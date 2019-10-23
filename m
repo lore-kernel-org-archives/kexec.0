@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iNHUG-0002tg-SR
- for kexec@lists.infradead.org; Wed, 23 Oct 2019 14:19:46 +0000
+ id 1iNHUR-0002w0-3J
+ for kexec@lists.infradead.org; Wed, 23 Oct 2019 14:19:57 +0000
 From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 0/2 v5] x86/kdump: Fix 'kmem -s' reported an invalid
- freepointer when SME was active
-Date: Wed, 23 Oct 2019 22:19:10 +0800
-Message-Id: <20191023141912.29110-1-lijiang@redhat.com>
+Subject: [PATCH 1/2 v5] x86/kdump: always reserve the low 1MiB when the
+ crashkernel option is specified
+Date: Wed, 23 Oct 2019 22:19:11 +0800
+Message-Id: <20191023141912.29110-2-lijiang@redhat.com>
+In-Reply-To: <20191023141912.29110-1-lijiang@redhat.com>
+References: <20191023141912.29110-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,73 +27,128 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, x86@kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, vgoyal@redhat.com
 
-In purgatory(), the main things are as below:
+Kdump kernel will reuse the first 640k region because the real mode
+trampoline has to work in this area. When the vmcore is dumped, the
+old memory in this area may be accessed, therefore, kernel has to
+copy the contents of the first 640k area to a backup region so that
+kdump kernel can read the old memory from the backup area of the
+first 640k area, which is done in the purgatory().
 
-[1] verify sha256 hashes for various segments.
-    Lets keep these codes, and do not touch the logic.
+But, the current handling of copying the first 640k area runs into
+problems when SME is enabled, kernel does not properly copy these
+old memory to the backup area in the purgatory(), thereby, kdump
+kernel reads out the encrypted contents, because the kdump kernel
+must access the first kernel's memory with the encryption bit set
+when SME is enabled in the first kernel. Please refer to this link:
 
-[2] copy the first 640k content to a backup region.
-    Lets safely remove it and clean all code related to backup region.
+Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
 
-This patch series will remove the backup region, because the current
-handling of copying the first 640k runs into problems when SME is
-active(https://bugzilla.kernel.org/show_bug.cgi?id=204793).
+Finally, it causes the following errors, and the crash tool gets
+invalid pointers when parsing the vmcore.
 
-The low 1MiB region will always be reserved when the crashkernel kernel
-command line option is specified. And this way makes it unnecessary to
-do anything with the low 1MiB region, because the memory allocated later
-won't fall into the low 1MiB area.
+crash> kmem -s|grep -i invalid
+kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
+crash>
 
-This series includes two patches:
-[1] x86/kdump: always reserve the low 1MiB when the crashkernel option
-    is specified
-    The low 1MiB region will always be reserved when the crashkernel
-    kernel command line option is specified, which ensures that the
-    memory allocated later won't fall into the low 1MiB area.
+To avoid the above errors, when the crashkernel option is specified,
+lets reserve the remaining low 1MiB memory(after reserving real mode
+memory) so that the allocated memory does not fall into the low 1MiB
+area, which makes us not to copy the first 640k content to a backup
+region in purgatory(). This indicates that it does not need to be
+included in crash dumps or used for anything except the processor
+trampolines that must live in the low 1MiB.
 
-[2] x86/kdump: clean up all the code related to the backup region
-    Remove the backup region and clean up.
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+---
+BTW:I also tried to fix the above problem in purgatory(), but there
+are too many restricts in purgatory() context, for example: i can't
+allocate new memory to create the identity mapping page table for
+SME situation.
 
-Changes since v1:
-[1] Add extra checking condition: when the crashkernel option is
-    specified, reserve the low 640k area.
+Currently, there are two places where the first 640k area is needed,
+the first one is in the find_trampoline_placement(), another one is
+in the reserve_real_mode(), and their content doesn't matter.
 
-Changes since v2:
-[1] Reserve the low 1MiB region when the crashkernel option is only
-    specified.(Suggested by Eric)
+In addition, also need to clean all the code related to the backup
+region later.
 
-[2] Remove the unused crash_copy_backup_region()
+ arch/x86/realmode/init.c |  2 ++
+ include/linux/kexec.h    |  2 ++
+ kernel/kexec_core.c      | 13 +++++++++++++
+ 3 files changed, 17 insertions(+)
 
-[3] Remove the backup region and clean up
-
-[4] Split them into three patches
-
-Changes since v3:
-[1] Improve the first patch's log
-
-[2] Improve the third patch based on Eric's suggestions
-
-Changes since v4:
-[1] Correct some typos, and also improve the first patch's log
-
-[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
-    and which is called by reserve_real_mode(). (Suggested by Boris) 
-
-Lianbo Jiang (2):
-  x86/kdump: always reserve the low 1MiB when the crashkernel option is
-    specified
-  x86/kdump: clean up all the code related to the backup region
-
- arch/x86/include/asm/kexec.h       | 10 ----
- arch/x86/include/asm/purgatory.h   | 10 ----
- arch/x86/kernel/crash.c            | 87 ++++--------------------------
- arch/x86/kernel/machine_kexec_64.c | 47 ----------------
- arch/x86/purgatory/purgatory.c     | 19 -------
- arch/x86/realmode/init.c           |  2 +
- include/linux/kexec.h              |  2 +
- kernel/kexec_core.c                | 13 +++++
- 8 files changed, 28 insertions(+), 162 deletions(-)
-
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index 7dce39c8c034..064cc79a015d 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -3,6 +3,7 @@
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+ #include <linux/mem_encrypt.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/set_memory.h>
+ #include <asm/pgtable.h>
+@@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
+ 
+ 	memblock_reserve(mem, size);
+ 	set_real_mode_mem(mem);
++	kexec_reserve_low_1MiB();
+ }
+ 
+ static void __init setup_real_mode(void)
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1776eb2e43a4..30acf1d738bc 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -306,6 +306,7 @@ extern void __crash_kexec(struct pt_regs *);
+ extern void crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+ int kexec_crash_loaded(void);
++void __init kexec_reserve_low_1MiB(void);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+ 
+@@ -397,6 +398,7 @@ static inline void __crash_kexec(struct pt_regs *regs) { }
+ static inline void crash_kexec(struct pt_regs *regs) { }
+ static inline int kexec_should_crash(struct task_struct *p) { return 0; }
+ static inline int kexec_crash_loaded(void) { return 0; }
++static inline void __init kexec_reserve_low_1MiB(void) { }
+ #define kexec_in_progress false
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 15d70a90b50d..5bd89f1fee42 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -37,6 +37,7 @@
+ #include <linux/compiler.h>
+ #include <linux/hugetlb.h>
+ #include <linux/frame.h>
++#include <linux/memblock.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -70,6 +71,18 @@ struct resource crashk_low_res = {
+ 	.desc  = IORES_DESC_CRASH_KERNEL
+ };
+ 
++/*
++ * When the crashkernel option is specified, only use the low
++ * 1MiB for the real mode trampoline.
++ */
++void __init kexec_reserve_low_1MiB(void)
++{
++	if (strstr(boot_command_line, "crashkernel=")) {
++		memblock_reserve(0, 1<<20);
++		pr_info("Reserving the low 1MiB of memory for crashkernel\n");
++	}
++}
++
+ int kexec_should_crash(struct task_struct *p)
+ {
+ 	/*
 -- 
 2.17.1
 
