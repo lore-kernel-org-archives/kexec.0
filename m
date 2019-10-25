@@ -5,11 +5,11 @@ References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
  <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
  <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
  <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
- <1571190256.5250.200.camel@linux.ibm.com>
-Message-ID: <3879883b-8c27-df25-ce20-97ed7274dc80@arm.com>
-Date: Fri, 25 Oct 2019 18:07:40 +0100
+ <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
+Message-ID: <b53ba912-6fec-211d-9494-bc6ae6fa3f31@arm.com>
+Date: Fri, 25 Oct 2019 18:08:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <1571190256.5250.200.camel@linux.ibm.com>
+In-Reply-To: <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,62 +19,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prsriva <prsriva@linux.microsoft.com>, takahiro.akashi@linaro.org, duwe@lst.de, Thiago Jung Bauermann <bauerman@linux.ibm.com>, allison@lohutok.net, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, jean-philippe@linaro.org, arnd@arndb.de, Masahiro Yamada <yamada.masahiro@socionext.com>, sboyd@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, zohar@linux.ibm.com, prsriva <prsriva@linux.microsoft.com>, takahiro.akashi@linaro.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, linux-integrity@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-SGkgTWltaSwKCk9uIDE2LzEwLzIwMTkgMDI6NDQsIE1pbWkgWm9oYXIgd3JvdGU6Cj4gT24gVHVl
-LCAyMDE5LTEwLTE1IGF0IDE4OjM5ICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToKPj4gSWYgU2Vj
-dXJlQm9vdCBpc24ndCByZWxldmFudCwgSSdtIGNvbmZ1c2VkIGFzIHRvIHdoeSBrZXhlY19maWxl
-X2xvYWQoKSBpcy4KPj4KPj4gSSB0aG91Z2h0IGtleGVjX2ZpbGVfbG9hZCgpIG9ubHkgZXhpc3Rl
-ZCBiZWNhdXNlIFNlY3VyZUJvb3Qgc3lzdGVtcyBuZWVkIHRvIHZhbGlkYXRlIHRoZQo+PiBuZXcg
-T1MgaW1hZ2VzJ3Mgc2lnbmF0dXJlIGJlZm9yZSBsb2FkaW5nIGl0LCBhbmQgd2UgY2FuJ3QgdHJ1
-c3QgdXNlci1zcGFjZSBjYWxsaW5nIEtleGVjCj4+IHRvIGRvIHRoaXMuCj4+Cj4+IElmIHRoZXJl
-IGlzIG5vIHNlY3VyZSBib290LCB3aHkgZG9lcyB0aGlzIHRoaW5nIG9ubHkgd29yayB3aXRoIGtl
-eGVjX2ZpbGVfbG9hZCgpPwo+PiAoZ29vZCBuZXdzISBXaXRoIHRoZSBVRUZJIG1lbXJlc2V2ZSB0
-YWJsZSwgaXQgc2hvdWxkIHdvcmsgdHJhbnNwYXJlbnRseSB3aXRoIHJlZ3VsYXIga2V4ZWMKPj4g
-dG9vKQoKPiBJJ20gc28gc29ycnkgZm9yIHRoZSBjb25mdXNpb24uIMKgSU1BIHdhcyBvcmlnaW5h
-bGx5IGxpbWl0ZWQgdG8KPiBleHRlbmRpbmcgdHJ1c3RlZCBib290IGNvbmNlcHRzIHRvIHRoZSBP
-Uy4gwqBBcyBvZiBMaW51eCAzLjEwLCBJTUEKPiBhZGRlZCBzdXBwb3J0IGZvciBleHRlbmRpbmcg
-c2VjdXJlIGJvb3QgY29uY2VwdHMgYW5kIGF1ZGl0aW5nIGZpbGUKPiBoYXNoZXMgKGNvbW1pdCBl
-N2M1NjhlMGZkMGNmKS4KPiAKPiBUcnVlLCBrZXhlY19maWxlX2xvYWQgaXMgcmVxdWlyZWQgZm9y
-IHZlcmlmeWluZyB0aGUga2V4ZWMga2VybmVsCj4gaW1hZ2UsIGJ1dCBpdCBpcyBhbHNvIHJlcXVp
-cmVkIGZvciBtZWFzdXJpbmcgdGhlIGtleGVjIGtlcm5lbCBpbWFnZSBhcwo+IHdlbGwuCj4gCj4g
-QWZ0ZXIgcmVhZGluZyB0aGUga2VybmVsIGltYWdlIGludG8gbWVtb3J5IChrZXJuZWxfcmVhZF9m
-aWxlX2Zyb21fZmQpLAo+IHRoZSBoYXNoIGlzIGNhbGN1bGF0ZWQgYW5kIHRoZW4gYWRkZWQgdG8g
-dGhlIElNQSBtZWFzdXJlbWVudCBsaXN0IGFuZAo+IHVzZWQgdG8gZXh0ZW5kIHRoZSBUUE0uIMKg
-QWxsIG9mIHRoaXMgaXMgYmFzZWQgb24gdGhlIElNQSBwb2xpY3ksCj4gaW5jbHVkaW5nIHRoZSBU
-UE0gUENSLgoKRG9uJ3Qgd2UgZ2V0IGEgc2V0IG9mIHNlZ21lbnRzIHdpdGggdGhlIHJlZ3VsYXIg
-a2V4ZWMgc3lzY2FsbD8gVGhlc2UgY291bGQgZXF1YWxseSBiZQpoYXNoZWQgYW5kIG1lYXN1cmVk
-LCBhbmQgbG9nZ2VkIHZpYSBJTUEgYW5kL29yIGV4dGVuZGluZyB0aGUgVFBNcyBtZWFzdXJlbWVu
-dHMuCgoob2J2aW91c2x5IHRoaXMgd291bGQgaW5jbHVkZSB0aGUgY29tbWFuZC1saW5lIGFuZCBt
-YXliZSBwdXJnYXRvcnksIHdoaWNoIG1ha2VzIGl0IGxlc3MKcHJlZGljdGFibGUsIGJ1dCB0aGVz
-ZSBhcmUgc3RpbGwgdGhlIGJpbmFyeSBibG9icyB0aGF0IHdlcmUgZ2l2ZW4gcHJpdmlsZWdlZCBh
-Y2Nlc3MgdG8gdGhlCnN5c3RlbSkuCgoKPj4+IEkgYW0gbm90IHN1cmUgaWYgaSBhZGRyZXNzZWQg
-YWxsIHlvdXIgY29uY2VybnMsIHBsZWFzZSBsZXQgbWUga25vdwo+Pj4gaWYgaSBtaXNzZWQgYW55
-dGhpbmcuIFRvIG1lIG1vc3QgY29uY2VybnMgbG9vayB0byBiZSB0b3dhcmRzIHRoZSBrZXhlYyBj
-YXNlIGFuZCBkZXBlbmRlbmN5Cj4+PiBvbiBoYXJkd2FyZShBQ1BJL1RQTSkgZHVyaW5nIGJvb3Qg
-YW5kIGVhcmx5IGJvb3Qgc2VydmljZXMsIHdoZXJlIGFzIGNhcnJ5aW5nIHRoZSBsb2dzIGlzCj4+
-PiBvbmx5IGR1cmluZyB0aGUga2V4ZWNfZmlsZV9sb2FkIHN5cyBjYWxsIGFuZCBkb2VzIG5vdCBp
-bnRlcmZlcmUgd2l0aCB0aGF0IGNvZGUgcGF0aC4KPj4+IElNQSBkb2N1bWVudGF0aW9uOiBodHRw
-czovL3NvdXJjZWZvcmdlLm5ldC9wL2xpbnV4LWltYS93aWtpL0hvbWUvCj4+Cj4+IFN1cHBvcnRp
-bmcgQUNQSSBpbiB0aGUgc2FtZSB3YXkgaXMgc29tZXRoaW5nIHdlIG5lZWQgdG8gZG8gZnJvbSBk
-YXkgb25lLiBrZXhlY19maWxlX2xvYWQoKQo+PiBhbHJlYWR5IGRvZXMgdGhpcy4gSSdtIG5vdCBz
-dXJlICJvbmx5IGtleGVjX2ZpbGVfbG9hZCgpIiBpcyBhIGp1c3RpZmlhYmxlIHJlc3RyaWN0aW9u
-Li4uCgo+IFRoZSBUUE0gUENScyBhcmUgbm90IHJlc2V0IG9uIGEgc29mdCByZWJvb3QuIMKgQXMg
-YSByZXN1bHQsIGluIG9yZGVyIHRvCj4gdmFsaWRhdGUgdGhlIElNQSBtZWFzdXJlbWVudCBsaXN0
-IGFnYWluc3QgdGhlIFRQTSBQQ1JzLCB0aGUgSU1BCj4gbWVhc3VyZW1lbnQgbGlzdCBpcyBzYXZl
-ZCBvbiBrZXhlYyBsb2FkLCByZXN0b3JlZCBvbiBib290LCBhbmQgdGhlbgo+IHRoZSBtZW1vcnkg
-YWxsb2NhdGVkIGZvciBjYXJyeWluZyB0aGUgbWVhc3VyZW1lbnQgbGlzdCBhY3Jvc3Mga2V4ZWMg
-aXMKPiBmcmVlZC4KCkhtbSwgdGhpcyBpcyB3aHkgdGhlIHJlc2VydmVkIG1lbW9yeSBnZXRzIGZy
-ZWVkLgoKV2hhdCBoYXBwZW5zIHRvIHN0dWZmIHRoYXQgaGFwcGVucyBiZXR3ZWVuIGtleGVjLWxv
-YWQgYW5kIGJvb3Q/ClRoZXJlIGlzIGEgY29tbWVudDoKfCAvKiBzZWdtZW50IHNpemUgY2FuJ3Qg
-Y2hhbmdlIGJldHdlZW4ga2V4ZWMgbG9hZCBhbmQgZXhlY3V0ZSAqLwoKQnV0IEkgY2FuJ3Qgc2Vl
-IGFueXdoZXJlIHRoYXQgZW5mb3JjZXMgdGhhdC4gSSBndWVzcyB0aG9zZSBtZWFzdXJlbWVudHMg
-d2lsbCBnbyBtaXNzaW5nLAphbmQgdGhlIFRQTSB2YWx1ZSB3aWxsIG5vdCBtYXRjaCBhZnRlciBr
-ZXhlYy4KCgoKVGhhbmtzLAoKSmFtZXMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi Pavel,
+
+On 15/10/2019 19:47, Pavel Tatashin wrote:
+>> I think the UEFI persistent-memory-reservations thing is a better fit for this [0][1].
+
+> Thank you for your thought. As I understand you propose the to use the
+> existing method as such:
+> 1. Use the existing kexec ABI to pass reservation from kernel to
+> kernel using EFI the same as is done for GICv3 tables.
+> 2. Allow this memory to be reservable only during first Linux boot via
+> EFI memory reserve
+> 3. Allow to have this memory pre-reserved by firmware or to be
+> embedded into device tree.
+> 
+> A question I have is how to tell that a reserved region is reserved
+> for IMA use. With GICv3 it is done by reading the registers, finding
+> the interrupt tables memory, and check that the memory ranges are
+> indeed pre-reserved.
+
+Good point, efi_mem_reserve_persistent() has no way of describing what a region is for,
+you have to know that from somewhere else.
+
+
+> Is there a way to name memory with the current ABI that you think is acceptable?
+
+This would need to go in the chosen node of the DT, like power-pc already does. This would
+work on arm64:ACPI systems too (because they have a DT chosen node).
+
+
+I'd like to understand why removing these entries is needed, it doesn't look like we have
+an API call to remove them from the efi mem-reserve...
+
+If it had a fixed position in memory its the sort of thing we'd expect firmware to
+reserved during boot. (e.g. ramoops).
+
+~
+
+From ima_add_kexec_buffer() this really is a transient memory reservation over kexec.
+I think the efi mem-reserve and a DT-chosen node entry with the PA is the only way to make
+this work smoothly between DT<->ACPI systems.
+
+We'd need a way of removing the efi mem-reserve in ima_free_kexec_buffer(), otherwise the
+memory remains lost. The DT-chosen node entry should have its pointer zero'd out once
+we've done this. (like we do for the KASLR seed).
+
+
+Not considered is parsing the DT-chosen node entry as if it were a memreserve during early
+boot. This wouldn't work if you kexec something that doesn't know what the node is, it
+would overwrite the the memory and may not remove the node for the next kexec, which does.
+
+
+Thanks,
+
+James
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
