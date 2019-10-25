@@ -1,16 +1,34 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: James Morse <james.morse@arm.com>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1iO3Z9-0003vJ-4e
+ for kexec@lists.infradead.org; Fri, 25 Oct 2019 17:40:00 +0000
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ x9PHcgDg008631
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2019 13:39:54 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2vv4axakxj-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 25 Oct 2019 13:39:53 -0400
+Received: from localhost
+ by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zohar@linux.ibm.com>;
+ Fri, 25 Oct 2019 18:39:51 +0100
 Subject: Re: [PATCH V4 0/2] Add support for arm64 to carry ima measurement
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Fri, 25 Oct 2019 13:39:43 -0400
+In-Reply-To: <3879883b-8c27-df25-ce20-97ed7274dc80@arm.com>
 References: <20191011003600.22090-1-prsriva@linux.microsoft.com>
  <87d92514-e5e4-a79f-467f-f24a4ed279b6@arm.com>
  <b35b239c-990c-0d5b-0298-8f9e35064e2b@linux.microsoft.com>
  <0053eb68-0905-4679-c97a-00c5cb6f1abb@arm.com>
- <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
-Message-ID: <b53ba912-6fec-211d-9494-bc6ae6fa3f31@arm.com>
-Date: Fri, 25 Oct 2019 18:08:16 +0100
-MIME-Version: 1.0
-In-Reply-To: <CA+CK2bBVcE91YbJx1f_BkNqbD03wGLNtyane7PjCnEu8i_cH2Q@mail.gmail.com>
-Content-Language: en-GB
+ <1571190256.5250.200.camel@linux.ibm.com>
+ <3879883b-8c27-df25-ce20-97ed7274dc80@arm.com>
+Mime-Version: 1.0
+Message-Id: <1572025183.4532.34.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,69 +37,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, jean-philippe@linaro.org, arnd@arndb.de, Masahiro Yamada <yamada.masahiro@socionext.com>, sboyd@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, zohar@linux.ibm.com, prsriva <prsriva@linux.microsoft.com>, takahiro.akashi@linaro.org, duwe@lst.de, bauerman@linux.ibm.com, allison@lohutok.net, linux-integrity@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: James Morse <james.morse@arm.com>
+Cc: mark.rutland@arm.com, jean-philippe@linaro.org, arnd@arndb.de, yamada.masahiro@socionext.com, sboyd@kernel.org, catalin.marinas@arm.com, ard.biesheuvel@linaro.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, prsriva <prsriva@linux.microsoft.com>, takahiro.akashi@linaro.org, duwe@lst.de, Thiago Jung Bauermann <bauerman@linux.ibm.com>, allison@lohutok.net, linux-integrity@vger.kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
-Hi Pavel,
-
-On 15/10/2019 19:47, Pavel Tatashin wrote:
->> I think the UEFI persistent-memory-reservations thing is a better fit for this [0][1].
-
-> Thank you for your thought. As I understand you propose the to use the
-> existing method as such:
-> 1. Use the existing kexec ABI to pass reservation from kernel to
-> kernel using EFI the same as is done for GICv3 tables.
-> 2. Allow this memory to be reservable only during first Linux boot via
-> EFI memory reserve
-> 3. Allow to have this memory pre-reserved by firmware or to be
-> embedded into device tree.
-> 
-> A question I have is how to tell that a reserved region is reserved
-> for IMA use. With GICv3 it is done by reading the registers, finding
-> the interrupt tables memory, and check that the memory ranges are
-> indeed pre-reserved.
-
-Good point, efi_mem_reserve_persistent() has no way of describing what a region is for,
-you have to know that from somewhere else.
-
-
-> Is there a way to name memory with the current ABI that you think is acceptable?
-
-This would need to go in the chosen node of the DT, like power-pc already does. This would
-work on arm64:ACPI systems too (because they have a DT chosen node).
-
-
-I'd like to understand why removing these entries is needed, it doesn't look like we have
-an API call to remove them from the efi mem-reserve...
-
-If it had a fixed position in memory its the sort of thing we'd expect firmware to
-reserved during boot. (e.g. ramoops).
-
-~
-
-From ima_add_kexec_buffer() this really is a transient memory reservation over kexec.
-I think the efi mem-reserve and a DT-chosen node entry with the PA is the only way to make
-this work smoothly between DT<->ACPI systems.
-
-We'd need a way of removing the efi mem-reserve in ima_free_kexec_buffer(), otherwise the
-memory remains lost. The DT-chosen node entry should have its pointer zero'd out once
-we've done this. (like we do for the KASLR seed).
-
-
-Not considered is parsing the DT-chosen node entry as if it were a memreserve during early
-boot. This wouldn't work if you kexec something that doesn't know what the node is, it
-would overwrite the the memory and may not remove the node for the next kexec, which does.
-
-
-Thanks,
-
-James
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAyMDE5LTEwLTI1IGF0IDE4OjA3ICswMTAwLCBKYW1lcyBNb3JzZSB3cm90ZToKPiBI
+aSBNaW1pLAo+IAo+IE9uIDE2LzEwLzIwMTkgMDI6NDQsIE1pbWkgWm9oYXIgd3JvdGU6Cj4gPiBP
+biBUdWUsIDIwMTktMTAtMTUgYXQgMTg6MzkgKzAxMDAsIEphbWVzIE1vcnNlIHdyb3RlOgo+ID4+
+IElmIFNlY3VyZUJvb3QgaXNuJ3QgcmVsZXZhbnQsIEknbSBjb25mdXNlZCBhcyB0byB3aHkga2V4
+ZWNfZmlsZV9sb2FkKCkgaXMuCj4gPj4KPiA+PiBJIHRob3VnaHQga2V4ZWNfZmlsZV9sb2FkKCkg
+b25seSBleGlzdGVkIGJlY2F1c2UgU2VjdXJlQm9vdCBzeXN0ZW1zIG5lZWQgdG8gdmFsaWRhdGUg
+dGhlCj4gPj4gbmV3IE9TIGltYWdlcydzIHNpZ25hdHVyZSBiZWZvcmUgbG9hZGluZyBpdCwgYW5k
+IHdlIGNhbid0IHRydXN0IHVzZXItc3BhY2UgY2FsbGluZyBLZXhlYwo+ID4+IHRvIGRvIHRoaXMu
+Cj4gPj4KPiA+PiBJZiB0aGVyZSBpcyBubyBzZWN1cmUgYm9vdCwgd2h5IGRvZXMgdGhpcyB0aGlu
+ZyBvbmx5IHdvcmsgd2l0aCBrZXhlY19maWxlX2xvYWQoKT8KPiA+PiAoZ29vZCBuZXdzISBXaXRo
+IHRoZSBVRUZJIG1lbXJlc2V2ZSB0YWJsZSwgaXQgc2hvdWxkIHdvcmsgdHJhbnNwYXJlbnRseSB3
+aXRoIHJlZ3VsYXIga2V4ZWMKPiA+PiB0b28pCj4gCj4gPiBJJ20gc28gc29ycnkgZm9yIHRoZSBj
+b25mdXNpb24uIMKgSU1BIHdhcyBvcmlnaW5hbGx5IGxpbWl0ZWQgdG8KPiA+IGV4dGVuZGluZyB0
+cnVzdGVkIGJvb3QgY29uY2VwdHMgdG8gdGhlIE9TLiDCoEFzIG9mIExpbnV4IDMuMTAsIElNQQo+
+ID4gYWRkZWQgc3VwcG9ydCBmb3IgZXh0ZW5kaW5nIHNlY3VyZSBib290IGNvbmNlcHRzIGFuZCBh
+dWRpdGluZyBmaWxlCj4gPiBoYXNoZXMgKGNvbW1pdCBlN2M1NjhlMGZkMGNmKS4KPiA+IAo+ID4g
+VHJ1ZSwga2V4ZWNfZmlsZV9sb2FkIGlzIHJlcXVpcmVkIGZvciB2ZXJpZnlpbmcgdGhlIGtleGVj
+IGtlcm5lbAo+ID4gaW1hZ2UsIGJ1dCBpdCBpcyBhbHNvIHJlcXVpcmVkIGZvciBtZWFzdXJpbmcg
+dGhlIGtleGVjIGtlcm5lbCBpbWFnZSBhcwo+ID4gd2VsbC4KPiA+IAo+ID4gQWZ0ZXIgcmVhZGlu
+ZyB0aGUga2VybmVsIGltYWdlIGludG8gbWVtb3J5IChrZXJuZWxfcmVhZF9maWxlX2Zyb21fZmQp
+LAo+ID4gdGhlIGhhc2ggaXMgY2FsY3VsYXRlZCBhbmQgdGhlbiBhZGRlZCB0byB0aGUgSU1BIG1l
+YXN1cmVtZW50IGxpc3QgYW5kCj4gPiB1c2VkIHRvIGV4dGVuZCB0aGUgVFBNLiDCoEFsbCBvZiB0
+aGlzIGlzIGJhc2VkIG9uIHRoZSBJTUEgcG9saWN5LAo+ID4gaW5jbHVkaW5nIHRoZSBUUE0gUENS
+Lgo+IAo+IERvbid0IHdlIGdldCBhIHNldCBvZiBzZWdtZW50cyB3aXRoIHRoZSByZWd1bGFyIGtl
+eGVjIHN5c2NhbGw/IFRoZXNlIGNvdWxkIGVxdWFsbHkgYmUKPiBoYXNoZWQgYW5kIG1lYXN1cmVk
+LCBhbmQgbG9nZ2VkIHZpYSBJTUEgYW5kL29yIGV4dGVuZGluZyB0aGUgVFBNcyBtZWFzdXJlbWVu
+dHMuCgpJTUEgd29ya3MgYXQgdGhlIGZpbGUgbGV2ZWwuIMKgSSdtIG5vdCBzdXJlIHdoYXQgaXQg
+d291bGQgbWVhbiB0bwptZWFzdXJlICJzZWdtZW50cyIuCgpPcmlnaW5hbGx5LCBrZXhlY19maWxl
+X2xvYWQgcmVhZCB0aGUgS0VYRUMga2VybmVsIGltYWdlIHR3aWNlLCBvbmNlIHRvCmNhbGN1bGF0
+ZSB0aGUgZmlsZSBoYXNoLCBhbmQgYWdhaW4gdG8gdmVyaWZ5IHRoZSBzaWduYXR1cmUuIMKgTm93
+CmtleGVjX2ZpbGVfbG9hZCBjYWxscyBrZXJuZWxfcmVhZF9maWxlX2Zyb21fZmQsIHdoaWNoIHJl
+YWRzIHRoZSBmaWxlCmludG8gbWVtb3J5LCBiZWZvcmUgSU1BIGNhbGN1bGF0ZXMgdGhlIGZpbGUg
+YnVmZmVyIGhhc2guCgo+IAo+IChvYnZpb3VzbHkgdGhpcyB3b3VsZCBpbmNsdWRlIHRoZSBjb21t
+YW5kLWxpbmUgYW5kIG1heWJlIHB1cmdhdG9yeSwgd2hpY2ggbWFrZXMgaXQgbGVzcwo+IHByZWRp
+Y3RhYmxlLCBidXQgdGhlc2UgYXJlIHN0aWxsIHRoZSBiaW5hcnkgYmxvYnMgdGhhdCB3ZXJlIGdp
+dmVuIHByaXZpbGVnZWQgYWNjZXNzIHRvIHRoZQo+IHN5c3RlbSkuCj4gCj4gCj4gPj4+IEkgYW0g
+bm90IHN1cmUgaWYgaSBhZGRyZXNzZWQgYWxsIHlvdXIgY29uY2VybnMsIHBsZWFzZSBsZXQgbWUg
+a25vdwo+ID4+PiBpZiBpIG1pc3NlZCBhbnl0aGluZy4gVG8gbWUgbW9zdCBjb25jZXJucyBsb29r
+IHRvIGJlIHRvd2FyZHMgdGhlIGtleGVjIGNhc2UgYW5kIGRlcGVuZGVuY3kKPiA+Pj4gb24gaGFy
+ZHdhcmUoQUNQSS9UUE0pIGR1cmluZyBib290IGFuZCBlYXJseSBib290IHNlcnZpY2VzLCB3aGVy
+ZSBhcyBjYXJyeWluZyB0aGUgbG9ncyBpcwo+ID4+PiBvbmx5IGR1cmluZyB0aGUga2V4ZWNfZmls
+ZV9sb2FkIHN5cyBjYWxsIGFuZCBkb2VzIG5vdCBpbnRlcmZlcmUgd2l0aCB0aGF0IGNvZGUgcGF0
+aC4KPiA+Pj4gSU1BIGRvY3VtZW50YXRpb246IGh0dHBzOi8vc291cmNlZm9yZ2UubmV0L3AvbGlu
+dXgtaW1hL3dpa2kvSG9tZS8KPiA+Pgo+ID4+IFN1cHBvcnRpbmcgQUNQSSBpbiB0aGUgc2FtZSB3
+YXkgaXMgc29tZXRoaW5nIHdlIG5lZWQgdG8gZG8gZnJvbSBkYXkgb25lLiBrZXhlY19maWxlX2xv
+YWQoKQo+ID4+IGFscmVhZHkgZG9lcyB0aGlzLiBJJ20gbm90IHN1cmUgIm9ubHkga2V4ZWNfZmls
+ZV9sb2FkKCkiIGlzIGEganVzdGlmaWFibGUgcmVzdHJpY3Rpb24uLi4KPiAKPiA+IFRoZSBUUE0g
+UENScyBhcmUgbm90IHJlc2V0IG9uIGEgc29mdCByZWJvb3QuIMKgQXMgYSByZXN1bHQsIGluIG9y
+ZGVyIHRvCj4gPiB2YWxpZGF0ZSB0aGUgSU1BIG1lYXN1cmVtZW50IGxpc3QgYWdhaW5zdCB0aGUg
+VFBNIFBDUnMsIHRoZSBJTUEKPiA+IG1lYXN1cmVtZW50IGxpc3QgaXMgc2F2ZWQgb24ga2V4ZWMg
+bG9hZCwgcmVzdG9yZWQgb24gYm9vdCwgYW5kIHRoZW4KPiA+IHRoZSBtZW1vcnkgYWxsb2NhdGVk
+IGZvciBjYXJyeWluZyB0aGUgbWVhc3VyZW1lbnQgbGlzdCBhY3Jvc3Mga2V4ZWMgaXMKPiA+IGZy
+ZWVkLgo+IAo+IEhtbSwgdGhpcyBpcyB3aHkgdGhlIHJlc2VydmVkIG1lbW9yeSBnZXRzIGZyZWVk
+LgoKWWVzCj4gCj4gV2hhdCBoYXBwZW5zIHRvIHN0dWZmIHRoYXQgaGFwcGVucyBiZXR3ZWVuIGtl
+eGVjLWxvYWQgYW5kIGJvb3Q/Cj4gVGhlcmUgaXMgYSBjb21tZW50Ogo+IHwgLyogc2VnbWVudCBz
+aXplIGNhbid0IGNoYW5nZSBiZXR3ZWVuIGtleGVjIGxvYWQgYW5kIGV4ZWN1dGUgKi8KClJpZ2h0
+LCB0aGUgb3JpZ2luYWwgdmVyc2lvbiBhZGRyZXNzZWQgdGhpcywgYnV0IHdhcyBuaXhlZCBieSBF
+cmljLApzYXlpbmcgaXQgd2FzIHVubmVjZXNzYXJ5LiDCoFRoZSBjdXJyZW50IHZlcnNpb24gYWxs
+b2NhdGVzIG1vcmUgbWVtb3J5CnRoYW4gbmVlZGVkIHRvIGhvcGVmdWxseSBjb21wZW5zYXRlLsKg
+Cgo+IAo+IEJ1dCBJIGNhbid0IHNlZSBhbnl3aGVyZSB0aGF0IGVuZm9yY2VzIHRoYXQuIEkgZ3Vl
+c3MgdGhvc2UgbWVhc3VyZW1lbnRzIHdpbGwgZ28gbWlzc2luZywKPiBhbmQgdGhlIFRQTSB2YWx1
+ZSB3aWxsIG5vdCBtYXRjaCBhZnRlciBrZXhlYy4KCk5vLCB0aGUga2V4ZWMgbG9hZCB3aWxsIHN1
+Y2NlZWQsIGJ1dCBpZiB0aGVyZSBpc24ndCBlbm91Z2ggbWVtb3J5IHRvCnN0b3JlIHRoZSBtZWFz
+dXJlbWVudCBsaXN0LCB0aGUgZXhlYyBzaG91bGQgZmFpbC4KCk1pbWkKCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
