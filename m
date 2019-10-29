@@ -2,19 +2,20 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-1.mimecast.com ([205.139.110.61]
  helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iPKeK-0004sa-DN
- for kexec@lists.infradead.org; Tue, 29 Oct 2019 06:06:38 +0000
+ id 1iPKx4-00056c-Hl
+ for kexec@lists.infradead.org; Tue, 29 Oct 2019 06:25:59 +0000
+Date: Tue, 29 Oct 2019 14:25:43 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH 1/2 v7] x86/kdump: always reserve the low 1MiB when the
  crashkernel option is specified
+Message-ID: <20191029062543.GC7616@MiWiFi-R3L-srv>
 References: <20191029021059.22070-1-lijiang@redhat.com>
  <20191029021059.22070-2-lijiang@redhat.com>
  <20191029052842.GA7616@MiWiFi-R3L-srv>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <ffb0d2d3-31c3-fba0-e0f4-bd48999a033e@redhat.com>
-Date: Tue, 29 Oct 2019 14:06:12 +0800
+ <ffb0d2d3-31c3-fba0-e0f4-bd48999a033e@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20191029052842.GA7616@MiWiFi-R3L-srv>
-Content-Language: en-US
+In-Reply-To: <ffb0d2d3-31c3-fba0-e0f4-bd48999a033e@redhat.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,104 +24,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: lijiang <lijiang@redhat.com>
 Cc: jgross@suse.com, Thomas.Lendacky@amd.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
 
-5ZyoIDIwMTnlubQxMOaciDI55pelIDEzOjI4LCBCYW9xdWFuIEhlIOWGmemBkzoKPiBPbiAxMC8y
-OS8xOSBhdCAxMDoxMGFtLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+IEtkdW1wIGtlcm5lbCB3aWxs
-IHJldXNlIHRoZSBmaXJzdCA2NDBrIHJlZ2lvbiBiZWNhdXNlIHRoZSByZWFsIG1vZGUKPj4gdHJh
-bXBvbGluZSBoYXMgdG8gd29yayBpbiB0aGlzIGFyZWEuIFdoZW4gdGhlIHZtY29yZSBpcyBkdW1w
-ZWQsIHRoZQo+PiBvbGQgbWVtb3J5IGluIHRoaXMgYXJlYSBtYXkgYmUgYWNjZXNzZWQsIHRoZXJl
-Zm9yZSwga2VybmVsIGhhcyB0bwo+PiBjb3B5IHRoZSBjb250ZW50cyBvZiB0aGUgZmlyc3QgNjQw
-ayBhcmVhIHRvIGEgYmFja3VwIHJlZ2lvbiBzbyB0aGF0Cj4+IGtkdW1wIGtlcm5lbCBjYW4gcmVh
-ZCB0aGUgb2xkIG1lbW9yeSBmcm9tIHRoZSBiYWNrdXAgYXJlYSBvZiB0aGUKPj4gZmlyc3QgNjQw
-ayBhcmVhLCB3aGljaCBpcyBkb25lIGluIHRoZSBwdXJnYXRvcnkoKS4KPj4KPj4gQnV0LCB0aGUg
-Y3VycmVudCBoYW5kbGluZyBvZiBjb3B5aW5nIHRoZSBmaXJzdCA2NDBrIGFyZWEgcnVucyBpbnRv
-Cj4+IHByb2JsZW1zIHdoZW4gU01FIGlzIGVuYWJsZWQsIGtlcm5lbCBkb2VzIG5vdCBwcm9wZXJs
-eSBjb3B5IHRoZXNlCj4+IG9sZCBtZW1vcnkgdG8gdGhlIGJhY2t1cCBhcmVhIGluIHRoZSBwdXJn
-YXRvcnkoKSwgdGhlcmVieSwga2R1bXAKPj4ga2VybmVsIHJlYWRzIG91dCB0aGUgZW5jcnlwdGVk
-IGNvbnRlbnRzLCBiZWNhdXNlIHRoZSBrZHVtcCBrZXJuZWwKPj4gbXVzdCBhY2Nlc3MgdGhlIGZp
-cnN0IGtlcm5lbCdzIG1lbW9yeSB3aXRoIHRoZSBlbmNyeXB0aW9uIGJpdCBzZXQKPj4gd2hlbiBT
-TUUgaXMgZW5hYmxlZCBpbiB0aGUgZmlyc3Qga2VybmVsLiBQbGVhc2UgcmVmZXIgdG8gdGhpcyBs
-aW5rOgo+Pgo+PiBCdWd6aWxsYTogaHR0cHM6Ly9idWd6aWxsYS5rZXJuZWwub3JnL3Nob3dfYnVn
-LmNnaT9pZD0yMDQ3OTMKPj4KPj4gRmluYWxseSwgaXQgY2F1c2VzIHRoZSBmb2xsb3dpbmcgZXJy
-b3JzLCBhbmQgdGhlIGNyYXNoIHRvb2wgZ2V0cwo+PiBpbnZhbGlkIHBvaW50ZXJzIHdoZW4gcGFy
-c2luZyB0aGUgdm1jb3JlLgo+Pgo+PiBjcmFzaD4ga21lbSAtc3xncmVwIC1pIGludmFsaWQKPj4g
-a21lbTogZG1hLWttYWxsb2MtNTEyOiBzbGFiOmZmZmZkNzc2ODAwMDFjMDAgaW52YWxpZCBmcmVl
-cG9pbnRlcjphNjA4NmFjMDk5ZjBjNWE0Cj4+IGttZW06IGRtYS1rbWFsbG9jLTUxMjogc2xhYjpm
-ZmZmZDc3NjgwMDAxYzAwIGludmFsaWQgZnJlZXBvaW50ZXI6YTYwODZhYzA5OWYwYzVhNAo+PiBj
-cmFzaD4KPj4KPj4gVG8gYXZvaWQgdGhlIGFib3ZlIGVycm9ycywgd2hlbiB0aGUgY3Jhc2hrZXJu
-ZWwgb3B0aW9uIGlzIHNwZWNpZmllZCwKPj4gbGV0cyByZXNlcnZlIHRoZSByZW1haW5pbmcgbG93
-IDFNaUIgbWVtb3J5KGFmdGVyIHJlc2VydmluZyByZWFsIG1vZGUKPj4gbWVtb3J5KSBzbyB0aGF0
-IHRoZSBhbGxvY2F0ZWQgbWVtb3J5IGRvZXMgbm90IGZhbGwgaW50byB0aGUgbG93IDFNaUIKPj4g
-YXJlYSwgd2hpY2ggbWFrZXMgdXMgbm90IHRvIGNvcHkgdGhlIGZpcnN0IDY0MGsgY29udGVudCB0
-byBhIGJhY2t1cAo+PiByZWdpb24gaW4gcHVyZ2F0b3J5KCkuIFRoaXMgaW5kaWNhdGVzIHRoYXQg
-aXQgZG9lcyBub3QgbmVlZCB0byBiZQo+PiBpbmNsdWRlZCBpbiBjcmFzaCBkdW1wcyBvciB1c2Vk
-IGZvciBhbnl0aGluZyBleGNlcHQgdGhlIHByb2Nlc3Nvcgo+PiB0cmFtcG9saW5lcyB0aGF0IG11
-c3QgbGl2ZSBpbiB0aGUgbG93IDFNaUIuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IExpYW5ibyBKaWFu
-ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+PiAtLS0KPj4gIGFyY2gveDg2L2luY2x1ZGUvYXNtL2Ny
-YXNoLmggfCAgNiArKysrKysKPj4gIGFyY2gveDg2L2tlcm5lbC9jcmFzaC5jICAgICAgfCAxNSAr
-KysrKysrKysrKysrKysKPj4gIGFyY2gveDg2L3JlYWxtb2RlL2luaXQuYyAgICAgfCAgMiArKwo+
-PiAgMyBmaWxlcyBjaGFuZ2VkLCAyMyBpbnNlcnRpb25zKCspCj4+Cj4+IGRpZmYgLS1naXQgYS9h
-cmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2gu
-aAo+PiBpbmRleCAwYWNmNWVlNDVhMjEuLjNlOTY2YTNkYzgyMyAxMDA2NDQKPj4gLS0tIGEvYXJj
-aC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaAo+PiArKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9j
-cmFzaC5oCj4+IEBAIC04LDQgKzgsMTAgQEAgaW50IGNyYXNoX3NldHVwX21lbW1hcF9lbnRyaWVz
-KHN0cnVjdCBraW1hZ2UgKmltYWdlLAo+PiAgCQlzdHJ1Y3QgYm9vdF9wYXJhbXMgKnBhcmFtcyk7
-Cj4+ICB2b2lkIGNyYXNoX3NtcF9zZW5kX3N0b3Aodm9pZCk7Cj4+ICAKPj4gKyNpZmRlZiBDT05G
-SUdfS0VYRUNfQ09SRQo+PiArdm9pZCBfX2luaXQga2V4ZWNfcmVzZXJ2ZV9sb3dfMU1pQih2b2lk
-KTsKPj4gKyNlbHNlCj4+ICtzdGF0aWMgaW5saW5lIHZvaWQgX19pbml0IGtleGVjX3Jlc2VydmVf
-bG93XzFNaUIodm9pZCkgeyB9Cj4+ICsjZW5kaWYKPj4gKwo+PiAgI2VuZGlmIC8qIF9BU01fWDg2
-X0NSQVNIX0ggKi8KPj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jIGIvYXJj
-aC94ODYva2VybmVsL2NyYXNoLmMKPj4gaW5kZXggZWI2NTFmYmRlOTJhLi4xNDRmNTE5YWVmMjkg
-MTAwNjQ0Cj4+IC0tLSBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jCj4+ICsrKyBiL2FyY2gveDg2
-L2tlcm5lbC9jcmFzaC5jCj4+IEBAIC0yNCw2ICsyNCw3IEBACj4+ICAjaW5jbHVkZSA8bGludXgv
-ZXhwb3J0Lmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvc2xhYi5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4
-L3ZtYWxsb2MuaD4KPj4gKyNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgo+PiAgCj4+ICAjaW5j
-bHVkZSA8YXNtL3Byb2Nlc3Nvci5oPgo+PiAgI2luY2x1ZGUgPGFzbS9oYXJkaXJxLmg+Cj4+IEBA
-IC0zOSw2ICs0MCw3IEBACj4+ICAjaW5jbHVkZSA8YXNtL3ZpcnRleHQuaD4KPj4gICNpbmNsdWRl
-IDxhc20vaW50ZWxfcHQuaD4KPj4gICNpbmNsdWRlIDxhc20vY3Jhc2guaD4KPj4gKyNpbmNsdWRl
-IDxhc20vY21kbGluZS5oPgo+PiAgCj4+ICAvKiBVc2VkIHdoaWxlIHByZXBhcmluZyBtZW1vcnkg
-bWFwIGVudHJpZXMgZm9yIHNlY29uZCBrZXJuZWwgKi8KPj4gIHN0cnVjdCBjcmFzaF9tZW1tYXBf
-ZGF0YSB7Cj4+IEBAIC02OCw2ICs3MCwxOSBAQCBzdGF0aWMgaW5saW5lIHZvaWQgY3B1X2NyYXNo
-X3ZtY2xlYXJfbG9hZGVkX3ZtY3NzKHZvaWQpCj4+ICAJcmN1X3JlYWRfdW5sb2NrKCk7Cj4+ICB9
-Cj4+ICAKPj4gKy8qCj4+ICsgKiBXaGVuIHRoZSBjcmFzaGtlcm5lbCBvcHRpb24gaXMgc3BlY2lm
-aWVkLCBvbmx5IHVzZSB0aGUgbG93Cj4+ICsgKiAxTWlCIGZvciB0aGUgcmVhbCBtb2RlIHRyYW1w
-b2xpbmUuCj4+ICsgKi8KPj4gK3ZvaWQgX19pbml0IGtleGVjX3Jlc2VydmVfbG93XzFNaUIodm9p
-ZCkKPiAKPiBUaGFua3MgZm9yIHRoZSBlZmZvcnQsIExpYW5iby4gSSBiZWxpZXZlIGV2ZXJ5b25l
-IGlzIGNvbmZpZGVudCB3aXRoIHRoaXMKPiBzb2x1dGlvbiBhbmQgZml4Lgo+IAo+IEkgaGF2ZSBh
-IHRpbnkgY29uY2Vybiwgd2h5IHRoZSBmdW5jdGlvbiBuYW1lIGlzCj4ga2V4ZWNfcmVzZXJ2ZV9s
-b3dfMU1pQigpLCBidXQgbm90IGtleGVjX3Jlc2VydmVfbG93XzFNKCk/CgpUaGFua3MgZm9yIHlv
-dXIgY29tbWVudCwgQmFvcXVhbi4KCkl0IG1lYW5zIHRoYXQga2VybmVsIHdpbGwgcmVzZXJ2ZSAx
-TSAnQnl0ZScgbWVtb3J5LCB0aGUgZnVuY3Rpb24gbmFtZSBkb2VzIG5vdApoYXZlIHNwZWNpYWwg
-bWVhbmluZy4KCldvdWxkIHlvdSBtaW5kIGlmIGkgY2hhbmdlIGl0IHRvIHRoZSBjcmFzaF9yZXNl
-cnZlX2xvd18xTSgpPwoKdm9pZCBfX2luaXQgY3Jhc2hfcmVzZXJ2ZV9sb3dfMU0odm9pZCkKClRo
-YW5rcy4KTGlhbmJvCgo+IEkgc2VhcmNoZWQgaW4ga2VybmVsIGNvZGUgd2l0aCBiZWxvdyBmaWx0
-ZXIsIGRpZG4ndCBzZWUgTWlCIGFwcGVhcmluZyBpbgo+IGEgZnVuY3Rpb24gbmFtZS4gSSBhbSBu
-b3Qgc3VyZSBhYm91dCBpdCBlaXRoZXIsIGp1c3QgYXNrLgo+IAo+IGdpdCBncmVwICJfWzEtOV0q
-TSAiIGFyY2gvIGtlcm5lbC8gbW0gaW5jbHVkZS8gZHJpdmVycy8gbmV0LyBpbml0IGZzIGNyeXB0
-by8gY2VydHMvIGlwYyBsaWIKPiAKPiBUaGFua3MKPiBCYW9xdWFuCj4gCj4+ICt7Cj4+ICsJaWYg
-KGNtZGxpbmVfZmluZF9vcHRpb24oYm9vdF9jb21tYW5kX2xpbmUsICJjcmFzaGtlcm5lbCIsCj4+
-ICsJCQkJTlVMTCwgMCkgPiAwKSB7Cj4+ICsJCW1lbWJsb2NrX3Jlc2VydmUoMCwgMTw8MjApOwo+
-PiArCQlwcl9pbmZvKCJSZXNlcnZpbmcgdGhlIGxvdyAxTWlCIG9mIG1lbW9yeSBmb3IgY3Jhc2hr
-ZXJuZWxcbiIpOwo+PiArCX0KPj4gK30KPj4gKwo+PiAgI2lmIGRlZmluZWQoQ09ORklHX1NNUCkg
-JiYgZGVmaW5lZChDT05GSUdfWDg2X0xPQ0FMX0FQSUMpCj4+ICAKPj4gIHN0YXRpYyB2b2lkIGtk
-dW1wX25taV9jYWxsYmFjayhpbnQgY3B1LCBzdHJ1Y3QgcHRfcmVncyAqcmVncykKPj4gZGlmZiAt
-LWdpdCBhL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQu
-Ywo+PiBpbmRleCA3ZGNlMzljOGMwMzQuLmI4YmJkMDAxN2NhOCAxMDA2NDQKPj4gLS0tIGEvYXJj
-aC94ODYvcmVhbG1vZGUvaW5pdC5jCj4+ICsrKyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYwo+
-PiBAQCAtOCw2ICs4LDcgQEAKPj4gICNpbmNsdWRlIDxhc20vcGd0YWJsZS5oPgo+PiAgI2luY2x1
-ZGUgPGFzbS9yZWFsbW9kZS5oPgo+PiAgI2luY2x1ZGUgPGFzbS90bGJmbHVzaC5oPgo+PiArI2lu
-Y2x1ZGUgPGFzbS9jcmFzaC5oPgo+PiAgCj4+ICBzdHJ1Y3QgcmVhbF9tb2RlX2hlYWRlciAqcmVh
-bF9tb2RlX2hlYWRlcjsKPj4gIHUzMiAqdHJhbXBvbGluZV9jcjRfZmVhdHVyZXM7Cj4+IEBAIC0z
-NCw2ICszNSw3IEBAIHZvaWQgX19pbml0IHJlc2VydmVfcmVhbF9tb2RlKHZvaWQpCj4+ICAKPj4g
-IAltZW1ibG9ja19yZXNlcnZlKG1lbSwgc2l6ZSk7Cj4+ICAJc2V0X3JlYWxfbW9kZV9tZW0obWVt
-KTsKPj4gKwlrZXhlY19yZXNlcnZlX2xvd18xTWlCKCk7Cj4+ICB9Cj4+ICAKPj4gIHN0YXRpYyB2
-b2lkIF9faW5pdCBzZXR1cF9yZWFsX21vZGUodm9pZCkKPj4gLS0gCj4+IDIuMTcuMQo+PgoKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 10/29/19 at 02:06pm, lijiang wrote:
+> >>  struct crash_memmap_data {
+> >> @@ -68,6 +70,19 @@ static inline void cpu_crash_vmclear_loaded_vmcss(void)
+> >>  	rcu_read_unlock();
+> >>  }
+> >>  
+> >> +/*
+> >> + * When the crashkernel option is specified, only use the low
+> >> + * 1MiB for the real mode trampoline.
+> >> + */
+> >> +void __init kexec_reserve_low_1MiB(void)
+> > 
+> > Thanks for the effort, Lianbo. I believe everyone is confident with this
+> > solution and fix.
+> > 
+> > I have a tiny concern, why the function name is
+> > kexec_reserve_low_1MiB(), but not kexec_reserve_low_1M()?
+> 
+> Thanks for your comment, Baoquan.
+> 
+> It means that kernel will reserve 1M 'Byte' memory, the function name does not
+> have special meaning.
+> 
+> Would you mind if i change it to the crash_reserve_low_1M()?
+
+Yes, crash_xx looks better since it's only related to crash dumping. As
+for 1M, not very sure, see if other people have comment about it. Anyway,
+crash_reserve_low_1M() looks good to me. Thanks.
+
+> 
+> void __init crash_reserve_low_1M(void)
+> 
+> Thanks.
+> Lianbo
+> 
+> > I searched in kernel code with below filter, didn't see MiB appearing in
+> > a function name. I am not sure about it either, just ask.
+> > 
+> > git grep "_[1-9]*M " arch/ kernel/ mm include/ drivers/ net/ init fs crypto/ certs/ ipc lib
+> > 
+> > Thanks
+> > Baoquan
+> > 
+> >> +{
+> >> +	if (cmdline_find_option(boot_command_line, "crashkernel",
+> >> +				NULL, 0) > 0) {
+> >> +		memblock_reserve(0, 1<<20);
+> >> +		pr_info("Reserving the low 1MiB of memory for crashkernel\n");
+> >> +	}
+> >> +}
+> >> +
+> >>  #if defined(CONFIG_SMP) && defined(CONFIG_X86_LOCAL_APIC)
+> >>  
+> >>  static void kdump_nmi_callback(int cpu, struct pt_regs *regs)
+> >> diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+> >> index 7dce39c8c034..b8bbd0017ca8 100644
+> >> --- a/arch/x86/realmode/init.c
+> >> +++ b/arch/x86/realmode/init.c
+> >> @@ -8,6 +8,7 @@
+> >>  #include <asm/pgtable.h>
+> >>  #include <asm/realmode.h>
+> >>  #include <asm/tlbflush.h>
+> >> +#include <asm/crash.h>
+> >>  
+> >>  struct real_mode_header *real_mode_header;
+> >>  u32 *trampoline_cr4_features;
+> >> @@ -34,6 +35,7 @@ void __init reserve_real_mode(void)
+> >>  
+> >>  	memblock_reserve(mem, size);
+> >>  	set_real_mode_mem(mem);
+> >> +	kexec_reserve_low_1MiB();
+> >>  }
+> >>  
+> >>  static void __init setup_real_mode(void)
+> >> -- 
+> >> 2.17.1
+> >>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
