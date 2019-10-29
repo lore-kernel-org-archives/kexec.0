@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iPC0V-0001gd-PV
- for kexec@lists.infradead.org; Mon, 28 Oct 2019 20:52:57 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: Makedumpfile help for 5.4.0.rc3 : Arm
-Date: Mon, 28 Oct 2019 20:49:33 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03593E47@BPXM09GP.gisp.nec.co.jp>
-References: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
- <CACi5LpM9eN7XuFRi-BapvGNSfu8GgDPTi0BRG9WT4E_nJkzwfw@mail.gmail.com>
- <B641BD39-6FA8-4382-AA04-D83CDCF5D278@oracle.com>
- <CACi5LpPRFi4BoyDp4dBDROJ48r6oZnenTJ_CE=MMefYnVnZ0ZA@mail.gmail.com>
-In-Reply-To: <CACi5LpPRFi4BoyDp4dBDROJ48r6oZnenTJ_CE=MMefYnVnZ0ZA@mail.gmail.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1iPGyi-0002tx-94
+ for kexec@lists.infradead.org; Tue, 29 Oct 2019 02:11:26 +0000
+From: Lianbo Jiang <lijiang@redhat.com>
+Subject: [PATCH 0/2 v7] x86/kdump: Fix 'kmem -s' reported an invalid
+ freepointer when SME was active
+Date: Tue, 29 Oct 2019 10:10:57 +0800
+Message-Id: <20191029021059.22070-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,50 +17,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: John Donnelly <john.p.donnelly@oracle.com>, kexec mailing list <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
 
-SGkgQmh1cGVzaCwNCg0KPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gSSBhbSB3
-b3JraW5nIG9uIHRoZSBjaGFuZ2VzIGluIHRoZSB2bWNvcmVpbmZvIGFmdGVyIHRoZSA1Mi1iaXQg
-VkENCj4gPiA+IGNoYW5nZXMgZnJvbSBTdGV2ZSB3ZXJlIGFjY2VwdGVkIGluIExpbnV4IDUuNC1y
-YzEgKCJTdXBwb3J0IGZvciA1Mi1iaXQNCj4gPiA+IHZpcnR1YWwgYWRkcmVzc2luZyBpbiBrZXJu
-ZWwgc3BhY2XigJ0pLg0KPiA+DQo+ID4NCj4gPiAgICBJIGRvbuKAmXQgc2VlIGEgY29tbWl0IHdp
-dGggdGhpcyB0aXRsZSBpbiBsaW51eC1zdGFibGUgIDsgIENvdWxkIHlvdSBiZSBhIGxpdHRsZSBt
-b3JlIHNwZWNpZmljIHdoYXQNCj4gZmlsZSAgdGhhdCB3YXMgYXBwbGllZCB0byA/DQo+IA0KPiBZ
-b3UgY2FuIGhhdmUgYSBsb29rIGF0IHRoZSBmb2xsb3dpbmcgY29tbWl0IChhbmQgZGVwZW5kZW5j
-aWVzKSBpbg0KPiBMaW51cydzIHRyZWUgKGdpdDovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGlu
-dXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQpDQo+IHdoaWNoIGludHJvZHVjZWQgNTIt
-Yml0IGtlcm5lbCBWQXMgZm9yIGFybTY0IGFyY2hpdGVjdHVyZToNCj4gDQo+IGNvbW1pdCBiNmQw
-MGQ0N2U4MWE0OWY2Y2Y0NjI1MThjMTA0MDhmMzdhM2U2Nzg1DQo+IEF1dGhvcjogU3RldmUgQ2Fw
-cGVyIDxzdGV2ZS5jYXBwZXJAYXJtLmNvbT4NCj4gRGF0ZTogICBXZWQgQXVnIDcgMTY6NTU6MjIg
-MjAxOSArMDEwMA0KPiANCj4gICAgIGFybTY0OiBtbTogSW50cm9kdWNlIDUyLWJpdCBLZXJuZWwg
-VkFzDQoNClRoYW5rIHlvdSBmb3Igd29ya2luZyBvbiB0aGlzLg0KDQpJJ3ZlIGFsc28gaGFkIGEg
-bG9vayBhdCB0aGVtLCBhbmQgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHdlIG5lZWQNCmluIHZt
-Y29yZWluZm8gYXQgbGVhc3Q6DQoNCi0gVENSX0VMMS5UMVNaIChhbG1vc3QgZXF1YWxzIHRvIHZh
-Yml0c19hY3R1YWwpIHRvIGRldGVybWluZToNCiAgbyBQQUdFX09GRlNFVA0KICBvIHdoZXRoZXIg
-dGhlIGtlcm5lbCBoYXMgdGhlICJmbGlwcGVkIiBsaW5lYXIgbWFwIGFuZCB0aGUgb3RoZXJzLg0K
-ICAgIFdlIG5lZWQgYSBmaXggdG8gX19wYSgpIHdpdGggaXQuIChzZWUgdGhlIHBhdGNoIGJlbG93
-KQ0KDQotIFBBX0JJVFMgb3IgTUFYX1BIWVNNRU1fQklUUyB0byBkZXRlcm1pbmU6DQogIG8gd2hl
-dGhlciBTUEFSU0VNRU1fRVhUUkVNRSBvciBub3QsIGluIGlzX3NwYXJzZW1lbV9leHRyZW1lKCkN
-CiAgbyB3aGV0aGVyIHRoZSBrZXJuZWwgaGFzIDQ4LWJpdCBvciA1Mi1iaXQgUEEgdG8gc3dpdGNo
-DQogICAgdGhlIGNhbGN1bGF0aW9uIG9mIHB0ZS10by1wYWRkci4gKHRoaXMgbWlnaHQgYmUgdW5u
-ZWNlc3Nhcnk/KQ0KDQpJcyB0aGlzIHJpZ2h0Pw0KDQpBbmQgd3JvdGUgYSB2ZXJ5IGRyYWZ0IHBh
-dGNoLCB3aGljaCB3b3JrcyBvbiBhIDUuNC1yYzQga2VybmVsIHRoYXQNCkkgbW9kaWZpZWQgdG8g
-aGF2ZSBOVU1CRVIodmFiaXRzX2FjdHVhbCkgYW5kIE5VTUJFUihNQVhfUEhZU01FTV9CSVRTKSwN
-CndpdGggVkFfQklUUz00OCBjb25maWcgb3IgVkFfQklUUz01MiBjb25maWcgcnVubmluZyBpbiA0
-OC1iaXQgbW9kZS4NCmh0dHBzOi8vZ2l0aHViLmNvbS9rLWhhZ2lvL21ha2VkdW1wZmlsZS9jb21t
-aXQvZmQ5ZDg2ZWEwNWIzOGU5ZWRiYjhjMGFjM2ViZDYxMmQ1ZDQ4NWRmMw0KDQooSSBkb24ndCBp
-bnRlbmQgdG8gZXhwb3J0IHRoZW0gYXMgdGhleSBhcmUsIGl0J3MganVzdCBmb3IgYW4gZXhwZXJp
-bWVudC4NCkFuZCBubyBzdXBwb3J0IGZvciAtLW1lbS11c2FnZSBvcHRpb24sICJyZWFsIiA1Mi1i
-aXQgUEEsIGFuZCBzbyBvbi4pDQoNCkFzIGZvciBNQVhfUEhZU01FTV9CSVRTLCBJIGRvbid0IHN0
-aWNrIHRvIGV4cG9ydCBpdCBmb3IgYWxsIGFyY2hpdGVjdHVyZXMsDQphbHRob3VnaCBJIHRvbGQg
-eW91IHRoYXQgaXQgd291bGQgYmUgYmV0dGVyIHRvIGRvIHNvIGluIHRoZSBwYXN0Lg0KSWYgaXQn
-cyBoYXJkIHRvIGRvIHNvLCBpdCdzIGZpbmUgd2l0aCBtZSB0byBleHBvcnQgaXQgb3Igc29tZXRo
-aW5nIHNpbWlsYXINCm9ubHkgZm9yIGFybTY0IGZvciBub3cuLg0KDQpZb3VyIHRob3VnaHRzPw0K
-DQpUaGFua3MsDQpLYXp1DQoNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+In purgatory(), the main things are as below:
+
+[1] verify sha256 hashes for various segments.
+    Lets keep these codes, and do not touch the logic.
+
+[2] copy the first 640k content to a backup region.
+    Lets safely remove it and clean all code related to backup region.
+
+This patch series will remove the backup region, because the current
+handling of copying the first 640k runs into problems when SME is
+active(https://bugzilla.kernel.org/show_bug.cgi?id=204793).
+
+The low 1MiB region will always be reserved when the crashkernel kernel
+command line option is specified. And this way makes it unnecessary to
+do anything with the low 1MiB region, because the memory allocated later
+won't fall into the low 1MiB area.
+
+This series includes two patches:
+[1] x86/kdump: always reserve the low 1MiB when the crashkernel option
+    is specified
+    The low 1MiB region will always be reserved when the crashkernel
+    kernel command line option is specified, which ensures that the
+    memory allocated later won't fall into the low 1MiB area.
+
+[2] x86/kdump: clean up all the code related to the backup region
+    Remove the backup region and clean up.
+
+Changes since v1:
+[1] Add extra checking condition: when the crashkernel option is
+    specified, reserve the low 640k area.
+
+Changes since v2:
+[1] Reserve the low 1MiB region when the crashkernel option is only
+    specified.(Suggested by Eric)
+
+[2] Remove the unused crash_copy_backup_region()
+
+[3] Remove the backup region and clean up
+
+[4] Split them into three patches
+
+Changes since v3:
+[1] Improve the first patch's log
+
+[2] Improve the third patch based on Eric's suggestions
+
+Changes since v4:
+[1] Correct some typos, and also improve the first patch's log
+
+[2] Add a new function kexec_reserve_low_1MiB() in kernel/kexec_core.c
+    and which is called by reserve_real_mode(). (Suggested by Boris)
+
+Changes since v5:
+[1] Call the cmdline_find_option() instead of strstr() to check the
+    crashkernel option. (Suggested by Hatayama)
+
+[2] Add a weak function kexec_reserve_low_1MiB() in kernel/kexec_core.c,
+    and implement the kexec_reserve_low_1MiB() in arch/x86/kernel/
+    machine_kexec_64.c so that it does not cause the compile error
+    on non-x86 kernel, and also ensures that it can work well on x86
+    kernel.
+
+Changes since v6:
+[1] Move the kexec_reserve_low_1MiB() to arch/x86/kernel/crash.c and
+    also move its declaration function to arch/x86/include/asm/crash.h
+    (Suggested by Dave Young)
+
+[2] Adjust the corresponding header files.
+
+Lianbo Jiang (2):
+  x86/kdump: always reserve the low 1MiB when the crashkernel option is
+    specified
+  x86/kdump: clean up all the code related to the backup region
+
+ arch/x86/include/asm/crash.h       |   6 ++
+ arch/x86/include/asm/kexec.h       |  10 ---
+ arch/x86/include/asm/purgatory.h   |  10 ---
+ arch/x86/kernel/crash.c            | 102 ++++++++---------------------
+ arch/x86/kernel/machine_kexec_64.c |  47 -------------
+ arch/x86/purgatory/purgatory.c     |  19 ------
+ arch/x86/realmode/init.c           |   2 +
+ 7 files changed, 34 insertions(+), 162 deletions(-)
+
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
