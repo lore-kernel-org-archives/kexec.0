@@ -1,9 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iPpkG-0001EC-J3
- for kexec@lists.infradead.org; Wed, 30 Oct 2019 15:18:50 +0000
-Subject: Re: Makedumpfile help for 5.4.0.rc3 : Arm
+ id 1iPrMT-0000en-Cc
+ for kexec@lists.infradead.org; Wed, 30 Oct 2019 17:02:23 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: Makedumpfile help for 5.4.0.rc3 : Arm
+Date: Wed, 30 Oct 2019 17:01:20 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC0359418B@BPXM09GP.gisp.nec.co.jp>
 References: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
  <CACi5LpM9eN7XuFRi-BapvGNSfu8GgDPTi0BRG9WT4E_nJkzwfw@mail.gmail.com>
  <B641BD39-6FA8-4382-AA04-D83CDCF5D278@oracle.com>
@@ -11,12 +14,10 @@ References: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
  <4AE2DC15AC0B8543882A74EA0D43DBEC03593E47@BPXM09GP.gisp.nec.co.jp>
  <CACi5LpOexc5ss6DRHOSWJeSAwwGPQ55z1XiFqenGzY1rLkzeqA@mail.gmail.com>
  <4AE2DC15AC0B8543882A74EA0D43DBEC03594125@BPXM09GP.gisp.nec.co.jp>
-From: John Donnelly <John.P.Donnelly@Oracle.com>
-Message-ID: <d913b734-3896-9211-acc3-8be21f15ed1f@Oracle.com>
-Date: Wed, 30 Oct 2019 10:18:17 -0500
-MIME-Version: 1.0
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03594125@BPXM09GP.gisp.nec.co.jp>
+ <d913b734-3896-9211-acc3-8be21f15ed1f@Oracle.com>
+In-Reply-To: <d913b734-3896-9211-acc3-8be21f15ed1f@Oracle.com>
 Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,91 +26,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: John Donnelly <John.P.Donnelly@Oracle.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>
 
-T24gMTAvMzAvMTkgMTA6MDggQU0sIEthenVoaXRvIEhhZ2lvIHdyb3RlOgo+IEhpIEJodXBlc2gs
-Cj4gCj4gT0ssIHRoYW5rcyBmb3IgbGV0dGluZyBtZSBrbm93IHRoYXQgaW4geW91ciBob2xpZGF5
-cy4gSGF2ZSBnb29kIG9uZXMuCj4gSSBqdXN0IHRob3VnaHQgdGhhdCBpdCBtaWdodCBiZSBnb29k
-IHRvIHNoYXJlIG91ciB1bmRlcnN0YW5kaW5nIGJlZm9yZQo+IHBvc3RpbmcgYSBrZXJuZWwgcGF0
-Y2ggc28gdGhhdCBJIGNhbiBkbyBzb21ldGhpbmcgdG8gc3VwcG9ydCB5b3UgaWYKPiBuZWVkIGJl
-Lgo+IAo+IAo+IEhpIEpvaG4sCj4gCj4gWW91IHNlZSB0aGF0IGVycm9yIHdpdGggbXkgdGVzdCBw
-YXRjaCwgd2hpY2ggaXMgb25seSBmb3IgdGVzdGluZyB0aG91Z2gsCj4gYXMgSSB3cm90ZSBiZWxv
-dwo+IAoKCiAgSGksCgogICAgSWYgdGhlcmUgYXJlIGNvcnJlc3BvbmRpbmcga2VybmVsIHBhdGNo
-ZXMgYmVpbmcgY29uc2lkZXJlZCB0byBtYWtlIAptYWtlZHVtcGZpbGUgd29yayAgb24gdjggYW5k
-IHY4LnggIHN5c3RlbXMgSSB3b3VsZCBiZSBpbnRlcmVzdGluZyBpbiAKdGVzdGluZyB0aG9zZSBh
-bHNvLgoKCm1ha2VkdW1wZmlsZSBzaG91bGQgYmUgYWJsZSB0byB3b3JrIHdpdGggYSB2YXJpZXR5
-IG9mIFZBYml0cyBhcyA0OCwgb3IgCjUyIHNldHRpbmdzLgoKCgo+Pj4gQW5kIHdyb3RlIGEgdmVy
-eSBkcmFmdCBwYXRjaCwgd2hpY2ggd29ya3Mgb24gYSA1LjQtcmM0IGtlcm5lbCB0aGF0Cj4+PiBJ
-IG1vZGlmaWVkIHRvIGhhdmUgTlVNQkVSKHZhYml0c19hY3R1YWwpIGFuZCBOVU1CRVIoTUFYX1BI
-WVNNRU1fQklUUyksCj4gCj4gdGhhdCBwYXRjaCByZXF1aXJlcyBhIGtlcm5lbCBmaXggdG8gaGF2
-ZSB0aGVzZSBpbiB2bWNvcmVpbmZvLgo+IERpZCB5b3UgdHJ5IGl0Pwo+IAo+IFRoYW5rcywKPiBL
-YXp1Cj4gCj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+IEhpIEthenUsCj4+Cj4+IFNv
-cnJ5IGZvciB0b3AgcG9zdGluZywgYnV0IEkgYW0gb24gbGVhdmUgZm9yIERpd2FsaSBIb2xpZGF5
-cyBhbmQgd2lsbAo+PiByZXR1cm4gdG8gdGhlIG9mZmljZSBpbiBhIGNvdXBsZSBvZiBkYXlzLgo+
-Pgo+PiBJIGhhdmUgdGhlIHNvbHV0aW9uL3BhdGNoc2V0IHJlYWR5IGFuZCBJIGp1c3QgbmVlZCB0
-byBmaW5pc2ggdGhlCj4+IGNvbW1pdCBtZXNzYWdlcyB0byBtYWtlIHN1cmUgdGhleSBhcmUgc2Vs
-Zi1leHBsYW5hdG9yeSBmb3IgdXBzdHJlYW0KPj4gYWNjZXB0YW5jZS4KPj4KPj4gSSB3aWxsIHRy
-eSB0byBwb3N0IHRoZW0gYW5kIGFsc28gYW5zd2VyIHlvdXIgZW1haWwgaW4gZGV0YWlsIHdoZW4g
-SQo+PiByZXR1cm4gYmFjayBmcm9tIGhvbGlkYXlzLgo+Pgo+PiBUaGFua3MgZm9yIHlvdXIgcGF0
-aWVuY2UuCj4+Cj4+IFJlZ2FyZHMsCj4+IEJodXBlc2gKPj4KPj4gKFNlbnQgZnJvbSBteSBBbmRy
-b2lkIFBob25lKQo+Pgo+PiBPbiBUdWUsIE9jdCAyOSwgMjAxOSBhdCAyOjIzIEFNIEthenVoaXRv
-IEhhZ2lvIDxrLWhhZ2lvQGFiLmpwLm5lYy5jb20+IHdyb3RlOgo+Pj4KPj4+IEhpIEJodXBlc2gs
-Cj4+Pgo+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+Pj4+PiBJIGFtIHdvcmtpbmcg
-b24gdGhlIGNoYW5nZXMgaW4gdGhlIHZtY29yZWluZm8gYWZ0ZXIgdGhlIDUyLWJpdCBWQQo+Pj4+
-Pj4gY2hhbmdlcyBmcm9tIFN0ZXZlIHdlcmUgYWNjZXB0ZWQgaW4gTGludXggNS40LXJjMSAoIlN1
-cHBvcnQgZm9yIDUyLWJpdAo+Pj4+Pj4gdmlydHVhbCBhZGRyZXNzaW5nIGluIGtlcm5lbCBzcGFj
-ZeKAnSkuCj4+Pj4+Cj4+Pj4+Cj4+Pj4+ICAgICBJIGRvbuKAmXQgc2VlIGEgY29tbWl0IHdpdGgg
-dGhpcyB0aXRsZSBpbiBsaW51eC1zdGFibGUgIDsgIENvdWxkIHlvdSBiZSBhIGxpdHRsZSBtb3Jl
-IHNwZWNpZmljIHdoYXQKPj4+PiBmaWxlICB0aGF0IHdhcyBhcHBsaWVkIHRvID8KPj4+Pgo+Pj4+
-IFlvdSBjYW4gaGF2ZSBhIGxvb2sgYXQgdGhlIGZvbGxvd2luZyBjb21taXQgKGFuZCBkZXBlbmRl
-bmNpZXMpIGluCj4+Pj4gTGludXMncyB0cmVlIChnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2Nt
-L2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0KQo+Pj4+IHdoaWNoIGludHJvZHVj
-ZWQgNTItYml0IGtlcm5lbCBWQXMgZm9yIGFybTY0IGFyY2hpdGVjdHVyZToKPj4+Pgo+Pj4+IGNv
-bW1pdCBiNmQwMGQ0N2U4MWE0OWY2Y2Y0NjI1MThjMTA0MDhmMzdhM2U2Nzg1Cj4+Pj4gQXV0aG9y
-OiBTdGV2ZSBDYXBwZXIgPHN0ZXZlLmNhcHBlckBhcm0uY29tPgo+Pj4+IERhdGU6ICAgV2VkIEF1
-ZyA3IDE2OjU1OjIyIDIwMTkgKzAxMDAKPj4+Pgo+Pj4+ICAgICAgYXJtNjQ6IG1tOiBJbnRyb2R1
-Y2UgNTItYml0IEtlcm5lbCBWQXMKPj4+Cj4+PiBUaGFuayB5b3UgZm9yIHdvcmtpbmcgb24gdGhp
-cy4KPj4+Cj4+PiBJJ3ZlIGFsc28gaGFkIGEgbG9vayBhdCB0aGVtLCBhbmQgbXkgdW5kZXJzdGFu
-ZGluZyBpcyB0aGF0IHdlIG5lZWQKPj4+IGluIHZtY29yZWluZm8gYXQgbGVhc3Q6Cj4+Pgo+Pj4g
-LSBUQ1JfRUwxLlQxU1ogKGFsbW9zdCBlcXVhbHMgdG8gdmFiaXRzX2FjdHVhbCkgdG8gZGV0ZXJt
-aW5lOgo+Pj4gICAgbyBQQUdFX09GRlNFVAo+Pj4gICAgbyB3aGV0aGVyIHRoZSBrZXJuZWwgaGFz
-IHRoZSAiZmxpcHBlZCIgbGluZWFyIG1hcCBhbmQgdGhlIG90aGVycy4KPj4+ICAgICAgV2UgbmVl
-ZCBhIGZpeCB0byBfX3BhKCkgd2l0aCBpdC4gKHNlZSB0aGUgcGF0Y2ggYmVsb3cpCj4+Pgo+Pj4g
-LSBQQV9CSVRTIG9yIE1BWF9QSFlTTUVNX0JJVFMgdG8gZGV0ZXJtaW5lOgo+Pj4gICAgbyB3aGV0
-aGVyIFNQQVJTRU1FTV9FWFRSRU1FIG9yIG5vdCwgaW4gaXNfc3BhcnNlbWVtX2V4dHJlbWUoKQo+
-Pj4gICAgbyB3aGV0aGVyIHRoZSBrZXJuZWwgaGFzIDQ4LWJpdCBvciA1Mi1iaXQgUEEgdG8gc3dp
-dGNoCj4+PiAgICAgIHRoZSBjYWxjdWxhdGlvbiBvZiBwdGUtdG8tcGFkZHIuICh0aGlzIG1pZ2h0
-IGJlIHVubmVjZXNzYXJ5PykKPj4+Cj4+PiBJcyB0aGlzIHJpZ2h0Pwo+Pj4KPj4+IEFuZCB3cm90
-ZSBhIHZlcnkgZHJhZnQgcGF0Y2gsIHdoaWNoIHdvcmtzIG9uIGEgNS40LXJjNCBrZXJuZWwgdGhh
-dAo+Pj4gSSBtb2RpZmllZCB0byBoYXZlIE5VTUJFUih2YWJpdHNfYWN0dWFsKSBhbmQgTlVNQkVS
-KE1BWF9QSFlTTUVNX0JJVFMpLAo+Pj4gd2l0aCBWQV9CSVRTPTQ4IGNvbmZpZyBvciBWQV9CSVRT
-PTUyIGNvbmZpZyBydW5uaW5nIGluIDQ4LWJpdCBtb2RlLgo+Pj4gaHR0cHM6Ly91cmxkZWZlbnNl
-LnByb29mcG9pbnQuY29tL3YyL3VybD91PWh0dHBzLTNBX19naXRodWIuY29tX2stMkRoYWdpb19t
-YWtlZHVtcGZpbGVfY29tbWl0X2ZkOWQ4NmVhMDViMzhlOWVkYmI4YzBhYzNlYmQ2MTJkNWQ0ODVk
-ZjMmZD1Ed0lHYVEmYz1Sb1AxWXVtQ1hDZ2FXSHZsWllSOFBaaDhCdjdxSXJNVUI2NWVhcElfSm5F
-JnI9dDJmUGc5RDg3RjdEOGptMF8zQ0c5eW9pSUtkUmc0cWNfdGhCdzRiek1oYyZtPUQzb3doQ0Zz
-SlI4WDBCaGwwVGphM0poNUJGaHZLa3VLcGlQbmo5YVpuWkUmcz1aTG51M3J2eHFhNk5QVVJtR05Z
-cENHNmcwSDl5RTNDQ2F6UU1XTzQwcU9vJmU9Cj4+Pgo+Pj4gKEkgZG9uJ3QgaW50ZW5kIHRvIGV4
-cG9ydCB0aGVtIGFzIHRoZXkgYXJlLCBpdCdzIGp1c3QgZm9yIGFuIGV4cGVyaW1lbnQuCj4+PiBB
-bmQgbm8gc3VwcG9ydCBmb3IgLS1tZW0tdXNhZ2Ugb3B0aW9uLCAicmVhbCIgNTItYml0IFBBLCBh
-bmQgc28gb24uKQo+Pj4KPj4+IEFzIGZvciBNQVhfUEhZU01FTV9CSVRTLCBJIGRvbid0IHN0aWNr
-IHRvIGV4cG9ydCBpdCBmb3IgYWxsIGFyY2hpdGVjdHVyZXMsCj4+PiBhbHRob3VnaCBJIHRvbGQg
-eW91IHRoYXQgaXQgd291bGQgYmUgYmV0dGVyIHRvIGRvIHNvIGluIHRoZSBwYXN0Lgo+Pj4gSWYg
-aXQncyBoYXJkIHRvIGRvIHNvLCBpdCdzIGZpbmUgd2l0aCBtZSB0byBleHBvcnQgaXQgb3Igc29t
-ZXRoaW5nIHNpbWlsYXIKPj4+IG9ubHkgZm9yIGFybTY0IGZvciBub3cuLgo+Pj4KPj4+IFlvdXIg
-dGhvdWdodHM/Cj4+Pgo+Pj4gVGhhbmtzLAo+Pj4gS2F6dQo+Pj4KPj4KPiAKPiBfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGtleGVjIG1haWxpbmcgbGlz
-dAo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiBodHRwczovL3VybGRlZmVuc2UucHJvb2Zw
-b2ludC5jb20vdjIvdXJsP3U9aHR0cC0zQV9fbGlzdHMuaW5mcmFkZWFkLm9yZ19tYWlsbWFuX2xp
-c3RpbmZvX2tleGVjJmQ9RHdJR2FRJmM9Um9QMVl1bUNYQ2dhV0h2bFpZUjhQWmg4QnY3cUlyTVVC
-NjVlYXBJX0puRSZyPXQyZlBnOUQ4N0Y3RDhqbTBfM0NHOXlvaUlLZFJnNHFjX3RoQnc0YnpNaGMm
-bT1EM293aENGc0pSOFgwQmhsMFRqYTNKaDVCRmh2S2t1S3BpUG5qOWFablpFJnM9SmxjREQtMzVv
-YWNkc0xiem5WdmZVM0dsOTN6cDFONTNQMlhjQzZfV2N1cyZlPQo+IAoKCi0tIApUaGFuayBZb3Us
-CkpvaG4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+> -----Original Message----- 
+>     If there are corresponding kernel patches being considered to make
+> makedumpfile work  on v8 and v8.x  systems I would be interesting in
+> testing those also.
+> 
+> 
+> makedumpfile should be able to work with a variety of VAbits as 48, or
+> 52 settings.
+
+Yes, Bhupesh will post his patches to do so.
+
+The v3 patchset that was mentioned earlier is this:
+https://lore.kernel.org/linux-arm-kernel/1553058574-18606-1-git-send-email-bhsharma@redhat.com/
+
+We have to export things that we need and arm maintainers can export
+to vmcoreinfo.
+
+Thanks,
+Kazu
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
