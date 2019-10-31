@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iQ4ed-0003VJ-PO
- for kexec@lists.infradead.org; Thu, 31 Oct 2019 07:14:03 +0000
-Date: Thu, 31 Oct 2019 08:13:45 +0100
-From: Borislav Petkov <bp@alien8.de>
+ id 1iQ6x4-0000xk-6D
+ for kexec@lists.infradead.org; Thu, 31 Oct 2019 09:41:12 +0000
 Subject: Re: [PATCH 1/2 RESEND v8] x86/kdump: always reserve the low 1M when
  the crashkernel option is specified
-Message-ID: <20191031071345.GA17248@nazgul.tnic>
 References: <20191031033517.11282-1-lijiang@redhat.com>
  <20191031033517.11282-2-lijiang@redhat.com>
+ <20191031071345.GA17248@nazgul.tnic>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <fe68b796-c483-20c4-623c-2671c52a3bf9@redhat.com>
+Date: Thu, 31 Oct 2019 17:40:35 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20191031033517.11282-2-lijiang@redhat.com>
+In-Reply-To: <20191031071345.GA17248@nazgul.tnic>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +23,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
+To: Borislav Petkov <bp@alien8.de>
 Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
 
-On Thu, Oct 31, 2019 at 11:35:16AM +0800, Lianbo Jiang wrote:
-> Kdump kernel will reuse the first 640k region because the real mode
-> trampoline has to work in this area. When the vmcore is dumped, the
-> old memory in this area may be accessed, therefore, kernel has to
-> copy the contents of the first 640k area to a backup region so that
-> kdump kernel can read the old memory from the backup area of the
-> first 640k area, which is done in the purgatory().
-> 
-> But, the current handling of copying the first 640k area runs into
-> problems when SME is enabled, kernel does not properly copy these
-> old memory to the backup area in the purgatory(), thereby, kdump
-> kernel reads out the encrypted contents, because the kdump kernel
-> must access the first kernel's memory with the encryption bit set
-> when SME is enabled in the first kernel. Please refer to this link:
-> 
-> Bugzilla: https://bugzilla.kernel.org/show_bug.cgi?id=204793
-> 
-> Finally, it causes the following errors, and the crash tool gets
-> invalid pointers when parsing the vmcore.
-> 
-> crash> kmem -s|grep -i invalid
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> kmem: dma-kmalloc-512: slab:ffffd77680001c00 invalid freepointer:a6086ac099f0c5a4
-> crash>
-> 
-> To avoid the above errors, when the crashkernel option is specified,
-> lets reserve the remaining low 1M memory(after reserving real mode
-> memory) so that the allocated memory does not fall into the low 1M
-> area, which makes us not to copy the first 640k content to a backup
-> region in purgatory(). This indicates that it does not need to be
-> included in crash dumps or used for anything except the processor
-> trampolines that must live in the low 1M.
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> Reported-by: kbuild test robot <lkp@intel.com>
-
-Please do not merge a 0day bot fix with another patch of yours which
-does not cause it in the first place. When you look at this patch alone,
-what do you think the Reported-by tag means, if anything at all?
-
-Also, it is not a "RESEND" if you change them. You can call them v8.1 or
-whatever to denote that the change is small.
-
-Also, do not send v9 or v8.1 or whatever, immediately but wait for other
-reviews. You have sent these patches 4(!) times in this week alone. How
-would you feel if I hammer your inbox with patches on a daily basis?
-
-You can read
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
-in the meantime, especially section
-
-"9) Don't get discouraged - or impatient"
-
-while waiting.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-ECO tip #101: Trim your mails when you reply.
---
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMTnlubQxMOaciDMx5pelIDE1OjEzLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IFBs
+ZWFzZSBkbyBub3QgbWVyZ2UgYSAwZGF5IGJvdCBmaXggd2l0aCBhbm90aGVyIHBhdGNoIG9mIHlv
+dXJzIHdoaWNoCj4gZG9lcyBub3QgY2F1c2UgaXQgaW4gdGhlIGZpcnN0IHBsYWNlLiBXaGVuIHlv
+dSBsb29rIGF0IHRoaXMgcGF0Y2ggYWxvbmUsCj4gd2hhdCBkbyB5b3UgdGhpbmsgdGhlIFJlcG9y
+dGVkLWJ5IHRhZyBtZWFucywgaWYgYW55dGhpbmcgYXQgYWxsPwo+IApUaGFua3MgZm9yIHlvdXIg
+c3VnZ2VzdGlvbnMuCgpNYXliZSBpdCBzaG91bGQgYmUgYSBzZXBhcmF0ZSBwYXRjaCB0byBmaXgg
+dGhlIG9sZCBjb21waWxlIHdhcm5pbmdzIGFzIGZvbGxvdy4KQW5kIGkgc2hvdWxkIHB1dCB0aGUg
+cGF0Y2ggaW50byB0aGlzIHNlcmllcy4KCgpjb21taXQgZDIwOTFkMWY0ZjY3ZjFjMzgyOTNiMGU5
+M2ZkYmZlZmE3NjY5NDBjZiAoSEVBRCAtPiBtYXN0ZXIpCkF1dGhvcjogTGlhbmJvIEppYW5nIDxs
+aWppYW5nQHJlZGhhdC5jb20+CkRhdGU6ICAgVGh1IE9jdCAzMSAxNTo0ODowMiAyMDE5ICswODAw
+CgogICAga2V4ZWM6IEZpeCBpMzg2IGJ1aWxkIHdhcm5pbmdzIHRoYXQgbWlzc2VkIGRlY2xhcmF0
+aW9uIG9mIHN0cnVjdCBraW1hZ2UKICAgIAogICAgS2J1aWxkIHRlc3Qgcm9ib3QgcmVwb3J0ZWQg
+c29tZSBidWlsZCB3YXJuaW5ncywgcGxlYXNlIHJlZmVyIHRvIHRoZQogICAgTGluayBiZWxvdyBm
+b3IgZGV0YWlscy4KICAgIAogICAgQWRkIGEgZGVjbGFyYXRpb24gb2Ygc3RydWN0IGtpbWFnZSB0
+byBmaXggdGhlc2UgY29tcGlsZSB3YXJuaW5ncy4KICAgIAogICAgRml4ZXM6IGRkNWY3MjYwNzZj
+YyAoImtleGVjOiBzdXBwb3J0IGZvciBrZXhlYyBvbiBwYW5pYyB1c2luZyBuZXcgc3lzdGVtIGNh
+bGwiKQogICAgUmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxsa3BAaW50ZWwuY29tPgog
+ICAgU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+CiAgICBM
+aW5rOiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xMC8zMC84MzMKCmRpZmYgLS1naXQgYS9h
+cmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oIGIvYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2gu
+aAppbmRleCAwYWNmNWVlNDVhMjEuLmVmNTYzOGY2NDFmMiAxMDA2NDQKLS0tIGEvYXJjaC94ODYv
+aW5jbHVkZS9hc20vY3Jhc2guaAorKysgYi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oCkBA
+IC0yLDYgKzIsOCBAQAogI2lmbmRlZiBfQVNNX1g4Nl9DUkFTSF9ICiAjZGVmaW5lIF9BU01fWDg2
+X0NSQVNIX0gKIAorc3RydWN0IGtpbWFnZTsKKwogaW50IGNyYXNoX2xvYWRfc2VnbWVudHMoc3Ry
+dWN0IGtpbWFnZSAqaW1hZ2UpOwogaW50IGNyYXNoX2NvcHlfYmFja3VwX3JlZ2lvbihzdHJ1Y3Qg
+a2ltYWdlICppbWFnZSk7CiBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtp
+bWFnZSAqaW1hZ2UsCgo+IEFsc28sIGl0IGlzIG5vdCBhICJSRVNFTkQiIGlmIHlvdSBjaGFuZ2Ug
+dGhlbS4gWW91IGNhbiBjYWxsIHRoZW0gdjguMSBvcgo+IHdoYXRldmVyIHRvIGRlbm90ZSB0aGF0
+IHRoZSBjaGFuZ2UgaXMgc21hbGwuCj4gClRoYW5rcyBmb3IgeW91ciBleHBsYW5hdGlvbiBpbiBk
+ZXRhaWwuCgo+IEFsc28sIGRvIG5vdCBzZW5kIHY5IG9yIHY4LjEgb3Igd2hhdGV2ZXIsIGltbWVk
+aWF0ZWx5IGJ1dCB3YWl0IGZvciBvdGhlcgo+IHJldmlld3MuCgpPSy4gTGV0cyB3YWl0IGEgd2Vl
+ayBvciBtb3JlLgoKPiBZb3UgaGF2ZSBzZW50IHRoZXNlIHBhdGNoZXMgNCghKSB0aW1lcyBpbiB0
+aGlzIHdlZWsgYWxvbmUuIEhvdwo+IHdvdWxkIHlvdSBmZWVsIGlmIEkgaGFtbWVyIHlvdXIgaW5i
+b3ggd2l0aCBwYXRjaGVzIG9uIGEgZGFpbHkgYmFzaXM/Cj5Qcm9iYWJseSBiZWNhdXNlIHRoZSBj
+aGFuZ2UgaXMgc21hbGwuCgpBbnl3YXksIHNvIHNvcnJ5LCBpdCBzZWVtcyBpbmNvbnNpZGVyYXRl
+LgoKPiBZb3UgY2FuIHJlYWQKPiAKPiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xh
+dGVzdC9wcm9jZXNzL3N1Ym1pdHRpbmctcGF0Y2hlcy5odG1sCj4gCj4gaW4gdGhlIG1lYW50aW1l
+LCBlc3BlY2lhbGx5IHNlY3Rpb24KPiAKPiAiOSkgRG9uJ3QgZ2V0IGRpc2NvdXJhZ2VkIC0gb3Ig
+aW1wYXRpZW50Igo+IAo+IHdoaWxlIHdhaXRpbmcuCgpPSy4gVGhhbmtzLgoKTGlhbmJvCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
