@@ -2,21 +2,26 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iQR6m-0004wV-LG
- for kexec@lists.infradead.org; Fri, 01 Nov 2019 07:12:34 +0000
-Subject: Re: [PATCH 1/2 RESEND v8] x86/kdump: always reserve the low 1M when
- the crashkernel option is specified
-References: <20191031033517.11282-1-lijiang@redhat.com>
- <20191031033517.11282-2-lijiang@redhat.com>
- <20191031071345.GA17248@nazgul.tnic>
- <fe68b796-c483-20c4-623c-2671c52a3bf9@redhat.com>
- <20191031104748.GC21133@nazgul.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <2865c4af-5630-9f42-1768-3ad5c90fe6f6@redhat.com>
-Date: Fri, 1 Nov 2019 15:12:09 +0800
+ id 1iQWMF-0006DM-GF
+ for kexec@lists.infradead.org; Fri, 01 Nov 2019 12:48:53 +0000
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com
+ [10.5.11.23])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 93233800EBA
+ for <kexec@lists.infradead.org>; Fri,  1 Nov 2019 12:48:45 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com
+ (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A15326574
+ for <kexec@lists.infradead.org>; Fri,  1 Nov 2019 12:48:45 +0000 (UTC)
+Date: Fri, 1 Nov 2019 08:48:45 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <1684529127.9771679.1572612525461.JavaMail.zimbra@redhat.com>
+In-Reply-To: <20191101014837.lxmqee5jyic7lk4d@two.firstfloor.org>
+References: <20191101014837.lxmqee5jyic7lk4d@two.firstfloor.org>
+Subject: Re: [Crash-utility] crash and makedumpfile with 5.3 missing memory
+ in	dump
 MIME-Version: 1.0
-In-Reply-To: <20191031104748.GC21133@nazgul.tnic>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,50 +30,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
+To: "Discussion list for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
+Cc: kexec@lists.infradead.org
 
-5ZyoIDIwMTnlubQxMOaciDMx5pelIDE4OjQ3LCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFRodSwgT2N0IDMxLCAyMDE5IGF0IDA1OjQwOjM1UE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IE1heWJlIGl0IHNob3VsZCBiZSBhIHNlcGFyYXRlIHBhdGNoIHRvIGZpeCB0aGUgb2xkIGNvbXBp
-bGUgd2FybmluZ3MgYXMgZm9sbG93Lgo+PiBBbmQgaSBzaG91bGQgcHV0IHRoZSBwYXRjaCBpbnRv
-IHRoaXMgc2VyaWVzLgo+IAo+IFllcywgbWF5YmUuCj4gCj4+IGNvbW1pdCBkMjA5MWQxZjRmNjdm
-MWMzODI5M2IwZTkzZmRiZmVmYTc2Njk0MGNmIChIRUFEIC0+IG1hc3RlcikKPj4gQXV0aG9yOiBM
-aWFuYm8gSmlhbmcgPGxpamlhbmdAcmVkaGF0LmNvbT4KPj4gRGF0ZTogICBUaHUgT2N0IDMxIDE1
-OjQ4OjAyIDIwMTkgKzA4MDAKPj4KPj4gICAgIGtleGVjOiBGaXggaTM4NiBidWlsZCB3YXJuaW5n
-cyB0aGF0IG1pc3NlZCBkZWNsYXJhdGlvbiBvZiBzdHJ1Y3Qga2ltYWdlCj4+ICAgICAKPj4gICAg
-IEtidWlsZCB0ZXN0IHJvYm90IHJlcG9ydGVkIHNvbWUgYnVpbGQgd2FybmluZ3MsIHBsZWFzZSBy
-ZWZlciB0byB0aGUKPj4gICAgIExpbmsgYmVsb3cgZm9yIGRldGFpbHMuCj4gCj4gRXhwbGFpbiBo
-ZXJlIHdoYXQgdGhlIHdhcm5pbmdzIGFyZSwgd2h5IHRoZXkgdHJpZ2dlciBhbmQgaG93IHlvdSdy
-ZQo+IGZpeGluZyBpdC4gSG93IGEgY29tbWl0IG1lc3NhZ2Ugc2hvdWxkIGxvb2sgbGlrZSBpcyBh
-bHNvIGV4cGxhaW5lZCBpbgo+IHRoYXQgZG9jdW1lbnQgSSBwb2ludGVkIHlvdSBhdC4KPiAKCk9L
-LCBsb29rcyBiZXR0ZXIoJ3doYXQtd2h5LWhvdycpLiBJIHdpbGwgaW1wcm92ZSB0aGUgYWJvdmUg
-bG9nLgoKPiBSZWZlcmluZyB0byBzb21lIGxpbmsgaXMgbm90IHdoYXQgd2UgZG8gaW4gY29tbWl0
-IG1lc3NhZ2VzLgo+IAo+PiAgICAgQWRkIGEgZGVjbGFyYXRpb24gb2Ygc3RydWN0IGtpbWFnZSB0
-byBmaXggdGhlc2UgY29tcGlsZSB3YXJuaW5ncy4KPj4gICAgIAo+PiAgICAgRml4ZXM6IGRkNWY3
-MjYwNzZjYyAoImtleGVjOiBzdXBwb3J0IGZvciBrZXhlYyBvbiBwYW5pYyB1c2luZyBuZXcgc3lz
-dGVtIGNhbGwiKQo+PiAgICAgUmVwb3J0ZWQtYnk6IGtidWlsZCB0ZXN0IHJvYm90IDxsa3BAaW50
-ZWwuY29tPgo+PiAgICAgU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhh
-dC5jb20+Cj4+ICAgICBMaW5rOiBodHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS8xMC8zMC84MzMK
-PiAKPiAqTkVWRVIqIHVzZSBsa21sLm9yZyBvciBhbnkgb3RoZXIgZXh0ZXJuYWwgVVJMIGZvciBy
-ZWZlcmluZyB0byBtYWlsCj4gdGhyZWFkcyBidXQgKmFsd2F5cyogdXNlIG91ciBvd24KPiAKPiBs
-a21sLmtlcm5lbC5vcmcvci88TWVzc2FnZS1JRD4KPiAKPiByZWRpcmVjdG9yLiBTZWUgb3RoZXIg
-dGlwIGNvbW1pdHMgZm9yIGFuIGV4YW1wbGUuCj4gCgpJdCdzIHVzZWZ1bCB0byBtZS4gVGhhbmtz
-LgoKPj4+IFlvdSBjYW4gcmVhZAo+Pj4KPj4+IGh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcvZG9jL2h0
-bWwvbGF0ZXN0L3Byb2Nlc3Mvc3VibWl0dGluZy1wYXRjaGVzLmh0bWwKPj4+Cj4+PiBpbiB0aGUg
-bWVhbnRpbWUsIGVzcGVjaWFsbHkgc2VjdGlvbgo+Pj4KPj4+ICI5KSBEb24ndCBnZXQgZGlzY291
-cmFnZWQgLSBvciBpbXBhdGllbnQiCj4+Pgo+Pj4gd2hpbGUgd2FpdGluZy4KPj4KPj4gT0suIFRo
-YW5rcy4KPiAKPiBBbmQgbWFrZSBzdXJlIHRvIHJlYWQgdGhhdCB3aG9sZSBkb2N1bWVudCBhbmQg
-YWxzbyBoYXZlIGEgbG9vayBhdCB0aGUKPiBwcm9jZXNzIGRvY3VtZW50Cj4gCgpJIHdpbGwgcmVh
-ZCB0aGUgYWJvdmUgZG9jdW1lbnQgY2FyZWZ1bGx5LiBCdXQgc29tZSBvZiB0aGUgcnVsZXMgaW4g
-dGhlIGRvY3VtZW50IGFyZQpzdGlsbCBlYXN5IHRvIGJlIGZvcmdvdCwgbWF5YmUgbmVlZCB0byBw
-cmFjdGljZSByZXBlYXRlZGx5LgoKPiBodHRwczovL3d3dy5rZXJuZWwub3JnL2RvYy9odG1sL2xh
-dGVzdC9wcm9jZXNzL2luZGV4Lmh0bWwKPiAKPiBzbyB0aGF0IHlvdSBjYW4gYXZvaWQgc3VjaCBt
-aXN0YWtlcyBpbiB0aGUgZnV0dXJlLgo+IAoKR29vZCBzdWdnZXN0aW9ucy4gVGhhbmsgeW91IHNv
-IG11Y2guCgpMaWFuYm8KCj4gVGh4Lgo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+
+----- Original Message -----
+> Hi,
+> 
+> [I'm not sure if that is a crash or mkdumpfile problem]
+> 
+> I'm trying to use crash to read a makedumpfile vmcore from 5.3, but I always
+> end up with an error when opening the dump.
+> 
+> I'm using the latest github crash
+> 
+> crash 7.2.7++
+> ...
+>  crash: page excluded: kernel virtual address: ffffffff82110370  type:
+>  "possible"
+>  WARNING: cannot read cpu_possible_map
+>  crash: page excluded: kernel virtual address: ffffffff82110360  type:
+>  "present"
+>  WARNING: cannot read cpu_present_map
+>  crash: page excluded: kernel virtual address: ffffffff82110368  type:
+>  "online"
+>  WARNING: cannot read cpu_online_map
+>  crash: page excluded: kernel virtual address: ffffffff82110358  type:
+>  "active"
+>  WARNING: cannot read cpu_active_map
+>  crash: page excluded: kernel virtual address: ffffffff82011544  type:
+>  "init_uts_ns"
+>  crash: page excluded: kernel virtual address: ffffffff82110360  type:
+>  "cpu_present_map"
+>  crash: page excluded: kernel virtual address: ffffffff82110360  type:
+>  "cpu_present_map"
+>  WARNING: ORC unwinder: cannot read lookup_num_blocks
+>  crash: seek error: kernel virtual address: ffff88822dffb000  type:
+>  "memory section root table"
+> 
+> The dump is created with the latest makedumpfile release
+> 
+> makedumpfile: version 1.6.6 (released on 27 Jun 2019)
+> 
+> It complains that it doesn't support the kernel
+> 
+> Any ideas?
+> 
+> -Andi
+> 
+
+Yeah, I'm not sure either.  I've tested the github crash on kernels up to 5.4-rc5,
+but only running on a live system.  Given that the errors indicate "page excluded",
+it looks like makedumpfile 1.6.6 may not cover 5.4 kernels.  The makedumpfile git
+log's master branch shows these as the last two commits:
+
+  commit 0a8b504102dbdb952b2e2e3ce15ae706165eba4e
+  Author: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+  Date:   Thu Jun 27 08:42:40 2019 -0400
+
+    [v1.6.6] Update version
+    
+    Update makedumpfile to version 1.6.6.
+    
+    Signed-off-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+
+  commit 8c21fc7e7c52a2c3e0299e50a8b37becadfa77b4
+  Author: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+  Date:   Thu Jun 13 15:32:55 2019 -0400
+
+    [PATCH] Support newer kernels up to v5.1
+    
+    A new makedumpfile supports newer kernels:
+    
+      - 4.20, 5.0, 5.1  (x86 FLATMEM)
+      - 4.20, 5.0, 5.1  (x86 SPARSEMEM)
+      - 4.20, 5.0, 5.1  (x86_64 SPARSEMEM)
+    
+    Signed-off-by: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+
+Dave
+
+
+
+
+
+
+
+> --
+> Crash-utility mailing list
+> Crash-utility@redhat.com
+> https://www.redhat.com/mailman/listinfo/crash-utility
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
