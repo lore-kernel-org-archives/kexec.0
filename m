@@ -1,19 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iQXOp-0003dw-1m
- for kexec@lists.infradead.org; Fri, 01 Nov 2019 13:55:37 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [Crash-utility] crash and makedumpfile with 5.3 missing memory
- in dump
-Date: Fri, 1 Nov 2019 13:54:30 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03594495@BPXM09GP.gisp.nec.co.jp>
-References: <20191101014837.lxmqee5jyic7lk4d@two.firstfloor.org>
- <1684529127.9771679.1572612525461.JavaMail.zimbra@redhat.com>
- <1593ae18-e75d-0023-5895-04e3bcdb1950@Oracle.com>
-In-Reply-To: <1593ae18-e75d-0023-5895-04e3bcdb1950@Oracle.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1iRc2w-0001uW-Cm
+ for kexec@lists.infradead.org; Mon, 04 Nov 2019 13:05:30 +0000
+Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id
+ xA4Ct6tC046091
+ for <kexec@lists.infradead.org>; Mon, 4 Nov 2019 08:05:22 -0500
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 2w2m00j0wt-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Mon, 04 Nov 2019 08:05:21 -0500
+Received: from localhost
+ by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <zaslonko@linux.ibm.com>;
+ Mon, 4 Nov 2019 13:05:18 -0000
+From: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+Subject: [PATCH] makedumpfile: Fix off-by-one issue in exclude_nodata_pages()
+Date: Mon,  4 Nov 2019 14:05:15 +0100
+Message-Id: <20191104130515.26741-1-zaslonko@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,73 +29,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "andi@firstfloor.org" <andi@firstfloor.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Discussion list for crash utility usage,
- maintenance and development" <crash-utility@redhat.com>
+To: kexec@lists.infradead.org
+Cc: prudo@linux.ibm.com, dyoung@redhat.com
 
-Hi,
+When building a dump bitmap (2nd bitmap) for the ELF dump, the last pfn
+of the cycle is always ignored in exclude_nodata_pages() function due to
+off-by-one error on cycle boundary check. Thus, the respective bit of
+the bitmap is never cleared.
+That can lead to the error when such a pfn should not be dumpable (e.g.
+the last pfn of the ELF-load of zero filesize). Based on the bit in the
+bitmap the page is treated as dumpable in write_elf_pages_cyclic() function
+and the follow on error is triggered in write_elf_load_segment() function
+due to the failing sanity check of paddr_to_offset2():
 
-> -----Original Message-----
-> >> I'm trying to use crash to read a makedumpfile vmcore from 5.3, but I always
-> >> end up with an error when opening the dump.
+   $ makedumpfile -E dump.elf dump.elf.E
+   Checking for memory holes                         : [100.0 %] |
+   write_elf_load_segment: Can't convert physaddr(7ffff000) to an offset.
+   makedumpfile Failed.
 
-As John mentioned, makedumpfile needs the following patch to work with
-5.3 or later correctly.  This patch is in the devel branch now.
-Please try the latest one.
-https://sourceforge.net/p/makedumpfile/code/ci/7bdb468c2c99dd780c9a5321f93c79cbfdce2527/
+Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+---
+ makedumpfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Although the commit message says that it causes makedumpfile an error,
-I saw some patterns later that makedumpfile created a broken dumpfile
-without error.
-
-(Usually I had to wrote "Required for kernel 5.3" in the commit message,
-but forgot it at that time..)
-
-Thanks,
-Kazu
-
-> >>
-> >> I'm using the latest github crash
-> >>
-> >> crash 7.2.7++
-> >> ...
-> >>   crash: page excluded: kernel virtual address: ffffffff82110370  type:
-> >>   "possible"
-> >>   WARNING: cannot read cpu_possible_map
-> >>   crash: page excluded: kernel virtual address: ffffffff82110360  type:
-> >>   "present"
-> >>   WARNING: cannot read cpu_present_map
-> >>   crash: page excluded: kernel virtual address: ffffffff82110368  type:
-> >>   "online"
-> >>   WARNING: cannot read cpu_online_map
-> >>   crash: page excluded: kernel virtual address: ffffffff82110358  type:
-> >>   "active"
-> >>   WARNING: cannot read cpu_active_map
-> >>   crash: page excluded: kernel virtual address: ffffffff82011544  type:
-> >>   "init_uts_ns"
-> >>   crash: page excluded: kernel virtual address: ffffffff82110360  type:
-> >>   "cpu_present_map"
-> >>   crash: page excluded: kernel virtual address: ffffffff82110360  type:
-> >>   "cpu_present_map"
-> >>   WARNING: ORC unwinder: cannot read lookup_num_blocks
-> >>   crash: seek error: kernel virtual address: ffff88822dffb000  type:
-> >>   "memory section root table"
-> >>
-> >> The dump is created with the latest makedumpfile release
-> >>
-> >> makedumpfile: version 1.6.6 (released on 27 Jun 2019)
-> >>
-> >> It complains that it doesn't support the kernel
-> >>
-> >> Any ideas?
-> >>
-> >> -Andi
-> >>
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index de0973f..4a00011 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -4740,7 +4740,7 @@ exclude_nodata_pages(struct cycle *cycle)
+ 		if (pfn < cycle->start_pfn)
+ 			pfn = cycle->start_pfn;
+ 		if (pfn_end >= cycle->end_pfn)
+-			pfn_end = cycle->end_pfn - 1;
++			pfn_end = cycle->end_pfn;
+ 		while (pfn < pfn_end) {
+ 			clear_bit_on_2nd_bitmap(pfn, cycle);
+ 			++pfn;
+-- 
+2.17.1
 
 
 _______________________________________________
