@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iSoEU-0007KM-NR
- for kexec@lists.infradead.org; Thu, 07 Nov 2019 20:18:22 +0000
-Date: Thu, 7 Nov 2019 15:18:11 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <651227040.10956407.1573157891163.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.7.1573156802.22483.kexec@lists.infradead.org>
-References: <mailman.7.1573156802.22483.kexec@lists.infradead.org>
-Subject: RE: makedumpfile: ELF format issues (RE: makedumpfile: Fix divide
- by zero in print_report()) (Kazuhito Hagio)
+ id 1iSoS3-0004ko-3L
+ for kexec@lists.infradead.org; Thu, 07 Nov 2019 20:32:20 +0000
+Received: by mail-lf1-f70.google.com with SMTP id a4so736394lfg.23
+ for <kexec@lists.infradead.org>; Thu, 07 Nov 2019 12:32:13 -0800 (PST)
 MIME-Version: 1.0
+References: <1C379272-3B10-432C-8A83-8F3008CEE87F@oracle.com>
+ <CACi5LpM9eN7XuFRi-BapvGNSfu8GgDPTi0BRG9WT4E_nJkzwfw@mail.gmail.com>
+ <B641BD39-6FA8-4382-AA04-D83CDCF5D278@oracle.com>
+ <CACi5LpPRFi4BoyDp4dBDROJ48r6oZnenTJ_CE=MMefYnVnZ0ZA@mail.gmail.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03593E47@BPXM09GP.gisp.nec.co.jp>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03593E47@BPXM09GP.gisp.nec.co.jp>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Fri, 8 Nov 2019 02:01:58 +0530
+Message-ID: <CACi5LpNGgMe0vchp73U8eLAYCP5OF_t890WheGdju05uJwP1Jw@mail.gmail.com>
+Subject: Re: Makedumpfile help for 5.4.0.rc3 : Arm
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,122 +25,84 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: k-hagio@ab.jp.nec.com
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: John Donnelly <john.p.donnelly@oracle.com>, kexec mailing list <kexec@lists.infradead.org>
 
-
-
------ Original Message -----
-> Date: Thu, 7 Nov 2019 16:12:06 +0000
-> From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> To: Dave Jones <davej@codemonkey.org.uk>
-> Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-> Subject: RE: makedumpfile: ELF format issues (RE: makedumpfile: Fix divide by zero in print_report())
-> Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC035949A4@BPXM09GP.gisp.nec.co.jp>
-> Content-Type: text/plain; charset="iso-2022-jp"
-> 
-> Hi,
-> 
-> > -----Original Message-----
-> > >  > > There are some other failure cases with non-null data, so maybe
-> > >  > > there's >1 bug here.
-> > >  > > I've not seen an obvious pattern to this. eg...
-> > >  > >
-> > >  > > https://pastebin.com/2uM4sBCF
-> > >  > >
-> > >  >
-> > >  > As for this case, I suspect that Elf64_Ehdr.e_phnum overflows
-> > >  > (i.e. num_loads_dumpfile > 65535):
-> > >
-> > > Oh, good catch.  These are 256GB machines, so after discarding
-> > > everything, that explains why we end up with so many sections.
-> > > This also explains why it sometimes works I think, when the discarding
-> > > manages to get the total nr headers <64k.
-> 
-> I also could reproduce this issue on a system with 192GB memory.
-> The note was actually overwritten by the following program headers.
-> -----
-> num_loads_dumpfile=76318                # more than 64k
-> ehdr64.e_phnum=10783                    # overflowed
-> note.p_offset=0x93708 .p_filesz=0x2958  # The note data is at 0x93708
-> note cd_header->offset=0x40
-> ...
->     head->off=     90040 load.p_addr= 44552e000 .p_off=  ed270060 ...
->                    ^^^^^ # these headers overwrote the note data.
->     head->off=     a0040 load.p_addr= 445630000 .p_off=  ed272060 ...
-> ...
-> The dumpfile is saved to dump.Ed25.devel.
-> 
-> makedumpfile Completed.
-> 
-> # readelf -a dump.Ed25.devel
-> ...
->   Number of program headers:         10783
-> ...
-> Displaying notes found at file offset 0x00093708 with length 0x00002958:
->   Owner                 Data size       Description
->                        0x00000007       Unknown note type: (0xdbce6060)
->    description data: 00 00 7a 39 fffffff2 ffffff8a ffffffff
-> # ../crash vmlinux dump.Ed25.devel
-> 
-> WARNING: possibly corrupt Elf64_Nhdr: n_namesz: 4185522176 n_descsz: 3
-> n_type: f4000
-> ...
-> WARNING: cannot read linux_banner string
-> crash: vmlinux and dump.Ed25.devel do not match!
-> -----
-> 
-> > I think this will be the one of the causes, and had a look at how
-> > we can fix it.  If you get a vmcore where this pattern occurs,
-> > you can try this tree:
-> > https://github.com/k-hagio/makedumpfile/tree/support-extended-elf
-> > 
-> > Then, the crash utility also needs a patch to support a dumpfile
-> > that has more than 64k program headers:
-> > https://github.com/k-hagio/crash/tree/support-extended-elf
-> 
-> These trees look to work well, though need more tests and tweaks.
-> -----
-> # readelf -a dump.Ed25.test
-> ...
->   Number of program headers:         65535 (76319)  <<-- note + loads
-> ...
-> Displaying notes found at file offset 0x00413748 with length 0x00002958:
->   Owner                 Data size       Description
->   CORE                 0x00000150       NT_PRSTATUS (prstatus structure)
->   CORE                 0x00000150       NT_PRSTATUS (prstatus structure)
->   CORE                 0x00000150       NT_PRSTATUS (prstatus structure)
-> ...
-> # ../crash-test vmlinux dump.Ed25.test
-> 
-> crash-test> help -D
-> vmcore_data:
->                   flags: c0 (KDUMP_LOCAL|KDUMP_ELF64)
->                    ndfd: 3
->                     ofp: 3141560
->             header_size: 4284576
->    num_pt_load_segments: 76318   <<-- loads
->      pt_load_segment[0]:
-> -----
-> 
-> It is possible that the issue occurs on general systems if they have
-> large memory, so I'm going to proceed with those patches.
-
-Hi Kazu,
-
-Do you want me to go ahead with the crash utility patch?  It looks
-safe enough to apply, and I did test it to make sure there were no
-ill-effects with sample ELF dumpfiles.
-
-Thanks,
-  Dave
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgS2F6dSwKClNvcnJ5IEkgaGFkIGEgbG90IG9mIGJhY2stbG9nIHRvIGNsZWFyIGFmdGVyIEkg
+cmV0dXJuZWQgZnJvbSBteQpob2xpZGF5cyBhbmQganVzdCBnb3QgdG8gYW5zd2VyaW5nIHRoaXMg
+bm93LgoKT24gVHVlLCBPY3QgMjksIDIwMTkgYXQgMjoyMyBBTSBLYXp1aGl0byBIYWdpbyA8ay1o
+YWdpb0BhYi5qcC5uZWMuY29tPiB3cm90ZToKPgo+IEhpIEJodXBlc2gsCj4KPiA+IC0tLS0tT3Jp
+Z2luYWwgTWVzc2FnZS0tLS0tCj4gPiA+ID4gSSBhbSB3b3JraW5nIG9uIHRoZSBjaGFuZ2VzIGlu
+IHRoZSB2bWNvcmVpbmZvIGFmdGVyIHRoZSA1Mi1iaXQgVkEKPiA+ID4gPiBjaGFuZ2VzIGZyb20g
+U3RldmUgd2VyZSBhY2NlcHRlZCBpbiBMaW51eCA1LjQtcmMxICgiU3VwcG9ydCBmb3IgNTItYml0
+Cj4gPiA+ID4gdmlydHVhbCBhZGRyZXNzaW5nIGluIGtlcm5lbCBzcGFjZeKAnSkuCj4gPiA+Cj4g
+PiA+Cj4gPiA+ICAgIEkgZG9u4oCZdCBzZWUgYSBjb21taXQgd2l0aCB0aGlzIHRpdGxlIGluIGxp
+bnV4LXN0YWJsZSAgOyAgQ291bGQgeW91IGJlIGEgbGl0dGxlIG1vcmUgc3BlY2lmaWMgd2hhdAo+
+ID4gZmlsZSAgdGhhdCB3YXMgYXBwbGllZCB0byA/Cj4gPgo+ID4gWW91IGNhbiBoYXZlIGEgbG9v
+ayBhdCB0aGUgZm9sbG93aW5nIGNvbW1pdCAoYW5kIGRlcGVuZGVuY2llcykgaW4KPiA+IExpbnVz
+J3MgdHJlZSAoZ2l0Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3Rv
+cnZhbGRzL2xpbnV4LmdpdCkKPiA+IHdoaWNoIGludHJvZHVjZWQgNTItYml0IGtlcm5lbCBWQXMg
+Zm9yIGFybTY0IGFyY2hpdGVjdHVyZToKPiA+Cj4gPiBjb21taXQgYjZkMDBkNDdlODFhNDlmNmNm
+NDYyNTE4YzEwNDA4ZjM3YTNlNjc4NQo+ID4gQXV0aG9yOiBTdGV2ZSBDYXBwZXIgPHN0ZXZlLmNh
+cHBlckBhcm0uY29tPgo+ID4gRGF0ZTogICBXZWQgQXVnIDcgMTY6NTU6MjIgMjAxOSArMDEwMAo+
+ID4KPiA+ICAgICBhcm02NDogbW06IEludHJvZHVjZSA1Mi1iaXQgS2VybmVsIFZBcwo+Cj4gVGhh
+bmsgeW91IGZvciB3b3JraW5nIG9uIHRoaXMuCj4KPiBJJ3ZlIGFsc28gaGFkIGEgbG9vayBhdCB0
+aGVtLCBhbmQgbXkgdW5kZXJzdGFuZGluZyBpcyB0aGF0IHdlIG5lZWQKPiBpbiB2bWNvcmVpbmZv
+IGF0IGxlYXN0Ogo+Cj4gLSBUQ1JfRUwxLlQxU1ogKGFsbW9zdCBlcXVhbHMgdG8gdmFiaXRzX2Fj
+dHVhbCkgdG8gZGV0ZXJtaW5lOgo+ICAgbyBQQUdFX09GRlNFVAoKSW5kZWVkLiBUaGVyZSBhcmUg
+c2V2ZXJhbCBzbWFsbCBsaXR0bGUgY2hhbmdlcyB3ZSBuZWVkOgoKRm9yIG5vdyBmb3IgQVJNdjgu
+Miwgd2UgbmVlZCB0byBleHBvcnQgVENSX0VMMS5UMVNaICh3aGljaCBpbmRpY2F0ZXMKdGhlIHZh
+Yml0c19hY3R1YWwpLiBJdCB3aWxsIGJlIHVzZWZ1bCBmb3IgQVJNdjguMwpwb2ludGVyLWF1dGhl
+bnRpY2F0aW9uIHN0dWZmIGFzIHdlbGwgKGJ1dCBJIHdpbGwgc2VuZCBpdCBvdXQgbGF0ZXIgYXMK
+YSBzZXBhcmF0ZSBwYXRjaHNldCkuCgpUaGUgQVJNIG1haW50YWluZXJzIHN1Z2dlc3QgdG8gZXhw
+b3J0IFRDUl9FTDEuVDBTWiBhcyB3ZWxsIChmb3IKaGVscGluZyB3aXRoIDUyLWJpdCB1c2VyLXNw
+YWNlIFZBIGFwcGxpY2F0aW9ucyB3b3JraW5nIG9uIG9sZGVyIDQ4LWJpdApWQSBrZXJuZWwpLCBi
+dXQgYWdhaW4gSSB0aGluayBpdCB3b3VsZCBiZSBhIHNlcGFyYXRlIChpZiBzdWNoIGEKdXNlLWNh
+c2UgYXJpc2VzKSBwYXRjaC4gSSBhbSB0cnlpbmcgdG8gdW5kZXJzdGFuZCBmcm9tIGZlZG9yYSBh
+cm02NAp1c2VycyBpZiB0aGV5IHJlYWxseSBoYXZlIHN1Y2ggdXNlLWNhc2VzIHByZXNlbnRseS4K
+Cj4gICBvIHdoZXRoZXIgdGhlIGtlcm5lbCBoYXMgdGhlICJmbGlwcGVkIiBsaW5lYXIgbWFwIGFu
+ZCB0aGUgb3RoZXJzLgo+ICAgICBXZSBuZWVkIGEgZml4IHRvIF9fcGEoKSB3aXRoIGl0LiAoc2Vl
+IHRoZSBwYXRjaCBiZWxvdykKPgo+IC0gUEFfQklUUyBvciBNQVhfUEhZU01FTV9CSVRTIHRvIGRl
+dGVybWluZToKPiAgIG8gd2hldGhlciBTUEFSU0VNRU1fRVhUUkVNRSBvciBub3QsIGluIGlzX3Nw
+YXJzZW1lbV9leHRyZW1lKCkKPiAgIG8gd2hldGhlciB0aGUga2VybmVsIGhhcyA0OC1iaXQgb3Ig
+NTItYml0IFBBIHRvIHN3aXRjaAo+ICAgICB0aGUgY2FsY3VsYXRpb24gb2YgcHRlLXRvLXBhZGRy
+LiAodGhpcyBtaWdodCBiZSB1bm5lY2Vzc2FyeT8pCj4KPiBJcyB0aGlzIHJpZ2h0PwoKSW5kZWVk
+LgoKPiBBbmQgd3JvdGUgYSB2ZXJ5IGRyYWZ0IHBhdGNoLCB3aGljaCB3b3JrcyBvbiBhIDUuNC1y
+YzQga2VybmVsIHRoYXQKPiBJIG1vZGlmaWVkIHRvIGhhdmUgTlVNQkVSKHZhYml0c19hY3R1YWwp
+IGFuZCBOVU1CRVIoTUFYX1BIWVNNRU1fQklUUyksCj4gd2l0aCBWQV9CSVRTPTQ4IGNvbmZpZyBv
+ciBWQV9CSVRTPTUyIGNvbmZpZyBydW5uaW5nIGluIDQ4LWJpdCBtb2RlLgo+IGh0dHBzOi8vZ2l0
+aHViLmNvbS9rLWhhZ2lvL21ha2VkdW1wZmlsZS9jb21taXQvZmQ5ZDg2ZWEwNWIzOGU5ZWRiYjhj
+MGFjM2ViZDYxMmQ1ZDQ4NWRmMwo+Cj4gKEkgZG9uJ3QgaW50ZW5kIHRvIGV4cG9ydCB0aGVtIGFz
+IHRoZXkgYXJlLCBpdCdzIGp1c3QgZm9yIGFuIGV4cGVyaW1lbnQuCj4gQW5kIG5vIHN1cHBvcnQg
+Zm9yIC0tbWVtLXVzYWdlIG9wdGlvbiwgInJlYWwiIDUyLWJpdCBQQSwgYW5kIHNvIG9uLikKPgo+
+IEFzIGZvciBNQVhfUEhZU01FTV9CSVRTLCBJIGRvbid0IHN0aWNrIHRvIGV4cG9ydCBpdCBmb3Ig
+YWxsIGFyY2hpdGVjdHVyZXMsCj4gYWx0aG91Z2ggSSB0b2xkIHlvdSB0aGF0IGl0IHdvdWxkIGJl
+IGJldHRlciB0byBkbyBzbyBpbiB0aGUgcGFzdC4KPiBJZiBpdCdzIGhhcmQgdG8gZG8gc28sIGl0
+J3MgZmluZSB3aXRoIG1lIHRvIGV4cG9ydCBpdCBvciBzb21ldGhpbmcgc2ltaWxhcgo+IG9ubHkg
+Zm9yIGFybTY0IGZvciBub3cuLgoKVGhhbmtzIGZvciB3b3JraW5nIG9uIHRoZSBjaGFuZ2VzLiBJ
+IHRoaW5rIHRoZSBtYWtlZHVtcGZpbGUgY2hhbmdlcwphcmUgcXVpdGUgc2ltcGxlciAob3RoZXIg
+dGhhbiB0aGUgLS1tZW0tdXNhZ2Ugb3B0aW9uIHdoaWNoIG1pZ2h0IGJlCmJyb2tlbiBmb3IgdGhl
+IDFzdCByb3VuZCBvZiA1Mi1iaXQgY2hhbmdlcyksIGJ1dCB0aGUga2VybmVsIHBhdGNoZXMKd291
+bGQgbmVlZCBkaXNjdXNzaW9uIGFuZCBjbG9zdXJlIHdpdGggQVJNIG1haW50YWluZXJzLgoKSSBo
+YXZlIGFscmVhZHkgc2VudCBvdXQgYSBjbGVhbnVwIHBhdGNoCjxodHRwczovL2xvcmUua2VybmVs
+Lm9yZy9saW51eC1hcm0ta2VybmVsLzE1NzI5MDQ2MDYtMjc5NjEtMS1naXQtc2VuZC1lbWFpbC1i
+aHNoYXJtYUByZWRoYXQuY29tLz4sCndoaWNoIGhhcyBiZWVuIHF1ZXVlZCBmb3IgNS41LCBhcyB0
+aGVyZSBpcyBubyBsb25nZXIgYW55IHNjZW5hcmlvCndoZXJlIHVzZXIgVkEgIT0ga2VybmVsIFZB
+IHNpemUgZnJvbSBhIGtlcm5lbCBjb25maWd1cmF0aW9uIHAtby12LgoKSSBhbSBkaXNjdXNzaW5n
+IGFub3RoZXIgZml4LXVwIHBhdGNoIHdpdGggdGhlIEFSTSBtYWludGFpbmVycyAod2hpY2gKdGhl
+eSBiZWxpZXZlIG5lZWRzIG1vcmUgdGVzdGluZykgZm9yIHRoZSA1Mi1iaXQgVkEgY2hhbmdlcyBp
+biB0aGUKa2VybmVsIGZvciBhbiBpc3N1ZSBJIGFtIHNlZWluZyBvbiBteSBib2FyZC4gU28sIEkg
+d2lsbCBrZWVwCndvcmtpbmcvZGVidWdnaW5nIG9uIHRoaXMgZm9yIG5vdy4KCk15IGN1cnJlbnQg
+Y291cnNlIG9mIGFjdGlvbiBpcyB0byBzZW5kIGF0IGxlYXN0IHRoZSBmb2xsb3dpbmcgdHdvCnBh
+dGNoZXMgZm9yIGV4cG9ydGluZzoKLSBUQ1JfRUwxLlQxU1ogaW4gdm1jb3JlaW5mbyAoZm9yIEFS
+TTY0IEFSQ0gpLAotIGNyYXNoX2NvcmUsIHZtY29yZWluZm86IEFwcGVuZCAnTUFYX1BIWVNNRU1f
+QklUUycgdG8gdm1jb3JlaW5mbyAoZm9yCmFsbCBBUkNIcykuCgpTdWJzZXF1ZW50bHkgSSB3aWxs
+IHNlbmQgdGhlIG1ha2VkdW1wZmlsZSBwYXRjaGVzIGFzIHdlbGwuCgpJIHdpbGwgQ2MgeW91IGFu
+ZCBKb2huIHRvIHRoZSBzYW1lLgoKUmVnYXJkcywKQmh1cGVzaAoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
