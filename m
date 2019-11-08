@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iT08q-0004nC-MO
- for kexec@lists.infradead.org; Fri, 08 Nov 2019 09:01:21 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH 3/3 v9] kexec: Fix i386 build warnings that missed declaration
- of struct kimage
-Date: Fri,  8 Nov 2019 17:00:27 +0800
-Message-Id: <20191108090027.11082-4-lijiang@redhat.com>
-In-Reply-To: <20191108090027.11082-1-lijiang@redhat.com>
-References: <20191108090027.11082-1-lijiang@redhat.com>
+ id 1iT71M-0003fN-6D
+ for kexec@lists.infradead.org; Fri, 08 Nov 2019 16:22:01 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: makedumpfile: ELF format issues
+Date: Fri, 8 Nov 2019 16:19:11 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03594B01@BPXM09GP.gisp.nec.co.jp>
+Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +17,44 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, dhowells@redhat.com, mingo@redhat.com, bp@alien8.de, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
+To: Dave Anderson <anderson@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Kbuild test robot reported some build warnings as follow:
+Hi Dave,
 
-arch/x86/include/asm/crash.h:5:32: warning: 'struct kimage' declared
-inside parameter list will not be visible outside of this definition
-or declaration
-    int crash_load_segments(struct kimage *image);
-                                   ^~~~~~
-    int crash_copy_backup_region(struct kimage *image);
-                                        ^~~~~~
-    int crash_setup_memmap_entries(struct kimage *image,
-                                          ^~~~~~
-The 'struct kimage' is defined in the header file include/linux/kexec.h,
-before using it, need to include its header file or make a declaration.
-Otherwise the above warnings may be triggered.
+> -----Original Message-----
+> > > It is possible that the issue occurs on general systems if they have
+> > > large memory, so I'm going to proceed with those patches.
+> >
+> > Hi Kazu,
+> >
+> > Do you want me to go ahead with the crash utility patch?  It looks
+> > safe enough to apply, and I did test it to make sure there were no
+> > ill-effects with sample ELF dumpfiles.
+> 
+> Oh, thank you for your attention and testing.
+> 
+> I'm dropping the ELF32 parts of them, because I think they will not be
+> used in the future.  (I estimate the theoretical minimum memory size
+> that makedumpfile could use the extended numbering is 64GB+256MB on
+> 4k page system.)
 
-Add a declaration of struct kimage to the file arch/x86/include/asm/
-crash.h, that will solve these compile warnings.
+I dropped the ELF32 part from the crash patch, could you check this?
+https://github.com/k-hagio/crash/tree/support-extended-elf.v2
 
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Reported-by: kbuild test robot <lkp@intel.com>
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-Link: https://lkml.kernel.org/r/201910310233.EJRtTMWP%25lkp@intel.com
----
- arch/x86/include/asm/crash.h | 2 ++
- 1 file changed, 2 insertions(+)
+This is for makedumpfile:
+https://github.com/k-hagio/makedumpfile/tree/support-extended-elf.v2
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index 3dff55f4ed9d..88eadd08ad70 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -2,6 +2,8 @@
- #ifndef _ASM_X86_CRASH_H
- #define _ASM_X86_CRASH_H
- 
-+struct kimage;
-+
- int crash_load_segments(struct kimage *image);
- int crash_copy_backup_region(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
--- 
-2.17.1
+I will post the updated makedumpfile patch later for public review,
+and would like to apply it next week.
+
+Thanks,
+Kazu
+
 
 
 _______________________________________________
