@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iU4g7-0003bQ-3Z
- for kexec@lists.infradead.org; Mon, 11 Nov 2019 08:04:05 +0000
-Received: by mail-pg1-f199.google.com with SMTP id 11so11345593pgm.23
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2019 00:01:45 -0800 (PST)
+ id 1iU4g7-0003bS-9d
+ for kexec@lists.infradead.org; Mon, 11 Nov 2019 08:04:07 +0000
+Received: by mail-pl1-f199.google.com with SMTP id x9so10126242plv.2
+ for <kexec@lists.infradead.org>; Mon, 11 Nov 2019 00:01:36 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v4 1/3] crash_core,
- vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-Date: Mon, 11 Nov 2019 13:31:20 +0530
-Message-Id: <1573459282-26989-2-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
-References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for
+ arm64 and MAX_PHYSMEM_BITS for all archs)
+Date: Mon, 11 Nov 2019 13:31:19 +0530
+Message-Id: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,39 +25,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, James Morse <james.morse@arm.com>, linux-arm-kernel@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>, Dave Anderson <anderson@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, bhsharma@redhat.com, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Steve Capper <steve.capper@arm.com>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org
 
-Right now user-space tools like 'makedumpfile' and 'crash' need to rely
-on a best-guess method of determining value of 'MAX_PHYSMEM_BITS'
-supported by underlying kernel.
+Changes since v3:
+----------------
+- v3 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+- Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+  instead of PTRS_PER_PGD.
+- Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+  'Documentation/arm64/memory.rst'
 
-This value is used in user-space code to calculate the bit-space
-required to store a section for SPARESMEM (similar to the existing
-calculation method used in the kernel implementation):
+Changes since v2:
+----------------
+- v2 can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+- Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+  ifdef sections, as suggested by Kazu.
+- Updated vmcoreinfo documentation to add description about
+  'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
 
-  #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+Changes since v1:
+----------------
+- v1 was sent out as a single patch which can be seen here:
+  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
 
-Now, regressions have been reported in user-space utilities
-like 'makedumpfile' and 'crash' on arm64, with the recently added
-kernel support for 52-bit physical address space, as there is
-no clear method of determining this value in user-space
-(other than reading kernel CONFIG flags).
+- v2 breaks the single patch into two independent patches:
+  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
 
-As per suggestion from makedumpfile maintainer (Kazu), it makes more
-sense to append 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself
-rather than in arch-specific code, so that the user-space code for other
-archs can also benefit from this addition to the vmcoreinfo and use it
-as a standard way of determining 'SECTIONS_SHIFT' value in user-land.
+This patchset primarily fixes the regression reported in user-space
+utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+with the availability of 52-bit address space feature in underlying
+kernel. These regressions have been reported both on CPUs which don't
+support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+and also on prototype platforms (like ARMv8 FVP simulator model) which
+support ARMv8.2 extensions and are running newer kernels.
 
-A reference 'makedumpfile' implementation which reads the
-'MAX_PHYSMEM_BITS' value from vmcoreinfo in a arch-independent fashion
-is available here:
+The reason for these regressions is that right now user-space tools
+have no direct access to these values (since these are not exported
+from the kernel) and hence need to rely on a best-guess method of
+determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+by underlying kernel.
 
-[0]. https://github.com/bhupesh-sharma/makedumpfile/blob/remove-max-phys-mem-bit-v1/arch/ppc64.c#L471
+Exporting these values via vmcoreinfo will help user-land in such cases.
+In addition, as per suggestion from makedumpfile maintainer (Kazu),
+it makes more sense to append 'MAX_PHYSMEM_BITS' to
+vmcoreinfo in the core code itself rather than in arm64 arch-specific
+code, so that the user-space code for other archs can also benefit from
+this addition to the vmcoreinfo and use it as a standard way of
+determining 'SECTIONS_SHIFT' value in user-land.
 
 Cc: Boris Petkov <bp@alien8.de>
 Cc: Ingo Molnar <mingo@kernel.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: James Morse <james.morse@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Will Deacon <will@kernel.org>
@@ -75,24 +95,20 @@ Cc: x86@kernel.org
 Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
 Cc: kexec@lists.infradead.org
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- kernel/crash_core.c | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 9f1557b98468..18175687133a 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -413,6 +413,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-+	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
- #endif
- 	VMCOREINFO_STRUCT_SIZE(page);
- 	VMCOREINFO_STRUCT_SIZE(pglist_data);
+Bhupesh Sharma (3):
+  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+  arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+  Documentation/arm64: Fix a simple typo in memory.rst
+
+ Documentation/arm64/memory.rst         | 2 +-
+ arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+ arch/arm64/kernel/crash_core.c         | 9 +++++++++
+ kernel/crash_core.c                    | 1 +
+ 4 files changed, 12 insertions(+), 1 deletion(-)
+
 -- 
 2.7.4
 
