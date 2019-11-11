@@ -2,15 +2,14 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iU4g7-0003bS-9d
- for kexec@lists.infradead.org; Mon, 11 Nov 2019 08:04:07 +0000
-Received: by mail-pl1-f199.google.com with SMTP id x9so10126242plv.2
- for <kexec@lists.infradead.org>; Mon, 11 Nov 2019 00:01:36 -0800 (PST)
+ id 1iU4h0-0004E0-78
+ for kexec@lists.infradead.org; Mon, 11 Nov 2019 08:04:59 +0000
+Received: by mail-pl1-f197.google.com with SMTP id v2so10113441plp.14
+ for <kexec@lists.infradead.org>; Mon, 11 Nov 2019 00:04:52 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ for
- arm64 and MAX_PHYSMEM_BITS for all archs)
-Date: Mon, 11 Nov 2019 13:31:19 +0530
-Message-Id: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
+Subject: [PATCH v4 2/3] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+Date: Mon, 11 Nov 2019 13:34:44 +0530
+Message-Id: <1573459485-27219-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,90 +24,90 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, bhsharma@redhat.com, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, linux-arm-kernel@lists.infradead.org, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Steve Capper <steve.capper@arm.com>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-Changes since v3:
-----------------
-- v3 can be seen here:
-  http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
-- Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
-  instead of PTRS_PER_PGD.
-- Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
-  'Documentation/arm64/memory.rst'
+vabits_actual variable on arm64 indicates the actual VA space size,
+and allows a single binary to support both 48-bit and 52-bit VA
+spaces.
 
-Changes since v2:
-----------------
-- v2 can be seen here:
-  http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
-- Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
-  ifdef sections, as suggested by Kazu.
-- Updated vmcoreinfo documentation to add description about
-  'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+If the ARMv8.2-LVA optional feature is present, and we are running
+with a 64KB page size; then it is possible to use 52-bits of address
+space for both userspace and kernel addresses. However, any kernel
+binary that supports 52-bit must also be able to fall back to 48-bit
+at early boot time if the hardware feature is not present.
 
-Changes since v1:
-----------------
-- v1 was sent out as a single patch which can be seen here:
-  http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+Since TCR_EL1.T1SZ indicates the size offset of the memory region
+addressed by TTBR1_EL1 (and hence can be used for determining the
+vabits_actual value) it makes more sense to export the same in
+vmcoreinfo rather than vabits_actual variable, as the name of the
+variable can change in future kernel versions, but the architectural
+constructs like TCR_EL1.T1SZ can be used better to indicate intended
+specific fields to user-space.
 
-- v2 breaks the single patch into two independent patches:
-  [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
-  [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+User-space utilities like makedumpfile and crash-utility, need to
+read/write this value from/to vmcoreinfo for determining if a virtual
+address lies in the linear map range.
 
-This patchset primarily fixes the regression reported in user-space
-utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
-with the availability of 52-bit address space feature in underlying
-kernel. These regressions have been reported both on CPUs which don't
-support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
-and also on prototype platforms (like ARMv8 FVP simulator model) which
-support ARMv8.2 extensions and are running newer kernels.
+The user-space computation for determining whether an address lies in
+the linear map range is the same as we have in kernel-space:
 
-The reason for these regressions is that right now user-space tools
-have no direct access to these values (since these are not exported
-from the kernel) and hence need to rely on a best-guess method of
-determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
-by underlying kernel.
+  #define __is_lm_address(addr)	(!(((u64)addr) & BIT(vabits_actual - 1)))
 
-Exporting these values via vmcoreinfo will help user-land in such cases.
-In addition, as per suggestion from makedumpfile maintainer (Kazu),
-it makes more sense to append 'MAX_PHYSMEM_BITS' to
-vmcoreinfo in the core code itself rather than in arm64 arch-specific
-code, so that the user-space code for other archs can also benefit from
-this addition to the vmcoreinfo and use it as a standard way of
-determining 'SECTIONS_SHIFT' value in user-land.
-
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jonathan Corbet <corbet@lwn.net>
 Cc: James Morse <james.morse@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: Steve Capper <steve.capper@arm.com>
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
 Cc: Dave Anderson <anderson@redhat.com>
 Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: x86@kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
 Cc: kexec@lists.infradead.org
-
-Bhupesh Sharma (3):
-  crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-  arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
-  Documentation/arm64: Fix a simple typo in memory.rst
-
- Documentation/arm64/memory.rst         | 2 +-
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
  arch/arm64/kernel/crash_core.c         | 9 +++++++++
- kernel/crash_core.c                    | 1 +
- 4 files changed, 12 insertions(+), 1 deletion(-)
+ 2 files changed, 10 insertions(+)
 
+diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+index d9fbd433cc17..d2e7aff5821e 100644
+--- a/arch/arm64/include/asm/pgtable-hwdef.h
++++ b/arch/arm64/include/asm/pgtable-hwdef.h
+@@ -215,6 +215,7 @@
+ #define TCR_TxSZ(x)		(TCR_T0SZ(x) | TCR_T1SZ(x))
+ #define TCR_TxSZ_WIDTH		6
+ #define TCR_T0SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T0SZ_OFFSET)
++#define TCR_T1SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T1SZ_OFFSET)
+ 
+ #define TCR_EPD0_SHIFT		7
+ #define TCR_EPD0_MASK		(UL(1) << TCR_EPD0_SHIFT)
+diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+index ca4c3e12d8c5..f78310ba65ea 100644
+--- a/arch/arm64/kernel/crash_core.c
++++ b/arch/arm64/kernel/crash_core.c
+@@ -7,6 +7,13 @@
+ #include <linux/crash_core.h>
+ #include <asm/memory.h>
+ 
++static inline u64 get_tcr_el1_t1sz(void);
++
++static inline u64 get_tcr_el1_t1sz(void)
++{
++	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
++}
++
+ void arch_crash_save_vmcoreinfo(void)
+ {
+ 	VMCOREINFO_NUMBER(VA_BITS);
+@@ -15,5 +22,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 						kimage_voffset);
+ 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+ 						PHYS_OFFSET);
++	vmcoreinfo_append_str("NUMBER(tcr_el1_t1sz)=0x%llx\n",
++						get_tcr_el1_t1sz());
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+ }
 -- 
 2.7.4
 
