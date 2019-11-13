@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iUhvy-0008LA-Nu
- for kexec@lists.infradead.org; Wed, 13 Nov 2019 01:59:04 +0000
+ id 1iUhy8-0002N7-Mb
+ for kexec@lists.infradead.org; Wed, 13 Nov 2019 02:01:18 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 095/115] x86/kexec: Correct KEXEC_BACKUP_SRC_END
+Subject: [PATCH AUTOSEL 4.9 58/68] x86/kexec: Correct KEXEC_BACKUP_SRC_END
  off-by-one error
-Date: Tue, 12 Nov 2019 20:56:02 -0500
-Message-Id: <20191113015622.11592-95-sashal@kernel.org>
-In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
-References: <20191113015622.11592-1-sashal@kernel.org>
+Date: Tue, 12 Nov 2019 20:59:22 -0500
+Message-Id: <20191113015932.12655-58-sashal@kernel.org>
+In-Reply-To: <20191113015932.12655-1-sashal@kernel.org>
+References: <20191113015932.12655-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -73,10 +73,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa71..5125fca472bb0 100644
+index 282630e4c6ea4..1624a7ffa95d8 100644
 --- a/arch/x86/include/asm/kexec.h
 +++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
+@@ -66,7 +66,7 @@ struct kimage;
  
  /* Memory to backup during crash kdump */
  #define KEXEC_BACKUP_SRC_START	(0UL)
