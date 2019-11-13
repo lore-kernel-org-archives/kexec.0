@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iUhsT-0006Vy-Ai
- for kexec@lists.infradead.org; Wed, 13 Nov 2019 01:55:27 +0000
+ id 1iUhvJ-000871-Vh
+ for kexec@lists.infradead.org; Wed, 13 Nov 2019 01:58:23 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 176/209] x86/kexec: Correct KEXEC_BACKUP_SRC_END
- off-by-one error
-Date: Tue, 12 Nov 2019 20:49:52 -0500
-Message-Id: <20191113015025.9685-176-sashal@kernel.org>
-In-Reply-To: <20191113015025.9685-1-sashal@kernel.org>
-References: <20191113015025.9685-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 072/115] kexec: Allocate decrypted control pages
+ for kdump if SME is enabled
+Date: Tue, 12 Nov 2019 20:55:39 -0500
+Message-Id: <20191113015622.11592-72-sashal@kernel.org>
+In-Reply-To: <20191113015622.11592-1-sashal@kernel.org>
+References: <20191113015622.11592-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,67 +24,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, Takashi Iwai <tiwai@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, baiyaowei@cmss.chinamobile.com, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, jroedel@suse.de, brijesh.singh@amd.com, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, tiwai@suse.de, kexec@lists.infradead.org, mingo@redhat.com, baiyaowei@cmss.chinamobile.com, hpa@zytor.com, bhelgaas@google.com, tglx@linutronix.de, Borislav Petkov <bp@suse.de>, dyoung@redhat.com, akpm@linux-foundation.org, dan.j.williams@intel.com
 
-From: Bjorn Helgaas <bhelgaas@google.com>
+From: Lianbo Jiang <lijiang@redhat.com>
 
-[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+[ Upstream commit 9cf38d5559e813cccdba8b44c82cc46ba48d0896 ]
 
-The only use of KEXEC_BACKUP_SRC_END is as an argument to
-walk_system_ram_res():
+When SME is enabled in the first kernel, it needs to allocate decrypted
+pages for kdump because when the kdump kernel boots, these pages need to
+be accessed decrypted in the initial boot stage, before SME is enabled.
 
-  int crash_load_segments(struct kimage *image)
-  {
-    ...
-    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
-                        image, determine_backup_region);
+ [ bp: clean up text. ]
 
-walk_system_ram_res() expects "start, end" arguments that are inclusive,
-i.e., the range to be walked includes both the start and end addresses.
-
-KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
-first address *past* the desired 0-640KB range.
-
-Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
-region is [0-0x9ffff], not [0-0xa0000].
-
-Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-CC: "H. Peter Anvin" <hpa@zytor.com>
-CC: Andrew Morton <akpm@linux-foundation.org>
-CC: Brijesh Singh <brijesh.singh@amd.com>
-CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-CC: Ingo Molnar <mingo@redhat.com>
-CC: Lianbo Jiang <lijiang@redhat.com>
-CC: Takashi Iwai <tiwai@suse.de>
-CC: Thomas Gleixner <tglx@linutronix.de>
-CC: Tom Lendacky <thomas.lendacky@amd.com>
-CC: Vivek Goyal <vgoyal@redhat.com>
-CC: baiyaowei@cmss.chinamobile.com
-CC: bhe@redhat.com
-CC: dan.j.williams@intel.com
-CC: dyoung@redhat.com
-CC: kexec@lists.infradead.org
-Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Reviewed-by: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: kexec@lists.infradead.org
+Cc: tglx@linutronix.de
+Cc: mingo@redhat.com
+Cc: hpa@zytor.com
+Cc: akpm@linux-foundation.org
+Cc: dan.j.williams@intel.com
+Cc: bhelgaas@google.com
+Cc: baiyaowei@cmss.chinamobile.com
+Cc: tiwai@suse.de
+Cc: brijesh.singh@amd.com
+Cc: dyoung@redhat.com
+Cc: bhe@redhat.com
+Cc: jroedel@suse.de
+Link: https://lkml.kernel.org/r/20180930031033.22110-3-lijiang@redhat.com
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/include/asm/kexec.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kernel/kexec_core.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index f327236f0fa71..5125fca472bb0 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -67,7 +67,7 @@ struct kimage;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 8f15665ab6167..27cf24e285e0c 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -473,6 +473,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
+ 		}
+ 	}
  
- /* Memory to backup during crash kdump */
- #define KEXEC_BACKUP_SRC_START	(0UL)
--#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
-+#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
++	/* Ensure that these pages are decrypted if SME is enabled. */
++	if (pages)
++		arch_kexec_post_alloc_pages(page_address(pages), 1 << order, 0);
++
+ 	return pages;
+ }
  
- /*
-  * CPU does not save ss and sp on stack if execution is already
+@@ -867,6 +871,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			result  = -ENOMEM;
+ 			goto out;
+ 		}
++		arch_kexec_post_alloc_pages(page_address(page), 1, 0);
+ 		ptr = kmap(page);
+ 		ptr += maddr & ~PAGE_MASK;
+ 		mchunk = min_t(size_t, mbytes,
+@@ -884,6 +889,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+ 			result = copy_from_user(ptr, buf, uchunk);
+ 		kexec_flush_icache_page(page);
+ 		kunmap(page);
++		arch_kexec_pre_free_pages(page_address(page), 1);
+ 		if (result) {
+ 			result = -EFAULT;
+ 			goto out;
 -- 
 2.20.1
 
