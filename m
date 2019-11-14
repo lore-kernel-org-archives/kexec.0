@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x643.google.com ([2607:f8b0:4864:20::643])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iV7Sy-0007So-26
- for kexec@lists.infradead.org; Thu, 14 Nov 2019 05:14:49 +0000
-Received: by mail-pl1-x643.google.com with SMTP id w8so2081712plq.5
- for <kexec@lists.infradead.org>; Wed, 13 Nov 2019 21:14:45 -0800 (PST)
-From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v2 2/3] libfdt: include fdt_addresses.c
-Date: Thu, 14 Nov 2019 14:15:09 +0900
-Message-Id: <20191114051510.17037-3-takahiro.akashi@linaro.org>
-In-Reply-To: <20191114051510.17037-1-takahiro.akashi@linaro.org>
-References: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+ id 1iVEPN-0004ok-Si
+ for kexec@lists.infradead.org; Thu, 14 Nov 2019 12:39:36 +0000
+Date: Thu, 14 Nov 2019 13:39:20 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH 3/3 v9] kexec: Fix i386 build warnings that missed
+ declaration of struct kimage
+Message-ID: <20191114123920.GA7222@zn.tnic>
+References: <20191108090027.11082-1-lijiang@redhat.com>
+ <20191108090027.11082-4-lijiang@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20191108090027.11082-4-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,53 +21,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
-Cc: kexec@lists.infradead.org, james.morse@arm.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
 
-In the implementation of kexec_file_loaded-based kdump for arm64,
-fdt_appendprop_addrrange() will be needed.
-
-So include fdt_addresses.c in making libfdt.
-
-Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>
----
- lib/Makefile        | 2 +-
- lib/fdt_addresses.c | 2 ++
- 2 files changed, 3 insertions(+), 1 deletion(-)
- create mode 100644 lib/fdt_addresses.c
-
-diff --git a/lib/Makefile b/lib/Makefile
-index c5892807e06f..1587a2de99c6 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -220,7 +220,7 @@ KASAN_SANITIZE_stackdepot.o := n
- KCOV_INSTRUMENT_stackdepot.o := n
- 
- libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
--	       fdt_empty_tree.o
-+	       fdt_empty_tree.o fdt_addresses.o
- $(foreach file, $(libfdt_files), \
- 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
- lib-$(CONFIG_LIBFDT) += $(libfdt_files)
-diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
-new file mode 100644
-index 000000000000..23610bcf390b
---- /dev/null
-+++ b/lib/fdt_addresses.c
-@@ -0,0 +1,2 @@
-+#include <linux/libfdt_env.h>
-+#include "../scripts/dtc/libfdt/fdt_addresses.c"
--- 
-2.21.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBOb3YgMDgsIDIwMTkgYXQgMDU6MDA6MjdQTSArMDgwMCwgTGlhbmJvIEppYW5nIHdy
+b3RlOgo+IEtidWlsZCB0ZXN0IHJvYm90IHJlcG9ydGVkIHNvbWUgYnVpbGQgd2FybmluZ3MgYXMg
+Zm9sbG93Ogo+IAo+IGFyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmg6NTozMjogd2FybmluZzog
+J3N0cnVjdCBraW1hZ2UnIGRlY2xhcmVkCj4gaW5zaWRlIHBhcmFtZXRlciBsaXN0IHdpbGwgbm90
+IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24KPiBvciBkZWNsYXJhdGlvbgo+
+ICAgICBpbnQgY3Jhc2hfbG9hZF9zZWdtZW50cyhzdHJ1Y3Qga2ltYWdlICppbWFnZSk7Cj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefn5+fn4KPiAgICAgaW50IGNyYXNoX2Nv
+cHlfYmFja3VwX3JlZ2lvbihzdHJ1Y3Qga2ltYWdlICppbWFnZSk7Cj4gICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fgo+ICAgICBpbnQgY3Jhc2hfc2V0dXBfbWVt
+bWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2UsCj4gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXn5+fn5+Cj4gVGhlICdzdHJ1Y3Qga2ltYWdlJyBpcyBkZWZp
+bmVkIGluIHRoZSBoZWFkZXIgZmlsZSBpbmNsdWRlL2xpbnV4L2tleGVjLmgsCj4gYmVmb3JlIHVz
+aW5nIGl0LCBuZWVkIHRvIGluY2x1ZGUgaXRzIGhlYWRlciBmaWxlIG9yIG1ha2UgYSBkZWNsYXJh
+dGlvbi4KPiBPdGhlcndpc2UgdGhlIGFib3ZlIHdhcm5pbmdzIG1heSBiZSB0cmlnZ2VyZWQuCj4g
+Cj4gQWRkIGEgZGVjbGFyYXRpb24gb2Ygc3RydWN0IGtpbWFnZSB0byB0aGUgZmlsZSBhcmNoL3g4
+Ni9pbmNsdWRlL2FzbS8KPiBjcmFzaC5oLCB0aGF0IHdpbGwgc29sdmUgdGhlc2UgY29tcGlsZSB3
+YXJuaW5ncy4KPiAKPiBGaXhlczogZGQ1ZjcyNjA3NmNjICgia2V4ZWM6IHN1cHBvcnQgZm9yIGtl
+eGVjIG9uIHBhbmljIHVzaW5nIG5ldyBzeXN0ZW0gY2FsbCIpCgpUaGlzIGlzLCBvZiBjb3Vyc2Us
+IHdyb25nLiBZb3VyICpmaXJzdCogcGF0Y2ggaXMgaW50cm9kdWNpbmcgdGhvc2UKd2FybmluZ3Mg
+YW5kIEknbSB3b25kZXJpbmcgaG93IGRpZCB5b3Ugbm90IHNlZSB0aGVtIGR1cmluZyBidWlsZGlu
+Zz8KCkluIGZpbGUgaW5jbHVkZWQgZnJvbSBhcmNoL3g4Ni9yZWFsbW9kZS9pbml0LmM6MTE6Ci4v
+YXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaDo1OjMyOiB3YXJuaW5nOiDigJhzdHJ1Y3Qga2lt
+YWdl4oCZIGRlY2xhcmVkIGluc2lkZSBwYXJhbWV0ZXIgbGlzdCB3aWxsIG5vdCBiZSB2aXNpYmxl
+IG91dHNpZGUgb2YgdGhpcyBkZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uCiAgICA1IHwgaW50IGNy
+YXNoX2xvYWRfc2VnbWVudHMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpOwogICAgICB8ICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICBefn5+fn4KLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFz
+aC5oOjY6Mzc6IHdhcm5pbmc6IOKAmHN0cnVjdCBraW1hZ2XigJkgZGVjbGFyZWQgaW5zaWRlIHBh
+cmFtZXRlciBsaXN0IHdpbGwgbm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRp
+b24gb3IgZGVjbGFyYXRpb24KICAgIDYgfCBpbnQgY3Jhc2hfY29weV9iYWNrdXBfcmVnaW9uKHN0
+cnVjdCBraW1hZ2UgKmltYWdlKTsKICAgICAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBefn5+fn4KLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oOjc6Mzk6IHdhcm5p
+bmc6IOKAmHN0cnVjdCBraW1hZ2XigJkgZGVjbGFyZWQgaW5zaWRlIHBhcmFtZXRlciBsaXN0IHdp
+bGwgbm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRp
+b24KICAgIDcgfCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAq
+aW1hZ2UsCiAgICAgIHwKCgpBbmQgdGhhdCBoYXBwZW5zIGJlY2F1c2UgeW91J3ZlIGluY2x1ZGVk
+IGFzbS9jcmFzaC5oIGluCmFyY2gveDg2L3JlYWxtb2RlL2luaXQuYyBhbmQgaXQgb2YgY291cnNl
+IGNvbXBsYWlucyBiZWNhdXNlIGl0IGhhc24ndApzZWVuIHRoYXQgc3RydWN0IHlldC4KCi0tIApS
+ZWdhcmRzL0dydXNzLAogICAgQm9yaXMuCgpodHRwczovL3Blb3BsZS5rZXJuZWwub3JnL3RnbHgv
+bm90ZXMtYWJvdXQtbmV0aXF1ZXR0ZQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
