@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iVKWH-00013g-89
- for kexec@lists.infradead.org; Thu, 14 Nov 2019 19:11:07 +0000
-Received: by mail-lf1-f71.google.com with SMTP id g143so2258690lfd.22
- for <kexec@lists.infradead.org>; Thu, 14 Nov 2019 11:11:00 -0800 (PST)
+ id 1iVLCS-0001Pz-EU
+ for kexec@lists.infradead.org; Thu, 14 Nov 2019 19:54:43 +0000
+Received: by mail-lf1-f70.google.com with SMTP id t6so2316050lfd.13
+ for <kexec@lists.infradead.org>; Thu, 14 Nov 2019 11:54:37 -0800 (PST)
 MIME-Version: 1.0
-References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035950A0@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC035950A0@BPXM09GP.gisp.nec.co.jp>
+References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
+ <20191113063858.GE22427@linaro.org>
+In-Reply-To: <20191113063858.GE22427@linaro.org>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 15 Nov 2019 00:40:35 +0530
-Message-ID: <CACi5LpPiRsu7-Lv9YMw4FNxP64=sXHjegZwmHD7VJvSL63gmCQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
+Date: Fri, 15 Nov 2019 01:24:17 +0530
+Message-ID: <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,139 +27,124 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Jonathan Corbet <corbet@lwn.net>, James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Anderson <anderson@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Kazu,
+Hi Akashi,
 
-On Thu, Nov 14, 2019 at 3:31 AM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
+On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
+<takahiro.akashi@linaro.org> wrote:
 >
 > Hi Bhupesh,
 >
-> Thanks for the updated patchset.
->
-> I'm taking a look at this, but I will be out of office from tomorrow
-> until Nov 29th, so please expect some (long) delays in my response..
+> Do you have a corresponding patch for userspace tools,
+> including crash util and/or makedumpfile?
+> Otherwise, we can't verify that a generated core file is
+> correctly handled.
 
-Thanks a lot for your message. Sure, let's discuss this more when you
-return from your holidays.
+Sure. I am still working on the crash-utility related changes, but you
+can find the makedumpfile changes I posted a couple of days ago here
+(see [0]) and the github link for the makedumpfile changes can be seen
+via [1].
+
+I will post the crash-util changes shortly as well.
+Thanks for having a look at the same.
+
+[0]. http://lists.infradead.org/pipermail/kexec/2019-November/023963.html
+[1]. https://github.com/bhupesh-sharma/makedumpfile/tree/52-bit-va-support-via-vmcore-upstream-v4
 
 Regards,
 Bhupesh
 
 >
 > Thanks,
-> Kazu
+> -Takahiro Akashi
 >
-> > -----Original Message-----
+> On Mon, Nov 11, 2019 at 01:31:19PM +0530, Bhupesh Sharma wrote:
 > > Changes since v3:
 > > ----------------
 > > - v3 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-March/022534.html
-> > - Added a new patch (via [PATCH 4/4]) which marks '--mem-usage' option as
-> >   unsupported for arm64 architecture. With the newer arm64 kernels
-> >   supporting 48-bit/52-bit VA address spaces and keeping a single
-> >   binary for supporting the same, the address of
-> >   kernel symbols like _stext, which could be earlier used to determine
-> >   VA_BITS value, can no longer to determine whether VA_BITS is set to 48
-> >   or 52 in the kernel space. Hence for now, it makes sense to mark
-> >   '--mem-usage' option as unsupported for arm64 architecture until
-> >   we have more clarity from arm64 kernel maintainers on how to manage
-> >   the same in future kernel/makedumpfile versions.
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+> > - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+> >   instead of PTRS_PER_PGD.
+> > - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+> >   'Documentation/arm64/memory.rst'
 > >
 > > Changes since v2:
 > > ----------------
 > > - v2 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
-> > - I missed some comments from Kazu sent on the LVA v1 patch when I sent
-> >   out the v2. So, addressing them now in v3.
-> > - Also added a patch that adds a tree-wide feature to read
-> >   'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+> > - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+> >   ifdef sections, as suggested by Kazu.
+> > - Updated vmcoreinfo documentation to add description about
+> >   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
 > >
 > > Changes since v1:
 > > ----------------
-> > - v1 was sent as two separate patches:
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
-> >   (ARMv8.2-LPA)
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
-> >   (ARMv8.2-LVA)
-> > - v2 combined the two in a single patchset and also addresses Kazu's
-> >   review comments.
+> > - v1 was sent out as a single patch which can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
 > >
-> > This patchset adds support for ARMv8.2 extensions in makedumpfile code.
-> > I cover the following two cases with this patchset:
-> >  - 48-bit kernel VA + 52-bit PA (LPA)
-> >  - 52-bit kernel VA (LVA) + 52-bit PA (LPA)
-> >  - 48-bit kernel VA + 52-bit user-space VA (LVA)
-> >  - 52-bit kernel VA + 52-bit user-space VA (Full LVA)
+> > - v2 breaks the single patch into two independent patches:
+> >   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+> >   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
 > >
-> > This has been tested for the following user-cases:
-> > 1. Creating a dumpfile using /proc/vmcore,
-> > 2. Creating a dumpfile using /proc/kcore, and
-> > 3. Post-processing a vmcore.
+> > This patchset primarily fixes the regression reported in user-space
+> > utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+> > with the availability of 52-bit address space feature in underlying
+> > kernel. These regressions have been reported both on CPUs which don't
+> > support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+> > and also on prototype platforms (like ARMv8 FVP simulator model) which
+> > support ARMv8.2 extensions and are running newer kernels.
 > >
-> > I have tested this patchset on the following platforms, with kernels
-> > which support/do-not-support ARMv8.2 features:
-> > 1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
-> >    ampere-osprey.
-> > 2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
-> >    simulation model).
+> > The reason for these regressions is that right now user-space tools
+> > have no direct access to these values (since these are not exported
+> > from the kernel) and hence need to rely on a best-guess method of
+> > determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+> > by underlying kernel.
 > >
-> > Also a preparation patch has been added in this patchset which adds a
-> > common feature for archs (except arm64, for which similar support is
-> > added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
-> > vmcoreinfo (if available).
+> > Exporting these values via vmcoreinfo will help user-land in such cases.
+> > In addition, as per suggestion from makedumpfile maintainer (Kazu),
+> > it makes more sense to append 'MAX_PHYSMEM_BITS' to
+> > vmcoreinfo in the core code itself rather than in arm64 arch-specific
+> > code, so that the user-space code for other archs can also benefit from
+> > this addition to the vmcoreinfo and use it as a standard way of
+> > determining 'SECTIONS_SHIFT' value in user-land.
 > >
-> > I recently posted two kernel patches (see [0] and [1]) which append
-> > 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' to vmcoreinfo in the kernel
-> > code, so that user-space code can benefit from the same.
-> >
-> > This patchset ensures backward compatibility for kernel versions in
-> > which 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' are not available in
-> > vmcoreinfo.
-> >
-> > [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023960.html
-> > [1]. http://lists.infradead.org/pipermail/kexec/2019-November/023962.html
-> >
-> > Cc: John Donnelly <john.p.donnelly@oracle.com>
+> > Cc: Boris Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Steve Capper <steve.capper@arm.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Dave Anderson <anderson@redhat.com>
 > > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > Cc: x86@kernel.org
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-doc@vger.kernel.org
 > > Cc: kexec@lists.infradead.org
 > >
-> > Bhupesh Sharma (4):
-> >   tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
-> >   makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
-> >   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
-> >     support)
-> >   makedumpfile: Mark --mem-usage option unsupported for arm64
+> > Bhupesh Sharma (3):
+> >   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+> >   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> >   Documentation/arm64: Fix a simple typo in memory.rst
 > >
-> >  arch/arm.c     |   8 +-
-> >  arch/arm64.c   | 438 ++++++++++++++++++++++++++++++++++++++++++---------------
-> >  arch/ia64.c    |   7 +-
-> >  arch/ppc.c     |   8 +-
-> >  arch/ppc64.c   |  49 ++++---
-> >  arch/s390x.c   |  29 ++--
-> >  arch/sparc64.c |   9 +-
-> >  arch/x86.c     |  34 +++--
-> >  arch/x86_64.c  |  27 ++--
-> >  makedumpfile.c |   7 +
-> >  makedumpfile.h |   3 +-
-> >  11 files changed, 439 insertions(+), 180 deletions(-)
+> >  Documentation/arm64/memory.rst         | 2 +-
+> >  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+> >  arch/arm64/kernel/crash_core.c         | 9 +++++++++
+> >  kernel/crash_core.c                    | 1 +
+> >  4 files changed, 12 insertions(+), 1 deletion(-)
 > >
 > > --
 > > 2.7.4
 > >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
->
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
 >
 
 
