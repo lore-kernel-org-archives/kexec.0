@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mail-pl1-x641.google.com ([2607:f8b0:4864:20::641])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iVPJf-0006hP-2w
- for kexec@lists.infradead.org; Fri, 15 Nov 2019 00:18:24 +0000
-Subject: Re: [PATCH 3/3 v9] kexec: Fix i386 build warnings that missed
- declaration of struct kimage
-References: <20191108090027.11082-1-lijiang@redhat.com>
- <20191108090027.11082-4-lijiang@redhat.com> <20191114123920.GA7222@zn.tnic>
- <59fbd119-495a-4d00-9738-98c22b276c1f@redhat.com>
- <20191114144353.GB7222@zn.tnic>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <16a61f4d-a112-6766-0272-9cfd65e78503@redhat.com>
-Date: Fri, 15 Nov 2019 08:18:02 +0800
+ id 1iVQt9-00008c-Td
+ for kexec@lists.infradead.org; Fri, 15 Nov 2019 01:59:10 +0000
+Received: by mail-pl1-x641.google.com with SMTP id h13so3578664plr.1
+ for <kexec@lists.infradead.org>; Thu, 14 Nov 2019 17:59:07 -0800 (PST)
+Date: Fri, 15 Nov 2019 11:00:00 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
+Message-ID: <20191115015959.GI22427@linaro.org>
+References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
+ <20191113063858.GE22427@linaro.org>
+ <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20191114144353.GB7222@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CACi5LpP54d9DKW63G5W6X4euBjAm2NwkHOiM01dB7g8d60s=4w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,39 +24,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: jgross@suse.com, Thomas.Lendacky@amd.com, bhe@redhat.com, horms@verge.net.au, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, mingo@redhat.com, ebiederm@xmission.com, hpa@zytor.com, tglx@linutronix.de, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Steve Capper <steve.capper@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org
 
-5ZyoIDIwMTnlubQxMeaciDE05pelIDIyOjQzLCBCb3Jpc2xhdiBQZXRrb3Yg5YaZ6YGTOgo+IE9u
-IFRodSwgTm92IDE0LCAyMDE5IGF0IDEwOjIwOjQyUE0gKzA4MDAsIGxpamlhbmcgd3JvdGU6Cj4+
-IEkgcmVhbGx5IHNhdyBteSBidWlsZGluZyByZXN1bHQsIGJ1dCBrYnVpbGQgcmVwb3J0ZWQgdGhl
-IGZvbGxvd2luZyBtZXNzYWdlczoKPj4KPj4gdmltICs1IGFyY2gveDg2L2luY2x1ZGUvYXNtL2Ny
-YXNoLmgKPj4KPj4gZGQ1ZjcyNjA3NmNjNzYgVml2ZWsgR295YWwgMjAxNC0wOC0wOCAgIDQgIAo+
-PiBkZDVmNzI2MDc2Y2M3NiBWaXZlayBHb3lhbCAyMDE0LTA4LTA4ICBANSAgaW50IGNyYXNoX2xv
-YWRfc2VnbWVudHMoc3RydWN0IGtpbWFnZSAqaW1hZ2UpOwo+PiBkZDVmNzI2MDc2Y2M3NiBWaXZl
-ayBHb3lhbCAyMDE0LTA4LTA4ICAgNiAgaW50IGNyYXNoX2NvcHlfYmFja3VwX3JlZ2lvbihzdHJ1
-Y3Qga2ltYWdlICppbWFnZSk7Cj4+IGRkNWY3MjYwNzZjYzc2IFZpdmVrIEdveWFsIDIwMTQtMDgt
-MDggICA3ICBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1h
-Z2UsCj4+IGRkNWY3MjYwNzZjYzc2IFZpdmVrIEdveWFsIDIwMTQtMDgtMDggICA4ICAJCXN0cnVj
-dCBib290X3BhcmFtcyAqcGFyYW1zKTsKPj4gODlmNTc5Y2U5OWY3ZTAgWWkgV2FuZyAgICAgMjAx
-OC0xMS0yMiAgIDkgIHZvaWQgY3Jhc2hfc21wX3NlbmRfc3RvcCh2b2lkKTsKPj4gZGQ1ZjcyNjA3
-NmNjNzYgVml2ZWsgR295YWwgMjAxNC0wOC0wOCAgMTAgIAo+Pgo+PiA6Ojo6OjogVGhlIGNvZGUg
-YXQgbGluZSA1IHdhcyBmaXJzdCBpbnRyb2R1Y2VkIGJ5IGNvbW1pdCAKPj4gICAgICAgIF5eXl5e
-Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl4KPj4gOjo6Ojo6IGRk
-NWY3MjYwNzZjYzc2MzlkOTcxM2IzMzRjOGMxMzNmNzdjNjc1N2Ega2V4ZWM6IHN1cHBvcnQgZm9y
-IGtleGVjIG9uIHBhbmljIHVzaW5nIG5ldyBzeXN0ZW0gY2FsbAo+PiAgICAgICAgXl5eXl5eXl5e
-Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5e
-Xl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eXl5eCj4gCj4gWW91IHNob3VsZCBub3QgdGFrZSB0
-aGUgcmVwb3J0IG9mIGEgYm90IGJsaW5kbHkgYnV0IHNob3VsZCBhbHdheXMgZG91YmxlCj4gY2hl
-Y2sgaXQuIExpa2UgZXZlcnkgb3RoZXIgY29tcHV0ZXIgc3lzdGVtIHByb2dyYW1tZWQgYnkgaHVt
-YW5zLCBpdCBjYW4KPiBtYWtlIG1pc3Rha2VzLgo+IAoKSW5kZWVkLCBpIHRvdGFsbHkgYWdyZWUu
-Cgo+PiBXb3VsZCB5b3UgbWluZCBnaXZpbmcgbWUgYW55IHN1Z2dlc3Rpb25zIGFib3V0IHRoaXM/
-Cj4gCj4gSSdsbCB0YWtlIGNhcmUgb2YgaXQgYWxsIGFuZCBwdXNoIHRoZSByZXN1bHRzIG91dCBz
-b29uLgo+IAoKT0ssIHRoYW5rIHlvdSBzbyBtdWNoLgoKTGlhbmJvCgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+Bhupesh,
+
+On Fri, Nov 15, 2019 at 01:24:17AM +0530, Bhupesh Sharma wrote:
+> Hi Akashi,
+> 
+> On Wed, Nov 13, 2019 at 12:11 PM AKASHI Takahiro
+> <takahiro.akashi@linaro.org> wrote:
+> >
+> > Hi Bhupesh,
+> >
+> > Do you have a corresponding patch for userspace tools,
+> > including crash util and/or makedumpfile?
+> > Otherwise, we can't verify that a generated core file is
+> > correctly handled.
+> 
+> Sure. I am still working on the crash-utility related changes, but you
+> can find the makedumpfile changes I posted a couple of days ago here
+> (see [0]) and the github link for the makedumpfile changes can be seen
+> via [1].
+> 
+> I will post the crash-util changes shortly as well.
+> Thanks for having a look at the same.
+
+Thank you.
+I have tested my kdump patch with a hacked version of crash
+where VA_BITS_ACTUAL is calculated from tcr_el1_t1sz in vmcoreinfo.
+
+-Takahiro Akashi
+
+
+> [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023963.html
+> [1]. https://github.com/bhupesh-sharma/makedumpfile/tree/52-bit-va-support-via-vmcore-upstream-v4
+> 
+> Regards,
+> Bhupesh
+> 
+> >
+> > Thanks,
+> > -Takahiro Akashi
+> >
+> > On Mon, Nov 11, 2019 at 01:31:19PM +0530, Bhupesh Sharma wrote:
+> > > Changes since v3:
+> > > ----------------
+> > > - v3 can be seen here:
+> > >   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+> > > - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+> > >   instead of PTRS_PER_PGD.
+> > > - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+> > >   'Documentation/arm64/memory.rst'
+> > >
+> > > Changes since v2:
+> > > ----------------
+> > > - v2 can be seen here:
+> > >   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+> > > - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+> > >   ifdef sections, as suggested by Kazu.
+> > > - Updated vmcoreinfo documentation to add description about
+> > >   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+> > >
+> > > Changes since v1:
+> > > ----------------
+> > > - v1 was sent out as a single patch which can be seen here:
+> > >   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+> > >
+> > > - v2 breaks the single patch into two independent patches:
+> > >   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+> > >   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+> > >
+> > > This patchset primarily fixes the regression reported in user-space
+> > > utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+> > > with the availability of 52-bit address space feature in underlying
+> > > kernel. These regressions have been reported both on CPUs which don't
+> > > support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+> > > and also on prototype platforms (like ARMv8 FVP simulator model) which
+> > > support ARMv8.2 extensions and are running newer kernels.
+> > >
+> > > The reason for these regressions is that right now user-space tools
+> > > have no direct access to these values (since these are not exported
+> > > from the kernel) and hence need to rely on a best-guess method of
+> > > determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+> > > by underlying kernel.
+> > >
+> > > Exporting these values via vmcoreinfo will help user-land in such cases.
+> > > In addition, as per suggestion from makedumpfile maintainer (Kazu),
+> > > it makes more sense to append 'MAX_PHYSMEM_BITS' to
+> > > vmcoreinfo in the core code itself rather than in arm64 arch-specific
+> > > code, so that the user-space code for other archs can also benefit from
+> > > this addition to the vmcoreinfo and use it as a standard way of
+> > > determining 'SECTIONS_SHIFT' value in user-land.
+> > >
+> > > Cc: Boris Petkov <bp@alien8.de>
+> > > Cc: Ingo Molnar <mingo@kernel.org>
+> > > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > > Cc: Jonathan Corbet <corbet@lwn.net>
+> > > Cc: James Morse <james.morse@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Steve Capper <steve.capper@arm.com>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > Cc: Paul Mackerras <paulus@samba.org>
+> > > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > > Cc: Dave Anderson <anderson@redhat.com>
+> > > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > > Cc: x86@kernel.org
+> > > Cc: linuxppc-dev@lists.ozlabs.org
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: linux-doc@vger.kernel.org
+> > > Cc: kexec@lists.infradead.org
+> > >
+> > > Bhupesh Sharma (3):
+> > >   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+> > >   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> > >   Documentation/arm64: Fix a simple typo in memory.rst
+> > >
+> > >  Documentation/arm64/memory.rst         | 2 +-
+> > >  arch/arm64/include/asm/pgtable-hwdef.h | 1 +
+> > >  arch/arm64/kernel/crash_core.c         | 9 +++++++++
+> > >  kernel/crash_core.c                    | 1 +
+> > >  4 files changed, 12 insertions(+), 1 deletion(-)
+> > >
+> > > --
+> > > 2.7.4
+> > >
+> >
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
