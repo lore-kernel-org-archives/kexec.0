@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from gate2.alliedtelesis.co.nz ([202.36.163.20])
+Received: from mail-il1-x141.google.com ([2607:f8b0:4864:20::141])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iWULH-00024M-MM
- for kexec@lists.infradead.org; Sun, 17 Nov 2019 23:52:33 +0000
-From: Chris Packham <chris.packham@alliedtelesis.co.nz>
-Subject: [PATCH] kexec: build multiboot2 for i386
-Date: Mon, 18 Nov 2019 12:52:15 +1300
-Message-Id: <20191117235215.18159-1-chris.packham@alliedtelesis.co.nz>
+ id 1iWZKn-00051Z-2T
+ for kexec@lists.infradead.org; Mon, 18 Nov 2019 05:12:22 +0000
+Received: by mail-il1-x141.google.com with SMTP id q1so14791087ile.13
+ for <kexec@lists.infradead.org>; Sun, 17 Nov 2019 21:12:17 -0800 (PST)
 MIME-Version: 1.0
+References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
+From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Date: Mon, 18 Nov 2019 10:42:05 +0530
+Message-ID: <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
+ extensions
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,75 +25,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, Chris Packham <chris.packham@alliedtelesis.co.nz>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: John Donnelly <john.p.donnelly@oracle.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, bhupesh.linux@gmail.com
 
-This addresses the following compilation issues when building for i386.
+Re-sending in plain text mode.
 
- kexec/arch/i386/kexec-x86.c:39:22: error: 'multiboot2_x86_probe' undeclared here (not in a function); did you mean 'multiboot_x86_probe'?
-   { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-                       ^~~~~~~~~~~~~~~~~~~~
-                       multiboot_x86_probe
- kexec/arch/i386/kexec-x86.c:39:44: error: 'multiboot2_x86_load' undeclared here (not in a function); did you mean 'multiboot_x86_load'?
-   { "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-                                             ^~~~~~~~~~~~~~~~~~~
-                                             multiboot_x86_load
- kexec/arch/i386/kexec-x86.c:40:4: error: 'multiboot2_x86_usage' undeclared here (not in a function); did you mean 'multiboot_x86_usage'?
-     multiboot2_x86_usage },
-     ^~~~~~~~~~~~~~~~~~~~
-     multiboot_x86_usage
- make: *** [Makefile:114: kexec/arch/i386/kexec-x86.o] Error 1
- make: *** Waiting for unfinished jobs....
+On Tue, Nov 12, 2019 at 4:39 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>
+> Changes since v3:
+> ----------------
+> - v3 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-March/022534.html
+> - Added a new patch (via [PATCH 4/4]) which marks '--mem-usage' option as
+>   unsupported for arm64 architecture. With the newer arm64 kernels
+>   supporting 48-bit/52-bit VA address spaces and keeping a single
+>   binary for supporting the same, the address of
+>   kernel symbols like _stext, which could be earlier used to determine
+>   VA_BITS value, can no longer to determine whether VA_BITS is set to 48
+>   or 52 in the kernel space. Hence for now, it makes sense to mark
+>   '--mem-usage' option as unsupported for arm64 architecture until
+>   we have more clarity from arm64 kernel maintainers on how to manage
+>   the same in future kernel/makedumpfile versions.
+>
+> Changes since v2:
+> ----------------
+> - v2 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
+> - I missed some comments from Kazu sent on the LVA v1 patch when I sent
+>   out the v2. So, addressing them now in v3.
+> - Also added a patch that adds a tree-wide feature to read
+>   'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
+>
+> Changes since v1:
+> ----------------
+> - v1 was sent as two separate patches:
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
+>   (ARMv8.2-LPA)
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+>   (ARMv8.2-LVA)
+> - v2 combined the two in a single patchset and also addresses Kazu's
+>   review comments.
+>
+> This patchset adds support for ARMv8.2 extensions in makedumpfile code.
+> I cover the following two cases with this patchset:
+>  - 48-bit kernel VA + 52-bit PA (LPA)
+>  - 52-bit kernel VA (LVA) + 52-bit PA (LPA)
+>  - 48-bit kernel VA + 52-bit user-space VA (LVA)
+>  - 52-bit kernel VA + 52-bit user-space VA (Full LVA)
+>
+> This has been tested for the following user-cases:
+> 1. Creating a dumpfile using /proc/vmcore,
+> 2. Creating a dumpfile using /proc/kcore, and
+> 3. Post-processing a vmcore.
+>
+> I have tested this patchset on the following platforms, with kernels
+> which support/do-not-support ARMv8.2 features:
+> 1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
+>    ampere-osprey.
+> 2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
+>    simulation model).
+>
+> Also a preparation patch has been added in this patchset which adds a
+> common feature for archs (except arm64, for which similar support is
+> added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
+> vmcoreinfo (if available).
+>
+> I recently posted two kernel patches (see [0] and [1]) which append
+> 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' to vmcoreinfo in the kernel
+> code, so that user-space code can benefit from the same.
+>
+> This patchset ensures backward compatibility for kernel versions in
+> which 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' are not available in
+> vmcoreinfo.
+>
+> [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023960.html
+> [1]. http://lists.infradead.org/pipermail/kexec/2019-November/023962.html
+>
+> Cc: John Donnelly <john.p.donnelly@oracle.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: kexec@lists.infradead.org
+>
+> Bhupesh Sharma (4):
+>   tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
+>   makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
+>   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
+>     support)
+>   makedumpfile: Mark --mem-usage option unsupported for arm64
+>
+>  arch/arm.c     |   8 +-
+>  arch/arm64.c   | 438 ++++++++++++++++++++++++++++++++++++++++++---------------
+>  arch/ia64.c    |   7 +-
+>  arch/ppc.c     |   8 +-
+>  arch/ppc64.c   |  49 ++++---
+>  arch/s390x.c   |  29 ++--
+>  arch/sparc64.c |   9 +-
+>  arch/x86.c     |  34 +++--
+>  arch/x86_64.c  |  27 ++--
+>  makedumpfile.c |   7 +
+>  makedumpfile.h |   3 +-
+>  11 files changed, 439 insertions(+), 180 deletions(-)
+>
+> --
 
-Signed-off-by: Chris Packham <chris.packham@alliedtelesis.co.nz>
----
-I wasn't sure whether this should be fixed by linking with kexec-mb2-x86.o or
-by removing the code from kexec-x86.c. I went for the former but I'd happily
-change to the latter.
+Tested this patch-set on Marvell's TX2 platform on top
+commit(82e6cce2219a) of https://git.code.sf.net/p/makedumpfile/code
+(devel branch)
 
- kexec/arch/i386/Makefile    | 2 +-
- kexec/arch/i386/kexec-x86.h | 5 +++++
- 2 files changed, 6 insertions(+), 1 deletion(-)
+Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 
-diff --git a/kexec/arch/i386/Makefile b/kexec/arch/i386/Makefile
-index 105cefd..f486103 100644
---- a/kexec/arch/i386/Makefile
-+++ b/kexec/arch/i386/Makefile
-@@ -7,6 +7,7 @@ i386_KEXEC_SRCS += kexec/arch/i386/kexec-elf-x86.c
- i386_KEXEC_SRCS += kexec/arch/i386/kexec-elf-rel-x86.c
- i386_KEXEC_SRCS += kexec/arch/i386/kexec-bzImage.c
- i386_KEXEC_SRCS += kexec/arch/i386/kexec-multiboot-x86.c
-+i386_KEXEC_SRCS += kexec/arch/i386/kexec-mb2-x86.c
- i386_KEXEC_SRCS += kexec/arch/i386/kexec-beoboot-x86.c
- i386_KEXEC_SRCS += kexec/arch/i386/kexec-nbi.c
- i386_KEXEC_SRCS += kexec/arch/i386/x86-linux-setup.c
-@@ -14,7 +15,6 @@ i386_KEXEC_SRCS += kexec/arch/i386/crashdump-x86.c
- 
- dist += kexec/arch/i386/Makefile $(i386_KEXEC_SRCS)			\
- 	kexec/arch/i386/crashdump-x86.h					\
--	kexec/arch/i386/kexec-mb2-x86.c					\
- 	kexec/arch/i386/kexec-x86.h					\
- 	kexec/arch/i386/x86-linux-setup.h				\
- 	kexec/arch/i386/include/arch/options.h
-diff --git a/kexec/arch/i386/kexec-x86.h b/kexec/arch/i386/kexec-x86.h
-index 1b58c3b..0f941df 100644
---- a/kexec/arch/i386/kexec-x86.h
-+++ b/kexec/arch/i386/kexec-x86.h
-@@ -60,6 +60,11 @@ int multiboot_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info);
- void multiboot_x86_usage(void);
- 
-+int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
-+			struct kexec_info *info);
-+void multiboot2_x86_usage(void);
-+int multiboot2_x86_probe(const char *buf, off_t buf_len);
-+
- int elf_x86_probe(const char *buf, off_t len);
- int elf_x86_load(int argc, char **argv, const char *buf, off_t len,
- 	struct kexec_info *info);
--- 
-2.24.0
-
+--pk
 
 _______________________________________________
 kexec mailing list
