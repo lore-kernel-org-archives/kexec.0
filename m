@@ -1,23 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iXpO1-00011g-Cc
- for kexec@lists.infradead.org; Thu, 21 Nov 2019 16:32:55 +0000
-Received: by mail-lf1-f70.google.com with SMTP id j16so1067167lfk.2
- for <kexec@lists.infradead.org>; Thu, 21 Nov 2019 08:32:49 -0800 (PST)
+Date: Thu, 21 Nov 2019 11:54:51 -0500
+From: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Subject: Re: [RFC PATCH v2] efi: arm64: Introduce
+ /sys/firmware/efi/memreserve to tell the persistent pages
+Message-ID: <20191121165451.ddc4e7rz5swvoirc@gabell>
+References: <20191114161019.8735-1-msys.mizuma@gmail.com>
 MIME-Version: 1.0
-References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
- <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
- <B71B3868-9A0B-46AD-8777-97A1599BFB91@oracle.com>
- <CACi5LpOF2FLrmXEyJ4FfjqJBxxt-np2+1V0EFK__EH=6ubFE0A@mail.gmail.com>
- <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
-In-Reply-To: <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 21 Nov 2019 22:02:34 +0530
-Message-ID: <CACi5LpO9hRKotoMAgEQiLPEHWm7DO_NXWmTL1Wcfi3A0OyGJMQ@mail.gmail.com>
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
+Content-Disposition: inline
+In-Reply-To: <20191114161019.8735-1-msys.mizuma@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,136 +20,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Donnelly <john.p.donnelly@oracle.com>
-Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-efi@vger.kernel.org
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, d.hatayama@fujitsu.com
 
-> On Wed, Nov 20, 2019 at 10:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
->
-> Hi,
->
->   Recent test below
->  This is your makedumpfile pulled from sourceforge .
+On Thu, Nov 14, 2019 at 11:10:19AM -0500, Masayoshi Mizuma wrote:
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> 
+> kexec reboot stops in early boot sequence because efi_config_parse_tables()
+> refers garbage data. We can see the log with memblock=debug kernel option:
+> 
+>   efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000  MEMRESERVE=0x9820bfdc58
+>   memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67] efi_config_parse_tables+0x228/0x278
+>   memblock_reserve: [0x0000000082760000-0x00000000324d07ff] efi_config_parse_tables+0x228/0x278
+>   memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9] efi_config_parse_tables+0x244/0x278
+>   memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2] efi_config_parse_tables+0x244/0x278
+>   memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12] efi_config_parse_tables+0x244/0x278
+>   ...
+> 
+> That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
+> 0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
+> head page of LPI pending table and LPI property table which are allocated by
+> gic_reserve_range().
+> 
+> The destroyer is kexec. kexec locates the initrd to the area:
+> 
+>   ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img --reuse-cmdline
+>   ...
+>   initrd: base 82290000, size 388dd8ah (59301258)
+>   ...
+> 
+> From dynamic debug log. initrd is located in segment[1]:
+>   machine_kexec_prepare:70:
+>     kexec kimage info:
+>       type:        0
+>       start:       85b30680
+>       head:        0
+>       nr_segments: 4
+>         segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481 pages
+>         segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905 pages
+>         segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1 pages
+>         segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1 pages
+> 
+> kexec searches the memory region to locate initrd through
+> "System RAM" in /proc/iomem. The pending tables are included in
+> "System RAM" because they are allocated by alloc_pages(), so kexec
+> destroys the LPI pending tables.
+> 
+> Introduce /sys/firmware/efi/memreserve to tell the pages pointed by
+> efi.mem_reserve so that kexec can avoid the area to locate initrd.
+> 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> ---
+>  drivers/firmware/efi/efi.c | 41 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 40 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 0b6b0c19a..07812d697 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -149,6 +149,45 @@ static ssize_t systab_show(struct kobject *kobj,
+>  
+>  static struct kobj_attribute efi_attr_systab = __ATTR_RO_MODE(systab, 0400);
+>  
+> +static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
 
-Do you mean github? I don't remember pushing anything to sourceforge.
-Please share the exact branch name and the source URL for the
-makedumpfile you are using
+> +static ssize_t memreserve_show(struct kobject *kobj,
+> +			   struct kobj_attribute *attr, char *buf)
+> +{
+> +	struct linux_efi_memreserve *rsv;
+> +	phys_addr_t start, end;
+> +	unsigned long prsv;
+> +	char *str = buf;
+> +	int count, i;
+> +
+> +	if (!kobj || !buf)
+> +		return -EINVAL;
+> +
+> +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
+> +			(!efi_memreserve_root))
+> +		return -ENODEV;
+> +
+> +	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+> +		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+> +		if (!rsv) {
+> +			pr_err("Could not map efi_memreserve\n");
+> +			return -ENOMEM;
+> +		}
+> +		count = atomic_read(&rsv->count);
+> +		for (i = 0; i < count; i++) {
+> +			start = rsv->entry[i].base;
+> +			end = start + rsv->entry[i].size - 1;
+> +
+> +			str += sprintf(str, "%pa-%pa\n", &start, &end);
+> +		}
+> +		memunmap(rsv);
+> +	}
+> +
+> +	return str - buf;
+> +}
+> +
+> +static struct kobj_attribute efi_attr_memreserve =
+> +			__ATTR_RO_MODE(memreserve, 0444);
+> +
 
-> It would be helpful if you bumped the VERSION and DATE to be certain we are using the correct pieces .
+I think it's better to put above between #ifdef CONFIG_KEXEC and #endif
+because it's useful for only kexec...
 
-You can print makedumpfile version in your scriptware. It lets you
-know the latest makedumpfile version. Note that this indicates the
-latest released version and not the development branch. The
-development branch is for things under test (like this change) and
-being stabilized whereas the released version contains a bump to a new
-VERSION number and DATE at which a release is made.
+>  #define EFI_FIELD(var) efi.var
+>  
+>  #define EFI_ATTR_SHOW(name) \
+> @@ -180,6 +219,7 @@ static struct attribute *efi_subsys_attrs[] = {
+>  	&efi_attr_runtime.attr,
+>  	&efi_attr_config_table.attr,
+>  	&efi_attr_fw_platform_size.attr,
 
-# makedumpfile -v
-makedumpfile: version 1.6.6 (released on 27 Jun 2019)
-lzo    enabled
+> +	&efi_attr_memreserve.attr,
 
-> kdump: saving vmcore
-> makedumpfile 1.6.6, 27 Jun 2019.
-> sadump: unsupported architecture
->               phys_start         phys_end       virt_start         virt_end
-> LOAD[ 0]         92a80000         94fe0000 ffff800010080000 ffff8000125e0000
-> LOAD[ 1]         90000000         92000000 ffffc00010000000 ffffc00012000000
-> LOAD[ 2]         928c0000         dfe00000 ffffc000128c0000 ffffc0005fe00000
-> LOAD[ 3]         ffe00000         fffa0000 ffffc0007fe00000 ffffc0007ffa0000
-> LOAD[ 4]        880000000       1000000000 ffffc00800000000 ffffc00f80000000
-> LOAD[ 5]       8800000000       bff7030000 ffffc08780000000 ffffc0bf77030000
-> LOAD[ 6]       bff7060000       bff72b0000 ffffc0bf77060000 ffffc0bf772b0000
-> LOAD[ 7]       bff72f0000       bff8030000 ffffc0bf772f0000 ffffc0bf78030000
-> LOAD[ 8]       bff8050000       bff8070000 ffffc0bf78050000 ffffc0bf78070000
-> LOAD[ 9]       bff80d0000       bff8270000 ffffc0bf780d0000 ffffc0bf78270000
-> LOAD[10]       bff8280000       bff83d0000 ffffc0bf78280000 ffffc0bf783d0000>
-> LOAD[11]       bff8870000       bffc1a0000 ffffc0bf78870000 ffffc0bf7c1a0000
-> LOAD[12]       bffc1c0000       bffc1d0000 ffffc0bf7c1c0000 ffffc0bf7c1d0000
-> LOAD[13]       bffe210000       bfffd10000 ffffc0bf7e210000 ffffc0bf7fd10000
-> LOAD[14]       bfffd40000       bfffd50000 ffffc0bf7fd40000 ffffc0bf7fd50000
-> LOAD[15]       bfffe00000       c000000000 ffffc0bf7fe00000 ffffc0bf80000000
-> Linux kdump
-> VMCOREINFO   :
-  OSRELEASE=5.4.0-rc8
-  PAGESIZE=65536
-> page_size    : 65536
-  SYMBOL(init_uts_ns)=ffff800011a65ca8
-  SYMBOL(node_online_map)=ffff800011a5d490
-  SYMBOL(swapper_pg_dir)=ffff8000112f0000
-  SYMBOL(_stext)=ffff800010081000
-  SYMBOL(vmap_area_list)=ffff800011b29a98
-  SYMBOL(mem_section)=ffff00bf7be7e300
-  LENGTH(mem_section)=64
-  SIZE(mem_section)=16
-  OFFSET(mem_section.section_mem_map)=0
-  NUMBER(MAX_PHYSMEM_BITS)=48   OFFSET(vmap_area.va_start)=0
-  OFFSET(vmap_area.list)=40
-  LENGTH(zone.free_area)=14
-  SYMBOL(log_buf)=ffff800011ada808
-  SYMBOL(log_buf_len)=ffff800011ada810
-  SYMBOL(log_first_idx)=ffff800011e772d4
-  SYMBOL(clear_idx)=ffff800011e74d20
-  SYMBOL(log_next_idx)=ffff800011e772e0
-  SIZE(printk_log)=16
-  OFFSET(printk_log.ts_nsec)=0
-  OFFSET(printk_log.len)=8
-  OFFSET(printk_log.text_len)=10
-  OFFSET(printk_log.dict_len)=12
-  LENGTH(free_area.free_list)=6
-  NUMBER(NR_FREE_PAGES)=0
-  NUMBER(PG_lru)=4
-  NUMBER(PG_private)=13
-  NUMBER(PG_swapcache)=10
-  NUMBER(PG_swapbacked)=19
-  NUMBER(PG_slab)=9
-  NUMBER(PG_hwpoison)=22
-  NUMBER(PG_head_mask)=65536
-  NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-129
-  NUMBER(HUGETLB_PAGE_DTOR)=2
-  NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE)=-257
-  NUMBER(VA_BITS)=48
-  NUMBER(kimage_voffset)=0xffff7fff7d600000
-  NUMBER(PHYS_OFFSET)=0x80000000
-  NUMBER(tcr_el1_t1sz)=0x10
-  KERNELOFFSET=0
-  CRASHTIME=1574266958
+Same as.
+I'll post the patch to change above and will remove the RFC.
 
-> phys_base    : 80000000 (vmcoreinfo)
+Thanks,
+Masa
 
-> max_mapnr    : c00000
-> There is enough free memory to be done in one cycle.
-
-> Buffer size for the cyclic mode: 3145728
-> va_bits      : 47
-> page_offset  : ffffc00000000000
-> kdump: saving vmcore failed
-
-You again seem to be using an old/incorrect version of makedumpfile.
-As you can see here from [0] and [1] the newer makedumpfile patches I
-posted print where the va_bits are derived from - _stext symbol or
-vmcoreinfo.
-
-Since you are running a kdump test, it should print something like
-this for va_bits if you have the correct makedumpfile changes compiled
-in and installed (via make install) - notice the source from where
-va_bits is determined properly is printed in brackets:
-phys_base    : 80000000 (vmcoreinfo)
-
-max_mapnr    : 97fd00
-There is enough free memory to be done in one cycle.
-
-Buffer size for the cyclic mode: 2490176
-va_bits        : 48 (vmcoreinfo)
-page_offset    : ffff000000000000 (approximation)
-kimage_voffset   : fffeffff8fc00000
-max_physmem_bits : 52
-section_size_bits: 30
-
-Regards,
-Bhupesh
-
-[0]. <https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-va-support-via-vmcore-upstream-v4/arch/arm64.c#L468>
-[1]. <https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-va-support-via-vmcore-upstream-v4/arch/arm64.c#L511>
-
+>  	NULL,
+>  };
+>  
+> @@ -964,7 +1004,6 @@ int efi_status_to_err(efi_status_t status)
+>  }
+>  
+>  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
+> -static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+>  
+>  static int __init efi_memreserve_map_root(void)
+>  {
+> -- 
+> 2.21.0
+> 
 
 _______________________________________________
 kexec mailing list
