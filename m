@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
  helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iXdj5-00034b-Ce
- for kexec@lists.infradead.org; Thu, 21 Nov 2019 04:05:53 +0000
-Received: by mail-lf1-f69.google.com with SMTP id m2so499923lfo.20
- for <kexec@lists.infradead.org>; Wed, 20 Nov 2019 20:05:44 -0800 (PST)
+ id 1iXpO1-00011g-Cc
+ for kexec@lists.infradead.org; Thu, 21 Nov 2019 16:32:55 +0000
+Received: by mail-lf1-f70.google.com with SMTP id j16so1067167lfk.2
+ for <kexec@lists.infradead.org>; Thu, 21 Nov 2019 08:32:49 -0800 (PST)
 MIME-Version: 1.0
-References: <1573459282-26989-1-git-send-email-bhsharma@redhat.com>
- <20191121032047.GB23368@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20191121032047.GB23368@dhcp-128-65.nay.redhat.com>
+References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
+ <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
+ <B71B3868-9A0B-46AD-8777-97A1599BFB91@oracle.com>
+ <CACi5LpOF2FLrmXEyJ4FfjqJBxxt-np2+1V0EFK__EH=6ubFE0A@mail.gmail.com>
+ <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
+In-Reply-To: <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 21 Nov 2019 09:35:29 +0530
-Message-ID: <CACi5LpOXW+HTsAZfxbwnCnypSdpk4=t8bsS=SRx0crc=4261VA@mail.gmail.com>
-Subject: Re: [PATCH v4 0/3] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
- for arm64 and MAX_PHYSMEM_BITS for all archs)
+Date: Thu, 21 Nov 2019 22:02:34 +0530
+Message-ID: <CACi5LpO9hRKotoMAgEQiLPEHWm7DO_NXWmTL1Wcfi3A0OyGJMQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
+ extensions
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,97 +30,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, x86@kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Anderson <anderson@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Steve Capper <steve.capper@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>, Boris Petkov <bp@alien8.de>, linuxppc-dev@lists.ozlabs.org
+To: John Donnelly <john.p.donnelly@oracle.com>
+Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
 
-Hi Dave,
-
-On Thu, Nov 21, 2019 at 8:51 AM Dave Young <dyoung@redhat.com> wrote:
+> On Wed, Nov 20, 2019 at 10:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
 >
-> On 11/11/19 at 01:31pm, Bhupesh Sharma wrote:
-> > Changes since v3:
-> > ----------------
-> > - v3 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
-> > - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
-> >   instead of PTRS_PER_PGD.
-> > - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
-> >   'Documentation/arm64/memory.rst'
-> >
-> > Changes since v2:
-> > ----------------
-> > - v2 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
-> > - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
-> >   ifdef sections, as suggested by Kazu.
-> > - Updated vmcoreinfo documentation to add description about
-> >   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
-> >
-> > Changes since v1:
-> > ----------------
-> > - v1 was sent out as a single patch which can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
-> >
-> > - v2 breaks the single patch into two independent patches:
-> >   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
-> >   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
-> >
-> > This patchset primarily fixes the regression reported in user-space
-> > utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
-> > with the availability of 52-bit address space feature in underlying
-> > kernel. These regressions have been reported both on CPUs which don't
-> > support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
-> > and also on prototype platforms (like ARMv8 FVP simulator model) which
-> > support ARMv8.2 extensions and are running newer kernels.
-> >
-> > The reason for these regressions is that right now user-space tools
-> > have no direct access to these values (since these are not exported
-> > from the kernel) and hence need to rely on a best-guess method of
-> > determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
-> > by underlying kernel.
-> >
-> > Exporting these values via vmcoreinfo will help user-land in such cases.
-> > In addition, as per suggestion from makedumpfile maintainer (Kazu),
-> > it makes more sense to append 'MAX_PHYSMEM_BITS' to
-> > vmcoreinfo in the core code itself rather than in arm64 arch-specific
-> > code, so that the user-space code for other archs can also benefit from
-> > this addition to the vmcoreinfo and use it as a standard way of
-> > determining 'SECTIONS_SHIFT' value in user-land.
-> >
-> > Cc: Boris Petkov <bp@alien8.de>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Jonathan Corbet <corbet@lwn.net>
-> > Cc: James Morse <james.morse@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Will Deacon <will@kernel.org>
-> > Cc: Steve Capper <steve.capper@arm.com>
-> > Cc: Catalin Marinas <catalin.marinas@arm.com>
-> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > Cc: Paul Mackerras <paulus@samba.org>
-> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> > Cc: Dave Anderson <anderson@redhat.com>
-> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > Cc: x86@kernel.org
-> > Cc: linuxppc-dev@lists.ozlabs.org
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-doc@vger.kernel.org
-> > Cc: kexec@lists.infradead.org
-> >
-> > Bhupesh Sharma (3):
-> >   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
-> >   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> Hi,
 >
-> Soft reminder:  the new introduced vmcoreinfo needs documentation
->
-> Please check Documentation/admin-guide/kdump/vmcoreinfo.rst
+>   Recent test below
+>  This is your makedumpfile pulled from sourceforge .
 
-Sure, will send a v5 to address the same.
+Do you mean github? I don't remember pushing anything to sourceforge.
+Please share the exact branch name and the source URL for the
+makedumpfile you are using
 
-Thanks,
+> It would be helpful if you bumped the VERSION and DATE to be certain we are using the correct pieces .
+
+You can print makedumpfile version in your scriptware. It lets you
+know the latest makedumpfile version. Note that this indicates the
+latest released version and not the development branch. The
+development branch is for things under test (like this change) and
+being stabilized whereas the released version contains a bump to a new
+VERSION number and DATE at which a release is made.
+
+# makedumpfile -v
+makedumpfile: version 1.6.6 (released on 27 Jun 2019)
+lzo    enabled
+
+> kdump: saving vmcore
+> makedumpfile 1.6.6, 27 Jun 2019.
+> sadump: unsupported architecture
+>               phys_start         phys_end       virt_start         virt_end
+> LOAD[ 0]         92a80000         94fe0000 ffff800010080000 ffff8000125e0000
+> LOAD[ 1]         90000000         92000000 ffffc00010000000 ffffc00012000000
+> LOAD[ 2]         928c0000         dfe00000 ffffc000128c0000 ffffc0005fe00000
+> LOAD[ 3]         ffe00000         fffa0000 ffffc0007fe00000 ffffc0007ffa0000
+> LOAD[ 4]        880000000       1000000000 ffffc00800000000 ffffc00f80000000
+> LOAD[ 5]       8800000000       bff7030000 ffffc08780000000 ffffc0bf77030000
+> LOAD[ 6]       bff7060000       bff72b0000 ffffc0bf77060000 ffffc0bf772b0000
+> LOAD[ 7]       bff72f0000       bff8030000 ffffc0bf772f0000 ffffc0bf78030000
+> LOAD[ 8]       bff8050000       bff8070000 ffffc0bf78050000 ffffc0bf78070000
+> LOAD[ 9]       bff80d0000       bff8270000 ffffc0bf780d0000 ffffc0bf78270000
+> LOAD[10]       bff8280000       bff83d0000 ffffc0bf78280000 ffffc0bf783d0000>
+> LOAD[11]       bff8870000       bffc1a0000 ffffc0bf78870000 ffffc0bf7c1a0000
+> LOAD[12]       bffc1c0000       bffc1d0000 ffffc0bf7c1c0000 ffffc0bf7c1d0000
+> LOAD[13]       bffe210000       bfffd10000 ffffc0bf7e210000 ffffc0bf7fd10000
+> LOAD[14]       bfffd40000       bfffd50000 ffffc0bf7fd40000 ffffc0bf7fd50000
+> LOAD[15]       bfffe00000       c000000000 ffffc0bf7fe00000 ffffc0bf80000000
+> Linux kdump
+> VMCOREINFO   :
+  OSRELEASE=5.4.0-rc8
+  PAGESIZE=65536
+> page_size    : 65536
+  SYMBOL(init_uts_ns)=ffff800011a65ca8
+  SYMBOL(node_online_map)=ffff800011a5d490
+  SYMBOL(swapper_pg_dir)=ffff8000112f0000
+  SYMBOL(_stext)=ffff800010081000
+  SYMBOL(vmap_area_list)=ffff800011b29a98
+  SYMBOL(mem_section)=ffff00bf7be7e300
+  LENGTH(mem_section)=64
+  SIZE(mem_section)=16
+  OFFSET(mem_section.section_mem_map)=0
+  NUMBER(MAX_PHYSMEM_BITS)=48   OFFSET(vmap_area.va_start)=0
+  OFFSET(vmap_area.list)=40
+  LENGTH(zone.free_area)=14
+  SYMBOL(log_buf)=ffff800011ada808
+  SYMBOL(log_buf_len)=ffff800011ada810
+  SYMBOL(log_first_idx)=ffff800011e772d4
+  SYMBOL(clear_idx)=ffff800011e74d20
+  SYMBOL(log_next_idx)=ffff800011e772e0
+  SIZE(printk_log)=16
+  OFFSET(printk_log.ts_nsec)=0
+  OFFSET(printk_log.len)=8
+  OFFSET(printk_log.text_len)=10
+  OFFSET(printk_log.dict_len)=12
+  LENGTH(free_area.free_list)=6
+  NUMBER(NR_FREE_PAGES)=0
+  NUMBER(PG_lru)=4
+  NUMBER(PG_private)=13
+  NUMBER(PG_swapcache)=10
+  NUMBER(PG_swapbacked)=19
+  NUMBER(PG_slab)=9
+  NUMBER(PG_hwpoison)=22
+  NUMBER(PG_head_mask)=65536
+  NUMBER(PAGE_BUDDY_MAPCOUNT_VALUE)=-129
+  NUMBER(HUGETLB_PAGE_DTOR)=2
+  NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE)=-257
+  NUMBER(VA_BITS)=48
+  NUMBER(kimage_voffset)=0xffff7fff7d600000
+  NUMBER(PHYS_OFFSET)=0x80000000
+  NUMBER(tcr_el1_t1sz)=0x10
+  KERNELOFFSET=0
+  CRASHTIME=1574266958
+
+> phys_base    : 80000000 (vmcoreinfo)
+
+> max_mapnr    : c00000
+> There is enough free memory to be done in one cycle.
+
+> Buffer size for the cyclic mode: 3145728
+> va_bits      : 47
+> page_offset  : ffffc00000000000
+> kdump: saving vmcore failed
+
+You again seem to be using an old/incorrect version of makedumpfile.
+As you can see here from [0] and [1] the newer makedumpfile patches I
+posted print where the va_bits are derived from - _stext symbol or
+vmcoreinfo.
+
+Since you are running a kdump test, it should print something like
+this for va_bits if you have the correct makedumpfile changes compiled
+in and installed (via make install) - notice the source from where
+va_bits is determined properly is printed in brackets:
+phys_base    : 80000000 (vmcoreinfo)
+
+max_mapnr    : 97fd00
+There is enough free memory to be done in one cycle.
+
+Buffer size for the cyclic mode: 2490176
+va_bits        : 48 (vmcoreinfo)
+page_offset    : ffff000000000000 (approximation)
+kimage_voffset   : fffeffff8fc00000
+max_physmem_bits : 52
+section_size_bits: 30
+
+Regards,
 Bhupesh
+
+[0]. <https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-va-support-via-vmcore-upstream-v4/arch/arm64.c#L468>
+[1]. <https://github.com/bhupesh-sharma/makedumpfile/blob/52-bit-va-support-via-vmcore-upstream-v4/arch/arm64.c#L511>
 
 
 _______________________________________________
