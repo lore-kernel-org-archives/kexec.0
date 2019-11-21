@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp2120.oracle.com ([156.151.31.85])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iXs0a-00045Y-3m
- for kexec@lists.infradead.org; Thu, 21 Nov 2019 19:20:53 +0000
+ id 1iXuN9-0001uZ-Gl
+ for kexec@lists.infradead.org; Thu, 21 Nov 2019 21:52:21 +0000
 Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
 Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
  extensions
 From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <4C21663E-4E3B-402D-96FD-BD7623C6628A@oracle.com>
-Date: Thu, 21 Nov 2019 13:20:38 -0600
-Message-Id: <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
+In-Reply-To: <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
+Date: Thu, 21 Nov 2019 15:52:05 -0600
+Message-Id: <C825B090-610A-4EFE-9292-57DDD4832BA6@oracle.com>
 References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
  <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
  <B71B3868-9A0B-46AD-8777-97A1599BFB91@oracle.com>
@@ -17,6 +17,7 @@ References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
  <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
  <CACi5LpO9hRKotoMAgEQiLPEHWm7DO_NXWmTL1Wcfi3A0OyGJMQ@mail.gmail.com>
  <4C21663E-4E3B-402D-96FD-BD7623C6628A@oracle.com>
+ <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,41 +35,66 @@ Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni
 
 
 
-> On Nov 21, 2019, at 10:59 AM, John Donnelly <john.p.donnelly@oracle.com> wrote:
+> On Nov 21, 2019, at 1:20 PM, John Donnelly <john.p.donnelly@oracle.com> wrote:
 > 
 > 
 > 
->> On Nov 21, 2019, at 10:32 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>> On Nov 21, 2019, at 10:59 AM, John Donnelly <john.p.donnelly@oracle.com> wrote:
 >> 
->>> On Wed, Nov 20, 2019 at 10:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
->>> 
->>> Hi,
->>> 
->>> Recent test below
->>> This is your makedumpfile pulled from sourceforge .
 >> 
->> Do you mean github? I don't remember pushing anything to sourceforge.
->> Please share the exact branch name and the source URL for the
->> makedumpfile you are using
+>> 
+>>> On Nov 21, 2019, at 10:32 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>>> 
+>>>> On Wed, Nov 20, 2019 at 10:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
+>>>> 
+>>>> Hi,
+>>>> 
+>>>> Recent test below
+>>>> This is your makedumpfile pulled from sourceforge .
+>>> 
+>>> Do you mean github? I don't remember pushing anything to sourceforge.
+>>> Please share the exact branch name and the source URL for the
+>>> makedumpfile you are using
+>> 
+>> Hi,   You are correct -  GitHub -    I used your url posted below ; I do not see the arch/arm64.c changes in the zip  version I downloaded . 
+>> 
+>> I am not a GUI/gitlab user. Can you please send a  tarball copy of your working makedumpfile   CLI  via email and I will verify it works.
+>> 
 > 
-> Hi,   You are correct -  GitHub -    I used your url posted below ; I do not see the arch/arm64.c changes in the zip  version I downloaded . 
 > 
-> I am not a GUI/gitlab user. Can you please send a  tarball copy of your working makedumpfile   CLI  via email and I will verify it works.
+>  Hi 
+> 
+> 
+>   I was able to fork and clone your work area .
+> 
+> I can see makedumpfile works now ! 
+> 
+> Fantastic ;;  Thank you for your patience !
 > 
 
 
-  Hi 
 
- 
-   I was able to fork and clone your work area .
+   I did some basic unit tests. 
 
- I can see makedumpfile works now ! 
+   This patch for  makedumpfile  ONLY WORKS on 5.4.0-rc8 kernel. 
 
- Fantastic ;;  Thank you for your patience !
+  It does not work with a previous 4.18 kernel. 
 
-
+ Is this suppose to be backwards compatible  ?
 
 
+
+
+
+> 
+> 
+> 
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_kexec&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=qzvbWFi4jiB58rXJ3WWlsBhMaCE050Bl3F630z5cxZQ&s=06v1wglHOpFgEZdqr06KBrYVdp3SPc6GuQ88d6Mo_24&e= 
 
 
 _______________________________________________
