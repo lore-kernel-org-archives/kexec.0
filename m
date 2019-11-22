@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iY6av-0001z9-MW
- for kexec@lists.infradead.org; Fri, 22 Nov 2019 10:55:25 +0000
+ id 1iY6hU-0006tC-Mq
+ for kexec@lists.infradead.org; Fri, 22 Nov 2019 11:02:10 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 079/122] kexec: Allocate decrypted control pages for
+Subject: [PATCH 4.19 138/220] kexec: Allocate decrypted control pages for
  kdump if SME is enabled
-Date: Fri, 22 Nov 2019 11:28:52 +0100
-Message-Id: <20191122100819.526924385@linuxfoundation.org>
-In-Reply-To: <20191122100722.177052205@linuxfoundation.org>
-References: <20191122100722.177052205@linuxfoundation.org>
+Date: Fri, 22 Nov 2019 11:28:23 +0100
+Message-Id: <20191122100922.727399494@linuxfoundation.org>
+In-Reply-To: <20191122100912.732983531@linuxfoundation.org>
+References: <20191122100912.732983531@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -59,7 +59,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 6 insertions(+)
 
 diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 8f15665ab6167..27cf24e285e0c 100644
+index f50b90d0d1c28..faeec8255e7e0 100644
 --- a/kernel/kexec_core.c
 +++ b/kernel/kexec_core.c
 @@ -473,6 +473,10 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
@@ -73,7 +73,7 @@ index 8f15665ab6167..27cf24e285e0c 100644
  	return pages;
  }
  
-@@ -867,6 +871,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+@@ -869,6 +873,7 @@ static int kimage_load_crash_segment(struct kimage *image,
  			result  = -ENOMEM;
  			goto out;
  		}
@@ -81,7 +81,7 @@ index 8f15665ab6167..27cf24e285e0c 100644
  		ptr = kmap(page);
  		ptr += maddr & ~PAGE_MASK;
  		mchunk = min_t(size_t, mbytes,
-@@ -884,6 +889,7 @@ static int kimage_load_crash_segment(struct kimage *image,
+@@ -886,6 +891,7 @@ static int kimage_load_crash_segment(struct kimage *image,
  			result = copy_from_user(ptr, buf, uchunk);
  		kexec_flush_icache_page(page);
  		kunmap(page);
