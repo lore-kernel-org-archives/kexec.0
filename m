@@ -1,31 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from scorn.kernelslacker.org ([2600:3c03:e000:2fb::1])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iYDy7-0008TY-4x
- for kexec@lists.infradead.org; Fri, 22 Nov 2019 18:47:49 +0000
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com
- [10.5.11.12])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 705D7800054
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2019 18:47:40 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com
- (colo-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.20])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id 64D8761074
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2019 18:47:40 +0000 (UTC)
-Received: from zmail24.collab.prod.int.phx2.redhat.com
- (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
- by colo-mx.corp.redhat.com (Postfix) with ESMTP id 5837F18095FF
- for <kexec@lists.infradead.org>; Fri, 22 Nov 2019 18:47:40 +0000 (UTC)
-Date: Fri, 22 Nov 2019 13:47:40 -0500 (EST)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <483111234.14383042.1574448460262.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.13491.1574446920.2486.kexec@lists.infradead.org>
-References: <mailman.13491.1574446920.2486.kexec@lists.infradead.org>
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
+ id 1iYFfu-0008EO-TF
+ for kexec@lists.infradead.org; Fri, 22 Nov 2019 20:37:08 +0000
+Date: Fri, 22 Nov 2019 15:37:02 -0500
+From: Dave Jones <davej@codemonkey.org.uk>
+Subject: Re: makedumpfile: ELF format issues (RE: makedumpfile: Fix divide by
+ zero in print_report())
+Message-ID: <20191122203702.GA4615@codemonkey.org.uk>
+References: <4AE2DC15AC0B8543882A74EA0D43DBEC03591761@BPXM09GP.gisp.nec.co.jp>
+ <20191009213855.GA14574@codemonkey.org.uk>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03593DA7@BPXM09GP.gisp.nec.co.jp>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035949A4@BPXM09GP.gisp.nec.co.jp>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03595014@BPXM09GP.gisp.nec.co.jp>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03595014@BPXM09GP.gisp.nec.co.jp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,35 +28,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+On Wed, Nov 13, 2019 at 07:36:01PM +0000, Kazuhito Hagio wrote:
 
+ > I think I've fixed the ELF issues which I could reproduce:
+ > - wrong statistics
+ > - e_phnum overflow
+ > 
+ > If you still see any problems with the latest makedumpfile,
+ > please let me know.
+ > 
+ > Thanks,
+ > Kazu
 
------ Original Message -----
-> 
-> Hi Bhupesh,
-> 
-> I recall seeing a reference to modification are needed for the crash CLI also
-> to support 5.4.0-rc with your kernel patches cited here.
->  
-> Where would I find that at ?  I don?t see crash on Giblab.
+It's taken me a little while to get this stuff into our production
+systems, but things are looking much better so far.  Since I pushed out
+the fixes, I've seen no new corrupted dumps.  I'll keep an eye on things
+and let you know if anything new comes up.
 
-https://github.com/crash-utility/crash
+thanks!
 
-> 
-> >>> 
-> >>> 
-> >>> Hi
-> >>> 
-> >>> 
-> >>> I was able to fork and clone your work area .
-> >>> 
-> >>> I can see makedumpfile works now !
-> >>> 
-> >>> Fantastic ;;  Thank you for your patience !
-> >>> 
-> >> 
-
+	Dave
 
 _______________________________________________
 kexec mailing list
