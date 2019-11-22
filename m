@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iY6KD-0002l7-Nl
- for kexec@lists.infradead.org; Fri, 22 Nov 2019 10:38:07 +0000
+ id 1iY6Uu-0002GR-DF
+ for kexec@lists.infradead.org; Fri, 22 Nov 2019 10:49:15 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.4 151/159] x86/kexec: Correct KEXEC_BACKUP_SRC_END
+Subject: [PATCH 4.9 211/222] x86/kexec: Correct KEXEC_BACKUP_SRC_END
  off-by-one error
-Date: Fri, 22 Nov 2019 11:29:02 +0100
-Message-Id: <20191122100844.637485011@linuxfoundation.org>
-In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
-References: <20191122100704.194776704@linuxfoundation.org>
+Date: Fri, 22 Nov 2019 11:29:11 +0100
+Message-Id: <20191122100917.646811418@linuxfoundation.org>
+In-Reply-To: <20191122100830.874290814@linuxfoundation.org>
+References: <20191122100830.874290814@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -73,7 +73,7 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index d2434c1cad055..414f9b52e58e6 100644
+index 282630e4c6ea4..1624a7ffa95d8 100644
 --- a/arch/x86/include/asm/kexec.h
 +++ b/arch/x86/include/asm/kexec.h
 @@ -66,7 +66,7 @@ struct kimage;
