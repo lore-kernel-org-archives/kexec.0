@@ -1,25 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from mail-yw1-xc44.google.com ([2607:f8b0:4864:20::c44])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iY9p8-000323-01
- for kexec@lists.infradead.org; Fri, 22 Nov 2019 14:22:19 +0000
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <03F00E44-16D9-46E8-88DA-6891968CE167@oracle.com>
-Date: Fri, 22 Nov 2019 08:22:01 -0600
-Message-Id: <5F63D43D-09E6-4188-A708-C31AB9F6CC0A@oracle.com>
-References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
- <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
- <B71B3868-9A0B-46AD-8777-97A1599BFB91@oracle.com>
- <CACi5LpOF2FLrmXEyJ4FfjqJBxxt-np2+1V0EFK__EH=6ubFE0A@mail.gmail.com>
- <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
- <CACi5LpO9hRKotoMAgEQiLPEHWm7DO_NXWmTL1Wcfi3A0OyGJMQ@mail.gmail.com>
- <4C21663E-4E3B-402D-96FD-BD7623C6628A@oracle.com>
- <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
- <C825B090-610A-4EFE-9292-57DDD4832BA6@oracle.com>
- <03F00E44-16D9-46E8-88DA-6891968CE167@oracle.com>
+ id 1iYDZ7-0007Gi-5h
+ for kexec@lists.infradead.org; Fri, 22 Nov 2019 18:21:59 +0000
+Received: by mail-yw1-xc44.google.com with SMTP id g77so2716058ywb.10
+ for <kexec@lists.infradead.org>; Fri, 22 Nov 2019 10:21:56 -0800 (PST)
+From: minyard@acm.org
+Subject: [PATCH] powerpc: Fix issue with missing registers in kdump
+Date: Fri, 22 Nov 2019 12:21:44 -0600
+Message-Id: <20191122182144.20633-1-minyard@acm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,20 +17,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev@lists.ozlabs.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Corey Minyard <cminyard@mvista.com>
 
-CgpIaSBCaHVwZXNoLAoKSSByZWNhbGwgc2VlaW5nIGEgcmVmZXJlbmNlIHRvIG1vZGlmaWNhdGlv
-biBhcmUgbmVlZGVkIGZvciB0aGUgY3Jhc2ggQ0xJIGFsc28gdG8gc3VwcG9ydCA1LjQuMC1yYyB3
-aXRoIHlvdXIga2VybmVsIHBhdGNoZXMgY2l0ZWQgaGVyZS4KIApXaGVyZSB3b3VsZCBJIGZpbmQg
-dGhhdCBhdCA/ICBJIGRvbuKAmXQgc2VlIGNyYXNoIG9uIEdpYmxhYi4KCgo+Pj4gCj4+PiAKPj4+
-IEhpIAo+Pj4gCj4+PiAKPj4+IEkgd2FzIGFibGUgdG8gZm9yayBhbmQgY2xvbmUgeW91ciB3b3Jr
-IGFyZWEgLgo+Pj4gCj4+PiBJIGNhbiBzZWUgbWFrZWR1bXBmaWxlIHdvcmtzIG5vdyAhIAo+Pj4g
-Cj4+PiBGYW50YXN0aWMgOzsgIFRoYW5rIHlvdSBmb3IgeW91ciBwYXRpZW5jZSAhCj4+PiAKPj4g
-CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMg
-bWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJh
-ZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Corey Minyard <cminyard@mvista.com>
+
+When powerpc saved the registers on an SMP system, it was doing so
+correctly.  But after the crash, the register information was blank.
+The issue was that the data was still in the CPU caches on the
+CPUs, but once the jump to the crash kernel was done, the data was
+never flushed to main memory, so that data was lost.
+
+Add a cache flush after the CPU register notes are saved to fix
+the issue.
+
+Signed-off-by: Corey Minyard <cminyard@mvista.com>
+---
+I found this problem on an older (3.10) kernel on a Freescale
+T1042D4RDB system, and I couldn't find any discussion or change that
+dealt with anything like this.  It appears to still be an issue,
+though I'm not sure and I'm not sure this is the right way to fix the
+problem.
+
+I've tried reproducing on end of tree, but I've run into a couple of
+issues.  The file
+ /proc/device-tree/soc@ffe000000/fman@400000/fman-firmware/fsl,firmware
+will only return 4096 bytes at a time (apparently it didn't in 3.10),
+but the kexec command tries to read it in one big read in
+kexec/arch/ppc/fs2dt.c:
+
+       if (read(fd, dt, len) != len)
+                die("unrecoverable error: could not read \"%s\": %s\n",
+                    pathname, strerror(errno));
+
+I hacked around that and now it hangs before printing anything in the
+new kernel.  Since the above was broken, I doubt this has been tested
+in a while, so no surprise, I guess.  
+
+So I can't test this out on a current kernel, and I'm not sure what to
+do at this point.  I have it fixed for our current use, but getting a
+fix upstream would be good.
+
+ arch/powerpc/kernel/crash.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/powerpc/kernel/crash.c b/arch/powerpc/kernel/crash.c
+index d488311efab1..f6e345b8c33d 100644
+--- a/arch/powerpc/kernel/crash.c
++++ b/arch/powerpc/kernel/crash.c
+@@ -24,6 +24,7 @@
+ #include <asm/smp.h>
+ #include <asm/setjmp.h>
+ #include <asm/debug.h>
++#include <asm/cacheflush.h>
+ 
+ /*
+  * The primary CPU waits a while for all secondary CPUs to enter. This is to
+@@ -75,8 +76,21 @@ void crash_ipi_callback(struct pt_regs *regs)
+ 
+ 	hard_irq_disable();
+ 	if (!cpumask_test_cpu(cpu, &cpus_state_saved)) {
++		char *buf;
++
+ 		crash_save_cpu(regs, cpu);
+ 		cpumask_set_cpu(cpu, &cpus_state_saved);
++
++		/*
++		 * Flush the crash note region data, otherwise the
++		 * data gets left in the CPU cache and then
++		 * invalidated, so the crashing cpu will never see it
++		 * in the new kernel.
++		 */
++		buf = (char *) per_cpu_ptr(crash_notes, cpu);
++		if (buf)
++			flush_dcache_range((unsigned long) buf,
++				(unsigned long) buf + sizeof(note_buf_t));
+ 	}
+ 
+ 	atomic_inc(&cpus_in_crash);
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
