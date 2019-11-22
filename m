@@ -1,23 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iXuN9-0001uZ-Gl
- for kexec@lists.infradead.org; Thu, 21 Nov 2019 21:52:21 +0000
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
-Date: Thu, 21 Nov 2019 15:52:05 -0600
-Message-Id: <C825B090-610A-4EFE-9292-57DDD4832BA6@oracle.com>
-References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
- <CAJ2QiJJ6DdxFheRo78+n1=ZuqMQnHeuLVWchK8SApt3w9wBKLQ@mail.gmail.com>
- <B71B3868-9A0B-46AD-8777-97A1599BFB91@oracle.com>
- <CACi5LpOF2FLrmXEyJ4FfjqJBxxt-np2+1V0EFK__EH=6ubFE0A@mail.gmail.com>
- <276620F6-E9AC-4BC6-B413-D84677C3D6BC@oracle.com>
- <CACi5LpO9hRKotoMAgEQiLPEHWm7DO_NXWmTL1Wcfi3A0OyGJMQ@mail.gmail.com>
- <4C21663E-4E3B-402D-96FD-BD7623C6628A@oracle.com>
- <F5504C62-6D51-4E37-AA35-269FEA7AE480@oracle.com>
+ id 1iY6KD-0002l7-Nl
+ for kexec@lists.infradead.org; Fri, 22 Nov 2019 10:38:07 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.4 151/159] x86/kexec: Correct KEXEC_BACKUP_SRC_END
+ off-by-one error
+Date: Fri, 22 Nov 2019 11:29:02 +0100
+Message-Id: <20191122100844.637485011@linuxfoundation.org>
+In-Reply-To: <20191122100704.194776704@linuxfoundation.org>
+References: <20191122100704.194776704@linuxfoundation.org>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,71 +23,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
+To: linux-kernel@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, Takashi Iwai <tiwai@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dan.j.williams@intel.com, stable@vger.kernel.org, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, baiyaowei@cmss.chinamobile.com, "H. Peter Anvin" <hpa@zytor.com>, Bjorn Helgaas <bhelgaas@google.com>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
+
+From: Bjorn Helgaas <bhelgaas@google.com>
+
+[ Upstream commit 51fbf14f2528a8c6401290e37f1c893a2412f1d3 ]
+
+The only use of KEXEC_BACKUP_SRC_END is as an argument to
+walk_system_ram_res():
+
+  int crash_load_segments(struct kimage *image)
+  {
+    ...
+    walk_system_ram_res(KEXEC_BACKUP_SRC_START, KEXEC_BACKUP_SRC_END,
+                        image, determine_backup_region);
+
+walk_system_ram_res() expects "start, end" arguments that are inclusive,
+i.e., the range to be walked includes both the start and end addresses.
+
+KEXEC_BACKUP_SRC_END was previously defined as (640 * 1024UL), which is the
+first address *past* the desired 0-640KB range.
+
+Define KEXEC_BACKUP_SRC_END as (640 * 1024UL - 1) so the KEXEC_BACKUP_SRC
+region is [0-0x9ffff], not [0-0xa0000].
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+CC: "H. Peter Anvin" <hpa@zytor.com>
+CC: Andrew Morton <akpm@linux-foundation.org>
+CC: Brijesh Singh <brijesh.singh@amd.com>
+CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC: Ingo Molnar <mingo@redhat.com>
+CC: Lianbo Jiang <lijiang@redhat.com>
+CC: Takashi Iwai <tiwai@suse.de>
+CC: Thomas Gleixner <tglx@linutronix.de>
+CC: Tom Lendacky <thomas.lendacky@amd.com>
+CC: Vivek Goyal <vgoyal@redhat.com>
+CC: baiyaowei@cmss.chinamobile.com
+CC: bhe@redhat.com
+CC: dan.j.williams@intel.com
+CC: dyoung@redhat.com
+CC: kexec@lists.infradead.org
+Link: http://lkml.kernel.org/r/153805811578.1157.6948388946904655969.stgit@bhelgaas-glaptop.roam.corp.google.com
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/x86/include/asm/kexec.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index d2434c1cad055..414f9b52e58e6 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -66,7 +66,7 @@ struct kimage;
+ 
+ /* Memory to backup during crash kdump */
+ #define KEXEC_BACKUP_SRC_START	(0UL)
+-#define KEXEC_BACKUP_SRC_END	(640 * 1024UL)	/* 640K */
++#define KEXEC_BACKUP_SRC_END	(640 * 1024UL - 1)	/* 640K */
+ 
+ /*
+  * CPU does not save ss and sp on stack if execution is already
+-- 
+2.20.1
 
 
-
-> On Nov 21, 2019, at 1:20 PM, John Donnelly <john.p.donnelly@oracle.com> wrote:
-> 
-> 
-> 
->> On Nov 21, 2019, at 10:59 AM, John Donnelly <john.p.donnelly@oracle.com> wrote:
->> 
->> 
->> 
->>> On Nov 21, 2019, at 10:32 AM, Bhupesh Sharma <bhsharma@redhat.com> wrote:
->>> 
->>>> On Wed, Nov 20, 2019 at 10:03 PM John Donnelly <john.p.donnelly@oracle.com> wrote:
->>>> 
->>>> Hi,
->>>> 
->>>> Recent test below
->>>> This is your makedumpfile pulled from sourceforge .
->>> 
->>> Do you mean github? I don't remember pushing anything to sourceforge.
->>> Please share the exact branch name and the source URL for the
->>> makedumpfile you are using
->> 
->> Hi,   You are correct -  GitHub -    I used your url posted below ; I do not see the arch/arm64.c changes in the zip  version I downloaded . 
->> 
->> I am not a GUI/gitlab user. Can you please send a  tarball copy of your working makedumpfile   CLI  via email and I will verify it works.
->> 
-> 
-> 
->  Hi 
-> 
-> 
->   I was able to fork and clone your work area .
-> 
-> I can see makedumpfile works now ! 
-> 
-> Fantastic ;;  Thank you for your patience !
-> 
-
-
-
-   I did some basic unit tests. 
-
-   This patch for  makedumpfile  ONLY WORKS on 5.4.0-rc8 kernel. 
-
-  It does not work with a previous 4.18 kernel. 
-
- Is this suppose to be backwards compatible  ?
-
-
-
-
-
-> 
-> 
-> 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> https://urldefense.proofpoint.com/v2/url?u=http-3A__lists.infradead.org_mailman_listinfo_kexec&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=qzvbWFi4jiB58rXJ3WWlsBhMaCE050Bl3F630z5cxZQ&s=06v1wglHOpFgEZdqr06KBrYVdp3SPc6GuQ88d6Mo_24&e= 
 
 
 _______________________________________________
