@@ -1,35 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iYWQ5-0005t1-JG
- for kexec@lists.infradead.org; Sat, 23 Nov 2019 14:29:55 +0000
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
- by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xANEOPeb093578
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2019 14:29:44 GMT
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
- by userp2120.oracle.com with ESMTP id 2wewdqs2j6-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2019 14:29:43 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
- by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id xANETJYn021581
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2019 14:29:43 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
- by userp3030.oracle.com with ESMTP id 2wesvyfj7a-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2019 14:29:43 +0000
-Received: from abhmp0009.oracle.com (abhmp0009.oracle.com [141.146.116.15])
- by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id xANETdXQ024676
- for <kexec@lists.infradead.org>; Sat, 23 Nov 2019 14:29:42 GMT
-Subject: Re: [PATCH v4 0/4] makedumpfile/arm64: Add support for ARMv8.2
- extensions
-References: <mailman.13491.1574446920.2486.kexec@lists.infradead.org>
- <483111234.14383042.1574448460262.JavaMail.zimbra@redhat.com>
-From: John Donnelly <John.P.Donnelly@Oracle.com>
-Message-ID: <afbba516-250b-3325-d453-0c37bc63d1b6@Oracle.com>
-Date: Sat, 23 Nov 2019 08:29:38 -0600
+ id 1iZ7IH-00036y-F3
+ for kexec@lists.infradead.org; Mon, 25 Nov 2019 05:52:19 +0000
+Date: Mon, 25 Nov 2019 13:52:01 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: kexec_file overwrites reserved EFI ESRT memory
+Message-ID: <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+References: <20191122180552.GA32104@weiser.dinsnail.net>
+ <87blt3y949.fsf@x220.int.ebiederm.org>
+ <20191122210702.GE32104@weiser.dinsnail.net>
 MIME-Version: 1.0
-In-Reply-To: <483111234.14383042.1574448460262.JavaMail.zimbra@redhat.com>
-Content-Language: en-US
+In-Reply-To: <20191122210702.GE32104@weiser.dinsnail.net>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -38,39 +22,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Michael Weiser <michael@weiser.dinsnail.net>
+Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-On 11/22/19 12:47 PM, Dave Anderson wrote:
+On 11/22/19 at 10:07pm, Michael Weiser wrote:
+> Hi Eric,
 > 
+> On Fri, Nov 22, 2019 at 02:00:22PM -0600, Eric W. Biederman wrote:
 > 
-> ----- Original Message -----
->>
->> Hi Bhupesh,
->>
->> I recall seeing a reference to modification are needed for the crash CLI also
->> to support 5.4.0-rc with your kernel patches cited here.
->>   
->> Where would I find that at ?  I don?t see crash on Giblab.
+> > > esrt: Unsupported ESRT version 2904149718861218184.
+> > >
+> > > (The image is rather large at 18MiB as it has a built-in initrd.)
+> > When did x86_64 get support for ARCH_KEEP_MEMBLOCK?  I can't find it
+> > anywhere.
 > 
-> https://urldefense.proofpoint.com/v2/url?u=https-3A__github.com_crash-2Dutility_crash&d=DwICAg&c=RoP1YumCXCgaWHvlZYR8PZh8Bv7qIrMUB65eapI_JnE&r=t2fPg9D87F7D8jm0_3CG9yoiIKdRg4qc_thBw4bzMhc&m=Idg6a1AITiQdn_Ne3jgviBQAPUgdP7PzV00Z47gRHe8&s=g2_ZOSi3nOdUQgU-MvV3nUWcDbnnanKhzPGPUKnFm-A&e=
+> No, is hasn't. I temporarily hacked that in to see if it'd change
+> anything and it did. Sorry to not be more clear about that.
 > 
->>
+> > Fundamentally when deciding where to place a new kernel kexec (either
+> > user space or the in kernel kexec_file implementation) needs to be able
+> > to ask the question which memory ares are reserved.
+> > What the buddy
+> > allocator does is unimportant as kexec copies memory from all over
+> > the place and places it in the destined memory addresses at the
+> > time of the kexec operation.
+> 
+> > So my question is why doesn't the ESRT reservation wind up in
+> > /proc/iomem?
+> 
+> My guess is that the focus was that some EFI structures need to be kept
+> around accross the life cycle of *one* running kernel and
+> memblock_reserve() was enough for that. Marking them so they survive
+> kexecing another kernel might just never have cropped up thus far. Ard
+> or Matt would know.
 
+Can you check your un-reserved memory, if your memory falls into EFI
+BOOT* then in X86 you can use something like below if it is not covered:
 
-Hi David ,
+void __init efi_esrt_init(void)
+{
+...
+	pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
+	if (md.type == EFI_BOOT_SERVICES_DATA)
+		efi_mem_reserve(esrt_data, esrt_data_size);
+...
+}
 
-Thank you. I verified that works with Bhupesh's makedumpfile and 5.4.0 
-kernel patches.
+Unfortunately I noticed there are different requirements/ways for
+different types of "reserved" memory.  But that is another topic..
 
+Thanks
+Dave 
 
-
--- 
-Thank You,
-John
 
 _______________________________________________
 kexec mailing list
