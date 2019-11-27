@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iZi7y-00076v-Qr
- for kexec@lists.infradead.org; Tue, 26 Nov 2019 21:12:09 +0000
-Received: by mail-lj1-f197.google.com with SMTP id y17so3920224ljm.16
- for <kexec@lists.infradead.org>; Tue, 26 Nov 2019 13:11:59 -0800 (PST)
+ id 1iZnen-0006Rs-NE
+ for kexec@lists.infradead.org; Wed, 27 Nov 2019 03:06:23 +0000
+Subject: Re: [PATCH] fix bug in is_dumpable_file()
+References: <1574133077-5436-1-git-send-email-piliu@redhat.com>
+From: piliu <piliu@redhat.com>
+Message-ID: <8eea60e3-8e45-dee5-12bd-645aedc201b5@redhat.com>
+Date: Wed, 27 Nov 2019 11:06:07 +0800
 MIME-Version: 1.0
-References: <CAJ2QiJLBcmdVrmJmfKehadUzzUkmMsn8b2BxmGh7LHXzo7PtJw@mail.gmail.com>
-In-Reply-To: <CAJ2QiJLBcmdVrmJmfKehadUzzUkmMsn8b2BxmGh7LHXzo7PtJw@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 27 Nov 2019 02:41:45 +0530
-Message-ID: <CACi5LpPosB9TbVBoG8CVdax0e7pJjpZQUQF2ZB3LciNohXRraQ@mail.gmail.com>
-Subject: Re: kexec-tools/vmcore-demsg: No program header covering vaddr
- 0xffff000be7a00000found kexec bug?
+In-Reply-To: <1574133077-5436-1-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,51 +23,103 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc: Prabhakar Kushwaha <pkushwaha@marvell.com>, kexec mailing list <kexec@lists.infradead.org>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
+To: kexec@lists.infradead.org
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 
-Hi Prabhakar,
+NACKed by myself due to a misunderstand of the code.
 
-On Tue, Nov 26, 2019 at 1:04 PM Prabhakar Kushwaha
-<prabhakar.pkin@gmail.com> wrote:
->
-> Hi All,
->
-> I am facing issue below error with latest kexec-tools/vmcore-demsg tools.
->
-> $ ./build/sbin/vmcore-dmesg /proc/vmcore
-> No program header covering vaddr 0xffff000be7a00000found kexec bug?
->
-> I am testing on AARM64 platform with following git repos.
-> A) kexec tools:
-> https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> top commit: bd077966e2b9041c (kexec-tools: Fix conversion overflow
-> when compiling on 32-bit platforms)
->
-> B) Linux:git://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-> top commit: af42d3466bdc8f3980 (Linux 5.4-rc8)
->
-> I am seeing similar issue in past also in couple of discussions. has
-> it not fixed earlier or it keep arises with time to time
->
-> Please suggest.
 
-Thanks for reporting the issue.
-I think the issue with the latest ARM64 kernel and kexec-tools is the
-same as the makedumpfile, i.e. the PAGE_OFFSET calculation needs to be
-dynamically done for 52-bit VA_BITS correctly as well.
-
-I think the VA_BITS calculation via _stext symbol will not work well
-for 52-bit case, because the 52nd and 48th bit are both set in such a
-case  (I already have a conversation going on with the arm64
-maintainers on how to get around this issue).
-
-Until we agree on a formal approach with the arm64 miantainer, I will
-try to send a patch (soon) to fix this kexec-tools issue in a generic
-way (for 52-bit and 48-bit VA_BITS values).
-
-Regards,
-Bhupesh
+On 11/19/2019 11:11 AM, Pingfan Liu wrote:
+> is_dumpable_file() is inconsistent with write_kdump_bitmap_file().
+> In the former one, bitmap->offset takes account for the header. But the
+> later one does not.
+> 
+> It makes things more mussy where info->bitmap1/bitmap2's offset do not
+> account for header, while info->bitmap_memory does.
+> 
+> Making all of these consistent by not accounting for header.
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> ---
+>  makedumpfile.c | 5 +----
+>  makedumpfile.h | 5 +++--
+>  sadump_info.c  | 4 ++--
+>  3 files changed, 6 insertions(+), 8 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index d76a435..496e212 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3637,7 +3637,6 @@ initialize_bitmap_memory(void)
+>  	struct disk_dump_header	*dh;
+>  	struct kdump_sub_header *kh;
+>  	struct dump_bitmap *bmp;
+> -	off_t bitmap_offset;
+>  	off_t bitmap_len, max_sect_len;
+>  	mdf_pfn_t pfn;
+>  	int i, j;
+> @@ -3647,8 +3646,6 @@ initialize_bitmap_memory(void)
+>  	kh = info->kh_memory;
+>  	block_size = dh->block_size;
+>  
+> -	bitmap_offset
+> -	    = (DISKDUMP_HEADER_BLOCKS + dh->sub_hdr_size) * block_size;
+>  	bitmap_len = block_size * dh->bitmap_blocks;
+>  
+>  	bmp = malloc(sizeof(struct dump_bitmap));
+> @@ -3667,7 +3664,7 @@ initialize_bitmap_memory(void)
+>  	bmp->file_name = info->name_memory;
+>  	bmp->no_block  = -1;
+>  	memset(bmp->buf, 0, BUFSIZE_BITMAP);
+> -	bmp->offset = bitmap_offset + bitmap_len / 2;
+> +	bmp->offset = bitmap_len / 2;
+>  	info->bitmap_memory = bmp;
+>  
+>  	if (dh->header_version >= 6)
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 24b2f69..3c02e83 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1171,6 +1171,7 @@ struct dump_bitmap {
+>  	int		no_block;
+>  	char		*file_name;
+>  	char		*buf;
+> +	/* offset in bitmap section */
+>  	off_t		offset;
+>  };
+>  
+> @@ -2204,10 +2205,10 @@ is_dumpable_buffer(struct dump_bitmap *bitmap, mdf_pfn_t pfn, struct cycle *cycl
+>  static inline int
+>  is_dumpable_file(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
+>  {
+> -	off_t offset;
+> +	off_t offset = info->offset_bitmap1;
+>  	ssize_t rcode;
+>  	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+> -		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+> +		offset += bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>  		if (lseek(bitmap->fd, offset, SEEK_SET) < 0 ) {
+>  			ERRMSG("Can't seek the bitmap(%s). %s\n",
+>  				bitmap->file_name, strerror(errno));
+> diff --git a/sadump_info.c b/sadump_info.c
+> index 46867ce..a3d51b9 100644
+> --- a/sadump_info.c
+> +++ b/sadump_info.c
+> @@ -137,11 +137,11 @@ sadump_is_on(char *bitmap, mdf_pfn_t i)
+>  static inline int
+>  sadump_is_dumpable(struct dump_bitmap *bitmap, mdf_pfn_t pfn)
+>  {
+> -	off_t offset;
+> +	off_t offset = info->offset_bitmap1;
+>  	ssize_t rcode;
+>  
+>  	if (pfn == 0 || bitmap->no_block != pfn/PFN_BUFBITMAP) {
+> -		offset = bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+> +		offset += bitmap->offset + BUFSIZE_BITMAP*(pfn/PFN_BUFBITMAP);
+>  		lseek(bitmap->fd, offset, SEEK_SET);
+>  		rcode = read(bitmap->fd, bitmap->buf, BUFSIZE_BITMAP);
+>  		if (rcode != BUFSIZE_BITMAP)
+> 
 
 
 _______________________________________________
