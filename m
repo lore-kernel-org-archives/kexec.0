@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ialx9-0005iC-KD
- for kexec@lists.infradead.org; Fri, 29 Nov 2019 19:29:21 +0000
-Received: by mail-pl1-f199.google.com with SMTP id k8so13216318plt.7
- for <kexec@lists.infradead.org>; Fri, 29 Nov 2019 11:29:13 -0800 (PST)
+ id 1iamQS-00073U-B9
+ for kexec@lists.infradead.org; Fri, 29 Nov 2019 19:59:38 +0000
+Received: by mail-pg1-f197.google.com with SMTP id r2so6593171pgl.4
+ for <kexec@lists.infradead.org>; Fri, 29 Nov 2019 11:59:32 -0800 (PST)
 From: Bhupesh Sharma <bhsharma@redhat.com>
 Subject: [RESEND PATCH v5 0/5] Append new variables to vmcoreinfo
  (TCR_EL1.T1SZ for arm64 and MAX_PHYSMEM_BITS for all archs)
-Date: Sat, 30 Nov 2019 00:58:41 +0530
-Message-Id: <1575055726-23464-1-git-send-email-bhsharma@redhat.com>
+Date: Sat, 30 Nov 2019 01:29:14 +0530
+Message-Id: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,7 +29,8 @@ Cc: Mark Rutland <mark.rutland@arm.com>, linux-doc@vger.kernel.org, Benjamin Her
 
 - Resending the v5 version as Will Deacon reported that the patchset was
   split into two seperate threads while sending out. It was an issue
-  with my 'msmtp' settings which is now fixed.
+  with my 'msmtp' settings which seems to be now fixed. Please ignore
+  all previous v5 versions.
 
 Changes since v4:
 ----------------
