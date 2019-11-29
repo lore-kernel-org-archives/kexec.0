@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from heinz.dinsnail.net ([2a01:238:43b4:3200:9392:5dcc:2f0e:a960])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iaiG3-0007vn-Mr
- for kexec@lists.infradead.org; Fri, 29 Nov 2019 15:32:37 +0000
-Date: Fri, 29 Nov 2019 16:27:00 +0100
-From: Michael Weiser <michael@weiser.dinsnail.net>
-Subject: Re: kexec_file overwrites reserved EFI ESRT memory
-Message-ID: <20191129152700.GA8286@weiser.dinsnail.net>
-References: <20191122180552.GA32104@weiser.dinsnail.net>
- <87blt3y949.fsf@x220.int.ebiederm.org>
- <20191122210702.GE32104@weiser.dinsnail.net>
- <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
+ id 1ialxC-0005id-HS
+ for kexec@lists.infradead.org; Fri, 29 Nov 2019 19:29:25 +0000
+Received: by mail-pj1-f71.google.com with SMTP id b10so2451905pju.18
+ for <kexec@lists.infradead.org>; Fri, 29 Nov 2019 11:29:19 -0800 (PST)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [RESEND PATCH v5 1/5] crash_core,
+ vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+Date: Sat, 30 Nov 2019 00:58:42 +0530
+Message-Id: <1575055726-23464-2-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1575055726-23464-1-git-send-email-bhsharma@redhat.com>
+References: <1575055726-23464-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,143 +21,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-efi@vger.kernel.org, kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: linux-kernel@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-doc@vger.kernel.org, Will Deacon <will@kernel.org>, bhsharma@redhat.com, x86@kernel.org, kexec@lists.infradead.org, Dave Anderson <anderson@redhat.com>, Paul Mackerras <paulus@samba.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Boris Petkov <bp@alien8.de>, Michael Ellerman <mpe@ellerman.id.au>, Catalin Marinas <catalin.marinas@arm.com>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org, Steve Capper <steve.capper@arm.com>
 
-Hello Dave,
+Right now user-space tools like 'makedumpfile' and 'crash' need to rely
+on a best-guess method of determining value of 'MAX_PHYSMEM_BITS'
+supported by underlying kernel.
 
-On Mon, Nov 25, 2019 at 01:52:01PM +0800, Dave Young wrote:
+This value is used in user-space code to calculate the bit-space
+required to store a section for SPARESMEM (similar to the existing
+calculation method used in the kernel implementation):
 
-> > > Fundamentally when deciding where to place a new kernel kexec (either
-> > > user space or the in kernel kexec_file implementation) needs to be able
-> > > to ask the question which memory ares are reserved.
-[...]
-> > > So my question is why doesn't the ESRT reservation wind up in
-> > > /proc/iomem?
-> > 
-> > My guess is that the focus was that some EFI structures need to be kept
-> > around accross the life cycle of *one* running kernel and
-> > memblock_reserve() was enough for that. Marking them so they survive
-> > kexecing another kernel might just never have cropped up thus far. Ard
-> > or Matt would know.
-> Can you check your un-reserved memory, if your memory falls into EFI
-> BOOT* then in X86 you can use something like below if it is not covered:
+  #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
 
-> void __init efi_esrt_init(void)
-> {
-> ...
-> 	pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
-> 	if (md.type == EFI_BOOT_SERVICES_DATA)
-> 		efi_mem_reserve(esrt_data, esrt_data_size);
-> ...
-> }
+Now, regressions have been reported in user-space utilities
+like 'makedumpfile' and 'crash' on arm64, with the recently added
+kernel support for 52-bit physical address space, as there is
+no clear method of determining this value in user-space
+(other than reading kernel CONFIG flags).
 
-Please bear with me if I'm a bit slow on the uptake here: On my machine,
-the esrt module reports at boot:
+As per suggestion from makedumpfile maintainer (Kazu), it makes more
+sense to append 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself
+rather than in arch-specific code, so that the user-space code for other
+archs can also benefit from this addition to the vmcoreinfo and use it
+as a standard way of determining 'SECTIONS_SHIFT' value in user-land.
 
-[    0.001244] esrt: Reserving ESRT space from 0x0000000074dd2f98 to 0x0000000074dd2fd0.
+A reference 'makedumpfile' implementation which reads the
+'MAX_PHYSMEM_BITS' value from vmcoreinfo in a arch-independent fashion
+is available here:
 
-This area is of type "Boot Data" (== BOOT_SERVICES_DATA) which makes the
-code you quote reserve it using memblock_reserve() shown by
-memblock=debug:
+[0]. https://github.com/bhupesh-sharma/makedumpfile/blob/remove-max-phys-mem-bit-v1/arch/ppc64.c#L471
 
-[    0.001246] memblock_reserve: [0x0000000074dd2f98-0x0000000074dd2fcf] efi_mem_reserve+0x1d/0x2b
+Cc: Boris Petkov <bp@alien8.de>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Steve Capper <steve.capper@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Dave Anderson <anderson@redhat.com>
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Cc: x86@kernel.org
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ kernel/crash_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-It also calls into arch/x86/platform/efi/quirks.c:efi_arch_mem_reserve()
-which tags it as EFI_MEMORY_RUNTIME while the surrounding ones aren't
-as shown by efi=debug:
-
-[    0.178111] efi: mem10: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd3000-0x0000000075becfff] (14MB)
-[    0.178113] efi: mem11: [Boot Data          |RUN|  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd2000-0x0000000074dd2fff] (0MB)
-[    0.178114] efi: mem12: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000006d635000-0x0000000074dd1fff] (119MB)
-
-This prevents arch/x86/platform/efi/quirks.c:efi_free_boot_services()
-from calling __memblock_free_late() on it. And indeed, memblock=debug does
-not report this area as being free'd while the surrounding ones are:
-
-[    0.178369] __memblock_free_late: [0x0000000074dd3000-0x0000000075becfff] efi_free_boot_services+0x126/0x1f8
-[    0.178658] __memblock_free_late: [0x000000006d635000-0x0000000074dd1fff] efi_free_boot_services+0x126/0x1f8
-
-The esrt area does not show up in /proc/iomem though:
-
-00100000-763f5fff : System RAM
-  62000000-62a00d80 : Kernel code
-  62c00000-62f15fff : Kernel rodata
-  63000000-630ea8bf : Kernel data
-  63fed000-641fffff : Kernel bss
-  65000000-6affffff : Crash kernel
-
-And thus kexec loads the new kernel right over that area as shown when
-enabling -DDEBUG on kexec_file.c (0x74dd3000 being inbetween 0x73000000
-and 0x73000000+0x24be000 = 0x754be000):
-
-[  650.007695] kexec_file: Loading segment 0: buf=0x000000003a9c84d6 bufsz=0x5000 mem=0x98000 memsz=0x6000
-[  650.007699] kexec_file: Loading segment 1: buf=0x0000000017b2b9e6 bufsz=0x1240 mem=0x96000 memsz=0x2000
-[  650.007703] kexec_file: Loading segment 2: buf=0x00000000fdf72ba2 bufsz=0x1150888 mem=0x73000000 memsz=0x24be000
-
-... because it looks for any memory hole large enough in iomem resources
-tagged as System RAM, which 0x74dd2000-0x74dd2fff would then need to be
-excluded from on my system.
-
-Looking some more at efi_arch_mem_reserve() I see that it also registers
-the area with efi.memmap and installs it using efi_memmap_install().
-which seems to call memremap(MEMREMAP_WB) on it. From my understanding
-of the comments in the source of memremap(), MEMREMAP_WB does specifically
-*not* reserve that memory in any way.
-
-> Unfortunately I noticed there are different requirements/ways for
-> different types of "reserved" memory.  But that is another topic..
-
-I tried to reserve the area with something like this:
-
-t a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 4de244683a7e..b86a5df027a2 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -249,6 +249,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-        efi_memory_desc_t md;
-        int num_entries;
-        void *new;
-+       struct resource *res;
- 
-        if (efi_mem_desc_lookup(addr, &md) ||
-            md.type != EFI_BOOT_SERVICES_DATA) {
-@@ -294,6 +295,21 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-        early_memunmap(new, new_size);
- 
-        efi_memmap_install(new_phys, num_entries);
-+
-+       res = memblock_alloc(sizeof(*res), SMP_CACHE_BYTES);
-+       if (!res) {
-+               pr_err("Failed to allocate EFI io resource allocator for "
-+                               "0x%llx:0x%llx", mr.range.start, mr.range.end);
-+               return;
-+       }
-+
-+       res->start      = mr.range.start;
-+       res->end        = mr.range.end;
-+       res->name       = "EFI runtime";
-+       res->flags      = IORESOURCE_MEM | IORESOURCE_BUSY;
-+       res->desc       = IORES_DESC_NONE;
-+
-+       insert_resource(&iomem_resource, res);
- }
- 
- /*
-
-... but failed miserably in terms of the kernel not booting because I
-have no experience whatsoever in programming and debugging early kernel
-init. But I am somewhat keen to ride the learning curve here. :)
-
-Am I on the right track or were you a couple of leaps ahead of me
-already and I just didn't get the question?
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 9f1557b98468..18175687133a 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -413,6 +413,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
++	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+ #endif
+ 	VMCOREINFO_STRUCT_SIZE(page);
+ 	VMCOREINFO_STRUCT_SIZE(pglist_data);
 -- 
-Thanks,
-Michael
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
