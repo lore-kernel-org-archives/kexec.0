@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iaUmd-00044A-B8
- for kexec@lists.infradead.org; Fri, 29 Nov 2019 01:09:21 +0000
-From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH] makedumpfile/Makefile: remove -lebl from LIBS
-Date: Fri, 29 Nov 2019 09:09:05 +0800
-Message-Id: <1574989745-5262-1-git-send-email-piliu@redhat.com>
+Date: Fri, 29 Nov 2019 10:24:22 +0000
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v5 0/5] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
+Message-ID: <20191129102421.GA28322@willie-the-truck>
+References: <1574972621-25750-1-git-send-email-bhsharma@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1574972621-25750-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,50 +16,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jonathan Corbet <corbet@lwn.net>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Boris Petkov <bp@alien8.de>, Dave Anderson <anderson@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, linuxppc-dev@lists.ozlabs.org, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org, Steve Capper <steve.capper@arm.com>
 
-since the following commit, -lebl has been removed from elfutils.
-commit b833c731359af12af9f16bcb621b3cdc170eafbc
-Author: Mark Wielaard <mark@klomp.org>
-Date:   Thu Aug 29 23:34:11 2019 +0200
+On Fri, Nov 29, 2019 at 01:53:36AM +0530, Bhupesh Sharma wrote:
+> Changes since v4:
+> ----------------
+> - v4 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+> - Addressed comments from Dave and added patches for documenting
+>   new variables appended to vmcoreinfo documentation.
+> - Added testing report shared by Akashi for PATCH 2/5.
 
-    libebl: Don't install libebl.a, libebl.h and remove backends from spec.
+Please can you fix your mail setup? The last two times you've sent this
+series it seems to get split into two threads, which is really hard to
+track in my inbox:
 
-    All archive members from libebl.a are now in libdw.a. We don't generate
-    separate backend shared libraries anymore. So remove them from the
-    elfutils.spec file.
+First thread:
 
-    Signed-off-by: Mark Wielaard <mark@klomp.org>
+https://lore.kernel.org/lkml/1574972621-25750-1-git-send-email-bhsharma@redhat.com/
 
-So remove it from LIBS for makedumpfile
+Second thread:
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
----
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+https://lore.kernel.org/lkml/1574972716-25858-1-git-send-email-bhsharma@redhat.com/
 
-diff --git a/Makefile b/Makefile
-index 1fdb628..df21b93 100644
---- a/Makefile
-+++ b/Makefile
-@@ -50,7 +50,7 @@ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
- SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c
- OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
- 
--LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
-+LIBS = -ldw -lbz2 -ldl -lelf -lz
- ifneq ($(LINKTYPE), dynamic)
- LIBS := -static $(LIBS)
- endif
--- 
-2.7.5
+Thanks,
 
+Will
 
 _______________________________________________
 kexec mailing list
