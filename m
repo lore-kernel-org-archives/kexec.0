@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15] helo=mx1.suse.de)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ibheC-00083r-34
- for kexec@lists.infradead.org; Mon, 02 Dec 2019 09:05:38 +0000
-Date: Mon, 2 Dec 2019 17:05:20 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: kexec_file overwrites reserved EFI ESRT memory
-Message-ID: <20191202090520.GA15874@dhcp-128-65.nay.redhat.com>
-References: <20191122180552.GA32104@weiser.dinsnail.net>
- <87blt3y949.fsf@x220.int.ebiederm.org>
- <20191122210702.GE32104@weiser.dinsnail.net>
- <20191125055201.GA6569@dhcp-128-65.nay.redhat.com>
- <20191129152700.GA8286@weiser.dinsnail.net>
- <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
+ id 1ibnwQ-0006NX-5O
+ for kexec@lists.infradead.org; Mon, 02 Dec 2019 15:48:53 +0000
+Date: Mon, 2 Dec 2019 16:48:41 +0100
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
+ implementation (writer)
+Message-ID: <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
+References: <20191128015235.12940-1-john.ogness@linutronix.de>
+ <20191128015235.12940-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20191202085829.GA15808@dhcp-128-65.nay.redhat.com>
 Content-Disposition: inline
+In-Reply-To: <20191128015235.12940-2-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,208 +25,371 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Weiser <michael@weiser.dinsnail.net>
-Cc: linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <andrea.parri@amarulasolutions.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
 
-Add more cc
-On 12/02/19 at 04:58pm, Dave Young wrote:
-> On 11/29/19 at 04:27pm, Michael Weiser wrote:
-> > Hello Dave,
-> > 
-> > On Mon, Nov 25, 2019 at 01:52:01PM +0800, Dave Young wrote:
-> > 
-> > > > > Fundamentally when deciding where to place a new kernel kexec (either
-> > > > > user space or the in kernel kexec_file implementation) needs to be able
-> > > > > to ask the question which memory ares are reserved.
-> > [...]
-> > > > > So my question is why doesn't the ESRT reservation wind up in
-> > > > > /proc/iomem?
-> > > > 
-> > > > My guess is that the focus was that some EFI structures need to be kept
-> > > > around accross the life cycle of *one* running kernel and
-> > > > memblock_reserve() was enough for that. Marking them so they survive
-> > > > kexecing another kernel might just never have cropped up thus far. Ard
-> > > > or Matt would know.
-> > > Can you check your un-reserved memory, if your memory falls into EFI
-> > > BOOT* then in X86 you can use something like below if it is not covered:
-> > 
-> > > void __init efi_esrt_init(void)
-> > > {
-> > > ...
-> > > 	pr_info("Reserving ESRT space from %pa to %pa.\n", &esrt_data, &end);
-> > > 	if (md.type == EFI_BOOT_SERVICES_DATA)
-> > > 		efi_mem_reserve(esrt_data, esrt_data_size);
-> > > ...
-> > > }
-> > 
-> > Please bear with me if I'm a bit slow on the uptake here: On my machine,
-> > the esrt module reports at boot:
-> > 
-> > [    0.001244] esrt: Reserving ESRT space from 0x0000000074dd2f98 to 0x0000000074dd2fd0.
-> > 
-> > This area is of type "Boot Data" (== BOOT_SERVICES_DATA) which makes the
-> > code you quote reserve it using memblock_reserve() shown by
-> > memblock=debug:
-> > 
-> > [    0.001246] memblock_reserve: [0x0000000074dd2f98-0x0000000074dd2fcf] efi_mem_reserve+0x1d/0x2b
-> > 
-> > It also calls into arch/x86/platform/efi/quirks.c:efi_arch_mem_reserve()
-> > which tags it as EFI_MEMORY_RUNTIME while the surrounding ones aren't
-> > as shown by efi=debug:
-> > 
-> > [    0.178111] efi: mem10: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd3000-0x0000000075becfff] (14MB)
-> > [    0.178113] efi: mem11: [Boot Data          |RUN|  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x0000000074dd2000-0x0000000074dd2fff] (0MB)
-> > [    0.178114] efi: mem12: [Boot Data          |   |  |  |  |  |  |  |  |   |WB|WT|WC|UC] range=[0x000000006d635000-0x0000000074dd1fff] (119MB)
-> > 
-> > This prevents arch/x86/platform/efi/quirks.c:efi_free_boot_services()
-> > from calling __memblock_free_late() on it. And indeed, memblock=debug does
-> > not report this area as being free'd while the surrounding ones are:
-> > 
-> > [    0.178369] __memblock_free_late: [0x0000000074dd3000-0x0000000075becfff] efi_free_boot_services+0x126/0x1f8
-> > [    0.178658] __memblock_free_late: [0x000000006d635000-0x0000000074dd1fff] efi_free_boot_services+0x126/0x1f8
-> > 
-> > The esrt area does not show up in /proc/iomem though:
-> > 
-> > 00100000-763f5fff : System RAM
-> >   62000000-62a00d80 : Kernel code
-> >   62c00000-62f15fff : Kernel rodata
-> >   63000000-630ea8bf : Kernel data
-> >   63fed000-641fffff : Kernel bss
-> >   65000000-6affffff : Crash kernel
-> > 
-> > And thus kexec loads the new kernel right over that area as shown when
-> > enabling -DDEBUG on kexec_file.c (0x74dd3000 being inbetween 0x73000000
-> > and 0x73000000+0x24be000 = 0x754be000):
-> > 
-> > [  650.007695] kexec_file: Loading segment 0: buf=0x000000003a9c84d6 bufsz=0x5000 mem=0x98000 memsz=0x6000
-> > [  650.007699] kexec_file: Loading segment 1: buf=0x0000000017b2b9e6 bufsz=0x1240 mem=0x96000 memsz=0x2000
-> > [  650.007703] kexec_file: Loading segment 2: buf=0x00000000fdf72ba2 bufsz=0x1150888 mem=0x73000000 memsz=0x24be000
-> > 
-> > ... because it looks for any memory hole large enough in iomem resources
-> > tagged as System RAM, which 0x74dd2000-0x74dd2fff would then need to be
-> > excluded from on my system.
-> > 
-> > Looking some more at efi_arch_mem_reserve() I see that it also registers
-> > the area with efi.memmap and installs it using efi_memmap_install().
-> > which seems to call memremap(MEMREMAP_WB) on it. From my understanding
-> > of the comments in the source of memremap(), MEMREMAP_WB does specifically
-> > *not* reserve that memory in any way.
-> > 
-> > > Unfortunately I noticed there are different requirements/ways for
-> > > different types of "reserved" memory.  But that is another topic..
-> > 
-> > I tried to reserve the area with something like this:
-> > 
-> > t a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> > index 4de244683a7e..b86a5df027a2 100644
-> > --- a/arch/x86/platform/efi/quirks.c
-> > +++ b/arch/x86/platform/efi/quirks.c
-> > @@ -249,6 +249,7 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-> >         efi_memory_desc_t md;
-> >         int num_entries;
-> >         void *new;
-> > +       struct resource *res;
-> >  
-> >         if (efi_mem_desc_lookup(addr, &md) ||
-> >             md.type != EFI_BOOT_SERVICES_DATA) {
-> > @@ -294,6 +295,21 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
-> >         early_memunmap(new, new_size);
-> >  
-> >         efi_memmap_install(new_phys, num_entries);
-> > +
-> > +       res = memblock_alloc(sizeof(*res), SMP_CACHE_BYTES);
-> > +       if (!res) {
-> > +               pr_err("Failed to allocate EFI io resource allocator for "
-> > +                               "0x%llx:0x%llx", mr.range.start, mr.range.end);
-> > +               return;
-> > +       }
-> > +
-> > +       res->start      = mr.range.start;
-> > +       res->end        = mr.range.end;
-> > +       res->name       = "EFI runtime";
-> > +       res->flags      = IORESOURCE_MEM | IORESOURCE_BUSY;
-> > +       res->desc       = IORES_DESC_NONE;
-> > +
-> > +       insert_resource(&iomem_resource, res);
-> >  }
-> >  
-> >  /*
-> > 
-> > ... but failed miserably in terms of the kernel not booting because I
-> > have no experience whatsoever in programming and debugging early kernel
-> > init. But I am somewhat keen to ride the learning curve here. :)
-> > 
-> > Am I on the right track or were you a couple of leaps ahead of me
-> > already and I just didn't get the question?
-> 
-> It seems a serious problem, the EFI modified memmap does not get an
-> /proc/iomem resource update, but kexec_file relies on /proc/iomem in
-> X86.
-> 
-> Can you try below diff see if it works for you? (not tested, and need
-> explicitly 'add_efi_memmap' in kernel cmdline param)
-> 
-> There is an question from Sai about why add_efi_memmap is not enabled by
-> default:
-> https://www.spinics.net/lists/linux-mm/msg185166.html
-> 
-> Long time ago the add_efi_memmap is only enabled in case we explict
-> enable it on cmdline, I'm not sure if we can do it by default, maybe we
-> should.   Need opinion from X86 maintainers..
-> 
-> diff --git a/arch/x86/include/asm/efi.h b/arch/x86/include/asm/efi.h
-> index 43a82e59c59d..eddaac6131cf 100644
-> --- a/arch/x86/include/asm/efi.h
-> +++ b/arch/x86/include/asm/efi.h
-> @@ -243,6 +243,7 @@ static inline bool efi_is_64bit(void)
->  
->  extern bool efi_reboot_required(void);
->  extern bool efi_is_table_address(unsigned long phys_addr);
-> +extern void do_add_efi_memmap(void);
->  
->  #else
->  static inline void parse_efi_setup(u64 phys_addr, u32 data_len) {}
-> diff --git a/arch/x86/platform/efi/efi.c b/arch/x86/platform/efi/efi.c
-> index 425e025341db..39e28ec76522 100644
-> --- a/arch/x86/platform/efi/efi.c
-> +++ b/arch/x86/platform/efi/efi.c
-> @@ -149,10 +149,12 @@ void __init efi_find_mirror(void)
->   * (zeropage) memory map.
->   */
->  
-> -static void __init do_add_efi_memmap(void)
-> +void __init do_add_efi_memmap(void)
->  {
->  	efi_memory_desc_t *md;
->  
-> +	if (!add_efi_memmap)
-> +		return;
->  	for_each_efi_memory_desc(md) {
->  		unsigned long long start = md->phys_addr;
->  		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-> @@ -224,8 +226,7 @@ int __init efi_memblock_x86_reserve_range(void)
->  	if (rv)
->  		return rv;
->  
-> -	if (add_efi_memmap)
-> -		do_add_efi_memmap();
-> +	do_add_efi_memmap();
->  
->  	WARN(efi.memmap.desc_version != 1,
->  	     "Unexpected EFI_MEMORY_DESCRIPTOR version %ld",
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index 3b9fd679cea9..cfda591e51e3 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -496,6 +496,7 @@ void __init efi_free_boot_services(void)
->  		pr_err("Could not install new EFI memmap\n");
->  		return;
->  	}
-> +	do_add_efi_memmap();
->  }
->  
->  /*
+Hi,
 
+I have seen few prelimitary versions before this public one.
+I am either happy with it or blind to see new problems[*].
+
+It would be great if anyone else could look at it. Especially
+I am intreseted:
+
+  + Whether the algorithm can be understood by people who
+    see it for the "first" time.
+
+  + Whether there are any obvious races. I wonder if our assumtions
+    about atomic_cmpxchg() guaranttes are correct.
+
+
+[*] I have found one theoretical ABA problem. I think that is
+    really rather theoretical and should not block this patch.
+    I think that we could do something to prevent it either
+    now or later. See below for more details
+
+
+On Thu 2019-11-28 02:58:33, John Ogness wrote:
+> Add a new lockless ringbuffer implementation to be used for printk.
+> First only add support for writers. Reader support will be added in
+> a follow-up commit.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> ---
+>  kernel/printk/printk_ringbuffer.c | 676 ++++++++++++++++++++++++++++++
+>  kernel/printk/printk_ringbuffer.h | 239 +++++++++++
+>  2 files changed, 915 insertions(+)
+>  create mode 100644 kernel/printk/printk_ringbuffer.c
+>  create mode 100644 kernel/printk/printk_ringbuffer.h
+> 
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> new file mode 100644
+> index 000000000000..09c32e52fd40
+> --- /dev/null
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -0,0 +1,676 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/irqflags.h>
+> +#include <linux/string.h>
+> +#include <linux/errno.h>
+> +#include <linux/bug.h>
+> +#include "printk_ringbuffer.h"
+> +
+> +/**
+> + * DOC: printk_ringbuffer overview
+> + *
+> + * Data Structure
+> + * --------------
+> + * The printk_ringbuffer is made up of 3 internal ringbuffers::
+> + *
+> + * * desc_ring:      A ring of descriptors. A descriptor contains all record
+> + *                   meta-data (sequence number, timestamp, loglevel, etc.) as
+> + *                   well as internal state information about the record and
+> + *                   logical positions specifying where in the other
+> + *                   ringbuffers the text and dictionary strings are located.
+> + *
+> + * * text_data_ring: A ring of data blocks. A data block consists of a 32-bit
+> + *                   integer (ID) that maps to a desc_ring index followed by
+> + *                   the text string of the record.
+> + *
+> + * * dict_data_ring: A ring of data blocks. A data block consists of a 32-bit
+> + *                   integer (ID) that maps to a desc_ring index followed by
+> + *                   the dictionary string of the record.
+> + *
+
+I slightly miss some top level description of the approach. Especially
+how the code deals with races. The following comes to my mind:
+
+
+The state of each entry is always defined by desc->state_val.
+It consists of 30-bit id and 2-bit state value, see DESC_INDEX()
+and get_desc_state.
+
+prb_reserve() call returns descriptor in a reserved state. It points
+to reserved data blocks in the data rings.
+
+The algorithm starts with using never used descriptors and data
+blocks. Later it uses descriptors and data blocks in the reusable
+state.
+
+The descriptors and data space are reused in a round-robin fahion.
+Only records in the committed state could be moved to reusable state.
+
+prb_reserve() has to do several steps. Namely it has to update head
+and tail positions in all ring buffers. Also it has to manipulare
+desc->state_val. Most races are avoided by using atomic_cmpxchg()
+operations. They make sure that all values are moved from one
+well defined state to another well defined state.
+
+ABA races are avoided by using logical positions and indexes.
+The rinbuffer must be reused many times before these values
+overflow. Anyway, logical positions to data ring could not overflow
+wildly. They are manipulated only when the descriptor is already
+reserved. The descriptor could get reused only when it was commited
+before. It means that there is a limited number of writers
+until they would need to reuse a particular descriptor. [*]
+
+Back to the prb_reserve() algorithm. The repeated pattern is that
+it does not matter what caller invalidates oldest entries. They are
+fine when it has already been done by another writer in the meantime.
+The real winner is the caller that is able to move the head position
+and reserve the space. Others need to go back to invalidating the oldest
+entry, etc.
+
+prb_reserve() caller has exclusive write access to the reserved
+descriptor and data blocks. It has to call prb_commit() when finished.
+It is a signal that the data are valid for readers. But it is also
+a signal that the descriptor and the space might get reused be
+other writers.
+
+
+Finally, readers just need to check the state of the descriptor
+before and after reading the data. The data are correct only
+when the descriptor is in committed state.
+
+[*] Hmm, the ABA problem might theoretically happen in desc_reserve(),
+    see below.
+
+
+
+> +/*
+> + * Sanity checker for reserve size. The ringbuffer code assumes that a data
+> + * block does not exceed the maximum possible size that could fit within the
+> + * ringbuffer. This function provides that basic size check so that the
+> + * assumption is safe.
+> + */
+> +static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
+> +{
+> +	struct prb_data_block *db = NULL;
+> +
+> +	/* Writers are not allowed to write data-less records. */
+> +	if (size == 0)
+> +		return false;
+
+I would personally let this decision to the API caller.
+
+The code actually have to support data-less records. They are used
+when the descriptor is reserved but the data block can't get reserved.
+
+The above statement might create false feeling that it could not
+happen later in the code. It might lead to bugs in writer code.
+Also reader API users might not expect to get a "valid" data-less
+record.
+
+> +	/*
+> +	 * Ensure the alignment padded size could possibly fit in the data
+> +	 * array. The largest possible data block must still leave room for
+> +	 * at least the ID of the next block.
+> +	 */
+> +	size = to_blk_size(size);
+> +	if (size > DATA_SIZE(data_ring) - sizeof(db->id))
+> +		return false;
+> +
+> +	return true;
+> +}
+> +
+> +/* Reserve a new descriptor, invalidating the oldest if necessary. */
+> +static bool desc_reserve(struct printk_ringbuffer *rb, u32 *id_out)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	struct prb_desc *desc;
+> +	u32 id_prev_wrap;
+> +	u32 head_id;
+> +	u32 id;
+> +
+> +	head_id = atomic_read(&desc_ring->head_id);
+> +
+> +	do {
+> +		desc = to_desc(desc_ring, head_id);
+> +
+> +		id = DESC_ID(head_id + 1);
+> +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
+> +
+> +		if (id_prev_wrap == atomic_read(&desc_ring->tail_id)) {
+> +			if (!desc_push_tail(rb, id_prev_wrap))
+> +				return false;
+> +		}
+> +	} while (!atomic_try_cmpxchg(&desc_ring->head_id, &head_id, id));
+
+Hmm, in theory, ABA problem might cause that we successfully
+move desc_ring->head_id when tail has not been pushed yet.
+
+As a result we would never call desc_push_tail() until
+it overflows again.
+
+I am not sure if we need to take care of it. The code is called with
+interrupts disabled. IMHO, only NMI could cause ABA problem
+in reality. But the game (debugging) is lost anyway when NMI ovewrites
+the buffer several times.
+
+Also it should not be a complete failure. We still could bail out when
+the previous state was not reusable. We are on the safe side
+when it was reusable.
+
+Also we could probably detect when desc_ring->tail_id is not
+updated any longer and do something about it.
+
+> +
+> +	desc = to_desc(desc_ring, id);
+> +
+> +	/* Set the descriptor's ID and also set its state to reserved. */
+> +	atomic_set(&desc->state_var, id | 0);
+
+We should check here that the original state id from the previous
+wrap in reusable state (or 0 for bootstrap). On error, we know that
+there was the ABA problem and would need to do something about it.
+
+> +
+> +	/* Store new ID/state before making any other changes. */
+> +	smp_wmb(); /* LMM_TAG(desc_reserve:A) */
+> +
+> +	*id_out = id;
+> +	return true;
+> +}
+> +
+> +/* Determine the end of a data block. */
+> +static unsigned long get_next_lpos(struct prb_data_ring *data_ring,
+> +				   unsigned long lpos, unsigned int size)
+> +{
+> +	unsigned long begin_lpos;
+> +	unsigned long next_lpos;
+> +
+> +	begin_lpos = lpos;
+> +	next_lpos = lpos + size;
+> +
+> +	if (DATA_WRAPS(data_ring, begin_lpos) ==
+> +	    DATA_WRAPS(data_ring, next_lpos)) {
+> +		/* The data block does not wrap. */
+> +		return next_lpos;
+> +	}
+> +
+> +	/* Wrapping data blocks store their data at the beginning. */
+> +	return (DATA_THIS_WRAP_START_LPOS(data_ring, next_lpos) + size);
+> +}
+> +
+> +/**
+> + * prb_reserve() - Reserve space in the ringbuffer.
+> + *
+> + * @e:  The entry structure to setup.
+> + * @rb: The ringbuffer to reserve data in.
+> + * @r:  The record structure to allocate buffers for.
+> + *
+> + * This is the public function available to writers to reserve data.
+> + *
+> + * The writer specifies the text and dict sizes to reserve by setting the
+> + * @text_buf_size and @dict_buf_size fields of @r, respectively. Dictionaries
+> + * are optional, so @dict_buf_size is allowed to be 0.
+> + *
+> + * Context: Any context. Disables local interrupts on success.
+> + * Return: true if at least text data could be allocated, otherwise false.
+> + *
+> + * On success, the fields @info, @text_buf, @dict_buf of @r will be set by
+> + * this function and should be filled in by the writer before committing.
+> + *
+> + * If the function fails to reserve dictionary space (but all else succeeded),
+> + * it will still report success. In that case @dict_buf is set to NULL and
+> + * @dict_buf_size is set to 0. Writers must check this before writing to
+> + * dictionary space.
+> + */
+> +bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+> +		 struct printk_record *r)
+> +{
+> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> +	struct prb_desc *d;
+> +	u32 id;
+> +
+> +	if (!data_check_size(&rb->text_data_ring, r->text_buf_size))
+> +		return false;
+> +
+> +	/* Records without dictionaries are allowed. */
+> +	if (r->dict_buf_size) {
+> +		if (!data_check_size(&rb->dict_data_ring, r->dict_buf_size))
+> +			return false;
+> +	}
+> +
+> +	/* Disable interrupts during the reserve/commit window. */
+> +	local_irq_save(e->irqflags);
+> +
+> +	if (!desc_reserve(rb, &id)) {
+> +		/* Descriptor reservation failures are tracked. */
+> +		atomic_long_inc(&rb->fail);
+> +		local_irq_restore(e->irqflags);
+> +		return false;
+> +	}
+> +
+> +	d = to_desc(desc_ring, id);
+> +
+> +	/*
+> +	 * Set the @e fields here so that prb_commit() can be used if
+> +	 * text data allocation fails.
+> +	 */
+> +	e->rb = rb;
+> +	e->id = id;
+> +
+> +	/*
+> +	 * Initialize the sequence number if it has never been set.
+> +	 * Otherwise just increment it by a full wrap.
+> +	 *
+> +	 * @seq is considered "never been set" if it has a value of 0,
+> +	 * _except_ for descs[0], which was set by the ringbuffer initializer
+> +	 * and therefore is always considered as set.
+> +	 *
+> +	 * See the "Bootstrap" comment block in printk_ringbuffer.h for
+> +	 * details about how the initializer bootstraps the descriptors.
+> +	 */
+> +	if (d->info.seq == 0 && DESC_INDEX(desc_ring, id) != 0)
+> +		d->info.seq = DESC_INDEX(desc_ring, id);
+> +	else
+> +		d->info.seq += DESCS_COUNT(desc_ring);
+> +
+> +	r->text_buf = data_alloc(rb, &rb->text_data_ring, r->text_buf_size,
+> +				 &d->text_blk_lpos, id);
+> +	/* If text data allocation fails, a data-less record is committed. */
+> +	if (r->text_buf_size && !r->text_buf) {
+> +		d->info.text_len = 0;
+> +		d->info.dict_len = 0;
+
+I would prefer to clear all four variables at the beginning:
+
+		r->text_buf = NULL;
+		r->dict_buf = NULL;
+		d->info.text_len = 0;
+		d->info.dict_len = 0;
+
+So that we never return an outdated/random pointer back.
+
+I might be too careful. But I think that it is a good price for
+a more safe API. Especially that broken printk() is not easy
+to debug.
+
+Best Regards,
+Petr
+
+> +		prb_commit(e);
+> +		return false;
+> +	}
+> +
+> +	r->dict_buf = data_alloc(rb, &rb->dict_data_ring, r->dict_buf_size,
+> +				 &d->dict_blk_lpos, id);
+> +	/*
+> +	 * If dict data allocation fails, the caller can still commit
+> +	 * text. But dictionary information will not be available.
+> +	 */
+> +	if (r->dict_buf_size && !r->dict_buf)
+> +		r->dict_buf_size = 0;
+> +
+> +	r->info = &d->info;
+> +
+> +	/* Set default values for the lengths. */
+> +	d->info.text_len = r->text_buf_size;
+> +	d->info.dict_len = r->dict_buf_size;
+> +
+> +	return true;
+> +}
+> +EXPORT_SYMBOL(prb_reserve);
+> +
 
 _______________________________________________
 kexec mailing list
