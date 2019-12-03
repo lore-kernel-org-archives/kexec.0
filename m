@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ibwog-0006uJ-MR
- for kexec@lists.infradead.org; Tue, 03 Dec 2019 01:17:30 +0000
-Received: by mail-pf1-x441.google.com with SMTP id y206so869878pfb.0
- for <kexec@lists.infradead.org>; Mon, 02 Dec 2019 17:17:24 -0800 (PST)
-Date: Tue, 3 Dec 2019 10:17:21 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-Message-ID: <20191203011721.GH93017@google.com>
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191202154841.qikvuvqt4btudxzg@pathway.suse.cz>
- <20191202155955.meawljmduiciw5t2@pathway.suse.cz>
- <87sgm2fzuh.fsf@linutronix.de>
+Date: Mon, 2 Dec 2019 20:28:53 -0500
+From: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Subject: Re: [PATCH] efi: arm64: Introduce /sys/firmware/efi/memreserve to
+ tell the persistent pages
+Message-ID: <20191203012853.hwnbs6dfcbnkbtgp@gabell>
+References: <20191125184944.15556-1-msys.mizuma@gmail.com>
+ <c27b6f69-befc-0c88-24b9-7b89d4f6e5a6@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87sgm2fzuh.fsf@linutronix.de>
+In-Reply-To: <c27b6f69-befc-0c88-24b9-7b89d4f6e5a6@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,59 +21,130 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, d.hatayama@fujitsu.com, linux-arm-kernel@lists.infradead.org
 
-On (19/12/02 17:37), John Ogness wrote:
-> On 2019-12-02, Petr Mladek <pmladek@suse.com> wrote:
-> >> > +/* Reserve a new descriptor, invalidating the oldest if necessary. */
-> >> > +static bool desc_reserve(struct printk_ringbuffer *rb, u32 *id_out)
-> >> > +{
-> >> > +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> >> > +	struct prb_desc *desc;
-> >> > +	u32 id_prev_wrap;
-> >> > +	u32 head_id;
-> >> > +	u32 id;
-> >> > +
-> >> > +	head_id = atomic_read(&desc_ring->head_id);
-> >> > +
-> >> > +	do {
-> >> > +		desc = to_desc(desc_ring, head_id);
-> >> > +
-> >> > +		id = DESC_ID(head_id + 1);
-> >> > +		id_prev_wrap = DESC_ID_PREV_WRAP(desc_ring, id);
-> >> > +
-> >> > +		if (id_prev_wrap == atomic_read(&desc_ring->tail_id)) {
-> >> > +			if (!desc_push_tail(rb, id_prev_wrap))
-> >> > +				return false;
-> >> > +		}
-> >> > +	} while (!atomic_try_cmpxchg(&desc_ring->head_id, &head_id, id));
-> >> 
-> >> Hmm, in theory, ABA problem might cause that we successfully
-> >> move desc_ring->head_id when tail has not been pushed yet.
-> >> 
-> >> As a result we would never call desc_push_tail() until
-> >> it overflows again.
-> >> 
-> >> I am not sure if we need to take care of it. The code is called with
-> >> interrupts disabled. IMHO, only NMI could cause ABA problem
-> >> in reality. But the game (debugging) is lost anyway when NMI ovewrites
-> >> the buffer several times.
-> >
-> > BTW: If I am counting correctly. The ABA problem would happen when
-> > exactly 2^30 (1G) messages is written in the mean time.
+On Fri, Nov 29, 2019 at 01:25:36PM +0100, Matthias Brugger wrote:
 > 
-> All the ringbuffer code assumes that the use of index numbers handles
-> the ABA problem (i.e. there must not be 1 billion printk's within an
-> NMI). If we want to support 1 billion+ printk's within an NMI, then
-> perhaps the index number should be increased. For 64-bit systems it
-> would be no problem to go to 62 bits. For 32-bit systems, I don't know
-> how well the 64-bit atomic operations are supported.
+> 
+> On 25/11/2019 19:49, Masayoshi Mizuma wrote:
+> > From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> > 
+> > kexec reboot stops in early boot sequence because efi_config_parse_tables()
+> > refers garbage data. We can see the log with memblock=debug kernel option:
+> > 
+> >   efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000  MEMRESERVE=0x9820bfdc58
+> >   memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67] efi_config_parse_tables+0x228/0x278
+> >   memblock_reserve: [0x0000000082760000-0x00000000324d07ff] efi_config_parse_tables+0x228/0x278
+> >   memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9] efi_config_parse_tables+0x244/0x278
+> >   memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2] efi_config_parse_tables+0x244/0x278
+> >   memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12] efi_config_parse_tables+0x244/0x278
+> >   ...
+> > 
+> > That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
+> > 0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
+> > head page of LPI pending table and LPI property table which are allocated by
+> > gic_reserve_range().
+> > 
+> > The destroyer is kexec. kexec locates the initrd to the area:
+> > 
+> >   ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img --reuse-cmdline
+> >   ...
+> >   initrd: base 82290000, size 388dd8ah (59301258)
+> >   ...
+> > 
+> > From dynamic debug log. initrd is located in segment[1]:
+> >   machine_kexec_prepare:70:
+> >     kexec kimage info:
+> >       type:        0
+> >       start:       85b30680
+> >       head:        0
+> >       nr_segments: 4
+> >         segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481 pages
+> >         segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905 pages
+> >         segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1 pages
+> >         segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1 pages
+> > 
+> > kexec searches the memory region to locate initrd through
+> > "System RAM" in /proc/iomem. The pending tables are included in
+> > "System RAM" because they are allocated by alloc_pages(), so kexec
+> > destroys the LPI pending tables.
+> > 
+> 
+> Doesn't that mean that you haven't enough memory reserved so that you have to
+> fallback to allocate it via __get_free_page()?
 
-ftrace dumps from NMI (DUMP_ALL type ftrace_dump_on_oops on a $BIG
-machine)? 1G seems large enough, but who knows.
+That's a not fallback allocation. The pending tables and also property
+tables are allocated by alloc_pages() on its_allocate_prop_table() and
+its_allocate_pending_table().
 
-	-ss
+> 
+> 
+> > Introduce /sys/firmware/efi/memreserve to tell the pages pointed by
+> > efi.mem_reserve so that kexec can avoid the area to locate initrd.
+> > 
+> 
+> Doesn't that need a patch for kexec-tools to actually take this into account?
+
+Yes, we need a patch for kexec-tools as well. I'm preparing the kexec
+patch.
+
+> 
+> > Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> > ---
+> >  drivers/firmware/efi/efi.c | 45 +++++++++++++++++++++++++++++++++++++-
+> >  1 file changed, 44 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> > index e98bbf8e5..0aa07cc09 100644
+> > --- a/drivers/firmware/efi/efi.c
+> > +++ b/drivers/firmware/efi/efi.c
+> > @@ -141,6 +141,47 @@ static ssize_t systab_show(struct kobject *kobj,
+> >  
+> >  static struct kobj_attribute efi_attr_systab = __ATTR_RO_MODE(systab, 0400);
+> >  
+> > +static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+> > +#ifdef CONFIG_KEXEC
+> > +static ssize_t memreserve_show(struct kobject *kobj,
+> > +			   struct kobj_attribute *attr, char *buf)
+> > +{
+> > +	struct linux_efi_memreserve *rsv;
+> > +	phys_addr_t start, end;
+> > +	unsigned long prsv;
+> > +	char *str = buf;
+> > +	int count, i;
+> > +
+> > +	if (!kobj || !buf)
+> > +		return -EINVAL;
+> > +
+> > +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
+> > +			(!efi_memreserve_root))
+> > +		return -ENODEV;
+> > +
+> > +	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+> > +		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+> > +		if (!rsv) {
+> > +			pr_err("Could not map efi_memreserve\n");
+> > +			return -ENOMEM;
+> > +		}
+> > +		count = atomic_read(&rsv->count);
+> > +		for (i = 0; i < count; i++) {
+> > +			start = rsv->entry[i].base;
+> > +			end = start + rsv->entry[i].size - 1;
+> > +
+> > +			str += sprintf(str, "%pa-%pa\n", &start, &end);
+> 
+> What happens if we provide a buf which is too small?
+
+Good point.
+The strings may exceed the buffer size (PAGE_SIZE) in case
+efi_memreserve_root has a lot of entries.
+It might be better to use seq_printf() to show efi_memreserve_root...
+I'll move the file from a sysfs entry to a proc entry so that 
+efi_memreserve_root can be handled by seq_printf().
+
+Thanks,
+Masa
 
 _______________________________________________
 kexec mailing list
