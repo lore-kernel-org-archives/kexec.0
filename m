@@ -1,9 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Masayoshi Mizuma <msys.mizuma@gmail.com>
-Subject: [PATCH v2 0/2] efi: arm64: Introduce /proc/efi/memreserve to tell the
- persistent pages
-Date: Tue,  3 Dec 2019 15:14:08 -0500
-Message-Id: <20191203201410.28045-1-msys.mizuma@gmail.com>
+Subject: [PATCH v2 1/2] efi: add /proc/efi directory
+Date: Tue,  3 Dec 2019 15:14:09 -0500
+Message-Id: <20191203201410.28045-2-msys.mizuma@gmail.com>
+In-Reply-To: <20191203201410.28045-1-msys.mizuma@gmail.com>
+References: <20191203201410.28045-1-msys.mizuma@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +23,53 @@ Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, kexec@lists.infradead.org, linux
 
 From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-kexec reboot sometime fails in early boot sequence on aarch64 machine.
-That is because kexec overwrites the LPI property tables and pending
-tables with the initrd.
+Add /proc/efi directory to show some efi internal information.
 
-To avoid the overwrite, introduce /proc/efi/memreserve to tell the
-tables region to kexec so that kexec can avoid the memory region to
-locate initrd.
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+---
+ drivers/firmware/efi/efi.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-kexec also needs a patch to handle /proc/efi/memreserve. I'm preparing
-the patch for kexec.
-
-Changelog
-    v2: - Change memreserve file location from sysfs to procfs.
-          memreserve may exceed the PAGE_SIZE in case efi_memreserve_root
-          has a lot of entries. So we cannot use sysfs_kf_seq_show().
-          Use seq_printf() in procfs instead.
-
-Masayoshi Mizuma (2):
-  efi: add /proc/efi directory
-  efi: arm64: Introduce /proc/efi/memreserve to tell the persistent
-    pages
-
- drivers/firmware/efi/efi.c | 93 +++++++++++++++++++++++++++++++++++++-
- 1 file changed, 92 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index d101f072c..d8157cb34 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -325,6 +325,22 @@ static __init int efivar_ssdt_load(void)
+ static inline int efivar_ssdt_load(void) { return 0; }
+ #endif
+ 
++#ifdef CONFIG_PROC_FS
++static struct proc_dir_entry *proc_efi;
++static int __init efi_proc_init(void)
++{
++	proc_efi = proc_mkdir("efi", NULL);
++	if (!proc_efi) {
++		pr_err("/proc/efi: Cannot create /proc/efi directory.\n");
++		return 1;
++	}
++
++	return 0;
++}
++#else
++static inline int efi_proc_init(void) { return 0; }
++#endif /* CONFIG_PROC_FS */
++
+ /*
+  * We register the efi subsystem with the firmware subsystem and the
+  * efivars subsystem with the efi subsystem, if the system was booted with
+@@ -381,6 +397,12 @@ static int __init efisubsys_init(void)
+ 		goto err_remove_group;
+ 	}
+ 
++	error = efi_proc_init();
++	if (error) {
++		sysfs_remove_mount_point(efi_kobj, "efivars");
++		goto err_remove_group;
++	}
++
+ 	return 0;
+ 
+ err_remove_group:
 -- 
 2.18.1
 
