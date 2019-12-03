@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 2 Dec 2019 20:28:53 -0500
-From: Masayoshi Mizuma <msys.mizuma@gmail.com>
-Subject: Re: [PATCH] efi: arm64: Introduce /sys/firmware/efi/memreserve to
- tell the persistent pages
-Message-ID: <20191203012853.hwnbs6dfcbnkbtgp@gabell>
-References: <20191125184944.15556-1-msys.mizuma@gmail.com>
- <c27b6f69-befc-0c88-24b9-7b89d4f6e5a6@gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c27b6f69-befc-0c88-24b9-7b89d4f6e5a6@gmail.com>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1ic2kH-0001RU-Ko
+ for kexec@lists.infradead.org; Tue, 03 Dec 2019 07:37:19 +0000
+From: Pingfan Liu <piliu@redhat.com>
+Subject: [PATCH] makedumpfile: assign bitmap2 fd for sub process during
+ refiltering
+Date: Tue,  3 Dec 2019 15:37:07 +0800
+Message-Id: <1575358627-17152-1-git-send-email-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,134 +17,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, d.hatayama@fujitsu.com, linux-arm-kernel@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 
-On Fri, Nov 29, 2019 at 01:25:36PM +0100, Matthias Brugger wrote:
-> 
-> 
-> On 25/11/2019 19:49, Masayoshi Mizuma wrote:
-> > From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> > 
-> > kexec reboot stops in early boot sequence because efi_config_parse_tables()
-> > refers garbage data. We can see the log with memblock=debug kernel option:
-> > 
-> >   efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000  MEMRESERVE=0x9820bfdc58
-> >   memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67] efi_config_parse_tables+0x228/0x278
-> >   memblock_reserve: [0x0000000082760000-0x00000000324d07ff] efi_config_parse_tables+0x228/0x278
-> >   memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9] efi_config_parse_tables+0x244/0x278
-> >   memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2] efi_config_parse_tables+0x244/0x278
-> >   memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12] efi_config_parse_tables+0x244/0x278
-> >   ...
-> > 
-> > That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
-> > 0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
-> > head page of LPI pending table and LPI property table which are allocated by
-> > gic_reserve_range().
-> > 
-> > The destroyer is kexec. kexec locates the initrd to the area:
-> > 
-> >   ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img --reuse-cmdline
-> >   ...
-> >   initrd: base 82290000, size 388dd8ah (59301258)
-> >   ...
-> > 
-> > From dynamic debug log. initrd is located in segment[1]:
-> >   machine_kexec_prepare:70:
-> >     kexec kimage info:
-> >       type:        0
-> >       start:       85b30680
-> >       head:        0
-> >       nr_segments: 4
-> >         segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481 pages
-> >         segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905 pages
-> >         segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1 pages
-> >         segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1 pages
-> > 
-> > kexec searches the memory region to locate initrd through
-> > "System RAM" in /proc/iomem. The pending tables are included in
-> > "System RAM" because they are allocated by alloc_pages(), so kexec
-> > destroys the LPI pending tables.
-> > 
-> 
-> Doesn't that mean that you haven't enough memory reserved so that you have to
-> fallback to allocate it via __get_free_page()?
+In refiltering mode, each sub process inherits bitmap2->fd from parent.
+Then they lseek()/read() on the same fd, which means that they interference
+with each other.
 
-That's a not fallback allocation. The pending tables and also property
-tables are allocated by alloc_pages() on its_allocate_prop_table() and
-its_allocate_pending_table().
+This breaks the purpose of SPLITTING_FD_BITMAP(i) for each sub process.
+Fix it by assigning a sub process dedicated fd to bitmap2->fd.
 
-> 
-> 
-> > Introduce /sys/firmware/efi/memreserve to tell the pages pointed by
-> > efi.mem_reserve so that kexec can avoid the area to locate initrd.
-> > 
-> 
-> Doesn't that need a patch for kexec-tools to actually take this into account?
+Signed-off-by: Pingfan Liu <piliu@redhat.com>
+---
+ makedumpfile.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Yes, we need a patch for kexec-tools as well. I'm preparing the kexec
-patch.
+diff --git a/makedumpfile.c b/makedumpfile.c
+index d76a435..1dc8640 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -8857,7 +8857,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+ 	if (info->flag_cyclic) {
+ 		if (!prepare_bitmap2_buffer())
+ 			return FALSE;
+-	}
++	} else if (info->flag_refiltering)
++		info->bitmap2->fd = info->fd_bitmap;
+ 
+ 	/*
+ 	 * Write pages and bitmap cyclically.
+-- 
+2.7.5
 
-> 
-> > Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> > ---
-> >  drivers/firmware/efi/efi.c | 45 +++++++++++++++++++++++++++++++++++++-
-> >  1 file changed, 44 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> > index e98bbf8e5..0aa07cc09 100644
-> > --- a/drivers/firmware/efi/efi.c
-> > +++ b/drivers/firmware/efi/efi.c
-> > @@ -141,6 +141,47 @@ static ssize_t systab_show(struct kobject *kobj,
-> >  
-> >  static struct kobj_attribute efi_attr_systab = __ATTR_RO_MODE(systab, 0400);
-> >  
-> > +static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
-> > +#ifdef CONFIG_KEXEC
-> > +static ssize_t memreserve_show(struct kobject *kobj,
-> > +			   struct kobj_attribute *attr, char *buf)
-> > +{
-> > +	struct linux_efi_memreserve *rsv;
-> > +	phys_addr_t start, end;
-> > +	unsigned long prsv;
-> > +	char *str = buf;
-> > +	int count, i;
-> > +
-> > +	if (!kobj || !buf)
-> > +		return -EINVAL;
-> > +
-> > +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
-> > +			(!efi_memreserve_root))
-> > +		return -ENODEV;
-> > +
-> > +	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
-> > +		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
-> > +		if (!rsv) {
-> > +			pr_err("Could not map efi_memreserve\n");
-> > +			return -ENOMEM;
-> > +		}
-> > +		count = atomic_read(&rsv->count);
-> > +		for (i = 0; i < count; i++) {
-> > +			start = rsv->entry[i].base;
-> > +			end = start + rsv->entry[i].size - 1;
-> > +
-> > +			str += sprintf(str, "%pa-%pa\n", &start, &end);
-> 
-> What happens if we provide a buf which is too small?
-
-Good point.
-The strings may exceed the buffer size (PAGE_SIZE) in case
-efi_memreserve_root has a lot of entries.
-It might be better to use seq_printf() to show efi_memreserve_root...
-I'll move the file from a sysfs entry to a proc entry so that 
-efi_memreserve_root can be handled by seq_printf().
-
-Thanks,
-Masa
 
 _______________________________________________
 kexec mailing list
