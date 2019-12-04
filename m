@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x741.google.com ([2607:f8b0:4864:20::741])
+Received: from mail-qk1-f193.google.com ([209.85.222.193])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icX4W-0008DJ-5v
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:23 +0000
-Received: by mail-qk1-x741.google.com with SMTP id m188so370660qkc.4
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:11 -0800 (PST)
+ id 1icX4d-0000W2-51
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:25 +0000
+Received: by mail-qk1-f193.google.com with SMTP id i18so320978qkl.11
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:19 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v8 19/25] arm64: kexec: arm64_relocate_new_kernel don't use x0
- as temp
-Date: Wed,  4 Dec 2019 10:59:32 -0500
-Message-Id: <20191204155938.2279686-20-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 25/25] arm64: kexec: remove head from relocation argument
+Date: Wed,  4 Dec 2019 10:59:38 -0500
+Message-Id: <20191204155938.2279686-26-pasha.tatashin@soleen.com>
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,63 +26,60 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
 
-x0 will contain the only argument to arm64_relocate_new_kernel; don't
-use it as a temp. Reassigned registers to free-up x0.
+Now, that relocation is done using virtual addresses, reloc_arg->head
+is not needed anymore.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/relocate_kernel.S | 24 ++++++++++++------------
- 1 file changed, 12 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/kexec.h    | 2 --
+ arch/arm64/kernel/asm-offsets.c   | 1 -
+ arch/arm64/kernel/machine_kexec.c | 1 -
+ 3 files changed, 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index e9c974ea4717..41f9c95fabe8 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -32,14 +32,14 @@ ENTRY(arm64_relocate_new_kernel)
- 	mov	x14, xzr			/* x14 = entry ptr */
- 	mov	x13, xzr			/* x13 = copy dest */
- 	/* Clear the sctlr_el2 flags. */
--	mrs	x0, CurrentEL
--	cmp	x0, #CurrentEL_EL2
-+	mrs	x2, CurrentEL
-+	cmp	x2, #CurrentEL_EL2
- 	b.ne	1f
--	mrs	x0, sctlr_el2
-+	mrs	x2, sctlr_el2
- 	ldr	x1, =SCTLR_ELx_FLAGS
--	bic	x0, x0, x1
-+	bic	x2, x2, x1
- 	pre_disable_mmu_workaround
--	msr	sctlr_el2, x0
-+	msr	sctlr_el2, x2
- 	isb
- 1:	/* Check if the new image needs relocation. */
- 	tbnz	x16, IND_DONE_BIT, .Ldone
-@@ -51,17 +51,17 @@ ENTRY(arm64_relocate_new_kernel)
- 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index df911a4aa8ce..b3a39736d0db 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -104,7 +104,6 @@ extern const unsigned long kexec_el2_vectors_offset;
  
- 	/* Invalidate dest page to PoC. */
--	mov     x0, x13
--	add     x20, x0, #PAGE_SIZE
-+	mov     x2, x13
-+	add     x20, x2, #PAGE_SIZE
- 	sub     x1, x15, #1
--	bic     x0, x0, x1
--2:	dc      ivac, x0
--	add     x0, x0, x15
--	cmp     x0, x20
-+	bic     x2, x2, x1
-+2:	dc      ivac, x2
-+	add     x2, x2, x15
-+	cmp     x2, x20
- 	b.lo    2b
- 	dsb     sy
- 
--	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
-+	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
- 	b	.Lnext
- .Ltest_indirection:
- 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
+ /*
+  * kern_reloc_arg is passed to kernel relocation function as an argument.
+- * head		kimage->head, allows to traverse through relocation segments.
+  * entry_addr	kimage->start, where to jump from relocation function (new
+  *		kernel, or purgatory entry address).
+  * kern_arg0	first argument to kernel is its dtb address. The other
+@@ -119,7 +118,6 @@ extern const unsigned long kexec_el2_vectors_offset;
+  * copy_len	Number of bytes that need to be copied
+  */
+ struct kern_reloc_arg {
+-	phys_addr_t head;
+ 	phys_addr_t entry_addr;
+ 	phys_addr_t kern_arg0;
+ 	phys_addr_t kern_arg1;
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 63060ea51727..097b4df616a2 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -130,7 +130,6 @@ int main(void)
+   DEFINE(SDEI_EVENT_PRIORITY,	offsetof(struct sdei_registered_event, priority));
+ #endif
+ #ifdef CONFIG_KEXEC_CORE
+-  DEFINE(KEXEC_KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
+   DEFINE(KEXEC_KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
+   DEFINE(KEXEC_KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
+   DEFINE(KEXEC_KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 8edcc4be0b15..2e11194b8023 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -174,7 +174,6 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	memcpy(reloc_code, kexec_relocate_code_start, kexec_relocate_code_size);
+ 	kimage->arch.kern_reloc = __pa(reloc_code) + kexec_kern_reloc_offset;
+ 	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
+-	kern_reloc_arg->head = kimage->head;
+ 	kern_reloc_arg->entry_addr = kimage->start;
+ 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
+ 	/* Setup vector table only when EL2 is available, but no VHE */
 -- 
 2.24.0
 
