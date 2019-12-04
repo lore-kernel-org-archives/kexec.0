@@ -2,17 +2,18 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icbEj-000413-SU
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 20:27:03 +0000
-Received: by mail-pf1-f200.google.com with SMTP id d127so311250pfa.7
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 12:26:56 -0800 (PST)
-Subject: Re: [PATCH v2 0/3] arm64: kexec_file: add kdump
+ id 1icbL9-000687-BE
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 20:33:40 +0000
+Received: by mail-pl1-f197.google.com with SMTP id 66so262193plc.22
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 12:33:34 -0800 (PST)
+Subject: Re: [PATCH v2 1/3] libfdt: define UINT32_MAX in libfdt_env.h
 References: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+ <20191114051510.17037-2-takahiro.akashi@linaro.org>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <da0113d3-24b8-6263-b06e-0e58037f292f@redhat.com>
-Date: Thu, 5 Dec 2019 01:56:47 +0530
+Message-ID: <aa35893d-fadc-be2a-1295-a986ced017fe@redhat.com>
+Date: Thu, 5 Dec 2019 02:03:27 +0530
 MIME-Version: 1.0
-In-Reply-To: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+In-Reply-To: <20191114051510.17037-2-takahiro.akashi@linaro.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -31,63 +32,52 @@ Cc: james.morse@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
 Hi Akashi,
 
-Thanks for the patchset.
-
 On 11/14/2019 10:45 AM, AKASHI Takahiro wrote:
-> This is the last piece of my kexec_file_load implementation for arm64.
-> It is now ready for being merged as some relevant patch to dtc/libfdt[1]
-> has finally been integrated in v5.3-rc1.
-> (Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
+> In the implementation of kexec_file_load-based kdump for arm64,
+> fdt_appendprop_addrrange() will be used, but fdt_addresses.c
+> will fail to compile due to missing UINT32_MAX.
 > 
-> Patch#1 and #2 are preliminary patches for libfdt component.
-> Patch#3 is to add kdump support.
+> So just define it in libfdt_env.h.
 > 
-> Bhepesh's patch[3] will be required for 52-bit VA support.
-> Once this patch is applied, whether or not CONFIG_ARM64_VA_BITS_52 is
-> enabled or not, a matching fix on user space side, crash utility,
-> will also be needed.
+> Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Frank Rowand <frowand.list@gmail.com>
+> ---
+>   include/linux/libfdt_env.h | 3 +++
+>   1 file changed, 3 insertions(+)
 > 
-> Anyway, I tested my patch, at least, with the following configuration:
-> 1) CONFIG_ARM64_BITS_48=y
-> 2) CONFIG_ARM64_BITS_52=y, but vabits_actual=48
+> diff --git a/include/linux/libfdt_env.h b/include/linux/libfdt_env.h
+> index edb0f0c30904..9ca00f11d9b1 100644
+> --- a/include/linux/libfdt_env.h
+> +++ b/include/linux/libfdt_env.h
+> @@ -3,6 +3,7 @@
+>   #define LIBFDT_ENV_H
+>   
+>   #include <linux/kernel.h>	/* For INT_MAX */
+> +#include <linux/limits.h>	/* For UINT32_MAX */
+>   #include <linux/string.h>
+>   
+>   #include <asm/byteorder.h>
+> @@ -11,6 +12,8 @@ typedef __be16 fdt16_t;
+>   typedef __be32 fdt32_t;
+>   typedef __be64 fdt64_t;
+>   
+> +#define UINT32_MAX U32_MAX
+> +
+>   #define fdt32_to_cpu(x) be32_to_cpu(x)
+>   #define cpu_to_fdt32(x) cpu_to_be32(x)
+>   #define fdt64_to_cpu(x) be64_to_cpu(x)
 > 
-> (I don't have any platform to use for
-> 3) CONFIG_ARM64_BITS_52=y, and vabits_actual=52)
-> 
-> [1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
->      v1.5.0-23-g87963ee20693"), in particular
-> 	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
-> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/693411.html
-> 
-> Changes in v2 (Nov 14, 2019)
-> * rebased to v5.4-rc7
-> * no functional changes
 
-This looks like a step in the right direction. I have some minor 
-nitpicks which I have mentioned in the individual patch reviews.
+With following upstream patches accepted already in Linus's tree (see 
+[0] and [1]), so we can drop this patch from the v3:
 
-With those addressed (v2?):
-
-Tested-and-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+[0] 26ed19adbab1 ("libfdt: reduce the number of headers included from 
+libfdt_env.h")
+[1] a8de1304b7df ("libfdt: define INT32_MAX and UINT32_MAX in libfdt_env.h")
 
 Thanks,
 Bhupesh
-
-> AKASHI Takahiro (3):
->    libfdt: define UINT32_MAX in libfdt_env.h
->    libfdt: include fdt_addresses.c
->    arm64: kexec_file: add crash dump support
-> 
->   arch/arm64/include/asm/kexec.h         |   4 +
->   arch/arm64/kernel/kexec_image.c        |   4 -
->   arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
->   include/linux/libfdt_env.h             |   3 +
->   lib/Makefile                           |   2 +-
->   lib/fdt_addresses.c                    |   2 +
->   6 files changed, 112 insertions(+), 9 deletions(-)
->   create mode 100644 lib/fdt_addresses.c
-> 
 
 
 _______________________________________________
