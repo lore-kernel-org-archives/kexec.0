@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icRme-0002Gy-20
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 10:21:26 +0000
-Date: Wed, 04 Dec 2019 10:21:13 -0000
-From: "tip-bot2 for Dave Young" <tip-bot2@linutronix.de>
-Subject: [tip: x86/urgent] x86/efi: Update e820 with reserved EFI boot
- services data to fix kexec breakage
-In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ id 1icRpH-00033G-IV
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 10:24:09 +0000
+Received: by mail-wr1-x443.google.com with SMTP id y17so7863920wrh.5
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 02:24:06 -0800 (PST)
 MIME-Version: 1.0
-Message-ID: <157545487347.21853.1786279419838113209.tip-bot2@tip-bot2>
+References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+ <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
+ <20191204101412.GD114697@gmail.com>
+In-Reply-To: <20191204101412.GD114697@gmail.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Date: Wed, 4 Dec 2019 10:24:01 +0000
+Message-ID: <CAKv+Gu8TcF69QNhqRJGh+A8AJ=91dfTJhRmV=J4V3ML9vQWoXA@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
+ data to fix kexec breakage
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,97 +23,85 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-tip-commits@vger.kernel.org
-Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, x86 <x86@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: Ingo Molnar <mingo@kernel.org>
+Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi <linux-efi@vger.kernel.org>, the arch/x86 maintainers <x86@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>
 
-The following commit has been merged into the x86/urgent branch of tip:
+On Wed, 4 Dec 2019 at 10:14, Ingo Molnar <mingo@kernel.org> wrote:
+>
+>
+> * Dave Young <dyoung@redhat.com> wrote:
+>
+> > On 12/04/19 at 03:52pm, Dave Young wrote:
+> > > Michael Weiser reported he got below error during a kexec rebooting:
+> > > esrt: Unsupported ESRT version 2904149718861218184.
+> > >
+> > > The ESRT memory stays in EFI boot services data, and it was reserved
+> > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
+> > > is to reuse the EFI boot services data across kexec reboot. For example
+> > > the BGRT image data and some ESRT memory like Michael reported.
+> > >
+> > > But although the memory is reserved it is not updated in X86 e820 table.
+> > > And kexec_file_load iterate system ram in io resource list to find places
+> > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+> > > initramfs overwritten the ESRT memory and then the failure happened.
+> >
+> > s/overwritten/overwrote :)  If need a repost please let me know..
+> >
+> > >
+> > > Since kexec_file_load depends on the e820 to be updated, just fix this
+> > > by updating the reserved EFI boot services memory as reserved type in e820.
+> > >
+> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+> > > bypassed in the reservation code path because they are assumed as reserved.
+> > > But the reservation is still needed for multiple kexec reboot.
+> > > And it is the only possible case we come here thus just drop the code
+> > > chunk then everything works without side effects.
+> > >
+> > > On my machine the ESRT memory sits in an EFI runtime data range, it does
+> > > not trigger the problem, but I successfully tested with BGRT instead.
+> > > both kexec_load and kexec_file_load work and kdump works as well.
+> > >
+> > > Signed-off-by: Dave Young <dyoung@redhat.com>
+>
+>
+> So I edited this to:
+>
+>  From: Dave Young <dyoung@redhat.com>
+>
+>  Michael Weiser reported he got this error during a kexec rebooting:
+>
+>    esrt: Unsupported ESRT version 2904149718861218184.
+>
+>  The ESRT memory stays in EFI boot services data, and it was reserved
+>  in kernel via efi_mem_reserve().  The initial purpose of the reservation
+>  is to reuse the EFI boot services data across kexec reboot. For example
+>  the BGRT image data and some ESRT memory like Michael reported.
+>
+>  But although the memory is reserved it is not updated in the X86 E820 table,
+>  and kexec_file_load() iterates system RAM in the IO resource list to find places
+>  for kernel, initramfs and other stuff. In Michael's case the kexec loaded
+>  initramfs overwrote the ESRT memory and then the failure happened.
+>
+>  Since kexec_file_load() depends on the E820 table being updated, just fix this
+>  by updating the reserved EFI boot services memory as reserved type in E820.
+>
+>  Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
+>  bypassed in the reservation code path because they are assumed as reserved.
+>
+>  But the reservation is still needed for multiple kexec reboots,
+>  and it is the only possible case we come here thus just drop the code
+>  chunk, then everything works without side effects.
+>
+>  On my machine the ESRT memory sits in an EFI runtime data range, it does
+>  not trigger the problem, but I successfully tested with BGRT instead.
+>  both kexec_load() and kexec_file_load() work and kdump works as well.
+>
 
-Commit-ID:     af164898482817a1d487964b68f3c21bae7a1beb
-Gitweb:        https://git.kernel.org/tip/af164898482817a1d487964b68f3c21bae7a1beb
-Author:        Dave Young <dyoung@redhat.com>
-AuthorDate:    Wed, 04 Dec 2019 15:52:33 +08:00
-Committer:     Ingo Molnar <mingo@kernel.org>
-CommitterDate: Wed, 04 Dec 2019 11:15:30 +01:00
-
-x86/efi: Update e820 with reserved EFI boot services data to fix kexec breakage
-
-Michael Weiser reported that he got this error during a kexec rebooting:
-
-  esrt: Unsupported ESRT version 2904149718861218184.
-
-The ESRT memory stays in EFI boot services data, and it was reserved
-in kernel via efi_mem_reserve().  The initial purpose of the reservation
-is to reuse the EFI boot services data across kexec reboot. For example
-the BGRT image data and some ESRT memory like Michael reported.
-
-But although the memory is reserved it is not updated in the X86 E820 table,
-and kexec_file_load() iterates system RAM in the IO resource list to find places
-for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-initramfs overwrote the ESRT memory and then the failure happened.
-
-Since kexec_file_load() depends on the E820 table being updated, just fix this
-by updating the reserved EFI boot services memory as reserved type in E820.
-
-Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-bypassed in the reservation code path because they are assumed as reserved.
-
-But the reservation is still needed for multiple kexec reboots,
-and it is the only possible case we come here thus just drop the code
-chunk, then everything works without side effects.
-
-On my machine the ESRT memory sits in an EFI runtime data range, it does
-not trigger the problem, but I successfully tested with BGRT instead.
-both kexec_load() and kexec_file_load() work and kdump works as well.
-
-[ mingo: Edited the changelog. ]
-
-Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
-Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kexec@lists.infradead.org
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/platform/efi/quirks.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 7675cf7..f8f0220 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 		return;
- 	}
- 
--	/* No need to reserve regions that will never be freed. */
--	if (md.attribute & EFI_MEMORY_RUNTIME)
--		return;
--
- 	size += addr % EFI_PAGE_SIZE;
- 	size = round_up(size, EFI_PAGE_SIZE);
- 	addr = round_down(addr, EFI_PAGE_SIZE);
-@@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	early_memunmap(new, new_size);
- 
- 	efi_memmap_install(new_phys, num_entries);
-+	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	e820__update_table(e820_table);
- }
- 
- /*
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
 
 _______________________________________________
 kexec mailing list
