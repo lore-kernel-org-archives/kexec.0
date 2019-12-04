@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x741.google.com ([2607:f8b0:4864:20::741])
+Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icX4C-0007ME-6H
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 15:59:55 +0000
-Received: by mail-qk1-x741.google.com with SMTP id k6so364483qki.5
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 07:59:52 -0800 (PST)
+ id 1icX4C-0007IV-CE
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 15:59:56 +0000
+Received: by mail-qt1-x844.google.com with SMTP id j5so201273qtq.9
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 07:59:47 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v8 07/25] arm64: hibernate: remove gotos as they are not needed
-Date: Wed,  4 Dec 2019 10:59:20 -0500
-Message-Id: <20191204155938.2279686-8-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 04/25] arm64: kexec: make dtb_mem always enabled
+Date: Wed,  4 Dec 2019 10:59:17 -0500
+Message-Id: <20191204155938.2279686-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,149 +26,56 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
 
-Usually, gotos are used to handle cleanup after exception, but in case of
-create_safe_exec_page and swsusp_arch_resume there are no clean-ups. So,
-simply return the errors directly.
+Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
+enabled. This adds ugly ifdefs to c files.
+
+Always enabled dtb_mem, when it is not used, it is NULL.
+Change the dtb_mem to phys_addr_t, as it is a physical address.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/kernel/hibernate.c | 49 ++++++++++++-----------------------
- 1 file changed, 17 insertions(+), 32 deletions(-)
+ arch/arm64/include/asm/kexec.h    | 4 ++--
+ arch/arm64/kernel/machine_kexec.c | 6 +-----
+ 2 files changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 34297716643f..83c41a2f8400 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -198,7 +198,6 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
--	int rc = 0;
- 	pgd_t *trans_pgd;
- 	pgd_t *pgdp;
- 	pud_t *pudp;
-@@ -206,47 +205,37 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	pte_t *ptep;
- 	unsigned long dst = get_safe_page(GFP_ATOMIC);
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 12a561a54128..ad6afed69078 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -90,14 +90,14 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
  
--	if (!dst) {
--		rc = -ENOMEM;
--		goto out;
--	}
-+	if (!dst)
-+		return -ENOMEM;
+-#ifdef CONFIG_KEXEC_FILE
+ #define ARCH_HAS_KIMAGE_ARCH
  
- 	memcpy((void *)dst, src_start, length);
- 	__flush_icache_range(dst, dst + length);
+ struct kimage_arch {
+ 	void *dtb;
+-	unsigned long dtb_mem;
++	phys_addr_t dtb_mem;
+ };
  
- 	trans_pgd = (void *)get_safe_page(GFP_ATOMIC);
--	if (!trans_pgd) {
--		rc = -ENOMEM;
--		goto out;
--	}
-+	if (!trans_pgd)
-+		return -ENOMEM;
++#ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops kexec_image_ops;
  
- 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
- 		pudp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pudp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!pudp)
-+			return -ENOMEM;
- 		pgd_populate(&init_mm, pgdp, pudp);
- 	}
+ struct kimage;
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 8e9c924423b4..ae1bad0156cd 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -203,11 +203,7 @@ void machine_kexec(struct kimage *kimage)
+ 	 * In kexec_file case, the kernel starts directly without purgatory.
+ 	 */
+ 	cpu_soft_restart(reboot_code_buffer_phys, kimage->head, kimage->start,
+-#ifdef CONFIG_KEXEC_FILE
+-						kimage->arch.dtb_mem);
+-#else
+-						0);
+-#endif
++			 kimage->arch.dtb_mem);
  
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
- 		pmdp = (void *)get_safe_page(GFP_ATOMIC);
--		if (!pmdp) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!pmdp)
-+			return -ENOMEM;
- 		pud_populate(&init_mm, pudp, pmdp);
- 	}
- 
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
- 		ptep = (void *)get_safe_page(GFP_ATOMIC);
--		if (!ptep) {
--			rc = -ENOMEM;
--			goto out;
--		}
-+		if (!ptep)
-+			return -ENOMEM;
- 		pmd_populate_kernel(&init_mm, pmdp, ptep);
- 	}
- 
-@@ -272,8 +261,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 
- 	*phys_dst_addr = virt_to_phys((void *)dst);
- 
--out:
--	return rc;
-+	return 0;
+ 	BUG(); /* Should never get here. */
  }
- 
- #define dcache_clean_range(start, end)	__flush_dcache_area(start, (end - start))
-@@ -482,7 +470,7 @@ static int copy_page_tables(pgd_t *dst_pgdp, unsigned long start,
-  */
- int swsusp_arch_resume(void)
- {
--	int rc = 0;
-+	int rc;
- 	void *zero_page;
- 	size_t exit_size;
- 	pgd_t *tmp_pg_dir;
-@@ -498,12 +486,11 @@ int swsusp_arch_resume(void)
- 	tmp_pg_dir = (pgd_t *)get_safe_page(GFP_ATOMIC);
- 	if (!tmp_pg_dir) {
- 		pr_err("Failed to allocate memory for temporary page tables.\n");
--		rc = -ENOMEM;
--		goto out;
-+		return -ENOMEM;
- 	}
- 	rc = copy_page_tables(tmp_pg_dir, PAGE_OFFSET, PAGE_END);
- 	if (rc)
--		goto out;
-+		return rc;
- 
- 	/*
- 	 * We need a zero page that is zero before & after resume in order to
-@@ -512,8 +499,7 @@ int swsusp_arch_resume(void)
- 	zero_page = (void *)get_safe_page(GFP_ATOMIC);
- 	if (!zero_page) {
- 		pr_err("Failed to allocate zero page.\n");
--		rc = -ENOMEM;
--		goto out;
-+		return -ENOMEM;
- 	}
- 
- 	/*
-@@ -531,7 +517,7 @@ int swsusp_arch_resume(void)
- 				   &phys_hibernate_exit);
- 	if (rc) {
- 		pr_err("Failed to create safe executable page for hibernate_exit code.\n");
--		goto out;
-+		return rc;
- 	}
- 
- 	/*
-@@ -558,8 +544,7 @@ int swsusp_arch_resume(void)
- 		       resume_hdr.reenter_kernel, restore_pblist,
- 		       resume_hdr.__hyp_stub_vectors, virt_to_phys(zero_page));
- 
--out:
--	return rc;
-+	return 0;
- }
- 
- int hibernate_resume_nonboot_cpu_disable(void)
 -- 
 2.24.0
 
