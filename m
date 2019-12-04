@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-f193.google.com ([209.85.222.193])
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icX4M-0007WA-2A
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:14 +0000
-Received: by mail-qk1-f193.google.com with SMTP id m188so369899qkc.4
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:00 -0800 (PST)
+ id 1icX4Q-0007nU-Tu
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:18 +0000
+Received: by mail-qt1-x843.google.com with SMTP id g1so224649qtj.6
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:05 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v8 12/25] arm64: trans_pgd: make trans_pgd_map_page generic
-Date: Wed,  4 Dec 2019 10:59:25 -0500
-Message-Id: <20191204155938.2279686-13-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 16/25] arm64: kexec: call kexec_image_info only once
+Date: Wed,  4 Dec 2019 10:59:29 -0500
+Message-Id: <20191204155938.2279686-17-pasha.tatashin@soleen.com>
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,159 +26,46 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
 
-kexec is going to use a different allocator, so make
-trans_pgd_map_page to accept allocator as an argument, and also
-kexec is going to use a different map protection, so also pass
-it via argument.
+Currently, kexec_image_info() is called during load time, and
+right before kernel is being kexec'ed. There is no need to do both.
+So, call it only once when segments are loaded and the physical
+location of page with copy of arm64_relocate_new_kernel is known.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: Matthias Brugger <mbrugger@suse.com>
 ---
- arch/arm64/include/asm/trans_pgd.h | 18 ++++++++++++++++--
- arch/arm64/kernel/hibernate.c      | 12 +++++++++++-
- arch/arm64/mm/trans_pgd.c          | 27 +++++++++++++++++++++------
- 3 files changed, 48 insertions(+), 9 deletions(-)
+ arch/arm64/kernel/machine_kexec.c | 5 +----
+ 1 file changed, 1 insertion(+), 4 deletions(-)
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index c7b5402b7d87..bb38f73aa7aa 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -11,10 +11,24 @@
- #include <linux/bits.h>
- #include <asm/pgtable-types.h>
- 
-+/*
-+ * trans_alloc_page
-+ *	- Allocator that should return exactly one zeroed page, if this
-+ *	 allocator fails, trans_pgd returns -ENOMEM error.
-+ *
-+ * trans_alloc_arg
-+ *	- Passed to trans_alloc_page as an argument
-+ */
-+
-+struct trans_pgd_info {
-+	void * (*trans_alloc_page)(void *arg);
-+	void *trans_alloc_arg;
-+};
-+
- int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
- 			  unsigned long end);
- 
--int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
--		       pgprot_t pgprot);
-+int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
-+		       void *page, unsigned long dst_addr, pgprot_t pgprot);
- 
- #endif /* _ASM_TRANS_TABLE_H */
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 3d6f0fd73591..607bb1fbc349 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -179,6 +179,11 @@ int arch_hibernation_header_restore(void *addr)
- }
- EXPORT_SYMBOL(arch_hibernation_header_restore);
- 
-+static void *hibernate_page_alloc(void *arg)
-+{
-+	return (void *)get_safe_page((gfp_t)(unsigned long)arg);
-+}
-+
- /*
-  * Copies length bytes, starting at src_start into an new page,
-  * perform cache maintenance, then maps it at the specified address low
-@@ -195,6 +200,11 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 				 unsigned long dst_addr,
- 				 phys_addr_t *phys_dst_addr)
- {
-+	struct trans_pgd_info trans_info = {
-+		.trans_alloc_page	= hibernate_page_alloc,
-+		.trans_alloc_arg	= (void *)GFP_ATOMIC,
-+	};
-+
- 	void *page = (void *)get_safe_page(GFP_ATOMIC);
- 	pgd_t *trans_pgd;
- 	int rc;
-@@ -209,7 +219,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	if (!trans_pgd)
- 		return -ENOMEM;
- 
--	rc = trans_pgd_map_page(trans_pgd, page, dst_addr,
-+	rc = trans_pgd_map_page(&trans_info, trans_pgd, page, dst_addr,
- 				PAGE_KERNEL_EXEC);
- 	if (rc)
- 		return rc;
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 5ac712b92439..1142dde8c02f 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -25,6 +25,11 @@
- #include <linux/mm.h>
- #include <linux/mmzone.h>
- 
-+static void *trans_alloc(struct trans_pgd_info *info)
-+{
-+	return info->trans_alloc_page(info->trans_alloc_arg);
-+}
-+
- static void _copy_pte(pte_t *dst_ptep, pte_t *src_ptep, unsigned long addr)
- {
- 	pte_t pte = READ_ONCE(*src_ptep);
-@@ -180,8 +185,18 @@ int trans_pgd_create_copy(pgd_t **dst_pgdp, unsigned long start,
- 	return rc;
- }
- 
--int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
--		       pgprot_t pgprot)
-+/*
-+ * Add map entry to trans_pgd for a base-size page at PTE level.
-+ * info:	contains allocator and its argument
-+ * trans_pgd:	page table in which new map is added.
-+ * page:	page to be mapped.
-+ * dst_addr:	new VA address for the pages
-+ * pgprot:	protection for the page.
-+ *
-+ * Returns 0 on success, and -ENOMEM on failure.
-+ */
-+int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
-+		       void *page, unsigned long dst_addr, pgprot_t pgprot)
- {
- 	pgd_t *pgdp;
- 	pud_t *pudp;
-@@ -190,7 +205,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
- 
- 	pgdp = pgd_offset_raw(trans_pgd, dst_addr);
- 	if (pgd_none(READ_ONCE(*pgdp))) {
--		pudp = (void *)get_safe_page(GFP_ATOMIC);
-+		pudp = trans_alloc(info);
- 		if (!pudp)
- 			return -ENOMEM;
- 		pgd_populate(&init_mm, pgdp, pudp);
-@@ -198,7 +213,7 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
- 
- 	pudp = pud_offset(pgdp, dst_addr);
- 	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = (void *)get_safe_page(GFP_ATOMIC);
-+		pmdp = trans_alloc(info);
- 		if (!pmdp)
- 			return -ENOMEM;
- 		pud_populate(&init_mm, pudp, pmdp);
-@@ -206,14 +221,14 @@ int trans_pgd_map_page(pgd_t *trans_pgd, void *page, unsigned long dst_addr,
- 
- 	pmdp = pmd_offset(pudp, dst_addr);
- 	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = (void *)get_safe_page(GFP_ATOMIC);
-+		ptep = trans_alloc(info);
- 		if (!ptep)
- 			return -ENOMEM;
- 		pmd_populate_kernel(&init_mm, pmdp, ptep);
- 	}
- 
- 	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), PAGE_KERNEL_EXEC));
-+	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 46718b289a6b..f94119b5cebc 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -66,6 +66,7 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	memcpy(reloc_code, arm64_relocate_new_kernel,
+ 	       arm64_relocate_new_kernel_size);
+ 	kimage->arch.kern_reloc = __pa(reloc_code);
++	kexec_image_info(kimage);
  
  	return 0;
  }
+@@ -80,8 +81,6 @@ int machine_kexec_post_load(struct kimage *kimage)
+  */
+ int machine_kexec_prepare(struct kimage *kimage)
+ {
+-	kexec_image_info(kimage);
+-
+ 	if (kimage->type != KEXEC_TYPE_CRASH && cpus_are_stuck_in_kernel()) {
+ 		pr_err("Can't kexec: CPUs are stuck in the kernel.\n");
+ 		return -EBUSY;
+@@ -167,8 +166,6 @@ void machine_kexec(struct kimage *kimage)
+ 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
+ 		"Some CPUs may be stale, kdump will be unreliable.\n");
+ 
+-	kexec_image_info(kimage);
+-
+ 	/* Flush the reboot_code_buffer in preparation for its execution. */
+ 	__flush_dcache_area(reboot_code_buffer, arm64_relocate_new_kernel_size);
+ 
 -- 
 2.24.0
 
