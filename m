@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icX4T-00084c-42
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:21 +0000
-Received: by mail-qt1-x844.google.com with SMTP id g1so224847qtj.6
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:08 -0800 (PST)
+Received: from mail-qt1-x843.google.com ([2607:f8b0:4864:20::843])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1icX4c-00028g-Oh
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:19 +0000
+Received: by mail-qt1-x843.google.com with SMTP id k11so246880qtm.3
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:15 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v8 18/25] arm64: kexec: arm64_relocate_new_kernel clean-ups
-Date: Wed,  4 Dec 2019 10:59:31 -0500
-Message-Id: <20191204155938.2279686-19-pasha.tatashin@soleen.com>
+Subject: [PATCH v8 22/25] arm64: kexec: kexec EL2 vectors
+Date: Wed,  4 Dec 2019 10:59:35 -0500
+Message-Id: <20191204155938.2279686-23-pasha.tatashin@soleen.com>
 In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,144 +26,124 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
 
-Remove excessive empty lines from arm64_relocate_new_kernel.
-Also, use comments on the same lines with instructions where
-appropriate.
-
-Change ENDPROC to END it never returns.
-
-copy_page(dest, src, tmps...)
-Increments dest and src by PAGE_SIZE, so no need to store dest
-prior to calling copy_page and increment it after. Also, src is not
-used after a copy, not need to copy either.
-
-Call raw_dcache_line_size()  only when relocation is actually going to
-happen.
-
-Since '.align 3' is intended to align globals at the end of the file,
-move it there.
+If we have a EL2 mode without VHE, the EL2 vectors are needed in order
+to switch to EL2 and jump to new world with hyperivsor privileges.
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/relocate_kernel.S | 50 +++++++----------------------
- 1 file changed, 11 insertions(+), 39 deletions(-)
+ arch/arm64/include/asm/kexec.h      |  5 +++++
+ arch/arm64/kernel/asm-offsets.c     |  1 +
+ arch/arm64/kernel/machine_kexec.c   |  5 +++++
+ arch/arm64/kernel/relocate_kernel.S | 34 +++++++++++++++++++++++++++++
+ 4 files changed, 45 insertions(+)
 
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 8cad34e7a9d9..414a0a41a60a 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -95,6 +95,7 @@ static inline void crash_post_resume(void) {}
+ extern const unsigned long kexec_relocate_code_size;
+ extern const unsigned char kexec_relocate_code_start[];
+ extern const unsigned long kexec_kern_reloc_offset;
++extern const unsigned long kexec_el2_vectors_offset;
+ #endif
+ 
+ /*
+@@ -104,6 +105,9 @@ extern const unsigned long kexec_kern_reloc_offset;
+  *		kernel, or purgatory entry address).
+  * kern_arg0	first argument to kernel is its dtb address. The other
+  *		arguments are currently unused, and must be set to 0
++ * el2_vector	If present means that relocation routine will go to EL1
++ *		from EL2 to do the copy, and then back to EL2 to do the jump
++ *		to new world.
+  */
+ struct kern_reloc_arg {
+ 	phys_addr_t head;
+@@ -112,6 +116,7 @@ struct kern_reloc_arg {
+ 	phys_addr_t kern_arg1;
+ 	phys_addr_t kern_arg2;
+ 	phys_addr_t kern_arg3;
++	phys_addr_t el2_vector;
+ };
+ 
+ #define ARCH_HAS_KIMAGE_ARCH
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 448230684749..ff974b648347 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -136,6 +136,7 @@ int main(void)
+   DEFINE(KEXEC_KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
+   DEFINE(KEXEC_KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
+   DEFINE(KEXEC_KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
++  DEFINE(KEXEC_KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, el2_vector));
+ #endif
+   return 0;
+ }
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 5e7b1f6569c4..ac6ade7c96ff 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -84,6 +84,11 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	kern_reloc_arg->head = kimage->head;
+ 	kern_reloc_arg->entry_addr = kimage->start;
+ 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
++	/* Setup vector table only when EL2 is available, but no VHE */
++	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
++		kern_reloc_arg->el2_vector = __pa(reloc_code)
++						+ kexec_el2_vectors_offset;
++	}
+ 	kexec_image_info(kimage);
+ 
+ 	return 0;
 diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index c1d7db71a726..e9c974ea4717 100644
+index 3c05220a79ab..67efa42575a5 100644
 --- a/arch/arm64/kernel/relocate_kernel.S
 +++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -8,7 +8,6 @@
- 
- #include <linux/kexec.h>
- #include <linux/linkage.h>
--
- #include <asm/assembler.h>
- #include <asm/kexec.h>
- #include <asm/page.h>
-@@ -17,25 +16,21 @@
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-  *
-- * The memory that the old kernel occupies may be overwritten when coping the
-+ * The memory that the old kernel occupies may be overwritten when copying the
-  * new image to its final location.  To assure that the
-  * arm64_relocate_new_kernel routine which does that copy is not overwritten,
-  * all code and data needed by arm64_relocate_new_kernel must be between the
-  * symbols arm64_relocate_new_kernel and arm64_relocate_new_kernel_end.  The
-  * machine_kexec() routine will copy arm64_relocate_new_kernel to the kexec
-- * control_code_page, a special page which has been set up to be preserved
-- * during the copy operation.
-+ * safe memory that has been set up to be preserved during the copy operation.
-  */
- ENTRY(arm64_relocate_new_kernel)
--
- 	/* Setup the list loop variables. */
- 	mov	x18, x2				/* x18 = dtb address */
- 	mov	x17, x1				/* x17 = kimage_start */
- 	mov	x16, x0				/* x16 = kimage_head */
--	raw_dcache_line_size x15, x0		/* x15 = dcache line size */
- 	mov	x14, xzr			/* x14 = entry ptr */
- 	mov	x13, xzr			/* x13 = copy dest */
--
- 	/* Clear the sctlr_el2 flags. */
- 	mrs	x0, CurrentEL
- 	cmp	x0, #CurrentEL_EL2
-@@ -46,14 +41,11 @@ ENTRY(arm64_relocate_new_kernel)
- 	pre_disable_mmu_workaround
- 	msr	sctlr_el2, x0
- 	isb
--1:
--
--	/* Check if the new image needs relocation. */
-+1:	/* Check if the new image needs relocation. */
- 	tbnz	x16, IND_DONE_BIT, .Ldone
--
-+	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
- .Lloop:
- 	and	x12, x16, PAGE_MASK		/* x12 = addr */
--
- 	/* Test the entry flags. */
- .Ltest_source:
- 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
-@@ -69,34 +61,18 @@ ENTRY(arm64_relocate_new_kernel)
- 	b.lo    2b
- 	dsb     sy
- 
--	mov x20, x13
--	mov x21, x12
--	copy_page x20, x21, x0, x1, x2, x3, x4, x5, x6, x7
--
--	/* dest += PAGE_SIZE */
--	add	x13, x13, PAGE_SIZE
-+	copy_page x13, x12, x0, x1, x2, x3, x4, x5, x6, x7
- 	b	.Lnext
--
- .Ltest_indirection:
- 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
--
--	/* ptr = addr */
--	mov	x14, x12
-+	mov	x14, x12			/* ptr = addr */
- 	b	.Lnext
--
- .Ltest_destination:
- 	tbz	x16, IND_DESTINATION_BIT, .Lnext
--
--	/* dest = addr */
--	mov	x13, x12
--
-+	mov	x13, x12			/* dest = addr */
- .Lnext:
--	/* entry = *ptr++ */
--	ldr	x16, [x14], #8
--
--	/* while (!(entry & DONE)) */
--	tbz	x16, IND_DONE_BIT, .Lloop
--
-+	ldr	x16, [x14], #8			/* entry = *ptr++ */
-+	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
- .Ldone:
- 	/* wait for writes from copy_page to finish */
- 	dsb	nsh
-@@ -110,16 +86,12 @@ ENTRY(arm64_relocate_new_kernel)
- 	mov	x2, xzr
- 	mov	x3, xzr
- 	br	x17
--
--ENDPROC(arm64_relocate_new_kernel)
--
+@@ -88,6 +88,38 @@ ENTRY(arm64_relocate_new_kernel)
  .ltorg
--
--.align 3	/* To keep the 64-bit values below naturally aligned. */
-+END(arm64_relocate_new_kernel)
+ END(arm64_relocate_new_kernel)
  
- .Lcopy_end:
++.macro el1_sync_64
++	br	x4			/* Jump to new world from el2 */
++	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
++.endm
++
++.macro invalid_vector label
++\label:
++	b \label
++	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
++.endm
++
++/* el2 vectors - switch el2 here while we restore the memory image. */
++	.align 11
++ENTRY(kexec_el2_vectors)
++	invalid_vector el2_sync_invalid_sp0	/* Synchronous EL2t */
++	invalid_vector el2_irq_invalid_sp0	/* IRQ EL2t */
++	invalid_vector el2_fiq_invalid_sp0	/* FIQ EL2t */
++	invalid_vector el2_error_invalid_sp0	/* Error EL2t */
++	invalid_vector el2_sync_invalid_spx	/* Synchronous EL2h */
++	invalid_vector el2_irq_invalid_spx	/* IRQ EL2h */
++	invalid_vector el2_fiq_invalid_spx	/* FIQ EL2h */
++	invalid_vector el2_error_invalid_spx	/* Error EL2h */
++		el1_sync_64			/* Synchronous 64-bit EL1 */
++	invalid_vector el1_irq_invalid_64	/* IRQ 64-bit EL1 */
++	invalid_vector el1_fiq_invalid_64	/* FIQ 64-bit EL1 */
++	invalid_vector el1_error_invalid_64	/* Error 64-bit EL1 */
++	invalid_vector el1_sync_invalid_32	/* Synchronous 32-bit EL1 */
++	invalid_vector el1_irq_invalid_32	/* IRQ 32-bit EL1 */
++	invalid_vector el1_fiq_invalid_32	/* FIQ 32-bit EL1 */
++	invalid_vector el1_error_invalid_32	/* Error 32-bit EL1 */
++END(kexec_el2_vectors)
++
+ .Lkexec_relocate_code_end:
  .org	KEXEC_CONTROL_PAGE_SIZE
--
-+.align 3	/* To keep the 64-bit values below naturally aligned. */
- /*
-  * arm64_relocate_new_kernel_size - Number of bytes to copy to the
-  * control_code_page.
+ .align 3	/* To keep the 64-bit values below naturally aligned. */
+@@ -99,3 +131,5 @@ GLOBAL(kexec_relocate_code_size)
+ 	.quad	.Lkexec_relocate_code_end - kexec_relocate_code_start
+ GLOBAL(kexec_kern_reloc_offset)
+ 	.quad	arm64_relocate_new_kernel - kexec_relocate_code_start
++GLOBAL(kexec_el2_vectors_offset)
++	.quad	kexec_el2_vectors - kexec_relocate_code_start
 -- 
 2.24.0
 
