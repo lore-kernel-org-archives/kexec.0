@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icPZM-00030Q-Uo
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 07:59:34 +0000
-Date: Wed, 4 Dec 2019 15:59:17 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-Message-ID: <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
+From: "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
+Subject: RE: [PATCH v2 2/2] efi: arm64: Introduce /proc/efi/memreserve to tell
+ the persistent pages
+Date: Wed, 4 Dec 2019 08:50:44 +0000
+Message-ID: <OSBPR01MB400616833DA3511C46279AD3955D0@OSBPR01MB4006.jpnprd01.prod.outlook.com>
+References: <20191203201410.28045-1-msys.mizuma@gmail.com>
+ <20191203201410.28045-3-msys.mizuma@gmail.com>
+In-Reply-To: <20191203201410.28045-3-msys.mizuma@gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +17,213 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-efi@vger.kernel.org, x86@kernel.org, linux-kernel@vger.kernel.org, Michael Weiser <michael@weiser.dinsnail.net>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+To: 'Masayoshi Mizuma' <msys.mizuma@gmail.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "m.mizuma@jp.fujitsu.com" <m.mizuma@jp.fujitsu.com>
+Cc: "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On 12/04/19 at 03:52pm, Dave Young wrote:
-> Michael Weiser reported he got below error during a kexec rebooting:
-> esrt: Unsupported ESRT version 2904149718861218184.
-> 
-> The ESRT memory stays in EFI boot services data, and it was reserved
-> in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> is to reuse the EFI boot services data across kexec reboot. For example
-> the BGRT image data and some ESRT memory like Michael reported. 
-> 
-> But although the memory is reserved it is not updated in X86 e820 table.
-> And kexec_file_load iterate system ram in io resource list to find places
-> for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> initramfs overwritten the ESRT memory and then the failure happened.
 
-s/overwritten/overwrote :)  If need a repost please let me know..
 
+> -----Original Message-----
+> From: linux-kernel-owner@vger.kernel.org
+> [mailto:linux-kernel-owner@vger.kernel.org] On Behalf Of Masayoshi Mizuma
+> Sent: Wednesday, December 4, 2019 5:14 AM
+> To: Ard Biesheuvel <ard.biesheuvel@linaro.org>;
+> linux-arm-kernel@lists.infradead.org; linux-efi@vger.kernel.org
+> Cc: Masayoshi Mizuma <msys.mizuma@gmail.com>; Mizuma, Masayoshi/水間 理仁
+> <m.mizuma@jp.fujitsu.com>; linux-kernel@vger.kernel.org;
+> kexec@lists.infradead.org; Hatayama, Daisuke/畑山 大輔
+> <d.hatayama@fujitsu.com>; Eric Biederman <ebiederm@xmission.com>; Matthias
+> Brugger <matthias.bgg@gmail.com>
+> Subject: [PATCH v2 2/2] efi: arm64: Introduce /proc/efi/memreserve to tell the
+> persistent pages
 > 
-> Since kexec_file_load depends on the e820 to be updated, just fix this
-> by updating the reserved EFI boot services memory as reserved type in e820.
+> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 > 
-> Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-> bypassed in the reservation code path because they are assumed as reserved.
-> But the reservation is still needed for multiple kexec reboot.
-> And it is the only possible case we come here thus just drop the code
-> chunk then everything works without side effects. 
+> kexec reboot stops in early boot sequence because efi_config_parse_tables()
+> refers garbage data. We can see the log with memblock=debug kernel option:
 > 
-> On my machine the ESRT memory sits in an EFI runtime data range, it does
-> not trigger the problem, but I successfully tested with BGRT instead.
-> both kexec_load and kexec_file_load work and kdump works as well.
+>   efi:  ACPI 2.0=0x9821790014  PROP=0x8757f5c0  SMBIOS 3.0=0x9820740000
+> MEMRESERVE=0x9820bfdc58
+>   memblock_reserve: [0x0000009820bfdc58-0x0000009820bfdc67]
+> efi_config_parse_tables+0x228/0x278
+>   memblock_reserve: [0x0000000082760000-0x00000000324d07ff]
+> efi_config_parse_tables+0x228/0x278
+>   memblock_reserve: [0xcc4f84ecc0511670-0x5f6e5214a7fd91f9]
+> efi_config_parse_tables+0x244/0x278
+>   memblock_reserve: [0xd2fd4144b9af693d-0xad0c1db1086f40a2]
+> efi_config_parse_tables+0x244/0x278
+>   memblock_reserve: [0x0c719bb159b1fadc-0x5aa6e62a1417ce12]
+> efi_config_parse_tables+0x244/0x278
+>   ...
 > 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
+> That happens because 0x82760000, struct linux_efi_memreserve, is destroyed.
+> 0x82760000 is pointed from efi.mem_reseve, and efi.mem_reserve points the
+> head page of LPI pending table and LPI property table which are allocated by
+> gic_reserve_range().
+> 
+> The destroyer is kexec. kexec locates the initrd to the area:
+> 
+>   ]# kexec -d -l /boot/vmlinuz-5.4.0-rc7 /boot/initramfs-5.4.0-rc7.img
+> --reuse-cmdline
+>   ...
+>   initrd: base 82290000, size 388dd8ah (59301258)
+>   ...
+> 
+> From dynamic debug log. initrd is located in segment[1]:
+>   machine_kexec_prepare:70:
+>     kexec kimage info:
+>       type:        0
+>       start:       85b30680
+>       head:        0
+>       nr_segments: 4
+>         segment[0]: 0000000080480000 - 0000000082290000, 0x1e10000 bytes, 481
+> pages
+>         segment[1]: 0000000082290000 - 0000000085b20000, 0x3890000 bytes, 905
+> pages
+>         segment[2]: 0000000085b20000 - 0000000085b30000, 0x10000 bytes, 1
+> pages
+>         segment[3]: 0000000085b30000 - 0000000085b40000, 0x10000 bytes, 1
+> pages
+> 
+> kexec searches the memory region to locate initrd through
+> "System RAM" in /proc/iomem. The pending tables are included in
+> "System RAM" because they are allocated by alloc_pages(), so kexec
+> destroys the LPI pending tables.
+> 
+> Introduce /proc/efi/memreserve to tell the pages pointed by
+> efi.mem_reserve so that kexec can avoid the area to locate initrd.
+> 
+> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 > ---
->  arch/x86/platform/efi/quirks.c |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
+>  drivers/firmware/efi/efi.c | 75 ++++++++++++++++++++++++++++++++++++--
+>  1 file changed, 72 insertions(+), 3 deletions(-)
 > 
-> --- linux-x86.orig/arch/x86/platform/efi/quirks.c
-> +++ linux-x86/arch/x86/platform/efi/quirks.c
-> @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
->  		return;
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index d8157cb34..80bbe0b3e 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -325,17 +325,87 @@ static __init int efivar_ssdt_load(void)
+>  static inline int efivar_ssdt_load(void) { return 0; }
+>  #endif
+> 
+> +static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+> +
+>  #ifdef CONFIG_PROC_FS
+>  static struct proc_dir_entry *proc_efi;
+> +#ifdef CONFIG_KEXEC
+> +static int memreserve_show(struct seq_file *m, void *v)
+> +{
+> +	struct linux_efi_memreserve *rsv;
+> +	phys_addr_t start, end;
+> +	unsigned long prsv;
+> +	int count, i;
+> +
+> +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
+> +			(!efi_memreserve_root))
+> +		return -ENODEV;
+> +
+> +	for (prsv = efi_memreserve_root->next; prsv; prsv = rsv->next) {
+> +		rsv = memremap(prsv, sizeof(*rsv), MEMREMAP_WB);
+> +		if (!rsv) {
+> +			pr_err("Could not map efi_memreserve\n");
+> +			return -ENOMEM;
+> +		}
+> +		count = atomic_read(&rsv->count);
+> +		for (i = 0; i < count; i++) {
+> +			start = rsv->entry[i].base;
+> +			end = start + rsv->entry[i].size - 1;
+> +
+> +			seq_printf(m, "%pa-%pa\n", &start, &end);
+> +		}
+
+It looks to me that we reach the same issue as sysfs if
+memreserve_show() calls seq_printf multiple times this way.
+Default buffer size of struct seq_file is also PAGE_SIZE.
+We can configure default buffer size using single_open_size(),
+but I think it better to do the same thing as /proc/iomem
+(and /proc/mounts and many others) than choosing a certain
+size as default value.
+
+Looking into implementation of /proc/iomem, its show method, r_show(),
+calls seq_printf() only once; in other words, r_show() is
+called the number of lines of /proc/iomem, which is equal to
+the number of resource objects. Then, there is no buffer size
+issue because "%pa-%pa\n" consumes at most (16 + 16 + 2) bytes
+per line.
+
+How about doing as /proc/iomem?
+
+> +		memunmap(rsv);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int memreserve_open(struct inode *inode, struct file *filp)
+> +{
+> +	return single_open(filp, memreserve_show, NULL);
+> +}
+> +
+> +static const struct file_operations memreserve_fops = {
+> +	.owner		= THIS_MODULE,
+> +	.open		= memreserve_open,
+> +	.read		= seq_read,
+> +	.llseek		= seq_lseek,
+> +	.release	= single_release,
+> +};
+> +
+> +static int __init efi_proc_memreserve(void)
+> +{
+> +	struct proc_dir_entry *pde;
+> +
+> +	if ((efi_memreserve_root == (void *)ULONG_MAX) ||
+> +			(!efi_memreserve_root))
+> +		return 0;
+> +
+> +	pde = proc_create("memreserve", 0444, proc_efi, &memreserve_fops);
+> +	if (!pde) {
+> +		pr_err("/proc/efi: Cannot create /proc/efi/memreserve
+> file.\n");
+> +		return 1;
+> +	}
+> +
+> +	return 0;
+> +}
+> +#else
+> +static inline int efi_proc_memreserve(void) { return 0; }
+> +#endif /* CONFIG_KEXEC */
+> +
+>  static int __init efi_proc_init(void)
+>  {
+> +	int error = 1;
+> +
+>  	proc_efi = proc_mkdir("efi", NULL);
+>  	if (!proc_efi) {
+>  		pr_err("/proc/efi: Cannot create /proc/efi directroy.\n");
+> -		return 1;
+> +		return error;
 >  	}
->  
-> -	/* No need to reserve regions that will never be freed. */
-> -	if (md.attribute & EFI_MEMORY_RUNTIME)
-> -		return;
-> -
->  	size += addr % EFI_PAGE_SIZE;
->  	size = round_up(size, EFI_PAGE_SIZE);
->  	addr = round_down(addr, EFI_PAGE_SIZE);
-> @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
->  	early_memunmap(new, new_size);
->  
->  	efi_memmap_install(new_phys, num_entries);
-> +	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-> +	e820__update_table(e820_table);
+> 
+> -	return 0;
+> +	error = efi_proc_memreserve();
+> +
+> +	return error;
 >  }
->  
->  /*
-
-Michael, could you a one more test and provide a tested-by if it works
-for you?
-
-Thanks
-Dave
+>  #else
+>  static inline int efi_proc_init(void) { return 0; }
+> @@ -986,7 +1056,6 @@ int efi_status_to_err(efi_status_t status)
+>  }
+> 
+>  static DEFINE_SPINLOCK(efi_mem_reserve_persistent_lock);
+> -static struct linux_efi_memreserve *efi_memreserve_root __ro_after_init;
+> 
+>  static int __init efi_memreserve_map_root(void)
+>  {
+> --
+> 2.18.1
 
 
 _______________________________________________
