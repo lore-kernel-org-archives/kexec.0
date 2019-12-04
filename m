@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ot1-x344.google.com ([2607:f8b0:4864:20::344])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icb1q-0007g1-9x
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 20:13:44 +0000
-Received: by mail-ot1-x344.google.com with SMTP id i15so432806oto.7
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 12:13:41 -0800 (PST)
+ id 1icbEj-000413-SU
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 20:27:03 +0000
+Received: by mail-pf1-f200.google.com with SMTP id d127so311250pfa.7
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 12:26:56 -0800 (PST)
+Subject: Re: [PATCH v2 0/3] arm64: kexec_file: add kdump
+References: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <da0113d3-24b8-6263-b06e-0e58037f292f@redhat.com>
+Date: Thu, 5 Dec 2019 01:56:47 +0530
 MIME-Version: 1.0
-References: <20191204145233.11962-1-ardb@kernel.org>
- <20191204171744.o3ijdspnelqn5fgd@gabell>
- <08f05b18-12b2-0ba4-b819-b95ba27d1862@arm.com>
- <20191204185708.hdoa5gzmfr547q53@gabell>
-In-Reply-To: <20191204185708.hdoa5gzmfr547q53@gabell>
-From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Date: Thu, 5 Dec 2019 01:43:28 +0530
-Message-ID: <CAFTCetTTgJRN+3+vqS+XbMMrra3xKqrEXzqEKpLsMn=G8peUjw@mail.gmail.com>
-Subject: Re: [PATCH] efi/memreserve: register reservations as 'reserved' in
- /proc/iomem
+In-Reply-To: <20191114051510.17037-1-takahiro.akashi@linaro.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,105 +22,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, linux-efi@vger.kernel.org, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Ard Biesheuvel <ardb@kernel.org>, Simon Horman <horms@verge.net.au>, James Morse <james.morse@arm.com>, d.hatayama@fujitsu.com
+To: AKASHI Takahiro <takahiro.akashi@linaro.org>, catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
+Cc: james.morse@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-Hello Masa,
+Hi Akashi,
 
-(+Cc Simon)
+Thanks for the patchset.
 
-On Thu, Dec 5, 2019 at 12:27 AM Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
->
-> On Wed, Dec 04, 2019 at 06:17:59PM +0000, James Morse wrote:
-> > Hi Masa,
-> >
-> > On 04/12/2019 17:17, Masayoshi Mizuma wrote:
-> > > Thank you for sending the patch, but unfortunately it doesn't work for the issue...
-> > >
-> > > After applied your patch, the LPI tables are marked as reserved in
-> > > /proc/iomem like as:
-> > >
-> > > 80300000-a1fdffff : System RAM
-> > >   80480000-8134ffff : Kernel code
-> > >   81350000-817bffff : reserved
-> > >   817c0000-82acffff : Kernel data
-> > >   830f0000-830fffff : reserved # Property table
-> > >   83480000-83480fff : reserved # Pending table
-> > >   83490000-8349ffff : reserved # Pending table
-> > >
-> > > However, kexec tries to allocate memory from System RAM, it doesn't care
-> > > the reserved in System RAM.
-> >
-> > > I'm not sure why kexec doesn't care the reserved in System RAM, however,
-> >
-> > Hmm, we added these to fix a problem with the UEFI memory map, and more recently ACPI
-> > tables being overwritten by kexec.
-> >
-> > Which version of kexec-tools are you using? Could you try:
-> > https://git.linaro.org/people/takahiro.akashi/kexec-tools.git/commit/?h=arm64/resv_mem
->
-> Thanks a lot! It worked and the issue is gone with Ard's patch and
-> the linaro kexec (arm64/resv_mem branch).
->
-> Ard, please feel free to add:
->
->         Tested-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On 11/14/2019 10:45 AM, AKASHI Takahiro wrote:
+> This is the last piece of my kexec_file_load implementation for arm64.
+> It is now ready for being merged as some relevant patch to dtc/libfdt[1]
+> has finally been integrated in v5.3-rc1.
+> (Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
+> 
+> Patch#1 and #2 are preliminary patches for libfdt component.
+> Patch#3 is to add kdump support.
+> 
+> Bhepesh's patch[3] will be required for 52-bit VA support.
+> Once this patch is applied, whether or not CONFIG_ARM64_VA_BITS_52 is
+> enabled or not, a matching fix on user space side, crash utility,
+> will also be needed.
+> 
+> Anyway, I tested my patch, at least, with the following configuration:
+> 1) CONFIG_ARM64_BITS_48=y
+> 2) CONFIG_ARM64_BITS_52=y, but vabits_actual=48
+> 
+> (I don't have any platform to use for
+> 3) CONFIG_ARM64_BITS_52=y, and vabits_actual=52)
+> 
+> [1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
+>      v1.5.0-23-g87963ee20693"), in particular
+> 	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
+> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
+> [3] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/693411.html
+> 
+> Changes in v2 (Nov 14, 2019)
+> * rebased to v5.4-rc7
+> * no functional changes
 
-Same results at my side, so:
-Tested-and-Reviewed-by: Bhipesh Sharma <bhsharma@redhat.com>
+This looks like a step in the right direction. I have some minor 
+nitpicks which I have mentioned in the individual patch reviews.
 
-> >
-> > > if the kexec behaivor is right, the LPI tables should not belong to
-> > > System RAM.
-> >
-> > > Like as:
-> > >
-> > > 80300000-830effff : System RAM
-> > >   80480000-8134ffff : Kernel code
-> > >   81350000-817bffff : reserved
-> > >   817c0000-82acffff : Kernel data
-> > > 830f0000-830fffff : reserved # Property table
-> > > 83480000-83480fff : reserved # Pending table
-> > > 83490000-8349ffff : reserved # Pending table
-> > > 834a0000-a1fdffff : System RAM
-> > >
-> > > I don't have ideas to separete LPI tables from System RAM... so I tried
-> > > to add a new file to inform the LPI tables to userspace.
-> >
-> > This is how 'nomap' memory appears, we carve it out of System RAM. A side effect of this
-> > is kdump can't touch it, as you've told it this isn't memory.
-> >
-> > As these tables are memory, mapped by the linear map, I think Ard's patch is the right
-> > thing to do ... I suspect your kexec-tools doesn't have those patches from Akashi to make
-> > it honour all second level entries.
->
-> I used the kexec on the top of master branch:
-> git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
->
-> Should we use the linaro kexec for aarch64 machine?
-> Or will the arm64/resv_mem branch be merged to the kexec on
-> git.kernel.org...?
+With those addressed (v2?):
 
-Glad that Ard's patch fixes the issue for you.
-Regarding Akashi's patch, I think it was sent to upstream kexec-tools
-some time ago (see [0}) but  seems not integrated in upstream
-kexec-tools (now I noticed my Tested-by email for the same got bounced
-off due to some gmail msmtp setting issues at my end - sorry for
-that). I have added Simon in Cc list.
-
-Hi Simon,
-
-Can you please help pick [0] in upstream kexec-tools with Tested-by
-from Masa and myself? Thanks a lot for your help.
-
-[0]. http://lists.infradead.org/pipermail/kexec/2019-January/022201.html
+Tested-and-Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
 
 Thanks,
 Bhupesh
+
+> AKASHI Takahiro (3):
+>    libfdt: define UINT32_MAX in libfdt_env.h
+>    libfdt: include fdt_addresses.c
+>    arm64: kexec_file: add crash dump support
+> 
+>   arch/arm64/include/asm/kexec.h         |   4 +
+>   arch/arm64/kernel/kexec_image.c        |   4 -
+>   arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
+>   include/linux/libfdt_env.h             |   3 +
+>   lib/Makefile                           |   2 +-
+>   lib/fdt_addresses.c                    |   2 +
+>   6 files changed, 112 insertions(+), 9 deletions(-)
+>   create mode 100644 lib/fdt_addresses.c
+> 
+
 
 _______________________________________________
 kexec mailing list
