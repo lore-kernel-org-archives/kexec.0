@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x841.google.com ([2607:f8b0:4864:20::841])
+Received: from mail-qt1-x844.google.com ([2607:f8b0:4864:20::844])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icX4a-0000EV-HO
- for kexec@lists.infradead.org; Wed, 04 Dec 2019 16:00:25 +0000
-Received: by mail-qt1-x841.google.com with SMTP id s8so257016qte.2
- for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 08:00:16 -0800 (PST)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v8 23/25] arm64: kexec: configure trans_pgd page table for
- kexec
-Date: Wed,  4 Dec 2019 10:59:36 -0500
-Message-Id: <20191204155938.2279686-24-pasha.tatashin@soleen.com>
-In-Reply-To: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
-References: <20191204155938.2279686-1-pasha.tatashin@soleen.com>
+ id 1icYHg-0003q5-Q5
+ for kexec@lists.infradead.org; Wed, 04 Dec 2019 17:17:54 +0000
+Received: by mail-qt1-x844.google.com with SMTP id z22so501758qto.7
+ for <kexec@lists.infradead.org>; Wed, 04 Dec 2019 09:17:52 -0800 (PST)
+Date: Wed, 4 Dec 2019 12:17:44 -0500
+From: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Subject: Re: [PATCH] efi/memreserve: register reservations as 'reserved' in
+ /proc/iomem
+Message-ID: <20191204171744.o3ijdspnelqn5fgd@gabell>
+References: <20191204145233.11962-1-ardb@kernel.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20191204145233.11962-1-ardb@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,217 +26,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, marc.zyngier@arm.com, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, bhsharma@redhat.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: mark.rutland@arm.com, Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>, linux-efi@vger.kernel.org, kexec@lists.infradead.org, james.morse@arm.com, d.hatayama@fujitsu.com
 
-Configure a page table located in kexec-safe memory that has
-the following mappings:
+Hello Ard,
 
-1. identity mapping for text of relocation function with executable
-   permission.
-2. identity mapping for argument for relocation function.
-3. linear mappings for all source ranges
-4. linear mappings for all destination ranges.
+Thank you for sending the patch, but unfortunately it doesn't work for the issue...
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/kexec.h    |  14 ++++
- arch/arm64/kernel/asm-offsets.c   |   5 ++
- arch/arm64/kernel/machine_kexec.c | 104 +++++++++++++++++++++++++++++-
- 3 files changed, 122 insertions(+), 1 deletion(-)
+After applied your patch, the LPI tables are marked as reserved in
+/proc/iomem like as:
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 414a0a41a60a..df911a4aa8ce 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -98,6 +98,10 @@ extern const unsigned long kexec_kern_reloc_offset;
- extern const unsigned long kexec_el2_vectors_offset;
- #endif
- 
-+#define KEXEC_SRC_START	PAGE_OFFSET
-+#define KEXEC_DST_START	(PAGE_OFFSET + \
-+			((UL(0xffffffffffffffff) - PAGE_OFFSET) >> 1) + 1)
-+
- /*
-  * kern_reloc_arg is passed to kernel relocation function as an argument.
-  * head		kimage->head, allows to traverse through relocation segments.
-@@ -108,6 +112,11 @@ extern const unsigned long kexec_el2_vectors_offset;
-  * el2_vector	If present means that relocation routine will go to EL1
-  *		from EL2 to do the copy, and then back to EL2 to do the jump
-  *		to new world.
-+ * trans_ttbr0	idmap for relocation function and its argument
-+ * trans_ttbr1	linear map for source/destination addresses.
-+ * src_addr	linear map for source pages.
-+ * dst_addr	linear map for destination pages.
-+ * copy_len	Number of bytes that need to be copied
-  */
- struct kern_reloc_arg {
- 	phys_addr_t head;
-@@ -117,6 +126,11 @@ struct kern_reloc_arg {
- 	phys_addr_t kern_arg2;
- 	phys_addr_t kern_arg3;
- 	phys_addr_t el2_vector;
-+	phys_addr_t trans_ttbr0;
-+	phys_addr_t trans_ttbr1;
-+	void *src_addr;
-+	void *dst_addr;
-+	unsigned long copy_len;
- };
- 
- #define ARCH_HAS_KIMAGE_ARCH
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index ff974b648347..63060ea51727 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -137,6 +137,11 @@ int main(void)
-   DEFINE(KEXEC_KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
-   DEFINE(KEXEC_KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
-   DEFINE(KEXEC_KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, el2_vector));
-+  DEFINE(KEXEC_KRELOC_TRANS_TTBR0,	offsetof(struct kern_reloc_arg, trans_ttbr0));
-+  DEFINE(KEXEC_KRELOC_TRANS_TTBR1,	offsetof(struct kern_reloc_arg, trans_ttbr1));
-+  DEFINE(KEXEC_KRELOC_SRC_ADDR,	offsetof(struct kern_reloc_arg, src_addr));
-+  DEFINE(KEXEC_KRELOC_DST_ADDR,	offsetof(struct kern_reloc_arg, dst_addr));
-+  DEFINE(KEXEC_KRELOC_COPY_LEN,	offsetof(struct kern_reloc_arg, copy_len));
- #endif
-   return 0;
- }
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index ac6ade7c96ff..8edcc4be0b15 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -20,6 +20,7 @@
- #include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/page.h>
-+#include <asm/trans_pgd.h>
- 
- #include "cpu-reset.h"
- 
-@@ -70,10 +71,102 @@ static void *kexec_page_alloc(void *arg)
- 	return page_address(page);
- }
- 
-+/*
-+ * Map source segments starting from KEXEC_SRC_START, and map destination
-+ * segments starting from KEXEC_DST_START, and return size of copy in
-+ * *copy_len argument.
-+ * Relocation function essentially needs to do:
-+ * memcpy(KEXEC_DST_START, KEXEC_SRC_START, copy_len);
-+ */
-+static int map_segments(struct kimage *kimage, pgd_t *pgdp,
-+			struct trans_pgd_info *info,
-+			unsigned long *copy_len)
-+{
-+	unsigned long *ptr = 0;
-+	unsigned long dest = 0;
-+	unsigned long src_va = KEXEC_SRC_START;
-+	unsigned long dst_va = KEXEC_DST_START;
-+	unsigned long len = 0;
-+	unsigned long entry, addr;
-+	int rc;
-+
-+	for (entry = kimage->head; !(entry & IND_DONE); entry = *ptr++) {
-+		addr = entry & PAGE_MASK;
-+
-+		switch (entry & IND_FLAGS) {
-+		case IND_DESTINATION:
-+			dest = addr;
-+			break;
-+		case IND_INDIRECTION:
-+			ptr = __va(addr);
-+			if (rc)
-+				return rc;
-+			break;
-+		case IND_SOURCE:
-+			rc = trans_pgd_map_page(info, pgdp, __va(addr),
-+						src_va, PAGE_KERNEL);
-+			if (rc)
-+				return rc;
-+			rc = trans_pgd_map_page(info, pgdp, __va(dest),
-+						dst_va, PAGE_KERNEL);
-+			if (rc)
-+				return rc;
-+			dest += PAGE_SIZE;
-+			src_va += PAGE_SIZE;
-+			dst_va += PAGE_SIZE;
-+			len += PAGE_SIZE;
-+		}
-+	}
-+	*copy_len = len;
-+
-+	return 0;
-+}
-+
-+static int mmu_relocate_setup(struct kimage *kimage, void *reloc_code,
-+			      struct kern_reloc_arg *kern_reloc_arg)
-+{
-+	struct trans_pgd_info info = {
-+		.trans_alloc_page	= kexec_page_alloc,
-+		.trans_alloc_arg	= kimage,
-+	};
-+
-+	pgd_t *trans_ttbr0 = kexec_page_alloc(kimage);
-+	pgd_t *trans_ttbr1 = kexec_page_alloc(kimage);
-+	int rc;
-+
-+	if (!trans_ttbr0 || !trans_ttbr1)
-+		return -ENOMEM;
-+
-+	rc = map_segments(kimage, trans_ttbr1, &info,
-+			  &kern_reloc_arg->copy_len);
-+	if (rc)
-+		return rc;
-+
-+	/* Map relocation function va == pa */
-+	rc = trans_pgd_map_page(&info, trans_ttbr0,  reloc_code,
-+				__pa(reloc_code), PAGE_KERNEL_EXEC);
-+	if (rc)
-+		return rc;
-+
-+	/* Map relocation function argument va == pa */
-+	rc = trans_pgd_map_page(&info, trans_ttbr0, kern_reloc_arg,
-+				__pa(kern_reloc_arg), PAGE_KERNEL);
-+	if (rc)
-+		return rc;
-+
-+	kern_reloc_arg->trans_ttbr0 = phys_to_ttbr(__pa(trans_ttbr0));
-+	kern_reloc_arg->trans_ttbr1 = phys_to_ttbr(__pa(trans_ttbr1));
-+	kern_reloc_arg->src_addr = (void *)KEXEC_SRC_START;
-+	kern_reloc_arg->dst_addr = (void *)KEXEC_DST_START;
-+
-+	return 0;
-+}
-+
- int machine_kexec_post_load(struct kimage *kimage)
- {
- 	void *reloc_code = page_to_virt(kimage->control_code_page);
- 	struct kern_reloc_arg *kern_reloc_arg = kexec_page_alloc(kimage);
-+	int rc = 0;
- 
- 	if (!kern_reloc_arg)
- 		return -ENOMEM;
-@@ -89,9 +182,18 @@ int machine_kexec_post_load(struct kimage *kimage)
- 		kern_reloc_arg->el2_vector = __pa(reloc_code)
- 						+ kexec_el2_vectors_offset;
- 	}
-+
-+	/*
-+	 * If relocation is not needed, we do not need to enable MMU in
-+	 * relocation routine, therefore do not create page tables for
-+	 * scenarios such as crash kernel
-+	 */
-+	if (!(kimage->head & IND_DONE))
-+		rc = mmu_relocate_setup(kimage, reloc_code, kern_reloc_arg);
-+
- 	kexec_image_info(kimage);
- 
--	return 0;
-+	return rc;
- }
- 
- 
--- 
-2.24.0
+80300000-a1fdffff : System RAM
+  80480000-8134ffff : Kernel code
+  81350000-817bffff : reserved
+  817c0000-82acffff : Kernel data
+  830f0000-830fffff : reserved # Property table
+  83480000-83480fff : reserved # Pending table
+  83490000-8349ffff : reserved # Pending table
 
+However, kexec tries to allocate memory from System RAM, it doesn't care
+the reserved in System RAM.
+
+Following example, kexec allocates memory 0x82ad0000-0x86640000 to locate
+the initrd, and LPI tables are also in the memory region, so LPI tables
+will be destroyed by kexec reboot.
+
+# kexec -d -l /boot/vmlinuz-5.4.1+ --initrd=/boot/initramfs-5.4.1+.img
+...
+initrd: base 82ad0000, size 3b67c6fh (62291055)
+...
+segment[1].mem   = 0x82ad0000
+segment[1].memsz = 0x3b70000   # 0x86640000 (== 0x82ad0000 + 0x3b70000)
+...
+
+I'm not sure why kexec doesn't care the reserved in System RAM, however,
+if the kexec behaivor is right, the LPI tables should not belong to
+System RAM.
+Like as:
+
+80300000-830effff : System RAM
+  80480000-8134ffff : Kernel code
+  81350000-817bffff : reserved
+  817c0000-82acffff : Kernel data
+830f0000-830fffff : reserved # Property table
+83480000-83480fff : reserved # Pending table
+83490000-8349ffff : reserved # Pending table
+834a0000-a1fdffff : System RAM
+
+I don't have ideas to separete LPI tables from System RAM... so I tried
+to add a new file to inform the LPI tables to userspace.
+
+Thanks,
+Masa
+
+On Wed, Dec 04, 2019 at 02:52:33PM +0000, Ard Biesheuvel wrote:
+> Memory regions that are reserved using efi_mem_reserve_persistent()
+> are recorded in a special EFI config table which survives kexec,
+> allowing the incoming kernel to honour them as well. However,
+> such reservations are not visible in /proc/iomem, and so the kexec
+> tools that load the incoming kernel and its initrd into memory may
+> overwrite these reserved regions before the incoming kernel has a
+> chance to reserve them from further use.
+> 
+> So add these reservations to /proc/iomem as they are created. Note
+> that reservations that are inherited from a previous kernel are
+> memblock_reserve()'d early on, so they are already visible in
+> /proc/iomem.
+> 
+> Cc: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+> Cc: d.hatayama@fujitsu.com
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Ard Biesheuvel <ardb@kernel.org>
+> ---
+>  drivers/firmware/efi/efi.c | 29 ++++++++++++++++++--
+>  1 file changed, 26 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index d101f072c8f8..fcd82dde23c8 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -979,6 +979,24 @@ static int __init efi_memreserve_map_root(void)
+>  	return 0;
+>  }
+>  
+> +static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+> +{
+> +	struct resource *res, *parent;
+> +
+> +	res = kzalloc(sizeof(struct resource), GFP_ATOMIC);
+> +	if (!res)
+> +		return -ENOMEM;
+> +
+> +	res->name	= "reserved";
+> +	res->flags	= IORESOURCE_MEM;
+> +	res->start	= addr;
+> +	res->end	= addr + size - 1;
+> +
+> +	/* we expect a conflict with a 'System RAM' region */
+> +	parent = request_resource_conflict(&iomem_resource, res);
+> +	return parent ? request_resource(parent, res) : 0;
+> +}
+> +
+>  int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+>  {
+>  	struct linux_efi_memreserve *rsv;
+> @@ -1001,9 +1019,8 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+>  		if (index < rsv->size) {
+>  			rsv->entry[index].base = addr;
+>  			rsv->entry[index].size = size;
+> -
+>  			memunmap(rsv);
+> -			return 0;
+> +			return efi_mem_reserve_iomem(addr, size);
+>  		}
+>  		memunmap(rsv);
+>  	}
+> @@ -1013,6 +1030,12 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+>  	if (!rsv)
+>  		return -ENOMEM;
+>  
+> +	rc = efi_mem_reserve_iomem(__pa(rsv), SZ_4K);
+> +	if (rc) {
+> +		free_page(rsv);
+> +		return rc;
+> +	}
+> +
+>  	/*
+>  	 * The memremap() call above assumes that a linux_efi_memreserve entry
+>  	 * never crosses a page boundary, so let's ensure that this remains true
+> @@ -1029,7 +1052,7 @@ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+>  	efi_memreserve_root->next = __pa(rsv);
+>  	spin_unlock(&efi_mem_reserve_persistent_lock);
+>  
+> -	return 0;
+> +	return efi_mem_reserve_iomem(addr, size);
+>  }
+>  
+>  static int __init efi_memreserve_root_init(void)
+> -- 
+> 2.17.1
+> 
+> 
+> 
 
 _______________________________________________
 kexec mailing list
