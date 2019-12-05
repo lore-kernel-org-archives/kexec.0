@@ -1,22 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icvVR-0002JW-HM
- for kexec@lists.infradead.org; Thu, 05 Dec 2019 18:05:43 +0000
-Received: by mail-lf1-f71.google.com with SMTP id y21so643692lfl.11
- for <kexec@lists.infradead.org>; Thu, 05 Dec 2019 10:05:33 -0800 (PST)
+ id 1icvhQ-0000tI-9J
+ for kexec@lists.infradead.org; Thu, 05 Dec 2019 18:18:02 +0000
+Received: by mail-lj1-f197.google.com with SMTP id l10so1194578ljb.15
+ for <kexec@lists.infradead.org>; Thu, 05 Dec 2019 10:17:55 -0800 (PST)
 MIME-Version: 1.0
 References: <1573556939-17803-1-git-send-email-bhsharma@redhat.com>
- <1573556939-17803-4-git-send-email-bhsharma@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0359718E@BPXM09GP.gisp.nec.co.jp>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0359740C@BPXM09GP.gisp.nec.co.jp>
-In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC0359740C@BPXM09GP.gisp.nec.co.jp>
+ <1573556939-17803-2-git-send-email-bhsharma@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03597103@BPXM09GP.gisp.nec.co.jp>
+In-Reply-To: <4AE2DC15AC0B8543882A74EA0D43DBEC03597103@BPXM09GP.gisp.nec.co.jp>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 5 Dec 2019 23:35:19 +0530
-Message-ID: <CACi5LpMHgZA6QumddL30Uzi97X7R5wshKag4gnyPs_A7xy8t0g@mail.gmail.com>
-Subject: Re: [PATCH v4 3/4] makedumpfile/arm64: Add support for ARMv8.2-LVA
- (52-bit kernel VA support)
+Date: Thu, 5 Dec 2019 23:47:40 +0530
+Message-ID: <CACi5LpNVeQYYYoXovVweaBwFbqrkFacMdiZzCn0G_Tp6OhZ=2A@mail.gmail.com>
+Subject: Re: [PATCH v4 1/4] tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from
+ vmcoreinfo (if available)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,371 +33,382 @@ Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupe
 
 Hi Kazu,
 
-On Thu, Dec 5, 2019 at 9:00 PM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
+On Wed, Dec 4, 2019 at 11:05 PM Kazuhito Hagio <k-hagio@ab.jp.nec.com> wrote:
 >
+> Hi Bhupesh,
+>
+> Sorry for the late reply.
+
+No problem.
+
 > > -----Original Message-----
-> > > -----Original Message-----
-> > > With ARMv8.2-LVA architecture extension availability, arm64 hardware
-> > > which supports this extension can support upto 52-bit virtual
-> > > addresses. It is specially useful for having a 52-bit user-space virtual
-> > > address space while the kernel can still retain 48-bit/52-bit virtual
-> > > addressing.
-> > >
-> > > Since at the moment we enable the support of this extension in the
-> > > kernel via a CONFIG flag (CONFIG_ARM64_VA_BITS_52), so there are
-> > > no clear mechanisms in user-space to determine this CONFIG
-> > > flag value and use it to determine the kernel-space VA address range
-> > > values.
-> > >
-> > > 'makedumpfile' can instead use 'TCR_EL1.T1SZ' value from vmcoreinfo
-> > > which indicates the size offset of the memory region addressed by
-> > > TTBR1_EL1 (and hence can be used for determining the
-> > > vabits_actual value).
-> > >
-> > > The user-space computation for determining whether an address lies in
-> > > the linear map range is the same as we have in kernel-space:
-> > >
-> > >   #define __is_lm_address(addr)     (!(((u64)addr) & BIT(vabits_actual - 1)))
-> > >
-> > > I have sent a kernel patch upstream to add 'TCR_EL1.T1SZ' to
-> > > vmcoreinfo for arm64 (see [0]).
-> > >
-> > > This patch is in accordance with ARMv8 Architecture Reference Manual
-> > > version D.a
-> > >
-> > > Note that with these changes the '--mem-usage' option will not work
-> > > properly for arm64 (a subsequent patch in this series will address the
-> > > same) and there is a discussion on-going with the arm64 maintainers to
-> > > find a way-out for the same (via standard kernel symbols like _stext).
-> > >
-> > > [0].http://lists.infradead.org/pipermail/kexec/2019-November/023962.html
-> > >
-> > > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > > Cc: John Donnelly <john.p.donnelly@oracle.com>
-> > > Cc: kexec@lists.infradead.org
-> > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> > > ---
-> > >  arch/arm64.c   | 148 +++++++++++++++++++++++++++++++++++++++++++++------------
-> > >  makedumpfile.c |   2 +
-> > >  makedumpfile.h |   3 +-
-> > >  3 files changed, 122 insertions(+), 31 deletions(-)
-> > >
-> > > diff --git a/arch/arm64.c b/arch/arm64.c
-> > > index ecb19139e178..094d73b8a60f 100644
-> > > --- a/arch/arm64.c
-> > > +++ b/arch/arm64.c
-> > > @@ -47,6 +47,7 @@ typedef struct {
-> > >  static int lpa_52_bit_support_available;
-> > >  static int pgtable_level;
-> > >  static int va_bits;
-> > > +static int vabits_actual;
-> > >  static unsigned long kimage_voffset;
-> > >
-> > >  #define SZ_4K                      4096
-> > > @@ -218,12 +219,19 @@ pmd_page_paddr(pmd_t pmd)
-> > >  #define pte_index(vaddr)           (((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-> > >  #define pte_offset(dir, vaddr)             (pmd_page_paddr((*dir)) + pte_index(vaddr) * sizeof(pte_t))
-> > >
-> > > +/*
-> > > + * The linear kernel range starts at the bottom of the virtual address
-> > > + * space. Testing the top bit for the start of the region is a
-> > > + * sufficient check and avoids having to worry about the tag.
-> > > + */
-> > > +#define is_linear_addr(addr)       (!(((unsigned long)addr) & (1UL << (vabits_actual - 1))))
-> >
-> > Does this check cover 5.3 or earlier kernels?
-> > There is no case that vabits_actual is zero?
-
-We can set vabits_actual as va_bits for older kernels. That shouldn't
-be a big change.
-Will add it in v5. See more below ...
-
-> As you know, 14c127c957c1 ("arm64: mm: Flip kernel VA space") changed
-> the check for linear address:
+> > This patch adds a common feature for archs (except arm64, for which
+> > similar support is added via subsequent patch) to retrieve
+> > 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
 >
-> -#define __is_lm_address(addr)  (!!((addr) & BIT(VA_BITS - 1)))
-> +#define __is_lm_address(addr)  (!((addr) & BIT(VA_BITS - 1)))
->
-> so if we use the same check as kernel has, I think we will need the
-> former one to support earlier kernels.
+> We already have the calibrate_machdep_info() function, which sets
+> info->max_physmem_bits from vmcoreinfo, so practically we don't need
+> to add this patch for the benefit.
 
-See above, we can use va_bits where vabits_actual is not present.
+Since other user-space tools like crash use the 'MAX_PHYSMEM_BITS' value as well
+it was agreed with the arm64 maintainers that it would be a good
+approach to export the
+same in vmcoreinfo and not use different methods to determine the same
+in user-space.
 
-> > > +
-> > >  static unsigned long long
-> > >  __pa(unsigned long vaddr)
-> > >  {
-> > >     if (kimage_voffset == NOT_FOUND_NUMBER ||
-> > > -                   (vaddr >= PAGE_OFFSET))
-> > > -           return (vaddr - PAGE_OFFSET + info->phys_base);
-> > > +                   is_linear_addr(vaddr))
-> > > +           return (vaddr + info->phys_base - PAGE_OFFSET);
-> > >     else
-> > >             return (vaddr - kimage_voffset);
-> > >  }
-> > > @@ -253,6 +261,7 @@ static int calculate_plat_config(void)
-> > >                     (PAGESIZE() == SZ_64K && va_bits == 42)) {
-> > >             pgtable_level = 2;
-> > >     } else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
-> > > +                   (PAGESIZE() == SZ_64K && va_bits == 52) ||
-> > >                     (PAGESIZE() == SZ_4K && va_bits == 39) ||
-> > >                     (PAGESIZE() == SZ_16K && va_bits == 47)) {
-> > >             pgtable_level = 3;
-> > > @@ -287,6 +296,16 @@ get_phys_base_arm64(void)
-> > >             return TRUE;
-> > >     }
-> > >
-> > > +   /* If both vabits_actual and va_bits are now initialized, always
-> > > +    * prefer vabits_actual over va_bits to calculate PAGE_OFFSET
-> > > +    * value.
-> > > +    */
-> > > +   if (vabits_actual && va_bits && vabits_actual != va_bits) {
-> > > +           info->page_offset = (-(1UL << vabits_actual));
-> > > +           DEBUG_MSG("page_offset    : %lx (via vabits_actual)\n",
-> > > +                           info->page_offset);
-> > > +   }
-> > > +
-> >
-> > Is this for --mem-usage?
-> > If so, let's drop from this patch and think about it later because
-> > some additional base functions will be needed for the option, I think.
+Take an example of the PPC makedumpfile implementation for example. It
+uses the following complex method of dtereming
+'info->max_physmem_bits':
+int
+set_ppc64_max_physmem_bits(void)
+{
+    long array_len = ARRAY_LENGTH(mem_section);
+    /*
+     * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+     * newer kernels 3.7 onwards uses 46 bits.
+     */
 
-Ok.
+    info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+    if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+        || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+        return TRUE;
 
-> > >     if (get_num_pt_loads() && PAGE_OFFSET) {
-> > >             for (i = 0;
-> > >                 get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
-> > > @@ -406,6 +425,73 @@ get_stext_symbol(void)
-> > >     return(found ? kallsym : FALSE);
-> > >  }
-> > >
-> > > +static int
-> > > +get_va_bits_from_stext_arm64(void)
-> > > +{
-> > > +   ulong _stext;
-> > > +
-> > > +   _stext = get_stext_symbol();
-> > > +   if (!_stext) {
-> > > +           ERRMSG("Can't get the symbol of _stext.\n");
-> > > +           return FALSE;
-> > > +   }
-> > > +
-> > > +   /* Derive va_bits as per arch/arm64/Kconfig. Note that this is a
-> > > +    * best case approximation at the moment, as there can be
-> > > +    * inconsistencies in this calculation (for e.g., for
-> > > +    * 52-bit kernel VA case, even the 48th bit might be set in
-> > > +    * the _stext symbol).
-> > > +    *
-> > > +    * So, we need to rely on the actual VA_BITS symbol in the
-> > > +    * vmcoreinfo for a accurate value.
-> > > +    *
-> > > +    * TODO: Improve this further once there is a closure with arm64
-> > > +    * kernel maintainers on the same.
-> > > +    */
-> > > +   if ((_stext & PAGE_OFFSET_52) == PAGE_OFFSET_52) {
-> > > +           va_bits = 52;
-> > > +   } else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
-> > > +           va_bits = 48;
-> > > +   } else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
-> > > +           va_bits = 47;
-> > > +   } else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-> > > +           va_bits = 42;
-> > > +   } else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
-> > > +           va_bits = 39;
-> > > +   } else if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
-> > > +           va_bits = 36;
-> > > +   } else {
-> > > +           ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
-> > > +           return FALSE;
-> > > +   }
-> > > +
-> > > +   DEBUG_MSG("va_bits    : %d (_stext) (approximation)\n", va_bits);
-> > > +
-> > > +   return TRUE;
-> > > +}
-> > > +
-> > > +static void
-> > > +get_page_offset_arm64(void)
-> > > +{
-> > > +   /* Check if 'vabits_actual' is initialized yet.
-> > > +    * If not, our best bet is to use 'va_bits' to calculate
-> > > +    * the PAGE_OFFSET value, otherwise use 'vabits_actual'
-> > > +    * for the same.
-> > > +    *
-> > > +    * See arch/arm64/include/asm/memory.h for more details.
-> > > +    */
-> > > +   if (!vabits_actual) {
-> > > +           info->page_offset = (-(1UL << va_bits));
-> > > +           DEBUG_MSG("page_offset    : %lx (approximation)\n",
-> > > +                                   info->page_offset);
-> > > +   } else {
-> > > +           info->page_offset = (-(1UL << vabits_actual));
-> > > +           DEBUG_MSG("page_offset    : %lx (accurate)\n",
-> > > +                                   info->page_offset);
-> > > +   }
-> >
-> > Does this support 5.3 or earlier kernels?
->
-> Because I didn't see the old page_offset calculation below in this patch:
->
-> > > -   info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
->
-> I was thinking that if there is a NUMBER(tcr_el1_t1sz) in vmcoreinfo,
-> we assume the kernel has the 'flipped' VA space.  And if there is no
-> NUMBER(tcr_el1_t1sz), then older 'non-flipped' VA [1].
+    info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
+    if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+        || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+        return TRUE;
 
-Yes vabits_actual will be not found in such a case and we can use
-va_bits in such a case and similarly helper routines for page table
-walk/page_offset calculation may need modification.
-Will fix in v5.
+    info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
+    if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+        || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+        return TRUE;
 
-> This might be a bit fragile against backport, but it requires less
-> vmcoreinfo, and older kernels don't need NUMBER(tcr_el1_t1sz).
-> (they might need NUMBER(MAX_USER_VA_BITS) like RHEL8 though.)
+    info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+    if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+        || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+        return TRUE;
 
-I think since this is an upstream fix, we should look at a generic fix
-(not restricted to RHEL, which anyway can contain out of tree fixes).
-I will send a v5 shortly with the suggested fixes.
+    return FALSE;
+}
+
+This might need modification and introduction of another
+_MAX_PHYSMEM_BITS_x_y macro when this changes for a newer kernel
+version.
+
+I think this makes the code error-prone and hard to read. Its much
+better to replace it with:
+/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+    if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+        info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+        return TRUE;
+} else {
+..
+}
+
+I think it will reduce future reworks (as per kernel versions) and
+also reduce issues while backporting makedumpfile to older kernels.
+
+What do you think?
 
 Regards,
 Bhupesh
-
-> What do you think?
->
-> [1] https://github.com/k-hagio/makedumpfile/commit/fd9d86ea05b38e9edbb8c0ac3ebd612d5d485df3#diff-73f1cf659e8099a2f3a94f38063f97ecR400
->
-> Thanks,
-> Kazu
->
->
+> > I recently posted a kernel patch (see [0]) which appends
+> > 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself rather than
+> > in arch-specific code, so that user-space code can also benefit from
+> > this addition to the vmcoreinfo and use it as a standard way of
+> > determining 'SECTIONS_SHIFT' value in 'makedumpfile' utility.
 > >
-> > Thanks,
-> > Kazu
+> > This patch ensures backward compatibility for kernel versions in which
+> > 'MAX_PHYSMEM_BITS' is not available in vmcoreinfo.
 > >
-> > > +
-> > > +}
-> > > +
-> > >  int
-> > >  get_machdep_info_arm64(void)
-> > >  {
-> > > @@ -420,8 +506,33 @@ get_machdep_info_arm64(void)
-> > >     /* Check if va_bits is still not initialized. If still 0, call
-> > >      * get_versiondep_info() to initialize the same.
-> > >      */
-> > > +   if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER) {
-> > > +           va_bits = NUMBER(VA_BITS);
-> > > +           DEBUG_MSG("va_bits        : %d (vmcoreinfo)\n",
-> > > +                           va_bits);
-> > > +   }
-> > > +
-> > > +   /* Check if va_bits is still not initialized. If still 0, call
-> > > +    * get_versiondep_info() to initialize the same from _stext
-> > > +    * symbol.
-> > > +    */
-> > >     if (!va_bits)
-> > > -           get_versiondep_info_arm64();
-> > > +           if (get_va_bits_from_stext_arm64() == FALSE)
-> > > +                   return FALSE;
-> > > +
-> > > +   get_page_offset_arm64();
-> > > +
-> > > +   /* See TCR_EL1, Translation Control Register (EL1) register
-> > > +    * description in the ARMv8 Architecture Reference Manual.
-> > > +    * Basically, we can use the TCR_EL1.T1SZ
-> > > +    * value to determine the virtual addressing range supported
-> > > +    * in the kernel-space (i.e. vabits_actual).
-> > > +    */
-> > > +   if (NUMBER(tcr_el1_t1sz) != NOT_FOUND_NUMBER) {
-> > > +           vabits_actual = 64 - NUMBER(tcr_el1_t1sz);
-> > > +           DEBUG_MSG("vabits_actual  : %d (vmcoreinfo)\n",
-> > > +                           vabits_actual);
-> > > +   }
-> > >
-> > >     if (!calculate_plat_config()) {
-> > >             ERRMSG("Can't determine platform config values\n");
-> > > @@ -459,34 +570,11 @@ get_xen_info_arm64(void)
-> > >  int
-> > >  get_versiondep_info_arm64(void)
-> > >  {
-> > > -   ulong _stext;
-> > > -
-> > > -   _stext = get_stext_symbol();
-> > > -   if (!_stext) {
-> > > -           ERRMSG("Can't get the symbol of _stext.\n");
-> > > -           return FALSE;
-> > > -   }
-> > > -
-> > > -   /* Derive va_bits as per arch/arm64/Kconfig */
-> > > -   if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
-> > > -           va_bits = 36;
-> > > -   } else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
-> > > -           va_bits = 39;
-> > > -   } else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-> > > -           va_bits = 42;
-> > > -   } else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
-> > > -           va_bits = 47;
-> > > -   } else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
-> > > -           va_bits = 48;
-> > > -   } else {
-> > > -           ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
-> > > -           return FALSE;
-> > > -   }
-> > > -
-> > > -   info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> > > +   if (!va_bits)
-> > > +           if (get_va_bits_from_stext_arm64() == FALSE)
-> > > +                   return FALSE;
-> > >
-> > > -   DEBUG_MSG("va_bits      : %d\n", va_bits);
-> > > -   DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
-> > > +   get_page_offset_arm64();
-> > >
-> > >     return TRUE;
-> > >  }
-> > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > index 4a000112ba59..baf559e4d74e 100644
-> > > --- a/makedumpfile.c
-> > > +++ b/makedumpfile.c
-> > > @@ -2314,6 +2314,7 @@ write_vmcoreinfo_data(void)
-> > >     WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
-> > >  #ifdef __aarch64__
-> > >     WRITE_NUMBER("VA_BITS", VA_BITS);
-> > > +   WRITE_NUMBER_UNSIGNED("tcr_el1_t1sz", tcr_el1_t1sz);
-> > >     WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
-> > >     WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
-> > >  #endif
-> > > @@ -2720,6 +2721,7 @@ read_vmcoreinfo(void)
-> > >     READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
-> > >  #ifdef __aarch64__
-> > >     READ_NUMBER("VA_BITS", VA_BITS);
-> > > +   READ_NUMBER_UNSIGNED("tcr_el1_t1sz", tcr_el1_t1sz);
-> > >     READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
-> > >     READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
-> > >  #endif
-> > > diff --git a/makedumpfile.h b/makedumpfile.h
-> > > index ac11e906b5b7..7eab6507c8df 100644
-> > > --- a/makedumpfile.h
-> > > +++ b/makedumpfile.h
-> > > @@ -974,7 +974,7 @@ int get_versiondep_info_arm64(void);
-> > >  int get_xen_basic_info_arm64(void);
-> > >  int get_xen_info_arm64(void);
-> > >  unsigned long get_kaslr_offset_arm64(unsigned long vaddr);
-> > > -#define paddr_to_vaddr_arm64(X) (((X) - info->phys_base) | PAGE_OFFSET)
-> > > +#define paddr_to_vaddr_arm64(X) (((X) - (info->phys_base - PAGE_OFFSET)))
-> > >
-> > >  #define find_vmemmap()             stub_false()
-> > >  #define vaddr_to_paddr(X)  vaddr_to_paddr_arm64(X)
-> > > @@ -1937,6 +1937,7 @@ struct number_table {
-> > >     long    KERNEL_IMAGE_SIZE;
-> > >  #ifdef __aarch64__
-> > >     long    VA_BITS;
-> > > +   unsigned long   tcr_el1_t1sz;
-> > >     unsigned long   PHYS_OFFSET;
-> > >     unsigned long   kimage_voffset;
-> > >  #endif
-> > > --
-> > > 2.7.4
-> > >
+> > [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023960.html
+> >
+> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > Cc: John Donnelly <john.p.donnelly@oracle.com>
+> > Cc: kexec@lists.infradead.org
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > ---
+> >  arch/arm.c     |  8 +++++++-
+> >  arch/ia64.c    |  7 ++++++-
+> >  arch/ppc.c     |  8 +++++++-
+> >  arch/ppc64.c   | 49 ++++++++++++++++++++++++++++---------------------
+> >  arch/s390x.c   | 29 ++++++++++++++++++-----------
+> >  arch/sparc64.c |  9 +++++++--
+> >  arch/x86.c     | 34 ++++++++++++++++++++--------------
+> >  arch/x86_64.c  | 27 ++++++++++++++++-----------
+> >  8 files changed, 109 insertions(+), 62 deletions(-)
+> >
+> > diff --git a/arch/arm.c b/arch/arm.c
+> > index af7442ac70bf..33536fc4dfc9 100644
+> > --- a/arch/arm.c
+> > +++ b/arch/arm.c
+> > @@ -81,7 +81,13 @@ int
+> >  get_machdep_info_arm(void)
+> >  {
+> >       info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
+> > -     info->max_physmem_bits = _MAX_PHYSMEM_BITS;
+> > +
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     else
+> > +             info->max_physmem_bits = _MAX_PHYSMEM_BITS;
+> > +
+> >       info->kernel_start = SYMBOL(_stext);
+> >       info->section_size_bits = _SECTION_SIZE_BITS;
+> >
+> > diff --git a/arch/ia64.c b/arch/ia64.c
+> > index 6c33cc7c8288..fb44dda47172 100644
+> > --- a/arch/ia64.c
+> > +++ b/arch/ia64.c
+> > @@ -85,7 +85,12 @@ get_machdep_info_ia64(void)
+> >       }
+> >
+> >       info->section_size_bits = _SECTION_SIZE_BITS;
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> > +
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     else
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> >
+> >       return TRUE;
+> >  }
+> > diff --git a/arch/ppc.c b/arch/ppc.c
+> > index 37c6a3b60cd3..ed9447427a30 100644
+> > --- a/arch/ppc.c
+> > +++ b/arch/ppc.c
+> > @@ -31,7 +31,13 @@ get_machdep_info_ppc(void)
+> >       unsigned long vmlist, vmap_area_list, vmalloc_start;
+> >
+> >       info->section_size_bits = _SECTION_SIZE_BITS;
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> > +
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     else
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> > +
+> >       info->page_offset = __PAGE_OFFSET;
+> >
+> >       if (SYMBOL(_stext) != NOT_FOUND_SYMBOL)
+> > diff --git a/arch/ppc64.c b/arch/ppc64.c
+> > index 9d8f2525f608..a3984eebdced 100644
+> > --- a/arch/ppc64.c
+> > +++ b/arch/ppc64.c
+> > @@ -466,30 +466,37 @@ int
+> >  set_ppc64_max_physmem_bits(void)
+> >  {
+> >       long array_len = ARRAY_LENGTH(mem_section);
+> > -     /*
+> > -      * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> > -      * newer kernels 3.7 onwards uses 46 bits.
+> > -      */
+> > -
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > -             return TRUE;
+> > -
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > -             return TRUE;
+> >
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> >               return TRUE;
+> > +     } else {
+> > +             /*
+> > +              * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> > +              * newer kernels 3.7 onwards uses 46 bits.
+> > +              */
+> >
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > -             return TRUE;
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +     }
+> >
+> >       return FALSE;
+> >  }
+> > diff --git a/arch/s390x.c b/arch/s390x.c
+> > index bf9d58e54fb7..4d17a783e5bd 100644
+> > --- a/arch/s390x.c
+> > +++ b/arch/s390x.c
+> > @@ -63,20 +63,27 @@ int
+> >  set_s390x_max_physmem_bits(void)
+> >  {
+> >       long array_len = ARRAY_LENGTH(mem_section);
+> > -     /*
+> > -      * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> > -      * newer kernels uses 46 bits.
+> > -      */
+> >
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> >               return TRUE;
+> > +     } else {
+> > +             /*
+> > +              * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> > +              * newer kernels uses 46 bits.
+> > +              */
+> >
+> > -     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
+> > -     if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > -             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > -             return TRUE;
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +
+> > +             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
+> > +             if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> > +                             || (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> > +                     return TRUE;
+> > +     }
+> >
+> >       return FALSE;
+> >  }
+> > diff --git a/arch/sparc64.c b/arch/sparc64.c
+> > index 1cfaa854ce6d..b93a05bdfe59 100644
+> > --- a/arch/sparc64.c
+> > +++ b/arch/sparc64.c
+> > @@ -25,10 +25,15 @@ int get_versiondep_info_sparc64(void)
+> >  {
+> >       info->section_size_bits = _SECTION_SIZE_BITS;
+> >
+> > -     if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     else if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+> >               info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
+> > -     else {
+> > +     else
+> >               info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
+> > +
+> > +     if (info->kernel_version < KERNEL_VERSION(3, 8, 13)) {
+> >               info->flag_vmemmap = TRUE;
+> >               info->vmemmap_start = VMEMMAP_BASE_SPARC64;
+> >               info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
+> > diff --git a/arch/x86.c b/arch/x86.c
+> > index 3fdae93084b8..f1b43d4c8179 100644
+> > --- a/arch/x86.c
+> > +++ b/arch/x86.c
+> > @@ -72,21 +72,27 @@ get_machdep_info_x86(void)
+> >  {
+> >       unsigned long vmlist, vmap_area_list, vmalloc_start;
+> >
+> > -     /* PAE */
+> > -     if ((vt.mem_flags & MEMORY_X86_PAE)
+> > -         || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
+> > -           && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
+> > -           && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
+> > -           == 512)) {
+> > -             DEBUG_MSG("\n");
+> > -             DEBUG_MSG("PAE          : ON\n");
+> > -             vt.mem_flags |= MEMORY_X86_PAE;
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
+> > -     } else {
+> > -             DEBUG_MSG("\n");
+> > -             DEBUG_MSG("PAE          : OFF\n");
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     else {
+> > +             /* PAE */
+> > +             if ((vt.mem_flags & MEMORY_X86_PAE)
+> > +                             || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
+> > +                                     && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
+> > +                                     && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
+> > +                                     == 512)) {
+> > +                     DEBUG_MSG("\n");
+> > +                     DEBUG_MSG("PAE          : ON\n");
+> > +                     vt.mem_flags |= MEMORY_X86_PAE;
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
+> > +             } else {
+> > +                     DEBUG_MSG("\n");
+> > +                     DEBUG_MSG("PAE          : OFF\n");
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> > +             }
+> >       }
+> > +
+> >       info->page_offset = __PAGE_OFFSET;
+> >
+> >       if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
+> > diff --git a/arch/x86_64.c b/arch/x86_64.c
+> > index 876644f932be..eff90307552c 100644
+> > --- a/arch/x86_64.c
+> > +++ b/arch/x86_64.c
+> > @@ -268,17 +268,22 @@ get_machdep_info_x86_64(void)
+> >  int
+> >  get_versiondep_info_x86_64(void)
+> >  {
+> > -     /*
+> > -      * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+> > -      */
+> > -     if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+> > -     else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+> > -     else if(check_5level_paging())
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
+> > -     else
+> > -             info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+> > +     /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> > +     if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> > +             info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> > +     } else {
+> > +             /*
+> > +              * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+> > +              */
+> > +             if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+> > +             else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+> > +             else if(check_5level_paging())
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
+> > +             else
+> > +                     info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+> > +     }
+> >
+> >       if (!get_page_offset_x86_64())
+> >               return FALSE;
+> > --
+> > 2.7.4
+> >
 >
 >
 >
