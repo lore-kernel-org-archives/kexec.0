@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from heinz.dinsnail.net ([81.169.187.250])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1icyhs-0003LY-Jw
- for kexec@lists.infradead.org; Thu, 05 Dec 2019 21:30:46 +0000
-Date: Thu, 5 Dec 2019 22:15:32 +0100
-From: Michael Weiser <michael@weiser.dinsnail.net>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-Message-ID: <20191205211532.GA10177@weiser.dinsnail.net>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
- <20191204075917.GA10587@dhcp-128-65.nay.redhat.com>
- <20191204101412.GD114697@gmail.com>
- <20191205105545.GA6710@dhcp-128-65.nay.redhat.com>
+Date: Thu, 5 Dec 2019 16:30:44 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH v4 7/8] linux/log2.h: Fix 64bit calculations in
+ roundup/down_pow_two()
+Message-ID: <20191205223044.GA250573@google.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20191205105545.GA6710@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20191203114743.1294-8-nsaenzjulienne@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,32 +19,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+To: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+Cc: linux-pci@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, "J. Bruce Fields" <bfields@fieldses.org>, linux-nfs@vger.kernel.org, Edward Cree <ecree@solarflare.com>, linux-clk@vger.kernel.org, f.fainelli@gmail.com, Herbert Xu <herbert@gondor.apana.org.au>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, maz@kernel.org, Joerg Roedel <joro@8bytes.org>, phil@raspberrypi.org, Doug Ledford <dledford@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>, Chen-Yu Tsai <wens@csie.org>, Chuck Lever <chuck.lever@oracle.com>, Martin Habets <mhabets@solarflare.com>, wahrenst@gmx.net, Tom Lendacky <thomas.lendacky@amd.com>, Jiri Pirko <jiri@resnulli.us>, Solarflare linux maintainers <linux-net-drivers@solarflare.com>, Maxime Ripard <mripard@kernel.org>, linux-rpi-kernel@lists.infradead.org, Anna Schumaker <anna.schumaker@netapp.com>, Trond Myklebust <trond.myklebust@hammerspace.com>, linux-arm-kernel@lists.infradead.org, Mirko Lindner <mlindner@marvell.com>, Mike Marciniszyn <mike.marciniszyn@intel.com>, mbrugger@suse.com, Stephen Boyd <sboyd@kernel.org>, netdev@vger.kernel.org, Yishai Hadas <yishaih@mellanox.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jeremy.linton@arm.com, "David S. Miller" <davem@davemloft.net>, Stephen Hemminger <stephen@networkplumber.org>, linux-rdma@vger.kernel.org, iommu@lists.linux-foundation.org, Moni Shoua <monis@mellanox.com>, Eric Biederman <ebiederm@xmission.com>, james.quinlan@broadcom.com, Thomas Graf <tgraf@suug.ch>, andrew.murray@arm.com, Robin Murphy <robin.murphy@arm.con>, David Woodhouse <dwmw2@infradead.org>, Dennis Dalessandro <dennis.dalessandro@intel.com>, Lu Baolu <baolu.lu@linux.intel.com>
 
-On Thu, Dec 05, 2019 at 06:55:45PM +0800, Dave Young wrote:
+You got the "n" on "down" in the subject, but still missing "of" ;)
 
-> >    esrt: Unsupported ESRT version 2904149718861218184.
-> > 
-> >  The ESRT memory stays in EFI boot services data, and it was reserved
-> >  in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> >  is to reuse the EFI boot services data across kexec reboot. For example
-> >  the BGRT image data and some ESRT memory like Michael reported.
-> > 
-> >  But although the memory is reserved it is not updated in the X86 E820 table,
-> >  and kexec_file_load() iterates system RAM in the IO resource list to find places
-> >  for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> >  initramfs overwrote the ESRT memory and then the failure happened.
-> > 
-> >  Since kexec_file_load() depends on the E820 table being updated, just fix this
-> >  by updating the reserved EFI boot services memory as reserved type in E820.
-> Thanks for the amending, also thank all for the review and test.
+On Tue, Dec 03, 2019 at 12:47:40PM +0100, Nicolas Saenz Julienne wrote:
+> Some users need to make sure their rounding function accepts and returns
+> 64bit long variables regardless of the architecture. Sadly
+> roundup/rounddown_pow_two() takes and returns unsigned longs. It turns
+> out ilog2() already handles 32/64bit calculations properly, and being
+> the building block to the round functions we can rework them as a
+> wrapper around it.
 
-Same from me, particularly everyone's patience with my haphazard
-guesswork around an area I clearly know nothing about. :)
--- 
-Thanks,
-Michael
+Missing "of" in the function names here.
+s/a wrapper/wrappers/
+
+IIUC the point of this is that roundup_pow_of_two() returned
+"unsigned long", which can be either 32 or 64 bits (worth pointing
+out, I think), and many callers need something that returns
+"unsigned long long" (always 64 bits).
+
+It's a nice simplification to remove the "__" variants.  Just as a
+casual reader of this commit message, I'd like to know why we had both
+the roundup and the __roundup versions in the first place, and why we
+no longer need both.
+
+> -#define roundup_pow_of_two(n)			\
+> -(						\
+> -	__builtin_constant_p(n) ? (		\
+> -		(n == 1) ? 1 :			\
+> -		(1UL << (ilog2((n) - 1) + 1))	\
+> -				   ) :		\
+> -	__roundup_pow_of_two(n)			\
+> - )
+> +#define roundup_pow_of_two(n)			  \
+> +(						  \
+> +	(__builtin_constant_p(n) && ((n) == 1)) ? \
+> +	1 : (1ULL << (ilog2((n) - 1) + 1))        \
+> +)
+
+Should the resulting type of this expression always be a ULL, even
+when n==1, i.e., should it be this?
+
+  1ULL : (1ULL << (ilog2((n) - 1) + 1))        \
+
+Or maybe there's no case where that makes a difference?
+
+Bjorn
 
 _______________________________________________
 kexec mailing list
