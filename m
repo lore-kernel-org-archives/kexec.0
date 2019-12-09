@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iePyM-0007z6-CM
- for kexec@lists.infradead.org; Mon, 09 Dec 2019 20:49:40 +0000
+ id 1ieR9e-00043u-Oc
+ for kexec@lists.infradead.org; Mon, 09 Dec 2019 22:05:24 +0000
 From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile/Makefile: remove -lebl from LIBS
-Date: Mon, 9 Dec 2019 20:49:03 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03597A6F@BPXM09GP.gisp.nec.co.jp>
-References: <1574989745-5262-1-git-send-email-piliu@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0359725A@BPXM09GP.gisp.nec.co.jp>
- <6dc65874-803a-10f3-dc42-d8704323ea0b@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC0359773A@BPXM09GP.gisp.nec.co.jp>
- <b5577cc9-20f9-4676-2596-b8444e3ab8d6@redhat.com>
-In-Reply-To: <b5577cc9-20f9-4676-2596-b8444e3ab8d6@redhat.com>
+Subject: RE: [PATCH] makedumpfile/s390: Add get_kaslr_offset() for s390x
+Date: Mon, 9 Dec 2019 22:02:22 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03597AB9@BPXM09GP.gisp.nec.co.jp>
+References: <20191203222725.64734-1-zaslonko@linux.ibm.com>
+In-Reply-To: <20191203222725.64734-1-zaslonko@linux.ibm.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,87 +23,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Mikhail Zaslonko <zaslonko@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "prudo@linux.ibm.com" <prudo@linux.ibm.com>, "dyoung@redhat.com" <dyoung@redhat.com>
+
+Hi Mikhail,
+
+Sorry for late reply.
 
 > -----Original Message-----
-> 
-> On 12/07/2019 12:28 AM, Kazuhito Hagio wrote:
-> >> -----Original Message-----
-> >>
-> >> On 12/05/2019 06:36 AM, Kazuhito Hagio wrote:
-> >>> Hi Pingfan,
-> >>>
-> >>> Thank you for the patch.
-> >>>
-> >>>> -----Original Message-----
-> >>>> since the following commit, -lebl has been removed from elfutils.
-> >>>> commit b833c731359af12af9f16bcb621b3cdc170eafbc
-> >>>> Author: Mark Wielaard <mark@klomp.org>
-> >>>> Date:   Thu Aug 29 23:34:11 2019 +0200
-> >>>>
-> >>>>     libebl: Don't install libebl.a, libebl.h and remove backends from spec.
-> >>>>
-> >>>>     All archive members from libebl.a are now in libdw.a. We don't generate
-> >>>>     separate backend shared libraries anymore. So remove them from the
-> >>>>     elfutils.spec file.
-> >>>>
-> >>>>     Signed-off-by: Mark Wielaard <mark@klomp.org>
-> >>>>
-> >>>> So remove it from LIBS for makedumpfile
-> >>>
-> >>> It seems that this is ok with the latest elfutils, but with older ones?
-> >>> Is it possible to remove -lebl when elfutils does not have libebl.a?
-> >> I have no idea about it for now. The method to check version depends on
-> >> distribution. Is it doable by checking /usr/lib64/libebl ?
-> >
-> > We have 'try-run' function written by Petr in the Makefile, which checks
-> > if clock_gettime() requies -lrt.  How about utilizing it like this?
-> >
-> > diff --git a/Makefile b/Makefile
-> > index 1fdb6286e85d..d4d1fb563209 100644
-> > --- a/Makefile
-> > +++ b/Makefile
-> > @@ -50,7 +50,7 @@ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
-> >  SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
-> arch/ppc.c arch/sparc64.c
-> >  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
-> >
-> > -LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
-> > +LIBS = -ldw -lbz2 -ldl -lelf -lz
-> >  ifneq ($(LINKTYPE), dynamic)
-> >  LIBS := -static $(LIBS)
-> >  endif
-> > @@ -79,6 +79,11 @@ LINK_TEST_PROG="int clock_gettime(); int main(){ return clock_gettime(); }"
-> >  LIBS := $(LIBS) $(call try-run,\
-> >  	echo $(LINK_TEST_PROG) | $(CC) $(CFLAGS) -o "$$TMP" -x c -,,-lrt)
-> >
-> > +# elfutils-0.178 or later does not install libebl.a.
-> > +LINK_TEST_PROG="int main() { return 0; }"
-> > +LIBS := $(LIBS) $(call try-run,\
-> > +	echo $(LINK_TEST_PROG) | $(CC) -o "$$TMP" -x c - -lebl,-lebl,)
-> > +
-> >  all: makedumpfile
-> >
-> >  $(OBJ_PART): $(SRC_PART)
-> >
-> >
-> > If libebl.a does not exist (gcc with -lebl fails), it will not append
-> > -lebl to LIBS.
-> >
-> Yes, it sounds a good idea.
-> 
-> Should I sumbit another patch or you will do by yourself?
+> Since kernel v5.2 KASLR is supported on s390. In makedumpfile however no
+> support has been added yet. This patch adds the arch specific function
+> get_kaslr_offset() for s390x.
+> Since the values in vmcoreinfo are already relocated, the patch is
+> mainly relevant for vmlinux processing (-x option).
 
-Modified and applied.
-https://sourceforge.net/p/makedumpfile/code/ci/71e798cb1b85e4879a19607ebb0a061cbc92f70f/
+In the current implementation of makedumpfile, the get_kaslr_offset(vaddr)
+is supposed to return the KASLR offset only when the offset is needed to
+add to the vaddr.  So generally symbols from kernel (vmlinux) need it, but
+symbols from modules are resolved dynamically and don't need the offset.
 
-Thanks!
+This patch always returns the offset if any, as a result, I guess this patch
+will not work as expected with module symbols in filter config file.
+
+So... How about making get_kaslr_offset_arm64() general for other archs
+(get_kaslr_offset_general() or something), then using it also for s390?
+If OK, I can do that generalization.
+
+Thanks,
 Kazu
 
 > 
-> Thanks,
-> Pingfan
+> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
+> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
+> ---
+>  arch/s390x.c   | 32 ++++++++++++++++++++++++++++++++
+>  makedumpfile.h |  3 ++-
+>  2 files changed, 34 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/s390x.c b/arch/s390x.c
+> index bf9d58e..892df14 100644
+> --- a/arch/s390x.c
+> +++ b/arch/s390x.c
+> @@ -122,6 +122,38 @@ get_machdep_info_s390x(void)
+>  	return TRUE;
+>  }
+> 
+> +unsigned long
+> +get_kaslr_offset_s390x(unsigned long vaddr)
+> +{
+> +	unsigned int i;
+> +	char buf[BUFSIZE_FGETS], *endp;
+> +
+> +	if (!info->file_vmcoreinfo)
+> +		return FALSE;
+> +
+> +	if (fseek(info->file_vmcoreinfo, 0, SEEK_SET) < 0) {
+> +		ERRMSG("Can't seek the vmcoreinfo file(%s). %s\n",
+> +		       info->name_vmcoreinfo, strerror(errno));
+> +		return FALSE;
+> +	}
+> +
+> +	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
+> +		i = strlen(buf);
+> +		if (!i)
+> +			break;
+> +		if (buf[i - 1] == '\n')
+> +			buf[i - 1] = '\0';
+> +		if (strncmp(buf, STR_KERNELOFFSET,
+> +			    strlen(STR_KERNELOFFSET)) == 0) {
+> +			info->kaslr_offset =
+> +				strtoul(buf + strlen(STR_KERNELOFFSET), &endp, 16);
+> +			DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
+> +		}
+> +	}
+> +
+> +	return info->kaslr_offset;
+> +}
+> +
+>  static int
+>  is_vmalloc_addr_s390x(unsigned long vaddr)
+>  {
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index ac11e90..26f6247 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1071,11 +1071,12 @@ unsigned long long vaddr_to_paddr_ppc(unsigned long vaddr);
+>  int get_machdep_info_s390x(void);
+>  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
+>  int is_iomem_phys_addr_s390x(unsigned long addr);
+> +unsigned long get_kaslr_offset_s390x(unsigned long vaddr);
+>  #define find_vmemmap()		stub_false()
+>  #define get_phys_base()		stub_true()
+>  #define get_machdep_info()	get_machdep_info_s390x()
+>  #define get_versiondep_info()	stub_true()
+> -#define get_kaslr_offset(X)	stub_false()
+> +#define get_kaslr_offset(X)	get_kaslr_offset_s390x(X)
+>  #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
+>  #define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
+>  #define is_phys_addr(X)		is_iomem_phys_addr_s390x(X)
+> --
+> 2.17.1
 > 
 
 
