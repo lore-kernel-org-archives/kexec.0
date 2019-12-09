@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from tyo161.gate.nec.co.jp ([114.179.232.161])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iePNk-0000ZZ-1B
- for kexec@lists.infradead.org; Mon, 09 Dec 2019 20:11:49 +0000
+ id 1iePyM-0007z6-CM
+ for kexec@lists.infradead.org; Mon, 09 Dec 2019 20:49:40 +0000
 From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile: assign bitmap2 fd for sub process during
- refiltering
-Date: Mon, 9 Dec 2019 20:10:24 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03597A16@BPXM09GP.gisp.nec.co.jp>
-References: <1575358627-17152-1-git-send-email-piliu@redhat.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC035977E6@BPXM09GP.gisp.nec.co.jp>
- <0d793e2d-6698-6543-13de-a3de8732df75@redhat.com>
-In-Reply-To: <0d793e2d-6698-6543-13de-a3de8732df75@redhat.com>
+Subject: RE: [PATCH] makedumpfile/Makefile: remove -lebl from LIBS
+Date: Mon, 9 Dec 2019 20:49:03 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03597A6F@BPXM09GP.gisp.nec.co.jp>
+References: <1574989745-5262-1-git-send-email-piliu@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0359725A@BPXM09GP.gisp.nec.co.jp>
+ <6dc65874-803a-10f3-dc42-d8704323ea0b@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC0359773A@BPXM09GP.gisp.nec.co.jp>
+ <b5577cc9-20f9-4676-2596-b8444e3ab8d6@redhat.com>
+In-Reply-To: <b5577cc9-20f9-4676-2596-b8444e3ab8d6@redhat.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -22,107 +23,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-
+To: piliu <piliu@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
 > -----Original Message-----
-> From: piliu <piliu@redhat.com>
-> Sent: Monday, December 9, 2019 1:06 AM
-> To: Hagio Kazuhito(萩尾 一仁) <k-hagio@ab.jp.nec.com>; kexec@lists.infradead.org
-> Subject: Re: [PATCH] makedumpfile: assign bitmap2 fd for sub process during refiltering
 > 
-> 
-> 
-> On 12/07/2019 06:11 AM, Kazuhito Hagio wrote:
-> > Hi Pingfan,
-> >
+> On 12/07/2019 12:28 AM, Kazuhito Hagio wrote:
 > >> -----Original Message-----
-> >> In refiltering mode, each sub process inherits bitmap2->fd from parent.
-> >> Then they lseek()/read() on the same fd, which means that they interference
-> >> with each other.
 > >>
-> >> This breaks the purpose of SPLITTING_FD_BITMAP(i) for each sub process.
-> >> Fix it by assigning a sub process dedicated fd to bitmap2->fd.
-> >>
-> >> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> >> On 12/05/2019 06:36 AM, Kazuhito Hagio wrote:
+> >>> Hi Pingfan,
+> >>>
+> >>> Thank you for the patch.
+> >>>
+> >>>> -----Original Message-----
+> >>>> since the following commit, -lebl has been removed from elfutils.
+> >>>> commit b833c731359af12af9f16bcb621b3cdc170eafbc
+> >>>> Author: Mark Wielaard <mark@klomp.org>
+> >>>> Date:   Thu Aug 29 23:34:11 2019 +0200
+> >>>>
+> >>>>     libebl: Don't install libebl.a, libebl.h and remove backends from spec.
+> >>>>
+> >>>>     All archive members from libebl.a are now in libdw.a. We don't generate
+> >>>>     separate backend shared libraries anymore. So remove them from the
+> >>>>     elfutils.spec file.
+> >>>>
+> >>>>     Signed-off-by: Mark Wielaard <mark@klomp.org>
+> >>>>
+> >>>> So remove it from LIBS for makedumpfile
+> >>>
+> >>> It seems that this is ok with the latest elfutils, but with older ones?
+> >>> Is it possible to remove -lebl when elfutils does not have libebl.a?
+> >> I have no idea about it for now. The method to check version depends on
+> >> distribution. Is it doable by checking /usr/lib64/libebl ?
 > >
-> > Thanks for the patch.
-> > I'm still reading the code, but it might be better to apply this to bitmap1->fd
-> > as well?  see you next week..
-> Yes. Although during my test, bitmap1 is not touched, but it is a
-> reasonable step to against any future bug.
+> > We have 'try-run' function written by Petr in the Makefile, which checks
+> > if clock_gettime() requies -lrt.  How about utilizing it like this?
+> >
+> > diff --git a/Makefile b/Makefile
+> > index 1fdb6286e85d..d4d1fb563209 100644
+> > --- a/Makefile
+> > +++ b/Makefile
+> > @@ -50,7 +50,7 @@ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+> >  SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
+> arch/ppc.c arch/sparc64.c
+> >  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+> >
+> > -LIBS = -ldw -lbz2 -lebl -ldl -lelf -lz
+> > +LIBS = -ldw -lbz2 -ldl -lelf -lz
+> >  ifneq ($(LINKTYPE), dynamic)
+> >  LIBS := -static $(LIBS)
+> >  endif
+> > @@ -79,6 +79,11 @@ LINK_TEST_PROG="int clock_gettime(); int main(){ return clock_gettime(); }"
+> >  LIBS := $(LIBS) $(call try-run,\
+> >  	echo $(LINK_TEST_PROG) | $(CC) $(CFLAGS) -o "$$TMP" -x c -,,-lrt)
+> >
+> > +# elfutils-0.178 or later does not install libebl.a.
+> > +LINK_TEST_PROG="int main() { return 0; }"
+> > +LIBS := $(LIBS) $(call try-run,\
+> > +	echo $(LINK_TEST_PROG) | $(CC) -o "$$TMP" -x c - -lebl,-lebl,)
+> > +
+> >  all: makedumpfile
+> >
+> >  $(OBJ_PART): $(SRC_PART)
+> >
+> >
+> > If libebl.a does not exist (gcc with -lebl fails), it will not append
+> > -lebl to LIBS.
+> >
+> Yes, it sounds a good idea.
+> 
+> Should I sumbit another patch or you will do by yourself?
 
-Reading the code, I think
-- the issue might occur not only in refiltering, but also the first filtering
-  with --split and --work-dir option (forced non-cyclic mode).
-- pefer to gather things for --split option into writeout_multiple_dumpfiles()
-  if we can, for readability.
+Modified and applied.
+https://sourceforge.net/p/makedumpfile/code/ci/71e798cb1b85e4879a19607ebb0a061cbc92f70f/
 
-So does the following patch work for you and your test?
-I could not have reproduced the issue yet.
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b9e9dfbd45ba..674c6a00e2dd 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -10091,6 +10091,10 @@ writeout_multiple_dumpfiles(void)
- 			info->split_start_pfn = SPLITTING_START_PFN(i);
- 			info->split_end_pfn   = SPLITTING_END_PFN(i);
- 
-+			if (!info->flag_cyclic) {
-+				info->bitmap1->fd = info->fd_bitmap;
-+				info->bitmap2->fd = info->fd_bitmap;
-+			}
- 			if (!reopen_dump_memory())
- 				exit(1);
- 			if ((status = writeout_dumpfile()) == FALSE)
-
-
-BTW, what do you see when the issue occurs? an error or broken dump?
-
-Thanks,
+Thanks!
 Kazu
 
 > 
 > Thanks,
 > Pingfan
-> >
-> > Thanks,
-> > Kazu
-> >
-> >> ---
-> >>  makedumpfile.c | 3 ++-
-> >>  1 file changed, 2 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/makedumpfile.c b/makedumpfile.c
-> >> index d76a435..1dc8640 100644
-> >> --- a/makedumpfile.c
-> >> +++ b/makedumpfile.c
-> >> @@ -8857,7 +8857,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
-> >>  	if (info->flag_cyclic) {
-> >>  		if (!prepare_bitmap2_buffer())
-> >>  			return FALSE;
-> >> -	}
-> >> +	} else if (info->flag_refiltering)
-> >> +		info->bitmap2->fd = info->fd_bitmap;
-> >>
-> >>  	/*
-> >>  	 * Write pages and bitmap cyclically.
-> >> --
-> >> 2.7.5
-> >>
-> >
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >
 > 
 
 
