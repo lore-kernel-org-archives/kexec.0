@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ieFRc-0008Kb-KE
- for kexec@lists.infradead.org; Mon, 09 Dec 2019 09:35:10 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191209092756.GH88619@google.com>
-Date: Mon, 09 Dec 2019 10:34:59 +0100
-In-Reply-To: <20191209092756.GH88619@google.com> (Sergey Senozhatsky's message
- of "Mon, 9 Dec 2019 18:27:56 +0900")
-Message-ID: <87muc1zvss.fsf@linutronix.de>
+ id 1iePNk-0000ZZ-1B
+ for kexec@lists.infradead.org; Mon, 09 Dec 2019 20:11:49 +0000
+From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+Subject: RE: [PATCH] makedumpfile: assign bitmap2 fd for sub process during
+ refiltering
+Date: Mon, 9 Dec 2019 20:10:24 +0000
+Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03597A16@BPXM09GP.gisp.nec.co.jp>
+References: <1575358627-17152-1-git-send-email-piliu@redhat.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC035977E6@BPXM09GP.gisp.nec.co.jp>
+ <0d793e2d-6698-6543-13de-a3de8732df75@redhat.com>
+In-Reply-To: <0d793e2d-6698-6543-13de-a3de8732df75@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,61 +22,110 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-2022-jp"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc: Andrea Parri <andrea.parri@amarulasolutions.com>, Petr Mladek <pmladek@suse.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
+To: piliu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 2019-12-09, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com> wrote:
->> + * Sample reader code::
->> + *
->> + *	struct printk_info info;
->> + *	char text_buf[32];
->> + *	char dict_buf[32];
->> + *	u64 next_seq = 0;
->> + *	struct printk_record r = {
->> + *		.info		= &info,
->> + *		.text_buf	= &text_buf[0],
->> + *		.dict_buf	= &dict_buf[0],
->> + *		.text_buf_size	= sizeof(text_buf),
->> + *		.dict_buf_size	= sizeof(dict_buf),
->> + *	};
->> + *
->> + *	while (prb_read_valid(&rb, next_seq, &r)) {
->> + *		if (info.seq != next_seq)
->> + *			pr_warn("lost %llu records\n", info.seq - next_seq);
->> + *
->> + *		if (info.text_len > r.text_buf_size) {
->> + *			pr_warn("record %llu text truncated\n", info.seq);
->> + *			text_buf[sizeof(text_buf) - 1] = 0;
->> + *		}
->> + *
->> + *		if (info.dict_len > r.dict_buf_size) {
->> + *			pr_warn("record %llu dict truncated\n", info.seq);
->> + *			dict_buf[sizeof(dict_buf) - 1] = 0;
->> + *		}
->> + *
->> + *		pr_info("%llu: %llu: %s;%s\n", info.seq, info.ts_nsec,
->> + *			&text_buf[0], info.dict_len ? &dict_buf[0] : "");
->> + *
->> + *		next_seq = info.seq + 1;
->> + *	}
->> + */
->
-> Will this loop ever end? :)
->
-> pr_info() adds data to ringbuffer, which prb_read_valid() reads, so
-> pr_info() can add more data, which prb_read_valid() will read, so
-> pr_info()...
 
-The sample code is assuming that @rb is not the same ringbuffer used by
-kernel/printk/printk.c. (For example, the test module is doing that to
-stress test the ringbuffer code without actually affecting printk.) I
-can add a sentence to clarify that.
+> -----Original Message-----
+> From: piliu <piliu@redhat.com>
+> Sent: Monday, December 9, 2019 1:06 AM
+> To: Hagio Kazuhito(萩尾 一仁) <k-hagio@ab.jp.nec.com>; kexec@lists.infradead.org
+> Subject: Re: [PATCH] makedumpfile: assign bitmap2 fd for sub process during refiltering
+> 
+> 
+> 
+> On 12/07/2019 06:11 AM, Kazuhito Hagio wrote:
+> > Hi Pingfan,
+> >
+> >> -----Original Message-----
+> >> In refiltering mode, each sub process inherits bitmap2->fd from parent.
+> >> Then they lseek()/read() on the same fd, which means that they interference
+> >> with each other.
+> >>
+> >> This breaks the purpose of SPLITTING_FD_BITMAP(i) for each sub process.
+> >> Fix it by assigning a sub process dedicated fd to bitmap2->fd.
+> >>
+> >> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> >
+> > Thanks for the patch.
+> > I'm still reading the code, but it might be better to apply this to bitmap1->fd
+> > as well?  see you next week..
+> Yes. Although during my test, bitmap1 is not touched, but it is a
+> reasonable step to against any future bug.
 
-John Ogness
+Reading the code, I think
+- the issue might occur not only in refiltering, but also the first filtering
+  with --split and --work-dir option (forced non-cyclic mode).
+- pefer to gather things for --split option into writeout_multiple_dumpfiles()
+  if we can, for readability.
+
+So does the following patch work for you and your test?
+I could not have reproduced the issue yet.
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b9e9dfbd45ba..674c6a00e2dd 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -10091,6 +10091,10 @@ writeout_multiple_dumpfiles(void)
+ 			info->split_start_pfn = SPLITTING_START_PFN(i);
+ 			info->split_end_pfn   = SPLITTING_END_PFN(i);
+ 
++			if (!info->flag_cyclic) {
++				info->bitmap1->fd = info->fd_bitmap;
++				info->bitmap2->fd = info->fd_bitmap;
++			}
+ 			if (!reopen_dump_memory())
+ 				exit(1);
+ 			if ((status = writeout_dumpfile()) == FALSE)
+
+
+BTW, what do you see when the issue occurs? an error or broken dump?
+
+Thanks,
+Kazu
+
+> 
+> Thanks,
+> Pingfan
+> >
+> > Thanks,
+> > Kazu
+> >
+> >> ---
+> >>  makedumpfile.c | 3 ++-
+> >>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/makedumpfile.c b/makedumpfile.c
+> >> index d76a435..1dc8640 100644
+> >> --- a/makedumpfile.c
+> >> +++ b/makedumpfile.c
+> >> @@ -8857,7 +8857,8 @@ write_kdump_pages_and_bitmap_cyclic(struct cache_data *cd_header, struct cache_d
+> >>  	if (info->flag_cyclic) {
+> >>  		if (!prepare_bitmap2_buffer())
+> >>  			return FALSE;
+> >> -	}
+> >> +	} else if (info->flag_refiltering)
+> >> +		info->bitmap2->fd = info->fd_bitmap;
+> >>
+> >>  	/*
+> >>  	 * Write pages and bitmap cyclically.
+> >> --
+> >> 2.7.5
+> >>
+> >
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
+> 
+
+
 
 _______________________________________________
 kexec mailing list
