@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ieo32-0004Hf-LB
- for kexec@lists.infradead.org; Tue, 10 Dec 2019 22:32:06 +0000
+ id 1ieo5M-0005pp-OF
+ for kexec@lists.infradead.org; Tue, 10 Dec 2019 22:34:31 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.9 74/91] x86/crash: Add a forward declaration of
+Subject: [PATCH AUTOSEL 4.4 60/71] x86/crash: Add a forward declaration of
  struct kimage
-Date: Tue, 10 Dec 2019 17:30:18 -0500
-Message-Id: <20191210223035.14270-74-sashal@kernel.org>
-In-Reply-To: <20191210223035.14270-1-sashal@kernel.org>
-References: <20191210223035.14270-1-sashal@kernel.org>
+Date: Tue, 10 Dec 2019 17:33:05 -0500
+Message-Id: <20191210223316.14988-60-sashal@kernel.org>
+In-Reply-To: <20191210223316.14988-1-sashal@kernel.org>
+References: <20191210223316.14988-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
