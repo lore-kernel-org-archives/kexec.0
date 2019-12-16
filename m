@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+Received: from mail-pj1-x1041.google.com ([2607:f8b0:4864:20::1041])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1igfqX-0008K1-By
- for kexec@lists.infradead.org; Mon, 16 Dec 2019 02:10:55 +0000
-Received: by mail-pg1-x543.google.com with SMTP id l24so2759302pgk.2
- for <kexec@lists.infradead.org>; Sun, 15 Dec 2019 18:10:53 -0800 (PST)
+ id 1igfqc-0008M8-MD
+ for kexec@lists.infradead.org; Mon, 16 Dec 2019 02:11:00 +0000
+Received: by mail-pj1-x1041.google.com with SMTP id ca19so2271024pjb.8
+ for <kexec@lists.infradead.org>; Sun, 15 Dec 2019 18:10:58 -0800 (PST)
 From: AKASHI Takahiro <takahiro.akashi@linaro.org>
-Subject: [PATCH v4 0/2] arm64: kexec_file: add kdump
-Date: Mon, 16 Dec 2019 11:12:45 +0900
-Message-Id: <20191216021247.24950-1-takahiro.akashi@linaro.org>
+Subject: [PATCH v4 1/2] libfdt: include fdt_addresses.c
+Date: Mon, 16 Dec 2019 11:12:46 +0900
+Message-Id: <20191216021247.24950-2-takahiro.akashi@linaro.org>
+In-Reply-To: <20191216021247.24950-1-takahiro.akashi@linaro.org>
+References: <20191216021247.24950-1-takahiro.akashi@linaro.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,61 +27,41 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will.deacon@arm.com, robh+dt@kernel.org, frowand.list@gmail.com
 Cc: bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, james.morse@arm.com, linux-arm-kernel@lists.infradead.org
 
-This is the last piece of my kexec_file_load implementation for arm64.
-It is now ready for being merged as some relevant patch to dtc/libfdt[1]
-has finally been integrated in v5.3-rc1.
-(Nothing changed since kexec_file v16[2] except adding Patch#1 and #2.)
+In the implementation of kexec_file_loaded-based kdump for arm64,
+fdt_appendprop_addrrange() will be needed.
 
-Patch#1 and #2 are preliminary patches for libfdt component.
-Patch#3 is to add kdump support.
+So include fdt_addresses.c in making libfdt.
 
-Bhepesh's patch[3] will be required for 52-bit VA support either against
-legacy kexec or kexec_file.
-Once this patch is applied, whether or not CONFIG_ARM64_VA_BITS_52 is
-enabled or not, a matching fix[4] on user space side, crash utility,
-will also be needed. 
-
-Anyway, I tested my patch, at least, with the following configuration:
-1) CONFIG_ARM64_BITS_48=y
-2) CONFIG_ARM64_BITS_52=y, but vabits_actual=48
-
-(I don't have any platform to use for
-3) CONFIG_ARM64_BITS_52=y, and vabits_actual=52)
-
-[1] commit 9bb9c6a110ea ("scripts/dtc: Update to upstream version
-    v1.5.0-23-g87963ee20693"), in particular
-	7fcf8208b8a9 libfdt: add fdt_append_addrrange()
-[2] http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612641.html
-[3] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-November/693411.html
-[4] https://www.redhat.com/archives/crash-utility/2019-November/msg00014.html
-
-Changes in v4 (Dec 16, 2019)
-* rebased to v5.5-rc2
-* use KEXEC_BUF_MEM_UNKNOWN instead of "0" (patch#2)
-
-Changes in v3 (Dec 9, 2019)
-* rebased to v5.5-rc1
-* no functional changes (since v1)
-
-Changes in v2 (Nov 14, 2019)
-* rebased to v5.4-rc7
-* no functional changes
-
-v1 (Sept 12, 2019)
-* on top of v5.3-rc8
-
-AKASHI Takahiro (2):
-  libfdt: include fdt_addresses.c
-  arm64: kexec_file: add crash dump support
-
- arch/arm64/include/asm/kexec.h         |   4 +
- arch/arm64/kernel/kexec_image.c        |   4 -
- arch/arm64/kernel/machine_kexec_file.c | 106 ++++++++++++++++++++++++-
- lib/Makefile                           |   2 +-
- lib/fdt_addresses.c                    |   2 +
- 5 files changed, 109 insertions(+), 9 deletions(-)
+Signed-off-by: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>
+---
+ lib/Makefile        | 2 +-
+ lib/fdt_addresses.c | 2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
  create mode 100644 lib/fdt_addresses.c
 
+diff --git a/lib/Makefile b/lib/Makefile
+index 93217d44237f..c20b1debe9b4 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -223,7 +223,7 @@ KASAN_SANITIZE_stackdepot.o := n
+ KCOV_INSTRUMENT_stackdepot.o := n
+ 
+ libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+-	       fdt_empty_tree.o
++	       fdt_empty_tree.o fdt_addresses.o
+ $(foreach file, $(libfdt_files), \
+ 	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
+ lib-$(CONFIG_LIBFDT) += $(libfdt_files)
+diff --git a/lib/fdt_addresses.c b/lib/fdt_addresses.c
+new file mode 100644
+index 000000000000..23610bcf390b
+--- /dev/null
++++ b/lib/fdt_addresses.c
+@@ -0,0 +1,2 @@
++#include <linux/libfdt_env.h>
++#include "../scripts/dtc/libfdt/fdt_addresses.c"
 -- 
 2.24.0
 
