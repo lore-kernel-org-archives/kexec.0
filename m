@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from tyo162.gate.nec.co.jp ([114.179.232.162])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ihGwf-0006Iw-Ni
- for kexec@lists.infradead.org; Tue, 17 Dec 2019 17:47:43 +0000
-From: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Subject: RE: [PATCH] makedumpfile/s390: Add get_kaslr_offset() for s390x
-Date: Tue, 17 Dec 2019 17:46:28 +0000
-Message-ID: <4AE2DC15AC0B8543882A74EA0D43DBEC03598540@BPXM09GP.gisp.nec.co.jp>
-References: <20191203222725.64734-1-zaslonko@linux.ibm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03597AB9@BPXM09GP.gisp.nec.co.jp>
- <323f61d4-6aab-a0b4-faa3-e41756fb9913@linux.ibm.com>
- <4AE2DC15AC0B8543882A74EA0D43DBEC03597F4E@BPXM09GP.gisp.nec.co.jp>
- <8fd807f1-c296-1a34-e42a-a102df62f3a0@linux.ibm.com>
-In-Reply-To: <8fd807f1-c296-1a34-e42a-a102df62f3a0@linux.ibm.com>
-Content-Language: en-US
+ id 1ihJ03-00063L-4X
+ for kexec@lists.infradead.org; Tue, 17 Dec 2019 19:59:21 +0000
+Received: by mail-pj1-f69.google.com with SMTP id k93so420136pjh.5
+ for <kexec@lists.infradead.org>; Tue, 17 Dec 2019 11:59:14 -0800 (PST)
+Subject: Re: [RFC] printing the final constructed kernel command line
+References: <056beee8-6caf-1aec-a111-1d0c37bcb137@oracle.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Message-ID: <4bb55b9c-1585-4d5a-2bd7-ec40b8fd0eed@redhat.com>
+Date: Wed, 18 Dec 2019 01:29:07 +0530
 MIME-Version: 1.0
+In-Reply-To: <056beee8-6caf-1aec-a111-1d0c37bcb137@oracle.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,188 +22,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zaslonko Mikhail <zaslonko@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: "prudo@linux.ibm.com" <prudo@linux.ibm.com>, "dyoung@redhat.com" <dyoung@redhat.com>
+To: Eric DeVolder <eric.devolder@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: "bhupesh.linux >> Bhupesh SHARMA" <bhupesh.linux@gmail.com>
 
-Hi Mikhail,
-
-> -----Original Message-----
-> Hi,
-> 
-> On 12.12.2019 17:12, Kazuhito Hagio wrote:
-> > Hi Mikhail,
-> >
-> >> -----Original Message-----
-> >> Hello Kazu,
-> >>
-> >> I think we can try to generalize the kaslr offset extraction.
-> >> I won't speak for other architectures, but for s390 that get_kaslr_offset_arm64()
-> >> should work fine. The only concern of mine is this TODO statement:
-> >>
-> >> if (_text <= vaddr && vaddr <= _end) {
-> >> 	DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
-> >> 	return info->kaslr_offset;
-> >> 	} else {
-> >> 	/*
-> >> 	* TODO: we need to check if it is vmalloc/vmmemmap/module
-> >> 	* address, we will have different offset
-> >> 	*/
-> >> 	return 0;
-> >> }
-> >>
-> >> Could you explain this one?
-> >
-> > Probably it was considered that the check would be needed to support
-> > the whole KASLR behavior when get_kaslr_offset_x86_64() was written
-> > originally.
-> >
-> > But in the current makedumpfile for x86_64 and arm64 supporting KASLR,
-> > the offset we need is the one for symbol addresses in vmlinux only.
-> > As I said below, module symbol addresses are retrieved from vmcore.
-> > Other addresses should not be passed to the function for now, as far
-> > as I know.
-> >
-> > So I think the TODO comment is confusing, and it would be better to
-> > remove it or change it to something like:
-> > /*
-> >  * Returns 0 if vaddr does not need the offset to be added,
-> >  * e.g. for module address.
-> >  */
-> >
-> > But if s390 uses get_kaslr_offset() in its arch-specific code to
-> > adjust addresses other than kernel text address, we might need to
-> > modify it for s390, not generalize it.
-> 
-> Currently, s390 doesn't use get_kaslr_offset() in its arch-specific
-> code.
-
-OK, I pushed a patch that generalizes it to my test repository.
-Could you enable s390 to use it and test?
-https://github.com/k-hagio/makedumpfile/tree/add-get_kaslr_offset_general
-
-Thanks,
-Kazu
-
-> 
-> >
-> > Thanks,
-> > Kazu
-> >
-> >>
-> >> Thanks,
-> >> Mikhail
-> >>
-> >> On 09.12.2019 23:02, Kazuhito Hagio wrote:
-> >>> Hi Mikhail,
-> >>>
-> >>> Sorry for late reply.
-> >>>
-> >>>> -----Original Message-----
-> >>>> Since kernel v5.2 KASLR is supported on s390. In makedumpfile however no
-> >>>> support has been added yet. This patch adds the arch specific function
-> >>>> get_kaslr_offset() for s390x.
-> >>>> Since the values in vmcoreinfo are already relocated, the patch is
-> >>>> mainly relevant for vmlinux processing (-x option).
-> >>>
-> >>> In the current implementation of makedumpfile, the get_kaslr_offset(vaddr)
-> >>> is supposed to return the KASLR offset only when the offset is needed to
-> >>> add to the vaddr.  So generally symbols from kernel (vmlinux) need it, but
-> >>> symbols from modules are resolved dynamically and don't need the offset.
-> >> \>
-> >>> This patch always returns the offset if any, as a result, I guess this patch
-> >>> will not work as expected with module symbols in filter config file.
-> >>>
-> >>> So... How about making get_kaslr_offset_arm64() general for other archs
-> >>> (get_kaslr_offset_general() or something), then using it also for s390?
-> >>> If OK, I can do that generalization.
-> >>>
-> >>> Thanks,
-> >>> Kazu
-> >>>
-> >>>>
-> >>>> Signed-off-by: Philipp Rudo <prudo@linux.ibm.com>
-> >>>> Signed-off-by: Mikhail Zaslonko <zaslonko@linux.ibm.com>
-> >>>> ---
-> >>>>  arch/s390x.c   | 32 ++++++++++++++++++++++++++++++++
-> >>>>  makedumpfile.h |  3 ++-
-> >>>>  2 files changed, 34 insertions(+), 1 deletion(-)
-> >>>>
-> >>>> diff --git a/arch/s390x.c b/arch/s390x.c
-> >>>> index bf9d58e..892df14 100644
-> >>>> --- a/arch/s390x.c
-> >>>> +++ b/arch/s390x.c
-> >>>> @@ -122,6 +122,38 @@ get_machdep_info_s390x(void)
-> >>>>  	return TRUE;
-> >>>>  }
-> >>>>
-> >>>> +unsigned long
-> >>>> +get_kaslr_offset_s390x(unsigned long vaddr)
-> >>>> +{
-> >>>> +	unsigned int i;
-> >>>> +	char buf[BUFSIZE_FGETS], *endp;
-> >>>> +
-> >>>> +	if (!info->file_vmcoreinfo)
-> >>>> +		return FALSE;
-> >>>> +
-> >>>> +	if (fseek(info->file_vmcoreinfo, 0, SEEK_SET) < 0) {
-> >>>> +		ERRMSG("Can't seek the vmcoreinfo file(%s). %s\n",
-> >>>> +		       info->name_vmcoreinfo, strerror(errno));
-> >>>> +		return FALSE;
-> >>>> +	}
-> >>>> +
-> >>>> +	while (fgets(buf, BUFSIZE_FGETS, info->file_vmcoreinfo)) {
-> >>>> +		i = strlen(buf);
-> >>>> +		if (!i)
-> >>>> +			break;
-> >>>> +		if (buf[i - 1] == '\n')
-> >>>> +			buf[i - 1] = '\0';
-> >>>> +		if (strncmp(buf, STR_KERNELOFFSET,
-> >>>> +			    strlen(STR_KERNELOFFSET)) == 0) {
-> >>>> +			info->kaslr_offset =
-> >>>> +				strtoul(buf + strlen(STR_KERNELOFFSET), &endp, 16);
-> >>>> +			DEBUG_MSG("info->kaslr_offset: %lx\n", info->kaslr_offset);
-> >>>> +		}
-> >>>> +	}
-> >>>> +
-> >>>> +	return info->kaslr_offset;
-> >>>> +}
-> >>>> +
-> >>>>  static int
-> >>>>  is_vmalloc_addr_s390x(unsigned long vaddr)
-> >>>>  {
-> >>>> diff --git a/makedumpfile.h b/makedumpfile.h
-> >>>> index ac11e90..26f6247 100644
-> >>>> --- a/makedumpfile.h
-> >>>> +++ b/makedumpfile.h
-> >>>> @@ -1071,11 +1071,12 @@ unsigned long long vaddr_to_paddr_ppc(unsigned long vaddr);
-> >>>>  int get_machdep_info_s390x(void);
-> >>>>  unsigned long long vaddr_to_paddr_s390x(unsigned long vaddr);
-> >>>>  int is_iomem_phys_addr_s390x(unsigned long addr);
-> >>>> +unsigned long get_kaslr_offset_s390x(unsigned long vaddr);
-> >>>>  #define find_vmemmap()		stub_false()
-> >>>>  #define get_phys_base()		stub_true()
-> >>>>  #define get_machdep_info()	get_machdep_info_s390x()
-> >>>>  #define get_versiondep_info()	stub_true()
-> >>>> -#define get_kaslr_offset(X)	stub_false()
-> >>>> +#define get_kaslr_offset(X)	get_kaslr_offset_s390x(X)
-> >>>>  #define vaddr_to_paddr(X)	vaddr_to_paddr_s390x(X)
-> >>>>  #define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
-> >>>>  #define is_phys_addr(X)		is_iomem_phys_addr_s390x(X)
-> >>>> --
-> >>>> 2.17.1
-> >>>>
-> >>>
-> >>>
-> >
-> >
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgRXJpYywKCk9uIDEyLzE3LzIwMTkgMDI6MDIgQU0sIEVyaWMgRGVWb2xkZXIgd3JvdGU6Cj4g
+VGhlIC0tY29tbWFuZC1saW5lLCAtLWFwcGVuZCwgYW5kIC0tcmV1c2UtY21kbGluZSBvcHRpb25z
+IHRvIGtleGVjIGNhbgo+IGJlIHVzZWQgaW4gY29tYmluYXRpb24gdG8gY3JhZnQgYSBrZXJuZWwg
+Y29tbWFuZCBsaW5lIGZvciBhIGtlcm5lbAo+IGxvYWRlZCB2aWEga2V4ZWMuIEluIGFkZGl0aW9u
+LCB0aGUga2V4ZWMgdG9vbCBtYXkgYWxzbyBtYW5pcHVsYXRlCj4gZnVydGhlciB0aGUgY29tbWFu
+ZCBsaW5lLCBlZy4gIGVsZmNvcmVoZHIgYWRkaXRpb24uCgpUaGFua3MgZm9yIHByb3Bvc2luZyB0
+aGlzIGNoYW5nZS4gSSBoYXZlIHNvbWUgY29tbWVudHMvcXVlcmllcyAoc2VlIGJlbG93KS4KCj4g
+VG8gYWlkIGluIGRlYnVnZ2luZyBrZHVtcC9rZXhlYyByZWxhdGVkIGlzc3VlcywgaXQgd291bGQg
+YmUgaGVscGZ1bAo+IGZvciBrZXhlYyB0byBwcmludCB0aGUgZmluYWwgY29uc3RydWN0ZWQga2Vy
+bmVsIGNvbW1hbmQgbGluZSBhcmd1bWVudC4KPiAKPiBGb3IgZXhhbXBsZSwgdGhlIGZvbGxvd2lu
+ZyBzaW1wbGUgY2hhbmdlIChmb3IgaTM4Ni94ODZfNjQpOgo+IAo+IGRpZmYgLS1naXQgYS9rZXhl
+Yy9hcmNoL2kzODYveDg2LWxpbnV4LXNldHVwLmMgCj4gYi9rZXhlYy9hcmNoL2kzODYveDg2LWxp
+bnV4LXNldHVwLmMKPiBpbmRleCAwNTdlZTE0Li42ZGM0YWRjIDEwMDY0NAo+IC0tLSBhL2tleGVj
+L2FyY2gvaTM4Ni94ODYtbGludXgtc2V0dXAuYwo+ICsrKyBiL2tleGVjL2FyY2gvaTM4Ni94ODYt
+bGludXgtc2V0dXAuYwo+IEBAIC01Nyw2ICs1Nyw4IEBAIHZvaWQgc2V0dXBfbGludXhfYm9vdGxv
+YWRlcl9wYXJhbWV0ZXJzX2hpZ2goCj4gICAgICAgY2hhciAqY21kbGluZV9wdHI7Cj4gICAgICAg
+dW5zaWduZWQgbG9uZyBpbml0cmRfYmFzZSwgaW5pdHJkX2FkZHJfbWF4Owo+IAo+ICsgICAgcHJp
+bnRmKCJGaW5hbCBrZXJuZWwgY21kbGluZTogJyVzJ1xuIiwgY21kbGluZSk7Cj4gKwoKSWYgd2Ug
+d2FudCB0byBhZGQgdGhpcyBmb3IgZGVidWdnaW5nIHB1cnBvc2VzLCBpdHMgYmV0dGVyIHRvIGhh
+dmUgCmRiZ3ByaW50ZigpIGluc3RlYWQgb2YgcHJpbnRmKCkgaGVyZS4gVGhpcyB3aWxsIG1ha2Ug
+c3VyZSB0aGF0IHRoZSBkZWJ1ZyAKbWVzc2FnZSBpcyBwcmludGVkIG9ubHkgd2hlbiAnLWQnIGZs
+YWcgaXMgc3BlY2lmaWVkIHdoaWxlIGNhbGxpbmcga2V4ZWMgCnV0aWxpdHkgZnJvbSBjb21tYW5k
+LWxpbmUuCgo+ICAgICAgIC8qIFNheSBJJ20gYSBib290IGxvYWRlciAqLwo+ICAgICAgIHJlYWxf
+bW9kZS0+bG9hZGVyX3R5cGUgPSBMT0FERVJfVFlQRV9LRVhFQyA8PCA0Owo+IAo+IHJlc3VsdHMg
+aW4gdGhlIGZvbGxvd2luZyBvbiBhIHN5c3RlbWQtYmFzZWQgc3lzdGVtIChmb3JtYXR0ZWQgdG8g
+Zml0Cj4gaW4gNzAgY2hhciBsaW5lcyk6Cj4gCj4gJSBzeXN0ZW1jdGwgc3RhdHVzIC1sIGtkdW1w
+LnNlcnZpY2UKPiDil48ga2R1bXAuc2VydmljZSAtIENyYXNoIHJlY292ZXJ5IGtlcm5lbCBhcm1p
+bmcKPiAgICAgTG9hZGVkOiBsb2FkZWQgKC91c3IvbGliL3N5c3RlbWQvc3lzdGVtL2tkdW1wLnNl
+cnZpY2U7IGVuYWJsZWQ7Cj4gICAgICB2ZW5kb3IgcHJlc2V0OiBlbmFibGVkKQo+ICAgICBBY3Rp
+dmU6IGFjdGl2ZSAoZXhpdGVkKSBzaW5jZSBNb24gMjAxOS0xMi0xNiAxNDo1OToyMSBFU1Q7Cj4g
+ICAgICAybWluIDUzcyBhZ28KPiAgICBQcm9jZXNzOiAxNDA1OCBFeGVjU3RvcD0vdXNyL2Jpbi9r
+ZHVtcGN0bCBzdG9wIChjb2RlPWV4aXRlZCwKPiAgICAgc3RhdHVzPTAvU1VDQ0VTUykKPiAgICBQ
+cm9jZXNzOiAxNDA3MyBFeGVjU3RhcnQ9L3Vzci9iaW4va2R1bXBjdGwgc3RhcnQgKGNvZGU9ZXhp
+dGVkLAo+ICAgICBzdGF0dXM9MC9TVUNDRVNTKQo+ICAgTWFpbiBQSUQ6IDE0MDczIChjb2RlPWV4
+aXRlZCwgc3RhdHVzPTAvU1VDQ0VTUykKPiAKPiBEZWMgMTYgMTQ6NTk6MTggdm0zNjQga2R1bXBj
+dGxbMTQwNThdOiBTdG9wcGluZyBrZHVtcDogW09LXQo+IERlYyAxNiAxNDo1OToxOCB2bTM2NCBz
+eXN0ZW1kWzFdOiBTdG9wcGVkIENyYXNoIHJlY292ZXJ5IGtlcm5lbCBhcm1pbmcuCj4gRGVjIDE2
+IDE0OjU5OjE4IHZtMzY0IHN5c3RlbWRbMV06IFN0YXJ0aW5nIENyYXNoIHJlY292ZXJ5IGtlcm5l
+bCBhcm1pbmcuLi4KPiBEZWMgMTYgMTQ6NTk6MjEgdm0zNjQga2R1bXBjdGxbMTQwNzNdOiBGaW5h
+bCBrZXJuZWwgY21kbGluZTogJ0JPT1RfSU1BR0U9Cj4gICAvdm1saW51ei00LjE0LjM1LTE5MDIu
+Ny4zLjEuZWw3dWVrLng4Nl82NCBybyByaGdiIHF1aWV0IExBTkc9ZW5fVVMuVVRGLTgKPiAgIGly
+cXBvbGwgbnJfY3B1cz0xIHJlc2V0X2RldmljZXMgY2dyb3VwX2Rpc2FibGU9bWVtb3J5IG1jZT1v
+ZmYgbnVtYT1vZmYKPiAgIHVkZXYuY2hpbGRyZW4tbWF4PTIgcGFuaWM9MTAgcm9vdGZsYWdzPW5v
+ZmFpbCBhY3BpX25vX21lbWhvdHBsdWcKPiAgIHRyYW5zcGFyZW50X2h1Z2VwYWdlPW5ldmVyIG5v
+a2FzbHIgbm92bWNvcmVkZCBkaXNhYmxlX2NwdV9hcGljaWQ9MAo+ICAgZWxmY29yZWhkcj05MDE0
+OTJLJwo+IERlYyAxNiAxNDo1OToyMSB2bTM2NCBzeXN0ZW1kWzFdOiBTdGFydGVkIENyYXNoIHJl
+Y292ZXJ5IGtlcm5lbCBhcm1pbmcuCj4gRGVjIDE2IDE0OjU5OjIxIHZtMzY0IGtkdW1wY3RsWzE0
+MDczXToga2V4ZWM6IGxvYWRlZCBrZHVtcCBrZXJuZWwKPiBEZWMgMTYgMTQ6NTk6MjEgdm0zNjQg
+a2R1bXBjdGxbMTQwNzNdOiBTdGFydGluZyBrZHVtcDogW09LXQo+IAo+IGFuZCB0aGUgb3V0cHV0
+IGlzIGFsc28gYXZhaWxhYmxlIGluIC92YXIvbG9nL21lc3NhZ2VzLgoKU2luY2Uga2R1bXBjdGwg
+aXMgYSBkaXN0cmlidXRpb24gc3BlY2lmaWMgc2NyaXB0IChVc2VkIGJ5IEZlZG9yYS9SSEVMKSwg
+CndoaWNoIGludm9rZXMgJ2tleGVjJyB1bmRlciB0aGUgaG9vZCwgd2UgY2FuIGRpc2N1c3MgdGhl
+IGZlYXR1cmVzIApzdXBwb3J0ZWQgYnkgJ2tleGVjJyByYXRoZXIgdGhhbiB0aGUgZGlzdHJpYnV0
+aW9uIHNwZWNpZmljIHNjcmlwdHMgCihkaXNjdXNzaW9uIHJlZ2FyZGluZyB3aGljaCBhcmUgcHJv
+YmFibHkgbW9yZSBzdWl0ZWQgdG8gdGhlIEZlZG9yYSBrZXhlYyAKbGlzdDoga2V4ZWNAbGlzdHMu
+ZmVkb3JhcHJvamVjdC5vcmcpCgo+IFRoZXJlIG1pZ2h0IGFsc28gYmUgYW4gb3Bwb3J0dW5pdHkg
+dG8gY29uc29saWRhdGUgaGFuZGxpbmcgb2YgdGhlCj4ga2VybmVsIGNvbW1hbmQgbGluZSwgYXMg
+bW9zdCBhcmNoIHRhcmdldHMgaGF2ZSB0aGUgLS1jb21tYW5kLWxpbmUsCj4gLS1hcHBlbmQsIGFu
+ZCAtLXJldXNlLWNtZGxpbmUgb3B0aW9ucywgdGhvdWdoIGVhY2ggYXJjaCBpbmRlcGVuZGVudGx5
+Cj4gY29kZXMgdGhlIHN1cHBvcnQgZm9yIHRoZXNlIG9wdGlvbnMuCgpUaGlzIHNlZW1zIGxpa2Ug
+YSBnb29kIGlkZWEsIG1vcmUgb24gdGhlIHNhbWUgYmVsb3cgLi4uCgo+IE5vdGU6IFNpbXBseSBw
+cmludGluZyB0aGUgY21kbGluZSBpbiBzY3JpcHRzIHN1Y2ggYXMga2R1bXBjdGwgbWF5IG5vdAo+
+IHJlc3VsdCBpbiB0aGUgc2FtZSBvcmRlcmluZywgYW5kIHdpbGwgb21pdCBhbnkgYWRkaXRpb24g
+bWFkZSBpbnRlcm5hbGx5Cj4gYnkga2V4ZWMsIHN1Y2ggYXMgdGhlIGVsZmNvcmVoZHIuCj4gCj4g
+SSBwcm9wb3NlIHRoZSBhZGRpdGlvbiBvZiBhbiBvcHRpb24gdG8ga2V4ZWMsIC0tcHJpbnQta2Ns
+ICh0byBtaXJyb3IKPiAtLXByaW50LWNrciksIHRoYXQgd291bGQgY29udHJvbCBzdWNoIHByaW50
+aW5nLCBhcyB3ZWxsIGFzIHRoZSBuZWVkZWQKPiBwZXIgYXJjaCBjb25kaXRpb25hbCBwcmludCBz
+dGF0ZW1lbnRzIHNpbWlsYXIgdG8gdGhlIGFib3ZlIHRvIHByaW50IHRoZQo+IGZpbmFsIGNvbnN0
+cnVjdGVkIGtlcm5lbCBjb21tYW5kIGxpbmUuCgouLi4gSSBhbSBub3Qgc3VyZSBJIHVuZGVyc3Rh
+bmQgdGhlIGFib3ZlIHBvaW50LiBMb29raW5nIGF0IHRoZSBsYXRlc3QgCmtleGVjLXRvb2xzIG1h
+biBwYWdlIChzZWU6IApnaXQ6Ly9naXQua2VybmVsLm9yZy9wdWIvc2NtL3V0aWxzL2tlcm5lbC9r
+ZXhlYy9rZXhlYy10b29scy5naXQpLCBJIApjb3VsZG4ndCBmaW5kICctLXByaW50LWNrcicgb3B0
+aW9uOgoKLS1wcmludC1ja3Itc2l6ZTogUHJpbnQgY3Jhc2gga2VybmVsIHJlZ2lvbiBzaXplLCBp
+ZiBhdmFpbGFibGUuCgpDYW4geW91IHBsZWFzZSBlbGFib3JhdGUgb24gJy0tcHJpbnQtY2tyJyBh
+bmQgJy0tcHJpbnQta2NsJyBvcHRpb25zIG1vcmUuCgpUaGFua3MsCkJodXBlc2gKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
