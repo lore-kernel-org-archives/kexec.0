@@ -1,12 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v6 0/4] support reserving crashkernel above 4G on arm64
- kdump
-References: <20190830071200.56169-1-chenzhou10@huawei.com>
-From: Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <2a97b296-59e7-0a26-84fa-e2ddcd7987b6@huawei.com>
-Date: Wed, 18 Dec 2019 10:07:59 +0800
+Received: from mail-pj1-x1041.google.com ([2607:f8b0:4864:20::1041])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1ihPMr-0002Y6-6a
+ for kexec@lists.infradead.org; Wed, 18 Dec 2019 02:47:20 +0000
+Received: by mail-pj1-x1041.google.com with SMTP id s94so646579pjc.1
+ for <kexec@lists.infradead.org>; Tue, 17 Dec 2019 18:47:16 -0800 (PST)
+Date: Wed, 18 Dec 2019 11:48:50 +0900
+From: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Subject: Re: [PATCH v2 2/3] arm64: kexec: allocate memory space avoiding
+ reserved regions
+Message-ID: <20191218024849.GA7386@linaro.org>
+References: <20190111095946.28070-1-takahiro.akashi@linaro.org>
+ <20190111095946.28070-3-takahiro.akashi@linaro.org>
+ <20191213200430.uxuebdavpq64scfh@gabell>
+ <CACi5LpOKCfgjmxo59sT5bVN0qHvYapy1NRXn0F=_By-vp0g=sA@mail.gmail.com>
+ <20191216141606.nhosl4v233mtvu4u@gabell>
 MIME-Version: 1.0
-In-Reply-To: <20190830071200.56169-1-chenzhou10@huawei.com>
+Content-Disposition: inline
+In-Reply-To: <20191216141606.nhosl4v233mtvu4u@gabell>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,102 +30,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, dyoung@redhat.com, bhsharma@redhat.com
-Cc: horms@verge.net.au, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, guohanjun@huawei.com
+To: Masayoshi Mizuma <msys.mizuma@gmail.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>, Bhupesh Sharma <bhsharma@redhat.com>, Simon Horman <horms@verge.net.au>, James Morse <james.morse@arm.com>
 
-Hi all,
+On Mon, Dec 16, 2019 at 09:16:06AM -0500, Masayoshi Mizuma wrote:
+> On Mon, Dec 16, 2019 at 11:22:56AM +0530, Bhupesh Sharma wrote:
+> > Thanks Masa,
 
-Friendly ping...
+[...]
 
-On 2019/8/30 15:11, Chen Zhou wrote:
-> I am busy with other things, so it was a long time before this version was
-> released.
+> > Since this is an old thread, it would be useful for people looking at
+> > the same, if you can add some comments/details about why you think
+> > this nit is needed.
 > 
-> This patch series enable reserving crashkernel above 4G in arm64.
+> Thank you for your follow up and I'm sorry I didn't explain it.
+> mem_regions_alloc_and_exclude() may fail in case realloc() or
+> mem_region_exclude() fail, so it would be better to add the error
+> handling.
 > 
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
-> when there is no enough low memory.
-> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
-> in this case, if swiotlb or DMA buffers are requierd, crash dump kernel
-> will boot failure because there is no low memory available for allocation.
+> > 
+> > Also if Akashi agrees with the same, it would be better if he could
+> > send a rebased version of the patchset (with your comments addressed),
+> > so that the same can be picked for upstream kexec-tools cleanly.
 > 
-> To solve these issues, introduce crashkernel=X,low to reserve specified
-> size low memory.
-> Crashkernel=X tries to reserve memory for the crash dump kernel under
-> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
-> size low memory for crash kdump kernel devices firstly and then reserve
-> memory above 4G.
-> 
-> When crashkernel is reserved above 4G in memory, that is, crashkernel=X,low
-> is specified simultaneously, kernel should reserve specified size low memory
-> for crash dump kernel devices. So there may be two crash kernel regions, one
-> is below 4G, the other is above 4G.
-> In order to distinct from the high region and make no effect to the use of
-> kexec-tools, rename the low region as "Crash kernel (low)", and add DT property
-> "linux,low-memory-range" to crash dump kernel's dtb to pass the low region.
-> 
-> Besides, we need to modify kexec-tools:
-> arm64: kdump: add another DT property to crash dump kernel's dtb(see [1])
-> 
-> The previous changes and discussions can be retrieved from:
-> 
-> Changes since [v5]
-> - Move reserve_crashkernel_low() into kernel/crash_core.c.
-> - Delete crashkernel=X,high.
-> - Modify crashkernel=X,low.
-> If crashkernel=X,low is specified simultaneously, reserve spcified size low
-> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-> pass to crash dump kernel by DT property "linux,low-memory-range".
-> - Update Documentation/admin-guide/kdump/kdump.rst.
-> 
-> Changes since [v4]
-> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
-> 
-> Changes since [v3]
-> - Add memblock_cap_memory_ranges back for multiple ranges.
-> - Fix some compiling warnings.
-> 
-> Changes since [v2]
-> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-> patch.
-> 
-> Changes since [v1]:
-> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
-> in fdt_enforce_memory_region().
-> There are at most two crash kernel regions, for two crash kernel regions
-> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-> and then remove the memory range in the middle.
-> 
-> [1]: http://lists.infradead.org/pipermail/kexec/2019-August/023569.html
-> [v1]: https://lkml.org/lkml/2019/4/2/1174
-> [v2]: https://lkml.org/lkml/2019/4/9/86
-> [v3]: https://lkml.org/lkml/2019/4/9/306
-> [v4]: https://lkml.org/lkml/2019/4/15/273
-> [v5]: https://lkml.org/lkml/2019/5/6/1360
-> 
-> Chen Zhou (4):
->   x86: kdump: move reserve_crashkernel_low() into crash_core.c
->   arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->   arm64: kdump: add memory for devices by DT property, low-memory-range
->   kdump: update Documentation about crashkernel on arm64
-> 
->  Documentation/admin-guide/kdump/kdump.rst       | 13 ++++-
->  Documentation/admin-guide/kernel-parameters.txt | 12 ++++-
->  arch/arm64/include/asm/kexec.h                  |  3 ++
->  arch/arm64/kernel/setup.c                       |  8 ++-
->  arch/arm64/mm/init.c                            | 61 +++++++++++++++++++++--
->  arch/x86/include/asm/kexec.h                    |  3 ++
->  arch/x86/kernel/setup.c                         | 65 +++----------------------
->  include/linux/crash_core.h                      |  4 ++
->  include/linux/kexec.h                           |  1 -
->  kernel/crash_core.c                             | 65 +++++++++++++++++++++++++
->  10 files changed, 168 insertions(+), 67 deletions(-)
-> 
+> Sounds great!
 
+I have almost forgotten the background of this patch.
+If you see that it is still useful, please feel free to re-post it.
+
+Thanks,
+-Takahiro Akashi
+
+> - Masa
+> 
+> > 
+> > @Akashi- Hi Akashi, Please let us know your views.
+> > 
+> > Thanks,
+> > Bhupesh
+> > 
+> > > +                     dbgprintf("%s:-      %016llx - %016llx\n",
+> > > > +                                     __func__, start, end);
+> > > > +             }
+> > > > +     }
+> > > > +
+> > > > +     fclose(fp);
+> > > > +
+> > > > +     *range = memranges.ranges;
+> > > > +     *ranges = memranges.size;
+> > > >
+> > > >       /* As a fallback option, we can try determining the PHYS_OFFSET
+> > > >        * value from the '/proc/iomem' entries as well.
+> > > > @@ -976,52 +1041,15 @@ static int get_memory_ranges_iomem_cb(void *data, int nr, char *str,
+> > > >        * between the user-space and kernel space 'PHYS_OFFSET'
+> > > >        * value.
+> > > >        */
+> > > > -     set_phys_offset(r->start, "iomem");
+> > > > +     if (memranges.size)
+> > > > +             set_phys_offset(memranges.ranges[0].start, "iomem");
+> > > >
+> > > > -     dbgprintf("%s: %016llx - %016llx : %s", __func__, r->start,
+> > > > -             r->end, str);
+> > > > +     dbgprint_mem_range("System RAM ranges;",
+> > > > +                             memranges.ranges, memranges.size);
+> > > >
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > -/**
+> > > > - * get_memory_ranges_iomem - Try to get the memory ranges from
+> > > > - * /proc/iomem.
+> > > > - */
+> > > > -
+> > > > -static int get_memory_ranges_iomem(struct memory_range *array,
+> > > > -     unsigned int *count)
+> > > > -{
+> > > > -     *count = kexec_iomem_for_each_line(NULL,
+> > > > -             get_memory_ranges_iomem_cb, array);
+> > > > -
+> > > > -     if (!*count) {
+> > > > -             dbgprintf("%s: failed: No RAM found.\n", __func__);
+> > > > -             return EFAILED;
+> > > > -     }
+> > > > -
+> > > > -     return 0;
+> > > > -}
+> > > > -
+> > > > -/**
+> > > > - * get_memory_ranges - Try to get the memory ranges some how.
+> > > > - */
+> > > > -
+> > > > -int get_memory_ranges(struct memory_range **range, int *ranges,
+> > > > -     unsigned long kexec_flags)
+> > > > -{
+> > > > -     static struct memory_range array[KEXEC_SEGMENT_MAX];
+> > > > -     unsigned int count;
+> > > > -     int result;
+> > > > -
+> > > > -     result = get_memory_ranges_iomem(array, &count);
+> > > > -
+> > > > -     *range = result ? NULL : array;
+> > > > -     *ranges = result ? 0 : count;
+> > > > -
+> > > > -     return result;
+> > > > -}
+> > > > -
+> > > >  int arch_compat_trampoline(struct kexec_info *info)
+> > > >  {
+> > > >       return 0;
+> > > > --
+> > > > 2.19.1
+> > > >
+> > > >
+> > >
+> > 
 
 _______________________________________________
 kexec mailing list
