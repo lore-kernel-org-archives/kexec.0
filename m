@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from esa18.fujitsucc.c3s2.iphmx.com ([216.71.158.38])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ijQ8t-0005A8-24
- for kexec@lists.infradead.org; Mon, 23 Dec 2019 16:01:12 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [RFC PATCH v5 1/3] printk-rb: new printk ringbuffer
- implementation (writer)
-References: <20191128015235.12940-1-john.ogness@linutronix.de>
- <20191128015235.12940-2-john.ogness@linutronix.de>
- <20191221142235.GA7824@andrea>
-Date: Mon, 23 Dec 2019 17:01:00 +0100
-Message-ID: <87imm7820z.fsf@linutronix.de>
+ id 1ijyFZ-0004bs-Lk
+ for kexec@lists.infradead.org; Wed, 25 Dec 2019 04:26:23 +0000
+From: "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
+Subject: [RFD] kdump, kaslr: how to fix the failure of reservation of
+ crashkernel low memory due to physical kaslr
+Date: Wed, 25 Dec 2019 04:26:08 +0000
+Message-ID: <OSBPR01MB4006AF8B4D355200E385850E95280@OSBPR01MB4006.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,59 +22,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrea Parri <parri.andrea@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Brendan Higgins <brendanhiggins@google.com>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>, kexec@lists.infradead.org
+To: "'dyoung@redhat.com'" <dyoung@redhat.com>, "'bhe@redhat.com'" <bhe@redhat.com>, "'vgoyal@redhat.com'" <vgoyal@redhat.com>, "'ebiederm@xmission.com'" <ebiederm@xmission.com>, "'mingo@kernel.org'" <mingo@kernel.org>
+Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
 
-Hi Andrea,
+Currently, reservation of crashkernel low memory sometimes fails due
+to a sparse memory caused by physical kaslr with the following
+message:
 
-On 2019-12-21, Andrea Parri <parri.andrea@gmail.com> wrote:
->> +	*desc_out = READ_ONCE(*desc);
->> +
->> +	/* Load data before re-checking state. */
->> +	smp_rmb(); /* matches LMM_REF(desc_reserve:A) */
->
-> I looked for a matching WRITE_ONCE() or some other type of marked write,
-> but I could not find it.  What is the rationale?  Or what did I miss?
+    Cannot reserve 256MB crashkernel low memory, please try smaller size.
 
-This smp_rmb() matches LMM_TAG(desc_reserve:A).
+Kdump needs low memory, memory area less than 4GB, e.g. for swiotlb.
+Its size is 256MB for low memory by default. OTOH, physical kaslr
+loads kernel images in a random physical address for
+security. Physical kaslr sometimes choose low memory and sparse
+there and as a result, reservation of crash kernel low memory could fail.
 
->> +	do {
->> +		next_lpos = get_next_lpos(data_ring, begin_lpos, size);
->> +
->> +		if (!data_push_tail(rb, data_ring,
->> +				    next_lpos - DATA_SIZE(data_ring))) {
->> +			/* Failed to allocate, specify a data-less block. */
->> +			blk_lpos->begin = INVALID_LPOS;
->> +			blk_lpos->next = INVALID_LPOS;
->> +			return NULL;
->> +		}
->> +	} while (!atomic_long_try_cmpxchg(&data_ring->head_lpos, &begin_lpos,
->> +					  next_lpos));
->> +
->> +	/*
->> +	 * No barrier is needed here. The data validity is defined by
->> +	 * the state of the associated descriptor. They are marked as
->> +	 * invalid at the moment. And only the winner of the above
->> +	 * cmpxchg() could write here.
->> +	 */
->
-> The (successful) CMPXCHG provides a full barrier.  This comment suggests
-> that that could be somehow relaxed?  Or the comment could be improved?
+This failure seldom occurs on systems with large memory. For example,
+on our system with 128GB, the issue occurs once in hundreds of
+reboots. Although it doesn't occur frequently and can be avoided in
+practice simply by rebooting the system, it definitely occurs once in
+hundreds of reboots. Once the issue occurs, it's difficult for ordinary
+users to understand why it failed. I'd like to fix this current behavior.
 
-You are correct. There is no need for the full barrier here. This code
-is based on Petr's POC. I focussed on making sure needed barriers are in
-place, but did not try to eliminate excessive barriers.
+I'm now coming up two ideas but don't know what is best. Please
+discuss how to fix the issue in better way.
 
-> (The patch introduces a number of CMPXCHG: similar questions would
-> apply to those other instances...)
+1) Add a kernel parameter to make physical kaslr to avoid specified
+   memory area
 
-LMM_TAG(data_push_tail:A) is the only CMPXCHG that requires its full
-barrier. All others can be relaxed. I will make this change for the next
-series.
+  This is the simplest idea I came up with first just like
+   kaslr_mem_avoid=4GB-0, which is similar syntax to memap=, meaning
+   that kaslr, please avoid to load kernel image into the region [0,
+   4GB).
 
-Thanks for taking time for this.
+  It looks to me that this can be implemented easily by taking
+   advantage of the existing code about mem_avoid mechanism in
+   arch/x86/boot/compressed/kaslr.c.
 
-John Ogness
+  This mechanism doesn't lose security provided by physical kaslr if
+   system memory is large enough.
+
+  Demerit of this is that users need configuration. Automatic way is
+   better if possible.
+
+2) Add special handling for crashkernel= low in physical kaslr
+
+  The second idea I came up with is to add special handling for
+   crashkernel= low in physical kaslr, i.e. physical kaslr recognizes
+   crashkernel= in kernel parameters and keep enough memory for
+   crashkenrel.
+
+  To guarantee that the memory area kept by the special handling in
+   physical kaslr is used for crashkernel, it is necessary to mark the
+   area to indicate to the crashkernel code executed after kernel
+   runs. To implement this, I imagine introducing a new type of memory
+   a kind of E820_CRASHKERNEL_LOW.
+
+  My concern on this idea is whether its worth implementing such
+   special handling in physical kaslr simply because I don't find such
+   code in physical kaslr now.
+
+3) Any other better ideas?
+
+Thanks.
+HATAYAMA, Daisuke
+
 
 _______________________________________________
 kexec mailing list
