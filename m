@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ikBjF-0006xG-Qt
- for kexec@lists.infradead.org; Wed, 25 Dec 2019 18:49:55 +0000
-Received: by mail-pj1-f70.google.com with SMTP id n89so3987279pji.6
- for <kexec@lists.infradead.org>; Wed, 25 Dec 2019 10:49:47 -0800 (PST)
-Subject: Re: [RESEND PATCH v5 5/5] Documentation/vmcoreinfo: Add documentation
- for 'TCR_EL1.T1SZ'
+ id 1ikBun-00033J-Pc
+ for kexec@lists.infradead.org; Wed, 25 Dec 2019 19:01:52 +0000
+Received: by mail-pg1-f198.google.com with SMTP id o21so2410599pgm.11
+ for <kexec@lists.infradead.org>; Wed, 25 Dec 2019 11:01:36 -0800 (PST)
+Subject: Re: [RESEND PATCH v5 2/5] arm64/crash_core: Export TCR_EL1.T1SZ in
+ vmcoreinfo
 References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
- <1575057559-25496-6-git-send-email-bhsharma@redhat.com>
- <8a982138-f1fa-34e8-18fd-49a79cea3652@arm.com>
+ <1575057559-25496-3-git-send-email-bhsharma@redhat.com>
+ <63d6e63c-7218-d2dd-8767-4464be83603f@arm.com>
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Message-ID: <b7d8d603-d9fe-3e18-c754-baf2015acd16@redhat.com>
-Date: Thu, 26 Dec 2019 00:19:35 +0530
+Message-ID: <af0fd2b0-99db-9d58-bc8d-0dd9d640b1eb@redhat.com>
+Date: Thu, 26 Dec 2019 00:31:27 +0530
 MIME-Version: 1.0
-In-Reply-To: <8a982138-f1fa-34e8-18fd-49a79cea3652@arm.com>
+In-Reply-To: <63d6e63c-7218-d2dd-8767-4464be83603f@arm.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -36,51 +36,137 @@ Hi James,
 
 On 12/12/2019 04:02 PM, James Morse wrote:
 > Hi Bhupesh,
-
-I am sorry this review mail skipped my attention due to holidays and 
-focus on other urgent issues.
-
+> 
 > On 29/11/2019 19:59, Bhupesh Sharma wrote:
->> Add documentation for TCR_EL1.T1SZ variable being added to
->> vmcoreinfo.
+>> vabits_actual variable on arm64 indicates the actual VA space size,
+>> and allows a single binary to support both 48-bit and 52-bit VA
+>> spaces.
 >>
->> It indicates the size offset of the memory region addressed by TTBR1_EL1
+>> If the ARMv8.2-LVA optional feature is present, and we are running
+>> with a 64KB page size; then it is possible to use 52-bits of address
+>> space for both userspace and kernel addresses. However, any kernel
+>> binary that supports 52-bit must also be able to fall back to 48-bit
+>> at early boot time if the hardware feature is not present.
+>>
+>> Since TCR_EL1.T1SZ indicates the size offset of the memory region
+>> addressed by TTBR1_EL1 (and hence can be used for determining the
+>> vabits_actual value) it makes more sense to export the same in
+>> vmcoreinfo rather than vabits_actual variable, as the name of the
+>> variable can change in future kernel versions, but the architectural
+>> constructs like TCR_EL1.T1SZ can be used better to indicate intended
+>> specific fields to user-space.
+>>
+>> User-space utilities like makedumpfile and crash-utility, need to
+>> read/write this value from/to vmcoreinfo
 > 
->> and hence can be used for determining the vabits_actual value.
-> 
-> used for determining random-internal-kernel-variable, that might not exist tomorrow.
-> 
-> Could you describe how this is useful/necessary if a debugger wants to walk the page
-> tables from the core file? I think this is a better argument.
-> 
-> Wouldn't the documentation be better as part of the patch that adds the export?
-> (... unless these have to go via different trees? ..)
+> (write?)
 
-Ok, will fix the same in v6 version.
+Yes, also write so that the vmcoreinfo from an (crashing) arm64 system 
+can be used for analysis of the root-cause of panic/crash on say an 
+x86_64 host using utilities like crash-utility/gdb.
 
->> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> index 447b64314f56..f9349f9d3345 100644
->> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
->> @@ -398,6 +398,12 @@ KERNELOFFSET
->>   The kernel randomization offset. Used to compute the page offset. If
->>   KASLR is disabled, this value is zero.
->>   
->> +TCR_EL1.T1SZ
->> +------------
->> +
->> +Indicates the size offset of the memory region addressed by TTBR1_EL1
+>> for determining if a virtual address lies in the linear map range.
 > 
->> +and hence can be used for determining the vabits_actual value.
-> 
-> 'vabits_actual' may not exist when the next person comes to read this documentation (its
-> going to rot really quickly).
-> 
-> I think the first half of this text is enough to say what this is for. You should include
-> words to the effect that its the hardware value that goes with swapper_pg_dir. You may
-> want to point readers to the arm-arm for more details on what the value means.
+> I think this is a fragile example. The debugger shouldn't need to know this.
 
-Ok, got it. Fixed this in v6, which should be on its way shortly.
+Well that the current user-space utility design, so I am not sure we can 
+tweak that too much.
+
+>> The user-space computation for determining whether an address lies in
+>> the linear map range is the same as we have in kernel-space:
+>>
+>>    #define __is_lm_address(addr)	(!(((u64)addr) & BIT(vabits_actual - 1)))
+> 
+> This was changed with 14c127c957c1 ("arm64: mm: Flip kernel VA space"). If user-space
+> tools rely on 'knowing' the kernel memory layout, they must have to constantly be fixed
+> and updated. This is a poor argument for adding this to something that ends up as ABI.
+
+See above. The user-space has to rely on some ABI/guaranteed 
+hardware-symbols which can be used for 'determining' the kernel memory 
+layout.
+
+> I think a better argument is walking the kernel page tables from the core dump.
+> Core code's vmcoreinfo exports the location of the kernel page tables, but in the example
+> above you can't walk them without knowing how T1SZ was configured.
+
+Sure, both makedumpfile and crash-utility (which walks the kernel page 
+tables from the core dump) use this (and similar) information currently 
+in the user-space.
+
+> On older kernels, user-space that needs this would have to assume the value it computes
+> from VA_BITs (also in vmcoreinfo) is the value in use.
+
+Yes, backward compatibility has been handled in the user-space already.
+
+> ---%<---
+>> I have sent out user-space patches for makedumpfile and crash-utility
+>> to add features for obtaining vabits_actual value from TCR_EL1.T1SZ (see
+>> [0] and [1]).
+>>
+>> Akashi reported that he was able to use this patchset and the user-space
+>> changes to get user-space working fine with the 52-bit kernel VA
+>> changes (see [2]).
+>>
+>> [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023966.html
+>> [1]. http://lists.infradead.org/pipermail/kexec/2019-November/024006.html
+>> [2]. http://lists.infradead.org/pipermail/kexec/2019-November/023992.html
+> ---%<---
+> 
+> This probably belongs in the cover letter instead of the commit log.
+
+Ok.
+
+> (From-memory: one of vmcore/kcore is virtually addressed, the other physically. Does this
+> fix your poblem in both cases?)
+> 
+> 
+>> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+>> index ca4c3e12d8c5..f78310ba65ea 100644
+>> --- a/arch/arm64/kernel/crash_core.c
+>> +++ b/arch/arm64/kernel/crash_core.c
+>> @@ -7,6 +7,13 @@
+>>   #include <linux/crash_core.h>
+>>   #include <asm/memory.h>
+> 
+> You need to include asm/sysreg.h for read_sysreg(), and asm/pgtable-hwdef.h for the macros
+> you added.
+
+Ok. Will check as I did not get any compilation errors without the same 
+and build-bot also did not raise a flag for the missing include files.
+
+>> +static inline u64 get_tcr_el1_t1sz(void);
+
+> Why do you need to do this?
+
+Without this I was getting a missing declaration error, while compiling 
+the code.
+
+>> +static inline u64 get_tcr_el1_t1sz(void)
+>> +{
+>> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
+>> +}
+> 
+> (We don't modify this one, and its always the same one very CPU, so this is fine.
+> This function is only called once when the stringy vmcoreinfo elf_note is created...)
+
+Right.
+
+>>   void arch_crash_save_vmcoreinfo(void)
+>>   {
+>>   	VMCOREINFO_NUMBER(VA_BITS);
+>> @@ -15,5 +22,7 @@ void arch_crash_save_vmcoreinfo(void)
+>>   						kimage_voffset);
+>>   	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+>>   						PHYS_OFFSET);
+>> +	vmcoreinfo_append_str("NUMBER(tcr_el1_t1sz)=0x%llx\n",
+>> +						get_tcr_el1_t1sz());
+> 
+> You document the name as being upper-case.
+> The two values either values either side are upper-case.
+Ok, will fix this in v6. Thanks for your inputs.
+
+>>   	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>>   }
 
 Thanks,
 Bhupesh
