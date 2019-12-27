@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
  helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ikfZt-0004fh-Bp
- for kexec@lists.infradead.org; Fri, 27 Dec 2019 02:42:15 +0000
-Date: Fri, 27 Dec 2019 10:41:58 +0800
-From: "'bhe@redhat.com'" <bhe@redhat.com>
-Subject: Re: [RFD] kdump, kaslr: how to fix the failure of reservation of
- crashkernel low memory due to physical kaslr
-Message-ID: <20191227024158.GD3355@MiWiFi-R3L-srv>
-References: <OSBPR01MB4006AF8B4D355200E385850E95280@OSBPR01MB4006.jpnprd01.prod.outlook.com>
- <20191225065914.GC3355@MiWiFi-R3L-srv>
- <TYAPR01MB4014912D759953FC24D6EE1B952B0@TYAPR01MB4014.jpnprd01.prod.outlook.com>
+ id 1ikial-00032J-U4
+ for kexec@lists.infradead.org; Fri, 27 Dec 2019 05:55:22 +0000
+Date: Fri, 27 Dec 2019 13:54:58 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v7 1/4] x86: kdump: move reserve_crashkernel_low() into
+ crash_core.c
+Message-ID: <20191227055458.GA14893@dhcp-128-65.nay.redhat.com>
+References: <20191223152349.180172-1-chenzhou10@huawei.com>
+ <20191223152349.180172-2-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <TYAPR01MB4014912D759953FC24D6EE1B952B0@TYAPR01MB4014.jpnprd01.prod.outlook.com>
+In-Reply-To: <20191223152349.180172-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,75 +26,304 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
-Cc: "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'ebiederm@xmission.com'" <ebiederm@xmission.com>, "'dyoung@redhat.com'" <dyoung@redhat.com>, "'mingo@kernel.org'" <mingo@kernel.org>, "'vgoyal@redhat.com'" <vgoyal@redhat.com>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: kbuild test robot <lkp@intel.com>, horms@verge.net.au, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, tglx@linutronix.de, will@kernel.org, linux-arm-kernel@lists.infradead.org
 
-On 12/26/19 at 09:22am, d.hatayama@fujitsu.com wrote:
+Hi,
+On 12/23/19 at 11:23pm, Chen Zhou wrote:
+> In preparation for supporting reserve_crashkernel_low in arm64 as
+> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
 > 
-> > -----Original Message-----
-> > 
-> > Hi HATAYAMA,
-> > 
-> > On 12/25/19 at 04:26am, d.hatayama@fujitsu.com wrote:
-> > > Currently, reservation of crashkernel low memory sometimes fails due
-> > > to a sparse memory caused by physical kaslr with the following
-> > > message:
-> > >
-> > >     Cannot reserve 256MB crashkernel low memory, please try smaller size.
-> > 
-> > I don't understand, may not get your point. KASLR will randomize the
-> > position of kernel image. However, kernel image usually takes up 50M
-> > memory. Under low 4G memory, how come it can't reserve 256M crashkernel
-> > low memory. Do you have the boot log of the failed case?
+> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
+> is specified. Different with x86_64, don't set low memory automatically.
+
+Do you have any reason for the difference?  I'd expect we have same
+logic if possible and remove some of the ifdefs.
+
 > 
-> Thanks for your comments and sorry for the insufficient explanation.
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  arch/x86/kernel/setup.c    | 62 ++++-----------------------------
+>  include/linux/crash_core.h |  3 ++
+>  include/linux/kexec.h      |  2 --
+>  kernel/crash_core.c        | 87 ++++++++++++++++++++++++++++++++++++++++++++++
+>  kernel/kexec_core.c        | 17 ---------
+>  5 files changed, 96 insertions(+), 75 deletions(-)
 > 
-> Low 4GB memory in our system is considerably limited. The size of the largest
-> contiguous free physical pages at the timing when kernel attempts at
-> reserving low memory for crash kernel is less than 512MB. Hence, if physical
-> kaslr inserts kernel image into the center of the chunk, every remaining
-> chunks have less than 256M size. Then, the failure occurs.
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index cedfe20..5f38942 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -486,59 +486,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>  #endif
+>  
+> -static int __init reserve_crashkernel_low(void)
+> -{
+> -#ifdef CONFIG_X86_64
+> -	unsigned long long base, low_base = 0, low_size = 0;
+> -	unsigned long total_low_mem;
+> -	int ret;
+> -
+> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> -
+> -	/* crashkernel=Y,low */
+> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+> -	if (ret) {
+> -		/*
+> -		 * two parts from kernel/dma/swiotlb.c:
+> -		 * -swiotlb size: user-specified with swiotlb= or default.
+> -		 *
+> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> -		 * to 8M for other buffers that may need to stay low too. Also
+> -		 * make sure we allocate enough extra low memory so that we
+> -		 * don't run out of DMA buffers for 32-bit devices.
+> -		 */
+> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+> -	} else {
+> -		/* passed with crashkernel=0,low ? */
+> -		if (!low_size)
+> -			return 0;
+> -	}
+> -
+> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> -	if (!low_base) {
+> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> -		       (unsigned long)(low_size >> 20));
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = memblock_reserve(low_base, low_size);
+> -	if (ret) {
+> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+> -		return ret;
+> -	}
+> -
+> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> -		(unsigned long)(low_size >> 20),
+> -		(unsigned long)(low_base >> 20),
+> -		(unsigned long)(total_low_mem >> 20));
+> -
+> -	crashk_low_res.start = low_base;
+> -	crashk_low_res.end   = low_base + low_size - 1;
+> -	insert_resource(&iomem_resource, &crashk_low_res);
+> -#endif
+> -	return 0;
+> -}
+> -
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_size, crash_base, total_mem;
+> @@ -602,9 +549,12 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> -		memblock_free(crash_base, crash_size);
+> -		return;
+> +	if (crash_base >= (1ULL << 32)) {
+> +		if (reserve_crashkernel_low()) {
+> +			memblock_free(crash_base, crash_size);
+> +			return;
+> +		}
+> +		insert_resource(&iomem_resource, &crashk_low_res);
 
-OK, this is truly extreme case, thanks for sharing.
+Some specific reason to move insert_resouce out of the
+reserve_crashkernel_low function?
 
-Then I have several questions about it:
+>  	}
+>  
+>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 525510a..4df8c0b 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  extern unsigned char *vmcoreinfo_data;
+>  extern size_t vmcoreinfo_size;
+>  extern u32 *vmcoreinfo_note;
+> +extern struct resource crashk_res;
+> +extern struct resource crashk_low_res;
+>  
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len);
+> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+> +int __init reserve_crashkernel_low(void);
+>  
+>  #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 1776eb2..5d5d963 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
+>  
+>  /* Location of a reserved region to hold the crash kernel.
+>   */
+> -extern struct resource crashk_res;
+> -extern struct resource crashk_low_res;
+>  extern note_buf_t __percpu *crash_notes;
+>  
+>  /* flag to track if kexec reboot is in progress */
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 9f1557b..eb72fd6 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/memblock.h>
+> +#include <linux/swiotlb.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
+>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+>  static unsigned char *vmcoreinfo_data_safecopy;
+>  
+> +/* Location of the reserved area for the crash kernel */
+> +struct resource crashk_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +struct resource crashk_low_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +
+>  /*
+>   * parsing the "crashkernel" commandline
+>   *
+> @@ -292,6 +310,75 @@ int __init parse_crashkernel_low(char *cmdline,
+>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>  }
+>  
+> +#if defined(CONFIG_X86_64)
+> +#define CRASH_ALIGN		SZ_16M
+> +#elif defined(CONFIG_ARM64)
+> +#define CRASH_ALIGN		SZ_2M
+> +#endif
 
-1) Can we use crashkernel=high, crashkernel=low, to fix this issue?
-I believe in this system you told, it must be a high-end server, should
-have hardware iommu depolyed. It doesn't need 256M low memory actually,
-maybe 128M, even 64M is enough?
+I think no need to have the #ifdef, although I can not think out of
+reason we have 16M for X86, maybe move it to 2M as well if no other
+objections.  Then it will be easier to reserve crashkernel successfully
+considering nowadays we have KASLR and other stuff it becomes harder.
 
-Asking this is because the 256M is default setting, default value only
-covers general cases.
+> +
+> +int __init reserve_crashkernel_low(void)
+> +{
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+> +	unsigned long long base, low_base = 0, low_size = 0;
+> +	unsigned long total_low_mem;
+> +	int ret;
+> +
+> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +
+> +	/* crashkernel=Y,low */
+> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
+> +			&base);
+> +	if (ret) {
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * two parts from lib/swiotlb.c:
+> +		 * -swiotlb size: user-specified with swiotlb= or default.
+> +		 *
+> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> +		 * to 8M for other buffers that may need to stay low too. Also
+> +		 * make sure we allocate enough extra low memory so that we
+> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 */
+> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+> +				256UL << 20);
+> +#else
+> +		/*
+> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
+> +		 * specified.
+> +		 */
+> +		return -EINVAL;
+> +#endif
 
-2) What if the system becomes more extreme, like the largest contiguous
-free physical pages is less than 256M, even less than 128M?
+As said before, can you explore about why it needs different logic, it
+would be good to keep two arches same.
 
-Even though kernel image is limited to above 4G, whose fault is it? and
-how can we fix it in this case?
-
-3) If we really add limitation, maybe add kaslr_high to limit KASLR to
-only put kernel image above 4G? 
-
- 
-> > 
-...
- 
-> > Someone ever told that some systems may not have low 4G memory since
-> > they own hardware iommu. In real life, I never see such kind of system,
-> > and most of them can give 256M crashkernel memory a satisfactory result.
-> > Unless you reserve more than 1G under low 4G, it could fail because of
-> > kinds of complicated memory reservations there.
+> +	} else {
+> +		/* passed with crashkernel=0,low ? */
+> +		if (!low_size)
+> +			return 0;
+> +	}
+> +
+> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	if (!low_base) {
+> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> +		       (unsigned long)(low_size >> 20));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = memblock_reserve(low_base, low_size);
+> +	if (ret) {
+> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+> +				__func__);
+> +		return ret;
+> +	}
+> +
+> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> +		(unsigned long)(low_size >> 20),
+> +		(unsigned long)(low_base >> 20),
+> +		(unsigned long)(total_low_mem >> 20));
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end   = low_base + low_size - 1;
+> +#endif
+> +	return 0;
+> +}
+> +
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len)
+>  {
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 15d70a9..458d093 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
+>  /* Flag to indicate we are going to kexec a new kernel */
+>  bool kexec_in_progress = false;
+>  
+> -
+> -/* Location of the reserved area for the crash kernel */
+> -struct resource crashk_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -struct resource crashk_low_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -
+>  int kexec_should_crash(struct task_struct *p)
+>  {
+>  	/*
+> -- 
+> 2.7.4
 > 
-> I'm surprised to hear such system without low 4GB memory and I wonder
-> how such system works well without restriction of memory access range
-> in early runtime mode on x86 such as real mode.
-
-I think they meant almost no low memory, and it's a prototype machine to
-experiment. Can't remember the detail.
 
 Thanks
-Baoquan
+Dave
 
 
 _______________________________________________
