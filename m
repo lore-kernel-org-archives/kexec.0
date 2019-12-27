@@ -1,15 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mail-eopbgr1300058.outbound.protection.outlook.com
+ ([40.107.130.58] helo=APC01-HK2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1iktwV-0004NV-Kb
- for kexec@lists.infradead.org; Fri, 27 Dec 2019 18:02:33 +0000
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.14 06/57] x86/efi: Update e820 with reserved EFI
- boot services data to fix kexec breakage
-Date: Fri, 27 Dec 2019 13:01:31 -0500
-Message-Id: <20191227180222.7076-6-sashal@kernel.org>
-In-Reply-To: <20191227180222.7076-1-sashal@kernel.org>
-References: <20191227180222.7076-1-sashal@kernel.org>
+ id 1ikxAn-0004QY-Iv
+ for kexec@lists.infradead.org; Fri, 27 Dec 2019 21:29:32 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH] makedumpfile/s390: Add get_kaslr_offset() for s390x
+Date: Fri, 27 Dec 2019 21:29:23 +0000
+Message-ID: <TY2PR01MB5210EBE26FC1603B3E7FF491DD2A0@TY2PR01MB5210.jpnprd01.prod.outlook.com>
+References: <20191203222725.64734-1-zaslonko@linux.ibm.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03597AB9@BPXM09GP.gisp.nec.co.jp>
+ <323f61d4-6aab-a0b4-faa3-e41756fb9913@linux.ibm.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03597F4E@BPXM09GP.gisp.nec.co.jp>
+ <8fd807f1-c296-1a34-e42a-a102df62f3a0@linux.ibm.com>
+ <4AE2DC15AC0B8543882A74EA0D43DBEC03598540@BPXM09GP.gisp.nec.co.jp>
+ <726b8852-77af-b440-99b2-6b5a7b05e674@redhat.com>
+ <2aa868b8-83f4-cb23-9acf-178a9ab8144a@redhat.com>
+In-Reply-To: <2aa868b8-83f4-cb23-9acf-178a9ab8144a@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,95 +28,182 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Sasha Levin <sashal@kernel.org>, Michael Weiser <michael@weiser.dinsnail.net>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Peter Zijlstra <peterz@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>, x86@kernel.org, kexec@lists.infradead.org, platform-driver-x86@vger.kernel.org, Borislav Petkov <bp@alien8.de>, "Eric W . Biederman" <ebiederm@xmission.com>, "H . Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: lijiang <lijiang@redhat.com>
+Cc: Mikhail Zaslonko <zaslonko@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
 
-From: Dave Young <dyoung@redhat.com>
-
-[ Upstream commit af164898482817a1d487964b68f3c21bae7a1beb ]
-
-Michael Weiser reported that he got this error during a kexec rebooting:
-
-  esrt: Unsupported ESRT version 2904149718861218184.
-
-The ESRT memory stays in EFI boot services data, and it was reserved
-in kernel via efi_mem_reserve().  The initial purpose of the reservation
-is to reuse the EFI boot services data across kexec reboot. For example
-the BGRT image data and some ESRT memory like Michael reported.
-
-But although the memory is reserved it is not updated in the X86 E820 table,
-and kexec_file_load() iterates system RAM in the IO resource list to find places
-for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-initramfs overwrote the ESRT memory and then the failure happened.
-
-Since kexec_file_load() depends on the E820 table being updated, just fix this
-by updating the reserved EFI boot services memory as reserved type in E820.
-
-Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-bypassed in the reservation code path because they are assumed as reserved.
-
-But the reservation is still needed for multiple kexec reboots,
-and it is the only possible case we come here thus just drop the code
-chunk, then everything works without side effects.
-
-On my machine the ESRT memory sits in an EFI runtime data range, it does
-not trigger the problem, but I successfully tested with BGRT instead.
-both kexec_load() and kexec_file_load() work and kdump works as well.
-
-[ mingo: Edited the changelog. ]
-
-Reported-by: Michael Weiser <michael@weiser.dinsnail.net>
-Tested-by: Michael Weiser <michael@weiser.dinsnail.net>
-Signed-off-by: Dave Young <dyoung@redhat.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Eric W. Biederman <ebiederm@xmission.com>
-Cc: H. Peter Anvin <hpa@zytor.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: kexec@lists.infradead.org
-Cc: linux-efi@vger.kernel.org
-Link: https://lkml.kernel.org/r/20191204075233.GA10520@dhcp-128-65.nay.redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/x86/platform/efi/quirks.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
-
-diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-index 5b513ccffde4..cadd7fd290fa 100644
---- a/arch/x86/platform/efi/quirks.c
-+++ b/arch/x86/platform/efi/quirks.c
-@@ -257,10 +257,6 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 		return;
- 	}
- 
--	/* No need to reserve regions that will never be freed. */
--	if (md.attribute & EFI_MEMORY_RUNTIME)
--		return;
--
- 	size += addr % EFI_PAGE_SIZE;
- 	size = round_up(size, EFI_PAGE_SIZE);
- 	addr = round_down(addr, EFI_PAGE_SIZE);
-@@ -290,6 +286,8 @@ void __init efi_arch_mem_reserve(phys_addr_t addr, u64 size)
- 	early_memunmap(new, new_size);
- 
- 	efi_memmap_install(new_phys, num_entries);
-+	e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-+	e820__update_table(e820_table);
- }
- 
- /*
--- 
-2.20.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgTGlhbmJvLA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IOWcqCAyMDE55bm0
+MTLmnIgyNuaXpSAxMTozOCwgbGlqaWFuZyDlhpnpgZM6DQo+ID4gSGksIEthenUgYW5kIE1pa2hh
+aWwsDQo+ID4NCj4gPj4gSGkgTWlraGFpbCwNCj4gPj4NCj4gPj4+IC0tLS0tT3JpZ2luYWwgTWVz
+c2FnZS0tLS0tDQo+ID4+PiBIaSwNCj4gPj4+DQo+ID4+PiBPbiAxMi4xMi4yMDE5IDE3OjEyLCBL
+YXp1aGl0byBIYWdpbyB3cm90ZToNCj4gPj4+PiBIaSBNaWtoYWlsLA0KPiA+Pj4+DQo+ID4+Pj4+
+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+IEhlbGxvIEthenUsDQo+ID4+Pj4+
+DQo+ID4+Pj4+IEkgdGhpbmsgd2UgY2FuIHRyeSB0byBnZW5lcmFsaXplIHRoZSBrYXNsciBvZmZz
+ZXQgZXh0cmFjdGlvbi4NCj4gPj4+Pj4gSSB3b24ndCBzcGVhayBmb3Igb3RoZXIgYXJjaGl0ZWN0
+dXJlcywgYnV0IGZvciBzMzkwIHRoYXQgZ2V0X2thc2xyX29mZnNldF9hcm02NCgpDQo+ID4+Pj4+
+IHNob3VsZCB3b3JrIGZpbmUuIFRoZSBvbmx5IGNvbmNlcm4gb2YgbWluZSBpcyB0aGlzIFRPRE8g
+c3RhdGVtZW50Og0KPiA+Pj4+Pg0KPiA+Pj4+PiBpZiAoX3RleHQgPD0gdmFkZHIgJiYgdmFkZHIg
+PD0gX2VuZCkgew0KPiA+Pj4+PiAJREVCVUdfTVNHKCJpbmZvLT5rYXNscl9vZmZzZXQ6ICVseFxu
+IiwgaW5mby0+a2FzbHJfb2Zmc2V0KTsNCj4gPj4+Pj4gCXJldHVybiBpbmZvLT5rYXNscl9vZmZz
+ZXQ7DQo+ID4+Pj4+IAl9IGVsc2Ugew0KPiA+Pj4+PiAJLyoNCj4gPj4+Pj4gCSogVE9ETzogd2Ug
+bmVlZCB0byBjaGVjayBpZiBpdCBpcyB2bWFsbG9jL3ZtbWVtbWFwL21vZHVsZQ0KPiA+Pj4+PiAJ
+KiBhZGRyZXNzLCB3ZSB3aWxsIGhhdmUgZGlmZmVyZW50IG9mZnNldA0KPiA+Pj4+PiAJKi8NCj4g
+Pj4+Pj4gCXJldHVybiAwOw0KPiA+Pj4+PiB9DQo+ID4+Pj4+DQo+ID4+Pj4+IENvdWxkIHlvdSBl
+eHBsYWluIHRoaXMgb25lPw0KPiA+Pj4+DQo+ID4+Pj4gUHJvYmFibHkgaXQgd2FzIGNvbnNpZGVy
+ZWQgdGhhdCB0aGUgY2hlY2sgd291bGQgYmUgbmVlZGVkIHRvIHN1cHBvcnQNCj4gPj4+PiB0aGUg
+d2hvbGUgS0FTTFIgYmVoYXZpb3Igd2hlbiBnZXRfa2FzbHJfb2Zmc2V0X3g4Nl82NCgpIHdhcyB3
+cml0dGVuDQo+ID4+Pj4gb3JpZ2luYWxseS4NCj4gPj4+Pg0KPiA+Pj4+IEJ1dCBpbiB0aGUgY3Vy
+cmVudCBtYWtlZHVtcGZpbGUgZm9yIHg4Nl82NCBhbmQgYXJtNjQgc3VwcG9ydGluZyBLQVNMUiwN
+Cj4gPj4+PiB0aGUgb2Zmc2V0IHdlIG5lZWQgaXMgdGhlIG9uZSBmb3Igc3ltYm9sIGFkZHJlc3Nl
+cyBpbiB2bWxpbnV4IG9ubHkuDQo+ID4+Pj4gQXMgSSBzYWlkIGJlbG93LCBtb2R1bGUgc3ltYm9s
+IGFkZHJlc3NlcyBhcmUgcmV0cmlldmVkIGZyb20gdm1jb3JlLg0KPiA+Pj4+IE90aGVyIGFkZHJl
+c3NlcyBzaG91bGQgbm90IGJlIHBhc3NlZCB0byB0aGUgZnVuY3Rpb24gZm9yIG5vdywgYXMgZmFy
+DQo+ID4+Pj4gYXMgSSBrbm93Lg0KPiA+Pj4+DQo+ID4+Pj4gU28gSSB0aGluayB0aGUgVE9ETyBj
+b21tZW50IGlzIGNvbmZ1c2luZywgYW5kIGl0IHdvdWxkIGJlIGJldHRlciB0bw0KPiA+Pj4+IHJl
+bW92ZSBpdCBvciBjaGFuZ2UgaXQgdG8gc29tZXRoaW5nIGxpa2U6DQo+ID4+Pj4gLyoNCj4gPj4+
+PiAgKiBSZXR1cm5zIDAgaWYgdmFkZHIgZG9lcyBub3QgbmVlZCB0aGUgb2Zmc2V0IHRvIGJlIGFk
+ZGVkLA0KPiA+Pj4+ICAqIGUuZy4gZm9yIG1vZHVsZSBhZGRyZXNzLg0KPiA+Pj4+ICAqLw0KPiA+
+Pj4+DQo+ID4+Pj4gQnV0IGlmIHMzOTAgdXNlcyBnZXRfa2FzbHJfb2Zmc2V0KCkgaW4gaXRzIGFy
+Y2gtc3BlY2lmaWMgY29kZSB0bw0KPiA+Pj4+IGFkanVzdCBhZGRyZXNzZXMgb3RoZXIgdGhhbiBr
+ZXJuZWwgdGV4dCBhZGRyZXNzLCB3ZSBtaWdodCBuZWVkIHRvDQo+ID4+Pj4gbW9kaWZ5IGl0IGZv
+ciBzMzkwLCBub3QgZ2VuZXJhbGl6ZSBpdC4NCj4gPj4+DQo+ID4+PiBDdXJyZW50bHksIHMzOTAg
+ZG9lc24ndCB1c2UgZ2V0X2thc2xyX29mZnNldCgpIGluIGl0cyBhcmNoLXNwZWNpZmljDQo+ID4+
+PiBjb2RlLg0KPiA+Pg0KPiA+PiBPSywgSSBwdXNoZWQgYSBwYXRjaCB0aGF0IGdlbmVyYWxpemVz
+IGl0IHRvIG15IHRlc3QgcmVwb3NpdG9yeS4NCj4gPj4gQ291bGQgeW91IGVuYWJsZSBzMzkwIHRv
+IHVzZSBpdCBhbmQgdGVzdD8NCj4gPj4gaHR0cHM6Ly9naXRodWIuY29tL2staGFnaW8vbWFrZWR1
+bXBmaWxlL3RyZWUvYWRkLWdldF9rYXNscl9vZmZzZXRfZ2VuZXJhbA0KPiA+Pg0KPiA+DQo+ID4g
+SSBlbmFibGVkIGl0IG9uIHMzOTAgYXMgYmVsb3cgYW5kIHRlc3RlZCwgaXQgd29ya2VkLg0KDQpU
+aGFuayB5b3UgZm9yIHRlc3RpbmcuDQoNCj4gPg0KPiA+IEBAIC0xMDc1LDcgKzEwNzUsNyBAQCBp
+bnQgaXNfaW9tZW1fcGh5c19hZGRyX3MzOTB4KHVuc2lnbmVkIGxvbmcgYWRkcik7DQo+ID4gICNk
+ZWZpbmUgZ2V0X3BoeXNfYmFzZSgpICAgICAgICAgICAgICAgIHN0dWJfdHJ1ZSgpDQo+ID4gICNk
+ZWZpbmUgZ2V0X21hY2hkZXBfaW5mbygpICAgICBnZXRfbWFjaGRlcF9pbmZvX3MzOTB4KCkNCj4g
+PiAgI2RlZmluZSBnZXRfdmVyc2lvbmRlcF9pbmZvKCkgIHN0dWJfdHJ1ZSgpDQo+ID4gLSNkZWZp
+bmUgZ2V0X2thc2xyX29mZnNldChYKSAgICBzdHViX2ZhbHNlKCkNCj4gPiArI2RlZmluZSBnZXRf
+a2FzbHJfb2Zmc2V0KFgpICAgIGdldF9rYXNscl9vZmZzZXRfZ2VuZXJhbChYKQ0KPiA+ICAjZGVm
+aW5lIHZhZGRyX3RvX3BhZGRyKFgpICAgICAgdmFkZHJfdG9fcGFkZHJfczM5MHgoWCkNCj4gPg0K
+PiA+IEJ1dCwgdGhlcmUgaXMgc3RpbGwgYSBwcm9ibGVtIHRoYXQgbmVlZHMgdG8gYmUgaW1wcm92
+ZWQuIEluIHRoZSBmaW5kX2thc2xyX29mZnNldHMoKSwNCj4gPiB0aGUgdmFsdWUgb2YgU1lNQk9M
+KF9zdGV4dCkgaXMgYWx3YXlzIDAoemVybykgYW5kIGl0IGlzIHBhc3NlZCB0byB0aGUgZ2V0X2th
+c2xyX29mZnNldCgpLg0KPiA+IEZvciB0aGUgZm9sbG93aW5nIGNvZGUgaW4gdGhlIGdldF9rYXNs
+cl9vZmZzZXRfZ2VuZXJhbCgpLCBpdCBkb2VzIG5vdCB3b3JrIGFzIGV4cGVjdGVkLg0KPiA+IC4u
+Lg0KPiA+IAlpZiAoX3RleHQgPD0gdmFkZHIgJiYgdmFkZHIgPD0gX2VuZCkNCj4gPiAJCXJldHVy
+biBpbmZvLT5rYXNscl9vZmZzZXQ7DQo+ID4gCWVsc2UNCj4gPiAJCXJldHVybiAwOw0KDQpJIGRv
+bid0IGtub3cgd2h5IHRoZSBTWU1CT0woX3N0ZXh0KSBpcyBwYXNzZWQgdG8gdGhlIGdldF9rYXNs
+cl9vZmZzZXQoKSB0aGVyZSwgYnV0DQpzaW5jZSB0aGUgcmV0dXJuIHZhbHVlIG9mIGdldF9rYXNs
+cl9vZmZzZXQoKSBpcyBub3QgdXNlZCBpbiB0aGUgZmluZF9rYXNscl9vZmZzZXRzKCksDQppdCdz
+IG1lYW5pbmdsZXNzIGFuZCBub3QgaGFybWZ1bC4gU28gaXQgaXMgbm90IHdvcnRoIGRvaW5nIFJF
+QURfU1lNQk9MKF9zdGV4dCkgdGhlcmUNCmZvciBub3cuDQoNCj4gDQo+IEluIGFkZGl0aW9uLCB0
+aGUgYWJvdmUgY29kZSBjb25mdXNlZCBtZSwgaXQgd2lsbCBhbHdheXMgcmV0dXJuIDAgb24gczM5
+MChwbGVhc2UgcmVmZXIgdG8gbXkgbG9ncykuDQoNClRoZSBhaW0gb2YgZ2V0X2thc2xyX29mZnNl
+dCgpIGhlcmUgaXMgb25seSBzZXR0aW5nIGluZm8tPmthc2xyX29mZnNldCB0byB0aGUgdmFsdWUN
+CmZyb20gdm1jb3JlaW5mbyBmb3IgdGhlIFNZTUJPTF9JTklUKCkgbWFjcm8uDQooZ2V0X2thc2xy
+X29mZnNldCgpIHJldHVybnMgdGhlIGthc2xyIG9mZnNldCBpbiB0aGUgcmVzb2x2ZV9jb25maWdf
+ZW50cnkoKS4pDQoNCkJ1dCB5ZWFoLCB0aGUgZ2V0X2thc2xyX29mZnNldChTWU1CT0woX3N0ZXh0
+KSkgaXMgY29uZnVzaW5nIGFuZCBub3QgZ29vZC4NClBhc3NpbmcgMCBtaWdodCBiZSBhIGJpdCBi
+ZXR0ZXIuLj8NCg0KVGhhbmtzLA0KS2F6dQ0KDQo+IA0KPiBUaGFua3MuDQo+IA0KPiA+IC4uLg0K
+PiA+IEhlcmUgaXMgbXkgbG9nOg0KPiA+IGdldF9rYXNscl9vZmZzZXRfZ2VuZXJhbDogaW5mby0+
+a2FzbHJfb2Zmc2V0OiA2N2ViYzAwMCwgX3RleHQ6MTAwMDAwLCBfZW5kOjEwYmEwMDAsIHZhZGRy
+OjANCj4gPg0KPiA+IEFmdGVyIGFwcGxpZWQgdGhlIGZvbGxvd2luZyBwYXRjaCwgZ290IHRoZSBl
+eHBlY3RlZCByZXN1bHQuDQo+ID4gIGludA0KPiA+ICBmaW5kX2thc2xyX29mZnNldHMoKQ0KPiA+
+ICB7DQo+ID4gQEAgLTM5NzMsNiArNDA0MiwxMSBAQCBmaW5kX2thc2xyX29mZnNldHMoKQ0KPiA+
+ICAgICAgICAgICogY2FsbGVkIHRoaXMgZnVuY3Rpb24gYmV0d2VlbiBvcGVuX3ZtY29yZWluZm8o
+KSBhbmQNCj4gPiAgICAgICAgICAqIGNsb3NlX3ZtY29yZWluZm8oKQ0KPiA+ICAgICAgICAgICov
+DQo+ID4gKyAgICAgICBSRUFEX1NZTUJPTCgiX3N0ZXh0IiwgX3N0ZXh0KTsNCj4gPiArICAgICAg
+IGlmIChTWU1CT0woX3N0ZXh0KSA9PSBOT1RfRk9VTkRfU1lNQk9MKSB7DQo+ID4gKyAgICAgICAg
+ICAgICAgICBFUlJNU0coIkNhbid0IGdldCB0aGUgc3ltYm9sIG9mIF9zdGV4dC5cbiIpOw0KPiA+
+ICsgICAgICAgICAgICAgICAgZ290byBvdXQ7DQo+ID4gKyAgICAgICB9DQo+ID4gICAgICAgICBn
+ZXRfa2FzbHJfb2Zmc2V0KFNZTUJPTChfc3RleHQpKTsNCj4gPg0KPiA+IEhlcmUgaXMgbXkgbG9n
+Og0KPiA+IGdldF9rYXNscl9vZmZzZXRfZ2VuZXJhbDogaW5mby0+a2FzbHJfb2Zmc2V0OiA2N2Vi
+YzAwMCwgX3RleHQ6MTAwMDAwLCBfZW5kOjEwYmEwMDAsIHZhZGRyOjY3ZmJjMDAwDQo+ID4NCj4g
+PiBCYXNpY2FsbHksIGJlZm9yZSB1c2luZyB0aGUgdmFsdWUgb2YgU1lNQk9MKF9zdGV4dCksIG5l
+ZWQgdG8gZW5zdXJlIHRoYXQgdGhlIFNZTUJPTChfc3RleHQpIGlzIHBhcnNlZA0KPiA+IGNvcnJl
+Y3RseS4NCj4gPg0KPiA+IFRoYW5rcy4NCj4gPg0KPiA+PiBUaGFua3MsDQo+ID4+IEthenUNCj4g
+Pj4NCj4gPj4+DQo+ID4+Pj4NCj4gPj4+PiBUaGFua3MsDQo+ID4+Pj4gS2F6dQ0KPiA+Pj4+DQo+
+ID4+Pj4+DQo+ID4+Pj4+IFRoYW5rcywNCj4gPj4+Pj4gTWlraGFpbA0KPiA+Pj4+Pg0KPiA+Pj4+
+PiBPbiAwOS4xMi4yMDE5IDIzOjAyLCBLYXp1aGl0byBIYWdpbyB3cm90ZToNCj4gPj4+Pj4+IEhp
+IE1pa2hhaWwsDQo+ID4+Pj4+Pg0KPiA+Pj4+Pj4gU29ycnkgZm9yIGxhdGUgcmVwbHkuDQo+ID4+
+Pj4+Pg0KPiA+Pj4+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4+Pj4+Pj4gU2lu
+Y2Uga2VybmVsIHY1LjIgS0FTTFIgaXMgc3VwcG9ydGVkIG9uIHMzOTAuIEluIG1ha2VkdW1wZmls
+ZSBob3dldmVyIG5vDQo+ID4+Pj4+Pj4gc3VwcG9ydCBoYXMgYmVlbiBhZGRlZCB5ZXQuIFRoaXMg
+cGF0Y2ggYWRkcyB0aGUgYXJjaCBzcGVjaWZpYyBmdW5jdGlvbg0KPiA+Pj4+Pj4+IGdldF9rYXNs
+cl9vZmZzZXQoKSBmb3IgczM5MHguDQo+ID4+Pj4+Pj4gU2luY2UgdGhlIHZhbHVlcyBpbiB2bWNv
+cmVpbmZvIGFyZSBhbHJlYWR5IHJlbG9jYXRlZCwgdGhlIHBhdGNoIGlzDQo+ID4+Pj4+Pj4gbWFp
+bmx5IHJlbGV2YW50IGZvciB2bWxpbnV4IHByb2Nlc3NpbmcgKC14IG9wdGlvbikuDQo+ID4+Pj4+
+Pg0KPiA+Pj4+Pj4gSW4gdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gb2YgbWFrZWR1bXBmaWxl
+LCB0aGUgZ2V0X2thc2xyX29mZnNldCh2YWRkcikNCj4gPj4+Pj4+IGlzIHN1cHBvc2VkIHRvIHJl
+dHVybiB0aGUgS0FTTFIgb2Zmc2V0IG9ubHkgd2hlbiB0aGUgb2Zmc2V0IGlzIG5lZWRlZCB0bw0K
+PiA+Pj4+Pj4gYWRkIHRvIHRoZSB2YWRkci4gIFNvIGdlbmVyYWxseSBzeW1ib2xzIGZyb20ga2Vy
+bmVsICh2bWxpbnV4KSBuZWVkIGl0LCBidXQNCj4gPj4+Pj4+IHN5bWJvbHMgZnJvbSBtb2R1bGVz
+IGFyZSByZXNvbHZlZCBkeW5hbWljYWxseSBhbmQgZG9uJ3QgbmVlZCB0aGUgb2Zmc2V0Lg0KPiA+
+Pj4+PiBcPg0KPiA+Pj4+Pj4gVGhpcyBwYXRjaCBhbHdheXMgcmV0dXJucyB0aGUgb2Zmc2V0IGlm
+IGFueSwgYXMgYSByZXN1bHQsIEkgZ3Vlc3MgdGhpcyBwYXRjaA0KPiA+Pj4+Pj4gd2lsbCBub3Qg
+d29yayBhcyBleHBlY3RlZCB3aXRoIG1vZHVsZSBzeW1ib2xzIGluIGZpbHRlciBjb25maWcgZmls
+ZS4NCj4gPj4+Pj4+DQo+ID4+Pj4+PiBTby4uLiBIb3cgYWJvdXQgbWFraW5nIGdldF9rYXNscl9v
+ZmZzZXRfYXJtNjQoKSBnZW5lcmFsIGZvciBvdGhlciBhcmNocw0KPiA+Pj4+Pj4gKGdldF9rYXNs
+cl9vZmZzZXRfZ2VuZXJhbCgpIG9yIHNvbWV0aGluZyksIHRoZW4gdXNpbmcgaXQgYWxzbyBmb3Ig
+czM5MD8NCj4gPj4+Pj4+IElmIE9LLCBJIGNhbiBkbyB0aGF0IGdlbmVyYWxpemF0aW9uLg0KPiA+
+Pj4+Pj4NCj4gPj4+Pj4+IFRoYW5rcywNCj4gPj4+Pj4+IEthenUNCj4gPj4+Pj4+DQo+ID4+Pj4+
+Pj4NCj4gPj4+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwIFJ1ZG8gPHBydWRvQGxpbnV4Lmli
+bS5jb20+DQo+ID4+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogTWlraGFpbCBaYXNsb25rbyA8emFzbG9u
+a29AbGludXguaWJtLmNvbT4NCj4gPj4+Pj4+PiAtLS0NCj4gPj4+Pj4+PiAgYXJjaC9zMzkweC5j
+ICAgfCAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKw0KPiA+Pj4+Pj4+ICBtYWtl
+ZHVtcGZpbGUuaCB8ICAzICsrLQ0KPiA+Pj4+Pj4+ICAyIGZpbGVzIGNoYW5nZWQsIDM0IGluc2Vy
+dGlvbnMoKyksIDEgZGVsZXRpb24oLSkNCj4gPj4+Pj4+Pg0KPiA+Pj4+Pj4+IGRpZmYgLS1naXQg
+YS9hcmNoL3MzOTB4LmMgYi9hcmNoL3MzOTB4LmMNCj4gPj4+Pj4+PiBpbmRleCBiZjlkNThlLi44
+OTJkZjE0IDEwMDY0NA0KPiA+Pj4+Pj4+IC0tLSBhL2FyY2gvczM5MHguYw0KPiA+Pj4+Pj4+ICsr
+KyBiL2FyY2gvczM5MHguYw0KPiA+Pj4+Pj4+IEBAIC0xMjIsNiArMTIyLDM4IEBAIGdldF9tYWNo
+ZGVwX2luZm9fczM5MHgodm9pZCkNCj4gPj4+Pj4+PiAgCXJldHVybiBUUlVFOw0KPiA+Pj4+Pj4+
+ICB9DQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+PiArdW5zaWduZWQgbG9uZw0KPiA+Pj4+Pj4+ICtnZXRf
+a2FzbHJfb2Zmc2V0X3MzOTB4KHVuc2lnbmVkIGxvbmcgdmFkZHIpDQo+ID4+Pj4+Pj4gK3sNCj4g
+Pj4+Pj4+PiArCXVuc2lnbmVkIGludCBpOw0KPiA+Pj4+Pj4+ICsJY2hhciBidWZbQlVGU0laRV9G
+R0VUU10sICplbmRwOw0KPiA+Pj4+Pj4+ICsNCj4gPj4+Pj4+PiArCWlmICghaW5mby0+ZmlsZV92
+bWNvcmVpbmZvKQ0KPiA+Pj4+Pj4+ICsJCXJldHVybiBGQUxTRTsNCj4gPj4+Pj4+PiArDQo+ID4+
+Pj4+Pj4gKwlpZiAoZnNlZWsoaW5mby0+ZmlsZV92bWNvcmVpbmZvLCAwLCBTRUVLX1NFVCkgPCAw
+KSB7DQo+ID4+Pj4+Pj4gKwkJRVJSTVNHKCJDYW4ndCBzZWVrIHRoZSB2bWNvcmVpbmZvIGZpbGUo
+JXMpLiAlc1xuIiwNCj4gPj4+Pj4+PiArCQkgICAgICAgaW5mby0+bmFtZV92bWNvcmVpbmZvLCBz
+dHJlcnJvcihlcnJubykpOw0KPiA+Pj4+Pj4+ICsJCXJldHVybiBGQUxTRTsNCj4gPj4+Pj4+PiAr
+CX0NCj4gPj4+Pj4+PiArDQo+ID4+Pj4+Pj4gKwl3aGlsZSAoZmdldHMoYnVmLCBCVUZTSVpFX0ZH
+RVRTLCBpbmZvLT5maWxlX3ZtY29yZWluZm8pKSB7DQo+ID4+Pj4+Pj4gKwkJaSA9IHN0cmxlbihi
+dWYpOw0KPiA+Pj4+Pj4+ICsJCWlmICghaSkNCj4gPj4+Pj4+PiArCQkJYnJlYWs7DQo+ID4+Pj4+
+Pj4gKwkJaWYgKGJ1ZltpIC0gMV0gPT0gJ1xuJykNCj4gPj4+Pj4+PiArCQkJYnVmW2kgLSAxXSA9
+ICdcMCc7DQo+ID4+Pj4+Pj4gKwkJaWYgKHN0cm5jbXAoYnVmLCBTVFJfS0VSTkVMT0ZGU0VULA0K
+PiA+Pj4+Pj4+ICsJCQkgICAgc3RybGVuKFNUUl9LRVJORUxPRkZTRVQpKSA9PSAwKSB7DQo+ID4+
+Pj4+Pj4gKwkJCWluZm8tPmthc2xyX29mZnNldCA9DQo+ID4+Pj4+Pj4gKwkJCQlzdHJ0b3VsKGJ1
+ZiArIHN0cmxlbihTVFJfS0VSTkVMT0ZGU0VUKSwgJmVuZHAsIDE2KTsNCj4gPj4+Pj4+PiArCQkJ
+REVCVUdfTVNHKCJpbmZvLT5rYXNscl9vZmZzZXQ6ICVseFxuIiwgaW5mby0+a2FzbHJfb2Zmc2V0
+KTsNCj4gPj4+Pj4+PiArCQl9DQo+ID4+Pj4+Pj4gKwl9DQo+ID4+Pj4+Pj4gKw0KPiA+Pj4+Pj4+
+ICsJcmV0dXJuIGluZm8tPmthc2xyX29mZnNldDsNCj4gPj4+Pj4+PiArfQ0KPiA+Pj4+Pj4+ICsN
+Cj4gPj4+Pj4+PiAgc3RhdGljIGludA0KPiA+Pj4+Pj4+ICBpc192bWFsbG9jX2FkZHJfczM5MHgo
+dW5zaWduZWQgbG9uZyB2YWRkcikNCj4gPj4+Pj4+PiAgew0KPiA+Pj4+Pj4+IGRpZmYgLS1naXQg
+YS9tYWtlZHVtcGZpbGUuaCBiL21ha2VkdW1wZmlsZS5oDQo+ID4+Pj4+Pj4gaW5kZXggYWMxMWU5
+MC4uMjZmNjI0NyAxMDA2NDQNCj4gPj4+Pj4+PiAtLS0gYS9tYWtlZHVtcGZpbGUuaA0KPiA+Pj4+
+Pj4+ICsrKyBiL21ha2VkdW1wZmlsZS5oDQo+ID4+Pj4+Pj4gQEAgLTEwNzEsMTEgKzEwNzEsMTIg
+QEAgdW5zaWduZWQgbG9uZyBsb25nIHZhZGRyX3RvX3BhZGRyX3BwYyh1bnNpZ25lZCBsb25nIHZh
+ZGRyKTsNCj4gPj4+Pj4+PiAgaW50IGdldF9tYWNoZGVwX2luZm9fczM5MHgodm9pZCk7DQo+ID4+
+Pj4+Pj4gIHVuc2lnbmVkIGxvbmcgbG9uZyB2YWRkcl90b19wYWRkcl9zMzkweCh1bnNpZ25lZCBs
+b25nIHZhZGRyKTsNCj4gPj4+Pj4+PiAgaW50IGlzX2lvbWVtX3BoeXNfYWRkcl9zMzkweCh1bnNp
+Z25lZCBsb25nIGFkZHIpOw0KPiA+Pj4+Pj4+ICt1bnNpZ25lZCBsb25nIGdldF9rYXNscl9vZmZz
+ZXRfczM5MHgodW5zaWduZWQgbG9uZyB2YWRkcik7DQo+ID4+Pj4+Pj4gICNkZWZpbmUgZmluZF92
+bWVtbWFwKCkJCXN0dWJfZmFsc2UoKQ0KPiA+Pj4+Pj4+ICAjZGVmaW5lIGdldF9waHlzX2Jhc2Uo
+KQkJc3R1Yl90cnVlKCkNCj4gPj4+Pj4+PiAgI2RlZmluZSBnZXRfbWFjaGRlcF9pbmZvKCkJZ2V0
+X21hY2hkZXBfaW5mb19zMzkweCgpDQo+ID4+Pj4+Pj4gICNkZWZpbmUgZ2V0X3ZlcnNpb25kZXBf
+aW5mbygpCXN0dWJfdHJ1ZSgpDQo+ID4+Pj4+Pj4gLSNkZWZpbmUgZ2V0X2thc2xyX29mZnNldChY
+KQlzdHViX2ZhbHNlKCkNCj4gPj4+Pj4+PiArI2RlZmluZSBnZXRfa2FzbHJfb2Zmc2V0KFgpCWdl
+dF9rYXNscl9vZmZzZXRfczM5MHgoWCkNCj4gPj4+Pj4+PiAgI2RlZmluZSB2YWRkcl90b19wYWRk
+cihYKQl2YWRkcl90b19wYWRkcl9zMzkweChYKQ0KPiA+Pj4+Pj4+ICAjZGVmaW5lIHBhZGRyX3Rv
+X3ZhZGRyKFgpCXBhZGRyX3RvX3ZhZGRyX2dlbmVyYWwoWCkNCj4gPj4+Pj4+PiAgI2RlZmluZSBp
+c19waHlzX2FkZHIoWCkJCWlzX2lvbWVtX3BoeXNfYWRkcl9zMzkweChYKQ0KPiA+Pj4+Pj4+IC0t
+DQo+ID4+Pj4+Pj4gMi4xNy4xDQo+ID4+Pj4+Pj4NCj4gPj4+Pj4+DQo+ID4+Pj4+Pg0KPiA+Pj4+
+DQo+ID4+Pj4NCj4gPj4NCj4gPj4NCj4gPj4NCj4gPj4gX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18NCj4gPj4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+ID4+IGtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYw0KPiA+Pg0KPiA+DQo+ID4NCj4gPiBfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXw0KPiA+IGtleGVjIG1haWxpbmcgbGlz
+dA0KPiA+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcNCj4gPiBodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjDQo+ID4NCj4gDQoNCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
