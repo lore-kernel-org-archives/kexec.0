@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ilcK1-00008E-A0
- for kexec@lists.infradead.org; Sun, 29 Dec 2019 17:25:47 +0000
+ id 1ilcS0-0002Tq-V8
+ for kexec@lists.infradead.org; Sun, 29 Dec 2019 17:34:02 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.14 118/161] x86/crash: Add a forward declaration of struct
+Subject: [PATCH 4.19 159/219] x86/crash: Add a forward declaration of struct
  kimage
-Date: Sun, 29 Dec 2019 18:19:26 +0100
-Message-Id: <20191229162433.898340980@linuxfoundation.org>
-In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
-References: <20191229162355.500086350@linuxfoundation.org>
+Date: Sun, 29 Dec 2019 18:19:21 +0100
+Message-Id: <20191229162532.764428471@linuxfoundation.org>
+In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
+References: <20191229162508.458551679@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
