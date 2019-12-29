@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ilZVJ-0003qG-Lw
- for kexec@lists.infradead.org; Sun, 29 Dec 2019 14:25:16 +0000
-Date: Sun, 29 Dec 2019 22:24:53 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] x86/efi: update e820 about reserved EFI boot services
- data to fix kexec breakage
-Message-ID: <20191229142453.GA18486@dhcp-128-65.nay.redhat.com>
-References: <20191204075233.GA10520@dhcp-128-65.nay.redhat.com>
- <CANTgghnsdijH90qnm24qat70T7FA5qOwmnXXt+NYVxHYa4SLJA@mail.gmail.com>
- <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
+ id 1ilcK1-00008E-A0
+ for kexec@lists.infradead.org; Sun, 29 Dec 2019 17:25:47 +0000
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: [PATCH 4.14 118/161] x86/crash: Add a forward declaration of struct
+ kimage
+Date: Sun, 29 Dec 2019 18:19:26 +0100
+Message-Id: <20191229162433.898340980@linuxfoundation.org>
+In-Reply-To: <20191229162355.500086350@linuxfoundation.org>
+References: <20191229162355.500086350@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAPcyv4iRdJO6xrCaN=vrSvYFLZanLazmJLArT5YMfdJ6rc-PEQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,110 +19,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, X86 ML <x86@kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "Eric W. Biederman" <ebiederm@xmission.com>, Dan Williams <dan.j.williams.korg@gmail.com>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+To: linux-kernel@vger.kernel.org
+Cc: =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Sasha Levin <sashal@kernel.org>, kbuild test robot <lkp@intel.com>, bhe@redhat.com, Ingo Molnar <mingo@redhat.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, stable@vger.kernel.org, dhowells@redhat.com, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, dyoung@redhat.com, d.hatayama@fujitsu.com, vgoyal@redhat.com, Lianbo Jiang <lijiang@redhat.com>
 
-Hi Dan,
-On 12/28/19 at 10:13pm, Dan Williams wrote:
-> On Sat, Dec 28, 2019 at 12:54 PM Dan Williams
-> <dan.j.williams.korg@gmail.com> wrote:
-> >
-> > On Tue, Dec 3, 2019 at 11:53 PM Dave Young <dyoung@redhat.com> wrote:
-> > >
-> > > Michael Weiser reported he got below error during a kexec rebooting:
-> > > esrt: Unsupported ESRT version 2904149718861218184.
-> > >
-> > > The ESRT memory stays in EFI boot services data, and it was reserved
-> > > in kernel via efi_mem_reserve().  The initial purpose of the reservation
-> > > is to reuse the EFI boot services data across kexec reboot. For example
-> > > the BGRT image data and some ESRT memory like Michael reported.
-> > >
-> > > But although the memory is reserved it is not updated in X86 e820 table.
-> > > And kexec_file_load iterate system ram in io resource list to find places
-> > > for kernel, initramfs and other stuff. In Michael's case the kexec loaded
-> > > initramfs overwritten the ESRT memory and then the failure happened.
-> > >
-> > > Since kexec_file_load depends on the e820 to be updated, just fix this
-> > > by updating the reserved EFI boot services memory as reserved type in e820.
-> > >
-> > > Originally any memory descriptors with EFI_MEMORY_RUNTIME attribute are
-> > > bypassed in the reservation code path because they are assumed as reserved.
-> > > But the reservation is still needed for multiple kexec reboot.
-> > > And it is the only possible case we come here thus just drop the code
-> > > chunk then everything works without side effects.
-> > >
-> > > On my machine the ESRT memory sits in an EFI runtime data range, it does
-> > > not trigger the problem, but I successfully tested with BGRT instead.
-> > > both kexec_load and kexec_file_load work and kdump works as well.
-> > >
-> > > Signed-off-by: Dave Young <dyoung@redhat.com>
-> > > ---
-> > >  arch/x86/platform/efi/quirks.c |    6 ++----
-> > >  1 file changed, 2 insertions(+), 4 deletions(-)
-> > >
-> > > --- linux-x86.orig/arch/x86/platform/efi/quirks.c
-> > > +++ linux-x86/arch/x86/platform/efi/quirks.c
-> > > @@ -260,10 +260,6 @@ void __init efi_arch_mem_reserve(phys_ad
-> > >                 return;
-> > >         }
-> > >
-> > > -       /* No need to reserve regions that will never be freed. */
-> > > -       if (md.attribute & EFI_MEMORY_RUNTIME)
-> > > -               return;
-> > > -
-> > >         size += addr % EFI_PAGE_SIZE;
-> > >         size = round_up(size, EFI_PAGE_SIZE);
-> > >         addr = round_down(addr, EFI_PAGE_SIZE);
-> > > @@ -293,6 +289,8 @@ void __init efi_arch_mem_reserve(phys_ad
-> > >         early_memunmap(new, new_size);
-> > >
-> > >         efi_memmap_install(new_phys, num_entries);
-> > > +       e820__range_update(addr, size, E820_TYPE_RAM, E820_TYPE_RESERVED);
-> > > +       e820__update_table(e820_table);
-> > >  }
-> > >
-> > >  /*
-> > >
-> >
-> > Bisect says this change (commit af1648984828) is triggering a
-> > regression, likely not urgent, in my testing of the new efi_fake_mem=
-> > facility to allow memory to be marked "soft reserved" via the kernel
-> > command line (commit 199c84717612 x86/efi: Add efi_fake_mem support
-> > for EFI_MEMORY_SP). The following command line triggers the crash
-> > signature below:
-> >
-> >     efi_fake_mem=4G@9G:0x40000,4G@13G:0x40000
-> >
-> > However, this command line works ok:
-> >
-> >     efi_fake_mem=8G@9G:0x40000
-> >
-> > So, something about multiple efi_fake_mem statements interacts badly
-> > with this change. Nothing obvious occurs to me at the moment, I'll
-> > keep debugging, but wanted to highlight this in the meantime in case
-> > someone else sees a deeper issue or the root cause.
-> 
-> Still looking, but this failure does not seem to be specific to the
-> "soft reservation" changes. Any update to the efi memmap that pushes
-> it over a page boundary triggers this failure. I.e. I can fix the
-> problem by over-allocating the efi memmap and then page aligning the
-> result. __early_ioremap "should" be handling this case, but it appears
-> something else is messing this up.
-
-I seems can not reproduce the bug, but maybe my vm setup is different.
-Can you do some debugging about the efi_memmap_insert function see if
-something wrong happened, maybe happens when memcpy to some new allocated buffer via
-memblock_alloc, just some guess.
-
-Thanks
-Dave
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+CgpbIFVwc3RyZWFtIGNvbW1p
+dCAxMTJlZWU1ZDA2MDA3ZGFlNTYxZjE0NDU4YmRlN2YyYTQ4NzllZjRlIF0KCkFkZCBhIGZvcndh
+cmQgZGVjbGFyYXRpb24gb2Ygc3RydWN0IGtpbWFnZSB0byB0aGUgY3Jhc2guaCBoZWFkZXIgYmVj
+YXVzZQpmdXR1cmUgY2hhbmdlcyB3aWxsIGludm9rZSBhIGNyYXNoLXNwZWNpZmljIGZ1bmN0aW9u
+IGZyb20gdGhlIHJlYWxtb2RlCmluaXQgcGF0aCBhbmQgdGhlIGNvbXBpbGVyIHdpbGwgY29tcGxh
+aW4gb3RoZXJ3aXNlIGxpa2UgdGhpczoKCiAgSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGFyY2gveDg2
+L3JlYWxtb2RlL2luaXQuYzoxMToKICAuL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmg6NToz
+Mjogd2FybmluZzog4oCYc3RydWN0IGtpbWFnZeKAmSBkZWNsYXJlZCBpbnNpZGVcCiAgIHBhcmFt
+ZXRlciBsaXN0IHdpbGwgbm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24g
+b3IgZGVjbGFyYXRpb24KICAgICAgNSB8IGludCBjcmFzaF9sb2FkX3NlZ21lbnRzKHN0cnVjdCBr
+aW1hZ2UgKmltYWdlKTsKICAgICAgICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBe
+fn5+fn4KICAuL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmg6NjozNzogd2FybmluZzog4oCY
+c3RydWN0IGtpbWFnZeKAmSBkZWNsYXJlZCBpbnNpZGVcCiAgIHBhcmFtZXRlciBsaXN0IHdpbGwg
+bm90IGJlIHZpc2libGUgb3V0c2lkZSBvZiB0aGlzIGRlZmluaXRpb24gb3IgZGVjbGFyYXRpb24K
+ICAgICAgNiB8IGludCBjcmFzaF9jb3B5X2JhY2t1cF9yZWdpb24oc3RydWN0IGtpbWFnZSAqaW1h
+Z2UpOwogICAgICAgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+
+CiAgLi9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oOjc6Mzk6IHdhcm5pbmc6IOKAmHN0cnVj
+dCBraW1hZ2XigJkgZGVjbGFyZWQgaW5zaWRlXAogICBwYXJhbWV0ZXIgbGlzdCB3aWxsIG5vdCBi
+ZSB2aXNpYmxlIG91dHNpZGUgb2YgdGhpcyBkZWZpbml0aW9uIG9yIGRlY2xhcmF0aW9uCiAgICAg
+IDcgfCBpbnQgY3Jhc2hfc2V0dXBfbWVtbWFwX2VudHJpZXMoc3RydWN0IGtpbWFnZSAqaW1hZ2Us
+CiAgICAgICAgfAoKIFsgYnA6IFJld3JpdGUgdGhlIGNvbW1pdCBtZXNzYWdlLiBdCgpSZXBvcnRl
+ZC1ieToga2J1aWxkIHRlc3Qgcm9ib3QgPGxrcEBpbnRlbC5jb20+ClNpZ25lZC1vZmYtYnk6IExp
+YW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgpTaWduZWQtb2ZmLWJ5OiBCb3Jpc2xhdiBQ
+ZXRrb3YgPGJwQHN1c2UuZGU+CkNjOiBiaGVAcmVkaGF0LmNvbQpDYzogZC5oYXRheWFtYUBmdWpp
+dHN1LmNvbQpDYzogZGhvd2VsbHNAcmVkaGF0LmNvbQpDYzogZHlvdW5nQHJlZGhhdC5jb20KQ2M6
+IGViaWVkZXJtQHhtaXNzaW9uLmNvbQpDYzogaG9ybXNAdmVyZ2UubmV0LmF1CkNjOiAiSC4gUGV0
+ZXIgQW52aW4iIDxocGFAenl0b3IuY29tPgpDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5j
+b20+CkNjOiBKw7xyZ2VuIEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+CkNjOiBrZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCkNjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4KQ2M6
+IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+CkNjOiB2Z295YWxAcmVkaGF0
+LmNvbQpDYzogeDg2LW1sIDx4ODZAa2VybmVsLm9yZz4KTGluazogaHR0cHM6Ly9sa21sLmtlcm5l
+bC5vcmcvci8yMDE5MTEwODA5MDAyNy4xMTA4Mi00LWxpamlhbmdAcmVkaGF0LmNvbQpMaW5rOiBo
+dHRwczovL2xrbWwua2VybmVsLm9yZy9yLzIwMTkxMDMxMDIzMy5FSlJ0VE1XUCUyNWxrcEBpbnRl
+bC5jb20KU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPgotLS0K
+IGFyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmggfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBp
+bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaCBi
+L2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKaW5kZXggYTdhZGIyYmZiZjBiLi42YjhhZDZm
+YTM5NzkgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKKysrIGIvYXJj
+aC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaApAQCAtMiw2ICsyLDggQEAKICNpZm5kZWYgX0FTTV9Y
+ODZfQ1JBU0hfSAogI2RlZmluZSBfQVNNX1g4Nl9DUkFTSF9ICiAKK3N0cnVjdCBraW1hZ2U7CisK
+IGludCBjcmFzaF9sb2FkX3NlZ21lbnRzKHN0cnVjdCBraW1hZ2UgKmltYWdlKTsKIGludCBjcmFz
+aF9jb3B5X2JhY2t1cF9yZWdpb24oc3RydWN0IGtpbWFnZSAqaW1hZ2UpOwogaW50IGNyYXNoX3Nl
+dHVwX21lbW1hcF9lbnRyaWVzKHN0cnVjdCBraW1hZ2UgKmltYWdlLAotLSAKMi4yMC4xCgoKCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
