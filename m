@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ilcS0-0002Tq-V8
- for kexec@lists.infradead.org; Sun, 29 Dec 2019 17:34:02 +0000
+ id 1ilckn-0002F9-0r
+ for kexec@lists.infradead.org; Sun, 29 Dec 2019 17:53:26 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 159/219] x86/crash: Add a forward declaration of struct
+Subject: [PATCH 5.4 302/434] x86/crash: Add a forward declaration of struct
  kimage
-Date: Sun, 29 Dec 2019 18:19:21 +0100
-Message-Id: <20191229162532.764428471@linuxfoundation.org>
-In-Reply-To: <20191229162508.458551679@linuxfoundation.org>
-References: <20191229162508.458551679@linuxfoundation.org>
+Date: Sun, 29 Dec 2019 18:25:55 +0100
+Message-Id: <20191229172722.012794847@linuxfoundation.org>
+In-Reply-To: <20191229172702.393141737@linuxfoundation.org>
+References: <20191229172702.393141737@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -62,8 +62,8 @@ dHRwczovL2xrbWwua2VybmVsLm9yZy9yLzIwMTkxMDMxMDIzMy5FSlJ0VE1XUCUyNWxrcEBpbnRl
 bC5jb20KU2lnbmVkLW9mZi1ieTogU2FzaGEgTGV2aW4gPHNhc2hhbEBrZXJuZWwub3JnPgotLS0K
 IGFyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmggfCAyICsrCiAxIGZpbGUgY2hhbmdlZCwgMiBp
 bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaCBi
-L2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKaW5kZXggYTdhZGIyYmZiZjBiLi42YjhhZDZm
-YTM5NzkgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKKysrIGIvYXJj
+L2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKaW5kZXggMGFjZjVlZTQ1YTIxLi5lZjU2Mzhm
+NjQxZjIgMTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKKysrIGIvYXJj
 aC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaApAQCAtMiw2ICsyLDggQEAKICNpZm5kZWYgX0FTTV9Y
 ODZfQ1JBU0hfSAogI2RlZmluZSBfQVNNX1g4Nl9DUkFTSF9ICiAKK3N0cnVjdCBraW1hZ2U7CisK
 IGludCBjcmFzaF9sb2FkX3NlZ21lbnRzKHN0cnVjdCBraW1hZ2UgKmltYWdlKTsKIGludCBjcmFz
