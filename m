@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga01.intel.com ([192.55.52.88])
+Received: from mail-ot1-x342.google.com ([2607:f8b0:4864:20::342])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1imPsX-0007uv-GB
- for kexec@lists.infradead.org; Tue, 31 Dec 2019 22:20:44 +0000
-Subject: [PATCH v2 4/4] efi: Fix handling of multiple efi_fake_mem= entries
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 31 Dec 2019 14:04:38 -0800
-Message-ID: <157782987865.367056.15199592105978588123.stgit@dwillia2-desk3.amr.corp.intel.com>
-In-Reply-To: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
-References: <157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com>
+ id 1imPto-000868-3T
+ for kexec@lists.infradead.org; Tue, 31 Dec 2019 22:22:01 +0000
+Received: by mail-ot1-x342.google.com with SMTP id 66so51718435otd.9
+ for <kexec@lists.infradead.org>; Tue, 31 Dec 2019 14:21:59 -0800 (PST)
 MIME-Version: 1.0
+References: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20191231014630.GA24942@dhcp-128-65.nay.redhat.com>
+ <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
+In-Reply-To: <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Tue, 31 Dec 2019 14:21:48 -0800
+Message-ID: <CAPcyv4idLx58iH0tA08vrVdvornd-jAwSwHQ6Eha+Z_UQUDDAQ@mail.gmail.com>
+Subject: Re: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem=
+ entries
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,157 +27,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: mingo@redhat.com
-Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Taku Izumi <izumi.taku@jp.fujitsu.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Taku Izumi <izumi.taku@jp.fujitsu.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
 
-Dave noticed that when specifying multiple efi_fake_mem= entries only
-the last entry was successfully being reflected in the efi memory map.
-This is due to the fact that the efi_memmap_insert() is being called
-multiple times, but on successive invocations the insertion should be
-applied to the last new memmap rather than the original map at
-efi_fake_memmap() entry.
+On Tue, Dec 31, 2019 at 1:11 PM Dan Williams <dan.j.williams@intel.com> wrote:
+> Perhaps a prettier way to do this is to push the handling of each
+> efi_fake_mem entry into a subroutine. However, I notice when a memmap
+> allocated by efi_memmap_alloc() is replaced by another dynamically
+> allocated memmap the previous one isn't released. I have a series that
+> fixes that up as well.
 
-Rework efi_fake_memmap() to install the new memory map after each
-efi_fake_mem= entry is parsed.
-
-This also fixes an issue in efi_fake_memmap() that caused it to litter
-emtpy entries into the end of the efi memory map. The empty entry causes
-efi_memmap_insert() to attempt more memmap splits / copies than
-efi_memmap_split_count() accounted for when sizing the new map.
-
-    BUG: unable to handle page fault for address: ffffffffff281000
-    [..]
-    RIP: 0010:efi_memmap_insert+0x11d/0x191
-    [..]
-    Call Trace:
-     ? bgrt_init+0xbe/0xbe
-     ? efi_arch_mem_reserve+0x1cb/0x228
-     ? acpi_parse_bgrt+0xa/0xd
-     ? acpi_table_parse+0x86/0xb8
-     ? acpi_boot_init+0x494/0x4e3
-     ? acpi_parse_x2apic+0x87/0x87
-     ? setup_acpi_sci+0xa2/0xa2
-     ? setup_arch+0x8db/0x9e1
-     ? start_kernel+0x6a/0x547
-     ? secondary_startup_64+0xb6/0xc0
-
-Commit af1648984828 "x86/efi: Update e820 with reserved EFI boot
-services data to fix kexec breakage" is listed in Fixes: since it
-introduces more occurrences where efi_memmap_insert() is invoked after
-an efi_fake_mem= configuration has been parsed. Previously the side
-effects of vestigial empty entries were benign, but with commit
-af1648984828 that follow-on efi_memmap_insert() invocation triggers the
-above crash signature.
-
-Fixes: 0f96a99dab36 ("efi: Add 'efi_fake_mem' boot option")
-Fixes: af1648984828 ("x86/efi: Update e820 with reserved EFI boot services...")
-Link: https://lore.kernel.org/r/20191231014630.GA24942@dhcp-128-65.nay.redhat.com
-Reported-by: Dave Young <dyoung@redhat.com>
-Cc: Taku Izumi <izumi.taku@jp.fujitsu.com>
-Cc: Michael Weiser <michael@weiser.dinsnail.net>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Dan Williams <dan.j.williams@intel.com>
----
- drivers/firmware/efi/fake_mem.c |   32 +++++++++++++++++---------------
- drivers/firmware/efi/memmap.c   |    2 +-
- include/linux/efi.h             |    2 ++
- 3 files changed, 20 insertions(+), 16 deletions(-)
-
-diff --git a/drivers/firmware/efi/fake_mem.c b/drivers/firmware/efi/fake_mem.c
-index 7e53e5520548..68d752d8af21 100644
---- a/drivers/firmware/efi/fake_mem.c
-+++ b/drivers/firmware/efi/fake_mem.c
-@@ -34,26 +34,17 @@ static int __init cmp_fake_mem(const void *x1, const void *x2)
- 	return 0;
- }
- 
--void __init efi_fake_memmap(void)
-+static void __init efi_fake_range(struct efi_mem_range *efi_range)
- {
- 	int new_nr_map = efi.memmap.nr_map;
- 	efi_memory_desc_t *md;
- 	phys_addr_t new_memmap_phy;
- 	unsigned long flags = 0;
- 	void *new_memmap;
--	int i;
--
--	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
--		return;
- 
- 	/* count up the number of EFI memory descriptor */
--	for (i = 0; i < nr_fake_mem; i++) {
--		for_each_efi_memory_desc(md) {
--			struct range *r = &efi_fake_mems[i].range;
--
--			new_nr_map += efi_memmap_split_count(md, r);
--		}
--	}
-+	for_each_efi_memory_desc(md)
-+		new_nr_map += efi_memmap_split_count(md, &efi_range->range);
- 
- 	/* allocate memory for new EFI memmap */
- 	new_memmap_phy = efi_memmap_alloc(new_nr_map, &flags);
-@@ -64,17 +55,28 @@ void __init efi_fake_memmap(void)
- 	new_memmap = early_memremap(new_memmap_phy,
- 				    efi.memmap.desc_size * new_nr_map);
- 	if (!new_memmap) {
--		memblock_free(new_memmap_phy, efi.memmap.desc_size * new_nr_map);
-+		__efi_memmap_free(new_memmap_phy,
-+				efi.memmap.desc_size * new_nr_map, flags);
- 		return;
- 	}
- 
--	for (i = 0; i < nr_fake_mem; i++)
--		efi_memmap_insert(&efi.memmap, new_memmap, &efi_fake_mems[i]);
-+	efi_memmap_insert(&efi.memmap, new_memmap, efi_range);
- 
- 	/* swap into new EFI memmap */
- 	early_memunmap(new_memmap, efi.memmap.desc_size * new_nr_map);
- 
- 	efi_memmap_install(new_memmap_phy, new_nr_map, flags);
-+}
-+
-+void __init efi_fake_memmap(void)
-+{
-+	int i;
-+
-+	if (!efi_enabled(EFI_MEMMAP) || !nr_fake_mem)
-+		return;
-+
-+	for (i = 0; i < nr_fake_mem; i++)
-+		efi_fake_range(&efi_fake_mems[i]);
- 
- 	/* print new EFI memmap */
- 	efi_print_memmap();
-diff --git a/drivers/firmware/efi/memmap.c b/drivers/firmware/efi/memmap.c
-index 188ab3cd5c52..de66c2a0e8f8 100644
---- a/drivers/firmware/efi/memmap.c
-+++ b/drivers/firmware/efi/memmap.c
-@@ -29,7 +29,7 @@ static phys_addr_t __init __efi_memmap_alloc_late(unsigned long size)
- 	return PFN_PHYS(page_to_pfn(p));
- }
- 
--static void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
-+void __init __efi_memmap_free(u64 phys, unsigned long size, unsigned long flags)
- {
- 	if (WARN_ON(slab_is_available() && (flags & EFI_MEMMAP_MEMBLOCK)))
- 		return;
-diff --git a/include/linux/efi.h b/include/linux/efi.h
-index fa2668a992ae..6ae31e064321 100644
---- a/include/linux/efi.h
-+++ b/include/linux/efi.h
-@@ -1061,6 +1061,8 @@ extern void __iomem *efi_lookup_mapped_addr(u64 phys_addr);
- 
- extern phys_addr_t __init efi_memmap_alloc(unsigned int num_entries,
- 		unsigned long *flags);
-+extern void __efi_memmap_free(u64 phys, unsigned long size,
-+		unsigned long flags);
- extern int __init efi_memmap_init_early(struct efi_memory_map_data *data);
- extern int __init efi_memmap_init_late(phys_addr_t addr, unsigned long size);
- extern void __init efi_memmap_unmap(void);
-
+Available here:
+http://lore.kernel.org/r/157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com
 
 _______________________________________________
 kexec mailing list
