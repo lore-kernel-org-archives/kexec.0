@@ -1,21 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-fw-4101.amazon.com ([72.21.198.25])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jJggW-0006u0-Jw
- for kexec@lists.infradead.org; Wed, 01 Apr 2020 16:57:50 +0000
-Received: from EX13MTAUEB002.ant.amazon.com
- (pdx4-ws-svc-p6-lb7-vlan3.pdx.amazon.com [10.170.41.166])
- by email-inbound-relay-2a-90c42d1d.us-west-2.amazon.com (Postfix) with ESMTPS
- id 56EAEA2257
- for <kexec@lists.infradead.org>; Wed,  1 Apr 2020 16:57:31 +0000 (UTC)
-From: Varad Gautam <vrd@amazon.de>
-Subject: [PATCH v2 3/3] kexec-xen: Introduce --exec-live-update to trigger a
- live update
-Date: Wed, 1 Apr 2020 18:57:17 +0200
-Message-ID: <1585760237-26924-3-git-send-email-vrd@amazon.de>
-In-Reply-To: <1585760237-26924-1-git-send-email-vrd@amazon.de>
-References: <1585760237-26924-1-git-send-email-vrd@amazon.de>
+ id 1jJiDk-0001PG-5r
+ for kexec@lists.infradead.org; Wed, 01 Apr 2020 18:36:13 +0000
+Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id
+ 031IYT62090968
+ for <kexec@lists.infradead.org>; Wed, 1 Apr 2020 14:36:09 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 304mcbn78m-1
+ (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 01 Apr 2020 14:36:09 -0400
+Received: from localhost
+ by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only!
+ Violators will be prosecuted
+ for <kexec@lists.infradead.org> from <hbathini@linux.ibm.com>;
+ Wed, 1 Apr 2020 19:35:56 +0100
+Subject: Re: [PATCHv4] powerpc/crashkernel: take "mem=" option into account
+References: <48c1b852-28e0-9c46-cafa-7c5992f966a7@linux.ibm.com>
+ <1585749644-4148-1-git-send-email-kernelfans@gmail.com>
+From: Hari Bathini <hbathini@linux.ibm.com>
+Date: Thu, 2 Apr 2020 00:06:01 +0530
 MIME-Version: 1.0
+In-Reply-To: <1585749644-4148-1-git-send-email-kernelfans@gmail.com>
+Content-Language: en-US
+Message-Id: <2bfddcda-1187-5718-ce13-0c30d25337a9@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,136 +37,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Varad Gautam <vrd@amazon.de>, dwmw@amazon.co.uk
-
-This signals xen to do a KEXEC_TYPE_LIVE_UPDATE kexec operation.
-
-Signed-off-by: Varad Gautam <vrd@amazon.de>
----
- kexec/kexec-xen.c | 12 ++++++++----
- kexec/kexec.c     | 11 ++++++++++-
- kexec/kexec.h     |  6 ++++--
- 3 files changed, 22 insertions(+), 7 deletions(-)
-
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index 83629ba..da514d0 100644
---- a/kexec/kexec-xen.c
-+++ b/kexec/kexec-xen.c
-@@ -242,15 +242,19 @@ int xen_kexec_status(uint64_t kexec_flags)
- 	return ret;
- }
- 
--void xen_kexec_exec(void)
-+void xen_kexec_exec(uint64_t kexec_flags)
- {
- 	xc_interface *xch;
--	
-+	uint8_t type = KEXEC_TYPE_DEFAULT;
-+
- 	xch = xc_interface_open(NULL, NULL, 0);
- 	if (!xch)
- 		return;
- 
--	xc_kexec_exec(xch, KEXEC_TYPE_DEFAULT);
-+	if (kexec_flags & KEXEC_LIVE_UPDATE)
-+		type = KEXEC_TYPE_LIVE_UPDATE;
-+
-+	xc_kexec_exec(xch, type);
- 
- 	xc_interface_close(xch);
- }
-@@ -277,7 +281,7 @@ int xen_kexec_status(uint64_t kexec_flags)
- 	return -1;
- }
- 
--void xen_kexec_exec(void)
-+void xen_kexec_exec(uint64_t kexec_flags)
- {
- }
- 
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index da61d6d..7ef3d2a 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -906,7 +906,7 @@ static int my_shutdown(void)
- static int my_exec(void)
- {
- 	if (xen_present())
--		xen_kexec_exec();
-+		xen_kexec_exec(kexec_flags);
- 	else
- 		reboot(LINUX_REBOOT_CMD_KEXEC);
- 	/* I have failed if I make it here */
-@@ -1012,6 +1012,8 @@ void usage(void)
- 	       "                      If capture kernel is being unloaded\n"
- 	       "                      specify -p with -u.\n"
- 	       " -e, --exec           Execute a currently loaded kernel.\n"
-+               "     --exec-live-update Execute a currently loaded xen image after\n"
-+                                      "storing the state required to live update.\n"
- 	       " -t, --type=TYPE      Specify the new kernel is of this type.\n"
- 	       "     --mem-min=<addr> Specify the lowest memory address to\n"
- 	       "                      load code into.\n"
-@@ -1397,6 +1399,13 @@ int main(int argc, char *argv[])
- 			do_unload = 1;
- 			kexec_file_flags |= KEXEC_FILE_UNLOAD;
- 			break;
-+                case OPT_EXEC_LIVE_UPDATE:
-+			if ( !xen_present() ) {
-+				fprintf(stderr, "--exec-live-update only works under xen.\n");
-+                                return 1;
-+                        }
-+			kexec_flags |= KEXEC_LIVE_UPDATE;
-+			/* fallthrough */
- 		case OPT_EXEC:
- 			do_load = 0;
- 			do_shutdown = 0;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 8021f39..f0f347d 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -234,7 +234,8 @@ extern int file_types;
- #define OPT_ENTRY		261
- #define OPT_PRINT_CKR_SIZE	262
- #define OPT_LOAD_LIVE_UPDATE	263
--#define OPT_MAX			264
-+#define OPT_EXEC_LIVE_UPDATE	264
-+#define OPT_MAX			265
- #define KEXEC_OPTIONS \
- 	{ "help",		0, 0, OPT_HELP }, \
- 	{ "version",		0, 0, OPT_VERSION }, \
-@@ -245,6 +246,7 @@ extern int file_types;
- 	{ "load",		0, 0, OPT_LOAD }, \
- 	{ "unload",		0, 0, OPT_UNLOAD }, \
- 	{ "exec",		0, 0, OPT_EXEC }, \
-+	{ "exec-live-update",	0, 0, OPT_EXEC_LIVE_UPDATE}, \
- 	{ "load-preserve-context", 0, 0, OPT_LOAD_PRESERVE_CONTEXT}, \
- 	{ "load-jump-back-helper", 0, 0, OPT_LOAD_JUMP_BACK_HELPER }, \
- 	{ "load-live-update", 0, 0, OPT_LOAD_LIVE_UPDATE }, \
-@@ -326,7 +328,7 @@ void cmdline_add_liveupdate(char **base);
- int xen_present(void);
- int xen_kexec_load(struct kexec_info *info);
- int xen_kexec_unload(uint64_t kexec_flags);
--void xen_kexec_exec(void);
-+void xen_kexec_exec(uint64_t kexec_flags);
- int xen_kexec_status(uint64_t kexec_flags);
- 
- extern unsigned long long get_kernel_sym(const char *text);
--- 
-2.7.4
+To: Pingfan Liu <kernelfans@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org
 
 
 
+On 01/04/20 7:30 PM, Pingfan Liu wrote:
+> 'mem=" option is an easy way to put high pressure on memory during some
+> test. Hence after applying the memory limit, instead of total mem, the
+> actual usable memory should be considered when reserving mem for
+> crashkernel. Otherwise the boot up may experience OOM issue.
+> 
+> E.g. it would reserve 4G prior to the change and 512M afterward, if passing
+> crashkernel="2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G", and
+> mem=5G on a 256G machine.
+> 
+> This issue is powerpc specific because it puts higher priority on fadump
+> and kdump reservation than on "mem=". Referring the following code:
+>     if (fadump_reserve_mem() == 0)
+>             reserve_crashkernel();
+>     ...
+>     /* Ensure that total memory size is page-aligned. */
+>     limit = ALIGN(memory_limit ?: memblock_phys_mem_size(), PAGE_SIZE);
+>     memblock_enforce_memory_limit(limit);
+> 
+> While on other arches, the effect of "mem=" takes a higher priority and pass
+> through memblock_phys_mem_size() before calling reserve_crashkernel().
+>> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> To: linuxppc-dev@lists.ozlabs.org
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: kexec@lists.infradead.org
+> ---
+> v3 -> v4: fix total_mem_sz based on adjusted memory_limit
 
-Amazon Development Center Germany GmbH
-Krausenstr. 38
-10117 Berlin
-Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
-Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
-Sitz: Berlin
-Ust-ID: DE 289 237 879
 
+Thanks for the update.
 
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
 
 
 _______________________________________________
