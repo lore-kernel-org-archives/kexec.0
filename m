@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jJcWI-0005M0-2V
- for kexec@lists.infradead.org; Wed, 01 Apr 2020 12:30:59 +0000
-Date: Wed, 1 Apr 2020 14:30:47 +0200
+ id 1jJcfF-00032R-Am
+ for kexec@lists.infradead.org; Wed, 01 Apr 2020 12:40:14 +0000
+Date: Wed, 1 Apr 2020 14:40:09 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] crashdump-ppc64: crashkernel-base and crashkernel-size
- are big-endian
-Message-ID: <20200401123047.GA29376@vergenet.net>
-References: <20200304232711.30464-1-cascardo@canonical.com>
+Subject: Re: [v2 0/2] Fix --kexec-syscall-auto on s390x
+Message-ID: <20200401124009.GB29376@vergenet.net>
+References: <20200313140929.29551-1-ptesarik@suse.cz>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200304232711.30464-1-cascardo@canonical.com>
+In-Reply-To: <20200313140929.29551-1-ptesarik@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,23 +23,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
-Cc: kexec@lists.infradead.org, hbathini@linux.ibm.com
+To: Petr Tesarik <ptesarik@suse.cz>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-On Wed, Mar 04, 2020 at 08:27:11PM -0300, Thadeu Lima de Souza Cascardo wrote:
-> When reading the device-tree exported crashkernel-base and
-> crashkernel-size, their values should be converted from big-endian to the
-> CPU byte order.
+On Fri, Mar 13, 2020 at 03:09:27PM +0100, Petr Tesarik wrote:
+> From: Petr Tesarik <ptesarik@suse.com>
 > 
-> These is the output of running kexec --print-ckr-size on a little-endian
-> ppc64 box.
+> As noticed by Raymund Will, kexec -la does not work on kernels without
+> the kexec_file_load(2) syscall, revealing some shortcomings in the
+> automatic syscall selection.
 > 
-> $ kexec --print-ckr-size
-> 137438953472
-> $ kexec --print-ckr-size
-> 536870912
+> Petr Tesarik (2):
+>   kexec-tools: Fix kexec_file_load(2) error handling
+>   kexec-tools: Reset getopt before falling back to legacy syscall
 > 
-> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+>  kexec/kexec.c | 120 ++++++++++++++++++++++++++++++++--------------------------
 
 Thanks, applied.
 
