@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ot1-x342.google.com ([2607:f8b0:4864:20::342])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1imPto-000868-3T
- for kexec@lists.infradead.org; Tue, 31 Dec 2019 22:22:01 +0000
-Received: by mail-ot1-x342.google.com with SMTP id 66so51718435otd.9
- for <kexec@lists.infradead.org>; Tue, 31 Dec 2019 14:21:59 -0800 (PST)
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jJcWI-0005M0-2V
+ for kexec@lists.infradead.org; Wed, 01 Apr 2020 12:30:59 +0000
+Date: Wed, 1 Apr 2020 14:30:47 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] crashdump-ppc64: crashkernel-base and crashkernel-size
+ are big-endian
+Message-ID: <20200401123047.GA29376@vergenet.net>
+References: <20200304232711.30464-1-cascardo@canonical.com>
 MIME-Version: 1.0
-References: <157773590338.4153451.5898675419563883883.stgit@dwillia2-desk3.amr.corp.intel.com>
- <20191231014630.GA24942@dhcp-128-65.nay.redhat.com>
- <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
-In-Reply-To: <CAPcyv4heY1CKAWo1AKKifYUtXdKjoUt45dZbCNhB2o59hkXY6g@mail.gmail.com>
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 31 Dec 2019 14:21:48 -0800
-Message-ID: <CAPcyv4idLx58iH0tA08vrVdvornd-jAwSwHQ6Eha+Z_UQUDDAQ@mail.gmail.com>
-Subject: Re: [PATCH] efi: Fix handling of multiple contiguous efi_fake_mem=
- entries
+Content-Disposition: inline
+In-Reply-To: <20200304232711.30464-1-cascardo@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,18 +24,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Michael Weiser <michael@weiser.dinsnail.net>, linux-efi <linux-efi@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Taku Izumi <izumi.taku@jp.fujitsu.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@kernel.org>
+To: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
+Cc: kexec@lists.infradead.org, hbathini@linux.ibm.com
 
-On Tue, Dec 31, 2019 at 1:11 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> Perhaps a prettier way to do this is to push the handling of each
-> efi_fake_mem entry into a subroutine. However, I notice when a memmap
-> allocated by efi_memmap_alloc() is replaced by another dynamically
-> allocated memmap the previous one isn't released. I have a series that
-> fixes that up as well.
+On Wed, Mar 04, 2020 at 08:27:11PM -0300, Thadeu Lima de Souza Cascardo wrote:
+> When reading the device-tree exported crashkernel-base and
+> crashkernel-size, their values should be converted from big-endian to the
+> CPU byte order.
+> 
+> These is the output of running kexec --print-ckr-size on a little-endian
+> ppc64 box.
+> 
+> $ kexec --print-ckr-size
+> 137438953472
+> $ kexec --print-ckr-size
+> 536870912
+> 
+> Signed-off-by: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>
 
-Available here:
-http://lore.kernel.org/r/157782985777.367056.14741265874314204783.stgit@dwillia2-desk3.amr.corp.intel.com
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
