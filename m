@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-fw-6001.amazon.com ([52.95.48.154])
+Received: from smtp-fw-9102.amazon.com ([207.171.184.29])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jJe0B-0003GC-9x
- for kexec@lists.infradead.org; Wed, 01 Apr 2020 14:05:57 +0000
-Subject: Re: [PATCH 2/3] kexec: Introduce --load-live-update for xen
-References: <1581066033-25120-1-git-send-email-vrd@amazon.de>
- <1581066033-25120-2-git-send-email-vrd@amazon.de>
- <20200401124738.GE29376@vergenet.net>
-From: <vrd@amazon.com>
-Message-ID: <ea36820e-514e-8a8c-ad2a-387525b28b5f@amazon.com>
-Date: Wed, 1 Apr 2020 16:05:31 +0200
+ id 1jJggJ-0006nV-IB
+ for kexec@lists.infradead.org; Wed, 01 Apr 2020 16:57:37 +0000
+Received: from EX13MTAUEE002.ant.amazon.com
+ (pdx4-ws-svc-p6-lb7-vlan2.pdx.amazon.com [10.170.41.162])
+ by email-inbound-relay-2a-6e2fc477.us-west-2.amazon.com (Postfix) with ESMTPS
+ id EC0F0A21D1
+ for <kexec@lists.infradead.org>; Wed,  1 Apr 2020 16:57:26 +0000 (UTC)
+From: Varad Gautam <vrd@amazon.de>
+Subject: [PATCH v2 2/3] kexec: Introduce --load-live-update for xen
+Date: Wed, 1 Apr 2020 18:57:16 +0200
+Message-ID: <1585760237-26924-2-git-send-email-vrd@amazon.de>
+In-Reply-To: <1585760237-26924-1-git-send-email-vrd@amazon.de>
+References: <1585760237-26924-1-git-send-email-vrd@amazon.de>
 MIME-Version: 1.0
-In-Reply-To: <20200401124738.GE29376@vergenet.net>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,73 +23,322 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Varad Gautam <vrd@amazon.de>
-Cc: kexec@lists.infradead.org, David Woodhouse <dwmw@amazon.co.uk>
+To: kexec@lists.infradead.org
+Cc: Varad Gautam <vrd@amazon.de>, dwmw@amazon.co.uk
 
-T24gNC8xLzIwIDI6NDcgUE0sIFNpbW9uIEhvcm1hbiB3cm90ZToKPiBDQVVUSU9OOiBUaGlzIGVt
-YWlsIG9yaWdpbmF0ZWQgZnJvbSBvdXRzaWRlIG9mIHRoZSBvcmdhbml6YXRpb24uIERvIG5vdCBj
-bGljayBsaW5rcyBvciBvcGVuIGF0dGFjaG1lbnRzIHVubGVzcyB5b3UgY2FuIGNvbmZpcm0gdGhl
-IHNlbmRlciBhbmQga25vdyB0aGUgY29udGVudCBpcyBzYWZlLgo+Cj4KPgo+IE9uIEZyaSwgRmVi
-IDA3LCAyMDIwIGF0IDEwOjAwOjMyQU0gKzAxMDAsIFZhcmFkIEdhdXRhbSB3cm90ZToKPj4gWGVu
-IGlzIGludGVuZGVkIHRvIGV4cG9zZSBhIEtFWEVDX1RZUEVfTElWRV9VUERBVEUgb3BlcmF0aW9u
-IHdoaWNoCj4+IGltcGxpZXMgYSBzdGF0ZWZ1bC1rZXhlYyBpbnRvIGEgbmV3IHhlbiBpbWFnZSAt
-IG9yIGEgImxpdmUgdXBkYXRlIi4KPj4gTWFrZSBrZXhlYy10b29scyBjYXBhYmxlIG9mIHRyaWdn
-ZXJpbmcgYSBsaXZlIHVwZGF0ZS4KPj4KPj4gRm9yIGEgbXVsdGlib290MiB4ZW4gaW1hZ2UsIHRo
-aXMgd2lsbDoKPj4gLSBsb2FkIGEgeGVuIEVsZiBpbnRvIGludG8gS0VYRUNfUkFOR0VfTUFfWEVO
-Cj4+IC0gbG9hZCBwdXJnYXRvcnkgYW5kIG1vZHVsZXMgaW50byBLRVhFQ19SQU5HRV9NQV9MSVZF
-VVBEQVRFCj4+IC0gYXBwZW5kIEVsZiBjbWRsaW5lIHdpdGggIiBsaXZldXBkYXRlPTxzaXplPkA8
-YWRkcj4KPj4KPj4gU2lnbmVkLW9mZi1ieTogVmFyYWQgR2F1dGFtIDx2cmRAYW1hem9uLmRlPgo+
-PiBDQzogRGF2aWQgV29vZGhvdXNlIDxkd213QGFtYXpvbi5jby51az4KPiBTb3JyeSBmb3IgdGhl
-IGxvbmcgZGVsYXkuCj4KPiBUaGlzIHBhdGNoIGRvZXMgbm90IGFwcGVhciB0byBjb21waWxlLgo+
-Cj4gZ2NjIC1XYWxsIC1XZXh0cmEgLVdwb2ludGVyLWFyaXRoIC1Xd3JpdGUtc3RyaW5ncyAtV2Zv
-cm1hdCAtTzIgLWZvbWl0LWZyYW1lLXBvaW50ZXIgLXBpcGUgLWZuby1zdHJpY3QtYWxpYXNpbmcg
-LVdhbGwgLVdzdHJpY3QtcHJvdG90eXBlcyAtSS4vaW5jbHVkZSAtSS4vdXRpbF9saWIvaW5jbHVk
-ZSAtSWluY2x1ZGUvICAtSS4va2V4ZWMvYXJjaC94ODZfNjQvaW5jbHVkZSAgLWMgLU1EIC1vIGtl
-eGVjL2tleGVjLm8ga2V4ZWMva2V4ZWMuYwo+IGtleGVjL2tleGVjLmM6IEluIGZ1bmN0aW9uIOKA
-mG15X3NodXRkb3du4oCZOgo+IGtleGVjL2tleGVjLmM6ODg5OjM6IHdhcm5pbmc6IGluaXRpYWxp
-emF0aW9uIGRpc2NhcmRzIOKAmGNvbnN04oCZIHF1YWxpZmllciBmcm9tIHBvaW50ZXIgdGFyZ2V0
-IHR5cGUgWy1XZGlzY2FyZGVkLXF1YWxpZmllcnNdCj4gICAgICJzaHV0ZG93biIsCj4gICAgIF5+
-fn5+fn5+fn4KPiBrZXhlYy9rZXhlYy5jOjg5MDozOiB3YXJuaW5nOiBpbml0aWFsaXphdGlvbiBk
-aXNjYXJkcyDigJhjb25zdOKAmSBxdWFsaWZpZXIgZnJvbSBwb2ludGVyIHRhcmdldCB0eXBlIFst
-V2Rpc2NhcmRlZC1xdWFsaWZpZXJzXQo+ICAgICAiLXIiLAo+ICAgICBefn5+Cj4ga2V4ZWMva2V4
-ZWMuYzo4OTE6Mzogd2FybmluZzogaW5pdGlhbGl6YXRpb24gZGlzY2FyZHMg4oCYY29uc3TigJkg
-cXVhbGlmaWVyIGZyb20gcG9pbnRlciB0YXJnZXQgdHlwZSBbLVdkaXNjYXJkZWQtcXVhbGlmaWVy
-c10KPiAgICAgIm5vdyIsCj4gICAgIF5+fn5+Cj4ga2V4ZWMva2V4ZWMuYzogSW4gZnVuY3Rpb24g
-4oCYY21kbGluZV9hZGRfbGl2ZXVwZGF0ZeKAmToKPiBrZXhlYy9rZXhlYy5jOjExODc6Mjogd2Fy
-bmluZzogaW1wbGljaXQgZGVjbGFyYXRpb24gb2YgZnVuY3Rpb24g4oCYeGVuX2dldF9rZXhlY19y
-YW5nZeKAmTsgZGlkIHlvdSBtZWFuIOKAmHhlbl9rZXhlY19zdGF0dXPigJk/IFstV2ltcGxpY2l0
-LWZ1bmN0aW9uLWRlY2xhcmF0aW9uXQo+ICAgIHhlbl9nZXRfa2V4ZWNfcmFuZ2UoS0VYRUNfUkFO
-R0VfTUFfTElWRVVQREFURSwgJmx1X3N0YXJ0LCAmbHVfZW5kKTsKPiAgICBefn5+fn5+fn5+fn5+
-fn5+fn5+Cj4gICAgeGVuX2tleGVjX3N0YXR1cwo+IGtleGVjL2tleGVjLmM6MTE4NzoyMjogZXJy
-b3I6IOKAmEtFWEVDX1JBTkdFX01BX0xJVkVVUERBVEXigJkgdW5kZWNsYXJlZCAoZmlyc3QgdXNl
-IGluIHRoaXMgZnVuY3Rpb24pCj4gICAgeGVuX2dldF9rZXhlY19yYW5nZShLRVhFQ19SQU5HRV9N
-QV9MSVZFVVBEQVRFLCAmbHVfc3RhcnQsICZsdV9lbmQpOwo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fgo+IGtleGVjL2tleGVjLmM6MTE4NzoyMjogbm90
-ZTogZWFjaCB1bmRlY2xhcmVkIGlkZW50aWZpZXIgaXMgcmVwb3J0ZWQgb25seSBvbmNlIGZvciBl
-YWNoIGZ1bmN0aW9uIGl0IGFwcGVhcnMgaW4KPiBrZXhlYy9rZXhlYy5jOiBJbiBmdW5jdGlvbiDi
-gJhtYWlu4oCZOgo+IGtleGVjL2tleGVjLmM6MTQzMzozNzogZXJyb3I6IOKAmEtFWEVDX0xJVkVf
-VVBEQVRF4oCZIHVuZGVjbGFyZWQgKGZpcnN0IHVzZSBpbiB0aGlzIGZ1bmN0aW9uKTsgZGlkIHlv
-dSBtZWFuIOKAmEtFWEVDX0xPQURFRF9QQVRI4oCZPwo+ICAgICAgICAgICAgICBLRVhFQ19QUkVT
-RVJWRV9DT05URVhUIDogS0VYRUNfTElWRV9VUERBVEU7Cj4gICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fgo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgS0VYRUNfTE9BREVEX1BBVEgKCgpJIHNlZSwgdGhlIHN5bWJvbHMg
-SSBhZGRlZCBhcmUgaGlkZGVuIGJlaGluZCBIQVZFX0xJQlhFTkNUUkwsIGFuZCBJJ20gCmFibGUg
-dG8gY29tcGlsZSB3aXRoIC0td2l0aC14ZW49eWVzIHdpdGhvdXQgdGhpcyBoYXBwZW5pbmc6IApo
-dHRwczovL3Bhc3RlLm9wZW5zdXNlLm9yZy82NzczOTU4OSAuCgpJJ2xsIHJld29yayB0aGlzIHRv
-IHdvcmsgb24gYm90aCB4ZW4gYW5kIG5vbi14ZW4gc2V0dXBzIGFuZCBzZW5kIGFnYWluLgoKClZh
-cmFkCgo+IGtleGVjL2tleGVjLmM6MTM3NDoxNjogd2FybmluZzogdGhpcyBzdGF0ZW1lbnQgbWF5
-IGZhbGwgdGhyb3VnaCBbLVdpbXBsaWNpdC1mYWxsdGhyb3VnaD1dCj4gICAgICBrZXhlY19kZWJ1
-ZyA9IDE7Cj4gICAgICB+fn5+fn5+fn5+fn5efn4KPiBrZXhlYy9rZXhlYy5jOjEzNzU6Mzogbm90
-ZTogaGVyZQo+ICAgICBjYXNlIE9QVF9OT0lGRE9XTjoKPiAgICAgXn5+fgo+IG1ha2U6ICoqKiBb
-TWFrZWZpbGU6MTE0OiBrZXhlYy9rZXhlYy5vXSBFcnJvciAxCj4KCgoKCkFtYXpvbiBEZXZlbG9w
-bWVudCBDZW50ZXIgR2VybWFueSBHbWJICktyYXVzZW5zdHIuIDM4CjEwMTE3IEJlcmxpbgpHZXNj
-aGFlZnRzZnVlaHJ1bmc6IENocmlzdGlhbiBTY2hsYWVnZXIsIEpvbmF0aGFuIFdlaXNzCkVpbmdl
-dHJhZ2VuIGFtIEFtdHNnZXJpY2h0IENoYXJsb3R0ZW5idXJnIHVudGVyIEhSQiAxNDkxNzMgQgpT
-aXR6OiBCZXJsaW4KVXN0LUlEOiBERSAyODkgMjM3IDg3OQoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+Support loading a live update image for xen from kexec userspace.
+For a multiboot2 Elf on a xen setup, this will:
+- load the Elf into KEXEC_RANGE_MA_XEN
+- load purgatory and modules into KEXEC_RANGE_MA_LIVEUPDATE
+- append the Elf cmdline with " liveupdate=<size>@<addr>
+
+v2: define xen related symbols outside of HAVE_LIBXENCTRL
+
+Signed-off-by: Varad Gautam <vrd@amazon.de>
+---
+ kexec/arch/i386/kexec-mb2-x86.c | 74 ++++++++++++++++++++++++++++++++++++++---
+ kexec/kexec-xen.c               |  8 +++--
+ kexec/kexec-xen.h               | 17 +++++++++-
+ kexec/kexec.c                   | 31 ++++++++++++++++-
+ kexec/kexec.h                   |  5 ++-
+ 5 files changed, 125 insertions(+), 10 deletions(-)
+
+diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
+index b839d59..1ad8aed 100644
+--- a/kexec/arch/i386/kexec-mb2-x86.c
++++ b/kexec/arch/i386/kexec-mb2-x86.c
+@@ -42,6 +42,8 @@
+ #include "../../kexec.h"
+ #include "../../kexec-elf.h"
+ #include "kexec-x86.h"
++#include "../../kexec-syscall.h"
++#include "../../kexec-xen.h"
+ #include <arch/options.h>
+ 
+ /* From GNU GRUB */
+@@ -388,6 +390,15 @@ static uint64_t multiboot2_mbi_end(void *mbi_buf, uint64_t mbi_ptr)
+ 	return mbi_ptr;
+ }
+ 
++static inline int multiboot2_rel_valid(struct multiboot_header_tag_relocatable *rel_tag,
++					uint64_t rel_start, uint64_t rel_end)
++{
++	if (rel_start >= rel_tag->min_addr && rel_end <= rel_tag->max_addr)
++		return 1;
++
++	return 0;
++}
++
+ int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 			struct kexec_info *info)
+ {
+@@ -413,6 +424,7 @@ int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 		{ 0, 				0, 0, 0 },
+ 	};
+ 	static const char short_options[] = KEXEC_ARCH_OPT_STR "";
++	uint64_t rel_min, rel_max;
+ 
+ 	/* Probe for the MB header if it's not already found */
+ 	if (mbh == NULL && multiboot_x86_probe(buf, len) != 1)
+@@ -459,19 +471,59 @@ int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (tmp_cmdline) {
+ 		free(tmp_cmdline);
+ 	}
++
++	if (xen_present() && info->kexec_flags & KEXEC_LIVE_UPDATE ) {
++		if (!mhi.rel_tag) {
++			fprintf(stderr, "Multiboot2 image must be relocatable"
++				"for KEXEC_LIVE_UPDATE.\n");
++			return -1;
++		}
++		cmdline_add_liveupdate(&command_line);
++	}
++
+ 	command_line_len = strlen(command_line) + 1;
+ 
+ 	/* Load the ELF executable */
+-	if (mhi.rel_tag)
++	if (mhi.rel_tag) {
++		rel_min = mhi.rel_tag->min_addr;
++		rel_max = mhi.rel_tag->max_addr;
++
++		if (info->kexec_flags & KEXEC_LIVE_UPDATE && xen_present()) {
++			/* TODO also check if elf is xen */
++			/* On a live update, load target xen over the current xen image. */
++			uint64_t xen_start, xen_end;
++
++			xen_get_kexec_range(KEXEC_RANGE_MA_XEN, &xen_start, &xen_end);
++			if (multiboot2_rel_valid(mhi.rel_tag, xen_start, xen_end)) {
++				rel_min = xen_start;
++			} else {
++				fprintf(stderr, "Cannot place Elf into "
++				"KEXEC_RANGE_MA_XEN for KEXEC_LIVE_UPDATE.\n");
++				return -1;
++			}
++		}
++
+ 		elf_exec_build_load_relocatable(info, &ehdr, buf, len, 0,
+-						mhi.rel_tag->min_addr, mhi.rel_tag->max_addr,
+-						mhi.rel_tag->align);
+-	else
++						rel_min, rel_max, mhi.rel_tag->align);
++	} else
+ 		elf_exec_build_load(info, &ehdr, buf, len, 0);
+ 
++	if (info->kexec_flags & KEXEC_LIVE_UPDATE && xen_present()) {
++		uint64_t lu_start, lu_end;
++
++		xen_get_kexec_range(7 /* KEXEC_RANGE_MA_LIVEUPDATE */, &lu_start, &lu_end);
++		/* Fit everything else into lu_start-lu_end. First page after lu_start is
++		 * reserved for LU breadcrumb. */
++		rel_min = lu_start + 4096;
++		rel_max = lu_end;
++	} else {
++		rel_min = 0;
++		rel_max = ULONG_MAX;
++	}
++
+ 	/* Load the setup code */
+ 	elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+-			   0, ULONG_MAX, 1, 0);
++			   rel_min, rel_max, 1, 0);
+ 
+ 	/* Construct information tags. */
+ 	mbi_bytes = multiboot2_get_mbi_size(info->memory_ranges, command_line_len, modules, mod_command_line_space);
+@@ -480,6 +532,18 @@ int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
+ 	mbi_ptr = multiboot2_make_mbi(info, command_line, command_line_len, info->rhdr.rel_addr, mbi_buf, mbi_bytes);
+ 	free(command_line);
+ 
++	if (info->kexec_flags & KEXEC_LIVE_UPDATE && xen_present()) {
++		if (multiboot2_rel_valid(mhi.rel_tag, rel_min, rel_max)) {
++			/* Shrink the reloc range to fit into LU region for xen. */
++			mhi.rel_tag->min_addr = rel_min;
++			mhi.rel_tag->max_addr = rel_max;
++		} else {
++			fprintf(stderr, "Multiboot2 image cannot be relocated into "
++				"KEXEC_RANGE_MA_LIVEUPDATE for KEXEC_LIVE_UPDATE.\n");
++			return -1;
++		}
++	}
++
+ 	/* Load modules */
+ 	if (modules) {
+ 		char *mod_filename, *mod_command_line, *mod_clp, *buf;
+diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
+index afcfc5b..83629ba 100644
+--- a/kexec/kexec-xen.c
++++ b/kexec/kexec-xen.c
+@@ -177,8 +177,12 @@ int xen_kexec_load(struct kexec_info *info)
+ 		seg++;
+ 	}
+ 
+-	type = (info->kexec_flags & KEXEC_ON_CRASH) ? KEXEC_TYPE_CRASH
+-		: KEXEC_TYPE_DEFAULT;
++	if (info->kexec_flags & KEXEC_ON_CRASH)
++		type = KEXEC_TYPE_CRASH;
++	else if (info->kexec_flags & KEXEC_LIVE_UPDATE )
++		type = KEXEC_TYPE_LIVE_UPDATE;
++	else
++		type = KEXEC_TYPE_DEFAULT;
+ 
+ 	arch = (info->kexec_flags & KEXEC_ARCH_MASK) >> 16;
+ #if defined(__i386__) || defined(__x86_64__)
+diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
+index 94d22cd..70fb576 100644
+--- a/kexec/kexec-xen.h
++++ b/kexec/kexec-xen.h
+@@ -64,9 +64,24 @@ extern int __xc_interface_close(xc_interface *xch);
+ 
+ #endif /* CONFIG_LIBXENCTRL_DL */
+ 
+-
+ #endif /* HAVE_LIBXENCTRL */
+ 
++#ifndef KEXEC_RANGE_MA_XEN
++#define KEXEC_RANGE_MA_XEN 1
++#endif
++
++#ifndef KEXEC_RANGE_MA_LIVEUPDATE
++#define KEXEC_RANGE_MA_LIVEUPDATE 7
++#endif
++
++#ifndef KEXEC_TYPE_LIVE_UPDATE
++#define KEXEC_TYPE_LIVE_UPDATE 2
++#endif
++
++#ifndef KEXEC_LIVE_UPDATE
++#define KEXEC_LIVE_UPDATE 0x00000004
++#endif
++
+ int xen_get_kexec_range(int range, uint64_t *start, uint64_t *end);
+ 
+ #endif /* KEXEC_XEN_H */
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 6601f1f..da61d6d 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -47,6 +47,7 @@
+ #include "kexec.h"
+ #include "kexec-syscall.h"
+ #include "kexec-elf.h"
++#include "kexec-xen.h"
+ #include "kexec-sha256.h"
+ #include "kexec-zlib.h"
+ #include "kexec-lzma.h"
+@@ -1022,6 +1023,8 @@ void usage(void)
+ 	       "                      context of current kernel during kexec.\n"
+ 	       "     --load-jump-back-helper Load a helper image to jump back\n"
+ 	       "                      to original kernel.\n"
++	       "     --load-live-update Load the new kernel to overwrite the\n"
++	       "                      running kernel.\n"
+ 	       "     --entry=<addr>   Specify jump back address.\n"
+ 	       "                      (0 means it's not jump back or\n"
+ 	       "                      preserve context)\n"
+@@ -1171,6 +1174,25 @@ char *concat_cmdline(const char *base, const char *append)
+ 	return cmdline;
+ }
+ 
++void cmdline_add_liveupdate(char **base)
++{
++	uint64_t lu_start, lu_end, lu_sizeM;
++	char *str;
++	char buf[64];
++	size_t len;
++
++	if ( !xen_present() )
++		return;
++
++	xen_get_kexec_range(KEXEC_RANGE_MA_LIVEUPDATE, &lu_start, &lu_end);
++	lu_sizeM = (lu_end - lu_start) / (1024 * 1024) + 1;
++	sprintf(buf, " liveupdate=%luM@0x%lx", lu_sizeM, lu_start);
++	len = strlen(*base) + strlen(buf) + 1;
++	str = xmalloc(len);
++	sprintf(str, "%s%s", *base, buf);
++	*base = str;
++}
++
+ /* New file based kexec system call related code */
+ static int do_kexec_file_load(int fileind, int argc, char **argv,
+ 			unsigned long flags) {
+@@ -1402,11 +1424,13 @@ int main(int argc, char *argv[])
+ 			}
+ 			break;
+ 		case OPT_LOAD_PRESERVE_CONTEXT:
++		case OPT_LOAD_LIVE_UPDATE:
+ 			do_load = 1;
+ 			do_exec = 0;
+ 			do_shutdown = 0;
+ 			do_sync = 1;
+-			kexec_flags = KEXEC_PRESERVE_CONTEXT;
++			kexec_flags = (opt == OPT_LOAD_PRESERVE_CONTEXT) ?
++				       KEXEC_PRESERVE_CONTEXT : KEXEC_LIVE_UPDATE;
+ 			break;
+ 		case OPT_TYPE:
+ 			type = optarg;
+@@ -1504,6 +1528,11 @@ int main(int argc, char *argv[])
+ 		    "\"--mem-max\" parameter\n");
+ 	}
+ 
++	if (do_load && (kexec_flags & KEXEC_LIVE_UPDATE) &&
++	    !xen_present()) {
++		die("--load-live-update can only be used with xen\n");
++	}
++
+ 	fileind = optind;
+ 	/* Reset getopt for the next pass; called in other source modules */
+ 	opterr = 1;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 28fd129..8021f39 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -233,7 +233,8 @@ extern int file_types;
+ #define OPT_LOAD_JUMP_BACK_HELPER 260
+ #define OPT_ENTRY		261
+ #define OPT_PRINT_CKR_SIZE	262
+-#define OPT_MAX			263
++#define OPT_LOAD_LIVE_UPDATE	263
++#define OPT_MAX			264
+ #define KEXEC_OPTIONS \
+ 	{ "help",		0, 0, OPT_HELP }, \
+ 	{ "version",		0, 0, OPT_VERSION }, \
+@@ -246,6 +247,7 @@ extern int file_types;
+ 	{ "exec",		0, 0, OPT_EXEC }, \
+ 	{ "load-preserve-context", 0, 0, OPT_LOAD_PRESERVE_CONTEXT}, \
+ 	{ "load-jump-back-helper", 0, 0, OPT_LOAD_JUMP_BACK_HELPER }, \
++	{ "load-live-update", 0, 0, OPT_LOAD_LIVE_UPDATE }, \
+ 	{ "entry",		1, 0, OPT_ENTRY }, \
+ 	{ "type",		1, 0, OPT_TYPE }, \
+ 	{ "load-panic",         0, 0, OPT_PANIC }, \
+@@ -319,6 +321,7 @@ const char * proc_iomem(void);
+ #define MAX_LINE	160
+ 
+ char *concat_cmdline(const char *base, const char *append);
++void cmdline_add_liveupdate(char **base);
+ 
+ int xen_present(void);
+ int xen_kexec_load(struct kexec_info *info);
+-- 
+2.7.4
+
+
+
+
+Amazon Development Center Germany GmbH
+Krausenstr. 38
+10117 Berlin
+Geschaeftsfuehrung: Christian Schlaeger, Jonathan Weiss
+Eingetragen am Amtsgericht Charlottenburg unter HRB 149173 B
+Sitz: Berlin
+Ust-ID: DE 289 237 879
+
+
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
