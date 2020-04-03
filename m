@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jJt85-00074j-Qv
- for kexec@lists.infradead.org; Thu, 02 Apr 2020 06:15:08 +0000
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
- memory resource names
-References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-3-james.morse@arm.com>
- <20200402054946.GA97238@dhcp-128-65.nay.redhat.com>
-From: piliu <piliu@redhat.com>
-Message-ID: <9725d779-e0de-2d8d-8716-22df3e791820@redhat.com>
-Date: Thu, 2 Apr 2020 14:12:39 +0800
+Subject: Re: [PATCH v7 1/4] x86: kdump: move reserve_crashkernel_low() into
+ crash_core.c
+References: <20191223152349.180172-1-chenzhou10@huawei.com>
+ <20191223152349.180172-2-chenzhou10@huawei.com>
+ <20191227055458.GA14893@dhcp-128-65.nay.redhat.com>
+ <09d42854-461b-e85c-ba3f-0e1173dc95b5@huawei.com>
+ <20191228093227.GA19720@dhcp-128-65.nay.redhat.com>
+ <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
+From: Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <38281780-5f3d-63dd-77cb-599815173c3c@huawei.com>
+Date: Fri, 3 Apr 2020 15:13:32 +0800
 MIME-Version: 1.0
-In-Reply-To: <20200402054946.GA97238@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <75429528-ba74-cfd3-b5bc-df5425ac0496@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,80 +24,419 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, James Morse <james.morse@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: kbuild test robot <lkp@intel.com>, horms@verge.net.au, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, tglx@linutronix.de, will@kernel.org, linux-arm-kernel@lists.infradead.org
 
+Hi Dave,
 
+On 2019/12/31 9:39, Chen Zhou wrote:
+> Hi Dave,
+> 
+> On 2019/12/28 17:32, Dave Young wrote:
+>> On 12/27/19 at 07:04pm, Chen Zhou wrote:
+>>> Hi Dave
+>>>
+>>> On 2019/12/27 13:54, Dave Young wrote:
+>>>> Hi,
+>>>> On 12/23/19 at 11:23pm, Chen Zhou wrote:
+>>>>> In preparation for supporting reserve_crashkernel_low in arm64 as
+>>>>> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
+>>>>>
+>>>>> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
+>>>>> is specified. Different with x86_64, don't set low memory automatically.
+>>>>
+>>>> Do you have any reason for the difference?  I'd expect we have same
+>>>> logic if possible and remove some of the ifdefs.
+>>>
+>>> In x86_64, if we reserve crashkernel above 4G, then we call reserve_crashkernel_low()
+>>> to reserve low memory.
+>>>
+>>> In arm64, to simplify, we call reserve_crashkernel_low() at the beginning of reserve_crashkernel()
+>>> and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low() allocated something.
+>>> In this case, if reserve crashkernel below 4G there will be 256M low memory set automatically
+>>> and this needs extra considerations.
+>>
+>> Sorry that I did not read the old thread details and thought that is
+>> arch dependent.  But rethink about that, it would be better that we can
+>> have same semantic about crashkernel parameters across arches.  If we
+>> make them different then it causes confusion, especially for
+>> distributions.
+>>
+>> OTOH, I thought if we reserve high memory then the low memory should be
+>> needed.  There might be some exceptions, but I do not know the exact
+>> one, can we make the behavior same, and special case those systems which
+>> do not need low memory reservation.
+>>
+> I thought like this and did implement with crashkernel parameters arch independent.
+> This is my v4: https://lkml.org/lkml/2019/5/6/1361, i implemented according to x86_64's
+> behavior.
+> 
+>>>
+>>> previous discusses:
+>>> 	https://lkml.org/lkml/2019/6/5/670
+>>> 	https://lkml.org/lkml/2019/6/13/229
+>>
+>> Another concern from James:
+>> "
+>> With both crashk_low_res and crashk_res, we end up with two entries in /proc/iomem called
+>> "Crash kernel". Because its sorted by address, and kexec-tools stops searching when it
+>> find "Crash kernel", you are always going to get the kernel placed in the lower portion.
+>> "
+>>
+>> The kexec-tools code is iterating all "Crash kernel" ranges and add them
+>> in an array.  In X86 code, it uses the higher range to locate memory.
+> 
+> We also discussed about this: https://lkml.org/lkml/2019/6/13/227.
+> I guess James's opinion is that kexec-tools should take forward compatibility into account.
+> "But we can't rely on people updating user-space when they update the kernel!" -- James
+> 
+>>
+>>>
+>>>>
+>>>>>
+>>>>> Reported-by: kbuild test robot <lkp@intel.com>
+>>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>>> ---
+>>>>>  arch/x86/kernel/setup.c    | 62 ++++-----------------------------
+>>>>>  include/linux/crash_core.h |  3 ++
+>>>>>  include/linux/kexec.h      |  2 --
+>>>>>  kernel/crash_core.c        | 87 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>>  kernel/kexec_core.c        | 17 ---------
+>>>>>  5 files changed, 96 insertions(+), 75 deletions(-)
+>>>>>
+>>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>>>>> index cedfe20..5f38942 100644
+>>>>> --- a/arch/x86/kernel/setup.c
+>>>>> +++ b/arch/x86/kernel/setup.c
+>>>>> @@ -486,59 +486,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>>>>>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>>>>>  #endif
+>>>>>  
+>>>>> -static int __init reserve_crashkernel_low(void)
+>>>>> -{
+>>>>> -#ifdef CONFIG_X86_64
+>>>>> -	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> -	unsigned long total_low_mem;
+>>>>> -	int ret;
+>>>>> -
+>>>>> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>>>>> -
+>>>>> -	/* crashkernel=Y,low */
+>>>>> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+>>>>> -	if (ret) {
+>>>>> -		/*
+>>>>> -		 * two parts from kernel/dma/swiotlb.c:
+>>>>> -		 * -swiotlb size: user-specified with swiotlb= or default.
+>>>>> -		 *
+>>>>> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+>>>>> -		 * to 8M for other buffers that may need to stay low too. Also
+>>>>> -		 * make sure we allocate enough extra low memory so that we
+>>>>> -		 * don't run out of DMA buffers for 32-bit devices.
+>>>>> -		 */
+>>>>> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+>>>>> -	} else {
+>>>>> -		/* passed with crashkernel=0,low ? */
+>>>>> -		if (!low_size)
+>>>>> -			return 0;
+>>>>> -	}
+>>>>> -
+>>>>> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>>>>> -	if (!low_base) {
+>>>>> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>>>> -		       (unsigned long)(low_size >> 20));
+>>>>> -		return -ENOMEM;
+>>>>> -	}
+>>>>> -
+>>>>> -	ret = memblock_reserve(low_base, low_size);
+>>>>> -	if (ret) {
+>>>>> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+>>>>> -		return ret;
+>>>>> -	}
+>>>>> -
+>>>>> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+>>>>> -		(unsigned long)(low_size >> 20),
+>>>>> -		(unsigned long)(low_base >> 20),
+>>>>> -		(unsigned long)(total_low_mem >> 20));
+>>>>> -
+>>>>> -	crashk_low_res.start = low_base;
+>>>>> -	crashk_low_res.end   = low_base + low_size - 1;
+>>>>> -	insert_resource(&iomem_resource, &crashk_low_res);
+>>>>> -#endif
+>>>>> -	return 0;
+>>>>> -}
+>>>>> -
+>>>>>  static void __init reserve_crashkernel(void)
+>>>>>  {
+>>>>>  	unsigned long long crash_size, crash_base, total_mem;
+>>>>> @@ -602,9 +549,12 @@ static void __init reserve_crashkernel(void)
+>>>>>  		return;
+>>>>>  	}
+>>>>>  
+>>>>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+>>>>> -		memblock_free(crash_base, crash_size);
+>>>>> -		return;
+>>>>> +	if (crash_base >= (1ULL << 32)) {
+>>>>> +		if (reserve_crashkernel_low()) {
+>>>>> +			memblock_free(crash_base, crash_size);
+>>>>> +			return;
+>>>>> +		}
+>>>>> +		insert_resource(&iomem_resource, &crashk_low_res);
+>>>>
+>>>> Some specific reason to move insert_resouce out of the
+>>>> reserve_crashkernel_low function?
+>>>
+>>> No specific reason.
+>>> I just exposed arm64 "Crash kernel low" in request_standard_resources() as other resources,
+>>> so did this change.
+>>
+>> Ok.
+>>
+>>>
+>>>>
+>>>>>  	}
+>>>>>  
+>>>>>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+>>>>> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+>>>>> index 525510a..4df8c0b 100644
+>>>>> --- a/include/linux/crash_core.h
+>>>>> +++ b/include/linux/crash_core.h
+>>>>> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>>>>>  extern unsigned char *vmcoreinfo_data;
+>>>>>  extern size_t vmcoreinfo_size;
+>>>>>  extern u32 *vmcoreinfo_note;
+>>>>> +extern struct resource crashk_res;
+>>>>> +extern struct resource crashk_low_res;
+>>>>>  
+>>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>>>>>  			  void *data, size_t data_len);
+>>>>> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>>>>>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>>>>>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>>>>> +int __init reserve_crashkernel_low(void);
+>>>>>  
+>>>>>  #endif /* LINUX_CRASH_CORE_H */
+>>>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>>>> index 1776eb2..5d5d963 100644
+>>>>> --- a/include/linux/kexec.h
+>>>>> +++ b/include/linux/kexec.h
+>>>>> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
+>>>>>  
+>>>>>  /* Location of a reserved region to hold the crash kernel.
+>>>>>   */
+>>>>> -extern struct resource crashk_res;
+>>>>> -extern struct resource crashk_low_res;
+>>>>>  extern note_buf_t __percpu *crash_notes;
+>>>>>  
+>>>>>  /* flag to track if kexec reboot is in progress */
+>>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>>>>> index 9f1557b..eb72fd6 100644
+>>>>> --- a/kernel/crash_core.c
+>>>>> +++ b/kernel/crash_core.c
+>>>>> @@ -7,6 +7,8 @@
+>>>>>  #include <linux/crash_core.h>
+>>>>>  #include <linux/utsname.h>
+>>>>>  #include <linux/vmalloc.h>
+>>>>> +#include <linux/memblock.h>
+>>>>> +#include <linux/swiotlb.h>
+>>>>>  
+>>>>>  #include <asm/page.h>
+>>>>>  #include <asm/sections.h>
+>>>>> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
+>>>>>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+>>>>>  static unsigned char *vmcoreinfo_data_safecopy;
+>>>>>  
+>>>>> +/* Location of the reserved area for the crash kernel */
+>>>>> +struct resource crashk_res = {
+>>>>> +	.name  = "Crash kernel",
+>>>>> +	.start = 0,
+>>>>> +	.end   = 0,
+>>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> +};
+>>>>> +struct resource crashk_low_res = {
+>>>>> +	.name  = "Crash kernel",
+>>>>> +	.start = 0,
+>>>>> +	.end   = 0,
+>>>>> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> +	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> +};
+>>>>> +
+>>>>>  /*
+>>>>>   * parsing the "crashkernel" commandline
+>>>>>   *
+>>>>> @@ -292,6 +310,75 @@ int __init parse_crashkernel_low(char *cmdline,
+>>>>>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>>>>>  }
+>>>>>  
+>>>>> +#if defined(CONFIG_X86_64)
+>>>>> +#define CRASH_ALIGN		SZ_16M
+>>>>> +#elif defined(CONFIG_ARM64)
+>>>>> +#define CRASH_ALIGN		SZ_2M
+>>>>> +#endif
+>>>>
+>>>> I think no need to have the #ifdef, although I can not think out of
+>>>> reason we have 16M for X86, maybe move it to 2M as well if no other
+>>>> objections.  Then it will be easier to reserve crashkernel successfully
+>>>> considering nowadays we have KASLR and other stuff it becomes harder.
+>>>
+>>> I also don't figure out why it is 16M in x86.
+>>
+>> IMHO, if we do not know why and in theory it should work with 2M, can
+>> you do some basic testing and move it to 2M?
+>>
+>> We can easily move back to 16M if someone really report something, but
+>> if we do not change it will always stay there but we do not know why.
+> 
+> Ok. I will do some test later.
 
-On 04/02/2020 01:49 PM, Dave Young wrote:
-> On 03/26/20 at 06:07pm, James Morse wrote:
->> Memory added to the system by hotplug has a 'System RAM' resource created
->> for it. This is exposed to user-space via /proc/iomem.
->>
->> This poses problems for kexec on arm64. If kexec decides to place the
->> kernel in one of these newly onlined regions, the new kernel will find
->> itself booting from a region not described as memory in the firmware
->> tables.
->>
->> Arm64 doesn't have a structure like the e820 memory map that can be
->> re-written when memory is brought online. Instead arm64 uses the UEFI
->> memory map, or the memory node from the DT, sometimes both. We never
->> rewrite these.
-> 
-> Could arm64 use similar way to update DT, or a cooked UEFI maps?
-> 
-> Add pingfan in cc, he said ppc64 update the DT after a memremove thus it
-> would be good to just redo a kexec load.
-> 
-Yes, the memory changes will be observed through device-node under
-/proc/device-tree/ (which is for powerpc).
+Recently, i tested with 2M alignment in x86 and the system works well.
 
-Later if running kexec -l/-p , it can build new dtb with the latest info
-from /proc/device-tree
-> Added Pingfan and Hari for comments and corrections.
+Besides, i found memblock_find_in_range() in reserve_crashkernel()
+restrict the lower bound of the range to "CRASH_ALIGN".
+If we can make memblock_find_in_range() search from the start of memory?
+
+The code is as follows:
+
+static void __init reserve_crashkernel(void)
+{
+	...
+	if (!high)
+            crash_base = memblock_find_in_range(CRASH_ALIGN,
+                        CRASH_ADDR_LOW_MAX,
+                        crash_size, CRASH_ALIGN);
+        if (!crash_base)
+            crash_base = memblock_find_in_range(CRASH_ALIGN,
+                        CRASH_ADDR_HIGH_MAX,
+                        crash_size, CRASH_ALIGN);
+
+Thanks,
+Chen Zhou
 > 
 >>
->> Allow an architecture to specify a different name for these hotplug
->> regions.
+>>>
+>>>>
+>>>>> +
+>>>>> +int __init reserve_crashkernel_low(void)
+>>>>> +{
+>>>>> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+>>>>> +	unsigned long long base, low_base = 0, low_size = 0;
+>>>>> +	unsigned long total_low_mem;
+>>>>> +	int ret;
+>>>>> +
+>>>>> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>>>>> +
+>>>>> +	/* crashkernel=Y,low */
+>>>>> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
+>>>>> +			&base);
+>>>>> +	if (ret) {
+>>>>> +#ifdef CONFIG_X86_64
+>>>>> +		/*
+>>>>> +		 * two parts from lib/swiotlb.c:
+>>>>> +		 * -swiotlb size: user-specified with swiotlb= or default.
+>>>>> +		 *
+>>>>> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+>>>>> +		 * to 8M for other buffers that may need to stay low too. Also
+>>>>> +		 * make sure we allocate enough extra low memory so that we
+>>>>> +		 * don't run out of DMA buffers for 32-bit devices.
+>>>>> +		 */
+>>>>> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+>>>>> +				256UL << 20);
+>>>>> +#else
+>>>>> +		/*
+>>>>> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
+>>>>> +		 * specified.
+>>>>> +		 */
+>>>>> +		return -EINVAL;
+>>>>> +#endif
+>>>>
+>>>> As said before, can you explore about why it needs different logic, it
+>>>> would be good to keep two arches same.
+>>>>
+>>>>> +	} else {
+>>>>> +		/* passed with crashkernel=0,low ? */
+>>>>> +		if (!low_size)
+>>>>> +			return 0;
+>>>>> +	}
+>>>>> +
+>>>>> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>>>>> +	if (!low_base) {
+>>>>> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>>>> +		       (unsigned long)(low_size >> 20));
+>>>>> +		return -ENOMEM;
+>>>>> +	}
+>>>>> +
+>>>>> +	ret = memblock_reserve(low_base, low_size);
+>>>>> +	if (ret) {
+>>>>> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+>>>>> +				__func__);
+>>>>> +		return ret;
+>>>>> +	}
+>>>>> +
+>>>>> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+>>>>> +		(unsigned long)(low_size >> 20),
+>>>>> +		(unsigned long)(low_base >> 20),
+>>>>> +		(unsigned long)(total_low_mem >> 20));
+>>>>> +
+>>>>> +	crashk_low_res.start = low_base;
+>>>>> +	crashk_low_res.end   = low_base + low_size - 1;
+>>>>> +#endif
+>>>>> +	return 0;
+>>>>> +}
+>>>>> +
+>>>>>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>>>>>  			  void *data, size_t data_len)
+>>>>>  {
+>>>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>>>> index 15d70a9..458d093 100644
+>>>>> --- a/kernel/kexec_core.c
+>>>>> +++ b/kernel/kexec_core.c
+>>>>> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
+>>>>>  /* Flag to indicate we are going to kexec a new kernel */
+>>>>>  bool kexec_in_progress = false;
+>>>>>  
+>>>>> -
+>>>>> -/* Location of the reserved area for the crash kernel */
+>>>>> -struct resource crashk_res = {
+>>>>> -	.name  = "Crash kernel",
+>>>>> -	.start = 0,
+>>>>> -	.end   = 0,
+>>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> -};
+>>>>> -struct resource crashk_low_res = {
+>>>>> -	.name  = "Crash kernel",
+>>>>> -	.start = 0,
+>>>>> -	.end   = 0,
+>>>>> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+>>>>> -	.desc  = IORES_DESC_CRASH_KERNEL
+>>>>> -};
+>>>>> -
+>>>>>  int kexec_should_crash(struct task_struct *p)
+>>>>>  {
+>>>>>  	/*
+>>>>> -- 
+>>>>> 2.7.4
+>>>>>
+>>>>
+>>>> Thanks
+>>>> Dave
+>>>>
+>>>>
+>>>> .
+>>>>
+>>> Thanks,
+>>> Chen Zhou
+>>>
 >>
->> Signed-off-by: James Morse <james.morse@arm.com>
->> ---
->>  mm/memory_hotplug.c | 6 +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index 0a54ffac8c68..69b03dd7fc74 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -42,6 +42,10 @@
->>  #include "internal.h"
->>  #include "shuffle.h"
->>  
->> +#ifndef MEMORY_HOTPLUG_RES_NAME
->> +#define MEMORY_HOTPLUG_RES_NAME "System RAM"
->> +#endif
->> +
->>  /*
->>   * online_page_callback contains pointer to current page onlining function.
->>   * Initially it is generic_online_page(). If it is required it could be
->> @@ -103,7 +107,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
->>  {
->>  	struct resource *res;
->>  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
->> -	char *resource_name = "System RAM";
->> +	char *resource_name = MEMORY_HOTPLUG_RES_NAME;
->>  
->>  	if (start + size > max_mem_size)
->>  		return ERR_PTR(-E2BIG);
->> -- 
->> 2.25.1
+>> Thanks
+>> Dave
 >>
 >>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
+> 
+> Thanks,
+> Chen Zhou
+> 
 
 
 _______________________________________________
