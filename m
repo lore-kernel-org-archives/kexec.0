@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 6 Apr 2020 22:10:53 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: Trying to kexec on Allwinner A80
-Message-ID: <20200406201053.GA10931@Red>
-References: <20200406082720.GA31279@Red>
- <20200406091600.GF25745@shell.armlinux.org.uk>
- <20200406092540.GB31279@Red>
- <20200406093729.GG25745@shell.armlinux.org.uk>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200406093729.GG25745@shell.armlinux.org.uk>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jLaHp-000320-Vo
+ for kexec@lists.infradead.org; Mon, 06 Apr 2020 22:32:11 +0000
+Received: by mail-pg1-f200.google.com with SMTP id 201so805434pgg.11
+ for <kexec@lists.infradead.org>; Mon, 06 Apr 2020 15:32:01 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
+Date: Tue,  7 Apr 2020 04:01:40 +0530
+Message-Id: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,55 +18,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
 
-On Mon, Apr 06, 2020 at 10:37:29AM +0100, Russell King - ARM Linux admin wrote:
-> On Mon, Apr 06, 2020 at 11:25:40AM +0200, Corentin Labbe wrote:
-> > On Mon, Apr 06, 2020 at 10:16:00AM +0100, Russell King - ARM Linux admin wrote:
-> > > On Mon, Apr 06, 2020 at 10:27:20AM +0200, Corentin Labbe wrote:
-> > > > Hello
-> > > > 
-> > > > I am trying to add the last missing Allwinner Soc in kernelci: the A80.
-> > > > But this SoC does not have any way to be used in kernelci, no USB nor network in uboot.
-> > > > So I have tried to fake uboot since the kernel has network support and run the new kernel via kexec.
-> > > > 
-> > > > But kexec 2.0.18 fail to work:
-> > > > kexec --force /tmp/kernel --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-> > > 
-> > > What happens if you omit the dtb argument?
-> > > 
-> > 
-> > No change without dtb
-> > 
-> > I have also tried to add --mem-mim and --mem-max without any change.
-> > I given mem according to what I saw in /proc/iomem
-> > 20000000-9fffffff : System RAM
-> >   20008000-207fffff : Kernel code
-> >   20900000-209a0c87 : Kernel data
-> > So I gave --mem-min 0x30000000 --mem-max 0x9fffffff
-> > Anyway, the result is always the same.
-> 
-> The next step is to enable the early debugging - first in the
-> decompressor - add #define DEBUG to the top of
-> arch/arm/boot/compressed/head.S
-> 
-> Also enable DEBUG_LL in the kernel and use earlyprintk to see if you can
-> get anything from the new kernel.
-> 
+kexec_file_load() syscall interface is now supported for
+arm64 architecture as well via commits:
+3751e728cef2 ("arm64: kexec_file: add crash dump support") and
+3ddd9992a590 ("arm64: enable KEXEC_FILE config")].
 
-I dont know what happened, but now I always get "Could not find a free area of memory of 0x86c1c0 bytes..." (even with kexec 2.0.18)
-Furthermore, I have added crashkernel=128M to the cmdlist
-I have verified that the reservation is working:
-20000000-9fffffff : System RAM
-  20008000-207fffff : Kernel code
-  20900000-209a0c87 : Kernel data
-  40000000-47ffffff : Crash kernel
-But even with this reservation, no change.
+This patch enables config KEXEC_FILE by default in the
+arm64 defconfig, so that user-space tools like kexec-tools
+can use the same as the default interface for kexec/kdump
+on arm64.
+
+Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: kexec@lists.infradead.org
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+---
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index 24e534d85045..fa122f4341a2 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
+ CONFIG_NUMA=y
+ CONFIG_SECCOMP=y
+ CONFIG_KEXEC=y
++CONFIG_KEXEC_FILE=y
+ CONFIG_CRASH_DUMP=y
+ CONFIG_XEN=y
+ CONFIG_COMPAT=y
+-- 
+2.7.4
 
 
 _______________________________________________
