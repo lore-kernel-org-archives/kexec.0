@@ -1,19 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jMCT9-0001Jp-9C
- for kexec@lists.infradead.org; Wed, 08 Apr 2020 15:18:25 +0000
-Date: Wed, 8 Apr 2020 23:18:08 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
-Message-ID: <20200408151808.GS2402@MiWiFi-R3L-srv>
-References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
- <20200407110115.GA14381@MiWiFi-R3L-srv>
- <87r1wzlcwn.fsf@vitty.brq.redhat.com>
+Date: Wed, 8 Apr 2020 17:24:12 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: Re: Trying to kexec on Allwinner A80
+Message-ID: <20200408152412.GA3621@Red>
+References: <20200407100203.GK25745@shell.armlinux.org.uk>
+ <20200407101912.GL25745@shell.armlinux.org.uk>
+ <20200407113454.GA457@Red>
+ <20200407122243.GN25745@shell.armlinux.org.uk>
+ <20200407130559.GB457@Red>
+ <20200407132602.GO25745@shell.armlinux.org.uk>
+ <20200407134849.GC457@Red>
+ <20200407181740.GP25745@shell.armlinux.org.uk>
+ <20200408084029.GA1859@Red>
+ <20200408093320.GQ25745@shell.armlinux.org.uk>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87r1wzlcwn.fsf@vitty.brq.redhat.com>
+In-Reply-To: <20200408093320.GQ25745@shell.armlinux.org.uk>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,85 +28,106 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vitaly Kuznetsov <vkuznets@redhat.com>
-Cc: dzickus@redhat.com, Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Christopherson <sean.j.christopherson@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, dyoung@redhat.com, Jim Mattson <jmattson@google.com>
+To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
 
-On 04/07/20 at 02:04pm, Vitaly Kuznetsov wrote:
-> Baoquan He <bhe@redhat.com> writes:
+On Wed, Apr 08, 2020 at 10:33:20AM +0100, Russell King - ARM Linux admin wrote:
+> On Wed, Apr 08, 2020 at 10:40:29AM +0200, Corentin Labbe wrote:
+> > This is the last boot:
+> > ## Loading init Ramdisk from Legacy Image at 2a000000 ...
+> >    Image Name:   
+> >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
+> >    Data Size:    8031928 Bytes = 7.7 MiB
+> >    Load Address: 00000000
+> >    Entry Point:  00000000
+> >    Verifying Checksum ... OK
+> > ## Flattened Device Tree blob at 23000000
+> >    Booting using the fdt blob at 0x23000000
+> >    Loading Ramdisk to 29857000, end 29fffeb8 ... OK
+> >    Loading Device Tree to 2984e000, end 29856fd1 ... OK
+> > Starting kernel ...
+> > ID:0x00000000 DT:0x2984E000
+> > Uncompressing Linux... done, booting the kernel.
+> > [...]
+> > fake uboot stuff
+> > [...]
+> > DEBUG: bootz: run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 earlyprintk ip=dhcp'
+> > Set DEBUG!
+> > main:1417 OPT_KEXEC_SYSCALL
+> > main:1422 OPT_KEXEC_SYSCALL_AUTO
+> > arch_process_options:119
+> > main:1500
+> > main:1517 res=0 do_load=1
+> > main:1519 res=0 do_kexec_file_syscall=0
+> > my_load:713
+> > Try gzip decompression.
+> > kernel: 0xb6931008 kernel_size: 0x444fc8
+> > get_memory_ranges:36
+> > MEMORY RANGES
+> > 0000000020000000-000000009fffffff (0)
+> > zImage_arm_load:423
+> > zImage header: 0x016f2818 0x00000000 0x00444fc8
+> > zImage size 0x444fc8, file size 0x444fc8
+> > zImage requires 0x00455fc8 bytes
+> >   offset 0x00006738 tag 0x5a534c4b size 8
+> > Decompressed kernel sizes:
+> >  text+data 0x00b77958 bss 0x0003d428 total 0x00bb4d80
+> > Resulting kernel space: 0x00fcd920
+> > Kernel: address=0x20008000 size=0x00fcd920
+> > Initrd: address=0x20fd6000 size=0x016a6b97
+> > DT    : address=0x2267d000 size=0x00006043
+> > kexec_load: entry = 0x20008000 flags = 0x280000
+> > nr_segments = 3
+> > segment[0].buf   = 0xb6931008
+> > segment[0].bufsz = 0x444fcc
+> > segment[0].mem   = 0x20008000
+> > segment[0].memsz = 0x445000
+> > segment[1].buf   = 0xb528a008
+> > segment[1].bufsz = 0x16a6b97
+> > segment[1].mem   = 0x20fd6000
+> > segment[1].memsz = 0x16a7000
+> > segment[2].buf   = 0x4ef88
+> > segment[2].bufsz = 0x6043
+> > segment[2].mem   = 0x2267d000
+> > segment[2].memsz = 0x7000
+> > main:1568 res=0[   32.098439] sun7i-dwmac 830000.ethernet eth0: Link is Down
+> > main:1582 res=0 do_exec=1
+> > [   32.113191] kexec_core: Starting new kernel
+> > [   32.460412] Bye!
+> > ID:0xFFFFFFFF DT:0x2267D000
+> > C:0x200080C0-0x2044CFE0->0x20B80500-0x20FC5420
+> > ID:0xFFFFFFFF DT:0x2267D000
+> > Uncompressing Linux... done, booting the kernel.
 > 
-> >
-> > The trace is here. 
-> >
-> > [  132.480817] RIP: 0010:crash_vmclear_local_loaded_vmcss+0x57/0xd0 [kvm_intel] 
+> Okay, that looks fine:
+> - the DT is out of the way, so shouldn't be corrupted by the
+>   decompression process.
+> - the decompressor writes the kernel image to 0x20008000 to 0x20b7f958
+>   which is clear of the decompressor itself (which relocated itself
+>   to 0x20b80500).
+> - the ID doesn't matter for DT booting purposes.
 > 
-> This is a known bug,
+> I see you've gone back to using your own dtb rather than one derived
+> from the booting kernel. I strongly recommend against giving your own
+> dtb to kexec as if the boot loader modifies the DTB when calling the
+> first kernel (such as adding memory region information, adding MAC
+> addresses, enabling or disabling various devices) those modifications
+> will be lost if you supply your own DTB to kexec.
 > 
-> https://lore.kernel.org/kvm/20200401081348.1345307-1-vkuznets@redhat.com/
+> Please drop "--dtb /tmp/dtb".
+> 
 
-Thanks for telling, Vitaly.
+Thanks it works now.
 
-I tested your patch, it works.
+With a working setup I diffed dtb and the one given by uboot and it seems the missing node for booting was /memory.
+So now I am able to boot the same kernel as the "fake uboot".
 
-One thing is I noticed a warning message when your patch is applied. When
-I changed back to revert this patchset, didn't found this message. I didn't
-look into the detail of network core code and the kvm vmx code, maybe it's
-not relevant.
+For booting a different kernel, I fdtput the dtb (for memory and bootargs), and it works until it try to mount the roofs which it find corrupt.
+Since the rootfs I get by the fakeuboot is a "uboot legacy image" (rootfs.cpio.gz modified by mkimage), I drop the first 64bytes but it seems not sufficiant. (even if file say it is a good rootfs.cpio.gz)
+Or perhaps the kernel get an invalid initrd address.
 
-
-[ 3708.629234] Type was not set for devlink port.
-[ 3708.629258] WARNING: CPU: 3 PID: 60 at net/core/devlink.c:7164 devlink_port_type_warn+0x11/0x20
-[ 3708.632328] Modules linked in: rfkill sunrpc intel_powerclamp coretemp kvm_intel kvm irqbypass intel_cstate iTCO_wdt hpwdt intel_uncore gpio_ich iTCO_vendor_support pcspkr ipmi_ssif hpilo lpc_ich ipmi_si ipmi_devintf ipmi_msghandler acpi_power_meter pcc_cpufreq i7core_edac ip_tables xfs libcrc32c radeon i2c_algo_bit drm_kms_helper cec ttm crc32c_intel serio_raw drm ata_generic pata_acpi mlx4_core bnx2 hpsa scsi_transport_sas
-[ 3708.640782] CPU: 3 PID: 60 Comm: kworker/3:1 Kdump: loaded Tainted: G          I       5.6.0+ #1
-[ 3708.642715] Hardware name: HP ProLiant DL380 G6, BIOS P62 08/16/2015
-[ 3708.644222] Workqueue: events devlink_port_type_warn
-[ 3708.645349] RIP: 0010:devlink_port_type_warn+0x11/0x20
-[ 3708.646535] Code: 0f 84 58 ff ff ff 0f 0b e9 51 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 90 66 66 66 66 90 48 c7 c7 c8 78 41 9d e8 21 c4 7f ff <0f> 0b c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 66 66 66 66 90 ba 20
-[ 3708.650924] RSP: 0018:ffffadd540307e78 EFLAGS: 00010286
-[ 3708.652257] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[ 3708.653889] RDX: 0000000000000002 RSI: ffffffff9df3e3c2 RDI: 0000000000000246
-[ 3708.655601] RBP: ffff9e0f8c1a7350 R08: 0000035f7b873491 R09: 0000000000000022
-[ 3708.657300] R10: ffffadd540307cc0 R11: 0000000000000000 R12: ffff9e0f974ea880
-[ 3708.658952] R13: ffff9e0f974f0700 R14: ffff9e0f958a4d80 R15: ffff9e0f8c1a7358
-[ 3708.660645] FS:  0000000000000000(0000) GS:ffff9e0f974c0000(0000) knlGS:0000000000000000
-[ 3708.662472] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3708.663719] CR2: 00007f2651a02fa8 CR3: 00000000ac60a000 CR4: 00000000000006e0
-[ 3708.665330] Call Trace:
-[ 3708.665840]  process_one_work+0x1b4/0x380
-[ 3708.666841]  worker_thread+0x50/0x3c0
-[ 3708.667751]  kthread+0xf9/0x130
-[ 3708.668495]  ? process_one_work+0x380/0x380
-[ 3708.669536]  ? kthread_park+0x90/0x90
-[ 3708.670402]  ret_from_fork+0x35/0x40
-[ 3708.671265] ---[ end trace 0fbe622d402fe0cf ]---
-[ 3708.672351] ------------[ cut here ]------------
-[ 3708.673507] Type was not set for devlink port.
-[ 3708.673520] WARNING: CPU: 3 PID: 60 at net/core/devlink.c:7164 devlink_port_type_warn+0x11/0x20
-[ 3708.676731] Modules linked in: rfkill sunrpc intel_powerclamp coretemp kvm_intel kvm irqbypass intel_cstate iTCO_wdt hpwdt intel_uncore gpio_ich iTCO_vendor_support pcspkr ipmi_ssif hpilo lpc_ich ipmi_si ipmi_devintf ipmi_msghandler acpi_power_meter pcc_cpufreq i7core_edac ip_tables xfs libcrc32c radeon i2c_algo_bit drm_kms_helper cec ttm crc32c_intel serio_raw drm ata_generic pata_acpi mlx4_core bnx2 hpsa scsi_transport_sas
-[ 3708.686060] CPU: 3 PID: 60 Comm: kworker/3:1 Kdump: loaded Tainted: G        W I       5.6.0+ #1
-[ 3708.688185] Hardware name: HP ProLiant DL380 G6, BIOS P62 08/16/2015
-[ 3708.689575] Workqueue: events devlink_port_type_warn
-[ 3708.690676] RIP: 0010:devlink_port_type_warn+0x11/0x20
-[ 3708.691794] Code: 0f 84 58 ff ff ff 0f 0b e9 51 ff ff ff 66 66 2e 0f 1f 84 00 00 00 00 00 90 66 66 66 66 90 48 c7 c7 c8 78 41 9d e8 21 c4 7f ff <0f> 0b c3 66 66 2e 0f 1f 84 00 00 00 00 00 90 66 66 66 66 90 ba 20
-[ 3708.696053] RSP: 0018:ffffadd540307e78 EFLAGS: 00010286
-[ 3708.697212] RAX: 0000000000000000 RBX: 0000000000000000 RCX: 0000000000000000
-[ 3708.698800] RDX: 0000000000000002 RSI: ffffffff9df3e3c2 RDI: 0000000000000246
-[ 3708.700503] RBP: ffff9e0f8c1a5d00 R08: 0000035f7e2abfe6 R09: 0000000000000022
-[ 3708.702228] R10: ffffadd540307cc0 R11: 0000000000000000 R12: ffff9e0f974ea880
-[ 3708.703778] R13: ffff9e0f974f0700 R14: ffff9e0f958a4d80 R15: ffff9e0f8c1a5d08
-[ 3708.705410] FS:  0000000000000000(0000) GS:ffff9e0f974c0000(0000) knlGS:0000000000000000
-[ 3708.707214] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[ 3708.708462] CR2: 00007f2651a02fa8 CR3: 00000000ac60a000 CR4: 00000000000006e0
-[ 3708.710068] Call Trace:
-[ 3708.710581]  process_one_work+0x1b4/0x380
-[ 3708.711466]  worker_thread+0x50/0x3c0
-[ 3708.712307]  kthread+0xf9/0x130
-[ 3708.713107]  ? process_one_work+0x380/0x380
-[ 3708.714132]  ? kthread_park+0x90/0x90
-[ 3708.714938]  ret_from_fork+0x35/0x40
-[ 3708.715782] ---[ end trace 0fbe622d402fe0d0 ]---
-[10563.256223] perf: interrupt took too long (2566 > 2500), lowering kernel.perf_event_max_sample_rate to 77000
-[14719.477168] perf: interrupt took too long (3546 > 3207), lowering kernel.perf_event_max_sample_rate to 56000
-
+Anyway the main issue is fixed.
+Thanks for your help
 
 _______________________________________________
 kexec mailing list
