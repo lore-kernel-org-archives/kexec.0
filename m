@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 8 Apr 2020 17:16:57 +0100
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: Trying to kexec on Allwinner A80
-Message-ID: <20200408161657.GT25745@shell.armlinux.org.uk>
-References: <20200407101912.GL25745@shell.armlinux.org.uk>
- <20200407113454.GA457@Red>
- <20200407122243.GN25745@shell.armlinux.org.uk>
- <20200407130559.GB457@Red>
- <20200407132602.GO25745@shell.armlinux.org.uk>
- <20200407134849.GC457@Red>
- <20200407181740.GP25745@shell.armlinux.org.uk>
- <20200408084029.GA1859@Red>
- <20200408093320.GQ25745@shell.armlinux.org.uk>
- <20200408152412.GA3621@Red>
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jMGd0-0004H9-A1
+ for kexec@lists.infradead.org; Wed, 08 Apr 2020 19:44:52 +0000
+Received: by mail-wm1-f70.google.com with SMTP id u6so798266wmm.6
+ for <kexec@lists.infradead.org>; Wed, 08 Apr 2020 12:44:41 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
+In-Reply-To: <20200408151808.GS2402@MiWiFi-R3L-srv>
+References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
+ <20200407110115.GA14381@MiWiFi-R3L-srv> <87r1wzlcwn.fsf@vitty.brq.redhat.com>
+ <20200408151808.GS2402@MiWiFi-R3L-srv>
+Date: Wed, 08 Apr 2020 21:44:37 +0200
+Message-ID: <87mu7l2256.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200408152412.GA3621@Red>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,128 +27,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mripard@kernel.org, wens@csie.org, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: dzickus@redhat.com, Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Christopherson <sean.j.christopherson@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, dyoung@redhat.com, Jim Mattson <jmattson@google.com>
 
-On Wed, Apr 08, 2020 at 05:24:12PM +0200, Corentin Labbe wrote:
-> On Wed, Apr 08, 2020 at 10:33:20AM +0100, Russell King - ARM Linux admin wrote:
-> > On Wed, Apr 08, 2020 at 10:40:29AM +0200, Corentin Labbe wrote:
-> > > This is the last boot:
-> > > ## Loading init Ramdisk from Legacy Image at 2a000000 ...
-> > >    Image Name:   
-> > >    Image Type:   ARM Linux RAMDisk Image (uncompressed)
-> > >    Data Size:    8031928 Bytes = 7.7 MiB
-> > >    Load Address: 00000000
-> > >    Entry Point:  00000000
-> > >    Verifying Checksum ... OK
-> > > ## Flattened Device Tree blob at 23000000
-> > >    Booting using the fdt blob at 0x23000000
-> > >    Loading Ramdisk to 29857000, end 29fffeb8 ... OK
-> > >    Loading Device Tree to 2984e000, end 29856fd1 ... OK
-> > > Starting kernel ...
-> > > ID:0x00000000 DT:0x2984E000
-> > > Uncompressing Linux... done, booting the kernel.
-> > > [...]
-> > > fake uboot stuff
-> > > [...]
-> > > DEBUG: bootz: run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 earlyprintk ip=dhcp'
-> > > Set DEBUG!
-> > > main:1417 OPT_KEXEC_SYSCALL
-> > > main:1422 OPT_KEXEC_SYSCALL_AUTO
-> > > arch_process_options:119
-> > > main:1500
-> > > main:1517 res=0 do_load=1
-> > > main:1519 res=0 do_kexec_file_syscall=0
-> > > my_load:713
-> > > Try gzip decompression.
-> > > kernel: 0xb6931008 kernel_size: 0x444fc8
-> > > get_memory_ranges:36
-> > > MEMORY RANGES
-> > > 0000000020000000-000000009fffffff (0)
-> > > zImage_arm_load:423
-> > > zImage header: 0x016f2818 0x00000000 0x00444fc8
-> > > zImage size 0x444fc8, file size 0x444fc8
-> > > zImage requires 0x00455fc8 bytes
-> > >   offset 0x00006738 tag 0x5a534c4b size 8
-> > > Decompressed kernel sizes:
-> > >  text+data 0x00b77958 bss 0x0003d428 total 0x00bb4d80
-> > > Resulting kernel space: 0x00fcd920
-> > > Kernel: address=0x20008000 size=0x00fcd920
-> > > Initrd: address=0x20fd6000 size=0x016a6b97
-> > > DT    : address=0x2267d000 size=0x00006043
-> > > kexec_load: entry = 0x20008000 flags = 0x280000
-> > > nr_segments = 3
-> > > segment[0].buf   = 0xb6931008
-> > > segment[0].bufsz = 0x444fcc
-> > > segment[0].mem   = 0x20008000
-> > > segment[0].memsz = 0x445000
-> > > segment[1].buf   = 0xb528a008
-> > > segment[1].bufsz = 0x16a6b97
-> > > segment[1].mem   = 0x20fd6000
-> > > segment[1].memsz = 0x16a7000
-> > > segment[2].buf   = 0x4ef88
-> > > segment[2].bufsz = 0x6043
-> > > segment[2].mem   = 0x2267d000
-> > > segment[2].memsz = 0x7000
-> > > main:1568 res=0[   32.098439] sun7i-dwmac 830000.ethernet eth0: Link is Down
-> > > main:1582 res=0 do_exec=1
-> > > [   32.113191] kexec_core: Starting new kernel
-> > > [   32.460412] Bye!
-> > > ID:0xFFFFFFFF DT:0x2267D000
-> > > C:0x200080C0-0x2044CFE0->0x20B80500-0x20FC5420
-> > > ID:0xFFFFFFFF DT:0x2267D000
-> > > Uncompressing Linux... done, booting the kernel.
-> > 
-> > Okay, that looks fine:
-> > - the DT is out of the way, so shouldn't be corrupted by the
-> >   decompression process.
-> > - the decompressor writes the kernel image to 0x20008000 to 0x20b7f958
-> >   which is clear of the decompressor itself (which relocated itself
-> >   to 0x20b80500).
-> > - the ID doesn't matter for DT booting purposes.
-> > 
-> > I see you've gone back to using your own dtb rather than one derived
-> > from the booting kernel. I strongly recommend against giving your own
-> > dtb to kexec as if the boot loader modifies the DTB when calling the
-> > first kernel (such as adding memory region information, adding MAC
-> > addresses, enabling or disabling various devices) those modifications
-> > will be lost if you supply your own DTB to kexec.
-> > 
-> > Please drop "--dtb /tmp/dtb".
-> > 
-> 
-> Thanks it works now.
-> 
-> With a working setup I diffed dtb and the one given by uboot and it seems the missing node for booting was /memory.
+Baoquan He <bhe@redhat.com> writes:
 
-That is more or less expected - it seems kexec never adds the /memory
-nodes to the dtb.  I've no idea whether it should or should not be doing
-so, and is for others to thrash out the arguments for and against what
-should be modified and how.
+> On 04/07/20 at 02:04pm, Vitaly Kuznetsov wrote:
+>> Baoquan He <bhe@redhat.com> writes:
+>> 
+>> >
+>> > The trace is here. 
+>> >
+>> > [  132.480817] RIP: 0010:crash_vmclear_local_loaded_vmcss+0x57/0xd0 [kvm_intel] 
+>> 
+>> This is a known bug,
+>> 
+>> https://lore.kernel.org/kvm/20200401081348.1345307-1-vkuznets@redhat.com/
+>
+> Thanks for telling, Vitaly.
+>
+> I tested your patch, it works.
+>
+> One thing is I noticed a warning message when your patch is applied. When
+> I changed back to revert this patchset, didn't found this message. I didn't
+> look into the detail of network core code and the kvm vmx code, maybe it's
+> not relevant.
+>
+>
+> [ 3708.629234] Type was not set for devlink port.
+> [ 3708.629258] WARNING: CPU: 3 PID: 60 at net/core/devlink.c:7164 devlink_port_type_warn+0x11/0x20
+> [ 3708.632328] Modules linked in: rfkill sunrpc intel_powerclamp coretemp kvm_intel kvm irqbypass intel_cstate iTCO_wdt hpwdt intel_uncore gpio_ich iTCO_vendor_support pcspkr ipmi_ssif hpilo lpc_ich ipmi_si ipmi_devintf ipmi_msghandler acpi_power_meter pcc_cpufreq i7core_edac ip_tables xfs libcrc32c radeon i2c_algo_bit drm_kms_helper cec ttm crc32c_intel serio_raw drm ata_generic pata_acpi mlx4_core bnx2 hpsa scsi_transport_sas
+> [ 3708.640782] CPU: 3 PID: 60 Comm: kworker/3:1 Kdump: loaded Tainted: G          I       5.6.0+ #1
+> [ 3708.642715] Hardware name: HP ProLiant DL380 G6, BIOS P62 08/16/2015
+> [ 3708.644222] Workqueue: events devlink_port_type_warn
+> [ 3708.645349] RIP: 0010:devlink_port_type_warn+0x11/0x20
 
-The upshot of the existing kexec behaviour is you can't take a dtb from
-the kernel build and use it with kexec.
-
-> For booting a different kernel, I fdtput the dtb (for memory and bootargs), and it works until it try to mount the roofs which it find corrupt.
-
-rootfs or initrd supplied to kexec?
-
-> Since the rootfs I get by the fakeuboot is a "uboot legacy image" (rootfs.cpio.gz modified by mkimage), I drop the first 64bytes but it seems not sufficiant. (even if file say it is a good rootfs.cpio.gz)
-> Or perhaps the kernel get an invalid initrd address.
-
-Yep, the file given via --initrd or --ramdisk is loaded exactly as-is
-into memory, no parsing of the file is done.  Neither the kernel, nor
-kexec, does any u-boot parsing of the initrd/ramdisk file; they are
-not u-boot.
-
-If you want to try giving the kernel a bit more space, you can try
---image-size=$((0x01000000)) to see whether that affects the ramdisk
-image problem - if it does, it means we're still not properly
-calculating the space the kernel needs.
+What's in the patchset you're testing? Is it Sean's series + my patch,
+or just my patch? In case it's the later I'm having hard times trying to
+see how this can be related, but in case it's the former the fact that
+we do stuff a little bit differently on kexec may actually be triggering
+the issue above. I still think that it's not causing it, just
+triggering.
 
 -- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+Vitaly
+
 
 _______________________________________________
 kexec mailing list
