@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1043.google.com ([2607:f8b0:4864:20::1043])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jMMTR-0005zL-Lw
- for kexec@lists.infradead.org; Thu, 09 Apr 2020 01:59:23 +0000
-Received: by mail-pj1-x1043.google.com with SMTP id t40so626673pjb.3
- for <kexec@lists.infradead.org>; Wed, 08 Apr 2020 18:59:21 -0700 (PDT)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv2 2/2] powerpc/pseries: update device tree before ejecting
- hotplug uevents
-Date: Thu,  9 Apr 2020 09:56:51 +0800
-Message-Id: <1586397411-24259-2-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1586397411-24259-1-git-send-email-kernelfans@gmail.com>
-References: <1586397411-24259-1-git-send-email-kernelfans@gmail.com>
+ id 1jMV8d-00088g-J2
+ for kexec@lists.infradead.org; Thu, 09 Apr 2020 11:14:29 +0000
+Received: by mail-wr1-f70.google.com with SMTP id t8so260360wrq.22
+ for <kexec@lists.infradead.org>; Thu, 09 Apr 2020 04:14:17 -0700 (PDT)
+From: Vitaly Kuznetsov <vkuznets@redhat.com>
+Subject: Re: [PATCH v2 0/3] KVM: VMX: Fix for kexec VMCLEAR and VMXON cleanup
+In-Reply-To: <20200409012002.GT2402@MiWiFi-R3L-srv>
+References: <20200321193751.24985-1-sean.j.christopherson@intel.com>
+ <20200407110115.GA14381@MiWiFi-R3L-srv> <87r1wzlcwn.fsf@vitty.brq.redhat.com>
+ <20200408151808.GS2402@MiWiFi-R3L-srv> <87mu7l2256.fsf@vitty.brq.redhat.com>
+ <20200409012002.GT2402@MiWiFi-R3L-srv>
+Date: Thu, 09 Apr 2020 13:14:14 +0200
+Message-ID: <87imi829o9.fsf@vitty.brq.redhat.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,119 +24,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Libor Pechacek <lpechacek@suse.cz>, Pingfan Liu <kernelfans@gmail.com>, kexec@lists.infradead.org, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Leonardo Bras <leonardo@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: dzickus@redhat.com, Wanpeng Li <wanpengli@tencent.com>, kvm@vger.kernel.org, Joerg Roedel <joro@8bytes.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sean Christopherson <sean.j.christopherson@intel.com>, Paolo Bonzini <pbonzini@redhat.com>, dyoung@redhat.com, Jim Mattson <jmattson@google.com>
 
-A bug is observed on pseries by taking the following steps on rhel:
--1. drmgr -c mem -r -q 5
--2. echo c > /proc/sysrq-trigger
+Baoquan He <bhe@redhat.com> writes:
 
-And then, the failure looks like:
-kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:14/
-kdump: saving vmcore-dmesg.txt
-kdump: saving vmcore-dmesg.txt complete
-kdump: saving vmcore
- Checking for memory holes                         : [  0.0 %] /                   Checking for memory holes                         : [100.0 %] |                   Excluding unnecessary pages                       : [100.0 %] \                   Copying data                                      : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-[   44.337663] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-[   44.337677] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-[   44.337692] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-[   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffba400000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
-[   44.338548] Core dump to |/bin/false pipe failed
-/lib/kdump-lib-initramfs.sh: line 98:   469 Bus error               $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete
-kdump: saving vmcore failed
+>
+> While I would suggest adding kexec@lists.infradead.org when code changes
+> are related to kexec/kdump since we usually watch this mailing list.
+> LKML contains too many mails, we may miss this kind of change, have to
+> debug and test again.
+>
 
-* Root cause *
-  After analyzing, it turns out that in the current implementation,
-when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt updating as
-the code __remove_memory() comes before drmem_update_dt().
-So in kdump kernel, when read_from_oldmem() resorts to
-pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due to
-non-exist pfn. And finally, low_hash_fault() raise SIGBUS to process, as it
-can be observed "Bus error"
+Definitely makes sense and I'll try my best to remember doing this
+myself next time but the problem is that scripts/checkpatch.pl is not
+smart enough, kexec related bits are scattered all over kernel and
+drivers so I'm afraid you're missing a lot in kexec@ :-(
 
-From a viewpoint of listener and publisher, the publisher notifies the
-listener before data is ready.  This introduces a problem where udev
-launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt before
-updating. And in capture kernel, makedumpfile will access the memory based
-on the stale dt info, and hit a SIGBUS error due to an un-existed lmb.
-
-* Fix *
-  In order to fix this issue, update dt before __remove_memory(), and
-accordingly the same rule in hot-add path.
-
-This will introduce extra dt updating payload for each involved lmb when hotplug.
-But it should be fine since drmem_update_dt() is memory based operation and
-hotplug is not a hot path.
-
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Leonardo Bras <leonardo@linux.ibm.com> 
-Cc: Libor Pechacek <lpechacek@suse.cz> 
-Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com> 
-To: linuxppc-dev@lists.ozlabs.org
-Cc: kexec@lists.infradead.org
----
-v1 -> v2: improve commit, and more detail about the SIGBUG failure path
- arch/powerpc/platforms/pseries/hotplug-memory.c | 15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
-
-diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-index 4bd9004..72cd4a5 100644
---- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-+++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-@@ -394,6 +394,9 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
- 	invalidate_lmb_associativity_index(lmb);
- 	lmb_clear_nid(lmb);
- 	lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-+	rtas_hp_event = true;
-+	drmem_update_dt();
-+	rtas_hp_event = false;
- 
- 	__remove_memory(nid, base_addr, block_sz);
- 
-@@ -667,6 +670,9 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
- 
- 	lmb_set_nid(lmb);
- 	lmb->flags |= DRCONF_MEM_ASSIGNED;
-+	rtas_hp_event = true;
-+	drmem_update_dt();
-+	rtas_hp_event = false;
- 
- 	block_sz = memory_block_size_bytes();
- 
-@@ -685,6 +691,9 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
- 		invalidate_lmb_associativity_index(lmb);
- 		lmb_clear_nid(lmb);
- 		lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-+		rtas_hp_event = true;
-+		drmem_update_dt();
-+		rtas_hp_event = false;
- 
- 		__remove_memory(nid, base_addr, block_sz);
- 	}
-@@ -941,12 +950,6 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
- 		break;
- 	}
- 
--	if (!rc) {
--		rtas_hp_event = true;
--		rc = drmem_update_dt();
--		rtas_hp_event = false;
--	}
--
- 	unlock_device_hotplug();
- 	return rc;
- }
 -- 
-2.7.5
+Vitaly
 
 
 _______________________________________________
