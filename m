@@ -1,28 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jMumk-0006AH-SA
- for kexec@lists.infradead.org; Fri, 10 Apr 2020 14:37:36 +0000
-Received: from mail-io1-f51.google.com (mail-io1-f51.google.com
- [209.85.166.51])
- (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
- (No client certificate requested)
- by mail.kernel.org (Postfix) with ESMTPSA id 5CF1E212CC
- for <kexec@lists.infradead.org>; Fri, 10 Apr 2020 14:37:34 +0000 (UTC)
-Received: by mail-io1-f51.google.com with SMTP id f3so1946376ioj.1
- for <kexec@lists.infradead.org>; Fri, 10 Apr 2020 07:37:34 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200410074320.16589-1-ardb@kernel.org>
- <20200410135644.GB6772@dhcp-128-65.nay.redhat.com>
- <20200410140151.GC6772@dhcp-128-65.nay.redhat.com>
- <CAMj1kXEM13Y5FCh8GvJGTueen3fa0u_JX66j0X10KPf4Z0c4Jg@mail.gmail.com>
- <20200410143313.GB8205@zn.tnic>
-In-Reply-To: <20200410143313.GB8205@zn.tnic>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Fri, 10 Apr 2020 16:37:23 +0200
-Message-ID: <CAMj1kXGn+RuJx2PJ+X5KJ3rtMyRRX2eOK2Zu5GuK1NHxum1M4w@mail.gmail.com>
-Subject: Re: [PATCH] efi/x86: Revert struct layout change to fix kexec boot
- regression
+Date: Fri, 10 Apr 2020 12:10:13 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+Message-Id: <20200410121013.03b609fd572504c03a666f4a@linux-foundation.org>
+In-Reply-To: <ba481c82-c69e-043c-4b66-2d2c7732cf07@redhat.com>
+References: <20200326180730.4754-1-james.morse@arm.com>
+ <20200326180730.4754-2-james.morse@arm.com>
+ <321e6bf7-e898-7701-dd60-6c25237ff9cd@redhat.com>
+ <a21d90ea-2566-a2bc-ad2f-6464a416c97f@arm.com>
+ <9cb4ea0d-34c3-de42-4b3f-ee25a59c4835@redhat.com>
+ <b0443908-e36f-9bc4-4a8a-4206cb782d4b@arm.com>
+ <72672e2c-a57a-8df9-0cff-8035cbce7740@redhat.com>
+ <34274b02-60ba-eb78-eacd-6dc1146ed3cd@arm.com>
+ <80e4d1d7-f493-3f66-f700-86f18002d692@redhat.com>
+ <dfacf85f-d79d-8742-7a13-1ac0a67bad04@arm.com>
+ <ba481c82-c69e-043c-4b66-2d2c7732cf07@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,24 +29,11 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: linux-efi <linux-efi@vger.kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, X86 ML <x86@kernel.org>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>, Ingo Molnar <mingo@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-On Fri, 10 Apr 2020 at 16:34, Borislav Petkov <bp@alien8.de> wrote:
->
-> On Fri, Apr 10, 2020 at 04:22:49PM +0200, Ard Biesheuvel wrote:
-> > > BTW, a fixes tag is good to have..
-> >
-> > I usually omit those for patches that fix bugs that were introduced in
-> > the current cycle.
->
-> A valid use case for having the Fixes: tag anyway are the backporting
-> kernels gangs which might pick up the first patch for whatever reason
-> and would probably be thankful if they find the second one, i.e., the
-> fix for the first one, through grepping or other, automated means.
->
-
-Fair point.
+It's unclear (to me) what is the status of this patchset.  But it does appear that
+an new version can be expected?
 
 _______________________________________________
 kexec mailing list
