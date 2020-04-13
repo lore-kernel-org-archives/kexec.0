@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410071.outbound.protection.outlook.com
- ([40.107.141.71] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jO4T7-0001bn-0K
- for kexec@lists.infradead.org; Mon, 13 Apr 2020 19:10:06 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile: clear mem_map if not in pt_loads
-Date: Mon, 13 Apr 2020 19:09:55 +0000
-Message-ID: <OSBPR01MB1991F32564DE2C60C233EC76DDDD0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <1586749598-1671-1-git-send-email-piliu@redhat.com>
-In-Reply-To: <1586749598-1671-1-git-send-email-piliu@redhat.com>
-Content-Language: en-US
-MIME-Version: 1.0
+Date: Mon, 13 Apr 2020 16:01:44 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+Message-Id: <20200413160144.0e07c0033afc474228bc9218@linux-foundation.org>
+In-Reply-To: <871rorjzmc.fsf@x220.int.ebiederm.org>
+References: <34274b02-60ba-eb78-eacd-6dc1146ed3cd@arm.com>
+ <80e4d1d7-f493-3f66-f700-86f18002d692@redhat.com>
+ <dfacf85f-d79d-8742-7a13-1ac0a67bad04@arm.com>
+ <ba481c82-c69e-043c-4b66-2d2c7732cf07@redhat.com>
+ <20200410121013.03b609fd572504c03a666f4a@linux-foundation.org>
+ <20200411034414.GH2129@MiWiFi-R3L-srv>
+ <20200411093009.GH25745@shell.armlinux.org.uk>
+ <20200412053507.GA4247@MiWiFi-R3L-srv>
+ <20200412080836.GM25745@shell.armlinux.org.uk>
+ <87wo6klbw0.fsf@x220.int.ebiederm.org>
+ <20200413023701.GA20265@MiWiFi-R3L-srv>
+ <871rorjzmc.fsf@x220.int.ebiederm.org>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,88 +30,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Anshuman Khandual <anshuman.khandual@arm.com>, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-Hi Pingfan,
+On Mon, 13 Apr 2020 08:15:23 -0500 ebiederm@xmission.com (Eric W. Biederman) wrote:
 
-> -----Original Message-----
-> The crashed kernel passes usable RAM info through pt_loads[], but the
-> current code ignore this, and parse all sections below info->max_mapnr.
-> Refer to code in get_mm_sparsemem()
->   num_section = divideup(info->max_mapnr, PAGES_PER_SECTION());
+> > For 3), people can still use kexec_load and develop/fix for it, if no
+> > kexec_file_load supported. But 32-bit arm should be a different one,
+> > more like i386, we will leave it as is, and fix anything which could
+> > break it. But people really expects to improve or add feature to it? E.g
+> > in this patchset, the mem hotplug issue James raised, I assume James is
+> > focusing on arm64, x86_64, but not 32-bit arm. As DavidH commented in
+> > another reply, people even don't agree to continue supporting memory
+> > hotplug on 32-bit system. We ever took effort to fix a memory hotplug
+> > bug on i386 with a patch, but people would rather set it as BROKEN.
 > 
-> These ranges can include unwanted memory e.g. reserved-memory for crash
-> kernel, PMEM for fs-dax. Excluding them by setting mem_maps[section_nr]=NULL.
+> For memory hotplug just reload.  Userspace already gets good events.
+> 
+> We should not expect anything except a panic kernel to be loaded over a
+> memory hotplug event. The kexec on panic code should actually be loaded
+> in a location that we don't reliquish if asked for it.
 
-hmm, I think that bitmap1 corresponds to pt_loads ranges, so even without
-the patch, only the ranges in pt_loads can be included in a dumpfile.
-Am I missing anything?
-
-Thanks,
-Kazu
-
-> 
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> ---
->  elf_info.c     | 12 ++++++++++++
->  elf_info.h     |  1 +
->  makedumpfile.c |  5 +++++
->  3 files changed, 18 insertions(+)
-> 
-> diff --git a/elf_info.c b/elf_info.c
-> index 7d72742..297c3e4 100644
-> --- a/elf_info.c
-> +++ b/elf_info.c
-> @@ -1302,3 +1302,15 @@ get_max_file_offset(void)
->  {
->  	return max_file_offset;
->  }
-> +
-> +int phyaddr_in_pt_loads(unsigned long long phys_start)
-> +{
-> +	 struct pt_load_segment *pls;
-> +
-> +	for (int i = 0; i < num_pt_loads; i++) {
-> +		pls = &pt_loads[i];
-> +		if (phys_start >= pls->phys_start && phys_start < pls->phys_end)
-> +			return TRUE;
-> +	}
-> +	return FALSE;
-> +}
-> diff --git a/elf_info.h b/elf_info.h
-> index 934b608..f5bb07c 100644
-> --- a/elf_info.h
-> +++ b/elf_info.h
-> @@ -90,6 +90,7 @@ void get_eraseinfo(off_t *offset, unsigned long *size);
->  void set_eraseinfo(off_t offset, unsigned long size);
-> 
->  off_t get_max_file_offset(void);
-> +int phyaddr_in_pt_loads(unsigned long long phys_start);
-> 
->  #endif  /* ELF_INFO_H */
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index f5860a1..c0fa075 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -3556,8 +3556,13 @@ get_mm_sparsemem(void)
->  		goto out;
->  	}
->  	for (section_nr = 0; section_nr < num_section; section_nr++) {
-> +		unsigned long phys_start;
-> +
->  		pfn_start = section_nr * PAGES_PER_SECTION();
->  		pfn_end   = pfn_start + PAGES_PER_SECTION();
-> +		phys_start = pfn_start << PAGESHIFT();
-> +		if (!phyaddr_in_pt_loads(phys_start))
-> +			mem_maps[section_nr] = (unsigned long)NULL;
->  		if (info->max_mapnr < pfn_end)
->  			pfn_end = info->max_mapnr;
->  		dump_mem_map(pfn_start, pfn_end, mem_maps[section_nr], section_nr);
-> --
-> 2.7.5
-
+Is that a nack for James's patchset?
 
 _______________________________________________
 kexec mailing list
