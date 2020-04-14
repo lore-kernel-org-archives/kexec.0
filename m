@@ -1,24 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
+Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
+ memory resource names
 References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-2-james.morse@arm.com>
- <321e6bf7-e898-7701-dd60-6c25237ff9cd@redhat.com>
- <a21d90ea-2566-a2bc-ad2f-6464a416c97f@arm.com>
- <9cb4ea0d-34c3-de42-4b3f-ee25a59c4835@redhat.com>
- <b0443908-e36f-9bc4-4a8a-4206cb782d4b@arm.com>
- <72672e2c-a57a-8df9-0cff-8035cbce7740@redhat.com>
- <34274b02-60ba-eb78-eacd-6dc1146ed3cd@arm.com>
- <80e4d1d7-f493-3f66-f700-86f18002d692@redhat.com>
- <dfacf85f-d79d-8742-7a13-1ac0a67bad04@arm.com>
- <ba481c82-c69e-043c-4b66-2d2c7732cf07@redhat.com>
- <20200410121013.03b609fd572504c03a666f4a@linux-foundation.org>
- <4ed2fa36-fcd8-7150-03d1-35f15e595ebb@redhat.com>
+ <20200326180730.4754-3-james.morse@arm.com>
+ <20200402054946.GA97238@dhcp-128-65.nay.redhat.com>
+ <9725d779-e0de-2d8d-8716-22df3e791820@redhat.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <2e3419b2-d00c-51c3-9b45-9de114608cdf@arm.com>
-Date: Tue, 14 Apr 2020 17:55:14 +0100
+Message-ID: <66b0cb1a-d63a-2720-19cf-3d8efcd02fde@arm.com>
+Date: Tue, 14 Apr 2020 18:21:16 +0100
 MIME-Version: 1.0
-In-Reply-To: <4ed2fa36-fcd8-7150-03d1-35f15e595ebb@redhat.com>
+In-Reply-To: <9725d779-e0de-2d8d-8716-22df3e791820@redhat.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,90 +23,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: piliu <piliu@redhat.com>
+Cc: Will Deacon <will@kernel.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-Hi guys,
+Hi Dave, Pingfan,
 
-On 14/04/2020 08:05, David Hildenbrand wrote:
-> On 10.04.20 21:10, Andrew Morton wrote:
->> It's unclear (to me) what is the status of this patchset.  But it does appear that
->> an new version can be expected?
+On 02/04/2020 07:12, piliu wrote:
+> On 04/02/2020 01:49 PM, Dave Young wrote:
+>> On 03/26/20 at 06:07pm, James Morse wrote:
+>>> Memory added to the system by hotplug has a 'System RAM' resource created
+>>> for it. This is exposed to user-space via /proc/iomem.
+>>>
+>>> This poses problems for kexec on arm64. If kexec decides to place the
+>>> kernel in one of these newly onlined regions, the new kernel will find
+>>> itself booting from a region not described as memory in the firmware
+>>> tables.
+>>>
+>>> Arm64 doesn't have a structure like the e820 memory map that can be
+>>> re-written when memory is brought online. Instead arm64 uses the UEFI
+>>> memory map, or the memory node from the DT, sometimes both. We never
+>>> rewrite these.
+>>
+>> Could arm64 use similar way to update DT, or a cooked UEFI maps?
 
-> I'd suggest to unqueue the patches until we have a consensus.
+>> Add pingfan in cc, he said ppc64 update the DT after a memremove thus it
+>> would be good to just redo a kexec load.
 
-Certainly!
-
-
-> While there are a couple of ideas floating around here, my current
-> suggestion would be either
+> Yes, the memory changes will be observed through device-node under
+> /proc/device-tree/ (which is for powerpc).
 > 
-> 1. Indicate all hotplugged memory as "System RAM (hotplugged)" in
-> /proc/iomem and the firmware memmap (on all architectures). This will
-> require kexec changes,
+> Later if running kexec -l/-p , it can build new dtb with the latest info
+> from /proc/device-tree
+For arm64, the device-tree is set in stone. We don't have the runtime parts of
+open-firmware that powerpc does. (my knowledge in this area is extremely sparse)
+arm64 platforms where stuff like this changes tend to use ACPI instead, and these all have
+to boot with UEFI, which means its the UEFI memory map that has authority.
 
-> but I would have assume that kexec has to be
-> updated in lock-step with the kernel
+We don't cook a fake UEFI memory map when things change because we treat it like the
+set-in-stone DT. This means we only have discrepancies in firmware to workaround, instead
+of any we introduce ourselves.
 
-News to me: I was using the version I first built when arm64's support was new. I've only
-had to update it once when we had to change user-space.
-
-I don't think debian updates kexec-tools when it updates the kernel.
-
-
-Making changes to /proc/iomem means updating user-space again, (for kdump). I'd like to
-avoid that if its at all possible.
-
-
-> just like e.g., makedumpfile.
-> Modify kexec() to not place the kexec kernel on these areas (easy) but
-> still consider them as crash regions to dump. When loading a kexec
-> kernel, validate in the kernel that the memory is appropriate.
-
-
-> 2. Make kexec() reload the the kernel whenever we e.g., get a udev event
-> for removal of memory in /sys/devices/system/memory/.
-
-I don't think we can rely on user-space to do something,
-
-
-> On every remove_memory(), invalidate the loaded kernel in the kernel.
-
-This is an option, ... but its a change of behaviour. If user-space asks for two
-impossible things, the second request should fail. Having the first-one disappear is a bit
-spooky...
-
-Fortunately user-space checks the 'kexec -l' bit happened before it calls reboot() behind
-'kexec -e'. So this works, but is not intuitive.
-
-("Did I load it? What changed and when? oh, half a mile up in dmesg is a message saying
-the kernel discarded the kexec kernel last wednesday.")
-
-
-> As I mentioned somewhere, 1. will be interesting for virtio-mem, where
-> we don't want any kexec kernel to be placed on virtio-mem-added memory.
-
-Do these virtio-mem-added regions need to be accessible by kdump?
-(do we already need a user-space change for that?)
-
-
-A third option, along the line of what I posted:
-
-Split the 'offline' and 'removed' ideas, which David mentioned somewhere. We'd end up with
-(yet) another notifier chain, that prevents the memory being removed, but you can still
-mark it as offline in /sys/. (...I'm not quite sure why you would do that...)
-
-This would need hooking up for ACPI (which covers x86 and arm64), and other architectures
-mechanisms for doing this...
-arm64 can then switch is arch hook that prevents 'bootmem' being removed to this new
-notifier chain, as the kernel can only boot from that was present at boot.
-
-
-My preference is 3, then 2.
-
-I think 1 is slightly less desirable than a message at kexec time that the memory layout
-has changed since load, and this might not work...
-
+One of the UEFI configuration tables describes addresses Linux programmed into hardware
+that can't be reset. Newer versions of Linux know how to pick these up on kexec... but
+older versions don't know how to parse/rewrite/move that table. Cooking up new versions of
+these tables would prevent us doing stuff like this, which we need to workaround hardware
+that didn't get the 'kexec exists' memo.
 
 
 Thanks,
