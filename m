@@ -1,25 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <34274b02-60ba-eb78-eacd-6dc1146ed3cd@arm.com>
- <80e4d1d7-f493-3f66-f700-86f18002d692@redhat.com>
- <dfacf85f-d79d-8742-7a13-1ac0a67bad04@arm.com>
- <ba481c82-c69e-043c-4b66-2d2c7732cf07@redhat.com>
- <20200410121013.03b609fd572504c03a666f4a@linux-foundation.org>
- <20200411034414.GH2129@MiWiFi-R3L-srv>
- <20200411093009.GH25745@shell.armlinux.org.uk>
- <20200412053507.GA4247@MiWiFi-R3L-srv>
- <20200412080836.GM25745@shell.armlinux.org.uk>
- <87wo6klbw0.fsf@x220.int.ebiederm.org>
- <20200413023701.GA20265@MiWiFi-R3L-srv>
- <871rorjzmc.fsf@x220.int.ebiederm.org>
- <20200413160144.0e07c0033afc474228bc9218@linux-foundation.org>
-Date: Tue, 14 Apr 2020 01:13:25 -0500
-In-Reply-To: <20200413160144.0e07c0033afc474228bc9218@linux-foundation.org>
- (Andrew Morton's message of "Mon, 13 Apr 2020 16:01:44 -0700")
-Message-ID: <87tv1miohm.fsf@x220.int.ebiederm.org>
+Received: from mail-wr1-x443.google.com ([2a00:1450:4864:20::443])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jOF2X-0001qx-2Z
+ for kexec@lists.infradead.org; Tue, 14 Apr 2020 06:27:22 +0000
+Received: by mail-wr1-x443.google.com with SMTP id f13so12914680wrm.13
+ for <kexec@lists.infradead.org>; Mon, 13 Apr 2020 23:27:20 -0700 (PDT)
+Date: Tue, 14 Apr 2020 08:27:16 +0200
+From: Ingo Molnar <mingo@kernel.org>
+Subject: Re: [PATCH] efi/x86: Revert struct layout change to fix kexec boot
+ regression
+Message-ID: <20200414062716.GB84326@gmail.com>
+References: <20200410074320.16589-1-ardb@kernel.org>
+ <20200410135644.GB6772@dhcp-128-65.nay.redhat.com>
+ <20200410140151.GC6772@dhcp-128-65.nay.redhat.com>
+ <CAMj1kXEM13Y5FCh8GvJGTueen3fa0u_JX66j0X10KPf4Z0c4Jg@mail.gmail.com>
+ <20200410143313.GB8205@zn.tnic>
+ <CAMj1kXGn+RuJx2PJ+X5KJ3rtMyRRX2eOK2Zu5GuK1NHxum1M4w@mail.gmail.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
+Content-Disposition: inline
+In-Reply-To: <CAMj1kXGn+RuJx2PJ+X5KJ3rtMyRRX2eOK2Zu5GuK1NHxum1M4w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,41 +31,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>, David Hildenbrand <david@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Anshuman Khandual <anshuman.khandual@arm.com>, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Ard Biesheuvel <ardb@kernel.org>
+Cc: linux-efi <linux-efi@vger.kernel.org>, "Theodore Y. Ts'o" <tytso@mit.edu>, X86 ML <x86@kernel.org>, kexec@lists.infradead.org, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
 
-Andrew Morton <akpm@linux-foundation.org> writes:
 
-> On Mon, 13 Apr 2020 08:15:23 -0500 ebiederm@xmission.com (Eric W. Biederman) wrote:
->
->> > For 3), people can still use kexec_load and develop/fix for it, if no
->> > kexec_file_load supported. But 32-bit arm should be a different one,
->> > more like i386, we will leave it as is, and fix anything which could
->> > break it. But people really expects to improve or add feature to it? E.g
->> > in this patchset, the mem hotplug issue James raised, I assume James is
->> > focusing on arm64, x86_64, but not 32-bit arm. As DavidH commented in
->> > another reply, people even don't agree to continue supporting memory
->> > hotplug on 32-bit system. We ever took effort to fix a memory hotplug
->> > bug on i386 with a patch, but people would rather set it as BROKEN.
->> 
->> For memory hotplug just reload.  Userspace already gets good events.
->> 
->> We should not expect anything except a panic kernel to be loaded over a
->> memory hotplug event. The kexec on panic code should actually be loaded
->> in a location that we don't reliquish if asked for it.
->
-> Is that a nack for James's patchset?
+* Ard Biesheuvel <ardb@kernel.org> wrote:
 
-I have just read the end of the thread and I have the sense that the
-patchset had already been rejected.  I will see if I can go back and
-read the beginning.
+> On Fri, 10 Apr 2020 at 16:34, Borislav Petkov <bp@alien8.de> wrote:
+> >
+> > On Fri, Apr 10, 2020 at 04:22:49PM +0200, Ard Biesheuvel wrote:
+> > > > BTW, a fixes tag is good to have..
+> > >
+> > > I usually omit those for patches that fix bugs that were introduced in
+> > > the current cycle.
+> >
+> > A valid use case for having the Fixes: tag anyway are the backporting
+> > kernels gangs which might pick up the first patch for whatever reason
+> > and would probably be thankful if they find the second one, i.e., the
+> > fix for the first one, through grepping or other, automated means.
+> >
+> 
+> Fair point.
 
-I was mostly reacting to the idea that you could stop maintaining an
-interface that people are actively using because there is a newer
-interface.
+I've added:
 
-Eric
+  Fixes: 0a67361dcdaa29 ("efi/x86: Remove runtime table address from kexec EFI setup data")
 
+Out of abundance of caution. :-)
+
+Thanks,
+
+	Ingo
 
 _______________________________________________
 kexec mailing list
