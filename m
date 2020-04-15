@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout2.w1.samsung.com ([210.118.77.12])
+Received: from mail-eopbgr1410089.outbound.protection.outlook.com
+ ([40.107.141.89] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jOfl0-0002zv-9B
- for kexec@lists.infradead.org; Wed, 15 Apr 2020 10:59:04 +0000
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
- by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id
- 20200415105900euoutp02b6f1b00978686e8586188514d16a647a~F_RuQJsWC2815628156euoutp02Y
- for <kexec@lists.infradead.org>; Wed, 15 Apr 2020 10:59:00 +0000 (GMT)
-From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH v2] arm: redefine OPT_APPEND and OPT_RAMDISK
-Date: Wed, 15 Apr 2020 12:58:45 +0200
-Message-Id: <20200415105845.22067-1-l.stelmach@samsung.com>
-In-Reply-To: <20200414085224.7069-1-l.stelmach@samsung.com>
+ id 1jOiGi-0005NS-3m
+ for kexec@lists.infradead.org; Wed, 15 Apr 2020 13:39:58 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: [PRE-ANNOUNCE] makedumpfile: Moving to GitHub
+Date: Wed, 15 Apr 2020 13:39:47 +0000
+Message-ID: <OSBPR01MB199153A43ABF489F17ACB84EDDDB0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
-References: <20200414085224.7069-1-l.stelmach@samsung.com>
- <CGME20200415105859eucas1p2db849d89aa9a338077a01784f73dad52@eucas1p2.samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,45 +19,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
-Cc: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-UmVkZWZpbmUgT1BUX0FQUEVORCB0byBhdm9pZCBjbGFzaCB3aXRoIE9QVF9LRVhFQ19TWVNDQUxM
-X0FVVE8uClJlZGVmaW5lIE9QVF9SQU1ESVNLIHRvIGF2b2lkIHN1Y2ggcHJvYmxlbXMgaW4gdGhl
-IGZ1dHVyZQoKU2lnbmVkLW9mZi1ieTogxYF1a2FzeiBTdGVsbWFjaCA8bC5zdGVsbWFjaEBzYW1z
-dW5nLmNvbT4KLS0tCiBrZXhlYy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIHwgNiAr
-KystLS0KIGtleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1hcm0uYyAgICAgfCAyICstCiAyIGZp
-bGVzIGNoYW5nZWQsIDQgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQg
-YS9rZXhlYy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIGIva2V4ZWMvYXJjaC9hcm0v
-aW5jbHVkZS9hcmNoL29wdGlvbnMuaAppbmRleCBhYmJmMzQ5Li42ZmFiZmI3IDEwMDY0NAotLS0g
-YS9rZXhlYy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oCisrKyBiL2tleGVjL2FyY2gv
-YXJtL2luY2x1ZGUvYXJjaC9vcHRpb25zLmgKQEAgLTQsMTIgKzQsMTIgQEAKICNkZWZpbmUgT1BU
-X0RUX05PX09MRF9ST09UCShPUFRfTUFYKzApCiAjZGVmaW5lIE9QVF9BUkNIX01BWAkJKE9QVF9N
-QVgrMSkKIAotI2RlZmluZSBPUFRfQVBQRU5ECSdhJwotI2RlZmluZSBPUFRfUkFNRElTSwkncicK
-ICNkZWZpbmUgT1BUX0RUQgkJKE9QVF9BUkNIX01BWCswKQogI2RlZmluZSBPUFRfQVRBR1MJKE9Q
-VF9BUkNIX01BWCsxKQogI2RlZmluZSBPUFRfSU1BR0VfU0laRQkoT1BUX0FSQ0hfTUFYKzIpCiAj
-ZGVmaW5lIE9QVF9QQUdFX09GRlNFVAkoT1BUX0FSQ0hfTUFYKzMpCisjZGVmaW5lIE9QVF9BUFBF
-TkQJKE9QVF9BUkNIX01BWCs0KQorI2RlZmluZSBPUFRfUkFNRElTSwkoT1BUX0FSQ0hfTUFYKzUp
-CiAKIC8qIE9wdGlvbnMgcmVsZXZhbnQgdG8gdGhlIGFyY2hpdGVjdHVyZSAoZXhjbHVkaW5nIGxv
-YWRlci1zcGVjaWZpYyBvbmVzKSwKICAqIGluIHRoaXMgY2FzZSBub25lOgpAQCAtNDUsNyArNDUs
-NyBAQAogCXsgImltYWdlLXNpemUiLAkJMSwgMCwgT1BUX0lNQUdFX1NJWkUgfSwgXAogCXsgInBh
-Z2Utb2Zmc2V0IiwJMSwgMCwgT1BUX1BBR0VfT0ZGU0VUIH0sCiAKLSNkZWZpbmUgS0VYRUNfQUxM
-X09QVF9TVFIgS0VYRUNfQVJDSF9PUFRfU1RSICJhOnI6czoiCisjZGVmaW5lIEtFWEVDX0FMTF9P
-UFRfU1RSIEtFWEVDX0FSQ0hfT1BUX1NUUiAiIgogCiBleHRlcm4gdW5zaWduZWQgaW50IGtleGVj
-X2FybV9pbWFnZV9zaXplOwogCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1h
-Z2UtYXJtLmMgYi9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKaW5kZXggMmE3ZWVh
-OS4uZDFhYThmNiAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5j
-CisrKyBiL2tleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1hcm0uYwpAQCAtNDE4LDcgKzQxOCw3
-IEBAIGludCB6SW1hZ2VfYXJtX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFy
-ICpidWYsIG9mZl90IGxlbiwKIAkJeyAicGFnZS1vZmZzZXQiLAkxLCAwLCBPUFRfUEFHRV9PRkZT
-RVQgfSwKIAkJeyAwLCAJCQkwLCAwLCAwIH0sCiAJfTsKLQlzdGF0aWMgY29uc3QgY2hhciBzaG9y
-dF9vcHRpb25zW10gPSBLRVhFQ19BUkNIX09QVF9TVFIgImE6cjoiOworCXN0YXRpYyBjb25zdCBj
-aGFyIHNob3J0X29wdGlvbnNbXSA9IEtFWEVDX0FSQ0hfT1BUX1NUUiAiIjsKIAogCS8qCiAJICog
-UGFyc2UgdGhlIGNvbW1hbmQgbGluZSBhcmd1bWVudHMKLS0gCjIuMjUuMAoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+Hi,
+
+I'm going to move makedumpfile's project page [1] and git repository
+from SourcrForge to GitHub for several reasons.  I will announce it
+when the preparation is completed.
+
+With this move, I plan to discontinue its 'devel' branch and use 'master'
+only.  We have not merged any hotfix directly into the master branch and
+distributions have backported patches in the devel branch into their trees.
+I don't think we make much use of the branch feature.  I'd like to simplify
+the process.
+
+Please let me know if you have any concerns.
+
+Although moving to GitHub, I continue to prefer you to post makedumpfile
+patches to this email list for reasons of a lot of good eyes.
+
+[1] https://sourceforge.net/projects/makedumpfile/
+
+Thanks,
+Kazu
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
