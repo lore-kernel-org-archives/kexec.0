@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-3-james.morse@arm.com>
-Date: Wed, 15 Apr 2020 15:36:12 -0500
-In-Reply-To: <20200326180730.4754-3-james.morse@arm.com> (James Morse's
- message of "Thu, 26 Mar 2020 18:07:29 +0000")
-Message-ID: <873694h4g3.fsf@x220.int.ebiederm.org>
+ <20200326180730.4754-4-james.morse@arm.com>
+Date: Wed, 15 Apr 2020 15:37:32 -0500
+In-Reply-To: <20200326180730.4754-4-james.morse@arm.com> (James Morse's
+ message of "Thu, 26 Mar 2020 18:07:30 +0000")
+Message-ID: <87v9m0fptf.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
- memory resource names
+Subject: Re: [PATCH 3/3] arm64: memory: Give hotplug memory a different
+ resource name
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,29 +26,15 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.mari
 
 James Morse <james.morse@arm.com> writes:
 
-> Memory added to the system by hotplug has a 'System RAM' resource created
-> for it. This is exposed to user-space via /proc/iomem.
+> If kexec chooses to place the kernel in a memory region that was
+> added after boot, we fail to boot as the kernel is running from a
+> location that is not described as memory by the UEFI memory map or
+> the original DT.
 >
-> This poses problems for kexec on arm64. If kexec decides to place the
-> kernel in one of these newly onlined regions, the new kernel will find
-> itself booting from a region not described as memory in the firmware
-> tables.
->
-> Arm64 doesn't have a structure like the e820 memory map that can be
-> re-written when memory is brought online. Instead arm64 uses the UEFI
-> memory map, or the memory node from the DT, sometimes both. We never
-> rewrite these.
->
-> Allow an architecture to specify a different name for these hotplug
-> regions.
+> To prevent unaware user-space kexec from doing this accidentally,
+> give these regions a different name.
 
-Gah.  No.
-
-Please find a way to pass the current memory map to the loaded kexec'd
-kernel.
-
-Starting a kernel with no way for it to know what the current memory map
-is just plain scary.
+Please fix the problem and don't hack around it.
 
 Eric
 
