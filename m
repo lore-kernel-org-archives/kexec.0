@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: ebiederm@xmission.com (Eric W. Biederman)
 References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-2-james.morse@arm.com>
-Date: Wed, 15 Apr 2020 15:33:43 -0500
-In-Reply-To: <20200326180730.4754-2-james.morse@arm.com> (James Morse's
- message of "Thu, 26 Mar 2020 18:07:28 +0000")
-Message-ID: <87d088h4k8.fsf@x220.int.ebiederm.org>
+ <20200326180730.4754-3-james.morse@arm.com>
+Date: Wed, 15 Apr 2020 15:36:12 -0500
+In-Reply-To: <20200326180730.4754-3-james.morse@arm.com> (James Morse's
+ message of "Thu, 26 Mar 2020 18:07:29 +0000")
+Message-ID: <873694h4g3.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
+Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
+ memory resource names
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,37 +26,29 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.mari
 
 James Morse <james.morse@arm.com> writes:
 
-> An image loaded for kexec is not stored in place, instead its segments
-> are scattered through memory, and are re-assembled when needed. In the
-> meantime, the target memory may have been removed.
+> Memory added to the system by hotplug has a 'System RAM' resource created
+> for it. This is exposed to user-space via /proc/iomem.
 >
-> Because mm is not aware that this memory is still in use, it allows it
-> to be removed.
+> This poses problems for kexec on arm64. If kexec decides to place the
+> kernel in one of these newly onlined regions, the new kernel will find
+> itself booting from a region not described as memory in the firmware
+> tables.
 >
-> Add a memory notifier to prevent the removal of memory regions that
-> overlap with a loaded kexec image segment. e.g., when triggered from the
-> Qemu console:
-> | kexec_core: memory region in use
-> | memory memory32: Offline failed.
+> Arm64 doesn't have a structure like the e820 memory map that can be
+> re-written when memory is brought online. Instead arm64 uses the UEFI
+> memory map, or the memory node from the DT, sometimes both. We never
+> rewrite these.
 >
-> Signed-off-by: James Morse <james.morse@arm.com>
+> Allow an architecture to specify a different name for these hotplug
+> regions.
 
-Given that we are talking about the destination pages for kexec
-not where the loaded kernel is currently stored the description is
-confusing.
+Gah.  No.
 
-Beyond that I think it would be better to simply unload the loaded
-kernel at memory hotunplug time.  Usually somewhere in the loaded image
-is a copy of the memory map at the time the kexec kernel was loaded.
-That will invalidate the memory map as well.
+Please find a way to pass the current memory map to the loaded kexec'd
+kernel.
 
-All of this should be for a very brief window of a few seconds, as
-the loaded kexec image is quite short.
-
-So instead of failing in the notifier, if you could simply unload the
-loaded image in the notifier I think that would be simpler and more
-robust.  While still preventing the loaded image from falling over
-when it starts executing.
+Starting a kernel with no way for it to know what the current memory map
+is just plain scary.
 
 Eric
 
