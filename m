@@ -1,18 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jP08e-0003Xm-07
- for kexec@lists.infradead.org; Thu, 16 Apr 2020 08:44:49 +0000
-Date: Thu, 16 Apr 2020 10:44:41 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm: redefine OPT_APPEND and OPT_RAMDISK
-Message-ID: <20200416084441.GA16024@vergenet.net>
-References: <20200414085224.7069-1-l.stelmach@samsung.com>
- <CGME20200415105859eucas1p2db849d89aa9a338077a01784f73dad52@eucas1p2.samsung.com>
- <20200415105845.22067-1-l.stelmach@samsung.com>
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jP4cT-0003Ab-1r
+ for kexec@lists.infradead.org; Thu, 16 Apr 2020 13:31:54 +0000
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+References: <20200412080836.GM25745@shell.armlinux.org.uk>
+ <87wo6klbw0.fsf@x220.int.ebiederm.org>
+ <20200413023701.GA20265@MiWiFi-R3L-srv>
+ <871rorjzmc.fsf@x220.int.ebiederm.org> <20200414064031.GB4247@MiWiFi-R3L-srv>
+ <86e96214-7053-340b-5c1a-ff97fb94d8e0@redhat.com>
+ <20200414092201.GD4247@MiWiFi-R3L-srv>
+ <ad060c8a-8afe-3858-0a4f-27ff54ef4c68@redhat.com>
+ <20200414143912.GE4247@MiWiFi-R3L-srv>
+ <0085f460-b0c7-b25f-36a7-fa3bafaab6fe@redhat.com>
+ <20200415023524.GG4247@MiWiFi-R3L-srv>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <18cf6afd-c651-25c7-aca3-3ca3c0e07547@redhat.com>
+Date: Thu, 16 Apr 2020 15:31:40 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200415105845.22067-1-l.stelmach@samsung.com>
+In-Reply-To: <20200415023524.GG4247@MiWiFi-R3L-srv>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,51 +30,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>
-Cc: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: piliu@redhat.com, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-T24gV2VkLCBBcHIgMTUsIDIwMjAgYXQgMTI6NTg6NDVQTSArMDIwMCwgxYF1a2FzeiBTdGVsbWFj
-aCB3cm90ZToKPiBSZWRlZmluZSBPUFRfQVBQRU5EIHRvIGF2b2lkIGNsYXNoIHdpdGggT1BUX0tF
-WEVDX1NZU0NBTExfQVVUTy4KPiBSZWRlZmluZSBPUFRfUkFNRElTSyB0byBhdm9pZCBzdWNoIHBy
-b2JsZW1zIGluIHRoZSBmdXR1cmUKPiAKPiBTaWduZWQtb2ZmLWJ5OiDFgXVrYXN6IFN0ZWxtYWNo
-IDxsLnN0ZWxtYWNoQHNhbXN1bmcuY29tPgoKSGkgxYF1a2FzeiwKCkkgYW0gc2xpZ2h0bHkgY29u
-Y2VybmVkIHRoYXQgdGhpcyB3aWxsIGJyZWFrIHRoaW5ncyBmb3IgdXNlcnMuCkJ1dCBPVE9IIHBl
-cmhhcHMgd2UgYWxyZWFkeSBicm9rZSB0aGluZ3Mgd2hlbiBhZGRpbmcgT1BUX0tFWEVDX1NZU0NB
-TExfQVVUTy4KRG8geW91IGhhdmUgYW55IHRob3VnaHRzIG9uIHRoaXM/Cgo+IC0tLQo+ICBrZXhl
-Yy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIHwgNiArKystLS0KPiAga2V4ZWMvYXJj
-aC9hcm0va2V4ZWMtekltYWdlLWFybS5jICAgICB8IDIgKy0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA0
-IGluc2VydGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2tleGVjL2Fy
-Y2gvYXJtL2luY2x1ZGUvYXJjaC9vcHRpb25zLmggYi9rZXhlYy9hcmNoL2FybS9pbmNsdWRlL2Fy
-Y2gvb3B0aW9ucy5oCj4gaW5kZXggYWJiZjM0OS4uNmZhYmZiNyAxMDA2NDQKPiAtLS0gYS9rZXhl
-Yy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oCj4gKysrIGIva2V4ZWMvYXJjaC9hcm0v
-aW5jbHVkZS9hcmNoL29wdGlvbnMuaAo+IEBAIC00LDEyICs0LDEyIEBACj4gICNkZWZpbmUgT1BU
-X0RUX05PX09MRF9ST09UCShPUFRfTUFYKzApCj4gICNkZWZpbmUgT1BUX0FSQ0hfTUFYCQkoT1BU
-X01BWCsxKQo+ICAKPiAtI2RlZmluZSBPUFRfQVBQRU5ECSdhJwo+IC0jZGVmaW5lIE9QVF9SQU1E
-SVNLCSdyJwo+ICAjZGVmaW5lIE9QVF9EVEIJCShPUFRfQVJDSF9NQVgrMCkKPiAgI2RlZmluZSBP
-UFRfQVRBR1MJKE9QVF9BUkNIX01BWCsxKQo+ICAjZGVmaW5lIE9QVF9JTUFHRV9TSVpFCShPUFRf
-QVJDSF9NQVgrMikKPiAgI2RlZmluZSBPUFRfUEFHRV9PRkZTRVQJKE9QVF9BUkNIX01BWCszKQo+
-ICsjZGVmaW5lIE9QVF9BUFBFTkQJKE9QVF9BUkNIX01BWCs0KQo+ICsjZGVmaW5lIE9QVF9SQU1E
-SVNLCShPUFRfQVJDSF9NQVgrNSkKPiAgCj4gIC8qIE9wdGlvbnMgcmVsZXZhbnQgdG8gdGhlIGFy
-Y2hpdGVjdHVyZSAoZXhjbHVkaW5nIGxvYWRlci1zcGVjaWZpYyBvbmVzKSwKPiAgICogaW4gdGhp
-cyBjYXNlIG5vbmU6Cj4gQEAgLTQ1LDcgKzQ1LDcgQEAKPiAgCXsgImltYWdlLXNpemUiLAkJMSwg
-MCwgT1BUX0lNQUdFX1NJWkUgfSwgXAo+ICAJeyAicGFnZS1vZmZzZXQiLAkxLCAwLCBPUFRfUEFH
-RV9PRkZTRVQgfSwKPiAgCj4gLSNkZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9P
-UFRfU1RSICJhOnI6czoiCj4gKyNkZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9P
-UFRfU1RSICIiCj4gIAo+ICBleHRlcm4gdW5zaWduZWQgaW50IGtleGVjX2FybV9pbWFnZV9zaXpl
-Owo+ICAKPiBkaWZmIC0tZ2l0IGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jIGIv
-a2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jCj4gaW5kZXggMmE3ZWVhOS4uZDFhYThm
-NiAxMDA2NDQKPiAtLS0gYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKPiArKysg
-Yi9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKPiBAQCAtNDE4LDcgKzQxOCw3IEBA
-IGludCB6SW1hZ2VfYXJtX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpi
-dWYsIG9mZl90IGxlbiwKPiAgCQl7ICJwYWdlLW9mZnNldCIsCTEsIDAsIE9QVF9QQUdFX09GRlNF
-VCB9LAo+ICAJCXsgMCwgCQkJMCwgMCwgMCB9LAo+ICAJfTsKPiAtCXN0YXRpYyBjb25zdCBjaGFy
-IHNob3J0X29wdGlvbnNbXSA9IEtFWEVDX0FSQ0hfT1BUX1NUUiAiYTpyOiI7Cj4gKwlzdGF0aWMg
-Y29uc3QgY2hhciBzaG9ydF9vcHRpb25zW10gPSBLRVhFQ19BUkNIX09QVF9TVFIgIiI7Cj4gIAo+
-ICAJLyoKPiAgCSAqIFBhcnNlIHRoZSBjb21tYW5kIGxpbmUgYXJndW1lbnRzCj4gLS0gCj4gMi4y
-NS4wCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+> Not sure if I get the notifier idea clearly. If you mean 
+> 
+> 1) Add a common function to pick memory in unmovable zone;
+
+Not strictly required IMHO. But, minor detail.
+
+> 2) Let DLPAR, balloon register with notifier;
+
+Yeah, or virtio-mem, or any other technology that adds/removes memory
+dynamically.
+
+> 3) In the common function, ask notified part to check if the picked
+>    unmovable memory is available for locating kexec kernel;
+
+Yeah.
+
+> 
+> Sounds doable to me, and not complicated.
+> 
+>> images. It would apply to
+>>
+>> - arm64 and filter out all hotadded memory (IIRC, only boot memory can
+>>   be used).
+> 
+> Do you mean hot added memory after boot can't be recognized and added
+> into system RAM on arm64?
+
+See patch #3 of this patch set, which wants to avoid placing kexec
+binaries on hotplugged memory. But I have no idea what the current plan
+regarding arm64 is (this thread exploded :) ).
+
+I would assume that we don't want to place kexec images on any
+hotplugged (or rather: hot(un)pluggable) memory - on any architecture.
+
+> 
+> 
+>> - powerpc to filter out all LMBs that can be removed (assuming not all
+>>   memory corresponds to LMBs that can be removed, otherwise we're in
+>>   trouble ... :) )
+>> - virtio-mem to filter out all memory it added.
+>> - hyper-v to filter out partially backed memory blocks (esp. the last
+>>   memory block it added and only partially backed it by memory).
+>>
+>> This would make it work for kexec_file_load(), however, I do wonder how
+>> we would want to approach that from userspace kexec-tools when handling
+>> it from kexec_load().
+> 
+> Let's make kexec_file_load work firstly. Since this work is only first
+> step to make kexec-ed kernel not break memory hotplug. After kexec
+> rebooting, the KASLR may locate kernel into hotpluggable area too.
+
+Can you elaborate how that would work?
+
+-- 
+Thanks,
+
+David / dhildenb
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
