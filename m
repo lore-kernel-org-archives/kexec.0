@@ -1,18 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout2.w1.samsung.com ([210.118.77.12])
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jQXUF-0005jQ-I5
- for kexec@lists.infradead.org; Mon, 20 Apr 2020 14:33:29 +0000
-From: Lukasz Stelmach <l.stelmach@samsung.com>
-Subject: [PATCH v2] arm: redefine OPT_APPEND and OPT_RAMDISK
-In-Reply-To: <20200416084441.GA16024@vergenet.net>
-Date: Mon, 20 Apr 2020 16:33:11 +0200
-Message-ID: <dleftjmu76ns60.fsf%l.stelmach@samsung.com>
+ id 1jQsyE-0003vw-Me
+ for kexec@lists.infradead.org; Tue, 21 Apr 2020 13:29:53 +0000
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+From: David Hildenbrand <david@redhat.com>
+References: <20200414064031.GB4247@MiWiFi-R3L-srv>
+ <86e96214-7053-340b-5c1a-ff97fb94d8e0@redhat.com>
+ <20200414092201.GD4247@MiWiFi-R3L-srv>
+ <ad060c8a-8afe-3858-0a4f-27ff54ef4c68@redhat.com>
+ <20200414143912.GE4247@MiWiFi-R3L-srv>
+ <0085f460-b0c7-b25f-36a7-fa3bafaab6fe@redhat.com>
+ <20200415023524.GG4247@MiWiFi-R3L-srv>
+ <18cf6afd-c651-25c7-aca3-3ca3c0e07547@redhat.com>
+ <20200416140247.GA12723@MiWiFi-R3L-srv>
+ <4e1546eb-4416-dc6d-d549-62d1cecccbc8@redhat.com>
+ <20200416143634.GH4247@MiWiFi-R3L-srv>
+ <2525cc9c-3566-6275-105b-7f4af8f980bc@redhat.com>
+Message-ID: <9a4eb1d7-33bf-8707-9c0c-1ca657c3e502@redhat.com>
+Date: Tue, 21 Apr 2020 15:29:37 +0200
 MIME-Version: 1.0
-References: <20200416084441.GA16024@vergenet.net>
- <20200414085224.7069-1-l.stelmach@samsung.com>
- <CGME20200415105859eucas1p2db849d89aa9a338077a01784f73dad52@eucas1p2.samsung.com>
- <20200415105845.22067-1-l.stelmach@samsung.com>
+In-Reply-To: <2525cc9c-3566-6275-105b-7f4af8f980bc@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,74 +32,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8638328130123976302=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au
-Cc: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: piliu@redhat.com, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
---===============8638328130123976302==
-Content-Type: multipart/signed; boundary="=-=-="; micalg="pgp-sha256";
-	protocol="application/pgp-signature"
+>> ACPI SRAT is embeded into efi, need read out the rsdp pointer. If we don't
+>> pass the efi, it won't get the SRAT table correctly, if I remember
+>> correctly. Yeah, I remeber kvm guest can get memory hotplugged with
+>> ACPI only, this won't happen on bare metal though. Need check carefully. 
+>> I have been using kvm guest with uefi firmwire recently.
+> 
+> Yeah, I can imagine that bare metal is different. kvm only uses ACPI.
+> 
+> I'm also asking because of virtio-mem. Memory added via virtio-mem is
+> not part of any efi tables or whatsoever. So I assume the kexec kernel
+> will not detect it automatically (good!), instead load the virtio-mem
+> driver and let it add memory back to the system.
+> 
+> I should probably play with kexec and virtio-mem once I have some spare
+> cycles ... to find out what's broken and needs to be addressed :)
 
---=-=-=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+FWIW, I just gave virtio-mem and kexec/kdump a try.
 
-> On Wed, Apr 15, 2020 at 12:58:45PM +0200, =C5=81ukasz Stelmach wrote:
->> Redefine OPT_APPEND to avoid clash with OPT_KEXEC_SYSCALL_AUTO.
->> Redefine OPT_RAMDISK to avoid such problems in the future
->>
->> Signed-off-by: =C5=81ukasz Stelmach <l.stelmach at samsung.com>
->
-> I am slightly concerned that this will break things for users.
-> But OTOH perhaps we already broke things when adding
-> OPT_KEXEC_SYSCALL_AUTO.
-> Do you have any thoughts on this?
+a) kdump seems to work. Memory added by virtio-mem is getting dumped.
+The kexec kernel only uses memory in the crash region. The virtio-mem
+driver properly bails out due to is_kdump_kernel().
 
-I am aware of this, but the current appears to be broken more. When I
-was using '-a' it didn't work as advertised in the usage message. Short
-*arch* options aren't documented there, so I suppose most people didn't
-use them. ARM is the only architecture that supports short options by
-defining OPT_* as characters. HPPA appears to be using them in the
-optstring (copied from ARM?) but not in OPT_*. Would you like me to
-clean this up too in v3?
+b) "kexec -s -l" seems to work fine. For now, the kernel does not seem
+to get placed on virtio-mem memory (pure luck due to the left-to-right
+search). Memory added by virtio-mem is not getting added to the e820
+map. Once the virtio-mem driver comes back up in the kexec kernel, the
+right memory is readded.
 
-In summary: undocumented, on one platform.
+c) "kexec -c -l" does not work properly. All memory added by virtio-mem
+is added to the e820 map, which is wrong. Memory that should not be
+touched will be touched by the kexec kernel. I assume kexec-tools just
+goes ahead and adds anything it can find in /proc/iomem (or
+/sys/firmware/memmap/) to the e820 map of the new kernel.
 
-P.S. Please, cc me. I am not subscribed to the list.
-=2D-=20
-=C5=81ukasz Stelmach
-Samsung R&D Institute Poland
-Samsung Electronics
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEEXpuyqjq9kGEVr9UQsK4enJilgBAFAl6dsqcACgkQsK4enJil
-gBCwnwf+LMYEqxAgSDJ5GXBStjQQaQscJPPVtESlndKLZtwH8I9O5wUnmUM2CNUp
-LnBf7TTmLjnKF6AmF7gJnQ5eaMkKOPi+wiYGg+3uMPnq13Bi8Qrw8OtWwu1Te7Fr
-yFsXPAa6T/dDqvj3nOQ27SImBFg2QBr3O/cTbUF+32fPB58y+dngEiznFs9wT+1/
-qrt5FsZA3PPoV8fP2SBm0deBhD1DMToSgsW+u2xJ3x5s1PDb4P/b2tC3BlQ6hPvh
-zCdpNOWJ7JVxwS7RhhcTVSUsZQCbbdw9szwg8wEyaviw7PUr34JksDB/YizjPFpB
-PYh6zTAzE92mWti/iSDX49itk89c1Q==
-=WpTA
------END PGP SIGNATURE-----
---=-=-=--
+Due to c), I assume all hotplugged memory (e.g., ACPI DIMMs) is
+similarly added to the e820 map and, therefore, won't be able to be
+onlined MOVABLE easily.
 
 
---===============8638328130123976302==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+At least for virtio-mem, I would either have to
+a) Not support "kexec -c -l". A viable option if we would be planning on
+not supporting it either way in the long term. I could block this
+in-kernel somehow eventually.
+
+b) Teach kexec-tools to leave virtio-mem added memory alone. E.g., by
+indicating it in /proc/iomem in a special way ("System RAM
+(hotplugged)"/"System RAM (virtio-mem)").
+
+Baoquan, any opinion on that?
+
+-- 
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============8638328130123976302==--
-
