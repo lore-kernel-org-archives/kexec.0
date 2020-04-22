@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 3/3] arm64: memory: Give hotplug memory a different
- resource name
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
 References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-4-james.morse@arm.com>
- <87v9m0fptf.fsf@x220.int.ebiederm.org>
+ <20200326180730.4754-2-james.morse@arm.com>
+ <87d088h4k8.fsf@x220.int.ebiederm.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <56c17c4e-fab4-5941-2239-e2aa77c8733d@arm.com>
-Date: Wed, 22 Apr 2020 13:14:32 +0100
+Message-ID: <a694cea6-4449-c77a-98f7-bd7a49cf47fc@arm.com>
+Date: Wed, 22 Apr 2020 13:28:59 +0100
 MIME-Version: 1.0
-In-Reply-To: <87v9m0fptf.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87d088h4k8.fsf@x220.int.ebiederm.org>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,41 +27,61 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.mari
 
 Hi Eric,
 
-On 15/04/2020 21:37, Eric W. Biederman wrote:
+On 15/04/2020 21:33, Eric W. Biederman wrote:
 > James Morse <james.morse@arm.com> writes:
 > 
->> If kexec chooses to place the kernel in a memory region that was
->> added after boot, we fail to boot as the kernel is running from a
->> location that is not described as memory by the UEFI memory map or
->> the original DT.
+>> An image loaded for kexec is not stored in place, instead its segments
+>> are scattered through memory, and are re-assembled when needed. In the
+>> meantime, the target memory may have been removed.
 >>
->> To prevent unaware user-space kexec from doing this accidentally,
->> give these regions a different name.
+>> Because mm is not aware that this memory is still in use, it allows it
+>> to be removed.
+>>
+>> Add a memory notifier to prevent the removal of memory regions that
+>> overlap with a loaded kexec image segment. e.g., when triggered from the
+>> Qemu console:
+>> | kexec_core: memory region in use
+>> | memory memory32: Offline failed.
+>>
+>> Signed-off-by: James Morse <james.morse@arm.com>
 > 
-> Please fix the problem and don't hack around it.
+> Given that we are talking about the destination pages for kexec
+> not where the loaded kernel is currently stored the description is
+> confusing.
 
-The problem is firmware didn't describe memory that wasn't present at boot.
+I think David has some better wording to cover this. I thought I had it with 'scattered
+and re-assembled'.
 
-arm64 relies on the firmware description of memory well before it can go poking around in
-ACPI to find out where extra memory was added to the system.
 
-We already need kexec to not overwrite in-memory structures left by firmware. (like, the
-memory map). We do this by naming them reserved in /proc/iomem.
+> Beyond that I think it would be better to simply unload the loaded
+> kernel at memory hotunplug time.
 
-Doing the same for hotadded memory means existing kexec user-space can't do this
-accidentally. The shape of /proc/iomem is the only trick in the book for arm64's kexec
-userspace, as its the only thing it looks at.
+Unconditionally, or if it aliases the removed region?
 
+I don't particular like it. User-space has asked for two impossible things, we are
+changing the answer to the first when we see the second. Its a bit spooky. (maybe no one
+will notice)
+
+
+> Usually somewhere in the loaded image
+> is a copy of the memory map at the time the kexec kernel was loaded.
+> That will invalidate the memory map as well.
+
+Ah, unconditionally. Sure, x86 needs this.
+(arm64 re-discovers the memory map from firmware tables after kexec)
+
+If that's an acceptable change in behaviour, sure, lets do that.
+
+
+> All of this should be for a very brief window of a few seconds, as
+> the loaded kexec image is quite short.
+
+It seems I'm the outlier anticipating anything could happen between those syscalls.
 
 
 Thanks,
 
 James
-
-
-
-
-
 
 _______________________________________________
 kexec mailing list
