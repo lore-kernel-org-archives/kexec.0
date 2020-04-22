@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
- memory resource names
+Subject: Re: [PATCH 3/3] arm64: memory: Give hotplug memory a different
+ resource name
 References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-3-james.morse@arm.com>
- <873694h4g3.fsf@x220.int.ebiederm.org>
+ <20200326180730.4754-4-james.morse@arm.com>
+ <87v9m0fptf.fsf@x220.int.ebiederm.org>
 From: James Morse <james.morse@arm.com>
-Message-ID: <f1678470-33a6-58c9-d7d3-16ac87d01714@arm.com>
-Date: Wed, 22 Apr 2020 13:14:08 +0100
+Message-ID: <56c17c4e-fab4-5941-2239-e2aa77c8733d@arm.com>
+Date: Wed, 22 Apr 2020 13:14:32 +0100
 MIME-Version: 1.0
-In-Reply-To: <873694h4g3.fsf@x220.int.ebiederm.org>
+In-Reply-To: <87v9m0fptf.fsf@x220.int.ebiederm.org>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,49 +27,41 @@ Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.mari
 
 Hi Eric,
 
-On 15/04/2020 21:36, Eric W. Biederman wrote:
+On 15/04/2020 21:37, Eric W. Biederman wrote:
 > James Morse <james.morse@arm.com> writes:
 > 
->> Memory added to the system by hotplug has a 'System RAM' resource created
->> for it. This is exposed to user-space via /proc/iomem.
+>> If kexec chooses to place the kernel in a memory region that was
+>> added after boot, we fail to boot as the kernel is running from a
+>> location that is not described as memory by the UEFI memory map or
+>> the original DT.
 >>
->> This poses problems for kexec on arm64. If kexec decides to place the
->> kernel in one of these newly onlined regions, the new kernel will find
->> itself booting from a region not described as memory in the firmware
->> tables.
->>
->> Arm64 doesn't have a structure like the e820 memory map that can be
->> re-written when memory is brought online. Instead arm64 uses the UEFI
->> memory map, or the memory node from the DT, sometimes both. We never
->> rewrite these.
->>
->> Allow an architecture to specify a different name for these hotplug
->> regions.
+>> To prevent unaware user-space kexec from doing this accidentally,
+>> give these regions a different name.
 > 
-> Gah.  No.
-> 
-> Please find a way to pass the current memory map to the loaded kexec'd
-> kernel.
+> Please fix the problem and don't hack around it.
 
-> Starting a kernel with no way for it to know what the current memory map
-> is just plain scary.
+The problem is firmware didn't describe memory that wasn't present at boot.
 
-We have one. Firmware tables are the source of all this information. We don't tamper with
-them.
+arm64 relies on the firmware description of memory well before it can go poking around in
+ACPI to find out where extra memory was added to the system.
 
-Firmware describes memory present at boot in the UEFI memory map or DT. On systems with
-ACPI, regions that were added after booting are discovered by running AML methods. (for
-which we need to allocate memory, so you can't describe boot memory like this)
+We already need kexec to not overwrite in-memory structures left by firmware. (like, the
+memory map). We do this by naming them reserved in /proc/iomem.
 
-This doesn't work if you kexec from a hot-added region. You've booted from memory that
-wasn't present at boot.
+Doing the same for hotadded memory means existing kexec user-space can't do this
+accidentally. The shape of /proc/iomem is the only trick in the book for arm64's kexec
+userspace, as its the only thing it looks at.
 
-I don't think this is fixable with the set of constraints.
 
 
 Thanks,
 
 James
+
+
+
+
+
 
 _______________________________________________
 kexec mailing list
