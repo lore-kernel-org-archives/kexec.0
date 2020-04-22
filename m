@@ -1,27 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jRCk7-0000ye-75
- for kexec@lists.infradead.org; Wed, 22 Apr 2020 10:36:36 +0000
-Date: Wed, 22 Apr 2020 18:36:23 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
-Message-ID: <20200422103623.GV4247@MiWiFi-R3L-srv>
-References: <18cf6afd-c651-25c7-aca3-3ca3c0e07547@redhat.com>
- <20200416140247.GA12723@MiWiFi-R3L-srv>
- <4e1546eb-4416-dc6d-d549-62d1cecccbc8@redhat.com>
- <20200416143634.GH4247@MiWiFi-R3L-srv>
- <2525cc9c-3566-6275-105b-7f4af8f980bc@redhat.com>
- <9a4eb1d7-33bf-8707-9c0c-1ca657c3e502@redhat.com>
- <20200422091718.GT4247@MiWiFi-R3L-srv>
- <b9173744-6be4-5b41-d205-319542d821ba@redhat.com>
- <20200422095733.GU4247@MiWiFi-R3L-srv>
- <b0e7b7e8-01d0-e03e-83a8-4763ccbede43@redhat.com>
+Subject: Re: [PATCH 0/3] kexec/memory_hotplug: Prevent removal and accidental
+ use
+References: <20200326180730.4754-1-james.morse@arm.com>
+ <87sgh4h4r7.fsf@x220.int.ebiederm.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <59b74cc5-89aa-83fa-5532-8e64d6382fdd@arm.com>
+Date: Wed, 22 Apr 2020 13:14:10 +0100
 MIME-Version: 1.0
-In-Reply-To: <b0e7b7e8-01d0-e03e-83a8-4763ccbede43@redhat.com>
-Content-Disposition: inline
+In-Reply-To: <87sgh4h4r7.fsf@x220.int.ebiederm.org>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,102 +21,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: piliu@redhat.com, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-On 04/22/20 at 12:05pm, David Hildenbrand wrote:
-> On 22.04.20 11:57, Baoquan He wrote:
-> > On 04/22/20 at 11:24am, David Hildenbrand wrote:
-> >> On 22.04.20 11:17, Baoquan He wrote:
-> >>> On 04/21/20 at 03:29pm, David Hildenbrand wrote:
-> >>>>>> ACPI SRAT is embeded into efi, need read out the rsdp pointer. If we don't
-> >>>>>> pass the efi, it won't get the SRAT table correctly, if I remember
-> >>>>>> correctly. Yeah, I remeber kvm guest can get memory hotplugged with
-> >>>>>> ACPI only, this won't happen on bare metal though. Need check carefully. 
-> >>>>>> I have been using kvm guest with uefi firmwire recently.
-> >>>>>
-> >>>>> Yeah, I can imagine that bare metal is different. kvm only uses ACPI.
-> >>>>>
-> >>>>> I'm also asking because of virtio-mem. Memory added via virtio-mem is
-> >>>>> not part of any efi tables or whatsoever. So I assume the kexec kernel
-> >>>>> will not detect it automatically (good!), instead load the virtio-mem
-> >>>>> driver and let it add memory back to the system.
-> >>>>>
-> >>>>> I should probably play with kexec and virtio-mem once I have some spare
-> >>>>> cycles ... to find out what's broken and needs to be addressed :)
-> >>>>
-> >>>> FWIW, I just gave virtio-mem and kexec/kdump a try.
-> >>>>
-> >>>> a) kdump seems to work. Memory added by virtio-mem is getting dumped.
-> >>>> The kexec kernel only uses memory in the crash region. The virtio-mem
-> >>>> driver properly bails out due to is_kdump_kernel().
-> >>>
-> >>> Right, kdump is not impacted later added memory.
-> >>>
-> >>>>
-> >>>> b) "kexec -s -l" seems to work fine. For now, the kernel does not seem
-> >>>> to get placed on virtio-mem memory (pure luck due to the left-to-right
-> >>>> search). Memory added by virtio-mem is not getting added to the e820
-> >>>> map. Once the virtio-mem driver comes back up in the kexec kernel, the
-> >>>> right memory is readded.
-> >>>
-> >>> kexec_file_load just behaves as you tested. It doesn't collect later
-> >>> added memory to e820 because it uses e820_table_kexec directly to pass
-> >>> e820 to kexec-ed kernel. However, this e820_table_kexec is only updated
-> >>> during boot stage. I tried hot adding DIMM after boot, kexec-ed kernel
-> >>> doesn't have it in e820 during bootup, but it's recoginized and added
-> >>> when ACPI scanning. I think we should update e820_table_kexec when hot
-> >>> add/remove memory, at least for DIMM. Not sure if DLPAR, virtio-mem,
-> >>> balloon will need be added into e820_table_kexec too, and if this is
-> >>> expected behaviour.
-> >>>
-> >>> But whatever we do, it won't impact the kexec file_loading, because of
-> >>> the searching strategy bottom up. Just adding them into e820_table_kexec
-> >>> will make it consistent with cold reboot which get recognizes and get
-> >>> them into e820 during bootup.
-> >>
-> >> Yeah, I think whatever a cold-booted kernel will see is what kexec-ed
-> >> kernel should see. Not more, not less.
-> >>
-> >> Regarding virtio-mem: Not in e820 on cold-boot.
-> >> Regarding DIMMs: DIMMs under KVM will never show up in the e820 map
-> >> IIRC. I think on real HW it can be different.
-> > 
-> > Yeah, DIMMs under KVM won't show up in e820 map. While this is not feature
-> > of QEMU/KVM, but a defect of it. I ever asked Igor who is developer of
-> > QEMU/KVM guest in this area, why we don't make kvm guest recognize
-> > hotpluggable DIMM and add it into e820 map, he said he had tried to make
-> > it, but this will corrupt guest on HyperV. So he had to revert the
-> 
-> Yeah, I remember that this had to be reverted due to something breaking.
-> But OTOH, it allows us to online coldplugged DIMMs online_movable
-> easily, so I'd say it's even a feature (although, does not behave like
-> real HW we have).
-> 
-> I use this extensively when testing memory hot(un)plug via coldplugged
-> DIMMs.
-> 
-> I do wonder if there is real HW, where this is also the case.
+Hi Eric,
 
-None for what I know. Hotplug on real HW includes two parts, the boot
-mem being hotpluggable is more flexiable one. It allows people to
-replace bad DIMM. And you can see code in boot stage has been adjusted a
-lot on this purpose, at that time, people haven't thought about kvm
-guest.
-
+On 15/04/2020 21:29, Eric W. Biederman wrote:
+> James Morse <james.morse@arm.com> writes:
 > 
-> > commit on qemu. So I think we can leave it for now for both real HW and
-> > kvm, or update the e820_table_kexec to include added DIMM for both real
-> > HW and KVM. I hope one day KVM dev will find a way to conquer the defect
-> > on HyperV and make the e820map consistent with bare metal. After all,
-> > kvm guest is trying to imitate real HW for the most part.
-> > 
-> > Anyway, I will think about the e820_table_kexec updating. See if we can
-> > do something about it.
+>> Hello!
+>>
+>> arm64 recently queued support for memory hotremove, which led to some
+>> new corner cases for kexec.
+>>
+>> If the kexec segments are loaded for a removable region, that region may
+>> be removed before kexec actually occurs. This causes the first kernel to
+>> lockup when applying the relocations. (I've triggered this on x86 too).
+>>
+>> The first patch adds a memory notifier for kexec so that it can refuse
+>> to allow in-use regions to be taken offline.
+>>
+>>
+>> This doesn't solve the problem for arm64, where the new kernel must
+>> initially rely on the data structures from the first boot to describe
+>> memory. These don't describe hotpluggable memory.
+>> If kexec places the kernel in one of these regions, it must also provide
+>> a DT that describes the region in which the kernel was mapped as memory.
+>> (and somehow ensure its always present in the future...)
+>>
+>> To prevent this from happening accidentally with unaware user-space,
+>> patches two and three allow arm64 to give these regions a different
+>> name.
+>>
+>> This is a change in behaviour for arm64 as memory hotadd and hotremove
+>> were added separately.
+>>
+>>
+>> I haven't tried kdump.
+>> Unaware kdump from user-space probably won't describe the hotplug
+>> regions if the name is different, which saves us from problems if
+>> the memory is no longer present at kdump time, but means the vmcore
+>> is incomplete.
+>>
+>>
+>> These patches are based on arm64's for-next/core branch, but can all
+>> be merged independently.
 > 
-> Yeah, for DIMMs on real HW it might definitely make sense. We might be
-> able to hook into updates of /sys/firmware/memmap on memory add/remove.
+> So I just looked through these quickly and I think there are real
+> problems here we can fix, and that are worth fixing.
+> 
+> However I am not thrilled with the fixes you propose.
 
+Sure. Unfortunately /proc/iomem is the only trick arm64 has to keep the existing
+kexec-tools working.
+(We've had 'unthrilling' patches like this before to prevent user-space from loading the
+kernel over the top of the in-memory firmware tables.)
+
+
+arm64 expects the description of memory to come from firmware, be that UEFI for memory
+present at boot, or the ACPI AML methods for memory that was added later.
+
+On arm64 there is no standard location for memory. The kernel has to be handed a pointer
+to the firmware tables that describe it. The kernel expects to boot from memory that was
+present at boot.
+
+Modifying the firmware tables at runtime doesn't solve the problem as we may need to move
+the firmware-reserved memory region that describes memory. User-space may still load and
+kexec either side of that update.
+
+Even if we could modify the structures at runtime, we can't update a loaded kexec image.
+We have no idea which blob from userspace is the DT. It may not even be linux that has
+been loaded.
+
+We can't emulate parts of UEFI's handover because kexec's purgatory isn't an EFI program.
+
+
+I can't see a path through all this. If we have to modify existing user-space, I'd rather
+leave it broken. We can detect the problem in the arch code and print a warning at load time.
+
+
+James
 
 _______________________________________________
 kexec mailing list
