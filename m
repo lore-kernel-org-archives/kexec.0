@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mailout1.w1.samsung.com ([210.118.77.11])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jRIQJ-0006VU-P5
- for kexec@lists.infradead.org; Wed, 22 Apr 2020 16:40:33 +0000
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
-References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-2-james.morse@arm.com>
- <87d088h4k8.fsf@x220.int.ebiederm.org>
- <a694cea6-4449-c77a-98f7-bd7a49cf47fc@arm.com>
- <87y2qn1r18.fsf@x220.int.ebiederm.org>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <a29beedb-750b-b838-6c2a-6e47ade2186a@redhat.com>
-Date: Wed, 22 Apr 2020 18:40:22 +0200
+ id 1jRLJB-00042n-2B
+ for kexec@lists.infradead.org; Wed, 22 Apr 2020 19:45:22 +0000
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+ by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id
+ 20200422194518euoutp012cdbabfb094c42320ab7bcfd27a9b9d4~IO_PO-hGQ3095730957euoutp01X
+ for <kexec@lists.infradead.org>; Wed, 22 Apr 2020 19:45:18 +0000 (GMT)
+From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH v3] arm: redefine OPT_APPEND and OPT_RAMDISK
+Date: Wed, 22 Apr 2020 21:45:04 +0200
+Message-Id: <20200422194504.14775-1-l.stelmach@samsung.com>
+In-Reply-To: <20200422080151.GA32200@vergenet.net>
 MIME-Version: 1.0
-In-Reply-To: <87y2qn1r18.fsf@x220.int.ebiederm.org>
-Content-Language: en-US
+References: <20200422080151.GA32200@vergenet.net>
+ <CGME20200422194517eucas1p11d2ab9f4f68b891ea963633045f31ce9@eucas1p1.samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,72 +23,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, James Morse <james.morse@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: horms@verge.net.au, svens@stackframe.org, kexec@lists.infradead.org
+Cc: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
 
-
-> The confusing part was talking about memory being still in use,
-> that is actually scheduled for use in the future.
-
-+1
-
-> 
->>> Usually somewhere in the loaded image
->>> is a copy of the memory map at the time the kexec kernel was loaded.
->>> That will invalidate the memory map as well.
->>
->> Ah, unconditionally. Sure, x86 needs this.
->> (arm64 re-discovers the memory map from firmware tables after kexec)
-
-Does this include hotplugged DIMMs e.g., under KVM?
-[...]
-
->>> All of this should be for a very brief window of a few seconds, as
->>> the loaded kexec image is quite short.
->>
->> It seems I'm the outlier anticipating anything could happen between
->> those syscalls.
-> 
-> The design is:
-> 	sys_kexec_load()
-> 	shutdown scripts
->         sys_reboot(LINUX_REBOOT_CMD_KEXEC);
-> 
-> There are two system call simply so that the shutdown scripts can run.
-> Now maybe someone somewhere does something different but that is not
-> expected.
-> 
-> Only the kexec on panic kernel is expected to persist somewhat
-> indefinitely.  But that should be in memory that is reserved from boot
-> time, and so the memory hotplug should have enough visibility to not
-> allow that memory to be given up.
-
-Yes, and AFAIK, memory blocks which hold the reserved crashkernel area
-can usually not get offlined and, therefore, the memory cannot get removed.
-
-Interestingly, s390x even has a hotplug notifier for that
-
-arch/s390/kernel/setup.c:kdump_mem_notifier()
-
-(offlining of memory on s390x can result in memory getting depopulated
-in the hypervisor, so after it would have been offlined, it would no
-longer be accessible. I somewhat doubt that this notifier is really
-needed - all pages in the crashkernel area should look like ordinary
-allocated pages when the area is reserved early during boot via the
-memblock allocator, and therefore offlining cannot succeed. But that's a
-different story - and I suspect this is a leftover from pre-memblock times.)
-
--- 
-Thanks,
-
-David / dhildenb
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+UmVkZWZpbmUgT1BUX0FQUEVORCB0byBhdm9pZCBjbGFzaCB3aXRoIE9QVF9LRVhFQ19TWVNDQUxM
+X0FVVE8uClJlZGVmaW5lIE9QVF9SQU1ESVNLIHRvIGF2b2lkIHN1Y2ggcHJvYmxlbXMgaW4gdGhl
+IGZ1dHVyZQoKTWlub3IgY2xlYW51cCBpbiBIUFBBIHRvby4KClNpZ25lZC1vZmYtYnk6IMWBdWth
+c3ogU3RlbG1hY2ggPGwuc3RlbG1hY2hAc2Ftc3VuZy5jb20+Ci0tLQpTdmVuLAoKSSByZW1vdmVk
+IHNvbWUgYXJjaCBzcGVjaWZpYyBzaG9ydCBvcHRpb25zIHdoaWNoIHRvIG1lIGRvbid0IHNlZW0K
+YmUgaGFuZGxlZCBpbiB0aGUgZ2V0b3B0X2xvbmcoKSBsb29wIGluIGtleGVjLWVsZi1ocHBhLmMu
+IFBsZWFzZSB0ZWxsIHVzLAppZiBpdCBkb2Vzbid0IGJyZWFrIGFueXRoaW5nLgoKS2luZCByZWdh
+cmRzLArFgVMKCiBrZXhlYy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oICB8IDYgKysr
+LS0tCiBrZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMgICAgICB8IDIgKy0KIGtleGVj
+L2FyY2gvaHBwYS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIHwgMiArLQoga2V4ZWMvYXJjaC9ocHBh
+L2tleGVjLWVsZi1ocHBhLmMgICAgICAgfCAyICstCiA0IGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0
+aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9pbmNs
+dWRlL2FyY2gvb3B0aW9ucy5oIGIva2V4ZWMvYXJjaC9hcm0vaW5jbHVkZS9hcmNoL29wdGlvbnMu
+aAppbmRleCBhYmJmMzQ5Li42ZmFiZmI3IDEwMDY0NAotLS0gYS9rZXhlYy9hcmNoL2FybS9pbmNs
+dWRlL2FyY2gvb3B0aW9ucy5oCisrKyBiL2tleGVjL2FyY2gvYXJtL2luY2x1ZGUvYXJjaC9vcHRp
+b25zLmgKQEAgLTQsMTIgKzQsMTIgQEAKICNkZWZpbmUgT1BUX0RUX05PX09MRF9ST09UCShPUFRf
+TUFYKzApCiAjZGVmaW5lIE9QVF9BUkNIX01BWAkJKE9QVF9NQVgrMSkKIAotI2RlZmluZSBPUFRf
+QVBQRU5ECSdhJwotI2RlZmluZSBPUFRfUkFNRElTSwkncicKICNkZWZpbmUgT1BUX0RUQgkJKE9Q
+VF9BUkNIX01BWCswKQogI2RlZmluZSBPUFRfQVRBR1MJKE9QVF9BUkNIX01BWCsxKQogI2RlZmlu
+ZSBPUFRfSU1BR0VfU0laRQkoT1BUX0FSQ0hfTUFYKzIpCiAjZGVmaW5lIE9QVF9QQUdFX09GRlNF
+VAkoT1BUX0FSQ0hfTUFYKzMpCisjZGVmaW5lIE9QVF9BUFBFTkQJKE9QVF9BUkNIX01BWCs0KQor
+I2RlZmluZSBPUFRfUkFNRElTSwkoT1BUX0FSQ0hfTUFYKzUpCiAKIC8qIE9wdGlvbnMgcmVsZXZh
+bnQgdG8gdGhlIGFyY2hpdGVjdHVyZSAoZXhjbHVkaW5nIGxvYWRlci1zcGVjaWZpYyBvbmVzKSwK
+ICAqIGluIHRoaXMgY2FzZSBub25lOgpAQCAtNDUsNyArNDUsNyBAQAogCXsgImltYWdlLXNpemUi
+LAkJMSwgMCwgT1BUX0lNQUdFX1NJWkUgfSwgXAogCXsgInBhZ2Utb2Zmc2V0IiwJMSwgMCwgT1BU
+X1BBR0VfT0ZGU0VUIH0sCiAKLSNkZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9P
+UFRfU1RSICJhOnI6czoiCisjZGVmaW5lIEtFWEVDX0FMTF9PUFRfU1RSIEtFWEVDX0FSQ0hfT1BU
+X1NUUiAiIgogCiBleHRlcm4gdW5zaWduZWQgaW50IGtleGVjX2FybV9pbWFnZV9zaXplOwogCmRp
+ZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMgYi9rZXhlYy9hcmNo
+L2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKaW5kZXggOTg0NTkyNS4uZmY2MDllMiAxMDA2NDQKLS0t
+IGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jCisrKyBiL2tleGVjL2FyY2gvYXJt
+L2tleGVjLXpJbWFnZS1hcm0uYwpAQCAtNDA5LDcgKzQwOSw3IEBAIGludCB6SW1hZ2VfYXJtX2xv
+YWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKIAkJ
+eyAicGFnZS1vZmZzZXQiLAkxLCAwLCBPUFRfUEFHRV9PRkZTRVQgfSwKIAkJeyAwLCAJCQkwLCAw
+LCAwIH0sCiAJfTsKLQlzdGF0aWMgY29uc3QgY2hhciBzaG9ydF9vcHRpb25zW10gPSBLRVhFQ19B
+UkNIX09QVF9TVFIgImE6cjoiOworCXN0YXRpYyBjb25zdCBjaGFyIHNob3J0X29wdGlvbnNbXSA9
+IEtFWEVDX0FSQ0hfT1BUX1NUUiAiIjsKIAogCS8qCiAJICogUGFyc2UgdGhlIGNvbW1hbmQgbGlu
+ZSBhcmd1bWVudHMKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaHBwYS9pbmNsdWRlL2FyY2gvb3B0
+aW9ucy5oIGIva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9vcHRpb25zLmgKaW5kZXggYTkz
+NjE0MC4uZTlkZWI1MSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9v
+cHRpb25zLmgKKysrIGIva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9vcHRpb25zLmgKQEAg
+LTE3LDcgKzE3LDcgQEAKIAl7ICJyYW1kaXNrIiwJCTEsIDAsIE9QVF9SQU1ESVNLIH0sCiAKIAot
+I2RlZmluZSBLRVhFQ19BTExfT1BUX1NUUiBLRVhFQ19BUkNIX09QVF9TVFIgImE6cjpzOiIKKyNk
+ZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9PUFRfU1RSICIiCiAKIC8qIFNlZSB0
+aGUgb3RoZXIgYXJjaGl0ZWN0dXJlcyBmb3IgZGV0YWlscyBvZiB0aGVzZTsgSFBQQSBoYXMgbm8K
+ICAqIGxvYWRlci1zcGVjaWZpYyBvcHRpb25zIHlldC4KZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gv
+aHBwYS9rZXhlYy1lbGYtaHBwYS5jIGIva2V4ZWMvYXJjaC9ocHBhL2tleGVjLWVsZi1ocHBhLmMK
+aW5kZXggZDNlZjBlOS4uNDc0YTkxOSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9ocHBhL2tleGVj
+LWVsZi1ocHBhLmMKKysrIGIva2V4ZWMvYXJjaC9ocHBhL2tleGVjLWVsZi1ocHBhLmMKQEAgLTc2
+LDcgKzc2LDcgQEAgaW50IGVsZl9ocHBhX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25z
+dCBjaGFyICpidWYsIG9mZl90IGxlbiwKIAkJeyAwLCAgICAgICAgICAgICAgICAgICAgMCwgTlVM
+TCwgMCB9LAogCX07CiAKLQlzdGF0aWMgY29uc3QgY2hhciBzaG9ydF9vcHRpb25zW10gPSBLRVhF
+Q19BTExfT1BUX1NUUiAiZCI7CisJc3RhdGljIGNvbnN0IGNoYXIgc2hvcnRfb3B0aW9uc1tdID0g
+S0VYRUNfQUxMX09QVF9TVFI7CiAKIAl3aGlsZSAoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFy
+Z3YsIHNob3J0X29wdGlvbnMsIG9wdGlvbnMsIDApKSAhPQogCQktMSkgewotLSAKMi4yNS4wCgoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
+bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
