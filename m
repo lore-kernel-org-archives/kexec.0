@@ -1,20 +1,27 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jRAKY-0002Oo-Ut
- for kexec@lists.infradead.org; Wed, 22 Apr 2020 08:02:04 +0000
-Date: Wed, 22 Apr 2020 10:01:57 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm: redefine OPT_APPEND and OPT_RAMDISK
-Message-ID: <20200422080151.GA32200@vergenet.net>
-References: <20200416084441.GA16024@vergenet.net>
- <20200414085224.7069-1-l.stelmach@samsung.com>
- <CGME20200415105859eucas1p2db849d89aa9a338077a01784f73dad52@eucas1p2.samsung.com>
- <20200415105845.22067-1-l.stelmach@samsung.com>
- <dleftjmu76ns60.fsf%l.stelmach@samsung.com>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jRBVd-0001x0-Me
+ for kexec@lists.infradead.org; Wed, 22 Apr 2020 09:17:35 +0000
+Date: Wed, 22 Apr 2020 17:17:18 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+Message-ID: <20200422091718.GT4247@MiWiFi-R3L-srv>
+References: <ad060c8a-8afe-3858-0a4f-27ff54ef4c68@redhat.com>
+ <20200414143912.GE4247@MiWiFi-R3L-srv>
+ <0085f460-b0c7-b25f-36a7-fa3bafaab6fe@redhat.com>
+ <20200415023524.GG4247@MiWiFi-R3L-srv>
+ <18cf6afd-c651-25c7-aca3-3ca3c0e07547@redhat.com>
+ <20200416140247.GA12723@MiWiFi-R3L-srv>
+ <4e1546eb-4416-dc6d-d549-62d1cecccbc8@redhat.com>
+ <20200416143634.GH4247@MiWiFi-R3L-srv>
+ <2525cc9c-3566-6275-105b-7f4af8f980bc@redhat.com>
+ <9a4eb1d7-33bf-8707-9c0c-1ca657c3e502@redhat.com>
 MIME-Version: 1.0
+In-Reply-To: <9a4eb1d7-33bf-8707-9c0c-1ca657c3e502@redhat.com>
 Content-Disposition: inline
-In-Reply-To: <dleftjmu76ns60.fsf%l.stelmach@samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +30,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lukasz Stelmach <l.stelmach@samsung.com>
-Cc: kexec@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>
+Cc: piliu@redhat.com, Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King - ARM Linux admin <linux@armlinux.org.uk>, linux-mm@kvack.org, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-T24gTW9uLCBBcHIgMjAsIDIwMjAgYXQgMDQ6MzM6MTFQTSArMDIwMCwgTHVrYXN6IFN0ZWxtYWNo
-IHdyb3RlOgo+ID4gT24gV2VkLCBBcHIgMTUsIDIwMjAgYXQgMTI6NTg6NDVQTSArMDIwMCwgxYF1
-a2FzeiBTdGVsbWFjaCB3cm90ZToKPiA+PiBSZWRlZmluZSBPUFRfQVBQRU5EIHRvIGF2b2lkIGNs
-YXNoIHdpdGggT1BUX0tFWEVDX1NZU0NBTExfQVVUTy4KPiA+PiBSZWRlZmluZSBPUFRfUkFNRElT
-SyB0byBhdm9pZCBzdWNoIHByb2JsZW1zIGluIHRoZSBmdXR1cmUKPiA+Pgo+ID4+IFNpZ25lZC1v
-ZmYtYnk6IMWBdWthc3ogU3RlbG1hY2ggPGwuc3RlbG1hY2ggYXQgc2Ftc3VuZy5jb20+Cj4gPgo+
-ID4gSSBhbSBzbGlnaHRseSBjb25jZXJuZWQgdGhhdCB0aGlzIHdpbGwgYnJlYWsgdGhpbmdzIGZv
-ciB1c2Vycy4KPiA+IEJ1dCBPVE9IIHBlcmhhcHMgd2UgYWxyZWFkeSBicm9rZSB0aGluZ3Mgd2hl
-biBhZGRpbmcKPiA+IE9QVF9LRVhFQ19TWVNDQUxMX0FVVE8uCj4gPiBEbyB5b3UgaGF2ZSBhbnkg
-dGhvdWdodHMgb24gdGhpcz8KPiAKPiBJIGFtIGF3YXJlIG9mIHRoaXMsIGJ1dCB0aGUgY3VycmVu
-dCBhcHBlYXJzIHRvIGJlIGJyb2tlbiBtb3JlLiBXaGVuIEkKPiB3YXMgdXNpbmcgJy1hJyBpdCBk
-aWRuJ3Qgd29yayBhcyBhZHZlcnRpc2VkIGluIHRoZSB1c2FnZSBtZXNzYWdlLiBTaG9ydAo+ICph
-cmNoKiBvcHRpb25zIGFyZW4ndCBkb2N1bWVudGVkIHRoZXJlLCBzbyBJIHN1cHBvc2UgbW9zdCBw
-ZW9wbGUgZGlkbid0Cj4gdXNlIHRoZW0uIEFSTSBpcyB0aGUgb25seSBhcmNoaXRlY3R1cmUgdGhh
-dCBzdXBwb3J0cyBzaG9ydCBvcHRpb25zIGJ5Cj4gZGVmaW5pbmcgT1BUXyogYXMgY2hhcmFjdGVy
-cy4gSFBQQSBhcHBlYXJzIHRvIGJlIHVzaW5nIHRoZW0gaW4gdGhlCj4gb3B0c3RyaW5nIChjb3Bp
-ZWQgZnJvbSBBUk0/KSBidXQgbm90IGluIE9QVF8qLiBXb3VsZCB5b3UgbGlrZSBtZSB0bwo+IGNs
-ZWFuIHRoaXMgdXAgdG9vIGluIHYzPwo+IAo+IEluIHN1bW1hcnk6IHVuZG9jdW1lbnRlZCwgb24g
-b25lIHBsYXRmb3JtLgo+IAo+IFAuUy4gUGxlYXNlLCBjYyBtZS4gSSBhbSBub3Qgc3Vic2NyaWJl
-ZCB0byB0aGUgbGlzdC4KClRoYW5rcyDFgXVrYXN6LAoKSSB0YWtlIHlvdXIgcG9pbnQgd2l0aCBy
-ZWdhcmRzIHRvIHRoZXNlIGZlYXR1cmVzIGJlaW5nIHVuZG9jdW1lbnRlZC4KQW5kIEkgdGhpbmsg
-dGhlIGV4dHJhIGNsZWFuLXVwIHlvdSBzdWdnZXN0IHNvdW5kcyBnb29kLgpDb3VsZCB5b3UgcG9z
-dCBhIHYzIHdpdGggdGhhdCBpbmNsdWRlZD8KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+On 04/21/20 at 03:29pm, David Hildenbrand wrote:
+> >> ACPI SRAT is embeded into efi, need read out the rsdp pointer. If we don't
+> >> pass the efi, it won't get the SRAT table correctly, if I remember
+> >> correctly. Yeah, I remeber kvm guest can get memory hotplugged with
+> >> ACPI only, this won't happen on bare metal though. Need check carefully. 
+> >> I have been using kvm guest with uefi firmwire recently.
+> > 
+> > Yeah, I can imagine that bare metal is different. kvm only uses ACPI.
+> > 
+> > I'm also asking because of virtio-mem. Memory added via virtio-mem is
+> > not part of any efi tables or whatsoever. So I assume the kexec kernel
+> > will not detect it automatically (good!), instead load the virtio-mem
+> > driver and let it add memory back to the system.
+> > 
+> > I should probably play with kexec and virtio-mem once I have some spare
+> > cycles ... to find out what's broken and needs to be addressed :)
+> 
+> FWIW, I just gave virtio-mem and kexec/kdump a try.
+> 
+> a) kdump seems to work. Memory added by virtio-mem is getting dumped.
+> The kexec kernel only uses memory in the crash region. The virtio-mem
+> driver properly bails out due to is_kdump_kernel().
+
+Right, kdump is not impacted later added memory.
+
+> 
+> b) "kexec -s -l" seems to work fine. For now, the kernel does not seem
+> to get placed on virtio-mem memory (pure luck due to the left-to-right
+> search). Memory added by virtio-mem is not getting added to the e820
+> map. Once the virtio-mem driver comes back up in the kexec kernel, the
+> right memory is readded.
+
+kexec_file_load just behaves as you tested. It doesn't collect later
+added memory to e820 because it uses e820_table_kexec directly to pass
+e820 to kexec-ed kernel. However, this e820_table_kexec is only updated
+during boot stage. I tried hot adding DIMM after boot, kexec-ed kernel
+doesn't have it in e820 during bootup, but it's recoginized and added
+when ACPI scanning. I think we should update e820_table_kexec when hot
+add/remove memory, at least for DIMM. Not sure if DLPAR, virtio-mem,
+balloon will need be added into e820_table_kexec too, and if this is
+expected behaviour.
+
+But whatever we do, it won't impact the kexec file_loading, because of
+the searching strategy bottom up. Just adding them into e820_table_kexec
+will make it consistent with cold reboot which get recognizes and get
+them into e820 during bootup.
+> 
+> c) "kexec -c -l" does not work properly. All memory added by virtio-mem
+> is added to the e820 map, which is wrong. Memory that should not be
+> touched will be touched by the kexec kernel. I assume kexec-tools just
+> goes ahead and adds anything it can find in /proc/iomem (or
+> /sys/firmware/memmap/) to the e820 map of the new kernel.
+> 
+> Due to c), I assume all hotplugged memory (e.g., ACPI DIMMs) is
+> similarly added to the e820 map and, therefore, won't be able to be
+> onlined MOVABLE easily.
+
+Yes, kexec_load will read memory regions from /sys/firmware/memmap/ or
+/proc/iomem. Making it right seems a little harder, we can export them
+to /proc/iomem or /sys/firmware/memmap/ with mark them with 'hotplug',
+but the attribute that which zone they belongs to is not easy to tell.
+
+We are proactive on widely testing kexec_file_load on x86_64, s390,
+arm64 by adding test cases into CKI.
+
+> 
+> 
+> At least for virtio-mem, I would either have to
+> a) Not support "kexec -c -l". A viable option if we would be planning on
+> not supporting it either way in the long term. I could block this
+> in-kernel somehow eventually.
+> 
+> b) Teach kexec-tools to leave virtio-mem added memory alone. E.g., by
+> indicating it in /proc/iomem in a special way ("System RAM
+> (hotplugged)"/"System RAM (virtio-mem)").
+> 
+> Baoquan, any opinion on that?
+> 
+> -- 
+> Thanks,
+> 
+> David / dhildenb
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
