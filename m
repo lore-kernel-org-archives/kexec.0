@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-2-james.morse@arm.com>
- <87d088h4k8.fsf@x220.int.ebiederm.org>
- <a694cea6-4449-c77a-98f7-bd7a49cf47fc@arm.com>
- <87y2qn1r18.fsf@x220.int.ebiederm.org>
- <a29beedb-750b-b838-6c2a-6e47ade2186a@redhat.com>
-Date: Thu, 23 Apr 2020 11:29:21 -0500
-In-Reply-To: <a29beedb-750b-b838-6c2a-6e47ade2186a@redhat.com> (David
- Hildenbrand's message of "Wed, 22 Apr 2020 18:40:22 +0200")
-Message-ID: <87ftcuxj1a.fsf@x220.int.ebiederm.org>
+Received: from mail-eopbgr1410051.outbound.protection.outlook.com
+ ([40.107.141.51] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jRhPV-0002EQ-PH
+ for kexec@lists.infradead.org; Thu, 23 Apr 2020 19:21:23 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [Crash-utility] new printk ringbuffer interface
+Date: Thu, 23 Apr 2020 19:21:14 +0000
+Message-ID: <OSBPR01MB1991F08228D7E9BDBEF07105DDD30@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <OSBPR01MB19916965DAEB1238FEB962F6DDD30@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <421536467.24687472.1587652980905.JavaMail.zimbra@redhat.com>
+ <OSBPR01MB1991CB3EC9C98B2387C61A1EDDD30@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB1991CB3EC9C98B2387C61A1EDDD30@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
- kexec image
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,83 +27,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Dave Anderson <anderson@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Discussion list
+ for crash utility usage,
+ maintenance and development" <crash-utility@redhat.com>
 
-David Hildenbrand <david@redhat.com> writes:
+> -----Original Message-----
+> > -----Original Message-----
+> > ----- Original Message -----
+> > > ccing kexec list, vmcore-dmesg also uses vmcoreinfo related to printk..
+> > >
+> > > > -----Original Message-----
+> > > >
+> > > > ----- Original Message -----
+> > > > > Hello Dave,
+> > > > >
+> > > > > You may or may not be aware that we are working on replacing [0] the
+> > > > > Linux printk ringbuffer. Rather than a single buffer containing a single
+> > > > > struct type, the new ringbuffer makes use of several different structs.
+> > > >
+> > > > Yes, I am most definitely aware...
+> > > >
+> > > > >
+> > > > > I am writing to ask your advice about how this should be exported for
+> > > > > the crash utility. Should all struct sizes and field offsets be
+> > > > > exported? It would look something like this:
+> > > > >
+> > > > >         VMCOREINFO_SYMBOL(prb);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(printk_ringbuffer);
+> > > > >         VMCOREINFO_OFFSET(printk_ringbuffer, desc_ring);
+> > > > >         VMCOREINFO_OFFSET(printk_ringbuffer, text_data_ring);
+> > > > >         VMCOREINFO_OFFSET(printk_ringbuffer, dict_data_ring);
+> > > > >         VMCOREINFO_OFFSET(printk_ringbuffer, fail);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(prb_desc_ring);
+> > > > >         VMCOREINFO_OFFSET(prb_desc_ring, count_bits);
+> > > > >         VMCOREINFO_OFFSET(prb_desc_ring, descs);
+> > > > >         VMCOREINFO_OFFSET(prb_desc_ring, head_id);
+> > > > >         VMCOREINFO_OFFSET(prb_desc_ring, tail_id);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(prb_desc);
+> > > > >         VMCOREINFO_OFFSET(prb_desc, info);
+> > > > >         VMCOREINFO_OFFSET(prb_desc, state_var);
+> > > > >         VMCOREINFO_OFFSET(prb_desc, text_blk_lpos);
+> > > > >         VMCOREINFO_OFFSET(prb_desc, dict_blk_lpos);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(prb_data_blk_lpos);
+> > > > >         VMCOREINFO_OFFSET(prb_data_blk_lpos, begin);
+> > > > >         VMCOREINFO_OFFSET(prb_data_blk_lpos, next);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(printk_info);
+> > > > >         VMCOREINFO_OFFSET(printk_info, seq);
+> > > > >         VMCOREINFO_OFFSET(printk_info, ts_nsec);
+> > > > >         VMCOREINFO_OFFSET(printk_info, text_len);
+> > > > >         VMCOREINFO_OFFSET(printk_info, dict_len);
+> > > > >         VMCOREINFO_OFFSET(printk_info, caller_id);
+> > > > >
+> > > > >         VMCOREINFO_STRUCT_SIZE(prb_data_ring);
+> > > > >         VMCOREINFO_OFFSET(prb_data_ring, size_bits);
+> > > > >         VMCOREINFO_OFFSET(prb_data_ring, data);
+> > > > >         VMCOREINFO_OFFSET(prb_data_ring, head_id);
+> > > > >         VMCOREINFO_OFFSET(prb_data_ring, tail_id);
+> > > > >
+> > > > > Or would it be enough to just recognize the new "prb" symbol and have
+> > > > > all the structures defined in the crash utility? If the latter is
+> > > > > preferred, should some sort of version number be exported? Or is the
+> > > > > kernel version number enough?
+> > >
+> > > first I don't think we can depend on the kernel version because distribution
+> > > kernels backport upstream patches.  So we will need a version number of the
+> > > ringbuffer if we choose that way.
+> >
+> > With respect to the kernel version, you are absolutely correct, as we've been
+> > burnt by that before with backports to distribution and the upstream longterm
+> > kernels.  But I think John was talking about exporting a printk-structure-set
+> > version number, so I think we're on the same page.
+> >
+> > Also, if we go the version-number route, there would still not be a requirement
+> > for the crash utility to duplicate the kernel data structures in its sources.
+> > As John's proof-of-concept patch showed, it can still use the traditional
+> > manner of getting structure sizes and member offsets.  With the version number
+> > exported, there may have to be a few small adjustments in the MEMBER_OFFSET_INIT()
+> > calls, but it would be fairly straight-forward to maintain.
+> >
+> > But of course makedumpfile would have to replicate the kernel data structures.
+> 
+> Ah, indeed.  I vaguely thought makedumpfile also might be able to do like crash
+> by setting sizes and offsets for each version..  But it will be hard to set them
+> manually for every architectures.  I'll think about it more.
 
->> The confusing part was talking about memory being still in use,
->> that is actually scheduled for use in the future.
->
-> +1
->
->> 
->>>> Usually somewhere in the loaded image
->>>> is a copy of the memory map at the time the kexec kernel was loaded.
->>>> That will invalidate the memory map as well.
->>>
->>> Ah, unconditionally. Sure, x86 needs this.
->>> (arm64 re-discovers the memory map from firmware tables after kexec)
->
-> Does this include hotplugged DIMMs e.g., under KVM?
-> [...]
+makedumpfile has some architecture or kernel version specific values in it and
+switches them by conditions, but the reason why we can do this is that they are
+mostly constants that rarely change and can be got from the kernel source easily.
+With respect to structure sizes and memger offsets, I don't think of a way to do
+this easily.
 
-As far as I know.  If the memory map changes we need to drop the loaded
-image.
+And then if we define all the structures in makedumpfile with the version number,
+how can we implement them and switch for each version?  The new ringbuffer is
+structured very much, I cannot imagine that it can be handled efficiently.
 
+Any ideas?
 
-Having thought about it a little more I suspect it would be the
-other way and just block all hotplug actions after a kexec_load.
-As all we expect to happen is running shutdown scripts.
+If there is no efficient way, we will need all of the entries in VMCOREINFO.
 
-If blocking the hotplug action uses printk to print a nice message
-saying something like: "Hotplug blocked because of a loaded kexec image",
-then people will be able to figure out what is going on and
-call kexec -u if they haven't started the shutdown scripts yet.
-
-
-Either way it is something simple and unconditional that will make
-things work.
-
->>>> All of this should be for a very brief window of a few seconds, as
->>>> the loaded kexec image is quite short.
->>>
->>> It seems I'm the outlier anticipating anything could happen between
->>> those syscalls.
->> 
->> The design is:
->> 	sys_kexec_load()
->> 	shutdown scripts
->>         sys_reboot(LINUX_REBOOT_CMD_KEXEC);
->> 
->> There are two system call simply so that the shutdown scripts can run.
->> Now maybe someone somewhere does something different but that is not
->> expected.
->> 
->> Only the kexec on panic kernel is expected to persist somewhat
->> indefinitely.  But that should be in memory that is reserved from boot
->> time, and so the memory hotplug should have enough visibility to not
->> allow that memory to be given up.
->
-> Yes, and AFAIK, memory blocks which hold the reserved crashkernel area
-> can usually not get offlined and, therefore, the memory cannot get removed.
->
-> Interestingly, s390x even has a hotplug notifier for that
->
-> arch/s390/kernel/setup.c:kdump_mem_notifier()
->
-> (offlining of memory on s390x can result in memory getting depopulated
-> in the hypervisor, so after it would have been offlined, it would no
-> longer be accessible. I somewhat doubt that this notifier is really
-> needed - all pages in the crashkernel area should look like ordinary
-> allocated pages when the area is reserved early during boot via the
-> memblock allocator, and therefore offlining cannot succeed. But that's a
-> different story - and I suspect this is a leftover from pre-memblock times.)
-
-It might be worth seeing if that is true, or if we need to generalize the
-s390x code.
-
-Eric
+Thanks,
+Kazu
 
 
 _______________________________________________
