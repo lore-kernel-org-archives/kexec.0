@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout1.w1.samsung.com ([210.118.77.11])
+Received: from mail-eopbgr1410079.outbound.protection.outlook.com
+ ([40.107.141.79] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jRLJB-00042n-2B
- for kexec@lists.infradead.org; Wed, 22 Apr 2020 19:45:22 +0000
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
- by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id
- 20200422194518euoutp012cdbabfb094c42320ab7bcfd27a9b9d4~IO_PO-hGQ3095730957euoutp01X
- for <kexec@lists.infradead.org>; Wed, 22 Apr 2020 19:45:18 +0000 (GMT)
-From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH v3] arm: redefine OPT_APPEND and OPT_RAMDISK
-Date: Wed, 22 Apr 2020 21:45:04 +0200
-Message-Id: <20200422194504.14775-1-l.stelmach@samsung.com>
-In-Reply-To: <20200422080151.GA32200@vergenet.net>
+ id 1jRcls-0002rF-8y
+ for kexec@lists.infradead.org; Thu, 23 Apr 2020 14:24:09 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [Crash-utility] new printk ringbuffer interface
+Date: Thu, 23 Apr 2020 14:23:59 +0000
+Message-ID: <OSBPR01MB19916965DAEB1238FEB962F6DDD30@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
-References: <20200422080151.GA32200@vergenet.net>
- <CGME20200422194517eucas1p11d2ab9f4f68b891ea963633045f31ce9@eucas1p1.samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,68 +19,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, svens@stackframe.org, kexec@lists.infradead.org
-Cc: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+To: Dave Anderson <anderson@redhat.com>, "Discussion list for crash utility
+ usage, maintenance and development" <crash-utility@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-UmVkZWZpbmUgT1BUX0FQUEVORCB0byBhdm9pZCBjbGFzaCB3aXRoIE9QVF9LRVhFQ19TWVNDQUxM
-X0FVVE8uClJlZGVmaW5lIE9QVF9SQU1ESVNLIHRvIGF2b2lkIHN1Y2ggcHJvYmxlbXMgaW4gdGhl
-IGZ1dHVyZQoKTWlub3IgY2xlYW51cCBpbiBIUFBBIHRvby4KClNpZ25lZC1vZmYtYnk6IMWBdWth
-c3ogU3RlbG1hY2ggPGwuc3RlbG1hY2hAc2Ftc3VuZy5jb20+Ci0tLQpTdmVuLAoKSSByZW1vdmVk
-IHNvbWUgYXJjaCBzcGVjaWZpYyBzaG9ydCBvcHRpb25zIHdoaWNoIHRvIG1lIGRvbid0IHNlZW0K
-YmUgaGFuZGxlZCBpbiB0aGUgZ2V0b3B0X2xvbmcoKSBsb29wIGluIGtleGVjLWVsZi1ocHBhLmMu
-IFBsZWFzZSB0ZWxsIHVzLAppZiBpdCBkb2Vzbid0IGJyZWFrIGFueXRoaW5nLgoKS2luZCByZWdh
-cmRzLArFgVMKCiBrZXhlYy9hcmNoL2FybS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oICB8IDYgKysr
-LS0tCiBrZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMgICAgICB8IDIgKy0KIGtleGVj
-L2FyY2gvaHBwYS9pbmNsdWRlL2FyY2gvb3B0aW9ucy5oIHwgMiArLQoga2V4ZWMvYXJjaC9ocHBh
-L2tleGVjLWVsZi1ocHBhLmMgICAgICAgfCAyICstCiA0IGZpbGVzIGNoYW5nZWQsIDYgaW5zZXJ0
-aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9pbmNs
-dWRlL2FyY2gvb3B0aW9ucy5oIGIva2V4ZWMvYXJjaC9hcm0vaW5jbHVkZS9hcmNoL29wdGlvbnMu
-aAppbmRleCBhYmJmMzQ5Li42ZmFiZmI3IDEwMDY0NAotLS0gYS9rZXhlYy9hcmNoL2FybS9pbmNs
-dWRlL2FyY2gvb3B0aW9ucy5oCisrKyBiL2tleGVjL2FyY2gvYXJtL2luY2x1ZGUvYXJjaC9vcHRp
-b25zLmgKQEAgLTQsMTIgKzQsMTIgQEAKICNkZWZpbmUgT1BUX0RUX05PX09MRF9ST09UCShPUFRf
-TUFYKzApCiAjZGVmaW5lIE9QVF9BUkNIX01BWAkJKE9QVF9NQVgrMSkKIAotI2RlZmluZSBPUFRf
-QVBQRU5ECSdhJwotI2RlZmluZSBPUFRfUkFNRElTSwkncicKICNkZWZpbmUgT1BUX0RUQgkJKE9Q
-VF9BUkNIX01BWCswKQogI2RlZmluZSBPUFRfQVRBR1MJKE9QVF9BUkNIX01BWCsxKQogI2RlZmlu
-ZSBPUFRfSU1BR0VfU0laRQkoT1BUX0FSQ0hfTUFYKzIpCiAjZGVmaW5lIE9QVF9QQUdFX09GRlNF
-VAkoT1BUX0FSQ0hfTUFYKzMpCisjZGVmaW5lIE9QVF9BUFBFTkQJKE9QVF9BUkNIX01BWCs0KQor
-I2RlZmluZSBPUFRfUkFNRElTSwkoT1BUX0FSQ0hfTUFYKzUpCiAKIC8qIE9wdGlvbnMgcmVsZXZh
-bnQgdG8gdGhlIGFyY2hpdGVjdHVyZSAoZXhjbHVkaW5nIGxvYWRlci1zcGVjaWZpYyBvbmVzKSwK
-ICAqIGluIHRoaXMgY2FzZSBub25lOgpAQCAtNDUsNyArNDUsNyBAQAogCXsgImltYWdlLXNpemUi
-LAkJMSwgMCwgT1BUX0lNQUdFX1NJWkUgfSwgXAogCXsgInBhZ2Utb2Zmc2V0IiwJMSwgMCwgT1BU
-X1BBR0VfT0ZGU0VUIH0sCiAKLSNkZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9P
-UFRfU1RSICJhOnI6czoiCisjZGVmaW5lIEtFWEVDX0FMTF9PUFRfU1RSIEtFWEVDX0FSQ0hfT1BU
-X1NUUiAiIgogCiBleHRlcm4gdW5zaWduZWQgaW50IGtleGVjX2FybV9pbWFnZV9zaXplOwogCmRp
-ZmYgLS1naXQgYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMgYi9rZXhlYy9hcmNo
-L2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKaW5kZXggOTg0NTkyNS4uZmY2MDllMiAxMDA2NDQKLS0t
-IGEva2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jCisrKyBiL2tleGVjL2FyY2gvYXJt
-L2tleGVjLXpJbWFnZS1hcm0uYwpAQCAtNDA5LDcgKzQwOSw3IEBAIGludCB6SW1hZ2VfYXJtX2xv
-YWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90IGxlbiwKIAkJ
-eyAicGFnZS1vZmZzZXQiLAkxLCAwLCBPUFRfUEFHRV9PRkZTRVQgfSwKIAkJeyAwLCAJCQkwLCAw
-LCAwIH0sCiAJfTsKLQlzdGF0aWMgY29uc3QgY2hhciBzaG9ydF9vcHRpb25zW10gPSBLRVhFQ19B
-UkNIX09QVF9TVFIgImE6cjoiOworCXN0YXRpYyBjb25zdCBjaGFyIHNob3J0X29wdGlvbnNbXSA9
-IEtFWEVDX0FSQ0hfT1BUX1NUUiAiIjsKIAogCS8qCiAJICogUGFyc2UgdGhlIGNvbW1hbmQgbGlu
-ZSBhcmd1bWVudHMKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvaHBwYS9pbmNsdWRlL2FyY2gvb3B0
-aW9ucy5oIGIva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9vcHRpb25zLmgKaW5kZXggYTkz
-NjE0MC4uZTlkZWI1MSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9v
-cHRpb25zLmgKKysrIGIva2V4ZWMvYXJjaC9ocHBhL2luY2x1ZGUvYXJjaC9vcHRpb25zLmgKQEAg
-LTE3LDcgKzE3LDcgQEAKIAl7ICJyYW1kaXNrIiwJCTEsIDAsIE9QVF9SQU1ESVNLIH0sCiAKIAot
-I2RlZmluZSBLRVhFQ19BTExfT1BUX1NUUiBLRVhFQ19BUkNIX09QVF9TVFIgImE6cjpzOiIKKyNk
-ZWZpbmUgS0VYRUNfQUxMX09QVF9TVFIgS0VYRUNfQVJDSF9PUFRfU1RSICIiCiAKIC8qIFNlZSB0
-aGUgb3RoZXIgYXJjaGl0ZWN0dXJlcyBmb3IgZGV0YWlscyBvZiB0aGVzZTsgSFBQQSBoYXMgbm8K
-ICAqIGxvYWRlci1zcGVjaWZpYyBvcHRpb25zIHlldC4KZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gv
-aHBwYS9rZXhlYy1lbGYtaHBwYS5jIGIva2V4ZWMvYXJjaC9ocHBhL2tleGVjLWVsZi1ocHBhLmMK
-aW5kZXggZDNlZjBlOS4uNDc0YTkxOSAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9ocHBhL2tleGVj
-LWVsZi1ocHBhLmMKKysrIGIva2V4ZWMvYXJjaC9ocHBhL2tleGVjLWVsZi1ocHBhLmMKQEAgLTc2
-LDcgKzc2LDcgQEAgaW50IGVsZl9ocHBhX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25z
-dCBjaGFyICpidWYsIG9mZl90IGxlbiwKIAkJeyAwLCAgICAgICAgICAgICAgICAgICAgMCwgTlVM
-TCwgMCB9LAogCX07CiAKLQlzdGF0aWMgY29uc3QgY2hhciBzaG9ydF9vcHRpb25zW10gPSBLRVhF
-Q19BTExfT1BUX1NUUiAiZCI7CisJc3RhdGljIGNvbnN0IGNoYXIgc2hvcnRfb3B0aW9uc1tdID0g
-S0VYRUNfQUxMX09QVF9TVFI7CiAKIAl3aGlsZSAoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFy
-Z3YsIHNob3J0X29wdGlvbnMsIG9wdGlvbnMsIDApKSAhPQogCQktMSkgewotLSAKMi4yNS4wCgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+ccing kexec list, vmcore-dmesg also uses vmcoreinfo related to printk..
+
+> -----Original Message-----
+> 
+> ----- Original Message -----
+> > Hello Dave,
+> >
+> > You may or may not be aware that we are working on replacing [0] the
+> > Linux printk ringbuffer. Rather than a single buffer containing a single
+> > struct type, the new ringbuffer makes use of several different structs.
+> 
+> Yes, I am most definitely aware...
+> 
+> >
+> > I am writing to ask your advice about how this should be exported for
+> > the crash utility. Should all struct sizes and field offsets be
+> > exported? It would look something like this:
+> >
+> >         VMCOREINFO_SYMBOL(prb);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(printk_ringbuffer);
+> >         VMCOREINFO_OFFSET(printk_ringbuffer, desc_ring);
+> >         VMCOREINFO_OFFSET(printk_ringbuffer, text_data_ring);
+> >         VMCOREINFO_OFFSET(printk_ringbuffer, dict_data_ring);
+> >         VMCOREINFO_OFFSET(printk_ringbuffer, fail);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(prb_desc_ring);
+> >         VMCOREINFO_OFFSET(prb_desc_ring, count_bits);
+> >         VMCOREINFO_OFFSET(prb_desc_ring, descs);
+> >         VMCOREINFO_OFFSET(prb_desc_ring, head_id);
+> >         VMCOREINFO_OFFSET(prb_desc_ring, tail_id);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(prb_desc);
+> >         VMCOREINFO_OFFSET(prb_desc, info);
+> >         VMCOREINFO_OFFSET(prb_desc, state_var);
+> >         VMCOREINFO_OFFSET(prb_desc, text_blk_lpos);
+> >         VMCOREINFO_OFFSET(prb_desc, dict_blk_lpos);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(prb_data_blk_lpos);
+> >         VMCOREINFO_OFFSET(prb_data_blk_lpos, begin);
+> >         VMCOREINFO_OFFSET(prb_data_blk_lpos, next);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(printk_info);
+> >         VMCOREINFO_OFFSET(printk_info, seq);
+> >         VMCOREINFO_OFFSET(printk_info, ts_nsec);
+> >         VMCOREINFO_OFFSET(printk_info, text_len);
+> >         VMCOREINFO_OFFSET(printk_info, dict_len);
+> >         VMCOREINFO_OFFSET(printk_info, caller_id);
+> >
+> >         VMCOREINFO_STRUCT_SIZE(prb_data_ring);
+> >         VMCOREINFO_OFFSET(prb_data_ring, size_bits);
+> >         VMCOREINFO_OFFSET(prb_data_ring, data);
+> >         VMCOREINFO_OFFSET(prb_data_ring, head_id);
+> >         VMCOREINFO_OFFSET(prb_data_ring, tail_id);
+> >
+> > Or would it be enough to just recognize the new "prb" symbol and have
+> > all the structures defined in the crash utility? If the latter is
+> > preferred, should some sort of version number be exported? Or is the
+> > kernel version number enough?
+
+first I don't think we can depend on the kernel version because distribution
+kernels backport upstream patches.  So we will need a version number of the
+ringbuffer if we choose that way.
+
+I think that "exporting all things" can sometimes reflect changes in kernel
+automatically and can reduce tool side effort more than "exporting a version
+number".  But the former requires a lot of entries and it might be hard for
+us to track the changes.  So having an explicit version might be better and
+I'm ok with the latter.
+
+But I hope no missing update of the version number..
+Any thoughts from vmcore-dmesg side?
+
+Thanks,
+Kazu
+
+> >
+> > I appreciate your feedback.
+> >
+> > John Ogness
+> 
+> With respect to the crash utility, there are two answers.
+> 
+> When running crash session normally, i.e. running "crash vmlinux vmcore", the runtime
+> "log" command does not use any VMCOREINFO entries that happen to be attached to a dumpfile.
+> Since crash has the vmlinux debuginfo data available, it uses its own interfaces to get
+> all kernel symbol and structure related information.
+> 
+> But there is a little-used capability where the the vmlinux file is not required,
+> but rather just the vmcore, in its "crash --log vmcore" feature.  That functionality
+> does require the VMCOREINFO entries to extract/dump the log, and exit.  Honestly I wish
+> I had never even introduced that feature.  And I wonder if it were deprecated,
+> would anybody care?
+> 
+> However, your question is highly relevant to the makedumpfile(8) facility
+> for its "makedumpfile --dump-dmesg" option.  Since it doesn't have the
+> luxury of a vmlinux file, it needs all of the VMCOREINF_xxx items.  Kazuhito
+> Hagio is the makedumpfile maintainer, and since he is the primary customer
+> of the VMCOREINFO entries, he would be a better person to answer your
+> question.
+> 
+> That being said, due the sheer number VMCOREINFO entries required, I like
+> your idea of providing a single version number.  But I defer to Kazu for
+> his preference.
+> 
+> Thanks,
+>   Dave
+> 
+> 
+> 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
