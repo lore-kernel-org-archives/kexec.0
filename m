@@ -1,31 +1,31 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jRyjy-00080P-J4
- for kexec@lists.infradead.org; Fri, 24 Apr 2020 13:51:40 +0000
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
- by userp2120.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ODnYjD178219
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 13:49:34 GMT
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
- by userp2120.oracle.com with ESMTP id 30k7qe6xb2-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 13:49:34 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
- by userp3020.oracle.com (8.16.0.42/8.16.0.42) with SMTP id 03ODfcrR155850
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 13:49:34 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
- by userp3020.oracle.com with ESMTP id 30k7qx6fse-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK)
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 13:49:33 +0000
-Received: from abhmp0019.oracle.com (abhmp0019.oracle.com [141.146.116.25])
- by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id 03ODnXvE023630
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 13:49:33 GMT
-From: John Donnelly <john.p.donnelly@oracle.com>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Date: Fri, 24 Apr 2020 08:49:31 -0500
-Subject: [crash - Question ] mod -s <module>   not working with compressed
- modules 
-Message-Id: <4FA43F2A-C118-4102-BC03-19B55A5AFEA9@oracle.com>
+ id 1jS3vm-0000ra-CQ
+ for kexec@lists.infradead.org; Fri, 24 Apr 2020 19:24:12 +0000
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com
+ [10.5.11.16])
+ (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+ (No client certificate requested)
+ by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAD7E107ACCD
+ for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
+Received: from colo-mx.corp.redhat.com
+ (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
+ by smtp.corp.redhat.com (Postfix) with ESMTPS id A33975C1D0
+ for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
+Received: from zmail24.collab.prod.int.phx2.redhat.com
+ (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
+ by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9C3774CA94
+ for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
+Date: Fri, 24 Apr 2020 15:24:00 -0400 (EDT)
+From: Dave Anderson <anderson@redhat.com>
+Message-ID: <289396508.24991092.1587756240556.JavaMail.zimbra@redhat.com>
+In-Reply-To: <mailman.7.1587754804.31179.kexec@lists.infradead.org>
+References: <mailman.7.1587754804.31179.kexec@lists.infradead.org>
+Subject: Re: [crash - Question ] mod -s <module>  not working with
+ compressed modules
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,30 +34,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec mailing list <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
-SGkgCgogSSBvYnNlcnZlZCB0aGF0ICBsb2FkaW5nIG1vZHVsZSBzeW1ib2xzIGZyb20gYSBjb21w
-cmVzc2VkIGtvLnh6ICAoIGNyYXNoIDcuMi4zLTEwLmVsNyApIGRvZXMgbm90IHdvcmssCmFuZCB0
-aGUgZGVzaXJlZCBtb2R1bGUgaGFzIHRvIGJlIHVuLWNvbXByZXNzZWQgLiBEb2VzIGFueW9uZSBr
-bm93IGlmIHRoZXJlIGlzIGEgcmVjZW50IHBhdGNoIHRoYXQgYWRkcmVzc2VzIHRoaXMgPwoKCkV4
-YW1wbGU6CgpNb2R1bGVzIGFyZSBsb2NhdGVkIGF0IHRoZSDigJRtb2QgcGF0aCA6CgpjcmFzaCAg
-IC1zICBgZmluZCBrZXJuZWwtdWVrLWRlYnVnaW5mby00LjE0LjM1LTE5MDIuMzAyLjEuMDEuZWw3
-dWVrLnJjMSAtbmFtZSB2bWxpbnV4IGAgdm1jb3JlIC0tbW9kIC4va2VybmVsLXVlay00LjE0LjM1
-LTE5MDIuMzAyLjEuMDEudHN0MTcwNTlfdTMuZWw3dWVrLnJjMS9saWIvbW9kdWxlcy80LjE0LjM1
-LTE5MDIuMzAyLjEuMDEuZWw3dWVrLnJjMS54ODZfNjQva2VybmVsLwoKCmNyYXNoPiBtb2QgLVMK
-bW9kOiBjYW5ub3QgZmluZCBvciBsb2FkIG9iamVjdCBmaWxlIGZvciB1c2Jfc3RvcmFnZSBtb2R1
-bGUKbW9kOiBjYW5ub3QgZmluZCBvciBsb2FkIG9iamVjdCBmaWxlIGZvciBkY2EgbW9kdWxlCm1v
-ZDogY2Fubm90IGZpbmQgb3IgbG9hZCBvYmplY3QgZmlsZSBmb3IgZmJfc3lzX2ZvcHMgbW9kdWxl
-Cm1vZDogY2Fubm90IGZpbmQgb3IgbG9hZCBvYmplY3QgZmlsZSBmb3IgdWFzIG1vZHVsZQogICAg
-IE1PRFVMRSAgICAgICBOQU1FICAgICAgICAgICAgICAgICAgICAgU0laRSAgT0JKRUNUIEZJTEUK
-ZmZmZmZmZmZjMDc0MDBjMCAgcWxhMnh4eCAgICAgICAgICAgICAgICA3OTQ2MjQgIC4va2VybmVs
-LXVlay00LjE0LjM1LTE5MDIuMzAyLjEuMDEuZWw3dWVrLnJjMS9saWIvbW9kdWxlcy80LjE0LjM1
-LTE5MDIuMzAyLjEuMDEuZWw3dWVrLnJjMS54ODZfNjQva2VybmVsL2RyaXZlcnMvc2NzaS9xbGEy
-eHh4L3FsYTJ4eHgua28gCgpJIHVuLWNvbXByZXNzZWQgcWxhMnh4eC5rby54eiAgc28gaXQgd2Fz
-IGZvdW5kLiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+
+----- Original Message ----
+> 
+> Hi
+> 
+>  I observed that  loading module symbols from a compressed ko.xz  ( crash 7.2.3-10.el7 ) does not work,
+> and the desired module has to be un-compressed . Does anyone know if there is a recent patch that addresses this ?
+
+Nope.
+
+
+> 
+> 
+> Example:
+> 
+> Modules are located at the mod path :
+> 
+> crash -s  `find kernel-uek-debuginfo-4.14.35-1902.302.1.01.el7uek.rc1 -name vmlinux ` vmcore --mod ./kernel-uek-4.14.35-1902.302.1.01.tst17059_u3.el7uek.rc1/lib/modules/4.14.35-1902.302.1.01.el7uek.rc1.x86_64/kernel/
+> 
+> 
+> crash> mod -S
+> mod: cannot find or load object file for usb_storage module
+> mod: cannot find or load object file for dca module
+> mod: cannot find or load object file for fb_sys_fops module
+> mod: cannot find or load object file for uas module
+>      MODULE       NAME                     SIZE  OBJECT FILE
+> ffffffffc07400c0  qla2xxx                794624
+> ./kernel-uek-4.14.35-1902.302.1.01.el7uek.rc1/lib/modules/4.14.35-1902.302.1.01.el7uek.rc1.x86_64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
+> 
+> I un-compressed qla2xxx.ko.xz  so it was found.
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
