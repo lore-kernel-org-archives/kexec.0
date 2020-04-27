@@ -1,31 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jS3vm-0000ra-CQ
- for kexec@lists.infradead.org; Fri, 24 Apr 2020 19:24:12 +0000
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com
- [10.5.11.16])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mimecast-mx01.redhat.com (Postfix) with ESMTPS id AAD7E107ACCD
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
-Received: from colo-mx.corp.redhat.com
- (colo-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.21])
- by smtp.corp.redhat.com (Postfix) with ESMTPS id A33975C1D0
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
-Received: from zmail24.collab.prod.int.phx2.redhat.com
- (zmail24.collab.prod.int.phx2.redhat.com [10.5.83.30])
- by colo-mx.corp.redhat.com (Postfix) with ESMTP id 9C3774CA94
- for <kexec@lists.infradead.org>; Fri, 24 Apr 2020 19:24:00 +0000 (UTC)
-Date: Fri, 24 Apr 2020 15:24:00 -0400 (EDT)
-From: Dave Anderson <anderson@redhat.com>
-Message-ID: <289396508.24991092.1587756240556.JavaMail.zimbra@redhat.com>
-In-Reply-To: <mailman.7.1587754804.31179.kexec@lists.infradead.org>
-References: <mailman.7.1587754804.31179.kexec@lists.infradead.org>
-Subject: Re: [crash - Question ] mod -s <module>  not working with
- compressed modules
-MIME-Version: 1.0
+From: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Subject: [PATCH v2 2/2] Documentation/vmcoreinfo: Add documentation for
+ 'KERNELPACMASK'
+Date: Mon, 27 Apr 2020 11:55:02 +0530
+Message-Id: <1587968702-19996-2-git-send-email-amit.kachhap@arm.com>
+In-Reply-To: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+References: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,43 +14,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
 
+Add documentation for KERNELPACMASK variable being added to the vmcoreinfo.
 
+It indicates the PAC bits mask information of signed kernel pointers if
+Armv8.3-A Pointer Authentication feature is present.
 
------ Original Message ----
-> 
-> Hi
-> 
->  I observed that  loading module symbols from a compressed ko.xz  ( crash 7.2.3-10.el7 ) does not work,
-> and the desired module has to be un-compressed . Does anyone know if there is a recent patch that addresses this ?
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+---
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-Nope.
-
-
-> 
-> 
-> Example:
-> 
-> Modules are located at the mod path :
-> 
-> crash -s  `find kernel-uek-debuginfo-4.14.35-1902.302.1.01.el7uek.rc1 -name vmlinux ` vmcore --mod ./kernel-uek-4.14.35-1902.302.1.01.tst17059_u3.el7uek.rc1/lib/modules/4.14.35-1902.302.1.01.el7uek.rc1.x86_64/kernel/
-> 
-> 
-> crash> mod -S
-> mod: cannot find or load object file for usb_storage module
-> mod: cannot find or load object file for dca module
-> mod: cannot find or load object file for fb_sys_fops module
-> mod: cannot find or load object file for uas module
->      MODULE       NAME                     SIZE  OBJECT FILE
-> ffffffffc07400c0  qla2xxx                794624
-> ./kernel-uek-4.14.35-1902.302.1.01.el7uek.rc1/lib/modules/4.14.35-1902.302.1.01.el7uek.rc1.x86_64/kernel/drivers/scsi/qla2xxx/qla2xxx.ko
-> 
-> I un-compressed qla2xxx.ko.xz  so it was found.
+diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+index 007a6b8..5cc3ee6 100644
+--- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
++++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+@@ -393,6 +393,12 @@ KERNELOFFSET
+ The kernel randomization offset. Used to compute the page offset. If
+ KASLR is disabled, this value is zero.
+ 
++KERNELPACMASK
++-------------
++
++Indicates the PAC bits mask information if Pointer Authentication is
++enabled and address authentication feature is present.
++
+ arm
+ ===
+ 
+-- 
+2.7.4
 
 
 _______________________________________________
