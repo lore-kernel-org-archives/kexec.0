@@ -1,11 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Amit Daniel Kachhap <amit.kachhap@arm.com>
-Subject: [PATCH v2 2/2] Documentation/vmcoreinfo: Add documentation for
- 'KERNELPACMASK'
-Date: Mon, 27 Apr 2020 11:55:02 +0530
-Message-Id: <1587968702-19996-2-git-send-email-amit.kachhap@arm.com>
-In-Reply-To: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
-References: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+Subject: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
+Date: Mon, 27 Apr 2020 11:55:01 +0530
+Message-Id: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,40 +17,76 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
 
-Add documentation for KERNELPACMASK variable being added to the vmcoreinfo.
+Recently arm64 linux kernel added support for Armv8.3-A Pointer
+Authentication feature. If this feature is enabled in the kernel and the
+hardware supports address authentication then the return addresses are
+signed and stored in the stack to prevent ROP kind of attack. Kdump tool
+will now dump the kernel with signed lr values in the stack.
 
-It indicates the PAC bits mask information of signed kernel pointers if
-Armv8.3-A Pointer Authentication feature is present.
+Any user analysis tool for this kernel dump may need the kernel pac mask
+information in vmcoreinfo to generate the correct return address for
+stacktrace purpose as well as to resolve the symbol name.
+
+This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
+bit positions via ptrace") which exposes pac mask information via ptrace
+interfaces.
 
 Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Will Deacon <will@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
 Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 ---
- Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
- 1 file changed, 6 insertions(+)
+Changes since v1:
+* Rebased to kernel 5.7-rc3.
+* commit log change.
 
-diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-index 007a6b8..5cc3ee6 100644
---- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-+++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-@@ -393,6 +393,12 @@ KERNELOFFSET
- The kernel randomization offset. Used to compute the page offset. If
- KASLR is disabled, this value is zero.
+An implementation of this new KERNELPACMASK vmcoreinfo field used by crash
+tool can be found here[1]. This change is accepted by crash utility
+maintainer [2].
+
+[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
+[2]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
+
+ arch/arm64/include/asm/compiler.h | 3 +++
+ arch/arm64/kernel/crash_core.c    | 4 ++++
+ 2 files changed, 7 insertions(+)
+
+diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+index eece20d..32d5900 100644
+--- a/arch/arm64/include/asm/compiler.h
++++ b/arch/arm64/include/asm/compiler.h
+@@ -19,6 +19,9 @@
+ #define __builtin_return_address(val)					\
+ 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
  
-+KERNELPACMASK
-+-------------
-+
-+Indicates the PAC bits mask information if Pointer Authentication is
-+enabled and address authentication feature is present.
-+
- arm
- ===
++#else  /* !CONFIG_ARM64_PTR_AUTH */
++#define	ptrauth_user_pac_mask()		0ULL
++#define	ptrauth_kernel_pac_mask()	0ULL
+ #endif /* CONFIG_ARM64_PTR_AUTH */
  
+ #endif /* __ASM_COMPILER_H */
+diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+index ca4c3e1..25cf2ce 100644
+--- a/arch/arm64/kernel/crash_core.c
++++ b/arch/arm64/kernel/crash_core.c
+@@ -6,6 +6,7 @@
+ 
+ #include <linux/crash_core.h>
+ #include <asm/memory.h>
++#include <asm/pointer_auth.h>
+ 
+ void arch_crash_save_vmcoreinfo(void)
+ {
+@@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+ 						PHYS_OFFSET);
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
++						system_supports_address_auth() ?
++						ptrauth_kernel_pac_mask() : 0);
+ }
 -- 
 2.7.4
 
