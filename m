@@ -1,8 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Amit Daniel Kachhap <amit.kachhap@arm.com>
-Subject: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
-Date: Mon, 27 Apr 2020 11:55:01 +0530
-Message-Id: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jTLZH-0001gD-08
+ for kexec@lists.infradead.org; Tue, 28 Apr 2020 08:26:16 +0000
+Received: by mail-qt1-f199.google.com with SMTP id q43so23684774qtj.11
+ for <kexec@lists.infradead.org>; Tue, 28 Apr 2020 01:26:10 -0700 (PDT)
+MIME-Version: 1.0
+References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
+ <20200408104655.GA92698@C02TD0UTHF1T.local>
+In-Reply-To: <20200408104655.GA92698@C02TD0UTHF1T.local>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 28 Apr 2020 13:55:58 +0530
+Message-ID: <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
+Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -11,84 +22,72 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Recently arm64 linux kernel added support for Armv8.3-A Pointer
-Authentication feature. If this feature is enabled in the kernel and the
-hardware supports address authentication then the return addresses are
-signed and stored in the stack to prevent ROP kind of attack. Kdump tool
-will now dump the kernel with signed lr values in the stack.
+On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
+>
+> On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
+> > kexec_file_load() syscall interface is now supported for
+> > arm64 architecture as well via commits:
+> > 3751e728cef2 ("arm64: kexec_file: add crash dump support") and
+> > 3ddd9992a590 ("arm64: enable KEXEC_FILE config")].
+> >
+> > This patch enables config KEXEC_FILE by default in the
+> > arm64 defconfig, so that user-space tools like kexec-tools
+> > can use the same as the default interface for kexec/kdump
+> > on arm64.
+> >
+> > Cc: AKASHI Takahiro <takahiro.akashi@linaro.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: kexec@lists.infradead.org
+> >
+> > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+>
+> FWIW:
+>
+> Acked-by: Mark Rutland <mark.rutland@arm.com>
+>
+> Mark.
+>
+> > ---
+> >  arch/arm64/configs/defconfig | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> > index 24e534d85045..fa122f4341a2 100644
+> > --- a/arch/arm64/configs/defconfig
+> > +++ b/arch/arm64/configs/defconfig
+> > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
+> >  CONFIG_NUMA=y
+> >  CONFIG_SECCOMP=y
+> >  CONFIG_KEXEC=y
+> > +CONFIG_KEXEC_FILE=y
+> >  CONFIG_CRASH_DUMP=y
+> >  CONFIG_XEN=y
+> >  CONFIG_COMPAT=y
+> > --
+> > 2.7.4
+> >
 
-Any user analysis tool for this kernel dump may need the kernel pac mask
-information in vmcoreinfo to generate the correct return address for
-stacktrace purpose as well as to resolve the symbol name.
+Thanks a lot  Mark.
 
-This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
-bit positions via ptrace") which exposes pac mask information via ptrace
-interfaces.
+Hi Catalin, Will,
 
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
----
-Changes since v1:
-* Rebased to kernel 5.7-rc3.
-* commit log change.
+Can you please help pick this patch in the arm tree. We have an
+increasing number of user-cases from distro users
+who want to use kexec_file_load() as the default interface for
+kexec/kdump on arm64.
 
-An implementation of this new KERNELPACMASK vmcoreinfo field used by crash
-tool can be found here[1]. This change is accepted by crash utility
-maintainer [2].
-
-[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
-[2]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
-
- arch/arm64/include/asm/compiler.h | 3 +++
- arch/arm64/kernel/crash_core.c    | 4 ++++
- 2 files changed, 7 insertions(+)
-
-diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
-index eece20d..32d5900 100644
---- a/arch/arm64/include/asm/compiler.h
-+++ b/arch/arm64/include/asm/compiler.h
-@@ -19,6 +19,9 @@
- #define __builtin_return_address(val)					\
- 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
- 
-+#else  /* !CONFIG_ARM64_PTR_AUTH */
-+#define	ptrauth_user_pac_mask()		0ULL
-+#define	ptrauth_kernel_pac_mask()	0ULL
- #endif /* CONFIG_ARM64_PTR_AUTH */
- 
- #endif /* __ASM_COMPILER_H */
-diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-index ca4c3e1..25cf2ce 100644
---- a/arch/arm64/kernel/crash_core.c
-+++ b/arch/arm64/kernel/crash_core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/crash_core.h>
- #include <asm/memory.h>
-+#include <asm/pointer_auth.h>
- 
- void arch_crash_save_vmcoreinfo(void)
- {
-@@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
- 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
- 						PHYS_OFFSET);
- 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
-+	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
-+						system_supports_address_auth() ?
-+						ptrauth_kernel_pac_mask() : 0);
- }
--- 
-2.7.4
+Regards,
+Bhupesh
 
 
 _______________________________________________
