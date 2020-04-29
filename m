@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 08/18] arm64: kexec: move relocation function setup
+Subject: Re: [PATCH v9 09/18] arm64: kexec: call kexec_image_info only once
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-9-pasha.tatashin@soleen.com>
+ <20200326032420.27220-10-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
-Date: Wed, 29 Apr 2020 18:01:26 +0100
+Message-ID: <61f1b270-9c88-f309-9665-0221a228b5b9@arm.com>
+Date: Wed, 29 Apr 2020 18:01:33 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-9-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-10-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,55 +26,21 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Currently, kernel relocation function is configured in machine_kexec()
-> at the time of kexec reboot by using control_code_page.
-> 
-> This operation, however, is more logical to be done during kexec_load,
-> and thus remove from reboot time. Move, setup of this function to
-> newly added machine_kexec_post_load().
+> Currently, kexec_image_info() is called during load time, and
+> right before kernel is being kexec'ed. There is no need to do both.
 
-This would avoid the need to special-case the cache maintenance, so its a good cleanup...
-
-
-> Because once MMU is enabled, kexec control page will contain more than
-> relocation kernel, but also vector table, add pointer to the actual
-> function within this page arch.kern_reloc. Currently, it equals to the
-> beginning of page, we will add offsets later, when vector table is
-> added.
-
-If the vector table always comes second, wouldn't this be extra work to hold the value 0?
-You can control the layout of this relocation code, as it has to be written in assembly.
-I don't get why this would be necessary.
+I think the original logic was if debugging, you'd see the load-time value in dmesg, and
+the kexec-time values when the machine panic()d and you hadn't made a note of the previous
+set. But I'm not sure why you'd have these debug messages enabled unless you were
+debugging kexec.
 
 
-> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> index ae1bad0156cd..ec71a153cc2d 100644
-> --- a/arch/arm64/kernel/machine_kexec.c
-> +++ b/arch/arm64/kernel/machine_kexec.c
-> @@ -58,6 +59,17 @@ void machine_kexec_cleanup(struct kimage *kimage)
->  	/* Empty routine needed to avoid build errors. */
->  }
->  
-> +int machine_kexec_post_load(struct kimage *kimage)
-> +{
-> +	void *reloc_code = page_to_virt(kimage->control_code_page);
-> +
-> +	memcpy(reloc_code, arm64_relocate_new_kernel,
-> +	       arm64_relocate_new_kernel_size);
-> +	kimage->arch.kern_reloc = __pa(reloc_code);
+> So, call it only once when segments are loaded and the physical
+> location of page with copy of arm64_relocate_new_kernel is known.
 
-Could we move the two cache maintenance calls for this area in here too. Keeping it next
-to the modification makes it clearer why it is required.
+Sure, keep the earlier version that is more likely to be seen.
 
-In this case we can use flush_icache_range() instead of its __variant because this now
-happens much earlier.
-
-
-> +	return 0;
-> +}
-
-Regardless,
-Reviewed-by: James Morse <james.morse@arm.com>
+Acked-by: James Morse <james.morse@arm.com>
 
 
 Thanks,
