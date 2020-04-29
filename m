@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 01/18] arm64: kexec: make dtb_mem always enabled
+Subject: Re: [PATCH v9 02/18] arm64: hibernate: move page handling function to
+ new trans_pgd.c
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-2-pasha.tatashin@soleen.com>
+ <20200326032420.27220-3-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <f29c53ec-a152-a4a9-6d50-7aeedd60173f@arm.com>
-Date: Wed, 29 Apr 2020 18:00:40 +0100
+Message-ID: <66f0c5c6-4926-fd0a-8210-40b3e71b9fe6@arm.com>
+Date: Wed, 29 Apr 2020 18:00:53 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-2-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-3-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,17 +27,10 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
-> enabled. This adds ugly ifdefs to c files.
+> Now, that we abstracted the required functions move them to a new home.
+> Later, we will generalize these function in order to be useful outside
+> of hibernation.
 
-~s/dtb_mem/ARCH_HAS_KIMAGE_ARCH/ ?
-dtb_mem is just one member of struct kimage_arch.
-
-
-> Always enabled dtb_mem, when it is not used, it is NULL.
-> Change the dtb_mem to phys_addr_t, as it is a physical address.
-
-Regardless,
 Reviewed-by: James Morse <james.morse@arm.com>
 
 
