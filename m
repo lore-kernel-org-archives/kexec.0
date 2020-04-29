@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 10/18] arm64: kexec: cpu_soft_restart change argument
- types
-References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-11-pasha.tatashin@soleen.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <e6faa23d-27a8-838a-33ef-2a6ad8a5c746@arm.com>
-Date: Wed, 29 Apr 2020 18:01:39 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-11-pasha.tatashin@soleen.com>
-Content-Language: en-GB
+Date: Wed, 29 Apr 2020 18:35:06 +0100
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v9 15/18] arm64: kexec: kexec EL2 vectors
+In-Reply-To: <20200326032420.27220-16-pasha.tatashin@soleen.com>
+References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+ <20200326032420.27220-16-pasha.tatashin@soleen.com>
+Message-ID: <e5f1ee17f8e4ac3a5f5077d85318e0ed@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,71 +15,169 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, steve.capper@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, jmorris@namei.org, linux-mm@kvack.org, rfontana@redhat.com, ebiederm@xmission.com, maz@kernel.org, matthias.bgg@gmail.com, tglx@linutronix.de, will@kernel.org, selindag@gmail.com, linux-arm-kernel@lists.infradead.org
+Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, steve.capper@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, selindag@gmail.com, jmorris@namei.org, linux-mm@kvack.org, james.morse@arm.com, ebiederm@xmission.com, matthias.bgg@gmail.com, rfontana@redhat.com, will@kernel.org, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org
 
-Hi Pavel,
+On 2020-03-26 03:24, Pavel Tatashin wrote:
+> If we have a EL2 mode without VHE, the EL2 vectors are needed in order
+> to switch to EL2 and jump to new world with hyperivsor privileges.
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/include/asm/kexec.h      |  5 +++++
+>  arch/arm64/kernel/asm-offsets.c     |  1 +
+>  arch/arm64/kernel/machine_kexec.c   |  5 +++++
+>  arch/arm64/kernel/relocate_kernel.S | 35 +++++++++++++++++++++++++++++
+>  4 files changed, 46 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/kexec.h 
+> b/arch/arm64/include/asm/kexec.h
+> index d944c2e289b2..0f758fd51518 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -95,6 +95,7 @@ static inline void crash_post_resume(void) {}
+>  extern const unsigned long kexec_relocate_code_size;
+>  extern const unsigned char kexec_relocate_code_start[];
+>  extern const unsigned long kexec_kern_reloc_offset;
+> +extern const unsigned long kexec_el2_vectors_offset;
+>  #endif
+> 
+>  /*
+> @@ -104,6 +105,9 @@ extern const unsigned long kexec_kern_reloc_offset;
+>   *		kernel, or purgatory entry address).
+>   * kern_arg0	first argument to kernel is its dtb address. The other
+>   *		arguments are currently unused, and must be set to 0
+> + * el2_vector	If present means that relocation routine will go to EL1
+> + *		from EL2 to do the copy, and then back to EL2 to do the jump
+> + *		to new world.
+>   */
+>  struct kern_reloc_arg {
+>  	phys_addr_t head;
+> @@ -112,6 +116,7 @@ struct kern_reloc_arg {
+>  	phys_addr_t kern_arg1;
+>  	phys_addr_t kern_arg2;
+>  	phys_addr_t kern_arg3;
+> +	phys_addr_t el2_vector;
+>  };
+> 
+>  #define ARCH_HAS_KIMAGE_ARCH
+> diff --git a/arch/arm64/kernel/asm-offsets.c 
+> b/arch/arm64/kernel/asm-offsets.c
+> index 448230684749..ff974b648347 100644
+> --- a/arch/arm64/kernel/asm-offsets.c
+> +++ b/arch/arm64/kernel/asm-offsets.c
+> @@ -136,6 +136,7 @@ int main(void)
+>    DEFINE(KEXEC_KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, 
+> kern_arg1));
+>    DEFINE(KEXEC_KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, 
+> kern_arg2));
+>    DEFINE(KEXEC_KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, 
+> kern_arg3));
+> +  DEFINE(KEXEC_KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, 
+> el2_vector));
+>  #endif
+>    return 0;
+>  }
+> diff --git a/arch/arm64/kernel/machine_kexec.c
+> b/arch/arm64/kernel/machine_kexec.c
+> index ab571fca9bd1..bd398def7627 100644
+> --- a/arch/arm64/kernel/machine_kexec.c
+> +++ b/arch/arm64/kernel/machine_kexec.c
+> @@ -84,6 +84,11 @@ int machine_kexec_post_load(struct kimage *kimage)
+>  	kern_reloc_arg->head = kimage->head;
+>  	kern_reloc_arg->entry_addr = kimage->start;
+>  	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
+> +	/* Setup vector table only when EL2 is available, but no VHE */
+> +	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
+> +		kern_reloc_arg->el2_vector = __pa(reloc_code)
+> +						+ kexec_el2_vectors_offset;
+> +	}
+>  	kexec_image_info(kimage);
+> 
+>  	return 0;
+> diff --git a/arch/arm64/kernel/relocate_kernel.S
+> b/arch/arm64/kernel/relocate_kernel.S
+> index aa9f2b2cd77c..6fd2fc0ef373 100644
+> --- a/arch/arm64/kernel/relocate_kernel.S
+> +++ b/arch/arm64/kernel/relocate_kernel.S
+> @@ -89,6 +89,38 @@ ENTRY(arm64_relocate_new_kernel)
+>  .ltorg
+>  END(arm64_relocate_new_kernel)
+> 
+> +.macro el1_sync_64
+> +	br	x4			/* Jump to new world from el2 */
+> +	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
+> +.endm
 
-On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Change argument types from unsigned long to a more descriptive
-> phys_addr_t.
+The common idiom to write this is to align the beginning of the
+macro, and not to bother about what follows:
 
-For 'entry', which is a physical addresses, sure...
+.macro whatever
+         .align 7
+         br      x4
+.endm
 
-> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-> index ed50e9587ad8..38cbd4068019 100644
-> --- a/arch/arm64/kernel/cpu-reset.h
-> +++ b/arch/arm64/kernel/cpu-reset.h
-> @@ -10,17 +10,17 @@
->  
->  #include <asm/virt.h>
->  
-> -void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
-> -	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+Specially given that 0 is an undefined instruction, and I really hate to 
+see
+those in the actual text. On the contrary, .align generates NOPs.
 
-> +void __cpu_soft_restart(phys_addr_t el2_switch, phys_addr_t entry,
-> +			phys_addr_t arg0, phys_addr_t arg1, phys_addr_t arg2);
+> +
+> +.macro invalid_vector label
+> +\label:
+> +	b \label
+> +	.fill 31, 4, 0			/* Set other 31 instr to zeroes */
+> +.endm
+> +
+> +/* el2 vectors - switch el2 here while we restore the memory image. */
+> +	.align 11
+> +ENTRY(kexec_el2_vectors)
 
-This looks weird because its re-using the hyp-stub API, because it might call the hyp-stub
-from the idmap. entry is passed in, so this isn't tied to kexec. Without tying it to
-kexec, how do you know arg2 is a physical address?
-I think it tried to be re-usable because 32bit has more users for this.
+Please see commit 617a2f392c92 ("arm64: kvm: Annotate assembly using 
+modern
+annoations"), and follow the same pattern.
 
-arg0-2 are unsigned long because the hyp-stub is just moving general purpose registers around.
+> +	invalid_vector el2_sync_invalid_sp0	/* Synchronous EL2t */
+> +	invalid_vector el2_irq_invalid_sp0	/* IRQ EL2t */
+> +	invalid_vector el2_fiq_invalid_sp0	/* FIQ EL2t */
+> +	invalid_vector el2_error_invalid_sp0	/* Error EL2t */
+> +	invalid_vector el2_sync_invalid_spx	/* Synchronous EL2h */
+> +	invalid_vector el2_irq_invalid_spx	/* IRQ EL2h */
+> +	invalid_vector el2_fiq_invalid_spx	/* FIQ EL2h */
+> +	invalid_vector el2_error_invalid_spx	/* Error EL2h */
+> +		el1_sync_64			/* Synchronous 64-bit EL1 */
+> +	invalid_vector el1_irq_invalid_64	/* IRQ 64-bit EL1 */
+> +	invalid_vector el1_fiq_invalid_64	/* FIQ 64-bit EL1 */
+> +	invalid_vector el1_error_invalid_64	/* Error 64-bit EL1 */
+> +	invalid_vector el1_sync_invalid_32	/* Synchronous 32-bit EL1 */
+> +	invalid_vector el1_irq_invalid_32	/* IRQ 32-bit EL1 */
+> +	invalid_vector el1_fiq_invalid_32	/* FIQ 32-bit EL1 */
+> +	invalid_vector el1_error_invalid_32	/* Error 32-bit EL1 */
+> +END(kexec_el2_vectors)
 
-This is to avoid casting?
-Sure, its only got one caller. This thing evolved because the platform-has-EL2 and
-kdump-while-KVM-was-running code was bolted on as they were discovered.
+Please write the vectors in 4 groups of 4, as this makes it a lot easier
+to follow what is what.
 
-
-> -static inline void __noreturn cpu_soft_restart(unsigned long entry,
-> -					       unsigned long arg0,
-> -					       unsigned long arg1,
-> -					       unsigned long arg2)
-> +static inline void __noreturn cpu_soft_restart(phys_addr_t entry,
-> +					       phys_addr_t arg0,
-> +					       phys_addr_t arg1,
-> +					       phys_addr_t arg2)
->  {
->  	typeof(__cpu_soft_restart) *restart;
->  
-> -	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
-> +	phys_addr_t el2_switch = !is_kernel_in_hyp_mode() &&
->  		is_hyp_mode_available();
-
-What on earth happened here!?
-
-
->  	restart = (void *)__pa_symbol(__cpu_soft_restart);
-
+> +
+>  .Lkexec_relocate_code_end:
+>  .org	KEXEC_CONTROL_PAGE_SIZE
+>  .align 3	/* To keep the 64-bit values below naturally aligned. */
+> @@ -102,3 +134,6 @@ kexec_relocate_code_size:
+>  .globl kexec_kern_reloc_offset
+>  kexec_kern_reloc_offset:
+>  	.quad	arm64_relocate_new_kernel - kexec_relocate_code_start
+> +.globl kexec_el2_vectors_offset
+> +kexec_el2_vectors_offset:
+> +	.quad	kexec_el2_vectors - kexec_relocate_code_start
 
 Thanks,
 
-James
+         M.
+-- 
+Jazz is not dead. It just smells funny...
 
 _______________________________________________
 kexec mailing list
