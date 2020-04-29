@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 09/18] arm64: kexec: call kexec_image_info only once
+Subject: Re: [PATCH v9 10/18] arm64: kexec: cpu_soft_restart change argument
+ types
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-10-pasha.tatashin@soleen.com>
+ <20200326032420.27220-11-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <61f1b270-9c88-f309-9665-0221a228b5b9@arm.com>
-Date: Wed, 29 Apr 2020 18:01:33 +0100
+Message-ID: <e6faa23d-27a8-838a-33ef-2a6ad8a5c746@arm.com>
+Date: Wed, 29 Apr 2020 18:01:39 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-10-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-11-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,21 +27,56 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Currently, kexec_image_info() is called during load time, and
-> right before kernel is being kexec'ed. There is no need to do both.
+> Change argument types from unsigned long to a more descriptive
+> phys_addr_t.
 
-I think the original logic was if debugging, you'd see the load-time value in dmesg, and
-the kexec-time values when the machine panic()d and you hadn't made a note of the previous
-set. But I'm not sure why you'd have these debug messages enabled unless you were
-debugging kexec.
+For 'entry', which is a physical addresses, sure...
+
+> diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> index ed50e9587ad8..38cbd4068019 100644
+> --- a/arch/arm64/kernel/cpu-reset.h
+> +++ b/arch/arm64/kernel/cpu-reset.h
+> @@ -10,17 +10,17 @@
+>  
+>  #include <asm/virt.h>
+>  
+> -void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+> -	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+
+> +void __cpu_soft_restart(phys_addr_t el2_switch, phys_addr_t entry,
+> +			phys_addr_t arg0, phys_addr_t arg1, phys_addr_t arg2);
+
+This looks weird because its re-using the hyp-stub API, because it might call the hyp-stub
+from the idmap. entry is passed in, so this isn't tied to kexec. Without tying it to
+kexec, how do you know arg2 is a physical address?
+I think it tried to be re-usable because 32bit has more users for this.
+
+arg0-2 are unsigned long because the hyp-stub is just moving general purpose registers around.
+
+This is to avoid casting?
+Sure, its only got one caller. This thing evolved because the platform-has-EL2 and
+kdump-while-KVM-was-running code was bolted on as they were discovered.
 
 
-> So, call it only once when segments are loaded and the physical
-> location of page with copy of arm64_relocate_new_kernel is known.
+> -static inline void __noreturn cpu_soft_restart(unsigned long entry,
+> -					       unsigned long arg0,
+> -					       unsigned long arg1,
+> -					       unsigned long arg2)
+> +static inline void __noreturn cpu_soft_restart(phys_addr_t entry,
+> +					       phys_addr_t arg0,
+> +					       phys_addr_t arg1,
+> +					       phys_addr_t arg2)
+>  {
+>  	typeof(__cpu_soft_restart) *restart;
+>  
+> -	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
+> +	phys_addr_t el2_switch = !is_kernel_in_hyp_mode() &&
+>  		is_hyp_mode_available();
 
-Sure, keep the earlier version that is more likely to be seen.
+What on earth happened here!?
 
-Acked-by: James Morse <james.morse@arm.com>
+
+>  	restart = (void *)__pa_symbol(__cpu_soft_restart);
 
 
 Thanks,
