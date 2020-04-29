@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 02/18] arm64: hibernate: move page handling function to
- new trans_pgd.c
+Subject: Re: [PATCH v9 04/18] arm64: trans_pgd: pass allocator
+ trans_pgd_create_copy
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-3-pasha.tatashin@soleen.com>
+ <20200326032420.27220-5-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <66f0c5c6-4926-fd0a-8210-40b3e71b9fe6@arm.com>
-Date: Wed, 29 Apr 2020 18:00:53 +0100
+Message-ID: <82db4b88-7e69-9298-f1cb-d3afcd29b1ae@arm.com>
+Date: Wed, 29 Apr 2020 18:01:06 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-3-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-5-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,9 +27,8 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Now, that we abstracted the required functions move them to a new home.
-> Later, we will generalize these function in order to be useful outside
-> of hibernation.
+> Make trans_pgd_create_copy and its subroutines to use allocator that is
+> passed as an argument
 
 Reviewed-by: James Morse <james.morse@arm.com>
 
