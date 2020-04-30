@@ -1,25 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mail-mw2nam10on2071.outbound.protection.outlook.com
+ ([40.107.94.71] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jU4hu-0007lg-Gr
- for kexec@lists.infradead.org; Thu, 30 Apr 2020 08:38:12 +0000
-Subject: Re: [PATCH] makedumpfile: cope with not-present mem section
-References: <1579487124-28426-1-git-send-email-piliu@redhat.com>
- <2AA47CAB-ED13-4A0A-9288-063832158203@redhat.com>
- <20200120085919.GB16539@MiWiFi-R3L-srv>
- <44958c3d-c861-8eb0-5713-50c36c7cfc6e@redhat.com>
- <TY2PR01MB5210FAB04501E6C59AAB2B06DD0F0@TY2PR01MB5210.jpnprd01.prod.outlook.com>
- <20200127170447.GA4080@calabresa> <20200127180627.GB4080@calabresa>
- <TY2PR01MB521005B2E72D78C4561C0562DD0A0@TY2PR01MB5210.jpnprd01.prod.outlook.com>
- <20200128193302.GC4080@calabresa>
- <769ddb8a-c845-04a6-0064-d674bbd04ae3@redhat.com>
- <OSBPR01MB1991FEF11882F89353E6B342DDAD0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-From: piliu <piliu@redhat.com>
-Message-ID: <e487a969-7660-bea8-405f-59f1aab426f5@redhat.com>
-Date: Thu, 30 Apr 2020 16:37:50 +0800
+ id 1jU4s5-0006l1-St
+ for kexec@lists.infradead.org; Thu, 30 Apr 2020 08:48:43 +0000
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+Subject: [PATCH v7 18/18] KVM: x86: Add kexec support for SEV Live Migration.
+Date: Thu, 30 Apr 2020 08:48:29 +0000
+Message-Id: <0adf76ea0f88e137bef5e045ebf96ebb004ee8df.1588234824.git.ashish.kalra@amd.com>
+In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
+References: <cover.1588234824.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB1991FEF11882F89353E6B342DDAD0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,74 +19,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
-Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, Oscar Salvador <osalvador@suse.de>
+To: pbonzini@redhat.com
+Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, kvm@vger.kernel.org, srutherford@google.com, joro@8bytes.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, rientjes@google.com, tglx@linutronix.de, bp@suse.de, venu.busireddy@oracle.com
 
-CgpPbiAwNC8yOS8yMDIwIDEwOjI3IFBNLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4Ep
-IHdyb3RlOgo+IEhpIFBpbmdmYW4sCj4gCj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+
-IEhpIEthenUgYW5kIENhc2NhcmRvLAo+Pgo+PiBJIGVuY291bnRlciBhIHdlaXJkIHByb2JsZW0g
-d2hlbiBydW5uaW5nIG1ha2VkdW1wZmlsZSBvbiBhIHMzOTAgbWFjaGluZS4KPj4KPj4gT3VyIHBy
-b2R1Y3Rpb24ga2VybmVsIHVzZXMgZXh0cmVtZSBzcGFyc2UgbWVtb3J5IG1vZGVsLCBhbmQgaGFz
-IHRoZQo+PiBmb2xsb3dpbmc6Cj4+Cj4+IGluIG1tL3NwYXJzZS5jCj4+Cj4+ICNpZmRlZiBDT05G
-SUdfU1BBUlNFTUVNX0VYVFJFTUUKPj4gc3RydWN0IG1lbV9zZWN0aW9uICoqbWVtX3NlY3Rpb247
-Cj4+ICNlbHNlCj4+IHN0cnVjdCBtZW1fc2VjdGlvbiBtZW1fc2VjdGlvbltOUl9TRUNUSU9OX1JP
-T1RTXVtTRUNUSU9OU19QRVJfUk9PVF0KPj4gICAgICAgICBfX19fY2FjaGVsaW5lX2ludGVybm9k
-ZWFsaWduZWRfaW5fc21wOwo+PiAjZW5kaWYKPj4KPj4gU28gaW4gbWFrZWR1bXBmaWxlLmMsIGdl
-dF9tZW1fc2VjdGlvbigpLCBpdCBnb3QgYSBmYWlsZWQgcmVzdWx0IHdoZW4gdGhlCj4+IGZpcnN0
-IGNhbGwgc2l0ZSB0byB2YWxpZGF0ZV9tZW1fc2VjdGlvbigpLCB0aGVuIGl0IHNob3VsZCBzdWNj
-ZXNzIGF0IHRoZQo+PiBzZWNvbmQgY2FsbCBzaXRlIHRvIHZhbGlkYXRlX21lbV9zZWN0aW9uKCks
-IHdoaWNoIGlzIGluc2lkZSBpZgo+PiAoaXNfc3BhcnNlbWVtX2V4dHJlbWUoKSkgY29uZGl0aW9u
-Lgo+IAo+IEkgdGhpbmsgeW91ciBwcm9kdWN0aW9uIGtlcm5lbCBzaG91bGQgaGF2ZSBrZXJuZWwg
-Y29tbWl0IGEwYjEyODAzNjhkMQo+ICgia2R1bXA6IHdyaXRlIGNvcnJlY3QgYWRkcmVzcyBvZiBt
-ZW1fc2VjdGlvbiBpbnRvIHZtY29yZWluZm8iKSwgc28gdGhlCj4gZmlyc3QgY2FsbCBzaG91bGQg
-cmV0dXJuIFRSVUUgYW5kIHRoZSBzZWNvbmQgb25lIHNob3VsZCByZXR1cm4gRkFMU0UuClllcywg
-aXQgaXMuCj4gCj4+Cj4+IEJ1dCB0aGUgYWN0dWFsIHJlc3VsdCBpcyBub3QgbGlrZSBleHBlY3Rl
-ZC4KPj4KPj4gQWZ0ZXIgaW50cm9kdWNpbmcKPj4gY29tbWl0IGUxMTNmMWM5NzRjODIwZjk2MzNk
-YzAwNzNlZGE1MjVkNzU3NWYzNjUgICAgW1BBVENIXSBjb3BlIHdpdGgKPj4gbm90LXByZXNlbnQg
-bWVtIHNlY3Rpb24KPj4KPj4gSSBnb3QgdHdvIHN1Y2Nlc3NmdWwgY2FsbHMgdG8gdmFsaWRhdGVf
-bWVtX3NlY3Rpb24oKSwgYW5kIGZpbmFsbHkgZmFpbGVkCj4+IGF0IHRoZSBjb25kaXRpb24KPj4g
-CQlyZXQgPSBzeW1ib2xfdmFsaWQgXiBwb2ludGVyX3ZhbGlkOwo+PiAJCWlmICghcmV0KSB7Cj4+
-IAkJCUVSUk1TRygiQ291bGQgbm90IHZhbGlkYXRlIG1lbV9zZWN0aW9uLlxuIik7Cj4+IAkJfQo+
-Pgo+Pgo+PiBEbyB5b3UgaGF2ZSBhbnkgaWRlYT8KPiAKPiBQcmVzdW1hYmx5IHRoaXMgd2lsbCBi
-ZSB3aGF0IEkgZXhwZWN0ZWQgdGhhdCBpdCBtaWdodCBiZSBwb3NzaWJsZS4KPiBJIGNhbiBhcHBs
-eSB0aGUgcGF0Y2ggYmVsb3cgdGhpcyB0aW1lLCB3aGF0IGFib3V0IHRoaXM/Cj4gaHR0cHM6Ly9n
-aXRodWIuY29tL2staGFnaW8vbWFrZWR1bXBmaWxlLW9sZC9jb21taXQvY2U4ODNkZjM4NjRhNTc0
-NGFjMGYxZWZmNDdkZTA2YjUwNzRlZGI1Zi5wYXRjaApsb29rcyBnb29kLgo+IAo+IG9yLCB3ZSBj
-YW4gYWxzbyBpbnZlc3RpZ2F0ZSB3aHkgdGhlIHNlY29uZCBjYWxsIHJldHVybnMgVFJVRSwgYW5k
-Cj4gZml4IHRoZSBjb25kaXRpb25zIGluIHRoZSB2YWxpZGF0ZV9tZW1fc2VjdGlvbigpLi4KVGhp
-cyBpcyBkdWUgdG8gdGhlIHJlbGF4ZWQgY29uZGl0aW9uIGNoZWNrIGFmdGVyIGFwcGx5aW5nIG15
-IGNvbW1pdApjb21taXQgZTExM2YxYzk3NCgiW1BBVENIXSBjb3BlIHdpdGggbm90LXByZXNlbnQg
-bWVtIHNlY3Rpb24iKQoKZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxl
-LmMKaW5kZXggYWU3MzM2YS4uNjA3ZTA3ZiAxMDA2NDQKLS0tIGEvbWFrZWR1bXBmaWxlLmMKKysr
-IGIvbWFrZWR1bXBmaWxlLmMKQEAgLTM0MDYsOCArMzQwNiw2IEBAIHNlY3Rpb25fbWVtX21hcF9h
-ZGRyKHVuc2lnbmVkIGxvbmcgYWRkciwgdW5zaWduZWQKbG9uZyAqbWFwX21hc2spCiAgICAgICAg
-bWFwID0gVUxPTkcobWVtX3NlY3Rpb24gKyBPRkZTRVQobWVtX3NlY3Rpb24uc2VjdGlvbl9tZW1f
-bWFwKSk7CiAgICAgICAgbWFzayA9IFNFQ1RJT05fTUFQX01BU0s7CiAgICAgICAgKm1hcF9tYXNr
-ID0gbWFwICYgfm1hc2s7Ci0gICAgICAgaWYgKG1hcCA9PSAweDApCi0gICAgICAgICAgICAgICAq
-bWFwX21hc2sgfD0gU0VDVElPTl9NQVJLRURfUFJFU0VOVDsKICAgICAgICBtYXAgJj0gbWFzazsK
-ICAgICAgICBmcmVlKG1lbV9zZWN0aW9uKTsKCkBAIC0zNDUzLDEwICszNDUxLDggQEAgdmFsaWRh
-dGVfbWVtX3NlY3Rpb24odW5zaWduZWQgbG9uZyAqbWVtX3NlYywKICAgICAgICAgICAgICAgICAg
-ICAgICAgbWVtX21hcCA9IE5PVF9NRU1NQVBfQUREUjsKICAgICAgICAgICAgICAgIH0gZWxzZSB7
-CiAgICAgICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgPSBzZWN0aW9uX21lbV9tYXBfYWRkcihz
-ZWN0aW9uLCAmbWFwX21hc2spOworICAgICAgICAgICAgICAgICAgICAgICAvKiBmb3IgZWl0aGVy
-IG5vIG1lbV9tYXAgb3IgaG90LXJlbW92ZWQgKi8KICAgICAgICAgICAgICAgICAgICAgICAgaWYg
-KCEobWFwX21hc2sgJiBTRUNUSU9OX01BUktFRF9QUkVTRU5UKSkgewotICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsgLS0tLS0tPiBhIHN0cmljdCBjaGVjawotICAg
-ICAgICAgICAgICAgICAgICAgICB9Ci0gICAgICAgICAgICAgICAgICAgICAgIGlmIChtZW1fbWFw
-ID09IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtZW1fbWFwID0gTk9UX01F
-TU1BUF9BRERSOwogICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgPSBzcGFyc2VfZGVjb2RlX21lbV9tYXAobWVtX21h
-cCwKCgpCZWZvcmUgbXkgcGF0Y2gsIGl0IHJldHVybiBGQUxTRSBmb3IgYW55IG5vbiBOVUxMIHZh
-bHVlIHdpdGhvdXQKU0VDVElPTl9NQVJLRURfUFJFU0VOVC4gQnV0IG15IHBhdGNoIHJlbGF4ZXMg
-dGhlIHJlc3RyaWN0aW9uIGFuZApjb25zaWRlciBpdCBhcyBob3QtcmVtb3ZlZCBtZW1fc2VjdGlv
-biBhbmQga2VlcHMgdGhlIHBhcnNpbmcgb24uCgpUaGFua3MsClBpbmdmYW4KPiAKPiBUaGFua3Ms
-Cj4gS2F6dQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-Cj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKPiAKCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
-c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+From: Ashish Kalra <ashish.kalra@amd.com>
+
+Reset the host's page encryption bitmap related to kernel
+specific page encryption status settings before we load a
+new kernel by kexec. We cannot reset the complete
+page encryption bitmap here as we need to retain the
+UEFI/OVMF firmware specific settings.
+
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 8b8cc87a3461..68f2de4c1e74 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -35,6 +35,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/e820/api.h>
+ 
+ static int kvmapf = 1;
+ 
+@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+ 	 */
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+ 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
++	/*
++	 * Reset the host's page encryption bitmap related to kernel
++	 * specific page encryption status settings before we load a
++	 * new kernel by kexec. NOTE: We cannot reset the complete
++	 * page encryption bitmap here as we need to retain the
++	 * UEFI/OVMF firmware specific settings.
++	 */
++	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
++		int i;
++		unsigned long nr_pages;
++
++		for (i = 0; i < e820_table->nr_entries; i++) {
++			struct e820_entry *entry = &e820_table->entries[i];
++			unsigned long start_pfn;
++			unsigned long end_pfn;
++
++			if (entry->type != E820_TYPE_RAM)
++				continue;
++
++			start_pfn = entry->addr >> PAGE_SHIFT;
++			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
++			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
++
++			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
++					   entry->addr, nr_pages, 1);
++		}
++	}
+ 	kvm_pv_disable_apf();
+ 	kvm_disable_steal_time();
+ }
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
