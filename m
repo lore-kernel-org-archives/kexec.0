@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam10on2071.outbound.protection.outlook.com
- ([40.107.94.71] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jU4s5-0006l1-St
- for kexec@lists.infradead.org; Thu, 30 Apr 2020 08:48:43 +0000
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-Subject: [PATCH v7 18/18] KVM: x86: Add kexec support for SEV Live Migration.
-Date: Thu, 30 Apr 2020 08:48:29 +0000
-Message-Id: <0adf76ea0f88e137bef5e045ebf96ebb004ee8df.1588234824.git.ashish.kalra@amd.com>
-In-Reply-To: <cover.1588234824.git.ashish.kalra@amd.com>
-References: <cover.1588234824.git.ashish.kalra@amd.com>
+Subject: Re: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in
+ vmcoreinfo
+References: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+From: Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <36929ba3-3274-6046-9a47-ed403f00fefe@arm.com>
+Date: Thu, 30 Apr 2020 17:05:55 +0530
 MIME-Version: 1.0
+In-Reply-To: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,75 +16,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pbonzini@redhat.com
-Cc: thomas.lendacky@amd.com, brijesh.singh@amd.com, kvm@vger.kernel.org, srutherford@google.com, joro@8bytes.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, rientjes@google.com, tglx@linutronix.de, bp@suse.de, venu.busireddy@oracle.com
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+Hi Will/Catalin,
 
-Reset the host's page encryption bitmap related to kernel
-specific page encryption status settings before we load a
-new kernel by kexec. We cannot reset the complete
-page encryption bitmap here as we need to retain the
-UEFI/OVMF firmware specific settings.
+On 4/27/20 11:55 AM, Amit Daniel Kachhap wrote:
+> Recently arm64 linux kernel added support for Armv8.3-A Pointer
+> Authentication feature. If this feature is enabled in the kernel and the
+> hardware supports address authentication then the return addresses are
+> signed and stored in the stack to prevent ROP kind of attack. Kdump tool
+> will now dump the kernel with signed lr values in the stack.
+> 
+> Any user analysis tool for this kernel dump may need the kernel pac mask
+> information in vmcoreinfo to generate the correct return address for
+> stacktrace purpose as well as to resolve the symbol name.
+> 
+> This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
+> bit positions via ptrace") which exposes pac mask information via ptrace
+> interfaces.
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+This patch user side changes are accepted by crash-utility maintainer [1]
+so I think this is in a good shape to go in.
 
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 8b8cc87a3461..68f2de4c1e74 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,7 @@
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
-+#include <asm/e820/api.h>
- 
- static int kvmapf = 1;
- 
-@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
- 	 */
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
- 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-+	/*
-+	 * Reset the host's page encryption bitmap related to kernel
-+	 * specific page encryption status settings before we load a
-+	 * new kernel by kexec. NOTE: We cannot reset the complete
-+	 * page encryption bitmap here as we need to retain the
-+	 * UEFI/OVMF firmware specific settings.
-+	 */
-+	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
-+		int i;
-+		unsigned long nr_pages;
-+
-+		for (i = 0; i < e820_table->nr_entries; i++) {
-+			struct e820_entry *entry = &e820_table->entries[i];
-+			unsigned long start_pfn;
-+			unsigned long end_pfn;
-+
-+			if (entry->type != E820_TYPE_RAM)
-+				continue;
-+
-+			start_pfn = entry->addr >> PAGE_SHIFT;
-+			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-+			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-+
-+			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-+					   entry->addr, nr_pages, 1);
-+		}
-+	}
- 	kvm_pv_disable_apf();
- 	kvm_disable_steal_time();
- }
--- 
-2.17.1
+Thanks,
+Amit Daniel
 
+[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
+
+> ---
+> Changes since v1:
+> * Rebased to kernel 5.7-rc3.
+> * commit log change.
+> 
+> An implementation of this new KERNELPACMASK vmcoreinfo field used by crash
+> tool can be found here[1]. This change is accepted by crash utility
+> maintainer [2].
+> 
+> [1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
+> [2]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
+> 
+>   arch/arm64/include/asm/compiler.h | 3 +++
+>   arch/arm64/kernel/crash_core.c    | 4 ++++
+>   2 files changed, 7 insertions(+)
+> 
+> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+> index eece20d..32d5900 100644
+> --- a/arch/arm64/include/asm/compiler.h
+> +++ b/arch/arm64/include/asm/compiler.h
+> @@ -19,6 +19,9 @@
+>   #define __builtin_return_address(val)					\
+>   	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
+>   
+> +#else  /* !CONFIG_ARM64_PTR_AUTH */
+> +#define	ptrauth_user_pac_mask()		0ULL
+> +#define	ptrauth_kernel_pac_mask()	0ULL
+>   #endif /* CONFIG_ARM64_PTR_AUTH */
+>   
+>   #endif /* __ASM_COMPILER_H */
+> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> index ca4c3e1..25cf2ce 100644
+> --- a/arch/arm64/kernel/crash_core.c
+> +++ b/arch/arm64/kernel/crash_core.c
+> @@ -6,6 +6,7 @@
+>   
+>   #include <linux/crash_core.h>
+>   #include <asm/memory.h>
+> +#include <asm/pointer_auth.h>
+>   
+>   void arch_crash_save_vmcoreinfo(void)
+>   {
+> @@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
+>   	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+>   						PHYS_OFFSET);
+>   	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+> +	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
+> +						system_supports_address_auth() ?
+> +						ptrauth_kernel_pac_mask() : 0);
+>   }
+> 
 
 _______________________________________________
 kexec mailing list
