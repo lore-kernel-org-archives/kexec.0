@@ -2,20 +2,24 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jU0v1-0004Ak-Pb
- for kexec@lists.infradead.org; Thu, 30 Apr 2020 04:35:32 +0000
-Received: by mail-qk1-f200.google.com with SMTP id d15so5209999qkl.10
- for <kexec@lists.infradead.org>; Wed, 29 Apr 2020 21:35:22 -0700 (PDT)
+ id 1jU4hu-0007lg-Gr
+ for kexec@lists.infradead.org; Thu, 30 Apr 2020 08:38:12 +0000
+Subject: Re: [PATCH] makedumpfile: cope with not-present mem section
+References: <1579487124-28426-1-git-send-email-piliu@redhat.com>
+ <2AA47CAB-ED13-4A0A-9288-063832158203@redhat.com>
+ <20200120085919.GB16539@MiWiFi-R3L-srv>
+ <44958c3d-c861-8eb0-5713-50c36c7cfc6e@redhat.com>
+ <TY2PR01MB5210FAB04501E6C59AAB2B06DD0F0@TY2PR01MB5210.jpnprd01.prod.outlook.com>
+ <20200127170447.GA4080@calabresa> <20200127180627.GB4080@calabresa>
+ <TY2PR01MB521005B2E72D78C4561C0562DD0A0@TY2PR01MB5210.jpnprd01.prod.outlook.com>
+ <20200128193302.GC4080@calabresa>
+ <769ddb8a-c845-04a6-0064-d674bbd04ae3@redhat.com>
+ <OSBPR01MB1991FEF11882F89353E6B342DDAD0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+From: piliu <piliu@redhat.com>
+Message-ID: <e487a969-7660-bea8-405f-59f1aab426f5@redhat.com>
+Date: Thu, 30 Apr 2020 16:37:50 +0800
 MIME-Version: 1.0
-References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
- <20200408104655.GA92698@C02TD0UTHF1T.local>
- <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
- <20200428100710.GD3868@gaia>
-In-Reply-To: <20200428100710.GD3868@gaia>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 30 Apr 2020 10:05:09 +0530
-Message-ID: <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
-Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
+In-Reply-To: <OSBPR01MB1991FEF11882F89353E6B342DDAD0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,61 +28,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arm@kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
+Cc: Thadeu Lima de Souza Cascardo <cascardo@canonical.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Michal Hocko <mhocko@kernel.org>, Qian Cai <cai@lca.pw>, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, Oscar Salvador <osalvador@suse.de>
 
-On Tue, Apr 28, 2020 at 3:37 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Tue, Apr 28, 2020 at 01:55:58PM +0530, Bhupesh Sharma wrote:
-> > On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
-> > > >  arch/arm64/configs/defconfig | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > > index 24e534d85045..fa122f4341a2 100644
-> > > > --- a/arch/arm64/configs/defconfig
-> > > > +++ b/arch/arm64/configs/defconfig
-> > > > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
-> > > >  CONFIG_NUMA=y
-> > > >  CONFIG_SECCOMP=y
-> > > >  CONFIG_KEXEC=y
-> > > > +CONFIG_KEXEC_FILE=y
-> > > >  CONFIG_CRASH_DUMP=y
-> > > >  CONFIG_XEN=y
-> > > >  CONFIG_COMPAT=y
-> > > > --
-> > > > 2.7.4
-> >
-> > Thanks a lot  Mark.
-> >
-> > Hi Catalin, Will,
-> >
-> > Can you please help pick this patch in the arm tree. We have an
-> > increasing number of user-cases from distro users
-> > who want to use kexec_file_load() as the default interface for
-> > kexec/kdump on arm64.
->
-> We could pick it up if it doesn't conflict with the arm-soc tree. They
-> tend to pick most of the defconfig changes these days (and could as well
-> pick this one).
-
-Thanks Catalin.
-(+Cc Arnd)
-
-Hi Arnd,
-
-Can you please help pick this change via the arm-soc tree?
-
-Thanks,
-Bhupesh
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAwNC8yOS8yMDIwIDEwOjI3IFBNLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4Ep
+IHdyb3RlOgo+IEhpIFBpbmdmYW4sCj4gCj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+
+IEhpIEthenUgYW5kIENhc2NhcmRvLAo+Pgo+PiBJIGVuY291bnRlciBhIHdlaXJkIHByb2JsZW0g
+d2hlbiBydW5uaW5nIG1ha2VkdW1wZmlsZSBvbiBhIHMzOTAgbWFjaGluZS4KPj4KPj4gT3VyIHBy
+b2R1Y3Rpb24ga2VybmVsIHVzZXMgZXh0cmVtZSBzcGFyc2UgbWVtb3J5IG1vZGVsLCBhbmQgaGFz
+IHRoZQo+PiBmb2xsb3dpbmc6Cj4+Cj4+IGluIG1tL3NwYXJzZS5jCj4+Cj4+ICNpZmRlZiBDT05G
+SUdfU1BBUlNFTUVNX0VYVFJFTUUKPj4gc3RydWN0IG1lbV9zZWN0aW9uICoqbWVtX3NlY3Rpb247
+Cj4+ICNlbHNlCj4+IHN0cnVjdCBtZW1fc2VjdGlvbiBtZW1fc2VjdGlvbltOUl9TRUNUSU9OX1JP
+T1RTXVtTRUNUSU9OU19QRVJfUk9PVF0KPj4gICAgICAgICBfX19fY2FjaGVsaW5lX2ludGVybm9k
+ZWFsaWduZWRfaW5fc21wOwo+PiAjZW5kaWYKPj4KPj4gU28gaW4gbWFrZWR1bXBmaWxlLmMsIGdl
+dF9tZW1fc2VjdGlvbigpLCBpdCBnb3QgYSBmYWlsZWQgcmVzdWx0IHdoZW4gdGhlCj4+IGZpcnN0
+IGNhbGwgc2l0ZSB0byB2YWxpZGF0ZV9tZW1fc2VjdGlvbigpLCB0aGVuIGl0IHNob3VsZCBzdWNj
+ZXNzIGF0IHRoZQo+PiBzZWNvbmQgY2FsbCBzaXRlIHRvIHZhbGlkYXRlX21lbV9zZWN0aW9uKCks
+IHdoaWNoIGlzIGluc2lkZSBpZgo+PiAoaXNfc3BhcnNlbWVtX2V4dHJlbWUoKSkgY29uZGl0aW9u
+Lgo+IAo+IEkgdGhpbmsgeW91ciBwcm9kdWN0aW9uIGtlcm5lbCBzaG91bGQgaGF2ZSBrZXJuZWwg
+Y29tbWl0IGEwYjEyODAzNjhkMQo+ICgia2R1bXA6IHdyaXRlIGNvcnJlY3QgYWRkcmVzcyBvZiBt
+ZW1fc2VjdGlvbiBpbnRvIHZtY29yZWluZm8iKSwgc28gdGhlCj4gZmlyc3QgY2FsbCBzaG91bGQg
+cmV0dXJuIFRSVUUgYW5kIHRoZSBzZWNvbmQgb25lIHNob3VsZCByZXR1cm4gRkFMU0UuClllcywg
+aXQgaXMuCj4gCj4+Cj4+IEJ1dCB0aGUgYWN0dWFsIHJlc3VsdCBpcyBub3QgbGlrZSBleHBlY3Rl
+ZC4KPj4KPj4gQWZ0ZXIgaW50cm9kdWNpbmcKPj4gY29tbWl0IGUxMTNmMWM5NzRjODIwZjk2MzNk
+YzAwNzNlZGE1MjVkNzU3NWYzNjUgICAgW1BBVENIXSBjb3BlIHdpdGgKPj4gbm90LXByZXNlbnQg
+bWVtIHNlY3Rpb24KPj4KPj4gSSBnb3QgdHdvIHN1Y2Nlc3NmdWwgY2FsbHMgdG8gdmFsaWRhdGVf
+bWVtX3NlY3Rpb24oKSwgYW5kIGZpbmFsbHkgZmFpbGVkCj4+IGF0IHRoZSBjb25kaXRpb24KPj4g
+CQlyZXQgPSBzeW1ib2xfdmFsaWQgXiBwb2ludGVyX3ZhbGlkOwo+PiAJCWlmICghcmV0KSB7Cj4+
+IAkJCUVSUk1TRygiQ291bGQgbm90IHZhbGlkYXRlIG1lbV9zZWN0aW9uLlxuIik7Cj4+IAkJfQo+
+Pgo+Pgo+PiBEbyB5b3UgaGF2ZSBhbnkgaWRlYT8KPiAKPiBQcmVzdW1hYmx5IHRoaXMgd2lsbCBi
+ZSB3aGF0IEkgZXhwZWN0ZWQgdGhhdCBpdCBtaWdodCBiZSBwb3NzaWJsZS4KPiBJIGNhbiBhcHBs
+eSB0aGUgcGF0Y2ggYmVsb3cgdGhpcyB0aW1lLCB3aGF0IGFib3V0IHRoaXM/Cj4gaHR0cHM6Ly9n
+aXRodWIuY29tL2staGFnaW8vbWFrZWR1bXBmaWxlLW9sZC9jb21taXQvY2U4ODNkZjM4NjRhNTc0
+NGFjMGYxZWZmNDdkZTA2YjUwNzRlZGI1Zi5wYXRjaApsb29rcyBnb29kLgo+IAo+IG9yLCB3ZSBj
+YW4gYWxzbyBpbnZlc3RpZ2F0ZSB3aHkgdGhlIHNlY29uZCBjYWxsIHJldHVybnMgVFJVRSwgYW5k
+Cj4gZml4IHRoZSBjb25kaXRpb25zIGluIHRoZSB2YWxpZGF0ZV9tZW1fc2VjdGlvbigpLi4KVGhp
+cyBpcyBkdWUgdG8gdGhlIHJlbGF4ZWQgY29uZGl0aW9uIGNoZWNrIGFmdGVyIGFwcGx5aW5nIG15
+IGNvbW1pdApjb21taXQgZTExM2YxYzk3NCgiW1BBVENIXSBjb3BlIHdpdGggbm90LXByZXNlbnQg
+bWVtIHNlY3Rpb24iKQoKZGlmZiAtLWdpdCBhL21ha2VkdW1wZmlsZS5jIGIvbWFrZWR1bXBmaWxl
+LmMKaW5kZXggYWU3MzM2YS4uNjA3ZTA3ZiAxMDA2NDQKLS0tIGEvbWFrZWR1bXBmaWxlLmMKKysr
+IGIvbWFrZWR1bXBmaWxlLmMKQEAgLTM0MDYsOCArMzQwNiw2IEBAIHNlY3Rpb25fbWVtX21hcF9h
+ZGRyKHVuc2lnbmVkIGxvbmcgYWRkciwgdW5zaWduZWQKbG9uZyAqbWFwX21hc2spCiAgICAgICAg
+bWFwID0gVUxPTkcobWVtX3NlY3Rpb24gKyBPRkZTRVQobWVtX3NlY3Rpb24uc2VjdGlvbl9tZW1f
+bWFwKSk7CiAgICAgICAgbWFzayA9IFNFQ1RJT05fTUFQX01BU0s7CiAgICAgICAgKm1hcF9tYXNr
+ID0gbWFwICYgfm1hc2s7Ci0gICAgICAgaWYgKG1hcCA9PSAweDApCi0gICAgICAgICAgICAgICAq
+bWFwX21hc2sgfD0gU0VDVElPTl9NQVJLRURfUFJFU0VOVDsKICAgICAgICBtYXAgJj0gbWFzazsK
+ICAgICAgICBmcmVlKG1lbV9zZWN0aW9uKTsKCkBAIC0zNDUzLDEwICszNDUxLDggQEAgdmFsaWRh
+dGVfbWVtX3NlY3Rpb24odW5zaWduZWQgbG9uZyAqbWVtX3NlYywKICAgICAgICAgICAgICAgICAg
+ICAgICAgbWVtX21hcCA9IE5PVF9NRU1NQVBfQUREUjsKICAgICAgICAgICAgICAgIH0gZWxzZSB7
+CiAgICAgICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgPSBzZWN0aW9uX21lbV9tYXBfYWRkcihz
+ZWN0aW9uLCAmbWFwX21hc2spOworICAgICAgICAgICAgICAgICAgICAgICAvKiBmb3IgZWl0aGVy
+IG5vIG1lbV9tYXAgb3IgaG90LXJlbW92ZWQgKi8KICAgICAgICAgICAgICAgICAgICAgICAgaWYg
+KCEobWFwX21hc2sgJiBTRUNUSU9OX01BUktFRF9QUkVTRU5UKSkgewotICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsgLS0tLS0tPiBhIHN0cmljdCBjaGVjawotICAg
+ICAgICAgICAgICAgICAgICAgICB9Ci0gICAgICAgICAgICAgICAgICAgICAgIGlmIChtZW1fbWFw
+ID09IDApIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBtZW1fbWFwID0gTk9UX01F
+TU1BUF9BRERSOwogICAgICAgICAgICAgICAgICAgICAgICB9IGVsc2UgewogICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgIG1lbV9tYXAgPSBzcGFyc2VfZGVjb2RlX21lbV9tYXAobWVtX21h
+cCwKCgpCZWZvcmUgbXkgcGF0Y2gsIGl0IHJldHVybiBGQUxTRSBmb3IgYW55IG5vbiBOVUxMIHZh
+bHVlIHdpdGhvdXQKU0VDVElPTl9NQVJLRURfUFJFU0VOVC4gQnV0IG15IHBhdGNoIHJlbGF4ZXMg
+dGhlIHJlc3RyaWN0aW9uIGFuZApjb25zaWRlciBpdCBhcyBob3QtcmVtb3ZlZCBtZW1fc2VjdGlv
+biBhbmQga2VlcHMgdGhlIHBhcnNpbmcgb24uCgpUaGFua3MsClBpbmdmYW4KPiAKPiBUaGFua3Ms
+Cj4gS2F6dQo+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+Cj4ga2V4ZWMgbWFpbGluZyBsaXN0Cj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKPiAKCgpfX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxp
+c3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
