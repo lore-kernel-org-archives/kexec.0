@@ -3,8 +3,8 @@ Subject: Re: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in
  vmcoreinfo
 References: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
 From: Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <36929ba3-3274-6046-9a47-ed403f00fefe@arm.com>
-Date: Thu, 30 Apr 2020 17:05:55 +0530
+Message-ID: <f7dad36c-6944-f5c9-b835-0992ff0391e5@arm.com>
+Date: Thu, 30 Apr 2020 17:14:34 +0530
 MIME-Version: 1.0
 In-Reply-To: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
 Content-Language: en-US
@@ -20,10 +20,12 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
+To: linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>
 
 Hi Will/Catalin,
+
+Sorry: Resending with correct To list.
 
 On 4/27/20 11:55 AM, Amit Daniel Kachhap wrote:
 > Recently arm64 linux kernel added support for Armv8.3-A Pointer
@@ -39,11 +41,6 @@ On 4/27/20 11:55 AM, Amit Daniel Kachhap wrote:
 > This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
 > bit positions via ptrace") which exposes pac mask information via ptrace
 > interfaces.
-> 
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 
 This patch user side changes are accepted by crash-utility maintainer [1]
 so I think this is in a good shape to go in.
@@ -51,8 +48,13 @@ so I think this is in a good shape to go in.
 Thanks,
 Amit Daniel
 
-[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
+[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
 
+> 
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 > ---
 > Changes since v1:
 > * Rebased to kernel 5.7-rc3.
