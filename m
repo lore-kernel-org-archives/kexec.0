@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jUS9z-0007h0-KA
- for kexec@lists.infradead.org; Fri, 01 May 2020 09:40:45 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2 0/3] printk: replace ringbuffer
-Date: Fri,  1 May 2020 11:46:07 +0206
-Message-Id: <20200501094010.17694-1-john.ogness@linutronix.de>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 1/3] kexec: Prevent removal of memory in use by a loaded
+ kexec image
+References: <20200326180730.4754-1-james.morse@arm.com>
+ <20200326180730.4754-2-james.morse@arm.com>
+ <87d088h4k8.fsf@x220.int.ebiederm.org>
+ <a694cea6-4449-c77a-98f7-bd7a49cf47fc@arm.com>
+ <87y2qn1r18.fsf@x220.int.ebiederm.org>
+ <a29beedb-750b-b838-6c2a-6e47ade2186a@redhat.com>
+Message-ID: <b5642228-c95b-7aca-b454-a07dde3d1866@arm.com>
+Date: Fri, 1 May 2020 17:55:19 +0100
 MIME-Version: 1.0
+In-Reply-To: <a29beedb-750b-b838-6c2a-6e47ade2186a@redhat.com>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,98 +25,54 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-Hello,
+Hi guys,
 
-Here is a v2 for the first series to rework the printk subsystem. The
-v1 and history are here [0]. This first series only replaces the
-existing ringbuffer implementation. No locking is removed. No
-semantics/behavior of printk are changed.
+On 22/04/2020 17:40, David Hildenbrand wrote:
+>>>> Usually somewhere in the loaded image
+>>>> is a copy of the memory map at the time the kexec kernel was loaded.
+>>>> That will invalidate the memory map as well.
+>>>
+>>> Ah, unconditionally. Sure, x86 needs this.
+>>> (arm64 re-discovers the memory map from firmware tables after kexec)
 
-The VMCOREINFO is updated. RFC patches for the external tools
-crash(8) [1] and makedumpfile(8) [2] have been submitted that allow
-the new ringbuffer to be correctly read.
+> Does this include hotplugged DIMMs e.g., under KVM?
 
-This series is in line with the agreements [3] made at the meeting
-during LPC2019 in Lisbon, with 1 exception: support for dictionaries
-will not be discontinued [4]. Dictionaries are stored in a separate
-buffer so that they cannot interfere with the human-readable buffer.
+If you advertise hotplugged memory to the guest using ACPI, yes.
 
-The list of changes since v1:
+We don't have a practical mechanism to pass 'fact's about the platform between kernels,
+instead we rely on those facts being discoverable, or described by firmware.
 
-printk_ringbuffer
-=================
-- documentation formatting/wording cleanup
-- main memory barrier comments moved from memory accesses to
-  memory barriers
-- remove all symbol exporting of printk_ringbuffer functions
-- add prb_count_lines() for line counting so printk.c can also use
-  this functionality
-- add prb_read_valid_info() to just read record meta-data
-- remove @line_count out of printk_record (there is now an interface
-  for line counting)
-- to_block(): remove intermediate (char *) typecast
-- data_alloc(): use WRITE_ONCE for writing block ID
-- data_push_tail(): fix test condition for tail LPOS already pushed
-- data_push_tail(): continue loop rather than try cmpxchg() if
-  tail LPOS was pushed
-- data_push_tail(): add memory barrier before pushing tail LPOS so
-  readers can recognize if data has expired while reading the
-  descriptor
-- data_make_reusable(): added memory barrier and logic to protect
-  against invalid read of block ID
-- data_alloc(): add memory barrier to guarantee the tail ID is stored
-  before updating the block ID
-- desc_reserve(): add memory barrier before checking ID to make sure
-  the head ID is read before the tail ID
-- desc_reserve(): move memory barrier to before the head ID is pushed
-  to guarantee the tail ID is stored before the head ID
 
-printk.c
-========
-- remove static syslog_record/console_record (use dynamic allocation
-  and in-place buffer manipulation instead)
-- reduce expected average message size from 64 to 32
-- add printk_record initializers to simplify reader and writer code
-- fix wrong return value when log_store() truncates
-- add full VMCOREINFO needed by makedumpfile(8)
-- change record_print_text() to add prefix data to the buffer
-  in-place instead of requiring a 2nd buffer
-- add helper to calculate text size when prefix added:
-  get_record_text_size() (used together with prb_count_lines() or
-  prb_read_valid_info() to get full text size, rather than abusing
-  record_print_text() for this purpose)
-- syslog_print_all(): fix missing break if copy_to_user() failed
-- moved "messages dropped" printing to call_console_drivers()
+>>>> All of this should be for a very brief window of a few seconds, as
+>>>> the loaded kexec image is quite short.
+>>>
+>>> It seems I'm the outlier anticipating anything could happen between
+>>> those syscalls.
+>>
+>> The design is:
+>> 	sys_kexec_load()
+>> 	shutdown scripts
+>>         sys_reboot(LINUX_REBOOT_CMD_KEXEC);
+>>
+>> There are two system call simply so that the shutdown scripts can run.
+>> Now maybe someone somewhere does something different but that is not
+>> expected.
 
-John Ogness
+[...]
 
-[0] https://lkml.kernel.org/r/20200128161948.8524-1-john.ogness@linutronix.de
-[1] https://www.redhat.com/archives/crash-utility/2020-April/msg00080.html
-[2] https://lists.infradead.org/pipermail/kexec/2020-April/024906.html
-[3] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
-[4] https://lkml.kernel.org/r/20191007120134.ciywr3wale4gxa6v@pathway.suse.cz
+> Yes, and AFAIK, memory blocks which hold the reserved crashkernel area
+> can usually not get offlined and, therefore, the memory cannot get removed.
 
-John Ogness (3):
-  crash: add VMCOREINFO macro for anonymous structs
-  printk: add lockless buffer
-  printk: use the lockless ringbuffer
+The crashkernel area on arm64 will always land in un-removable memory. We set PG_Reserved
+on it too.
 
- include/linux/crash_core.h        |    3 +
- include/linux/kmsg_dump.h         |    2 -
- kernel/printk/Makefile            |    1 +
- kernel/printk/printk.c            |  938 +++++++++--------
- kernel/printk/printk_ringbuffer.c | 1626 +++++++++++++++++++++++++++++
- kernel/printk/printk_ringbuffer.h |  369 +++++++
- 6 files changed, 2491 insertions(+), 448 deletions(-)
- create mode 100644 kernel/printk/printk_ringbuffer.c
- create mode 100644 kernel/printk/printk_ringbuffer.h
 
--- 
-2.20.1
+Thanks,
 
+James
 
 _______________________________________________
 kexec mailing list
