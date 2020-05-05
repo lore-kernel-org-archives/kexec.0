@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mail-dm6nam12on2067.outbound.protection.outlook.com
+ ([40.107.243.67] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jW2sL-000203-2V
- for kexec@lists.infradead.org; Tue, 05 May 2020 19:05:07 +0000
-Received: by mail-pl1-f198.google.com with SMTP id j23so2671486pll.16
- for <kexec@lists.infradead.org>; Tue, 05 May 2020 12:05:01 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 2/2] net: qed: Disable SRIOV functionality inside kdump kernel
-Date: Wed,  6 May 2020 00:34:41 +0530
-Message-Id: <1588705481-18385-3-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
-References: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
+ id 1jW50r-0000e0-0y
+ for kexec@lists.infradead.org; Tue, 05 May 2020 21:22:02 +0000
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+Subject: [PATCH v8 17/18] KVM: x86: Add kexec support for SEV Live Migration.
+Date: Tue,  5 May 2020 21:21:44 +0000
+Message-Id: <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
+In-Reply-To: <cover.1588711355.git.ashish.kalra@amd.com>
+References: <cover.1588711355.git.ashish.kalra@amd.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,90 +19,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org
-Cc: aelior@marvell.com, manishc@marvell.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, GR-everest-linux-l2@marvell.com, bhupesh.linux@gmail.com, davem@davemloft.net
+To: pbonzini@redhat.com
+Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, kvm@vger.kernel.org, srutherford@google.com, joro@8bytes.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, rientjes@google.com, tglx@linutronix.de, bp@suse.de, venu.busireddy@oracle.com
 
-Since we have kdump kernel(s) running under severe memory constraint
-it makes sense to disable the qed SRIOV functionality when running the
-kdump kernel as kdump configurations on several distributions don't
-support SRIOV targets for saving the vmcore (see [1] for example).
+From: Ashish Kalra <ashish.kalra@amd.com>
 
-Currently the qed SRIOV functionality ends up consuming memory in
-the kdump kernel, when we don't really use the same.
+Reset the host's page encryption bitmap related to kernel
+specific page encryption status settings before we load a
+new kernel by kexec. We cannot reset the complete
+page encryption bitmap here as we need to retain the
+UEFI/OVMF firmware specific settings.
 
-An example log seen in the kdump kernel with the SRIOV functionality
-enabled can be seen below (obtained via memstrack tool, see [2]):
- dracut-pre-pivot[676]: ======== Report format module_summary: ========
- dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
+The host's page encryption bitmap is maintained for the
+guest to keep the encrypted/decrypted state of the guest pages,
+therefore we need to explicitly mark all shared pages as
+encrypted again before rebooting into the new guest kernel.
 
-This patch disables the SRIOV functionality inside kdump kernel and with
-the same applied the memory consumption goes down:
- dracut-pre-pivot[671]: ======== Report format module_summary: ========
- dracut-pre-pivot[671]: Module qed using 124.6MB (1993 pages), peak allocation 124.7MB (1995 pages)
-
-[1]. https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/installing-and-configuring-kdump_managing-monitoring-and-updating-the-kernel#supported-kdump-targets_supported-kdump-configurations-and-targets
-[2]. Memstrack tool: https://github.com/ryncsn/memstrack
-
-Cc: kexec@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: Ariel Elior <aelior@marvell.com>
-Cc: GR-everest-linux-l2@marvell.com
-Cc: Manish Chopra <manishc@marvell.com>
-Cc: David S. Miller <davem@davemloft.net>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
 ---
- drivers/net/ethernet/qlogic/qed/qed_sriov.h  | 10 +++++++---
- drivers/net/ethernet/qlogic/qede/qede_main.c |  2 +-
- 2 files changed, 8 insertions(+), 4 deletions(-)
+ arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
 
-diff --git a/drivers/net/ethernet/qlogic/qed/qed_sriov.h b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-index 368e88565783..f2ebd9a76e20 100644
---- a/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-+++ b/drivers/net/ethernet/qlogic/qed/qed_sriov.h
-@@ -32,6 +32,7 @@
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index 4b29815de873..a8bc30d5b15b 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -35,6 +35,7 @@
+ #include <asm/hypervisor.h>
+ #include <asm/tlb.h>
+ #include <asm/cpuidle_haltpoll.h>
++#include <asm/e820/api.h>
  
- #ifndef _QED_SRIOV_H
- #define _QED_SRIOV_H
-+#include <linux/crash_dump.h>
- #include <linux/types.h>
- #include "qed_vf.h"
+ static int kvmapf = 1;
  
-@@ -40,9 +41,12 @@
- #define QED_VF_ARRAY_LENGTH (3)
- 
- #ifdef CONFIG_QED_SRIOV
--#define IS_VF(cdev)             ((cdev)->b_is_vf)
--#define IS_PF(cdev)             (!((cdev)->b_is_vf))
--#define IS_PF_SRIOV(p_hwfn)     (!!((p_hwfn)->cdev->p_iov_info))
-+#define IS_VF(cdev)             ((is_kdump_kernel()) ? \
-+				 (0) : ((cdev)->b_is_vf))
-+#define IS_PF(cdev)             ((is_kdump_kernel()) ? \
-+				 (1) : !((cdev)->b_is_vf))
-+#define IS_PF_SRIOV(p_hwfn)     ((is_kdump_kernel()) ? \
-+				 (0) : !!((p_hwfn)->cdev->p_iov_info))
- #else
- #define IS_VF(cdev)             (0)
- #define IS_PF(cdev)             (1)
-diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 34fa3917eb33..f557ae90ce7c 100644
---- a/drivers/net/ethernet/qlogic/qede/qede_main.c
-+++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
-@@ -1187,7 +1187,7 @@ static int qede_probe(struct pci_dev *pdev, const struct pci_device_id *id)
- 	case QEDE_PRIVATE_VF:
- 		if (debug & QED_LOG_VERBOSE_MASK)
- 			dev_err(&pdev->dev, "Probing a VF\n");
--		is_vf = true;
-+		is_vf = is_kdump_kernel() ? false : true;
- 		break;
- 	default:
- 		if (debug & QED_LOG_VERBOSE_MASK)
+@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+ 	 */
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+ 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
++	/*
++	 * Reset the host's page encryption bitmap related to kernel
++	 * specific page encryption status settings before we load a
++	 * new kernel by kexec. NOTE: We cannot reset the complete
++	 * page encryption bitmap here as we need to retain the
++	 * UEFI/OVMF firmware specific settings.
++	 */
++	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
++		int i;
++		unsigned long nr_pages;
++
++		for (i = 0; i < e820_table->nr_entries; i++) {
++			struct e820_entry *entry = &e820_table->entries[i];
++			unsigned long start_pfn;
++			unsigned long end_pfn;
++
++			if (entry->type != E820_TYPE_RAM)
++				continue;
++
++			start_pfn = entry->addr >> PAGE_SHIFT;
++			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
++			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
++
++			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
++					   entry->addr, nr_pages, 1);
++		}
++	}
+ 	kvm_pv_disable_apf();
+ 	kvm_disable_steal_time();
+ }
 -- 
-2.7.4
+2.17.1
 
 
 _______________________________________________
