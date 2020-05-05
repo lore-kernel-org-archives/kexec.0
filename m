@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm6nam12on2067.outbound.protection.outlook.com
- ([40.107.243.67] helo=NAM12-DM6-obe.outbound.protection.outlook.com)
+Received: from shards.monkeyblade.net ([2620:137:e000::1:9])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jW50r-0000e0-0y
- for kexec@lists.infradead.org; Tue, 05 May 2020 21:22:02 +0000
-From: Ashish Kalra <Ashish.Kalra@amd.com>
-Subject: [PATCH v8 17/18] KVM: x86: Add kexec support for SEV Live Migration.
-Date: Tue,  5 May 2020 21:21:44 +0000
-Message-Id: <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
-In-Reply-To: <cover.1588711355.git.ashish.kalra@amd.com>
-References: <cover.1588711355.git.ashish.kalra@amd.com>
-MIME-Version: 1.0
+ id 1jW53X-0001Ed-Gx
+ for kexec@lists.infradead.org; Tue, 05 May 2020 21:24:48 +0000
+Date: Tue, 05 May 2020 14:24:39 -0700 (PDT)
+Message-Id: <20200505.142439.1075452616982863931.davem@davemloft.net>
+Subject: Re: [PATCH 1/2] net: qed*: Reduce RX and TX default ring count
+ when running inside kdump kernel
+From: David Miller <davem@davemloft.net>
+In-Reply-To: <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
+References: <1588705481-18385-1-git-send-email-bhsharma@redhat.com>
+ <1588705481-18385-2-git-send-email-bhsharma@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,76 +24,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pbonzini@redhat.com
-Cc: Thomas.Lendacky@amd.com, brijesh.singh@amd.com, kvm@vger.kernel.org, srutherford@google.com, joro@8bytes.org, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mingo@redhat.com, hpa@zytor.com, rientjes@google.com, tglx@linutronix.de, bp@suse.de, venu.busireddy@oracle.com
+To: bhsharma@redhat.com
+Cc: aelior@marvell.com, manishc@marvell.com, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, GR-everest-linux-l2@marvell.com, bhupesh.linux@gmail.com
 
-From: Ashish Kalra <ashish.kalra@amd.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed,  6 May 2020 00:34:40 +0530
 
-Reset the host's page encryption bitmap related to kernel
-specific page encryption status settings before we load a
-new kernel by kexec. We cannot reset the complete
-page encryption bitmap here as we need to retain the
-UEFI/OVMF firmware specific settings.
+> -#define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
+> +#define NUM_RX_BDS_DEF		((is_kdump_kernel()) ? ((u16)BIT(6) - 1) : ((u16)BIT(10) - 1))
 
-The host's page encryption bitmap is maintained for the
-guest to keep the encrypted/decrypted state of the guest pages,
-therefore we need to explicitly mark all shared pages as
-encrypted again before rebooting into the new guest kernel.
-
-Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
----
- arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
-
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index 4b29815de873..a8bc30d5b15b 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -35,6 +35,7 @@
- #include <asm/hypervisor.h>
- #include <asm/tlb.h>
- #include <asm/cpuidle_haltpoll.h>
-+#include <asm/e820/api.h>
- 
- static int kvmapf = 1;
- 
-@@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
- 	 */
- 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
- 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-+	/*
-+	 * Reset the host's page encryption bitmap related to kernel
-+	 * specific page encryption status settings before we load a
-+	 * new kernel by kexec. NOTE: We cannot reset the complete
-+	 * page encryption bitmap here as we need to retain the
-+	 * UEFI/OVMF firmware specific settings.
-+	 */
-+	if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
-+		int i;
-+		unsigned long nr_pages;
-+
-+		for (i = 0; i < e820_table->nr_entries; i++) {
-+			struct e820_entry *entry = &e820_table->entries[i];
-+			unsigned long start_pfn;
-+			unsigned long end_pfn;
-+
-+			if (entry->type != E820_TYPE_RAM)
-+				continue;
-+
-+			start_pfn = entry->addr >> PAGE_SHIFT;
-+			end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-+			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-+
-+			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-+					   entry->addr, nr_pages, 1);
-+		}
-+	}
- 	kvm_pv_disable_apf();
- 	kvm_disable_steal_time();
- }
--- 
-2.17.1
-
+These parenthesis are very excessive and unnecessary.  At the
+very least remove the parenthesis around is_kdump_kernel().
 
 _______________________________________________
 kexec mailing list
