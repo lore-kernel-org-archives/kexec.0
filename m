@@ -1,20 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jVjAy-0002LA-Bj
- for kexec@lists.infradead.org; Mon, 04 May 2020 22:03:02 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1588130803-20527-4-git-send-email-iamjoonsoo.kim@lge.com>
- <87h7wzvjko.fsf@x220.int.ebiederm.org>
- <CAAmzW4MrD75+Prw=fQ=d5uXKgGy3urBwmxnNtoNsw5M1m9xjYQ@mail.gmail.com>
- <87ftcfpzjn.fsf@x220.int.ebiederm.org>
-Date: Mon, 04 May 2020 16:59:14 -0500
-In-Reply-To: <87ftcfpzjn.fsf@x220.int.ebiederm.org> (Eric W. Biederman's
- message of "Mon, 04 May 2020 09:03:56 -0500")
-Message-ID: <87368fmkel.fsf_-_@x220.int.ebiederm.org>
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Subject: [PATCH] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+Date: Tue, 5 May 2020 08:59:20 -0700
+Message-ID: <1588694360-11114-1-git-send-email-pkushwaha@marvell.com>
 MIME-Version: 1.0
-Subject: [RFC][PATCH] kexec: Teach indirect pages how to live in high memory
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,315 +16,155 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joonsoo Kim <js1304@gmail.com>
-Cc: kernel-team@lge.com, Michal Hocko <mhocko@suse.com>, Minchan Kim <minchan@kernel.org>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Rik van Riel <riel@surriel.com>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Christian Koenig <christian.koenig@amd.com>, Christoph Hellwig <hch@infradead.org>, Linux Memory Management List <linux-mm@kvack.org>, Huang Rui <ray.huang@amd.com>, Kexec Mailing List <kexec@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Johannes Weiner <hannes@cmpxchg.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Mel Gorman <mgorman@techsingularity.net>, Roman Gushchin <guro@fb.com>, Vlastimil Babka <vbabka@suse.cz>
+To: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, robin.murphy@arm.com, maz@kernel.org, will.deacon@arm.com
+Cc: bhsharma@redhat.com, Prabhakar Kushwaha <pkushwaha@marvell.com>, helgaas@kernel.org, gkulkarni@marvell.com, prabhakar.pkin@gmail.com
 
+An SMMU Stream table is created by the primary kernel. This table is
+used by the SMMU to perform address translations for device-originated
+transactions. Any crash (if happened) launches the kdump kernel which
+re-creates the SMMU Stream table. New transactions will be translated
+via this new table.
 
-Recently a patch was proposed to kimage_alloc_page to slightly alter
-the logic of how pages allocated with incompatible flags were
-detected.  The logic was being altered because the semantics of the
-page alloctor were changing yet again.
+There are scenarios, where devices are still having old pending
+transactions (configured in the primary kernel). These transactions
+come in-between Stream table creation and device-driver probe.
+As new stream table does not have entry for older transactions,
+it will be aborted by SMMU.
 
-Looking at that case I realized that there is no reason for it to even
-exist.  Either the indirect page allocations and the source page
-allocations could be separated out, or I could do as I am doing now
-and simply teach the indirect pages to live in high memory.
+Similar observations were found with PCIe-Intel 82576 Gigabit
+Network card. It sends old Memory Read transaction in kdump kernel.
+Transactions configured for older Stream table entries, that do not
+exist any longer in the new table, will cause a PCIe Completion Abort.
+Returned PCIe completion abort further leads to AER Errors from APEI
+Generic Hardware Error Source (GHES) with completion timeout.
+A network device hang is observed even after continuous
+reset/recovery from driver, Hence device is no more usable.
 
-This patch replaced pointers of type kimage_entry_t * with a new type
-kimage_entry_pos_t.  This new type holds the physical address of the
-indirect page and the offset within that page of the next indirect
-entry to write.  A special constant KIMAGE_ENTRY_POS_INVALID is added
-that kimage_image_pos_t variables that don't currently have a valid
-may be set to.
+So, If we are in a kdump kernel try to copy SMMU Stream table from
+primary/old kernel to preserve the mappings until the device driver
+takes over.
 
-Two new functions kimage_read_entry and kimage_write_entry have been
-provided to write entries in way that works if they live in high
-memory.
-
-The now unnecessary checks to see if a destination entry is non-zero
-and to increment it if so have been removed.  For safety new indrect
-pages are now cleared so we have a guarantee everything that has not
-been used yet is zero.  Along with this writing an extra trailing 0
-entry has been removed, as it is known all trailing entries are now 0.
-
-With highmem support implemented for indirect pages
-kimage_image_alloc_page has been updated to always allocate
-GFP_HIGHUSER pages, and handling of pages with different
-gfp flags has been removed.
-
-Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 ---
+This patch has been tested with
+A) PCIe-Intel 82576 Gigabit Network card in following
+configurations with "no AER error". Each iteration has
+been tested on both Suse kdump rfs And default Centos distro rfs.
 
-I have not done more than compile test this but I think this will remove
-that tricky case in the kexec highmem support.
+ 1)  with 2 level stream table 
+       ----------------------------------------------------
+       SMMU               |  Normal Ping   | Flood Ping
+       -----------------------------------------------------
+       Default Operation  |  100 times     | 10 times
+       -----------------------------------------------------
+       IOMMU bypass       |  41 times      | 10 times
+       -----------------------------------------------------
 
-Any comments?  Does anyone have a 32bit highmem system where they can
-test this code?  I can probably do something with a 32bit x86 kernel
-but it has been a few days.
+ 2)  with Linear stream table. 
+       -----------------------------------------------------
+       SMMU               |  Normal Ping   | Flood Ping
+       ------------------------------------------------------
+       Default Operation  |  100 times     | 10 times
+       ------------------------------------------------------
+       IOMMU bypass       |  55 times      | 10 times
+       -------------------------------------------------------
 
-Does anyone know how we can more effectively allocate memory below
-whatever the maximum limit that kexec supports? Typically below
-4G on 32bit and below 2^64 on 64bits.
+B) This patch is also tested with Micron Technology Inc 9200 PRO NVMe
+SSD card with 2 level stream table using "fio" in mixed read/write and
+only read configurations. It is tested for both Default Operation and
+IOMMU bypass mode for minimum 10 iterations across Centos kdump rfs and
+default Centos ditstro rfs.
 
-Eric
+This patch is not full proof solution. Issue can still come
+from the point device is discovered and driver probe called. 
+This patch has reduced window of scenario from "SMMU Stream table 
+creation - device-driver" to "device discovery - device-driver".
+Usually, device discovery to device-driver is very small time. So
+the probability is very low. 
 
- include/linux/kexec.h |   5 +-
- kernel/kexec_core.c   | 119 +++++++++++++++++++++++++-----------------
- 2 files changed, 73 insertions(+), 51 deletions(-)
+Note: device-discovery will overwrite existing stream table entries 
+with both SMMU stage as by-pass.
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 1776eb2e43a4..6d3f6f4cb926 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -69,6 +69,8 @@
-  */
- 
- typedef unsigned long kimage_entry_t;
-+typedef unsigned long kimage_entry_pos_t;
-+#define KIMAGE_ENTRY_POS_INVALID ((kimage_entry_pos_t)-2)
- 
- struct kexec_segment {
- 	/*
-@@ -243,8 +245,7 @@ int kexec_elf_probe(const char *buf, unsigned long len);
- #endif
- struct kimage {
- 	kimage_entry_t head;
--	kimage_entry_t *entry;
--	kimage_entry_t *last_entry;
-+	kimage_entry_pos_t entry_pos;
- 
- 	unsigned long start;
- 	struct page *control_code_page;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c19c0dad1ebe..45862fda9e60 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -142,7 +142,6 @@ EXPORT_SYMBOL_GPL(kexec_crash_loaded);
- #define PAGE_COUNT(x) (((x) + PAGE_SIZE - 1) >> PAGE_SHIFT)
- 
- static struct page *kimage_alloc_page(struct kimage *image,
--				       gfp_t gfp_mask,
- 				       unsigned long dest);
- 
- int sanity_check_segment_list(struct kimage *image)
-@@ -261,8 +260,7 @@ struct kimage *do_kimage_alloc_init(void)
- 		return NULL;
- 
- 	image->head = 0;
--	image->entry = &image->head;
--	image->last_entry = &image->head;
-+	image->entry_pos = KIMAGE_ENTRY_POS_INVALID;
- 	image->control_page = ~0; /* By default this does not apply */
- 	image->type = KEXEC_TYPE_DEFAULT;
- 
-@@ -531,28 +529,56 @@ int kimage_crash_copy_vmcoreinfo(struct kimage *image)
- 	return 0;
- }
- 
--static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
-+static kimage_entry_t kimage_read_entry(kimage_entry_pos_t pos)
- {
--	if (*image->entry != 0)
--		image->entry++;
-+	kimage_entry_t *arr, entry;
-+	struct page *page;
-+	unsigned long off;
-+
-+	page = boot_pfn_to_page(pos >> PAGE_SHIFT);
-+	off = pos & ~PAGE_MASK;
-+	arr = kmap_atomic(page);
-+	entry = arr[off];
-+	kunmap_atomic(arr);
-+
-+	return entry;
-+}
- 
--	if (image->entry == image->last_entry) {
--		kimage_entry_t *ind_page;
-+static void kimage_write_entry(kimage_entry_pos_t pos, kimage_entry_t entry)
-+{
-+	kimage_entry_t *arr;
-+	struct page *page;
-+	unsigned long off;
-+
-+	page = boot_pfn_to_page(pos >> PAGE_SHIFT);
-+	off = pos & ~PAGE_MASK;
-+	arr = kmap_atomic(page);
-+	arr[off] = entry;
-+	kunmap_atomic(arr);
-+}
-+
-+#define LAST_KIMAGE_ENTRY ((PAGE_SIZE/sizeof(kimage_entry_t)) - 1)
-+static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
-+{
-+	if ((image->entry_pos == KIMAGE_ENTRY_POS_INVALID) ||
-+	    ((image->entry_pos & ~PAGE_MASK) == LAST_KIMAGE_ENTRY)) {
-+		unsigned long ind_addr;
- 		struct page *page;
- 
--		page = kimage_alloc_page(image, GFP_KERNEL, KIMAGE_NO_DEST);
-+		page = kimage_alloc_page(image, KIMAGE_NO_DEST);
- 		if (!page)
- 			return -ENOMEM;
- 
--		ind_page = page_address(page);
--		*image->entry = virt_to_boot_phys(ind_page) | IND_INDIRECTION;
--		image->entry = ind_page;
--		image->last_entry = ind_page +
--				      ((PAGE_SIZE/sizeof(kimage_entry_t)) - 1);
-+		ind_addr = page_to_boot_pfn(page) << PAGE_SHIFT;
-+		kimage_write_entry(image->entry_pos, ind_addr | IND_INDIRECTION);
-+
-+		clear_highpage(page);
-+
-+		image->entry_pos = ind_addr;
- 	}
--	*image->entry = entry;
--	image->entry++;
--	*image->entry = 0;
-+
-+	kimage_write_entry(image->entry_pos, entry);
-+	image->entry_pos++;
- 
- 	return 0;
- }
-@@ -597,16 +623,14 @@ int __weak machine_kexec_post_load(struct kimage *image)
- 
- void kimage_terminate(struct kimage *image)
- {
--	if (*image->entry != 0)
--		image->entry++;
--
--	*image->entry = IND_DONE;
-+	kimage_write_entry(image->entry_pos, IND_DONE);
- }
- 
--#define for_each_kimage_entry(image, ptr, entry) \
--	for (ptr = &image->head; (entry = *ptr) && !(entry & IND_DONE); \
--		ptr = (entry & IND_INDIRECTION) ? \
--			boot_phys_to_virt((entry & PAGE_MASK)) : ptr + 1)
-+#define for_each_kimage_entry(image, pos, entry) 				\
-+	for (entry = image->head, pos = KIMAGE_ENTRY_POS_INVALID;		\
-+	     entry && !(entry & IND_DONE);					\
-+	     pos = ((entry & IND_INDIRECTION) ? (entry & PAGE_MASK) : pos + 1), \
-+	     entry = kimage_read_entry(pos))
- 
- static void kimage_free_entry(kimage_entry_t entry)
- {
-@@ -618,8 +642,8 @@ static void kimage_free_entry(kimage_entry_t entry)
- 
- void kimage_free(struct kimage *image)
- {
--	kimage_entry_t *ptr, entry;
--	kimage_entry_t ind = 0;
-+	kimage_entry_t entry, ind = 0;
-+	kimage_entry_pos_t pos;
- 
- 	if (!image)
- 		return;
-@@ -630,7 +654,7 @@ void kimage_free(struct kimage *image)
- 	}
- 
- 	kimage_free_extra_pages(image);
--	for_each_kimage_entry(image, ptr, entry) {
-+	for_each_kimage_entry(image, pos, entry) {
- 		if (entry & IND_INDIRECTION) {
- 			/* Free the previous indirection page */
- 			if (ind & IND_INDIRECTION)
-@@ -662,27 +686,27 @@ void kimage_free(struct kimage *image)
- 	kfree(image);
- }
- 
--static kimage_entry_t *kimage_dst_used(struct kimage *image,
--					unsigned long page)
-+static kimage_entry_pos_t kimage_dst_used(struct kimage *image,
-+					  unsigned long page)
- {
--	kimage_entry_t *ptr, entry;
- 	unsigned long destination = 0;
-+	kimage_entry_pos_t pos;
-+	kimage_entry_t entry;
- 
--	for_each_kimage_entry(image, ptr, entry) {
-+	for_each_kimage_entry(image, pos, entry) {
- 		if (entry & IND_DESTINATION)
- 			destination = entry & PAGE_MASK;
- 		else if (entry & IND_SOURCE) {
- 			if (page == destination)
--				return ptr;
-+				return pos;
- 			destination += PAGE_SIZE;
- 		}
- 	}
- 
--	return NULL;
-+	return KIMAGE_ENTRY_POS_INVALID;
- }
- 
- static struct page *kimage_alloc_page(struct kimage *image,
--					gfp_t gfp_mask,
- 					unsigned long destination)
- {
- 	/*
-@@ -719,10 +743,10 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 	}
- 	page = NULL;
- 	while (1) {
--		kimage_entry_t *old;
-+		kimage_entry_pos_t pos;
- 
- 		/* Allocate a page, if we run out of memory give up */
--		page = kimage_alloc_pages(gfp_mask, 0);
-+		page = kimage_alloc_pages(GFP_HIGHUSER, 0);
- 		if (!page)
- 			return NULL;
- 		/* If the page cannot be used file it away */
-@@ -747,26 +771,23 @@ static struct page *kimage_alloc_page(struct kimage *image,
- 		 * See if there is already a source page for this
- 		 * destination page.  And if so swap the source pages.
- 		 */
--		old = kimage_dst_used(image, addr);
--		if (old) {
-+		pos = kimage_dst_used(image, addr);
-+		if (pos != KIMAGE_ENTRY_POS_INVALID) {
- 			/* If so move it */
-+			kimage_entry_t old, replacement;
- 			unsigned long old_addr;
- 			struct page *old_page;
- 
--			old_addr = *old & PAGE_MASK;
-+			old = kimage_read_entry(pos);
-+			old_addr = old & PAGE_MASK;
- 			old_page = boot_pfn_to_page(old_addr >> PAGE_SHIFT);
- 			copy_highpage(page, old_page);
--			*old = addr | (*old & ~PAGE_MASK);
-+			replacement = addr | (old & ~PAGE_MASK);
-+			kimage_write_entry(pos, replacement);
- 
- 			/* The old page I have found cannot be a
--			 * destination page, so return it if it's
--			 * gfp_flags honor the ones passed in.
-+			 * destination page, so return it.
- 			 */
--			if (!(gfp_mask & __GFP_HIGHMEM) &&
--			    PageHighMem(old_page)) {
--				kimage_free_pages(old_page);
--				continue;
--			}
- 			addr = old_addr;
- 			page = old_page;
+ drivers/iommu/arm-smmu-v3.c | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 82508730feb7..64d1b925932d 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -1847,7 +1847,13 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
  			break;
-@@ -805,7 +826,7 @@ static int kimage_load_normal_segment(struct kimage *image,
- 		char *ptr;
- 		size_t uchunk, mchunk;
+ 		case STRTAB_STE_0_CFG_S1_TRANS:
+ 		case STRTAB_STE_0_CFG_S2_TRANS:
+-			ste_live = true;
++			/*
++			 * As kdump kernel copy STE table from previous
++			 * kernel. It still may have valid stream table entries.
++			 * Forcing entry as false to allow overwrite.
++			 */
++			if (!is_kdump_kernel())
++				ste_live = true;
+ 			break;
+ 		case STRTAB_STE_0_CFG_ABORT:
+ 			BUG_ON(!disable_bypass);
+@@ -3264,6 +3270,9 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+ 		return -ENOMEM;
+ 	}
  
--		page = kimage_alloc_page(image, GFP_HIGHUSER, maddr);
-+		page = kimage_alloc_page(image, maddr);
- 		if (!page) {
- 			result  = -ENOMEM;
- 			goto out;
++	if (is_kdump_kernel())
++		return 0;
++
+ 	for (i = 0; i < cfg->num_l1_ents; ++i) {
+ 		arm_smmu_write_strtab_l1_desc(strtab, &cfg->l1_desc[i]);
+ 		strtab += STRTAB_L1_DESC_DWORDS << 3;
+@@ -3272,6 +3281,23 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+ 	return 0;
+ }
+ 
++static void arm_smmu_copy_table(struct arm_smmu_device *smmu,
++			       struct arm_smmu_strtab_cfg *cfg, u32 size)
++{
++	struct arm_smmu_strtab_cfg rdcfg;
++
++	rdcfg.strtab_dma = readq_relaxed(smmu->base + ARM_SMMU_STRTAB_BASE);
++	rdcfg.strtab_base_cfg = readq_relaxed(smmu->base
++					      + ARM_SMMU_STRTAB_BASE_CFG);
++
++	rdcfg.strtab_dma &= STRTAB_BASE_ADDR_MASK;
++	rdcfg.strtab = ioremap(rdcfg.strtab_dma, size);
++
++	memcpy_fromio(cfg->strtab, rdcfg.strtab, size);
++
++	cfg->strtab_base_cfg = rdcfg.strtab_base_cfg;
++}
++
+ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+ {
+ 	void *strtab;
+@@ -3307,6 +3333,9 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+ 	reg |= FIELD_PREP(STRTAB_BASE_CFG_SPLIT, STRTAB_SPLIT);
+ 	cfg->strtab_base_cfg = reg;
+ 
++	if (is_kdump_kernel())
++		arm_smmu_copy_table(smmu, cfg, l1size);
++
+ 	return arm_smmu_init_l1_strtab(smmu);
+ }
+ 
+@@ -3334,6 +3363,11 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
+ 	reg |= FIELD_PREP(STRTAB_BASE_CFG_LOG2SIZE, smmu->sid_bits);
+ 	cfg->strtab_base_cfg = reg;
+ 
++	if (is_kdump_kernel()) {
++		arm_smmu_copy_table(smmu, cfg, size);
++		return 0;
++	}
++
+ 	arm_smmu_init_bypass_stes(strtab, cfg->num_l1_ents);
+ 	return 0;
+ }
 -- 
-2.25.0
+2.18.2
 
 
 _______________________________________________
