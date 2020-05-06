@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-x344.google.com ([2a00:1450:4864:20::344])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWKYA-00041L-2A
- for kexec@lists.infradead.org; Wed, 06 May 2020 13:57:27 +0000
-Received: by mail-wm1-x344.google.com with SMTP id r26so2797293wmh.0
- for <kexec@lists.infradead.org>; Wed, 06 May 2020 06:57:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200504190227.18269-1-david@redhat.com>
- <20200504190227.18269-2-david@redhat.com>
-In-Reply-To: <20200504190227.18269-2-david@redhat.com>
-From: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Date: Wed, 6 May 2020 15:57:13 +0200
-Message-ID: <CAM9Jb+hni2G69n5djfY7mqFALhk9QxGgyr1dkkGx4VTJLmhGGQ@mail.gmail.com>
+ id 1jWKto-0001dd-H5
+ for kexec@lists.infradead.org; Wed, 06 May 2020 14:19:50 +0000
 Subject: Re: [PATCH v3 1/3] mm/memory_hotplug: Introduce
  add_memory_device_managed()
+References: <20200504190227.18269-1-david@redhat.com>
+ <20200504190227.18269-2-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <1b908bcb-e2e1-88fd-1aa1-6226add49a40@redhat.com>
+Date: Wed, 6 May 2020 16:19:34 +0200
+MIME-Version: 1.0
+In-Reply-To: <20200504190227.18269-2-david@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,12 +26,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: Michal Hocko <mhocko@suse.com>, Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Linux MM <linux-mm@kvack.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
+To: linux-kernel@vger.kernel.org
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Michal Hocko <mhocko@suse.com>, Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, kexec@lists.infradead.org, Wei Yang <richard.weiyang@gmail.com>, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
 
-Looks good to me.
+Typo in $SUBJECT, should be "add_memory_driver_managed" ...
 
-Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+-- 
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
