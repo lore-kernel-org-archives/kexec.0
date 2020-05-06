@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v2 1/2] arm64/crash_core: Export KERNELPACMASK in
- vmcoreinfo
-References: <1587968702-19996-1-git-send-email-amit.kachhap@arm.com>
- <20200504171741.GD1833@willie-the-truck>
- <bc5e6fc5-15f4-40bb-4466-816de5912893@arm.com>
- <20200506123112.GF8043@willie-the-truck>
-From: Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <590176f0-802b-f71a-0c1e-00283808e1d8@arm.com>
-Date: Wed, 6 May 2020 18:34:20 +0530
+Received: from mail-wm1-x341.google.com ([2a00:1450:4864:20::341])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jWKWU-0003j5-Mp
+ for kexec@lists.infradead.org; Wed, 06 May 2020 13:55:44 +0000
+Received: by mail-wm1-x341.google.com with SMTP id u16so2760592wmc.5
+ for <kexec@lists.infradead.org>; Wed, 06 May 2020 06:55:42 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20200506123112.GF8043@willie-the-truck>
-Content-Language: en-US
+References: <20200504190227.18269-1-david@redhat.com>
+ <20200504190227.18269-4-david@redhat.com>
+In-Reply-To: <20200504190227.18269-4-david@redhat.com>
+From: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Date: Wed, 6 May 2020 15:55:29 +0200
+Message-ID: <CAM9Jb+h0VKOU5dSZ7ChzW_Z=tG+UGq-cY7ePPRQpFS1-GHZOgg@mail.gmail.com>
+Subject: Re: [PATCH v3 3/3] device-dax: Add memory via
+ add_memory_driver_managed()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,49 +22,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, linux-arm-kernel@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>, Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Wei Yang <richard.weiyang@gmail.com>, Linux MM <linux-mm@kvack.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
 
-Hi,
+> Currently, when adding memory, we create entries in /sys/firmware/memmap/
+> as "System RAM". This will lead to kexec-tools to add that memory to the
+> fixed-up initial memmap for a kexec kernel (loaded via kexec_load()). The
+> memory will be considered initial System RAM by the kexec'd kernel and
+> can no longer be reconfigured. This is not what happens during a real
+> reboot.
+>
+> Let's add our memory via add_memory_driver_managed() now, so we won't
+> create entries in /sys/firmware/memmap/ and indicate the memory as
+> "System RAM (kmem)" in /proc/iomem. This allows everybody (especially
+> kexec-tools) to identify that this memory is special and has to be treated
+> differently than ordinary (hotplugged) System RAM.
+>
+> Before configuring the namespace:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-33fffffff : namespace0.0
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> After configuring the namespace:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           148200000-33fffffff : dax0.0
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> After loading kmem before this change:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           150000000-33fffffff : dax0.0
+>             150000000-33fffffff : System RAM
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> After loading kmem after this change:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           150000000-33fffffff : dax0.0
+>             150000000-33fffffff : System RAM (kmem)
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> After a proper reboot:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           148200000-33fffffff : dax0.0
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> Within the kexec kernel before this change:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           150000000-33fffffff : System RAM
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> Within the kexec kernel after this change:
+>         [root@localhost ~]# cat /proc/iomem
+>         ...
+>         140000000-33fffffff : Persistent Memory
+>           140000000-1481fffff : namespace0.0
+>           148200000-33fffffff : dax0.0
+>         3280000000-32ffffffff : PCI Bus 0000:00
+>
+> /sys/firmware/memmap/ before this change:
+>         0000000000000000-000000000009fc00 (System RAM)
+>         000000000009fc00-00000000000a0000 (Reserved)
+>         00000000000f0000-0000000000100000 (Reserved)
+>         0000000000100000-00000000bffdf000 (System RAM)
+>         00000000bffdf000-00000000c0000000 (Reserved)
+>         00000000feffc000-00000000ff000000 (Reserved)
+>         00000000fffc0000-0000000100000000 (Reserved)
+>         0000000100000000-0000000140000000 (System RAM)
+>         0000000150000000-0000000340000000 (System RAM)
+>
+> /sys/firmware/memmap/ after a proper reboot:
+>         0000000000000000-000000000009fc00 (System RAM)
+>         000000000009fc00-00000000000a0000 (Reserved)
+>         00000000000f0000-0000000000100000 (Reserved)
+>         0000000000100000-00000000bffdf000 (System RAM)
+>         00000000bffdf000-00000000c0000000 (Reserved)
+>         00000000feffc000-00000000ff000000 (Reserved)
+>         00000000fffc0000-0000000100000000 (Reserved)
+>         0000000100000000-0000000140000000 (System RAM)
+>
+> /sys/firmware/memmap/ after this change:
+>         0000000000000000-000000000009fc00 (System RAM)
+>         000000000009fc00-00000000000a0000 (Reserved)
+>         00000000000f0000-0000000000100000 (Reserved)
+>         0000000000100000-00000000bffdf000 (System RAM)
+>         00000000bffdf000-00000000c0000000 (Reserved)
+>         00000000feffc000-00000000ff000000 (Reserved)
+>         00000000fffc0000-0000000100000000 (Reserved)
+>         0000000100000000-0000000140000000 (System RAM)
+>
+> kexec-tools already seem to basically ignore any System RAM that's not
+> on top level when searching for areas to place kexec images - but also
+> for determining crash areas to dump via kdump. Changing the resource name
+> won't have an impact.
+>
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  drivers/dax/kmem.c | 8 +++++++-
+>  1 file changed, 7 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/dax/kmem.c b/drivers/dax/kmem.c
+> index 3d0a7e702c94..5a645a24e359 100644
+> --- a/drivers/dax/kmem.c
+> +++ b/drivers/dax/kmem.c
+> @@ -65,7 +65,13 @@ int dev_dax_kmem_probe(struct device *dev)
+>         new_res->flags = IORESOURCE_SYSTEM_RAM;
+>         new_res->name = dev_name(dev);
+>
+> -       rc = add_memory(numa_node, new_res->start, resource_size(new_res));
+> +       /*
+> +        * Ensure that future kexec'd kernels will not treat this as RAM
+> +        * automatically.
+> +        */
+> +       rc = add_memory_driver_managed(numa_node, new_res->start,
+> +                                      resource_size(new_res),
+> +                                      "System RAM (kmem)");
+>         if (rc) {
+>                 release_resource(new_res);
+>                 kfree(new_res);
+> --
 
-On 5/6/20 6:01 PM, Will Deacon wrote:
-> On Wed, May 06, 2020 at 05:32:56PM +0530, Amit Kachhap wrote:
->> On 5/4/20 10:47 PM, Will Deacon wrote:
->>> On Mon, Apr 27, 2020 at 11:55:01AM +0530, Amit Daniel Kachhap wrote:
->>>> diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
->>>> index eece20d..32d5900 100644
->>>> --- a/arch/arm64/include/asm/compiler.h
->>>> +++ b/arch/arm64/include/asm/compiler.h
->>>> @@ -19,6 +19,9 @@
->>>>    #define __builtin_return_address(val)					\
->>>>    	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
->>>> +#else  /* !CONFIG_ARM64_PTR_AUTH */
->>>> +#define	ptrauth_user_pac_mask()		0ULL
->>>> +#define	ptrauth_kernel_pac_mask()	0ULL
->>>
->>> This doesn't look quite right to me, since you still have to take into
->>> account the case where CONFIG_ARM64_PTR_AUTH=y but the feature is not
->>> available at runtime:
->>
->> Yes agree with you here. However the config gaurd is saving some extra
->> computation for __builtin_return_address. There are some compiler
->> support being added in __builtin_extract_return_address to mask the PAC.
->> Hopefully that will improve this code. In the meantime let it be like this.
-> 
-> Does the extra computation matter? Isn't it just a couple of instructions?
+Acked-by: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
 
-ok sure. I will push v3 as you suggested.
-
-Thanks,
-Amit
-
-> 
-> Will
-> 
+> 2.25.3
+>
 
 _______________________________________________
 kexec mailing list
