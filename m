@@ -1,20 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mail-pj1-f65.google.com ([209.85.216.65])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWonW-0007Bi-AD
- for kexec@lists.infradead.org; Thu, 07 May 2020 22:15:19 +0000
-Date: Thu, 7 May 2020 18:15:03 -0400
-From: Rafael Aquini <aquini@redhat.com>
-Subject: Re: [PATCH] kernel: add panic_on_taint
-Message-ID: <20200507221503.GL205881@optiplex-lnx>
-References: <20200506222815.274570-1-aquini@redhat.com>
- <C5E11731-5503-45CC-9F72-41E8863ACD27@lca.pw>
- <20200507204219.GJ205881@optiplex-lnx>
- <27AA744E-930A-492A-BE87-05A119FE1549@lca.pw>
+ id 1jWoxu-0006w7-2i
+ for kexec@lists.infradead.org; Thu, 07 May 2020 22:26:03 +0000
+Received: by mail-pj1-f65.google.com with SMTP id y6so3289644pjc.4
+ for <kexec@lists.infradead.org>; Thu, 07 May 2020 15:26:01 -0700 (PDT)
+Date: Thu, 7 May 2020 22:25:58 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507222558.GA11244@42.do-not-panic.com>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
+ <20200507184307.GF205881@optiplex-lnx>
+ <20200507184705.GG205881@optiplex-lnx>
+ <20200507203340.GZ11244@42.do-not-panic.com>
+ <20200507220606.GK205881@optiplex-lnx>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <27AA744E-930A-492A-BE87-05A119FE1549@lca.pw>
+In-Reply-To: <20200507220606.GK205881@optiplex-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,45 +30,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Qian Cai <cai@lca.pw>
-Cc: Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, dyoung@redhat.com
+To: Rafael Aquini <aquini@redhat.com>
+Cc: linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Jeff Mahoney <jeffm@suse.com>, bhe@redhat.com, corbet@lwn.net, Laura Abbott <labbott@redhat.com>, dyoung@redhat.com, Ann Davis <AnDavis@suse.com>, Richard Palethorpe <rpalethorpe@suse.de>, keescook@chromium.org, Jiri Kosina <jikos@kernel.org>, cai@lca.pw, Adrian Bunk <bunk@kernel.org>, Tso Ted <tytso@mit.edu>, Jessica Yu <jeyu@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Thu, May 07, 2020 at 06:05:27PM -0400, Qian Cai wrote:
+On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
+> On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
+> > I *think* that a cmdline route to enable this would likely remove the
+> > need for the kernel config for this. But even with Vlastimil's work
+> > merged, I think we'd want yet-another value to enable / disable this
+> > feature. Do we need yet-another-taint flag to tell us that this feature
+> > was enabled?
+> >
 > 
-> 
-> > On May 7, 2020, at 4:42 PM, Rafael Aquini <aquini@redhat.com> wrote:
-> > 
-> > On Wed, May 06, 2020 at 10:50:19PM -0400, Qian Cai wrote:
-> >> 
-> >> 
-> >>> On May 6, 2020, at 6:28 PM, Rafael Aquini <aquini@redhat.com> wrote:
-> >>> 
-> >>> Analogously to the introduction of panic_on_warn, this patch
-> >>> introduces a kernel option named panic_on_taint in order to
-> >>> provide a simple and generic way to stop execution and catch
-> >>> a coredump when the kernel gets tainted by any given taint flag.
-> >>> 
-> >>> This is useful for debugging sessions as it avoids rebuilding
-> >>> the kernel to explicitly add calls to panic() or BUG() into
-> >>> code sites that introduce the taint flags of interest.
-> >>> Another, perhaps less frequent, use for this option would be
-> >>> as a mean for assuring a security policy (in paranoid mode)
-> >>> case where no single taint is allowed for the running system.
-> >> 
-> >> Andrew, you can drop the patch below from -mm now because that one is now obsolete,
-> >> 
-> >> mm-slub-add-panic_on_error-to-the-debug-facilities.patch
-> >> 
-> > Please, don't drop it yet. I'll send a patch to get rid of the bits,
-> > once this one gets accepted, if it gets accepted.
-> 
-> Why do you ever want that obsolete patch even show up in linux-next to potentailly waste other people/bots time to test it and develop things on top of it?
->
+> I guess it makes sense to get rid of the sysctl interface for
+> proc_on_taint, and only keep it as a cmdline option. 
 
-It's a reasonable and self-contained feature that we have a valid use for. 
-I honestly fail to see it causing that amount of annoyance as you are 
-suggesting here.
+That would be easier to support and k3eps this simple.
 
+> But the real issue seems to be, regardless we go with a cmdline-only option
+> or not, the ability of proc_taint() to set any arbitrary taint flag 
+> other than just marking the kernel with TAINT_USER. 
+
+I think we would have no other option but to add a new TAINT flag so
+that we know that the taint flag was modified by a user. Perhaps just
+re-using TAINT_USER when proc_taint() would suffice.
+
+  Luis
 
 _______________________________________________
 kexec mailing list
