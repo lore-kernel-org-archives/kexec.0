@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWlUE-0007wj-7Q
- for kexec@lists.infradead.org; Thu, 07 May 2020 18:43:11 +0000
-Subject: Re: [RFC 21/43] x86/KASLR: PKRAM: support physical kaslr
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
- <1588812129-8596-22-git-send-email-anthony.yznaga@oracle.com>
- <202005071049.2D0939137D@keescook>
-From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Message-ID: <62a1c002-ad7b-a364-5797-6d7f5545d5cf@oracle.com>
-Date: Thu, 7 May 2020 11:41:51 -0700
+ id 1jWlUP-00083d-P0
+ for kexec@lists.infradead.org; Thu, 07 May 2020 18:43:23 +0000
+Date: Thu, 7 May 2020 14:43:07 -0400
+From: Rafael Aquini <aquini@redhat.com>
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507184307.GF205881@optiplex-lnx>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <202005071049.2D0939137D@keescook>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200507182257.GX11244@42.do-not-panic.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +25,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kees Cook <keescook@chromium.org>
-Cc: rafael.j.wysocki@intel.com, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, zhenzhong.duan@oracle.com, lei.l.li@intel.com, linux-mm@kvack.org, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, daniel.kiper@oracle.com, x86@kernel.org, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mhocko@kernel.org, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, linux-kernel@vger.kernel.org, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, masahiroy@kernel.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: rdunlap@infradead.org, keescook@chromium.org, bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, cai@lca.pw, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, dyoung@redhat.com
 
-
-
-On 5/7/20 10:51 AM, Kees Cook wrote:
-> On Wed, May 06, 2020 at 05:41:47PM -0700, Anthony Yznaga wrote:
->> Avoid regions of memory that contain preserved pages when computing
->> slots used to select where to put the decompressed kernel.
-> This is changing the slot-walking code instead of updating
-> mem_avoid_overlap() -- that's where the check for a "reserved" memory
-> area should live.
+On Thu, May 07, 2020 at 06:22:57PM +0000, Luis Chamberlain wrote:
+> On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> > diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> > index 8a176d8727a3..b80ab660d727 100644
+> > --- a/kernel/sysctl.c
+> > +++ b/kernel/sysctl.c
+> > @@ -1217,6 +1217,13 @@ static struct ctl_table kern_table[] = {
+> >  		.extra1		= SYSCTL_ZERO,
+> >  		.extra2		= SYSCTL_ONE,
+> >  	},
+> > +	{
+> > +		.procname	= "panic_on_taint",
+> > +		.data		= &panic_on_taint,
+> > +		.maxlen		= sizeof(unsigned long),
+> > +		.mode		= 0644,
+> > +		.proc_handler	= proc_doulongvec_minmax,
+> > +	},
+> 
+> You sent this out before I could reply to the other thread on v1.
+> My thoughts on the min / max values, or lack here:
+>                                                                                 
+> Valid range doesn't mean "currently allowed defined" masks.                     
+> 
+> For example, if you expect to panic due to a taint, but a new taint type
+> you want was not added on an older kernel you would be under a very
+> *false* sense of security that your kernel may not have hit such a
+> taint, but the reality of the situation was that the kernel didn't
+> support that taint flag only added in future kernels.                           
+> 
+> You may need to define a new flag (MAX_TAINT) which should be the last
+> value + 1, the allowed max values would be                                      
+> 
+> (2^MAX_TAINT)-1                                                                 
+> 
+> or                                                                              
+> 
+> (1<<MAX_TAINT)-1  
+> 
+> Since this is to *PANIC* I think we do want to test ranges and ensure
+> only valid ones are allowed.
 >
-> For example, this is how both mem_avoid_memmap() and the setup_data
-> memory areas are handled.
->
-> Is there a reason mem_avoid_overlap() can't be used here?
->
 
-I was thinking it would be more efficient to process just
-the regions that did not contain preserved pages rather
-than checking for preserved pages in mem_avoid_overlap(),
-but I see that may just be adding unnecessary complexity.
-I'll investigate modifying mem_avoid_overlap().
-Thank you for the comments!
+Ok. I'm thinking in:
 
-Anthony
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 8a176d8727a3..ee492431e7b0 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -1217,6 +1217,15 @@ static struct ctl_table kern_table[] = {
+                .extra1         = SYSCTL_ZERO,
+                .extra2         = SYSCTL_ONE,
+        },
++       {
++               .procname       = "panic_on_taint",
++               .data           = &panic_on_taint,
++               .maxlen         = sizeof(unsigned long),
++               .mode           = 0644,
++               .proc_handler   = proc_doulongvec_minmax,
++               .extra1         = SYSCTL_ZERO,
++               .extra2         = (1 << TAINT_FLAGS_COUNT << 1) - 1,
++       },
+
+
+Would that address your concerns wrt this one?
+
+Cheers!
+-- Rafael
+
 
 _______________________________________________
 kexec mailing list
