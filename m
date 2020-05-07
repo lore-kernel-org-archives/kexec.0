@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp2120.oracle.com ([156.151.31.85])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWUfk-0003zu-8k
- for kexec@lists.infradead.org; Thu, 07 May 2020 00:46:08 +0000
+ id 1jWUgF-0004NG-0R
+ for kexec@lists.infradead.org; Thu, 07 May 2020 00:46:41 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC 26/43] mm: shmem: when inserting,
- handle pages already charged to a memcg
-Date: Wed,  6 May 2020 17:41:52 -0700
-Message-Id: <1588812129-8596-27-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 17/43] PKRAM: provide a way to check if a memory range has
+ preserved pages
+Date: Wed,  6 May 2020 17:41:43 -0700
+Message-Id: <1588812129-8596-18-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,61 +26,68 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, mhocko@kernel.org, lei.l.li@intel.com, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, masahiroy@kernel.org, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, zhenzhong.duan@oracle.com, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, daniel.kiper@oracle.com
 
-If shmem_insert_page() is called to insert a page that was preserved
-using PKRAM on the current boot (i.e. preserved page is restored without
-an intervening kexec boot), the page will still be charged to a memory
-cgroup because it is never freed. Don't try to charge it again.
+When a kernel is loaded for kexec the address ranges where the kexec
+segments will be copied to may conflict with pages already set to be
+preserved. Provide a way to determine if preserved pages exist in a
+specified range.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/shmem.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ include/linux/pkram.h |  2 ++
+ mm/pkram.c            | 25 +++++++++++++++++++++++++
+ 2 files changed, 27 insertions(+)
 
-diff --git a/mm/shmem.c b/mm/shmem.c
-index 13475073fb52..1f3b43b8fa34 100644
---- a/mm/shmem.c
-+++ b/mm/shmem.c
-@@ -693,6 +693,7 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
- 	struct mem_cgroup *memcg;
- 	pgoff_t hindex = index;
- 	bool on_lru = PageLRU(page);
-+	bool has_memcg = page->mem_cgroup ? true : false;
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index 1ba48442ef8e..1cd518843d7a 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -70,11 +70,13 @@ extern unsigned long pkram_reserved_pages;
+ void pkram_reserve(void);
+ void pkram_free_pgt(void);
+ void pkram_ban_region(unsigned long start, unsigned long end);
++int pkram_has_preserved_pages(unsigned long start, unsigned long end);
+ #else
+ #define pkram_reserved_pages 0UL
+ static inline void pkram_reserve(void) { }
+ static inline void pkram_free_pgt(void) { }
+ static inline void pkram_ban_region(unsigned long start, unsigned long end) { }
++static inline int pkram_has_preserved_pages(unsigned long start, unsigned long end) { return 0; }
+ #endif
  
- 	if (index > (MAX_LFS_FILESIZE >> PAGE_SHIFT))
- 		return -EFBIG;
-@@ -738,20 +739,24 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ #endif /* _LINUX_PKRAM_H */
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 60863c8ecbab..0aaaf9b79682 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1499,3 +1499,28 @@ phys_addr_t __init_memblock pkram_memblock_find_in_range(phys_addr_t start,
  
- 	__SetPageReferenced(page);
- 
--	err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
--					PageTransHuge(page));
--	if (err)
--		goto out_unlock;
-+	if (!has_memcg) {
-+		err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
-+						PageTransHuge(page));
-+		if (err)
-+			goto out_unlock;
-+	}
- 
- 	err = shmem_add_to_page_cache(page, mapping, hindex,
- 					NULL, gfp & GFP_RECLAIM_MASK);
- 	if (err) {
--		mem_cgroup_cancel_charge(page, memcg,
--			PageTransHuge(page));
-+		if (!has_memcg)
-+			mem_cgroup_cancel_charge(page, memcg,
-+						PageTransHuge(page));
- 		goto out_unlock;
- 	}
--	mem_cgroup_commit_charge(page, memcg, on_lru,
--			PageTransHuge(page));
-+	if (!has_memcg)
-+		mem_cgroup_commit_charge(page, memcg, on_lru,
-+					PageTransHuge(page));
- 
- 	if (!on_lru)
- 		lru_cache_add_anon(page);
+ 	return st.retval;
+ }
++
++static int pkram_has_preserved_pages_cb(struct pkram_pg_state *st, unsigned long base, unsigned long size)
++{
++	st->retval = 1;
++	return 1;
++}
++
++/*
++ * Check whether the memory range [start, end) contains preserved pages.
++ */
++int pkram_has_preserved_pages(unsigned long start, unsigned long end)
++{
++	struct pkram_pg_state st = {
++		.range_cb = pkram_has_preserved_pages_cb,
++		.min_addr = start,
++		.max_addr = end,
++	};
++
++	if (!pkram_pgd)
++		return 0;
++
++	pkram_walk_pgt_rev(&st, pkram_pgd);
++
++	return st.retval;
++}
 -- 
 2.13.3
 
