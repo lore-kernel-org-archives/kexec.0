@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWlck-0007in-8R
- for kexec@lists.infradead.org; Thu, 07 May 2020 18:51:59 +0000
-Date: Thu, 7 May 2020 13:56:24 -0500
-From: "Gustavo A. R. Silva" <gustavoars@kernel.org>
-Subject: [PATCH] kexec: Replace zero-length array with flexible-array
-Message-ID: <20200507185624.GA14851@embeddedor>
+ id 1jWleF-0007su-Uk
+ for kexec@lists.infradead.org; Thu, 07 May 2020 18:53:33 +0000
+Date: Thu, 7 May 2020 14:53:15 -0400
+From: Rafael Aquini <aquini@redhat.com>
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200507185315.GH205881@optiplex-lnx>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507185046.GY11244@42.do-not-panic.com>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <20200507185046.GY11244@42.do-not-panic.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,62 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: rdunlap@infradead.org, keescook@chromium.org, bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, cai@lca.pw, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, dyoung@redhat.com
 
-The current codebase makes use of the zero-length array language
-extension to the C90 standard, but the preferred mechanism to declare
-variable-length types such as these ones is a flexible array member[1][2],
-introduced in C99:
+On Thu, May 07, 2020 at 06:50:46PM +0000, Luis Chamberlain wrote:
+> On Thu, May 07, 2020 at 02:06:31PM -0400, Rafael Aquini wrote:
+> > Another, perhaps less frequent, use for this option would be
+> > as a mean for assuring a security policy (in paranoid mode)
+> > case where no single taint is allowed for the running system.
+> 
+> If used for this purpose then we must add a new TAINT flag for
+> proc_taint() was used, otherwise we can cheat to show a taint
+> *did* happen, where in fact it never happened, some punk just
+> echo'd a value into the kernel's /proc/sys/kernel/tainted.
+>
 
-struct foo {
-        int stuff;
-        struct boo array[];
-};
-
-By making use of the mechanism above, we will get a compiler warning
-in case the flexible array does not occur last in the structure, which
-will help us prevent some kind of undefined behavior bugs from being
-inadvertently introduced[3] to the codebase from now on.
-
-Also, notice that, dynamic memory allocations won't be affected by
-this change:
-
-"Flexible array members have incomplete type, and so the sizeof operator
-may not be applied. As a quirk of the original implementation of
-zero-length arrays, sizeof evaluates to zero."[1]
-
-sizeof(flexible-array-member) triggers a warning because flexible array
-members have incomplete type[1]. There are some instances of code in
-which the sizeof operator is being incorrectly/erroneously applied to
-zero-length arrays and the result is zero. Such instances may be hiding
-some bugs. So, this work (flexible-array member conversions) will also
-help to get completely rid of those sorts of issues.
-
-This issue was found with the help of Coccinelle.
-
-[1] https://gcc.gnu.org/onlinedocs/gcc/Zero-Length.html
-[2] https://github.com/KSPP/linux/issues/21
-[3] commit 76497732932f ("cxgb3/l2t: Fix undefined behaviour")
-
-Signed-off-by: Gustavo A. R. Silva <gustavoars@kernel.org>
----
- include/linux/kexec.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 1776eb2e43a4..ea67910ae6b7 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -208,7 +208,7 @@ struct crash_mem_range {
- struct crash_mem {
- 	unsigned int max_nr_ranges;
- 	unsigned int nr_ranges;
--	struct crash_mem_range ranges[0];
-+	struct crash_mem_range ranges[];
- };
+To accomplish that, the punk would need to be root, though, in which 
+case everything else is doomed, already.
  
- extern int crash_exclude_mem_range(struct crash_mem *mem,
+> Forunately proc_taint() only allows to *increment* the taint, not
+> reduce.
+> 
+>   Luis
+> 
 
 
 _______________________________________________
