@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v9 14/18] arm64: kexec: offset for relocation function
+Subject: Re: [PATCH v9 16/18] arm64: kexec: configure trans_pgd page table for
+ kexec
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-15-pasha.tatashin@soleen.com>
+ <20200326032420.27220-17-pasha.tatashin@soleen.com>
 From: James Morse <james.morse@arm.com>
-Message-ID: <2c23b35d-d4b7-904c-9516-5f317dd963c7@arm.com>
-Date: Thu, 7 May 2020 17:22:30 +0100
+Message-ID: <5ed92d16-123c-8b79-0fc1-4cefdee65d5d@arm.com>
+Date: Thu, 7 May 2020 17:22:36 +0100
 MIME-Version: 1.0
-In-Reply-To: <20200326032420.27220-15-pasha.tatashin@soleen.com>
+In-Reply-To: <20200326032420.27220-17-pasha.tatashin@soleen.com>
 Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,82 +27,143 @@ Cc: sashal@kernel.org, mark.rutland@arm.com, vladimir.murzin@arm.com, corbet@lwn
 Hi Pavel,
 
 On 26/03/2020 03:24, Pavel Tatashin wrote:
-> Soon, relocation function will share the same page with EL2 vectors.
+> Configure a page table located in kexec-safe memory that has
+> the following mappings:
+> 
+> 1. identity mapping for text of relocation function with executable
+>    permission.
+> 2. linear mappings for all source ranges
+> 3. linear mappings for all destination ranges.
 
-The EL2 vectors would only be executed with the MMU off, so they don't need to be mapped
-anywhere in particular. (this is something hibernate probably does sloppily).
+Its taken this long to work out your definition of linear here doesn't match the way the
+rest of the arch code uses the term.
 
+You are using the MMU to re-assemble the scattered kexec image in VA space, so that the
+relocation code doesn't have to walk the list.
 
-> Add offset within this page to arm64_relocate_new_kernel, and also
-> the total size of relocation code which will include both the function
-> and the EL2 vectors.
+While its a cool trick, I don't think this is a good idea, it makes it much harder to
+debug as we have a new definition for VA->PA, instead of re-using the kernels. We should
+do the least surprising thing. The person debugging a problem's first assumptions should
+be correct. Doing this means any debug information printed before kexec() is suddenly
+useless for debugging a problem that occurs during relocation.
 
-See arch/arm64/kernel/vmlinux.lds.S and sections.h for an example of how the idmap,
-hibernate and the non-KVM hyp code do this.
+...
 
-If we're going to change this, I'd prefer it be the same as the other users...
+Let me hack together what I've been describing and we can discuss whether its simpler.
+(most of next week is gone already though...)
 
+(some Nits below)
 
 > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-> index 990185744148..d944c2e289b2 100644
+> index 0f758fd51518..8f4332ac607a 100644
 > --- a/arch/arm64/include/asm/kexec.h
 > +++ b/arch/arm64/include/asm/kexec.h
-> @@ -90,6 +90,13 @@ static inline void crash_prepare_suspend(void) {}
->  static inline void crash_post_resume(void) {}
->  #endif
->  
-> +#if defined(CONFIG_KEXEC_CORE)
-> +/* The beginning and size of relcation code to stage 2 kernel */
-> +extern const unsigned long kexec_relocate_code_size;
-> +extern const unsigned char kexec_relocate_code_start[];
-> +extern const unsigned long kexec_kern_reloc_offset;
-> +#endif
+> @@ -108,6 +108,12 @@ extern const unsigned long kexec_el2_vectors_offset;
+>   * el2_vector	If present means that relocation routine will go to EL1
+>   *		from EL2 to do the copy, and then back to EL2 to do the jump
+>   *		to new world.
+> + * trans_ttbr0	idmap for relocation function and its argument
+> + * trans_ttbr1	linear map for source/destination addresses.
+> + * trans_t0sz	t0sz for idmap page in trans_ttbr0
 
-This makes these things visible globally ... but drops the arm64_ prefix!
+You should be able to load the TTBR0_EL1 (and corresponding TCR_EL1.T0SZ) before kicking
+off the relocation code. There should be no need to pass it in to assembly.
 
-
-> diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-> index 22ccdcb106d3..aa9f2b2cd77c 100644
-> --- a/arch/arm64/kernel/relocate_kernel.S
-> +++ b/arch/arm64/kernel/relocate_kernel.S
-> @@ -14,6 +14,9 @@
->  #include <asm/page.h>
->  #include <asm/sysreg.h>
->  
-> +.globl kexec_relocate_code_start
-> +kexec_relocate_code_start:
-
-Which of the fancy new asm-annotations should this be?
+For example, hibernate sets TTBR0_EL1 in create_safe_exec_page().
 
 
-
-> @@ -86,13 +89,16 @@ ENTRY(arm64_relocate_new_kernel)
->  .ltorg
->  END(arm64_relocate_new_kernel)
->  
-> -.Lcopy_end:
-> +.Lkexec_relocate_code_end:
->  .org	KEXEC_CONTROL_PAGE_SIZE
->  .align 3	/* To keep the 64-bit values below naturally aligned. */
-
->  /*
-> - * arm64_relocate_new_kernel_size - Number of bytes to copy to the
-> + * kexec_relocate_code_size - Number of bytes to copy to the
->   * control_code_page.
+> + * src_addr	linear map for source pages.
+> + * dst_addr	linear map for destination pages.
+> + * copy_len	Number of bytes that need to be copied
 >   */
-> -.globl arm64_relocate_new_kernel_size
-> -arm64_relocate_new_kernel_size:
-> -	.quad	.Lcopy_end - arm64_relocate_new_kernel
-> +.globl kexec_relocate_code_size
-> +kexec_relocate_code_size:
-> +	.quad	.Lkexec_relocate_code_end - kexec_relocate_code_start
-> +.globl kexec_kern_reloc_offset
-> +kexec_kern_reloc_offset:
-> +	.quad	arm64_relocate_new_kernel - kexec_relocate_code_start
-> 
+>  struct kern_reloc_arg {
+>  	phys_addr_t head;
 
-Can't we calculate this from the start/end markers? These variables held in assembly
-generated code is pretty manky.
+> @@ -70,10 +71,90 @@ static void *kexec_page_alloc(void *arg)
+>  	return page_address(page);
+>  }
+>  
+> +/*
+> + * Map source segments starting from src_va, and map destination
+> + * segments starting from dst_va, and return size of copy in
+> + * *copy_len argument.
+> + * Relocation function essentially needs to do:
+> + * memcpy(dst_va, src_va, copy_len);
+> + */
+> +static int map_segments(struct kimage *kimage, pgd_t *pgdp,
+> +			struct trans_pgd_info *info,
+> +			unsigned long src_va,
+> +			unsigned long dst_va,
+> +			unsigned long *copy_len)
+> +{
+> +	unsigned long *ptr = 0;
+> +	unsigned long dest = 0;
+> +	unsigned long len = 0;
+> +	unsigned long entry, addr;
+> +	int rc;
+> +
+> +	for (entry = kimage->head; !(entry & IND_DONE); entry = *ptr++) {
+> +		addr = entry & PAGE_MASK;
+> +
+> +		switch (entry & IND_FLAGS) {
+> +		case IND_DESTINATION:
+> +			dest = addr;
+> +			break;
+
+So we hope to always find a destination first?
+
+
+> +		case IND_INDIRECTION:
+> +			ptr = __va(addr);
+> +			if (rc)
+> +				return rc;
+
+Where does rc come from?
+
+> +			break;
+
+> +		case IND_SOURCE:
+> +			rc = trans_pgd_map_page(info, pgdp, __va(addr),
+> +						src_va, PAGE_KERNEL);
+> +			if (rc)
+> +				return rc;
+> +			rc = trans_pgd_map_page(info, pgdp, __va(dest),
+> +						dst_va, PAGE_KERNEL);
+> +			if (rc)
+> +				return rc;
+> +			dest += PAGE_SIZE;
+> +			src_va += PAGE_SIZE;
+> +			dst_va += PAGE_SIZE;
+> +			len += PAGE_SIZE;
+> +		}
+> +	}
+> +	*copy_len = len;
+> +
+> +	return 0;
+> +}
+> +
+> @@ -89,9 +170,18 @@ int machine_kexec_post_load(struct kimage *kimage)
+>  		kern_reloc_arg->el2_vector = __pa(reloc_code)
+>  						+ kexec_el2_vectors_offset;
+>  	}
+> +
+> +	/*
+> +	 * If relocation is not needed, we do not need to enable MMU in
+
+Strictly you aren't enabling it, but disabling it _after_ the relocation.
+
+
+> +	 * relocation routine, therefore do not create page tables for
+> +	 * scenarios such as crash kernel
+> +	 */
+> +	if (!(kimage->head & IND_DONE))
+> +		rc = mmu_relocate_setup(kimage, reloc_code, kern_reloc_arg);
+> +
+>  	kexec_image_info(kimage);
+>  
+> -	return 0;
+> +	return rc;
+>  }
 
 
 Thanks,
