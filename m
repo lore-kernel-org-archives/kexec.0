@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWUeU-0008W4-8J
- for kexec@lists.infradead.org; Thu, 07 May 2020 00:44:40 +0000
+ id 1jWUeV-00007x-0T
+ for kexec@lists.infradead.org; Thu, 07 May 2020 00:44:41 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC 02/43] mm: PKRAM: implement node load and save functions
-Date: Wed,  6 May 2020 17:41:28 -0700
-Message-Id: <1588812129-8596-3-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 21/43] x86/KASLR: PKRAM: support physical kaslr
+Date: Wed,  6 May 2020 17:41:47 -0700
+Message-Id: <1588812129-8596-22-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,252 +25,420 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, mhocko@kernel.org, lei.l.li@intel.com, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, masahiroy@kernel.org, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, zhenzhong.duan@oracle.com, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, daniel.kiper@oracle.com
 
-Preserved memory is divided into nodes which can be saved and loaded
-independently of each other. PKRAM nodes are kept on a list and
-identified by unique names. Whenever a save operation is initiated by
-calling pkram_prepare_save(), a new node is created and linked to the
-list. When the save operation has been committed by calling
-pkram_finish_save(), the node becomes loadable. A load operation can be
-then initiated by calling pkram_prepare_load() which deletes the node
-from the list and prepares the corresponding stream for loading data
-from it. After the load has been finished, the pkram_finish_load()
-function must be called to free the node. Nodes are also deleted when a
-save operation is discarded, i.e. pkram_discard_save() is called instead
-of pkram_finish_save().
+Avoid regions of memory that contain preserved pages when computing
+slots used to select where to put the decompressed kernel.
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |   7 ++-
- mm/pkram.c            | 148 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 149 insertions(+), 6 deletions(-)
+ arch/x86/boot/compressed/Makefile |   3 +
+ arch/x86/boot/compressed/kaslr.c  |  67 ++++++----
+ arch/x86/boot/compressed/misc.h   |  19 +++
+ arch/x86/boot/compressed/pkram.c  | 252 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 320 insertions(+), 21 deletions(-)
+ create mode 100644 arch/x86/boot/compressed/pkram.c
 
-diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index 4c4e13311ec8..83a0579e4c1c 100644
---- a/include/linux/pkram.h
-+++ b/include/linux/pkram.h
-@@ -6,7 +6,12 @@
- #include <linux/types.h>
- #include <linux/mm_types.h>
+diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
+index 5f7c262bcc99..ba0d76c53574 100644
+--- a/arch/x86/boot/compressed/Makefile
++++ b/arch/x86/boot/compressed/Makefile
+@@ -84,6 +84,9 @@ ifdef CONFIG_X86_64
+ 	vmlinux-objs-$(CONFIG_RANDOMIZE_BASE) += $(obj)/kaslr_64.o
+ 	vmlinux-objs-y += $(obj)/mem_encrypt.o
+ 	vmlinux-objs-y += $(obj)/pgtable_64.o
++ifdef CONFIG_RANDOMIZE_BASE
++	vmlinux-objs-$(CONFIG_PKRAM) += $(obj)/pkram.o
++endif
+ endif
  
--struct pkram_stream;
-+struct pkram_node;
-+
-+struct pkram_stream {
-+	gfp_t gfp_mask;
-+	struct pkram_node *node;
-+};
+ vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
+diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
+index d7408af55738..3f0a6fb15ac2 100644
+--- a/arch/x86/boot/compressed/kaslr.c
++++ b/arch/x86/boot/compressed/kaslr.c
+@@ -613,31 +613,16 @@ static unsigned long slots_fetch_random(void)
+ 	return 0;
+ }
  
- #define PKRAM_NAME_MAX		256	/* including nul */
- 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index d6f2f79d4852..5c57126353ff 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -2,16 +2,85 @@
- #include <linux/err.h>
- #include <linux/gfp.h>
- #include <linux/kernel.h>
-+#include <linux/list.h>
- #include <linux/mm.h>
-+#include <linux/mutex.h>
- #include <linux/pkram.h>
-+#include <linux/string.h>
- #include <linux/types.h>
- 
-+/*
-+ * Preserved memory is divided into nodes that can be saved or loaded
-+ * independently of each other. The nodes are identified by unique name
-+ * strings.
-+ *
-+ * The structure occupies a memory page.
-+ */
-+struct pkram_node {
-+	__u32	flags;
-+
-+	__u8	name[PKRAM_NAME_MAX];
-+};
-+
-+#define PKRAM_SAVE		1
-+#define PKRAM_LOAD		2
-+#define PKRAM_ACCMODE_MASK	3
-+
-+static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
-+static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
-+
-+static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
-+{
-+	return alloc_page(gfp_mask);
-+}
-+
-+static inline void pkram_free_page(void *addr)
-+{
-+	free_page((unsigned long)addr);
-+}
-+
-+static inline void pkram_insert_node(struct pkram_node *node)
-+{
-+	list_add(&virt_to_page(node)->lru, &pkram_nodes);
-+}
-+
-+static inline void pkram_delete_node(struct pkram_node *node)
-+{
-+	list_del(&virt_to_page(node)->lru);
-+}
-+
-+static struct pkram_node *pkram_find_node(const char *name)
-+{
-+	struct page *page;
-+	struct pkram_node *node;
-+
-+	list_for_each_entry(page, &pkram_nodes, lru) {
-+		node = page_address(page);
-+		if (strcmp(node->name, name) == 0)
-+			return node;
-+	}
-+	return NULL;
-+}
-+
-+static void pkram_stream_init(struct pkram_stream *ps,
-+			     struct pkram_node *node, gfp_t gfp_mask)
-+{
-+	memset(ps, 0, sizeof(*ps));
-+	ps->gfp_mask = gfp_mask;
-+	ps->node = node;
-+}
-+
- /**
-  * Create a preserved memory node with name @name and initialize stream @ps
-  * for saving data to it.
-  *
-  * @gfp_mask specifies the memory allocation mask to be used when saving data.
-  *
-+ * Error values:
-+ *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
-+ *	%ENOMEM: insufficient memory available
-+ *	%EEXIST: node with specified name already exists
-+ *
-  * Returns 0 on success, -errno on failure.
-  *
-  * After the save has finished, pkram_finish_save() (or pkram_discard_save() in
-@@ -19,7 +88,34 @@
-  */
- int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask)
+-static void __process_mem_region(struct mem_vector *entry,
+-				 unsigned long minimum,
+-				 unsigned long image_size)
++void ___process_mem_region(struct mem_vector *entry,
++			   unsigned long minimum,
++			   unsigned long image_size)
  {
--	return -ENOSYS;
-+	struct page *page;
-+	struct pkram_node *node;
-+	int err = 0;
+ 	struct mem_vector region, overlap;
+-	unsigned long start_orig, end;
++	unsigned long start_orig;
+ 	struct mem_vector cur_entry;
+ 
+-	/* On 32-bit, ignore entries entirely above our maximum. */
+-	if (IS_ENABLED(CONFIG_X86_32) && entry->start >= KERNEL_IMAGE_SIZE)
+-		return;
+-
+-	/* Ignore entries entirely below our minimum. */
+-	if (entry->start + entry->size < minimum)
+-		return;
+-
+-	/* Ignore entries above memory limit */
+-	end = min(entry->size + entry->start, mem_limit);
+-	if (entry->start >= end)
+-		return;
+-	cur_entry.start = entry->start;
+-	cur_entry.size = end - entry->start;
+-
+-	region.start = cur_entry.start;
+-	region.size = cur_entry.size;
++	region.start = cur_entry.start = entry->start;
++	region.size = cur_entry.size = entry->size;
+ 
+ 	/* Give up if slot area array is full. */
+ 	while (slot_area_index < MAX_SLOT_AREA) {
+@@ -691,6 +676,39 @@ static void __process_mem_region(struct mem_vector *entry,
+ 	}
+ }
+ 
++static void __process_mem_region(struct mem_vector *entry,
++				 unsigned long minimum,
++				 unsigned long image_size)
++{
++	struct mem_vector region, overlap;
++	unsigned long start_orig, end;
++	struct mem_vector cur_entry;
 +
-+	if (strlen(name) >= PKRAM_NAME_MAX)
-+		return -ENAMETOOLONG;
++	/* On 32-bit, ignore entries entirely above our maximum. */
++	if (IS_ENABLED(CONFIG_X86_32) && entry->start >= KERNEL_IMAGE_SIZE)
++		return;
 +
-+	page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
-+	if (!page)
-+		return -ENOMEM;
-+	node = page_address(page);
++	/* Ignore entries entirely below our minimum. */
++	if (entry->start + entry->size < minimum)
++		return;
 +
-+	node->flags = PKRAM_SAVE;
-+	strcpy(node->name, name);
++	/* Ignore entries above memory limit */
++	end = min(entry->size + entry->start, mem_limit);
++	if (entry->start >= end)
++		return;
++	cur_entry.start = entry->start;
++	cur_entry.size = end - entry->start;
 +
-+	mutex_lock(&pkram_mutex);
-+	if (!pkram_find_node(name))
-+		pkram_insert_node(node);
++	/* Return if region can't contain decompressed kernel */
++	if (cur_entry.size < image_size)
++		return;
++
++	if (pkram_enabled())
++		return pkram_process_mem_region(&cur_entry, minimum, image_size);
 +	else
-+		err = -EEXIST;
-+	mutex_unlock(&pkram_mutex);
-+	if (err) {
-+		__free_page(page);
-+		return err;
++		return ___process_mem_region(&cur_entry, minimum, image_size);
++}
++
+ static bool process_mem_region(struct mem_vector *region,
+ 			       unsigned long long minimum,
+ 			       unsigned long long image_size)
+@@ -902,6 +920,8 @@ void choose_random_location(unsigned long input,
+ 		return;
+ 	}
+ 
++	pkram_init();
++
+ #ifdef CONFIG_X86_5LEVEL
+ 	if (__read_cr4() & X86_CR4_LA57) {
+ 		__pgtable_l5_enabled = 1;
+@@ -952,3 +972,8 @@ void choose_random_location(unsigned long input,
+ 		random_addr = find_random_virt_addr(LOAD_PHYSICAL_ADDR, output_size);
+ 	*virt_addr = random_addr;
+ }
++
++int slot_areas_full(void)
++{
++	return slot_area_index == MAX_SLOT_AREA;
++}
+diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
+index 726e264410ff..ca1a8ae5ebe9 100644
+--- a/arch/x86/boot/compressed/misc.h
++++ b/arch/x86/boot/compressed/misc.h
+@@ -117,6 +117,25 @@ static inline void console_init(void)
+ { }
+ #endif
+ 
++void ___process_mem_region(struct mem_vector *entry,
++			   unsigned long minimum,
++			   unsigned long image_size);
++
++#ifdef CONFIG_PKRAM
++void pkram_init(void);
++int pkram_enabled(void);
++void pkram_process_mem_region(struct mem_vector *entry,
++			      unsigned long minimum,
++			      unsigned long image_size);
++#else
++static inline void pkram_init(void) { }
++static inline int pkram_enabled(void) { return 0; }
++static inline void pkram_process_mem_region(struct mem_vector *entry,
++					    unsigned long minimum,
++					    unsigned long image_size)
++{ ___process_mem_region(entry, minimum, image_size); }
++#endif
++
+ void set_sev_encryption_mask(void);
+ 
+ /* acpi.c */
+diff --git a/arch/x86/boot/compressed/pkram.c b/arch/x86/boot/compressed/pkram.c
+new file mode 100644
+index 000000000000..5fc1e26909de
+--- /dev/null
++++ b/arch/x86/boot/compressed/pkram.c
+@@ -0,0 +1,252 @@
++// SPDX-License-Identifier: GPL-2.0
++#define __pa(x)  ((unsigned long)(x))
++#define __va(x)  ((void *)((unsigned long)(x)))
++
++#include "misc.h"
++#include <asm/pgtable.h>
++
++struct pkram_super_block {
++	__u64   node_pfn;
++	__u64   pgd_pfn;
++};
++
++static unsigned long long pkram_sb_pfn;
++static struct pkram_super_block *pkram_sb;
++static pgd_t *pkram_pgd;
++
++struct pg_state {
++	int (*range_cb)(struct pg_state *state, unsigned long base,
++			unsigned long size);
++	unsigned long curr_addr;
++	unsigned long start_addr;
++	unsigned long min_addr;
++	unsigned long max_addr;
++	unsigned long min_size;
++	unsigned long minimum;
++	bool tracking;
++	bool find_holes;
++};
++
++int pkram_enabled(void)
++{
++	return pkram_pgd ? 1 : 0;
++}
++
++void pkram_init(void)
++{
++	char arg[32];
++
++	if (cmdline_find_option("pkram", arg, sizeof(arg)) > 0) {
++		if (kstrtoull(arg, 16, &pkram_sb_pfn) != 0)
++			return;
++	} else
++		return;
++
++	pkram_sb = (struct pkram_super_block *)(pkram_sb_pfn << PAGE_SHIFT);
++
++	if (pkram_sb)
++		pkram_pgd = (pgd_t *)(pkram_sb->pgd_pfn << PAGE_SHIFT);
++}
++
++static int note_page(struct pg_state *st, int present)
++{
++	unsigned long curr_addr = st->curr_addr;
++	bool track_page = present ^ st->find_holes;
++
++	if (!st->tracking && track_page) {
++		if (curr_addr >= st->max_addr)
++			return 1;
++		/*
++		 * curr_addr can be < min_addr if the page straddles the
++		 * boundary
++		 */
++		st->start_addr = max(curr_addr, st->min_addr);
++		st->tracking = true;
++	} else if (st->tracking) {
++		unsigned long base, size;
++		int ret;
++
++		/* Continue tracking if upper bound has not been reached */
++		if (track_page && curr_addr < st->max_addr)
++			return 0;
++
++		curr_addr = min(curr_addr, st->max_addr);
++
++		base = st->start_addr;
++		size = curr_addr - st->start_addr;
++		st->tracking = false;
++
++		ret = st->range_cb(st, base, size);
++
++		if (curr_addr == st->max_addr)
++			return 1;
++		else
++			return ret;
 +	}
 +
-+	pkram_stream_init(ps, node, gfp_mask);
 +	return 0;
- }
- 
- /**
-@@ -50,7 +146,12 @@ void pkram_finish_save_obj(struct pkram_stream *ps)
-  */
- void pkram_finish_save(struct pkram_stream *ps)
- {
--	BUG();
-+	struct pkram_node *node = ps->node;
++}
 +
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
++static int walk_pte_level(struct pg_state *st, pmd_t addr, unsigned long P)
++{
++	unsigned long *bitmap;
++	int present;
++	int i, ret;
 +
-+	smp_wmb();
-+	node->flags &= ~PKRAM_ACCMODE_MASK;
- }
- 
- /**
-@@ -60,7 +161,15 @@ void pkram_finish_save(struct pkram_stream *ps)
-  */
- void pkram_discard_save(struct pkram_stream *ps)
- {
--	BUG();
-+	struct pkram_node *node = ps->node;
++	bitmap = __va(pmd_val(addr));
++	for (i = 0; i < PTRS_PER_PTE; i++) {
++		unsigned long curr_addr = P + i * PAGE_SIZE;
 +
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
-+
-+	mutex_lock(&pkram_mutex);
-+	pkram_delete_node(node);
-+	mutex_unlock(&pkram_mutex);
-+
-+	pkram_free_page(node);
- }
- 
- /**
-@@ -69,11 +178,36 @@ void pkram_discard_save(struct pkram_stream *ps)
-  *
-  * Returns 0 on success, -errno on failure.
-  *
-+ * Error values:
-+ *	%ENOENT: node with specified name does not exist
-+ *	%EBUSY: save to required node has not finished yet
-+ *
-  * After the load has finished, pkram_finish_load() is to be called.
-  */
- int pkram_prepare_load(struct pkram_stream *ps, const char *name)
- {
--	return -ENOSYS;
-+	struct pkram_node *node;
-+	int err = 0;
-+
-+	mutex_lock(&pkram_mutex);
-+	node = pkram_find_node(name);
-+	if (!node) {
-+		err = -ENOENT;
-+		goto out_unlock;
++		if (curr_addr < st->min_addr)
++			continue;
++		st->curr_addr = curr_addr;
++		present = test_bit(i, bitmap);
++		ret = note_page(st, present);
++		if (ret)
++			break;
 +	}
-+	if (node->flags & PKRAM_ACCMODE_MASK) {
-+		err = -EBUSY;
-+		goto out_unlock;
-+	}
-+	pkram_delete_node(node);
-+out_unlock:
-+	mutex_unlock(&pkram_mutex);
-+	if (err)
-+		return err;
 +
-+	node->flags |= PKRAM_LOAD;
-+	pkram_stream_init(ps, node, 0);
++	return ret;
++}
++
++static int walk_pmd_level(struct pg_state *st, pud_t addr, unsigned long P)
++{
++	pmd_t *start;
++	int i, ret;
++
++	start = (pmd_t *)pud_page_vaddr(addr);
++	for (i = 0; i < PTRS_PER_PMD; i++, start++) {
++		unsigned long curr_addr = P + i * PMD_SIZE;
++
++		if (curr_addr + PMD_SIZE <= st->min_addr)
++			continue;
++		st->curr_addr = curr_addr;
++		if (!pmd_none(*start)) {
++			if (pmd_large(*start))
++				ret = note_page(st, true);
++			else
++				ret = walk_pte_level(st, *start, curr_addr);
++		} else
++			ret = note_page(st, false);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++static int walk_pud_level(struct pg_state *st, p4d_t addr, unsigned long P)
++{
++	pud_t *start;
++	int i, ret;
++
++	start = (pud_t *)p4d_page_vaddr(addr);
++	for (i = 0; i < PTRS_PER_PUD; i++, start++) {
++		unsigned long curr_addr = P + i * PUD_SIZE;
++
++		if (curr_addr + PUD_SIZE <= st->min_addr)
++			continue;
++		st->curr_addr = curr_addr;
++		if (!pud_none(*start)) {
++			if (pud_large(*start))
++				ret = note_page(st, true);
++			else
++				ret = walk_pmd_level(st, *start, curr_addr);
++		} else
++			ret = note_page(st, false);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++static int walk_p4d_level(struct pg_state *st, pgd_t addr, unsigned long P)
++{
++	p4d_t *start;
++	int i, ret;
++
++	if (PTRS_PER_P4D == 1)
++		return walk_pud_level(st, __p4d(pgd_val(addr)), P);
++
++	start = (p4d_t *)pgd_page_vaddr(addr);
++	for (i = 0; i < PTRS_PER_P4D; i++, start++) {
++		unsigned long curr_addr = P + i * P4D_SIZE;
++
++		if (curr_addr + P4D_SIZE <= st->min_addr)
++			continue;
++		st->curr_addr = curr_addr;
++		if (!p4d_none(*start)) {
++			if (p4d_large(*start))
++				ret = note_page(st, true);
++			else
++				ret = walk_pud_level(st, *start, curr_addr);
++		} else
++			ret = note_page(st, false);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++#define pgd_large(a) (pgtable_l5_enabled() ? pgd_large(a) : p4d_large(__p4d(pgd_val(a))))
++#define pgd_none(a)  (pgtable_l5_enabled() ? pgd_none(a) : p4d_none(__p4d(pgd_val(a))))
++
++static int walk_pgd_level(struct pg_state *st, pgd_t *pgd)
++{
++	pgd_t *start = pgd;
++	int i, ret = 0;
++
++	for (i = 0; i < PTRS_PER_PGD; i++, start++) {
++		unsigned long curr_addr = i * PGDIR_SIZE;
++
++		if (curr_addr + PGDIR_SIZE <= st->min_addr)
++			continue;
++		st->curr_addr = curr_addr;
++		if (!pgd_none(*start))
++			ret = walk_p4d_level(st, *start, curr_addr);
++		else
++			ret = note_page(st, false);
++		if (ret)
++			break;
++	}
++
++	return ret;
++}
++
++extern int slot_areas_full(void);
++
++static int pkram_process_mem_region_cb(struct pg_state *st, unsigned long base, unsigned long size)
++{
++	struct mem_vector region = {
++		.start = base,
++		.size = size,
++	};
++
++	if (size < st->min_size)
++		return 0;
++
++	___process_mem_region(&region, st->minimum, st->min_size);
++
++	if (slot_areas_full())
++		return 1;
++
 +	return 0;
- }
- 
- /**
-@@ -106,7 +240,11 @@ void pkram_finish_load_obj(struct pkram_stream *ps)
-  */
- void pkram_finish_load(struct pkram_stream *ps)
- {
--	BUG();
-+	struct pkram_node *node = ps->node;
++}
 +
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
++void pkram_process_mem_region(struct mem_vector *entry,
++			     unsigned long minimum,
++			     unsigned long image_size)
++{
++	struct pg_state st = {
++		.range_cb = pkram_process_mem_region_cb,
++		.min_addr = max((unsigned long)entry->start, minimum),
++		.max_addr = entry->start + entry->size,
++		.min_size = image_size,
++		.minimum = minimum,
++		.find_holes = true,
++	};
 +
-+	pkram_free_page(node);
- }
- 
- /**
++	walk_pgd_level(&st, pkram_pgd);
++}
 -- 
 2.13.3
 
