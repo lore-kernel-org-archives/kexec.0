@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2120.oracle.com ([141.146.126.78])
+Received: from userp2120.oracle.com ([156.151.31.85])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWUfj-0003zn-6v
- for kexec@lists.infradead.org; Thu, 07 May 2020 00:46:07 +0000
+ id 1jWUfk-0003zu-8k
+ for kexec@lists.infradead.org; Thu, 07 May 2020 00:46:08 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC 15/43] PKRAM: provide a way to ban pages from use by PKRAM
-Date: Wed,  6 May 2020 17:41:41 -0700
-Message-Id: <1588812129-8596-16-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 26/43] mm: shmem: when inserting,
+ handle pages already charged to a memcg
+Date: Wed,  6 May 2020 17:41:52 -0700
+Message-Id: <1588812129-8596-27-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,311 +26,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, mhocko@kernel.org, lei.l.li@intel.com, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, masahiroy@kernel.org, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, zhenzhong.duan@oracle.com, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, daniel.kiper@oracle.com
 
-Not all memory ranges can be used for saving preserved over-kexec data.
-For example, a kexec kernel may be loaded before pages are preserved.
-The memory regions where the kexec segments will be copied to on kexec
-must not contain preserved pages or else they will be clobbered.
+If shmem_insert_page() is called to insert a page that was preserved
+using PKRAM on the current boot (i.e. preserved page is restored without
+an intervening kexec boot), the page will still be charged to a memory
+cgroup because it is never freed. Don't try to charge it again.
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |   2 +
- mm/pkram.c            | 210 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 212 insertions(+)
+ mm/shmem.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index 409022e1472f..1ba48442ef8e 100644
---- a/include/linux/pkram.h
-+++ b/include/linux/pkram.h
-@@ -69,10 +69,12 @@ phys_addr_t pkram_memblock_find_in_range(phys_addr_t start, phys_addr_t end,
- extern unsigned long pkram_reserved_pages;
- void pkram_reserve(void);
- void pkram_free_pgt(void);
-+void pkram_ban_region(unsigned long start, unsigned long end);
- #else
- #define pkram_reserved_pages 0UL
- static inline void pkram_reserve(void) { }
- static inline void pkram_free_pgt(void) { }
-+static inline void pkram_ban_region(unsigned long start, unsigned long end) { }
- #endif
+diff --git a/mm/shmem.c b/mm/shmem.c
+index 13475073fb52..1f3b43b8fa34 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -693,6 +693,7 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
+ 	struct mem_cgroup *memcg;
+ 	pgoff_t hindex = index;
+ 	bool on_lru = PageLRU(page);
++	bool has_memcg = page->mem_cgroup ? true : false;
  
- #endif /* _LINUX_PKRAM_H */
-diff --git a/mm/pkram.c b/mm/pkram.c
-index e49c9bcd3854..60863c8ecbab 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -119,6 +119,28 @@ unsigned long __initdata pkram_reserved_pages;
- static bool pkram_reservation_in_progress;
+ 	if (index > (MAX_LFS_FILESIZE >> PAGE_SHIFT))
+ 		return -EFBIG;
+@@ -738,20 +739,24 @@ int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
  
- /*
-+ * For tracking a region of memory that PKRAM is not allowed to use.
-+ */
-+struct banned_region {
-+	unsigned long start, end;		/* pfn, inclusive */
-+};
-+
-+#define MAX_NR_BANNED		(32 + MAX_NUMNODES * 2)
-+
-+static unsigned int nr_banned;			/* number of banned regions */
-+
-+/* banned regions; arranged in ascending order, do not overlap */
-+static struct banned_region banned[MAX_NR_BANNED];
-+/*
-+ * If a page allocated for PKRAM turns out to belong to a banned region,
-+ * it is placed on the banned_pages list so subsequent allocation attempts
-+ * do not encounter it again. The list is shrunk when system memory is low.
-+ */
-+static LIST_HEAD(banned_pages);			/* linked through page::lru */
-+static DEFINE_SPINLOCK(banned_pages_lock);
-+static unsigned long nr_banned_pages;
-+
-+/*
-  * The PKRAM super block pfn, see above.
-  */
- static int __init parse_pkram_sb_pfn(char *arg)
-@@ -223,12 +245,120 @@ void __init pkram_reserve(void)
- 	pr_info("PKRAM: %lu pages reserved\n", pkram_reserved_pages);
- }
+ 	__SetPageReferenced(page);
  
-+/*
-+ * Ban pfn range [start..end] (inclusive) from use in PKRAM.
-+ */
-+void pkram_ban_region(unsigned long start, unsigned long end)
-+{
-+	int i, merged = -1;
-+
-+	if (pkram_reservation_in_progress)
-+		return;
-+
-+	/* first try to merge the region with an existing one */
-+	for (i = nr_banned - 1; i >= 0 && start <= banned[i].end + 1; i--) {
-+		if (end + 1 >= banned[i].start) {
-+			start = min(banned[i].start, start);
-+			end = max(banned[i].end, end);
-+			if (merged < 0)
-+				merged = i;
-+		} else
-+			/*
-+			 * Regions are arranged in ascending order and do not
-+			 * intersect so the merged region cannot jump over its
-+			 * predecessors.
-+			 */
-+			BUG_ON(merged >= 0);
-+	}
-+
-+	i++;
-+
-+	if (merged >= 0) {
-+		banned[i].start = start;
-+		banned[i].end = end;
-+		/* shift if merged with more than one region */
-+		memmove(banned + i + 1, banned + merged + 1,
-+			sizeof(*banned) * (nr_banned - merged - 1));
-+		nr_banned -= merged - i;
-+		return;
-+	}
-+
-+	/*
-+	 * The region does not intersect with an existing one;
-+	 * try to create a new one.
-+	 */
-+	if (nr_banned == MAX_NR_BANNED) {
-+		pr_err("PKRAM: Failed to ban %lu-%lu: "
-+		       "Too many banned regions\n", start, end);
-+		return;
-+	}
-+
-+	memmove(banned + i + 1, banned + i,
-+		sizeof(*banned) * (nr_banned - i));
-+	banned[i].start = start;
-+	banned[i].end = end;
-+	nr_banned++;
-+}
-+
-+static void pkram_show_banned(void)
-+{
-+	int i;
-+	unsigned long n, total = 0;
-+
-+	pr_info("PKRAM: banned regions:\n");
-+	for (i = 0; i < nr_banned; i++) {
-+		n = banned[i].end - banned[i].start + 1;
-+		pr_info("%4d: [%08lx - %08lx] %ld pages\n",
-+			i, banned[i].start, banned[i].end, n);
-+		total += n;
-+	}
-+	pr_info("Total banned: %ld pages in %d regions\n",
-+		total, nr_banned);
-+}
-+
-+/*
-+ * Returns true if the page may not be used for storing preserved data.
-+ */
-+static bool pkram_page_banned(struct page *page)
-+{
-+	unsigned long epfn, pfn = page_to_pfn(page);
-+	int l = 0, r = nr_banned - 1, m;
-+
-+	epfn = pfn + compound_nr(page) - 1;
-+
-+	/* do binary search */
-+	while (l <= r) {
-+		m = (l + r) / 2;
-+		if (epfn < banned[m].start)
-+			r = m - 1;
-+		else if (pfn > banned[m].end)
-+			l = m + 1;
-+		else
-+			return true;
-+	}
-+	return false;
-+}
-+
- static inline struct page *__pkram_alloc_page(gfp_t gfp_mask, bool add_to_map)
- {
- 	struct page *page;
-+	LIST_HEAD(list);
-+	unsigned long len = 0;
- 	int err;
- 
- 	page = alloc_page(gfp_mask);
-+	while (page && pkram_page_banned(page)) {
-+		len++;
-+		list_add(&page->lru, &list);
-+		page = alloc_page(gfp_mask);
-+	}
-+	if (len > 0) {
-+		spin_lock(&banned_pages_lock);
-+		nr_banned_pages += len;
-+		list_splice(&list, &banned_pages);
-+		spin_unlock(&banned_pages_lock);
-+	}
-+
- 	if (page && add_to_map) {
- 		err = pkram_add_identity_map(page);
- 		if (err) {
-@@ -256,6 +386,53 @@ static inline void pkram_free_page(void *addr)
- 	free_page((unsigned long)addr);
- }
- 
-+static void __banned_pages_shrink(unsigned long nr_to_scan)
-+{
-+	struct page *page;
-+
-+	if (nr_to_scan <= 0)
-+		return;
-+
-+	while (nr_banned_pages > 0) {
-+		BUG_ON(list_empty(&banned_pages));
-+		page = list_first_entry(&banned_pages, struct page, lru);
-+		list_del(&page->lru);
-+		__free_page(page);
-+		nr_banned_pages--;
-+		nr_to_scan--;
-+		if (!nr_to_scan)
-+			break;
-+	}
-+}
-+
-+static unsigned long
-+banned_pages_count(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	return nr_banned_pages;
-+}
-+
-+static unsigned long
-+banned_pages_scan(struct shrinker *shrink, struct shrink_control *sc)
-+{
-+	int nr_left = nr_banned_pages;
-+
-+	if (!sc->nr_to_scan || !nr_left)
-+		return nr_left;
-+
-+	spin_lock(&banned_pages_lock);
-+	__banned_pages_shrink(sc->nr_to_scan);
-+	nr_left = nr_banned_pages;
-+	spin_unlock(&banned_pages_lock);
-+
-+	return nr_left;
-+}
-+
-+static struct shrinker banned_pages_shrinker = {
-+	.count_objects = banned_pages_count,
-+	.scan_objects = banned_pages_scan,
-+	.seeks = DEFAULT_SEEKS,
-+};
-+
- static inline void pkram_insert_node(struct pkram_node *node)
- {
- 	list_add(&virt_to_page(node)->lru, &pkram_nodes);
-@@ -665,6 +842,32 @@ static int __pkram_save_page(struct pkram_stream *ps,
- 	return 0;
- }
- 
-+static int __pkram_save_page_copy(struct pkram_stream *ps, struct page *page,
-+				short flags)
-+{
-+	int nr_pages = compound_nr(page);
-+	pgoff_t index = page->index;
-+	int i, err;
-+
-+	for (i = 0; i < nr_pages; i++, index++) {
-+		struct page *p = page + i;
-+		struct page *new;
-+
-+		new = pkram_alloc_page(ps->gfp_mask);
-+		if (!new)
-+			return -ENOMEM;
-+
-+		copy_highpage(new, p);
-+		err = __pkram_save_page(ps, new, flags, index);
-+		put_page(new);
-+
+-	err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
+-					PageTransHuge(page));
+-	if (err)
+-		goto out_unlock;
++	if (!has_memcg) {
++		err = mem_cgroup_try_charge_delay(page, mm, gfp, &memcg,
++						PageTransHuge(page));
 +		if (err)
-+			return err;
++			goto out_unlock;
 +	}
-+
-+	return 0;
-+}
-+
- /**
-  * Save page @page to the preserved memory node and object associated with
-  * stream @ps. The stream must have been initialized with pkram_prepare_save()
-@@ -688,6 +891,10 @@ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
  
- 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
- 
-+	/* if page is banned, relocate it */
-+	if (pkram_page_banned(page))
-+		return __pkram_save_page_copy(ps, page, flags);
-+
- 	err = __pkram_save_page(ps, page, flags, page->index);
- 	if (!err)
- 		err = pkram_add_identity_map(page);
-@@ -891,6 +1098,7 @@ static void __pkram_reboot(void)
- 	unsigned long pgd_pfn = 0;
- 
- 	if (pkram_pgd) {
-+		pkram_show_banned();
- 		list_for_each_entry_reverse(page, &pkram_nodes, lru) {
- 			node = page_address(page);
- 			if (WARN_ON(node->flags & PKRAM_ACCMODE_MASK))
-@@ -957,6 +1165,7 @@ static int __init pkram_init_sb(void)
- 		page = __pkram_alloc_page(GFP_KERNEL | __GFP_ZERO, false);
- 		if (!page) {
- 			pr_err("PKRAM: Failed to allocate super block\n");
-+			__banned_pages_shrink(ULONG_MAX);
- 			return 0;
- 		}
- 		pkram_sb = page_address(page);
-@@ -979,6 +1188,7 @@ static int __init pkram_init(void)
- {
- 	if (pkram_init_sb()) {
- 		register_reboot_notifier(&pkram_reboot_notifier);
-+		register_shrinker(&banned_pages_shrinker);
- 		sysfs_update_group(kernel_kobj, &pkram_attr_group);
+ 	err = shmem_add_to_page_cache(page, mapping, hindex,
+ 					NULL, gfp & GFP_RECLAIM_MASK);
+ 	if (err) {
+-		mem_cgroup_cancel_charge(page, memcg,
+-			PageTransHuge(page));
++		if (!has_memcg)
++			mem_cgroup_cancel_charge(page, memcg,
++						PageTransHuge(page));
+ 		goto out_unlock;
  	}
- 	return 0;
+-	mem_cgroup_commit_charge(page, memcg, on_lru,
+-			PageTransHuge(page));
++	if (!has_memcg)
++		mem_cgroup_commit_charge(page, memcg, on_lru,
++					PageTransHuge(page));
+ 
+ 	if (!on_lru)
+ 		lru_cache_add_anon(page);
 -- 
 2.13.3
 
