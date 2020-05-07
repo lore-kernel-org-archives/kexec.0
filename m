@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWUfJ-0003eE-5s
- for kexec@lists.infradead.org; Thu, 07 May 2020 00:45:33 +0000
+ id 1jWUfL-0003g5-7r
+ for kexec@lists.infradead.org; Thu, 07 May 2020 00:45:34 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC 04/43] mm: PKRAM: implement page stream operations
-Date: Wed,  6 May 2020 17:41:30 -0700
-Message-Id: <1588812129-8596-5-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 36/43] PKRAM: add support for loading pages in bulk
+Date: Wed,  6 May 2020 17:42:02 -0700
+Message-Id: <1588812129-8596-37-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,342 +25,182 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, mhocko@kernel.org, lei.l.li@intel.com, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, masahiroy@kernel.org, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, zhenzhong.duan@oracle.com, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, daniel.kiper@oracle.com
 
-Using the pkram_save_page() function, one can populate PKRAM objects with
-memory pages which can later be loaded using the pkram_load_page()
-function. Saving a memory page to PKRAM is accomplished by recording
-its pfn and incrementing its refcount so that it will not be freed after
-the last user puts it.
+This patch adds three functions:
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+pkram_prepare_load_pages()
+  Called after calling pkram_prepare_load_obj()
+
+pkram_load_pages()
+  Loads some number of pages that are contiguous by their original
+  file index values.  The index of the first page, an array of the
+  page pointers, and the number of pages in the array are provided
+  to the caller.
+
+pkram_finish_load_pages()
+  Called when no more pages will be loaded from the pkram_obj.
+
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |   5 ++
- mm/pkram.c            | 219 +++++++++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 221 insertions(+), 3 deletions(-)
+ include/linux/pkram.h |   6 +++
+ mm/pkram.c            | 106 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
 diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index fabde2cd8203..f338d1c2aeb6 100644
+index bf2e138b044e..3f059791f88c 100644
 --- a/include/linux/pkram.h
 +++ b/include/linux/pkram.h
-@@ -12,6 +12,11 @@ struct pkram_stream {
- 	gfp_t gfp_mask;
- 	struct pkram_node *node;
- 	struct pkram_obj *obj;
-+
-+	struct pkram_link *link;		/* current link */
-+	unsigned int entry_idx;		/* next entry in link */
-+
-+	unsigned long next_index;
- };
+@@ -18,6 +18,9 @@ struct pkram_stream {
+ 	struct pkram_link *link;		/* current link */
+ 	unsigned int entry_idx;		/* next entry in link */
  
- #define PKRAM_NAME_MAX		256	/* including nul */
++	struct page **pages;
++	unsigned int nr_pages;
++
+ 	unsigned long next_index;
+ 	struct address_space *mapping;
+ 	struct mm_struct *mm;
+@@ -60,14 +63,17 @@ void pkram_discard_save(struct pkram_stream *ps);
+ 
+ int pkram_prepare_load(struct pkram_stream *ps, const char *name);
+ int pkram_prepare_load_obj(struct pkram_stream *ps);
++int pkram_prepare_load_pages(struct pkram_stream *ps);
+ void pkram_finish_load(struct pkram_stream *ps);
+ void pkram_finish_load_obj(struct pkram_stream *ps);
++void pkram_finish_load_pages(struct pkram_stream *ps);
+ 
+ #define PKRAM_PAGE_TRANS_HUGE	0x1	/* page is a transparent hugepage */
+ 
+ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags);
+ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index,
+ 			     short *flags);
++int pkram_load_pages(struct pkram_stream *ps, unsigned long *index);
+ 
+ ssize_t pkram_write(struct pkram_stream *ps, const void *buf, size_t count);
+ size_t pkram_read(struct pkram_stream *ps, void *buf, size_t count);
 diff --git a/mm/pkram.c b/mm/pkram.c
-index 4934ffd8b019..ab3053ca3539 100644
+index 042c14dedc25..ef092aa5ce7a 100644
 --- a/mm/pkram.c
 +++ b/mm/pkram.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/err.h>
- #include <linux/gfp.h>
-+#include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
- #include <linux/mm.h>
-@@ -10,8 +11,38 @@
- #include <linux/string.h>
- #include <linux/types.h>
- 
-+#include "internal.h"
-+
-+
-+/*
-+ * Represents a reference to a data page saved to PKRAM.
-+ */
-+typedef __u64 pkram_entry_t;
-+
-+#define PKRAM_ENTRY_FLAGS_SHIFT	0x5
-+#define PKRAM_ENTRY_FLAGS_MASK	0x7f
-+
-+/*
-+ * Keeps references to data pages saved to PKRAM.
-+ * The structure occupies a memory page.
-+ */
-+struct pkram_link {
-+	__u64	link_pfn;	/* points to the next link of the object */
-+	__u64	index;		/* mapping index of first pkram_entry_t */
-+
-+	/*
-+	 * the array occupies the rest of the link page; if the link is not
-+	 * full, the rest of the array must be filled with zeros
-+	 */
-+	pkram_entry_t entry[0];
-+};
-+
-+#define PKRAM_LINK_ENTRIES_MAX \
-+	((PAGE_SIZE-sizeof(struct pkram_link))/sizeof(pkram_entry_t))
-+
- struct pkram_obj {
--	__u64   obj_pfn;	/* points to the next object in the list */
-+	__u64	link_pfn;	/* points to the first link of the object */
-+	__u64	obj_pfn;	/* points to the next object in the list */
- };
- 
- /*
-@@ -19,6 +50,10 @@ struct pkram_obj {
-  * independently of each other. The nodes are identified by unique name
-  * strings.
-  *
-+ * References to data pages saved to a preserved memory node are kept in a
-+ * singly-linked list of PKRAM link structures (see above), the node has a
-+ * pointer to the head of.
-+ *
-  * The structure occupies a memory page.
-  */
- struct pkram_node {
-@@ -68,6 +103,37 @@ static struct pkram_node *pkram_find_node(const char *name)
- 	return NULL;
- }
- 
-+static void pkram_truncate_link(struct pkram_link *link)
-+{
-+	struct page *page;
-+	pkram_entry_t p;
-+	int i;
-+
-+	for (i = 0; i < PKRAM_LINK_ENTRIES_MAX; i++) {
-+		p = link->entry[i];
-+		if (!p)
-+			continue;
-+		page = pfn_to_page(PHYS_PFN(p));
-+		put_page(page);
-+	}
-+}
-+
-+static void pkram_truncate_obj(struct pkram_obj *obj)
-+{
-+	unsigned long link_pfn;
-+	struct pkram_link *link;
-+
-+	link_pfn = obj->link_pfn;
-+	while (link_pfn) {
-+		link = pfn_to_kaddr(link_pfn);
-+		pkram_truncate_link(link);
-+		link_pfn = link->link_pfn;
-+		pkram_free_page(link);
-+		cond_resched();
-+	}
-+	obj->link_pfn = 0;
-+}
-+
- static void pkram_truncate_node(struct pkram_node *node)
- {
- 	unsigned long obj_pfn;
-@@ -76,6 +142,7 @@ static void pkram_truncate_node(struct pkram_node *node)
- 	obj_pfn = node->obj_pfn;
- 	while (obj_pfn) {
- 		obj = pfn_to_kaddr(obj_pfn);
-+		pkram_truncate_obj(obj);
- 		obj_pfn = obj->obj_pfn;
- 		pkram_free_page(obj);
- 		cond_resched();
-@@ -83,6 +150,26 @@ static void pkram_truncate_node(struct pkram_node *node)
- 	node->obj_pfn = 0;
- }
- 
-+static void pkram_add_link(struct pkram_link *link, struct pkram_obj *obj)
-+{
-+	link->link_pfn = obj->link_pfn;
-+	obj->link_pfn = page_to_pfn(virt_to_page(link));
-+}
-+
-+static struct pkram_link *pkram_remove_link(struct pkram_obj *obj)
-+{
-+	struct pkram_link *current_link;
-+
-+	if (!obj->link_pfn)
-+		return NULL;
-+
-+	current_link = pfn_to_kaddr(obj->link_pfn);
-+	obj->link_pfn = current_link->link_pfn;
-+	current_link->link_pfn = 0;
-+
-+	return current_link;
-+}
-+
- static void pkram_stream_init(struct pkram_stream *ps,
- 			     struct pkram_node *node, gfp_t gfp_mask)
- {
-@@ -94,6 +181,9 @@ static void pkram_stream_init(struct pkram_stream *ps,
- static void pkram_stream_init_obj(struct pkram_stream *ps, struct pkram_obj *obj)
- {
- 	ps->obj = obj;
-+	ps->link = NULL;
-+	ps->entry_idx = 0;
-+	ps->next_index = 0;
+@@ -820,6 +820,37 @@ int pkram_prepare_load_obj(struct pkram_stream *ps)
  }
  
  /**
-@@ -295,9 +385,28 @@ void pkram_finish_load_obj(struct pkram_stream *ps)
- {
- 	struct pkram_node *node = ps->node;
- 	struct pkram_obj *obj = ps->obj;
-+	struct pkram_link *link = ps->link;
- 
- 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
- 
-+	/*
-+	 * If link is not null, then loading stopped within a pkram_link
-+	 * unexpectedly.
-+	 */
-+	if (link) {
-+		unsigned long link_pfn;
-+
-+		link_pfn = page_to_pfn(virt_to_page(link));
-+		while (link_pfn) {
-+			link = pfn_to_kaddr(link_pfn);
-+			pkram_truncate_link(link);
-+			link_pfn = link->link_pfn;
-+			pkram_free_page(link);
-+			cond_resched();
-+		}
-+	}
-+
-+	pkram_truncate_obj(obj);
- 	pkram_free_page(obj);
- }
- 
-@@ -316,6 +425,44 @@ void pkram_finish_load(struct pkram_stream *ps)
- 	pkram_free_page(node);
- }
- 
-+/*
-+ * Insert page to PKRAM node allocating a new PKRAM link if necessary.
++ * Initialize stream @ps for loading preserved pages from it.
++ *
++ * Returns 0 on success, -errno on failure.
++ *
++ * Error values:
++ *	%ENOMEM: insufficient memory available
++ *
++ * After the load has finished, pkram_finish_load_pages() is to be called.
 + */
-+static int __pkram_save_page(struct pkram_stream *ps,
-+			    struct page *page, short flags, unsigned long index)
++int pkram_prepare_load_pages(struct pkram_stream *ps)
 +{
-+	struct pkram_link *link = ps->link;
-+	struct pkram_obj *obj = ps->obj;
-+	pkram_entry_t p;
++	BUG_ON((ps->node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
 +
-+	if (!link || ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
-+	    index != ps->next_index) {
-+		struct page *link_page;
-+
-+		link_page = pkram_alloc_page((ps->gfp_mask & GFP_RECLAIM_MASK) |
-+					    __GFP_ZERO);
-+		if (!link_page)
-+			return -ENOMEM;
-+
-+		ps->link = link = page_address(link_page);
-+		pkram_add_link(link, obj);
-+
-+		ps->entry_idx = 0;
-+
-+		ps->next_index = link->index = index;
-+	}
-+
-+	ps->next_index++;
-+
-+	get_page(page);
-+	p = page_to_phys(page);
-+	p |= ((flags & PKRAM_ENTRY_FLAGS_MASK) << PKRAM_ENTRY_FLAGS_SHIFT);
-+	link->entry[ps->entry_idx] = p;
-+	ps->entry_idx++;
++	ps->pages = kzalloc(PAGE_SIZE, GFP_KERNEL);
++	if (!ps->pages)
++		return -ENOMEM;
 +
 +	return 0;
 +}
 +
- /**
-  * Save page @page to the preserved memory node and object associated with
-  * stream @ps. The stream must have been initialized with pkram_prepare_save()
-@@ -324,10 +471,72 @@ void pkram_finish_load(struct pkram_stream *ps)
-  * @flags specifies supplemental page state to be preserved.
-  *
-  * Returns 0 on success, -errno on failure.
-+ *
-+ * Error values:
-+ *	%ENOMEM: insufficient amount of memory available
-+ *
-+ * Saving a page to preserved memory is simply incrementing its refcount so
-+ * that it will not get freed after the last user puts it. That means it is
-+ * safe to use the page as usual after it has been saved.
-  */
- int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
- {
--	return -ENOSYS;
-+	struct pkram_node *node = ps->node;
++/**
++ * Finish the load of preserved pages started with pkram_prepare_load_pages()
++ */
++void pkram_finish_load_pages(struct pkram_stream *ps)
++{
++	BUG_ON((ps->node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
 +
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
-+
-+	BUG_ON(PageCompound(page));
-+
-+	return __pkram_save_page(ps, page, flags, page->index);
++	kfree(ps->pages);
 +}
 +
-+/*
-+ * Extract the next page from preserved memory freeing a PKRAM link if it
-+ * becomes empty.
++/**
+  * Finish the load of a preserved memory object started with
+  * pkram_prepare_load_obj() freeing the object and any data that has not
+  * been loaded from it.
+@@ -1066,6 +1097,81 @@ struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index, shor
+ }
+ 
+ /**
++ * Load pages from the preserved memory object associated with stream
++ * @ps. The stream must have been initialized with pkram_prepare_load(),
++ * pkram_prepare_load_obj(), and pkram_prepare_load_pages().
++ * The page entries of a single pkram_link are processed, and the stream
++ * 'pages' buffer is populated with the page pointers.
++ *
++ * Returns 0 if one or more pages are loaded or -ENODATA if there are no
++ * pages to load.
++ *
++ * The pages loaded have an incremented refcount either because the page
++ * was initialized with a refcount of 1 at boot or because the page was
++ * subsequently preserved which increased the refcount.
 + */
-+static struct page *__pkram_load_page(struct pkram_stream *ps, unsigned long *index, short *flags)
++int pkram_load_pages(struct pkram_stream *ps, unsigned long *index)
 +{
 +	struct pkram_link *link = ps->link;
-+	struct page *page;
-+	pkram_entry_t p;
-+	short flgs;
++	int nr_entries = 0;
++	int i;
 +
 +	if (!link) {
 +		link = pkram_remove_link(ps->obj);
 +		if (!link)
-+			return NULL;
-+
-+		ps->link = link;
-+		ps->entry_idx = 0;
-+		ps->next_index = link->index;
++			return -ENODATA;
 +	}
 +
-+	BUG_ON(ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX);
++	*index = link->index;
 +
-+	p = link->entry[ps->entry_idx];
-+	BUG_ON(!p);
++	for (i = 0; i < PKRAM_LINK_ENTRIES_MAX; i++) {
++		unsigned long p = link->entry[i];
++		struct page *page;
++		short flags;
 +
-+	flgs = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
-+	page = pfn_to_page(PHYS_PFN(p));
++		if (!p)
++			break;
 +
-+	if (flags)
-+		*flags = flgs;
-+	if (index)
-+		*index = ps->next_index;
++		flags = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
++		nr_entries++;
 +
-+	ps->next_index++;
++		page = pfn_to_page(PHYS_PFN(p));
++		ps->pages[i] = page;
 +
-+	/* clear to avoid double free (see pkram_truncate_link()) */
-+	link->entry[ps->entry_idx] = 0;
++		if (flags & PKRAM_PAGE_TRANS_HUGE) {
++			int order = p & PKRAM_ENTRY_ORDER_MASK;
++			int nr_pages = 1 << order;
++			int j;
 +
-+	ps->entry_idx++;
-+	if (ps->entry_idx >= PKRAM_LINK_ENTRIES_MAX ||
-+	    !link->entry[ps->entry_idx]) {
++			for (j = 0; j < nr_pages; j++) {
++				struct page *p = page + j;
++
++				ClearPageReserved(p);
++			}
++
++			prep_compound_page(page, order);
++			prep_transhuge_page(page);
++		} else {
++			ClearPageReserved(page);
++		}
++
++		pkram_remove_identity_map(page);
++	}
++
++	ps->nr_pages = nr_entries;
++
++	/* Advance to next pkram_link page and free this one */
++	if (link->link_pfn)
++		ps->link = pfn_to_kaddr(link->link_pfn);
++	else
 +		ps->link = NULL;
-+		pkram_free_page(link);
-+	}
 +
-+	return page;
- }
- 
- /**
-@@ -346,7 +555,11 @@ int pkram_save_page(struct pkram_stream *ps, struct page *page, short flags)
-  */
- struct page *pkram_load_page(struct pkram_stream *ps, unsigned long *index, short *flags)
- {
--	return NULL;
-+	struct pkram_node *node = ps->node;
++	pkram_free_page(link);
 +
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
++	return 0;
++}
 +
-+	return __pkram_load_page(ps, index, flags);
- }
- 
- /**
++/**
+  * Copy @count bytes from @buf to the preserved memory node and object
+  * associated with stream @ps. The stream must have been initialized with
+  * pkram_prepare_save() and pkram_prepare_save_obj().
 -- 
 2.13.3
 
