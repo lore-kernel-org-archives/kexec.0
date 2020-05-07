@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2120.oracle.com ([141.146.126.78])
+Received: from userp2130.oracle.com ([156.151.31.86])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jWUhQ-0004wi-CC
- for kexec@lists.infradead.org; Thu, 07 May 2020 00:47:41 +0000
+ id 1jWUhm-00050w-8a
+ for kexec@lists.infradead.org; Thu, 07 May 2020 00:48:06 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC 38/43] mm: implement splicing a list of pages to the LRU
-Date: Wed,  6 May 2020 17:42:04 -0700
-Message-Id: <1588812129-8596-39-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC 41/43] XArray: add xas_export_node() and xas_import_node()
+Date: Wed,  6 May 2020 17:42:07 -0700
+Message-Id: <1588812129-8596-42-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,152 +25,235 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, mhocko@kernel.org, lei.l.li@intel.com, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, masahiroy@kernel.org, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, rppt@linux.ibm.com, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, zhenzhong.duan@oracle.com, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, daniel.kiper@oracle.com
 
-Considerable contention on the LRU lock happens when multiple threads
-are used to insert pages into a shmem file in parallel. To alleviate this
-provide a way for pages to be added to the same LRU to be staged so that
-they can be added by splicing lists and updating stats once with the lock
-held. For now only unevictable pages are supported.
+Contention on the xarray lock when multiple threads are adding to the
+same xarray can be mitigated by providing a way to add entries in
+bulk.
+
+Allow a caller to allocate and populate an xarray node outside of
+the target xarray and then only take the xarray lock long enough to
+import the node into it.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/swap.h |  11 ++++++
- mm/swap.c            | 101 +++++++++++++++++++++++++++++++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
+ Documentation/core-api/xarray.rst |   8 +++
+ include/linux/xarray.h            |   2 +
+ lib/test_xarray.c                 |  45 +++++++++++++++++
+ lib/xarray.c                      | 100 ++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 155 insertions(+)
 
-diff --git a/include/linux/swap.h b/include/linux/swap.h
-index e1bbf7a16b27..462045f536a8 100644
---- a/include/linux/swap.h
-+++ b/include/linux/swap.h
-@@ -346,6 +346,17 @@ extern void swap_setup(void);
+diff --git a/Documentation/core-api/xarray.rst b/Documentation/core-api/xarray.rst
+index 640934b6f7b4..659e10df8901 100644
+--- a/Documentation/core-api/xarray.rst
++++ b/Documentation/core-api/xarray.rst
+@@ -444,6 +444,14 @@ called each time the XArray updates a node.  This is used by the page
+ cache workingset code to maintain its list of nodes which contain only
+ shadow entries.
  
- extern void lru_cache_add_active_or_unevictable(struct page *page,
- 						struct vm_area_struct *vma);
-+struct lru_splice {
-+	struct list_head	splice;
-+	struct list_head	*lru_head;
-+	struct pglist_data	*pgdat;
-+	struct lruvec		*lruvec;
-+	enum lru_list		lru;
-+	unsigned long		nr_pages[MAX_NR_ZONES];
-+	unsigned long		pgculled;
-+};
-+extern void lru_splice_add_anon(struct page *page, struct lru_splice *splice);
-+extern void add_splice_to_lru_list(struct lru_splice *splice);
++xas_export_node() is used to remove and return a node from an XArray
++while xas_import_node() is used to add a node to an XArray.  Together
++these can be used, for example, to reduce lock contention when multiple
++threads are updating an XArray by allowing a caller to allocate and
++populate a node outside of the target XArray in a local XArray, export
++the node, and then take the target XArray lock just long enough to import
++the node.
++
+ Multi-Index Entries
+ -------------------
  
- /* linux/mm/vmscan.c */
- extern unsigned long zone_reclaimable_pages(struct zone *zone);
-diff --git a/mm/swap.c b/mm/swap.c
-index bf9a79fed62d..848f8b516471 100644
---- a/mm/swap.c
-+++ b/mm/swap.c
-@@ -187,6 +187,107 @@ int get_kernel_page(unsigned long start, int write, struct page **pages)
+diff --git a/include/linux/xarray.h b/include/linux/xarray.h
+index 14c893433139..73bd8ccc4424 100644
+--- a/include/linux/xarray.h
++++ b/include/linux/xarray.h
+@@ -1504,6 +1504,8 @@ bool xas_nomem(struct xa_state *, gfp_t);
+ void xas_pause(struct xa_state *);
+ 
+ void xas_create_range(struct xa_state *);
++struct xa_node *xas_export_node(struct xa_state *xas);
++void xas_import_node(struct xa_state *xas, struct xa_node *node);
+ 
+ /**
+  * xas_reload() - Refetch an entry from the xarray.
+diff --git a/lib/test_xarray.c b/lib/test_xarray.c
+index d4f97925dbd8..5cfaa1720cc1 100644
+--- a/lib/test_xarray.c
++++ b/lib/test_xarray.c
+@@ -1682,6 +1682,50 @@ static noinline void check_destroy(struct xarray *xa)
+ #endif
  }
- EXPORT_SYMBOL_GPL(get_kernel_page);
  
-+/*
-+ * Update stats and move accumulated pages from an lru_splice to the lru.
-+ */
-+void add_splice_to_lru_list(struct lru_splice *splice)
++static noinline void check_export_import_1(struct xarray *xa,
++		unsigned long index, unsigned int order)
 +{
-+	struct pglist_data *pgdat = splice->pgdat;
-+	struct lruvec *lruvec = splice->lruvec;
-+	enum lru_list lru = splice->lru;
-+	unsigned long flags = 0;
-+	int zid;
++	int xa_shift = order + XA_CHUNK_SHIFT - (order % XA_CHUNK_SHIFT);
++	XA_STATE(xas, xa, index);
++	struct xa_node *node;
++	unsigned long i;
 +
-+	spin_lock_irqsave(&pgdat->lru_lock, flags);
-+	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
-+		if (splice->nr_pages[zid])
-+			update_lru_size(lruvec, lru, zid, splice->nr_pages[zid]);
-+	}
-+	count_vm_events(UNEVICTABLE_PGCULLED, splice->pgculled);
-+	list_splice(&splice->splice, splice->lru_head);
-+	spin_unlock_irqrestore(&pgdat->lru_lock, flags);
++	xa_store_many_order(xa, index, xa_shift);
 +
-+	splice->lru_head = NULL;
-+	splice->pgculled = 0;
++	xas_lock(&xas);
++	xas_set_order(&xas, index, xa_shift);
++	node = xas_export_node(&xas);
++	xas_unlock(&xas);
++
++	XA_BUG_ON(xa, !xa_empty(xa));
++
++	do {
++		xas_lock(&xas);
++		xas_set_order(&xas, index, xa_shift);
++		xas_import_node(&xas, node);
++		xas_unlock(&xas);
++	} while (xas_nomem(&xas, GFP_KERNEL));
++
++	for (i = index; i < index + (1UL << xa_shift); i++)
++		xa_erase_index(xa, i);
++
++	XA_BUG_ON(xa, !xa_empty(xa));
 +}
 +
-+static void add_page_to_lru_splice(struct page *page,
-+				   struct lru_splice *splice,
-+				   struct lruvec *lruvec, enum lru_list lru)
++static noinline void check_export_import(struct xarray *xa)
 +{
-+	int zid;
++	unsigned int order;
++	unsigned int max_order = IS_ENABLED(CONFIG_XARRAY_MULTI) ? 12 : 1;
 +
-+	if (splice->lru_head == &lruvec->lists[lru]) {
-+		list_add(&page->lru, &splice->splice);
-+		splice->nr_pages[page_zonenum(page)] += hpage_nr_pages(page);
++	for (order = 0; order < max_order; order += XA_CHUNK_SHIFT) {
++		int xa_shift = order + XA_CHUNK_SHIFT;
++		unsigned long j;
++
++		for (j = 0; j < XA_CHUNK_SIZE; j++)
++			check_export_import_1(xa, j << xa_shift, order);
++	}
++}
++
+ static DEFINE_XARRAY(array);
+ 
+ static int xarray_checks(void)
+@@ -1712,6 +1756,7 @@ static int xarray_checks(void)
+ 	check_workingset(&array, 0);
+ 	check_workingset(&array, 64);
+ 	check_workingset(&array, 4096);
++	check_export_import(&array);
+ 
+ 	printk("XArray: %u of %u tests passed\n", tests_passed, tests_run);
+ 	return (tests_run == tests_passed) ? 0 : -EINVAL;
+diff --git a/lib/xarray.c b/lib/xarray.c
+index e9e641d3c0c3..478925780e87 100644
+--- a/lib/xarray.c
++++ b/lib/xarray.c
+@@ -507,6 +507,30 @@ static void xas_delete_node(struct xa_state *xas)
+ 		xas_shrink(xas);
+ }
+ 
++static void xas_unlink_node(struct xa_state *xas)
++{
++	struct xa_node *node = xas->xa_node;
++	struct xa_node *parent;
++
++	parent = xa_parent_locked(xas->xa, node);
++	xas->xa_node = parent;
++	xas->xa_offset = node->offset;
++
++	if (!parent) {
++		xas->xa->xa_head = NULL;
++		xas->xa_node = XAS_BOUNDS;
 +		return;
 +	}
 +
-+	INIT_LIST_HEAD(&splice->splice);
-+	splice->lruvec = lruvec;
-+	splice->lru_head = &lruvec->lists[lru];
-+	splice->lru = lru;
-+	list_add(&page->lru, &splice->splice);
-+	for (zid = 0; zid < MAX_NR_ZONES; zid++)
-+		splice->nr_pages[zid] = 0;
-+	splice->nr_pages[page_zonenum(page)] = hpage_nr_pages(page);
++	parent->slots[xas->xa_offset] = NULL;
++	parent->count--;
++	XA_NODE_BUG_ON(parent, parent->count > XA_CHUNK_SIZE);
 +
++	xas_update(xas, parent);
++
++	xas_delete_node(xas);
 +}
 +
-+/*
-+ * Similar in functionality to __pagevec_lru_add_fn() but here the page is
-+ * being added to an lru_splice and the LRU lock is not held.
+ /**
+  * xas_free_nodes() - Free this node and all nodes that it references
+  * @xas: Array operation state.
+@@ -1540,6 +1564,82 @@ static void xas_set_range(struct xa_state *xas, unsigned long first,
+ }
+ 
+ /**
++ * xas_export_node() - remove and return a node from an XArray
++ * @xas: XArray operation state
++ *
++ * The range covered by @xas must be aligned to and cover a single node
++ * at any level of the tree.
++ *
++ * Return: On success, returns the removed node.  If the range is invalid,
++ * returns %NULL and sets -EINVAL in @xas.  Otherwise returns %NULL if the
++ * node does not exist.
 + */
-+static void page_lru_splice_add(struct page *page, struct lruvec *lruvec, struct lru_splice *splice)
++struct xa_node *xas_export_node(struct xa_state *xas)
 +{
-+	enum lru_list lru;
-+	int was_unevictable = TestClearPageUnevictable(page);
++	struct xa_node *node;
 +
-+	VM_BUG_ON_PAGE(PageLRU(page), page);
-+	/* XXX only supports unevictable pages at the moment */
-+	VM_BUG_ON_PAGE(was_unevictable, page);
-+
-+	SetPageLRU(page);
-+	smp_mb();
-+
-+	lru = LRU_UNEVICTABLE;
-+	ClearPageActive(page);
-+	SetPageUnevictable(page);
-+	if (!was_unevictable)
-+		splice->pgculled++;
-+
-+	add_page_to_lru_splice(page, splice, lruvec, lru);
-+	trace_mm_lru_insertion(page, lru);
-+}
-+
-+static void lru_splice_add(struct page *page, struct lru_splice *splice)
-+{
-+	struct pglist_data *pagepgdat, *pgdat = splice->pgdat;
-+	struct lruvec *lruvec;
-+
-+	pagepgdat = page_pgdat(page);
-+
-+	if (pagepgdat != pgdat) {
-+		if (pgdat)
-+			add_splice_to_lru_list(splice);
-+		splice->pgdat = pagepgdat;
++	if (!xas->xa_shift || xas->xa_sibs) {
++		xas_set_err(xas, -EINVAL);
++		return NULL;
 +	}
 +
-+	lruvec = mem_cgroup_page_lruvec(page, pagepgdat);
-+	page_lru_splice_add(page, lruvec, splice);
++	xas->xa_shift -= XA_CHUNK_SHIFT;
++
++	if (!xas_find(xas, xas->xa_index))
++		return NULL;
++	node = xas->xa_node;
++	xas_unlink_node(xas);
++	node->parent = NULL;
++
++	return node;
 +}
 +
-+void lru_splice_add_anon(struct page *page, struct lru_splice *splice)
++/**
++ * xas_import_node() - add a node to an XArray
++ * @xas: XArray operation state
++ * @node: The node to add
++ *
++ * The range covered by @xas must be aligned to and cover a single node
++ * at any level of the tree.  No nodes should already exist within the
++ * range.
++ * Sets an error in @xas if the range is invalid or xas_create() fails
++ */
++void xas_import_node(struct xa_state *xas, struct xa_node *node)
 +{
-+	if (PageActive(page))
-+		ClearPageActive(page);
-+	get_page(page);
++	struct xa_node *parent = NULL;
++	void __rcu **slot = &xas->xa->xa_head;
++	int count = 0;
 +
-+	lru_splice_add(page, splice);
++	if (!xas->xa_shift || xas->xa_sibs) {
++		xas_set_err(xas, -EINVAL);
++		return;
++	}
 +
-+	put_page(page);
++	if (xas->xa_index || xa_head_locked(xas->xa)) {
++		xas_set_order(xas, xas->xa_index, node->shift + XA_CHUNK_SHIFT);
++		xas_create(xas, true);
++
++		if (xas_invalid(xas))
++			return;
++
++		parent = xas->xa_node;
++	}
++
++	if (parent) {
++		slot = &parent->slots[xas->xa_offset];
++		node->offset = xas->xa_offset;
++		count++;
++	}
++
++	RCU_INIT_POINTER(node->parent, parent);
++	node->array = xas->xa;
++
++	rcu_assign_pointer(*slot, xa_mk_node(node));
++
++	update_node(xas, parent, count, 0);
 +}
 +
- static void pagevec_lru_move_fn(struct pagevec *pvec,
- 	void (*move_fn)(struct page *page, struct lruvec *lruvec, void *arg),
- 	void *arg)
++/**
+  * xa_store_range() - Store this entry at a range of indices in the XArray.
+  * @xa: XArray.
+  * @first: First index to affect.
 -- 
 2.13.3
 
