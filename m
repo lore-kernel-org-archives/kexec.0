@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jX2Po-0004HU-OR
- for kexec@lists.infradead.org; Fri, 08 May 2020 12:47:46 +0000
-Date: Fri, 8 May 2020 08:47:19 -0400
-From: Rafael Aquini <aquini@redhat.com>
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200508124719.GB367616@optiplex-lnx>
-References: <20200507180631.308441-1-aquini@redhat.com>
- <20200507182257.GX11244@42.do-not-panic.com>
- <20200507184307.GF205881@optiplex-lnx>
- <20200507184705.GG205881@optiplex-lnx>
- <20200507203340.GZ11244@42.do-not-panic.com>
- <20200507220606.GK205881@optiplex-lnx>
- <20200507222558.GA11244@42.do-not-panic.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200507222558.GA11244@42.do-not-panic.com>
+ id 1jXCnl-0002nG-E5
+ for kexec@lists.infradead.org; Fri, 08 May 2020 23:53:10 +0000
+Date: Fri, 8 May 2020 16:53:06 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user
+ space after unloading kmem
+Message-Id: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
+In-Reply-To: <20200508084217.9160-2-david@redhat.com>
+References: <20200508084217.9160-1-david@redhat.com>
+ <20200508084217.9160-2-david@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,47 +20,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Jeff Mahoney <jeffm@suse.com>, bhe@redhat.com, corbet@lwn.net, Laura Abbott <labbott@redhat.com>, dyoung@redhat.com, Ann Davis <AnDavis@suse.com>, Richard Palethorpe <rpalethorpe@suse.de>, keescook@chromium.org, Jiri Kosina <jikos@kernel.org>, cai@lca.pw, Adrian Bunk <bunk@kernel.org>, Tso Ted <tytso@mit.edu>, Jessica Yu <jeyu@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>
 
-On Thu, May 07, 2020 at 10:25:58PM +0000, Luis Chamberlain wrote:
-> On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
-> > On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
-> > > I *think* that a cmdline route to enable this would likely remove the
-> > > need for the kernel config for this. But even with Vlastimil's work
-> > > merged, I think we'd want yet-another value to enable / disable this
-> > > feature. Do we need yet-another-taint flag to tell us that this feature
-> > > was enabled?
-> > >
-> > 
-> > I guess it makes sense to get rid of the sysctl interface for
-> > proc_on_taint, and only keep it as a cmdline option. 
-> 
-> That would be easier to support and k3eps this simple.
-> 
-> > But the real issue seems to be, regardless we go with a cmdline-only option
-> > or not, the ability of proc_taint() to set any arbitrary taint flag 
-> > other than just marking the kernel with TAINT_USER. 
-> 
-> I think we would have no other option but to add a new TAINT flag so
-> that we know that the taint flag was modified by a user. Perhaps just
-> re-using TAINT_USER when proc_taint() would suffice.
->
-
-We might not need an extra taint flag if, perhaps, we could make these
-two features mutually exclusive. The idea here is that bitmasks added 
-via panic_on_taint get filtered out in proc_taint(), so a malicious 
-user couldn't exploit the latter interface to easily panic the system,
-when the first one is also in use. 
- 
--- Rafael
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCAgOCBNYXkgMjAyMCAxMDo0MjoxNCArMDIwMCBEYXZpZCBIaWxkZW5icmFuZCA8ZGF2
+aWRAcmVkaGF0LmNvbT4gd3JvdGU6Cgo+IEFzc3VtZSB3ZSBoYXZlIGttZW0gY29uZmlndXJlZCBh
+bmQgbG9hZGVkOgo+ICAgW3Jvb3RAbG9jYWxob3N0IH5dIyBjYXQgL3Byb2MvaW9tZW0KPiAgIC4u
+Lgo+ICAgMTQwMDAwMDAwLTMzZmZmZmZmZiA6IFBlcnNpc3RlbnQgTWVtb3J5JAo+ICAgICAxNDAw
+MDAwMDAtMTQ4MWZmZmZmIDogbmFtZXNwYWNlMC4wCj4gICAgIDE1MDAwMDAwMC0zM2ZmZmZmZmYg
+OiBkYXgwLjAKPiAgICAgICAxNTAwMDAwMDAtMzNmZmZmZmZmIDogU3lzdGVtIFJBTQo+IAo+IEFz
+c3VtZSB3ZSB0cnkgdG8gdW5sb2FkIGttZW0uIFRoaXMgZm9yY2UtdW5sb2FkaW5nIHdpbGwgd29y
+aywgZXZlbiBpZgo+IG1lbW9yeSBjYW5ub3QgZ2V0IHJlbW92ZWQgZnJvbSB0aGUgc3lzdGVtLgo+
+ICAgW3Jvb3RAbG9jYWxob3N0IH5dIyBybW1vZCBrbWVtCj4gICBbICAgODYuMzgwMjI4XSByZW1v
+dmluZyBtZW1vcnkgZmFpbHMsIGJlY2F1c2UgbWVtb3J5IFsweDAwMDAwMDAxNTAwMDAwMDAtMHgw
+MDAwMDAwMTU3ZmZmZmZmXSBpcyBvbmxpbmVkCj4gICAuLi4KPiAgIFsgICA4Ni40MzEyMjVdIGtt
+ZW0gZGF4MC4wOiBEQVggcmVnaW9uIFttZW0gMHgxNTAwMDAwMDAtMHgzM2ZmZmZmZmZdIGNhbm5v
+dCBiZSBob3RyZW1vdmVkIHVudGlsIHRoZSBuZXh0IHJlYm9vdAo+IAo+IE5vdywgd2UgY2FuIHJl
+Y29uZmlndXJlIHRoZSBuYW1lc3BhY2U6Cj4gICBbcm9vdEBsb2NhbGhvc3Qgfl0jIG5kY3RsIGNy
+ZWF0ZS1uYW1lc3BhY2UgLS1mb3JjZSAtLXJlY29uZmlnPW5hbWVzcGFjZTAuMCAtLW1vZGU9ZGV2
+ZGF4Cj4gICBbICAxMzEuNDA5MzUxXSBuZF9wbWVtIG5hbWVzcGFjZTAuMDogY291bGQgbm90IHJl
+c2VydmUgcmVnaW9uIFttZW0gMHgxNDAwMDAwMDAtMHgzM2ZmZmZmZmZdZGF4Cj4gICBbICAxMzEu
+NDEwMTQ3XSBuZF9wbWVtOiBwcm9iZSBvZiBuYW1lc3BhY2UwLjAgZmFpbGVkIHdpdGggZXJyb3Ig
+LTE2bmFtZXNwYWNlMC4wIC0tbW9kZT1kZXZkYXgKPiAgIC4uLgo+IAo+IFRoaXMgZmFpbHMgYXMg
+ZXhwZWN0ZWQgZHVlIHRvIHRoZSBidXN5IG1lbW9yeSByZXNvdXJjZSwgYW5kIHRoZSBtZW1vcnkK
+PiBjYW5ub3QgYmUgdXNlZC4gSG93ZXZlciwgdGhlIGRheDAuMCBkZXZpY2UgaXMgcmVtb3ZlZCwg
+YW5kIGFsb25nIGl0cyBuYW1lLgo+IAo+IFRoZSBuYW1lIG9mIHRoZSBtZW1vcnkgcmVzb3VyY2Ug
+bm93IHBvaW50cyBhdCBmcmVlZCBtZW1vcnkgKG5hbWUgb2YgdGhlCj4gZGV2aWNlKS4KPiAgIFty
+b290QGxvY2FsaG9zdCB+XSMgY2F0IC9wcm9jL2lvbWVtCj4gICAuLi4KPiAgIDE0MDAwMDAwMC0z
+M2ZmZmZmZmYgOiBQZXJzaXN0ZW50IE1lbW9yeQo+ICAgICAxNDAwMDAwMDAtMTQ4MWZmZmZmIDog
+bmFtZXNwYWNlMC4wCj4gICAgIDE1MDAwMDAwMC0zM2ZmZmZmZmYgOiDvv71f77+9Xjdf77+977+9
+L1/vv73vv713Uu+/ve+/vVdR77+977+977+9Xu+/ve+/ve+/vSAuLi4KPiAgICAgMTUwMDAwMDAw
+LTMzZmZmZmZmZiA6IFN5c3RlbSBSQU0KPiAKPiBXZSBoYXZlIHRvIG1ha2Ugc3VyZSB0byBkdXBs
+aWNhdGUgdGhlIHN0cmluZy4gV2hpbGUgYXQgaXQsIHJlbW92ZSB0aGUKPiBzdXBlcmZsdW91cyBz
+ZXR0aW5nIG9mIHRoZSBuYW1lIGFuZCBmaXh1cCBhIHN0YWxlIGNvbW1lbnQuCj4gCj4gRml4ZXM6
+IDlmOTYwZGE3MmIyNSAoImRldmljZS1kYXg6ICJIb3RyZW1vdmUiIHBlcnNpc3RlbnQgbWVtb3J5
+IHRoYXQgaXMgdXNlZCBsaWtlIG5vcm1hbCBSQU0iKQo+IENjOiBzdGFibGVAdmdlci5rZXJuZWwu
+b3JnICMgdjUuMwoKaG0uCgpJcyB0aGlzIHJlYWxseSAtc3RhYmxlIG1hdGVyaWFsPyAgVGhlc2Ug
+YXJlIGFsbCBwcml2aWxlZ2VkIG9wZXJhdGlvbnMsCkkgZXhwZWN0PwoKQXNzdW1pbmcgInllcyIs
+IEkndmUgcXVldWVkIHRoaXMgc2VwYXJhdGVseSwgc3RhZ2VkIGZvciA1LjctcmNYLiAgSSdsbApy
+ZWRvIHBhdGNoZXMgMi00IGFzIGEgdGhyZWUtcGF0Y2ggc2VyaWVzIGZvciA1LjgtcmMxLgoKPiBD
+YzogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+Cj4gQ2M6IFZpc2hhbCBW
+ZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPgo+IENjOiBEYXZlIEppYW5nIDxkYXZlLmpp
+YW5nQGludGVsLmNvbT4KPiBDYzogUGF2ZWwgVGF0YXNoaW4gPHBhc2hhLnRhdGFzaGluQHNvbGVl
+bi5jb20+CgpSZXZpZXdlcnMsIHBsZWFzZSA7KQoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
