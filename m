@@ -1,25 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f195.google.com ([209.85.215.195])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jXGU1-00027P-0X
- for kexec@lists.infradead.org; Sat, 09 May 2020 03:49:02 +0000
-Received: by mail-pg1-f195.google.com with SMTP id 207so1825149pgc.6
- for <kexec@lists.infradead.org>; Fri, 08 May 2020 20:48:57 -0700 (PDT)
-Date: Sat, 9 May 2020 03:48:54 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v2] kernel: add panic_on_taint
-Message-ID: <20200509034854.GI11244@42.do-not-panic.com>
-References: <20200507180631.308441-1-aquini@redhat.com>
- <20200507182257.GX11244@42.do-not-panic.com>
- <20200507184307.GF205881@optiplex-lnx>
- <20200507184705.GG205881@optiplex-lnx>
- <20200507203340.GZ11244@42.do-not-panic.com>
- <20200507220606.GK205881@optiplex-lnx>
- <20200507222558.GA11244@42.do-not-panic.com>
- <20200508124719.GB367616@optiplex-lnx>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200508124719.GB367616@optiplex-lnx>
+ id 1jXIE6-0008IJ-HA
+ for kexec@lists.infradead.org; Sat, 09 May 2020 05:40:44 +0000
+Received: by mail-wr1-f71.google.com with SMTP id d16so1913507wrv.18
+ for <kexec@lists.infradead.org>; Fri, 08 May 2020 22:40:36 -0700 (PDT)
+From: David Hildenbrand <david@redhat.com>
+Mime-Version: 1.0 (1.0)
+Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user space
+ after unloading kmem
+Date: Sat, 9 May 2020 07:40:33 +0200
+Message-Id: <B72EB609-44DC-4133-820C-9BEA95CA012D@redhat.com>
+References: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
+In-Reply-To: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,52 +22,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rafael Aquini <aquini@redhat.com>
-Cc: linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Jeff Mahoney <jeffm@suse.com>, bhe@redhat.com, corbet@lwn.net, Laura Abbott <labbott@redhat.com>, dyoung@redhat.com, Ann Davis <AnDavis@suse.com>, Richard Palethorpe <rpalethorpe@suse.de>, keescook@chromium.org, Jiri Kosina <jikos@kernel.org>, cai@lca.pw, Adrian Bunk <bunk@kernel.org>, Tso Ted <tytso@mit.edu>, Jessica Yu <jeyu@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, David Hildenbrand <david@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>
 
-On Fri, May 08, 2020 at 08:47:19AM -0400, Rafael Aquini wrote:
-> On Thu, May 07, 2020 at 10:25:58PM +0000, Luis Chamberlain wrote:
-> > On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
-> > > On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
-> > > > I *think* that a cmdline route to enable this would likely remove the
-> > > > need for the kernel config for this. But even with Vlastimil's work
-> > > > merged, I think we'd want yet-another value to enable / disable this
-> > > > feature. Do we need yet-another-taint flag to tell us that this feature
-> > > > was enabled?
-> > > >
-> > > 
-> > > I guess it makes sense to get rid of the sysctl interface for
-> > > proc_on_taint, and only keep it as a cmdline option. 
-> > 
-> > That would be easier to support and k3eps this simple.
-> > 
-> > > But the real issue seems to be, regardless we go with a cmdline-only option
-> > > or not, the ability of proc_taint() to set any arbitrary taint flag 
-> > > other than just marking the kernel with TAINT_USER. 
-> > 
-> > I think we would have no other option but to add a new TAINT flag so
-> > that we know that the taint flag was modified by a user. Perhaps just
-> > re-using TAINT_USER when proc_taint() would suffice.
-> >
-> 
-> We might not need an extra taint flag if, perhaps, we could make these
-> two features mutually exclusive. The idea here is that bitmasks added 
-> via panic_on_taint get filtered out in proc_taint(), so a malicious 
-> user couldn't exploit the latter interface to easily panic the system,
-> when the first one is also in use. 
-
-I get it, however I I can still see the person who enables enabling
-panic-on-tain wanting to know if proc_taint() was used. So even if
-it was not on their mask, if it was modified that seems like important
-information for a bug report analysis.
-
-  Luis
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Cgo+IEFtIDA5LjA1LjIwMjAgdW0gMDE6NTMgc2NocmllYiBBbmRyZXcgTW9ydG9uIDxha3BtQGxp
+bnV4LWZvdW5kYXRpb24ub3JnPjoKPiAKPiDvu79PbiBGcmksICA4IE1heSAyMDIwIDEwOjQyOjE0
+ICswMjAwIERhdmlkIEhpbGRlbmJyYW5kIDxkYXZpZEByZWRoYXQuY29tPiB3cm90ZToKPiAKPj4g
+QXNzdW1lIHdlIGhhdmUga21lbSBjb25maWd1cmVkIGFuZCBsb2FkZWQ6Cj4+ICBbcm9vdEBsb2Nh
+bGhvc3Qgfl0jIGNhdCAvcHJvYy9pb21lbQo+PiAgLi4uCj4+ICAxNDAwMDAwMDAtMzNmZmZmZmZm
+IDogUGVyc2lzdGVudCBNZW1vcnkkCj4+ICAgIDE0MDAwMDAwMC0xNDgxZmZmZmYgOiBuYW1lc3Bh
+Y2UwLjAKPj4gICAgMTUwMDAwMDAwLTMzZmZmZmZmZiA6IGRheDAuMAo+PiAgICAgIDE1MDAwMDAw
+MC0zM2ZmZmZmZmYgOiBTeXN0ZW0gUkFNCj4+IAo+PiBBc3N1bWUgd2UgdHJ5IHRvIHVubG9hZCBr
+bWVtLiBUaGlzIGZvcmNlLXVubG9hZGluZyB3aWxsIHdvcmssIGV2ZW4gaWYKPj4gbWVtb3J5IGNh
+bm5vdCBnZXQgcmVtb3ZlZCBmcm9tIHRoZSBzeXN0ZW0uCj4+ICBbcm9vdEBsb2NhbGhvc3Qgfl0j
+IHJtbW9kIGttZW0KPj4gIFsgICA4Ni4zODAyMjhdIHJlbW92aW5nIG1lbW9yeSBmYWlscywgYmVj
+YXVzZSBtZW1vcnkgWzB4MDAwMDAwMDE1MDAwMDAwMC0weDAwMDAwMDAxNTdmZmZmZmZdIGlzIG9u
+bGluZWQKPj4gIC4uLgo+PiAgWyAgIDg2LjQzMTIyNV0ga21lbSBkYXgwLjA6IERBWCByZWdpb24g
+W21lbSAweDE1MDAwMDAwMC0weDMzZmZmZmZmZl0gY2Fubm90IGJlIGhvdHJlbW92ZWQgdW50aWwg
+dGhlIG5leHQgcmVib290Cj4+IAo+PiBOb3csIHdlIGNhbiByZWNvbmZpZ3VyZSB0aGUgbmFtZXNw
+YWNlOgo+PiAgW3Jvb3RAbG9jYWxob3N0IH5dIyBuZGN0bCBjcmVhdGUtbmFtZXNwYWNlIC0tZm9y
+Y2UgLS1yZWNvbmZpZz1uYW1lc3BhY2UwLjAgLS1tb2RlPWRldmRheAo+PiAgWyAgMTMxLjQwOTM1
+MV0gbmRfcG1lbSBuYW1lc3BhY2UwLjA6IGNvdWxkIG5vdCByZXNlcnZlIHJlZ2lvbiBbbWVtIDB4
+MTQwMDAwMDAwLTB4MzNmZmZmZmZmXWRheAo+PiAgWyAgMTMxLjQxMDE0N10gbmRfcG1lbTogcHJv
+YmUgb2YgbmFtZXNwYWNlMC4wIGZhaWxlZCB3aXRoIGVycm9yIC0xNm5hbWVzcGFjZTAuMCAtLW1v
+ZGU9ZGV2ZGF4Cj4+ICAuLi4KPj4gCj4+IFRoaXMgZmFpbHMgYXMgZXhwZWN0ZWQgZHVlIHRvIHRo
+ZSBidXN5IG1lbW9yeSByZXNvdXJjZSwgYW5kIHRoZSBtZW1vcnkKPj4gY2Fubm90IGJlIHVzZWQu
+IEhvd2V2ZXIsIHRoZSBkYXgwLjAgZGV2aWNlIGlzIHJlbW92ZWQsIGFuZCBhbG9uZyBpdHMgbmFt
+ZS4KPj4gCj4+IFRoZSBuYW1lIG9mIHRoZSBtZW1vcnkgcmVzb3VyY2Ugbm93IHBvaW50cyBhdCBm
+cmVlZCBtZW1vcnkgKG5hbWUgb2YgdGhlCj4+IGRldmljZSkuCj4+ICBbcm9vdEBsb2NhbGhvc3Qg
+fl0jIGNhdCAvcHJvYy9pb21lbQo+PiAgLi4uCj4+ICAxNDAwMDAwMDAtMzNmZmZmZmZmIDogUGVy
+c2lzdGVudCBNZW1vcnkKPj4gICAgMTQwMDAwMDAwLTE0ODFmZmZmZiA6IG5hbWVzcGFjZTAuMAo+
+PiAgICAxNTAwMDAwMDAtMzNmZmZmZmZmIDog77+9X++/vV43X++/ve+/vS9f77+977+9d1Lvv73v
+v71XUe+/ve+/ve+/vV7vv73vv73vv70gLi4uCj4+ICAgIDE1MDAwMDAwMC0zM2ZmZmZmZmYgOiBT
+eXN0ZW0gUkFNCj4+IAo+PiBXZSBoYXZlIHRvIG1ha2Ugc3VyZSB0byBkdXBsaWNhdGUgdGhlIHN0
+cmluZy4gV2hpbGUgYXQgaXQsIHJlbW92ZSB0aGUKPj4gc3VwZXJmbHVvdXMgc2V0dGluZyBvZiB0
+aGUgbmFtZSBhbmQgZml4dXAgYSBzdGFsZSBjb21tZW50Lgo+PiAKPj4gRml4ZXM6IDlmOTYwZGE3
+MmIyNSAoImRldmljZS1kYXg6ICJIb3RyZW1vdmUiIHBlcnNpc3RlbnQgbWVtb3J5IHRoYXQgaXMg
+dXNlZCBsaWtlIG5vcm1hbCBSQU0iKQo+PiBDYzogc3RhYmxlQHZnZXIua2VybmVsLm9yZyAjIHY1
+LjMKPiAKPiBobS4KPiAKPiBJcyB0aGlzIHJlYWxseSAtc3RhYmxlIG1hdGVyaWFsPyAgVGhlc2Ug
+YXJlIGFsbCBwcml2aWxlZ2VkIG9wZXJhdGlvbnMsCj4gSSBleHBlY3Q/CgpZZXMsIG15IHRob3Vn
+aHQgd2FzIHJhdGhlciB0aGF0IGFuIGFkbWluIGNvdWxkIGJyaW5nIHRoZSBzeXN0ZW0gaW50byBz
+dWNoIGEgc3RhdGUgKGJ5IG1pc3Rha2U/KS4gTGV04oCYcyBzZWUgaWYgc29tZWJvZHkgaGFzIGEg
+c3VnZ2VzdGlvbi4KCkkgZ3Vlc3MgaWYgd2Ugd2VyZSByZWFsbHkgdW5sdWNreSwgd2UgY291bGQg
+YWNjZXNzIGludmFsaWQgbWVtb3J5IGFuZCB0cmlnZ2VyIGEgQlVHIChlLmcuLCBwYWdlIGF0IHRo
+ZSBlbmQgb2YgbWVtb3J5IGFuZCBkb2VzIG5vdCBjb250YWluIGEgMCBieXRlKS4KCj4gCj4gQXNz
+dW1pbmcgInllcyIsIEkndmUgcXVldWVkIHRoaXMgc2VwYXJhdGVseSwgc3RhZ2VkIGZvciA1Ljct
+cmNYLiAgSSdsbAo+IHJlZG8gcGF0Y2hlcyAyLTQgYXMgYSB0aHJlZS1wYXRjaCBzZXJpZXMgZm9y
+IDUuOC1yYzEuCgpNYWtlIHNlbnNlLCBsZXTigJhzIHdhaXQgZm9yIHJldmlldyBmZWVkYmFjaywg
+dGhhbmtzIQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
