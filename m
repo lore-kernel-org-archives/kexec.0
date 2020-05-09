@@ -1,13 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 8 May 2020 17:45:36 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
- memory resource names
-Message-Id: <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
-In-Reply-To: <20200326180730.4754-3-james.morse@arm.com>
-References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-3-james.morse@arm.com>
-Mime-Version: 1.0
+Received: from mail-pg1-f195.google.com ([209.85.215.195])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXGU1-00027P-0X
+ for kexec@lists.infradead.org; Sat, 09 May 2020 03:49:02 +0000
+Received: by mail-pg1-f195.google.com with SMTP id 207so1825149pgc.6
+ for <kexec@lists.infradead.org>; Fri, 08 May 2020 20:48:57 -0700 (PDT)
+Date: Sat, 9 May 2020 03:48:54 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v2] kernel: add panic_on_taint
+Message-ID: <20200509034854.GI11244@42.do-not-panic.com>
+References: <20200507180631.308441-1-aquini@redhat.com>
+ <20200507182257.GX11244@42.do-not-panic.com>
+ <20200507184307.GF205881@optiplex-lnx>
+ <20200507184705.GG205881@optiplex-lnx>
+ <20200507203340.GZ11244@42.do-not-panic.com>
+ <20200507220606.GK205881@optiplex-lnx>
+ <20200507222558.GA11244@42.do-not-panic.com>
+ <20200508124719.GB367616@optiplex-lnx>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200508124719.GB367616@optiplex-lnx>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,70 +32,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: Rafael Aquini <aquini@redhat.com>
+Cc: linux-doc@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Jeff Mahoney <jeffm@suse.com>, bhe@redhat.com, corbet@lwn.net, Laura Abbott <labbott@redhat.com>, dyoung@redhat.com, Ann Davis <AnDavis@suse.com>, Richard Palethorpe <rpalethorpe@suse.de>, keescook@chromium.org, Jiri Kosina <jikos@kernel.org>, cai@lca.pw, Adrian Bunk <bunk@kernel.org>, Tso Ted <tytso@mit.edu>, Jessica Yu <jeyu@suse.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Thu, 26 Mar 2020 18:07:29 +0000 James Morse <james.morse@arm.com> wrote:
-
-> Memory added to the system by hotplug has a 'System RAM' resource created
-> for it. This is exposed to user-space via /proc/iomem.
+On Fri, May 08, 2020 at 08:47:19AM -0400, Rafael Aquini wrote:
+> On Thu, May 07, 2020 at 10:25:58PM +0000, Luis Chamberlain wrote:
+> > On Thu, May 07, 2020 at 06:06:06PM -0400, Rafael Aquini wrote:
+> > > On Thu, May 07, 2020 at 08:33:40PM +0000, Luis Chamberlain wrote:
+> > > > I *think* that a cmdline route to enable this would likely remove the
+> > > > need for the kernel config for this. But even with Vlastimil's work
+> > > > merged, I think we'd want yet-another value to enable / disable this
+> > > > feature. Do we need yet-another-taint flag to tell us that this feature
+> > > > was enabled?
+> > > >
+> > > 
+> > > I guess it makes sense to get rid of the sysctl interface for
+> > > proc_on_taint, and only keep it as a cmdline option. 
+> > 
+> > That would be easier to support and k3eps this simple.
+> > 
+> > > But the real issue seems to be, regardless we go with a cmdline-only option
+> > > or not, the ability of proc_taint() to set any arbitrary taint flag 
+> > > other than just marking the kernel with TAINT_USER. 
+> > 
+> > I think we would have no other option but to add a new TAINT flag so
+> > that we know that the taint flag was modified by a user. Perhaps just
+> > re-using TAINT_USER when proc_taint() would suffice.
+> >
 > 
-> This poses problems for kexec on arm64. If kexec decides to place the
-> kernel in one of these newly onlined regions, the new kernel will find
-> itself booting from a region not described as memory in the firmware
-> tables.
-> 
-> Arm64 doesn't have a structure like the e820 memory map that can be
-> re-written when memory is brought online. Instead arm64 uses the UEFI
-> memory map, or the memory node from the DT, sometimes both. We never
-> rewrite these.
-> 
-> Allow an architecture to specify a different name for these hotplug
-> regions.
-> 
-> ...
->
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -42,6 +42,10 @@
->  #include "internal.h"
->  #include "shuffle.h"
->  
-> +#ifndef MEMORY_HOTPLUG_RES_NAME
-> +#define MEMORY_HOTPLUG_RES_NAME "System RAM"
-> +#endif
-> +
->  /*
->   * online_page_callback contains pointer to current page onlining function.
->   * Initially it is generic_online_page(). If it is required it could be
-> @@ -103,7 +107,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
->  {
->  	struct resource *res;
->  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> -	char *resource_name = "System RAM";
-> +	char *resource_name = MEMORY_HOTPLUG_RES_NAME;
->  
->  	if (start + size > max_mem_size)
->  		return ERR_PTR(-E2BIG);
+> We might not need an extra taint flag if, perhaps, we could make these
+> two features mutually exclusive. The idea here is that bitmasks added 
+> via panic_on_taint get filtered out in proc_taint(), so a malicious 
+> user couldn't exploit the latter interface to easily panic the system,
+> when the first one is also in use. 
 
-I suppose we should do this as well:
+I get it, however I I can still see the person who enables enabling
+panic-on-tain wanting to know if proc_taint() was used. So even if
+it was not on their mask, if it was modified that seems like important
+information for a bug report analysis.
 
---- a/mm/memory_hotplug.c~mm-memory_hotplug-allow-arch-override-of-non-boot-memory-resource-names-fix
-+++ a/mm/memory_hotplug.c
-@@ -129,7 +129,8 @@ static struct resource *register_memory_
- 			       resource_name, flags);
- 
- 	if (!res) {
--		pr_debug("Unable to reserve System RAM region: %016llx->%016llx\n",
-+		pr_debug("Unable to reserve " MEMORY_HOTPLUG_RES_NAME
-+				" region: %016llx->%016llx\n",
- 				start, start + size);
- 		return ERR_PTR(-EEXIST);
- 	}
-
-It assumes that MEMORY_HOTPLUG_RES_NAME will be a literal string, which
-is the case in [3/3].
-
+  Luis
 
 _______________________________________________
 kexec mailing list
