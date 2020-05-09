@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20200501165701.24587-1-james.morse@arm.com>
- <40b07632-b044-d1cd-96a2-81eec3da93e7@redhat.com>
-Date: Sat, 09 May 2020 10:14:49 -0500
-In-Reply-To: <40b07632-b044-d1cd-96a2-81eec3da93e7@redhat.com> (David
- Hildenbrand's message of "Fri, 1 May 2020 19:26:39 +0200")
-Message-ID: <8736892l92.fsf@x220.int.ebiederm.org>
+Received: from mail-pj1-x1041.google.com ([2607:f8b0:4864:20::1041])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jXUgs-0000b4-1k
+ for kexec@lists.infradead.org; Sat, 09 May 2020 18:59:15 +0000
+Received: by mail-pj1-x1041.google.com with SMTP id e6so5739950pjt.4
+ for <kexec@lists.infradead.org>; Sat, 09 May 2020 11:59:13 -0700 (PDT)
+Date: Sat, 9 May 2020 11:59:10 -0700
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v3] kernel: add panic_on_taint
+Message-ID: <202005091159.A317BEFF@keescook>
+References: <20200509135737.622299-1-aquini@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH] kexec: Discard loaded image on memory hotplug
+Content-Disposition: inline
+In-Reply-To: <20200509135737.622299-1-aquini@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,89 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Rafael Aquini <aquini@redhat.com>
+Cc: linux-doc@vger.kernel.org, tiwai@suse.de, jeffm@suse.com, bhe@redhat.com, corbet@lwn.net, labbott@redhat.com, dyoung@redhat.com, AnDavis@suse.com, rpalethorpe@suse.de, jikos@kernel.org, cai@lca.pw, bunk@kernel.org, tytso@mit.edu, jeyu@suse.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org
 
-David Hildenbrand <david@redhat.com> writes:
+On Sat, May 09, 2020 at 09:57:37AM -0400, Rafael Aquini wrote:
+> Analogously to the introduction of panic_on_warn, this patch
+> introduces a kernel option named panic_on_taint in order to
+> provide a simple and generic way to stop execution and catch
+> a coredump when the kernel gets tainted by any given taint flag.
+> 
+> This is useful for debugging sessions as it avoids rebuilding
+> the kernel to explicitly add calls to panic() or BUG() into
+> code sites that introduce the taint flags of interest.
+> Another, perhaps less frequent, use for this option would be
+> as a mean for assuring a security policy (in paranoid mode)
+> case where no single taint is allowed for the running system.
+> 
+> Suggested-by: Qian Cai <cai@lca.pw>
+> Signed-off-by: Rafael Aquini <aquini@redhat.com>
 
-> On 01.05.20 18:57, James Morse wrote:
->> On x86, the kexec payload contains a copy of the current memory map.
->> If memory is added or removed, this copy of the memory map becomes
->> stale. Getting this wrong may prevent the next kernel from booting.
->> The first kernel may die if it tries to re-assemble the next kernel
->> in memory that has been removed.
->> 
->> Discard the loaded kexec image when the memory map changes, user-space
->> should reload it.
->> 
->> Kdump is unaffected, as it is placed within the crashkernel reserved
->> memory area and only uses this memory. The stale memory map may affect
->> generation of the vmcore, but the kdump kernel should be in a position
->> to validate it.
->> 
->> Signed-off-by: James Morse <james.morse@arm.com>
->> ---
->> This patch obsoletes:
->>  * kexec/memory_hotplug: Prevent removal and accidental use
->> https://lore.kernel.org/linux-arm-kernel/20200326180730.4754-1-james.morse@arm.com/
->> 
->>  kernel/kexec_core.c | 40 ++++++++++++++++++++++++++++++++++++++++
->>  1 file changed, 40 insertions(+)
->> 
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index c19c0dad1ebe..e1901e5bd4b5 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -12,6 +12,7 @@
->>  #include <linux/slab.h>
->>  #include <linux/fs.h>
->>  #include <linux/kexec.h>
->> +#include <linux/memory.h>
->>  #include <linux/mutex.h>
->>  #include <linux/list.h>
->>  #include <linux/highmem.h>
->> @@ -22,10 +23,12 @@
->>  #include <linux/elf.h>
->>  #include <linux/elfcore.h>
->>  #include <linux/utsname.h>
->> +#include <linux/notifier.h>
->>  #include <linux/numa.h>
->>  #include <linux/suspend.h>
->>  #include <linux/device.h>
->>  #include <linux/freezer.h>
->> +#include <linux/pfn.h>
->>  #include <linux/pm.h>
->>  #include <linux/cpu.h>
->>  #include <linux/uaccess.h>
->> @@ -1219,3 +1222,40 @@ void __weak arch_kexec_protect_crashkres(void)
->>  
->>  void __weak arch_kexec_unprotect_crashkres(void)
->>  {}
->> +
->> +/*
->> + * If the memory layout changes, any loaded kexec image should be evicted
->> + * as it may contain a copy of the (now stale) memory map. This also means
->> + * we don't need to check the memory is still present when re-assembling the
->> + * new kernel at machine_kexec() time.
->> + */
->
-> Onlining/offlining is not a change of the memory map.
+Reviewed-by: Kees Cook <keescook@chromium.org>
 
-Phrasing it that way is non-sense.  What is important is memory
-available in the system.  A memory map is just a reflection upon that,
-a memory map is not the definition of truth.
-
-So if this notifier reflects when memory is coming and going on the
-system this is a reasonable approach.  
-
-Do these notifiers might fire for special kinds of memory that should
-only be used for very special purposes?
-
-This change with the addition of some filters say to limit taking action
-to MEM_ONLINE and MEM_OFFLINE looks reasonable to me.  Probably also
-filtering out special kinds of memory that is not gernally useful.
-
-Eric
+-- 
+Kees Cook
 
 _______________________________________________
 kexec mailing list
