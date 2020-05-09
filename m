@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jXCnl-0002nG-E5
- for kexec@lists.infradead.org; Fri, 08 May 2020 23:53:10 +0000
-Date: Fri, 8 May 2020 16:53:06 -0700
+Date: Fri, 8 May 2020 17:45:36 -0700
 From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v4 1/4] device-dax: Don't leak kernel memory to user
- space after unloading kmem
-Message-Id: <20200508165306.7cd806f7e451c5c9bc2a40ac@linux-foundation.org>
-In-Reply-To: <20200508084217.9160-2-david@redhat.com>
-References: <20200508084217.9160-1-david@redhat.com>
- <20200508084217.9160-2-david@redhat.com>
+Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
+ memory resource names
+Message-Id: <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
+In-Reply-To: <20200326180730.4754-3-james.morse@arm.com>
+References: <20200326180730.4754-1-james.morse@arm.com>
+ <20200326180730.4754-3-james.morse@arm.com>
 Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,53 +16,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: Dave Jiang <dave.jiang@intel.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, linux-nvdimm@lists.01.org, Vishal Verma <vishal.l.verma@intel.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-mm@kvack.org, Dan Williams <dan.j.williams@intel.com>
+To: James Morse <james.morse@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-T24gRnJpLCAgOCBNYXkgMjAyMCAxMDo0MjoxNCArMDIwMCBEYXZpZCBIaWxkZW5icmFuZCA8ZGF2
-aWRAcmVkaGF0LmNvbT4gd3JvdGU6Cgo+IEFzc3VtZSB3ZSBoYXZlIGttZW0gY29uZmlndXJlZCBh
-bmQgbG9hZGVkOgo+ICAgW3Jvb3RAbG9jYWxob3N0IH5dIyBjYXQgL3Byb2MvaW9tZW0KPiAgIC4u
-Lgo+ICAgMTQwMDAwMDAwLTMzZmZmZmZmZiA6IFBlcnNpc3RlbnQgTWVtb3J5JAo+ICAgICAxNDAw
-MDAwMDAtMTQ4MWZmZmZmIDogbmFtZXNwYWNlMC4wCj4gICAgIDE1MDAwMDAwMC0zM2ZmZmZmZmYg
-OiBkYXgwLjAKPiAgICAgICAxNTAwMDAwMDAtMzNmZmZmZmZmIDogU3lzdGVtIFJBTQo+IAo+IEFz
-c3VtZSB3ZSB0cnkgdG8gdW5sb2FkIGttZW0uIFRoaXMgZm9yY2UtdW5sb2FkaW5nIHdpbGwgd29y
-aywgZXZlbiBpZgo+IG1lbW9yeSBjYW5ub3QgZ2V0IHJlbW92ZWQgZnJvbSB0aGUgc3lzdGVtLgo+
-ICAgW3Jvb3RAbG9jYWxob3N0IH5dIyBybW1vZCBrbWVtCj4gICBbICAgODYuMzgwMjI4XSByZW1v
-dmluZyBtZW1vcnkgZmFpbHMsIGJlY2F1c2UgbWVtb3J5IFsweDAwMDAwMDAxNTAwMDAwMDAtMHgw
-MDAwMDAwMTU3ZmZmZmZmXSBpcyBvbmxpbmVkCj4gICAuLi4KPiAgIFsgICA4Ni40MzEyMjVdIGtt
-ZW0gZGF4MC4wOiBEQVggcmVnaW9uIFttZW0gMHgxNTAwMDAwMDAtMHgzM2ZmZmZmZmZdIGNhbm5v
-dCBiZSBob3RyZW1vdmVkIHVudGlsIHRoZSBuZXh0IHJlYm9vdAo+IAo+IE5vdywgd2UgY2FuIHJl
-Y29uZmlndXJlIHRoZSBuYW1lc3BhY2U6Cj4gICBbcm9vdEBsb2NhbGhvc3Qgfl0jIG5kY3RsIGNy
-ZWF0ZS1uYW1lc3BhY2UgLS1mb3JjZSAtLXJlY29uZmlnPW5hbWVzcGFjZTAuMCAtLW1vZGU9ZGV2
-ZGF4Cj4gICBbICAxMzEuNDA5MzUxXSBuZF9wbWVtIG5hbWVzcGFjZTAuMDogY291bGQgbm90IHJl
-c2VydmUgcmVnaW9uIFttZW0gMHgxNDAwMDAwMDAtMHgzM2ZmZmZmZmZdZGF4Cj4gICBbICAxMzEu
-NDEwMTQ3XSBuZF9wbWVtOiBwcm9iZSBvZiBuYW1lc3BhY2UwLjAgZmFpbGVkIHdpdGggZXJyb3Ig
-LTE2bmFtZXNwYWNlMC4wIC0tbW9kZT1kZXZkYXgKPiAgIC4uLgo+IAo+IFRoaXMgZmFpbHMgYXMg
-ZXhwZWN0ZWQgZHVlIHRvIHRoZSBidXN5IG1lbW9yeSByZXNvdXJjZSwgYW5kIHRoZSBtZW1vcnkK
-PiBjYW5ub3QgYmUgdXNlZC4gSG93ZXZlciwgdGhlIGRheDAuMCBkZXZpY2UgaXMgcmVtb3ZlZCwg
-YW5kIGFsb25nIGl0cyBuYW1lLgo+IAo+IFRoZSBuYW1lIG9mIHRoZSBtZW1vcnkgcmVzb3VyY2Ug
-bm93IHBvaW50cyBhdCBmcmVlZCBtZW1vcnkgKG5hbWUgb2YgdGhlCj4gZGV2aWNlKS4KPiAgIFty
-b290QGxvY2FsaG9zdCB+XSMgY2F0IC9wcm9jL2lvbWVtCj4gICAuLi4KPiAgIDE0MDAwMDAwMC0z
-M2ZmZmZmZmYgOiBQZXJzaXN0ZW50IE1lbW9yeQo+ICAgICAxNDAwMDAwMDAtMTQ4MWZmZmZmIDog
-bmFtZXNwYWNlMC4wCj4gICAgIDE1MDAwMDAwMC0zM2ZmZmZmZmYgOiDvv71f77+9Xjdf77+977+9
-L1/vv73vv713Uu+/ve+/vVdR77+977+977+9Xu+/ve+/ve+/vSAuLi4KPiAgICAgMTUwMDAwMDAw
-LTMzZmZmZmZmZiA6IFN5c3RlbSBSQU0KPiAKPiBXZSBoYXZlIHRvIG1ha2Ugc3VyZSB0byBkdXBs
-aWNhdGUgdGhlIHN0cmluZy4gV2hpbGUgYXQgaXQsIHJlbW92ZSB0aGUKPiBzdXBlcmZsdW91cyBz
-ZXR0aW5nIG9mIHRoZSBuYW1lIGFuZCBmaXh1cCBhIHN0YWxlIGNvbW1lbnQuCj4gCj4gRml4ZXM6
-IDlmOTYwZGE3MmIyNSAoImRldmljZS1kYXg6ICJIb3RyZW1vdmUiIHBlcnNpc3RlbnQgbWVtb3J5
-IHRoYXQgaXMgdXNlZCBsaWtlIG5vcm1hbCBSQU0iKQo+IENjOiBzdGFibGVAdmdlci5rZXJuZWwu
-b3JnICMgdjUuMwoKaG0uCgpJcyB0aGlzIHJlYWxseSAtc3RhYmxlIG1hdGVyaWFsPyAgVGhlc2Ug
-YXJlIGFsbCBwcml2aWxlZ2VkIG9wZXJhdGlvbnMsCkkgZXhwZWN0PwoKQXNzdW1pbmcgInllcyIs
-IEkndmUgcXVldWVkIHRoaXMgc2VwYXJhdGVseSwgc3RhZ2VkIGZvciA1LjctcmNYLiAgSSdsbApy
-ZWRvIHBhdGNoZXMgMi00IGFzIGEgdGhyZWUtcGF0Y2ggc2VyaWVzIGZvciA1LjgtcmMxLgoKPiBD
-YzogRGFuIFdpbGxpYW1zIDxkYW4uai53aWxsaWFtc0BpbnRlbC5jb20+Cj4gQ2M6IFZpc2hhbCBW
-ZXJtYSA8dmlzaGFsLmwudmVybWFAaW50ZWwuY29tPgo+IENjOiBEYXZlIEppYW5nIDxkYXZlLmpp
-YW5nQGludGVsLmNvbT4KPiBDYzogUGF2ZWwgVGF0YXNoaW4gPHBhc2hhLnRhdGFzaGluQHNvbGVl
-bi5jb20+CgpSZXZpZXdlcnMsIHBsZWFzZSA7KQoKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+On Thu, 26 Mar 2020 18:07:29 +0000 James Morse <james.morse@arm.com> wrote:
+
+> Memory added to the system by hotplug has a 'System RAM' resource created
+> for it. This is exposed to user-space via /proc/iomem.
+> 
+> This poses problems for kexec on arm64. If kexec decides to place the
+> kernel in one of these newly onlined regions, the new kernel will find
+> itself booting from a region not described as memory in the firmware
+> tables.
+> 
+> Arm64 doesn't have a structure like the e820 memory map that can be
+> re-written when memory is brought online. Instead arm64 uses the UEFI
+> memory map, or the memory node from the DT, sometimes both. We never
+> rewrite these.
+> 
+> Allow an architecture to specify a different name for these hotplug
+> regions.
+> 
+> ...
+>
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -42,6 +42,10 @@
+>  #include "internal.h"
+>  #include "shuffle.h"
+>  
+> +#ifndef MEMORY_HOTPLUG_RES_NAME
+> +#define MEMORY_HOTPLUG_RES_NAME "System RAM"
+> +#endif
+> +
+>  /*
+>   * online_page_callback contains pointer to current page onlining function.
+>   * Initially it is generic_online_page(). If it is required it could be
+> @@ -103,7 +107,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
+>  {
+>  	struct resource *res;
+>  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> -	char *resource_name = "System RAM";
+> +	char *resource_name = MEMORY_HOTPLUG_RES_NAME;
+>  
+>  	if (start + size > max_mem_size)
+>  		return ERR_PTR(-E2BIG);
+
+I suppose we should do this as well:
+
+--- a/mm/memory_hotplug.c~mm-memory_hotplug-allow-arch-override-of-non-boot-memory-resource-names-fix
++++ a/mm/memory_hotplug.c
+@@ -129,7 +129,8 @@ static struct resource *register_memory_
+ 			       resource_name, flags);
+ 
+ 	if (!res) {
+-		pr_debug("Unable to reserve System RAM region: %016llx->%016llx\n",
++		pr_debug("Unable to reserve " MEMORY_HOTPLUG_RES_NAME
++				" region: %016llx->%016llx\n",
+ 				start, start + size);
+ 		return ERR_PTR(-EEXIST);
+ 	}
+
+It assumes that MEMORY_HOTPLUG_RES_NAME will be a literal string, which
+is the case in [3/3].
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
