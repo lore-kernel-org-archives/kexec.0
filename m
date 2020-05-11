@@ -1,21 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jY71d-0005bM-Vm
- for kexec@lists.infradead.org; Mon, 11 May 2020 11:55:15 +0000
-Subject: Re: [PATCH] kexec: Discard loaded image on memory hotplug
-References: <20200501165701.24587-1-james.morse@arm.com>
- <40b07632-b044-d1cd-96a2-81eec3da93e7@redhat.com>
- <8736892l92.fsf@x220.int.ebiederm.org>
- <a1c162fe-74de-c5ca-dadf-d451e970fdea@redhat.com>
- <20200511112755.GB4922@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <04c8edd0-5c67-3ba7-5f87-c16a47b2af5c@redhat.com>
-Date: Mon, 11 May 2020 13:55:02 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200511112755.GB4922@MiWiFi-R3L-srv>
-Content-Language: en-US
+From: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Subject: [PATCH v3 1/2] arm64/crash_core: Export KERNELPACMASK in vmcoreinfo
+Date: Mon, 11 May 2020 18:31:55 +0530
+Message-Id: <1589202116-18265-1-git-send-email-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,105 +11,95 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Will Deacon <will@kernel.org>
 
-On 11.05.20 13:27, Baoquan He wrote:
-> On 05/11/20 at 10:19am, David Hildenbrand wrote:
->> On 09.05.20 17:14, Eric W. Biederman wrote:
->>>>> + * If the memory layout changes, any loaded kexec image should be evicted
->>>>> + * as it may contain a copy of the (now stale) memory map. This also means
->>>>> + * we don't need to check the memory is still present when re-assembling the
->>>>> + * new kernel at machine_kexec() time.
->>>>> + */
->>>>
->>>> Onlining/offlining is not a change of the memory map.
->>>
->>> Phrasing it that way is non-sense.  What is important is memory
->>> available in the system.  A memory map is just a reflection upon that,
->>> a memory map is not the definition of truth.
->>>
->>> So if this notifier reflects when memory is coming and going on the
->>> system this is a reasonable approach.  
->>>
->>> Do these notifiers might fire for special kinds of memory that should
->>> only be used for very special purposes?
->>>
->>> This change with the addition of some filters say to limit taking action
->>> to MEM_ONLINE and MEM_OFFLINE looks reasonable to me.  Probably also
->>> filtering out special kinds of memory that is not gernally useful.
->>
->> There are cases, where this notifier will not get called (e.g., hotplug
->> a DIMM and don't online it) or will get called, although nothing changed
->> (offline+re-online to a different zone triggered by user space). AFAIK,
->> nothing in kexec (*besides kdump) cares about online vs. offline memory.
->> This is why this feels wrong.
->>
->> add_memory()/try_remove_memory() is the place where:
->> - Memblocks are created/deleted (if the memblock allocator is still
->>   alive)
->> - Memory resources are created/deleted (e.g., reflected in /proc/iomem)
->> - Firmware memmap entries are created/deleted (/sys/firmware/memmap)
->>
->> My idea would be to add something like
->> kexec_map_add()/kexec_map_remove() where we have
->> firmware_map_add_hotplug()/firmware_map_remove(). From there, we can
->> unload the kexec image like done in this patch.
-> 
-> Hi David,
-> 
-> I may miss some details, do you know why we have to unload the kexec image
-> when add/remove memory?
-> 
-> If this is applied, even kexec_file_load is also affected. As we
-> discussed, kexec_file_load is not impacted by kinds of memory
-> adding/removing at all.
+Recently arm64 linux kernel added support for Armv8.3-A Pointer
+Authentication feature. If this feature is enabled in the kernel and the
+hardware supports address authentication then the return addresses are
+signed and stored in the stack to prevent ROP kind of attack. Kdump tool
+will now dump the kernel with signed lr values in the stack.
 
-kexec_load():
+Any user analysis tool for this kernel dump may need the kernel pac mask
+information in vmcoreinfo to generate the correct return address for
+stacktrace purpose as well as to resolve the symbol name.
 
-1. kexec-tools could have placed kexec images on memory that will be
-removed.
+This patch is similar to commit ec6e822d1a22d0eef ("arm64: expose user PAC
+bit positions via ptrace") which exposes pac mask information via ptrace
+interfaces.
 
-2. the memory map of the guest is stale (esp., might still contain
-hotunplugged memory). /sys/firmware/memmap and /proc/iomem will be
-updated, so kexec-tools can fix this up.
+The config gaurd ARM64_PTR_AUTH is removed form asm/compiler.h so macros
+like ptrauth_kernel_pac_mask can be used ungaurded. This config protection
+is confusing as the pointer authentication feature may be missing at
+runtime even though this config is present.
 
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+---
+Changes since v2:
+* Removed CONFIG_ARM64_PTR_AUTH config guard as suggested by Will.
+* A commit log change.
 
-kexec_file_load():
+An implementation of this new KERNELPACMASK vmcoreinfo field used by crash
+tool can be found here[1]. This change is accepted by crash utility
+maintainer [2].
 
-1. kexec could have placed kexec images on memory that will be removed,
-especially when kexec_locate_mem_hole() is called to locate memory top-down.
+[1]: https://www.redhat.com/archives/crash-utility/2020-April/msg00095.html
+[2]: https://www.redhat.com/archives/crash-utility/2020-April/msg00099.html
 
-IIRC, the memory map might also be stale and I agree that unloading
-won't actually change something here (needs different fixes as I
-explained regarding the kexec e820 map). Think about unplugging a DIMM
-that was described in the e820 map during boot and was put into the
-MOVABLE zone using cmdline parameters like "movablecore". After unplug,
-it will still be described in the kexec e820 map.
+ arch/arm64/include/asm/compiler.h | 4 ----
+ arch/arm64/kernel/crash_core.c    | 4 ++++
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-I agree that we might might be able to make smarter decisions in the
-kernel regarding kexec_file_load() - for example, try to find new
-locations for kexec images. For now, this seems to be simple.
-
-> 
-> Besides, if unload image in casae memory added/removed, we will accept
-> that the later 'kexec -e' is actually rebooting?
-
-At least in the kernel, kernel_kexec() will bail out in case there is no
-kexec_image loaded anymore. And we printed a message, so we can at least
-figure out what happened.
-
-Where is this rebooting you mention performed in case there is no image
-loaded?
-
+diff --git a/arch/arm64/include/asm/compiler.h b/arch/arm64/include/asm/compiler.h
+index eece20d..51a7ce8 100644
+--- a/arch/arm64/include/asm/compiler.h
++++ b/arch/arm64/include/asm/compiler.h
+@@ -2,8 +2,6 @@
+ #ifndef __ASM_COMPILER_H
+ #define __ASM_COMPILER_H
+ 
+-#if defined(CONFIG_ARM64_PTR_AUTH)
+-
+ /*
+  * The EL0/EL1 pointer bits used by a pointer authentication code.
+  * This is dependent on TBI0/TBI1 being enabled, or bits 63:56 would also apply.
+@@ -19,6 +17,4 @@
+ #define __builtin_return_address(val)					\
+ 	(void *)(ptrauth_clear_pac((unsigned long)__builtin_return_address(val)))
+ 
+-#endif /* CONFIG_ARM64_PTR_AUTH */
+-
+ #endif /* __ASM_COMPILER_H */
+diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+index ca4c3e1..1f646b0 100644
+--- a/arch/arm64/kernel/crash_core.c
++++ b/arch/arm64/kernel/crash_core.c
+@@ -5,6 +5,7 @@
+  */
+ 
+ #include <linux/crash_core.h>
++#include <asm/cpufeature.h>
+ #include <asm/memory.h>
+ 
+ void arch_crash_save_vmcoreinfo(void)
+@@ -16,4 +17,7 @@ void arch_crash_save_vmcoreinfo(void)
+ 	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+ 						PHYS_OFFSET);
+ 	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
++	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
++						system_supports_address_auth() ?
++						ptrauth_kernel_pac_mask() : 0);
+ }
 -- 
-Thanks,
-
-David / dhildenb
+2.7.4
 
 
 _______________________________________________
