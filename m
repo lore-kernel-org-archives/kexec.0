@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jY3ug-0004PD-1S
- for kexec@lists.infradead.org; Mon, 11 May 2020 08:35:51 +0000
-Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
- memory resource names
-References: <20200326180730.4754-1-james.morse@arm.com>
- <20200326180730.4754-3-james.morse@arm.com>
- <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <f4aa1ac4-5878-0f9d-d94c-cdecc5d4ce18@redhat.com>
-Date: Mon, 11 May 2020 10:35:01 +0200
-MIME-Version: 1.0
-In-Reply-To: <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
-Content-Language: en-US
+ id 1jY5Pf-0006FT-A8
+ for kexec@lists.infradead.org; Mon, 11 May 2020 10:11:57 +0000
+Received: by mail-pj1-f69.google.com with SMTP id o13so17180742pjb.7
+ for <kexec@lists.infradead.org>; Mon, 11 May 2020 03:11:48 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH v2 0/2] net: Optimize the qed* allocations inside kdump kernel
+Date: Mon, 11 May 2020 15:41:40 +0530
+Message-Id: <1589191902-958-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,84 +18,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, James Morse <james.morse@arm.com>
-Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
+To: netdev@vger.kernel.org
+Cc: aelior@marvell.com, irusskikh@marvell.com, manishc@marvell.com, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, GR-everest-linux-l2@marvell.com, bhupesh.linux@gmail.com, davem@davemloft.net
 
-On 09.05.20 02:45, Andrew Morton wrote:
-> On Thu, 26 Mar 2020 18:07:29 +0000 James Morse <james.morse@arm.com> wrote:
-> 
->> Memory added to the system by hotplug has a 'System RAM' resource created
->> for it. This is exposed to user-space via /proc/iomem.
->>
->> This poses problems for kexec on arm64. If kexec decides to place the
->> kernel in one of these newly onlined regions, the new kernel will find
->> itself booting from a region not described as memory in the firmware
->> tables.
->>
->> Arm64 doesn't have a structure like the e820 memory map that can be
->> re-written when memory is brought online. Instead arm64 uses the UEFI
->> memory map, or the memory node from the DT, sometimes both. We never
->> rewrite these.
->>
->> Allow an architecture to specify a different name for these hotplug
->> regions.
->>
->> ...
->>
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -42,6 +42,10 @@
->>  #include "internal.h"
->>  #include "shuffle.h"
->>  
->> +#ifndef MEMORY_HOTPLUG_RES_NAME
->> +#define MEMORY_HOTPLUG_RES_NAME "System RAM"
->> +#endif
->> +
->>  /*
->>   * online_page_callback contains pointer to current page onlining function.
->>   * Initially it is generic_online_page(). If it is required it could be
->> @@ -103,7 +107,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
->>  {
->>  	struct resource *res;
->>  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
->> -	char *resource_name = "System RAM";
->> +	char *resource_name = MEMORY_HOTPLUG_RES_NAME;
->>  
->>  	if (start + size > max_mem_size)
->>  		return ERR_PTR(-E2BIG);
-> 
-> I suppose we should do this as well:
-> 
-> --- a/mm/memory_hotplug.c~mm-memory_hotplug-allow-arch-override-of-non-boot-memory-resource-names-fix
-> +++ a/mm/memory_hotplug.c
-> @@ -129,7 +129,8 @@ static struct resource *register_memory_
->  			       resource_name, flags);
->  
->  	if (!res) {
-> -		pr_debug("Unable to reserve System RAM region: %016llx->%016llx\n",
-> +		pr_debug("Unable to reserve " MEMORY_HOTPLUG_RES_NAME
-> +				" region: %016llx->%016llx\n",
->  				start, start + size);
->  		return ERR_PTR(-EEXIST);
->  	}
-> 
-> It assumes that MEMORY_HOTPLUG_RES_NAME will be a literal string, which
-> is the case in [3/3].
+Changes since v1:
+----------------
+- v1 can be seen here: http://lists.infradead.org/pipermail/kexec/2020-May/024935.html
+- Addressed review comments received on v1:
+  * Removed unnecessary paranthesis.
+  * Used a different macro for minimum RX/TX ring count value in kdump
+    kernel.
 
-@Andrew, as discussed in this thread already [1], I suggest to drop this
-series from -mm tree for now.
+Since kdump kernel(s) run under severe memory constraint with the
+basic idea being to save the crashdump vmcore reliably when the primary
+kernel panics/hangs, large memory allocations done by a network driver
+can cause the crashkernel to panic with OOM.
 
-[1] https://lkml.kernel.org/r/2e3419b2-d00c-51c3-9b45-9de114608cdf@arm.com
+The qed* drivers take up approximately 214MB memory when run in the
+kdump kernel with the default configuration settings presently used in
+the driver. With an usual crashkernel size of 512M, this allocation
+is equal to almost half of the total crashkernel size allocated.
+
+See some logs obtained via memstrack tool (see [1]) below:
+ dracut-pre-pivot[676]: ======== Report format module_summary: ========
+ dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
+ dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
+
+This patchset tries to reduce the overall memory allocation profile of
+the qed* driver when they run in the kdump kernel. With these
+optimization we can see a saving of approx 85M in the kdump kernel:
+ dracut-pre-pivot[671]: ======== Report format module_summary: ========
+ dracut-pre-pivot[671]: Module qed using 124.6MB (1993 pages), peak allocation 124.7MB (1995 pages)
+ <..snip..>
+ dracut-pre-pivot[671]: Module qede using 4.6MB (73 pages), peak allocation 4.6MB (74 pages)
+
+And the kdump kernel can save vmcore successfully via both ssh and nfs
+interfaces.
+
+This patchset contains two patches:
+[PATCH 1/2] - Reduces the default TX and RX ring count in kdump kernel.
+[PATCH 2/2] - Disables qed SRIOV feature in kdump kernel (as it is
+              normally not a supported kdump target for saving
+	      vmcore).
+
+[1]. Memstrack tool: https://github.com/ryncsn/memstrack
+
+Bhupesh Sharma (2):
+  net: qed*: Reduce RX and TX default ring count when running inside
+    kdump kernel
+  net: qed: Disable SRIOV functionality inside kdump kernel
+
+ drivers/net/ethernet/qlogic/qed/qed_sriov.h  | 10 +++++++---
+ drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 13 ++++++++++---
+ 3 files changed, 19 insertions(+), 6 deletions(-)
 
 -- 
-Thanks,
-
-David / dhildenb
+2.7.4
 
 
 _______________________________________________
