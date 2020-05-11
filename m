@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jY3fN-0006Q6-9O
- for kexec@lists.infradead.org; Mon, 11 May 2020 08:20:04 +0000
-Subject: Re: [PATCH] kexec: Discard loaded image on memory hotplug
-References: <20200501165701.24587-1-james.morse@arm.com>
- <40b07632-b044-d1cd-96a2-81eec3da93e7@redhat.com>
- <8736892l92.fsf@x220.int.ebiederm.org>
+ id 1jY3ug-0004PD-1S
+ for kexec@lists.infradead.org; Mon, 11 May 2020 08:35:51 +0000
+Subject: Re: [PATCH 2/3] mm/memory_hotplug: Allow arch override of non boot
+ memory resource names
+References: <20200326180730.4754-1-james.morse@arm.com>
+ <20200326180730.4754-3-james.morse@arm.com>
+ <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
 From: David Hildenbrand <david@redhat.com>
-Message-ID: <a1c162fe-74de-c5ca-dadf-d451e970fdea@redhat.com>
-Date: Mon, 11 May 2020 10:19:46 +0200
+Message-ID: <f4aa1ac4-5878-0f9d-d94c-cdecc5d4ce18@redhat.com>
+Date: Mon, 11 May 2020 10:35:01 +0200
 MIME-Version: 1.0
-In-Reply-To: <8736892l92.fsf@x220.int.ebiederm.org>
+In-Reply-To: <20200508174536.77c7aa3d5d0220cedd07f2e9@linux-foundation.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,113 +27,75 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>, James Morse <james.morse@arm.com>
+Cc: Anshuman Khandual <anshuman.khandual@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, Eric Biederman <ebiederm@xmission.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-On 09.05.20 17:14, Eric W. Biederman wrote:
-> David Hildenbrand <david@redhat.com> writes:
+On 09.05.20 02:45, Andrew Morton wrote:
+> On Thu, 26 Mar 2020 18:07:29 +0000 James Morse <james.morse@arm.com> wrote:
 > 
->> On 01.05.20 18:57, James Morse wrote:
->>> On x86, the kexec payload contains a copy of the current memory map.
->>> If memory is added or removed, this copy of the memory map becomes
->>> stale. Getting this wrong may prevent the next kernel from booting.
->>> The first kernel may die if it tries to re-assemble the next kernel
->>> in memory that has been removed.
->>>
->>> Discard the loaded kexec image when the memory map changes, user-space
->>> should reload it.
->>>
->>> Kdump is unaffected, as it is placed within the crashkernel reserved
->>> memory area and only uses this memory. The stale memory map may affect
->>> generation of the vmcore, but the kdump kernel should be in a position
->>> to validate it.
->>>
->>> Signed-off-by: James Morse <james.morse@arm.com>
->>> ---
->>> This patch obsoletes:
->>>  * kexec/memory_hotplug: Prevent removal and accidental use
->>> https://lore.kernel.org/linux-arm-kernel/20200326180730.4754-1-james.morse@arm.com/
->>>
->>>  kernel/kexec_core.c | 40 ++++++++++++++++++++++++++++++++++++++++
->>>  1 file changed, 40 insertions(+)
->>>
->>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->>> index c19c0dad1ebe..e1901e5bd4b5 100644
->>> --- a/kernel/kexec_core.c
->>> +++ b/kernel/kexec_core.c
->>> @@ -12,6 +12,7 @@
->>>  #include <linux/slab.h>
->>>  #include <linux/fs.h>
->>>  #include <linux/kexec.h>
->>> +#include <linux/memory.h>
->>>  #include <linux/mutex.h>
->>>  #include <linux/list.h>
->>>  #include <linux/highmem.h>
->>> @@ -22,10 +23,12 @@
->>>  #include <linux/elf.h>
->>>  #include <linux/elfcore.h>
->>>  #include <linux/utsname.h>
->>> +#include <linux/notifier.h>
->>>  #include <linux/numa.h>
->>>  #include <linux/suspend.h>
->>>  #include <linux/device.h>
->>>  #include <linux/freezer.h>
->>> +#include <linux/pfn.h>
->>>  #include <linux/pm.h>
->>>  #include <linux/cpu.h>
->>>  #include <linux/uaccess.h>
->>> @@ -1219,3 +1222,40 @@ void __weak arch_kexec_protect_crashkres(void)
->>>  
->>>  void __weak arch_kexec_unprotect_crashkres(void)
->>>  {}
->>> +
->>> +/*
->>> + * If the memory layout changes, any loaded kexec image should be evicted
->>> + * as it may contain a copy of the (now stale) memory map. This also means
->>> + * we don't need to check the memory is still present when re-assembling the
->>> + * new kernel at machine_kexec() time.
->>> + */
+>> Memory added to the system by hotplug has a 'System RAM' resource created
+>> for it. This is exposed to user-space via /proc/iomem.
 >>
->> Onlining/offlining is not a change of the memory map.
+>> This poses problems for kexec on arm64. If kexec decides to place the
+>> kernel in one of these newly onlined regions, the new kernel will find
+>> itself booting from a region not described as memory in the firmware
+>> tables.
+>>
+>> Arm64 doesn't have a structure like the e820 memory map that can be
+>> re-written when memory is brought online. Instead arm64 uses the UEFI
+>> memory map, or the memory node from the DT, sometimes both. We never
+>> rewrite these.
+>>
+>> Allow an architecture to specify a different name for these hotplug
+>> regions.
+>>
+>> ...
+>>
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -42,6 +42,10 @@
+>>  #include "internal.h"
+>>  #include "shuffle.h"
+>>  
+>> +#ifndef MEMORY_HOTPLUG_RES_NAME
+>> +#define MEMORY_HOTPLUG_RES_NAME "System RAM"
+>> +#endif
+>> +
+>>  /*
+>>   * online_page_callback contains pointer to current page onlining function.
+>>   * Initially it is generic_online_page(). If it is required it could be
+>> @@ -103,7 +107,7 @@ static struct resource *register_memory_resource(u64 start, u64 size)
+>>  {
+>>  	struct resource *res;
+>>  	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>> -	char *resource_name = "System RAM";
+>> +	char *resource_name = MEMORY_HOTPLUG_RES_NAME;
+>>  
+>>  	if (start + size > max_mem_size)
+>>  		return ERR_PTR(-E2BIG);
 > 
-> Phrasing it that way is non-sense.  What is important is memory
-> available in the system.  A memory map is just a reflection upon that,
-> a memory map is not the definition of truth.
+> I suppose we should do this as well:
 > 
-> So if this notifier reflects when memory is coming and going on the
-> system this is a reasonable approach.  
+> --- a/mm/memory_hotplug.c~mm-memory_hotplug-allow-arch-override-of-non-boot-memory-resource-names-fix
+> +++ a/mm/memory_hotplug.c
+> @@ -129,7 +129,8 @@ static struct resource *register_memory_
+>  			       resource_name, flags);
+>  
+>  	if (!res) {
+> -		pr_debug("Unable to reserve System RAM region: %016llx->%016llx\n",
+> +		pr_debug("Unable to reserve " MEMORY_HOTPLUG_RES_NAME
+> +				" region: %016llx->%016llx\n",
+>  				start, start + size);
+>  		return ERR_PTR(-EEXIST);
+>  	}
 > 
-> Do these notifiers might fire for special kinds of memory that should
-> only be used for very special purposes?
-> 
-> This change with the addition of some filters say to limit taking action
-> to MEM_ONLINE and MEM_OFFLINE looks reasonable to me.  Probably also
-> filtering out special kinds of memory that is not gernally useful.
+> It assumes that MEMORY_HOTPLUG_RES_NAME will be a literal string, which
+> is the case in [3/3].
 
-There are cases, where this notifier will not get called (e.g., hotplug
-a DIMM and don't online it) or will get called, although nothing changed
-(offline+re-online to a different zone triggered by user space). AFAIK,
-nothing in kexec (*besides kdump) cares about online vs. offline memory.
-This is why this feels wrong.
+@Andrew, as discussed in this thread already [1], I suggest to drop this
+series from -mm tree for now.
 
-add_memory()/try_remove_memory() is the place where:
-- Memblocks are created/deleted (if the memblock allocator is still
-  alive)
-- Memory resources are created/deleted (e.g., reflected in /proc/iomem)
-- Firmware memmap entries are created/deleted (/sys/firmware/memmap)
-
-My idea would be to add something like
-kexec_map_add()/kexec_map_remove() where we have
-firmware_map_add_hotplug()/firmware_map_remove(). From there, we can
-unload the kexec image like done in this patch.
-
-And these callbacks might come in handy for fixing up the kexec initial
-memmap in case of kexec_file_load(). AFAIKS on x86_64:
-- Hotplugging a DIMM will not add that memory to
-  e820_table_kexec
-- Hotunplugging a DIMM will not remove that memory from e820_table_kexec
-
-Maybe we have similar things to handle on other architectures.
+[1] https://lkml.kernel.org/r/2e3419b2-d00c-51c3-9b45-9de114608cdf@arm.com
 
 -- 
 Thanks,
