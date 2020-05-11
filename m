@@ -2,18 +2,18 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jXwzN-0002Hy-Et
- for kexec@lists.infradead.org; Mon, 11 May 2020 01:12:15 +0000
-Date: Mon, 11 May 2020 09:11:49 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3] kernel: add panic_on_taint
-Message-ID: <20200511011149.GH5029@MiWiFi-R3L-srv>
-References: <20200509135737.622299-1-aquini@redhat.com>
- <20200510025921.GA10165@MiWiFi-R3L-srv>
- <20200510182202.GA31704@t490s>
+ id 1jY3fN-0006Q6-9O
+ for kexec@lists.infradead.org; Mon, 11 May 2020 08:20:04 +0000
+Subject: Re: [PATCH] kexec: Discard loaded image on memory hotplug
+References: <20200501165701.24587-1-james.morse@arm.com>
+ <40b07632-b044-d1cd-96a2-81eec3da93e7@redhat.com>
+ <8736892l92.fsf@x220.int.ebiederm.org>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <a1c162fe-74de-c5ca-dadf-d451e970fdea@redhat.com>
+Date: Mon, 11 May 2020 10:19:46 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200510182202.GA31704@t490s>
+In-Reply-To: <8736892l92.fsf@x220.int.ebiederm.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,157 +26,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rafael Aquini <aquini@redhat.com>
-Cc: linux-doc@vger.kernel.org, tiwai@suse.de, jeffm@suse.com, corbet@lwn.net, labbott@redhat.com, dyoung@redhat.com, AnDavis@suse.com, rpalethorpe@suse.de, keescook@chromium.org, jikos@kernel.org, cai@lca.pw, bunk@kernel.org, tytso@mit.edu, jeyu@suse.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, mcgrof@kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Dave Young <dyoung@redhat.com>, linux-arm-kernel@lists.infradead.org
 
-On 05/10/20 at 02:22pm, Rafael Aquini wrote:
-> > > diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > index 7bc83f3d9bdf..4a69fe49a70d 100644
-> > > --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > @@ -3404,6 +3404,21 @@
-> > >  	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
-> > >  			on a WARN().
-> > >  
-> > > +	panic_on_taint=	[KNL] conditionally panic() in add_taint()
-> > > +			Format: <str>
-> > 			Changed it as 'Format: <string>' to be
-> > consistent with the existing other options?
+On 09.05.20 17:14, Eric W. Biederman wrote:
+> David Hildenbrand <david@redhat.com> writes:
 > 
-> I can resubmit with the change, if it's a strong req and the surgery
-> cannot be done at merge time.
+>> On 01.05.20 18:57, James Morse wrote:
+>>> On x86, the kexec payload contains a copy of the current memory map.
+>>> If memory is added or removed, this copy of the memory map becomes
+>>> stale. Getting this wrong may prevent the next kernel from booting.
+>>> The first kernel may die if it tries to re-assemble the next kernel
+>>> in memory that has been removed.
+>>>
+>>> Discard the loaded kexec image when the memory map changes, user-space
+>>> should reload it.
+>>>
+>>> Kdump is unaffected, as it is placed within the crashkernel reserved
+>>> memory area and only uses this memory. The stale memory map may affect
+>>> generation of the vmcore, but the kdump kernel should be in a position
+>>> to validate it.
+>>>
+>>> Signed-off-by: James Morse <james.morse@arm.com>
+>>> ---
+>>> This patch obsoletes:
+>>>  * kexec/memory_hotplug: Prevent removal and accidental use
+>>> https://lore.kernel.org/linux-arm-kernel/20200326180730.4754-1-james.morse@arm.com/
+>>>
+>>>  kernel/kexec_core.c | 40 ++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 40 insertions(+)
+>>>
+>>> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>>> index c19c0dad1ebe..e1901e5bd4b5 100644
+>>> --- a/kernel/kexec_core.c
+>>> +++ b/kernel/kexec_core.c
+>>> @@ -12,6 +12,7 @@
+>>>  #include <linux/slab.h>
+>>>  #include <linux/fs.h>
+>>>  #include <linux/kexec.h>
+>>> +#include <linux/memory.h>
+>>>  #include <linux/mutex.h>
+>>>  #include <linux/list.h>
+>>>  #include <linux/highmem.h>
+>>> @@ -22,10 +23,12 @@
+>>>  #include <linux/elf.h>
+>>>  #include <linux/elfcore.h>
+>>>  #include <linux/utsname.h>
+>>> +#include <linux/notifier.h>
+>>>  #include <linux/numa.h>
+>>>  #include <linux/suspend.h>
+>>>  #include <linux/device.h>
+>>>  #include <linux/freezer.h>
+>>> +#include <linux/pfn.h>
+>>>  #include <linux/pm.h>
+>>>  #include <linux/cpu.h>
+>>>  #include <linux/uaccess.h>
+>>> @@ -1219,3 +1222,40 @@ void __weak arch_kexec_protect_crashkres(void)
+>>>  
+>>>  void __weak arch_kexec_unprotect_crashkres(void)
+>>>  {}
+>>> +
+>>> +/*
+>>> + * If the memory layout changes, any loaded kexec image should be evicted
+>>> + * as it may contain a copy of the (now stale) memory map. This also means
+>>> + * we don't need to check the memory is still present when re-assembling the
+>>> + * new kernel at machine_kexec() time.
+>>> + */
+>>
+>> Onlining/offlining is not a change of the memory map.
+> 
+> Phrasing it that way is non-sense.  What is important is memory
+> available in the system.  A memory map is just a reflection upon that,
+> a memory map is not the definition of truth.
+> 
+> So if this notifier reflects when memory is coming and going on the
+> system this is a reasonable approach.  
+> 
+> Do these notifiers might fire for special kinds of memory that should
+> only be used for very special purposes?
+> 
+> This change with the addition of some filters say to limit taking action
+> to MEM_ONLINE and MEM_OFFLINE looks reasonable to me.  Probably also
+> filtering out special kinds of memory that is not gernally useful.
 
-Yeah, maybe maintainer can help adjust this, not sure who will pick it.
-No, it's not a strong request, people might get a little bit confusion
-about which format should be referred to when a new kernel option is added.
+There are cases, where this notifier will not get called (e.g., hotplug
+a DIMM and don't online it) or will get called, although nothing changed
+(offline+re-online to a different zone triggered by user space). AFAIK,
+nothing in kexec (*besides kdump) cares about online vs. offline memory.
+This is why this feels wrong.
 
-> 
-> 
-> > > +			Specifies, as a string, the TAINT flag set that will
-> > > +			compose a bitmask for calling panic() when the kernel
-> > > +			gets tainted.
-> > > +			See Documentation/admin-guide/tainted-kernels.rst for
-> > > +			details on the taint flags that users can pick to
-> > > +			compose the bitmask to assign to panic_on_taint.
-> > > +			When the string is prefixed with a '-' the bitmask
-> > > +			set in panic_on_taint will be mutually exclusive
-> > > +			with the sysctl knob kernel.tainted, and any attempt
-> > > +			to write to that sysctl will fail with -EINVAL for
-> > > +			any taint value that masks with the flags set for
-> > > +			this option.
-> > > +
-> > >  	crash_kexec_post_notifiers
-> > >  			Run kdump after running panic-notifiers and dumping
-> > >  			kmsg. This only for the users who doubt kdump always
-> > > diff --git a/include/linux/kernel.h b/include/linux/kernel.h
-> > > index 9b7a8d74a9d6..66bc102cb59a 100644
-> > > --- a/include/linux/kernel.h
-> > > +++ b/include/linux/kernel.h
-> > > @@ -528,6 +528,8 @@ extern int panic_on_oops;
-> > >  extern int panic_on_unrecovered_nmi;
-> > >  extern int panic_on_io_nmi;
-> > >  extern int panic_on_warn;
-> > > +extern unsigned long panic_on_taint;
-> > > +extern bool panic_on_taint_exclusive;
-> > >  extern int sysctl_panic_on_rcu_stall;
-> > >  extern int sysctl_panic_on_stackoverflow;
-> > >  
-> > > diff --git a/kernel/panic.c b/kernel/panic.c
-> > > index b69ee9e76cb2..65c62f8a1de8 100644
-> > > --- a/kernel/panic.c
-> > > +++ b/kernel/panic.c
-> > > @@ -25,6 +25,7 @@
-> > >  #include <linux/kexec.h>
-> > >  #include <linux/sched.h>
-> > >  #include <linux/sysrq.h>
-> > > +#include <linux/ctype.h>
-> > >  #include <linux/init.h>
-> > >  #include <linux/nmi.h>
-> > >  #include <linux/console.h>
-> > > @@ -44,6 +45,8 @@ static int pause_on_oops_flag;
-> > >  static DEFINE_SPINLOCK(pause_on_oops_lock);
-> > >  bool crash_kexec_post_notifiers;
-> > >  int panic_on_warn __read_mostly;
-> > > +unsigned long panic_on_taint;
-> > > +bool panic_on_taint_exclusive = false;
-> > >  
-> > >  int panic_timeout = CONFIG_PANIC_TIMEOUT;
-> > >  EXPORT_SYMBOL_GPL(panic_timeout);
-> > > @@ -434,6 +437,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
-> > >  		pr_warn("Disabling lock debugging due to kernel taint\n");
-> > >  
-> > >  	set_bit(flag, &tainted_mask);
-> > > +
-> > > +	if (tainted_mask & panic_on_taint) {
-> > > +		panic_on_taint = 0;
-> > 
-> > This panic_on_taint resetting is redundant? It will trigger crash, do we
-> > need care if it's 0 or not?
-> >
-> 
-> We might still get more than one CPU hitting a taint adding code path after 
-> the one that tripped here called panic. To avoid multiple calls to panic, 
-> in that particular scenario, we clear the panic_on_taint bitmask out. 
-> Also, albeit non-frequent, we might be tracking TAINT_WARN, and still hit 
-> a WARN_ON() in the panic / kdump path, thus incurring in a second 
-> (and unwanted) call to panic here.  
+add_memory()/try_remove_memory() is the place where:
+- Memblocks are created/deleted (if the memblock allocator is still
+  alive)
+- Memory resources are created/deleted (e.g., reflected in /proc/iomem)
+- Firmware memmap entries are created/deleted (/sys/firmware/memmap)
 
-Hmm, this cpu will set panic_cpu firstly, all other cpu need stop and
-have no chance to execute panic. But yes, clearing panic_on_taint makes
-code easier to understand.
+My idea would be to add something like
+kexec_map_add()/kexec_map_remove() where we have
+firmware_map_add_hotplug()/firmware_map_remove(). From there, we can
+unload the kexec image like done in this patch.
 
-> 
->  
-> > > +		panic("panic_on_taint set ...");
-> > > +	}
-> > >  }
-> > >  EXPORT_SYMBOL(add_taint);
-> > >  
-> > > @@ -686,3 +694,35 @@ static int __init oops_setup(char *s)
-> > >  	return 0;
-> > >  }
-> > >  early_param("oops", oops_setup);
-> > > +
-> > > +static int __init panic_on_taint_setup(char *s)
-> > > +{
-> > > +	/* we just ignore panic_on_taint if passed without flags */
-> > > +	if (!s)
-> > > +		goto out;
-> > > +
-> > > +	for (; *s; s++) {
-> > > +		int i;
-> > > +
-> > > +		if (*s == '-') {
-> > > +			panic_on_taint_exclusive = true;
-> > > +			continue;
-> > > +		}
-> > > +
-> > > +		for (i = 0; i < TAINT_FLAGS_COUNT; i++) {
-> > > +			if (toupper(*s) == taint_flags[i].c_true) {
-> > > +				set_bit(i, &panic_on_taint);
-> > > +				break;
-> > > +			}
-> > > +		}
-> > 
-> > Read admin-guide/tainted-kernels.rst, but still do not get what 'G' means.
-> > If I specify 'panic_on_taint="G"' or 'panic_on_taint="-G"' in cmdline,
-> > what is expected for this customer behaviour?
-> > 
-> 
-> This will not panic the system as no taint flag gets actually set in 
-> panic_on_taint bitmask for G.
-> 
-> G is the counterpart of P, and appears on print_tainted() whenever
-> TAINT_PROPRIETARY_MODULE is not set. panic_on_taint doesn't set
-> anything for G, as it doesn't represent any taint, but the lack
-> of one particular taint, instead.
-> 
-> (apparently, TAINT_PROPRIETARY_MODULE is the only taint flag
-> that follows that pattern of having an extra assigned letter 
-> that means its absence, and perhaps it should be removed)
+And these callbacks might come in handy for fixing up the kexec initial
+memmap in case of kexec_file_load(). AFAIKS on x86_64:
+- Hotplugging a DIMM will not add that memory to
+  e820_table_kexec
+- Hotunplugging a DIMM will not remove that memory from e820_table_kexec
 
-Yeah, agree. I will make a draft patch to remove it, see if there's
-objection from people.
+Maybe we have similar things to handle on other architectures.
+
+-- 
+Thanks,
+
+David / dhildenb
 
 
 _______________________________________________
