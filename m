@@ -1,19 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jYHvP-00032v-6a
- for kexec@lists.infradead.org; Mon, 11 May 2020 23:33:34 +0000
-Subject: Re: [RFC 14/43] mm: memblock: PKRAM: prevent memblock resize from
- clobbering preserved pages
-References: <1588812129-8596-1-git-send-email-anthony.yznaga@oracle.com>
- <1588812129-8596-15-git-send-email-anthony.yznaga@oracle.com>
- <20200511135727.GA983798@linux.ibm.com>
-From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Message-ID: <54773d69-1a2b-1ab3-24d9-b322d580fb42@oracle.com>
-Date: Mon, 11 May 2020 16:29:33 -0700
+From: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Subject: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+Date: Mon, 11 May 2020 19:46:06 -0700
+Message-ID: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
 MIME-Version: 1.0
-In-Reply-To: <20200511135727.GA983798@linux.ibm.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,106 +12,167 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: x86@kernel.org, linux-doc@vger.kernel.org, gustavo@embeddedor.com, peterz@infradead.org, kexec@lists.infradead.org, paul.c.lai@intel.com, dave.hansen@linux.intel.com, zhenzhong.duan@oracle.com, lei.l.li@intel.com, linux-mm@kvack.org, nivedita@alum.mit.edu, ziqian.lzq@antfin.com, hpa@zytor.com, ardb@kernel.org, ashok.raj@intel.com, bhe@redhat.com, corbet@lwn.net, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, hughd@google.com, willy@infradead.org, mhocko@kernel.org, mingo@redhat.com, vdavydov.dev@gmail.com, ying.huang@intel.com, Thomas.Lendacky@amd.com, kevin.tian@intel.com, jroedel@suse.de, keescook@chromium.org, dan.j.williams@intel.com, bp@alien8.de, zhiyuan.lv@intel.com, luto@kernel.org, tglx@linutronix.de, andriy.shevchenko@linux.intel.com, dima@golovin.in, yang.shi@linux.alibaba.com, ndesaulniers@google.com, linux-kernel@vger.kernel.org, guro@fb.com, minchan@kernel.org, ebiederm@xmission.com, jason.zeng@intel.com, hannes@cmpxchg.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, masahiroy@kernel.org
+To: linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, robin.murphy@arm.com, maz@kernel.org, will@kernel.org
+Cc: bhsharma@redhat.com, Prabhakar Kushwaha <pkushwaha@marvell.com>, helgaas@kernel.org, gkulkarni@marvell.com, prabhakar.pkin@gmail.com
 
-CgpPbiA1LzExLzIwIDY6NTcgQU0sIE1pa2UgUmFwb3BvcnQgd3JvdGU6Cj4gT24gV2VkLCBNYXkg
-MDYsIDIwMjAgYXQgMDU6NDE6NDBQTSAtMDcwMCwgQW50aG9ueSBZem5hZ2Egd3JvdGU6Cj4+IFRo
-ZSBzaXplIG9mIHRoZSBtZW1ibG9jayByZXNlcnZlZCBhcnJheSBtYXkgYmUgaW5jcmVhc2VkIHdo
-aWxlIHByZXNlcnZlZAo+PiBwYWdlcyBhcmUgYmVpbmcgcmVzZXJ2ZWQuIFdoZW4gdGhpcyBoYXBw
-ZW5zLCBwcmVzZXJ2ZWQgcGFnZXMgdGhhdCBoYXZlCj4+IG5vdCB5ZXQgYmVlbiByZXNlcnZlZCBh
-cmUgYXQgcmlzayBmb3IgYmVpbmcgY2xvYmJlcmVkIHdoZW4gc3BhY2UgZm9yIGEKPj4gbGFyZ2Vy
-IGFycmF5IGlzIGFsbG9jYXRlZC4KPj4gV2hlbiBjYWxsZWQgZnJvbSBtZW1ibG9ja19kb3VibGVf
-YXJyYXkoKSwgYSB3cmFwcGVyIGFyb3VuZAo+PiBtZW1ibG9ja19maW5kX2luX3JhbmdlKCkgd2Fs
-a3MgdGhlIHByZXNlcnZlZCBwYWdlcyBwYWdldGFibGUgdG8gZmluZAo+PiBzdWZmaWNpZW50bHkg
-c2l6ZWQgcmFuZ2VzIHdpdGhvdXQgcHJlc2VydmVkIHBhZ2VzIGFuZCBwYXNzZXMgdGhlbSB0bwo+
-PiBtZW1ibG9ja19maW5kX2luX3JhbmdlKCkuCj4gSSdkIHN1Z2dlc3QgdG8gY3JlYXRlIGFuIGFy
-cmF5IG9mIG1lbWJsb2NrX3JlZ2lvbidzIHRoYXQgd2lsbCBjb250YWluCj4gdGhlIFBLUkFNIHJh
-bmdlcyBiZWZvcmUga2V4ZWMgYW5kIHBhc3MgdGhpcyBhcnJheSB0byB0aGUgbmV3IGtlcm5lbC4K
-PiBUaGVuLCBzb21ld2hlcmUgaW4gc3RhcnRfa2VyZW5lbCgpIHJlcGxhY2UgcmVwbGFjZQo+IG1l
-bWJsb2NrLnJlc2VydmVkLT5yZWdpb25zIHdpdGggdGhhdCBhcnJheS4gCgpJJ2xsIGxvb2sgaW50
-byBkb2luZyB0aGlzLsKgIFRoYW5rcyEKCkFudGhvbnkKCj4KPj4gU2lnbmVkLW9mZi1ieTogQW50
-aG9ueSBZem5hZ2EgPGFudGhvbnkueXpuYWdhQG9yYWNsZS5jb20+Cj4+IC0tLQo+PiAgaW5jbHVk
-ZS9saW51eC9wa3JhbS5oIHwgIDMgKysrCj4+ICBtbS9tZW1ibG9jay5jICAgICAgICAgfCAxNSAr
-KysrKysrKysrKysrLS0KPj4gIG1tL3BrcmFtLmMgICAgICAgICAgICB8IDUxICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKwo+PiAgMyBmaWxlcyBjaGFu
-Z2VkLCA2NyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEv
-aW5jbHVkZS9saW51eC9wa3JhbS5oIGIvaW5jbHVkZS9saW51eC9wa3JhbS5oCj4+IGluZGV4IGVk
-YzVkOGJlZjlkMy4uNDA5MDIyZTE0NzJmIDEwMDY0NAo+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3Br
-cmFtLmgKPj4gKysrIGIvaW5jbHVkZS9saW51eC9wa3JhbS5oCj4+IEBAIC02Miw2ICs2Miw5IEBA
-IHN0cnVjdCBwYWdlICpwa3JhbV9sb2FkX3BhZ2Uoc3RydWN0IHBrcmFtX3N0cmVhbSAqcHMsIHVu
-c2lnbmVkIGxvbmcgKmluZGV4LAo+PiAgc3NpemVfdCBwa3JhbV93cml0ZShzdHJ1Y3QgcGtyYW1f
-c3RyZWFtICpwcywgY29uc3Qgdm9pZCAqYnVmLCBzaXplX3QgY291bnQpOwo+PiAgc2l6ZV90IHBr
-cmFtX3JlYWQoc3RydWN0IHBrcmFtX3N0cmVhbSAqcHMsIHZvaWQgKmJ1Ziwgc2l6ZV90IGNvdW50
-KTsKPj4gIAo+PiArcGh5c19hZGRyX3QgcGtyYW1fbWVtYmxvY2tfZmluZF9pbl9yYW5nZShwaHlz
-X2FkZHJfdCBzdGFydCwgcGh5c19hZGRyX3QgZW5kLAo+PiArCQkJCQkgcGh5c19hZGRyX3Qgc2l6
-ZSwgcGh5c19hZGRyX3QgYWxpZ24pOwo+PiArCj4+ICAjaWZkZWYgQ09ORklHX1BLUkFNCj4+ICBl
-eHRlcm4gdW5zaWduZWQgbG9uZyBwa3JhbV9yZXNlcnZlZF9wYWdlczsKPj4gIHZvaWQgcGtyYW1f
-cmVzZXJ2ZSh2b2lkKTsKPj4gZGlmZiAtLWdpdCBhL21tL21lbWJsb2NrLmMgYi9tbS9tZW1ibG9j
-ay5jCj4+IGluZGV4IGM3OWJhNmY5OTIwYy4uNjlhZTg4M2I4ZDIxIDEwMDY0NAo+PiAtLS0gYS9t
-bS9tZW1ibG9jay5jCj4+ICsrKyBiL21tL21lbWJsb2NrLmMKPj4gQEAgLTE2LDYgKzE2LDcgQEAK
-Pj4gICNpbmNsdWRlIDxsaW51eC9rbWVtbGVhay5oPgo+PiAgI2luY2x1ZGUgPGxpbnV4L3NlcV9m
-aWxlLmg+Cj4+ICAjaW5jbHVkZSA8bGludXgvbWVtYmxvY2suaD4KPj4gKyNpbmNsdWRlIDxsaW51
-eC9wa3JhbS5oPgo+PiAgCj4+ICAjaW5jbHVkZSA8YXNtL3NlY3Rpb25zLmg+Cj4+ICAjaW5jbHVk
-ZSA8bGludXgvaW8uaD4KPj4gQEAgLTM0OSw2ICszNTAsMTYgQEAgcGh5c19hZGRyX3QgX19pbml0
-X21lbWJsb2NrIG1lbWJsb2NrX2ZpbmRfaW5fcmFuZ2UocGh5c19hZGRyX3Qgc3RhcnQsCj4+ICAJ
-cmV0dXJuIHJldDsKPj4gIH0KPj4gIAo+PiArcGh5c19hZGRyX3QgX19pbml0X21lbWJsb2NrIF9f
-bWVtYmxvY2tfZmluZF9pbl9yYW5nZShwaHlzX2FkZHJfdCBzdGFydCwKPj4gKwkJCQkJcGh5c19h
-ZGRyX3QgZW5kLCBwaHlzX2FkZHJfdCBzaXplLAo+PiArCQkJCQlwaHlzX2FkZHJfdCBhbGlnbikK
-Pj4gK3sKPj4gKwlpZiAoSVNfRU5BQkxFRChDT05GSUdfUEtSQU0pKQo+PiArCQlyZXR1cm4gcGty
-YW1fbWVtYmxvY2tfZmluZF9pbl9yYW5nZShzdGFydCwgZW5kLCBzaXplLCBhbGlnbik7Cj4+ICsJ
-ZWxzZQo+PiArCQlyZXR1cm4gbWVtYmxvY2tfZmluZF9pbl9yYW5nZShzdGFydCwgZW5kLCBzaXpl
-LCBhbGlnbik7Cj4+ICt9Cj4+ICsKPj4gIHN0YXRpYyB2b2lkIF9faW5pdF9tZW1ibG9jayBtZW1i
-bG9ja19yZW1vdmVfcmVnaW9uKHN0cnVjdCBtZW1ibG9ja190eXBlICp0eXBlLCB1bnNpZ25lZCBs
-b25nIHIpCj4+ICB7Cj4+ICAJdHlwZS0+dG90YWxfc2l6ZSAtPSB0eXBlLT5yZWdpb25zW3JdLnNp
-emU7Cj4+IEBAIC00NDcsMTEgKzQ1OCwxMSBAQCBzdGF0aWMgaW50IF9faW5pdF9tZW1ibG9jayBt
-ZW1ibG9ja19kb3VibGVfYXJyYXkoc3RydWN0IG1lbWJsb2NrX3R5cGUgKnR5cGUsCj4+ICAJCWlm
-ICh0eXBlICE9ICZtZW1ibG9jay5yZXNlcnZlZCkKPj4gIAkJCW5ld19hcmVhX3N0YXJ0ID0gbmV3
-X2FyZWFfc2l6ZSA9IDA7Cj4+ICAKPj4gLQkJYWRkciA9IG1lbWJsb2NrX2ZpbmRfaW5fcmFuZ2Uo
-bmV3X2FyZWFfc3RhcnQgKyBuZXdfYXJlYV9zaXplLAo+PiArCQlhZGRyID0gX19tZW1ibG9ja19m
-aW5kX2luX3JhbmdlKG5ld19hcmVhX3N0YXJ0ICsgbmV3X2FyZWFfc2l6ZSwKPj4gIAkJCQkJCW1l
-bWJsb2NrLmN1cnJlbnRfbGltaXQsCj4+ICAJCQkJCQluZXdfYWxsb2Nfc2l6ZSwgUEFHRV9TSVpF
-KTsKPj4gIAkJaWYgKCFhZGRyICYmIG5ld19hcmVhX3NpemUpCj4+IC0JCQlhZGRyID0gbWVtYmxv
-Y2tfZmluZF9pbl9yYW5nZSgwLAo+PiArCQkJYWRkciA9IF9fbWVtYmxvY2tfZmluZF9pbl9yYW5n
-ZSgwLAo+PiAgCQkJCW1pbihuZXdfYXJlYV9zdGFydCwgbWVtYmxvY2suY3VycmVudF9saW1pdCks
-Cj4+ICAJCQkJbmV3X2FsbG9jX3NpemUsIFBBR0VfU0laRSk7Cj4+ICAKPj4gZGlmZiAtLWdpdCBh
-L21tL3BrcmFtLmMgYi9tbS9wa3JhbS5jCj4+IGluZGV4IGRkM2M4OTYxNDAxMC4uZTQ5YzliY2Qz
-ODU0IDEwMDY0NAo+PiAtLS0gYS9tbS9wa3JhbS5jCj4+ICsrKyBiL21tL3BrcmFtLmMKPj4gQEAg
-LTEyMzgsMyArMTIzOCw1NCBAQCB2b2lkIHBrcmFtX2ZyZWVfcGd0KHZvaWQpCj4+ICAJX19mcmVl
-X3BhZ2VzX2NvcmUodmlydF90b19wYWdlKHBrcmFtX3BnZCksIDApOwo+PiAgCXBrcmFtX3BnZCA9
-IE5VTEw7Cj4+ICB9Cj4+ICsKPj4gK3N0YXRpYyBpbnQgX19pbml0X21lbWJsb2NrIHBrcmFtX21l
-bWJsb2NrX2ZpbmRfY2Ioc3RydWN0IHBrcmFtX3BnX3N0YXRlICpzdCwgdW5zaWduZWQgbG9uZyBi
-YXNlLCB1bnNpZ25lZCBsb25nIHNpemUpCj4+ICt7Cj4+ICsJdW5zaWduZWQgbG9uZyBlbmQgPSBi
-YXNlICsgc2l6ZTsKPj4gKwl1bnNpZ25lZCBsb25nIGFkZHI7Cj4+ICsKPj4gKwlpZiAoc2l6ZSA8
-IHN0LT5taW5fc2l6ZSkKPj4gKwkJcmV0dXJuIDA7Cj4+ICsKPj4gKwlhZGRyID0gIG1lbWJsb2Nr
-X2ZpbmRfaW5fcmFuZ2UoYmFzZSwgZW5kLCBzdC0+bWluX3NpemUsIFBBR0VfU0laRSk7Cj4+ICsJ
-aWYgKCFhZGRyKQo+PiArCQlyZXR1cm4gMDsKPj4gKwo+PiArCXN0LT5yZXR2YWwgPSBhZGRyOwo+
-PiArCXJldHVybiAxOwo+PiArfQo+PiArCj4+ICsvKgo+PiArICogSXQgbWF5IGJlIG5lY2Vzc2Fy
-eSB0byBhbGxvY2F0ZSBhIGxhcmdlciByZXNlcnZlZCBtZW1ibG9jayBhcnJheQo+PiArICogd2hp
-bGUgcG9wdWxhdGluZyBpdCB3aXRoIHJhbmdlcyBvZiBwcmVzZXJ2ZWQgcGFnZXMuICBUbyBhdm9p
-ZAo+PiArICogdHJhbXBsaW5nIHByZXNlcnZlZCBwYWdlcyB0aGF0IGhhdmUgbm90IHlldCBiZWVu
-IGFkZGVkIHRvIHRoZQo+PiArICogbWVtYmxvY2sgcmVzZXJ2ZWQgbGlzdCB0aGlzIGZ1bmN0aW9u
-IGltcGxlbWVudHMgYSB3cmFwcGVyIGFyb3VuZAo+PiArICogbWVtYmxvY2tfZmluZF9pbl9yYW5n
-ZSgpIHRoYXQgcmVzdHJpY3RzIHNlYXJjaGVzIHRvIHN1YnJhbmdlcwo+PiArICogdGhhdCBkbyBu
-b3QgY29udGFpbiBwcmVzZXJ2ZWQgcGFnZXMuCj4+ICsgKi8KPj4gK3BoeXNfYWRkcl90IF9faW5p
-dF9tZW1ibG9jayBwa3JhbV9tZW1ibG9ja19maW5kX2luX3JhbmdlKHBoeXNfYWRkcl90IHN0YXJ0
-LAo+PiArCQkJCQlwaHlzX2FkZHJfdCBlbmQsIHBoeXNfYWRkcl90IHNpemUsCj4+ICsJCQkJCXBo
-eXNfYWRkcl90IGFsaWduKQo+PiArewo+PiArCXN0cnVjdCBwa3JhbV9wZ19zdGF0ZSBzdCA9IHsK
-Pj4gKwkJLnJhbmdlX2NiID0gcGtyYW1fbWVtYmxvY2tfZmluZF9jYiwKPj4gKwkJLm1pbl9hZGRy
-ID0gc3RhcnQsCj4+ICsJCS5tYXhfYWRkciA9IGVuZCwKPj4gKwkJLm1pbl9zaXplID0gUEFHRV9B
-TElHTihzaXplKSwKPj4gKwkJLmZpbmRfaG9sZXMgPSB0cnVlLAo+PiArCX07Cj4+ICsKPj4gKwlp
-ZiAoIXBrcmFtX3Jlc2VydmF0aW9uX2luX3Byb2dyZXNzKQo+PiArCQlyZXR1cm4gbWVtYmxvY2tf
-ZmluZF9pbl9yYW5nZShzdGFydCwgZW5kLCBzaXplLCBhbGlnbik7Cj4+ICsKPj4gKwlpZiAoIXBr
-cmFtX3BnZCkgewo+PiArCQlXQVJOX09OQ0UoMSwgIk5vIHByZXNlcnZlZCBwYWdlcyBwYWdldGFi
-bGVcbiIpOwo+PiArCQlyZXR1cm4gbWVtYmxvY2tfZmluZF9pbl9yYW5nZShzdGFydCwgZW5kLCBz
-aXplLCBhbGlnbik7Cj4+ICsJfQo+PiArCj4+ICsJV0FSTl9PTkNFKG1lbWJsb2NrX2JvdHRvbV91
-cCgpLCAiUEtSQU06IGJvdHRvbSB1cCBtZW1ibG9jayBhbGxvY2F0aW9uIG5vdCB5ZXQgc3VwcG9y
-dGVkXG4iKTsKPj4gKwo+PiArCXBrcmFtX3dhbGtfcGd0X3Jldigmc3QsIHBrcmFtX3BnZCk7Cj4+
-ICsKPj4gKwlyZXR1cm4gc3QucmV0dmFsOwo+PiArfQo+PiAtLSAKPj4gMi4xMy4zCj4+CgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+An SMMU Stream table is created by the primary kernel. This table is
+used by the SMMU to perform address translations for device-originated
+transactions. Any crash (if happened) launches the kdump kernel which
+re-creates the SMMU Stream table. New transactions will be translated
+via this new table.
+
+There are scenarios, where devices are still having old pending
+transactions (configured in the primary kernel). These transactions
+come in-between Stream table creation and device-driver probe.
+As new stream table does not have entry for older transactions,
+it will be aborted by SMMU.
+
+Similar observations were found with PCIe-Intel 82576 Gigabit
+Network card. It sends old Memory Read transaction in kdump kernel.
+Transactions configured for older Stream table entries, that do not
+exist any longer in the new table, will cause a PCIe Completion Abort.
+Returned PCIe completion abort further leads to AER Errors from APEI
+Generic Hardware Error Source (GHES) with completion timeout.
+A network device hang is observed even after continuous
+reset/recovery from driver, Hence device is no more usable.
+
+So, If we are in a kdump kernel try to copy SMMU Stream table from
+primary/old kernel to preserve the mappings until the device driver
+takes over.
+
+Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+---
+Changes for v2: Used memremap in-place of ioremap
+
+V2 patch has been sanity tested. 
+
+V1 patch has been tested with
+A) PCIe-Intel 82576 Gigabit Network card in following
+configurations with "no AER error". Each iteration has
+been tested on both Suse kdump rfs And default Centos distro rfs.
+
+ 1)  with 2 level stream table 
+       ----------------------------------------------------
+       SMMU               |  Normal Ping   | Flood Ping
+       -----------------------------------------------------
+       Default Operation  |  100 times     | 10 times
+       -----------------------------------------------------
+       IOMMU bypass       |  41 times      | 10 times
+       -----------------------------------------------------
+
+ 2)  with Linear stream table. 
+       -----------------------------------------------------
+       SMMU               |  Normal Ping   | Flood Ping
+       ------------------------------------------------------
+       Default Operation  |  100 times     | 10 times
+       ------------------------------------------------------
+       IOMMU bypass       |  55 times      | 10 times
+       -------------------------------------------------------
+
+B) This patch is also tested with Micron Technology Inc 9200 PRO NVMe
+SSD card with 2 level stream table using "fio" in mixed read/write and
+only read configurations. It is tested for both Default Operation and
+IOMMU bypass mode for minimum 10 iterations across Centos kdump rfs and
+default Centos ditstro rfs.
+
+This patch is not full proof solution. Issue can still come
+from the point device is discovered and driver probe called. 
+This patch has reduced window of scenario from "SMMU Stream table 
+creation - device-driver" to "device discovery - device-driver".
+Usually, device discovery to device-driver is very small time. So
+the probability is very low. 
+
+Note: device-discovery will overwrite existing stream table entries 
+with both SMMU stage as by-pass.
+
+
+ drivers/iommu/arm-smmu-v3.c | 36 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 35 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+index 82508730feb7..d492d92c2dd7 100644
+--- a/drivers/iommu/arm-smmu-v3.c
++++ b/drivers/iommu/arm-smmu-v3.c
+@@ -1847,7 +1847,13 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+ 			break;
+ 		case STRTAB_STE_0_CFG_S1_TRANS:
+ 		case STRTAB_STE_0_CFG_S2_TRANS:
+-			ste_live = true;
++			/*
++			 * As kdump kernel copy STE table from previous
++			 * kernel. It still may have valid stream table entries.
++			 * Forcing entry as false to allow overwrite.
++			 */
++			if (!is_kdump_kernel())
++				ste_live = true;
+ 			break;
+ 		case STRTAB_STE_0_CFG_ABORT:
+ 			BUG_ON(!disable_bypass);
+@@ -3264,6 +3270,9 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+ 		return -ENOMEM;
+ 	}
+ 
++	if (is_kdump_kernel())
++		return 0;
++
+ 	for (i = 0; i < cfg->num_l1_ents; ++i) {
+ 		arm_smmu_write_strtab_l1_desc(strtab, &cfg->l1_desc[i]);
+ 		strtab += STRTAB_L1_DESC_DWORDS << 3;
+@@ -3272,6 +3281,23 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+ 	return 0;
+ }
+ 
++static void arm_smmu_copy_table(struct arm_smmu_device *smmu,
++			       struct arm_smmu_strtab_cfg *cfg, u32 size)
++{
++	struct arm_smmu_strtab_cfg rdcfg;
++
++	rdcfg.strtab_dma = readq_relaxed(smmu->base + ARM_SMMU_STRTAB_BASE);
++	rdcfg.strtab_base_cfg = readq_relaxed(smmu->base
++					      + ARM_SMMU_STRTAB_BASE_CFG);
++
++	rdcfg.strtab_dma &= STRTAB_BASE_ADDR_MASK;
++	rdcfg.strtab = memremap(rdcfg.strtab_dma, size, MEMREMAP_WB);
++
++	memcpy_fromio(cfg->strtab, rdcfg.strtab, size);
++
++	cfg->strtab_base_cfg = rdcfg.strtab_base_cfg;
++}
++
+ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+ {
+ 	void *strtab;
+@@ -3307,6 +3333,9 @@ static int arm_smmu_init_strtab_2lvl(struct arm_smmu_device *smmu)
+ 	reg |= FIELD_PREP(STRTAB_BASE_CFG_SPLIT, STRTAB_SPLIT);
+ 	cfg->strtab_base_cfg = reg;
+ 
++	if (is_kdump_kernel())
++		arm_smmu_copy_table(smmu, cfg, l1size);
++
+ 	return arm_smmu_init_l1_strtab(smmu);
+ }
+ 
+@@ -3334,6 +3363,11 @@ static int arm_smmu_init_strtab_linear(struct arm_smmu_device *smmu)
+ 	reg |= FIELD_PREP(STRTAB_BASE_CFG_LOG2SIZE, smmu->sid_bits);
+ 	cfg->strtab_base_cfg = reg;
+ 
++	if (is_kdump_kernel()) {
++		arm_smmu_copy_table(smmu, cfg, size);
++		return 0;
++	}
++
+ 	arm_smmu_init_bypass_stes(strtab, cfg->num_l1_ents);
+ 	return 0;
+ }
+-- 
+2.18.2
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
