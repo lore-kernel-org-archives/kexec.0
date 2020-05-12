@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from alln-iport-7.cisco.com ([173.37.142.94])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jYYrl-0007Z7-R9
- for kexec@lists.infradead.org; Tue, 12 May 2020 17:38:55 +0000
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
+ id 1jYYy8-0005QV-4G
+ for kexec@lists.infradead.org; Tue, 12 May 2020 17:45:29 +0000
+From: "Daniel Walker (danielwa)" <danielwa@cisco.com>
 Subject: Re: [REQUEST] makedumpfile: stream compress flat ELF format with libz
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <20200512172546.GL31850@zorba>
-Date: Tue, 12 May 2020 12:38:42 -0500
-Message-Id: <69649640-B477-4969-AA2B-2E03587944F1@oracle.com>
+Date: Tue, 12 May 2020 17:45:24 +0000
+Message-ID: <20200512174523.GM31850@zorba>
 References: <20200512172546.GL31850@zorba>
+ <69649640-B477-4969-AA2B-2E03587944F1@oracle.com>
+In-Reply-To: <69649640-B477-4969-AA2B-2E03587944F1@oracle.com>
+Content-Language: en-US
+Content-ID: <3CBDD08183FDA64EABCFDBCB08C59582@namprd11.prod.outlook.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,59 +25,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Daniel Walker (danielwa)" <danielwa@cisco.com>
+To: John Donnelly <john.p.donnelly@oracle.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "xe-linux-external(mailer list)" <xe-linux-external@cisco.com>
 
-
-
-> On May 12, 2020, at 12:25 PM, Daniel Walker (danielwa) <danielwa@cisco.com> wrote:
+On Tue, May 12, 2020 at 12:38:42PM -0500, John Donnelly wrote:
+ 
+> 
+>   Hi Daniel. 
+> 
+>    -z happens to be used by tar and rsync to indicate compression ;-) . 
 > 
 > 
-> Hi,
-> 
-> I created an enhancement request for makedumpfile here,
-> 
-> https://urldefense.com/v3/__https://github.com/makedumpfile/makedumpfile/issues/1__;!!GqivPVa7Brio!LJIWfQ8ged-9RjjV00zqmBGbL2-UU0baDJmxqVXo5AxYcofHzP8oxfWHZZ4ijk6O9N9I$ 
-> 
-> I found that compressing a flat core with gzip significantly reduces the size of
-> the core. Here were my findings,
-> 
-> 32G flat elf core -E -F -d 0
-> 33G kdump core -d 0
-> 16G kdump compressed -c -d 0
-> 1.9G flat elf core stream compressed with gzip -E -F -d 0
-> 
-> My feature request was to implement an option inside makedumpfile to gzip
-> compress the core output. This can already be accomplished by piping the core
-> thru the gzip tool, however, because makedumpfile already links against libz
-> having the option for makedumpfile to do it allows the gzip tools to be removed
-> from the crash kernels initramfs there by reducing the size.
-> 
-> Kazuhito Hagio had suggest adding the -C option instead of repurposing -c to do
-> this.
-> 
+
+This would be fine with me,
+
+makedumpfile -z -F -E -d 31 /proc/vmcore core.gz
 
 
-  Hi Daniel. 
-
-   -z happens to be used by tar and rsync to indicate compression ;-) . 
-
-
-
-
-
-> So a resulting command line might looks like this,
-> 
-> makedumpfile -C -F -E -d 31 /proc/vmcore core.gz
-> 
-> Thanks,
-> Daniel
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> https://urldefense.com/v3/__http://lists.infradead.org/mailman/listinfo/kexec__;!!GqivPVa7Brio!LJIWfQ8ged-9RjjV00zqmBGbL2-UU0baDJmxqVXo5AxYcofHzP8oxfWHZZ4ijsPXKz5A$ 
-
-
+Daniel
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
