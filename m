@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-f68.google.com ([209.85.216.68])
+Received: from mail-pf1-f196.google.com ([209.85.210.196])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jYtC9-0000xm-5m
+ id 1jYtC7-0000xf-Jk
  for kexec@lists.infradead.org; Wed, 13 May 2020 15:21:22 +0000
-Received: by mail-pj1-f68.google.com with SMTP id a5so11247473pjh.2
- for <kexec@lists.infradead.org>; Wed, 13 May 2020 08:21:16 -0700 (PDT)
+Received: by mail-pf1-f196.google.com with SMTP id x77so8144844pfc.0
+ for <kexec@lists.infradead.org>; Wed, 13 May 2020 08:21:14 -0700 (PDT)
 From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: [PATCH 2/3] security: add symbol namespace for reading file data
-Date: Wed, 13 May 2020 15:21:07 +0000
-Message-Id: <20200513152108.25669-3-mcgrof@kernel.org>
-In-Reply-To: <20200513152108.25669-1-mcgrof@kernel.org>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
+Subject: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+Date: Wed, 13 May 2020 15:21:05 +0000
+Message-Id: <20200513152108.25669-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,105 +25,43 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: viro@zeniv.linux.org.uk, gregkh@linuxfoundation.org, rafael@kernel.org, ebiederm@xmission.com, jeyu@kernel.org, jmorris@namei.org, keescook@chromium.org, paul@paul-moore.com, stephen.smalley.work@gmail.com, eparis@parisplace.org, nayna@linux.ibm.com, zohar@linux.ibm.com
 Cc: scott.branden@broadcom.com, selinux@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, geert@linux-m68k.org, dan.carpenter@oracle.com, skhan@linuxfoundation.org, linux-fsdevel@vger.kernel.org, tglx@linutronix.de, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com, Luis Chamberlain <mcgrof@kernel.org>
 
-Certain symbols are not meant to be used by everybody, the security
-helpers for reading files directly is one such case. Use a symbol
-namespace for them.
+While reviewing Scott Branden's submission of the new Broadcom VK driver
+driver upstream [0], part of which included 4 new pread varaints of the
+existing kernel_read*(), calls I grew shivers of the possibility of drivers
+using these exported symbols loosely. If we're going to grow these, it
+seems best to restrict the symbols to a namespace so drivers and
+subsystem maintainers don't use these carelessly.
 
-This will prevent abuse of use of these symbols in places they were
-not inteded to be used, and provides an easy way to audit where these
-types of operations happen as a whole.
+This should also help with making it easier to audit future locations in
+the kernel such read calls happen by just looking at the imports of the
+namespace.
 
-Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
----
+This goes compile tested with allyesconfig and allmodconfig on x86_64.
+0-day should have a report on build status with other configs later of
+my branch [1].
+
+[0] https://lkml.kernel.org/r/20200508002739.19360-1-scott.branden@broadcom.com
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux-next.git/log/?h=20200513-kernel-read-sym
+
+Luis Chamberlain (3):
+  fs: unexport kernel_read_file()
+  security: add symbol namespace for reading file data
+  fs: move kernel_read*() calls to its own symbol namespace
+
  drivers/base/firmware_loader/fallback.c | 1 +
- fs/exec.c                               | 2 ++
+ drivers/base/firmware_loader/main.c     | 1 +
+ fs/exec.c                               | 9 +++++----
  kernel/kexec.c                          | 2 ++
- kernel/module.c                         | 2 ++
- security/security.c                     | 6 +++---
- 5 files changed, 10 insertions(+), 3 deletions(-)
+ kernel/kexec_file.c                     | 2 ++
+ kernel/module.c                         | 3 +++
+ security/integrity/digsig.c             | 3 +++
+ security/integrity/ima/ima_fs.c         | 3 +++
+ security/integrity/ima/ima_main.c       | 2 ++
+ security/loadpin/loadpin.c              | 2 ++
+ security/security.c                     | 8 +++++---
+ security/selinux/hooks.c                | 2 ++
+ 12 files changed, 31 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
-index d9ac7296205e..b088886dafda 100644
---- a/drivers/base/firmware_loader/fallback.c
-+++ b/drivers/base/firmware_loader/fallback.c
-@@ -19,6 +19,7 @@
-  */
- 
- MODULE_IMPORT_NS(FIRMWARE_LOADER_PRIVATE);
-+MODULE_IMPORT_NS(SECURITY_READ);
- 
- extern struct firmware_fallback_config fw_fallback_config;
- 
-diff --git a/fs/exec.c b/fs/exec.c
-index 9791b9eef9ce..30bd800ab1d6 100644
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -72,6 +72,8 @@
- 
- #include <trace/events/sched.h>
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- int suid_dumpable = 0;
- 
- static LIST_HEAD(formats);
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index f977786fe498..8d572b41a157 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -19,6 +19,8 @@
- 
- #include "kexec_internal.h"
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- static int copy_user_segment_list(struct kimage *image,
- 				  unsigned long nr_segments,
- 				  struct kexec_segment __user *segments)
-diff --git a/kernel/module.c b/kernel/module.c
-index 80faaf2116dd..8973a463712e 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -59,6 +59,8 @@
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-+MODULE_IMPORT_NS(SECURITY_READ);
-+
- #define CREATE_TRACE_POINTS
- #include <trace/events/module.h>
- 
-diff --git a/security/security.c b/security/security.c
-index 8ae66e4c370f..bdbd1fc5105a 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -1654,7 +1654,7 @@ int security_kernel_read_file(struct file *file, enum kernel_read_file_id id)
- 		return ret;
- 	return ima_read_file(file, id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_read_file);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_read_file, SECURITY_READ);
- 
- int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
- 				   enum kernel_read_file_id id)
-@@ -1666,7 +1666,7 @@ int security_kernel_post_read_file(struct file *file, char *buf, loff_t size,
- 		return ret;
- 	return ima_post_read_file(file, buf, size, id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_post_read_file);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_post_read_file, SECURITY_READ);
- 
- int security_kernel_load_data(enum kernel_load_data_id id)
- {
-@@ -1677,7 +1677,7 @@ int security_kernel_load_data(enum kernel_load_data_id id)
- 		return ret;
- 	return ima_load_data(id);
- }
--EXPORT_SYMBOL_GPL(security_kernel_load_data);
-+EXPORT_SYMBOL_NS_GPL(security_kernel_load_data, SECURITY_READ);
- 
- int security_task_fix_setuid(struct cred *new, const struct cred *old,
- 			     int flags)
 -- 
 2.26.2
 
