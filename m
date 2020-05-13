@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from relay10.mail.gandi.net ([217.70.178.230])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jYuCs-0004Kl-K1
- for kexec@lists.infradead.org; Wed, 13 May 2020 16:26:08 +0000
-Date: Wed, 13 May 2020 18:26:04 +0200
-From: Greg KH <gregkh@linuxfoundation.org>
+ id 1jYvnh-0006yz-C2
+ for kexec@lists.infradead.org; Wed, 13 May 2020 18:08:14 +0000
+Date: Wed, 13 May 2020 11:07:46 -0700
+From: Josh Triplett <josh@joshtriplett.org>
 Subject: Re: [PATCH 2/3] security: add symbol namespace for reading file data
-Message-ID: <20200513162604.GE1362525@kroah.com>
+Message-ID: <20200513180746.GA75734@localhost>
 References: <20200513152108.25669-1-mcgrof@kernel.org>
  <20200513152108.25669-3-mcgrof@kernel.org>
  <87k11fonbk.fsf@x220.int.ebiederm.org>
@@ -27,7 +27,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Luis Chamberlain <mcgrof@kernel.org>
-Cc: rafael@kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, geert@linux-m68k.org, dan.carpenter@oracle.com, keescook@chromium.org, scott.branden@broadcom.com, selinux@vger.kernel.org, Josh Triplett <josh@joshtriplett.org>, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
+Cc: rafael@kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, geert@linux-m68k.org, dan.carpenter@oracle.com, keescook@chromium.org, scott.branden@broadcom.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, "Eric W. Biederman" <ebiederm@xmission.com>, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
 
 On Wed, May 13, 2020 at 04:16:22PM +0000, Luis Chamberlain wrote:
 > On Wed, May 13, 2020 at 10:40:31AM -0500, Eric W. Biederman wrote:
@@ -67,14 +67,9 @@ On Wed, May 13, 2020 at 04:16:22PM +0000, Luis Chamberlain wrote:
 > Would any Android stakeholders / small / embedded folks whave any issue
 > with this?
 
-Android has build in the firmware loading logic for a while now.  Well,
-always, they have not had kernel modules for many years.  That is
-changing but this logic is not getting moved to a kernel module as that
-would just be silly :)
-
-thanks,
-
-greg k-h
+As long as you can still *completely* compile out firmware loading, I
+don't think there's a huge use case for making it modular. y/n seems
+fine.
 
 _______________________________________________
 kexec mailing list
