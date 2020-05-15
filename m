@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 15 May 2020 22:06:11 +0100
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: kexec: arm: possible overwrite of initrd
-Message-ID: <20200515210611.GS1551@shell.armlinux.org.uk>
-References: <20200515135712.GA5979@Red>
+Received: from mail-pj1-f66.google.com ([209.85.216.66])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jZhtg-0001kK-6B
+ for kexec@lists.infradead.org; Fri, 15 May 2020 21:29:38 +0000
+Received: by mail-pj1-f66.google.com with SMTP id n15so1560531pjt.4
+ for <kexec@lists.infradead.org>; Fri, 15 May 2020 14:29:35 -0700 (PDT)
+Date: Fri, 15 May 2020 21:29:33 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+Message-ID: <20200515212933.GD11244@42.do-not-panic.com>
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513181736.GA24342@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200515135712.GA5979@Red>
+In-Reply-To: <20200513181736.GA24342@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,33 +26,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: kexec@lists.infradead.org, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: rafael@kernel.org, zohar@linux.ibm.com, dhowells@redhat.com, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, geert@linux-m68k.org, dan.carpenter@oracle.com, keescook@chromium.org, scott.branden@broadcom.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, ebiederm@xmission.com, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
 
-On Fri, May 15, 2020 at 03:57:12PM +0200, Corentin Labbe wrote:
-> Hello
-> 
-> Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
+On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
+> Can you also move kernel_read_* out of fs.h?  That header gets pulled
+> in just about everywhere and doesn't really need function not related
+> to the general fs interface.
 
-You can try increasing the kernel size that kexec thinks the kernel
-needs, but it should be extremely accurate with modern kexec.
+Sure, where should I dump these?
 
---image-size $((0x01dc8154 + 0x10000))
-
-will add 64k on top of what you currently have.  Note where the first
-figure comes from (you'll find it in the debug output, see
-"Resulting kernel space").
-
-The best I can say is try playing around with that - but, kexec's
-calculations should be spot on to stop the booting kernel from
-overwriting the initrd.
-
-The only way to debug that is to get the booted kernel to hexdump the
-initrd so it's possible to see what happened to it.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
+  Luis
 
 _______________________________________________
 kexec mailing list
