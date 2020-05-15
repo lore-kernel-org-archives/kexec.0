@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mail-pj1-x1042.google.com ([2607:f8b0:4864:20::1042])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jZWQF-0004Kn-EZ
- for kexec@lists.infradead.org; Fri, 15 May 2020 09:14:28 +0000
-Received: by mail-qk1-f197.google.com with SMTP id f200so1536495qke.14
- for <kexec@lists.infradead.org>; Fri, 15 May 2020 02:14:22 -0700 (PDT)
+ id 1jZXW3-00080h-BD
+ for kexec@lists.infradead.org; Fri, 15 May 2020 10:24:32 +0000
+Received: by mail-pj1-x1042.google.com with SMTP id s69so720375pjb.4
+ for <kexec@lists.infradead.org>; Fri, 15 May 2020 03:24:30 -0700 (PDT)
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Date: Fri, 15 May 2020 19:24:27 +0900
+Subject: Re: [PATCH v2 0/3] printk: replace ringbuffer
+Message-ID: <20200515102427.GB42471@jagdpanzerIV.localdomain>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
- <20200408104655.GA92698@C02TD0UTHF1T.local>
- <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
- <20200428100710.GD3868@gaia>
- <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
-In-Reply-To: <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 15 May 2020 14:44:08 +0530
-Message-ID: <CACi5LpMnbFbmqWOn0GfPD2H50UcZ0XHQ7X+Cd0E-cS-zfL7tQQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
+Content-Disposition: inline
+In-Reply-To: <20200501094010.17694-1-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,61 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arm@kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Arnd,
+On (20/05/01 11:46), John Ogness wrote:
+> Hello,
+> 
+> Here is a v2 for the first series to rework the printk subsystem. The
+> v1 and history are here [0]. This first series only replaces the
+> existing ringbuffer implementation. No locking is removed. No
+> semantics/behavior of printk are changed.
+> 
+> The VMCOREINFO is updated. RFC patches for the external tools
+> crash(8) [1] and makedumpfile(8) [2] have been submitted that allow
+> the new ringbuffer to be correctly read.
+> 
+> This series is in line with the agreements [3] made at the meeting
+> during LPC2019 in Lisbon, with 1 exception: support for dictionaries
+> will not be discontinued [4]. Dictionaries are stored in a separate
+> buffer so that they cannot interfere with the human-readable buffer.
 
-On Thu, Apr 30, 2020 at 10:05 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
->
-> On Tue, Apr 28, 2020 at 3:37 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 01:55:58PM +0530, Bhupesh Sharma wrote:
-> > > On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
-> > > > >  arch/arm64/configs/defconfig | 1 +
-> > > > >  1 file changed, 1 insertion(+)
-> > > > >
-> > > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > > > index 24e534d85045..fa122f4341a2 100644
-> > > > > --- a/arch/arm64/configs/defconfig
-> > > > > +++ b/arch/arm64/configs/defconfig
-> > > > > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
-> > > > >  CONFIG_NUMA=y
-> > > > >  CONFIG_SECCOMP=y
-> > > > >  CONFIG_KEXEC=y
-> > > > > +CONFIG_KEXEC_FILE=y
-> > > > >  CONFIG_CRASH_DUMP=y
-> > > > >  CONFIG_XEN=y
-> > > > >  CONFIG_COMPAT=y
-> > > > > --
-> > > > > 2.7.4
-> > >
-> > > Thanks a lot  Mark.
-> > >
-> > > Hi Catalin, Will,
-> > >
-> > > Can you please help pick this patch in the arm tree. We have an
-> > > increasing number of user-cases from distro users
-> > > who want to use kexec_file_load() as the default interface for
-> > > kexec/kdump on arm64.
-> >
-> > We could pick it up if it doesn't conflict with the arm-soc tree. They
-> > tend to pick most of the defconfig changes these days (and could as well
-> > pick this one).
->
-> Thanks Catalin.
-> (+Cc Arnd)
->
-> Hi Arnd,
->
-> Can you please help pick this change via the arm-soc tree?
+I'm willing to bless this. The code looks good to me, nice job guys.
 
-Ping. Any updates on this defconfig patch.
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
 
-Thanks,
-Bhupesh
-
+	-ss
 
 _______________________________________________
 kexec mailing list
