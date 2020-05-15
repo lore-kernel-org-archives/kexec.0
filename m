@@ -1,10 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 15 May 2020 15:57:12 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: kexec: arm: possible overwrite of initrd
-Message-ID: <20200515135712.GA5979@Red>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jZeYY-0003Rg-A0
+ for kexec@lists.infradead.org; Fri, 15 May 2020 17:55:36 +0000
+From: Rafael Aquini <aquini@redhat.com>
+Subject: [PATCH v5] kernel: add panic_on_taint
+Date: Fri, 15 May 2020 13:55:02 -0400
+Message-Id: <20200515175502.146720-1-aquini@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,172 +21,214 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk
-Cc: linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, tiwai@suse.de, jeffm@suse.com, bhe@redhat.com, corbet@lwn.net, labbott@redhat.com, dyoung@redhat.com, AnDavis@suse.com, rpalethorpe@suse.de, keescook@chromium.org, jikos@kernel.org, cai@lca.pw, bunk@kernel.org, tytso@mit.edu, jeyu@suse.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kexec@lists.infradead.org, mcgrof@kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org
 
-Hello
+Analogously to the introduction of panic_on_warn, this patch introduces a kernel
+option named panic_on_taint in order to provide a simple and generic way to stop
+execution and catch a coredump when the kernel gets tainted by any given flag.
 
-Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
+This is useful for debugging sessions as it avoids having to rebuild the kernel
+to explicitly add calls to panic() into the code sites that introduce the taint
+flags of interest. For instance, if one is interested in proceeding with a
+post-mortem analysis at the point a given code path is hitting a bad page
+(i.e. unaccount_page_cache_page(), or slab_bug()), a coredump can be collected
+by rebooting the kernel with 'panic_on_taint=0x20' amended to the command line.
 
-But now I have started to use kernelCI builds, I got problems.
-All sunxi_defconfig kernel works but not multi_v7_defconfig which got:
-[    1.896540] Trying to unpack rootfs image as initramfs...
-[    1.896947] rootfs image is not initramfs (invalid magic at start of compressed archive); looks like an initrd
-Then:
-[    3.927732] RAMDISK: Couldn't find valid RAM disk image starting at 0.
-[    3.934489] VFS: Cannot open root device \"(null)\" or unknown-block(0,0): error -6
+Another, perhaps less frequent, use for this option would be as a mean for
+assuring a security policy case where only a subset of taints, or no single
+taint (in paranoid mode), is allowed for the running system.
+The optional switch 'nousertaint' is handy in this particular scenario,
+as it will avoid userspace induced crashes by writes to sysctl interface
+/proc/sys/kernel/tainted causing false positive hits for such policies.
 
-I have tryed to disable all related RD/RAMFS/compression CONFIGs without change.
-Only the size of the kernel seems to matter which let me think that the initrd is overwritten by the kernel.
+Suggested-by: Qian Cai <cai@lca.pw>
+Signed-off-by: Rafael Aquini <aquini@redhat.com>
+---
+Changelog:
+* v2: get rid of unnecessary/misguided compiler hints		(Luis)
+      enhance documentation text for the new kernel parameter	(Randy)
+* v3: drop sysctl interface, keep it only as a kernel parameter	(Luis)
+* v4: change panic_on_taint input from alphabetical taint flags
+      to hexadecimal bitmasks, for clarity and extendability	(Luis)
+* v5: add doc note on the potential effects of panic_on_taint
+      with notaintuser on writes to kernel.tainted sysctl knob	(Luis)
 
-I use kexec-tools master
-This is the output of my kexec run
-run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
-Try gzip decompression.
-kernel: 0xb65c0008 kernel_size: 0x853200
-MEMORY RANGES
-0000000020000000-000000009fffffff (0)
-zImage header: 0x016f2818 0x00000000 0x00853200
-zImage size 0x853200, file size 0x853200
-zImage requires 0x00864200 bytes
-  offset 0x0000b810 tag 0x5a534c4b size 8
-Decompressed kernel sizes:
- text+data 0x01563f54 bss 0x0005ca84 total 0x015c09d8
-Resulting kernel space: 0x01dc8154
-Kernel: address=0x20008000 size=0x01dc8154
-Initrd: address=0x21dd1000 size=0x01c64369
-DT    : address=0x23a36000 size=0x000060bb
-kexec_load: entry = 0x20008000 flags = 0x280000
-nr_segments = 3
-segment[0].buf   = 0xb65c0008
-segment[0].bufsz = 0x853204
-segment[0].mem   = 0x20008000
-segment[0].memsz = 0x854000
-segment[1].buf   = 0xb495b000
-segment[1].bufsz = 0x1c64369
-segment[1].mem   = 0x21dd1000
-segment[1].memsz = 0x1c65000
-segment[2].buf   = 0x4f030
-segment[2].bufsz = 0x60bb
-segment[2[   39.693411] sun7i-dwmac 830000.ethernet eth0: Link is Down
-].mem   = 0x23a36000
-segment[2].memsz = 0x7000
-[   39.709586] kexec_core: Starting new kernel
-[   40.120408] Bye!
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 5.6.11-dirty (compile@Red) (gcc version 9.2.0 (Gentoo 9.2.0-r2 p3)) #43 SMP Fri May 15 15:31:20 CEST 2020
-[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
-[    0.000000] CPU: div instructions available: patching division code
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-[    0.000000] OF: fdt: Machine model: Cubietech Cubieboard4
-[    0.000000] Memory policy: Data cache writealloc
-[    0.000000] efi: Getting EFI parameters from FDT:
-[    0.000000] efi: UEFI not found.
-[    0.000000] Ignoring RAM at 0x50000000-0xa0000000
-[    0.000000] Consider using a HIGHMEM enabled kernel.
-[    0.000000] cma: Reserved 64 MiB at 0x4c000000
-[    0.000000] percpu: Embedded 20 pages/cpu s49228 r8192 d24500 u81920
-[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 195072
-[    0.000000] Kernel command line: 'console=ttyS0,115200n8
-[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
-[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
-[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
-[    0.000000] Memory: 662712K/786432K available (12288K kernel code, 1455K rwdata, 4788K rodata, 2048K init, 370K bss, 58184K reserved, 65536K cma-reserved)
-[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
-[    0.000000] rcu: Hierarchical RCU implementation.
-[    0.000000] rcu: 	RCU event tracing is enabled.
-[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=16 to nr_cpu_ids=8.
-[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
-[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
-[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
-[    0.000000] random: get_random_bytes called from start_kernel+0x2fc/0x494 with crng_init=0
-[    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
-[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
-[    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
-[    0.000018] Switching to timer-based delay loop, resolution 41ns
-[    0.001476] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
-[    0.002630] Console: colour dummy device 80x30
-[    0.002953] printk: console [tty0] enabled
-[    0.002997] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
-[    0.003026] pid_max: default: 32768 minimum: 301
-[    0.003201] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-[    0.003237] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
-[    0.003933] CPU: Testing write buffer coherency: ok
-[    0.004409] CPU0: update cpu_capacity 523
-[    0.004433] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.005032] Setting up static identity map for 0x20300000 - 0x203000ac
-[    0.005475] ARM CCI driver probed
-[    0.005783] sunxi multi cluster SMP support installed
-[    0.006198] rcu: Hierarchical SRCU implementation.
-[    0.008162] EFI services will not be available.
-[    0.008500] smp: Bringing up secondary CPUs ...
-[    0.009318] CPU1: update cpu_capacity 523
-[    0.009324] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
-[    0.010326] CPU2: update cpu_capacity 523
-[    0.010333] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
-[    0.011197] CPU3: update cpu_capacity 523
-[    0.011203] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
-[    0.012178] CPU4: update cpu_capacity 1538
-[    0.012192] CPU4: thread -1, cpu 0, socket 1, mpidr 80000100
-[    0.012208] CPU4: Spectre v2: using ICIALLU workaround
-[    0.013422] CPU5: update cpu_capacity 1538
-[    0.013435] CPU5: thread -1, cpu 1, socket 1, mpidr 80000101
-[    0.013449] CPU5: Spectre v2: using ICIALLU workaround
-[    0.014582] CPU6: update cpu_capacity 1538
-[    0.014596] CPU6: thread -1, cpu 2, socket 1, mpidr 80000102
-[    0.014611] CPU6: Spectre v2: using ICIALLU workaround
-[    0.015757] CPU7: update cpu_capacity 1538
-[    0.015771] CPU7: thread -1, cpu 3, socket 1, mpidr 80000103
-[    0.015787] CPU7: Spectre v2: using ICIALLU workaround
-[    0.016070] smp: Brought up 1 node, 8 CPUs
-[    0.016110] SMP: Total of 8 processors activated (384.00 BogoMIPS).
-[    0.016125] CPU: All CPU(s) started in SVC mode.
-[    0.017054] devtmpfs: initialized
-[    0.027537] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
-[    0.027597] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
-[    0.029778] pinctrl core: initialized pinctrl subsystem
-[    0.032100] thermal_sys: Registered thermal governor 'step_wise'
-[    0.032374] DMI not present or invalid.
-[    0.032934] NET: Registered protocol family 16
-[    0.035272] DMA: preallocated 256 KiB pool for atomic coherent allocations
-[    0.038735] cpuidle: using governor menu
-[    0.038866] No ATAGs?
-[    0.039281] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
-[    0.039335] hw-breakpoint: maximum watchpoint size is 8 bytes.
-[    0.041953] Serial: AMBA PL011 UART driver
-[    0.044873] sram 20000.sram: can't request region for resource [mem 0x00020000-0x0005ffff]
-[    0.044925] sram 20000.sram: could not map SRAM registers
-[    0.044976] sram: probe of 20000.sram failed with error -16
-[    0.104030] AT91: Could not find identification node
-[    0.105987] iommu: Default domain type: Translated 
-[    0.106465] vgaarb: loaded
-[    0.107861] SCSI subsystem initialized
-[    0.108599] usbcore: registered new interface driver usbfs
-[    0.108705] usbcore: registered new interface driver hub
-[    0.108893] usbcore: registered new device driver usb
-[    0.110629] pps_core: LinuxPPS API ver. 1 registered
-[    0.110663] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
-[    0.110732] PTP clock support registered
-[    0.111020] EDAC MC: Ver: 3.0.0
-[    0.114979] clocksource: Switched to clocksource arch_sys_counter
-[    1.892786] NET: Registered protocol family 2
-[    1.893828] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 6144 bytes, linear)
-[    1.893912] TCP established hash table entries: 8192 (order: 3, 32768 bytes, linear)
-[    1.894090] TCP bind hash table entries: 8192 (order: 4, 65536 bytes, linear)
-[    1.894411] TCP: Hash tables configured (established 8192 bind 8192)
-[    1.894622] UDP hash table entries: 512 (order: 2, 16384 bytes, linear)
-[    1.894725] UDP-Lite hash table entries: 512 (order: 2, 16384 bytes, linear)
-[    1.895155] NET: Registered protocol family 1
-[    1.896009] RPC: Registered named UNIX socket transport module.
-[    1.896047] RPC: Registered udp transport module.
-[    1.896077] RPC: Registered tcp transport module.
-[    1.896106] RPC: Registered tcp NFSv4.1 backchannel transport module.
-[    1.896144] PCI: CLS 0 bytes, default 64
-[    1.896540] Trying to unpack rootfs image as initramfs...
-[    1.896947] rootfs image is not initramfs (invalid magic at start of compressed archive); looks like an initrd
-[    2.040365] Freeing initrd memory: 29076K
+ Documentation/admin-guide/kdump/kdump.rst     |  8 +++++
+ .../admin-guide/kernel-parameters.txt         | 13 +++++++
+ Documentation/admin-guide/sysctl/kernel.rst   |  7 ++++
+ include/linux/kernel.h                        |  3 ++
+ kernel/panic.c                                | 34 +++++++++++++++++++
+ kernel/sysctl.c                               | 11 +++++-
+ 6 files changed, 75 insertions(+), 1 deletion(-)
 
-Regards
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index ac7e131d2935..2da65fef2a1c 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -521,6 +521,14 @@ will cause a kdump to occur at the panic() call.  In cases where a user wants
+ to specify this during runtime, /proc/sys/kernel/panic_on_warn can be set to 1
+ to achieve the same behaviour.
+ 
++Trigger Kdump on add_taint()
++============================
++
++The kernel parameter panic_on_taint facilitates a conditional call to panic()
++from within add_taint() whenever the value set in this bitmask matches with the
++bit flag being set by add_taint().
++This will cause a kdump to occur at the add_taint()->panic() call.
++
+ Contact
+ =======
+ 
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index d9197499aad1..27b988acb4db 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3422,6 +3422,19 @@
+ 			bit 4: print ftrace buffer
+ 			bit 5: print all printk messages in buffer
+ 
++	panic_on_taint=	Bitmask for conditionally call panic() in add_taint()
++			Format: <hex>[,nousertaint]
++			Hexadecimal bitmask representing the set of TAINT flags
++			that will cause the kernel to panic when add_taint() is
++			called with any of the flags in this set.
++			The optional switch "nousertaint" can be utilized to
++			prevent userspace forced crashes by writing to sysctl
++			/proc/sys/kernel/tainted any flagset matching with the
++			bitmask set on panic_on_taint.
++			See Documentation/admin-guide/tainted-kernels.rst for
++			extra details on the taint flags that users can pick
++			to compose the bitmask to assign to panic_on_taint.
++
+ 	panic_on_warn	panic() instead of WARN().  Useful to cause kdump
+ 			on a WARN().
+ 
+diff --git a/Documentation/admin-guide/sysctl/kernel.rst b/Documentation/admin-guide/sysctl/kernel.rst
+index c6c27db68d4c..427ce0a86b36 100644
+--- a/Documentation/admin-guide/sysctl/kernel.rst
++++ b/Documentation/admin-guide/sysctl/kernel.rst
+@@ -1241,6 +1241,13 @@ ORed together. The letters are seen in "Tainted" line of Oops reports.
+ 
+ See :doc:`/admin-guide/tainted-kernels` for more information.
+ 
++Note:
++  writes to this sysctl interface will fail with ``EINVAL`` if the kernel is
++  booted with the command line option ``panic_on_taint=<bitmask>,nousertaint``
++  and any of the ORed together values being written to ``tainted`` match with
++  the bitmask declared on panic_on_taint.
++  See :doc:`/admin-guide/kernel-parameters` for more details on that particular
++  kernel command line option and its optional ``nousertaint`` switch.
+ 
+ threads-max
+ ===========
+diff --git a/include/linux/kernel.h b/include/linux/kernel.h
+index 04a5885cec1b..82d91547d122 100644
+--- a/include/linux/kernel.h
++++ b/include/linux/kernel.h
+@@ -534,6 +534,8 @@ extern int panic_on_oops;
+ extern int panic_on_unrecovered_nmi;
+ extern int panic_on_io_nmi;
+ extern int panic_on_warn;
++extern unsigned long panic_on_taint;
++extern bool panic_on_taint_nousertaint;
+ extern int sysctl_panic_on_rcu_stall;
+ extern int sysctl_panic_on_stackoverflow;
+ 
+@@ -602,6 +604,7 @@ extern enum system_states {
+ #define TAINT_AUX			16
+ #define TAINT_RANDSTRUCT		17
+ #define TAINT_FLAGS_COUNT		18
++#define TAINT_FLAGS_MAX			((1UL << TAINT_FLAGS_COUNT) - 1)
+ 
+ struct taint_flag {
+ 	char c_true;	/* character printed when tainted */
+diff --git a/kernel/panic.c b/kernel/panic.c
+index ec6d7d788ce7..85568bbfb12b 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -52,6 +52,8 @@ static int pause_on_oops_flag;
+ static DEFINE_SPINLOCK(pause_on_oops_lock);
+ bool crash_kexec_post_notifiers;
+ int panic_on_warn __read_mostly;
++unsigned long panic_on_taint;
++bool panic_on_taint_nousertaint = false;
+ 
+ int panic_timeout = CONFIG_PANIC_TIMEOUT;
+ EXPORT_SYMBOL_GPL(panic_timeout);
+@@ -442,6 +444,11 @@ void add_taint(unsigned flag, enum lockdep_ok lockdep_ok)
+ 		pr_warn("Disabling lock debugging due to kernel taint\n");
+ 
+ 	set_bit(flag, &tainted_mask);
++
++	if (tainted_mask & panic_on_taint) {
++		panic_on_taint = 0;
++		panic("panic_on_taint set ...");
++	}
+ }
+ EXPORT_SYMBOL(add_taint);
+ 
+@@ -697,3 +704,30 @@ static int __init oops_setup(char *s)
+ 	return 0;
+ }
+ early_param("oops", oops_setup);
++
++static int __init panic_on_taint_setup(char *s)
++{
++	char *taint_str;
++
++	if (!s)
++		return -EINVAL;
++
++	taint_str = strsep(&s, ",");
++	if (kstrtoul(taint_str, 16, &panic_on_taint))
++		return -EINVAL;
++
++	/* make sure panic_on_taint doesn't hold out-of-range TAINT flags */
++	panic_on_taint &= TAINT_FLAGS_MAX;
++
++	if (!panic_on_taint)
++		return -EINVAL;
++
++	if (s && !strcmp(s, "nousertaint"))
++		panic_on_taint_nousertaint = true;
++
++	pr_info("panic_on_taint: bitmask=0x%lx nousertaint_mode=%sabled\n",
++		panic_on_taint, panic_on_taint_nousertaint ? "en" : "dis");
++
++	return 0;
++}
++early_param("panic_on_taint", panic_on_taint_setup);
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index 349cab382081..c8ec67c1e137 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -865,11 +865,20 @@ static int proc_taint(struct ctl_table *table, int write,
+ 		return err;
+ 
+ 	if (write) {
++		int i;
++
++		/*
++		 * If we are relying on panic_on_taint not producing
++		 * false positives due to userspace input, bail out
++		 * before setting the requested taint flags.
++		 */
++		if (panic_on_taint_nousertaint && (tmptaint & panic_on_taint))
++			return -EINVAL;
++
+ 		/*
+ 		 * Poor man's atomic or. Not worth adding a primitive
+ 		 * to everyone's atomic.h for this
+ 		 */
+-		int i;
+ 		for (i = 0; i < TAINT_FLAGS_COUNT; i++)
+ 			if ((1UL << i) & tmptaint)
+ 				add_taint(i, LOCKDEP_STILL_OK);
+-- 
+2.25.4
+
 
 _______________________________________________
 kexec mailing list
