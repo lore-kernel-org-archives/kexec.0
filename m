@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-f196.google.com ([209.85.215.196])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jZgv8-0002hx-MR
- for kexec@lists.infradead.org; Fri, 15 May 2020 20:27:04 +0000
-Received: by mail-pg1-f196.google.com with SMTP id f6so1537286pgm.1
- for <kexec@lists.infradead.org>; Fri, 15 May 2020 13:26:59 -0700 (PDT)
-Date: Fri, 15 May 2020 20:26:56 +0000
-From: Luis Chamberlain <mcgrof@kernel.org>
-Subject: Re: [PATCH v5] kernel: add panic_on_taint
-Message-ID: <20200515202656.GZ11244@42.do-not-panic.com>
-References: <20200515175502.146720-1-aquini@redhat.com>
+Date: Fri, 15 May 2020 22:06:11 +0100
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: kexec: arm: possible overwrite of initrd
+Message-ID: <20200515210611.GS1551@shell.armlinux.org.uk>
+References: <20200515135712.GA5979@Red>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200515175502.146720-1-aquini@redhat.com>
+In-Reply-To: <20200515135712.GA5979@Red>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,34 +19,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rafael Aquini <aquini@redhat.com>
-Cc: linux-doc@vger.kernel.org, tiwai@suse.de, jeffm@suse.com, bhe@redhat.com, corbet@lwn.net, labbott@redhat.com, dyoung@redhat.com, AnDavis@suse.com, rpalethorpe@suse.de, keescook@chromium.org, jikos@kernel.org, cai@lca.pw, bunk@kernel.org, tytso@mit.edu, jeyu@suse.de, gregkh@linuxfoundation.org, rdunlap@infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, torvalds@linux-foundation.org
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: kexec@lists.infradead.org, ebiederm@xmission.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Fri, May 15, 2020 at 01:55:02PM -0400, Rafael Aquini wrote:
-> Analogously to the introduction of panic_on_warn, this patch introduces a kernel
-> option named panic_on_taint in order to provide a simple and generic way to stop
-> execution and catch a coredump when the kernel gets tainted by any given flag.
+On Fri, May 15, 2020 at 03:57:12PM +0200, Corentin Labbe wrote:
+> Hello
 > 
-> This is useful for debugging sessions as it avoids having to rebuild the kernel
-> to explicitly add calls to panic() into the code sites that introduce the taint
-> flags of interest. For instance, if one is interested in proceeding with a
-> post-mortem analysis at the point a given code path is hitting a bad page
-> (i.e. unaccount_page_cache_page(), or slab_bug()), a coredump can be collected
-> by rebooting the kernel with 'panic_on_taint=0x20' amended to the command line.
-> 
-> Another, perhaps less frequent, use for this option would be as a mean for
-> assuring a security policy case where only a subset of taints, or no single
-> taint (in paranoid mode), is allowed for the running system.
-> The optional switch 'nousertaint' is handy in this particular scenario,
-> as it will avoid userspace induced crashes by writes to sysctl interface
-> /proc/sys/kernel/tainted causing false positive hits for such policies.
-> 
-> Suggested-by: Qian Cai <cai@lca.pw>
-> Signed-off-by: Rafael Aquini <aquini@redhat.com>
+> Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
 
-Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+You can try increasing the kernel size that kexec thinks the kernel
+needs, but it should be extremely accurate with modern kexec.
 
-  Luis
+--image-size $((0x01dc8154 + 0x10000))
+
+will add 64k on top of what you currently have.  Note where the first
+figure comes from (you'll find it in the debug output, see
+"Resulting kernel space").
+
+The best I can say is try playing around with that - but, kexec's
+calculations should be spot on to stop the booting kernel from
+overwriting the initrd.
+
+The only way to debug that is to get the booted kernel to hexdump the
+initrd so it's possible to see what happened to it.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 10.2Mbps down 587kbps up
 
 _______________________________________________
 kexec mailing list
