@@ -1,9 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Date: Fri, 15 May 2020 15:57:12 +0200
+From: Corentin Labbe <clabbe.montjoie@gmail.com>
+Subject: kexec: arm: possible overwrite of initrd
+Message-ID: <20200515135712.GA5979@Red>
 MIME-Version: 1.0
-From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date: Fri, 15 May 2020 16:28:13 +0530
-Message-ID: <CAJ2QiJJgw0Cm=XBeVvOJ8WnWB0Xfv3JEYKTQUovnwrrDw17w9g@mail.gmail.com>
-Subject: kdump: Getting "warn_alloc" warning during boot of kdump kernel
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,109 +17,172 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec mailing list <kexec@lists.infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Kamlakant Patel <kamlakantp@marvell.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>
+To: ebiederm@xmission.com, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux@armlinux.org.uk
+Cc: linux-kernel@vger.kernel.org
 
-Hi All,
+Hello
 
-We are getting "warn_alloc" warning during boot of kdump kernel. This
-warning is observed with latest upstream tag (v5.7-rc5).
+Following https://lkml.org/lkml/2020/4/6/96 I was able to boot my Cubieboard4 via kexec reliabily.
 
-Primary/1st Kernel
-----------------------------
-# dmesg | grep crash
-[    0.000000] crashkernel reserved: 0x00000000d6000000 -
-0x00000000f6000000 (512 MB)
-[    0.000000] Kernel command line:
-BOOT_IMAGE=(hd8,gpt2)/vmlinuz-5.7.0-rc5
-root=UUID=c4050f17-526f-48a8-9804-c6b35cbb584c ro crashkernel=512M
-earlycon console=ttyAMA0
+But now I have started to use kernelCI builds, I got problems.
+All sunxi_defconfig kernel works but not multi_v7_defconfig which got:
+[    1.896540] Trying to unpack rootfs image as initramfs...
+[    1.896947] rootfs image is not initramfs (invalid magic at start of compressed archive); looks like an initrd
+Then:
+[    3.927732] RAMDISK: Couldn't find valid RAM disk image starting at 0.
+[    3.934489] VFS: Cannot open root device \"(null)\" or unknown-block(0,0): error -6
 
-# cat /proc/iomem | grep -i crash
-  d6000000 - f6000000 : Crash kernel
+I have tryed to disable all related RD/RAMFS/compression CONFIGs without change.
+Only the size of the kernel seems to matter which let me think that the initrd is overwritten by the kernel.
 
-Logs from Kdump/crash kernel with warnings & dump_stack
-------------------------------------------------------------------------
+I use kexec-tools master
+This is the output of my kexec run
+run kexec with --debug --kexec-syscall --force --initrd /tmp/ramdisk --dtb /tmp/dtb --command-line='console=ttyS0,115200n8 root=/dev/ram0 earlycon=uart,mmio32,0x7000000 ip=dhcp'
+Try gzip decompression.
+kernel: 0xb65c0008 kernel_size: 0x853200
+MEMORY RANGES
+0000000020000000-000000009fffffff (0)
+zImage header: 0x016f2818 0x00000000 0x00853200
+zImage size 0x853200, file size 0x853200
+zImage requires 0x00864200 bytes
+  offset 0x0000b810 tag 0x5a534c4b size 8
+Decompressed kernel sizes:
+ text+data 0x01563f54 bss 0x0005ca84 total 0x015c09d8
+Resulting kernel space: 0x01dc8154
+Kernel: address=0x20008000 size=0x01dc8154
+Initrd: address=0x21dd1000 size=0x01c64369
+DT    : address=0x23a36000 size=0x000060bb
+kexec_load: entry = 0x20008000 flags = 0x280000
+nr_segments = 3
+segment[0].buf   = 0xb65c0008
+segment[0].bufsz = 0x853204
+segment[0].mem   = 0x20008000
+segment[0].memsz = 0x854000
+segment[1].buf   = 0xb495b000
+segment[1].bufsz = 0x1c64369
+segment[1].mem   = 0x21dd1000
+segment[1].memsz = 0x1c65000
+segment[2].buf   = 0x4f030
+segment[2].bufsz = 0x60bb
+segment[2[   39.693411] sun7i-dwmac 830000.ethernet eth0: Link is Down
+].mem   = 0x23a36000
+segment[2].memsz = 0x7000
+[   39.709586] kexec_core: Starting new kernel
+[   40.120408] Bye!
+[    0.000000] Booting Linux on physical CPU 0x0
+[    0.000000] Linux version 5.6.11-dirty (compile@Red) (gcc version 9.2.0 (Gentoo 9.2.0-r2 p3)) #43 SMP Fri May 15 15:31:20 CEST 2020
+[    0.000000] CPU: ARMv7 Processor [410fc075] revision 5 (ARMv7), cr=10c5387d
+[    0.000000] CPU: div instructions available: patching division code
+[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
+[    0.000000] OF: fdt: Machine model: Cubietech Cubieboard4
+[    0.000000] Memory policy: Data cache writealloc
+[    0.000000] efi: Getting EFI parameters from FDT:
+[    0.000000] efi: UEFI not found.
+[    0.000000] Ignoring RAM at 0x50000000-0xa0000000
+[    0.000000] Consider using a HIGHMEM enabled kernel.
+[    0.000000] cma: Reserved 64 MiB at 0x4c000000
+[    0.000000] percpu: Embedded 20 pages/cpu s49228 r8192 d24500 u81920
+[    0.000000] Built 1 zonelists, mobility grouping on.  Total pages: 195072
+[    0.000000] Kernel command line: 'console=ttyS0,115200n8
+[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes, linear)
+[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes, linear)
+[    0.000000] mem auto-init: stack:off, heap alloc:off, heap free:off
+[    0.000000] Memory: 662712K/786432K available (12288K kernel code, 1455K rwdata, 4788K rodata, 2048K init, 370K bss, 58184K reserved, 65536K cma-reserved)
+[    0.000000] SLUB: HWalign=64, Order=0-3, MinObjects=0, CPUs=8, Nodes=1
+[    0.000000] rcu: Hierarchical RCU implementation.
+[    0.000000] rcu: 	RCU event tracing is enabled.
+[    0.000000] rcu: 	RCU restricting CPUs from NR_CPUS=16 to nr_cpu_ids=8.
+[    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 10 jiffies.
+[    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=8
+[    0.000000] NR_IRQS: 16, nr_irqs: 16, preallocated irqs: 16
+[    0.000000] random: get_random_bytes called from start_kernel+0x2fc/0x494 with crng_init=0
+[    0.000000] arch_timer: cp15 timer(s) running at 24.00MHz (phys).
+[    0.000000] clocksource: arch_sys_counter: mask: 0xffffffffffffff max_cycles: 0x588fe9dc0, max_idle_ns: 440795202592 ns
+[    0.000006] sched_clock: 56 bits at 24MHz, resolution 41ns, wraps every 4398046511097ns
+[    0.000018] Switching to timer-based delay loop, resolution 41ns
+[    0.001476] clocksource: timer: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 79635851949 ns
+[    0.002630] Console: colour dummy device 80x30
+[    0.002953] printk: console [tty0] enabled
+[    0.002997] Calibrating delay loop (skipped), value calculated using timer frequency.. 48.00 BogoMIPS (lpj=240000)
+[    0.003026] pid_max: default: 32768 minimum: 301
+[    0.003201] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.003237] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes, linear)
+[    0.003933] CPU: Testing write buffer coherency: ok
+[    0.004409] CPU0: update cpu_capacity 523
+[    0.004433] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.005032] Setting up static identity map for 0x20300000 - 0x203000ac
+[    0.005475] ARM CCI driver probed
+[    0.005783] sunxi multi cluster SMP support installed
+[    0.006198] rcu: Hierarchical SRCU implementation.
+[    0.008162] EFI services will not be available.
+[    0.008500] smp: Bringing up secondary CPUs ...
+[    0.009318] CPU1: update cpu_capacity 523
+[    0.009324] CPU1: thread -1, cpu 1, socket 0, mpidr 80000001
+[    0.010326] CPU2: update cpu_capacity 523
+[    0.010333] CPU2: thread -1, cpu 2, socket 0, mpidr 80000002
+[    0.011197] CPU3: update cpu_capacity 523
+[    0.011203] CPU3: thread -1, cpu 3, socket 0, mpidr 80000003
+[    0.012178] CPU4: update cpu_capacity 1538
+[    0.012192] CPU4: thread -1, cpu 0, socket 1, mpidr 80000100
+[    0.012208] CPU4: Spectre v2: using ICIALLU workaround
+[    0.013422] CPU5: update cpu_capacity 1538
+[    0.013435] CPU5: thread -1, cpu 1, socket 1, mpidr 80000101
+[    0.013449] CPU5: Spectre v2: using ICIALLU workaround
+[    0.014582] CPU6: update cpu_capacity 1538
+[    0.014596] CPU6: thread -1, cpu 2, socket 1, mpidr 80000102
+[    0.014611] CPU6: Spectre v2: using ICIALLU workaround
+[    0.015757] CPU7: update cpu_capacity 1538
+[    0.015771] CPU7: thread -1, cpu 3, socket 1, mpidr 80000103
+[    0.015787] CPU7: Spectre v2: using ICIALLU workaround
+[    0.016070] smp: Brought up 1 node, 8 CPUs
+[    0.016110] SMP: Total of 8 processors activated (384.00 BogoMIPS).
+[    0.016125] CPU: All CPU(s) started in SVC mode.
+[    0.017054] devtmpfs: initialized
+[    0.027537] clocksource: jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 19112604462750000 ns
+[    0.027597] futex hash table entries: 2048 (order: 5, 131072 bytes, linear)
+[    0.029778] pinctrl core: initialized pinctrl subsystem
+[    0.032100] thermal_sys: Registered thermal governor 'step_wise'
+[    0.032374] DMI not present or invalid.
+[    0.032934] NET: Registered protocol family 16
+[    0.035272] DMA: preallocated 256 KiB pool for atomic coherent allocations
+[    0.038735] cpuidle: using governor menu
+[    0.038866] No ATAGs?
+[    0.039281] hw-breakpoint: found 5 (+1 reserved) breakpoint and 4 watchpoint registers.
+[    0.039335] hw-breakpoint: maximum watchpoint size is 8 bytes.
+[    0.041953] Serial: AMBA PL011 UART driver
+[    0.044873] sram 20000.sram: can't request region for resource [mem 0x00020000-0x0005ffff]
+[    0.044925] sram 20000.sram: could not map SRAM registers
+[    0.044976] sram: probe of 20000.sram failed with error -16
+[    0.104030] AT91: Could not find identification node
+[    0.105987] iommu: Default domain type: Translated 
+[    0.106465] vgaarb: loaded
+[    0.107861] SCSI subsystem initialized
+[    0.108599] usbcore: registered new interface driver usbfs
+[    0.108705] usbcore: registered new interface driver hub
+[    0.108893] usbcore: registered new device driver usb
+[    0.110629] pps_core: LinuxPPS API ver. 1 registered
+[    0.110663] pps_core: Software ver. 5.3.6 - Copyright 2005-2007 Rodolfo Giometti <giometti@linux.it>
+[    0.110732] PTP clock support registered
+[    0.111020] EDAC MC: Ver: 3.0.0
+[    0.114979] clocksource: Switched to clocksource arch_sys_counter
+[    1.892786] NET: Registered protocol family 2
+[    1.893828] tcp_listen_portaddr_hash hash table entries: 512 (order: 0, 6144 bytes, linear)
+[    1.893912] TCP established hash table entries: 8192 (order: 3, 32768 bytes, linear)
+[    1.894090] TCP bind hash table entries: 8192 (order: 4, 65536 bytes, linear)
+[    1.894411] TCP: Hash tables configured (established 8192 bind 8192)
+[    1.894622] UDP hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    1.894725] UDP-Lite hash table entries: 512 (order: 2, 16384 bytes, linear)
+[    1.895155] NET: Registered protocol family 1
+[    1.896009] RPC: Registered named UNIX socket transport module.
+[    1.896047] RPC: Registered udp transport module.
+[    1.896077] RPC: Registered tcp transport module.
+[    1.896106] RPC: Registered tcp NFSv4.1 backchannel transport module.
+[    1.896144] PCI: CLS 0 bytes, default 64
+[    1.896540] Trying to unpack rootfs image as initramfs...
+[    1.896947] rootfs image is not initramfs (invalid magic at start of compressed archive); looks like an initrd
+[    2.040365] Freeing initrd memory: 29076K
 
-[    0.239360] swapper/0: page allocation failure: order:2,
-mode:0x1(GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
-[    0.249917] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.7.0-rc5 #44
-[    0.256246] Hardware name: To be filled by O.E.M. Saber/Saber, BIOS
-0ACKL027 07/01/2019
-[    0.264333] Call trace:
-[    0.266797]  dump_backtrace+0x0/0x1f8
-[    0.270490]  show_stack+0x20/0x30
-[    0.273833]  dump_stack+0xc0/0x10c
-[    0.277263]  warn_alloc+0x10c/0x178
-[    0.280781]  __alloc_pages_slowpath.constprop.112+0xaec/0xb28
-[    0.286584]  __alloc_pages_nodemask+0x2b4/0x300
-[    0.291156]  alloc_page_interleave+0x24/0xa0
-[    0.295464]  alloc_pages_current+0xe4/0x108
-[    0.299686]  dma_atomic_pool_init+0x44/0x1a4
-[    0.303995]  do_one_initcall+0x54/0x228
-[    0.307864]  kernel_init_freeable+0x228/0x2cc
-[    0.312263]  kernel_init+0x1c/0x110
-[    0.315781]  ret_from_fork+0x10/0x18
-
-We did some debugging.
-As per commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
-. DMA zone has been re-defined.
-here, ZONE_DMA has a fixed range of 0x802f0000 - 0xbfffffff and
-ZONE_DMA32 has range from 0xc0000000-0xfffffffff.
-
-When bootargs is defined with "crashkernel= X" for 1st/primary kernel.
-Than X amount of memory is reserved in First kernel. This reserved
-memory is used to boot kdump/crash kernel and represented as "Crash
-kernel" in cat /prom/iomem.
-
-If some region of reserved memory(Crash kernel) **does not** fall in
-ZONE_DMA region i.e. 0x802f0000 - 0xbfffffff, this warning is
-observed.
-Other drivers like scsi_register_driver [1] also fail. We also see
-other kinds of error [2].
-
-Considering DMA_ZONE has requirement of 0x802f0000 - 0xbfffffff.
-Can we enforce "Crash kernel" to always reserved between 0x0000_0000
-to 0xc000_0000 in reserve_crashkernel() -->memblock_find_in_range()
-or
-what could be best possible solution.
-
---pk
-
-[1]
-------------------------------------------------------------
-[   21.509239]  dump_backtrace+0x0/0x1f8
-[   21.516592]  show_stack+0x20/0x30
-[   21.523248]  dump_stack+0xc0/0x10c
-[   21.530087]  warn_alloc+0x10c/0x178
-[   21.537090]  __alloc_pages_slowpath.constprop.112+0xaec/0xb28
-[   21.548644]  __alloc_pages_nodemask+0x2b4/0x300
-[   21.557750]  alloc_pages_current+0x90/0x108
-[   21.566155]  alloc_slab_page+0x184/0x340
-[   21.574030]  new_slab+0x420/0x4c8
-[   21.580681]  ___slab_alloc+0x354/0x4e8
-[   21.588207]  __slab_alloc+0x28/0x58
-[   21.595210]  kmem_cache_alloc_trace+0x230/0x250
-[   21.604316]  sr_probe+0x250/0x618 [sr_mod]
-[   21.612555]  really_probe+0xe4/0x448
-[   21.619733]  driver_probe_device+0xe8/0x140
-[   21.628136]  device_driver_attach+0x7c/0x88
-[   21.636536]  __driver_attach+0xac/0x178
-[   21.644239]  bus_for_each_dev+0x7c/0xd0
-[   21.651943]  driver_attach+0x2c/0x38
-[   21.659119]  bus_add_driver+0x1a8/0x240
-[   21.666823]  driver_register+0x6c/0x128
-[   21.674533]  scsi_register_driver+0x28/0x38
-[   21.682939]  init_sr+0x40/0x10000 [sr_mod]
-
-[2]
--------------------------------------------------------------------
-[   21.450571] systemd-udevd: page allocation failure: order:0,
-mode:0xcc1(GFP_KERNEL|GFP_DMA),
-nodemask=(null),cpuset=/,mems_allowed=0^M
-[   21.450571] systemd-udevd: page allocation failure: order:0,
-mode:0xcc1(GFP_KERNEL|GFP_DMA),
-nodemask=(null),cpuset=/,mems_allowed=0^M
+Regards
 
 _______________________________________________
 kexec mailing list
