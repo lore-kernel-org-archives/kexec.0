@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jafR7-00029O-Nh
- for kexec@lists.infradead.org; Mon, 18 May 2020 13:04:10 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v2 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
-Date: Mon, 18 May 2020 15:03:53 +0200
-In-Reply-To: <20200501094010.17694-3-john.ogness@linutronix.de> (John Ogness's
- message of "Fri, 1 May 2020 11:46:09 +0206")
-Message-ID: <87v9ktcs3q.fsf@vostro.fn.ogness.net>
+ id 1jahZn-0001qH-4V
+ for kexec@lists.infradead.org; Mon, 18 May 2020 15:21:12 +0000
+Received: by mail-pf1-x443.google.com with SMTP id v63so5099919pfb.10
+ for <kexec@lists.infradead.org>; Mon, 18 May 2020 08:21:11 -0700 (PDT)
+Date: Mon, 18 May 2020 08:21:08 -0700
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+Message-ID: <202005180820.46CEF3C2@keescook>
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513181736.GA24342@infradead.org>
+ <20200515212933.GD11244@42.do-not-panic.com>
+ <20200518062255.GB15641@infradead.org>
+ <1589805462.5111.107.camel@linux.ibm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1589805462.5111.107.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,156 +25,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, "Paul E. McKenney" <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: rafael@kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, Christoph Hellwig <hch@infradead.org>, geert@linux-m68k.org, dan.carpenter@oracle.com, scott.branden@broadcom.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, ebiederm@xmission.com, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
 
-Hi,
+On Mon, May 18, 2020 at 08:37:42AM -0400, Mimi Zohar wrote:
+> Hi Christoph,
+> =
 
-For the v2 I was supposed to have fixed a bug in v1. The cover letter
-stated:
+> On Sun, 2020-05-17 at 23:22 -0700, Christoph Hellwig wrote:
+> > On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
+> > > On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
+> > > > Can you also move kernel_read_* out of fs.h?  That header gets pull=
+ed
+> > > > in just about everywhere and doesn't really need function not relat=
+ed
+> > > > to the general fs interface.
+> > > =
 
-- data_push_tail(): continue loop rather than try cmpxchg() if
-  tail LPOS was pushed
+> > > Sure, where should I dump these?
+> > =
 
-Unfortunately, the fix was incorrect and actually made it worse. The
-explanation and patch are below.
+> > Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
+> > of the file comment explaining the point of the interface, which I
+> > still don't get :)
+> =
 
-On 2020-05-01, John Ogness <john.ogness@linutronix.de> wrote:
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> new file mode 100644
-> index 000000000000..e0a66468d4f3
-> --- /dev/null
-> +++ b/kernel/printk/printk_ringbuffer.c
-...
-> +/*
-> + * Advance the data ring tail to at least @lpos. This function puts
-> + * descriptors into the reusable state if the tail is pushed beyond
-> + * their associated data block.
-> + */
-> +static bool data_push_tail(struct printk_ringbuffer *rb,
-> +			   struct prb_data_ring *data_ring,
-> +			   unsigned long lpos)
-> +{
-> +	unsigned long tail_lpos;
-> +	unsigned long next_lpos;
-> +
-> +	/* If @lpos is not valid, there is nothing to do. */
-> +	if (lpos == INVALID_LPOS)
-> +		return true;
-> +
-> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
-> +
-> +	do {
-> +		/* Done, if the tail lpos is already at or beyond @lpos. */
-> +		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
-> +			break;
-> +
-> +		/*
-> +		 * Make all descriptors reusable that are associated with
-> +		 * data blocks before @lpos.
-> +		 */
-> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
-> +					&next_lpos)) {
-> +			/*
-> +			 * Guarantee the descriptor state loaded in
-> +			 * data_make_reusable() is performed before reloading
-> +			 * the tail lpos. The failed data_make_reusable() may
-> +			 * be due to a newly recycled descriptor causing
-> +			 * the tail lpos to have been previously pushed. This
-> +			 * pairs with desc_reserve:D.
-> +			 *
-> +			 * Memory barrier involvement:
-> +			 *
-> +			 * If data_make_reusable:D reads from desc_reserve:G,
-> +			 * then data_push_tail:B reads from data_push_tail:D.
-> +			 *
-> +			 * Relies on:
-> +			 *
-> +			 * MB from data_push_tail:D to desc_reserve:G
-> +			 *    matching
-> +			 * RMB from data_make_reusable:D to data_push_tail:B
-> +			 *
-> +			 * Note: data_push_tail:D and desc_reserve:G can be
-> +			 *       different CPUs. However, the desc_reserve:G
-> +			 *       CPU (which performs the full memory barrier)
-> +			 *       must have previously seen data_push_tail:D.
-> +			 */
-> +			smp_rmb(); /* LMM(data_push_tail:A) */
-> +
-> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
-> +						); /* LMM(data_push_tail:B) */
-> +			if (next_lpos == tail_lpos)
-> +				return false;
-> +
-> +			/* Another task pushed the tail. Try again. */
-> +			tail_lpos = next_lpos;
-> +			continue;
+> Instead of rolling your own method of having the kernel read a file,
+> which requires call specific security hooks, this interface provides a
+> single generic set of pre and post security hooks.=A0=A0The
+> kernel_read_file_id enumeration permits the security hook to
+> differentiate between callers.
+> =
 
-The purpose of the continue is to try again _without_ attempting a
-cmpxchg(). However, since the cmpxchg() is in the while condition, it
-_is_ called. This is a major problem because if the cmpxchg() succeeds
-(highly likely at this point) then the smp_mb() is not called and
-success is returned even though the tail may not have been pushed far
-enough.
+> To comply with secure and trusted boot concepts, a file cannot be
+> accessible to the caller until after it has been measured and/or the
+> integrity (hash/signature) appraised.
+> =
 
-The cmpxchg() needs to be moved out of the while condition so that a
-continue can be used as intended. Patch below.
+> In some cases, the file was previously read twice, first to measure
+> and/or appraise the file and then read again into a buffer for
+> use.=A0=A0This interface reads the file into a buffer once, calls the
+> generic post security hook, before providing the buffer to the caller.
+> =A0(Note using firmware pre-allocated memory might be an issue.)
+> =
 
-> +		}
-> +
-> +		/*
-> +		 * Guarantee any descriptor states that have transitioned to
-> +		 * reusable are stored before pushing the tail lpos. This
-> +		 * allows readers to identify if data has expired while
-> +		 * reading the descriptor. This pairs with desc_read:D.
-> +		 */
-> +		smp_mb(); /* LMM(data_push_tail:C) */
-> +
-> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
-> +			&tail_lpos, next_lpos)); /* LMM(data_push_tail:D) */
-> +
-> +	return true;
-> +}
+> Partial reading firmware will result in needing to pre-read the entire
+> file, most likely on the security pre hook.
 
-John Ogness
+Well described! :)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index e0a66468d4f3..ac542bdb8deb 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -546,11 +546,8 @@ static bool data_push_tail(struct printk_ringbuffer *rb,
- 
- 	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
- 
--	do {
--		/* Done, if the tail lpos is already at or beyond @lpos. */
--		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
--			break;
--
-+	/* Done, if the tail lpos is already at or beyond @lpos. */
-+	while ((lpos - tail_lpos) - 1 < DATA_SIZE(data_ring)) {
- 		/*
- 		 * Make all descriptors reusable that are associated with
- 		 * data blocks before @lpos.
-@@ -601,8 +598,12 @@ static bool data_push_tail(struct printk_ringbuffer *rb,
- 		 */
- 		smp_mb(); /* LMM(data_push_tail:C) */
- 
--	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
--			&tail_lpos, next_lpos)); /* LMM(data_push_tail:D) */
-+		if (atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
-+				&tail_lpos,
-+				next_lpos)) { /* LMM(data_push_tail:D) */
-+			break;
-+		}
-+	}
- 
- 	return true;
- }
+-- =
+
+Kees Cook
 
 _______________________________________________
 kexec mailing list
