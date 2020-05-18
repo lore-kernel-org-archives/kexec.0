@@ -1,22 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jahZn-0001qH-4V
- for kexec@lists.infradead.org; Mon, 18 May 2020 15:21:12 +0000
-Received: by mail-pf1-x443.google.com with SMTP id v63so5099919pfb.10
- for <kexec@lists.infradead.org>; Mon, 18 May 2020 08:21:11 -0700 (PDT)
-Date: Mon, 18 May 2020 08:21:08 -0700
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
-Message-ID: <202005180820.46CEF3C2@keescook>
-References: <20200513152108.25669-1-mcgrof@kernel.org>
- <20200513181736.GA24342@infradead.org>
- <20200515212933.GD11244@42.do-not-panic.com>
- <20200518062255.GB15641@infradead.org>
- <1589805462.5111.107.camel@linux.ibm.com>
+Date: Mon, 18 May 2020 16:55:45 +0100
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+Message-ID: <20200518155545.GO32394@willie-the-truck>
+References: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1589805462.5111.107.camel@linux.ibm.com>
+In-Reply-To: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +15,146 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: rafael@kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, Christoph Hellwig <hch@infradead.org>, geert@linux-m68k.org, dan.carpenter@oracle.com, scott.branden@broadcom.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, ebiederm@xmission.com, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
+To: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Cc: gkulkarni@marvell.com, maz@kernel.org, bhsharma@redhat.com, kexec@lists.infradead.org, helgaas@kernel.org, prabhakar.pkin@gmail.com, robin.murphy@arm.com, linux-arm-kernel@lists.infradead.org
 
-On Mon, May 18, 2020 at 08:37:42AM -0400, Mimi Zohar wrote:
-> Hi Christoph,
-> =
+On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
+> An SMMU Stream table is created by the primary kernel. This table is
+> used by the SMMU to perform address translations for device-originated
+> transactions. Any crash (if happened) launches the kdump kernel which
+> re-creates the SMMU Stream table. New transactions will be translated
+> via this new table.
+> 
+> There are scenarios, where devices are still having old pending
+> transactions (configured in the primary kernel). These transactions
+> come in-between Stream table creation and device-driver probe.
+> As new stream table does not have entry for older transactions,
+> it will be aborted by SMMU.
+> 
+> Similar observations were found with PCIe-Intel 82576 Gigabit
+> Network card. It sends old Memory Read transaction in kdump kernel.
+> Transactions configured for older Stream table entries, that do not
+> exist any longer in the new table, will cause a PCIe Completion Abort.
+> Returned PCIe completion abort further leads to AER Errors from APEI
+> Generic Hardware Error Source (GHES) with completion timeout.
+> A network device hang is observed even after continuous
+> reset/recovery from driver, Hence device is no more usable.
+> 
+> So, If we are in a kdump kernel try to copy SMMU Stream table from
+> primary/old kernel to preserve the mappings until the device driver
+> takes over.
+> 
+> Signed-off-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> ---
+> Changes for v2: Used memremap in-place of ioremap
+> 
+> V2 patch has been sanity tested.
 
-> On Sun, 2020-05-17 at 23:22 -0700, Christoph Hellwig wrote:
-> > On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
-> > > On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
-> > > > Can you also move kernel_read_* out of fs.h?  That header gets pull=
-ed
-> > > > in just about everywhere and doesn't really need function not relat=
-ed
-> > > > to the general fs interface.
-> > > =
+Are you sure?
 
-> > > Sure, where should I dump these?
-> > =
+> V1 patch has been tested with
+> A) PCIe-Intel 82576 Gigabit Network card in following
+> configurations with "no AER error". Each iteration has
+> been tested on both Suse kdump rfs And default Centos distro rfs.
+> 
+>  1)  with 2 level stream table 
+>        ----------------------------------------------------
+>        SMMU               |  Normal Ping   | Flood Ping
+>        -----------------------------------------------------
+>        Default Operation  |  100 times     | 10 times
+>        -----------------------------------------------------
+>        IOMMU bypass       |  41 times      | 10 times
+>        -----------------------------------------------------
+> 
+>  2)  with Linear stream table. 
+>        -----------------------------------------------------
+>        SMMU               |  Normal Ping   | Flood Ping
+>        ------------------------------------------------------
+>        Default Operation  |  100 times     | 10 times
+>        ------------------------------------------------------
+>        IOMMU bypass       |  55 times      | 10 times
+>        -------------------------------------------------------
+> 
+> B) This patch is also tested with Micron Technology Inc 9200 PRO NVMe
+> SSD card with 2 level stream table using "fio" in mixed read/write and
+> only read configurations. It is tested for both Default Operation and
+> IOMMU bypass mode for minimum 10 iterations across Centos kdump rfs and
+> default Centos ditstro rfs.
+> 
+> This patch is not full proof solution. Issue can still come
+> from the point device is discovered and driver probe called. 
+> This patch has reduced window of scenario from "SMMU Stream table 
+> creation - device-driver" to "device discovery - device-driver".
+> Usually, device discovery to device-driver is very small time. So
+> the probability is very low. 
+> 
+> Note: device-discovery will overwrite existing stream table entries 
+> with both SMMU stage as by-pass.
+> 
+> 
+>  drivers/iommu/arm-smmu-v3.c | 36 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index 82508730feb7..d492d92c2dd7 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -1847,7 +1847,13 @@ static void arm_smmu_write_strtab_ent(struct arm_smmu_master *master, u32 sid,
+>  			break;
+>  		case STRTAB_STE_0_CFG_S1_TRANS:
+>  		case STRTAB_STE_0_CFG_S2_TRANS:
+> -			ste_live = true;
+> +			/*
+> +			 * As kdump kernel copy STE table from previous
+> +			 * kernel. It still may have valid stream table entries.
+> +			 * Forcing entry as false to allow overwrite.
+> +			 */
+> +			if (!is_kdump_kernel())
+> +				ste_live = true;
+>  			break;
+>  		case STRTAB_STE_0_CFG_ABORT:
+>  			BUG_ON(!disable_bypass);
+> @@ -3264,6 +3270,9 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+>  		return -ENOMEM;
+>  	}
+>  
+> +	if (is_kdump_kernel())
+> +		return 0;
+> +
+>  	for (i = 0; i < cfg->num_l1_ents; ++i) {
+>  		arm_smmu_write_strtab_l1_desc(strtab, &cfg->l1_desc[i]);
+>  		strtab += STRTAB_L1_DESC_DWORDS << 3;
+> @@ -3272,6 +3281,23 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+>  	return 0;
+>  }
+>  
+> +static void arm_smmu_copy_table(struct arm_smmu_device *smmu,
+> +			       struct arm_smmu_strtab_cfg *cfg, u32 size)
+> +{
+> +	struct arm_smmu_strtab_cfg rdcfg;
+> +
+> +	rdcfg.strtab_dma = readq_relaxed(smmu->base + ARM_SMMU_STRTAB_BASE);
+> +	rdcfg.strtab_base_cfg = readq_relaxed(smmu->base
+> +					      + ARM_SMMU_STRTAB_BASE_CFG);
+> +
+> +	rdcfg.strtab_dma &= STRTAB_BASE_ADDR_MASK;
+> +	rdcfg.strtab = memremap(rdcfg.strtab_dma, size, MEMREMAP_WB);
+> +
+> +	memcpy_fromio(cfg->strtab, rdcfg.strtab, size);
+> +
+> +	cfg->strtab_base_cfg = rdcfg.strtab_base_cfg;
 
-> > Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
-> > of the file comment explaining the point of the interface, which I
-> > still don't get :)
-> =
+Sorry, but this is unacceptable. These things were allocated by the DMA API
+so you can't just memcpy them around and hope for the best.
 
-> Instead of rolling your own method of having the kernel read a file,
-> which requires call specific security hooks, this interface provides a
-> single generic set of pre and post security hooks.=A0=A0The
-> kernel_read_file_id enumeration permits the security hook to
-> differentiate between callers.
-> =
+Either you reinitialise the DMA masters you care about or you disable DMA. I
+don't see a viable third option.
 
-> To comply with secure and trusted boot concepts, a file cannot be
-> accessible to the caller until after it has been measured and/or the
-> integrity (hash/signature) appraised.
-> =
-
-> In some cases, the file was previously read twice, first to measure
-> and/or appraise the file and then read again into a buffer for
-> use.=A0=A0This interface reads the file into a buffer once, calls the
-> generic post security hook, before providing the buffer to the caller.
-> =A0(Note using firmware pre-allocated memory might be an issue.)
-> =
-
-> Partial reading firmware will result in needing to pre-read the entire
-> file, most likely on the security pre hook.
-
-Well described! :)
-
--- =
-
-Kees Cook
+Will
 
 _______________________________________________
 kexec mailing list
