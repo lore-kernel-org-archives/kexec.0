@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v7 0/4] support reserving crashkernel above 4G on arm64
- kdump
-References: <20191223152349.180172-1-chenzhou10@huawei.com>
- <a57d46bc-881e-3526-91ca-558bf64e2aa8@huawei.com>
- <CAK8P3a2VrAqefPYF2JqRjwdhgTDtORUgWgVuYxRYWqKxE3+5pA@mail.gmail.com>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <e35e37f2-bcb3-cc19-d506-18f576dcbfb9@huawei.com>
-Date: Wed, 20 May 2020 11:30:43 +0800
-MIME-Version: 1.0
-In-Reply-To: <CAK8P3a2VrAqefPYF2JqRjwdhgTDtORUgWgVuYxRYWqKxE3+5pA@mail.gmail.com>
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jbJju-0002AR-Hx
+ for kexec@lists.infradead.org; Wed, 20 May 2020 08:06:12 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH] MAINTAINERS: add files related to kdump
+Date: Wed, 20 May 2020 16:05:57 +0800
+Message-Id: <20200520080557.13260-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,60 +16,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Simon Horman <horms@verge.net.au>, john.p.donnelly@oracle.com, Will Deacon <will@kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, pkushwaha@marvell.com, Dave Young <dyoung@redhat.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, dyoung@redhat.com, vgoyal@redhat.com
 
-Hi Arnd,
+Kdump is implemented based on kexec, however some files are only
+related to crash dumping and missing, add them to KDUMP entry.
 
-On 2020/5/19 18:21, Arnd Bergmann wrote:
-> On Thu, Mar 26, 2020 at 4:10 AM Chen Zhou <chenzhou10@huawei.com> wrote:
->> Hi all,
->>
->> Friendly ping...
-> I was asked about this patch series, and see that you last posted it in
-> December. I think you should rebase it to linux-5.7-rc6 and post the
-> entire series again to make progress, as it's unlikely that any maintainer
-> would pick up the patches from last year.
->
-> For the contents, everything seems reasonable to me, but I noticed that
-> you are adding a property to the /chosen node without adding the
-> corresponding documentation to
-> Documentation/devicetree/bindings/chosen.txt
->
-> Please add that, and Cc the devicetree maintainers on the updated
-> patch.
->
->          Arnd
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ MAINTAINERS | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Thanks for your review and comments, i will rebase it to linux-5.7-rc6 and add the
-corresponding documentation.
-
-Thanks,
-Chen Zhou
-
->> On 2019/12/23 23:23, Chen Zhou wrote:
->>> This patch series enable reserving crashkernel above 4G in arm64.
->>>
->>> There are following issues in arm64 kdump:
->>> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
->>> when there is no enough low memory.
->>> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
->>> in this case, if swiotlb or DMA buffers are required, crash dump kernel
->>> will boot failure because there is no low memory available for allocation.
->>>
->>> The previous changes and discussions can be retrieved from:
->>>
->>> Changes since [v6]
->>> - Fix build errors reported by kbuild test robot.
-> ...
->
-> .
->
-
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 83cf5c43242a..2f9eefd33114 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9251,6 +9251,11 @@ L:	kexec@lists.infradead.org
+ S:	Maintained
+ W:	http://lse.sourceforge.net/kdump/
+ F:	Documentation/admin-guide/kdump/
++F:	fs/proc/vmcore.c
++F:	include/linux/crash_core.h
++F:	include/linux/crash_dump.h
++F:	include/uapi/linux/vmcore.h
++F:	kernel/crash.*
+ 
+ KEENE FM RADIO TRANSMITTER DRIVER
+ M:	Hans Verkuil <hverkuil@xs4all.nl>
+-- 
+2.17.2
 
 
 _______________________________________________
