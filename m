@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
-References: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
- <20200518155545.GO32394@willie-the-truck>
- <CAJ2QiJLMKckbuAqJutAi_zUQqqaK5Mg_u5Q=gg-POSvmk8cT9g@mail.gmail.com>
- <20200521092311.GB5091@willie-the-truck>
-In-Reply-To: <20200521092311.GB5091@willie-the-truck>
-From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date: Thu, 21 May 2020 16:52:02 +0530
-Message-ID: <CAJ2QiJK4h=5abVdODWTYg8Loy0Hhnhm1HrBzAM3bZXKtGXYK+Q@mail.gmail.com>
-Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-6-chenzhou10@huawei.com>
+In-Reply-To: <20200521093805.64398-6-chenzhou10@huawei.com>
+From: Rob Herring <robh+dt@kernel.org>
+Date: Thu, 21 May 2020 07:29:17 -0600
+Message-ID: <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document linux,
+ low-memory-range for arm64 kdump
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +20,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>
-Cc: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Bjorn Helgaas <helgaas@kernel.org>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: Simon Horman <horms@verge.net.au>, John.p.donnelly@oracle.com, Baoquan He <bhe@redhat.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <guohanjun@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, pkushwaha@marvell.com, dyoung@redhat.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 
-Hi Will,
-
-
-On Thu, May 21, 2020 at 2:53 PM Will Deacon <will@kernel.org> wrote:
+On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
 >
-> On Tue, May 19, 2020 at 08:24:21AM +0530, Prabhakar Kushwaha wrote:
-> > On Mon, May 18, 2020 at 9:25 PM Will Deacon <will@kernel.org> wrote:
-> > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
-> > > > @@ -3272,6 +3281,23 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
-> > > >       return 0;
-> > > >  }
-> > > >
-> > > > +static void arm_smmu_copy_table(struct arm_smmu_device *smmu,
-> > > > +                            struct arm_smmu_strtab_cfg *cfg, u32 size)
-> > > > +{
-> > > > +     struct arm_smmu_strtab_cfg rdcfg;
-> > > > +
-> > > > +     rdcfg.strtab_dma = readq_relaxed(smmu->base + ARM_SMMU_STRTAB_BASE);
-> > > > +     rdcfg.strtab_base_cfg = readq_relaxed(smmu->base
-> > > > +                                           + ARM_SMMU_STRTAB_BASE_CFG);
-> > > > +
-> > > > +     rdcfg.strtab_dma &= STRTAB_BASE_ADDR_MASK;
-> > > > +     rdcfg.strtab = memremap(rdcfg.strtab_dma, size, MEMREMAP_WB);
-> > > > +
-> > > > +     memcpy_fromio(cfg->strtab, rdcfg.strtab, size);
-> > > > +
-> >
-> > this need a fix. It should be memcpy.
-> >
-> > > > +     cfg->strtab_base_cfg = rdcfg.strtab_base_cfg;
-> > >
-> > > Sorry, but this is unacceptable. These things were allocated by the DMA API
-> > > so you can't just memcpy them around and hope for the best.
-> > >
-> >
-> > I was referring copy_context_table() in drivers/iommu/intel-iommu.c.
-> > here i see usage of memremap and memcpy to copy older iommu table.
-> > did I take wrong reference?
-> >
-> > What kind of issue you are foreseeing in using memcpy(). May be we can
-> > try to find a solution.
+> Add documentation for DT property used by arm64 kdump:
+> linux,low-memory-range.
+> "linux,low-memory-range" is an another memory region used for crash
+> dump kernel devices.
 >
-> Well the thing might not be cache-coherent to start with...
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  Documentation/devicetree/bindings/chosen.txt | 25 ++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+
+chosen is now a schema documented here[1].
+
+> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> index 45e79172a646..bfe6fb6976e6 100644
+> --- a/Documentation/devicetree/bindings/chosen.txt
+> +++ b/Documentation/devicetree/bindings/chosen.txt
+> @@ -103,6 +103,31 @@ While this property does not represent a real hardware, the address
+>  and the size are expressed in #address-cells and #size-cells,
+>  respectively, of the root node.
 >
+> +linux,low-memory-range
+> +----------------------
+> +This property (arm64 only) holds a base address and size, describing a
+> +limited region below 4G. Similar to "linux,usable-memory-range", it is
+> +an another memory range which may be considered available for use by the
+> +kernel.
 
-Thanks for telling possible issue area.  Let me try to explain why
-this should not be an issue.
+Why can't you just add a range to "linux,usable-memory-range"? It
+shouldn't be hard to figure out which part is below 4G.
 
-kdump kernel runs from reserved memory space defined during the boot
-of first kernel. kdump does not touch memory of the previous kernel.
-So no page has been created in kdump kernel  and  there should not be
-any data/attribute/coherency issue from MMU point of view .
+Rob
 
-During SMMU probe functions,  dmem_alloc_coherent() will be used
-allocate new memory (part of existing flow).
-This patch copy STE or first level descriptor to *this* memory, after
-mapping physical address using memremap().
-It just copy everything  so there should not be any issue related to
-attribute/content.
-
-Yes, copying  done after mapping it as MEMREMAP_WB. if you want I can
-use it as MEMREMAP_WT
-
-In both scenario and also considering intel driver is doing similar
-things. I feel there should not be an issue.
-
-Please let me know if you have any other view to solve this problem. I
-will be more than happy to explore it.
-
-thanks
---pk
+[1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml
 
 _______________________________________________
 kexec mailing list
