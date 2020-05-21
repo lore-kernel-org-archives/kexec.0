@@ -1,11 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v8 4/5] kdump: update Documentation about crashkernel on arm64
-Date: Thu, 21 May 2020 17:38:04 +0800
-Message-ID: <20200521093805.64398-5-chenzhou10@huawei.com>
-In-Reply-To: <20200521093805.64398-1-chenzhou10@huawei.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
+References: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
+ <20200518155545.GO32394@willie-the-truck>
+ <CAJ2QiJLMKckbuAqJutAi_zUQqqaK5Mg_u5Q=gg-POSvmk8cT9g@mail.gmail.com>
+ <20200521092311.GB5091@willie-the-truck>
+In-Reply-To: <20200521092311.GB5091@willie-the-truck>
+From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Date: Thu, 21 May 2020 16:52:02 +0530
+Message-ID: <CAJ2QiJK4h=5abVdODWTYg8Loy0Hhnhm1HrBzAM3bZXKtGXYK+Q@mail.gmail.com>
+Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,89 +21,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tglx@linutronix.de, mingo@redhat.com, catalin.marinas@arm.com, will@kernel.org, dyoung@redhat.com, bhe@redhat.com, robh+dt@kernel.org
-Cc: John.p.donnelly@oracle.com, arnd@arndb.de, devicetree@vger.kernel.org, chenzhou10@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, horms@verge.net.au, guohanjun@huawei.com, pkushwaha@marvell.com, linux-arm-kernel@lists.infradead.org
+To: Will Deacon <will@kernel.org>
+Cc: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Bjorn Helgaas <helgaas@kernel.org>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Now we support crashkernel=X,[low] on arm64, update the Documentation.
+Hi Will,
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
----
- Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
- Documentation/admin-guide/kernel-parameters.txt | 12 +++++++++++-
- 2 files changed, 22 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index ac7e131d2935..e55173ec1666 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -299,7 +299,13 @@ Boot into System Kernel
-    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
-    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
- 
--   On x86 and x86_64, use "crashkernel=64M@16M".
-+   On x86 use "crashkernel=64M@16M".
-+
-+   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
-+   fall back to reserve region above 4G when '@offset' hasn't been specified.
-+   We can also use "crashkernel=X,high" to select a region above 4G, which
-+   also tries to allocate at least 256M below 4G automatically and
-+   "crashkernel=Y,low" can be used to allocate specified size low memory.
- 
-    On ppc64, use "crashkernel=128M@32M".
- 
-@@ -316,8 +322,11 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
--   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-+   On arm64, use "crashkernel=Y[@X]". Note that the start address of
-    the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-+   If crashkernel=Z,low is specified simultaneously, reserve spcified size
-+   low memory for crash kdump kernel devices firstly and then reserve memory
-+   above 4G.
- 
- Load the Dump-capture Kernel
- ============================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 7bc83f3d9bdf..97695783b817 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -722,6 +722,9 @@
- 			[KNL, x86_64] select a region under 4G first, and
- 			fall back to reserve region above 4G when '@offset'
- 			hasn't been specified.
-+			[KNL, arm64] If crashkernel=X,low is specified, reserve
-+			spcified size low memory for crash kdump kernel devices
-+			firstly, and then reserve memory above 4G.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
-@@ -746,12 +749,19 @@
- 			requires at least 64M+32K low memory, also enough extra
- 			low memory is needed to make sure DMA buffers for 32-bit
- 			devices won't run out. Kernel would try to allocate at
--			at least 256M below 4G automatically.
-+			least 256M below 4G automatically.
- 			This one let user to specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
-+			[KNL, arm64] range under 4G.
-+			This one let user to specify own low range under 4G
-+			for crash dump kernel instead.
-+			Different with x86_64, kernel allocates specified size
-+			physical memory region only when this parameter is specified
-+			instead of trying to allocate at least 256M below 4G
-+			automatically.
- 
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
--- 
-2.20.1
+On Thu, May 21, 2020 at 2:53 PM Will Deacon <will@kernel.org> wrote:
+>
+> On Tue, May 19, 2020 at 08:24:21AM +0530, Prabhakar Kushwaha wrote:
+> > On Mon, May 18, 2020 at 9:25 PM Will Deacon <will@kernel.org> wrote:
+> > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
+> > > > @@ -3272,6 +3281,23 @@ static int arm_smmu_init_l1_strtab(struct arm_smmu_device *smmu)
+> > > >       return 0;
+> > > >  }
+> > > >
+> > > > +static void arm_smmu_copy_table(struct arm_smmu_device *smmu,
+> > > > +                            struct arm_smmu_strtab_cfg *cfg, u32 size)
+> > > > +{
+> > > > +     struct arm_smmu_strtab_cfg rdcfg;
+> > > > +
+> > > > +     rdcfg.strtab_dma = readq_relaxed(smmu->base + ARM_SMMU_STRTAB_BASE);
+> > > > +     rdcfg.strtab_base_cfg = readq_relaxed(smmu->base
+> > > > +                                           + ARM_SMMU_STRTAB_BASE_CFG);
+> > > > +
+> > > > +     rdcfg.strtab_dma &= STRTAB_BASE_ADDR_MASK;
+> > > > +     rdcfg.strtab = memremap(rdcfg.strtab_dma, size, MEMREMAP_WB);
+> > > > +
+> > > > +     memcpy_fromio(cfg->strtab, rdcfg.strtab, size);
+> > > > +
+> >
+> > this need a fix. It should be memcpy.
+> >
+> > > > +     cfg->strtab_base_cfg = rdcfg.strtab_base_cfg;
+> > >
+> > > Sorry, but this is unacceptable. These things were allocated by the DMA API
+> > > so you can't just memcpy them around and hope for the best.
+> > >
+> >
+> > I was referring copy_context_table() in drivers/iommu/intel-iommu.c.
+> > here i see usage of memremap and memcpy to copy older iommu table.
+> > did I take wrong reference?
+> >
+> > What kind of issue you are foreseeing in using memcpy(). May be we can
+> > try to find a solution.
+>
+> Well the thing might not be cache-coherent to start with...
+>
 
+Thanks for telling possible issue area.  Let me try to explain why
+this should not be an issue.
+
+kdump kernel runs from reserved memory space defined during the boot
+of first kernel. kdump does not touch memory of the previous kernel.
+So no page has been created in kdump kernel  and  there should not be
+any data/attribute/coherency issue from MMU point of view .
+
+During SMMU probe functions,  dmem_alloc_coherent() will be used
+allocate new memory (part of existing flow).
+This patch copy STE or first level descriptor to *this* memory, after
+mapping physical address using memremap().
+It just copy everything  so there should not be any issue related to
+attribute/content.
+
+Yes, copying  done after mapping it as MEMREMAP_WB. if you want I can
+use it as MEMREMAP_WT
+
+In both scenario and also considering intel driver is doing similar
+things. I feel there should not be an issue.
+
+Please let me know if you have any other view to solve this problem. I
+will be more than happy to explore it.
+
+thanks
+--pk
 
 _______________________________________________
 kexec mailing list
