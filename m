@@ -1,23 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1041.google.com ([2607:f8b0:4864:20::1041])
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jcGio-0008G9-Rs
- for kexec@lists.infradead.org; Fri, 22 May 2020 23:05:00 +0000
-Received: by mail-pj1-x1041.google.com with SMTP id s69so5634287pjb.4
- for <kexec@lists.infradead.org>; Fri, 22 May 2020 16:04:58 -0700 (PDT)
-Date: Fri, 22 May 2020 16:04:55 -0700
-From: Kees Cook <keescook@chromium.org>
+ id 1jcH2T-0007LV-1S
+ for kexec@lists.infradead.org; Fri, 22 May 2020 23:25:18 +0000
+Received: by mail-pg1-x541.google.com with SMTP id s10so5723129pgm.0
+ for <kexec@lists.infradead.org>; Fri, 22 May 2020 16:25:16 -0700 (PDT)
 Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
-Message-ID: <202005221551.5CA1372@keescook>
 References: <20200513152108.25669-1-mcgrof@kernel.org>
  <20200513181736.GA24342@infradead.org>
  <20200515212933.GD11244@42.do-not-panic.com>
  <20200518062255.GB15641@infradead.org>
  <1589805462.5111.107.camel@linux.ibm.com>
  <7525ca03-def7-dfe2-80a9-25270cb0ae05@broadcom.com>
+ <202005221551.5CA1372@keescook>
+From: Scott Branden <scott.branden@broadcom.com>
+Message-ID: <c48a80f5-a09c-6747-3db8-be23a260a0cb@broadcom.com>
+Date: Fri, 22 May 2020 16:25:03 -0700
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <7525ca03-def7-dfe2-80a9-25270cb0ae05@broadcom.com>
+In-Reply-To: <202005221551.5CA1372@keescook>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,100 +27,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
+To: Kees Cook <keescook@chromium.org>
 Cc: rafael@kernel.org, Mimi Zohar <zohar@linux.ibm.com>, dhowells@redhat.com, linux-security-module@vger.kernel.org, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, Christoph Hellwig <hch@infradead.org>, geert@linux-m68k.org, dan.carpenter@oracle.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, ebiederm@xmission.com, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
 
-On Fri, May 22, 2020 at 03:24:32PM -0700, Scott Branden wrote:
-> On 2020-05-18 5:37 a.m., Mimi Zohar wrote:
-> > On Sun, 2020-05-17 at 23:22 -0700, Christoph Hellwig wrote:
-> > > On Fri, May 15, 2020 at 09:29:33PM +0000, Luis Chamberlain wrote:
-> > > > On Wed, May 13, 2020 at 11:17:36AM -0700, Christoph Hellwig wrote:
-> > > > > Can you also move kernel_read_* out of fs.h?  That header gets pu=
-lled
-> > > > > in just about everywhere and doesn't really need function not rel=
-ated
-> > > > > to the general fs interface.
-> > > > Sure, where should I dump these?
-> > > Maybe a new linux/kernel_read_file.h?  Bonus points for a small top
-> > > of the file comment explaining the point of the interface, which I
-> > > still don't get :)
-> > Instead of rolling your own method of having the kernel read a file,
-> > which requires call specific security hooks, this interface provides a
-> > single generic set of pre and post security hooks.=A0=A0The
-> > kernel_read_file_id enumeration permits the security hook to
-> > differentiate between callers.
-> > =
-
-> > To comply with secure and trusted boot concepts, a file cannot be
-> > accessible to the caller until after it has been measured and/or the
-> > integrity (hash/signature) appraised.
-> > =
-
-> > In some cases, the file was previously read twice, first to measure
-> > and/or appraise the file and then read again into a buffer for
-> > use.=A0=A0This interface reads the file into a buffer once, calls the
-> > generic post security hook, before providing the buffer to the caller.
-> >  =A0(Note using firmware pre-allocated memory might be an issue.)
-> > =
-
-> > Partial reading firmware will result in needing to pre-read the entire
-> > file, most likely on the security pre hook.
-> The entire file may be very large and not fit into a buffer.
-> Hence one of the reasons for a partial read of the file.
-> For security purposes, you need to change your code to limit the amount
-> of data it reads into a buffer at one time to not consume or run out of m=
-uch
-> memory.
-
-Hm? That's not how whole-file hashing works. :)
-
-These hooks need to finish their hashing and policy checking before they
-can allow the rest of the code to move forward. (That's why it's a
-security hook.) If kernel memory utilization is the primary concern,
-then sure, things could be rearranged to do partial read and update the
-hash incrementally, but the entire file still needs to be locked,
-entirely hashed by hook, then read by the caller, then unlocked and
-released.
-
-So, if you want to have partial file reads work, you'll need to
-rearchitect the way this works to avoid regressing the security coverage
-of these operations.
-
-So, probably, the code will look something like:
-
-
-file =3D kernel_open_file_for_reading(...)
-	file =3D open...
-	disallow_writes(file);
-	while (processed < size-of-file) {
-		buf =3D read(file, size...)
-		security_file_read_partial(buf)
-	}
-	ret =3D security_file_read_finished(file);
-	if (ret < 0) {
-		allow_writes(file);
-		return PTR_ERR(ret);
-	}
-	return file;
-
-while (processed < size-of-file) {
-	buf =3D read(file, size...)
-	firmware_send_partial(buf);
-}
-
-kernel_close_file_for_reading(file)
-	allow_writes(file);
-
-
--- =
-
-Kees Cook
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgS2VlcywKCk9uIDIwMjAtMDUtMjIgNDowNCBwLm0uLCBLZWVzIENvb2sgd3JvdGU6Cj4gT24g
+RnJpLCBNYXkgMjIsIDIwMjAgYXQgMDM6MjQ6MzJQTSAtMDcwMCwgU2NvdHQgQnJhbmRlbiB3cm90
+ZToKPj4gT24gMjAyMC0wNS0xOCA1OjM3IGEubS4sIE1pbWkgWm9oYXIgd3JvdGU6Cj4+PiBPbiBT
+dW4sIDIwMjAtMDUtMTcgYXQgMjM6MjIgLTA3MDAsIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOgo+
+Pj4+IE9uIEZyaSwgTWF5IDE1LCAyMDIwIGF0IDA5OjI5OjMzUE0gKzAwMDAsIEx1aXMgQ2hhbWJl
+cmxhaW4gd3JvdGU6Cj4+Pj4+IE9uIFdlZCwgTWF5IDEzLCAyMDIwIGF0IDExOjE3OjM2QU0gLTA3
+MDAsIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOgo+Pj4+Pj4gQ2FuIHlvdSBhbHNvIG1vdmUga2Vy
+bmVsX3JlYWRfKiBvdXQgb2YgZnMuaD8gIFRoYXQgaGVhZGVyIGdldHMgcHVsbGVkCj4+Pj4+PiBp
+biBqdXN0IGFib3V0IGV2ZXJ5d2hlcmUgYW5kIGRvZXNuJ3QgcmVhbGx5IG5lZWQgZnVuY3Rpb24g
+bm90IHJlbGF0ZWQKPj4+Pj4+IHRvIHRoZSBnZW5lcmFsIGZzIGludGVyZmFjZS4KPj4+Pj4gU3Vy
+ZSwgd2hlcmUgc2hvdWxkIEkgZHVtcCB0aGVzZT8KPj4+PiBNYXliZSBhIG5ldyBsaW51eC9rZXJu
+ZWxfcmVhZF9maWxlLmg/ICBCb251cyBwb2ludHMgZm9yIGEgc21hbGwgdG9wCj4+Pj4gb2YgdGhl
+IGZpbGUgY29tbWVudCBleHBsYWluaW5nIHRoZSBwb2ludCBvZiB0aGUgaW50ZXJmYWNlLCB3aGlj
+aCBJCj4+Pj4gc3RpbGwgZG9uJ3QgZ2V0IDopCj4+PiBJbnN0ZWFkIG9mIHJvbGxpbmcgeW91ciBv
+d24gbWV0aG9kIG9mIGhhdmluZyB0aGUga2VybmVsIHJlYWQgYSBmaWxlLAo+Pj4gd2hpY2ggcmVx
+dWlyZXMgY2FsbCBzcGVjaWZpYyBzZWN1cml0eSBob29rcywgdGhpcyBpbnRlcmZhY2UgcHJvdmlk
+ZXMgYQo+Pj4gc2luZ2xlIGdlbmVyaWMgc2V0IG9mIHByZSBhbmQgcG9zdCBzZWN1cml0eSBob29r
+cy7CoMKgVGhlCj4+PiBrZXJuZWxfcmVhZF9maWxlX2lkIGVudW1lcmF0aW9uIHBlcm1pdHMgdGhl
+IHNlY3VyaXR5IGhvb2sgdG8KPj4+IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBjYWxsZXJzLgo+Pj4K
+Pj4+IFRvIGNvbXBseSB3aXRoIHNlY3VyZSBhbmQgdHJ1c3RlZCBib290IGNvbmNlcHRzLCBhIGZp
+bGUgY2Fubm90IGJlCj4+PiBhY2Nlc3NpYmxlIHRvIHRoZSBjYWxsZXIgdW50aWwgYWZ0ZXIgaXQg
+aGFzIGJlZW4gbWVhc3VyZWQgYW5kL29yIHRoZQo+Pj4gaW50ZWdyaXR5IChoYXNoL3NpZ25hdHVy
+ZSkgYXBwcmFpc2VkLgo+Pj4KPj4+IEluIHNvbWUgY2FzZXMsIHRoZSBmaWxlIHdhcyBwcmV2aW91
+c2x5IHJlYWQgdHdpY2UsIGZpcnN0IHRvIG1lYXN1cmUKPj4+IGFuZC9vciBhcHByYWlzZSB0aGUg
+ZmlsZSBhbmQgdGhlbiByZWFkIGFnYWluIGludG8gYSBidWZmZXIgZm9yCj4+PiB1c2UuwqDCoFRo
+aXMgaW50ZXJmYWNlIHJlYWRzIHRoZSBmaWxlIGludG8gYSBidWZmZXIgb25jZSwgY2FsbHMgdGhl
+Cj4+PiBnZW5lcmljIHBvc3Qgc2VjdXJpdHkgaG9vaywgYmVmb3JlIHByb3ZpZGluZyB0aGUgYnVm
+ZmVyIHRvIHRoZSBjYWxsZXIuCj4+PiAgIMKgKE5vdGUgdXNpbmcgZmlybXdhcmUgcHJlLWFsbG9j
+YXRlZCBtZW1vcnkgbWlnaHQgYmUgYW4gaXNzdWUuKQo+Pj4KPj4+IFBhcnRpYWwgcmVhZGluZyBm
+aXJtd2FyZSB3aWxsIHJlc3VsdCBpbiBuZWVkaW5nIHRvIHByZS1yZWFkIHRoZSBlbnRpcmUKPj4+
+IGZpbGUsIG1vc3QgbGlrZWx5IG9uIHRoZSBzZWN1cml0eSBwcmUgaG9vay4KPj4gVGhlIGVudGly
+ZSBmaWxlIG1heSBiZSB2ZXJ5IGxhcmdlIGFuZCBub3QgZml0IGludG8gYSBidWZmZXIuCj4+IEhl
+bmNlIG9uZSBvZiB0aGUgcmVhc29ucyBmb3IgYSBwYXJ0aWFsIHJlYWQgb2YgdGhlIGZpbGUuCj4+
+IEZvciBzZWN1cml0eSBwdXJwb3NlcywgeW91IG5lZWQgdG8gY2hhbmdlIHlvdXIgY29kZSB0byBs
+aW1pdCB0aGUgYW1vdW50Cj4+IG9mIGRhdGEgaXQgcmVhZHMgaW50byBhIGJ1ZmZlciBhdCBvbmUg
+dGltZSB0byBub3QgY29uc3VtZSBvciBydW4gb3V0IG9mIG11Y2gKPj4gbWVtb3J5Lgo+IEhtPyBU
+aGF0J3Mgbm90IGhvdyB3aG9sZS1maWxlIGhhc2hpbmcgd29ya3MuIDopCgo+Cj4gVGhlc2UgaG9v
+a3MgbmVlZCB0byBmaW5pc2ggdGhlaXIgaGFzaGluZyBhbmQgcG9saWN5IGNoZWNraW5nIGJlZm9y
+ZSB0aGV5Cj4gY2FuIGFsbG93IHRoZSByZXN0IG9mIHRoZSBjb2RlIHRvIG1vdmUgZm9yd2FyZC4g
+KFRoYXQncyB3aHkgaXQncyBhCj4gc2VjdXJpdHkgaG9vay4pIElmIGtlcm5lbCBtZW1vcnkgdXRp
+bGl6YXRpb24gaXMgdGhlIHByaW1hcnkgY29uY2VybiwKPiB0aGVuIHN1cmUsIHRoaW5ncyBjb3Vs
+ZCBiZSByZWFycmFuZ2VkIHRvIGRvIHBhcnRpYWwgcmVhZCBhbmQgdXBkYXRlIHRoZQo+IGhhc2gg
+aW5jcmVtZW50YWxseSwgYnV0IHRoZSBlbnRpcmUgZmlsZSBzdGlsbCBuZWVkcyB0byBiZSBsb2Nr
+ZWQsCj4gZW50aXJlbHkgaGFzaGVkIGJ5IGhvb2ssIHRoZW4gcmVhZCBieSB0aGUgY2FsbGVyLCB0
+aGVuIHVubG9ja2VkIGFuZAo+IHJlbGVhc2VkLgo+Cj4gU28sIGlmIHlvdSB3YW50IHRvIGhhdmUg
+cGFydGlhbCBmaWxlIHJlYWRzIHdvcmssIHlvdSdsbCBuZWVkIHRvCj4gcmVhcmNoaXRlY3QgdGhl
+IHdheSB0aGlzIHdvcmtzIHRvIGF2b2lkIHJlZ3Jlc3NpbmcgdGhlIHNlY3VyaXR5IGNvdmVyYWdl
+Cj4gb2YgdGhlc2Ugb3BlcmF0aW9ucy4KSSBhbSBub3QgZmFtaWxpYXIgd2l0aCBob3cgdGhlIHNl
+Y3VyaXR5IGhhbmRsaW5nIGNvZGUgd29ya3MgYXQgYWxsLgpJcyB0aGUgc2FtZSBzZWN1cml0eSBj
+aGVjayBydW4gb24gZmlsZXMgb3BlbmVkIGZyb20gdXNlciBzcGFjZT8KQSBmaWxlIGNvdWxkIGJl
+IGh1Z2UuCgpJZiBpdCBhc3N1bWVzIHRoZXJlIGlzIHRoZXJlIGlzIGVub3VnaCBtZW1vcnkgYXZh
+aWxhYmxlIHRvIHJlYWQgdGhlIAplbnRpcmUgZmlsZSBpbnRvIGtlcm5lbCBzcGFjZQp0aGVuIHRo
+ZSBpbXByb3ZlbWVudCBiZWxvdyBjYW4gYmUgbGVmdCBhcyBhIG1lbW9yeSBvcHRpbWl6YXRpb24g
+dG8gYmUgCmRvbmUgaW4KYW4gaW5kZXBlbmRlbnQgKG9yIGZ1dHVyZSkgcGF0Y2ggc2VyaWVzLgoK
+PiBTbywgcHJvYmFibHksIHRoZSBjb2RlIHdpbGwgbG9vayBzb21ldGhpbmcgbGlrZToKPgo+Cj4g
+ZmlsZSA9IGtlcm5lbF9vcGVuX2ZpbGVfZm9yX3JlYWRpbmcoLi4uKQo+IAlmaWxlID0gb3Blbi4u
+Lgo+IAlkaXNhbGxvd193cml0ZXMoZmlsZSk7Cj4gCXdoaWxlIChwcm9jZXNzZWQgPCBzaXplLW9m
+LWZpbGUpIHsKPiAJCWJ1ZiA9IHJlYWQoZmlsZSwgc2l6ZS4uLikKPiAJCXNlY3VyaXR5X2ZpbGVf
+cmVhZF9wYXJ0aWFsKGJ1ZikKPiAJfQo+IAlyZXQgPSBzZWN1cml0eV9maWxlX3JlYWRfZmluaXNo
+ZWQoZmlsZSk7Cj4gCWlmIChyZXQgPCAwKSB7Cj4gCQlhbGxvd193cml0ZXMoZmlsZSk7Cj4gCQly
+ZXR1cm4gUFRSX0VSUihyZXQpOwo+IAl9Cj4gCXJldHVybiBmaWxlOwo+Cj4gd2hpbGUgKHByb2Nl
+c3NlZCA8IHNpemUtb2YtZmlsZSkgewo+IAlidWYgPSByZWFkKGZpbGUsIHNpemUuLi4pCj4gCWZp
+cm13YXJlX3NlbmRfcGFydGlhbChidWYpOwo+IH0KPgo+IGtlcm5lbF9jbG9zZV9maWxlX2Zvcl9y
+ZWFkaW5nKGZpbGUpCj4gCWFsbG93X3dyaXRlcyhmaWxlKTsKPgo+CgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
+QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
+aXN0aW5mby9rZXhlYwo=
