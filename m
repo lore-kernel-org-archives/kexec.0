@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from esa15.fujitsucc.c3s2.iphmx.com ([68.232.156.107])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jbxKf-0004dw-4w
- for kexec@lists.infradead.org; Fri, 22 May 2020 02:22:47 +0000
-From: "d.hatayama@fujitsu.com" <d.hatayama@fujitsu.com>
-Subject: Re: [PATCH] sadump: Fix failure of reading __per_cpu_load memory
-Date: Fri, 22 May 2020 02:22:34 +0000
-Message-ID: <OSBPR01MB5048B8A9DFBA861A3A9AE0E795B40@OSBPR01MB5048.jpnprd01.prod.outlook.com>
-References: <TYAPR01MB41279E6F5CDD8350F13BA38F84B70@TYAPR01MB4127.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYAPR01MB41279E6F5CDD8350F13BA38F84B70@TYAPR01MB4127.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
+Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
+ linux,low-memory-range for arm64 kdump
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-6-chenzhou10@huawei.com>
+ <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
+Date: Fri, 22 May 2020 11:24:11 +0800
 MIME-Version: 1.0
+In-Reply-To: <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,76 +17,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-2022-jp"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "saito.kazuya@fujitsu.com" <saito.kazuya@fujitsu.com>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Simon Horman <horms@verge.net.au>, John.p.donnelly@oracle.com, Baoquan He <bhe@redhat.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <guohanjun@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, pkushwaha@marvell.com, dyoung@redhat.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 
-Saito-san,
+Hi Rob,
 
-Thanks for your patch.
+On 2020/5/21 21:29, Rob Herring wrote:
+> On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
+>> Add documentation for DT property used by arm64 kdump:
+>> linux,low-memory-range.
+>> "linux,low-memory-range" is an another memory region used for crash
+>> dump kernel devices.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>  Documentation/devicetree/bindings/chosen.txt | 25 ++++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+> chosen is now a schema documented here[1].
+Ok, that is, i don't need to modify the doc in kernel, just create a pull request in github [1]?
 
-I think it better to remove __per_cpu_load code, which is unnecessary.
+>
+>> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+>> index 45e79172a646..bfe6fb6976e6 100644
+>> --- a/Documentation/devicetree/bindings/chosen.txt
+>> +++ b/Documentation/devicetree/bindings/chosen.txt
+>> @@ -103,6 +103,31 @@ While this property does not represent a real hardware, the address
+>>  and the size are expressed in #address-cells and #size-cells,
+>>  respectively, of the root node.
+>>
+>> +linux,low-memory-range
+>> +----------------------
+>> +This property (arm64 only) holds a base address and size, describing a
+>> +limited region below 4G. Similar to "linux,usable-memory-range", it is
+>> +an another memory range which may be considered available for use by the
+>> +kernel.
+> Why can't you just add a range to "linux,usable-memory-range"? It
+> shouldn't be hard to figure out which part is below 4G.
+I did like this in my previous version, such as v5. After discussed with James, i modified it to the current way.
 
-________________________________________
-差出人: kexec <kexec-bounces@lists.infradead.org> が saito.kazuya@fujitsu.com <saito.kazuya@fujitsu.com> の代理で送信
-送信日時: 2020年5月21日 16:15
-宛先: 'kexec@lists.infradead.org'
-件名: [PATCH] sadump: Fix failure of reading __per_cpu_load memory
+We think the existing behavior should be unchanged, which helps with keeping compatibility with existing
+user-space and older kdump kernels.
 
-Creating vmcore from sadump by makedumpfile fails with the following
-error messages since kernel-4.19 with PTI (Page Table Isolation)
-enabled:
+The comments from James:
+> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+Won't this break if your kdump kernel doesn't know what the extra parameters are?
+Or if it expects two ranges, but only gets one? These DT properties should be treated as
+ABI between kernel versions, we can't really change it like this.
 
-  __vtop4_x86_64: Can't get a valid pte.
-  readmem: Can't convert a virtual address(ffffffffb2986000) to physical address.
-  readmem: type_addr: 0, addr:ffffffffb2986000, size:8
-  per_cpu_init: Can't read __per_cpu_load memory.
+I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
+think the simplest thing to do is to add an 'linux,low-memory-range' that we
+memblock_add() after memblock_cap_memory_range() has been called.
+If its missing, or the new kernel doesn't know what its for, everything keeps working.
 
-This is caused by the following patch:
-https://github.com/torvalds/linux/commit/c40a56a7818cfe735fc93a69e1875f8bba834483
+previous discusses:
+https://lkml.org/lkml/2019/6/5/674
+https://lkml.org/lkml/2019/6/13/229
 
-The above patch clears _PAGE_PRESENT bit of __per_cpu_load memory, so
-__vtop4_x86_64 fails to convert the virtual address of the
-__per_cpu_load.
+Thanks,
+Chen Zhou
 
-To fix this issue, this patch changes sanity check of per_cpu_ptr()
-to use address of the __per_cpu_load instead of data of the memory.
-
-Signed-off-by: Kazuya Saito <saito.kazuya@fujitsu.com>
-Signed-off-by: Kiyotaka Nakamura <kiyo@fujitsu.com>
----
- sadump_info.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/sadump_info.c b/sadump_info.c
-index 46867ce..72a077b 100644
---- a/sadump_info.c
-+++ b/sadump_info.c
-@@ -1732,11 +1732,11 @@ per_cpu_init(void)
-                return FALSE;
-        }
-
--       if (!readmem(VADDR, SYMBOL(__per_cpu_load), &si->__per_cpu_load,
--                    sizeof(unsigned long))) {
--               ERRMSG("Can't read __per_cpu_load memory.\n");
-+       if (SYMBOL(__per_cpu_load) == NOT_FOUND_SYMBOL) {
-+               ERRMSG("Can't find __per_cpu_load symbol.\n");
-                return FALSE;
-        }
-+       si->__per_cpu_load = SYMBOL(__per_cpu_load);
-
-        DEBUG_MSG("sadump: __per_cpu_load: %#lx\n", si->__per_cpu_load);
-        DEBUG_MSG("sadump: __per_cpu_offset: LENGTH: %ld\n",
---
-2.12.3
+>
+> Rob
+>
+> [1] https://github.com/devicetree-org/dt-schema/blob/master/schemas/chosen.yaml
+>
+> .
+>
 
 
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
