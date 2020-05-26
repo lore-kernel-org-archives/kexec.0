@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jda7J-0007Wg-Pr
- for kexec@lists.infradead.org; Tue, 26 May 2020 13:59:43 +0000
-Date: Tue, 26 May 2020 15:59:35 +0200
-From: Jiri Bohac <jbohac@suse.cz>
-Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
- or mandatory signature
-Message-ID: <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
-References: <20200525052351.24134-1-lijiang@redhat.com>
+Date: Tue, 26 May 2020 15:18:00 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v8 5/5] dt-bindings: chosen: Document
+ linux,low-memory-range for arm64 kdump
+Message-ID: <20200526211800.GA352001@bogus>
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-6-chenzhou10@huawei.com>
+ <CAL_Jsq+EV02YBqEGoJrsJW8Y+g_GkB_LkTwWCxNCb3F+8MSdyw@mail.gmail.com>
+ <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200525052351.24134-1-lijiang@redhat.com>
+In-Reply-To: <a419602e-6a85-ca35-39de-b3c26d433199@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,40 +23,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>
-Cc: bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, dyoung@redhat.com
+To: chenzhou <chenzhou10@huawei.com>, James Morse <james.morse@arm.com>
+Cc: Simon Horman <horms@verge.net.au>, John.p.donnelly@oracle.com, Baoquan He <bhe@redhat.com>, Will Deacon <will@kernel.org>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Hanjun Guo <guohanjun@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, pkushwaha@marvell.com, dyoung@redhat.com, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 
-On Mon, May 25, 2020 at 01:23:51PM +0800, Lianbo Jiang wrote:
-> So, here, let's simplify the logic to improve code readability. If the
-> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
-> is mandated. Otherwise, we lift the bar for any kernel image.
+On Fri, May 22, 2020 at 11:24:11AM +0800, chenzhou wrote:
+> Hi Rob,
 
-I agree completely; in fact that was my intention when
-introducing the code, but I got overruled about the return codes:
-https://lore.kernel.org/lkml/20180119125425.l72meyyc2qtrriwe@dwarf.suse.cz/
++James M (It's nice to Cc folks if you mention/quote them)
 
-I like this simplification very much, except this part:
 
-> +	if (ret) {
-> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+> On 2020/5/21 21:29, Rob Herring wrote:
+> > On Thu, May 21, 2020 at 3:35 AM Chen Zhou <chenzhou10@huawei.com> wrote:
+> >> Add documentation for DT property used by arm64 kdump:
+> >> linux,low-memory-range.
+> >> "linux,low-memory-range" is an another memory region used for crash
+> >> dump kernel devices.
+> >>
+> >> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> >> ---
+> >>  Documentation/devicetree/bindings/chosen.txt | 25 ++++++++++++++++++++
+> >>  1 file changed, 25 insertions(+)
+> > chosen is now a schema documented here[1].
+> Ok, that is, i don't need to modify the doc in kernel, just create a pull request in github [1]?
+> 
+> >
+> >> diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+> >> index 45e79172a646..bfe6fb6976e6 100644
+> >> --- a/Documentation/devicetree/bindings/chosen.txt
+> >> +++ b/Documentation/devicetree/bindings/chosen.txt
+> >> @@ -103,6 +103,31 @@ While this property does not represent a real hardware, the address
+> >>  and the size are expressed in #address-cells and #size-cells,
+> >>  respectively, of the root node.
+> >>
+> >> +linux,low-memory-range
+> >> +----------------------
+> >> +This property (arm64 only) holds a base address and size, describing a
+> >> +limited region below 4G. Similar to "linux,usable-memory-range", it is
+> >> +an another memory range which may be considered available for use by the
+> >> +kernel.
+> > Why can't you just add a range to "linux,usable-memory-range"? It
+> > shouldn't be hard to figure out which part is below 4G.
+> I did like this in my previous version, such as v5. After discussed with James, i modified it to the current way.
+> 
+> We think the existing behavior should be unchanged, which helps with keeping compatibility with existing
+> user-space and older kdump kernels.
+> 
+> The comments from James:
+> > linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
+> Won't this break if your kdump kernel doesn't know what the extra parameters are?
+> Or if it expects two ranges, but only gets one? These DT properties should be treated as
+> ABI between kernel versions, we can't really change it like this.
+> 
+> I think the 'low' region is an optional-extra, that is never mapped by the first kernel. I
+> think the simplest thing to do is to add an 'linux,low-memory-range' that we
+> memblock_add() after memblock_cap_memory_range() has been called.
+> If its missing, or the new kernel doesn't know what its for, everything keeps working.
 
-...
 
-> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+I don't think there's a compatibility issue here though. The current 
+kernel doesn't care if the property is longer than 1 base+size. It only 
+checks if the size is less than 1 base+size. And yes, we can rely on 
+that implementation detail. It's only an ABI if an existing user 
+notices.
 
-I think the log level should stay at most PR_NOTICE when the
-verification failure results in rejecting the kernel. Perhaps
-even lower.
+Now, if the low memory is listed first, then an older kdump kernel 
+would get a different memory range. If that's a problem, then define 
+that low memory goes last. 
 
-In case verification is not enforced and the failure is
-ignored, KERN_DEBUG seems reasonable.
-
-Regards,
-
--- 
-Jiri Bohac <jbohac@suse.cz>
-SUSE Labs, Prague, Czechia
-
+Rob
 
 _______________________________________________
 kexec mailing list
