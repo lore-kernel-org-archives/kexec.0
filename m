@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
  helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jdNtW-0004bt-BP
- for kexec@lists.infradead.org; Tue, 26 May 2020 00:56:40 +0000
-Date: Tue, 26 May 2020 08:56:15 +0800
+ id 1jdNw6-00053U-BC
+ for kexec@lists.infradead.org; Tue, 26 May 2020 00:59:20 +0000
+Date: Tue, 26 May 2020 08:59:04 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v8 1/5] x86: kdump: move reserve_crashkernel_low() into
- crash_core.c
-Message-ID: <20200526005615.GD20045@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v8 2/5] arm64: kdump: reserve crashkenel above 4G for
+ crash dump kernel
+Message-ID: <20200526005904.GE20045@MiWiFi-R3L-srv>
 References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <20200521093805.64398-2-chenzhou10@huawei.com>
+ <20200521093805.64398-3-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200521093805.64398-2-chenzhou10@huawei.com>
+In-Reply-To: <20200521093805.64398-3-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,293 +30,96 @@ To: Chen Zhou <chenzhou10@huawei.com>
 Cc: horms@verge.net.au, John.p.donnelly@oracle.com, arnd@arndb.de, will@kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, guohanjun@huawei.com, tglx@linutronix.de, pkushwaha@marvell.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
 On 05/21/20 at 05:38pm, Chen Zhou wrote:
-> In preparation for supporting reserve_crashkernel_low in arm64 as
-> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
+> Crashkernel=X tries to reserve memory for the crash dump kernel under
+> 4G. If crashkernel=X,low is specified simultaneously, reserve spcified
+> size low memory for crash kdump kernel devices firstly and then reserve
+> memory above 4G.
 
-
-
-> BTW, move x86 CRASH_ALIGN to 2M.
-
-The reason is?
+Wondering why crashkernel=,high is not introduced to arm64 to be
+consistent with x86_64, to make the behaviour be the same on all
+architecutres. 
 
 > 
-> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
-> is specified. Different with x86_64, don't set low memory automatically.
-> 
-> Reported-by: kbuild test robot <lkp@intel.com>
 > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 > Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
 > ---
->  arch/x86/kernel/setup.c    | 66 ++++-------------------------
->  include/linux/crash_core.h |  3 ++
->  include/linux/kexec.h      |  2 -
->  kernel/crash_core.c        | 85 ++++++++++++++++++++++++++++++++++++++
->  kernel/kexec_core.c        | 17 --------
->  5 files changed, 96 insertions(+), 77 deletions(-)
+>  arch/arm64/kernel/setup.c |  8 +++++++-
+>  arch/arm64/mm/init.c      | 31 +++++++++++++++++++++++++++++--
+>  2 files changed, 36 insertions(+), 3 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 4b3fa6cd3106..de75fec73d47 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -395,8 +395,8 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->  
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index 3fd2c11c09fc..a8487e4d3e5a 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -238,7 +238,13 @@ static void __init request_standard_resources(void)
+>  		    kernel_data.end <= res->end)
+>  			request_resource(res, &kernel_data);
 >  #ifdef CONFIG_KEXEC_CORE
->  
-> -/* 16M alignment for crash kernel regions */
-> -#define CRASH_ALIGN		SZ_16M
-> +/* 2M alignment for crash kernel regions */
-> +#define CRASH_ALIGN		SZ_2M
->  
->  /*
->   * Keep the crash kernel below this limit.
-> @@ -419,59 +419,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->  # define CRASH_ADDR_HIGH_MAX	SZ_64T
->  #endif
->  
-> -static int __init reserve_crashkernel_low(void)
-> -{
-> -#ifdef CONFIG_X86_64
-> -	unsigned long long base, low_base = 0, low_size = 0;
-> -	unsigned long total_low_mem;
-> -	int ret;
-> -
-> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> -
-> -	/* crashkernel=Y,low */
-> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
-> -	if (ret) {
-> -		/*
-> -		 * two parts from kernel/dma/swiotlb.c:
-> -		 * -swiotlb size: user-specified with swiotlb= or default.
-> -		 *
-> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
-> -		 * to 8M for other buffers that may need to stay low too. Also
-> -		 * make sure we allocate enough extra low memory so that we
-> -		 * don't run out of DMA buffers for 32-bit devices.
-> -		 */
-> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
-> -	} else {
-> -		/* passed with crashkernel=0,low ? */
-> -		if (!low_size)
-> -			return 0;
-> -	}
-> -
-> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-> -	if (!low_base) {
-> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-> -		       (unsigned long)(low_size >> 20));
-> -		return -ENOMEM;
-> -	}
-> -
-> -	ret = memblock_reserve(low_base, low_size);
-> -	if (ret) {
-> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
-> -		return ret;
-> -	}
-> -
-> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
-> -		(unsigned long)(low_size >> 20),
-> -		(unsigned long)(low_base >> 20),
-> -		(unsigned long)(total_low_mem >> 20));
-> -
-> -	crashk_low_res.start = low_base;
-> -	crashk_low_res.end   = low_base + low_size - 1;
-> -	insert_resource(&iomem_resource, &crashk_low_res);
-> -#endif
-> -	return 0;
-> -}
-> -
->  static void __init reserve_crashkernel(void)
+> -		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+> +		/*
+> +		 * Userspace will find "Crash kernel" region in /proc/iomem.
+> +		 * Note: the low region is renamed as Crash kernel (low).
+> +		 */
+> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
+> +				crashk_low_res.end <= res->end)
+> +			request_resource(res, &crashk_low_res);
+>  		if (crashk_res.end && crashk_res.start >= res->start &&
+>  		    crashk_res.end <= res->end)
+>  			request_resource(res, &crashk_res);
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index e42727e3568e..71498acf0cd8 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -81,6 +81,7 @@ static void __init reserve_crashkernel(void)
 >  {
->  	unsigned long long crash_size, crash_base, total_mem;
-> @@ -535,9 +482,12 @@ static void __init reserve_crashkernel(void)
+>  	unsigned long long crash_base, crash_size;
+>  	int ret;
+> +	phys_addr_t crash_max = arm64_dma32_phys_limit;
+>  
+>  	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>  				&crash_size, &crash_base);
+> @@ -88,12 +89,38 @@ static void __init reserve_crashkernel(void)
+>  	if (ret || !crash_size)
 >  		return;
->  	}
 >  
-> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-> -		memblock_free(crash_base, crash_size);
-> -		return;
-> +	if (crash_base >= (1ULL << 32)) {
-> +		if (reserve_crashkernel_low()) {
-> +			memblock_free(crash_base, crash_size);
-> +			return;
-> +		}
-> +		insert_resource(&iomem_resource, &crashk_low_res);
->  	}
->  
->  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 525510a9f965..4df8c0bff03e 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->  extern unsigned char *vmcoreinfo_data;
->  extern size_t vmcoreinfo_size;
->  extern u32 *vmcoreinfo_note;
-> +extern struct resource crashk_res;
-> +extern struct resource crashk_low_res;
->  
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len);
-> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
->  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
->  		unsigned long long *crash_size, unsigned long long *crash_base);
-> +int __init reserve_crashkernel_low(void);
->  
->  #endif /* LINUX_CRASH_CORE_H */
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 1776eb2e43a4..5d5d9635b18d 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
->  
->  /* Location of a reserved region to hold the crash kernel.
->   */
-> -extern struct resource crashk_res;
-> -extern struct resource crashk_low_res;
->  extern note_buf_t __percpu *crash_notes;
->  
->  /* flag to track if kexec reboot is in progress */
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 9f1557b98468..a7580d291c37 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -7,6 +7,8 @@
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/memblock.h>
-> +#include <linux/swiotlb.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
->  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
->  static unsigned char *vmcoreinfo_data_safecopy;
->  
-> +/* Location of the reserved area for the crash kernel */
-> +struct resource crashk_res = {
-> +	.name  = "Crash kernel",
-> +	.start = 0,
-> +	.end   = 0,
-> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-> +	.desc  = IORES_DESC_CRASH_KERNEL
-> +};
-> +struct resource crashk_low_res = {
-> +	.name  = "Crash kernel",
-> +	.start = 0,
-> +	.end   = 0,
-> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-> +	.desc  = IORES_DESC_CRASH_KERNEL
-> +};
-> +
->  /*
->   * parsing the "crashkernel" commandline
->   *
-> @@ -292,6 +310,73 @@ int __init parse_crashkernel_low(char *cmdline,
->  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
->  }
->  
-> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
-> +#define CRASH_ALIGN		SZ_2M
-> +#endif
-> +
-> +int __init reserve_crashkernel_low(void)
-> +{
-> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
-> +	unsigned long long base, low_base = 0, low_size = 0;
-> +	unsigned long total_low_mem;
-> +	int ret;
-> +
-> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> +
-> +	/* crashkernel=Y,low */
-> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
-> +			&base);
-> +	if (ret) {
-> +#ifdef CONFIG_X86_64
+> +	ret = reserve_crashkernel_low();
+> +	if (!ret && crashk_low_res.end) {
 > +		/*
-> +		 * two parts from lib/swiotlb.c:
-> +		 * -swiotlb size: user-specified with swiotlb= or default.
+> +		 * If crashkernel=X,low specified, there may be two regions,
+> +		 * we need to make some changes as follows:
 > +		 *
-> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
-> +		 * to 8M for other buffers that may need to stay low too. Also
-> +		 * make sure we allocate enough extra low memory so that we
-> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 * 1. rename the low region as "Crash kernel (low)"
+> +		 * In order to distinct from the high region and make no effect
+> +		 * to the use of existing kexec-tools, rename the low region as
+> +		 * "Crash kernel (low)".
+> +		 *
+> +		 * 2. change the upper bound for crash memory
+> +		 * Set MEMBLOCK_ALLOC_ACCESSIBLE upper bound for crash memory.
+> +		 *
+> +		 * 3. mark the low region as "nomap"
+> +		 * The low region is intended to be used for crash dump kernel
+> +		 * devices, just mark the low region as "nomap" simply.
 > +		 */
-> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
-> +				256UL << 20);
-> +#else
-> +		/*
-> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
-> +		 * specified.
-> +		 */
-> +		return -EINVAL;
-> +#endif
-> +	} else {
-> +		/* passed with crashkernel=0,low ? */
-> +		if (!low_size)
-> +			return 0;
+> +		const char *rename = "Crash kernel (low)";
+> +
+> +		crashk_low_res.name = rename;
+> +		crash_max = MEMBLOCK_ALLOC_ACCESSIBLE;
+> +		memblock_mark_nomap(crashk_low_res.start,
+> +				    resource_size(&crashk_low_res));
 > +	}
 > +
-> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-> +	if (!low_base) {
-> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-> +		       (unsigned long)(low_size >> 20));
-> +		return -ENOMEM;
-> +	}
-> +
-> +	ret = memblock_reserve(low_base, low_size);
-> +	if (ret) {
-> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
-> +				__func__);
-> +		return ret;
-> +	}
-> +
-> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
-> +		(unsigned long)(low_size >> 20),
-> +		(unsigned long)(low_base >> 20),
-> +		(unsigned long)(total_low_mem >> 20));
-> +
-> +	crashk_low_res.start = low_base;
-> +	crashk_low_res.end   = low_base + low_size - 1;
-> +#endif
-> +	return 0;
-> +}
-> +
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len)
->  {
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index c19c0dad1ebe..db66bbabfff3 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
->  /* Flag to indicate we are going to kexec a new kernel */
->  bool kexec_in_progress = false;
+>  	crash_size = PAGE_ALIGN(crash_size);
 >  
-> -
-> -/* Location of the reserved area for the crash kernel */
-> -struct resource crashk_res = {
-> -	.name  = "Crash kernel",
-> -	.start = 0,
-> -	.end   = 0,
-> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-> -	.desc  = IORES_DESC_CRASH_KERNEL
-> -};
-> -struct resource crashk_low_res = {
-> -	.name  = "Crash kernel",
-> -	.start = 0,
-> -	.end   = 0,
-> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-> -	.desc  = IORES_DESC_CRASH_KERNEL
-> -};
-> -
->  int kexec_should_crash(struct task_struct *p)
->  {
->  	/*
+>  	if (crash_base == 0) {
+>  		/* Current arm64 boot protocol requires 2MB alignment */
+> -		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
+> -				crash_size, SZ_2M);
+> +		crash_base = memblock_find_in_range(0, crash_max, crash_size,
+> +				SZ_2M);
+>  		if (crash_base == 0) {
+>  			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+>  				crash_size);
 > -- 
 > 2.20.1
 > 
