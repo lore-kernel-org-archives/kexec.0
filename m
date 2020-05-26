@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jd5cj-0005v3-SQ
- for kexec@lists.infradead.org; Mon, 25 May 2020 05:26:07 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH] kexec: Do not verify the signature without the lockdown or
- mandatory signature
-Date: Mon, 25 May 2020 13:23:51 +0800
-Message-Id: <20200525052351.24134-1-lijiang@redhat.com>
+ id 1jdNtW-0004bt-BP
+ for kexec@lists.infradead.org; Tue, 26 May 2020 00:56:40 +0000
+Date: Tue, 26 May 2020 08:56:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v8 1/5] x86: kdump: move reserve_crashkernel_low() into
+ crash_core.c
+Message-ID: <20200526005615.GD20045@MiWiFi-R3L-srv>
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200521093805.64398-2-chenzhou10@huawei.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200521093805.64398-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,111 +22,310 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: jbohac@suse.cz, bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, ebiederm@xmission.com, dyoung@redhat.com
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: horms@verge.net.au, John.p.donnelly@oracle.com, arnd@arndb.de, will@kernel.org, devicetree@vger.kernel.org, catalin.marinas@arm.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, guohanjun@huawei.com, tglx@linutronix.de, pkushwaha@marvell.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-Signature verification is an important security feature, to protect
-system from being attacked with a kernel of unknown origin. Kexec
-rebooting is a way to replace the running kernel, hence need be
-secured carefully.
+On 05/21/20 at 05:38pm, Chen Zhou wrote:
+> In preparation for supporting reserve_crashkernel_low in arm64 as
+> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
 
-In the current code of handling signature verification of kexec kernel,
-the logic is very twisted. It mixes signature verification, IMA signature
-appraising and kexec lockdown.
 
-If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
-signature, the supported crypto, and key, we don't think this is wrong,
-Unless kexec lockdown is executed. IMA is considered as another kind of
-signature appraising method.
 
-If kexec kernel image has signature/crypto/key, it has to go through the
-signature verification and pass. Otherwise it's seen as verification
-failure, and won't be loaded.
+> BTW, move x86 CRASH_ALIGN to 2M.
 
-Seems kexec kernel image with an unqualified signature is even worse than
-those w/o signature at all, this sounds very unreasonable. E.g. If people
-get a unsigned kernel to load, or a kernel signed with expired key, which
-one is more dangerous?
+The reason is?
 
-So, here, let's simplify the logic to improve code readability. If the
-KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
-is mandated. Otherwise, we lift the bar for any kernel image.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
- kernel/kexec_file.c | 37 ++++++-------------------------------
- 1 file changed, 6 insertions(+), 31 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index faa74d5f6941..e4bdf0c42f35 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -181,52 +181,27 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- static int
- kimage_validate_signature(struct kimage *image)
- {
--	const char *reason;
- 	int ret;
- 
- 	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
- 					   image->kernel_buf_len);
--	switch (ret) {
--	case 0:
--		break;
-+	if (ret) {
-+		pr_debug("kernel signature verification failed (%d).\n", ret);
- 
--		/* Certain verification errors are non-fatal if we're not
--		 * checking errors, provided we aren't mandating that there
--		 * must be a valid signature.
--		 */
--	case -ENODATA:
--		reason = "kexec of unsigned image";
--		goto decide;
--	case -ENOPKG:
--		reason = "kexec of image with unsupported crypto";
--		goto decide;
--	case -ENOKEY:
--		reason = "kexec of image with unavailable key";
--	decide:
--		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
--			pr_notice("%s rejected\n", reason);
-+		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE))
- 			return ret;
--		}
- 
--		/* If IMA is guaranteed to appraise a signature on the kexec
-+		/*
-+		 * If IMA is guaranteed to appraise a signature on the kexec
- 		 * image, permit it even if the kernel is otherwise locked
- 		 * down.
- 		 */
- 		if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
- 		    security_locked_down(LOCKDOWN_KEXEC))
- 			return -EPERM;
--
--		return 0;
--
--		/* All other errors are fatal, including nomem, unparseable
--		 * signatures and signature check failures - even if signatures
--		 * aren't required.
--		 */
--	default:
--		pr_notice("kernel signature verification failed (%d).\n", ret);
- 	}
- 
--	return ret;
-+	return 0;
- }
- #endif
- 
--- 
-2.17.1
+> 
+> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
+> is specified. Different with x86_64, don't set low memory automatically.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> ---
+>  arch/x86/kernel/setup.c    | 66 ++++-------------------------
+>  include/linux/crash_core.h |  3 ++
+>  include/linux/kexec.h      |  2 -
+>  kernel/crash_core.c        | 85 ++++++++++++++++++++++++++++++++++++++
+>  kernel/kexec_core.c        | 17 --------
+>  5 files changed, 96 insertions(+), 77 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 4b3fa6cd3106..de75fec73d47 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -395,8 +395,8 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> -/* 16M alignment for crash kernel regions */
+> -#define CRASH_ALIGN		SZ_16M
+> +/* 2M alignment for crash kernel regions */
+> +#define CRASH_ALIGN		SZ_2M
+>  
+>  /*
+>   * Keep the crash kernel below this limit.
+> @@ -419,59 +419,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>  #endif
+>  
+> -static int __init reserve_crashkernel_low(void)
+> -{
+> -#ifdef CONFIG_X86_64
+> -	unsigned long long base, low_base = 0, low_size = 0;
+> -	unsigned long total_low_mem;
+> -	int ret;
+> -
+> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> -
+> -	/* crashkernel=Y,low */
+> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+> -	if (ret) {
+> -		/*
+> -		 * two parts from kernel/dma/swiotlb.c:
+> -		 * -swiotlb size: user-specified with swiotlb= or default.
+> -		 *
+> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> -		 * to 8M for other buffers that may need to stay low too. Also
+> -		 * make sure we allocate enough extra low memory so that we
+> -		 * don't run out of DMA buffers for 32-bit devices.
+> -		 */
+> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+> -	} else {
+> -		/* passed with crashkernel=0,low ? */
+> -		if (!low_size)
+> -			return 0;
+> -	}
+> -
+> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> -	if (!low_base) {
+> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> -		       (unsigned long)(low_size >> 20));
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = memblock_reserve(low_base, low_size);
+> -	if (ret) {
+> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+> -		return ret;
+> -	}
+> -
+> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> -		(unsigned long)(low_size >> 20),
+> -		(unsigned long)(low_base >> 20),
+> -		(unsigned long)(total_low_mem >> 20));
+> -
+> -	crashk_low_res.start = low_base;
+> -	crashk_low_res.end   = low_base + low_size - 1;
+> -	insert_resource(&iomem_resource, &crashk_low_res);
+> -#endif
+> -	return 0;
+> -}
+> -
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_size, crash_base, total_mem;
+> @@ -535,9 +482,12 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> -		memblock_free(crash_base, crash_size);
+> -		return;
+> +	if (crash_base >= (1ULL << 32)) {
+> +		if (reserve_crashkernel_low()) {
+> +			memblock_free(crash_base, crash_size);
+> +			return;
+> +		}
+> +		insert_resource(&iomem_resource, &crashk_low_res);
+>  	}
+>  
+>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 525510a9f965..4df8c0bff03e 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  extern unsigned char *vmcoreinfo_data;
+>  extern size_t vmcoreinfo_size;
+>  extern u32 *vmcoreinfo_note;
+> +extern struct resource crashk_res;
+> +extern struct resource crashk_low_res;
+>  
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len);
+> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+> +int __init reserve_crashkernel_low(void);
+>  
+>  #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 1776eb2e43a4..5d5d9635b18d 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
+>  
+>  /* Location of a reserved region to hold the crash kernel.
+>   */
+> -extern struct resource crashk_res;
+> -extern struct resource crashk_low_res;
+>  extern note_buf_t __percpu *crash_notes;
+>  
+>  /* flag to track if kexec reboot is in progress */
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 9f1557b98468..a7580d291c37 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/memblock.h>
+> +#include <linux/swiotlb.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
+>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+>  static unsigned char *vmcoreinfo_data_safecopy;
+>  
+> +/* Location of the reserved area for the crash kernel */
+> +struct resource crashk_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +struct resource crashk_low_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +
+>  /*
+>   * parsing the "crashkernel" commandline
+>   *
+> @@ -292,6 +310,73 @@ int __init parse_crashkernel_low(char *cmdline,
+>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>  }
+>  
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+> +#define CRASH_ALIGN		SZ_2M
+> +#endif
+> +
+> +int __init reserve_crashkernel_low(void)
+> +{
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+> +	unsigned long long base, low_base = 0, low_size = 0;
+> +	unsigned long total_low_mem;
+> +	int ret;
+> +
+> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +
+> +	/* crashkernel=Y,low */
+> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
+> +			&base);
+> +	if (ret) {
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * two parts from lib/swiotlb.c:
+> +		 * -swiotlb size: user-specified with swiotlb= or default.
+> +		 *
+> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> +		 * to 8M for other buffers that may need to stay low too. Also
+> +		 * make sure we allocate enough extra low memory so that we
+> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 */
+> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+> +				256UL << 20);
+> +#else
+> +		/*
+> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
+> +		 * specified.
+> +		 */
+> +		return -EINVAL;
+> +#endif
+> +	} else {
+> +		/* passed with crashkernel=0,low ? */
+> +		if (!low_size)
+> +			return 0;
+> +	}
+> +
+> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	if (!low_base) {
+> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> +		       (unsigned long)(low_size >> 20));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = memblock_reserve(low_base, low_size);
+> +	if (ret) {
+> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+> +				__func__);
+> +		return ret;
+> +	}
+> +
+> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> +		(unsigned long)(low_size >> 20),
+> +		(unsigned long)(low_base >> 20),
+> +		(unsigned long)(total_low_mem >> 20));
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end   = low_base + low_size - 1;
+> +#endif
+> +	return 0;
+> +}
+> +
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len)
+>  {
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index c19c0dad1ebe..db66bbabfff3 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
+>  /* Flag to indicate we are going to kexec a new kernel */
+>  bool kexec_in_progress = false;
+>  
+> -
+> -/* Location of the reserved area for the crash kernel */
+> -struct resource crashk_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -struct resource crashk_low_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -
+>  int kexec_should_crash(struct task_struct *p)
+>  {
+>  	/*
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
