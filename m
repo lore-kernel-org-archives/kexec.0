@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jdnMg-0006t5-EN
- for kexec@lists.infradead.org; Wed, 27 May 2020 04:08:27 +0000
+ id 1jdt6k-0001TG-I5
+ for kexec@lists.infradead.org; Wed, 27 May 2020 10:16:24 +0000
+Date: Wed, 27 May 2020 12:16:18 +0200
+From: Jiri Bohac <jbohac@suse.cz>
 Subject: Re: [PATCH] kexec: Do not verify the signature without the lockdown
  or mandatory signature
-From: lijiang <lijiang@redhat.com>
+Message-ID: <20200527101618.jgbxbk5ooiaett43@dwarf.suse.cz>
 References: <20200525052351.24134-1-lijiang@redhat.com>
  <20200526135935.ffkfulsjf7xrep63@dwarf.suse.cz>
  <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
-Message-ID: <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
-Date: Wed, 27 May 2020 12:08:12 +0800
+ <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <07a65a70-3764-f62f-705c-049b8d409316@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <4da44e94-a839-2033-29d2-90bebd4ee1e2@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +23,53 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiri Bohac <jbohac@suse.cz>
+To: lijiang <lijiang@redhat.com>
 Cc: bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, dyoung@redhat.com
 
-5ZyoIDIwMjDlubQwNeaciDI35pelIDExOjE1LCBsaWppYW5nIOWGmemBkzoKPiDlnKggMjAyMOW5
-tDA15pyIMjbml6UgMjE6NTksIEppcmkgQm9oYWMg5YaZ6YGTOgo+PiBPbiBNb24sIE1heSAyNSwg
-MjAyMCBhdCAwMToyMzo1MVBNICswODAwLCBMaWFuYm8gSmlhbmcgd3JvdGU6Cj4+PiBTbywgaGVy
-ZSwgbGV0J3Mgc2ltcGxpZnkgdGhlIGxvZ2ljIHRvIGltcHJvdmUgY29kZSByZWFkYWJpbGl0eS4g
-SWYgdGhlCj4+PiBLRVhFQ19TSUdfRk9SQ0UgZW5hYmxlZCBvciBrZXhlYyBsb2NrZG93biBlbmFi
-bGVkLCBzaWduYXR1cmUgdmVyaWZpY2F0aW9uCj4+PiBpcyBtYW5kYXRlZC4gT3RoZXJ3aXNlLCB3
-ZSBsaWZ0IHRoZSBiYXIgZm9yIGFueSBrZXJuZWwgaW1hZ2UuCj4+Cj4+IEkgYWdyZWUgY29tcGxl
-dGVseTsgaW4gZmFjdCB0aGF0IHdhcyBteSBpbnRlbnRpb24gd2hlbgo+PiBpbnRyb2R1Y2luZyB0
-aGUgY29kZSwgYnV0IEkgZ290IG92ZXJydWxlZCBhYm91dCB0aGUgcmV0dXJuIGNvZGVzOgo+PiBo
-dHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzIwMTgwMTE5MTI1NDI1Lmw3Mm1leXljMnF0cnJp
-d2VAZHdhcmYuc3VzZS5jei8KPj4KPj4gSSBsaWtlIHRoaXMgc2ltcGxpZmljYXRpb24gdmVyeSBt
-dWNoLCBleGNlcHQgdGhpcyBwYXJ0Ogo+Pgo+Pj4gKwlpZiAocmV0KSB7Cj4+PiArCQlwcl9kZWJ1
-Zygia2VybmVsIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24gZmFpbGVkICglZCkuXG4iLCByZXQpOwo+
-Pgo+PiAuLi4KPj4KPj4+IC0JCXByX25vdGljZSgia2VybmVsIHNpZ25hdHVyZSB2ZXJpZmljYXRp
-b24gZmFpbGVkICglZCkuXG4iLCByZXQpOwo+Pgo+PiBJIHRoaW5rIHRoZSBsb2cgbGV2ZWwgc2hv
-dWxkIHN0YXkgYXQgbW9zdCBQUl9OT1RJQ0Ugd2hlbiB0aGUKPj4gdmVyaWZpY2F0aW9uIGZhaWx1
-cmUgcmVzdWx0cyBpbiByZWplY3RpbmcgdGhlIGtlcm5lbC4gUGVyaGFwcwo+PiBldmVuIGxvd2Vy
-Lgo+Pgo+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIGNvbW1lbnQsIEppcmkgQm9oYWMuCj4gCj4gSSBs
-aWtlIHRoZSBpZGVhIG9mIHN0YXlpbmcgYXQgbW9zdCBQUl9OT1RJQ0UsIGJ1dCB0aGUgcHJfbm90
-aWNlKCkgd2lsbCBvdXRwdXQKPiBzb21lIG1lc3NhZ2VzIHRoYXQga2VybmVsIGNvdWxkIHdhbnQg
-dG8gaWdub3JlLCBzdWNoIGFzIHRoZSBjYXNlIHlvdSBtZW50aW9uZWQKPiBiZWxvdy4KPiAKPj4g
-SW4gY2FzZSB2ZXJpZmljYXRpb24gaXMgbm90IGVuZm9yY2VkIGFuZCB0aGUgZmFpbHVyZSBpcwo+
-PiBpZ25vcmVkLCBLRVJOX0RFQlVHIHNlZW1zIHJlYXNvbmFibGUuCj4+Cj4gCj4gWWVzLCBnb29k
-IHVuZGVyc3RhbmRpbmcuIEl0IHNlZW1zIHRoYXQgdGhlIHByX2RlYnVnKCkgaXMgc3RpbGwgYSBn
-b29kIG9wdGlvbiBoZXJlPwo+IEFueSBvdGhlciB0aG91Z2h0cz8KPiAKCk9yIHRoZSBmb2xsb3dp
-bmcgY2hhbmdlIGxvb2tzIGJldHRlcj8gV2hhdCdzIHlvdXIgb3Bpbmlvbj8KCnN0YXRpYyBpbnQK
-a2ltYWdlX3ZhbGlkYXRlX3NpZ25hdHVyZShzdHJ1Y3Qga2ltYWdlICppbWFnZSkKewogICAgICAg
-IGludCByZXQ7CgogICAgICAgIHJldCA9IGFyY2hfa2V4ZWNfa2VybmVsX3ZlcmlmeV9zaWcoaW1h
-Z2UsIGltYWdlLT5rZXJuZWxfYnVmLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgaW1hZ2UtPmtlcm5lbF9idWZfbGVuKTsKICAgICAgICBpZiAocmV0KSB7CgogICAg
-ICAgICAgICAgICAgaWYgKElTX0VOQUJMRUQoQ09ORklHX0tFWEVDX1NJR19GT1JDRSkpIHsKICAg
-ICAgICAgICAgICAgICAgICAgICAgcHJfbm90aWNlKCJFbmZvcmNlZCBrZXJuZWwgc2lnbmF0dXJl
-IHZlcmlmaWNhdGlvbiBmYWlsZWQgKCVkKS5cbiIsIHJldCk7CiAgICAgICAgICAgICAgICAgICAg
-ICAgIHJldHVybiByZXQ7CiAgICAgICAgICAgICAgICB9CgogICAgICAgICAgICAgICAgLyoKICAg
-ICAgICAgICAgICAgICAqIElmIElNQSBpcyBndWFyYW50ZWVkIHRvIGFwcHJhaXNlIGEgc2lnbmF0
-dXJlIG9uIHRoZSBrZXhlYwogICAgICAgICAgICAgICAgICogaW1hZ2UsIHBlcm1pdCBpdCBldmVu
-IGlmIHRoZSBrZXJuZWwgaXMgb3RoZXJ3aXNlIGxvY2tlZAogICAgICAgICAgICAgICAgICogZG93
-bi4KICAgICAgICAgICAgICAgICAqLwogICAgICAgICAgICAgICAgaWYgKCFpbWFfYXBwcmFpc2Vf
-c2lnbmF0dXJlKFJFQURJTkdfS0VYRUNfSU1BR0UpICYmCiAgICAgICAgICAgICAgICAgICAgc2Vj
-dXJpdHlfbG9ja2VkX2Rvd24oTE9DS0RPV05fS0VYRUMpKQogICAgICAgICAgICAgICAgICAgICAg
-ICByZXR1cm4gLUVQRVJNOwoKICAgICAgICAgICAgICAgIHByX2RlYnVnKCJrZXJuZWwgc2lnbmF0
-dXJlIHZlcmlmaWNhdGlvbiBmYWlsZWQgKCVkKS5cbiIsIHJldCk7CiAgICAgICAgfQoKICAgICAg
-ICByZXR1cm4gMDsKfQoKClRoYW5rcy4KTGlhbmJvCgo+IFRoYW5rcy4KPiBMaWFuYm8KPiAKPiAK
-Pj4gUmVnYXJkcywKPj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
-Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, May 27, 2020 at 12:08:12PM +0800, lijiang wrote:
+> Or the following change looks better? What's your opinion?
+> 
+> static int
+> kimage_validate_signature(struct kimage *image)
+> {
+>         int ret;
+> 
+>         ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>                                            image->kernel_buf_len);
+>         if (ret) {
+> 
+>                 if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+>                         pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+>                         return ret;
+>                 }
+> 
+>                 /*
+>                  * If IMA is guaranteed to appraise a signature on the kexec
+>                  * image, permit it even if the kernel is otherwise locked
+>                  * down.
+>                  */
+>                 if (!ima_appraise_signature(READING_KEXEC_IMAGE) &&
+>                     security_locked_down(LOCKDOWN_KEXEC))
+>                         return -EPERM;
+> 
+>                 pr_debug("kernel signature verification failed (%d).\n", ret);
+>         }
+> 
+>         return 0;
+> }
+
+Looks good to me, thanks!
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
