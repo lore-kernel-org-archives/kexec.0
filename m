@@ -1,11 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 27 May 2020 15:18:33 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
-Message-ID: <20200527201833.GA258397@bjorn-Precision-5520>
+Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
+ kdump
+References: <20200521093805.64398-1-chenzhou10@huawei.com>
+ <20200526014242.GF20045@MiWiFi-R3L-srv>
+From: John Donnelly <John.P.donnelly@oracle.com>
+Message-ID: <897ea1b9-a68c-8544-6532-a21be135ce01@oracle.com>
+Date: Thu, 28 May 2020 17:20:34 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAJ2QiJKkHiY=qd=pEa2+b-cQenvNZ5XT_X1Djh-6P+a0smf++A@mail.gmail.com>
+In-Reply-To: <20200526014242.GF20045@MiWiFi-R3L-srv>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,249 +17,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Myron Stowe <myron.stowe@redhat.com>, Vijay Mohan Pandarathil <vijaymohan.pandarathil@hp.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Baoquan He <bhe@redhat.com>, Chen Zhou <chenzhou10@huawei.com>
+Cc: horms@verge.net.au, devicetree@vger.kernel.org, arnd@arndb.de, will@kernel.org, linux-doc@vger.kernel.org, catalin.marinas@arm.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, guohanjun@huawei.com, tglx@linutronix.de, pkushwaha@marvell.com, dyoung@redhat.com, linux-arm-kernel@lists.infradead.org
 
-On Wed, May 27, 2020 at 05:14:39PM +0530, Prabhakar Kushwaha wrote:
-> On Fri, May 22, 2020 at 4:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Thu, May 21, 2020 at 09:28:20AM +0530, Prabhakar Kushwaha wrote:
-> > > On Wed, May 20, 2020 at 4:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > On Thu, May 14, 2020 at 12:47:02PM +0530, Prabhakar Kushwaha wrote:
-> > > > > On Wed, May 13, 2020 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
-> > > > > > > An SMMU Stream table is created by the primary kernel. This table is
-> > > > > > > used by the SMMU to perform address translations for device-originated
-> > > > > > > transactions. Any crash (if happened) launches the kdump kernel which
-> > > > > > > re-creates the SMMU Stream table. New transactions will be translated
-> > > > > > > via this new table..
-> > > > > > >
-> > > > > > > There are scenarios, where devices are still having old pending
-> > > > > > > transactions (configured in the primary kernel). These transactions
-> > > > > > > come in-between Stream table creation and device-driver probe.
-> > > > > > > As new stream table does not have entry for older transactions,
-> > > > > > > it will be aborted by SMMU.
-> > > > > > >
-> > > > > > > Similar observations were found with PCIe-Intel 82576 Gigabit
-> > > > > > > Network card. It sends old Memory Read transaction in kdump kernel.
-> > > > > > > Transactions configured for older Stream table entries, that do not
-> > > > > > > exist any longer in the new table, will cause a PCIe Completion Abort.
-> > > > > >
-> > > > > > That sounds like exactly what we want, doesn't it?
-> > > > > >
-> > > > > > Or do you *want* DMA from the previous kernel to complete?  That will
-> > > > > > read or scribble on something, but maybe that's not terrible as long
-> > > > > > as it's not memory used by the kdump kernel.
-> > > > >
-> > > > > Yes, Abort should happen. But it should happen in context of driver.
-> > > > > But current abort is happening because of SMMU and no driver/pcie
-> > > > > setup present at this moment.
-> > > >
-> > > > I don't understand what you mean by "in context of driver."  The whole
-> > > > problem is that we can't control *when* the abort happens, so it may
-> > > > happen in *any* context.  It may happen when a NIC receives a packet
-> > > > or at some other unpredictable time.
-> > > >
-> > > > > Solution of this issue should be at 2 place
-> > > > > a) SMMU level: I still believe, this patch has potential to overcome
-> > > > > issue till finally driver's probe takeover.
-> > > > > b) Device level: Even if something goes wrong. Driver/device should
-> > > > > able to recover.
-> > > > >
-> > > > > > > Returned PCIe completion abort further leads to AER Errors from APEI
-> > > > > > > Generic Hardware Error Source (GHES) with completion timeout.
-> > > > > > > A network device hang is observed even after continuous
-> > > > > > > reset/recovery from driver, Hence device is no more usable.
-> > > > > >
-> > > > > > The fact that the device is no longer usable is definitely a problem.
-> > > > > > But in principle we *should* be able to recover from these errors.  If
-> > > > > > we could recover and reliably use the device after the error, that
-> > > > > > seems like it would be a more robust solution that having to add
-> > > > > > special cases in every IOMMU driver.
-> > > > > >
-> > > > > > If you have details about this sort of error, I'd like to try to fix
-> > > > > > it because we want to recover from that sort of error in normal
-> > > > > > (non-crash) situations as well.
-> > > > > >
-> > > > > Completion abort case should be gracefully handled.  And device should
-> > > > > always remain usable.
-> > > > >
-> > > > > There are 2 scenario which I am testing with Ethernet card PCIe-Intel
-> > > > > 82576 Gigabit Network card.
-> > > > >
-> > > > > I)  Crash testing using kdump root file system: De-facto scenario
-> > > > >     -  kdump file system does not have Ethernet driver
-> > > > >     -  A lot of AER prints [1], making it impossible to work on shell
-> > > > > of kdump root file system.
-> > > >
-> > > > In this case, I think report_error_detected() is deciding that because
-> > > > the device has no driver, we can't do anything.  The flow is like
-> > > > this:
-> > > >
-> > > >   aer_recover_work_func               # aer_recover_work
-> > > >     kfifo_get(aer_recover_ring, entry)
-> > > >     dev = pci_get_domain_bus_and_slot
-> > > >     cper_print_aer(dev, ...)
-> > > >       pci_err("AER: aer_status:")
-> > > >       pci_err("AER:   [14] CmpltTO")
-> > > >       pci_err("AER: aer_layer=")
-> > > >     if (AER_NONFATAL)
-> > > >       pcie_do_recovery(dev, pci_channel_io_normal)
-> > > >         status = CAN_RECOVER
-> > > >         pci_walk_bus(report_normal_detected)
-> > > >           report_error_detected
-> > > >             if (!dev->driver)
-> > > >               vote = NO_AER_DRIVER
-> > > >               pci_info("can't recover (no error_detected callback)")
-> > > >             *result = merge_result(*, NO_AER_DRIVER)
-> > > >             # always NO_AER_DRIVER
-> > > >         status is now NO_AER_DRIVER
-> > > >
-> > > > So pcie_do_recovery() does not call .report_mmio_enabled() or .slot_reset(),
-> > > > and status is not RECOVERED, so it skips .resume().
-> > > >
-> > > > I don't remember the history there, but if a device has no driver and
-> > > > the device generates errors, it seems like we ought to be able to
-> > > > reset it.
-> > >
-> > > But how to reset the device considering there is no driver.
-> > > Hypothetically, this case should be taken care by PCIe subsystem to
-> > > perform reset at PCIe level.
-> >
-> > I don't understand your question.  The PCI core (not the device
-> > driver) already does the reset.  When pcie_do_recovery() calls
-> > reset_link(), all devices on the other side of the link are reset.
-> >
-> > > > We should be able to field one (or a few) AER errors, reset the
-> > > > device, and you should be able to use the shell in the kdump kernel.
-> > > >
-> > > here kdump shell is usable only problem is a "lot of AER Errors". One
-> > > cannot see what they are typing.
-> >
-> > Right, that's what I expect.  If the PCI core resets the device, you
-> > should get just a few AER errors, and they should stop after the
-> > device is reset.
-> >
-> > > > >     -  Note kdump shell allows to use makedumpfile, vmcore-dmesg applications.
-> > > > >
-> > > > > II) Crash testing using default root file system: Specific case to
-> > > > > test Ethernet driver in second kernel
-> > > > >    -  Default root file system have Ethernet driver
-> > > > >    -  AER error comes even before the driver probe starts.
-> > > > >    -  Driver does reset Ethernet card as part of probe but no success.
-> > > > >    -  AER also tries to recover. but no success.  [2]
-> > > > >    -  I also tries to remove AER errors by using "pci=noaer" bootargs
-> > > > > and commenting ghes_handle_aer() from GHES driver..
-> > > > >           than different set of errors come which also never able to recover [3]
-> > > > >
-> > >
-> > > Please suggest your view on this case. Here driver is preset.
-> > > (driver/net/ethernet/intel/igb/igb_main.c)
-> > > In this case AER errors starts even before driver probe starts.
-> > > After probe, driver does the device reset with no success and even AER
-> > > recovery does not work.
-> >
-> > This case should be the same as the one above.  If we can change the
-> > PCI core so it can reset the device when there's no driver,  that would
-> > apply to case I (where there will never be a driver) and to case II
-> > (where there is no driver now, but a driver will probe the device
-> > later).
-> 
-> Does this means change are required in PCI core.
-
-Yes, I am suggesting that the PCI core does not do the right thing
-here.
-
-> I tried following changes in pcie_do_recovery() but it did not help.
-> Same error as before.
-> 
-> -- a/drivers/pci/pcie/err.c
-> +++ b/drivers/pci/pcie/err.c
->         pci_info(dev, "broadcast resume message\n");
->         pci_walk_bus(bus, report_resume, &status);
-> @@ -203,7 +207,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
->         return status;
-> 
->  failed:
->         pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> +       pci_reset_function(dev);
-> +       pci_aer_clear_device_status(dev);
-> +       pci_aer_clear_nonfatal_status(dev);
-
-Did you confirm that this resets the devices in question (0000:09:00.0
-and 0000:09:00.1, I think), and what reset mechanism this uses (FLR,
-PM, etc)?
-
-Case I is using APEI, and it looks like that can queue up 16 errors
-(AER_RECOVER_RING_SIZE), so that queue could be completely full before
-we even get a chance to reset the device.  But I would think that the
-reset should *eventually* stop the errors, even though we might log
-30+ of them first.
-
-As an experiment, you could reduce AER_RECOVER_RING_SIZE to 1 or 2 and
-see if it reduces the logging.
-
-> > > Problem mentioned in case I and II goes away if do pci_reset_function
-> > > during enumeration phase of kdump kernel.
-> > > can we thought of doing pci_reset_function for all devices in kdump
-> > > kernel or device specific quirk.
-> > >
-> > > --pk
-> > >
-> > >
-> > > > > As per my understanding, possible solutions are
-> > > > >  - Copy SMMU table i.e. this patch
-> > > > > OR
-> > > > >  - Doing pci_reset_function() during enumeration phase.
-> > > > > I also tried clearing "M" bit using pci_clear_master during
-> > > > > enumeration but it did not help. Because driver re-set M bit causing
-> > > > > same AER error again.
-> > > > >
-> > > > >
-> > > > > -pk
-> > > > >
-> > > > > ---------------------------------------------------------------------------------------------------------------------------
-> > > > > [1] with bootargs having pci=noaer
-> > > > >
-> > > > > [   22.494648] {4}[Hardware Error]: Hardware error from APEI Generic
-> > > > > Hardware Error Source: 1
-> > > > > [   22.512773] {4}[Hardware Error]: event severity: recoverable
-> > > > > [   22.518419] {4}[Hardware Error]:  Error 0, type: recoverable
-> > > > > [   22.544804] {4}[Hardware Error]:   section_type: PCIe error
-> > > > > [   22.550363] {4}[Hardware Error]:   port_type: 0, PCIe end point
-> > > > > [   22.556268] {4}[Hardware Error]:   version: 3.0
-> > > > > [   22.560785] {4}[Hardware Error]:   command: 0x0507, status: 0x4010
-> > > > > [   22.576852] {4}[Hardware Error]:   device_id: 0000:09:00.1
-> > > > > [   22.582323] {4}[Hardware Error]:   slot: 0
-> > > > > [   22.586406] {4}[Hardware Error]:   secondary_bus: 0x00
-> > > > > [   22.591530] {4}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
-> > > > > [   22.608900] {4}[Hardware Error]:   class_code: 000002
-> > > > > [   22.613938] {4}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
-> > > > > [   22.803534] pci 0000:09:00.1: AER: aer_status: 0x00004000,
-> > > > > aer_mask: 0x00000000
-> > > > > [   22.810838] pci 0000:09:00.1: AER:    [14] CmpltTO                (First)
-> > > > > [   22.817613] pci 0000:09:00.1: AER: aer_layer=Transaction Layer,
-> > > > > aer_agent=Requester ID
-> > > > > [   22.847374] pci 0000:09:00.1: AER: aer_uncor_severity: 0x00062011
-> > > > > [   22.866161] mpt3sas_cm0: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED,
-> > > > > total mem (8153768 kB)
-> > > > > [   22.946178] pci 0000:09:00.0: AER: can't recover (no error_detected callback)
-> > > > > [   22.995142] pci 0000:09:00.1: AER: can't recover (no error_detected callback)
-> > > > > [   23.002300] pcieport 0000:00:09.0: AER: device recovery failed
-> > > > > [   23.027607] pci 0000:09:00.1: AER: aer_status: 0x00004000,
-> > > > > aer_mask: 0x00000000
-> > > > > [   23.044109] pci 0000:09:00.1: AER:    [14] CmpltTO                (First)
-> > > > > [   23.060713] pci 0000:09:00.1: AER: aer_layer=Transaction Layer,
-> > > > > aer_agent=Requester ID
-> > > > > [   23.068616] pci 0000:09:00.1: AER: aer_uncor_severity: 0x00062011
-> > > > > [   23.122056] pci 0000:09:00.0: AER: can't recover (no error_detected callback)
-
-<snip>
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDUvMjUvMjAgODo0MiBQTSwgQmFvcXVhbiBIZSB3cm90ZToKPiBPbiAwNS8yMS8yMCBhdCAw
+NTozOHBtLCBDaGVuIFpob3Ugd3JvdGU6Cj4+IFRoaXMgcGF0Y2ggc2VyaWVzIGVuYWJsZSByZXNl
+cnZpbmcgY3Jhc2hrZXJuZWwgYWJvdmUgNEcgaW4gYXJtNjQuCj4+Cj4+IFRoZXJlIGFyZSBmb2xs
+b3dpbmcgaXNzdWVzIGluIGFybTY0IGtkdW1wOgo+PiAxLiBXZSB1c2UgY3Jhc2hrZXJuZWw9WCB0
+byByZXNlcnZlIGNyYXNoa2VybmVsIGJlbG93IDRHLCB3aGljaCB3aWxsIGZhaWwKPj4gd2hlbiB0
+aGVyZSBpcyBubyBlbm91Z2ggbG93IG1lbW9yeS4KPj4gMi4gQ3VycmVudGx5LCBjcmFzaGtlcm5l
+bD1ZQFggY2FuIGJlIHVzZWQgdG8gcmVzZXJ2ZSBjcmFzaGtlcm5lbCBhYm92ZSA0RywKPj4gaW4g
+dGhpcyBjYXNlLCBpZiBzd2lvdGxiIG9yIERNQSBidWZmZXJzIGFyZSByZXF1aXJlZCwgY3Jhc2gg
+ZHVtcCBrZXJuZWwKPj4gd2lsbCBib290IGZhaWx1cmUgYmVjYXVzZSB0aGVyZSBpcyBubyBsb3cg
+bWVtb3J5IGF2YWlsYWJsZSBmb3IgYWxsb2NhdGlvbi4KPj4KPj4gVG8gc29sdmUgdGhlc2UgaXNz
+dWVzLCBpbnRyb2R1Y2UgY3Jhc2hrZXJuZWw9WCxsb3cgdG8gcmVzZXJ2ZSBzcGVjaWZpZWQKPj4g
+c2l6ZSBsb3cgbWVtb3J5Lgo+PiBDcmFzaGtlcm5lbD1YIHRyaWVzIHRvIHJlc2VydmUgbWVtb3J5
+IGZvciB0aGUgY3Jhc2ggZHVtcCBrZXJuZWwgdW5kZXIKPj4gNEcuIElmIGNyYXNoa2VybmVsPVks
+bG93IGlzIHNwZWNpZmllZCBzaW11bHRhbmVvdXNseSwgcmVzZXJ2ZSBzcGNpZmllZAo+PiBzaXpl
+IGxvdyBtZW1vcnkgZm9yIGNyYXNoIGtkdW1wIGtlcm5lbCBkZXZpY2VzIGZpcnN0bHkgYW5kIHRo
+ZW4gcmVzZXJ2ZQo+PiBtZW1vcnkgYWJvdmUgNEcuCj4+Cj4+IFdoZW4gY3Jhc2hrZXJuZWwgaXMg
+cmVzZXJ2ZWQgYWJvdmUgNEcgaW4gbWVtb3J5LCB0aGF0IGlzLCBjcmFzaGtlcm5lbD1YLGxvdwo+
+PiBpcyBzcGVjaWZpZWQgc2ltdWx0YW5lb3VzbHksIGtlcm5lbCBzaG91bGQgcmVzZXJ2ZSBzcGVj
+aWZpZWQgc2l6ZSBsb3cgbWVtb3J5Cj4+IGZvciBjcmFzaCBkdW1wIGtlcm5lbCBkZXZpY2VzLiBT
+byB0aGVyZSBtYXkgYmUgdHdvIGNyYXNoIGtlcm5lbCByZWdpb25zLCBvbmUKPj4gaXMgYmVsb3cg
+NEcsIHRoZSBvdGhlciBpcyBhYm92ZSA0Ry4KPj4gSW4gb3JkZXIgdG8gZGlzdGluY3QgZnJvbSB0
+aGUgaGlnaCByZWdpb24gYW5kIG1ha2Ugbm8gZWZmZWN0IHRvIHRoZSB1c2Ugb2YKPj4ga2V4ZWMt
+dG9vbHMsIHJlbmFtZSB0aGUgbG93IHJlZ2lvbiBhcyAiQ3Jhc2gga2VybmVsIChsb3cpIiwgYW5k
+IGFkZCBEVCBwcm9wZXJ0eQo+PiAibGludXgsbG93LW1lbW9yeS1yYW5nZSIgdG8gY3Jhc2ggZHVt
+cCBrZXJuZWwncyBkdGIgdG8gcGFzcyB0aGUgbG93IHJlZ2lvbi4KPj4KPj4gQmVzaWRlcywgd2Ug
+bmVlZCB0byBtb2RpZnkga2V4ZWMtdG9vbHM6Cj4+IGFybTY0OiBrZHVtcDogYWRkIGFub3RoZXIg
+RFQgcHJvcGVydHkgdG8gY3Jhc2ggZHVtcCBrZXJuZWwncyBkdGIoc2VlIFsxXSkKPj4KPj4gVGhl
+IHByZXZpb3VzIGNoYW5nZXMgYW5kIGRpc2N1c3Npb25zIGNhbiBiZSByZXRyaWV2ZWQgZnJvbToK
+Pj4KPj4gQ2hhbmdlcyBzaW5jZSBbdjddCj4+IC0gTW92ZSB4ODYgQ1JBU0hfQUxJR04gdG8gMk0K
+Pj4gU3VnZ2VzdGVkIGJ5IERhdmUgYW5kIGRvIHNvbWUgdGVzdCwgbW92ZSB4ODYgQ1JBU0hfQUxJ
+R04gdG8gMk0uCj4gT0ssIG1vdmluZyB4ODYgQ1JBU0hfQUxJR04gdG8gMk0gaXMgc3VnZ2VzdGVk
+IGJ5IERhdmUuIEJlY2F1c2UKPiBDT05GSUdfUEhZU0lDQUxfQUxJR04gY2FuIGJlIHNlbGVjdGVk
+IGZyb20gMk0gdG8gMTZNLiBTbyAyTSBzZWVtcyBnb29kLgo+IEJ1dCwgYW55d2F5LCB3ZSBzaG91
+bGQgdGVsbCB0aGUgcmVhc29uIHdoeSBpdCBuZWVkIGJlIGNoYW5nZWQgaW4gY29tbWl0Cj4gbG9n
+Lgo+Cj4KPiBhcmNoL3g4Ni9LY29uZmlnOgo+IGNvbmZpZyBQSFlTSUNBTF9BTElHTgo+ICAgICAg
+ICAgIGhleCAiQWxpZ25tZW50IHZhbHVlIHRvIHdoaWNoIGtlcm5lbCBzaG91bGQgYmUgYWxpZ25l
+ZCIKPiAgICAgICAgICBkZWZhdWx0ICIweDIwMDAwMCIKPiAgICAgICAgICByYW5nZSAweDIwMDAg
+MHgxMDAwMDAwIGlmIFg4Nl8zMgo+ICAgICAgICAgIHJhbmdlIDB4MjAwMDAwIDB4MTAwMDAwMCBp
+ZiBYODZfNjQKPgo+PiAtIFVwZGF0ZSBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+Y2hvc2VuLnR4dAo+PiBBZGQgY29ycmVzcG9uZGluZyBkb2N1bWVudGF0aW9uIHRvIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9zZW4udHh0IHN1Z2dlc3RlZCBieSBBcm5kLgo+
+PiAtIEFkZCBUZXN0ZWQtYnkgZnJvbSBKaG9uIGFuZCBwawo+Pgo+PiBDaGFuZ2VzIHNpbmNlIFt2
+Nl0KPj4gLSBGaXggYnVpbGQgZXJyb3JzIHJlcG9ydGVkIGJ5IGtidWlsZCB0ZXN0IHJvYm90Lgo+
+Pgo+PiBDaGFuZ2VzIHNpbmNlIFt2NV0KPj4gLSBNb3ZlIHJlc2VydmVfY3Jhc2hrZXJuZWxfbG93
+KCkgaW50byBrZXJuZWwvY3Jhc2hfY29yZS5jLgo+PiAtIERlbGV0ZSBjcmFzaGtlcm5lbD1YLGhp
+Z2guCj4gQW5kIHRoZSBjcmFzaGtlcm5lbD1YLGhpZ2ggYmVpbmcgZGVsZXRlZCBuZWVkIGJlIHRv
+bGQgdG9vLiBPdGhlcndpc2UKPiBwZW9wbGUgcmVhZGluZyB0aGUgY29tbWl0IGhhdmUgdG8gY2hl
+Y2sgd2h5IHRoZW1zZWx2ZXMuIEkgZGlkbid0IGZvbGxvdwo+IHRoZSBvbGQgdmVyc2lvbiwgY2Fu
+J3Qgc2VlIHdoeSAsaGlnaCBjYW4ndCBiZSBzcGVjaWZpZWQgZXhwbGljaXRseS4KPgo+PiAtIE1v
+ZGlmeSBjcmFzaGtlcm5lbD1YLGxvdy4KPj4gSWYgY3Jhc2hrZXJuZWw9WCxsb3cgaXMgc3BlY2lm
+aWVkIHNpbXVsdGFuZW91c2x5LCByZXNlcnZlIHNwY2lmaWVkIHNpemUgbG93Cj4+IG1lbW9yeSBm
+b3IgY3Jhc2gga2R1bXAga2VybmVsIGRldmljZXMgZmlyc3RseSBhbmQgdGhlbiByZXNlcnZlIG1l
+bW9yeSBhYm92ZSA0Ry4KPj4gSW4gYWRkaXRpb24sIHJlbmFtZSBjcmFzaGtfbG93X3JlcyBhcyAi
+Q3Jhc2gga2VybmVsIChsb3cpIiBmb3IgYXJtNjQsIGFuZCB0aGVuCj4+IHBhc3MgdG8gY3Jhc2gg
+ZHVtcCBrZXJuZWwgYnkgRFQgcHJvcGVydHkgImxpbnV4LGxvdy1tZW1vcnktcmFuZ2UiLgo+PiAt
+IFVwZGF0ZSBEb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdC4KPj4KPj4g
+Q2hhbmdlcyBzaW5jZSBbdjRdCj4+IC0gUmVpbXBsZW1lbnQgbWVtYmxvY2tfY2FwX21lbW9yeV9y
+YW5nZXMgZm9yIG11bHRpcGxlIHJhbmdlcyBieSBNaWtlLgo+Pgo+PiBDaGFuZ2VzIHNpbmNlIFt2
+M10KPj4gLSBBZGQgbWVtYmxvY2tfY2FwX21lbW9yeV9yYW5nZXMgYmFjayBmb3IgbXVsdGlwbGUg
+cmFuZ2VzLgo+PiAtIEZpeCBzb21lIGNvbXBpbGluZyB3YXJuaW5ncy4KPj4KPj4gQ2hhbmdlcyBz
+aW5jZSBbdjJdCj4+IC0gU3BsaXQgcGF0Y2ggImFybTY0OiBrZHVtcDogc3VwcG9ydCByZXNlcnZp
+bmcgY3Jhc2hrZXJuZWwgYWJvdmUgNEciIGFzCj4+IHR3by4gUHV0ICJtb3ZlIHJlc2VydmVfY3Jh
+c2hrZXJuZWxfbG93KCkgaW50byBrZXhlY19jb3JlLmMiIGluIGEgc2VwYXJhdGUKPj4gcGF0Y2gu
+Cj4+Cj4+IENoYW5nZXMgc2luY2UgW3YxXToKPj4gLSBNb3ZlIGNvbW1vbiByZXNlcnZlX2NyYXNo
+a2VybmVsX2xvdygpIGNvZGUgaW50byBrZXJuZWwva2V4ZWNfY29yZS5jLgo+PiAtIFJlbW92ZSBt
+ZW1ibG9ja19jYXBfbWVtb3J5X3JhbmdlcygpIGkgYWRkZWQgaW4gdjEgYW5kIGltcGxlbWVudCB0
+aGF0Cj4+IGluIGZkdF9lbmZvcmNlX21lbW9yeV9yZWdpb24oKS4KPj4gVGhlcmUgYXJlIGF0IG1v
+c3QgdHdvIGNyYXNoIGtlcm5lbCByZWdpb25zLCBmb3IgdHdvIGNyYXNoIGtlcm5lbCByZWdpb25z
+Cj4+IGNhc2UsIHdlIGNhcCB0aGUgbWVtb3J5IHJhbmdlIFttaW4ocmVnc1sqXS5zdGFydCksIG1h
+eChyZWdzWypdLmVuZCldCj4+IGFuZCB0aGVuIHJlbW92ZSB0aGUgbWVtb3J5IHJhbmdlIGluIHRo
+ZSBtaWRkbGUuCj4+Cj4+IFsxXTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9fX2h0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL3BpcGVybWFpbC9rZXhlYy8yMDIwLU1heS8wMjUxMjguaHRtbF9f
+OyEhR3FpdlBWYTdCcmlvIU5IUUlRVmJWejViUjFTU1A3VTdTd1QzdUhiNk9ueWNQR2E2bk0wb0xU
+YVFkWlQ0cGpSc2pyTWpuNUdxT0p3UXMzQzR4JAo+PiBbdjFdOiBodHRwczovL3VybGRlZmVuc2Uu
+Y29tL3YzL19faHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvNC8yLzExNzRfXzshIUdxaXZQVmE3
+QnJpbyFOSFFJUVZiVno1YlIxU1NQN1U3U3dUM3VIYjZPbnljUEdhNm5NMG9MVGFRZFpUNHBqUnNq
+ck1qbjVHcU9KNmUtbUlFcCQKPj4gW3YyXTogaHR0cHM6Ly91cmxkZWZlbnNlLmNvbS92My9fX2h0
+dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzQvOS84Nl9fOyEhR3FpdlBWYTdCcmlvIU5IUUlRVmJW
+ejViUjFTU1A3VTdTd1QzdUhiNk9ueWNQR2E2bk0wb0xUYVFkWlQ0cGpSc2pyTWpuNUdxT0p5VVZq
+VXRhJAo+PiBbdjNdOiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9sa21sLm9y
+Zy9sa21sLzIwMTkvNC85LzMwNl9fOyEhR3FpdlBWYTdCcmlvIU5IUUlRVmJWejViUjFTU1A3VTdT
+d1QzdUhiNk9ueWNQR2E2bk0wb0xUYVFkWlQ0cGpSc2pyTWpuNUdxT0ozQ1hCUmRUJAo+PiBbdjRd
+OiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkv
+NC8xNS8yNzNfXzshIUdxaXZQVmE3QnJpbyFOSFFJUVZiVno1YlIxU1NQN1U3U3dUM3VIYjZPbnlj
+UEdhNm5NMG9MVGFRZFpUNHBqUnNqck1qbjVHcU9KN1N4VzFWaiQKPj4gW3Y1XTogaHR0cHM6Ly91
+cmxkZWZlbnNlLmNvbS92My9fX2h0dHBzOi8vbGttbC5vcmcvbGttbC8yMDE5LzUvNi8xMzYwX187
+ISFHcWl2UFZhN0JyaW8hTkhRSVFWYlZ6NWJSMVNTUDdVN1N3VDN1SGI2T255Y1BHYTZuTTBvTFRh
+UWRaVDRwalJzanJNam41R3FPSjJ3eUo5dGokCj4+IFt2Nl06IGh0dHBzOi8vdXJsZGVmZW5zZS5j
+b20vdjMvX19odHRwczovL2xrbWwub3JnL2xrbWwvMjAxOS84LzMwLzE0Ml9fOyEhR3FpdlBWYTdC
+cmlvIU5IUUlRVmJWejViUjFTU1A3VTdTd1QzdUhiNk9ueWNQR2E2bk0wb0xUYVFkWlQ0cGpSc2py
+TWpuNUdxT0p6dkdoV0JoJAo+PiBbdjddOiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0
+cHM6Ly9sa21sLm9yZy9sa21sLzIwMTkvMTIvMjMvNDExX187ISFHcWl2UFZhN0JyaW8hTkhRSVFW
+YlZ6NWJSMVNTUDdVN1N3VDN1SGI2T255Y1BHYTZuTTBvTFRhUWRaVDRwalJzanJNam41R3FPSjZw
+QWc2dFgkCj4+Cj4+IENoZW4gWmhvdSAoNSk6Cj4+ICAgIHg4Njoga2R1bXA6IG1vdmUgcmVzZXJ2
+ZV9jcmFzaGtlcm5lbF9sb3coKSBpbnRvIGNyYXNoX2NvcmUuYwo+PiAgICBhcm02NDoga2R1bXA6
+IHJlc2VydmUgY3Jhc2hrZW5lbCBhYm92ZSA0RyBmb3IgY3Jhc2ggZHVtcCBrZXJuZWwKPj4gICAg
+YXJtNjQ6IGtkdW1wOiBhZGQgbWVtb3J5IGZvciBkZXZpY2VzIGJ5IERUIHByb3BlcnR5LCBsb3ct
+bWVtb3J5LXJhbmdlCj4+ICAgIGtkdW1wOiB1cGRhdGUgRG9jdW1lbnRhdGlvbiBhYm91dCBjcmFz
+aGtlcm5lbCBvbiBhcm02NAo+PiAgICBkdC1iaW5kaW5nczogY2hvc2VuOiBEb2N1bWVudCBsaW51
+eCxsb3ctbWVtb3J5LXJhbmdlIGZvciBhcm02NCBrZHVtcAo+Pgo+PiAgIERvY3VtZW50YXRpb24v
+YWRtaW4tZ3VpZGUva2R1bXAva2R1bXAucnN0ICAgICB8IDEzICsrLQo+PiAgIC4uLi9hZG1pbi1n
+dWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQgICAgICAgICB8IDEyICsrLQo+PiAgIERvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9zZW4udHh0ICB8IDI1ICsrKysrKwo+PiAgIGFy
+Y2gvYXJtNjQva2VybmVsL3NldHVwLmMgICAgICAgICAgICAgICAgICAgICB8ICA4ICstCj4+ICAg
+YXJjaC9hcm02NC9tbS9pbml0LmMgICAgICAgICAgICAgICAgICAgICAgICAgIHwgNjEgKysrKysr
+KysrKysrLQo+PiAgIGFyY2gveDg2L2tlcm5lbC9zZXR1cC5jICAgICAgICAgICAgICAgICAgICAg
+ICB8IDY2ICsrLS0tLS0tLS0tLS0tCj4+ICAgaW5jbHVkZS9saW51eC9jcmFzaF9jb3JlLmggICAg
+ICAgICAgICAgICAgICAgIHwgIDMgKwo+PiAgIGluY2x1ZGUvbGludXgva2V4ZWMuaCAgICAgICAg
+ICAgICAgICAgICAgICAgICB8ICAyIC0KPj4gICBrZXJuZWwvY3Jhc2hfY29yZS5jICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgfCA4NSArKysrKysrKysrKysrKysrKysrCj4+ICAga2VybmVsL2tl
+eGVjX2NvcmUuYyAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgMTcgLS0tLQo+PiAgIDEwIGZp
+bGVzIGNoYW5nZWQsIDIwOCBpbnNlcnRpb25zKCspLCA4NCBkZWxldGlvbnMoLSkKPj4KPj4gLS0g
+Cj4+IDIuMjAuMQo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwo+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwo+PiBodHRwczovL3VybGRlZmVuc2UuY29tL3YzL19faHR0cDovL2xpc3RzLmluZnJhZGVh
+ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlY19fOyEhR3FpdlBWYTdCcmlvIU5IUUlRVmJWejVi
+UjFTU1A3VTdTd1QzdUhiNk9ueWNQR2E2bk0wb0xUYVFkWlQ0cGpSc2pyTWpuNUdxT0p3d1g4SFNs
+JAo+PgoKCgpIaSwKCgoKVGhpcyBwcm9wb3NhbCB0byBpbXByb3ZlIHZtY29yZSBjcmVhdGlvbiBv
+biBBcm3CoCBoYXMgYmVlbiBnb2luZyBvbiBmb3IgCmFsbW9zdCBhIHllYXIgbm93LgoKV2hvIGlz
+IHRoZcKgIGZpbmFsIG1haW50YWluZXIgdGhhdCBuZWVkcyB0byBhcHByb3ZlIGFuZCBleGNlcHQg
+dGhlc2UgPwoKV2hhdCBhcmUgdGhlIGxpbmdlcmluZyBpc3N1ZXMgdGhhdCBhcmUgcmVtYWluaW5n
+IHNvIHdlIGdldCB0aGVzZSAKYWNjZXB0ZWQgaW50byBhIHVwc3RyZWFtIGNvbW1pdCA/CgoKVGhh
+bmsgeW91LgoKSm9obi4KCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
