@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd42.google.com ([2607:f8b0:4864:20::d42])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jeqw9-0008Gb-Gi
- for kexec@lists.infradead.org; Sat, 30 May 2020 02:09:26 +0000
-Received: by mail-io1-xd42.google.com with SMTP id q8so1376879iow.7
- for <kexec@lists.infradead.org>; Fri, 29 May 2020 19:09:16 -0700 (PDT)
+Date: Mon, 1 Jun 2020 08:34:48 +0100
+From: Will Deacon <will@kernel.org>
+Subject: Re: kdump: Getting "warn_alloc" warning during boot of kdump kernel
+Message-ID: <20200601073447.GC8601@willie-the-truck>
+References: <CAJ2QiJJgw0Cm=XBeVvOJ8WnWB0Xfv3JEYKTQUovnwrrDw17w9g@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1588711355.git.ashish.kalra@amd.com>
- <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
-In-Reply-To: <697cbb9301acf18296b65bb63686b6c0d422e382.1588711355.git.ashish.kalra@amd.com>
-From: Steve Rutherford <srutherford@google.com>
-Date: Fri, 29 May 2020 19:08:40 -0700
-Message-ID: <CABayD+fxrRVR2An2wKA4uf99NtScWvAAvv4UdoE_vsSFpe8KxQ@mail.gmail.com>
-Subject: Re: [PATCH v8 17/18] KVM: x86: Add kexec support for SEV Live
- Migration.
+Content-Disposition: inline
+In-Reply-To: <CAJ2QiJJgw0Cm=XBeVvOJ8WnWB0Xfv3JEYKTQUovnwrrDw17w9g@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,85 +19,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ashish Kalra <Ashish.Kalra@amd.com>
-Cc: Tom Lendacky <Thomas.Lendacky@amd.com>, David Rientjes <rientjes@google.com>, Brijesh Singh <brijesh.singh@amd.com>, KVM list <kvm@vger.kernel.org>, Joerg Roedel <joro@8bytes.org>, X86 ML <x86@kernel.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Venu Busireddy <venu.busireddy@oracle.com>
+To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Cc: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Catalin Marinas <catalin.marinas@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Kamlakant Patel <kamlakantp@marvell.com>, Prabhakar Kushwaha <pkushwaha@marvell.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-On Tue, May 5, 2020 at 2:21 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
->
-> From: Ashish Kalra <ashish.kalra@amd.com>
->
-> Reset the host's page encryption bitmap related to kernel
-> specific page encryption status settings before we load a
-> new kernel by kexec. We cannot reset the complete
-> page encryption bitmap here as we need to retain the
-> UEFI/OVMF firmware specific settings.
->
-> The host's page encryption bitmap is maintained for the
-> guest to keep the encrypted/decrypted state of the guest pages,
-> therefore we need to explicitly mark all shared pages as
-> encrypted again before rebooting into the new guest kernel.
->
-> Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> ---
->  arch/x86/kernel/kvm.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->
-> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> index 4b29815de873..a8bc30d5b15b 100644
-> --- a/arch/x86/kernel/kvm.c
-> +++ b/arch/x86/kernel/kvm.c
-> @@ -35,6 +35,7 @@
->  #include <asm/hypervisor.h>
->  #include <asm/tlb.h>
->  #include <asm/cpuidle_haltpoll.h>
-> +#include <asm/e820/api.h>
->
->  static int kvmapf = 1;
->
-> @@ -358,6 +359,33 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
->          */
->         if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
->                 wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-> +       /*
-> +        * Reset the host's page encryption bitmap related to kernel
-> +        * specific page encryption status settings before we load a
-> +        * new kernel by kexec. NOTE: We cannot reset the complete
-> +        * page encryption bitmap here as we need to retain the
-> +        * UEFI/OVMF firmware specific settings.
-> +        */
-> +       if (sev_live_migration_enabled() & (smp_processor_id() == 0)) {
-> +               int i;
-> +               unsigned long nr_pages;
-> +
-> +               for (i = 0; i < e820_table->nr_entries; i++) {
-> +                       struct e820_entry *entry = &e820_table->entries[i];
-> +                       unsigned long start_pfn;
-> +                       unsigned long end_pfn;
-> +
-> +                       if (entry->type != E820_TYPE_RAM)
-> +                               continue;
-What should the behavior be for other memory types that are not
-expected to be mucked with by firmware? Should we avoid resetting the
-enc status of pmem/pram pages?
+On Fri, May 15, 2020 at 04:28:13PM +0530, Prabhakar Kushwaha wrote:
+> We are getting "warn_alloc" warning during boot of kdump kernel. This
+> warning is observed with latest upstream tag (v5.7-rc5).
 
-My intuition here is that we should only preserve the enc status of
-those bits that are set by the firmware.
+Perhaps you can help to review:
 
-> +
-> +                       start_pfn = entry->addr >> PAGE_SHIFT;
-> +                       end_pfn = (entry->addr + entry->size) >> PAGE_SHIFT;
-> +                       nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-> +
-> +                       kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> +                                          entry->addr, nr_pages, 1);
-> +               }
-> +       }
->         kvm_pv_disable_apf();
->         kvm_disable_steal_time();
->  }
-> --
-> 2.17.1
->
+https://lore.kernel.org/r/20200521093805.64398-1-chenzhou10@huawei.com
+
+Since it looks like it should solve your problem.
+
+Will
 
 _______________________________________________
 kexec mailing list
