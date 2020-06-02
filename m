@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jfz2D-0005qx-Ma
- for kexec@lists.infradead.org; Tue, 02 Jun 2020 05:00:23 +0000
-From: Lianbo Jiang <lijiang@redhat.com>
-Subject: [PATCH v2] kexec: Do not verify the signature without the lockdown or
- mandatory signature
-Date: Tue,  2 Jun 2020 12:59:52 +0800
-Message-Id: <20200602045952.27487-1-lijiang@redhat.com>
+ id 1jfzQC-0002bY-RV
+ for kexec@lists.infradead.org; Tue, 02 Jun 2020 05:25:11 +0000
+Received: by mail-qt1-f199.google.com with SMTP id w14so5546193qtv.19
+ for <kexec@lists.infradead.org>; Mon, 01 Jun 2020 22:24:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 2 Jun 2020 10:54:46 +0530
+Message-ID: <CACi5LpMKSNz=_OQWmEQ2kaswbjAONjn2pXQiu=jCA=wMt3wGCQ@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,114 +22,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: jbohac@suse.cz, bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com
+To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, x86@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Amit Kachhap <amit.kachhap@arm.com>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Catalin Marinas <catalin.marinas@arm.com>, John Donnelly <john.p.donnelly@oracle.com>, scott.branden@broadcom.com, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Steve Capper <steve.capper@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org
 
-Signature verification is an important security feature, to protect
-system from being attacked with a kernel of unknown origin. Kexec
-rebooting is a way to replace the running kernel, hence need be
-secured carefully.
+Hello,
 
-In the current code of handling signature verification of kexec kernel,
-the logic is very twisted. It mixes signature verification, IMA signature
-appraising and kexec lockdown.
+On Thu, May 14, 2020 at 12:22 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+>
+> Apologies for the delayed update. Its been quite some time since I
+> posted the last version (v5), but I have been really caught up in some
+> other critical issues.
+>
+> Changes since v5:
+> ----------------
+> - v5 can be viewed here:
+>   http://lists.infradead.org/pipermail/kexec/2019-November/024055.html
+> - Addressed review comments from James Morse and Boris.
+> - Added Tested-by received from John on v5 patchset.
+> - Rebased against arm64 (for-next/ptr-auth) branch which has Amit's
+>   patchset for ARMv8.3-A Pointer Authentication feature vmcoreinfo
+>   applied.
+>
+> Changes since v4:
+> ----------------
+> - v4 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+> - Addressed comments from Dave and added patches for documenting
+>   new variables appended to vmcoreinfo documentation.
+> - Added testing report shared by Akashi for PATCH 2/5.
+>
+> Changes since v3:
+> ----------------
+> - v3 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+> - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+>   instead of PTRS_PER_PGD.
+> - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+>   'Documentation/arm64/memory.rst'
+>
+> Changes since v2:
+> ----------------
+> - v2 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+> - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+>   ifdef sections, as suggested by Kazu.
+> - Updated vmcoreinfo documentation to add description about
+>   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+>
+> Changes since v1:
+> ----------------
+> - v1 was sent out as a single patch which can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+>
+> - v2 breaks the single patch into two independent patches:
+>   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+>   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+>
+> This patchset primarily fixes the regression reported in user-space
+> utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+> with the availability of 52-bit address space feature in underlying
+> kernel. These regressions have been reported both on CPUs which don't
+> support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+> and also on prototype platforms (like ARMv8 FVP simulator model) which
+> support ARMv8.2 extensions and are running newer kernels.
+>
+> The reason for these regressions is that right now user-space tools
+> have no direct access to these values (since these are not exported
+> from the kernel) and hence need to rely on a best-guess method of
+> determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+> by underlying kernel.
+>
+> Exporting these values via vmcoreinfo will help user-land in such cases.
+> In addition, as per suggestion from makedumpfile maintainer (Kazu),
+> it makes more sense to append 'MAX_PHYSMEM_BITS' to
+> vmcoreinfo in the core code itself rather than in arm64 arch-specific
+> code, so that the user-space code for other archs can also benefit from
+> this addition to the vmcoreinfo and use it as a standard way of
+> determining 'SECTIONS_SHIFT' value in user-land.
+>
+> Cc: Boris Petkov <bp@alien8.de>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Jonathan Corbet <corbet@lwn.net>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Dave Anderson <anderson@redhat.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: John Donnelly <john.p.donnelly@oracle.com>
+> Cc: scott.branden@broadcom.com
+> Cc: Amit Kachhap <amit.kachhap@arm.com>
+> Cc: x86@kernel.org
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+>
+> Bhupesh Sharma (2):
+>   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+>   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+>
+>  Documentation/admin-guide/kdump/vmcoreinfo.rst | 16 ++++++++++++++++
+>  arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+>  arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+>  kernel/crash_core.c                            |  1 +
+>  4 files changed, 28 insertions(+)
 
-If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
-signature, the supported crypto, and key, we don't think this is wrong,
-Unless kexec lockdown is executed. IMA is considered as another kind of
-signature appraising method.
+Ping. @James Morse , Others
 
-If kexec kernel image has signature/crypto/key, it has to go through the
-signature verification and pass. Otherwise it's seen as verification
-failure, and won't be loaded.
+Please share if you have some comments regarding this patchset.
 
-Seems kexec kernel image with an unqualified signature is even worse than
-those w/o signature at all, this sounds very unreasonable. E.g. If people
-get a unsigned kernel to load, or a kernel signed with expired key, which
-one is more dangerous?
-
-So, here, let's simplify the logic to improve code readability. If the
-KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
-is mandated. Otherwise, we lift the bar for any kernel image.
-
-Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
----
-Changes since v1:
-[1] Modify the log level(suggested by Jiri Bohac)
-
- kernel/kexec_file.c | 34 ++++++----------------------------
- 1 file changed, 6 insertions(+), 28 deletions(-)
-
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index faa74d5f6941..fae496958a68 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -181,34 +181,19 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- static int
- kimage_validate_signature(struct kimage *image)
- {
--	const char *reason;
- 	int ret;
- 
- 	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
- 					   image->kernel_buf_len);
--	switch (ret) {
--	case 0:
--		break;
-+	if (ret) {
- 
--		/* Certain verification errors are non-fatal if we're not
--		 * checking errors, provided we aren't mandating that there
--		 * must be a valid signature.
--		 */
--	case -ENODATA:
--		reason = "kexec of unsigned image";
--		goto decide;
--	case -ENOPKG:
--		reason = "kexec of image with unsupported crypto";
--		goto decide;
--	case -ENOKEY:
--		reason = "kexec of image with unavailable key";
--	decide:
- 		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
--			pr_notice("%s rejected\n", reason);
-+			pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
- 			return ret;
- 		}
- 
--		/* If IMA is guaranteed to appraise a signature on the kexec
-+		/*
-+		 * If IMA is guaranteed to appraise a signature on the kexec
- 		 * image, permit it even if the kernel is otherwise locked
- 		 * down.
- 		 */
-@@ -216,17 +201,10 @@ kimage_validate_signature(struct kimage *image)
- 		    security_locked_down(LOCKDOWN_KEXEC))
- 			return -EPERM;
- 
--		return 0;
--
--		/* All other errors are fatal, including nomem, unparseable
--		 * signatures and signature check failures - even if signatures
--		 * aren't required.
--		 */
--	default:
--		pr_notice("kernel signature verification failed (%d).\n", ret);
-+		pr_debug("kernel signature verification failed (%d).\n", ret);
- 	}
- 
--	return ret;
-+	return 0;
- }
- #endif
- 
--- 
-2.17.1
+Thanks,
+Bhupesh
 
 
 _______________________________________________
