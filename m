@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailout1.w1.samsung.com ([210.118.77.11])
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jg4LX-0004mr-Np
- for kexec@lists.infradead.org; Tue, 02 Jun 2020 10:40:41 +0000
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
- by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id
- 20200602104036euoutp01525bfa6f23fe4340f94aead806cc93d8~Us-XN8u4B0347303473euoutp01h
- for <kexec@lists.infradead.org>; Tue,  2 Jun 2020 10:40:36 +0000 (GMT)
-From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
-Subject: [PATCH] arm: Increase zImage length after getting the tag
-Date: Tue,  2 Jun 2020 12:40:34 +0200
-Message-Id: <20200602104034.31256-1-l.stelmach@samsung.com>
+ id 1jg5Mh-0002GF-Co
+ for kexec@lists.infradead.org; Tue, 02 Jun 2020 11:45:56 +0000
+Date: Tue, 2 Jun 2020 13:45:48 +0200
+From: Jiri Bohac <jbohac@suse.cz>
+Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
+ lockdown or mandatory signature
+Message-ID: <20200602114548.2yevcdfsho4it75u@dwarf.suse.cz>
+References: <20200602045952.27487-1-lijiang@redhat.com>
 MIME-Version: 1.0
-References: <CGME20200602104036eucas1p1fac98e8f4c2ab7272b4fbf95aefef7cd@eucas1p1.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +20,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: horms@verge.net.au, kexec@lists.infradead.org
-Cc: Russell King <rmk@armlinux.org.uk>, =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>, b.zolnierkie@samsung.com
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-SW5jcmVhc2UgdGhlIHNpemUgb2YgdGhlIHpJbWFnZSBhZnRlciBzZWVraW5nIGZvciB0aGUgdGFn
-IHRvIGF2b2lkCnJlYWRpbmcgcGFzdCB0aGUgZW5kIG9mIHRoZSBzdXBwbGllZCBidWZmZXIgc2hv
-dWxkIHRoZXJlIGJlIG5vdCB0YWcKaW4gdGhlIHpJbWFnZS4KCkZpeGVzOiBmNTdmMGJmODk3NWQy
-NGZlMWU3YzQ5MzZmZGZiNWMzYjEyM2FiNzVmClNpZ25lZC1vZmYtYnk6IMWBdWthc3ogU3RlbG1h
-Y2ggPGwuc3RlbG1hY2hAc2Ftc3VuZy5jb20+CkNjOiBSdXNzZWxsIEtpbmcgPHJta0Bhcm1saW51
-eC5vcmcudWs+Ci0tLQoga2V4ZWMvYXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jIHwgMTUgKysr
-KysrKystLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCA3IGRlbGV0aW9u
-cygtKQoKZGlmZiAtLWdpdCBhL2tleGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1hcm0uYyBiL2tl
-eGVjL2FyY2gvYXJtL2tleGVjLXpJbWFnZS1hcm0uYwppbmRleCBmZjYwOWUyLi45MjVhOWJlIDEw
-MDY0NAotLS0gYS9rZXhlYy9hcmNoL2FybS9rZXhlYy16SW1hZ2UtYXJtLmMKKysrIGIva2V4ZWMv
-YXJjaC9hcm0va2V4ZWMtekltYWdlLWFybS5jCkBAIC01NDMsNiArNTQzLDE0IEBAIGludCB6SW1h
-Z2VfYXJtX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYsIG9mZl90
-IGxlbiwKIAkgKi8KIAlrZXJuZWxfbWVtX3NpemUgPSBsZW4gKyA0OwogCisJLyoKKwkgKiBDaGVj
-ayBmb3IgYSBrZXJuZWwgc2l6ZSBleHRlbnNpb24sIGFuZCBzZXQgb3IgdmFsaWRhdGUgdGhlCisJ
-ICogaW1hZ2Ugc2l6ZS4gIFRoaXMgaXMgdGhlIHRvdGFsIHNwYWNlIG5lZWRlZCB0byBhdm9pZCB0
-aGUKKwkgKiBib290IGtlcm5lbCBCU1MsIHNvIG90aGVyIGRhdGEgKHN1Y2ggYXMgaW5pdHJkKSBk
-b2VzIG5vdCBnZXQKKwkgKiBvdmVyd3JpdHRlbi4KKwkgKi8KKwl0YWcgPSBmaW5kX2V4dGVuc2lv
-bl90YWcoYnVmLCBsZW4sIFpJTUFHRV9UQUdfS1JOTF9TSVpFKTsKKwogCS8qCiAJICogVGhlIHpJ
-bWFnZSBsZW5ndGggZG9lcyBub3QgaW5jbHVkZSBpdHMgc3RhY2sgKDRrKSBvciBpdHMKIAkgKiBt
-YWxsb2Mgc3BhY2UgKDY0aykuICBJbmNsdWRlIHRoaXMuCkBAIC01NTEsMTMgKzU1OSw2IEBAIGlu
-dCB6SW1hZ2VfYXJtX2xvYWQoaW50IGFyZ2MsIGNoYXIgKiphcmd2LCBjb25zdCBjaGFyICpidWYs
-IG9mZl90IGxlbiwKIAogCWRiZ3ByaW50ZigiekltYWdlIHJlcXVpcmVzIDB4JTA4bGx4IGJ5dGVz
-XG4iLCAodW5zaWduZWQgbG9uZyBsb25nKWxlbik7CiAKLQkvKgotCSAqIENoZWNrIGZvciBhIGtl
-cm5lbCBzaXplIGV4dGVuc2lvbiwgYW5kIHNldCBvciB2YWxpZGF0ZSB0aGUKLQkgKiBpbWFnZSBz
-aXplLiAgVGhpcyBpcyB0aGUgdG90YWwgc3BhY2UgbmVlZGVkIHRvIGF2b2lkIHRoZQotCSAqIGJv
-b3Qga2VybmVsIEJTUywgc28gb3RoZXIgZGF0YSAoc3VjaCBhcyBpbml0cmQpIGRvZXMgbm90IGdl
-dAotCSAqIG92ZXJ3cml0dGVuLgotCSAqLwotCXRhZyA9IGZpbmRfZXh0ZW5zaW9uX3RhZyhidWYs
-IGxlbiwgWklNQUdFX1RBR19LUk5MX1NJWkUpOwogCWlmICh0YWcpIHsKIAkJdWludDMyX3QgKnAg
-PSAodm9pZCAqKWJ1ZiArIGxlMzJfdG9fY3B1KHRhZy0+dS5rcm5sX3NpemUuc2l6ZV9wdHIpOwog
-CQl1aW50MzJfdCBlZGF0YV9zaXplID0gbGUzMl90b19jcHUoZ2V0X3VuYWxpZ25lZChwKSk7Ci0t
-IAoyLjI2LjIKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Tue, Jun 02, 2020 at 12:59:52PM +0800, Lianbo Jiang wrote:
+> So, here, let's simplify the logic to improve code readability. If the
+> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+> is mandated. Otherwise, we lift the bar for any kernel image.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
+
+Reviewed-by: Jiri Bohac <jbohac@suse.cz>
+
+-- 
+Jiri Bohac <jbohac@suse.cz>
+SUSE Labs, Prague, Czechia
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
