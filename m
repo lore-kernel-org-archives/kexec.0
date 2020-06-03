@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.1\))
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
-Date: Wed, 3 Jun 2020 10:30:27 -0500
-Message-Id: <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
- <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
- <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
- <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
- <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
- <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
- <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
- <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
+MIME-Version: 1.0
+References: <CAJ2QiJKKSy20Z5oZ-yMb3AaioowBWC9ooQeQ+n+vXGLdiYKhgg@mail.gmail.com>
+ <20200529193334.GA451372@bjorn-Precision-5520>
+In-Reply-To: <20200529193334.GA451372@bjorn-Precision-5520>
+From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Date: Wed, 3 Jun 2020 23:12:48 +0530
+Message-ID: <CAJ2QiJ+fhPWAxZXzHhNFLkHr47e+wTqqz+s5r+utgCP=C6qsjw@mail.gmail.com>
+Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,217 +15,756 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: Simon Horman <horms@verge.net.au>, Devicetree List <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, guohanjun@huawei.com, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, nsaenzjulienne@suse.de, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Prabhakar Kushwaha <pkushwaha@marvell.com>, RuiRui Yang <dyoung@redhat.com>, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Myron Stowe <myron.stowe@redhat.com>, Vijay Mohan Pandarathil <vijaymohan.pandarathil@hp.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Cgo+IE9uIEp1biAzLCAyMDIwLCBhdCA4OjIwIEFNLCBjaGVuemhvdSA8Y2hlbnpob3UxMEBodWF3
-ZWkuY29tPiB3cm90ZToKPiAKPiBIaSwKPiAKPiAKPiBPbiAyMDIwLzYvMyAxOTo0NywgUHJhYmhh
-a2FyIEt1c2h3YWhhIHdyb3RlOgo+PiBIaSBDaGVuLAo+PiAKPj4gT24gVHVlLCBKdW4gMiwgMjAy
-MCBhdCA4OjEyIFBNIEpvaG4gRG9ubmVsbHkgPGpvaG4ucC5kb25uZWxseUBvcmFjbGUuY29tPiB3
-cm90ZToKPj4+IAo+Pj4gCj4+Pj4gT24gSnVuIDIsIDIwMjAsIGF0IDEyOjM4IEFNLCBQcmFiaGFr
-YXIgS3VzaHdhaGEgPHByYWJoYWthci5wa2luQGdtYWlsLmNvbT4gd3JvdGU6Cj4+Pj4gCj4+Pj4g
-T24gVHVlLCBKdW4gMiwgMjAyMCBhdCAzOjI5IEFNIEpvaG4gRG9ubmVsbHkgPGpvaG4ucC5kb25u
-ZWxseUBvcmFjbGUuY29tPiB3cm90ZToKPj4+Pj4gSGkgLiAgU2VlIGJlbG93ICEKPj4+Pj4gCj4+
-Pj4+PiBPbiBKdW4gMSwgMjAyMCwgYXQgNDowMiBQTSwgQmh1cGVzaCBTaGFybWEgPGJoc2hhcm1h
-QHJlZGhhdC5jb20+IHdyb3RlOgo+Pj4+Pj4gCj4+Pj4+PiBIaSBKb2huLAo+Pj4+Pj4gCj4+Pj4+
-PiBPbiBUdWUsIEp1biAyLCAyMDIwIGF0IDE6MDEgQU0gSm9obiBEb25uZWxseSA8Sm9obi5QLmRv
-bm5lbGx5QG9yYWNsZS5jb20+IHdyb3RlOgo+Pj4+Pj4+IEhpLAo+Pj4+Pj4+IAo+Pj4+Pj4+IAo+
-Pj4+Pj4+IE9uIDYvMS8yMCA3OjAyIEFNLCBQcmFiaGFrYXIgS3VzaHdhaGEgd3JvdGU6Cj4+Pj4+
-Pj4+IEhpIENoZW4sCj4+Pj4+Pj4+IAo+Pj4+Pj4+PiBPbiBUaHUsIE1heSAyMSwgMjAyMCBhdCAz
-OjA1IFBNIENoZW4gWmhvdSA8Y2hlbnpob3UxMEBodWF3ZWkuY29tPiB3cm90ZToKPj4+Pj4+Pj4+
-IFRoaXMgcGF0Y2ggc2VyaWVzIGVuYWJsZSByZXNlcnZpbmcgY3Jhc2hrZXJuZWwgYWJvdmUgNEcg
-aW4gYXJtNjQuCj4+Pj4+Pj4+PiAKPj4+Pj4+Pj4+IFRoZXJlIGFyZSBmb2xsb3dpbmcgaXNzdWVz
-IGluIGFybTY0IGtkdW1wOgo+Pj4+Pj4+Pj4gMS4gV2UgdXNlIGNyYXNoa2VybmVsPVggdG8gcmVz
-ZXJ2ZSBjcmFzaGtlcm5lbCBiZWxvdyA0Rywgd2hpY2ggd2lsbCBmYWlsCj4+Pj4+Pj4+PiB3aGVu
-IHRoZXJlIGlzIG5vIGVub3VnaCBsb3cgbWVtb3J5Lgo+Pj4+Pj4+Pj4gMi4gQ3VycmVudGx5LCBj
-cmFzaGtlcm5lbD1ZQFggY2FuIGJlIHVzZWQgdG8gcmVzZXJ2ZSBjcmFzaGtlcm5lbCBhYm92ZSA0
-RywKPj4+Pj4+Pj4+IGluIHRoaXMgY2FzZSwgaWYgc3dpb3RsYiBvciBETUEgYnVmZmVycyBhcmUg
-cmVxdWlyZWQsIGNyYXNoIGR1bXAga2VybmVsCj4+Pj4+Pj4+PiB3aWxsIGJvb3QgZmFpbHVyZSBi
-ZWNhdXNlIHRoZXJlIGlzIG5vIGxvdyBtZW1vcnkgYXZhaWxhYmxlIGZvciBhbGxvY2F0aW9uLgo+
-Pj4+Pj4+Pj4gCj4+Pj4+Pj4+IFdlIGFyZSBnZXR0aW5nICJ3YXJuX2FsbG9jIiBbMV0gd2Fybmlu
-ZyBkdXJpbmcgYm9vdCBvZiBrZHVtcCBrZXJuZWwKPj4+Pj4+Pj4gd2l0aCBib290YXJncyBhcyBb
-Ml0gb2YgcHJpbWFyeSBrZXJuZWwuCj4+Pj4+Pj4+IFRoaXMgZXJyb3Igb2JzZXJ2ZWQgb24gVGh1
-bmRlclgyICBBUk02NCBwbGF0Zm9ybS4KPj4+Pj4+Pj4gCj4+Pj4+Pj4+IEl0IGlzIG9ic2VydmVk
-IHdpdGggbGF0ZXN0IHVwc3RyZWFtIHRhZyAodjUuNy1yYzMpIHdpdGggdGhpcyBwYXRjaCBzZXQK
-Pj4+Pj4+Pj4gYW5kIGh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvcGlwZXJtYWlsL2tleGVjLzIwMjAtTWF5LzAyNTEyOC5odG1sX187ISFHcWl2
-UFZhN0JyaW8hTG5UU0FSa0N0MFYwRm96UjBLbXFvb2FINUFEdGRYdnMzbVBkUDNLUlZxQUxtdlNL
-MlZtQ2tJUEloc2F4YmlJQUFsenUkCj4+Pj4+Pj4+IEFsc28gKip3aXRob3V0KiogdGhpcyBwYXRj
-aC1zZXQKPj4+Pj4+Pj4gImh0dHBzOi8vdXJsZGVmZW5zZS5jb20vdjMvX19odHRwczovL3d3dy5z
-cGluaWNzLm5ldC9saXN0cy9hcm0ta2VybmVsL21zZzgwNjg4Mi5odG1sX187ISFHcWl2UFZhN0Jy
-aW8hTG5UU0FSa0N0MFYwRm96UjBLbXFvb2FINUFEdGRYdnMzbVBkUDNLUlZxQUxtdlNLMlZtQ2tJ
-UEloc2F4YmpDNnVqTUEkIgo+Pj4+Pj4+PiAKPj4+Pj4+Pj4gVGhpcyBpc3N1ZSBjb21lcyB3aGVu
-ZXZlciBjcmFzaGtlcm5lbCBtZW1vcnkgaXMgcmVzZXJ2ZWQgYWZ0ZXIgMHhjMDAwXzAwMDAuCj4+
-Pj4+Pj4+IE1vcmUgZGV0YWlscyBkaXNjdXNzZWQgZWFybGllciBpbgo+Pj4+Pj4+PiBodHRwczov
-L3VybGRlZmVuc2UuY29tL3YzL19faHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtl
-cm5lbC9tc2c4MDY4ODIuaHRtbF9fOyEhR3FpdlBWYTdCcmlvIUxuVFNBUmtDdDBWMEZvelIwS21x
-b29hSDVBRHRkWHZzM21QZFAzS1JWcUFMbXZTSzJWbUNrSVBJaHNheGJqQzZ1ak1BJCAgd2l0aG91
-dCBhbnkKPj4+Pj4+Pj4gc29sdXRpb24KPj4+Pj4+Pj4gCj4+Pj4+Pj4+IFRoaXMgcGF0Y2gtc2V0
-IGlzIGV4cGVjdGVkIHRvIHNvbHZlIHNpbWlsYXIga2luZCBvZiBpc3N1ZS4KPj4+Pj4+Pj4gaS5l
-LiBsb3cgbWVtb3J5IGlzIG9ubHkgdGFyZ2V0ZWQgZm9yIERNQSwgc3dpb3RsYjsgU28gYWJvdmUg
-bWVudGlvbmVkCj4+Pj4+Pj4+IG9ic2VydmF0aW9uIHNob3VsZCBiZSBjb25zaWRlcmVkL2ZpeGVk
-LiAuCj4+Pj4+Pj4+IAo+Pj4+Pj4+PiAtLXBrCj4+Pj4+Pj4+IAo+Pj4+Pj4+PiBbMV0KPj4+Pj4+
-Pj4gWyAgIDMwLjM2NjY5NV0gRE1JOiBDYXZpdW0gSW5jLiBTYWJlci9TYWJlciwgQklPUwo+Pj4+
-Pj4+PiBUWDItRlctUmVsZWFzZS0zLjEtYnVpbGRfMDEtMjgwMy1nNzQyNTNhNTQxYSBtbS9kZC95
-eXl5Cj4+Pj4+Pj4+IFsgICAzMC4zNjc2OTZdIE5FVDogUmVnaXN0ZXJlZCBwcm90b2NvbCBmYW1p
-bHkgMTYKPj4+Pj4+Pj4gWyAgIDMwLjM2OTk3M10gc3dhcHBlci8wOiBwYWdlIGFsbG9jYXRpb24g
-ZmFpbHVyZTogb3JkZXI6NiwKPj4+Pj4+Pj4gbW9kZToweDEoR0ZQX0RNQSksIG5vZGVtYXNrPShu
-dWxsKSxjcHVzZXQ9LyxtZW1zX2FsbG93ZWQ9MAo+Pj4+Pj4+PiBbICAgMzAuMzY5OTgwXSBDUFU6
-IDAgUElEOiAxIENvbW06IHN3YXBwZXIvMCBOb3QgdGFpbnRlZCA1LjcuMC1yYzMrICMxMjEKPj4+
-Pj4+Pj4gWyAgIDMwLjM2OTk4MV0gSGFyZHdhcmUgbmFtZTogQ2F2aXVtIEluYy4gU2FiZXIvU2Fi
-ZXIsIEJJT1MKPj4+Pj4+Pj4gVFgyLUZXLVJlbGVhc2UtMy4xLWJ1aWxkXzAxLTI4MDMtZzc0MjUz
-YTU0MWEgbW0vZGQveXl5eQo+Pj4+Pj4+PiBbICAgMzAuMzY5OTg0XSBDYWxsIHRyYWNlOgo+Pj4+
-Pj4+PiBbICAgMzAuMzY5OTg5XSAgZHVtcF9iYWNrdHJhY2UrMHgwLzB4MWY4Cj4+Pj4+Pj4+IFsg
-ICAzMC4zNjk5OTFdICBzaG93X3N0YWNrKzB4MjAvMHgzMAo+Pj4+Pj4+PiBbICAgMzAuMzY5OTk3
-XSAgZHVtcF9zdGFjaysweGMwLzB4MTBjCj4+Pj4+Pj4+IFsgICAzMC4zNzAwMDFdICB3YXJuX2Fs
-bG9jKzB4MTBjLzB4MTc4Cj4+Pj4+Pj4+IFsgICAzMC4zNzAwMDRdICBfX2FsbG9jX3BhZ2VzX3Ns
-b3dwYXRoLmNvbnN0cHJvcC4xMTErMHhiMTAvMHhiNTAKPj4+Pj4+Pj4gWyAgIDMwLjM3MDAwNl0g
-IF9fYWxsb2NfcGFnZXNfbm9kZW1hc2srMHgyYjQvMHgzMDAKPj4+Pj4+Pj4gWyAgIDMwLjM3MDAw
-OF0gIGFsbG9jX3BhZ2VfaW50ZXJsZWF2ZSsweDI0LzB4OTgKPj4+Pj4+Pj4gWyAgIDMwLjM3MDAx
-MV0gIGFsbG9jX3BhZ2VzX2N1cnJlbnQrMHhlNC8weDEwOAo+Pj4+Pj4+PiBbICAgMzAuMzcwMDE3
-XSAgZG1hX2F0b21pY19wb29sX2luaXQrMHg0NC8weDFhNAo+Pj4+Pj4+PiBbICAgMzAuMzcwMDIw
-XSAgZG9fb25lX2luaXRjYWxsKzB4NTQvMHgyMjgKPj4+Pj4+Pj4gWyAgIDMwLjM3MDAyN10gIGtl
-cm5lbF9pbml0X2ZyZWVhYmxlKzB4MjI4LzB4MmNjCj4+Pj4+Pj4+IFsgICAzMC4zNzAwMzFdICBr
-ZXJuZWxfaW5pdCsweDFjLzB4MTEwCj4+Pj4+Pj4+IFsgICAzMC4zNzAwMzRdICByZXRfZnJvbV9m
-b3JrKzB4MTAvMHgxOAo+Pj4+Pj4+PiBbICAgMzAuMzcwMDM2XSBNZW0tSW5mbzoKPj4+Pj4+Pj4g
-WyAgIDMwLjM3MDA2NF0gYWN0aXZlX2Fub246MCBpbmFjdGl2ZV9hbm9uOjAgaXNvbGF0ZWRfYW5v
-bjowCj4+Pj4+Pj4+IFsgICAzMC4zNzAwNjRdICBhY3RpdmVfZmlsZTowIGluYWN0aXZlX2ZpbGU6
-MCBpc29sYXRlZF9maWxlOjAKPj4+Pj4+Pj4gWyAgIDMwLjM3MDA2NF0gIHVuZXZpY3RhYmxlOjAg
-ZGlydHk6MCB3cml0ZWJhY2s6MCB1bnN0YWJsZTowCj4+Pj4+Pj4+IFsgICAzMC4zNzAwNjRdICBz
-bGFiX3JlY2xhaW1hYmxlOjM0IHNsYWJfdW5yZWNsYWltYWJsZTo0NDM4Cj4+Pj4+Pj4+IFsgICAz
-MC4zNzAwNjRdICBtYXBwZWQ6MCBzaG1lbTowIHBhZ2V0YWJsZXM6MTQgYm91bmNlOjAKPj4+Pj4+
-Pj4gWyAgIDMwLjM3MDA2NF0gIGZyZWU6MTUzNzcxOSBmcmVlX3BjcDoyMTkgZnJlZV9jbWE6MAo+
-Pj4+Pj4+PiBbICAgMzAuMzcwMDcwXSBOb2RlIDAgYWN0aXZlX2Fub246MGtCIGluYWN0aXZlX2Fu
-b246MGtCCj4+Pj4+Pj4+IGFjdGl2ZV9maWxlOjBrQiBpbmFjdGl2ZV9maWxlOjBrQiB1bmV2aWN0
-YWJsZTowa0IgaXNvbGF0ZWQoYW5vbik6MGtCCj4+Pj4+Pj4+IGlzb2xhdGVkKGZpbGUpOjBrQiBt
-YXBwZWQ6MGtCIGRpcnR5OjBrQiB3cml0ZWJhY2s6MGtCIHNobWVtOjBrQgo+Pj4+Pj4+PiBzaG1l
-bV90aHA6IDBrQiBzaG1lbV9wbWRtYXBwZWQ6IDBrQiBhbm9uX3RocDogMGtCIHdyaXRlYmFja190
-bXA6MGtCCj4+Pj4+Pj4+IHVuc3RhYmxlOjBrQiBhbGxfdW5yZWNsYWltYWJsZT8gbm8KPj4+Pj4+
-Pj4gWyAgIDMwLjM3MDA3M10gTm9kZSAxIGFjdGl2ZV9hbm9uOjBrQiBpbmFjdGl2ZV9hbm9uOjBr
-Qgo+Pj4+Pj4+PiBhY3RpdmVfZmlsZTowa0IgaW5hY3RpdmVfZmlsZTowa0IgdW5ldmljdGFibGU6
-MGtCIGlzb2xhdGVkKGFub24pOjBrQgo+Pj4+Pj4+PiBpc29sYXRlZChmaWxlKTowa0IgbWFwcGVk
-OjBrQiBkaXJ0eTowa0Igd3JpdGViYWNrOjBrQiBzaG1lbTowa0IKPj4+Pj4+Pj4gc2htZW1fdGhw
-OiAwa0Igc2htZW1fcG1kbWFwcGVkOiAwa0IgYW5vbl90aHA6IDBrQiB3cml0ZWJhY2tfdG1wOjBr
-Qgo+Pj4+Pj4+PiB1bnN0YWJsZTowa0IgYWxsX3VucmVjbGFpbWFibGU/IG5vCj4+Pj4+Pj4+IFsg
-ICAzMC4zNzAwNzldIE5vZGUgMCBETUEgZnJlZTowa0IgbWluOjBrQiBsb3c6MGtCIGhpZ2g6MGtC
-Cj4+Pj4+Pj4+IHJlc2VydmVkX2hpZ2hhdG9taWM6MEtCIGFjdGl2ZV9hbm9uOjBrQiBpbmFjdGl2
-ZV9hbm9uOjBrQgo+Pj4+Pj4+PiBhY3RpdmVfZmlsZTowa0IgaW5hY3RpdmVfZmlsZTowa0IgdW5l
-dmljdGFibGU6MGtCIHdyaXRlcGVuZGluZzowa0IKPj4+Pj4+Pj4gcHJlc2VudDoxMjhrQiBtYW5h
-Z2VkOjBrQiBtbG9ja2VkOjBrQiBrZXJuZWxfc3RhY2s6MGtCIHBhZ2V0YWJsZXM6MGtCCj4+Pj4+
-Pj4+IGJvdW5jZTowa0IgZnJlZV9wY3A6MGtCIGxvY2FsX3BjcDowa0IgZnJlZV9jbWE6MGtCCj4+
-Pj4+Pj4+IFsgICAzMC4zNzAwODRdIGxvd21lbV9yZXNlcnZlW106IDAgMjUwIDYwNjMgNjA2Mwo+
-Pj4+Pj4+PiBbICAgMzAuMzcwMDkwXSBOb2RlIDAgRE1BMzIgZnJlZToyNTYwMDBrQiBtaW46NDA4
-a0IgbG93OjY2NGtCCj4+Pj4+Pj4+IGhpZ2g6OTIwa0IgcmVzZXJ2ZWRfaGlnaGF0b21pYzowS0Ig
-YWN0aXZlX2Fub246MGtCIGluYWN0aXZlX2Fub246MGtCCj4+Pj4+Pj4+IGFjdGl2ZV9maWxlOjBr
-QiBpbmFjdGl2ZV9maWxlOjBrQiB1bmV2aWN0YWJsZTowa0Igd3JpdGVwZW5kaW5nOjBrQgo+Pj4+
-Pj4+PiBwcmVzZW50OjI2OTcwMGtCIG1hbmFnZWQ6MjU2MDAwa0IgbWxvY2tlZDowa0Iga2VybmVs
-X3N0YWNrOjBrQgo+Pj4+Pj4+PiBwYWdldGFibGVzOjBrQiBib3VuY2U6MGtCIGZyZWVfcGNwOjBr
-QiBsb2NhbF9wY3A6MGtCIGZyZWVfY21hOjBrQgo+Pj4+Pj4+PiBbICAgMzAuMzcwMDk0XSBsb3dt
-ZW1fcmVzZXJ2ZVtdOiAwIDAgNTgxMyA1ODEzCj4+Pj4+Pj4+IFsgICAzMC4zNzAxMDBdIE5vZGUg
-MCBOb3JtYWwgZnJlZTo1ODk0ODc2a0IgbWluOjk1NTJrQiBsb3c6MTU1MDRrQgo+Pj4+Pj4+PiBo
-aWdoOjIxNDU2a0IgcmVzZXJ2ZWRfaGlnaGF0b21pYzowS0IgYWN0aXZlX2Fub246MGtCIGluYWN0
-aXZlX2Fub246MGtCCj4+Pj4+Pj4+IGFjdGl2ZV9maWxlOjBrQiBpbmFjdGl2ZV9maWxlOjBrQiB1
-bmV2aWN0YWJsZTowa0Igd3JpdGVwZW5kaW5nOjBrQgo+Pj4+Pj4+PiBwcmVzZW50OjgzODg2MDhr
-QiBtYW5hZ2VkOjU5NTMxMTJrQiBtbG9ja2VkOjBrQiBrZXJuZWxfc3RhY2s6MjE2NzJrQgo+Pj4+
-Pj4+PiBwYWdldGFibGVzOjU2a0IgYm91bmNlOjBrQiBmcmVlX3BjcDo4NzZrQiBsb2NhbF9wY3A6
-MTc2a0IgZnJlZV9jbWE6MGtCCj4+Pj4+Pj4+IFsgICAzMC4zNzAxMDRdIGxvd21lbV9yZXNlcnZl
-W106IDAgMCAwIDAKPj4+Pj4+Pj4gWyAgIDMwLjM3MDEwN10gTm9kZSAwIERNQTogMCo0a0IgMCo4
-a0IgMCoxNmtCIDAqMzJrQiAwKjY0a0IgMCoxMjhrQgo+Pj4+Pj4+PiAwKjI1NmtCIDAqNTEya0Ig
-MCoxMDI0a0IgMCoyMDQ4a0IgMCo0MDk2a0IgPSAwa0IKPj4+Pj4+Pj4gWyAgIDMwLjM3MDExM10g
-Tm9kZSAwIERNQTMyOiAwKjRrQiAwKjhrQiAwKjE2a0IgMCozMmtCIDAqNjRrQiAwKjEyOGtCCj4+
-Pj4+Pj4+IDAqMjU2a0IgMCo1MTJrQiAwKjEwMjRrQiAxKjIwNDhrQiAoTSkgNjIqNDA5NmtCIChN
-KSA9IDI1NjAwMGtCCj4+Pj4+Pj4+IFsgICAzMC4zNzAxMTldIE5vZGUgMCBOb3JtYWw6IDIqNGtC
-IChNKSAzKjhrQiAoTUUpIDIqMTZrQiAoVUUpIDMqMzJrQgo+Pj4+Pj4+PiAoVU0pIDEqNjRrQiAo
-VSkgMioxMjhrQiAoTSkgMioyNTZrQiAoTUUpIDMqNTEya0IgKE1FKSAzKjEwMjRrQiAoTUUpCj4+
-Pj4+Pj4+IDMqMjA0OGtCIChVTUUpIDE0MzYqNDA5NmtCIChNKSA9IDU4OTM2MDBrQgo+Pj4+Pj4+
-PiBbICAgMzAuMzcwMTI5XSBOb2RlIDAgaHVnZXBhZ2VzX3RvdGFsPTAgaHVnZXBhZ2VzX2ZyZWU9
-MAo+Pj4+Pj4+PiBodWdlcGFnZXNfc3VycD0wIGh1Z2VwYWdlc19zaXplPTEwNDg1NzZrQgo+Pj4+
-Pj4+PiBbICAgMzAuMzcwMTMwXSAwIHRvdGFsIHBhZ2VjYWNoZSBwYWdlcwo+Pj4+Pj4+PiBbICAg
-MzAuMzcwMTMyXSAwIHBhZ2VzIGluIHN3YXAgY2FjaGUKPj4+Pj4+Pj4gWyAgIDMwLjM3MDEzNF0g
-U3dhcCBjYWNoZSBzdGF0czogYWRkIDAsIGRlbGV0ZSAwLCBmaW5kIDAvMAo+Pj4+Pj4+PiBbICAg
-MzAuMzcwMTM1XSBGcmVlIHN3YXAgID0gMGtCCj4+Pj4+Pj4+IFsgICAzMC4zNzAxMzZdIFRvdGFs
-IHN3YXAgPSAwa0IKPj4+Pj4+Pj4gWyAgIDMwLjM3MDEzN10gMjE2NDYwOSBwYWdlcyBSQU0KPj4+
-Pj4+Pj4gWyAgIDMwLjM3MDEzOV0gMCBwYWdlcyBIaWdoTWVtL01vdmFibGVPbmx5Cj4+Pj4+Pj4+
-IFsgICAzMC4zNzAxNDBdIDYxMjMzMSBwYWdlcyByZXNlcnZlZAo+Pj4+Pj4+PiBbICAgMzAuMzcw
-MTQxXSAwIHBhZ2VzIGh3cG9pc29uZWQKPj4+Pj4+Pj4gWyAgIDMwLjM3MDE0M10gRE1BOiBmYWls
-ZWQgdG8gYWxsb2NhdGUgMjU2IEtpQiBwb29sIGZvciBhdG9taWMKPj4+Pj4+Pj4gY29oZXJlbnQg
-YWxsb2NhdGlvbgo+Pj4+Pj4+IAo+Pj4+Pj4+IER1cmluZyBteSB0ZXN0aW5nIEkgc2F3IHRoZSBz
-YW1lIGVycm9yIGFuZCBDaGVuJ3MgIHNvbHV0aW9uIGNvcnJlY3RlZCBpdCAuCj4+Pj4+PiBXaGlj
-aCBjb21iaW5hdGlvbiB5b3UgYXJlIHVzaW5nIG9uIHlvdXIgc2lkZT8gSSBhbSB1c2luZyBQcmFi
-aGFrYXIncwo+Pj4+Pj4gc3VnZ2VzdGVkIGVudmlyb25tZW50IGFuZCBjYW4gcmVwcm9kdWNlIHRo
-ZSBpc3N1ZQo+Pj4+Pj4gd2l0aCBvciB3aXRob3V0IENoZW4ncyBjcmFzaGtlcm5lbCBzdXBwb3J0
-IGFib3ZlIDRHIHBhdGNoc2V0Lgo+Pj4+Pj4gCj4+Pj4+PiBJIGFtIGFsc28gdXNpbmcgYSBUaHVu
-ZGVyWDIgcGxhdGZvcm0gd2l0aCBsYXRlc3QgbWFrZWR1bXBmaWxlIGNvZGUgYW5kCj4+Pj4+PiBr
-ZXhlYy10b29scyAod2l0aCB0aGUgc3VnZ2VzdGVkIHBhdGNoCj4+Pj4+PiA8aHR0cHM6Ly91cmxk
-ZWZlbnNlLmNvbS92My9fX2h0dHBzOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwva2V4
-ZWMvMjAyMC1NYXkvMDI1MTI4Lmh0bWxfXzshIUdxaXZQVmE3QnJpbyFKNmxVaWc1OC1HdzZUS1pu
-RUVZekVlU1UzNlQtMVNxbEIxa0ltVTAweHRYX2xzczVUeC1KYlVtTEU5VEpDM2ZvWEJMZyQgPiku
-Cj4+Pj4+PiAKPj4+Pj4+IFRoYW5rcywKPj4+Pj4+IEJodXBlc2gKPj4+Pj4gCj4+Pj4+IEkgZGlk
-IHRoaXMgYWN0aXZpdHkgNSBtb250aHMgYWdvIGFuZCBJIGhhdmUgbW92ZWQgb24gdG8gb3RoZXIg
-YWN0aXZpdGllcy4gTXkgRE1BIGZhaWx1cmVzIHdlcmUgcmVsYXRlZCB0byBQQ0kgZGV2aWNlcyB0
-aGF0IGNvdWxkIG5vdCBiZSBlbnVtZXJhdGVkIGJlY2F1c2UgIGxvdy1ETUEgc3BhY2Ugd2FzIG5v
-dCAgYXZhaWxhYmxlIHdoZW4gY3Jhc2hrZXJuZWwgd2FzIG1vdmVkIGFib3ZlIDRHOyBJIGRvbuKA
-mXQgcmVjYWxsIHRoZSBleGFjdCBwbGF0Zm9ybS4KPj4+Pj4gCj4+Pj4+IAo+Pj4+PiAKPj4+Pj4g
-Rm9yIHRoaXMgZmFpbHVyZSAsCj4+Pj4+IAo+Pj4+Pj4+PiBETUE6IGZhaWxlZCB0byBhbGxvY2F0
-ZSAyNTYgS2lCIHBvb2wgZm9yIGF0b21pYwo+Pj4+Pj4+PiBjb2hlcmVudCBhbGxvY2F0aW9uCj4+
-Pj4+IAo+Pj4+PiBJcyBkdWUgdG8gOgo+Pj4+PiAKPj4+Pj4gCj4+Pj4+IDM2MTgwODJjCj4+Pj4+
-ICgiYXJtNjQgdXNlIGJvdGggWk9ORV9ETUEgYW5kIFpPTkVfRE1BMzIiKQo+Pj4+PiAKPj4+Pj4g
-V2l0aCB0aGUgaW50cm9kdWN0aW9uIG9mIFpPTkVfRE1BIHRvIHN1cHBvcnQgdGhlIFJhc3BiZXJy
-eSBETUEKPj4+Pj4gcmVnaW9uIGJlbG93IDFHLCB0aGUgY3Jhc2hrZXJuZWwgaXMgcGxhY2VkIGlu
-IHRoZSB1cHBlciA0Rwo+Pj4+PiBaT05FX0RNQV8zMiByZWdpb24uIFNpbmNlIHRoZSBjcmFzaGtl
-cm5lbCBkb2VzIG5vdCBoYXZlIGFjY2Vzcwo+Pj4+PiB0byB0aGUgWk9ORV9ETUEgcmVnaW9uLCBp
-dCBwcmludHMgb3V0IGNhbGwgdHJhY2UgZHVyaW5nIGJvb3R1cC4KPj4+Pj4gCj4+Pj4+IEl0IGlz
-IGR1ZSB0byBoYXZpbmcgdGhpcyBDT05GSUcgaXRlbSAgT04gIDoKPj4+Pj4gCj4+Pj4+IAo+Pj4+
-PiBDT05GSUdfWk9ORV9ETUE9eQo+Pj4+PiAKPj4+Pj4gVHVybmluZyBvZmYgWk9ORV9ETUEgZml4
-ZXMgYSBpc3N1ZSBhbmQgUmFzcGJlcnJ5IFBJIDQgd2lsbAo+Pj4+PiB1c2UgdGhlIGRldmljZSB0
-cmVlIHRvIHNwZWNpZnkgbWVtb3J5IGJlbG93IDFHLgo+Pj4+PiAKPj4+Pj4gCj4+Pj4gRGlzYWJs
-aW5nIFpPTkVfRE1BIGlzIHRlbXBvcmFyeSBzb2x1dGlvbi4gIFdlIG1heSBuZWVkIHByb3BlciBz
-b2x1dGlvbgo+Pj4gCj4+PiBQZXJoYXBzIHRoZSBSYXNwYmVycnkgcGxhdGZvcm0gY29uZmlndXJh
-dGlvbiBkZXBlbmRlbmNpZXMgbmVlZCBzZXBhcmF0ZWQgIGZyb20g4oCcc2VydmVyIGNsYXNz4oCd
-IEFybSAgZXF1aXBtZW50ID8gIE9yIGF1dG8tY29uZmlndXJlZCBvbiBib290ID8gIENvbnN1bHQg
-YW4gZXhwZXJ0IDstKQo+Pj4gCj4+PiAKPj4+IAo+Pj4+PiBJIHdvdWxkIGxpa2UgdG8gc2VlIENo
-ZW7igJlzIGZlYXR1cmUgYWRkZWQgLCBwZXJoYXBzIGFzIEVYUEVSSU1FTlRBTCwgIHNvIHdlIGNh
-biBnZXQgc29tZSBjb25maWd1cmF0aW9uIHRlc3RpbmcgZG9uZSBvbiBpdC4gICBJdCBjb3JyZWN0
-cyBoYXZpbmcgYSBETUEgem9uZSBpbiBsb3cgbWVtb3J5IHdoaWxlIGNyYXNoLWtlcm5lbCBpcyBh
-Ym92ZSA0R0IuICBUaGlzIGhhcyBiZWVuIGdvaW5nIG9uIGZvciBhIHllYXIgbm93Lgo+Pj4+IEkg
-d2lsbCBhbHNvIGxpa2UgdGhpcyBwYXRjaCB0byBiZSBhZGRlZCBpbiBMaW51eCBhcyBlYXJseSBh
-cyBwb3NzaWJsZS4KPj4+PiAKPj4+PiBJc3N1ZSBtZW50aW9uZWQgYnkgbWUgaGFwcGVucyB3aXRo
-IG9yIHdpdGhvdXQgdGhpcyBwYXRjaC4KPj4+PiAKPj4+PiBUaGlzIHBhdGNoLXNldCBjYW4gY29u
-c2lkZXIgZml4aW5nIGJlY2F1c2UgaXQgdXNlcyBsb3cgbWVtb3J5IGZvciBETUEKPj4+PiAmIHN3
-aW90bGIgb25seS4KPj4+PiBXZSBjYW4gY29uc2lkZXIgcmVzdHJpY3RpbmcgY3Jhc2hrZXJuZWwg
-d2l0aGluIHRoZSByZXF1aXJlZCByYW5nZSBsaWtlIGJlbG93Cj4+Pj4gCj4+Pj4gZGlmZiAtLWdp
-dCBhL2tlcm5lbC9jcmFzaF9jb3JlLmMgYi9rZXJuZWwvY3Jhc2hfY29yZS5jCj4+Pj4gaW5kZXgg
-N2Y5ZTVhNmRjNDhjLi5iZDY3YjkwZDM1YmQgMTAwNjQ0Cj4+Pj4gLS0tIGEva2VybmVsL2NyYXNo
-X2NvcmUuYwo+Pj4+ICsrKyBiL2tlcm5lbC9jcmFzaF9jb3JlLmMKPj4+PiBAQCAtMzU0LDcgKzM1
-NCw3IEBAIGludCBfX2luaXQgcmVzZXJ2ZV9jcmFzaGtlcm5lbF9sb3codm9pZCkKPj4+PiAgICAg
-ICAgICAgICAgICAgICAgICAgcmV0dXJuIDA7Cj4+Pj4gICAgICAgfQo+Pj4+IAo+Pj4+IC0gICAg
-ICAgbG93X2Jhc2UgPSBtZW1ibG9ja19maW5kX2luX3JhbmdlKDAsIDFVTEwgPDwgMzIsIGxvd19z
-aXplLCBDUkFTSF9BTElHTik7Cj4+Pj4gKyAgICAgICBsb3dfYmFzZSA9IG1lbWJsb2NrX2ZpbmRf
-aW5fcmFuZ2UoMCwweGMwMDAwMDAwLCBsb3dfc2l6ZSwgQ1JBU0hfQUxJR04pOwo+Pj4+ICAgICAg
-IGlmICghbG93X2Jhc2UpIHsKPj4+PiAgICAgICAgICAgICAgIHByX2VycigiQ2Fubm90IHJlc2Vy
-dmUgJWxkTUIgY3Jhc2hrZXJuZWwgbG93IG1lbW9yeSwKPj4+PiBwbGVhc2UgdHJ5IHNtYWxsZXIg
-c2l6ZS5cbiIsCj4+Pj4gICAgICAgICAgICAgICAgICAgICAgKHVuc2lnbmVkIGxvbmcpKGxvd19z
-aXplID4+IDIwKSk7Cj4+Pj4gCj4+Pj4gCj4+PiAgICBJIHN1c3BlY3QgIDB4YzAwMDAwMDAgIHdv
-dWxkIG5lZWQgdG8gYmUgYSBDT05GSUcgaXRlbSAgYW5kIG5vdCBoYXJkLWNvZGVkLgo+Pj4gCj4+
-IGlmIHlvdSBjb25zaWRlciB0aGlzIGFzIHZhbGlkIGNoYW5nZSwgIGNhbiB5b3UgcGxlYXNlIGlu
-Y29ycG9yYXRlIGFzCj4+IHBhcnQgb2YgeW91ciBwYXRjaC1zZXQuCj4gCj4gQWZ0ZXIgY29tbWl0
-IDFhOGUxY2VmNyAoImFybTY0OiB1c2UgYm90aCBaT05FX0RNQSBhbmQgWk9ORV9ETUEzMiIp77yM
-dGhlIDAtNEcgbWVtb3J5IGlzIHNwbGl0ZWQKPiB0byBETUEgW21lbSAweDAwMDAwMDAwMDAwMDAw
-MDAtMHgwMDAwMDAwMDNmZmZmZmZmXSBhbmQgRE1BMzIgW21lbSAweDAwMDAwMDAwNDAwMDAwMDAt
-MHgwMDAwMDAwMGZmZmZmZmZmXSBvbiBhcm02NC4KPiAKPiBGcm9tIHRoZSBhYm92ZSBkaXNjdXNz
-aW9uLCBvbiB5b3VyIHBsYXRmb3JtLCB0aGUgbG93IGNyYXNoa2VybmVsIGZhbGwgaW4gRE1BMzIg
-cmVnaW9uLCBidXQgeW91ciBlbnZpcm9ubWVudCBuZWVkcyB0byBhY2Nlc3MgRE1BCj4gcmVnaW9u
-LCBzbyB0aGVyZSBpcyB0aGUgY2FsbCB0cmFjZS4KPiAKPiBJIGhhdmUgYSBxdWVzdGlvbiwgd2h5
-IGRvIHlvdSBjaG9vc2UgMHhjMDAwMDAwMCBoZXJlPwo+IAo+IEJlc2lkZXMsIHRoaXMgaXMgY29t
-bW9uIGNvZGUsIHdlIGFsc28gbmVlZCB0byBjb25zaWRlciBhYm91dCB4ODYuCj4gCgogKyBuc2Fl
-bnpqdWxpZW5uZUBzdXNlLmRlIAoKICBFeGFjdGx5IC4gIFRoaXMgaXMgd2h5IGl0IG5lZWRzIHRv
-IGJlIGEgQ09ORklHIG9wdGlvbiBmb3IgIFJhc3BiZXJyeSAuLiwgIG9yIGRldmljZSB0cmVlIG9w
-dGlvbi4gCgoKICBXZSBjb3VsZCByZXZlcnQgMWE4ZTFjZWY3IHNpbmNlIGl0IGJyb2tlICBBcm0g
-a2R1bXAgdG9vLgoKCj4gCj4gVGhhbmtzLAo+IENoZW4gWmhvdQo+IAoKCiAKIApfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Bjorn,
+
+On Sat, May 30, 2020 at 1:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, May 29, 2020 at 07:48:10PM +0530, Prabhakar Kushwaha wrote:
+> > On Thu, May 28, 2020 at 1:48 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > >
+> > > On Wed, May 27, 2020 at 05:14:39PM +0530, Prabhakar Kushwaha wrote:
+> > > > On Fri, May 22, 2020 at 4:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > On Thu, May 21, 2020 at 09:28:20AM +0530, Prabhakar Kushwaha wrote:
+> > > > > > On Wed, May 20, 2020 at 4:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > On Thu, May 14, 2020 at 12:47:02PM +0530, Prabhakar Kushwaha wrote:
+> > > > > > > > On Wed, May 13, 2020 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
+> > > > > > > > > > An SMMU Stream table is created by the primary kernel. This table is
+> > > > > > > > > > used by the SMMU to perform address translations for device-originated
+> > > > > > > > > > transactions. Any crash (if happened) launches the kdump kernel which
+> > > > > > > > > > re-creates the SMMU Stream table. New transactions will be translated
+> > > > > > > > > > via this new table..
+> > > > > > > > > >
+> > > > > > > > > > There are scenarios, where devices are still having old pending
+> > > > > > > > > > transactions (configured in the primary kernel). These transactions
+> > > > > > > > > > come in-between Stream table creation and device-driver probe.
+> > > > > > > > > > As new stream table does not have entry for older transactions,
+> > > > > > > > > > it will be aborted by SMMU.
+> > > > > > > > > >
+> > > > > > > > > > Similar observations were found with PCIe-Intel 82576 Gigabit
+> > > > > > > > > > Network card. It sends old Memory Read transaction in kdump kernel.
+> > > > > > > > > > Transactions configured for older Stream table entries, that do not
+> > > > > > > > > > exist any longer in the new table, will cause a PCIe Completion Abort.
+> > > > > > > > >
+> > > > > > > > > That sounds like exactly what we want, doesn't it?
+> > > > > > > > >
+> > > > > > > > > Or do you *want* DMA from the previous kernel to complete?  That will
+> > > > > > > > > read or scribble on something, but maybe that's not terrible as long
+> > > > > > > > > as it's not memory used by the kdump kernel.
+> > > > > > > >
+> > > > > > > > Yes, Abort should happen. But it should happen in context of driver.
+> > > > > > > > But current abort is happening because of SMMU and no driver/pcie
+> > > > > > > > setup present at this moment.
+> > > > > > >
+> > > > > > > I don't understand what you mean by "in context of driver."  The whole
+> > > > > > > problem is that we can't control *when* the abort happens, so it may
+> > > > > > > happen in *any* context.  It may happen when a NIC receives a packet
+> > > > > > > or at some other unpredictable time.
+> > > > > > >
+> > > > > > > > Solution of this issue should be at 2 place
+> > > > > > > > a) SMMU level: I still believe, this patch has potential to overcome
+> > > > > > > > issue till finally driver's probe takeover.
+> > > > > > > > b) Device level: Even if something goes wrong. Driver/device should
+> > > > > > > > able to recover.
+> > > > > > > >
+> > > > > > > > > > Returned PCIe completion abort further leads to AER Errors from APEI
+> > > > > > > > > > Generic Hardware Error Source (GHES) with completion timeout.
+> > > > > > > > > > A network device hang is observed even after continuous
+> > > > > > > > > > reset/recovery from driver, Hence device is no more usable.
+> > > > > > > > >
+> > > > > > > > > The fact that the device is no longer usable is definitely a problem.
+> > > > > > > > > But in principle we *should* be able to recover from these errors.  If
+> > > > > > > > > we could recover and reliably use the device after the error, that
+> > > > > > > > > seems like it would be a more robust solution that having to add
+> > > > > > > > > special cases in every IOMMU driver.
+> > > > > > > > >
+> > > > > > > > > If you have details about this sort of error, I'd like to try to fix
+> > > > > > > > > it because we want to recover from that sort of error in normal
+> > > > > > > > > (non-crash) situations as well.
+> > > > > > > > >
+> > > > > > > > Completion abort case should be gracefully handled.  And device should
+> > > > > > > > always remain usable.
+> > > > > > > >
+> > > > > > > > There are 2 scenario which I am testing with Ethernet card PCIe-Intel
+> > > > > > > > 82576 Gigabit Network card.
+> > > > > > > >
+> > > > > > > > I)  Crash testing using kdump root file system: De-facto scenario
+> > > > > > > >     -  kdump file system does not have Ethernet driver
+> > > > > > > >     -  A lot of AER prints [1], making it impossible to work on shell
+> > > > > > > > of kdump root file system.
+> > > > > > >
+> > > > > > > In this case, I think report_error_detected() is deciding that because
+> > > > > > > the device has no driver, we can't do anything.  The flow is like
+> > > > > > > this:
+> > > > > > >
+> > > > > > >   aer_recover_work_func               # aer_recover_work
+> > > > > > >     kfifo_get(aer_recover_ring, entry)
+> > > > > > >     dev = pci_get_domain_bus_and_slot
+> > > > > > >     cper_print_aer(dev, ...)
+> > > > > > >       pci_err("AER: aer_status:")
+> > > > > > >       pci_err("AER:   [14] CmpltTO")
+> > > > > > >       pci_err("AER: aer_layer=")
+> > > > > > >     if (AER_NONFATAL)
+> > > > > > >       pcie_do_recovery(dev, pci_channel_io_normal)
+> > > > > > >         status = CAN_RECOVER
+> > > > > > >         pci_walk_bus(report_normal_detected)
+> > > > > > >           report_error_detected
+> > > > > > >             if (!dev->driver)
+> > > > > > >               vote = NO_AER_DRIVER
+> > > > > > >               pci_info("can't recover (no error_detected callback)")
+> > > > > > >             *result = merge_result(*, NO_AER_DRIVER)
+> > > > > > >             # always NO_AER_DRIVER
+> > > > > > >         status is now NO_AER_DRIVER
+> > > > > > >
+> > > > > > > So pcie_do_recovery() does not call .report_mmio_enabled() or .slot_reset(),
+> > > > > > > and status is not RECOVERED, so it skips .resume().
+> > > > > > >
+> > > > > > > I don't remember the history there, but if a device has no driver and
+> > > > > > > the device generates errors, it seems like we ought to be able to
+> > > > > > > reset it.
+> > > > > >
+> > > > > > But how to reset the device considering there is no driver.
+> > > > > > Hypothetically, this case should be taken care by PCIe subsystem to
+> > > > > > perform reset at PCIe level.
+> > > > >
+> > > > > I don't understand your question.  The PCI core (not the device
+> > > > > driver) already does the reset.  When pcie_do_recovery() calls
+> > > > > reset_link(), all devices on the other side of the link are reset.
+> > > > >
+> > > > > > > We should be able to field one (or a few) AER errors, reset the
+> > > > > > > device, and you should be able to use the shell in the kdump kernel.
+> > > > > > >
+> > > > > > here kdump shell is usable only problem is a "lot of AER Errors". One
+> > > > > > cannot see what they are typing.
+> > > > >
+> > > > > Right, that's what I expect.  If the PCI core resets the device, you
+> > > > > should get just a few AER errors, and they should stop after the
+> > > > > device is reset.
+> > > > >
+> > > > > > > >     -  Note kdump shell allows to use makedumpfile, vmcore-dmesg applications.
+> > > > > > > >
+> > > > > > > > II) Crash testing using default root file system: Specific case to
+> > > > > > > > test Ethernet driver in second kernel
+> > > > > > > >    -  Default root file system have Ethernet driver
+> > > > > > > >    -  AER error comes even before the driver probe starts.
+> > > > > > > >    -  Driver does reset Ethernet card as part of probe but no success.
+> > > > > > > >    -  AER also tries to recover. but no success.  [2]
+> > > > > > > >    -  I also tries to remove AER errors by using "pci=noaer" bootargs
+> > > > > > > > and commenting ghes_handle_aer() from GHES driver..
+> > > > > > > >           than different set of errors come which also never able to recover [3]
+> > > > > > > >
+> > > > > >
+> > > > > > Please suggest your view on this case. Here driver is preset.
+> > > > > > (driver/net/ethernet/intel/igb/igb_main.c)
+> > > > > > In this case AER errors starts even before driver probe starts.
+> > > > > > After probe, driver does the device reset with no success and even AER
+> > > > > > recovery does not work.
+> > > > >
+> > > > > This case should be the same as the one above.  If we can change the
+> > > > > PCI core so it can reset the device when there's no driver,  that would
+> > > > > apply to case I (where there will never be a driver) and to case II
+> > > > > (where there is no driver now, but a driver will probe the device
+> > > > > later).
+> > > >
+> > > > Does this means change are required in PCI core.
+> > >
+> > > Yes, I am suggesting that the PCI core does not do the right thing
+> > > here.
+> > >
+> > > > I tried following changes in pcie_do_recovery() but it did not help.
+> > > > Same error as before.
+> > > >
+> > > > -- a/drivers/pci/pcie/err.c
+> > > > +++ b/drivers/pci/pcie/err.c
+> > > >         pci_info(dev, "broadcast resume message\n");
+> > > >         pci_walk_bus(bus, report_resume, &status);
+> > > > @@ -203,7 +207,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> > > >         return status;
+> > > >
+> > > >  failed:
+> > > >         pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+> > > > +       pci_reset_function(dev);
+> > > > +       pci_aer_clear_device_status(dev);
+> > > > +       pci_aer_clear_nonfatal_status(dev);
+> > >
+> > > Did you confirm that this resets the devices in question (0000:09:00.0
+> > > and 0000:09:00.1, I think), and what reset mechanism this uses (FLR,
+> > > PM, etc)?
+> >
+> > Earlier reset  was happening with P2P bridge(0000:00:09.0) this the
+> > reason no effect. After making following changes,  both devices are
+> > now getting reset.
+> > Both devices are using FLR.
+> >
+> > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > index 117c0a2b2ba4..26b908f55aef 100644
+> > --- a/drivers/pci/pcie/err.c
+> > +++ b/drivers/pci/pcie/err.c
+> > @@ -66,6 +66,20 @@ static int report_error_detected(struct pci_dev *dev,
+> >                 if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> >                         vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+> >                         pci_info(dev, "can't recover (no
+> > error_detected callback)\n");
+> > +
+> > +                       pci_save_state(dev);
+> > +                       pci_cfg_access_lock(dev);
+> > +
+> > +                       /* Quiesce the device completely */
+> > +                       pci_write_config_word(dev, PCI_COMMAND,
+> > +                             PCI_COMMAND_INTX_DISABLE);
+> > +                       if (!__pci_reset_function_locked(dev)) {
+> > +                               vote = PCI_ERS_RESULT_RECOVERED;
+> > +                               pci_info(dev, "recovered via pci level
+> > reset\n");
+> > +                       }
+>
+> Why do we need to save the state and quiesce the device?  The reset
+> should disable interrupts anyway.  In this particular case where
+> there's no driver, I don't think we should have to restore the state.
+> We maybe should *remove* the device and re-enumerate it after the
+> reset, but the state from before the reset should be irrelevant.
+>
+
+I tried pci_reset_fucntion_locked without save/restore then I got the
+synchronous abort during igb_probe (case 2 i.e. with driver). This is
+100% reproducible.
+looks like pci_reset_function_locked is causing PCI configuration
+space random. Same is mentioned here
+https://www.kernel.org/doc/html/latest/driver-api/pci/pci.html
+
+[   16.492586] Internal error: synchronous external abort: 96000610 [#1] SMP
+[   16.499362] Modules linked in: mpt3sas(+) igb(+) nvme nvme_core
+raid_class scsi_transport_sas i2c_algo_bit mdio libcrc32c gpio_xlp
+i2c_xlp9xx(+) uas usb_storage
+[   16.513696] CPU: 0 PID: 477 Comm: systemd-udevd Not tainted 5.7.0-rc3+ #132
+[   16.520644] Hardware name: Cavium Inc. Saber/Saber, BIOS
+TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/yyyy
+[   16.530805] pstate: 60400009 (nZCv daif +PAN -UAO)
+[   16.535598] pc : igb_rd32+0x24/0xe0 [igb]
+[   16.539603] lr : igb_get_invariants_82575+0xb0/0xde8 [igb]
+[   16.545074] sp : ffffffc012e2b7e0
+[   16.548375] x29: ffffffc012e2b7e0 x28: ffffffc008baa4d8
+[   16.553674] x27: 0000000000000001 x26: ffffffc008b99a70
+[   16.558972] x25: ffffff8cdef60900 x24: ffffff8cdef60e48
+[   16.564270] x23: ffffff8cf30b50b0 x22: ffffffc011359988
+[   16.569568] x21: ffffff8cdef612e0 x20: ffffff8cdef60e68
+[   16.574866] x19: ffffffc0140a0018 x18: 0000000000000000
+[   16.580164] x17: 0000000000000000 x16: 0000000000000000
+[   16.585463] x15: 0000000000000000 x14: 0000000000000000
+[   16.590761] x13: 0000000000000000 x12: 0000000000000000
+[   16.596059] x11: ffffffc008b86b08 x10: 0000000000000000
+[   16.601357] x9 : ffffffc008b88888 x8 : ffffffc008b81050
+[   16.606655] x7 : 0000000000000000 x6 : ffffff8cdef611a8
+[   16.611952] x5 : ffffffc008b887d8 x4 : ffffffc008ba7a68
+[   16.617250] x3 : 0000000000000000 x2 : ffffffc0140a0000
+[   16.622548] x1 : 0000000000000018 x0 : ffffff8cdef60e48
+[   16.627846] Call trace:
+[   16.630288]  igb_rd32+0x24/0xe0 [igb]
+[   16.633943]  igb_get_invariants_82575+0xb0/0xde8 [igb]
+[   16.639073]  igb_probe+0x264/0xed8 [igb]
+[   16.642989]  local_pci_probe+0x48/0xb8
+[   16.646727]  pci_device_probe+0x120/0x1b8
+[   16.650735]  really_probe+0xe4/0x448
+[   16.654298]  driver_probe_device+0xe8/0x140
+[   16.658469]  device_driver_attach+0x7c/0x88
+[   16.662638]  __driver_attach+0xac/0x178
+[   16.666462]  bus_for_each_dev+0x7c/0xd0
+[   16.670284]  driver_attach+0x2c/0x38
+[   16.673846]  bus_add_driver+0x1a8/0x240
+[   16.677670]  driver_register+0x6c/0x128
+[   16.681492]  __pci_register_driver+0x4c/0x58
+[   16.685754]  igb_init_module+0x64/0x1000 [igb]
+[   16.690189]  do_one_initcall+0x54/0x228
+[   16.694021]  do_init_module+0x60/0x240
+[   16.697757]  load_module+0x1614/0x1970
+[   16.701493]  __do_sys_finit_module+0xb4/0x118
+[   16.705837]  __arm64_sys_finit_module+0x28/0x38
+[   16.710367]  do_el0_svc+0xf8/0x1b8
+[   16.713761]  el0_sync_handler+0x12c/0x20c
+[   16.717757]  el0_sync+0x158/0x180
+[   16.721062] Code: a90153f3 f9400402 b4000482 8b214053 (b9400273)
+[   16.727144] ---[ end trace 95523d7d37f1d883 ]---
+[   16.731748] Kernel panic - not syncing: Fatal exception
+[   16.736962] Kernel Offset: disabled
+[   16.740438] CPU features: 0x084002,22000c38
+[   16.744607] Memory Limit: none
+
+> > +                       pci_cfg_access_unlock(dev);
+> > +                       pci_restore_state(dev);
+> >                 } else {
+> >                         vote = PCI_ERS_RESULT_NONE;
+> >                 }
+> >
+> > in order to take care of case 2 (driver comes after sometime) ==>
+> > following code needs to be added to avoid crash during igb_probe.  It
+> > looks to be a race condition between AER and igb_probe().
+> >
+> > diff --git a/drivers/net/ethernet/intel/igb/igb_main.c
+> > b/drivers/net/ethernet/intel/igb/igb_main.c
+> > index b46bff8fe056..c48f0a54bb95 100644
+> > --- a/drivers/net/ethernet/intel/igb/igb_main.c
+> > +++ b/drivers/net/ethernet/intel/igb/igb_main.c
+> > @@ -3012,6 +3012,11 @@ static int igb_probe(struct pci_dev *pdev,
+> > const struct pci_device_id *ent)
+> >         /* Catch broken hardware that put the wrong VF device ID in
+> >          * the PCIe SR-IOV capability.
+> >          */
+> > +       if (pci_dev_trylock(pdev)) {
+> > +               mdelay(1000);
+> > +               pci_info(pdev,"device is locked, try waiting 1 sec\n");
+> > +       }
+>
+> This is interesting to learn about the AER/driver interaction, but of
+> course, we wouldn't want to add code like this permanently.
+>
+> > Here are the observation with all above changes
+> > A) AER errors are less but they are still there for both case 1 (No
+> > driver at all) and case 2 (driver comes after some time)
+>
+> We'll certainly get *some* AER errors.  We have to get one before we
+> know to reset the device.
+>
+> > B) Each AER error(NON_FATAL) causes both devices to reset. It happens many times
+>
+> I'm not sure why we reset both devices.  Are we seeing errors from
+> both, or could we be more selective in the code?
+>
+
+I tried even with a reset of 09.01.0 *only* but again AER errors were
+found from 09.00.0 as mentioned in previous mail.
+So either do a reset of one or both devices, AER error from 09.00.0 is
+inevitable. So better to do rest for all devices connected to the bus.
+
+Following changes looks to be working with these observations for case
+1 (No  driver at all) & case 2 (driver comes after some time)
+A) AER errors are less
+B) For NON_FATAL AER errors both devices get reset.
+C) Few AER errors(neither NON_FATAL nor FATAL) for 09.00.0 still
+comes. (Note this device is never used for networking in the primary
+kernel)
+D) No action taking for "c" as below changes does not cover "c".
+E)  No AER errors from any device after some time (At least 8-10 AER
+errors, all from 09.00.0)
+F) Ping/SSH is working fine in case 2 for kudmp kernel.
+
+Please let me know your view. I can send a patch after detailed testing.
+
+diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+index 14bb8f54723e..585a43b9c0da 100644
+--- a/drivers/pci/pcie/err.c
++++ b/drivers/pci/pcie/err.c
+@@ -66,6 +66,19 @@ static int report_error_detected(struct pci_dev *dev,
+                if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+                        vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+                        pci_info(dev, "can't recover (no
+error_detected callback)\n");
++
++                       pci_save_state(dev);
++                       pci_cfg_access_lock(dev);
++
++                       pci_write_config_word(dev, PCI_COMMAND,
+PCI_COMMAND_INTX_DISABLE);
++
++                       if (!__pci_reset_function_locked(dev)) {
++                               vote = PCI_ERS_RESULT_RECOVERED;
++                               pci_info(dev, "Recovered via pci level
+reset\n");
++                       }
++
++                       pci_cfg_access_unlock(dev);
++                       pci_restore_state(dev);
+                } else {
+                        vote = PCI_ERS_RESULT_NONE;
+
+--pk
+
+
+> > C) After that AER errors [1] comes is only for device 0000:09:00.0.
+> > This is strange as this pci device is not being used during test.
+> > Ping/ssh are happening with 0000:09:01.0
+> > D) If wait for some more time. No more AER errors from any device
+> > E) Ping is working fine in case 2.
+> >
+> > 09:00.0 Ethernet controller: Intel Corporation 82576 Gigabit Network
+> > Connection (rev 01)
+> > 09:00.1 Ethernet controller: Intel Corporation 82576 Gigabit Network
+> > Connection (rev 01)
+> >
+> > # lspci -t -v
+> >
+> >  \-[0000:00]-+-00.0  Cavium, Inc. CN99xx [ThunderX2] Integrated PCI Host bridge
+> >              +-01.0-[01]--
+> >              +-02.0-[02]--
+> >              +-03.0-[03]--
+> >              +-04.0-[04]--
+> >              +-05.0-[05]--+-00.0  Broadcom Inc. and subsidiaries
+> > BCM57840 NetXtreme II 10 Gigabit Ethernet
+> >              |            \-00.1  Broadcom Inc. and subsidiaries
+> > BCM57840 NetXtreme II 10 Gigabit Ethernet
+> >              +-06.0-[06]--
+> >              +-07.0-[07]--
+> >              +-08.0-[08]--
+> >              +-09.0-[09-0a]--+-00.0  Intel Corporation 82576 Gigabit
+> > Network Connection
+> >              |               \-00.1  Intel Corporation 82576 Gigabit
+> > Network Connection
+> >
+> >
+> > [1] AER error which comes for 09:00.0:
+> >
+> > [   81.659825] {7}[Hardware Error]: Hardware error from APEI Generic
+> > Hardware Error Source: 0
+> > [   81.668080] {7}[Hardware Error]: It has been corrected by h/w and
+> > requires no further action
+> > [   81.676503] {7}[Hardware Error]: event severity: corrected
+> > [   81.681975] {7}[Hardware Error]:  Error 0, type: corrected
+> > [   81.687447] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.693004] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   81.698908] {7}[Hardware Error]:   version: 3.0
+> > [   81.703424] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   81.709589] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   81.715059] {7}[Hardware Error]:   slot: 0
+> > [   81.719141] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   81.724265] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   81.730864] {7}[Hardware Error]:   class_code: 000002
+> > [   81.735901] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   81.742587] {7}[Hardware Error]:  Error 1, type: corrected
+> > [   81.748058] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.753615] {7}[Hardware Error]:   port_type: 4, root port
+> > [   81.759086] {7}[Hardware Error]:   version: 3.0
+> > [   81.763602] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   81.769767] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   81.775237] {7}[Hardware Error]:   slot: 0
+> > [   81.779319] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   81.784442] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   81.791041] {7}[Hardware Error]:   class_code: 000406
+> > [   81.796078] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   81.803806] {7}[Hardware Error]:  Error 2, type: corrected
+> > [   81.809276] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.814834] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   81.820738] {7}[Hardware Error]:   version: 3.0
+> > [   81.825254] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   81.831419] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   81.836889] {7}[Hardware Error]:   slot: 0
+> > [   81.840971] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   81.846094] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   81.852693] {7}[Hardware Error]:   class_code: 000002
+> > [   81.857730] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   81.864416] {7}[Hardware Error]:  Error 3, type: corrected
+> > [   81.869886] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.875444] {7}[Hardware Error]:   port_type: 4, root port
+> > [   81.880914] {7}[Hardware Error]:   version: 3.0
+> > [   81.885430] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   81.891595] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   81.897066] {7}[Hardware Error]:   slot: 0
+> > [   81.901147] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   81.906271] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   81.912870] {7}[Hardware Error]:   class_code: 000406
+> > [   81.917906] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   81.925634] {7}[Hardware Error]:  Error 4, type: corrected
+> > [   81.931104] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.936662] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   81.942566] {7}[Hardware Error]:   version: 3.0
+> > [   81.947082] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   81.953247] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   81.958717] {7}[Hardware Error]:   slot: 0
+> > [   81.962799] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   81.967923] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   81.974522] {7}[Hardware Error]:   class_code: 000002
+> > [   81.979558] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   81.986244] {7}[Hardware Error]:  Error 5, type: corrected
+> > [   81.991715] {7}[Hardware Error]:   section_type: PCIe error
+> > [   81.997272] {7}[Hardware Error]:   port_type: 4, root port
+> > [   82.002743] {7}[Hardware Error]:   version: 3.0
+> > [   82.007259] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   82.013424] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   82.018894] {7}[Hardware Error]:   slot: 0
+> > [   82.022976] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   82.028099] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   82.034698] {7}[Hardware Error]:   class_code: 000406
+> > [   82.039735] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   82.047463] {7}[Hardware Error]:  Error 6, type: corrected
+> > [   82.052933] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.058491] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   82.064395] {7}[Hardware Error]:   version: 3.0
+> > [   82.068911] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   82.075076] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   82.080547] {7}[Hardware Error]:   slot: 0
+> > [   82.084628] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   82.089752] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   82.096351] {7}[Hardware Error]:   class_code: 000002
+> > [   82.101387] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   82.108073] {7}[Hardware Error]:  Error 7, type: corrected
+> > [   82.113544] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.119101] {7}[Hardware Error]:   port_type: 4, root port
+> > [   82.124572] {7}[Hardware Error]:   version: 3.0
+> > [   82.129087] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   82.135252] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   82.140723] {7}[Hardware Error]:   slot: 0
+> > [   82.144805] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   82.149928] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   82.156527] {7}[Hardware Error]:   class_code: 000406
+> > [   82.161564] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   82.169291] {7}[Hardware Error]:  Error 8, type: corrected
+> > [   82.174762] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.180319] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   82.186224] {7}[Hardware Error]:   version: 3.0
+> > [   82.190739] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   82.196904] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   82.202375] {7}[Hardware Error]:   slot: 0
+> > [   82.206456] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   82.211580] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   82.218179] {7}[Hardware Error]:   class_code: 000002
+> > [   82.223216] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   82.229901] {7}[Hardware Error]:  Error 9, type: corrected
+> > [   82.235372] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.240929] {7}[Hardware Error]:   port_type: 4, root port
+> > [   82.246400] {7}[Hardware Error]:   version: 3.0
+> > [   82.250916] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   82.257081] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   82.262551] {7}[Hardware Error]:   slot: 0
+> > [   82.266633] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   82.271756] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   82.278355] {7}[Hardware Error]:   class_code: 000406
+> > [   82.283392] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   82.291119] {7}[Hardware Error]:  Error 10, type: corrected
+> > [   82.296676] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.302234] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   82.308138] {7}[Hardware Error]:   version: 3.0
+> > [   82.312654] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   82.318819] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   82.324290] {7}[Hardware Error]:   slot: 0
+> > [   82.328371] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   82.333495] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   82.340094] {7}[Hardware Error]:   class_code: 000002
+> > [   82.345131] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   82.351816] {7}[Hardware Error]:  Error 11, type: corrected
+> > [   82.357374] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.362931] {7}[Hardware Error]:   port_type: 4, root port
+> > [   82.368402] {7}[Hardware Error]:   version: 3.0
+> > [   82.372917] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   82.379082] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   82.384553] {7}[Hardware Error]:   slot: 0
+> > [   82.388635] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   82.393758] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   82.400357] {7}[Hardware Error]:   class_code: 000406
+> > [   82.405394] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   82.413121] {7}[Hardware Error]:  Error 12, type: corrected
+> > [   82.418678] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.424236] {7}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   82.430140] {7}[Hardware Error]:   version: 3.0
+> > [   82.434656] {7}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   82.440821] {7}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   82.446291] {7}[Hardware Error]:   slot: 0
+> > [   82.450373] {7}[Hardware Error]:   secondary_bus: 0x00
+> > [   82.455497] {7}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   82.462096] {7}[Hardware Error]:   class_code: 000002
+> > [   82.467132] {7}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   82.473818] {7}[Hardware Error]:  Error 13, type: corrected
+> > [   82.479375] {7}[Hardware Error]:   section_type: PCIe error
+> > [   82.484933] {7}[Hardware Error]:   port_type: 4, root port
+> > [   82.490403] {7}[Hardware Error]:   version: 3.0
+> > [   82.494919] {7}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   82.501084] {7}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   82.506555] {7}[Hardware Error]:   slot: 0
+> > [   82.510636] {7}[Hardware Error]:   secondary_bus: 0x09
+> > [   82.515760] {7}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   82.522359] {7}[Hardware Error]:   class_code: 000406
+> > [   82.527395] {7}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   82.535171] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.542476] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.550301] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.558032] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.566296] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.573597] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.581421] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.589151] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.597411] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.604711] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.612535] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.620271] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.628525] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.635826] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.643649] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.651385] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.659645] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.666940] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.674763] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.682498] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.690759] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.698053] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.705876] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.713612] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   82.721872] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   82.729167] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   82.736990] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   82.744725] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   88.059225] {8}[Hardware Error]: Hardware error from APEI Generic
+> > Hardware Error Source: 0
+> > [   88.067478] {8}[Hardware Error]: It has been corrected by h/w and
+> > requires no further action
+> > [   88.075899] {8}[Hardware Error]: event severity: corrected
+> > [   88.081370] {8}[Hardware Error]:  Error 0, type: corrected
+> > [   88.086841] {8}[Hardware Error]:   section_type: PCIe error
+> > [   88.092399] {8}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   88.098303] {8}[Hardware Error]:   version: 3.0
+> > [   88.102819] {8}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   88.108984] {8}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   88.114455] {8}[Hardware Error]:   slot: 0
+> > [   88.118536] {8}[Hardware Error]:   secondary_bus: 0x00
+> > [   88.123660] {8}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   88.130259] {8}[Hardware Error]:   class_code: 000002
+> > [   88.135296] {8}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   88.141981] {8}[Hardware Error]:  Error 1, type: corrected
+> > [   88.147452] {8}[Hardware Error]:   section_type: PCIe error
+> > [   88.153009] {8}[Hardware Error]:   port_type: 4, root port
+> > [   88.158480] {8}[Hardware Error]:   version: 3.0
+> > [   88.162995] {8}[Hardware Error]:   command: 0x0106, status: 0x4010
+> > [   88.169161] {8}[Hardware Error]:   device_id: 0000:00:09.0
+> > [   88.174633] {8}[Hardware Error]:   slot: 0
+> > [   88.180018] {8}[Hardware Error]:   secondary_bus: 0x09
+> > [   88.185142] {8}[Hardware Error]:   vendor_id: 0x177d, device_id: 0xaf84
+> > [   88.191914] {8}[Hardware Error]:   class_code: 000406
+> > [   88.196951] {8}[Hardware Error]:   bridge: secondary_status:
+> > 0x6000, control: 0x0002
+> > [   88.204852] {8}[Hardware Error]:  Error 2, type: corrected
+> > [   88.210323] {8}[Hardware Error]:   section_type: PCIe error
+> > [   88.215881] {8}[Hardware Error]:   port_type: 0, PCIe end point
+> > [   88.221786] {8}[Hardware Error]:   version: 3.0
+> > [   88.226301] {8}[Hardware Error]:   command: 0x0507, status: 0x0010
+> > [   88.232466] {8}[Hardware Error]:   device_id: 0000:09:00.0
+> > [   88.237937] {8}[Hardware Error]:   slot: 0
+> > [   88.242019] {8}[Hardware Error]:   secondary_bus: 0x00
+> > [   88.247142] {8}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > [   88.253741] {8}[Hardware Error]:   class_code: 000002
+> > [   88.258778] {8}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > [   88.265509] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   88.272812] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> > [   88.280635] pcieport 0000:00:09.0: AER: aer_status: 0x00000000,
+> > aer_mask: 0x00002000
+> > [   88.288363] pcieport 0000:00:09.0: AER: aer_layer=Transaction
+> > Layer, aer_agent=Receiver ID
+> > [   88.296622] igb 0000:09:00.0: AER: aer_status: 0x00002000,
+> > aer_mask: 0x00002000
+> > [   88.305391] igb 0000:09:00.0: AER: aer_layer=Transaction Layer,
+> > aer_agent=Receiver ID
+> >
+> > > Case I is using APEI, and it looks like that can queue up 16 errors
+> > > (AER_RECOVER_RING_SIZE), so that queue could be completely full before
+> > > we even get a chance to reset the device.  But I would think that the
+> > > reset should *eventually* stop the errors, even though we might log
+> > > 30+ of them first.
+> > >
+> > > As an experiment, you could reduce AER_RECOVER_RING_SIZE to 1 or 2 and
+> > > see if it reduces the logging.
+> >
+> > Did not tried this experiment. I believe it is not required now
+> >
+> > --pk
+> >
+> > >
+> > > > > > Problem mentioned in case I and II goes away if do pci_reset_function
+> > > > > > during enumeration phase of kdump kernel.
+> > > > > > can we thought of doing pci_reset_function for all devices in kdump
+> > > > > > kernel or device specific quirk.
+> > > > > >
+> > > > > > --pk
+> > > > > >
+> > > > > >
+> > > > > > > > As per my understanding, possible solutions are
+> > > > > > > >  - Copy SMMU table i.e. this patch
+> > > > > > > > OR
+> > > > > > > >  - Doing pci_reset_function() during enumeration phase.
+> > > > > > > > I also tried clearing "M" bit using pci_clear_master during
+> > > > > > > > enumeration but it did not help. Because driver re-set M bit causing
+> > > > > > > > same AER error again.
+> > > > > > > >
+> > > > > > > >
+> > > > > > > > -pk
+> > > > > > > >
+> > > > > > > > ---------------------------------------------------------------------------------------------------------------------------
+> > > > > > > > [1] with bootargs having pci=noaer
+> > > > > > > >
+> > > > > > > > [   22.494648] {4}[Hardware Error]: Hardware error from APEI Generic
+> > > > > > > > Hardware Error Source: 1
+> > > > > > > > [   22.512773] {4}[Hardware Error]: event severity: recoverable
+> > > > > > > > [   22.518419] {4}[Hardware Error]:  Error 0, type: recoverable
+> > > > > > > > [   22.544804] {4}[Hardware Error]:   section_type: PCIe error
+> > > > > > > > [   22.550363] {4}[Hardware Error]:   port_type: 0, PCIe end point
+> > > > > > > > [   22.556268] {4}[Hardware Error]:   version: 3.0
+> > > > > > > > [   22.560785] {4}[Hardware Error]:   command: 0x0507, status: 0x4010
+> > > > > > > > [   22.576852] {4}[Hardware Error]:   device_id: 0000:09:00.1
+> > > > > > > > [   22.582323] {4}[Hardware Error]:   slot: 0
+> > > > > > > > [   22.586406] {4}[Hardware Error]:   secondary_bus: 0x00
+> > > > > > > > [   22.591530] {4}[Hardware Error]:   vendor_id: 0x8086, device_id: 0x10c9
+> > > > > > > > [   22.608900] {4}[Hardware Error]:   class_code: 000002
+> > > > > > > > [   22.613938] {4}[Hardware Error]:   serial number: 0xff1b4580, 0x90e2baff
+> > > > > > > > [   22.803534] pci 0000:09:00.1: AER: aer_status: 0x00004000,
+> > > > > > > > aer_mask: 0x00000000
+> > > > > > > > [   22.810838] pci 0000:09:00.1: AER:    [14] CmpltTO                (First)
+> > > > > > > > [   22.817613] pci 0000:09:00.1: AER: aer_layer=Transaction Layer,
+> > > > > > > > aer_agent=Requester ID
+> > > > > > > > [   22.847374] pci 0000:09:00.1: AER: aer_uncor_severity: 0x00062011
+> > > > > > > > [   22.866161] mpt3sas_cm0: 63 BIT PCI BUS DMA ADDRESSING SUPPORTED,
+> > > > > > > > total mem (8153768 kB)
+> > > > > > > > [   22.946178] pci 0000:09:00.0: AER: can't recover (no error_detected callback)
+> > > > > > > > [   22.995142] pci 0000:09:00.1: AER: can't recover (no error_detected callback)
+> > > > > > > > [   23.002300] pcieport 0000:00:09.0: AER: device recovery failed
+> > > > > > > > [   23.027607] pci 0000:09:00.1: AER: aer_status: 0x00004000,
+> > > > > > > > aer_mask: 0x00000000
+> > > > > > > > [   23.044109] pci 0000:09:00.1: AER:    [14] CmpltTO                (First)
+> > > > > > > > [   23.060713] pci 0000:09:00.1: AER: aer_layer=Transaction Layer,
+> > > > > > > > aer_agent=Requester ID
+> > > > > > > > [   23.068616] pci 0000:09:00.1: AER: aer_uncor_severity: 0x00062011
+> > > > > > > > [   23.122056] pci 0000:09:00.0: AER: can't recover (no error_detected callback)
+> > >
+> > > <snip>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
