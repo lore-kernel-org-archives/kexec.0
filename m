@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jgQRm-0007Hx-OX
- for kexec@lists.infradead.org; Wed, 03 Jun 2020 10:16:36 +0000
-Date: Wed, 3 Jun 2020 12:16:28 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 1/3] crash: add VMCOREINFO macro for anonymous structs
-Message-ID: <20200603101627.GE14855@linux-b0ei>
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-2-john.ogness@linutronix.de>
+From: Kamlakant Patel <kamlakantp@marvell.com>
+Subject: RE: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+Date: Wed, 3 Jun 2020 11:20:16 +0000
+Message-ID: <DM6PR18MB24258C2F2B91E4BF407421CDD2880@DM6PR18MB2425.namprd18.prod.outlook.com>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+In-Reply-To: <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200501094010.17694-2-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +20,151 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "x86@kernel.org" <x86@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ganapatrao Kulkarni <gkulkarni@marvell.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Steve Capper <steve.capper@arm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>
 
-On Fri 2020-05-01 11:46:08, John Ogness wrote:
-> Some structs are not named and are only available via their typedef.
-> Add a VMCOREINFO macro to export field offsets for such structs.
+Hi Bhupesh,
 
-Honestly, I did not get the meaning until I looked at the sample
-usage added by the 2nd patch.
+> -----Original Message-----
+> From: kexec <kexec-bounces@lists.infradead.org> On Behalf Of Bhupesh
+> Sharma
+> Sent: Thursday, May 14, 2020 12:23 AM
+> To: linux-arm-kernel@lists.infradead.org; x86@kernel.org
+> Cc: Mark Rutland <mark.rutland@arm.com>; Kazuhito Hagio <k-
+> hagio@ab.jp.nec.com>; Steve Capper <steve.capper@arm.com>; Catalin
+> Marinas <catalin.marinas@arm.com>; bhsharma@redhat.com; Ard Biesheuvel
+> <ard.biesheuvel@linaro.org>; kexec@lists.infradead.org; linux-
+> kernel@vger.kernel.org; James Morse <james.morse@arm.com>; Dave
+> Anderson <anderson@redhat.com>; bhupesh.linux@gmail.com; Will Deacon
+> <will@kernel.org>
+> Subject: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> 
+> vabits_actual variable on arm64 indicates the actual VA space size, and allows a
+> single binary to support both 48-bit and 52-bit VA spaces.
+> 
+> If the ARMv8.2-LVA optional feature is present, and we are running with a 64KB
+> page size; then it is possible to use 52-bits of address space for both userspace
+> and kernel addresses. However, any kernel binary that supports 52-bit must also
+> be able to fall back to 48-bit at early boot time if the hardware feature is not
+> present.
+> 
+> Since TCR_EL1.T1SZ indicates the size offset of the memory region addressed by
+> TTBR1_EL1 (and hence can be used for determining the vabits_actual value) it
+> makes more sense to export the same in vmcoreinfo rather than vabits_actual
+> variable, as the name of the variable can change in future kernel versions, but
+> the architectural constructs like TCR_EL1.T1SZ can be used better to indicate
+> intended specific fields to user-space.
+> 
+> User-space utilities like makedumpfile and crash-utility, need to read this value
+> from vmcoreinfo for determining if a virtual address lies in the linear map range.
+> 
+> While at it also add documentation for TCR_EL1.T1SZ variable being added to
+> vmcoreinfo.
+> 
+> It indicates the size offset of the memory region addressed by TTBR1_EL1
+> 
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Dave Anderson <anderson@redhat.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  Documentation/admin-guide/kdump/vmcoreinfo.rst | 11 +++++++++++
+>  arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+>  arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+>  3 files changed, 22 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index 2a632020f809..2baad0bfb09d 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -404,6 +404,17 @@ KERNELPACMASK
+>  The mask to extract the Pointer Authentication Code from a kernel virtual
+> address.
+> 
+> +TCR_EL1.T1SZ
+> +------------
+> +
+> +Indicates the size offset of the memory region addressed by TTBR1_EL1.
+> +The region size is 2^(64-T1SZ) bytes.
+> +
+> +TTBR1_EL1 is the table base address register specified by ARMv8-A
+> +architecture which is used to lookup the page-tables for the Virtual
+> +addresses in the higher VA range (refer to ARMv8 ARM document for more
+> +details).
+> +
+>  arm
+>  ===
+> 
+> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h
+> b/arch/arm64/include/asm/pgtable-hwdef.h
+> index 6bf5e650da78..a1861af97ac9 100644
+> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+> @@ -216,6 +216,7 @@
+>  #define TCR_TxSZ(x)		(TCR_T0SZ(x) | TCR_T1SZ(x))
+>  #define TCR_TxSZ_WIDTH		6
+>  #define TCR_T0SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) <<
+> TCR_T0SZ_OFFSET)
+> +#define TCR_T1SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) <<
+> TCR_T1SZ_OFFSET)
+> 
+>  #define TCR_EPD0_SHIFT		7
+>  #define TCR_EPD0_MASK		(UL(1) << TCR_EPD0_SHIFT)
+> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> index 1f646b07e3e9..314391a156ee 100644
+> --- a/arch/arm64/kernel/crash_core.c
+> +++ b/arch/arm64/kernel/crash_core.c
+> @@ -7,6 +7,14 @@
+>  #include <linux/crash_core.h>
+>  #include <asm/cpufeature.h>
+>  #include <asm/memory.h>
+> +#include <asm/pgtable-hwdef.h>
+> +
+> +static inline u64 get_tcr_el1_t1sz(void);
+> +
+> +static inline u64 get_tcr_el1_t1sz(void) {
+> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET; }
+> 
+>  void arch_crash_save_vmcoreinfo(void)
+>  {
+> @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
+>  						kimage_voffset);
+>  	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+>  						PHYS_OFFSET);
+> +	vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
+> +						get_tcr_el1_t1sz());
+I tested this patch on top of upstream kernel v5.7 and I am getting "crash: cannot determine VA_BITS_ACTUAL" error with crash tool.
+I looked into crash-utility source and it is expecting tcr_el1_t1sz not TCR_EL1_T1SZ.
+Could you please check.
 
-The term "anonymous structures" has another meaning in C++. It is
-used for structures without any name that are defined inside a named
-structure.
-
-Something like this might be better:
-
-"crash: Add VMCOREINFO macro to define offset in a struct declared by typedef
-
- The existing macro VMCOREINFO_OFFSET() can't be used for structures
- declared via typedef because "struct" is not part of type definition.
-
- Create another macro for this purpose."
-
-
-Anyway, thanks a lot for the prototype of crash implementation.
-I am happy that it is possible.
-
-Best Regards,
-Petr
-
-PS: It might take few more days until I send some feedback for the
-other patches. They are a bit more complex ;-)
+Thanks,
+Kamlakant Patel
+>  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>  	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
+> 
+> 	system_supports_address_auth() ?
+> --
+> 2.7.4
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> https://urldefense.proofpoint.com/v2/url?u=http-
+> 3A__lists.infradead.org_mailman_listinfo_kexec&d=DwICAg&c=nKjWec2b6R0m
+> OyPaz7xtfQ&r=XecQZQJWhG6-
+> mN8sWxffFOgUXg4irGP3Sjuy6RxdacQ&m=oeLdIVaWScimdfEc4dNhRI0tT24IgzG
+> 7LkpAE5P11JQ&s=LLjHpz349DuDtORX4xywCxzbGUOagoq4JXosStycqI4&e=
 
 _______________________________________________
 kexec mailing list
