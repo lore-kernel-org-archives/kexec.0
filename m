@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 4 Jun 2020 08:14:11 +0100
+Date: Thu, 4 Jun 2020 08:19:24 +0100
 From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-Message-ID: <20200604071410.GA30155@willie-the-truck>
-References: <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
- <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
- <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
- <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
- <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
- <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
- <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
- <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
- <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
- <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
+Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+Message-ID: <20200604071923.GB30155@willie-the-truck>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+ <DM6PR18MB24258C2F2B91E4BF407421CDD2880@DM6PR18MB2425.namprd18.prod.outlook.com>
+ <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
+In-Reply-To: <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,62 +18,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: John Donnelly <john.p.donnelly@oracle.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, Devicetree List <devicetree@vger.kernel.org>, chenzhou <chenzhou10@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, James Morse <james.morse@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, guohanjun@huawei.com, Thomas Gleixner <tglx@linutronix.de>, Prabhakar Kushwaha <pkushwaha@marvell.com>, RuiRui Yang <dyoung@redhat.com>, Ingo Molnar <mingo@redhat.com>, nsaenzjulienne@suse.de
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ganapatrao Kulkarni <gkulkarni@marvell.com>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Kamlakant Patel <kamlakantp@marvell.com>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-T24gVGh1LCBKdW4gMDQsIDIwMjAgYXQgMDE6MTc6MDZBTSArMDUzMCwgQmh1cGVzaCBTaGFybWEg
-d3JvdGU6Cj4gT24gV2VkLCBKdW4gMywgMjAyMCBhdCA5OjAzIFBNIEpvaG4gRG9ubmVsbHkgPGpv
-aG4ucC5kb25uZWxseUBvcmFjbGUuY29tPiB3cm90ZToKPiA+ID4gT24gSnVuIDMsIDIwMjAsIGF0
-IDg6MjAgQU0sIGNoZW56aG91IDxjaGVuemhvdTEwQGh1YXdlaS5jb20+IHdyb3RlOgo+ID4gPiBP
-biAyMDIwLzYvMyAxOTo0NywgUHJhYmhha2FyIEt1c2h3YWhhIHdyb3RlOgo+ID4gPj4+PiBkaWZm
-IC0tZ2l0IGEva2VybmVsL2NyYXNoX2NvcmUuYyBiL2tlcm5lbC9jcmFzaF9jb3JlLmMKPiA+ID4+
-Pj4gaW5kZXggN2Y5ZTVhNmRjNDhjLi5iZDY3YjkwZDM1YmQgMTAwNjQ0Cj4gPiA+Pj4+IC0tLSBh
-L2tlcm5lbC9jcmFzaF9jb3JlLmMKPiA+ID4+Pj4gKysrIGIva2VybmVsL2NyYXNoX2NvcmUuYwo+
-ID4gPj4+PiBAQCAtMzU0LDcgKzM1NCw3IEBAIGludCBfX2luaXQgcmVzZXJ2ZV9jcmFzaGtlcm5l
-bF9sb3codm9pZCkKPiA+ID4+Pj4gICAgICAgICAgICAgICAgICAgICAgIHJldHVybiAwOwo+ID4g
-Pj4+PiAgICAgICB9Cj4gPiA+Pj4+Cj4gPiA+Pj4+IC0gICAgICAgbG93X2Jhc2UgPSBtZW1ibG9j
-a19maW5kX2luX3JhbmdlKDAsIDFVTEwgPDwgMzIsIGxvd19zaXplLCBDUkFTSF9BTElHTik7Cj4g
-PiA+Pj4+ICsgICAgICAgbG93X2Jhc2UgPSBtZW1ibG9ja19maW5kX2luX3JhbmdlKDAsMHhjMDAw
-MDAwMCwgbG93X3NpemUsIENSQVNIX0FMSUdOKTsKPiA+ID4+Pj4gICAgICAgaWYgKCFsb3dfYmFz
-ZSkgewo+ID4gPj4+PiAgICAgICAgICAgICAgIHByX2VycigiQ2Fubm90IHJlc2VydmUgJWxkTUIg
-Y3Jhc2hrZXJuZWwgbG93IG1lbW9yeSwKPiA+ID4+Pj4gcGxlYXNlIHRyeSBzbWFsbGVyIHNpemUu
-XG4iLAo+ID4gPj4+PiAgICAgICAgICAgICAgICAgICAgICAodW5zaWduZWQgbG9uZykobG93X3Np
-emUgPj4gMjApKTsKPiA+ID4+Pj4KPiA+ID4+Pj4KPiA+ID4+PiAgICBJIHN1c3BlY3QgIDB4YzAw
-MDAwMDAgIHdvdWxkIG5lZWQgdG8gYmUgYSBDT05GSUcgaXRlbSAgYW5kIG5vdCBoYXJkLWNvZGVk
-Lgo+ID4gPj4+Cj4gPiA+PiBpZiB5b3UgY29uc2lkZXIgdGhpcyBhcyB2YWxpZCBjaGFuZ2UsICBj
-YW4geW91IHBsZWFzZSBpbmNvcnBvcmF0ZSBhcwo+ID4gPj4gcGFydCBvZiB5b3VyIHBhdGNoLXNl
-dC4KPiA+ID4KPiA+ID4gQWZ0ZXIgY29tbWl0IDFhOGUxY2VmNyAoImFybTY0OiB1c2UgYm90aCBa
-T05FX0RNQSBhbmQKPiA+ID4gWk9ORV9ETUEzMiIp77yMdGhlIDAtNEcgbWVtb3J5IGlzIHNwbGl0
-ZWQgdG8gRE1BIFttZW0KPiA+ID4gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDAzZmZmZmZm
-Zl0gYW5kIERNQTMyIFttZW0KPiA+ID4gMHgwMDAwMDAwMDQwMDAwMDAwLTB4MDAwMDAwMDBmZmZm
-ZmZmZl0gb24gYXJtNjQuCj4gPiA+Cj4gPiA+IEZyb20gdGhlIGFib3ZlIGRpc2N1c3Npb24sIG9u
-IHlvdXIgcGxhdGZvcm0sIHRoZSBsb3cgY3Jhc2hrZXJuZWwgZmFsbAo+ID4gPiBpbiBETUEzMiBy
-ZWdpb24sIGJ1dCB5b3VyIGVudmlyb25tZW50IG5lZWRzIHRvIGFjY2VzcyBETUEgcmVnaW9uLCBz
-bwo+ID4gPiB0aGVyZSBpcyB0aGUgY2FsbCB0cmFjZS4KPiA+ID4KPiA+ID4gSSBoYXZlIGEgcXVl
-c3Rpb24sIHdoeSBkbyB5b3UgY2hvb3NlIDB4YzAwMDAwMDAgaGVyZT8KPiA+ID4KPiA+ID4gQmVz
-aWRlcywgdGhpcyBpcyBjb21tb24gY29kZSwgd2UgYWxzbyBuZWVkIHRvIGNvbnNpZGVyIGFib3V0
-IHg4Ni4KPiA+ID4KPiA+Cj4gPiAgKyBuc2FlbnpqdWxpZW5uZUBzdXNlLmRlCj4gPgo+ID4gICBF
-eGFjdGx5IC4gIFRoaXMgaXMgd2h5IGl0IG5lZWRzIHRvIGJlIGEgQ09ORklHIG9wdGlvbiBmb3Ig
-IFJhc3BiZXJyeQo+ID4gICAuLiwgIG9yIGRldmljZSB0cmVlIG9wdGlvbi4KPiA+Cj4gPgo+ID4g
-ICBXZSBjb3VsZCByZXZlcnQgMWE4ZTFjZWY3IHNpbmNlIGl0IGJyb2tlICBBcm0ga2R1bXAgdG9v
-Lgo+IAo+IFdlbGwsIHVuZm9ydHVuYXRlbHkgdGhlIHBhdGNoIGZvciBjb21taXQgMWE4ZTFjZWY3
-NjAzICgiYXJtNjQ6IHVzZQo+IGJvdGggWk9ORV9ETUEgYW5kIFpPTkVfRE1BMzIiKSB3YXMgbm90
-IENjJ2VkIHRvIHRoZSBrZXhlYyBtYWlsaW5nCj4gbGlzdCwgdGh1cyB3ZSBjb3VsZG4ndCBnZXQg
-bWFueSBleWVzIG9uIGl0IGZvciBhIHRob3JvdWdoIHJldmlldyBmcm9tCj4ga2V4ZWMva2R1bXAg
-cC1vLXYuCj4gCj4gQWxzbyB3ZSBoaXN0b3JpY2FsbHkgbmV2ZXIgaGFkIGRpc3RpbmN0aW9uIGlu
-IGNvbW1vbiBhcmNoIGNvZGUgb24gdGhlCj4gYmFzaXMgb2YgdGhlIGludGVuZGVkIGVuZCB1c2Ut
-Y2FzZTogZW1iZWRkZWQsIHNlcnZlciBvciBhdXRvbW90aXZlLCBzbwo+IEkgYW0gbm90IHN1cmUg
-aW50cm9kdWNpbmcgYSBSYXNwYmVycnkgc3BlY2lmaWMgQ09ORklHIG9wdGlvbiB3b3VsZCBiZQo+
-IGEgZ29vZCBpZGVhLgoKUmlnaHQsIHdlIG5lZWQgYSBmaXggdGhhdCB3b3JrcyBmb3IgZXZlcnli
-b2R5LCBzaW5jZSB3ZSB0cnkgaGFyZCBmb3IgYQpzaW5nbGUgSW1hZ2UgdGhhdCB3b3JrcyBmb3Ig
-YWxsIHBsYXRmb3Jtcy4KCldoYXQgSSBkb24ndCByZWFsbHkgdW5kZXJzdGFuZCBpcyB3aHksIHdp
-dGggQ2hlbidzIHBhdGNoZXMgYXBwbGllZCwgd2UgY2FuJ3QKanVzdCBrZWVwIHRoZSBjcmFzaGtl
-cm5lbCBvdXQgb2YgdGhlIERNQSB6b25lcyBhbHRvZ2V0aGVyIHdoZW4gbm8gYmFzZSBpcwpzcGVj
-aWZpZWQuIEkgZ3Vlc3MgSSdsbCBqdXN0IGxvb2sgb3V0IGZvciB5b3VyIHBhdGNoIQoKV2lsbAoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Thu, Jun 04, 2020 at 02:04:58AM +0530, Bhupesh Sharma wrote:
+> On Wed, Jun 3, 2020 at 4:50 PM Kamlakant Patel <kamlakantp@marvell.com> wrote:
+> > > diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> > > index 1f646b07e3e9..314391a156ee 100644
+> > > --- a/arch/arm64/kernel/crash_core.c
+> > > +++ b/arch/arm64/kernel/crash_core.c
+> > > @@ -7,6 +7,14 @@
+> > >  #include <linux/crash_core.h>
+> > >  #include <asm/cpufeature.h>
+> > >  #include <asm/memory.h>
+> > > +#include <asm/pgtable-hwdef.h>
+> > > +
+> > > +static inline u64 get_tcr_el1_t1sz(void);
+> > > +
+> > > +static inline u64 get_tcr_el1_t1sz(void) {
+> > > +     return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET; }
+> > >
+> > >  void arch_crash_save_vmcoreinfo(void)
+> > >  {
+> > > @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
+> > >                                               kimage_voffset);
+> > >       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+> > >                                               PHYS_OFFSET);
+> > > +     vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
+> > > +                                             get_tcr_el1_t1sz());
+> > I tested this patch on top of upstream kernel v5.7 and I am getting "crash: cannot determine VA_BITS_ACTUAL" error with crash tool.
+> > I looked into crash-utility source and it is expecting tcr_el1_t1sz not TCR_EL1_T1SZ.
+> > Could you please check.
+> 
+> Indeed. As per James comments on the v5 (see [1]) where he suggested
+> converting ttcr_el1_t1sz into TCR_EL1_T1SZ, I made the change in v6
+> accordingly.
+> 
+> This time I haven't sent out the v6 userspace changes
+> (makedumpfile/crash-utility) upstream first, since we are waiting for
+> kernel changes to be accepted first, as we have seen in the past that
+> while the userspace patches have been accepted, the kernel patches
+> required a respin cycle, thus leading to inconsistencies, as you also
+> pointed out with crash-utility.
+
+Yes, and that';s the right way to do it. Userspace can't rely on the
+stability of a kernel interface if it's no in the upstream kernel!
+
+So doing with the ALL CAPS names is the right thing to do.
+
+Will
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
