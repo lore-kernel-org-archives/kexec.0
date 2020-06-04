@@ -1,11 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 3 Jun 2020 19:02:32 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
-Message-ID: <20200604000232.GA956503@bjorn-Precision-5520>
+From: Kamlakant Patel <kamlakantp@marvell.com>
+Subject: RE: [EXT] Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in
+ vmcoreinfo
+Date: Thu, 4 Jun 2020 04:49:07 +0000
+Message-ID: <DM6PR18MB24256DBD136BB053245AF8CED2890@DM6PR18MB2425.namprd18.prod.outlook.com>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+ <DM6PR18MB24258C2F2B91E4BF407421CDD2880@DM6PR18MB2425.namprd18.prod.outlook.com>
+ <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
+In-Reply-To: <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAJ2QiJ+fhPWAxZXzHhNFLkHr47e+wTqqz+s5r+utgCP=C6qsjw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,244 +23,222 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Myron Stowe <myron.stowe@redhat.com>, Vijay Mohan Pandarathil <vijaymohan.pandarathil@hp.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ganapatrao Kulkarni <gkulkarni@marvell.com>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-On Wed, Jun 03, 2020 at 11:12:48PM +0530, Prabhakar Kushwaha wrote:
-> On Sat, May 30, 2020 at 1:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > On Fri, May 29, 2020 at 07:48:10PM +0530, Prabhakar Kushwaha wrote:
-> > > On Thu, May 28, 2020 at 1:48 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > >
-> > > > On Wed, May 27, 2020 at 05:14:39PM +0530, Prabhakar Kushwaha wrote:
-> > > > > On Fri, May 22, 2020 at 4:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > On Thu, May 21, 2020 at 09:28:20AM +0530, Prabhakar Kushwaha wrote:
-> > > > > > > On Wed, May 20, 2020 at 4:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > On Thu, May 14, 2020 at 12:47:02PM +0530, Prabhakar Kushwaha wrote:
-> > > > > > > > > On Wed, May 13, 2020 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
-> > > > > > > > > > > An SMMU Stream table is created by the primary kernel. This table is
-> > > > > > > > > > > used by the SMMU to perform address translations for device-originated
-> > > > > > > > > > > transactions. Any crash (if happened) launches the kdump kernel which
-> > > > > > > > > > > re-creates the SMMU Stream table. New transactions will be translated
-> > > > > > > > > > > via this new table..
-> > > > > > > > > > >
-> > > > > > > > > > > There are scenarios, where devices are still having old pending
-> > > > > > > > > > > transactions (configured in the primary kernel). These transactions
-> > > > > > > > > > > come in-between Stream table creation and device-driver probe.
-> > > > > > > > > > > As new stream table does not have entry for older transactions,
-> > > > > > > > > > > it will be aborted by SMMU.
-> > > > > > > > > > >
-> > > > > > > > > > > Similar observations were found with PCIe-Intel 82576 Gigabit
-> > > > > > > > > > > Network card. It sends old Memory Read transaction in kdump kernel.
-> > > > > > > > > > > Transactions configured for older Stream table entries, that do not
-> > > > > > > > > > > exist any longer in the new table, will cause a PCIe Completion Abort.
-> > > > > > > > > >
-> > > > > > > > > > That sounds like exactly what we want, doesn't it?
-> > > > > > > > > >
-> > > > > > > > > > Or do you *want* DMA from the previous kernel to complete?  That will
-> > > > > > > > > > read or scribble on something, but maybe that's not terrible as long
-> > > > > > > > > > as it's not memory used by the kdump kernel.
-> > > > > > > > >
-> > > > > > > > > Yes, Abort should happen. But it should happen in context of driver.
-> > > > > > > > > But current abort is happening because of SMMU and no driver/pcie
-> > > > > > > > > setup present at this moment.
-> > > > > > > >
-> > > > > > > > I don't understand what you mean by "in context of driver."  The whole
-> > > > > > > > problem is that we can't control *when* the abort happens, so it may
-> > > > > > > > happen in *any* context.  It may happen when a NIC receives a packet
-> > > > > > > > or at some other unpredictable time.
-> > > > > > > >
-> > > > > > > > > Solution of this issue should be at 2 place
-> > > > > > > > > a) SMMU level: I still believe, this patch has potential to overcome
-> > > > > > > > > issue till finally driver's probe takeover.
-> > > > > > > > > b) Device level: Even if something goes wrong. Driver/device should
-> > > > > > > > > able to recover.
-> > > > > > > > >
-> > > > > > > > > > > Returned PCIe completion abort further leads to AER Errors from APEI
-> > > > > > > > > > > Generic Hardware Error Source (GHES) with completion timeout.
-> > > > > > > > > > > A network device hang is observed even after continuous
-> > > > > > > > > > > reset/recovery from driver, Hence device is no more usable.
-> > > > > > > > > >
-> > > > > > > > > > The fact that the device is no longer usable is definitely a problem.
-> > > > > > > > > > But in principle we *should* be able to recover from these errors.  If
-> > > > > > > > > > we could recover and reliably use the device after the error, that
-> > > > > > > > > > seems like it would be a more robust solution that having to add
-> > > > > > > > > > special cases in every IOMMU driver.
-> > > > > > > > > >
-> > > > > > > > > > If you have details about this sort of error, I'd like to try to fix
-> > > > > > > > > > it because we want to recover from that sort of error in normal
-> > > > > > > > > > (non-crash) situations as well.
-> > > > > > > > > >
-> > > > > > > > > Completion abort case should be gracefully handled.  And device should
-> > > > > > > > > always remain usable.
-> > > > > > > > >
-> > > > > > > > > There are 2 scenario which I am testing with Ethernet card PCIe-Intel
-> > > > > > > > > 82576 Gigabit Network card.
-> > > > > > > > >
-> > > > > > > > > I)  Crash testing using kdump root file system: De-facto scenario
-> > > > > > > > >     -  kdump file system does not have Ethernet driver
-> > > > > > > > >     -  A lot of AER prints [1], making it impossible to work on shell
-> > > > > > > > > of kdump root file system.
-> > > > > > > >
-> > > > > > > > In this case, I think report_error_detected() is deciding that because
-> > > > > > > > the device has no driver, we can't do anything.  The flow is like
-> > > > > > > > this:
-> > > > > > > >
-> > > > > > > >   aer_recover_work_func               # aer_recover_work
-> > > > > > > >     kfifo_get(aer_recover_ring, entry)
-> > > > > > > >     dev = pci_get_domain_bus_and_slot
-> > > > > > > >     cper_print_aer(dev, ...)
-> > > > > > > >       pci_err("AER: aer_status:")
-> > > > > > > >       pci_err("AER:   [14] CmpltTO")
-> > > > > > > >       pci_err("AER: aer_layer=")
-> > > > > > > >     if (AER_NONFATAL)
-> > > > > > > >       pcie_do_recovery(dev, pci_channel_io_normal)
-> > > > > > > >         status = CAN_RECOVER
-> > > > > > > >         pci_walk_bus(report_normal_detected)
-> > > > > > > >           report_error_detected
-> > > > > > > >             if (!dev->driver)
-> > > > > > > >               vote = NO_AER_DRIVER
-> > > > > > > >               pci_info("can't recover (no error_detected callback)")
-> > > > > > > >             *result = merge_result(*, NO_AER_DRIVER)
-> > > > > > > >             # always NO_AER_DRIVER
-> > > > > > > >         status is now NO_AER_DRIVER
-> > > > > > > >
-> > > > > > > > So pcie_do_recovery() does not call .report_mmio_enabled() or .slot_reset(),
-> > > > > > > > and status is not RECOVERED, so it skips .resume().
-> > > > > > > >
-> > > > > > > > I don't remember the history there, but if a device has no driver and
-> > > > > > > > the device generates errors, it seems like we ought to be able to
-> > > > > > > > reset it.
-> > > > > > >
-> > > > > > > But how to reset the device considering there is no driver.
-> > > > > > > Hypothetically, this case should be taken care by PCIe subsystem to
-> > > > > > > perform reset at PCIe level.
-> > > > > >
-> > > > > > I don't understand your question.  The PCI core (not the device
-> > > > > > driver) already does the reset.  When pcie_do_recovery() calls
-> > > > > > reset_link(), all devices on the other side of the link are reset.
-> > > > > >
-> > > > > > > > We should be able to field one (or a few) AER errors, reset the
-> > > > > > > > device, and you should be able to use the shell in the kdump kernel.
-> > > > > > > >
-> > > > > > > here kdump shell is usable only problem is a "lot of AER Errors". One
-> > > > > > > cannot see what they are typing.
-> > > > > >
-> > > > > > Right, that's what I expect.  If the PCI core resets the device, you
-> > > > > > should get just a few AER errors, and they should stop after the
-> > > > > > device is reset.
-> > > > > >
-> > > > > > > > >     -  Note kdump shell allows to use makedumpfile, vmcore-dmesg applications.
-> > > > > > > > >
-> > > > > > > > > II) Crash testing using default root file system: Specific case to
-> > > > > > > > > test Ethernet driver in second kernel
-> > > > > > > > >    -  Default root file system have Ethernet driver
-> > > > > > > > >    -  AER error comes even before the driver probe starts.
-> > > > > > > > >    -  Driver does reset Ethernet card as part of probe but no success.
-> > > > > > > > >    -  AER also tries to recover. but no success.  [2]
-> > > > > > > > >    -  I also tries to remove AER errors by using "pci=noaer" bootargs
-> > > > > > > > > and commenting ghes_handle_aer() from GHES driver..
-> > > > > > > > >           than different set of errors come which also never able to recover [3]
-> > > > > > > > >
-> > > > > > >
-> > > > > > > Please suggest your view on this case. Here driver is preset.
-> > > > > > > (driver/net/ethernet/intel/igb/igb_main.c)
-> > > > > > > In this case AER errors starts even before driver probe starts.
-> > > > > > > After probe, driver does the device reset with no success and even AER
-> > > > > > > recovery does not work.
-> > > > > >
-> > > > > > This case should be the same as the one above.  If we can change the
-> > > > > > PCI core so it can reset the device when there's no driver,  that would
-> > > > > > apply to case I (where there will never be a driver) and to case II
-> > > > > > (where there is no driver now, but a driver will probe the device
-> > > > > > later).
-> > > > >
-> > > > > Does this means change are required in PCI core.
-> > > >
-> > > > Yes, I am suggesting that the PCI core does not do the right thing
-> > > > here.
-> > > >
-> > > > > I tried following changes in pcie_do_recovery() but it did not help.
-> > > > > Same error as before.
-> > > > >
-> > > > > -- a/drivers/pci/pcie/err.c
-> > > > > +++ b/drivers/pci/pcie/err.c
-> > > > >         pci_info(dev, "broadcast resume message\n");
-> > > > >         pci_walk_bus(bus, report_resume, &status);
-> > > > > @@ -203,7 +207,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> > > > >         return status;
-> > > > >
-> > > > >  failed:
-> > > > >         pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> > > > > +       pci_reset_function(dev);
-> > > > > +       pci_aer_clear_device_status(dev);
-> > > > > +       pci_aer_clear_nonfatal_status(dev);
-> > > >
-> > > > Did you confirm that this resets the devices in question (0000:09:00.0
-> > > > and 0000:09:00.1, I think), and what reset mechanism this uses (FLR,
-> > > > PM, etc)?
-> > >
-> > > Earlier reset  was happening with P2P bridge(0000:00:09.0) this the
-> > > reason no effect. After making following changes,  both devices are
-> > > now getting reset.
-> > > Both devices are using FLR.
-> > >
-> > > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > > index 117c0a2b2ba4..26b908f55aef 100644
-> > > --- a/drivers/pci/pcie/err.c
-> > > +++ b/drivers/pci/pcie/err.c
-> > > @@ -66,6 +66,20 @@ static int report_error_detected(struct pci_dev *dev,
-> > >                 if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> > >                         vote = PCI_ERS_RESULT_NO_AER_DRIVER;
-> > >                         pci_info(dev, "can't recover (no
-> > > error_detected callback)\n");
-> > > +
-> > > +                       pci_save_state(dev);
-> > > +                       pci_cfg_access_lock(dev);
-> > > +
-> > > +                       /* Quiesce the device completely */
-> > > +                       pci_write_config_word(dev, PCI_COMMAND,
-> > > +                             PCI_COMMAND_INTX_DISABLE);
-> > > +                       if (!__pci_reset_function_locked(dev)) {
-> > > +                               vote = PCI_ERS_RESULT_RECOVERED;
-> > > +                               pci_info(dev, "recovered via pci level
-> > > reset\n");
-> > > +                       }
-> >
-> > Why do we need to save the state and quiesce the device?  The reset
-> > should disable interrupts anyway.  In this particular case where
-> > there's no driver, I don't think we should have to restore the state.
-> > We maybe should *remove* the device and re-enumerate it after the
-> > reset, but the state from before the reset should be irrelevant.
+Hi Bhupesh,
+
+> -----Original Message-----
+> From: Bhupesh Sharma <bhsharma@redhat.com>
+> Sent: Thursday, June 4, 2020 2:05 AM
+> To: Kamlakant Patel <kamlakantp@marvell.com>
+> Cc: linux-arm-kernel@lists.infradead.org; x86@kernel.org; Mark Rutland
+> <mark.rutland@arm.com>; Kazuhito Hagio <k-hagio@ab.jp.nec.com>; Steve
+> Capper <steve.capper@arm.com>; Catalin Marinas
+> <catalin.marinas@arm.com>; Ard Biesheuvel <ard.biesheuvel@linaro.org>;
+> kexec@lists.infradead.org; linux-kernel@vger.kernel.org; James Morse
+> <james.morse@arm.com>; Dave Anderson <anderson@redhat.com>;
+> bhupesh.linux@gmail.com; Will Deacon <will@kernel.org>; Ganapatrao Kulkarni
+> <gkulkarni@marvell.com>
+> Subject: [EXT] Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in
+> vmcoreinfo
 > 
-> I tried pci_reset_function_locked without save/restore then I got the
-> synchronous abort during igb_probe (case 2 i.e. with driver). This is
-> 100% reproducible.
-> looks like pci_reset_function_locked is causing PCI configuration
-> space random. Same is mentioned here
-> https://www.kernel.org/doc/html/latest/driver-api/pci/pci.html
+> External Email
+> 
+> ----------------------------------------------------------------------
+> Hi Kamlakant,
+> 
+> Many thanks for having a look at the patchset.
+> 
+> On Wed, Jun 3, 2020 at 4:50 PM Kamlakant Patel <kamlakantp@marvell.com>
+> wrote:
+> >
+> > Hi Bhupesh,
+> >
+> > > -----Original Message-----
+> > > From: kexec <kexec-bounces@lists.infradead.org> On Behalf Of Bhupesh
+> > > Sharma
+> > > Sent: Thursday, May 14, 2020 12:23 AM
+> > > To: linux-arm-kernel@lists.infradead.org; x86@kernel.org
+> > > Cc: Mark Rutland <mark.rutland@arm.com>; Kazuhito Hagio <k-
+> > > hagio@ab.jp.nec.com>; Steve Capper <steve.capper@arm.com>; Catalin
+> > > Marinas <catalin.marinas@arm.com>; bhsharma@redhat.com; Ard
+> > > Biesheuvel <ard.biesheuvel@linaro.org>; kexec@lists.infradead.org;
+> > > linux- kernel@vger.kernel.org; James Morse <james.morse@arm.com>;
+> > > Dave Anderson <anderson@redhat.com>; bhupesh.linux@gmail.com; Will
+> > > Deacon <will@kernel.org>
+> > > Subject: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in
+> > > vmcoreinfo
+> > >
+> > > vabits_actual variable on arm64 indicates the actual VA space size,
+> > > and allows a single binary to support both 48-bit and 52-bit VA spaces.
+> > >
+> > > If the ARMv8.2-LVA optional feature is present, and we are running
+> > > with a 64KB page size; then it is possible to use 52-bits of address
+> > > space for both userspace and kernel addresses. However, any kernel
+> > > binary that supports 52-bit must also be able to fall back to 48-bit
+> > > at early boot time if the hardware feature is not present.
+> > >
+> > > Since TCR_EL1.T1SZ indicates the size offset of the memory region
+> > > addressed by
+> > > TTBR1_EL1 (and hence can be used for determining the vabits_actual
+> > > value) it makes more sense to export the same in vmcoreinfo rather
+> > > than vabits_actual variable, as the name of the variable can change
+> > > in future kernel versions, but the architectural constructs like
+> > > TCR_EL1.T1SZ can be used better to indicate intended specific fields to user-
+> space.
+> > >
+> > > User-space utilities like makedumpfile and crash-utility, need to
+> > > read this value from vmcoreinfo for determining if a virtual address lies in the
+> linear map range.
+> > >
+> > > While at it also add documentation for TCR_EL1.T1SZ variable being
+> > > added to vmcoreinfo.
+> > >
+> > > It indicates the size offset of the memory region addressed by
+> > > TTBR1_EL1
+> > >
+> > > Cc: James Morse <james.morse@arm.com>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Will Deacon <will@kernel.org>
+> > > Cc: Steve Capper <steve.capper@arm.com>
+> > > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > > Cc: Dave Anderson <anderson@redhat.com>
+> > > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-kernel@vger.kernel.org
+> > > Cc: kexec@lists.infradead.org
+> > > Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> > > Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> > > ---
+> > >  Documentation/admin-guide/kdump/vmcoreinfo.rst | 11 +++++++++++
+> > >  arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+> > >  arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+> > >  3 files changed, 22 insertions(+)
+> > >
+> > > diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> > > b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> > > index 2a632020f809..2baad0bfb09d 100644
+> > > --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> > > +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> > > @@ -404,6 +404,17 @@ KERNELPACMASK
+> > >  The mask to extract the Pointer Authentication Code from a kernel
+> > > virtual address.
+> > >
+> > > +TCR_EL1.T1SZ
+> > > +------------
+> > > +
+> > > +Indicates the size offset of the memory region addressed by TTBR1_EL1.
+> > > +The region size is 2^(64-T1SZ) bytes.
+> > > +
+> > > +TTBR1_EL1 is the table base address register specified by ARMv8-A
+> > > +architecture which is used to lookup the page-tables for the
+> > > +Virtual addresses in the higher VA range (refer to ARMv8 ARM
+> > > +document for more details).
+> > > +
+> > >  arm
+> > >  ===
+> > >
+> > > diff --git a/arch/arm64/include/asm/pgtable-hwdef.h
+> > > b/arch/arm64/include/asm/pgtable-hwdef.h
+> > > index 6bf5e650da78..a1861af97ac9 100644
+> > > --- a/arch/arm64/include/asm/pgtable-hwdef.h
+> > > +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+> > > @@ -216,6 +216,7 @@
+> > >  #define TCR_TxSZ(x)          (TCR_T0SZ(x) | TCR_T1SZ(x))
+> > >  #define TCR_TxSZ_WIDTH               6
+> > >  #define TCR_T0SZ_MASK                (((UL(1) << TCR_TxSZ_WIDTH) - 1) <<
+> > > TCR_T0SZ_OFFSET)
+> > > +#define TCR_T1SZ_MASK                (((UL(1) << TCR_TxSZ_WIDTH) - 1) <<
+> > > TCR_T1SZ_OFFSET)
+> > >
+> > >  #define TCR_EPD0_SHIFT               7
+> > >  #define TCR_EPD0_MASK                (UL(1) << TCR_EPD0_SHIFT)
+> > > diff --git a/arch/arm64/kernel/crash_core.c
+> > > b/arch/arm64/kernel/crash_core.c index 1f646b07e3e9..314391a156ee
+> > > 100644
+> > > --- a/arch/arm64/kernel/crash_core.c
+> > > +++ b/arch/arm64/kernel/crash_core.c
+> > > @@ -7,6 +7,14 @@
+> > >  #include <linux/crash_core.h>
+> > >  #include <asm/cpufeature.h>
+> > >  #include <asm/memory.h>
+> > > +#include <asm/pgtable-hwdef.h>
+> > > +
+> > > +static inline u64 get_tcr_el1_t1sz(void);
+> > > +
+> > > +static inline u64 get_tcr_el1_t1sz(void) {
+> > > +     return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >>
+> > > +TCR_T1SZ_OFFSET; }
+> > >
+> > >  void arch_crash_save_vmcoreinfo(void)  { @@ -16,6 +24,8 @@ void
+> > > arch_crash_save_vmcoreinfo(void)
+> > >                                               kimage_voffset);
+> > >       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+> > >                                               PHYS_OFFSET);
+> > > +     vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
+> > > +                                             get_tcr_el1_t1sz());
+> > I tested this patch on top of upstream kernel v5.7 and I am getting "crash:
+> cannot determine VA_BITS_ACTUAL" error with crash tool.
+> > I looked into crash-utility source and it is expecting tcr_el1_t1sz not
+> TCR_EL1_T1SZ.
+> > Could you please check.
+> 
+> Indeed. As per James comments on the v5 (see [1]) where he suggested
+> converting ttcr_el1_t1sz into TCR_EL1_T1SZ, I made the change in v6
+> accordingly.
+> 
+> This time I haven't sent out the v6 userspace changes
+> (makedumpfile/crash-utility) upstream first, since we are waiting for kernel
+> changes to be accepted first, as we have seen in the past that while the
+> userspace patches have been accepted, the kernel patches required a respin
+> cycle, thus leading to inconsistencies, as you also pointed out with crash-utility.
+> 
+> If you want, for your local testing, I can share my github branch where I have
+> kept the crash-utility v6 patchset ready. Please let me know.
+> 
+> [1]. https://urldefense.proofpoint.com/v2/url?u=https-
+> 3A__lore.kernel.org_linuxppc-2Ddev_63d6e63c-2D7218-2Dd2dd-2D8767-
+> 2D4464be83603f-
+> 40arm.com_&d=DwIBaQ&c=nKjWec2b6R0mOyPaz7xtfQ&r=XecQZQJWhG6-
+> mN8sWxffFOgUXg4irGP3Sjuy6RxdacQ&m=ijR8vEafG_QGTKYX2oI-
+> SvfFsY4pPou6tvtrnxRoloo&s=zJmo3qbm2XfnKbrUqJPNN5o6PJqER9OzltwgS4aTa
+> -k&e=
+Thanks for clarifying.
+I made userspace changes accordingly and tested and it works fine. We will be wait for your userspace patch.
 
-That documentation is poorly worded.  A reset doesn't make the
-contents of config space "random," but of course it sets config space
-registers to their initialization values, including things like the
-device BARs.  After a reset, the device BARs are zero, so it won't
-respond at the address we expect, and I'm sure that's what's causing
-the external abort.
+Tested-by: Kamlakant Patel <kamlakantp@marvell.com>
 
-So I guess we *do* need to save the state before the reset and restore
-it (either that or enumerate the device from scratch just like we
-would if it had been hot-added).  I'm not really thrilled with trying
-to save the state after the device has already reported an error.  I'd
-rather do it earlier, maybe during enumeration, like in
-pci_init_capabilities().  But I don't understand all the subtleties of
-dev->state_saved, so that requires some legwork.
-
-I don't think we should set INTX_DISABLE; the reset will make whatever
-we do with it irrelevant anyway.
-
-Remind me why the pci_cfg_access_lock()?
-
-Bjorn
+Thanks,
+Kamlakant Patel
+> 
+> Thanks,
+> Bhupesh
+> 
+> 
+> >
+> > Thanks,
+> > Kamlakant Patel
+> > >       vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+> > >       vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
+> > >
+> > >       system_supports_address_auth() ?
+> > > --
+> > > 2.7.4
+> > >
+> > >
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > https://urldefense.proofpoint.com/v2/url?u=http-
+> > > 3A__lists.infradead.org_mailman_listinfo_kexec&d=DwICAg&c=nKjWec2b6R
+> > > 0m
+> > > OyPaz7xtfQ&r=XecQZQJWhG6-
+> > >
+> mN8sWxffFOgUXg4irGP3Sjuy6RxdacQ&m=oeLdIVaWScimdfEc4dNhRI0tT24IgzG
+> > > 7LkpAE5P11JQ&s=LLjHpz349DuDtORX4xywCxzbGUOagoq4JXosStycqI4&e=
+> >
 
 _______________________________________________
 kexec mailing list
