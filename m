@@ -1,23 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jgaAT-0006jQ-7h
- for kexec@lists.infradead.org; Wed, 03 Jun 2020 20:39:22 +0000
-Received: by mail-qt1-f198.google.com with SMTP id p31so3008613qte.1
- for <kexec@lists.infradead.org>; Wed, 03 Jun 2020 13:39:12 -0700 (PDT)
+Date: Wed, 3 Jun 2020 19:02:32 -0500
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+Message-ID: <20200604000232.GA956503@bjorn-Precision-5520>
 MIME-Version: 1.0
-References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
- <1575057559-25496-6-git-send-email-bhsharma@redhat.com>
- <8a982138-f1fa-34e8-18fd-49a79cea3652@arm.com>
- <b7d8d603-d9fe-3e18-c754-baf2015acd16@redhat.com>
- <51606585-77a3-265f-1d4e-19f25a90697d@broadcom.com>
-In-Reply-To: <51606585-77a3-265f-1d4e-19f25a90697d@broadcom.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 4 Jun 2020 02:08:59 +0530
-Message-ID: <CACi5LpPXdcJ7AmFWiSyM8rG_+7C=wTqiP0oCa9QAPe0Y0_wH=Q@mail.gmail.com>
-Subject: Re: Re: [RESEND PATCH v5 5/5] Documentation/vmcoreinfo: Add
- documentation for 'TCR_EL1.T1SZ'
+Content-Disposition: inline
+In-Reply-To: <CAJ2QiJ+fhPWAxZXzHhNFLkHr47e+wTqqz+s5r+utgCP=C6qsjw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,87 +18,244 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, x86@kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Steve Capper <steve.capper@arm.com>
+To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
+Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Myron Stowe <myron.stowe@redhat.com>, Vijay Mohan Pandarathil <vijaymohan.pandarathil@hp.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 
-Hello Scott,
+On Wed, Jun 03, 2020 at 11:12:48PM +0530, Prabhakar Kushwaha wrote:
+> On Sat, May 30, 2020 at 1:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > On Fri, May 29, 2020 at 07:48:10PM +0530, Prabhakar Kushwaha wrote:
+> > > On Thu, May 28, 2020 at 1:48 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > >
+> > > > On Wed, May 27, 2020 at 05:14:39PM +0530, Prabhakar Kushwaha wrote:
+> > > > > On Fri, May 22, 2020 at 4:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > On Thu, May 21, 2020 at 09:28:20AM +0530, Prabhakar Kushwaha wrote:
+> > > > > > > On Wed, May 20, 2020 at 4:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > On Thu, May 14, 2020 at 12:47:02PM +0530, Prabhakar Kushwaha wrote:
+> > > > > > > > > On Wed, May 13, 2020 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+> > > > > > > > > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
+> > > > > > > > > > > An SMMU Stream table is created by the primary kernel. This table is
+> > > > > > > > > > > used by the SMMU to perform address translations for device-originated
+> > > > > > > > > > > transactions. Any crash (if happened) launches the kdump kernel which
+> > > > > > > > > > > re-creates the SMMU Stream table. New transactions will be translated
+> > > > > > > > > > > via this new table..
+> > > > > > > > > > >
+> > > > > > > > > > > There are scenarios, where devices are still having old pending
+> > > > > > > > > > > transactions (configured in the primary kernel). These transactions
+> > > > > > > > > > > come in-between Stream table creation and device-driver probe.
+> > > > > > > > > > > As new stream table does not have entry for older transactions,
+> > > > > > > > > > > it will be aborted by SMMU.
+> > > > > > > > > > >
+> > > > > > > > > > > Similar observations were found with PCIe-Intel 82576 Gigabit
+> > > > > > > > > > > Network card. It sends old Memory Read transaction in kdump kernel.
+> > > > > > > > > > > Transactions configured for older Stream table entries, that do not
+> > > > > > > > > > > exist any longer in the new table, will cause a PCIe Completion Abort.
+> > > > > > > > > >
+> > > > > > > > > > That sounds like exactly what we want, doesn't it?
+> > > > > > > > > >
+> > > > > > > > > > Or do you *want* DMA from the previous kernel to complete?  That will
+> > > > > > > > > > read or scribble on something, but maybe that's not terrible as long
+> > > > > > > > > > as it's not memory used by the kdump kernel.
+> > > > > > > > >
+> > > > > > > > > Yes, Abort should happen. But it should happen in context of driver.
+> > > > > > > > > But current abort is happening because of SMMU and no driver/pcie
+> > > > > > > > > setup present at this moment.
+> > > > > > > >
+> > > > > > > > I don't understand what you mean by "in context of driver."  The whole
+> > > > > > > > problem is that we can't control *when* the abort happens, so it may
+> > > > > > > > happen in *any* context.  It may happen when a NIC receives a packet
+> > > > > > > > or at some other unpredictable time.
+> > > > > > > >
+> > > > > > > > > Solution of this issue should be at 2 place
+> > > > > > > > > a) SMMU level: I still believe, this patch has potential to overcome
+> > > > > > > > > issue till finally driver's probe takeover.
+> > > > > > > > > b) Device level: Even if something goes wrong. Driver/device should
+> > > > > > > > > able to recover.
+> > > > > > > > >
+> > > > > > > > > > > Returned PCIe completion abort further leads to AER Errors from APEI
+> > > > > > > > > > > Generic Hardware Error Source (GHES) with completion timeout.
+> > > > > > > > > > > A network device hang is observed even after continuous
+> > > > > > > > > > > reset/recovery from driver, Hence device is no more usable.
+> > > > > > > > > >
+> > > > > > > > > > The fact that the device is no longer usable is definitely a problem.
+> > > > > > > > > > But in principle we *should* be able to recover from these errors.  If
+> > > > > > > > > > we could recover and reliably use the device after the error, that
+> > > > > > > > > > seems like it would be a more robust solution that having to add
+> > > > > > > > > > special cases in every IOMMU driver.
+> > > > > > > > > >
+> > > > > > > > > > If you have details about this sort of error, I'd like to try to fix
+> > > > > > > > > > it because we want to recover from that sort of error in normal
+> > > > > > > > > > (non-crash) situations as well.
+> > > > > > > > > >
+> > > > > > > > > Completion abort case should be gracefully handled.  And device should
+> > > > > > > > > always remain usable.
+> > > > > > > > >
+> > > > > > > > > There are 2 scenario which I am testing with Ethernet card PCIe-Intel
+> > > > > > > > > 82576 Gigabit Network card.
+> > > > > > > > >
+> > > > > > > > > I)  Crash testing using kdump root file system: De-facto scenario
+> > > > > > > > >     -  kdump file system does not have Ethernet driver
+> > > > > > > > >     -  A lot of AER prints [1], making it impossible to work on shell
+> > > > > > > > > of kdump root file system.
+> > > > > > > >
+> > > > > > > > In this case, I think report_error_detected() is deciding that because
+> > > > > > > > the device has no driver, we can't do anything.  The flow is like
+> > > > > > > > this:
+> > > > > > > >
+> > > > > > > >   aer_recover_work_func               # aer_recover_work
+> > > > > > > >     kfifo_get(aer_recover_ring, entry)
+> > > > > > > >     dev = pci_get_domain_bus_and_slot
+> > > > > > > >     cper_print_aer(dev, ...)
+> > > > > > > >       pci_err("AER: aer_status:")
+> > > > > > > >       pci_err("AER:   [14] CmpltTO")
+> > > > > > > >       pci_err("AER: aer_layer=")
+> > > > > > > >     if (AER_NONFATAL)
+> > > > > > > >       pcie_do_recovery(dev, pci_channel_io_normal)
+> > > > > > > >         status = CAN_RECOVER
+> > > > > > > >         pci_walk_bus(report_normal_detected)
+> > > > > > > >           report_error_detected
+> > > > > > > >             if (!dev->driver)
+> > > > > > > >               vote = NO_AER_DRIVER
+> > > > > > > >               pci_info("can't recover (no error_detected callback)")
+> > > > > > > >             *result = merge_result(*, NO_AER_DRIVER)
+> > > > > > > >             # always NO_AER_DRIVER
+> > > > > > > >         status is now NO_AER_DRIVER
+> > > > > > > >
+> > > > > > > > So pcie_do_recovery() does not call .report_mmio_enabled() or .slot_reset(),
+> > > > > > > > and status is not RECOVERED, so it skips .resume().
+> > > > > > > >
+> > > > > > > > I don't remember the history there, but if a device has no driver and
+> > > > > > > > the device generates errors, it seems like we ought to be able to
+> > > > > > > > reset it.
+> > > > > > >
+> > > > > > > But how to reset the device considering there is no driver.
+> > > > > > > Hypothetically, this case should be taken care by PCIe subsystem to
+> > > > > > > perform reset at PCIe level.
+> > > > > >
+> > > > > > I don't understand your question.  The PCI core (not the device
+> > > > > > driver) already does the reset.  When pcie_do_recovery() calls
+> > > > > > reset_link(), all devices on the other side of the link are reset.
+> > > > > >
+> > > > > > > > We should be able to field one (or a few) AER errors, reset the
+> > > > > > > > device, and you should be able to use the shell in the kdump kernel.
+> > > > > > > >
+> > > > > > > here kdump shell is usable only problem is a "lot of AER Errors". One
+> > > > > > > cannot see what they are typing.
+> > > > > >
+> > > > > > Right, that's what I expect.  If the PCI core resets the device, you
+> > > > > > should get just a few AER errors, and they should stop after the
+> > > > > > device is reset.
+> > > > > >
+> > > > > > > > >     -  Note kdump shell allows to use makedumpfile, vmcore-dmesg applications.
+> > > > > > > > >
+> > > > > > > > > II) Crash testing using default root file system: Specific case to
+> > > > > > > > > test Ethernet driver in second kernel
+> > > > > > > > >    -  Default root file system have Ethernet driver
+> > > > > > > > >    -  AER error comes even before the driver probe starts.
+> > > > > > > > >    -  Driver does reset Ethernet card as part of probe but no success.
+> > > > > > > > >    -  AER also tries to recover. but no success.  [2]
+> > > > > > > > >    -  I also tries to remove AER errors by using "pci=noaer" bootargs
+> > > > > > > > > and commenting ghes_handle_aer() from GHES driver..
+> > > > > > > > >           than different set of errors come which also never able to recover [3]
+> > > > > > > > >
+> > > > > > >
+> > > > > > > Please suggest your view on this case. Here driver is preset.
+> > > > > > > (driver/net/ethernet/intel/igb/igb_main.c)
+> > > > > > > In this case AER errors starts even before driver probe starts.
+> > > > > > > After probe, driver does the device reset with no success and even AER
+> > > > > > > recovery does not work.
+> > > > > >
+> > > > > > This case should be the same as the one above.  If we can change the
+> > > > > > PCI core so it can reset the device when there's no driver,  that would
+> > > > > > apply to case I (where there will never be a driver) and to case II
+> > > > > > (where there is no driver now, but a driver will probe the device
+> > > > > > later).
+> > > > >
+> > > > > Does this means change are required in PCI core.
+> > > >
+> > > > Yes, I am suggesting that the PCI core does not do the right thing
+> > > > here.
+> > > >
+> > > > > I tried following changes in pcie_do_recovery() but it did not help.
+> > > > > Same error as before.
+> > > > >
+> > > > > -- a/drivers/pci/pcie/err.c
+> > > > > +++ b/drivers/pci/pcie/err.c
+> > > > >         pci_info(dev, "broadcast resume message\n");
+> > > > >         pci_walk_bus(bus, report_resume, &status);
+> > > > > @@ -203,7 +207,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
+> > > > >         return status;
+> > > > >
+> > > > >  failed:
+> > > > >         pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
+> > > > > +       pci_reset_function(dev);
+> > > > > +       pci_aer_clear_device_status(dev);
+> > > > > +       pci_aer_clear_nonfatal_status(dev);
+> > > >
+> > > > Did you confirm that this resets the devices in question (0000:09:00.0
+> > > > and 0000:09:00.1, I think), and what reset mechanism this uses (FLR,
+> > > > PM, etc)?
+> > >
+> > > Earlier reset  was happening with P2P bridge(0000:00:09.0) this the
+> > > reason no effect. After making following changes,  both devices are
+> > > now getting reset.
+> > > Both devices are using FLR.
+> > >
+> > > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
+> > > index 117c0a2b2ba4..26b908f55aef 100644
+> > > --- a/drivers/pci/pcie/err.c
+> > > +++ b/drivers/pci/pcie/err.c
+> > > @@ -66,6 +66,20 @@ static int report_error_detected(struct pci_dev *dev,
+> > >                 if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
+> > >                         vote = PCI_ERS_RESULT_NO_AER_DRIVER;
+> > >                         pci_info(dev, "can't recover (no
+> > > error_detected callback)\n");
+> > > +
+> > > +                       pci_save_state(dev);
+> > > +                       pci_cfg_access_lock(dev);
+> > > +
+> > > +                       /* Quiesce the device completely */
+> > > +                       pci_write_config_word(dev, PCI_COMMAND,
+> > > +                             PCI_COMMAND_INTX_DISABLE);
+> > > +                       if (!__pci_reset_function_locked(dev)) {
+> > > +                               vote = PCI_ERS_RESULT_RECOVERED;
+> > > +                               pci_info(dev, "recovered via pci level
+> > > reset\n");
+> > > +                       }
+> >
+> > Why do we need to save the state and quiesce the device?  The reset
+> > should disable interrupts anyway.  In this particular case where
+> > there's no driver, I don't think we should have to restore the state.
+> > We maybe should *remove* the device and re-enumerate it after the
+> > reset, but the state from before the reset should be irrelevant.
+> 
+> I tried pci_reset_function_locked without save/restore then I got the
+> synchronous abort during igb_probe (case 2 i.e. with driver). This is
+> 100% reproducible.
+> looks like pci_reset_function_locked is causing PCI configuration
+> space random. Same is mentioned here
+> https://www.kernel.org/doc/html/latest/driver-api/pci/pci.html
 
-On Thu, Jun 4, 2020 at 12:17 AM Scott Branden
-<scott.branden@broadcom.com> wrote:
->
-> Hi Bhupesh,
->
-> Would be great to get this patch series upstreamed?
->
-> On 2019-12-25 10:49 a.m., Bhupesh Sharma wrote:
-> > Hi James,
-> >
-> > On 12/12/2019 04:02 PM, James Morse wrote:
-> >> Hi Bhupesh,
-> >
-> > I am sorry this review mail skipped my attention due to holidays and
-> > focus on other urgent issues.
-> >
-> >> On 29/11/2019 19:59, Bhupesh Sharma wrote:
-> >>> Add documentation for TCR_EL1.T1SZ variable being added to
-> >>> vmcoreinfo.
-> >>>
-> >>> It indicates the size offset of the memory region addressed by
-> >>> TTBR1_EL1
-> >>
-> >>> and hence can be used for determining the vabits_actual value.
-> >>
-> >> used for determining random-internal-kernel-variable, that might not
-> >> exist tomorrow.
-> >>
-> >> Could you describe how this is useful/necessary if a debugger wants
-> >> to walk the page
-> >> tables from the core file? I think this is a better argument.
-> >>
-> >> Wouldn't the documentation be better as part of the patch that adds
-> >> the export?
-> >> (... unless these have to go via different trees? ..)
-> >
-> > Ok, will fix the same in v6 version.
-> >
-> >>> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> >>> b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> >>> index 447b64314f56..f9349f9d3345 100644
-> >>> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> >>> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> >>> @@ -398,6 +398,12 @@ KERNELOFFSET
-> >>>   The kernel randomization offset. Used to compute the page offset. If
-> >>>   KASLR is disabled, this value is zero.
-> >>>   +TCR_EL1.T1SZ
-> >>> +------------
-> >>> +
-> >>> +Indicates the size offset of the memory region addressed by TTBR1_EL1
-> >>
-> >>> +and hence can be used for determining the vabits_actual value.
-> >>
-> >> 'vabits_actual' may not exist when the next person comes to read this
-> >> documentation (its
-> >> going to rot really quickly).
-> >>
-> >> I think the first half of this text is enough to say what this is
-> >> for. You should include
-> >> words to the effect that its the hardware value that goes with
-> >> swapper_pg_dir. You may
-> >> want to point readers to the arm-arm for more details on what the
-> >> value means.
-> >
-> > Ok, got it. Fixed this in v6, which should be on its way shortly.
-> I can't seem to find v6?
+That documentation is poorly worded.  A reset doesn't make the
+contents of config space "random," but of course it sets config space
+registers to their initialization values, including things like the
+device BARs.  After a reset, the device BARs are zero, so it won't
+respond at the address we expect, and I'm sure that's what's causing
+the external abort.
 
-Oops. I remember Cc'ing you to the v6 patchset (may be my email client
-messed up), anyways here is the v6 patchset for your reference:
-<http://lists.infradead.org/pipermail/kexec/2020-May/025095.html>
+So I guess we *do* need to save the state before the reset and restore
+it (either that or enumerate the device from scratch just like we
+would if it had been hot-added).  I'm not really thrilled with trying
+to save the state after the device has already reported an error.  I'd
+rather do it earlier, maybe during enumeration, like in
+pci_init_capabilities().  But I don't understand all the subtleties of
+dev->state_saved, so that requires some legwork.
 
-Do share your review/test comments on the same.
+I don't think we should set INTX_DISABLE; the reset will make whatever
+we do with it irrelevant anyway.
 
-Thanks,
-Bhupesh
+Remind me why the pci_cfg_access_lock()?
 
+Bjorn
 
 _______________________________________________
 kexec mailing list
