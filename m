@@ -1,24 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <1829b2969f722f19d9afcc913c5054887ca72578.camel@suse.de>
-Subject: Re: [PATCH v8 0/5] support reserving crashkernel above 4G on arm64
- kdump
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date: Fri, 05 Jun 2020 10:21:41 +0200
-In-Reply-To: <de6c7c59-89d2-5b2e-d7ba-50403c4bcaf2@oracle.com>
-References: <20200521093805.64398-1-chenzhou10@huawei.com>
- <CAJ2QiJ+1Hj2OQzpR5CfvLGMfTTbXAST94hsbfm0VcDmJKV3WTw@mail.gmail.com>
- <303695cc-d3ea-9f51-1489-07d27d4253d4@oracle.com>
- <CACi5LpOZzdfEKUYAfYxtgeUbk9K6YFVUKLaGS8XoS0kForjH9A@mail.gmail.com>
- <F64A309C-B9C0-45F2-A50D-D677005C33A6@oracle.com>
- <CAJ2QiJJE-jeRL1HPUZCwi1LtV9CBMmYrsOaS6vX1R1sJ6Z1t8g@mail.gmail.com>
- <6EA47B07-5119-49DF-9980-12A2066F22CA@oracle.com>
- <CAJ2QiJJhUCnobrMHui5=6zLzgy3KsoPxrqiH_oYT8Jhb5MkmbA@mail.gmail.com>
- <8463464e-5461-f328-621c-bacc6a3b88dd@huawei.com>
- <8E0D45DC-12BF-437D-A342-03E974D9C6D4@oracle.com>
- <CACi5LpN-+NRnaDoWWWidbzma8BNzmofA5FQBV=cPF1Mc84FpFg@mail.gmail.com>
- <751bbe2512628ff38002db33ce02af051d080cd2.camel@suse.de>
- <de6c7c59-89d2-5b2e-d7ba-50403c4bcaf2@oracle.com>
+Received: from mail-pf1-x442.google.com ([2607:f8b0:4864:20::442])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jhGsK-0006zE-10
+ for kexec@lists.infradead.org; Fri, 05 Jun 2020 18:15:29 +0000
+Received: by mail-pf1-x442.google.com with SMTP id 64so5334283pfg.8
+ for <kexec@lists.infradead.org>; Fri, 05 Jun 2020 11:15:27 -0700 (PDT)
+Subject: Re: [PATCH 0/3] fs: reduce export usage of kerne_read*() calls
+References: <20200513152108.25669-1-mcgrof@kernel.org>
+ <20200513181736.GA24342@infradead.org>
+ <20200515212933.GD11244@42.do-not-panic.com>
+ <20200518062255.GB15641@infradead.org>
+ <1589805462.5111.107.camel@linux.ibm.com>
+ <7525ca03-def7-dfe2-80a9-25270cb0ae05@broadcom.com>
+ <202005221551.5CA1372@keescook>
+ <c48a80f5-a09c-6747-3db8-be23a260a0cb@broadcom.com>
+ <1590288736.5111.431.camel@linux.ibm.com>
+From: Scott Branden <scott.branden@broadcom.com>
+Message-ID: <1c68c0c7-1b0a-dfec-0e50-1b65eedc3dc7@broadcom.com>
+Date: Fri, 5 Jun 2020 11:15:21 -0700
 MIME-Version: 1.0
+In-Reply-To: <1590288736.5111.431.camel@linux.ibm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,516 +29,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============6016784180392945023=="
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Donnelly <John.P.donnelly@oracle.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Devicetree List <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Baoquan He <bhe@redhat.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, chenzhou <chenzhou10@huawei.com>, Catalin Marinas <catalin.marinas@arm.com>, RuiRui Yang <dyoung@redhat.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, James Morse <james.morse@arm.com>, guohanjun@huawei.com, Thomas Gleixner <tglx@linutronix.de>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@redhat.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Mimi Zohar <zohar@linux.ibm.com>, Kees Cook <keescook@chromium.org>
+Cc: rafael@kernel.org, dhowells@redhat.com, linux-security-module@vger.kernel.org, paul@paul-moore.com, nayna@linux.ibm.com, jmorris@namei.org, Christoph Hellwig <hch@infradead.org>, geert@linux-m68k.org, dan.carpenter@oracle.com, selinux@vger.kernel.org, viro@zeniv.linux.org.uk, skhan@linuxfoundation.org, eparis@parisplace.org, tglx@linutronix.de, gregkh@linuxfoundation.org, stephen.smalley.work@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, ebiederm@xmission.com, jeyu@kernel.org, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org, bauerman@linux.ibm.com
 
-
---===============6016784180392945023==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-uSOtOi+SJ+bMj8a3VO+u"
-
-
---=-uSOtOi+SJ+bMj8a3VO+u
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2020-06-04 at 21:26 -0500, John Donnelly wrote:
-> On 6/4/20 12:01 PM, Nicolas Saenz Julienne wrote:
-> > On Thu, 2020-06-04 at 01:17 +0530, Bhupesh Sharma wrote:
-> > > Hi All,
-> > >=20
-> > > On Wed, Jun 3, 2020 at 9:03 PM John Donnelly <john.p.donnelly@oracle.=
-com>
-> > > wrote:
-> > > > > On Jun 3, 2020, at 8:20 AM, chenzhou <chenzhou10@huawei.com> wrot=
-e:
-> > > > >=20
-> > > > > Hi,
-> > > > >=20
-> > > > >=20
-> > > > > On 2020/6/3 19:47, Prabhakar Kushwaha wrote:
-> > > > > > Hi Chen,
-> > > > > >=20
-> > > > > > On Tue, Jun 2, 2020 at 8:12 PM John Donnelly <
-> > > > > > john.p.donnelly@oracle.com
-> > > > > > > wrote:
-> > > > > > >=20
-> > > > > > > > On Jun 2, 2020, at 12:38 AM, Prabhakar Kushwaha <
-> > > > > > > > prabhakar.pkin@gmail.com> wrote:
-> > > > > > > >=20
-> > > > > > > > On Tue, Jun 2, 2020 at 3:29 AM John Donnelly <
-> > > > > > > > john.p.donnelly@oracle.com> wrote:
-> > > > > > > > > Hi .  See below !
-> > > > > > > > >=20
-> > > > > > > > > > On Jun 1, 2020, at 4:02 PM, Bhupesh Sharma <
-> > > > > > > > > > bhsharma@redhat.com>
-> > > > > > > > > > wrote:
-> > > > > > > > > >=20
-> > > > > > > > > > Hi John,
-> > > > > > > > > >=20
-> > > > > > > > > > On Tue, Jun 2, 2020 at 1:01 AM John Donnelly <
-> > > > > > > > > > John.P.donnelly@oracle.com> wrote:
-> > > > > > > > > > > Hi,
-> > > > > > > > > > >=20
-> > > > > > > > > > >=20
-> > > > > > > > > > > On 6/1/20 7:02 AM, Prabhakar Kushwaha wrote:
-> > > > > > > > > > > > Hi Chen,
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > On Thu, May 21, 2020 at 3:05 PM Chen Zhou <
-> > > > > > > > > > > > chenzhou10@huawei.com> wrote:
-> > > > > > > > > > > > > This patch series enable reserving crashkernel ab=
-ove
-> > > > > > > > > > > > > 4G in
-> > > > > > > > > > > > > arm64.
-> > > > > > > > > > > > >=20
-> > > > > > > > > > > > > There are following issues in arm64 kdump:
-> > > > > > > > > > > > > 1. We use crashkernel=3DX to reserve crashkernel =
-below
-> > > > > > > > > > > > > 4G,
-> > > > > > > > > > > > > which will fail
-> > > > > > > > > > > > > when there is no enough low memory.
-> > > > > > > > > > > > > 2. Currently, crashkernel=3DY@X can be used to re=
-serve
-> > > > > > > > > > > > > crashkernel above 4G,
-> > > > > > > > > > > > > in this case, if swiotlb or DMA buffers are requi=
-red,
-> > > > > > > > > > > > > crash dump kernel
-> > > > > > > > > > > > > will boot failure because there is no low memory
-> > > > > > > > > > > > > available
-> > > > > > > > > > > > > for allocation.
-> > > > > > > > > > > > >=20
-> > > > > > > > > > > > We are getting "warn_alloc" [1] warning during boot=
- of
-> > > > > > > > > > > > kdump
-> > > > > > > > > > > > kernel
-> > > > > > > > > > > > with bootargs as [2] of primary kernel.
-> > > > > > > > > > > > This error observed on ThunderX2  ARM64 platform.
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > It is observed with latest upstream tag (v5.7-rc3) =
-with
-> > > > > > > > > > > > this
-> > > > > > > > > > > > patch set
-> > > > > > > > > > > > and
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/202=
-0-May/025128.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KR=
-VqALmvSK2VmCkIPIhsaxbiIAAlzu$
-> > > > > > > > > > > > Also **without** this patch-set
-> > > > > > > > > > > > "
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806=
-882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2=
-VmCkIPIhsaxbjC6ujMA$
-> > > > > > > > > > > > "
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > This issue comes whenever crashkernel memory is res=
-erved
-> > > > > > > > > > > > after 0xc000_0000.
-> > > > > > > > > > > > More details discussed earlier in
-> > > > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://www.spinics.net/lists/arm-kernel/msg806=
-882.html__;!!GqivPVa7Brio!LnTSARkCt0V0FozR0KmqooaH5ADtdXvs3mPdP3KRVqALmvSK2=
-VmCkIPIhsaxbjC6ujMA$
-> >    without
-> > > > > > > > > > > > any
-> > > > > > > > > > > > solution
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > This patch-set is expected to solve similar kind of
-> > > > > > > > > > > > issue.
-> > > > > > > > > > > > i.e. low memory is only targeted for DMA, swiotlb; =
-So
-> > > > > > > > > > > > above
-> > > > > > > > > > > > mentioned
-> > > > > > > > > > > > observation should be considered/fixed. .
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > --pk
-> > > > > > > > > > > >=20
-> > > > > > > > > > > > [1]
-> > > > > > > > > > > > [   30.366695] DMI: Cavium Inc. Saber/Saber, BIOS
-> > > > > > > > > > > > TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/=
-yyyy
-> > > > > > > > > > > > [   30.367696] NET: Registered protocol family 16
-> > > > > > > > > > > > [   30.369973] swapper/0: page allocation failure:
-> > > > > > > > > > > > order:6,
-> > > > > > > > > > > > mode:0x1(GFP_DMA),
-> > > > > > > > > > > > nodemask=3D(null),cpuset=3D/,mems_allowed=3D0
-> > > > > > > > > > > > [   30.369980] CPU: 0 PID: 1 Comm: swapper/0 Not ta=
-inted
-> > > > > > > > > > > > 5.7.0-rc3+ #121
-> > > > > > > > > > > > [   30.369981] Hardware name: Cavium Inc. Saber/Sab=
-er,
-> > > > > > > > > > > > BIOS
-> > > > > > > > > > > > TX2-FW-Release-3.1-build_01-2803-g74253a541a mm/dd/=
-yyyy
-> > > > > > > > > > > > [   30.369984] Call trace:
-> > > > > > > > > > > > [   30.369989]  dump_backtrace+0x0/0x1f8
-> > > > > > > > > > > > [   30.369991]  show_stack+0x20/0x30
-> > > > > > > > > > > > [   30.369997]  dump_stack+0xc0/0x10c
-> > > > > > > > > > > > [   30.370001]  warn_alloc+0x10c/0x178
-> > > > > > > > > > > > [   30.370004]  __alloc_pages_slowpath.constprop.11=
-1+0xb
-> > > > > > > > > > > > 10/0
-> > > > > > > > > > > > xb50
-> > > > > > > > > > > > [   30.370006]  __alloc_pages_nodemask+0x2b4/0x300
-> > > > > > > > > > > > [   30.370008]  alloc_page_interleave+0x24/0x98
-> > > > > > > > > > > > [   30.370011]  alloc_pages_current+0xe4/0x108
-> > > > > > > > > > > > [   30.370017]  dma_atomic_pool_init+0x44/0x1a4
-> > > > > > > > > > > > [   30.370020]  do_one_initcall+0x54/0x228
-> > > > > > > > > > > > [   30.370027]  kernel_init_freeable+0x228/0x2cc
-> > > > > > > > > > > > [   30.370031]  kernel_init+0x1c/0x110
-> > > > > > > > > > > > [   30.370034]  ret_from_fork+0x10/0x18
-> > > > > > > > > > > > [   30.370036] Mem-Info:
-> > > > > > > > > > > > [   30.370064] active_anon:0 inactive_anon:0
-> > > > > > > > > > > > isolated_anon:0
-> > > > > > > > > > > > [   30.370064]  active_file:0 inactive_file:0
-> > > > > > > > > > > > isolated_file:0
-> > > > > > > > > > > > [   30.370064]  unevictable:0 dirty:0 writeback:0
-> > > > > > > > > > > > unstable:0
-> > > > > > > > > > > > [   30.370064]  slab_reclaimable:34
-> > > > > > > > > > > > slab_unreclaimable:4438
-> > > > > > > > > > > > [   30.370064]  mapped:0 shmem:0 pagetables:14 boun=
-ce:0
-> > > > > > > > > > > > [   30.370064]  free:1537719 free_pcp:219 free_cma:=
-0
-> > > > > > > > > > > > [   30.370070] Node 0 active_anon:0kB inactive_anon=
-:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > isolated(anon):0kB
-> > > > > > > > > > > > isolated(file):0kB mapped:0kB dirty:0kB writeback:0=
-kB
-> > > > > > > > > > > > shmem:0kB
-> > > > > > > > > > > > shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
-> > > > > > > > > > > > writeback_tmp:0kB
-> > > > > > > > > > > > unstable:0kB all_unreclaimable? no
-> > > > > > > > > > > > [   30.370073] Node 1 active_anon:0kB inactive_anon=
-:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > isolated(anon):0kB
-> > > > > > > > > > > > isolated(file):0kB mapped:0kB dirty:0kB writeback:0=
-kB
-> > > > > > > > > > > > shmem:0kB
-> > > > > > > > > > > > shmem_thp: 0kB shmem_pmdmapped: 0kB anon_thp: 0kB
-> > > > > > > > > > > > writeback_tmp:0kB
-> > > > > > > > > > > > unstable:0kB all_unreclaimable? no
-> > > > > > > > > > > > [   30.370079] Node 0 DMA free:0kB min:0kB low:0kB
-> > > > > > > > > > > > high:0kB
-> > > > > > > > > > > > reserved_highatomic:0KB active_anon:0kB
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:128kB managed:0kB mlocked:0kB kernel_stack:=
-0kB
-> > > > > > > > > > > > pagetables:0kB
-> > > > > > > > > > > > bounce:0kB free_pcp:0kB local_pcp:0kB free_cma:0kB
-> > > > > > > > > > > > [   30.370084] lowmem_reserve[]: 0 250 6063 6063
-> > > > > > > > > > > > [   30.370090] Node 0 DMA32 free:256000kB min:408kB
-> > > > > > > > > > > > low:664kB
-> > > > > > > > > > > > high:920kB reserved_highatomic:0KB active_anon:0kB
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:269700kB managed:256000kB mlocked:0kB
-> > > > > > > > > > > > kernel_stack:0kB
-> > > > > > > > > > > > pagetables:0kB bounce:0kB free_pcp:0kB local_pcp:0k=
-B
-> > > > > > > > > > > > free_cma:0kB
-> > > > > > > > > > > > [   30.370094] lowmem_reserve[]: 0 0 5813 5813
-> > > > > > > > > > > > [   30.370100] Node 0 Normal free:5894876kB min:955=
-2kB
-> > > > > > > > > > > > low:15504kB
-> > > > > > > > > > > > high:21456kB reserved_highatomic:0KB active_anon:0k=
-B
-> > > > > > > > > > > > inactive_anon:0kB
-> > > > > > > > > > > > active_file:0kB inactive_file:0kB unevictable:0kB
-> > > > > > > > > > > > writepending:0kB
-> > > > > > > > > > > > present:8388608kB managed:5953112kB mlocked:0kB
-> > > > > > > > > > > > kernel_stack:21672kB
-> > > > > > > > > > > > pagetables:56kB bounce:0kB free_pcp:876kB
-> > > > > > > > > > > > local_pcp:176kB
-> > > > > > > > > > > > free_cma:0kB
-> > > > > > > > > > > > [   30.370104] lowmem_reserve[]: 0 0 0 0
-> > > > > > > > > > > > [   30.370107] Node 0 DMA: 0*4kB 0*8kB 0*16kB 0*32k=
-B
-> > > > > > > > > > > > 0*64kB
-> > > > > > > > > > > > 0*128kB
-> > > > > > > > > > > > 0*256kB 0*512kB 0*1024kB 0*2048kB 0*4096kB =3D 0kB
-> > > > > > > > > > > > [   30.370113] Node 0 DMA32: 0*4kB 0*8kB 0*16kB 0*3=
-2kB
-> > > > > > > > > > > > 0*64kB 0*128kB
-> > > > > > > > > > > > 0*256kB 0*512kB 0*1024kB 1*2048kB (M) 62*4096kB (M)=
- =3D
-> > > > > > > > > > > > 256000kB
-> > > > > > > > > > > > [   30.370119] Node 0 Normal: 2*4kB (M) 3*8kB (ME)
-> > > > > > > > > > > > 2*16kB
-> > > > > > > > > > > > (UE) 3*32kB
-> > > > > > > > > > > > (UM) 1*64kB (U) 2*128kB (M) 2*256kB (ME) 3*512kB (M=
-E)
-> > > > > > > > > > > > 3*1024kB (ME)
-> > > > > > > > > > > > 3*2048kB (UME) 1436*4096kB (M) =3D 5893600kB
-> > > > > > > > > > > > [   30.370129] Node 0 hugepages_total=3D0 hugepages=
-_free=3D0
-> > > > > > > > > > > > hugepages_surp=3D0 hugepages_size=3D1048576kB
-> > > > > > > > > > > > [   30.370130] 0 total pagecache pages
-> > > > > > > > > > > > [   30.370132] 0 pages in swap cache
-> > > > > > > > > > > > [   30.370134] Swap cache stats: add 0, delete 0, f=
-ind
-> > > > > > > > > > > > 0/0
-> > > > > > > > > > > > [   30.370135] Free swap  =3D 0kB
-> > > > > > > > > > > > [   30.370136] Total swap =3D 0kB
-> > > > > > > > > > > > [   30.370137] 2164609 pages RAM
-> > > > > > > > > > > > [   30.370139] 0 pages HighMem/MovableOnly
-> > > > > > > > > > > > [   30.370140] 612331 pages reserved
-> > > > > > > > > > > > [   30.370141] 0 pages hwpoisoned
-> > > > > > > > > > > > [   30.370143] DMA: failed to allocate 256 KiB pool=
- for
-> > > > > > > > > > > > atomic
-> > > > > > > > > > > > coherent allocation
-> > > > > > > > > > > During my testing I saw the same error and
-> > > > > > > > > > > Chen's  solution
-> > > > > > > > > > > corrected it .
-> > > > > > > > > > Which combination you are using on your side? I am usin=
-g
-> > > > > > > > > > Prabhakar's
-> > > > > > > > > > suggested environment and can reproduce the issue
-> > > > > > > > > > with or without Chen's crashkernel support above 4G
-> > > > > > > > > > patchset.
-> > > > > > > > > >=20
-> > > > > > > > > > I am also using a ThunderX2 platform with latest
-> > > > > > > > > > makedumpfile
-> > > > > > > > > > code and
-> > > > > > > > > > kexec-tools (with the suggested patch
-> > > > > > > > > > <
-> > > > > > > > > >=20
-> >=20
-https://urldefense.com/v3/__https://lists.infradead.org/pipermail/kexec/202=
-0-May/025128.html__;!!GqivPVa7Brio!J6lUig58-Gw6TKZnEEYzEeSU36T-1SqlB1kImU00=
-xtX_lss5Tx-JbUmLE9TJC3foXBLg$
-> > > > > > > > > > > ).
-> > > > > > > > > > Thanks,
-> > > > > > > > > > Bhupesh
-> > > > > > > > > I did this activity 5 months ago and I have moved on to o=
-ther
-> > > > > > > > > activities. My DMA failures were related to PCI devices t=
-hat
-> > > > > > > > > could
-> > > > > > > > > not be enumerated because  low-DMA space was not  availab=
-le
-> > > > > > > > > when
-> > > > > > > > > crashkernel was moved above 4G; I don=E2=80=99t recall th=
-e exact
-> > > > > > > > > platform.
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > For this failure ,
-> > > > > > > > >=20
-> > > > > > > > > > > > DMA: failed to allocate 256 KiB pool for atomic
-> > > > > > > > > > > > coherent allocation
-> > > > > > > > > Is due to :
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > 3618082c
-> > > > > > > > > ("arm64 use both ZONE_DMA and ZONE_DMA32")
-> > > > > > > > >=20
-> > > > > > > > > With the introduction of ZONE_DMA to support the Raspberr=
-y DMA
-> > > > > > > > > region below 1G, the crashkernel is placed in the upper 4=
-G
-> > > > > > > > > ZONE_DMA_32 region. Since the crashkernel does not have a=
-ccess
-> > > > > > > > > to the ZONE_DMA region, it prints out call trace during
-> > > > > > > > > bootup.
-> > > > > > > > >=20
-> > > > > > > > > It is due to having this CONFIG item  ON  :
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > > CONFIG_ZONE_DMA=3Dy
-> > > > > > > > >=20
-> > > > > > > > > Turning off ZONE_DMA fixes a issue and Raspberry PI 4 wil=
-l
-> > > > > > > > > use the device tree to specify memory below 1G.
-> > > > > > > > >=20
-> > > > > > > > >=20
-> > > > > > > > Disabling ZONE_DMA is temporary solution.  We may need prop=
-er
-> > > > > > > > solution
-> > > > > > > Perhaps the Raspberry platform configuration dependencies nee=
-d
-> > > > > > > separated  from =E2=80=9Cserver class=E2=80=9D Arm  equipment=
- ?  Or auto-
-> > > > > > > configured on
-> > > > > > > boot ?  Consult an expert ;-)
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > >=20
-> > > > > > > > > I would like to see Chen=E2=80=99s feature added , perhap=
-s as
-> > > > > > > > > EXPERIMENTAL,  so we can get some configuration testing d=
-one
-> > > > > > > > > on
-> > > > > > > > > it.   It corrects having a DMA zone in low memory while c=
-rash-
-> > > > > > > > > kernel is above 4GB.  This has been going on for a year n=
-ow.
-> > > > > > > > I will also like this patch to be added in Linux as early a=
-s
-> > > > > > > > possible.
-> > > > > > > >=20
-> > > > > > > > Issue mentioned by me happens with or without this patch.
-> > > > > > > >=20
-> > > > > > > > This patch-set can consider fixing because it uses low memo=
-ry
-> > > > > > > > for
-> > > > > > > > DMA
-> > > > > > > > & swiotlb only.
-> > > > > > > > We can consider restricting crashkernel within the required
-> > > > > > > > range
-> > > > > > > > like below
-> > > > > > > >=20
-> > > > > > > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > > > > > > > index 7f9e5a6dc48c..bd67b90d35bd 100644
-> > > > > > > > --- a/kernel/crash_core.c
-> > > > > > > > +++ b/kernel/crash_core.c
-> > > > > > > > @@ -354,7 +354,7 @@ int __init reserve_crashkernel_low(void=
-)
-> > > > > > > >                        return 0;
-> > > > > > > >        }
-> > > > > > > >=20
-> > > > > > > > -       low_base =3D memblock_find_in_range(0, 1ULL << 32,
-> > > > > > > > low_size,
-> > > > > > > > CRASH_ALIGN);
-> > > > > > > > +       low_base =3D memblock_find_in_range(0,0xc0000000,
-> > > > > > > > low_size,
-> > > > > > > > CRASH_ALIGN);
-> > > > > > > >        if (!low_base) {
-> > > > > > > >                pr_err("Cannot reserve %ldMB crashkernel low
-> > > > > > > > memory,
-> > > > > > > > please try smaller size.\n",
-> > > > > > > >                       (unsigned long)(low_size >> 20));
-> > > > > > > >=20
-> > > > > > > >=20
-> > > > > > >     I suspect  0xc0000000  would need to be a CONFIG item  an=
-d not
-> > > > > > > hard-coded.
-> > > > > > >=20
-> > > > > > if you consider this as valid change,  can you please incorpora=
-te as
-> > > > > > part of your patch-set.
-> > > > > After commit 1a8e1cef7 ("arm64: use both ZONE_DMA and ZONE_DMA32"=
-)=EF=BC=8Cthe
-> > > > > 0-
-> > > > > 4G memory is splited
-> > > > > to DMA [mem 0x0000000000000000-0x000000003fffffff] and DMA32 [mem
-> > > > > 0x0000000040000000-0x00000000ffffffff] on arm64.
-> > > > >=20
-> > > > >  From the above discussion, on your platform, the low crashkernel=
- fall
-> > > > > in
-> > > > > DMA32 region, but your environment needs to access DMA
-> > > > > region, so there is the call trace.
-> > > > >=20
-> > > > > I have a question, why do you choose 0xc0000000 here?
-> > > > >=20
-> > > > > Besides, this is common code, we also need to consider about x86.
-> > > > >=20
-> > > >   + nsaenzjulienne@suse.de
-> > Thanks for adding me to the conversation, and sorry for the headaches.
-> >=20
-> > > >    Exactly .  This is why it needs to be a CONFIG option for  Raspb=
-erry
-> > > > ..,  or device tree option.
-> > > >=20
-> > > >=20
-> > > >    We could revert 1a8e1cef7 since it broke  Arm kdump too.
-> > > Well, unfortunately the patch for commit 1a8e1cef7603 ("arm64: use
-> > > both ZONE_DMA and ZONE_DMA32") was not Cc'ed to the kexec mailing
-> > > list, thus we couldn't get many eyes on it for a thorough review from
-> > > kexec/kdump p-o-v.
-> > >=20
-> > > Also we historically never had distinction in common arch code on the
-> > > basis of the intended end use-case: embedded, server or automotive, s=
-o
-> > > I am not sure introducing a Raspberry specific CONFIG option would be
-> > > a good idea.
-> > +1
-> >=20
-> >  From the distros perspective it's very important to keep a single kern=
-el
-> > image.
-> >=20
-> > > So, rather than reverting the patch, we can look at addressing the
-> > > same properly this time - especially from a kdump p-o-v.
-> > > This issue has been reported by some Red Hat arm64 partners with
-> > > upstream kernel also and as we have noticed in the past as well,
-> > > hardcoding the placement of the crashkernel base address (unless the
-> > > base address is specified by a crashkernel=3DX@Y like bootargs) is al=
-so
-> > > not a portable suggestion.
-> > >=20
-> > > I am working on a possible fix and will have more updates on the same
-> > > in a day-or-two.
-> > Please keep me in the loop, we've also had issues pointing to this repo=
-rted
-> > by
-> > SUSE partners. I can do some testing both on the RPi4 and on big server=
-s
-> > that
-> > need huge crashkernel sizes.
-> >=20
-> > Regards,
-> > Nicolas
-> >=20
-> Hi Nicolas,
->=20
->=20
-> You want want to review this topic with the various email threads . It=
-=20
-> has been a long journey.
-
-Will do, thanks!
-
-Regards,
-Nicolas
-
-
---=-uSOtOi+SJ+bMj8a3VO+u
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAl7aAJUACgkQlfZmHno8
-x/7P3Af9GriSLNLwiJ6mP1Wz3FaQS9zrZv1y2ipqBNijUzySFEw/OPyV7MWduvCR
-H7ugjhSe0VsKQO8aPgskNyE2Fk+WQ7BgPInJLfE50/KPcvoEy32pUzXEtCMnBOVA
-gfjuKHBo10OGv2ytQgTGLdr7y1n/J1vsSpJqZm0rQ18zu4kTqJKKo86iI1+MgKEk
-S2UawOQxOiKIdHZ5iVHI/kdPkCwTrqxx0fkNhcpyDUuIHaMe0IyAX9FK3u4BJIfp
-DObetzAJ95AIzZYSsMNZuNPH3BqgX0pg05F5TFUN7B0AsmsyNcWHNSsTYP9ZATBJ
-aTRJe5xO6wYuhCBugrhRu5QDlQwBQg==
-=ezKH
------END PGP SIGNATURE-----
-
---=-uSOtOi+SJ+bMj8a3VO+u--
-
-
-
---===============6016784180392945023==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
-
---===============6016784180392945023==--
-
-
+SGkgTWltaSwKCk9uIDIwMjAtMDUtMjMgNzo1MiBwLm0uLCBNaW1pIFpvaGFyIHdyb3RlOgo+IE9u
+IEZyaSwgMjAyMC0wNS0yMiBhdCAxNjoyNSAtMDcwMCwgU2NvdHQgQnJhbmRlbiB3cm90ZToKPj4g
+SGkgS2VlcywKPj4KPj4gT24gMjAyMC0wNS0yMiA0OjA0IHAubS4sIEtlZXMgQ29vayB3cm90ZToK
+Pj4+IE9uIEZyaSwgTWF5IDIyLCAyMDIwIGF0IDAzOjI0OjMyUE0gLTA3MDAsIFNjb3R0IEJyYW5k
+ZW4gd3JvdGU6Cj4+Pj4gT24gMjAyMC0wNS0xOCA1OjM3IGEubS4sIE1pbWkgWm9oYXIgd3JvdGU6
+Cj4+Pj4+IE9uIFN1biwgMjAyMC0wNS0xNyBhdCAyMzoyMiAtMDcwMCwgQ2hyaXN0b3BoIEhlbGx3
+aWcgd3JvdGU6Cj4+Pj4+PiBPbiBGcmksIE1heSAxNSwgMjAyMCBhdCAwOToyOTozM1BNICswMDAw
+LCBMdWlzIENoYW1iZXJsYWluIHdyb3RlOgo+Pj4+Pj4+IE9uIFdlZCwgTWF5IDEzLCAyMDIwIGF0
+IDExOjE3OjM2QU0gLTA3MDAsIENocmlzdG9waCBIZWxsd2lnIHdyb3RlOgo+Pj4+Pj4+PiBDYW4g
+eW91IGFsc28gbW92ZSBrZXJuZWxfcmVhZF8qIG91dCBvZiBmcy5oPyAgVGhhdCBoZWFkZXIgZ2V0
+cyBwdWxsZWQKPj4+Pj4+Pj4gaW4ganVzdCBhYm91dCBldmVyeXdoZXJlIGFuZCBkb2Vzbid0IHJl
+YWxseSBuZWVkIGZ1bmN0aW9uIG5vdCByZWxhdGVkCj4+Pj4+Pj4+IHRvIHRoZSBnZW5lcmFsIGZz
+IGludGVyZmFjZS4KPj4+Pj4+PiBTdXJlLCB3aGVyZSBzaG91bGQgSSBkdW1wIHRoZXNlPwo+Pj4+
+Pj4gTWF5YmUgYSBuZXcgbGludXgva2VybmVsX3JlYWRfZmlsZS5oPyAgQm9udXMgcG9pbnRzIGZv
+ciBhIHNtYWxsIHRvcAo+Pj4+Pj4gb2YgdGhlIGZpbGUgY29tbWVudCBleHBsYWluaW5nIHRoZSBw
+b2ludCBvZiB0aGUgaW50ZXJmYWNlLCB3aGljaCBJCj4+Pj4+PiBzdGlsbCBkb24ndCBnZXQgOikK
+Pj4+Pj4gSW5zdGVhZCBvZiByb2xsaW5nIHlvdXIgb3duIG1ldGhvZCBvZiBoYXZpbmcgdGhlIGtl
+cm5lbCByZWFkIGEgZmlsZSwKPj4+Pj4gd2hpY2ggcmVxdWlyZXMgY2FsbCBzcGVjaWZpYyBzZWN1
+cml0eSBob29rcywgdGhpcyBpbnRlcmZhY2UgcHJvdmlkZXMgYQo+Pj4+PiBzaW5nbGUgZ2VuZXJp
+YyBzZXQgb2YgcHJlIGFuZCBwb3N0IHNlY3VyaXR5IGhvb2tzLsKgwqBUaGUKPj4+Pj4ga2VybmVs
+X3JlYWRfZmlsZV9pZCBlbnVtZXJhdGlvbiBwZXJtaXRzIHRoZSBzZWN1cml0eSBob29rIHRvCj4+
+Pj4+IGRpZmZlcmVudGlhdGUgYmV0d2VlbiBjYWxsZXJzLgo+Pj4+Pgo+Pj4+PiBUbyBjb21wbHkg
+d2l0aCBzZWN1cmUgYW5kIHRydXN0ZWQgYm9vdCBjb25jZXB0cywgYSBmaWxlIGNhbm5vdCBiZQo+
+Pj4+PiBhY2Nlc3NpYmxlIHRvIHRoZSBjYWxsZXIgdW50aWwgYWZ0ZXIgaXQgaGFzIGJlZW4gbWVh
+c3VyZWQgYW5kL29yIHRoZQo+Pj4+PiBpbnRlZ3JpdHkgKGhhc2gvc2lnbmF0dXJlKSBhcHByYWlz
+ZWQuCj4+Pj4+Cj4+Pj4+IEluIHNvbWUgY2FzZXMsIHRoZSBmaWxlIHdhcyBwcmV2aW91c2x5IHJl
+YWQgdHdpY2UsIGZpcnN0IHRvIG1lYXN1cmUKPj4+Pj4gYW5kL29yIGFwcHJhaXNlIHRoZSBmaWxl
+IGFuZCB0aGVuIHJlYWQgYWdhaW4gaW50byBhIGJ1ZmZlciBmb3IKPj4+Pj4gdXNlLsKgwqBUaGlz
+IGludGVyZmFjZSByZWFkcyB0aGUgZmlsZSBpbnRvIGEgYnVmZmVyIG9uY2UsIGNhbGxzIHRoZQo+
+Pj4+PiBnZW5lcmljIHBvc3Qgc2VjdXJpdHkgaG9vaywgYmVmb3JlIHByb3ZpZGluZyB0aGUgYnVm
+ZmVyIHRvIHRoZSBjYWxsZXIuCj4+Pj4+ICAgIMKgKE5vdGUgdXNpbmcgZmlybXdhcmUgcHJlLWFs
+bG9jYXRlZCBtZW1vcnkgbWlnaHQgYmUgYW4gaXNzdWUuKQo+Pj4+Pgo+Pj4+PiBQYXJ0aWFsIHJl
+YWRpbmcgZmlybXdhcmUgd2lsbCByZXN1bHQgaW4gbmVlZGluZyB0byBwcmUtcmVhZCB0aGUgZW50
+aXJlCj4+Pj4+IGZpbGUsIG1vc3QgbGlrZWx5IG9uIHRoZSBzZWN1cml0eSBwcmUgaG9vay4KPj4+
+PiBUaGUgZW50aXJlIGZpbGUgbWF5IGJlIHZlcnkgbGFyZ2UgYW5kIG5vdCBmaXQgaW50byBhIGJ1
+ZmZlci4KPj4+PiBIZW5jZSBvbmUgb2YgdGhlIHJlYXNvbnMgZm9yIGEgcGFydGlhbCByZWFkIG9m
+IHRoZSBmaWxlLgo+Pj4+IEZvciBzZWN1cml0eSBwdXJwb3NlcywgeW91IG5lZWQgdG8gY2hhbmdl
+IHlvdXIgY29kZSB0byBsaW1pdCB0aGUgYW1vdW50Cj4+Pj4gb2YgZGF0YSBpdCByZWFkcyBpbnRv
+IGEgYnVmZmVyIGF0IG9uZSB0aW1lIHRvIG5vdCBjb25zdW1lIG9yIHJ1biBvdXQgb2YgbXVjaAo+
+Pj4+IG1lbW9yeS4KPj4+IEhtPyBUaGF0J3Mgbm90IGhvdyB3aG9sZS1maWxlIGhhc2hpbmcgd29y
+a3MuIDopCj4+PiBUaGVzZSBob29rcyBuZWVkIHRvIGZpbmlzaCB0aGVpciBoYXNoaW5nIGFuZCBw
+b2xpY3kgY2hlY2tpbmcgYmVmb3JlIHRoZXkKPj4+IGNhbiBhbGxvdyB0aGUgcmVzdCBvZiB0aGUg
+Y29kZSB0byBtb3ZlIGZvcndhcmQuIChUaGF0J3Mgd2h5IGl0J3MgYQo+Pj4gc2VjdXJpdHkgaG9v
+ay4pIElmIGtlcm5lbCBtZW1vcnkgdXRpbGl6YXRpb24gaXMgdGhlIHByaW1hcnkgY29uY2VybiwK
+Pj4+IHRoZW4gc3VyZSwgdGhpbmdzIGNvdWxkIGJlIHJlYXJyYW5nZWQgdG8gZG8gcGFydGlhbCBy
+ZWFkIGFuZCB1cGRhdGUgdGhlCj4+PiBoYXNoIGluY3JlbWVudGFsbHksIGJ1dCB0aGUgZW50aXJl
+IGZpbGUgc3RpbGwgbmVlZHMgdG8gYmUgbG9ja2VkLAo+Pj4gZW50aXJlbHkgaGFzaGVkIGJ5IGhv
+b2ssIHRoZW4gcmVhZCBieSB0aGUgY2FsbGVyLCB0aGVuIHVubG9ja2VkIGFuZAo+Pj4gcmVsZWFz
+ZWQuCj4gRXhhY3RseS4KPgo+Pj4gU28sIGlmIHlvdSB3YW50IHRvIGhhdmUgcGFydGlhbCBmaWxl
+IHJlYWRzIHdvcmssIHlvdSdsbCBuZWVkIHRvCj4+PiByZWFyY2hpdGVjdCB0aGUgd2F5IHRoaXMg
+d29ya3MgdG8gYXZvaWQgcmVncmVzc2luZyB0aGUgc2VjdXJpdHkgY292ZXJhZ2UKPj4+IG9mIHRo
+ZXNlIG9wZXJhdGlvbnMuCj4+IEkgYW0gbm90IGZhbWlsaWFyIHdpdGggaG93IHRoZSBzZWN1cml0
+eSBoYW5kbGluZyBjb2RlIHdvcmtzIGF0IGFsbC4KPj4gSXMgdGhlIHNhbWUgc2VjdXJpdHkgY2hl
+Y2sgcnVuIG9uIGZpbGVzIG9wZW5lZCBmcm9tIHVzZXIgc3BhY2U/Cj4+IEEgZmlsZSBjb3VsZCBi
+ZSBodWdlLgo+Pgo+PiBJZiBpdCBhc3N1bWVzIHRoZXJlIGlzIHRoZXJlIGlzIGVub3VnaCBtZW1v
+cnkgYXZhaWxhYmxlIHRvIHJlYWQgdGhlCj4+IGVudGlyZSBmaWxlIGludG8ga2VybmVsIHNwYWNl
+IHRoZW4gdGhlIGltcHJvdmVtZW50IGJlbG93IGNhbiBiZSBsZWZ0IGFzCj4+IGEgbWVtb3J5IG9w
+dGltaXphdGlvbiB0byBiZSBkb25lIGluIGFuIGluZGVwZW5kZW50IChvciBmdXR1cmUpIHBhdGNo
+IHNlcmllcy4KPiBUaGVyZSBhcmUgdHdvIHNlY3VyaXR5IGhvb2tzIC0gc2VjdXJpdHlfa2VybmVs
+X3JlYWRfZmlsZSgpLAo+IHNlY3VyaXR5X2tlcm5lbF9wb3N0X3JlYWRfZmlsZSAtIGluIGtlcm5l
+bF9yZWFkX2ZpbGUoKS4gwqBUaGUgZmlyc3QKPiBob29rIGlzIGNhbGxlZCBiZWZvcmUgdGhlIGZp
+bGUgaXMgcmVhZCBpbnRvIGEgYnVmZmVyLCB3aGlsZSB0aGUgc2Vjb25kCj4gaG9vayBpcyBjYWxs
+ZWQgYWZ0ZXJ3YXJkcy4KPgo+IEZvciBwYXJ0aWFsIHJlYWRzLCBtZWFzdXJpbmcgdGhlIGZpcm13
+YXJlIGFuZCB2ZXJpZnlpbmcgdGhlIGZpcm13YXJlJ3MKPiBzaWduYXR1cmUgd2lsbCBuZWVkIHRv
+IGJlIGRvbmUgb24gdGhlIHNlY3VyaXR5X2tlcm5lbF9yZWFkX2ZpbGUoKQo+IGhvb2suCj4KPj4+
+IFNvLCBwcm9iYWJseSwgdGhlIGNvZGUgd2lsbCBsb29rIHNvbWV0aGluZyBsaWtlOgo+Pj4KPj4+
+Cj4+PiBmaWxlID0ga2VybmVsX29wZW5fZmlsZV9mb3JfcmVhZGluZyguLi4pCj4+PiAJZmlsZSA9
+IG9wZW4uLi4KPj4+IAlkaXNhbGxvd193cml0ZXMoZmlsZSk7Cj4+PiAJd2hpbGUgKHByb2Nlc3Nl
+ZCA8IHNpemUtb2YtZmlsZSkgewo+Pj4gCQlidWYgPSByZWFkKGZpbGUsIHNpemUuLi4pCj4+PiAJ
+CXNlY3VyaXR5X2ZpbGVfcmVhZF9wYXJ0aWFsKGJ1ZikKPj4+IAl9Cj4+PiAJcmV0ID0gc2VjdXJp
+dHlfZmlsZV9yZWFkX2ZpbmlzaGVkKGZpbGUpOwo+Pj4gCWlmIChyZXQgPCAwKSB7Cj4+PiAJCWFs
+bG93X3dyaXRlcyhmaWxlKTsKPj4+IAkJcmV0dXJuIFBUUl9FUlIocmV0KTsKPj4+IAl9Cj4+PiAJ
+cmV0dXJuIGZpbGU7Cj4+Pgo+Pj4gd2hpbGUgKHByb2Nlc3NlZCA8IHNpemUtb2YtZmlsZSkgewo+
+Pj4gCWJ1ZiA9IHJlYWQoZmlsZSwgc2l6ZS4uLikKPj4+IAlmaXJtd2FyZV9zZW5kX3BhcnRpYWwo
+YnVmKTsKPj4+IH0KPj4+Cj4+PiBrZXJuZWxfY2xvc2VfZmlsZV9mb3JfcmVhZGluZyhmaWxlKQo+
+Pj4gCWFsbG93X3dyaXRlcyhmaWxlKTsKPiBSaWdodCwgdGhlIGltYV9maWxlX21tYXAoKSwgaW1h
+X2Jwcm1fY2hlY2soKSwgYW5kIGltYV9maWxlX2NoZWNrKCkKPiBob29rcyBjYWxsIHByb2Nlc3Nf
+bWVhc3VyZW1lbnQoKSB0byBkbyB0aGlzLiDCoGltYV9wb3N0X3JlYWRfZmlsZSgpCj4gcGFzc2Vz
+IGEgYnVmZmVyIHRvIHByb2Nlc3NfbWVhc3VyZW1lbnQoKSBpbnN0ZWFkLgo+Cj4gU2NvdHQsIHRo
+ZSBjaGFuZ2Ugc2hvdWxkIGJlIHN0cmFpZ2h0IGZvcndhcmQuIMKgVGhlIGFkZGl0aW9uYWwgcGF0
+Y2gKPiBuZWVkcyB0bzoKPiAtIGRlZmluZSBhIG5ldyBrZXJuZWxfcmVhZF9maWxlX2lkIGVudW1l
+cmF0aW9uLCBsaWtlCj4gRklSTVdBUkVfUEFSVElBTF9SRUFELgo+IC0gQ3VycmVudGx5IGltYV9y
+ZWFkX2ZpbGUoKSBoYXMgYSBjb21tZW50IGFib3V0IHByZS1hbGxvY2F0ZWQgZmlybXdhcmUKPiBi
+dWZmZXJzLiDCoFVwZGF0ZSBpbWFfcmVhZF9maWxlKCkgdG8gY2FsbCBwcm9jZXNzX21lYXN1cmVt
+ZW50KCkgZm9yIHRoZQo+IG5ldyBlbnVtZXJhdGlvbiBGSVJNV0FSRV9QQVJUSUFMX1JFQUQgYW5k
+IHVwZGF0ZSBpbWFfcG9zdF9yZWFkX2ZpbGUoKQo+IHRvIHJldHVybiBpbW1lZGlhdGVseS4KU2hv
+dWxkIHRoaXMgYmUgd2hhdCBpcyBpbiBpbWFfcmVhZF9maWxlPwp7CiDCoMKgwqAgZW51bSBpbWFf
+aG9va3MgZnVuYzsKIMKgwqDCoCB1MzIgc2VjaWQ7CgogwqDCoMKgIGlmIChyZWFkX2lkICE9IFJF
+QURJTkdfRklSTVdBUkVfUEFSVElBTF9SRUFEKQogwqDCoMKgIMKgwqDCoCByZXR1cm4gMDsKCiDC
+oMKgwqAgaWYgKCFmaWxlKSB7IC8qIHNob3VsZCBuZXZlciBoYXBwZW4gKi8KIMKgwqDCoCDCoMKg
+wqAgaWYgKGltYV9hcHByYWlzZSAmIElNQV9BUFBSQUlTRV9FTkZPUkNFKQogwqDCoMKgIMKgwqDC
+oCDCoMKgwqAgcmV0dXJuIC1FQUNDRVM7CiDCoMKgwqAgwqDCoMKgIHJldHVybiAwOwogwqDCoMKg
+IH0KCiDCoMKgwqAgc2VjdXJpdHlfdGFza19nZXRzZWNpZChjdXJyZW50LCAmc2VjaWQpOwogwqDC
+oMKgIHJldHVybiBwcm9jZXNzX21lYXN1cmVtZW50KGZpbGUsIGN1cnJlbnRfY3JlZCgpLCBzZWNp
+ZCwgTlVMTCwKIMKgwqDCoCDCoMKgwqAgwqDCoMKgIMKgwqDCoCDCoMKgIDAsIE1BWV9SRUFELCBG
+SUxFX0NIRUNLKTsKfQo+Cj4gVGhlIGJ1aWx0LWluIElNQSBtZWFzdXJlbWVudCBwb2xpY3kgY29u
+dGFpbnMgYSBydWxlIHRvIG1lYXN1cmUKPiBmaXJtd2FyZS4gwqBUaGUgcG9saWN5IGNhbiBiZSBz
+cGVjaWZpZWQgb24gdGhlIGJvb3QgY29tbWFuZCBsaW5lIGJ5Cj4gc3BlY2lmeWluZyAiaW1hX3Bv
+bGljeT10Y2IiLiDCoEFmdGVyIHJlYWRpbmcgdGhlIGZpcm13YXJlLCB0aGUgZmlybXdhcmUKPiBt
+ZWFzdXJlbWVudCBzaG91bGQgYmUgaW4gPHNlY3VyaXR5ZnM+L2ltYS9hc2NpaV9ydW50aW1lX21l
+YXN1cmVtZW50cy4KPgo+IHRoYW5rcywKPgo+IE1pbWkKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
