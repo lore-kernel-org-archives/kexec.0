@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 4 Jun 2020 08:19:24 +0100
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
-Message-ID: <20200604071923.GB30155@willie-the-truck>
-References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
- <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
- <DM6PR18MB24258C2F2B91E4BF407421CDD2880@DM6PR18MB2425.namprd18.prod.outlook.com>
- <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpOyQ+MAg9rh=cgLprBGTZ3kvtVP1ShNKG-2AV1Tu14EgQ@mail.gmail.com>
+Received: from linux.microsoft.com ([13.77.154.182])
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jgznm-0006fF-FG
+ for kexec@lists.infradead.org; Fri, 05 Jun 2020 00:01:39 +0000
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Subject: [PATCH][RFC] kdump: append kernel build-id string to VMCOREINFO
+Date: Thu,  4 Jun 2020 17:01:31 -0700
+Message-Id: <1591315291-66957-1-git-send-email-vijayb@linux.microsoft.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,59 +15,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ganapatrao Kulkarni <gkulkarni@marvell.com>, Steve Capper <steve.capper@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Kamlakant Patel <kamlakantp@marvell.com>, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+Cc: clang-built-linux@googlegroups.com, Tyler Hicks <tyhicks@linux.microsoft.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu, Jun 04, 2020 at 02:04:58AM +0530, Bhupesh Sharma wrote:
-> On Wed, Jun 3, 2020 at 4:50 PM Kamlakant Patel <kamlakantp@marvell.com> wrote:
-> > > diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-> > > index 1f646b07e3e9..314391a156ee 100644
-> > > --- a/arch/arm64/kernel/crash_core.c
-> > > +++ b/arch/arm64/kernel/crash_core.c
-> > > @@ -7,6 +7,14 @@
-> > >  #include <linux/crash_core.h>
-> > >  #include <asm/cpufeature.h>
-> > >  #include <asm/memory.h>
-> > > +#include <asm/pgtable-hwdef.h>
-> > > +
-> > > +static inline u64 get_tcr_el1_t1sz(void);
-> > > +
-> > > +static inline u64 get_tcr_el1_t1sz(void) {
-> > > +     return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET; }
-> > >
-> > >  void arch_crash_save_vmcoreinfo(void)
-> > >  {
-> > > @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
-> > >                                               kimage_voffset);
-> > >       vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
-> > >                                               PHYS_OFFSET);
-> > > +     vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
-> > > +                                             get_tcr_el1_t1sz());
-> > I tested this patch on top of upstream kernel v5.7 and I am getting "crash: cannot determine VA_BITS_ACTUAL" error with crash tool.
-> > I looked into crash-utility source and it is expecting tcr_el1_t1sz not TCR_EL1_T1SZ.
-> > Could you please check.
-> 
-> Indeed. As per James comments on the v5 (see [1]) where he suggested
-> converting ttcr_el1_t1sz into TCR_EL1_T1SZ, I made the change in v6
-> accordingly.
-> 
-> This time I haven't sent out the v6 userspace changes
-> (makedumpfile/crash-utility) upstream first, since we are waiting for
-> kernel changes to be accepted first, as we have seen in the past that
-> while the userspace patches have been accepted, the kernel patches
-> required a respin cycle, thus leading to inconsistencies, as you also
-> pointed out with crash-utility.
+Make kernel GNU build-id available in VMCOREINFO.  Having
+build-id in VMCOREINFO facilitates presenting appropriate kernel
+namelist image with debug information file to kernel crash dump
+analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+key for crash analysis automation.
 
-Yes, and that';s the right way to do it. Userspace can't rely on the
-stability of a kernel interface if it's no in the upstream kernel!
+Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
+---
+Regarding if this patch is necessary or matching of linux_banner
+and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+need -- IMO, build-id approach more foolproof, in most instances it
+is a cryptographic hash generated using internal code/ELF bits unlike
+kernel version string upon which linux_banner is based that is
+external to the code.  I feel each is intended for a different purpose.
+Also OSRELEASE is not suitable when two different kernel builds
+from same version with different features enabled.
 
-So doing with the ALL CAPS names is the right thing to do.
+Currently for most linux (and non-linux) systems build-id can be
+extracted using standard methods for file types such as user mode crash
+dumps, shared libraries, loadable kernel modules etc.  This is an
+exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+some uniformity for automation tools.
 
-Will
+ include/linux/crash_core.h |  6 +++++
+ kernel/crash_core.c        | 50 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 525510a9f965..6594dbc34a37 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -38,6 +38,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ 
+ #define VMCOREINFO_OSRELEASE(value) \
+ 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
++#define VMCOREINFO_BUILD_ID(value) \
++	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+ #define VMCOREINFO_PAGESIZE(value) \
+ 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+ #define VMCOREINFO_SYMBOL(name) \
+@@ -64,6 +66,10 @@ extern unsigned char *vmcoreinfo_data;
+ extern size_t vmcoreinfo_size;
+ extern u32 *vmcoreinfo_note;
+ 
++/* raw contents of kernel .notes section */
++extern const void __start_notes __weak;
++extern const void __stop_notes __weak;
++
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len);
+ void final_note(Elf_Word *buf);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 9f1557b98468..c094db478803 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -11,6 +11,8 @@
+ #include <asm/page.h>
+ #include <asm/sections.h>
+ 
++#include <crypto/sha.h>
++
+ /* vmcoreinfo stuff */
+ unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+@@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+ }
+ EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+ 
++#define NOTES_SIZE (&__stop_notes - &__start_notes)
++#define BUILD_ID_MAX SHA1_DIGEST_SIZE
++#define NT_GNU_BUILD_ID 3
++
++struct elf_note_section {
++	struct elf_note	n_hdr;
++	u8 n_data[];
++};
++
++/*
++ * Add build ID from .notes section as generated by the GNU ld(1)
++ * or LLVM lld(1) --build-id option.
++ */
++static void add_build_id_vmcoreinfo(void)
++{
++	char build_id[BUILD_ID_MAX * 2 + 1];
++	int n_remain = NOTES_SIZE;
++
++	while (n_remain >= sizeof(struct elf_note)) {
++		const struct elf_note_section *g_build_id =
++			&__start_notes + NOTES_SIZE - n_remain;
++		const u32 n_namesz = g_build_id->n_hdr.n_namesz;
++
++		if (g_build_id->n_hdr.n_type == NT_GNU_BUILD_ID &&
++		    n_namesz != 0 &&
++		    !strcmp((char *)&g_build_id->n_data[0], "GNU")) {
++			if (g_build_id->n_hdr.n_descsz <= BUILD_ID_MAX) {
++				const u32 n_descsz = g_build_id->n_hdr.n_descsz;
++				const u8 *s = &g_build_id->n_data[n_namesz];
++
++				s = PTR_ALIGN(s, 4);
++				bin2hex(build_id, s, n_descsz);
++				build_id[2 * n_descsz] = '\0';
++				VMCOREINFO_BUILD_ID(build_id);
++				return;
++			}
++			pr_warn("Build ID is too large to include in vmcoreinfo: %lu > %lu\n",
++				g_build_id->n_hdr.n_descsz,
++				BUILD_ID_MAX);
++			return;
++		}
++		n_remain -= sizeof(struct elf_note) +
++			ALIGN(g_build_id->n_hdr.n_namesz, 4) +
++			ALIGN(g_build_id->n_hdr.n_descsz, 4);
++	}
++}
++
+ static int __init crash_save_vmcoreinfo_init(void)
+ {
+ 	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
+@@ -394,6 +443,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	}
+ 
+ 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
++	add_build_id_vmcoreinfo();
+ 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+ 
+ 	VMCOREINFO_SYMBOL(init_uts_ns);
+-- 
+2.26.2
+
 
 _______________________________________________
 kexec mailing list
