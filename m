@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jhYjh-0005x7-1C
- for kexec@lists.infradead.org; Sat, 06 Jun 2020 13:19:46 +0000
-Date: Sat, 6 Jun 2020 15:19:33 +0200
+ id 1jhYla-0000LQ-P6
+ for kexec@lists.infradead.org; Sat, 06 Jun 2020 13:21:44 +0000
+Date: Sat, 6 Jun 2020 15:21:39 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3] arm64: kdump: add another DT property to crash dump
- kernel's dtb
-Message-ID: <20200606131933.GA24391@vergenet.net>
-References: <20200521083257.53415-1-chenzhou10@huawei.com>
+Subject: Re: [PATCH] kexec-tools: fix the unintended fallthrough when '-d'
+ option is used
+Message-ID: <20200606132139.GB24391@vergenet.net>
+References: <159107231976.24822.8366905851318047662.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200521083257.53415-1-chenzhou10@huawei.com>
+In-Reply-To: <159107231976.24822.8366905851318047662.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: kexec@lists.infradead.org
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>, Kexec-ml <kexec@lists.infradead.org>
 
-On Thu, May 21, 2020 at 04:32:57PM +0800, Chen Zhou wrote:
-> Currently, there is only one crash kernel region on arm64, we add
-> another region "crash kernel low" used for crash dump kernel devices.
-> 
-> To do this, we add DT property "linux,low-memory-range" to crash
-> dump kernel's dtb to pass the low region.
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+On Tue, Jun 02, 2020 at 10:01:59AM +0530, Hari Bathini wrote:
+> Fixes: 28d4ab532808 ("Add generic debug option")
+> Cc: Cong Wang <xiyou.wangcong@gmail.com>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+
+Thanks, applied.
+
 > ---
-> For "support reserving crashkernel above 4G on arm64 kdump", we need
-> to modify the kexec-tools.
+>  kexec/kexec.c |    1 +
+>  1 file changed, 1 insertion(+)
 > 
-> Changes since [v2]:
-> - Rebase to latest kexec-tools code.
+> diff --git a/kexec/kexec.c b/kexec/kexec.c
+> index 7ef3d2a..a62b362 100644
+> --- a/kexec/kexec.c
+> +++ b/kexec/kexec.c
+> @@ -1374,6 +1374,7 @@ int main(int argc, char *argv[])
+>  			return 0;
+>  		case OPT_DEBUG:
+>  			kexec_debug = 1;
+> +			break;
+>  		case OPT_NOIFDOWN:
+>  			skip_ifdown = 1;
+>  			break;
 > 
-> Changes since [v1]:
-> - Add another DT property "linux,low-memory-range" to crash dump kernel's
-> dtb to pass the low region instead of reusing "linux,usable-memory-range".
 > 
-> [1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
-> [2]: http://lists.infradead.org/pipermail/kexec/2019-August/023569.html
-
-Thanks.
-
-I think it would be appropriate for me to apply this change to
-kexec-tools once the corresponding changes have been accepted to
-the kernel.
-
-Please repost when that is the case.
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 _______________________________________________
 kexec mailing list
