@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190] helo=huawei.com)
+Received: from pandora.armlinux.org.uk
+ ([2001:4d48:ad52:3201:214:fdff:fe10:1be6])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jhYxw-0006Fv-Ts
- for kexec@lists.infradead.org; Sat, 06 Jun 2020 13:34:30 +0000
-Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
- by Forcepoint Email with ESMTP id 11061E49C2EAA545ABB5
- for <kexec@lists.infradead.org>; Sat,  6 Jun 2020 21:34:01 +0800 (CST)
-Subject: Re: [PATCH v3] arm64: kdump: add another DT property to crash dump
- kernel's dtb
-References: <20200521083257.53415-1-chenzhou10@huawei.com>
- <20200606131933.GA24391@vergenet.net>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <d6d2bd25-19f8-7ccf-19e6-e29dd700f64d@huawei.com>
-Date: Sat, 6 Jun 2020 21:33:59 +0800
+ id 1jha08-0003dF-OW
+ for kexec@lists.infradead.org; Sat, 06 Jun 2020 14:40:50 +0000
+Date: Sat, 6 Jun 2020 15:40:31 +0100
+From: Russell King <rmk@armlinux.org.uk>
+Subject: Re: [PATCH] arm: Increase zImage length after getting the tag
+Message-ID: <20200606144031.GL1538@flint.armlinux.org.uk>
+References: <CGME20200602104036eucas1p1fac98e8f4c2ab7272b4fbf95aefef7cd@eucas1p1.samsung.com>
+ <20200602104034.31256-1-l.stelmach@samsung.com>
+ <20200606132319.GC24391@vergenet.net>
 MIME-Version: 1.0
-In-Reply-To: <20200606131933.GA24391@vergenet.net>
+Content-Disposition: inline
+In-Reply-To: <20200606132319.GC24391@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,55 +22,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+Cc: kexec@lists.infradead.org, =?utf-8?Q?=C5=81ukasz?= Stelmach <l.stelmach@samsung.com>, b.zolnierkie@samsung.com
 
-
-
-On 2020/6/6 21:19, Simon Horman wrote:
-> On Thu, May 21, 2020 at 04:32:57PM +0800, Chen Zhou wrote:
->> Currently, there is only one crash kernel region on arm64, we add
->> another region "crash kernel low" used for crash dump kernel devices.
->>
->> To do this, we add DT property "linux,low-memory-range" to crash
->> dump kernel's dtb to pass the low region.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->> For "support reserving crashkernel above 4G on arm64 kdump", we need
->> to modify the kexec-tools.
->>
->> Changes since [v2]:
->> - Rebase to latest kexec-tools code.
->>
->> Changes since [v1]:
->> - Add another DT property "linux,low-memory-range" to crash dump kernel's
->> dtb to pass the low region instead of reusing "linux,usable-memory-range".
->>
->> [1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
->> [2]: http://lists.infradead.org/pipermail/kexec/2019-August/023569.html
-> Thanks.
->
-> I think it would be appropriate for me to apply this change to
-> kexec-tools once the corresponding changes have been accepted to
-> the kernel.
->
-> Please repost when that is the case.
-ok.
-
-Thanks,
-Chen Zhou
->
-> .
->
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBKdW4gMDYsIDIwMjAgYXQgMDM6MjM6MTlQTSArMDIwMCwgU2ltb24gSG9ybWFuIHdy
+b3RlOgo+IE9uIFR1ZSwgSnVuIDAyLCAyMDIwIGF0IDEyOjQwOjM0UE0gKzAyMDAsIMWBdWthc3og
+U3RlbG1hY2ggd3JvdGU6Cj4gPiBJbmNyZWFzZSB0aGUgc2l6ZSBvZiB0aGUgekltYWdlIGFmdGVy
+IHNlZWtpbmcgZm9yIHRoZSB0YWcgdG8gYXZvaWQKPiA+IHJlYWRpbmcgcGFzdCB0aGUgZW5kIG9m
+IHRoZSBzdXBwbGllZCBidWZmZXIgc2hvdWxkIHRoZXJlIGJlIG5vdCB0YWcKPiA+IGluIHRoZSB6
+SW1hZ2UuCj4gPiAKPiA+IEZpeGVzOiBmNTdmMGJmODk3NWQyNGZlMWU3YzQ5MzZmZGZiNWMzYjEy
+M2FiNzVmCj4gPiBTaWduZWQtb2ZmLWJ5OiDFgXVrYXN6IFN0ZWxtYWNoIDxsLnN0ZWxtYWNoQHNh
+bXN1bmcuY29tPgo+ID4gQ2M6IFJ1c3NlbGwgS2luZyA8cm1rQGFybWxpbnV4Lm9yZy51az4KPiAK
+PiBUaGFua3MgxYF1a2FzeiwKClNvcnJ5LCBJJ3ZlIG5vdCBzZWVuIHRoZSBwYXRjaCwgc28gaXQg
+aGFzbid0IGJlZW4gcmV2aWV3ZWQuICBUaGlzIGlzIHRoZQpmaXJzdCBJJ20gYXdhcmUgb2YgaXRz
+IGV4aXN0ZW5jZS4KCi0tIApSdXNzZWxsIEtpbmcKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
