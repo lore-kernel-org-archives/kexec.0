@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jiCP1-0005ju-Jn
+ for kexec@lists.infradead.org; Mon, 08 Jun 2020 07:41:05 +0000
+Date: Mon, 8 Jun 2020 15:40:47 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
+ lockdown or mandatory signature
+Message-ID: <20200608074047.GF20367@MiWiFi-R3L-srv>
+References: <20200602045952.27487-1-lijiang@redhat.com>
 MIME-Version: 1.0
-References: <CAJ2QiJ+fhPWAxZXzHhNFLkHr47e+wTqqz+s5r+utgCP=C6qsjw@mail.gmail.com>
- <20200604000232.GA956503@bjorn-Precision-5520>
-In-Reply-To: <20200604000232.GA956503@bjorn-Precision-5520>
-From: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Date: Sun, 7 Jun 2020 14:00:35 +0530
-Message-ID: <CAJ2QiJJ58nWe_vpjLWoFuM7s-7f7H-40q-4r-aGqorKPy9EPQw@mail.gmail.com>
-Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
+Content-Disposition: inline
+In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,362 +25,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Myron Stowe <myron.stowe@redhat.com>, Vijay Mohan Pandarathil <vijaymohan.pandarathil@hp.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Robin Murphy <robin.murphy@arm.com>, linux-pci@vger.kernel.org, Prabhakar Kushwaha <pkushwaha@marvell.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Lianbo Jiang <lijiang@redhat.com>
+Cc: jbohac@suse.cz, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, linux-kernel@vger.kernel.org, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com
 
-Hi Bjorn,
+On 06/02/20 at 12:59pm, Lianbo Jiang wrote:
+> Signature verification is an important security feature, to protect
+> system from being attacked with a kernel of unknown origin. Kexec
+> rebooting is a way to replace the running kernel, hence need be
+> secured carefully.
+> 
+> In the current code of handling signature verification of kexec kernel,
+> the logic is very twisted. It mixes signature verification, IMA signature
+> appraising and kexec lockdown.
+> 
+> If there is no KEXEC_SIG_FORCE, kexec kernel image doesn't have one of
+> signature, the supported crypto, and key, we don't think this is wrong,
+> Unless kexec lockdown is executed. IMA is considered as another kind of
+> signature appraising method.
+> 
+> If kexec kernel image has signature/crypto/key, it has to go through the
+> signature verification and pass. Otherwise it's seen as verification
+> failure, and won't be loaded.
+> 
+> Seems kexec kernel image with an unqualified signature is even worse than
+> those w/o signature at all, this sounds very unreasonable. E.g. If people
+> get a unsigned kernel to load, or a kernel signed with expired key, which
+> one is more dangerous?
+> 
+> So, here, let's simplify the logic to improve code readability. If the
+> KEXEC_SIG_FORCE enabled or kexec lockdown enabled, signature verification
+> is mandated. Otherwise, we lift the bar for any kernel image.
+> 
+> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
 
-On Thu, Jun 4, 2020 at 5:32 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jun 03, 2020 at 11:12:48PM +0530, Prabhakar Kushwaha wrote:
-> > On Sat, May 30, 2020 at 1:03 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > On Fri, May 29, 2020 at 07:48:10PM +0530, Prabhakar Kushwaha wrote:
-> > > > On Thu, May 28, 2020 at 1:48 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > >
-> > > > > On Wed, May 27, 2020 at 05:14:39PM +0530, Prabhakar Kushwaha wrote:
-> > > > > > On Fri, May 22, 2020 at 4:19 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > On Thu, May 21, 2020 at 09:28:20AM +0530, Prabhakar Kushwaha wrote:
-> > > > > > > > On Wed, May 20, 2020 at 4:52 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > On Thu, May 14, 2020 at 12:47:02PM +0530, Prabhakar Kushwaha wrote:
-> > > > > > > > > > On Wed, May 13, 2020 at 3:33 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
-> > > > > > > > > > > On Mon, May 11, 2020 at 07:46:06PM -0700, Prabhakar Kushwaha wrote:
-> > > > > > > > > > > > An SMMU Stream table is created by the primary kernel. This table is
-> > > > > > > > > > > > used by the SMMU to perform address translations for device-originated
-> > > > > > > > > > > > transactions. Any crash (if happened) launches the kdump kernel which
-> > > > > > > > > > > > re-creates the SMMU Stream table. New transactions will be translated
-> > > > > > > > > > > > via this new table..
-> > > > > > > > > > > >
-> > > > > > > > > > > > There are scenarios, where devices are still having old pending
-> > > > > > > > > > > > transactions (configured in the primary kernel). These transactions
-> > > > > > > > > > > > come in-between Stream table creation and device-driver probe.
-> > > > > > > > > > > > As new stream table does not have entry for older transactions,
-> > > > > > > > > > > > it will be aborted by SMMU.
-> > > > > > > > > > > >
-> > > > > > > > > > > > Similar observations were found with PCIe-Intel 82576 Gigabit
-> > > > > > > > > > > > Network card. It sends old Memory Read transaction in kdump kernel.
-> > > > > > > > > > > > Transactions configured for older Stream table entries, that do not
-> > > > > > > > > > > > exist any longer in the new table, will cause a PCIe Completion Abort.
-> > > > > > > > > > >
-> > > > > > > > > > > That sounds like exactly what we want, doesn't it?
-> > > > > > > > > > >
-> > > > > > > > > > > Or do you *want* DMA from the previous kernel to complete?  That will
-> > > > > > > > > > > read or scribble on something, but maybe that's not terrible as long
-> > > > > > > > > > > as it's not memory used by the kdump kernel.
-> > > > > > > > > >
-> > > > > > > > > > Yes, Abort should happen. But it should happen in context of driver.
-> > > > > > > > > > But current abort is happening because of SMMU and no driver/pcie
-> > > > > > > > > > setup present at this moment.
-> > > > > > > > >
-> > > > > > > > > I don't understand what you mean by "in context of driver."  The whole
-> > > > > > > > > problem is that we can't control *when* the abort happens, so it may
-> > > > > > > > > happen in *any* context.  It may happen when a NIC receives a packet
-> > > > > > > > > or at some other unpredictable time.
-> > > > > > > > >
-> > > > > > > > > > Solution of this issue should be at 2 place
-> > > > > > > > > > a) SMMU level: I still believe, this patch has potential to overcome
-> > > > > > > > > > issue till finally driver's probe takeover.
-> > > > > > > > > > b) Device level: Even if something goes wrong. Driver/device should
-> > > > > > > > > > able to recover.
-> > > > > > > > > >
-> > > > > > > > > > > > Returned PCIe completion abort further leads to AER Errors from APEI
-> > > > > > > > > > > > Generic Hardware Error Source (GHES) with completion timeout.
-> > > > > > > > > > > > A network device hang is observed even after continuous
-> > > > > > > > > > > > reset/recovery from driver, Hence device is no more usable.
-> > > > > > > > > > >
-> > > > > > > > > > > The fact that the device is no longer usable is definitely a problem.
-> > > > > > > > > > > But in principle we *should* be able to recover from these errors.  If
-> > > > > > > > > > > we could recover and reliably use the device after the error, that
-> > > > > > > > > > > seems like it would be a more robust solution that having to add
-> > > > > > > > > > > special cases in every IOMMU driver.
-> > > > > > > > > > >
-> > > > > > > > > > > If you have details about this sort of error, I'd like to try to fix
-> > > > > > > > > > > it because we want to recover from that sort of error in normal
-> > > > > > > > > > > (non-crash) situations as well.
-> > > > > > > > > > >
-> > > > > > > > > > Completion abort case should be gracefully handled.  And device should
-> > > > > > > > > > always remain usable.
-> > > > > > > > > >
-> > > > > > > > > > There are 2 scenario which I am testing with Ethernet card PCIe-Intel
-> > > > > > > > > > 82576 Gigabit Network card.
-> > > > > > > > > >
-> > > > > > > > > > I)  Crash testing using kdump root file system: De-facto scenario
-> > > > > > > > > >     -  kdump file system does not have Ethernet driver
-> > > > > > > > > >     -  A lot of AER prints [1], making it impossible to work on shell
-> > > > > > > > > > of kdump root file system.
-> > > > > > > > >
-> > > > > > > > > In this case, I think report_error_detected() is deciding that because
-> > > > > > > > > the device has no driver, we can't do anything.  The flow is like
-> > > > > > > > > this:
-> > > > > > > > >
-> > > > > > > > >   aer_recover_work_func               # aer_recover_work
-> > > > > > > > >     kfifo_get(aer_recover_ring, entry)
-> > > > > > > > >     dev = pci_get_domain_bus_and_slot
-> > > > > > > > >     cper_print_aer(dev, ...)
-> > > > > > > > >       pci_err("AER: aer_status:")
-> > > > > > > > >       pci_err("AER:   [14] CmpltTO")
-> > > > > > > > >       pci_err("AER: aer_layer=")
-> > > > > > > > >     if (AER_NONFATAL)
-> > > > > > > > >       pcie_do_recovery(dev, pci_channel_io_normal)
-> > > > > > > > >         status = CAN_RECOVER
-> > > > > > > > >         pci_walk_bus(report_normal_detected)
-> > > > > > > > >           report_error_detected
-> > > > > > > > >             if (!dev->driver)
-> > > > > > > > >               vote = NO_AER_DRIVER
-> > > > > > > > >               pci_info("can't recover (no error_detected callback)")
-> > > > > > > > >             *result = merge_result(*, NO_AER_DRIVER)
-> > > > > > > > >             # always NO_AER_DRIVER
-> > > > > > > > >         status is now NO_AER_DRIVER
-> > > > > > > > >
-> > > > > > > > > So pcie_do_recovery() does not call .report_mmio_enabled() or .slot_reset(),
-> > > > > > > > > and status is not RECOVERED, so it skips .resume().
-> > > > > > > > >
-> > > > > > > > > I don't remember the history there, but if a device has no driver and
-> > > > > > > > > the device generates errors, it seems like we ought to be able to
-> > > > > > > > > reset it.
-> > > > > > > >
-> > > > > > > > But how to reset the device considering there is no driver.
-> > > > > > > > Hypothetically, this case should be taken care by PCIe subsystem to
-> > > > > > > > perform reset at PCIe level.
-> > > > > > >
-> > > > > > > I don't understand your question.  The PCI core (not the device
-> > > > > > > driver) already does the reset.  When pcie_do_recovery() calls
-> > > > > > > reset_link(), all devices on the other side of the link are reset.
-> > > > > > >
-> > > > > > > > > We should be able to field one (or a few) AER errors, reset the
-> > > > > > > > > device, and you should be able to use the shell in the kdump kernel.
-> > > > > > > > >
-> > > > > > > > here kdump shell is usable only problem is a "lot of AER Errors". One
-> > > > > > > > cannot see what they are typing.
-> > > > > > >
-> > > > > > > Right, that's what I expect.  If the PCI core resets the device, you
-> > > > > > > should get just a few AER errors, and they should stop after the
-> > > > > > > device is reset.
-> > > > > > >
-> > > > > > > > > >     -  Note kdump shell allows to use makedumpfile, vmcore-dmesg applications.
-> > > > > > > > > >
-> > > > > > > > > > II) Crash testing using default root file system: Specific case to
-> > > > > > > > > > test Ethernet driver in second kernel
-> > > > > > > > > >    -  Default root file system have Ethernet driver
-> > > > > > > > > >    -  AER error comes even before the driver probe starts.
-> > > > > > > > > >    -  Driver does reset Ethernet card as part of probe but no success.
-> > > > > > > > > >    -  AER also tries to recover. but no success.  [2]
-> > > > > > > > > >    -  I also tries to remove AER errors by using "pci=noaer" bootargs
-> > > > > > > > > > and commenting ghes_handle_aer() from GHES driver..
-> > > > > > > > > >           than different set of errors come which also never able to recover [3]
-> > > > > > > > > >
-> > > > > > > >
-> > > > > > > > Please suggest your view on this case. Here driver is preset.
-> > > > > > > > (driver/net/ethernet/intel/igb/igb_main.c)
-> > > > > > > > In this case AER errors starts even before driver probe starts.
-> > > > > > > > After probe, driver does the device reset with no success and even AER
-> > > > > > > > recovery does not work.
-> > > > > > >
-> > > > > > > This case should be the same as the one above.  If we can change the
-> > > > > > > PCI core so it can reset the device when there's no driver,  that would
-> > > > > > > apply to case I (where there will never be a driver) and to case II
-> > > > > > > (where there is no driver now, but a driver will probe the device
-> > > > > > > later).
-> > > > > >
-> > > > > > Does this means change are required in PCI core.
-> > > > >
-> > > > > Yes, I am suggesting that the PCI core does not do the right thing
-> > > > > here.
-> > > > >
-> > > > > > I tried following changes in pcie_do_recovery() but it did not help.
-> > > > > > Same error as before.
-> > > > > >
-> > > > > > -- a/drivers/pci/pcie/err.c
-> > > > > > +++ b/drivers/pci/pcie/err.c
-> > > > > >         pci_info(dev, "broadcast resume message\n");
-> > > > > >         pci_walk_bus(bus, report_resume, &status);
-> > > > > > @@ -203,7 +207,12 @@ pci_ers_result_t pcie_do_recovery(struct pci_dev *dev,
-> > > > > >         return status;
-> > > > > >
-> > > > > >  failed:
-> > > > > >         pci_uevent_ers(dev, PCI_ERS_RESULT_DISCONNECT);
-> > > > > > +       pci_reset_function(dev);
-> > > > > > +       pci_aer_clear_device_status(dev);
-> > > > > > +       pci_aer_clear_nonfatal_status(dev);
-> > > > >
-> > > > > Did you confirm that this resets the devices in question (0000:09:00.0
-> > > > > and 0000:09:00.1, I think), and what reset mechanism this uses (FLR,
-> > > > > PM, etc)?
-> > > >
-> > > > Earlier reset  was happening with P2P bridge(0000:00:09.0) this the
-> > > > reason no effect. After making following changes,  both devices are
-> > > > now getting reset.
-> > > > Both devices are using FLR.
-> > > >
-> > > > diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-> > > > index 117c0a2b2ba4..26b908f55aef 100644
-> > > > --- a/drivers/pci/pcie/err.c
-> > > > +++ b/drivers/pci/pcie/err.c
-> > > > @@ -66,6 +66,20 @@ static int report_error_detected(struct pci_dev *dev,
-> > > >                 if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-> > > >                         vote = PCI_ERS_RESULT_NO_AER_DRIVER;
-> > > >                         pci_info(dev, "can't recover (no
-> > > > error_detected callback)\n");
-> > > > +
-> > > > +                       pci_save_state(dev);
-> > > > +                       pci_cfg_access_lock(dev);
-> > > > +
-> > > > +                       /* Quiesce the device completely */
-> > > > +                       pci_write_config_word(dev, PCI_COMMAND,
-> > > > +                             PCI_COMMAND_INTX_DISABLE);
-> > > > +                       if (!__pci_reset_function_locked(dev)) {
-> > > > +                               vote = PCI_ERS_RESULT_RECOVERED;
-> > > > +                               pci_info(dev, "recovered via pci level
-> > > > reset\n");
-> > > > +                       }
-> > >
-> > > Why do we need to save the state and quiesce the device?  The reset
-> > > should disable interrupts anyway.  In this particular case where
-> > > there's no driver, I don't think we should have to restore the state.
-> > > We maybe should *remove* the device and re-enumerate it after the
-> > > reset, but the state from before the reset should be irrelevant.
-> >
-> > I tried pci_reset_function_locked without save/restore then I got the
-> > synchronous abort during igb_probe (case 2 i.e. with driver). This is
-> > 100% reproducible.
-> > looks like pci_reset_function_locked is causing PCI configuration
-> > space random. Same is mentioned here
-> > https://www.kernel.org/doc/html/latest/driver-api/pci/pci.html
->
-> That documentation is poorly worded.  A reset doesn't make the
-> contents of config space "random," but of course it sets config space
-> registers to their initialization values, including things like the
-> device BARs.  After a reset, the device BARs are zero, so it won't
-> respond at the address we expect, and I'm sure that's what's causing
-> the external abort.
->
-> So I guess we *do* need to save the state before the reset and restore
-> it (either that or enumerate the device from scratch just like we
-> would if it had been hot-added).  I'm not really thrilled with trying
-> to save the state after the device has already reported an error.  I'd
-> rather do it earlier, maybe during enumeration, like in
-> pci_init_capabilities().  But I don't understand all the subtleties of
-> dev->state_saved, so that requires some legwork.
->
+Looks good to me.
 
-I tried moving pci_save_state earlier. All observations are the same
-as mentioned in earlier discussions.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Some modifications are required in pci_restore_state() as by default
-it makes dev->state_saved = false after restore. .
-So the next AER causes the earlier mentioned
-crash(igb_get_invariants_82575 --> igb_rd32).  It is because
-pci_restore_state() returns without restoring any state.
+> ---
+> Changes since v1:
+> [1] Modify the log level(suggested by Jiri Bohac)
+> 
+>  kernel/kexec_file.c | 34 ++++++----------------------------
+>  1 file changed, 6 insertions(+), 28 deletions(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index faa74d5f6941..fae496958a68 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -181,34 +181,19 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+> -	const char *reason;
+>  	int ret;
+>  
+>  	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>  					   image->kernel_buf_len);
+> -	switch (ret) {
+> -	case 0:
+> -		break;
+> +	if (ret) {
+>  
+> -		/* Certain verification errors are non-fatal if we're not
+> -		 * checking errors, provided we aren't mandating that there
+> -		 * must be a valid signature.
+> -		 */
+> -	case -ENODATA:
+> -		reason = "kexec of unsigned image";
+> -		goto decide;
+> -	case -ENOPKG:
+> -		reason = "kexec of image with unsupported crypto";
+> -		goto decide;
+> -	case -ENOKEY:
+> -		reason = "kexec of image with unavailable key";
+> -	decide:
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -			pr_notice("%s rejected\n", reason);
+> +			pr_notice("Enforced kernel signature verification failed (%d).\n", ret);
+>  			return ret;
+>  		}
+>  
+> -		/* If IMA is guaranteed to appraise a signature on the kexec
+> +		/*
+> +		 * If IMA is guaranteed to appraise a signature on the kexec
+>  		 * image, permit it even if the kernel is otherwise locked
+>  		 * down.
+>  		 */
+> @@ -216,17 +201,10 @@ kimage_validate_signature(struct kimage *image)
+>  		    security_locked_down(LOCKDOWN_KEXEC))
+>  			return -EPERM;
+>  
+> -		return 0;
+> -
+> -		/* All other errors are fatal, including nomem, unparseable
+> -		 * signatures and signature check failures - even if signatures
+> -		 * aren't required.
+> -		 */
+> -	default:
+> -		pr_notice("kernel signature verification failed (%d).\n", ret);
+> +		pr_debug("kernel signature verification failed (%d).\n", ret);
+>  	}
+>  
+> -	return ret;
+> +	return 0;
+>  }
+>  #endif
+>  
+> -- 
+> 2.17.1
+> 
 
-Code changes are below [1]
-
-> I don't think we should set INTX_DISABLE; the reset will make whatever
-> we do with it irrelevant anyway.
->
-Yes.. It is not required.
-
-> Remind me why the pci_cfg_access_lock()?
-
-I thought of the race conditions between AER (save/restore) and
-igb_probe. So I added this.
-It is not required as lock is inherently "taken care" in both AER (bus
-walk) and igb_probe by the framework.
-
-[1]
-root@localhost$ git diff
-diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-index 595fcf59843f..35396eb4fd9e 100644
---- a/drivers/pci/pci.c
-+++ b/drivers/pci/pci.c
-@@ -1537,11 +1537,7 @@ static void pci_restore_rebar_state(struct pci_dev *pdev)
-        }
- }
-
--/**
-- * pci_restore_state - Restore the saved state of a PCI device
-- * @dev: PCI device that we're dealing with
-- */
--void pci_restore_state(struct pci_dev *dev)
-+void __pci_restore_state(struct pci_dev *dev, int retain_state)
- {
-        if (!dev->state_saved)
-                return;
-@@ -1572,10 +1568,26 @@ void pci_restore_state(struct pci_dev *dev)
-        pci_enable_acs(dev);
-        pci_restore_iov_state(dev);
-
--       dev->state_saved = false;
-+       if (!retain_state)
-+               dev->state_saved = false;
-+}
-+
-+/**
-+ * pci_restore_state - Restore the saved state of a PCI device
-+ * @dev: PCI device that we're dealing with
-+ */
-+void pci_restore_state(struct pci_dev *dev)
-+{
-+       __pci_restore_state(dev, 0);
- }
- EXPORT_SYMBOL(pci_restore_state);
-
-+void pci_restore_retain_state(struct pci_dev *dev)
-+{
-+       __pci_restore_state(dev, 1);
-+}
-+EXPORT_SYMBOL(pci_restore_retain_state);
-+
- struct pci_saved_state {
-        u32 config_space[16];
-        struct pci_cap_saved_data cap[0];
-diff --git a/drivers/pci/pcie/err.c b/drivers/pci/pcie/err.c
-index 14bb8f54723e..621eaa34bf9f 100644
---- a/drivers/pci/pcie/err.c
-+++ b/drivers/pci/pcie/err.c
-@@ -66,6 +66,13 @@ static int report_error_detected(struct pci_dev *dev,
-                if (dev->hdr_type != PCI_HEADER_TYPE_BRIDGE) {
-                        vote = PCI_ERS_RESULT_NO_AER_DRIVER;
-                        pci_info(dev, "can't recover (no
-error_detected callback)\n");
-+
-+                       if (!__pci_reset_function_locked(dev)) {
-+                               vote = PCI_ERS_RESULT_RECOVERED;
-+                               pci_info(dev, "Recovered via pci level
-reset\n");
-+                       }
-+
-+                       pci_restore_retain_state(dev);
-                } else {
-                        vote = PCI_ERS_RESULT_NONE;
-                }
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 77b8a145c39b..af4e27c95421 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -2448,6 +2448,8 @@ void pci_device_add(struct pci_dev *dev, struct
-pci_bus *bus)
-
-        pci_init_capabilities(dev);
-
-+       pci_save_state(dev);
-+
-        /*
-         * Add the device to our list of discovered devices
-         * and the bus list for fixup functions, etc.
-diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 83ce1cdf5676..42ab7ef850b7 100644
---- a/include/linux/pci.h
-+++ b/include/linux/pci.h
-@@ -1234,6 +1234,7 @@ void pci_unmap_rom(struct pci_dev *pdev, void
-__iomem *rom);
-
- /* Power management related routines */
- int pci_save_state(struct pci_dev *dev);
-+void pci_restore_retain_state(struct pci_dev *dev);
- void pci_restore_state(struct pci_dev *dev);
- struct pci_saved_state *pci_store_saved_state(struct pci_dev *dev);
- int pci_load_saved_state(struct pci_dev *dev,
-
---pk
 
 _______________________________________________
 kexec mailing list
