@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 8 Jun 2020 12:41:23 +0100
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH][v2] iommu: arm-smmu-v3: Copy SMMU table for kdump kernel
-Message-ID: <20200608114122.GB3108@willie-the-truck>
-References: <1589251566-32126-1-git-send-email-pkushwaha@marvell.com>
- <20200518155545.GO32394@willie-the-truck>
- <CAJ2QiJLMKckbuAqJutAi_zUQqqaK5Mg_u5Q=gg-POSvmk8cT9g@mail.gmail.com>
- <20200521092311.GB5091@willie-the-truck>
- <CAJ2QiJK4h=5abVdODWTYg8Loy0Hhnhm1HrBzAM3bZXKtGXYK+Q@mail.gmail.com>
- <20200601073957.GD8601@willie-the-truck>
- <CAJ2QiJ+-VV9bXbdfqHxeZgUiGBg_iMqBQcSH5cD_sfb-UQpQ6w@mail.gmail.com>
+Received: from mail.kernel.org ([198.145.29.99])
+ by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jiQuE-0002f0-4C
+ for kexec@lists.infradead.org; Mon, 08 Jun 2020 23:10:18 +0000
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.7 187/274] net: qed*: Reduce RX and TX default ring
+ count when running inside kdump kernel
+Date: Mon,  8 Jun 2020 19:04:40 -0400
+Message-Id: <20200608230607.3361041-187-sashal@kernel.org>
+In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
+References: <20200608230607.3361041-1-sashal@kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAJ2QiJ+-VV9bXbdfqHxeZgUiGBg_iMqBQcSH5cD_sfb-UQpQ6w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,97 +23,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Prabhakar Kushwaha <prabhakar.pkin@gmail.com>
-Cc: Ganapatrao Prabhakerrao Kulkarni <gkulkarni@marvell.com>, Marc Zyngier <maz@kernel.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec mailing list <kexec@lists.infradead.org>, Bjorn Helgaas <helgaas@kernel.org>, Prabhakar Kushwaha <pkushwaha@marvell.com>, Robin Murphy <robin.murphy@arm.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Sasha Levin <sashal@kernel.org>, Ariel Elior <aelior@marvell.com>, Manish Chopra <manishc@marvell.com>, netdev@vger.kernel.org, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, GR-everest-linux-l2@marvell.com, "David S . Miller" <davem@davemloft.net>
 
-On Tue, Jun 02, 2020 at 07:34:47PM +0530, Prabhakar Kushwaha wrote:
-> On Mon, Jun 1, 2020 at 1:10 PM Will Deacon <will@kernel.org> wrote:
-> > On Thu, May 21, 2020 at 04:52:02PM +0530, Prabhakar Kushwaha wrote:
-> > > On Thu, May 21, 2020 at 2:53 PM Will Deacon <will@kernel.org> wrote:
-> > > > On Tue, May 19, 2020 at 08:24:21AM +0530, Prabhakar Kushwaha wrote:
-> > > > > What kind of issue you are foreseeing in using memcpy(). May be we can
-> > > > > try to find a solution.
-> > > >
-> > > > Well the thing might not be cache-coherent to start with...
-> > > >
-> > >
-> > > Thanks for telling possible issue area.  Let me try to explain why
-> > > this should not be an issue.
-> > >
-> > > kdump kernel runs from reserved memory space defined during the boot
-> > > of first kernel. kdump does not touch memory of the previous kernel.
-> > > So no page has been created in kdump kernel  and  there should not be
-> > > any data/attribute/coherency issue from MMU point of view .
-> >
-> > Then how does this work?:
-> >
-> >         rdcfg.strtab = memremap(rdcfg.strtab_dma, size, MEMREMAP_WB);
-> >
-> > You're explicitly asking for a write-back mapping.
-> >
-> 
-> As i mentioned earlier, I will replace it with MEMREMAP_WT to make
-> sure data is written into the memory.
-> 
-> Please note, this memmap is temporary for copying older SMMU table to
-> cfg->strtab.
-> Here, cfg->strtab & cfg->strtab_dma allocated via dmam_alloc_coherent
-> during SMMU probe.
-> 
-> 
-> > > During SMMU probe functions,  dmem_alloc_coherent() will be used
-> > > allocate new memory (part of existing flow).
-> > > This patch copy STE or first level descriptor to *this* memory, after
-> > > mapping physical address using memremap().
-> > > It just copy everything  so there should not be any issue related to
-> > > attribute/content.
-> > >
-> > > Yes, copying  done after mapping it as MEMREMAP_WB. if you want I can
-> > > use it as MEMREMAP_WT
-> >
-> > You need to take into account whether or not the device is coherent, and the
-> > DMA API is designed to handle that for you. But even then, this is fragile
-> > as hell because you end up having to infer the hardware configuration
-> > from the device to understand the size and format of the data structures.
-> > If the crashkernel isn't identical to the host kernel (in terms of kconfig,
-> > driver version, firmware tables, cmdline etc) then this is very likely to
-> > go wrong.
-> 
-> There are two possible scenarios for mismatched kdump kernel
-> 1.  kdump kernel does not have the devices' driver
-> 2.  kdump kernel have the different variation/configuration of driver
-> 
-> This patch create temporary SMMU table entries which are overwritten
-> by driver-probe.
+From: Bhupesh Sharma <bhsharma@redhat.com>
 
-What exactly does this achieve, given that you don't copy the context
-descriptors or the page tables?
+[ Upstream commit 73e030977f7884dbe1be0018bab517e8d02760f8 ]
 
-> Driver's probe will overwrite SMMU entries based on its new
-> requirement (size, format, data structures etc).
-> 
-> for "1",  As  no device driver,  SMMU entry will remain there.
-> Means no-one looking for the copied content (even if device continued
-> to perform DMA).
-> 
-> About coherency between Cores and Memory(DMA).
-> At the time of crash:  Only one CPU is allowed to remain continue,
-> rest are stopped.
-> __crash_kexec --> machine_crash_shutdown --> crash_smp_send_stop()
-> 
-> The active CPU is used to boot kdump kernel. hence none of the CPUs is
-> looking for data copied by DMA.
-> Coherency issue should not be there.
+Normally kdump kernel(s) run under severe memory constraint with the
+basic idea being to save the crashdump vmcore reliably when the primary
+kernel panics/hangs.
 
-I'm talking about coherency between the SMMU and the CPU, so I don't think
-the number of CPUs is relevant.
+Currently the qed* ethernet driver ends up consuming a lot of memory in
+the kdump kernel, leading to kdump kernel panic when one tries to save
+the vmcore via ssh/nfs (thus utilizing the services of the underlying
+qed* network interfaces).
 
-> please let me know your view.
+An example OOM message log seen in the kdump kernel can be seen here
+[1], with crashkernel size reservation of 512M.
 
-It still seems extremely fragile to me, so I continue to think that this
-is the wrong approach.
+Using tools like memstrack (see [2]), we can track the modules taking up
+the bulk of memory in the kdump kernel and organize the memory usage
+output as per 'highest allocator first'. An example log for the OOM case
+indicates that the qed* modules end up allocating approximately 216M
+memory, which is a large part of the total crashkernel size:
 
-Will
+ dracut-pre-pivot[676]: ======== Report format module_summary: ========
+ dracut-pre-pivot[676]: Module qed using 149.6MB (2394 pages), peak allocation 149.6MB (2394 pages)
+ dracut-pre-pivot[676]: Module qede using 65.3MB (1045 pages), peak allocation 65.3MB (1045 pages)
+
+This patch reduces the default RX and TX ring count from 1024 to 64
+when running inside kdump kernel, which leads to a significant memory
+saving.
+
+An example log with the patch applied shows the reduced memory
+allocation in the kdump kernel:
+ dracut-pre-pivot[674]: ======== Report format module_summary: ========
+ dracut-pre-pivot[674]: Module qed using 141.8MB (2268 pages), peak allocation 141.8MB (2268 pages)
+ <..snip..>
+[dracut-pre-pivot[674]: Module qede using 4.8MB (76 pages), peak allocation 4.9MB (78 pages)
+
+Tested crashdump vmcore save via ssh/nfs protocol using underlying qed*
+network interface after applying this patch.
+
+[1] OOM log:
+------------
+
+ kworker/0:6: page allocation failure: order:6,
+ mode:0x60c0c0(GFP_KERNEL|__GFP_COMP|__GFP_ZERO), nodemask=(null)
+ kworker/0:6 cpuset=/ mems_allowed=0
+ CPU: 0 PID: 145 Comm: kworker/0:6 Not tainted 4.18.0-109.el8.aarch64 #1
+ Hardware name: To be filled by O.E.M. Saber/Saber, BIOS 0ACKL025
+ 01/18/2019
+ Workqueue: events work_for_cpu_fn
+ Call trace:
+  dump_backtrace+0x0/0x188
+  show_stack+0x24/0x30
+  dump_stack+0x90/0xb4
+  warn_alloc+0xf4/0x178
+  __alloc_pages_nodemask+0xcac/0xd58
+  alloc_pages_current+0x8c/0xf8
+  kmalloc_order_trace+0x38/0x108
+  qed_iov_alloc+0x40/0x248 [qed]
+  qed_resc_alloc+0x224/0x518 [qed]
+  qed_slowpath_start+0x254/0x928 [qed]
+   __qede_probe+0xf8/0x5e0 [qede]
+  qede_probe+0x68/0xd8 [qede]
+  local_pci_probe+0x44/0xa8
+  work_for_cpu_fn+0x20/0x30
+  process_one_work+0x1ac/0x3e8
+  worker_thread+0x44/0x448
+  kthread+0x130/0x138
+  ret_from_fork+0x10/0x18
+  Cannot start slowpath
+  qede: probe of 0000:05:00.1 failed with error -12
+
+[2]. Memstrack tool: https://github.com/ryncsn/memstrack
+
+Cc: kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: Ariel Elior <aelior@marvell.com>
+Cc: GR-everest-linux-l2@marvell.com
+Cc: Manish Chopra <manishc@marvell.com>
+Cc: David S. Miller <davem@davemloft.net>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/ethernet/qlogic/qede/qede.h      |  2 ++
+ drivers/net/ethernet/qlogic/qede/qede_main.c | 11 +++++++++--
+ 2 files changed, 11 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
+index 234c6f30effb..234c7e35ee1e 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede.h
++++ b/drivers/net/ethernet/qlogic/qede/qede.h
+@@ -574,12 +574,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
+ #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
+ #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
+ #define NUM_RX_BDS_MIN		128
++#define NUM_RX_BDS_KDUMP_MIN	63
+ #define NUM_RX_BDS_DEF		((u16)BIT(10) - 1)
+ 
+ #define TX_RING_SIZE_POW	13
+ #define TX_RING_SIZE		((u16)BIT(TX_RING_SIZE_POW))
+ #define NUM_TX_BDS_MAX		(TX_RING_SIZE - 1)
+ #define NUM_TX_BDS_MIN		128
++#define NUM_TX_BDS_KDUMP_MIN	63
+ #define NUM_TX_BDS_DEF		NUM_TX_BDS_MAX
+ 
+ #define QEDE_MIN_PKT_LEN		64
+diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
+index 34fa3917eb33..1a83d1fd8ccd 100644
+--- a/drivers/net/ethernet/qlogic/qede/qede_main.c
++++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
+@@ -29,6 +29,7 @@
+  * CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+  * SOFTWARE.
+  */
++#include <linux/crash_dump.h>
+ #include <linux/module.h>
+ #include <linux/pci.h>
+ #include <linux/version.h>
+@@ -707,8 +708,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
+ 	edev->dp_module = dp_module;
+ 	edev->dp_level = dp_level;
+ 	edev->ops = qed_ops;
+-	edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
+-	edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
++
++	if (is_kdump_kernel()) {
++		edev->q_num_rx_buffers = NUM_RX_BDS_KDUMP_MIN;
++		edev->q_num_tx_buffers = NUM_TX_BDS_KDUMP_MIN;
++	} else {
++		edev->q_num_rx_buffers = NUM_RX_BDS_DEF;
++		edev->q_num_tx_buffers = NUM_TX_BDS_DEF;
++	}
+ 
+ 	DP_INFO(edev, "Allocated netdev with %d tx queues and %d rx queues\n",
+ 		info->num_queues, info->num_queues);
+-- 
+2.25.1
+
 
 _______________________________________________
 kexec mailing list
