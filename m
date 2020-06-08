@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jiQuE-0002f0-4C
- for kexec@lists.infradead.org; Mon, 08 Jun 2020 23:10:18 +0000
+ id 1jiR7j-0003Lr-NK
+ for kexec@lists.infradead.org; Mon, 08 Jun 2020 23:24:21 +0000
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.7 187/274] net: qed*: Reduce RX and TX default ring
+Subject: [PATCH AUTOSEL 4.19 070/106] net: qed*: Reduce RX and TX default ring
  count when running inside kdump kernel
-Date: Mon,  8 Jun 2020 19:04:40 -0400
-Message-Id: <20200608230607.3361041-187-sashal@kernel.org>
-In-Reply-To: <20200608230607.3361041-1-sashal@kernel.org>
-References: <20200608230607.3361041-1-sashal@kernel.org>
+Date: Mon,  8 Jun 2020 19:22:02 -0400
+Message-Id: <20200608232238.3368589-70-sashal@kernel.org>
+In-Reply-To: <20200608232238.3368589-1-sashal@kernel.org>
+References: <20200608232238.3368589-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -115,10 +115,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index 234c6f30effb..234c7e35ee1e 100644
+index dc3be8a4acf4..2bdc410d1144 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede.h
 +++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -574,12 +574,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
+@@ -550,12 +550,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
  #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
  #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
  #define NUM_RX_BDS_MIN		128
@@ -134,7 +134,7 @@ index 234c6f30effb..234c7e35ee1e 100644
  
  #define QEDE_MIN_PKT_LEN		64
 diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 34fa3917eb33..1a83d1fd8ccd 100644
+index 0d8e39ffbcd1..1aabb2e7a38b 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede_main.c
 +++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
 @@ -29,6 +29,7 @@
@@ -145,7 +145,7 @@ index 34fa3917eb33..1a83d1fd8ccd 100644
  #include <linux/module.h>
  #include <linux/pci.h>
  #include <linux/version.h>
-@@ -707,8 +708,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
+@@ -730,8 +731,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
  	edev->dp_module = dp_module;
  	edev->dp_level = dp_level;
  	edev->ops = qed_ops;
