@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jifnF-0002o5-1c
- for kexec@lists.infradead.org; Tue, 09 Jun 2020 15:04:02 +0000
+ id 1jigbk-0006HA-Oa
+ for kexec@lists.infradead.org; Tue, 09 Jun 2020 15:56:14 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: Full barrier in data_push_tail(): was [PATCH v2 2/3] printk: add
- lockless buffer
+Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk:
+ add lockless buffer
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609094820.GC23752@linux-b0ei>
-Date: Tue, 09 Jun 2020 17:03:54 +0200
-In-Reply-To: <20200609094820.GC23752@linux-b0ei> (Petr Mladek's message of
- "Tue, 9 Jun 2020 11:48:20 +0200")
-Message-ID: <87h7vkuvqd.fsf@vostro.fn.ogness.net>
+ <20200609113751.GD23752@linux-b0ei>
+Date: Tue, 09 Jun 2020 17:56:03 +0200
+In-Reply-To: <20200609113751.GD23752@linux-b0ei> (Petr Mladek's message of
+ "Tue, 9 Jun 2020 13:37:51 +0200")
+Message-ID: <87d068utbg.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,39 +32,147 @@ Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsk
 On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
 >> --- /dev/null
 >> +++ b/kernel/printk/printk_ringbuffer.c
->> +static bool data_push_tail(struct printk_ringbuffer *rb,
->> +			   struct prb_data_ring *data_ring,
->> +			   unsigned long lpos)
+>> +/*
+>> + * Advance the desc ring tail. This function advances the tail by one
+>> + * descriptor, thus invalidating the oldest descriptor. Before advancing
+>> + * the tail, the tail descriptor is made reusable and all data blocks up to
+>> + * and including the descriptor's data block are invalidated (i.e. the data
+>> + * ring tail is pushed past the data block of the descriptor being made
+>> + * reusable).
+>> + */
+>> +static bool desc_push_tail(struct printk_ringbuffer *rb,
+>> +			   unsigned long tail_id)
 >> +{
->> ...
+>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>> +	enum desc_state d_state;
+>> +	struct prb_desc desc;
+>> +
+>> +	d_state = desc_read(desc_ring, tail_id, &desc);
+>> +
+>> +	switch (d_state) {
+>> +	case desc_miss:
+>> +		/*
+>> +		 * If the ID is exactly 1 wrap behind the expected, it is
+>> +		 * in the process of being reserved by another writer and
+>> +		 * must be considered reserved.
+>> +		 */
+>> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
+>> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
+>> +			return false;
+>> +		}
 >> +
 >> +		/*
->> +		 * Guarantee any descriptor states that have transitioned to
->> +		 * reusable are stored before pushing the tail lpos. This
->> +		 * allows readers to identify if data has expired while
->> +		 * reading the descriptor. This pairs with desc_read:D.
+>> +		 * The ID has changed. Another writer must have pushed the
+>> +		 * tail and recycled the descriptor already. Success is
+>> +		 * returned because the caller is only interested in the
+>> +		 * specified tail being pushed, which it was.
 >> +		 */
->> +		smp_mb(); /* LMM(data_push_tail:C) */
+>> +		return true;
+>> +	case desc_reserved:
+>> +		return false;
+>> +	case desc_committed:
+>> +		desc_make_reusable(desc_ring, tail_id);
+>> +		break;
+>> +	case desc_reusable:
+>> +		break;
+>> +	}
+>> +
+>> +	/*
+>> +	 * Data blocks must be invalidated before their associated
+>> +	 * descriptor can be made available for recycling. Invalidating
+>> +	 * them later is not possible because there is no way to trust
+>> +	 * data blocks once their associated descriptor is gone.
+>> +	 */
+>> +
+>> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
+>> +		return false;
+>> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
+>> +		return false;
+>> +
+>> +	/*
+>> +	 * Check the next descriptor after @tail_id before pushing the tail
+>> +	 * to it because the tail must always be in a committed or reusable
+>> +	 * state. The implementation of prb_first_seq() relies on this.
+>> +	 *
+>> +	 * A successful read implies that the next descriptor is less than or
+>> +	 * equal to @head_id so there is no risk of pushing the tail past the
+>> +	 * head.
+>> +	 */
+>> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
+>> +			    &desc); /* LMM(desc_push_tail:A) */
+>> +	if (d_state == desc_committed || d_state == desc_reusable) {
+>> +		/*
+>> +		 * Any CPU that loads the new tail ID, must see that the
+>> +		 * descriptor at @tail_id is in the reusable state. See the
+>> +		 * read memory barrier part of desc_reserve:D for details.
+>> +		 */
+>> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
+>> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:B) */
 >
-> The comment does not explain why we need a full barrier here.
->
-> I would add something like:
->
-> 		* Full barrier is necessary because the descriptors
-> 		* might have been made reusable also by other CPUs.
+> I was quite confused by the above comment. Does it mean that we need
+> a barrier here? Or does it explain why the cmpxchg has its own
+> LMM marker?
 
-Agreed. Somehow I missed that explanation for this comment.
+This LMM marker is referenced quite often, but since it is a relaxed
+cmpxchg(), its significance is not immediately clear. I was hoping to
+add some hints as to why it is significant. The comment that it is
+referring to is:
 
-> For people like me, it would be great to add also link to a more
-> detailed explanation, for example, the litmus tests, or something
-> even more human readable ;-) I think that it is a "rather" common
-> problem. I wonder whether it is already documented somewhere.
+	/*
+	 * Guarantee the tail ID is read before validating the
+	 * recycled descriptor state. A read memory barrier is
+	 * sufficient for this. This pairs with data_push_tail:C.
+	 *
+	 * Memory barrier involvement:
+	 *
+	 * If desc_reserve:C reads from desc_push_tail:B, then
+	 * desc_reserve:F reads from desc_make_reusable:A.
+	 *
+	 * Relies on:
+	 *
+	 * MB from desc_make_reusable:A to desc_push_tail:B
+	 *    matching
+	 * RMB from desc_reserve:C to desc_reserve:F
+	 *
+	 * Note: desc_make_reusable:A, desc_push_tail:B, and
+	 *       data_push_tail:C can all be different CPUs. However,
+	 *       the desc_push_tail:B CPU must have previously seen
+	 *       data_push_tail:D and the data_push_tail:D CPU (which
+	 *       performs the full memory barrier) must have
+	 *       previously seen desc_make_reusable:A.
+	 */
 
-I believe that memory barriers need to be formally documented. Perhaps
-in such a way that litmus tests can be easily generated. Tools could
-greatly assist with this. It is my hope that my memory barrier
-documentation can spark some ideas about how we could do this. (Doing
-all this manually really sucks!)
+English translation:
+
+In order to push the data tail, a CPU must first see that the associated
+descriptor is in the reusable state. Since a full memory barrier is
+performed after that sighting and before doing the data tail push, _any_
+CPU that sees the pushed data tail will be able to see that the
+associated descriptor is in the reusable state.
+
+In order to push the descriptor tail, a CPU must first see that the
+associated data tail has been pushed. Therefore, that CPU would also see
+that the associated descriptor is in the reusable state.
+
+> I think that we actually need a full barrier here to make sure that
+> all CPUs see the changes made by data_push_tail() before we
+> allow to rewrite the descriptor. The changes in data_push_tail() might
+> be done on different CPUs.
+
+There needs to be a reason why the ordering of data tail pushing and
+descriptor tail pushing is important.
+
+> It is similar like the full barrier in data_push_tail() before changing
+> data_ring->tail_lpos.
+
+How so? That memory barrier exists to make sure the reusable descriptor
+state is stored before pushing the data tail. This is important for
+readers (which start from the data tail) so they can notice if the
+descriptor has since been invalidated (reusable state).
+
+But where is it important that the data tail change is seen before the
+descriptor tail change? How are the data tail and descriptor tail
+significantly related to each other?
 
 John Ogness
 
