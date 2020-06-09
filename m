@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jifOJ-0002kf-MC
- for kexec@lists.infradead.org; Tue, 09 Jun 2020 14:38:17 +0000
-Date: Tue, 9 Jun 2020 16:38:11 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: data_ring head_lpos and tail_lpos synchronization: was [PATCH v2
- 2/3] printk: add lockless buffer
-Message-ID: <20200609143811.GF23752@linux-b0ei>
+ id 1jifYL-0000nR-2l
+ for kexec@lists.infradead.org; Tue, 09 Jun 2020 14:48:39 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3]
+ printk: add lockless buffer
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
+ <20200609093103.GB23752@linux-b0ei>
+Date: Tue, 09 Jun 2020 16:48:30 +0200
+In-Reply-To: <20200609093103.GB23752@linux-b0ei> (Petr Mladek's message of
+ "Tue, 9 Jun 2020 11:31:03 +0200")
+Message-ID: <87lfkwuwg1.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200501094010.17694-3-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,230 +26,209 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri 2020-05-01 11:46:09, John Ogness wrote:
-> Introduce a multi-reader multi-writer lockless ringbuffer for storing
-> the kernel log messages. Readers and writers may use their API from
-> any context (including scheduler and NMI). This ringbuffer will make
-> it possible to decouple printk() callers from any context, locking,
-> or console constraints. It also makes it possible for readers to have
-> full access to the ringbuffer contents at any time and context (for
-> example from any panic situation).
-> 
-> --- /dev/null
-> +++ b/kernel/printk/printk_ringbuffer.c
-> +/*
-> + * Advance the data ring tail to at least @lpos. This function puts
-> + * descriptors into the reusable state if the tail is pushed beyond
-> + * their associated data block.
-> + */
-> +static bool data_push_tail(struct printk_ringbuffer *rb,
-> +			   struct prb_data_ring *data_ring,
-> +			   unsigned long lpos)
-> +{
-> +	unsigned long tail_lpos;
-> +	unsigned long next_lpos;
-> +
-> +	/* If @lpos is not valid, there is nothing to do. */
-> +	if (lpos == INVALID_LPOS)
-> +		return true;
-> +
-> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> +/*
+>> + * Given a data ring (text or dict), put the associated descriptor of each
+>> + * data block from @lpos_begin until @lpos_end into the reusable state.
+>> + *
+>> + * If there is any problem making the associated descriptor reusable, either
+>> + * the descriptor has not yet been committed or another writer task has
+>> + * already pushed the tail lpos past the problematic data block. Regardless,
+>> + * on error the caller can re-load the tail lpos to determine the situation.
+>> + */
+>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+>> +			       struct prb_data_ring *data_ring,
+>> +			       unsigned long lpos_begin,
+>> +			       unsigned long lpos_end,
+>> +			       unsigned long *lpos_out)
+>> +{
+>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+>> +	struct prb_data_blk_lpos *blk_lpos;
+>> +	struct prb_data_block *blk;
+>> +	unsigned long tail_lpos;
+>> +	enum desc_state d_state;
+>> +	struct prb_desc desc;
+>> +	unsigned long id;
+>> +
+>> +	/*
+>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+>> +	 * blk_lpos within the local copy of the descriptor.
+>> +	 */
+>> +	if (data_ring == &rb->text_data_ring)
+>> +		blk_lpos = &desc.text_blk_lpos;
+>> +	else
+>> +		blk_lpos = &desc.dict_blk_lpos;
+>> +
+>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+>> +		blk = to_block(data_ring, lpos_begin);
+>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+>> +
+>> +		/*
+>> +		 * Guarantee the block ID is loaded before checking the tail
+>> +		 * lpos. The loaded block ID can only be considered valid if
+>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+>> +		 * with data_alloc:A.
+>> +		 *
+>> +		 * Memory barrier involvement:
+>> +		 *
+>> +		 * If data_make_reusable:A reads from data_alloc:B, then
+>> +		 * data_make_reusable:C reads from data_push_tail:D.
+>> +		 *
+>> +		 * Relies on:
+>> +		 *
+>> +		 * MB from data_push_tail:D to data_alloc:B
+>> +		 *    matching
+>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+>> +		 *
+>> +		 * Note: data_push_tail:D and data_alloc:B can be different
+>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+>> +		 *       the full memory barrier) must have previously seen
+>> +		 *       data_push_tail:D.
+>> +		 */
+>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+>> +
+>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+>> +					); /* LMM(data_make_reusable:C) */
+>> +
+>> +		/*
+>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+>> +		 * tail lpos and try again.
+>> +		 */
+>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+>> +			lpos_begin = tail_lpos;
+>> +			continue;
+>> +		}
+>
+> I am sorry if we have had this discussion already in past.
 
-Hmm, I wonder whether data_ring->tail_lpos and data_ring->head_lpos
-are synchronized enough between each other.
+We have [0]. (Search for "Ouch.")
 
-I feel that there should be read barrier here. But it seems that more
-barriers are missing. For example, let's have:
+> Well, it would just prove that it really needs a comment why this
+> check is necessary.
 
+The comment says why it is necessary. The previous read of the block ID
+cannot be trusted if the the tail has been pushed beyond it.
 
-CPU0				CPU1
+> IMHO, the following check of the descriptor state should be enough:
+>
+> 1. This function returns "false" when the descriptor is in desc_misc or
+>    desc_reusable state or when it does not point back to the data.
+>
+>    In this case, data_push_tail() does similar check. It loads
+>    data_ring->tail_lpos as well. It returns false when the tail did
+>    not move. Otherwise, it calls data_make_reusable() again and has
+>    the same effect as the continue here.
+>
+>
+> 2. This function returns true only when the descriptor is in committed
+>    or reusable state and points back to the same data block. In this,
+>    case it really contains consistent data.
+>
+>    OK, it is possible that the block is already reused when the
+>    descriptor is in reusable state. But it is possible only when
+>    data_ring->tail_lpos moved. In this case, cmpxchg in
+>    data_push_tail() would fail and we would go back as well.
 
-data_alloc()
-  begin_lpos = atomic_read(data_ring->head_lpos);
+In your email from our previous discussion, you pointed out that two
+writers could race to allocate a block and the loser would start freeing
+the winner's data because it gets a valid block ID to a descriptor in
+the committed state that points back to the block lpos.
 
-				data_alloc()
-				  data_push_tail()
-				    cmpxchg(data_ring->tail_lpos);
-				    // A: no barrier
-				  cmpxchg(data_ring->head_lpos);
+You wrote:
 
-  data_push_tail()
-    // B: no barrier
-    tail_lpos = atomic_read(data_ring->tail_lpos);
+> => We should add a check into data_make_reusable() that
+>    we are invalidating really the descriptor pointing to
+>    the given lpos and not a freshly reused one!
 
-Problem 1:
+That is what this check is doing. If the tail has been pushed beyond the
+block, we cannot trust the block ID read because that area may have been
+recycled already.
 
-   CPU0 might see random ordering of data_ring->tail_lpos and
-   head_lpos values modified by CPU1. There are missing both
-   write and read barriers.
+>> +/*
+>> + * Advance the data ring tail to at least @lpos. This function puts
+>> + * descriptors into the reusable state if the tail is pushed beyond
+>> + * their associated data block.
+>> + */
+>> +static bool data_push_tail(struct printk_ringbuffer *rb,
+>> +			   struct prb_data_ring *data_ring,
+>> +			   unsigned long lpos)
+>> +{
+>> +	unsigned long tail_lpos;
+>> +	unsigned long next_lpos;
+>> +
+>> +	/* If @lpos is not valid, there is nothing to do. */
+>> +	if (lpos == INVALID_LPOS)
+>> +		return true;
+>> +
+>> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+>> +
+>> +	do {
+>> +		/* Done, if the tail lpos is already at or beyond @lpos. */
+>> +		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
+>> +			break;
+>> +
+>> +		/*
+>> +		 * Make all descriptors reusable that are associated with
+>> +		 * data blocks before @lpos.
+>> +		 */
+>> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
+>> +					&next_lpos)) {
+>> +			/*
+>> +			 * Guarantee the descriptor state loaded in
+>> +			 * data_make_reusable() is performed before reloading
+>> +			 * the tail lpos. The failed data_make_reusable() may
+>> +			 * be due to a newly recycled descriptor causing
+>> +			 * the tail lpos to have been previously pushed. This
+>> +			 * pairs with desc_reserve:D.
+>> +			 *
+>> +			 * Memory barrier involvement:
+>> +			 *
+>> +			 * If data_make_reusable:D reads from desc_reserve:G,
+>> +			 * then data_push_tail:B reads from data_push_tail:D.
+>> +			 *
+>> +			 * Relies on:
+>> +			 *
+>> +			 * MB from data_push_tail:D to desc_reserve:G
+>> +			 *    matching
+>> +			 * RMB from data_make_reusable:D to data_push_tail:B
+>> +			 *
+>> +			 * Note: data_push_tail:D and desc_reserve:G can be
+>> +			 *       different CPUs. However, the desc_reserve:G
+>> +			 *       CPU (which performs the full memory barrier)
+>> +			 *       must have previously seen data_push_tail:D.
+>> +			 */
+>> +			smp_rmb(); /* LMM(data_push_tail:A) */
+>> +
+>> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
+>> +						); /* LMM(data_push_tail:B) */
+>
+> I have been a bit confused whether next_lpos variable is used
+> correctly everywhere. The primary purpose is to use a value provided
+> by data_make_reusable() in the cmpxchg below.
+>
+> But it is (mis)used here to temporary store the current tail_lpos
+> value. Could we please use another variable here? IMHO, the following
+> code would be more clear:
+>
+> 	tail_lpos_old = tail_lpos;
+> 	tail_lpos = atomic_long_read(&data_ring->tail_lpos); /* LMM(data_push_tail:B) */
+>
+> 	if (tail_lpos == tail_lpos_old)
+> 		return false;
 
+You are correct. I am ashamed about this misuse. I will add the variable
+and rely on the compiler to appropriately merge/recycle stack variables.
 
-Problem 2:
+John Ogness
 
-   There might be still a chance because CPU0 does:
-
-     if (!data_make_reusable())
-       smp_rmb()
-       tail_lpos = atomic_read(data_ring->tail_lpos);
-
-   But CPU0 might still see old data_ring->tail because CPU1 did not
-   do write barrier.
-
-
-My proposal:
-
-1. There should be full memory barrier on the location A before
-   updating data_ring->head_lpos. It will be the same as the full
-   barriers needed before updating data_ring->tail_lpos.
-
-   data_ring->tail_lpos might have been pushed by another CPU.
-   We need to make sure that all CPUs see all needed changes
-   before we data_alloc() pushes head_lpos.
-
-
-2. There should be read memory barrier in the location B.
-
-   It is not strictly necessary because data_push_tail() tries
-   to re-read data_ring->tail_lpos after a read barrier. But
-   the re-read is just a fallback.
-
-   The read barrier before the first read should be there to
-   keep "clean" design ;-) Or there should be at least some
-   comment about why the barrier is not there.
-
-Best Regards,
-Petr
-
-> +
-> +	do {
-> +		/* Done, if the tail lpos is already at or beyond @lpos. */
-> +		if ((lpos - tail_lpos) - 1 >= DATA_SIZE(data_ring))
-> +			break;
-> +
-> +		/*
-> +		 * Make all descriptors reusable that are associated with
-> +		 * data blocks before @lpos.
-> +		 */
-> +		if (!data_make_reusable(rb, data_ring, tail_lpos, lpos,
-> +					&next_lpos)) {
-> +			/*
-> +			 * Guarantee the descriptor state loaded in
-> +			 * data_make_reusable() is performed before reloading
-> +			 * the tail lpos. The failed data_make_reusable() may
-> +			 * be due to a newly recycled descriptor causing
-> +			 * the tail lpos to have been previously pushed. This
-> +			 * pairs with desc_reserve:D.
-> +			 *
-> +			 * Memory barrier involvement:
-> +			 *
-> +			 * If data_make_reusable:D reads from desc_reserve:G,
-> +			 * then data_push_tail:B reads from data_push_tail:D.
-> +			 *
-> +			 * Relies on:
-> +			 *
-> +			 * MB from data_push_tail:D to desc_reserve:G
-> +			 *    matching
-> +			 * RMB from data_make_reusable:D to data_push_tail:B
-> +			 *
-> +			 * Note: data_push_tail:D and desc_reserve:G can be
-> +			 *       different CPUs. However, the desc_reserve:G
-> +			 *       CPU (which performs the full memory barrier)
-> +			 *       must have previously seen data_push_tail:D.
-> +			 */
-> +			smp_rmb(); /* LMM(data_push_tail:A) */
-> +
-> +			next_lpos = atomic_long_read(&data_ring->tail_lpos
-> +						); /* LMM(data_push_tail:B) */
-> +			if (next_lpos == tail_lpos)
-> +				return false;
-> +
-> +			/* Another task pushed the tail. Try again. */
-> +			tail_lpos = next_lpos;
-> +			continue;
-> +		}
-> +
-> +		/*
-> +		 * Guarantee any descriptor states that have transitioned to
-> +		 * reusable are stored before pushing the tail lpos. This
-> +		 * allows readers to identify if data has expired while
-> +		 * reading the descriptor. This pairs with desc_read:D.
-> +		 */
-> +		smp_mb(); /* LMM(data_push_tail:C) */
-> +
-> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->tail_lpos,
-> +			&tail_lpos, next_lpos)); /* LMM(data_push_tail:D) */
-> +
-> +	return true;
-> +}
-> +
-> +/*
-> + * Allocate a new data block, invalidating the oldest data block(s)
-> + * if necessary. This function also associates the data block with
-> + * a specified descriptor.
-> + */
-> +static char *data_alloc(struct printk_ringbuffer *rb,
-> +			struct prb_data_ring *data_ring, unsigned long size,
-> +			struct prb_data_blk_lpos *blk_lpos, unsigned long id)
-> +{
-> +	struct prb_data_block *blk;
-> +	unsigned long begin_lpos;
-> +	unsigned long next_lpos;
-> +
-> +	if (!data_ring->data || size == 0) {
-> +		/* Specify a data-less block. */
-> +		blk_lpos->begin = INVALID_LPOS;
-> +		blk_lpos->next = INVALID_LPOS;
-> +		return NULL;
-> +	}
-> +
-> +	size = to_blk_size(size);
-> +
-> +	begin_lpos = atomic_long_read(&data_ring->head_lpos);
-> +
-> +	do {
-> +		next_lpos = get_next_lpos(data_ring, begin_lpos, size);
-> +
-> +		if (!data_push_tail(rb, data_ring,
-> +				    next_lpos - DATA_SIZE(data_ring))) {
-> +			/* Failed to allocate, specify a data-less block. */
-> +			blk_lpos->begin = INVALID_LPOS;
-> +			blk_lpos->next = INVALID_LPOS;
-> +			return NULL;
-> +		}
-> +	} while (!atomic_long_try_cmpxchg_relaxed(&data_ring->head_lpos,
-> +						  &begin_lpos, next_lpos));
-> +
-> +	/*
-> +	 * Guarantee any updated tail lpos is stored before setting the new
-> +	 * block ID. This allows block IDs to be trusted based on the tail
-> +	 * lpos. A full memory barrier is needed since another task may
-> +	 * have updated the tail lpos. This pairs with data_make_reusable:B.
-> +	 */
-> +	smp_mb(); /* LMM(data_alloc:A) */
-> +
-> +	blk = to_block(data_ring, begin_lpos);
-> +	WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
-> +
-> +	if (DATA_WRAPS(data_ring, begin_lpos) !=
-> +	    DATA_WRAPS(data_ring, next_lpos)) {
-> +		/* Wrapping data blocks store their data at the beginning. */
-> +		blk = to_block(data_ring, 0);
-> +
-> +		/*
-> +		 * Store the ID on the wrapped block for consistency.
-> +		 * The printk_ringbuffer does not actually use it.
-> +		 */
-> +		blk->id = id;
-> +	}
-> +
-> +	blk_lpos->begin = begin_lpos;
-> +	blk_lpos->next = next_lpos;
-> +
-> +	return &blk->data[0];
-> +}
+[0] https://lkml.kernel.org/r/87ftecy343.fsf@linutronix.de
 
 _______________________________________________
 kexec mailing list
