@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jiYP5-0001tQ-Ci
- for kexec@lists.infradead.org; Tue, 09 Jun 2020 07:10:37 +0000
-Date: Tue, 9 Jun 2020 09:10:30 +0200
+ id 1jiab6-0002qy-S3
+ for kexec@lists.infradead.org; Tue, 09 Jun 2020 09:31:10 +0000
+Date: Tue, 9 Jun 2020 11:31:03 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
-Message-ID: <20200609071030.GA23752@linux-b0ei>
+Subject: redundant check in make_data_reusable(): was [PATCH v2 2/3] printk:
+ add lockless buffer
+Message-ID: <20200609093103.GB23752@linux-b0ei>
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -36,6 +37,9 @@ On Fri 2020-05-01 11:46:09, John Ogness wrote:
 > full access to the ringbuffer contents at any time and context (for
 > example from any panic situation).
 > 
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> new file mode 100644
+> index 000000000000..e0a66468d4f3
 > --- /dev/null
 > +++ b/kernel/printk/printk_ringbuffer.c
 > +/*
@@ -74,65 +78,7 @@ On Fri 2020-05-01 11:46:09, John Ogness wrote:
 > +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
 > +		blk = to_block(data_ring, lpos_begin);
 > +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
-
-This would deserve some comment:
-
-1. Compiler could not optimize out the read because there is a data
-   dependency on lpos_begin.
-
-2. Compiler could not postpone the read because it is followed by
-   smp_rmb().
-
-So, is READ_ONCE() realy needed?
-
-Well, blk->id clearly can be modified in parallel so we need to be
-careful. There is smp_rmb() right below. Do we needed smp_rmb() also
-before?
-
-What about the following scenario?:
-
-
-CPU0						CPU1
-
-						data_alloc()
-						  data_push_tail()
-
-						blk = to_block(data_ring, begin_lpos)
-						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
-
-desc_push_tail()
-  data_push_tail()
-
-    tail_lpos = data_ring->tail_lpos;
-    // see data_ring->tail_lpos already updated by CPU1
-
-    data_make_reusable()
-
-      // lpos_begin = tail_lpos via parameter
-      blk = to_block(data_ring, lpos_begin);
-      id = blk->id
-
-Now: CPU0 might see outdated blk->id before CPU1 wrote new value
-     because there is no read barrier betwen reading tail_lpos
-     and blk->id here.
-
-     The outdated id would cause desc_miss. CPU0 would return back
-     to data_push_tail(). It will try to re-read data_ring->tail_lpos.
-     But it will be the same as before because it already read the
-     updated value.
-
-     As a result, data_alloc() would fail.
-
-IMHO, we need smp_rmb() between data_ring->tail_lpos read and
-the related blk->id read. It should be either in data_push_tail()
-or in data_make_reusable().
-
-Best Regards,
-Petr
-
-PS: I am still in the middle of the review. I think that it is better
-to discuss each race separately.
-
+> +
 > +		/*
 > +		 * Guarantee the block ID is loaded before checking the tail
 > +		 * lpos. The loaded block ID can only be considered valid if
@@ -169,6 +115,35 @@ to discuss each race separately.
 > +			lpos_begin = tail_lpos;
 > +			continue;
 > +		}
+
+I am sorry if we have had this discussion already in past. Well, it
+would just prove that it really needs a comment why this check is
+necessary. I looks redundant or just an optimization to me.
+
+IMHO, the following check of the descriptor state should be enough:
+
+1. This function returns "false" when the descriptor is in desc_misc or
+   desc_reusable state or when it does not point back to the data.
+
+   In this case, data_push_tail() does similar check. It loads
+   data_ring->tail_lpos as well. It returns false when the tail did
+   not move. Otherwise, it calls data_make_reusable() again and has
+   the same effect as the continue here.
+
+
+2. This function returns true only when the descriptor is in committed
+   or reusable state and points back to the same data block. In this,
+   case it really contains consistent data.
+
+   OK, it is possible that the block is already reused when the
+   descriptor is in reusable state. But it is possible only when
+   data_ring->tail_lpos moved. In this case, cmpxchg in
+   data_push_tail() would fail and we would go back as well.
+
+Do I miss anything, please?
+
+See also a nit below.
+
 > +
 > +		d_state = desc_read(desc_ring, id,
 > +				    &desc); /* LMM(data_make_reusable:D) */
@@ -262,6 +237,21 @@ to discuss each race separately.
 > +
 > +			next_lpos = atomic_long_read(&data_ring->tail_lpos
 > +						); /* LMM(data_push_tail:B) */
+
+I have been a bit confused whether next_lpos variable is used
+correctly everywhere. The primary purpose is to use a value provided
+by data_make_reusable() in the cmpxchg below.
+
+But it is (mis)used here to temporary store the current tail_lpos
+value. Could we please use another variable here? IMHO, the following
+code would be more clear:
+
+	tail_lpos_old = tail_lpos;
+	tail_lpos = atomic_long_read(&data_ring->tail_lpos); /* LMM(data_push_tail:B) */
+
+	if (tail_lpos == tail_lpos_old)
+		return false;
+
 > +			if (next_lpos == tail_lpos)
 > +				return false;
 > +
@@ -283,7 +273,6 @@ to discuss each race separately.
 > +
 > +	return true;
 > +}
-> +
 
 _______________________________________________
 kexec mailing list
