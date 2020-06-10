@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jivzi-0004vb-6D
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 08:21:59 +0000
-Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
- lockdown or mandatory signature
-From: lijiang <lijiang@redhat.com>
-References: <20200602045952.27487-1-lijiang@redhat.com>
-Message-ID: <49d2af1c-bcbf-41d8-071c-93cce024b47b@redhat.com>
-Date: Wed, 10 Jun 2020 16:21:40 +0800
+ id 1jiwJz-0002aI-KE
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 08:42:57 +0000
+Date: Wed, 10 Jun 2020 10:42:48 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
+Message-ID: <20200610084248.GA4311@linux-b0ei>
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+ <20200501094010.17694-3-john.ogness@linutronix.de>
+ <20200609071030.GA23752@linux-b0ei>
+ <87tuzkuxtw.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
-In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <87tuzkuxtw.fsf@vostro.fn.ogness.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,77 +22,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, "ebiederm@xmission.com" <ebiederm@xmission.com>
-Cc: jbohac@suse.cz, bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, ebiederm@xmission.com, dyoung@redhat.com
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-CkkganVzdCBub3RpY2VkIHRoYXQgSSBmb3Jnb3QgdG8gYWRkIEVyaWMgQmllZGVybWFuIGluIGNj
-IGxpc3QsIHNvIHNvcnJ5IGZvciB0aGlzLgoKVGhhbmtzLgpMaWFuYm8KCuWcqCAyMDIw5bm0MDbm
-nIgwMuaXpSAxMjo1OSwgTGlhbmJvIEppYW5nIOWGmemBkzoKPiBTaWduYXR1cmUgdmVyaWZpY2F0
-aW9uIGlzIGFuIGltcG9ydGFudCBzZWN1cml0eSBmZWF0dXJlLCB0byBwcm90ZWN0Cj4gc3lzdGVt
-IGZyb20gYmVpbmcgYXR0YWNrZWQgd2l0aCBhIGtlcm5lbCBvZiB1bmtub3duIG9yaWdpbi4gS2V4
-ZWMKPiByZWJvb3RpbmcgaXMgYSB3YXkgdG8gcmVwbGFjZSB0aGUgcnVubmluZyBrZXJuZWwsIGhl
-bmNlIG5lZWQgYmUKPiBzZWN1cmVkIGNhcmVmdWxseS4KPiAKPiBJbiB0aGUgY3VycmVudCBjb2Rl
-IG9mIGhhbmRsaW5nIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24gb2Yga2V4ZWMga2VybmVsLAo+IHRo
-ZSBsb2dpYyBpcyB2ZXJ5IHR3aXN0ZWQuIEl0IG1peGVzIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24s
-IElNQSBzaWduYXR1cmUKPiBhcHByYWlzaW5nIGFuZCBrZXhlYyBsb2NrZG93bi4KPiAKPiBJZiB0
-aGVyZSBpcyBubyBLRVhFQ19TSUdfRk9SQ0UsIGtleGVjIGtlcm5lbCBpbWFnZSBkb2Vzbid0IGhh
-dmUgb25lIG9mCj4gc2lnbmF0dXJlLCB0aGUgc3VwcG9ydGVkIGNyeXB0bywgYW5kIGtleSwgd2Ug
-ZG9uJ3QgdGhpbmsgdGhpcyBpcyB3cm9uZywKPiBVbmxlc3Mga2V4ZWMgbG9ja2Rvd24gaXMgZXhl
-Y3V0ZWQuIElNQSBpcyBjb25zaWRlcmVkIGFzIGFub3RoZXIga2luZCBvZgo+IHNpZ25hdHVyZSBh
-cHByYWlzaW5nIG1ldGhvZC4KPiAKPiBJZiBrZXhlYyBrZXJuZWwgaW1hZ2UgaGFzIHNpZ25hdHVy
-ZS9jcnlwdG8va2V5LCBpdCBoYXMgdG8gZ28gdGhyb3VnaCB0aGUKPiBzaWduYXR1cmUgdmVyaWZp
-Y2F0aW9uIGFuZCBwYXNzLiBPdGhlcndpc2UgaXQncyBzZWVuIGFzIHZlcmlmaWNhdGlvbgo+IGZh
-aWx1cmUsIGFuZCB3b24ndCBiZSBsb2FkZWQuCj4gCj4gU2VlbXMga2V4ZWMga2VybmVsIGltYWdl
-IHdpdGggYW4gdW5xdWFsaWZpZWQgc2lnbmF0dXJlIGlzIGV2ZW4gd29yc2UgdGhhbgo+IHRob3Nl
-IHcvbyBzaWduYXR1cmUgYXQgYWxsLCB0aGlzIHNvdW5kcyB2ZXJ5IHVucmVhc29uYWJsZS4gRS5n
-LiBJZiBwZW9wbGUKPiBnZXQgYSB1bnNpZ25lZCBrZXJuZWwgdG8gbG9hZCwgb3IgYSBrZXJuZWwg
-c2lnbmVkIHdpdGggZXhwaXJlZCBrZXksIHdoaWNoCj4gb25lIGlzIG1vcmUgZGFuZ2Vyb3VzPwo+
-IAo+IFNvLCBoZXJlLCBsZXQncyBzaW1wbGlmeSB0aGUgbG9naWMgdG8gaW1wcm92ZSBjb2RlIHJl
-YWRhYmlsaXR5LiBJZiB0aGUKPiBLRVhFQ19TSUdfRk9SQ0UgZW5hYmxlZCBvciBrZXhlYyBsb2Nr
-ZG93biBlbmFibGVkLCBzaWduYXR1cmUgdmVyaWZpY2F0aW9uCj4gaXMgbWFuZGF0ZWQuIE90aGVy
-d2lzZSwgd2UgbGlmdCB0aGUgYmFyIGZvciBhbnkga2VybmVsIGltYWdlLgo+IAo+IFNpZ25lZC1v
-ZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+IC0tLQo+IENoYW5nZXMg
-c2luY2UgdjE6Cj4gWzFdIE1vZGlmeSB0aGUgbG9nIGxldmVsKHN1Z2dlc3RlZCBieSBKaXJpIEJv
-aGFjKQo+IAo+ICBrZXJuZWwva2V4ZWNfZmlsZS5jIHwgMzQgKysrKysrLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyOCBkZWxl
-dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2ZpbGUuYyBiL2tlcm5lbC9r
-ZXhlY19maWxlLmMKPiBpbmRleCBmYWE3NGQ1ZjY5NDEuLmZhZTQ5Njk1OGE2OCAxMDA2NDQKPiAt
-LS0gYS9rZXJuZWwva2V4ZWNfZmlsZS5jCj4gKysrIGIva2VybmVsL2tleGVjX2ZpbGUuYwo+IEBA
-IC0xODEsMzQgKzE4MSwxOSBAQCB2b2lkIGtpbWFnZV9maWxlX3Bvc3RfbG9hZF9jbGVhbnVwKHN0
-cnVjdCBraW1hZ2UgKmltYWdlKQo+ICBzdGF0aWMgaW50Cj4gIGtpbWFnZV92YWxpZGF0ZV9zaWdu
-YXR1cmUoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4gIHsKPiAtCWNvbnN0IGNoYXIgKnJlYXNvbjsK
-PiAgCWludCByZXQ7Cj4gIAo+ICAJcmV0ID0gYXJjaF9rZXhlY19rZXJuZWxfdmVyaWZ5X3NpZyhp
-bWFnZSwgaW1hZ2UtPmtlcm5lbF9idWYsCj4gIAkJCQkJICAgaW1hZ2UtPmtlcm5lbF9idWZfbGVu
-KTsKPiAtCXN3aXRjaCAocmV0KSB7Cj4gLQljYXNlIDA6Cj4gLQkJYnJlYWs7Cj4gKwlpZiAocmV0
-KSB7Cj4gIAo+IC0JCS8qIENlcnRhaW4gdmVyaWZpY2F0aW9uIGVycm9ycyBhcmUgbm9uLWZhdGFs
-IGlmIHdlJ3JlIG5vdAo+IC0JCSAqIGNoZWNraW5nIGVycm9ycywgcHJvdmlkZWQgd2UgYXJlbid0
-IG1hbmRhdGluZyB0aGF0IHRoZXJlCj4gLQkJICogbXVzdCBiZSBhIHZhbGlkIHNpZ25hdHVyZS4K
-PiAtCQkgKi8KPiAtCWNhc2UgLUVOT0RBVEE6Cj4gLQkJcmVhc29uID0gImtleGVjIG9mIHVuc2ln
-bmVkIGltYWdlIjsKPiAtCQlnb3RvIGRlY2lkZTsKPiAtCWNhc2UgLUVOT1BLRzoKPiAtCQlyZWFz
-b24gPSAia2V4ZWMgb2YgaW1hZ2Ugd2l0aCB1bnN1cHBvcnRlZCBjcnlwdG8iOwo+IC0JCWdvdG8g
-ZGVjaWRlOwo+IC0JY2FzZSAtRU5PS0VZOgo+IC0JCXJlYXNvbiA9ICJrZXhlYyBvZiBpbWFnZSB3
-aXRoIHVuYXZhaWxhYmxlIGtleSI7Cj4gLQlkZWNpZGU6Cj4gIAkJaWYgKElTX0VOQUJMRUQoQ09O
-RklHX0tFWEVDX1NJR19GT1JDRSkpIHsKPiAtCQkJcHJfbm90aWNlKCIlcyByZWplY3RlZFxuIiwg
-cmVhc29uKTsKPiArCQkJcHJfbm90aWNlKCJFbmZvcmNlZCBrZXJuZWwgc2lnbmF0dXJlIHZlcmlm
-aWNhdGlvbiBmYWlsZWQgKCVkKS5cbiIsIHJldCk7Cj4gIAkJCXJldHVybiByZXQ7Cj4gIAkJfQo+
-ICAKPiAtCQkvKiBJZiBJTUEgaXMgZ3VhcmFudGVlZCB0byBhcHByYWlzZSBhIHNpZ25hdHVyZSBv
-biB0aGUga2V4ZWMKPiArCQkvKgo+ICsJCSAqIElmIElNQSBpcyBndWFyYW50ZWVkIHRvIGFwcHJh
-aXNlIGEgc2lnbmF0dXJlIG9uIHRoZSBrZXhlYwo+ICAJCSAqIGltYWdlLCBwZXJtaXQgaXQgZXZl
-biBpZiB0aGUga2VybmVsIGlzIG90aGVyd2lzZSBsb2NrZWQKPiAgCQkgKiBkb3duLgo+ICAJCSAq
-Lwo+IEBAIC0yMTYsMTcgKzIwMSwxMCBAQCBraW1hZ2VfdmFsaWRhdGVfc2lnbmF0dXJlKHN0cnVj
-dCBraW1hZ2UgKmltYWdlKQo+ICAJCSAgICBzZWN1cml0eV9sb2NrZWRfZG93bihMT0NLRE9XTl9L
-RVhFQykpCj4gIAkJCXJldHVybiAtRVBFUk07Cj4gIAo+IC0JCXJldHVybiAwOwo+IC0KPiAtCQkv
-KiBBbGwgb3RoZXIgZXJyb3JzIGFyZSBmYXRhbCwgaW5jbHVkaW5nIG5vbWVtLCB1bnBhcnNlYWJs
-ZQo+IC0JCSAqIHNpZ25hdHVyZXMgYW5kIHNpZ25hdHVyZSBjaGVjayBmYWlsdXJlcyAtIGV2ZW4g
-aWYgc2lnbmF0dXJlcwo+IC0JCSAqIGFyZW4ndCByZXF1aXJlZC4KPiAtCQkgKi8KPiAtCWRlZmF1
-bHQ6Cj4gLQkJcHJfbm90aWNlKCJrZXJuZWwgc2lnbmF0dXJlIHZlcmlmaWNhdGlvbiBmYWlsZWQg
-KCVkKS5cbiIsIHJldCk7Cj4gKwkJcHJfZGVidWcoImtlcm5lbCBzaWduYXR1cmUgdmVyaWZpY2F0
-aW9uIGZhaWxlZCAoJWQpLlxuIiwgcmV0KTsKPiAgCX0KPiAgCj4gLQlyZXR1cm4gcmV0Owo+ICsJ
-cmV0dXJuIDA7Cj4gIH0KPiAgI2VuZGlmCj4gIAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+On Tue 2020-06-09 16:18:35, John Ogness wrote:
+> On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+> >> --- /dev/null
+> >> +++ b/kernel/printk/printk_ringbuffer.c
+> >> +/*
+> >> + * Given a data ring (text or dict), put the associated descriptor of each
+> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
+> >> + *
+> >> + * If there is any problem making the associated descriptor reusable, either
+> >> + * the descriptor has not yet been committed or another writer task has
+> >> + * already pushed the tail lpos past the problematic data block. Regardless,
+> >> + * on error the caller can re-load the tail lpos to determine the situation.
+> >> + */
+> >> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+> >> +			       struct prb_data_ring *data_ring,
+> >> +			       unsigned long lpos_begin,
+> >> +			       unsigned long lpos_end,
+> >> +			       unsigned long *lpos_out)
+> >> +{
+> >> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> >> +	struct prb_data_blk_lpos *blk_lpos;
+> >> +	struct prb_data_block *blk;
+> >> +	unsigned long tail_lpos;
+> >> +	enum desc_state d_state;
+> >> +	struct prb_desc desc;
+> >> +	unsigned long id;
+> >> +
+> >> +	/*
+> >> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+> >> +	 * blk_lpos within the local copy of the descriptor.
+> >> +	 */
+> >> +	if (data_ring == &rb->text_data_ring)
+> >> +		blk_lpos = &desc.text_blk_lpos;
+> >> +	else
+> >> +		blk_lpos = &desc.dict_blk_lpos;
+> >> +
+> >> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+> >> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+> >> +		blk = to_block(data_ring, lpos_begin);
+> >> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+> >
+> > This would deserve some comment:
+> >
+> > 1. Compiler could not optimize out the read because there is a data
+> >    dependency on lpos_begin.
+> >
+> > 2. Compiler could not postpone the read because it is followed by
+> >    smp_rmb().
+> >
+> > So, is READ_ONCE() realy needed?
+> 
+> I agree that it is not needed. Both the READ_ONCE() and its countering
+> WRITE_ONCE() (data_alloc:B) only document the lockless shared access. I
+> will remove both for the next version.
+
+Sounds good.
+
+> Do we still need a comment? Is it not obvious that there is a data
+> dependency on @lpos_begin?
+
+Sigh, I just wonder why I am always confusedby this. See below.
+
+
+>         blk = to_block(data_ring, lpos_begin);
+>         id = blk->id;
+> 
+> > Well, blk->id clearly can be modified in parallel so we need to be
+> > careful. There is smp_rmb() right below. Do we needed smp_rmb() also
+> > before?
+> >
+> > What about the following scenario?:
+> >
+> >
+> > CPU0						CPU1
+> >
+> > 						data_alloc()
+> > 						  data_push_tail()
+> >
+> > 						blk = to_block(data_ring, begin_lpos)
+> > 						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
+> >
+> > desc_push_tail()
+> >   data_push_tail()
+> >
+> >     tail_lpos = data_ring->tail_lpos;
+> >     // see data_ring->tail_lpos already updated by CPU1
+> >
+> >     data_make_reusable()
+> >
+> >       // lpos_begin = tail_lpos via parameter
+> >       blk = to_block(data_ring, lpos_begin);
+> >       id = blk->id
+> >
+> > Now: CPU0 might see outdated blk->id before CPU1 wrote new value
+> >      because there is no read barrier betwen reading tail_lpos
+> >      and blk->id here.
+> 
+> In your example, CPU1 is pushing the tail and then setting the block ID
+> for the _newly_ allocated block, that is located is _before_ the new
+> tail. If CPU0 sees the new tail already, it is still reading a valid
+> block ID, which is _not_ from the block that CPU1 is in the process of
+> writing.
+
+Ah, I see. I wrongly assumed that both CPO0 and CPU1 are working with
+the same block address. But if CPU0 sees the new tail_lpos, it is
+already looking at another block. And it is the classic fight against
+yet another potential CPUs that try to push the tail as well.
+
+I wonder if the comment might look like:
+
+/*
+ * No barrier is needed between reading tail_lpos and the related
+ * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
+ * to modify the related blk->id. CPUs that see the moved tail_lpos
+ * are looking at another block related to the new tail_lpos.
+ * It does not mater when the previous winner modifies the previous
+ * block.
+ */
+
+I am not sure how many people are confused like me. It is possible
+that it is not worth it. I just know that I did this mistake
+repeatedly ;-)
+
+Best Regards,
+Petr
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
