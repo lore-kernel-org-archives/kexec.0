@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jiwJz-0002aI-KE
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 08:42:57 +0000
-Date: Wed, 10 Jun 2020 10:42:48 +0200
+ id 1jixBx-0006Ki-A0
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 09:38:43 +0000
+Date: Wed, 10 Jun 2020 11:38:35 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
-Message-ID: <20200610084248.GA4311@linux-b0ei>
+Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3]
+ printk: add lockless buffer
+Message-ID: <20200610093835.GB4311@linux-b0ei>
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609071030.GA23752@linux-b0ei>
- <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+ <20200609093103.GB23752@linux-b0ei>
+ <87lfkwuwg1.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+In-Reply-To: <87lfkwuwg1.fsf@vostro.fn.ogness.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,7 +30,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: John Ogness <john.ogness@linutronix.de>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Tue 2020-06-09 16:18:35, John Ogness wrote:
+On Tue 2020-06-09 16:48:30, John Ogness wrote:
 > On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
 > >> --- /dev/null
 > >> +++ b/kernel/printk/printk_ringbuffer.c
@@ -69,88 +70,108 @@ On Tue 2020-06-09 16:18:35, John Ogness wrote:
 > >> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
 > >> +		blk = to_block(data_ring, lpos_begin);
 > >> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+> >> +
+> >> +		/*
+> >> +		 * Guarantee the block ID is loaded before checking the tail
+> >> +		 * lpos. The loaded block ID can only be considered valid if
+> >> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+> >> +		 * with data_alloc:A.
+> >> +		 *
+> >> +		 * Memory barrier involvement:
+> >> +		 *
+> >> +		 * If data_make_reusable:A reads from data_alloc:B, then
+> >> +		 * data_make_reusable:C reads from data_push_tail:D.
+> >> +		 *
+> >> +		 * Relies on:
+> >> +		 *
+> >> +		 * MB from data_push_tail:D to data_alloc:B
+> >> +		 *    matching
+> >> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+> >> +		 *
+> >> +		 * Note: data_push_tail:D and data_alloc:B can be different
+> >> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+> >> +		 *       the full memory barrier) must have previously seen
+> >> +		 *       data_push_tail:D.
+> >> +		 */
+> >> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+> >> +
+> >> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+> >> +					); /* LMM(data_make_reusable:C) */
+> >> +
+> >> +		/*
+> >> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+> >> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+> >> +		 * tail lpos and try again.
+> >> +		 */
+> >> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+> >> +			lpos_begin = tail_lpos;
+> >> +			continue;
+> >> +		}
 > >
-> > This would deserve some comment:
-> >
-> > 1. Compiler could not optimize out the read because there is a data
-> >    dependency on lpos_begin.
-> >
-> > 2. Compiler could not postpone the read because it is followed by
-> >    smp_rmb().
-> >
-> > So, is READ_ONCE() realy needed?
+> > I am sorry if we have had this discussion already in past.
 > 
-> I agree that it is not needed. Both the READ_ONCE() and its countering
-> WRITE_ONCE() (data_alloc:B) only document the lockless shared access. I
-> will remove both for the next version.
+> We have [0]. (Search for "Ouch.")
 
-Sounds good.
+I see. Thanks a lot for the pointer.
 
-> Do we still need a comment? Is it not obvious that there is a data
-> dependency on @lpos_begin?
-
-Sigh, I just wonder why I am always confusedby this. See below.
-
-
->         blk = to_block(data_ring, lpos_begin);
->         id = blk->id;
+> > Well, it would just prove that it really needs a comment why this
+> > check is necessary.
 > 
-> > Well, blk->id clearly can be modified in parallel so we need to be
-> > careful. There is smp_rmb() right below. Do we needed smp_rmb() also
-> > before?
-> >
-> > What about the following scenario?:
-> >
-> >
-> > CPU0						CPU1
-> >
-> > 						data_alloc()
-> > 						  data_push_tail()
-> >
-> > 						blk = to_block(data_ring, begin_lpos)
-> > 						WRITE_ONCE(blk->id, id); /* LMM(data_alloc:B) */
-> >
-> > desc_push_tail()
-> >   data_push_tail()
-> >
-> >     tail_lpos = data_ring->tail_lpos;
-> >     // see data_ring->tail_lpos already updated by CPU1
-> >
-> >     data_make_reusable()
-> >
-> >       // lpos_begin = tail_lpos via parameter
-> >       blk = to_block(data_ring, lpos_begin);
-> >       id = blk->id
-> >
-> > Now: CPU0 might see outdated blk->id before CPU1 wrote new value
-> >      because there is no read barrier betwen reading tail_lpos
-> >      and blk->id here.
-> 
-> In your example, CPU1 is pushing the tail and then setting the block ID
-> for the _newly_ allocated block, that is located is _before_ the new
-> tail. If CPU0 sees the new tail already, it is still reading a valid
-> block ID, which is _not_ from the block that CPU1 is in the process of
-> writing.
+> The comment says why it is necessary. The previous read of the block ID
+> cannot be trusted if the the tail has been pushed beyond it.
 
-Ah, I see. I wrongly assumed that both CPO0 and CPU1 are working with
-the same block address. But if CPU0 sees the new tail_lpos, it is
-already looking at another block. And it is the classic fight against
-yet another potential CPUs that try to push the tail as well.
+Not really. The comment describes what the check does. But it does not
+explain why it is needed. The reason might be described be something like:
 
-I wonder if the comment might look like:
+		* Make sure that the id read from tail_lpos is really
+		* pointing to this lpos. The block might have been
+		* reused in the meantime. Make sure to do not make
+		* the new owner reusable.
 
-/*
- * No barrier is needed between reading tail_lpos and the related
- * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
- * to modify the related blk->id. CPUs that see the moved tail_lpos
- * are looking at another block related to the new tail_lpos.
- * It does not mater when the previous winner modifies the previous
- * block.
- */
+But wait! This situation should get caught by the two existing descriptor
+checks:
 
-I am not sure how many people are confused like me. It is possible
-that it is not worth it. I just know that I did this mistake
-repeatedly ;-)
+>		case desc_committed:
+>			/*
+>			 * This data block is invalid if the descriptor
+>			 * does not point back to it.
+>			 */
+>			if (blk_lpos->begin != lpos_begin)
+>				return false;
+>			desc_make_reusable(desc_ring, id);
+>			break;
+>		case desc_reusable:
+>			/*
+>			 * This data block is invalid if the descriptor
+>			 * does not point back to it.
+>			 */
+>			if (blk_lpos->begin != lpos_begin)
+>				return false;
+>			break;
+
+Here again the comments describe what the check does but not why.
+I would write something like:
+
+			/*
+			 * The block might have already been
+			 * reused. Make sure that the descriptor really
+			 * points back to the checked lpos. It covers
+			 * both situations. Random data might point to
+			 * a valid descriptor just by chance. Or the block
+			 * has been already reused by another descriptor.
+			 */
+
+BTW: In theory, it might happen that the ringbuffer is reused many
+times in the meantime and (blk_lpos->begin == lpos_begin) again.
+But then lpos_begin would be valid lpos again and even the range
+check would not catch this as well.
+
+So, I think that the lpos range check is still redundant. We might
+describe it as an extra paranoid check but I am not sure if it is
+worth it.
+
+But I would remove it and keep the code "simple" and design "clear".
+Well, I do not resist on it.
 
 Best Regards,
 Petr
