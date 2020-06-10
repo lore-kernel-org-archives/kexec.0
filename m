@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-x241.google.com ([2a00:1450:4864:20::241])
+Received: from mail-lf1-x144.google.com ([2a00:1450:4864:20::144])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jj3t8-0002j4-O6
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 16:47:44 +0000
-Received: by mail-lj1-x241.google.com with SMTP id a9so3346725ljn.6
- for <kexec@lists.infradead.org>; Wed, 10 Jun 2020 09:47:41 -0700 (PDT)
+ id 1jj3v6-0003j8-QB
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 16:49:47 +0000
+Received: by mail-lf1-x144.google.com with SMTP id u16so1849145lfl.8
+ for <kexec@lists.infradead.org>; Wed, 10 Jun 2020 09:49:44 -0700 (PDT)
 From: Bharat Gooty <bharat.gooty@broadcom.com>
 References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
  <1575057559-25496-3-git-send-email-bhsharma@redhat.com>
@@ -16,10 +16,11 @@ References: <1575057559-25496-1-git-send-email-bhsharma@redhat.com>
  <974f3601-25f8-f4e6-43a8-ff4275e9c174@arm.com>
  <CACi5LpOK6Q3ud3M3zakexLJNOtHy9TODHyYSHVwE3JHVakKzqA@mail.gmail.com>
  <d401b003-af3e-c525-ba00-0de48486b7a0@broadcom.com>
-In-Reply-To: <d401b003-af3e-c525-ba00-0de48486b7a0@broadcom.com>
+ f644ddb6fdb926606bb376a9f491ee79@mail.gmail.com
+In-Reply-To: f644ddb6fdb926606bb376a9f491ee79@mail.gmail.com
 MIME-Version: 1.0
-Date: Wed, 10 Jun 2020 22:17:37 +0530
-Message-ID: <f644ddb6fdb926606bb376a9f491ee79@mail.gmail.com>
+Date: Wed, 10 Jun 2020 22:19:40 +0530
+Message-ID: <2fd8e2d3f2805aca00cb1bd3d7b40839@mail.gmail.com>
 Subject: RE: Re: [RESEND PATCH v5 2/5] arm64/crash_core: Export TCR_EL1.T1SZ
  in vmcoreinfo
 List-Id: <kexec.lists.infradead.org>
@@ -35,7 +36,23 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Scott Branden <scott.branden@broadcom.com>, Bhupesh Sharma <bhsharma@redhat.com>, Amit Kachhap <amit.kachhap@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ray Jui <ray.jui@broadcom.com>, linuxppc-dev@lists.ozlabs.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh linux <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Steve Capper <steve.capper@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Bharat Gooty <bharat.gooty@broadcom.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Ray Jui <ray.jui@broadcom.com>, linuxppc-dev@lists.ozlabs.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh linux <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, kexec mailing list <kexec@lists.infradead.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Steve Capper <steve.capper@arm.com>
+
+Sorry, error message was not posted. Following is the error message
+
+crash: cannot determine VA_BITS_ACTUAL
+
+-----Original Message-----
+From: Bharat Gooty [mailto:bharat.gooty@broadcom.com]
+Sent: Wednesday, June 10, 2020 10:18 PM
+To: Scott Branden; 'Bhupesh Sharma'; 'Amit Kachhap'
+Cc: 'Mark Rutland'; 'x86@kernel.org'; 'Will Deacon'; 'Linux Doc Mailing
+List'; 'Catalin Marinas'; 'Ard Biesheuvel'; 'kexec mailing list'; 'Linux
+Kernel Mailing List'; 'Kazuhito Hagio'; 'James Morse'; 'Dave Anderson';
+'bhupesh linux'; 'linuxppc-dev@lists.ozlabs.org'; 'linux-arm-kernel'; 'Steve
+Capper'; Ray Jui
+Subject: RE: Re: [RESEND PATCH v5 2/5] arm64/crash_core: Export TCR_EL1.T1SZ
+in vmcoreinfo
 
 Hello Bhupesh,
 V6 patch set on Linux 5.7, did not help.
