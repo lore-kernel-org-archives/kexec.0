@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jiqM7-0000mf-8x
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 02:20:45 +0000
-Date: Wed, 10 Jun 2020 10:20:27 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH][RFC] kdump: append kernel build-id string to VMCOREINFO
-Message-ID: <20200610022027.GI20367@MiWiFi-R3L-srv>
-References: <1591315291-66957-1-git-send-email-vijayb@linux.microsoft.com>
+ id 1jivY3-0007Dl-2g
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 07:53:24 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: data_ring head_lpos and tail_lpos synchronization: was [PATCH v2
+ 2/3] printk: add lockless buffer
+References: <20200501094010.17694-1-john.ogness@linutronix.de>
+ <20200501094010.17694-3-john.ogness@linutronix.de>
+ <20200609143811.GF23752@linux-b0ei>
+Date: Wed, 10 Jun 2020 09:53:16 +0200
+In-Reply-To: <20200609143811.GF23752@linux-b0ei> (Petr Mladek's message of
+ "Tue, 9 Jun 2020 16:38:11 +0200")
+Message-ID: <87wo4fpdar.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1591315291-66957-1-git-send-email-vijayb@linux.microsoft.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,162 +26,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vijay Balakrishna <vijayb@linux.microsoft.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com, Tyler Hicks <tyhicks@linux.microsoft.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On 06/04/20 at 05:01pm, Vijay Balakrishna wrote:
-> Make kernel GNU build-id available in VMCOREINFO.  Having
-> build-id in VMCOREINFO facilitates presenting appropriate kernel
-> namelist image with debug information file to kernel crash dump
-> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
-> key for crash analysis automation.
+On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
+>> --- /dev/null
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> +/*
+>> + * Advance the data ring tail to at least @lpos. This function puts
+>> + * descriptors into the reusable state if the tail is pushed beyond
+>> + * their associated data block.
+>> + */
+>> +static bool data_push_tail(struct printk_ringbuffer *rb,
+>> +			   struct prb_data_ring *data_ring,
+>> +			   unsigned long lpos)
+>> +{
+>> +	unsigned long tail_lpos;
+>> +	unsigned long next_lpos;
+>> +
+>> +	/* If @lpos is not valid, there is nothing to do. */
+>> +	if (lpos == INVALID_LPOS)
+>> +		return true;
+>> +
+>> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
+>
+> Hmm, I wonder whether data_ring->tail_lpos and data_ring->head_lpos
+> are synchronized enough between each other.
+>
+> I feel that there should be read barrier here. But it seems that more
+> barriers are missing. For example, let's have:
+>
+>
+> CPU0				CPU1
+>
+> data_alloc()
+>   begin_lpos = atomic_read(data_ring->head_lpos);
+>
+> 				data_alloc()
+> 				  data_push_tail()
+> 				    cmpxchg(data_ring->tail_lpos);
+> 				    // A: no barrier
+> 				  cmpxchg(data_ring->head_lpos);
+>
+>   data_push_tail()
+>     // B: no barrier
+>     tail_lpos = atomic_read(data_ring->tail_lpos);
+>
+> Problem 1:
+>
+>    CPU0 might see random ordering of data_ring->tail_lpos and
+>    head_lpos values modified by CPU1. There are missing both
+>    write and read barriers.
 
-Looks like a good idea. I have several concerns, please check below inline
-comments.
+You need to explain why this is a problem. CPU0 saw some head and some
+tail. Both values are at least the current values (i.e. there is no
+danger that it sees a tail that is further than the tail really is).
 
-> 
-> Signed-off-by: Vijay Balakrishna <vijayb@linux.microsoft.com>
-> ---
-> Regarding if this patch is necessary or matching of linux_banner
-> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
-> need -- IMO, build-id approach more foolproof, in most instances it
-> is a cryptographic hash generated using internal code/ELF bits unlike
-> kernel version string upon which linux_banner is based that is
-> external to the code.  I feel each is intended for a different purpose.
-> Also OSRELEASE is not suitable when two different kernel builds
-> from same version with different features enabled.
-> 
-> Currently for most linux (and non-linux) systems build-id can be
-> extracted using standard methods for file types such as user mode crash
-> dumps, shared libraries, loadable kernel modules etc.  This is an
-> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
-> some uniformity for automation tools.
+CPU0 then uses the head/tail values to determine how far to advance the
+tail and how far to advance the head. Both of these advances use
+cmpxchg_relaxed(). So there is no danger of random head/tail
+modifications. Upon cmpxchg_relaxed() failure, the new current values
+are loaded and it retries based on the new values.
 
-These two paragraphs can be added to log too?
+The only issue is if data_push_tail()/data_make_reusable() are able to
+recognize that a data area is already recycled. And both functions have
+memory barriers in place for that.
 
-> 
->  include/linux/crash_core.h |  6 +++++
->  kernel/crash_core.c        | 50 ++++++++++++++++++++++++++++++++++++++
->  2 files changed, 56 insertions(+)
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 525510a9f965..6594dbc34a37 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -38,6 +38,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->  
->  #define VMCOREINFO_OSRELEASE(value) \
->  	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-> +#define VMCOREINFO_BUILD_ID(value) \
-> +	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
->  #define VMCOREINFO_PAGESIZE(value) \
->  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
->  #define VMCOREINFO_SYMBOL(name) \
-> @@ -64,6 +66,10 @@ extern unsigned char *vmcoreinfo_data;
->  extern size_t vmcoreinfo_size;
->  extern u32 *vmcoreinfo_note;
->  
-> +/* raw contents of kernel .notes section */
-> +extern const void __start_notes __weak;
-> +extern const void __stop_notes __weak;
-> +
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len);
->  void final_note(Elf_Word *buf);
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 9f1557b98468..c094db478803 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -11,6 +11,8 @@
->  #include <asm/page.h>
->  #include <asm/sections.h>
->  
-> +#include <crypto/sha.h>
-> +
->  /* vmcoreinfo stuff */
->  unsigned char *vmcoreinfo_data;
->  size_t vmcoreinfo_size;
-> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  }
->  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->  
-> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
-> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
-> +#define NT_GNU_BUILD_ID 3
-> +
-> +struct elf_note_section {
-> +	struct elf_note	n_hdr;
-> +	u8 n_data[];
-> +};
-> +
-> +/*
-> + * Add build ID from .notes section as generated by the GNU ld(1)
-> + * or LLVM lld(1) --build-id option.
-> + */
-> +static void add_build_id_vmcoreinfo(void)
-> +{
-> +	char build_id[BUILD_ID_MAX * 2 + 1];
+> Problem 2:
+>
+>    There might be still a chance because CPU0 does:
+>
+>      if (!data_make_reusable())
+>        smp_rmb()
+>        tail_lpos = atomic_read(data_ring->tail_lpos);
+>
+>    But CPU0 might still see old data_ring->tail because CPU1 did not
+>    do write barrier.
 
-Here, could you tell why we need two times the build id length?
+I claim that it does not matter. The smp_rmb() here pairs with the full
+memory barrier LMM(desc_reserve:D). The reasoning:
 
-> +	int n_remain = NOTES_SIZE;
-> +
-> +	while (n_remain >= sizeof(struct elf_note)) {
-> +		const struct elf_note_section *g_build_id =
+	 * Guarantee any data ring tail changes are stored before
+	 * recycling the descriptor. Data ring tail changes can happen
+	 * via desc_push_tail()->data_push_tail(). A full memory
+	 * barrier is needed since another task may have pushed the
+	 * data ring tails. This pairs with data_push_tail:A.
 
-Here naming of 'g_build_id' looks a little weird. We usually define
-global variable with 'g_xxxx'. Maybe we can change it to 'note_sec' or
-something else, because not all iterated elf_note_section is build_id
-related. 
+So if data_make_reusable() failed due to a descriptor already being
+recycled, we know CPU0 will be able to read an updated tail value (and
+try again with the new value).
 
-> +			&__start_notes + NOTES_SIZE - n_remain;
-> +		const u32 n_namesz = g_build_id->n_hdr.n_namesz;
-> +
-> +		if (g_build_id->n_hdr.n_type == NT_GNU_BUILD_ID &&
-> +		    n_namesz != 0 &&
-> +		    !strcmp((char *)&g_build_id->n_data[0], "GNU")) {
-> +			if (g_build_id->n_hdr.n_descsz <= BUILD_ID_MAX) {
-> +				const u32 n_descsz = g_build_id->n_hdr.n_descsz;
-> +				const u8 *s = &g_build_id->n_data[n_namesz];
-> +
-> +				s = PTR_ALIGN(s, 4);
-> +				bin2hex(build_id, s, n_descsz);
-> +				build_id[2 * n_descsz] = '\0';
-> +				VMCOREINFO_BUILD_ID(build_id);
-> +				return;
-> +			}
-> +			pr_warn("Build ID is too large to include in vmcoreinfo: %lu > %lu\n",
-> +				g_build_id->n_hdr.n_descsz,
-> +				BUILD_ID_MAX);
-> +			return;
-> +		}
-> +		n_remain -= sizeof(struct elf_note) +
-> +			ALIGN(g_build_id->n_hdr.n_namesz, 4) +
-> +			ALIGN(g_build_id->n_hdr.n_descsz, 4);
-> +	}
-> +}
-> +
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
->  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> @@ -394,6 +443,7 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	}
->  
->  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-> +	add_build_id_vmcoreinfo();
->  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
->  
->  	VMCOREINFO_SYMBOL(init_uts_ns);
-> -- 
-> 2.26.2
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+John Ogness
 
 _______________________________________________
 kexec mailing list
