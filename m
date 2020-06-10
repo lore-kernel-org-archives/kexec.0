@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jixtw-0002rb-GI
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 10:24:10 +0000
+ id 1jj1C9-0002KE-NB
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 13:55:11 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3]
- printk: add lockless buffer
+Subject: Re: blk->id read race: was: [PATCH v2 2/3] printk: add lockless buffer
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609093103.GB23752@linux-b0ei>
- <87lfkwuwg1.fsf@vostro.fn.ogness.net>
- <20200610093835.GB4311@linux-b0ei>
-Date: Wed, 10 Jun 2020 12:24:01 +0200
-In-Reply-To: <20200610093835.GB4311@linux-b0ei> (Petr Mladek's message of
- "Wed, 10 Jun 2020 11:38:35 +0200")
-Message-ID: <87o8prp6bi.fsf@vostro.fn.ogness.net>
+ <20200609071030.GA23752@linux-b0ei>
+ <87tuzkuxtw.fsf@vostro.fn.ogness.net>
+ <20200610084248.GA4311@linux-b0ei>
+Date: Wed, 10 Jun 2020 15:55:00 +0200
+In-Reply-To: <20200610084248.GA4311@linux-b0ei> (Petr Mladek's message of
+ "Wed, 10 Jun 2020 10:42:48 +0200")
+Message-ID: <87k10fowjv.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,12 +31,12 @@ To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
 On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
->> >> --- /dev/null
->> >> +++ b/kernel/printk/printk_ringbuffer.c
->> >> +/*
->> >> + * Given a data ring (text or dict), put the associated descriptor of each
->> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
->> >> + *
+>>>> --- /dev/null
+>>>> +++ b/kernel/printk/printk_ringbuffer.c
+>>>> +/*
+>>>> + * Given a data ring (text or dict), put the associated descriptor of each
+>>>> + * data block from @lpos_begin until @lpos_end into the reusable state.
+>>>> + *
 >>>> + * If there is any problem making the associated descriptor reusable, either
 >>>> + * the descriptor has not yet been committed or another writer task has
 >>>> + * already pushed the tail lpos past the problematic data block. Regardless,
@@ -70,132 +69,46 @@ On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
 >>>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
 >>>> +		blk = to_block(data_ring, lpos_begin);
 >>>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
->>>> +
->>>> +		/*
->>>> +		 * Guarantee the block ID is loaded before checking the tail
->>>> +		 * lpos. The loaded block ID can only be considered valid if
->>>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
->>>> +		 * with data_alloc:A.
->>>> +		 *
->>>> +		 * Memory barrier involvement:
->>>> +		 *
->>>> +		 * If data_make_reusable:A reads from data_alloc:B, then
->>>> +		 * data_make_reusable:C reads from data_push_tail:D.
->>>> +		 *
->>>> +		 * Relies on:
->>>> +		 *
->>>> +		 * MB from data_push_tail:D to data_alloc:B
->>>> +		 *    matching
->>>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
->>>> +		 *
->>>> +		 * Note: data_push_tail:D and data_alloc:B can be different
->>>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
->>>> +		 *       the full memory barrier) must have previously seen
->>>> +		 *       data_push_tail:D.
->>>> +		 */
->>>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
->>>> +
->>>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
->>>> +					); /* LMM(data_make_reusable:C) */
->>>> +
->>>> +		/*
->>>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
->>>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
->>>> +		 * tail lpos and try again.
->>>> +		 */
->>>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
->>>> +			lpos_begin = tail_lpos;
->>>> +			continue;
->>>> +		}
 >>>
->>> I am sorry if we have had this discussion already in past.
->> 
->> We have [0]. (Search for "Ouch.")
+>>> This would deserve some comment:
 >
-> I see. Thanks a lot for the pointer.
+> I wonder if the comment might look like:
 >
->>> Well, it would just prove that it really needs a comment why this
->>> check is necessary.
->> 
->> The comment says why it is necessary. The previous read of the block ID
->> cannot be trusted if the the tail has been pushed beyond it.
->
-> Not really. The comment describes what the check does. But it does not
-> explain why it is needed. The reason might be described be something like:
->
-> 		* Make sure that the id read from tail_lpos is really
-> 		* pointing to this lpos. The block might have been
-> 		* reused in the meantime. Make sure to do not make
-> 		* the new owner reusable.
+> /*
+>  * No barrier is needed between reading tail_lpos and the related
+>  * blk->id. Only CPU that modifies tail_lpos via cmpxchg is allowed
+>  * to modify the related blk->id. CPUs that see the moved tail_lpos
+>  * are looking at another block related to the new tail_lpos.
+>  * It does not mater when the previous winner modifies the previous
+>  * block.
+>  */
 
-That is _not_ what this check is doing. I recommend looking closely at
-the example you posted. This is not about whether or not a descriptor is
-pointing to this lpos. In your example you showed that ID, state, and
-lpos values could all look good, but it is for the _new_ record and we
-should _not_ invalidate that one.
+Sorry, but this comment does not make sense for me. The tail is pushed
+_before_ the block ID is modified. So any kind of barrier here (where we
+read the tail, then the block ID, i.e. the same order) would be
+inappropriate anyway.
 
-We can detect the scenario you pointed out by verifying the tail has not
-moved beyond the data block that the ID was read from. The comment for
-this check says:
+Also, this comment only talks about when a new value is seen, but not
+about when the old value is seen. IMO it is seeing the old value that is
+worthy of a comment since that is the only case with a data race.
 
-    If @lpos_begin has fallen behind the tail lpos,
-    the read block ID cannot be trusted.
+In preparation for my next version I have added the following comment:
 
-This is exactly the why. It is only about whether we can trust that a
-non-garbage block ID was read. Or do you want me to add:
+        blk = to_block(data_ring, lpos_begin);
 
-    ... because data read that is behind the tail lpos must be
-    considered garbage.
+        /*
+         * When going from lpos to block pointer, the wrap around
+         * feature of the lpos value is lost. Since another CPU could
+         * invalidate this data area at any time, the data tail must
+         * be re-checked after the block ID has been read.
+         */
 
-> But wait! This situation should get caught by the two existing descriptor
-> checks:
->
->>		case desc_committed:
->>			/*
->>			 * This data block is invalid if the descriptor
->>			 * does not point back to it.
->>			 */
->>			if (blk_lpos->begin != lpos_begin)
->>				return false;
->>			desc_make_reusable(desc_ring, id);
->>			break;
->>		case desc_reusable:
->>			/*
->>			 * This data block is invalid if the descriptor
->>			 * does not point back to it.
->>			 */
->>			if (blk_lpos->begin != lpos_begin)
->>				return false;
->>			break;
+        id = blk->id; /* LMM(data_make_reusable:A) */
 
-No. Your example showed that it is not caught here.
-
-> Here again the comments describe what the check does but not why.
-> I would write something like:
->
-> 			/*
-> 			 * The block might have already been
-> 			 * reused. Make sure that the descriptor really
-> 			 * points back to the checked lpos. It covers
-> 			 * both situations. Random data might point to
-> 			 * a valid descriptor just by chance. Or the block
-> 			 * has been already reused by another descriptor.
-> 			 */
-
-OK. I will expand the comments to something similar to this.
-
-> So, I think that the lpos range check is still redundant. We might
-> describe it as an extra paranoid check but I am not sure if it is
-> worth it.
->
-> But I would remove it and keep the code "simple" and design "clear".
-> Well, I do not resist on it.
-
-If we remove it, we end up back at your bug report. ;-)
+I think this comment also helps to further clarify "why" the following
+data tail check occurs.
 
 John Ogness
-
-[0] https://lkml.kernel.org/r/87ftecy343.fsf@linutronix.de
 
 _______________________________________________
 kexec mailing list
