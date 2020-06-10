@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jivY3-0007Dl-2g
- for kexec@lists.infradead.org; Wed, 10 Jun 2020 07:53:24 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: data_ring head_lpos and tail_lpos synchronization: was [PATCH v2
- 2/3] printk: add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609143811.GF23752@linux-b0ei>
-Date: Wed, 10 Jun 2020 09:53:16 +0200
-In-Reply-To: <20200609143811.GF23752@linux-b0ei> (Petr Mladek's message of
- "Tue, 9 Jun 2020 16:38:11 +0200")
-Message-ID: <87wo4fpdar.fsf@vostro.fn.ogness.net>
+ id 1jivzi-0004vb-6D
+ for kexec@lists.infradead.org; Wed, 10 Jun 2020 08:21:59 +0000
+Subject: Re: [PATCH v2] kexec: Do not verify the signature without the
+ lockdown or mandatory signature
+From: lijiang <lijiang@redhat.com>
+References: <20200602045952.27487-1-lijiang@redhat.com>
+Message-ID: <49d2af1c-bcbf-41d8-071c-93cce024b47b@redhat.com>
+Date: Wed, 10 Jun 2020 16:21:40 +0800
 MIME-Version: 1.0
+In-Reply-To: <20200602045952.27487-1-lijiang@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,103 +21,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org, "ebiederm@xmission.com" <ebiederm@xmission.com>
+Cc: jbohac@suse.cz, bhe@redhat.com, kexec@lists.infradead.org, jmorris@namei.org, mjg59@google.com, ebiederm@xmission.com, dyoung@redhat.com
 
-On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
->> --- /dev/null
->> +++ b/kernel/printk/printk_ringbuffer.c
->> +/*
->> + * Advance the data ring tail to at least @lpos. This function puts
->> + * descriptors into the reusable state if the tail is pushed beyond
->> + * their associated data block.
->> + */
->> +static bool data_push_tail(struct printk_ringbuffer *rb,
->> +			   struct prb_data_ring *data_ring,
->> +			   unsigned long lpos)
->> +{
->> +	unsigned long tail_lpos;
->> +	unsigned long next_lpos;
->> +
->> +	/* If @lpos is not valid, there is nothing to do. */
->> +	if (lpos == INVALID_LPOS)
->> +		return true;
->> +
->> +	tail_lpos = atomic_long_read(&data_ring->tail_lpos);
->
-> Hmm, I wonder whether data_ring->tail_lpos and data_ring->head_lpos
-> are synchronized enough between each other.
->
-> I feel that there should be read barrier here. But it seems that more
-> barriers are missing. For example, let's have:
->
->
-> CPU0				CPU1
->
-> data_alloc()
->   begin_lpos = atomic_read(data_ring->head_lpos);
->
-> 				data_alloc()
-> 				  data_push_tail()
-> 				    cmpxchg(data_ring->tail_lpos);
-> 				    // A: no barrier
-> 				  cmpxchg(data_ring->head_lpos);
->
->   data_push_tail()
->     // B: no barrier
->     tail_lpos = atomic_read(data_ring->tail_lpos);
->
-> Problem 1:
->
->    CPU0 might see random ordering of data_ring->tail_lpos and
->    head_lpos values modified by CPU1. There are missing both
->    write and read barriers.
-
-You need to explain why this is a problem. CPU0 saw some head and some
-tail. Both values are at least the current values (i.e. there is no
-danger that it sees a tail that is further than the tail really is).
-
-CPU0 then uses the head/tail values to determine how far to advance the
-tail and how far to advance the head. Both of these advances use
-cmpxchg_relaxed(). So there is no danger of random head/tail
-modifications. Upon cmpxchg_relaxed() failure, the new current values
-are loaded and it retries based on the new values.
-
-The only issue is if data_push_tail()/data_make_reusable() are able to
-recognize that a data area is already recycled. And both functions have
-memory barriers in place for that.
-
-> Problem 2:
->
->    There might be still a chance because CPU0 does:
->
->      if (!data_make_reusable())
->        smp_rmb()
->        tail_lpos = atomic_read(data_ring->tail_lpos);
->
->    But CPU0 might still see old data_ring->tail because CPU1 did not
->    do write barrier.
-
-I claim that it does not matter. The smp_rmb() here pairs with the full
-memory barrier LMM(desc_reserve:D). The reasoning:
-
-	 * Guarantee any data ring tail changes are stored before
-	 * recycling the descriptor. Data ring tail changes can happen
-	 * via desc_push_tail()->data_push_tail(). A full memory
-	 * barrier is needed since another task may have pushed the
-	 * data ring tails. This pairs with data_push_tail:A.
-
-So if data_make_reusable() failed due to a descriptor already being
-recycled, we know CPU0 will be able to read an updated tail value (and
-try again with the new value).
-
-John Ogness
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CkkganVzdCBub3RpY2VkIHRoYXQgSSBmb3Jnb3QgdG8gYWRkIEVyaWMgQmllZGVybWFuIGluIGNj
+IGxpc3QsIHNvIHNvcnJ5IGZvciB0aGlzLgoKVGhhbmtzLgpMaWFuYm8KCuWcqCAyMDIw5bm0MDbm
+nIgwMuaXpSAxMjo1OSwgTGlhbmJvIEppYW5nIOWGmemBkzoKPiBTaWduYXR1cmUgdmVyaWZpY2F0
+aW9uIGlzIGFuIGltcG9ydGFudCBzZWN1cml0eSBmZWF0dXJlLCB0byBwcm90ZWN0Cj4gc3lzdGVt
+IGZyb20gYmVpbmcgYXR0YWNrZWQgd2l0aCBhIGtlcm5lbCBvZiB1bmtub3duIG9yaWdpbi4gS2V4
+ZWMKPiByZWJvb3RpbmcgaXMgYSB3YXkgdG8gcmVwbGFjZSB0aGUgcnVubmluZyBrZXJuZWwsIGhl
+bmNlIG5lZWQgYmUKPiBzZWN1cmVkIGNhcmVmdWxseS4KPiAKPiBJbiB0aGUgY3VycmVudCBjb2Rl
+IG9mIGhhbmRsaW5nIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24gb2Yga2V4ZWMga2VybmVsLAo+IHRo
+ZSBsb2dpYyBpcyB2ZXJ5IHR3aXN0ZWQuIEl0IG1peGVzIHNpZ25hdHVyZSB2ZXJpZmljYXRpb24s
+IElNQSBzaWduYXR1cmUKPiBhcHByYWlzaW5nIGFuZCBrZXhlYyBsb2NrZG93bi4KPiAKPiBJZiB0
+aGVyZSBpcyBubyBLRVhFQ19TSUdfRk9SQ0UsIGtleGVjIGtlcm5lbCBpbWFnZSBkb2Vzbid0IGhh
+dmUgb25lIG9mCj4gc2lnbmF0dXJlLCB0aGUgc3VwcG9ydGVkIGNyeXB0bywgYW5kIGtleSwgd2Ug
+ZG9uJ3QgdGhpbmsgdGhpcyBpcyB3cm9uZywKPiBVbmxlc3Mga2V4ZWMgbG9ja2Rvd24gaXMgZXhl
+Y3V0ZWQuIElNQSBpcyBjb25zaWRlcmVkIGFzIGFub3RoZXIga2luZCBvZgo+IHNpZ25hdHVyZSBh
+cHByYWlzaW5nIG1ldGhvZC4KPiAKPiBJZiBrZXhlYyBrZXJuZWwgaW1hZ2UgaGFzIHNpZ25hdHVy
+ZS9jcnlwdG8va2V5LCBpdCBoYXMgdG8gZ28gdGhyb3VnaCB0aGUKPiBzaWduYXR1cmUgdmVyaWZp
+Y2F0aW9uIGFuZCBwYXNzLiBPdGhlcndpc2UgaXQncyBzZWVuIGFzIHZlcmlmaWNhdGlvbgo+IGZh
+aWx1cmUsIGFuZCB3b24ndCBiZSBsb2FkZWQuCj4gCj4gU2VlbXMga2V4ZWMga2VybmVsIGltYWdl
+IHdpdGggYW4gdW5xdWFsaWZpZWQgc2lnbmF0dXJlIGlzIGV2ZW4gd29yc2UgdGhhbgo+IHRob3Nl
+IHcvbyBzaWduYXR1cmUgYXQgYWxsLCB0aGlzIHNvdW5kcyB2ZXJ5IHVucmVhc29uYWJsZS4gRS5n
+LiBJZiBwZW9wbGUKPiBnZXQgYSB1bnNpZ25lZCBrZXJuZWwgdG8gbG9hZCwgb3IgYSBrZXJuZWwg
+c2lnbmVkIHdpdGggZXhwaXJlZCBrZXksIHdoaWNoCj4gb25lIGlzIG1vcmUgZGFuZ2Vyb3VzPwo+
+IAo+IFNvLCBoZXJlLCBsZXQncyBzaW1wbGlmeSB0aGUgbG9naWMgdG8gaW1wcm92ZSBjb2RlIHJl
+YWRhYmlsaXR5LiBJZiB0aGUKPiBLRVhFQ19TSUdfRk9SQ0UgZW5hYmxlZCBvciBrZXhlYyBsb2Nr
+ZG93biBlbmFibGVkLCBzaWduYXR1cmUgdmVyaWZpY2F0aW9uCj4gaXMgbWFuZGF0ZWQuIE90aGVy
+d2lzZSwgd2UgbGlmdCB0aGUgYmFyIGZvciBhbnkga2VybmVsIGltYWdlLgo+IAo+IFNpZ25lZC1v
+ZmYtYnk6IExpYW5ibyBKaWFuZyA8bGlqaWFuZ0ByZWRoYXQuY29tPgo+IC0tLQo+IENoYW5nZXMg
+c2luY2UgdjE6Cj4gWzFdIE1vZGlmeSB0aGUgbG9nIGxldmVsKHN1Z2dlc3RlZCBieSBKaXJpIEJv
+aGFjKQo+IAo+ICBrZXJuZWwva2V4ZWNfZmlsZS5jIHwgMzQgKysrKysrLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAyOCBkZWxl
+dGlvbnMoLSkKPiAKPiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2ZpbGUuYyBiL2tlcm5lbC9r
+ZXhlY19maWxlLmMKPiBpbmRleCBmYWE3NGQ1ZjY5NDEuLmZhZTQ5Njk1OGE2OCAxMDA2NDQKPiAt
+LS0gYS9rZXJuZWwva2V4ZWNfZmlsZS5jCj4gKysrIGIva2VybmVsL2tleGVjX2ZpbGUuYwo+IEBA
+IC0xODEsMzQgKzE4MSwxOSBAQCB2b2lkIGtpbWFnZV9maWxlX3Bvc3RfbG9hZF9jbGVhbnVwKHN0
+cnVjdCBraW1hZ2UgKmltYWdlKQo+ICBzdGF0aWMgaW50Cj4gIGtpbWFnZV92YWxpZGF0ZV9zaWdu
+YXR1cmUoc3RydWN0IGtpbWFnZSAqaW1hZ2UpCj4gIHsKPiAtCWNvbnN0IGNoYXIgKnJlYXNvbjsK
+PiAgCWludCByZXQ7Cj4gIAo+ICAJcmV0ID0gYXJjaF9rZXhlY19rZXJuZWxfdmVyaWZ5X3NpZyhp
+bWFnZSwgaW1hZ2UtPmtlcm5lbF9idWYsCj4gIAkJCQkJICAgaW1hZ2UtPmtlcm5lbF9idWZfbGVu
+KTsKPiAtCXN3aXRjaCAocmV0KSB7Cj4gLQljYXNlIDA6Cj4gLQkJYnJlYWs7Cj4gKwlpZiAocmV0
+KSB7Cj4gIAo+IC0JCS8qIENlcnRhaW4gdmVyaWZpY2F0aW9uIGVycm9ycyBhcmUgbm9uLWZhdGFs
+IGlmIHdlJ3JlIG5vdAo+IC0JCSAqIGNoZWNraW5nIGVycm9ycywgcHJvdmlkZWQgd2UgYXJlbid0
+IG1hbmRhdGluZyB0aGF0IHRoZXJlCj4gLQkJICogbXVzdCBiZSBhIHZhbGlkIHNpZ25hdHVyZS4K
+PiAtCQkgKi8KPiAtCWNhc2UgLUVOT0RBVEE6Cj4gLQkJcmVhc29uID0gImtleGVjIG9mIHVuc2ln
+bmVkIGltYWdlIjsKPiAtCQlnb3RvIGRlY2lkZTsKPiAtCWNhc2UgLUVOT1BLRzoKPiAtCQlyZWFz
+b24gPSAia2V4ZWMgb2YgaW1hZ2Ugd2l0aCB1bnN1cHBvcnRlZCBjcnlwdG8iOwo+IC0JCWdvdG8g
+ZGVjaWRlOwo+IC0JY2FzZSAtRU5PS0VZOgo+IC0JCXJlYXNvbiA9ICJrZXhlYyBvZiBpbWFnZSB3
+aXRoIHVuYXZhaWxhYmxlIGtleSI7Cj4gLQlkZWNpZGU6Cj4gIAkJaWYgKElTX0VOQUJMRUQoQ09O
+RklHX0tFWEVDX1NJR19GT1JDRSkpIHsKPiAtCQkJcHJfbm90aWNlKCIlcyByZWplY3RlZFxuIiwg
+cmVhc29uKTsKPiArCQkJcHJfbm90aWNlKCJFbmZvcmNlZCBrZXJuZWwgc2lnbmF0dXJlIHZlcmlm
+aWNhdGlvbiBmYWlsZWQgKCVkKS5cbiIsIHJldCk7Cj4gIAkJCXJldHVybiByZXQ7Cj4gIAkJfQo+
+ICAKPiAtCQkvKiBJZiBJTUEgaXMgZ3VhcmFudGVlZCB0byBhcHByYWlzZSBhIHNpZ25hdHVyZSBv
+biB0aGUga2V4ZWMKPiArCQkvKgo+ICsJCSAqIElmIElNQSBpcyBndWFyYW50ZWVkIHRvIGFwcHJh
+aXNlIGEgc2lnbmF0dXJlIG9uIHRoZSBrZXhlYwo+ICAJCSAqIGltYWdlLCBwZXJtaXQgaXQgZXZl
+biBpZiB0aGUga2VybmVsIGlzIG90aGVyd2lzZSBsb2NrZWQKPiAgCQkgKiBkb3duLgo+ICAJCSAq
+Lwo+IEBAIC0yMTYsMTcgKzIwMSwxMCBAQCBraW1hZ2VfdmFsaWRhdGVfc2lnbmF0dXJlKHN0cnVj
+dCBraW1hZ2UgKmltYWdlKQo+ICAJCSAgICBzZWN1cml0eV9sb2NrZWRfZG93bihMT0NLRE9XTl9L
+RVhFQykpCj4gIAkJCXJldHVybiAtRVBFUk07Cj4gIAo+IC0JCXJldHVybiAwOwo+IC0KPiAtCQkv
+KiBBbGwgb3RoZXIgZXJyb3JzIGFyZSBmYXRhbCwgaW5jbHVkaW5nIG5vbWVtLCB1bnBhcnNlYWJs
+ZQo+IC0JCSAqIHNpZ25hdHVyZXMgYW5kIHNpZ25hdHVyZSBjaGVjayBmYWlsdXJlcyAtIGV2ZW4g
+aWYgc2lnbmF0dXJlcwo+IC0JCSAqIGFyZW4ndCByZXF1aXJlZC4KPiAtCQkgKi8KPiAtCWRlZmF1
+bHQ6Cj4gLQkJcHJfbm90aWNlKCJrZXJuZWwgc2lnbmF0dXJlIHZlcmlmaWNhdGlvbiBmYWlsZWQg
+KCVkKS5cbiIsIHJldCk7Cj4gKwkJcHJfZGVidWcoImtlcm5lbCBzaWduYXR1cmUgdmVyaWZpY2F0
+aW9uIGZhaWxlZCAoJWQpLlxuIiwgcmV0KTsKPiAgCX0KPiAgCj4gLQlyZXR1cm4gcmV0Owo+ICsJ
+cmV0dXJuIDA7Cj4gIH0KPiAgI2VuZGlmCj4gIAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
+bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
+a2V4ZWMK
