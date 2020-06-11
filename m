@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jjLtS-0002cQ-1w
- for kexec@lists.infradead.org; Thu, 11 Jun 2020 12:01:16 +0000
-Date: Thu, 11 Jun 2020 14:01:08 +0200
+ id 1jjNfl-0001ZO-06
+ for kexec@lists.infradead.org; Thu, 11 Jun 2020 13:55:15 +0000
+Date: Thu, 11 Jun 2020 15:55:09 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3]
+Subject: Re: redundant check in make_data_reusable(): was [PATCH v2 2/3]
  printk: add lockless buffer
-Message-ID: <20200611120107.GD6581@linux-b0ei>
+Message-ID: <20200611135509.GE6581@linux-b0ei>
 References: <20200501094010.17694-1-john.ogness@linutronix.de>
  <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609113751.GD23752@linux-b0ei>
- <87d068utbg.fsf@vostro.fn.ogness.net>
+ <20200609093103.GB23752@linux-b0ei>
+ <87lfkwuwg1.fsf@vostro.fn.ogness.net>
+ <20200610093835.GB4311@linux-b0ei>
+ <87o8prp6bi.fsf@vostro.fn.ogness.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87d068utbg.fsf@vostro.fn.ogness.net>
+In-Reply-To: <87o8prp6bi.fsf@vostro.fn.ogness.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,223 +32,204 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: John Ogness <john.ogness@linutronix.de>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Tue 2020-06-09 17:56:03, John Ogness wrote:
-> On 2020-06-09, Petr Mladek <pmladek@suse.com> wrote:
-> >> --- /dev/null
-> >> +++ b/kernel/printk/printk_ringbuffer.c
-> >> +/*
-> >> + * Advance the desc ring tail. This function advances the tail by one
-> >> + * descriptor, thus invalidating the oldest descriptor. Before advancing
-> >> + * the tail, the tail descriptor is made reusable and all data blocks up to
-> >> + * and including the descriptor's data block are invalidated (i.e. the data
-> >> + * ring tail is pushed past the data block of the descriptor being made
-> >> + * reusable).
-> >> + */
-> >> +static bool desc_push_tail(struct printk_ringbuffer *rb,
-> >> +			   unsigned long tail_id)
-> >> +{
-> >> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
-> >> +	enum desc_state d_state;
-> >> +	struct prb_desc desc;
-> >> +
-> >> +	d_state = desc_read(desc_ring, tail_id, &desc);
-> >> +
-> >> +	switch (d_state) {
-> >> +	case desc_miss:
-> >> +		/*
-> >> +		 * If the ID is exactly 1 wrap behind the expected, it is
-> >> +		 * in the process of being reserved by another writer and
-> >> +		 * must be considered reserved.
-> >> +		 */
-> >> +		if (DESC_ID(atomic_long_read(&desc.state_var)) ==
-> >> +		    DESC_ID_PREV_WRAP(desc_ring, tail_id)) {
-> >> +			return false;
-> >> +		}
-> >> +
-> >> +		/*
-> >> +		 * The ID has changed. Another writer must have pushed the
-> >> +		 * tail and recycled the descriptor already. Success is
-> >> +		 * returned because the caller is only interested in the
-> >> +		 * specified tail being pushed, which it was.
-> >> +		 */
-> >> +		return true;
-> >> +	case desc_reserved:
-> >> +		return false;
-> >> +	case desc_committed:
-> >> +		desc_make_reusable(desc_ring, tail_id);
-> >> +		break;
-> >> +	case desc_reusable:
-> >> +		break;
-> >> +	}
-> >> +
-> >> +	/*
-> >> +	 * Data blocks must be invalidated before their associated
-> >> +	 * descriptor can be made available for recycling. Invalidating
-> >> +	 * them later is not possible because there is no way to trust
-> >> +	 * data blocks once their associated descriptor is gone.
-> >> +	 */
-> >> +
-> >> +	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
-> >> +		return false;
-> >> +	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
-> >> +		return false;
-> >> +
-> >> +	/*
-> >> +	 * Check the next descriptor after @tail_id before pushing the tail
-> >> +	 * to it because the tail must always be in a committed or reusable
-> >> +	 * state. The implementation of prb_first_seq() relies on this.
-> >> +	 *
-> >> +	 * A successful read implies that the next descriptor is less than or
-> >> +	 * equal to @head_id so there is no risk of pushing the tail past the
-> >> +	 * head.
-> >> +	 */
-> >> +	d_state = desc_read(desc_ring, DESC_ID(tail_id + 1),
-> >> +			    &desc); /* LMM(desc_push_tail:A) */
-> >> +	if (d_state == desc_committed || d_state == desc_reusable) {
-> >> +		/*
-> >> +		 * Any CPU that loads the new tail ID, must see that the
-> >> +		 * descriptor at @tail_id is in the reusable state. See the
-> >> +		 * read memory barrier part of desc_reserve:D for details.
-> >> +		 */
-> >> +		atomic_long_cmpxchg_relaxed(&desc_ring->tail_id, tail_id,
-> >> +			DESC_ID(tail_id + 1)); /* LMM(desc_push_tail:B) */
+On Wed 2020-06-10 12:24:01, John Ogness wrote:
+> On 2020-06-10, Petr Mladek <pmladek@suse.com> wrote:
+> >> >> --- /dev/null
+> >> >> +++ b/kernel/printk/printk_ringbuffer.c
+> >> >> +/*
+> >> >> + * Given a data ring (text or dict), put the associated descriptor of each
+> >> >> + * data block from @lpos_begin until @lpos_end into the reusable state.
+> >> >> + *
+> >>>> + * If there is any problem making the associated descriptor reusable, either
+> >>>> + * the descriptor has not yet been committed or another writer task has
+> >>>> + * already pushed the tail lpos past the problematic data block. Regardless,
+> >>>> + * on error the caller can re-load the tail lpos to determine the situation.
+> >>>> + */
+> >>>> +static bool data_make_reusable(struct printk_ringbuffer *rb,
+> >>>> +			       struct prb_data_ring *data_ring,
+> >>>> +			       unsigned long lpos_begin,
+> >>>> +			       unsigned long lpos_end,
+> >>>> +			       unsigned long *lpos_out)
+> >>>> +{
+> >>>> +	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+> >>>> +	struct prb_data_blk_lpos *blk_lpos;
+> >>>> +	struct prb_data_block *blk;
+> >>>> +	unsigned long tail_lpos;
+> >>>> +	enum desc_state d_state;
+> >>>> +	struct prb_desc desc;
+> >>>> +	unsigned long id;
+> >>>> +
+> >>>> +	/*
+> >>>> +	 * Using the provided @data_ring, point @blk_lpos to the correct
+> >>>> +	 * blk_lpos within the local copy of the descriptor.
+> >>>> +	 */
+> >>>> +	if (data_ring == &rb->text_data_ring)
+> >>>> +		blk_lpos = &desc.text_blk_lpos;
+> >>>> +	else
+> >>>> +		blk_lpos = &desc.dict_blk_lpos;
+> >>>> +
+> >>>> +	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
+> >>>> +	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
+> >>>> +		blk = to_block(data_ring, lpos_begin);
+> >>>> +		id = READ_ONCE(blk->id); /* LMM(data_make_reusable:A) */
+> >>>> +
+> >>>> +		/*
+> >>>> +		 * Guarantee the block ID is loaded before checking the tail
+> >>>> +		 * lpos. The loaded block ID can only be considered valid if
+> >>>> +		 * the tail lpos has not overtaken @lpos_begin. This pairs
+> >>>> +		 * with data_alloc:A.
+> >>>> +		 *
+> >>>> +		 * Memory barrier involvement:
+> >>>> +		 *
+> >>>> +		 * If data_make_reusable:A reads from data_alloc:B, then
+> >>>> +		 * data_make_reusable:C reads from data_push_tail:D.
+> >>>> +		 *
+> >>>> +		 * Relies on:
+> >>>> +		 *
+> >>>> +		 * MB from data_push_tail:D to data_alloc:B
+> >>>> +		 *    matching
+> >>>> +		 * RMB from data_make_reusable:A to data_make_reusable:C
+> >>>> +		 *
+> >>>> +		 * Note: data_push_tail:D and data_alloc:B can be different
+> >>>> +		 *       CPUs. However, the data_alloc:B CPU (which performs
+> >>>> +		 *       the full memory barrier) must have previously seen
+> >>>> +		 *       data_push_tail:D.
+> >>>> +		 */
+> >>>> +		smp_rmb(); /* LMM(data_make_reusable:B) */
+> >>>> +
+> >>>> +		tail_lpos = atomic_long_read(&data_ring->tail_lpos
+> >>>> +					); /* LMM(data_make_reusable:C) */
+> >>>> +
+> >>>> +		/*
+> >>>> +		 * If @lpos_begin has fallen behind the tail lpos, the read
+> >>>> +		 * block ID cannot be trusted. Fast forward @lpos_begin to the
+> >>>> +		 * tail lpos and try again.
+> >>>> +		 */
+> >>>> +		if (lpos_begin - tail_lpos >= DATA_SIZE(data_ring)) {
+> >>>> +			lpos_begin = tail_lpos;
+> >>>> +			continue;
+> >>>> +		}
+> >>>
+> >>> I am sorry if we have had this discussion already in past.
+> >> 
+> >> We have [0]. (Search for "Ouch.")
 > >
-> > I was quite confused by the above comment. Does it mean that we need
-> > a barrier here? Or does it explain why the cmpxchg has its own
-> > LMM marker?
+> > I see. Thanks a lot for the pointer.
+> >
+> >>> Well, it would just prove that it really needs a comment why this
+> >>> check is necessary.
+> >> 
+> >> The comment says why it is necessary. The previous read of the block ID
+> >> cannot be trusted if the the tail has been pushed beyond it.
+> >
+> > Not really. The comment describes what the check does. But it does not
+> > explain why it is needed. The reason might be described be something like:
+> >
+> > 		* Make sure that the id read from tail_lpos is really
+> > 		* pointing to this lpos. The block might have been
+> > 		* reused in the meantime. Make sure to do not make
+> > 		* the new owner reusable.
 > 
-> This LMM marker is referenced quite often, but since it is a relaxed
-> cmpxchg(), its significance is not immediately clear. I was hoping to
-> add some hints as to why it is significant. The comment that it is
-> referring to is:
+> That is _not_ what this check is doing. I recommend looking closely at
+> the example you posted. This is not about whether or not a descriptor is
+> pointing to this lpos. In your example you showed that ID, state, and
+> lpos values could all look good, but it is for the _new_ record and we
+> should _not_ invalidate that one.
+
+OK, let's make sure that we are talking about the same example.
+I was talking about this one from
+https://lore.kernel.org/lkml/87ftecy343.fsf@linutronix.de/
+
+% [*] Another problem would be when data_make_reusable() see the new
+%     data already in the committed state. It would make fresh new
+%     data reusable.
+%
+%     I mean the following:
+%
+% CPU0				CPU1
+%
+% data_alloc()
+%   begin_lpos = dr->head_lpos
+%   data_push_tail()
+%     lpos = dr->tail_lpos
+%				prb_reserve()
+%				  # reserve the location of current
+%				  # dr->tail_lpos
+%				prb_commit()
+%
+%     id = blk->id
+%     # read id for the freshly written data on CPU1
+%     # and happily make them reusable
+%     data_make_reusable()
+
+Sigh, sigh, sigh, there is a hugely misleading comment in the example:
+
+%				  # reserve the location of current
+%				  # dr->tail_lpos
+
+It is true that it reserves part of this location. But it will use
+data_ring->head_lpos for the related desc->text_blk_lpos.begin !!!
+
+See below:
+
+> We can detect the scenario you pointed out by verifying the tail has not
+> moved beyond the data block that the ID was read from. The comment for
+> this check says:
 > 
-> 	/*
-> 	 * Guarantee the tail ID is read before validating the
-> 	 * recycled descriptor state. A read memory barrier is
-> 	 * sufficient for this. This pairs with data_push_tail:C.
-> 	 *
-> 	 * Memory barrier involvement:
-> 	 *
-> 	 * If desc_reserve:C reads from desc_push_tail:B, then
-> 	 * desc_reserve:F reads from desc_make_reusable:A.
-> 	 *
-> 	 * Relies on:
-> 	 *
-> 	 * MB from desc_make_reusable:A to desc_push_tail:B
-> 	 *    matching
-> 	 * RMB from desc_reserve:C to desc_reserve:F
-> 	 *
-> 	 * Note: desc_make_reusable:A, desc_push_tail:B, and
-> 	 *       data_push_tail:C can all be different CPUs. However,
-> 	 *       the desc_push_tail:B CPU must have previously seen
-> 	 *       data_push_tail:D and the data_push_tail:D CPU (which
-> 	 *       performs the full memory barrier) must have
-> 	 *       previously seen desc_make_reusable:A.
-> 	 */
+>     If @lpos_begin has fallen behind the tail lpos,
+>     the read block ID cannot be trusted.
 > 
-> English translation:
+> This is exactly the why. It is only about whether we can trust that a
+> non-garbage block ID was read. Or do you want me to add:
 > 
-> In order to push the data tail, a CPU must first see that the associated
-> descriptor is in the reusable state. Since a full memory barrier is
-> performed after that sighting and before doing the data tail push, _any_
-> CPU that sees the pushed data tail will be able to see that the
-> associated descriptor is in the reusable state.
+>     ... because data read that is behind the tail lpos must be
+>     considered garbage.
 > 
-> In order to push the descriptor tail, a CPU must first see that the
-> associated data tail has been pushed. Therefore, that CPU would also see
-> that the associated descriptor is in the reusable state.
-
-Thanks a lot for this detailed description. It helped a lot.
-
-Let me try another description from slightly different angle:
-
-All this relies on the fact the the full barrier is called in
-data_push_tail() and data_push_tail() is called right above.
-But there are two situations where the barrier is not called.
-It is when:
-
-  1. desc.text_blk_lpos.next already is behind data_ring->tail_lpos.
-
-     This is safe.
-
-     It might happen when there was a race in the past. CPU1 reserved
-     a descriptor before CPU2 and CPU2 was able to allocate data block
-     before CPU1.
-
-     As a result, both descriptors and both data blocks were moved
-     into reusable state when the earlier descriptor was reused.
-     It is because it pointed to newer data block and the older data
-     block must have been invalidated together with the newer
-     descriptor.
-
-     Now, the full barrier was called before tail_lpos was moved.
-     Both descriptors must have been in the reusable state already.
-
-
-  2. desc.text_blk_lpos == INVALID_LPOS.
-
-     It seems that this is not synchronized and other CPUs might see
-     the old state.
-
-     It happens for data blocks that do not have any data. So it
-     probably does not cause real problems but ...
-
-
-
-> > I think that we actually need a full barrier here to make sure that
-> > all CPUs see the changes made by data_push_tail() before we
-> > allow to rewrite the descriptor. The changes in data_push_tail() might
-> > be done on different CPUs.
+> > But wait! This situation should get caught by the two existing descriptor
+> > checks:
+> >
+> >>		case desc_committed:
+> >>			/*
+> >>			 * This data block is invalid if the descriptor
+> >>			 * does not point back to it.
+> >>			 */
+> >>			if (blk_lpos->begin != lpos_begin)
+> >>				return false;
+> >>			desc_make_reusable(desc_ring, id);
+> >>			break;
+> >>		case desc_reusable:
+> >>			/*
+> >>			 * This data block is invalid if the descriptor
+> >>			 * does not point back to it.
+> >>			 */
+> >>			if (blk_lpos->begin != lpos_begin)
+> >>				return false;
+> >>			break;
 > 
-> How so? That memory barrier exists to make sure the reusable descriptor
-> state is stored before pushing the data tail. This is important for
-> readers (which start from the data tail) so they can notice if the
-> descriptor has since been invalidated (reusable state).
-> 
-> But where is it important that the data tail change is seen before the
-> descriptor tail change? How are the data tail and descriptor tail
-> significantly related to each other?
+> No. Your example showed that it is not caught here.
 
-I have to admit that I did not think about it deeply enough. It was
-more about feeling and seeing similar pattern.
+I am afraid that my example was wrong:
 
-You have a point. The state value of the descriptor is the central
-point. It is used to synchronize operations with both desc_ring and
-data_ring.
-
-The state is modified only once. So one (full) memory barrier should
-be enough to synchronize all CPUs.
-
-The state has to be modified before the data block could be reused.
-Therefore the full barrier has to be already in the data_ring code.
-
-The question is what to do with the empty data case. I see three
-possibilities:
-
-  1. Ignore the case with empty block because it (probably) does not
-     cause real problems.
-
-  2. Call the full barrier in data_push_tail() even when the data
-     block is empty.
-
-  3. Call the full barrier also in desc_push_tail() as I suggested.
+If blk->id comes from the new descriptor written by CPU1 then
+blk_lpos->begin is based on the old data_ring->head_lpos.
+Then it is different from lpos_begin.
 
 
-My opinion:
+Let's put it another way. The state of the descriptor defines validity
+of the data. Descriptor in committed state _must not_ point to invalid
+data block!!!
 
-I prefer 3rd solution. The barrier would be superfluous in the most
-common situation. But it would create more error-proof code.
-We could always optimize it when it causes problems.
+If a descriptor in committed state point to lpos that was in invalid range
+before reading the descriptor then we have a huge hole in the design.
 
-Anyway, I would feel very uneasy about the the 1st solution. And the
-2nd solution is weird. It would be hard to explain.
+This is why I believe that the check of the descriptor must be enough.
 
 
 Best Regards,
 Petr
 
-PS: I start feeling more confident about the code. The more barriers
-the less possible races ;-)
+PS: I am sorry if I create too much confusion. It is easy to
+get lost :-(
 
 _______________________________________________
 kexec mailing list
