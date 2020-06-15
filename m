@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from us-smtp-2.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jjWHQ-0003FX-99
- for kexec@lists.infradead.org; Thu, 11 Jun 2020 23:06:41 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: Barrier before pushing desc_ring tail: was [PATCH v2 2/3] printk:
- add lockless buffer
-References: <20200501094010.17694-1-john.ogness@linutronix.de>
- <20200501094010.17694-3-john.ogness@linutronix.de>
- <20200609113751.GD23752@linux-b0ei>
- <87d068utbg.fsf@vostro.fn.ogness.net>
- <20200611120107.GD6581@linux-b0ei>
-Date: Fri, 12 Jun 2020 01:06:28 +0200
-In-Reply-To: <20200611120107.GD6581@linux-b0ei> (Petr Mladek's message of
- "Thu, 11 Jun 2020 14:01:08 +0200")
-Message-ID: <87bllpyzgr.fsf@vostro.fn.ogness.net>
+ id 1jkuWo-0006VS-L7
+ for kexec@lists.infradead.org; Mon, 15 Jun 2020 19:12:20 +0000
+Received: by mail-qv1-f69.google.com with SMTP id q5so13747485qvp.23
+ for <kexec@lists.infradead.org>; Mon, 15 Jun 2020 12:11:51 -0700 (PDT)
 MIME-Version: 1.0
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <CACi5LpMKSNz=_OQWmEQ2kaswbjAONjn2pXQiu=jCA=wMt3wGCQ@mail.gmail.com>
+In-Reply-To: <CACi5LpMKSNz=_OQWmEQ2kaswbjAONjn2pXQiu=jCA=wMt3wGCQ@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Tue, 16 Jun 2020 00:41:37 +0530
+Message-ID: <CACi5LpNYtAFq6PYjsYArViz+gzuh5-_CKZLBqo826oWhERrx8A@mail.gmail.com>
+Subject: Re: [PATCH v6 0/2] Append new variables to vmcoreinfo (TCR_EL1.T1SZ
+ for arm64 and MAX_PHYSMEM_BITS for all archs)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,78 +27,140 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, x86@kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, John Donnelly <john.p.donnelly@oracle.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Steve Capper <steve.capper@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linuxppc-dev@lists.ozlabs.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Scott Branden <scott.branden@broadcom.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, James Morse <james.morse@arm.com>, kexec mailing list <kexec@lists.infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Amit Kachhap <amit.kachhap@arm.com>, Boris Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Dave Anderson <anderson@redhat.com>, Ingo Molnar <mingo@kernel.org>, Paul Mackerras <paulus@samba.org>
 
-On 2020-06-11, Petr Mladek <pmladek@suse.com> wrote:
-> All this relies on the fact the the full barrier is called in
-> data_push_tail() and data_push_tail() is called right above.
-> But there are two situations where the barrier is not called.
-> It is when:
+Hello Catalin, Will,
+
+On Tue, Jun 2, 2020 at 10:54 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
 >
->   1. desc.text_blk_lpos.next already is behind data_ring->tail_lpos.
+> Hello,
 >
->      This is safe.
-
-Yes, and I have since expanded the comment above the data_push_tail()
-while loop to mention that:
-
-	/*
-	 * Loop until the tail lpos is at or beyond @lpos. This condition
-	 * may already be satisfied, resulting in no full memory barrier
-	 * from data_push_tail:C being performed. However, since this CPU
-	 * sees the new tail lpos, any descriptor states that transitioned to
-	 * the reusable state must already be visible.
-	 */
-
->   2. desc.text_blk_lpos == INVALID_LPOS.
+> On Thu, May 14, 2020 at 12:22 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
+> >
+> > Apologies for the delayed update. Its been quite some time since I
+> > posted the last version (v5), but I have been really caught up in some
+> > other critical issues.
+> >
+> > Changes since v5:
+> > ----------------
+> > - v5 can be viewed here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-November/024055.html
+> > - Addressed review comments from James Morse and Boris.
+> > - Added Tested-by received from John on v5 patchset.
+> > - Rebased against arm64 (for-next/ptr-auth) branch which has Amit's
+> >   patchset for ARMv8.3-A Pointer Authentication feature vmcoreinfo
+> >   applied.
+> >
+> > Changes since v4:
+> > ----------------
+> > - v4 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-November/023961.html
+> > - Addressed comments from Dave and added patches for documenting
+> >   new variables appended to vmcoreinfo documentation.
+> > - Added testing report shared by Akashi for PATCH 2/5.
+> >
+> > Changes since v3:
+> > ----------------
+> > - v3 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022590.html
+> > - Addressed comments from James and exported TCR_EL1.T1SZ in vmcoreinfo
+> >   instead of PTRS_PER_PGD.
+> > - Added a new patch (via [PATCH 3/3]), which fixes a simple typo in
+> >   'Documentation/arm64/memory.rst'
+> >
+> > Changes since v2:
+> > ----------------
+> > - v2 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022531.html
+> > - Protected 'MAX_PHYSMEM_BITS' vmcoreinfo variable under CONFIG_SPARSEMEM
+> >   ifdef sections, as suggested by Kazu.
+> > - Updated vmcoreinfo documentation to add description about
+> >   'MAX_PHYSMEM_BITS' variable (via [PATCH 3/3]).
+> >
+> > Changes since v1:
+> > ----------------
+> > - v1 was sent out as a single patch which can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022411.html
+> >
+> > - v2 breaks the single patch into two independent patches:
+> >   [PATCH 1/2] appends 'PTRS_PER_PGD' to vmcoreinfo for arm64 arch, whereas
+> >   [PATCH 2/2] appends 'MAX_PHYSMEM_BITS' to vmcoreinfo in core kernel code (all archs)
+> >
+> > This patchset primarily fixes the regression reported in user-space
+> > utilities like 'makedumpfile' and 'crash-utility' on arm64 architecture
+> > with the availability of 52-bit address space feature in underlying
+> > kernel. These regressions have been reported both on CPUs which don't
+> > support ARMv8.2 extensions (i.e. LVA, LPA) and are running newer kernels
+> > and also on prototype platforms (like ARMv8 FVP simulator model) which
+> > support ARMv8.2 extensions and are running newer kernels.
+> >
+> > The reason for these regressions is that right now user-space tools
+> > have no direct access to these values (since these are not exported
+> > from the kernel) and hence need to rely on a best-guess method of
+> > determining value of 'vabits_actual' and 'MAX_PHYSMEM_BITS' supported
+> > by underlying kernel.
+> >
+> > Exporting these values via vmcoreinfo will help user-land in such cases.
+> > In addition, as per suggestion from makedumpfile maintainer (Kazu),
+> > it makes more sense to append 'MAX_PHYSMEM_BITS' to
+> > vmcoreinfo in the core code itself rather than in arm64 arch-specific
+> > code, so that the user-space code for other archs can also benefit from
+> > this addition to the vmcoreinfo and use it as a standard way of
+> > determining 'SECTIONS_SHIFT' value in user-land.
+> >
+> > Cc: Boris Petkov <bp@alien8.de>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Jonathan Corbet <corbet@lwn.net>
+> > Cc: James Morse <james.morse@arm.com>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Will Deacon <will@kernel.org>
+> > Cc: Steve Capper <steve.capper@arm.com>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > Cc: Paul Mackerras <paulus@samba.org>
+> > Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> > Cc: Dave Anderson <anderson@redhat.com>
+> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > Cc: John Donnelly <john.p.donnelly@oracle.com>
+> > Cc: scott.branden@broadcom.com
+> > Cc: Amit Kachhap <amit.kachhap@arm.com>
+> > Cc: x86@kernel.org
+> > Cc: linuxppc-dev@lists.ozlabs.org
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Cc: linux-doc@vger.kernel.org
+> > Cc: kexec@lists.infradead.org
+> >
+> > Bhupesh Sharma (2):
+> >   crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo
+> >   arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+> >
+> >  Documentation/admin-guide/kdump/vmcoreinfo.rst | 16 ++++++++++++++++
+> >  arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+> >  arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+> >  kernel/crash_core.c                            |  1 +
+> >  4 files changed, 28 insertions(+)
 >
->      It seems that this is not synchronized and other CPUs might see
->      the old state.
-
-Great catch! This could trigger the WARN_ON at desc_reserve:F and lead
-to prb_reserve() unnecessarily failing.
-
-> The question is what to do with the empty data case. I see three
-> possibilities:
+> Ping. @James Morse , Others
 >
->   1. Ignore the case with empty block because it (probably) does not
->      cause real problems.
+> Please share if you have some comments regarding this patchset.
 
-It could cause dropped messages.
+Ping. I think we have two Tested-by available from Oracle and Marvell
+folks on this patchset and no further review-comments.
+Can you please help review/pick this patchset via the arm64 tree?
 
->   2. Call the full barrier in data_push_tail() even when the data
->      block is empty.
+User-space utilities like makedumpfile and crash have been broken
+since 52-bit VA addressing was enabled on arm64 kernel, so distros are
+obliged to carry downstream-only fixes for these user-space utilities
+to make them work with the kernel which support 52-bit VA addressing
+on arm64.
 
-This is the common case, since most records will not have dictionary
-data.
+Thanks,
+Bhupesh
 
->   3. Call the full barrier also in desc_push_tail() as I suggested.
->
-> My opinion:
->
-> I prefer 3rd solution.
-
-Agreed. For my next version I am folding all smp_mb() and smp_wmb()
-calls into their neighboring cmpxchg_relaxed(). This would apply here as
-well, changing desc_push_tail:B to a full cmpxchg().
-
-We still need the full memory barrier at data_push_tail:C. Readers rely
-on it to be able to verify if their copied data is still valid:
-
-CPU0 (writer0)        CPU1 (writer1)       CPU2 (reader)
-                                           desc_read->committed
-desc_make_reusable
-smp_mb
-data_push_tail
-                      read new data tail
-                      data_push_head
-                      smp_mb
-                      write new data
-                                           read garbage new data
-                                           desc_read->reusable
-
-John Ogness
 
 _______________________________________________
 kexec mailing list
