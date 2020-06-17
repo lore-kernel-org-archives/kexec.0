@@ -1,17 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-f195.google.com ([209.85.222.195])
+Received: from mail-lf1-x141.google.com ([2a00:1450:4864:20::141])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jlK1f-0006gz-HU
- for kexec@lists.infradead.org; Tue, 16 Jun 2020 22:25:52 +0000
-Received: by mail-qk1-f195.google.com with SMTP id q2so258808qkb.2
- for <kexec@lists.infradead.org>; Tue, 16 Jun 2020 15:25:50 -0700 (PDT)
-From: Arvind Sankar <nivedita@alum.mit.edu>
-Subject: [PATCH] x86/purgatory: Add -fno-stack-protector
-Date: Tue, 16 Jun 2020 18:25:47 -0400
-Message-Id: <20200616222547.1979233-1-nivedita@alum.mit.edu>
-In-Reply-To: <CAEJqkggDJEC4W9V6ijmPoE0-soKE7zBUWUiDLdCZArEsDo9vrQ@mail.gmail.com>
-References: <CAEJqkggDJEC4W9V6ijmPoE0-soKE7zBUWUiDLdCZArEsDo9vrQ@mail.gmail.com>
+ id 1jlLbr-0004am-Rd
+ for kexec@lists.infradead.org; Wed, 17 Jun 2020 00:07:21 +0000
+Received: by mail-lf1-x141.google.com with SMTP id d7so167266lfi.12
+ for <kexec@lists.infradead.org>; Tue, 16 Jun 2020 17:07:18 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com.
+ [209.85.208.171])
+ by smtp.gmail.com with ESMTPSA id 144sm2980329lfm.87.2020.06.16.17.07.15
+ for <kexec@lists.infradead.org>
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 16 Jun 2020 17:07:15 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id y11so641370ljm.9
+ for <kexec@lists.infradead.org>; Tue, 16 Jun 2020 17:07:15 -0700 (PDT)
 MIME-Version: 1.0
+References: <CAEJqkggDJEC4W9V6ijmPoE0-soKE7zBUWUiDLdCZArEsDo9vrQ@mail.gmail.com>
+ <20200616222547.1979233-1-nivedita@alum.mit.edu>
+In-Reply-To: <20200616222547.1979233-1-nivedita@alum.mit.edu>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 16 Jun 2020 17:06:59 -0700
+Message-ID: <CAHk-=wj_1mQmG5H4ZVcNudjhQyxTNTtni6hV1nTkEY2QQJzgAg@mail.gmail.com>
+Subject: Re: [PATCH] x86/purgatory: Add -fno-stack-protector
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,48 +33,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org, kexec@lists.infradead.org
-Cc: Borislav Petkov <bp@alien8.de>, Hans de Goede <hdegoede@redhat.com>, Gabriel C <nix.or.die@googlemail.com>, Linus Torvalds <torvalds@linux-foundation.org>, linux-kernel@vger.kernel.org
+To: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Gabriel C <nix.or.die@googlemail.com>, the arch/x86 maintainers <x86@kernel.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Borislav Petkov <bp@alien8.de>
 
-The purgatory Makefile removes -fstack-protector options if they were
-configured in, but does not currently add -fno-stack-protector.
+On Tue, Jun 16, 2020 at 3:25 PM Arvind Sankar <nivedita@alum.mit.edu> wrote:
+>
+> The purgatory Makefile removes -fstack-protector options if they were
+> configured in, but does not currently add -fno-stack-protector.
 
-If gcc was configured with the --enable-default-ssp configure option,
-this results in the stack protector still being enabled for the
-purgatory (absent distro-specific specs files that might disable it
-again for freestanding compilations), if the main kernel is being
-compiled with stack protection enabled (if it's disabled for the main
-kernel, the top-level Makefile will add -fno-stack-protector).
+I took this directly, since the build failure seems so annoying if you
+happen to have an affected compiler and config.
 
-This will break the build since commit
-  e4160b2e4b02 ("x86/purgatory: Fail the build if purgatory.ro has missing symbols")
-and prior to that would have caused runtime failure when trying to use
-kexec.
+Maybe that's not very common, but ..
 
-Explicitly add -fno-stack-protector to avoid this, as done in other
-Makefiles that need to disable the stack protector.
-
-Reported-by: Gabriel C <nix.or.die@googlemail.com>
-Signed-off-by: Arvind Sankar <nivedita@alum.mit.edu>
----
- arch/x86/purgatory/Makefile | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index b04e6e72a592..088bd764e0b7 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -34,6 +34,7 @@ KCOV_INSTRUMENT := n
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
- PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
- PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
-+PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
- 
- # Default KBUILD_CFLAGS can have -pg option set when FTRACE is enabled. That
- # in turn leaves some undefined symbols like __fentry__ in purgatory and not
--- 
-2.26.2
-
+              Linus
 
 _______________________________________________
 kexec mailing list
