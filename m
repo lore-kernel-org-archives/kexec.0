@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jle04-0000BA-DZ
- for kexec@lists.infradead.org; Wed, 17 Jun 2020 19:45:33 +0000
-Date: Wed, 17 Jun 2020 12:45:31 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
+Received: from linux.microsoft.com ([13.77.154.182])
+ by bombadil.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jlg5k-0000gm-PY
+ for kexec@lists.infradead.org; Wed, 17 Jun 2020 21:59:34 +0000
 Subject: Re: [PATCH v2][RFC] kdump: append kernel build-id string to VMCOREINFO
-Message-Id: <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
-In-Reply-To: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
 References: <1591849672-34104-1-git-send-email-vijayb@linux.microsoft.com>
-Mime-Version: 1.0
+ <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
+From: Vijay Balakrishna <vijayb@linux.microsoft.com>
+Message-ID: <4bf02b0f-fc24-eb28-cf5c-419e7161f707@linux.microsoft.com>
+Date: Wed, 17 Jun 2020 14:59:18 -0700
+MIME-Version: 1.0
+In-Reply-To: <20200617124531.753b42152682219f267b75a1@linux-foundation.org>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,107 +20,117 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Vijay Balakrishna <vijayb@linux.microsoft.com>
+To: Andrew Morton <akpm@linux-foundation.org>
 Cc: Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, clang-built-linux@googlegroups.com, Tyler Hicks <tyhicks@linux.microsoft.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Wed, 10 Jun 2020 21:27:52 -0700 Vijay Balakrishna <vijayb@linux.microsoft.com> wrote:
+Thanks Andrew.  See inline.
 
-> Make kernel GNU build-id available in VMCOREINFO.  Having
-> build-id in VMCOREINFO facilitates presenting appropriate kernel
-> namelist image with debug information file to kernel crash dump
-> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
-> key for crash analysis automation.
+On 6/17/2020 12:45 PM, Andrew Morton wrote:
+> On Wed, 10 Jun 2020 21:27:52 -0700 Vijay Balakrishna <vijayb@linux.microsoft.com> wrote:
 > 
-> Regarding if this patch is necessary or matching of linux_banner
-> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
-> need -- IMO, build-id approach more foolproof, in most instances it
-> is a cryptographic hash generated using internal code/ELF bits unlike
-> kernel version string upon which linux_banner is based that is
-> external to the code.  I feel each is intended for a different purpose.
-> Also OSRELEASE is not suitable when two different kernel builds
-> from same version with different features enabled.
+>> Make kernel GNU build-id available in VMCOREINFO.  Having
+>> build-id in VMCOREINFO facilitates presenting appropriate kernel
+>> namelist image with debug information file to kernel crash dump
+>> analysis tools.  Currently VMCOREINFO lacks uniquely identifiable
+>> key for crash analysis automation.
+>>
+>> Regarding if this patch is necessary or matching of linux_banner
+>> and OSRELEASE in VMCOREINFO employed by crash(8) meets the
+>> need -- IMO, build-id approach more foolproof, in most instances it
+>> is a cryptographic hash generated using internal code/ELF bits unlike
+>> kernel version string upon which linux_banner is based that is
+>> external to the code.  I feel each is intended for a different purpose.
+>> Also OSRELEASE is not suitable when two different kernel builds
+>> from same version with different features enabled.
+>>
+>> Currently for most linux (and non-linux) systems build-id can be
+>> extracted using standard methods for file types such as user mode crash
+>> dumps, shared libraries, loadable kernel modules etc.,  This is an
+>> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
+>> some uniformity for automation tools.
+>>
+>> ...
+>>
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -11,6 +11,8 @@
+>>   #include <asm/page.h>
+>>   #include <asm/sections.h>
+>>   
+>> +#include <crypto/sha.h>
+>> +
+>>   /* vmcoreinfo stuff */
+>>   unsigned char *vmcoreinfo_data;
+>>   size_t vmcoreinfo_size;
+>> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>>   }
+>>   EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>>   
+>> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
+>> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+>> +#define NT_GNU_BUILD_ID 3
+>> +
+>> +struct elf_note_section {
+>> +	struct elf_note	n_hdr;
+>> +	u8 n_data[];
+>> +};
+>> +
+>> +/*
+>> + * Add build ID from .notes section as generated by the GNU ld(1)
+>> + * or LLVM lld(1) --build-id option.
+>> + */
+>> +static void add_build_id_vmcoreinfo(void)
+>> +{
+>> +	char build_id[BUILD_ID_MAX * 2 + 1];
+>> +	int n_remain = NOTES_SIZE;
+>> +
+>> +	while (n_remain >= sizeof(struct elf_note)) {
+>> +		const struct elf_note_section *note_sec =
+>> +			&__start_notes + NOTES_SIZE - n_remain;
+>> +		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+>> +
+>> +		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+>> +		    n_namesz != 0 &&
+>> +		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
 > 
-> Currently for most linux (and non-linux) systems build-id can be
-> extracted using standard methods for file types such as user mode crash
-> dumps, shared libraries, loadable kernel modules etc.,  This is an
-> exception for linux kernel dump.  Having build-id in VMCOREINFO brings
-> some uniformity for automation tools.
+> Is it guaranteed that n_data[] is null-terminated?
+
+ From ELF(5) "Notes (Nhdr)" section:
+
+>        n_namesz  The length of the name field in bytes.  The contents will immediately follow this note in memory.  The name is null  terminated.   For
+>                  example, if the name is "GNU", then n_namesz will be set to 4.
+
+Vijay
+
 > 
-> ...
->
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -11,6 +11,8 @@
->  #include <asm/page.h>
->  #include <asm/sections.h>
->  
-> +#include <crypto/sha.h>
-> +
->  /* vmcoreinfo stuff */
->  unsigned char *vmcoreinfo_data;
->  size_t vmcoreinfo_size;
-> @@ -376,6 +378,53 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  }
->  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->  
-> +#define NOTES_SIZE (&__stop_notes - &__start_notes)
-> +#define BUILD_ID_MAX SHA1_DIGEST_SIZE
-> +#define NT_GNU_BUILD_ID 3
-> +
-> +struct elf_note_section {
-> +	struct elf_note	n_hdr;
-> +	u8 n_data[];
-> +};
-> +
-> +/*
-> + * Add build ID from .notes section as generated by the GNU ld(1)
-> + * or LLVM lld(1) --build-id option.
-> + */
-> +static void add_build_id_vmcoreinfo(void)
-> +{
-> +	char build_id[BUILD_ID_MAX * 2 + 1];
-> +	int n_remain = NOTES_SIZE;
-> +
-> +	while (n_remain >= sizeof(struct elf_note)) {
-> +		const struct elf_note_section *note_sec =
-> +			&__start_notes + NOTES_SIZE - n_remain;
-> +		const u32 n_namesz = note_sec->n_hdr.n_namesz;
-> +
-> +		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
-> +		    n_namesz != 0 &&
-> +		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
-
-Is it guaranteed that n_data[] is null-terminated?
-
-> +			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
-> +				const u32 n_descsz = note_sec->n_hdr.n_descsz;
-> +				const u8 *s = &note_sec->n_data[n_namesz];
-> +
-> +				s = PTR_ALIGN(s, 4);
-> +				bin2hex(build_id, s, n_descsz);
-> +				build_id[2 * n_descsz] = '\0';
-> +				VMCOREINFO_BUILD_ID(build_id);
-> +				return;
-> +			}
-> +			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
-> +				note_sec->n_hdr.n_descsz,
-> +				BUILD_ID_MAX);
-> +			return;
-> +		}
-> +		n_remain -= sizeof(struct elf_note) +
-> +			ALIGN(note_sec->n_hdr.n_namesz, 4) +
-> +			ALIGN(note_sec->n_hdr.n_descsz, 4);
-> +	}
-> +}
-> +
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
->  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-
+>> +			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+>> +				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+>> +				const u8 *s = &note_sec->n_data[n_namesz];
+>> +
+>> +				s = PTR_ALIGN(s, 4);
+>> +				bin2hex(build_id, s, n_descsz);
+>> +				build_id[2 * n_descsz] = '\0';
+>> +				VMCOREINFO_BUILD_ID(build_id);
+>> +				return;
+>> +			}
+>> +			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+>> +				note_sec->n_hdr.n_descsz,
+>> +				BUILD_ID_MAX);
+>> +			return;
+>> +		}
+>> +		n_remain -= sizeof(struct elf_note) +
+>> +			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+>> +			ALIGN(note_sec->n_hdr.n_descsz, 4);
+>> +	}
+>> +}
+>> +
+>>   static int __init crash_save_vmcoreinfo_init(void)
+>>   {
+>>   	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
 
 _______________________________________________
 kexec mailing list
