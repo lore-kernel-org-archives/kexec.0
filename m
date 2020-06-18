@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.windriver.com ([147.11.1.11])
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jlpxe-00074M-O1
- for kexec@lists.infradead.org; Thu, 18 Jun 2020 08:31:54 +0000
-Subject: Re: [PATCH] arm64: continue loading even if kaslr-seed is not wiped
- to zero
-References: <20200616033320.2553-1-xulin.sun@windriver.com>
- <CACi5LpOH8FvTF+iybJ-BionyRiKaz4DC80K2U0_XxEerhcHs6g@mail.gmail.com>
-From: Xulin Sun <xulin.sun@windriver.com>
-Message-ID: <df9e26a5-4462-2744-3587-acbf706935ff@windriver.com>
-Date: Thu, 18 Jun 2020 16:31:39 +0800
+ id 1jlrFO-0006IS-Lv
+ for kexec@lists.infradead.org; Thu, 18 Jun 2020 09:54:16 +0000
+Date: Thu, 18 Jun 2020 17:54:01 +0800
+From: "dyoung@redhat.com" <dyoung@redhat.com>
+Subject: Re: [Intel-gfx] i915/kexec: warning at
+ drivers/gpu/drm/i915/display/intel_psr.c:782 intel_psr_activate+0x3c6/0x440
+Message-ID: <20200618095401.GB8527@dhcp-128-65.nay.redhat.com>
+References: <20200617065315.GA6501@dhcp-128-65.nay.redhat.com>
+ <b9abdee84e2465da720d2c44e80ba286470f7f3d.camel@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <CACi5LpOH8FvTF+iybJ-BionyRiKaz4DC80K2U0_XxEerhcHs6g@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <b9abdee84e2465da720d2c44e80ba286470f7f3d.camel@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,94 +22,104 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: xulinsun@gmail.com, Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
+To: "Souza, Jose" <jose.souza@intel.com>
+Cc: "bhe@redhat.com" <bhe@redhat.com>, "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>, "joonas.lahtinen@linux.intel.com" <joonas.lahtinen@linux.intel.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jani.nikula@linux.intel.com" <jani.nikula@linux.intel.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "Vivi,
+ Rodrigo" <rodrigo.vivi@intel.com>
 
-Ck9uIDIwMjAvNi8xNyDkuIvljYgzOjE5LCBCaHVwZXNoIFNoYXJtYSB3cm90ZToKPiBIaSBYdW5s
-aW4sCj4KPiBPbiBUdWUsIEp1biAxNiwgMjAyMCBhdCA5OjAzIEFNIFh1bGluIFN1biA8eHVsaW4u
-c3VuQHdpbmRyaXZlci5jb20+IHdyb3RlOgo+PiBUaGUgY29tbWl0IGMzZjA0MzI0MWE4NjZhIChh
-cm02NDogQWRkIHN1cHBvcnQgdG8gc3VwcGx5ICdrYXNsci1zZWVkJyB0byBzZWNvbmRhcnkga2Vy
-bmVsKQo+PiBhZGQga2FzbHItc2VlZCBzdXBwb3J0LiBBbmQgY29uc2lkZXIgdGhlIHByaW1hcnkg
-a2VybmVsIHJlYWRzIHRoZSAna2FzbHItc2VlZCcKPj4gYW5kIHdpcGVzIGl0IHRvIDAuIEJ1dCBp
-biB0aGUgc2l0dWF0aW9uLCAnQ09ORklHX1JBTkRPTUlaRV9CQVNFJyB3YXMgbm90IHNldCB0bwo+
-PiB5IGluIHRoZSBwcmltYXJ5IGtlcm5lbCBhbmQgQVRGIGZpcm13YXJlIGhhcyBzZXQgdGhlICdr
-YXNsci1zZWVkJyBkdGIgcHJvcGVydHkKPj4gd2l0aCBub24temVybywgVGh1cyB3aWxsIHJldHVy
-biBlcnJvci4KPj4KPj4gU28gaW4gdGhlIGFib3ZlIGNhc2UsIGNvbnRpbnVlIGxvYWRpbmcgdGhl
-IHNlZ21lbnRzIHdpdGggbm8ga2FzbHIKPj4gc3VwcG9ydGVkIHNpdHVhdGlvbi4KPj4KPj4gU2ln
-bmVkLW9mZi1ieTogWHVsaW4gU3VuIDx4dWxpbi5zdW5Ad2luZHJpdmVyLmNvbT4KPj4gLS0tCj4+
-ICAga2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1hcm02NC5jIHwgNCArKy0tCj4+ICAgMSBmaWxlIGNo
-YW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBh
-L2tleGVjL2FyY2gvYXJtNjQva2V4ZWMtYXJtNjQuYyBiL2tleGVjL2FyY2gvYXJtNjQva2V4ZWMt
-YXJtNjQuYwo+PiBpbmRleCAyOTkyYmNlLi41NDBmNGQ3IDEwMDY0NAo+PiAtLS0gYS9rZXhlYy9h
-cmNoL2FybTY0L2tleGVjLWFybTY0LmMKPj4gKysrIGIva2V4ZWMvYXJjaC9hcm02NC9rZXhlYy1h
-cm02NC5jCj4+IEBAIC01MDYsOCArNTA2LDcgQEAgc3RhdGljIGludCBzZXR1cF8ybmRfZHRiKHN0
-cnVjdCBkdGIgKmR0YiwgY2hhciAqY29tbWFuZF9saW5lLCBpbnQgb25fY3Jhc2gpCj4+ICAgICAg
-ICAgICAgICAgICAgaWYgKGthc2xyX3NlZWQgIT0gMCkgewo+PiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgZGJncHJpbnRmKCIlczoga2FzbHItc2VlZCBpcyBub3Qgd2lwZWQgdG8gMC5cbiIsCj4+
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgX19mdW5jX18pOwo+PiAt
-ICAgICAgICAgICAgICAgICAgICAgICByZXN1bHQgPSAtRUlOVkFMOwo+PiAtICAgICAgICAgICAg
-ICAgICAgICAgICBnb3RvIG9uX2Vycm9yOwo+PiArICAgICAgICAgICAgICAgICAgICAgICBnb3Rv
-IHVuYWJsZV9rYXNscjsKPj4gICAgICAgICAgICAgICAgICB9Cj4+Cj4+ICAgICAgICAgICAgICAg
-ICAgLyoKPj4gQEAgLTU1MCw2ICs1NDksNyBAQCBzdGF0aWMgaW50IHNldHVwXzJuZF9kdGIoc3Ry
-dWN0IGR0YiAqZHRiLCBjaGFyICpjb21tYW5kX2xpbmUsIGludCBvbl9jcmFzaCkKPj4gICAgICAg
-ICAgICAgICAgICB9Cj4+ICAgICAgICAgIH0KPj4KPj4gK3VuYWJsZV9rYXNscjoKPj4gICAgICAg
-ICAgaWYgKG9uX2NyYXNoKSB7Cj4+ICAgICAgICAgICAgICAgICAgLyogYWRkIGxpbnV4LGVsZmNv
-cmVoZHIgKi8KPj4gICAgICAgICAgICAgICAgICBub2Rlb2Zmc2V0ID0gZmR0X3BhdGhfb2Zmc2V0
-KG5ld19idWYsICIvY2hvc2VuIik7Cj4+IC0tCj4+IDIuMTcuMQo+IFNvcnJ5LCBidXQgdGhpcyBz
-ZWVtcyBsaWtlIGFuIEFURiBpc3N1ZSB3aGljaCB5b3UgYXJlIHRyeWluZyB0byBmaXggaW4KPiBr
-ZXhlYy10b29scy4KPiBTZWUgJ0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jaG9z
-ZW4udHh0JyBmb3IgdGhlIGRldGFpbHMgb2YKPiB0aGUgJ2thc2xyLXNlZWQnIHByb3BlcnR5Ogo+
-Cj4ga2FzbHItc2VlZAo+IC0tLS0tLS0tLS0tCj4KPiBUaGlzIHByb3BlcnR5IGlzIHVzZWQgd2hl
-biBib290aW5nIHdpdGggQ09ORklHX1JBTkRPTUlaRV9CQVNFIGFzIHRoZQo+IGVudHJvcHkgdXNl
-ZCB0byByYW5kb21pemUgdGhlIGtlcm5lbCBpbWFnZSBiYXNlIGFkZHJlc3MgbG9jYXRpb24uIFNp
-bmNlCj4gaXQgaXMgdXNlZCBkaXJlY3RseSwgdGhpcyB2YWx1ZSBpcyBpbnRlbmRlZCBvbmx5IGZv
-ciBLQVNMUiwgYW5kIHNob3VsZAo+IG5vdCBiZSB1c2VkIGZvciBvdGhlciBwdXJwb3NlcyAoYXMg
-aXQgbWF5IGxlYWsgaW5mb3JtYXRpb24gYWJvdXQgS0FTTFIKPiBvZmZzZXRzKS4gSXQgaXMgcGFy
-c2VkIGFzIGEgdTY0IHZhbHVlLCBlLmcuCj4KPiAvIHsKPiAgICAgIGNob3NlbiB7Cj4gICAgICAg
-ICAga2FzbHItc2VlZCA9IDwweGZlZWRiZWVmIDB4YzBkZWYwMGQ+Owo+ICAgICAgfTsKPiB9Owo+
-Cj4gU28sIGlmIENPTkZJR19SQU5ET01JWkVfQkFTRSAob3Iga2FzbHIpIGlzIGRpc2FibGVkLCB0
-aGlzIHZhbHVlIHNob3VsZAo+IG5vdCBiZSBhdmFpbGFibGUgaW4gdGhlIHBhdGNoZWQgRFRCIHJl
-YWQgZnJvbSB0aGUga2VybmVsLCBhcyBvdGhlcndpc2UKPiB3ZSBoYXZlIGEgcG9zc2libGUgc2Vj
-dXJpdHkgdnVsbmVyYWJpbGl0eSBhcyB3ZSBhcmUgbGVha2luZyBvdXQgdGhlCj4ga2VybmVsIHRl
-eHQgYWRkcmVzcyB3aGljaCBjYW4gYmUgdXNlZCBieSBzbm9vcGluZyBhcHBsaWNhdGlvbnMgdG8K
-PiBpbmplY3QgbWFsaWNpb3VzIGNvZGUgaW4gdGhlIGtlcm5lbC4KPgo+IEZvciBleGFtcGxlIG9u
-IG15IHF1YWxjb21tIGFybTY0IHBsYXRmb3JtLCBpZiBDT05GSUdfUkFORE9NSVpFX0JBU0UgaXMK
-PiBzZXQgdG8gbiwgdXNlci1zcGFjZSB0b29scyBsaWtlICdkdGMnIGFyZSBub3QgYWJsZSB0byBm
-aW5kIHRoZQo+ICdrYXNsci1zZWVkJyBwcm9wZXJ0eSBpbiB0aGUgL2Nob3NlbiBub2RlIChhbmQg
-c2FtZSBpcyB0aGUgY2FzZSB3aXRoCj4ga2V4ZWMtdG9vbHMpOgo+Cj4gIyBkdGMgLUkgZHRiIC1P
-IGR0cyAvc3lzL2Zpcm13YXJlL2ZkdCB8IGdyZXAgLUEgMTAgLWkgY2hvc2VuCj4gICAgICBjaG9z
-ZW4gewo+ICAgICAuLi4gbm8gJ2thc2xyLXNlZWQnIG5vZGUKPiB9CgoKT24gbXkgTlhQIExTMTA0
-M0EgUkRCIHBsYXRmb3JtKGFybTY0KSwgdGhlIEFURiByZWxhdGVkIGJvb3Rsb2FkZXIgYW5kIApm
-aXJtd2FyZSBhcmUgZGVmYXVsdCBpbnN0YWxsZWQgd2l0aCBOWFAgcmVsZWFzZWQgbGF0ZXN0IHZl
-cnNpb24uCgoxLiBpZsKgIENPTkZJR19SQU5ET01JWkVfQkFTRSBpcyBzZXQgdG8gbiBvbiBsaW51
-eCBrZXJuZWwuCgojZHRjIC1JIGR0YiAtTyBkdHMgZmR0IHwgZ3JlcCAtQSAxMCAtaSBjaG9zZW4K
-CiDCoMKgwqAgY2hvc2VuIHsKIMKgwqDCoCDCoMKgwqAga2FzbHItc2VlZCA9IDwweDQ4ODk1MjAz
-IDB4OTM1YmVhMzE+OwoKfQoKMi4gaWbCoCBDT05GSUdfUkFORE9NSVpFX0JBU0UgaXMgc2V0IHRv
-IHkgb24gbGludXgga2VybmVsCgojZHRjIC1JIGR0YiAtTyBkdHMgZmR0IHwgZ3JlcCAtQSAxMCAt
-aSBjaG9zZW4KCiDCoMKgwqAgY2hvc2VuIHsKIMKgwqDCoCDCoMKgwqAga2FzbHItc2VlZCA9IDww
-eDAgMHgwPjsKCn0KClRoZSB1LWJvb3QgY29kZSBmbG93IHRvIHNldCB0aGUgImthc2xyLXNlZWQi
-IGlzOiAKaHR0cHM6Ly9zb3VyY2UuY29kZWF1cm9yYS5vcmcvZXh0ZXJuYWwvcW9yaXEvcW9yaXEt
-Y29tcG9uZW50cy91LWJvb3QKCiDCoMKgwqAgZnRfYm9hcmRfc2V0dXAKIMKgwqDCoCDCoMKgwqAg
-ZnRfY3B1X3NldHVwCiDCoMKgwqAgwqDCoCDCoMKgwqDCoCBmZHRfZml4dXBfa2FzbHIKIMKgwqDC
-oCDCoMKgIMKgwqDCoCDCoMKgwqDCoCBmZHRfc2V0cHJvcChmZHQsIG5vZGVvZmZzZXQsICJrYXNs
-ci1zZWVkIiwgcmFuZCwKClNvIEkgc3VzcGVjdCB0aGF0IHUtYm9vdCB3aWxsIHNldCB0aGUgImth
-c2xyLXNlZWQiIHByb3BlcnR5IGFuZCBkb2VzIG5vdCAKbmVlZCB0byBrbm93IGlmIGtlcm5lbCBo
-YXMgZW5hYmxlZCB0aGUga2VybmVsIGNvbmZpZyBvcHRpb24gCiJDT05GSUdfUkFORE9NSVpFX0JB
-U0UiIG9yIG5vdCwgYW5kIGl0IGhhcyBubyB3YXkgdG8gZ2V0IHRoZSB2YWx1ZS4KCkRvIHlvdXIg
-cXVhbGNvbW0gYXJtNjQgcGxhdGZvcm0gdXNlIHRoZSBzYW1lIHUtYm9vdCBjb2RlIHdpdGggImdp
-dC5kZW54LmRlIj8KCgpUaGFua3MKClh1bGluCgoKPgo+IEFsc28gY29uZmlybSB0aGF0IHRoZSBr
-ZXJuZWwgc3ltYm9sIGJhc2UgYWRkcmVzcyBpcyBub3QgcmFuZG9taXplZCBvbgo+IHN1Y2Nlc3Np
-dmUgcmVib290cyAoaW4gdGhpcyBjYXNlKSB2aWE6Cj4gIyBjYXQgL3Byb2Mva2FsbHN5bXMKPgo+
-IFdoZXJlYXMsIGlmIEkgYm9vdCB0aGUga2VybmVsIHdpdGggQ09ORklHX1JBTkRPTUlaRV9CQVNF
-IChvciBrYXNscikKPiBlbmFibGVkLCBJIGNhbiBzZWUgdGhhdCB0aGUgJ2thc2xyLXNlZWQnIHBy
-b3BlcnR5IGlzIHdpcGVkIHRvICcwJyAoYXMKPiBleHBlY3RlZCBieSB0aGUga2VybmVsJykgYW5k
-IGNhbiBiZSBzZWVuIGluIHRoZSBvdXRwdXQgb2Y6Cj4KPiAjIGR0YyAtSSBkdGIgLU8gZHRzIC9z
-eXMvZmlybXdhcmUvZmR0IHwgZ3JlcCAtQSAxMCAtaSBjaG9zZW4KPiAgICAgIGNob3NlbiB7Cj4g
-ICAgICBrYXNsci1zZWVkID0gPDB4MCAweDA+Cj4gfQo+Cj4gVGhhbmtzLAo+IEJodXBlc2gKPgoK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFp
-bGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVh
-ZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Souza,
+On 06/17/20 at 05:34pm, Souza, Jose wrote:
+> Hi Dave
+> 
+> Will take care of this, looks like PSR2 was left enabled by UEFI/BIOS then i915 enables PSR1.Are you affected by any visual glitches or other issues?
+
+Thanks you.  I do not see visual glitches and other issues other than
+the warning.
+
+> Could you attach a log with drm.debug=0x1e set?
+
+It seems a lot of output with the debug option enabled, will send to you
+separately with an attachment.
+
+> 
+> Thanks
+> 
+> On Wed, 2020-06-17 at 14:53 +0800, Dave Young wrote:
+> > Hi,
+> > 
+> > This warning exists for long time, I did not find time to report, here
+> > is the latest kernel logs, can you please to have a look?
+> > 
+> > hardware: Thinkpad T480s
+> > lspci: 00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 620 (rev 07)
+> > --
+[snip]
+> > [    9.652406] fbcon: i915drmfb (fb0) is primary device
+> > [    9.653653] ------------[ cut here ]------------
+> > [    9.653654] i915 0000:00:02.0: drm_WARN_ON(intel_de_read(dev_priv, ((const i915_reg_t){ .reg = ((((&(dev_priv)->__info)->trans_offsets[(dev_priv->psr.transcoder)] - (&(dev_priv)->__info)->trans_offsets[TRANSCODER_A] + (0x60800) + ((&(dev_priv)->__info)->display_mmio_offset)) - dev_priv->hsw_psr_mmio_adjust)) })) & (1 << 31))
+> > [    9.657092] WARNING: CPU: 1 PID: 103 at drivers/gpu/drm/i915/display/intel_psr.c:782 intel_psr_activate+0x3c6/0x440 [i915]
+> > [    9.657093] Modules linked in: snd_hda_codec_realtek(+) snd_hda_codec_generic iwlmvm(+) mac80211 input_leds snd_hda_intel snd_intel_dspcfg snd_hda_codec snd_hwdep snd_hda_core kvm_intel libarc4 snd_seq kvm snd_seq_device iwlwifi serio_raw irqbypass snd_pcm thinkpad_acpi pcspkr cfg80211 ledtrig_audio snd_timer rfkill i915 e1000e snd i2c_i801 soundcore i2c_smbus video intel_gtt iosf_mbi drm_kms_helper syscopyarea sysfillrect sysimgblt fb_sys_fops fuse drm
+> > [    9.657262] CPU: 1 PID: 103 Comm: kworker/u16:3 Not tainted 5.8.0-rc1+ #179
+> > [    9.657262] Hardware name: LENOVO 20L8S3M801/20L8S3M801, BIOS N22ET54W (1.31 ) 04/22/2019
+> > [    9.657262] Workqueue: events_unbound async_run_entry_fn
+> > [    9.657263] RIP: 0010:intel_psr_activate+0x3c6/0x440 [i915]
+> > [    9.657264] Code: 4c 8b 6f 50 4d 85 ed 75 03 4c 8b 2f e8 c3 e0 1f e1 48 c7 c1 a0 ca 2e a0 4c 89 ea 48 c7 c7 40 3b 30 a0 48 89 c6 e8 f2 21 e0 e0 <0f> 0b 80 bd 88 69 00 00 00 0f 84 b5 fc ff ff 48 8b 7d 18 4c 8b 6f
+> > [    9.657264] RSP: 0018:ffff88842ad2b898 EFLAGS: 00010282
+> > [    9.657265] RAX: 0000000000000000 RBX: 0000000000000001 RCX: 0000000000000000
+> > [    9.657265] RDX: 000000000000013a RSI: ffffffff825346da RDI: ffffffff82534ada
+> > [    9.657265] RBP: ffff888423228000 R08: 000000023f6713ae R09: 000000000000013a
+> > [    9.657266] R10: 0000000000000067 R11: 000000000002fa10 R12: ffff88842c16b128
+> > [    9.657266] R13: ffff88842bb09970 R14: 0000000000000001 R15: ffff88842cbcc000
+> > [    9.657266] FS:  0000000000000000(0000) GS:ffff88842e440000(0000) knlGS:0000000000000000
+> > [    9.657267] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> > [    9.657267] CR2: 000055b5c70404c8 CR3: 0000000421d96005 CR4: 00000000001606e0
+> > [    9.657267] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+> > [    9.657267] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+> > [    9.657267] Call Trace:
+> > [    9.657268]  intel_psr_update+0x17c/0x1a0 [i915]
+> > [    9.657268]  intel_ddi_update_pipe+0x6c/0xb0 [i915]
+> > [    9.657268]  intel_update_crtc+0x28b/0x420 [i915]
+> > [    9.657268]  skl_commit_modeset_enables+0x142/0x4e0 [i915]
+> > [    9.657269]  intel_atomic_commit_tail+0x2c6/0x1290 [i915]
+> > [    9.657269]  ? complete+0x2f/0x40
+> > [    9.657269]  ? flush_workqueue_prep_pwqs+0x118/0x130
+> > [    9.657269]  ? flush_workqueue+0x178/0x3c0
+> > [    9.657270]  intel_atomic_commit+0x281/0x300 [i915]
+> > [    9.657270]  drm_client_modeset_commit_atomic+0x1be/0x200 [drm]
+> > [    9.657270]  drm_client_modeset_commit_locked+0x54/0x150 [drm]
+> > [    9.657270]  drm_client_modeset_commit+0x24/0x40 [drm]
+> > [    9.657271]  drm_fb_helper_restore_fbdev_mode_unlocked+0x49/0x90 [drm_kms_helper]
+> > [    9.657271]  drm_fb_helper_set_par+0x30/0x40 [drm_kms_helper]
+> > [    9.657271]  intel_fbdev_set_par+0x16/0x60 [i915]
+> > [    9.657272]  ? con_is_visible+0x27/0x40
+> > [    9.657272]  fbcon_init+0x2e7/0x680
+> > [    9.657272]  visual_init+0xce/0x130
+> > [    9.657272]  do_bind_con_driver.isra.0+0x1da/0x2e0
+> > [    9.657273]  do_take_over_console+0x116/0x180
+> > [    9.657273]  do_fbcon_takeover+0x5c/0xc0
+> > [    9.657273]  register_framebuffer+0x1e4/0x300
+> > [    9.657274]  __drm_fb_helper_initial_config_and_unlock+0x320/0x490 [drm_kms_helper]
+> > [    9.657274]  intel_fbdev_initial_config+0x14/0x30 [i915]
+> > [    9.657274]  async_run_entry_fn+0x37/0x150
+> > [    9.657274]  process_one_work+0x1bf/0x3d0
+> > [    9.657275]  worker_thread+0x4d/0x3d0
+> > [    9.657275]  ? process_one_work+0x3d0/0x3d0
+> > [    9.657275]  kthread+0x11b/0x140
+> > [    9.657276]  ? kthread_create_worker_on_cpu+0x70/0x70
+> > [    9.657276]  ret_from_fork+0x22/0x30
+> > [    9.657276] ---[ end trace f701c3abca58b4af ]---
+> > [    9.674849] Console: switching to colour frame buffer device 240x67
+> > 
+> > [snip]
+
+Thanks
+Dave
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
