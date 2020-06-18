@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mga03.intel.com ([134.134.136.65])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jlvrO-0000Hh-KP
- for kexec@lists.infradead.org; Thu, 18 Jun 2020 14:49:51 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v3 1/3] crash: add VMCOREINFO macro to define offset in a
- struct declared by typedef
-Date: Thu, 18 Jun 2020 16:55:17 +0206
-Message-Id: <20200618144919.9806-2-john.ogness@linutronix.de>
-In-Reply-To: <20200618144919.9806-1-john.ogness@linutronix.de>
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ id 1jlzD5-0008NC-HY
+ for kexec@lists.infradead.org; Thu, 18 Jun 2020 18:24:24 +0000
+Date: Fri, 19 Jun 2020 02:23:23 +0800
+From: kernel test robot <lkp@intel.com>
+Subject: [RFC PATCH] printk: _printk_rb_static_dict can be static
+Message-ID: <20200618182323.GA72993@4e49555bcca1>
+References: <20200618144919.9806-4-john.ogness@linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200618144919.9806-4-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +23,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, kbuild-all@lists.01.org, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
 
-The existing macro VMCOREINFO_OFFSET() can't be used for structures
-declared via typedef because "struct" is not part of type definition.
 
-Create another macro for this purpose.
-
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: kernel test robot <lkp@intel.com>
 ---
- include/linux/crash_core.h | 3 +++
- 1 file changed, 3 insertions(+)
+ printk.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 525510a9f965..43b51c9df571 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -53,6 +53,9 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- #define VMCOREINFO_OFFSET(name, field) \
- 	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
- 			      (unsigned long)offsetof(struct name, field))
-+#define VMCOREINFO_TYPE_OFFSET(name, field) \
-+	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
-+			      (unsigned long)offsetof(name, field))
- #define VMCOREINFO_LENGTH(name, value) \
- 	vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
- #define VMCOREINFO_NUMBER(name) \
--- 
-2.20.1
-
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 7642ef634956f..d812ada06735f 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -434,7 +434,7 @@ static u32 log_buf_len = __LOG_BUF_LEN;
+  */
+ #define PRB_AVGBITS 5	/* 32 character average length */
+ 
+-_DECLARE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
++static _DECLARE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
+ 		  PRB_AVGBITS, PRB_AVGBITS, &__log_buf[0]);
+ 
+ static struct printk_ringbuffer printk_rb_dynamic;
 
 _______________________________________________
 kexec mailing list
