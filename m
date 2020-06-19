@@ -1,15 +1,15 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jmIVr-0002oY-VT
- for kexec@lists.infradead.org; Fri, 19 Jun 2020 15:01:05 +0000
+ id 1jmIsC-0001lG-1t
+ for kexec@lists.infradead.org; Fri, 19 Jun 2020 15:24:09 +0000
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 4.19 156/267] net: qed*: Reduce RX and TX default ring count
+Subject: [PATCH 5.7 176/376] net: qed*: Reduce RX and TX default ring count
  when running inside kdump kernel
-Date: Fri, 19 Jun 2020 16:32:21 +0200
-Message-Id: <20200619141656.297146576@linuxfoundation.org>
-In-Reply-To: <20200619141648.840376470@linuxfoundation.org>
-References: <20200619141648.840376470@linuxfoundation.org>
+Date: Fri, 19 Jun 2020 16:31:34 +0200
+Message-Id: <20200619141718.684657236@linuxfoundation.org>
+In-Reply-To: <20200619141710.350494719@linuxfoundation.org>
+References: <20200619141710.350494719@linuxfoundation.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,7 +22,7 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Sasha Levin <sashal@kernel.org>, Ariel Elior <aelior@marvell.com>, Manish Chopra <manishc@marvell.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, stable@vger.kernel.org, GR-everest-linux-l2@marvell.com, "David S. Miller" <davem@davemloft.net>
 
@@ -115,10 +115,10 @@ Signed-off-by: Sasha Levin <sashal@kernel.org>
  2 files changed, 11 insertions(+), 2 deletions(-)
 
 diff --git a/drivers/net/ethernet/qlogic/qede/qede.h b/drivers/net/ethernet/qlogic/qede/qede.h
-index dc3be8a4acf4..2bdc410d1144 100644
+index 234c6f30effb..234c7e35ee1e 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede.h
 +++ b/drivers/net/ethernet/qlogic/qede/qede.h
-@@ -550,12 +550,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
+@@ -574,12 +574,14 @@ int qede_add_tc_flower_fltr(struct qede_dev *edev, __be16 proto,
  #define RX_RING_SIZE		((u16)BIT(RX_RING_SIZE_POW))
  #define NUM_RX_BDS_MAX		(RX_RING_SIZE - 1)
  #define NUM_RX_BDS_MIN		128
@@ -134,7 +134,7 @@ index dc3be8a4acf4..2bdc410d1144 100644
  
  #define QEDE_MIN_PKT_LEN		64
 diff --git a/drivers/net/ethernet/qlogic/qede/qede_main.c b/drivers/net/ethernet/qlogic/qede/qede_main.c
-index 0d8e39ffbcd1..1aabb2e7a38b 100644
+index 34fa3917eb33..1a83d1fd8ccd 100644
 --- a/drivers/net/ethernet/qlogic/qede/qede_main.c
 +++ b/drivers/net/ethernet/qlogic/qede/qede_main.c
 @@ -29,6 +29,7 @@
@@ -145,7 +145,7 @@ index 0d8e39ffbcd1..1aabb2e7a38b 100644
  #include <linux/module.h>
  #include <linux/pci.h>
  #include <linux/version.h>
-@@ -730,8 +731,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
+@@ -707,8 +708,14 @@ static struct qede_dev *qede_alloc_etherdev(struct qed_dev *cdev,
  	edev->dp_module = dp_module;
  	edev->dp_level = dp_level;
  	edev->ops = qed_ops;
