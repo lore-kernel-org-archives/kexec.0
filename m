@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from linux.microsoft.com ([13.77.154.182])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jnWt6-0000lC-Pl
- for kexec@lists.infradead.org; Tue, 23 Jun 2020 00:34:09 +0000
+ id 1jnWtT-0000pR-7M
+ for kexec@lists.infradead.org; Tue, 23 Jun 2020 00:34:32 +0000
 From: Tyler Hicks <tyhicks@linux.microsoft.com>
-Subject: [PATCH 00/12] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE
- rule support
-Date: Mon, 22 Jun 2020 19:32:24 -0500
-Message-Id: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+Subject: [PATCH 12/12] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+Date: Mon, 22 Jun 2020 19:32:36 -0500
+Message-Id: <20200623003236.830149-13-tyhicks@linux.microsoft.com>
+In-Reply-To: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,14 +24,16 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Mimi Zohar <zohar@linux.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: Janne Karhunen <janne.karhunen@gmail.com>, Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
+Cc: Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-This series ultimately extends the supported IMA rule conditionals for
-the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
-IMA language conditional support for KEXEC_CMDLINE rules in comparison
-to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
-rules do not support *any* conditionals so you cannot have a sequence of
-rules like this:
+Take the properties of the kexec kernel's inode and the current task
+ownership into consideration when matching a KEXEC_CMDLINE operation to
+the rules in the IMA policy. This allows for some uniformity when
+writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
+and KEXEC_CMDLINE operations.
+
+Prior to this patch, it was not possible to write a set of rules like
+this:
 
  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
@@ -38,86 +42,227 @@ rules like this:
  measure func=KEXEC_INITRAMFS_CHECK
  measure func=KEXEC_CMDLINE
 
-Instead, KEXEC_CMDLINE rules can only be measured or not measured and
-there's no additional flexibility in today's implementation of the
-KEXEC_CMDLINE hook function.
+The inode information associated with the kernel being loaded by a
+kexec_kernel_load(2) syscall can now be included in the decision to
+measure or not
 
-With this series, the above sequence of rules becomes valid and any
-calls to kexec_file_load() with a kernel and initramfs inode type of
-foo_t will not be measured (that includes the kernel cmdline buffer)
-while all other objects given to a kexec_file_load() syscall will be
-measured. There's obviously not an inode directly associated with the
-kernel cmdline buffer but this patch series ties the inode based
-decision making for KEXEC_CMDLINE to the kernel's inode. I think this
-will be intuitive to policy authors.
+Additonally, the uid, euid, and subj_* conditionals can also now be
+used in KEXEC_CMDLINE rules. There was no technical reason as to why
+those conditionals weren't being considered previously other than
+ima_match_rules() didn't have a valid inode to use so it immediately
+bailed out for KEXEC_CMDLINE operations rather than going through the
+full list of conditional comparisons.
 
-While reading IMA code and preparing to make this change, I realized
-that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
-quite special in comparison to longer standing hook functions. These
-buffer based hook functions can only support measure actions and there
-are some restrictions on the conditionals that they support. However,
-the rule parser isn't enforcing any of those restrictions and IMA policy
-authors wouldn't have any immediate way of knowing that the policy that
-they wrote is invalid. For example, the sequence of rules above parses
-successfully in today's kernel but the
-"dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
-ima_match_rules(). The dont_measure rule is *always* considered to be a
-match so, surprisingly, no KEXEC_CMDLINE measurements are made.
+Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org
+---
+ include/linux/ima.h                          |  4 ++--
+ kernel/kexec_file.c                          |  2 +-
+ security/integrity/ima/ima.h                 |  3 ++-
+ security/integrity/ima/ima_api.c             |  2 +-
+ security/integrity/ima/ima_appraise.c        |  2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |  2 +-
+ security/integrity/ima/ima_main.c            | 24 +++++++++++++++-----
+ security/integrity/ima/ima_policy.c          | 17 +++++---------
+ security/integrity/ima/ima_queue_keys.c      |  2 +-
+ 9 files changed, 33 insertions(+), 25 deletions(-)
 
-While making the rule parser more strict, I realized that the parser
-does not correctly free all of the allocated memory associated with an
-ima_rule_entry when going down some error paths. Invalid policy loaded
-by the policy administrator could result in small memory leaks.
-
-I envision patches 1-7 going to stable. The series is ordered in a way
-that has all the fixes up front, followed by cleanups, followed by the
-feature patch. The breakdown of patches looks like so:
-
- Memory leak fixes: 1-4
- Parser strictness fixes: 5-7
- Code cleanups made possible by the fixes: 8-11
- Extend KEXEC_CMDLINE rule support: 12
-
-Perhaps the most logical ordering for code review is:
-
- 1, 2, 3, 4, 8, 9, 5, 6, 7, 10, 11, 12
-
-If you'd like me to re-order or split up the series, just let me know.
-Thanks for considering these patches!
-
-Tyler
-
-Tyler Hicks (12):
-  ima: Have the LSM free its audit rule
-  ima: Create a function to free a rule entry
-  ima: Free the entire rule when deleting a list of rules
-  ima: Free the entire rule if it fails to parse
-  ima: Fail rule parsing when buffer hook functions have an invalid
-    action
-  ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an
-    invalid cond
-  ima: Fail rule parsing when the KEY_CHECK hook is combined with an
-    invalid cond
-  ima: Shallow copy the args_p member of ima_rule_entry.lsm elements
-  ima: Use correct type for the args_p member of ima_rule_entry.lsm
-    elements
-  ima: Move validation of the keyrings conditional into
-    ima_validate_rule()
-  ima: Use the common function to detect LSM conditionals in a rule
-  ima: Support additional conditionals in the KEXEC_CMDLINE hook
-    function
-
- include/linux/ima.h                          |   4 +-
- kernel/kexec_file.c                          |   2 +-
- security/integrity/ima/ima.h                 |   9 +-
- security/integrity/ima/ima_api.c             |   2 +-
- security/integrity/ima/ima_appraise.c        |   2 +-
- security/integrity/ima/ima_asymmetric_keys.c |   2 +-
- security/integrity/ima/ima_main.c            |  24 ++-
- security/integrity/ima/ima_policy.c          | 159 ++++++++++++++-----
- security/integrity/ima/ima_queue_keys.c      |   2 +-
- 9 files changed, 148 insertions(+), 58 deletions(-)
-
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 9164e1534ec9..d15100de6cdd 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -25,7 +25,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+ 			      enum kernel_read_file_id id);
+ extern void ima_post_path_mknod(struct dentry *dentry);
+ extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+-extern void ima_kexec_cmdline(const void *buf, int size);
++extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
+ 
+ #ifdef CONFIG_IMA_KEXEC
+ extern void ima_add_kexec_buffer(struct kimage *image);
+@@ -103,7 +103,7 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+ 	return -EOPNOTSUPP;
+ }
+ 
+-static inline void ima_kexec_cmdline(const void *buf, int size) {}
++static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
+ #endif /* CONFIG_IMA */
+ 
+ #ifndef CONFIG_IMA_KEXEC
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index bb05fd52de85..07df431c1f21 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -287,7 +287,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 			goto out;
+ 		}
+ 
+-		ima_kexec_cmdline(image->cmdline_buf,
++		ima_kexec_cmdline(kernel_fd, image->cmdline_buf,
+ 				  image->cmdline_buf_len - 1);
+ 	}
+ 
+diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+index de05d7f1d3ec..ed9307dd0e60 100644
+--- a/security/integrity/ima/ima.h
++++ b/security/integrity/ima/ima.h
+@@ -251,7 +251,8 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+ 			   struct ima_template_desc *template_desc);
+ void process_buffer_measurement(const void *buf, int size,
+ 				const char *eventname, enum ima_hooks func,
+-				int pcr, const char *keyring);
++				int pcr, struct inode *inode,
++				const char *keyring);
+ void ima_audit_measurement(struct integrity_iint_cache *iint,
+ 			   const unsigned char *filename);
+ int ima_alloc_init_template(struct ima_event_data *event_data,
+diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+index bf22de8b7ce0..4f39fb93f278 100644
+--- a/security/integrity/ima/ima_api.c
++++ b/security/integrity/ima/ima_api.c
+@@ -162,7 +162,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+ 
+ /**
+  * ima_get_action - appraise & measure decision based on policy.
+- * @inode: pointer to inode to measure
++ * @inode: pointer to the inode associated with the object being validated
+  * @cred: pointer to credentials structure to validate
+  * @secid: secid of the task being validated
+  * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXEC,
+diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+index a9649b04b9f1..0c11aeefea24 100644
+--- a/security/integrity/ima/ima_appraise.c
++++ b/security/integrity/ima/ima_appraise.c
+@@ -330,7 +330,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
+ 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
+ 			process_buffer_measurement(digest, digestsize,
+ 						   "blacklisted-hash", NONE,
+-						   pcr, NULL);
++						   pcr, NULL, NULL);
+ 	}
+ 
+ 	return rc;
+diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+index aaae80c4e376..585b64557094 100644
+--- a/security/integrity/ima/ima_asymmetric_keys.c
++++ b/security/integrity/ima/ima_asymmetric_keys.c
+@@ -60,5 +60,5 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+ 	 */
+ 	process_buffer_measurement(payload, payload_len,
+ 				   keyring->description, KEY_CHECK, 0,
+-				   keyring->description);
++				   NULL, keyring->description);
+ }
+diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+index c1583d98c5e5..82acd66bf653 100644
+--- a/security/integrity/ima/ima_main.c
++++ b/security/integrity/ima/ima_main.c
+@@ -731,13 +731,15 @@ int ima_load_data(enum kernel_load_data_id id)
+  * @eventname: event name to be used for the buffer entry.
+  * @func: IMA hook
+  * @pcr: pcr to extend the measurement
++ * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
+  * @keyring: keyring name to determine the action to be performed
+  *
+  * Based on policy, the buffer is measured into the ima log.
+  */
+ void process_buffer_measurement(const void *buf, int size,
+ 				const char *eventname, enum ima_hooks func,
+-				int pcr, const char *keyring)
++				int pcr, struct inode *inode,
++				const char *keyring)
+ {
+ 	int ret = 0;
+ 	struct ima_template_entry *entry = NULL;
+@@ -767,7 +769,7 @@ void process_buffer_measurement(const void *buf, int size,
+ 	 */
+ 	if (func) {
+ 		security_task_getsecid(current, &secid);
+-		action = ima_get_action(NULL, current_cred(), secid, 0, func,
++		action = ima_get_action(inode, current_cred(), secid, 0, func,
+ 					&pcr, &template, keyring);
+ 		if (!(action & IMA_MEASURE))
+ 			return;
+@@ -815,16 +817,26 @@ void process_buffer_measurement(const void *buf, int size,
+ 
+ /**
+  * ima_kexec_cmdline - measure kexec cmdline boot args
++ * @kernel_fd: file descriptor of the kexec kernel being loaded
+  * @buf: pointer to buffer
+  * @size: size of buffer
+  *
+  * Buffers can only be measured, not appraised.
+  */
+-void ima_kexec_cmdline(const void *buf, int size)
++void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
+ {
+-	if (buf && size != 0)
+-		process_buffer_measurement(buf, size, "kexec-cmdline",
+-					   KEXEC_CMDLINE, 0, NULL);
++	struct fd f;
++
++	if (!buf || !size)
++		return;
++
++	f = fdget(kernel_fd);
++	if (!f.file)
++		return;
++
++	process_buffer_measurement(buf, size, "kexec-cmdline", KEXEC_CMDLINE, 0,
++				   file_inode(f.file), NULL);
++	fdput(f);
+ }
+ 
+ static int __init init_ima(void)
+diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+index 0ca9902287bf..5a6aee530011 100644
+--- a/security/integrity/ima/ima_policy.c
++++ b/security/integrity/ima/ima_policy.c
+@@ -442,13 +442,9 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+ {
+ 	int i;
+ 
+-	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
+-		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
+-			if (func == KEY_CHECK)
+-				return ima_match_keyring(rule, keyring, cred);
+-			return true;
+-		}
+-		return false;
++	if (func == KEY_CHECK) {
++		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
++		       ima_match_keyring(rule, keyring, cred);
+ 	}
+ 	if ((rule->flags & IMA_FUNC) &&
+ 	    (rule->func != func && func != POST_SETATTR))
+@@ -1003,10 +999,9 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+ 			if (entry->action & ~(MEASURE | DONT_MEASURE))
+ 				return false;
+ 
+-			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
+-				return false;
+-
+-			if (ima_rule_contains_lsm_cond(entry))
++			if (entry->flags & ~(IMA_FUNC | IMA_FSMAGIC | IMA_UID |
++					     IMA_FOWNER | IMA_FSUUID |
++					     IMA_EUID | IMA_PCR | IMA_FSNAME))
+ 				return false;
+ 
+ 			break;
+diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+index cb3e3f501593..7c69d7397832 100644
+--- a/security/integrity/ima/ima_queue_keys.c
++++ b/security/integrity/ima/ima_queue_keys.c
+@@ -156,7 +156,7 @@ void ima_process_queued_keys(void)
+ 			process_buffer_measurement(entry->payload,
+ 						   entry->payload_len,
+ 						   entry->keyring_name,
+-						   KEY_CHECK, 0,
++						   KEY_CHECK, 0, NULL,
+ 						   entry->keyring_name);
+ 		list_del(&entry->list);
+ 		ima_free_key_entry(entry);
 -- 
 2.25.1
 
