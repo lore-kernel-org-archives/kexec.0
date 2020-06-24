@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from verein.lst.de ([213.95.11.211])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jo0Fb-0006Qz-Cu
- for kexec@lists.infradead.org; Wed, 24 Jun 2020 07:55:20 +0000
-Date: Wed, 24 Jun 2020 09:55:16 +0200
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 1/1] fs: move kernel_read_file* to its own include file
-Message-ID: <20200624075516.GA20553@lst.de>
-References: <20200617161218.18487-1-scott.branden@broadcom.com>
+ id 1jo16L-0004yn-Ko
+ for kexec@lists.infradead.org; Wed, 24 Jun 2020 08:49:50 +0000
+Date: Wed, 24 Jun 2020 10:49:47 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 1/3] crash: add VMCOREINFO macro to define offset in a
+ struct declared by typedef
+Message-ID: <20200624084947.GA6156@alley>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-2-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200617161218.18487-1-scott.branden@broadcom.com>
+In-Reply-To: <20200618144919.9806-2-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,12 +25,21 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: "Rafael J . Wysocki" <rafael@kernel.org>, Mimi Zohar <zohar@linux.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Christoph Hellwig <hch@lst.de>, Paul Moore <paul@paul-moore.com>, James Morris <jmorris@namei.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, "Serge E . Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Eric Paris <eparis@parisplace.org>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-fsdevel@vger.kernel.org, linux-integrity@vger.kernel.org
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Looks good,
+On Thu 2020-06-18 16:55:17, John Ogness wrote:
+> The existing macro VMCOREINFO_OFFSET() can't be used for structures
+> declared via typedef because "struct" is not part of type definition.
+> 
+> Create another macro for this purpose.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-Reviewed-by: Christoph Hellwig <hch@lst.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
