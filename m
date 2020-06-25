@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1joMCw-0000yl-ET
- for kexec@lists.infradead.org; Thu, 25 Jun 2020 07:22:03 +0000
-Date: Thu, 25 Jun 2020 15:19:59 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v3 0/3] printk: replace ringbuffer
-Message-ID: <20200625071959.GA18744@dhcp-128-65.nay.redhat.com>
+ id 1joN42-0007O6-JL
+ for kexec@lists.infradead.org; Thu, 25 Jun 2020 08:16:55 +0000
+Date: Thu, 25 Jun 2020 10:16:50 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: truncate dict: was: Re: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+Message-ID: <20200625081650.GE6156@alley>
 References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200618144919.9806-1-john.ogness@linutronix.de>
+In-Reply-To: <20200618144919.9806-4-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,31 +26,59 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi John,
-On 06/18/20 at 04:55pm, John Ogness wrote:
-> Hello,
-> 
-> Here is a v3 for the first series to rework the printk
-> subsystem. The v2 and history are here [0]. This first series
-> only replaces the existing ringbuffer implementation. No locking
-> is removed. No semantics/behavior of printk are changed.
-> 
-> Reviews on the ringbuffer are still ongoing, but I was asked to
-> post this new version since several changes from v2 have been
-> already agreed upon.
-> 
-> The series is based on v5.8-rc1.
+On Thu 2020-06-18 16:55:19, John Ogness wrote:
+> Replace the existing ringbuffer usage and implementation with
+> lockless ringbuffer usage. Even though the new ringbuffer does not
+> require locking, all existing locking is left in place. Therefore,
+> this change is purely replacing the underlining ringbuffer.
 
-Do you have the kdump userspace part link so that people can try
-and do some testing?
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -594,22 +473,26 @@ static u32 msg_used_size(u16 text_len, u16 dict_len, u32 *pad_len)
+>  #define MAX_LOG_TAKE_PART 4
+>  static const char trunc_msg[] = "<truncated>";
+>  
+> -static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+> -			u16 *dict_len, u32 *pad_len)
+> +static void truncate_msg(u16 *text_len, u16 *trunc_msg_len, u16 *dict_len)
+>  {
+>  	/*
+>  	 * The message should not take the whole buffer. Otherwise, it might
+>  	 * get removed too soon.
+>  	 */
+>  	u32 max_text_len = log_buf_len / MAX_LOG_TAKE_PART;
+> +
+>  	if (*text_len > max_text_len)
+>  		*text_len = max_text_len;
+> -	/* enable the warning message */
+> +
+> +	/* enable the warning message (if there is room) */
+>  	*trunc_msg_len = strlen(trunc_msg);
+> +	if (*text_len >= *trunc_msg_len)
+> +		*text_len -= *trunc_msg_len;
+> +	else
+> +		*trunc_msg_len = 0;
+> +
+>  	/* disable the "dict" completely */
+>  	*dict_len = 0;
 
-Eg. some makedumpfile/crash tool git branch etc.
+The dictionary does not longer need to be removed at this point.
+It is stored in a separate buffer. It is ignored by prb_reserve()
+when there is not enough space for it.
 
-Thanks
-Dave
+> -	/* compute the size again, count also the warning message */
+> -	return msg_used_size(*text_len + *trunc_msg_len, 0, pad_len);
+>  }
+>  
+>  /* insert record into the buffer, discard old ones, update heads */
 
+Best Regards,
+Petr
+
+PS: I am still in the middle of review of this patch. I decided to
+send the tree comments that I already have separately.
 
 _______________________________________________
 kexec mailing list
