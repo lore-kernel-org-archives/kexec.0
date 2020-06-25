@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1joTki-0003Mz-VT
- for kexec@lists.infradead.org; Thu, 25 Jun 2020 15:25:25 +0000
-Date: Thu, 25 Jun 2020 17:25:23 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: record_printk_text tricks: was: [PATCH v3 3/3] printk: use the
- lockless ringbuffer
-Message-ID: <20200625152523.GJ8444@alley>
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
- <20200625120946.GG6156@alley>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200625120946.GG6156@alley>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by casper.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1joanl-0004go-N8
+ for kexec@lists.infradead.org; Thu, 25 Jun 2020 22:57:05 +0000
+Message-ID: <1593125804.27152.426.camel@linux.ibm.com>
+Subject: Re: [PATCH 12/12] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Thu, 25 Jun 2020 18:56:44 -0400
+In-Reply-To: <20200623003236.830149-13-tyhicks@linux.microsoft.com>
+References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
+ <20200623003236.830149-13-tyhicks@linux.microsoft.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,42 +20,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Tyler Hicks <tyhicks@linux.microsoft.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-On Thu 2020-06-25 14:09:46, Petr Mladek wrote:
-> On Thu 2020-06-18 16:55:19, John Ogness wrote:
-> > Replace the existing ringbuffer usage and implementation with
-> > lockless ringbuffer usage. Even though the new ringbuffer does not
-> > require locking, all existing locking is left in place. Therefore,
-> > this change is purely replacing the underlining ringbuffer.
-> 
-> > --- a/kernel/printk/printk.c
-> > +++ b/kernel/printk/printk.c
-> > +static size_t record_print_text(struct printk_record *r, bool syslog,
-> > +				bool time)
-
-[...]
-
-> > +static size_t get_record_text_size(struct printk_info *info,
-> > +				   unsigned int line_count,
-> > +				   bool syslog, bool time)
-> > +{
-
-Nit: This should get called get_record_print_text_size(). It will make
-it more clear that it counts the prefixes added for printing.
-
-Best Regards,
-Petr
-
-PS: I have finished review of this 3rd patch. I am going to look at
-the 2nd patch the following week if I find the courage ;-)
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCAyMDIwLTA2LTIyIGF0IDE5OjMyIC0wNTAwLCBUeWxlciBIaWNrcyB3cm90ZToKPiBU
+YWtlIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBrZXhlYyBrZXJuZWwncyBpbm9kZSBhbmQgdGhlIGN1
+cnJlbnQgdGFzawo+IG93bmVyc2hpcCBpbnRvIGNvbnNpZGVyYXRpb24gd2hlbiBtYXRjaGluZyBh
+IEtFWEVDX0NNRExJTkUgb3BlcmF0aW9uIHRvCj4gdGhlIHJ1bGVzIGluIHRoZSBJTUEgcG9saWN5
+LiBUaGlzIGFsbG93cyBmb3Igc29tZSB1bmlmb3JtaXR5IHdoZW4KPiB3cml0aW5nIElNQSBwb2xp
+Y3kgcnVsZXMgZm9yIEtFWEVDX0tFUk5FTF9DSEVDSywgS0VYRUNfSU5JVFJBTUZTX0NIRUNLLAo+
+IGFuZCBLRVhFQ19DTURMSU5FIG9wZXJhdGlvbnMuCj4gCj4gUHJpb3IgdG8gdGhpcyBwYXRjaCwg
+aXQgd2FzIG5vdCBwb3NzaWJsZSB0byB3cml0ZSBhIHNldCBvZiBydWxlcyBsaWtlCj4gdGhpczoK
+PiAKPiAgZG9udF9tZWFzdXJlIGZ1bmM9S0VYRUNfS0VSTkVMX0NIRUNLIG9ial90eXBlPWZvb190
+Cj4gIGRvbnRfbWVhc3VyZSBmdW5jPUtFWEVDX0lOSVRSQU1GU19DSEVDSyBvYmpfdHlwZT1mb29f
+dAo+ICBkb250X21lYXN1cmUgZnVuYz1LRVhFQ19DTURMSU5FIG9ial90eXBlPWZvb190Cj4gIG1l
+YXN1cmUgZnVuYz1LRVhFQ19LRVJORUxfQ0hFQ0sKPiAgbWVhc3VyZSBmdW5jPUtFWEVDX0lOSVRS
+QU1GU19DSEVDSwo+ICBtZWFzdXJlIGZ1bmM9S0VYRUNfQ01ETElORQo+IAo+IFRoZSBpbm9kZSBp
+bmZvcm1hdGlvbiBhc3NvY2lhdGVkIHdpdGggdGhlIGtlcm5lbCBiZWluZyBsb2FkZWQgYnkgYQo+
+IGtleGVjX2tlcm5lbF9sb2FkKDIpIHN5c2NhbGwgY2FuIG5vdyBiZSBpbmNsdWRlZCBpbiB0aGUg
+ZGVjaXNpb24gdG8KPiBtZWFzdXJlIG9yIG5vdAo+IAo+IEFkZGl0b25hbGx5LCB0aGUgdWlkLCBl
+dWlkLCBhbmQgc3Vial8qIGNvbmRpdGlvbmFscyBjYW4gYWxzbyBub3cgYmUKPiB1c2VkIGluIEtF
+WEVDX0NNRExJTkUgcnVsZXMuIFRoZXJlIHdhcyBubyB0ZWNobmljYWwgcmVhc29uIGFzIHRvIHdo
+eQo+IHRob3NlIGNvbmRpdGlvbmFscyB3ZXJlbid0IGJlaW5nIGNvbnNpZGVyZWQgcHJldmlvdXNs
+eSBvdGhlciB0aGFuCj4gaW1hX21hdGNoX3J1bGVzKCkgZGlkbid0IGhhdmUgYSB2YWxpZCBpbm9k
+ZSB0byB1c2Ugc28gaXQgaW1tZWRpYXRlbHkKPiBiYWlsZWQgb3V0IGZvciBLRVhFQ19DTURMSU5F
+IG9wZXJhdGlvbnMgcmF0aGVyIHRoYW4gZ29pbmcgdGhyb3VnaCB0aGUKPiBmdWxsIGxpc3Qgb2Yg
+Y29uZGl0aW9uYWwgY29tcGFyaXNvbnMuCgpUaGlzIG1ha2VzIGEgbG90IG9mIHNlbnNlLgoKPHNu
+aXA+CsKgCj4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYyBi
+L3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+IGluZGV4IGMxNTgzZDk4YzVlNS4u
+ODJhY2Q2NmJmNjUzIDEwMDY0NAo+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21h
+aW4uYwo+ICsrKyBiL3NlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21haW4uYwo+IEBAIC03MzEs
+MTMgKzczMSwxNSBAQCBpbnQgaW1hX2xvYWRfZGF0YShlbnVtIGtlcm5lbF9sb2FkX2RhdGFfaWQg
+aWQpCj4gICAqIEBldmVudG5hbWU6IGV2ZW50IG5hbWUgdG8gYmUgdXNlZCBmb3IgdGhlIGJ1ZmZl
+ciBlbnRyeS4KPiAgICogQGZ1bmM6IElNQSBob29rCj4gICAqIEBwY3I6IHBjciB0byBleHRlbmQg
+dGhlIG1lYXN1cmVtZW50Cj4gKyAqIEBpbm9kZTogaW5vZGUgYXNzb2NpYXRlZCB3aXRoIHRoZSBv
+YmplY3QgYmVpbmcgbWVhc3VyZWQgKE5VTEwgZm9yIEtFWV9DSEVDSykKPiAgICogQGtleXJpbmc6
+IGtleXJpbmcgbmFtZSB0byBkZXRlcm1pbmUgdGhlIGFjdGlvbiB0byBiZSBwZXJmb3JtZWQKPiAg
+ICoKPiAgICogQmFzZWQgb24gcG9saWN5LCB0aGUgYnVmZmVyIGlzIG1lYXN1cmVkIGludG8gdGhl
+IGltYSBsb2cuCj4gICAqLwo+ICB2b2lkIHByb2Nlc3NfYnVmZmVyX21lYXN1cmVtZW50KGNvbnN0
+IHZvaWQgKmJ1ZiwgaW50IHNpemUsCj4gIAkJCQljb25zdCBjaGFyICpldmVudG5hbWUsIGVudW0g
+aW1hX2hvb2tzIGZ1bmMsCj4gLQkJCQlpbnQgcGNyLCBjb25zdCBjaGFyICprZXlyaW5nKQo+ICsJ
+CQkJaW50IHBjciwgc3RydWN0IGlub2RlICppbm9kZSwKPiArCQkJCWNvbnN0IGNoYXIgKmtleXJp
+bmcpCj4gIHsKClRoZSBmaWxlIGRlc2NyaXB0b3IgaXMgcGFzc2VkIGFzIHRoZSBmaXJzdCBhcmcg
+dG8KcHJvY2Vzc19tZWFzdXJlbWVudCgpLiDCoFNvcnJ5IGZvciB0aGUgcGF0Y2ggY2h1cm4sIGJ1
+dCBjb3VsZCB3ZSBkbyB0aGUKc2FtZSBmb3IgcHJvY2Vzc19idWZmZXJfbWVhc3VyZW1lbnRzLiDC
+oEFzIG11Y2ggYXMgcG9zc2libGUgbGV0cyBrZWVwCnRoZW0gaW4gc2FtZS4KCnRoYW5rcywKCk1p
+bWkKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
