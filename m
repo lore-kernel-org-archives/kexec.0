@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jotgJ-0008Cx-Qj
- for kexec@lists.infradead.org; Fri, 26 Jun 2020 19:06:37 +0000
-Subject: [PATCH 11/11] ppc64/kexec_file: add appropriate regions for memory
- reserve map
-From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Sat, 27 Jun 2020 00:36:18 +0530
-Message-ID: <159319837868.16351.14592923589220822484.stgit@hbathini.in.ibm.com>
-In-Reply-To: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+Received: from linux.microsoft.com ([13.77.154.182])
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jox0I-00039f-3F
+ for kexec@lists.infradead.org; Fri, 26 Jun 2020 22:39:27 +0000
+From: Tyler Hicks <tyhicks@linux.microsoft.com>
+Subject: [PATCH v2 00/11] ima: Fix rule parsing bugs and extend KEXEC_CMDLINE
+ rule support
+Date: Fri, 26 Jun 2020 17:38:49 -0500
+Message-Id: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,120 +21,111 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Mimi Zohar <zohar@linux.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Janne Karhunen <janne.karhunen@gmail.com>, Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-While initrd, elfcorehdr and backup regions are already added to the
-reserve map, there are a few missing regions that need to be added to
-the memory reserve map. Add them here. And now that all the changes
-to load panic kernel are in place, claim likewise.
+This series ultimately extends the supported IMA rule conditionals for
+the KEXEC_CMDLINE hook function. As of today, there's an imbalance in
+IMA language conditional support for KEXEC_CMDLINE rules in comparison
+to KEXEC_KERNEL_CHECK and KEXEC_INITRAMFS_CHECK rules. The KEXEC_CMDLINE
+rules do not support *any* conditionals so you cannot have a sequence of
+rules like this:
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
- arch/powerpc/kexec/file_load_64.c |   61 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 56 insertions(+), 5 deletions(-)
+ dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+ dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+ dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+ measure func=KEXEC_KERNEL_CHECK
+ measure func=KEXEC_INITRAMFS_CHECK
+ measure func=KEXEC_CMDLINE
 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 58fc2d8..813453d 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -185,6 +185,38 @@ static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
- }
- 
- /**
-+ * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
-+ *                              memory regions that should be added to the
-+ *                              memory reserve map to ensure the region is
-+ *                              protected from any mischeif.
-+ * @mem_ranges:                 Range list to add the memory ranges to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+static int get_reserved_memory_ranges(struct crash_mem **mem_ranges)
-+{
-+	int ret;
-+
-+	ret = add_rtas_mem_range(mem_ranges, false);
-+	if (ret)
-+		goto out;
-+
-+	ret = add_opal_mem_range(mem_ranges, false);
-+	if (ret)
-+		goto out;
-+
-+	ret = add_tce_mem_ranges(mem_ranges);
-+	if (ret)
-+		goto out;
-+
-+	ret = add_reserved_ranges(mem_ranges);
-+out:
-+	if (ret)
-+		pr_err("Failed to setup reserved memory ranges\n");
-+	return ret;
-+}
-+
-+/**
-  * __locate_mem_hole_ppc64 - Tests if the memory hole between buf_min & buf_max
-  *                           is large enough for the buffer. If true, sets
-  *                           kbuf->mem to the buffer.
-@@ -1182,8 +1214,8 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
- 			unsigned long initrd_load_addr,
- 			unsigned long initrd_len, const char *cmdline)
- {
--	struct crash_mem *umem = NULL;
--	int chosen_node, ret;
-+	struct crash_mem *umem = NULL, *rmem = NULL;
-+	int i, chosen_node, ret;
- 
- 	/* Remove memory reservation for the current device tree. */
- 	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
-@@ -1229,6 +1261,24 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
- 		}
- 	}
- 
-+	/* Update memory reserve map */
-+	ret = get_reserved_memory_ranges(&rmem);
-+	if (ret)
-+		goto out;
-+
-+	for (i = 0; i < rmem->nr_ranges; i++) {
-+		u64 base, size;
-+
-+		base = rmem->ranges[i].start;
-+		size = rmem->ranges[i].end - base + 1;
-+		ret = fdt_add_mem_rsv(fdt, base, size);
-+		if (ret) {
-+			pr_err("Error updating memory reserve map: %s\n",
-+			       fdt_strerror(ret));
-+			goto out;
-+		}
-+	}
-+
- 	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
- 			    cmdline, &chosen_node);
- 	if (ret)
-@@ -1239,6 +1289,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
- 		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
- out:
- 	kfree(umem);
-+	kfree(rmem);
- 	return ret;
- }
- 
-@@ -1378,10 +1429,10 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 
- 		/* Get exclude memory ranges needed for setting up kdump segments */
- 		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
--		if (ret)
-+		if (ret) {
- 			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
--		/* Return this until all changes for panic kernel are in */
--		return -EOPNOTSUPP;
-+			return ret;
-+		}
- 	}
- 
- 	return kexec_image_probe_default(image, buf, buf_len);
+Instead, KEXEC_CMDLINE rules can only be measured or not measured and
+there's no additional flexibility in today's implementation of the
+KEXEC_CMDLINE hook function.
+
+With this series, the above sequence of rules becomes valid and any
+calls to kexec_file_load() with a kernel and initramfs inode type of
+foo_t will not be measured (that includes the kernel cmdline buffer)
+while all other objects given to a kexec_file_load() syscall will be
+measured. There's obviously not an inode directly associated with the
+kernel cmdline buffer but this patch series ties the inode based
+decision making for KEXEC_CMDLINE to the kernel's inode. I think this
+will be intuitive to policy authors.
+
+While reading IMA code and preparing to make this change, I realized
+that the buffer based hook functions (KEXEC_CMDLINE and KEY_CHECK) are
+quite special in comparison to longer standing hook functions. These
+buffer based hook functions can only support measure actions and there
+are some restrictions on the conditionals that they support. However,
+the rule parser isn't enforcing any of those restrictions and IMA policy
+authors wouldn't have any immediate way of knowing that the policy that
+they wrote is invalid. For example, the sequence of rules above parses
+successfully in today's kernel but the
+"dont_measure func=KEXEC_CMDLINE ..." rule is incorrectly handled in
+ima_match_rules(). The dont_measure rule is *always* considered to be a
+match so, surprisingly, no KEXEC_CMDLINE measurements are made.
+
+While making the rule parser more strict, I realized that the parser
+does not correctly free all of the allocated memory associated with an
+ima_rule_entry when going down some error paths. Invalid policy loaded
+by the policy administrator could result in small memory leaks.
+
+I envision patches 1-6 going to stable. The series is ordered in a way
+that has all the fixes up front, followed by cleanups, followed by the
+feature patch. The breakdown of patches looks like so:
+
+ Memory leak fixes: 1-3
+ Parser strictness fixes: 4-6
+ Code cleanups made possible by the fixes: 7-10
+ Extend KEXEC_CMDLINE rule support: 11
+
+Perhaps the most logical ordering for code review is:
+
+ 1, 2, 3, 7, 8, 4, 5, 6, 9, 10, 11
+
+If you'd like me to re-order or split up the series, just let me know.
+Thanks for considering these patches!
+
+* Series-wide v2 changes
+  - Rebased onto next-integrity-testing
+  - Squashed patches 2 and 3 from v1
+    + Updated this cover letter to account for changes to patch index
+      changes
+    + See patch 2 for specific code changes
+
+Tyler
+
+Tyler Hicks (11):
+  ima: Have the LSM free its audit rule
+  ima: Free the entire rule when deleting a list of rules
+  ima: Free the entire rule if it fails to parse
+  ima: Fail rule parsing when buffer hook functions have an invalid
+    action
+  ima: Fail rule parsing when the KEXEC_CMDLINE hook is combined with an
+    invalid cond
+  ima: Fail rule parsing when the KEY_CHECK hook is combined with an
+    invalid cond
+  ima: Shallow copy the args_p member of ima_rule_entry.lsm elements
+  ima: Use correct type for the args_p member of ima_rule_entry.lsm
+    elements
+  ima: Move validation of the keyrings conditional into
+    ima_validate_rule()
+  ima: Use the common function to detect LSM conditionals in a rule
+  ima: Support additional conditionals in the KEXEC_CMDLINE hook
+    function
+
+ include/linux/ima.h                          |   4 +-
+ kernel/kexec_file.c                          |   2 +-
+ security/integrity/ima/ima.h                 |   7 +-
+ security/integrity/ima/ima_api.c             |   2 +-
+ security/integrity/ima/ima_appraise.c        |   2 +-
+ security/integrity/ima/ima_asymmetric_keys.c |   2 +-
+ security/integrity/ima/ima_main.c            |  23 ++-
+ security/integrity/ima/ima_policy.c          | 161 ++++++++++++++-----
+ security/integrity/ima/ima_queue_keys.c      |   2 +-
+ 9 files changed, 148 insertions(+), 57 deletions(-)
+
+-- 
+2.25.1
 
 
 _______________________________________________
