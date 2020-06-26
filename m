@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from linux.microsoft.com ([13.77.154.182])
- by casper.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1joaqi-0004yW-PA
- for kexec@lists.infradead.org; Thu, 25 Jun 2020 23:00:08 +0000
-Date: Thu, 25 Jun 2020 17:59:57 -0500
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
-Subject: Re: [PATCH 12/12] ima: Support additional conditionals in the
- KEXEC_CMDLINE hook function
-Message-ID: <20200625225957.GC4694@sequoia>
-References: <20200623003236.830149-1-tyhicks@linux.microsoft.com>
- <20200623003236.830149-13-tyhicks@linux.microsoft.com>
- <1593125804.27152.426.camel@linux.ibm.com>
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1joois-00044C-01
+ for kexec@lists.infradead.org; Fri, 26 Jun 2020 13:48:54 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: truncate dict: was: Re: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625081650.GE6156@alley>
+Date: Fri, 26 Jun 2020 15:48:42 +0200
+In-Reply-To: <20200625081650.GE6156@alley> (Petr Mladek's message of "Thu, 25
+ Jun 2020 10:16:50 +0200")
+Message-ID: <87wo3u2b0l.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1593125804.27152.426.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,90 +22,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On 2020-06-25 18:56:44, Mimi Zohar wrote:
-> On Mon, 2020-06-22 at 19:32 -0500, Tyler Hicks wrote:
-> > Take the properties of the kexec kernel's inode and the current task
-> > ownership into consideration when matching a KEXEC_CMDLINE operation to
-> > the rules in the IMA policy. This allows for some uniformity when
-> > writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
-> > and KEXEC_CMDLINE operations.
-> > =
+On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -594,22 +473,26 @@ static u32 msg_used_size(u16 text_len, u16 dict_len, u32 *pad_len)
+>>  #define MAX_LOG_TAKE_PART 4
+>>  static const char trunc_msg[] = "<truncated>";
+>>  
+>> -static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+>> -			u16 *dict_len, u32 *pad_len)
+>> +static void truncate_msg(u16 *text_len, u16 *trunc_msg_len, u16 *dict_len)
+>>  {
+>>  	/*
+>>  	 * The message should not take the whole buffer. Otherwise, it might
+>>  	 * get removed too soon.
+>>  	 */
+>>  	u32 max_text_len = log_buf_len / MAX_LOG_TAKE_PART;
+>> +
+>>  	if (*text_len > max_text_len)
+>>  		*text_len = max_text_len;
+>> -	/* enable the warning message */
+>> +
+>> +	/* enable the warning message (if there is room) */
+>>  	*trunc_msg_len = strlen(trunc_msg);
+>> +	if (*text_len >= *trunc_msg_len)
+>> +		*text_len -= *trunc_msg_len;
+>> +	else
+>> +		*trunc_msg_len = 0;
+>> +
+>>  	/* disable the "dict" completely */
+>>  	*dict_len = 0;
+>
+> The dictionary does not longer need to be removed at this point.
+> It is stored in a separate buffer. It is ignored by prb_reserve()
+> when there is not enough space for it.
 
-> > Prior to this patch, it was not possible to write a set of rules like
-> > this:
-> > =
+Agreed. @dict_len argument will also be dropped from the function.
 
-> >  dont_measure func=3DKEXEC_KERNEL_CHECK obj_type=3Dfoo_t
-> >  dont_measure func=3DKEXEC_INITRAMFS_CHECK obj_type=3Dfoo_t
-> >  dont_measure func=3DKEXEC_CMDLINE obj_type=3Dfoo_t
-> >  measure func=3DKEXEC_KERNEL_CHECK
-> >  measure func=3DKEXEC_INITRAMFS_CHECK
-> >  measure func=3DKEXEC_CMDLINE
-> > =
-
-> > The inode information associated with the kernel being loaded by a
-> > kexec_kernel_load(2) syscall can now be included in the decision to
-> > measure or not
-> > =
-
-> > Additonally, the uid, euid, and subj_* conditionals can also now be
-> > used in KEXEC_CMDLINE rules. There was no technical reason as to why
-> > those conditionals weren't being considered previously other than
-> > ima_match_rules() didn't have a valid inode to use so it immediately
-> > bailed out for KEXEC_CMDLINE operations rather than going through the
-> > full list of conditional comparisons.
-> =
-
-> This makes a lot of sense.
-> =
-
-> <snip>
-> =A0
-> > diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima=
-/ima_main.c
-> > index c1583d98c5e5..82acd66bf653 100644
-> > --- a/security/integrity/ima/ima_main.c
-> > +++ b/security/integrity/ima/ima_main.c
-> > @@ -731,13 +731,15 @@ int ima_load_data(enum kernel_load_data_id id)
-> >   * @eventname: event name to be used for the buffer entry.
-> >   * @func: IMA hook
-> >   * @pcr: pcr to extend the measurement
-> > + * @inode: inode associated with the object being measured (NULL for K=
-EY_CHECK)
-> >   * @keyring: keyring name to determine the action to be performed
-> >   *
-> >   * Based on policy, the buffer is measured into the ima log.
-> >   */
-> >  void process_buffer_measurement(const void *buf, int size,
-> >  				const char *eventname, enum ima_hooks func,
-> > -				int pcr, const char *keyring)
-> > +				int pcr, struct inode *inode,
-> > +				const char *keyring)
-> >  {
-> =
-
-> The file descriptor is passed as the first arg to
-> process_measurement(). =A0Sorry for the patch churn, but could we do the
-> same for process_buffer_measurements. =A0As much as possible lets keep
-> them in same.
-
-Yep! That makes sense to me.
-
-Tyler
-
-> =
-
-> thanks,
-> =
-
-> Mimi
+John Ogness
 
 _______________________________________________
 kexec mailing list
