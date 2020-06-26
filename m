@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from linux.microsoft.com ([13.77.154.182])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jox0b-0003Cg-QX
- for kexec@lists.infradead.org; Fri, 26 Jun 2020 22:39:46 +0000
-From: Tyler Hicks <tyhicks@linux.microsoft.com>
-Subject: [PATCH v2 11/11] ima: Support additional conditionals in the
- KEXEC_CMDLINE hook function
-Date: Fri, 26 Jun 2020 17:39:00 -0500
-Message-Id: <20200626223900.253615-12-tyhicks@linux.microsoft.com>
-In-Reply-To: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
-References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1joxj9-0006wS-Ad
+ for kexec@lists.infradead.org; Fri, 26 Jun 2020 23:25:48 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: record_printk_text tricks: was: [PATCH v3 3/3] printk: use the
+ lockless ringbuffer
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625120946.GG6156@alley>
+Date: Sat, 27 Jun 2020 01:25:34 +0200
+In-Reply-To: <20200625120946.GG6156@alley> (Petr Mladek's message of "Thu, 25
+ Jun 2020 14:09:46 +0200")
+Message-ID: <87k0ztbea9.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,255 +26,382 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mimi Zohar <zohar@linux.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
-Cc: Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Take the properties of the kexec kernel's inode and the current task
-ownership into consideration when matching a KEXEC_CMDLINE operation to
-the rules in the IMA policy. This allows for some uniformity when
-writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
-and KEXEC_CMDLINE operations.
+On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -1344,72 +1304,150 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog,
+>>  	return len;
+>>  }
+>>  
+>> -static size_t msg_print_text(const struct printk_log *msg, bool syslog,
+>> -			     bool time, char *buf, size_t size)
+>> +static size_t record_print_text(struct printk_record *r, bool syslog,
+>> +				bool time)
+>>  {
+>> -	const char *text = log_text(msg);
+>> -	size_t text_size = msg->text_len;
+>> -	size_t len = 0;
+>> +	size_t text_len = r->info->text_len;
+>> +	size_t buf_size = r->text_buf_size;
+>> +	char *text = r->text_buf;
+>>  	char prefix[PREFIX_MAX];
+>> -	const size_t prefix_len = print_prefix(msg, syslog, time, prefix);
+>> +	bool truncated = false;
+>> +	size_t prefix_len;
+>> +	size_t line_len;
+>> +	size_t len = 0;
+>> +	char *next;
+>>  
+>> -	do {
+>> -		const char *next = memchr(text, '\n', text_size);
+>> -		size_t text_len;
+>> +	prefix_len = info_print_prefix(r->info, syslog, time, prefix);
+>>  
+>> +	/*
+>> +	 * Add the prefix for each line by shifting the rest of the text to
+>> +	 * make room for each prefix. If the buffer is not large enough for
+>> +	 * all the prefixes, then drop the trailing text and report the
+>> +	 * largest length that includes full lines with their prefixes.
+>
+> This should go up as the function description.
+>
+> Sigh, this function does (already did) many subltle decisions. We
+> should mention them in the description. My current understanding is
+> the following:
+>
+> /*
+>  * Prepare the record for printing. The text is shifted in the given
+>  * buffer to avoid a need for another one. The following operations
+>  * are done:
+>  *
+>  *   - Add prefix for each line.
+>  *   - Add the trailing newline that has been removed in vprintk_store().
+>  *   - Drop truncated lines that do not longer fit into the buffer.
+>  *
+>  * Return: The length of the updated text, including the added
+>  * prefixes, newline. The dropped line(s) are not counted.
+>  */
 
-Prior to this patch, it was not possible to write a set of rules like
-this:
+OK.
 
- dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
- dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
- dont_measure func=KEXEC_CMDLINE obj_type=foo_t
- measure func=KEXEC_KERNEL_CHECK
- measure func=KEXEC_INITRAMFS_CHECK
- measure func=KEXEC_CMDLINE
+>> +	 *
+>> +	 * @text_len: bytes of unprocessed text
+>> +	 * @line_len: bytes of current line (newline _not_ included)
+>> +	 * @text:     pointer to beginning of current line
+>> +	 * @len:      number of bytes processed (size of r->text_buf done)
+>
+> Please, move this to the variable declaration.
 
-The inode information associated with the kernel being loaded by a
-kexec_kernel_load(2) syscall can now be included in the decision to
-measure or not
+I find it more helpful to see these critical definitions directly above
+the loop. When I add them to the variable declarations, I find it really
+ugly and hard to reference. Maybe you could show me an example of what
+you want it to look like?
 
-Additonally, the uid, euid, and subj_* conditionals can also now be
-used in KEXEC_CMDLINE rules. There was no technical reason as to why
-those conditionals weren't being considered previously other than
-ima_match_rules() didn't have a valid inode to use so it immediately
-bailed out for KEXEC_CMDLINE operations rather than going through the
-full list of conditional comparisons.
+>> +	 */
+>> +	for (;;) {
+>> +		next = memchr(text, '\n', text_len);
+>>  		if (next) {
+>> -			text_len = next - text;
+>> -			next++;
+>> -			text_size -= next - text;
+>> +			line_len = next - text;
+>>  		} else {
+>> -			text_len = text_size;
+>> +			/*
+>> +			 * No newline. If the text was previously truncated,
+>> +			 * assume this line was truncated and do not include
+>> +			 * it.
+>> +			 */
+>
+> The word "assume" is confusing. The last line _must_ have been truncated when
+> "truncated" is set. I would write:
+>
+> 			/* Drop incomplete truncated lines. */
 
-Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org
----
+OK.
 
-* v2
-  - Moved the inode parameter of process_buffer_measurement() to be the
-    first parameter so that it more closely matches process_masurement()
+>> +			if (truncated)
+>> +				break;
+>> +			line_len = text_len;
+>>  		}
+>>  
+>> -		if (buf) {
+>> -			if (prefix_len + text_len + 1 >= size - len)
+>> +		/*
+>> +		 * Ensure there is enough buffer available to shift this line
+>> +		 * (and add a newline at the end).
+>> +		 */
+>> +		if (len + prefix_len + line_len + 1 > buf_size)
+>> +			break;
+>> +
+>> +		/*
+>> +		 * Ensure there is enough buffer available to shift all
+>> +		 * remaining text (and add a newline at the end). If this
+>> +		 * test fails, then there must be a newline (i.e.
+>> +		 * text_len > line_len because the previous test succeeded).
+>> +		 */
+>> +		if (len + prefix_len + text_len + 1 > buf_size) {
+>> +			/*
+>> +			 * Truncate @text_len so that there is enough space
+>> +			 * for a prefix. A newline will not be added because
+>> +			 * the last line of the text is now truncated and
+>> +			 * will not be included.
+>> +			 */
+>> +			text_len = (buf_size - len) - prefix_len;
+>
+> This is confusing. The check requires that one more character gets truncated.
+> And it should be perfectly fine to truncate '\n' from the previous
+> line. The final '\n' is always added.
 
- include/linux/ima.h                          |  4 ++--
- kernel/kexec_file.c                          |  2 +-
- security/integrity/ima/ima.h                 |  2 +-
- security/integrity/ima/ima_api.c             |  2 +-
- security/integrity/ima/ima_appraise.c        |  2 +-
- security/integrity/ima/ima_asymmetric_keys.c |  2 +-
- security/integrity/ima/ima_main.c            | 23 +++++++++++++++-----
- security/integrity/ima/ima_policy.c          | 17 +++++----------
- security/integrity/ima/ima_queue_keys.c      |  2 +-
- 9 files changed, 31 insertions(+), 25 deletions(-)
+Agreed.
 
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 9164e1534ec9..d15100de6cdd 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -25,7 +25,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
- 			      enum kernel_read_file_id id);
- extern void ima_post_path_mknod(struct dentry *dentry);
- extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
--extern void ima_kexec_cmdline(const void *buf, int size);
-+extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
- 
- #ifdef CONFIG_IMA_KEXEC
- extern void ima_add_kexec_buffer(struct kimage *image);
-@@ -103,7 +103,7 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
- 	return -EOPNOTSUPP;
- }
- 
--static inline void ima_kexec_cmdline(const void *buf, int size) {}
-+static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
- #endif /* CONFIG_IMA */
- 
- #ifndef CONFIG_IMA_KEXEC
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index bb05fd52de85..07df431c1f21 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -287,7 +287,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 			goto out;
- 		}
- 
--		ima_kexec_cmdline(image->cmdline_buf,
-+		ima_kexec_cmdline(kernel_fd, image->cmdline_buf,
- 				  image->cmdline_buf_len - 1);
- 	}
- 
-diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
-index 59ec28f5c117..ff2bf57ff0c7 100644
---- a/security/integrity/ima/ima.h
-+++ b/security/integrity/ima/ima.h
-@@ -265,7 +265,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
- 			   struct evm_ima_xattr_data *xattr_value,
- 			   int xattr_len, const struct modsig *modsig, int pcr,
- 			   struct ima_template_desc *template_desc);
--void process_buffer_measurement(const void *buf, int size,
-+void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 				const char *eventname, enum ima_hooks func,
- 				int pcr, const char *keyring);
- void ima_audit_measurement(struct integrity_iint_cache *iint,
-diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
-index bf22de8b7ce0..4f39fb93f278 100644
---- a/security/integrity/ima/ima_api.c
-+++ b/security/integrity/ima/ima_api.c
-@@ -162,7 +162,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
- 
- /**
-  * ima_get_action - appraise & measure decision based on policy.
-- * @inode: pointer to inode to measure
-+ * @inode: pointer to the inode associated with the object being validated
-  * @cred: pointer to credentials structure to validate
-  * @secid: secid of the task being validated
-  * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXEC,
-diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
-index a9649b04b9f1..6c52bf7ea7f0 100644
---- a/security/integrity/ima/ima_appraise.c
-+++ b/security/integrity/ima/ima_appraise.c
-@@ -328,7 +328,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
- 
- 		rc = is_binary_blacklisted(digest, digestsize);
- 		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
--			process_buffer_measurement(digest, digestsize,
-+			process_buffer_measurement(NULL, digest, digestsize,
- 						   "blacklisted-hash", NONE,
- 						   pcr, NULL);
- 	}
-diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
-index aaae80c4e376..1c68c500c26f 100644
---- a/security/integrity/ima/ima_asymmetric_keys.c
-+++ b/security/integrity/ima/ima_asymmetric_keys.c
-@@ -58,7 +58,7 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
- 	 * if the IMA policy is configured to measure a key linked
- 	 * to the given keyring.
- 	 */
--	process_buffer_measurement(payload, payload_len,
-+	process_buffer_measurement(NULL, payload, payload_len,
- 				   keyring->description, KEY_CHECK, 0,
- 				   keyring->description);
- }
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index 8351b2fd48e0..8a91711ca79b 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -726,6 +726,7 @@ int ima_load_data(enum kernel_load_data_id id)
- 
- /*
-  * process_buffer_measurement - Measure the buffer to ima log.
-+ * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
-  * @buf: pointer to the buffer that needs to be added to the log.
-  * @size: size of buffer(in bytes).
-  * @eventname: event name to be used for the buffer entry.
-@@ -735,7 +736,7 @@ int ima_load_data(enum kernel_load_data_id id)
-  *
-  * Based on policy, the buffer is measured into the ima log.
-  */
--void process_buffer_measurement(const void *buf, int size,
-+void process_buffer_measurement(struct inode *inode, const void *buf, int size,
- 				const char *eventname, enum ima_hooks func,
- 				int pcr, const char *keyring)
- {
-@@ -768,7 +769,7 @@ void process_buffer_measurement(const void *buf, int size,
- 	 */
- 	if (func) {
- 		security_task_getsecid(current, &secid);
--		action = ima_get_action(NULL, current_cred(), secid, 0, func,
-+		action = ima_get_action(inode, current_cred(), secid, 0, func,
- 					&pcr, &template, keyring);
- 		if (!(action & IMA_MEASURE))
- 			return;
-@@ -823,16 +824,26 @@ void process_buffer_measurement(const void *buf, int size,
- 
- /**
-  * ima_kexec_cmdline - measure kexec cmdline boot args
-+ * @kernel_fd: file descriptor of the kexec kernel being loaded
-  * @buf: pointer to buffer
-  * @size: size of buffer
-  *
-  * Buffers can only be measured, not appraised.
-  */
--void ima_kexec_cmdline(const void *buf, int size)
-+void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
- {
--	if (buf && size != 0)
--		process_buffer_measurement(buf, size, "kexec-cmdline",
--					   KEXEC_CMDLINE, 0, NULL);
-+	struct fd f;
-+
-+	if (!buf || !size)
-+		return;
-+
-+	f = fdget(kernel_fd);
-+	if (!f.file)
-+		return;
-+
-+	process_buffer_measurement(file_inode(f.file), buf, size,
-+				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL);
-+	fdput(f);
- }
- 
- static int __init init_ima(void)
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index 5eb14b567a31..294323b36d06 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -443,13 +443,9 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
- {
- 	int i;
- 
--	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
--		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
--			if (func == KEY_CHECK)
--				return ima_match_keyring(rule, keyring, cred);
--			return true;
--		}
--		return false;
-+	if (func == KEY_CHECK) {
-+		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
-+		       ima_match_keyring(rule, keyring, cred);
- 	}
- 	if ((rule->flags & IMA_FUNC) &&
- 	    (rule->func != func && func != POST_SETATTR))
-@@ -1007,10 +1003,9 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
- 			if (entry->action & ~(MEASURE | DONT_MEASURE))
- 				return false;
- 
--			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
--				return false;
--
--			if (ima_rule_contains_lsm_cond(entry))
-+			if (entry->flags & ~(IMA_FUNC | IMA_FSMAGIC | IMA_UID |
-+					     IMA_FOWNER | IMA_FSUUID |
-+					     IMA_EUID | IMA_PCR | IMA_FSNAME))
- 				return false;
- 
- 			break;
-diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
-index 56ce24a18b66..69a8626a35c0 100644
---- a/security/integrity/ima/ima_queue_keys.c
-+++ b/security/integrity/ima/ima_queue_keys.c
-@@ -158,7 +158,7 @@ void ima_process_queued_keys(void)
- 
- 	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
- 		if (!timer_expired)
--			process_buffer_measurement(entry->payload,
-+			process_buffer_measurement(NULL, entry->payload,
- 						   entry->payload_len,
- 						   entry->keyring_name,
- 						   KEY_CHECK, 0,
--- 
-2.25.1
+>> +
+>> +			/*
+>> +			 * Ensure there is still a newline. Otherwise this
+>> +			 * line may have been truncated and will not be
+>> +			 * included.
+>> +			 */
+>> +			if (memchr(text, '\n', text_len) == NULL)
+>  >  				break;
+>
+> This looks superfluous. We do this check only when the first check of "line_len"
+> passed. It means that at least one line is printable.
 
+You are correct.
+
+> I would personally replace this part of the code by:
+>
+> 		/*
+> 		 * Truncate the remaining text when it does not longer
+> 		 * fit into the buffer.
+> 		 *
+> 		 * Note that this check could fail only when
+> 		 * text_len > line_len because the previous check
+> 		 * passed.
+> 		 */
+> 		if (len + prefix_len + text_len + 1 > buf_size) {
+> 			text_len = buf_size - len - prefix_len - 1;
+> 			truncated = 1;
+> 		}
+>
+> Or we could actually switch the two checks and do:
+>
+> 		/*
+> 		 * Truncate the text if it would not longer fit into
+> 		 * the given buffer.
+> 		 */
+> 		if (len + prefix_len + text_len + 1 > buf_size) {
+> 			text_len = buf_size - len - prefix_len - 1;
+> 			truncated = 1;
+> 		}
+>
+> 		/* Drop even the current line when truncated */
+> 		if (line_len > text_len)
+> 			break;
+
+Yes, I like how you switched the checks. Also, the second check can be
+nested inside the first one.
+
+However, the "line_len > text_len" check will not work here because
+text_len is unsigned and could underflow with this logic. I think doing
+the math twice (as I did) is the simplest.
+
+>> -			memcpy(buf + len, prefix, prefix_len);
+>> -			len += prefix_len;
+>> -			memcpy(buf + len, text, text_len);
+>> -			len += text_len;
+>> -			buf[len++] = '\n';
+>> -		} else {
+>> -			/* SYSLOG_ACTION_* buffer size only calculation */
+>> -			len += prefix_len + text_len + 1;
+>> +			/* Note that the last line will not be included. */
+>> +			truncated = true;
+>>  		}
+>>  
+>> -		text = next;
+>> -	} while (text);
+>> +		memmove(text + prefix_len, text, text_len);
+>> +		memcpy(text, prefix, prefix_len);
+>> +
+>> +		/* Advance beyond the newly added prefix and existing line. */
+>> +		text += prefix_len + line_len;
+>> +
+>> +		/* The remaining text has only decreased by the line. */
+>> +		text_len -= line_len;
+>> +
+>> +		len += prefix_len + line_len + 1;
+>> +
+>> +		if (text_len) {
+>> +			/* Advance past the newline. */
+>> +			text++;
+>> +			text_len--;
+>
+> "text_len" might be zero at this point when the stored string ended
+> with newline.
+>
+> It might happen already now when the original text ended by "\n\n".
+> Only the very last '\n' gets removed in vprintk_store().
+>
+> It actually looks reasonable to do the extra cycle and printk
+> the (requested) empty line.
+>
+> Except that we might end here also when the text was truncated right
+> before the newline marker. Well, this is a corner case, the string
+> is truncated anyway, so we could do whatever is easier in this case.
+
+I agree that the code is quite tricky here. I will refactor as you have
+suggested.
+
+> Well, it will need another update after we remove logbuf_lock. I think that
+> we will need to store the final '\n'. Or at least we would need to
+> reserve a space for it.
+
+What does the logbuf_lock have to do with this? What does this have to
+do with reserving extra space? We are modifying the reader's buffer
+in-place, not the datablock data.
+
+> Anyway, it might deserve some comment somewhere. See below for
+> alternative code.
+>
+>> +		} else {
+>> +			/* The final line, add a newline. */
+>> +			*text = '\n';
+>> +			break;
+>> +		}
+>
+> I do not have strong opinion. The code does things by small steps that
+> might be checked easily. But it has many steps and it might hide some
+> subtle catches like the one commented right above.
+
+Your suggestions to simplify are good.
+
+>> +static size_t get_record_text_size(struct printk_info *info,
+>> +				   unsigned int line_count,
+>> +				   bool syslog, bool time)
+>> +{
+>> +	char prefix[PREFIX_MAX];
+>> +	size_t prefix_len;
+>> +
+>> +	prefix_len = info_print_prefix(info, syslog, time, prefix);
+>> +
+>> +	/*
+>> +	 * Each line will be preceded with a prefix. The intermediate
+>> +	 * newlines are already within the text, but a final trailing
+>> +	 * newline will be added.
+>> +	 */
+>> +	return ((prefix_len * line_count) + info->text_len + 1);
+>
+> Note: This might need an update when lockbuf_lock gets removed and the
+> trailing newline is not longer removed. We will need to explicitly
+> add it when it was missing.
+>
+> We might need to check LOG_NEWLINE flag here. Or come with even better
+> solution.
+
+Again, I do not understand what this has to do with the
+lockbuf_lock. Please explain.
+
+Below is how I would like to implement record_print_text() after
+incorporating your suggestions. Please show me how you would like to see
+the important variable role comments formatted. Thanks.
+
+John Ogness
+
+/*
+ * Prepare the record for printing. The text is shifted within the given
+ * buffer to avoid a need for another one. The following operations are
+ * done:
+ *
+ *   - Add prefix for each line.
+ *   - Add the trailing newline that has been removed in vprintk_store().
+ *   - Drop truncated lines that do not longer fit into the buffer.
+ *
+ * Return: The length of the updated/prepared text, including the added
+ * prefixes and the newline. The dropped line(s) are not counted.
+ */
+static size_t record_print_text(struct printk_record *r, bool syslog,
+				bool time)
+{
+	size_t text_len = r->info->text_len;
+	size_t buf_size = r->text_buf_size;
+	char *text = r->text_buf;
+	char prefix[PREFIX_MAX];
+	bool truncated = false;
+	size_t prefix_len;
+	size_t line_len;
+	size_t len = 0;
+	char *next;
+
+	prefix_len = info_print_prefix(r->info, syslog, time, prefix);
+
+	/*
+	 * @text_len: bytes of unprocessed text
+	 * @line_len: bytes of current line _without_ newline
+	 * @text:     pointer to beginning of current line
+	 * @len:      number of bytes prepared in r->text_buf
+	 */
+	for (;;) {
+		next = memchr(text, '\n', text_len);
+		if (next) {
+			line_len = next - text;
+		} else {
+			/* Drop truncated line(s). */
+			if (truncated)
+				break;
+			line_len = text_len;
+		}
+
+		/*
+		 * Truncate the text if there is not enough space to add the
+		 * prefix and a trailing newline.
+		 */
+		if (len + prefix_len + text_len + 1 > buf_size) {
+			/* Drop even the current line if no space. */
+			if (len + prefix_len + line_len + 1 > buf_size)
+				break;
+
+			text_len = buf_size - len - prefix_len - 1;
+			truncated = true;
+		}
+
+		memmove(text + prefix_len, text, text_len);
+		memcpy(text, prefix, prefix_len);
+
+		len += prefix_len + line_len + 1;
+
+		if (text_len == line_len) {
+			/*
+			 * Add the trailing newline removed in
+			 * vprintk_store().
+			 */
+			text[prefix_len + line_len] = '\n';
+			break;
+		}
+
+		/*
+		 * Advance beyond the added prefix and the related line with
+		 * its newline.
+		 */
+		text += prefix_len + line_len + 1;
+
+		/*
+		 * The remaining text has only decreased by the line with its
+		 * newline.
+		 *
+		 * Note that @text_len can become zero. It happens when @text
+		 * ended with a newline (either due to truncation or the
+		 * original string ending with "\n\n"). The loop is correctly
+		 * repeated and (if not truncated) an empty line with a prefix
+		 * will be prepared.
+		 */
+		text_len -= line_len + 1;
+	}
+
+	return len;
+}
 
 _______________________________________________
 kexec mailing list
