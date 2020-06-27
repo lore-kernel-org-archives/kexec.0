@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga04.intel.com ([192.55.52.120])
+Received: from mga18.intel.com ([134.134.136.126])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jp8Le-0001WU-1v
- for kexec@lists.infradead.org; Sat, 27 Jun 2020 10:46:15 +0000
-Date: Sat, 27 Jun 2020 18:45:39 +0800
+ id 1jp9Oq-0000JJ-OG
+ for kexec@lists.infradead.org; Sat, 27 Jun 2020 11:53:38 +0000
+Date: Sat, 27 Jun 2020 19:52:49 +0800
 From: kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
-Message-ID: <202006271822.I4qp1F7k%lkp@intel.com>
-References: <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+Subject: Re: [PATCH 07/11] ppc64/kexec_file: add support to relocate purgatory
+Message-ID: <202006271902.JI3hIpyI%lkp@intel.com>
+References: <159319834059.16351.11383518457733304716.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="ZGiS0Q5IWpPtfppv"
+Content-Type: multipart/mixed; boundary="WIyZ46R2i8wDzkSu"
 Content-Disposition: inline
-In-Reply-To: <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+In-Reply-To: <159319834059.16351.11383518457733304716.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,16 +26,16 @@ To: Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>
 Cc: kbuild-all@lists.01.org, Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, Linux Memory Management List <linux-mm@kvack.org>, Sourabh Jain <sourabhjain@linux.ibm.com>
 
 
---ZGiS0Q5IWpPtfppv
+--WIyZ46R2i8wDzkSu
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
 Hi Hari,
 
-Thank you for the patch! Perhaps something to improve:
+Thank you for the patch! Yet something to improve:
 
-[auto build test WARNING on powerpc/next]
-[also build test WARNING on linux/master linus/master v5.8-rc2 next-20200626]
+[auto build test ERROR on powerpc/next]
+[also build test ERROR on linux/master linus/master v5.8-rc2 next-20200626]
 [If your patch is applied to the wrong git tree, kindly drop us a note.
 And when submitting patch, we suggest to use  as documented in
 https://git-scm.com/docs/git-format-patch]
@@ -54,34 +53,226 @@ reproduce (this is a W=1 build):
 If you fix the issue, kindly add following tag as appropriate
 Reported-by: kernel test robot <lkp@intel.com>
 
-All warnings (new ones prefixed by >>):
+All error/warnings (new ones prefixed by >>):
 
->> arch/powerpc/kexec/file_load_64.c:390:5: warning: no previous prototype for 'arch_kimage_file_post_load_cleanup' [-Wmissing-prototypes]
-     390 | int arch_kimage_file_post_load_cleanup(struct kimage *image)
+>> arch/powerpc/kexec/file_load_64.c:711:47: warning: parameter names (without types) in function declaration
+     711 | static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
+         |                                               ^~~~~~~
+>> arch/powerpc/kexec/file_load_64.c:711:47: warning: 'struct mem_sym' declared inside parameter list will not be visible outside of this definition or declaration
+   arch/powerpc/kexec/file_load_64.c: In function 'kexec_do_relocs_ppc64':
+>> arch/powerpc/kexec/file_load_64.c:791:29: error: passing argument 1 of 'local_entry_offset' from incompatible pointer type [-Werror=incompatible-pointer-types]
+     791 |   val += local_entry_offset(sym);
+         |                             ^~~
+         |                             |
+         |                             const Elf64_Sym * {aka const struct elf64_sym *}
+   arch/powerpc/kexec/file_load_64.c:711:56: note: expected 'struct mem_sym * (*)()' but argument is of type 'const Elf64_Sym *' {aka 'const struct elf64_sym *'}
+     711 | static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
+         |                                        ~~~~~~~~~~~~~~~~^~~~~~~~~~~
+   arch/powerpc/kexec/file_load_64.c: At top level:
+   arch/powerpc/kexec/file_load_64.c:1124:5: warning: no previous prototype for 'arch_kimage_file_post_load_cleanup' [-Wmissing-prototypes]
+    1124 | int arch_kimage_file_post_load_cleanup(struct kimage *image)
          |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+   cc1: some warnings being treated as errors
 
-vim +/arch_kimage_file_post_load_cleanup +390 arch/powerpc/kexec/file_load_64.c
+vim +/local_entry_offset +791 arch/powerpc/kexec/file_load_64.c
 
-   382	
-   383	/**
-   384	 * arch_kimage_file_post_load_cleanup - Frees up all the allocations done
-   385	 *                                      while loading the image.
-   386	 * @image:                              kexec image being loaded.
-   387	 *
-   388	 * Returns 0 on success, negative errno on error.
-   389	 */
- > 390	int arch_kimage_file_post_load_cleanup(struct kimage *image)
+   679	
+   680	/* Helper functions to apply relocations */
+   681	static int do_relative_toc(unsigned long val, uint16_t *loc,
+   682				   unsigned long mask, int complain_signed)
+   683	{
+   684		if (complain_signed && (val + 0x8000 > 0xffff)) {
+   685			pr_err("TOC16 relocation overflows (%lu)\n", val);
+   686			return -ENOEXEC;
+   687		}
+   688	
+   689		if ((~mask & 0xffff) & val) {
+   690			pr_err("Bad TOC16 relocation (%lu)\n", val);
+   691			return -ENOEXEC;
+   692		}
+   693	
+   694		*loc = (*loc & ~mask) | (val & mask);
+   695		return 0;
+   696	}
+   697	#ifdef PPC64_ELF_ABI_v2
+   698	/* PowerPC64 specific values for the Elf64_Sym st_other field.  */
+   699	#define STO_PPC64_LOCAL_BIT	5
+   700	#define STO_PPC64_LOCAL_MASK	(7 << STO_PPC64_LOCAL_BIT)
+   701	#define PPC64_LOCAL_ENTRY_OFFSET(other)					\
+   702		(((1 << (((other) & STO_PPC64_LOCAL_MASK) >> STO_PPC64_LOCAL_BIT)) \
+   703		 >> 2) << 2)
+   704	
+   705	static unsigned int local_entry_offset(const Elf64_Sym *sym)
+   706	{
+   707		/* If this symbol has a local entry point, use it. */
+   708		return PPC64_LOCAL_ENTRY_OFFSET(sym->st_other);
+   709	}
+   710	#else
+ > 711	static unsigned int local_entry_offset(struct mem_sym *UNUSED(sym))
+   712	{
+   713		return 0;
+   714	}
+   715	#endif
+   716	
+   717	/**
+   718	 * kexec_do_relocs_ppc64 - Apply relocations based on relocation type.
+   719	 * @my_r2:                 TOC pointer.
+   720	 * @sym:                   Symbol to relocate.
+   721	 * @r_type:                Relocation type.
+   722	 * @loc:                   Location to modify.
+   723	 * @val:                   Relocated symbol value.
+   724	 * @addr:                  Final location after relocation.
+   725	 *
+   726	 * Returns 0 on success, negative errno on error.
+   727	 */
+   728	static int kexec_do_relocs_ppc64(unsigned long my_r2, const Elf_Sym *sym,
+   729					 int r_type, void *loc, unsigned long val,
+   730					 unsigned long addr)
+   731	{
+   732		int ret = 0;
+   733	
+   734		switch (r_type) {
+   735		case R_PPC64_ADDR32:
+   736			/* Simply set it */
+   737			*(uint32_t *)loc = val;
+   738			break;
+   739	
+   740		case R_PPC64_ADDR64:
+   741			/* Simply set it */
+   742			*(uint64_t *)loc = val;
+   743			break;
+   744	
+   745		case R_PPC64_REL64:
+   746			*(uint64_t *)loc = val - (uint64_t)loc;
+   747			break;
+   748	
+   749		case R_PPC64_REL32:
+   750			/* Convert value to relative */
+   751			val -= (unsigned long)loc;
+   752			if (val + 0x80000000 > 0xffffffff) {
+   753				pr_err("REL32 %li out of range!\n", val);
+   754				return -ENOEXEC;
+   755			}
+   756	
+   757			*(uint32_t *)loc = val;
+   758			break;
+   759	
+   760		case R_PPC64_TOC:
+   761			*(uint64_t *)loc = my_r2;
+   762			break;
+   763	
+   764		case R_PPC64_TOC16:
+   765			ret = do_relative_toc(val - my_r2, loc, 0xffff, 1);
+   766			break;
+   767	
+   768		case R_PPC64_TOC16_DS:
+   769			ret = do_relative_toc(val - my_r2, loc, 0xfffc, 1);
+   770			break;
+   771	
+   772		case R_PPC64_TOC16_LO:
+   773			ret = do_relative_toc(val - my_r2, loc, 0xffff, 0);
+   774			break;
+   775	
+   776		case R_PPC64_TOC16_LO_DS:
+   777			ret = do_relative_toc(val - my_r2, loc, 0xfffc, 0);
+   778			break;
+   779	
+   780		case R_PPC64_TOC16_HI:
+   781			ret = do_relative_toc((val - my_r2) >> 16, loc,
+   782					      0xffff, 0);
+   783			break;
+   784	
+   785		case R_PPC64_TOC16_HA:
+   786			ret = do_relative_toc((val - my_r2 + 0x8000) >> 16, loc,
+   787					      0xffff, 0);
+   788			break;
+   789	
+   790		case R_PPC64_REL24:
+ > 791			val += local_entry_offset(sym);
+   792			/* Convert value to relative */
+   793			val -= addr;
+   794			if (val + 0x2000000 > 0x3ffffff || (val & 3) != 0) {
+   795				pr_err("REL24 %li out of range!\n", val);
+   796				return -ENOEXEC;
+   797			}
+   798	
+   799			/* Only replace bits 2 through 26 */
+   800			*(uint32_t *)loc = ((*(uint32_t *)loc & ~0x03fffffc) |
+   801					    (val & 0x03fffffc));
+   802			break;
+   803	
+   804		case R_PPC64_ADDR16_LO:
+   805			*(uint16_t *)loc = val & 0xffff;
+   806			break;
+   807	
+   808		case R_PPC64_ADDR16_HI:
+   809			*(uint16_t *)loc = (val >> 16) & 0xffff;
+   810			break;
+   811	
+   812		case R_PPC64_ADDR16_HA:
+   813			*(uint16_t *)loc = (((val + 0x8000) >> 16) & 0xffff);
+   814			break;
+   815	
+   816		case R_PPC64_ADDR16_HIGHER:
+   817			*(uint16_t *)loc = (((uint64_t)val >> 32) & 0xffff);
+   818			break;
+   819	
+   820		case R_PPC64_ADDR16_HIGHEST:
+   821			*(uint16_t *)loc = (((uint64_t)val >> 48) & 0xffff);
+   822			break;
+   823	
+   824			/* R_PPC64_REL16_HA and R_PPC64_REL16_LO are handled to support
+   825			 * ABIv2 r2 assignment based on r12 for PIC executable.
+   826			 * Here address is known, so replace
+   827			 *	0:	addis 2,12,.TOC.-0b@ha
+   828			 *		addi 2,2,.TOC.-0b@l
+   829			 * by
+   830			 *		lis 2,.TOC.@ha
+   831			 *		addi 2,2,.TOC.@l
+   832			 */
+   833		case R_PPC64_REL16_HA:
+   834			/* check that we are dealing with the addis 2,12 instruction */
+   835			if (((*(uint32_t *)loc) & 0xffff0000) != 0x3c4c0000) {
+   836				pr_err("Unexpected instruction for  R_PPC64_REL16_HA");
+   837				return -ENOEXEC;
+   838			}
+   839	
+   840			val += my_r2;
+   841			/* replacing by lis 2 */
+   842			*(uint32_t *)loc = 0x3c400000 + ((val >> 16) & 0xffff);
+   843			break;
+   844	
+   845		case R_PPC64_REL16_LO:
+   846			/* check that we are dealing with the addi 2,2 instruction */
+   847			if (((*(uint32_t *)loc) & 0xffff0000) != 0x38420000) {
+   848				pr_err("Unexpected instruction for R_PPC64_REL16_LO");
+   849				return -ENOEXEC;
+   850			}
+   851	
+   852			val += my_r2 - 4;
+   853			*(uint16_t *)loc = val & 0xffff;
+   854			break;
+   855	
+   856		default:
+   857			pr_err("Unknown rela relocation: %d\n", r_type);
+   858			ret = -ENOEXEC;
+   859			break;
+   860		}
+   861	
+   862		return ret;
+   863	}
+   864	
 
 ---
 0-DAY CI Kernel Test Service, Intel Corporation
 https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
---ZGiS0Q5IWpPtfppv
+--WIyZ46R2i8wDzkSu
 Content-Type: application/gzip
 Content-Disposition: attachment; filename=".config.gz"
 Content-Transfer-Encoding: base64
 
-H4sICGUY914AAy5jb25maWcAlDxZc9s40u/zK1TJy+7DzPqKJ6ktPYAkSGFEEgwASpZfWI6j
+H4sICA0p914AAy5jb25maWcAlDxZc9s40u/zK1TJy+7DzPqKJ6ktPYAkSGFEEgwASpZfWI6j
 ZFzrI5+P/Sb767cb4NEAISebqpmE3UDjavQNvf3l7YK9PD/cXT3fXF/d3n5ffN3f7x+vnvef
 F19ubvf/XGRyUUuz4Jkwv0Hj8ub+5a9/fHv4//3jt+vFu9/e/3b06+P1yWK9f7zf3y7Sh/sv
 N19fgMDNw/0vb39JZZ2LokvTbsOVFrLuDL8wyzc9gfOzX2+R4K9fr68XfyvS9O+LD7+d/nb0
@@ -1371,7 +1562,7 @@ FqhaBphuCIjldpp97ozp0/hblfjW11slMPdpbTC1pLl7w4UCZMrYqXbIZIXbt/Jcx5mksMaC
 TewOHNcNZigU90sTb6JHmYIu+ePcwNJPbTdYjr7EehF1pEM77YDSC5sYWKUISNKhDPx/jQ2k
 EIhhBAA=
 
---ZGiS0Q5IWpPtfppv
+--WIyZ46R2i8wDzkSu
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -1382,5 +1573,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---ZGiS0Q5IWpPtfppv--
+--WIyZ46R2i8wDzkSu--
 
