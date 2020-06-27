@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from pegase1.c-s.fr ([93.17.236.30])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1joxj9-0006wS-Ad
- for kexec@lists.infradead.org; Fri, 26 Jun 2020 23:25:48 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: record_printk_text tricks: was: [PATCH v3 3/3] printk: use the
- lockless ringbuffer
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
- <20200625120946.GG6156@alley>
-Date: Sat, 27 Jun 2020 01:25:34 +0200
-In-Reply-To: <20200625120946.GG6156@alley> (Petr Mladek's message of "Thu, 25
- Jun 2020 14:09:46 +0200")
-Message-ID: <87k0ztbea9.fsf@jogness.linutronix.de>
+ id 1jp4MU-0004W8-9i
+ for kexec@lists.infradead.org; Sat, 27 Jun 2020 06:30:52 +0000
+Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <9a976370-caef-1beb-d172-bcb0b17e9b78@csgroup.eu>
+Date: Sat, 27 Jun 2020 08:30:22 +0200
 MIME-Version: 1.0
+In-Reply-To: <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+Content-Language: fr
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,388 +21,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
->> --- a/kernel/printk/printk.c
->> +++ b/kernel/printk/printk.c
->> @@ -1344,72 +1304,150 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog,
->>  	return len;
->>  }
->>  
->> -static size_t msg_print_text(const struct printk_log *msg, bool syslog,
->> -			     bool time, char *buf, size_t size)
->> +static size_t record_print_text(struct printk_record *r, bool syslog,
->> +				bool time)
->>  {
->> -	const char *text = log_text(msg);
->> -	size_t text_size = msg->text_len;
->> -	size_t len = 0;
->> +	size_t text_len = r->info->text_len;
->> +	size_t buf_size = r->text_buf_size;
->> +	char *text = r->text_buf;
->>  	char prefix[PREFIX_MAX];
->> -	const size_t prefix_len = print_prefix(msg, syslog, time, prefix);
->> +	bool truncated = false;
->> +	size_t prefix_len;
->> +	size_t line_len;
->> +	size_t len = 0;
->> +	char *next;
->>  
->> -	do {
->> -		const char *next = memchr(text, '\n', text_size);
->> -		size_t text_len;
->> +	prefix_len = info_print_prefix(r->info, syslog, time, prefix);
->>  
->> +	/*
->> +	 * Add the prefix for each line by shifting the rest of the text to
->> +	 * make room for each prefix. If the buffer is not large enough for
->> +	 * all the prefixes, then drop the trailing text and report the
->> +	 * largest length that includes full lines with their prefixes.
->
-> This should go up as the function description.
->
-> Sigh, this function does (already did) many subltle decisions. We
-> should mention them in the description. My current understanding is
-> the following:
->
-> /*
->  * Prepare the record for printing. The text is shifted in the given
->  * buffer to avoid a need for another one. The following operations
->  * are done:
->  *
->  *   - Add prefix for each line.
->  *   - Add the trailing newline that has been removed in vprintk_store().
->  *   - Drop truncated lines that do not longer fit into the buffer.
->  *
->  * Return: The length of the updated text, including the added
->  * prefixes, newline. The dropped line(s) are not counted.
->  */
-
-OK.
-
->> +	 *
->> +	 * @text_len: bytes of unprocessed text
->> +	 * @line_len: bytes of current line (newline _not_ included)
->> +	 * @text:     pointer to beginning of current line
->> +	 * @len:      number of bytes processed (size of r->text_buf done)
->
-> Please, move this to the variable declaration.
-
-I find it more helpful to see these critical definitions directly above
-the loop. When I add them to the variable declarations, I find it really
-ugly and hard to reference. Maybe you could show me an example of what
-you want it to look like?
-
->> +	 */
->> +	for (;;) {
->> +		next = memchr(text, '\n', text_len);
->>  		if (next) {
->> -			text_len = next - text;
->> -			next++;
->> -			text_size -= next - text;
->> +			line_len = next - text;
->>  		} else {
->> -			text_len = text_size;
->> +			/*
->> +			 * No newline. If the text was previously truncated,
->> +			 * assume this line was truncated and do not include
->> +			 * it.
->> +			 */
->
-> The word "assume" is confusing. The last line _must_ have been truncated when
-> "truncated" is set. I would write:
->
-> 			/* Drop incomplete truncated lines. */
-
-OK.
-
->> +			if (truncated)
->> +				break;
->> +			line_len = text_len;
->>  		}
->>  
->> -		if (buf) {
->> -			if (prefix_len + text_len + 1 >= size - len)
->> +		/*
->> +		 * Ensure there is enough buffer available to shift this line
->> +		 * (and add a newline at the end).
->> +		 */
->> +		if (len + prefix_len + line_len + 1 > buf_size)
->> +			break;
->> +
->> +		/*
->> +		 * Ensure there is enough buffer available to shift all
->> +		 * remaining text (and add a newline at the end). If this
->> +		 * test fails, then there must be a newline (i.e.
->> +		 * text_len > line_len because the previous test succeeded).
->> +		 */
->> +		if (len + prefix_len + text_len + 1 > buf_size) {
->> +			/*
->> +			 * Truncate @text_len so that there is enough space
->> +			 * for a prefix. A newline will not be added because
->> +			 * the last line of the text is now truncated and
->> +			 * will not be included.
->> +			 */
->> +			text_len = (buf_size - len) - prefix_len;
->
-> This is confusing. The check requires that one more character gets truncated.
-> And it should be perfectly fine to truncate '\n' from the previous
-> line. The final '\n' is always added.
-
-Agreed.
-
->> +
->> +			/*
->> +			 * Ensure there is still a newline. Otherwise this
->> +			 * line may have been truncated and will not be
->> +			 * included.
->> +			 */
->> +			if (memchr(text, '\n', text_len) == NULL)
->  >  				break;
->
-> This looks superfluous. We do this check only when the first check of "line_len"
-> passed. It means that at least one line is printable.
-
-You are correct.
-
-> I would personally replace this part of the code by:
->
-> 		/*
-> 		 * Truncate the remaining text when it does not longer
-> 		 * fit into the buffer.
-> 		 *
-> 		 * Note that this check could fail only when
-> 		 * text_len > line_len because the previous check
-> 		 * passed.
-> 		 */
-> 		if (len + prefix_len + text_len + 1 > buf_size) {
-> 			text_len = buf_size - len - prefix_len - 1;
-> 			truncated = 1;
-> 		}
->
-> Or we could actually switch the two checks and do:
->
-> 		/*
-> 		 * Truncate the text if it would not longer fit into
-> 		 * the given buffer.
-> 		 */
-> 		if (len + prefix_len + text_len + 1 > buf_size) {
-> 			text_len = buf_size - len - prefix_len - 1;
-> 			truncated = 1;
-> 		}
->
-> 		/* Drop even the current line when truncated */
-> 		if (line_len > text_len)
-> 			break;
-
-Yes, I like how you switched the checks. Also, the second check can be
-nested inside the first one.
-
-However, the "line_len > text_len" check will not work here because
-text_len is unsigned and could underflow with this logic. I think doing
-the math twice (as I did) is the simplest.
-
->> -			memcpy(buf + len, prefix, prefix_len);
->> -			len += prefix_len;
->> -			memcpy(buf + len, text, text_len);
->> -			len += text_len;
->> -			buf[len++] = '\n';
->> -		} else {
->> -			/* SYSLOG_ACTION_* buffer size only calculation */
->> -			len += prefix_len + text_len + 1;
->> +			/* Note that the last line will not be included. */
->> +			truncated = true;
->>  		}
->>  
->> -		text = next;
->> -	} while (text);
->> +		memmove(text + prefix_len, text, text_len);
->> +		memcpy(text, prefix, prefix_len);
->> +
->> +		/* Advance beyond the newly added prefix and existing line. */
->> +		text += prefix_len + line_len;
->> +
->> +		/* The remaining text has only decreased by the line. */
->> +		text_len -= line_len;
->> +
->> +		len += prefix_len + line_len + 1;
->> +
->> +		if (text_len) {
->> +			/* Advance past the newline. */
->> +			text++;
->> +			text_len--;
->
-> "text_len" might be zero at this point when the stored string ended
-> with newline.
->
-> It might happen already now when the original text ended by "\n\n".
-> Only the very last '\n' gets removed in vprintk_store().
->
-> It actually looks reasonable to do the extra cycle and printk
-> the (requested) empty line.
->
-> Except that we might end here also when the text was truncated right
-> before the newline marker. Well, this is a corner case, the string
-> is truncated anyway, so we could do whatever is easier in this case.
-
-I agree that the code is quite tricky here. I will refactor as you have
-suggested.
-
-> Well, it will need another update after we remove logbuf_lock. I think that
-> we will need to store the final '\n'. Or at least we would need to
-> reserve a space for it.
-
-What does the logbuf_lock have to do with this? What does this have to
-do with reserving extra space? We are modifying the reader's buffer
-in-place, not the datablock data.
-
-> Anyway, it might deserve some comment somewhere. See below for
-> alternative code.
->
->> +		} else {
->> +			/* The final line, add a newline. */
->> +			*text = '\n';
->> +			break;
->> +		}
->
-> I do not have strong opinion. The code does things by small steps that
-> might be checked easily. But it has many steps and it might hide some
-> subtle catches like the one commented right above.
-
-Your suggestions to simplify are good.
-
->> +static size_t get_record_text_size(struct printk_info *info,
->> +				   unsigned int line_count,
->> +				   bool syslog, bool time)
->> +{
->> +	char prefix[PREFIX_MAX];
->> +	size_t prefix_len;
->> +
->> +	prefix_len = info_print_prefix(info, syslog, time, prefix);
->> +
->> +	/*
->> +	 * Each line will be preceded with a prefix. The intermediate
->> +	 * newlines are already within the text, but a final trailing
->> +	 * newline will be added.
->> +	 */
->> +	return ((prefix_len * line_count) + info->text_len + 1);
->
-> Note: This might need an update when lockbuf_lock gets removed and the
-> trailing newline is not longer removed. We will need to explicitly
-> add it when it was missing.
->
-> We might need to check LOG_NEWLINE flag here. Or come with even better
-> solution.
-
-Again, I do not understand what this has to do with the
-lockbuf_lock. Please explain.
-
-Below is how I would like to implement record_print_text() after
-incorporating your suggestions. Please show me how you would like to see
-the important variable role comments formatted. Thanks.
-
-John Ogness
-
-/*
- * Prepare the record for printing. The text is shifted within the given
- * buffer to avoid a need for another one. The following operations are
- * done:
- *
- *   - Add prefix for each line.
- *   - Add the trailing newline that has been removed in vprintk_store().
- *   - Drop truncated lines that do not longer fit into the buffer.
- *
- * Return: The length of the updated/prepared text, including the added
- * prefixes and the newline. The dropped line(s) are not counted.
- */
-static size_t record_print_text(struct printk_record *r, bool syslog,
-				bool time)
-{
-	size_t text_len = r->info->text_len;
-	size_t buf_size = r->text_buf_size;
-	char *text = r->text_buf;
-	char prefix[PREFIX_MAX];
-	bool truncated = false;
-	size_t prefix_len;
-	size_t line_len;
-	size_t len = 0;
-	char *next;
-
-	prefix_len = info_print_prefix(r->info, syslog, time, prefix);
-
-	/*
-	 * @text_len: bytes of unprocessed text
-	 * @line_len: bytes of current line _without_ newline
-	 * @text:     pointer to beginning of current line
-	 * @len:      number of bytes prepared in r->text_buf
-	 */
-	for (;;) {
-		next = memchr(text, '\n', text_len);
-		if (next) {
-			line_len = next - text;
-		} else {
-			/* Drop truncated line(s). */
-			if (truncated)
-				break;
-			line_len = text_len;
-		}
-
-		/*
-		 * Truncate the text if there is not enough space to add the
-		 * prefix and a trailing newline.
-		 */
-		if (len + prefix_len + text_len + 1 > buf_size) {
-			/* Drop even the current line if no space. */
-			if (len + prefix_len + line_len + 1 > buf_size)
-				break;
-
-			text_len = buf_size - len - prefix_len - 1;
-			truncated = true;
-		}
-
-		memmove(text + prefix_len, text, text_len);
-		memcpy(text, prefix, prefix_len);
-
-		len += prefix_len + line_len + 1;
-
-		if (text_len == line_len) {
-			/*
-			 * Add the trailing newline removed in
-			 * vprintk_store().
-			 */
-			text[prefix_len + line_len] = '\n';
-			break;
-		}
-
-		/*
-		 * Advance beyond the added prefix and the related line with
-		 * its newline.
-		 */
-		text += prefix_len + line_len + 1;
-
-		/*
-		 * The remaining text has only decreased by the line with its
-		 * newline.
-		 *
-		 * Note that @text_len can become zero. It happens when @text
-		 * ended with a newline (either due to truncation or the
-		 * original string ending with "\n\n"). The loop is correctly
-		 * repeated and (if not truncated) an empty line with a prefix
-		 * will be prepared.
-		 */
-		text_len -= line_len + 1;
-	}
-
-	return len;
-}
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpMZSAyNi8wNi8yMDIwIMOgIDIxOjA0LCBIYXJpIEJhdGhpbmkgYSDDqWNyaXTCoDoKPiBTb21l
+IGFyY2hzIGNhbiBoYXZlIHNwZWNpYWwgbWVtb3J5IHJlZ2lvbnMsIHdpdGhpbiB0aGUgZ2l2ZW4g
+bWVtb3J5Cj4gcmFuZ2UsIHdoaWNoIGNhbid0IGJlIHVzZWQgZm9yIHRoZSBidWZmZXIgaW4gYSBr
+ZXhlYyBzZWdtZW50LiBBcwo+IGtleGVjX2FkZF9idWZmZXIoKSBmdW5jdGlvbiBpcyBiZWluZyBj
+YWxsZWQgZnJvbSBnZW5lcmljIGNvZGUgYXMgd2VsbCwKPiBhZGQgd2VhayBhcmNoX2tleGVjX2Fk
+ZF9idWZmZXIgZGVmaW5pdGlvbiBmb3IgYXJjaHMgdG8gb3ZlcnJpZGUgJiB0YWtlCj4gY2FyZSBv
+ZiBzcGVjaWFsIHJlZ2lvbnMgYmVmb3JlIHRyeWluZyB0byBsb2NhdGUgYSBtZW1vcnkgaG9sZS4K
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBIYXJpIEJhdGhpbmkgPGhiYXRoaW5pQGxpbnV4LmlibS5jb20+
+Cj4gLS0tCj4gICBpbmNsdWRlL2xpbnV4L2tleGVjLmggfCAgICA1ICsrKysrCj4gICBrZXJuZWwv
+a2V4ZWNfZmlsZS5jICAgfCAgIDM3ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0t
+LS0KPiAgIDIgZmlsZXMgY2hhbmdlZCwgMzggaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkK
+PiAKPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9rZXhlYy5oIGIvaW5jbHVkZS9saW51eC9r
+ZXhlYy5oCj4gaW5kZXggMTc3NmViMi4uMTIzNzY4MiAxMDA2NDQKPiAtLS0gYS9pbmNsdWRlL2xp
+bnV4L2tleGVjLmgKPiArKysgYi9pbmNsdWRlL2xpbnV4L2tleGVjLmgKPiBAQCAtMTk1LDYgKzE5
+NSwxMSBAQCBpbnQgX193ZWFrIGFyY2hfa2V4ZWNfYXBwbHlfcmVsb2NhdGlvbnMoc3RydWN0IHB1
+cmdhdG9yeV9pbmZvICpwaSwKPiAgIAkJCQkJY29uc3QgRWxmX1NoZHIgKnJlbHNlYywKPiAgIAkJ
+CQkJY29uc3QgRWxmX1NoZHIgKnN5bXRhYik7Cj4gICAKPiArZXh0ZXJuIGludCBhcmNoX2tleGVj
+X2FkZF9idWZmZXIoc3RydWN0IGtleGVjX2J1ZiAqa2J1Zik7Cj4gKwoKZXh0ZXJuIGtleXdvcmsg
+aXMgdXNlbGVzcyBoZXJlLCBwbGVhc2UgcmVtb3ZlIChjaGVja3BhdGNoIGFsc28gY29tcGxhaW5z
+IAphYm91dCBpdCB1c3VhbGx5KS4KCj4gKy8qIGFyY2hfa2V4ZWNfYWRkX2J1ZmZlciBjYWxscyB0
+aGlzIHdoZW4gaXQgaXMgcmVhZHkgKi8KPiArZXh0ZXJuIGludCBfX2tleGVjX2FkZF9idWZmZXIo
+c3RydWN0IGtleGVjX2J1ZiAqa2J1Zik7Cj4gKwoKc2FtZQoKPiAgIGV4dGVybiBpbnQga2V4ZWNf
+YWRkX2J1ZmZlcihzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmKTsKPiAgIGludCBrZXhlY19sb2NhdGVf
+bWVtX2hvbGUoc3RydWN0IGtleGVjX2J1ZiAqa2J1Zik7Cj4gICAKPiBkaWZmIC0tZ2l0IGEva2Vy
+bmVsL2tleGVjX2ZpbGUuYyBiL2tlcm5lbC9rZXhlY19maWxlLmMKPiBpbmRleCBiYjA1ZmQ1Li5h
+MGI0ZjdmIDEwMDY0NAo+IC0tLSBhL2tlcm5lbC9rZXhlY19maWxlLmMKPiArKysgYi9rZXJuZWwv
+a2V4ZWNfZmlsZS5jCj4gQEAgLTY2OSwxMCArNjY5LDYgQEAgaW50IGtleGVjX2xvY2F0ZV9tZW1f
+aG9sZShzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmKQo+ICAgICovCj4gICBpbnQga2V4ZWNfYWRkX2J1
+ZmZlcihzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmKQo+ICAgewo+IC0KPiAtCXN0cnVjdCBrZXhlY19z
+ZWdtZW50ICprc2VnbWVudDsKPiAtCWludCByZXQ7Cj4gLQo+ICAgCS8qIEN1cnJlbnRseSBhZGRp
+bmcgc2VnbWVudCB0aGlzIHdheSBpcyBhbGxvd2VkIG9ubHkgaW4gZmlsZSBtb2RlICovCj4gICAJ
+aWYgKCFrYnVmLT5pbWFnZS0+ZmlsZV9tb2RlKQo+ICAgCQlyZXR1cm4gLUVJTlZBTDsKPiBAQCAt
+Njk2LDYgKzY5MiwyNSBAQCBpbnQga2V4ZWNfYWRkX2J1ZmZlcihzdHJ1Y3Qga2V4ZWNfYnVmICpr
+YnVmKQo+ICAgCWtidWYtPm1lbXN6ID0gQUxJR04oa2J1Zi0+bWVtc3osIFBBR0VfU0laRSk7Cj4g
+ICAJa2J1Zi0+YnVmX2FsaWduID0gbWF4KGtidWYtPmJ1Zl9hbGlnbiwgUEFHRV9TSVpFKTsKPiAg
+IAo+ICsJcmV0dXJuIGFyY2hfa2V4ZWNfYWRkX2J1ZmZlcihrYnVmKTsKPiArfQo+ICsKPiArLyoq
+Cj4gKyAqIF9fa2V4ZWNfYWRkX2J1ZmZlciAtIGFyY2hfa2V4ZWNfYWRkX2J1ZmZlciB3b3VsZCBj
+YWxsIHRoaXMgZnVuY3Rpb24gYWZ0ZXIKPiArICogICAgICAgICAgICAgICAgICAgICAgdXBkYXRp
+bmcga2J1ZiwgdG8gcGxhY2UgYSBidWZmZXIgaW4gYSBrZXhlYyBzZWdtZW50Lgo+ICsgKiBAa2J1
+ZjogICAgICAgICAgICAgICBCdWZmZXIgY29udGVudHMgYW5kIG1lbW9yeSBwYXJhbWV0ZXJzLgo+
+ICsgKgo+ICsgKiBUaGlzIGZ1bmN0aW9uIGFzc3VtZXMgdGhhdCBrZXhlY19tdXRleCBpcyBoZWxk
+Lgo+ICsgKiBPbiBzdWNjZXNzZnVsIHJldHVybiwgQGtidWYtPm1lbSB3aWxsIGhhdmUgdGhlIHBo
+eXNpY2FsIGFkZHJlc3Mgb2YKPiArICogdGhlIGJ1ZmZlciBpbiBtZW1vcnkuCj4gKyAqCj4gKyAq
+IFJldHVybjogMCBvbiBzdWNjZXNzLCBuZWdhdGl2ZSBlcnJubyBvbiBlcnJvci4KPiArICovCj4g
+K2ludCBfX2tleGVjX2FkZF9idWZmZXIoc3RydWN0IGtleGVjX2J1ZiAqa2J1ZikKPiArewo+ICsJ
+c3RydWN0IGtleGVjX3NlZ21lbnQgKmtzZWdtZW50Owo+ICsJaW50IHJldDsKPiArCj4gICAJLyog
+V2FsayB0aGUgUkFNIHJhbmdlcyBhbmQgYWxsb2NhdGUgYSBzdWl0YWJsZSByYW5nZSBmb3IgdGhl
+IGJ1ZmZlciAqLwo+ICAgCXJldCA9IGtleGVjX2xvY2F0ZV9tZW1faG9sZShrYnVmKTsKPiAgIAlp
+ZiAocmV0KQo+IEBAIC03MTEsNiArNzI2LDIwIEBAIGludCBrZXhlY19hZGRfYnVmZmVyKHN0cnVj
+dCBrZXhlY19idWYgKmtidWYpCj4gICAJcmV0dXJuIDA7Cj4gICB9Cj4gICAKPiArLyoqCj4gKyAq
+IGFyY2hfa2V4ZWNfYWRkX2J1ZmZlciAtIFNvbWUgYXJjaHMgaGF2ZSBtZW1vcnkgcmVnaW9ucyB3
+aXRoaW4gdGhlIGdpdmVuCj4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgIHJhbmdlIHRoYXQg
+Y2FuJ3QgYmUgdXNlZCB0byBwbGFjZSBhIGtleGVjIHNlZ21lbnQuCj4gKyAqICAgICAgICAgICAg
+ICAgICAgICAgICAgIFN1Y2ggYXJjaHMgY2FuIG92ZXJyaWRlIHRoaXMgZnVuY3Rpb24gdG8gdGFr
+ZSBjYXJlCj4gKyAqICAgICAgICAgICAgICAgICAgICAgICAgIG9mIHRoZW0gYmVmb3JlIHRyeWlu
+ZyB0byBsb2NhdGUgdGhlIG1lbW9yeSBob2xlLgo+ICsgKiBAa2J1ZjogICAgICAgICAgICAgICAg
+ICBCdWZmZXIgY29udGVudHMgYW5kIG1lbW9yeSBwYXJhbWV0ZXJzLgo+ICsgKgo+ICsgKiBSZXR1
+cm46IDAgb24gc3VjY2VzcywgbmVnYXRpdmUgZXJybm8gb24gZXJyb3IuCj4gKyAqLwo+ICtpbnQg
+X193ZWFrIGFyY2hfa2V4ZWNfYWRkX2J1ZmZlcihzdHJ1Y3Qga2V4ZWNfYnVmICprYnVmKQo+ICt7
+Cj4gKwlyZXR1cm4gX19rZXhlY19hZGRfYnVmZmVyKGtidWYpOwo+ICt9Cj4gKwo+ICAgLyogQ2Fs
+Y3VsYXRlIGFuZCBzdG9yZSB0aGUgZGlnZXN0IG9mIHNlZ21lbnRzICovCj4gICBzdGF0aWMgaW50
+IGtleGVjX2NhbGN1bGF0ZV9zdG9yZV9kaWdlc3RzKHN0cnVjdCBraW1hZ2UgKmltYWdlKQo+ICAg
+ewo+IAoKQ2hyaXN0b3BoZQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
