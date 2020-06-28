@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp.al2klimov.de ([2a01:4f8:c0c:1465::1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jp87y-0000qJ-AC
- for kexec@lists.infradead.org; Sat, 27 Jun 2020 10:32:06 +0000
-From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Subject: [PATCH] Replace HTTP links with HTTPS ones: kdump
-Date: Sat, 27 Jun 2020 12:31:51 +0200
-Message-Id: <20200627103151.71942-1-grandmaster@al2klimov.de>
+Received: from linux.microsoft.com ([13.77.154.182])
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jpKn3-0001DR-6f
+ for kexec@lists.infradead.org; Sun, 28 Jun 2020 00:03:22 +0000
+Subject: Re: [PATCH v2 11/11] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-12-tyhicks@linux.microsoft.com>
+From: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+Message-ID: <f8897c9a-2ee4-c42b-3138-15ea9d14852c@linux.microsoft.com>
+Date: Sat, 27 Jun 2020 17:03:11 -0700
 MIME-Version: 1.0
+In-Reply-To: <20200626223900.253615-12-tyhicks@linux.microsoft.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,80 +21,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, corbet@lwn.net, kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+To: Tyler Hicks <tyhicks@linux.microsoft.com>, Mimi Zohar <zohar@linux.ibm.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>
+Cc: Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morris <jmorris@namei.org>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-Rationale:
-Reduces attack surface on kernel devs opening the links for MITM
-as HTTPS traffic is much harder to manipulate.
+On 6/26/20 3:39 PM, Tyler Hicks wrote:
+> Take the properties of the kexec kernel's inode and the current task
+> ownership into consideration when matching a KEXEC_CMDLINE operation to
+> the rules in the IMA policy. This allows for some uniformity when
+> writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
+> and KEXEC_CMDLINE operations.
+> 
+> Prior to this patch, it was not possible to write a set of rules like
+> this:
+> 
+>   dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>   dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>   dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>   measure func=KEXEC_KERNEL_CHECK
+>   measure func=KEXEC_INITRAMFS_CHECK
+>   measure func=KEXEC_CMDLINE
+> 
+> The inode information associated with the kernel being loaded by a
+> kexec_kernel_load(2) syscall can now be included in the decision to
+> measure or not
+> 
+> Additonally, the uid, euid, and subj_* conditionals can also now be
+> used in KEXEC_CMDLINE rules. There was no technical reason as to why
+> those conditionals weren't being considered previously other than
+> ima_match_rules() didn't have a valid inode to use so it immediately
+> bailed out for KEXEC_CMDLINE operations rather than going through the
+> full list of conditional comparisons.
+> 
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> ---
+> 
+> * v2
+>    - Moved the inode parameter of process_buffer_measurement() to be the
+>      first parameter so that it more closely matches process_masurement()
+> 
+>   include/linux/ima.h                          |  4 ++--
+>   kernel/kexec_file.c                          |  2 +-
+>   security/integrity/ima/ima.h                 |  2 +-
+>   security/integrity/ima/ima_api.c             |  2 +-
+>   security/integrity/ima/ima_appraise.c        |  2 +-
+>   security/integrity/ima/ima_asymmetric_keys.c |  2 +-
+>   security/integrity/ima/ima_main.c            | 23 +++++++++++++++-----
+>   security/integrity/ima/ima_policy.c          | 17 +++++----------
+>   security/integrity/ima/ima_queue_keys.c      |  2 +-
+>   9 files changed, 31 insertions(+), 25 deletions(-)
+> 
 
-Deterministic algorithm:
-For each file:
-  If not .svg:
-    For each line:
-      If doesn't contain `\bxmlns\b`:
-        For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
-          If both the HTTP and HTTPS versions
-          return 200 OK and serve the same content:
-            Replace HTTP with HTTPS.
-
-Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
----
- If there are any URLs to be removed completely or at least not HTTPSified:
- Just clearly say so and I'll *undo my change*.
- See also https://lkml.org/lkml/2020/6/27/64
-
- If there are any valid, but yet not changed URLs:
- See https://lkml.org/lkml/2020/6/26/837
-
- Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 2da65fef2a1c..8cfa35f777f5 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -65,20 +65,20 @@ Install kexec-tools
- 
- 2) Download the kexec-tools user-space package from the following URL:
- 
--http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
-+https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
- 
- This is a symlink to the latest version.
- 
- The latest kexec-tools git tree is available at:
- 
- - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
--- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-+- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
- 
- There is also a gitweb interface available at
--http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
-+https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
- 
- More information about kexec-tools can be found at
--http://horms.net/projects/kexec/
-+https://horms.net/projects/kexec/
- 
- 3) Unpack the tarball with the tar command, as follows::
- 
-@@ -511,7 +511,7 @@ dump kernel.
- You can also use the Crash utility to analyze dump files in Kdump
- format. Crash is available on Dave Anderson's site at the following URL:
- 
--   http://people.redhat.com/~anderson/
-+   https://people.redhat.com/~anderson/
- 
- Trigger Kdump on WARN()
- =======================
--- 
-2.27.0
-
+Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
 _______________________________________________
 kexec mailing list
