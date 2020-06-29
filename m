@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
-Subject: Re: [PATCH v9 0/5] support reserving crashkernel above 4G on arm64
- kdump
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <20200628083458.40066-1-chenzhou10@huawei.com>
-Date: Mon, 29 Jun 2020 09:44:06 -0500
-Message-Id: <7DE7332B-1431-466A-A1DB-658A8D65F5CE@oracle.com>
-References: <20200628083458.40066-1-chenzhou10@huawei.com>
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jq1go-0003oT-1V
+ for kexec@lists.infradead.org; Mon, 29 Jun 2020 21:51:46 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: syslog size unread: was: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625152042.GI8444@alley>
+Date: Mon, 29 Jun 2020 23:51:40 +0200
+In-Reply-To: <20200625152042.GI8444@alley> (Petr Mladek's message of "Thu, 25
+ Jun 2020 17:20:42 +0200")
+Message-ID: <87k0zp8rrn.fsf@jogness.linutronix.de>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,146 +26,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: horms@verge.net.au, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, dyoung@redhat.com, guohanjun@huawei.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, Thomas Gleixner <tglx@linutronix.de>, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi , 
+On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
+> On Thu 2020-06-18 16:55:19, John Ogness wrote:
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -1609,11 +1633,15 @@ int do_syslog(int type, char __user *buf, int len, int source)
+>>  		break;
+>>  	/* Number of chars in the log buffer */
+>>  	case SYSLOG_ACTION_SIZE_UNREAD:
+>> +		if (source != SYSLOG_FROM_PROC) {
+>> +			text = kmalloc(LOG_LINE_MAX + PREFIX_MAX, GFP_KERNEL);
+>> +			if (!text)
+>> +				return -ENOMEM;
+>
+> The buffer is needed only to count lines to count the size of added
+> prefixes. Could we use the new prb_read_valid_info() that allows to
+> get the number of lines without actually reading the buffer?
 
-> On Jun 28, 2020, at 3:34 AM, Chen Zhou <chenzhou10@huawei.com> wrote:
-> 
-> This patch series enable reserving crashkernel above 4G in arm64.
-> 
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
-> when there is no enough low memory.
-> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
-> in this case, if swiotlb or DMA buffers are required, crash dump kernel
-> will boot failure because there is no low memory available for allocation.
-> 3. commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32") broken
-> the arm64 kdump. If the memory reserved for crash dump kernel falled in
-> ZONE_DMA32, the devices in crash dump kernel need to use ZONE_DMA will alloc
-> fail.
-> 
-> To solve these issues, introduce crashkernel=X,low to reserve specified
-> size low memory.
-> Crashkernel=X tries to reserve memory for the crash dump kernel under
-> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
-> size low memory for crash kdump kernel devices firstly and then reserve
-> memory above 4G.
-> 
-> When crashkernel is reserved above 4G in memory and crashkernel=X,low
-> is specified simultaneously, kernel should reserve specified size low memory
-> for crash dump kernel devices. So there may be two crash kernel regions, one
-> is below 4G, the other is above 4G.
-> In order to distinct from the high region and make no effect to the use of
-> kexec-tools, rename the low region as "Crash kernel (low)", and pass the
-> low region by reusing DT property "linux,usable-memory-range". We made the low
-> memory region as the last range of "linux,usable-memory-range" to keep
-> compatibility with existing user-space and older kdump kernels.
-> 
-> Besides, we need to modify kexec-tools:
-> arm64: support more than one crash kernel regions(see [1])
-> 
-> Another update is document about DT property 'linux,usable-memory-range':
-> schemas: update 'linux,usable-memory-range' node schema(see [2])
-> 
-> The previous changes and discussions can be retrieved from:
-> 
-> Changes since [v8]
-> - Reuse DT property "linux,usable-memory-range".
-> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
-> memory region.
-> - Fix kdump broken with ZONE_DMA reintroduced.
-> - Update chosen schema.
+Yes!
 
-  
-  Nice job Chen, 
+For the next version I introduce a macro to iterate just the meta data:
 
-  Does this need a Ack-by from the Raspberry maintainers on this ZONE_DMA fix  ?
+#define prb_for_each_info(from, rb, s, i, lc) \
+for ((s) = from; prb_read_valid_info(rb, s, i, lc); (s) = (i)->seq + 1)
 
-  This activity has been going on for over a year now.  Can we please get this finalized and merged ?
- 
- Thank you,
- John.
+This can be used in all 3 locations where prb_count_lines() is used. In
+all three places, there is no need to be copying the data. And for
+SYSLOG_ACTION_SIZE_UNREAD, there is no need for the record and kmalloc'd
+buffer.
 
+This also means that prb_count_lines() will become a private static
+helper of the ringbuffer.
 
-
-> 
-> Changes since [v7]
-> - Move x86 CRASH_ALIGN to 2M
-> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
-> - Update Documentation/devicetree/bindings/chosen.txt.
-> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
-> suggested by Arnd.
-> - Add Tested-by from Jhon and pk.
-> 
-> Changes since [v6]
-> - Fix build errors reported by kbuild test robot.
-> 
-> Changes since [v5]
-> - Move reserve_crashkernel_low() into kernel/crash_core.c.
-> - Delete crashkernel=X,high.
-> - Modify crashkernel=X,low.
-> If crashkernel=X,low is specified simultaneously, reserve spcified size low
-> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-> pass to crash dump kernel by DT property "linux,low-memory-range".
-> - Update Documentation/admin-guide/kdump/kdump.rst.
-> 
-> Changes since [v4]
-> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
-> 
-> Changes since [v3]
-> - Add memblock_cap_memory_ranges back for multiple ranges.
-> - Fix some compiling warnings.
-> 
-> Changes since [v2]
-> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-> patch.
-> 
-> Changes since [v1]:
-> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
-> in fdt_enforce_memory_region().
-> There are at most two crash kernel regions, for two crash kernel regions
-> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-> and then remove the memory range in the middle.
-> 
-> [1]: https://urldefense.com/v3/__http://lists.infradead.org/pipermail/kexec/2020-June/020737.html__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw-1A43Ss$ 
-> [2]: https://urldefense.com/v3/__https://github.com/robherring/dt-schema/pull/19__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw9xTB8yT$  
-> [v1]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/2/1174__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw2EAOIhM$ 
-> [v2]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/86__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwx3ILnLL$ 
-> [v3]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/306__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw5YJeYoP$ 
-> [v4]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/15/273__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwxbrySTW$ 
-> [v5]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/5/6/1360__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwzGOGcMs$ 
-> [v6]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/8/30/142__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw70P0bKy$ 
-> [v7]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/12/23/411__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw29m6Wrh$ 
-> [v8]: https://urldefense.com/v3/__https://lkml.org/lkml/2020/5/21/213__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw-jGzScF$ 
-> 
-> Chen Zhou (5):
->  x86: kdump: move reserve_crashkernel_low() into crash_core.c
->  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
->  arm64: kdump: add memory for devices by DT property
->    linux,usable-memory-range
->  arm64: kdump: fix kdump broken with ZONE_DMA reintroduced
->  kdump: update Documentation about crashkernel on arm64
-> 
-> Documentation/admin-guide/kdump/kdump.rst     | 13 ++-
-> .../admin-guide/kernel-parameters.txt         | 17 +++-
-> arch/arm64/kernel/setup.c                     |  8 +-
-> arch/arm64/mm/init.c                          | 74 ++++++++++++---
-> arch/x86/kernel/setup.c                       | 66 ++------------
-> include/linux/crash_core.h                    |  3 +
-> include/linux/kexec.h                         |  2 -
-> kernel/crash_core.c                           | 90 +++++++++++++++++++
-> kernel/kexec_core.c                           | 17 ----
-> 9 files changed, 196 insertions(+), 94 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
-
+John Ogness
 
 _______________________________________________
 kexec mailing list
