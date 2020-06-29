@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jpmlD-0001mX-1p
- for kexec@lists.infradead.org; Mon, 29 Jun 2020 05:55:19 +0000
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
+ id 1jpmqp-0002G6-U7
+ for kexec@lists.infradead.org; Mon, 29 Jun 2020 06:01:08 +0000
+Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
+ while locating memory hole
 References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
- <9cfda789-0747-a67a-b825-5ea6f15099b8@redhat.com>
+ <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
+ <ed94a357-16aa-9f17-aa5f-5aab6617ed68@redhat.com>
 From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <f745de42-297e-6eed-d25b-ea21d6000dc5@linux.ibm.com>
-Date: Mon, 29 Jun 2020 11:25:02 +0530
+Message-ID: <38237270-ce15-c8ec-a527-1ff938ca257d@linux.ibm.com>
+Date: Mon, 29 Jun 2020 11:30:35 +0530
 MIME-Version: 1.0
-In-Reply-To: <9cfda789-0747-a67a-b825-5ea6f15099b8@redhat.com>
+In-Reply-To: <ed94a357-16aa-9f17-aa5f-5aab6617ed68@redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,46 +28,32 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: piliu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
 
 
-On 28/06/20 7:44 am, piliu wrote:
+On 28/06/20 7:58 am, piliu wrote:
 > Hi Hari,
-
-Hi Pingfan,
-
 > 
-> After a quick through for this series, I have a few question/comment on
-> this patch for the time being. Pls see comment inline.
-> 
-> On 06/27/2020 03:05 AM, Hari Bathini wrote:
->> crashkernel region could have an overlap with special memory regions
->> like  opal, rtas, tce-table & such. These regions are referred to as
->> exclude memory ranges. Setup this ranges during image probe in order
->> to avoid them while finding the buffer for different kdump segments.
+> If in [4/11],  get_exclude_memory_ranges() turns out to be unnecessary
+> ,then this patch is abundant either. As my understanding, memblock has
+> already helped to achieved the purpose that get_exclude_memory_ranges()
+> wants.
 
-[...]
+As mentioned in the other patch, there is a need for @exclude_ranges as crashkernel
+region is likely to have an overlap with regions like opal, rtas..
 
->> +	/*
->> +	 * Use the locate_mem_hole logic in kexec_add_buffer() for regular
->> +	 * kexec_file_load syscall
->> +	 */
->> +	if (kbuf->image->type != KEXEC_TYPE_CRASH)
->> +		return 0;
-> Can the ranges overlap [crashk_res.start, crashk_res.end]?  Otherwise
-> there is no requirement for @exclude_ranges.
+But yeah.. the weak function should have been kexec_locate_mem_hole() instead
+of kexec_add_buffer(). Will take care of that in v2.
 
-The ranges like rtas, opal are loaded by f/w. They almost always overlap with
-crashkernel region. So, @exclude_ranges is required to support kdump.
-
-> I guess you have a design for future. If not true, then it is better to
-> fold the condition "if (kbuf->image->type != KEXEC_TYPE_CRASH)" into the
-> caller and rename this function to better distinguish use cases between
-> kexec and kdump
-
-Yeah, this condition will be folded. I have a follow-up patch for that explaining
-why kexec case should also be folded. Will try to add that to this series for v2.
+> On 06/27/2020 03:04 AM, Hari Bathini wrote:
+>> Some archs can have special memory regions, within the given memory
+>> range, which can't be used for the buffer in a kexec segment. As
+>> kexec_add_buffer() function is being called from generic code as well,
+>> add weak arch_kexec_add_buffer definition for archs to override & take
+>> care of special regions before trying to locate a memory hole.
+>>
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 
 Thanks
 Hari
