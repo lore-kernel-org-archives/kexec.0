@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jps8U-0003LS-6P
- for kexec@lists.infradead.org; Mon, 29 Jun 2020 11:39:43 +0000
-Date: Mon, 29 Jun 2020 13:39:33 +0200
-From: Petr Tesarik <ptesarik@suse.cz>
-Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
- while locating memory hole
-Message-ID: <20200629133933.0787f562@ezekiel.suse.cz>
-In-Reply-To: <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
-MIME-Version: 1.0
+Mime-Version: 1.0 (Mac OS X Mail 11.5 \(3445.9.5\))
+Subject: Re: [PATCH v9 0/5] support reserving crashkernel above 4G on arm64
+ kdump
+From: John Donnelly <john.p.donnelly@oracle.com>
+In-Reply-To: <20200628083458.40066-1-chenzhou10@huawei.com>
+Date: Mon, 29 Jun 2020 09:44:06 -0500
+Message-Id: <7DE7332B-1431-466A-A1DB-658A8D65F5CE@oracle.com>
+References: <20200628083458.40066-1-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,172 +15,152 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8897946850049456692=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: horms@verge.net.au, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, dyoung@redhat.com, guohanjun@huawei.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, Thomas Gleixner <tglx@linutronix.de>, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
 
---===============8897946850049456692==
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/D5Q_Btj.Z_5nJ6kJU141Zr9"; protocol="application/pgp-signature"
+Hi , 
 
---Sig_/D5Q_Btj.Z_5nJ6kJU141Zr9
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> On Jun 28, 2020, at 3:34 AM, Chen Zhou <chenzhou10@huawei.com> wrote:
+> 
+> This patch series enable reserving crashkernel above 4G in arm64.
+> 
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel below 4G, which will fail
+> when there is no enough low memory.
+> 2. Currently, crashkernel=Y@X can be used to reserve crashkernel above 4G,
+> in this case, if swiotlb or DMA buffers are required, crash dump kernel
+> will boot failure because there is no low memory available for allocation.
+> 3. commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32") broken
+> the arm64 kdump. If the memory reserved for crash dump kernel falled in
+> ZONE_DMA32, the devices in crash dump kernel need to use ZONE_DMA will alloc
+> fail.
+> 
+> To solve these issues, introduce crashkernel=X,low to reserve specified
+> size low memory.
+> Crashkernel=X tries to reserve memory for the crash dump kernel under
+> 4G. If crashkernel=Y,low is specified simultaneously, reserve spcified
+> size low memory for crash kdump kernel devices firstly and then reserve
+> memory above 4G.
+> 
+> When crashkernel is reserved above 4G in memory and crashkernel=X,low
+> is specified simultaneously, kernel should reserve specified size low memory
+> for crash dump kernel devices. So there may be two crash kernel regions, one
+> is below 4G, the other is above 4G.
+> In order to distinct from the high region and make no effect to the use of
+> kexec-tools, rename the low region as "Crash kernel (low)", and pass the
+> low region by reusing DT property "linux,usable-memory-range". We made the low
+> memory region as the last range of "linux,usable-memory-range" to keep
+> compatibility with existing user-space and older kdump kernels.
+> 
+> Besides, we need to modify kexec-tools:
+> arm64: support more than one crash kernel regions(see [1])
+> 
+> Another update is document about DT property 'linux,usable-memory-range':
+> schemas: update 'linux,usable-memory-range' node schema(see [2])
+> 
+> The previous changes and discussions can be retrieved from:
+> 
+> Changes since [v8]
+> - Reuse DT property "linux,usable-memory-range".
+> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
+> memory region.
+> - Fix kdump broken with ZONE_DMA reintroduced.
+> - Update chosen schema.
 
-Hi Hari,
+  
+  Nice job Chen, 
 
-is there any good reason to add two more functions with a very similar
-name to an existing function? AFAICS all you need is a way to call a
-PPC64-specific function from within kexec_add_buffer (PATCH 4/11), so
-you could add something like this:
+  Does this need a Ack-by from the Raspberry maintainers on this ZONE_DMA fix  ?
 
-int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-{
-	return 0;
-}
-
-Call this function from kexec_add_buffer where appropriate and then
-override it for PPC64 (it roughly corresponds to your
-kexec_locate_mem_hole_ppc64() from PATCH 4/11).
-
-FWIW it would make it easier for me to follow the resulting code.
-
-Petr T
-
-On Sat, 27 Jun 2020 00:34:43 +0530
-Hari Bathini <hbathini@linux.ibm.com> wrote:
-
-> Some archs can have special memory regions, within the given memory
-> range, which can't be used for the buffer in a kexec segment. As
-> kexec_add_buffer() function is being called from generic code as well,
-> add weak arch_kexec_add_buffer definition for archs to override & take
-> care of special regions before trying to locate a memory hole.
->=20
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> ---
->  include/linux/kexec.h |    5 +++++
->  kernel/kexec_file.c   |   37 +++++++++++++++++++++++++++++++++----
->  2 files changed, 38 insertions(+), 4 deletions(-)
->=20
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 1776eb2..1237682 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -195,6 +195,11 @@ int __weak arch_kexec_apply_relocations(struct purga=
-tory_info *pi,
->  					const Elf_Shdr *relsec,
->  					const Elf_Shdr *symtab);
-> =20
-> +extern int arch_kexec_add_buffer(struct kexec_buf *kbuf);
-> +
-> +/* arch_kexec_add_buffer calls this when it is ready */
-> +extern int __kexec_add_buffer(struct kexec_buf *kbuf);
-> +
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
-> =20
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index bb05fd5..a0b4f7f 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -669,10 +669,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
->   */
->  int kexec_add_buffer(struct kexec_buf *kbuf)
->  {
-> -
-> -	struct kexec_segment *ksegment;
-> -	int ret;
-> -
->  	/* Currently adding segment this way is allowed only in file mode */
->  	if (!kbuf->image->file_mode)
->  		return -EINVAL;
-> @@ -696,6 +692,25 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	kbuf->memsz =3D ALIGN(kbuf->memsz, PAGE_SIZE);
->  	kbuf->buf_align =3D max(kbuf->buf_align, PAGE_SIZE);
-> =20
-> +	return arch_kexec_add_buffer(kbuf);
-> +}
-> +
-> +/**
-> + * __kexec_add_buffer - arch_kexec_add_buffer would call this function a=
-fter
-> + *                      updating kbuf, to place a buffer in a kexec segm=
-ent.
-> + * @kbuf:               Buffer contents and memory parameters.
-> + *
-> + * This function assumes that kexec_mutex is held.
-> + * On successful return, @kbuf->mem will have the physical address of
-> + * the buffer in memory.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __kexec_add_buffer(struct kexec_buf *kbuf)
-> +{
-> +	struct kexec_segment *ksegment;
-> +	int ret;
-> +
->  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
->  	ret =3D kexec_locate_mem_hole(kbuf);
->  	if (ret)
-> @@ -711,6 +726,20 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
->  	return 0;
->  }
-> =20
-> +/**
-> + * arch_kexec_add_buffer - Some archs have memory regions within the giv=
-en
-> + *                         range that can't be used to place a kexec seg=
-ment.
-> + *                         Such archs can override this function to take=
- care
-> + *                         of them before trying to locate the memory ho=
-le.
-> + * @kbuf:                  Buffer contents and memory parameters.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int __weak arch_kexec_add_buffer(struct kexec_buf *kbuf)
-> +{
-> +	return __kexec_add_buffer(kbuf);
-> +}
-> +
->  /* Calculate and store the digest of segments */
->  static int kexec_calculate_store_digests(struct kimage *image)
->  {
->=20
+  This activity has been going on for over a year now.  Can we please get this finalized and merged ?
+ 
+ Thank you,
+ John.
 
 
---Sig_/D5Q_Btj.Z_5nJ6kJU141Zr9
-Content-Type: application/pgp-signature
-Content-Description: =?unknown-8bit?q?Digit=C3=A1ln=C3=AD?= podpis OpenPGP
 
------BEGIN PGP SIGNATURE-----
+> 
+> Changes since [v7]
+> - Move x86 CRASH_ALIGN to 2M
+> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+> - Update Documentation/devicetree/bindings/chosen.txt.
+> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
+> suggested by Arnd.
+> - Add Tested-by from Jhon and pk.
+> 
+> Changes since [v6]
+> - Fix build errors reported by kbuild test robot.
+> 
+> Changes since [v5]
+> - Move reserve_crashkernel_low() into kernel/crash_core.c.
+> - Delete crashkernel=X,high.
+> - Modify crashkernel=X,low.
+> If crashkernel=X,low is specified simultaneously, reserve spcified size low
+> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
+> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
+> pass to crash dump kernel by DT property "linux,low-memory-range".
+> - Update Documentation/admin-guide/kdump/kdump.rst.
+> 
+> Changes since [v4]
+> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+> 
+> Changes since [v3]
+> - Add memblock_cap_memory_ranges back for multiple ranges.
+> - Fix some compiling warnings.
+> 
+> Changes since [v2]
+> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+> patch.
+> 
+> Changes since [v1]:
+> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
+> in fdt_enforce_memory_region().
+> There are at most two crash kernel regions, for two crash kernel regions
+> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+> and then remove the memory range in the middle.
+> 
+> [1]: https://urldefense.com/v3/__http://lists.infradead.org/pipermail/kexec/2020-June/020737.html__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw-1A43Ss$ 
+> [2]: https://urldefense.com/v3/__https://github.com/robherring/dt-schema/pull/19__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw9xTB8yT$  
+> [v1]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/2/1174__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw2EAOIhM$ 
+> [v2]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/86__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwx3ILnLL$ 
+> [v3]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/9/306__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw5YJeYoP$ 
+> [v4]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/4/15/273__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwxbrySTW$ 
+> [v5]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/5/6/1360__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbwzGOGcMs$ 
+> [v6]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/8/30/142__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw70P0bKy$ 
+> [v7]: https://urldefense.com/v3/__https://lkml.org/lkml/2019/12/23/411__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw29m6Wrh$ 
+> [v8]: https://urldefense.com/v3/__https://lkml.org/lkml/2020/5/21/213__;!!GqivPVa7Brio!OnPQrQrzeDmjwp6OTFe3rN1ddb-AUny-Wq5vlaMfxI3rSentYYQy-2H91dqbw-jGzScF$ 
+> 
+> Chen Zhou (5):
+>  x86: kdump: move reserve_crashkernel_low() into crash_core.c
+>  arm64: kdump: reserve crashkenel above 4G for crash dump kernel
+>  arm64: kdump: add memory for devices by DT property
+>    linux,usable-memory-range
+>  arm64: kdump: fix kdump broken with ZONE_DMA reintroduced
+>  kdump: update Documentation about crashkernel on arm64
+> 
+> Documentation/admin-guide/kdump/kdump.rst     | 13 ++-
+> .../admin-guide/kernel-parameters.txt         | 17 +++-
+> arch/arm64/kernel/setup.c                     |  8 +-
+> arch/arm64/mm/init.c                          | 74 ++++++++++++---
+> arch/x86/kernel/setup.c                       | 66 ++------------
+> include/linux/crash_core.h                    |  3 +
+> include/linux/kexec.h                         |  2 -
+> kernel/crash_core.c                           | 90 +++++++++++++++++++
+> kernel/kexec_core.c                           | 17 ----
+> 9 files changed, 196 insertions(+), 94 deletions(-)
+> 
+> -- 
+> 2.20.1
+> 
 
-iQEzBAEBCAAdFiEEHl2YIZkIo5VO2MxYqlA7ya4PR6cFAl750vUACgkQqlA7ya4P
-R6dpTAf/dLQ6L45/sKP4CXfNn4HbDkmtImkYe5MjG/bvbhQrgLZxll54L0YT2bt/
-Xml4Bam2sLd761+VlBcJaQXLojyENgxLEpyAN2XXCFW+8YSipIRrpvmX8RrP+Szr
-PbYupPmCs8Y7GS6iptYE8nASFVQJm4JS4h/HZCsyUcZUpe+lrlM2BkO42FP+X8L9
-KdDubtEyyyWzwXx1PWpfq+I5IDIVKaIaCvXBeOp8OIjnHE4mtRcnMfahD2TBg3LM
-2ga/b4txkwuVkrnVuBaAjMmcK95nlth5oc0NFGMvyoLFUiS48fHYhwFWn7gYQW54
-08VDEBmerlqmS/Qvkym6ERI2MsuC6A==
-=M+ug
------END PGP SIGNATURE-----
-
---Sig_/D5Q_Btj.Z_5nJ6kJU141Zr9--
-
-
---===============8897946850049456692==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============8897946850049456692==--
-
