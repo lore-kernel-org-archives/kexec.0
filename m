@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jq1mt-0005CB-FF
- for kexec@lists.infradead.org; Mon, 29 Jun 2020 21:58:04 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless
- ringbuffer
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
- <20200625082838.GF6156@alley> <87sgeh3m5j.fsf@jogness.linutronix.de>
- <20200629140445.GK6156@alley>
-Date: Mon, 29 Jun 2020 23:57:59 +0200
-In-Reply-To: <20200629140445.GK6156@alley> (Petr Mladek's message of "Mon, 29
- Jun 2020 16:04:45 +0200")
-Message-ID: <87ftad8rh4.fsf@jogness.linutronix.de>
+ id 1jq6ys-0007Vz-P9
+ for kexec@lists.infradead.org; Tue, 30 Jun 2020 03:30:47 +0000
+Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+ <9cfda789-0747-a67a-b825-5ea6f15099b8@redhat.com>
+ <f745de42-297e-6eed-d25b-ea21d6000dc5@linux.ibm.com>
+From: piliu <piliu@redhat.com>
+Message-ID: <283fc181-2331-7c2f-db66-5e02e5ffb2e4@redhat.com>
+Date: Tue, 30 Jun 2020 11:30:26 +0800
 MIME-Version: 1.0
+In-Reply-To: <f745de42-297e-6eed-d25b-ea21d6000dc5@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,34 +27,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On 2020-06-29, Petr Mladek <pmladek@suse.com> wrote:
->> @@ @@ void __init setup_log_buf(int early)
->> +	prb_init(&printk_rb_dynamic,
->> +		 new_log_buf, order_base_2(new_log_buf_len),
->> +		 new_dict_buf, order_base_2(new_log_buf_len),
->> +		 new_descs, order_base_2(new_descs_count));
->
-> order_base_2() is safe. But the result might be tat some allocated
-> space is not used.
->
-> I would prefer to make sure that new_log_buf_len is rounded, e.g.
-> by roundup_pow_of_two(), at the beginning of the function. Then we
-> could use ilog2() here.
 
-new_log_buf_len can only be set within log_buf_len_update(), and it
-is already doing exactly what you want:
 
-        if (size)
-                size = roundup_pow_of_two(size);
-        if (size > log_buf_len)
-                new_log_buf_len = (unsigned long)size;
+On 06/29/2020 01:55 PM, Hari Bathini wrote:
+> 
+> 
+> On 28/06/20 7:44 am, piliu wrote:
+>> Hi Hari,
+> 
+> Hi Pingfan,
+> 
+>>
+>> After a quick through for this series, I have a few question/comment on
+>> this patch for the time being. Pls see comment inline.
+>>
+>> On 06/27/2020 03:05 AM, Hari Bathini wrote:
+>>> crashkernel region could have an overlap with special memory regions
+>>> like  opal, rtas, tce-table & such. These regions are referred to as
+>>> exclude memory ranges. Setup this ranges during image probe in order
+>>> to avoid them while finding the buffer for different kdump segments.
+> 
+> [...]
+> 
+>>> +	/*
+>>> +	 * Use the locate_mem_hole logic in kexec_add_buffer() for regular
+>>> +	 * kexec_file_load syscall
+>>> +	 */
+>>> +	if (kbuf->image->type != KEXEC_TYPE_CRASH)
+>>> +		return 0;
+>> Can the ranges overlap [crashk_res.start, crashk_res.end]?  Otherwise
+>> there is no requirement for @exclude_ranges.
+> 
+> The ranges like rtas, opal are loaded by f/w. They almost always overlap with
+> crashkernel region. So, @exclude_ranges is required to support kdump.
+f/w passes rtas/opal as service, then must f/w mark these ranges as
+fdt_reserved_mem in order to make kernel aware not to use these ranges?
+Otherwise kernel memory allocation besides kdump can also overwrite
+these ranges.
 
-I can switch to ilog2() instead of the more conservative order_base_2().
+Hmm, revisiting reserve_crashkernel(). It seems not to take any reserved
+memory into consider except kernel text. Could it work based on memblock
+allocator?
 
-John Ogness
+Thanks,
+Pingfan
+> 
+>> I guess you have a design for future. If not true, then it is better to
+>> fold the condition "if (kbuf->image->type != KEXEC_TYPE_CRASH)" into the
+>> caller and rename this function to better distinguish use cases between
+>> kexec and kdump
+> 
+> Yeah, this condition will be folded. I have a follow-up patch for that explaining
+> why kexec case should also be folded. Will try to add that to this series for v2.
+> 
+> Thanks
+> Hari
+> 
+
 
 _______________________________________________
 kexec mailing list
