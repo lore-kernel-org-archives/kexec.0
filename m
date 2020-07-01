@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqXdR-00054Y-NM
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 07:58:26 +0000
-Date: Wed, 1 Jul 2020 15:58:03 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kdump
-Message-ID: <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
-References: <20200627103151.71942-1-grandmaster@al2klimov.de>
+Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+From: Amit Kachhap <amit.kachhap@arm.com>
+Message-ID: <9b44a21d-93e0-8e5d-019c-fd360bf0504b@arm.com>
+Date: Wed, 1 Jul 2020 13:34:00 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200627103151.71942-1-grandmaster@al2klimov.de>
+In-Reply-To: <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,84 +16,143 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Alexander A. Klimov" <grandmaster@al2klimov.de>
-Cc: bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
+To: Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel@lists.infradead.org, x86@kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Steve Capper <steve.capper@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
 
-On 06/27/20 at 12:31pm, Alexander A. Klimov wrote:
-> Rationale:
-> Reduces attack surface on kernel devs opening the links for MITM
-> as HTTPS traffic is much harder to manipulate.
+Hi Bhupesh,
+
+On 5/14/20 12:22 AM, Bhupesh Sharma wrote:
+> vabits_actual variable on arm64 indicates the actual VA space size,
+> and allows a single binary to support both 48-bit and 52-bit VA
+> spaces.
 > 
-> Deterministic algorithm:
-> For each file:
->   If not .svg:
->     For each line:
->       If doesn't contain `\bxmlns\b`:
->         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
->           If both the HTTP and HTTPS versions
->           return 200 OK and serve the same content:
->             Replace HTTP with HTTPS.
+> If the ARMv8.2-LVA optional feature is present, and we are running
+> with a 64KB page size; then it is possible to use 52-bits of address
+> space for both userspace and kernel addresses. However, any kernel
+> binary that supports 52-bit must also be able to fall back to 48-bit
+> at early boot time if the hardware feature is not present.
 > 
-> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> Since TCR_EL1.T1SZ indicates the size offset of the memory region
+> addressed by TTBR1_EL1 (and hence can be used for determining the
+> vabits_actual value) it makes more sense to export the same in
+> vmcoreinfo rather than vabits_actual variable, as the name of the
+> variable can change in future kernel versions, but the architectural
+> constructs like TCR_EL1.T1SZ can be used better to indicate intended
+> specific fields to user-space.
+> 
+> User-space utilities like makedumpfile and crash-utility, need to
+> read this value from vmcoreinfo for determining if a virtual
+> address lies in the linear map range.
+> 
+> While at it also add documentation for TCR_EL1.T1SZ variable being
+> added to vmcoreinfo.
+> 
+> It indicates the size offset of the memory region addressed by TTBR1_EL1
+> 
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Steve Capper <steve.capper@arm.com>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Dave Anderson <anderson@redhat.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+I tested this for both 48 and 52 VA. The dump log looks fine with the 
+crash tool link provided by you so,
+
+Tested-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+
+Also the code changes/documentation looks fine to me with a minor 
+comments below,
+
+Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+
 > ---
->  If there are any URLs to be removed completely or at least not HTTPSified:
->  Just clearly say so and I'll *undo my change*.
->  See also https://lkml.org/lkml/2020/6/27/64
+>   Documentation/admin-guide/kdump/vmcoreinfo.rst | 11 +++++++++++
+>   arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
+>   arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
+>   3 files changed, 22 insertions(+)
 > 
->  If there are any valid, but yet not changed URLs:
->  See https://lkml.org/lkml/2020/6/26/837
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index 2a632020f809..2baad0bfb09d 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -404,6 +404,17 @@ KERNELPACMASK
+>   The mask to extract the Pointer Authentication Code from a kernel virtual
+>   address.
+>   
+> +TCR_EL1.T1SZ
+> +------------
+> +
+> +Indicates the size offset of the memory region addressed by TTBR1_EL1.
+> +The region size is 2^(64-T1SZ) bytes.
+> +
+> +TTBR1_EL1 is the table base address register specified by ARMv8-A
+> +architecture which is used to lookup the page-tables for the Virtual
+> +addresses in the higher VA range (refer to ARMv8 ARM document for
+> +more details).
+> +
+>   arm
+>   ===
+>   
+> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
+> index 6bf5e650da78..a1861af97ac9 100644
+> --- a/arch/arm64/include/asm/pgtable-hwdef.h
+> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
+> @@ -216,6 +216,7 @@
+>   #define TCR_TxSZ(x)		(TCR_T0SZ(x) | TCR_T1SZ(x))
+>   #define TCR_TxSZ_WIDTH		6
+>   #define TCR_T0SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T0SZ_OFFSET)
+> +#define TCR_T1SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T1SZ_OFFSET)
+>   
+>   #define TCR_EPD0_SHIFT		7
+>   #define TCR_EPD0_MASK		(UL(1) << TCR_EPD0_SHIFT)
+> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
+> index 1f646b07e3e9..314391a156ee 100644
+> --- a/arch/arm64/kernel/crash_core.c
+> +++ b/arch/arm64/kernel/crash_core.c
+> @@ -7,6 +7,14 @@
+>   #include <linux/crash_core.h>
+>   #include <asm/cpufeature.h>
+>   #include <asm/memory.h>
+> +#include <asm/pgtable-hwdef.h>
+
+Nit: May be you forgot to include <asm/sysreg.h> here as suggested by 
+James in v5.
+
+Cheers,
+Amit
+
+> +
+> +static inline u64 get_tcr_el1_t1sz(void);
+> +
+> +static inline u64 get_tcr_el1_t1sz(void)
+> +{
+> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
+> +}
+>   
+>   void arch_crash_save_vmcoreinfo(void)
+>   {
+> @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
+>   						kimage_voffset);
+>   	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
+>   						PHYS_OFFSET);
+> +	vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
+> +						get_tcr_el1_t1sz());
+>   	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
+>   	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
+>   						system_supports_address_auth() ?
 > 
->  Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
->  1 file changed, 5 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 2da65fef2a1c..8cfa35f777f5 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -65,20 +65,20 @@ Install kexec-tools
->  
->  2) Download the kexec-tools user-space package from the following URL:
->  
-> -http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
-> +https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
->  
->  This is a symlink to the latest version.
->  
->  The latest kexec-tools git tree is available at:
->  
->  - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> -- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-> +- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
->  
->  There is also a gitweb interface available at
-> -http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
-> +https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
->  
->  More information about kexec-tools can be found at
-> -http://horms.net/projects/kexec/
-> +https://horms.net/projects/kexec/
->  
->  3) Unpack the tarball with the tar command, as follows::
->  
-> @@ -511,7 +511,7 @@ dump kernel.
->  You can also use the Crash utility to analyze dump files in Kdump
->  format. Crash is available on Dave Anderson's site at the following URL:
->  
-> -   http://people.redhat.com/~anderson/
-> +   https://people.redhat.com/~anderson/
-
-Would you mind to update above url as well?
-
-Dave have moved it to below url instead:
-https://crash-utility.github.io/
-
-Thanks
-Dave
-
 
 _______________________________________________
 kexec mailing list
