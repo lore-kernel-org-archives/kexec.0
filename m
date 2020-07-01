@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqisB-00014a-Uz
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 19:58:24 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: pending output optimization: was: [PATCH v3 3/3] printk: use the
- lockless ringbuffer
-In-Reply-To: <20200625151741.GH8444@alley>
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
- <20200625151741.GH8444@alley>
-Date: Wed, 01 Jul 2020 22:04:19 +0206
-Message-ID: <87o8oznh2c.fsf@jogness.linutronix.de>
-MIME-Version: 1.0
+ id 1jql1i-00022V-Km
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 22:16:24 +0000
+Received: by mail-pg1-f199.google.com with SMTP id z187so18938351pgd.11
+ for <kexec@lists.infradead.org>; Wed, 01 Jul 2020 15:14:42 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH 0/2] arm64/kdump: Fix OOPS and OOM issues in kdump kernel
+Date: Thu,  2 Jul 2020 03:44:18 +0530
+Message-Id: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,43 +18,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: cgroups@vger.kernel.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Davydov <vdavydov.dev@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
 
-On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
->> --- a/kernel/printk/printk.c
->> +++ b/kernel/printk/printk.c
->> @@ -2009,9 +2056,9 @@ asmlinkage int vprintk_emit(int facility, int level,
->>  
->>  	/* This stops the holder of console_sem just where we want him */
->>  	logbuf_lock_irqsave(flags);
->> -	curr_log_seq = log_next_seq;
->> +	pending_output = !prb_read_valid(prb, console_seq, NULL);
->>  	printed_len = vprintk_store(facility, level, dict, dictlen, fmt, args);
->> -	pending_output = (curr_log_seq != log_next_seq);
->> +	pending_output &= prb_read_valid(prb, console_seq, NULL);
->
-> This will stop working after we remove the locks. Consoles will be
-> able to handle messages while the new one is being added. There will
-> be no gurantee that someone is still hadling the previously pending
-> output.
->
-> Please, always handle consoles when printed_len is not zero!!!
->
-> The pending output was just an optimization added recently. Nobody
-> requested it. It was just an idea that made sense.
+Prabhakar recently reported a kdump kernel boot failure on ThunderX2
+arm64 plaforms (which I was able to reproduce on ampere arm64 machines
+as well), (see [1]), which is seen when a corner case is hit on some
+arm64 boards when kdump kernel runs with "cgroup_disable=memory" passed
+to the kdump kernel (via bootargs) and the crashkernel was originally
+allocated from either a ZONE_DMA32 memory or mixture of memory chunks
+belonging to both ZONE_DMA and ZONE_DMA32 regions.
 
-OK. I will insert a patch before this one that reverts commit
-3ac37a93fa92 ("printk: lock/unlock console only for new logbuf
-entries"). Then there is no @pending_output for me to implement and it
-will be clear that this series is changing/reverting some printk
-behavior.
+While [PATCH 1/2] fixes the OOPS inside mem_cgroup_get_nr_swap_pages()
+function, [PATCH 2/2] fixes the OOM seen inside the kdump kernel by
+allocating the crashkernel inside ZONE_DMA region only.
 
-John Ogness
+[1]. https://marc.info/?l=kexec&m=158954035710703&w=4
+
+Cc: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: James Morse <james.morse@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: cgroups@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+Bhupesh Sharma (2):
+  mm/memcontrol: Fix OOPS inside mem_cgroup_get_nr_swap_pages()
+  arm64: Allocate crashkernel always in ZONE_DMA
+
+ arch/arm64/mm/init.c | 16 ++++++++++++++--
+ mm/memcontrol.c      |  9 ++++++++-
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+
+-- 
+2.7.4
+
 
 _______________________________________________
 kexec mailing list
