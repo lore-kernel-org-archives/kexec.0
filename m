@@ -2,20 +2,16 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqXSc-00013M-Fy
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 07:47:15 +0000
-Date: Wed, 1 Jul 2020 15:46:59 +0800
+ id 1jqXdR-00054Y-NM
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 07:58:26 +0000
+Date: Wed, 1 Jul 2020 15:58:03 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
- while locating memory hole
-Message-ID: <20200701074659.GA3878@dhcp-128-65.nay.redhat.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
- <20200629133933.0787f562@ezekiel.suse.cz>
- <7981ae61-26c6-000c-9ee4-382dab3eecab@linux.ibm.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kdump
+Message-ID: <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
+References: <20200627103151.71942-1-grandmaster@al2klimov.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <7981ae61-26c6-000c-9ee4-382dab3eecab@linux.ibm.com>
+In-Reply-To: <20200627103151.71942-1-grandmaster@al2klimov.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,43 +24,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-On 06/29/20 at 05:26pm, Hari Bathini wrote:
-> Hi Petr,
+On 06/27/20 at 12:31pm, Alexander A. Klimov wrote:
+> Rationale:
+> Reduces attack surface on kernel devs opening the links for MITM
+> as HTTPS traffic is much harder to manipulate.
 > 
-> On 29/06/20 5:09 pm, Petr Tesarik wrote:
-> > Hi Hari,
-> > 
-> > is there any good reason to add two more functions with a very similar
-> > name to an existing function? AFAICS all you need is a way to call a
-> > PPC64-specific function from within kexec_add_buffer (PATCH 4/11), so
-> > you could add something like this:
-> > 
-> > int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> > {
-> > 	return 0;
-> > }
-> > 
-> > Call this function from kexec_add_buffer where appropriate and then
-> > override it for PPC64 (it roughly corresponds to your
-> > kexec_locate_mem_hole_ppc64() from PATCH 4/11).
-> > 
-> > FWIW it would make it easier for me to follow the resulting code.
+> Deterministic algorithm:
+> For each file:
+>   If not .svg:
+>     For each line:
+>       If doesn't contain `\bxmlns\b`:
+>         For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>           If both the HTTP and HTTPS versions
+>           return 200 OK and serve the same content:
+>             Replace HTTP with HTTPS.
 > 
-> Right, Petr.
+> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> ---
+>  If there are any URLs to be removed completely or at least not HTTPSified:
+>  Just clearly say so and I'll *undo my change*.
+>  See also https://lkml.org/lkml/2020/6/27/64
 > 
-> I was trying out a few things before I ended up with what I sent here.
-> Bu yeah.. I did realize arch_kexec_locate_mem_hole() would have been better
-> after sending out v1. Will take care of that in v2.
+>  If there are any valid, but yet not changed URLs:
+>  See https://lkml.org/lkml/2020/6/26/837
+> 
+>  Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 2da65fef2a1c..8cfa35f777f5 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -65,20 +65,20 @@ Install kexec-tools
+>  
+>  2) Download the kexec-tools user-space package from the following URL:
+>  
+> -http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+> +https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+>  
+>  This is a symlink to the latest version.
+>  
+>  The latest kexec-tools git tree is available at:
+>  
+>  - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> -- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> +- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+>  
+>  There is also a gitweb interface available at
+> -http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+> +https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+>  
+>  More information about kexec-tools can be found at
+> -http://horms.net/projects/kexec/
+> +https://horms.net/projects/kexec/
+>  
+>  3) Unpack the tarball with the tar command, as follows::
+>  
+> @@ -511,7 +511,7 @@ dump kernel.
+>  You can also use the Crash utility to analyze dump files in Kdump
+>  format. Crash is available on Dave Anderson's site at the following URL:
+>  
+> -   http://people.redhat.com/~anderson/
+> +   https://people.redhat.com/~anderson/
 
-Another way is use arch private function to locate mem hole, then set
-kbuf->mem, and then call kexec_add_buf, it will skip the common locate
-hole function.
+Would you mind to update above url as well?
 
-But other than that I have some confusion about those excluded ranges.
-Replied a question to patch 4.
+Dave have moved it to below url instead:
+https://crash-utility.github.io/
 
 Thanks
 Dave
