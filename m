@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from smtp.al2klimov.de ([2a01:4f8:c0c:1465::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqg1A-0005Ov-HR
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 16:55:29 +0000
-Date: Wed, 1 Jul 2020 18:55:13 +0200
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 1/1] fs: move kernel_read_file* to its own include file
-Message-ID: <20200701165513.GA3176669@kroah.com>
-References: <20200617161218.18487-1-scott.branden@broadcom.com>
+ id 1jqgbe-00012k-NW
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 17:33:11 +0000
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kdump
+References: <20200627103151.71942-1-grandmaster@al2klimov.de>
+ <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
+From: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Message-ID: <1de76ef5-e447-2274-c45a-3b0356bd63ae@al2klimov.de>
+Date: Wed, 1 Jul 2020 19:33:04 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200617161218.18487-1-scott.branden@broadcom.com>
+In-Reply-To: <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,22 +20,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: linux-security-module@vger.kernel.org, Kees Cook <keescook@chromium.org>, "Rafael J . Wysocki" <rafael@kernel.org>, selinux@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Luis Chamberlain <mcgrof@kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Eric Biederman <ebiederm@xmission.com>, Jessica Yu <jeyu@kernel.org>, linux-fsdevel@vger.kernel.org, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>, Christoph Hellwig <hch@lst.de>, Alexander Viro <viro@zeniv.linux.org.uk>
+To: Dave Young <dyoung@redhat.com>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-On Wed, Jun 17, 2020 at 09:12:18AM -0700, Scott Branden wrote:
-> Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-> include file. That header gets pulled in just about everywhere
-> and doesn't really need functions not related to the general fs interface.
+
+
+Am 01.07.20 um 09:58 schrieb Dave Young:
+> On 06/27/20 at 12:31pm, Alexander A. Klimov wrote:
+>> Rationale:
+>> Reduces attack surface on kernel devs opening the links for MITM
+>> as HTTPS traffic is much harder to manipulate.
+>>
+>> Deterministic algorithm:
+>> For each file:
+>>    If not .svg:
+>>      For each line:
+>>        If doesn't contain `\bxmlns\b`:
+>>          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+>>            If both the HTTP and HTTPS versions
+>>            return 200 OK and serve the same content:
+>>              Replace HTTP with HTTPS.
+>>
+>> Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+>> ---
+>>   If there are any URLs to be removed completely or at least not HTTPSified:
+>>   Just clearly say so and I'll *undo my change*.
+>>   See also https://lkml.org/lkml/2020/6/27/64
+>>
+>>   If there are any valid, but yet not changed URLs:
+>>   See https://lkml.org/lkml/2020/6/26/837
+>>
+>>   Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
+>>   1 file changed, 5 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+>> index 2da65fef2a1c..8cfa35f777f5 100644
+>> --- a/Documentation/admin-guide/kdump/kdump.rst
+>> +++ b/Documentation/admin-guide/kdump/kdump.rst
+>> @@ -65,20 +65,20 @@ Install kexec-tools
+>>   
+>>   2) Download the kexec-tools user-space package from the following URL:
+>>   
+>> -http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+>> +https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+>>   
+>>   This is a symlink to the latest version.
+>>   
+>>   The latest kexec-tools git tree is available at:
+>>   
+>>   - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+>> -- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+>> +- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+>>   
+>>   There is also a gitweb interface available at
+>> -http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+>> +https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+>>   
+>>   More information about kexec-tools can be found at
+>> -http://horms.net/projects/kexec/
+>> +https://horms.net/projects/kexec/
+>>   
+>>   3) Unpack the tarball with the tar command, as follows::
+>>   
+>> @@ -511,7 +511,7 @@ dump kernel.
+>>   You can also use the Crash utility to analyze dump files in Kdump
+>>   format. Crash is available on Dave Anderson's site at the following URL:
+>>   
+>> -   http://people.redhat.com/~anderson/
+>> +   https://people.redhat.com/~anderson/
 > 
-> Suggested-by: Christoph Hellwig <hch@lst.de>
-> Signed-off-by: Scott Branden <scott.branden@broadcom.com>
+> Would you mind to update above url as well?
+I'll update all of the URLs not changed yet, but (please) not in this 
+patch round.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+See also https://lkml.org/lkml/2020/6/26/837
+
+> 
+> Dave have moved it to below url instead:
+> https://crash-utility.github.io/
+> 
+> Thanks
+> Dave
+> 
 
 _______________________________________________
 kexec mailing list
