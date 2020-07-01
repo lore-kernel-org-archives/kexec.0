@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
-References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
- <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
-From: Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <9b44a21d-93e0-8e5d-019c-fd360bf0504b@arm.com>
-Date: Wed, 1 Jul 2020 13:34:00 +0530
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jqXjQ-0005yU-DU
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 08:04:37 +0000
+Date: Wed, 1 Jul 2020 16:04:16 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 11/11] ima: Support additional conditionals in the
+ KEXEC_CMDLINE hook function
+Message-ID: <20200701080416.GC3878@dhcp-128-65.nay.redhat.com>
+References: <20200626223900.253615-1-tyhicks@linux.microsoft.com>
+ <20200626223900.253615-12-tyhicks@linux.microsoft.com>
 MIME-Version: 1.0
-In-Reply-To: <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200626223900.253615-12-tyhicks@linux.microsoft.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,143 +22,276 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Steve Capper <steve.capper@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, James Morse <james.morse@arm.com>, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
+To: Tyler Hicks <tyhicks@linux.microsoft.com>
+Cc: Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-Hi Bhupesh,
-
-On 5/14/20 12:22 AM, Bhupesh Sharma wrote:
-> vabits_actual variable on arm64 indicates the actual VA space size,
-> and allows a single binary to support both 48-bit and 52-bit VA
-> spaces.
+Hi,
+On 06/26/20 at 05:39pm, Tyler Hicks wrote:
+> Take the properties of the kexec kernel's inode and the current task
+> ownership into consideration when matching a KEXEC_CMDLINE operation to
+> the rules in the IMA policy. This allows for some uniformity when
+> writing IMA policy rules for KEXEC_KERNEL_CHECK, KEXEC_INITRAMFS_CHECK,
+> and KEXEC_CMDLINE operations.
 > 
-> If the ARMv8.2-LVA optional feature is present, and we are running
-> with a 64KB page size; then it is possible to use 52-bits of address
-> space for both userspace and kernel addresses. However, any kernel
-> binary that supports 52-bit must also be able to fall back to 48-bit
-> at early boot time if the hardware feature is not present.
+> Prior to this patch, it was not possible to write a set of rules like
+> this:
 > 
-> Since TCR_EL1.T1SZ indicates the size offset of the memory region
-> addressed by TTBR1_EL1 (and hence can be used for determining the
-> vabits_actual value) it makes more sense to export the same in
-> vmcoreinfo rather than vabits_actual variable, as the name of the
-> variable can change in future kernel versions, but the architectural
-> constructs like TCR_EL1.T1SZ can be used better to indicate intended
-> specific fields to user-space.
+>  dont_measure func=KEXEC_KERNEL_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_INITRAMFS_CHECK obj_type=foo_t
+>  dont_measure func=KEXEC_CMDLINE obj_type=foo_t
+>  measure func=KEXEC_KERNEL_CHECK
+>  measure func=KEXEC_INITRAMFS_CHECK
+>  measure func=KEXEC_CMDLINE
 > 
-> User-space utilities like makedumpfile and crash-utility, need to
-> read this value from vmcoreinfo for determining if a virtual
-> address lies in the linear map range.
+> The inode information associated with the kernel being loaded by a
+> kexec_kernel_load(2) syscall can now be included in the decision to
+> measure or not
 > 
-> While at it also add documentation for TCR_EL1.T1SZ variable being
-> added to vmcoreinfo.
+> Additonally, the uid, euid, and subj_* conditionals can also now be
+> used in KEXEC_CMDLINE rules. There was no technical reason as to why
+> those conditionals weren't being considered previously other than
+> ima_match_rules() didn't have a valid inode to use so it immediately
+> bailed out for KEXEC_CMDLINE operations rather than going through the
+> full list of conditional comparisons.
 > 
-> It indicates the size offset of the memory region addressed by TTBR1_EL1
-> 
-> Cc: James Morse <james.morse@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Will Deacon <will@kernel.org>
-> Cc: Steve Capper <steve.capper@arm.com>
-> Cc: Catalin Marinas <catalin.marinas@arm.com>
-> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-> Cc: Dave Anderson <anderson@redhat.com>
-> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Tyler Hicks <tyhicks@linux.microsoft.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
 > Cc: kexec@lists.infradead.org
-> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-
-I tested this for both 48 and 52 VA. The dump log looks fine with the 
-crash tool link provided by you so,
-
-Tested-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-
-Also the code changes/documentation looks fine to me with a minor 
-comments below,
-
-Reviewed-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-
 > ---
->   Documentation/admin-guide/kdump/vmcoreinfo.rst | 11 +++++++++++
->   arch/arm64/include/asm/pgtable-hwdef.h         |  1 +
->   arch/arm64/kernel/crash_core.c                 | 10 ++++++++++
->   3 files changed, 22 insertions(+)
 > 
-> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> index 2a632020f809..2baad0bfb09d 100644
-> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> @@ -404,6 +404,17 @@ KERNELPACMASK
->   The mask to extract the Pointer Authentication Code from a kernel virtual
->   address.
->   
-> +TCR_EL1.T1SZ
-> +------------
-> +
-> +Indicates the size offset of the memory region addressed by TTBR1_EL1.
-> +The region size is 2^(64-T1SZ) bytes.
-> +
-> +TTBR1_EL1 is the table base address register specified by ARMv8-A
-> +architecture which is used to lookup the page-tables for the Virtual
-> +addresses in the higher VA range (refer to ARMv8 ARM document for
-> +more details).
-> +
->   arm
->   ===
->   
-> diff --git a/arch/arm64/include/asm/pgtable-hwdef.h b/arch/arm64/include/asm/pgtable-hwdef.h
-> index 6bf5e650da78..a1861af97ac9 100644
-> --- a/arch/arm64/include/asm/pgtable-hwdef.h
-> +++ b/arch/arm64/include/asm/pgtable-hwdef.h
-> @@ -216,6 +216,7 @@
->   #define TCR_TxSZ(x)		(TCR_T0SZ(x) | TCR_T1SZ(x))
->   #define TCR_TxSZ_WIDTH		6
->   #define TCR_T0SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T0SZ_OFFSET)
-> +#define TCR_T1SZ_MASK		(((UL(1) << TCR_TxSZ_WIDTH) - 1) << TCR_T1SZ_OFFSET)
->   
->   #define TCR_EPD0_SHIFT		7
->   #define TCR_EPD0_MASK		(UL(1) << TCR_EPD0_SHIFT)
-> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-> index 1f646b07e3e9..314391a156ee 100644
-> --- a/arch/arm64/kernel/crash_core.c
-> +++ b/arch/arm64/kernel/crash_core.c
-> @@ -7,6 +7,14 @@
->   #include <linux/crash_core.h>
->   #include <asm/cpufeature.h>
->   #include <asm/memory.h>
-> +#include <asm/pgtable-hwdef.h>
-
-Nit: May be you forgot to include <asm/sysreg.h> here as suggested by 
-James in v5.
-
-Cheers,
-Amit
-
-> +
-> +static inline u64 get_tcr_el1_t1sz(void);
-> +
-> +static inline u64 get_tcr_el1_t1sz(void)
-> +{
-> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
-> +}
->   
->   void arch_crash_save_vmcoreinfo(void)
->   {
-> @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
->   						kimage_voffset);
->   	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
->   						PHYS_OFFSET);
-> +	vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
-> +						get_tcr_el1_t1sz());
->   	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
->   	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
->   						system_supports_address_auth() ?
+> * v2
+>   - Moved the inode parameter of process_buffer_measurement() to be the
+>     first parameter so that it more closely matches process_masurement()
 > 
+>  include/linux/ima.h                          |  4 ++--
+>  kernel/kexec_file.c                          |  2 +-
+>  security/integrity/ima/ima.h                 |  2 +-
+>  security/integrity/ima/ima_api.c             |  2 +-
+>  security/integrity/ima/ima_appraise.c        |  2 +-
+>  security/integrity/ima/ima_asymmetric_keys.c |  2 +-
+>  security/integrity/ima/ima_main.c            | 23 +++++++++++++++-----
+>  security/integrity/ima/ima_policy.c          | 17 +++++----------
+>  security/integrity/ima/ima_queue_keys.c      |  2 +-
+>  9 files changed, 31 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/ima.h b/include/linux/ima.h
+> index 9164e1534ec9..d15100de6cdd 100644
+> --- a/include/linux/ima.h
+> +++ b/include/linux/ima.h
+> @@ -25,7 +25,7 @@ extern int ima_post_read_file(struct file *file, void *buf, loff_t size,
+>  			      enum kernel_read_file_id id);
+>  extern void ima_post_path_mknod(struct dentry *dentry);
+>  extern int ima_file_hash(struct file *file, char *buf, size_t buf_size);
+> -extern void ima_kexec_cmdline(const void *buf, int size);
+> +extern void ima_kexec_cmdline(int kernel_fd, const void *buf, int size);
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+>  extern void ima_add_kexec_buffer(struct kimage *image);
+> @@ -103,7 +103,7 @@ static inline int ima_file_hash(struct file *file, char *buf, size_t buf_size)
+>  	return -EOPNOTSUPP;
+>  }
+>  
+> -static inline void ima_kexec_cmdline(const void *buf, int size) {}
+> +static inline void ima_kexec_cmdline(int kernel_fd, const void *buf, int size) {}
+>  #endif /* CONFIG_IMA */
+>  
+>  #ifndef CONFIG_IMA_KEXEC
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index bb05fd52de85..07df431c1f21 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -287,7 +287,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>  			goto out;
+>  		}
+>  
+> -		ima_kexec_cmdline(image->cmdline_buf,
+> +		ima_kexec_cmdline(kernel_fd, image->cmdline_buf,
+>  				  image->cmdline_buf_len - 1);
+>  	}
+>  
+> diff --git a/security/integrity/ima/ima.h b/security/integrity/ima/ima.h
+> index 59ec28f5c117..ff2bf57ff0c7 100644
+> --- a/security/integrity/ima/ima.h
+> +++ b/security/integrity/ima/ima.h
+> @@ -265,7 +265,7 @@ void ima_store_measurement(struct integrity_iint_cache *iint, struct file *file,
+>  			   struct evm_ima_xattr_data *xattr_value,
+>  			   int xattr_len, const struct modsig *modsig, int pcr,
+>  			   struct ima_template_desc *template_desc);
+> -void process_buffer_measurement(const void *buf, int size,
+> +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  				const char *eventname, enum ima_hooks func,
+>  				int pcr, const char *keyring);
+>  void ima_audit_measurement(struct integrity_iint_cache *iint,
+> diff --git a/security/integrity/ima/ima_api.c b/security/integrity/ima/ima_api.c
+> index bf22de8b7ce0..4f39fb93f278 100644
+> --- a/security/integrity/ima/ima_api.c
+> +++ b/security/integrity/ima/ima_api.c
+> @@ -162,7 +162,7 @@ void ima_add_violation(struct file *file, const unsigned char *filename,
+>  
+>  /**
+>   * ima_get_action - appraise & measure decision based on policy.
+> - * @inode: pointer to inode to measure
+> + * @inode: pointer to the inode associated with the object being validated
+>   * @cred: pointer to credentials structure to validate
+>   * @secid: secid of the task being validated
+>   * @mask: contains the permission mask (MAY_READ, MAY_WRITE, MAY_EXEC,
+> diff --git a/security/integrity/ima/ima_appraise.c b/security/integrity/ima/ima_appraise.c
+> index a9649b04b9f1..6c52bf7ea7f0 100644
+> --- a/security/integrity/ima/ima_appraise.c
+> +++ b/security/integrity/ima/ima_appraise.c
+> @@ -328,7 +328,7 @@ int ima_check_blacklist(struct integrity_iint_cache *iint,
+>  
+>  		rc = is_binary_blacklisted(digest, digestsize);
+>  		if ((rc == -EPERM) && (iint->flags & IMA_MEASURE))
+> -			process_buffer_measurement(digest, digestsize,
+> +			process_buffer_measurement(NULL, digest, digestsize,
+>  						   "blacklisted-hash", NONE,
+>  						   pcr, NULL);
+>  	}
+> diff --git a/security/integrity/ima/ima_asymmetric_keys.c b/security/integrity/ima/ima_asymmetric_keys.c
+> index aaae80c4e376..1c68c500c26f 100644
+> --- a/security/integrity/ima/ima_asymmetric_keys.c
+> +++ b/security/integrity/ima/ima_asymmetric_keys.c
+> @@ -58,7 +58,7 @@ void ima_post_key_create_or_update(struct key *keyring, struct key *key,
+>  	 * if the IMA policy is configured to measure a key linked
+>  	 * to the given keyring.
+>  	 */
+> -	process_buffer_measurement(payload, payload_len,
+> +	process_buffer_measurement(NULL, payload, payload_len,
+>  				   keyring->description, KEY_CHECK, 0,
+>  				   keyring->description);
+>  }
+> diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
+> index 8351b2fd48e0..8a91711ca79b 100644
+> --- a/security/integrity/ima/ima_main.c
+> +++ b/security/integrity/ima/ima_main.c
+> @@ -726,6 +726,7 @@ int ima_load_data(enum kernel_load_data_id id)
+>  
+>  /*
+>   * process_buffer_measurement - Measure the buffer to ima log.
+> + * @inode: inode associated with the object being measured (NULL for KEY_CHECK)
+>   * @buf: pointer to the buffer that needs to be added to the log.
+>   * @size: size of buffer(in bytes).
+>   * @eventname: event name to be used for the buffer entry.
+> @@ -735,7 +736,7 @@ int ima_load_data(enum kernel_load_data_id id)
+>   *
+>   * Based on policy, the buffer is measured into the ima log.
+>   */
+> -void process_buffer_measurement(const void *buf, int size,
+> +void process_buffer_measurement(struct inode *inode, const void *buf, int size,
+>  				const char *eventname, enum ima_hooks func,
+>  				int pcr, const char *keyring)
+>  {
+> @@ -768,7 +769,7 @@ void process_buffer_measurement(const void *buf, int size,
+>  	 */
+>  	if (func) {
+>  		security_task_getsecid(current, &secid);
+> -		action = ima_get_action(NULL, current_cred(), secid, 0, func,
+> +		action = ima_get_action(inode, current_cred(), secid, 0, func,
+>  					&pcr, &template, keyring);
+>  		if (!(action & IMA_MEASURE))
+>  			return;
+> @@ -823,16 +824,26 @@ void process_buffer_measurement(const void *buf, int size,
+>  
+>  /**
+>   * ima_kexec_cmdline - measure kexec cmdline boot args
+> + * @kernel_fd: file descriptor of the kexec kernel being loaded
+>   * @buf: pointer to buffer
+>   * @size: size of buffer
+>   *
+>   * Buffers can only be measured, not appraised.
+>   */
+> -void ima_kexec_cmdline(const void *buf, int size)
+> +void ima_kexec_cmdline(int kernel_fd, const void *buf, int size)
+>  {
+> -	if (buf && size != 0)
+> -		process_buffer_measurement(buf, size, "kexec-cmdline",
+> -					   KEXEC_CMDLINE, 0, NULL);
+> +	struct fd f;
+> +
+> +	if (!buf || !size)
+> +		return;
+> +
+> +	f = fdget(kernel_fd);
+> +	if (!f.file)
+> +		return;
+> +
+> +	process_buffer_measurement(file_inode(f.file), buf, size,
+> +				   "kexec-cmdline", KEXEC_CMDLINE, 0, NULL);
+> +	fdput(f);
+>  }
+>  
+>  static int __init init_ima(void)
+> diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
+> index 5eb14b567a31..294323b36d06 100644
+> --- a/security/integrity/ima/ima_policy.c
+> +++ b/security/integrity/ima/ima_policy.c
+> @@ -443,13 +443,9 @@ static bool ima_match_rules(struct ima_rule_entry *rule, struct inode *inode,
+>  {
+>  	int i;
+>  
+> -	if ((func == KEXEC_CMDLINE) || (func == KEY_CHECK)) {
+> -		if ((rule->flags & IMA_FUNC) && (rule->func == func)) {
+> -			if (func == KEY_CHECK)
+> -				return ima_match_keyring(rule, keyring, cred);
+> -			return true;
+> -		}
+> -		return false;
+> +	if (func == KEY_CHECK) {
+> +		return (rule->flags & IMA_FUNC) && (rule->func == func) &&
+> +		       ima_match_keyring(rule, keyring, cred);
+>  	}
+>  	if ((rule->flags & IMA_FUNC) &&
+>  	    (rule->func != func && func != POST_SETATTR))
+> @@ -1007,10 +1003,9 @@ static bool ima_validate_rule(struct ima_rule_entry *entry)
+>  			if (entry->action & ~(MEASURE | DONT_MEASURE))
+>  				return false;
+>  
+> -			if (entry->flags & ~(IMA_FUNC | IMA_PCR))
+> -				return false;
+> -
+> -			if (ima_rule_contains_lsm_cond(entry))
+> +			if (entry->flags & ~(IMA_FUNC | IMA_FSMAGIC | IMA_UID |
+> +					     IMA_FOWNER | IMA_FSUUID |
+> +					     IMA_EUID | IMA_PCR | IMA_FSNAME))
+>  				return false;
+>  
+>  			break;
+> diff --git a/security/integrity/ima/ima_queue_keys.c b/security/integrity/ima/ima_queue_keys.c
+> index 56ce24a18b66..69a8626a35c0 100644
+> --- a/security/integrity/ima/ima_queue_keys.c
+> +++ b/security/integrity/ima/ima_queue_keys.c
+> @@ -158,7 +158,7 @@ void ima_process_queued_keys(void)
+>  
+>  	list_for_each_entry_safe(entry, tmp, &ima_keys, list) {
+>  		if (!timer_expired)
+> -			process_buffer_measurement(entry->payload,
+> +			process_buffer_measurement(NULL, entry->payload,
+>  						   entry->payload_len,
+>  						   entry->keyring_name,
+>  						   KEY_CHECK, 0,
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+Although I still do not understand the deep knowledge of IMA, I
+still wonder to know what is the effect to the behavior changes end user
+visible.   Does it work with a kernel built-in commandline? eg no
+cmdlien passed at all.
+
+Thanks
+Dave
+
 
 _______________________________________________
 kexec mailing list
