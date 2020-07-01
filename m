@@ -1,13 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v6 2/2] arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo
-References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
- <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
-From: James Morse <james.morse@arm.com>
-Message-ID: <7abd195f-2091-0ef9-2e0b-4a8bf2cf820e@arm.com>
-Date: Wed, 1 Jul 2020 12:59:39 +0100
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jqcFR-0008Az-8q
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 12:53:58 +0000
+Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
+ <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
+ <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
+From: piliu <piliu@redhat.com>
+Message-ID: <bc8fe308-5ce9-1ca6-c832-7c3a75a732d2@redhat.com>
+Date: Wed, 1 Jul 2020 20:53:35 +0800
 MIME-Version: 1.0
-In-Reply-To: <1589395957-24628-3-git-send-email-bhsharma@redhat.com>
-Content-Language: en-GB
+In-Reply-To: <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,87 +26,93 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, linux-arm-kernel@lists.infradead.org, x86@kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Steve Capper <steve.capper@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Dave Anderson <anderson@redhat.com>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
-
-Hi Bhupesh,
-
-On 13/05/2020 19:52, Bhupesh Sharma wrote:
-> vabits_actual variable on arm64 indicates the actual VA space size,
-> and allows a single binary to support both 48-bit and 52-bit VA
-> spaces.
-
-I'd prefer the commit message not to refer to this 'vabits_actual' thing at all. By the
-time a git-archaeologist comes to read this, it may be long gone.
-
-Ideally this would refer to: TCR_EL1.TxSZ, which controls the VA space size,
-and can be configured by a single kernel image to support either 48-bit or 52-bit VA space.
+To: Dave Young <dyoung@redhat.com>, Hari Bathini <hbathini@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, lkml <linux-kernel@vger.kernel.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
 
-> If the ARMv8.2-LVA optional feature is present, and we are running
-> with a 64KB page size; then it is possible to use 52-bits of address
-> space for both userspace and kernel addresses. However, any kernel
-> binary that supports 52-bit must also be able to fall back to 48-bit
-> at early boot time if the hardware feature is not present.
+
+On 07/01/2020 03:40 PM, Dave Young wrote:
+> Hi Hari,
+> On 06/27/20 at 12:35am, Hari Bathini wrote:
+>> crashkernel region could have an overlap with special memory regions
+>> like  opal, rtas, tce-table & such. These regions are referred to as
+>> exclude memory ranges. Setup this ranges during image probe in order
+>> to avoid them while finding the buffer for different kdump segments.
+>> Implement kexec_locate_mem_hole_ppc64() that locates a memory hole
+>> accounting for these ranges. Also, override arch_kexec_add_buffer()
+>> to locate a memory hole & later call __kexec_add_buffer() function
+>> with kbuf->mem set to skip the generic locate memory hole lookup.
+>>
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>> ---
+>>  arch/powerpc/include/asm/crashdump-ppc64.h |   10 +
+>>  arch/powerpc/include/asm/kexec.h           |    7 -
+>>  arch/powerpc/kexec/elf_64.c                |    7 +
+>>  arch/powerpc/kexec/file_load_64.c          |  292 ++++++++++++++++++++++++++++
+>>  4 files changed, 312 insertions(+), 4 deletions(-)
+>>  create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+>>
+> [snip]
+>>  /**
+>> + * get_exclude_memory_ranges - Get exclude memory ranges. This list includes
+>> + *                             regions like opal/rtas, tce-table, initrd,
+>> + *                             kernel, htab which should be avoided while
+>> + *                             setting up kexec load segments.
+>> + * @mem_ranges:                Range list to add the memory ranges to.
+>> + *
+>> + * Returns 0 on success, negative errno on error.
+>> + */
+>> +static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+>> +{
+>> +	int ret;
+>> +
+>> +	ret = add_tce_mem_ranges(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_initrd_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_htab_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_kernel_mem_range(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_rtas_mem_range(mem_ranges, false);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_opal_mem_range(mem_ranges, false);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	ret = add_reserved_ranges(mem_ranges);
+>> +	if (ret)
+>> +		goto out;
+>> +
+>> +	/* exclude memory ranges should be sorted for easy lookup */
+>> +	sort_memory_ranges(*mem_ranges);
+>> +out:
+>> +	if (ret)
+>> +		pr_err("Failed to setup exclude memory ranges\n");
+>> +	return ret;
+>> +}
 > 
-> Since TCR_EL1.T1SZ indicates the size offset of the memory region
-> addressed by TTBR1_EL1 (and hence can be used for determining the
-> vabits_actual value) it makes more sense to export the same in
-> vmcoreinfo rather than vabits_actual variable, as the name of the
-> variable can change in future kernel versions, but the architectural
-> constructs like TCR_EL1.T1SZ can be used better to indicate intended
-> specific fields to user-space.
-> 
-> User-space utilities like makedumpfile and crash-utility, need to
-> read this value from vmcoreinfo for determining if a virtual
-> address lies in the linear map range.
-> 
-> While at it also add documentation for TCR_EL1.T1SZ variable being
-> added to vmcoreinfo.
-> 
-> It indicates the size offset of the memory region addressed by TTBR1_EL1
+> I'm confused about the "overlap with crashkernel memory", does that mean
+> those normal kernel used memory could be put in crashkernel reserved
+> memory range?  If so why can't just skip those areas while crashkernel
+> doing the reservation?
+I raised the same question in another mail. As Hari's answer, "kexec -p"
+skips these ranges in user space. And the same logic should be done in
+"kexec -s -p"
 
-> diff --git a/arch/arm64/kernel/crash_core.c b/arch/arm64/kernel/crash_core.c
-> index 1f646b07e3e9..314391a156ee 100644
-> --- a/arch/arm64/kernel/crash_core.c
-> +++ b/arch/arm64/kernel/crash_core.c
-> @@ -7,6 +7,14 @@
->  #include <linux/crash_core.h>
->  #include <asm/cpufeature.h>
->  #include <asm/memory.h>
-> +#include <asm/pgtable-hwdef.h>
-> +
-> +static inline u64 get_tcr_el1_t1sz(void);
-> +
-> +static inline u64 get_tcr_el1_t1sz(void)
-> +{
-> +	return (read_sysreg(tcr_el1) & TCR_T1SZ_MASK) >> TCR_T1SZ_OFFSET;
-> +}
->  
->  void arch_crash_save_vmcoreinfo(void)
->  {
-> @@ -16,6 +24,8 @@ void arch_crash_save_vmcoreinfo(void)
->  						kimage_voffset);
->  	vmcoreinfo_append_str("NUMBER(PHYS_OFFSET)=0x%llx\n",
->  						PHYS_OFFSET);
-> +	vmcoreinfo_append_str("NUMBER(TCR_EL1_T1SZ)=0x%llx\n",
-> +						get_tcr_el1_t1sz());
->  	vmcoreinfo_append_str("KERNELOFFSET=%lx\n", kaslr_offset());
->  	vmcoreinfo_append_str("NUMBER(KERNELPACMASK)=0x%llx\n",
->  						system_supports_address_auth() ?
+Regards,
+Pingfan
 
-(I think second guessing the kernel memory map is a sisyphean effort), but this register
-isn't going to disappear, or change its meaning!:
-
-Reviewed-by: James Morse <james.morse@arm.com>
-
-You may need to re-post this to get the maintainer's attention as its normally safe to
-assume patches posted before rc1 no longer apply. (in this case, this one does)
-
-
-Thanks,
-
-James
 
 _______________________________________________
 kexec mailing list
