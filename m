@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqhWJ-0007sD-JR
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 18:31:44 +0000
-Subject: Re: [PATCH 01/11] kexec_file: allow archs to handle special regions
- while locating memory hole
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319828304.16351.6990340111766605842.stgit@hbathini.in.ibm.com>
- <20200629133933.0787f562@ezekiel.suse.cz>
- <7981ae61-26c6-000c-9ee4-382dab3eecab@linux.ibm.com>
- <20200701074659.GA3878@dhcp-128-65.nay.redhat.com>
-From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <0e145e84-a6cf-4da3-1a1a-331a7e1ac1fa@linux.ibm.com>
-Date: Thu, 2 Jul 2020 00:01:31 +0530
+ id 1jqisB-00014a-Uz
+ for kexec@lists.infradead.org; Wed, 01 Jul 2020 19:58:24 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: pending output optimization: was: [PATCH v3 3/3] printk: use the
+ lockless ringbuffer
+In-Reply-To: <20200625151741.GH8444@alley>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625151741.GH8444@alley>
+Date: Wed, 01 Jul 2020 22:04:19 +0206
+Message-ID: <87o8oznh2c.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20200701074659.GA3878@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,53 +25,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>, Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
+On 2020-06-25, Petr Mladek <pmladek@suse.com> wrote:
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -2009,9 +2056,9 @@ asmlinkage int vprintk_emit(int facility, int level,
+>>  
+>>  	/* This stops the holder of console_sem just where we want him */
+>>  	logbuf_lock_irqsave(flags);
+>> -	curr_log_seq = log_next_seq;
+>> +	pending_output = !prb_read_valid(prb, console_seq, NULL);
+>>  	printed_len = vprintk_store(facility, level, dict, dictlen, fmt, args);
+>> -	pending_output = (curr_log_seq != log_next_seq);
+>> +	pending_output &= prb_read_valid(prb, console_seq, NULL);
+>
+> This will stop working after we remove the locks. Consoles will be
+> able to handle messages while the new one is being added. There will
+> be no gurantee that someone is still hadling the previously pending
+> output.
+>
+> Please, always handle consoles when printed_len is not zero!!!
+>
+> The pending output was just an optimization added recently. Nobody
+> requested it. It was just an idea that made sense.
 
+OK. I will insert a patch before this one that reverts commit
+3ac37a93fa92 ("printk: lock/unlock console only for new logbuf
+entries"). Then there is no @pending_output for me to implement and it
+will be clear that this series is changing/reverting some printk
+behavior.
 
-On 01/07/20 1:16 pm, Dave Young wrote:
-> On 06/29/20 at 05:26pm, Hari Bathini wrote:
->> Hi Petr,
->>
->> On 29/06/20 5:09 pm, Petr Tesarik wrote:
->>> Hi Hari,
->>>
->>> is there any good reason to add two more functions with a very similar
->>> name to an existing function? AFAICS all you need is a way to call a
->>> PPC64-specific function from within kexec_add_buffer (PATCH 4/11), so
->>> you could add something like this:
->>>
->>> int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
->>> {
->>> 	return 0;
->>> }
->>>
->>> Call this function from kexec_add_buffer where appropriate and then
->>> override it for PPC64 (it roughly corresponds to your
->>> kexec_locate_mem_hole_ppc64() from PATCH 4/11).
->>>
->>> FWIW it would make it easier for me to follow the resulting code.
->>
->> Right, Petr.
->>
->> I was trying out a few things before I ended up with what I sent here.
->> Bu yeah.. I did realize arch_kexec_locate_mem_hole() would have been better
->> after sending out v1. Will take care of that in v2.
-> 
-> Another way is use arch private function to locate mem hole, then set
-> kbuf->mem, and then call kexec_add_buf, it will skip the common locate
-> hole function.
-
-Dave, I did think about it. But there are a couple of places this can get
-tricky. One is ima_add_kexec_buffer() and the other is kexec_elf_load().
-These call sites could be updated to set kbuf->mem before kexec_add_buffer().
-But the current approach seemed like the better option for it creates a
-single point of control in setting up segment buffers and also, makes adding
-any new segments simpler, arch-specific segments or otherwise.
-
-Thanks
-Hari
+John Ogness
 
 _______________________________________________
 kexec mailing list
