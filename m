@@ -1,20 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqzKM-0006UL-SR
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 13:32:35 +0000
-Date: Thu, 2 Jul 2020 15:31:10 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 3/3] printk: use the lockless ringbuffer
-Message-ID: <20200702133110.GE14288@alley>
-References: <20200618144919.9806-1-john.ogness@linutronix.de>
- <20200618144919.9806-4-john.ogness@linutronix.de>
- <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com>
- <87zh8imgs5.fsf@jogness.linutronix.de>
- <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
+Date: Thu, 2 Jul 2020 17:55:59 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v6 1/2] crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS'
+ to vmcoreinfo
+Message-ID: <20200702165558.GH22241@gaia>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-2-git-send-email-bhsharma@redhat.com>
+ <20200702110003.GC22241@gaia>
+ <20200702120855.GD21026@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
+In-Reply-To: <20200702120855.GD21026@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,39 +19,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Dave Young <dyoung@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, Bhupesh Sharma <bhsharma@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org, Dave Anderson <anderson@redhat.com>
 
-T24gVGh1IDIwMjAtMDctMDIgMTc6NDM6MjIsIGxpamlhbmcgd3JvdGU6Cj4g5ZyoIDIwMjDlubQw
-N+aciDAy5pelIDE3OjAyLCBKb2huIE9nbmVzcyDlhpnpgZM6Cj4gPiBPbiAyMDIwLTA3LTAyLCBs
-aWppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+IHdyb3RlOgo+ID4+IEFib3V0IHRoZSBWTUNPUkVJ
-TkZPIHBhcnQsIEkgbWFkZSBzb21lIHRlc3RzIGJhc2VkIG9uIHRoZSBrZXJuZWwgcGF0Y2gKPiA+
-PiB2MywgdGhlIG1ha2VkdW1wZmlsZSBhbmQgY3Jhc2gtdXRpbGl0eSBjYW4gd29yayBhcyBleHBl
-Y3RlZCB3aXRoIHlvdXIKPiA+PiBwYXRjaCh1c2Vyc3BhY2UgcGF0Y2gpLCBidXQsIHVuZm9ydHVu
-YXRlbHksIHRoZSB2bWNvcmUtZG1lc2coa2V4ZWMtdG9vbHMpCj4gPj4gY2FuJ3QgY29ycmVjdGx5
-IHJlYWQgdGhlIHByaW50ayByaW5nIGJ1ZmZlciBpbmZvcm1hdGlvbiwgYW5kIGdldCB0aGUKPiA+
-PiBmb2xsb3dpbmcgZXJyb3I6Cj4gPj4KPiA+PiAiTWlzc2luZyB0aGUgbG9nX2J1ZiBzeW1ib2wi
-Cj4gPj4KPiA+PiBUaGUga2V4ZWMtdG9vbHModm1jb3JlLWRtZXNnKSBzaG91bGQgYWxzbyBoYXZl
-IGEgc2ltaWxhciBwYXRjaCwganVzdCBsaWtlCj4gPj4gaW4gdGhlIG1ha2VkdW1wZmlsZSBhbmQg
-Y3Jhc2gtdXRpbGl0eS4KPiA+IAo+ID4gWWVzLCBhIHBhdGNoIGZvciB0aGlzIGlzIG5lZWRlZCAo
-YXMgd2VsbCBhcyBmb3IgYW55IG90aGVyIHJlbGF0ZWQKPiA+IHNvZnR3YXJlIGZsb2F0aW5nIGFy
-b3VuZCB0aGUgaW50ZXJuZXQpLgo+ID4gCj4gPiBJIGhhdmUgbm8gUkZDIHBhdGNoZXMgZm9yIHZt
-Y29yZS1kbWVzZy4gTG9va2luZyBhdCB0aGUgY29kZSwgSSB0aGluayBpdAo+ID4gd291bGQgYmUg
-cXVpdGUgc3RyYWlnaHQgZm9yd2FyZCB0byBwb3J0IHRoZSBtYWtlZHVtcGZpbGUgcGF0Y2guIEkg
-d2lsbAo+IAo+IFllcywgaXQgc2hvdWxkIGJlIGEgc2ltaWxhciBwYXRjaC4KPiAKPiA+IHRyeSB0
-byBtYWtlIHNvbWUgdGltZSBmb3IgdGhpcy4KPiA+IAo+IFRoYXQgd291bGQgYmUgbmljZS4gVGhh
-bmsgeW91LCBKb2huIE9nbmVzcy4KPiAKPiA+IEkgZG8gbm90IHdhbnQgdG8gcGF0Y2ggYW55IG90
-aGVyIHNvZnR3YXJlIGZvciB0aGlzLiBJIHRoaW5rIHdpdGggMwo+ID4gZXhhbXBsZXMgKGNyYXNo
-LCBtYWtlZHVtcGZpbGUsIHZtY29yZS1kbWVzZyksIG90aGVycyBzaG91bGQgYmUgYWJsZSB0bwo+
-IAo+IEl0J3MgZ29vZCBlbm91Z2ggdG8gaGF2ZSB0aGUgcGF0Y2ggZm9yIHRoZSBtYWtlZHVtcGZp
-bGUsIGNyYXNoIGFuZCB2bWNvcmUtZG1lc2csCj4gd2hpY2ggY2FuIGVuc3VyZSB0aGUga2R1bXAo
-dXNlcnNwYWNlKSB3b3JrIHdlbGwuCgpJIGFncmVlIHRoYXQgdGhpcyB0aHJlZSBhcmUgdGhlIG1v
-c3QgaW1wb3J0YW50IG9uZXMgYW5kIHNob3VsZCBiZQplbm91Z2guCgpUaGFua3MgYSBsb3QgZm9y
-IHdvcmtpbmcgb24gaXQgYW5kIHRlc3RpbmcgaXQuCgpCZXN0IFJlZ2FyZHMsClBldHIKCl9fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
-bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Jul 02, 2020 at 08:08:55PM +0800, Dave Young wrote:
+> Hi Catalin,
+> On 07/02/20 at 12:00pm, Catalin Marinas wrote:
+> > On Thu, May 14, 2020 at 12:22:36AM +0530, Bhupesh Sharma wrote:
+> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > > index 9f1557b98468..18175687133a 100644
+> > > --- a/kernel/crash_core.c
+> > > +++ b/kernel/crash_core.c
+> > > @@ -413,6 +413,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> > >  	VMCOREINFO_STRUCT_SIZE(mem_section);
+> > >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> > > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+> > >  #endif
+> > >  	VMCOREINFO_STRUCT_SIZE(page);
+> > >  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+> > 
+> > I can queue this patch via the arm64 tree (together with the second one)
+> > but I'd like an ack from the kernel/crash_core.c maintainers. They don't
+> > seem to have been cc'ed either (only the kexec list).
+> 
+> For the VMCOREINFO part, I'm fine with the changes, but since I do not
+> understand the arm64 pieces so I would like to leave to arm64 people to
+> review.  If arm64 bits are good enough, feel free to add:
+> 
+> Acked-by: Dave Young <dyoung@redhat.com>
+
+Thanks.
+
+-- 
+Catalin
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
