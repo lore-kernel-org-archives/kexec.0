@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jql1i-00022W-MN
- for kexec@lists.infradead.org; Wed, 01 Jul 2020 22:16:24 +0000
-Received: by mail-pg1-f197.google.com with SMTP id s8so1281836pgs.9
- for <kexec@lists.infradead.org>; Wed, 01 Jul 2020 15:14:47 -0700 (PDT)
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH 1/2] mm/memcontrol: Fix OOPS inside
- mem_cgroup_get_nr_swap_pages()
-Date: Thu,  2 Jul 2020 03:44:19 +0530
-Message-Id: <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
-In-Reply-To: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
-References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ id 1jqpIF-00013y-3W
+ for kexec@lists.infradead.org; Thu, 02 Jul 2020 02:49:44 +0000
+Date: Thu, 2 Jul 2020 10:49:19 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v9 1/5] x86: kdump: move reserve_crashkernel_low() into
+ crash_core.c
+Message-ID: <20200702024919.GA12277@dhcp-128-65.nay.redhat.com>
+References: <20200628083458.40066-1-chenzhou10@huawei.com>
+ <20200628083458.40066-2-chenzhou10@huawei.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200628083458.40066-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,128 +22,311 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cgroups@vger.kernel.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
-Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michal Hocko <mhocko@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Davydov <vdavydov.dev@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: horms@verge.net.au, John.P.donnelly@oracle.com, guohanjun@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
 
-Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
-function in a corner case seen on some arm64 boards when kdump kernel
-runs with "cgroup_disable=memory" passed to the kdump kernel via
-bootargs.
+On 06/28/20 at 04:34pm, Chen Zhou wrote:
+> In preparation for supporting reserve_crashkernel_low in arm64 as
+> x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
+> 
+> BTW, move x86_64 CRASH_ALIGN to 2M suggested by Dave. CONFIG_PHYSICAL_ALIGN
+> can be selected from 2M to 16M, move to the same as arm64.
+> 
+> Note, in arm64, we reserve low memory if and only if crashkernel=X,low
+> is specified. Different with x86_64, don't set low memory automatically.
+> 
+> Reported-by: kbuild test robot <lkp@intel.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> ---
+>  arch/x86/kernel/setup.c    | 66 ++++-------------------------
+>  include/linux/crash_core.h |  3 ++
+>  include/linux/kexec.h      |  2 -
+>  kernel/crash_core.c        | 85 ++++++++++++++++++++++++++++++++++++++
+>  kernel/kexec_core.c        | 17 --------
+>  5 files changed, 96 insertions(+), 77 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index a3767e74c758..33db99ae3035 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -401,8 +401,8 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> -/* 16M alignment for crash kernel regions */
+> -#define CRASH_ALIGN		SZ_16M
+> +/* 2M alignment for crash kernel regions */
+> +#define CRASH_ALIGN		SZ_2M
+>  
+>  /*
+>   * Keep the crash kernel below this limit.
+> @@ -425,59 +425,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  # define CRASH_ADDR_HIGH_MAX	SZ_64T
+>  #endif
+>  
+> -static int __init reserve_crashkernel_low(void)
+> -{
+> -#ifdef CONFIG_X86_64
+> -	unsigned long long base, low_base = 0, low_size = 0;
+> -	unsigned long total_low_mem;
+> -	int ret;
+> -
+> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> -
+> -	/* crashkernel=Y,low */
+> -	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+> -	if (ret) {
+> -		/*
+> -		 * two parts from kernel/dma/swiotlb.c:
+> -		 * -swiotlb size: user-specified with swiotlb= or default.
+> -		 *
+> -		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> -		 * to 8M for other buffers that may need to stay low too. Also
+> -		 * make sure we allocate enough extra low memory so that we
+> -		 * don't run out of DMA buffers for 32-bit devices.
+> -		 */
+> -		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+> -	} else {
+> -		/* passed with crashkernel=0,low ? */
+> -		if (!low_size)
+> -			return 0;
+> -	}
+> -
+> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> -	if (!low_base) {
+> -		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> -		       (unsigned long)(low_size >> 20));
+> -		return -ENOMEM;
+> -	}
+> -
+> -	ret = memblock_reserve(low_base, low_size);
+> -	if (ret) {
+> -		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+> -		return ret;
+> -	}
+> -
+> -	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> -		(unsigned long)(low_size >> 20),
+> -		(unsigned long)(low_base >> 20),
+> -		(unsigned long)(total_low_mem >> 20));
+> -
+> -	crashk_low_res.start = low_base;
+> -	crashk_low_res.end   = low_base + low_size - 1;
+> -	insert_resource(&iomem_resource, &crashk_low_res);
+> -#endif
+> -	return 0;
+> -}
+> -
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_size, crash_base, total_mem;
+> @@ -541,9 +488,12 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> -		memblock_free(crash_base, crash_size);
+> -		return;
+> +	if (crash_base >= (1ULL << 32)) {
+> +		if (reserve_crashkernel_low()) {
+> +			memblock_free(crash_base, crash_size);
+> +			return;
+> +		}
+> +		insert_resource(&iomem_resource, &crashk_low_res);
+>  	}
+>  
+>  	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 525510a9f965..4df8c0bff03e 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -63,6 +63,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  extern unsigned char *vmcoreinfo_data;
+>  extern size_t vmcoreinfo_size;
+>  extern u32 *vmcoreinfo_note;
+> +extern struct resource crashk_res;
+> +extern struct resource crashk_low_res;
+>  
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len);
+> @@ -74,5 +76,6 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+>  int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>  		unsigned long long *crash_size, unsigned long long *crash_base);
+> +int __init reserve_crashkernel_low(void);
+>  
+>  #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index ea67910ae6b7..a460afdbab0f 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -330,8 +330,6 @@ extern int kexec_load_disabled;
+>  
+>  /* Location of a reserved region to hold the crash kernel.
+>   */
+> -extern struct resource crashk_res;
+> -extern struct resource crashk_low_res;
+>  extern note_buf_t __percpu *crash_notes;
+>  
+>  /* flag to track if kexec reboot is in progress */
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 9f1557b98468..a7580d291c37 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,8 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/memblock.h>
+> +#include <linux/swiotlb.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -19,6 +21,22 @@ u32 *vmcoreinfo_note;
+>  /* trusted vmcoreinfo, e.g. we can make a copy in the crash memory */
+>  static unsigned char *vmcoreinfo_data_safecopy;
+>  
+> +/* Location of the reserved area for the crash kernel */
+> +struct resource crashk_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +struct resource crashk_low_res = {
+> +	.name  = "Crash kernel",
+> +	.start = 0,
+> +	.end   = 0,
+> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> +	.desc  = IORES_DESC_CRASH_KERNEL
+> +};
+> +
+>  /*
+>   * parsing the "crashkernel" commandline
+>   *
+> @@ -292,6 +310,73 @@ int __init parse_crashkernel_low(char *cmdline,
+>  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+>  }
+>  
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+> +#define CRASH_ALIGN		SZ_2M
+> +#endif
+> +
+> +int __init reserve_crashkernel_low(void)
+> +{
+> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+> +	unsigned long long base, low_base = 0, low_size = 0;
+> +	unsigned long total_low_mem;
+> +	int ret;
+> +
+> +	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +
+> +	/* crashkernel=Y,low */
+> +	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size,
+> +			&base);
+> +	if (ret) {
+> +#ifdef CONFIG_X86_64
+> +		/*
+> +		 * two parts from lib/swiotlb.c:
+> +		 * -swiotlb size: user-specified with swiotlb= or default.
+> +		 *
+> +		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+> +		 * to 8M for other buffers that may need to stay low too. Also
+> +		 * make sure we allocate enough extra low memory so that we
+> +		 * don't run out of DMA buffers for 32-bit devices.
+> +		 */
+> +		low_size = max(swiotlb_size_or_default() + (8UL << 20),
+> +				256UL << 20);
+> +#else
+> +		/*
+> +		 * in arm64, reserve low memory if and only if crashkernel=X,low
+> +		 * specified.
+> +		 */
+> +		return -EINVAL;
+> +#endif
+> +	} else {
+> +		/* passed with crashkernel=0,low ? */
+> +		if (!low_size)
+> +			return 0;
+> +	}
+> +
+> +	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	if (!low_base) {
+> +		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+> +		       (unsigned long)(low_size >> 20));
+> +		return -ENOMEM;
+> +	}
+> +
+> +	ret = memblock_reserve(low_base, low_size);
+> +	if (ret) {
+> +		pr_err("%s: Error reserving crashkernel low memblock.\n",
+> +				__func__);
+> +		return ret;
+> +	}
+> +
+> +	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+> +		(unsigned long)(low_size >> 20),
+> +		(unsigned long)(low_base >> 20),
+> +		(unsigned long)(total_low_mem >> 20));
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end   = low_base + low_size - 1;
+> +#endif
+> +	return 0;
+> +}
+> +
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len)
+>  {
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index c19c0dad1ebe..db66bbabfff3 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -53,23 +53,6 @@ note_buf_t __percpu *crash_notes;
+>  /* Flag to indicate we are going to kexec a new kernel */
+>  bool kexec_in_progress = false;
+>  
+> -
+> -/* Location of the reserved area for the crash kernel */
+> -struct resource crashk_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -struct resource crashk_low_res = {
+> -	.name  = "Crash kernel",
+> -	.start = 0,
+> -	.end   = 0,
+> -	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
+> -	.desc  = IORES_DESC_CRASH_KERNEL
+> -};
+> -
+>  int kexec_should_crash(struct task_struct *p)
+>  {
+>  	/*
+> -- 
+> 2.20.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
-The root-cause behind the same is that currently mem_cgroup_swap_init()
-function is implemented as a subsys_initcall() call instead of a
-core_initcall(), this means 'cgroup_memory_noswap' still
-remains set to the default value (false) even when memcg is disabled via
-"cgroup_disable=memory" boot parameter.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
-function in corner cases:
-
-  [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
-  [    0.274495] Mem abort info:
-  [    0.277311]   ESR = 0x96000006
-  [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
-  [    0.285751]   SET = 0, FnV = 0
-  [    0.288830]   EA = 0, S1PTW = 0
-  [    0.291995] Data abort info:
-  [    0.294897]   ISV = 0, ISS = 0x00000006
-  [    0.298765]   CM = 0, WnR = 0
-  [    0.301757] [0000000000000188] user address but active_mm is swapper
-  [    0.308174] Internal error: Oops: 96000006 [#1] SMP
-  [    0.313097] Modules linked in:
-  <..snip..>
-  [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
-  [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
-  [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
-  [    0.347564] sp : fffffe0012b6f800
-  [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
-  [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
-  [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
-  [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
-  [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
-  [    0.377720] x19: 0000000000000000 x18: 0000000000000010
-  [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
-  [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
-  [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
-  [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
-  [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
-  [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
-  [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
-  [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
-  [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
-  [    0.431346] Call trace:
-  [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
-  [    0.438735]  shrink_lruvec+0x404/0x4f8
-  [    0.442516]  shrink_node+0x1a8/0x688
-  [    0.446121]  do_try_to_free_pages+0xe8/0x448
-  [    0.450429]  try_to_free_pages+0x110/0x230
-  [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
-  [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
-  [    0.464938]  alloc_page_interleave+0x20/0x90
-  [    0.469246]  alloc_pages_current+0xdc/0xf8
-  [    0.473379]  atomic_pool_expand+0x60/0x210
-  [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
-  [    0.481910]  dma_atomic_pool_init+0xac/0x158
-  [    0.486220]  do_one_initcall+0x50/0x218
-  [    0.490091]  kernel_init_freeable+0x22c/0x2d0
-  [    0.494489]  kernel_init+0x18/0x110
-  [    0.498007]  ret_from_fork+0x10/0x18
-  [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
-  [    0.507770] ---[ end trace 9795948475817de4 ]---
-  [    0.512429] Kernel panic - not syncing: Fatal exception
-  [    0.517705] Rebooting in 10 seconds..
-
-Cc: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: cgroups@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
----
- mm/memcontrol.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
-
-diff --git a/mm/memcontrol.c b/mm/memcontrol.c
-index 19622328e4b5..8323e4b7b390 100644
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
- 	{ },	/* terminate */
- };
- 
-+/*
-+ * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
-+ * instead of a core_initcall(), this could mean cgroup_memory_noswap still
-+ * remains set to false even when memcg is disabled via "cgroup_disable=memory"
-+ * boot parameter. This may result in premature OOPS inside 
-+ * mem_cgroup_get_nr_swap_pages() function in corner cases.
-+ */
- static int __init mem_cgroup_swap_init(void)
- {
- 	/* No memory control -> no swap control */
-@@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
- 
- 	return 0;
- }
--subsys_initcall(mem_cgroup_swap_init);
-+core_initcall(mem_cgroup_swap_init);
- 
- #endif /* CONFIG_MEMCG_SWAP */
--- 
-2.7.4
+Thanks
+Dave
 
 
 _______________________________________________
