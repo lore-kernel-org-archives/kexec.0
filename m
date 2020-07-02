@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jr5Hi-0002sp-NT
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 19:54:15 +0000
-Subject: [PATCH v2 00/12] ppc64: enable kdump support for kexec_file_load
- syscall
+ id 1jr5Hx-0002uz-AV
+ for kexec@lists.infradead.org; Thu, 02 Jul 2020 19:54:30 +0000
+Subject: [PATCH v2 01/12] kexec_file: allow archs to handle special regions
+ while locating memory hole
 From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Fri, 03 Jul 2020 01:23:57 +0530
-Message-ID: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+Date: Fri, 03 Jul 2020 01:24:13 +0530
+Message-ID: <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
+In-Reply-To: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,114 +24,117 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+Cc: kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-This patch series enables kdump support for kexec_file_load system
-call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-code but heavily modified for kernel consumption. There is scope to
-expand purgatory to verify sha256 digest along with other improvements
-in purgatory code. Will deal with those changes in a separate patch
-series later.
+Some architectures may have special memory regions, within the given
+memory range, which can't be used for the buffer in a kexec segment.
+Implement weak arch_kexec_locate_mem_hole() definition which arch code
+may override, to take care of special regions, while trying to locate
+a memory hole.
 
-The first patch adds a weak arch_kexec_locate_mem_hole() function to
-override locate memory hole logic suiting arch needs. There are some
-special regions in ppc64 which should be avoided while loading buffer
-& there are multiple callers to kexec_add_buffer making it complicated
-to maintain range sanity and using generic lookup at the same time.
+Also, add the missing declarations for arch overridable functions and
+and drop the __weak descriptors in the declarations to avoid non-weak
+definitions from becoming weak.
 
-The second patch marks ppc64 specific code within arch/powerpc/kexec
-and arch/powerpc/purgatory to make the subsequent code changes easy
-to understand.
-
-The next patch adds helper function to setup different memory ranges
-needed for loading kdump kernel, booting into it and exporting the
-crashing kernel's elfcore.
-
-The fourth patch overrides arch_kexec_locate_mem_hole() function to
-locate memory hole for kdump segments by accounting for the special
-memory regions, referred to as excluded memory ranges, and sets
-kbuf->mem when a suitable memory region is found.
-
-The fifth patch moves walk_drmem_lmbs() out of .init section with
-a few changes to reuse it for setting up kdump kernel's usable memory
-ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
-and set linux,drconf-usable-memory & linux,usable-memory properties
-in order to restrict kdump kernel's memory usage.
-
-The seventh patch adds relocation support for the purgatory. Patch 8
-helps setup the stack for the purgatory. The next patch setups up
-backup region as a segment while loading kdump kernel and teaches
-purgatory to copy it from source to destination.
-
-Patch 10 builds the elfcore header for the running kernel & passes
-the info to kdump kernel via "elfcorehdr=" parameter to export as
-/proc/vmcore file. The next patch sets up the memory reserve map
-for the kexec kernel and also claims kdump support for kdump as
-all the necessary changes are added.
-
-The last patch fixes a lookup issue for `kexec -l -s` case when
-memory is reserved for crashkernel.
-
-Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
-boxes and a simulator.
+Reported-by: kernel test robot <lkp@intel.com>
+[lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
+Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+---
 
 Changes in v2:
 * Introduced arch_kexec_locate_mem_hole() for override and dropped
   weak arch_kexec_add_buffer().
-* Addressed warnings reported by lkp.
-* Added patch to address kexec load issue when memory is reserved
-  for crashkernel.
-* Used the appropriate license header for the new files added.
-* Added an option to merge ranges to minimize reallocations while
-  adding memory ranges.
-* Dropped within_crashkernel parameter for add_opal_mem_range() &
-  add_rtas_mem_range() functions as it is not really needed.
-
----
-
-Hari Bathini (12):
-      kexec_file: allow archs to handle special regions while locating memory hole
-      powerpc/kexec_file: mark PPC64 specific code
-      powerpc/kexec_file: add helper functions for getting memory ranges
-      ppc64/kexec_file: avoid stomping memory used by special regions
-      powerpc/drmem: make lmb walk a bit more flexible
-      ppc64/kexec_file: restrict memory usage of kdump kernel
-      ppc64/kexec_file: add support to relocate purgatory
-      ppc64/kexec_file: setup the stack for purgatory
-      ppc64/kexec_file: setup backup region for kdump kernel
-      ppc64/kexec_file: prepare elfcore header for crashing kernel
-      ppc64/kexec_file: add appropriate regions for memory reserve map
-      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+* Dropped __weak identifier for arch overridable functions.
+* Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
+  reported by lkp. lkp report for reference:
+    - https://lore.kernel.org/patchwork/patch/1264418/
 
 
- arch/powerpc/include/asm/crashdump-ppc64.h |   15 
- arch/powerpc/include/asm/drmem.h           |    9 
- arch/powerpc/include/asm/kexec.h           |   35 +
- arch/powerpc/include/asm/kexec_ranges.h    |   18 
- arch/powerpc/include/asm/purgatory.h       |   11 
- arch/powerpc/kernel/prom.c                 |   13 
- arch/powerpc/kexec/Makefile                |    2 
- arch/powerpc/kexec/elf_64.c                |   35 +
- arch/powerpc/kexec/file_load.c             |   78 +
- arch/powerpc/kexec/file_load_64.c          | 1509 ++++++++++++++++++++++++++++
- arch/powerpc/kexec/ranges.c                |  397 +++++++
- arch/powerpc/mm/drmem.c                    |   87 +-
- arch/powerpc/mm/numa.c                     |   13 
- arch/powerpc/purgatory/Makefile            |   28 -
- arch/powerpc/purgatory/purgatory_64.c      |   36 +
- arch/powerpc/purgatory/trampoline.S        |  117 --
- arch/powerpc/purgatory/trampoline_64.S     |  175 +++
- include/linux/kexec.h                      |   29 -
- kernel/kexec_file.c                        |   16 
- 19 files changed, 2413 insertions(+), 210 deletions(-)
- create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
- create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
- create mode 100644 arch/powerpc/include/asm/purgatory.h
- create mode 100644 arch/powerpc/kexec/file_load_64.c
- create mode 100644 arch/powerpc/kexec/ranges.c
- create mode 100644 arch/powerpc/purgatory/purgatory_64.c
- delete mode 100644 arch/powerpc/purgatory/trampoline.S
- create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+ include/linux/kexec.h |   29 ++++++++++++++++++-----------
+ kernel/kexec_file.c   |   16 ++++++++++++++--
+ 2 files changed, 32 insertions(+), 13 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ea67910..9e93bef 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -183,17 +183,24 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+ 				   bool get_value);
+ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ 
+-int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+-					 unsigned long buf_len);
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+-int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+-					    Elf_Shdr *section,
+-					    const Elf_Shdr *relsec,
+-					    const Elf_Shdr *symtab);
+-int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
+-					Elf_Shdr *section,
+-					const Elf_Shdr *relsec,
+-					const Elf_Shdr *symtab);
++/* Architectures may override the below functions */
++int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
++				  unsigned long buf_len);
++void *arch_kexec_kernel_image_load(struct kimage *image);
++int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
++				     Elf_Shdr *section,
++				     const Elf_Shdr *relsec,
++				     const Elf_Shdr *symtab);
++int arch_kexec_apply_relocations(struct purgatory_info *pi,
++				 Elf_Shdr *section,
++				 const Elf_Shdr *relsec,
++				 const Elf_Shdr *symtab);
++int arch_kimage_file_post_load_cleanup(struct kimage *image);
++#ifdef CONFIG_KEXEC_SIG
++int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
++				 unsigned long buf_len);
++#endif
++int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 09cc78d..e89912d 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -636,6 +636,19 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ }
+ 
+ /**
++ * arch_kexec_locate_mem_hole - Find free memory to place the segments.
++ * @kbuf:                       Parameters for the memory search.
++ *
++ * On success, kbuf->mem will have the start address of the memory region found.
++ *
++ * Return: 0 on success, negative errno on error.
++ */
++int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
++{
++	return kexec_locate_mem_hole(kbuf);
++}
++
++/**
+  * kexec_add_buffer - place a buffer in a kexec segment
+  * @kbuf:	Buffer contents and memory parameters.
+  *
+@@ -647,7 +660,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+  */
+ int kexec_add_buffer(struct kexec_buf *kbuf)
+ {
+-
+ 	struct kexec_segment *ksegment;
+ 	int ret;
+ 
+@@ -675,7 +687,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+ 
+ 	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+-	ret = kexec_locate_mem_hole(kbuf);
++	ret = arch_kexec_locate_mem_hole(kbuf);
+ 	if (ret)
+ 		return ret;
+ 
 
 
 _______________________________________________
