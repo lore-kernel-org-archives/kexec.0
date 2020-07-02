@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jr4pk-0000o4-Es
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 19:25:21 +0000
-Received: by mail-qk1-f199.google.com with SMTP id z1so10057481qkz.3
- for <kexec@lists.infradead.org>; Thu, 02 Jul 2020 12:25:16 -0700 (PDT)
+ id 1jr5Hi-0002sp-NT
+ for kexec@lists.infradead.org; Thu, 02 Jul 2020 19:54:15 +0000
+Subject: [PATCH v2 00/12] ppc64: enable kdump support for kexec_file_load
+ syscall
+From: Hari Bathini <hbathini@linux.ibm.com>
+Date: Fri, 03 Jul 2020 01:23:57 +0530
+Message-ID: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
- <20200408104655.GA92698@C02TD0UTHF1T.local>
- <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
- <20200428100710.GD3868@gaia>
- <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
- <CACi5LpMnbFbmqWOn0GfPD2H50UcZ0XHQ7X+Cd0E-cS-zfL7tQQ@mail.gmail.com>
-In-Reply-To: <CACi5LpMnbFbmqWOn0GfPD2H50UcZ0XHQ7X+Cd0E-cS-zfL7tQQ@mail.gmail.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Fri, 3 Jul 2020 00:55:03 +0530
-Message-ID: <CACi5LpPcPoVwWBviuCfCri1xQSc34iXkQ8BTcTqXDEcYHSuoEQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,68 +21,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arm@kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-Hi Catalin,
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption. There is scope to
+expand purgatory to verify sha256 digest along with other improvements
+in purgatory code. Will deal with those changes in a separate patch
+series later.
 
-On Fri, May 15, 2020 at 2:44 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
->
-> Hi Arnd,
->
-> On Thu, Apr 30, 2020 at 10:05 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> >
-> > On Tue, Apr 28, 2020 at 3:37 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > >
-> > > On Tue, Apr 28, 2020 at 01:55:58PM +0530, Bhupesh Sharma wrote:
-> > > > On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > > On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
-> > > > > >  arch/arm64/configs/defconfig | 1 +
-> > > > > >  1 file changed, 1 insertion(+)
-> > > > > >
-> > > > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > > > > index 24e534d85045..fa122f4341a2 100644
-> > > > > > --- a/arch/arm64/configs/defconfig
-> > > > > > +++ b/arch/arm64/configs/defconfig
-> > > > > > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
-> > > > > >  CONFIG_NUMA=y
-> > > > > >  CONFIG_SECCOMP=y
-> > > > > >  CONFIG_KEXEC=y
-> > > > > > +CONFIG_KEXEC_FILE=y
-> > > > > >  CONFIG_CRASH_DUMP=y
-> > > > > >  CONFIG_XEN=y
-> > > > > >  CONFIG_COMPAT=y
-> > > > > > --
-> > > > > > 2.7.4
-> > > >
-> > > > Thanks a lot  Mark.
-> > > >
-> > > > Hi Catalin, Will,
-> > > >
-> > > > Can you please help pick this patch in the arm tree. We have an
-> > > > increasing number of user-cases from distro users
-> > > > who want to use kexec_file_load() as the default interface for
-> > > > kexec/kdump on arm64.
-> > >
-> > > We could pick it up if it doesn't conflict with the arm-soc tree. They
-> > > tend to pick most of the defconfig changes these days (and could as well
-> > > pick this one).
-> >
-> > Thanks Catalin.
-> > (+Cc Arnd)
-> >
-> > Hi Arnd,
-> >
-> > Can you please help pick this change via the arm-soc tree?
->
-> Ping. Any updates on this defconfig patch.
+The first patch adds a weak arch_kexec_locate_mem_hole() function to
+override locate memory hole logic suiting arch needs. There are some
+special regions in ppc64 which should be avoided while loading buffer
+& there are multiple callers to kexec_add_buffer making it complicated
+to maintain range sanity and using generic lookup at the same time.
 
-Ping. Seems there is no reply from Arnd on this patch.
-Can you please help pull in this one as well. It has been pending for
-quite some time now.
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
 
-Thanks,
-Bhupesh
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_locate_mem_hole() function to
+locate memory hole for kdump segments by accounting for the special
+memory regions, referred to as excluded memory ranges, and sets
+kbuf->mem when a suitable memory region is found.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The seventh patch adds relocation support for the purgatory. Patch 8
+helps setup the stack for the purgatory. The next patch setups up
+backup region as a segment while loading kdump kernel and teaches
+purgatory to copy it from source to destination.
+
+Patch 10 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The next patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support for kdump as
+all the necessary changes are added.
+
+The last patch fixes a lookup issue for `kexec -l -s` case when
+memory is reserved for crashkernel.
+
+Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+boxes and a simulator.
+
+Changes in v2:
+* Introduced arch_kexec_locate_mem_hole() for override and dropped
+  weak arch_kexec_add_buffer().
+* Addressed warnings reported by lkp.
+* Added patch to address kexec load issue when memory is reserved
+  for crashkernel.
+* Used the appropriate license header for the new files added.
+* Added an option to merge ranges to minimize reallocations while
+  adding memory ranges.
+* Dropped within_crashkernel parameter for add_opal_mem_range() &
+  add_rtas_mem_range() functions as it is not really needed.
+
+---
+
+Hari Bathini (12):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: add support to relocate purgatory
+      ppc64/kexec_file: setup the stack for purgatory
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
+      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+
+
+ arch/powerpc/include/asm/crashdump-ppc64.h |   15 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   35 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   18 
+ arch/powerpc/include/asm/purgatory.h       |   11 
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   35 +
+ arch/powerpc/kexec/file_load.c             |   78 +
+ arch/powerpc/kexec/file_load_64.c          | 1509 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  397 +++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |   28 -
+ arch/powerpc/purgatory/purgatory_64.c      |   36 +
+ arch/powerpc/purgatory/trampoline.S        |  117 --
+ arch/powerpc/purgatory/trampoline_64.S     |  175 +++
+ include/linux/kexec.h                      |   29 -
+ kernel/kexec_file.c                        |   16 
+ 19 files changed, 2413 insertions(+), 210 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/include/asm/purgatory.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ create mode 100644 arch/powerpc/purgatory/purgatory_64.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
 
 
 _______________________________________________
