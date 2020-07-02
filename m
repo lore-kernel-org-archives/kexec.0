@@ -1,21 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
  helo=us-smtp-delivery-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqxsB-0001do-Cl
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 11:59:24 +0000
-Date: Thu, 2 Jul 2020 19:59:07 +0800
+ id 1jqy1s-0002z3-Jc
+ for kexec@lists.infradead.org; Thu, 02 Jul 2020 12:09:25 +0000
+Date: Thu, 2 Jul 2020 20:08:55 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 04/11] ppc64/kexec_file: avoid stomping memory used by
- special regions
-Message-ID: <20200702115907.GC21026@dhcp-128-65.nay.redhat.com>
-References: <159319825403.16351.7253978047621755765.stgit@hbathini.in.ibm.com>
- <159319831192.16351.17443438699302756548.stgit@hbathini.in.ibm.com>
- <20200701074012.GA4496@dhcp-128-65.nay.redhat.com>
- <bc8fe308-5ce9-1ca6-c832-7c3a75a732d2@redhat.com>
+Subject: Re: [PATCH v6 1/2] crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS'
+ to vmcoreinfo
+Message-ID: <20200702120855.GD21026@dhcp-128-65.nay.redhat.com>
+References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
+ <1589395957-24628-2-git-send-email-bhsharma@redhat.com>
+ <20200702110003.GC22241@gaia>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <bc8fe308-5ce9-1ca6-c832-7c3a75a732d2@redhat.com>
+In-Reply-To: <20200702110003.GC22241@gaia>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,20 +27,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>
-Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Mimi Zohar <zohar@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, Bhupesh Sharma <bhsharma@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org, Dave Anderson <anderson@redhat.com>
 
-> > I'm confused about the "overlap with crashkernel memory", does that mean
-> > those normal kernel used memory could be put in crashkernel reserved
-> > memory range?  If so why can't just skip those areas while crashkernel
-> > doing the reservation?
-> I raised the same question in another mail. As Hari's answer, "kexec -p"
-> skips these ranges in user space. And the same logic should be done in
-> "kexec -s -p"
+Hi Catalin,
+On 07/02/20 at 12:00pm, Catalin Marinas wrote:
+> On Thu, May 14, 2020 at 12:22:36AM +0530, Bhupesh Sharma wrote:
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > index 9f1557b98468..18175687133a 100644
+> > --- a/kernel/crash_core.c
+> > +++ b/kernel/crash_core.c
+> > @@ -413,6 +413,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+> >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> >  	VMCOREINFO_STRUCT_SIZE(mem_section);
+> >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+> > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+> >  #endif
+> >  	VMCOREINFO_STRUCT_SIZE(page);
+> >  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+> 
+> I can queue this patch via the arm64 tree (together with the second one)
+> but I'd like an ack from the kernel/crash_core.c maintainers. They don't
+> seem to have been cc'ed either (only the kexec list).
 
-See it, thanks!  The confusion also applied to the userspace
-implementation though.  Seems they have to be special cases because of 
-the powerpc crashkernel reservation implemtation in kernel limitation
+For the VMCOREINFO part, I'm fine with the changes, but since I do not
+understand the arm64 pieces so I would like to leave to arm64 people to
+review.  If arm64 bits are good enough, feel free to add:
+
+Acked-by: Dave Young <dyoung@redhat.com>
 
 Thanks
 Dave
