@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqpRx-00020Z-9O
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 02:59:46 +0000
-Date: Thu, 2 Jul 2020 10:59:26 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v9 5/5] kdump: update Documentation about crashkernel on
- arm64
-Message-ID: <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
-References: <20200628083458.40066-1-chenzhou10@huawei.com>
- <20200628083458.40066-6-chenzhou10@huawei.com>
+Date: Thu, 2 Jul 2020 08:00:24 +0200
+From: Michal Hocko <mhocko@kernel.org>
+Subject: Re: [PATCH 1/2] mm/memcontrol: Fix OOPS inside
+ mem_cgroup_get_nr_swap_pages()
+Message-ID: <20200702060024.GA18446@dhcp22.suse.cz>
+References: <1593641660-13254-1-git-send-email-bhsharma@redhat.com>
+ <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200628083458.40066-6-chenzhou10@huawei.com>
+In-Reply-To: <1593641660-13254-2-git-send-email-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,134 +21,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: horms@verge.net.au, John.P.donnelly@oracle.com, guohanjun@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, James Morse <james.morse@arm.com>, Vladimir Davydov <vdavydov.dev@gmail.com>, Johannes Weiner <hannes@cmpxchg.org>, cgroups@vger.kernel.org, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org
 
-Hi Chen,
-On 06/28/20 at 04:34pm, Chen Zhou wrote:
-> Now we support crashkernel=X,[low] on arm64, update the Documentation.
-> We could use parameters "crashkernel=X crashkernel=Y,low" to reserve
-> memory above 4G.
+On Thu 02-07-20 03:44:19, Bhupesh Sharma wrote:
+> Prabhakar reported an OOPS inside mem_cgroup_get_nr_swap_pages()
+> function in a corner case seen on some arm64 boards when kdump kernel
+> runs with "cgroup_disable=memory" passed to the kdump kernel via
+> bootargs.
 > 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> The root-cause behind the same is that currently mem_cgroup_swap_init()
+> function is implemented as a subsys_initcall() call instead of a
+> core_initcall(), this means 'cgroup_memory_noswap' still
+> remains set to the default value (false) even when memcg is disabled via
+> "cgroup_disable=memory" boot parameter.
+> 
+> This may result in premature OOPS inside mem_cgroup_get_nr_swap_pages()
+> function in corner cases:
+> 
+>   [    0.265617] Unable to handle kernel NULL pointer dereference at virtual address 0000000000000188
+>   [    0.274495] Mem abort info:
+>   [    0.277311]   ESR = 0x96000006
+>   [    0.280389]   EC = 0x25: DABT (current EL), IL = 32 bits
+>   [    0.285751]   SET = 0, FnV = 0
+>   [    0.288830]   EA = 0, S1PTW = 0
+>   [    0.291995] Data abort info:
+>   [    0.294897]   ISV = 0, ISS = 0x00000006
+>   [    0.298765]   CM = 0, WnR = 0
+>   [    0.301757] [0000000000000188] user address but active_mm is swapper
+>   [    0.308174] Internal error: Oops: 96000006 [#1] SMP
+>   [    0.313097] Modules linked in:
+>   <..snip..>
+>   [    0.331384] pstate: 00400009 (nzcv daif +PAN -UAO BTYPE=--)
+>   [    0.337014] pc : mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+>   [    0.342289] lr : mem_cgroup_get_nr_swap_pages+0x68/0xf4
+>   [    0.347564] sp : fffffe0012b6f800
+>   [    0.350905] x29: fffffe0012b6f800 x28: fffffe00116b3000
+>   [    0.356268] x27: fffffe0012b6fb00 x26: 0000000000000020
+>   [    0.361631] x25: 0000000000000000 x24: fffffc00723ffe28
+>   [    0.366994] x23: fffffe0010d5b468 x22: fffffe00116bfa00
+>   [    0.372357] x21: fffffe0010aabda8 x20: 0000000000000000
+>   [    0.377720] x19: 0000000000000000 x18: 0000000000000010
+>   [    0.383082] x17: 0000000043e612f2 x16: 00000000a9863ed7
+>   [    0.388445] x15: ffffffffffffffff x14: 202c303d70617773
+>   [    0.393808] x13: 6f6e5f79726f6d65 x12: 6d5f70756f726763
+>   [    0.399170] x11: 2073656761705f70 x10: 6177735f726e5f74
+>   [    0.404533] x9 : fffffe00100e9580 x8 : fffffe0010628160
+>   [    0.409895] x7 : 00000000000000a8 x6 : fffffe00118f5e5e
+>   [    0.415258] x5 : 0000000000000001 x4 : 0000000000000000
+>   [    0.420621] x3 : 0000000000000000 x2 : 0000000000000000
+>   [    0.425983] x1 : 0000000000000000 x0 : fffffc0060079000
+>   [    0.431346] Call trace:
+>   [    0.433809]  mem_cgroup_get_nr_swap_pages+0x9c/0xf4
+>   [    0.438735]  shrink_lruvec+0x404/0x4f8
+>   [    0.442516]  shrink_node+0x1a8/0x688
+>   [    0.446121]  do_try_to_free_pages+0xe8/0x448
+>   [    0.450429]  try_to_free_pages+0x110/0x230
+>   [    0.454563]  __alloc_pages_slowpath.constprop.106+0x2b8/0xb48
+>   [    0.460366]  __alloc_pages_nodemask+0x2ac/0x2f8
+>   [    0.464938]  alloc_page_interleave+0x20/0x90
+>   [    0.469246]  alloc_pages_current+0xdc/0xf8
+>   [    0.473379]  atomic_pool_expand+0x60/0x210
+>   [    0.477514]  __dma_atomic_pool_init+0x50/0xa4
+>   [    0.481910]  dma_atomic_pool_init+0xac/0x158
+>   [    0.486220]  do_one_initcall+0x50/0x218
+>   [    0.490091]  kernel_init_freeable+0x22c/0x2d0
+>   [    0.494489]  kernel_init+0x18/0x110
+>   [    0.498007]  ret_from_fork+0x10/0x18
+>   [    0.501614] Code: aa1403e3 91106000 97f82a27 14000011 (f940c663)
+>   [    0.507770] ---[ end trace 9795948475817de4 ]---
+>   [    0.512429] Kernel panic - not syncing: Fatal exception
+>   [    0.517705] Rebooting in 10 seconds..
+> 
+> Cc: Johannes Weiner <hannes@cmpxchg.org>
+> Cc: Michal Hocko <mhocko@kernel.org>
+> Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+> Cc: James Morse <james.morse@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: cgroups@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: kexec@lists.infradead.org
+
+Fixes: eccb52e78809 ("mm: memcontrol: prepare swap controller setup for integration")
+
+> Reported-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+
+This is subtle as hell, I have to say. I find the ordering in the init
+calls very unintuitive and extremely hard to follow. The above commit
+has introduced the problem but the code previously has worked mostly by
+a luck because our default was flipped.
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+
 > ---
->  Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
->  Documentation/admin-guide/kernel-parameters.txt | 17 +++++++++++++++--
->  2 files changed, 26 insertions(+), 4 deletions(-)
+>  mm/memcontrol.c | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 2da65fef2a1c..6ba294d425c9 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -299,7 +299,13 @@ Boot into System Kernel
->     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+> diff --git a/mm/memcontrol.c b/mm/memcontrol.c
+> index 19622328e4b5..8323e4b7b390 100644
+> --- a/mm/memcontrol.c
+> +++ b/mm/memcontrol.c
+> @@ -7186,6 +7186,13 @@ static struct cftype memsw_files[] = {
+>  	{ },	/* terminate */
+>  };
 >  
-> -   On x86 and x86_64, use "crashkernel=64M@16M".
-> +   On x86 use "crashkernel=64M@16M".
-> +
-> +   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
-> +   fall back to reserve region above 4G when '@offset' hasn't been specified.
-
-Actually crashkernel=Y without the offset works well, I do not see why
-we need the offset, it should be some legacy thing.  So it should be
-better just use the Y without offset here, and just leave a note
-somewhere people can use [@X] offset when they really have to.
-
-> +   We can also use "crashkernel=X,high" to select a region above 4G, which
-> +   also tries to allocate at least 256M below 4G automatically and
-> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+> +/*
+> + * If mem_cgroup_swap_init() is implemented as a subsys_initcall()
+> + * instead of a core_initcall(), this could mean cgroup_memory_noswap still
+> + * remains set to false even when memcg is disabled via "cgroup_disable=memory"
+> + * boot parameter. This may result in premature OOPS inside 
+> + * mem_cgroup_get_nr_swap_pages() function in corner cases.
+> + */
+>  static int __init mem_cgroup_swap_init(void)
+>  {
+>  	/* No memory control -> no swap control */
+> @@ -7200,6 +7207,6 @@ static int __init mem_cgroup_swap_init(void)
 >  
->     On ppc64, use "crashkernel=128M@32M".
+>  	return 0;
+>  }
+> -subsys_initcall(mem_cgroup_swap_init);
+> +core_initcall(mem_cgroup_swap_init);
 >  
-> @@ -316,8 +322,11 @@ Boot into System Kernel
->     kernel will automatically locate the crash kernel image within the
->     first 512MB of RAM if X is not given.
->  
-> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-> +   On arm64, use "crashkernel=Y[@X]". Note that the start address of
->     the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-> +   If crashkernel=Z,low is specified simultaneously, reserve spcified size
-> +   low memory for crash kdump kernel devices firstly and then reserve memory
-
-"devices" seems not very accurate, maybe just drop the "for crash kdump
-kernel devices" since it is clear based on the context.
-
-> +   above 4G.
->  
->  Load the Dump-capture Kernel
->  ============================
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index fb95fad81c79..335431a351c0 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -722,6 +722,9 @@
->  			[KNL, x86_64] select a region under 4G first, and
->  			fall back to reserve region above 4G when '@offset'
->  			hasn't been specified.
-> +			[KNL, arm64] If crashkernel=X,low is specified, reserve
-> +			spcified size low memory for crash kdump kernel devices
-
-Ditto.
-
-> +			firstly, and then reserve memory above 4G.
->  			See Documentation/admin-guide/kdump/kdump.rst for further details.
->  
->  	crashkernel=range1:size1[,range2:size2,...][@offset]
-> @@ -746,13 +749,23 @@
->  			requires at least 64M+32K low memory, also enough extra
->  			low memory is needed to make sure DMA buffers for 32-bit
->  			devices won't run out. Kernel would try to allocate at
-> -			at least 256M below 4G automatically.
-> +			least 256M below 4G automatically.
->  			This one let user to specify own low range under 4G
->  			for second kernel instead.
->  			0: to disable low allocation.
->  			It will be ignored when crashkernel=X,high is not used
->  			or memory reserved is below 4G.
-> -
-> +			[KNL, arm64] range under 4G.
-> +			This one let user to specify own low range under 4G
-> +			for crash dump kernel instead.
-> +			Different with x86_64, kernel allocates specified size
-
-sounds better:
-s/Different with/Be different from
-
-s/allocates/reserves
-
-> +			physical memory region only when this parameter is specified
-> +			instead of trying to allocate at least 256M below 4G
-
-s/allocate/reserve
-
-> +			automatically.
-> +			This parameter is used along with crashkernel=X when we
-
-Could change the passive sentence to below:
-"Use this parameter along with"
-
-> +			want to reserve crashkernel above 4G. If there are devices
-> +			need to use ZONE_DMA in crash dump kernel, it is also
-> +			a good choice.
->  	cryptomgr.notests
->  			[KNL] Disable crypto self-tests
->  
+>  #endif /* CONFIG_MEMCG_SWAP */
 > -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+> 2.7.4
 
-Thanks
-Dave
-
+-- 
+Michal Hocko
+SUSE Labs
 
 _______________________________________________
 kexec mailing list
