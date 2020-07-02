@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jqy1s-0002z3-Jc
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 12:09:25 +0000
-Date: Thu, 2 Jul 2020 20:08:55 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v6 1/2] crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS'
- to vmcoreinfo
-Message-ID: <20200702120855.GD21026@dhcp-128-65.nay.redhat.com>
-References: <1589395957-24628-1-git-send-email-bhsharma@redhat.com>
- <1589395957-24628-2-git-send-email-bhsharma@redhat.com>
- <20200702110003.GC22241@gaia>
+ id 1jqzJf-0006L7-C1
+ for kexec@lists.infradead.org; Thu, 02 Jul 2020 13:31:52 +0000
+Date: Thu, 2 Jul 2020 15:27:58 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: buffer allocation: was: [PATCH v3 3/3] printk: use the lockless
+ ringbuffer
+Message-ID: <20200702132758.GD14288@alley>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <20200625082838.GF6156@alley>
+ <87sgeh3m5j.fsf@jogness.linutronix.de>
+ <20200629140445.GK6156@alley>
+ <87ftad8rh4.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200702110003.GC22241@gaia>
+In-Reply-To: <87ftad8rh4.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,38 +29,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Michael Ellerman <mpe@ellerman.id.au>, Bhupesh Sharma <bhsharma@redhat.com>, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Boris Petkov <bp@alien8.de>, James Morse <james.morse@arm.com>, Thomas Gleixner <tglx@linutronix.de>, bhupesh.linux@gmail.com, Will Deacon <will@kernel.org>, Ingo Molnar <mingo@kernel.org>, linux-arm-kernel@lists.infradead.org, Dave Anderson <anderson@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Catalin,
-On 07/02/20 at 12:00pm, Catalin Marinas wrote:
-> On Thu, May 14, 2020 at 12:22:36AM +0530, Bhupesh Sharma wrote:
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index 9f1557b98468..18175687133a 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -413,6 +413,7 @@ static int __init crash_save_vmcoreinfo_init(void)
-> >  	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-> >  	VMCOREINFO_STRUCT_SIZE(mem_section);
-> >  	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-> > +	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-> >  #endif
-> >  	VMCOREINFO_STRUCT_SIZE(page);
-> >  	VMCOREINFO_STRUCT_SIZE(pglist_data);
+On Mon 2020-06-29 23:57:59, John Ogness wrote:
+> On 2020-06-29, Petr Mladek <pmladek@suse.com> wrote:
+> >> @@ @@ void __init setup_log_buf(int early)
+> >> +	prb_init(&printk_rb_dynamic,
+> >> +		 new_log_buf, order_base_2(new_log_buf_len),
+> >> +		 new_dict_buf, order_base_2(new_log_buf_len),
+> >> +		 new_descs, order_base_2(new_descs_count));
+> >
+> > order_base_2() is safe. But the result might be tat some allocated
+> > space is not used.
+> >
+> > I would prefer to make sure that new_log_buf_len is rounded, e.g.
+> > by roundup_pow_of_two(), at the beginning of the function. Then we
+> > could use ilog2() here.
 > 
-> I can queue this patch via the arm64 tree (together with the second one)
-> but I'd like an ack from the kernel/crash_core.c maintainers. They don't
-> seem to have been cc'ed either (only the kexec list).
+> new_log_buf_len can only be set within log_buf_len_update(), and it
+> is already doing exactly what you want:
+> 
+>         if (size)
+>                 size = roundup_pow_of_two(size);
+>         if (size > log_buf_len)
+>                 new_log_buf_len = (unsigned long)size;
 
-For the VMCOREINFO part, I'm fine with the changes, but since I do not
-understand the arm64 pieces so I would like to leave to arm64 people to
-review.  If arm64 bits are good enough, feel free to add:
+I know. I though about repeating this in setup_log_bug() to make it
+error proof. But it is not really needed. I do not resist on it.
 
-Acked-by: Dave Young <dyoung@redhat.com>
+> I can switch to ilog2() instead of the more conservative order_base_2().
 
-Thanks
-Dave
+Yes, please change it to ilog2().
 
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
