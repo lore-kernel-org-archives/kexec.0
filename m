@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jrHjH-0004sp-2m
- for kexec@lists.infradead.org; Fri, 03 Jul 2020 09:11:32 +0000
-Date: Fri, 3 Jul 2020 17:11:10 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v10 5/5] kdump: update Documentation about crashkernel on
- arm64
-Message-ID: <20200703091110.GA56741@dhcp-128-65.nay.redhat.com>
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-6-chenzhou10@huawei.com>
- <20200703044635.GA28640@dhcp-128-65.nay.redhat.com>
- <20200703045023.GB28640@dhcp-128-65.nay.redhat.com>
+ id 1jrKHL-0008BJ-5x
+ for kexec@lists.infradead.org; Fri, 03 Jul 2020 11:54:51 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH v3 3/3] printk: use the lockless ringbuffer
+In-Reply-To: <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com>
+ <87zh8imgs5.fsf@jogness.linutronix.de>
+ <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
+Date: Fri, 03 Jul 2020 14:00:47 +0206
+Message-ID: <87lfk0stiw.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200703045023.GB28640@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,28 +26,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
+To: lijiang <lijiang@redhat.com>, Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On 07/03/20 at 12:50pm, Dave Young wrote:
-> On 07/03/20 at 12:46pm, Dave Young wrote:
-> > Hi,
-> > 
-> > Thanks for the update, but still some nitpicks :(
-> > 
-> > I'm sorry I did not catch them previously,  but maybe it is not worth to
-> > repost the whole series if no other changes needed.
-> 
-> Feel free to add my acks for the common kdump part:
+On 2020-07-02, lijiang <lijiang@redhat.com> wrote:
+> About the VMCOREINFO part, I made some tests based on the kernel patch
+> v3, the makedumpfile and crash-utility can work as expected with your
+> patch(userspace patch), but, unfortunately, the
+> vmcore-dmesg(kexec-tools) can't correctly read the printk ring buffer
+> information, and get the following error:
+>
+> "Missing the log_buf symbol"
+>
+> The kexec-tools(vmcore-dmesg) should also have a similar patch, just like
+> in the makedumpfile and crash-utility.
 
-Forgot to add "With those typos fixed":)
+A patched kexec-tools is available here [0].
 
-> 
-> Acked-by: Dave Young <dyoung@redhat.com>
-> 
-> Thanks
-> Dave
+I did not test using 32-bit dumps on 64-bit machines and vice versa. But
+it should work.
 
+John Ogness
+
+[0] https://github.com/Linutronix/kexec-tools.git (printk branch)
 
 _______________________________________________
 kexec mailing list
