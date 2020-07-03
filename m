@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jr5Kz-0003bN-1j
- for kexec@lists.infradead.org; Thu, 02 Jul 2020 19:57:37 +0000
-Subject: [PATCH v2 12/12] ppc64/kexec_file: fix kexec load failure with lack
- of memory hole
-From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Fri, 03 Jul 2020 01:27:23 +0530
-Message-ID: <159371982816.21555.14889636057215515048.stgit@hbathini.in.ibm.com>
-In-Reply-To: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
-References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+Subject: Re: [PATCH v9 5/5] kdump: update Documentation about crashkernel on
+ arm64
+References: <20200628083458.40066-1-chenzhou10@huawei.com>
+ <20200628083458.40066-6-chenzhou10@huawei.com>
+ <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <e7a76906-303e-9c38-1001-cb56eb3fd2e1@huawei.com>
+Date: Fri, 3 Jul 2020 08:57:34 +0800
 MIME-Version: 1.0
+In-Reply-To: <20200702025926.GB12277@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,98 +21,138 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: horms@verge.net.au, John.P.donnelly@oracle.com, guohanjun@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, catalin.marinas@arm.com, bhsharma@redhat.com, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
 
-The kexec purgatory has to run in real mode. Only the first memory
-block maybe accessible in real mode. And, unlike the case with panic
-kernel, no memory is set aside for regular kexec load. Another thing
-to note is, the memory for crashkernel is reserved at an offset of
-128MB. So, when crashkernel memory is reserved, the memory ranges to
-load kexec segments shrink further as the generic code only looks for
-memblock free memory ranges and in all likelihood only a tiny bit of
-memory from 0 to 128MB would be available to load kexec segments.
-
-With kdump being used by default in general, kexec file load is likely
-to fail almost always. This can be fixed by changing the memory hole
-lookup logic for regular kexec to use the same method as kdump. This
-would mean that most kexec segments will overlap with crashkernel
-memory region. That should still be ok as the pages, whose destination
-address isn't available while loading, are placed in an intermediate
-location till a flush to the actual destination address happens during
-kexec boot sequence.
-
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
----
-
-Changes in v2:
-* New patch to fix locating memory hole for kexec_file_load (kexec -s -l)
-  when memory is reserved for crashkernel.
+Hi Dave,
 
 
- arch/powerpc/kexec/file_load_64.c |   33 ++++++++++++++-------------------
- 1 file changed, 14 insertions(+), 19 deletions(-)
+On 2020/7/2 10:59, Dave Young wrote:
+> Hi Chen,
+> On 06/28/20 at 04:34pm, Chen Zhou wrote:
+>> Now we support crashkernel=X,[low] on arm64, update the Documentation.
+>> We could use parameters "crashkernel=X crashkernel=Y,low" to reserve
+>> memory above 4G.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+>> Tested-by: Prabhakar Kushwaha <pkushwaha@marvell.com>
+>> ---
+>>  Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++--
+>>  Documentation/admin-guide/kernel-parameters.txt | 17 +++++++++++++++--
+>>  2 files changed, 26 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+>> index 2da65fef2a1c..6ba294d425c9 100644
+>> --- a/Documentation/admin-guide/kdump/kdump.rst
+>> +++ b/Documentation/admin-guide/kdump/kdump.rst
+>> @@ -299,7 +299,13 @@ Boot into System Kernel
+>>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+>>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+>>  
+>> -   On x86 and x86_64, use "crashkernel=64M@16M".
+>> +   On x86 use "crashkernel=64M@16M".
+>> +
+>> +   On x86_64, use "crashkernel=Y[@X]" to select a region under 4G first, and
+>> +   fall back to reserve region above 4G when '@offset' hasn't been specified.
+> Actually crashkernel=Y without the offset works well, I do not see why
+> we need the offset, it should be some legacy thing.  So it should be
+> better just use the Y without offset here, and just leave a note
+> somewhere people can use [@X] offset when they really have to.
+>
+>> +   We can also use "crashkernel=X,high" to select a region above 4G, which
+>> +   also tries to allocate at least 256M below 4G automatically and
+>> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+>>  
+>>     On ppc64, use "crashkernel=128M@32M".
+>>  
+>> @@ -316,8 +322,11 @@ Boot into System Kernel
+>>     kernel will automatically locate the crash kernel image within the
+>>     first 512MB of RAM if X is not given.
+>>  
+>> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+>> +   On arm64, use "crashkernel=Y[@X]". Note that the start address of
+>>     the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+>> +   If crashkernel=Z,low is specified simultaneously, reserve spcified size
+>> +   low memory for crash kdump kernel devices firstly and then reserve memory
+> "devices" seems not very accurate, maybe just drop the "for crash kdump
+> kernel devices" since it is clear based on the context.
+>
+>> +   above 4G.
+>>  
+>>  Load the Dump-capture Kernel
+>>  ============================
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index fb95fad81c79..335431a351c0 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -722,6 +722,9 @@
+>>  			[KNL, x86_64] select a region under 4G first, and
+>>  			fall back to reserve region above 4G when '@offset'
+>>  			hasn't been specified.
+>> +			[KNL, arm64] If crashkernel=X,low is specified, reserve
+>> +			spcified size low memory for crash kdump kernel devices
+> Ditto.
+>
+>> +			firstly, and then reserve memory above 4G.
+>>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+>>  
+>>  	crashkernel=range1:size1[,range2:size2,...][@offset]
+>> @@ -746,13 +749,23 @@
+>>  			requires at least 64M+32K low memory, also enough extra
+>>  			low memory is needed to make sure DMA buffers for 32-bit
+>>  			devices won't run out. Kernel would try to allocate at
+>> -			at least 256M below 4G automatically.
+>> +			least 256M below 4G automatically.
+>>  			This one let user to specify own low range under 4G
+>>  			for second kernel instead.
+>>  			0: to disable low allocation.
+>>  			It will be ignored when crashkernel=X,high is not used
+>>  			or memory reserved is below 4G.
+>> -
+>> +			[KNL, arm64] range under 4G.
+>> +			This one let user to specify own low range under 4G
+>> +			for crash dump kernel instead.
+>> +			Different with x86_64, kernel allocates specified size
+> sounds better:
+> s/Different with/Be different from
+>
+> s/allocates/reserves
+>
+>> +			physical memory region only when this parameter is specified
+>> +			instead of trying to allocate at least 256M below 4G
+> s/allocate/reserve
+>
+>> +			automatically.
+>> +			This parameter is used along with crashkernel=X when we
+> Could change the passive sentence to below:
+> "Use this parameter along with"
+Thanks for your review and suggestions. I will update these in next version.
 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index d3b29e0..746c16f 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -1326,13 +1326,6 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	u64 buf_min, buf_max;
- 	int ret;
- 
--	/*
--	 * Use the generic kexec_locate_mem_hole for regular
--	 * kexec_file_load syscall
--	 */
--	if (kbuf->image->type != KEXEC_TYPE_CRASH)
--		return kexec_locate_mem_hole(kbuf);
--
- 	/* Look up the exclude ranges list while locating the memory hole */
- 	emem = &(kbuf->image->arch.exclude_ranges);
- 	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
-@@ -1340,11 +1333,15 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 		return 0;
- 	}
- 
-+	buf_min = kbuf->buf_min;
-+	buf_max = kbuf->buf_max;
- 	/* Segments for kdump kernel should be within crashkernel region */
--	buf_min = (kbuf->buf_min < crashk_res.start ?
--		   crashk_res.start : kbuf->buf_min);
--	buf_max = (kbuf->buf_max > crashk_res.end ?
--		   crashk_res.end : kbuf->buf_max);
-+	if (kbuf->image->type == KEXEC_TYPE_CRASH) {
-+		buf_min = (buf_min < crashk_res.start ?
-+			   crashk_res.start : buf_min);
-+		buf_max = (buf_max > crashk_res.end ?
-+			   crashk_res.end : buf_max);
-+	}
- 
- 	if (buf_min > buf_max) {
- 		pr_err("Invalid buffer min and/or max values\n");
-@@ -1477,15 +1474,13 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 				  unsigned long buf_len)
- {
--	if (image->type == KEXEC_TYPE_CRASH) {
--		int ret;
-+	int ret;
- 
--		/* Get exclude memory ranges needed for setting up kdump segments */
--		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
--		if (ret) {
--			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
--			return ret;
--		}
-+	/* Get exclude memory ranges needed for setting up kexec segments */
-+	ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
-+	if (ret) {
-+		pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
-+		return ret;
- 	}
- 
- 	return kexec_image_probe_default(image, buf, buf_len);
+Thanks,
+Chen Zhou
+>> +			want to reserve crashkernel above 4G. If there are devices
+>> +			need to use ZONE_DMA in crash dump kernel, it is also
+>> +			a good choice.
+>>  	cryptomgr.notests
+>>  			[KNL] Disable crypto self-tests
+>>  
+>> -- 
+>> 2.20.1
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>>
+> Thanks
+> Dave
+>
+>
+> .
+>
+
 
 
 _______________________________________________
