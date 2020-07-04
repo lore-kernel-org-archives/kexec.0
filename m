@@ -1,18 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 3 Jul 2020 17:39:04 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
-Message-ID: <20200703163844.GD14950@gaia>
-References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
- <20200408104655.GA92698@C02TD0UTHF1T.local>
- <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
- <20200428100710.GD3868@gaia>
- <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
- <CACi5LpMnbFbmqWOn0GfPD2H50UcZ0XHQ7X+Cd0E-cS-zfL7tQQ@mail.gmail.com>
- <CACi5LpPcPoVwWBviuCfCri1xQSc34iXkQ8BTcTqXDEcYHSuoEQ@mail.gmail.com>
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1jrWjB-0001j0-ER
+ for kexec@lists.infradead.org; Sat, 04 Jul 2020 01:12:27 +0000
+Subject: Re: [PATCH v3 3/3] printk: use the lockless ringbuffer
+References: <20200618144919.9806-1-john.ogness@linutronix.de>
+ <20200618144919.9806-4-john.ogness@linutronix.de>
+ <ba338fab-9e98-366b-8fd4-05d4daa14f6d@redhat.com>
+ <87zh8imgs5.fsf@jogness.linutronix.de>
+ <585a6a1b-931c-1034-e2cc-da2c4381751e@redhat.com>
+ <20200702133110.GE14288@alley>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <56266e04-56b2-41fa-fff1-c3437ddec929@redhat.com>
+Date: Sat, 4 Jul 2020 09:12:06 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACi5LpPcPoVwWBviuCfCri1xQSc34iXkQ8BTcTqXDEcYHSuoEQ@mail.gmail.com>
+In-Reply-To: <20200702133110.GE14288@alley>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,71 +25,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arm@kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri, Jul 03, 2020 at 12:55:03AM +0530, Bhupesh Sharma wrote:
-> On Fri, May 15, 2020 at 2:44 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > On Thu, Apr 30, 2020 at 10:05 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > > On Tue, Apr 28, 2020 at 3:37 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > >
-> > > > On Tue, Apr 28, 2020 at 01:55:58PM +0530, Bhupesh Sharma wrote:
-> > > > > On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > > > On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
-> > > > > > >  arch/arm64/configs/defconfig | 1 +
-> > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > >
-> > > > > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > > > > > index 24e534d85045..fa122f4341a2 100644
-> > > > > > > --- a/arch/arm64/configs/defconfig
-> > > > > > > +++ b/arch/arm64/configs/defconfig
-> > > > > > > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
-> > > > > > >  CONFIG_NUMA=y
-> > > > > > >  CONFIG_SECCOMP=y
-> > > > > > >  CONFIG_KEXEC=y
-> > > > > > > +CONFIG_KEXEC_FILE=y
-> > > > > > >  CONFIG_CRASH_DUMP=y
-> > > > > > >  CONFIG_XEN=y
-> > > > > > >  CONFIG_COMPAT=y
-> > > > > > > --
-> > > > > > > 2.7.4
-> > > > >
-> > > > > Thanks a lot  Mark.
-> > > > >
-> > > > > Hi Catalin, Will,
-> > > > >
-> > > > > Can you please help pick this patch in the arm tree. We have an
-> > > > > increasing number of user-cases from distro users
-> > > > > who want to use kexec_file_load() as the default interface for
-> > > > > kexec/kdump on arm64.
-> > > >
-> > > > We could pick it up if it doesn't conflict with the arm-soc tree. They
-> > > > tend to pick most of the defconfig changes these days (and could as well
-> > > > pick this one).
-> > >
-> > > Thanks Catalin.
-> > > (+Cc Arnd)
-> > >
-> > > Hi Arnd,
-> > >
-> > > Can you please help pick this change via the arm-soc tree?
-> >
-> > Ping. Any updates on this defconfig patch.
-> 
-> Ping. Seems there is no reply from Arnd on this patch.
-> Can you please help pull in this one as well. It has been pending for
-> quite some time now.
-
-I can queue it for 5.9.
-
--- 
-Catalin
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMjDlubQwN+aciDAy5pelIDIxOjMxLCBQZXRyIE1sYWRlayDlhpnpgZM6Cj4gT24gVGh1
+IDIwMjAtMDctMDIgMTc6NDM6MjIsIGxpamlhbmcgd3JvdGU6Cj4+IOWcqCAyMDIw5bm0MDfmnIgw
+MuaXpSAxNzowMiwgSm9obiBPZ25lc3Mg5YaZ6YGTOgo+Pj4gT24gMjAyMC0wNy0wMiwgbGlqaWFu
+ZyA8bGlqaWFuZ0ByZWRoYXQuY29tPiB3cm90ZToKPj4+PiBBYm91dCB0aGUgVk1DT1JFSU5GTyBw
+YXJ0LCBJIG1hZGUgc29tZSB0ZXN0cyBiYXNlZCBvbiB0aGUga2VybmVsIHBhdGNoCj4+Pj4gdjMs
+IHRoZSBtYWtlZHVtcGZpbGUgYW5kIGNyYXNoLXV0aWxpdHkgY2FuIHdvcmsgYXMgZXhwZWN0ZWQg
+d2l0aCB5b3VyCj4+Pj4gcGF0Y2godXNlcnNwYWNlIHBhdGNoKSwgYnV0LCB1bmZvcnR1bmF0ZWx5
+LCB0aGUgdm1jb3JlLWRtZXNnKGtleGVjLXRvb2xzKQo+Pj4+IGNhbid0IGNvcnJlY3RseSByZWFk
+IHRoZSBwcmludGsgcmluZyBidWZmZXIgaW5mb3JtYXRpb24sIGFuZCBnZXQgdGhlCj4+Pj4gZm9s
+bG93aW5nIGVycm9yOgo+Pj4+Cj4+Pj4gIk1pc3NpbmcgdGhlIGxvZ19idWYgc3ltYm9sIgo+Pj4+
+Cj4+Pj4gVGhlIGtleGVjLXRvb2xzKHZtY29yZS1kbWVzZykgc2hvdWxkIGFsc28gaGF2ZSBhIHNp
+bWlsYXIgcGF0Y2gsIGp1c3QgbGlrZQo+Pj4+IGluIHRoZSBtYWtlZHVtcGZpbGUgYW5kIGNyYXNo
+LXV0aWxpdHkuCj4+Pgo+Pj4gWWVzLCBhIHBhdGNoIGZvciB0aGlzIGlzIG5lZWRlZCAoYXMgd2Vs
+bCBhcyBmb3IgYW55IG90aGVyIHJlbGF0ZWQKPj4+IHNvZnR3YXJlIGZsb2F0aW5nIGFyb3VuZCB0
+aGUgaW50ZXJuZXQpLgo+Pj4KPj4+IEkgaGF2ZSBubyBSRkMgcGF0Y2hlcyBmb3Igdm1jb3JlLWRt
+ZXNnLiBMb29raW5nIGF0IHRoZSBjb2RlLCBJIHRoaW5rIGl0Cj4+PiB3b3VsZCBiZSBxdWl0ZSBz
+dHJhaWdodCBmb3J3YXJkIHRvIHBvcnQgdGhlIG1ha2VkdW1wZmlsZSBwYXRjaC4gSSB3aWxsCj4+
+Cj4+IFllcywgaXQgc2hvdWxkIGJlIGEgc2ltaWxhciBwYXRjaC4KPj4KPj4+IHRyeSB0byBtYWtl
+IHNvbWUgdGltZSBmb3IgdGhpcy4KPj4+Cj4+IFRoYXQgd291bGQgYmUgbmljZS4gVGhhbmsgeW91
+LCBKb2huIE9nbmVzcy4KPj4KPj4+IEkgZG8gbm90IHdhbnQgdG8gcGF0Y2ggYW55IG90aGVyIHNv
+ZnR3YXJlIGZvciB0aGlzLiBJIHRoaW5rIHdpdGggMwo+Pj4gZXhhbXBsZXMgKGNyYXNoLCBtYWtl
+ZHVtcGZpbGUsIHZtY29yZS1kbWVzZyksIG90aGVycyBzaG91bGQgYmUgYWJsZSB0bwo+Pgo+PiBJ
+dCdzIGdvb2QgZW5vdWdoIHRvIGhhdmUgdGhlIHBhdGNoIGZvciB0aGUgbWFrZWR1bXBmaWxlLCBj
+cmFzaCBhbmQgdm1jb3JlLWRtZXNnLAo+PiB3aGljaCBjYW4gZW5zdXJlIHRoZSBrZHVtcCh1c2Vy
+c3BhY2UpIHdvcmsgd2VsbC4KPiAKPiBJIGFncmVlIHRoYXQgdGhpcyB0aHJlZSBhcmUgdGhlIG1v
+c3QgaW1wb3J0YW50IG9uZXMgYW5kIHNob3VsZCBiZQo+IGVub3VnaC4KPiAKPiBUaGFua3MgYSBs
+b3QgZm9yIHdvcmtpbmcgb24gaXQgYW5kIHRlc3RpbmcgaXQuCj4gCk15IHBsZWFzdXJlLiBJIHdp
+bGwgdGVzdCB0aGUgdm1jb3JlLWRtZXNnIGxhdGVyLgoKVGhhbmtzLgpMaWFuYm8KCj4gQmVzdCBS
+ZWdhcmRzLAo+IFBldHIKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
