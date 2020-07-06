@@ -2,24 +2,18 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
  helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jroZE-0003dy-C5
- for kexec@lists.infradead.org; Sat, 04 Jul 2020 20:15:21 +0000
-Received: by mail-qv1-f71.google.com with SMTP id a12so17059685qvt.22
- for <kexec@lists.infradead.org>; Sat, 04 Jul 2020 13:15:13 -0700 (PDT)
+ id 1jsN5x-0002Gh-QZ
+ for kexec@lists.infradead.org; Mon, 06 Jul 2020 09:07:26 +0000
+Date: Mon, 6 Jul 2020 17:07:07 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v2 01/12] kexec_file: allow archs to handle special
+ regions while locating memory hole
+Message-ID: <20200706090707.GA9048@dhcp-128-65.nay.redhat.com>
+References: <159371956443.21555.18251597651350106920.stgit@hbathini.in.ibm.com>
+ <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-References: <1586212300-30797-1-git-send-email-bhsharma@redhat.com>
- <20200408104655.GA92698@C02TD0UTHF1T.local>
- <CACi5LpP0WqYGxrJL6BJia-ceSR5XbjytsSY+P74xaDJZTJA8jA@mail.gmail.com>
- <20200428100710.GD3868@gaia>
- <CACi5LpPW2zmq0-UDnU_115ePxXKWG+1i6UciVWPpq=PzQHrkOw@mail.gmail.com>
- <CACi5LpMnbFbmqWOn0GfPD2H50UcZ0XHQ7X+Cd0E-cS-zfL7tQQ@mail.gmail.com>
- <CACi5LpPcPoVwWBviuCfCri1xQSc34iXkQ8BTcTqXDEcYHSuoEQ@mail.gmail.com>
- <20200703163844.GD14950@gaia>
-In-Reply-To: <20200703163844.GD14950@gaia>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Sun, 5 Jul 2020 01:45:01 +0530
-Message-ID: <CACi5LpNWJNTGpBXAP7rR-9yVmnVSgJddwo25fGeirOthrguwHA@mail.gmail.com>
-Subject: Re: [PATCH] arm64/defconfig: Enable CONFIG_KEXEC_FILE
+Content-Disposition: inline
+In-Reply-To: <159371964681.21555.573193508667543223.stgit@hbathini.in.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,69 +26,125 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, kexec mailing list <kexec@lists.infradead.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, arm@kernel.org, James Morse <james.morse@arm.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Thiago Jung Bauermann <bauerman@linux.ibm.com>, kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Mimi Zohar <zohar@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Fri, Jul 3, 2020 at 10:09 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
->
-> On Fri, Jul 03, 2020 at 12:55:03AM +0530, Bhupesh Sharma wrote:
-> > On Fri, May 15, 2020 at 2:44 PM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > > On Thu, Apr 30, 2020 at 10:05 AM Bhupesh Sharma <bhsharma@redhat.com> wrote:
-> > > > On Tue, Apr 28, 2020 at 3:37 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > > > >
-> > > > > On Tue, Apr 28, 2020 at 01:55:58PM +0530, Bhupesh Sharma wrote:
-> > > > > > On Wed, Apr 8, 2020 at 4:17 PM Mark Rutland <mark.rutland@arm.com> wrote:
-> > > > > > > On Tue, Apr 07, 2020 at 04:01:40AM +0530, Bhupesh Sharma wrote:
-> > > > > > > >  arch/arm64/configs/defconfig | 1 +
-> > > > > > > >  1 file changed, 1 insertion(+)
-> > > > > > > >
-> > > > > > > > diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-> > > > > > > > index 24e534d85045..fa122f4341a2 100644
-> > > > > > > > --- a/arch/arm64/configs/defconfig
-> > > > > > > > +++ b/arch/arm64/configs/defconfig
-> > > > > > > > @@ -66,6 +66,7 @@ CONFIG_SCHED_SMT=y
-> > > > > > > >  CONFIG_NUMA=y
-> > > > > > > >  CONFIG_SECCOMP=y
-> > > > > > > >  CONFIG_KEXEC=y
-> > > > > > > > +CONFIG_KEXEC_FILE=y
-> > > > > > > >  CONFIG_CRASH_DUMP=y
-> > > > > > > >  CONFIG_XEN=y
-> > > > > > > >  CONFIG_COMPAT=y
-> > > > > > > > --
-> > > > > > > > 2.7.4
-> > > > > >
-> > > > > > Thanks a lot  Mark.
-> > > > > >
-> > > > > > Hi Catalin, Will,
-> > > > > >
-> > > > > > Can you please help pick this patch in the arm tree. We have an
-> > > > > > increasing number of user-cases from distro users
-> > > > > > who want to use kexec_file_load() as the default interface for
-> > > > > > kexec/kdump on arm64.
-> > > > >
-> > > > > We could pick it up if it doesn't conflict with the arm-soc tree. They
-> > > > > tend to pick most of the defconfig changes these days (and could as well
-> > > > > pick this one).
-> > > >
-> > > > Thanks Catalin.
-> > > > (+Cc Arnd)
-> > > >
-> > > > Hi Arnd,
-> > > >
-> > > > Can you please help pick this change via the arm-soc tree?
-> > >
-> > > Ping. Any updates on this defconfig patch.
-> >
-> > Ping. Seems there is no reply from Arnd on this patch.
-> > Can you please help pull in this one as well. It has been pending for
-> > quite some time now.
->
-> I can queue it for 5.9.
+On 07/03/20 at 01:24am, Hari Bathini wrote:
+> Some architectures may have special memory regions, within the given
+> memory range, which can't be used for the buffer in a kexec segment.
+> Implement weak arch_kexec_locate_mem_hole() definition which arch code
+> may override, to take care of special regions, while trying to locate
+> a memory hole.
+> 
+> Also, add the missing declarations for arch overridable functions and
+> and drop the __weak descriptors in the declarations to avoid non-weak
+> definitions from becoming weak.
+> 
+> Reported-by: kernel test robot <lkp@intel.com>
+> [lkp: In v1, arch_kimage_file_post_load_cleanup() declaration was missing]
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> ---
+> 
+> Changes in v2:
+> * Introduced arch_kexec_locate_mem_hole() for override and dropped
+>   weak arch_kexec_add_buffer().
+> * Dropped __weak identifier for arch overridable functions.
+> * Fixed the missing declaration for arch_kimage_file_post_load_cleanup()
+>   reported by lkp. lkp report for reference:
+>     - https://lore.kernel.org/patchwork/patch/1264418/
+> 
+> 
+>  include/linux/kexec.h |   29 ++++++++++++++++++-----------
+>  kernel/kexec_file.c   |   16 ++++++++++++++--
+>  2 files changed, 32 insertions(+), 13 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index ea67910..9e93bef 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -183,17 +183,24 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>  				   bool get_value);
+>  void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+>  
+> -int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> -					 unsigned long buf_len);
+> -void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+> -int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> -					    Elf_Shdr *section,
+> -					    const Elf_Shdr *relsec,
+> -					    const Elf_Shdr *symtab);
+> -int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
+> -					Elf_Shdr *section,
+> -					const Elf_Shdr *relsec,
+> -					const Elf_Shdr *symtab);
+> +/* Architectures may override the below functions */
+> +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> +				  unsigned long buf_len);
+> +void *arch_kexec_kernel_image_load(struct kimage *image);
+> +int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> +				     Elf_Shdr *section,
+> +				     const Elf_Shdr *relsec,
+> +				     const Elf_Shdr *symtab);
+> +int arch_kexec_apply_relocations(struct purgatory_info *pi,
+> +				 Elf_Shdr *section,
+> +				 const Elf_Shdr *relsec,
+> +				 const Elf_Shdr *symtab);
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#ifdef CONFIG_KEXEC_SIG
+> +int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> +				 unsigned long buf_len);
+> +#endif
+> +int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 09cc78d..e89912d 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -636,6 +636,19 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>  }
+>  
+>  /**
+> + * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+> + * @kbuf:                       Parameters for the memory search.
+> + *
+> + * On success, kbuf->mem will have the start address of the memory region found.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> +{
+> +	return kexec_locate_mem_hole(kbuf);
+> +}
+> +
+> +/**
+>   * kexec_add_buffer - place a buffer in a kexec segment
+>   * @kbuf:	Buffer contents and memory parameters.
+>   *
+> @@ -647,7 +660,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>   */
+>  int kexec_add_buffer(struct kexec_buf *kbuf)
+>  {
+> -
+>  	struct kexec_segment *ksegment;
+>  	int ret;
+>  
+> @@ -675,7 +687,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+>  	kbuf->buf_align = max(kbuf->buf_align, PAGE_SIZE);
+>  
+>  	/* Walk the RAM ranges and allocate a suitable range for the buffer */
+> -	ret = kexec_locate_mem_hole(kbuf);
+> +	ret = arch_kexec_locate_mem_hole(kbuf);
+>  	if (ret)
+>  		return ret;
+>  
+> 
 
-Many thanks, Catalin.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-Regards,
-Bhupesh
+Thanks
+Dave
 
 
 _______________________________________________
