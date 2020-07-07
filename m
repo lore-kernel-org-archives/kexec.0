@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jtWWq-0004OT-9F
- for kexec@lists.infradead.org; Thu, 09 Jul 2020 13:24:06 +0000
+ id 1jsp4Q-0001yW-PH
+ for kexec@lists.infradead.org; Tue, 07 Jul 2020 14:59:51 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v5 4/4] printk: use the lockless ringbuffer
-Date: Thu,  9 Jul 2020 15:29:44 +0206
-Message-Id: <20200709132344.760-5-john.ogness@linutronix.de>
-In-Reply-To: <20200709132344.760-1-john.ogness@linutronix.de>
-References: <20200709132344.760-1-john.ogness@linutronix.de>
+Subject: [PATCH v4 4/4] printk: use the lockless ringbuffer
+Date: Tue,  7 Jul 2020 17:05:32 +0206
+Message-Id: <20200707145932.8752-5-john.ogness@linutronix.de>
+In-Reply-To: <20200707145932.8752-1-john.ogness@linutronix.de>
+References: <20200707145932.8752-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -47,13 +47,12 @@ Changes that exist due to the ringbuffer replacement:
   dynamic array.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
  kernel/printk/printk.c | 940 +++++++++++++++++++++--------------------
  1 file changed, 493 insertions(+), 447 deletions(-)
 
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 1b41e1b98221..fec71229169e 100644
+index 1b41e1b98221..4c6b4e68ad07 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
 @@ -55,6 +55,7 @@
@@ -526,11 +525,11 @@ index 1b41e1b98221..fec71229169e 100644
  	}
  
 -	if (user->seq < log_first_seq) {
-+	if (user->seq < prb_first_valid_seq(prb)) {
++	if (user->seq < prb_first_seq(prb)) {
  		/* our last seen message is gone, return error and reset */
 -		user->idx = log_first_idx;
 -		user->seq = log_first_seq;
-+		user->seq = prb_first_valid_seq(prb);
++		user->seq = prb_first_seq(prb);
  		ret = -EPIPE;
  		logbuf_unlock_irq();
  		goto out;
@@ -558,7 +557,7 @@ index 1b41e1b98221..fec71229169e 100644
  		/* the first record */
 -		user->idx = log_first_idx;
 -		user->seq = log_first_seq;
-+		user->seq = prb_first_valid_seq(prb);
++		user->seq = prb_first_seq(prb);
  		break;
  	case SEEK_DATA:
  		/*
@@ -585,7 +584,7 @@ index 1b41e1b98221..fec71229169e 100644
 +	if (prb_read_valid(prb, user->seq, NULL)) {
  		/* return error when data has vanished underneath us */
 -		if (user->seq < log_first_seq)
-+		if (user->seq < prb_first_valid_seq(prb))
++		if (user->seq < prb_first_seq(prb))
  			ret = EPOLLIN|EPOLLRDNORM|EPOLLERR|EPOLLPRI;
  		else
  			ret = EPOLLIN|EPOLLRDNORM;
@@ -600,7 +599,7 @@ index 1b41e1b98221..fec71229169e 100644
  	logbuf_lock_irq();
 -	user->idx = log_first_idx;
 -	user->seq = log_first_seq;
-+	user->seq = prb_first_valid_seq(prb);
++	user->seq = prb_first_seq(prb);
  	logbuf_unlock_irq();
  
  	file->private_data = user;
@@ -750,7 +749,7 @@ index 1b41e1b98221..fec71229169e 100644
 +	new_descs_size = new_descs_count * sizeof(struct prb_desc);
 +	new_descs = memblock_alloc(new_descs_size, LOG_ALIGN);
 +	if (unlikely(!new_descs)) {
-+		pr_err("log_buf_len: %zu desc bytes not available\n",
++		pr_err("log_buf_len: %lu desc bytes not available\n",
 +		       new_descs_size);
 +		memblock_free(__pa(new_dict_buf), new_log_buf_len);
 +		memblock_free(__pa(new_log_buf), new_log_buf_len);
@@ -762,9 +761,9 @@ index 1b41e1b98221..fec71229169e 100644
 +			&setup_dict_buf[0], sizeof(setup_dict_buf));
 +
 +	prb_init(&printk_rb_dynamic,
-+		 new_log_buf, ilog2(new_log_buf_len),
-+		 new_dict_buf, ilog2(new_log_buf_len),
-+		 new_descs, ilog2(new_descs_count));
++		 new_log_buf, order_base_2(new_log_buf_len),
++		 new_dict_buf, order_base_2(new_log_buf_len),
++		 new_descs, order_base_2(new_descs_count));
 +
  	logbuf_lock_irqsave(flags);
 +
@@ -1127,11 +1126,11 @@ index 1b41e1b98221..fec71229169e 100644
  	case SYSLOG_ACTION_SIZE_UNREAD:
  		logbuf_lock_irq();
 -		if (syslog_seq < log_first_seq) {
-+		if (syslog_seq < prb_first_valid_seq(prb)) {
++		if (syslog_seq < prb_first_seq(prb)) {
  			/* messages are gone, move to first one */
 -			syslog_seq = log_first_seq;
 -			syslog_idx = log_first_idx;
-+			syslog_seq = prb_first_valid_seq(prb);
++			syslog_seq = prb_first_seq(prb);
  			syslog_partial = 0;
  		}
  		if (source == SYSLOG_FROM_PROC) {
@@ -1206,7 +1205,7 @@ index 1b41e1b98221..fec71229169e 100644
  #define printk_time		false
  
 +#define prb_read_valid(rb, seq, r)	false
-+#define prb_first_valid_seq(rb)		0
++#define prb_first_seq(rb)		0
 +
  static u64 syslog_seq;
 -static u32 syslog_idx;
@@ -1358,7 +1357,7 @@ index 1b41e1b98221..fec71229169e 100644
  		logbuf_lock_irqsave(flags);
 -		console_seq = log_first_seq;
 -		console_idx = log_first_idx;
-+		console_seq = prb_first_valid_seq(prb);
++		console_seq = prb_first_seq(prb);
  		logbuf_unlock_irqrestore(flags);
  	}
  	console_unlock();
@@ -1453,11 +1452,11 @@ index 1b41e1b98221..fec71229169e 100644
  
  	logbuf_lock_irqsave(flags);
 -	if (dumper->cur_seq < log_first_seq) {
-+	if (dumper->cur_seq < prb_first_valid_seq(prb)) {
++	if (dumper->cur_seq < prb_first_seq(prb)) {
  		/* messages are gone, move to first available one */
 -		dumper->cur_seq = log_first_seq;
 -		dumper->cur_idx = log_first_idx;
-+		dumper->cur_seq = prb_first_valid_seq(prb);
++		dumper->cur_seq = prb_first_seq(prb);
  	}
  
  	/* last entry */
