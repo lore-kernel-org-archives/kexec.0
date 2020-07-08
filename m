@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jsp4Q-0001yP-UP
- for kexec@lists.infradead.org; Tue, 07 Jul 2020 14:59:45 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v4 3/4] Revert "printk: lock/unlock console only for new
- logbuf entries"
-Date: Tue,  7 Jul 2020 17:05:31 +0206
-Message-Id: <20200707145932.8752-4-john.ogness@linutronix.de>
-In-Reply-To: <20200707145932.8752-1-john.ogness@linutronix.de>
-References: <20200707145932.8752-1-john.ogness@linutronix.de>
+ id 1jt0aJ-00061g-9f
+ for kexec@lists.infradead.org; Wed, 08 Jul 2020 03:17:24 +0000
+Date: Wed, 8 Jul 2020 11:17:04 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] Replace HTTP links with HTTPS ones: kdump
+Message-ID: <20200708031704.GA10532@dhcp-128-65.nay.redhat.com>
+References: <20200627103151.71942-1-grandmaster@al2klimov.de>
+ <20200701075803.GB3878@dhcp-128-65.nay.redhat.com>
+ <1de76ef5-e447-2274-c45a-3b0356bd63ae@al2klimov.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1de76ef5-e447-2274-c45a-3b0356bd63ae@al2klimov.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,63 +26,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: "Alexander A. Klimov" <grandmaster@al2klimov.de>
+Cc: bhe@redhat.com, linux-doc@vger.kernel.org, corbet@lwn.net, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
-This reverts commit 3ac37a93fa9217e576bebfd4ba3e80edaaeb2289.
+On 07/01/20 at 07:33pm, Alexander A. Klimov wrote:
+> 
+> 
+> Am 01.07.20 um 09:58 schrieb Dave Young:
+> > On 06/27/20 at 12:31pm, Alexander A. Klimov wrote:
+> > > Rationale:
+> > > Reduces attack surface on kernel devs opening the links for MITM
+> > > as HTTPS traffic is much harder to manipulate.
+> > > 
+> > > Deterministic algorithm:
+> > > For each file:
+> > >    If not .svg:
+> > >      For each line:
+> > >        If doesn't contain `\bxmlns\b`:
+> > >          For each link, `\bhttp://[^# \t\r\n]*(?:\w|/)`:
+> > >            If both the HTTP and HTTPS versions
+> > >            return 200 OK and serve the same content:
+> > >              Replace HTTP with HTTPS.
+> > > 
+> > > Signed-off-by: Alexander A. Klimov <grandmaster@al2klimov.de>
+> > > ---
+> > >   If there are any URLs to be removed completely or at least not HTTPSified:
+> > >   Just clearly say so and I'll *undo my change*.
+> > >   See also https://lkml.org/lkml/2020/6/27/64
+> > > 
+> > >   If there are any valid, but yet not changed URLs:
+> > >   See https://lkml.org/lkml/2020/6/26/837
+> > > 
+> > >   Documentation/admin-guide/kdump/kdump.rst | 10 +++++-----
+> > >   1 file changed, 5 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> > > index 2da65fef2a1c..8cfa35f777f5 100644
+> > > --- a/Documentation/admin-guide/kdump/kdump.rst
+> > > +++ b/Documentation/admin-guide/kdump/kdump.rst
+> > > @@ -65,20 +65,20 @@ Install kexec-tools
+> > >   2) Download the kexec-tools user-space package from the following URL:
+> > > -http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+> > > +https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools.tar.gz
+> > >   This is a symlink to the latest version.
+> > >   The latest kexec-tools git tree is available at:
+> > >   - git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> > > -- http://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> > > +- https://www.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+> > >   There is also a gitweb interface available at
+> > > -http://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+> > > +https://www.kernel.org/git/?p=utils/kernel/kexec/kexec-tools.git
+> > >   More information about kexec-tools can be found at
+> > > -http://horms.net/projects/kexec/
+> > > +https://horms.net/projects/kexec/
+> > >   3) Unpack the tarball with the tar command, as follows::
+> > > @@ -511,7 +511,7 @@ dump kernel.
+> > >   You can also use the Crash utility to analyze dump files in Kdump
+> > >   format. Crash is available on Dave Anderson's site at the following URL:
+> > > -   http://people.redhat.com/~anderson/
+> > > +   https://people.redhat.com/~anderson/
+> > 
+> > Would you mind to update above url as well?
+> I'll update all of the URLs not changed yet, but (please) not in this patch
+> round.
+> 
+> See also https://lkml.org/lkml/2020/6/26/837
 
-This optimization will not apply once the transition to a lockless
-printk is complete. Rather than porting this optimization through
-the transition only to remove it anyway, just revert it now to
-simplify the transition.
+If this series can be taken soon then we can wait and submit a patch
+later.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- kernel/printk/printk.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+Or just drop this one from your series, I can submit another one to take
+the https and crash url together later.
 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b71eaf5f5a86..1b41e1b98221 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1981,9 +1981,8 @@ asmlinkage int vprintk_emit(int facility, int level,
- 			    const char *fmt, va_list args)
- {
- 	int printed_len;
--	bool in_sched = false, pending_output;
-+	bool in_sched = false;
- 	unsigned long flags;
--	u64 curr_log_seq;
- 
- 	/* Suppress unimportant messages after panic happens */
- 	if (unlikely(suppress_printk))
-@@ -1999,13 +1998,11 @@ asmlinkage int vprintk_emit(int facility, int level,
- 
- 	/* This stops the holder of console_sem just where we want him */
- 	logbuf_lock_irqsave(flags);
--	curr_log_seq = log_next_seq;
- 	printed_len = vprintk_store(facility, level, dict, dictlen, fmt, args);
--	pending_output = (curr_log_seq != log_next_seq);
- 	logbuf_unlock_irqrestore(flags);
- 
- 	/* If called from the scheduler, we can not call up(). */
--	if (!in_sched && pending_output) {
-+	if (!in_sched) {
- 		/*
- 		 * Disable preemption to avoid being preempted while holding
- 		 * console_sem which would prevent anyone from printing to
-@@ -2022,8 +2019,7 @@ asmlinkage int vprintk_emit(int facility, int level,
- 		preempt_enable();
- 	}
- 
--	if (pending_output)
--		wake_up_klogd();
-+	wake_up_klogd();
- 	return printed_len;
- }
- EXPORT_SYMBOL(vprintk_emit);
--- 
-2.20.1
+Either works.
+
+> 
+> > 
+> > Dave have moved it to below url instead:
+> > https://crash-utility.github.io/
+> > 
+> > Thanks
+> > Dave
+> > 
+> 
 
 
 _______________________________________________
