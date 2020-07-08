@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jt9xx-0006DE-Dh
- for kexec@lists.infradead.org; Wed, 08 Jul 2020 13:18:26 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v4 4/4] printk: use the lockless ringbuffer
-In-Reply-To: <202007080356.fSb8SLZk%lkp@intel.com>
-References: <20200707145932.8752-5-john.ogness@linutronix.de>
- <202007080356.fSb8SLZk%lkp@intel.com>
-Date: Wed, 08 Jul 2020 15:24:20 +0206
-Message-ID: <87r1tmcfhf.fsf@jogness.linutronix.de>
+ id 1jtB9Z-0007tO-1L
+ for kexec@lists.infradead.org; Wed, 08 Jul 2020 14:34:30 +0000
+Date: Wed, 8 Jul 2020 16:34:25 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v4 3/4] Revert "printk: lock/unlock console only for new
+ logbuf entries"
+Message-ID: <20200708143425.GD4751@alley>
+References: <20200707145932.8752-1-john.ogness@linutronix.de>
+ <20200707145932.8752-4-john.ogness@linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200707145932.8752-4-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,35 +25,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kernel test robot <lkp@intel.com>, Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, kbuild-all@lists.01.org, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, clang-built-linux@googlegroups.com, Thomas Gleixner <tglx@linutronix.de>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Fix prepared for for v5.
+On Tue 2020-07-07 17:05:31, John Ogness wrote:
+> This reverts commit 3ac37a93fa9217e576bebfd4ba3e80edaaeb2289.
+> 
+> This optimization will not apply once the transition to a lockless
+> printk is complete. Rather than porting this optimization through
+> the transition only to remove it anyway, just revert it now to
+> simplify the transition.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-On 2020-07-08, kernel test robot <lkp@intel.com> wrote:
->>> kernel/printk/printk.c:1146:10: warning: format specifies type 'unsigned long' but the argument has type 'size_t' (aka 'unsigned int') [-Wformat]
->                           new_descs_size);
->                           ^~~~~~~~~~~~~~
->    include/linux/printk.h:338:33: note: expanded from macro 'pr_err'
->            printk(KERN_ERR pr_fmt(fmt), ##__VA_ARGS__)
->                                   ~~~     ^~~~~~~~~~~
->    1 warning generated.
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-Reported-by: kernel test robot <lkp@intel.com>
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index de8d54be4115..0b1337f4188c 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1142,7 +1142,7 @@ void __init setup_log_buf(int early)
- 	new_descs_size = new_descs_count * sizeof(struct prb_desc);
- 	new_descs = memblock_alloc(new_descs_size, LOG_ALIGN);
- 	if (unlikely(!new_descs)) {
--		pr_err("log_buf_len: %lu desc bytes not available\n",
-+		pr_err("log_buf_len: %zu desc bytes not available\n",
- 		       new_descs_size);
- 		memblock_free(__pa(new_dict_buf), new_log_buf_len);
- 		memblock_free(__pa(new_log_buf), new_log_buf_len);
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
