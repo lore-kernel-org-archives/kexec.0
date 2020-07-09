@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mail-pj1-x1035.google.com ([2607:f8b0:4864:20::1035])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jtQaz-0000Oq-1F
- for kexec@lists.infradead.org; Thu, 09 Jul 2020 07:03:50 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH v4 0/4] printk: replace ringbuffer
-In-Reply-To: <20200708152005.GF4751@alley>
-References: <20200707145932.8752-1-john.ogness@linutronix.de>
- <20200708152005.GF4751@alley>
-Date: Thu, 09 Jul 2020 09:09:31 +0206
-Message-ID: <87wo3d9nlo.fsf@jogness.linutronix.de>
+ id 1jtRzl-0002Re-4T
+ for kexec@lists.infradead.org; Thu, 09 Jul 2020 08:33:29 +0000
+Received: by mail-pj1-x1035.google.com with SMTP id t15so783401pjq.5
+ for <kexec@lists.infradead.org>; Thu, 09 Jul 2020 01:33:27 -0700 (PDT)
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Date: Thu, 9 Jul 2020 17:33:23 +0900
+Subject: Re: [printk] 18a2dc6982: ltp.kmsg01.fail
+Message-ID: <20200709083323.GA572@jagdpanzerIV.localdomain>
+References: <20200707145932.8752-5-john.ogness@linutronix.de>
+ <20200709071411.GR3874@shao2-debian>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200709071411.GR3874@shao2-debian>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,46 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: kernel test robot <rong.a.chen@intel.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, lkp@lists.01.org, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On 2020-07-08, Petr Mladek <pmladek@suse.com> wrote:
-> OK, I think that we are ready to try this in linux-next.
-> I am going to push it there via printk/linux.git.
->
-> [...]
-> 
-> Of course, there are still many potential problems. The following comes
-> to my mind:
->
-> [...]
->
->    + Debugging tools accessing the buffer directly would need to
->      understand the new structure. Fortunately John provided
->      patches for the most prominent ones.
+On (20/07/09 15:14), kernel test robot wrote:
+[..]
 
-The next series in the printk-rework (move LOG_CONT handling from
-writers to readers) makes some further changes that, while not
-incompatible, could affect the output of existing tools. It may be a
-good idea to let the new ringbuffer sit in linux-next until the next
-series has been discussed/reviewed/merged. After the next series,
-everything will be in place (with regard to userspace tools) to finish
-the rework.
+Took me a while to find the FAIL-ed test:
 
-As reminder, here are all the steps planned for the full rework:
+> kmsg01.c:393: INFO: TEST: read returns EPIPE when messages get overwritten
+> kmsg01.c:398: INFO: first seqno: 0
+> kmsg01.c:411: INFO: first seqno now: 881
+> kmsg01.c:425: FAIL: read returned: 77: SUCCESS (0)
 
-1. replace ringbuffer
-2. implement NMI-safe LOG_CONT (i.e. move handling to readers)
-3. remove logbuf_lock
-4. remove safe buffers
-5. implement per-console printing kthreads
-6. implement emergency mode and write_atomic() support
-7. implement write_atomic() for 8250 UART
+So this is seq number related
+https://github.com/linux-test-project/ltp/blob/master/testcases/kernel/logging/kmsg/kmsg01.c#L383
 
-Some of the steps may be combined into a single series if the changes
-are not too dramatic.
+LTP writes a gazillion (roughly, maybe a bit less than that)
+filler messages to /dev/kmsg in order to cause logbuf overlap:
+...
+19490 [  172.301584] LTP kmsg01 FILLER MESSAGE TO OVERWRITE OTHERS
+19491 [  172.308730] LTP kmsg01 FILLER MESSAGE TO OVERWRITE OTHERS
+19492 [  172.313852] LTP kmsg01 FILLER MESSAGE TO OVERWRITE OTHERS
+19493 [  172.320988] LTP kmsg01 FILLER MESSAGE TO OVERWRITE OTHERS
+19494 [  172.325618] LTP kmsg01 FILLER MESSAGE TO OVERWRITE OTHERS
+...
 
-John Ogness
+	-ss
 
 _______________________________________________
 kexec mailing list
