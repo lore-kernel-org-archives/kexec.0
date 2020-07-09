@@ -1,24 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1043.google.com ([2607:f8b0:4864:20::1043])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jtWHU-0002v1-P7
- for kexec@lists.infradead.org; Thu, 09 Jul 2020 13:08:05 +0000
-Received: by mail-pj1-x1043.google.com with SMTP id f16so1092846pjt.0
- for <kexec@lists.infradead.org>; Thu, 09 Jul 2020 06:08:04 -0700 (PDT)
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Date: Thu, 9 Jul 2020 22:07:58 +0900
-Subject: Re: [printk] 18a2dc6982: ltp.kmsg01.fail
-Message-ID: <20200709130758.GB4380@jagdpanzerIV.localdomain>
-References: <20200707145932.8752-5-john.ogness@linutronix.de>
- <20200709071411.GR3874@shao2-debian>
- <20200709083323.GA572@jagdpanzerIV.localdomain>
- <874kqhm1v8.fsf@jogness.linutronix.de>
- <20200709105906.GC11164@alley> <20200709111310.GD11164@alley>
- <87zh89kkek.fsf@jogness.linutronix.de>
- <20200709122448.GJ4751@alley>
+ id 1jtWWo-0004Mf-PU
+ for kexec@lists.infradead.org; Thu, 09 Jul 2020 13:23:55 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH v5 1/4] crash: add VMCOREINFO macro to define offset in a
+ struct declared by typedef
+Date: Thu,  9 Jul 2020 15:29:41 +0206
+Message-Id: <20200709132344.760-2-john.ogness@linutronix.de>
+In-Reply-To: <20200709132344.760-1-john.ogness@linutronix.de>
+References: <20200709132344.760-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200709122448.GJ4751@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,32 +24,38 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, kernel test robot <rong.a.chen@intel.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, lkp@lists.01.org, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On (20/07/09 14:25), Petr Mladek wrote:
-> On Thu 2020-07-09 13:23:07, John Ogness wrote:
-> > On 2020-07-09, Petr Mladek <pmladek@suse.com> wrote:
-> > > I though more about it. IMHO, it will be better to modify
-> > > prb_first_seq() to do the same cycle as prb_next_seq()
-> > > and return seq number of the first valid entry.
-> > 
-> > Exactly!
-> > 
-> > Here is a patch that does just that. I added a prb_first_valid_seq()
-> > function and made prb_first_seq() static. (The ringbuffer still needs
-> > prb_first_seq() for itself.)
-> 
-> The fix looks fine to me:
+The existing macro VMCOREINFO_OFFSET() can't be used for structures
+declared via typedef because "struct" is not part of type definition.
 
-Yeah, looks right to me as well.
+Create another macro for this purpose.
 
-> It means that we have two fixes on top of the original patchset. Could
-> you please send v5 with the two fixes integrated? I would just squash
-> them into the 4th patch.
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Acked-by: Baoquan He <bhe@redhat.com>
+Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+ include/linux/crash_core.h | 3 +++
+ 1 file changed, 3 insertions(+)
 
-I'd prefer v5, if possible.
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 525510a9f965..43b51c9df571 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -53,6 +53,9 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ #define VMCOREINFO_OFFSET(name, field) \
+ 	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+ 			      (unsigned long)offsetof(struct name, field))
++#define VMCOREINFO_TYPE_OFFSET(name, field) \
++	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
++			      (unsigned long)offsetof(name, field))
+ #define VMCOREINFO_LENGTH(name, value) \
+ 	vmcoreinfo_append_str("LENGTH(%s)=%lu\n", #name, (unsigned long)value)
+ #define VMCOREINFO_NUMBER(name) \
+-- 
+2.20.1
 
-	-ss
 
 _______________________________________________
 kexec mailing list
