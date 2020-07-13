@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jv26A-0006km-QE
- for kexec@lists.infradead.org; Mon, 13 Jul 2020 17:18:39 +0000
+ id 1jv286-0006zq-8O
+ for kexec@lists.infradead.org; Mon, 13 Jul 2020 17:20:39 +0000
 Subject: [PATCH v3 00/12] ppc64: enable kdump support for kexec_file_load
  syscall
 From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Mon, 13 Jul 2020 22:48:19 +0530
-Message-ID: <159466066875.24582.5506988608335189343.stgit@hbathini.in.ibm.com>
+Date: Mon, 13 Jul 2020 22:50:24 +0530
+Message-ID: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -69,6 +70,29 @@ all the necessary changes are added.
 
 The last patch fixes a lookup issue for `kexec -l -s` case when
 memory is reserved for crashkernel.
+
+Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+boxes, one with secureboot enabled and a simulator.
+
+v2 -> v3:
+* Fixed TOC pointer calculation for purgatory by using section info
+  that has relocations applied.
+* Fixed arch_kexec_locate_mem_hole() function to fallback to generic
+  kexec_locate_mem_hole() lookup if exclude ranges list is empty.
+* Dropped check for backup_start in trampoline_64.S as purgatory()
+  function takes care of it anyway.
+
+v1 -> v2:
+* Introduced arch_kexec_locate_mem_hole() for override and dropped
+  weak arch_kexec_add_buffer().
+* Addressed warnings reported by lkp.
+* Added patch to address kexec load issue when memory is reserved
+  for crashkernel.
+* Used the appropriate license header for the new files added.
+* Added an option to merge ranges to minimize reallocations while
+  adding memory ranges.
+* Dropped within_crashkernel parameter for add_opal_mem_range() &
+  add_rtas_mem_range() functions as it is not really needed.
 
 ---
 
