@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1juo8R-0003kg-G4
- for kexec@lists.infradead.org; Mon, 13 Jul 2020 02:24:04 +0000
-Received: by mail-pf1-x441.google.com with SMTP id u5so5343520pfn.7
- for <kexec@lists.infradead.org>; Sun, 12 Jul 2020 19:24:02 -0700 (PDT)
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Date: Mon, 13 Jul 2020 11:23:56 +0900
-Subject: Re: [PATCH v5 0/4] printk: replace ringbuffer
-Message-ID: <20200713022356.GB491026@jagdpanzerIV.localdomain>
-References: <20200709132344.760-1-john.ogness@linutronix.de>
- <20200710082833.GM4751@alley>
+ id 1jv26A-0006km-QE
+ for kexec@lists.infradead.org; Mon, 13 Jul 2020 17:18:39 +0000
+Subject: [PATCH v3 00/12] ppc64: enable kdump support for kexec_file_load
+ syscall
+From: Hari Bathini <hbathini@linux.ibm.com>
+Date: Mon, 13 Jul 2020 22:48:19 +0530
+Message-ID: <159466066875.24582.5506988608335189343.stgit@hbathini.in.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200710082833.GM4751@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,34 +21,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On (20/07/10 10:28), Petr Mladek wrote:
-> On Thu 2020-07-09 15:29:40, John Ogness wrote:
-> > Hello,
-> > 
-> > Here is a v5 for the first series to rework the printk
-> > subsystem. The v4 is here [0]. This first series
-> > only replaces the existing ringbuffer implementation. No locking
-> > is removed. The semantics/behavior of printk are kept the same
-> > except for a minor optimization that is reverted (patch 3).
-> > 
-> > John Ogness (4):
-> >   crash: add VMCOREINFO macro to define offset in a struct declared by
-> >     typedef
-> >   printk: add lockless ringbuffer
-> >   Revert "printk: lock/unlock console only for new logbuf entries"
-> >   printk: use the lockless ringbuffer
-> 
-> The patchset is committed in printk/linux.git, branch printk-rework.
+This patch series enables kdump support for kexec_file_load system
+call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+code but heavily modified for kernel consumption. There is scope to
+expand purgatory to verify sha256 digest along with other improvements
+in purgatory code. Will deal with those changes in a separate patch
+series later.
 
-FWIW,
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+The first patch adds a weak arch_kexec_locate_mem_hole() function to
+override locate memory hole logic suiting arch needs. There are some
+special regions in ppc64 which should be avoided while loading buffer
+& there are multiple callers to kexec_add_buffer making it complicated
+to maintain range sanity and using generic lookup at the same time.
 
-Thank you.
+The second patch marks ppc64 specific code within arch/powerpc/kexec
+and arch/powerpc/purgatory to make the subsequent code changes easy
+to understand.
 
-	-ss
+The next patch adds helper function to setup different memory ranges
+needed for loading kdump kernel, booting into it and exporting the
+crashing kernel's elfcore.
+
+The fourth patch overrides arch_kexec_locate_mem_hole() function to
+locate memory hole for kdump segments by accounting for the special
+memory regions, referred to as excluded memory ranges, and sets
+kbuf->mem when a suitable memory region is found.
+
+The fifth patch moves walk_drmem_lmbs() out of .init section with
+a few changes to reuse it for setting up kdump kernel's usable memory
+ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+and set linux,drconf-usable-memory & linux,usable-memory properties
+in order to restrict kdump kernel's memory usage.
+
+The seventh patch adds relocation support for the purgatory. Patch 8
+helps setup the stack for the purgatory. The next patch setups up
+backup region as a segment while loading kdump kernel and teaches
+purgatory to copy it from source to destination.
+
+Patch 10 builds the elfcore header for the running kernel & passes
+the info to kdump kernel via "elfcorehdr=" parameter to export as
+/proc/vmcore file. The next patch sets up the memory reserve map
+for the kexec kernel and also claims kdump support for kdump as
+all the necessary changes are added.
+
+The last patch fixes a lookup issue for `kexec -l -s` case when
+memory is reserved for crashkernel.
+
+---
+
+Hari Bathini (12):
+      kexec_file: allow archs to handle special regions while locating memory hole
+      powerpc/kexec_file: mark PPC64 specific code
+      powerpc/kexec_file: add helper functions for getting memory ranges
+      ppc64/kexec_file: avoid stomping memory used by special regions
+      powerpc/drmem: make lmb walk a bit more flexible
+      ppc64/kexec_file: restrict memory usage of kdump kernel
+      ppc64/kexec_file: add support to relocate purgatory
+      ppc64/kexec_file: setup the stack for purgatory
+      ppc64/kexec_file: setup backup region for kdump kernel
+      ppc64/kexec_file: prepare elfcore header for crashing kernel
+      ppc64/kexec_file: add appropriate regions for memory reserve map
+      ppc64/kexec_file: fix kexec load failure with lack of memory hole
+
+
+ arch/powerpc/include/asm/crashdump-ppc64.h |   15 
+ arch/powerpc/include/asm/drmem.h           |    9 
+ arch/powerpc/include/asm/kexec.h           |   35 +
+ arch/powerpc/include/asm/kexec_ranges.h    |   18 
+ arch/powerpc/include/asm/purgatory.h       |   11 
+ arch/powerpc/kernel/prom.c                 |   13 
+ arch/powerpc/kexec/Makefile                |    2 
+ arch/powerpc/kexec/elf_64.c                |   35 +
+ arch/powerpc/kexec/file_load.c             |   78 +
+ arch/powerpc/kexec/file_load_64.c          | 1508 ++++++++++++++++++++++++++++
+ arch/powerpc/kexec/ranges.c                |  397 +++++++
+ arch/powerpc/mm/drmem.c                    |   87 +-
+ arch/powerpc/mm/numa.c                     |   13 
+ arch/powerpc/purgatory/Makefile            |   28 -
+ arch/powerpc/purgatory/purgatory_64.c      |   36 +
+ arch/powerpc/purgatory/trampoline.S        |  117 --
+ arch/powerpc/purgatory/trampoline_64.S     |  170 +++
+ include/linux/kexec.h                      |   29 -
+ kernel/kexec_file.c                        |   16 
+ 19 files changed, 2407 insertions(+), 210 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/crashdump-ppc64.h
+ create mode 100644 arch/powerpc/include/asm/kexec_ranges.h
+ create mode 100644 arch/powerpc/include/asm/purgatory.h
+ create mode 100644 arch/powerpc/kexec/file_load_64.c
+ create mode 100644 arch/powerpc/kexec/ranges.c
+ create mode 100644 arch/powerpc/purgatory/purgatory_64.c
+ delete mode 100644 arch/powerpc/purgatory/trampoline.S
+ create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+
 
 _______________________________________________
 kexec mailing list
