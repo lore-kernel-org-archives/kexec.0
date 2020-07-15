@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jvUgF-0008D2-NA
- for kexec@lists.infradead.org; Tue, 14 Jul 2020 23:49:49 +0000
+ id 1jvXL2-0001wa-OC
+ for kexec@lists.infradead.org; Wed, 15 Jul 2020 02:40:05 +0000
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466087136.24747.16494497863685481495.stgit@hbathini.in.ibm.com>
+ <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v3 03/12] powerpc/kexec_file: add helper functions for
- getting memory ranges
-In-reply-to: <159466087136.24747.16494497863685481495.stgit@hbathini.in.ibm.com>
-Date: Tue, 14 Jul 2020 20:49:31 -0300
-Message-ID: <874kq98xo4.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+In-reply-to: <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
+Date: Tue, 14 Jul 2020 23:39:45 -0300
+Message-ID: <87365t8pse.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,320 +29,256 @@ To: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
 
-Hello Hari,
-
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> In kexec case, the kernel to be loaded uses the same memory layout as
-> the running kernel. So, passing on the DT of the running kernel would
-> be good enough.
+> diff --git a/arch/powerpc/include/asm/crashdump-ppc64.h b/arch/powerpc/include/asm/crashdump-ppc64.h
+> new file mode 100644
+> index 0000000..90deb46
+> --- /dev/null
+> +++ b/arch/powerpc/include/asm/crashdump-ppc64.h
+> @@ -0,0 +1,10 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +#ifndef _ASM_POWERPC_CRASHDUMP_PPC64_H
+> +#define _ASM_POWERPC_CRASHDUMP_PPC64_H
+> +
+> +/* min & max addresses for kdump load segments */
+> +#define KDUMP_BUF_MIN		(crashk_res.start)
+> +#define KDUMP_BUF_MAX		((crashk_res.end < ppc64_rma_size) ? \
+> +				 crashk_res.end : (ppc64_rma_size - 1))
+> +
+> +#endif /* __ASM_POWERPC_CRASHDUMP_PPC64_H */
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index 7008ea1..bf47a01 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -100,14 +100,16 @@ void relocate_new_kernel(unsigned long indirection_page, unsigned long reboot_co
+>  #ifdef CONFIG_KEXEC_FILE
+>  extern const struct kexec_file_ops kexec_elf64_ops;
 >
-> But in case of kdump, different memory ranges are needed to manage
-> loading the kdump kernel, booting into it and exporting the elfcore
-> of the crashing kernel. The ranges are exlude memory ranges, usable
+> -#ifdef CONFIG_IMA_KEXEC
+>  #define ARCH_HAS_KIMAGE_ARCH
+>
+>  struct kimage_arch {
+> +	struct crash_mem *exclude_ranges;
+> +
+> +#ifdef CONFIG_IMA_KEXEC
+>  	phys_addr_t ima_buffer_addr;
+>  	size_t ima_buffer_size;
+> -};
+>  #endif
+> +};
+>
+>  int setup_purgatory(struct kimage *image, const void *slave_code,
+>  		    const void *fdt, unsigned long kernel_load_addr,
+> @@ -125,6 +127,7 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>  			unsigned long initrd_load_addr,
+>  			unsigned long initrd_len, const char *cmdline);
+>  #endif /* CONFIG_PPC64 */
+> +
+>  #endif /* CONFIG_KEXEC_FILE */
+>
+>  #else /* !CONFIG_KEXEC_CORE */
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index 23ad04c..c695f94 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -22,6 +22,7 @@
+>  #include <linux/of_fdt.h>
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+> +#include <asm/crashdump-ppc64.h>
+>
+>  static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  			unsigned long kernel_len, char *initrd,
+> @@ -46,6 +47,12 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	if (ret)
+>  		goto out;
+>
+> +	if (image->type == KEXEC_TYPE_CRASH) {
+> +		/* min & max buffer values for kdump case */
+> +		kbuf.buf_min = pbuf.buf_min = KDUMP_BUF_MIN;
+> +		kbuf.buf_max = pbuf.buf_max = KDUMP_BUF_MAX;
 
-s/exlude/exclude/
+This is only my personal opinion and an actual maintainer may disagree,
+but just looking at the lines above, I would assume that KDUMP_BUF_MIN
+and KDUMP_BUF_MAX were constants, when in fact they aren't.
 
-> memory ranges, reserved memory ranges and crash memory ranges.
->
-> Exclude memory ranges specify the list of memory ranges to avoid while
-> loading kdump segments. Usable memory ranges list the memory ranges
-> that could be used for booting kdump kernel. Reserved memory ranges
-> list the memory regions for the loading kernel's reserve map. Crash
-> memory ranges list the memory ranges to be exported as the crashing
-> kernel's elfcore.
->
-> Add helper functions for setting up the above mentioned memory ranges.
-> This helpers facilitate in understanding the subsequent changes better
-> and make it easy to setup the different memory ranges listed above, as
-> and when appropriate.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
+I suggest using static inline macros in <asm/crashdump-ppc64.h>, for
+example:
+
+static inline resource_size_t get_kdump_buf_min(void)
+{
+	return crashk_res.start;
+}
+
+static inline resource_size_t get_kdump_buf_max(void)
+{
+	return (crashk_res.end < ppc64_rma_size) ? \
+		 crashk_res.end : (ppc64_rma_size - 1)
+}
+
+
+> +	}
+> +
+>  	ret = kexec_elf_load(image, &ehdr, &elf_info, &kbuf, &kernel_load_addr);
+>  	if (ret)
+>  		goto out;
 
 <snip>
 
 > +/**
-> + * get_mem_rngs_size - Get the allocated size of mrngs based on
-> + *                     max_nr_ranges and chunk size.
-> + * @mrngs:             Memory ranges.
-> + *
-> + * Returns the maximum no. of ranges.
-
-This isn't correct. It returns the maximum size of @mrngs.
-
-> + */
-> +static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
-> +{
-> +	size_t size;
-> +
-> +	if (!mrngs)
-> +		return 0;
-> +
-> +	size = (sizeof(struct crash_mem) +
-> +		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
-> +
-> +	/*
-> +	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
-> +	 * So, align to get the actual length.
-> +	 */
-> +	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
-> +}
-
-<snip>
-
-> +/**
-> + * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
-> + * @mem_ranges:         Range list to add the memory range(s) to.
+> + * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+> + *                              in the memory regions between buf_min & buf_max
+> + *                              for the buffer. If found, sets kbuf->mem.
+> + * @kbuf:                       Buffer contents and memory parameters.
+> + * @buf_min:                    Minimum address for the buffer.
+> + * @buf_max:                    Maximum address for the buffer.
 > + *
 > + * Returns 0 on success, negative errno on error.
 > + */
-> +int add_tce_mem_ranges(struct crash_mem **mem_ranges)
+> +static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
+> +				      u64 buf_min, u64 buf_max)
 > +{
-> +	struct device_node *dn;
-> +	int ret;
+> +	int ret = -EADDRNOTAVAIL;
+> +	phys_addr_t start, end;
+> +	u64 i;
 > +
-> +	for_each_node_by_type(dn, "pci") {
-> +		u64 base;
-> +		u32 size;
-> +
-> +		ret = of_property_read_u64(dn, "linux,tce-base", &base);
-> +		ret |= of_property_read_u32(dn, "linux,tce-size", &size);
-> +		if (!ret)
-
-Shouldn't the condition be `ret` instead of `!ret`?
-
+> +	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> +			       MEMBLOCK_NONE, &start, &end, NULL) {
+> +		if (start > buf_max)
 > +			continue;
 > +
-> +		ret = add_mem_range(mem_ranges, base, size);
-> +		if (ret)
+> +		/* Memory hole not found */
+> +		if (end < buf_min)
 > +			break;
-> +	}
 > +
-> +	return ret;
-> +}
+> +		/* Adjust memory region based on the given range */
+> +		if (start < buf_min)
+> +			start = buf_min;
+> +		if (end > buf_max)
+> +			end = buf_max;
 > +
-> +/**
-> + * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
-> + *                        if the initrd was retained.
-> + * @mem_ranges:           Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_initrd_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +	u64 base, end;
-> +	int ret = 0;
-> +	char *str;
-> +
-> +	/* This range means something only if initrd was retained */
-> +	str = strstr(saved_command_line, "retain_initrd");
-> +	if (!str)
-> +		return 0;
-> +
-> +	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
-> +	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
-> +	if (!ret)
-> +		ret = add_mem_range(mem_ranges, base, end - base + 1);
-> +	return ret;
-> +}
-> +
-> +/**
-> + * add_htab_mem_range - Adds htab range to the given memory ranges list,
-> + *                      if it exists
-> + * @mem_ranges:         Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_htab_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +#ifdef CONFIG_PPC_BOOK3S_64
-> +	int ret;
-> +
-> +	if (!htab_address)
-> +		return 0;
-> +
-> +	ret = add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
-> +	return ret;
-> +#else
-> +	return 0;
-> +#endif
-> +}
+> +		start = ALIGN(start, kbuf->buf_align);
+> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
 
-If I'm not mistaken, this is not the preferred way of having alternative
-implementations of a function. The "Conditional Compilation" section of
-the coding style document doesn't mention this directly, but does say
-that it's better to put the conditionals in a header file.
+This is why I dislike using start and end to express address ranges:
 
-In this case, I would do this in <asm/kexec_ranges.h>
+While struct resource seems to use the [address, end] convention, my
+reading of memblock code is that it uses [addres, end). This is
+guaranteed to lead to bugs. So the above has an off-by-one error. To
+calculate the size of the current range, you need to use `end - start`.
 
-#ifdef CONFIG_PPC_BOOK3S_64
-int add_htab_mem_range(struct crash_mem **mem_ranges);
-#else
-static inline int add_htab_mem_range(struct crash_mem **mem_ranges)
-{
-	return 0;
-}
-#endif
+> +			/* Suitable memory range found. Set kbuf->mem */
+> +			kbuf->mem = ALIGN_DOWN(end - kbuf->memsz + 1,
 
-And in ranges.c just surround the add_htab_mem_range() definition with
-#ifdef CONFIG_PPC_BOOK3S_64 and #endif
+Similarly, I believe the `+ 1` here is wrong.
 
-Also, there's no need for the ret variable. You can just
-`return add_mem_range(...)` directly.
-
-> +
-> +/**
-> + * add_kernel_mem_range - Adds kernel text region to the given
-> + *                        memory ranges list.
-> + * @mem_ranges:           Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_kernel_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +	int ret;
-> +
-> +	ret = add_mem_range(mem_ranges, 0, __pa(_end));
-> +	return ret;
-> +}
-
-No need for the ret variable here, just `return add_mem_range()`
-directly.
-
-> +
-> +/**
-> + * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
-> + * @mem_ranges:         Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_rtas_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +	struct device_node *dn;
-> +	int ret = 0;
-> +
-> +	dn = of_find_node_by_path("/rtas");
-> +	if (dn) {
-> +		u32 base, size;
-> +
-> +		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
-> +		ret |= of_property_read_u32(dn, "rtas-size", &size);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = add_mem_range(mem_ranges, base, size);
-
-You're missing an of_node_put(dn) here (also in the early return in the
-line above).
-
-> +	}
-> +	return ret;
-> +}
-> +
-> +/**
-> + * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
-> + * @mem_ranges:         Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_opal_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +	struct device_node *dn;
-> +	int ret = 0;
-> +
-> +	dn = of_find_node_by_path("/ibm,opal");
-> +	if (dn) {
-> +		u64 base, size;
-> +
-> +		ret = of_property_read_u64(dn, "opal-base-address", &base);
-> +		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
-> +		if (ret)
-> +			return ret;
-> +
-> +		ret = add_mem_range(mem_ranges, base, size);
-
-You're missing an of_node_put(dn) here (also in the early return in the
-line above).
-
-> +	}
-> +	return ret;
-> +}
-> +
-> +/**
-> + * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
-> + *                       to the given memory ranges list.
-> + * @mem_ranges:          Range list to add the memory ranges to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_reserved_ranges(struct crash_mem **mem_ranges)
-> +{
-> +	int i, len, ret = 0;
-> +	const __be32 *prop;
-> +
-> +	prop = of_get_property(of_root, "reserved-ranges", &len);
-> +	if (!prop)
-> +		return 0;
-> +
-> +	/*
-> +	 * Each reserved range is an (address,size) pair, 2 cells each,
-> +	 * totalling 4 cells per range.
-
-Can you assume that, or do you need to check the #address-cells and
-#size-cells properties of the root node?
-
-> +	 */
-> +	for (i = 0; i < len / (sizeof(*prop) * 4); i++) {
-> +		u64 base, size;
-> +
-> +		base = of_read_number(prop + (i * 4) + 0, 2);
-> +		size = of_read_number(prop + (i * 4) + 2, 2);
-> +
-> +		ret = add_mem_range(mem_ranges, base, size);
-> +		if (ret)
+> +					       kbuf->buf_align);
+> +			ret = 0;
 > +			break;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +/**
-> + * sort_memory_ranges - Sorts the given memory ranges list.
-> + * @mem_ranges:         Range list to sort.
-> + * @merge:              If true, merge the list after sorting.
-> + *
-> + * Returns nothing.
-> + */
-> +void sort_memory_ranges(struct crash_mem *mrngs, bool merge)
-> +{
-> +	struct crash_mem_range *rngs;
-> +	struct crash_mem_range rng;
-> +	int i, j, idx;
-> +
-> +	if (!mrngs)
-> +		return;
-> +
-> +	/* Sort the ranges in-place */
-> +	rngs = &mrngs->ranges[0];
-> +	for (i = 0; i < mrngs->nr_ranges; i++) {
-> +		idx = i;
-> +		for (j = (i + 1); j < mrngs->nr_ranges; j++) {
-> +			if (rngs[idx].start > rngs[j].start)
-> +				idx = j;
-> +		}
-> +		if (idx != i) {
-> +			rng = rngs[idx];
-> +			rngs[idx] = rngs[i];
-> +			rngs[i] = rng;
 > +		}
 > +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * locate_mem_hole_top_down_ppc64 - Skip special memory regions to find a
+> + *                                  suitable buffer with top down approach.
+> + * @kbuf:                           Buffer contents and memory parameters.
+> + * @buf_min:                        Minimum address for the buffer.
+> + * @buf_max:                        Maximum address for the buffer.
+> + * @emem:                           Exclude memory ranges.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int locate_mem_hole_top_down_ppc64(struct kexec_buf *kbuf,
+> +					  u64 buf_min, u64 buf_max,
+> +					  const struct crash_mem *emem)
+> +{
+> +	int i, ret = 0, err = -EADDRNOTAVAIL;
+> +	u64 start, end, tmin, tmax;
+> +
+> +	tmax = buf_max;
+> +	for (i = (emem->nr_ranges - 1); i >= 0; i--) {
+> +		start = emem->ranges[i].start;
+> +		end = emem->ranges[i].end;
+> +
+> +		if (start > tmax)
+> +			continue;
+> +
+> +		if (end < tmax) {
+> +			tmin = (end < buf_min ? buf_min : end + 1);
+> +			ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
+> +			if (!ret)
+> +				return 0;
+> +		}
+> +
+> +		tmax = start - 1;
+> +
+> +		if (tmax < buf_min) {
+> +			ret = err;
+> +			break;
+> +		}
+> +		ret = 0;
+> +	}
+> +
+> +	if (!ret) {
+> +		tmin = buf_min;
+> +		ret = __locate_mem_hole_top_down(kbuf, tmin, tmax);
+> +	}
+> +	return ret;
+> +}
+> +
+> +/**
+> + * __locate_mem_hole_bottom_up - Looks bottom up for a large enough memory hole
+> + *                               in the memory regions between buf_min & buf_max
+> + *                               for the buffer. If found, sets kbuf->mem.
+> + * @kbuf:                        Buffer contents and memory parameters.
+> + * @buf_min:                     Minimum address for the buffer.
+> + * @buf_max:                     Maximum address for the buffer.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int __locate_mem_hole_bottom_up(struct kexec_buf *kbuf,
+> +				       u64 buf_min, u64 buf_max)
+> +{
+> +	int ret = -EADDRNOTAVAIL;
+> +	phys_addr_t start, end;
+> +	u64 i;
+> +
+> +	for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,
+> +			   MEMBLOCK_NONE, &start, &end, NULL) {
+> +		if (end < buf_min)
+> +			continue;
+> +
+> +		/* Memory hole not found */
+> +		if (start > buf_max)
+> +			break;
+> +
+> +		/* Adjust memory region based on the given range */
+> +		if (start < buf_min)
+> +			start = buf_min;
+> +		if (end > buf_max)
+> +			end = buf_max;
 
-Would it work using sort() from lib/sort.c here?
+buf_max is an inclusive end address, right? Then this should read
+`end = buf_max + 1`. Same thing in the top-down version above.
 
 > +
-> +	if (merge)
-> +		__merge_memory_ranges(mrngs);
+> +		start = ALIGN(start, kbuf->buf_align);
+> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
+
+Same off-by-one problem. There shouldn't be a `+ 1` here.
+
+> +			/* Suitable memory range found. Set kbuf->mem */
+> +			kbuf->mem = start;
+> +			ret = 0;
+> +			break;
+> +		}
+> +	}
+> +
+> +	return ret;
 > +}
 
 
