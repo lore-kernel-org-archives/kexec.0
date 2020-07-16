@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwBv8-0000Mv-Pl
- for kexec@lists.infradead.org; Thu, 16 Jul 2020 22:00:03 +0000
+ id 1jwBwJ-0000Si-UD
+ for kexec@lists.infradead.org; Thu, 16 Jul 2020 22:01:17 +0000
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
- <87365t8pse.fsf@morokweng.localdomain>
- <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
+ <159466090332.24747.9255471295044653085.stgit@hbathini.in.ibm.com>
+ <871rld8mic.fsf@morokweng.localdomain>
+ <30e8f02a-f009-70a5-01e9-dec9eff213b1@linux.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by
- special regions
-In-reply-to: <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
-Date: Thu, 16 Jul 2020 18:59:49 -0300
-Message-ID: <878sfjce96.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v3 05/12] powerpc/drmem: make lmb walk a bit more flexible
+In-reply-to: <30e8f02a-f009-70a5-01e9-dec9eff213b1@linux.ibm.com>
+Date: Thu, 16 Jul 2020 19:01:05 -0300
+Message-ID: <877dv3ce72.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,60 +32,43 @@ Cc: Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Nayna Jain 
 
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> On 15/07/20 8:09 am, Thiago Jung Bauermann wrote:
+> On 15/07/20 9:20 am, Thiago Jung Bauermann wrote:
 >> 
 >> Hari Bathini <hbathini@linux.ibm.com> writes:
 >> 
->
-> <snip>
->  
->>> +/**
->>> + * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
->>> + *                              in the memory regions between buf_min & buf_max
->>> + *                              for the buffer. If found, sets kbuf->mem.
->>> + * @kbuf:                       Buffer contents and memory parameters.
->>> + * @buf_min:                    Minimum address for the buffer.
->>> + * @buf_max:                    Maximum address for the buffer.
->>> + *
->>> + * Returns 0 on success, negative errno on error.
->>> + */
->>> +static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
->>> +				      u64 buf_min, u64 buf_max)
->>> +{
->>> +	int ret = -EADDRNOTAVAIL;
->>> +	phys_addr_t start, end;
->>> +	u64 i;
->>> +
->>> +	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
->>> +			       MEMBLOCK_NONE, &start, &end, NULL) {
->>> +		if (start > buf_max)
->>> +			continue;
->>> +
->>> +		/* Memory hole not found */
->>> +		if (end < buf_min)
->>> +			break;
->>> +
->>> +		/* Adjust memory region based on the given range */
->>> +		if (start < buf_min)
->>> +			start = buf_min;
->>> +		if (end > buf_max)
->>> +			end = buf_max;
->>> +
->>> +		start = ALIGN(start, kbuf->buf_align);
->>> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
+>>> @@ -534,7 +537,7 @@ static int __init early_init_dt_scan_memory_ppc(unsigned long node,
+>>>  #ifdef CONFIG_PPC_PSERIES
+>>>  	if (depth == 1 &&
+>>>  	    strcmp(uname, "ibm,dynamic-reconfiguration-memory") == 0) {
+>>> -		walk_drmem_lmbs_early(node, early_init_drmem_lmb);
+>>> +		walk_drmem_lmbs_early(node, NULL, early_init_drmem_lmb);
 >> 
->> This is why I dislike using start and end to express address ranges:
+>> walk_drmem_lmbs_early() can now fail. Should this failure be propagated
+>> as a return value of early_init_dt_scan_memory_ppc()?
+>   
 >> 
->> While struct resource seems to use the [address, end] convention, my
+>>>  		return 0;
+>>>  	}
+>>>  #endif
+>> <snip>
+>> 
+>>> @@ -787,7 +790,7 @@ static int __init parse_numa_properties(void)
+>>>  	 */
+>>>  	memory = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
+>>>  	if (memory) {
+>>> -		walk_drmem_lmbs(memory, numa_setup_drmem_lmb);
+>>> +		walk_drmem_lmbs(memory, NULL, numa_setup_drmem_lmb);
+>> 
+>> Similarly here. Now that this call can fail, should
+>> parse_numa_properties() handle or propagate the failure?
 >
-> struct crash_mem also uses [address, end] convention.
-> This off-by-one error did not cause any issues as the hole start and size we try to find
-> are at least page aligned.
->
-> Nonetheless, I think fixing 'end' early in the loop with "end -= 1" would ensure
-> correctness while continuing to use the same convention for structs crash_mem & resource.
+> They would still not fail unless the callbacks early_init_drmem_lmb() & numa_setup_drmem_lmb()
+> are updated to have failure scenarios. Also, these call sites always ignored failure scenarios
+> even before walk_drmem_lmbs() was introduced. So, I prefer to keep them the way they are?
 
-Sounds good.
+Ok, makes sense. In this case:
+
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
 -- 
 Thiago Jung Bauermann
