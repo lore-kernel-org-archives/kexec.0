@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jvt1b-0001m2-G5
- for kexec@lists.infradead.org; Thu, 16 Jul 2020 01:49:28 +0000
+ id 1jvtXW-0003rC-O2
+ for kexec@lists.infradead.org; Thu, 16 Jul 2020 02:22:27 +0000
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com>
+ <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v3 02/12] powerpc/kexec_file: mark PPC64 specific code
-In-reply-to: <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com>
-Date: Wed, 15 Jul 2020 22:49:12 -0300
-Message-ID: <87v9io8c13.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v3 10/12] ppc64/kexec_file: prepare elfcore header for
+ crashing kernel
+In-reply-to: <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com>
+Date: Wed, 15 Jul 2020 23:22:08 -0300
+Message-ID: <87tuy88ai7.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,149 +28,159 @@ To: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
 
-I didn't forget about this patch. I just wanted to see more of the
-changes before comenting on it.
-
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
-> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
-> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
-> same spirit.
+>  /**
+> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
+> + *                           first/crashing kernel's memory regions that
+> + *                           would be exported via an elfcore.
+> + * @mem_ranges:              Range list to add the memory ranges to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	struct memblock_region *reg;
+> +	struct crash_mem *tmem;
+> +	int ret;
+> +
+> +	for_each_memblock(memory, reg) {
+> +		u64 base, size;
+> +
+> +		base = (u64)reg->base;
+> +		size = (u64)reg->size;
+> +
+> +		/* Skip backup memory region, which needs a separate entry */
+> +		if (base == BACKUP_SRC_START) {
+> +			if (size > BACKUP_SRC_SIZE) {
+> +				base = BACKUP_SRC_END + 1;
+> +				size -= BACKUP_SRC_SIZE;
+> +			} else
+> +				continue;
+> +		}
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		/* Try merging adjacent ranges before reallocation attempt */
+> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
+> +			sort_memory_ranges(*mem_ranges, true);
+> +	}
+> +
+> +	/* Reallocate memory ranges if there is no space to split ranges */
+> +	tmem = *mem_ranges;
+> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
+> +		tmem = realloc_mem_ranges(mem_ranges);
+> +		if (!tmem)
+> +			goto out;
+> +	}
+> +
+> +	/* Exclude crashkernel region */
+> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = add_rtas_mem_range(mem_ranges);
+> +	if (ret)
+> +		goto out;
+> +
+> +	ret = add_opal_mem_range(mem_ranges);
+> +	if (ret)
+> +		goto out;
 
-There's only a 64 bit implementation of kexec_file_load() so this is a
-somewhat theoretical exercise, but there's no harm in getting the code
-organized, so:
+Maybe I'm confused, but don't you add the RTAS and OPAL regions as
+usable memory for the crashkernel? In that case they shouldn't show up
+in the core file.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
-I have just one question below.
-
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-> ---
->
-> v2 -> v3:
-> * Unchanged. Added Tested-by tag from Pingfan.
->
-> v1 -> v2:
-> * No changes.
->
->
->  arch/powerpc/include/asm/kexec.h       |   11 +++
->  arch/powerpc/kexec/Makefile            |    2 -
->  arch/powerpc/kexec/elf_64.c            |    7 +-
->  arch/powerpc/kexec/file_load.c         |   37 ++--------
->  arch/powerpc/kexec/file_load_64.c      |  108 ++++++++++++++++++++++++++++++
->  arch/powerpc/purgatory/Makefile        |    4 +
->  arch/powerpc/purgatory/trampoline.S    |  117 --------------------------------
->  arch/powerpc/purgatory/trampoline_64.S |  117 ++++++++++++++++++++++++++++++++
->  8 files changed, 248 insertions(+), 155 deletions(-)
->  create mode 100644 arch/powerpc/kexec/file_load_64.c
->  delete mode 100644 arch/powerpc/purgatory/trampoline.S
->  create mode 100644 arch/powerpc/purgatory/trampoline_64.S
+> +
+> +	/* create a separate program header for the backup region */
+> +	ret = add_mem_range(mem_ranges, BACKUP_SRC_START, BACKUP_SRC_SIZE);
+> +	if (ret)
+> +		goto out;
+> +
+> +	sort_memory_ranges(*mem_ranges, false);
+> +out:
+> +	if (ret)
+> +		pr_err("Failed to setup crash memory ranges\n");
+> +	return ret;
+> +}
 
 <snip>
 
-> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> new file mode 100644
-> index 0000000..e6bff960
-> --- /dev/null
-> +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -0,0 +1,108 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * ppc64 code to implement the kexec_file_load syscall
-> + *
-> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
-> + * Copyright (C) 2004  IBM Corp.
-> + * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
-> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
-> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
-> + * Copyright (C) 2020  IBM Corporation
-> + *
-> + * Based on kexec-tools' kexec-ppc64.c, kexec-elf-rel-ppc64.c, fs2dt.c.
-> + * Heavily modified for the kernel by
-> + * Hari Bathini <hbathini@linux.ibm.com>.
-> + */
-> +
-> +#include <linux/kexec.h>
-> +#include <linux/of_fdt.h>
-> +#include <linux/libfdt.h>
-> +
-> +const struct kexec_file_ops * const kexec_file_loaders[] = {
-> +	&kexec_elf64_ops,
-> +	NULL
-> +};
-> +
 > +/**
-> + * setup_purgatory_ppc64 - initialize PPC64 specific purgatory's global
-> + *                         variables and call setup_purgatory() to initialize
-> + *                         common global variable.
-> + * @image:                 kexec image.
-> + * @slave_code:            Slave code for the purgatory.
-> + * @fdt:                   Flattened device tree for the next kernel.
-> + * @kernel_load_addr:      Address where the kernel is loaded.
-> + * @fdt_load_addr:         Address where the flattened device tree is loaded.
+> + * prepare_elf_headers - Prepare headers for the elfcore to be exported as
+> + *                       /proc/vmcore by the kdump kernel.
+> + * @image:               Kexec image.
+> + * @cmem:                Crash memory ranges to be exported via elfcore.
+> + * @addr:                Vmalloc'd memory allocated by crash_prepare_elf64_headers
+> + *                       to prepare the elf headers.
+> + * @sz:                  Size of the vmalloc'd memory allocated.
 > + *
 > + * Returns 0 on success, negative errno on error.
 > + */
-> +int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
-> +			  const void *fdt, unsigned long kernel_load_addr,
-> +			  unsigned long fdt_load_addr)
+> +static int prepare_elf_headers(struct kimage *image, struct crash_mem *cmem,
+> +			       void **addr, unsigned long *sz)
 > +{
 > +	int ret;
 > +
-> +	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
-> +			      fdt_load_addr);
-> +	if (ret)
-> +		pr_err("Failed to setup purgatory symbols");
-> +	return ret;
-> +}
+> +	ret = crash_prepare_elf64_headers(cmem, false, addr, sz);
 > +
-> +/**
-> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
-> + *                       being loaded.
-> + * @image:               kexec image being loaded.
-> + * @fdt:                 Flattened device tree for the next kernel.
-> + * @initrd_load_addr:    Address where the next initrd will be loaded.
-> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
-> + * @cmdline:             Command line for the next kernel, or NULL if there will
-> + *                       be none.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
-> +			unsigned long initrd_load_addr,
-> +			unsigned long initrd_len, const char *cmdline)
-> +{
-> +	int chosen_node, ret;
-> +
-> +	/* Remove memory reservation for the current device tree. */
-> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
-> +				 fdt_totalsize(initial_boot_params));
-> +	if (ret == 0)
-> +		pr_debug("Removed old device tree reservation.\n");
-> +	else if (ret != -ENOENT) {
-> +		pr_err("Failed to remove old device-tree reservation.\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
-> +			    cmdline, &chosen_node);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
-> +	if (ret)
-> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
+> +	/* Fix the offset for backup region in the ELF header */
+> +	if (!ret)
+> +		update_backup_region_phdr(image, *addr);
 > +
 > +	return ret;
 > +}
 
-For setup_purgatory_ppc64() you start with an empty function and build
-from there, but for setup_new_fdt_ppc64() you moved some code here. Is
-the code above 64 bit specific?
+The code above can be inlined into its caller, I don't see a need to
+have a separate function.
+
+> +
+> +/**
+> + * load_elfcorehdr_segment - Setup crash memory ranges and initialize elfcorehdr
+> + *                           segment needed to load kdump kernel.
+> + * @image:                   Kexec image.
+> + * @kbuf:                    Buffer contents and memory parameters.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
+> +{
+> +	struct crash_mem *cmem = NULL;
+> +	unsigned long headers_sz;
+> +	void *headers = NULL;
+> +	int ret;
+> +
+> +	ret = get_crash_memory_ranges(&cmem);
+> +	if (ret)
+> +		goto out;
+> +
+> +	/* Setup elfcorehdr segment */
+> +	ret = prepare_elf_headers(image, cmem, &headers, &headers_sz);
+> +	if (ret) {
+> +		pr_err("Failed to prepare elf headers for the core\n");
+> +		goto out;
+> +	}
+> +
+> +	kbuf->buffer = headers;
+> +	kbuf->mem = KEXEC_BUF_MEM_UNKNOWN;
+> +	kbuf->bufsz = kbuf->memsz = headers_sz;
+> +	kbuf->top_down = false;
+> +
+> +	ret = kexec_add_buffer(kbuf);
+> +	if (ret) {
+> +		vfree(headers);
+> +		goto out;
+> +	}
+> +
+> +	image->arch.elfcorehdr_addr = kbuf->mem;
+> +	image->arch.elf_headers_sz = headers_sz;
+> +	image->arch.elf_headers = headers;
+> +out:
+> +	kfree(cmem);
+> +	return ret;
+> +}
 
 --
 Thiago Jung Bauermann
