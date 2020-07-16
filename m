@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwBsb-0008Tl-59
- for kexec@lists.infradead.org; Thu, 16 Jul 2020 21:57:26 +0000
+ id 1jwBv8-0000Mv-Pl
+ for kexec@lists.infradead.org; Thu, 16 Jul 2020 22:00:03 +0000
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466098739.24747.5860501703617893464.stgit@hbathini.in.ibm.com>
- <87tuy88ai7.fsf@morokweng.localdomain>
- <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
+ <159466088775.24747.1248185448154277951.stgit@hbathini.in.ibm.com>
+ <87365t8pse.fsf@morokweng.localdomain>
+ <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v3 10/12] ppc64/kexec_file: prepare elfcore header for
- crashing kernel
-In-reply-to: <929db6fe-b221-a514-8ea1-93227f8d47b0@linux.ibm.com>
-Date: Thu, 16 Jul 2020 18:57:15 -0300
-Message-ID: <87a6zzcedg.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v3 04/12] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+In-reply-to: <0582476e-415e-3f60-2bb2-6199d0340156@linux.ibm.com>
+Date: Thu, 16 Jul 2020 18:59:49 -0300
+Message-ID: <878sfjce96.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -33,83 +32,60 @@ Cc: Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Nayna Jain 
 
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> On 16/07/20 7:52 am, Thiago Jung Bauermann wrote:
+> On 15/07/20 8:09 am, Thiago Jung Bauermann wrote:
 >> 
 >> Hari Bathini <hbathini@linux.ibm.com> writes:
 >> 
->>>  /**
->>> + * get_crash_memory_ranges - Get crash memory ranges. This list includes
->>> + *                           first/crashing kernel's memory regions that
->>> + *                           would be exported via an elfcore.
->>> + * @mem_ranges:              Range list to add the memory ranges to.
+>
+> <snip>
+>  
+>>> +/**
+>>> + * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+>>> + *                              in the memory regions between buf_min & buf_max
+>>> + *                              for the buffer. If found, sets kbuf->mem.
+>>> + * @kbuf:                       Buffer contents and memory parameters.
+>>> + * @buf_min:                    Minimum address for the buffer.
+>>> + * @buf_max:                    Maximum address for the buffer.
 >>> + *
 >>> + * Returns 0 on success, negative errno on error.
 >>> + */
->>> +static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
+>>> +static int __locate_mem_hole_top_down(struct kexec_buf *kbuf,
+>>> +				      u64 buf_min, u64 buf_max)
 >>> +{
->>> +	struct memblock_region *reg;
->>> +	struct crash_mem *tmem;
->>> +	int ret;
+>>> +	int ret = -EADDRNOTAVAIL;
+>>> +	phys_addr_t start, end;
+>>> +	u64 i;
 >>> +
->>> +	for_each_memblock(memory, reg) {
->>> +		u64 base, size;
+>>> +	for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE,
+>>> +			       MEMBLOCK_NONE, &start, &end, NULL) {
+>>> +		if (start > buf_max)
+>>> +			continue;
 >>> +
->>> +		base = (u64)reg->base;
->>> +		size = (u64)reg->size;
+>>> +		/* Memory hole not found */
+>>> +		if (end < buf_min)
+>>> +			break;
 >>> +
->>> +		/* Skip backup memory region, which needs a separate entry */
->>> +		if (base == BACKUP_SRC_START) {
->>> +			if (size > BACKUP_SRC_SIZE) {
->>> +				base = BACKUP_SRC_END + 1;
->>> +				size -= BACKUP_SRC_SIZE;
->>> +			} else
->>> +				continue;
->>> +		}
+>>> +		/* Adjust memory region based on the given range */
+>>> +		if (start < buf_min)
+>>> +			start = buf_min;
+>>> +		if (end > buf_max)
+>>> +			end = buf_max;
 >>> +
->>> +		ret = add_mem_range(mem_ranges, base, size);
->>> +		if (ret)
->>> +			goto out;
->>> +
->>> +		/* Try merging adjacent ranges before reallocation attempt */
->>> +		if ((*mem_ranges)->nr_ranges == (*mem_ranges)->max_nr_ranges)
->>> +			sort_memory_ranges(*mem_ranges, true);
->>> +	}
->>> +
->>> +	/* Reallocate memory ranges if there is no space to split ranges */
->>> +	tmem = *mem_ranges;
->>> +	if (tmem && (tmem->nr_ranges == tmem->max_nr_ranges)) {
->>> +		tmem = realloc_mem_ranges(mem_ranges);
->>> +		if (!tmem)
->>> +			goto out;
->>> +	}
->>> +
->>> +	/* Exclude crashkernel region */
->>> +	ret = crash_exclude_mem_range(tmem, crashk_res.start, crashk_res.end);
->>> +	if (ret)
->>> +		goto out;
->>> +
->>> +	ret = add_rtas_mem_range(mem_ranges);
->>> +	if (ret)
->>> +		goto out;
->>> +
->>> +	ret = add_opal_mem_range(mem_ranges);
->>> +	if (ret)
->>> +		goto out;
+>>> +		start = ALIGN(start, kbuf->buf_align);
+>>> +		if (start < end && (end - start + 1) >= kbuf->memsz) {
 >> 
->> Maybe I'm confused, but don't you add the RTAS and OPAL regions as
->> usable memory for the crashkernel? In that case they shouldn't show up
->> in the core file.
+>> This is why I dislike using start and end to express address ranges:
+>> 
+>> While struct resource seems to use the [address, end] convention, my
 >
-> kexec-tools does the same thing. I am not endorsing it but I was trying to stay
-> in parity to avoid breaking any userspace tools/commands. But as you rightly
-> pointed, this is NOT right. The right thing to do, to get the rtas/opal data at
-> the time of crash, is to have a backup region for them just like we have for
-> the first 64K memory. I was hoping to do that later.
+> struct crash_mem also uses [address, end] convention.
+> This off-by-one error did not cause any issues as the hole start and size we try to find
+> are at least page aligned.
 >
-> Will check how userspace tools respond to dropping these regions. If that makes
-> the tools unhappy, will retain the regions with a FIXME. Sorry about the confusion.
+> Nonetheless, I think fixing 'end' early in the loop with "end -= 1" would ensure
+> correctness while continuing to use the same convention for structs crash_mem & resource.
 
-No problem, thanks for the clarification.
+Sounds good.
 
 -- 
 Thiago Jung Bauermann
