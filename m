@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pj1-x1042.google.com ([2607:f8b0:4864:20::1042])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwIGb-0002LA-O0
- for kexec@lists.infradead.org; Fri, 17 Jul 2020 04:46:38 +0000
-Subject: Re: [PATCH v3 02/12] powerpc/kexec_file: mark PPC64 specific code
-References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466085652.24747.2414199807974963385.stgit@hbathini.in.ibm.com>
- <87v9io8c13.fsf@morokweng.localdomain>
-From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <63d551a9-684b-768b-8b0f-2a0da68d7f11@linux.ibm.com>
-Date: Fri, 17 Jul 2020 10:16:25 +0530
+ id 1jwUOE-0005qa-5j
+ for kexec@lists.infradead.org; Fri, 17 Jul 2020 17:43:20 +0000
+Received: by mail-pj1-x1042.google.com with SMTP id b92so6752790pjc.4
+ for <kexec@lists.infradead.org>; Fri, 17 Jul 2020 10:43:16 -0700 (PDT)
+From: Kees Cook <keescook@chromium.org>
+Subject: [PATCH 01/13] firmware_loader: EFI firmware loader must handle
+ pre-allocated buffer
+Date: Fri, 17 Jul 2020 10:42:56 -0700
+Message-Id: <20200717174309.1164575-2-keescook@chromium.org>
+In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
+References: <20200717174309.1164575-1-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <87v9io8c13.fsf@morokweng.localdomain>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,83 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Nayna Jain <nayna@linux.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
+To: Scott Branden <scott.branden@broadcom.com>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <stephen.boyd@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Peter Jones <pjones@redhat.com>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Matthew Wilcox <willy@infradead.org>, KP Singh <kpsingh@google.com>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-integrity@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
+The EFI platform firmware fallback would clobber any pre-allocated
+buffers. Instead, correctly refuse to reallocate when too small (as
+already done in the sysfs fallback), or perform allocation normally
+when needed.
 
+Fixes: e4c2c0ff00ec ("firmware: Add new platform fallback mechanism and firm ware_request_platform()")
+Cc: stable@vger.kernel.org
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+To aid in backporting, this change is made before moving
+kernel_read_file() to separate header/source files.
+---
+ drivers/base/firmware_loader/fallback_platform.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-On 16/07/20 7:19 am, Thiago Jung Bauermann wrote:
-> 
-> I didn't forget about this patch. I just wanted to see more of the
-> changes before comenting on it.
-> 
-> Hari Bathini <hbathini@linux.ibm.com> writes:
-> 
->> Some of the kexec_file_load code isn't PPC64 specific. Move PPC64
->> specific code from kexec/file_load.c to kexec/file_load_64.c. Also,
->> rename purgatory/trampoline.S to purgatory/trampoline_64.S in the
->> same spirit.
-> 
-> There's only a 64 bit implementation of kexec_file_load() so this is a
-> somewhat theoretical exercise, but there's no harm in getting the code
-> organized, so:
-> 
-> Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> 
-> I have just one question below.
+diff --git a/drivers/base/firmware_loader/fallback_platform.c b/drivers/base/firmware_loader/fallback_platform.c
+index cdd2c9a9f38a..685edb7dd05a 100644
+--- a/drivers/base/firmware_loader/fallback_platform.c
++++ b/drivers/base/firmware_loader/fallback_platform.c
+@@ -25,7 +25,10 @@ int firmware_fallback_platform(struct fw_priv *fw_priv, u32 opt_flags)
+ 	if (rc)
+ 		return rc; /* rc == -ENOENT when the fw was not found */
+ 
+-	fw_priv->data = vmalloc(size);
++	if (fw_priv->data && size > fw_priv->allocated_size)
++		return -ENOMEM;
++	if (!fw_priv->data)
++		fw_priv->data = vmalloc(size);
+ 	if (!fw_priv->data)
+ 		return -ENOMEM;
+ 
+-- 
+2.25.1
 
-<snip>
-
->> +/**
->> + * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
->> + *                       being loaded.
->> + * @image:               kexec image being loaded.
->> + * @fdt:                 Flattened device tree for the next kernel.
->> + * @initrd_load_addr:    Address where the next initrd will be loaded.
->> + * @initrd_len:          Size of the next initrd, or 0 if there will be none.
->> + * @cmdline:             Command line for the next kernel, or NULL if there will
->> + *                       be none.
->> + *
->> + * Returns 0 on success, negative errno on error.
->> + */
->> +int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
->> +			unsigned long initrd_load_addr,
->> +			unsigned long initrd_len, const char *cmdline)
->> +{
->> +	int chosen_node, ret;
->> +
->> +	/* Remove memory reservation for the current device tree. */
->> +	ret = delete_fdt_mem_rsv(fdt, __pa(initial_boot_params),
->> +				 fdt_totalsize(initial_boot_params));
->> +	if (ret == 0)
->> +		pr_debug("Removed old device tree reservation.\n");
->> +	else if (ret != -ENOENT) {
->> +		pr_err("Failed to remove old device-tree reservation.\n");
->> +		return ret;
->> +	}
->> +
->> +	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len,
->> +			    cmdline, &chosen_node);
->> +	if (ret)
->> +		return ret;
->> +
->> +	ret = fdt_setprop(fdt, chosen_node, "linux,booted-from-kexec", NULL, 0);
->> +	if (ret)
->> +		pr_err("Failed to update device-tree with linux,booted-from-kexec\n");
->> +
->> +	return ret;
->> +}
-> 
-> For setup_purgatory_ppc64() you start with an empty function and build
-> from there, but for setup_new_fdt_ppc64() you moved some code here. Is
-> the code above 64 bit specific?
-
-Actually, I was not quiet sure if fdt updates like in patch 6 & patch 9 can be
-done after setup_ima_buffer() call. If you can confirm, I will move them back
-to setup_purgatory()
-
-Thanks
-Hari
 
 _______________________________________________
 kexec mailing list
