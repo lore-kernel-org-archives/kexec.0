@@ -2,20 +2,18 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
  helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwHpc-0006fZ-1e
- for kexec@lists.infradead.org; Fri, 17 Jul 2020 04:18:44 +0000
-Subject: Re: [PATCH v3 06/12] ppc64/kexec_file: restrict memory usage of kdump
- kernel
+ id 1jwI3p-0001Jr-H5
+ for kexec@lists.infradead.org; Fri, 17 Jul 2020 04:33:26 +0000
+Subject: Re: [PATCH v3 03/12] powerpc/kexec_file: add helper functions for
+ getting memory ranges
 References: <159466074408.24747.10036072269371204890.stgit@hbathini.in.ibm.com>
- <159466091925.24747.6840028682768745598.stgit@hbathini.in.ibm.com>
- <87365s9ysj.fsf@morokweng.localdomain>
- <baa29ea9-7698-a7e8-e5a4-c9f842e1fcc8@linux.ibm.com>
- <875zance3n.fsf@morokweng.localdomain>
+ <159466087136.24747.16494497863685481495.stgit@hbathini.in.ibm.com>
+ <874kq98xo4.fsf@morokweng.localdomain>
 From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <f1e6f1d4-5052-ce6a-747f-bb821987b75a@linux.ibm.com>
-Date: Fri, 17 Jul 2020 09:47:25 +0530
+Message-ID: <0684ed3d-0dde-8dce-f12c-72ef86bc91f9@linux.ibm.com>
+Date: Fri, 17 Jul 2020 10:02:00 +0530
 MIME-Version: 1.0
-In-Reply-To: <875zance3n.fsf@morokweng.localdomain>
+In-Reply-To: <874kq98xo4.fsf@morokweng.localdomain>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -34,36 +32,67 @@ Cc: Pingfan Liu <piliu@redhat.com>, Petr Tesarik <ptesarik@suse.cz>, Nayna Jain 
 
 
 
-On 17/07/20 3:33 am, Thiago Jung Bauermann wrote:
+On 15/07/20 5:19 am, Thiago Jung Bauermann wrote:
+> 
+> Hello Hari,
 > 
 > Hari Bathini <hbathini@linux.ibm.com> writes:
 > 
->> On 16/07/20 4:22 am, Thiago Jung Bauermann wrote:
->>>
->>> Hari Bathini <hbathini@linux.ibm.com> writes:
->>>
+>> In kexec case, the kernel to be loaded uses the same memory layout as
+>> the running kernel. So, passing on the DT of the running kernel would
+>> be good enough.
+>>
+>> But in case of kdump, different memory ranges are needed to manage
+>> loading the kdump kernel, booting into it and exporting the elfcore
+>> of the crashing kernel. The ranges are exlude memory ranges, usable
+> 
+> s/exlude/exclude/
+> 
+>> memory ranges, reserved memory ranges and crash memory ranges.
+>>
+>> Exclude memory ranges specify the list of memory ranges to avoid while
+>> loading kdump segments. Usable memory ranges list the memory ranges
+>> that could be used for booting kdump kernel. Reserved memory ranges
+>> list the memory regions for the loading kernel's reserve map. Crash
+>> memory ranges list the memory ranges to be exported as the crashing
+>> kernel's elfcore.
+>>
+>> Add helper functions for setting up the above mentioned memory ranges.
+>> This helpers facilitate in understanding the subsequent changes better
+>> and make it easy to setup the different memory ranges listed above, as
+>> and when appropriate.
+>>
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>> Tested-by: Pingfan Liu <piliu@redhat.com>
+> 
 
 <snip>
- 
->>>> +	 * each representing a memory range.
->>>> +	 */
->>>> +	ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
->>>> +
->>>> +	for (i = 0; i < ranges; i++) {
->>>> +		base = of_read_number(prop, n_mem_addr_cells);
->>>> +		prop += n_mem_addr_cells;
->>>> +		end = base + of_read_number(prop, n_mem_size_cells) - 1;
->>
->> prop is not used after the above.
->>
->>> You need to `prop += n_mem_size_cells` here.
->>
->> But yeah, adding it would make it look complete in some sense..
-> 
-> Isn't it used in the next iteration of the loop?
 
-Memory@XXX/reg typically has only one range. I was looking at it
-from that perspective which is not right. Will update.
+>> +/**
+>> + * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
+>> + *                       to the given memory ranges list.
+>> + * @mem_ranges:          Range list to add the memory ranges to.
+>> + *
+>> + * Returns 0 on success, negative errno on error.
+>> + */
+>> +int add_reserved_ranges(struct crash_mem **mem_ranges)
+>> +{
+>> +	int i, len, ret = 0;
+>> +	const __be32 *prop;
+>> +
+>> +	prop = of_get_property(of_root, "reserved-ranges", &len);
+>> +	if (!prop)
+>> +		return 0;
+>> +
+>> +	/*
+>> +	 * Each reserved range is an (address,size) pair, 2 cells each,
+>> +	 * totalling 4 cells per range.
+> 
+> Can you assume that, or do you need to check the #address-cells and
+> #size-cells properties of the root node?
+
+Taken from early_reserve_mem_dt() which did not seem to care.
+Should we be doing any different here?
 
 Thanks
 Hari
