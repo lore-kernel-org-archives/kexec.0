@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwa65-0007Zh-HG
- for kexec@lists.infradead.org; Fri, 17 Jul 2020 23:48:59 +0000
+ id 1jwa65-0007aU-Pv
+ for kexec@lists.infradead.org; Fri, 17 Jul 2020 23:49:01 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH 0/4] printk: reimplement LOG_CONT handling
-Date: Sat, 18 Jul 2020 01:54:14 +0206
-Message-Id: <20200717234818.8622-1-john.ogness@linutronix.de>
+Subject: [PATCH 4/4] ipconfig: cleanup printk usage
+Date: Sat, 18 Jul 2020 01:54:18 +0206
+Message-Id: <20200717234818.8622-5-john.ogness@linutronix.de>
+In-Reply-To: <20200717234818.8622-1-john.ogness@linutronix.de>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,63 +25,74 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hello,
+The use of pr_info() and pr_cont() was not ordered correctly for
+all cases. Order it so that all cases provide the expected output.
 
-Here is the second series to rework the printk subsystem. This series
-removes LOG_CONT handling from printk() callers, storing all LOG_CONT
-parts individually in the ringbuffer. With this series, LOG_CONT
-handling is moved to the ringbuffer readers that provide the record
-contents to users (console printing, syslog, /dev/kmsg).
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+---
+ net/ipv4/ipconfig.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
 
-This change is necessary in order to support the upcoming move to a
-fully lockless printk() implementation.
-
-This series is in line with the agreements [0] made at the meeting
-during LPC2019 in Lisbon, with 1 exception: For the /dev/kmsg
-interface, empty line placeholder records are reported for the
-LOG_CONT parts.
-
-Using placeholders avoids tools such as systemd-journald from
-erroneously reporting missed messages. However, it also means that
-empty placeholder records are visible in systemd-journald logs and
-displayed in tools such as dmesg.
-
-The effect can be easily observed with the sysrq help:
-
-$ echo h | sudo tee /proc/sysrq-trigger
-$ sudo dmesg | tail -n 30
-$ sudo journalctl -k -n 30
-
-Providing the placeholder entries allows a userspace tool to identify
-if records were actually lost. IMHO this an important feature. Its
-side effect can be addressed by userspace tools if they change to
-silently consume empty records.
-
-For dump tools that process the ringbuffer directly (such as crash,
-makedumpfile, kexec-tools), they will need to implement LOG_CONT
-handling if they want to present clean continuous line messages.
-
-Finally, by moving LOG_CONT handling from writers to readers, some
-incorrect pr_cont() usage is revealed. Patch 4 of this series
-addresses one such example.
-
-This series is based on the printk git tree [1] printk-rework branch.
-
-[0] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git (printk-rework branch)
-
-John Ogness (4):
-  printk: ringbuffer: support dataless records
-  printk: store instead of processing cont parts
-  printk: process cont records during reading
-  ipconfig: cleanup printk usage
-
- kernel/printk/printk.c            | 569 ++++++++++++++++++++----------
- kernel/printk/printk_ringbuffer.c |  58 ++-
- kernel/printk/printk_ringbuffer.h |  15 +-
- net/ipv4/ipconfig.c               |  25 +-
- 4 files changed, 434 insertions(+), 233 deletions(-)
-
+diff --git a/net/ipv4/ipconfig.c b/net/ipv4/ipconfig.c
+index 561f15b5a944..0f4bd7a59310 100644
+--- a/net/ipv4/ipconfig.c
++++ b/net/ipv4/ipconfig.c
+@@ -1442,6 +1442,9 @@ static int __init ip_auto_config(void)
+ #endif
+ 	int err;
+ 	unsigned int i;
++#ifndef IPCONFIG_SILENT
++	bool pr0;
++#endif
+ 
+ 	/* Initialise all name servers and NTP servers to NONE (but only if the
+ 	 * "ip=" or "nfsaddrs=" kernel command line parameters weren't decoded,
+@@ -1575,31 +1578,37 @@ static int __init ip_auto_config(void)
+ 	if (ic_dev_mtu)
+ 		pr_cont(", mtu=%d", ic_dev_mtu);
+ 	/* Name servers (if any): */
++	pr0 = false;
+ 	for (i = 0; i < CONF_NAMESERVERS_MAX; i++) {
+ 		if (ic_nameservers[i] != NONE) {
+-			if (i == 0)
++			if (!pr0) {
+ 				pr_info("     nameserver%u=%pI4",
+ 					i, &ic_nameservers[i]);
+-			else
++				pr0 = true;
++			} else {
+ 				pr_cont(", nameserver%u=%pI4",
+ 					i, &ic_nameservers[i]);
++			}
+ 		}
+-		if (i + 1 == CONF_NAMESERVERS_MAX)
+-			pr_cont("\n");
+ 	}
++	if (pr0)
++		pr_cont("\n");
+ 	/* NTP servers (if any): */
++	pr0 = false;
+ 	for (i = 0; i < CONF_NTP_SERVERS_MAX; i++) {
+ 		if (ic_ntp_servers[i] != NONE) {
+-			if (i == 0)
++			if (!pr0) {
+ 				pr_info("     ntpserver%u=%pI4",
+ 					i, &ic_ntp_servers[i]);
+-			else
++				pr0 = true;
++			} else {
+ 				pr_cont(", ntpserver%u=%pI4",
+ 					i, &ic_ntp_servers[i]);
++			}
+ 		}
+-		if (i + 1 == CONF_NTP_SERVERS_MAX)
+-			pr_cont("\n");
+ 	}
++	if (pr0)
++		pr_cont("\n");
+ #endif /* !SILENT */
+ 
+ 	/*
 -- 
 2.20.1
 
