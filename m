@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x442.google.com ([2607:f8b0:4864:20::442])
+Received: from mail-pj1-x1043.google.com ([2607:f8b0:4864:20::1043])
  by casper.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwUOH-0002kT-7U
- for kexec@lists.infradead.org; Fri, 17 Jul 2020 17:43:43 +0000
-Received: by mail-pf1-x442.google.com with SMTP id 1so5750251pfn.9
- for <kexec@lists.infradead.org>; Fri, 17 Jul 2020 10:43:20 -0700 (PDT)
+ id 1jwUOJ-0002ki-GX
+ for kexec@lists.infradead.org; Fri, 17 Jul 2020 17:43:45 +0000
+Received: by mail-pj1-x1043.google.com with SMTP id a9so1248698pjd.3
+ for <kexec@lists.infradead.org>; Fri, 17 Jul 2020 10:43:21 -0700 (PDT)
 From: Kees Cook <keescook@chromium.org>
-Subject: [PATCH 04/13] fs/kernel_read_file: Split into separate include file
-Date: Fri, 17 Jul 2020 10:42:59 -0700
-Message-Id: <20200717174309.1164575-5-keescook@chromium.org>
+Subject: [PATCH 05/13] fs/kernel_read_file: Split into separate source file
+Date: Fri, 17 Jul 2020 10:43:00 -0700
+Message-Id: <20200717174309.1164575-6-keescook@chromium.org>
 In-Reply-To: <20200717174309.1164575-1-keescook@chromium.org>
 References: <20200717174309.1164575-1-keescook@chromium.org>
 MIME-Version: 1.0
@@ -25,301 +25,321 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Scott Branden <scott.branden@broadcom.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <stephen.boyd@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Peter Jones <pjones@redhat.com>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Christoph Hellwig <hch@lst.de>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Matthew Wilcox <willy@infradead.org>, KP Singh <kpsingh@google.com>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-integrity@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <stephen.boyd@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Peter Jones <pjones@redhat.com>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Matthew Wilcox <willy@infradead.org>, KP Singh <kpsingh@google.com>, "Serge E. Hallyn" <serge@hallyn.com>, Kees Cook <keescook@chromium.org>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-integrity@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-From: Scott Branden <scott.branden@broadcom.com>
+These routines are used in places outside of exec(2), so in preparation
+for refactoring them, move them into a separate source file,
+fs/kernel_read_file.c.
 
-Move kernel_read_file* out of linux/fs.h to its own linux/kernel_read_file.h
-include file. That header gets pulled in just about everywhere
-and doesn't really need functions not related to the general fs interface.
-
-Suggested-by: Christoph Hellwig <hch@lst.de>
-Signed-off-by: Scott Branden <scott.branden@broadcom.com>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Link: https://lore.kernel.org/r/20200706232309.12010-2-scott.branden@broadcom.com
 Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
- drivers/base/firmware_loader/main.c |  1 +
- fs/exec.c                           |  1 +
- include/linux/fs.h                  | 38 ---------------------
- include/linux/ima.h                 |  1 +
- include/linux/kernel_read_file.h    | 51 +++++++++++++++++++++++++++++
- include/linux/security.h            |  1 +
- kernel/kexec_file.c                 |  1 +
- kernel/module.c                     |  1 +
- security/integrity/digsig.c         |  1 +
- security/integrity/ima/ima_fs.c     |  1 +
- security/integrity/ima/ima_main.c   |  1 +
- security/integrity/ima/ima_policy.c |  1 +
- security/loadpin/loadpin.c          |  1 +
- security/security.c                 |  1 +
- security/selinux/hooks.c            |  1 +
- 15 files changed, 64 insertions(+), 38 deletions(-)
- create mode 100644 include/linux/kernel_read_file.h
+ fs/Makefile           |   3 +-
+ fs/exec.c             | 132 ----------------------------------------
+ fs/kernel_read_file.c | 138 ++++++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 140 insertions(+), 133 deletions(-)
+ create mode 100644 fs/kernel_read_file.c
 
-diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
-index c2f57cedcd6f..d4a413ea48ce 100644
---- a/drivers/base/firmware_loader/main.c
-+++ b/drivers/base/firmware_loader/main.c
-@@ -12,6 +12,7 @@
+diff --git a/fs/Makefile b/fs/Makefile
+index 2ce5112b02c8..a05fc247b2a7 100644
+--- a/fs/Makefile
++++ b/fs/Makefile
+@@ -13,7 +13,8 @@ obj-y :=	open.o read_write.o file_table.o super.o \
+ 		seq_file.o xattr.o libfs.o fs-writeback.o \
+ 		pnode.o splice.o sync.o utimes.o d_path.o \
+ 		stack.o fs_struct.o statfs.o fs_pin.o nsfs.o \
+-		fs_types.o fs_context.o fs_parser.o fsopen.o
++		fs_types.o fs_context.o fs_parser.o fsopen.o \
++		kernel_read_file.o
  
- #include <linux/capability.h>
- #include <linux/device.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/module.h>
- #include <linux/init.h>
- #include <linux/timer.h>
+ ifeq ($(CONFIG_BLOCK),y)
+ obj-y +=	buffer.o block_dev.o direct-io.o mpage.o
 diff --git a/fs/exec.c b/fs/exec.c
-index 2bf549757ce7..07a7fe9ac5be 100644
+index 07a7fe9ac5be..d619b79aab30 100644
 --- a/fs/exec.c
 +++ b/fs/exec.c
-@@ -23,6 +23,7 @@
-  * formats.
-  */
+@@ -923,138 +923,6 @@ struct file *open_exec(const char *name)
+ }
+ EXPORT_SYMBOL(open_exec);
  
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/file.h>
- #include <linux/fdtable.h>
-diff --git a/include/linux/fs.h b/include/linux/fs.h
-index f50a35d54a61..11dd6cc7de58 100644
---- a/include/linux/fs.h
-+++ b/include/linux/fs.h
-@@ -2993,44 +2993,6 @@ static inline void i_readcount_inc(struct inode *inode)
- #endif
- extern int do_pipe_flags(int *, int);
- 
--/* This is a list of *what* is being read, not *how* nor *where*. */
--#define __kernel_read_file_id(id) \
--	id(UNKNOWN, unknown)		\
--	id(FIRMWARE, firmware)		\
--	id(MODULE, kernel-module)		\
--	id(KEXEC_IMAGE, kexec-image)		\
--	id(KEXEC_INITRAMFS, kexec-initramfs)	\
--	id(POLICY, security-policy)		\
--	id(X509_CERTIFICATE, x509-certificate)	\
--	id(MAX_ID, )
--
--#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
--#define __fid_stringify(dummy, str) #str,
--
--enum kernel_read_file_id {
--	__kernel_read_file_id(__fid_enumify)
--};
--
--static const char * const kernel_read_file_str[] = {
--	__kernel_read_file_id(__fid_stringify)
--};
--
--static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+-int kernel_read_file(struct file *file, void **buf, loff_t *size,
+-		     loff_t max_size, enum kernel_read_file_id id)
 -{
--	if ((unsigned)id >= READING_MAX_ID)
--		return kernel_read_file_str[READING_UNKNOWN];
+-	loff_t i_size, pos;
+-	ssize_t bytes = 0;
+-	void *allocated = NULL;
+-	int ret;
 -
--	return kernel_read_file_str[id];
+-	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
+-		return -EINVAL;
+-
+-	ret = deny_write_access(file);
+-	if (ret)
+-		return ret;
+-
+-	ret = security_kernel_read_file(file, id);
+-	if (ret)
+-		goto out;
+-
+-	i_size = i_size_read(file_inode(file));
+-	if (i_size <= 0) {
+-		ret = -EINVAL;
+-		goto out;
+-	}
+-	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
+-		ret = -EFBIG;
+-		goto out;
+-	}
+-
+-	if (!*buf)
+-		*buf = allocated = vmalloc(i_size);
+-	if (!*buf) {
+-		ret = -ENOMEM;
+-		goto out;
+-	}
+-
+-	pos = 0;
+-	while (pos < i_size) {
+-		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
+-		if (bytes < 0) {
+-			ret = bytes;
+-			goto out_free;
+-		}
+-
+-		if (bytes == 0)
+-			break;
+-	}
+-
+-	if (pos != i_size) {
+-		ret = -EIO;
+-		goto out_free;
+-	}
+-
+-	ret = security_kernel_post_read_file(file, *buf, i_size, id);
+-	if (!ret)
+-		*size = pos;
+-
+-out_free:
+-	if (ret < 0) {
+-		if (allocated) {
+-			vfree(*buf);
+-			*buf = NULL;
+-		}
+-	}
+-
+-out:
+-	allow_write_access(file);
+-	return ret;
 -}
+-EXPORT_SYMBOL_GPL(kernel_read_file);
 -
--extern int kernel_read_file(struct file *, void **, loff_t *, loff_t,
--			    enum kernel_read_file_id);
--extern int kernel_read_file_from_path(const char *, void **, loff_t *, loff_t,
--				      enum kernel_read_file_id);
--extern int kernel_read_file_from_path_initns(const char *, void **, loff_t *, loff_t,
--					     enum kernel_read_file_id);
--extern int kernel_read_file_from_fd(int, void **, loff_t *, loff_t,
--				    enum kernel_read_file_id);
- extern ssize_t kernel_read(struct file *, void *, size_t, loff_t *);
- extern ssize_t kernel_write(struct file *, const void *, size_t, loff_t *);
- extern ssize_t __kernel_write(struct file *, const void *, size_t, loff_t *);
-diff --git a/include/linux/ima.h b/include/linux/ima.h
-index 9164e1534ec9..148636bfcc8f 100644
---- a/include/linux/ima.h
-+++ b/include/linux/ima.h
-@@ -7,6 +7,7 @@
- #ifndef _LINUX_IMA_H
- #define _LINUX_IMA_H
- 
-+#include <linux/kernel_read_file.h>
- #include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/kexec.h>
-diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+-int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
+-			       loff_t max_size, enum kernel_read_file_id id)
+-{
+-	struct file *file;
+-	int ret;
+-
+-	if (!path || !*path)
+-		return -EINVAL;
+-
+-	file = filp_open(path, O_RDONLY, 0);
+-	if (IS_ERR(file))
+-		return PTR_ERR(file);
+-
+-	ret = kernel_read_file(file, buf, size, max_size, id);
+-	fput(file);
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+-
+-int kernel_read_file_from_path_initns(const char *path, void **buf,
+-				      loff_t *size, loff_t max_size,
+-				      enum kernel_read_file_id id)
+-{
+-	struct file *file;
+-	struct path root;
+-	int ret;
+-
+-	if (!path || !*path)
+-		return -EINVAL;
+-
+-	task_lock(&init_task);
+-	get_fs_root(init_task.fs, &root);
+-	task_unlock(&init_task);
+-
+-	file = file_open_root(root.dentry, root.mnt, path, O_RDONLY, 0);
+-	path_put(&root);
+-	if (IS_ERR(file))
+-		return PTR_ERR(file);
+-
+-	ret = kernel_read_file(file, buf, size, max_size, id);
+-	fput(file);
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+-
+-int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
+-			     enum kernel_read_file_id id)
+-{
+-	struct fd f = fdget(fd);
+-	int ret = -EBADF;
+-
+-	if (!f.file)
+-		goto out;
+-
+-	ret = kernel_read_file(f.file, buf, size, max_size, id);
+-out:
+-	fdput(f);
+-	return ret;
+-}
+-EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
+-
+ #if defined(CONFIG_HAVE_AOUT) || defined(CONFIG_BINFMT_FLAT) || \
+     defined(CONFIG_BINFMT_ELF_FDPIC)
+ ssize_t read_code(struct file *file, unsigned long addr, loff_t pos, size_t len)
+diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
 new file mode 100644
-index 000000000000..78cf3d7dc835
+index 000000000000..54d972d4befc
 --- /dev/null
-+++ b/include/linux/kernel_read_file.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_KERNEL_READ_FILE_H
-+#define _LINUX_KERNEL_READ_FILE_H
++++ b/fs/kernel_read_file.c
+@@ -0,0 +1,138 @@
++// SPDX-License-Identifier: GPL-2.0-only
++#include <linux/fs.h>
++#include <linux/fs_struct.h>
++#include <linux/kernel_read_file.h>
++#include <linux/security.h>
++#include <linux/vmalloc.h>
 +
-+#include <linux/file.h>
-+#include <linux/types.h>
-+
-+/* This is a list of *what* is being read, not *how* nor *where*. */
-+#define __kernel_read_file_id(id) \
-+	id(UNKNOWN, unknown)		\
-+	id(FIRMWARE, firmware)		\
-+	id(MODULE, kernel-module)		\
-+	id(KEXEC_IMAGE, kexec-image)		\
-+	id(KEXEC_INITRAMFS, kexec-initramfs)	\
-+	id(POLICY, security-policy)		\
-+	id(X509_CERTIFICATE, x509-certificate)	\
-+	id(MAX_ID, )
-+
-+#define __fid_enumify(ENUM, dummy) READING_ ## ENUM,
-+#define __fid_stringify(dummy, str) #str,
-+
-+enum kernel_read_file_id {
-+	__kernel_read_file_id(__fid_enumify)
-+};
-+
-+static const char * const kernel_read_file_str[] = {
-+	__kernel_read_file_id(__fid_stringify)
-+};
-+
-+static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
++int kernel_read_file(struct file *file, void **buf, loff_t *size,
++		     loff_t max_size, enum kernel_read_file_id id)
 +{
-+	if ((unsigned int)id >= READING_MAX_ID)
-+		return kernel_read_file_str[READING_UNKNOWN];
++	loff_t i_size, pos;
++	ssize_t bytes = 0;
++	void *allocated = NULL;
++	int ret;
 +
-+	return kernel_read_file_str[id];
++	if (!S_ISREG(file_inode(file)->i_mode) || max_size < 0)
++		return -EINVAL;
++
++	ret = deny_write_access(file);
++	if (ret)
++		return ret;
++
++	ret = security_kernel_read_file(file, id);
++	if (ret)
++		goto out;
++
++	i_size = i_size_read(file_inode(file));
++	if (i_size <= 0) {
++		ret = -EINVAL;
++		goto out;
++	}
++	if (i_size > SIZE_MAX || (max_size > 0 && i_size > max_size)) {
++		ret = -EFBIG;
++		goto out;
++	}
++
++	if (!*buf)
++		*buf = allocated = vmalloc(i_size);
++	if (!*buf) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	pos = 0;
++	while (pos < i_size) {
++		bytes = kernel_read(file, *buf + pos, i_size - pos, &pos);
++		if (bytes < 0) {
++			ret = bytes;
++			goto out_free;
++		}
++
++		if (bytes == 0)
++			break;
++	}
++
++	if (pos != i_size) {
++		ret = -EIO;
++		goto out_free;
++	}
++
++	ret = security_kernel_post_read_file(file, *buf, i_size, id);
++	if (!ret)
++		*size = pos;
++
++out_free:
++	if (ret < 0) {
++		if (allocated) {
++			vfree(*buf);
++			*buf = NULL;
++		}
++	}
++
++out:
++	allow_write_access(file);
++	return ret;
 +}
++EXPORT_SYMBOL_GPL(kernel_read_file);
 +
-+int kernel_read_file(struct file *file,
-+		     void **buf, loff_t *size, loff_t max_size,
-+		     enum kernel_read_file_id id);
-+int kernel_read_file_from_path(const char *path,
-+			       void **buf, loff_t *size, loff_t max_size,
-+			       enum kernel_read_file_id id);
-+int kernel_read_file_from_path_initns(const char *path,
-+				      void **buf, loff_t *size, loff_t max_size,
-+				      enum kernel_read_file_id id);
-+int kernel_read_file_from_fd(int fd,
-+			     void **buf, loff_t *size, loff_t max_size,
-+			     enum kernel_read_file_id id);
++int kernel_read_file_from_path(const char *path, void **buf, loff_t *size,
++			       loff_t max_size, enum kernel_read_file_id id)
++{
++	struct file *file;
++	int ret;
 +
-+#endif /* _LINUX_KERNEL_READ_FILE_H */
-diff --git a/include/linux/security.h b/include/linux/security.h
-index 0a0a03b36a3b..42df0d9b4c37 100644
---- a/include/linux/security.h
-+++ b/include/linux/security.h
-@@ -23,6 +23,7 @@
- #ifndef __LINUX_SECURITY_H
- #define __LINUX_SECURITY_H
- 
-+#include <linux/kernel_read_file.h>
- #include <linux/key.h>
- #include <linux/capability.h>
- #include <linux/fs.h>
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 09cc78df53c6..1358069ce9e9 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -24,6 +24,7 @@
- #include <linux/elf.h>
- #include <linux/elfcore.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include "kexec_internal.h"
-diff --git a/kernel/module.c b/kernel/module.c
-index 26105148f4d2..e9765803601b 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -18,6 +18,7 @@
- #include <linux/fs.h>
- #include <linux/sysfs.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/vmalloc.h>
- #include <linux/elf.h>
-diff --git a/security/integrity/digsig.c b/security/integrity/digsig.c
-index ac02b7632353..f8869be45d8f 100644
---- a/security/integrity/digsig.c
-+++ b/security/integrity/digsig.c
-@@ -10,6 +10,7 @@
- #include <linux/sched.h>
- #include <linux/slab.h>
- #include <linux/cred.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/key-type.h>
- #include <linux/digsig.h>
- #include <linux/vmalloc.h>
-diff --git a/security/integrity/ima/ima_fs.c b/security/integrity/ima/ima_fs.c
-index 15a44c5022f7..e13ffece3726 100644
---- a/security/integrity/ima/ima_fs.c
-+++ b/security/integrity/ima/ima_fs.c
-@@ -13,6 +13,7 @@
-  */
- 
- #include <linux/fcntl.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/slab.h>
- #include <linux/init.h>
- #include <linux/seq_file.h>
-diff --git a/security/integrity/ima/ima_main.c b/security/integrity/ima/ima_main.c
-index f80ee4ce4669..dab4a13221cf 100644
---- a/security/integrity/ima/ima_main.c
-+++ b/security/integrity/ima/ima_main.c
-@@ -18,6 +18,7 @@
- #include <linux/module.h>
- #include <linux/file.h>
- #include <linux/binfmts.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/mount.h>
- #include <linux/mman.h>
- #include <linux/slab.h>
-diff --git a/security/integrity/ima/ima_policy.c b/security/integrity/ima/ima_policy.c
-index e493063a3c34..f8390f6081f0 100644
---- a/security/integrity/ima/ima_policy.c
-+++ b/security/integrity/ima/ima_policy.c
-@@ -9,6 +9,7 @@
- 
- #include <linux/init.h>
- #include <linux/list.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/fs.h>
- #include <linux/security.h>
- #include <linux/magic.h>
-diff --git a/security/loadpin/loadpin.c b/security/loadpin/loadpin.c
-index ee5cb944f4ad..81bc95127f92 100644
---- a/security/loadpin/loadpin.c
-+++ b/security/loadpin/loadpin.c
-@@ -11,6 +11,7 @@
- 
- #include <linux/module.h>
- #include <linux/fs.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/lsm_hooks.h>
- #include <linux/mount.h>
- #include <linux/path.h>
-diff --git a/security/security.c b/security/security.c
-index 0ce3e73edd42..f5920115a325 100644
---- a/security/security.c
-+++ b/security/security.c
-@@ -16,6 +16,7 @@
- #include <linux/export.h>
- #include <linux/init.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/lsm_hooks.h>
- #include <linux/integrity.h>
- #include <linux/ima.h>
-diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-index efa6108b1ce9..5de45010fb1a 100644
---- a/security/selinux/hooks.c
-+++ b/security/selinux/hooks.c
-@@ -24,6 +24,7 @@
- #include <linux/init.h>
- #include <linux/kd.h>
- #include <linux/kernel.h>
-+#include <linux/kernel_read_file.h>
- #include <linux/tracehook.h>
- #include <linux/errno.h>
- #include <linux/sched/signal.h>
++	if (!path || !*path)
++		return -EINVAL;
++
++	file = filp_open(path, O_RDONLY, 0);
++	if (IS_ERR(file))
++		return PTR_ERR(file);
++
++	ret = kernel_read_file(file, buf, size, max_size, id);
++	fput(file);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
++
++int kernel_read_file_from_path_initns(const char *path, void **buf,
++				      loff_t *size, loff_t max_size,
++				      enum kernel_read_file_id id)
++{
++	struct file *file;
++	struct path root;
++	int ret;
++
++	if (!path || !*path)
++		return -EINVAL;
++
++	task_lock(&init_task);
++	get_fs_root(init_task.fs, &root);
++	task_unlock(&init_task);
++
++	file = file_open_root(root.dentry, root.mnt, path, O_RDONLY, 0);
++	path_put(&root);
++	if (IS_ERR(file))
++		return PTR_ERR(file);
++
++	ret = kernel_read_file(file, buf, size, max_size, id);
++	fput(file);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
++
++int kernel_read_file_from_fd(int fd, void **buf, loff_t *size, loff_t max_size,
++			     enum kernel_read_file_id id)
++{
++	struct fd f = fdget(fd);
++	int ret = -EBADF;
++
++	if (!f.file)
++		goto out;
++
++	ret = kernel_read_file(f.file, buf, size, max_size, id);
++out:
++	fdput(f);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(kernel_read_file_from_fd);
 -- 
 2.25.1
 
