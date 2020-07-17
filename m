@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x642.google.com ([2607:f8b0:4864:20::642])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwYYq-0003fJ-M5
- for kexec@lists.infradead.org; Fri, 17 Jul 2020 22:10:34 +0000
-Received: by mail-pl1-x642.google.com with SMTP id x9so6006438plr.2
- for <kexec@lists.infradead.org>; Fri, 17 Jul 2020 15:10:32 -0700 (PDT)
-Date: Fri, 17 Jul 2020 15:10:28 -0700
-From: Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH 00/13] Introduce partial kernel_read_file() support
-Message-ID: <202007171506.CCE3902A9@keescook>
-References: <20200717174309.1164575-1-keescook@chromium.org>
- <8de85fc3-9f31-fc59-abc1-29f43fb90988@broadcom.com>
+ id 1jwa65-0007Zh-HG
+ for kexec@lists.infradead.org; Fri, 17 Jul 2020 23:48:59 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH 0/4] printk: reimplement LOG_CONT handling
+Date: Sat, 18 Jul 2020 01:54:14 +0206
+Message-Id: <20200717234818.8622-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <8de85fc3-9f31-fc59-abc1-29f43fb90988@broadcom.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +16,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Scott Branden <scott.branden@broadcom.com>
-Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <stephen.boyd@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Peter Jones <pjones@redhat.com>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Matthew Wilcox <willy@infradead.org>, KP Singh <kpsingh@google.com>, "Serge E. Hallyn" <serge@hallyn.com>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-integrity@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri, Jul 17, 2020 at 12:17:02PM -0700, Scott Branden wrote:
-> Thanks for sending out.=A0 This looks different than your other patch ser=
-ies.
+Hello,
 
-Yes, it mutated in my head as I considered how all of this should hang
-together, which is why I wanted to get it sent before the weekend. I'm
-still trying to figure out why the fireware testsuite fails for me, etc.
+Here is the second series to rework the printk subsystem. This series
+removes LOG_CONT handling from printk() callers, storing all LOG_CONT
+parts individually in the ringbuffer. With this series, LOG_CONT
+handling is moved to the ringbuffer readers that provide the record
+contents to users (console printing, syslog, /dev/kmsg).
 
-> We should get the first 5 patches accepted now though as they are
-> simple cleanups and fixes.=A0 That will reduce the number of outstanding
-> patches in the series.
+This change is necessary in order to support the upcoming move to a
+fully lockless printk() implementation.
 
-Agreed. I'd like to get some more eyes on it, but I can get it ready for
--next.
+This series is in line with the agreements [0] made at the meeting
+during LPC2019 in Lisbon, with 1 exception: For the /dev/kmsg
+interface, empty line placeholder records are reported for the
+LOG_CONT parts.
 
-> At first glance the issue with the changes after that is the existing
-> API assumes it has read the whole file and failed if it did not.
-> Now, if the file is larger than the amount requested there is no indicati=
-on?
+Using placeholders avoids tools such as systemd-journald from
+erroneously reporting missed messages. However, it also means that
+empty placeholder records are visible in systemd-journald logs and
+displayed in tools such as dmesg.
 
-The intention is to have old API users unchanged and new users can use
-a pre-allocated buf (with buf_size) along with file_size to examine
-their partial read progress. If I broke the old API, that's a bug and I
-need to fix it, but that's why I wanted to start with the firmware test
-suite (basic things like module loading work fine after this series, but
-I wanted to really exercise the corners that the firmware suite pokes
-at).
+The effect can be easily observed with the sysrq help:
 
--- =
+$ echo h | sudo tee /proc/sysrq-trigger
+$ sudo dmesg | tail -n 30
+$ sudo journalctl -k -n 30
 
-Kees Cook
+Providing the placeholder entries allows a userspace tool to identify
+if records were actually lost. IMHO this an important feature. Its
+side effect can be addressed by userspace tools if they change to
+silently consume empty records.
+
+For dump tools that process the ringbuffer directly (such as crash,
+makedumpfile, kexec-tools), they will need to implement LOG_CONT
+handling if they want to present clean continuous line messages.
+
+Finally, by moving LOG_CONT handling from writers to readers, some
+incorrect pr_cont() usage is revealed. Patch 4 of this series
+addresses one such example.
+
+This series is based on the printk git tree [1] printk-rework branch.
+
+[0] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/printk/linux.git (printk-rework branch)
+
+John Ogness (4):
+  printk: ringbuffer: support dataless records
+  printk: store instead of processing cont parts
+  printk: process cont records during reading
+  ipconfig: cleanup printk usage
+
+ kernel/printk/printk.c            | 569 ++++++++++++++++++++----------
+ kernel/printk/printk_ringbuffer.c |  58 ++-
+ kernel/printk/printk_ringbuffer.h |  15 +-
+ net/ipv4/ipconfig.c               |  25 +-
+ 4 files changed, 434 insertions(+), 233 deletions(-)
+
+-- 
+2.20.1
+
 
 _______________________________________________
 kexec mailing list
