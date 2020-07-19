@@ -1,27 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-x241.google.com ([2a00:1450:4864:20::241])
+Received: from mail-pl1-x642.google.com ([2607:f8b0:4864:20::642])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jwqrH-0003S3-Vo
- for kexec@lists.infradead.org; Sat, 18 Jul 2020 17:42:48 +0000
-Received: by mail-lj1-x241.google.com with SMTP id q4so16165517lji.2
- for <kexec@lists.infradead.org>; Sat, 18 Jul 2020 10:42:47 -0700 (PDT)
-Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com.
- [209.85.167.43])
- by smtp.gmail.com with ESMTPSA id r9sm1253189lfc.51.2020.07.18.10.42.44
- for <kexec@lists.infradead.org>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Sat, 18 Jul 2020 10:42:45 -0700 (PDT)
-Received: by mail-lf1-f43.google.com with SMTP id j21so7729936lfe.6
- for <kexec@lists.infradead.org>; Sat, 18 Jul 2020 10:42:44 -0700 (PDT)
+ id 1jx0ER-0006eE-4k
+ for kexec@lists.infradead.org; Sun, 19 Jul 2020 03:43:20 +0000
+Received: by mail-pl1-x642.google.com with SMTP id q17so7114789pls.9
+ for <kexec@lists.infradead.org>; Sat, 18 Jul 2020 20:43:16 -0700 (PDT)
+Date: Sun, 19 Jul 2020 12:43:12 +0900
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
+Message-ID: <20200719034312.GA566736@jagdpanzerIV.localdomain>
+References: <20200709132344.760-1-john.ogness@linutronix.de>
+ <20200709132344.760-5-john.ogness@linutronix.de>
+ <20200718121053.GA691245@elver.google.com>
 MIME-Version: 1.0
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
-In-Reply-To: <87blkcanps.fsf@jogness.linutronix.de>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Sat, 18 Jul 2020 10:42:28 -0700
-Message-ID: <CAHk-=wgX9Q+en5j8EmYkhxEx8H0EzHhx5WqPGui7KNiV7=ZK-w@mail.gmail.com>
-Subject: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
+Content-Disposition: inline
+In-Reply-To: <20200718121053.GA691245@elver.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,45 +27,26 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Marco Elver <elver@google.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Paul McKenney <paulmck@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Sat, Jul 18, 2020 at 7:43 AM John Ogness <john.ogness@linutronix.de> wrote:
->
-> I expect this is handled correctly since the reader is not given any
-> parts until a full line is ready, but I will put more focus on testing
-> this to make sure.
+Hi Marco,
 
-Yeah, the patches looked fine, but I only scanned them, and just
-wanted to make sure.
+On (20/07/18 14:10), Marco Elver wrote:
+> 
+> It seems this causes a regression observed at least with newline-only
+> printks. I noticed this during -next testing because various debugging
+> tools (K*SAN, lockdep, etc.) use e.g. pr_{err,warn,info}("\n") to format
+> reports.
+> 
+> Without wanting to wait for a report from one of these debugging tools,
+> a simple reproducer is below. Without this patch, the expected newline
+> is printed.
 
-Over the years, we've gotten printk wrong so many times that I get a
-bit paranoid. Things can look fine on the screen, but then have odd
-line breaks in the logs. Or vice versa. Or work fine on some machine,
-but consistently show some race on another.
+Empty/blank lines carry no valuable payload, could you please explain
+why do you consider this to be a regression?
 
-And some of the more complex features are hardly ever actually used -
-I'm not sure the optional message context (aka dictionary) is ever
-actually used.
-
-Yes, all the "dev_printk()" helpers fill it in with the device
-information (create_syslog_header()), and you _can_ use them if you
-know about them (ie
-
-    journalctl -b _KERNEL_SUBSYSTEM=pci_bus
-
-but I sometimes wonder how many people use all this complexity. And
-how many people even know about it..)
-
-So there are hidden things in there that can easily break *subtly* and
-then take ages for people to notice, because while some are very
-obvious indeed ("why is my module list message broken up into a
-hundred lines?") others might be things people aren't even aware of.
-
-Maybe a lot of system tools use those kernel dictionaries. Maybe it
-would break immediately. I just sometimes wonder...
-
-                 Linus
+	-ss
 
 _______________________________________________
 kexec mailing list
