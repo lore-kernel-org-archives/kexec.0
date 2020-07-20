@@ -1,29 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lj1-x242.google.com ([2a00:1450:4864:20::242])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxaZ2-00014t-Dp
- for kexec@lists.infradead.org; Mon, 20 Jul 2020 18:31:01 +0000
-Received: by mail-lj1-x242.google.com with SMTP id x9so21307230ljc.5
- for <kexec@lists.infradead.org>; Mon, 20 Jul 2020 11:30:58 -0700 (PDT)
-Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com.
- [209.85.208.170])
- by smtp.gmail.com with ESMTPSA id j144sm3797753lfj.54.2020.07.20.11.30.53
- for <kexec@lists.infradead.org>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Mon, 20 Jul 2020 11:30:55 -0700 (PDT)
-Received: by mail-lj1-f170.google.com with SMTP id x9so21306945ljc.5
- for <kexec@lists.infradead.org>; Mon, 20 Jul 2020 11:30:53 -0700 (PDT)
-MIME-Version: 1.0
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
-In-Reply-To: <20200720015057.GA463@jagdpanzerIV.localdomain>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Mon, 20 Jul 2020 11:30:36 -0700
-Message-ID: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
+ id 1jxdUc-00027M-Tn
+ for kexec@lists.infradead.org; Mon, 20 Jul 2020 21:38:39 +0000
+Message-ID: <1595281097.5055.79.camel@linux.ibm.com>
+Subject: Re: [PATCH v3 00/12] ima: Fix rule parsing bugs and extend
+ KEXEC_CMDLINE rule support
+From: Mimi Zohar <zohar@linux.ibm.com>
+Date: Mon, 20 Jul 2020 17:38:17 -0400
+In-Reply-To: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+References: <20200709061911.954326-1-tyhicks@linux.microsoft.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,57 +19,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Tyler Hicks <tyhicks@linux.microsoft.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Sasha Levin <sashal@kernel.org>
+Cc: Nayna Jain <nayna@linux.ibm.com>, Janne Karhunen <janne.karhunen@gmail.com>, Prakhar Srivastava <prsriva02@gmail.com>, kexec@lists.infradead.org, James Morris <jmorris@namei.org>, linux-kernel@vger.kernel.org, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-integrity@vger.kernel.org, "Serge E . Hallyn" <serge@hallyn.com>
 
-On Sun, Jul 19, 2020 at 6:51 PM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> Do I get it right, what you are saying is - when we process a PR_CONT
-> message the cont buffer should already contain previous non-LOG_NEWLINE
-> and non-PR_CONT message, otherwise it's a bug?
-
-No.
-
-I'm saying that the code that does PR_CONT should have done *some*
-printing before, otherwise it's at the very least questionable.
-
-IOW, you can't just randomly start printing with PR_CONT, without
-having established _some_ context for it.
-
-But that context could be a previous newline you created (the PR_CONT
-will be a no-op). That's certainly useful for printing a header and
-then after that printing possible other complex data that may or may
-not have line breaks in it.
-
-So your example looks fine. The context starts out with
-
-    pr_warn("which would create a new lock dependency:\n");
-
-and after that you can use KERN_CONT / pr_cont() as much as you want,
-since you've established a context for what you're printing.
-
-And then it ends with 'pr_cont("\n")'.
-
-So anything that was interrupted by this, and uses KERN_CONT /
-pr_cont() will have no ambiguous issues. The code you pointed at both
-started and ended a line.
-
-That said, we have traditionally used not just "current process", but
-also "last irq-level" as the context information, so I do think it
-would be good to continue to do that.
-
-At that point, "an interrupt printed something in the middle" isn't
-even an issue any more, because it's clear that the context has
-changed.
-
-                     Linus
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+W0NjJ2luZyBTYXNoYV0KCk9uIFRodSwgMjAyMC0wNy0wOSBhdCAwMToxOCAtMDUwMCwgVHlsZXIg
+SGlja3Mgd3JvdGU6Cgo+IEkgZW52aXNpb24gcGF0Y2hlcyAxLTcgZ29pbmcgdG8gc3RhYmxlLiBU
+aGUgc2VyaWVzIGlzIG9yZGVyZWQgaW4gYSB3YXkKPiB0aGF0IGhhcyBhbGwgdGhlIGZpeGVzIHVw
+IGZyb250LCBmb2xsb3dlZCBieSBjbGVhbnVwcywgZm9sbG93ZWQgYnkgdGhlCj4gZmVhdHVyZSBw
+YXRjaC4gVGhlIGJyZWFrZG93biBvZiBwYXRjaGVzIGxvb2tzIGxpa2Ugc286Cj4gCj4gIE1lbW9y
+eSBsZWFrIGZpeGVzOiAxLTMKPiAgUGFyc2VyIHN0cmljdG5lc3MgZml4ZXM6IDQtNwo+ICBDb2Rl
+IGNsZWFudXBzIG1hZGUgcG9zc2libGUgYnkgdGhlIGZpeGVzOiA4LTExCj4gIEV4dGVuZCBLRVhF
+Q19DTURMSU5FIHJ1bGUgc3VwcG9ydDogMTIKCkkgYWdyZWUgdGhleSBzaG91bGQgYmUgYmFja3Bv
+cnRlZCwgYnV0IHRoZXkgZG9uJ3QgYXBwbHkgY2xlYW5seSBiZWZvcmUKbGludXgtNS42LiDCoFRo
+ZSBjaGFuZ2VzIGFyZW4ndCB0aGF0IG1ham9yLiDCoFNvbWUgcGF0Y2ggaHVua3MgYXBwbHkKY2xl
+YW5seSwgYnV0IHdvbid0IGNvbXBpbGUsIHdoaWxlIG90aGVycyBwYXRjaCBodW5rcyBuZWVkIHRv
+IGJlCmRyb3BwZWQgYmFzZWQgb24gd2hlbiB0aGUgZmVhdHVyZSB3YXMgdXBzdHJlYW1lZC4gwqBG
+b3IgdGhlc2UgcmVhc29ucywKSSdtIG5vdCBDYydpbmcgc3RhYmxlLgoKRmVhdHVyZSB1cHN0cmVh
+bWVkOgotIExTTSBwb2xpY3kgdXBkYXRlOiBsaW51eCA1LjMKLSBrZXkgY29tbWFuZCBsaW5lOiBs
+aW51eCA1LjMKLSBibGFja2xpc3Q6IGxpbnV4IDUuNQotIGtleXJpbmdzOiBsaW51eCA1LjYKCkZv
+ciBMaW51eCA1LjM6Ci3CoERlcGVuZGVuY3kgb24gYmFja3BvcnRpbmcgY29tbWl0IDQ4M2VjMjZl
+ZWQ0MiAoImltYTogaW1hL2xzbSBwb2xpY3kKcnVsZSBsb2FkaW5nIGxvZ2ljIGJ1ZyBmaXhlcyIp
+IHRvIGFwcGx5ICLCoGltYTogRnJlZSB0aGUgZW50aXJlIHJ1bGUgaWYKaXQgZmFpbHMgdG8gcGFy
+c2UiLgoKTWltaQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xp
+c3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
