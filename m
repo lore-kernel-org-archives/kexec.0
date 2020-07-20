@@ -1,16 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mail-lj1-x242.google.com ([2a00:1450:4864:20::242])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxX6s-0006GC-1K
- for kexec@lists.infradead.org; Mon, 20 Jul 2020 14:49:42 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH 1/4] printk: ringbuffer: support dataless records
-In-Reply-To: <20200717234818.8622-2-john.ogness@linutronix.de>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-2-john.ogness@linutronix.de>
-Date: Mon, 20 Jul 2020 16:55:39 +0206
-Message-ID: <87blkas0l8.fsf@jogness.linutronix.de>
+ id 1jxaZ2-00014t-Dp
+ for kexec@lists.infradead.org; Mon, 20 Jul 2020 18:31:01 +0000
+Received: by mail-lj1-x242.google.com with SMTP id x9so21307230ljc.5
+ for <kexec@lists.infradead.org>; Mon, 20 Jul 2020 11:30:58 -0700 (PDT)
+Received: from mail-lj1-f170.google.com (mail-lj1-f170.google.com.
+ [209.85.208.170])
+ by smtp.gmail.com with ESMTPSA id j144sm3797753lfj.54.2020.07.20.11.30.53
+ for <kexec@lists.infradead.org>
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Mon, 20 Jul 2020 11:30:55 -0700 (PDT)
+Received: by mail-lj1-f170.google.com with SMTP id x9so21306945ljc.5
+ for <kexec@lists.infradead.org>; Mon, 20 Jul 2020 11:30:53 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <20200717234818.8622-3-john.ogness@linutronix.de>
+ <20200719143527.GA566@jagdpanzerIV.localdomain>
+ <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
+ <20200720015057.GA463@jagdpanzerIV.localdomain>
+In-Reply-To: <20200720015057.GA463@jagdpanzerIV.localdomain>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Mon, 20 Jul 2020 11:30:36 -0700
+Message-ID: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
+Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +36,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
 
-On 2020-07-18, John Ogness <john.ogness@linutronix.de> wrote:
-> In order to support storage of continuous lines, dataless records must
-> be allowed. For example, these are generated with the legal calls:
+On Sun, Jul 19, 2020 at 6:51 PM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
 >
->     pr_info("");
->     pr_cont("\n");
->
-> Currently dataless records are denoted by INVALID_LPOS in order to
-> recognize failed prb_reserve() calls. Change the code to use two
-> different identifiers (FAILED_LPOS and NO_LPOS) to distinguish
-> between failed prb_reserve() records and successful dataless records.
+> Do I get it right, what you are saying is - when we process a PR_CONT
+> message the cont buffer should already contain previous non-LOG_NEWLINE
+> and non-PR_CONT message, otherwise it's a bug?
 
-This patch has been re-posted [0] as a regression fix for the first
-series that is already in linux-next. Only the commit message has been
-changed to reflect the regression fix rather than preparing for
-continuous line support.
+No.
 
-Assuming that patch is accepted, this one should be dropped.
+I'm saying that the code that does PR_CONT should have done *some*
+printing before, otherwise it's at the very least questionable.
 
-John Ogness
+IOW, you can't just randomly start printing with PR_CONT, without
+having established _some_ context for it.
 
-[0] https://lkml.kernel.org/r/20200720140111.19935-1-john.ogness@linutronix.de
+But that context could be a previous newline you created (the PR_CONT
+will be a no-op). That's certainly useful for printing a header and
+then after that printing possible other complex data that may or may
+not have line breaks in it.
+
+So your example looks fine. The context starts out with
+
+    pr_warn("which would create a new lock dependency:\n");
+
+and after that you can use KERN_CONT / pr_cont() as much as you want,
+since you've established a context for what you're printing.
+
+And then it ends with 'pr_cont("\n")'.
+
+So anything that was interrupted by this, and uses KERN_CONT /
+pr_cont() will have no ambiguous issues. The code you pointed at both
+started and ended a line.
+
+That said, we have traditionally used not just "current process", but
+also "last irq-level" as the context information, so I do think it
+would be good to continue to do that.
+
+At that point, "an interrupt printed something in the middle" isn't
+even an issue any more, because it's clear that the context has
+changed.
+
+                     Linus
 
 _______________________________________________
 kexec mailing list
