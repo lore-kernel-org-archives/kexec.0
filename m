@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
+Received: from smtprelay0064.hostedemail.com ([216.40.44.64]
+ helo=smtprelay.hostedemail.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxiQh-0006ED-TY
- for kexec@lists.infradead.org; Tue, 21 Jul 2020 02:54:56 +0000
-Received: by mail-pl1-x644.google.com with SMTP id x9so9614773plr.2
- for <kexec@lists.infradead.org>; Mon, 20 Jul 2020 19:54:55 -0700 (PDT)
-Date: Tue, 21 Jul 2020 11:54:50 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH][next] printk: ringbuffer: support dataless records
-Message-ID: <20200721025450.GA5678@jagdpanzerIV.localdomain>
-References: <20200720140111.19935-1-john.ogness@linutronix.de>
+ id 1jxjLt-0003Nc-1g
+ for kexec@lists.infradead.org; Tue, 21 Jul 2020 03:54:02 +0000
+Message-ID: <b44b9b7c0f0d5ace01e56d2bac0251573ea7df17.camel@perches.com>
+Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
+From: Joe Perches <joe@perches.com>
+Date: Mon, 20 Jul 2020 20:53:52 -0700
+In-Reply-To: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <20200717234818.8622-3-john.ogness@linutronix.de>
+ <20200719143527.GA566@jagdpanzerIV.localdomain>
+ <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
+ <20200720015057.GA463@jagdpanzerIV.localdomain>
+ <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200720140111.19935-1-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +28,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Marco Elver <elver@google.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
 
-On (20/07/20 16:07), John Ogness wrote:
->  
-> +/* Determine if a logical position refers to a data-less block. */
-> +#define LPOS_DATALESS(lpos)		((lpos) & 1UL)
-> +
+On Mon, 2020-07-20 at 11:30 -0700, Linus Torvalds wrote:
+> On Sun, Jul 19, 2020 at 6:51 PM Sergey Senozhatsky
+> <sergey.senozhatsky@gmail.com> wrote:
+> > Do I get it right, what you are saying is - when we process a PR_CONT
+> > message the cont buffer should already contain previous non-LOG_NEWLINE
+> > and non-PR_CONT message, otherwise it's a bug?
+> 
+> No.
+> 
+> I'm saying that the code that does PR_CONT should have done *some*
+> printing before, otherwise it's at the very least questionable.
+> 
+> IOW, you can't just randomly start printing with PR_CONT, without
+> having established _some_ context for it.
 
-[..]
+I believe there are at least a few cases that
+_only_ use pr_cont to emit
+complete lines.
 
-> @@ -1402,7 +1396,9 @@ static int prb_read(struct printk_ringbuffer *rb, u64 seq,
->  	/* Copy text data. If it fails, this is a data-less record. */
->  	if (!copy_data(&rb->text_data_ring, &desc.text_blk_lpos, desc.info.text_len,
->  		       r->text_buf, r->text_buf_size, line_count)) {
-> -		return -ENOENT;
-> +		/* Report an error if there should have been data. */
-> +		if (desc.info.text_len != 0)
-> +			return -ENOENT;
->  	}
+For example: SEQ_printf in kernel/sched/debug.c
 
-If this is a dataless record then should copy_data() return error?
 
-Otherwise, looks good to me
-Acked-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-
-	-ss
 
 _______________________________________________
 kexec mailing list
