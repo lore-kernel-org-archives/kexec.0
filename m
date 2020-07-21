@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtprelay0064.hostedemail.com ([216.40.44.64]
- helo=smtprelay.hostedemail.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxjLt-0003Nc-1g
- for kexec@lists.infradead.org; Tue, 21 Jul 2020 03:54:02 +0000
-Message-ID: <b44b9b7c0f0d5ace01e56d2bac0251573ea7df17.camel@perches.com>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-From: Joe Perches <joe@perches.com>
-Date: Mon, 20 Jul 2020 20:53:52 -0700
-In-Reply-To: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
- <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
+ id 1jxpY2-0001uj-Mk
+ for kexec@lists.infradead.org; Tue, 21 Jul 2020 10:30:59 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH][next] printk: ringbuffer: support dataless records
+In-Reply-To: <20200721025450.GA5678@jagdpanzerIV.localdomain>
+References: <20200720140111.19935-1-john.ogness@linutronix.de>
+ <20200721025450.GA5678@jagdpanzerIV.localdomain>
+Date: Tue, 21 Jul 2020 12:36:55 +0206
+Message-ID: <87lfjdw468.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,31 +23,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>, Marco Elver <elver@google.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Mon, 2020-07-20 at 11:30 -0700, Linus Torvalds wrote:
-> On Sun, Jul 19, 2020 at 6:51 PM Sergey Senozhatsky
-> <sergey.senozhatsky@gmail.com> wrote:
-> > Do I get it right, what you are saying is - when we process a PR_CONT
-> > message the cont buffer should already contain previous non-LOG_NEWLINE
-> > and non-PR_CONT message, otherwise it's a bug?
-> 
-> No.
-> 
-> I'm saying that the code that does PR_CONT should have done *some*
-> printing before, otherwise it's at the very least questionable.
-> 
-> IOW, you can't just randomly start printing with PR_CONT, without
-> having established _some_ context for it.
+On 2020-07-21, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+>> @@ -1402,7 +1396,9 @@ static int prb_read(struct printk_ringbuffer *rb, u64 seq,
+>>  	/* Copy text data. If it fails, this is a data-less record. */
+>>  	if (!copy_data(&rb->text_data_ring, &desc.text_blk_lpos, desc.info.text_len,
+>>  		       r->text_buf, r->text_buf_size, line_count)) {
+>> -		return -ENOENT;
+>> +		/* Report an error if there should have been data. */
+>> +		if (desc.info.text_len != 0)
+>> +			return -ENOENT;
+>>  	}
+>
+> If this is a dataless record then should copy_data() return error?
 
-I believe there are at least a few cases that
-_only_ use pr_cont to emit
-complete lines.
+You are correct. That makes more sense. I will send a v2.
 
-For example: SEQ_printf in kernel/sched/debug.c
-
-
+John Ogness
 
 _______________________________________________
 kexec mailing list
