@@ -1,11 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from mail-lf1-x144.google.com ([2a00:1450:4864:20::144])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxtho-0005df-MK
- for kexec@lists.infradead.org; Tue, 21 Jul 2020 14:57:21 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-In-Reply-To: <20200721144220.GE44523@jagdpanzerIV.localdomain>
+ id 1jxuOL-00066E-Nn
+ for kexec@lists.infradead.org; Tue, 21 Jul 2020 15:41:18 +0000
+Received: by mail-lf1-x144.google.com with SMTP id u12so11911114lff.2
+ for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 08:41:17 -0700 (PDT)
+Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com.
+ [209.85.167.52])
+ by smtp.gmail.com with ESMTPSA id j19sm1956219lfe.91.2020.07.21.08.41.14
+ for <kexec@lists.infradead.org>
+ (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
+ Tue, 21 Jul 2020 08:41:14 -0700 (PDT)
+Received: by mail-lf1-f52.google.com with SMTP id o4so11940619lfi.7
+ for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 08:41:14 -0700 (PDT)
+MIME-Version: 1.0
 References: <20200717234818.8622-1-john.ogness@linutronix.de>
  <20200717234818.8622-3-john.ogness@linutronix.de>
  <20200719143527.GA566@jagdpanzerIV.localdomain>
@@ -13,9 +21,11 @@ References: <20200717234818.8622-1-john.ogness@linutronix.de>
  <20200720015057.GA463@jagdpanzerIV.localdomain>
  <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
  <20200721144220.GE44523@jagdpanzerIV.localdomain>
-Date: Tue, 21 Jul 2020 17:03:16 +0206
-Message-ID: <87ft9kx6er.fsf@jogness.linutronix.de>
-MIME-Version: 1.0
+In-Reply-To: <20200721144220.GE44523@jagdpanzerIV.localdomain>
+From: Linus Torvalds <torvalds@linux-foundation.org>
+Date: Tue, 21 Jul 2020 08:40:58 -0700
+Message-ID: <CAHk-=wibPWj9m1jQWeJUq+iPMG9tHaLANY-UaruakHuezFHr4w@mail.gmail.com>
+Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,35 +38,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
 
-On 2020-07-21, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
->> That said, we have traditionally used not just "current process", but
->> also "last irq-level" as the context information, so I do think it
->> would be good to continue to do that.
+On Tue, Jul 21, 2020 at 7:42 AM Sergey Senozhatsky
+<sergey.senozhatsky@gmail.com> wrote:
 >
 > OK, so basically, extending printk_caller_id() so that for IRQ/NMI
 > we will have more info than just "0x80000000 + raw_smp_processor_id()".
 
-If bit31 is set, the upper 8 bits could specify what the lower 24 bits
-represent. That would give some freedom for the future.
+I think it's really preempt_count() that we want to have there.
 
-For example:
+That has the softirq/hardirq/NMI information in it.
 
-0x80 = cpu id (generic context)
-0x81 = interrupt number
-0x82 = cpu id (nmi context)
+So the "context" identifier of an incomplete write would be { task,
+cpu, preempt_count() } of the writer. If a new KERN_CONT writer comes
+in, it would have to match in that context to actually combine.
 
-Or maybe ascii should be used instead?
+You can probably play "hide the bits" tricks to not *ac tually* use
+three words for it. The task structure in particular tends to be very
+aligned, you could hide bits in the low bits there. The CPU number
+would fit in there, for example.
 
-0x80 | '\0' = cpu id (generic context)
-0x80 | 'i'  = interrupt number
-0x80 | 'n'  = cpu id (nmi context)
-
-Just an idea.
-
-John Ogness
+             Linus
 
 _______________________________________________
 kexec mailing list
