@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1044.google.com ([2607:f8b0:4864:20::1044])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxtTQ-0003JY-8s
- for kexec@lists.infradead.org; Tue, 21 Jul 2020 14:42:28 +0000
-Received: by mail-pj1-x1044.google.com with SMTP id f16so1784785pjt.0
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 07:42:25 -0700 (PDT)
-Date: Tue, 21 Jul 2020 23:42:20 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+ id 1jxtho-0005df-MK
+ for kexec@lists.infradead.org; Tue, 21 Jul 2020 14:57:21 +0000
+From: John Ogness <john.ogness@linutronix.de>
 Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-Message-ID: <20200721144220.GE44523@jagdpanzerIV.localdomain>
+In-Reply-To: <20200721144220.GE44523@jagdpanzerIV.localdomain>
 References: <20200717234818.8622-1-john.ogness@linutronix.de>
  <20200717234818.8622-3-john.ogness@linutronix.de>
  <20200719143527.GA566@jagdpanzerIV.localdomain>
  <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
  <20200720015057.GA463@jagdpanzerIV.localdomain>
  <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
+ <20200721144220.GE44523@jagdpanzerIV.localdomain>
+Date: Tue, 21 Jul 2020 17:03:16 +0206
+Message-ID: <87ft9kx6er.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,36 +28,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
 
-On (20/07/20 11:30), Linus Torvalds wrote:
-> > Do I get it right, what you are saying is - when we process a PR_CONT
-> > message the cont buffer should already contain previous non-LOG_NEWLINE
-> > and non-PR_CONT message, otherwise it's a bug?
-> 
-> No.
-> 
-> I'm saying that the code that does PR_CONT should have done *some*
-> printing before, otherwise it's at the very least questionable.
-> 
-> IOW, you can't just randomly start printing with PR_CONT, without
-> having established _some_ context for it.
+On 2020-07-21, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+>> That said, we have traditionally used not just "current process", but
+>> also "last irq-level" as the context information, so I do think it
+>> would be good to continue to do that.
+>
+> OK, so basically, extending printk_caller_id() so that for IRQ/NMI
+> we will have more info than just "0x80000000 + raw_smp_processor_id()".
 
-OK, I see. I sort of suspect that we may actually have code that does
-just pr_cont() (e.g. what Joe pointed out). It doesn't seem like that
-"establish a context" was ever enforced, doing a bunch of pr_cont()
-simply works.
+If bit31 is set, the upper 8 bits could specify what the lower 24 bits
+represent. That would give some freedom for the future.
 
-[..]
-> That said, we have traditionally used not just "current process", but
-> also "last irq-level" as the context information, so I do think it
-> would be good to continue to do that.
+For example:
 
-OK, so basically, extending printk_caller_id() so that for IRQ/NMI
-we will have more info than just "0x80000000 + raw_smp_processor_id()".
+0x80 = cpu id (generic context)
+0x81 = interrupt number
+0x82 = cpu id (nmi context)
 
-	-ss
+Or maybe ascii should be used instead?
+
+0x80 | '\0' = cpu id (generic context)
+0x80 | 'i'  = interrupt number
+0x80 | 'n'  = cpu id (nmi context)
+
+Just an idea.
+
+John Ogness
 
 _______________________________________________
 kexec mailing list
