@@ -1,31 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x144.google.com ([2a00:1450:4864:20::144])
+Received: from mail-wm1-x343.google.com ([2a00:1450:4864:20::343])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jxuOL-00066E-Nn
- for kexec@lists.infradead.org; Tue, 21 Jul 2020 15:41:18 +0000
-Received: by mail-lf1-x144.google.com with SMTP id u12so11911114lff.2
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 08:41:17 -0700 (PDT)
-Received: from mail-lf1-f52.google.com (mail-lf1-f52.google.com.
- [209.85.167.52])
- by smtp.gmail.com with ESMTPSA id j19sm1956219lfe.91.2020.07.21.08.41.14
- for <kexec@lists.infradead.org>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Tue, 21 Jul 2020 08:41:14 -0700 (PDT)
-Received: by mail-lf1-f52.google.com with SMTP id o4so11940619lfi.7
- for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 08:41:14 -0700 (PDT)
+ id 1jy02i-0006Qi-3a
+ for kexec@lists.infradead.org; Tue, 21 Jul 2020 21:43:21 +0000
+Received: by mail-wm1-x343.google.com with SMTP id 22so42318wmg.1
+ for <kexec@lists.infradead.org>; Tue, 21 Jul 2020 14:43:18 -0700 (PDT)
+Subject: Re: [PATCH 06/13] fs/kernel_read_file: Remove redundant size argument
+References: <20200717174309.1164575-1-keescook@chromium.org>
+ <20200717174309.1164575-7-keescook@chromium.org>
+From: Scott Branden <scott.branden@broadcom.com>
+Message-ID: <ec326654-c43b-259c-409c-63929ad5b217@broadcom.com>
+Date: Tue, 21 Jul 2020 14:43:07 -0700
 MIME-Version: 1.0
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
- <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
- <20200721144220.GE44523@jagdpanzerIV.localdomain>
-In-Reply-To: <20200721144220.GE44523@jagdpanzerIV.localdomain>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Tue, 21 Jul 2020 08:40:58 -0700
-Message-ID: <CAHk-=wibPWj9m1jQWeJUq+iPMG9tHaLANY-UaruakHuezFHr4w@mail.gmail.com>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
+In-Reply-To: <20200717174309.1164575-7-keescook@chromium.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,35 +22,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>
+To: Kees Cook <keescook@chromium.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Stephen Boyd <stephen.boyd@linaro.org>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Peter Jones <pjones@redhat.com>, "Joel Fernandes (Google)" <joel@joelfernandes.org>, linux-security-module@vger.kernel.org, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Matthew Wilcox <willy@infradead.org>, KP Singh <kpsingh@google.com>, "Serge E. Hallyn" <serge@hallyn.com>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, linux-integrity@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-On Tue, Jul 21, 2020 at 7:42 AM Sergey Senozhatsky
-<sergey.senozhatsky@gmail.com> wrote:
->
-> OK, so basically, extending printk_caller_id() so that for IRQ/NMI
-> we will have more info than just "0x80000000 + raw_smp_processor_id()".
-
-I think it's really preempt_count() that we want to have there.
-
-That has the softirq/hardirq/NMI information in it.
-
-So the "context" identifier of an incomplete write would be { task,
-cpu, preempt_count() } of the writer. If a new KERN_CONT writer comes
-in, it would have to match in that context to actually combine.
-
-You can probably play "hide the bits" tricks to not *ac tually* use
-three words for it. The task structure in particular tends to be very
-aligned, you could hide bits in the low bits there. The CPU number
-would fit in there, for example.
-
-             Linus
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgS2VlcywKCk9uIDIwMjAtMDctMTcgMTA6NDMgYS5tLiwgS2VlcyBDb29rIHdyb3RlOgo+IElu
+IHByZXBhcmF0aW9uIGZvciByZWZhY3RvcmluZyBrZXJuZWxfcmVhZF9maWxlKigpLCByZW1vdmUg
+dGhlIHJlZHVuZGFudAo+ICJzaXplIiBhcmd1bWVudCB3aGljaCBpcyBub3QgbmVlZGVkOiBpdCBj
+YW4gYmUgaW5jbHVkZWQgaW4gdGhlIHJldHVybgo+IGNvZGUsIHdpdGggY2FsbGVycyBhZGp1c3Rl
+ZC4gKFZGUyByZWFkcyBhbHJlYWR5IGNhbm5vdCBiZSBsYXJnZXIgdGhhbgo+IElOVF9NQVguKQo+
+Cj4gU2lnbmVkLW9mZi1ieTogS2VlcyBDb29rIDxrZWVzY29va0BjaHJvbWl1bS5vcmc+Cj4gLS0t
+Cj4gICBkcml2ZXJzL2Jhc2UvZmlybXdhcmVfbG9hZGVyL21haW4uYyB8ICA4ICsrKystLS0tCj4g
+ICBmcy9rZXJuZWxfcmVhZF9maWxlLmMgICAgICAgICAgICAgICB8IDIwICsrKysrKysrKy0tLS0t
+LS0tLS0tCj4gICBpbmNsdWRlL2xpbnV4L2tlcm5lbF9yZWFkX2ZpbGUuaCAgICB8ICA4ICsrKyst
+LS0tCj4gICBrZXJuZWwva2V4ZWNfZmlsZS5jICAgICAgICAgICAgICAgICB8IDEzICsrKysrKy0t
+LS0tLS0KPiAgIGtlcm5lbC9tb2R1bGUuYyAgICAgICAgICAgICAgICAgICAgIHwgIDcgKysrLS0t
+LQo+ICAgc2VjdXJpdHkvaW50ZWdyaXR5L2RpZ3NpZy5jICAgICAgICAgfCAgNSArKystLQo+ICAg
+c2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfZnMuYyAgICAgfCAgNSArKystLQo+ICAgNyBmaWxl
+cyBjaGFuZ2VkLCAzMiBpbnNlcnRpb25zKCspLCAzNCBkZWxldGlvbnMoLSkKPgo+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2Jhc2UvZmlybXdhcmVfbG9hZGVyL21haW4uYyBiL2RyaXZlcnMvYmFzZS9m
+aXJtd2FyZV9sb2FkZXIvbWFpbi5jCj4gaW5kZXggZDRhNDEzZWE0OGNlLi5lYTQxOWM3ZDNkMzQg
+MTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9iYXNlL2Zpcm13YXJlX2xvYWRlci9tYWluLmMKPiArKysg
+Yi9kcml2ZXJzL2Jhc2UvZmlybXdhcmVfbG9hZGVyL21haW4uYwo+IEBAIC00NjIsNyArNDYyLDcg
+QEAgZndfZ2V0X2ZpbGVzeXN0ZW1fZmlybXdhcmUoc3RydWN0IGRldmljZSAqZGV2aWNlLCBzdHJ1
+Y3QgZndfcHJpdiAqZndfcHJpdiwKPiAgIAkJCQkJICAgICBzaXplX3QgaW5fc2l6ZSwKPiAgIAkJ
+CQkJICAgICBjb25zdCB2b2lkICppbl9idWZmZXIpKQo+ICAgewo+IC0JbG9mZl90IHNpemU7Cj4g
+KwlzaXplX3Qgc2l6ZTsKPiAgIAlpbnQgaSwgbGVuOwo+ICAgCWludCByYyA9IC1FTk9FTlQ7Cj4g
+ICAJY2hhciAqcGF0aDsKPiBAQCAtNDk0LDEwICs0OTQsOSBAQCBmd19nZXRfZmlsZXN5c3RlbV9m
+aXJtd2FyZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UsIHN0cnVjdCBmd19wcml2ICpmd19wcml2LAo+
+ICAgCQlmd19wcml2LT5zaXplID0gMDsKPiAgIAo+ICAgCQkvKiBsb2FkIGZpcm13YXJlIGZpbGVz
+IGZyb20gdGhlIG1vdW50IG5hbWVzcGFjZSBvZiBpbml0ICovCj4gLQkJcmMgPSBrZXJuZWxfcmVh
+ZF9maWxlX2Zyb21fcGF0aF9pbml0bnMocGF0aCwgJmJ1ZmZlciwKPiAtCQkJCQkJICAgICAgICZz
+aXplLCBtc2l6ZSwKPiArCQlyYyA9IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoX2luaXRucyhw
+YXRoLCAmYnVmZmVyLCBtc2l6ZSwKPiAgIAkJCQkJCSAgICAgICBSRUFESU5HX0ZJUk1XQVJFKTsK
+PiAtCQlpZiAocmMpIHsKPiArCQlpZiAocmMgPCAwKSB7Cj4gICAJCQlpZiAocmMgIT0gLUVOT0VO
+VCkKPiAgIAkJCQlkZXZfd2FybihkZXZpY2UsICJsb2FkaW5nICVzIGZhaWxlZCB3aXRoIGVycm9y
+ICVkXG4iLAo+ICAgCQkJCQkgcGF0aCwgcmMpOwo+IEBAIC01MDYsNiArNTA1LDcgQEAgZndfZ2V0
+X2ZpbGVzeXN0ZW1fZmlybXdhcmUoc3RydWN0IGRldmljZSAqZGV2aWNlLCBzdHJ1Y3QgZndfcHJp
+diAqZndfcHJpdiwKPiAgIAkJCQkJIHBhdGgpOwo+ICAgCQkJY29udGludWU7Cj4gICAJCX0KPiAr
+CQlzaXplID0gcmM7CkNoYW5nZSBmYWlscyB0byByZXR1cm4gMC7CoCBOZWVkIHJjID0gMDsgaGVy
+ZS4KPiAgIAkJZGV2X2RiZyhkZXZpY2UsICJMb2FkaW5nIGZpcm13YXJlIGZyb20gJXNcbiIsIHBh
+dGgpOwo+ICAgCQlpZiAoZGVjb21wcmVzcykgewo+ICAgCQkJZGV2X2RiZyhkZXZpY2UsICJmL3cg
+ZGVjb21wcmVzc2luZyAlc1xuIiwKPgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
