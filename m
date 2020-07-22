@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyGYh-0005B8-P6
- for kexec@lists.infradead.org; Wed, 22 Jul 2020 15:21:28 +0000
-Date: Wed, 22 Jul 2020 10:21:23 -0500
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
-Message-ID: <20200722152123.GA1278089@bjorn-Precision-5520>
+ id 1jyIdY-0003Ed-7k
+ for kexec@lists.infradead.org; Wed, 22 Jul 2020 17:34:37 +0000
+Subject: Re: [PATCH v4 07/12] ppc64/kexec_file: add support to relocate
+ purgatory
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+ <159524956457.20855.12480643681198700190.stgit@hbathini.in.ibm.com>
+ <871rl4rxao.fsf@mpe.ellerman.id.au>
+From: Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <2037fa32-28be-5995-1c22-c8b01cafe088@linux.ibm.com>
+Date: Wed, 22 Jul 2020 23:03:00 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CACPcB9cpEX-uYeTp7DVEXtwDRWBCTVoPCB4dxPbyq1sDeixP_w@mail.gmail.com>
+In-Reply-To: <871rl4rxao.fsf@mpe.ellerman.id.au>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,118 +26,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>
-Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Randy Wright <rwright@hpe.com>, Jerry Hoemann <jerry.hoemann@hpe.com>, Deepa Dinamani <deepa.kernel@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
+To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
-> On Fri, Mar 6, 2020 at 5:38 PM Baoquan He <bhe@redhat.com> wrote:
-> > On 03/04/20 at 08:53pm, Deepa Dinamani wrote:
-> > > On Wed, Mar 4, 2020 at 7:53 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > On 03/03/20 at 01:01pm, Deepa Dinamani wrote:
-> > > > > I looked at this some more. Looks like we do not clear irqs
-> > > > > when we do a kexec reboot. And, the bootup code maintains
-> > > > > the same table for the kexec-ed kernel. I'm looking at the
-> > > > > following code in
-> > > >
-> > > > I guess you are talking about kdump reboot here, right? Kexec
-> > > > and kdump boot take the similar mechanism, but differ a
-> > > > little.
-> > >
-> > > Right I meant kdump kernel here. And, clearly the
-> > > is_kdump_kernel() case below.
-> > >
-> > > > > intel_irq_remapping.c:
-> > > > >
-> > > > >         if (ir_pre_enabled(iommu)) {
-> > > > >                 if (!is_kdump_kernel()) {
-> > > > >                         pr_warn("IRQ remapping was enabled on %s but
-> > > > > we are not in kdump mode\n",
-> > > > >                                 iommu->name);
-> > > > >                         clear_ir_pre_enabled(iommu);
-> > > > >                         iommu_disable_irq_remapping(iommu);
-> > > > >                 } else if (iommu_load_old_irte(iommu))
-> > > >
-> > > > Here, it's for kdump kernel to copy old ir table from 1st kernel.
-> > >
-> > > Correct.
-> > >
-> > > > >                         pr_err("Failed to copy IR table for %s from
-> > > > > previous kernel\n",
-> > > > >                                iommu->name);
-> > > > >                 else
-> > > > >                         pr_info("Copied IR table for %s from previous kernel\n",
-> > > > >                                 iommu->name);
-> > > > >         }
-> > > > >
-> > > > > Would cleaning the interrupts(like in the non kdump path
-> > > > > above) just before shutdown help here? This should clear the
-> > > > > interrupts enabled for all the devices in the current
-> > > > > kernel. So when kdump kernel starts, it starts clean. This
-> > > > > should probably help block out the interrupts from a device
-> > > > > that does not have a driver.
-> > > >
-> > > > I think stopping those devices out of control from continue
-> > > > sending interrupts is a good idea. While not sure if only
-> > > > clearing the interrupt will be enough. Those devices which
-> > > > will be initialized by their driver will brake, but devices
-> > > > which drivers are not loaded into kdump kernel may continue
-> > > > acting. Even though interrupts are cleaning at this time, the
-> > > > on-flight DMA could continue triggerring interrupt since the
-> > > > ir table and iopage table are rebuilt.
-> > >
-> > > This should be handled by the IOMMU, right? And, hence you are
-> > > getting UR. This seems like the correct execution flow to me.
-> >
-> > Sorry for late reply.
-> > Yes, this is initializing IOMMU device.
-> >
-> > > Anyway, you could just test this theory by removing the
-> > > is_kdump_kernel() check above and see if it solves your problem.
-> > > Obviously, check the VT-d spec to figure out the exact sequence to
-> > > turn off the IR.
-> >
-> > OK, I will talk to Kairui and get a machine to test it. Thanks for your
-> > nice idea, if you have a draft patch, we are happy to test it.
-> >
-> > > Note that the device that is causing the problem here is a legit
-> > > device. We want to have interrupts from devices we don't know about
-> > > blocked anyway because we can have compromised firmware/ devices that
-> > > could cause a DoS attack. So blocking the unwanted interrupts seems
-> > > like the right thing to do here.
-> >
-> > Kairui said it's a device which driver is not loaded in kdump kernel
-> > because it's not needed by kdump. We try to only load kernel modules
-> > which are needed, e.g one device is the dump target, its driver has to
-> > be loaded in. In this case, the device is more like a out of control
-> > device to kdump kernel.
+
+
+On 22/07/20 9:55 am, Michael Ellerman wrote:
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+>> Right now purgatory implementation is only minimal. But if purgatory
+>> code is to be enhanced to copy memory to the backup region and verify
+>> sha256 digest, relocations may have to be applied to the purgatory.
+>> So, add support to relocate purgatory in kexec_file_load system call
+>> by setting up TOC pointer and applying RELA relocations as needed.
+>>
+>> Reported-by: kernel test robot <lkp@intel.com>
+>> [lkp: In v1, 'struct mem_sym' was declared in parameter list]
+>> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+>> ---
+>>
+>> * Michael, can you share your opinion on the below:
+>>     - https://lore.kernel.org/patchwork/patch/1272027/
+>>     - My intention in cover note.
 > 
-> Hi Bao, Deepa, sorry for this very late response. The test machine was
-> not available for sometime, and I restarted to work on this problem.
+> It seems like a lot of complexity for little benefit.
 > 
-> For the workaround mention by Deepa (by remote the is_kdump_kernel()
-> check), it didn't work, the machine still hangs upon shutdown.
-> The devices that were left in an unknown state and sending interrupt
-> could be a problem, but it's irrelevant to this hanging problem.
+> AFAICS your final purgatory_64.c is only 36 lines, and all it does is a
+> single (open coded) memcpy().
 > 
-> I think I didn't make one thing clear, The PCI UR error never arrives
-> in kernel, it's the iLo BMC on that HPE machine caught the error, and
-> send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-> figure out why the NMI hanged kernel, even with panic=-1,
-> panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-> NMI by shutdown the devices in right order, that's also a solution.
+> It seems like we could write that in not many more lines of assembler
+> and avoid all this code.
 
-I'm not sure how much sympathy to have for this situation.  A PCIe UR
-is fatal for the transaction and maybe even the device, but from the
-overall system point of view, it *should* be a recoverable error and
-we shouldn't panic.
+Hi Michael,
 
-Errors like that should be reported via the normal AER or ACPI/APEI
-mechanisms.  It sounds like in this case, the platform has decided
-these aren't enough and it is trying to force a reboot?  If this is
-"special" platform behavior, I'm not sure how much we need to cater
-for it.
+I am not sure if you would agree with me on this, but I am looking at the
+purgatory code as work in progress. As mentioned in the cover note, I intend
+to add log messaging, sha256 verification into purgatory. And also change it
+to position independent executable after moving common purgatory code (sha256
+verification) to arch-independent code.
 
-Bjorn
+When I initially took this up, I wanted to add all the above changes too, but
+cut down on it, in the interest of time, first to get kdump (kexec -s -p)
+working in v5.9 merge window.
+
+But as the logic in patches 07/12 & 08/12 has been tested in kexec-tools code
+a lot of times and there are unlikely to be any changes to them except for
+__kexec_do_relocs() function (afaics), when -PIE would be used, I submitted them.
+With patch 09/12, I tried for a change that uses relocations while is minimal
+for now.
+
+Would you prefer it to be absolutely minimal by dropping patches 7 & 8 for
+now and writing the backup data copy code in assembler?
+
+Thanks
+Hari
 
 _______________________________________________
 kexec mailing list
