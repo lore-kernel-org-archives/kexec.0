@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([2401:3900:2:1::2] helo=ozlabs.org)
+Received: from ozlabs.org ([203.11.71.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jy6Jw-0001N0-NB
- for kexec@lists.infradead.org; Wed, 22 Jul 2020 04:25:33 +0000
+ id 1jy6pA-0003EI-Bh
+ for kexec@lists.infradead.org; Wed, 22 Jul 2020 04:57:49 +0000
 From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v4 07/12] ppc64/kexec_file: add support to relocate
- purgatory
-In-Reply-To: <159524956457.20855.12480643681198700190.stgit@hbathini.in.ibm.com>
-References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
- <159524956457.20855.12480643681198700190.stgit@hbathini.in.ibm.com>
-Date: Wed, 22 Jul 2020 14:25:19 +1000
-Message-ID: <871rl4rxao.fsf@mpe.ellerman.id.au>
+Subject: Re: [PATCHv3 2/2] powerpc/pseries: update device tree before ejecting
+ hotplug uevents
+In-Reply-To: <1595382730-10565-2-git-send-email-kernelfans@gmail.com>
+References: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
+ <1595382730-10565-2-git-send-email-kernelfans@gmail.com>
+Date: Wed, 22 Jul 2020 14:57:45 +1000
+Message-ID: <87pn8oqh86.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,34 +24,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: Pingfan Liu <kernelfans@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>, Pingfan Liu <kernelfans@gmail.com>
 
-Hari Bathini <hbathini@linux.ibm.com> writes:
-> Right now purgatory implementation is only minimal. But if purgatory
-> code is to be enhanced to copy memory to the backup region and verify
-> sha256 digest, relocations may have to be applied to the purgatory.
-> So, add support to relocate purgatory in kexec_file_load system call
-> by setting up TOC pointer and applying RELA relocations as needed.
+Pingfan Liu <kernelfans@gmail.com> writes:
+> A bug is observed on pseries by taking the following steps on rhel:
+                                                                ^
+                                                                RHEL
+
+I assume it happens on mainline too?
+
+> -1. drmgr -c mem -r -q 5
+> -2. echo c > /proc/sysrq-trigger
 >
-> Reported-by: kernel test robot <lkp@intel.com>
-> [lkp: In v1, 'struct mem_sym' was declared in parameter list]
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> And then, the failure looks like:
+> kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:14/
+> kdump: saving vmcore-dmesg.txt
+> kdump: saving vmcore-dmesg.txt complete
+> kdump: saving vmcore
+>  Checking for memory holes                         : [  0.0 %] /                   Checking for memory holes                         : [100.0 %] |                   Excluding unnecessary pages                       : [100.0 %] \                   Copying data                                      : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
+> [   44.337663] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
+> [   44.337677] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
+> [   44.337692] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
+> [   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffba400000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
+> [   44.338548] Core dump to |/bin/false pipe failed
+> /lib/kdump-lib-initramfs.sh: line 98:   469 Bus error               $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete
+> kdump: saving vmcore failed
+>
+> * Root cause *
+>   After analyzing, it turns out that in the current implementation,
+> when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt updating as
+> the code __remove_memory() comes before drmem_update_dt().
+> So in kdump kernel, when read_from_oldmem() resorts to
+> pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due to
+> non-exist pfn. And finally, low_hash_fault() raise SIGBUS to process, as it
+> can be observed "Bus error"
+>
+> From a viewpoint of listener and publisher, the publisher notifies the
+> listener before data is ready.  This introduces a problem where udev
+> launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt before
+> updating. And in capture kernel, makedumpfile will access the memory based
+> on the stale dt info, and hit a SIGBUS error due to an un-existed lmb.
+>
+> * Fix *
+>   In order to fix this issue, update dt before __remove_memory(), and
+> accordingly the same rule in hot-add path.
+>
+> This will introduce extra dt updating payload for each involved lmb when hotplug.
+> But it should be fine since drmem_update_dt() is memory based operation and
+> hotplug is not a hot path.
+>
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Hari Bathini <hbathini@linux.ibm.com>
+> Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> To: linuxppc-dev@lists.ozlabs.org
+> Cc: kexec@lists.infradead.org
 > ---
+> v2 -> v3: rebase onto ppc next-test branch
+> ---
+>  arch/powerpc/platforms/pseries/hotplug-memory.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
 >
-> * Michael, can you share your opinion on the below:
->     - https://lore.kernel.org/patchwork/patch/1272027/
->     - My intention in cover note.
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> index 1a3ac3b..def8cb3f 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> @@ -372,6 +372,7 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+>  	invalidate_lmb_associativity_index(lmb);
+>  	lmb_clear_nid(lmb);
+>  	lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+> +	drmem_update_dt();
 
-It seems like a lot of complexity for little benefit.
+No error checking?
 
-AFAICS your final purgatory_64.c is only 36 lines, and all it does is a
-single (open coded) memcpy().
+>  	__remove_memory(nid, base_addr, block_sz);
+>  
+> @@ -607,6 +608,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>  
+>  	lmb_set_nid(lmb);
+>  	lmb->flags |= DRCONF_MEM_ASSIGNED;
+> +	drmem_update_dt();
 
-It seems like we could write that in not many more lines of assembler
-and avoid all this code.
+And here ..
+>  
+>  	block_sz = memory_block_size_bytes();
+>  
+> @@ -625,6 +627,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>  		invalidate_lmb_associativity_index(lmb);
+>  		lmb_clear_nid(lmb);
+>  		lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+> +		drmem_update_dt();
 
-What am I missing?
+
+And here ..
+
+>  		__remove_memory(nid, base_addr, block_sz);
+>  	}
+> @@ -877,9 +880,6 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
+>  		break;
+>  	}
+>  
+> -	if (!rc)
+> -		rc = drmem_update_dt();
+> -
+>  	unlock_device_hotplug();
+>  	return rc;
+
+Whereas previously we did check it.
+
 
 cheers
 
