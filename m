@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jybFx-0001FU-6d
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 13:27:29 +0000
+ id 1jycPK-0000Di-Fx
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 14:41:15 +0000
 From: Nathan Lynch <nathanl@linux.ibm.com>
-Subject: Re: [PATCHv3 2/2] powerpc/pseries: update device tree before ejecting
- hotplug uevents
-In-Reply-To: <1595382730-10565-2-git-send-email-kernelfans@gmail.com>
+Subject: Re: [PATCHv3 1/2] powerpc/pseries: group lmb operation and memblock's
+In-Reply-To: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
 References: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
- <1595382730-10565-2-git-send-email-kernelfans@gmail.com>
-Date: Thu, 23 Jul 2020 08:27:18 -0500
-Message-ID: <87imee1hvt.fsf@linux.ibm.com>
+Date: Thu, 23 Jul 2020 09:41:06 -0500
+Message-ID: <87ft9i1egt.fsf@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,70 +23,61 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, cheloha@linux.ibm.com, kexec@lists.infradead.org, ldufour@linux.ibm.com, linuxppc-dev@lists.ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>
 
 Pingfan Liu <kernelfans@gmail.com> writes:
-> A bug is observed on pseries by taking the following steps on rhel:
-> -1. drmgr -c mem -r -q 5
-> -2. echo c > /proc/sysrq-trigger
+> This patch prepares for the incoming patch which swaps the order of KOBJ_
+> uevent and dt's updating.
 >
-> And then, the failure looks like:
-> kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:14/
-> kdump: saving vmcore-dmesg.txt
-> kdump: saving vmcore-dmesg.txt complete
-> kdump: saving vmcore
->  Checking for memory holes                         : [  0.0 %] /                   Checking for memory holes                         : [100.0 %] |                   Excluding unnecessary pages                       : [100.0 %] \                   Copying data                                      : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-> [   44.337663] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-> [   44.337677] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-> [   44.337692] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-> [   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffba400000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
-> [   44.338548] Core dump to |/bin/false pipe failed
-> /lib/kdump-lib-initramfs.sh: line 98:   469 Bus error               $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete
-> kdump: saving vmcore failed
->
-> * Root cause *
->   After analyzing, it turns out that in the current implementation,
-> when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt updating as
-> the code __remove_memory() comes before drmem_update_dt().
-> So in kdump kernel, when read_from_oldmem() resorts to
-> pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due to
-> non-exist pfn. And finally, low_hash_fault() raise SIGBUS to process, as it
-> can be observed "Bus error"
->
-> From a viewpoint of listener and publisher, the publisher notifies the
-> listener before data is ready.  This introduces a problem where udev
-> launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt before
-> updating. And in capture kernel, makedumpfile will access the memory based
-> on the stale dt info, and hit a SIGBUS error due to an un-existed lmb.
->
-> * Fix *
->   In order to fix this issue, update dt before __remove_memory(), and
-> accordingly the same rule in hot-add path.
->
-> This will introduce extra dt updating payload for each involved lmb when hotplug.
-> But it should be fine since drmem_update_dt() is memory based operation and
-> hotplug is not a hot path.
+> It has no functional effect, just groups lmb operation and memblock's in
+> order to insert dt updating operation easily, and makes it easier to
+> review.
 
-This is great analysis but the performance implications of the change
-are grave. The add/remove paths here are already O(n) where n is the
-quantity of memory assigned to the LP, this change would make it O(n^2):
+...
 
-dlpar_memory_add_by_count
-  for_each_drmem_lmb             <--
-    dlpar_add_lmb
-      drmem_update_dt(_v1|_v2)
-        for_each_drmem_lmb       <--
+> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> index 5d545b7..1a3ac3b 100644
+> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> @@ -355,7 +355,8 @@ static int dlpar_add_lmb(struct drmem_lmb *);
+>  static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+>  {
+>  	unsigned long block_sz;
+> -	int rc;
+> +	phys_addr_t base_addr;
+> +	int rc, nid;
+>  
+>  	if (!lmb_is_removable(lmb))
+>  		return -EINVAL;
+> @@ -364,17 +365,19 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+>  	if (rc)
+>  		return rc;
+>  
+> +	base_addr = lmb->base_addr;
+> +	nid = lmb->nid;
+>  	block_sz = pseries_memory_block_size();
+>  
+> -	__remove_memory(lmb->nid, lmb->base_addr, block_sz);
+> -
+> -	/* Update memory regions for memory remove */
+> -	memblock_remove(lmb->base_addr, block_sz);
+> -
+>  	invalidate_lmb_associativity_index(lmb);
+>  	lmb_clear_nid(lmb);
+>  	lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+>  
+> +	__remove_memory(nid, base_addr, block_sz);
+> +
+> +	/* Update memory regions for memory remove */
+> +	memblock_remove(base_addr, block_sz);
+> +
+>  	return 0;
+>  }
 
-Memory add/remove isn't a hot path but quadratic runtime complexity
-isn't acceptable. Its current performance is bad enough that I have
-internal bugs open on it.
-
-Not to mention we leak memory every time drmem_update_dt is called
-because we can't safely free device tree properties :-(
-
-Also note that this sort of reverts (fixes?) 063b8b1251fd
-("powerpc/pseries/memory-hotplug: Only update DT once per memory DLPAR
-request").
+I don't understand; the commit message should not claim this has no
+functional effect when it changes the order of operations like
+this. Maybe this is an improvement over the current behavior, but it's
+not explained why it would be.
 
 _______________________________________________
 kexec mailing list
