@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyjRv-0001oH-Es
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 22:12:24 +0000
+ id 1jyjZE-0002FW-6c
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 22:19:57 +0000
 References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
- <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
+ <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v4 03/12] powerpc/kexec_file: add helper functions for
- getting memory ranges
-In-reply-to: <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
-Date: Thu, 23 Jul 2020 19:12:05 -0300
-Message-ID: <878sf96fuy.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v4 04/12] ppc64/kexec_file: avoid stomping memory used by
+ special regions
+In-reply-to: <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
+Date: Thu, 23 Jul 2020 19:19:41 -0300
+Message-ID: <877dut6fia.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,54 +31,18 @@ Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Nayna
 
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> In kexec case, the kernel to be loaded uses the same memory layout as
-> the running kernel. So, passing on the DT of the running kernel would
-> be good enough.
->
-> But in case of kdump, different memory ranges are needed to manage
-> loading the kdump kernel, booting into it and exporting the elfcore
-> of the crashing kernel. The ranges are exclude memory ranges, usable
-> memory ranges, reserved memory ranges and crash memory ranges.
->
-> Exclude memory ranges specify the list of memory ranges to avoid while
-> loading kdump segments. Usable memory ranges list the memory ranges
-> that could be used for booting kdump kernel. Reserved memory ranges
-> list the memory regions for the loading kernel's reserve map. Crash
-> memory ranges list the memory ranges to be exported as the crashing
-> kernel's elfcore.
->
-> Add helper functions for setting up the above mentioned memory ranges.
-> This helpers facilitate in understanding the subsequent changes better
-> and make it easy to setup the different memory ranges listed above, as
-> and when appropriate.
+> crashkernel region could have an overlap with special memory regions
+> like  opal, rtas, tce-table & such. These regions are referred to as
+> exclude memory ranges. Setup this ranges during image probe in order
+> to avoid them while finding the buffer for different kdump segments.
+> Override arch_kexec_locate_mem_hole() to locate a memory hole taking
+> these ranges into account.
 >
 > Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-
-Just one comment below, but regardless:
 
 Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-> +/**
-> + * add_htab_mem_range - Adds htab range to the given memory ranges list,
-> + *                      if it exists
-> + * @mem_ranges:         Range list to add the memory range to.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int add_htab_mem_range(struct crash_mem **mem_ranges)
-> +{
-> +	if (!htab_address)
-> +		return 0;
-> +
-> +	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
-> +}
-
-I believe you need to surround this function with `#ifdef
-CONFIG_PPC_BOOK3S_64` and `#endif` to match what is done in
-<asm/kexec_ranges.h>.
-
---
+-- 
 Thiago Jung Bauermann
 IBM Linux Technology Center
 
