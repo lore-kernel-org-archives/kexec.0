@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-x341.google.com ([2a00:1450:4864:20::341])
+Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyNFA-0007bD-8d
- for kexec@lists.infradead.org; Wed, 22 Jul 2020 22:29:47 +0000
-Received: by mail-wm1-x341.google.com with SMTP id p14so2886405wmg.1
- for <kexec@lists.infradead.org>; Wed, 22 Jul 2020 15:29:41 -0700 (PDT)
-Subject: Re: [PATCH v2 15/18] fs/kernel_file_read: Add "offset" arg for
- partial reads
+ id 1jyf5S-0006gP-Bs
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 17:32:55 +0000
+Received: by mail-pl1-x644.google.com with SMTP id x8so2846828plm.10
+ for <kexec@lists.infradead.org>; Thu, 23 Jul 2020 10:32:53 -0700 (PDT)
+Subject: Re: [PATCH v2 01/18] test_firmware: Test platform fw loading on
+ non-EFI systems
 References: <20200722193020.2676422-1-keescook@chromium.org>
- <20200722193020.2676422-16-keescook@chromium.org>
+ <20200722193020.2676422-2-keescook@chromium.org>
 From: Scott Branden <scott.branden@broadcom.com>
-Message-ID: <c0cf63be-7291-9e8f-b622-00205f0d637a@broadcom.com>
-Date: Wed, 22 Jul 2020 15:29:26 -0700
+Message-ID: <b74d5e93-f978-1463-abcd-f2c51abb73ad@broadcom.com>
+Date: Thu, 23 Jul 2020 10:32:45 -0700
 MIME-Version: 1.0
-In-Reply-To: <20200722193020.2676422-16-keescook@chromium.org>
+In-Reply-To: <20200722193020.2676422-2-keescook@chromium.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,216 +23,170 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kees Cook <keescook@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, linux-security-module@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, selinux@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Jessica Yu <jeyu@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, linux-security-module@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, selinux@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Jessica Yu <jeyu@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-SGkgS2VlcywKClRoZXNlIGNoYW5nZXMgZG9uJ3QgcGFzcyB0aGUga2VybmVsLXNlbGZ0ZXN0IGZv
-ciBwYXJ0aWFsIHJlYWRzIEkgYWRkZWQKKHdoaWNoIGFyZSBhdCB0aGUgZW5kIG9mIHRoaXMgcGF0
-Y2ggdjIgc2VyaWVzKS4KU2VlIGNoYW5nZSBiZWxvdyBhZGRlZCBmb3IgdGVtcCB3b3JrYXJvdW5k
-IGZvciBpc3N1ZS4KRXZlbiB3aXRoIHN1Y2ggY2hhbmdlIHJlYWwgcmVxdWVzdF9wYXJ0aWFsX2Zp
-cm13YXJlX2ludG9fYnVmIGRvZXNuJ3QKd29yayBmdWxseSB3aXRoIG15IGJjbS12ayBkcml2ZXIu
-wqAgSSdtIHRyeWluZyB0byBkZWJ1ZyB0aGF0LgoKT24gMjAyMC0wNy0yMiAxMjozMCBwLm0uLCBL
-ZWVzIENvb2sgd3JvdGU6Cj4gVG8gcGVyZm9ybSBwYXJ0aWFsIHJlYWRzLCBjYWxsZXJzIG9mIGtl
-cm5lbF9yZWFkX2ZpbGUqKCkgbXVzdCBoYXZlIGEKPiBub24tTlVMTCBmaWxlX3NpemUgYXJndW1l
-bnQgYW5kIGEgcHJlYWxsb2NhdGVkIGJ1ZmZlci4gVGhlIG5ldyAib2Zmc2V0Igo+IGFyZ3VtZW50
-IGNhbiB0aGVuIGJlIHVzZWQgdG8gc2VlayB0byBzcGVjaWZpYyBsb2NhdGlvbnMgaW4gdGhlIGZp
-bGUgdG8KPiBmaWxsIHRoZSBidWZmZXIgdG8sIGF0IG1vc3QsICJidWZfc2l6ZSIgcGVyIGNhbGwu
-Cj4KPiBXaGVyZSBwb3NzaWJsZSwgdGhlIExTTSBob29rcyBjYW4gcmVwb3J0IHdoZXRoZXIgYSBm
-dWxsIGZpbGUgaGFzIGJlZW4KPiByZWFkIG9yIG5vdCBzbyB0aGF0IHRoZSBjb250ZW50cyBjYW4g
-YmUgcmVhc29uZWQgYWJvdXQuCj4KPiBTaWduZWQtb2ZmLWJ5OiBLZWVzIENvb2sgPGtlZXNjb29r
-QGNocm9taXVtLm9yZz4KPiAtLS0KPiAgIGRyaXZlcnMvYmFzZS9maXJtd2FyZV9sb2FkZXIvbWFp
-bi5jIHwgIDIgKy0KPiAgIGZzL2tlcm5lbF9yZWFkX2ZpbGUuYyAgICAgICAgICAgICAgIHwgNzgg
-KysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0KPiAgIGluY2x1ZGUvbGludXgva2VybmVsX3Jl
-YWRfZmlsZS5oICAgIHwgIDggKy0tCj4gICBrZXJuZWwva2V4ZWNfZmlsZS5jICAgICAgICAgICAg
-ICAgICB8ICA0ICstCj4gICBrZXJuZWwvbW9kdWxlLmMgICAgICAgICAgICAgICAgICAgICB8ICAy
-ICstCj4gICBzZWN1cml0eS9pbnRlZ3JpdHkvZGlnc2lnLmMgICAgICAgICB8ICAyICstCj4gICBz
-ZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5jICAgICB8ICAzICstCj4gICA3IGZpbGVzIGNo
-YW5nZWQsIDY1IGluc2VydGlvbnMoKyksIDM0IGRlbGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvYmFzZS9maXJtd2FyZV9sb2FkZXIvbWFpbi5jIGIvZHJpdmVycy9iYXNlL2Zpcm13
-YXJlX2xvYWRlci9tYWluLmMKPiBpbmRleCBiZDE5OTQwNDkzNWYuLmQ5NTI0OWI1Mjg0ZSAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2Jhc2UvZmlybXdhcmVfbG9hZGVyL21haW4uYwo+ICsrKyBiL2Ry
-aXZlcnMvYmFzZS9maXJtd2FyZV9sb2FkZXIvbWFpbi5jCj4gQEAgLTQ5NCw3ICs0OTQsNyBAQCBm
-d19nZXRfZmlsZXN5c3RlbV9maXJtd2FyZShzdHJ1Y3QgZGV2aWNlICpkZXZpY2UsIHN0cnVjdCBm
-d19wcml2ICpmd19wcml2LAo+ICAgCQlmd19wcml2LT5zaXplID0gMDsKPiAgIAo+ICAgCQkvKiBs
-b2FkIGZpcm13YXJlIGZpbGVzIGZyb20gdGhlIG1vdW50IG5hbWVzcGFjZSBvZiBpbml0ICovCj4g
-LQkJcmMgPSBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aF9pbml0bnMocGF0aCwgJmJ1ZmZlciwg
-bXNpemUsCj4gKwkJcmMgPSBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aF9pbml0bnMocGF0aCwg
-MCwgJmJ1ZmZlciwgbXNpemUsCj4gICAJCQkJCQkgICAgICAgTlVMTCwKPiAgIAkJCQkJCSAgICAg
-ICBSRUFESU5HX0ZJUk1XQVJFKTsKPiAgIAkJaWYgKHJjIDwgMCkgewo+IGRpZmYgLS1naXQgYS9m
-cy9rZXJuZWxfcmVhZF9maWxlLmMgYi9mcy9rZXJuZWxfcmVhZF9maWxlLmMKPiBpbmRleCBkNzNi
-YzNmYTcxMGEuLjkwZDI1NWZiZGQ5YiAxMDA2NDQKPiAtLS0gYS9mcy9rZXJuZWxfcmVhZF9maWxl
-LmMKPiArKysgYi9mcy9rZXJuZWxfcmVhZF9maWxlLmMKPiBAQCAtOSw2ICs5LDcgQEAKPiAgICAq
-IGtlcm5lbF9yZWFkX2ZpbGUoKSAtIHJlYWQgZmlsZSBjb250ZW50cyBpbnRvIGEga2VybmVsIGJ1
-ZmZlcgo+ICAgICoKPiAgICAqIEBmaWxlCWZpbGUgdG8gcmVhZCBmcm9tCj4gKyAqIEBvZmZzZXQJ
-d2hlcmUgdG8gc3RhcnQgcmVhZGluZyBmcm9tIChzZWUgYmVsb3cpLgo+ICAgICogQGJ1ZgkJcG9p
-bnRlciB0byBhICJ2b2lkICoiIGJ1ZmZlciBmb3IgcmVhZGluZyBpbnRvIChpZgo+ICAgICoJCSpA
-YnVmIGlzIE5VTEwsIGEgYnVmZmVyIHdpbGwgYmUgYWxsb2NhdGVkLCBhbmQKPiAgICAqCQlAYnVm
-X3NpemUgd2lsbCBiZSBpZ25vcmVkKQo+IEBAIC0xOSwxOSArMjAsMzEgQEAKPiAgICAqIEBpZAkJ
-dGhlIGtlcm5lbF9yZWFkX2ZpbGVfaWQgaWRlbnRpZnlpbmcgdGhlIHR5cGUgb2YKPiAgICAqCQlm
-aWxlIGNvbnRlbnRzIGJlaW5nIHJlYWQgKGZvciBMU01zIHRvIGV4YW1pbmUpCj4gICAgKgo+ICsg
-KiBAb2Zmc2V0IG11c3QgYmUgMCB1bmxlc3MgYm90aCBAYnVmIGFuZCBAZmlsZV9zaXplIGFyZSBu
-b24tTlVMTAo+ICsgKiAoaS5lLiB0aGUgY2FsbGVyIG11c3QgYmUgZXhwZWN0aW5nIHRvIHJlYWQg
-cGFydGlhbCBmaWxlIGNvbnRlbnRzCj4gKyAqIHZpYSBhbiBhbHJlYWR5LWFsbG9jYXRlZCBAYnVm
-LCBpbiBhdCBtb3N0IEBidWZfc2l6ZSBjaHVua3MsIGFuZAo+ICsgKiB3aWxsIGJlIGFibGUgdG8g
-ZGV0ZXJtaW5lIHdoZW4gdGhlIGVudGlyZSBmaWxlIHdhcyByZWFkIGJ5Cj4gKyAqIGNoZWNraW5n
-IEBmaWxlX3NpemUpLiBUaGlzIGlzbid0IGEgcmVjb21tZW5kZWQgd2F5IHRvIHJlYWQgYQo+ICsg
-KiBmaWxlLCB0aG91Z2gsIHNpbmNlIGl0IGlzIHBvc3NpYmxlIHRoYXQgdGhlIGNvbnRlbnRzIG1p
-Z2h0Cj4gKyAqIGNoYW5nZSBiZXR3ZWVuIGNhbGxzIHRvIGtlcm5lbF9yZWFkX2ZpbGUoKS4KPiAr
-ICoKPiAgICAqIFJldHVybnMgbnVtYmVyIG9mIGJ5dGVzIHJlYWQgKG5vIHNpbmdsZSByZWFkIHdp
-bGwgYmUgYmlnZ2VyCj4gICAgKiB0aGFuIElOVF9NQVgpLCBvciBuZWdhdGl2ZSBvbiBlcnJvci4K
-PiAgICAqCj4gICAgKi8KPiAtaW50IGtlcm5lbF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUs
-IHZvaWQgKipidWYsCj4gK2ludCBrZXJuZWxfcmVhZF9maWxlKHN0cnVjdCBmaWxlICpmaWxlLCBs
-b2ZmX3Qgb2Zmc2V0LCB2b2lkICoqYnVmLAo+ICAgCQkgICAgIHNpemVfdCBidWZfc2l6ZSwgc2l6
-ZV90ICpmaWxlX3NpemUsCj4gICAJCSAgICAgZW51bSBrZXJuZWxfcmVhZF9maWxlX2lkIGlkKQo+
-ICAgewo+ICAgCWxvZmZfdCBpX3NpemUsIHBvczsKPiAtCXNzaXplX3QgYnl0ZXMgPSAwOwo+ICsJ
-c2l6ZV90IGNvcGllZDsKPiAgIAl2b2lkICphbGxvY2F0ZWQgPSBOVUxMOwo+ICsJYm9vbCB3aG9s
-ZV9maWxlOwo+ICAgCWludCByZXQ7Cj4gICAKPiArCWlmIChvZmZzZXQgIT0gMCAmJiAoISpidWYg
-fHwgIWZpbGVfc2l6ZSkpCj4gKwkJcmV0dXJuIC1FSU5WQUw7Cj4gKwo+ICAgCWlmICghU19JU1JF
-RyhmaWxlX2lub2RlKGZpbGUpLT5pX21vZGUpKQo+ICAgCQlyZXR1cm4gLUVJTlZBTDsKPiAgIAo+
-IEBAIC0zOSwxOSArNTIsMjcgQEAgaW50IGtlcm5lbF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZp
-bGUsIHZvaWQgKipidWYsCj4gICAJaWYgKHJldCkKPiAgIAkJcmV0dXJuIHJldDsKPiAgIAo+IC0J
-cmV0ID0gc2VjdXJpdHlfa2VybmVsX3JlYWRfZmlsZShmaWxlLCBpZCwgdHJ1ZSk7Cj4gLQlpZiAo
-cmV0KQo+IC0JCWdvdG8gb3V0Owo+IC0KPiAgIAlpX3NpemUgPSBpX3NpemVfcmVhZChmaWxlX2lu
-b2RlKGZpbGUpKTsKPiAgIAlpZiAoaV9zaXplIDw9IDApIHsKPiAgIAkJcmV0ID0gLUVJTlZBTDsK
-PiAgIAkJZ290byBvdXQ7Cj4gICAJfQo+IC0JaWYgKGlfc2l6ZSA+IElOVF9NQVggfHwgaV9zaXpl
-ID4gYnVmX3NpemUpIHsKPiArCS8qIFRoZSBmaWxlIGlzIHRvbyBiaWcgZm9yIHNhbmUgYWN0aXZp
-dGllcy4gKi8KPiArCWlmIChpX3NpemUgPiBJTlRfTUFYKSB7Cj4gKwkJcmV0ID0gLUVGQklHOwo+
-ICsJCWdvdG8gb3V0Owo+ICsJfQo+ICsJLyogVGhlIGVudGlyZSBmaWxlIGNhbm5vdCBiZSByZWFk
-IGluIG9uZSBidWZmZXIuICovCj4gKwlpZiAoIWZpbGVfc2l6ZSAmJiBvZmZzZXQgPT0gMCAmJiBp
-X3NpemUgPiBidWZfc2l6ZSkgewo+ICAgCQlyZXQgPSAtRUZCSUc7Cj4gICAJCWdvdG8gb3V0Owo+
-ICAgCX0KPiArCj4gKwl3aG9sZV9maWxlID0gKG9mZnNldCA9PSAwICYmIGlfc2l6ZSA8PSBidWZf
-c2l6ZSk7CkEgaGFjayB0byBnZXQgdGhpcyBwYXNzaW5nIEkgYWRkZWQgd2hpY2ggcHJvYmFibHkg
-YnJlYWtzIHNvbWUgc2VjdXJpdHk/CmlmICh3aG9sZV9maWxlKSB7Cj4gKwlyZXQgPSBzZWN1cml0
-eV9rZXJuZWxfcmVhZF9maWxlKGZpbGUsIGlkLCB3aG9sZV9maWxlKTsKPiArCWlmIChyZXQpCj4g
-KwkJZ290byBvdXQ7Cj4gKwp9Cj4gICAJaWYgKGZpbGVfc2l6ZSkKPiAgIAkJKmZpbGVfc2l6ZSA9
-IGlfc2l6ZTsKPiAgIAo+IEBAIC02Miw5ICs4MywxNCBAQCBpbnQga2VybmVsX3JlYWRfZmlsZShz
-dHJ1Y3QgZmlsZSAqZmlsZSwgdm9pZCAqKmJ1ZiwKPiAgIAkJZ290byBvdXQ7Cj4gICAJfQo+ICAg
-Cj4gLQlwb3MgPSAwOwo+IC0Jd2hpbGUgKHBvcyA8IGlfc2l6ZSkgewo+IC0JCWJ5dGVzID0ga2Vy
-bmVsX3JlYWQoZmlsZSwgKmJ1ZiArIHBvcywgaV9zaXplIC0gcG9zLCAmcG9zKTsKPiArCXBvcyA9
-IG9mZnNldDsKPiArCWNvcGllZCA9IDA7Cj4gKwl3aGlsZSAoY29waWVkIDwgYnVmX3NpemUpIHsK
-PiArCQlzc2l6ZV90IGJ5dGVzOwo+ICsJCXNpemVfdCB3YW50ZWQgPSBtaW5fdChzaXplX3QsIGJ1
-Zl9zaXplIC0gY29waWVkLAo+ICsJCQkJCSAgICAgIGlfc2l6ZSAtIHBvcyk7Cj4gKwo+ICsJCWJ5
-dGVzID0ga2VybmVsX3JlYWQoZmlsZSwgKmJ1ZiArIGNvcGllZCwgd2FudGVkLCAmcG9zKTsKPiAg
-IAkJaWYgKGJ5dGVzIDwgMCkgewo+ICAgCQkJcmV0ID0gYnl0ZXM7Cj4gICAJCQlnb3RvIG91dF9m
-cmVlOwo+IEBAIC03MiwxNCArOTgsMTcgQEAgaW50IGtlcm5lbF9yZWFkX2ZpbGUoc3RydWN0IGZp
-bGUgKmZpbGUsIHZvaWQgKipidWYsCj4gICAKPiAgIAkJaWYgKGJ5dGVzID09IDApCj4gICAJCQli
-cmVhazsKPiArCQljb3BpZWQgKz0gYnl0ZXM7Cj4gICAJfQo+ICAgCj4gLQlpZiAocG9zICE9IGlf
-c2l6ZSkgewo+IC0JCXJldCA9IC1FSU87Cj4gLQkJZ290byBvdXRfZnJlZTsKPiAtCX0KPiArCWlm
-ICh3aG9sZV9maWxlKSB7Cj4gKwkJaWYgKHBvcyAhPSBpX3NpemUpIHsKPiArCQkJcmV0ID0gLUVJ
-TzsKPiArCQkJZ290byBvdXRfZnJlZTsKPiArCQl9Cj4gICAKPiAtCXJldCA9IHNlY3VyaXR5X2tl
-cm5lbF9wb3N0X3JlYWRfZmlsZShmaWxlLCAqYnVmLCBpX3NpemUsIGlkKTsKPiArCQlyZXQgPSBz
-ZWN1cml0eV9rZXJuZWxfcG9zdF9yZWFkX2ZpbGUoZmlsZSwgKmJ1ZiwgaV9zaXplLCBpZCk7Cj4g
-Kwl9Cj4gICAKPiAgIG91dF9mcmVlOgo+ICAgCWlmIChyZXQgPCAwKSB7Cj4gQEAgLTkxLDExICsx
-MjAsMTEgQEAgaW50IGtlcm5lbF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIHZvaWQgKipi
-dWYsCj4gICAKPiAgIG91dDoKPiAgIAlhbGxvd193cml0ZV9hY2Nlc3MoZmlsZSk7Cj4gLQlyZXR1
-cm4gcmV0ID09IDAgPyBwb3MgOiByZXQ7Cj4gKwlyZXR1cm4gcmV0ID09IDAgPyBjb3BpZWQgOiBy
-ZXQ7Cj4gICB9Cj4gICBFWFBPUlRfU1lNQk9MX0dQTChrZXJuZWxfcmVhZF9maWxlKTsKPiAgIAo+
-IC1pbnQga2VybmVsX3JlYWRfZmlsZV9mcm9tX3BhdGgoY29uc3QgY2hhciAqcGF0aCwgdm9pZCAq
-KmJ1ZiwKPiAraW50IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoKGNvbnN0IGNoYXIgKnBhdGgs
-IGxvZmZfdCBvZmZzZXQsIHZvaWQgKipidWYsCj4gICAJCQkgICAgICAgc2l6ZV90IGJ1Zl9zaXpl
-LCBzaXplX3QgKmZpbGVfc2l6ZSwKPiAgIAkJCSAgICAgICBlbnVtIGtlcm5lbF9yZWFkX2ZpbGVf
-aWQgaWQpCj4gICB7Cj4gQEAgLTEwOSwxNCArMTM4LDE1IEBAIGludCBrZXJuZWxfcmVhZF9maWxl
-X2Zyb21fcGF0aChjb25zdCBjaGFyICpwYXRoLCB2b2lkICoqYnVmLAo+ICAgCWlmIChJU19FUlIo
-ZmlsZSkpCj4gICAJCXJldHVybiBQVFJfRVJSKGZpbGUpOwo+ICAgCj4gLQlyZXQgPSBrZXJuZWxf
-cmVhZF9maWxlKGZpbGUsIGJ1ZiwgYnVmX3NpemUsIGZpbGVfc2l6ZSwgaWQpOwo+ICsJcmV0ID0g
-a2VybmVsX3JlYWRfZmlsZShmaWxlLCBvZmZzZXQsIGJ1ZiwgYnVmX3NpemUsIGZpbGVfc2l6ZSwg
-aWQpOwo+ICAgCWZwdXQoZmlsZSk7Cj4gICAJcmV0dXJuIHJldDsKPiAgIH0KPiAgIEVYUE9SVF9T
-WU1CT0xfR1BMKGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoKTsKPiAgIAo+IC1pbnQga2VybmVs
-X3JlYWRfZmlsZV9mcm9tX3BhdGhfaW5pdG5zKGNvbnN0IGNoYXIgKnBhdGgsIHZvaWQgKipidWYs
-Cj4gLQkJCQkgICAgICBzaXplX3QgYnVmX3NpemUsIHNpemVfdCAqZmlsZV9zaXplLAo+ICtpbnQg
-a2VybmVsX3JlYWRfZmlsZV9mcm9tX3BhdGhfaW5pdG5zKGNvbnN0IGNoYXIgKnBhdGgsIGxvZmZf
-dCBvZmZzZXQsCj4gKwkJCQkgICAgICB2b2lkICoqYnVmLCBzaXplX3QgYnVmX3NpemUsCj4gKwkJ
-CQkgICAgICBzaXplX3QgKmZpbGVfc2l6ZSwKPiAgIAkJCQkgICAgICBlbnVtIGtlcm5lbF9yZWFk
-X2ZpbGVfaWQgaWQpCj4gICB7Cj4gICAJc3RydWN0IGZpbGUgKmZpbGU7Cj4gQEAgLTEzNSwxNCAr
-MTY1LDE0IEBAIGludCBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aF9pbml0bnMoY29uc3QgY2hh
-ciAqcGF0aCwgdm9pZCAqKmJ1ZiwKPiAgIAlpZiAoSVNfRVJSKGZpbGUpKQo+ICAgCQlyZXR1cm4g
-UFRSX0VSUihmaWxlKTsKPiAgIAo+IC0JcmV0ID0ga2VybmVsX3JlYWRfZmlsZShmaWxlLCBidWYs
-IGJ1Zl9zaXplLCBmaWxlX3NpemUsIGlkKTsKPiArCXJldCA9IGtlcm5lbF9yZWFkX2ZpbGUoZmls
-ZSwgb2Zmc2V0LCBidWYsIGJ1Zl9zaXplLCBmaWxlX3NpemUsIGlkKTsKPiAgIAlmcHV0KGZpbGUp
-Owo+ICAgCXJldHVybiByZXQ7Cj4gICB9Cj4gICBFWFBPUlRfU1lNQk9MX0dQTChrZXJuZWxfcmVh
-ZF9maWxlX2Zyb21fcGF0aF9pbml0bnMpOwo+ICAgCj4gLWludCBrZXJuZWxfcmVhZF9maWxlX2Zy
-b21fZmQoaW50IGZkLCB2b2lkICoqYnVmLCBzaXplX3QgYnVmX3NpemUsCj4gLQkJCSAgICAgc2l6
-ZV90ICpmaWxlX3NpemUsCj4gK2ludCBrZXJuZWxfcmVhZF9maWxlX2Zyb21fZmQoaW50IGZkLCBs
-b2ZmX3Qgb2Zmc2V0LCB2b2lkICoqYnVmLAo+ICsJCQkgICAgIHNpemVfdCBidWZfc2l6ZSwgc2l6
-ZV90ICpmaWxlX3NpemUsCj4gICAJCQkgICAgIGVudW0ga2VybmVsX3JlYWRfZmlsZV9pZCBpZCkK
-PiAgIHsKPiAgIAlzdHJ1Y3QgZmQgZiA9IGZkZ2V0KGZkKTsKPiBAQCAtMTUxLDcgKzE4MSw3IEBA
-IGludCBrZXJuZWxfcmVhZF9maWxlX2Zyb21fZmQoaW50IGZkLCB2b2lkICoqYnVmLCBzaXplX3Qg
-YnVmX3NpemUsCj4gICAJaWYgKCFmLmZpbGUpCj4gICAJCWdvdG8gb3V0Owo+ICAgCj4gLQlyZXQg
-PSBrZXJuZWxfcmVhZF9maWxlKGYuZmlsZSwgYnVmLCBidWZfc2l6ZSwgZmlsZV9zaXplLCBpZCk7
-Cj4gKwlyZXQgPSBrZXJuZWxfcmVhZF9maWxlKGYuZmlsZSwgb2Zmc2V0LCBidWYsIGJ1Zl9zaXpl
-LCBmaWxlX3NpemUsIGlkKTsKPiAgIG91dDoKPiAgIAlmZHB1dChmKTsKPiAgIAlyZXR1cm4gcmV0
-Owo+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L2tlcm5lbF9yZWFkX2ZpbGUuaCBiL2luY2x1
-ZGUvbGludXgva2VybmVsX3JlYWRfZmlsZS5oCj4gaW5kZXggMDIzMjkzZWFmOTQ4Li41NzVmZmEx
-MDMxZDMgMTAwNjQ0Cj4gLS0tIGEvaW5jbHVkZS9saW51eC9rZXJuZWxfcmVhZF9maWxlLmgKPiAr
-KysgYi9pbmNsdWRlL2xpbnV4L2tlcm5lbF9yZWFkX2ZpbGUuaAo+IEBAIC0zNSwxOSArMzUsMTkg
-QEAgc3RhdGljIGlubGluZSBjb25zdCBjaGFyICprZXJuZWxfcmVhZF9maWxlX2lkX3N0cihlbnVt
-IGtlcm5lbF9yZWFkX2ZpbGVfaWQgaWQpCj4gICAJcmV0dXJuIGtlcm5lbF9yZWFkX2ZpbGVfc3Ry
-W2lkXTsKPiAgIH0KPiAgIAo+IC1pbnQga2VybmVsX3JlYWRfZmlsZShzdHJ1Y3QgZmlsZSAqZmls
-ZSwKPiAraW50IGtlcm5lbF9yZWFkX2ZpbGUoc3RydWN0IGZpbGUgKmZpbGUsIGxvZmZfdCBvZmZz
-ZXQsCj4gICAJCSAgICAgdm9pZCAqKmJ1Ziwgc2l6ZV90IGJ1Zl9zaXplLAo+ICAgCQkgICAgIHNp
-emVfdCAqZmlsZV9zaXplLAo+ICAgCQkgICAgIGVudW0ga2VybmVsX3JlYWRfZmlsZV9pZCBpZCk7
-Cj4gLWludCBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aChjb25zdCBjaGFyICpwYXRoLAo+ICtp
-bnQga2VybmVsX3JlYWRfZmlsZV9mcm9tX3BhdGgoY29uc3QgY2hhciAqcGF0aCwgbG9mZl90IG9m
-ZnNldCwKPiAgIAkJCSAgICAgICB2b2lkICoqYnVmLCBzaXplX3QgYnVmX3NpemUsCj4gICAJCQkg
-ICAgICAgc2l6ZV90ICpmaWxlX3NpemUsCj4gICAJCQkgICAgICAgZW51bSBrZXJuZWxfcmVhZF9m
-aWxlX2lkIGlkKTsKPiAtaW50IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoX2luaXRucyhjb25z
-dCBjaGFyICpwYXRoLAo+ICtpbnQga2VybmVsX3JlYWRfZmlsZV9mcm9tX3BhdGhfaW5pdG5zKGNv
-bnN0IGNoYXIgKnBhdGgsIGxvZmZfdCBvZmZzZXQsCj4gICAJCQkJICAgICAgdm9pZCAqKmJ1Ziwg
-c2l6ZV90IGJ1Zl9zaXplLAo+ICAgCQkJCSAgICAgIHNpemVfdCAqZmlsZV9zaXplLAo+ICAgCQkJ
-CSAgICAgIGVudW0ga2VybmVsX3JlYWRfZmlsZV9pZCBpZCk7Cj4gLWludCBrZXJuZWxfcmVhZF9m
-aWxlX2Zyb21fZmQoaW50IGZkLAo+ICtpbnQga2VybmVsX3JlYWRfZmlsZV9mcm9tX2ZkKGludCBm
-ZCwgbG9mZl90IG9mZnNldCwKPiAgIAkJCSAgICAgdm9pZCAqKmJ1Ziwgc2l6ZV90IGJ1Zl9zaXpl
-LAo+ICAgCQkJICAgICBzaXplX3QgKmZpbGVfc2l6ZSwKPiAgIAkJCSAgICAgZW51bSBrZXJuZWxf
-cmVhZF9maWxlX2lkIGlkKTsKPiBkaWZmIC0tZ2l0IGEva2VybmVsL2tleGVjX2ZpbGUuYyBiL2tl
-cm5lbC9rZXhlY19maWxlLmMKPiBpbmRleCA4NzhjYTY4NGEzYTEuLjQ1NzI2YmM4ZjZjZSAxMDA2
-NDQKPiAtLS0gYS9rZXJuZWwva2V4ZWNfZmlsZS5jCj4gKysrIGIva2VybmVsL2tleGVjX2ZpbGUu
-Ywo+IEBAIC0yMjEsNyArMjIxLDcgQEAga2ltYWdlX2ZpbGVfcHJlcGFyZV9zZWdtZW50cyhzdHJ1
-Y3Qga2ltYWdlICppbWFnZSwgaW50IGtlcm5lbF9mZCwgaW50IGluaXRyZF9mZCwKPiAgIAlpbnQg
-cmV0Owo+ICAgCXZvaWQgKmxkYXRhOwo+ICAgCj4gLQlyZXQgPSBrZXJuZWxfcmVhZF9maWxlX2Zy
-b21fZmQoa2VybmVsX2ZkLCAmaW1hZ2UtPmtlcm5lbF9idWYsCj4gKwlyZXQgPSBrZXJuZWxfcmVh
-ZF9maWxlX2Zyb21fZmQoa2VybmVsX2ZkLCAwLCAmaW1hZ2UtPmtlcm5lbF9idWYsCj4gICAJCQkJ
-ICAgICAgIElOVF9NQVgsIE5VTEwsIFJFQURJTkdfS0VYRUNfSU1BR0UpOwo+ICAgCWlmIChyZXQg
-PCAwKQo+ICAgCQlyZXR1cm4gcmV0Owo+IEBAIC0yNDEsNyArMjQxLDcgQEAga2ltYWdlX2ZpbGVf
-cHJlcGFyZV9zZWdtZW50cyhzdHJ1Y3Qga2ltYWdlICppbWFnZSwgaW50IGtlcm5lbF9mZCwgaW50
-IGluaXRyZF9mZCwKPiAgICNlbmRpZgo+ICAgCS8qIEl0IGlzIHBvc3NpYmxlIHRoYXQgdGhlcmUg
-bm8gaW5pdHJhbWZzIGlzIGJlaW5nIGxvYWRlZCAqLwo+ICAgCWlmICghKGZsYWdzICYgS0VYRUNf
-RklMRV9OT19JTklUUkFNRlMpKSB7Cj4gLQkJcmV0ID0ga2VybmVsX3JlYWRfZmlsZV9mcm9tX2Zk
-KGluaXRyZF9mZCwgJmltYWdlLT5pbml0cmRfYnVmLAo+ICsJCXJldCA9IGtlcm5lbF9yZWFkX2Zp
-bGVfZnJvbV9mZChpbml0cmRfZmQsIDAsICZpbWFnZS0+aW5pdHJkX2J1ZiwKPiAgIAkJCQkJICAg
-ICAgIElOVF9NQVgsIE5VTEwsCj4gICAJCQkJCSAgICAgICBSRUFESU5HX0tFWEVDX0lOSVRSQU1G
-Uyk7Cj4gICAJCWlmIChyZXQgPCAwKQo+IGRpZmYgLS1naXQgYS9rZXJuZWwvbW9kdWxlLmMgYi9r
-ZXJuZWwvbW9kdWxlLmMKPiBpbmRleCA5MGE0Nzg4ZGZmOWQuLmQzNTNkMWY2NzY4MSAxMDA2NDQK
-PiAtLS0gYS9rZXJuZWwvbW9kdWxlLmMKPiArKysgYi9rZXJuZWwvbW9kdWxlLmMKPiBAQCAtNDAw
-Nyw3ICs0MDA3LDcgQEAgU1lTQ0FMTF9ERUZJTkUzKGZpbml0X21vZHVsZSwgaW50LCBmZCwgY29u
-c3QgY2hhciBfX3VzZXIgKiwgdWFyZ3MsIGludCwgZmxhZ3MpCj4gICAJCSAgICAgIHxNT0RVTEVf
-SU5JVF9JR05PUkVfVkVSTUFHSUMpKQo+ICAgCQlyZXR1cm4gLUVJTlZBTDsKPiAgIAo+IC0JZXJy
-ID0ga2VybmVsX3JlYWRfZmlsZV9mcm9tX2ZkKGZkLCAmaGRyLCBJTlRfTUFYLCBOVUxMLAo+ICsJ
-ZXJyID0ga2VybmVsX3JlYWRfZmlsZV9mcm9tX2ZkKGZkLCAwLCAmaGRyLCBJTlRfTUFYLCBOVUxM
-LAo+ICAgCQkJCSAgICAgICBSRUFESU5HX01PRFVMRSk7Cj4gICAJaWYgKGVyciA8IDApCj4gICAJ
-CXJldHVybiBlcnI7Cj4gZGlmZiAtLWdpdCBhL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYyBi
-L3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYwo+IGluZGV4IDhhNTIzZGZkN2ZkNy4uMGY1MThk
-Y2ZkZTA1IDEwMDY0NAo+IC0tLSBhL3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYwo+ICsrKyBi
-L3NlY3VyaXR5L2ludGVncml0eS9kaWdzaWcuYwo+IEBAIC0xNzUsNyArMTc1LDcgQEAgaW50IF9f
-aW5pdCBpbnRlZ3JpdHlfbG9hZF94NTA5KGNvbnN0IHVuc2lnbmVkIGludCBpZCwgY29uc3QgY2hh
-ciAqcGF0aCkKPiAgIAlpbnQgcmM7Cj4gICAJa2V5X3Blcm1fdCBwZXJtOwo+ICAgCj4gLQlyYyA9
-IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoKHBhdGgsICZkYXRhLCBJTlRfTUFYLCBOVUxMLAo+
-ICsJcmMgPSBrZXJuZWxfcmVhZF9maWxlX2Zyb21fcGF0aChwYXRoLCAwLCAmZGF0YSwgSU5UX01B
-WCwgTlVMTCwKPiAgIAkJCQkJUkVBRElOR19YNTA5X0NFUlRJRklDQVRFKTsKPiAgIAlpZiAocmMg
-PCAwKSB7Cj4gICAJCXByX2VycigiVW5hYmxlIHRvIG9wZW4gZmlsZTogJXMgKCVkKSIsIHBhdGgs
-IHJjKTsKPiBkaWZmIC0tZ2l0IGEvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfZnMuYyBiL3Nl
-Y3VyaXR5L2ludGVncml0eS9pbWEvaW1hX2ZzLmMKPiBpbmRleCA1ZmM1NmNjYjY2NzguLmVhOGZm
-OGEwN2IzNiAxMDA2NDQKPiAtLS0gYS9zZWN1cml0eS9pbnRlZ3JpdHkvaW1hL2ltYV9mcy5jCj4g
-KysrIGIvc2VjdXJpdHkvaW50ZWdyaXR5L2ltYS9pbWFfZnMuYwo+IEBAIC0yODQsNyArMjg0LDgg
-QEAgc3RhdGljIHNzaXplX3QgaW1hX3JlYWRfcG9saWN5KGNoYXIgKnBhdGgpCj4gICAJZGF0YXAg
-PSBwYXRoOwo+ICAgCXN0cnNlcCgmZGF0YXAsICJcbiIpOwo+ICAgCj4gLQlyYyA9IGtlcm5lbF9y
-ZWFkX2ZpbGVfZnJvbV9wYXRoKHBhdGgsICZkYXRhLCBJTlRfTUFYLCBOVUxMLCBSRUFESU5HX1BP
-TElDWSk7Cj4gKwlyYyA9IGtlcm5lbF9yZWFkX2ZpbGVfZnJvbV9wYXRoKHBhdGgsIDAsICZkYXRh
-LCBJTlRfTUFYLCBOVUxMLAo+ICsJCQkJCVJFQURJTkdfUE9MSUNZKTsKPiAgIAlpZiAocmMgPCAw
-KSB7Cj4gICAJCXByX2VycigiVW5hYmxlIHRvIG9wZW4gZmlsZTogJXMgKCVkKSIsIHBhdGgsIHJj
-KTsKPiAgIAkJcmV0dXJuIHJjOwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Looks good.
+
+On 2020-07-22 12:30 p.m., Kees Cook wrote:
+> On non-EFI systems, it wasn't possible to test the platform firmware
+> loader because it will have never set "checked_fw" during __init.
+> Instead, allow the test code to override this check. Additionally split
+> the declarations into a private header file so it there is greater
+> enforcement of the symbol visibility.
+>
+> Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
+Acked-by: Scott Branden <scott.branden@broadcom.com>
+> ---
+>   drivers/firmware/efi/embedded-firmware.c | 21 ++++++++++++++++-----
+>   drivers/firmware/efi/embedded-firmware.h | 19 +++++++++++++++++++
+>   include/linux/efi_embedded_fw.h          | 13 -------------
+>   lib/test_firmware.c                      |  5 +++++
+>   4 files changed, 40 insertions(+), 18 deletions(-)
+>   create mode 100644 drivers/firmware/efi/embedded-firmware.h
+>
+> diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/efi/embedded-firmware.c
+> index a1b199de9006..0fb03cd0a5a2 100644
+> --- a/drivers/firmware/efi/embedded-firmware.c
+> +++ b/drivers/firmware/efi/embedded-firmware.c
+> @@ -14,11 +14,22 @@
+>   #include <linux/vmalloc.h>
+>   #include <crypto/sha.h>
+>   
+> +#include "embedded-firmware.h"
+> +
+> +#ifdef CONFIG_TEST_FIRMWARE
+> +# define EFI_EMBEDDED_FW_VISIBILITY
+> +#else
+> +# define EFI_EMBEDDED_FW_VISIBILITY static
+> +#endif
+> +
+> +EFI_EMBEDDED_FW_VISIBILITY LIST_HEAD(efi_embedded_fw_list);
+> +EFI_EMBEDDED_FW_VISIBILITY bool efi_embedded_fw_checked;
+> +
+>   /* Exported for use by lib/test_firmware.c only */
+> -LIST_HEAD(efi_embedded_fw_list);
+> +#ifdef CONFIG_TEST_FIRMWARE
+>   EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
+> -
+> -static bool checked_for_fw;
+> +EXPORT_SYMBOL_GPL(efi_embedded_fw_checked);
+> +#endif
+>   
+>   static const struct dmi_system_id * const embedded_fw_table[] = {
+>   #ifdef CONFIG_TOUCHSCREEN_DMI
+> @@ -119,14 +130,14 @@ void __init efi_check_for_embedded_firmwares(void)
+>   		}
+>   	}
+>   
+> -	checked_for_fw = true;
+> +	efi_embedded_fw_checked = true;
+>   }
+>   
+>   int efi_get_embedded_fw(const char *name, const u8 **data, size_t *size)
+>   {
+>   	struct efi_embedded_fw *iter, *fw = NULL;
+>   
+> -	if (!checked_for_fw) {
+> +	if (!efi_embedded_fw_checked) {
+>   		pr_warn("Warning %s called while we did not check for embedded fw\n",
+>   			__func__);
+>   		return -ENOENT;
+> diff --git a/drivers/firmware/efi/embedded-firmware.h b/drivers/firmware/efi/embedded-firmware.h
+> new file mode 100644
+> index 000000000000..34113316d068
+> --- /dev/null
+> +++ b/drivers/firmware/efi/embedded-firmware.h
+> @@ -0,0 +1,19 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +#ifndef _EFI_EMBEDDED_FW_INTERNAL_H_
+> +#define _EFI_EMBEDDED_FW_INTERNAL_H_
+> +
+> +/*
+> + * This struct and efi_embedded_fw_list are private to the efi-embedded fw
+> + * implementation they only in separate header for use by lib/test_firmware.c.
+> + */
+> +struct efi_embedded_fw {
+> +	struct list_head list;
+> +	const char *name;
+> +	const u8 *data;
+> +	size_t length;
+> +};
+> +
+> +extern struct list_head efi_embedded_fw_list;
+> +extern bool efi_embedded_fw_checked;
+> +
+> +#endif /* _EFI_EMBEDDED_FW_INTERNAL_H_ */
+> diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded_fw.h
+> index 57eac5241303..4ad5db9f5312 100644
+> --- a/include/linux/efi_embedded_fw.h
+> +++ b/include/linux/efi_embedded_fw.h
+> @@ -7,19 +7,6 @@
+>   
+>   #define EFI_EMBEDDED_FW_PREFIX_LEN		8
+>   
+> -/*
+> - * This struct and efi_embedded_fw_list are private to the efi-embedded fw
+> - * implementation they are in this header for use by lib/test_firmware.c only!
+> - */
+> -struct efi_embedded_fw {
+> -	struct list_head list;
+> -	const char *name;
+> -	const u8 *data;
+> -	size_t length;
+> -};
+> -
+> -extern struct list_head efi_embedded_fw_list;
+> -
+>   /**
+>    * struct efi_embedded_fw_desc - This struct is used by the EFI embedded-fw
+>    *                               code to search for embedded firmwares.
+> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
+> index 9fee2b93a8d1..62af792e151c 100644
+> --- a/lib/test_firmware.c
+> +++ b/lib/test_firmware.c
+> @@ -489,6 +489,7 @@ static ssize_t trigger_request_store(struct device *dev,
+>   static DEVICE_ATTR_WO(trigger_request);
+>   
+>   #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
+> +#include "../drivers/firmware/efi/embedded-firmware.h"
+>   static ssize_t trigger_request_platform_store(struct device *dev,
+>   					      struct device_attribute *attr,
+>   					      const char *buf, size_t count)
+> @@ -501,6 +502,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+>   	};
+>   	struct efi_embedded_fw efi_embedded_fw;
+>   	const struct firmware *firmware = NULL;
+> +	bool saved_efi_embedded_fw_checked;
+>   	char *name;
+>   	int rc;
+>   
+> @@ -513,6 +515,8 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+>   	efi_embedded_fw.data = (void *)test_data;
+>   	efi_embedded_fw.length = sizeof(test_data);
+>   	list_add(&efi_embedded_fw.list, &efi_embedded_fw_list);
+> +	saved_efi_embedded_fw_checked = efi_embedded_fw_checked;
+> +	efi_embedded_fw_checked = true;
+>   
+>   	pr_info("loading '%s'\n", name);
+>   	rc = firmware_request_platform(&firmware, name, dev);
+> @@ -530,6 +534,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
+>   	rc = count;
+>   
+>   out:
+> +	efi_embedded_fw_checked = saved_efi_embedded_fw_checked;
+>   	release_firmware(firmware);
+>   	list_del(&efi_embedded_fw.list);
+>   	kfree(name);
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
