@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyg3T-0006ud-9a
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 18:34:56 +0000
-Received: by mail-io1-f72.google.com with SMTP id f25so4660214ioh.7
- for <kexec@lists.infradead.org>; Thu, 23 Jul 2020 11:34:51 -0700 (PDT)
+ id 1jyjRv-0001oH-Es
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 22:12:24 +0000
+References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
+ <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
+From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [PATCH v4 03/12] powerpc/kexec_file: add helper functions for
+ getting memory ranges
+In-reply-to: <159524946347.20855.15784642736087777919.stgit@hbathini.in.ibm.com>
+Date: Thu, 23 Jul 2020 19:12:05 -0300
+Message-ID: <878sf96fuy.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-References: <20200722215048.GL220876@anatevka.americas.hpqcorp.net>
- <20200723000012.GA1325359@bjorn-Precision-5520>
-In-Reply-To: <20200723000012.GA1325359@bjorn-Precision-5520>
-From: Kairui Song <kasong@redhat.com>
-Date: Fri, 24 Jul 2020 02:34:39 +0800
-Message-ID: <CACPcB9f_cD4RFA_H002LPVaAqrDh_81fjEkM2HGekdWVa+V_BQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
- kdump kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,90 +24,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Randy Wright <rwright@hpe.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Deepa Dinamani <deepa.kernel@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
-
-On Thu, Jul 23, 2020 at 8:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
->
-> On Wed, Jul 22, 2020 at 03:50:48PM -0600, Jerry Hoemann wrote:
-> > On Wed, Jul 22, 2020 at 10:21:23AM -0500, Bjorn Helgaas wrote:
-> > > On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
->
-> > > > I think I didn't make one thing clear, The PCI UR error never arrives
-> > > > in kernel, it's the iLo BMC on that HPE machine caught the error, and
-> > > > send kernel an NMI. kernel is panicked by NMI, I'm still trying to
-> > > > figure out why the NMI hanged kernel, even with panic=-1,
-> > > > panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
-> > > > NMI by shutdown the devices in right order, that's also a solution.
->
-> ACPI v6.3, chapter 18, does mention NMIs several times, e.g., Table
-> 18-394 and sec 18.4.  I'm not familiar enough with APEI to know
-> whether Linux correctly supports all those cases.  Maybe this is a
-> symptom that we don't?
->
-> > > I'm not sure how much sympathy to have for this situation.  A PCIe UR
-> > > is fatal for the transaction and maybe even the device, but from the
-> > > overall system point of view, it *should* be a recoverable error and
-> > > we shouldn't panic.
-> > >
-> > > Errors like that should be reported via the normal AER or ACPI/APEI
-> > > mechanisms.  It sounds like in this case, the platform has decided
-> > > these aren't enough and it is trying to force a reboot?  If this is
-> > > "special" platform behavior, I'm not sure how much we need to cater
-> > > for it.
-> >
-> > Are these AER errors the type processed by the GHES code?
->
-> My understanding from ACPI v6.3, sec 18.3.2, is that the Hardware
-> Error Source Table may contain Error Source Descriptors of types like:
->
->   IA-32 Machine Check Exception
->   IA-32 Corrected Machine Check
->   IA-32 Non-Maskable Interrupt
->   PCIe Root Port AER
->   PCIe Device AER
->   Generic Hardware Error Source (GHES)
->   Hardware Error Notification
->   IA-32 Deferred Machine Check
->
-> I would naively expect PCIe UR errors to be reported via one of the
-> PCIe Error Sources, not GHES, but maybe there's some reason to use
-> GHES.
->
-> The kernel should already know how to deal with the PCIe AER errors,
-> but we'd have to add new device-specific code to handle things
-> reported via GHES, along the lines of what Shiju is doing here:
->
->   https://lore.kernel.org/r/20200722104245.1060-1-shiju.jose@huawei.com
->
-> > I'll note that RedHat runs their crash kernel with:  hest_disable.
-> > So, the ghes code is disabled in the crash kernel.
->
-> That would disable all the HEST error sources, including the PCIe AER
-> ones as well as GHES ones.  If we turn off some of the normal error
-> handling mechanisms, I guess we have to expect that some errors won't
-> be handled correctly.
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
 
-Hi, that's true, hest_disable is added by default to reduce memory
-usage in special cases.
-But even if I remove hest_disable and have GHES enabled, but the
-hanging issue still exists, from the iLO console log, it's still
-sending an NMI to kernel, and kernel hanged.
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-The NMI won't hang the kernel for 100 percent, sometime it will just
-panic and reboot and sometimes it hangs. This behavior didn't change
-after/before enabled the GHES.
+> In kexec case, the kernel to be loaded uses the same memory layout as
+> the running kernel. So, passing on the DT of the running kernel would
+> be good enough.
+>
+> But in case of kdump, different memory ranges are needed to manage
+> loading the kdump kernel, booting into it and exporting the elfcore
+> of the crashing kernel. The ranges are exclude memory ranges, usable
+> memory ranges, reserved memory ranges and crash memory ranges.
+>
+> Exclude memory ranges specify the list of memory ranges to avoid while
+> loading kdump segments. Usable memory ranges list the memory ranges
+> that could be used for booting kdump kernel. Reserved memory ranges
+> list the memory regions for the loading kernel's reserve map. Crash
+> memory ranges list the memory ranges to be exported as the crashing
+> kernel's elfcore.
+>
+> Add helper functions for setting up the above mentioned memory ranges.
+> This helpers facilitate in understanding the subsequent changes better
+> and make it easy to setup the different memory ranges listed above, as
+> and when appropriate.
+>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> Tested-by: Pingfan Liu <piliu@redhat.com>
 
-Maybe this is a "special platform behavior". I'm also not 100 percent
-sure if/how we can cover this in a good way for now.
-I'll try to figure how the NMI actually hanged the kernel and see if
-it could be fixed in other ways.
+Just one comment below, but regardless:
 
--- 
-Best Regards,
-Kairui Song
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
+> +/**
+> + * add_htab_mem_range - Adds htab range to the given memory ranges list,
+> + *                      if it exists
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_htab_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	if (!htab_address)
+> +		return 0;
+> +
+> +	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
+> +}
+
+I believe you need to surround this function with `#ifdef
+CONFIG_PPC_BOOK3S_64` and `#endif` to match what is done in
+<asm/kexec_ranges.h>.
+
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 _______________________________________________
 kexec mailing list
