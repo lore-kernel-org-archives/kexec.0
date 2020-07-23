@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jycPK-0000Di-Fx
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 14:41:15 +0000
-From: Nathan Lynch <nathanl@linux.ibm.com>
-Subject: Re: [PATCHv3 1/2] powerpc/pseries: group lmb operation and memblock's
-In-Reply-To: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
-References: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
-Date: Thu, 23 Jul 2020 09:41:06 -0500
-Message-ID: <87ft9i1egt.fsf@linux.ibm.com>
+ id 1jyg3T-0006ud-9a
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 18:34:56 +0000
+Received: by mail-io1-f72.google.com with SMTP id f25so4660214ioh.7
+ for <kexec@lists.infradead.org>; Thu, 23 Jul 2020 11:34:51 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200722215048.GL220876@anatevka.americas.hpqcorp.net>
+ <20200723000012.GA1325359@bjorn-Precision-5520>
+In-Reply-To: <20200723000012.GA1325359@bjorn-Precision-5520>
+From: Kairui Song <kasong@redhat.com>
+Date: Fri, 24 Jul 2020 02:34:39 +0800
+Message-ID: <CACPcB9f_cD4RFA_H002LPVaAqrDh_81fjEkM2HGekdWVa+V_BQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] PCI, kdump: Clear bus master bit upon shutdown in
+ kdump kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,62 +27,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: jroedel@suse.de, Baoquan He <bhe@redhat.com>, linux-pci@vger.kernel.org, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Jerry Hoemann <jerry.hoemann@hpe.com>, Randy Wright <rwright@hpe.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Deepa Dinamani <deepa.kernel@gmail.com>, Myron Stowe <myron.stowe@redhat.com>, Khalid Aziz <khalid@gonehiking.org>
 
-Pingfan Liu <kernelfans@gmail.com> writes:
-> This patch prepares for the incoming patch which swaps the order of KOBJ_
-> uevent and dt's updating.
+On Thu, Jul 23, 2020 at 8:00 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
 >
-> It has no functional effect, just groups lmb operation and memblock's in
-> order to insert dt updating operation easily, and makes it easier to
-> review.
+> On Wed, Jul 22, 2020 at 03:50:48PM -0600, Jerry Hoemann wrote:
+> > On Wed, Jul 22, 2020 at 10:21:23AM -0500, Bjorn Helgaas wrote:
+> > > On Wed, Jul 22, 2020 at 10:52:26PM +0800, Kairui Song wrote:
+>
+> > > > I think I didn't make one thing clear, The PCI UR error never arrives
+> > > > in kernel, it's the iLo BMC on that HPE machine caught the error, and
+> > > > send kernel an NMI. kernel is panicked by NMI, I'm still trying to
+> > > > figure out why the NMI hanged kernel, even with panic=-1,
+> > > > panic_on_io_nmi, panic_on_unknown_nmi all set. But if we can avoid the
+> > > > NMI by shutdown the devices in right order, that's also a solution.
+>
+> ACPI v6.3, chapter 18, does mention NMIs several times, e.g., Table
+> 18-394 and sec 18.4.  I'm not familiar enough with APEI to know
+> whether Linux correctly supports all those cases.  Maybe this is a
+> symptom that we don't?
+>
+> > > I'm not sure how much sympathy to have for this situation.  A PCIe UR
+> > > is fatal for the transaction and maybe even the device, but from the
+> > > overall system point of view, it *should* be a recoverable error and
+> > > we shouldn't panic.
+> > >
+> > > Errors like that should be reported via the normal AER or ACPI/APEI
+> > > mechanisms.  It sounds like in this case, the platform has decided
+> > > these aren't enough and it is trying to force a reboot?  If this is
+> > > "special" platform behavior, I'm not sure how much we need to cater
+> > > for it.
+> >
+> > Are these AER errors the type processed by the GHES code?
+>
+> My understanding from ACPI v6.3, sec 18.3.2, is that the Hardware
+> Error Source Table may contain Error Source Descriptors of types like:
+>
+>   IA-32 Machine Check Exception
+>   IA-32 Corrected Machine Check
+>   IA-32 Non-Maskable Interrupt
+>   PCIe Root Port AER
+>   PCIe Device AER
+>   Generic Hardware Error Source (GHES)
+>   Hardware Error Notification
+>   IA-32 Deferred Machine Check
+>
+> I would naively expect PCIe UR errors to be reported via one of the
+> PCIe Error Sources, not GHES, but maybe there's some reason to use
+> GHES.
+>
+> The kernel should already know how to deal with the PCIe AER errors,
+> but we'd have to add new device-specific code to handle things
+> reported via GHES, along the lines of what Shiju is doing here:
+>
+>   https://lore.kernel.org/r/20200722104245.1060-1-shiju.jose@huawei.com
+>
+> > I'll note that RedHat runs their crash kernel with:  hest_disable.
+> > So, the ghes code is disabled in the crash kernel.
+>
+> That would disable all the HEST error sources, including the PCIe AER
+> ones as well as GHES ones.  If we turn off some of the normal error
+> handling mechanisms, I guess we have to expect that some errors won't
+> be handled correctly.
 
-...
 
-> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> index 5d545b7..1a3ac3b 100644
-> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> @@ -355,7 +355,8 @@ static int dlpar_add_lmb(struct drmem_lmb *);
->  static int dlpar_remove_lmb(struct drmem_lmb *lmb)
->  {
->  	unsigned long block_sz;
-> -	int rc;
-> +	phys_addr_t base_addr;
-> +	int rc, nid;
->  
->  	if (!lmb_is_removable(lmb))
->  		return -EINVAL;
-> @@ -364,17 +365,19 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
->  	if (rc)
->  		return rc;
->  
-> +	base_addr = lmb->base_addr;
-> +	nid = lmb->nid;
->  	block_sz = pseries_memory_block_size();
->  
-> -	__remove_memory(lmb->nid, lmb->base_addr, block_sz);
-> -
-> -	/* Update memory regions for memory remove */
-> -	memblock_remove(lmb->base_addr, block_sz);
-> -
->  	invalidate_lmb_associativity_index(lmb);
->  	lmb_clear_nid(lmb);
->  	lmb->flags &= ~DRCONF_MEM_ASSIGNED;
->  
-> +	__remove_memory(nid, base_addr, block_sz);
-> +
-> +	/* Update memory regions for memory remove */
-> +	memblock_remove(base_addr, block_sz);
-> +
->  	return 0;
->  }
+Hi, that's true, hest_disable is added by default to reduce memory
+usage in special cases.
+But even if I remove hest_disable and have GHES enabled, but the
+hanging issue still exists, from the iLO console log, it's still
+sending an NMI to kernel, and kernel hanged.
 
-I don't understand; the commit message should not claim this has no
-functional effect when it changes the order of operations like
-this. Maybe this is an improvement over the current behavior, but it's
-not explained why it would be.
+The NMI won't hang the kernel for 100 percent, sometime it will just
+panic and reboot and sometimes it hangs. This behavior didn't change
+after/before enabled the GHES.
+
+Maybe this is a "special platform behavior". I'm also not 100 percent
+sure if/how we can cover this in a good way for now.
+I'll try to figure how the NMI actually hanged the kernel and see if
+it could be fixed in other ways.
+
+-- 
+Best Regards,
+Kairui Song
+
 
 _______________________________________________
 kexec mailing list
