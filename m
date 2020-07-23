@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x644.google.com ([2607:f8b0:4864:20::644])
+Received: from mail-pf1-x441.google.com ([2607:f8b0:4864:20::441])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyf5S-0006gP-Bs
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 17:32:55 +0000
-Received: by mail-pl1-x644.google.com with SMTP id x8so2846828plm.10
- for <kexec@lists.infradead.org>; Thu, 23 Jul 2020 10:32:53 -0700 (PDT)
-Subject: Re: [PATCH v2 01/18] test_firmware: Test platform fw loading on
- non-EFI systems
+ id 1jyf6k-0007JC-Lh
+ for kexec@lists.infradead.org; Thu, 23 Jul 2020 17:34:16 +0000
+Received: by mail-pf1-x441.google.com with SMTP id a24so3342483pfc.10
+ for <kexec@lists.infradead.org>; Thu, 23 Jul 2020 10:34:14 -0700 (PDT)
+Subject: Re: [PATCH v2 02/18] selftest/firmware: Add selftest timeout in
+ settings
 References: <20200722193020.2676422-1-keescook@chromium.org>
- <20200722193020.2676422-2-keescook@chromium.org>
+ <20200722193020.2676422-3-keescook@chromium.org>
 From: Scott Branden <scott.branden@broadcom.com>
-Message-ID: <b74d5e93-f978-1463-abcd-f2c51abb73ad@broadcom.com>
-Date: Thu, 23 Jul 2020 10:32:45 -0700
+Message-ID: <577f52ba-a514-558d-7041-e65ea9974917@broadcom.com>
+Date: Thu, 23 Jul 2020 10:34:06 -0700
 MIME-Version: 1.0
-In-Reply-To: <20200722193020.2676422-2-keescook@chromium.org>
+In-Reply-To: <20200722193020.2676422-3-keescook@chromium.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,162 +28,62 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kees Cook <keescook@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, linux-security-module@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, selinux@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Jessica Yu <jeyu@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, linux-security-module@vger.kernel.org, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, selinux@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Jessica Yu <jeyu@kernel.org>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Looks good.
+works.
 
 On 2020-07-22 12:30 p.m., Kees Cook wrote:
-> On non-EFI systems, it wasn't possible to test the platform firmware
-> loader because it will have never set "checked_fw" during __init.
-> Instead, allow the test code to override this check. Additionally split
-> the declarations into a private header file so it there is greater
-> enforcement of the symbol visibility.
+> The firmware tests would always time out for me. Add a correct timeout,
+> including details on how the value was reached. Additionally allow the
+> test harness to skip comments in settings files and report how long a
+> given timeout was.
 >
-> Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
-> Cc: stable@vger.kernel.org
 > Signed-off-by: Kees Cook <keescook@chromium.org>
 Acked-by: Scott Branden <scott.branden@broadcom.com>
 > ---
->   drivers/firmware/efi/embedded-firmware.c | 21 ++++++++++++++++-----
->   drivers/firmware/efi/embedded-firmware.h | 19 +++++++++++++++++++
->   include/linux/efi_embedded_fw.h          | 13 -------------
->   lib/test_firmware.c                      |  5 +++++
->   4 files changed, 40 insertions(+), 18 deletions(-)
->   create mode 100644 drivers/firmware/efi/embedded-firmware.h
+>   tools/testing/selftests/firmware/settings   | 8 ++++++++
+>   tools/testing/selftests/kselftest/runner.sh | 6 +++++-
+>   2 files changed, 13 insertions(+), 1 deletion(-)
+>   create mode 100644 tools/testing/selftests/firmware/settings
 >
-> diff --git a/drivers/firmware/efi/embedded-firmware.c b/drivers/firmware/efi/embedded-firmware.c
-> index a1b199de9006..0fb03cd0a5a2 100644
-> --- a/drivers/firmware/efi/embedded-firmware.c
-> +++ b/drivers/firmware/efi/embedded-firmware.c
-> @@ -14,11 +14,22 @@
->   #include <linux/vmalloc.h>
->   #include <crypto/sha.h>
->   
-> +#include "embedded-firmware.h"
-> +
-> +#ifdef CONFIG_TEST_FIRMWARE
-> +# define EFI_EMBEDDED_FW_VISIBILITY
-> +#else
-> +# define EFI_EMBEDDED_FW_VISIBILITY static
-> +#endif
-> +
-> +EFI_EMBEDDED_FW_VISIBILITY LIST_HEAD(efi_embedded_fw_list);
-> +EFI_EMBEDDED_FW_VISIBILITY bool efi_embedded_fw_checked;
-> +
->   /* Exported for use by lib/test_firmware.c only */
-> -LIST_HEAD(efi_embedded_fw_list);
-> +#ifdef CONFIG_TEST_FIRMWARE
->   EXPORT_SYMBOL_GPL(efi_embedded_fw_list);
-> -
-> -static bool checked_for_fw;
-> +EXPORT_SYMBOL_GPL(efi_embedded_fw_checked);
-> +#endif
->   
->   static const struct dmi_system_id * const embedded_fw_table[] = {
->   #ifdef CONFIG_TOUCHSCREEN_DMI
-> @@ -119,14 +130,14 @@ void __init efi_check_for_embedded_firmwares(void)
->   		}
->   	}
->   
-> -	checked_for_fw = true;
-> +	efi_embedded_fw_checked = true;
->   }
->   
->   int efi_get_embedded_fw(const char *name, const u8 **data, size_t *size)
->   {
->   	struct efi_embedded_fw *iter, *fw = NULL;
->   
-> -	if (!checked_for_fw) {
-> +	if (!efi_embedded_fw_checked) {
->   		pr_warn("Warning %s called while we did not check for embedded fw\n",
->   			__func__);
->   		return -ENOENT;
-> diff --git a/drivers/firmware/efi/embedded-firmware.h b/drivers/firmware/efi/embedded-firmware.h
+> diff --git a/tools/testing/selftests/firmware/settings b/tools/testing/selftests/firmware/settings
 > new file mode 100644
-> index 000000000000..34113316d068
+> index 000000000000..085e664ee093
 > --- /dev/null
-> +++ b/drivers/firmware/efi/embedded-firmware.h
-> @@ -0,0 +1,19 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +#ifndef _EFI_EMBEDDED_FW_INTERNAL_H_
-> +#define _EFI_EMBEDDED_FW_INTERNAL_H_
-> +
-> +/*
-> + * This struct and efi_embedded_fw_list are private to the efi-embedded fw
-> + * implementation they only in separate header for use by lib/test_firmware.c.
-> + */
-> +struct efi_embedded_fw {
-> +	struct list_head list;
-> +	const char *name;
-> +	const u8 *data;
-> +	size_t length;
-> +};
-> +
-> +extern struct list_head efi_embedded_fw_list;
-> +extern bool efi_embedded_fw_checked;
-> +
-> +#endif /* _EFI_EMBEDDED_FW_INTERNAL_H_ */
-> diff --git a/include/linux/efi_embedded_fw.h b/include/linux/efi_embedded_fw.h
-> index 57eac5241303..4ad5db9f5312 100644
-> --- a/include/linux/efi_embedded_fw.h
-> +++ b/include/linux/efi_embedded_fw.h
-> @@ -7,19 +7,6 @@
->   
->   #define EFI_EMBEDDED_FW_PREFIX_LEN		8
->   
-> -/*
-> - * This struct and efi_embedded_fw_list are private to the efi-embedded fw
-> - * implementation they are in this header for use by lib/test_firmware.c only!
-> - */
-> -struct efi_embedded_fw {
-> -	struct list_head list;
-> -	const char *name;
-> -	const u8 *data;
-> -	size_t length;
-> -};
-> -
-> -extern struct list_head efi_embedded_fw_list;
-> -
->   /**
->    * struct efi_embedded_fw_desc - This struct is used by the EFI embedded-fw
->    *                               code to search for embedded firmwares.
-> diff --git a/lib/test_firmware.c b/lib/test_firmware.c
-> index 9fee2b93a8d1..62af792e151c 100644
-> --- a/lib/test_firmware.c
-> +++ b/lib/test_firmware.c
-> @@ -489,6 +489,7 @@ static ssize_t trigger_request_store(struct device *dev,
->   static DEVICE_ATTR_WO(trigger_request);
->   
->   #ifdef CONFIG_EFI_EMBEDDED_FIRMWARE
-> +#include "../drivers/firmware/efi/embedded-firmware.h"
->   static ssize_t trigger_request_platform_store(struct device *dev,
->   					      struct device_attribute *attr,
->   					      const char *buf, size_t count)
-> @@ -501,6 +502,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->   	};
->   	struct efi_embedded_fw efi_embedded_fw;
->   	const struct firmware *firmware = NULL;
-> +	bool saved_efi_embedded_fw_checked;
->   	char *name;
->   	int rc;
->   
-> @@ -513,6 +515,8 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->   	efi_embedded_fw.data = (void *)test_data;
->   	efi_embedded_fw.length = sizeof(test_data);
->   	list_add(&efi_embedded_fw.list, &efi_embedded_fw_list);
-> +	saved_efi_embedded_fw_checked = efi_embedded_fw_checked;
-> +	efi_embedded_fw_checked = true;
->   
->   	pr_info("loading '%s'\n", name);
->   	rc = firmware_request_platform(&firmware, name, dev);
-> @@ -530,6 +534,7 @@ static ssize_t trigger_request_platform_store(struct device *dev,
->   	rc = count;
->   
->   out:
-> +	efi_embedded_fw_checked = saved_efi_embedded_fw_checked;
->   	release_firmware(firmware);
->   	list_del(&efi_embedded_fw.list);
->   	kfree(name);
+> +++ b/tools/testing/selftests/firmware/settings
+> @@ -0,0 +1,8 @@
+> +# The async firmware timeout is set to 1 second (but ends up being effectively
+> +# 2 seconds). There are 3 test configs, each done with and without firmware
+> +# present, each with 2 "nowait" functions tested 5 times. Expected time for a
+> +# normal execution should be 2 * 3 * 2 * 2 * 5 = 120 seconds for those alone.
+> +# Additionally, fw_fallback may take 5 seconds for internal timeouts in each
+> +# of the 3 configs, so at least another 15 seconds are needed. Add another
+> +# 10 seconds for each testing config: 120 + 15 + 30
+> +timeout=165
+> diff --git a/tools/testing/selftests/kselftest/runner.sh b/tools/testing/selftests/kselftest/runner.sh
+> index 676b3a8b114d..cd5ddf979f15 100644
+> --- a/tools/testing/selftests/kselftest/runner.sh
+> +++ b/tools/testing/selftests/kselftest/runner.sh
+> @@ -53,6 +53,10 @@ run_one()
+>   	settings="$BASE_DIR/$DIR/settings"
+>   	if [ -r "$settings" ] ; then
+>   		while read line ; do
+> +			# Skip comments.
+> +			if echo "$line" | grep -q '^#'; then
+> +				continue
+> +			fi
+>   			field=$(echo "$line" | cut -d= -f1)
+>   			value=$(echo "$line" | cut -d= -f2-)
+>   			eval "kselftest_$field"="$value"
+> @@ -80,7 +84,7 @@ run_one()
+>   			echo "not ok $test_num $TEST_HDR_MSG # SKIP"
+>   		elif [ $rc -eq $timeout_rc ]; then \
+>   			echo "#"
+> -			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT"
+> +			echo "not ok $test_num $TEST_HDR_MSG # TIMEOUT $kselftest_timeout seconds"
+>   		else
+>   			echo "not ok $test_num $TEST_HDR_MSG # exit=$rc"
+>   		fi)
 
 
 _______________________________________________
