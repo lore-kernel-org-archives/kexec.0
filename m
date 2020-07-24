@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1jyjZE-0002FW-6c
- for kexec@lists.infradead.org; Thu, 23 Jul 2020 22:19:57 +0000
+ id 1jylEp-00037j-S9
+ for kexec@lists.infradead.org; Fri, 24 Jul 2020 00:07:04 +0000
 References: <159524918900.20855.17709718993097359220.stgit@hbathini.in.ibm.com>
- <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
+ <159524954805.20855.1164928096364700614.stgit@hbathini.in.ibm.com>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [PATCH v4 04/12] ppc64/kexec_file: avoid stomping memory used by
- special regions
-In-reply-to: <159524948081.20855.1023953568610670370.stgit@hbathini.in.ibm.com>
-Date: Thu, 23 Jul 2020 19:19:41 -0300
-Message-ID: <877dut6fia.fsf@morokweng.localdomain>
+Subject: Re: [PATCH v4 06/12] ppc64/kexec_file: restrict memory usage of kdump
+ kernel
+In-reply-to: <159524954805.20855.1164928096364700614.stgit@hbathini.in.ibm.com>
+Date: Thu, 23 Jul 2020 21:06:42 -0300
+Message-ID: <875zad6ajx.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,32 +20,79 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Hari Bathini <hbathini@linux.ibm.com>
 Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Kexec-ml <kexec@lists.infradead.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-
-Hari Bathini <hbathini@linux.ibm.com> writes:
-
-> crashkernel region could have an overlap with special memory regions
-> like  opal, rtas, tce-table & such. These regions are referred to as
-> exclude memory ranges. Setup this ranges during image probe in order
-> to avoid them while finding the buffer for different kdump segments.
-> Override arch_kexec_locate_mem_hole() to locate a memory hole taking
-> these ranges into account.
->
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CkhhcmkgQmF0aGluaSA8aGJhdGhpbmlAbGludXguaWJtLmNvbT4gd3JpdGVzOgoKPiBLZHVtcCBr
+ZXJuZWwsIHVzZWQgZm9yIGNhcHR1cmluZyB0aGUga2VybmVsIGNvcmUgaW1hZ2UsIGlzIHN1cHBv
+c2VkCj4gdG8gdXNlIG9ubHkgc3BlY2lmaWMgbWVtb3J5IHJlZ2lvbnMgdG8gYXZvaWQgY29ycnVw
+dGluZyB0aGUgaW1hZ2UgdG8KPiBiZSBjYXB0dXJlZC4gVGhlIHJlZ2lvbnMgYXJlIGNyYXNoa2Vy
+bmVsIHJhbmdlIC0gdGhlIG1lbW9yeSByZXNlcnZlZAo+IGV4cGxpY2l0bHkgZm9yIGtkdW1wIGtl
+cm5lbCwgbWVtb3J5IHVzZWQgZm9yIHRoZSB0Y2UtdGFibGUsIHRoZSBPUEFMCj4gcmVnaW9uIGFu
+ZCBSVEFTIHJlZ2lvbiBhcyBhcHBsaWNhYmxlLiBSZXN0cmljdCBrZHVtcCBrZXJuZWwgbWVtb3J5
+Cj4gdG8gdXNlIG9ubHkgdGhlc2UgcmVnaW9ucyBieSBzZXR0aW5nIHVwIHVzYWJsZS1tZW1vcnkg
+RFQgcHJvcGVydHkuCj4gQWxzbywgdGVsbCB0aGUga2R1bXAga2VybmVsIHRvIHJ1biBhdCB0aGUg
+bG9hZGVkIGFkZHJlc3MgYnkgc2V0dGluZwo+IHRoZSBtYWdpYyB3b3JkIGF0IDB4NWMuCj4KPiBT
+aWduZWQtb2ZmLWJ5OiBIYXJpIEJhdGhpbmkgPGhiYXRoaW5pQGxpbnV4LmlibS5jb20+Cj4gVGVz
+dGVkLWJ5OiBQaW5nZmFuIExpdSA8cGlsaXVAcmVkaGF0LmNvbT4KPiAtLS0KPgo+IHYzIC0+IHY0
+Ogo+ICogVXBkYXRlZCBnZXRfbm9kZV9wYXRoKCkgdG8gYmUgYW4gaXRlcmF0aXZlIGZ1bmN0aW9u
+IGluc3RlYWQgb2YgYQo+ICAgcmVjdXJzaXZlIG9uZS4KPiAqIEFkZGVkIGNvbW1lbnQgZXhwbGFp
+bmluZyB3aHkgbG93IG1lbW9yeSBpcyBhZGRlZCB0byBrZHVtcCBrZXJuZWwncwo+ICAgdXNhYmxl
+IG1lbW9yeSByYW5nZXMgdGhvdWdoIGl0IGRvZXNuJ3QgZmFsbCBpbiBjcmFzaGtlcm5lbCByZWdp
+b24uCj4gKiBGb3IgY29ycmVjdG5lc3MsIGFkZGVkIGZkdF9hZGRfbWVtX3JzdigpIGZvciB0aGUg
+bG93IG1lbW9yeSBiZWluZwo+ICAgYWRkZWQgdG8ga2R1bXAga2VybmVsJ3MgdXNhYmxlIG1lbW9y
+eSByYW5nZXMuCgpHb29kIGlkZWEuCgo+ICogRml4ZWQgcHJvcCBwb2ludGVyIHVwZGF0ZSBpbiBh
+ZGRfdXNhYmxlX21lbV9wcm9wZXJ0eSgpIGFuZCBjaGFuZ2VkCj4gICBkdXBsZSB0byB0dXBsZSBh
+cyBzdWdnZXN0ZWQgYnkgVGhpYWdvLgoKPHNuaXA+Cgo+ICsvKioKPiArICogZ2V0X25vZGVfcGF0
+aGxlbiAtIEdldCB0aGUgZnVsbCBwYXRoIGxlbmd0aCBvZiB0aGUgZ2l2ZW4gbm9kZS4KPiArICog
+QGRuOiAgICAgICAgICAgICAgIE5vZGUuCj4gKyAqCj4gKyAqIEFsc28sIGNvdW50cyAnLycgYXQg
+dGhlIGVuZCBvZiB0aGUgcGF0aC4KPiArICogRm9yIGV4YW1wbGUsIC9tZW1vcnlAMCB3aWxsIGJl
+ICIvbWVtb3J5QDAvXDAiID0+IDExIGJ5dGVzLgoKV291bGRuJ3QgdGhpcyBmdW5jdGlvbiByZXR1
+cm4gMTAgaW4gdGhlIGNhc2Ugb2YgL21lbW9yeUAwPwpBcmUgeW91IHNheWluZyB0aGF0IGl0IHNo
+b3VsZCBjb3VudCB0aGUgXDAgYXQgdGhlIGVuZCB0b28/IGl0J3Mgbm90CmRvaW5nIHRoYXQsIEFG
+QUlDUy4KCj4gKyAqCj4gKyAqIFJldHVybnMgdGhlIHN0cmluZyBsZW5ndGggb2YgdGhlIG5vZGUn
+cyBmdWxsIHBhdGguCj4gKyAqLwoKTWF5YmUgaXQncyBtZSAoYnkgYW5hbG9neSB3aXRoIHN0cmxl
+bigpKSwgYnV0IEkgd291bGQgZXhwZWN0ICJzdHJpbmcKbGVuZ3RoIiB0byBub3QgaW5jbHVkZSB0
+aGUgdGVybWluYXRpbmcgXDAuIEkgc3VnZ2VzdCByZW5hbWluZyB0aGUKZnVuY3Rpb24gdG8gc29t
+ZXRoaW5nIGxpa2UgZ2V0X25vZGVfcGF0aF9zaXplKCkgYW5kIGRvIHMvbGVuZ3RoL3NpemUvIGlu
+CnRoZSBjb21tZW50IGFib3ZlIGlmIGl0J3Mgc3VwcG9zZWQgdG8gY291bnQgdGhlIHRlcm1pbmF0
+aW5nIFwwLgoKPiArc3RhdGljIGludCBnZXRfbm9kZV9wYXRobGVuKHN0cnVjdCBkZXZpY2Vfbm9k
+ZSAqZG4pCj4gK3sKPiArCWludCBsZW4gPSAwOwo+ICsKPiArCWlmICghZG4pCj4gKwkJcmV0dXJu
+IDA7Cj4gKwo+ICsJd2hpbGUgKGRuKSB7Cj4gKwkJbGVuICs9IHN0cmxlbihkbi0+ZnVsbF9uYW1l
+KSArIDE7Cj4gKwkJZG4gPSBkbi0+cGFyZW50Owo+ICsJfQo+ICsKPiArCXJldHVybiBsZW4gKyAx
+Owo+ICt9Cj4gKwo+ICsvKioKPiArICogZ2V0X25vZGVfcGF0aCAtIEdldCB0aGUgZnVsbCBwYXRo
+IG9mIHRoZSBnaXZlbiBub2RlLgo+ICsgKiBAbm9kZTogICAgICAgICAgRGV2aWNlIG5vZGUuCj4g
+KyAqCj4gKyAqIEFsbG9jYXRlcyBidWZmZXIgZm9yIG5vZGUgcGF0aC4gVGhlIGNhbGxlciBtdXN0
+IGZyZWUgdGhlIGJ1ZmZlcgo+ICsgKiBhZnRlciB1c2UuCj4gKyAqCj4gKyAqIFJldHVybnMgYnVm
+ZmVyIHdpdGggcGF0aCBvbiBzdWNjZXNzLCBOVUxMIG90aGVyd2lzZS4KPiArICovCj4gK3N0YXRp
+YyBjaGFyICpnZXRfbm9kZV9wYXRoKHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSkKPiArewo+ICsJ
+c3RydWN0IGRldmljZV9ub2RlICpkbjsKPiArCWludCBsZW4sIGlkeCwgbmxlbjsKPiArCWNoYXIg
+KnBhdGggPSBOVUxMOwo+ICsJY2hhciBlbmRfY2hhcjsKPiArCj4gKwlpZiAoIW5vZGUpCj4gKwkJ
+Z290byBlcnI7Cj4gKwo+ICsJLyoKPiArCSAqIEdldCB0aGUgcGF0aCBsZW5ndGggZmlyc3QgYW5k
+IHVzZSBpdCB0byBpdGVyYXRpdmVseSBidWlsZCB0aGUgcGF0aAo+ICsJICogZnJvbSBub2RlIHRv
+IHJvb3QuCj4gKwkgKi8KPiArCWxlbiA9IGdldF9ub2RlX3BhdGhsZW4obm9kZSk7Cj4gKwo+ICsJ
+LyogQWxsb2NhdGUgbWVtb3J5IGZvciBub2RlIHBhdGggKi8KPiArCXBhdGggPSBremFsbG9jKEFM
+SUdOKGxlbiwgOCksIEdGUF9LRVJORUwpOwo+ICsJaWYgKCFwYXRoKQo+ICsJCWdvdG8gZXJyOwo+
+ICsKPiArCS8qCj4gKwkgKiBJdGVyYXRpdmVseSB1cGRhdGUgcGF0aCBmcm9tIG5vZGUgdG8gcm9v
+dCBieSBkZWNyZW1lbnRpbmcKPiArCSAqIGluZGV4IGFwcHJvcHJpYXRlbHkuCj4gKwkgKgo+ICsJ
+ICogQWxzbywgYWRkICVOVUwgYXQgdGhlIGVuZCBvZiBub2RlICYgJy8nIGF0IHRoZSBlbmQgb2Yg
+YWxsIGl0cwo+ICsJICogcGFyZW50IG5vZGVzLgo+ICsJICovCj4gKwlkbiA9IG5vZGU7Cj4gKwlw
+YXRoWzBdID0gJy8nOwo+ICsJaWR4ID0gbGVuIC0gMTsKCkhlcmUsIGlkeCBpcyBwb2ludGluZyB0
+byB0aGUgc3VwcG9zZWQgJy8nIGF0IHRoZSBlbmQgb2YgdGhlIG5vZGUKcGF0aMKgLi4uCgo+ICsJ
+ZW5kX2NoYXIgPSAnXDAnOwo+ICsJd2hpbGUgKGRuLT5wYXJlbnQpIHsKPiArCQlwYXRoWy0taWR4
+XSA9IGVuZF9jaGFyOwoKLi4gYW5kIGluIHRoZSBmaXJzdCBpcmVhdGlvbiwgdGhpcyBpcyB3cml0
+aW5nICdcMCcgYXQgYSBwbGFjZSB3aGljaCB3aWxsIGJlCm92ZXJ3cml0dGVuIGJ5IHRoZSBtZW1j
+cHkoKSBiZWxvdyB3aXRoIHRoZSBsYXN0IGNoYXJhY3RlciBvZgpkbi0+ZnVsbF9uYW1lLiBZb3Ug
+bmVlZCB0byBzdGFydCBpZHggd2l0aCBsZW4sIG5vdCBsZW4gLSAxLgoKPiArCQllbmRfY2hhciA9
+ICcvJzsKPiArCj4gKwkJbmxlbiA9IHN0cmxlbihkbi0+ZnVsbF9uYW1lKTsKPiArCQlpZHggLT0g
+bmxlbjsKPiArCQltZW1jcHkocGF0aCArIGlkeCwgZG4tPmZ1bGxfbmFtZSwgbmxlbik7Cj4gKwo+
+ICsJCWRuID0gZG4tPnBhcmVudDsKPiArCX0KPiArCj4gKwlyZXR1cm4gcGF0aDsKPiArZXJyOgo+
+ICsJa2ZyZWUocGF0aCk7Cj4gKwlyZXR1cm4gTlVMTDsKPiArfQoKLS0KVGhpYWdvIEp1bmcgQmF1
+ZXJtYW5uCklCTSBMaW51eCBUZWNobm9sb2d5IENlbnRlcgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
