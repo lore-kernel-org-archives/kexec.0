@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([203.11.71.1])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0Pvv-0001uI-KZ
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 13:46:20 +0000
+ id 1k0QKc-0006Pw-9z
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 14:11:51 +0000
 From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's
- OPAL calls
-In-Reply-To: <159579233676.5790.10701756666641782647.stgit@hbathini>
+Subject: Re: [RESEND PATCH v5 08/11] ppc64/kexec_file: setup backup region for
+ kdump kernel
+In-Reply-To: <159579235754.5790.5203600072984600891.stgit@hbathini>
 References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579233676.5790.10701756666641782647.stgit@hbathini>
-Date: Tue, 28 Jul 2020 23:46:15 +1000
-Message-ID: <87365b7nx4.fsf@mpe.ellerman.id.au>
+ <159579235754.5790.5203600072984600891.stgit@hbathini>
+Date: Wed, 29 Jul 2020 00:11:43 +1000
+Message-ID: <87y2n36868.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,102 +28,107 @@ To: Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.
 Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Eric Biederman <ebiederm@xmission.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
 Hari Bathini <hbathini@linux.ibm.com> writes:
-> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
-> to be filled with OPAL base & entry addresses respectively. Setting
-> these registers allows the kernel to perform OPAL calls before the
-> device tree is parsed.
-
-I'm not convinced we want to do this.
-
-If we do it becomes part of the kexec ABI and we have to honour it into
-the future.
-
-And in practice there are no non-development kernels built with OPAL early
-debugging enabled, so it's not clear it actually helps anyone other than
-developers.
-
-cheers
-
-> v4 -> v5:
-> * New patch. Updated opal_base & opal_entry values in r8 & r9 respectively.
->   This change was part of the below dropped patch in v4:
->     - https://lore.kernel.org/patchwork/patch/1275667/
->
->
->  arch/powerpc/kexec/file_load_64.c      |   16 ++++++++++++++++
->  arch/powerpc/purgatory/trampoline_64.S |   15 +++++++++++++++
->  2 files changed, 31 insertions(+)
->
 > diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> index 8df085a22fd7..a5c1442590b2 100644
+> index a5c1442590b2..88408b17a7f6 100644
 > --- a/arch/powerpc/kexec/file_load_64.c
 > +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -713,6 +713,8 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
->  			  const void *fdt, unsigned long kernel_load_addr,
->  			  unsigned long fdt_load_addr)
->  {
-> +	struct device_node *dn = NULL;
-> +	uint64_t val;
->  	int ret;
->  
->  	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
-> @@ -735,9 +737,23 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
->  			goto out;
->  	}
->  
-> +	/* Setup OPAL base & entry values */
-> +	dn = of_find_node_by_path("/ibm,opal");
-> +	if (dn) {
-> +		of_property_read_u64(dn, "opal-base-address", &val);
-> +		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
-> +						     sizeof(val), false);
-> +		if (ret)
-> +			goto out;
-> +
-> +		of_property_read_u64(dn, "opal-entry-address", &val);
-> +		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
-> +						     sizeof(val), false);
-> +	}
->  out:
->  	if (ret)
->  		pr_err("Failed to setup purgatory symbols");
-> +	of_node_put(dn);
+> @@ -697,6 +699,69 @@ static int update_usable_mem_fdt(void *fdt, struct crash_mem *usable_mem)
 >  	return ret;
 >  }
 >  
+> +/**
+> + * load_backup_segment - Locate a memory hole to place the backup region.
+> + * @image:               Kexec image.
+> + * @kbuf:                Buffer contents and memory parameters.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int load_backup_segment(struct kimage *image, struct kexec_buf *kbuf)
+> +{
+> +	void *buf;
+> +	int ret;
+> +
+> +	/* Setup a segment for backup region */
+> +	buf = vzalloc(BACKUP_SRC_SIZE);
+
+This worried me initially, because we can't copy from physically
+discontiguous pages in real mode.
+
+But as you explained this buffer is not used for copying.
+
+I think if you move the large comment below up here, it would be
+clearer.
+
+
 > diff --git a/arch/powerpc/purgatory/trampoline_64.S b/arch/powerpc/purgatory/trampoline_64.S
-> index a5a83c3f53e6..464af8e8a4cb 100644
+> index 464af8e8a4cb..d4b52961f592 100644
 > --- a/arch/powerpc/purgatory/trampoline_64.S
 > +++ b/arch/powerpc/purgatory/trampoline_64.S
-> @@ -61,6 +61,10 @@ master:
->  	li	%r4,28
->  	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
->  1:
-> +	/* Load opal base and entry values in r8 & r9 respectively */
-> +	ld	%r8,(opal_base - 0b)(%r18)
-> +	ld	%r9,(opal_entry - 0b)(%r18)
+> @@ -43,14 +44,38 @@ master:
+>  	mr	%r17,%r3	/* save cpu id to r17 */
+>  	mr	%r15,%r4	/* save physical address in reg15 */
+>  
+> +	bl	0f		/* Work out where we're running */
+> +0:	mflr	%r18
+
+I know you just moved it, but this should use:
+
+	bcl	20, 31, $+4
+	mflr	%r18
+
+Which is a special form of branch and link that doesn't unbalance the
+link stack in the chip.
+
+> +	/*
+> +	 * Copy BACKUP_SRC_SIZE bytes from BACKUP_SRC_START to
+> +	 * backup_start 8 bytes at a time.
+> +	 *
+> +	 * Use r3 = dest, r4 = src, r5 = size, r6 = count
+> +	 */
+> +	ld	%r3,(backup_start - 0b)(%r18)
+> +	cmpdi	%cr0,%r3,0
+
+I prefer spaces or tabs between arguments, eg:
+
+	cmpdi	%cr0, %r3, 0
+
+> +	beq	80f		/* skip if there is no backup region */
+
+Local labels will make this clearer I think. eg:
+
+	beq	.Lskip_copy
+
+> +	lis	%r5,BACKUP_SRC_SIZE@h
+> +	ori	%r5,%r5,BACKUP_SRC_SIZE@l
+> +	cmpdi	%cr0,%r5,0
+> +	beq	80f		/* skip if copy size is zero */
+> +	lis	%r4,BACKUP_SRC_START@h
+> +	ori	%r4,%r4,BACKUP_SRC_START@l
+> +	li	%r6,0
+> +70:
+
+.Lcopy_loop:
+
+> +	ldx	%r0,%r6,%r4
+> +	stdx	%r0,%r6,%r3
+> +	addi	%r6,%r6,8
+> +	cmpld	%cr0,%r6,%r5
+> +	blt	70b
+
+	blt	.Lcopy_loop
+
 > +
->  	/* load the kernel address */
->  	ld	%r4,(kernel - 0b)(%r18)
->  
-> @@ -102,6 +106,17 @@ dt_offset:
->  	.8byte  0x0
->  	.size dt_offset, . - dt_offset
->  
-> +	.balign 8
-> +	.globl opal_base
-> +opal_base:
-> +	.8byte  0x0
-> +	.size opal_base, . - opal_base
-> +
-> +	.balign 8
-> +	.globl opal_entry
-> +opal_entry:
-> +	.8byte  0x0
-> +	.size opal_entry, . - opal_entry
->  
->  	.data
->  	.balign 8
+
+.Lskip_copy:
+
+> +80:
+>  	or	%r3,%r3,%r3	/* ok now to high priority, lets boot */
+>  	lis	%r6,0x1
+>  	mtctr	%r6		/* delay a bit for slaves to catch up */
+>  	bdnz	.		/* before we overwrite 0-100 again */
+
+
+cheers
 
 _______________________________________________
 kexec mailing list
