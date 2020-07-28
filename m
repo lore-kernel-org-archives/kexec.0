@@ -1,25 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1042.google.com ([2607:f8b0:4864:20::1042])
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0FGj-0007lG-1I
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:23:06 +0000
-Received: by mail-pj1-x1042.google.com with SMTP id k1so10692035pjt.5
- for <kexec@lists.infradead.org>; Mon, 27 Jul 2020 19:23:03 -0700 (PDT)
-Date: Tue, 28 Jul 2020 11:22:59 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-Message-ID: <20200728022259.GB1286082@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
- <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
- <20200721144220.GE44523@jagdpanzerIV.localdomain>
- <CAHk-=wibPWj9m1jQWeJUq+iPMG9tHaLANY-UaruakHuezFHr4w@mail.gmail.com>
+ id 1k0FQO-00017A-B9
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:33:05 +0000
+Subject: Re: [RESEND PATCH v5 00/11] ppc64: enable kdump support for
+ kexec_file_load syscall
+References: <159579157320.5790.6748078824637688685.stgit@hbathini>
+From: piliu <piliu@redhat.com>
+Message-ID: <23911b9d-7534-031c-6f98-80f90439c834@redhat.com>
+Date: Tue, 28 Jul 2020 10:32:42 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAHk-=wibPWj9m1jQWeJUq+iPMG9tHaLANY-UaruakHuezFHr4w@mail.gmail.com>
+In-Reply-To: <159579157320.5790.6748078824637688685.stgit@hbathini>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,59 +24,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: Hari Bathini <hbathini@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+Cc: kernel test robot <lkp@intel.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Vivek Goyal <vgoyal@redhat.com>, Laurent Dufour <ldufour@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
-On (20/07/21 08:40), Linus Torvalds wrote:
-> On Tue, Jul 21, 2020 at 7:42 AM Sergey Senozhatsky
-> <sergey.senozhatsky@gmail.com> wrote:
-> >
-> > OK, so basically, extending printk_caller_id() so that for IRQ/NMI
-> > we will have more info than just "0x80000000 + raw_smp_processor_id()".
+
+
+On 07/27/2020 03:36 AM, Hari Bathini wrote:
+> Sorry! There was a gateway issue on my system while posting v5, due to
+> which some patches did not make it through. Resending...
 > 
-> I think it's really preempt_count() that we want to have there.
+> This patch series enables kdump support for kexec_file_load system
+> call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+> code but heavily modified for kernel consumption.
 > 
-> That has the softirq/hardirq/NMI information in it.
+> The first patch adds a weak arch_kexec_locate_mem_hole() function to
+> override locate memory hole logic suiting arch needs. There are some
+> special regions in ppc64 which should be avoided while loading buffer
+> & there are multiple callers to kexec_add_buffer making it complicated
+> to maintain range sanity and using generic lookup at the same time.
 > 
-> So the "context" identifier of an incomplete write would be { task,
-> cpu, preempt_count() } of the writer. If a new KERN_CONT writer comes
-> in, it would have to match in that context to actually combine.
+> The second patch marks ppc64 specific code within arch/powerpc/kexec
+> and arch/powerpc/purgatory to make the subsequent code changes easy
+> to understand.
 > 
-> You can probably play "hide the bits" tricks to not *ac tually* use
-> three words for it. The task structure in particular tends to be very
-> aligned, you could hide bits in the low bits there. The CPU number
-> would fit in there, for example.
+> The next patch adds helper function to setup different memory ranges
+> needed for loading kdump kernel, booting into it and exporting the
+> crashing kernel's elfcore.
+> 
+> The fourth patch overrides arch_kexec_locate_mem_hole() function to
+> locate memory hole for kdump segments by accounting for the special
+> memory regions, referred to as excluded memory ranges, and sets
+> kbuf->mem when a suitable memory region is found.
+> 
+> The fifth patch moves walk_drmem_lmbs() out of .init section with
+> a few changes to reuse it for setting up kdump kernel's usable memory
+> ranges. The next patch uses walk_drmem_lmbs() to look up the LMBs
+> and set linux,drconf-usable-memory & linux,usable-memory properties
+> in order to restrict kdump kernel's memory usage.
+> 
+> The seventh patch updates purgatory to setup r8 & r9 with opal base
+> and opal entry addresses respectively to aid kernels built with
+> CONFIG_PPC_EARLY_DEBUG_OPAL enabled. The next patch setups up backup
+> region as a kexec segment while loading kdump kernel and teaches
+> purgatory to copy data from source to destination.
+> 
+> Patch 09 builds the elfcore header for the running kernel & passes
+> the info to kdump kernel via "elfcorehdr=" parameter to export as
+> /proc/vmcore file. The next patch sets up the memory reserve map
+> for the kexec kernel and also claims kdump support for kdump as
+> all the necessary changes are added.
+> 
+> The last patch fixes a lookup issue for `kexec -l -s` case when
+> memory is reserved for crashkernel.
+> 
+> Tested the changes successfully on P8, P9 lpars, couple of OpenPOWER
+> boxes, one with secureboot enabled, KVM guest and a simulator.
+> 
+> v4 -> v5:
+> * Dropped patches 07/12 & 08/12 and updated purgatory to do everything
+>   in assembly.
+I guess you achieve this by carefully selecting instruction to avoid
+relocation issue, right?
 
-The purpose of callerid has changed. We used to keep it _only_ in
-struct printk_log and never used it for anything but
+Thanks,
+Pingfan
 
-	if (cont.owner == current && (lflags & LOG_CONT))
-		...
-
-so it was easy to use task_struct pointers - we only cared if cont.owner
-matches current and never dereferenced the cont.owner pointer.
-
-But we do show caller id to users now (CONFIG_PRINTK_CALLER), so it
-makes sense to keep there something more or less human readable, it
-helps syzkaller/fuzzer people. That's why we keep PID in [30,0] bits
-of callerid if the printk was called in_task(), and CPU_ID otherwise.
-
-Replacing easy to understand PID/CPU_ID with some magic hex, e.g.
-hash(current) >> shift or hash(smp_processor_id()) >> shift, will
-make things less convenient, so I think it is reasonable to preserve
-the existing scheme.
-
-I like what John suggests:
-
-- if printk was called from in_task(), then we keep PID in [30,0] bits
-- otherwise we keep smp_processor_id() in [27,0] bits and in the upper
-  bits we keep the IRQ/NMI/etc flags.
-
-It may make sense to "promote" u32 callerid to u64, just in case if
-someone sometime in the future will have boxes with more than several
-billion PIDs.
-
-	-ss
 
 _______________________________________________
 kexec mailing list
