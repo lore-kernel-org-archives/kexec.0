@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-io1-xd44.google.com ([2607:f8b0:4864:20::d44])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0FUZ-0001Tq-77
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:37:24 +0000
-References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579235754.5790.5203600072984600891.stgit@hbathini>
-From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [RESEND PATCH v5 08/11] ppc64/kexec_file: setup backup region for
- kdump kernel
-In-reply-to: <159579235754.5790.5203600072984600891.stgit@hbathini>
-Date: Mon, 27 Jul 2020 23:37:08 -0300
-Message-ID: <87d04gxt4b.fsf@morokweng.localdomain>
+ id 1k0JHH-0001Dy-Bz
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 06:39:56 +0000
+Received: by mail-io1-xd44.google.com with SMTP id w12so6012155iom.4
+ for <kexec@lists.infradead.org>; Mon, 27 Jul 2020 23:39:53 -0700 (PDT)
 MIME-Version: 1.0
+References: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
+ <87ft9i1egt.fsf@linux.ibm.com>
+In-Reply-To: <87ft9i1egt.fsf@linux.ibm.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Tue, 28 Jul 2020 14:39:40 +0800
+Message-ID: <CAFgQCTt+oOD7Vw=UKzzWrwucyjrKQr=WWsGzAk3JX60cfXrdpQ@mail.gmail.com>
+Subject: Re: [PATCHv3 1/2] powerpc/pseries: group lmb operation and memblock's
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +25,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
+To: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Kexec Mailing List <kexec@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
 
-
-Hari Bathini <hbathini@linux.ibm.com> writes:
-
-> Though kdump kernel boots from loaded address, the first 64KB of it is
-> copied down to real 0. So, setup a backup region and let purgatory
-> copy the first 64KB of crashed kernel into this backup region before
-> booting into kdump kernel. Update reserve map with backup region and
-> crashed kernel's memory to avoid kdump kernel from accidentially using
-> that memory.
+On Thu, Jul 23, 2020 at 10:41 PM Nathan Lynch <nathanl@linux.ibm.com> wrote:
 >
-> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> Pingfan Liu <kernelfans@gmail.com> writes:
+> > This patch prepares for the incoming patch which swaps the order of KOBJ_
+> > uevent and dt's updating.
+> >
+> > It has no functional effect, just groups lmb operation and memblock's in
+> > order to insert dt updating operation easily, and makes it easier to
+> > review.
+>
+> ...
+>
+> > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > index 5d545b7..1a3ac3b 100644
+> > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > @@ -355,7 +355,8 @@ static int dlpar_add_lmb(struct drmem_lmb *);
+> >  static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+> >  {
+> >       unsigned long block_sz;
+> > -     int rc;
+> > +     phys_addr_t base_addr;
+> > +     int rc, nid;
+> >
+> >       if (!lmb_is_removable(lmb))
+> >               return -EINVAL;
+> > @@ -364,17 +365,19 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+> >       if (rc)
+> >               return rc;
+> >
+> > +     base_addr = lmb->base_addr;
+> > +     nid = lmb->nid;
+> >       block_sz = pseries_memory_block_size();
+> >
+> > -     __remove_memory(lmb->nid, lmb->base_addr, block_sz);
+> > -
+> > -     /* Update memory regions for memory remove */
+> > -     memblock_remove(lmb->base_addr, block_sz);
+> > -
+> >       invalidate_lmb_associativity_index(lmb);
+> >       lmb_clear_nid(lmb);
+> >       lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+> >
+> > +     __remove_memory(nid, base_addr, block_sz);
+> > +
+> > +     /* Update memory regions for memory remove */
+> > +     memblock_remove(base_addr, block_sz);
+> > +
+> >       return 0;
+> >  }
+>
+> I don't understand; the commit message should not claim this has no
+> functional effect when it changes the order of operations like
+> this. Maybe this is an improvement over the current behavior, but it's
+> not explained why it would be.
+One group of functions, which name contains lmb, are powerpc specific,
+and used to form dt.
 
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+The other group __remove_memory() and memblock_remove() are integrated
+with linux mm.
 
--- 
-Thiago Jung Bauermann
-IBM Linux Technology Center
+And [2/2] arrange dt-updating just before __remove_memory()
+
+Thanks,
+Pingfan
 
 _______________________________________________
 kexec mailing list
