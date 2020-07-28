@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0F4T-0006Zd-6B
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:10:26 +0000
+ id 1k0FBR-000703-DE
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:17:38 +0000
 References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579231812.5790.16096865978767385505.stgit@hbathini>
+ <159579233676.5790.10701756666641782647.stgit@hbathini>
 From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Subject: Re: [RESEND PATCH v5 06/11] ppc64/kexec_file: restrict memory usage
- of kdump kernel
-In-reply-to: <159579231812.5790.16096865978767385505.stgit@hbathini>
-Date: Mon, 27 Jul 2020 23:10:08 -0300
-Message-ID: <87ft9cxudb.fsf@morokweng.localdomain>
+Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's
+ OPAL calls
+In-reply-to: <159579233676.5790.10701756666641782647.stgit@hbathini>
+Date: Mon, 27 Jul 2020 23:17:23 -0300
+Message-ID: <87eeowxu18.fsf@morokweng.localdomain>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,23 +31,16 @@ Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Mimi 
 
 Hari Bathini <hbathini@linux.ibm.com> writes:
 
-> Kdump kernel, used for capturing the kernel core image, is supposed
-> to use only specific memory regions to avoid corrupting the image to
-> be captured. The regions are crashkernel range - the memory reserved
-> explicitly for kdump kernel, memory used for the tce-table, the OPAL
-> region and RTAS region as applicable. Restrict kdump kernel memory
-> to use only these regions by setting up usable-memory DT property.
-> Also, tell the kdump kernel to run at the loaded address by setting
-> the magic word at 0x5c.
+> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
+> to be filled with OPAL base & entry addresses respectively. Setting
+> these registers allows the kernel to perform OPAL calls before the
+> device tree is parsed.
 >
 > Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-> Tested-by: Pingfan Liu <piliu@redhat.com>
-
-I liked the new versions of get_node_path_size() and get_node_path().
 
 Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
---
+-- 
 Thiago Jung Bauermann
 IBM Linux Technology Center
 
