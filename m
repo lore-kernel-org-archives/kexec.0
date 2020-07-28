@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 27 Jul 2020 18:30:15 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
- reintroduced
-Message-ID: <20200727173014.GL13938@gaia>
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-5-chenzhou10@huawei.com>
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k0F4T-0006Zd-6B
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 02:10:26 +0000
+References: <159579157320.5790.6748078824637688685.stgit@hbathini>
+ <159579231812.5790.16096865978767385505.stgit@hbathini>
+From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: Re: [RESEND PATCH v5 06/11] ppc64/kexec_file: restrict memory usage
+ of kdump kernel
+In-reply-to: <159579231812.5790.16096865978767385505.stgit@hbathini>
+Date: Mon, 27 Jul 2020 23:10:08 -0300
+Message-ID: <87ft9cxudb.fsf@morokweng.localdomain>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200703035816.31289-5-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,90 +24,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, dyoung@redhat.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
+To: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Pingfan Liu <piliu@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Jul 03, 2020 at 11:58:15AM +0800, Chen Zhou wrote:
-> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
-> broken the arm64 kdump. If the memory reserved for crash dump kernel
-> falled in ZONE_DMA32, the devices in crash dump kernel need to use
-> ZONE_DMA will alloc fail.
-> 
-> This patch addressed the above issue based on "reserving crashkernel
-> above 4G". Originally, we reserve low memory below 4G, and now just need
-> to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
-> if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
-> in crash dump kernel, it is a good choice to use parameters
-> "crashkernel=X crashkernel=Y,low".
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  kernel/crash_core.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index a7580d291c37..e8ecbbc761a3 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
->  	unsigned long long base, low_base = 0, low_size = 0;
->  	unsigned long total_low_mem;
->  	int ret;
-> +	phys_addr_t crash_max = 1ULL << 32;
->  
->  	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->  
-> @@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
->  			return 0;
->  	}
->  
-> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
-> +#ifdef CONFIG_ARM64
-> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
-> +		crash_max = arm64_dma_phys_limit;
-> +#endif
-> +	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
->  	if (!low_base) {
->  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->  		       (unsigned long)(low_size >> 20));
 
-Given the number of #ifdefs we end up with in this function, I think
-it's better to simply copy to the code to arch/arm64 and tailor it
-accordingly.
+Hari Bathini <hbathini@linux.ibm.com> writes:
 
-Anyway, there are two series solving slightly different issues with
-kdump reservations:
+> Kdump kernel, used for capturing the kernel core image, is supposed
+> to use only specific memory regions to avoid corrupting the image to
+> be captured. The regions are crashkernel range - the memory reserved
+> explicitly for kdump kernel, memory used for the tce-table, the OPAL
+> region and RTAS region as applicable. Restrict kdump kernel memory
+> to use only these regions by setting up usable-memory DT property.
+> Also, tell the kdump kernel to run at the loaded address by setting
+> the magic word at 0x5c.
+>
+> Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
+> Tested-by: Pingfan Liu <piliu@redhat.com>
 
-1. This series which relaxes the crashkernel= allocation to go anywhere
-   in the accessible space while having a dedicated crashkernel=X,low
-   option for ZONE_DMA.
+I liked the new versions of get_node_path_size() and get_node_path().
 
-2. Bhupesh's series [1] forcing crashkernel=X allocations only from
-   ZONE_DMA.
+Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
-Existing crashkernel= uses may no longer work, depending on where the
-allocation falls. Option (2) above is a quick fix assuming that the
-crashkernel reservation is small enough. What's a typical crashkernel
-option here? That series is probably more prone to reservation failures.
-
-Option (1), i.e. this series, doesn't solve the problem raised by
-Bhupesh unless one uses the crashkernel=X,low argument. It can actually
-make it worse even for ZONE_DMA32 since the allocation can go above 4G
-(assuming that we change the ZONE_DMA configuration to only limit it to
-1GB on RPi4).
-
-I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
-allocations. If this is too small for typical kdump, we can look into
-expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
-list). In addition, if Chen thinks allocations above 4G are still needed
-or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
-",high" option to explicitly require such access.
-
-[1] http://lists.infradead.org/pipermail/kexec/2020-July/020777.html
-
--- 
-Catalin
+--
+Thiago Jung Bauermann
+IBM Linux Technology Center
 
 _______________________________________________
 kexec mailing list
