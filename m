@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd44.google.com ([2607:f8b0:4864:20::d44])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0JHH-0001Dy-Bz
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 06:39:56 +0000
-Received: by mail-io1-xd44.google.com with SMTP id w12so6012155iom.4
- for <kexec@lists.infradead.org>; Mon, 27 Jul 2020 23:39:53 -0700 (PDT)
+ id 1k0PBb-0002Vp-Ix
+ for kexec@lists.infradead.org; Tue, 28 Jul 2020 12:58:29 +0000
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [RESEND PATCH v5 03/11] powerpc/kexec_file: add helper functions
+ for getting memory ranges
+In-Reply-To: <159579222211.5790.10294144969496171475.stgit@hbathini>
+References: <159579157320.5790.6748078824637688685.stgit@hbathini>
+ <159579222211.5790.10294144969496171475.stgit@hbathini>
+Date: Tue, 28 Jul 2020 22:58:15 +1000
+Message-ID: <87a6zj7q54.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-References: <1595382730-10565-1-git-send-email-kernelfans@gmail.com>
- <87ft9i1egt.fsf@linux.ibm.com>
-In-Reply-To: <87ft9i1egt.fsf@linux.ibm.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Tue, 28 Jul 2020 14:39:40 +0800
-Message-ID: <CAFgQCTt+oOD7Vw=UKzzWrwucyjrKQr=WWsGzAk3JX60cfXrdpQ@mail.gmail.com>
-Subject: Re: [PATCHv3 1/2] powerpc/pseries: group lmb operation and memblock's
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,74 +24,448 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nathan Lynch <nathanl@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Kexec Mailing List <kexec@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
+To: Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-On Thu, Jul 23, 2020 at 10:41 PM Nathan Lynch <nathanl@linux.ibm.com> wrote:
->
-> Pingfan Liu <kernelfans@gmail.com> writes:
-> > This patch prepares for the incoming patch which swaps the order of KOBJ_
-> > uevent and dt's updating.
-> >
-> > It has no functional effect, just groups lmb operation and memblock's in
-> > order to insert dt updating operation easily, and makes it easier to
-> > review.
->
-> ...
->
-> > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> > index 5d545b7..1a3ac3b 100644
-> > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> > @@ -355,7 +355,8 @@ static int dlpar_add_lmb(struct drmem_lmb *);
-> >  static int dlpar_remove_lmb(struct drmem_lmb *lmb)
-> >  {
-> >       unsigned long block_sz;
-> > -     int rc;
-> > +     phys_addr_t base_addr;
-> > +     int rc, nid;
-> >
-> >       if (!lmb_is_removable(lmb))
-> >               return -EINVAL;
-> > @@ -364,17 +365,19 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
-> >       if (rc)
-> >               return rc;
-> >
-> > +     base_addr = lmb->base_addr;
-> > +     nid = lmb->nid;
-> >       block_sz = pseries_memory_block_size();
-> >
-> > -     __remove_memory(lmb->nid, lmb->base_addr, block_sz);
-> > -
-> > -     /* Update memory regions for memory remove */
-> > -     memblock_remove(lmb->base_addr, block_sz);
-> > -
-> >       invalidate_lmb_associativity_index(lmb);
-> >       lmb_clear_nid(lmb);
-> >       lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-> >
-> > +     __remove_memory(nid, base_addr, block_sz);
-> > +
-> > +     /* Update memory regions for memory remove */
-> > +     memblock_remove(base_addr, block_sz);
-> > +
-> >       return 0;
-> >  }
->
-> I don't understand; the commit message should not claim this has no
-> functional effect when it changes the order of operations like
-> this. Maybe this is an improvement over the current behavior, but it's
-> not explained why it would be.
-One group of functions, which name contains lmb, are powerpc specific,
-and used to form dt.
+Hi Hari,
 
-The other group __remove_memory() and memblock_remove() are integrated
-with linux mm.
+Some comments inline ...
 
-And [2/2] arrange dt-updating just before __remove_memory()
+Hari Bathini <hbathini@linux.ibm.com> writes:
+> diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+> new file mode 100644
+> index 000000000000..21bea1b78443
+> --- /dev/null
+> +++ b/arch/powerpc/kexec/ranges.c
+> @@ -0,0 +1,417 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * powerpc code to implement the kexec_file_load syscall
+> + *
+> + * Copyright (C) 2004  Adam Litke (agl@us.ibm.com)
+> + * Copyright (C) 2004  IBM Corp.
+> + * Copyright (C) 2004,2005  Milton D Miller II, IBM Corporation
+> + * Copyright (C) 2005  R Sharada (sharada@in.ibm.com)
+> + * Copyright (C) 2006  Mohan Kumar M (mohan@in.ibm.com)
+> + * Copyright (C) 2020  IBM Corporation
+> + *
+> + * Based on kexec-tools' kexec-ppc64.c, fs2dt.c.
+> + * Heavily modified for the kernel by
+> + * Hari Bathini <hbathini@linux.ibm.com>.
 
-Thanks,
-Pingfan
+Please just use your name, email addresses bit rot. It's in the commit
+log anyway.
+
+> + */
+> +
+> +#undef DEBUG
+    ^
+Dont do that in new code please.
+
+> +#define pr_fmt(fmt) "kexec ranges: " fmt
+> +
+> +#include <linux/sort.h>
+> +#include <linux/kexec.h>
+> +#include <linux/of_device.h>
+> +#include <linux/slab.h>
+> +#include <asm/sections.h>
+> +#include <asm/kexec_ranges.h>
+> +
+> +/**
+> + * get_max_nr_ranges - Get the max no. of ranges crash_mem structure
+> + *                     could hold, given the size allocated for it.
+> + * @size:              Allocation size of crash_mem structure.
+> + *
+> + * Returns the maximum no. of ranges.
+> + */
+> +static inline unsigned int get_max_nr_ranges(size_t size)
+> +{
+> +	return ((size - sizeof(struct crash_mem)) /
+> +		sizeof(struct crash_mem_range));
+> +}
+> +
+> +/**
+> + * get_mem_rngs_size - Get the allocated size of mrngs based on
+> + *                     max_nr_ranges and chunk size.
+> + * @mrngs:             Memory ranges.
+
+mrngs is not a great name, what about memory_ranges or ranges?
+
+Ditto everywhere else you use mrngs.
+
+> + *
+> + * Returns the maximum size of @mrngs.
+> + */
+> +static inline size_t get_mem_rngs_size(struct crash_mem *mrngs)
+> +{
+> +	size_t size;
+> +
+> +	if (!mrngs)
+> +		return 0;
+> +
+> +	size = (sizeof(struct crash_mem) +
+> +		(mrngs->max_nr_ranges * sizeof(struct crash_mem_range)));
+> +
+> +	/*
+> +	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
+> +	 * So, align to get the actual length.
+> +	 */
+> +	return ALIGN(size, MEM_RANGE_CHUNK_SZ);
+> +}
+> +
+> +/**
+> + * __add_mem_range - add a memory range to memory ranges list.
+> + * @mem_ranges:      Range list to add the memory range to.
+> + * @base:            Base address of the range to add.
+> + * @size:            Size of the memory range to add.
+> + *
+> + * (Re)allocates memory, if needed.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +
+> +	if ((mrngs == NULL) || (mrngs->nr_ranges == mrngs->max_nr_ranges)) {
+
+(mrngs == NULL) should just be !mrngs.
+
+> +		mrngs = realloc_mem_ranges(mem_ranges);
+> +		if (!mrngs)
+> +			return -ENOMEM;
+> +	}
+> +
+> +	mrngs->ranges[mrngs->nr_ranges].start = base;
+> +	mrngs->ranges[mrngs->nr_ranges].end = base + size - 1;
+> +	pr_debug("Added memory range [%#016llx - %#016llx] at index %d\n",
+> +		 base, base + size - 1, mrngs->nr_ranges);
+> +	mrngs->nr_ranges++;
+> +	return 0;
+> +}
+> +
+> +/**
+> + * __merge_memory_ranges - Merges the given memory ranges list.
+> + * @mem_ranges:            Range list to merge.
+> + *
+> + * Assumes a sorted range list.
+> + *
+> + * Returns nothing.
+> + */
+
+A lot of this code is annoyingly similar to the memblock code, though
+the internals of that are all static these days.
+
+I guess for now we'll just have to add all this. Maybe in future it can
+be consolidated.
+
+> +static void __merge_memory_ranges(struct crash_mem *mrngs)
+> +{
+> +	struct crash_mem_range *rngs;
+> +	int i, idx;
+> +
+> +	if (!mrngs)
+> +		return;
+> +
+> +	idx = 0;
+> +	rngs = &mrngs->ranges[0];
+> +	for (i = 1; i < mrngs->nr_ranges; i++) {
+> +		if (rngs[i].start <= (rngs[i-1].end + 1))
+> +			rngs[idx].end = rngs[i].end;
+> +		else {
+> +			idx++;
+> +			if (i == idx)
+> +				continue;
+> +
+> +			rngs[idx] = rngs[i];
+> +		}
+> +	}
+> +	mrngs->nr_ranges = idx + 1;
+> +}
+> +
+> +/**
+> + * realloc_mem_ranges - reallocate mem_ranges with size incremented
+> + *                      by MEM_RANGE_CHUNK_SZ. Frees up the old memory,
+> + *                      if memory allocation fails.
+> + * @mem_ranges:         Memory ranges to reallocate.
+> + *
+> + * Returns pointer to reallocated memory on success, NULL otherwise.
+> + */
+> +struct crash_mem *realloc_mem_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +	unsigned int nr_ranges;
+> +	size_t size;
+> +
+> +	size = get_mem_rngs_size(mrngs);
+> +	nr_ranges = mrngs ? mrngs->nr_ranges : 0;
+> +
+> +	size += MEM_RANGE_CHUNK_SZ;
+> +	mrngs = krealloc(*mem_ranges, size, GFP_KERNEL);
+> +	if (!mrngs) {
+> +		kfree(*mem_ranges);
+> +		*mem_ranges = NULL;
+> +		return NULL;
+> +	}
+> +
+> +	mrngs->nr_ranges = nr_ranges;
+> +	mrngs->max_nr_ranges = get_max_nr_ranges(size);
+> +	*mem_ranges = mrngs;
+> +
+> +	return mrngs;
+> +}
+> +
+> +/**
+> + * add_mem_range - Updates existing memory range, if there is an overlap.
+> + *                 Else, adds a new memory range.
+> + * @mem_ranges:    Range list to add the memory range to.
+> + * @base:          Base address of the range to add.
+> + * @size:          Size of the memory range to add.
+> + *
+> + * (Re)allocates memory, if needed.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+> +{
+> +	struct crash_mem *mrngs = *mem_ranges;
+> +	u64 mstart, mend, end;
+> +	unsigned int i;
+> +
+> +	if (!size)
+> +		return 0;
+> +
+> +	end = base + size - 1;
+> +
+> +	if ((mrngs == NULL) || (mrngs->nr_ranges == 0))
+> +		return __add_mem_range(mem_ranges, base, size);
+> +
+> +	for (i = 0; i < mrngs->nr_ranges; i++) {
+> +		mstart = mrngs->ranges[i].start;
+> +		mend = mrngs->ranges[i].end;
+> +		if (base < mend && end > mstart) {
+> +			if (base < mstart)
+> +				mrngs->ranges[i].start = base;
+> +			if (end > mend)
+> +				mrngs->ranges[i].end = end;
+> +			return 0;
+> +		}
+> +	}
+> +
+> +	return __add_mem_range(mem_ranges, base, size);
+> +}
+> +
+> +/**
+> + * add_tce_mem_ranges - Adds tce-table range to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range(s) to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_tce_mem_ranges(struct crash_mem **mem_ranges)
+
+Not sure this and the other add_foo_mem_ranges() really belong in this patch.
+
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	for_each_node_by_type(dn, "pci") {
+> +		u64 base;
+> +		u32 size;
+> +		int rc;
+
+Do you really need ret and rc?
+
+> +		/*
+> +		 * It is ok to have pci nodes without tce. So, ignore
+> +		 * any read errors here.
+> +		 */
+> +		rc = of_property_read_u64(dn, "linux,tce-base", &base);
+> +		rc |= of_property_read_u32(dn, "linux,tce-size", &size);
+> +		if (rc)
+> +			continue;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +		if (ret)
+> +			break;
+                        ^
+                        dn leaked.
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +/**
+> + * add_initrd_mem_range - Adds initrd range to the given memory ranges list,
+> + *                        if the initrd was retained.
+> + * @mem_ranges:           Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_initrd_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	u64 base, end;
+> +	char *str;
+> +	int ret;
+> +
+> +	/* This range means something only if initrd was retained */
+> +	str = strstr(saved_command_line, "retain_initrd");
+> +	if (!str)
+> +		return 0;
+
+Unfortunate that we have to go and scan the command line again. But I
+don't see a better way ATM.
+
+Could be more concise:
+
+	if (!strstr(saved_command_line, "retain_initrd"))
+		return 0;
+
+> +
+> +	ret = of_property_read_u64(of_chosen, "linux,initrd-start", &base);
+> +	ret |= of_property_read_u64(of_chosen, "linux,initrd-end", &end);
+> +	if (!ret)
+> +		ret = add_mem_range(mem_ranges, base, end - base + 1);
+> +	return ret;
+> +}
+> +
+> +#ifdef CONFIG_PPC_BOOK3S_64
+> +/**
+> + * add_htab_mem_range - Adds htab range to the given memory ranges list,
+> + *                      if it exists
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_htab_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	if (!htab_address)
+> +		return 0;
+> +
+> +	return add_mem_range(mem_ranges, __pa(htab_address), htab_size_bytes);
+> +}
+> +#endif
+> +
+> +/**
+> + * add_kernel_mem_range - Adds kernel text region to the given
+> + *                        memory ranges list.
+> + * @mem_ranges:           Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_kernel_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	return add_mem_range(mem_ranges, 0, __pa(_end));
+> +}
+> +
+> +/**
+> + * add_rtas_mem_range - Adds RTAS region to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_rtas_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	dn = of_find_node_by_path("/rtas");
+> +	if (dn) {
+> +		u32 base, size;
+> +
+> +		ret = of_property_read_u32(dn, "linux,rtas-base", &base);
+> +		ret |= of_property_read_u32(dn, "rtas-size", &size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +	}
+> +
+> +out:
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+
+Or:
+	struct device_node *dn;
+        u32 base, size;
+	int rc;
+
+	dn = of_find_node_by_path("/rtas");
+	if (!dn)
+        	return 0;
+
+	rc  = of_property_read_u32(dn, "linux,rtas-base", &base);
+	rc |= of_property_read_u32(dn, "rtas-size", &size);
+	if (rc == 0)
+		rc = add_mem_range(mem_ranges, base, size);
+
+	of_node_put(dn);
+	return rc;
+}
+
+
+> +
+> +/**
+> + * add_opal_mem_range - Adds OPAL region to the given memory ranges list.
+> + * @mem_ranges:         Range list to add the memory range to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_opal_mem_range(struct crash_mem **mem_ranges)
+> +{
+> +	struct device_node *dn;
+> +	int ret = 0;
+> +
+> +	dn = of_find_node_by_path("/ibm,opal");
+> +	if (dn) {
+> +		u64 base, size;
+> +
+> +		ret = of_property_read_u64(dn, "opal-base-address", &base);
+> +		ret |= of_property_read_u64(dn, "opal-runtime-size", &size);
+> +		if (ret)
+> +			goto out;
+> +
+> +		ret = add_mem_range(mem_ranges, base, size);
+> +	}
+> +
+> +out:
+> +	of_node_put(dn);
+> +	return ret;
+> +}
+> +
+> +/**
+> + * add_reserved_ranges - Adds "/reserved-ranges" regions exported by f/w
+> + *                       to the given memory ranges list.
+> + * @mem_ranges:          Range list to add the memory ranges to.
+> + *
+> + * Returns 0 on success, negative errno on error.
+> + */
+> +int add_reserved_ranges(struct crash_mem **mem_ranges)
+> +{
+> +	int n_mem_addr_cells, n_mem_size_cells, i, len, cells, ret = 0;
+> +	const __be32 *prop;
+> +
+> +	prop = of_get_property(of_root, "reserved-ranges", &len);
+> +	if (!prop)
+> +		return 0;
+> +
+> +	of_node_get(of_root);
+
+You shouldn't need to get the root node, you already used it above anyway.
+
+> +	n_mem_addr_cells = of_n_addr_cells(of_root);
+> +	n_mem_size_cells = of_n_size_cells(of_root);
+> +	cells = n_mem_addr_cells + n_mem_size_cells;
+> +
+> +	/* Each reserved range is an (address,size) pair */
+> +	for (i = 0; i < (len / (sizeof(*prop) * cells)); i++) {
+                                       ^
+                                       just u32 would be clearer I think.
+
+
+
+cheers
 
 _______________________________________________
 kexec mailing list
