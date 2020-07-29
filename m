@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0kVP-0004wq-ME
- for kexec@lists.infradead.org; Wed, 29 Jul 2020 11:44:21 +0000
-Subject: [PATCH v6 11/11] ppc64/kexec_file: enable early kernel's OPAL calls
-From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Wed, 29 Jul 2020 17:14:06 +0530
-Message-ID: <159602303975.575379.5032301944162937479.stgit@hbathini>
-In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
-References: <159602259854.575379.16910915605574571585.stgit@hbathini>
+Date: Wed, 29 Jul 2020 12:58:52 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
+ reintroduced
+Message-ID: <20200729115851.GC5524@gaia>
+References: <20200703035816.31289-1-chenzhou10@huawei.com>
+ <20200703035816.31289-5-chenzhou10@huawei.com>
+ <20200727173014.GL13938@gaia>
+ <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,110 +23,120 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
+To: chenzhou <chenzhou10@huawei.com>
+Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, dyoung@redhat.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
 
-Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
-to be filled with OPAL base & entry addresses respectively. Setting
-these registers allows the kernel to perform OPAL calls before the
-device tree is parsed.
+Hi Chen,
 
-Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
-Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
----
+On Wed, Jul 29, 2020 at 11:52:39AM +0800, chenzhou wrote:
+> On 2020/7/28 1:30, Catalin Marinas wrote:
+> > Anyway, there are two series solving slightly different issues with
+> > kdump reservations:
+> >
+> > 1. This series which relaxes the crashkernel= allocation to go anywhere
+> >    in the accessible space while having a dedicated crashkernel=X,low
+> >    option for ZONE_DMA.
+> >
+> > 2. Bhupesh's series [1] forcing crashkernel=X allocations only from
+> >    ZONE_DMA.
+> >
+> > For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
+> > Existing crashkernel= uses may no longer work, depending on where the
+> > allocation falls. Option (2) above is a quick fix assuming that the
+> > crashkernel reservation is small enough. What's a typical crashkernel
+> > option here? That series is probably more prone to reservation failures.
+> >
+> > Option (1), i.e. this series, doesn't solve the problem raised by
+> > Bhupesh unless one uses the crashkernel=X,low argument. It can actually
+> > make it worse even for ZONE_DMA32 since the allocation can go above 4G
+> > (assuming that we change the ZONE_DMA configuration to only limit it to
+> > 1GB on RPi4).
+> >
+> > I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
+> > allocations. If this is too small for typical kdump, we can look into
+> > expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
+> > list). In addition, if Chen thinks allocations above 4G are still needed
+> > or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
+> > ",high" option to explicitly require such access.
+> 
+> Thanks for your reply and exhaustive explanation.
+> 
+> In our ARM servers, we need to to reserve a large chunk for kdump(512M
+> or 1G), there is no enough low memory. So we proposed this patch
+> series "support reserving crashkernel above 4G on arm64 kdump" In
+> April 2019.
 
-v5 -> v6:
-* Added Reviewed-by tag from Thiago.
-* Moved the patch to end of the series for mpe to take a call on whether
-  to have it or not.
+Trying to go through the discussions last year, hopefully things get
+clearer.
 
-v4 -> v5:
-* New patch. Updated opal_base & opal_entry values in r8 & r9 respectively.
-  This change was part of the below dropped patch in v4:
-    - https://lore.kernel.org/patchwork/patch/1275667/
+So prior to the ZONE_DMA change, you still couldn't reserve 1G in the
+first 4GB? It shouldn't be sparsely populated during early boot.
 
+> I introduce parameters "crashkernel=X,[high,low]" as x86_64 does in earlier versions.
+> Suggested by James, to simplify, we call reserve_crashkernel_low() at the beginning of
+> reserve_crashkernel() and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low()
+> allocated something.
+> That is, just the parameter "crashkernel=X,low" is ok and i deleted "crashkernel=X,high".
 
- arch/powerpc/kexec/file_load_64.c      |   20 ++++++++++++++++++++
- arch/powerpc/purgatory/trampoline_64.S |   16 ++++++++++++++++
- 2 files changed, 36 insertions(+)
+The problem I see is that with your patches we diverge from x86
+behaviour (and the arm64 behaviour prior to the ZONE_DMA reduction) as
+we now require that crashkernel=X,low is always passed if you want
+something in ZONE_DMA (and you do want, otherwise the crashdump kernel
+fails to boot).
 
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index c6a37ad5a0a4..53bb71e3a2e1 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -876,6 +876,7 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
- 			  const void *fdt, unsigned long kernel_load_addr,
- 			  unsigned long fdt_load_addr)
- {
-+	struct device_node *dn = NULL;
- 	int ret;
- 
- 	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
-@@ -903,9 +904,28 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
- 					     &image->arch.backup_start,
- 					     sizeof(image->arch.backup_start),
- 					     false);
-+	if (ret)
-+		goto out;
-+
-+	/* Setup OPAL base & entry values */
-+	dn = of_find_node_by_path("/ibm,opal");
-+	if (dn) {
-+		u64 val;
-+
-+		of_property_read_u64(dn, "opal-base-address", &val);
-+		ret = kexec_purgatory_get_set_symbol(image, "opal_base", &val,
-+						     sizeof(val), false);
-+		if (ret)
-+			goto out;
-+
-+		of_property_read_u64(dn, "opal-entry-address", &val);
-+		ret = kexec_purgatory_get_set_symbol(image, "opal_entry", &val,
-+						     sizeof(val), false);
-+	}
- out:
- 	if (ret)
- 		pr_err("Failed to setup purgatory symbols");
-+	of_node_put(dn);
- 	return ret;
- }
- 
-diff --git a/arch/powerpc/purgatory/trampoline_64.S b/arch/powerpc/purgatory/trampoline_64.S
-index e79077ff1355..e6a6e7e6dfe4 100644
---- a/arch/powerpc/purgatory/trampoline_64.S
-+++ b/arch/powerpc/purgatory/trampoline_64.S
-@@ -87,6 +87,10 @@ master:
- 	li	%r4,28
- 	STWX_BE	%r17,%r3,%r4	/* Store my cpu as __be32 at byte 28 */
- 1:
-+	/* Load opal base and entry values in r8 & r9 respectively */
-+	ld	%r8,(opal_base - 0b)(%r18)
-+	ld	%r9,(opal_entry - 0b)(%r18)
-+
- 	/* load the kernel address */
- 	ld	%r4,(kernel - 0b)(%r18)
- 
-@@ -133,6 +137,18 @@ backup_start:
- 	.8byte  0x0
- 	.size backup_start, . - backup_start
- 
-+	.balign 8
-+	.globl opal_base
-+opal_base:
-+	.8byte  0x0
-+	.size opal_base, . - opal_base
-+
-+	.balign 8
-+	.globl opal_entry
-+opal_entry:
-+	.8byte  0x0
-+	.size opal_entry, . - opal_entry
-+
- 	.data
- 	.balign 8
- .globl purgatory_sha256_digest
+My main requirement is that crashkernel=X, without any suffix, still
+works which I don't think is guaranteed with your patches (well,
+ignoring RPi4 ZONE_DMA). Bhupesh's series is a quick fix but doesn't
+solve your large allocation requirements (that may have worked prior to
+the ZONE_DMA change).
 
+> After the ZONE_DMA introduced in December 2019, the issue occurred as
+> you said above. In fact, we didn't have RPi4 machine.
 
+You don't even need to have a RPi4 machine, ZONE_DMA has been set to 1GB
+unconditionally. And while we could move it back to 4GB on non-RPi4
+hardware, I'd rather have a solution that fixes kdump for RPi4 as well.
+
+> Originally, i suggested to fix this based on this patch series and
+> used the dedicated option.
+> 
+> According to your clarify, for typical kdump, there are other
+> solutions. In this case, "keep the crashkernel= behaviour to ZONE_DMA
+> allocations" looks much better.
+> 
+> How about like this:
+> 1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel=
+>    behaviour to ZONE_DMA allocations.
+> 2. For this patch series, make the reserve_crashkernel_low() to
+>    ZONE_DMA allocations.
+
+So you mean rebasing your series on top of Bhupesh's? I guess you can
+combine the two, I really don't care which way as long as we fix both
+issues and agree on the crashkernel= semantics. I think with some tweaks
+we can go with your series alone.
+
+IIUC from the x86 code (especially the part you #ifdef'ed out for
+arm64), if ",low" is not passed (so just standard crashkernel=X), it
+still allocates sufficient low memory for the swiotlb in ZONE_DMA. The
+rest can go in a high region. Why can't we do something similar on
+arm64? Of course, you can keep the ",low" argument for explicit
+allocation but I don't want to mandate it.
+
+So with an implicit ZONE_DMA allocation similar to the x86 one, we
+probably don't need Bhupesh's series at all. In addition, we can limit
+crashkernel= to the first 4G with a fall-back to high like x86 (not sure
+if memblock_find_in_range() is guaranteed to search in ascending order).
+I don't think we need an explicit ",high" annotation.
+
+So with the above, just a crashkernel=1G gives you at least 256MB in
+ZONE_DMA followed by the rest anywhere, with a preference for
+ZONE_DMA32. This way we can also keep the reserve_crashkernel_low()
+mostly intact from x86 (less #ifdef's).
+
+Do I miss anything?
+
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
