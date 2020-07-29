@@ -1,13 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
- reintroduced
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-5-chenzhou10@huawei.com> <20200727173014.GL13938@gaia>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
-Date: Wed, 29 Jul 2020 11:52:39 +0800
+Received: from mail-pg1-f194.google.com ([209.85.215.194])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k0aGP-0005Ab-KC
+ for kexec@lists.infradead.org; Wed, 29 Jul 2020 00:48:10 +0000
+Received: by mail-pg1-f194.google.com with SMTP id m22so13302640pgv.9
+ for <kexec@lists.infradead.org>; Tue, 28 Jul 2020 17:48:09 -0700 (PDT)
+Date: Wed, 29 Jul 2020 00:48:06 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH v2 01/18] test_firmware: Test platform fw loading on
+ non-EFI systems
+Message-ID: <20200729004806.GK4332@42.do-not-panic.com>
+References: <20200722193020.2676422-1-keescook@chromium.org>
+ <20200722193020.2676422-2-keescook@chromium.org>
 MIME-Version: 1.0
-In-Reply-To: <20200727173014.GL13938@gaia>
+Content-Disposition: inline
+In-Reply-To: <20200722193020.2676422-2-keescook@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,117 +27,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, dyoung@redhat.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
+To: Kees Cook <keescook@chromium.org>
+Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, Scott Branden <scott.branden@broadcom.com>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Hi  Catalin,
+On Wed, Jul 22, 2020 at 12:30:03PM -0700, Kees Cook wrote:
+> On non-EFI systems, it wasn't possible to test the platform firmware
+> loader because it will have never set "checked_fw" during __init.
+> Instead, allow the test code to override this check. Additionally split
+> the declarations into a private header file so it there is greater
+> enforcement of the symbol visibility.
+> 
+> Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
+A *clearly* private symbol namespace would seem cleaner, example the existing:
 
-On 2020/7/28 1:30, Catalin Marinas wrote:
-> On Fri, Jul 03, 2020 at 11:58:15AM +0800, Chen Zhou wrote:
->> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
->> broken the arm64 kdump. If the memory reserved for crash dump kernel
->> falled in ZONE_DMA32, the devices in crash dump kernel need to use
->> ZONE_DMA will alloc fail.
->>
->> This patch addressed the above issue based on "reserving crashkernel
->> above 4G". Originally, we reserve low memory below 4G, and now just need
->> to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
->> if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
->> in crash dump kernel, it is a good choice to use parameters
->> "crashkernel=X crashkernel=Y,low".
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  kernel/crash_core.c | 7 ++++++-
->>  1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index a7580d291c37..e8ecbbc761a3 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
->>  	unsigned long long base, low_base = 0, low_size = 0;
->>  	unsigned long total_low_mem;
->>  	int ret;
->> +	phys_addr_t crash_max = 1ULL << 32;
->>  
->>  	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
->>  
->> @@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
->>  			return 0;
->>  	}
->>  
->> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
->> +#ifdef CONFIG_ARM64
->> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
->> +		crash_max = arm64_dma_phys_limit;
->> +#endif
->> +	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
->>  	if (!low_base) {
->>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>  		       (unsigned long)(low_size >> 20));
-> Given the number of #ifdefs we end up with in this function, I think
-> it's better to simply copy to the code to arch/arm64 and tailor it
-> accordingly.
->
-> Anyway, there are two series solving slightly different issues with
-> kdump reservations:
->
-> 1. This series which relaxes the crashkernel= allocation to go anywhere
->    in the accessible space while having a dedicated crashkernel=X,low
->    option for ZONE_DMA.
->
-> 2. Bhupesh's series [1] forcing crashkernel=X allocations only from
->    ZONE_DMA.
->
-> For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
-> Existing crashkernel= uses may no longer work, depending on where the
-> allocation falls. Option (2) above is a quick fix assuming that the
-> crashkernel reservation is small enough. What's a typical crashkernel
-> option here? That series is probably more prone to reservation failures.
->
-> Option (1), i.e. this series, doesn't solve the problem raised by
-> Bhupesh unless one uses the crashkernel=X,low argument. It can actually
-> make it worse even for ZONE_DMA32 since the allocation can go above 4G
-> (assuming that we change the ZONE_DMA configuration to only limit it to
-> 1GB on RPi4).
->
-> I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
-> allocations. If this is too small for typical kdump, we can look into
-> expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
-> list). In addition, if Chen thinks allocations above 4G are still needed
-> or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
-> ",high" option to explicitly require such access.
-Thanks for your reply and exhaustive explanation.
+EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
 
-In our ARM servers, we need to to reserve a large chunk for kdump(512M or 1G),
-there is no enough low memory. So we proposed this patch series
-"support reserving crashkernel above 4G on arm64 kdump" In April 2019.
-
-I introduce parameters "crashkernel=X,[high,low]" as x86_64 does in earlier versions.
-Suggested by James, to simplify, we call reserve_crashkernel_low() at the beginning of
-reserve_crashkernel() and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low()
-allocated something.
-That is, just the parameter "crashkernel=X,low" is ok and i deleted "crashkernel=X,high".
-
-After the ZONE_DMA introduced in December 2019, the issue occurred as you said above.
-In fact, we didn't have RPi4 machine. Originally, i suggested to fix this based on this patch series
-and used the dedicated option.
-
-According to your clarify, for typical kdump, there are other solutions. In this case,
-"keep the crashkernel= behaviour to ZONE_DMA allocations" looks much better.
-
-How about like this:
-1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel= behaviour to ZONE_DMA allocations.
-2. For this patch series, make the reserve_crashkernel_low() to ZONE_DMA allocations.
-
-Thanks,
-Chen Zhou
-> [1] http://lists.infradead.org/pipermail/kexec/2020-July/020777.html
->
-
-
+  Luis
 
 _______________________________________________
 kexec mailing list
