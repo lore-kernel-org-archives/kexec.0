@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from ozlabs.org ([2401:3900:2:1::2])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0VMy-0000C8-Ix
- for kexec@lists.infradead.org; Tue, 28 Jul 2020 19:34:37 +0000
-Subject: Re: [RESEND PATCH v5 06/11] ppc64/kexec_file: restrict memory usage
- of kdump kernel
+ id 1k0agj-00073q-Jq
+ for kexec@lists.infradead.org; Wed, 29 Jul 2020 01:15:22 +0000
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [RESEND PATCH v5 07/11] ppc64/kexec_file: enable early kernel's
+ OPAL calls
+In-Reply-To: <23baef6a-6ddc-572a-82c5-21a7fa441485@linux.ibm.com>
 References: <159579157320.5790.6748078824637688685.stgit@hbathini>
- <159579231812.5790.16096865978767385505.stgit@hbathini>
- <875za77o05.fsf@mpe.ellerman.id.au>
-From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <23c4e7a2-6fbc-8007-5e9a-35c3a4d3898b@linux.ibm.com>
-Date: Wed, 29 Jul 2020 01:04:22 +0530
+ <159579233676.5790.10701756666641782647.stgit@hbathini>
+ <87365b7nx4.fsf@mpe.ellerman.id.au>
+ <23baef6a-6ddc-572a-82c5-21a7fa441485@linux.ibm.com>
+Date: Wed, 29 Jul 2020 11:15:12 +1000
+Message-ID: <87v9i75dgf.fsf@mpe.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <875za77o05.fsf@mpe.ellerman.id.au>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,64 +22,43 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Andrew Morton <akpm@linux-foundation.org>
+To: Hari Bathini <hbathini@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>
 Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Eric Biederman <ebiederm@xmission.com>
 
+Hari Bathini <hbathini@linux.ibm.com> writes:
+> On 28/07/20 7:16 pm, Michael Ellerman wrote:
+>> Hari Bathini <hbathini@linux.ibm.com> writes:
+>>> Kernel built with CONFIG_PPC_EARLY_DEBUG_OPAL enabled expects r8 & r9
+>>> to be filled with OPAL base & entry addresses respectively. Setting
+>>> these registers allows the kernel to perform OPAL calls before the
+>>> device tree is parsed.
+>> 
+>> I'm not convinced we want to do this.
+>> 
+>> If we do it becomes part of the kexec ABI and we have to honour it into
+>> the future.
+>> 
+>> And in practice there are no non-development kernels built with OPAL early
+>> debugging enabled, so it's not clear it actually helps anyone other than
+>> developers.
+>> 
+>
+> Hmmm.. kexec-tools does it since commit d58ad564852c ("kexec/ppc64
+> Enable early kernel's OPAL calls") for kexec_load syscall. So, we would
+> be breaking kexec ABI either way, I guess.
 
+Ugh, OK.
 
-On 28/07/20 7:14 pm, Michael Ellerman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
->> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
->> index 2df6f4273ddd..8df085a22fd7 100644
->> --- a/arch/powerpc/kexec/file_load_64.c
->> +++ b/arch/powerpc/kexec/file_load_64.c
->> @@ -17,9 +17,21 @@
->>   #include <linux/kexec.h>
->>   #include <linux/of_fdt.h>
->>   #include <linux/libfdt.h>
->> +#include <linux/of_device.h>
->>   #include <linux/memblock.h>
->> +#include <linux/slab.h>
->> +#include <asm/drmem.h>
->>   #include <asm/kexec_ranges.h>
->>   
->> +struct umem_info {
->> +	uint64_t *buf; /* data buffer for usable-memory property */
->> +	uint32_t idx;  /* current index */
->> +	uint32_t size; /* size allocated for the data buffer */
-> 
-> Use kernel types please, u64, u32.
-> 
->> +	/* usable memory ranges to look up */
->> +	const struct crash_mem *umrngs;
-> 
-> "umrngs".
-> 
-> Given it's part of the umem_info struct could it just be "ranges"?
+> Let me put this patch at the end of the series in the respin to let you
+> decide whether to have it or not..
 
-True. Actually, having crash_mem_range *ranges + u32 nr_ranges and 
-populating them seems better. Will do that..
+Thanks.
 
->> +		return NULL;
->> +	}
-> 
-> 	um_info->size = new_size;
-> 
->> +
->> +	memset(tbuf + um_info->idx, 0, MEM_RANGE_CHUNK_SZ);
-> 
-> Just pass __GFP_ZERO to krealloc?
-
-There are patches submitted to stable fixing a few modules that use 
-krealloc with __GFP_ZERO. Also, this zeroing is not really needed.
-I will drop the memset instead..
-
-Thanks
-Hari
+cheers
 
 _______________________________________________
 kexec mailing list
