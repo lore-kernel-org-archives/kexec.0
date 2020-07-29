@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0kUt-0004pM-B3
- for kexec@lists.infradead.org; Wed, 29 Jul 2020 11:43:48 +0000
-Subject: [PATCH v6 09/11] ppc64/kexec_file: add appropriate regions for memory
- reserve map
+ id 1k0kV9-0004sv-MK
+ for kexec@lists.infradead.org; Wed, 29 Jul 2020 11:44:04 +0000
+Subject: [PATCH v6 10/11] ppc64/kexec_file: fix kexec load failure with lack
+ of memory hole
 From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Wed, 29 Jul 2020 17:13:33 +0530
-Message-ID: <159602300473.575379.4218568032039284448.stgit@hbathini>
+Date: Wed, 29 Jul 2020 17:13:49 +0530
+Message-ID: <159602302326.575379.14038896654942043093.stgit@hbathini>
 In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
 References: <159602259854.575379.16910915605574571585.stgit@hbathini>
 MIME-Version: 1.0
@@ -26,10 +27,23 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-While initrd, elfcorehdr and backup regions are already added to the
-reserve map, there are a few missing regions that need to be added to
-the memory reserve map. Add them here. And now that all the changes
-to load panic kernel are in place, claim likewise.
+The kexec purgatory has to run in real mode. Only the first memory
+block maybe accessible in real mode. And, unlike the case with panic
+kernel, no memory is set aside for regular kexec load. Another thing
+to note is, the memory for crashkernel is reserved at an offset of
+128MB. So, when crashkernel memory is reserved, the memory ranges to
+load kexec segments shrink further as the generic code only looks for
+memblock free memory ranges and in all likelihood only a tiny bit of
+memory from 0 to 128MB would be available to load kexec segments.
+
+With kdump being used by default in general, kexec file load is likely
+to fail almost always. This can be fixed by changing the memory hole
+lookup logic for regular kexec to use the same method as kdump. This
+would mean that most kexec segments will overlap with crashkernel
+memory region. That should still be ok as the pages, whose destination
+address isn't available while loading, are placed in an intermediate
+location till a flush to the actual destination address happens during
+kexec boot sequence.
 
 Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 Tested-by: Pingfan Liu <piliu@redhat.com>
@@ -43,108 +57,76 @@ v4 -> v5:
 * Unchanged.
 
 v3 -> v4:
-* Fixed a spellcheck and added Reviewed-by tag from Thiago.
+* Unchanged. Added Reviewed-by tag from Thiago.
 
 v2 -> v3:
 * Unchanged. Added Tested-by tag from Pingfan.
 
 v1 -> v2:
-* Updated add_rtas_mem_range() & add_opal_mem_range() callsites based on
-  the new prototype for these functions.
+* New patch to fix locating memory hole for kexec_file_load (kexec -s -l)
+  when memory is reserved for crashkernel.
 
 
- arch/powerpc/kexec/file_load_64.c |   58 ++++++++++++++++++++++++++++++++++---
- 1 file changed, 53 insertions(+), 5 deletions(-)
+ arch/powerpc/kexec/file_load_64.c |   33 ++++++++++++++-------------------
+ 1 file changed, 14 insertions(+), 19 deletions(-)
 
 diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 0d280d097cd6..f13c5b8399e1 100644
+index f13c5b8399e1..c6a37ad5a0a4 100644
 --- a/arch/powerpc/kexec/file_load_64.c
 +++ b/arch/powerpc/kexec/file_load_64.c
-@@ -205,6 +205,34 @@ static int get_crash_memory_ranges(struct crash_mem **mem_ranges)
- 	return ret;
- }
+@@ -1012,13 +1012,6 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 	u64 buf_min, buf_max;
+ 	int ret;
  
-+/**
-+ * get_reserved_memory_ranges - Get reserve memory ranges. This list includes
-+ *                              memory regions that should be added to the
-+ *                              memory reserve map to ensure the region is
-+ *                              protected from any mischief.
-+ * @mem_ranges:                 Range list to add the memory ranges to.
-+ *
-+ * Returns 0 on success, negative errno on error.
-+ */
-+static int get_reserved_memory_ranges(struct crash_mem **mem_ranges)
-+{
-+	int ret;
-+
-+	ret = add_rtas_mem_range(mem_ranges);
-+	if (ret)
-+		goto out;
-+
-+	ret = add_tce_mem_ranges(mem_ranges);
-+	if (ret)
-+		goto out;
-+
-+	ret = add_reserved_mem_ranges(mem_ranges);
-+out:
-+	if (ret)
-+		pr_err("Failed to setup reserved memory ranges\n");
-+	return ret;
-+}
-+
- /**
-  * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
-  *                              in the memory regions between buf_min & buf_max
-@@ -897,8 +925,8 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
- 			unsigned long initrd_load_addr,
- 			unsigned long initrd_len, const char *cmdline)
- {
--	struct crash_mem *umem = NULL;
--	int ret;
-+	struct crash_mem *umem = NULL, *rmem = NULL;
-+	int i, nr_ranges, ret;
- 
- 	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
- 	if (ret)
-@@ -941,7 +969,27 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
- 		}
+-	/*
+-	 * Use the generic kexec_locate_mem_hole for regular
+-	 * kexec_file_load syscall
+-	 */
+-	if (kbuf->image->type != KEXEC_TYPE_CRASH)
+-		return kexec_locate_mem_hole(kbuf);
+-
+ 	/* Look up the exclude ranges list while locating the memory hole */
+ 	emem = &(kbuf->image->arch.exclude_ranges);
+ 	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
+@@ -1026,11 +1019,15 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ 		return kexec_locate_mem_hole(kbuf);
  	}
  
-+	/* Update memory reserve map */
-+	ret = get_reserved_memory_ranges(&rmem);
-+	if (ret)
-+		goto out;
-+
-+	nr_ranges = rmem ? rmem->nr_ranges : 0;
-+	for (i = 0; i < nr_ranges; i++) {
-+		u64 base, size;
-+
-+		base = rmem->ranges[i].start;
-+		size = rmem->ranges[i].end - base + 1;
-+		ret = fdt_add_mem_rsv(fdt, base, size);
-+		if (ret) {
-+			pr_err("Error updating memory reserve map: %s\n",
-+			       fdt_strerror(ret));
-+			goto out;
-+		}
++	buf_min = kbuf->buf_min;
++	buf_max = kbuf->buf_max;
+ 	/* Segments for kdump kernel should be within crashkernel region */
+-	buf_min = (kbuf->buf_min < crashk_res.start ?
+-		   crashk_res.start : kbuf->buf_min);
+-	buf_max = (kbuf->buf_max > crashk_res.end ?
+-		   crashk_res.end : kbuf->buf_max);
++	if (kbuf->image->type == KEXEC_TYPE_CRASH) {
++		buf_min = (buf_min < crashk_res.start ?
++			   crashk_res.start : buf_min);
++		buf_max = (buf_max > crashk_res.end ?
++			   crashk_res.end : buf_max);
 +	}
-+
- out:
-+	kfree(rmem);
- 	kfree(umem);
- 	return ret;
- }
-@@ -1024,10 +1072,10 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
  
- 		/* Get exclude memory ranges needed for setting up kdump segments */
- 		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
--		if (ret)
-+		if (ret) {
- 			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
--		/* Return this until all changes for panic kernel are in */
--		return -EOPNOTSUPP;
-+			return ret;
-+		}
+ 	if (buf_min > buf_max) {
+ 		pr_err("Invalid buffer min and/or max values\n");
+@@ -1067,15 +1064,13 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+ 				  unsigned long buf_len)
+ {
+-	if (image->type == KEXEC_TYPE_CRASH) {
+-		int ret;
++	int ret;
+ 
+-		/* Get exclude memory ranges needed for setting up kdump segments */
+-		ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
+-		if (ret) {
+-			pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
+-			return ret;
+-		}
++	/* Get exclude memory ranges needed for setting up kexec segments */
++	ret = get_exclude_memory_ranges(&(image->arch.exclude_ranges));
++	if (ret) {
++		pr_err("Failed to setup exclude memory ranges for buffer lookup\n");
++		return ret;
  	}
  
  	return kexec_image_probe_default(image, buf, buf_len);
