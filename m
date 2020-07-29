@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0kRz-0002sb-CT
- for kexec@lists.infradead.org; Wed, 29 Jul 2020 11:40:48 +0000
-Subject: [PATCH v6 05/11] powerpc/drmem: make lmb walk a bit more flexible
+ id 1k0kTf-0004Z1-Ay
+ for kexec@lists.infradead.org; Wed, 29 Jul 2020 11:42:32 +0000
+Subject: [PATCH v6 06/11] ppc64/kexec_file: restrict memory usage of kdump
+ kernel
 From: Hari Bathini <hbathini@linux.ibm.com>
-Date: Wed, 29 Jul 2020 17:10:32 +0530
-Message-ID: <159602282727.575379.3979857013827701828.stgit@hbathini>
+Date: Wed, 29 Jul 2020 17:12:16 +0530
+Message-ID: <159602284284.575379.6962016255404325493.stgit@hbathini>
 In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
 References: <159602259854.575379.16910915605574571585.stgit@hbathini>
 MIME-Version: 1.0
@@ -25,17 +26,14 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Michael Ellerman <mpe@ellerman.id.au>
 Cc: Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Mimi Zohar <zohar@linux.ibm.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Sourabh Jain <sourabhjain@linux.ibm.com>, lkml <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>
 
-Currently, numa & prom are the users of drmem lmb walk code. Loading
-kdump with kexec_file also needs to walk the drmem LMBs to setup the
-usable memory ranges for kdump kernel. But there are couple of issues
-in using the code as is. One, walk_drmem_lmb() code is built into the
-.init section currently, while kexec_file needs it later. Two, there
-is no scope to pass data to the callback function for processing and/
-or erroring out on certain conditions.
-
-Fix that by, moving drmem LMB walk code out of .init section, adding
-scope to pass data to the callback function and bailing out when
-an error is encountered in the callback function.
+Kdump kernel, used for capturing the kernel core image, is supposed
+to use only specific memory regions to avoid corrupting the image to
+be captured. The regions are crashkernel range - the memory reserved
+explicitly for kdump kernel, memory used for the tce-table, the OPAL
+region and RTAS region as applicable. Restrict kdump kernel memory
+to use only these regions by setting up usable-memory DT property.
+Also, tell the kdump kernel to run at the loaded address by setting
+the magic word at 0x5c.
 
 Signed-off-by: Hari Bathini <hbathini@linux.ibm.com>
 Tested-by: Pingfan Liu <piliu@redhat.com>
@@ -43,364 +41,475 @@ Reviewed-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
 ---
 
 v5 -> v6:
-* Unchanged.
+* Added Reviewed-by tag from Thiago.
+* Avoided pass by reference count parameter in add_usable_mem() function
+  by calculating the range count added from index value before & after it.
+* Instead of trying to reinvent the wheel with get_node_path() &
+  get_node_path_size() functions, used %pOF format as suggested by mpe.
+* Used kernel types instead of uint32_t/uint64_t.
+* and Dropped 'struct crash_mem *' member & added 'struct crash_mem_range *',
+  nr_ranges & max_entries fields to 'struct umem_info' to avoid bit of
+  a clutter in check_realloc_usable_mem() & add_usable_mem() functions.
+* Updated the comment as to why 0 till crashk_res.start was needed to be
+  added to usable memory ranges. Note that kexec-tools also has been
+  doing the same thing.
 
 v4 -> v5:
-* Unchanged.
+* Renamed get_node_pathlen() function to get_node_path_size() and
+  handled root node separately to avoid off-by-one error in
+  calculating string size.
+* Updated get_node_path() in line with change in get_node_path_size().
 
 v3 -> v4:
-* Unchanged. Added Reviewed-by tag from Thiago.
+* Updated get_node_path() to be an iterative function instead of a
+  recursive one.
+* Added comment explaining why low memory is added to kdump kernel's
+  usable memory ranges though it doesn't fall in crashkernel region.
+* For correctness, added fdt_add_mem_rsv() for the low memory being
+  added to kdump kernel's usable memory ranges.
+* Fixed prop pointer update in add_usable_mem_property() and changed
+  duple to tuple as suggested by Thiago.
 
 v2 -> v3:
 * Unchanged. Added Tested-by tag from Pingfan.
 
 v1 -> v2:
-* No changes.
+* Fixed off-by-one error while setting up usable-memory properties.
+* Updated add_rtas_mem_range() & add_opal_mem_range() callsites based on
+  the new prototype for these functions.
 
 
- arch/powerpc/include/asm/drmem.h |    9 ++--
- arch/powerpc/kernel/prom.c       |   13 +++---
- arch/powerpc/mm/drmem.c          |   87 +++++++++++++++++++++++++-------------
- arch/powerpc/mm/numa.c           |   13 +++---
- 4 files changed, 78 insertions(+), 44 deletions(-)
+ arch/powerpc/kexec/file_load_64.c |  386 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 385 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/include/asm/drmem.h b/arch/powerpc/include/asm/drmem.h
-index 414d209f45bb..17ccc6474ab6 100644
---- a/arch/powerpc/include/asm/drmem.h
-+++ b/arch/powerpc/include/asm/drmem.h
-@@ -90,13 +90,14 @@ static inline bool drmem_lmb_reserved(struct drmem_lmb *lmb)
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index d09c7724efa8..f94660874765 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -17,9 +17,23 @@
+ #include <linux/kexec.h>
+ #include <linux/of_fdt.h>
+ #include <linux/libfdt.h>
++#include <linux/of_device.h>
+ #include <linux/memblock.h>
++#include <linux/slab.h>
++#include <asm/drmem.h>
+ #include <asm/kexec_ranges.h>
+ 
++struct umem_info {
++	u64 *buf;		/* data buffer for usable-memory property */
++	u32 size;		/* size allocated for the data buffer */
++	u32 max_entries;	/* maximum no. of entries */
++	u32 idx;		/* index of current entry */
++
++	/* usable memory ranges to look up */
++	unsigned int nr_ranges;
++	const struct crash_mem_range *ranges;
++};
++
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+ 	&kexec_elf64_ops,
+ 	NULL
+@@ -74,6 +88,44 @@ static int get_exclude_memory_ranges(struct crash_mem **mem_ranges)
+ 	return ret;
  }
  
- u64 drmem_lmb_memory_max(void);
--void __init walk_drmem_lmbs(struct device_node *dn,
--			void (*func)(struct drmem_lmb *, const __be32 **));
-+int walk_drmem_lmbs(struct device_node *dn, void *data,
-+		    int (*func)(struct drmem_lmb *, const __be32 **, void *));
- int drmem_update_dt(void);
++/**
++ * get_usable_memory_ranges - Get usable memory ranges. This list includes
++ *                            regions like crashkernel, opal/rtas & tce-table,
++ *                            that kdump kernel could use.
++ * @mem_ranges:               Range list to add the memory ranges to.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int get_usable_memory_ranges(struct crash_mem **mem_ranges)
++{
++	int ret;
++
++	/*
++	 * Early boot failure observed on guests when low memory (first memory
++	 * block?) is not added to usable memory. So, add [0, crashk_res.end]
++	 * instead of [crashk_res.start, crashk_res.end] to workaround it.
++	 * Also, crashed kernel's memory must be added to reserve map to
++	 * avoid kdump kernel from using it.
++	 */
++	ret = add_mem_range(mem_ranges, 0, crashk_res.end + 1);
++	if (ret)
++		goto out;
++
++	ret = add_rtas_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_opal_mem_range(mem_ranges);
++	if (ret)
++		goto out;
++
++	ret = add_tce_mem_ranges(mem_ranges);
++out:
++	if (ret)
++		pr_err("Failed to setup usable memory ranges\n");
++	return ret;
++}
++
+ /**
+  * __locate_mem_hole_top_down - Looks top down for a large enough memory hole
+  *                              in the memory regions between buf_min & buf_max
+@@ -273,6 +325,286 @@ static int locate_mem_hole_bottom_up_ppc64(struct kexec_buf *kbuf,
+ 	return ret;
+ }
  
- #ifdef CONFIG_PPC_PSERIES
--void __init walk_drmem_lmbs_early(unsigned long node,
--			void (*func)(struct drmem_lmb *, const __be32 **));
-+int __init
-+walk_drmem_lmbs_early(unsigned long node, void *data,
-+		      int (*func)(struct drmem_lmb *, const __be32 **, void *));
- #endif
- 
- static inline void invalidate_lmb_associativity_index(struct drmem_lmb *lmb)
-diff --git a/arch/powerpc/kernel/prom.c b/arch/powerpc/kernel/prom.c
-index 9cc49f265c86..7df78de378b0 100644
---- a/arch/powerpc/kernel/prom.c
-+++ b/arch/powerpc/kernel/prom.c
-@@ -468,8 +468,9 @@ static bool validate_mem_limit(u64 base, u64 *size)
-  * This contains a list of memory blocks along with NUMA affinity
-  * information.
-  */
--static void __init early_init_drmem_lmb(struct drmem_lmb *lmb,
--					const __be32 **usm)
-+static int  __init early_init_drmem_lmb(struct drmem_lmb *lmb,
-+					const __be32 **usm,
-+					void *data)
- {
- 	u64 base, size;
- 	int is_kexec_kdump = 0, rngs;
-@@ -484,7 +485,7 @@ static void __init early_init_drmem_lmb(struct drmem_lmb *lmb,
- 	 */
- 	if ((lmb->flags & DRCONF_MEM_RESERVED) ||
- 	    !(lmb->flags & DRCONF_MEM_ASSIGNED))
--		return;
-+		return 0;
- 
- 	if (*usm)
- 		is_kexec_kdump = 1;
-@@ -499,7 +500,7 @@ static void __init early_init_drmem_lmb(struct drmem_lmb *lmb,
- 		 */
- 		rngs = dt_mem_next_cell(dt_root_size_cells, usm);
- 		if (!rngs) /* there are no (base, size) duple */
--			return;
-+			return 0;
- 	}
- 
- 	do {
-@@ -524,6 +525,8 @@ static void __init early_init_drmem_lmb(struct drmem_lmb *lmb,
- 		if (lmb->flags & DRCONF_MEM_HOTREMOVABLE)
- 			memblock_mark_hotplug(base, size);
- 	} while (--rngs);
++/**
++ * check_realloc_usable_mem - Reallocate buffer if it can't accommodate entries
++ * @um_info:                  Usable memory buffer and ranges info.
++ * @cnt:                      No. of entries to accommodate.
++ *
++ * Frees up the old buffer if memory reallocation fails.
++ *
++ * Returns buffer on success, NULL on error.
++ */
++static u64 *check_realloc_usable_mem(struct umem_info *um_info, int cnt)
++{
++	u32 new_size;
++	u64 *tbuf;
++
++	if ((um_info->idx + cnt) <= um_info->max_entries)
++		return um_info->buf;
++
++	new_size = um_info->size + MEM_RANGE_CHUNK_SZ;
++	tbuf = krealloc(um_info->buf, new_size, GFP_KERNEL);
++	if (tbuf) {
++		um_info->buf = tbuf;
++		um_info->size = new_size;
++		um_info->max_entries = (um_info->size / sizeof(u64));
++	}
++
++	return tbuf;
++}
++
++/**
++ * add_usable_mem - Add the usable memory ranges within the given memory range
++ *                  to the buffer
++ * @um_info:        Usable memory buffer and ranges info.
++ * @base:           Base address of memory range to look for.
++ * @end:            End address of memory range to look for.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int add_usable_mem(struct umem_info *um_info, u64 base, u64 end)
++{
++	u64 loc_base, loc_end;
++	bool add;
++	int i;
++
++	for (i = 0; i < um_info->nr_ranges; i++) {
++		add = false;
++		loc_base = um_info->ranges[i].start;
++		loc_end = um_info->ranges[i].end;
++		if (loc_base >= base && loc_end <= end)
++			add = true;
++		else if (base < loc_end && end > loc_base) {
++			if (loc_base < base)
++				loc_base = base;
++			if (loc_end > end)
++				loc_end = end;
++			add = true;
++		}
++
++		if (add) {
++			if (!check_realloc_usable_mem(um_info, 2))
++				return -ENOMEM;
++
++			um_info->buf[um_info->idx++] = cpu_to_be64(loc_base);
++			um_info->buf[um_info->idx++] =
++					cpu_to_be64(loc_end - loc_base + 1);
++		}
++	}
 +
 +	return 0;
- }
- #endif /* CONFIG_PPC_PSERIES */
- 
-@@ -534,7 +537,7 @@ static int __init early_init_dt_scan_memory_ppc(unsigned long node,
- #ifdef CONFIG_PPC_PSERIES
- 	if (depth == 1 &&
- 	    strcmp(uname, "ibm,dynamic-reconfiguration-memory") == 0) {
--		walk_drmem_lmbs_early(node, early_init_drmem_lmb);
-+		walk_drmem_lmbs_early(node, NULL, early_init_drmem_lmb);
- 		return 0;
- 	}
- #endif
-diff --git a/arch/powerpc/mm/drmem.c b/arch/powerpc/mm/drmem.c
-index 59327cefbc6a..b2eeea39684c 100644
---- a/arch/powerpc/mm/drmem.c
-+++ b/arch/powerpc/mm/drmem.c
-@@ -14,6 +14,8 @@
- #include <asm/prom.h>
- #include <asm/drmem.h>
- 
-+static int n_root_addr_cells, n_root_size_cells;
++}
 +
- static struct drmem_lmb_info __drmem_info;
- struct drmem_lmb_info *drmem_info = &__drmem_info;
- 
-@@ -189,12 +191,13 @@ int drmem_update_dt(void)
- 	return rc;
- }
- 
--static void __init read_drconf_v1_cell(struct drmem_lmb *lmb,
-+static void read_drconf_v1_cell(struct drmem_lmb *lmb,
- 				       const __be32 **prop)
- {
- 	const __be32 *p = *prop;
- 
--	lmb->base_addr = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	lmb->base_addr = of_read_number(p, n_root_addr_cells);
-+	p += n_root_addr_cells;
- 	lmb->drc_index = of_read_number(p++, 1);
- 
- 	p++; /* skip reserved field */
-@@ -205,29 +208,33 @@ static void __init read_drconf_v1_cell(struct drmem_lmb *lmb,
- 	*prop = p;
- }
- 
--static void __init __walk_drmem_v1_lmbs(const __be32 *prop, const __be32 *usm,
--			void (*func)(struct drmem_lmb *, const __be32 **))
-+static int
-+__walk_drmem_v1_lmbs(const __be32 *prop, const __be32 *usm, void *data,
-+		     int (*func)(struct drmem_lmb *, const __be32 **, void *))
- {
- 	struct drmem_lmb lmb;
- 	u32 i, n_lmbs;
-+	int ret = 0;
- 
- 	n_lmbs = of_read_number(prop++, 1);
--	if (n_lmbs == 0)
--		return;
--
- 	for (i = 0; i < n_lmbs; i++) {
- 		read_drconf_v1_cell(&lmb, &prop);
--		func(&lmb, &usm);
-+		ret = func(&lmb, &usm, data);
++/**
++ * kdump_setup_usable_lmb - This is a callback function that gets called by
++ *                          walk_drmem_lmbs for every LMB to set its
++ *                          usable memory ranges.
++ * @lmb:                    LMB info.
++ * @usm:                    linux,drconf-usable-memory property value.
++ * @data:                   Pointer to usable memory buffer and ranges info.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int kdump_setup_usable_lmb(struct drmem_lmb *lmb, const __be32 **usm,
++				  void *data)
++{
++	struct umem_info *um_info;
++	int tmp_idx, ret;
++	u64 base, end;
++
++	/*
++	 * kdump load isn't supported on kernels already booted with
++	 * linux,drconf-usable-memory property.
++	 */
++	if (*usm) {
++		pr_err("linux,drconf-usable-memory property already exists!");
++		return -EINVAL;
++	}
++
++	um_info = data;
++	tmp_idx = um_info->idx;
++	if (!check_realloc_usable_mem(um_info, 1))
++		return -ENOMEM;
++
++	um_info->idx++;
++	base = lmb->base_addr;
++	end = base + drmem_lmb_size() - 1;
++	ret = add_usable_mem(um_info, base, end);
++	if (!ret) {
++		/*
++		 * Update the no. of ranges added. Two entries (base & size)
++		 * for every range added.
++		 */
++		um_info->buf[tmp_idx] =
++				cpu_to_be64((um_info->idx - tmp_idx - 1) / 2);
++	}
++
++	return ret;
++}
++
++#define NODE_PATH_LEN		256
++/**
++ * add_usable_mem_property - Add usable memory property for the given
++ *                           memory node.
++ * @fdt:                     Flattened device tree for the kdump kernel.
++ * @dn:                      Memory node.
++ * @um_info:                 Usable memory buffer and ranges info.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int add_usable_mem_property(void *fdt, struct device_node *dn,
++				   struct umem_info *um_info)
++{
++	int n_mem_addr_cells, n_mem_size_cells, node;
++	char path[NODE_PATH_LEN];
++	int i, len, ranges, ret;
++	const __be32 *prop;
++	u64 base, end;
++
++	of_node_get(dn);
++
++	if (snprintf(path, NODE_PATH_LEN, "%pOF", dn) > (NODE_PATH_LEN - 1)) {
++		pr_err("Buffer (%d) too small for memory node: %pOF\n",
++		       NODE_PATH_LEN, dn);
++		return -EOVERFLOW;
++	}
++	pr_debug("Memory node path: %s\n", path);
++
++	/* Now that we know the path, find its offset in kdump kernel's fdt */
++	node = fdt_path_offset(fdt, path);
++	if (node < 0) {
++		pr_err("Malformed device tree: error reading %s\n", path);
++		ret = -EINVAL;
++		goto out;
++	}
++
++	/* Get the address & size cells */
++	n_mem_addr_cells = of_n_addr_cells(dn);
++	n_mem_size_cells = of_n_size_cells(dn);
++	pr_debug("address cells: %d, size cells: %d\n", n_mem_addr_cells,
++		 n_mem_size_cells);
++
++	um_info->idx  = 0;
++	if (!check_realloc_usable_mem(um_info, 2)) {
++		ret = -ENOMEM;
++		goto out;
++	}
++
++	prop = of_get_property(dn, "reg", &len);
++	if (!prop || len <= 0) {
++		ret = 0;
++		goto out;
++	}
++
++	/*
++	 * "reg" property represents sequence of (addr,size) tuples
++	 * each representing a memory range.
++	 */
++	ranges = (len >> 2) / (n_mem_addr_cells + n_mem_size_cells);
++
++	for (i = 0; i < ranges; i++) {
++		base = of_read_number(prop, n_mem_addr_cells);
++		prop += n_mem_addr_cells;
++		end = base + of_read_number(prop, n_mem_size_cells) - 1;
++		prop += n_mem_size_cells;
++
++		ret = add_usable_mem(um_info, base, end);
 +		if (ret)
-+			break;
- 	}
++			goto out;
++	}
 +
++	/*
++	 * No kdump kernel usable memory found in this memory node.
++	 * Write (0,0) tuple in linux,usable-memory property for
++	 * this region to be ignored.
++	 */
++	if (um_info->idx == 0) {
++		um_info->buf[0] = 0;
++		um_info->buf[1] = 0;
++		um_info->idx = 2;
++	}
++
++	ret = fdt_setprop(fdt, node, "linux,usable-memory", um_info->buf,
++			  (um_info->idx * sizeof(u64)));
++
++out:
++	of_node_put(dn);
++	return ret;
++}
++
++
++/**
++ * update_usable_mem_fdt - Updates kdump kernel's fdt with linux,usable-memory
++ *                         and linux,drconf-usable-memory DT properties as
++ *                         appropriate to restrict its memory usage.
++ * @fdt:                   Flattened device tree for the kdump kernel.
++ * @usable_mem:            Usable memory ranges for kdump kernel.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int update_usable_mem_fdt(void *fdt, struct crash_mem *usable_mem)
++{
++	struct umem_info um_info;
++	struct device_node *dn;
++	int node, ret = 0;
++
++	if (!usable_mem) {
++		pr_err("Usable memory ranges for kdump kernel not found\n");
++		return -ENOENT;
++	}
++
++	node = fdt_path_offset(fdt, "/ibm,dynamic-reconfiguration-memory");
++	if (node == -FDT_ERR_NOTFOUND)
++		pr_debug("No dynamic reconfiguration memory found\n");
++	else if (node < 0) {
++		pr_err("Malformed device tree: error reading /ibm,dynamic-reconfiguration-memory.\n");
++		return -EINVAL;
++	}
++
++	um_info.buf  = NULL;
++	um_info.size = 0;
++	um_info.max_entries = 0;
++	um_info.idx  = 0;
++	/* Memory ranges to look up */
++	um_info.ranges = &(usable_mem->ranges[0]);
++	um_info.nr_ranges = usable_mem->nr_ranges;
++
++	dn = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
++	if (dn) {
++		ret = walk_drmem_lmbs(dn, &um_info, kdump_setup_usable_lmb);
++		of_node_put(dn);
++
++		if (ret) {
++			pr_err("Could not setup linux,drconf-usable-memory property for kdump\n");
++			goto out;
++		}
++
++		ret = fdt_setprop(fdt, node, "linux,drconf-usable-memory",
++				  um_info.buf, (um_info.idx * sizeof(u64)));
++		if (ret) {
++			pr_err("Failed to update fdt with linux,drconf-usable-memory property");
++			goto out;
++		}
++	}
++
++	/*
++	 * Walk through each memory node and set linux,usable-memory property
++	 * for the corresponding node in kdump kernel's fdt.
++	 */
++	for_each_node_by_type(dn, "memory") {
++		ret = add_usable_mem_property(fdt, dn, &um_info);
++		if (ret) {
++			pr_err("Failed to set linux,usable-memory property for %s node",
++			       dn->full_name);
++			goto out;
++		}
++	}
++
++out:
++	kfree(um_info.buf);
++	return ret;
++}
++
+ /**
+  * setup_purgatory_ppc64 - initialize PPC64 specific purgatory's global
+  *                         variables and call setup_purgatory() to initialize
+@@ -293,6 +625,25 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+ 
+ 	ret = setup_purgatory(image, slave_code, fdt, kernel_load_addr,
+ 			      fdt_load_addr);
++	if (ret)
++		goto out;
++
++	if (image->type == KEXEC_TYPE_CRASH) {
++		u32 my_run_at_load = 1;
++
++		/*
++		 * Tell relocatable kernel to run at load address
++		 * via the word meant for that at 0x5c.
++		 */
++		ret = kexec_purgatory_get_set_symbol(image, "run_at_load",
++						     &my_run_at_load,
++						     sizeof(my_run_at_load),
++						     false);
++		if (ret)
++			goto out;
++	}
++
++out:
+ 	if (ret)
+ 		pr_err("Failed to setup purgatory symbols");
+ 	return ret;
+@@ -314,7 +665,40 @@ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ 			unsigned long initrd_load_addr,
+ 			unsigned long initrd_len, const char *cmdline)
+ {
+-	return setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
++	struct crash_mem *umem = NULL;
++	int ret;
++
++	ret = setup_new_fdt(image, fdt, initrd_load_addr, initrd_len, cmdline);
++	if (ret)
++		goto out;
++
++	/*
++	 * Restrict memory usage for kdump kernel by setting up
++	 * usable memory ranges.
++	 */
++	if (image->type == KEXEC_TYPE_CRASH) {
++		ret = get_usable_memory_ranges(&umem);
++		if (ret)
++			goto out;
++
++		ret = update_usable_mem_fdt(fdt, umem);
++		if (ret) {
++			pr_err("Error setting up usable-memory property for kdump kernel\n");
++			goto out;
++		}
++
++		/* Ensure we don't touch crashed kernel's memory */
++		ret = fdt_add_mem_rsv(fdt, 0, crashk_res.start);
++		if (ret) {
++			pr_err("Error reserving crash memory: %s\n",
++			       fdt_strerror(ret));
++			goto out;
++		}
++	}
++
++out:
++	kfree(umem);
 +	return ret;
  }
  
--static void __init read_drconf_v2_cell(struct of_drconf_cell_v2 *dr_cell,
-+static void read_drconf_v2_cell(struct of_drconf_cell_v2 *dr_cell,
- 				       const __be32 **prop)
- {
- 	const __be32 *p = *prop;
- 
- 	dr_cell->seq_lmbs = of_read_number(p++, 1);
--	dr_cell->base_addr = dt_mem_next_cell(dt_root_addr_cells, &p);
-+	dr_cell->base_addr = of_read_number(p, n_root_addr_cells);
-+	p += n_root_addr_cells;
- 	dr_cell->drc_index = of_read_number(p++, 1);
- 	dr_cell->aa_index = of_read_number(p++, 1);
- 	dr_cell->flags = of_read_number(p++, 1);
-@@ -235,17 +242,16 @@ static void __init read_drconf_v2_cell(struct of_drconf_cell_v2 *dr_cell,
- 	*prop = p;
- }
- 
--static void __init __walk_drmem_v2_lmbs(const __be32 *prop, const __be32 *usm,
--			void (*func)(struct drmem_lmb *, const __be32 **))
-+static int
-+__walk_drmem_v2_lmbs(const __be32 *prop, const __be32 *usm, void *data,
-+		     int (*func)(struct drmem_lmb *, const __be32 **, void *))
- {
- 	struct of_drconf_cell_v2 dr_cell;
- 	struct drmem_lmb lmb;
- 	u32 i, j, lmb_sets;
-+	int ret = 0;
- 
- 	lmb_sets = of_read_number(prop++, 1);
--	if (lmb_sets == 0)
--		return;
--
- 	for (i = 0; i < lmb_sets; i++) {
- 		read_drconf_v2_cell(&dr_cell, &prop);
- 
-@@ -259,21 +265,29 @@ static void __init __walk_drmem_v2_lmbs(const __be32 *prop, const __be32 *usm,
- 			lmb.aa_index = dr_cell.aa_index;
- 			lmb.flags = dr_cell.flags;
- 
--			func(&lmb, &usm);
-+			ret = func(&lmb, &usm, data);
-+			if (ret)
-+				break;
- 		}
- 	}
-+
-+	return ret;
- }
- 
- #ifdef CONFIG_PPC_PSERIES
--void __init walk_drmem_lmbs_early(unsigned long node,
--			void (*func)(struct drmem_lmb *, const __be32 **))
-+int __init walk_drmem_lmbs_early(unsigned long node, void *data,
-+		int (*func)(struct drmem_lmb *, const __be32 **, void *))
- {
- 	const __be32 *prop, *usm;
--	int len;
-+	int len, ret = -ENODEV;
- 
- 	prop = of_get_flat_dt_prop(node, "ibm,lmb-size", &len);
- 	if (!prop || len < dt_root_size_cells * sizeof(__be32))
--		return;
-+		return ret;
-+
-+	/* Get the address & size cells */
-+	n_root_addr_cells = dt_root_addr_cells;
-+	n_root_size_cells = dt_root_size_cells;
- 
- 	drmem_info->lmb_size = dt_mem_next_cell(dt_root_size_cells, &prop);
- 
-@@ -281,20 +295,21 @@ void __init walk_drmem_lmbs_early(unsigned long node,
- 
- 	prop = of_get_flat_dt_prop(node, "ibm,dynamic-memory", &len);
- 	if (prop) {
--		__walk_drmem_v1_lmbs(prop, usm, func);
-+		ret = __walk_drmem_v1_lmbs(prop, usm, data, func);
- 	} else {
- 		prop = of_get_flat_dt_prop(node, "ibm,dynamic-memory-v2",
- 					   &len);
- 		if (prop)
--			__walk_drmem_v2_lmbs(prop, usm, func);
-+			ret = __walk_drmem_v2_lmbs(prop, usm, data, func);
- 	}
- 
- 	memblock_dump_all();
-+	return ret;
- }
- 
- #endif
- 
--static int __init init_drmem_lmb_size(struct device_node *dn)
-+static int init_drmem_lmb_size(struct device_node *dn)
- {
- 	const __be32 *prop;
- 	int len;
-@@ -303,12 +318,12 @@ static int __init init_drmem_lmb_size(struct device_node *dn)
- 		return 0;
- 
- 	prop = of_get_property(dn, "ibm,lmb-size", &len);
--	if (!prop || len < dt_root_size_cells * sizeof(__be32)) {
-+	if (!prop || len < n_root_size_cells * sizeof(__be32)) {
- 		pr_info("Could not determine LMB size\n");
- 		return -1;
- 	}
- 
--	drmem_info->lmb_size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+	drmem_info->lmb_size = of_read_number(prop, n_root_size_cells);
- 	return 0;
- }
- 
-@@ -329,24 +344,36 @@ static const __be32 *of_get_usable_memory(struct device_node *dn)
- 	return prop;
- }
- 
--void __init walk_drmem_lmbs(struct device_node *dn,
--			    void (*func)(struct drmem_lmb *, const __be32 **))
-+int walk_drmem_lmbs(struct device_node *dn, void *data,
-+		    int (*func)(struct drmem_lmb *, const __be32 **, void *))
- {
- 	const __be32 *prop, *usm;
-+	int ret = -ENODEV;
-+
-+	if (!of_root)
-+		return ret;
-+
-+	/* Get the address & size cells */
-+	of_node_get(of_root);
-+	n_root_addr_cells = of_n_addr_cells(of_root);
-+	n_root_size_cells = of_n_size_cells(of_root);
-+	of_node_put(of_root);
- 
- 	if (init_drmem_lmb_size(dn))
--		return;
-+		return ret;
- 
- 	usm = of_get_usable_memory(dn);
- 
- 	prop = of_get_property(dn, "ibm,dynamic-memory", NULL);
- 	if (prop) {
--		__walk_drmem_v1_lmbs(prop, usm, func);
-+		ret = __walk_drmem_v1_lmbs(prop, usm, data, func);
- 	} else {
- 		prop = of_get_property(dn, "ibm,dynamic-memory-v2", NULL);
- 		if (prop)
--			__walk_drmem_v2_lmbs(prop, usm, func);
-+			ret = __walk_drmem_v2_lmbs(prop, usm, data, func);
- 	}
-+
-+	return ret;
- }
- 
- static void __init init_drmem_v1_lmbs(const __be32 *prop)
-diff --git a/arch/powerpc/mm/numa.c b/arch/powerpc/mm/numa.c
-index 9fcf2d195830..88eb6894418d 100644
---- a/arch/powerpc/mm/numa.c
-+++ b/arch/powerpc/mm/numa.c
-@@ -644,8 +644,9 @@ static inline int __init read_usm_ranges(const __be32 **usm)
-  * Extract NUMA information from the ibm,dynamic-reconfiguration-memory
-  * node.  This assumes n_mem_{addr,size}_cells have been set.
-  */
--static void __init numa_setup_drmem_lmb(struct drmem_lmb *lmb,
--					const __be32 **usm)
-+static int __init numa_setup_drmem_lmb(struct drmem_lmb *lmb,
-+					const __be32 **usm,
-+					void *data)
- {
- 	unsigned int ranges, is_kexec_kdump = 0;
- 	unsigned long base, size, sz;
-@@ -657,7 +658,7 @@ static void __init numa_setup_drmem_lmb(struct drmem_lmb *lmb,
- 	 */
- 	if ((lmb->flags & DRCONF_MEM_RESERVED)
- 	    || !(lmb->flags & DRCONF_MEM_ASSIGNED))
--		return;
-+		return 0;
- 
- 	if (*usm)
- 		is_kexec_kdump = 1;
-@@ -669,7 +670,7 @@ static void __init numa_setup_drmem_lmb(struct drmem_lmb *lmb,
- 	if (is_kexec_kdump) {
- 		ranges = read_usm_ranges(usm);
- 		if (!ranges) /* there are no (base, size) duple */
--			return;
-+			return 0;
- 	}
- 
- 	do {
-@@ -686,6 +687,8 @@ static void __init numa_setup_drmem_lmb(struct drmem_lmb *lmb,
- 		if (sz)
- 			memblock_set_node(base, sz, &memblock.memory, nid);
- 	} while (--ranges);
-+
-+	return 0;
- }
- 
- static int __init parse_numa_properties(void)
-@@ -787,7 +790,7 @@ static int __init parse_numa_properties(void)
- 	 */
- 	memory = of_find_node_by_path("/ibm,dynamic-reconfiguration-memory");
- 	if (memory) {
--		walk_drmem_lmbs(memory, numa_setup_drmem_lmb);
-+		walk_drmem_lmbs(memory, NULL, numa_setup_drmem_lmb);
- 		of_node_put(memory);
- 	}
- 
+ /**
 
 
 
