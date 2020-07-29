@@ -1,25 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1043.google.com ([2607:f8b0:4864:20::1043])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k0bRq-0003S7-10
- for kexec@lists.infradead.org; Wed, 29 Jul 2020 02:04:02 +0000
-Received: by mail-pj1-x1043.google.com with SMTP id ha11so1246283pjb.1
- for <kexec@lists.infradead.org>; Tue, 28 Jul 2020 19:04:01 -0700 (PDT)
-Date: Wed, 29 Jul 2020 11:03:55 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: [PATCH 2/4] printk: store instead of processing cont parts
-Message-ID: <20200729020355.GA1534750@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <20200717234818.8622-3-john.ogness@linutronix.de>
- <20200719143527.GA566@jagdpanzerIV.localdomain>
- <CAHk-=wg70es2rSYsHbBcWrBPsoHmbZ8vmeqTS_Kypv6zHAwQjA@mail.gmail.com>
- <20200720015057.GA463@jagdpanzerIV.localdomain>
- <CAHk-=whqiemoYRE41+qMuwQ_Qw3pn7gy2-Mso=ZDrwxQCVkncg@mail.gmail.com>
- <20200721144220.GE44523@jagdpanzerIV.localdomain>
- <87ft9kx6er.fsf@jogness.linutronix.de>
+Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
+ reintroduced
+References: <20200703035816.31289-1-chenzhou10@huawei.com>
+ <20200703035816.31289-5-chenzhou10@huawei.com> <20200727173014.GL13938@gaia>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
+Date: Wed, 29 Jul 2020 11:52:39 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87ft9kx6er.fsf@jogness.linutronix.de>
+In-Reply-To: <20200727173014.GL13938@gaia>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,35 +20,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, dyoung@redhat.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
 
-On (20/07/21 17:03), John Ogness wrote:
-> On 2020-07-21, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
-> >> That said, we have traditionally used not just "current process", but
-> >> also "last irq-level" as the context information, so I do think it
-> >> would be good to continue to do that.
-> >
-> > OK, so basically, extending printk_caller_id() so that for IRQ/NMI
-> > we will have more info than just "0x80000000 + raw_smp_processor_id()".
-> 
-> If bit31 is set, the upper 8 bits could specify what the lower 24 bits
-> represent. That would give some freedom for the future.
-> 
-> For example:
-> 
-> 0x80 = cpu id (generic context)
-> 0x81 = interrupt number
-> 0x82 = cpu id (nmi context)
+Hi  Catalin,
 
-Looks good to me. I'd probably add in_softirq state. So the contexts
-are: in_task, in_softirq, in_irq, in_nmi
 
-For the purpose of future extensions, I would probably consider
-u64 for callerid. So that we can store more "state bits" in the future,
-like disabled/enabled preemption; disabled/enabled local irqs; etc.
+On 2020/7/28 1:30, Catalin Marinas wrote:
+> On Fri, Jul 03, 2020 at 11:58:15AM +0800, Chen Zhou wrote:
+>> commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32")
+>> broken the arm64 kdump. If the memory reserved for crash dump kernel
+>> falled in ZONE_DMA32, the devices in crash dump kernel need to use
+>> ZONE_DMA will alloc fail.
+>>
+>> This patch addressed the above issue based on "reserving crashkernel
+>> above 4G". Originally, we reserve low memory below 4G, and now just need
+>> to adjust memory limit to arm64_dma_phys_limit in reserve_crashkernel_low
+>> if ZONE_DMA is enabled. That is, if there are devices need to use ZONE_DMA
+>> in crash dump kernel, it is a good choice to use parameters
+>> "crashkernel=X crashkernel=Y,low".
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>  kernel/crash_core.c | 7 ++++++-
+>>  1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index a7580d291c37..e8ecbbc761a3 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -320,6 +320,7 @@ int __init reserve_crashkernel_low(void)
+>>  	unsigned long long base, low_base = 0, low_size = 0;
+>>  	unsigned long total_low_mem;
+>>  	int ret;
+>> +	phys_addr_t crash_max = 1ULL << 32;
+>>  
+>>  	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>>  
+>> @@ -352,7 +353,11 @@ int __init reserve_crashkernel_low(void)
+>>  			return 0;
+>>  	}
+>>  
+>> -	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+>> +#ifdef CONFIG_ARM64
+>> +	if (IS_ENABLED(CONFIG_ZONE_DMA))
+>> +		crash_max = arm64_dma_phys_limit;
+>> +#endif
+>> +	low_base = memblock_find_in_range(0, crash_max, low_size, CRASH_ALIGN);
+>>  	if (!low_base) {
+>>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>  		       (unsigned long)(low_size >> 20));
+> Given the number of #ifdefs we end up with in this function, I think
+> it's better to simply copy to the code to arch/arm64 and tailor it
+> accordingly.
+>
+> Anyway, there are two series solving slightly different issues with
+> kdump reservations:
+>
+> 1. This series which relaxes the crashkernel= allocation to go anywhere
+>    in the accessible space while having a dedicated crashkernel=X,low
+>    option for ZONE_DMA.
+>
+> 2. Bhupesh's series [1] forcing crashkernel=X allocations only from
+>    ZONE_DMA.
+>
+> For RPi4 support, we limited ZONE_DMA allocations to the 1st GB.
+> Existing crashkernel= uses may no longer work, depending on where the
+> allocation falls. Option (2) above is a quick fix assuming that the
+> crashkernel reservation is small enough. What's a typical crashkernel
+> option here? That series is probably more prone to reservation failures.
+>
+> Option (1), i.e. this series, doesn't solve the problem raised by
+> Bhupesh unless one uses the crashkernel=X,low argument. It can actually
+> make it worse even for ZONE_DMA32 since the allocation can go above 4G
+> (assuming that we change the ZONE_DMA configuration to only limit it to
+> 1GB on RPi4).
+>
+> I'm more inclined to keep the crashkernel= behaviour to ZONE_DMA
+> allocations. If this is too small for typical kdump, we can look into
+> expanding ZONE_DMA to 4G on non-RPi4 hardware (we had patches on the
+> list). In addition, if Chen thinks allocations above 4G are still needed
+> or if RPi4 needs a sufficiently large crashkernel=, I'd rather have a
+> ",high" option to explicitly require such access.
+Thanks for your reply and exhaustive explanation.
 
-	-ss
+In our ARM servers, we need to to reserve a large chunk for kdump(512M or 1G),
+there is no enough low memory. So we proposed this patch series
+"support reserving crashkernel above 4G on arm64 kdump" In April 2019.
+
+I introduce parameters "crashkernel=X,[high,low]" as x86_64 does in earlier versions.
+Suggested by James, to simplify, we call reserve_crashkernel_low() at the beginning of
+reserve_crashkernel() and then relax the arm64_dma32_phys_limit if reserve_crashkernel_low()
+allocated something.
+That is, just the parameter "crashkernel=X,low" is ok and i deleted "crashkernel=X,high".
+
+After the ZONE_DMA introduced in December 2019, the issue occurred as you said above.
+In fact, we didn't have RPi4 machine. Originally, i suggested to fix this based on this patch series
+and used the dedicated option.
+
+According to your clarify, for typical kdump, there are other solutions. In this case,
+"keep the crashkernel= behaviour to ZONE_DMA allocations" looks much better.
+
+How about like this:
+1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel= behaviour to ZONE_DMA allocations.
+2. For this patch series, make the reserve_crashkernel_low() to ZONE_DMA allocations.
+
+Thanks,
+Chen Zhou
+> [1] http://lists.infradead.org/pipermail/kexec/2020-July/020777.html
+>
+
+
 
 _______________________________________________
 kexec mailing list
