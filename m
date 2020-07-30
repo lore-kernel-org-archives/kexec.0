@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v10 4/5] arm64: kdump: fix kdump broken with ZONE_DMA
- reintroduced
-References: <20200703035816.31289-1-chenzhou10@huawei.com>
- <20200703035816.31289-5-chenzhou10@huawei.com> <20200727173014.GL13938@gaia>
- <dd40f6ee-d5bd-1798-e7d6-1fb8ae91dc8b@huawei.com>
- <20200729115851.GC5524@gaia>
- <217004f5-dd8e-d04c-038b-c88b132d5495@huawei.com>
- <20200729152028.GE5524@gaia>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <10e223dc-9314-920f-c208-65a31819d1b7@huawei.com>
-Date: Thu, 30 Jul 2020 16:22:37 +0800
-MIME-Version: 1.0
-In-Reply-To: <20200729152028.GE5524@gaia>
+Received: from mail-pj1-x1041.google.com ([2607:f8b0:4864:20::1041])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k18gx-000514-9A
+ for kexec@lists.infradead.org; Thu, 30 Jul 2020 13:33:52 +0000
+Received: by mail-pj1-x1041.google.com with SMTP id a9so4214837pjd.3
+ for <kexec@lists.infradead.org>; Thu, 30 Jul 2020 06:33:48 -0700 (PDT)
+From: Pingfan Liu <kernelfans@gmail.com>
+Subject: [PATCHv4 1/2] powerpc/pseries: group lmb operation and memblock's
+Date: Thu, 30 Jul 2020 21:33:24 +0800
+Message-Id: <1596116005-27511-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,101 +17,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: horms@verge.net.au, John.P.donnelly@oracle.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, dyoung@redhat.com, bhsharma@redhat.com, guohanjun@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, Pingfan Liu <kernelfans@gmail.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>
 
-Hi Catalin,
+This patch prepares for the incoming patch which swaps the order of
+KOBJ_ADD/REMOVE uevent and dt's updating.
 
+The dt updating should come after lmb operations, and before
+__remove_memory()/__add_memory().  Accordingly, grouping all lmb operations
+before the memblock's.
 
-On 2020/7/29 23:20, Catalin Marinas wrote:
-> On Wed, Jul 29, 2020 at 10:14:32PM +0800, chenzhou wrote:
->> On 2020/7/29 19:58, Catalin Marinas wrote:
->>> On Wed, Jul 29, 2020 at 11:52:39AM +0800, chenzhou wrote:
->>>> How about like this:
->>>> 1. For ZONE_DMA issue, use Bhupesh's solution, keep the crashkernel=
->>>>    behaviour to ZONE_DMA allocations.
->>>> 2. For this patch series, make the reserve_crashkernel_low() to
->>>>    ZONE_DMA allocations.
->>> So you mean rebasing your series on top of Bhupesh's? I guess you can
->>> combine the two, I really don't care which way as long as we fix both
->>> issues and agree on the crashkernel= semantics. I think with some tweaks
->>> we can go with your series alone.
->>>
->>> IIUC from the x86 code (especially the part you #ifdef'ed out for
->>> arm64), if ",low" is not passed (so just standard crashkernel=X), it
->>> still allocates sufficient low memory for the swiotlb in ZONE_DMA. The
->>> rest can go in a high region. Why can't we do something similar on
->>> arm64? Of course, you can keep the ",low" argument for explicit
->>> allocation but I don't want to mandate it.
->> It is a good idea to combine the two.
->>
->> For parameter crashkernel=X, we do like this:
->> 1. allocate some low memory in ZONE_DMA(or ZONE_DMA32 if CONFIG_ZONE_DMA=n)
->> 2. allocate X size memory in a high region
->>
->> ",low" argument can be used to specify the low memory.
->>
->> Do i understand correctly?
-> Yes, although we could follow the x86 approach:
->
-> 1. Try low (ZONE_DMA for arm64) allocation, fallback to high allocation
->    if it fails.
->
-> 2. If crash_base is outside ZONE_DMA, call reserve_crashkernel_low()
->    which either honours the ,low option or allocates some small amount
->    in ZONE_DMA.
->
-> If at some point we have platforms failing step 2, we'll look at
-> changing ZONE_DMA to the full 4GB on non-RPi4 platforms.
->
-> It looks to me like x86 ignores the ,low option if the first step
-> managed to get some low memory. Shall we do the same on arm64?
-Yes, we could do like this.
->
->>> So with an implicit ZONE_DMA allocation similar to the x86 one, we
->>> probably don't need Bhupesh's series at all. In addition, we can limit
->>> crashkernel= to the first 4G with a fall-back to high like x86 (not sure
->>> if memblock_find_in_range() is guaranteed to search in ascending order).
->>> I don't think we need an explicit ",high" annotation.
->>>
->>> So with the above, just a crashkernel=1G gives you at least 256MB in
->>> ZONE_DMA followed by the rest anywhere, with a preference for
->>> ZONE_DMA32. This way we can also keep the reserve_crashkernel_low()
->>> mostly intact from x86 (less #ifdef's).
->> Yes. We can let crashkernel=X  try to reserve low memory and fall back to use high memory
->> if failing to find a low range.
-> The only question is whether we need to preserve some more ZONE_DMA on
-> the current system. If for example we pass a crashkernel=512M and some
-> cma=, we may end up with very little free memory in ZONE_DMA. That's
-> mostly an issue for RPi4 since other platforms would work with
-> ZONE_DMA32. We could add a threshold and go for high allocation directly
-> if the required size is too large.
-Ok.  I will think about the threshold in the next version and make the value be 1/2 or 1/3 of the ZONE_DMA.
->
->> About the function reserve_crashkernel_low(), if we put it in arch/arm64, there is some common
->> code with x86_64. Some suggestions about this?
-> If we can use this function almost intact, just move it in a common
-> place. But if it gets sprinkled with #ifdef CONFIG_ARM64, I'd rather
-> duplicate it. I'd still prefer to move it to a common place if possible.
->
-> You can go a step further and also move the x86 reserve_crashkernel() to
-> common code. I don't think there a significant difference between arm64
-> and x86 here. You'd have to define arch-specific specific
-> CRASH_ADDR_LOW_MAX etc.
-I will take these into account and send the next version recently.
->
-> Also patches moving code should not have any functional change. The
-> CRASH_ALIGN change from 16M to 2M on x86 should be a separate patch as
-> it needs to be acked by the x86 maintainers (IIRC, Ingo only acked the
-> function move if there was no functional change; CRASH_ALIGN is used for
-> the start address, not just alignment, on x86).
->
-Thanks,
-Chen Zhou
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Hari Bathini <hbathini@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>
+Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+Cc: kexec@lists.infradead.org
+To: linuxppc-dev@lists.ozlabs.org
+---
+v3 -> v4: improve commit log
+ arch/powerpc/platforms/pseries/hotplug-memory.c | 26 ++++++++++++++++---------
+ 1 file changed, 17 insertions(+), 9 deletions(-)
+
+diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
+index 5d545b7..1a3ac3b 100644
+--- a/arch/powerpc/platforms/pseries/hotplug-memory.c
++++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+@@ -355,7 +355,8 @@ static int dlpar_add_lmb(struct drmem_lmb *);
+ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+ {
+ 	unsigned long block_sz;
+-	int rc;
++	phys_addr_t base_addr;
++	int rc, nid;
+ 
+ 	if (!lmb_is_removable(lmb))
+ 		return -EINVAL;
+@@ -364,17 +365,19 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+ 	if (rc)
+ 		return rc;
+ 
++	base_addr = lmb->base_addr;
++	nid = lmb->nid;
+ 	block_sz = pseries_memory_block_size();
+ 
+-	__remove_memory(lmb->nid, lmb->base_addr, block_sz);
+-
+-	/* Update memory regions for memory remove */
+-	memblock_remove(lmb->base_addr, block_sz);
+-
+ 	invalidate_lmb_associativity_index(lmb);
+ 	lmb_clear_nid(lmb);
+ 	lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+ 
++	__remove_memory(nid, base_addr, block_sz);
++
++	/* Update memory regions for memory remove */
++	memblock_remove(base_addr, block_sz);
++
+ 	return 0;
+ }
+ 
+@@ -603,6 +606,8 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+ 	}
+ 
+ 	lmb_set_nid(lmb);
++	lmb->flags |= DRCONF_MEM_ASSIGNED;
++
+ 	block_sz = memory_block_size_bytes();
+ 
+ 	/* Add the memory */
+@@ -614,11 +619,14 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+ 
+ 	rc = dlpar_online_lmb(lmb);
+ 	if (rc) {
+-		__remove_memory(lmb->nid, lmb->base_addr, block_sz);
++		int nid = lmb->nid;
++		phys_addr_t base_addr = lmb->base_addr;
++
+ 		invalidate_lmb_associativity_index(lmb);
+ 		lmb_clear_nid(lmb);
+-	} else {
+-		lmb->flags |= DRCONF_MEM_ASSIGNED;
++		lmb->flags &= ~DRCONF_MEM_ASSIGNED;
++
++		__remove_memory(nid, base_addr, block_sz);
+ 	}
+ 
+ 	return rc;
+-- 
+2.7.5
 
 
 _______________________________________________
