@@ -1,11 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-Date: Sat, 1 Aug 2020 21:08:56 +0800
-Message-ID: <20200801130856.86625-6-chenzhou10@huawei.com>
-In-Reply-To: <20200801130856.86625-1-chenzhou10@huawei.com>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
-MIME-Version: 1.0
+Received: from bilbo.ozlabs.org ([2401:3900:2:1::2] helo=ozlabs.org)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k2E8s-0004ve-O4
+ for kexec@lists.infradead.org; Sun, 02 Aug 2020 13:35:12 +0000
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
+References: <159602259854.575379.16910915605574571585.stgit@hbathini>
+Subject: Re: [PATCH v6 00/11] ppc64: enable kdump support for kexec_file_load
+ syscall
+Message-Id: <159637523806.42190.10916857383137134464.b4-ty@ellerman.id.au>
+Date: Sun,  2 Aug 2020 23:35:02 +1000 (AEST)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,110 +18,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com, prabhakar.pkin@gmail.com, bhsharma@redhat.com
-Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, nsaenzjulienne@suse.de, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+To: Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>
+Cc: Laurent Dufour <ldufour@linux.ibm.com>, kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, lkml <linux-kernel@vger.kernel.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-Now the behavior of crashkernel=X has been changed, which tries low
-allocation in ZONE_DMA, and fall back to high allocation if it fails.
+On Wed, 29 Jul 2020 17:08:44 +0530, Hari Bathini wrote:
+> Sorry! There was a gateway issue on my system while posting v5, due to
+> which some patches did not make it through. Resending...
+> 
+> This patch series enables kdump support for kexec_file_load system
+> call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
+> code but heavily modified for kernel consumption.
+> 
+> [...]
 
-If requized size X is too large and leads to very little free memory
-in ZONE_DMA after low allocation, the system may not work well.
-So add a threshold and go for high allocation directly if the required
-size is too large. The threshold is set as the half of low memory.
+Applied to powerpc/next.
 
-If crash_base is outside ZONE_DMA, try to allocate at least 256M in
-ZONE_DMA automatically. "crashkernel=Y,low" can be used to allocate
-specified size low memory. For non-RPi4 platforms, change ZONE_DMA
-memtioned above to ZONE_DMA32.
+[01/11] kexec_file: Allow archs to handle special regions while locating memory hole
+        https://git.kernel.org/powerpc/c/f891f19736bdf404845f97d8038054be37160ea8
+[02/11] powerpc/kexec_file: Mark PPC64 specific code
+        https://git.kernel.org/powerpc/c/19031275a5881233b4fc31b7dee68bf0b0758bbc
+[03/11] powerpc/kexec_file: Add helper functions for getting memory ranges
+        https://git.kernel.org/powerpc/c/180adfc532a83c1d74146449f7385f767d4b8059
+[04/11] powerpc/kexec_file: Avoid stomping memory used by special regions
+        https://git.kernel.org/powerpc/c/b8e55a3e5c208862eacded5aad822184f89f85d9
+[05/11] powerpc/drmem: Make LMB walk a bit more flexible
+        https://git.kernel.org/powerpc/c/adfefc609e55edc5dce18a68d1526af6d70aaf86
+[06/11] powerpc/kexec_file: Restrict memory usage of kdump kernel
+        https://git.kernel.org/powerpc/c/7c64e21a1c5a5bcd651d895b8faa68e9cdcc433d
+[07/11] powerpc/kexec_file: Setup backup region for kdump kernel
+        https://git.kernel.org/powerpc/c/1a1cf93c200581c72a3cd521e1e0a1a3b5d0077d
+[08/11] powerpc/kexec_file: Prepare elfcore header for crashing kernel
+        https://git.kernel.org/powerpc/c/cb350c1f1f867db16725f1bb06be033ece19e998
+[09/11] powerpc/kexec_file: Add appropriate regions for memory reserve map
+        https://git.kernel.org/powerpc/c/6ecd0163d36049b5f2435a8658f1320c9f3f2924
+[10/11] powerpc/kexec_file: Fix kexec load failure with lack of memory hole
+        https://git.kernel.org/powerpc/c/b5667d13be8d0928a02b46e0c6f7ab891d32f697
+[11/11] powerpc/kexec_file: Enable early kernel OPAL calls
+        https://git.kernel.org/powerpc/c/2e6bd221d96fcfd9bd1eed5cd9c008e7959daed7
 
-So update the Documentation.
-
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- Documentation/admin-guide/kdump/kdump.rst     | 21 ++++++++++++++++---
- .../admin-guide/kernel-parameters.txt         | 11 ++++++++--
- 2 files changed, 27 insertions(+), 5 deletions(-)
-
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 2da65fef2a1c..4b58f97351d5 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -299,7 +299,15 @@ Boot into System Kernel
-    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
-    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
- 
--   On x86 and x86_64, use "crashkernel=64M@16M".
-+   On x86 use "crashkernel=64M@16M".
-+
-+   On x86_64, use "crashkernel=X" to select a region under 4G first, and
-+   fall back to reserve region above 4G.
-+   We can also use "crashkernel=X,high" to select a region above 4G, which
-+   also tries to allocate at least 256M below 4G automatically and
-+   "crashkernel=Y,low" can be used to allocate specified size low memory.
-+   Use "crashkernel=Y@X" if you really have to reserve memory from specified
-+   start address X.
- 
-    On ppc64, use "crashkernel=128M@32M".
- 
-@@ -316,8 +324,15 @@ Boot into System Kernel
-    kernel will automatically locate the crash kernel image within the
-    first 512MB of RAM if X is not given.
- 
--   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
--   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-+   On arm64, use "crashkernel=X" to try low allocation in ZONE_DMA, and
-+   fall back to high allocation if it fails. And go for high allocation
-+   directly if the required size is too large. If crash_base is outside
-+   ZONE_DMA, try to allocate at least 256M in ZONE_DMA automatically.
-+   "crashkernel=Y,low" can be used to allocate specified size low memory.
-+   For non-RPi4 platforms, change ZONE_DMA memtioned above to ZONE_DMA32.
-+   Use "crashkernel=Y@X" if you really have to reserve memory from
-+   specified start address X. Note that the start address of the kernel,
-+   X if explicitly specified, must be aligned to 2MiB (0x200000).
- 
- Load the Dump-capture Kernel
- ============================
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index fb95fad81c79..d1b6016850d6 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -722,6 +722,10 @@
- 			[KNL, x86_64] select a region under 4G first, and
- 			fall back to reserve region above 4G when '@offset'
- 			hasn't been specified.
-+			[KNL, arm64] Try low allocation in ZONE_DMA, fall back
-+			to high allocation if it fails when '@offset' hasn't been
-+			specified. For non-RPi4 platforms, change ZONE_DMA to
-+			ZONE_DMA32.
- 			See Documentation/admin-guide/kdump/kdump.rst for further details.
- 
- 	crashkernel=range1:size1[,range2:size2,...][@offset]
-@@ -746,13 +750,16 @@
- 			requires at least 64M+32K low memory, also enough extra
- 			low memory is needed to make sure DMA buffers for 32-bit
- 			devices won't run out. Kernel would try to allocate at
--			at least 256M below 4G automatically.
-+			least 256M below 4G automatically.
- 			This one let user to specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
- 			or memory reserved is below 4G.
--
-+			[KNL, arm64] range under 4G.
-+			This one let user to specify a low range in ZONE_DMA for
-+			crash dump kernel. For non-RPi4 platforms, change ZONE_DMA
-+			to ZONE_DMA32.
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
- 
--- 
-2.20.1
-
+cheers
 
 _______________________________________________
 kexec mailing list
