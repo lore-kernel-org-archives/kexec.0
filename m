@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from bilbo.ozlabs.org ([2401:3900:2:1::2] helo=ozlabs.org)
+Received: from mail-pj1-x1042.google.com ([2607:f8b0:4864:20::1042])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k2E8s-0004ve-O4
- for kexec@lists.infradead.org; Sun, 02 Aug 2020 13:35:12 +0000
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-In-Reply-To: <159602259854.575379.16910915605574571585.stgit@hbathini>
-References: <159602259854.575379.16910915605574571585.stgit@hbathini>
-Subject: Re: [PATCH v6 00/11] ppc64: enable kdump support for kexec_file_load
- syscall
-Message-Id: <159637523806.42190.10916857383137134464.b4-ty@ellerman.id.au>
-Date: Sun,  2 Aug 2020 23:35:02 +1000 (AEST)
+ id 1k2TMS-00060Y-Q5
+ for kexec@lists.infradead.org; Mon, 03 Aug 2020 05:50:13 +0000
+Received: by mail-pj1-x1042.google.com with SMTP id lx9so10763726pjb.2
+ for <kexec@lists.infradead.org>; Sun, 02 Aug 2020 22:50:12 -0700 (PDT)
+From: Pingfan Liu <kernelfans@gmail.com>
+Subject: [PATCHv2] x86/purgatory: don't generate debug info for purgatory.ro
+Date: Mon,  3 Aug 2020 13:49:48 +0800
+Message-Id: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,45 +22,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>, kernel test robot <lkp@intel.com>, Pingfan Liu <piliu@redhat.com>, Kexec-ml <kexec@lists.infradead.org>, Dave Young <dyoung@redhat.com>, Nayna Jain <nayna@linux.ibm.com>, Petr Tesarik <ptesarik@suse.cz>, lkml <linux-kernel@vger.kernel.org>, Sourabh Jain <sourabhjain@linux.ibm.com>, Vivek Goyal <vgoyal@redhat.com>, linuxppc-dev <linuxppc-dev@ozlabs.org>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>, Mahesh J Salgaonkar <mahesh@linux.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
+To: x86@kernel.org
+Cc: Steve Wahl <steve.wahl@hpe.com>, kexec@lists.infradead.org, Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Arvind Sankar <nivedita@alum.mit.edu>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
 
-On Wed, 29 Jul 2020 17:08:44 +0530, Hari Bathini wrote:
-> Sorry! There was a gateway issue on my system while posting v5, due to
-> which some patches did not make it through. Resending...
-> 
-> This patch series enables kdump support for kexec_file_load system
-> call (kexec -s -p) on PPC64. The changes are inspired from kexec-tools
-> code but heavily modified for kernel consumption.
-> 
-> [...]
+Purgatory.ro is a standalone binary that is not linked against the rest of
+the kernel.  Its image is copied into an array that is linked to the
+kernel, and from there kexec relocates it wherever it desires.
 
-Applied to powerpc/next.
+Unlike the debug info for vmlinux, which can be used for analyzing crash
+such info is useless in purgatory.ro. And discarding them can save about
+200K space.
 
-[01/11] kexec_file: Allow archs to handle special regions while locating memory hole
-        https://git.kernel.org/powerpc/c/f891f19736bdf404845f97d8038054be37160ea8
-[02/11] powerpc/kexec_file: Mark PPC64 specific code
-        https://git.kernel.org/powerpc/c/19031275a5881233b4fc31b7dee68bf0b0758bbc
-[03/11] powerpc/kexec_file: Add helper functions for getting memory ranges
-        https://git.kernel.org/powerpc/c/180adfc532a83c1d74146449f7385f767d4b8059
-[04/11] powerpc/kexec_file: Avoid stomping memory used by special regions
-        https://git.kernel.org/powerpc/c/b8e55a3e5c208862eacded5aad822184f89f85d9
-[05/11] powerpc/drmem: Make LMB walk a bit more flexible
-        https://git.kernel.org/powerpc/c/adfefc609e55edc5dce18a68d1526af6d70aaf86
-[06/11] powerpc/kexec_file: Restrict memory usage of kdump kernel
-        https://git.kernel.org/powerpc/c/7c64e21a1c5a5bcd651d895b8faa68e9cdcc433d
-[07/11] powerpc/kexec_file: Setup backup region for kdump kernel
-        https://git.kernel.org/powerpc/c/1a1cf93c200581c72a3cd521e1e0a1a3b5d0077d
-[08/11] powerpc/kexec_file: Prepare elfcore header for crashing kernel
-        https://git.kernel.org/powerpc/c/cb350c1f1f867db16725f1bb06be033ece19e998
-[09/11] powerpc/kexec_file: Add appropriate regions for memory reserve map
-        https://git.kernel.org/powerpc/c/6ecd0163d36049b5f2435a8658f1320c9f3f2924
-[10/11] powerpc/kexec_file: Fix kexec load failure with lack of memory hole
-        https://git.kernel.org/powerpc/c/b5667d13be8d0928a02b46e0c6f7ab891d32f697
-[11/11] powerpc/kexec_file: Enable early kernel OPAL calls
-        https://git.kernel.org/powerpc/c/2e6bd221d96fcfd9bd1eed5cd9c008e7959daed7
+Original:
+  259080  kexec-purgatory.o
+Stripped debug info:
+   29152  kexec-purgatory.o
 
-cheers
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Hans de Goede <hdegoede@redhat.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Arvind Sankar <nivedita@alum.mit.edu>
+Cc: Steve Wahl <steve.wahl@hpe.com>
+Cc: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org
+To: x86@kernel.org
+---
+ arch/x86/purgatory/Makefile | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
+index 088bd76..d24b43a 100644
+--- a/arch/x86/purgatory/Makefile
++++ b/arch/x86/purgatory/Makefile
+@@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
+ # make up the standalone purgatory.ro
+ 
+ PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
+-PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
++PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
+ PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
+ PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
+ 
+@@ -64,6 +64,9 @@ CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
+ CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
+ CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
+ 
++AFLAGS_REMOVE_setup-x86_$(BITS).o	+= -Wa,-gdwarf-2
++AFLAGS_REMOVE_entry64.o			+= -Wa,-gdwarf-2
++
+ $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
+ 		$(call if_changed,ld)
+ 
+-- 
+2.7.5
+
 
 _______________________________________________
 kexec mailing list
