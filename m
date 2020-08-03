@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1042.google.com ([2607:f8b0:4864:20::1042])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k2TMS-00060Y-Q5
- for kexec@lists.infradead.org; Mon, 03 Aug 2020 05:50:13 +0000
-Received: by mail-pj1-x1042.google.com with SMTP id lx9so10763726pjb.2
- for <kexec@lists.infradead.org>; Sun, 02 Aug 2020 22:50:12 -0700 (PDT)
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCHv2] x86/purgatory: don't generate debug info for purgatory.ro
-Date: Mon,  3 Aug 2020 13:49:48 +0800
-Message-Id: <1596433788-3784-1-git-send-email-kernelfans@gmail.com>
+ id 1k2ata-00075O-4F
+ for kexec@lists.infradead.org; Mon, 03 Aug 2020 13:52:55 +0000
+From: Laurent Dufour <ldufour@linux.ibm.com>
+Subject: Re: [PATCHv4 1/2] powerpc/pseries: group lmb operation and memblock's
+References: <1596116005-27511-1-git-send-email-kernelfans@gmail.com>
+Message-ID: <ee585548-aefc-ff3f-6a79-e616b9e04f12@linux.ibm.com>
+Date: Mon, 3 Aug 2020 15:52:44 +0200
+MIME-Version: 1.0
+In-Reply-To: <1596116005-27511-1-git-send-email-kernelfans@gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,69 +19,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: x86@kernel.org
-Cc: Steve Wahl <steve.wahl@hpe.com>, kexec@lists.infradead.org, Nick Desaulniers <ndesaulniers@google.com>, linux-kernel@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, Hans de Goede <hdegoede@redhat.com>, Arvind Sankar <nivedita@alum.mit.edu>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>
+To: linuxppc-dev@lists.ozlabs.org, Pingfan Liu <kernelfans@gmail.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>
 
-Purgatory.ro is a standalone binary that is not linked against the rest of
-the kernel.  Its image is copied into an array that is linked to the
-kernel, and from there kexec relocates it wherever it desires.
+> @@ -603,6 +606,8 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>         }
+>
+>         lmb_set_nid(lmb);
+> +       lmb->flags |= DRCONF_MEM_ASSIGNED;
+> +
+>         block_sz = memory_block_size_bytes();
+>
+>         /* Add the memory */
 
-Unlike the debug info for vmlinux, which can be used for analyzing crash
-such info is useless in purgatory.ro. And discarding them can save about
-200K space.
+Since the lmb->flags is now set earlier, you should unset it in the case the 
+call to __add_memory() fails, something like:
 
-Original:
-  259080  kexec-purgatory.o
-Stripped debug info:
-   29152  kexec-purgatory.o
+@@ -614,6 +614,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+  	rc = __add_memory(lmb->nid, lmb->base_addr, block_sz);
+  	if (rc) {
+  		invalidate_lmb_associativity_index(lmb);
++		lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+  		return rc;
+  	}
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Hans de Goede <hdegoede@redhat.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Arvind Sankar <nivedita@alum.mit.edu>
-Cc: Steve Wahl <steve.wahl@hpe.com>
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-To: x86@kernel.org
----
- arch/x86/purgatory/Makefile | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
-
-diff --git a/arch/x86/purgatory/Makefile b/arch/x86/purgatory/Makefile
-index 088bd76..d24b43a 100644
---- a/arch/x86/purgatory/Makefile
-+++ b/arch/x86/purgatory/Makefile
-@@ -32,7 +32,7 @@ KCOV_INSTRUMENT := n
- # make up the standalone purgatory.ro
- 
- PURGATORY_CFLAGS_REMOVE := -mcmodel=kernel
--PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss
-+PURGATORY_CFLAGS := -mcmodel=large -ffreestanding -fno-zero-initialized-in-bss -g0
- PURGATORY_CFLAGS += $(DISABLE_STACKLEAK_PLUGIN) -DDISABLE_BRANCH_PROFILING
- PURGATORY_CFLAGS += $(call cc-option,-fno-stack-protector)
- 
-@@ -64,6 +64,9 @@ CFLAGS_sha256.o			+= $(PURGATORY_CFLAGS)
- CFLAGS_REMOVE_string.o		+= $(PURGATORY_CFLAGS_REMOVE)
- CFLAGS_string.o			+= $(PURGATORY_CFLAGS)
- 
-+AFLAGS_REMOVE_setup-x86_$(BITS).o	+= -Wa,-gdwarf-2
-+AFLAGS_REMOVE_entry64.o			+= -Wa,-gdwarf-2
-+
- $(obj)/purgatory.ro: $(PURGATORY_OBJS) FORCE
- 		$(call if_changed,ld)
- 
--- 
-2.7.5
-
+> @@ -614,11 +619,14 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>
+>         rc = dlpar_online_lmb(lmb);
+>         if (rc) {
+> -               __remove_memory(lmb->nid, lmb->base_addr, block_sz);
+> +               int nid = lmb->nid;
+> +               phys_addr_t base_addr = lmb->base_addr;
+> +
+>                 invalidate_lmb_associativity_index(lmb);
+>                 lmb_clear_nid(lmb);
+> -       } else {
+> -               lmb->flags |= DRCONF_MEM_ASSIGNED;
+> +               lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+> +
+> +               __remove_memory(nid, base_addr, block_sz);
+>         }
+>
+>         return rc;
 
 _______________________________________________
 kexec mailing list
