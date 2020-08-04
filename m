@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x12a.google.com ([2607:f8b0:4864:20::12a])
+Received: from mail-io1-xd43.google.com ([2607:f8b0:4864:20::d43])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k2x4j-0007HC-Cc
- for kexec@lists.infradead.org; Tue, 04 Aug 2020 13:33:54 +0000
-Received: by mail-il1-x12a.google.com with SMTP id 77so5705770ilc.5
- for <kexec@lists.infradead.org>; Tue, 04 Aug 2020 06:33:51 -0700 (PDT)
+ id 1k2x9R-0007XX-Oo
+ for kexec@lists.infradead.org; Tue, 04 Aug 2020 13:38:46 +0000
+Received: by mail-io1-xd43.google.com with SMTP id s189so34967228iod.2
+ for <kexec@lists.infradead.org>; Tue, 04 Aug 2020 06:38:45 -0700 (PDT)
 MIME-Version: 1.0
 References: <1596116005-27511-1-git-send-email-kernelfans@gmail.com>
- <ee585548-aefc-ff3f-6a79-e616b9e04f12@linux.ibm.com>
-In-Reply-To: <ee585548-aefc-ff3f-6a79-e616b9e04f12@linux.ibm.com>
+ <1596116005-27511-2-git-send-email-kernelfans@gmail.com>
+ <951e4406-1172-09a3-a8db-6f0a92aea2ed@linux.ibm.com>
+In-Reply-To: <951e4406-1172-09a3-a8db-6f0a92aea2ed@linux.ibm.com>
 From: Pingfan Liu <kernelfans@gmail.com>
-Date: Tue, 4 Aug 2020 21:33:39 +0800
-Message-ID: <CAFgQCTt=qjaYtOUvt7sy1PiSo1sDdGn9Dktyu9O26QXagvbNFQ@mail.gmail.com>
-Subject: Re: [PATCHv4 1/2] powerpc/pseries: group lmb operation and memblock's
+Date: Tue, 4 Aug 2020 21:38:33 +0800
+Message-ID: <CAFgQCTs-A9=AEbU=x9OA6UyBd0wf20arLVtWKshu3oTo=BjGww@mail.gmail.com>
+Subject: Re: [PATCHv4 2/2] powerpc/pseries: update device tree before ejecting
+ hotplug uevents
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,29 +30,94 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Laurent Dufour <ldufour@linux.ibm.com>
 Cc: Nathan Lynch <nathanl@linux.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-On Mon, Aug 3, 2020 at 9:52 PM Laurent Dufour <ldufour@linux.ibm.com> wrote:
+On Tue, Aug 4, 2020 at 12:29 AM Laurent Dufour <ldufour@linux.ibm.com> wrote:
 >
-> > @@ -603,6 +606,8 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
-> >         }
+[...]
+> >       lmb_set_nid(lmb);
+> >       lmb->flags |= DRCONF_MEM_ASSIGNED;
+> > +     if (dt_update) {
+> > +             ret = drmem_update_dt();
+> > +             if (ret)
+> > +                     pr_warn("%s fail to update dt, but continue\n", __func__);
+> > +     }
 > >
-> >         lmb_set_nid(lmb);
-> > +       lmb->flags |= DRCONF_MEM_ASSIGNED;
+> >       block_sz = memory_block_size_bytes();
+>
+> In the case the call to __add_memory is failing, the flag DRCONF_MEM_ASSIGNED
+> should be cleared as I mentioned in your previous patch. In addition to this,
+Yes.
+> the DT should be updated, or the caller should manage that but that will be hard
+> since it doesn't know where the error happened in this function.
+Yeah, it is hard to manage it by caller, so just updating dt  is a
+easier method.
+>
+> >
+> > @@ -625,7 +653,11 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+> >               invalidate_lmb_associativity_index(lmb);
+> >               lmb_clear_nid(lmb);
+> >               lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+> > -
+> > +             if (dt_update) {
+> > +                     ret = drmem_update_dt();
+> > +                     if (ret)
+> > +                             pr_warn("%s fail to update dt during rollback, but continue\n", __func__);
+> > +             }
+> >               __remove_memory(nid, base_addr, block_sz);
+> >       }
+> >
+> > @@ -638,6 +670,7 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
+> >       int lmbs_available = 0;
+> >       int lmbs_added = 0;
+> >       int rc;
+> > +     bool dt_update = false;
+> >
+> >       pr_info("Attempting to hot-add %d LMB(s)\n", lmbs_to_add);
+> >
+> > @@ -664,7 +697,7 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
+> >               if (rc)
+> >                       continue;
+> >
+> > -             rc = dlpar_add_lmb(lmb);
+> > +             rc = dlpar_add_lmb(lmb, dt_update);
+> >               if (rc) {
+> >                       dlpar_release_drc(lmb->drc_index);
+> >                       continue;
+> > @@ -678,16 +711,23 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
+> >               lmbs_added++;
+> >               if (lmbs_added == lmbs_to_add)
+> >                       break;
+> > +             else if (lmbs_added == lmbs_to_add - 1)
+> > +                     dt_update = true;
+>
+> In the case the number of LMB to add is 1, dt_update is never set to true, and
+> the device tree is never updated. You need to set dt_update to true earlier in
+> the loop block.
+Oh, I will fix it in V5
+>
+> >       }
+> >
+> >       if (lmbs_added != lmbs_to_add) {
+> > +             bool rollback_dt_update = false;
 > > +
-> >         block_sz = memory_block_size_bytes();
+> >               pr_err("Memory hot-add failed, removing any added LMBs\n");
 > >
-> >         /* Add the memory */
+> >               for_each_drmem_lmb(lmb) {
+> >                       if (!drmem_lmb_reserved(lmb))
+> >                               continue;
+> >
+> > -                     rc = dlpar_remove_lmb(lmb);
+> > +                     if (--lmbs_added == 0 && dt_update)
+> > +                             rollback_dt_update = true;
 >
-> Since the lmb->flags is now set earlier, you should unset it in the case the
-> call to __add_memory() fails, something like:
->
-> @@ -614,6 +614,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->         rc = __add_memory(lmb->nid, lmb->base_addr, block_sz);
->         if (rc) {
->                 invalidate_lmb_associativity_index(lmb);
-> +               lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-You are right. I will fix it in V5.
+> That test may have to be review to deal with error during the last LMB addition,
+> the DT may have been updated before __add_memory() is failing in
+> dlpar_add_lmb(). In that case, lmbs_added == 0 and that branch is not covered.
+> That's not an issue if dlpar_add_lmb() is handling that case (see my comment above).
+I will fix it in next version.
 
-Thanks,
+Thanks for your review.
+
+Regards,
 Pingfan
 
 _______________________________________________
