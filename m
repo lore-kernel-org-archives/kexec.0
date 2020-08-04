@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-il1-x12a.google.com ([2607:f8b0:4864:20::12a])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k2txP-0006Dv-0M
- for kexec@lists.infradead.org; Tue, 04 Aug 2020 10:14:08 +0000
-Date: Tue, 4 Aug 2020 12:14:00 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2][next] printk: ringbuffer: support dataless records
-Message-ID: <20200804101400.GB24529@alley>
-References: <20200721132528.9661-1-john.ogness@linutronix.de>
+ id 1k2x4j-0007HC-Cc
+ for kexec@lists.infradead.org; Tue, 04 Aug 2020 13:33:54 +0000
+Received: by mail-il1-x12a.google.com with SMTP id 77so5705770ilc.5
+ for <kexec@lists.infradead.org>; Tue, 04 Aug 2020 06:33:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200721132528.9661-1-john.ogness@linutronix.de>
+References: <1596116005-27511-1-git-send-email-kernelfans@gmail.com>
+ <ee585548-aefc-ff3f-6a79-e616b9e04f12@linux.ibm.com>
+In-Reply-To: <ee585548-aefc-ff3f-6a79-e616b9e04f12@linux.ibm.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Tue, 4 Aug 2020 21:33:39 +0800
+Message-ID: <CAFgQCTt=qjaYtOUvt7sy1PiSo1sDdGn9Dktyu9O26QXagvbNFQ@mail.gmail.com>
+Subject: Re: [PATCHv4 1/2] powerpc/pseries: group lmb operation and memblock's
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,93 +25,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Marco Elver <elver@google.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Laurent Dufour <ldufour@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-On Tue 2020-07-21 15:31:28, John Ogness wrote:
-> With commit ("printk: use the lockless ringbuffer"), printk()
-> started silently dropping messages without text because such
-> records are not supported by the new printk ringbuffer.
-> 
-> Add support for such records.
-> 
-> Currently dataless records are denoted by INVALID_LPOS in order
-> to recognize failed prb_reserve() calls. Change the ringbuffer
-> to instead use two different identifiers (FAILED_LPOS and
-> NO_LPOS) to distinguish between failed prb_reserve() records and
-> successful dataless records, respectively.
-> 
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 7355ca99e852..0659b50872b5 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
->  static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
->  {
->  	struct prb_data_block *db = NULL;
->  
-> -	/*
-> -	 * Writers are not allowed to write data-less records. Such records
-> -	 * are used only internally by the ringbuffer to denote records where
-> -	 * their data failed to allocate or have been lost.
-> -	 */
->  	if (size == 0)
-> -		return false;
-> +		return true;
+On Mon, Aug 3, 2020 at 9:52 PM Laurent Dufour <ldufour@linux.ibm.com> wrote:
+>
+> > @@ -603,6 +606,8 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+> >         }
+> >
+> >         lmb_set_nid(lmb);
+> > +       lmb->flags |= DRCONF_MEM_ASSIGNED;
+> > +
+> >         block_sz = memory_block_size_bytes();
+> >
+> >         /* Add the memory */
+>
+> Since the lmb->flags is now set earlier, you should unset it in the case the
+> call to __add_memory() fails, something like:
+>
+> @@ -614,6 +614,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
+>         rc = __add_memory(lmb->nid, lmb->base_addr, block_sz);
+>         if (rc) {
+>                 invalidate_lmb_associativity_index(lmb);
+> +               lmb->flags &= ~DRCONF_MEM_ASSIGNED;
+You are right. I will fix it in V5.
 
-Nit: This might deserve a comment why size == 0 is handled
-     a special way.specially. I think about something like:
-
-	/*
-	 * Empty data blocks are handled by special lpos values in
-	 * the record descriptor. No space is needed in the data ring.
-	 */
-
-or simply
-
-	/* Data-less records take no space in the data ring. */
-
->  	/*
->  	 * Ensure the alignment padded size could possibly fit in the data
-
-> @@ -1025,6 +1020,10 @@ static char *data_alloc(struct printk_ringbuffer *rb,
->  static unsigned int space_used(struct prb_data_ring *data_ring,
->  			       struct prb_data_blk_lpos *blk_lpos)
->  {
-> +	/* Data-less blocks take no space. */
-> +	if (LPOS_DATALESS(blk_lpos->begin))
-> +		return 0;
-
-Nit: It seems that all the other locations check also blk_lpos->next,
-     for example, get_data() does:
-
-	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
-
-
-     Both approaches are error prone. I would either simplify the
-     other locations and check only lpos->begin. But better might
-     be to be on the safe side do a paranoid check, like:
-
-bool is_dataless(struct prb_data_blk_lpos *blk_lpos)
-{
-	if (LPOS_DATALESS(blk_lpos->begin) || LPOS_DATALESS(blk_lpos->next)) {
-		WARN_ON_ONCE(blk_lpos->begin != blk_lpos->next);
-		return true;
-	}
-
-	return false;
-}
-
-> +
->  	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
->  		/* Data block does not wrap. */
->  		return (DATA_INDEX(data_ring, blk_lpos->next) -
-
-Anyway, the patch looks fine. It is already pushed in
-printk/linux.git. So, if you agree with my nits, we should
-solve them with separate patches on top of the existing ones.
-
-Best Regards,
-Petr
+Thanks,
+Pingfan
 
 _______________________________________________
 kexec mailing list
