@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-yb1-xb49.google.com ([2607:f8b0:4864:20::b49])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k5Wmi-0004qr-5r
- for kexec@lists.infradead.org; Tue, 11 Aug 2020 16:05:57 +0000
-Date: Tue, 11 Aug 2020 18:05:51 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 0/4] printk: reimplement LOG_CONT handling
-Message-ID: <20200811160551.GC12903@alley>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87blkcanps.fsf@jogness.linutronix.de>
+ id 1k5bBG-0002cs-AV
+ for kexec@lists.infradead.org; Tue, 11 Aug 2020 20:47:35 +0000
+Received: by mail-yb1-xb49.google.com with SMTP id w17so276548ybl.9
+ for <kexec@lists.infradead.org>; Tue, 11 Aug 2020 13:47:32 -0700 (PDT)
+Date: Tue, 11 Aug 2020 13:47:29 -0700
+In-Reply-To: <20200709132344.760-5-john.ogness@linutronix.de>
+Message-Id: <20200811204729.1116341-1-ndesaulniers@google.com>
+Mime-Version: 1.0
+References: <20200709132344.760-5-john.ogness@linutronix.de>
+Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
+From: Nick Desaulniers <ndesaulniers@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,117 +24,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: john.ogness@linutronix.de
+Cc: parri.andrea@gmail.com, pmladek@suse.com, sergey.senozhatsky.work@gmail.com, paulmck@kernel.org, peterz@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, swboyd@chromium.org, sergey.senozhatsky@gmail.com, tglx@linutronix.de, torvalds@linux-foundation.org
 
-On Sat 2020-07-18 16:48:55, John Ogness wrote:
-> On 2020-07-17, Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> > Make sure you test the case of "fast concurrent readers". The last
-> > time we did things like this, it was a disaster, because a concurrent
-> > reader would see and return the _incomplete_ line, and the next entry
-> > was still being generated on another CPU.
-> >
-> > The reader would then decide to return that incomplete line, because
-> > it had something.
-> >
-> > And while in theory this could then be handled properly in user space,
-> > in practice it wasn't. So you'd see a lot of logging tools that would
-> > then report all those continuations as separate log events.
-> >
-> > Which is the whole point of LOG_CONT - for that *not* to happen.
-> 
-> I expect this is handled correctly since the reader is not given any
-> parts until a full line is ready, but I will put more focus on testing
-> this to make sure. Thanks for the regression and testing tips.
+From what I can tell, I think this patch ("printk: use the lockless
+ringbuffer") breaks lx-dmesg in CONFIG_GDB_SCRIPTS.
 
-Hmm, the current patchset has different problem. The continuation
-pieces are correctly passed as a single lines. But empty line is
-printed for each unused sequence number to avoid warnings about
-missed messages in journactl. It looks like:
+(gdb) lx-dmesg
+Python Exception <class 'gdb.error'> No symbol "log_first_idx" in specified context.: 
+Error occurred in Python: No symbol "log_first_idx" in specified context.
 
-Aug 11 17:08:16 sle15-sp1 kernel: x86/fpu: xstate_offset[3]:  832, xstate_sizes[3]:   64
-Aug 11 17:08:16 sle15-sp1 kernel: x86/fpu: xstate_offset[4]:  896, xstate_sizes[4]:   64
-Aug 11 17:08:16 sle15-sp1 kernel: x86/fpu: Enabled xstate features 0x1f, context size is 960 bytes, using 'compacted' format.
-Aug 11 17:08:16 sle15-sp1 kernel: BIOS-provided physical RAM map:
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-[...]
-Aug 11 17:08:16 sle15-sp1 kernel: kvm-clock: using sched offset of 85305506196438 cycles
-Aug 11 17:08:16 sle15-sp1 kernel: clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 88>
-Aug 11 17:08:16 sle15-sp1 kernel: tsc: Detected 2112.000 MHz processor
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: e820: remove [mem 0x000a0000-0x000fffff] usable
-Aug 11 17:08:16 sle15-sp1 kernel: last_pfn = 0x180000 max_arch_pfn = 0x400000000
-Aug 11 17:08:16 sle15-sp1 kernel: MTRR default type: write-back
-Aug 11 17:08:16 sle15-sp1 kernel: MTRR fixed ranges enabled:
-[...]
-Aug 11 17:08:16 sle15-sp1 kernel: clocksource: refined-jiffies: mask: 0xffffffff max_cycles: 0xffffffff, max_idle_ns: 7645519>
-Aug 11 17:08:16 sle15-sp1 kernel: setup_percpu: NR_CPUS:8192 nr_cpumask_bits:3 nr_cpu_ids:3 nr_node_ids:1
-Aug 11 17:08:16 sle15-sp1 kernel: percpu: Embedded 508 pages/cpu s2043904 r8192 d28672 u2097152
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: pcpu-alloc: s2043904 r8192 d28672 u2097152 alloc=1*2097152
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: 
-Aug 11 17:08:16 sle15-sp1 kernel: pcpu-alloc: [0] 0 [0] 1 [0] 2 
-Aug 11 17:08:16 sle15-sp1 kernel: KVM setup async PF for cpu 0
-Aug 11 17:08:16 sle15-sp1 kernel: kvm-stealtime: cpu 0, msr 17f9f2080
-Aug 11 17:08:16 sle15-sp1 kernel: Built 1 zonelists, mobility grouping on.  Total pages: 1031901
-Aug 11 17:08:16 sle15-sp1 kernel: Policy zone: Normal
+This command is used to dump the printk log buffer.
 
+It looks like the only places left in the kernel that reference are:
 
-> > So this is just a heads-up that I will not pull something that breaks
-> > LOG_CONT because it thinks "user space can handle it". No. User space
-> > does not handle it, and we need to handle it for the user.
+- Documentation/admin-guide/kdump/gdbmacros.txt
+- Documentation/admin-guide/kdump/vmcoreinfo.rst
+- scripts/gdb/linux/dmesg.py
 
-I am afraid that this not acceptable for Linus either because people
-will report bugs and complain about regression.
+I believe this commit removed log_first_idx, so all of the above probably need
+to be fixed up, too.
 
-Slightly better solution is to skip the unused sequence numbers. It
-looks good in both dmesg/journalctl by default. Note that journalctl
-shows the warnings about missing lines "only" with "-a" option.
-Sigh, but I am afraid that this is still not acceptable.
-
-
-Hmm, I can't find any simple or even working solution for maintaining
-a monotonic sequence number a lockless way that would be the same
-for all stored pieces.
-
-I am afraid that the only working solution is to store all pieces
-in a single lockless transaction. I think that John already
-proposed using 2nd small lockless buffer for this. The problem
-might be how to synchronize flushing the pieces into the final
-buffer.
-
-Another solution would be to use separate buffer for each context
-and CPU. The problem is a missing final "\n". It might cause
-that a buffer is not flushed for a long time until another
-message is printed in the same context on the same CPU.
-
-The 2nd small logbuffer looks like a better choice if we
-are able to solve the lockless flush.
-
-Best Regards,
-Petr
+~ Nick
 
 _______________________________________________
 kexec mailing list
