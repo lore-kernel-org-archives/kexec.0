@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-yb1-xb49.google.com ([2607:f8b0:4864:20::b49])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k5bBG-0002cs-AV
- for kexec@lists.infradead.org; Tue, 11 Aug 2020 20:47:35 +0000
-Received: by mail-yb1-xb49.google.com with SMTP id w17so276548ybl.9
- for <kexec@lists.infradead.org>; Tue, 11 Aug 2020 13:47:32 -0700 (PDT)
-Date: Tue, 11 Aug 2020 13:47:29 -0700
-In-Reply-To: <20200709132344.760-5-john.ogness@linutronix.de>
-Message-Id: <20200811204729.1116341-1-ndesaulniers@google.com>
-Mime-Version: 1.0
-References: <20200709132344.760-5-john.ogness@linutronix.de>
-Subject: Re: [PATCH v5 4/4] printk: use the lockless ringbuffer
-From: Nick Desaulniers <ndesaulniers@google.com>
+ id 1k5tmS-0000mi-UR
+ for kexec@lists.infradead.org; Wed, 12 Aug 2020 16:39:15 +0000
+Date: Wed, 12 Aug 2020 18:39:08 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+Message-ID: <20200812163908.GH12903@alley>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200811160551.GC12903@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,28 +27,160 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: john.ogness@linutronix.de
-Cc: parri.andrea@gmail.com, pmladek@suse.com, sergey.senozhatsky.work@gmail.com, paulmck@kernel.org, peterz@infradead.org, gregkh@linuxfoundation.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rostedt@goodmis.org, swboyd@chromium.org, sergey.senozhatsky@gmail.com, tglx@linutronix.de, torvalds@linux-foundation.org
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-From what I can tell, I think this patch ("printk: use the lockless
-ringbuffer") breaks lx-dmesg in CONFIG_GDB_SCRIPTS.
+On Tue 2020-08-11 18:05:51, Petr Mladek wrote:
+> On Sat 2020-07-18 16:48:55, John Ogness wrote:
+> > On 2020-07-17, Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> > > Make sure you test the case of "fast concurrent readers". The last
+> > > time we did things like this, it was a disaster, because a concurrent
+> > > reader would see and return the _incomplete_ line, and the next entry
+> > > was still being generated on another CPU.
+> > >
+> > > The reader would then decide to return that incomplete line, because
+> > > it had something.
+> > >
+> > > And while in theory this could then be handled properly in user space,
+> > > in practice it wasn't. So you'd see a lot of logging tools that would
+> > > then report all those continuations as separate log events.
+> > >
+> > > Which is the whole point of LOG_CONT - for that *not* to happen.
+> > 
+> > I expect this is handled correctly since the reader is not given any
+> > parts until a full line is ready, but I will put more focus on testing
+> > this to make sure. Thanks for the regression and testing tips.
+> 
+> Hmm, the current patchset has different problem. The continuation
+> pieces are correctly passed as a single lines. But empty line is
+> printed for each unused sequence number to avoid warnings about
+> missed messages in journactl. It looks like:
+> 
+> I am afraid that the only working solution is to store all pieces
+> in a single lockless transaction. I think that John already
+> proposed using 2nd small lockless buffer for this. The problem
+> might be how to synchronize flushing the pieces into the final
+> buffer.
 
-(gdb) lx-dmesg
-Python Exception <class 'gdb.error'> No symbol "log_first_idx" in specified context.: 
-Error occurred in Python: No symbol "log_first_idx" in specified context.
+Do not panic! It might look scary. But I am less scared
+after I wrote some pieces of the pseudo code.
 
-This command is used to dump the printk log buffer.
+So, I have one crazy idea to add one more state bit so that we
+could have:
 
-It looks like the only places left in the kernel that reference are:
+  + committed: set when the data are written into the data ring.
+  + final: set when the data block could not longer get reopened
+  + reuse: set when the desctiptor/data block could get reused
 
-- Documentation/admin-guide/kdump/gdbmacros.txt
-- Documentation/admin-guide/kdump/vmcoreinfo.rst
-- scripts/gdb/linux/dmesg.py
 
-I believe this commit removed log_first_idx, so all of the above probably need
-to be fixed up, too.
+"final" bit will define when the descriptor could not longer
+get reopened (cleared committed bit) and the data block could
+not get extended.
 
-~ Nick
+The logic would be the following:
+
+bool prb_reserve() {
+
+	desc = try_reopen_desc(seq);
+	if (desc) {
+		text_buf = data_alloc_continuous();
+		if (text_buf)
+			goto success;
+		else
+			/* commit the reopened desc back again */
+			prb_commit(desc);
+	}
+
+	/* Otherwise, do as before */
+	desc = desc_reserve();
+	if (!desc)
+		goto fail;
+
+	text_buf = data_alloc();
+	...
+
+where:
+
+static struct prb_desc *try_reopen_desc(seq)
+{
+	struct prb_desc *desc;
+
+	enum desc_state d_state;
+	struct prb_desc desc;
+
+	d_state = desc_read(desc_ring, seq, &desc);
+	if (d_state != committed_and_not_finalized)
+		return NULL;
+
+	if (!is_same_context(desc))
+		return NULL;
+
+	/* try to reopen only when the state is still the same */
+	if(!atomic_long_cmpxchg_relaxed(state_var,
+					val_committed_and_not_finished,
+					val_reserved))
+		return NULL;
+
+	return desc;
+}
+
+static char *data_alloc_continuous()
+{
+	/*
+	 * Same as data_alloc() with one added parameter:
+	 * unsigned long requested_begin_lpos;
+	 */
+
+	begin_lpos = atomic_long_read(&data_ring->head_lpos);
+
+	do {
+		if (begin_lpos != requested_begin_lpos)
+			return NULL;
+
+	... same as before
+
+	} while (!atomic_long_try_cmpxchg(&data_ring->head_lpos, &begin_lpos,
+					  next_lpos)); /* LMM(data_alloc:A) */
+
+	if (requested_begin_lpos) {
+		/* only update tail lpos */
+		blk_lpos->next = next_lpos;
+		/* return pointer to the new data space */
+		return &blk->data[0];
+	}
+
+	/* For completely new block do everything as before */
+	blk = to_block(data_ring, begin_lpos);
+	blk->id = id; /* LMM(data_alloc:B) */
+	...
+}
+
+void prb_commit_and_finalize()
+{
+	/* Same as prb_commit() + it will set also 'final' bit */
+}
+
+
+Addintional changes in the code:
+
++ desc_resrved() will also set 'final' bit in the previous
+  descriptor so that the descriptor could not longer get reopended
+  once committed.
+
++ prb_commit_and_finalize() will be called instead of prb_commit()
+  when the message ends with '\n'.
+
++ prb_read() will allow to read the data only when
+  the state is "committed_and_finalized".
+
++ desc_make_reusable() can be called only when the desciptor
+  is in "commited_and_finalized" state.
+
+
+I am not sure if it is everything. Also it might need some code
+refactoring.
+
+But it looks like it might work. And it should not require new barriers.
 
 _______________________________________________
 kexec mailing list
