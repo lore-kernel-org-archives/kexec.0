@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k65qi-0000YM-Rz
- for kexec@lists.infradead.org; Thu, 13 Aug 2020 05:32:28 +0000
-From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH] MIPS: Fix compile warnnings in kexec-elf-mips.c
-Date: Thu, 13 Aug 2020 13:31:52 +0800
-Message-Id: <1597296712-28069-1-git-send-email-tangyouling@loongson.cn>
+Received: from mx2.suse.de ([195.135.220.15])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k67iS-0002MN-Kz
+ for kexec@lists.infradead.org; Thu, 13 Aug 2020 07:32:01 +0000
+Date: Thu, 13 Aug 2020 09:31:58 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+Message-ID: <20200813073158.GI12903@alley>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley> <20200812163908.GH12903@alley>
+ <87v9hn2y1p.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87v9hn2y1p.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,46 +24,73 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Rml4IHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6CgprZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1p
-cHMuYzoxNjE6NDE6IHdhcm5pbmc6IHBhc3NpbmcgYXJndW1lbnQgMyBvZgrigJhkdGJfc2V0X2lu
-aXRyZOKAmSBtYWtlcyBpbnRlZ2VyIGZyb20gcG9pbnRlciB3aXRob3V0IGEgY2FzdApkdGJfc2V0
-X2luaXRyZCgmZHRiX2J1ZiwgJmR0Yl9sZW5ndGgsIGluaXRyZF9idWYsIGluaXRyZF9idWYgKyBp
-bml0cmRfc2l6ZSk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXgpJ
-biBmaWxlIGluY2x1ZGVkIGZyb20ga2V4ZWMvYXJjaC9taXBzL2tleGVjLWVsZi1taXBzLmM6MzM6
-MDoKa2V4ZWMvYXJjaC9taXBzLy4uLy4uL2R0LW9wcy5oOjY6NTogbm90ZTogZXhwZWN0ZWQg4oCY
-b2ZmX3TigJkgYnV0IGFyZ3VtZW50IGlzCm9mIHR5cGUg4oCYY2hhciAq4oCZCmludCBkdGJfc2V0
-X2luaXRyZChjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIG9mZl90IHN0YXJ0LCBvZmZfdCBl
-bmQpOwogICAgIF4KCmtleGVjL2FyY2gvbWlwcy9rZXhlYy1lbGYtbWlwcy5jOjE2MTo1Mzogd2Fy
-bmluZzogcGFzc2luZyBhcmd1bWVudCA0IG9mCuKAmGR0Yl9zZXRfaW5pdHJk4oCZIG1ha2VzIGlu
-dGVnZXIgZnJvbSBwb2ludGVyIHdpdGhvdXQgYSBjYXN0CmR0Yl9zZXRfaW5pdHJkKCZkdGJfYnVm
-LCAmZHRiX2xlbmd0aCwgaW5pdHJkX2J1ZiwgaW5pdHJkX2J1ZiArIGluaXRyZF9zaXplKTsKICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeCkluIGZp
-bGUgaW5jbHVkZWQgZnJvbSBrZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1pcHMuYzozMzowOgpr
-ZXhlYy9hcmNoL21pcHMvLi4vLi4vZHQtb3BzLmg6Njo1OiBub3RlOiBleHBlY3RlZCDigJhvZmZf
-dOKAmSBidXQgYXJndW1lbnQgaXMKb2YgdHlwZSDigJhjaGFyICrigJkKaW50IGR0Yl9zZXRfaW5p
-dHJkKGNoYXIgKipkdGIsIG9mZl90ICpkdGJfc2l6ZSwgb2ZmX3Qgc3RhcnQsIG9mZl90IGVuZCk7
-CiAgICAgXgoKU2lnbmVkLW9mZi1ieTogWW91bGluZyBUYW5nIDx0YW5neW91bGluZ0Bsb29uZ3Nv
-bi5jbj4KLS0tCiBrZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1pcHMuYyB8IDIgKy0KIDEgZmls
-ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2tl
-eGVjL2FyY2gvbWlwcy9rZXhlYy1lbGYtbWlwcy5jIGIva2V4ZWMvYXJjaC9taXBzL2tleGVjLWVs
-Zi1taXBzLmMKaW5kZXggY2Y5MDg3OS4uYTJkMTFmYyAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9t
-aXBzL2tleGVjLWVsZi1taXBzLmMKKysrIGIva2V4ZWMvYXJjaC9taXBzL2tleGVjLWVsZi1taXBz
-LmMKQEAgLTE2MSw3ICsxNjEsNyBAQCBpbnQgZWxmX21pcHNfbG9hZChpbnQgYXJnYywgY2hhciAq
-KmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAogCiAJCS8qIENyZWF0ZSBpbml0cmQg
-ZW50cmllcyBpbiBkdGIgLSBhbHRob3VnaCBhdCB0aGlzIHRpbWUKIAkJICogdGhleSB3b3VsZCBu
-b3QgcG9pbnQgdG8gdGhlIGNvcnJlY3QgbG9jYXRpb24gKi8KLQkJZHRiX3NldF9pbml0cmQoJmR0
-Yl9idWYsICZkdGJfbGVuZ3RoLCBpbml0cmRfYnVmLCBpbml0cmRfYnVmICsgaW5pdHJkX3NpemUp
-OworCQlkdGJfc2V0X2luaXRyZCgmZHRiX2J1ZiwgJmR0Yl9sZW5ndGgsIChvZmZfdClpbml0cmRf
-YnVmLCAob2ZmX3QpaW5pdHJkX2J1ZiArIGluaXRyZF9zaXplKTsKIAogCQlpbml0cmRfYmFzZSA9
-IGFkZF9idWZmZXIoaW5mbywgaW5pdHJkX2J1ZiwgaW5pdHJkX3NpemUsCiAJCQkJCWluaXRyZF9z
-aXplLCBzaXplb2Yodm9pZCAqKSwKLS0gCjIuMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+On Thu 2020-08-13 02:30:02, John Ogness wrote:
+> On 2020-08-12, Petr Mladek <pmladek@suse.com> wrote:
+> > So, I have one crazy idea to add one more state bit so that we
+> > could have:
+> >
+> >   + committed: set when the data are written into the data ring.
+> >   + final: set when the data block could not longer get reopened
+> >   + reuse: set when the desctiptor/data block could get reused
+> >
+> > "final" bit will define when the descriptor could not longer
+> > get reopened (cleared committed bit) and the data block could
+> > not get extended.
+> 
+> I implemented this solution for myself and am currently running more
+> tests. Some things that I changed from your suggestion:
+> 
+> 1. I created a separate prb_reserve_cont() function. The reason for this
+> is because the caller needs to understand what is happening. The caller
+> is getting an existing record with existing data and must append new
+> data. The @text_len field of the info reports how long the existing data
+> is.
+
+I see.
+
+> So the LOG_CONT handling code in printk.c looks something like this:
+
+Yeah, it makes sense.
+
+
+> 2. I haven't yet figured out how to preserve calling context when a
+> newline appears. For example:
+> 
+> pr_info("text");
+> pr_cont(" 1");
+> pr_cont(" 2\n");
+> pr_cont("3");
+> pr_cont(" 4\n");
+> 
+> For "3" the calling context (info, timestamp) is lost because with "2"
+> the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
+
+I am going to answer Sergey's reply.
+
+
+> 3. There are some memory barriers introduced, but it looks like it
+> shouldn't add too much complexity.
+
+Uff. I have hooped for this.
+
+> I will continue to refine my working version and post a patch so that we
+> have something to work with. This looks to be the most promising way
+> forward. Thanks.
+
+Uff, I am happy that it seems working. Several other approaches looked
+much more complicated or they caused regressions.
+
+Best Regards,
+Petr
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
