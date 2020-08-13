@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k68nq-0003En-Pl
- for kexec@lists.infradead.org; Thu, 13 Aug 2020 08:41:39 +0000
-Date: Thu, 13 Aug 2020 10:41:36 +0200
+ id 1k6ANx-0003Fj-8q
+ for kexec@lists.infradead.org; Thu, 13 Aug 2020 10:23:02 +0000
+Date: Thu, 13 Aug 2020 12:22:58 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Message-ID: <20200813084136.GK12903@alley>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
- <20200811160551.GC12903@alley> <20200812163908.GH12903@alley>
- <87v9hn2y1p.fsf@jogness.linutronix.de>
- <20200813051853.GA510@jagdpanzerIV.localdomain>
- <875z9nvvl2.fsf@jogness.linutronix.de>
+Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
+ and real
+Message-ID: <20200813102258.GL12903@alley>
+References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
+ <20200811094413.GA12903@alley>
+ <87zh7175hj.fsf@nanos.tec.linutronix.de>
+ <20200811130218.GI6215@alley>
+ <20200813015500.GC2020879@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <875z9nvvl2.fsf@jogness.linutronix.de>
+In-Reply-To: <20200813015500.GC2020879@jagdpanzerIV.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,84 +28,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, John Ogness <john.ogness@linutronix.de>, Orson Zhai <orson.zhai@unisoc.com>, Baoquan He <bhe@redhat.com>, cixi.geng1@unisoc.com, Stephen Boyd <sboyd@kernel.org>, zhang.lyra@gmail.com, Steven Sistare <steven.sistare@oracle.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Jon DeVree <nuxi@vault24.org>, John Stultz <john.stultz@linaro.org>, ruifeng.zhang1@unisoc.com, Orson Zhai <orsonzhai@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Salvatore Bonaccorso <carnil@debian.org>, Dave Young <dyoung@redhat.com>, Dominique Martinet <asmadeus@codewreck.org>, Vivek Goyal <vgoyal@redhat.com>, Pavel Tatashin <pasha.tatashin@soleen.com>
 
-On Thu 2020-08-13 09:50:25, John Ogness wrote:
-> On 2020-08-13, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
-> > This is not an unseen pattern, I'm afraid. And the problem here can
-> > be more general:
-> >
-> > 	pr_info("text");
-> > 	pr_cont("1");
-> > 	exception/IRQ/NMI
-> > 		pr_alert("text\n");
-> > 	pr_cont("2");
-> > 	pr_cont("\n");
-> >
-> > I guess the solution would be to store "last log_level" in task_struct
-> > and get current (new) timestamp for broken cont line?
+On Thu 2020-08-13 10:55:00, Sergey Senozhatsky wrote:
+> On (20/08/11 15:02), Petr Mladek wrote:
+> > On Tue 2020-08-11 14:05:12, Thomas Gleixner wrote:
+> > > Petr Mladek <pmladek@suse.com> writes:
+> > > > At least "crash" tool would need an update anyway. AFAIK, it checks
+> > > > the size of struct printk_log and refuses to read it when it changes.
+> > > >
+> > > > It means that the hack with VMCOREINFO_FIELD_OFFSET probably is not
+> > > > needed because we would need to update the crashdump-related tools anyway.
+> > > >
+> > > > Well, the timing is good. We are about to switch the printk ring
+> > > > buffer into a lockless one. It requires updating the crashdump tools
+> > > > as well. We could do this at the same time. The lockless ring buffer
+> > > > already is in linux-next. It is aimed for 5.10 or 5.11.
+> > > ...
+> > > > It would be great to synchronize all these changes changes of the
+> > > > printk log buffer structures.
+> > > 
+> > > I agree that having one update is a good thing, but pretty please can we
+> > > finally make progress with this and not create yet another dependency?
+> > 
+> > To make it clear. I definitely do not want to block lockless printk by
+> > this.
+> > 
+> > BTW: I am not 100% convinced that storing all three timestamps is
+> > worth it. It increases the code complexity, metadata size. It needs
+> > an interface with the userspace that has to stay backward compatible.
 > 
-> (Warning: new ideas ahead)
-> 
-> The fundamental problem is that there is no real association between
-> the cont parts. So any interruption results in a broken record. If we
-> really want to do this correctly, we need real association.
-> 
-> With the new finalize flag for records, I thought about perhaps adding
-> support for chaining data blocks.
-> 
-> A data block currently stores an unsigned long for the ID of the
-> associated descriptor. But it could optionally include a second unsigned
-> long, which is the lpos of the next text part. All the data blocks of a
-> chain would point back to the same descriptor. The descriptor would only
-> point to the first data block of the chain and include a flag that it is
-> using chained data blocks.
->
-> Then we would only need to track the sequence number of the open record
-> and new data blocks could be added to the data block chain of the
-> correct record. Readers cannot see the record until it is finalized.
+> Can we, perhaps, store those various "alternative" timestamps in dict so
+> then whoever wants to read them can just parse the dict key:value pairs
+> attach to each printk message?
 
-Note that we still must try to append the continuous piece into the
-same data block. We could not concatenate them in the reader API
-because it would create the problem with unused/skipped sequence numbers.
+Interesting idea. It might be a way how to add optional metadata
+without breaking compatibility with crashdump tools.
 
-Also it would complicate the reader code. It would need to know
-whether a record has already been printed together with a previous
-one.
+Well, I have bad feeling about it. Some of the reasons might be:
+
+  + would take more space (prefix + text vs. binary representation)
+  + not reliable because dict is currently dropped when no space
+  + it would make the controversial dictionary feature more important
 
 
-> Also, since only finalized records can be invalidated, there are no
-> races of chains becoming invalidated while being appended.
-> 
-> My concerns about this idea:
-> 
-> - What if the printk user does not correctly terminate the cont message?
->   There is no mechanism to allow that open record to be force-finalized
->   so that readers can read newer records.
-
-This is a real problem. And it is the reason why the cont buffer is
-currently flushed (finalized) by the next message from another context.
-
-
-> - For tasks, the sequence number of the open record could be stored on
->   the task_struct. For non-tasks, we could use a global per-cpu variable
->   where each CPU stores 2 sequence numbers: the sequence number of the
->   open record for the non-task and the sequence number of the open
->   record for an interrupting NMI. Is that sufficient?
-
-Yeah, it would be possible.
-
-Anyway, this would fix an already existing problem. It might get
-complicated and tricky. I am afraid that it comes from the "perfection
-is the enemy of good" department.
-
-A good compromise might be to just store "loglevel" from the previous
-message in the given context. It could then be used for pr_cont()
-messages in the same context.
-
-Anyway, I would solve this later because it is already existing
-problem.
+I would prefer to solve this by storing the timestamps in the
+structure with metadata.
 
 Best Regards,
 Petr
