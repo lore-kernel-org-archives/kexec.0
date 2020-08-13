@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k612N-0001Zy-9Q
- for kexec@lists.infradead.org; Thu, 13 Aug 2020 00:24:08 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-In-Reply-To: <20200812163908.GH12903@alley>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley>
- <20200812163908.GH12903@alley>
-Date: Thu, 13 Aug 2020 02:30:02 +0206
-Message-ID: <87v9hn2y1p.fsf@jogness.linutronix.de>
+ id 1k62SR-000152-09
+ for kexec@lists.infradead.org; Thu, 13 Aug 2020 01:55:07 +0000
+Received: by mail-pg1-x541.google.com with SMTP id s15so2015124pgc.8
+ for <kexec@lists.infradead.org>; Wed, 12 Aug 2020 18:55:05 -0700 (PDT)
+Date: Thu, 13 Aug 2020 10:55:00 +0900
+From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
+ and real
+Message-ID: <20200813015500.GC2020879@jagdpanzerIV.localdomain>
+References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
+ <20200811094413.GA12903@alley>
+ <87zh7175hj.fsf@nanos.tec.linutronix.de>
+ <20200811130218.GI6215@alley>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200811130218.GI6215@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,76 +30,50 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Dominique Martinet <asmadeus@codewreck.org>, ruifeng.zhang1@unisoc.com, Steven Sistare <steven.sistare@oracle.com>, Prarit Bhargava <prarit@redhat.com>, Baoquan He <bhe@redhat.com>, zhang.lyra@gmail.com, cixi.geng1@unisoc.com, Orson Zhai <orsonzhai@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Pavel Tatashin <pasha.tatashin@soleen.com>, John Ogness <john.ogness@linutronix.de>, Steven Rostedt <rostedt@goodmis.org>, Jon DeVree <nuxi@vault24.org>, Thomas Gleixner <tglx@linutronix.de>, Salvatore Bonaccorso <carnil@debian.org>, Stephen Boyd <sboyd@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Orson Zhai <orson.zhai@unisoc.com>, John Stultz <john.stultz@linaro.org>
 
-On 2020-08-12, Petr Mladek <pmladek@suse.com> wrote:
-> So, I have one crazy idea to add one more state bit so that we
-> could have:
+On (20/08/11 15:02), Petr Mladek wrote:
+> On Tue 2020-08-11 14:05:12, Thomas Gleixner wrote:
+> > Petr Mladek <pmladek@suse.com> writes:
+> > > At least "crash" tool would need an update anyway. AFAIK, it checks
+> > > the size of struct printk_log and refuses to read it when it changes.
+> > >
+> > > It means that the hack with VMCOREINFO_FIELD_OFFSET probably is not
+> > > needed because we would need to update the crashdump-related tools anyway.
+> > >
+> > > Well, the timing is good. We are about to switch the printk ring
+> > > buffer into a lockless one. It requires updating the crashdump tools
+> > > as well. We could do this at the same time. The lockless ring buffer
+> > > already is in linux-next. It is aimed for 5.10 or 5.11.
+> > ...
+> > > It would be great to synchronize all these changes changes of the
+> > > printk log buffer structures.
+> > 
+> > I agree that having one update is a good thing, but pretty please can we
+> > finally make progress with this and not create yet another dependency?
+> 
+> To make it clear. I definitely do not want to block lockless printk by
+> this.
+> 
+> BTW: I am not 100% convinced that storing all three timestamps is
+> worth it. It increases the code complexity, metadata size. It needs
+> an interface with the userspace that has to stay backward compatible.
+
+Can we, perhaps, store those various "alternative" timestamps in dict so
+then whoever wants to read them can just parse the dict key:value pairs
+attach to each printk message?
+
+> Also it still will be racy because the timestamp is taken when the message
+> is printed. It might be "long" before or after the event that
+> it talks about.
 >
->   + committed: set when the data are written into the data ring.
->   + final: set when the data block could not longer get reopened
->   + reuse: set when the desctiptor/data block could get reused
->
-> "final" bit will define when the descriptor could not longer
-> get reopened (cleared committed bit) and the data block could
-> not get extended.
+> There is still the alternative to print all three timestamps regularly
+> for those interested. It is less user convenient but much easier
+> to maintain.
 
-I had not thought of extending data blocks. That is clever!
+Yes, that's a nice alternative.
 
-I implemented this solution for myself and am currently running more
-tests. Some things that I changed from your suggestion:
-
-1. I created a separate prb_reserve_cont() function. The reason for this
-is because the caller needs to understand what is happening. The caller
-is getting an existing record with existing data and must append new
-data. The @text_len field of the info reports how long the existing data
-is. So the LOG_CONT handling code in printk.c looks something like this:
-
-        if (lflags & LOG_CONT) {
-                struct prb_reserved_entry e;
-                struct printk_record r;
-
-                prb_rec_init_wr(&r, text_len, 0);
-
-                if (prb_reserve_cont(&e, prb, &r, caller_id)) {
-                        memcpy(&r.text_buf[r.info->text_len], text, text_len);
-                        r.info->text_len += text_len;
-
-                        if (lflags & LOG_NEWLINE)
-                                r.info->flags |= LOG_NEWLINE;
-
-                        if (r.info->flags & LOG_NEWLINE)
-                                prb_commit_finalize(&e);
-                        else
-                                prb_commit(&e);
-
-                        return text_len;
-                }
-        }
-
-This seemed simpler than trying to extend prb_reserve() to secretly
-support LOG_CONT records.
-
-2. I haven't yet figured out how to preserve calling context when a
-newline appears. For example:
-
-pr_info("text");
-pr_cont(" 1");
-pr_cont(" 2\n");
-pr_cont("3");
-pr_cont(" 4\n");
-
-For "3" the calling context (info, timestamp) is lost because with "2"
-the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
-
-3. There are some memory barriers introduced, but it looks like it
-shouldn't add too much complexity.
-
-I will continue to refine my working version and post a patch so that we
-have something to work with. This looks to be the most promising way
-forward. Thanks.
-
-John Ogness
+	-ss
 
 _______________________________________________
 kexec mailing list
