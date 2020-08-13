@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k67uV-0003JA-VY
- for kexec@lists.infradead.org; Thu, 13 Aug 2020 07:44:28 +0000
-From: John Ogness <john.ogness@linutronix.de>
+ id 1k6818-0004mi-Qk
+ for kexec@lists.infradead.org; Thu, 13 Aug 2020 07:51:20 +0000
+Date: Thu, 13 Aug 2020 09:51:17 +0200
+From: Petr Mladek <pmladek@suse.com>
 Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
  LOG_CONT handling
-In-Reply-To: <20200813051853.GA510@jagdpanzerIV.localdomain>
+Message-ID: <20200813075117.GJ12903@alley>
 References: <20200717234818.8622-1-john.ogness@linutronix.de>
  <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de> <20200811160551.GC12903@alley>
- <20200812163908.GH12903@alley> <87v9hn2y1p.fsf@jogness.linutronix.de>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley> <20200812163908.GH12903@alley>
+ <87v9hn2y1p.fsf@jogness.linutronix.de>
  <20200813051853.GA510@jagdpanzerIV.localdomain>
-Date: Thu, 13 Aug 2020 09:50:25 +0206
-Message-ID: <875z9nvvl2.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200813051853.GA510@jagdpanzerIV.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,58 +30,129 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On 2020-08-13, Sergey Senozhatsky <sergey.senozhatsky@gmail.com> wrote:
+On Thu 2020-08-13 14:18:53, Sergey Senozhatsky wrote:
+> On (20/08/13 02:30), John Ogness wrote:
+> > 2. I haven't yet figured out how to preserve calling context when a
+> > newline appears. For example:
+> > 
+> > pr_info("text");
+> > pr_cont(" 1");
+> > pr_cont(" 2\n");
+> > pr_cont("3");
+> > pr_cont(" 4\n");
+> >
+> > For "3" the calling context (info, timestamp) is lost because with "2"
+> > the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
+
+If I get it correctly, the original code has the same problem.
+
+The cont buffer is flushed when the cont piece ends with newline:
+
+static bool cont_add(u32 caller_id, int facility, int level,
+		     enum log_flags flags, const char *text, size_t len)
+{
+   [...]
+
+	// The original flags come from the first line,
+	// but later continuations can add a newline.
+	if (flags & LOG_NEWLINE) {
+		cont.flags |= LOG_NEWLINE;
+		cont_flush();
+	}
+
+	return true;
+}
+
+cont_flush sets	cont.len = 0;
+
+static void cont_flush(void)
+{
+	[...]
+	cont.len = 0;
+}
+
+
+The messages is appended only when cont.len != 0 in log_output:
+
+static size_t log_output(int facility, int level, enum log_flags lflags, const char *dict, size_t dictlen, char *text, size_t text_len)
+{
+	const u32 caller_id = printk_caller_id();
+
+	/*
+	 * If an earlier line was buffered, and we're a continuation
+	 * write from the same context, try to add it to the buffer.
+	 */
+	if (cont.len) {
+		if (cont.caller_id == caller_id && (lflags & LOG_CONT)) {
+			if (cont_add(caller_id, facility, level, lflags, text, text_len))
+				return text_len;
+		}
+
+      [...]
+}
+
+
+Also the original context is overridden when the cont buffer is empty:
+
+static bool cont_add(u32 caller_id, int facility, int level,
+		     enum log_flags flags, const char *text, size_t len)
+{
+	[...]
+
+	if (!cont.len) {
+		cont.facility = facility;
+		cont.level = level;
+		cont.caller_id = caller_id;
+		cont.ts_nsec = local_clock();
+		cont.flags = flags;
+	}
+
+	[...]
+}
+
+So I would ignore this problem for now.
+
+
 > This is not an unseen pattern, I'm afraid. And the problem here can
 > be more general:
->
+> 
 > 	pr_info("text");
 > 	pr_cont("1");
 > 	exception/IRQ/NMI
 > 		pr_alert("text\n");
 > 	pr_cont("2");
 > 	pr_cont("\n");
->
+> 
+
+Good point.
+
+
 > I guess the solution would be to store "last log_level" in task_struct
 > and get current (new) timestamp for broken cont line?
 
-(Warning: new ideas ahead)
+I think about storing the context in per-CPU and per-context array.
+It should be more memory efficient than task_struct and it should
+solve even the above problem.
 
-The fundamental problem is that there is no real association between
-the cont parts. So any interruption results in a broken record. If we
-really want to do this correctly, we need real association.
 
-With the new finalize flag for records, I thought about perhaps adding
-support for chaining data blocks.
+> We have this problem now. E.g. early boot messages from one of my boxes:
+> 
+> 6,173,41837,-;x86: Booting SMP configuration:
+> 6,174,41838,-;.... node  #0, CPUs:      #1 #2 #3 #4
+> 4,175,44993,-;MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/...
+> 4,176,44993,c; #5 #6 #7
+> 
+> "CPUs: #1 #2 #3 #4 #5 #6 #7" is supposed to be one cont line with
+> loglevel 6. But it gets interrupted and flushed so that "#5 #6 #7"
+> appears with the different loglevel.
 
-A data block currently stores an unsigned long for the ID of the
-associated descriptor. But it could optionally include a second unsigned
-long, which is the lpos of the next text part. All the data blocks of a
-chain would point back to the same descriptor. The descriptor would only
-point to the first data block of the chain and include a flag that it is
-using chained data blocks.
+Nice example. It would be nice to fix this. But it should be done
+separately.
 
-Then we would only need to track the sequence number of the open record
-and new data blocks could be added to the data block chain of the
-correct record. Readers cannot see the record until it is finalized.
-
-Also, since only finalized records can be invalidated, there are no
-races of chains becoming invalidated while being appended.
-
-My concerns about this idea:
-
-- What if the printk user does not correctly terminate the cont message?
-  There is no mechanism to allow that open record to be force-finalized
-  so that readers can read newer records.
-
-- For tasks, the sequence number of the open record could be stored on
-  the task_struct. For non-tasks, we could use a global per-cpu variable
-  where each CPU stores 2 sequence numbers: the sequence number of the
-  open record for the non-task and the sequence number of the open
-  record for an interrupting NMI. Is that sufficient?
-
-John Ogness
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
