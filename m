@@ -1,23 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x444.google.com ([2607:f8b0:4864:20::444])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k65dm-00007q-Kv
- for kexec@lists.infradead.org; Thu, 13 Aug 2020 05:19:03 +0000
-Received: by mail-pf1-x444.google.com with SMTP id d188so2224624pfd.2
- for <kexec@lists.infradead.org>; Wed, 12 Aug 2020 22:18:58 -0700 (PDT)
-Date: Thu, 13 Aug 2020 14:18:53 +0900
-From: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
- LOG_CONT handling
-Message-ID: <20200813051853.GA510@jagdpanzerIV.localdomain>
-References: <20200717234818.8622-1-john.ogness@linutronix.de>
- <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
- <87blkcanps.fsf@jogness.linutronix.de>
- <20200811160551.GC12903@alley> <20200812163908.GH12903@alley>
- <87v9hn2y1p.fsf@jogness.linutronix.de>
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k65qi-0000YM-Rz
+ for kexec@lists.infradead.org; Thu, 13 Aug 2020 05:32:28 +0000
+From: Youling Tang <tangyouling@loongson.cn>
+Subject: [PATCH] MIPS: Fix compile warnnings in kexec-elf-mips.c
+Date: Thu, 13 Aug 2020 13:31:52 +0800
+Message-Id: <1597296712-28069-1-git-send-email-tangyouling@loongson.cn>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87v9hn2y1p.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +16,46 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
 
-On (20/08/13 02:30), John Ogness wrote:
-> 2. I haven't yet figured out how to preserve calling context when a
-> newline appears. For example:
-> 
-> pr_info("text");
-> pr_cont(" 1");
-> pr_cont(" 2\n");
-> pr_cont("3");
-> pr_cont(" 4\n");
->
-> For "3" the calling context (info, timestamp) is lost because with "2"
-> the record is finalized. Perhaps the above is invalid usage of LOG_CONT?
-
-This is not an unseen pattern, I'm afraid. And the problem here can
-be more general:
-
-	pr_info("text");
-	pr_cont("1");
-	exception/IRQ/NMI
-		pr_alert("text\n");
-	pr_cont("2");
-	pr_cont("\n");
-
-I guess the solution would be to store "last log_level" in task_struct
-and get current (new) timestamp for broken cont line?
-
-We have this problem now. E.g. early boot messages from one of my boxes:
-
-6,173,41837,-;x86: Booting SMP configuration:
-6,174,41838,-;.... node  #0, CPUs:      #1 #2 #3 #4
-4,175,44993,-;MDS CPU bug present and SMT on, data leak possible. See https://www.kernel.org/doc/...
-4,176,44993,c; #5 #6 #7
-
-"CPUs: #1 #2 #3 #4 #5 #6 #7" is supposed to be one cont line with
-loglevel 6. But it gets interrupted and flushed so that "#5 #6 #7"
-appears with the different loglevel.
-
-	-ss
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Rml4IHRoZSBmb2xsb3dpbmcgd2FybmluZ3M6CgprZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1p
+cHMuYzoxNjE6NDE6IHdhcm5pbmc6IHBhc3NpbmcgYXJndW1lbnQgMyBvZgrigJhkdGJfc2V0X2lu
+aXRyZOKAmSBtYWtlcyBpbnRlZ2VyIGZyb20gcG9pbnRlciB3aXRob3V0IGEgY2FzdApkdGJfc2V0
+X2luaXRyZCgmZHRiX2J1ZiwgJmR0Yl9sZW5ndGgsIGluaXRyZF9idWYsIGluaXRyZF9idWYgKyBp
+bml0cmRfc2l6ZSk7CiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXgpJ
+biBmaWxlIGluY2x1ZGVkIGZyb20ga2V4ZWMvYXJjaC9taXBzL2tleGVjLWVsZi1taXBzLmM6MzM6
+MDoKa2V4ZWMvYXJjaC9taXBzLy4uLy4uL2R0LW9wcy5oOjY6NTogbm90ZTogZXhwZWN0ZWQg4oCY
+b2ZmX3TigJkgYnV0IGFyZ3VtZW50IGlzCm9mIHR5cGUg4oCYY2hhciAq4oCZCmludCBkdGJfc2V0
+X2luaXRyZChjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIG9mZl90IHN0YXJ0LCBvZmZfdCBl
+bmQpOwogICAgIF4KCmtleGVjL2FyY2gvbWlwcy9rZXhlYy1lbGYtbWlwcy5jOjE2MTo1Mzogd2Fy
+bmluZzogcGFzc2luZyBhcmd1bWVudCA0IG9mCuKAmGR0Yl9zZXRfaW5pdHJk4oCZIG1ha2VzIGlu
+dGVnZXIgZnJvbSBwb2ludGVyIHdpdGhvdXQgYSBjYXN0CmR0Yl9zZXRfaW5pdHJkKCZkdGJfYnVm
+LCAmZHRiX2xlbmd0aCwgaW5pdHJkX2J1ZiwgaW5pdHJkX2J1ZiArIGluaXRyZF9zaXplKTsKICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeCkluIGZp
+bGUgaW5jbHVkZWQgZnJvbSBrZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1pcHMuYzozMzowOgpr
+ZXhlYy9hcmNoL21pcHMvLi4vLi4vZHQtb3BzLmg6Njo1OiBub3RlOiBleHBlY3RlZCDigJhvZmZf
+dOKAmSBidXQgYXJndW1lbnQgaXMKb2YgdHlwZSDigJhjaGFyICrigJkKaW50IGR0Yl9zZXRfaW5p
+dHJkKGNoYXIgKipkdGIsIG9mZl90ICpkdGJfc2l6ZSwgb2ZmX3Qgc3RhcnQsIG9mZl90IGVuZCk7
+CiAgICAgXgoKU2lnbmVkLW9mZi1ieTogWW91bGluZyBUYW5nIDx0YW5neW91bGluZ0Bsb29uZ3Nv
+bi5jbj4KLS0tCiBrZXhlYy9hcmNoL21pcHMva2V4ZWMtZWxmLW1pcHMuYyB8IDIgKy0KIDEgZmls
+ZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2tl
+eGVjL2FyY2gvbWlwcy9rZXhlYy1lbGYtbWlwcy5jIGIva2V4ZWMvYXJjaC9taXBzL2tleGVjLWVs
+Zi1taXBzLmMKaW5kZXggY2Y5MDg3OS4uYTJkMTFmYyAxMDA2NDQKLS0tIGEva2V4ZWMvYXJjaC9t
+aXBzL2tleGVjLWVsZi1taXBzLmMKKysrIGIva2V4ZWMvYXJjaC9taXBzL2tleGVjLWVsZi1taXBz
+LmMKQEAgLTE2MSw3ICsxNjEsNyBAQCBpbnQgZWxmX21pcHNfbG9hZChpbnQgYXJnYywgY2hhciAq
+KmFyZ3YsIGNvbnN0IGNoYXIgKmJ1Ziwgb2ZmX3QgbGVuLAogCiAJCS8qIENyZWF0ZSBpbml0cmQg
+ZW50cmllcyBpbiBkdGIgLSBhbHRob3VnaCBhdCB0aGlzIHRpbWUKIAkJICogdGhleSB3b3VsZCBu
+b3QgcG9pbnQgdG8gdGhlIGNvcnJlY3QgbG9jYXRpb24gKi8KLQkJZHRiX3NldF9pbml0cmQoJmR0
+Yl9idWYsICZkdGJfbGVuZ3RoLCBpbml0cmRfYnVmLCBpbml0cmRfYnVmICsgaW5pdHJkX3NpemUp
+OworCQlkdGJfc2V0X2luaXRyZCgmZHRiX2J1ZiwgJmR0Yl9sZW5ndGgsIChvZmZfdClpbml0cmRf
+YnVmLCAob2ZmX3QpaW5pdHJkX2J1ZiArIGluaXRyZF9zaXplKTsKIAogCQlpbml0cmRfYmFzZSA9
+IGFkZF9idWZmZXIoaW5mbywgaW5pdHJkX2J1ZiwgaW5pdHJkX3NpemUsCiAJCQkJCWluaXRyZF9z
+aXplLCBzaXplb2Yodm9pZCAqKSwKLS0gCjIuMS4wCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
