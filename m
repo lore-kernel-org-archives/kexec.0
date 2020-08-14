@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-ej1-x643.google.com ([2a00:1450:4864:20::643])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k6bVk-0005fs-Kc
- for kexec@lists.infradead.org; Fri, 14 Aug 2020 15:20:53 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20200814055239.47348-1-sangyan@huawei.com>
-Date: Fri, 14 Aug 2020 10:17:06 -0500
-In-Reply-To: <20200814055239.47348-1-sangyan@huawei.com> (Sang Yan's message
- of "Fri, 14 Aug 2020 01:52:38 -0400")
-Message-ID: <87tux5i7f1.fsf@x220.int.ebiederm.org>
+ id 1k6fHz-0003fR-65
+ for kexec@lists.infradead.org; Fri, 14 Aug 2020 19:22:56 +0000
+Received: by mail-ej1-x643.google.com with SMTP id c16so11029631ejx.12
+ for <kexec@lists.infradead.org>; Fri, 14 Aug 2020 12:22:53 -0700 (PDT)
 MIME-Version: 1.0
+References: <20200814055239.47348-1-sangyan@huawei.com>
+ <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
+ <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
+ <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 14 Aug 2020 15:22:16 -0400
+Message-ID: <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
 Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,25 +27,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sang Yan <sangyan@huawei.com>
-Cc: luanjianhai@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, luchunhua@huawei.com, guohanjun@huawei.com, zhuling8@huawei.com
+To: Dave Young <dyoung@redhat.com>
+Cc: luanjianhai@huawei.com, Sang Yan <sangyan@huawei.com>, xiexiuqi@huawei.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, luchunhua@huawei.com, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, guohanjun@huawei.com, zhuling8@huawei.com
 
-Sang Yan <sangyan@huawei.com> writes:
+On Fri, Aug 14, 2020 at 7:24 AM Dave Young <dyoung@redhat.com> wrote:
+>
+> Hi,
+>
+> On 08/14/20 at 04:21pm, Sang Yan wrote:
+> >
+> >
+> > On 08/14/20 14:58, Dave Young wrote:
+> > > On 08/14/20 at 01:52am, Sang Yan wrote:
+> > >> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
+> > >> copy all segments from vmalloced memory to kernel boot memory,
+> > >> because of disabled mmu.
+> > >
+> > > It is not the case on all archs, I assume your case is arm64, please
+> > > describe it in patch log :)
+> > >
+> > Yes, it's particularly obvious on arm64. I will add it to the patch log,
+> > and test how long it takes on x86 and other arch.
+> >
+> > > About the arm64 problem, I know Pavel Tatashin is working on a patchset
+> > > to improve the performance with enabling mmu.
+> > >
+> > > I added Pavel in cc, can you try his patches?
+> > >
+> > Thanks for your tips, I will try these patches. @Pavel.
+> > Disable mmu after finishing copying pages?
+> > >>
+> > >> We introduce quick kexec to save time of copying memory as above,
+> > >> just like kdump(kexec on crash), by using reserved memory
+> > >> "Quick Kexec".
+> > >
+> > > This approach may have gain, but it also introduce extra requirements to
+> > > pre-reserve a memory region.  I wonder how Eric thinks about the idea.
+> > >
+> > > Anyway the "quick" name sounds not very good, I would suggest do not
+> > > introduce a new param, and the code can check if pre-reserved region
+> > > exist then use it, if not then fallback to old way.
+> > >
+> > aha. I agree with it, but I thought it may change the old behaviors of
+> > kexec_load.
+> >
+> > I will update a new patch without introducing new flags and new params.
+>
+> Frankly I'm still not sure it is worth to introduce a new interface if the
+> improvement can be done in arch code like Pavel is doing.  Can you try
+> that first?
 
-> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
-> copy all segments from vmalloced memory to kernel boot memory,
-> because of disabled mmu.
+Hi Dave,
 
-I haven't seen kexec that slow since I tested on my 16Mhz 386.
+Thank you for including me into this discussion.
 
-That machine has an excuse it really is slow.  Anything else
-that takes seconds is almost certainly slow because someone
-has misconfigured things to not cache the data copied by kexec.
+My patches will fix this issue. This is an ARM64 specific problem and
+I did not see this to be performance problem on x86 during kexec
+relocation. This happens because on ARM64 relocation is performed with
+MMU disabled, and when MMU is disabled the caching is disabled as
+well.
 
-I humbly suggest that you fix the arm64 code so that the data gets
-cached.
+I have a patch series that fixes this entirely, but James Morse
+(+CCed) and I still have not agreed on the final approach. We had an
+off-list conversation about it, and we need to continue it in public
+ML.
 
-Eric
+Here is some history:
+
+This is the original series that I sent a year ago. It basically
+proposes the same thing as this series from Sang Yan:
+https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
+
+Once, I realized that with enabling MMU the relocation is issue is
+gone completely, I sent a new series, and this is the latest version
+of that series:
+https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com/
+
+It has been tested in production, and several people from different
+companies commented to me that they are using it as well.
+
+After my patch series was sent out, James created a new branch in his
+tree with his approach of enabling MMU without having a new VA space,
+but instead re-use what the kernel  has now. I have not tested that
+branch yet.
+
+Here are some comments from James Morse and the off-list discussion we had:
+-------
+It sounds like you are depending on write streaming mode to meet your
+target performance.
+This isn't even CPU specific, its cache and firmware configuration specific!
+I don't think we should optimise a general purpose operating system
+based on things like this.
+..
+I think the best approach is going to be to eliminate the relocations entirely.
+...
+I'm afraid I view this kexec-map thing as high-risk duct-tape over the
+kexec core code
+deliberately scattering the kexec payload.
+I'd prefer any approach that causes the payload to be stored in-place
+from the beginning
+as that benefits other architectures too.
+-------
+
+It appears James is leaning to the approach of not performing
+relocation at all and use what is proposed by Sang Yan and me during
+my first approach for this problem. However, I have several issues
+with this take, which if addressed would be OK for me.
+1. The newer, more secure kexec syscall kexec_file_load(), which
+allows to check the IMA integrity of the loaded file does not have a
+way to specify the area in memory where to place the kernel. We are
+using this syscall in production, and cannot go back to kexec_load()
+for security reasons.
+2. Reserving memory means wasting memory during run-time. Our machine
+has only 8G of RAM, and reserving even 128M for the next kernel is an
+expensive proposition. Now we start loading the next kernel after some
+non essential processes are stopped, but before essential processes
+are stopped for the lowest downtime possible.
+3. Disabling relocation means changes in the common code, which I am
+not sure actually helps any other platform beside ARM64, so I am
+worried it won't be accepted into upstream.
+
+Thank you,
+Pasha
 
 _______________________________________________
 kexec mailing list
