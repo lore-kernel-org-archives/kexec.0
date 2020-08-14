@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190] helo=huawei.com)
+Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
+ helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k6TCq-0004Ej-TF
- for kexec@lists.infradead.org; Fri, 14 Aug 2020 06:31:05 +0000
-From: Sang Yan <sangyan@huawei.com>
-Subject: [PATCH 1/2] kexec: Add quick kexec support for kernel
-Date: Fri, 14 Aug 2020 01:52:38 -0400
-Message-ID: <20200814055239.47348-1-sangyan@huawei.com>
+ id 1k6TIn-0004iv-VR
+ for kexec@lists.infradead.org; Fri, 14 Aug 2020 06:34:59 +0000
+Date: Fri, 14 Aug 2020 14:34:39 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [RFC PATCH] printk: Change timestamp to triplet as mono, boot
+ and real
+Message-ID: <20200814063439.GA18058@dhcp-128-65.nay.redhat.com>
+References: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1597120822-11999-1-git-send-email-orsonzhai@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,250 +25,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org, xiexiuqi@huawei.com, guohanjun@huawei.com
-Cc: luanjianhai@huawei.com, zhuling8@huawei.com, luchunhua@huawei.com
+To: Orson Zhai <orsonzhai@gmail.com>
+Cc: Prarit Bhargava <prarit@redhat.com>, Petr Mladek <pmladek@suse.com>, Orson Zhai <orson.zhai@unisoc.com>, Baoquan He <bhe@redhat.com>, Stephen Boyd <sboyd@kernel.org>, zhang.lyra@gmail.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, John Stultz <john.stultz@linaro.org>, ruifeng.zhang1@unisoc.com, cixi.geng1@unisoc.com, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>
 
-In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
-copy all segments from vmalloced memory to kernel boot memory,
-because of disabled mmu.
+On 08/11/20 at 12:40pm, Orson Zhai wrote:
+> From: Thomas Gleixner <tglx@linutronix.de>
+> 
+> Timestamps printed in kernel log are retrieved by local_clock which reads
+> jiffies as a referrence clock source.
+> But it is diffcult to be synchronized with logs generated out of kernel,
+> say some remote processors (Modem) in the Soc of mobile phones. 
+> Jiffies will be unchanged when system is in suspend mode but Modem will
+> not.
+> 
+> So timestamps are required to be compensated with suspend time in some
+> complecated scenarios especially for Android system. As an initial
+> implementation was rejected by Linus, Thomas made this patch [1] 2 yeas
+> ago to replace ts_nsec with a struct ts that consists 3 types of time:
+> mono, boot and real.
+> 
+> This is an updated version which comes from patch [1] written by Thomas
+> and suggestion [2] about VMCORE_INFO given by Linus.
+> 
+> It provides the prerequisite code to print kernel logs with boot or real
+> timestamp in the future.
+> 
+> [1] https://lore.kernel.org/lkml/alpine.DEB.2.20.1711142341130.2221@nanos/
+> [2] https://lore.kernel.org/lkml/CA+55aFz-VvPBoW0RvDW4eN5YhwaUzcMvsYzrqEC41QdfOdiF4Q@mail.gmail.com/
+> 
+> Cc. Thomas Gleixner <tglx@linutronix.de>
+> Cc. Linus Torvalds <torvalds@linux-foundation.org>
+> Cc. Prarit Bhargava <prarit@redhat.com>
+> Cc. Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Orson Zhai <orson.zhai@unisoc.com>
+> Tested-by: Cixi Geng <cixi.geng1@unisoc.com>
+> ---
+> This patch has been tested in qemu-x86-system. One problem is the timestamp
+> in kernel log will be printed [    0.000000] for longer time than before. 
+> 
+> 1 [    0.000000] microcode: microcode updated early to revision 0x28, date = 2019-11-12 
+> 2 [    0.000000] Linux version 5.8.0+ (root@spreadtrum) (gcc (Ubuntu 7.5.0-3ubuntu1~18.04) 7.5.0, GNU ld (GNU Binutils for Ubuntu) 2.30) #2 SMP Fri Aug 7 21:30:51 CST 2020
+> 3 [    0.000000] Command line: BOOT_IMAGE=/vmlinuz-5.8.0+ root=UUID=4d889bca-be18-433d-9b86-c1c1714cc293 ro quiet splash vt.handoff=1
+> 4 [    0.000000] KERNEL supported cpus: 
+> 5 [    0.000000]   Intel GenuineIntel
+> ....
+> 223 [    0.000000]  Tracing variant of Tasks RCU enabled. 
+> 224 [    0.000000] rcu: RCU calculated value of scheduler-enlistment delay is 25 jiffies. 
+> 225 [    0.000000] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=4 
+> 226 [    0.000000] NR_IRQS: 524544, nr_irqs: 456, preallocated irqs: 16 
+> 227 [    0.059662] random: crng done (trusting CPU's manufacturer) 
+>          ^^^^^^^^
+> 228 [    0.059662] Console: colour dummy device 80x25 
+> 229 [    0.059662] printk: console [tty0] enabled 
+> 230 [    0.059662] ACPI: Core revision 20200528 
+> 
+> compared to old log:
+> 
+> 69 [    0.000000] reserve setup_data: [mem 0x0000000100000000-0x000000021fdfffff] usable
+> 70 [    0.000000] efi: EFI v2.31 by American Megatrends
+> 71 [    0.000000] efi: ESRT=0xdbf69818 ACPI=0xdaef8000 ACPI 2.0=0xdaef8000 SMBIOS=0xf0480
+> 72 [    0.000000] SMBIOS 2.8 present.
+> 73 [    0.000000] DMI: LENOVO ThinkCentre M4500t-N000/, BIOS FCKT58AUS 09/17/2014
+> 74 [    0.000000] tsc: Fast TSC calibration using PIT
+> 75 [    0.000000] tsc: Detected 3292.477 MHz processor
+> 76 [    0.000503] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+>         ^^^^^^^^
+> 77 [    0.000504] e820: remove [mem 0x000a0000-0x000fffff] usable
+> 78 [    0.000510] last_pfn = 0x21fe00 max_arch_pfn = 0x400000000
+> 79 [    0.000513] MTRR default type: uncachable
+>  
+>  include/linux/crash_core.h  |  6 ++++--
+>  include/linux/timekeeping.h | 15 +++++++++++++++
+>  kernel/printk/printk.c      | 34 +++++++++++++++++++---------------
+>  kernel/time/timekeeping.c   | 36 +++++++++++++++++++++++++-----------
+>  4 files changed, 63 insertions(+), 28 deletions(-)
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 525510a..85b96cd 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -50,9 +50,11 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  #define VMCOREINFO_STRUCT_SIZE(name) \
+>  	vmcoreinfo_append_str("SIZE(%s)=%lu\n", #name, \
+>  			      (unsigned long)sizeof(struct name))
+> -#define VMCOREINFO_OFFSET(name, field) \
+> +#define VMCOREINFO_FIELD_OFFSET(name, field, offset) \
+>  	vmcoreinfo_append_str("OFFSET(%s.%s)=%lu\n", #name, #field, \
+> -			      (unsigned long)offsetof(struct name, field))
+> +			      (unsigned long)offsetof(struct name, offset))
+> +#define VMCOREINFO_OFFSET(name, field) \
+> +	VMCOREINFO_FIELD_OFFSET(name, field, field)
 
-We introduce quick kexec to save time of copying memory as above,
-just like kdump(kexec on crash), by using reserved memory
-"Quick Kexec".
+We do not regard the VMCOREINFO* as a strict ABI,  makedumpfile and
+crash tool can update to check the new field first then fallback to the old name.
 
-Constructing quick kimage as the same as crash kernel,
-then simply copy all segments of kimage to reserved memroy.
+These crash dump tools are not usual userspace applications, although we
+try not to break them, but if we have to and a tool update can make it
+work again then I suggest we go with the change instead of doing the
+trick.
 
-We also add this support in syscall kexec_load using flags
-of KEXEC_QUICK.
-
-Signed-off-by: Sang Yan <sangyan@huawei.com>
----
- arch/Kconfig               | 10 ++++++++++
- include/linux/ioport.h     |  3 +++
- include/linux/kexec.h      | 13 +++++++++++-
- include/uapi/linux/kexec.h |  3 +++
- kernel/kexec.c             | 10 ++++++++++
- kernel/kexec_core.c        | 41 +++++++++++++++++++++++++++++---------
- 6 files changed, 70 insertions(+), 10 deletions(-)
-
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 3329fa143637..eca782cb8e29 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -21,6 +21,16 @@ config KEXEC_CORE
- config KEXEC_ELF
- 	bool
- 
-+config QUICK_KEXEC
-+	bool "Support for quick kexec"
-+	depends on KEXEC_CORE
-+	help
-+	  Say y here to enable this feature.
-+	  It use reserved memory to accelerate kexec, just like crash
-+	  kexec, load new kernel and initrd to reserved memory, and
-+	  boot new kernel on that memory. It will save the time of
-+	  relocating kernel.
-+
- config HAVE_IMA_KEXEC
- 	bool
- 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 6c2b06fe8beb..f37c632accbe 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -136,6 +136,9 @@ enum {
- 	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
- 	IORES_DESC_RESERVED			= 7,
- 	IORES_DESC_SOFT_RESERVED		= 8,
-+#ifdef CONFIG_QUICK_KEXEC
-+	IORES_DESC_QUICK_KEXEC			= 9,
-+#endif
- };
- 
- /*
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9e93bef52968..976bf9631070 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -269,9 +269,12 @@ struct kimage {
- 	unsigned long control_page;
- 
- 	/* Flags to indicate special processing */
--	unsigned int type : 1;
-+	unsigned int type : 2;
- #define KEXEC_TYPE_DEFAULT 0
- #define KEXEC_TYPE_CRASH   1
-+#ifdef CONFIG_QUICK_KEXEC
-+#define KEXEC_TYPE_QUICK   2
-+#endif
- 	unsigned int preserve_context : 1;
- 	/* If set, we are using file mode kexec syscall */
- 	unsigned int file_mode:1;
-@@ -331,6 +334,11 @@ extern int kexec_load_disabled;
- #define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
- #endif
- 
-+#ifdef CONFIG_QUICK_KEXEC
-+#undef KEXEC_FLAGS
-+#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_QUICK)
-+#endif
-+
- /* List of defined/legal kexec file flags */
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
- 				 KEXEC_FILE_NO_INITRAMFS)
-@@ -340,6 +348,9 @@ extern int kexec_load_disabled;
- extern struct resource crashk_res;
- extern struct resource crashk_low_res;
- extern note_buf_t __percpu *crash_notes;
-+#ifdef CONFIG_QUICK_KEXEC
-+extern struct resource quick_kexec_res;
-+#endif
- 
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
-diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
-index 05669c87a0af..e3213614b713 100644
---- a/include/uapi/linux/kexec.h
-+++ b/include/uapi/linux/kexec.h
-@@ -12,6 +12,9 @@
- /* kexec flags for different usage scenarios */
- #define KEXEC_ON_CRASH		0x00000001
- #define KEXEC_PRESERVE_CONTEXT	0x00000002
-+#ifdef CONFIG_QUICK_KEXEC
-+#define KEXEC_QUICK		0x00000004
-+#endif
- #define KEXEC_ARCH_MASK		0xffff0000
- 
- /*
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index f977786fe498..428af4cd3e1a 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -44,6 +44,9 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 	int ret;
- 	struct kimage *image;
- 	bool kexec_on_panic = flags & KEXEC_ON_CRASH;
-+#ifdef CONFIG_QUICK_KEXEC
-+	bool kexec_on_quick = flags & KEXEC_QUICK;
-+#endif
- 
- 	if (kexec_on_panic) {
- 		/* Verify we have a valid entry point */
-@@ -69,6 +72,13 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 		image->type = KEXEC_TYPE_CRASH;
- 	}
- 
-+#ifdef CONFIG_QUICK_KEXEC
-+	if (kexec_on_quick) {
-+		image->control_page = quick_kexec_res.start;
-+		image->type = KEXEC_TYPE_QUICK;
-+	}
-+#endif
-+
- 	ret = sanity_check_segment_list(image);
- 	if (ret)
- 		goto out_free_image;
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index c19c0dad1ebe..b73dd749368b 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -70,6 +70,16 @@ struct resource crashk_low_res = {
- 	.desc  = IORES_DESC_CRASH_KERNEL
- };
- 
-+#ifdef CONFIG_QUICK_KEXEC
-+struct resource quick_kexec_res = {
-+	.name  = "Quick kexec",
-+	.start = 0,
-+	.end   = 0,
-+	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
-+	.desc  = IORES_DESC_QUICK_KEXEC
-+};
-+#endif
-+
- int kexec_should_crash(struct task_struct *p)
- {
- 	/*
-@@ -413,8 +423,10 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
- 	return pages;
- }
- 
--static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
--						      unsigned int order)
-+
-+static struct page *kimage_alloc_special_control_pages(struct kimage *image,
-+						       unsigned int order,
-+						       unsigned long end)
- {
- 	/* Control pages are special, they are the intermediaries
- 	 * that are needed while we copy the rest of the pages
-@@ -444,7 +456,7 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
- 	size = (1 << order) << PAGE_SHIFT;
- 	hole_start = (image->control_page + (size - 1)) & ~(size - 1);
- 	hole_end   = hole_start + size - 1;
--	while (hole_end <= crashk_res.end) {
-+	while (hole_end <= end) {
- 		unsigned long i;
- 
- 		cond_resched();
-@@ -479,7 +491,6 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
- 	return pages;
- }
- 
--
- struct page *kimage_alloc_control_pages(struct kimage *image,
- 					 unsigned int order)
- {
-@@ -490,8 +501,15 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
- 		pages = kimage_alloc_normal_control_pages(image, order);
- 		break;
- 	case KEXEC_TYPE_CRASH:
--		pages = kimage_alloc_crash_control_pages(image, order);
-+		pages = kimage_alloc_special_control_pages(image, order,
-+							   crashk_res.end);
-+		break;
-+#ifdef CONFIG_QUICK_KEXEC
-+	case KEXEC_TYPE_QUICK:
-+		pages = kimage_alloc_special_control_pages(image, order,
-+							   quick_kexec_res.end);
- 		break;
-+#endif
- 	}
- 
- 	return pages;
-@@ -847,11 +865,11 @@ static int kimage_load_normal_segment(struct kimage *image,
- 	return result;
- }
- 
--static int kimage_load_crash_segment(struct kimage *image,
-+static int kimage_load_special_segment(struct kimage *image,
- 					struct kexec_segment *segment)
- {
--	/* For crash dumps kernels we simply copy the data from
--	 * user space to it's destination.
-+	/* For crash dumps kernels and quick kexec kernels
-+	 * we simply copy the data from user space to it's destination.
- 	 * We do things a page at a time for the sake of kmap.
- 	 */
- 	unsigned long maddr;
-@@ -925,8 +943,13 @@ int kimage_load_segment(struct kimage *image,
- 		result = kimage_load_normal_segment(image, segment);
- 		break;
- 	case KEXEC_TYPE_CRASH:
--		result = kimage_load_crash_segment(image, segment);
-+		result = kimage_load_special_segment(image, segment);
-+		break;
-+#ifdef CONFIG_QUICK_KEXEC
-+	case KEXEC_TYPE_QUICK:
-+		result = kimage_load_special_segment(image, segment);
- 		break;
-+#endif
- 	}
- 
- 	return result;
--- 
-2.19.1
+Thanks
+Dave
 
 
 _______________________________________________
