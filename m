@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k6Xoy-0002TF-SW
- for kexec@lists.infradead.org; Fri, 14 Aug 2020 11:24:29 +0000
-Date: Fri, 14 Aug 2020 19:24:13 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-Message-ID: <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
- <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
+ id 1k6YJt-0004Oe-Ct
+ for kexec@lists.infradead.org; Fri, 14 Aug 2020 11:56:26 +0000
+Message-Id: <20200814101933.574326079@linutronix.de>
+Date: Fri, 14 Aug 2020 12:19:33 +0200
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,61 +15,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sang Yan <sangyan@huawei.com>
-Cc: luanjianhai@huawei.com, pasha.tatashin@soleen.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, luchunhua@huawei.com, ebiederm@xmission.com, guohanjun@huawei.com, zhuling8@huawei.com
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Prarit Bhargava <prarit@redhat.com>, Petr Mladek <pmladek@suse.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, Stephen Boyd <sboyd@kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, John Stultz <john.stultz@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi,
+printk intends to store various timestamps (MONOTONIC, REALTIME, BOOTTIME)
+to make correlation of dmesg accross different machines easier.
 
-On 08/14/20 at 04:21pm, Sang Yan wrote:
-> 
-> 
-> On 08/14/20 14:58, Dave Young wrote:
-> > On 08/14/20 at 01:52am, Sang Yan wrote:
-> >> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
-> >> copy all segments from vmalloced memory to kernel boot memory,
-> >> because of disabled mmu.
-> > 
-> > It is not the case on all archs, I assume your case is arm64, please
-> > describe it in patch log :)
-> > 
-> Yes, it's particularly obvious on arm64. I will add it to the patch log,
-> and test how long it takes on x86 and other arch.
-> 
-> > About the arm64 problem, I know Pavel Tatashin is working on a patchset
-> > to improve the performance with enabling mmu.
-> > 
-> > I added Pavel in cc, can you try his patches?
-> > 
-> Thanks for your tips, I will try these patches. @Pavel.
-> Disable mmu after finishing copying pages?
-> >>
-> >> We introduce quick kexec to save time of copying memory as above,
-> >> just like kdump(kexec on crash), by using reserved memory
-> >> "Quick Kexec".
-> > 
-> > This approach may have gain, but it also introduce extra requirements to
-> > pre-reserve a memory region.  I wonder how Eric thinks about the idea.
-> > 
-> > Anyway the "quick" name sounds not very good, I would suggest do not
-> > introduce a new param, and the code can check if pre-reserved region
-> > exist then use it, if not then fallback to old way.
-> > 
-> aha. I agree with it, but I thought it may change the old behaviors of
-> kexec_load.
-> 
-> I will update a new patch without introducing new flags and new params.
+The NMI safe timekeeper allows to retrieve these timestamps from any
+context, but it lacks a few things:
 
-Frankly I'm still not sure it is worth to introduce a new interface if the
-improvement can be done in arch code like Pavel is doing.  Can you try
-that first?
+  1) The nmi safe accessors are not providing time stamps until timekeeping
+     is initialized during early boot.
 
-Thanks
-Dave
+     This can be mitigated by using sched clock up to the point where time-
+     keeping becomes available. This has no side effects because clock
+     monotonic takes sched clock into account at initialization time
+     anyway. So no random time jumps are possible.
 
+     If early sched clock is not available then there is no difference
+     either, obviously. Both return 0.
+
+  2) It requires a new accessor which allows to retrieve all three clock
+     timestamps in one go.
+
+     Trivial excercise. But there are a few twists:
+
+     A) Access to boot time can be racy if the sleep time offset on resume
+     	is injected after timekeeping resume. That's the case when the RTC
+     	or whatever is used to calculate sleep time is not availble when
+	the timekeeping core is resumed.
+
+     B) Timestamps are frozen accross the very inner low level
+     	suspend/resume path. Not a big problem, but might affect the
+     	developer debug printks.
+
+     A detailed description of these two points is in the changelog of
+     patch 2.
+
+Thanks,
+
+	tglx
 
 _______________________________________________
 kexec mailing list
