@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtprelay0084.hostedemail.com ([216.40.44.84]
- helo=smtprelay.hostedemail.com)
+Received: from szxga04-in.huawei.com ([45.249.212.190] helo=huawei.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k6Ss5-0000pa-QA
- for kexec@lists.infradead.org; Fri, 14 Aug 2020 06:07:23 +0000
-Message-ID: <d1414df440b872ab7792946725991cb948537654.camel@perches.com>
-Subject: Re: [PATCH] kexec: Delete an unnecessary comparison
-From: Joe Perches <joe@perches.com>
-Date: Thu, 13 Aug 2020 23:07:16 -0700
-In-Reply-To: <1597322730-3881-1-git-send-email-tangyouling@loongson.cn>
-References: <1597322730-3881-1-git-send-email-tangyouling@loongson.cn>
+ id 1k6TCP-0004Ei-Tk
+ for kexec@lists.infradead.org; Fri, 14 Aug 2020 06:28:23 +0000
+From: Sang Yan <sangyan@huawei.com>
+Subject: [PATCH 2/2] arm64: Reserve memory for quick kexec
+Date: Fri, 14 Aug 2020 01:52:39 -0400
+Message-ID: <20200814055239.47348-2-sangyan@huawei.com>
+In-Reply-To: <20200814055239.47348-1-sangyan@huawei.com>
+References: <20200814055239.47348-1-sangyan@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,99 +22,98 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Youling Tang <tangyouling@loongson.cn>, Eric Biederman <ebiederm@xmission.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: kexec@lists.infradead.org, ebiederm@xmission.com, linux-kernel@vger.kernel.org, xiexiuqi@huawei.com, guohanjun@huawei.com
+Cc: luanjianhai@huawei.com, zhuling8@huawei.com, luchunhua@huawei.com
 
-On Thu, 2020-08-13 at 20:45 +0800, Youling Tang wrote:
-> Regardless of whether the ret value is zero or non-zero, the trajectory
-> of the program execution is the same, so there is no need to compare.
-> 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> ---
->  kernel/kexec_file.c | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 78c0837..3ad0ae2 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -800,8 +800,6 @@ static int kexec_calculate_store_digests(struct kimage *image)
->  
->  		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
->  						     digest, SHA256_DIGEST_SIZE, 0);
-> -		if (ret)
-> -			goto out_free_digest;
->  	}
->  
->  out_free_digest:
+Reserve memory for quick kexec on arm64
+with cmdline "quickkexec=".
 
-If you really want to change the function, then
-you could change a couple of breaks to gotos,
-remove multiple unnecessary tests, and unindent
-a block of code too.
-
+Signed-off-by: Sang Yan <sangyan@huawei.com>
 ---
- kernel/kexec_file.c | 30 ++++++++++++------------------
- 1 file changed, 12 insertions(+), 18 deletions(-)
+ arch/arm64/kernel/setup.c |  6 ++++++
+ arch/arm64/mm/init.c      | 43 +++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 49 insertions(+)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index ca40bef75a61..34a025e85887 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -763,7 +763,7 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 		ret = crypto_shash_update(desc, ksegment->kbuf,
- 					  ksegment->bufsz);
- 		if (ret)
--			break;
-+			goto out_free_digest;
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 77c4c9bad1b8..2a5dc032d95e 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -369,6 +369,12 @@ void __init __no_sanitize_address setup_arch(char **cmdline_p)
+ 	 */
+ 	init_task.thread_info.ttbr0 = __pa_symbol(empty_zero_page);
+ #endif
++#ifdef CONFIG_QUICK_KEXEC
++		if (quick_kexec_res.end &&
++		    quick_kexec_res.start >= res->start &&
++		    quick_kexec_res.end <= res->end)
++			request_resource(res, &quick_kexec_res);
++#endif
  
- 		/*
- 		 * Assume rest of the buffer is filled with zero and
-@@ -777,32 +777,26 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 				bytes = zero_buf_sz;
- 			ret = crypto_shash_update(desc, zero_buf, bytes);
- 			if (ret)
--				break;
-+				goto out_free_digest;
- 			nullsz -= bytes;
- 		}
+ 	if (boot_args[1] || boot_args[2] || boot_args[3]) {
+ 		pr_err("WARNING: x1-x3 nonzero in violation of boot protocol:\n"
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 481d22c32a2e..579acb93728f 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -130,6 +130,45 @@ static void __init reserve_crashkernel(void)
+ }
+ #endif /* CONFIG_KEXEC_CORE */
  
--		if (ret)
--			break;
--
- 		sha_regions[j].start = ksegment->mem;
- 		sha_regions[j].len = ksegment->memsz;
- 		j++;
- 	}
- 
--	if (!ret) {
--		ret = crypto_shash_final(desc, digest);
--		if (ret)
--			goto out_free_digest;
--		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
--						     sha_regions, sha_region_sz, 0);
--		if (ret)
--			goto out_free_digest;
-+	ret = crypto_shash_final(desc, digest);
-+	if (ret)
-+		goto out_free_digest;
- 
--		ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
--						     digest, SHA256_DIGEST_SIZE, 0);
--		if (ret)
--			goto out_free_digest;
--	}
-+	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha_regions",
-+					     sha_regions, sha_region_sz, 0);
-+	if (ret)
-+		goto out_free_digest;
++#ifdef CONFIG_QUICK_KEXEC
++static int __init parse_quick_kexec(char *p)
++{
++	if (!p)
++		return 0;
 +
-+	ret = kexec_purgatory_get_set_symbol(image, "purgatory_sha256_digest",
-+					     digest, SHA256_DIGEST_SIZE, 0);
++	quick_kexec_res.end = PAGE_ALIGN(memparse(p, NULL));
++
++	return 0;
++}
++early_param("quickkexec", parse_quick_kexec);
++
++static void __init reserve_quick_kexec(void)
++{
++	unsigned long long mem_start, mem_len;
++
++	mem_len = quick_kexec_res.end;
++	if (mem_len == 0)
++		return;
++
++	/* Current arm64 boot protocol requires 2MB alignment */
++	mem_start = memblock_find_in_range(0, ARCH_LOW_ADDRESS_LIMIT,
++			mem_len, CRASH_ALIGN);
++	if (mem_start == 0) {
++		pr_warn("cannot allocate quick kexec mem (size:0x%llx)\n",
++			mem_len);
++		quick_kexec_res.end = 0;
++		return;
++	}
++
++	memblock_reserve(mem_start, mem_len);
++	pr_info("quick kexec mem reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
++		mem_start, mem_start + mem_len,	mem_len >> 20);
++
++	quick_kexec_res.start = mem_start;
++	quick_kexec_res.end = mem_start + mem_len - 1;
++}
++#endif
++
+ #ifdef CONFIG_CRASH_DUMP
+ static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+ 		const char *uname, int depth, void *data)
+@@ -399,6 +438,10 @@ void __init arm64_memblock_init(void)
  
- out_free_digest:
- 	kfree(digest);
-
+ 	reserve_crashkernel();
+ 
++#ifdef CONFIG_QUICK_KEXEC
++	reserve_quick_kexec();
++#endif
++
+ 	reserve_elfcorehdr();
+ 
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+-- 
+2.19.1
 
 
 _______________________________________________
