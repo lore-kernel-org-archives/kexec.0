@@ -1,16 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga04-in.huawei.com ([45.249.212.190] helo=huawei.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k6UyZ-00072L-1X
- for kexec@lists.infradead.org; Fri, 14 Aug 2020 08:22:12 +0000
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
-From: Sang Yan <sangyan@huawei.com>
-Message-ID: <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
-Date: Fri, 14 Aug 2020 16:21:56 +0800
+ id 1k6VdY-0004Ql-DX
+ for kexec@lists.infradead.org; Fri, 14 Aug 2020 09:04:33 +0000
+Date: Fri, 14 Aug 2020 11:04:26 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: POC: Alternative solution: Re: [PATCH 0/4] printk: reimplement
+ LOG_CONT handling
+Message-ID: <20200814090426.GK6215@alley>
+References: <20200717234818.8622-1-john.ogness@linutronix.de>
+ <CAHk-=wivdy6-i=iqJ1ZG9YrRzaS0_LHHEPwb9KJg-S8i-Wm30w@mail.gmail.com>
+ <87blkcanps.fsf@jogness.linutronix.de>
+ <20200811160551.GC12903@alley> <20200812163908.GH12903@alley>
+ <87v9hn2y1p.fsf@jogness.linutronix.de>
+ <20200813051853.GA510@jagdpanzerIV.localdomain>
+ <875z9nvvl2.fsf@jogness.linutronix.de>
+ <20200813084136.GK12903@alley>
+ <20200813115435.GB483@jagdpanzerIV.localdomain>
 MIME-Version: 1.0
-In-Reply-To: <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
+Content-Disposition: inline
+In-Reply-To: <20200813115435.GB483@jagdpanzerIV.localdomain>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,300 +32,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: luanjianhai@huawei.com, pasha.tatashin@soleen.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, luchunhua@huawei.com, ebiederm@xmission.com, guohanjun@huawei.com, zhuling8@huawei.com
+To: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, John Ogness <john.ogness@linutronix.de>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+
+On Thu 2020-08-13 20:54:35, Sergey Senozhatsky wrote:
+> On (20/08/13 10:41), Petr Mladek wrote:
+> > > My concerns about this idea:
+> > > 
+> > > - What if the printk user does not correctly terminate the cont message?
+> > >   There is no mechanism to allow that open record to be force-finalized
+> > >   so that readers can read newer records.
+> > 
+> > This is a real problem. And it is the reason why the cont buffer is
+> > currently flushed (finalized) by the next message from another context.
+> 
+> I understand that you think that this should be discussed and addressed
+> later in a separate patch, but, since we are on pr_cont topic right now,
+> can we slow down and maybe re-think what is actually expected from
+> pr_cont()? IOW, have the "what is expect from this feature" thread?
+> 
+> For instance, is missing \n the one and only reason why printk-s from
+> another context flush cont buffer now? Because I can see some more reasons
+> for current behaviour and I'd like to question those reasons.
+> 
+> I think what Linus said a long time ago was that the initial purpose of
+> pr_cont was
+> 
+> 	pr_info("Initialize feature foo...");
+> 	if (init_feature_foo() == 0)
+> 		pr_cont("ok\n");
+> 	else
+> 		pr_cont("not ok\n");
+> 
+> 	And if init_feature_foo() crashes the kernel then the first printk()
+> 	form panic() will flush the cont buffer.
+> 
+> We can handle this by realizing that new printk() message has LOG_NEWLINE
+> and has different log_level (not pr_cont), maybe.
+
+Yes, this is a handy behavior. But it is also complicated
+on the implementation side. It requires that consoles are able to
+print the existing part of the continuous line and print only
+the rest later.
+
+BTW: It used to work before the commit 5c2992ee7fd8a29d041 ("printk:
+     remove console flushing special cases for partial buffered
+     lines");
+
+BTW2: It will be much easier to implement when only the last
+     message can be partially shown on the consoles. Each console
+     driver will need to track the position only in one message.
+
+     Also it will be easier when the part of the message if stored
+     in the main lockless ring buffer. Then the driver could just
+     try to reread the last message and see if it was concatenated.
 
 
+> Let's look at the more general case:
+> 
+> CPU0					.. CPU255
+> pr_info("text");
+> 					pr_alert("boom\n");
+> pr_cont("1);
+> pr_cont("2\n");
+> 
+> Do we really need to preliminary flush CPU0 pr_cont buffer in this
+> case? There is no connection between messages from CPU0 and CPU255.
+> Maybe (maybe!) what matters here is keeping the order of messages
+> per-context rather than globally system-wide?
 
-On 08/14/20 14:58, Dave Young wrote:
-> On 08/14/20 at 01:52am, Sang Yan wrote:
->> In normal kexec, relocating kernel may cost 5 ~ 10 seconds, to
->> copy all segments from vmalloced memory to kernel boot memory,
->> because of disabled mmu.
-> 
-> It is not the case on all archs, I assume your case is arm64, please
-> describe it in patch log :)
-> 
-Yes, it's particularly obvious on arm64. I will add it to the patch log,
-and test how long it takes on x86 and other arch.
+Honestly, I have no idea how many newlines are missing. They are often
+not noticed because the buffered message is flushed later by some
+other one.
 
-> About the arm64 problem, I know Pavel Tatashin is working on a patchset
-> to improve the performance with enabling mmu.
-> 
-> I added Pavel in cc, can you try his patches?
-> 
-Thanks for your tips, I will try these patches. @Pavel.
-Disable mmu after finishing copying pages?
->>
->> We introduce quick kexec to save time of copying memory as above,
->> just like kdump(kexec on crash), by using reserved memory
->> "Quick Kexec".
-> 
-> This approach may have gain, but it also introduce extra requirements to
-> pre-reserve a memory region.  I wonder how Eric thinks about the idea.
-> 
-> Anyway the "quick" name sounds not very good, I would suggest do not
-> introduce a new param, and the code can check if pre-reserved region
-> exist then use it, if not then fallback to old way.
-> 
-aha. I agree with it, but I thought it may change the old behaviors of
-kexec_load.
+The chance that some other "random" message will flush the pending
+message is much lower if we have many cont buffers per-context
+and per-cpu.
 
-I will update a new patch without introducing new flags and new params.
+I am not brave enough to add more cont buffers without some fallback
+mechanism to flush them later (irq_work?, timer?) or without
+audit of all callers.
 
-Thanks a lot.
+Where the audit is implicit when all callers are converted to
+the buffered printk API.
 
->>
->> Constructing quick kimage as the same as crash kernel,
->> then simply copy all segments of kimage to reserved memroy.
->>
->> We also add this support in syscall kexec_load using flags
->> of KEXEC_QUICK.
->>
->> Signed-off-by: Sang Yan <sangyan@huawei.com>
->> ---
->>  arch/Kconfig               | 10 ++++++++++
->>  include/linux/ioport.h     |  3 +++
->>  include/linux/kexec.h      | 13 +++++++++++-
->>  include/uapi/linux/kexec.h |  3 +++
->>  kernel/kexec.c             | 10 ++++++++++
->>  kernel/kexec_core.c        | 41 +++++++++++++++++++++++++++++---------
->>  6 files changed, 70 insertions(+), 10 deletions(-)
->>
->> diff --git a/arch/Kconfig b/arch/Kconfig
->> index 3329fa143637..eca782cb8e29 100644
->> --- a/arch/Kconfig
->> +++ b/arch/Kconfig
->> @@ -21,6 +21,16 @@ config KEXEC_CORE
->>  config KEXEC_ELF
->>  	bool
->>  
->> +config QUICK_KEXEC
->> +	bool "Support for quick kexec"
->> +	depends on KEXEC_CORE
->> +	help
->> +	  Say y here to enable this feature.
->> +	  It use reserved memory to accelerate kexec, just like crash
->> +	  kexec, load new kernel and initrd to reserved memory, and
->> +	  boot new kernel on that memory. It will save the time of
->> +	  relocating kernel.
->> +
->>  config HAVE_IMA_KEXEC
->>  	bool
->>  
->> diff --git a/include/linux/ioport.h b/include/linux/ioport.h
->> index 6c2b06fe8beb..f37c632accbe 100644
->> --- a/include/linux/ioport.h
->> +++ b/include/linux/ioport.h
->> @@ -136,6 +136,9 @@ enum {
->>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->>  	IORES_DESC_RESERVED			= 7,
->>  	IORES_DESC_SOFT_RESERVED		= 8,
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	IORES_DESC_QUICK_KEXEC			= 9,
->> +#endif
->>  };
->>  
->>  /*
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 9e93bef52968..976bf9631070 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -269,9 +269,12 @@ struct kimage {
->>  	unsigned long control_page;
->>  
->>  	/* Flags to indicate special processing */
->> -	unsigned int type : 1;
->> +	unsigned int type : 2;
->>  #define KEXEC_TYPE_DEFAULT 0
->>  #define KEXEC_TYPE_CRASH   1
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_TYPE_QUICK   2
->> +#endif
->>  	unsigned int preserve_context : 1;
->>  	/* If set, we are using file mode kexec syscall */
->>  	unsigned int file_mode:1;
->> @@ -331,6 +334,11 @@ extern int kexec_load_disabled;
->>  #define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_PRESERVE_CONTEXT)
->>  #endif
->>  
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#undef KEXEC_FLAGS
->> +#define KEXEC_FLAGS    (KEXEC_ON_CRASH | KEXEC_QUICK)
->> +#endif
->> +
->>  /* List of defined/legal kexec file flags */
->>  #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
->>  				 KEXEC_FILE_NO_INITRAMFS)
->> @@ -340,6 +348,9 @@ extern int kexec_load_disabled;
->>  extern struct resource crashk_res;
->>  extern struct resource crashk_low_res;
->>  extern note_buf_t __percpu *crash_notes;
->> +#ifdef CONFIG_QUICK_KEXEC
->> +extern struct resource quick_kexec_res;
->> +#endif
->>  
->>  /* flag to track if kexec reboot is in progress */
->>  extern bool kexec_in_progress;
->> diff --git a/include/uapi/linux/kexec.h b/include/uapi/linux/kexec.h
->> index 05669c87a0af..e3213614b713 100644
->> --- a/include/uapi/linux/kexec.h
->> +++ b/include/uapi/linux/kexec.h
->> @@ -12,6 +12,9 @@
->>  /* kexec flags for different usage scenarios */
->>  #define KEXEC_ON_CRASH		0x00000001
->>  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_QUICK		0x00000004
->> +#endif
->>  #define KEXEC_ARCH_MASK		0xffff0000
->>  
->>  /*
->> diff --git a/kernel/kexec.c b/kernel/kexec.c
->> index f977786fe498..428af4cd3e1a 100644
->> --- a/kernel/kexec.c
->> +++ b/kernel/kexec.c
->> @@ -44,6 +44,9 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
->>  	int ret;
->>  	struct kimage *image;
->>  	bool kexec_on_panic = flags & KEXEC_ON_CRASH;
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	bool kexec_on_quick = flags & KEXEC_QUICK;
->> +#endif
->>  
->>  	if (kexec_on_panic) {
->>  		/* Verify we have a valid entry point */
->> @@ -69,6 +72,13 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
->>  		image->type = KEXEC_TYPE_CRASH;
->>  	}
->>  
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	if (kexec_on_quick) {
->> +		image->control_page = quick_kexec_res.start;
->> +		image->type = KEXEC_TYPE_QUICK;
->> +	}
->> +#endif
->> +
->>  	ret = sanity_check_segment_list(image);
->>  	if (ret)
->>  		goto out_free_image;
->> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> index c19c0dad1ebe..b73dd749368b 100644
->> --- a/kernel/kexec_core.c
->> +++ b/kernel/kexec_core.c
->> @@ -70,6 +70,16 @@ struct resource crashk_low_res = {
->>  	.desc  = IORES_DESC_CRASH_KERNEL
->>  };
->>  
->> +#ifdef CONFIG_QUICK_KEXEC
->> +struct resource quick_kexec_res = {
->> +	.name  = "Quick kexec",
->> +	.start = 0,
->> +	.end   = 0,
->> +	.flags = IORESOURCE_BUSY | IORESOURCE_SYSTEM_RAM,
->> +	.desc  = IORES_DESC_QUICK_KEXEC
->> +};
->> +#endif
->> +
->>  int kexec_should_crash(struct task_struct *p)
->>  {
->>  	/*
->> @@ -413,8 +423,10 @@ static struct page *kimage_alloc_normal_control_pages(struct kimage *image,
->>  	return pages;
->>  }
->>  
->> -static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
->> -						      unsigned int order)
->> +
->> +static struct page *kimage_alloc_special_control_pages(struct kimage *image,
->> +						       unsigned int order,
->> +						       unsigned long end)
->>  {
->>  	/* Control pages are special, they are the intermediaries
->>  	 * that are needed while we copy the rest of the pages
->> @@ -444,7 +456,7 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
->>  	size = (1 << order) << PAGE_SHIFT;
->>  	hole_start = (image->control_page + (size - 1)) & ~(size - 1);
->>  	hole_end   = hole_start + size - 1;
->> -	while (hole_end <= crashk_res.end) {
->> +	while (hole_end <= end) {
->>  		unsigned long i;
->>  
->>  		cond_resched();
->> @@ -479,7 +491,6 @@ static struct page *kimage_alloc_crash_control_pages(struct kimage *image,
->>  	return pages;
->>  }
->>  
->> -
->>  struct page *kimage_alloc_control_pages(struct kimage *image,
->>  					 unsigned int order)
->>  {
->> @@ -490,8 +501,15 @@ struct page *kimage_alloc_control_pages(struct kimage *image,
->>  		pages = kimage_alloc_normal_control_pages(image, order);
->>  		break;
->>  	case KEXEC_TYPE_CRASH:
->> -		pages = kimage_alloc_crash_control_pages(image, order);
->> +		pages = kimage_alloc_special_control_pages(image, order,
->> +							   crashk_res.end);
->> +		break;
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	case KEXEC_TYPE_QUICK:
->> +		pages = kimage_alloc_special_control_pages(image, order,
->> +							   quick_kexec_res.end);
->>  		break;
->> +#endif
->>  	}
->>  
->>  	return pages;
->> @@ -847,11 +865,11 @@ static int kimage_load_normal_segment(struct kimage *image,
->>  	return result;
->>  }
->>  
->> -static int kimage_load_crash_segment(struct kimage *image,
->> +static int kimage_load_special_segment(struct kimage *image,
->>  					struct kexec_segment *segment)
->>  {
->> -	/* For crash dumps kernels we simply copy the data from
->> -	 * user space to it's destination.
->> +	/* For crash dumps kernels and quick kexec kernels
->> +	 * we simply copy the data from user space to it's destination.
->>  	 * We do things a page at a time for the sake of kmap.
->>  	 */
->>  	unsigned long maddr;
->> @@ -925,8 +943,13 @@ int kimage_load_segment(struct kimage *image,
->>  		result = kimage_load_normal_segment(image, segment);
->>  		break;
->>  	case KEXEC_TYPE_CRASH:
->> -		result = kimage_load_crash_segment(image, segment);
->> +		result = kimage_load_special_segment(image, segment);
->> +		break;
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	case KEXEC_TYPE_QUICK:
->> +		result = kimage_load_special_segment(image, segment);
->>  		break;
->> +#endif
->>  	}
->>  
->>  	return result;
->> -- 
->> 2.19.1
->>
->>
->> _______________________________________________
->> kexec mailing list
->> kexec@lists.infradead.org
->> http://lists.infradead.org/mailman/listinfo/kexec
->>
-> 
-> Thanks
-> Dave
-> 
-> 
-> .
-> 
-Thanks
-Sang Yan
 
+There is one more problem. Any buffering might cause that nobody
+will be able to see the message when things go wrong. Flushing
+during panic() might help but only when panic() is called
+and when there are system-wide cont buffers.
+
+By other words, the current pr_cont() behavior causes mixed output
+from time to time. But it increases the chance to see the messages.
+And it makes it easier to find them in crashdump. Perfect output
+is nice. But it will not help when the messages gets lost.
+
+All I want to say that it is not black and white.
+
+
+My opinion:
+
+I will leave the decision on John. If he thinks that converting
+all pr_cont() users to a buffered API is easier I will be fine
+with it. It was proposed and requested several times.
+
+If John realizes that my proposal to allow to reopen committed
+messages is easier, I will be fine with it as well. We could
+create the buffered API and convert the most critical
+users one by one later. Also the context information will
+allow to connect the broken messages in userspace and
+do not complicate the kernel side.
+
+Anyway, the lockless printk() feature is more important for
+me that a perfect output of continuous lines.
+
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
