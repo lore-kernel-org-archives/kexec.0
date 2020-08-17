@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from jabberwock.ucw.cz ([46.255.230.98])
+Received: from out02.mta.xmission.com ([166.70.13.232])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k7fP8-0006lW-UE
- for kexec@lists.infradead.org; Mon, 17 Aug 2020 13:42:28 +0000
-Date: Mon, 17 Aug 2020 15:42:24 +0200
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-Message-ID: <20200817134224.GA8381@bug>
-References: <20200814055239.47348-1-sangyan@huawei.com>
+ id 1k7js0-0006me-Qh
+ for kexec@lists.infradead.org; Mon, 17 Aug 2020 18:28:33 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20200813151922.1093791-1-alex.popov@linux.com>
+ <20200813151922.1093791-3-alex.popov@linux.com>
+Date: Mon, 17 Aug 2020 13:24:37 -0500
+In-Reply-To: <20200813151922.1093791-3-alex.popov@linux.com> (Alexander
+ Popov's message of "Thu, 13 Aug 2020 18:19:22 +0300")
+Message-ID: <87zh6t9llm.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200814055239.47348-1-sangyan@huawei.com>
+Subject: Re: [PATCH RFC 2/2] lkdtm: Add heap spraying test
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,72 +24,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Sang Yan <sangyan@huawei.com>
-Cc: luanjianhai@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, luchunhua@huawei.com, ebiederm@xmission.com, guohanjun@huawei.com, zhuling8@huawei.com
+To: Alexander Popov <alex.popov@linux.com>
+Cc: kernel-hardening@lists.openwall.com, Peter Zijlstra <peterz@infradead.org>, David Howells <dhowells@redhat.com>, linux-mm@kvack.org, Alexander Potapenko <glider@google.com>, kasan-dev@googlegroups.com, Christoph Lameter <cl@linux.com>, Will Deacon <will@kernel.org>, Pekka Enberg <penberg@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, David Rientjes <rientjes@google.com>, Andrey Ryabinin <aryabinin@virtuozzo.com>, Laura Abbott <labbott@redhat.com>, Kees Cook <keescook@chromium.org>, Arnd Bergmann <arnd@arndb.de>, Jann Horn <jannh@google.com>, Steven Rostedt <rostedt@goodmis.org>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Dmitry Vyukov <dvyukov@google.com>, notify@kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Patrick Bellasi <patrick.bellasi@arm.com>, Masami Hiramatsu <mhiramat@kernel.org>, Johannes Weiner <hannes@cmpxchg.org>, Andrew Morton <akpm@linux-foundation.org>
 
-Hi!
+Alexander Popov <alex.popov@linux.com> writes:
 
-> +config QUICK_KEXEC
-> +	bool "Support for quick kexec"
-> +	depends on KEXEC_CORE
-> +	help
-> +	  Say y here to enable this feature.
+> Add a simple test for CONFIG_SLAB_QUARANTINE.
+>
+> It performs heap spraying that aims to reallocate the recently freed heap
+> object. This technique is used for exploiting use-after-free
+> vulnerabilities in the kernel code.
+>
+> This test shows that CONFIG_SLAB_QUARANTINE breaks heap spraying
+> exploitation technique.
+>
+> Signed-off-by: Alexander Popov <alex.popov@linux.com>
 
-?
+Why put this test in the linux kernel dump test module?
 
-> +	  It use reserved memory to accelerate kexec, just like crash
+I have no problem with tests, and I may be wrong but this
+does not look like you are testing to see if heap corruption
+triggers a crash dump.  Which is what the rest of the tests
+in lkdtm are about.  Seeing if the test triggers successfully
+triggers a crash dump.
 
-uses
+Eric
 
-> +	  kexec, load new kernel and initrd to reserved memory, and
-> +	  boot new kernel on that memory. It will save the time of
-> +	  relocating kernel.
-
-loads a new.... boots new... 
-
->  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->  	IORES_DESC_RESERVED			= 7,
->  	IORES_DESC_SOFT_RESERVED		= 8,
-> +#ifdef CONFIG_QUICK_KEXEC
-> +	IORES_DESC_QUICK_KEXEC			= 9,
-> +#endif
->  };
-
-Remove ifdef.
-
->  /*
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 9e93bef52968..976bf9631070 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -269,9 +269,12 @@ struct kimage {
->  	unsigned long control_page;
+> ---
+>  drivers/misc/lkdtm/core.c  |  1 +
+>  drivers/misc/lkdtm/heap.c  | 40 ++++++++++++++++++++++++++++++++++++++
+>  drivers/misc/lkdtm/lkdtm.h |  1 +
+>  3 files changed, 42 insertions(+)
+>
+> diff --git a/drivers/misc/lkdtm/core.c b/drivers/misc/lkdtm/core.c
+> index a5e344df9166..78b7669c35eb 100644
+> --- a/drivers/misc/lkdtm/core.c
+> +++ b/drivers/misc/lkdtm/core.c
+> @@ -126,6 +126,7 @@ static const struct crashtype crashtypes[] = {
+>  	CRASHTYPE(SLAB_FREE_DOUBLE),
+>  	CRASHTYPE(SLAB_FREE_CROSS),
+>  	CRASHTYPE(SLAB_FREE_PAGE),
+> +	CRASHTYPE(HEAP_SPRAY),
+>  	CRASHTYPE(SOFTLOCKUP),
+>  	CRASHTYPE(HARDLOCKUP),
+>  	CRASHTYPE(SPINLOCKUP),
+> diff --git a/drivers/misc/lkdtm/heap.c b/drivers/misc/lkdtm/heap.c
+> index 1323bc16f113..a72a241e314a 100644
+> --- a/drivers/misc/lkdtm/heap.c
+> +++ b/drivers/misc/lkdtm/heap.c
+> @@ -205,6 +205,46 @@ static void ctor_a(void *region)
+>  static void ctor_b(void *region)
+>  { }
 >  
->  	/* Flags to indicate special processing */
-> -	unsigned int type : 1;
-> +	unsigned int type : 2;
->  #define KEXEC_TYPE_DEFAULT 0
->  #define KEXEC_TYPE_CRASH   1
-> +#ifdef CONFIG_QUICK_KEXEC
-> +#define KEXEC_TYPE_QUICK   2
-> +#endif
->  	unsigned int preserve_context : 1;
-
-Here, too.
-
-> +++ b/include/uapi/linux/kexec.h
-> @@ -12,6 +12,9 @@
->  /* kexec flags for different usage scenarios */
->  #define KEXEC_ON_CRASH		0x00000001
->  #define KEXEC_PRESERVE_CONTEXT	0x00000002
-> +#ifdef CONFIG_QUICK_KEXEC
-> +#define KEXEC_QUICK		0x00000004
-> +#endif
->  #define KEXEC_ARCH_MASK		0xffff0000
-
-And here.
-
-									Pavel
+> +#define HEAP_SPRAY_SIZE 128
+> +
+> +void lkdtm_HEAP_SPRAY(void)
+> +{
+> +	int *addr;
+> +	int *spray_addrs[HEAP_SPRAY_SIZE] = { 0 };
+> +	unsigned long i = 0;
+> +
+> +	addr = kmem_cache_alloc(a_cache, GFP_KERNEL);
+> +	if (!addr) {
+> +		pr_info("Unable to allocate memory in lkdtm-heap-a cache\n");
+> +		return;
+> +	}
+> +
+> +	*addr = 0x31337;
+> +	kmem_cache_free(a_cache, addr);
+> +
+> +	pr_info("Performing heap spraying...\n");
+> +	for (i = 0; i < HEAP_SPRAY_SIZE; i++) {
+> +		spray_addrs[i] = kmem_cache_alloc(a_cache, GFP_KERNEL);
+> +		*spray_addrs[i] = 0x31337;
+> +		pr_info("attempt %lu: spray alloc addr %p vs freed addr %p\n",
+> +						i, spray_addrs[i], addr);
+> +		if (spray_addrs[i] == addr) {
+> +			pr_info("freed addr is reallocated!\n");
+> +			break;
+> +		}
+> +	}
+> +
+> +	if (i < HEAP_SPRAY_SIZE)
+> +		pr_info("FAIL! Heap spraying succeed :(\n");
+> +	else
+> +		pr_info("OK! Heap spraying hasn't succeed :)\n");
+> +
+> +	for (i = 0; i < HEAP_SPRAY_SIZE; i++) {
+> +		if (spray_addrs[i])
+> +			kmem_cache_free(a_cache, spray_addrs[i]);
+> +	}
+> +}
+> +
+>  void __init lkdtm_heap_init(void)
+>  {
+>  	double_free_cache = kmem_cache_create("lkdtm-heap-double_free",
+> diff --git a/drivers/misc/lkdtm/lkdtm.h b/drivers/misc/lkdtm/lkdtm.h
+> index 8878538b2c13..dfafb4ae6f3a 100644
+> --- a/drivers/misc/lkdtm/lkdtm.h
+> +++ b/drivers/misc/lkdtm/lkdtm.h
+> @@ -45,6 +45,7 @@ void lkdtm_READ_BUDDY_AFTER_FREE(void);
+>  void lkdtm_SLAB_FREE_DOUBLE(void);
+>  void lkdtm_SLAB_FREE_CROSS(void);
+>  void lkdtm_SLAB_FREE_PAGE(void);
+> +void lkdtm_HEAP_SPRAY(void);
+>  
+>  /* lkdtm_perms.c */
+>  void __init lkdtm_perms_init(void);
 
 _______________________________________________
 kexec mailing list
