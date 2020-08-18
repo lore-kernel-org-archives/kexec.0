@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-6-chenzhou10@huawei.com>
- <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
- <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
- <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
-Date: Tue, 18 Aug 2020 15:07:04 +0800
-MIME-Version: 1.0
-In-Reply-To: <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1k7ygG-0002lw-A3
+ for kexec@lists.infradead.org; Tue, 18 Aug 2020 10:17:26 +0000
+From: Jinyang He <hejinyang@loongson.cn>
+Subject: [PATCH] README: Add the necessary method about elfutils
+Date: Tue, 18 Aug 2020 18:10:23 +0800
+Message-Id: <1597745423-10295-1-git-send-email-hejinyang@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,63 +15,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Kazuhito Hagio <k-hagio-ab@nec.com>, kexec-ml <kexec@lists.infradead.org>
 
+In dwarf_info.c: 20, #include <elfutils/libdwfl.h>
 
+Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+---
+ README | 1 +
+ 1 file changed, 1 insertion(+)
 
-On 2020/8/10 14:03, Dave Young wrote:
-> Hi,
->
->>> Previously I remember we talked about to use similar logic as X86, but I
->>> remember you mentioned on some arm64 platform there could be no low
->>> memory at all.  Is this not a problem now for the fallback?  Just be
->>> curious, thanks for the update, for the common part looks good.
->> Hi Dave,
->>
->> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
-> I meant about this reply instead :)
-> https://lkml.org/lkml/2020/1/16/616
-Hi Dave,
-
-Sorry for not repley in time, I was on holiday last week.
-
-The platform James mentioned may exist for which have no devices and need no low memory.
-For our arm64 server platform, there are some devices and need low memory.
-
-I got it. For the platform with no low memory, reserving crashkernel will  always fail.
-How about like this:
-
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index a8e34d97a894..4df18c7ea438 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -147,7 +147,7 @@ static void __init reserve_crashkernel(void)
-        }
-        memblock_reserve(crash_base, crash_size);
- 
--       if (crash_base >= CRASH_ADDR_LOW_MAX) {
-+       if (memstart_addr < CRASH_ADDR_LOW_MAX && crash_base >= CRASH_ADDR_LOW_MAX) {
-                const char *rename = "Crash kernel (low)";
- 
-                if (reserve_crashkernel_low()) {
-
-
-Thanks,
-Chen Zhou
-
->
-> Thanks
-> Dave
->
->
-> .
->
-
+diff --git a/README b/README
+index f83717f..f69fe43 100644
+--- a/README
++++ b/README
+@@ -18,6 +18,7 @@
+      #
+      # mkdir /usr/local/include/elfutils/
+      # cp ./libdw/libdw.h   /usr/local/include/elfutils/libdw.h
++     # cp ./libdwfl/libdwfl.h /usr/local/include/elfutils/libdwfl.h
+      # cp ./libdw/dwarf.h   /usr/local/include/dwarf.h
+      # cp ./libelf/libelf.h /usr/local/include/libelf.h
+      # cp ./libelf/gelf.h   /usr/local/include/gelf.h
+-- 
+2.1.0
 
 
 _______________________________________________
