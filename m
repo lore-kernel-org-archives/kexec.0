@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga07-in.huawei.com ([45.249.212.35] helo=huawei.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k7vRo-0007Tp-Hz
- for kexec@lists.infradead.org; Tue, 18 Aug 2020 06:50:17 +0000
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200817134224.GA8381@bug>
-From: Sang Yan <sangyan@huawei.com>
-Message-ID: <97b12762-cee1-67fd-2c6f-b0bfe1cf14fc@huawei.com>
-Date: Tue, 18 Aug 2020 14:49:56 +0800
+Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
+References: <20200801130856.86625-1-chenzhou10@huawei.com>
+ <20200801130856.86625-6-chenzhou10@huawei.com>
+ <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
+ <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
+ <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+Date: Tue, 18 Aug 2020 15:07:04 +0800
 MIME-Version: 1.0
-In-Reply-To: <20200817134224.GA8381@bug>
+In-Reply-To: <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,81 +22,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: luanjianhai@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, luchunhua@huawei.com, ebiederm@xmission.com, guohanjun@huawei.com, zhuling8@huawei.com
+To: Dave Young <dyoung@redhat.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
 
-On 8/17/2020 9:42 PM, Pavel Machek wrote:
-> Hi!
-> 
->> +config QUICK_KEXEC
->> +	bool "Support for quick kexec"
->> +	depends on KEXEC_CORE
->> +	help
->> +	  Say y here to enable this feature.
-> 
-> ?
-> 
->> +	  It use reserved memory to accelerate kexec, just like crash
-> 
-> uses
-> 
->> +	  kexec, load new kernel and initrd to reserved memory, and
->> +	  boot new kernel on that memory. It will save the time of
->> +	  relocating kernel.
-> 
-> loads a new.... boots new... 
-> 
->>  	IORES_DESC_DEVICE_PRIVATE_MEMORY	= 6,
->>  	IORES_DESC_RESERVED			= 7,
->>  	IORES_DESC_SOFT_RESERVED		= 8,
->> +#ifdef CONFIG_QUICK_KEXEC
->> +	IORES_DESC_QUICK_KEXEC			= 9,
->> +#endif
->>  };
-> 
-> Remove ifdef.
-> 
->>  /*
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 9e93bef52968..976bf9631070 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -269,9 +269,12 @@ struct kimage {
->>  	unsigned long control_page;
->>  
->>  	/* Flags to indicate special processing */
->> -	unsigned int type : 1;
->> +	unsigned int type : 2;
->>  #define KEXEC_TYPE_DEFAULT 0
->>  #define KEXEC_TYPE_CRASH   1
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_TYPE_QUICK   2
->> +#endif
->>  	unsigned int preserve_context : 1;
-> 
-> Here, too.
-> 
->> +++ b/include/uapi/linux/kexec.h
->> @@ -12,6 +12,9 @@
->>  /* kexec flags for different usage scenarios */
->>  #define KEXEC_ON_CRASH		0x00000001
->>  #define KEXEC_PRESERVE_CONTEXT	0x00000002
->> +#ifdef CONFIG_QUICK_KEXEC
->> +#define KEXEC_QUICK		0x00000004
->> +#endif
->>  #define KEXEC_ARCH_MASK		0xffff0000
-> 
-> And here.
-> 
-> 									Pavel
-> 
+
+On 2020/8/10 14:03, Dave Young wrote:
+> Hi,
+>
+>>> Previously I remember we talked about to use similar logic as X86, but I
+>>> remember you mentioned on some arm64 platform there could be no low
+>>> memory at all.  Is this not a problem now for the fallback?  Just be
+>>> curious, thanks for the update, for the common part looks good.
+>> Hi Dave,
+>>
+>> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
+> I meant about this reply instead :)
+> https://lkml.org/lkml/2020/1/16/616
+Hi Dave,
+
+Sorry for not repley in time, I was on holiday last week.
+
+The platform James mentioned may exist for which have no devices and need no low memory.
+For our arm64 server platform, there are some devices and need low memory.
+
+I got it. For the platform with no low memory, reserving crashkernel will  always fail.
+How about like this:
+
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index a8e34d97a894..4df18c7ea438 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -147,7 +147,7 @@ static void __init reserve_crashkernel(void)
+        }
+        memblock_reserve(crash_base, crash_size);
+ 
+-       if (crash_base >= CRASH_ADDR_LOW_MAX) {
++       if (memstart_addr < CRASH_ADDR_LOW_MAX && crash_base >= CRASH_ADDR_LOW_MAX) {
+                const char *rename = "Crash kernel (low)";
+ 
+                if (reserve_crashkernel_low()) {
+
+
+Thanks,
+Chen Zhou
+
+>
+> Thanks
+> Dave
+>
+>
 > .
-> 
+>
 
-Thanks a lot for your review.
-
-Sang Yan.
 
 
 _______________________________________________
