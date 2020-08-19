@@ -1,22 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([207.211.31.81]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k8Mod-0000p2-So
- for kexec@lists.infradead.org; Wed, 19 Aug 2020 12:03:40 +0000
-Date: Wed, 19 Aug 2020 20:03:01 +0800
+ id 1k8NLP-0000Pb-6v
+ for kexec@lists.infradead.org; Wed, 19 Aug 2020 12:37:37 +0000
+Date: Wed, 19 Aug 2020 20:37:13 +0800
 From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-Message-ID: <20200819120301.GA13727@dhcp-128-65.nay.redhat.com>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-6-chenzhou10@huawei.com>
- <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
- <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
- <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
- <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
+Message-ID: <20200819123713.GB13727@dhcp-128-65.nay.redhat.com>
+References: <20200814055239.47348-1-sangyan@huawei.com>
+ <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
+ <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
+ <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
+ <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
+ <a6e8de9c-06fa-75c4-b975-457877226f49@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+In-Reply-To: <a6e8de9c-06fa-75c4-b975-457877226f49@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,68 +29,209 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: James Morse <james.morse@arm.com>
+Cc: luanjianhai@huawei.com, Pavel Tatashin <pasha.tatashin@soleen.com>, xiexiuqi@huawei.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, luchunhua@huawei.com, "Eric W. Biederman" <ebiederm@xmission.com>, guohanjun@huawei.com, zhuling8@huawei.com, Sang Yan <sangyan@huawei.com>
 
-On 08/18/20 at 03:07pm, chenzhou wrote:
+On 08/17/20 at 01:14pm, James Morse wrote:
+> Hi guys,
+> 
+> On 14/08/2020 20:22, Pavel Tatashin wrote:
+> > On Fri, Aug 14, 2020 at 7:24 AM Dave Young <dyoung@redhat.com> wrote:
+> >> On 08/14/20 at 04:21pm, Sang Yan wrote:
+> >>> On 08/14/20 14:58, Dave Young wrote:
+> >>>> On 08/14/20 at 01:52am, Sang Yan wrote:
+> >>> Yes, it's particularly obvious on arm64. I will add it to the patch log,
+> >>> and test how long it takes on x86 and other arch.
+> 
+> Earlier versions of kexec-tools had the in-purgatory checksum enabled unconditionally.
+> More recent versions let you disable it, I think the parameter is called no-checks. This
+> saves some time, but the relocations still have to be done.
 > 
 > 
-> On 2020/8/10 14:03, Dave Young wrote:
-> > Hi,
-> >
-> >>> Previously I remember we talked about to use similar logic as X86, but I
-> >>> remember you mentioned on some arm64 platform there could be no low
-> >>> memory at all.  Is this not a problem now for the fallback?  Just be
-> >>> curious, thanks for the update, for the common part looks good.
-> >> Hi Dave,
+> >>>> About the arm64 problem, I know Pavel Tatashin is working on a patchset
+> >>>> to improve the performance with enabling mmu.
+> >>>>
+> >>>> I added Pavel in cc, can you try his patches?
+> >>>>
+> >>> Thanks for your tips, I will try these patches. @Pavel.
+> >>> Disable mmu after finishing copying pages?
+> 
+> >>>>> We introduce quick kexec to save time of copying memory as above,
+> >>>>> just like kdump(kexec on crash), by using reserved memory
+> >>>>> "Quick Kexec".
+> >>>>
+> >>>> This approach may have gain, but it also introduce extra requirements to
+> >>>> pre-reserve a memory region.  I wonder how Eric thinks about the idea.
+> >>>>
+> >>>> Anyway the "quick" name sounds not very good, I would suggest do not
+> >>>> introduce a new param, and the code can check if pre-reserved region
+> >>>> exist then use it, if not then fallback to old way.
+> >>>>
+> >>> aha. I agree with it, but I thought it may change the old behaviors of
+> >>> kexec_load.
+> >>>
+> >>> I will update a new patch without introducing new flags and new params.
 > >>
-> >> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
-> > I meant about this reply instead :)
-> > https://lkml.org/lkml/2020/1/16/616
-> Hi Dave,
+> >> Frankly I'm still not sure it is worth to introduce a new interface if the
+> >> improvement can be done in arch code like Pavel is doing.  Can you try
+> >> that first?
 > 
-> Sorry for not repley in time, I was on holiday last week.
+> > My patches will fix this issue. This is an ARM64 specific problem and
+> > I did not see this to be performance problem on x86 during kexec
+> > relocation. This happens because on ARM64 relocation is performed with
+> > MMU disabled, and when MMU is disabled the caching is disabled as
+> > well.
+> 
+> > I have a patch series that fixes this entirely, but James Morse
+> > (+CCed) and I still have not agreed on the final approach. We had an
+> > off-list conversation about it, and we need to continue it in public
+> > ML.
+> > 
+> > Here is some history:
+> > 
+> > This is the original series that I sent a year ago. It basically
+> > proposes the same thing as this series from Sang Yan:
+> > https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
+> > 
+> > Once, I realized that with enabling MMU the relocation is issue is
+> > gone completely, I sent a new series, and this is the latest version
+> > of that series:
+> > https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com/
+> > 
+> > It has been tested in production, and several people from different
+> > companies commented to me that they are using it as well.
+> > 
+> > After my patch series was sent out, James created a new branch in his
+> > tree with his approach of enabling MMU without having a new VA space,
+> > but instead re-use what the kernel  has now. I have not tested that
+> > branch yet.
+> 
+> For context, that is here:
+> http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/kexec%2Bmmu/v0
+> 
+> I think we can maintain this approach, but it doesn't work for Pavel, as he has extra
+> requirements. I stopped looking at it because it became a solution no-one needed.
+> 
+> 
+> > Here are some comments from James Morse and the off-list discussion we had:
+> > -------
+> > It sounds like you are depending on write streaming mode to meet your
+> > target performance.
+> > This isn't even CPU specific, its cache and firmware configuration specific!
+> > I don't think we should optimise a general purpose operating system
+> > based on things like this.
+> > ..
+> > I think the best approach is going to be to eliminate the relocations entirely.> ...
+> > I'm afraid I view this kexec-map thing as high-risk duct-tape over the
+> > kexec core code
+> > deliberately scattering the kexec payload.
+> > I'd prefer any approach that causes the payload to be stored in-place
+> > from the beginning
+> > as that benefits other architectures too.
+> > -------
+> 
+> The 'eliminate relocations' comment goes with some of the context you removed.
+> 
+> 
+> > It appears James is leaning to the approach of not performing
+> > relocation at all and use what is proposed by Sang Yan and me during
+> > my first approach for this problem.
+> 
+> The background to that is Pavel's timing requirements: Enabling the MMU isn't enough, from
+> his description he also depends on re-arranging the memory so the CPU only sees increasing
+> virtual addresses. This is what my 'write streaming' comment refers to.
+> Doing this requires rewriting the relocation assembly code.
+> 
+> If we enable the MMU during kexec relocation, I expect someone on a memory constrained
+> system to come out of the woodwork screaming 'regression'. Systems with insufficient
+> memory to allocate the page tables will no longer be able to kexec.
+> 
+> If we keep the relocation assembly code as it is, its possible for it to handle MMU-on and
+> MMU-off relocations with a very small adjustment. It just won't work for Pavel, as
+> enabling the MMU is not enough.
+> 
+> I'm confident we won't get a second copy of the relocation code, that only runs on some
+> platforms, past the arch code maintainer.
+> 
+> 
+> > However, I have several issues
+> > with this take, which if addressed would be OK for me.
+> > 1. The newer, more secure kexec syscall kexec_file_load(), which
+> > allows to check the IMA integrity of the loaded file does not have a
+> > way to specify the area in memory where to place the kernel. We are
+> > using this syscall in production, and cannot go back to kexec_load()
+> > for security reasons.
+> > 2. Reserving memory means wasting memory during run-time. Our machine
+> > has only 8G of RAM, and reserving even 128M 
+> 
+> You're loading a 128M kernel!?
+> 
+> 
+> > for the next kernel is an
+> > expensive proposition. Now we start loading the next kernel after some
+> > non essential processes are stopped, but before essential processes
+> > are stopped for the lowest downtime possible.
+> 
+> > 3. Disabling relocation means changes in the common code, which I am
+> > not sure actually helps any other platform beside ARM64, so I am
+> > worried it won't be accepted into upstream.
+> 
+> I'm happy to post the MMU-enabled series, it needs to be maintainable and solve someone's
+> problem.
+> 
+> To chip away at the rest of Pavel's problem, my suggestions were:
+>  * Allocate things in place. If we can allocate any 2MB hugepage, we can place the DTB
+>   there and not need to relocate it.
+> 
+>  * use huge pages more generally in the core code. With the MMU enabled, this might keep
+>    the core in write-streaming-mode for longer. (might, because this is very platform
+>    specific).
+> 
+>  * Store the kexec payload in the crashkernel carveout, to eliminate the relocations
+>    completely. This is the bit Pavel quoted.
+> 
+> To expand on the carveout:
+> The crashkernel carveout is sized to load the payload, and memory to run the kdump kernel
+> entirely from within the carveout. Its obviously bigger than the payload it contains.
+> 
+> If you load your kexec kernel into the 'memory' part of the carveout, it won't overwrite
+> the kdump payload, and it wont require relocation, as its already stored in place. arm64's
+> arch code will spot these in-place buffers, and skip the relocation.
+> 
+> If you kdump even after doing this, the kdump kernel sees the kexec payload as
+> uninitialised memory, and will overwrite it.
+> 
+> If we did this, we wouldn't need to enable the MMU, and it should skip most of the
+> relocation code on all architectures without any changes to the arch code.
 
-Hi, no problem, thanks for following up.
+I'm not very confident about this approach.  
+
+Kdump usually goes with a minimum initramfs, but for kexec reboot the
+normal initramfs generated by distribution could be larger, and there
+could be some other cases which can cause troubles.
+
+Another way, maybe one can copy the kernel, dtb, initrd etc with the
+very early boot code. And the later kernel code just use the kexec_file_load
+function to load them, since they are already in kernel buffers so the
+relocations are not necessary.
+
+Current kexec_file_load use 'fd' to load file content, we can have some
+interface to load from memory buffers.
+
+Anyway this is just a wild idea.
 
 > 
-> The platform James mentioned may exist for which have no devices and need no low memory.
-> For our arm64 server platform, there are some devices and need low memory.
+> On arm64 the kernel and initramfs only need relocating because their physical addresses
+> are baked into the DTB. The DTB's physical address is then passed to the new kernel.
+> From memory: 'relocatable kernel' is detectable from the image header, and the support
+> predates arm64's kexec support.
 > 
-> I got it. For the platform with no low memory, reserving crashkernel will  always fail.
-> How about like this:
+> 
+> James
+> 
 
-I think the question should leave to Catalin or James, I have no
-suggestion about this:)
-
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index a8e34d97a894..4df18c7ea438 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -147,7 +147,7 @@ static void __init reserve_crashkernel(void)
->         }
->         memblock_reserve(crash_base, crash_size);
->  
-> -       if (crash_base >= CRASH_ADDR_LOW_MAX) {
-> +       if (memstart_addr < CRASH_ADDR_LOW_MAX && crash_base >= CRASH_ADDR_LOW_MAX) {
->                 const char *rename = "Crash kernel (low)";
->  
->                 if (reserve_crashkernel_low()) {
-> 
-> 
-> Thanks,
-> Chen Zhou
-> 
-> >
-> > Thanks
-> > Dave
-> >
-> >
-> > .
-> >
-> 
-> 
+Thanks
+Dave
 
 
 _______________________________________________
