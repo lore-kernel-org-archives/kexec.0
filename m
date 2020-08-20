@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k8NLP-0000Pb-6v
- for kexec@lists.infradead.org; Wed, 19 Aug 2020 12:37:37 +0000
-Date: Wed, 19 Aug 2020 20:37:13 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2] kexec: Add quick kexec support for kernel
-Message-ID: <20200819123713.GB13727@dhcp-128-65.nay.redhat.com>
-References: <20200814055239.47348-1-sangyan@huawei.com>
- <20200814065845.GA18234@dhcp-128-65.nay.redhat.com>
- <ad098e21-d689-f655-1e32-c93adcf0cb2d@huawei.com>
- <20200814112413.GA8097@dhcp-128-65.nay.redhat.com>
- <CA+CK2bDG9mzzpLhyQS=MiyNNcYsUdV=VQt9LufL7VrqKH8cK_g@mail.gmail.com>
- <a6e8de9c-06fa-75c4-b975-457877226f49@arm.com>
+ id 1k8gEZ-0001fW-Gq
+ for kexec@lists.infradead.org; Thu, 20 Aug 2020 08:47:44 +0000
+Date: Thu, 20 Aug 2020 10:47:38 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
+Message-ID: <20200820084738.GD4353@alley>
+References: <20200814101933.574326079@linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <a6e8de9c-06fa-75c4-b975-457877226f49@arm.com>
+In-Reply-To: <20200814101933.574326079@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,209 +23,219 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: luanjianhai@huawei.com, Pavel Tatashin <pasha.tatashin@soleen.com>, xiexiuqi@huawei.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, luchunhua@huawei.com, "Eric W. Biederman" <ebiederm@xmission.com>, guohanjun@huawei.com, zhuling8@huawei.com, Sang Yan <sangyan@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Prarit Bhargava <prarit@redhat.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, John Stultz <john.stultz@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On 08/17/20 at 01:14pm, James Morse wrote:
-> Hi guys,
+On Fri 2020-08-14 12:19:33, Thomas Gleixner wrote:
+> printk intends to store various timestamps (MONOTONIC, REALTIME, BOOTTIME)
+> to make correlation of dmesg accross different machines easier.
 > 
-> On 14/08/2020 20:22, Pavel Tatashin wrote:
-> > On Fri, Aug 14, 2020 at 7:24 AM Dave Young <dyoung@redhat.com> wrote:
-> >> On 08/14/20 at 04:21pm, Sang Yan wrote:
-> >>> On 08/14/20 14:58, Dave Young wrote:
-> >>>> On 08/14/20 at 01:52am, Sang Yan wrote:
-> >>> Yes, it's particularly obvious on arm64. I will add it to the patch log,
-> >>> and test how long it takes on x86 and other arch.
-> 
-> Earlier versions of kexec-tools had the in-purgatory checksum enabled unconditionally.
-> More recent versions let you disable it, I think the parameter is called no-checks. This
-> saves some time, but the relocations still have to be done.
-> 
-> 
-> >>>> About the arm64 problem, I know Pavel Tatashin is working on a patchset
-> >>>> to improve the performance with enabling mmu.
-> >>>>
-> >>>> I added Pavel in cc, can you try his patches?
-> >>>>
-> >>> Thanks for your tips, I will try these patches. @Pavel.
-> >>> Disable mmu after finishing copying pages?
-> 
-> >>>>> We introduce quick kexec to save time of copying memory as above,
-> >>>>> just like kdump(kexec on crash), by using reserved memory
-> >>>>> "Quick Kexec".
-> >>>>
-> >>>> This approach may have gain, but it also introduce extra requirements to
-> >>>> pre-reserve a memory region.  I wonder how Eric thinks about the idea.
-> >>>>
-> >>>> Anyway the "quick" name sounds not very good, I would suggest do not
-> >>>> introduce a new param, and the code can check if pre-reserved region
-> >>>> exist then use it, if not then fallback to old way.
-> >>>>
-> >>> aha. I agree with it, but I thought it may change the old behaviors of
-> >>> kexec_load.
-> >>>
-> >>> I will update a new patch without introducing new flags and new params.
-> >>
-> >> Frankly I'm still not sure it is worth to introduce a new interface if the
-> >> improvement can be done in arch code like Pavel is doing.  Can you try
-> >> that first?
-> 
-> > My patches will fix this issue. This is an ARM64 specific problem and
-> > I did not see this to be performance problem on x86 during kexec
-> > relocation. This happens because on ARM64 relocation is performed with
-> > MMU disabled, and when MMU is disabled the caching is disabled as
-> > well.
-> 
-> > I have a patch series that fixes this entirely, but James Morse
-> > (+CCed) and I still have not agreed on the final approach. We had an
-> > off-list conversation about it, and we need to continue it in public
-> > ML.
-> > 
-> > Here is some history:
-> > 
-> > This is the original series that I sent a year ago. It basically
-> > proposes the same thing as this series from Sang Yan:
-> > https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com/
-> > 
-> > Once, I realized that with enabling MMU the relocation is issue is
-> > gone completely, I sent a new series, and this is the latest version
-> > of that series:
-> > https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com/
-> > 
-> > It has been tested in production, and several people from different
-> > companies commented to me that they are using it as well.
-> > 
-> > After my patch series was sent out, James created a new branch in his
-> > tree with his approach of enabling MMU without having a new VA space,
-> > but instead re-use what the kernel  has now. I have not tested that
-> > branch yet.
-> 
-> For context, that is here:
-> http://www.linux-arm.org/git?p=linux-jm.git;a=shortlog;h=refs/heads/kexec%2Bmmu/v0
-> 
-> I think we can maintain this approach, but it doesn't work for Pavel, as he has extra
-> requirements. I stopped looking at it because it became a solution no-one needed.
-> 
-> 
-> > Here are some comments from James Morse and the off-list discussion we had:
-> > -------
-> > It sounds like you are depending on write streaming mode to meet your
-> > target performance.
-> > This isn't even CPU specific, its cache and firmware configuration specific!
-> > I don't think we should optimise a general purpose operating system
-> > based on things like this.
-> > ..
-> > I think the best approach is going to be to eliminate the relocations entirely.> ...
-> > I'm afraid I view this kexec-map thing as high-risk duct-tape over the
-> > kexec core code
-> > deliberately scattering the kexec payload.
-> > I'd prefer any approach that causes the payload to be stored in-place
-> > from the beginning
-> > as that benefits other architectures too.
-> > -------
-> 
-> The 'eliminate relocations' comment goes with some of the context you removed.
-> 
-> 
-> > It appears James is leaning to the approach of not performing
-> > relocation at all and use what is proposed by Sang Yan and me during
-> > my first approach for this problem.
-> 
-> The background to that is Pavel's timing requirements: Enabling the MMU isn't enough, from
-> his description he also depends on re-arranging the memory so the CPU only sees increasing
-> virtual addresses. This is what my 'write streaming' comment refers to.
-> Doing this requires rewriting the relocation assembly code.
-> 
-> If we enable the MMU during kexec relocation, I expect someone on a memory constrained
-> system to come out of the woodwork screaming 'regression'. Systems with insufficient
-> memory to allocate the page tables will no longer be able to kexec.
-> 
-> If we keep the relocation assembly code as it is, its possible for it to handle MMU-on and
-> MMU-off relocations with a very small adjustment. It just won't work for Pavel, as
-> enabling the MMU is not enough.
-> 
-> I'm confident we won't get a second copy of the relocation code, that only runs on some
-> platforms, past the arch code maintainer.
-> 
-> 
-> > However, I have several issues
-> > with this take, which if addressed would be OK for me.
-> > 1. The newer, more secure kexec syscall kexec_file_load(), which
-> > allows to check the IMA integrity of the loaded file does not have a
-> > way to specify the area in memory where to place the kernel. We are
-> > using this syscall in production, and cannot go back to kexec_load()
-> > for security reasons.
-> > 2. Reserving memory means wasting memory during run-time. Our machine
-> > has only 8G of RAM, and reserving even 128M 
-> 
-> You're loading a 128M kernel!?
-> 
-> 
-> > for the next kernel is an
-> > expensive proposition. Now we start loading the next kernel after some
-> > non essential processes are stopped, but before essential processes
-> > are stopped for the lowest downtime possible.
-> 
-> > 3. Disabling relocation means changes in the common code, which I am
-> > not sure actually helps any other platform beside ARM64, so I am
-> > worried it won't be accepted into upstream.
-> 
-> I'm happy to post the MMU-enabled series, it needs to be maintainable and solve someone's
-> problem.
-> 
-> To chip away at the rest of Pavel's problem, my suggestions were:
->  * Allocate things in place. If we can allocate any 2MB hugepage, we can place the DTB
->   there and not need to relocate it.
-> 
->  * use huge pages more generally in the core code. With the MMU enabled, this might keep
->    the core in write-streaming-mode for longer. (might, because this is very platform
->    specific).
-> 
->  * Store the kexec payload in the crashkernel carveout, to eliminate the relocations
->    completely. This is the bit Pavel quoted.
-> 
-> To expand on the carveout:
-> The crashkernel carveout is sized to load the payload, and memory to run the kdump kernel
-> entirely from within the carveout. Its obviously bigger than the payload it contains.
-> 
-> If you load your kexec kernel into the 'memory' part of the carveout, it won't overwrite
-> the kdump payload, and it wont require relocation, as its already stored in place. arm64's
-> arch code will spot these in-place buffers, and skip the relocation.
-> 
-> If you kdump even after doing this, the kdump kernel sees the kexec payload as
-> uninitialised memory, and will overwrite it.
-> 
-> If we did this, we wouldn't need to enable the MMU, and it should skip most of the
-> relocation code on all architectures without any changes to the arch code.
+> The NMI safe timekeeper allows to retrieve these timestamps from any
+> context.
 
-I'm not very confident about this approach.  
+For both patches:
 
-Kdump usually goes with a minimum initramfs, but for kexec reboot the
-normal initramfs generated by distribution could be larger, and there
-could be some other cases which can cause troubles.
+Tested-by: Petr Mladek <pmladek@suse.com>
 
-Another way, maybe one can copy the kernel, dtb, initrd etc with the
-very early boot code. And the later kernel code just use the kexec_file_load
-function to load them, since they are already in kernel buffers so the
-relocations are not necessary.
+I am not familiar with the timekeeping code so that I could not
+provide a valuable review. Anyway, the patches seem to work
+as expected.
 
-Current kexec_file_load use 'fd' to load file content, we can have some
-interface to load from memory buffers.
+The interface is perfectly fine for printk() needs.
 
-Anyway this is just a wild idea.
 
-> 
-> On arm64 the kernel and initramfs only need relocating because their physical addresses
-> are baked into the DTB. The DTB's physical address is then passed to the new kernel.
-> From memory: 'relocatable kernel' is detectable from the image header, and the support
-> predates arm64's kexec support.
-> 
-> 
-> James
-> 
+I tested them with the patch below. The first timestamps appear
+as early as before:
 
-Thanks
-Dave
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: Using msrs 4b564d01 and 4b564d00
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: cpu 0, msr 129c01001, primary cpu clock
+[    0.000000] [    0.000000][1970-01-01T00:00:00][    T0] kvm-clock: using sched offset of 56519600356309 cycles
+[    0.000008] [    0.000008][1970-01-01T00:00:00][    T0] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[    0.000022] [    0.000022][1970-01-01T00:00:00][    T0] tsc: Detected 2112.000 MHz processor
+[    0.000835] [    0.000835][1970-01-01T00:00:00][    T0] e820: update [mem 0x00000000-0x00000fff] usable ==> reserved
+
+The realtime timestamps get ready later as expected:
+
+[    0.073075] [    0.073075][1970-01-01T00:00:00][    T0] rcu: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=3
+[    0.075847] [    0.075847][1970-01-01T00:00:00][    T0] NR_IRQS: 524544, nr_irqs: 448, preallocated irqs: 16
+[    0.076014] [    0.076014][2020-08-20T07:58:46][    T0] Console: colour dummy device 80x25
+[    0.076014] [    0.076014][2020-08-20T07:58:46][    T0] printk: console [tty0] enabled
+
+Also suspend resume seems to work as expected. I tested it the follwing way:
+
+echo core > /sys/power/pm_test
+echo reboot > /sys/power/disk
+echo disk > /sys/power/state
+
+and the result is:
+
+[  224.422540] [  224.422540][2020-08-20T08:02:31][ T5124] Disabling non-boot CPUs ...
+[  224.424171] [  224.424171][2020-08-20T08:02:31][   T15] IRQ fixup: irq 21 move in progress, old vector 36
+[  224.425304] [  224.425304][2020-08-20T08:02:31][ T5124] smpboot: CPU 1 is now offline
+[  224.426664] [  224.426664][2020-08-20T08:02:31][   T20] IRQ 21: no longer affine to CPU2
+[  224.426685] [  224.426685][2020-08-20T08:02:31][   T20] IRQ 24: no longer affine to CPU2
+[  224.426717] [  224.426717][2020-08-20T08:02:31][   T20] IRQ 27: no longer affine to CPU2
+[  224.427765] [  224.427765][2020-08-20T08:02:31][ T5124] smpboot: CPU 2 is now offline
+[  224.428016] [  224.428016][2020-08-20T08:02:31][ T5124] PM: hibernation: debug: Waiting for 5 seconds.
+[  224.428218] [  229.618141][2020-08-20T08:02:36][ T5124] Enabling non-boot CPUs ...
+   ^^^            ^^^                          ^^
+[  224.428560] [  229.618483][2020-08-20T08:02:36][ T5124] x86: Booting SMP configuration:
+[  224.428564] [  229.618486][2020-08-20T08:02:36][ T5124] smpboot: Booting Node 0 Processor 1 APIC 0x1
+[  224.428766] [  229.618688][2020-08-20T08:02:36][    T0] kvm-clock: cpu 1, msr 129c01041, secondary cpu clock
+[  224.449192] [  229.639115][2020-08-20T08:02:36][   T14] kvm-guest: stealtime: cpu 1, msr 17fbf2080
+
+
+And here is the patch that I used for testing:
+
+From 39bdfebfa94fc55616fe23f2f0b80e06479b65e0 Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 20 Aug 2020 10:18:57 +0200
+Subject: [PATCH] printk: Test using all three timestamps: mono, boot, real
+
+Test timekeeper enhancements proposed at
+https://lore.kernel.org/r/20200814101933.574326079@linutronix.de
+
+Allow to store and show all three timestamp (mono, boot, real).
+
+It is not final solution. The prefix takes 83 characters that might
+make the real text invisible or hard to read. Fragments of seconds
+are lost in when printing real time timestamp. Offset is not provided
+for crashdump tools.
+
+Only syslog interface is supported. The log can be seen on consoles
+or via:
+
+    dmesg -S
+
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/printk/printk.c | 40 ++++++++++++++++++++++++++--------------
+ 1 file changed, 26 insertions(+), 14 deletions(-)
+
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 9b75f6bfc333..329f3595b024 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -366,7 +366,7 @@ enum log_flags {
+ };
+ 
+ struct printk_log {
+-	u64 ts_nsec;		/* timestamp in nanoseconds */
++	struct ktime_timestamps ts; /* timestamps */
+ 	u16 len;		/* length of entire record */
+ 	u16 text_len;		/* length of text buffer */
+ 	u16 dict_len;		/* length of dictionary buffer */
+@@ -443,7 +443,7 @@ static u64 clear_seq;
+ static u32 clear_idx;
+ 
+ #ifdef CONFIG_PRINTK_CALLER
+-#define PREFIX_MAX		48
++#define PREFIX_MAX		48+14+21
+ #else
+ #define PREFIX_MAX		32
+ #endif
+@@ -614,7 +614,7 @@ static u32 truncate_msg(u16 *text_len, u16 *trunc_msg_len,
+ 
+ /* insert record into the buffer, discard old ones, update heads */
+ static int log_store(u32 caller_id, int facility, int level,
+-		     enum log_flags flags, u64 ts_nsec,
++		     enum log_flags flags, struct ktime_timestamps *ts,
+ 		     const char *dict, u16 dict_len,
+ 		     const char *text, u16 text_len)
+ {
+@@ -657,10 +657,10 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	msg->facility = facility;
+ 	msg->level = level & 7;
+ 	msg->flags = flags & 0x1f;
+-	if (ts_nsec > 0)
+-		msg->ts_nsec = ts_nsec;
++	if (ts)
++		msg->ts = *ts;
+ 	else
+-		msg->ts_nsec = local_clock();
++		ktime_get_fast_timestamps(&msg->ts);
+ #ifdef CONFIG_PRINTK_CALLER
+ 	msg->caller_id = caller_id;
+ #endif
+@@ -726,7 +726,7 @@ static void append_char(char **pp, char *e, char c)
+ static ssize_t msg_print_ext_header(char *buf, size_t size,
+ 				    struct printk_log *msg, u64 seq)
+ {
+-	u64 ts_usec = msg->ts_nsec;
++	u64 ts_usec = msg->ts.mono;
+ 	char caller[20];
+ #ifdef CONFIG_PRINTK_CALLER
+ 	u32 id = msg->caller_id;
+@@ -1090,8 +1090,8 @@ void log_buf_vmcoreinfo_setup(void)
+ 	 * parse it and detect any changes to structure down the line.
+ 	 */
+ 	VMCOREINFO_STRUCT_SIZE(printk_log);
+-	VMCOREINFO_OFFSET(printk_log, ts_nsec);
+-	VMCOREINFO_OFFSET(printk_log, len);
++/*	VMCOREINFO_OFFSET(printk_log, ts);
++ */	VMCOREINFO_OFFSET(printk_log, len);
+ 	VMCOREINFO_OFFSET(printk_log, text_len);
+ 	VMCOREINFO_OFFSET(printk_log, dict_len);
+ #ifdef CONFIG_PRINTK_CALLER
+@@ -1308,6 +1308,14 @@ static size_t print_time(u64 ts, char *buf)
+ 		       (unsigned long)ts, rem_nsec / 1000);
+ }
+ 
++static size_t print_real_time(u64 ts, char *buf)
++{
++	u64 ts_nsec = ts / 1000000000;
++
++	return sprintf(buf, "[%ptT]", &ts_nsec);
++}
++
++
+ #ifdef CONFIG_PRINTK_CALLER
+ static size_t print_caller(u32 id, char *buf)
+ {
+@@ -1329,8 +1337,12 @@ static size_t print_prefix(const struct printk_log *msg, bool syslog,
+ 	if (syslog)
+ 		len = print_syslog((msg->facility << 3) | msg->level, buf);
+ 
+-	if (time)
+-		len += print_time(msg->ts_nsec, buf + len);
++
++	if (time) {
++		len += print_time(msg->ts.mono, buf + len);
++		len += print_time(msg->ts.boot, buf + len);
++		len += print_real_time(msg->ts.real, buf + len);
++	}
+ 
+ 	len += print_caller(msg->caller_id, buf + len);
+ 
+@@ -1855,7 +1867,7 @@ static struct cont {
+ 	char buf[LOG_LINE_MAX];
+ 	size_t len;			/* length == 0 means unused buffer */
+ 	u32 caller_id;			/* printk_caller_id() of first print */
+-	u64 ts_nsec;			/* time of first print */
++	struct ktime_timestamps ts;	/* time of first print */
+ 	u8 level;			/* log level of first message */
+ 	u8 facility;			/* log facility of first message */
+ 	enum log_flags flags;		/* prefix, newline flags */
+@@ -1867,7 +1879,7 @@ static void cont_flush(void)
+ 		return;
+ 
+ 	log_store(cont.caller_id, cont.facility, cont.level, cont.flags,
+-		  cont.ts_nsec, NULL, 0, cont.buf, cont.len);
++		  &cont.ts, NULL, 0, cont.buf, cont.len);
+ 	cont.len = 0;
+ }
+ 
+@@ -1884,7 +1896,7 @@ static bool cont_add(u32 caller_id, int facility, int level,
+ 		cont.facility = facility;
+ 		cont.level = level;
+ 		cont.caller_id = caller_id;
+-		cont.ts_nsec = local_clock();
++		ktime_get_fast_timestamps(&cont.ts);
+ 		cont.flags = flags;
+ 	}
+ 
+-- 
+2.26.2
 
 
 _______________________________________________
