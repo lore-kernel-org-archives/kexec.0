@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1k8iMD-00012Z-Dt
- for kexec@lists.infradead.org; Thu, 20 Aug 2020 11:03:46 +0000
-Date: Thu, 20 Aug 2020 12:43:48 +0200
+ id 1k8jJ9-0001lq-Vk
+ for kexec@lists.infradead.org; Thu, 20 Aug 2020 12:04:40 +0000
+Date: Thu, 20 Aug 2020 14:04:36 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [patch 0/2] timekeeping: NMI safe timekeeper enhancements
-Message-ID: <20200820104348.GF4353@alley>
-References: <20200814101933.574326079@linutronix.de>
- <20200820084738.GD4353@alley>
- <878se9ip7k.fsf@nanos.tec.linutronix.de>
+Subject: Re: [PATCH][next] docs: vmcoreinfo: add lockless printk ringbuffer
+ vmcoreinfo
+Message-ID: <20200820120436.GH4353@alley>
+References: <20200814213316.6394-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <878se9ip7k.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <20200814213316.6394-1-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,20 +24,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Prarit Bhargava <prarit@redhat.com>, Baoquan He <bhe@redhat.com>, Peter Zijlstra <peterz@infradead.org>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, John Stultz <john.stultz@linaro.org>, Orson Zhai <orsonzhai@gmail.com>, Stephen Boyd <sboyd@kernel.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Nick Desaulniers <ndesaulniers@google.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Thu 2020-08-20 12:30:55, Thomas Gleixner wrote:
-> Petr,
+On Fri 2020-08-14 23:39:16, John Ogness wrote:
+> With the introduction of the lockless printk ringbuffer, the
+> VMCOREINFO relating to the kernel log buffer was changed. Update the
+> documentation to match those changes.
 > 
-> On Thu, Aug 20 2020 at 10:47, Petr Mladek wrote:
-> > The interface is perfectly fine for printk() needs.
-> 
-> Good. So I suggest that I apply that on top of rc1 somewhere in tip and
-> tag the top commit. So you can pull that tag into your printk branch and
-> go wild.
+> Fixes: ("printk: use the lockless ringbuffer")
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
 
-Sounds good to me.
+Looks nice.
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Thanks a lot for taking care of the crashdump related stuff.
+It helps a lot.
 
 Best Regards,
 Petr
