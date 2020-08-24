@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kA9pH-0001cn-8u
+ id 1kA9pG-0001cB-NZ
  for kexec@lists.infradead.org; Mon, 24 Aug 2020 10:35:47 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2 4/7][next] printk: ringbuffer: add BLK_DATALESS() macro
-Date: Mon, 24 Aug 2020 12:41:35 +0206
-Message-Id: <20200824103538.31446-5-john.ogness@linutronix.de>
-In-Reply-To: <20200824103538.31446-1-john.ogness@linutronix.de>
-References: <20200824103538.31446-1-john.ogness@linutronix.de>
+Subject: [PATCH v2 0/7][next] printk: reimplement LOG_CONT handling
+Date: Mon, 24 Aug 2020 12:41:31 +0206
+Message-Id: <20200824103538.31446-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,46 +23,60 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Rather than continually needing to explicitly check @begin and @next
-to identify a dataless block, introduce and use a BLK_DATALESS()
-macro.
+Hello,
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- kernel/printk/printk_ringbuffer.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+Here is v2 for the second series to rework the printk subsystem.
+(The v1 is here [0].) This series implements a new ringbuffer
+feature that allows the last record to be extended. Petr Mladek
+provided the initial proof of concept [1] for this.
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 86af38c2cf77..d66718e74aae 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -266,6 +266,8 @@
- 
- /* Determine if a logical position refers to a data-less block. */
- #define LPOS_DATALESS(lpos)		((lpos) & 1UL)
-+#define BLK_DATALESS(blk)		(LPOS_DATALESS((blk)->begin) && \
-+					 LPOS_DATALESS((blk)->next))
- 
- /* Get the logical position at index 0 of the current wrap. */
- #define DATA_THIS_WRAP_START_LPOS(data_ring, lpos) \
-@@ -1021,7 +1023,7 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
- 			       struct prb_data_blk_lpos *blk_lpos)
- {
- 	/* Data-less blocks take no space. */
--	if (LPOS_DATALESS(blk_lpos->begin))
-+	if (BLK_DATALESS(blk_lpos))
- 		return 0;
- 
- 	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
-@@ -1054,7 +1056,7 @@ static const char *get_data(struct prb_data_ring *data_ring,
- 	struct prb_data_block *db;
- 
- 	/* Data-less data block description. */
--	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
-+	if (BLK_DATALESS(blk_lpos)) {
- 		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
- 			*data_size = 0;
- 			return "";
+Using the record extension feature, LOG_CONT is re-implemented
+in a way that exactly preserves its behavior, but avoids the
+need for an extra buffer. In particular, it avoids the need for
+any synchronization that such a buffer requires.
+
+This series deviates from the agreements [2] made at the meeting
+during LPC2019 in Lisbon. The test results of the v1 series
+showed that the effects on existing userspace tools using
+/dev/kmsg (journalctl, dmesg) were not acceptable [3]. That is
+why a new decision [4] was made to preserve the current LOG_CONT
+behavior.
+
+Patch 5 introduces two new memory barriers. However, both are
+alternate path memory barriers. They exactly match the purpose
+and context of the two existing memory barriers that they
+provide an alternate path for. For this reason, I do not
+believe that a new memory barrier review is necessary.
+Nevertheless, I have included the memory barrier experts CC.
+
+Patch 6 assumes that the gdb script series [5] for the new
+printk ringbuffer has been applied.
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20200717234818.8622-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20200812163908.GH12903@alley
+[2] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[3] https://lkml.kernel.org/r/20200811160551.GC12903@alley
+[4] https://lkml.kernel.org/r/CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com
+[5] https://lkml.kernel.org/r/20200814212525.6118-1-john.ogness@linutronix.de
+
+John Ogness (7):
+  printk: ringbuffer: rename DESC_COMMITTED_MASK flag
+  printk: ringbuffer: change representation of reusable
+  printk: ringbuffer: relocate get_data()
+  printk: ringbuffer: add BLK_DATALESS() macro
+  printk: ringbuffer: add finalization/extension support
+  printk: reimplement log_cont using record extension
+  scripts/gdb: support printk finalized records
+
+ Documentation/admin-guide/kdump/gdbmacros.txt |  10 +-
+ kernel/printk/printk.c                        |  98 +---
+ kernel/printk/printk_ringbuffer.c             | 496 +++++++++++++++---
+ kernel/printk/printk_ringbuffer.h             |  12 +-
+ scripts/gdb/linux/dmesg.py                    |  10 +-
+ 5 files changed, 453 insertions(+), 173 deletions(-)
+
 -- 
 2.20.1
 
