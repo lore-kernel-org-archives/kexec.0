@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kA9pG-0001cB-NZ
+ id 1kA9pG-0001cU-VZ
  for kexec@lists.infradead.org; Mon, 24 Aug 2020 10:35:47 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2 0/7][next] printk: reimplement LOG_CONT handling
-Date: Mon, 24 Aug 2020 12:41:31 +0206
-Message-Id: <20200824103538.31446-1-john.ogness@linutronix.de>
+Subject: [PATCH v2 2/7][next] printk: ringbuffer: change representation of
+ reusable
+Date: Mon, 24 Aug 2020 12:41:33 +0206
+Message-Id: <20200824103538.31446-3-john.ogness@linutronix.de>
+In-Reply-To: <20200824103538.31446-1-john.ogness@linutronix.de>
+References: <20200824103538.31446-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,60 +26,58 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hello,
+The reusable queried state is represented by the combined flags:
 
-Here is v2 for the second series to rework the printk subsystem.
-(The v1 is here [0].) This series implements a new ringbuffer
-feature that allows the last record to be extended. Petr Mladek
-provided the initial proof of concept [1] for this.
+    DESC_COMMIT_MASK | DESC_REUSE_MASK
 
-Using the record extension feature, LOG_CONT is re-implemented
-in a way that exactly preserves its behavior, but avoids the
-need for an extra buffer. In particular, it avoids the need for
-any synchronization that such a buffer requires.
+There is no reason for the DESC_COMMIT_MASK to be part of that
+representation. In particular, this will add confusion when more
+state flags are available.
 
-This series deviates from the agreements [2] made at the meeting
-during LPC2019 in Lisbon. The test results of the v1 series
-showed that the effects on existing userspace tools using
-/dev/kmsg (journalctl, dmesg) were not acceptable [3]. That is
-why a new decision [4] was made to preserve the current LOG_CONT
-behavior.
+Change the representation of the reusable queried state to just
+the DESC_REUSE_MASK flag.
 
-Patch 5 introduces two new memory barriers. However, both are
-alternate path memory barriers. They exactly match the purpose
-and context of the two existing memory barriers that they
-provide an alternate path for. For this reason, I do not
-believe that a new memory barrier review is necessary.
-Nevertheless, I have included the memory barrier experts CC.
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+---
+ kernel/printk/printk_ringbuffer.c | 4 ++--
+ kernel/printk/printk_ringbuffer.h | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Patch 6 assumes that the gdb script series [5] for the new
-printk ringbuffer has been applied.
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/20200717234818.8622-1-john.ogness@linutronix.de
-[1] https://lkml.kernel.org/r/20200812163908.GH12903@alley
-[2] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
-[3] https://lkml.kernel.org/r/20200811160551.GC12903@alley
-[4] https://lkml.kernel.org/r/CAHk-=wj_b6Bh=d-Wwh0xYqoQBhHkYeExhszkpxdRA6GjTvkRiQ@mail.gmail.com
-[5] https://lkml.kernel.org/r/20200814212525.6118-1-john.ogness@linutronix.de
-
-John Ogness (7):
-  printk: ringbuffer: rename DESC_COMMITTED_MASK flag
-  printk: ringbuffer: change representation of reusable
-  printk: ringbuffer: relocate get_data()
-  printk: ringbuffer: add BLK_DATALESS() macro
-  printk: ringbuffer: add finalization/extension support
-  printk: reimplement log_cont using record extension
-  scripts/gdb: support printk finalized records
-
- Documentation/admin-guide/kdump/gdbmacros.txt |  10 +-
- kernel/printk/printk.c                        |  98 +---
- kernel/printk/printk_ringbuffer.c             | 496 +++++++++++++++---
- kernel/printk/printk_ringbuffer.h             |  12 +-
- scripts/gdb/linux/dmesg.py                    |  10 +-
- 5 files changed, 453 insertions(+), 173 deletions(-)
-
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 76248c82d557..d339ff7647da 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -463,7 +463,7 @@ static void desc_make_reusable(struct prb_desc_ring *desc_ring,
+ 			       unsigned long id)
+ {
+ 	unsigned long val_committed = id | DESC_COMMIT_MASK;
+-	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
++	unsigned long val_reusable = id | DESC_REUSE_MASK;
+ 	struct prb_desc *desc = to_desc(desc_ring, id);
+ 	atomic_long_t *state_var = &desc->state_var;
+ 
+@@ -899,7 +899,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	 */
+ 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
+ 	if (prev_state_val &&
+-	    prev_state_val != (id_prev_wrap | DESC_COMMIT_MASK | DESC_REUSE_MASK)) {
++	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
+ 		WARN_ON_ONCE(1);
+ 		return false;
+ 	}
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index dcda5e9b4676..96ef997d7bd6 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -213,7 +213,7 @@ struct prb_reserved_entry {
+  */
+ #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
+ #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
+-#define DESC0_SV(ct_bits)	(DESC_COMMIT_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
++#define DESC0_SV(ct_bits)	(DESC_REUSE_MASK | DESC0_ID(ct_bits))
+ 
+ /*
+  * Define a ringbuffer with an external text data buffer. The same as
 -- 
 2.20.1
 
