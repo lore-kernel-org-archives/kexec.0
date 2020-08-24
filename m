@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kA9pG-0001cU-VZ
- for kexec@lists.infradead.org; Mon, 24 Aug 2020 10:35:47 +0000
+ id 1kA9pJ-0001fm-O6
+ for kexec@lists.infradead.org; Mon, 24 Aug 2020 10:35:50 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2 2/7][next] printk: ringbuffer: change representation of
- reusable
-Date: Mon, 24 Aug 2020 12:41:33 +0206
-Message-Id: <20200824103538.31446-3-john.ogness@linutronix.de>
+Subject: [PATCH v2 7/7][next] scripts/gdb: support printk finalized records
+Date: Mon, 24 Aug 2020 12:41:38 +0206
+Message-Id: <20200824103538.31446-8-john.ogness@linutronix.de>
 In-Reply-To: <20200824103538.31446-1-john.ogness@linutronix.de>
 References: <20200824103538.31446-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -26,58 +25,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-The reusable queried state is represented by the combined flags:
+With commit ("printk: ringbuffer: add finalization/extension support")
+a new state bit for finalized records was added. This not only changed
+the bit representation of committed records, but also reduced the size
+for record IDs.
 
-    DESC_COMMIT_MASK | DESC_REUSE_MASK
-
-There is no reason for the DESC_COMMIT_MASK to be part of that
-representation. In particular, this will add confusion when more
-state flags are available.
-
-Change the representation of the reusable queried state to just
-the DESC_REUSE_MASK flag.
+Update the gdb scripts to correctly interpret the state variable.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/printk_ringbuffer.c | 4 ++--
- kernel/printk/printk_ringbuffer.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/kdump/gdbmacros.txt | 10 +++++++---
+ scripts/gdb/linux/dmesg.py                    | 10 ++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 76248c82d557..d339ff7647da 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -463,7 +463,7 @@ static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- 			       unsigned long id)
- {
- 	unsigned long val_committed = id | DESC_COMMIT_MASK;
--	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
-+	unsigned long val_reusable = id | DESC_REUSE_MASK;
- 	struct prb_desc *desc = to_desc(desc_ring, id);
- 	atomic_long_t *state_var = &desc->state_var;
+diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
+index 6025534c6c14..1ccc811c82ad 100644
+--- a/Documentation/admin-guide/kdump/gdbmacros.txt
++++ b/Documentation/admin-guide/kdump/gdbmacros.txt
+@@ -295,8 +295,11 @@ document dump_record
+ end
  
-@@ -899,7 +899,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 */
- 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
- 	if (prev_state_val &&
--	    prev_state_val != (id_prev_wrap | DESC_COMMIT_MASK | DESC_REUSE_MASK)) {
-+	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index dcda5e9b4676..96ef997d7bd6 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -213,7 +213,7 @@ struct prb_reserved_entry {
-  */
- #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
- #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
--#define DESC0_SV(ct_bits)	(DESC_COMMIT_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
-+#define DESC0_SV(ct_bits)	(DESC_REUSE_MASK | DESC0_ID(ct_bits))
+ define dmesg
+-	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
+-	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
++	# definitions from kernel/printk/printk_ringbuffer.h
++	set var $desc_commit = 1UL << ((sizeof(long) * 8) - 1)
++	set var $desc_final = 1UL << ((sizeof(long) * 8) - 2)
++	set var $desc_reuse = 1UL << ((sizeof(long) * 8) - 3)
++	set var $flags_mask = $desc_commit | $desc_final | $desc_reuse
+ 	set var $id_mask = ~$flags_mask
  
- /*
-  * Define a ringbuffer with an external text data buffer. The same as
+ 	set var $desc_count = 1U << prb->desc_ring.count_bits
+@@ -309,7 +312,8 @@ define dmesg
+ 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
+ 
+ 		# skip non-committed record
+-		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
++		# (note that commit+!final records will be displayed)
++		if (($desc->state_var.counter & $desc_commit) == $desc_commit)
+ 			dump_record $desc $prev_flags
+ 			set var $prev_flags = $desc->info.flags
+ 		end
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6c6022012ea8..367523c5c270 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -79,9 +79,10 @@ class LxDmesg(gdb.Command):
+ 
+         # definitions from kernel/printk/printk_ringbuffer.h
+         desc_sv_bits = utils.get_long_type().sizeof * 8
+-        desc_committed_mask = 1 << (desc_sv_bits - 1)
+-        desc_reuse_mask = 1 << (desc_sv_bits - 2)
+-        desc_flags_mask = desc_committed_mask | desc_reuse_mask
++        desc_commit_mask = 1 << (desc_sv_bits - 1)
++        desc_final_mask = 1 << (desc_sv_bits - 2)
++        desc_reuse_mask = 1 << (desc_sv_bits - 3)
++        desc_flags_mask = desc_commit_mask | desc_final_mask | desc_reuse_mask
+         desc_id_mask = ~desc_flags_mask
+ 
+         # read in tail and head descriptor ids
+@@ -96,8 +97,9 @@ class LxDmesg(gdb.Command):
+             desc_off = desc_sz * ind
+ 
+             # skip non-committed record
++            # (note that commit+!final records will be displayed)
+             state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
+-            if state != desc_committed_mask:
++            if state & desc_commit_mask != desc_commit_mask:
+                 if did == head_id:
+                     break
+                 did = (did + 1) & desc_id_mask
 -- 
 2.20.1
 
