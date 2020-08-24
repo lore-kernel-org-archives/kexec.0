@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kA9pG-0001cO-D8
+ id 1kA9pG-0001cZ-D9
  for kexec@lists.infradead.org; Mon, 24 Aug 2020 10:35:44 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH v2 1/7][next] printk: ringbuffer: rename DESC_COMMITTED_MASK
- flag
-Date: Mon, 24 Aug 2020 12:41:32 +0206
-Message-Id: <20200824103538.31446-2-john.ogness@linutronix.de>
+Subject: [PATCH v2 3/7][next] printk: ringbuffer: relocate get_data()
+Date: Mon, 24 Aug 2020 12:41:34 +0206
+Message-Id: <20200824103538.31446-4-john.ogness@linutronix.de>
 In-Reply-To: <20200824103538.31446-1-john.ogness@linutronix.de>
 References: <20200824103538.31446-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -26,82 +25,148 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-The flag DESC_COMMITTED_MASK has a much longer name compared to the
-other state flags and also is in past tense form, rather than in
-command form. Rename the flag to DESC_COMMIT_MASK in order to match
-the other state flags.
+Move the internal get_data() function as-is above prb_reserve() so
+that a later change can make use of the static function.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/printk_ringbuffer.c | 8 ++++----
- kernel/printk/printk_ringbuffer.h | 6 +++---
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ kernel/printk/printk_ringbuffer.c | 116 +++++++++++++++---------------
+ 1 file changed, 58 insertions(+), 58 deletions(-)
 
 diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 0659b50872b5..76248c82d557 100644
+index d339ff7647da..86af38c2cf77 100644
 --- a/kernel/printk/printk_ringbuffer.c
 +++ b/kernel/printk/printk_ringbuffer.c
-@@ -361,7 +361,7 @@ static enum desc_state get_desc_state(unsigned long id,
- 	if (state_val & DESC_REUSE_MASK)
- 		return desc_reusable;
+@@ -1038,6 +1038,64 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
+ 		DATA_SIZE(data_ring) - DATA_INDEX(data_ring, blk_lpos->begin));
+ }
  
--	if (state_val & DESC_COMMITTED_MASK)
-+	if (state_val & DESC_COMMIT_MASK)
- 		return desc_committed;
++/*
++ * Given @blk_lpos, return a pointer to the writer data from the data block
++ * and calculate the size of the data part. A NULL pointer is returned if
++ * @blk_lpos specifies values that could never be legal.
++ *
++ * This function (used by readers) performs strict validation on the lpos
++ * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
++ * triggered if an internal error is detected.
++ */
++static const char *get_data(struct prb_data_ring *data_ring,
++			    struct prb_data_blk_lpos *blk_lpos,
++			    unsigned int *data_size)
++{
++	struct prb_data_block *db;
++
++	/* Data-less data block description. */
++	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
++		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
++			*data_size = 0;
++			return "";
++		}
++		return NULL;
++	}
++
++	/* Regular data block: @begin less than @next and in same wrap. */
++	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
++	    blk_lpos->begin < blk_lpos->next) {
++		db = to_block(data_ring, blk_lpos->begin);
++		*data_size = blk_lpos->next - blk_lpos->begin;
++
++	/* Wrapping data block: @begin is one wrap behind @next. */
++	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
++		   DATA_WRAPS(data_ring, blk_lpos->next)) {
++		db = to_block(data_ring, 0);
++		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
++
++	/* Illegal block description. */
++	} else {
++		WARN_ON_ONCE(1);
++		return NULL;
++	}
++
++	/* A valid data block will always be aligned to the ID size. */
++	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
++	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
++		return NULL;
++	}
++
++	/* A valid data block will always have at least an ID. */
++	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
++		return NULL;
++
++	/* Subtract block ID space from size to reflect data size. */
++	*data_size -= sizeof(db->id);
++
++	return &db->data[0];
++}
++
+ /**
+  * prb_reserve() - Reserve space in the ringbuffer.
+  *
+@@ -1192,64 +1250,6 @@ void prb_commit(struct prb_reserved_entry *e)
+ 	local_irq_restore(e->irqflags);
+ }
  
- 	return desc_reserved;
-@@ -462,7 +462,7 @@ static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
- static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- 			       unsigned long id)
- {
--	unsigned long val_committed = id | DESC_COMMITTED_MASK;
-+	unsigned long val_committed = id | DESC_COMMIT_MASK;
- 	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
- 	struct prb_desc *desc = to_desc(desc_ring, id);
- 	atomic_long_t *state_var = &desc->state_var;
-@@ -899,7 +899,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 */
- 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
- 	if (prev_state_val &&
--	    prev_state_val != (id_prev_wrap | DESC_COMMITTED_MASK | DESC_REUSE_MASK)) {
-+	    prev_state_val != (id_prev_wrap | DESC_COMMIT_MASK | DESC_REUSE_MASK)) {
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-@@ -1184,7 +1184,7 @@ void prb_commit(struct prb_reserved_entry *e)
- 	 * this. This pairs with desc_read:B.
- 	 */
- 	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
--				     e->id | DESC_COMMITTED_MASK)) { /* LMM(prb_commit:B) */
-+				     e->id | DESC_COMMIT_MASK)) { /* LMM(prb_commit:B) */
- 		WARN_ON_ONCE(1);
- 	}
- 
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index e6302da041f9..dcda5e9b4676 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -115,9 +115,9 @@ struct prb_reserved_entry {
- #define _DATA_SIZE(sz_bits)		(1UL << (sz_bits))
- #define _DESCS_COUNT(ct_bits)		(1U << (ct_bits))
- #define DESC_SV_BITS			(sizeof(unsigned long) * 8)
--#define DESC_COMMITTED_MASK		(1UL << (DESC_SV_BITS - 1))
-+#define DESC_COMMIT_MASK		(1UL << (DESC_SV_BITS - 1))
- #define DESC_REUSE_MASK			(1UL << (DESC_SV_BITS - 2))
--#define DESC_FLAGS_MASK			(DESC_COMMITTED_MASK | DESC_REUSE_MASK)
-+#define DESC_FLAGS_MASK			(DESC_COMMIT_MASK | DESC_REUSE_MASK)
- #define DESC_ID_MASK			(~DESC_FLAGS_MASK)
- #define DESC_ID(sv)			((sv) & DESC_ID_MASK)
- #define FAILED_LPOS			0x1
-@@ -213,7 +213,7 @@ struct prb_reserved_entry {
-  */
- #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
- #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
--#define DESC0_SV(ct_bits)	(DESC_COMMITTED_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
-+#define DESC0_SV(ct_bits)	(DESC_COMMIT_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
- 
+-/*
+- * Given @blk_lpos, return a pointer to the writer data from the data block
+- * and calculate the size of the data part. A NULL pointer is returned if
+- * @blk_lpos specifies values that could never be legal.
+- *
+- * This function (used by readers) performs strict validation on the lpos
+- * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
+- * triggered if an internal error is detected.
+- */
+-static const char *get_data(struct prb_data_ring *data_ring,
+-			    struct prb_data_blk_lpos *blk_lpos,
+-			    unsigned int *data_size)
+-{
+-	struct prb_data_block *db;
+-
+-	/* Data-less data block description. */
+-	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
+-		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
+-			*data_size = 0;
+-			return "";
+-		}
+-		return NULL;
+-	}
+-
+-	/* Regular data block: @begin less than @next and in same wrap. */
+-	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
+-	    blk_lpos->begin < blk_lpos->next) {
+-		db = to_block(data_ring, blk_lpos->begin);
+-		*data_size = blk_lpos->next - blk_lpos->begin;
+-
+-	/* Wrapping data block: @begin is one wrap behind @next. */
+-	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
+-		   DATA_WRAPS(data_ring, blk_lpos->next)) {
+-		db = to_block(data_ring, 0);
+-		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
+-
+-	/* Illegal block description. */
+-	} else {
+-		WARN_ON_ONCE(1);
+-		return NULL;
+-	}
+-
+-	/* A valid data block will always be aligned to the ID size. */
+-	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
+-	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
+-		return NULL;
+-	}
+-
+-	/* A valid data block will always have at least an ID. */
+-	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
+-		return NULL;
+-
+-	/* Subtract block ID space from size to reflect data size. */
+-	*data_size -= sizeof(db->id);
+-
+-	return &db->data[0];
+-}
+-
  /*
-  * Define a ringbuffer with an external text data buffer. The same as
+  * Count the number of lines in provided text. All text has at least 1 line
+  * (even if @text_size is 0). Each '\n' processed is counted as an additional
 -- 
 2.20.1
 
