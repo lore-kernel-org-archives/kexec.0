@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kBDel-0005jj-4f
- for kexec@lists.infradead.org; Thu, 27 Aug 2020 08:53:16 +0000
-Subject: Re: [PATCHv5 1/2] powerpc/pseries: group lmb operation and memblock's
-References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
-From: Laurent Dufour <ldufour@linux.ibm.com>
-Message-ID: <0b852131-ff09-9fe4-4336-42cda0c8b931@linux.ibm.com>
-Date: Thu, 27 Aug 2020 10:53:03 +0200
+ id 1kBEgQ-0003FO-Kl
+ for kexec@lists.infradead.org; Thu, 27 Aug 2020 09:59:03 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH v2 5/7][next] printk: ringbuffer: add
+ finalization/extension support
+In-Reply-To: <20200826150726.GA4928@alley>
+References: <20200824103538.31446-1-john.ogness@linutronix.de>
+ <20200824103538.31446-6-john.ogness@linutronix.de>
+ <87lfi1ls2g.fsf@jogness.linutronix.de>
+ <20200826100113.GA8849@jagdpanzerIV.localdomain>
+ <87eentlh19.fsf@jogness.linutronix.de> <20200826150726.GA4928@alley>
+Date: Thu, 27 Aug 2020 12:04:58 +0206
+Message-ID: <87pn7c5s0t.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,67 +23,202 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-TGUgMTAvMDgvMjAyMCDDoCAxMDo1MiwgUGluZ2ZhbiBMaXUgYSDDqWNyaXTCoDoKPiBUaGlzIHBh
-dGNoIHByZXBhcmVzIGZvciB0aGUgaW5jb21pbmcgcGF0Y2ggd2hpY2ggc3dhcHMgdGhlIG9yZGVy
-IG9mCj4gS09CSl9BREQvUkVNT1ZFIHVldmVudCBhbmQgZHQncyB1cGRhdGluZy4KPiAKPiBUaGUg
-ZHQgdXBkYXRpbmcgc2hvdWxkIGNvbWUgYWZ0ZXIgbG1iIG9wZXJhdGlvbnMsIGFuZCBiZWZvcmUK
-PiBfX3JlbW92ZV9tZW1vcnkoKS9fX2FkZF9tZW1vcnkoKS4gIEFjY29yZGluZ2x5LCBncm91cGlu
-ZyBhbGwgbG1iIG9wZXJhdGlvbnMKPiBiZWZvcmUgdGhlIG1lbWJsb2NrJ3MuCgpJIGNhbid0IGZp
-bmQgdGhlIGxpbmsgYmV0d2VlbiB0aGlzIGNvbW1pdCBkZXNjcmlwdGlvbiBhbmQgdGhlIGNvZGUn
-cyBjaGFuZ2VzIGJlbG93LgoKPiAKPiBTaWduZWQtb2ZmLWJ5OiBQaW5nZmFuIExpdSA8a2VybmVs
-ZmFuc0BnbWFpbC5jb20+Cj4gQ2M6IE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxlcm1hbi5pZC5h
-dT4KPiBDYzogSGFyaSBCYXRoaW5pIDxoYmF0aGluaUBsaW51eC5pYm0uY29tPgo+IENjOiBOYXRo
-YW4gTHluY2ggPG5hdGhhbmxAbGludXguaWJtLmNvbT4KPiBDYzogTmF0aGFuIEZvbnRlbm90IDxu
-Zm9udEBsaW51eC52bmV0LmlibS5jb20+Cj4gQ2M6IExhdXJlbnQgRHVmb3VyIDxsZHVmb3VyQGxp
-bnV4LmlibS5jb20+Cj4gVG86IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gQ2M6IGtl
-eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiAtLS0KPiB2NCAtPiB2NTogZml4IHRoZSBtaXNzIG9m
-IGNsZWFyaW5nIERSQ09ORl9NRU1fQVNTSUdORUQgaW4gYSBmYWlsdXJlIHBhdGgKPiAgIGFyY2gv
-cG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jIHwgMjggKysrKysrKysr
-KysrKysrKystLS0tLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKyksIDkg
-ZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNl
-cmllcy9ob3RwbHVnLW1lbW9yeS5jIGIvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVzL2hv
-dHBsdWctbWVtb3J5LmMKPiBpbmRleCA1ZDU0NWI3Li40NmNiY2QxIDEwMDY0NAo+IC0tLSBhL2Fy
-Y2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jCj4gKysrIGIvYXJj
-aC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVzL2hvdHBsdWctbWVtb3J5LmMKPiBAQCAtMzU1LDcg
-KzM1NSw4IEBAIHN0YXRpYyBpbnQgZGxwYXJfYWRkX2xtYihzdHJ1Y3QgZHJtZW1fbG1iICopOwo+
-ICAgc3RhdGljIGludCBkbHBhcl9yZW1vdmVfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKmxtYikKPiAg
-IHsKPiAgIAl1bnNpZ25lZCBsb25nIGJsb2NrX3N6Owo+IC0JaW50IHJjOwo+ICsJcGh5c19hZGRy
-X3QgYmFzZV9hZGRyOwo+ICsJaW50IHJjLCBuaWQ7Cj4gICAKPiAgIAlpZiAoIWxtYl9pc19yZW1v
-dmFibGUobG1iKSkKPiAgIAkJcmV0dXJuIC1FSU5WQUw7Cj4gQEAgLTM2NCwxNyArMzY1LDE5IEBA
-IHN0YXRpYyBpbnQgZGxwYXJfcmVtb3ZlX2xtYihzdHJ1Y3QgZHJtZW1fbG1iICpsbWIpCj4gICAJ
-aWYgKHJjKQo+ICAgCQlyZXR1cm4gcmM7Cj4gICAKPiArCWJhc2VfYWRkciA9IGxtYi0+YmFzZV9h
-ZGRyOwo+ICsJbmlkID0gbG1iLT5uaWQ7Cj4gICAJYmxvY2tfc3ogPSBwc2VyaWVzX21lbW9yeV9i
-bG9ja19zaXplKCk7Cj4gICAKPiAtCV9fcmVtb3ZlX21lbW9yeShsbWItPm5pZCwgbG1iLT5iYXNl
-X2FkZHIsIGJsb2NrX3N6KTsKPiAtCj4gLQkvKiBVcGRhdGUgbWVtb3J5IHJlZ2lvbnMgZm9yIG1l
-bW9yeSByZW1vdmUgKi8KPiAtCW1lbWJsb2NrX3JlbW92ZShsbWItPmJhc2VfYWRkciwgYmxvY2tf
-c3opOwo+IC0KPiAgIAlpbnZhbGlkYXRlX2xtYl9hc3NvY2lhdGl2aXR5X2luZGV4KGxtYik7Cj4g
-ICAJbG1iX2NsZWFyX25pZChsbWIpOwo+ICAgCWxtYi0+ZmxhZ3MgJj0gfkRSQ09ORl9NRU1fQVNT
-SUdORUQ7Cj4gICAKPiArCV9fcmVtb3ZlX21lbW9yeShuaWQsIGJhc2VfYWRkciwgYmxvY2tfc3op
-Owo+ICsKPiArCS8qIFVwZGF0ZSBtZW1vcnkgcmVnaW9ucyBmb3IgbWVtb3J5IHJlbW92ZSAqLwo+
-ICsJbWVtYmxvY2tfcmVtb3ZlKGJhc2VfYWRkciwgYmxvY2tfc3opOwo+ICsKPiAgIAlyZXR1cm4g
-MDsKPiAgIH0KPiAgIAo+IEBAIC02MDMsMjIgKzYwNiwyOSBAQCBzdGF0aWMgaW50IGRscGFyX2Fk
-ZF9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+ICAgCX0KPiAgIAo+ICAgCWxtYl9zZXRfbmlk
-KGxtYik7Cj4gKwlsbWItPmZsYWdzIHw9IERSQ09ORl9NRU1fQVNTSUdORUQ7Cj4gKwo+ICAgCWJs
-b2NrX3N6ID0gbWVtb3J5X2Jsb2NrX3NpemVfYnl0ZXMoKTsKPiAgIAo+ICAgCS8qIEFkZCB0aGUg
-bWVtb3J5ICovCj4gICAJcmMgPSBfX2FkZF9tZW1vcnkobG1iLT5uaWQsIGxtYi0+YmFzZV9hZGRy
-LCBibG9ja19zeik7Cj4gICAJaWYgKHJjKSB7Cj4gICAJCWludmFsaWRhdGVfbG1iX2Fzc29jaWF0
-aXZpdHlfaW5kZXgobG1iKTsKPiArCQlsbWJfY2xlYXJfbmlkKGxtYik7Cj4gKwkJbG1iLT5mbGFn
-cyAmPSB+RFJDT05GX01FTV9BU1NJR05FRDsKPiAgIAkJcmV0dXJuIHJjOwo+ICAgCX0KPiAgIAo+
-ICAgCXJjID0gZGxwYXJfb25saW5lX2xtYihsbWIpOwo+ICAgCWlmIChyYykgewo+IC0JCV9fcmVt
-b3ZlX21lbW9yeShsbWItPm5pZCwgbG1iLT5iYXNlX2FkZHIsIGJsb2NrX3N6KTsKPiArCQlpbnQg
-bmlkID0gbG1iLT5uaWQ7Cj4gKwkJcGh5c19hZGRyX3QgYmFzZV9hZGRyID0gbG1iLT5iYXNlX2Fk
-ZHI7Cj4gKwo+ICAgCQlpbnZhbGlkYXRlX2xtYl9hc3NvY2lhdGl2aXR5X2luZGV4KGxtYik7Cj4g
-ICAJCWxtYl9jbGVhcl9uaWQobG1iKTsKPiAtCX0gZWxzZSB7Cj4gLQkJbG1iLT5mbGFncyB8PSBE
-UkNPTkZfTUVNX0FTU0lHTkVEOwo+ICsJCWxtYi0+ZmxhZ3MgJj0gfkRSQ09ORl9NRU1fQVNTSUdO
-RUQ7Cj4gKwo+ICsJCV9fcmVtb3ZlX21lbW9yeShuaWQsIGJhc2VfYWRkciwgYmxvY2tfc3opOwo+
-ICAgCX0KPiAgIAo+ICAgCXJldHVybiByYzsKPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+On 2020-08-26, Petr Mladek <pmladek@suse.com> wrote:
+>> This series makes a very naive assumption that the previous
+>> descriptor is either in the reserved or committed queried states. The
+>> fact is, it can be in any of the 4 queried states. Adding support for
+>> finalization of all the states then gets quite complex, since any
+>> state transition (cmpxchg) may have to deal with an unexpected FINAL
+>> flag.
+>
+> It has to be done in two steps to avoid race:
+>
+> prb_commit()
+>
+>    + set PRB_COMMIT_MASK
+>    + check if it is still the last descriptor in the array
+>    + set PRB_FINAL_MASK when it is not the last descriptor
+>
+> It should work because prb_reserve() finalizes the previous
+> descriptor after the new one is reserved. As a result:
+>
+>    + prb_reserve() should either see PRB_COMMIT_MASK in the previous
+>      descriptor and be able to finalize it.
+>
+>    + or prb_commit() will see that the head moved and it is not
+>      longer the last reserved one.
+
+I do not like the idea of relying on descriptors to finalize
+themselves. I worry that there might be some hole there. Failing to
+finalize basically disables printk, so that is pretty serious.
+
+Below is a patch against this series that adds support for finalizing
+all 4 queried states. It passes all my tests. Note that the code handles
+2 corner cases:
+
+1. When seq is 0, there is no previous descriptor to finalize. This
+   exception is important because we don't want to finalize the -1
+   placeholder. Otherwise, upon the first wrap, a descriptor will be
+   prematurely finalized.
+
+2. When a previous descriptor is being reserved for the first time, it
+   might have a state_var value of 0 because the writer is still in
+   prb_reserve() and has not set the initial value yet. I added
+   considerable comments on this special case.
+
+I am comfortable with adding this new code, although it clearly adds
+complexity.
+
+John Ogness
+
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 90d48973ac9e..1ed1e9eb930f 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -860,9 +860,11 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	struct prb_desc_ring *desc_ring = &rb->desc_ring;
+ 	unsigned long prev_state_val;
+ 	unsigned long id_prev_wrap;
++	unsigned long state_val;
+ 	struct prb_desc *desc;
+ 	unsigned long head_id;
+ 	unsigned long id;
++	bool is_final;
+ 
+ 	head_id = atomic_long_read(&desc_ring->head_id); /* LMM(desc_reserve:A) */
+ 
+@@ -953,10 +955,17 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	 * See "ABA Issues" about why this verification is performed.
+ 	 */
+ 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
+-	if (prev_state_val &&
+-	    get_desc_state(id_prev_wrap, prev_state_val, NULL) != desc_reusable) {
+-		WARN_ON_ONCE(1);
+-		return false;
++	if (get_desc_state(id_prev_wrap, prev_state_val, &is_final) != desc_reusable) {
++		/*
++		 * If this descriptor has never been used, @prev_state_val
++		 * will be 0. However, even though it may have never been
++		 * used, it may have been finalized. So that flag must be
++		 * ignored.
++		 */
++		if ((prev_state_val & ~DESC_FINAL_MASK)) {
++			WARN_ON_ONCE(1);
++			return false;
++		}
+ 	}
+ 
+ 	/*
+@@ -967,10 +976,25 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	 * any other changes. A write memory barrier is sufficient for this.
+ 	 * This pairs with desc_read:D.
+ 	 */
+-	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
+-				     id | 0)) { /* LMM(desc_reserve:F) */
+-		WARN_ON_ONCE(1);
+-		return false;
++	if (is_final)
++		state_val = id | 0 | DESC_FINAL_MASK;
++	else
++		state_val = id | 0;
++	if (atomic_long_cmpxchg(&desc->state_var, prev_state_val,
++				state_val) != prev_state_val) { /* LMM(desc_reserve:F) */
++		/*
++		 * This reusable descriptor must have been finalized already.
++		 * Retry with a reusable+final expected value.
++		 */
++		prev_state_val |= DESC_FINAL_MASK;
++		state_val |= DESC_FINAL_MASK;
++
++		if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
++					     state_val)) { /* LMM(desc_reserve:FIXME) */
++
++			WARN_ON_ONCE(1);
++			return false;
++		}
+ 	}
+ 
+ 	/* Now data in @desc can be modified: LMM(desc_reserve:G) */
+@@ -1364,9 +1388,37 @@ static void desc_finalize(struct prb_desc_ring *desc_ring, unsigned long id)
+ 	while (!atomic_long_try_cmpxchg_relaxed(&d->state_var, &prev_state_val,
+ 						prev_state_val | DESC_FINAL_MASK)) {
+ 
+-		if (get_desc_state(id, prev_state_val, &is_final) != desc_reserved)
++		switch (get_desc_state(id, prev_state_val, &is_final)) {
++		case desc_miss:
++			/*
++			 * If the ID is exactly 1 wrap behind the expected, it is
++			 * in the process of being reserved by another writer and
++			 * must be considered reserved.
++			 */
++			if (get_desc_state(DESC_ID_PREV_WRAP(desc_ring, id),
++					   prev_state_val, &is_final) != desc_reusable) {
++				/*
++				 * If this descriptor has never been used, @prev_state_val
++				 * will be 0. However, even though it may have never been
++				 * used, it may have been finalized. So that flag must be
++				 * ignored.
++				 */
++				if ((prev_state_val & ~DESC_FINAL_MASK)) {
++					WARN_ON_ONCE(1);
++					return;
++				}
++			}
++			fallthrough;
++		case desc_reserved:
++		case desc_reusable:
++			/* finalizable, try again */
+ 			break;
++		case desc_committed:
++			/* already finalized */
++			return;
++		}
+ 
++		/* already finalized? */
+ 		if (is_final)
+ 			break;
+ 	}
+@@ -1431,14 +1483,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 		goto fail;
+ 	}
+ 
+-	/*
+-	 * New data is about to be reserved. Once that happens, previous
+-	 * descriptors are no longer able to be extended. Finalize the
+-	 * previous descriptor now so that it can be made available to
+-	 * readers (when committed).
+-	 */
+-	desc_finalize(desc_ring, DESC_ID(id - 1));
+-
+ 	d = to_desc(desc_ring, id);
+ 
+ 	/*
+@@ -1464,6 +1508,16 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	else
+ 		d->info.seq += DESCS_COUNT(desc_ring);
+ 
++	/*
++	 * New data is about to be reserved. Once that happens, previous
++	 * descriptors are no longer able to be extended. Finalize the
++	 * previous descriptor now so that it can be made available to
++	 * readers (when committed). (For the first descriptor, there is
++	 * no previous record to finalize.)
++	 */
++	if (d->info.seq > 0)
++		desc_finalize(desc_ring, DESC_ID(id - 1));
++
+ 	r->text_buf = data_alloc(rb, &rb->text_data_ring, r->text_buf_size,
+ 				 &d->text_blk_lpos, id);
+ 	/* If text data allocation fails, a data-less record is committed. */
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
