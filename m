@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd43.google.com ([2607:f8b0:4864:20::d43])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kBBWU-0007gQ-9o
- for kexec@lists.infradead.org; Thu, 27 Aug 2020 06:36:35 +0000
-Received: by mail-io1-xd43.google.com with SMTP id g14so4737549iom.0
- for <kexec@lists.infradead.org>; Wed, 26 Aug 2020 23:36:31 -0700 (PDT)
-MIME-Version: 1.0
-References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
- <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
-In-Reply-To: <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Thu, 27 Aug 2020 14:36:18 +0800
-Message-ID: <CAFgQCTssv8mQqcySzctwy=LUnsS81eK73QYQN7Qn95OvmVxe_Q@mail.gmail.com>
+ id 1kBCjA-0002vh-TO
+ for kexec@lists.infradead.org; Thu, 27 Aug 2020 07:53:46 +0000
 Subject: Re: [PATCHv5 2/2] powerpc/pseries: update device tree before ejecting
  hotplug uevents
+References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
+ <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
+From: Laurent Dufour <ldufour@linux.ibm.com>
+Message-ID: <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
+Date: Thu, 27 Aug 2020 09:53:33 +0200
+MIME-Version: 1.0
+In-Reply-To: <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,391 +21,260 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
-Cc: Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Kexec Mailing List <kexec@lists.infradead.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, Laurent Dufour <ldufour@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>
+To: Pingfan Liu <kernelfans@gmail.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>, Nathan Fontenot <nfont@linux.vnet.ibm.com>
 
-Hello guys. Do you have further comments on this version?
-
-Thanks,
-Pingfan
-
-On Mon, Aug 10, 2020 at 4:53 PM Pingfan Liu <kernelfans@gmail.com> wrote:
->
-> A bug is observed on pseries by taking the following steps on rhel:
-> -1. drmgr -c mem -r -q 5
-> -2. echo c > /proc/sysrq-trigger
->
-> And then, the failure looks like:
-> kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:14/
-> kdump: saving vmcore-dmesg.txt
-> kdump: saving vmcore-dmesg.txt complete
-> kdump: saving vmcore
->  Checking for memory holes                         : [  0.0 %] /                   Checking for memory holes                         : [100.0 %] |                   Excluding unnecessary pages                       : [100.0 %] \                   Copying data                                      : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-> [   44.337663] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-> [   44.337677] hash-mmu: mm: Hashing failure ! EA=0x7fffba400000 access=0x8000000000000004 current=makedumpfile
-> [   44.337692] hash-mmu:     trap=0x300 vsid=0x13a109c ssize=1 base psize=2 psize 2 pte=0xc000000050000504
-> [   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffba400000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
-> [   44.338548] Core dump to |/bin/false pipe failed
-> /lib/kdump-lib-initramfs.sh: line 98:   469 Bus error               $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incomplete
-> kdump: saving vmcore failed
->
-> * Root cause *
->   After analyzing, it turns out that in the current implementation,
-> when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt updating as
-> the code __remove_memory() comes before drmem_update_dt().
-> So in kdump kernel, when read_from_oldmem() resorts to
-> pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due to
-> non-exist pfn. And finally, low_hash_fault() raise SIGBUS to process, as it
-> can be observed "Bus error"
->
-> From a viewpoint of listener and publisher, the publisher notifies the
-> listener before data is ready.  This introduces a problem where udev
-> launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt before
-> updating. And in capture kernel, makedumpfile will access the memory based
-> on the stale dt info, and hit a SIGBUS error due to an un-existed lmb.
->
-> * Fix *
-> This bug is introduced by commit 063b8b1251fd
-> ("powerpc/pseries/memory-hotplug: Only update DT once per memory DLPAR
-> request"), which tried to combine all the dt updating into one.
->
-> To fix this issue, meanwhile not to introduce a quadratic runtime
-> complexity by the model:
->   dlpar_memory_add_by_count
->     for_each_drmem_lmb             <--
->       dlpar_add_lmb
->         drmem_update_dt(_v1|_v2)
->           for_each_drmem_lmb       <--
-> The dt should still be only updated once, and just before the last memory
-> online/offline event is ejected to user space. Achieve this by tracing the
-> num of lmb added or removed.
->
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Hari Bathini <hbathini@linux.ibm.com>
-> Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> To: linuxppc-dev@lists.ozlabs.org
-> Cc: kexec@lists.infradead.org
-> ---
-> v4 -> v5: change dlpar_add_lmb()/dlpar_remove_lmb() prototype to report
->           whether dt is updated successfully.
->           Fix a condition boundary check bug
-> v3 -> v4: resolve a quadratic runtime complexity issue.
->           This series is applied on next-test branch
->  arch/powerpc/platforms/pseries/hotplug-memory.c | 102 +++++++++++++++++++-----
->  1 file changed, 80 insertions(+), 22 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> index 46cbcd1..1567d9f 100644
-> --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> @@ -350,13 +350,22 @@ static bool lmb_is_removable(struct drmem_lmb *lmb)
->         return true;
->  }
->
-> -static int dlpar_add_lmb(struct drmem_lmb *);
-> +enum dt_update_status {
-> +       DT_NOUPDATE,
-> +       DT_TOUPDATE,
-> +       DT_UPDATED,
-> +};
-> +
-> +/* "*dt_update" returns DT_UPDATED if updated */
-> +static int dlpar_add_lmb(struct drmem_lmb *lmb,
-> +               enum dt_update_status *dt_update);
->
-> -static int dlpar_remove_lmb(struct drmem_lmb *lmb)
-> +static int dlpar_remove_lmb(struct drmem_lmb *lmb,
-> +               enum dt_update_status *dt_update)
->  {
->         unsigned long block_sz;
->         phys_addr_t base_addr;
-> -       int rc, nid;
-> +       int rc, ret, nid;
->
->         if (!lmb_is_removable(lmb))
->                 return -EINVAL;
-> @@ -372,6 +381,13 @@ static int dlpar_remove_lmb(struct drmem_lmb *lmb)
->         invalidate_lmb_associativity_index(lmb);
->         lmb_clear_nid(lmb);
->         lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-> +       if (*dt_update) {
-> +               ret = drmem_update_dt();
-> +               if (ret)
-> +                       pr_warn("%s fail to update dt, but continue\n", __func__);
-> +               else
-> +                       *dt_update = DT_UPDATED;
-> +       }
->
->         __remove_memory(nid, base_addr, block_sz);
->
-> @@ -387,6 +403,7 @@ static int dlpar_memory_remove_by_count(u32 lmbs_to_remove)
->         int lmbs_removed = 0;
->         int lmbs_available = 0;
->         int rc;
-> +       enum dt_update_status dt_update = DT_NOUPDATE;
->
->         pr_info("Attempting to hot-remove %d LMB(s)\n", lmbs_to_remove);
->
-> @@ -409,7 +426,11 @@ static int dlpar_memory_remove_by_count(u32 lmbs_to_remove)
->         }
->
->         for_each_drmem_lmb(lmb) {
-> -               rc = dlpar_remove_lmb(lmb);
-> +
-> +               /* combine dt updating for all LMBs */
-> +               if (lmbs_to_remove - lmbs_removed <= 1)
-> +                       dt_update = DT_TOUPDATE;
-> +               rc = dlpar_remove_lmb(lmb, &dt_update);
->                 if (rc)
->                         continue;
->
-> @@ -424,13 +445,17 @@ static int dlpar_memory_remove_by_count(u32 lmbs_to_remove)
->         }
->
->         if (lmbs_removed != lmbs_to_remove) {
-> +               enum dt_update_status rollback_dt_update = DT_NOUPDATE;
-> +
->                 pr_err("Memory hot-remove failed, adding LMB's back\n");
->
->                 for_each_drmem_lmb(lmb) {
->                         if (!drmem_lmb_reserved(lmb))
->                                 continue;
->
-> -                       rc = dlpar_add_lmb(lmb);
-> +                       if (--lmbs_removed == 0 && dt_update == DT_UPDATED)
-> +                               rollback_dt_update = DT_TOUPDATE;
-> +                       rc = dlpar_add_lmb(lmb, &rollback_dt_update);
->                         if (rc)
->                                 pr_err("Failed to add LMB back, drc index %x\n",
->                                        lmb->drc_index);
-> @@ -458,6 +483,7 @@ static int dlpar_memory_remove_by_count(u32 lmbs_to_remove)
->
->  static int dlpar_memory_remove_by_index(u32 drc_index)
->  {
-> +       enum dt_update_status dt_update = DT_TOUPDATE;
->         struct drmem_lmb *lmb;
->         int lmb_found;
->         int rc;
-> @@ -468,7 +494,7 @@ static int dlpar_memory_remove_by_index(u32 drc_index)
->         for_each_drmem_lmb(lmb) {
->                 if (lmb->drc_index == drc_index) {
->                         lmb_found = 1;
-> -                       rc = dlpar_remove_lmb(lmb);
-> +                       rc = dlpar_remove_lmb(lmb, &dt_update);
->                         if (!rc)
->                                 dlpar_release_drc(lmb->drc_index);
->
-> @@ -490,6 +516,7 @@ static int dlpar_memory_remove_by_index(u32 drc_index)
->
->  static int dlpar_memory_remove_by_ic(u32 lmbs_to_remove, u32 drc_index)
->  {
-> +       enum dt_update_status dt_update = DT_NOUPDATE;
->         struct drmem_lmb *lmb, *start_lmb, *end_lmb;
->         int lmbs_available = 0;
->         int rc;
-> @@ -519,7 +546,9 @@ static int dlpar_memory_remove_by_ic(u32 lmbs_to_remove, u32 drc_index)
->                 if (!(lmb->flags & DRCONF_MEM_ASSIGNED))
->                         continue;
->
-> -               rc = dlpar_remove_lmb(lmb);
-> +               if (lmb == end_lmb)
-> +                       dt_update = DT_TOUPDATE;
-> +               rc = dlpar_remove_lmb(lmb, &dt_update);
->                 if (rc)
->                         break;
->
-> @@ -527,14 +556,16 @@ static int dlpar_memory_remove_by_ic(u32 lmbs_to_remove, u32 drc_index)
->         }
->
->         if (rc) {
-> -               pr_err("Memory indexed-count-remove failed, adding any removed LMBs\n");
-> +               enum dt_update_status rollback_dt_update = DT_NOUPDATE;
->
-> +               pr_err("Memory indexed-count-remove failed, adding any removed LMBs\n");
->
->                 for_each_drmem_lmb_in_range(lmb, start_lmb, end_lmb) {
->                         if (!drmem_lmb_reserved(lmb))
->                                 continue;
-> -
-> -                       rc = dlpar_add_lmb(lmb);
-> +                       if (lmb == end_lmb && dt_update == DT_UPDATED)
-> +                               rollback_dt_update = DT_TOUPDATE;
-> +                       rc = dlpar_add_lmb(lmb, &rollback_dt_update);
->                         if (rc)
->                                 pr_err("Failed to add LMB, drc index %x\n",
->                                        lmb->drc_index);
-> @@ -572,7 +603,7 @@ static inline int dlpar_memory_remove(struct pseries_hp_errorlog *hp_elog)
->  {
->         return -EOPNOTSUPP;
->  }
-> -static int dlpar_remove_lmb(struct drmem_lmb *lmb)
-> +static int dlpar_remove_lmb(struct drmem_lmb *lmb, bool dt_update)
->  {
->         return -EOPNOTSUPP;
->  }
-> @@ -591,10 +622,11 @@ static int dlpar_memory_remove_by_ic(u32 lmbs_to_remove, u32 drc_index)
->  }
->  #endif /* CONFIG_MEMORY_HOTREMOVE */
->
-> -static int dlpar_add_lmb(struct drmem_lmb *lmb)
-> +static int dlpar_add_lmb(struct drmem_lmb *lmb,
-> +               enum dt_update_status *dt_update)
->  {
->         unsigned long block_sz;
-> -       int rc;
-> +       int rc, ret;
->
->         if (lmb->flags & DRCONF_MEM_ASSIGNED)
->                 return -EINVAL;
-> @@ -607,6 +639,13 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->
->         lmb_set_nid(lmb);
->         lmb->flags |= DRCONF_MEM_ASSIGNED;
-> +       if (*dt_update) {
-> +               ret = drmem_update_dt();
-> +               if (ret)
-> +                       pr_warn("%s fail to update dt, but continue\n", __func__);
-> +               else
-> +                       *dt_update = DT_UPDATED;
-> +       }
->
->         block_sz = memory_block_size_bytes();
->
-> @@ -616,6 +655,8 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->                 invalidate_lmb_associativity_index(lmb);
->                 lmb_clear_nid(lmb);
->                 lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-> +               if (*dt_update == DT_UPDATED)
-> +                       drmem_update_dt();
->                 return rc;
->         }
->
-> @@ -627,7 +668,11 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->                 invalidate_lmb_associativity_index(lmb);
->                 lmb_clear_nid(lmb);
->                 lmb->flags &= ~DRCONF_MEM_ASSIGNED;
-> -
-> +               if (*dt_update == DT_UPDATED) {
-> +                       ret = drmem_update_dt();
-> +                       if (ret)
-> +                               pr_warn("%s fail to update dt during rollback, but continue\n", __func__);
-> +               }
->                 __remove_memory(nid, base_addr, block_sz);
->         }
->
-> @@ -636,6 +681,7 @@ static int dlpar_add_lmb(struct drmem_lmb *lmb)
->
->  static int dlpar_memory_add_by_count(u32 lmbs_to_add)
->  {
-> +       enum dt_update_status dt_update = DT_NOUPDATE;
->         struct drmem_lmb *lmb;
->         int lmbs_available = 0;
->         int lmbs_added = 0;
-> @@ -666,7 +712,9 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
->                 if (rc)
->                         continue;
->
-> -               rc = dlpar_add_lmb(lmb);
-> +               if (lmbs_to_add - lmbs_added <= 1)
-> +                       dt_update = DT_TOUPDATE;
-> +               rc = dlpar_add_lmb(lmb, &dt_update);
->                 if (rc) {
->                         dlpar_release_drc(lmb->drc_index);
->                         continue;
-> @@ -683,13 +731,18 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
->         }
->
->         if (lmbs_added != lmbs_to_add) {
-> +               enum dt_update_status rollback_dt_update = DT_NOUPDATE;
-> +
->                 pr_err("Memory hot-add failed, removing any added LMBs\n");
->
->                 for_each_drmem_lmb(lmb) {
->                         if (!drmem_lmb_reserved(lmb))
->                                 continue;
->
-> -                       rc = dlpar_remove_lmb(lmb);
-> +                       if (--lmbs_added == 0 && dt_update == DT_UPDATED)
-> +                               rollback_dt_update = DT_TOUPDATE;
-> +
-> +                       rc = dlpar_remove_lmb(lmb, &rollback_dt_update);
->                         if (rc)
->                                 pr_err("Failed to remove LMB, drc index %x\n",
->                                        lmb->drc_index);
-> @@ -716,6 +769,7 @@ static int dlpar_memory_add_by_count(u32 lmbs_to_add)
->
->  static int dlpar_memory_add_by_index(u32 drc_index)
->  {
-> +       enum dt_update_status dt_update = DT_TOUPDATE;
->         struct drmem_lmb *lmb;
->         int rc, lmb_found;
->
-> @@ -727,7 +781,7 @@ static int dlpar_memory_add_by_index(u32 drc_index)
->                         lmb_found = 1;
->                         rc = dlpar_acquire_drc(lmb->drc_index);
->                         if (!rc) {
-> -                               rc = dlpar_add_lmb(lmb);
-> +                               rc = dlpar_add_lmb(lmb, &dt_update);
->                                 if (rc)
->                                         dlpar_release_drc(lmb->drc_index);
->                         }
-> @@ -750,6 +804,7 @@ static int dlpar_memory_add_by_index(u32 drc_index)
->
->  static int dlpar_memory_add_by_ic(u32 lmbs_to_add, u32 drc_index)
->  {
-> +       enum dt_update_status dt_update = DT_NOUPDATE;
->         struct drmem_lmb *lmb, *start_lmb, *end_lmb;
->         int lmbs_available = 0;
->         int rc;
-> @@ -783,7 +838,9 @@ static int dlpar_memory_add_by_ic(u32 lmbs_to_add, u32 drc_index)
->                 if (rc)
->                         break;
->
-> -               rc = dlpar_add_lmb(lmb);
-> +               if (lmb == end_lmb)
-> +                       dt_update = DT_TOUPDATE;
-> +               rc = dlpar_add_lmb(lmb, &dt_update);
->                 if (rc) {
->                         dlpar_release_drc(lmb->drc_index);
->                         break;
-> @@ -796,10 +853,14 @@ static int dlpar_memory_add_by_ic(u32 lmbs_to_add, u32 drc_index)
->                 pr_err("Memory indexed-count-add failed, removing any added LMBs\n");
->
->                 for_each_drmem_lmb_in_range(lmb, start_lmb, end_lmb) {
-> +                       enum dt_update_status rollback_dt_update = DT_NOUPDATE;
-> +
->                         if (!drmem_lmb_reserved(lmb))
->                                 continue;
->
-> -                       rc = dlpar_remove_lmb(lmb);
-> +                       if (lmb == end_lmb && dt_update == DT_UPDATED)
-> +                               rollback_dt_update = DT_TOUPDATE;
-> +                       rc = dlpar_remove_lmb(lmb, &rollback_dt_update);
->                         if (rc)
->                                 pr_err("Failed to remove LMB, drc index %x\n",
->                                        lmb->drc_index);
-> @@ -879,9 +940,6 @@ int dlpar_memory(struct pseries_hp_errorlog *hp_elog)
->                 break;
->         }
->
-> -       if (!rc)
-> -               rc = drmem_update_dt();
-> -
->         unlock_device_hotplug();
->         return rc;
->  }
-> --
-> 2.7.5
->
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+TGUgMTAvMDgvMjAyMCDDoCAxMDo1MiwgUGluZ2ZhbiBMaXUgYSDDqWNyaXTCoDoKPiBBIGJ1ZyBp
+cyBvYnNlcnZlZCBvbiBwc2VyaWVzIGJ5IHRha2luZyB0aGUgZm9sbG93aW5nIHN0ZXBzIG9uIHJo
+ZWw6Cj4gLTEuIGRybWdyIC1jIG1lbSAtciAtcSA1Cj4gLTIuIGVjaG8gYyA+IC9wcm9jL3N5c3Jx
+LXRyaWdnZXIKPiAKPiBBbmQgdGhlbiwgdGhlIGZhaWx1cmUgbG9va3MgbGlrZToKPiBrZHVtcDog
+c2F2aW5nIHRvIC9zeXNyb290Ly92YXIvY3Jhc2gvMTI3LjAuMC4xLTIwMjAtMDEtMTYtMDI6MDY6
+MTQvCj4ga2R1bXA6IHNhdmluZyB2bWNvcmUtZG1lc2cudHh0Cj4ga2R1bXA6IHNhdmluZyB2bWNv
+cmUtZG1lc2cudHh0IGNvbXBsZXRlCj4ga2R1bXA6IHNhdmluZyB2bWNvcmUKPiAgIENoZWNraW5n
+IGZvciBtZW1vcnkgaG9sZXMgICAgICAgICAgICAgICAgICAgICAgICAgOiBbICAwLjAgJV0gLyAg
+ICAgICAgICAgICAgICAgICBDaGVja2luZyBmb3IgbWVtb3J5IGhvbGVzICAgICAgICAgICAgICAg
+ICAgICAgICAgIDogWzEwMC4wICVdIHwgICAgICAgICAgICAgICAgICAgRXhjbHVkaW5nIHVubmVj
+ZXNzYXJ5IHBhZ2VzICAgICAgICAgICAgICAgICAgICAgICA6IFsxMDAuMCAlXSBcICAgICAgICAg
+ICAgICAgICAgIENvcHlpbmcgZGF0YSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgOiBbICAwLjMgJV0gLSAgICAgICAgICBldGE6IDM4c1sgICA0NC4zMzc2MzZdIGhhc2gtbW11
+OiBtbTogSGFzaGluZyBmYWlsdXJlICEgRUE9MHg3ZmZmYmE0MDAwMDAgYWNjZXNzPTB4ODAwMDAw
+MDAwMDAwMDAwNCBjdXJyZW50PW1ha2VkdW1wZmlsZQo+IFsgICA0NC4zMzc2NjNdIGhhc2gtbW11
+OiAgICAgdHJhcD0weDMwMCB2c2lkPTB4MTNhMTA5YyBzc2l6ZT0xIGJhc2UgcHNpemU9MiBwc2l6
+ZSAyIHB0ZT0weGMwMDAwMDAwNTAwMDA1MDQKPiBbICAgNDQuMzM3Njc3XSBoYXNoLW1tdTogbW06
+IEhhc2hpbmcgZmFpbHVyZSAhIEVBPTB4N2ZmZmJhNDAwMDAwIGFjY2Vzcz0weDgwMDAwMDAwMDAw
+MDAwMDQgY3VycmVudD1tYWtlZHVtcGZpbGUKPiBbICAgNDQuMzM3NjkyXSBoYXNoLW1tdTogICAg
+IHRyYXA9MHgzMDAgdnNpZD0weDEzYTEwOWMgc3NpemU9MSBiYXNlIHBzaXplPTIgcHNpemUgMiBw
+dGU9MHhjMDAwMDAwMDUwMDAwNTA0Cj4gWyAgIDQ0LjMzNzcwOF0gbWFrZWR1bXBmaWxlWzQ2OV06
+IHVuaGFuZGxlZCBzaWduYWwgNyBhdCAwMDAwN2ZmZmJhNDAwMDAwIG5pcCAwMDAwN2ZmZmJiYzRk
+N2ZjIGxyIDAwMDAwMDAxMTM1NmNhM2MgY29kZSAyCj4gWyAgIDQ0LjMzODU0OF0gQ29yZSBkdW1w
+IHRvIHwvYmluL2ZhbHNlIHBpcGUgZmFpbGVkCj4gL2xpYi9rZHVtcC1saWItaW5pdHJhbWZzLnNo
+OiBsaW5lIDk4OiAgIDQ2OSBCdXMgZXJyb3IgICAgICAgICAgICAgICAkQ09SRV9DT0xMRUNUT1Ig
+L3Byb2Mvdm1jb3JlICRfbXAvJEtEVU1QX1BBVEgvJEhPU1RfSVAtJERBVEVESVIvdm1jb3JlLWlu
+Y29tcGxldGUKPiBrZHVtcDogc2F2aW5nIHZtY29yZSBmYWlsZWQKPiAKPiAqIFJvb3QgY2F1c2Ug
+Kgo+ICAgIEFmdGVyIGFuYWx5emluZywgaXQgdHVybnMgb3V0IHRoYXQgaW4gdGhlIGN1cnJlbnQg
+aW1wbGVtZW50YXRpb24sCj4gd2hlbiBob3QtcmVtb3ZpbmcgbG1iLCB0aGUgS09CSl9SRU1PVkUg
+ZXZlbnQgZWplY3RzIGJlZm9yZSB0aGUgZHQgdXBkYXRpbmcgYXMKPiB0aGUgY29kZSBfX3JlbW92
+ZV9tZW1vcnkoKSBjb21lcyBiZWZvcmUgZHJtZW1fdXBkYXRlX2R0KCkuCj4gU28gaW4ga2R1bXAg
+a2VybmVsLCB3aGVuIHJlYWRfZnJvbV9vbGRtZW0oKSByZXNvcnRzIHRvCj4gcFNlcmllc19scGFy
+X2hwdGVfaW5zZXJ0KCkgdG8gaW5zdGFsbCBocHRlLCBidXQgZmFpbHMgd2l0aCAtMiBkdWUgdG8K
+PiBub24tZXhpc3QgcGZuLiBBbmQgZmluYWxseSwgbG93X2hhc2hfZmF1bHQoKSByYWlzZSBTSUdC
+VVMgdG8gcHJvY2VzcywgYXMgaXQKPiBjYW4gYmUgb2JzZXJ2ZWQgIkJ1cyBlcnJvciIKPiAKPiAg
+RnJvbSBhIHZpZXdwb2ludCBvZiBsaXN0ZW5lciBhbmQgcHVibGlzaGVyLCB0aGUgcHVibGlzaGVy
+IG5vdGlmaWVzIHRoZQo+IGxpc3RlbmVyIGJlZm9yZSBkYXRhIGlzIHJlYWR5LiAgVGhpcyBpbnRy
+b2R1Y2VzIGEgcHJvYmxlbSB3aGVyZSB1ZGV2Cj4gbGF1bmNoZXMga2V4ZWMtdG9vbHMgKGR1ZSB0
+byBLT0JKX1JFTU9WRSkgYW5kIGxvYWRzIGEgc3RhbGUgZHQgYmVmb3JlCj4gdXBkYXRpbmcuIEFu
+ZCBpbiBjYXB0dXJlIGtlcm5lbCwgbWFrZWR1bXBmaWxlIHdpbGwgYWNjZXNzIHRoZSBtZW1vcnkg
+YmFzZWQKPiBvbiB0aGUgc3RhbGUgZHQgaW5mbywgYW5kIGhpdCBhIFNJR0JVUyBlcnJvciBkdWUg
+dG8gYW4gdW4tZXhpc3RlZCBsbWIuCj4gCj4gKiBGaXggKgo+IFRoaXMgYnVnIGlzIGludHJvZHVj
+ZWQgYnkgY29tbWl0IDA2M2I4YjEyNTFmZAo+ICgicG93ZXJwYy9wc2VyaWVzL21lbW9yeS1ob3Rw
+bHVnOiBPbmx5IHVwZGF0ZSBEVCBvbmNlIHBlciBtZW1vcnkgRExQQVIKPiByZXF1ZXN0IiksIHdo
+aWNoIHRyaWVkIHRvIGNvbWJpbmUgYWxsIHRoZSBkdCB1cGRhdGluZyBpbnRvIG9uZS4KPiAKPiBU
+byBmaXggdGhpcyBpc3N1ZSwgbWVhbndoaWxlIG5vdCB0byBpbnRyb2R1Y2UgYSBxdWFkcmF0aWMg
+cnVudGltZQo+IGNvbXBsZXhpdHkgYnkgdGhlIG1vZGVsOgo+ICAgIGRscGFyX21lbW9yeV9hZGRf
+YnlfY291bnQKPiAgICAgIGZvcl9lYWNoX2RybWVtX2xtYiAgICAgICAgICAgICA8LS0KPiAgICAg
+ICAgZGxwYXJfYWRkX2xtYgo+ICAgICAgICAgIGRybWVtX3VwZGF0ZV9kdChfdjF8X3YyKQo+ICAg
+ICAgICAgICAgZm9yX2VhY2hfZHJtZW1fbG1iICAgICAgIDwtLQo+IFRoZSBkdCBzaG91bGQgc3Rp
+bGwgYmUgb25seSB1cGRhdGVkIG9uY2UsIGFuZCBqdXN0IGJlZm9yZSB0aGUgbGFzdCBtZW1vcnkK
+PiBvbmxpbmUvb2ZmbGluZSBldmVudCBpcyBlamVjdGVkIHRvIHVzZXIgc3BhY2UuIEFjaGlldmUg
+dGhpcyBieSB0cmFjaW5nIHRoZQo+IG51bSBvZiBsbWIgYWRkZWQgb3IgcmVtb3ZlZC4KPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBQaW5nZmFuIExpdSA8a2VybmVsZmFuc0BnbWFpbC5jb20+Cj4gQ2M6IE1p
+Y2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxlcm1hbi5pZC5hdT4KPiBDYzogSGFyaSBCYXRoaW5pIDxo
+YmF0aGluaUBsaW51eC5pYm0uY29tPgo+IENjOiBOYXRoYW4gTHluY2ggPG5hdGhhbmxAbGludXgu
+aWJtLmNvbT4KPiBDYzogTmF0aGFuIEZvbnRlbm90IDxuZm9udEBsaW51eC52bmV0LmlibS5jb20+
+Cj4gQ2M6IExhdXJlbnQgRHVmb3VyIDxsZHVmb3VyQGxpbnV4LmlibS5jb20+Cj4gVG86IGxpbnV4
+cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcK
+PiAtLS0KPiB2NCAtPiB2NTogY2hhbmdlIGRscGFyX2FkZF9sbWIoKS9kbHBhcl9yZW1vdmVfbG1i
+KCkgcHJvdG90eXBlIHRvIHJlcG9ydAo+ICAgICAgICAgICAgd2hldGhlciBkdCBpcyB1cGRhdGVk
+IHN1Y2Nlc3NmdWxseS4KPiAgICAgICAgICAgIEZpeCBhIGNvbmRpdGlvbiBib3VuZGFyeSBjaGVj
+ayBidWcKPiB2MyAtPiB2NDogcmVzb2x2ZSBhIHF1YWRyYXRpYyBydW50aW1lIGNvbXBsZXhpdHkg
+aXNzdWUuCj4gICAgICAgICAgICBUaGlzIHNlcmllcyBpcyBhcHBsaWVkIG9uIG5leHQtdGVzdCBi
+cmFuY2gKPiAgIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5j
+IHwgMTAyICsrKysrKysrKysrKysrKysrKystLS0tLQo+ICAgMSBmaWxlIGNoYW5nZWQsIDgwIGlu
+c2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL3Bvd2Vy
+cGMvcGxhdGZvcm1zL3BzZXJpZXMvaG90cGx1Zy1tZW1vcnkuYyBiL2FyY2gvcG93ZXJwYy9wbGF0
+Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jCj4gaW5kZXggNDZjYmNkMS4uMTU2N2Q5ZiAx
+MDA2NDQKPiAtLS0gYS9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3BzZXJpZXMvaG90cGx1Zy1tZW1v
+cnkuYwo+ICsrKyBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9y
+eS5jCj4gQEAgLTM1MCwxMyArMzUwLDIyIEBAIHN0YXRpYyBib29sIGxtYl9pc19yZW1vdmFibGUo
+c3RydWN0IGRybWVtX2xtYiAqbG1iKQo+ICAgCXJldHVybiB0cnVlOwo+ICAgfQo+ICAgCj4gLXN0
+YXRpYyBpbnQgZGxwYXJfYWRkX2xtYihzdHJ1Y3QgZHJtZW1fbG1iICopOwo+ICtlbnVtIGR0X3Vw
+ZGF0ZV9zdGF0dXMgewo+ICsJRFRfTk9VUERBVEUsCj4gKwlEVF9UT1VQREFURSwKPiArCURUX1VQ
+REFURUQsCj4gK307Cj4gKwo+ICsvKiAiKmR0X3VwZGF0ZSIgcmV0dXJucyBEVF9VUERBVEVEIGlm
+IHVwZGF0ZWQgKi8KPiArc3RhdGljIGludCBkbHBhcl9hZGRfbG1iKHN0cnVjdCBkcm1lbV9sbWIg
+KmxtYiwKPiArCQllbnVtIGR0X3VwZGF0ZV9zdGF0dXMgKmR0X3VwZGF0ZSk7Cj4gICAKPiAtc3Rh
+dGljIGludCBkbHBhcl9yZW1vdmVfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKmxtYikKPiArc3RhdGlj
+IGludCBkbHBhcl9yZW1vdmVfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKmxtYiwKPiArCQllbnVtIGR0
+X3VwZGF0ZV9zdGF0dXMgKmR0X3VwZGF0ZSkKPiAgIHsKPiAgIAl1bnNpZ25lZCBsb25nIGJsb2Nr
+X3N6Owo+ICAgCXBoeXNfYWRkcl90IGJhc2VfYWRkcjsKPiAtCWludCByYywgbmlkOwo+ICsJaW50
+IHJjLCByZXQsIG5pZDsKPiAgIAo+ICAgCWlmICghbG1iX2lzX3JlbW92YWJsZShsbWIpKQo+ICAg
+CQlyZXR1cm4gLUVJTlZBTDsKPiBAQCAtMzcyLDYgKzM4MSwxMyBAQCBzdGF0aWMgaW50IGRscGFy
+X3JlbW92ZV9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+ICAgCWludmFsaWRhdGVfbG1iX2Fz
+c29jaWF0aXZpdHlfaW5kZXgobG1iKTsKPiAgIAlsbWJfY2xlYXJfbmlkKGxtYik7Cj4gICAJbG1i
+LT5mbGFncyAmPSB+RFJDT05GX01FTV9BU1NJR05FRDsKPiArCWlmICgqZHRfdXBkYXRlKSB7CgpU
+aGF0IHRlc3QgaXMgd3JvbmcsIHlvdSBzaG91bGQgZG86CiAgICAgICAgIGlmICgqZHRfdXBkYXRl
+ICYmICpkdF91cGRhdGUgPT0gRFRfVE9VUERBVEUpIHsKCldpdGggdGhlIGN1cnJlbnQgY29kZSwg
+dGhlIGRldmljZSB0cmVlIGlzIHVwZGF0ZWQgYWxsIHRoZSB0aW1lLgoKQW5vdGhlciBvcHRpb24g
+d291bGQgYmUgdG8gcGFzcyBhIHZhbGlkIHBvaW50ZXIgKCE9IE5VTEwpIG9ubHkgd2hlbiBEVCB1
+cGRhdGUgaXMgCnJlcXVpcmVkLCB0aGlzIHdheSB5b3UgZG9uJ3QgbmVlZCB0aGUgRFRfVE9VUERB
+VEUgdmFsdWUuIFRoZSBjYWxsZXIgd291bGQgaGF2ZSAKdG8gc2V0IHRoZSBwb2ludGVyIGFjY29y
+ZGluZ2x5LiBUaGUgYWR2YW50YWdlIHdpdGggdGhpcyBvcHRpb24gaXMgdGhlIGNhbGxlciBpcyAK
+Z3VhcmFudGVlZCB0aGF0IGl0cyB2YXJpYWJsZSBpcyBub3QgdG91Y2hlZCBieSB0aGUgY2FsbGVl
+IHdoZW4gbm8gZGV2aWNlIHRyZWUgaXMgCnJlcXVlc3RlZC4gQSBzaW1wbGUgYm9vbGVhbiBwb2lu
+dGVyIHdvdWxkIGJlIGVub3VnaCB3aXRob3V0IHRoZSBuZWVkIHRvIHRoaXMgZW51bS4KCgo+ICsJ
+CXJldCA9IGRybWVtX3VwZGF0ZV9kdCgpOwo+ICsJCWlmIChyZXQpCj4gKwkJCXByX3dhcm4oIiVz
+IGZhaWwgdG8gdXBkYXRlIGR0LCBidXQgY29udGludWVcbiIsIF9fZnVuY19fKTsKPiArCQllbHNl
+Cj4gKwkJCSpkdF91cGRhdGUgPSBEVF9VUERBVEVEOwo+ICsJfQo+ICAgCj4gICAJX19yZW1vdmVf
+bWVtb3J5KG5pZCwgYmFzZV9hZGRyLCBibG9ja19zeik7Cj4gICAKPiBAQCAtMzg3LDYgKzQwMyw3
+IEBAIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9ieV9jb3VudCh1MzIgbG1ic190b19y
+ZW1vdmUpCj4gICAJaW50IGxtYnNfcmVtb3ZlZCA9IDA7Cj4gICAJaW50IGxtYnNfYXZhaWxhYmxl
+ID0gMDsKPiAgIAlpbnQgcmM7Cj4gKwllbnVtIGR0X3VwZGF0ZV9zdGF0dXMgZHRfdXBkYXRlID0g
+RFRfTk9VUERBVEU7Cj4gICAKPiAgIAlwcl9pbmZvKCJBdHRlbXB0aW5nIHRvIGhvdC1yZW1vdmUg
+JWQgTE1CKHMpXG4iLCBsbWJzX3RvX3JlbW92ZSk7Cj4gICAKPiBAQCAtNDA5LDcgKzQyNiwxMSBA
+QCBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9yZW1vdmVfYnlfY291bnQodTMyIGxtYnNfdG9fcmVt
+b3ZlKQo+ICAgCX0KPiAgIAo+ICAgCWZvcl9lYWNoX2RybWVtX2xtYihsbWIpIHsKPiAtCQlyYyA9
+IGRscGFyX3JlbW92ZV9sbWIobG1iKTsKPiArCj4gKwkJLyogY29tYmluZSBkdCB1cGRhdGluZyBm
+b3IgYWxsIExNQnMgKi8KPiArCQlpZiAobG1ic190b19yZW1vdmUgLSBsbWJzX3JlbW92ZWQgPD0g
+MSkKPiArCQkJZHRfdXBkYXRlID0gRFRfVE9VUERBVEU7Cj4gKwkJcmMgPSBkbHBhcl9yZW1vdmVf
+bG1iKGxtYiwgJmR0X3VwZGF0ZSk7Cj4gICAJCWlmIChyYykKPiAgIAkJCWNvbnRpbnVlOwo+ICAg
+Cj4gQEAgLTQyNCwxMyArNDQ1LDE3IEBAIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9i
+eV9jb3VudCh1MzIgbG1ic190b19yZW1vdmUpCj4gICAJfQo+ICAgCj4gICAJaWYgKGxtYnNfcmVt
+b3ZlZCAhPSBsbWJzX3RvX3JlbW92ZSkgewo+ICsJCWVudW0gZHRfdXBkYXRlX3N0YXR1cyByb2xs
+YmFja19kdF91cGRhdGUgPSBEVF9OT1VQREFURTsKPiArCj4gICAJCXByX2VycigiTWVtb3J5IGhv
+dC1yZW1vdmUgZmFpbGVkLCBhZGRpbmcgTE1CJ3MgYmFja1xuIik7Cj4gICAKPiAgIAkJZm9yX2Vh
+Y2hfZHJtZW1fbG1iKGxtYikgewo+ICAgCQkJaWYgKCFkcm1lbV9sbWJfcmVzZXJ2ZWQobG1iKSkK
+PiAgIAkJCQljb250aW51ZTsKPiAgIAo+IC0JCQlyYyA9IGRscGFyX2FkZF9sbWIobG1iKTsKPiAr
+CQkJaWYgKC0tbG1ic19yZW1vdmVkID09IDAgJiYgZHRfdXBkYXRlID09IERUX1VQREFURUQpCj4g
+KwkJCQlyb2xsYmFja19kdF91cGRhdGUgPSBEVF9UT1VQREFURTsKPiArCQkJcmMgPSBkbHBhcl9h
+ZGRfbG1iKGxtYiwgJnJvbGxiYWNrX2R0X3VwZGF0ZSk7Cj4gICAJCQlpZiAocmMpCj4gICAJCQkJ
+cHJfZXJyKCJGYWlsZWQgdG8gYWRkIExNQiBiYWNrLCBkcmMgaW5kZXggJXhcbiIsCj4gICAJCQkJ
+ICAgICAgIGxtYi0+ZHJjX2luZGV4KTsKPiBAQCAtNDU4LDYgKzQ4Myw3IEBAIHN0YXRpYyBpbnQg
+ZGxwYXJfbWVtb3J5X3JlbW92ZV9ieV9jb3VudCh1MzIgbG1ic190b19yZW1vdmUpCj4gICAKPiAg
+IHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9ieV9pbmRleCh1MzIgZHJjX2luZGV4KQo+
+ICAgewo+ICsJZW51bSBkdF91cGRhdGVfc3RhdHVzIGR0X3VwZGF0ZSA9IERUX1RPVVBEQVRFOwo+
+ICAgCXN0cnVjdCBkcm1lbV9sbWIgKmxtYjsKPiAgIAlpbnQgbG1iX2ZvdW5kOwo+ICAgCWludCBy
+YzsKPiBAQCAtNDY4LDcgKzQ5NCw3IEBAIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9i
+eV9pbmRleCh1MzIgZHJjX2luZGV4KQo+ICAgCWZvcl9lYWNoX2RybWVtX2xtYihsbWIpIHsKPiAg
+IAkJaWYgKGxtYi0+ZHJjX2luZGV4ID09IGRyY19pbmRleCkgewo+ICAgCQkJbG1iX2ZvdW5kID0g
+MTsKPiAtCQkJcmMgPSBkbHBhcl9yZW1vdmVfbG1iKGxtYik7Cj4gKwkJCXJjID0gZGxwYXJfcmVt
+b3ZlX2xtYihsbWIsICZkdF91cGRhdGUpOwo+ICAgCQkJaWYgKCFyYykKPiAgIAkJCQlkbHBhcl9y
+ZWxlYXNlX2RyYyhsbWItPmRyY19pbmRleCk7Cj4gICAKPiBAQCAtNDkwLDYgKzUxNiw3IEBAIHN0
+YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9ieV9pbmRleCh1MzIgZHJjX2luZGV4KQo+ICAg
+Cj4gICBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9yZW1vdmVfYnlfaWModTMyIGxtYnNfdG9fcmVt
+b3ZlLCB1MzIgZHJjX2luZGV4KQo+ICAgewo+ICsJZW51bSBkdF91cGRhdGVfc3RhdHVzIGR0X3Vw
+ZGF0ZSA9IERUX05PVVBEQVRFOwo+ICAgCXN0cnVjdCBkcm1lbV9sbWIgKmxtYiwgKnN0YXJ0X2xt
+YiwgKmVuZF9sbWI7Cj4gICAJaW50IGxtYnNfYXZhaWxhYmxlID0gMDsKPiAgIAlpbnQgcmM7Cj4g
+QEAgLTUxOSw3ICs1NDYsOSBAQCBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9yZW1vdmVfYnlfaWMo
+dTMyIGxtYnNfdG9fcmVtb3ZlLCB1MzIgZHJjX2luZGV4KQo+ICAgCQlpZiAoIShsbWItPmZsYWdz
+ICYgRFJDT05GX01FTV9BU1NJR05FRCkpCj4gICAJCQljb250aW51ZTsKPiAgIAo+IC0JCXJjID0g
+ZGxwYXJfcmVtb3ZlX2xtYihsbWIpOwo+ICsJCWlmIChsbWIgPT0gZW5kX2xtYikKPiArCQkJZHRf
+dXBkYXRlID0gRFRfVE9VUERBVEU7Cj4gKwkJcmMgPSBkbHBhcl9yZW1vdmVfbG1iKGxtYiwgJmR0
+X3VwZGF0ZSk7Cj4gICAJCWlmIChyYykKPiAgIAkJCWJyZWFrOwo+ICAgCj4gQEAgLTUyNywxNCAr
+NTU2LDE2IEBAIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9ieV9pYyh1MzIgbG1ic190
+b19yZW1vdmUsIHUzMiBkcmNfaW5kZXgpCj4gICAJfQo+ICAgCj4gICAJaWYgKHJjKSB7Cj4gLQkJ
+cHJfZXJyKCJNZW1vcnkgaW5kZXhlZC1jb3VudC1yZW1vdmUgZmFpbGVkLCBhZGRpbmcgYW55IHJl
+bW92ZWQgTE1Cc1xuIik7Cj4gKwkJZW51bSBkdF91cGRhdGVfc3RhdHVzIHJvbGxiYWNrX2R0X3Vw
+ZGF0ZSA9IERUX05PVVBEQVRFOwo+ICAgCj4gKwkJcHJfZXJyKCJNZW1vcnkgaW5kZXhlZC1jb3Vu
+dC1yZW1vdmUgZmFpbGVkLCBhZGRpbmcgYW55IHJlbW92ZWQgTE1Cc1xuIik7Cj4gICAKPiAgIAkJ
+Zm9yX2VhY2hfZHJtZW1fbG1iX2luX3JhbmdlKGxtYiwgc3RhcnRfbG1iLCBlbmRfbG1iKSB7Cj4g
+ICAJCQlpZiAoIWRybWVtX2xtYl9yZXNlcnZlZChsbWIpKQo+ICAgCQkJCWNvbnRpbnVlOwo+IC0K
+PiAtCQkJcmMgPSBkbHBhcl9hZGRfbG1iKGxtYik7Cj4gKwkJCWlmIChsbWIgPT0gZW5kX2xtYiAm
+JiBkdF91cGRhdGUgPT0gRFRfVVBEQVRFRCkKPiArCQkJCXJvbGxiYWNrX2R0X3VwZGF0ZSA9IERU
+X1RPVVBEQVRFOwo+ICsJCQlyYyA9IGRscGFyX2FkZF9sbWIobG1iLCAmcm9sbGJhY2tfZHRfdXBk
+YXRlKTsKPiAgIAkJCWlmIChyYykKPiAgIAkJCQlwcl9lcnIoIkZhaWxlZCB0byBhZGQgTE1CLCBk
+cmMgaW5kZXggJXhcbiIsCj4gICAJCQkJICAgICAgIGxtYi0+ZHJjX2luZGV4KTsKPiBAQCAtNTcy
+LDcgKzYwMyw3IEBAIHN0YXRpYyBpbmxpbmUgaW50IGRscGFyX21lbW9yeV9yZW1vdmUoc3RydWN0
+IHBzZXJpZXNfaHBfZXJyb3Jsb2cgKmhwX2Vsb2cpCj4gICB7Cj4gICAJcmV0dXJuIC1FT1BOT1RT
+VVBQOwo+ICAgfQo+IC1zdGF0aWMgaW50IGRscGFyX3JlbW92ZV9sbWIoc3RydWN0IGRybWVtX2xt
+YiAqbG1iKQo+ICtzdGF0aWMgaW50IGRscGFyX3JlbW92ZV9sbWIoc3RydWN0IGRybWVtX2xtYiAq
+bG1iLCBib29sIGR0X3VwZGF0ZSkKPiAgIHsKPiAgIAlyZXR1cm4gLUVPUE5PVFNVUFA7Cj4gICB9
+Cj4gQEAgLTU5MSwxMCArNjIyLDExIEBAIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X3JlbW92ZV9i
+eV9pYyh1MzIgbG1ic190b19yZW1vdmUsIHUzMiBkcmNfaW5kZXgpCj4gICB9Cj4gICAjZW5kaWYg
+LyogQ09ORklHX01FTU9SWV9IT1RSRU1PVkUgKi8KPiAgIAo+IC1zdGF0aWMgaW50IGRscGFyX2Fk
+ZF9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+ICtzdGF0aWMgaW50IGRscGFyX2FkZF9sbWIo
+c3RydWN0IGRybWVtX2xtYiAqbG1iLAo+ICsJCWVudW0gZHRfdXBkYXRlX3N0YXR1cyAqZHRfdXBk
+YXRlKQo+ICAgewo+ICAgCXVuc2lnbmVkIGxvbmcgYmxvY2tfc3o7Cj4gLQlpbnQgcmM7Cj4gKwlp
+bnQgcmMsIHJldDsKPiAgIAo+ICAgCWlmIChsbWItPmZsYWdzICYgRFJDT05GX01FTV9BU1NJR05F
+RCkKPiAgIAkJcmV0dXJuIC1FSU5WQUw7Cj4gQEAgLTYwNyw2ICs2MzksMTMgQEAgc3RhdGljIGlu
+dCBkbHBhcl9hZGRfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKmxtYikKPiAgIAo+ICAgCWxtYl9zZXRf
+bmlkKGxtYik7Cj4gICAJbG1iLT5mbGFncyB8PSBEUkNPTkZfTUVNX0FTU0lHTkVEOwo+ICsJaWYg
+KCpkdF91cGRhdGUpIHsKPiArCQlyZXQgPSBkcm1lbV91cGRhdGVfZHQoKTsKPiArCQlpZiAocmV0
+KQo+ICsJCQlwcl93YXJuKCIlcyBmYWlsIHRvIHVwZGF0ZSBkdCwgYnV0IGNvbnRpbnVlXG4iLCBf
+X2Z1bmNfXyk7Cj4gKwkJZWxzZQo+ICsJCQkqZHRfdXBkYXRlID0gRFRfVVBEQVRFRDsKPiArCX0K
+PiAgIAo+ICAgCWJsb2NrX3N6ID0gbWVtb3J5X2Jsb2NrX3NpemVfYnl0ZXMoKTsKPiAgIAo+IEBA
+IC02MTYsNiArNjU1LDggQEAgc3RhdGljIGludCBkbHBhcl9hZGRfbG1iKHN0cnVjdCBkcm1lbV9s
+bWIgKmxtYikKPiAgIAkJaW52YWxpZGF0ZV9sbWJfYXNzb2NpYXRpdml0eV9pbmRleChsbWIpOwo+
+ICAgCQlsbWJfY2xlYXJfbmlkKGxtYik7Cj4gICAJCWxtYi0+ZmxhZ3MgJj0gfkRSQ09ORl9NRU1f
+QVNTSUdORUQ7Cj4gKwkJaWYgKCpkdF91cGRhdGUgPT0gRFRfVVBEQVRFRCkKPiArCQkJZHJtZW1f
+dXBkYXRlX2R0KCk7Cj4gICAJCXJldHVybiByYzsKPiAgIAl9Cj4gICAKPiBAQCAtNjI3LDcgKzY2
+OCwxMSBAQCBzdGF0aWMgaW50IGRscGFyX2FkZF9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+
+ICAgCQlpbnZhbGlkYXRlX2xtYl9hc3NvY2lhdGl2aXR5X2luZGV4KGxtYik7Cj4gICAJCWxtYl9j
+bGVhcl9uaWQobG1iKTsKPiAgIAkJbG1iLT5mbGFncyAmPSB+RFJDT05GX01FTV9BU1NJR05FRDsK
+PiAtCj4gKwkJaWYgKCpkdF91cGRhdGUgPT0gRFRfVVBEQVRFRCkgewo+ICsJCQlyZXQgPSBkcm1l
+bV91cGRhdGVfZHQoKTsKPiArCQkJaWYgKHJldCkKPiArCQkJCXByX3dhcm4oIiVzIGZhaWwgdG8g
+dXBkYXRlIGR0IGR1cmluZyByb2xsYmFjaywgYnV0IGNvbnRpbnVlXG4iLCBfX2Z1bmNfXyk7Cj4g
+KwkJfQo+ICAgCQlfX3JlbW92ZV9tZW1vcnkobmlkLCBiYXNlX2FkZHIsIGJsb2NrX3N6KTsKPiAg
+IAl9Cj4gICAKPiBAQCAtNjM2LDYgKzY4MSw3IEBAIHN0YXRpYyBpbnQgZGxwYXJfYWRkX2xtYihz
+dHJ1Y3QgZHJtZW1fbG1iICpsbWIpCj4gICAKPiAgIHN0YXRpYyBpbnQgZGxwYXJfbWVtb3J5X2Fk
+ZF9ieV9jb3VudCh1MzIgbG1ic190b19hZGQpCj4gICB7Cj4gKwllbnVtIGR0X3VwZGF0ZV9zdGF0
+dXMgZHRfdXBkYXRlID0gRFRfTk9VUERBVEU7Cj4gICAJc3RydWN0IGRybWVtX2xtYiAqbG1iOwo+
+ICAgCWludCBsbWJzX2F2YWlsYWJsZSA9IDA7Cj4gICAJaW50IGxtYnNfYWRkZWQgPSAwOwo+IEBA
+IC02NjYsNyArNzEyLDkgQEAgc3RhdGljIGludCBkbHBhcl9tZW1vcnlfYWRkX2J5X2NvdW50KHUz
+MiBsbWJzX3RvX2FkZCkKPiAgIAkJaWYgKHJjKQo+ICAgCQkJY29udGludWU7Cj4gICAKPiAtCQly
+YyA9IGRscGFyX2FkZF9sbWIobG1iKTsKPiArCQlpZiAobG1ic190b19hZGQgLSBsbWJzX2FkZGVk
+IDw9IDEpCj4gKwkJCWR0X3VwZGF0ZSA9IERUX1RPVVBEQVRFOwo+ICsJCXJjID0gZGxwYXJfYWRk
+X2xtYihsbWIsICZkdF91cGRhdGUpOwo+ICAgCQlpZiAocmMpIHsKPiAgIAkJCWRscGFyX3JlbGVh
+c2VfZHJjKGxtYi0+ZHJjX2luZGV4KTsKPiAgIAkJCWNvbnRpbnVlOwo+IEBAIC02ODMsMTMgKzcz
+MSwxOCBAQCBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9hZGRfYnlfY291bnQodTMyIGxtYnNfdG9f
+YWRkKQo+ICAgCX0KPiAgIAo+ICAgCWlmIChsbWJzX2FkZGVkICE9IGxtYnNfdG9fYWRkKSB7Cj4g
+KwkJZW51bSBkdF91cGRhdGVfc3RhdHVzIHJvbGxiYWNrX2R0X3VwZGF0ZSA9IERUX05PVVBEQVRF
+Owo+ICsKPiAgIAkJcHJfZXJyKCJNZW1vcnkgaG90LWFkZCBmYWlsZWQsIHJlbW92aW5nIGFueSBh
+ZGRlZCBMTUJzXG4iKTsKPiAgIAo+ICAgCQlmb3JfZWFjaF9kcm1lbV9sbWIobG1iKSB7Cj4gICAJ
+CQlpZiAoIWRybWVtX2xtYl9yZXNlcnZlZChsbWIpKQo+ICAgCQkJCWNvbnRpbnVlOwo+ICAgCj4g
+LQkJCXJjID0gZGxwYXJfcmVtb3ZlX2xtYihsbWIpOwo+ICsJCQlpZiAoLS1sbWJzX2FkZGVkID09
+IDAgJiYgZHRfdXBkYXRlID09IERUX1VQREFURUQpCj4gKwkJCQlyb2xsYmFja19kdF91cGRhdGUg
+PSBEVF9UT1VQREFURTsKPiArCj4gKwkJCXJjID0gZGxwYXJfcmVtb3ZlX2xtYihsbWIsICZyb2xs
+YmFja19kdF91cGRhdGUpOwo+ICAgCQkJaWYgKHJjKQo+ICAgCQkJCXByX2VycigiRmFpbGVkIHRv
+IHJlbW92ZSBMTUIsIGRyYyBpbmRleCAleFxuIiwKPiAgIAkJCQkgICAgICAgbG1iLT5kcmNfaW5k
+ZXgpOwo+IEBAIC03MTYsNiArNzY5LDcgQEAgc3RhdGljIGludCBkbHBhcl9tZW1vcnlfYWRkX2J5
+X2NvdW50KHUzMiBsbWJzX3RvX2FkZCkKPiAgIAo+ICAgc3RhdGljIGludCBkbHBhcl9tZW1vcnlf
+YWRkX2J5X2luZGV4KHUzMiBkcmNfaW5kZXgpCj4gICB7Cj4gKwllbnVtIGR0X3VwZGF0ZV9zdGF0
+dXMgZHRfdXBkYXRlID0gRFRfVE9VUERBVEU7Cj4gICAJc3RydWN0IGRybWVtX2xtYiAqbG1iOwo+
+ICAgCWludCByYywgbG1iX2ZvdW5kOwo+ICAgCj4gQEAgLTcyNyw3ICs3ODEsNyBAQCBzdGF0aWMg
+aW50IGRscGFyX21lbW9yeV9hZGRfYnlfaW5kZXgodTMyIGRyY19pbmRleCkKPiAgIAkJCWxtYl9m
+b3VuZCA9IDE7Cj4gICAJCQlyYyA9IGRscGFyX2FjcXVpcmVfZHJjKGxtYi0+ZHJjX2luZGV4KTsK
+PiAgIAkJCWlmICghcmMpIHsKPiAtCQkJCXJjID0gZGxwYXJfYWRkX2xtYihsbWIpOwo+ICsJCQkJ
+cmMgPSBkbHBhcl9hZGRfbG1iKGxtYiwgJmR0X3VwZGF0ZSk7Cj4gICAJCQkJaWYgKHJjKQo+ICAg
+CQkJCQlkbHBhcl9yZWxlYXNlX2RyYyhsbWItPmRyY19pbmRleCk7Cj4gICAJCQl9Cj4gQEAgLTc1
+MCw2ICs4MDQsNyBAQCBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9hZGRfYnlfaW5kZXgodTMyIGRy
+Y19pbmRleCkKPiAgIAo+ICAgc3RhdGljIGludCBkbHBhcl9tZW1vcnlfYWRkX2J5X2ljKHUzMiBs
+bWJzX3RvX2FkZCwgdTMyIGRyY19pbmRleCkKPiAgIHsKPiArCWVudW0gZHRfdXBkYXRlX3N0YXR1
+cyBkdF91cGRhdGUgPSBEVF9OT1VQREFURTsKPiAgIAlzdHJ1Y3QgZHJtZW1fbG1iICpsbWIsICpz
+dGFydF9sbWIsICplbmRfbG1iOwo+ICAgCWludCBsbWJzX2F2YWlsYWJsZSA9IDA7Cj4gICAJaW50
+IHJjOwo+IEBAIC03ODMsNyArODM4LDkgQEAgc3RhdGljIGludCBkbHBhcl9tZW1vcnlfYWRkX2J5
+X2ljKHUzMiBsbWJzX3RvX2FkZCwgdTMyIGRyY19pbmRleCkKPiAgIAkJaWYgKHJjKQo+ICAgCQkJ
+YnJlYWs7Cj4gICAKPiAtCQlyYyA9IGRscGFyX2FkZF9sbWIobG1iKTsKPiArCQlpZiAobG1iID09
+IGVuZF9sbWIpCj4gKwkJCWR0X3VwZGF0ZSA9IERUX1RPVVBEQVRFOwo+ICsJCXJjID0gZGxwYXJf
+YWRkX2xtYihsbWIsICZkdF91cGRhdGUpOwo+ICAgCQlpZiAocmMpIHsKPiAgIAkJCWRscGFyX3Jl
+bGVhc2VfZHJjKGxtYi0+ZHJjX2luZGV4KTsKPiAgIAkJCWJyZWFrOwo+IEBAIC03OTYsMTAgKzg1
+MywxNCBAQCBzdGF0aWMgaW50IGRscGFyX21lbW9yeV9hZGRfYnlfaWModTMyIGxtYnNfdG9fYWRk
+LCB1MzIgZHJjX2luZGV4KQo+ICAgCQlwcl9lcnIoIk1lbW9yeSBpbmRleGVkLWNvdW50LWFkZCBm
+YWlsZWQsIHJlbW92aW5nIGFueSBhZGRlZCBMTUJzXG4iKTsKPiAgIAo+ICAgCQlmb3JfZWFjaF9k
+cm1lbV9sbWJfaW5fcmFuZ2UobG1iLCBzdGFydF9sbWIsIGVuZF9sbWIpIHsKPiArCQkJZW51bSBk
+dF91cGRhdGVfc3RhdHVzIHJvbGxiYWNrX2R0X3VwZGF0ZSA9IERUX05PVVBEQVRFOwo+ICsKPiAg
+IAkJCWlmICghZHJtZW1fbG1iX3Jlc2VydmVkKGxtYikpCj4gICAJCQkJY29udGludWU7Cj4gICAK
+PiAtCQkJcmMgPSBkbHBhcl9yZW1vdmVfbG1iKGxtYik7Cj4gKwkJCWlmIChsbWIgPT0gZW5kX2xt
+YiAmJiBkdF91cGRhdGUgPT0gRFRfVVBEQVRFRCkKPiArCQkJCXJvbGxiYWNrX2R0X3VwZGF0ZSA9
+IERUX1RPVVBEQVRFOwo+ICsJCQlyYyA9IGRscGFyX3JlbW92ZV9sbWIobG1iLCAmcm9sbGJhY2tf
+ZHRfdXBkYXRlKTsKPiAgIAkJCWlmIChyYykKPiAgIAkJCQlwcl9lcnIoIkZhaWxlZCB0byByZW1v
+dmUgTE1CLCBkcmMgaW5kZXggJXhcbiIsCj4gICAJCQkJICAgICAgIGxtYi0+ZHJjX2luZGV4KTsK
+PiBAQCAtODc5LDkgKzk0MCw2IEBAIGludCBkbHBhcl9tZW1vcnkoc3RydWN0IHBzZXJpZXNfaHBf
+ZXJyb3Jsb2cgKmhwX2Vsb2cpCj4gICAJCWJyZWFrOwo+ICAgCX0KPiAgIAo+IC0JaWYgKCFyYykK
+PiAtCQlyYyA9IGRybWVtX3VwZGF0ZV9kdCgpOwo+IC0KPiAgIAl1bmxvY2tfZGV2aWNlX2hvdHBs
+dWcoKTsKPiAgIAlyZXR1cm4gcmM7Cj4gICB9Cj4gCgoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
