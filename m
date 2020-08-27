@@ -1,18 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kBIt1-0001YP-Sa
- for kexec@lists.infradead.org; Thu, 27 Aug 2020 14:28:22 +0000
-From: John Ogness <john.ogness@linutronix.de>
+ id 1kBJeL-0003Zi-Pw
+ for kexec@lists.infradead.org; Thu, 27 Aug 2020 15:17:15 +0000
+Date: Thu, 27 Aug 2020 17:17:11 +0200
+From: Petr Mladek <pmladek@suse.com>
 Subject: Re: [PATCH v2 5/7][next] printk: ringbuffer: add
  finalization/extension support
-In-Reply-To: <20200827125047.GB4353@alley>
+Message-ID: <20200827151710.GB4928@alley>
 References: <20200824103538.31446-1-john.ogness@linutronix.de>
  <20200824103538.31446-6-john.ogness@linutronix.de>
- <20200827125047.GB4353@alley>
-Date: Thu, 27 Aug 2020 16:34:16 +0206
-Message-ID: <87mu2g5fjz.fsf@jogness.linutronix.de>
+ <87lfi1ls2g.fsf@jogness.linutronix.de>
+ <20200826100113.GA8849@jagdpanzerIV.localdomain>
+ <87eentlh19.fsf@jogness.linutronix.de>
+ <20200826150726.GA4928@alley>
+ <87pn7c5s0t.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <87pn7c5s0t.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,195 +30,391 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
+To: John Ogness <john.ogness@linutronix.de>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Petr,
+On Thu 2020-08-27 12:04:58, John Ogness wrote:
+> On 2020-08-26, Petr Mladek <pmladek@suse.com> wrote:
+> >> This series makes a very naive assumption that the previous
+> >> descriptor is either in the reserved or committed queried states. The
+> >> fact is, it can be in any of the 4 queried states. Adding support for
+> >> finalization of all the states then gets quite complex, since any
+> >> state transition (cmpxchg) may have to deal with an unexpected FINAL
+> >> flag.
+> >
+> > It has to be done in two steps to avoid race:
+> >
+> > prb_commit()
+> >
+> >    + set PRB_COMMIT_MASK
+> >    + check if it is still the last descriptor in the array
+> >    + set PRB_FINAL_MASK when it is not the last descriptor
+> >
+> > It should work because prb_reserve() finalizes the previous
+> > descriptor after the new one is reserved. As a result:
+> >
+> >    + prb_reserve() should either see PRB_COMMIT_MASK in the previous
+> >      descriptor and be able to finalize it.
+> >
+> >    + or prb_commit() will see that the head moved and it is not
+> >      longer the last reserved one.
+> 
+> I do not like the idea of relying on descriptors to finalize
+> themselves. I worry that there might be some hole there. Failing to
+> finalize basically disables printk, so that is pretty serious.
+> 
+> Below is a patch against this series that adds support for finalizing
+> all 4 queried states. It passes all my tests. Note that the code handles
+> 2 corner cases:
+> 
+> 1. When seq is 0, there is no previous descriptor to finalize. This
+>    exception is important because we don't want to finalize the -1
+>    placeholder. Otherwise, upon the first wrap, a descriptor will be
+>    prematurely finalized.
+> 
+> 2. When a previous descriptor is being reserved for the first time, it
+>    might have a state_var value of 0 because the writer is still in
+>    prb_reserve() and has not set the initial value yet. I added
+>    considerable comments on this special case.
+> 
+> I am comfortable with adding this new code, although it clearly adds
+> complexity.
+> 
+> John Ogness
+> 
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> index 90d48973ac9e..1ed1e9eb930f 100644
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -967,10 +976,25 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+>  	 * any other changes. A write memory barrier is sufficient for this.
+>  	 * This pairs with desc_read:D.
+>  	 */
+> -	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
+> -				     id | 0)) { /* LMM(desc_reserve:F) */
+> -		WARN_ON_ONCE(1);
+> -		return false;
+> +	if (is_final)
+> +		state_val = id | 0 | DESC_FINAL_MASK;
+> +	else
+> +		state_val = id | 0;
+> +	if (atomic_long_cmpxchg(&desc->state_var, prev_state_val,
+> +				state_val) != prev_state_val) { /* LMM(desc_reserve:F) */
+> +		/*
+> +		 * This reusable descriptor must have been finalized already.
+> +		 * Retry with a reusable+final expected value.
+> +		 */
+> +		prev_state_val |= DESC_FINAL_MASK;
+> +		state_val |= DESC_FINAL_MASK;
+> +
+> +		if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
+> +					     state_val)) { /* LMM(desc_reserve:FIXME) */
+> +
+> +			WARN_ON_ONCE(1);
+> +			return false;
 
-Thanks for the review. Most of your suggested changes are fine and I'll
-integrate them for the next version. Here a few comments on some open
-issues.
+IMHO, this need to be done in a cycle until is succeeds. The previous
+descriptor might get reopened or commited several times in the mean time.
 
-On 2020-08-27, Petr Mladek <pmladek@suse.com> wrote:
->> +static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
->> +					 unsigned long *id_out)
->> +{
->> +	unsigned long prev_state_val;
->> +	struct prb_desc *d;
->> +	unsigned long id;
->> +
->> +	id = atomic_long_read(&desc_ring->head_id);
->> +
->> +	d = to_desc(desc_ring, id);
->> +
->> +	prev_state_val = id | DESC_COMMIT_MASK;
->> +	if (!atomic_long_try_cmpxchg_relaxed(&d->state_var, &prev_state_val, id | 0))
->> +		return NULL;
->
-> This might deserve a comment why any barrier is not needed here.
-> I guess that you did not add it because the reader API allows
-> to read data only when DESC_FINAL_MASK is set.
->
-> But this assumption looks dangerous to me. As I already wrote above.
-> We might later need to add an API to read the already committed
-> parts of a continuous lines.
+I have played with the code from the original patchset in parallel
+and came with alreanative solution that uses DESC_FINAL_MASK
+as I originally thought. See below.
 
-Supporting such an API will require more than just a memory barrier
-here. When a record is re-opened, it actually transitions back to a
-reserved state. At that point there is no difference between a record
-being extended and one that is reserved for the first time.
+I still have to shake my head around both approaches.
 
-Perhaps my idea of chaining blocks [0] might be more appropriate. Then
-there are discrete committed pieces that can be read if needed.
+Anwyay, here is my code against the original patchset:
 
-Either way, such a partial-read feature will require a new memory
-barrier pair so a reader would see the state change before any data was
-modified. As the code is now (without such a feature), a memory barrier
-is not needed.
+From 578a9ad6bdb536269cc03d7a65420a414ac35022 Mon Sep 17 00:00:00 2001
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 27 Aug 2020 16:38:03 +0200
+Subject: [PATCH] printk: Alternative solution for handling non-finalized
+ descriptors
 
->> +static void desc_finalize(struct prb_desc_ring *desc_ring, unsigned long id)
->> +{
->> +	unsigned long prev_state_val = id | DESC_COMMIT_MASK;
->> +	struct prb_desc *d = to_desc(desc_ring, id);
->> +	bool is_final;
->> +
->> +	while (!atomic_long_try_cmpxchg_relaxed(&d->state_var, &prev_state_val,
->> +						prev_state_val | DESC_FINAL_MASK)) {
->> +
->> +		if (get_desc_state(id, prev_state_val, &is_final) != desc_reserved)
->> +			break;
->> +
->> +		if (is_final)
->> +			break;
->> +	}
->
-> Do we need the cycle and check if it succeeded?
+The original patchset allowed to set PRB_FINAL_MASK even when PRB_COMMIT_MASK
+was not set. It was used in prb_reserve() to make sure that the previous
+record will always get finalized.
 
-The initial cmpxchg() is assuming the previous descriptor is in the
-commit+!final state (common case). But, for example, if it was in the
-reserve+final state, the cmpxhg() would fail and the finalization is
-already successful.
+The result is that there are more possible combinations of the bits
+and more cmpxchg calls have to be used with different combinations
+of bits.
 
-> When could the cmpxchg fail?
->
->     + It is still reserved or reserved again => it should get
->       finalized by the one who reserved it. This is related to
->       the problem reported/discussed in the other thread,
->       see https://lore.kernel.org/r/87lfi1ls2g.fsf@jogness.linutronix.de
->
->     + It is already in the final (committed) state => success
->
->     + It is in reusable state => already done in the past
->
->     + It is already reused => already done in the past
+This is easy in prb_commit(). It needs to set PRB_COMMIT_MASK.
+PRB_FINAL_MASK could never get removed. So it is enough to try
+both possibilities in the right order.
 
-  + It is being reserved but is still uninitialized (state_var = 0).
+But it gets more problematic in prb_reserve() because the previous
+descriptor might get repeatedly re-reserved. It would need to
+try both combinations in a cycle until it succeeds. It would
+work in reality because the data block could not get extended
+indefinitely. But it might make headaches when one tries
+to understand the logic.
 
-  + It is being reserved but is not yet set (id is one wrap behind).
+Alternative solution is to allow to set PRB_FINAL_MASK only
+when PRB_COMMIT_MASK is set. This might result in a non-finalized
+descriptor when PRB_COMMIT_MASK was not set when the next descriptor
+was reserved and nobody later called prb_commit_finalize().
 
-> IMHO, the following simple call should be enough.
->
-> 	atomic_long_try_cmpxchg_relaxed(&d->state_var,	&prev_state_val,
-> 					prev_state_val | DESC_FINAL_MASK);
+The solution is to set PRB_FINAL_MASK also from prb_commit()
+when the next descriptor is already reused. The only requirement
+is to set PRB_COMMIT_MASK before checking the next descriptor
+to avoid race.
 
-This works if we define that the FINAL flag can only be set when the
-COMMIT flag is set. (More on this below.)
+By other words. PRB_FINAL_MASK could be set from two locations.
 
-> Well, I am not sure about the "relaxed" variant again. I would feel
-> more comfortable when it is full barrier especially because it
-> might be done by another CPU than what did the commit. And
-> we need to avoid the race when nobody finalize the record.
+    + prb_reserve() must not set it when PRB_COMMIT_MASK has not
+      been set yet. But then prb_commit() must be called and
+      it must see that the next descriptor has been reused.
 
-The FINAL flag has nothing to do with whether or not the data is
-consistent. It's only use is to prevent a writer from transitioning a
-descriptor back to reserved via cmpxchg(). What would a memory barrier
-here be pairing with?
+    + prb_commit() must check if the next descriptor is already
+      reused and set PRB_FINAL_MASK just in case it has not
+      already been done by prb_reserve().
 
->> +static void _prb_commit(struct prb_reserved_entry *e, unsigned long final_mask)
->>  {
->>  	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
->>  	struct prb_desc *d = to_desc(desc_ring, e->id);
->>  	unsigned long prev_state_val = e->id | 0;
->>  
->> -	/* Now the writer has finished all writing: LMM(prb_commit:A) */
->> +	/* Now the writer has finished all writing: LMM(_prb_commit:A) */
->>  
->>  	/*
->>  	 * Set the descriptor as committed. See "ABA Issues" about why
->> @@ -1244,14 +1518,66 @@ void prb_commit(struct prb_reserved_entry *e)
->>  	 * this. This pairs with desc_read:B.
->>  	 */
->>  	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
->> -				     e->id | DESC_COMMIT_MASK)) { /* LMM(prb_commit:B) */
->> -		WARN_ON_ONCE(1);
->> +				     e->id | DESC_COMMIT_MASK |
->> +					     final_mask)) { /* LMM(_prb_commit:B) */
->> +		/*
->> +		 * This reserved descriptor must have been finalized already.
->> +		 * Retry with a reserved+final expected value.
->> +		 */
->> +		prev_state_val = e->id | 0 | DESC_FINAL_MASK;
->
-> This does not make sense to me. The state "e->id | 0 | DESC_FINAL_MASK"
-> must never happen. It would mean that someone finalized
-> record that is still being modified.
+All new cmpxchg() are full barriers to be on the safe side.
+I believe that it is necessary but I did not have time
+to describe it. We might discuss it later when this approach
+was used.
 
-Correct. Setting the FINAL flag means the descriptor cannot be
-_reopened_. It has nothing to do with the current state of the
-descriptor. Once the FINAL flag is set, it remains set for the remaining
-lifetime of that record.
+Signed-off-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/printk/printk.c            |   6 +-
+ kernel/printk/printk_ringbuffer.c | 128 +++++++++++++++++-------------
+ kernel/printk/printk_ringbuffer.h |   2 +-
+ 3 files changed, 79 insertions(+), 57 deletions(-)
 
-> Or we both have different understanding of the logic.
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 80afee3cfec7..01c034ddb118 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -535,7 +535,7 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	if ((flags & LOG_CONT) || !(flags & LOG_NEWLINE))
+ 		prb_commit(&e);
+ 	else
+-		prb_commit_finalize(&e);
++		prb_final_commit(&e);
+ 
+ 	return (text_len + trunc_msg_len);
+ }
+@@ -1091,7 +1091,7 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+ 	dest_r.info->ts_nsec = r->info->ts_nsec;
+ 	dest_r.info->caller_id = r->info->caller_id;
+ 
+-	prb_commit_finalize(&e);
++	prb_final_commit(&e);
+ 
+ 	return prb_record_text_space(&e);
+ }
+@@ -1905,7 +1905,7 @@ static size_t log_output(int facility, int level, enum log_flags lflags, const c
+ 			r.info->text_len += text_len;
+ 			if (lflags & LOG_NEWLINE) {
+ 				r.info->flags |= LOG_NEWLINE;
+-				prb_commit_finalize(&e);
++				prb_final_commit(&e);
+ 			} else {
+ 				prb_commit(&e);
+ 			}
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index 90d48973ac9e..e674d09ea27c 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -1351,25 +1351,58 @@ bool prb_reserve_last(struct prb_reserved_entry *e, struct printk_ringbuffer *rb
+ }
+ 
+ /*
+- * Attempt to finalize a specified descriptor. Finalization only happens if
+- * the descriptor is in the !final or commit+!final state, both of which
+- * yield a state query result of desc_reserved.
++ * Attempt to finalize a specified descriptor. It is possible only
++ * when it has DESC_COMMIT_MASK set.
+  */
+ static void desc_finalize(struct prb_desc_ring *desc_ring, unsigned long id)
+ {
+ 	unsigned long prev_state_val = id | DESC_COMMIT_MASK;
+ 	struct prb_desc *d = to_desc(desc_ring, id);
+-	bool is_final;
+ 
+-	while (!atomic_long_try_cmpxchg_relaxed(&d->state_var, &prev_state_val,
+-						prev_state_val | DESC_FINAL_MASK)) {
++	/*
++	 * Failure is perfectly fine. It might happen when the descriptor
++	 * is in the following states:
++	 *
++	 *  + reserved: will be finalized in the related prb_commit()
++	 *  + committed: already finalized
++	 *  + reusable: already finalized and invalidated
++	 *  + misc: already finalized and reused again
++	 */
++	atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
++				prev_state_val | DESC_FINAL_MASK);
+ 
+-		if (get_desc_state(id, prev_state_val, &is_final) != desc_reserved)
+-			break;
++}
+ 
+-		if (is_final)
+-			break;
+-	}
++/*
++ * Finalize the descriptor when it is not the last reserved one.
++ */
++static void desc_check_and_finalize(struct prb_desc_ring *desc_ring, unsigned long id)
++{
++	unsigned long next_prev_id = DESC_ID_PREV_WRAP(desc_ring, id + 1);
++	struct prb_desc *next_prev_d = to_desc(desc_ring, next_prev_id);
++	unsigned long next_prev_state_val;
++	enum desc_state next_prev_d_state;
++
++	/*
++	 * reserved, committed, and reusable states mean that the next desciptor
++	 * is still used for older data from previous wrap.
++	 *
++	 * Note that it is important to check id from the previous wrap. It is
++	 * only way to be sure that the next descripter has not been reused yet.
++	 * Otherwise, the desc ring might have already been reused many times.
++	 */
++	next_prev_state_val = atomic_long_read(&next_prev_d->state_var);
++	next_prev_d_state = get_desc_state(next_prev_id, next_prev_state_val, NULL);
++	if (next_prev_d_state != desc_miss)
++		return;
++
++
++	/*
++	 * desc_miss mean the the next descriptor is already used for newer data
++	 * and this descriptor has to be finalized. It is needed to support
++	 * continuous lines even there is a missing newline.
++	 */
++	desc_finalize(desc_ring, id);
+ }
+ 
+ /**
+@@ -1432,10 +1465,8 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	}
+ 
+ 	/*
+-	 * New data is about to be reserved. Once that happens, previous
+-	 * descriptors are no longer able to be extended. Finalize the
+-	 * previous descriptor now so that it can be made available to
+-	 * readers (when committed).
++	 * Try to finalize the previous descriptor. It is needed to make sure
++	 * that it will be finalized even when there is a missing newline.
+ 	 */
+ 	desc_finalize(desc_ring, DESC_ID(id - 1));
+ 
+@@ -1501,13 +1532,13 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ }
+ 
+ /* Commit the data (possibly finalizing it) and restore interrupts. */
+-static void _prb_commit(struct prb_reserved_entry *e, unsigned long final_mask)
++void prb_commit(struct prb_reserved_entry *e)
+ {
+ 	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
+ 	struct prb_desc *d = to_desc(desc_ring, e->id);
+ 	unsigned long prev_state_val = e->id | 0;
+ 
+-	/* Now the writer has finished all writing: LMM(_prb_commit:A) */
++	/* Now the writer has finished all writing: LMM(prb_commit:A) */
+ 
+ 	/*
+ 	 * Set the descriptor as committed. See "ABA Issues" about why
+@@ -1518,46 +1549,14 @@ static void _prb_commit(struct prb_reserved_entry *e, unsigned long final_mask)
+ 	 * this. This pairs with desc_read:B.
+ 	 */
+ 	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
+-				     e->id | DESC_COMMIT_MASK |
+-					     final_mask)) { /* LMM(_prb_commit:B) */
+-		/*
+-		 * This reserved descriptor must have been finalized already.
+-		 * Retry with a reserved+final expected value.
+-		 */
+-		prev_state_val = e->id | 0 | DESC_FINAL_MASK;
+-
+-		if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
+-					     e->id | DESC_COMMIT_MASK |
+-						     DESC_FINAL_MASK)) { /* LMM(_prb_commit:C) */
+-			WARN_ON_ONCE(1);
+-		}
++				     e->id | DESC_COMMIT_MASK)) { /* LMM(_prb_commit:B) */
++				WARN_ON_ONCE(1);
+ 	}
+ 
+ 	/* Restore interrupts, the reserve/commit window is finished. */
+ 	local_irq_restore(e->irqflags);
+ }
+ 
+-/**
+- * prb_commit() - Commit (previously reserved) data to the ringbuffer.
+- *
+- * @e: The entry containing the reserved data information.
+- *
+- * This is the public function available to writers to commit data.
+- *
+- * Note that the data is not yet available to readers until it is finalized.
+- * Finalizing happens automatically when space for the next record is
+- * reserved.
+- *
+- * See prb_commit_finalize() for a version of this function that finalizes
+- * immediately.
+- *
+- * Context: Any context. Enables local interrupts.
+- */
+-void prb_commit(struct prb_reserved_entry *e)
+-{
+-	_prb_commit(e, 0);
+-}
+-
+ /**
+  * prb_commit_finalize() - Commit and finalize (previously reserved) data to
+  *                         the ringbuffer.
+@@ -1573,9 +1572,32 @@ void prb_commit(struct prb_reserved_entry *e)
+  *
+  * Context: Any context. Enables local interrupts.
+  */
+-void prb_commit_finalize(struct prb_reserved_entry *e)
++void prb_final_commit(struct prb_reserved_entry *e)
+ {
+-	_prb_commit(e, DESC_FINAL_MASK);
++	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
++	struct prb_desc *d = to_desc(desc_ring, e->id);
++	unsigned long prev_state_val = e->id | 0;
++
++	/* Now the writer has finished all writing: LMM(prb_commit:A) */
++
++	/*
++	 * Set the descriptor as committed and final in a single step.
++	 * See "ABA Issues" about why cmpxchg() instead of set() is used.
++	 *
++	 * Guarantee all record data is stored before the descriptor state
++	 * is stored as committed. A write memory barrier is sufficient for
++	 * this. This pairs with desc_read:B.
++	 */
++	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
++				     e->id | DESC_COMMIT_MASK | DESC_FINAL_MASK)) { /* LMM(prb_final_commit:B) */
++		WARN_ON_ONCE(1);
++	}
++
++
++	desc_check_and_finalize(desc_ring, e->id);
++
++	/* Restore interrupts, the reserve/commit window is finished. */
++	local_irq_restore(e->irqflags);
+ }
+ 
+ /*
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index 8ed1f1f154ec..6fb486ab2bde 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -322,7 +322,7 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ bool prb_reserve_last(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 		      struct printk_record *r, u32 caller_id);
+ void prb_commit(struct prb_reserved_entry *e);
+-void prb_commit_finalize(struct prb_reserved_entry *e);
++void prb_final_commit(struct prb_reserved_entry *e);
+ 
+ void prb_init(struct printk_ringbuffer *rb,
+ 	      char *text_buf, unsigned int text_buf_size,
+-- 
+2.26.2
 
-Yes.
-
-> Well, there are actually two approaches:
->
->    + I originally expected that FINAL bit could be set only when
->      COMMIT bit is set. But this brings the problems that prb_commit()
->      would need to set FINAL when it is not longer the last descriptor.
-
-My first attempt was to implement this. It turned out complex because it
-involves descriptors finalizing themselves _and_ descriptors finalizing
-their predecessor. This required two new memory barrier pairs:
-
-  - between a writer committing and re-checking the head_id that another
-    writer may have modified
-
-  - between a writer setting the state and another writer checking that
-    state
-
-After re-evaluating the purpose of the FINAL flag, I decided that it
-would be simpler to implement the 2nd approach (below) and would not
-require any new memory barrier pairs.
-
->    + Another approach is that FINAL bit could be set even when the
->      COMMIT is not set. It would always be set by the next
->      prb_reserve(). But it causes that there are more possible
->      combinations of COMMIT and FINAL bits. As a result, the caller
->      would  need try more variants of the cmpxchg() calls. And
->      it creates another races/cycles, ...
-
-It does not cause more races. And I don't see where it will cause more
-cmpxchg() calls. It probably _does_ lead to more cmpxchg() _code_. But
-those are fallbacks for when the common case fails.
-
-> I guess that you wanted to implement the 2nd approach and ended in
-> many troubles. I wonder if the 1st approach might be easier.
-
-Well, the "many troubles" were due to my naive assumption about the
-previous descriptor state. Once I realized that, the missing piece was
-obvious.
-
-I will reconsider the first approach. Perhaps adding memory barriers is
-preferable if it reduces lines of code.
-
-And we will need to clarify partial continuous line reading because
-right now that will not work.
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/875z9nvvl2.fsf@jogness.linutronix.de
 
 _______________________________________________
 kexec mailing list
