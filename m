@@ -1,23 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-il1-x142.google.com ([2607:f8b0:4864:20::142])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kBYhs-0005Kg-62
- for kexec@lists.infradead.org; Fri, 28 Aug 2020 07:21:53 +0000
-Date: Fri, 28 Aug 2020 09:21:48 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v2 5/7][next] printk: ringbuffer: add
- finalization/extension support
-Message-ID: <20200828072148.GC4353@alley>
-References: <20200824103538.31446-1-john.ogness@linutronix.de>
- <20200824103538.31446-6-john.ogness@linutronix.de>
- <87lfi1ls2g.fsf@jogness.linutronix.de>
- <20200826100113.GA8849@jagdpanzerIV.localdomain>
- <87eentlh19.fsf@jogness.linutronix.de>
- <20200826150726.GA4928@alley>
- <87pn7c5s0t.fsf@jogness.linutronix.de>
+ id 1kBZSp-0002E8-Uz
+ for kexec@lists.infradead.org; Fri, 28 Aug 2020 08:10:25 +0000
+Received: by mail-il1-x142.google.com with SMTP id q14so165045ilj.8
+ for <kexec@lists.infradead.org>; Fri, 28 Aug 2020 01:10:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87pn7c5s0t.fsf@jogness.linutronix.de>
+References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
+ <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
+ <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
+In-Reply-To: <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Fri, 28 Aug 2020 16:10:09 +0800
+Message-ID: <CAFgQCTs58dOcO0CGVDD1WxiOE9yaPe_WG-U=t+=at45bAipQ_A@mail.gmail.com>
+Subject: Re: [PATCHv5 2/2] powerpc/pseries: update device tree before ejecting
+ hotplug uevents
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,197 +23,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Laurent Dufour <ldufour@linux.ibm.com>
+Cc: Nathan Lynch <nathanl@linux.ibm.com>, Michael Ellerman <mpe@ellerman.id.au>, Kexec Mailing List <kexec@lists.infradead.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
 
-On Thu 2020-08-27 12:04:58, John Ogness wrote:
-> On 2020-08-26, Petr Mladek <pmladek@suse.com> wrote:
-> >> This series makes a very naive assumption that the previous
-> >> descriptor is either in the reserved or committed queried states. The
-> >> fact is, it can be in any of the 4 queried states. Adding support for
-> >> finalization of all the states then gets quite complex, since any
-> >> state transition (cmpxchg) may have to deal with an unexpected FINAL
-> >> flag.
-> >
-> > It has to be done in two steps to avoid race:
-> >
-> > prb_commit()
-> >
-> >    + set PRB_COMMIT_MASK
-> >    + check if it is still the last descriptor in the array
-> >    + set PRB_FINAL_MASK when it is not the last descriptor
-> >
-> > It should work because prb_reserve() finalizes the previous
-> > descriptor after the new one is reserved. As a result:
-> >
-> >    + prb_reserve() should either see PRB_COMMIT_MASK in the previous
-> >      descriptor and be able to finalize it.
-> >
-> >    + or prb_commit() will see that the head moved and it is not
-> >      longer the last reserved one.
-> 
-> I do not like the idea of relying on descriptors to finalize
-> themselves. I worry that there might be some hole there. Failing to
-> finalize basically disables printk, so that is pretty serious.
-> 
-> Below is a patch against this series that adds support for finalizing
-> all 4 queried states. It passes all my tests. Note that the code handles
-> 2 corner cases:
-> 
-> 1. When seq is 0, there is no previous descriptor to finalize. This
->    exception is important because we don't want to finalize the -1
->    placeholder. Otherwise, upon the first wrap, a descriptor will be
->    prematurely finalized.
-> 
-> 2. When a previous descriptor is being reserved for the first time, it
->    might have a state_var value of 0 because the writer is still in
->    prb_reserve() and has not set the initial value yet. I added
->    considerable comments on this special case.
-> 
-> I am comfortable with adding this new code, although it clearly adds
-> complexity.
-> 
-> John Ogness
-> 
-> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-> index 90d48973ac9e..1ed1e9eb930f 100644
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> @@ -860,9 +860,11 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
->  	struct prb_desc_ring *desc_ring = &rb->desc_ring;
->  	unsigned long prev_state_val;
->  	unsigned long id_prev_wrap;
-> +	unsigned long state_val;
->  	struct prb_desc *desc;
->  	unsigned long head_id;
->  	unsigned long id;
-> +	bool is_final;
->  
->  	head_id = atomic_long_read(&desc_ring->head_id); /* LMM(desc_reserve:A) */
->  
-> @@ -953,10 +955,17 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
->  	 * See "ABA Issues" about why this verification is performed.
->  	 */
->  	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
-> -	if (prev_state_val &&
-> -	    get_desc_state(id_prev_wrap, prev_state_val, NULL) != desc_reusable) {
-> -		WARN_ON_ONCE(1);
-> -		return false;
-> +	if (get_desc_state(id_prev_wrap, prev_state_val, &is_final) != desc_reusable) {
-> +		/*
-> +		 * If this descriptor has never been used, @prev_state_val
-> +		 * will be 0. However, even though it may have never been
-> +		 * used, it may have been finalized. So that flag must be
-> +		 * ignored.
-> +		 */
-> +		if ((prev_state_val & ~DESC_FINAL_MASK)) {
-> +			WARN_ON_ONCE(1);
-> +			return false;
-> +		}
->  	}
->  
->  	/*
-> @@ -967,10 +976,25 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
->  	 * any other changes. A write memory barrier is sufficient for this.
->  	 * This pairs with desc_read:D.
->  	 */
-> -	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
-> -				     id | 0)) { /* LMM(desc_reserve:F) */
-> -		WARN_ON_ONCE(1);
-> -		return false;
-> +	if (is_final)
-> +		state_val = id | 0 | DESC_FINAL_MASK;
-
-The state from the previous wrap always have to have DESC_FINAL_MASK set.
-Do I miss something, please?
-
-> +	else
-> +		state_val = id | 0;
-> +	if (atomic_long_cmpxchg(&desc->state_var, prev_state_val,
-> +				state_val) != prev_state_val) { /* LMM(desc_reserve:F) */
-> +		/*
-> +		 * This reusable descriptor must have been finalized already.
-> +		 * Retry with a reusable+final expected value.
-> +		 */
-> +		prev_state_val |= DESC_FINAL_MASK;
-> +		state_val |= DESC_FINAL_MASK;
-> +
-> +		if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
-> +					     state_val)) { /* LMM(desc_reserve:FIXME) */
-> +
-> +			WARN_ON_ONCE(1);
-> +			return false;
-> +		}
->  	}
->  
->  	/* Now data in @desc can be modified: LMM(desc_reserve:G) */
-> @@ -1364,9 +1388,37 @@ static void desc_finalize(struct prb_desc_ring *desc_ring, unsigned long id)
->  	while (!atomic_long_try_cmpxchg_relaxed(&d->state_var, &prev_state_val,
->  						prev_state_val | DESC_FINAL_MASK)) {
->  
-> -		if (get_desc_state(id, prev_state_val, &is_final) != desc_reserved)
-> +		switch (get_desc_state(id, prev_state_val, &is_final)) {
-> +		case desc_miss:
-> +			/*
-> +			 * If the ID is exactly 1 wrap behind the expected, it is
-> +			 * in the process of being reserved by another writer and
-> +			 * must be considered reserved.
-> +			 */
-> +			if (get_desc_state(DESC_ID_PREV_WRAP(desc_ring, id),
-> +					   prev_state_val, &is_final) != desc_reusable) {
-> +				/*
-> +				 * If this descriptor has never been used, @prev_state_val
-> +				 * will be 0. However, even though it may have never been
-> +				 * used, it may have been finalized. So that flag must be
-> +				 * ignored.
-> +				 */
-> +				if ((prev_state_val & ~DESC_FINAL_MASK)) {
-> +					WARN_ON_ONCE(1);
-> +					return;
-> +				}
-> +			}
-> +			fallthrough;
-
-How is this supposed to work please?
-
-If the ID is exactly one wrap behind, it is being reserved but the new
-it was not written yet. In this case, DESC_FINAL_MASK is already set.
-The above cmpxchg will not do any change. And prb_reserve() will not
-be able to distinguish that it has been finalized.
-
-A solution would be to write the new id here. But then it will be
-needed to detect this in prb_reserve().
-
-It is possible that it already works this way. But I do not see it.
-I haven't had a coffee yet.
-
-
-I am really not sure what solution is better. Mine have more barriers.
-But this brings many new combinations that need to be checked and
-handled. Sigh.
-
-Best Regards,
-Petr
-
-> +		case desc_reserved:
-> +		case desc_reusable:
-> +			/* finalizable, try again */
->  			break;
-> +		case desc_committed:
-> +			/* already finalized */
-> +			return;
-> +		}
->  
-> +		/* already finalized? */
->  		if (is_final)
->  			break;
->  	}
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBBdWcgMjcsIDIwMjAgYXQgMzo1MyBQTSBMYXVyZW50IER1Zm91ciA8bGR1Zm91ckBs
+aW51eC5pYm0uY29tPiB3cm90ZToKPgo+IExlIDEwLzA4LzIwMjAgw6AgMTA6NTIsIFBpbmdmYW4g
+TGl1IGEgw6ljcml0IDoKPiA+IEEgYnVnIGlzIG9ic2VydmVkIG9uIHBzZXJpZXMgYnkgdGFraW5n
+IHRoZSBmb2xsb3dpbmcgc3RlcHMgb24gcmhlbDoKPiA+IC0xLiBkcm1nciAtYyBtZW0gLXIgLXEg
+NQo+ID4gLTIuIGVjaG8gYyA+IC9wcm9jL3N5c3JxLXRyaWdnZXIKPiA+Cj4gPiBBbmQgdGhlbiwg
+dGhlIGZhaWx1cmUgbG9va3MgbGlrZToKPiA+IGtkdW1wOiBzYXZpbmcgdG8gL3N5c3Jvb3QvL3Zh
+ci9jcmFzaC8xMjcuMC4wLjEtMjAyMC0wMS0xNi0wMjowNjoxNC8KPiA+IGtkdW1wOiBzYXZpbmcg
+dm1jb3JlLWRtZXNnLnR4dAo+ID4ga2R1bXA6IHNhdmluZyB2bWNvcmUtZG1lc2cudHh0IGNvbXBs
+ZXRlCj4gPiBrZHVtcDogc2F2aW5nIHZtY29yZQo+ID4gICBDaGVja2luZyBmb3IgbWVtb3J5IGhv
+bGVzICAgICAgICAgICAgICAgICAgICAgICAgIDogWyAgMC4wICVdIC8gICAgICAgICAgICAgICAg
+ICAgQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAgICAgICA6IFsx
+MDAuMCAlXSB8ICAgICAgICAgICAgICAgICAgIEV4Y2x1ZGluZyB1bm5lY2Vzc2FyeSBwYWdlcyAg
+ICAgICAgICAgICAgICAgICAgICAgOiBbMTAwLjAgJV0gXCAgICAgICAgICAgICAgICAgICBDb3B5
+aW5nIGRhdGEgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDogWyAgMC4zICVd
+IC0gICAgICAgICAgZXRhOiAzOHNbICAgNDQuMzM3NjM2XSBoYXNoLW1tdTogbW06IEhhc2hpbmcg
+ZmFpbHVyZSAhIEVBPTB4N2ZmZmJhNDAwMDAwIGFjY2Vzcz0weDgwMDAwMDAwMDAwMDAwMDQgY3Vy
+cmVudD1tYWtlZHVtcGZpbGUKPiA+IFsgICA0NC4zMzc2NjNdIGhhc2gtbW11OiAgICAgdHJhcD0w
+eDMwMCB2c2lkPTB4MTNhMTA5YyBzc2l6ZT0xIGJhc2UgcHNpemU9MiBwc2l6ZSAyIHB0ZT0weGMw
+MDAwMDAwNTAwMDA1MDQKPiA+IFsgICA0NC4zMzc2NzddIGhhc2gtbW11OiBtbTogSGFzaGluZyBm
+YWlsdXJlICEgRUE9MHg3ZmZmYmE0MDAwMDAgYWNjZXNzPTB4ODAwMDAwMDAwMDAwMDAwNCBjdXJy
+ZW50PW1ha2VkdW1wZmlsZQo+ID4gWyAgIDQ0LjMzNzY5Ml0gaGFzaC1tbXU6ICAgICB0cmFwPTB4
+MzAwIHZzaWQ9MHgxM2ExMDljIHNzaXplPTEgYmFzZSBwc2l6ZT0yIHBzaXplIDIgcHRlPTB4YzAw
+MDAwMDA1MDAwMDUwNAo+ID4gWyAgIDQ0LjMzNzcwOF0gbWFrZWR1bXBmaWxlWzQ2OV06IHVuaGFu
+ZGxlZCBzaWduYWwgNyBhdCAwMDAwN2ZmZmJhNDAwMDAwIG5pcCAwMDAwN2ZmZmJiYzRkN2ZjIGxy
+IDAwMDAwMDAxMTM1NmNhM2MgY29kZSAyCj4gPiBbICAgNDQuMzM4NTQ4XSBDb3JlIGR1bXAgdG8g
+fC9iaW4vZmFsc2UgcGlwZSBmYWlsZWQKPiA+IC9saWIva2R1bXAtbGliLWluaXRyYW1mcy5zaDog
+bGluZSA5ODogICA0NjkgQnVzIGVycm9yICAgICAgICAgICAgICAgJENPUkVfQ09MTEVDVE9SIC9w
+cm9jL3ZtY29yZSAkX21wLyRLRFVNUF9QQVRILyRIT1NUX0lQLSREQVRFRElSL3ZtY29yZS1pbmNv
+bXBsZXRlCj4gPiBrZHVtcDogc2F2aW5nIHZtY29yZSBmYWlsZWQKPiA+Cj4gPiAqIFJvb3QgY2F1
+c2UgKgo+ID4gICAgQWZ0ZXIgYW5hbHl6aW5nLCBpdCB0dXJucyBvdXQgdGhhdCBpbiB0aGUgY3Vy
+cmVudCBpbXBsZW1lbnRhdGlvbiwKPiA+IHdoZW4gaG90LXJlbW92aW5nIGxtYiwgdGhlIEtPQkpf
+UkVNT1ZFIGV2ZW50IGVqZWN0cyBiZWZvcmUgdGhlIGR0IHVwZGF0aW5nIGFzCj4gPiB0aGUgY29k
+ZSBfX3JlbW92ZV9tZW1vcnkoKSBjb21lcyBiZWZvcmUgZHJtZW1fdXBkYXRlX2R0KCkuCj4gPiBT
+byBpbiBrZHVtcCBrZXJuZWwsIHdoZW4gcmVhZF9mcm9tX29sZG1lbSgpIHJlc29ydHMgdG8KPiA+
+IHBTZXJpZXNfbHBhcl9ocHRlX2luc2VydCgpIHRvIGluc3RhbGwgaHB0ZSwgYnV0IGZhaWxzIHdp
+dGggLTIgZHVlIHRvCj4gPiBub24tZXhpc3QgcGZuLiBBbmQgZmluYWxseSwgbG93X2hhc2hfZmF1
+bHQoKSByYWlzZSBTSUdCVVMgdG8gcHJvY2VzcywgYXMgaXQKPiA+IGNhbiBiZSBvYnNlcnZlZCAi
+QnVzIGVycm9yIgo+ID4KPiA+ICBGcm9tIGEgdmlld3BvaW50IG9mIGxpc3RlbmVyIGFuZCBwdWJs
+aXNoZXIsIHRoZSBwdWJsaXNoZXIgbm90aWZpZXMgdGhlCj4gPiBsaXN0ZW5lciBiZWZvcmUgZGF0
+YSBpcyByZWFkeS4gIFRoaXMgaW50cm9kdWNlcyBhIHByb2JsZW0gd2hlcmUgdWRldgo+ID4gbGF1
+bmNoZXMga2V4ZWMtdG9vbHMgKGR1ZSB0byBLT0JKX1JFTU9WRSkgYW5kIGxvYWRzIGEgc3RhbGUg
+ZHQgYmVmb3JlCj4gPiB1cGRhdGluZy4gQW5kIGluIGNhcHR1cmUga2VybmVsLCBtYWtlZHVtcGZp
+bGUgd2lsbCBhY2Nlc3MgdGhlIG1lbW9yeSBiYXNlZAo+ID4gb24gdGhlIHN0YWxlIGR0IGluZm8s
+IGFuZCBoaXQgYSBTSUdCVVMgZXJyb3IgZHVlIHRvIGFuIHVuLWV4aXN0ZWQgbG1iLgo+ID4KPiA+
+ICogRml4ICoKPiA+IFRoaXMgYnVnIGlzIGludHJvZHVjZWQgYnkgY29tbWl0IDA2M2I4YjEyNTFm
+ZAo+ID4gKCJwb3dlcnBjL3BzZXJpZXMvbWVtb3J5LWhvdHBsdWc6IE9ubHkgdXBkYXRlIERUIG9u
+Y2UgcGVyIG1lbW9yeSBETFBBUgo+ID4gcmVxdWVzdCIpLCB3aGljaCB0cmllZCB0byBjb21iaW5l
+IGFsbCB0aGUgZHQgdXBkYXRpbmcgaW50byBvbmUuCj4gPgo+ID4gVG8gZml4IHRoaXMgaXNzdWUs
+IG1lYW53aGlsZSBub3QgdG8gaW50cm9kdWNlIGEgcXVhZHJhdGljIHJ1bnRpbWUKPiA+IGNvbXBs
+ZXhpdHkgYnkgdGhlIG1vZGVsOgo+ID4gICAgZGxwYXJfbWVtb3J5X2FkZF9ieV9jb3VudAo+ID4g
+ICAgICBmb3JfZWFjaF9kcm1lbV9sbWIgICAgICAgICAgICAgPC0tCj4gPiAgICAgICAgZGxwYXJf
+YWRkX2xtYgo+ID4gICAgICAgICAgZHJtZW1fdXBkYXRlX2R0KF92MXxfdjIpCj4gPiAgICAgICAg
+ICAgIGZvcl9lYWNoX2RybWVtX2xtYiAgICAgICA8LS0KPiA+IFRoZSBkdCBzaG91bGQgc3RpbGwg
+YmUgb25seSB1cGRhdGVkIG9uY2UsIGFuZCBqdXN0IGJlZm9yZSB0aGUgbGFzdCBtZW1vcnkKPiA+
+IG9ubGluZS9vZmZsaW5lIGV2ZW50IGlzIGVqZWN0ZWQgdG8gdXNlciBzcGFjZS4gQWNoaWV2ZSB0
+aGlzIGJ5IHRyYWNpbmcgdGhlCj4gPiBudW0gb2YgbG1iIGFkZGVkIG9yIHJlbW92ZWQuCj4gPgo+
+ID4gU2lnbmVkLW9mZi1ieTogUGluZ2ZhbiBMaXUgPGtlcm5lbGZhbnNAZ21haWwuY29tPgo+ID4g
+Q2M6IE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxlcm1hbi5pZC5hdT4KPiA+IENjOiBIYXJpIEJh
+dGhpbmkgPGhiYXRoaW5pQGxpbnV4LmlibS5jb20+Cj4gPiBDYzogTmF0aGFuIEx5bmNoIDxuYXRo
+YW5sQGxpbnV4LmlibS5jb20+Cj4gPiBDYzogTmF0aGFuIEZvbnRlbm90IDxuZm9udEBsaW51eC52
+bmV0LmlibS5jb20+Cj4gPiBDYzogTGF1cmVudCBEdWZvdXIgPGxkdWZvdXJAbGludXguaWJtLmNv
+bT4KPiA+IFRvOiBsaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwo+ID4gQ2M6IGtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKPiA+IC0tLQo+ID4gdjQgLT4gdjU6IGNoYW5nZSBkbHBhcl9hZGRf
+bG1iKCkvZGxwYXJfcmVtb3ZlX2xtYigpIHByb3RvdHlwZSB0byByZXBvcnQKPiA+ICAgICAgICAg
+ICAgd2hldGhlciBkdCBpcyB1cGRhdGVkIHN1Y2Nlc3NmdWxseS4KPiA+ICAgICAgICAgICAgRml4
+IGEgY29uZGl0aW9uIGJvdW5kYXJ5IGNoZWNrIGJ1Zwo+ID4gdjMgLT4gdjQ6IHJlc29sdmUgYSBx
+dWFkcmF0aWMgcnVudGltZSBjb21wbGV4aXR5IGlzc3VlLgo+ID4gICAgICAgICAgICBUaGlzIHNl
+cmllcyBpcyBhcHBsaWVkIG9uIG5leHQtdGVzdCBicmFuY2gKPiA+ICAgYXJjaC9wb3dlcnBjL3Bs
+YXRmb3Jtcy9wc2VyaWVzL2hvdHBsdWctbWVtb3J5LmMgfCAxMDIgKysrKysrKysrKysrKysrKysr
+Ky0tLS0tCj4gPiAgIDEgZmlsZSBjaGFuZ2VkLCA4MCBpbnNlcnRpb25zKCspLCAyMiBkZWxldGlv
+bnMoLSkKPiA+Cj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVz
+L2hvdHBsdWctbWVtb3J5LmMgYi9hcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3BzZXJpZXMvaG90cGx1
+Zy1tZW1vcnkuYwo+ID4gaW5kZXggNDZjYmNkMS4uMTU2N2Q5ZiAxMDA2NDQKPiA+IC0tLSBhL2Fy
+Y2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jCj4gPiArKysgYi9h
+cmNoL3Bvd2VycGMvcGxhdGZvcm1zL3BzZXJpZXMvaG90cGx1Zy1tZW1vcnkuYwo+ID4gQEAgLTM1
+MCwxMyArMzUwLDIyIEBAIHN0YXRpYyBib29sIGxtYl9pc19yZW1vdmFibGUoc3RydWN0IGRybWVt
+X2xtYiAqbG1iKQo+ID4gICAgICAgcmV0dXJuIHRydWU7Cj4gPiAgIH0KPiA+Cj4gPiAtc3RhdGlj
+IGludCBkbHBhcl9hZGRfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKik7Cj4gPiArZW51bSBkdF91cGRh
+dGVfc3RhdHVzIHsKPiA+ICsgICAgIERUX05PVVBEQVRFLAo+ID4gKyAgICAgRFRfVE9VUERBVEUs
+Cj4gPiArICAgICBEVF9VUERBVEVELAo+ID4gK307Cj4gPiArCj4gPiArLyogIipkdF91cGRhdGUi
+IHJldHVybnMgRFRfVVBEQVRFRCBpZiB1cGRhdGVkICovCj4gPiArc3RhdGljIGludCBkbHBhcl9h
+ZGRfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKmxtYiwKPiA+ICsgICAgICAgICAgICAgZW51bSBkdF91
+cGRhdGVfc3RhdHVzICpkdF91cGRhdGUpOwo+ID4KPiA+IC1zdGF0aWMgaW50IGRscGFyX3JlbW92
+ZV9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+ID4gK3N0YXRpYyBpbnQgZGxwYXJfcmVtb3Zl
+X2xtYihzdHJ1Y3QgZHJtZW1fbG1iICpsbWIsCj4gPiArICAgICAgICAgICAgIGVudW0gZHRfdXBk
+YXRlX3N0YXR1cyAqZHRfdXBkYXRlKQo+ID4gICB7Cj4gPiAgICAgICB1bnNpZ25lZCBsb25nIGJs
+b2NrX3N6Owo+ID4gICAgICAgcGh5c19hZGRyX3QgYmFzZV9hZGRyOwo+ID4gLSAgICAgaW50IHJj
+LCBuaWQ7Cj4gPiArICAgICBpbnQgcmMsIHJldCwgbmlkOwo+ID4KPiA+ICAgICAgIGlmICghbG1i
+X2lzX3JlbW92YWJsZShsbWIpKQo+ID4gICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPiA+
+IEBAIC0zNzIsNiArMzgxLDEzIEBAIHN0YXRpYyBpbnQgZGxwYXJfcmVtb3ZlX2xtYihzdHJ1Y3Qg
+ZHJtZW1fbG1iICpsbWIpCj4gPiAgICAgICBpbnZhbGlkYXRlX2xtYl9hc3NvY2lhdGl2aXR5X2lu
+ZGV4KGxtYik7Cj4gPiAgICAgICBsbWJfY2xlYXJfbmlkKGxtYik7Cj4gPiAgICAgICBsbWItPmZs
+YWdzICY9IH5EUkNPTkZfTUVNX0FTU0lHTkVEOwo+ID4gKyAgICAgaWYgKCpkdF91cGRhdGUpIHsK
+T3JpZ2luYWwsIEkgcGxhbiB0byB1c2UgaXQgdG8gZXhjbHVkZSB0aGUgY2FzZSBvZiBEVF9OT1VQ
+REFURSwgd2hpY2ggaXMgdmFsdWUgMC4KQW5kIEkgdGhpbmsgaXQgbG9va3MgYmV0dGVyIGJ5IHVz
+aW5nIGlmICgqZHRfdXBkYXRlID09IERUX1RPVVBEQVRFKQo+Cj4gVGhhdCB0ZXN0IGlzIHdyb25n
+LCB5b3Ugc2hvdWxkIGRvOgo+ICAgICAgICAgIGlmICgqZHRfdXBkYXRlICYmICpkdF91cGRhdGUg
+PT0gRFRfVE9VUERBVEUpIHsKSSB0aGluayB5b3UgbWVhbiAgaWYgKGR0X3VwZGF0ZSAmJiAqZHRf
+dXBkYXRlID09IERUX1RPVVBEQVRFKSB7Cj4KPiBXaXRoIHRoZSBjdXJyZW50IGNvZGUsIHRoZSBk
+ZXZpY2UgdHJlZSBpcyB1cGRhdGVkIGFsbCB0aGUgdGltZS4KPgo+IEFub3RoZXIgb3B0aW9uIHdv
+dWxkIGJlIHRvIHBhc3MgYSB2YWxpZCBwb2ludGVyICghPSBOVUxMKSBvbmx5IHdoZW4gRFQgdXBk
+YXRlIGlzCj4gcmVxdWlyZWQsIHRoaXMgd2F5IHlvdSBkb24ndCBuZWVkIHRoZSBEVF9UT1VQREFU
+RSB2YWx1ZS4gVGhlIGNhbGxlciB3b3VsZCBoYXZlCj4gdG8gc2V0IHRoZSBwb2ludGVyIGFjY29y
+ZGluZ2x5LiBUaGUgYWR2YW50YWdlIHdpdGggdGhpcyBvcHRpb24gaXMgdGhlIGNhbGxlciBpcwo+
+IGd1YXJhbnRlZWQgdGhhdCBpdHMgdmFyaWFibGUgaXMgbm90IHRvdWNoZWQgYnkgdGhlIGNhbGxl
+ZSB3aGVuIG5vIGRldmljZSB0cmVlIGlzCj4gcmVxdWVzdGVkLiBBIHNpbXBsZSBib29sZWFuIHBv
+aW50ZXIgd291bGQgYmUgZW5vdWdoIHdpdGhvdXQgdGhlIG5lZWQgdG8gdGhpcyBlbnVtLgpJdCBp
+cyBleHBlY3RlZCB0aGF0IGRscGFyX3JlbW92ZV9sbWIvZGxwYXJfYWRkX2xtYiBjYW4gcmVwb3J0
+IHdoZXRoZXIKdGhleSBzdWNjZXNzZnVsbHkgdXBkYXRlIGR0IG9yIG5vdC4gU28gdGhlIGNhbGxl
+ciBjYW4gaGFuZGxlIHRoZQpkaWZmZXJlbnQgY2FzZXMuCgpUaGFua3MsClBpbmdmYW4KCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcg
+bGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8va2V4ZWMK
