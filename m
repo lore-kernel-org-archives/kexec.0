@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kCYLh-0000yQ-Df
+ id 1kCYLh-0000ya-Je
  for kexec@lists.infradead.org; Mon, 31 Aug 2020 01:11:10 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH next v3 5/8] printk: ringbuffer: clear initial reserved fields
-Date: Mon, 31 Aug 2020 03:16:55 +0206
-Message-Id: <20200831011058.6286-6-john.ogness@linutronix.de>
+Subject: [PATCH next v3 7/8] printk: reimplement log_cont using record
+ extension
+Date: Mon, 31 Aug 2020 03:16:57 +0206
+Message-Id: <20200831011058.6286-8-john.ogness@linutronix.de>
 In-Reply-To: <20200831011058.6286-1-john.ogness@linutronix.de>
 References: <20200831011058.6286-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -25,119 +26,143 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-prb_reserve() will set some meta data values and leave others
-uninitialized (or rather, containing the values of the previous
-wrap). Simplify the API by always clearing out all the fields.
-Only the sequence number is filled in. The caller is now
-responsible for filling in the rest of the meta data fields.
-In particular, for correctly filling in text and dict lengths.
+Use the record extending feature of the ringbuffer to implement
+continuous messages. This preserves the existing continuous message
+behavior.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 ---
- kernel/printk/printk.c            |  7 ++++++-
- kernel/printk/printk_ringbuffer.c | 29 +++++++++++++++++++----------
- 2 files changed, 25 insertions(+), 11 deletions(-)
+ kernel/printk/printk.c | 98 +++++++++---------------------------------
+ 1 file changed, 20 insertions(+), 78 deletions(-)
 
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index ad8d1dfe5fbe..7e7d596c8878 100644
+index 7e7d596c8878..d0b2bea1fd81 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
-@@ -520,8 +520,11 @@ static int log_store(u32 caller_id, int facility, int level,
- 	memcpy(&r.text_buf[0], text, text_len);
- 	if (trunc_msg_len)
- 		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
--	if (r.dict_buf)
-+	r.info->text_len = text_len + trunc_msg_len;
-+	if (r.dict_buf) {
- 		memcpy(&r.dict_buf[0], dict, dict_len);
-+		r.info->dict_len = dict_len;
-+	}
- 	r.info->facility = facility;
- 	r.info->level = level & 7;
- 	r.info->flags = flags & 0x1f;
-@@ -1078,9 +1081,11 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
- 		return 0;
+@@ -535,7 +535,10 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	r.info->caller_id = caller_id;
  
- 	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
-+	dest_r.info->text_len = r->info->text_len;
- 	if (dest_r.dict_buf) {
- 		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
- 		       dest_r.dict_buf_size);
-+		dest_r.info->dict_len = r->info->dict_len;
- 	}
- 	dest_r.info->facility = r->info->facility;
- 	dest_r.info->level = r->info->level;
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index d66718e74aae..da54d4fadf96 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -146,10 +146,13 @@
-  *
-  *	if (prb_reserve(&e, &test_rb, &r)) {
-  *		snprintf(r.text_buf, r.text_buf_size, "%s", textstr);
-+ *		r.info->text_len = strlen(textstr);
-  *
-  *		// dictionary allocation may have failed
-- *		if (r.dict_buf)
-+ *		if (r.dict_buf) {
-  *			snprintf(r.dict_buf, r.dict_buf_size, "%s", dictstr);
-+ *			r.info->dict_len = strlen(dictstr);
-+ *		}
-  *
-  *		r.info->ts_nsec = local_clock();
-  *
-@@ -1125,9 +1128,9 @@ static const char *get_data(struct prb_data_ring *data_ring,
-  * @dict_buf_size is set to 0. Writers must check this before writing to
-  * dictionary space.
-  *
-- * @info->text_len and @info->dict_len will already be set to @text_buf_size
-- * and @dict_buf_size, respectively. If dictionary space reservation fails,
-- * @info->dict_len is set to 0.
-+ * Important: @info->text_len and @info->dict_len need to be set correctly by
-+ *            the writer in order for data to be readable and/or extended.
-+ *            Their values are initialized to 0.
-  */
- bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 		 struct printk_record *r)
-@@ -1159,6 +1162,18 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+ 	/* insert message */
+-	prb_commit(&e);
++	if ((flags & LOG_CONT) || !(flags & LOG_NEWLINE))
++		prb_commit(&e);
++	else
++		prb_final_commit(&e);
  
- 	d = to_desc(desc_ring, id);
+ 	return (text_len + trunc_msg_len);
+ }
+@@ -1093,7 +1096,7 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+ 	dest_r.info->ts_nsec = r->info->ts_nsec;
+ 	dest_r.info->caller_id = r->info->caller_id;
  
-+	/*
-+	 * Clear all @info fields except for @seq, which is used to determine
-+	 * the new sequence number. The writer must fill in new values.
-+	 */
-+	d->info.ts_nsec = 0;
-+	d->info.text_len = 0;
-+	d->info.dict_len = 0;
-+	d->info.facility = 0;
-+	d->info.flags = 0;
-+	d->info.level = 0;
-+	d->info.caller_id = 0;
-+
- 	/*
- 	 * Set the @e fields here so that prb_commit() can be used if
- 	 * text data allocation fails.
-@@ -1186,8 +1201,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 				 &d->text_blk_lpos, id);
- 	/* If text data allocation fails, a data-less record is committed. */
- 	if (r->text_buf_size && !r->text_buf) {
--		d->info.text_len = 0;
--		d->info.dict_len = 0;
- 		prb_commit(e);
- 		/* prb_commit() re-enabled interrupts. */
- 		goto fail;
-@@ -1204,10 +1217,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+-	prb_commit(&e);
++	prb_final_commit(&e);
  
- 	r->info = &d->info;
+ 	return prb_record_text_space(&e);
+ }
+@@ -1893,87 +1896,26 @@ static inline u32 printk_caller_id(void)
+ 		0x80000000 + raw_smp_processor_id();
+ }
  
--	/* Set default values for the sizes. */
--	d->info.text_len = r->text_buf_size;
--	d->info.dict_len = r->dict_buf_size;
+-/*
+- * Continuation lines are buffered, and not committed to the record buffer
+- * until the line is complete, or a race forces it. The line fragments
+- * though, are printed immediately to the consoles to ensure everything has
+- * reached the console in case of a kernel crash.
+- */
+-static struct cont {
+-	char buf[LOG_LINE_MAX];
+-	size_t len;			/* length == 0 means unused buffer */
+-	u32 caller_id;			/* printk_caller_id() of first print */
+-	u64 ts_nsec;			/* time of first print */
+-	u8 level;			/* log level of first message */
+-	u8 facility;			/* log facility of first message */
+-	enum log_flags flags;		/* prefix, newline flags */
+-} cont;
 -
- 	/* Record full text space used by record. */
- 	e->text_space = space_used(&rb->text_data_ring, &d->text_blk_lpos);
+-static void cont_flush(void)
+-{
+-	if (cont.len == 0)
+-		return;
+-
+-	log_store(cont.caller_id, cont.facility, cont.level, cont.flags,
+-		  cont.ts_nsec, NULL, 0, cont.buf, cont.len);
+-	cont.len = 0;
+-}
+-
+-static bool cont_add(u32 caller_id, int facility, int level,
+-		     enum log_flags flags, const char *text, size_t len)
+-{
+-	/* If the line gets too long, split it up in separate records. */
+-	if (cont.len + len > sizeof(cont.buf)) {
+-		cont_flush();
+-		return false;
+-	}
+-
+-	if (!cont.len) {
+-		cont.facility = facility;
+-		cont.level = level;
+-		cont.caller_id = caller_id;
+-		cont.ts_nsec = local_clock();
+-		cont.flags = flags;
+-	}
+-
+-	memcpy(cont.buf + cont.len, text, len);
+-	cont.len += len;
+-
+-	// The original flags come from the first line,
+-	// but later continuations can add a newline.
+-	if (flags & LOG_NEWLINE) {
+-		cont.flags |= LOG_NEWLINE;
+-		cont_flush();
+-	}
+-
+-	return true;
+-}
+-
+ static size_t log_output(int facility, int level, enum log_flags lflags, const char *dict, size_t dictlen, char *text, size_t text_len)
+ {
+ 	const u32 caller_id = printk_caller_id();
  
+-	/*
+-	 * If an earlier line was buffered, and we're a continuation
+-	 * write from the same context, try to add it to the buffer.
+-	 */
+-	if (cont.len) {
+-		if (cont.caller_id == caller_id && (lflags & LOG_CONT)) {
+-			if (cont_add(caller_id, facility, level, lflags, text, text_len))
+-				return text_len;
+-		}
+-		/* Otherwise, make sure it's flushed */
+-		cont_flush();
+-	}
+-
+-	/* Skip empty continuation lines that couldn't be added - they just flush */
+-	if (!text_len && (lflags & LOG_CONT))
+-		return 0;
+-
+-	/* If it doesn't end in a newline, try to buffer the current line */
+-	if (!(lflags & LOG_NEWLINE)) {
+-		if (cont_add(caller_id, facility, level, lflags, text, text_len))
++	if (lflags & LOG_CONT) {
++		struct prb_reserved_entry e;
++		struct printk_record r;
++
++		prb_rec_init_wr(&r, text_len, 0);
++		if (prb_reserve_in_last(&e, prb, &r, caller_id)) {
++			memcpy(&r.text_buf[r.info->text_len], text, text_len);
++			r.info->text_len += text_len;
++			if (lflags & LOG_NEWLINE) {
++				r.info->flags |= LOG_NEWLINE;
++				prb_final_commit(&e);
++			} else {
++				prb_commit(&e);
++			}
+ 			return text_len;
++		}
+ 	}
+ 
+ 	/* Store it in the record log */
 -- 
 2.20.1
 
