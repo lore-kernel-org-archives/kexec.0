@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kCYLf-0000v8-HE
+ id 1kCYLf-0000vQ-SM
  for kexec@lists.infradead.org; Mon, 31 Aug 2020 01:11:06 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH next v3 2/8] printk: ringbuffer: change representation of
- reusable
-Date: Mon, 31 Aug 2020 03:16:52 +0206
-Message-Id: <20200831011058.6286-3-john.ogness@linutronix.de>
+Subject: [PATCH next v3 4/8] printk: ringbuffer: add BLK_DATALESS() macro
+Date: Mon, 31 Aug 2020 03:16:54 +0206
+Message-Id: <20200831011058.6286-5-john.ogness@linutronix.de>
 In-Reply-To: <20200831011058.6286-1-john.ogness@linutronix.de>
 References: <20200831011058.6286-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -26,59 +25,47 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-The reusable queried state is represented by the combined flags:
-
-    DESC_COMMIT_MASK | DESC_REUSE_MASK
-
-There is no reason for the DESC_COMMIT_MASK to be part of that
-representation. In particular, this will add confusion when more
-state flags are available.
-
-Change the representation of the reusable queried state to just
-the DESC_REUSE_MASK flag.
+Rather than continually needing to explicitly check @begin and @next
+to identify a dataless block, introduce and use a BLK_DATALESS()
+macro.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk_ringbuffer.c | 4 ++--
- kernel/printk/printk_ringbuffer.h | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ kernel/printk/printk_ringbuffer.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
 diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 76248c82d557..d339ff7647da 100644
+index 86af38c2cf77..d66718e74aae 100644
 --- a/kernel/printk/printk_ringbuffer.c
 +++ b/kernel/printk/printk_ringbuffer.c
-@@ -463,7 +463,7 @@ static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- 			       unsigned long id)
+@@ -266,6 +266,8 @@
+ 
+ /* Determine if a logical position refers to a data-less block. */
+ #define LPOS_DATALESS(lpos)		((lpos) & 1UL)
++#define BLK_DATALESS(blk)		(LPOS_DATALESS((blk)->begin) && \
++					 LPOS_DATALESS((blk)->next))
+ 
+ /* Get the logical position at index 0 of the current wrap. */
+ #define DATA_THIS_WRAP_START_LPOS(data_ring, lpos) \
+@@ -1021,7 +1023,7 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
+ 			       struct prb_data_blk_lpos *blk_lpos)
  {
- 	unsigned long val_committed = id | DESC_COMMIT_MASK;
--	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
-+	unsigned long val_reusable = id | DESC_REUSE_MASK;
- 	struct prb_desc *desc = to_desc(desc_ring, id);
- 	atomic_long_t *state_var = &desc->state_var;
+ 	/* Data-less blocks take no space. */
+-	if (LPOS_DATALESS(blk_lpos->begin))
++	if (BLK_DATALESS(blk_lpos))
+ 		return 0;
  
-@@ -899,7 +899,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 */
- 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
- 	if (prev_state_val &&
--	    prev_state_val != (id_prev_wrap | DESC_COMMIT_MASK | DESC_REUSE_MASK)) {
-+	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index dcda5e9b4676..96ef997d7bd6 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -213,7 +213,7 @@ struct prb_reserved_entry {
-  */
- #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
- #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
--#define DESC0_SV(ct_bits)	(DESC_COMMIT_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
-+#define DESC0_SV(ct_bits)	(DESC_REUSE_MASK | DESC0_ID(ct_bits))
+ 	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
+@@ -1054,7 +1056,7 @@ static const char *get_data(struct prb_data_ring *data_ring,
+ 	struct prb_data_block *db;
  
- /*
-  * Define a ringbuffer with an external text data buffer. The same as
+ 	/* Data-less data block description. */
+-	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
++	if (BLK_DATALESS(blk_lpos)) {
+ 		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
+ 			*data_size = 0;
+ 			return "";
 -- 
 2.20.1
 
