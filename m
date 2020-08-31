@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kCYLf-0000vJ-Fg
- for kexec@lists.infradead.org; Mon, 31 Aug 2020 01:11:07 +0000
+ id 1kCYLh-0000yZ-JF
+ for kexec@lists.infradead.org; Mon, 31 Aug 2020 01:11:09 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH next v3 3/8] printk: ringbuffer: relocate get_data()
-Date: Mon, 31 Aug 2020 03:16:53 +0206
-Message-Id: <20200831011058.6286-4-john.ogness@linutronix.de>
+Subject: [PATCH next v3 8/8] scripts/gdb: support printk finalized records
+Date: Mon, 31 Aug 2020 03:16:58 +0206
+Message-Id: <20200831011058.6286-9-john.ogness@linutronix.de>
 In-Reply-To: <20200831011058.6286-1-john.ogness@linutronix.de>
 References: <20200831011058.6286-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -25,149 +25,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Move the internal get_data() function as-is above prb_reserve() so
-that a later change can make use of the static function.
+With commit ("printk: ringbuffer: add finalization/extension support")
+a new state bit for finalized records was added. This not only changed
+the bit representation of committed records, but also reduced the size
+for record IDs.
+
+Update the gdb scripts to correctly interpret the state variable.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk_ringbuffer.c | 116 +++++++++++++++---------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+ Documentation/admin-guide/kdump/gdbmacros.txt | 10 +++++++---
+ scripts/gdb/linux/dmesg.py                    | 10 ++++++----
+ 2 files changed, 13 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index d339ff7647da..86af38c2cf77 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -1038,6 +1038,64 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
- 		DATA_SIZE(data_ring) - DATA_INDEX(data_ring, blk_lpos->begin));
- }
+diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
+index 7adece30237e..bcb78368b381 100644
+--- a/Documentation/admin-guide/kdump/gdbmacros.txt
++++ b/Documentation/admin-guide/kdump/gdbmacros.txt
+@@ -295,8 +295,11 @@ document dump_record
+ end
  
-+/*
-+ * Given @blk_lpos, return a pointer to the writer data from the data block
-+ * and calculate the size of the data part. A NULL pointer is returned if
-+ * @blk_lpos specifies values that could never be legal.
-+ *
-+ * This function (used by readers) performs strict validation on the lpos
-+ * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
-+ * triggered if an internal error is detected.
-+ */
-+static const char *get_data(struct prb_data_ring *data_ring,
-+			    struct prb_data_blk_lpos *blk_lpos,
-+			    unsigned int *data_size)
-+{
-+	struct prb_data_block *db;
-+
-+	/* Data-less data block description. */
-+	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
-+		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
-+			*data_size = 0;
-+			return "";
-+		}
-+		return NULL;
-+	}
-+
-+	/* Regular data block: @begin less than @next and in same wrap. */
-+	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
-+	    blk_lpos->begin < blk_lpos->next) {
-+		db = to_block(data_ring, blk_lpos->begin);
-+		*data_size = blk_lpos->next - blk_lpos->begin;
-+
-+	/* Wrapping data block: @begin is one wrap behind @next. */
-+	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
-+		   DATA_WRAPS(data_ring, blk_lpos->next)) {
-+		db = to_block(data_ring, 0);
-+		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
-+
-+	/* Illegal block description. */
-+	} else {
-+		WARN_ON_ONCE(1);
-+		return NULL;
-+	}
-+
-+	/* A valid data block will always be aligned to the ID size. */
-+	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
-+	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
-+		return NULL;
-+	}
-+
-+	/* A valid data block will always have at least an ID. */
-+	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
-+		return NULL;
-+
-+	/* Subtract block ID space from size to reflect data size. */
-+	*data_size -= sizeof(db->id);
-+
-+	return &db->data[0];
-+}
-+
- /**
-  * prb_reserve() - Reserve space in the ringbuffer.
-  *
-@@ -1192,64 +1250,6 @@ void prb_commit(struct prb_reserved_entry *e)
- 	local_irq_restore(e->irqflags);
- }
+ define dmesg
+-	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
+-	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
++	# definitions from kernel/printk/printk_ringbuffer.h
++	set var $desc_commit = 1UL << ((sizeof(long) * 8) - 1)
++	set var $desc_final = 1UL << ((sizeof(long) * 8) - 2)
++	set var $desc_reuse = 1UL << ((sizeof(long) * 8) - 3)
++	set var $flags_mask = $desc_commit | $desc_final | $desc_reuse
+ 	set var $id_mask = ~$flags_mask
  
--/*
-- * Given @blk_lpos, return a pointer to the writer data from the data block
-- * and calculate the size of the data part. A NULL pointer is returned if
-- * @blk_lpos specifies values that could never be legal.
-- *
-- * This function (used by readers) performs strict validation on the lpos
-- * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
-- * triggered if an internal error is detected.
-- */
--static const char *get_data(struct prb_data_ring *data_ring,
--			    struct prb_data_blk_lpos *blk_lpos,
--			    unsigned int *data_size)
--{
--	struct prb_data_block *db;
--
--	/* Data-less data block description. */
--	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
--		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
--			*data_size = 0;
--			return "";
--		}
--		return NULL;
--	}
--
--	/* Regular data block: @begin less than @next and in same wrap. */
--	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
--	    blk_lpos->begin < blk_lpos->next) {
--		db = to_block(data_ring, blk_lpos->begin);
--		*data_size = blk_lpos->next - blk_lpos->begin;
--
--	/* Wrapping data block: @begin is one wrap behind @next. */
--	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
--		   DATA_WRAPS(data_ring, blk_lpos->next)) {
--		db = to_block(data_ring, 0);
--		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
--
--	/* Illegal block description. */
--	} else {
--		WARN_ON_ONCE(1);
--		return NULL;
--	}
--
--	/* A valid data block will always be aligned to the ID size. */
--	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
--	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
--		return NULL;
--	}
--
--	/* A valid data block will always have at least an ID. */
--	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
--		return NULL;
--
--	/* Subtract block ID space from size to reflect data size. */
--	*data_size -= sizeof(db->id);
--
--	return &db->data[0];
--}
--
- /*
-  * Count the number of lines in provided text. All text has at least 1 line
-  * (even if @text_size is 0). Each '\n' processed is counted as an additional
+ 	set var $desc_count = 1U << prb->desc_ring.count_bits
+@@ -309,7 +312,8 @@ define dmesg
+ 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
+ 
+ 		# skip non-committed record
+-		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
++		# (note that commit+!final records will be displayed)
++		if (($desc->state_var.counter & $desc_commit) == $desc_commit)
+ 			dump_record $desc $prev_flags
+ 			set var $prev_flags = $desc->info.flags
+ 		end
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6c6022012ea8..367523c5c270 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -79,9 +79,10 @@ class LxDmesg(gdb.Command):
+ 
+         # definitions from kernel/printk/printk_ringbuffer.h
+         desc_sv_bits = utils.get_long_type().sizeof * 8
+-        desc_committed_mask = 1 << (desc_sv_bits - 1)
+-        desc_reuse_mask = 1 << (desc_sv_bits - 2)
+-        desc_flags_mask = desc_committed_mask | desc_reuse_mask
++        desc_commit_mask = 1 << (desc_sv_bits - 1)
++        desc_final_mask = 1 << (desc_sv_bits - 2)
++        desc_reuse_mask = 1 << (desc_sv_bits - 3)
++        desc_flags_mask = desc_commit_mask | desc_final_mask | desc_reuse_mask
+         desc_id_mask = ~desc_flags_mask
+ 
+         # read in tail and head descriptor ids
+@@ -96,8 +97,9 @@ class LxDmesg(gdb.Command):
+             desc_off = desc_sz * ind
+ 
+             # skip non-committed record
++            # (note that commit+!final records will be displayed)
+             state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
+-            if state != desc_committed_mask:
++            if state & desc_commit_mask != desc_commit_mask:
+                 if did == head_id:
+                     break
+                 did = (did + 1) & desc_id_mask
 -- 
 2.20.1
 
