@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 1 Sep 2020 17:50:02 +0100
+Date: Tue, 1 Sep 2020 18:13:07 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v11 2/5] x86: kdump: move reserve_crashkernel_low() into
- crash_core.c
-Message-ID: <20200901165001.GJ5561@gaia>
+Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
+Message-ID: <20200901171306.GK5561@gaia>
 References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-3-chenzhou10@huawei.com>
- <20200806133627.GB2077191@gmail.com>
+ <20200801130856.86625-6-chenzhou10@huawei.com>
+ <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
+ <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
+ <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
+ <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200806133627.GB2077191@gmail.com>
+In-Reply-To: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,40 +24,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ingo Molnar <mingo@kernel.org>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: chenzhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, Dave Young <dyoung@redhat.com>, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-On Thu, Aug 06, 2020 at 03:36:27PM +0200, Ingo Molnar wrote:
+On Tue, Aug 18, 2020 at 03:07:04PM +0800, chenzhou wrote:
+> On 2020/8/10 14:03, Dave Young wrote:
+> >>> Previously I remember we talked about to use similar logic as X86, but I
+> >>> remember you mentioned on some arm64 platform there could be no low
+> >>> memory at all.  Is this not a problem now for the fallback?  Just be
+> >>> curious, thanks for the update, for the common part looks good.
+> >>
+> >> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
+> > I meant about this reply instead :)
+> > https://lkml.org/lkml/2020/1/16/616
 > 
-> * Chen Zhou <chenzhou10@huawei.com> wrote:
+> Sorry for not repley in time, I was on holiday last week.
 > 
-> > In preparation for supporting reserve_crashkernel_low in arm64 as
-> > x86_64 does, move reserve_crashkernel_low() into kernel/crash_core.c.
-> > 
-> > BTW, move x86_64 CRASH_ALIGN to 2M suggested by Dave. CONFIG_PHYSICAL_ALIGN
-> > can be selected from 2M to 16M, move to the same as arm64.
-> > 
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> > ---
-> >  arch/x86/include/asm/kexec.h | 24 ++++++++++
-> >  arch/x86/kernel/setup.c      | 86 +++---------------------------------
-> >  include/linux/crash_core.h   |  3 ++
-> >  include/linux/kexec.h        |  2 -
-> >  kernel/crash_core.c          | 74 +++++++++++++++++++++++++++++++
-> >  kernel/kexec_core.c          | 17 -------
-> >  6 files changed, 107 insertions(+), 99 deletions(-)
-> 
-> Since the changes are centered around arm64, I suppose the arm64 tree 
-> will carry this patchset?
-> 
-> Assuming that this is a 100% invariant moving of code that doesn't 
-> regress on x86:
-> 
->   Acked-by: Ingo Molnar <mingo@kernel.org>
+> The platform James mentioned may exist for which have no devices and
+> need no low memory.
 
-Thanks Ingo. The only difference I see is that CRASH_ALIGN has been
-reduced to 2M here from 16M for x86. Would this break configs that have
-PHYSICAL_ALIGN > 2M?
+If there is no memory below 4GB, the arm64 kernel assumes that the
+32-bit devices will have some DMA offsets shifting the addresses to the
+bottom of the available RAM. So even if RAM starts above 4GB, we
+ZONE_DMA32 will be allocated in the bottom 4GB of the high memory (and
+if the hardware designers forgot to shift those DMA accesses, we don't
+have to support the platform ;)).
+
+So the arm64 notion of low memory differs slightly from the x86 one.
 
 -- 
 Catalin
