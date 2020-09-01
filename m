@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kD58C-0001ZX-VV
- for kexec@lists.infradead.org; Tue, 01 Sep 2020 12:11:21 +0000
-Date: Tue, 1 Sep 2020 14:11:17 +0200
+ id 1kD7LR-0004XG-2A
+ for kexec@lists.infradead.org; Tue, 01 Sep 2020 14:33:10 +0000
+Date: Tue, 1 Sep 2020 16:33:06 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH][next] docs: vmcoreinfo: add lockless printk ringbuffer
- vmcoreinfo
-Message-ID: <20200901121116.GL4928@alley>
-References: <20200814213316.6394-1-john.ogness@linutronix.de>
+Subject: Re: [PATCH next v3 5/8] printk: ringbuffer: clear initial reserved
+ fields
+Message-ID: <20200901143306.GQ4928@alley>
+References: <20200831011058.6286-1-john.ogness@linutronix.de>
+ <20200831011058.6286-6-john.ogness@linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200814213316.6394-1-john.ogness@linutronix.de>
+In-Reply-To: <20200831011058.6286-6-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,18 +26,99 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: John Ogness <john.ogness@linutronix.de>
-Cc: Nick Desaulniers <ndesaulniers@google.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, Linus Torvalds <torvalds@linux-foundation.org>, Jonathan Corbet <corbet@lwn.net>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri 2020-08-14 23:39:16, John Ogness wrote:
-> With the introduction of the lockless printk ringbuffer, the
-> VMCOREINFO relating to the kernel log buffer was changed. Update the
-> documentation to match those changes.
+On Mon 2020-08-31 03:16:55, John Ogness wrote:
+> prb_reserve() will set some meta data values and leave others
+> uninitialized (or rather, containing the values of the previous
+> wrap). Simplify the API by always clearing out all the fields.
+> Only the sequence number is filled in. The caller is now
+> responsible for filling in the rest of the meta data fields.
+> In particular, for correctly filling in text and dict lengths.
 > 
-> Fixes: ("printk: use the lockless ringbuffer")
 > Signed-off-by: John Ogness <john.ogness@linutronix.de>
-> Reported-by: Nick Desaulniers <ndesaulniers@google.com>
+>
+> ---
+>  kernel/printk/printk.c            |  7 ++++++-
+>  kernel/printk/printk_ringbuffer.c | 29 +++++++++++++++++++----------
+>  2 files changed, 25 insertions(+), 11 deletions(-)
+> 
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index ad8d1dfe5fbe..7e7d596c8878 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -520,8 +520,11 @@ static int log_store(u32 caller_id, int facility, int level,
+>  	memcpy(&r.text_buf[0], text, text_len);
+>  	if (trunc_msg_len)
+>  		memcpy(&r.text_buf[text_len], trunc_msg, trunc_msg_len);
+> -	if (r.dict_buf)
+> +	r.info->text_len = text_len + trunc_msg_len;
+> +	if (r.dict_buf) {
+>  		memcpy(&r.dict_buf[0], dict, dict_len);
+> +		r.info->dict_len = dict_len;
+> +	}
+>  	r.info->facility = facility;
+>  	r.info->level = level & 7;
+>  	r.info->flags = flags & 0x1f;
+> @@ -1078,9 +1081,11 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+>  		return 0;
+>  
+>  	memcpy(&dest_r.text_buf[0], &r->text_buf[0], dest_r.text_buf_size);
+> +	dest_r.info->text_len = r->info->text_len;
 
-The patch is committed in printk/linux.git, branch printk-rework.
+It looks a bit non-consistent that memcpy() copies text_buf_size but valid data
+are defined by text_len.
+
+I would prefer to be on the safe size and copy only text_len.
+
+I could imagine some later optimization that will make buf_size bigger
+by alignment or something like that. The reason might be preparation
+for continuous lines or so. Then the size of the original buffer and
+the destination one might differ.
+
+It is unrelated to this patch. I would solve it by a preparation
+or followup one.
+
+
+>  	if (dest_r.dict_buf) {
+
+>  		memcpy(&dest_r.dict_buf[0], &r->dict_buf[0],
+>  		       dest_r.dict_buf_size);
+> +		dest_r.info->dict_len = r->info->dict_len;
+
+Same here.
+
+>  	}
+>  	dest_r.info->facility = r->info->facility;
+>  	dest_r.info->level = r->info->level;
+> diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+> index d66718e74aae..da54d4fadf96 100644
+> --- a/kernel/printk/printk_ringbuffer.c
+> +++ b/kernel/printk/printk_ringbuffer.c
+> @@ -1159,6 +1162,18 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
+>  
+>  	d = to_desc(desc_ring, id);
+>  
+> +	/*
+> +	 * Clear all @info fields except for @seq, which is used to determine
+> +	 * the new sequence number. The writer must fill in new values.
+> +	 */
+> +	d->info.ts_nsec = 0;
+> +	d->info.text_len = 0;
+> +	d->info.dict_len = 0;
+> +	d->info.facility = 0;
+> +	d->info.flags = 0;
+> +	d->info.level = 0;
+> +	d->info.caller_id = 0;
+
+This will be easy to miss when a new field is added in the future.
+
+I would prefer to store @seq into temporary variable and clear
+the entire structure by memset(). The new sequence number is
+calculated few lines below anyway.
+
+
+Otherwise, it looks good to me.
 
 Best Regards,
 Petr
