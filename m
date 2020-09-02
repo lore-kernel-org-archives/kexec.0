@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kDVby-0006SQ-Fr
- for kexec@lists.infradead.org; Wed, 02 Sep 2020 16:27:51 +0000
-Date: Wed, 2 Sep 2020 18:27:43 +0200
+ id 1kDVcX-0006ZA-SM
+ for kexec@lists.infradead.org; Wed, 02 Sep 2020 16:28:26 +0000
+Date: Wed, 2 Sep 2020 18:28:22 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: Fix resource leaks in kexec.c
-Message-ID: <20200902162742.GE21427@vergenet.net>
-References: <1598345003-1634-1-git-send-email-tangyouling@loongson.cn>
+Subject: Re: [PATCH] AUTHORS: Update email address for Khalid
+Message-ID: <20200902162822.GF21427@vergenet.net>
+References: <20200825142957.369587-1-khalid@gonehiking.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1598345003-1634-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <20200825142957.369587-1-khalid@gonehiking.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,15 +23,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Youling Tang <tangyouling@loongson.cn>
+To: Khalid Aziz <khalid@gonehiking.org>
 Cc: kexec@lists.infradead.org
 
-On Tue, Aug 25, 2020 at 04:43:23PM +0800, Youling Tang wrote:
-> Add free() call when handling some error returns.
+On Tue, Aug 25, 2020 at 08:29:57AM -0600, Khalid Aziz wrote:
+> New email address for Khalid Aziz.
 > 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> Signed-off-by: Khalid Aziz <khalid@gonehiking.org>
 
-Is there a value in cleaning up like this immediately before exiting?
+Thanks Khalid,
+
+applied.
 
 _______________________________________________
 kexec mailing list
