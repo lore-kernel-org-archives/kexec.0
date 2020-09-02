@@ -1,13 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 2 Sep 2020 18:13:42 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-Message-ID: <20200902171341.GC16673@gaia>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-6-chenzhou10@huawei.com>
+Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
+ helo=us-smtp-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kDXMZ-0000Y8-ED
+ for kexec@lists.infradead.org; Wed, 02 Sep 2020 18:20:04 +0000
+Received: by mail-ot1-f70.google.com with SMTP id r18so158261otq.6
+ for <kexec@lists.infradead.org>; Wed, 02 Sep 2020 11:18:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200801130856.86625-6-chenzhou10@huawei.com>
+References: <20200902073404.1067640-1-rburanyi@google.com>
+In-Reply-To: <20200902073404.1067640-1-rburanyi@google.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 2 Sep 2020 23:47:51 +0530
+Message-ID: <CACi5LpMPJ_WH9q4fXrUky-bUqbk_AW0djEm71z5m5bins5bTjA@mail.gmail.com>
+Subject: Re: [PATCH] kexec: remove the 2GB size limit on initrd file
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,56 +25,61 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Robi Buranyi <rburanyi@google.com>
+Cc: Greg Thelen <gthelen@google.com>, kexec mailing list <kexec@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>
 
-On Sat, Aug 01, 2020 at 09:08:56PM +0800, Chen Zhou wrote:
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 2da65fef2a1c..4b58f97351d5 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -299,7 +299,15 @@ Boot into System Kernel
->     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->  
-> -   On x86 and x86_64, use "crashkernel=64M@16M".
-> +   On x86 use "crashkernel=64M@16M".
-> +
-> +   On x86_64, use "crashkernel=X" to select a region under 4G first, and
-> +   fall back to reserve region above 4G.
-> +   We can also use "crashkernel=X,high" to select a region above 4G, which
-> +   also tries to allocate at least 256M below 4G automatically and
-> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
-> +   Use "crashkernel=Y@X" if you really have to reserve memory from specified
-> +   start address X.
->  
->     On ppc64, use "crashkernel=128M@32M".
->  
-> @@ -316,8 +324,15 @@ Boot into System Kernel
->     kernel will automatically locate the crash kernel image within the
->     first 512MB of RAM if X is not given.
->  
-> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-> +   On arm64, use "crashkernel=X" to try low allocation in ZONE_DMA, and
-> +   fall back to high allocation if it fails. And go for high allocation
-> +   directly if the required size is too large. If crash_base is outside
+Hi Robi,
 
-I wouldn't mention crash_base in the admin guide. That's an
-implementation detail really and admins are not supposed to read the
-source code to make sense of the documentation. ZONE_DMA is also a
-kernel internal, so you'd need to define what it is for arm64. At least
-the DMA and DMA32 zones are printed during kernel boot.
+On Wed, Sep 2, 2020 at 1:05 PM Robi Buranyi <rburanyi@google.com> wrote:
+>
+> Enable loading initrd files exceeding the INT_MAX size. Remove the
+> INT_MAX limit completely, and let any initrd load if it fits in the
+> memory.
+>
+> Signed-off-by: Robi Buranyi <rburanyi@google.com>
+> ---
+>  kernel/kexec_file.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index ca40bef75a61..659a9d165198 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -222,7 +222,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>         loff_t size;
+>
+>         ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+> -                                      &size, INT_MAX, READING_KEXEC_IMAGE);
+> +                                      &size, 0, READING_KEXEC_IMAGE);
+>         if (ret)
+>                 return ret;
+>         image->kernel_buf_len = size;
+> @@ -242,7 +242,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+>         /* It is possible that there no initramfs is being loaded */
+>         if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+>                 ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+> -                                              &size, INT_MAX,
+> +                                              &size, 0,
+>                                                READING_KEXEC_INITRAMFS);
+>                 if (ret)
+>                         goto out;
+> --
+> 2.28.0.402.g5ffc5be6b7-goog
 
-> +   ZONE_DMA, try to allocate at least 256M in ZONE_DMA automatically.
-> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
-> +   For non-RPi4 platforms, change ZONE_DMA memtioned above to ZONE_DMA32.
-> +   Use "crashkernel=Y@X" if you really have to reserve memory from
-> +   specified start address X. Note that the start address of the kernel,
-> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
+Can you share some background about this fix? For example why is it
+needed or what is failing at your end?
+I think a 2GB initramfs is a good enough size to accommodate while
+loading it via kexec_file_load(). Eventually the initramfs to be
+loaded is passed via user-space as a command line argument to the
+kexec_file_load() syscall, so we should be careful about the file
+sizes we might be loading here.
 
--- 
-Catalin
+I am just trying to understand what initramfs size limits you are
+working with from a kexec_file_load() p-o-v.
+
+Thanks,
+Bhupesh
+
 
 _______________________________________________
 kexec mailing list
