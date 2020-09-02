@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 1 Sep 2020 18:13:07 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
-Message-ID: <20200901171306.GK5561@gaia>
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-6-chenzhou10@huawei.com>
- <20200808100239.GB60590@dhcp-128-65.nay.redhat.com>
- <96d0da23-d484-7f66-1680-07b4b5984831@huawei.com>
- <20200810060355.GB6988@dhcp-128-65.nay.redhat.com>
- <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <2e6aebf9-3765-5d8c-933c-698442db1d52@huawei.com>
+Received: from mail-yb1-xb4a.google.com ([2607:f8b0:4864:20::b4a])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kDNI0-0004GJ-Uu
+ for kexec@lists.infradead.org; Wed, 02 Sep 2020 07:34:41 +0000
+Received: by mail-yb1-xb4a.google.com with SMTP id l67so4163750ybb.7
+ for <kexec@lists.infradead.org>; Wed, 02 Sep 2020 00:34:38 -0700 (PDT)
+Date: Wed,  2 Sep 2020 00:34:04 -0700
+Message-Id: <20200902073404.1067640-1-rburanyi@google.com>
+Mime-Version: 1.0
+Subject: [PATCH] kexec: remove the 2GB size limit on initrd file
+From: Robi Buranyi <rburanyi@google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,36 +22,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, Dave Young <dyoung@redhat.com>, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Greg Thelen <gthelen@google.com>
+Cc: Robi Buranyi <rburanyi@google.com>
 
-On Tue, Aug 18, 2020 at 03:07:04PM +0800, chenzhou wrote:
-> On 2020/8/10 14:03, Dave Young wrote:
-> >>> Previously I remember we talked about to use similar logic as X86, but I
-> >>> remember you mentioned on some arm64 platform there could be no low
-> >>> memory at all.  Is this not a problem now for the fallback?  Just be
-> >>> curious, thanks for the update, for the common part looks good.
-> >>
-> >> Did you mean this discuss: https://lkml.org/lkml/2019/12/27/122?
-> > I meant about this reply instead :)
-> > https://lkml.org/lkml/2020/1/16/616
-> 
-> Sorry for not repley in time, I was on holiday last week.
-> 
-> The platform James mentioned may exist for which have no devices and
-> need no low memory.
+Enable loading initrd files exceeding the INT_MAX size. Remove the
+INT_MAX limit completely, and let any initrd load if it fits in the
+memory.
 
-If there is no memory below 4GB, the arm64 kernel assumes that the
-32-bit devices will have some DMA offsets shifting the addresses to the
-bottom of the available RAM. So even if RAM starts above 4GB, we
-ZONE_DMA32 will be allocated in the bottom 4GB of the high memory (and
-if the hardware designers forgot to shift those DMA accesses, we don't
-have to support the platform ;)).
+Signed-off-by: Robi Buranyi <rburanyi@google.com>
+---
+ kernel/kexec_file.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-So the arm64 notion of low memory differs slightly from the x86 one.
-
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index ca40bef75a61..659a9d165198 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -222,7 +222,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	loff_t size;
+ 
+ 	ret = kernel_read_file_from_fd(kernel_fd, &image->kernel_buf,
+-				       &size, INT_MAX, READING_KEXEC_IMAGE);
++				       &size, 0, READING_KEXEC_IMAGE);
+ 	if (ret)
+ 		return ret;
+ 	image->kernel_buf_len = size;
+@@ -242,7 +242,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
+ 	/* It is possible that there no initramfs is being loaded */
+ 	if (!(flags & KEXEC_FILE_NO_INITRAMFS)) {
+ 		ret = kernel_read_file_from_fd(initrd_fd, &image->initrd_buf,
+-					       &size, INT_MAX,
++					       &size, 0,
+ 					       READING_KEXEC_INITRAMFS);
+ 		if (ret)
+ 			goto out;
 -- 
-Catalin
+2.28.0.402.g5ffc5be6b7-goog
+
 
 _______________________________________________
 kexec mailing list
