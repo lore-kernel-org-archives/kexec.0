@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kDRlb-0001YN-Rg
- for kexec@lists.infradead.org; Wed, 02 Sep 2020 12:21:33 +0000
-Date: Wed, 2 Sep 2020 14:21:28 +0200
+ id 1kDS39-00032D-1t
+ for kexec@lists.infradead.org; Wed, 02 Sep 2020 12:39:40 +0000
+Date: Wed, 2 Sep 2020 14:39:36 +0200
 From: Petr Mladek <pmladek@suse.com>
-Subject: misc: was: [PATCH next v3 6/8] printk: ringbuffer: add
- finalization/extension support
-Message-ID: <20200902122125.GB9496@alley>
+Subject: Re: state names: vas: Re: [PATCH next v3 6/8] printk: ringbuffer:
+ add finalization/extension support
+Message-ID: <20200902123936.GC9496@alley>
 References: <20200831011058.6286-1-john.ogness@linutronix.de>
  <20200831011058.6286-7-john.ogness@linutronix.de>
+ <20200902105250.GA15764@alley>
+ <87r1rkctn5.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200831011058.6286-7-john.ogness@linutronix.de>
+In-Reply-To: <87r1rkctn5.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,207 +30,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: John Ogness <john.ogness@linutronix.de>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Mon 2020-08-31 03:16:56, John Ogness wrote:
-> Add support for extending the newest data block. For this, introduce
-> a new finalization state flag (DESC_FINAL_MASK) that denotes when a
-> descriptor may not be extended, i.e. is finalized.
+On Wed 2020-09-02 13:26:14, John Ogness wrote:
+> On 2020-09-02, Petr Mladek <pmladek@suse.com> wrote:
+> >> +static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
+> >> +					 u32 caller_id, unsigned long *id_out)
+> >> +{
+> >> +	unsigned long prev_state_val;
+> >> +	enum desc_state d_state;
+> >> +	struct prb_desc desc;
+> >> +	struct prb_desc *d;
+> >> +	unsigned long id;
+> >> +
+> >> +	id = atomic_long_read(&desc_ring->head_id);
+> >> +
+> >> +	/*
+> >> +	 * To minimize unnecessarily reopening a descriptor, first check the
+> >> +	 * descriptor is in the correct state and has a matching caller ID.
+> >> +	 */
+> >> +	d_state = desc_read(desc_ring, id, &desc);
+> >> +	if (d_state != desc_reserved ||
+> >> +	    !(atomic_long_read(&desc.state_var) & DESC_COMMIT_MASK) ||
+> >
+> > First, define 5 desc_states, something like:
+> >
+> > enum desc_state {
+> > 	desc_miss = -1,		/* ID mismatch */
+> > 	desc_modified =	 0x0,	/* reserved, being modified by writer */
 > 
-> Three new memory barrier pairs are introduced. Two of them are not
-> significant because they are alternate path memory barriers that
-> exactly correspond to existing memory barriers.
->
-> But the third (_prb_commit:B / desc_reserve:D) is new and guarantees
-> that descriptors will always be finalized, either because a
-> descriptor setting DESC_COMMIT_MASK sees that there is a newer
-> descriptor and so finalizes itself or because a new descriptor being
-> reserved sees that the previous descriptor has DESC_COMMIT_MASK set
-> and finalizes that descriptor.
+> I prefer the "desc_reserved" name. It may or may not have be modified yet.
 
-Just for record. All the barriers look good to me.
-
-There are always full barriers when we change DESC_COMMIT_MASK.
-It guarantees consistency of the descriptor and data rings.
-
-The only relaxed modification is adding DESC_FINAL_MASK. It is OK.
-It can be done only when DESC_COMMIT_MASK has been set before
-using a full barrier. It means that all changes of the rings
-has already been since before.
+Yeah, "desc_reserved" sounds better. I probably just wanted to free my
+fantasy from the current code ;-)
 
 
-> --- a/kernel/printk/printk_ringbuffer.c
-> +++ b/kernel/printk/printk_ringbuffer.c
-> +
-> +/**
-> + * prb_reserve_in_last() - Re-reserve and extend the space in the ringbuffer
-> + *                         used by the newest record.
-> + *
-> + * @e:         The entry structure to setup.
-> + * @rb:        The ringbuffer to re-reserve and extend data in.
-> + * @r:         The record structure to allocate buffers for.
-> + * @caller_id: The caller ID of the caller (reserving writer).
-> + *
-> + * This is the public function available to writers to re-reserve and extend
-> + * data.
-> + *
-> + * The writer specifies the text size to extend (not the new total size) by
-> + * setting the @text_buf_size field of @r. Dictionaries cannot be extended so
+> > 	desc_committed = 0x1,	/* committed by writer, could get reopened */
+> > 	desc_finalized = 0x2,	/* committed, could not longer get modified */
+> > 	desc_reusable =	 0x3,	/* free, not yet used by any writer */
+> > };
+> >
+> > Second, only 4 variants of the 3 state bits are currently used.
+> > It means that two bits are enough and they might use exactly
+> > the above names:
+> >
+> > I mean to do something like:
+> >
+> > #define DESC_SV_BITS		(sizeof(unsigned long) * 8)
+> > #define DESC_SV(desc_state)	((unsigned long)desc_state << (DESC_SV_BITS - 2))
+> > #define DESC_ST(state_val)	((unsigned long)state_val >> (DESC_SV_BITS - 2))
+> 
+> This makes sense and will get us back the bit we lost because of
+> finalization.
 
-Better might be to say that extending dictionaries is not
-supported.
+Yup. Which is good especially on 32-bit architectures.
 
-> + * @dict_buf_size of @r should be set to 0. To ensure proper initialization of
-> + * @r, prb_rec_init_wr() should be used.
-> + *
-> + * This function will fail if @caller_id does not match the caller ID of the
-> + * newest record. In that case the caller must reserve new data using
-> + * prb_reserve().
-> + *
-> + * Context: Any context. Disables local interrupts on success.
-> + * Return: true if text data could be extended, otherwise false.
-> + *
-> + * On success:
-> + *
-> + *   - @r->text_buf points to the beginning of the entire text buffer.
-> + *
-> + *   - @r->text_buf_len is set to the new total size of the buffer.
+> I am wondering if VMCOREINFO should include a DESC_FLAGS_MASK so that
+> crash tools could at least successfully iterate the ID's, even if they
+> didn't know what all the flag values mean (in the case that more bits
+> are added later).
 
-s/buf_len/buf_size/
+Good point. I am just not sure whether they should try read all ids
+or they should refuse reading anything when a new bit is added.
 
-> + *   - @r->dict_buf and @r->dict_buf_len are cleared because extending
-> + *     the dict buffer is not supported.
+Well, I really hope that we will not need new states anytime soon.
+It would need a really strong reason.
 
-Same here.
+I personally can't think about any use case. pr_cont() was special
+because it was the writer side. All other steps of the printk rework
+are on the reader side.
 
-> + *
-> + *   - @r->info is not touched so that @r->info->text_len could be used
-> + *     to append the text.
-> + *
-> + *   - prb_record_text_space() can be used on @e to query the new
-> + *     actually used space.
-> + *
-> + * Important: All @r->info fields will already be set with the current values
-> + *            for the record. I.e. @r->info->text_len will be less than
-> + *            @text_buf_size and @r->info->dict_len may be set, even though
-> + *            @dict_buf_size is 0. Writers can use @r->info->text_len to know
-> + *            where concatenation begins and writers should update
-> + *            @r->info->text_len after concatenating.
-> + */
-> +bool prb_reserve_in_last(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
-> +			 struct printk_record *r, u32 caller_id)
-> +{
-> +	unsigned int data_size;
-> +	struct prb_desc *d;
-> +	unsigned long id;
-> +
-> +	local_irq_save(e->irqflags);
-> +
-> +	/* Transition the newest descriptor back to the reserved state. */
-> +	d = desc_reopen_last(&rb->desc_ring, caller_id, &id);
-> +	if (!d) {
-> +		local_irq_restore(e->irqflags);
-> +		goto fail_reopen;
-> +	}
-> +
-> +	/* Now the writer has exclusive access: LMM(prb_reserve_in_last:A) */
-> +
-> +	/*
-> +	 * Set the @e fields here so that prb_commit() can be used if
-> +	 * anything fails from now on.
-> +	 */
-> +	e->rb = rb;
-> +	e->id = id;
-> +
-> +	/*
-> +	 * desc_reopen_last() checked the caller_id, but there was no
-> +	 * exclusive access at that point. The descriptor may have
-> +	 * changed since then.
-> +	 */
-> +	if (caller_id != d->info.caller_id)
-> +		goto fail;
-> +
-> +	if (BLK_DATALESS(&d->text_blk_lpos)) {
-
-We do not clear d->info when reopening the descriptor. I would at
-least add here a consistency check similar to the one below:
-
-		if (WARN_ON_ONCE(d->info.text_len)) {
-			pr_warn_once("wrong data size (%u, expecting 0) for data\n",
-				     d->info.text_len);
-			d->info.text_len = 0;
-		}
-
-> +		r->text_buf = data_alloc(rb, &rb->text_data_ring, r->text_buf_size,
-> +					 &d->text_blk_lpos, id);
-> +	} else {
-> +		if (!get_data(&rb->text_data_ring, &d->text_blk_lpos, &data_size))
-> +			goto fail;
-> +
-> +		/*
-> +		 * Increase the buffer size to include the original size. If
-> +		 * the meta data (@text_len) is not sane, use the full data
-> +		 * block size.
-> +		 */
-> +		if (WARN_ON_ONCE(d->info.text_len > data_size)) {
-> +			pr_warn_once("wrong data size (%u, expecting >=%hu) for data\n",
-> +				     data_size, d->info.text_len);
-> +			d->info.text_len = data_size;
-> +		}
-> +		r->text_buf_size += d->info.text_len;
-> +
-> +		if (!data_check_size(&rb->text_data_ring, r->text_buf_size))
-> +			goto fail;
-> +
-> +		r->text_buf = data_realloc(rb, &rb->text_data_ring, r->text_buf_size,
-> +					   &d->text_blk_lpos, id);
-> +	}
-> +	if (r->text_buf_size && !r->text_buf)
-> +		goto fail;
-
-[...]
-
-> @@ -1261,6 +1615,59 @@ void prb_commit(struct prb_reserved_entry *e)
->  	local_irq_restore(e->irqflags);
->  }
->  
-> +/**
-> + * prb_commit() - Commit (previously reserved) data to the ringbuffer.
-> + *
-> + * @e: The entry containing the reserved data information.
-> + *
-> + * This is the public function available to writers to commit data.
-> + *
-> + * Note that the data is not yet available to readers until it is finalized.
-> + * Finalizing happens automatically when space for the next record is
-> + * reserved.
-> + *
-> + * See prb_final_commit() for a version of this function that finalizes
-> + * immediately.
-> + *
-> + * Context: Any context. Enables local interrupts.
-> + */
-> +void prb_commit(struct prb_reserved_entry *e)
-> +{
-> +	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
-> +	unsigned long head_id;
-> +
-> +	_prb_commit(e, 0);
-> +
-> +	/*
-> +	 * If this descriptor is no longer the head (i.e. a new record has
-> +	 * been allocated), extending the data for this record is no longer
-> +	 * allowed and therefore it must be finalized.
-> +	 */
-> +	head_id = atomic_long_read(&desc_ring->head_id); /* LMM(prb_commit:A) */
-> +	if (head_id != e->id)
-> +		desc_make_final(desc_ring, e->id);
-
-Nice trick! I wonder why I suggested to do it the complicated
-way via desc_state.
-
-> +}
-> +
-
-I finished review of this patch.
+I believe that we are getting close with all the ring buffer code.
+And I have good feeling about it.
 
 Best Regards,
 Petr
