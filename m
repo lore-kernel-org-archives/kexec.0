@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 2 Sep 2020 18:09:11 +0100
+Date: Wed, 2 Sep 2020 18:13:42 +0100
 From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v11 3/5] arm64: kdump: reimplement crashkernel=X
-Message-ID: <20200902170910.GB16673@gaia>
+Subject: Re: [PATCH v11 5/5] kdump: update Documentation about crashkernel
+Message-ID: <20200902171341.GC16673@gaia>
 References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-4-chenzhou10@huawei.com>
+ <20200801130856.86625-6-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200801130856.86625-4-chenzhou10@huawei.com>
+In-Reply-To: <20200801130856.86625-6-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,36 +23,50 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Chen Zhou <chenzhou10@huawei.com>
 Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-On Sat, Aug 01, 2020 at 09:08:54PM +0800, Chen Zhou wrote:
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which
-> will fail when there is no enough low memory.
-> 2. If reserving crashkernel above 4G, in this case, crash dump
-> kernel will boot failure because there is no low memory available
-> for allocation.
-> 3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
-> if the memory reserved for crash dump kernel falled in ZONE_DMA32,
-> the devices in crash dump kernel need to use ZONE_DMA will alloc
-> fail.
-> 
-> To solve these issues, change the behavior of crashkernel=X.
-> crashkernel=X tries low allocation in ZONE_DMA, and fall back to
-> high allocation if it fails.
-> 
-> If requized size X is too large and leads to very little free memory
-> in ZONE_DMA after low allocation, the system may not work normally.
-> So add a threshold and go for high allocation directly if the required
-> size is too large. The value of threshold is set as the half of
-> the low memory.
-> 
-> If crash_base is outside ZONE_DMA, try to allocate at least 256M in
-> ZONE_DMA automatically. "crashkernel=Y,low" can be used to allocate
-> specified size low memory.
+On Sat, Aug 01, 2020 at 09:08:56PM +0800, Chen Zhou wrote:
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 2da65fef2a1c..4b58f97351d5 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -299,7 +299,15 @@ Boot into System Kernel
+>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+>  
+> -   On x86 and x86_64, use "crashkernel=64M@16M".
+> +   On x86 use "crashkernel=64M@16M".
+> +
+> +   On x86_64, use "crashkernel=X" to select a region under 4G first, and
+> +   fall back to reserve region above 4G.
+> +   We can also use "crashkernel=X,high" to select a region above 4G, which
+> +   also tries to allocate at least 256M below 4G automatically and
+> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+> +   Use "crashkernel=Y@X" if you really have to reserve memory from specified
+> +   start address X.
+>  
+>     On ppc64, use "crashkernel=128M@32M".
+>  
+> @@ -316,8 +324,15 @@ Boot into System Kernel
+>     kernel will automatically locate the crash kernel image within the
+>     first 512MB of RAM if X is not given.
+>  
+> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+> +   On arm64, use "crashkernel=X" to try low allocation in ZONE_DMA, and
+> +   fall back to high allocation if it fails. And go for high allocation
+> +   directly if the required size is too large. If crash_base is outside
 
-Except for the threshold to keep zone ZONE_DMA memory,
-reserve_crashkernel() looks very close to the x86 version. Shall we try
-to make this generic as well? In the first instance, you could avoid the
-threshold check if it takes an explicit ",high" option.
+I wouldn't mention crash_base in the admin guide. That's an
+implementation detail really and admins are not supposed to read the
+source code to make sense of the documentation. ZONE_DMA is also a
+kernel internal, so you'd need to define what it is for arm64. At least
+the DMA and DMA32 zones are printed during kernel boot.
+
+> +   ZONE_DMA, try to allocate at least 256M in ZONE_DMA automatically.
+> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+> +   For non-RPi4 platforms, change ZONE_DMA memtioned above to ZONE_DMA32.
+> +   Use "crashkernel=Y@X" if you really have to reserve memory from
+> +   specified start address X. Note that the start address of the kernel,
+> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
 
 -- 
 Catalin
