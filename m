@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kDVde-0006iK-Pr
- for kexec@lists.infradead.org; Wed, 02 Sep 2020 16:29:35 +0000
-Date: Wed, 2 Sep 2020 18:29:31 +0200
+Date: Wed, 2 Sep 2020 18:32:17 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] kexec/kexec.c: Add missing close() call
-Message-ID: <20200902162931.GG21427@vergenet.net>
-References: <1598403114-19103-1-git-send-email-tangyouling@loongson.cn>
- <faeb80e8-8d44-a0fb-bf7c-046df8b9433a@gonehiking.org>
+Subject: Re: [PATCH] arm: kdump: Add DT properties to crash dump kernel's DTB
+Message-ID: <20200902163217.GH21427@vergenet.net>
+References: <20200902154129.6358-1-geert+renesas@glider.be>
+ <CAMuHMdX722bUNmZLjGi7qEVQdA4ODY5gZ-61SnMU+oiOqnjZXQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <faeb80e8-8d44-a0fb-bf7c-046df8b9433a@gonehiking.org>
+In-Reply-To: <CAMuHMdX722bUNmZLjGi7qEVQdA4ODY5gZ-61SnMU+oiOqnjZXQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +20,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Khalid Aziz <khalid@gonehiking.org>
-Cc: kexec@lists.infradead.org, Youling Tang <tangyouling@loongson.cn>, "Eric W. Biederman" <ebiederm@xmission.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Akashi Takahiro <takahiro.akashi@linaro.org>, Lukasz Stelmach <l.stelmach@samsung.com>, kexec@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-On Wed, Aug 26, 2020 at 09:53:34AM -0600, Khalid Aziz wrote:
-> On 8/25/20 6:51 PM, Youling Tang wrote:
-> > Add missing close() call.
-> > 
-> > Signed-off-by: Youling Tang <tangyouling@loongson.cn>
-> > ---
-> >  kexec/kexec.c | 3 +++
-> >  1 file changed, 3 insertions(+)
-> > 
-> > diff --git a/kexec/kexec.c b/kexec/kexec.c
-> > index a62b362..bb88caa 100644
-> > --- a/kexec/kexec.c
-> > +++ b/kexec/kexec.c
-> > @@ -585,6 +585,7 @@ static char *slurp_file_generic(const char *filename, off_t *r_size,
-> >  		die("Read on %s ended before stat said it should\n", filename);
-> >  
-> >  	*r_size = size;
-> > +	close(fd);
-> >  	return buf;
-> >  }
-> >  
-> > @@ -1257,12 +1258,14 @@ static int do_kexec_file_load(int fileind, int argc, char **argv,
-> >  	if (i == file_types) {
-> >  		fprintf(stderr, "Cannot determine the file type " "of %s\n",
-> >  				kernel);
-> > +		close(kernel_fd);
-> >  		return EFAILED;
-> >  	}
-> >  
-> >  	ret = file_type[i].load(argc, argv, kernel_buf, kernel_size, &info);
-> >  	if (ret < 0) {
-> >  		fprintf(stderr, "Cannot load %s\n", kernel);
-> > +		close(kernel_fd);
-> >  		return ret;
-> >  	}
-> >  
-> > 
+On Wed, Sep 02, 2020 at 05:48:00PM +0200, Geert Uytterhoeven wrote:
+> On Wed, Sep 2, 2020 at 5:41 PM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > Pass the following properties to the crash dump kernel, to provide a
+> > modern DT interface between kexec and the crash dump kernel:
+> >
+> >   - linux,elfcorehdr: ELF core header segment, similar to the
+> >     "elfcorehdr=" kernel parameter.
+> >   - linux,usable-memory-range: Usable memory reserved for the crash dump
+> >     kernel.
+> >     This makes the memory reservation explicit, so Linux no longer needs
+> >     to mask the program counter, and rely on the "mem=" kernel parameter
+> >     to obtain the start and size of usable memory.
+> >
+> > For backwards compatibility, the "elfcorehdr=" and "mem=" kernel
+> > parameters are still appended to the kernel command line.
+> >
+> > Loosely based on the ARM64 version by Akashi Takahiro.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > 
-> This looks good to me.
-> 
-> Reviewed-by: Khalid Aziz <khalid@gonehiking.org>
+> The counterpart patch for linux is "[PATCH] ARM: Parse kdump DT
+> properties"
+> (https://lore.kernel.org/r/20200902154538.6807-1-geert+renesas@glider.be)
 
-Thanks, applied.
+Thanks Geert,
+
+I think it would be best to hold-off on the user-space patch
+until the kernel patch is accepted.
 
 _______________________________________________
 kexec mailing list
