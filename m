@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kE27V-00010G-0q
- for kexec@lists.infradead.org; Fri, 04 Sep 2020 03:10:34 +0000
-Date: Fri, 4 Sep 2020 11:10:14 +0800
-From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v11 3/5] arm64: kdump: reimplement crashkernel=X
-Message-ID: <20200904031014.GA11869@dhcp-128-65.nay.redhat.com>
 References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-4-chenzhou10@huawei.com>
- <20200902170910.GB16673@gaia>
+ <20200801130856.86625-4-chenzhou10@huawei.com> <20200902170910.GB16673@gaia>
  <f33a0ce6-552e-2f1a-e720-4f7124f15d1e@huawei.com>
  <20200904030424.GA11384@dhcp-128-65.nay.redhat.com>
+ <20200904031014.GA11869@dhcp-128-65.nay.redhat.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <f4e0a246-0ca5-474b-8f39-c8299851d2b8@huawei.com>
+Date: Fri, 4 Sep 2020 12:02:05 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200904030424.GA11384@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200904031014.GA11869@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,80 +18,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
+To: Dave Young <dyoung@redhat.com>
 Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-On 09/04/20 at 11:04am, Dave Young wrote:
-> On 09/03/20 at 07:26pm, chenzhou wrote:
-> > Hi Catalin,
-> > 
-> > 
-> > On 2020/9/3 1:09, Catalin Marinas wrote:
-> > > On Sat, Aug 01, 2020 at 09:08:54PM +0800, Chen Zhou wrote:
-> > >> There are following issues in arm64 kdump:
-> > >> 1. We use crashkernel=X to reserve crashkernel below 4G, which
-> > >> will fail when there is no enough low memory.
-> > >> 2. If reserving crashkernel above 4G, in this case, crash dump
-> > >> kernel will boot failure because there is no low memory available
-> > >> for allocation.
-> > >> 3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
-> > >> if the memory reserved for crash dump kernel falled in ZONE_DMA32,
-> > >> the devices in crash dump kernel need to use ZONE_DMA will alloc
-> > >> fail.
-> > >>
-> > >> To solve these issues, change the behavior of crashkernel=X.
-> > >> crashkernel=X tries low allocation in ZONE_DMA, and fall back to
-> > >> high allocation if it fails.
-> > >>
-> > >> If requized size X is too large and leads to very little free memory
-> > >> in ZONE_DMA after low allocation, the system may not work normally.
-> > >> So add a threshold and go for high allocation directly if the required
-> > >> size is too large. The value of threshold is set as the half of
-> > >> the low memory.
-> > >>
-> > >> If crash_base is outside ZONE_DMA, try to allocate at least 256M in
-> > >> ZONE_DMA automatically. "crashkernel=Y,low" can be used to allocate
-> > >> specified size low memory.
-> > > Except for the threshold to keep zone ZONE_DMA memory,
-> > > reserve_crashkernel() looks very close to the x86 version. Shall we try
-> > > to make this generic as well? In the first instance, you could avoid the
-> > > threshold check if it takes an explicit ",high" option.
-> > Ok, i will try to do this.
-> > 
-> > I look into the function reserve_crashkernel() of x86 and found the start address is
-> > CRASH_ALIGN in function memblock_find_in_range(), which is different with arm64.
-> > 
-> > I don't figure out why is CRASH_ALIGN in x86, is there any specific reason?
-> 
-> Hmm, took another look at the option CONFIG_PHYSICAL_ALIGN
-> config PHYSICAL_ALIGN
->         hex "Alignment value to which kernel should be aligned"
->         default "0x200000"
->         range 0x2000 0x1000000 if X86_32
->         range 0x200000 0x1000000 if X86_64
-> 
-> According to above, I think the 16M should come from the largest value
-> But the default value is 2M,  with smaller value reservation can have
-> more chance to succeed.
-> 
-> It seems we still need arch specific CRASH_ALIGN, but the initial
-> version you added the #ifdef for different arches, can you move the
-> macro to arch specific headers?
-
-And just keep the x86 align value as is, I can try to change the x86
-value later to CONFIG_PHYSICAL_ALIGN, in this way this series can be
-cleaner.
-
-> 
-> Thanks
-> Dave
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAyMDIwLzkvNCAxMToxMCwgRGF2ZSBZb3VuZyB3cm90ZToKPiBPbiAwOS8wNC8yMCBhdCAx
+MTowNGFtLCBEYXZlIFlvdW5nIHdyb3RlOgo+PiBPbiAwOS8wMy8yMCBhdCAwNzoyNnBtLCBjaGVu
+emhvdSB3cm90ZToKPj4+IEhpIENhdGFsaW4sCj4+Pgo+Pj4KPj4+IE9uIDIwMjAvOS8zIDE6MDks
+IENhdGFsaW4gTWFyaW5hcyB3cm90ZToKPj4+PiBPbiBTYXQsIEF1ZyAwMSwgMjAyMCBhdCAwOTow
+ODo1NFBNICswODAwLCBDaGVuIFpob3Ugd3JvdGU6Cj4+Pj4+IFRoZXJlIGFyZSBmb2xsb3dpbmcg
+aXNzdWVzIGluIGFybTY0IGtkdW1wOgo+Pj4+PiAxLiBXZSB1c2UgY3Jhc2hrZXJuZWw9WCB0byBy
+ZXNlcnZlIGNyYXNoa2VybmVsIGJlbG93IDRHLCB3aGljaAo+Pj4+PiB3aWxsIGZhaWwgd2hlbiB0
+aGVyZSBpcyBubyBlbm91Z2ggbG93IG1lbW9yeS4KPj4+Pj4gMi4gSWYgcmVzZXJ2aW5nIGNyYXNo
+a2VybmVsIGFib3ZlIDRHLCBpbiB0aGlzIGNhc2UsIGNyYXNoIGR1bXAKPj4+Pj4ga2VybmVsIHdp
+bGwgYm9vdCBmYWlsdXJlIGJlY2F1c2UgdGhlcmUgaXMgbm8gbG93IG1lbW9yeSBhdmFpbGFibGUK
+Pj4+Pj4gZm9yIGFsbG9jYXRpb24uCj4+Pj4+IDMuIFNpbmNlIGNvbW1pdCAxYThlMWNlZjc2MDMg
+KCJhcm02NDogdXNlIGJvdGggWk9ORV9ETUEgYW5kIFpPTkVfRE1BMzIiKSwKPj4+Pj4gaWYgdGhl
+IG1lbW9yeSByZXNlcnZlZCBmb3IgY3Jhc2ggZHVtcCBrZXJuZWwgZmFsbGVkIGluIFpPTkVfRE1B
+MzIsCj4+Pj4+IHRoZSBkZXZpY2VzIGluIGNyYXNoIGR1bXAga2VybmVsIG5lZWQgdG8gdXNlIFpP
+TkVfRE1BIHdpbGwgYWxsb2MKPj4+Pj4gZmFpbC4KPj4+Pj4KPj4+Pj4gVG8gc29sdmUgdGhlc2Ug
+aXNzdWVzLCBjaGFuZ2UgdGhlIGJlaGF2aW9yIG9mIGNyYXNoa2VybmVsPVguCj4+Pj4+IGNyYXNo
+a2VybmVsPVggdHJpZXMgbG93IGFsbG9jYXRpb24gaW4gWk9ORV9ETUEsIGFuZCBmYWxsIGJhY2sg
+dG8KPj4+Pj4gaGlnaCBhbGxvY2F0aW9uIGlmIGl0IGZhaWxzLgo+Pj4+Pgo+Pj4+PiBJZiByZXF1
+aXplZCBzaXplIFggaXMgdG9vIGxhcmdlIGFuZCBsZWFkcyB0byB2ZXJ5IGxpdHRsZSBmcmVlIG1l
+bW9yeQo+Pj4+PiBpbiBaT05FX0RNQSBhZnRlciBsb3cgYWxsb2NhdGlvbiwgdGhlIHN5c3RlbSBt
+YXkgbm90IHdvcmsgbm9ybWFsbHkuCj4+Pj4+IFNvIGFkZCBhIHRocmVzaG9sZCBhbmQgZ28gZm9y
+IGhpZ2ggYWxsb2NhdGlvbiBkaXJlY3RseSBpZiB0aGUgcmVxdWlyZWQKPj4+Pj4gc2l6ZSBpcyB0
+b28gbGFyZ2UuIFRoZSB2YWx1ZSBvZiB0aHJlc2hvbGQgaXMgc2V0IGFzIHRoZSBoYWxmIG9mCj4+
+Pj4+IHRoZSBsb3cgbWVtb3J5Lgo+Pj4+Pgo+Pj4+PiBJZiBjcmFzaF9iYXNlIGlzIG91dHNpZGUg
+Wk9ORV9ETUEsIHRyeSB0byBhbGxvY2F0ZSBhdCBsZWFzdCAyNTZNIGluCj4+Pj4+IFpPTkVfRE1B
+IGF1dG9tYXRpY2FsbHkuICJjcmFzaGtlcm5lbD1ZLGxvdyIgY2FuIGJlIHVzZWQgdG8gYWxsb2Nh
+dGUKPj4+Pj4gc3BlY2lmaWVkIHNpemUgbG93IG1lbW9yeS4KPj4+PiBFeGNlcHQgZm9yIHRoZSB0
+aHJlc2hvbGQgdG8ga2VlcCB6b25lIFpPTkVfRE1BIG1lbW9yeSwKPj4+PiByZXNlcnZlX2NyYXNo
+a2VybmVsKCkgbG9va3MgdmVyeSBjbG9zZSB0byB0aGUgeDg2IHZlcnNpb24uIFNoYWxsIHdlIHRy
+eQo+Pj4+IHRvIG1ha2UgdGhpcyBnZW5lcmljIGFzIHdlbGw/IEluIHRoZSBmaXJzdCBpbnN0YW5j
+ZSwgeW91IGNvdWxkIGF2b2lkIHRoZQo+Pj4+IHRocmVzaG9sZCBjaGVjayBpZiBpdCB0YWtlcyBh
+biBleHBsaWNpdCAiLGhpZ2giIG9wdGlvbi4KPj4+IE9rLCBpIHdpbGwgdHJ5IHRvIGRvIHRoaXMu
+Cj4+Pgo+Pj4gSSBsb29rIGludG8gdGhlIGZ1bmN0aW9uIHJlc2VydmVfY3Jhc2hrZXJuZWwoKSBv
+ZiB4ODYgYW5kIGZvdW5kIHRoZSBzdGFydCBhZGRyZXNzIGlzCj4+PiBDUkFTSF9BTElHTiBpbiBm
+dW5jdGlvbiBtZW1ibG9ja19maW5kX2luX3JhbmdlKCksIHdoaWNoIGlzIGRpZmZlcmVudCB3aXRo
+IGFybTY0Lgo+Pj4KPj4+IEkgZG9uJ3QgZmlndXJlIG91dCB3aHkgaXMgQ1JBU0hfQUxJR04gaW4g
+eDg2LCBpcyB0aGVyZSBhbnkgc3BlY2lmaWMgcmVhc29uPwo+PiBIbW0sIHRvb2sgYW5vdGhlciBs
+b29rIGF0IHRoZSBvcHRpb24gQ09ORklHX1BIWVNJQ0FMX0FMSUdOCj4+IGNvbmZpZyBQSFlTSUNB
+TF9BTElHTgo+PiAgICAgICAgIGhleCAiQWxpZ25tZW50IHZhbHVlIHRvIHdoaWNoIGtlcm5lbCBz
+aG91bGQgYmUgYWxpZ25lZCIKPj4gICAgICAgICBkZWZhdWx0ICIweDIwMDAwMCIKPj4gICAgICAg
+ICByYW5nZSAweDIwMDAgMHgxMDAwMDAwIGlmIFg4Nl8zMgo+PiAgICAgICAgIHJhbmdlIDB4MjAw
+MDAwIDB4MTAwMDAwMCBpZiBYODZfNjQKPj4KPj4gQWNjb3JkaW5nIHRvIGFib3ZlLCBJIHRoaW5r
+IHRoZSAxNk0gc2hvdWxkIGNvbWUgZnJvbSB0aGUgbGFyZ2VzdCB2YWx1ZQo+PiBCdXQgdGhlIGRl
+ZmF1bHQgdmFsdWUgaXMgMk0sICB3aXRoIHNtYWxsZXIgdmFsdWUgcmVzZXJ2YXRpb24gY2FuIGhh
+dmUKPj4gbW9yZSBjaGFuY2UgdG8gc3VjY2VlZC4KPj4KPj4gSXQgc2VlbXMgd2Ugc3RpbGwgbmVl
+ZCBhcmNoIHNwZWNpZmljIENSQVNIX0FMSUdOLCBidXQgdGhlIGluaXRpYWwKPj4gdmVyc2lvbiB5
+b3UgYWRkZWQgdGhlICNpZmRlZiBmb3IgZGlmZmVyZW50IGFyY2hlcywgY2FuIHlvdSBtb3ZlIHRo
+ZQo+PiBtYWNybyB0byBhcmNoIHNwZWNpZmljIGhlYWRlcnM/Cj4gQW5kIGp1c3Qga2VlcCB0aGUg
+eDg2IGFsaWduIHZhbHVlIGFzIGlzLCBJIGNhbiB0cnkgdG8gY2hhbmdlIHRoZSB4ODYKPiB2YWx1
+ZSBsYXRlciB0byBDT05GSUdfUEhZU0lDQUxfQUxJR04sIGluIHRoaXMgd2F5IHRoaXMgc2VyaWVz
+IGNhbiBiZQo+IGNsZWFuZXIuCk9rLiBJIGhhdmUgbm8gcXVlc3Rpb24gYWJvdXQgdGhlIHZhbHVl
+IG9mIG1hY3JvIENSQVNIX0FMSUdOLAppbnN0ZWFkIHRoZSBsb3dlciBib3VuZCBvZiBtZW1ibG9j
+a19maW5kX2luX3JhbmdlKCkuCgpGb3IgeDg2LCBpbiByZXNlcnZlX2NyYXNoa2VybmVsKCnvvIxy
+ZXN0cmljdCB0aGUgbG93ZXIgYm91bmQgb2YgdGhlIHJhbmdlIHRvIENSQVNIX0FMSUdOLAogICAg
+Li4uCiAgICBjcmFzaF9iYXNlID0gbWVtYmxvY2tfZmluZF9pbl9yYW5nZShDUkFTSF9BTElHTiwK
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgQ1JBU0hfQURE
+Ul9MT1dfTUFYLAogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBjcmFzaF9zaXplLCBDUkFTSF9BTElHTik7CiAgICAuLi4KICAgCmluIHJlc2VydmVfY3Jhc2hr
+ZXJuZWxfbG93KCnvvIx3aXRoIG5vIHRoaXMgcmVzdHJpY3Rpb24uCiAgICAuLi4KICAgIGxvd19i
+YXNlID0gbWVtYmxvY2tfZmluZF9pbl9yYW5nZSgwLCAxVUxMIDw8IDMyLCBsb3dfc2l6ZSwgQ1JB
+U0hfQUxJR04pOwogICAgLi4uCgpIb3cgYWJvdXQgYWxsIG1ha2luZyBtZW1ibG9ja19maW5kX2lu
+X3JhbmdlKCkgc2VhcmNoIGZyb20gdGhlIHN0YXJ0IG9mIG1lbW9yeT8KSWYgaXQgaXMgb2ssIGkg
+d2lsbCBkbyBsaWtlIHRoaXMgaW4gdGhlIGdlbmVyaWMgdmVyc2lvbi4KClRoYW5rcywKQ2hlbiBa
+aG91Cj4KPj4gVGhhbmtzCj4+IERhdmUKPgo+IC4KPgoKCgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2tleGVjCg==
