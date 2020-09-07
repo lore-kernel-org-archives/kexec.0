@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v11 3/5] arm64: kdump: reimplement crashkernel=X
-References: <20200801130856.86625-1-chenzhou10@huawei.com>
- <20200801130856.86625-4-chenzhou10@huawei.com> <20200902170910.GB16673@gaia>
- <f33a0ce6-552e-2f1a-e720-4f7124f15d1e@huawei.com>
- <20200904030424.GA11384@dhcp-128-65.nay.redhat.com>
- <20200904031014.GA11869@dhcp-128-65.nay.redhat.com>
- <f4e0a246-0ca5-474b-8f39-c8299851d2b8@huawei.com>
- <20200904041633.GB11869@dhcp-128-65.nay.redhat.com>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <886c91a3-6729-e534-4d9d-b807c5584892@huawei.com>
-Date: Fri, 4 Sep 2020 14:39:21 +0800
+From: Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v12 2/9] x86: kdump: make the lower bound of crash kernel
+ reservation consistent
+Date: Mon, 7 Sep 2020 21:47:38 +0800
+Message-ID: <20200907134745.25732-3-chenzhou10@huawei.com>
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20200904041633.GB11869@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,83 +15,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com, prabhakar.pkin@gmail.com, bhsharma@redhat.com
+Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, nsaenzjulienne@suse.de, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-CgpPbiAyMDIwLzkvNCAxMjoxNiwgRGF2ZSBZb3VuZyB3cm90ZToKPiBPbiAwOS8wNC8yMCBhdCAx
-MjowMnBtLCBjaGVuemhvdSB3cm90ZToKPj4KPj4gT24gMjAyMC85LzQgMTE6MTAsIERhdmUgWW91
-bmcgd3JvdGU6Cj4+PiBPbiAwOS8wNC8yMCBhdCAxMTowNGFtLCBEYXZlIFlvdW5nIHdyb3RlOgo+
-Pj4+IE9uIDA5LzAzLzIwIGF0IDA3OjI2cG0sIGNoZW56aG91IHdyb3RlOgo+Pj4+PiBIaSBDYXRh
-bGluLAo+Pj4+Pgo+Pj4+Pgo+Pj4+PiBPbiAyMDIwLzkvMyAxOjA5LCBDYXRhbGluIE1hcmluYXMg
-d3JvdGU6Cj4+Pj4+PiBPbiBTYXQsIEF1ZyAwMSwgMjAyMCBhdCAwOTowODo1NFBNICswODAwLCBD
-aGVuIFpob3Ugd3JvdGU6Cj4+Pj4+Pj4gVGhlcmUgYXJlIGZvbGxvd2luZyBpc3N1ZXMgaW4gYXJt
-NjQga2R1bXA6Cj4+Pj4+Pj4gMS4gV2UgdXNlIGNyYXNoa2VybmVsPVggdG8gcmVzZXJ2ZSBjcmFz
-aGtlcm5lbCBiZWxvdyA0Rywgd2hpY2gKPj4+Pj4+PiB3aWxsIGZhaWwgd2hlbiB0aGVyZSBpcyBu
-byBlbm91Z2ggbG93IG1lbW9yeS4KPj4+Pj4+PiAyLiBJZiByZXNlcnZpbmcgY3Jhc2hrZXJuZWwg
-YWJvdmUgNEcsIGluIHRoaXMgY2FzZSwgY3Jhc2ggZHVtcAo+Pj4+Pj4+IGtlcm5lbCB3aWxsIGJv
-b3QgZmFpbHVyZSBiZWNhdXNlIHRoZXJlIGlzIG5vIGxvdyBtZW1vcnkgYXZhaWxhYmxlCj4+Pj4+
-Pj4gZm9yIGFsbG9jYXRpb24uCj4+Pj4+Pj4gMy4gU2luY2UgY29tbWl0IDFhOGUxY2VmNzYwMyAo
-ImFybTY0OiB1c2UgYm90aCBaT05FX0RNQSBhbmQgWk9ORV9ETUEzMiIpLAo+Pj4+Pj4+IGlmIHRo
-ZSBtZW1vcnkgcmVzZXJ2ZWQgZm9yIGNyYXNoIGR1bXAga2VybmVsIGZhbGxlZCBpbiBaT05FX0RN
-QTMyLAo+Pj4+Pj4+IHRoZSBkZXZpY2VzIGluIGNyYXNoIGR1bXAga2VybmVsIG5lZWQgdG8gdXNl
-IFpPTkVfRE1BIHdpbGwgYWxsb2MKPj4+Pj4+PiBmYWlsLgo+Pj4+Pj4+Cj4+Pj4+Pj4gVG8gc29s
-dmUgdGhlc2UgaXNzdWVzLCBjaGFuZ2UgdGhlIGJlaGF2aW9yIG9mIGNyYXNoa2VybmVsPVguCj4+
-Pj4+Pj4gY3Jhc2hrZXJuZWw9WCB0cmllcyBsb3cgYWxsb2NhdGlvbiBpbiBaT05FX0RNQSwgYW5k
-IGZhbGwgYmFjayB0bwo+Pj4+Pj4+IGhpZ2ggYWxsb2NhdGlvbiBpZiBpdCBmYWlscy4KPj4+Pj4+
-Pgo+Pj4+Pj4+IElmIHJlcXVpemVkIHNpemUgWCBpcyB0b28gbGFyZ2UgYW5kIGxlYWRzIHRvIHZl
-cnkgbGl0dGxlIGZyZWUgbWVtb3J5Cj4+Pj4+Pj4gaW4gWk9ORV9ETUEgYWZ0ZXIgbG93IGFsbG9j
-YXRpb24sIHRoZSBzeXN0ZW0gbWF5IG5vdCB3b3JrIG5vcm1hbGx5Lgo+Pj4+Pj4+IFNvIGFkZCBh
-IHRocmVzaG9sZCBhbmQgZ28gZm9yIGhpZ2ggYWxsb2NhdGlvbiBkaXJlY3RseSBpZiB0aGUgcmVx
-dWlyZWQKPj4+Pj4+PiBzaXplIGlzIHRvbyBsYXJnZS4gVGhlIHZhbHVlIG9mIHRocmVzaG9sZCBp
-cyBzZXQgYXMgdGhlIGhhbGYgb2YKPj4+Pj4+PiB0aGUgbG93IG1lbW9yeS4KPj4+Pj4+Pgo+Pj4+
-Pj4+IElmIGNyYXNoX2Jhc2UgaXMgb3V0c2lkZSBaT05FX0RNQSwgdHJ5IHRvIGFsbG9jYXRlIGF0
-IGxlYXN0IDI1Nk0gaW4KPj4+Pj4+PiBaT05FX0RNQSBhdXRvbWF0aWNhbGx5LiAiY3Jhc2hrZXJu
-ZWw9WSxsb3ciIGNhbiBiZSB1c2VkIHRvIGFsbG9jYXRlCj4+Pj4+Pj4gc3BlY2lmaWVkIHNpemUg
-bG93IG1lbW9yeS4KPj4+Pj4+IEV4Y2VwdCBmb3IgdGhlIHRocmVzaG9sZCB0byBrZWVwIHpvbmUg
-Wk9ORV9ETUEgbWVtb3J5LAo+Pj4+Pj4gcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpIGxvb2tzIHZlcnkg
-Y2xvc2UgdG8gdGhlIHg4NiB2ZXJzaW9uLiBTaGFsbCB3ZSB0cnkKPj4+Pj4+IHRvIG1ha2UgdGhp
-cyBnZW5lcmljIGFzIHdlbGw/IEluIHRoZSBmaXJzdCBpbnN0YW5jZSwgeW91IGNvdWxkIGF2b2lk
-IHRoZQo+Pj4+Pj4gdGhyZXNob2xkIGNoZWNrIGlmIGl0IHRha2VzIGFuIGV4cGxpY2l0ICIsaGln
-aCIgb3B0aW9uLgo+Pj4+PiBPaywgaSB3aWxsIHRyeSB0byBkbyB0aGlzLgo+Pj4+Pgo+Pj4+PiBJ
-IGxvb2sgaW50byB0aGUgZnVuY3Rpb24gcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpIG9mIHg4NiBhbmQg
-Zm91bmQgdGhlIHN0YXJ0IGFkZHJlc3MgaXMKPj4+Pj4gQ1JBU0hfQUxJR04gaW4gZnVuY3Rpb24g
-bWVtYmxvY2tfZmluZF9pbl9yYW5nZSgpLCB3aGljaCBpcyBkaWZmZXJlbnQgd2l0aCBhcm02NC4K
-Pj4+Pj4KPj4+Pj4gSSBkb24ndCBmaWd1cmUgb3V0IHdoeSBpcyBDUkFTSF9BTElHTiBpbiB4ODYs
-IGlzIHRoZXJlIGFueSBzcGVjaWZpYyByZWFzb24/Cj4+Pj4gSG1tLCB0b29rIGFub3RoZXIgbG9v
-ayBhdCB0aGUgb3B0aW9uIENPTkZJR19QSFlTSUNBTF9BTElHTgo+Pj4+IGNvbmZpZyBQSFlTSUNB
-TF9BTElHTgo+Pj4+ICAgICAgICAgaGV4ICJBbGlnbm1lbnQgdmFsdWUgdG8gd2hpY2gga2VybmVs
-IHNob3VsZCBiZSBhbGlnbmVkIgo+Pj4+ICAgICAgICAgZGVmYXVsdCAiMHgyMDAwMDAiCj4+Pj4g
-ICAgICAgICByYW5nZSAweDIwMDAgMHgxMDAwMDAwIGlmIFg4Nl8zMgo+Pj4+ICAgICAgICAgcmFu
-Z2UgMHgyMDAwMDAgMHgxMDAwMDAwIGlmIFg4Nl82NAo+Pj4+Cj4+Pj4gQWNjb3JkaW5nIHRvIGFi
-b3ZlLCBJIHRoaW5rIHRoZSAxNk0gc2hvdWxkIGNvbWUgZnJvbSB0aGUgbGFyZ2VzdCB2YWx1ZQo+
-Pj4+IEJ1dCB0aGUgZGVmYXVsdCB2YWx1ZSBpcyAyTSwgIHdpdGggc21hbGxlciB2YWx1ZSByZXNl
-cnZhdGlvbiBjYW4gaGF2ZQo+Pj4+IG1vcmUgY2hhbmNlIHRvIHN1Y2NlZWQuCj4+Pj4KPj4+PiBJ
-dCBzZWVtcyB3ZSBzdGlsbCBuZWVkIGFyY2ggc3BlY2lmaWMgQ1JBU0hfQUxJR04sIGJ1dCB0aGUg
-aW5pdGlhbAo+Pj4+IHZlcnNpb24geW91IGFkZGVkIHRoZSAjaWZkZWYgZm9yIGRpZmZlcmVudCBh
-cmNoZXMsIGNhbiB5b3UgbW92ZSB0aGUKPj4+PiBtYWNybyB0byBhcmNoIHNwZWNpZmljIGhlYWRl
-cnM/Cj4+PiBBbmQganVzdCBrZWVwIHRoZSB4ODYgYWxpZ24gdmFsdWUgYXMgaXMsIEkgY2FuIHRy
-eSB0byBjaGFuZ2UgdGhlIHg4Ngo+Pj4gdmFsdWUgbGF0ZXIgdG8gQ09ORklHX1BIWVNJQ0FMX0FM
-SUdOLCBpbiB0aGlzIHdheSB0aGlzIHNlcmllcyBjYW4gYmUKPj4+IGNsZWFuZXIuCj4+IE9rLiBJ
-IGhhdmUgbm8gcXVlc3Rpb24gYWJvdXQgdGhlIHZhbHVlIG9mIG1hY3JvIENSQVNIX0FMSUdOLAo+
-PiBpbnN0ZWFkIHRoZSBsb3dlciBib3VuZCBvZiBtZW1ibG9ja19maW5kX2luX3JhbmdlKCkuCj4+
-Cj4+IEZvciB4ODYsIGluIHJlc2VydmVfY3Jhc2hrZXJuZWwoKe+8jHJlc3RyaWN0IHRoZSBsb3dl
-ciBib3VuZCBvZiB0aGUgcmFuZ2UgdG8gQ1JBU0hfQUxJR04sCj4+ICAgICAuLi4KPj4gICAgIGNy
-YXNoX2Jhc2UgPSBtZW1ibG9ja19maW5kX2luX3JhbmdlKENSQVNIX0FMSUdOLAo+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBDUkFTSF9BRERSX0xPV19N
-QVgsCj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNy
-YXNoX3NpemUsIENSQVNIX0FMSUdOKTsKPj4gICAgIC4uLgo+PiAgICAKPj4gaW4gcmVzZXJ2ZV9j
-cmFzaGtlcm5lbF9sb3coKe+8jHdpdGggbm8gdGhpcyByZXN0cmljdGlvbi4KPj4gICAgIC4uLgo+
-PiAgICAgbG93X2Jhc2UgPSBtZW1ibG9ja19maW5kX2luX3JhbmdlKDAsIDFVTEwgPDwgMzIsIGxv
-d19zaXplLCBDUkFTSF9BTElHTik7Cj4+ICAgICAuLi4KPj4KPj4gSG93IGFib3V0IGFsbCBtYWtp
-bmcgbWVtYmxvY2tfZmluZF9pbl9yYW5nZSgpIHNlYXJjaCBmcm9tIHRoZSBzdGFydCBvZiBtZW1v
-cnk/Cj4+IElmIGl0IGlzIG9rLCBpIHdpbGwgZG8gbGlrZSB0aGlzIGluIHRoZSBnZW5lcmljIHZl
-cnNpb24uCj4gSSBmZWVsIHN0YXJ0aW5nIHdpdGggQ1JBU0hfQUxJR04gc291bmRzIGJldHRlciwg
-Y2FuIHlvdSBqdXN0IHNlYXJjaCBmcm9tCj4gQ1JBU0hfQUxJR04gaW4gZ2VuZXJpYyB2ZXJzaW9u
-Pwpvay4KPgo+IFRoYW5rcwo+IERhdmUKPgo+Cj4gLgo+CgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+The lower bounds of crash kernel reservation and crash kernel low
+reservation are different, use the consistent value CRASH_ALIGN.
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/x86/kernel/setup.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 296294ad0dd8..d7fd90c52dae 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -451,7 +451,7 @@ static int __init reserve_crashkernel_low(void)
+ 			return 0;
+ 	}
+ 
+-	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
++	low_base = memblock_find_in_range(CRASH_ALIGN, 1ULL << 32, low_size, CRASH_ALIGN);
+ 	if (!low_base) {
+ 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+ 		       (unsigned long)(low_size >> 20));
+-- 
+2.20.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
