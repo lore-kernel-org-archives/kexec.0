@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v12 1/9] x86: kdump: move CRASH_ALIGN to 2M
-Date: Mon, 7 Sep 2020 21:47:37 +0800
-Message-ID: <20200907134745.25732-2-chenzhou10@huawei.com>
+Subject: [PATCH v12 8/9] arm64: kdump: add memory for devices by DT property
+ linux, usable-memory-range
+Date: Mon, 7 Sep 2020 21:47:44 +0800
+Message-ID: <20200907134745.25732-9-chenzhou10@huawei.com>
 In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
 References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
@@ -21,56 +22,102 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com, prabhakar.pkin@gmail.com, bhsharma@redhat.com
 Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, nsaenzjulienne@suse.de, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M and default
-value is 2M, so move CRASH_ALIGN to 2M, with smaller value reservation
-can have more chance to succeed.
-And replace the hard-coded alignment with macro CRASH_ALIGN in function
-reserve_crashkernel().
+When reserving crashkernel in high memory, some low memory is reserved
+for crash dump kernel devices and never mapped by the first kernel.
+This memory range is advertised to crash dump kernel via DT property
+under /chosen,
+	linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
 
-Suggested-by: Dave Young <dyoung@redhat.com>
+We reused the DT property linux,usable-memory-range and made the low
+memory region as the second range "BASE2 SIZE2", which keeps compatibility
+with existing user-space and older kdump kernels.
+
+Crash dump kernel reads this property at boot time and call memblock_add()
+to add the low memory region after memblock_cap_memory_range() has been
+called.
+
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/x86/include/asm/kexec.h | 3 +++
- arch/x86/kernel/setup.c      | 5 +----
- 2 files changed, 4 insertions(+), 4 deletions(-)
+ arch/arm64/mm/init.c | 43 +++++++++++++++++++++++++++++++++----------
+ 1 file changed, 33 insertions(+), 10 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 6802c59e8252..83f200dd54a1 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -18,6 +18,9 @@
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index e56a0e5d5b77..2af8c38279d9 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -76,6 +76,15 @@ static void __init reserve_crashkernel(void)
+ }
+ #endif
  
- # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
- 
-+/* 2M alignment for crash kernel regions */
-+#define CRASH_ALIGN		SZ_2M
++/*
++ * The main usage of linux,usable-memory-range is for crash dump kernel.
++ * Originally, the number of usable-memory regions is one. Now there may
++ * be two regions, low region and high region.
++ * To make compatibility with existing user-space and older kdump, the low
++ * region is always the last range of linux,usable-memory-range if exist.
++ */
++#define MAX_USABLE_RANGES	2
 +
- #ifndef __ASSEMBLY__
+ #ifdef CONFIG_CRASH_DUMP
+ static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+ 		const char *uname, int depth, void *data)
+@@ -191,9 +200,9 @@ early_param("mem", early_mem);
+ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 		const char *uname, int depth, void *data)
+ {
+-	struct memblock_region *usablemem = data;
+-	const __be32 *reg;
+-	int len;
++	struct memblock_region *usable_rgns = data;
++	const __be32 *reg, *endp;
++	int len, nr = 0;
  
- #include <linux/string.h>
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 3511736fbc74..296294ad0dd8 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -402,9 +402,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 	if (depth != 1 || strcmp(uname, "chosen") != 0)
+ 		return 0;
+@@ -202,22 +211,36 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+ 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+ 		return 1;
  
- #ifdef CONFIG_KEXEC_CORE
+-	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
++	endp = reg + (len / sizeof(__be32));
++	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		usable_rgns[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
++		usable_rgns[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
++
++		if (++nr >= MAX_USABLE_RANGES)
++			break;
++	}
  
--/* 16M alignment for crash kernel regions */
--#define CRASH_ALIGN		SZ_16M
--
- /*
-  * Keep the crash kernel below this limit.
-  *
-@@ -530,7 +527,7 @@ static void __init reserve_crashkernel(void)
+ 	return 1;
+ }
  
- 		start = memblock_find_in_range(crash_base,
- 					       crash_base + crash_size,
--					       crash_size, 1 << 20);
-+					       crash_size, CRASH_ALIGN);
- 		if (start != crash_base) {
- 			pr_info("crashkernel reservation failed - memory is in use.\n");
- 			return;
+ static void __init fdt_enforce_memory_region(void)
+ {
+-	struct memblock_region reg = {
+-		.size = 0,
++	struct memblock_region usable_rgns[MAX_USABLE_RANGES] = {
++		{ .size = 0 },
++		{ .size = 0 }
+ 	};
+ 
+-	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
++	of_scan_flat_dt(early_init_dt_scan_usablemem, &usable_rgns);
+ 
+-	if (reg.size)
+-		memblock_cap_memory_range(reg.base, reg.size);
++	/*
++	 * The first range of usable-memory regions is for crash dump
++	 * kernel with only one region or for high region with two regions,
++	 * the second range is dedicated for low region if exist.
++	 */
++	if (usable_rgns[0].size)
++		memblock_cap_memory_range(usable_rgns[0].base, usable_rgns[0].size);
++	if (usable_rgns[1].size)
++		memblock_add(usable_rgns[1].base, usable_rgns[1].size);
+ }
+ 
+ void __init arm64_memblock_init(void)
 -- 
 2.20.1
 
