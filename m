@@ -1,8 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v12 0/9] support reserving crashkernel above 4G on arm64 kdump
-Date: Mon, 7 Sep 2020 21:47:36 +0800
-Message-ID: <20200907134745.25732-1-chenzhou10@huawei.com>
+Subject: [PATCH v12 6/9] arm64: kdump: reimplement crashkernel=X
+Date: Mon, 7 Sep 2020 21:47:42 +0800
+Message-ID: <20200907134745.25732-7-chenzhou10@huawei.com>
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,162 +32,217 @@ if the memory reserved for crash dump kernel falled in ZONE_DMA32,
 the devices in crash dump kernel need to use ZONE_DMA will alloc
 fail.
 
-To solve these issues, change the behavior of crashkernel=X.
+To solve these issues, change the behavior of crashkernel=X and
+introduce crashkernel=X,[high,low].
 crashkernel=X tries low allocation in DMA zone, and fall back to
 high allocation if it fails.
-If requized size X is too large and leads to very little low memory
-in DMA zone after low allocation, the system may not work normally.
-So add a threshold and go for high allocation directly if the required
-size is too large. The value of threshold is set as the half of
-the low memory.
-
-We can also use "crashkernel=X,high" to select a high region above
-DMA zone, which also tries to allocate at least 256M low memory in
-DMA zone automatically.
+We can also use "crashkernel=X,high" to select a region above DMA zone,
+which also tries to allocate at least 256M in DMA zone automatically.
 "crashkernel=Y,low" can be used to allocate specified size low memory.
+
 For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
 
-When reserving crashkernel in high memory, some low memory is reserved
-for crash dump kernel devices. So there may be two regions reserved for
-crash dump kernel.
-In order to distinct from the high region and make no effect to the use
-of existing kexec-tools, rename the low region as "Crash kernel (low)",
-and pass the low region by reusing DT property
-"linux,usable-memory-range". We made the low memory region as the last
-range of "linux,usable-memory-range" to keep compatibility with existing
-user-space and older kdump kernels.
+Another minor change, there may be two regions reserved for crash
+dump kernel, in order to distinct from the high region and make no
+effect to the use of existing kexec-tools, rename the low region as
+"Crash kernel (low)".
 
-Besides, we need to modify kexec-tools:
-arm64: support more than one crash kernel regions(see [1])
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h |  9 +++++
+ arch/arm64/kernel/setup.c      | 13 +++++++-
+ arch/arm64/mm/init.c           | 60 ++--------------------------------
+ arch/arm64/mm/mmu.c            |  4 +++
+ kernel/crash_core.c            |  8 +++--
+ 5 files changed, 34 insertions(+), 60 deletions(-)
 
-Another update is document about DT property 'linux,usable-memory-range':
-schemas: update 'linux,usable-memory-range' node schema(see [2])
-
-This patchset contains the following nine patches:
-0001-x86-kdump-move-CRASH_ALIGN-to-2M.patch
-0002-x86-kdump-make-the-lower-bound-of-crash-kernel-reser.patch
-0003-x86-kdump-use-macro-CRASH_ADDR_LOW_MAX-in-functions-.patch
-0004-x86-kdump-move-reserve_crashkernel-_low-into-crash_c.patch
-0005-arm64-kdump-introduce-some-macroes-for-crash-kernel-.patch
-0006-arm64-kdump-reimplement-crashkernel-X.patch
-0007-kdump-add-threshold-for-the-required-memory.patch
-0008-arm64-kdump-add-memory-for-devices-by-DT-property-li.patch
-0009-kdump-update-Documentation-about-crashkernel.patch
-
-0001-0003 are some x86 cleanups which prepares for making
-functionsreserve_crashkernel[_low]() generic.
-
-0004 makes functions reserve_crashkernel[_low]() generic.
-0005-0006 reimplements crashkernel=X.
-0007 adds threshold for the required memory.
-0008 adds memory for devices by DT property linux,usable-memory-range.
-0009 updates the doc.
-
-Changes since [v11]
-- Rebased on top of 5.9-rc4.
-- Make the function reserve_crashkernel() of x86 generic.
-Suggested by Catalin, make the function reserve_crashkernel() of x86 generic
-and arm64 use the generic version to reimplement crashkernel=X.
-
-Changes since [v10]
-- Reimplement crashkernel=X suggested by Catalin, Many thanks to Catalin.
-
-Changes since [v9]
-- Patch 1 add Acked-by from Dave.
-- Update patch 5 according to Dave's comments.
-- Update chosen schema.
-
-Changes since [v8]
-- Reuse DT property "linux,usable-memory-range".
-Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
-memory region.
-- Fix kdump broken with ZONE_DMA reintroduced.
-- Update chosen schema.
-
-Changes since [v7]
-- Move x86 CRASH_ALIGN to 2M
-Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
-- Update Documentation/devicetree/bindings/chosen.txt.
-Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
-suggested by Arnd.
-- Add Tested-by from Jhon and pk.
-
-Changes since [v6]
-- Fix build errors reported by kbuild test robot.
-
-Changes since [v5]
-- Move reserve_crashkernel_low() into kernel/crash_core.c.
-- Delete crashkernel=X,high.
-- Modify crashkernel=X,low.
-If crashkernel=X,low is specified simultaneously, reserve spcified size low
-memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-pass to crash dump kernel by DT property "linux,low-memory-range".
-- Update Documentation/admin-guide/kdump/kdump.rst.
-
-Changes since [v4]
-- Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
-
-Changes since [v3]
-- Add memblock_cap_memory_ranges back for multiple ranges.
-- Fix some compiling warnings.
-
-Changes since [v2]
-- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-patch.
-
-Changes since [v1]:
-- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-- Remove memblock_cap_memory_ranges() i added in v1 and implement that
-in fdt_enforce_memory_region().
-There are at most two crash kernel regions, for two crash kernel regions
-case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-and then remove the memory range in the middle.
-
-[1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
-[2]: https://github.com/robherring/dt-schema/pull/19 
-[v1]: https://lkml.org/lkml/2019/4/2/1174
-[v2]: https://lkml.org/lkml/2019/4/9/86
-[v3]: https://lkml.org/lkml/2019/4/9/306
-[v4]: https://lkml.org/lkml/2019/4/15/273
-[v5]: https://lkml.org/lkml/2019/5/6/1360
-[v6]: https://lkml.org/lkml/2019/8/30/142
-[v7]: https://lkml.org/lkml/2019/12/23/411
-[v8]: https://lkml.org/lkml/2020/5/21/213
-[v9]: https://lkml.org/lkml/2020/6/28/73
-[v10]: https://lkml.org/lkml/2020/7/2/1443
-[v11]: https://lkml.org/lkml/2020/8/1/150
-
-Chen Zhou (9):
-  x86: kdump: move CRASH_ALIGN to 2M
-  x86: kdump: make the lower bound of crash kernel reservation
-    consistent
-  x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
-    reserve_crashkernel[_low]()
-  x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
-  arm64: kdump: introduce some macroes for crash kernel reservation
-  arm64: kdump: reimplement crashkernel=X
-  kdump: add threshold for the required memory
-  arm64: kdump: add memory for devices by DT property
-    linux,usable-memory-range
-  kdump: update Documentation about crashkernel
-
- Documentation/admin-guide/kdump/kdump.rst     |  25 ++-
- .../admin-guide/kernel-parameters.txt         |  13 +-
- arch/arm64/include/asm/kexec.h                |  15 ++
- arch/arm64/include/asm/processor.h            |   1 +
- arch/arm64/kernel/setup.c                     |  13 +-
- arch/arm64/mm/init.c                          | 105 ++++------
- arch/arm64/mm/mmu.c                           |   4 +
- arch/x86/include/asm/kexec.h                  |  28 +++
- arch/x86/kernel/setup.c                       | 165 +--------------
- include/linux/crash_core.h                    |   4 +
- include/linux/kexec.h                         |   2 -
- kernel/crash_core.c                           | 192 ++++++++++++++++++
- kernel/kexec_core.c                           |  17 --
- 13 files changed, 328 insertions(+), 256 deletions(-)
-
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 402d208265a3..79909ae5e22e 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -28,7 +28,12 @@
+ /* 2M alignment for crash kernel regions */
+ #define CRASH_ALIGN	SZ_2M
+ 
++#ifdef CONFIG_ZONE_DMA
++#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
++#else
+ #define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
++#endif
++
+ #define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
+ 
+ #ifndef __ASSEMBLY__
+@@ -96,6 +101,10 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
+ 
++#ifdef CONFIG_KEXEC_CORE
++extern void __init reserve_crashkernel(void);
++#endif
++
+ #ifdef CONFIG_KEXEC_FILE
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 53acbeca4f57..1b24072f2bae 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -238,7 +238,18 @@ static void __init request_standard_resources(void)
+ 		    kernel_data.end <= res->end)
+ 			request_resource(res, &kernel_data);
+ #ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
++		/*
++		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
++		 * region in /proc/iomem.
++		 * In order to distinct from the high region and make no effect
++		 * to the use of existing kexec-tools, rename the low region as
++		 * "Crash kernel (low)".
++		 */
++		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
++				crashk_low_res.end <= res->end) {
++			crashk_low_res.name = "Crash kernel (low)";
++			request_resource(res, &crashk_low_res);
++		}
+ 		if (crashk_res.end && crashk_res.start >= res->start &&
+ 		    crashk_res.end <= res->end)
+ 			request_resource(res, &crashk_res);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index ad27dc4cc55e..e56a0e5d5b77 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -35,6 +35,7 @@
+ #include <asm/fixmap.h>
+ #include <asm/kasan.h>
+ #include <asm/kernel-pgtable.h>
++#include <asm/kexec.h>
+ #include <asm/memory.h>
+ #include <asm/numa.h>
+ #include <asm/sections.h>
+@@ -69,66 +70,11 @@ EXPORT_SYMBOL(vmemmap);
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+ 
+-#ifdef CONFIG_KEXEC_CORE
+-/*
+- * reserve_crashkernel() - reserves memory for crash kernel
+- *
+- * This function reserves memory area given in "crashkernel=" kernel command
+- * line parameter. The memory reserved is used by dump capture kernel when
+- * primary kernel is crashing.
+- */
+-static void __init reserve_crashkernel(void)
+-{
+-	unsigned long long crash_base, crash_size;
+-	int ret;
+-
+-	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+-				&crash_size, &crash_base);
+-	/* no crashkernel= or invalid value specified */
+-	if (ret || !crash_size)
+-		return;
+-
+-	crash_size = PAGE_ALIGN(crash_size);
+-
+-	if (crash_base == 0) {
+-		/* Current arm64 boot protocol requires 2MB alignment */
+-		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
+-				crash_size, CRASH_ALIGN);
+-		if (crash_base == 0) {
+-			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+-				crash_size);
+-			return;
+-		}
+-	} else {
+-		/* User specifies base address explicitly. */
+-		if (!memblock_is_region_memory(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region is not memory\n");
+-			return;
+-		}
+-
+-		if (memblock_is_region_reserved(crash_base, crash_size)) {
+-			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
+-			return;
+-		}
+-
+-		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
+-			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
+-			return;
+-		}
+-	}
+-	memblock_reserve(crash_base, crash_size);
+-
+-	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+-		crash_base, crash_base + crash_size, crash_size >> 20);
+-
+-	crashk_res.start = crash_base;
+-	crashk_res.end = crash_base + crash_size - 1;
+-}
+-#else
++#ifndef CONFIG_KEXEC_CORE
+ static void __init reserve_crashkernel(void)
+ {
+ }
+-#endif /* CONFIG_KEXEC_CORE */
++#endif
+ 
+ #ifdef CONFIG_CRASH_DUMP
+ static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index 75df62fea1b6..0b1b3ec18785 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -476,6 +476,10 @@ static void __init map_mem(pgd_t *pgdp)
+ 	 */
+ 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ #ifdef CONFIG_KEXEC_CORE
++	if (crashk_low_res.end)
++		memblock_mark_nomap(crashk_low_res.start,
++				    resource_size(&crashk_low_res));
++
+ 	if (crashk_res.end)
+ 		memblock_mark_nomap(crashk_res.start,
+ 				    resource_size(&crashk_res));
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index d968ef268fb4..3f735cb37ace 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -321,7 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
+ 
+ int __init reserve_crashkernel_low(void)
+ {
+-#if defined(CONFIG_X86_64)
++#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
+ 	unsigned long long base, low_base = 0, low_size = 0;
+ 	unsigned long total_low_mem;
+ 	int ret;
+@@ -370,12 +370,14 @@ int __init reserve_crashkernel_low(void)
+ 
+ 	crashk_low_res.start = low_base;
+ 	crashk_low_res.end   = low_base + low_size - 1;
++#ifdef CONFIG_X86
+ 	insert_resource(&iomem_resource, &crashk_low_res);
++#endif
+ #endif
+ 	return 0;
+ }
+ 
+-#if defined(CONFIG_X86)
++#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
+ #ifdef CONFIG_KEXEC_CORE
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+@@ -468,7 +470,9 @@ void __init reserve_crashkernel(void)
+ 
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end   = crash_base + crash_size - 1;
++#ifdef CONFIG_X86
+ 	insert_resource(&iomem_resource, &crashk_res);
++#endif
+ }
+ #endif /* CONFIG_KEXEC_CORE */
+ #endif
 -- 
 2.20.1
 
