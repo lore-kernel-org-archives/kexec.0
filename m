@@ -1,9 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v12 8/9] arm64: kdump: add memory for devices by DT property
- linux, usable-memory-range
-Date: Mon, 7 Sep 2020 21:47:44 +0800
-Message-ID: <20200907134745.25732-9-chenzhou10@huawei.com>
+Subject: [PATCH v12 9/9] kdump: update Documentation about crashkernel
+Date: Mon, 7 Sep 2020 21:47:45 +0800
+Message-ID: <20200907134745.25732-10-chenzhou10@huawei.com>
 In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
 References: <20200907134745.25732-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
@@ -22,102 +21,116 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com, prabhakar.pkin@gmail.com, bhsharma@redhat.com
 Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, nsaenzjulienne@suse.de, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-When reserving crashkernel in high memory, some low memory is reserved
-for crash dump kernel devices and never mapped by the first kernel.
-This memory range is advertised to crash dump kernel via DT property
-under /chosen,
-	linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+For arm64, the behavior of crashkernel=X has been changed, which
+tries low allocation in DMA zone, and fall back to high allocation
+if it fails.
+We can also use "crashkernel=X,high" to select a high region above
+DMA zone, which also tries to allocate at least 256M low memory in
+DMA zone automatically.
+"crashkernel=Y,low" can be used to allocate specified size low memory
+in DMA zone.
+For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
 
-We reused the DT property linux,usable-memory-range and made the low
-memory region as the second range "BASE2 SIZE2", which keeps compatibility
-with existing user-space and older kdump kernels.
+For x86 and arm64, we introduce threshold for the required memory.
+if required size X is too large and leads to very little free low
+memory after low allocation, the system may not work well.
+So add a threshold and go for high allocation directly if the required
+size is too large. The threshold is set as the half of low memory.
 
-Crash dump kernel reads this property at boot time and call memblock_add()
-to add the low memory region after memblock_cap_memory_range() has been
-called.
+So update the Documentation.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/arm64/mm/init.c | 43 +++++++++++++++++++++++++++++++++----------
- 1 file changed, 33 insertions(+), 10 deletions(-)
+ Documentation/admin-guide/kdump/kdump.rst     | 25 ++++++++++++++++---
+ .../admin-guide/kernel-parameters.txt         | 13 ++++++++--
+ 2 files changed, 33 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index e56a0e5d5b77..2af8c38279d9 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -76,6 +76,15 @@ static void __init reserve_crashkernel(void)
- }
- #endif
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 2da65fef2a1c..549611abc581 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -299,7 +299,16 @@ Boot into System Kernel
+    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
  
-+/*
-+ * The main usage of linux,usable-memory-range is for crash dump kernel.
-+ * Originally, the number of usable-memory regions is one. Now there may
-+ * be two regions, low region and high region.
-+ * To make compatibility with existing user-space and older kdump, the low
-+ * region is always the last range of linux,usable-memory-range if exist.
-+ */
-+#define MAX_USABLE_RANGES	2
+-   On x86 and x86_64, use "crashkernel=64M@16M".
++   On x86 use "crashkernel=64M@16M".
 +
- #ifdef CONFIG_CRASH_DUMP
- static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
- 		const char *uname, int depth, void *data)
-@@ -191,9 +200,9 @@ early_param("mem", early_mem);
- static int __init early_init_dt_scan_usablemem(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
--	struct memblock_region *usablemem = data;
--	const __be32 *reg;
--	int len;
-+	struct memblock_region *usable_rgns = data;
-+	const __be32 *reg, *endp;
-+	int len, nr = 0;
++   On x86_64, use "crashkernel=X" to select a region under 4G first, and
++   fall back to reserve region above 4G. And go for high allocation
++   directly if the required size is too large.
++   We can also use "crashkernel=X,high" to select a region above 4G, which
++   also tries to allocate at least 256M below 4G automatically and
++   "crashkernel=Y,low" can be used to allocate specified size low memory.
++   Use "crashkernel=Y@X" if you really have to reserve memory from specified
++   start address X.
  
- 	if (depth != 1 || strcmp(uname, "chosen") != 0)
- 		return 0;
-@@ -202,22 +211,36 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
- 		return 1;
+    On ppc64, use "crashkernel=128M@32M".
  
--	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+	endp = reg + (len / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		usable_rgns[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		usable_rgns[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+
-+		if (++nr >= MAX_USABLE_RANGES)
-+			break;
-+	}
+@@ -316,8 +325,18 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
  
- 	return 1;
- }
+-   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+-   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
++   On arm64, use "crashkernel=X" to try low allocation in DMA zone, and
++   fall back to high allocation if it fails. And go for high allocation
++   directly if the required size is too large.
++   We can also use "crashkernel=X,high" to select a high region above
++   DMA zone, which also tries to allocate at least 256M low memory in
++   DMA zone automatically.
++   "crashkernel=Y,low" can be used to allocate specified size low memory
++   in DMA zone.
++   For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
++   Use "crashkernel=Y@X" if you really have to reserve memory from
++   specified start address X. Note that the start address of the kernel,
++   X if explicitly specified, must be aligned to 2MiB (0x200000).
  
- static void __init fdt_enforce_memory_region(void)
- {
--	struct memblock_region reg = {
--		.size = 0,
-+	struct memblock_region usable_rgns[MAX_USABLE_RANGES] = {
-+		{ .size = 0 },
-+		{ .size = 0 }
- 	};
+ Load the Dump-capture Kernel
+ ============================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index a1068742a6df..f7df572d8f64 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -727,6 +727,10 @@
+ 			[KNL, X86-64] Select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
++			[KNL, arm64] Try low allocation in DMA zone, fall back
++			to high allocation if it fails when '@offset' hasn't been
++			specified. For non-RPi4 platforms, change DMA zone to
++			DMA32 zone.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
  
--	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &usable_rgns);
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+@@ -743,6 +747,8 @@
+ 			Otherwise memory region will be allocated below 4G, if
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
++			[KNL, arm64] range in high memory.
++			Allow kernel to allocate physical memory region from top.
+ 	crashkernel=size[KMG],low
+ 			[KNL, X86-64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+@@ -751,13 +757,16 @@
+ 			requires at least 64M+32K low memory, also enough extra
+ 			low memory is needed to make sure DMA buffers for 32-bit
+ 			devices won't run out. Kernel would try to allocate at
+-			at least 256M below 4G automatically.
++			least 256M below 4G automatically.
+ 			This one let user to specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+-
++			[KNL, arm64] range in low memory.
++			This one let user to specify a low range in DMA zone for
++			crash dump kernel. For non-RPi4 platforms, change DMA zone
++			to DMA32 zone.
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
  
--	if (reg.size)
--		memblock_cap_memory_range(reg.base, reg.size);
-+	/*
-+	 * The first range of usable-memory regions is for crash dump
-+	 * kernel with only one region or for high region with two regions,
-+	 * the second range is dedicated for low region if exist.
-+	 */
-+	if (usable_rgns[0].size)
-+		memblock_cap_memory_range(usable_rgns[0].base, usable_rgns[0].size);
-+	if (usable_rgns[1].size)
-+		memblock_add(usable_rgns[1].base, usable_rgns[1].size);
- }
- 
- void __init arm64_memblock_init(void)
 -- 
 2.20.1
 
