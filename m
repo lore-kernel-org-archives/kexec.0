@@ -1,11 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v12 6/9] arm64: kdump: reimplement crashkernel=X
-Date: Mon, 7 Sep 2020 21:47:42 +0800
-Message-ID: <20200907134745.25732-7-chenzhou10@huawei.com>
-In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kFSKi-00021H-2R
+ for kexec@lists.infradead.org; Tue, 08 Sep 2020 01:22:04 +0000
+Date: Tue, 8 Sep 2020 09:21:38 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v12 1/9] x86: kdump: move CRASH_ALIGN to 2M
+Message-ID: <20200908012138.GA3058@dhcp-128-65.nay.redhat.com>
 References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <20200907134745.25732-2-chenzhou10@huawei.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200907134745.25732-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,233 +25,77 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: catalin.marinas@arm.com, will@kernel.org, james.morse@arm.com, tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, corbet@lwn.net, John.P.donnelly@oracle.com, prabhakar.pkin@gmail.com, bhsharma@redhat.com
-Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, nsaenzjulienne@suse.de, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-There are following issues in arm64 kdump:
-1. We use crashkernel=X to reserve crashkernel below 4G, which
-will fail when there is no enough low memory.
-2. If reserving crashkernel above 4G, in this case, crash dump
-kernel will boot failure because there is no low memory available
-for allocation.
-3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
-if the memory reserved for crash dump kernel falled in ZONE_DMA32,
-the devices in crash dump kernel need to use ZONE_DMA will alloc
-fail.
+Hi,
 
-To solve these issues, change the behavior of crashkernel=X and
-introduce crashkernel=X,[high,low].
-crashkernel=X tries low allocation in DMA zone, and fall back to
-high allocation if it fails.
-We can also use "crashkernel=X,high" to select a region above DMA zone,
-which also tries to allocate at least 256M in DMA zone automatically.
-"crashkernel=Y,low" can be used to allocate specified size low memory.
+On 09/07/20 at 09:47pm, Chen Zhou wrote:
+> CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M and default
+> value is 2M, so move CRASH_ALIGN to 2M, with smaller value reservation
+> can have more chance to succeed.
 
-For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
+Seems still some misunderstanding about the change :(  I'm sorry if I
+did not explain it clearly.
 
-Another minor change, there may be two regions reserved for crash
-dump kernel, in order to distinct from the high region and make no
-effect to the use of existing kexec-tools, rename the low region as
-"Crash kernel (low)".
+Previously I missed the PHYSICAL_ALIGN can change according to .config
+I mean we should change the value to CONFIG_PHYSICAL_ALIGN for X86
+And I suggest to move back to keep using 16M.  And do not change it in
+this series.
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/include/asm/kexec.h |  9 +++++
- arch/arm64/kernel/setup.c      | 13 +++++++-
- arch/arm64/mm/init.c           | 60 ++--------------------------------
- arch/arm64/mm/mmu.c            |  4 +++
- kernel/crash_core.c            |  8 +++--
- 5 files changed, 34 insertions(+), 60 deletions(-)
+> And replace the hard-coded alignment with macro CRASH_ALIGN in function
+> reserve_crashkernel().
+> 
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  arch/x86/include/asm/kexec.h | 3 +++
+>  arch/x86/kernel/setup.c      | 5 +----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 6802c59e8252..83f200dd54a1 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -18,6 +18,9 @@
+>  
+>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+>  
+> +/* 2M alignment for crash kernel regions */
+> +#define CRASH_ALIGN		SZ_2M
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <linux/string.h>
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 3511736fbc74..296294ad0dd8 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -402,9 +402,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> -/* 16M alignment for crash kernel regions */
+> -#define CRASH_ALIGN		SZ_16M
+> -
+>  /*
+>   * Keep the crash kernel below this limit.
+>   *
+> @@ -530,7 +527,7 @@ static void __init reserve_crashkernel(void)
+>  
+>  		start = memblock_find_in_range(crash_base,
+>  					       crash_base + crash_size,
+> -					       crash_size, 1 << 20);
+> +					       crash_size, CRASH_ALIGN);
+>  		if (start != crash_base) {
+>  			pr_info("crashkernel reservation failed - memory is in use.\n");
+>  			return;
+> -- 
+> 2.20.1
+> 
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 402d208265a3..79909ae5e22e 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -28,7 +28,12 @@
- /* 2M alignment for crash kernel regions */
- #define CRASH_ALIGN	SZ_2M
- 
-+#ifdef CONFIG_ZONE_DMA
-+#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
-+#else
- #define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
-+#endif
-+
- #define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
- 
- #ifndef __ASSEMBLY__
-@@ -96,6 +101,10 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
- 
-+#ifdef CONFIG_KEXEC_CORE
-+extern void __init reserve_crashkernel(void);
-+#endif
-+
- #ifdef CONFIG_KEXEC_FILE
- #define ARCH_HAS_KIMAGE_ARCH
- 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 53acbeca4f57..1b24072f2bae 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -238,7 +238,18 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		/*
-+		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
-+		 * region in /proc/iomem.
-+		 * In order to distinct from the high region and make no effect
-+		 * to the use of existing kexec-tools, rename the low region as
-+		 * "Crash kernel (low)".
-+		 */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+				crashk_low_res.end <= res->end) {
-+			crashk_low_res.name = "Crash kernel (low)";
-+			request_resource(res, &crashk_low_res);
-+		}
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index ad27dc4cc55e..e56a0e5d5b77 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -35,6 +35,7 @@
- #include <asm/fixmap.h>
- #include <asm/kasan.h>
- #include <asm/kernel-pgtable.h>
-+#include <asm/kexec.h>
- #include <asm/memory.h>
- #include <asm/numa.h>
- #include <asm/sections.h>
-@@ -69,66 +70,11 @@ EXPORT_SYMBOL(vmemmap);
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- phys_addr_t arm64_dma32_phys_limit __ro_after_init;
- 
--#ifdef CONFIG_KEXEC_CORE
--/*
-- * reserve_crashkernel() - reserves memory for crash kernel
-- *
-- * This function reserves memory area given in "crashkernel=" kernel command
-- * line parameter. The memory reserved is used by dump capture kernel when
-- * primary kernel is crashing.
-- */
--static void __init reserve_crashkernel(void)
--{
--	unsigned long long crash_base, crash_size;
--	int ret;
--
--	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&crash_size, &crash_base);
--	/* no crashkernel= or invalid value specified */
--	if (ret || !crash_size)
--		return;
--
--	crash_size = PAGE_ALIGN(crash_size);
--
--	if (crash_base == 0) {
--		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
--				crash_size, CRASH_ALIGN);
--		if (crash_base == 0) {
--			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
--				crash_size);
--			return;
--		}
--	} else {
--		/* User specifies base address explicitly. */
--		if (!memblock_is_region_memory(crash_base, crash_size)) {
--			pr_warn("cannot reserve crashkernel: region is not memory\n");
--			return;
--		}
--
--		if (memblock_is_region_reserved(crash_base, crash_size)) {
--			pr_warn("cannot reserve crashkernel: region overlaps reserved memory\n");
--			return;
--		}
--
--		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
--			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
--			return;
--		}
--	}
--	memblock_reserve(crash_base, crash_size);
--
--	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
--		crash_base, crash_base + crash_size, crash_size >> 20);
--
--	crashk_res.start = crash_base;
--	crashk_res.end = crash_base + crash_size - 1;
--}
--#else
-+#ifndef CONFIG_KEXEC_CORE
- static void __init reserve_crashkernel(void)
- {
- }
--#endif /* CONFIG_KEXEC_CORE */
-+#endif
- 
- #ifdef CONFIG_CRASH_DUMP
- static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 75df62fea1b6..0b1b3ec18785 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -476,6 +476,10 @@ static void __init map_mem(pgd_t *pgdp)
- 	 */
- 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
- #ifdef CONFIG_KEXEC_CORE
-+	if (crashk_low_res.end)
-+		memblock_mark_nomap(crashk_low_res.start,
-+				    resource_size(&crashk_low_res));
-+
- 	if (crashk_res.end)
- 		memblock_mark_nomap(crashk_res.start,
- 				    resource_size(&crashk_res));
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index d968ef268fb4..3f735cb37ace 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -321,7 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
- 
- int __init reserve_crashkernel_low(void)
- {
--#if defined(CONFIG_X86_64)
-+#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
- 	unsigned long long base, low_base = 0, low_size = 0;
- 	unsigned long total_low_mem;
- 	int ret;
-@@ -370,12 +370,14 @@ int __init reserve_crashkernel_low(void)
- 
- 	crashk_low_res.start = low_base;
- 	crashk_low_res.end   = low_base + low_size - 1;
-+#ifdef CONFIG_X86
- 	insert_resource(&iomem_resource, &crashk_low_res);
-+#endif
- #endif
- 	return 0;
- }
- 
--#if defined(CONFIG_X86)
-+#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
- #ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-@@ -468,7 +470,9 @@ void __init reserve_crashkernel(void)
- 
- 	crashk_res.start = crash_base;
- 	crashk_res.end   = crash_base + crash_size - 1;
-+#ifdef CONFIG_X86
- 	insert_resource(&iomem_resource, &crashk_res);
-+#endif
- }
- #endif /* CONFIG_KEXEC_CORE */
- #endif
--- 
-2.20.1
+Thanks
+Dave
 
 
 _______________________________________________
