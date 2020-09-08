@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kFkEh-0003Ej-IA
- for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:29:05 +0000
+ id 1kFkEh-0003Ek-PY
+ for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:29:04 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH printk v4 0/6] printk: reimplement LOG_CONT handling
-Date: Tue,  8 Sep 2020 22:34:53 +0206
-Message-Id: <20200908202859.2736-1-john.ogness@linutronix.de>
+Subject: [PATCH printk v4 2/6] printk: ringbuffer: add BLK_DATALESS() macro
+Date: Tue,  8 Sep 2020 22:34:55 +0206
+Message-Id: <20200908202859.2736-3-john.ogness@linutronix.de>
+In-Reply-To: <20200908202859.2736-1-john.ogness@linutronix.de>
+References: <20200908202859.2736-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,126 +25,47 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hello,
+Rather than continually needing to explicitly check @begin and @next
+to identify a dataless block, introduce and use a BLK_DATALESS()
+macro.
 
-Here is v4 for the second series to rework the printk subsystem.
-(The v3 is here [0].) This series implements a new ringbuffer
-feature that allows the last record to be extended. Petr Mladek
-provided the initial proof of concept [1] for this.
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+---
+ kernel/printk/printk_ringbuffer.c | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-Using the record extension feature, LOG_CONT is re-implemented
-in a way that exactly preserves its behavior, but avoids the
-need for an extra buffer. In particular, it avoids the need for
-any synchronization that such a buffer requires.
-
-This series deviates from the agreements [2] made at the meeting
-during LPC2019 in Lisbon. The test results of the v1 series,
-which implemented LOG_CONT as agreed upon, showed that the
-effects on existing userspace tools using /dev/kmsg (journalctl,
-dmesg) were not acceptable [3].
-
-Patch 5 introduces *four* new memory barrier pairs. Two of them
-are insignificant additions (data_realloc:A/desc_read:D and
-data_realloc:A/data_push_tail:B) because they are alternate path
-memory barriers that exactly match the purpose and context of
-the two existing memory barrier pairs they provide an alternate
-path for. The other two new memory barrier pairs are significant
-additions:
-
-desc_reopen_last:A / _prb_commit:B - When reopening a descriptor,
-    ensure the state transitions back to desc_reserved before
-    fully trusting the descriptor data.
-
-_prb_commit:B / desc_reserve:D - When committing a descriptor,
-    ensure the state transitions to desc_committed before checking
-    the head ID to see if the descriptor needs to be finalized.
-
-The test module used to test the ringbuffer is available
-here [4].
-
-The series is based on the printk-rework branch of the printk git
-tree:
-e60768311af8 ("scripts/gdb: update for lockless printk ringbuffer")
-
-The list of changes since v3:
-
-printk_ringbuffer
-=================
-
-- move enum desc_state definition to printk_ringbuffer.h
-
-- change enum desc_state to define the exact state values used
-  in the state variable
-
-- add DESC_STATE() macro to retrieve the state from the state
-  variable
-
-- add DESC_SV() macro to build a state variable value given an
-  ID and state
-
-- get_desc_state(): simply return the state value rather than
-  processing state flags
-
-- desc_finalized is now a queried state instead of a state flag
-
-- desc_read(): always return a set @state_var, even if the
-  descriptor is in an inconsistent state (desc_reopen_last()
-  relies on this)
-
-- change state logic that tested for desc_committed to now test
-  for desc_finalized, since this is the new state directly
-  preceding desc_reusable
-
-- data_realloc(): add a check if the data block should shrink
-  (and in that case, do not modify the data block, i.e. data
-  blocks will never shrink)
-
-- prb_reserve_in_last(): add WARN_ON for unexpected @text_len
-  value
-
-- prb_reserve(): save a copy of @seq and use use memset() to
-  clear @info
-
-- desc_read_committed_seq(): rename function to
-  desc_read_finalized_seq() since desc_finalized is the desired
-  state for readers
-
-- documentation: update state and finalization descriptions
-
-printk.c
-========
-
-- use @text_len and @dict_len for memcpy() size
-
-gdb scripts
-===========
-
-- update to use new state representation
-
-John Ogness
-
-[0] https://lkml.kernel.org/r/20200831011058.6286-1-john.ogness@linutronix.de
-[1] https://lkml.kernel.org/r/20200812163908.GH12903@alley
-[2] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
-[3] https://lkml.kernel.org/r/20200811160551.GC12903@alley
-[4] https://github.com/Linutronix/prb-test.git
-
-
-John Ogness (6):
-  printk: ringbuffer: relocate get_data()
-  printk: ringbuffer: add BLK_DATALESS() macro
-  printk: ringbuffer: clear initial reserved fields
-  printk: ringbuffer: change representation of states
-  printk: ringbuffer: add finalization/extension support
-  printk: reimplement log_cont using record extension
-
- Documentation/admin-guide/kdump/gdbmacros.txt |  13 +-
- kernel/printk/printk.c                        | 110 +--
- kernel/printk/printk_ringbuffer.c             | 695 ++++++++++++++----
- kernel/printk/printk_ringbuffer.h             |  35 +-
- scripts/gdb/linux/dmesg.py                    |  12 +-
- 5 files changed, 624 insertions(+), 241 deletions(-)
-
+diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
+index aa6e31a27601..6ee5ebce1450 100644
+--- a/kernel/printk/printk_ringbuffer.c
++++ b/kernel/printk/printk_ringbuffer.c
+@@ -266,6 +266,8 @@
+ 
+ /* Determine if a logical position refers to a data-less block. */
+ #define LPOS_DATALESS(lpos)		((lpos) & 1UL)
++#define BLK_DATALESS(blk)		(LPOS_DATALESS((blk)->begin) && \
++					 LPOS_DATALESS((blk)->next))
+ 
+ /* Get the logical position at index 0 of the current wrap. */
+ #define DATA_THIS_WRAP_START_LPOS(data_ring, lpos) \
+@@ -1021,7 +1023,7 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
+ 			       struct prb_data_blk_lpos *blk_lpos)
+ {
+ 	/* Data-less blocks take no space. */
+-	if (LPOS_DATALESS(blk_lpos->begin))
++	if (BLK_DATALESS(blk_lpos))
+ 		return 0;
+ 
+ 	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next)) {
+@@ -1054,7 +1056,7 @@ static const char *get_data(struct prb_data_ring *data_ring,
+ 	struct prb_data_block *db;
+ 
+ 	/* Data-less data block description. */
+-	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
++	if (BLK_DATALESS(blk_lpos)) {
+ 		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
+ 			*data_size = 0;
+ 			return "";
 -- 
 2.20.1
 
