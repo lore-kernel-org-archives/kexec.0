@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v12 1/9] x86: kdump: move CRASH_ALIGN to 2M
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
- <20200907134745.25732-2-chenzhou10@huawei.com>
- <20200908012138.GA3058@dhcp-128-65.nay.redhat.com>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <c0fc35d0-a9e3-6349-08bc-d2f7a12e3680@huawei.com>
-Date: Tue, 8 Sep 2020 11:19:42 +0800
+Received: from us-smtp-1.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kFjx6-0000Py-17
+ for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:10:54 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 2/7] kernel/resource: move and rename
+ IORESOURCE_MEM_DRIVER_MANAGED
+Date: Tue,  8 Sep 2020 22:10:07 +0200
+Message-Id: <20200908201012.44168-3-david@redhat.com>
+In-Reply-To: <20200908201012.44168-1-david@redhat.com>
+References: <20200908201012.44168-1-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20200908012138.GA3058@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,93 +24,97 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: linux-kernel@vger.kernel.org
+Cc: linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org, Michal Hocko <mhocko@suse.com>, linux-acpi@vger.kernel.org, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Jason Gunthorpe <jgg@ziepe.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Hildenbrand <david@redhat.com>, kexec@lists.infradead.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Wei Yang <richardw.yang@linux.intel.com>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
 
+IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
+always set to 0 by hardware. This is far from beautiful (and confusing),
+and the bit only applies to SYSRAM. So let's move it out of the
+bus-specific (PnP) defined bits.
 
+We'll add another SYSRAM specific bit soon. If we ever need more bits for
+other purposes, we can steal some from "desc", or reshuffle/regroup what we
+have.
 
-On 2020/9/8 9:21, Dave Young wrote:
-> Hi,
->
-> On 09/07/20 at 09:47pm, Chen Zhou wrote:
->> CONFIG_PHYSICAL_ALIGN can be selected from 2M to 16M and default
->> value is 2M, so move CRASH_ALIGN to 2M, with smaller value reservation
->> can have more chance to succeed.
-> Seems still some misunderstanding about the change :(  I'm sorry if I
-> did not explain it clearly.
->
-> Previously I missed the PHYSICAL_ALIGN can change according to .config
-> I mean we should change the value to CONFIG_PHYSICAL_ALIGN for X86
-> And I suggest to move back to keep using 16M.  And do not change it in
-> this series.
-Hi Dave,
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Jason Gunthorpe <jgg@ziepe.ca>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Wei Yang <richardw.yang@linux.intel.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: kexec@lists.infradead.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ include/linux/ioport.h | 4 +++-
+ kernel/kexec_file.c    | 2 +-
+ mm/memory_hotplug.c    | 4 ++--
+ 3 files changed, 6 insertions(+), 4 deletions(-)
 
-Sorry, i misunderstood about this.
-
-Ok, this patch will keep the value of CRASH_ALIGN as it is,
-just move CRASH_ALIGN to header asm/kexec.h and replace the hard-coded alignment
-with macro CRASH_ALIGN in function reserve_crashkernel().
-
-Thanks,
-Chen Zhou
->
->> And replace the hard-coded alignment with macro CRASH_ALIGN in function
->> reserve_crashkernel().
->>
->> Suggested-by: Dave Young <dyoung@redhat.com>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> ---
->>  arch/x86/include/asm/kexec.h | 3 +++
->>  arch/x86/kernel/setup.c      | 5 +----
->>  2 files changed, 4 insertions(+), 4 deletions(-)
->>
->> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
->> index 6802c59e8252..83f200dd54a1 100644
->> --- a/arch/x86/include/asm/kexec.h
->> +++ b/arch/x86/include/asm/kexec.h
->> @@ -18,6 +18,9 @@
->>  
->>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
->>  
->> +/* 2M alignment for crash kernel regions */
->> +#define CRASH_ALIGN		SZ_2M
->> +
->>  #ifndef __ASSEMBLY__
->>  
->>  #include <linux/string.h>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 3511736fbc74..296294ad0dd8 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -402,9 +402,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->>  
->>  #ifdef CONFIG_KEXEC_CORE
->>  
->> -/* 16M alignment for crash kernel regions */
->> -#define CRASH_ALIGN		SZ_16M
->> -
->>  /*
->>   * Keep the crash kernel below this limit.
->>   *
->> @@ -530,7 +527,7 @@ static void __init reserve_crashkernel(void)
->>  
->>  		start = memblock_find_in_range(crash_base,
->>  					       crash_base + crash_size,
->> -					       crash_size, 1 << 20);
->> +					       crash_size, CRASH_ALIGN);
->>  		if (start != crash_base) {
->>  			pr_info("crashkernel reservation failed - memory is in use.\n");
->>  			return;
->> -- 
->> 2.20.1
->>
-> Thanks
-> Dave
->
->
-> .
->
-
+diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+index 52a91f5fa1a36..d7620d7c941a0 100644
+--- a/include/linux/ioport.h
++++ b/include/linux/ioport.h
+@@ -58,6 +58,9 @@ struct resource {
+ #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
+ #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
+ 
++/* IORESOURCE_SYSRAM specific bits. */
++#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
++
+ #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
+ 
+ #define IORESOURCE_DISABLED	0x10000000
+@@ -103,7 +106,6 @@ struct resource {
+ #define IORESOURCE_MEM_32BIT		(3<<3)
+ #define IORESOURCE_MEM_SHADOWABLE	(1<<5)	/* dup: IORESOURCE_SHADOWABLE */
+ #define IORESOURCE_MEM_EXPANSIONROM	(1<<6)
+-#define IORESOURCE_MEM_DRIVER_MANAGED	(1<<7)
+ 
+ /* PnP I/O specific bits (IORESOURCE_BITS) */
+ #define IORESOURCE_IO_16BIT_ADDR	(1<<0)
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index ca40bef75a616..dfeeed1aed084 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -520,7 +520,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+ 	/* Returning 0 will take to next memory range */
+ 
+ 	/* Don't use memory that will be detected and handled by a driver. */
+-	if (res->flags & IORESOURCE_MEM_DRIVER_MANAGED)
++	if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
+ 		return 0;
+ 
+ 	if (sz < kbuf->memsz)
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 4c47b68a9f4b5..8e1cd18b5cf14 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size,
+ 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+ 
+ 	if (strcmp(resource_name, "System RAM"))
+-		flags |= IORESOURCE_MEM_DRIVER_MANAGED;
++		flags |= IORESOURCE_SYSRAM_DRIVER_MANAGED;
+ 
+ 	/*
+ 	 * Make sure value parsed from 'mem=' only restricts memory adding
+@@ -1160,7 +1160,7 @@ EXPORT_SYMBOL_GPL(add_memory);
+  *
+  * For this memory, no entries in /sys/firmware/memmap ("raw firmware-provided
+  * memory map") are created. Also, the created memory resource is flagged
+- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-case
++ * with IORESOURCE_SYSRAM_DRIVER_MANAGED, so in-kernel users can special-case
+  * this memory as well (esp., not place kexec images onto it).
+  *
+  * The resource_name (visible via /proc/iomem) has to have the format
+-- 
+2.26.2
 
 
 _______________________________________________
