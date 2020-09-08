@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kFkEh-0003Eq-Tb
- for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:29:07 +0000
+ id 1kFkEi-0003Et-79
+ for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:29:11 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH printk v4 1/6] printk: ringbuffer: relocate get_data()
-Date: Tue,  8 Sep 2020 22:34:54 +0206
-Message-Id: <20200908202859.2736-2-john.ogness@linutronix.de>
+Subject: [PATCH printk v4 4/6] printk: ringbuffer: change representation of
+ states
+Date: Tue,  8 Sep 2020 22:34:57 +0206
+Message-Id: <20200908202859.2736-5-john.ogness@linutronix.de>
 In-Reply-To: <20200908202859.2736-1-john.ogness@linutronix.de>
 References: <20200908202859.2736-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -25,149 +26,212 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Move the internal get_data() function as-is above prb_reserve() so
-that a later change can make use of the static function.
+Rather than deriving the state by evaluating bits within the flags
+area of the state variable, assign the states explicit values and
+set those values in the flags area. Introduce macros to make it
+simple to read and write state values for the state variable.
+
+Although the functionality is preserved, the binary representation
+for the states is changed.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
-Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- kernel/printk/printk_ringbuffer.c | 116 +++++++++++++++---------------
- 1 file changed, 58 insertions(+), 58 deletions(-)
+ Documentation/admin-guide/kdump/gdbmacros.txt | 12 ++++---
+ kernel/printk/printk_ringbuffer.c             | 28 +++++------------
+ kernel/printk/printk_ringbuffer.h             | 31 ++++++++++++-------
+ scripts/gdb/linux/dmesg.py                    | 11 ++++---
+ 4 files changed, 41 insertions(+), 41 deletions(-)
 
+diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
+index 7adece30237e..8f533b751c46 100644
+--- a/Documentation/admin-guide/kdump/gdbmacros.txt
++++ b/Documentation/admin-guide/kdump/gdbmacros.txt
+@@ -295,9 +295,12 @@ document dump_record
+ end
+ 
+ define dmesg
+-	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
+-	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
+-	set var $id_mask = ~$flags_mask
++	# definitions from kernel/printk/printk_ringbuffer.h
++	set var $desc_committed = 1
++	set var $desc_sv_bits = sizeof(long) * 8
++	set var $desc_flags_shift = $desc_sv_bits - 2
++	set var $desc_flags_mask = 3 << $desc_flags_shift
++	set var $id_mask = ~$desc_flags_mask
+ 
+ 	set var $desc_count = 1U << prb->desc_ring.count_bits
+ 	set var $prev_flags = 0
+@@ -309,7 +312,8 @@ define dmesg
+ 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
+ 
+ 		# skip non-committed record
+-		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
++		set var $state = 3 & ($desc->state_var.counter >> $desc_flags_shift)
++		if ($state == $desc_committed)
+ 			dump_record $desc $prev_flags
+ 			set var $prev_flags = $desc->info.flags
+ 		end
 diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 0659b50872b5..aa6e31a27601 100644
+index 82347abb22a5..911fbe150e9a 100644
 --- a/kernel/printk/printk_ringbuffer.c
 +++ b/kernel/printk/printk_ringbuffer.c
-@@ -1038,6 +1038,64 @@ static unsigned int space_used(struct prb_data_ring *data_ring,
- 		DATA_SIZE(data_ring) - DATA_INDEX(data_ring, blk_lpos->begin));
+@@ -348,14 +348,6 @@ static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
+ 	return true;
  }
  
-+/*
-+ * Given @blk_lpos, return a pointer to the writer data from the data block
-+ * and calculate the size of the data part. A NULL pointer is returned if
-+ * @blk_lpos specifies values that could never be legal.
-+ *
-+ * This function (used by readers) performs strict validation on the lpos
-+ * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
-+ * triggered if an internal error is detected.
-+ */
-+static const char *get_data(struct prb_data_ring *data_ring,
-+			    struct prb_data_blk_lpos *blk_lpos,
-+			    unsigned int *data_size)
-+{
-+	struct prb_data_block *db;
-+
-+	/* Data-less data block description. */
-+	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
-+		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
-+			*data_size = 0;
-+			return "";
-+		}
-+		return NULL;
-+	}
-+
-+	/* Regular data block: @begin less than @next and in same wrap. */
-+	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
-+	    blk_lpos->begin < blk_lpos->next) {
-+		db = to_block(data_ring, blk_lpos->begin);
-+		*data_size = blk_lpos->next - blk_lpos->begin;
-+
-+	/* Wrapping data block: @begin is one wrap behind @next. */
-+	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
-+		   DATA_WRAPS(data_ring, blk_lpos->next)) {
-+		db = to_block(data_ring, 0);
-+		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
-+
-+	/* Illegal block description. */
-+	} else {
-+		WARN_ON_ONCE(1);
-+		return NULL;
-+	}
-+
-+	/* A valid data block will always be aligned to the ID size. */
-+	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
-+	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
-+		return NULL;
-+	}
-+
-+	/* A valid data block will always have at least an ID. */
-+	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
-+		return NULL;
-+
-+	/* Subtract block ID space from size to reflect data size. */
-+	*data_size -= sizeof(db->id);
-+
-+	return &db->data[0];
-+}
-+
- /**
-  * prb_reserve() - Reserve space in the ringbuffer.
-  *
-@@ -1192,64 +1250,6 @@ void prb_commit(struct prb_reserved_entry *e)
- 	local_irq_restore(e->irqflags);
+-/* The possible responses of a descriptor state-query. */
+-enum desc_state {
+-	desc_miss,	/* ID mismatch */
+-	desc_reserved,	/* reserved, in use by writer */
+-	desc_committed, /* committed, writer is done */
+-	desc_reusable,	/* free, not yet used by any writer */
+-};
+-
+ /* Query the state of a descriptor. */
+ static enum desc_state get_desc_state(unsigned long id,
+ 				      unsigned long state_val)
+@@ -363,13 +355,7 @@ static enum desc_state get_desc_state(unsigned long id,
+ 	if (id != DESC_ID(state_val))
+ 		return desc_miss;
+ 
+-	if (state_val & DESC_REUSE_MASK)
+-		return desc_reusable;
+-
+-	if (state_val & DESC_COMMITTED_MASK)
+-		return desc_committed;
+-
+-	return desc_reserved;
++	return DESC_STATE(state_val);
  }
  
--/*
-- * Given @blk_lpos, return a pointer to the writer data from the data block
-- * and calculate the size of the data part. A NULL pointer is returned if
-- * @blk_lpos specifies values that could never be legal.
-- *
-- * This function (used by readers) performs strict validation on the lpos
-- * values to possibly detect bugs in the writer code. A WARN_ON_ONCE() is
-- * triggered if an internal error is detected.
-- */
--static const char *get_data(struct prb_data_ring *data_ring,
--			    struct prb_data_blk_lpos *blk_lpos,
--			    unsigned int *data_size)
--{
--	struct prb_data_block *db;
--
--	/* Data-less data block description. */
--	if (LPOS_DATALESS(blk_lpos->begin) && LPOS_DATALESS(blk_lpos->next)) {
--		if (blk_lpos->begin == NO_LPOS && blk_lpos->next == NO_LPOS) {
--			*data_size = 0;
--			return "";
--		}
--		return NULL;
--	}
--
--	/* Regular data block: @begin less than @next and in same wrap. */
--	if (DATA_WRAPS(data_ring, blk_lpos->begin) == DATA_WRAPS(data_ring, blk_lpos->next) &&
--	    blk_lpos->begin < blk_lpos->next) {
--		db = to_block(data_ring, blk_lpos->begin);
--		*data_size = blk_lpos->next - blk_lpos->begin;
--
--	/* Wrapping data block: @begin is one wrap behind @next. */
--	} else if (DATA_WRAPS(data_ring, blk_lpos->begin + DATA_SIZE(data_ring)) ==
--		   DATA_WRAPS(data_ring, blk_lpos->next)) {
--		db = to_block(data_ring, 0);
--		*data_size = DATA_INDEX(data_ring, blk_lpos->next);
--
--	/* Illegal block description. */
--	} else {
--		WARN_ON_ONCE(1);
--		return NULL;
--	}
--
--	/* A valid data block will always be aligned to the ID size. */
--	if (WARN_ON_ONCE(blk_lpos->begin != ALIGN(blk_lpos->begin, sizeof(db->id))) ||
--	    WARN_ON_ONCE(blk_lpos->next != ALIGN(blk_lpos->next, sizeof(db->id)))) {
--		return NULL;
--	}
--
--	/* A valid data block will always have at least an ID. */
--	if (WARN_ON_ONCE(*data_size < sizeof(db->id)))
--		return NULL;
--
--	/* Subtract block ID space from size to reflect data size. */
--	*data_size -= sizeof(db->id);
--
--	return &db->data[0];
--}
--
  /*
-  * Count the number of lines in provided text. All text has at least 1 line
-  * (even if @text_size is 0). Each '\n' processed is counted as an additional
+@@ -467,8 +453,8 @@ static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
+ static void desc_make_reusable(struct prb_desc_ring *desc_ring,
+ 			       unsigned long id)
+ {
+-	unsigned long val_committed = id | DESC_COMMITTED_MASK;
+-	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
++	unsigned long val_committed = DESC_SV(id, desc_committed);
++	unsigned long val_reusable = DESC_SV(id, desc_reusable);
+ 	struct prb_desc *desc = to_desc(desc_ring, id);
+ 	atomic_long_t *state_var = &desc->state_var;
+ 
+@@ -904,7 +890,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	 */
+ 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
+ 	if (prev_state_val &&
+-	    prev_state_val != (id_prev_wrap | DESC_COMMITTED_MASK | DESC_REUSE_MASK)) {
++	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
+ 		WARN_ON_ONCE(1);
+ 		return false;
+ 	}
+@@ -918,7 +904,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
+ 	 * This pairs with desc_read:D.
+ 	 */
+ 	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
+-				     id | 0)) { /* LMM(desc_reserve:F) */
++			DESC_SV(id, desc_reserved))) { /* LMM(desc_reserve:F) */
+ 		WARN_ON_ONCE(1);
+ 		return false;
+ 	}
+@@ -1237,7 +1223,7 @@ void prb_commit(struct prb_reserved_entry *e)
+ {
+ 	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
+ 	struct prb_desc *d = to_desc(desc_ring, e->id);
+-	unsigned long prev_state_val = e->id | 0;
++	unsigned long prev_state_val = DESC_SV(e->id, desc_reserved);
+ 
+ 	/* Now the writer has finished all writing: LMM(prb_commit:A) */
+ 
+@@ -1250,7 +1236,7 @@ void prb_commit(struct prb_reserved_entry *e)
+ 	 * this. This pairs with desc_read:B.
+ 	 */
+ 	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
+-				     e->id | DESC_COMMITTED_MASK)) { /* LMM(prb_commit:B) */
++			DESC_SV(e->id, desc_committed))) { /* LMM(prb_commit:B) */
+ 		WARN_ON_ONCE(1);
+ 	}
+ 
+diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
+index e6302da041f9..a9d85a6727b1 100644
+--- a/kernel/printk/printk_ringbuffer.h
++++ b/kernel/printk/printk_ringbuffer.h
+@@ -112,16 +112,25 @@ struct prb_reserved_entry {
+ 	unsigned int			text_space;
+ };
+ 
+-#define _DATA_SIZE(sz_bits)		(1UL << (sz_bits))
+-#define _DESCS_COUNT(ct_bits)		(1U << (ct_bits))
+-#define DESC_SV_BITS			(sizeof(unsigned long) * 8)
+-#define DESC_COMMITTED_MASK		(1UL << (DESC_SV_BITS - 1))
+-#define DESC_REUSE_MASK			(1UL << (DESC_SV_BITS - 2))
+-#define DESC_FLAGS_MASK			(DESC_COMMITTED_MASK | DESC_REUSE_MASK)
+-#define DESC_ID_MASK			(~DESC_FLAGS_MASK)
+-#define DESC_ID(sv)			((sv) & DESC_ID_MASK)
+-#define FAILED_LPOS			0x1
+-#define NO_LPOS				0x3
++/* The possible responses of a descriptor state-query. */
++enum desc_state {
++	desc_miss	=  -1,	/* ID mismatch (pseudo state) */
++	desc_reserved	= 0x0,	/* reserved, in use by writer */
++	desc_committed	= 0x1,	/* committed by writer */
++	desc_reusable	= 0x3,	/* free, not yet used by any writer */
++};
++
++#define _DATA_SIZE(sz_bits)	(1UL << (sz_bits))
++#define _DESCS_COUNT(ct_bits)	(1U << (ct_bits))
++#define DESC_SV_BITS		(sizeof(unsigned long) * 8)
++#define DESC_FLAGS_SHIFT	(DESC_SV_BITS - 2)
++#define DESC_FLAGS_MASK		(3UL << DESC_FLAGS_SHIFT)
++#define DESC_STATE(sv)		(3UL & (sv >> DESC_FLAGS_SHIFT))
++#define DESC_SV(id, state)	(((unsigned long)state << DESC_FLAGS_SHIFT) | id)
++#define DESC_ID_MASK		(~DESC_FLAGS_MASK)
++#define DESC_ID(sv)		((sv) & DESC_ID_MASK)
++#define FAILED_LPOS		0x1
++#define NO_LPOS			0x3
+ 
+ #define FAILED_BLK_LPOS	\
+ {				\
+@@ -213,7 +222,7 @@ struct prb_reserved_entry {
+  */
+ #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
+ #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
+-#define DESC0_SV(ct_bits)	(DESC_COMMITTED_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
++#define DESC0_SV(ct_bits)	DESC_SV(DESC0_ID(ct_bits), desc_reusable)
+ 
+ /*
+  * Define a ringbuffer with an external text data buffer. The same as
+diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
+index 6c6022012ea8..dd8c0b95063a 100644
+--- a/scripts/gdb/linux/dmesg.py
++++ b/scripts/gdb/linux/dmesg.py
+@@ -78,10 +78,10 @@ class LxDmesg(gdb.Command):
+         len_off = off + printk_info_type.get_type()['text_len'].bitpos // 8
+ 
+         # definitions from kernel/printk/printk_ringbuffer.h
++        desc_committed = 1
+         desc_sv_bits = utils.get_long_type().sizeof * 8
+-        desc_committed_mask = 1 << (desc_sv_bits - 1)
+-        desc_reuse_mask = 1 << (desc_sv_bits - 2)
+-        desc_flags_mask = desc_committed_mask | desc_reuse_mask
++        desc_flags_shift = desc_sv_bits - 2
++        desc_flags_mask = 3 << desc_flags_shift
+         desc_id_mask = ~desc_flags_mask
+ 
+         # read in tail and head descriptor ids
+@@ -96,8 +96,9 @@ class LxDmesg(gdb.Command):
+             desc_off = desc_sz * ind
+ 
+             # skip non-committed record
+-            state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
+-            if state != desc_committed_mask:
++            state = 3 & (utils.read_u64(descs, desc_off + sv_off +
++                                        counter_off) >> desc_flags_shift)
++            if state != desc_committed:
+                 if did == head_id:
+                     break
+                 did = (did + 1) & desc_id_mask
 -- 
 2.20.1
 
