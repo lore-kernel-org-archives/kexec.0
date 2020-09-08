@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kFjx6-0000Py-17
- for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:10:54 +0000
-From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 2/7] kernel/resource: move and rename
- IORESOURCE_MEM_DRIVER_MANAGED
-Date: Tue,  8 Sep 2020 22:10:07 +0200
-Message-Id: <20200908201012.44168-3-david@redhat.com>
-In-Reply-To: <20200908201012.44168-1-david@redhat.com>
-References: <20200908201012.44168-1-david@redhat.com>
+ id 1kFkEh-0003Ej-IA
+ for kexec@lists.infradead.org; Tue, 08 Sep 2020 20:29:05 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH printk v4 0/6] printk: reimplement LOG_CONT handling
+Date: Tue,  8 Sep 2020 22:34:53 +0206
+Message-Id: <20200908202859.2736-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,97 +20,131 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org, Michal Hocko <mhocko@suse.com>, linux-acpi@vger.kernel.org, Baoquan He <bhe@redhat.com>, linux-nvdimm@lists.01.org, Jason Gunthorpe <jgg@ziepe.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, David Hildenbrand <david@redhat.com>, kexec@lists.infradead.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Wei Yang <richardw.yang@linux.intel.com>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>, Eric Biederman <ebiederm@xmission.com>, Kees Cook <keescook@chromium.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
-always set to 0 by hardware. This is far from beautiful (and confusing),
-and the bit only applies to SYSRAM. So let's move it out of the
-bus-specific (PnP) defined bits.
+Hello,
 
-We'll add another SYSRAM specific bit soon. If we ever need more bits for
-other purposes, we can steal some from "desc", or reshuffle/regroup what we
-have.
+Here is v4 for the second series to rework the printk subsystem.
+(The v3 is here [0].) This series implements a new ringbuffer
+feature that allows the last record to be extended. Petr Mladek
+provided the initial proof of concept [1] for this.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Michal Hocko <mhocko@suse.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Jason Gunthorpe <jgg@ziepe.ca>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Wei Yang <richardw.yang@linux.intel.com>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kexec@lists.infradead.org
-Signed-off-by: David Hildenbrand <david@redhat.com>
----
- include/linux/ioport.h | 4 +++-
- kernel/kexec_file.c    | 2 +-
- mm/memory_hotplug.c    | 4 ++--
- 3 files changed, 6 insertions(+), 4 deletions(-)
+Using the record extension feature, LOG_CONT is re-implemented
+in a way that exactly preserves its behavior, but avoids the
+need for an extra buffer. In particular, it avoids the need for
+any synchronization that such a buffer requires.
 
-diff --git a/include/linux/ioport.h b/include/linux/ioport.h
-index 52a91f5fa1a36..d7620d7c941a0 100644
---- a/include/linux/ioport.h
-+++ b/include/linux/ioport.h
-@@ -58,6 +58,9 @@ struct resource {
- #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
- #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
- 
-+/* IORESOURCE_SYSRAM specific bits. */
-+#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
-+
- #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
- 
- #define IORESOURCE_DISABLED	0x10000000
-@@ -103,7 +106,6 @@ struct resource {
- #define IORESOURCE_MEM_32BIT		(3<<3)
- #define IORESOURCE_MEM_SHADOWABLE	(1<<5)	/* dup: IORESOURCE_SHADOWABLE */
- #define IORESOURCE_MEM_EXPANSIONROM	(1<<6)
--#define IORESOURCE_MEM_DRIVER_MANAGED	(1<<7)
- 
- /* PnP I/O specific bits (IORESOURCE_BITS) */
- #define IORESOURCE_IO_16BIT_ADDR	(1<<0)
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index ca40bef75a616..dfeeed1aed084 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -520,7 +520,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
- 	/* Returning 0 will take to next memory range */
- 
- 	/* Don't use memory that will be detected and handled by a driver. */
--	if (res->flags & IORESOURCE_MEM_DRIVER_MANAGED)
-+	if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
- 		return 0;
- 
- 	if (sz < kbuf->memsz)
-diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-index 4c47b68a9f4b5..8e1cd18b5cf14 100644
---- a/mm/memory_hotplug.c
-+++ b/mm/memory_hotplug.c
-@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size,
- 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
- 
- 	if (strcmp(resource_name, "System RAM"))
--		flags |= IORESOURCE_MEM_DRIVER_MANAGED;
-+		flags |= IORESOURCE_SYSRAM_DRIVER_MANAGED;
- 
- 	/*
- 	 * Make sure value parsed from 'mem=' only restricts memory adding
-@@ -1160,7 +1160,7 @@ EXPORT_SYMBOL_GPL(add_memory);
-  *
-  * For this memory, no entries in /sys/firmware/memmap ("raw firmware-provided
-  * memory map") are created. Also, the created memory resource is flagged
-- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-case
-+ * with IORESOURCE_SYSRAM_DRIVER_MANAGED, so in-kernel users can special-case
-  * this memory as well (esp., not place kexec images onto it).
-  *
-  * The resource_name (visible via /proc/iomem) has to have the format
+This series deviates from the agreements [2] made at the meeting
+during LPC2019 in Lisbon. The test results of the v1 series,
+which implemented LOG_CONT as agreed upon, showed that the
+effects on existing userspace tools using /dev/kmsg (journalctl,
+dmesg) were not acceptable [3].
+
+Patch 5 introduces *four* new memory barrier pairs. Two of them
+are insignificant additions (data_realloc:A/desc_read:D and
+data_realloc:A/data_push_tail:B) because they are alternate path
+memory barriers that exactly match the purpose and context of
+the two existing memory barrier pairs they provide an alternate
+path for. The other two new memory barrier pairs are significant
+additions:
+
+desc_reopen_last:A / _prb_commit:B - When reopening a descriptor,
+    ensure the state transitions back to desc_reserved before
+    fully trusting the descriptor data.
+
+_prb_commit:B / desc_reserve:D - When committing a descriptor,
+    ensure the state transitions to desc_committed before checking
+    the head ID to see if the descriptor needs to be finalized.
+
+The test module used to test the ringbuffer is available
+here [4].
+
+The series is based on the printk-rework branch of the printk git
+tree:
+e60768311af8 ("scripts/gdb: update for lockless printk ringbuffer")
+
+The list of changes since v3:
+
+printk_ringbuffer
+=================
+
+- move enum desc_state definition to printk_ringbuffer.h
+
+- change enum desc_state to define the exact state values used
+  in the state variable
+
+- add DESC_STATE() macro to retrieve the state from the state
+  variable
+
+- add DESC_SV() macro to build a state variable value given an
+  ID and state
+
+- get_desc_state(): simply return the state value rather than
+  processing state flags
+
+- desc_finalized is now a queried state instead of a state flag
+
+- desc_read(): always return a set @state_var, even if the
+  descriptor is in an inconsistent state (desc_reopen_last()
+  relies on this)
+
+- change state logic that tested for desc_committed to now test
+  for desc_finalized, since this is the new state directly
+  preceding desc_reusable
+
+- data_realloc(): add a check if the data block should shrink
+  (and in that case, do not modify the data block, i.e. data
+  blocks will never shrink)
+
+- prb_reserve_in_last(): add WARN_ON for unexpected @text_len
+  value
+
+- prb_reserve(): save a copy of @seq and use use memset() to
+  clear @info
+
+- desc_read_committed_seq(): rename function to
+  desc_read_finalized_seq() since desc_finalized is the desired
+  state for readers
+
+- documentation: update state and finalization descriptions
+
+printk.c
+========
+
+- use @text_len and @dict_len for memcpy() size
+
+gdb scripts
+===========
+
+- update to use new state representation
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20200831011058.6286-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20200812163908.GH12903@alley
+[2] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[3] https://lkml.kernel.org/r/20200811160551.GC12903@alley
+[4] https://github.com/Linutronix/prb-test.git
+
+
+John Ogness (6):
+  printk: ringbuffer: relocate get_data()
+  printk: ringbuffer: add BLK_DATALESS() macro
+  printk: ringbuffer: clear initial reserved fields
+  printk: ringbuffer: change representation of states
+  printk: ringbuffer: add finalization/extension support
+  printk: reimplement log_cont using record extension
+
+ Documentation/admin-guide/kdump/gdbmacros.txt |  13 +-
+ kernel/printk/printk.c                        | 110 +--
+ kernel/printk/printk_ringbuffer.c             | 695 ++++++++++++++----
+ kernel/printk/printk_ringbuffer.h             |  35 +-
+ scripts/gdb/linux/dmesg.py                    |  12 +-
+ 5 files changed, 624 insertions(+), 241 deletions(-)
+
 -- 
-2.26.2
+2.20.1
 
 
 _______________________________________________
