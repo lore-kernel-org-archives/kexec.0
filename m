@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-1.mimecast.com ([205.139.110.61]
- helo=us-smtp-delivery-1.mimecast.com)
+Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kHgWx-0005En-Fn
- for kexec@lists.infradead.org; Mon, 14 Sep 2020 04:55:56 +0000
-Subject: Re: makedumpfile: a feature question about filtering
-References: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
- <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-From: piliu <piliu@redhat.com>
-Message-ID: <0b99591e-7117-7661-e728-684ece22787e@redhat.com>
-Date: Mon, 14 Sep 2020 12:55:45 +0800
+ id 1kG8Qj-0005HP-4m
+ for kexec@lists.infradead.org; Wed, 09 Sep 2020 22:19:06 +0000
+Received: by mail-pg1-x541.google.com with SMTP id 7so3076353pgm.11
+ for <kexec@lists.infradead.org>; Wed, 09 Sep 2020 15:19:02 -0700 (PDT)
+Date: Wed, 9 Sep 2020 15:18:58 -0700
+From: Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2 01/18] test_firmware: Test platform fw loading on
+ non-EFI systems
+Message-ID: <202009091518.732D15B21@keescook>
+References: <20200722193020.2676422-1-keescook@chromium.org>
+ <20200722193020.2676422-2-keescook@chromium.org>
+ <20200729004806.GK4332@42.do-not-panic.com>
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20200729004806.GK4332@42.do-not-panic.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,31 +24,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: linux-efi@vger.kernel.org, "Rafael J. Wysocki" <rafael@kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-fsdevel@vger.kernel.org, Stephen Boyd <stephen.boyd@linaro.org>, SeongJae Park <sjpark@amazon.de>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, Tushar Sugandhi <tusharsu@linux.microsoft.com>, Peter Jones <pjones@redhat.com>, linux-kselftest@vger.kernel.org, "Joel Fernandes (Google)" <joel@joelfernandes.org>, Shuah Khan <shuah@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Cedeno <thomascedeno@google.com>, Anders Roxell <anders.roxell@linaro.org>, Paul Moore <paul@paul-moore.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Nayna Jain <nayna@linux.ibm.com>, Matthew Garrett <matthewgarrett@google.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Aaron Goidel <acgoide@tycho.nsa.gov>, "Serge E. Hallyn" <serge@hallyn.com>, Wenwen Wang <wenwen@cs.uga.edu>, Scott Branden <scott.branden@broadcom.com>, selinux@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, Hans de Goede <hdegoede@redhat.com>, Alexander Viro <viro@zeniv.linux.org.uk>, Matthieu Baerts <matthieu.baerts@tessares.net>, KP Singh <kpsingh@chromium.org>, Eric Paris <eparis@parisplace.org>, linux-integrity@vger.kernel.org, Florent Revest <revest@google.com>, Andrea Righi <andrea.righi@canonical.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Smalley <stephen.smalley.work@gmail.com>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, linux-security-module@vger.kernel.org, Eric Biederman <ebiederm@xmission.com>, Dave Olsthoorn <dave@bewaar.me>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Casey Schaufler <casey@schaufler-ca.com>, Joe Perches <joe@perches.com>, Andrew Morton <akpm@linux-foundation.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
 
-CgpPbiAwOS8xMS8yMDIwIDA0OjUzIFBNLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4Ep
-IHdyb3RlOgo+IEhpIFBpbmdmYW4sCj4gCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4g
-SGVsbG8sCj4+Cj4+IFRoZXJlIGlzIGFuIGFwcGVhbCB3aGljaCBvbmx5IHdhbnRzIHRvIHNhdmUg
-c29tZSB1c2VyIHBhZ2UgaW5jbHVkaW5nIGVudgo+PiBhbmQgYXJncyBwYWdlcywgYW5kIGRpc2Nh
-cmRzIHRoZSBvdGhlciB1c2VyIHNwYWNlIHBhZ2VzLgo+IAo+IEkgdW5kZXJzdGFuZCB0aGF0IGl0
-J3MgaGVscGZ1bCB0byBnZXQgdGhlbSBldmVuIHdpdGggLWQgMzEgZm9yIGNyYXNoJ3MKPiAicHMg
-LWEiIG9wdGlvbi4uCj4gCj4+Cj4+IFRvIGFjaGlldmUgdGhpcyBmZWF0dXJlLCBtbV9zdHJ1Y3Qn
-cyBtZW1iZXJzICJhcmdfc3RhcnQsIGFyZ19lbmQsCj4+IGVudl9zdGFydCwgZW52X2VuZDsiIHNo
-b3VsZCBiZSBhY2Nlc3NlZC4gU28gd2UgbmVlZCB0byBleHBvcnQgbW1fc3RydWN0Cj4+IGFuZCBp
-bml0X21tIHRocm91Z2ggdm1jb3JlLgo+IAo+IEhvdyBtYW55IG9mZnNldHMvc2l6ZXMgd2lsbCBi
-ZSByZXF1aXJlZCB0byB3YWxrIGFsbCB0YXNrcz8KQXQgcHJlc2VudCwgSSB0aGluayBvbmx5IHRo
-ZSBpbmZvICJhcmdfc3RhcnQsIGFyZ19lbmQsIGVudl9zdGFydCwKZW52X2VuZCIgaW4gbW1fc3Ry
-dWN0IGFyZSByZXF1aXJlZC4KPiBJZiBrZXJuZWwgbWFpbnRhaW5lcnMgYWNjZXB0IGl0LCBJIHdp
-bGwgbm90IG9wcG9zZSB0aGF0IGZlYXR1cmUuLgpPSywgSSB3aWxsIHN0YXJ0IHdpdGgga2VybmVs
-IHNpZGUgYXMgdGhlIGZpcnN0IHN0ZXAuCj4gCj4gKG9yIGl0IHdvdWxkIGJlIHNpbXBsZXIgdG8g
-bWFyayB0aGUgcGFnZXMgc29tZXRoaW5nIHNwZWNpYWwgd2hlbiBhbGxvY2F0aW5nLAo+IGJ1dCBJ
-IGRvbid0IGZlZWwgbGlrZSBpdCdzIGVhc3kgdG8gY2hhbmdlIGtlcm5lbCB0byBkbyBzby4pClll
-cywgSSBhZ3JlZS4gRnJvbSBrZXJuZWwgc2lkZSwgdGhlIHBhZ2UgaXMgYSBub3JtYWwgdXNlciBz
-cGFjZSBwYWdlLAp0aGVyZSBzaG91bGQgbm90IGJlIGV4Y2VwdGlvbi4KClRoYW5rcywKUGluZ2Zh
-bgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Wed, Jul 29, 2020 at 12:48:06AM +0000, Luis Chamberlain wrote:
+> On Wed, Jul 22, 2020 at 12:30:03PM -0700, Kees Cook wrote:
+> > On non-EFI systems, it wasn't possible to test the platform firmware
+> > loader because it will have never set "checked_fw" during __init.
+> > Instead, allow the test code to override this check. Additionally split
+> > the declarations into a private header file so it there is greater
+> > enforcement of the symbol visibility.
+> > 
+> > Fixes: 548193cba2a7 ("test_firmware: add support for firmware_request_platform")
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> 
+> A *clearly* private symbol namespace would seem cleaner, example the existing:
+> 
+> EXPORT_SYMBOL_NS_GPL(fw_fallback_config, FIRMWARE_LOADER_PRIVATE);
+
+I'm respinning this now. It doesn't solve in-kernel visibility, but it
+does solve module visibility, I guess. It's a simpler patch, and I think
+gets the point across. Will send after build testing...
+
+-- 
+Kees Cook
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
