@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-2.mimecast.com ([205.139.110.61]
+ helo=us-smtp-delivery-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kFute-0000ac-Jw
- for kexec@lists.infradead.org; Wed, 09 Sep 2020 07:52:08 +0000
+ id 1kFute-0000ak-KX
+ for kexec@lists.infradead.org; Wed, 09 Sep 2020 07:52:10 +0000
 From: Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH 0/3] Add writing support to vmcore for reusing oldmem
-Date: Wed,  9 Sep 2020 15:50:13 +0800
-Message-Id: <20200909075016.104407-1-kasong@redhat.com>
+Subject: [RFC PATCH 2/3] vmcore: Add interface to write to old mem
+Date: Wed,  9 Sep 2020 15:50:15 +0800
+Message-Id: <20200909075016.104407-3-kasong@redhat.com>
+In-Reply-To: <20200909075016.104407-1-kasong@redhat.com>
+References: <20200909075016.104407-1-kasong@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,93 +26,252 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Currently vmcore only supports reading, this patch series is an RFC
-to add writing support to vmcore. It's x86_64 only yet, I'll add other
-architecture later if there is no problem with this idea.
+vmcore is used as the interface to access crashed kernel's memory in
+kdump, and currently vmcore only supports reading.
 
-My purpose of adding writing support is to reuse the crashed kernel's
-old memory in kdump kernel, reduce kdump memory pressure, and
-allow kdump to run with a smaller crashkernel reservation.
+Adding writing support is useful for enabling userspace making better
+use of the old memory.
 
-This is doable because in most cases, after kernel panic, user only
-interested in the crashed kernel itself, and userspace/cache/free
-memory pages are not dumped. `makedumpfile` is widely used to skip
-these pages. Kernel pages usually only take a small part of
-the whole old memory. So there will be many reusable pages.
+For kdump, `makedumpfile` is widely used to reduce the dumped vmcore
+size, and in most setup, it will drop user space memory, caches. This
+means these memory pages are reusable.
 
-By adding writing support, userspace then can use these pages as a fast
-and temporary storage. This helps reduce memory pressure in many ways.
+Kdump runs in limited pre-reserved memory region, so if these old memory
+pages are reused, it can help reduce memory pressure in kdump kernel,
+hence allow first kernel to reserve less memory for kdump.
 
-For example, I've written a POC program based on this, it will find
-the reusable pages, and creates an NBD device which maps to these pages.
-The NBD device can then be used as swap, or to hold some temp files
-which previouly live in RAM.
+Adding write support to vmcore is the first step, then user space can
+do IO on the old mem. There are multiple ways to reuse the memory, for
+example, userspace can register a NBD device, and redirect the IO on the
+device to old memory. The NBD device can be used as swap, or used to
+hold some temp files.
 
-The link of the POC tool: https://github.com/ryncsn/kdumpd
+Signed-off-by: Kairui Song <kasong@redhat.com>
+---
+ fs/proc/vmcore.c           | 129 +++++++++++++++++++++++++++++++++----
+ include/linux/crash_dump.h |  18 ++++--
+ 2 files changed, 131 insertions(+), 16 deletions(-)
 
-I tested it on x86_64 on latest Fedora by using it as swap with
-following step in kdump kernel:
-
-  1. Install this tool in kdump initramfs
-  2. Execute following command in kdump:
-     /sbin/modprobe nbd nbds_max=1
-     /bin/kdumpd &
-     /sbin/mkswap /dev/nbd0
-     /sbin/swapon /dev/nbd0
-  3. Observe the swap is being used:
-     SwapTotal:        131068 kB
-     SwapFree:         121852 kB
-
-It helped to reduce the crashkernel from 168M to 110M for a successful
-kdump run over NFSv3. There are still many workitems that could be done
-based on this idea, eg. move the initramfs content to the old memory,
-which may help reduce another ~10-20M of memory.
-
-It's have been a long time issue that kdump suffers from OOM issue
-with limited crashkernel memory. So reusing old memory could be very
-helpful.
-
-This method have it's limitation:
-- Swap only works for userspace. But kdump userspace is a major memory
-  consumer, so in general this should be helpful enough.
-- For users who want to dump the whole memory area, this won't help as
-  there is no reusable page.
-
-I've tried other ways to improve the crashkernel value, eg.
-- Reserve some smaller memory segments in first kernel for crashkernel: It's
-  only a suppliment of the default crashkernel reservation and only make
-  crashkernel value more adjustable, still not solving the real problem.
-
-- Reuse old memory, but hotplug chunk of reusable old memory into
-  kdump kernel's memory:
-  It's hard to find large chunk of continuous memory, especially on
-  systems with heavy workload, the reusable regions could be very
-  fragmental. So it can only hotplug small fragments of memories,
-  which looks hackish, and may have a high page table overhead.
-
-- Implement the old memory based based block device as a kernel
-  module. It doesn't looks good to have a module for this sole
-  usage and it don't have much performance/implementation advantage
-  compared to this RFC.
-
-Besides, keeping all the complex logic of parsing reusing old memory
-logic in userspace seems a better idea.
-
-And as a plus, this could make it more doable and reasonable to
-have n crashkernel=auto param. If there is a swap, then userspace
-will have less memory pressure. crashkernel=auto can focus on the
-kernel usage.
-
-Kairui Song (3):
-  vmcore: simplify read_from_olemem
-  vmcore: Add interface to write to old mem
-  x86_64: implement copy_to_oldmem_page
-
- arch/x86/kernel/crash_dump_64.c |  49 ++++++++--
- fs/proc/vmcore.c                | 154 ++++++++++++++++++++++++++------
- include/linux/crash_dump.h      |  18 +++-
- 3 files changed, 180 insertions(+), 41 deletions(-)
-
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 124c2066f3e5..23acc0f2ecd7 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -103,9 +103,9 @@ static int pfn_is_ram(unsigned long pfn)
+ }
+ 
+ /* Reads a page from the oldmem device from given offset. */
+-ssize_t read_from_oldmem(char *buf, size_t count,
+-			 u64 *ppos, int userbuf,
+-			 bool encrypted)
++static ssize_t oldmem_rw_page(char *buf, size_t count,
++			      u64 *ppos, int userbuf,
++			      bool encrypted, bool is_write)
+ {
+ 	unsigned long pfn, offset;
+ 	size_t nr_bytes, to_copy = count;
+@@ -119,20 +119,33 @@ ssize_t read_from_oldmem(char *buf, size_t count,
+ 
+ 		/* If pfn is not ram, return zeros for sparse dump files */
+ 		if (pfn_is_ram(pfn) == 0) {
+-			memset(buf, 0, nr_bytes);
+-		} else {
+-			if (encrypted)
+-				tmp = copy_oldmem_page_encrypted(pfn, buf,
+-								 nr_bytes,
+-								 offset,
+-								 userbuf);
++			if (is_write)
++				return -EINVAL;
+ 			else
+-				tmp = copy_oldmem_page(pfn, buf, nr_bytes,
+-						       offset, userbuf);
++				memset(buf, 0, nr_bytes);
++		} else {
++			if (encrypted) {
++				tmp = is_write ?
++					copy_to_oldmem_page_encrypted(pfn, buf,
++								      nr_bytes,
++								      offset,
++								      userbuf) :
++					copy_oldmem_page_encrypted(pfn, buf,
++								   nr_bytes,
++								   offset,
++								   userbuf);
++			} else {
++				tmp = is_write ?
++					copy_to_oldmem_page(pfn, buf, nr_bytes,
++							    offset, userbuf) :
++					copy_oldmem_page(pfn, buf, nr_bytes,
++							offset, userbuf);
++			}
+ 
+ 			if (tmp < 0)
+ 				return tmp;
+ 		}
++
+ 		*ppos += nr_bytes;
+ 		buf += nr_bytes;
+ 		to_copy -= nr_bytes;
+@@ -143,6 +156,22 @@ ssize_t read_from_oldmem(char *buf, size_t count,
+ 	return count;
+ }
+ 
++/* Reads a page from the oldmem device from given offset. */
++ssize_t read_from_oldmem(char *buf, size_t count,
++			 u64 *ppos, int userbuf,
++			 bool encrypted)
++{
++	return oldmem_rw_page(buf, count, ppos, userbuf, encrypted, 0);
++}
++
++/* Writes a page to the oldmem device of given offset. */
++ssize_t write_to_oldmem(char *buf, size_t count,
++			u64 *ppos, int userbuf,
++			bool encrypted)
++{
++	return oldmem_rw_page(buf, count, ppos, userbuf, encrypted, 1);
++}
++
+ /*
+  * Architectures may override this function to allocate ELF header in 2nd kernel
+  */
+@@ -184,6 +213,26 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 	return remap_pfn_range(vma, from, pfn, size, prot);
+ }
+ 
++/*
++ * Architectures which support writing to oldmem overrides this.
++ */
++ssize_t __weak
++copy_to_oldmem_page(unsigned long pfn, char *buf, size_t csize,
++			   unsigned long offset, int userbuf)
++{
++	return -EOPNOTSUPP;
++}
++
++/*
++ * Architectures which support memory encryption override this.
++ */
++ssize_t __weak
++copy_to_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
++			   unsigned long offset, int userbuf)
++{
++	return copy_to_oldmem_page(pfn, buf, csize, offset, userbuf);
++}
++
+ /*
+  * Architectures which support memory encryption override this.
+  */
+@@ -394,6 +443,61 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
+ 	return __read_vmcore((__force char *) buffer, buflen, fpos, 1);
+ }
+ 
++/*
++ * Write to the old memory region, overriding ELF headers is not allowed.
++ * On error, negative value is returned otherwise number of bytes wrote
++ * are returned.
++ */
++static ssize_t __write_vmcore(char *buffer, size_t buflen, loff_t *fpos,
++			     int userbuf)
++{
++	ssize_t acc = 0, tmp;
++	size_t tsz;
++	u64 start;
++	struct vmcore *m = NULL;
++
++	if (buflen == 0 || *fpos >= vmcore_size)
++		return 0;
++
++	/* trim buflen to not go beyond EOF */
++	if (buflen > vmcore_size - *fpos)
++		buflen = vmcore_size - *fpos;
++
++	/* Deny writing to ELF headers */
++	if (*fpos < elfcorebuf_sz + elfnotes_sz)
++		return -EPERM;
++
++	list_for_each_entry(m, &vmcore_list, list) {
++		if (*fpos < m->offset + m->size) {
++			tsz = (size_t)min_t(unsigned long long,
++					    m->offset + m->size - *fpos,
++					    buflen);
++			start = m->paddr + *fpos - m->offset;
++			tmp = write_to_oldmem(buffer, tsz, &start,
++					      userbuf, mem_encrypt_active());
++			if (tmp < 0)
++				return tmp;
++			buflen -= tsz;
++			*fpos += tsz;
++			buffer += tsz;
++			acc += tsz;
++
++			/* leave now if filled buffer already */
++			if (buflen == 0)
++				return acc;
++		}
++	}
++
++	return acc;
++}
++
++
++static ssize_t write_vmcore(struct file *file, const char __user *buffer,
++			   size_t buflen, loff_t *fpos)
++{
++	return __write_vmcore((__force char *) buffer, buflen, fpos, 1);
++}
++
+ /*
+  * The vmcore fault handler uses the page cache and fills data using the
+  * standard __vmcore_read() function.
+@@ -662,6 +766,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+ 
+ static const struct proc_ops vmcore_proc_ops = {
+ 	.proc_read	= read_vmcore,
++	.proc_write	= write_vmcore,
+ 	.proc_lseek	= default_llseek,
+ 	.proc_mmap	= mmap_vmcore,
+ };
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index a5192b718dbe..8d8e75c08073 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -26,10 +26,15 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
+ 				  unsigned long size, pgprot_t prot);
+ 
+ extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
+-						unsigned long, int);
++				unsigned long, int);
+ extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
+ 					  size_t csize, unsigned long offset,
+ 					  int userbuf);
++extern ssize_t copy_to_oldmem_page(unsigned long pfn, char *buf, size_t csize,
++				   unsigned long offset, int userbuf);
++extern ssize_t copy_to_oldmem_page_encrypted(unsigned long pfn, char *buf,
++					     size_t csize, unsigned long offset,
++					     int userbuf);
+ 
+ void vmcore_cleanup(void);
+ 
+@@ -119,10 +124,15 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
+ ssize_t read_from_oldmem(char *buf, size_t count,
+ 			 u64 *ppos, int userbuf,
+ 			 bool encrypted);
++ssize_t write_to_oldmem(char *buf, size_t count,
++			u64 *ppos, int userbuf,
++			bool encrypted);
+ #else
+-static inline ssize_t read_from_oldmem(char *buf, size_t count,
+-				       u64 *ppos, int userbuf,
+-				       bool encrypted)
++static inline ssize_t read_from_oldmem(char*, size_t, u64*, int, bool)
++{
++	return -EOPNOTSUPP;
++}
++static inline ssize_t write_to_oldmem(char*, size_t, u64*, int, bool);
+ {
+ 	return -EOPNOTSUPP;
+ }
 -- 
 2.26.2
 
