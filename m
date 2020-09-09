@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kFutj-0000dh-90
- for kexec@lists.infradead.org; Wed, 09 Sep 2020 07:52:14 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [RFC PATCH 3/3] x86_64: implement copy_to_oldmem_page
-Date: Wed,  9 Sep 2020 15:50:16 +0800
-Message-Id: <20200909075016.104407-4-kasong@redhat.com>
-In-Reply-To: <20200909075016.104407-1-kasong@redhat.com>
-References: <20200909075016.104407-1-kasong@redhat.com>
+ id 1kFwUt-0006y0-Ij
+ for kexec@lists.infradead.org; Wed, 09 Sep 2020 09:34:37 +0000
+Date: Wed, 9 Sep 2020 11:34:31 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH printk v4 3/6] printk: ringbuffer: clear initial reserved
+ fields
+Message-ID: <20200909093431.GE3864@alley>
+References: <20200908202859.2736-1-john.ogness@linutronix.de>
+ <20200908202859.2736-4-john.ogness@linutronix.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200908202859.2736-4-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,102 +25,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Kairui Song <kasong@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Dave Young <dyoung@redhat.com>, Alexey Dobriyan <adobriyan@gmail.com>, Vivek Goyal <vgoyal@redhat.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Previous commit introduced writing support for vmcore, it requires
-per-architecture implementation for the writing function.
+On Tue 2020-09-08 22:34:56, John Ogness wrote:
+> prb_reserve() will set some meta data values and leave others
+> uninitialized (or rather, containing the values of the previous
+> wrap). Simplify the API by always clearing out all the fields.
+> Only the sequence number is filled in. The caller is now
+> responsible for filling in the rest of the meta data fields.
+> In particular, for correctly filling in text and dict lengths.
+> 
+> Signed-off-by: John Ogness <john.ogness@linutronix.de>
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- arch/x86/kernel/crash_dump_64.c | 49 +++++++++++++++++++++++++++------
- 1 file changed, 40 insertions(+), 9 deletions(-)
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index 045e82e8945b..ec80da75b287 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -13,7 +13,7 @@
- 
- static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 				  unsigned long offset, int userbuf,
--				  bool encrypted)
-+				  bool encrypted, bool is_write)
- {
- 	void  *vaddr;
- 
-@@ -28,13 +28,25 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 	if (!vaddr)
- 		return -ENOMEM;
- 
--	if (userbuf) {
--		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
--			iounmap((void __iomem *)vaddr);
--			return -EFAULT;
-+	if (is_write) {
-+		if (userbuf) {
-+			if (copy_from_user(vaddr + offset, (void __user *)buf, csize)) {
-+				iounmap((void __iomem *)vaddr);
-+				return -EFAULT;
-+			}
-+		} else {
-+			memcpy(vaddr + offset, buf, csize);
- 		}
--	} else
--		memcpy(buf, vaddr + offset, csize);
-+	} else {
-+		if (userbuf) {
-+			if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
-+				iounmap((void __iomem *)vaddr);
-+				return -EFAULT;
-+			}
-+		} else {
-+			memcpy(buf, vaddr + offset, csize);
-+		}
-+	}
- 
- 	set_iounmap_nonlazy();
- 	iounmap((void __iomem *)vaddr);
-@@ -57,7 +69,7 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 			 unsigned long offset, int userbuf)
- {
--	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, false);
-+	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, false, false);
- }
- 
- /**
-@@ -68,7 +80,26 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
- 				   unsigned long offset, int userbuf)
- {
--	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
-+	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true, false);
-+}
-+
-+/**
-+ * copy_to_oldmem_page - similar to copy_oldmem_page but in opposite direction.
-+ */
-+ssize_t copy_to_oldmem_page(unsigned long pfn, char *src, size_t csize,
-+		unsigned long offset, int userbuf)
-+{
-+	return __copy_oldmem_page(pfn, src, csize, offset, userbuf, false, true);
-+}
-+
-+/**
-+ * copy_to_oldmem_page_encrypted - similar to copy_oldmem_page_encrypted but
-+ * in opposite direction.
-+ */
-+ssize_t copy_to_oldmem_page_encrypted(unsigned long pfn, char *src, size_t csize,
-+		unsigned long offset, int userbuf)
-+{
-+	return __copy_oldmem_page(pfn, src, csize, offset, userbuf, true, true);
- }
- 
- ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
--- 
-2.26.2
-
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
