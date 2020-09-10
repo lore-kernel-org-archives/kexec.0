@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([205.139.110.120]
- helo=us-smtp-1.mimecast.com)
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kGFDE-0004u6-Cz
- for kexec@lists.infradead.org; Thu, 10 Sep 2020 05:33:37 +0000
-Received: by mail-pf1-f200.google.com with SMTP id o21so3740179pfd.14
- for <kexec@lists.infradead.org>; Wed, 09 Sep 2020 22:33:33 -0700 (PDT)
+ id 1kGFDP-0004wu-Lc
+ for kexec@lists.infradead.org; Thu, 10 Sep 2020 05:33:48 +0000
+Received: by mail-pf1-f197.google.com with SMTP id b142so3771225pfb.9
+ for <kexec@lists.infradead.org>; Wed, 09 Sep 2020 22:33:45 -0700 (PDT)
 From: Bhupesh Sharma <bhsharma@redhat.com>
-Subject: [PATCH v5 2/3] makedumpfile/arm64: Add support for ARMv8.2-LPA
- (52-bit PA support)
-Date: Thu, 10 Sep 2020 11:03:04 +0530
-Message-Id: <20200910053305.323365-3-bhsharma@redhat.com>
+Subject: [PATCH v5 3/3] makedumpfile/arm64: Add support for ARMv8.2-LVA
+ (52-bit kernel VA support)
+Date: Thu, 10 Sep 2020 11:03:05 +0530
+Message-Id: <20200910053305.323365-4-bhsharma@redhat.com>
 In-Reply-To: <20200910053305.323365-1-bhsharma@redhat.com>
 References: <20200910053305.323365-1-bhsharma@redhat.com>
 MIME-Version: 1.0
@@ -29,22 +28,52 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: John Donnelly <john.p.donnelly@oracle.com>, bhsharma@redhat.com, bhupesh.linux@gmail.com, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 
-ARMv8.2-LPA architecture extension (if available on underlying hardware)
-can support 52-bit physical addresses, while the kernel virtual
-addresses remain 48-bit.
+With ARMv8.2-LVA architecture extension availability, arm64 hardware
+which supports this extension can support upto 52-bit virtual
+addresses. It is specially useful for having a 52-bit user-space virtual
+address space while the kernel can still retain 48-bit/52-bit virtual
+addressing.
 
-Make sure that we read the 52-bit PA address capability from
-'MAX_PHYSMEM_BITS' variable (if available in vmcoreinfo) and
-accordingly change the pte_to_phy() mask values and also traverse
-the page-table walk accordingly.
+Since at the moment we enable the support of this extension in the
+kernel via a CONFIG flag (CONFIG_ARM64_VA_BITS_52), so there are
+no clear mechanisms in user-space to determine this CONFIG
+flag value and use it to determine the kernel-space VA address range
+values.
 
-Also make sure that it works well for the existing 48-bit PA address
-platforms and also on environments which use newer kernels with 52-bit
-PA support but hardware which is not ARM8.2-LPA compliant.
+'makedumpfile' can instead use 'TCR_EL1.T1SZ' value from vmcoreinfo
+which indicates the size offset of the memory region addressed by
+TTBR1_EL1 (and hence can be used for determining the
+vabits_actual value).
 
-Kernel commit 1d50e5d0c505 ("crash_core, vmcoreinfo: Append
-'MAX_PHYSMEM_BITS' to vmcoreinfo") already supports adding
-'MAX_PHYSMEM_BITS' variable to vmcoreinfo.
+Using the vmcoreinfo variable exported by kernel commit
+ bbdbc11804ff ("arm64/crash_core: Export  TCR_EL1.T1SZ in vmcoreinfo"),
+the user-space can use the following computation for determining whether
+ an address lies in the linear map range (for newer kernels >= 5.4):
+
+  #define __is_lm_address(addr)	(!(((u64)addr) & BIT(vabits_actual - 1)))
+
+Note that for the --mem-usage case though we need to calculate
+vabits_actual value before the vmcoreinfo read functionality is ready,
+so we can instead read the architecture register ID_AA64MMFR2_EL1
+directly to see if the underlying hardware supports 52-bit addressing
+and accordingly set vabits_actual as:
+
+   read_id_aa64mmfr2_el1();
+   if (hardware supports 52-bit addressing)
+	vabits_actual = 52;
+   else
+	vabits_actual = va_bits value calculated via _stext symbol;
+
+Also make sure that the page_offset, is_linear_addr(addr) and __pa()
+calculations work both for older (< 5.4) and newer kernels (>= 5.4).
+
+I have tested several combinations with both kernel categories
+[for e.g. with different VA (39, 42, 48 and 52-bit) and PA combinations
+(48 and 52-bit)] on at-least 3 different boards.
+
+Unfortunately, this means that we need to call 'populate_kernel_version()'
+earlier 'get_page_offset_arm64()' as 'info->kernel_version' remains
+uninitialized before its first use otherwise.
 
 This patch is in accordance with ARMv8 Architecture Reference Manual
 
@@ -53,391 +82,402 @@ Cc: John Donnelly <john.p.donnelly@oracle.com>
 Cc: kexec@lists.infradead.org
 Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 ---
- arch/arm64.c | 291 ++++++++++++++++++++++++++++++++++++---------------
- 1 file changed, 204 insertions(+), 87 deletions(-)
+ arch/arm64.c   | 233 ++++++++++++++++++++++++++++++++++++++++++-------
+ common.h       |  10 +++
+ makedumpfile.c |   4 +-
+ makedumpfile.h |   6 +-
+ 4 files changed, 218 insertions(+), 35 deletions(-)
 
 diff --git a/arch/arm64.c b/arch/arm64.c
-index 54d60b440850..709e0a506916 100644
+index 709e0a506916..ccaa8641ca66 100644
 --- a/arch/arm64.c
 +++ b/arch/arm64.c
-@@ -39,72 +39,185 @@ typedef struct {
- 	unsigned long pte;
- } pte_t;
+@@ -19,10 +19,23 @@
  
-+#define __pte(x)	((pte_t) { (x) } )
-+#define __pmd(x)	((pmd_t) { (x) } )
-+#define __pud(x)	((pud_t) { (x) } )
-+#define __pgd(x)	((pgd_t) { (x) } )
+ #ifdef __aarch64__
+ 
++#include <asm/hwcap.h>
++#include <sys/auxv.h>
+ #include "../elf_info.h"
+ #include "../makedumpfile.h"
+ #include "../print_info.h"
+ 
++/* ID_AA64MMFR2_EL1 related helpers: */
++#define ID_AA64MMFR2_LVA_SHIFT	16
++#define ID_AA64MMFR2_LVA_MASK	(0xf << ID_AA64MMFR2_LVA_SHIFT)
 +
-+static int lpa_52_bit_support_available;
++/* CPU feature ID registers */
++#define get_cpu_ftr(id) ({							\
++		unsigned long __val;						\
++		asm volatile("mrs %0, " __stringify(id) : "=r" (__val));	\
++		__val;								\
++})
++
+ typedef struct {
+ 	unsigned long pgd;
+ } pgd_t;
+@@ -47,6 +60,7 @@ typedef struct {
+ static int lpa_52_bit_support_available;
  static int pgtable_level;
  static int va_bits;
++static int vabits_actual;
  static unsigned long kimage_voffset;
  
--#define SZ_4K			(4 * 1024)
--#define SZ_16K			(16 * 1024)
--#define SZ_64K			(64 * 1024)
--#define SZ_128M			(128 * 1024 * 1024)
-+#define SZ_4K			4096
-+#define SZ_16K			16384
-+#define SZ_64K			65536
- 
--#define PAGE_OFFSET_36 ((0xffffffffffffffffUL) << 36)
--#define PAGE_OFFSET_39 ((0xffffffffffffffffUL) << 39)
--#define PAGE_OFFSET_42 ((0xffffffffffffffffUL) << 42)
--#define PAGE_OFFSET_47 ((0xffffffffffffffffUL) << 47)
--#define PAGE_OFFSET_48 ((0xffffffffffffffffUL) << 48)
-+#define PAGE_OFFSET_36		((0xffffffffffffffffUL) << 36)
-+#define PAGE_OFFSET_39		((0xffffffffffffffffUL) << 39)
-+#define PAGE_OFFSET_42		((0xffffffffffffffffUL) << 42)
-+#define PAGE_OFFSET_47		((0xffffffffffffffffUL) << 47)
-+#define PAGE_OFFSET_48		((0xffffffffffffffffUL) << 48)
-+#define PAGE_OFFSET_52		((0xffffffffffffffffUL) << 52)
+ #define SZ_4K			4096
+@@ -58,7 +72,6 @@ static unsigned long kimage_voffset;
+ #define PAGE_OFFSET_42		((0xffffffffffffffffUL) << 42)
+ #define PAGE_OFFSET_47		((0xffffffffffffffffUL) << 47)
+ #define PAGE_OFFSET_48		((0xffffffffffffffffUL) << 48)
+-#define PAGE_OFFSET_52		((0xffffffffffffffffUL) << 52)
  
  #define pgd_val(x)		((x).pgd)
  #define pud_val(x)		(pgd_val((x).pgd))
- #define pmd_val(x)		(pud_val((x).pud))
- #define pte_val(x)		((x).pte)
+@@ -219,13 +232,25 @@ pmd_page_paddr(pmd_t pmd)
+ #define pte_index(vaddr) 		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
+ #define pte_offset(dir, vaddr) 		(pmd_page_paddr((*dir)) + pte_index(vaddr) * sizeof(pte_t))
  
--#define PAGE_MASK		(~(PAGESIZE() - 1))
--#define PGDIR_SHIFT		((PAGESHIFT() - 3) * pgtable_level + 3)
--#define PTRS_PER_PGD		(1 << (va_bits - PGDIR_SHIFT))
--#define PUD_SHIFT		get_pud_shift_arm64()
--#define PUD_SIZE		(1UL << PUD_SHIFT)
--#define PUD_MASK		(~(PUD_SIZE - 1))
--#define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
--#define PTRS_PER_PUD		PTRS_PER_PTE
--#define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
--#define PMD_SIZE		(1UL << PMD_SHIFT)
--#define PMD_MASK		(~(PMD_SIZE - 1))
-+/* See 'include/uapi/linux/const.h' for definitions below */
-+#define __AC(X,Y)	(X##Y)
-+#define _AC(X,Y)	__AC(X,Y)
-+#define _AT(T,X)	((T)(X))
-+
-+/* See 'include/asm/pgtable-types.h' for definitions below */
-+typedef unsigned long pteval_t;
-+typedef unsigned long pmdval_t;
-+typedef unsigned long pudval_t;
-+typedef unsigned long pgdval_t;
-+
-+#define PAGE_SHIFT	PAGESHIFT()
-+
-+/* See 'arch/arm64/include/asm/pgtable-hwdef.h' for definitions below */
-+
-+#define ARM64_HW_PGTABLE_LEVEL_SHIFT(n)	((PAGE_SHIFT - 3) * (4 - (n)) + 3)
-+
-+#define PTRS_PER_PTE		(1 << (PAGE_SHIFT - 3))
-+
 +/*
-+ * PMD_SHIFT determines the size a level 2 page table entry can map.
++ * The linear kernel range starts at the bottom of the virtual address
++ * space. Testing the top bit for the start of the region is a
++ * sufficient check and avoids having to worry about the tag.
 + */
-+#define PMD_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(2)
-+#define PMD_SIZE		(_AC(1, UL) << PMD_SHIFT)
-+#define PMD_MASK		(~(PMD_SIZE-1))
- #define PTRS_PER_PMD		PTRS_PER_PTE
- 
--#define PAGE_PRESENT		(1 << 0)
-+/*
-+ * PUD_SHIFT determines the size a level 1 page table entry can map.
-+ */
-+#define PUD_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(1)
-+#define PUD_SIZE		(_AC(1, UL) << PUD_SHIFT)
-+#define PUD_MASK		(~(PUD_SIZE-1))
-+#define PTRS_PER_PUD		PTRS_PER_PTE
++#define is_linear_addr(addr)	((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
++	(!!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))) : \
++	(!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))))
 +
-+/*
-+ * PGDIR_SHIFT determines the size a top-level page table entry can map
-+ * (depending on the configuration, this level can be 0, 1 or 2).
-+ */
-+#define PGDIR_SHIFT		ARM64_HW_PGTABLE_LEVEL_SHIFT(4 - (pgtable_level))
-+#define PGDIR_SIZE		(_AC(1, UL) << PGDIR_SHIFT)
-+#define PGDIR_MASK		(~(PGDIR_SIZE-1))
-+#define PTRS_PER_PGD		(1 << ((va_bits) - PGDIR_SHIFT))
-+
-+/*
-+ * Section address mask and size definitions.
-+ */
- #define SECTIONS_SIZE_BITS	30
--/* Highest possible physical address supported */
--#define PHYS_MASK_SHIFT		48
--#define PHYS_MASK		((1UL << PHYS_MASK_SHIFT) - 1)
-+
- /*
-- * Remove the highest order bits that are not a part of the
-- * physical address in a section
-+ * Hardware page table definitions.
-+ *
-+ * Level 1 descriptor (PUD).
-  */
- #define PMD_SECTION_MASK	((1UL << PHYS_MASK_SHIFT) - 1)
-+#define PUD_TYPE_TABLE		(_AT(pudval_t, 3) << 0)
-+#define PUD_TABLE_BIT		(_AT(pudval_t, 1) << 1)
-+#define PUD_TYPE_MASK		(_AT(pudval_t, 3) << 0)
-+#define PUD_TYPE_SECT		(_AT(pudval_t, 1) << 0)
- 
--#define PMD_TYPE_MASK		3
--#define PMD_TYPE_SECT		1
--#define PMD_TYPE_TABLE		3
-+/*
-+ * Level 2 descriptor (PMD).
-+ */
-+#define PMD_TYPE_MASK		(_AT(pmdval_t, 3) << 0)
-+#define PMD_TYPE_FAULT		(_AT(pmdval_t, 0) << 0)
-+#define PMD_TYPE_TABLE		(_AT(pmdval_t, 3) << 0)
-+#define PMD_TYPE_SECT		(_AT(pmdval_t, 1) << 0)
-+#define PMD_TABLE_BIT		(_AT(pmdval_t, 1) << 1)
-+
-+/*
-+ * Level 3 descriptor (PTE).
-+ */
-+#define PTE_ADDR_LOW		(((_AT(pteval_t, 1) << (48 - PAGE_SHIFT)) - 1) << PAGE_SHIFT)
-+#define PTE_ADDR_HIGH		(_AT(pteval_t, 0xf) << 12)
-+
-+static inline unsigned long
-+get_pte_addr_mask_arm64(void)
-+{
-+	if (lpa_52_bit_support_available)
-+		return (PTE_ADDR_LOW | PTE_ADDR_HIGH);
-+	else
-+		return PTE_ADDR_LOW;
-+}
-+
-+#define PTE_ADDR_MASK		get_pte_addr_mask_arm64()
- 
--#define PUD_TYPE_MASK		3
--#define PUD_TYPE_SECT		1
--#define PUD_TYPE_TABLE		3
-+#define PAGE_MASK		(~(PAGESIZE() - 1))
-+#define PAGE_PRESENT		(1 << 0)
- 
-+/* Helper API to convert between a physical address and its placement
-+ * in a page table entry, taking care of 52-bit addresses.
-+ */
-+static inline unsigned long
-+__pte_to_phys(pte_t pte)
-+{
-+	if (lpa_52_bit_support_available)
-+		return ((pte_val(pte) & PTE_ADDR_LOW) | ((pte_val(pte) & PTE_ADDR_HIGH) << 36));
-+	else
-+		return (pte_val(pte) & PTE_ADDR_MASK);
-+}
-+
-+/* Find an entry in a page-table-directory */
- #define pgd_index(vaddr) 		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
--#define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
- 
--#define pte_index(vaddr) 		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
--#define pmd_page_paddr(pmd)		(pmd_val(pmd) & PHYS_MASK & (int32_t)PAGE_MASK)
--#define pte_offset(dir, vaddr) 		((pte_t*)pmd_page_paddr((*dir)) + pte_index(vaddr))
-+static inline pte_t
-+pgd_pte(pgd_t pgd)
-+{
-+	return __pte(pgd_val(pgd));
-+}
- 
--#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
--#define pud_page_paddr(pud)		(pud_val(pud) & PHYS_MASK & (int32_t)PAGE_MASK)
--#define pmd_offset_pgtbl_lvl_2(pud, vaddr) ((pmd_t *)pud)
--#define pmd_offset_pgtbl_lvl_3(pud, vaddr) ((pmd_t *)pud_page_paddr((*pud)) + pmd_index(vaddr))
-+#define __pgd_to_phys(pgd)		__pte_to_phys(pgd_pte(pgd))
-+#define pgd_offset(pgd, vaddr)		((pgd_t *)(pgd) + pgd_index(vaddr))
-+
-+static inline pte_t pud_pte(pud_t pud)
-+{
-+	return __pte(pud_val(pud));
-+}
- 
-+static inline unsigned long
-+pgd_page_paddr(pgd_t pgd)
-+{
-+	return __pgd_to_phys(pgd);
-+}
-+
-+/* Find an entry in the first-level page table. */
- #define pud_index(vaddr)		(((vaddr) >> PUD_SHIFT) & (PTRS_PER_PUD - 1))
--#define pgd_page_paddr(pgd)		(pgd_val(pgd) & PHYS_MASK & (int32_t)PAGE_MASK)
-+#define __pud_to_phys(pud)		__pte_to_phys(pud_pte(pud))
-+
-+static inline unsigned long
-+pud_page_paddr(pud_t pud)
-+{
-+	return __pud_to_phys(pud);
-+}
-+
-+/* Find an entry in the second-level page table. */
-+#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+
-+static inline pte_t pmd_pte(pmd_t pmd)
-+{
-+	return __pte(pmd_val(pmd));
-+}
-+
-+#define __pmd_to_phys(pmd)		__pte_to_phys(pmd_pte(pmd))
-+
-+static inline unsigned long
-+pmd_page_paddr(pmd_t pmd)
-+{
-+	return __pmd_to_phys(pmd);
-+}
-+
-+/* Find an entry in the third-level page table. */
-+#define pte_index(vaddr) 		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+#define pte_offset(dir, vaddr) 		(pmd_page_paddr((*dir)) + pte_index(vaddr) * sizeof(pte_t))
- 
  static unsigned long long
  __pa(unsigned long vaddr)
-@@ -116,32 +229,22 @@ __pa(unsigned long vaddr)
+ {
+ 	if (kimage_voffset == NOT_FOUND_NUMBER ||
+-			(vaddr >= PAGE_OFFSET))
+-		return (vaddr - PAGE_OFFSET + info->phys_base);
+-	else
++			is_linear_addr(vaddr)) {
++		if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
++			return ((vaddr & ~PAGE_OFFSET) + info->phys_base);
++		else
++			return (vaddr + info->phys_base - PAGE_OFFSET);
++	} else
  		return (vaddr - kimage_voffset);
  }
  
--static int
--get_pud_shift_arm64(void)
-+static pud_t *
-+pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
- {
--	if (pgtable_level == 4)
--		return ((PAGESHIFT() - 3) * 3 + 3);
-+	if (pgtable_level > 3)
-+		return (pud_t *)(pgd_page_paddr(*pgdv) + pud_index(vaddr) * sizeof(pud_t));
- 	else
--		return PGDIR_SHIFT;
-+		return (pud_t *)(pgda);
+@@ -254,6 +279,7 @@ static int calculate_plat_config(void)
+ 			(PAGESIZE() == SZ_64K && va_bits == 42)) {
+ 		pgtable_level = 2;
+ 	} else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
++			(PAGESIZE() == SZ_64K && va_bits == 52) ||
+ 			(PAGESIZE() == SZ_4K && va_bits == 39) ||
+ 			(PAGESIZE() == SZ_16K && va_bits == 47)) {
+ 		pgtable_level = 3;
+@@ -288,8 +314,14 @@ get_phys_base_arm64(void)
+ 		return TRUE;
+ 	}
+ 
++	/* Ignore the 1st PT_LOAD */
+ 	if (get_num_pt_loads() && PAGE_OFFSET) {
+-		for (i = 0;
++		/* Note that the following loop starts with i = 1.
++		 * This is required to make sure that the following logic
++		 * works both for old and newer kernels (with flipped
++		 * VA space, i.e. >= 5.4.0)
++		 */
++		for (i = 1;
+ 		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
+ 		    i++) {
+ 			if (virt_start != NOT_KV_ADDR
+@@ -346,6 +378,139 @@ get_stext_symbol(void)
+ 	return(found ? kallsym : FALSE);
  }
  
- static pmd_t *
- pmd_offset(pud_t *puda, pud_t *pudv, unsigned long vaddr)
- {
--	if (pgtable_level == 2) {
--		return pmd_offset_pgtbl_lvl_2(puda, vaddr);
--	} else {
--		return pmd_offset_pgtbl_lvl_3(pudv, vaddr);
--	}
--}
--
--static pud_t *
--pud_offset(pgd_t *pgda, pgd_t *pgdv, unsigned long vaddr)
--{
--	if (pgtable_level == 4)
--		return ((pud_t *)pgd_page_paddr((*pgdv)) + pud_index(vaddr));
-+	if (pgtable_level > 2)
-+		return (pmd_t *)(pud_page_paddr(*pudv) + pmd_index(vaddr) * sizeof(pmd_t));
- 	else
--		return (pud_t *)(pgda);
-+		return (pmd_t*)(puda);
- }
- 
- static int calculate_plat_config(void)
-@@ -246,6 +349,14 @@ get_stext_symbol(void)
++static int
++get_va_bits_from_stext_arm64(void)
++{
++	ulong _stext;
++
++	_stext = get_stext_symbol();
++	if (!_stext) {
++		ERRMSG("Can't get the symbol of _stext.\n");
++		return FALSE;
++	}
++
++	/* Derive va_bits as per arch/arm64/Kconfig. Note that this is a
++	 * best case approximation at the moment, as there can be
++	 * inconsistencies in this calculation (for e.g., for
++	 * 52-bit kernel VA case, the 48th bit is set in
++	 * the _stext symbol).
++	 *
++	 * So, we need to rely on the vabits_actual symbol in the
++	 * vmcoreinfo or read via system register for a accurate value
++	 * of the virtual addressing supported by the underlying kernel.
++	 */
++	if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
++		va_bits = 48;
++	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
++		va_bits = 47;
++	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
++		va_bits = 42;
++	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
++		va_bits = 39;
++	} else if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
++		va_bits = 36;
++	} else {
++		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
++		return FALSE;
++	}
++
++	DEBUG_MSG("va_bits       : %d (approximation via _stext)\n", va_bits);
++
++	return TRUE;
++}
++
++/* Note that its important to note that the
++ * ID_AA64MMFR2_EL1 architecture register can be read
++ * only when we give an .arch hint to the gcc/binutils,
++ * so we use the gcc construct '__attribute__ ((target ("arch=armv8.2-a")))'
++ * here which is an .arch directive (see AArch64-Target-selection-directives
++ * documentation from ARM for details). This is required only for
++ * this function to make sure it compiles well with gcc/binutils.
++ */
++__attribute__ ((target ("arch=armv8.2-a")))
++static unsigned long
++read_id_aa64mmfr2_el1(void)
++{
++	return get_cpu_ftr(ID_AA64MMFR2_EL1);
++}
++
++static int
++get_vabits_actual_from_id_aa64mmfr2_el1(void)
++{
++	int l_vabits_actual;
++	unsigned long val;
++
++	/* Check if ID_AA64MMFR2_EL1 CPU-ID register indicates
++	 * ARMv8.2/LVA support:
++	 * VARange, bits [19:16]
++	 *   From ARMv8.2:
++	 *   Indicates support for a larger virtual address.
++	 *   Defined values are:
++	 *     0b0000 VMSAv8-64 supports 48-bit VAs.
++	 *     0b0001 VMSAv8-64 supports 52-bit VAs when using the 64KB
++	 *            page size. The other translation granules support
++	 *            48-bit VAs.
++	 *
++	 * See ARMv8 ARM for more details.
++	 */
++	if (!(getauxval(AT_HWCAP) & HWCAP_CPUID)) {
++		ERRMSG("arm64 CPUID registers unavailable.\n");
++		return ERROR;
++	}
++
++	val = read_id_aa64mmfr2_el1();
++	val = (val & ID_AA64MMFR2_LVA_MASK) > ID_AA64MMFR2_LVA_SHIFT;
++
++	if ((val == 0x1) && (PAGESIZE() == SZ_64K))
++		l_vabits_actual = 52;
++	else
++		l_vabits_actual = 48;
++
++	return l_vabits_actual;
++}
++
++static void
++get_page_offset_arm64(void)
++{
++	/* Check if 'vabits_actual' is initialized yet.
++	 * If not, our best bet is to read ID_AA64MMFR2_EL1 CPU-ID
++	 * register.
++	 */
++	if (!vabits_actual) {
++		vabits_actual = get_vabits_actual_from_id_aa64mmfr2_el1();
++		if ((vabits_actual == ERROR) || (vabits_actual != 52)) {
++			/* If we cannot read ID_AA64MMFR2_EL1 arch
++			 * register or if this register does not indicate
++			 * support for a larger virtual address, our last
++			 * option is to use the VA_BITS to calculate the
++			 * PAGE_OFFSET value, i.e. vabits_actual = VA_BITS.
++			 */
++			vabits_actual = va_bits;
++			DEBUG_MSG("vabits_actual : %d (approximation via va_bits)\n",
++					vabits_actual);
++		} else
++			DEBUG_MSG("vabits_actual : %d (via id_aa64mmfr2_el1)\n",
++					vabits_actual);
++	}
++
++	if (!populate_kernel_version()) {
++		ERRMSG("Cannot get information about current kernel\n");
++		return;
++	}
++
++	/* See arch/arm64/include/asm/memory.h for more details of
++	 * the PAGE_OFFSET calculation.
++	 */
++	if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
++		info->page_offset = ((0xffffffffffffffffUL) -
++				((1UL) << (vabits_actual - 1)) + 1);
++	else
++		info->page_offset = (-(1UL << vabits_actual));
++
++	DEBUG_MSG("page_offset   : %lx (via vabits_actual)\n",
++			info->page_offset);
++}
++
  int
  get_machdep_info_arm64(void)
  {
-+	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+		if (info->max_physmem_bits == 52)
-+			lpa_52_bit_support_available = 1;
-+	} else
-+		info->max_physmem_bits = 48;
-+
+@@ -360,8 +525,33 @@ get_machdep_info_arm64(void)
  	/* Check if va_bits is still not initialized. If still 0, call
  	 * get_versiondep_info() to initialize the same.
  	 */
-@@ -258,12 +369,11 @@ get_machdep_info_arm64(void)
- 	}
++	if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER) {
++		va_bits = NUMBER(VA_BITS);
++		DEBUG_MSG("va_bits       : %d (vmcoreinfo)\n",
++				va_bits);
++	}
++
++	/* Check if va_bits is still not initialized. If still 0, call
++	 * get_versiondep_info() to initialize the same from _stext
++	 * symbol.
++	 */
+ 	if (!va_bits)
+-		get_versiondep_info_arm64();
++		if (get_va_bits_from_stext_arm64() == FALSE)
++			return FALSE;
++
++	/* See TCR_EL1, Translation Control Register (EL1) register
++	 * description in the ARMv8 Architecture Reference Manual.
++	 * Basically, we can use the TCR_EL1.T1SZ
++	 * value to determine the virtual addressing range supported
++	 * in the kernel-space (i.e. vabits_actual).
++	 */
++	if (NUMBER(TCR_EL1_T1SZ) != NOT_FOUND_NUMBER) {
++		vabits_actual = 64 - NUMBER(TCR_EL1_T1SZ);
++		DEBUG_MSG("vabits_actual : %d (vmcoreinfo)\n",
++				vabits_actual);
++	}
++
++	get_page_offset_arm64();
  
- 	kimage_voffset = NUMBER(kimage_voffset);
--	info->max_physmem_bits = PHYS_MASK_SHIFT;
- 	info->section_size_bits = SECTIONS_SIZE_BITS;
+ 	if (!calculate_plat_config()) {
+ 		ERRMSG("Can't determine platform config values\n");
+@@ -399,34 +589,11 @@ get_xen_info_arm64(void)
+ int
+ get_versiondep_info_arm64(void)
+ {
+-	ulong _stext;
+-
+-	_stext = get_stext_symbol();
+-	if (!_stext) {
+-		ERRMSG("Can't get the symbol of _stext.\n");
+-		return FALSE;
+-	}
+-
+-	/* Derive va_bits as per arch/arm64/Kconfig */
+-	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
+-		va_bits = 36;
+-	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
+-		va_bits = 39;
+-	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
+-		va_bits = 42;
+-	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
+-		va_bits = 47;
+-	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
+-		va_bits = 48;
+-	} else {
+-		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
+-		return FALSE;
+-	}
+-
+-	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
++	if (!va_bits)
++		if (get_va_bits_from_stext_arm64() == FALSE)
++			return FALSE;
  
- 	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
--	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
--	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
-+	DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
-+	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
+-	DEBUG_MSG("va_bits      : %d\n", va_bits);
+-	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
++	get_page_offset_arm64();
  
  	return TRUE;
  }
-@@ -321,6 +431,19 @@ get_versiondep_info_arm64(void)
+diff --git a/common.h b/common.h
+index 6e2f657a79c7..1901df195e9d 100644
+--- a/common.h
++++ b/common.h
+@@ -50,5 +50,15 @@
+ #define NOT_PADDR	(ULONGLONG_MAX)
+ #define BADADDR  	((ulong)(-1))
+ 
++/* Indirect stringification.  Doing two levels allows the parameter to be a
++ * macro itself.  For example, compile with -DFOO=bar, __stringify(FOO)
++ * converts to "bar".
++ *
++ * Copied from linux source: 'include/linux/stringify.h'
++ */
++
++#define __stringify_1(x...)	#x
++#define __stringify(x...)	__stringify_1(x)
++
+ #endif  /* COMMON_H */
+ 
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 4c4251ea8719..5ab82fd3cf14 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1133,7 +1133,7 @@ fallback_to_current_page_size(void)
  	return TRUE;
  }
  
-+/* 1GB section for Page Table level = 4 and Page Size = 4KB */
-+static int
-+is_pud_sect(pud_t pud)
-+{
-+	return ((pud_val(pud) & PUD_TYPE_MASK) == PUD_TYPE_SECT);
-+}
-+
-+static int
-+is_pmd_sect(pmd_t pmd)
-+{
-+	return ((pmd_val(pmd) & PMD_TYPE_MASK) == PMD_TYPE_SECT);
-+}
-+
- /*
-  * vaddr_to_paddr_arm64() - translate arbitrary virtual address to physical
-  * @vaddr: virtual address to translate
-@@ -358,10 +481,9 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
- 		return NOT_PADDR;
- 	}
+-static int populate_kernel_version(void)
++int populate_kernel_version(void)
+ {
+ 	struct utsname utsname;
  
--	if ((pud_val(pudv) & PUD_TYPE_MASK) == PUD_TYPE_SECT) {
--		/* 1GB section for Page Table level = 4 and Page Size = 4KB */
--		paddr = (pud_val(pudv) & (PUD_MASK & PMD_SECTION_MASK))
--					+ (vaddr & (PUD_SIZE - 1));
-+	if (is_pud_sect(pudv)) {
-+		paddr = (pud_page_paddr(pudv) & PUD_MASK) +
-+				(vaddr & (PUD_SIZE - 1));
- 		return paddr;
- 	}
+@@ -2323,6 +2323,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
+ #ifdef __aarch64__
+ 	WRITE_NUMBER("VA_BITS", VA_BITS);
++	WRITE_NUMBER_UNSIGNED("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
+ 	WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
+ 	WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
+ #endif
+@@ -2729,6 +2730,7 @@ read_vmcoreinfo(void)
+ 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
+ #ifdef __aarch64__
+ 	READ_NUMBER("VA_BITS", VA_BITS);
++	READ_NUMBER_UNSIGNED("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
+ 	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
+ 	READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
+ #endif
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 03fb4ce06872..dc65f002bad6 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -974,7 +974,9 @@ unsigned long long vaddr_to_paddr_arm64(unsigned long vaddr);
+ int get_versiondep_info_arm64(void);
+ int get_xen_basic_info_arm64(void);
+ int get_xen_info_arm64(void);
+-#define paddr_to_vaddr_arm64(X) (((X) - info->phys_base) | PAGE_OFFSET)
++#define paddr_to_vaddr_arm64(X) ((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
++				 ((X) - (info->phys_base - PAGE_OFFSET)) :		\
++				 (((X) - info->phys_base) | PAGE_OFFSET))
  
-@@ -371,29 +493,24 @@ vaddr_to_paddr_arm64(unsigned long vaddr)
- 		return NOT_PADDR;
- 	}
+ #define find_vmemmap()		stub_false()
+ #define vaddr_to_paddr(X)	vaddr_to_paddr_arm64(X)
+@@ -1938,6 +1940,7 @@ struct number_table {
+ 	long	KERNEL_IMAGE_SIZE;
+ #ifdef __aarch64__
+ 	long 	VA_BITS;
++	unsigned long	TCR_EL1_T1SZ;
+ 	unsigned long	PHYS_OFFSET;
+ 	unsigned long	kimage_voffset;
+ #endif
+@@ -2389,5 +2392,6 @@ ulong htol(char *s, int flags);
+ int hexadecimal(char *s, int count);
+ int decimal(char *s, int count);
+ int file_exists(char *file);
++int populate_kernel_version(void);
  
--	switch (pmd_val(pmdv) & PMD_TYPE_MASK) {
--	case PMD_TYPE_TABLE:
--		ptea = pte_offset(&pmdv, vaddr);
--		/* 64k page */
--		if (!readmem(PADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
--			ERRMSG("Can't read pte\n");
--			return NOT_PADDR;
--		}
-+	if (is_pmd_sect(pmdv)) {
-+		paddr = (pmd_page_paddr(pmdv) & PMD_MASK) +
-+				(vaddr & (PMD_SIZE - 1));
-+		return paddr;
-+	}
- 
--		if (!(pte_val(ptev) & PAGE_PRESENT)) {
--			ERRMSG("Can't get a valid pte.\n");
--			return NOT_PADDR;
--		} else {
-+	ptea = (pte_t *)pte_offset(&pmdv, vaddr);
-+	if (!readmem(PADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
-+		ERRMSG("Can't read pte\n");
-+		return NOT_PADDR;
-+	}
- 
--			paddr = (PAGEBASE(pte_val(ptev)) & PHYS_MASK)
--					+ (vaddr & (PAGESIZE() - 1));
--		}
--		break;
--	case PMD_TYPE_SECT:
--		/* 512MB section for Page Table level = 3 and Page Size = 64KB*/
--		paddr = (pmd_val(pmdv) & (PMD_MASK & PMD_SECTION_MASK))
--					+ (vaddr & (PMD_SIZE - 1));
--		break;
-+	if (!(pte_val(ptev) & PAGE_PRESENT)) {
-+		ERRMSG("Can't get a valid pte.\n");
-+		return NOT_PADDR;
-+	} else {
-+		paddr = __pte_to_phys(ptev) +
-+				(vaddr & (PAGESIZE() - 1));
- 	}
- 
- 	return paddr;
+ #endif /* MAKEDUMPFILE_H */
 -- 
 2.26.2
 
