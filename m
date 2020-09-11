@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
+Received: from mail-eopbgr1410077.outbound.protection.outlook.com
+ ([40.107.141.77] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kGY4O-00023h-FZ
- for kexec@lists.infradead.org; Fri, 11 Sep 2020 01:41:45 +0000
-Date: Fri, 11 Sep 2020 09:40:14 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] crash_dump: Remove the unused include statements
-Message-ID: <20200911014014.GA27590@MiWiFi-R3L-srv>
-References: <1599727742-19329-1-git-send-email-tiantao6@hisilicon.com>
+ id 1kGeoX-0006wo-54
+ for kexec@lists.infradead.org; Fri, 11 Sep 2020 08:53:50 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: makedumpfile: a feature question about filtering
+Date: Fri, 11 Sep 2020 08:53:31 +0000
+Message-ID: <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
+In-Reply-To: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <1599727742-19329-1-git-send-email-tiantao6@hisilicon.com>
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,38 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tian Tao <tiantao6@hisilicon.com>
-Cc: kexec@lists.infradead.org, akpm@linux-foundation.org, dyoung@redhat.com, linuxarm@huawei.com, vgoyal@redhat.com
+To: piliu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 09/10/20 at 04:49pm, Tian Tao wrote:
-> linux/pgtable.h is included more than once, Remove the one that isn't
-> necessary.
+Hi Pingfan,
+
+-----Original Message-----
+> Hello,
 > 
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> There is an appeal which only wants to save some user page including env
+> and args pages, and discards the other user space pages.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+I understand that it's helpful to get them even with -d 31 for crash's
+"ps -a" option..
 
-> ---
->  include/linux/crash_dump.h | 2 --
->  1 file changed, 2 deletions(-)
 > 
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index a5192b7..6bd8a33 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -8,8 +8,6 @@
->  #include <linux/pgtable.h>
->  #include <uapi/linux/vmcore.h>
->  
-> -#include <linux/pgtable.h> /* for pgprot_t */
-> -
->  #ifdef CONFIG_CRASH_DUMP
->  #define ELFCORE_ADDR_MAX	(-1ULL)
->  #define ELFCORE_ADDR_ERR	(-2ULL)
-> -- 
-> 2.7.4
-> 
+> To achieve this feature, mm_struct's members "arg_start, arg_end,
+> env_start, env_end;" should be accessed. So we need to export mm_struct
+> and init_mm through vmcore.
 
+How many offsets/sizes will be required to walk all tasks?
+If kernel maintainers accept it, I will not oppose that feature..
+
+(or it would be simpler to mark the pages something special when allocating,
+but I don't feel like it's easy to change kernel to do so.)
+
+Thanks,
+Kazu
+
+> 
+> This somewhat overlaps with the function of crash utility. And I want to
+> know if this feature is acceptable in upstream.
+> 
+> Any comment and suggestion?
+> 
+> Thanks,
+> Pingfan
 
 _______________________________________________
 kexec mailing list
