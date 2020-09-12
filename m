@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kGuP5-0003p3-HA
- for kexec@lists.infradead.org; Sat, 12 Sep 2020 01:32:37 +0000
+ id 1kGuV3-0004CP-Jc
+ for kexec@lists.infradead.org; Sat, 12 Sep 2020 01:38:46 +0000
 From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH] kexec-tools: mips: Remove commandline parameter "mem"
-Date: Sat, 12 Sep 2020 09:32:24 +0800
-Message-Id: <1599874344-6229-1-git-send-email-tangyouling@loongson.cn>
-MIME-Version: 1.0
+Subject: [PATCH] kexec-tools: Fix a prompt message when crashkernel is not
+ reserved
+Date: Sat, 12 Sep 2020 09:38:41 +0800
+Message-Id: <1599874721-6903-1-git-send-email-tangyouling@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,46 +16,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>, Khalid Aziz <khalid@gonehiking.org>, "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: kexec@lists.infradead.org
 
-Im1lbT0iIGluZGljYXRpbmcgdGhlIG1lbW9yeSByZWdpb24gdGhlIG5ldyBrZXJuZWwgY2FuIHVz
-ZSB0byBib290IGludG8uCkFuZCBwYXNzZWQgdG8gdGhlIGR1bXAtY2FwdHVyZSBrZXJuZWwgYnkg
-a2VybmVsIGNvbW1hbmRsaW5lIHBhcmFtZXRlcgoibWVtPSIuIEJ1dCBpbiB0aGUgZHVtcC1jYXB0
-dXJlIGtlcm5lbCwgd2UgZG9u4oCZdCBuZWVkIHRvIHVzZSB0aGlzIHBhcmFtZXRlcgpub3csIHNv
-IHJlbW92ZSAibWVtIiBhbmQgZG9uJ3QgYWRkICJtZW09IiB0byBuZXcga2VybmVsIGNvbW1hbmRs
-aW5lLgoKU2lnbmVkLW9mZi1ieTogWW91bGluZyBUYW5nIDx0YW5neW91bGluZ0Bsb29uZ3Nvbi5j
-bj4KLS0tCiBrZXhlYy9hcmNoL21pcHMvY3Jhc2hkdW1wLW1pcHMuYyB8IDI5IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tCiAxIGZpbGUgY2hhbmdlZCwgMjkgZGVsZXRpb25zKC0pCgpkaWZm
-IC0tZ2l0IGEva2V4ZWMvYXJjaC9taXBzL2NyYXNoZHVtcC1taXBzLmMgYi9rZXhlYy9hcmNoL21p
-cHMvY3Jhc2hkdW1wLW1pcHMuYwppbmRleCBmYzkyZTY0Li4yNmQ1MDQzIDEwMDY0NAotLS0gYS9r
-ZXhlYy9hcmNoL21pcHMvY3Jhc2hkdW1wLW1pcHMuYworKysgYi9rZXhlYy9hcmNoL21pcHMvY3Jh
-c2hkdW1wLW1pcHMuYwpAQCAtMjQzLDMzICsyNDMsNiBAQCBzdGF0aWMgdm9pZCB1bHRvYSh1bnNp
-Z25lZCBsb25nIGksIGNoYXIgKnN0cikKIAl9CiB9CiAKLS8qIEFkZHMgdGhlIGFwcHJvcHJpYXRl
-IG1lbT0gb3B0aW9ucyB0byBjb21tYW5kIGxpbmUsIGluZGljYXRpbmcgdGhlCi0gKiBtZW1vcnkg
-cmVnaW9uIHRoZSBuZXcga2VybmVsIGNhbiB1c2UgdG8gYm9vdCBpbnRvLiAqLwotc3RhdGljIGlu
-dCBjbWRsaW5lX2FkZF9tZW0oY2hhciAqY21kbGluZSwgdW5zaWduZWQgbG9uZyBhZGRyLAotCQl1
-bnNpZ25lZCBsb25nIHNpemUpCi17Ci0JaW50IGNtZGxlbiwgbGVuOwotCWNoYXIgc3RyWzUwXSwg
-KnB0cjsKLQotCWFkZHIgPSBhZGRyLzEwMjQ7Ci0Jc2l6ZSA9IHNpemUvMTAyNDsKLQlwdHIgPSBz
-dHI7Ci0Jc3RyY3B5KHN0ciwgIiBtZW09Iik7Ci0JcHRyICs9IHN0cmxlbihzdHIpOwotCXVsdG9h
-KHNpemUsIHB0cik7Ci0Jc3RyY2F0KHN0ciwgIktAIik7Ci0JcHRyID0gc3RyICsgc3RybGVuKHN0
-cik7Ci0JdWx0b2EoYWRkciwgcHRyKTsKLQlzdHJjYXQoc3RyLCAiSyIpOwotCWxlbiA9IHN0cmxl
-bihzdHIpOwotCWNtZGxlbiA9IHN0cmxlbihjbWRsaW5lKSArIGxlbjsKLQlpZiAoY21kbGVuID4g
-KENPTU1BTkRfTElORV9TSVpFIC0gMSkpCi0JCWRpZSgiQ29tbWFuZCBsaW5lIG92ZXJmbG93XG4i
-KTsKLQlzdHJjYXQoY21kbGluZSwgc3RyKTsKLQotCXJldHVybiAwOwotfQotCiAvKiBBZGRzIHRo
-ZSBlbGZjb3JlaGRyPSBjb21tYW5kIGxpbmUgcGFyYW1ldGVyIHRvIGNvbW1hbmQgbGluZS4gKi8K
-IHN0YXRpYyBpbnQgY21kbGluZV9hZGRfZWxmY29yZWhkcihjaGFyICpjbWRsaW5lLCB1bnNpZ25l
-ZCBsb25nIGFkZHIpCiB7CkBAIC0zOTcsOCArMzcwLDYgQEAgaW50IGxvYWRfY3Jhc2hkdW1wX3Nl
-Z21lbnRzKHN0cnVjdCBrZXhlY19pbmZvICppbmZvLCBjaGFyKiBtb2RfY21kbGluZSwKIAkgKiBi
-YWNrdXAgc2VnbWVudCBpcyBhZnRlciBlbGZjb3JlaGRyLCBzbyB1c2UgZWxmY29yZWhkciBhcyB0
-b3Agb2YKIAkgKiBrZXJuZWwncyBhdmFpbGFibGUgbWVtb3J5CiAJICovCi0JY21kbGluZV9hZGRf
-bWVtKG1vZF9jbWRsaW5lLCBjcmFzaF9yZXNlcnZlZF9tZW0uc3RhcnQsCi0JCWVsZmNvcmVoZHIg
-LSBjcmFzaF9yZXNlcnZlZF9tZW0uc3RhcnQpOwogCWNtZGxpbmVfYWRkX2VsZmNvcmVoZHIobW9k
-X2NtZGxpbmUsIGVsZmNvcmVoZHIpOwogCiAJZGJncHJpbnRmKCJDUkFTSCBNRU1PUlkgUkFOR0VT
-OlxuIik7Ci0tIAoyLjEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Where Y specifies how much memory to reserve for the dump-capture kernel
+and X specifies the beginning of this reserved memory. So Y should be
+placed before X.
+
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ kexec/kexec.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index bb88caa..fd7c8d2 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1530,7 +1530,7 @@ int main(int argc, char *argv[])
+ 	    !is_crashkernel_mem_reserved()) {
+ 		die("Memory for crashkernel is not reserved\n"
+ 		    "Please reserve memory by passing"
+-		    "\"crashkernel=X@Y\" parameter to kernel\n"
++		    "\"crashkernel=Y@X\" parameter to kernel\n"
+ 		    "Then try to loading kdump kernel\n");
+ 	}
+ 
+-- 
+2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
