@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410077.outbound.protection.outlook.com
- ([40.107.141.77] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kHkZx-0003Cz-Ql
- for kexec@lists.infradead.org; Mon, 14 Sep 2020 09:15:18 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: makedumpfile: a feature question about filtering
-Date: Mon, 14 Sep 2020 09:15:14 +0000
-Message-ID: <OSBPR01MB1991A2DAB9596B60910C9CE6DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
- <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <0b99591e-7117-7661-e728-684ece22787e@redhat.com>
- <OSBPR01MB19915EEEDE74943D073908D4DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <e6f42e12-5c7c-67fa-0f5c-621d7508ee45@redhat.com>
-In-Reply-To: <e6f42e12-5c7c-67fa-0f5c-621d7508ee45@redhat.com>
-Content-Language: ja-JP
+ id 1kHngD-0005Oa-Ow
+ for kexec@lists.infradead.org; Mon, 14 Sep 2020 12:33:58 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH printk v5 0/6] printk: reimplement LOG_CONT handling
+Date: Mon, 14 Sep 2020 14:39:48 +0206
+Message-Id: <20200914123354.832-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,44 +16,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gT24gMDkvMTQvMjAyMCAwNDoxNSBQTSwgSEFH
-SU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKSB3cm90ZToNCj4gPiAtLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPiA+PiBPbiAwOS8xMS8yMDIwIDA0OjUzIFBNLCBIQUdJTyBLQVpVSElUTyjo
-kKnlsL7jgIDkuIDku4EpIHdyb3RlOg0KPiA+Pj4gSGkgUGluZ2ZhbiwNCj4gPj4+DQo+ID4+PiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+Pj4+IEhlbGxvLA0KPiA+Pj4+DQo+ID4+Pj4g
-VGhlcmUgaXMgYW4gYXBwZWFsIHdoaWNoIG9ubHkgd2FudHMgdG8gc2F2ZSBzb21lIHVzZXIgcGFn
-ZSBpbmNsdWRpbmcgZW52DQo+ID4+Pj4gYW5kIGFyZ3MgcGFnZXMsIGFuZCBkaXNjYXJkcyB0aGUg
-b3RoZXIgdXNlciBzcGFjZSBwYWdlcy4NCj4gPj4+DQo+ID4+PiBJIHVuZGVyc3RhbmQgdGhhdCBp
-dCdzIGhlbHBmdWwgdG8gZ2V0IHRoZW0gZXZlbiB3aXRoIC1kIDMxIGZvciBjcmFzaCdzDQo+ID4+
-PiAicHMgLWEiIG9wdGlvbi4uDQo+ID4+Pg0KPiA+Pj4+DQo+ID4+Pj4gVG8gYWNoaWV2ZSB0aGlz
-IGZlYXR1cmUsIG1tX3N0cnVjdCdzIG1lbWJlcnMgImFyZ19zdGFydCwgYXJnX2VuZCwNCj4gPj4+
-PiBlbnZfc3RhcnQsIGVudl9lbmQ7IiBzaG91bGQgYmUgYWNjZXNzZWQuIFNvIHdlIG5lZWQgdG8g
-ZXhwb3J0IG1tX3N0cnVjdA0KPiA+Pj4+IGFuZCBpbml0X21tIHRocm91Z2ggdm1jb3JlLg0KPiA+
-Pj4NCj4gPj4+IEhvdyBtYW55IG9mZnNldHMvc2l6ZXMgd2lsbCBiZSByZXF1aXJlZCB0byB3YWxr
-IGFsbCB0YXNrcz8NCj4gPj4gQXQgcHJlc2VudCwgSSB0aGluayBvbmx5IHRoZSBpbmZvICJhcmdf
-c3RhcnQsIGFyZ19lbmQsIGVudl9zdGFydCwNCj4gPj4gZW52X2VuZCIgaW4gbW1fc3RydWN0IGFy
-ZSByZXF1aXJlZC4NCj4gPg0KPiA+IGFoIHdoYXQgSSB3YW50ZWQgdG8gYXNrIG1haW5seSB3YXMg
-dGhlIG51bWJlciBvZiB0aGUgb2Zmc2V0cy9zaXplcyB1c2VkIHRvDQo+ID4gd2FsayB0aHJvdWdo
-IGFsbCAodXNlcikgdGFza3MgaW4gYSBzeXN0ZW0sIGJlY2F1c2UgbWFrZWR1bXBmaWxlIGNhbm5v
-dCBnZXQNCj4gPiB0byBhIHRhc2sncyBhcmdfc3RhcnQgb25seSB3aXRoIE9GRlNFVChtbV9zdHJ1
-Y3QuYXJnX3N0YXJ0KS4gIElzIGl0IGVhc3kNCj4gPiBlbm91Z2ggdG8gZG8gaXQgb25seSB3aXRo
-IHNldmVyYWwgdm1jb3JlaW5mbyBlbnRyaWVzPw0KPiBZZXMsIGl0IGlzLiBJdGVyYXRpbmcgb3Zl
-ciB0YXNrcyByZXF1aXJlcyB0byBleHBvc2UNCj4gT0ZGU0VUKG1tX3N0cnVjdC5tbWxpc3QsIGFu
-ZCAmaW5pdF9tbS4gVGhlbiBmb3IgZWFjaCBtbV9zdHJ1Y3QsIHdlIG5lZWQNCj4gYW4gYWNjZXNz
-IHRvICJhcmdfc3RhcnQsIGFyZ19lbmQsIGVudl9zdGFydCxlbnZfZW5kIg0KDQpIbW0sIGJ1dCBh
-IEZlZG9yYSAzMiBtYWNoaW5lIGhhcyBhbiBlbXB0eSBpbml0X21tLm1tbGlzdC4NCihiZWNhdXNl
-IG9mIG5vIHVzZWQgc3dhcD8pDQoNCmNyYXNoPiBwIGluaXRfbW0ubW1saXN0DQokMSA9IHsNCiAg
-bmV4dCA9IDB4ZmZmZmZmZmY4MjZlZTIwMCA8aW5pdF9tbSsxNjA+LCANCiAgcHJldiA9IDB4ZmZm
-ZmZmZmY4MjZlZTIwMCA8aW5pdF9tbSsxNjA+DQp9DQpjcmFzaD4gc3dhcA0KU1dBUF9JTkZPX1NU
-UlVDVCAgICBUWVBFICAgICAgIFNJWkUgICAgICAgVVNFRCAgICAgUENUICBQUkkgIEZJTEVOQU1F
-DQpmZmZmOGJhZGI1Mzg1YTAwICBQQVJUSVRJT04gIDQxNTMzNDBrICAgICAgMGsgICAgICAgMCUg
-ICAtMiAgL2Rldi9kbS0xDQoNCkkgbWlnaHQgYmUgc3RpbGwgbWlzc2luZyBzb21ldGhpbmcuDQoN
-ClRoYW5rcywNCkthenUNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hello,
+
+Here is v5 for the second series to rework the printk subsystem.
+(The v4 is here [0].) This series implements a new ringbuffer
+feature that allows the last record to be extended. Petr Mladek
+provided the initial proof of concept [1] for this.
+
+Using the record extension feature, LOG_CONT is re-implemented
+in a way that exactly preserves its behavior, but avoids the
+need for an extra buffer. In particular, it avoids the need for
+any synchronization that such a buffer requires.
+
+This series deviates from the agreements [2] made at the meeting
+during LPC2019 in Lisbon. The test results of the v1 series,
+which implemented LOG_CONT as agreed upon, showed that the
+effects on existing userspace tools using /dev/kmsg (journalctl,
+dmesg) were not acceptable [3].
+
+Patch 5 introduces *four* new memory barrier pairs. Two of them
+are insignificant additions (data_realloc:A/desc_read:D and
+data_realloc:A/data_push_tail:B) because they are alternate path
+memory barriers that exactly match the purpose and context of
+the two existing memory barrier pairs they provide an alternate
+path for. The other two new memory barrier pairs are significant
+additions:
+
+desc_reopen_last:A / _prb_commit:B - When reopening a descriptor,
+    ensure the state transitions back to desc_reserved before
+    fully trusting the descriptor data.
+
+_prb_commit:B / desc_reserve:D - When committing a descriptor,
+    ensure the state transitions to desc_committed before checking
+    the head ID to see if the descriptor needs to be finalized.
+
+The test module used to test the ringbuffer is available
+here [4].
+
+The series is based on the printk-rework branch of the printk git
+tree:
+
+e60768311af8 ("scripts/gdb: update for lockless printk ringbuffer")
+
+The list of changes since v4:
+
+printk_ringbuffer
+=================
+
+- desc_read(): revert setting @state_var when inconsistent (a
+  separate series [5] is addressing this bug)
+
+- desc_reserve(): use DESC_SV() when setting reserved
+
+- data_realloc(): also do nothing if the size is the same
+
+- prb_reserve_in_last(): adjust dataless checks/warnings to match
+  the non-dataless case
+
+- prb_reserve_in_last(): fix length modifier in warnings
+
+- change comments about "state flags" to just talk about "states"
+
+John Ogness
+
+[0] https://lkml.kernel.org/r/20200908202859.2736-1-john.ogness@linutronix.de
+[1] https://lkml.kernel.org/r/20200812163908.GH12903@alley
+[2] https://lkml.kernel.org/r/87k1acz5rx.fsf@linutronix.de
+[3] https://lkml.kernel.org/r/20200811160551.GC12903@alley
+[4] https://github.com/Linutronix/prb-test.git
+[5] https://lkml.kernel.org/r/20200914094803.27365-1-john.ogness@linutronix.de
+
+John Ogness (6):
+  printk: ringbuffer: relocate get_data()
+  printk: ringbuffer: add BLK_DATALESS() macro
+  printk: ringbuffer: clear initial reserved fields
+  printk: ringbuffer: change representation of states
+  printk: ringbuffer: add finalization/extension support
+  printk: reimplement log_cont using record extension
+
+ Documentation/admin-guide/kdump/gdbmacros.txt |  13 +-
+ kernel/printk/printk.c                        | 110 +--
+ kernel/printk/printk_ringbuffer.c             | 683 ++++++++++++++----
+ kernel/printk/printk_ringbuffer.h             |  35 +-
+ scripts/gdb/linux/dmesg.py                    |  12 +-
+ 5 files changed, 615 insertions(+), 238 deletions(-)
+
+-- 
+2.20.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
