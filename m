@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kHngF-0005PK-37
+ id 1kHngG-0005Qm-0n
  for kexec@lists.infradead.org; Mon, 14 Sep 2020 12:34:05 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH printk v5 4/6] printk: ringbuffer: change representation of
- states
-Date: Mon, 14 Sep 2020 14:39:52 +0206
-Message-Id: <20200914123354.832-5-john.ogness@linutronix.de>
+Subject: [PATCH printk v5 6/6] printk: reimplement log_cont using record
+ extension
+Date: Mon, 14 Sep 2020 14:39:54 +0206
+Message-Id: <20200914123354.832-7-john.ogness@linutronix.de>
 In-Reply-To: <20200914123354.832-1-john.ogness@linutronix.de>
 References: <20200914123354.832-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
@@ -26,213 +26,144 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Petr Mladek <pmladek@suse.com>
 Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Rather than deriving the state by evaluating bits within the flags
-area of the state variable, assign the states explicit values and
-set those values in the flags area. Introduce macros to make it
-simple to read and write state values for the state variable.
-
-Although the functionality is preserved, the binary representation
-for the states is changed.
+Use the record extending feature of the ringbuffer to implement
+continuous messages. This preserves the existing continuous message
+behavior.
 
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- Documentation/admin-guide/kdump/gdbmacros.txt | 12 ++++---
- kernel/printk/printk_ringbuffer.c             | 28 +++++------------
- kernel/printk/printk_ringbuffer.h             | 31 ++++++++++++-------
- scripts/gdb/linux/dmesg.py                    | 11 ++++---
- 4 files changed, 41 insertions(+), 41 deletions(-)
+ kernel/printk/printk.c | 98 +++++++++---------------------------------
+ 1 file changed, 20 insertions(+), 78 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/gdbmacros.txt b/Documentation/admin-guide/kdump/gdbmacros.txt
-index 7adece30237e..8f533b751c46 100644
---- a/Documentation/admin-guide/kdump/gdbmacros.txt
-+++ b/Documentation/admin-guide/kdump/gdbmacros.txt
-@@ -295,9 +295,12 @@ document dump_record
- end
+diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+index 964b5701688f..9a2e23191576 100644
+--- a/kernel/printk/printk.c
++++ b/kernel/printk/printk.c
+@@ -535,7 +535,10 @@ static int log_store(u32 caller_id, int facility, int level,
+ 	r.info->caller_id = caller_id;
  
- define dmesg
--	set var $desc_committed = 1UL << ((sizeof(long) * 8) - 1)
--	set var $flags_mask = 3UL << ((sizeof(long) * 8) - 2)
--	set var $id_mask = ~$flags_mask
-+	# definitions from kernel/printk/printk_ringbuffer.h
-+	set var $desc_committed = 1
-+	set var $desc_sv_bits = sizeof(long) * 8
-+	set var $desc_flags_shift = $desc_sv_bits - 2
-+	set var $desc_flags_mask = 3 << $desc_flags_shift
-+	set var $id_mask = ~$desc_flags_mask
+ 	/* insert message */
+-	prb_commit(&e);
++	if ((flags & LOG_CONT) || !(flags & LOG_NEWLINE))
++		prb_commit(&e);
++	else
++		prb_final_commit(&e);
  
- 	set var $desc_count = 1U << prb->desc_ring.count_bits
- 	set var $prev_flags = 0
-@@ -309,7 +312,8 @@ define dmesg
- 		set var $desc = &prb->desc_ring.descs[$id % $desc_count]
+ 	return (text_len + trunc_msg_len);
+ }
+@@ -1084,7 +1087,7 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
+ 	dest_r.info->ts_nsec = r->info->ts_nsec;
+ 	dest_r.info->caller_id = r->info->caller_id;
  
- 		# skip non-committed record
--		if (($desc->state_var.counter & $flags_mask) == $desc_committed)
-+		set var $state = 3 & ($desc->state_var.counter >> $desc_flags_shift)
-+		if ($state == $desc_committed)
- 			dump_record $desc $prev_flags
- 			set var $prev_flags = $desc->info.flags
- 		end
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index 82347abb22a5..911fbe150e9a 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -348,14 +348,6 @@ static bool data_check_size(struct prb_data_ring *data_ring, unsigned int size)
- 	return true;
+-	prb_commit(&e);
++	prb_final_commit(&e);
+ 
+ 	return prb_record_text_space(&e);
+ }
+@@ -1884,87 +1887,26 @@ static inline u32 printk_caller_id(void)
+ 		0x80000000 + raw_smp_processor_id();
  }
  
--/* The possible responses of a descriptor state-query. */
--enum desc_state {
--	desc_miss,	/* ID mismatch */
--	desc_reserved,	/* reserved, in use by writer */
--	desc_committed, /* committed, writer is done */
--	desc_reusable,	/* free, not yet used by any writer */
--};
+-/*
+- * Continuation lines are buffered, and not committed to the record buffer
+- * until the line is complete, or a race forces it. The line fragments
+- * though, are printed immediately to the consoles to ensure everything has
+- * reached the console in case of a kernel crash.
+- */
+-static struct cont {
+-	char buf[LOG_LINE_MAX];
+-	size_t len;			/* length == 0 means unused buffer */
+-	u32 caller_id;			/* printk_caller_id() of first print */
+-	u64 ts_nsec;			/* time of first print */
+-	u8 level;			/* log level of first message */
+-	u8 facility;			/* log facility of first message */
+-	enum log_flags flags;		/* prefix, newline flags */
+-} cont;
 -
- /* Query the state of a descriptor. */
- static enum desc_state get_desc_state(unsigned long id,
- 				      unsigned long state_val)
-@@ -363,13 +355,7 @@ static enum desc_state get_desc_state(unsigned long id,
- 	if (id != DESC_ID(state_val))
- 		return desc_miss;
- 
--	if (state_val & DESC_REUSE_MASK)
--		return desc_reusable;
+-static void cont_flush(void)
+-{
+-	if (cont.len == 0)
+-		return;
 -
--	if (state_val & DESC_COMMITTED_MASK)
--		return desc_committed;
+-	log_store(cont.caller_id, cont.facility, cont.level, cont.flags,
+-		  cont.ts_nsec, NULL, 0, cont.buf, cont.len);
+-	cont.len = 0;
+-}
 -
--	return desc_reserved;
-+	return DESC_STATE(state_val);
- }
- 
- /*
-@@ -467,8 +453,8 @@ static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
- static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- 			       unsigned long id)
+-static bool cont_add(u32 caller_id, int facility, int level,
+-		     enum log_flags flags, const char *text, size_t len)
+-{
+-	/* If the line gets too long, split it up in separate records. */
+-	if (cont.len + len > sizeof(cont.buf)) {
+-		cont_flush();
+-		return false;
+-	}
+-
+-	if (!cont.len) {
+-		cont.facility = facility;
+-		cont.level = level;
+-		cont.caller_id = caller_id;
+-		cont.ts_nsec = local_clock();
+-		cont.flags = flags;
+-	}
+-
+-	memcpy(cont.buf + cont.len, text, len);
+-	cont.len += len;
+-
+-	// The original flags come from the first line,
+-	// but later continuations can add a newline.
+-	if (flags & LOG_NEWLINE) {
+-		cont.flags |= LOG_NEWLINE;
+-		cont_flush();
+-	}
+-
+-	return true;
+-}
+-
+ static size_t log_output(int facility, int level, enum log_flags lflags, const char *dict, size_t dictlen, char *text, size_t text_len)
  {
--	unsigned long val_committed = id | DESC_COMMITTED_MASK;
--	unsigned long val_reusable = val_committed | DESC_REUSE_MASK;
-+	unsigned long val_committed = DESC_SV(id, desc_committed);
-+	unsigned long val_reusable = DESC_SV(id, desc_reusable);
- 	struct prb_desc *desc = to_desc(desc_ring, id);
- 	atomic_long_t *state_var = &desc->state_var;
+ 	const u32 caller_id = printk_caller_id();
  
-@@ -904,7 +890,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 */
- 	prev_state_val = atomic_long_read(&desc->state_var); /* LMM(desc_reserve:E) */
- 	if (prev_state_val &&
--	    prev_state_val != (id_prev_wrap | DESC_COMMITTED_MASK | DESC_REUSE_MASK)) {
-+	    get_desc_state(id_prev_wrap, prev_state_val) != desc_reusable) {
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-@@ -918,7 +904,7 @@ static bool desc_reserve(struct printk_ringbuffer *rb, unsigned long *id_out)
- 	 * This pairs with desc_read:D.
- 	 */
- 	if (!atomic_long_try_cmpxchg(&desc->state_var, &prev_state_val,
--				     id | 0)) { /* LMM(desc_reserve:F) */
-+			DESC_SV(id, desc_reserved))) { /* LMM(desc_reserve:F) */
- 		WARN_ON_ONCE(1);
- 		return false;
- 	}
-@@ -1237,7 +1223,7 @@ void prb_commit(struct prb_reserved_entry *e)
- {
- 	struct prb_desc_ring *desc_ring = &e->rb->desc_ring;
- 	struct prb_desc *d = to_desc(desc_ring, e->id);
--	unsigned long prev_state_val = e->id | 0;
-+	unsigned long prev_state_val = DESC_SV(e->id, desc_reserved);
- 
- 	/* Now the writer has finished all writing: LMM(prb_commit:A) */
- 
-@@ -1250,7 +1236,7 @@ void prb_commit(struct prb_reserved_entry *e)
- 	 * this. This pairs with desc_read:B.
- 	 */
- 	if (!atomic_long_try_cmpxchg(&d->state_var, &prev_state_val,
--				     e->id | DESC_COMMITTED_MASK)) { /* LMM(prb_commit:B) */
-+			DESC_SV(e->id, desc_committed))) { /* LMM(prb_commit:B) */
- 		WARN_ON_ONCE(1);
- 	}
- 
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index e6302da041f9..a9d85a6727b1 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -112,16 +112,25 @@ struct prb_reserved_entry {
- 	unsigned int			text_space;
- };
- 
--#define _DATA_SIZE(sz_bits)		(1UL << (sz_bits))
--#define _DESCS_COUNT(ct_bits)		(1U << (ct_bits))
--#define DESC_SV_BITS			(sizeof(unsigned long) * 8)
--#define DESC_COMMITTED_MASK		(1UL << (DESC_SV_BITS - 1))
--#define DESC_REUSE_MASK			(1UL << (DESC_SV_BITS - 2))
--#define DESC_FLAGS_MASK			(DESC_COMMITTED_MASK | DESC_REUSE_MASK)
--#define DESC_ID_MASK			(~DESC_FLAGS_MASK)
--#define DESC_ID(sv)			((sv) & DESC_ID_MASK)
--#define FAILED_LPOS			0x1
--#define NO_LPOS				0x3
-+/* The possible responses of a descriptor state-query. */
-+enum desc_state {
-+	desc_miss	=  -1,	/* ID mismatch (pseudo state) */
-+	desc_reserved	= 0x0,	/* reserved, in use by writer */
-+	desc_committed	= 0x1,	/* committed by writer */
-+	desc_reusable	= 0x3,	/* free, not yet used by any writer */
-+};
+-	/*
+-	 * If an earlier line was buffered, and we're a continuation
+-	 * write from the same context, try to add it to the buffer.
+-	 */
+-	if (cont.len) {
+-		if (cont.caller_id == caller_id && (lflags & LOG_CONT)) {
+-			if (cont_add(caller_id, facility, level, lflags, text, text_len))
+-				return text_len;
+-		}
+-		/* Otherwise, make sure it's flushed */
+-		cont_flush();
+-	}
+-
+-	/* Skip empty continuation lines that couldn't be added - they just flush */
+-	if (!text_len && (lflags & LOG_CONT))
+-		return 0;
+-
+-	/* If it doesn't end in a newline, try to buffer the current line */
+-	if (!(lflags & LOG_NEWLINE)) {
+-		if (cont_add(caller_id, facility, level, lflags, text, text_len))
++	if (lflags & LOG_CONT) {
++		struct prb_reserved_entry e;
++		struct printk_record r;
 +
-+#define _DATA_SIZE(sz_bits)	(1UL << (sz_bits))
-+#define _DESCS_COUNT(ct_bits)	(1U << (ct_bits))
-+#define DESC_SV_BITS		(sizeof(unsigned long) * 8)
-+#define DESC_FLAGS_SHIFT	(DESC_SV_BITS - 2)
-+#define DESC_FLAGS_MASK		(3UL << DESC_FLAGS_SHIFT)
-+#define DESC_STATE(sv)		(3UL & (sv >> DESC_FLAGS_SHIFT))
-+#define DESC_SV(id, state)	(((unsigned long)state << DESC_FLAGS_SHIFT) | id)
-+#define DESC_ID_MASK		(~DESC_FLAGS_MASK)
-+#define DESC_ID(sv)		((sv) & DESC_ID_MASK)
-+#define FAILED_LPOS		0x1
-+#define NO_LPOS			0x3
++		prb_rec_init_wr(&r, text_len, 0);
++		if (prb_reserve_in_last(&e, prb, &r, caller_id)) {
++			memcpy(&r.text_buf[r.info->text_len], text, text_len);
++			r.info->text_len += text_len;
++			if (lflags & LOG_NEWLINE) {
++				r.info->flags |= LOG_NEWLINE;
++				prb_final_commit(&e);
++			} else {
++				prb_commit(&e);
++			}
+ 			return text_len;
++		}
+ 	}
  
- #define FAILED_BLK_LPOS	\
- {				\
-@@ -213,7 +222,7 @@ struct prb_reserved_entry {
-  */
- #define BLK0_LPOS(sz_bits)	(-(_DATA_SIZE(sz_bits)))
- #define DESC0_ID(ct_bits)	DESC_ID(-(_DESCS_COUNT(ct_bits) + 1))
--#define DESC0_SV(ct_bits)	(DESC_COMMITTED_MASK | DESC_REUSE_MASK | DESC0_ID(ct_bits))
-+#define DESC0_SV(ct_bits)	DESC_SV(DESC0_ID(ct_bits), desc_reusable)
- 
- /*
-  * Define a ringbuffer with an external text data buffer. The same as
-diff --git a/scripts/gdb/linux/dmesg.py b/scripts/gdb/linux/dmesg.py
-index 6c6022012ea8..dd8c0b95063a 100644
---- a/scripts/gdb/linux/dmesg.py
-+++ b/scripts/gdb/linux/dmesg.py
-@@ -78,10 +78,10 @@ class LxDmesg(gdb.Command):
-         len_off = off + printk_info_type.get_type()['text_len'].bitpos // 8
- 
-         # definitions from kernel/printk/printk_ringbuffer.h
-+        desc_committed = 1
-         desc_sv_bits = utils.get_long_type().sizeof * 8
--        desc_committed_mask = 1 << (desc_sv_bits - 1)
--        desc_reuse_mask = 1 << (desc_sv_bits - 2)
--        desc_flags_mask = desc_committed_mask | desc_reuse_mask
-+        desc_flags_shift = desc_sv_bits - 2
-+        desc_flags_mask = 3 << desc_flags_shift
-         desc_id_mask = ~desc_flags_mask
- 
-         # read in tail and head descriptor ids
-@@ -96,8 +96,9 @@ class LxDmesg(gdb.Command):
-             desc_off = desc_sz * ind
- 
-             # skip non-committed record
--            state = utils.read_u64(descs, desc_off + sv_off + counter_off) & desc_flags_mask
--            if state != desc_committed_mask:
-+            state = 3 & (utils.read_u64(descs, desc_off + sv_off +
-+                                        counter_off) >> desc_flags_shift)
-+            if state != desc_committed:
-                 if did == head_id:
-                     break
-                 did = (did + 1) & desc_id_mask
+ 	/* Store it in the record log */
 -- 
 2.20.1
 
