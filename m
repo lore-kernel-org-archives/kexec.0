@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kI0k0-000054-P2
- for kexec@lists.infradead.org; Tue, 15 Sep 2020 02:30:45 +0000
-Subject: Re: makedumpfile: a feature question about filtering
-References: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
- <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <0b99591e-7117-7661-e728-684ece22787e@redhat.com>
- <OSBPR01MB19915EEEDE74943D073908D4DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <e6f42e12-5c7c-67fa-0f5c-621d7508ee45@redhat.com>
- <OSBPR01MB1991A2DAB9596B60910C9CE6DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-From: piliu <piliu@redhat.com>
-Message-ID: <80e79f89-4d9d-b4de-5d90-4a9d4d242e70@redhat.com>
-Date: Tue, 15 Sep 2020 10:30:37 +0800
+Subject: Re: [PATCH v12 0/9] support reserving crashkernel above 4G on arm64
+ kdump
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <05b1fdbb-5bb3-1345-14ac-9bf91df16aa4@huawei.com>
+Date: Tue, 15 Sep 2020 15:16:51 +0800
 MIME-Version: 1.0
-In-Reply-To: <OSBPR01MB1991A2DAB9596B60910C9CE6DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <20200907134745.25732-1-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,52 +15,192 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: catalin.marinas@arm.com, dyoung@redhat.com
+Cc: John.P.donnelly@oracle.com, guohanjun@huawei.com, xiexiuqi@huawei.com, arnd@arndb.de, bhe@redhat.com, corbet@lwn.net, horms@verge.net.au, bhsharma@redhat.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, wangkefeng.wang@huawei.com, mingo@redhat.com, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, nsaenzjulienne@suse.de
 
-CgpPbiAwOS8xNC8yMDIwIDA1OjE1IFBNLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4Ep
-IHdyb3RlOgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+IE9uIDA5LzE0LzIwMjAgMDQ6
-MTUgUE0sIEhBR0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4gOS7gSkgd3JvdGU6Cj4+PiAtLS0tLU9y
-aWdpbmFsIE1lc3NhZ2UtLS0tLQo+Pj4+IE9uIDA5LzExLzIwMjAgMDQ6NTMgUE0sIEhBR0lPIEtB
-WlVISVRPKOiQqeWwvuOAgOS4gOS7gSkgd3JvdGU6Cj4+Pj4+IEhpIFBpbmdmYW4sCj4+Pj4+Cj4+
-Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+Pj4+PiBIZWxsbywKPj4+Pj4+Cj4+Pj4+
-PiBUaGVyZSBpcyBhbiBhcHBlYWwgd2hpY2ggb25seSB3YW50cyB0byBzYXZlIHNvbWUgdXNlciBw
-YWdlIGluY2x1ZGluZyBlbnYKPj4+Pj4+IGFuZCBhcmdzIHBhZ2VzLCBhbmQgZGlzY2FyZHMgdGhl
-IG90aGVyIHVzZXIgc3BhY2UgcGFnZXMuCj4+Pj4+Cj4+Pj4+IEkgdW5kZXJzdGFuZCB0aGF0IGl0
-J3MgaGVscGZ1bCB0byBnZXQgdGhlbSBldmVuIHdpdGggLWQgMzEgZm9yIGNyYXNoJ3MKPj4+Pj4g
-InBzIC1hIiBvcHRpb24uLgo+Pj4+Pgo+Pj4+Pj4KPj4+Pj4+IFRvIGFjaGlldmUgdGhpcyBmZWF0
-dXJlLCBtbV9zdHJ1Y3QncyBtZW1iZXJzICJhcmdfc3RhcnQsIGFyZ19lbmQsCj4+Pj4+PiBlbnZf
-c3RhcnQsIGVudl9lbmQ7IiBzaG91bGQgYmUgYWNjZXNzZWQuIFNvIHdlIG5lZWQgdG8gZXhwb3J0
-IG1tX3N0cnVjdAo+Pj4+Pj4gYW5kIGluaXRfbW0gdGhyb3VnaCB2bWNvcmUuCj4+Pj4+Cj4+Pj4+
-IEhvdyBtYW55IG9mZnNldHMvc2l6ZXMgd2lsbCBiZSByZXF1aXJlZCB0byB3YWxrIGFsbCB0YXNr
-cz8KPj4+PiBBdCBwcmVzZW50LCBJIHRoaW5rIG9ubHkgdGhlIGluZm8gImFyZ19zdGFydCwgYXJn
-X2VuZCwgZW52X3N0YXJ0LAo+Pj4+IGVudl9lbmQiIGluIG1tX3N0cnVjdCBhcmUgcmVxdWlyZWQu
-Cj4+Pgo+Pj4gYWggd2hhdCBJIHdhbnRlZCB0byBhc2sgbWFpbmx5IHdhcyB0aGUgbnVtYmVyIG9m
-IHRoZSBvZmZzZXRzL3NpemVzIHVzZWQgdG8KPj4+IHdhbGsgdGhyb3VnaCBhbGwgKHVzZXIpIHRh
-c2tzIGluIGEgc3lzdGVtLCBiZWNhdXNlIG1ha2VkdW1wZmlsZSBjYW5ub3QgZ2V0Cj4+PiB0byBh
-IHRhc2sncyBhcmdfc3RhcnQgb25seSB3aXRoIE9GRlNFVChtbV9zdHJ1Y3QuYXJnX3N0YXJ0KS4g
-IElzIGl0IGVhc3kKPj4+IGVub3VnaCB0byBkbyBpdCBvbmx5IHdpdGggc2V2ZXJhbCB2bWNvcmVp
-bmZvIGVudHJpZXM/Cj4+IFllcywgaXQgaXMuIEl0ZXJhdGluZyBvdmVyIHRhc2tzIHJlcXVpcmVz
-IHRvIGV4cG9zZQo+PiBPRkZTRVQobW1fc3RydWN0Lm1tbGlzdCwgYW5kICZpbml0X21tLiBUaGVu
-IGZvciBlYWNoIG1tX3N0cnVjdCwgd2UgbmVlZAo+PiBhbiBhY2Nlc3MgdG8gImFyZ19zdGFydCwg
-YXJnX2VuZCwgZW52X3N0YXJ0LGVudl9lbmQiCj4gCj4gSG1tLCBidXQgYSBGZWRvcmEgMzIgbWFj
-aGluZSBoYXMgYW4gZW1wdHkgaW5pdF9tbS5tbWxpc3QuCj4gKGJlY2F1c2Ugb2Ygbm8gdXNlZCBz
-d2FwPykKQWhhLCBzb3JyeSB0aGF0IEkgbWFkZSBhIG1pc3Rha2UgYW5kIG1tbGlzdCBpcyBub3Qg
-dXNlZCB0byBvcmdhbml6ZSBhbGwKdGhlIG1tIGFueSBtb3JlLgoKSW4gb3JkZXIgdG8gYWNjZXNz
-IGFsbCBtbV9zdHJjdXQgaW4gdGhlIHN5c3RlbSwgaW5pdF90YXNrLnRhc2tzCmxpbmtlZC1saXN0
-IHNob3VsZCBiZSBleHBvc2VkLCBhbmQgZm9yIGVhY2ggdGFzayB3ZSBjYW4gYWNjZXNzIGl0cwpt
-bV9zdHJ1Y3QgYnkgT0ZGU0VUKHRhc2tfc3RydWN0Lm1tKSwgdGhlbiBPRkZTRVQobW1fc3RydWN0
-LmFyZ19zdGFydCkuCj4gCj4gY3Jhc2g+IHAgaW5pdF9tbS5tbWxpc3QKPiAkMSA9IHsKPiAgIG5l
-eHQgPSAweGZmZmZmZmZmODI2ZWUyMDAgPGluaXRfbW0rMTYwPiwgCj4gICBwcmV2ID0gMHhmZmZm
-ZmZmZjgyNmVlMjAwIDxpbml0X21tKzE2MD4KPiB9Cj4gY3Jhc2g+IHN3YXAKPiBTV0FQX0lORk9f
-U1RSVUNUICAgIFRZUEUgICAgICAgU0laRSAgICAgICBVU0VEICAgICBQQ1QgIFBSSSAgRklMRU5B
-TUUKPiBmZmZmOGJhZGI1Mzg1YTAwICBQQVJUSVRJT04gIDQxNTMzNDBrICAgICAgMGsgICAgICAg
-MCUgICAtMiAgL2Rldi9kbS0xCj4gCj4gSSBtaWdodCBiZSBzdGlsbCBtaXNzaW5nIHNvbWV0aGlu
-Zy4KWW91IGFyZSByaWdodC4gQW5kIGNvdWxkIHlvdSBmb3Jlc2VlIGFueSBwcm9ibGVtIHdpdGgg
-bXkgbmV3IHRyeT8KClRoYW5rcywKUGluZ2ZhbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
-ZWMK
+
+
+On 2020/9/7 21:47, Chen Zhou wrote:
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel below 4G, which
+> will fail when there is no enough low memory.
+> 2. If reserving crashkernel above 4G, in this case, crash dump
+> kernel will boot failure because there is no low memory available
+> for allocation.
+> 3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
+> if the memory reserved for crash dump kernel falled in ZONE_DMA32,
+> the devices in crash dump kernel need to use ZONE_DMA will alloc
+> fail.
+>
+> To solve these issues, change the behavior of crashkernel=X.
+> crashkernel=X tries low allocation in DMA zone, and fall back to
+> high allocation if it fails.
+> If requized size X is too large and leads to very little low memory
+> in DMA zone after low allocation, the system may not work normally.
+> So add a threshold and go for high allocation directly if the required
+> size is too large. The value of threshold is set as the half of
+> the low memory.
+>
+> We can also use "crashkernel=X,high" to select a high region above
+> DMA zone, which also tries to allocate at least 256M low memory in
+> DMA zone automatically.
+> "crashkernel=Y,low" can be used to allocate specified size low memory.
+> For non-RPi4 platforms, change DMA zone memtioned above to DMA32 zone.
+>
+> When reserving crashkernel in high memory, some low memory is reserved
+> for crash dump kernel devices. So there may be two regions reserved for
+> crash dump kernel.
+> In order to distinct from the high region and make no effect to the use
+> of existing kexec-tools, rename the low region as "Crash kernel (low)",
+> and pass the low region by reusing DT property
+> "linux,usable-memory-range". We made the low memory region as the last
+> range of "linux,usable-memory-range" to keep compatibility with existing
+> user-space and older kdump kernels.
+>
+> Besides, we need to modify kexec-tools:
+> arm64: support more than one crash kernel regions(see [1])
+>
+> Another update is document about DT property 'linux,usable-memory-range':
+> schemas: update 'linux,usable-memory-range' node schema(see [2])
+>
+> This patchset contains the following nine patches:
+> 0001-x86-kdump-move-CRASH_ALIGN-to-2M.patch
+> 0002-x86-kdump-make-the-lower-bound-of-crash-kernel-reser.patch
+> 0003-x86-kdump-use-macro-CRASH_ADDR_LOW_MAX-in-functions-.patch
+> 0004-x86-kdump-move-reserve_crashkernel-_low-into-crash_c.patch
+> 0005-arm64-kdump-introduce-some-macroes-for-crash-kernel-.patch
+> 0006-arm64-kdump-reimplement-crashkernel-X.patch
+> 0007-kdump-add-threshold-for-the-required-memory.patch
+> 0008-arm64-kdump-add-memory-for-devices-by-DT-property-li.patch
+> 0009-kdump-update-Documentation-about-crashkernel.patch
+>
+> 0001-0003 are some x86 cleanups which prepares for making
+> functionsreserve_crashkernel[_low]() generic.
+>
+> 0004 makes functions reserve_crashkernel[_low]() generic.
+> 0005-0006 reimplements crashkernel=X.
+> 0007 adds threshold for the required memory.
+> 0008 adds memory for devices by DT property linux,usable-memory-range.
+> 0009 updates the doc.
+Hi Catalin and Dave,
+
+Any other suggestions about this patchset? Let me know if you have any questions.
+
+Thanks,
+Chen Zhou
+>
+> Changes since [v11]
+> - Rebased on top of 5.9-rc4.
+> - Make the function reserve_crashkernel() of x86 generic.
+> Suggested by Catalin, make the function reserve_crashkernel() of x86 generic
+> and arm64 use the generic version to reimplement crashkernel=X.
+>
+> Changes since [v10]
+> - Reimplement crashkernel=X suggested by Catalin, Many thanks to Catalin.
+>
+> Changes since [v9]
+> - Patch 1 add Acked-by from Dave.
+> - Update patch 5 according to Dave's comments.
+> - Update chosen schema.
+>
+> Changes since [v8]
+> - Reuse DT property "linux,usable-memory-range".
+> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
+> memory region.
+> - Fix kdump broken with ZONE_DMA reintroduced.
+> - Update chosen schema.
+>
+> Changes since [v7]
+> - Move x86 CRASH_ALIGN to 2M
+> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+> - Update Documentation/devicetree/bindings/chosen.txt.
+> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
+> suggested by Arnd.
+> - Add Tested-by from Jhon and pk.
+>
+> Changes since [v6]
+> - Fix build errors reported by kbuild test robot.
+>
+> Changes since [v5]
+> - Move reserve_crashkernel_low() into kernel/crash_core.c.
+> - Delete crashkernel=X,high.
+> - Modify crashkernel=X,low.
+> If crashkernel=X,low is specified simultaneously, reserve spcified size low
+> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
+> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
+> pass to crash dump kernel by DT property "linux,low-memory-range".
+> - Update Documentation/admin-guide/kdump/kdump.rst.
+>
+> Changes since [v4]
+> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+>
+> Changes since [v3]
+> - Add memblock_cap_memory_ranges back for multiple ranges.
+> - Fix some compiling warnings.
+>
+> Changes since [v2]
+> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+> patch.
+>
+> Changes since [v1]:
+> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
+> in fdt_enforce_memory_region().
+> There are at most two crash kernel regions, for two crash kernel regions
+> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+> and then remove the memory range in the middle.
+>
+> [1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
+> [2]: https://github.com/robherring/dt-schema/pull/19 
+> [v1]: https://lkml.org/lkml/2019/4/2/1174
+> [v2]: https://lkml.org/lkml/2019/4/9/86
+> [v3]: https://lkml.org/lkml/2019/4/9/306
+> [v4]: https://lkml.org/lkml/2019/4/15/273
+> [v5]: https://lkml.org/lkml/2019/5/6/1360
+> [v6]: https://lkml.org/lkml/2019/8/30/142
+> [v7]: https://lkml.org/lkml/2019/12/23/411
+> [v8]: https://lkml.org/lkml/2020/5/21/213
+> [v9]: https://lkml.org/lkml/2020/6/28/73
+> [v10]: https://lkml.org/lkml/2020/7/2/1443
+> [v11]: https://lkml.org/lkml/2020/8/1/150
+>
+> Chen Zhou (9):
+>   x86: kdump: move CRASH_ALIGN to 2M
+>   x86: kdump: make the lower bound of crash kernel reservation
+>     consistent
+>   x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
+>     reserve_crashkernel[_low]()
+>   x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
+>   arm64: kdump: introduce some macroes for crash kernel reservation
+>   arm64: kdump: reimplement crashkernel=X
+>   kdump: add threshold for the required memory
+>   arm64: kdump: add memory for devices by DT property
+>     linux,usable-memory-range
+>   kdump: update Documentation about crashkernel
+>
+>  Documentation/admin-guide/kdump/kdump.rst     |  25 ++-
+>  .../admin-guide/kernel-parameters.txt         |  13 +-
+>  arch/arm64/include/asm/kexec.h                |  15 ++
+>  arch/arm64/include/asm/processor.h            |   1 +
+>  arch/arm64/kernel/setup.c                     |  13 +-
+>  arch/arm64/mm/init.c                          | 105 ++++------
+>  arch/arm64/mm/mmu.c                           |   4 +
+>  arch/x86/include/asm/kexec.h                  |  28 +++
+>  arch/x86/kernel/setup.c                       | 165 +--------------
+>  include/linux/crash_core.h                    |   4 +
+>  include/linux/kexec.h                         |   2 -
+>  kernel/crash_core.c                           | 192 ++++++++++++++++++
+>  kernel/kexec_core.c                           |  17 --
+>  13 files changed, 328 insertions(+), 256 deletions(-)
+>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
