@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out4436.biz.mail.alibaba.com ([47.88.44.36])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kI0cN-0008JJ-9m
- for kexec@lists.infradead.org; Tue, 15 Sep 2020 02:22:52 +0000
-Date: Tue, 15 Sep 2020 10:20:23 +0800
-From: Wei Yang <richard.weiyang@linux.alibaba.com>
-Subject: Re: [PATCH v2 2/7] kernel/resource: move and rename
- IORESOURCE_MEM_DRIVER_MANAGED
-Message-ID: <20200915022023.GD2007@L-31X9LVDL-1304.local>
-References: <20200908201012.44168-1-david@redhat.com>
- <20200908201012.44168-3-david@redhat.com>
+ id 1kI0k0-000054-P2
+ for kexec@lists.infradead.org; Tue, 15 Sep 2020 02:30:45 +0000
+Subject: Re: makedumpfile: a feature question about filtering
+References: <9da0d585-4170-5758-e27d-814fcb97d575@redhat.com>
+ <OSBPR01MB1991C082928AD18ED5574DDBDD240@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <0b99591e-7117-7661-e728-684ece22787e@redhat.com>
+ <OSBPR01MB19915EEEDE74943D073908D4DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <e6f42e12-5c7c-67fa-0f5c-621d7508ee45@redhat.com>
+ <OSBPR01MB1991A2DAB9596B60910C9CE6DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+From: piliu <piliu@redhat.com>
+Message-ID: <80e79f89-4d9d-b4de-5d90-4a9d4d242e70@redhat.com>
+Date: Tue, 15 Sep 2020 10:30:37 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200908201012.44168-3-david@redhat.com>
+In-Reply-To: <OSBPR01MB1991A2DAB9596B60910C9CE6DD230@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,113 +23,52 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org, Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-nvdimm@lists.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Eric Biederman <ebiederm@xmission.com>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On Tue, Sep 08, 2020 at 10:10:07PM +0200, David Hildenbrand wrote:
->IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
->always set to 0 by hardware. This is far from beautiful (and confusing),
->and the bit only applies to SYSRAM. So let's move it out of the
->bus-specific (PnP) defined bits.
->
->We'll add another SYSRAM specific bit soon. If we ever need more bits for
->other purposes, we can steal some from "desc", or reshuffle/regroup what we
->have.
-
-I think you make this definition because we use IORESOURCE_SYSRAM_RAM for
-hotpluged memory? So we make them all in IORESOURCE_SYSRAM_XXX family?
-
->
->Cc: Andrew Morton <akpm@linux-foundation.org>
->Cc: Michal Hocko <mhocko@suse.com>
->Cc: Dan Williams <dan.j.williams@intel.com>
->Cc: Jason Gunthorpe <jgg@ziepe.ca>
->Cc: Kees Cook <keescook@chromium.org>
->Cc: Ard Biesheuvel <ardb@kernel.org>
->Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
->Cc: Baoquan He <bhe@redhat.com>
->Cc: Wei Yang <richardw.yang@linux.intel.com>
->Cc: Eric Biederman <ebiederm@xmission.com>
->Cc: Thomas Gleixner <tglx@linutronix.de>
->Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->Cc: kexec@lists.infradead.org
->Signed-off-by: David Hildenbrand <david@redhat.com>
->---
-> include/linux/ioport.h | 4 +++-
-> kernel/kexec_file.c    | 2 +-
-> mm/memory_hotplug.c    | 4 ++--
-> 3 files changed, 6 insertions(+), 4 deletions(-)
->
->diff --git a/include/linux/ioport.h b/include/linux/ioport.h
->index 52a91f5fa1a36..d7620d7c941a0 100644
->--- a/include/linux/ioport.h
->+++ b/include/linux/ioport.h
->@@ -58,6 +58,9 @@ struct resource {
-> #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
-> #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
-> 
->+/* IORESOURCE_SYSRAM specific bits. */
->+#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
->+
-> #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
-> 
-> #define IORESOURCE_DISABLED	0x10000000
->@@ -103,7 +106,6 @@ struct resource {
-> #define IORESOURCE_MEM_32BIT		(3<<3)
-> #define IORESOURCE_MEM_SHADOWABLE	(1<<5)	/* dup: IORESOURCE_SHADOWABLE */
-> #define IORESOURCE_MEM_EXPANSIONROM	(1<<6)
->-#define IORESOURCE_MEM_DRIVER_MANAGED	(1<<7)
-> 
-> /* PnP I/O specific bits (IORESOURCE_BITS) */
-> #define IORESOURCE_IO_16BIT_ADDR	(1<<0)
->diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->index ca40bef75a616..dfeeed1aed084 100644
->--- a/kernel/kexec_file.c
->+++ b/kernel/kexec_file.c
->@@ -520,7 +520,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
-> 	/* Returning 0 will take to next memory range */
-> 
-> 	/* Don't use memory that will be detected and handled by a driver. */
->-	if (res->flags & IORESOURCE_MEM_DRIVER_MANAGED)
->+	if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
-> 		return 0;
-> 
-> 	if (sz < kbuf->memsz)
->diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->index 4c47b68a9f4b5..8e1cd18b5cf14 100644
->--- a/mm/memory_hotplug.c
->+++ b/mm/memory_hotplug.c
->@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size,
-> 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
-> 
-> 	if (strcmp(resource_name, "System RAM"))
->-		flags |= IORESOURCE_MEM_DRIVER_MANAGED;
->+		flags |= IORESOURCE_SYSRAM_DRIVER_MANAGED;
-> 
-> 	/*
-> 	 * Make sure value parsed from 'mem=' only restricts memory adding
->@@ -1160,7 +1160,7 @@ EXPORT_SYMBOL_GPL(add_memory);
->  *
->  * For this memory, no entries in /sys/firmware/memmap ("raw firmware-provided
->  * memory map") are created. Also, the created memory resource is flagged
->- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-case
->+ * with IORESOURCE_SYSRAM_DRIVER_MANAGED, so in-kernel users can special-case
->  * this memory as well (esp., not place kexec images onto it).
->  *
->  * The resource_name (visible via /proc/iomem) has to have the format
->-- 
->2.26.2
-
--- 
-Wei Yang
-Help you, Help me
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAwOS8xNC8yMDIwIDA1OjE1IFBNLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4Ep
+IHdyb3RlOgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+IE9uIDA5LzE0LzIwMjAgMDQ6
+MTUgUE0sIEhBR0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4gOS7gSkgd3JvdGU6Cj4+PiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQo+Pj4+IE9uIDA5LzExLzIwMjAgMDQ6NTMgUE0sIEhBR0lPIEtB
+WlVISVRPKOiQqeWwvuOAgOS4gOS7gSkgd3JvdGU6Cj4+Pj4+IEhpIFBpbmdmYW4sCj4+Pj4+Cj4+
+Pj4+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4+Pj4+PiBIZWxsbywKPj4+Pj4+Cj4+Pj4+
+PiBUaGVyZSBpcyBhbiBhcHBlYWwgd2hpY2ggb25seSB3YW50cyB0byBzYXZlIHNvbWUgdXNlciBw
+YWdlIGluY2x1ZGluZyBlbnYKPj4+Pj4+IGFuZCBhcmdzIHBhZ2VzLCBhbmQgZGlzY2FyZHMgdGhl
+IG90aGVyIHVzZXIgc3BhY2UgcGFnZXMuCj4+Pj4+Cj4+Pj4+IEkgdW5kZXJzdGFuZCB0aGF0IGl0
+J3MgaGVscGZ1bCB0byBnZXQgdGhlbSBldmVuIHdpdGggLWQgMzEgZm9yIGNyYXNoJ3MKPj4+Pj4g
+InBzIC1hIiBvcHRpb24uLgo+Pj4+Pgo+Pj4+Pj4KPj4+Pj4+IFRvIGFjaGlldmUgdGhpcyBmZWF0
+dXJlLCBtbV9zdHJ1Y3QncyBtZW1iZXJzICJhcmdfc3RhcnQsIGFyZ19lbmQsCj4+Pj4+PiBlbnZf
+c3RhcnQsIGVudl9lbmQ7IiBzaG91bGQgYmUgYWNjZXNzZWQuIFNvIHdlIG5lZWQgdG8gZXhwb3J0
+IG1tX3N0cnVjdAo+Pj4+Pj4gYW5kIGluaXRfbW0gdGhyb3VnaCB2bWNvcmUuCj4+Pj4+Cj4+Pj4+
+IEhvdyBtYW55IG9mZnNldHMvc2l6ZXMgd2lsbCBiZSByZXF1aXJlZCB0byB3YWxrIGFsbCB0YXNr
+cz8KPj4+PiBBdCBwcmVzZW50LCBJIHRoaW5rIG9ubHkgdGhlIGluZm8gImFyZ19zdGFydCwgYXJn
+X2VuZCwgZW52X3N0YXJ0LAo+Pj4+IGVudl9lbmQiIGluIG1tX3N0cnVjdCBhcmUgcmVxdWlyZWQu
+Cj4+Pgo+Pj4gYWggd2hhdCBJIHdhbnRlZCB0byBhc2sgbWFpbmx5IHdhcyB0aGUgbnVtYmVyIG9m
+IHRoZSBvZmZzZXRzL3NpemVzIHVzZWQgdG8KPj4+IHdhbGsgdGhyb3VnaCBhbGwgKHVzZXIpIHRh
+c2tzIGluIGEgc3lzdGVtLCBiZWNhdXNlIG1ha2VkdW1wZmlsZSBjYW5ub3QgZ2V0Cj4+PiB0byBh
+IHRhc2sncyBhcmdfc3RhcnQgb25seSB3aXRoIE9GRlNFVChtbV9zdHJ1Y3QuYXJnX3N0YXJ0KS4g
+IElzIGl0IGVhc3kKPj4+IGVub3VnaCB0byBkbyBpdCBvbmx5IHdpdGggc2V2ZXJhbCB2bWNvcmVp
+bmZvIGVudHJpZXM/Cj4+IFllcywgaXQgaXMuIEl0ZXJhdGluZyBvdmVyIHRhc2tzIHJlcXVpcmVz
+IHRvIGV4cG9zZQo+PiBPRkZTRVQobW1fc3RydWN0Lm1tbGlzdCwgYW5kICZpbml0X21tLiBUaGVu
+IGZvciBlYWNoIG1tX3N0cnVjdCwgd2UgbmVlZAo+PiBhbiBhY2Nlc3MgdG8gImFyZ19zdGFydCwg
+YXJnX2VuZCwgZW52X3N0YXJ0LGVudl9lbmQiCj4gCj4gSG1tLCBidXQgYSBGZWRvcmEgMzIgbWFj
+aGluZSBoYXMgYW4gZW1wdHkgaW5pdF9tbS5tbWxpc3QuCj4gKGJlY2F1c2Ugb2Ygbm8gdXNlZCBz
+d2FwPykKQWhhLCBzb3JyeSB0aGF0IEkgbWFkZSBhIG1pc3Rha2UgYW5kIG1tbGlzdCBpcyBub3Qg
+dXNlZCB0byBvcmdhbml6ZSBhbGwKdGhlIG1tIGFueSBtb3JlLgoKSW4gb3JkZXIgdG8gYWNjZXNz
+IGFsbCBtbV9zdHJjdXQgaW4gdGhlIHN5c3RlbSwgaW5pdF90YXNrLnRhc2tzCmxpbmtlZC1saXN0
+IHNob3VsZCBiZSBleHBvc2VkLCBhbmQgZm9yIGVhY2ggdGFzayB3ZSBjYW4gYWNjZXNzIGl0cwpt
+bV9zdHJ1Y3QgYnkgT0ZGU0VUKHRhc2tfc3RydWN0Lm1tKSwgdGhlbiBPRkZTRVQobW1fc3RydWN0
+LmFyZ19zdGFydCkuCj4gCj4gY3Jhc2g+IHAgaW5pdF9tbS5tbWxpc3QKPiAkMSA9IHsKPiAgIG5l
+eHQgPSAweGZmZmZmZmZmODI2ZWUyMDAgPGluaXRfbW0rMTYwPiwgCj4gICBwcmV2ID0gMHhmZmZm
+ZmZmZjgyNmVlMjAwIDxpbml0X21tKzE2MD4KPiB9Cj4gY3Jhc2g+IHN3YXAKPiBTV0FQX0lORk9f
+U1RSVUNUICAgIFRZUEUgICAgICAgU0laRSAgICAgICBVU0VEICAgICBQQ1QgIFBSSSAgRklMRU5B
+TUUKPiBmZmZmOGJhZGI1Mzg1YTAwICBQQVJUSVRJT04gIDQxNTMzNDBrICAgICAgMGsgICAgICAg
+MCUgICAtMiAgL2Rldi9kbS0xCj4gCj4gSSBtaWdodCBiZSBzdGlsbCBtaXNzaW5nIHNvbWV0aGlu
+Zy4KWW91IGFyZSByaWdodC4gQW5kIGNvdWxkIHlvdSBmb3Jlc2VlIGFueSBwcm9ibGVtIHdpdGgg
+bXkgbmV3IHRyeT8KClRoYW5rcywKUGluZ2ZhbgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZy
+YWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4
+ZWMK
