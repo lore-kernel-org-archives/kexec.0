@@ -1,31 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from out4436.biz.mail.alibaba.com ([47.88.44.36])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kHrdR-0005tj-RT
- for kexec@lists.infradead.org; Mon, 14 Sep 2020 16:47:22 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20200528084614.0c949e8d@gandalf.local.home>
- <cbbf7926-148e-7acb-dc03-3f055d73364b@jv-coder.de>
- <20200727163655.8c94c8e245637b62311f5053@linux-foundation.org>
- <c6b095af-fc92-420f-303f-d2efd9f28873@jv-coder.de>
- <20200821110848.6c3183d1@oasis.local.home>
- <20200821134753.9547695c9b782275be3c95b5@linux-foundation.org>
- <20200821170334.73b52fdd@oasis.local.home>
- <95d7a489-a295-1c11-ac62-83e941ed3a87@jv-coder.de>
- <20200907114618.GR2674@hirez.programming.kicks-ass.net>
- <5c3a502f-2255-5aae-3599-5220aa4b8328@jv-coder.de>
- <20200907162338.GN1362448@hirez.programming.kicks-ass.net>
- <5600c9f8-2c9d-7776-161a-5f5c1be62c10@jv-coder.de>
- <51f3b288-260b-a800-6a47-51d93f892c3d@jv-coder.de>
- <87sgbo3p5w.fsf@x220.int.ebiederm.org>
- <22bad750-ef5d-82a5-527c-5213346dd280@jv-coder.de>
-Date: Mon, 14 Sep 2020 11:46:25 -0500
-In-Reply-To: <22bad750-ef5d-82a5-527c-5213346dd280@jv-coder.de> (Joerg
- Vehlow's message of "Mon, 14 Sep 2020 08:03:27 +0200")
-Message-ID: <87k0wws3vi.fsf@x220.int.ebiederm.org>
+ id 1kI0cN-0008JJ-9m
+ for kexec@lists.infradead.org; Tue, 15 Sep 2020 02:22:52 +0000
+Date: Tue, 15 Sep 2020 10:20:23 +0800
+From: Wei Yang <richard.weiyang@linux.alibaba.com>
+Subject: Re: [PATCH v2 2/7] kernel/resource: move and rename
+ IORESOURCE_MEM_DRIVER_MANAGED
+Message-ID: <20200915022023.GD2007@L-31X9LVDL-1304.local>
+References: <20200908201012.44168-1-david@redhat.com>
+ <20200908201012.44168-3-david@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [BUG RT] dump-capture kernel not executed for panic in interrupt
- context
+Content-Disposition: inline
+In-Reply-To: <20200908201012.44168-3-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,85 +21,111 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Reply-To: Wei Yang <richard.weiyang@linux.alibaba.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Vehlow <lkml@jv-coder.de>
-Cc: peterz@infradead.org, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, Kexec Mailing List <kexec@lists.infradead.org>, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Joerg Vehlow <joerg.vehlow@aox-tech.de>, Huang Ying <ying.huang@intel.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-s390@vger.kernel.org, linux-hyperv@vger.kernel.org, Michal Hocko <mhocko@suse.com>, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, linux-acpi@vger.kernel.org, Jason Gunthorpe <jgg@ziepe.ca>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-nvdimm@lists.01.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, virtualization@lists.linux-foundation.org, linux-mm@kvack.org, Thomas Gleixner <tglx@linutronix.de>, Eric Biederman <ebiederm@xmission.com>, Pankaj Gupta <pankaj.gupta.linux@gmail.com>, Ard Biesheuvel <ardb@kernel.org>, xen-devel@lists.xenproject.org, Andrew Morton <akpm@linux-foundation.org>, Dan Williams <dan.j.williams@intel.com>
 
+On Tue, Sep 08, 2020 at 10:10:07PM +0200, David Hildenbrand wrote:
+>IORESOURCE_MEM_DRIVER_MANAGED currently uses an unused PnP bit, which is
+>always set to 0 by hardware. This is far from beautiful (and confusing),
+>and the bit only applies to SYSRAM. So let's move it out of the
+>bus-specific (PnP) defined bits.
+>
+>We'll add another SYSRAM specific bit soon. If we ever need more bits for
+>other purposes, we can steal some from "desc", or reshuffle/regroup what we
+>have.
 
-Adding the kexec list as well.
+I think you make this definition because we use IORESOURCE_SYSRAM_RAM for
+hotpluged memory? So we make them all in IORESOURCE_SYSRAM_XXX family?
 
-Joerg Vehlow <lkml@jv-coder.de> writes:
+>
+>Cc: Andrew Morton <akpm@linux-foundation.org>
+>Cc: Michal Hocko <mhocko@suse.com>
+>Cc: Dan Williams <dan.j.williams@intel.com>
+>Cc: Jason Gunthorpe <jgg@ziepe.ca>
+>Cc: Kees Cook <keescook@chromium.org>
+>Cc: Ard Biesheuvel <ardb@kernel.org>
+>Cc: Pankaj Gupta <pankaj.gupta.linux@gmail.com>
+>Cc: Baoquan He <bhe@redhat.com>
+>Cc: Wei Yang <richardw.yang@linux.intel.com>
+>Cc: Eric Biederman <ebiederm@xmission.com>
+>Cc: Thomas Gleixner <tglx@linutronix.de>
+>Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>Cc: kexec@lists.infradead.org
+>Signed-off-by: David Hildenbrand <david@redhat.com>
+>---
+> include/linux/ioport.h | 4 +++-
+> kernel/kexec_file.c    | 2 +-
+> mm/memory_hotplug.c    | 4 ++--
+> 3 files changed, 6 insertions(+), 4 deletions(-)
+>
+>diff --git a/include/linux/ioport.h b/include/linux/ioport.h
+>index 52a91f5fa1a36..d7620d7c941a0 100644
+>--- a/include/linux/ioport.h
+>+++ b/include/linux/ioport.h
+>@@ -58,6 +58,9 @@ struct resource {
+> #define IORESOURCE_EXT_TYPE_BITS 0x01000000	/* Resource extended types */
+> #define IORESOURCE_SYSRAM	0x01000000	/* System RAM (modifier) */
+> 
+>+/* IORESOURCE_SYSRAM specific bits. */
+>+#define IORESOURCE_SYSRAM_DRIVER_MANAGED	0x02000000 /* Always detected via a driver. */
+>+
+> #define IORESOURCE_EXCLUSIVE	0x08000000	/* Userland may not map this resource */
+> 
+> #define IORESOURCE_DISABLED	0x10000000
+>@@ -103,7 +106,6 @@ struct resource {
+> #define IORESOURCE_MEM_32BIT		(3<<3)
+> #define IORESOURCE_MEM_SHADOWABLE	(1<<5)	/* dup: IORESOURCE_SHADOWABLE */
+> #define IORESOURCE_MEM_EXPANSIONROM	(1<<6)
+>-#define IORESOURCE_MEM_DRIVER_MANAGED	(1<<7)
+> 
+> /* PnP I/O specific bits (IORESOURCE_BITS) */
+> #define IORESOURCE_IO_16BIT_ADDR	(1<<0)
+>diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>index ca40bef75a616..dfeeed1aed084 100644
+>--- a/kernel/kexec_file.c
+>+++ b/kernel/kexec_file.c
+>@@ -520,7 +520,7 @@ static int locate_mem_hole_callback(struct resource *res, void *arg)
+> 	/* Returning 0 will take to next memory range */
+> 
+> 	/* Don't use memory that will be detected and handled by a driver. */
+>-	if (res->flags & IORESOURCE_MEM_DRIVER_MANAGED)
+>+	if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
+> 		return 0;
+> 
+> 	if (sz < kbuf->memsz)
+>diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>index 4c47b68a9f4b5..8e1cd18b5cf14 100644
+>--- a/mm/memory_hotplug.c
+>+++ b/mm/memory_hotplug.c
+>@@ -105,7 +105,7 @@ static struct resource *register_memory_resource(u64 start, u64 size,
+> 	unsigned long flags =  IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+> 
+> 	if (strcmp(resource_name, "System RAM"))
+>-		flags |= IORESOURCE_MEM_DRIVER_MANAGED;
+>+		flags |= IORESOURCE_SYSRAM_DRIVER_MANAGED;
+> 
+> 	/*
+> 	 * Make sure value parsed from 'mem=' only restricts memory adding
+>@@ -1160,7 +1160,7 @@ EXPORT_SYMBOL_GPL(add_memory);
+>  *
+>  * For this memory, no entries in /sys/firmware/memmap ("raw firmware-provided
+>  * memory map") are created. Also, the created memory resource is flagged
+>- * with IORESOURCE_MEM_DRIVER_MANAGED, so in-kernel users can special-case
+>+ * with IORESOURCE_SYSRAM_DRIVER_MANAGED, so in-kernel users can special-case
+>  * this memory as well (esp., not place kexec images onto it).
+>  *
+>  * The resource_name (visible via /proc/iomem) has to have the format
+>-- 
+>2.26.2
 
-> Hi Eric,
->> What is this patch supposed to be doing?
->>
->> What bug is it fixing?
-> This information is part in the first message of this mail thread.
-> The patch was intendedfor the active discussion in this thread,
-> not for a broad review.
-
-> A short summary: In the rt kernel, a panic in an interrupt context does
-> not start the dump-capture kernel, because there is a mutex_trylock in
-> __crash_kexe. If this is called in interrupt context, it always fails.
-> In the non-rt kernel calling mutex_trylock is not allowed according to
-> the comment of the function, but it still works.
-
-Thanks.  For whatever reason I did not see the rest of this thread
-when I was replying to your patch.
-
-I get the feeling the rt kernel is breaking this case deliberately.
-I don't know of any reason why a trylock couldn't work.
-
-That said I won't propose fixing up the locks that way.
-
->> A BUG_ON that triggers inside of BUG_ONs seems not just suspect but
->> outright impossible to make use of.
-> I am not entirely sure what would happen here. But even if it gets in
-> some kind ofendless loop, I guess this is ok, because it allows finding
-> the problem. A piece of code in the function, that ensures the precondition
-> is a lot better than relying on only a comment.
-> If this was in mtex_trylock, the bug described above wouldn't have sneaked
-> in 12 years ago...
-
-BUG_ON's are more likely to hide a problem then to show it.
-Sometimes they are appropriate but the should be avoided as much as
-possible.
-
-
->> I get the feeling skimming this that it is time to sort out and simplify
->> the locking here, rather than make it more complex, and more likely to
->> fail.
-> I would very much like that, but sadly it looks like it is not possible.
-> Either it wouldrequire blocking locks, that may fail, or not locking at
-> all, that may also fail.Using a different kind of lock (like spinlock)
-> is also not possible, becausespinlock_trylock again uses mutex_trylock
-> in the rt kernel.
-
-I think it is possible but the locking needs to be relooked at.
-
->> I get the feeling that over the years somehow the assumption that the
->> rest of the kernel is broken and that we need to get out of the broken
->> kernel as fast and as simply as possible has been lost.
-> Yes I also have the feeling, that the mutexes need fixing, but I wouldn't
-> to post any patch for that. At the moment, given the interface of the mutex,
-> this is clearly a bug in kexec, even if it works in the non-rt kernel.
-
-Cleanups that break the code. Sigh.
-
-The code was written correctly for this case and was fine until
-8c5a1cf0ad3a ("kexec: use a mutex for locking rather than xchg()").
-
-Mostly because I didn't trust locks given their comparatively high level
-of abstraction and what do you know that turned out to be correct in
-this case.
-
-It definitely looks time to see how the locking can be improved on the
-kexec on panic code path.
-
-Eric
+-- 
+Wei Yang
+Help you, Help me
 
 _______________________________________________
 kexec mailing list
