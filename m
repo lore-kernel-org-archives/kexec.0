@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400044.outbound.protection.outlook.com
- ([40.107.140.44] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kImZG-0007ur-Qf
- for kexec@lists.infradead.org; Thu, 17 Sep 2020 05:34:52 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
+ id 1kIrhq-0003CM-Oj
+ for kexec@lists.infradead.org; Thu, 17 Sep 2020 11:04:03 +0000
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
 Subject: RE: [PATCH v2 1/1] Calculate offset to field 'init_uts_ns.name'
-Date: Thu, 17 Sep 2020 05:34:41 +0000
-Message-ID: <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 References: <20200916135147.1303016-1-egorenar@linux.ibm.com>
-In-Reply-To: <20200916135147.1303016-1-egorenar@linux.ibm.com>
-Content-Language: ja-JP
+ <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Date: Thu, 17 Sep 2020 13:03:51 +0200
+Message-ID: <87r1r01x7s.fsf@oc8242746057.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,108 +19,32 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexander Egorenkov <egorenar@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Alexander,
-
------Original Message-----
-> The offset has changed in linux-next (v5.9.0) from 4 to 0 because
-> there is no more 'kref' member variable at the beginning of 'init_uts_ns'.
-> The change was introduced with commit 9a56493f6942c0e2df1579986128721da96e00d8.
-> To handle both cases correctly, calculate the offset at run time instead.
-
-Thank you for catching this and the patch.
-
-but do you know the kernel patch corresponding to this patch, i.e. adds
-the OFFSET(init_uts_ns.name) (strictly, OFFSET(uts_namespace.name) probably)
-entry to vmcoreinfo?  The makedumpfile usually just read it from vmcore,
-so cannot calculate without debug info in vmlinux.
-
-If it has not been posted yet, we need to do.  The best situation is
-that the patch is merged into linux-next first and then merged into
-mainline together with the commit 9a56493f6942.
-
-Is it possible for you?  otherwise, anyone or I might try.
-
-Thanks,
-Kazu
-
-> 
-> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> ---
->  makedumpfile.c | 8 ++++++--
->  makedumpfile.h | 4 ++++
->  2 files changed, 10 insertions(+), 2 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 4c4251e..2d62db8 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1159,7 +1159,7 @@ check_release(void)
->  	if (SYMBOL(system_utsname) != NOT_FOUND_SYMBOL) {
->  		utsname = SYMBOL(system_utsname);
->  	} else if (SYMBOL(init_uts_ns) != NOT_FOUND_SYMBOL) {
-> -		utsname = SYMBOL(init_uts_ns) + sizeof(int);
-> +		utsname = SYMBOL(init_uts_ns) + OFFSET(init_uts_ns.name);
->  	} else {
->  		ERRMSG("Can't get the symbol of system_utsname.\n");
->  		return FALSE;
-> @@ -2077,7 +2077,7 @@ get_str_osrelease_from_vmlinux(void)
->  	if (SYMBOL(system_utsname) != NOT_FOUND_SYMBOL) {
->  		utsname = SYMBOL(system_utsname);
->  	} else if (SYMBOL(init_uts_ns) != NOT_FOUND_SYMBOL) {
-> -		utsname = SYMBOL(init_uts_ns) + sizeof(int);
-> +		utsname = SYMBOL(init_uts_ns) + OFFSET(init_uts_ns.name);
->  	} else {
->  		ERRMSG("Can't get the symbol of system_utsname.\n");
->  		return FALSE;
-> @@ -2285,6 +2285,8 @@ write_vmcoreinfo_data(void)
->  	WRITE_MEMBER_OFFSET("mmu_psize_def.shift", mmu_psize_def.shift);
->  	WRITE_MEMBER_OFFSET("cpu_spec.mmu_features", cpu_spec.mmu_features);
-> 
-> +	WRITE_MEMBER_OFFSET("init_uts_ns.name", init_uts_ns.name);
-> +
->  	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
->  		WRITE_ARRAY_LENGTH("node_data", node_data);
->  	if (SYMBOL(pgdat_list) != NOT_FOUND_SYMBOL)
-> @@ -2697,6 +2699,8 @@ read_vmcoreinfo(void)
->  		READ_MEMBER_OFFSET("log.text_len", printk_log.text_len);
->  	}
-> 
-> +	READ_MEMBER_OFFSET("init_uts_ns.name", init_uts_ns.name);
-> +
->  	READ_ARRAY_LENGTH("node_data", node_data);
->  	READ_ARRAY_LENGTH("pgdat_list", pgdat_list);
->  	READ_ARRAY_LENGTH("mem_section", mem_section);
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 03fb4ce..7d8c54d 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1880,6 +1880,10 @@ struct offset_table {
->  	struct cpu_spec_s {
->  		long	mmu_features;
->  	} cpu_spec;
-> +
-> +	struct init_uts_ns_s {
-> +		long	name;
-> +	} init_uts_ns;
->  };
-> 
->  /*
-> --
-> 2.26.2
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQk8ay1oYWdpby1hYkBuZWMuY29tPiB3cml0
+ZXM6CgoKPiBUaGFuayB5b3UgZm9yIGNhdGNoaW5nIHRoaXMgYW5kIHRoZSBwYXRjaC4KPgo+IGJ1
+dCBkbyB5b3Uga25vdyB0aGUga2VybmVsIHBhdGNoIGNvcnJlc3BvbmRpbmcgdG8gdGhpcyBwYXRj
+aCwgaS5lLiBhZGRzCj4gdGhlIE9GRlNFVChpbml0X3V0c19ucy5uYW1lKSAoc3RyaWN0bHksIE9G
+RlNFVCh1dHNfbmFtZXNwYWNlLm5hbWUpIHByb2JhYmx5KQo+IGVudHJ5IHRvIHZtY29yZWluZm8/
+ICBUaGUgbWFrZWR1bXBmaWxlIHVzdWFsbHkganVzdCByZWFkIGl0IGZyb20gdm1jb3JlLAo+IHNv
+IGNhbm5vdCBjYWxjdWxhdGUgd2l0aG91dCBkZWJ1ZyBpbmZvIGluIHZtbGludXguCj4KPiBJZiBp
+dCBoYXMgbm90IGJlZW4gcG9zdGVkIHlldCwgd2UgbmVlZCB0byBkby4gIFRoZSBiZXN0IHNpdHVh
+dGlvbiBpcwo+IHRoYXQgdGhlIHBhdGNoIGlzIG1lcmdlZCBpbnRvIGxpbnV4LW5leHQgZmlyc3Qg
+YW5kIHRoZW4gbWVyZ2VkIGludG8KPiBtYWlubGluZSB0b2dldGhlciB3aXRoIHRoZSBjb21taXQg
+OWE1NjQ5M2Y2OTQyLgo+Cj4gSXMgaXQgcG9zc2libGUgZm9yIHlvdT8gIG90aGVyd2lzZSwgYW55
+b25lIG9yIEkgbWlnaHQgdHJ5Lgo+Cj4gVGhhbmtzLAo+IEthenUKPgoKSGkgS2F6dSwKCnNvcnJ5
+LCBpJ20gbmV3IHRvIG1ha2VkdW1wZmlsZSBhbmQgYXBwYXJlbnRseSBzdGlsbCBub3QgdW5kZXJz
+dGFuZGluZwpldmVyeXRoaW5nIGNvcnJlY3RseS4gSSBjaGVja2VkIHRoZSAqbGludXgtbmV4dCog
+cmVwbyBhbmQgY291bGRuJ3QgZmluZAphbnl0aGluZyB3aGljaCBhZGRzICppbml0X3V0c19ucy5u
+YW1lKi4gSSBvbmx5IHNlZQoKCVZNQ09SRUlORk9fT1NSRUxFQVNFKGluaXRfdXRzX25zLm5hbWUu
+cmVsZWFzZSk7CgoJVk1DT1JFSU5GT19TWU1CT0woaW5pdF91dHNfbnMpOwoKSSBjaGVja2VkIGtl
+cm5lbC9jcmFzaF9jb3JlLmMsIHRoaXMgaXMgdGhlIHJpZ2h0IHBsYWNlIHRvIGNoZWNrLCByaWdo
+dCA/CkJ1dCBteSBmaXggc2VlbXMgdG8gd29yayB3aXRoIGEgY3Jhc2ggZHVtcCBmcm9tIGxpbnV4
+LW5leHQuCgpUaGFua3MKUmVnYXJkcwpBbGV4CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhl
+Ywo=
