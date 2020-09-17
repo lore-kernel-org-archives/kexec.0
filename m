@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kIjry-0004Cs-Sf
- for kexec@lists.infradead.org; Thu, 17 Sep 2020 02:42:00 +0000
-Subject: Re: [PATCH] kexec-tools: Add some missing free() calls
-References: <1599874789-7042-1-git-send-email-tangyouling@loongson.cn>
- <CAFTCetQRyzv6qx2dSsR59qUoL7keiwawjxN_f_f1DrD75PGB7A@mail.gmail.com>
-From: Youling Tang <tangyouling@loongson.cn>
-Message-ID: <d79d173a-261a-ff5c-f9e9-26fb514d1a88@loongson.cn>
-Date: Thu, 17 Sep 2020 10:41:46 +0800
+Received: from mail-eopbgr1400044.outbound.protection.outlook.com
+ ([40.107.140.44] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kImZG-0007ur-Qf
+ for kexec@lists.infradead.org; Thu, 17 Sep 2020 05:34:52 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v2 1/1] Calculate offset to field 'init_uts_ns.name'
+Date: Thu, 17 Sep 2020 05:34:41 +0000
+Message-ID: <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20200916135147.1303016-1-egorenar@linux.ibm.com>
+In-Reply-To: <20200916135147.1303016-1-egorenar@linux.ibm.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <CAFTCetQRyzv6qx2dSsR59qUoL7keiwawjxN_f_f1DrD75PGB7A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,106 +21,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
+To: Alexander Egorenkov <egorenar@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
+Hi Alexander,
 
+-----Original Message-----
+> The offset has changed in linux-next (v5.9.0) from 4 to 0 because
+> there is no more 'kref' member variable at the beginning of 'init_uts_ns'.
+> The change was introduced with commit 9a56493f6942c0e2df1579986128721da96e00d8.
+> To handle both cases correctly, calculate the offset at run time instead.
 
-On 09/17/2020 04:20 AM, Bhupesh SHARMA wrote:
-> Hi Youling,
->
-> See some comments inline:
->
-> On Sat, Sep 12, 2020 at 7:11 AM Youling Tang <tangyouling@loongson.cn> wrote:
->> Add some missing free() calls.
->>
->> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
->> ---
->>   kexec/arch/i386/crashdump-x86.c    | 22 +++++++++++++++++-----
->>   kexec/arch/mips/crashdump-mips.c   |  5 ++++-
->>   kexec/arch/ppc64/crashdump-ppc64.c |  8 ++++++--
->>   3 files changed, 27 insertions(+), 8 deletions(-)
-> First, I think this is a step in the right direction, however, earlier
-> also while running 'valgrind' on an x86_64 kexec elf I saw the
-> following memory leaks reported:
->
-> ==596886== 15,604 bytes in 1 blocks are indirectly lost in loss record 4 of 12
-> ==596886==    at 0x483A809: malloc (vg_replace_malloc.c:307)
-> ==596886==    by 0x40396D: xmalloc (kexec.c:101)
-> ==596886==    by 0x410D35: do_bzImage64_load (kexec-bzImage64.c:182)
-> ==596886==    by 0x410D35: bzImage64_load (kexec-bzImage64.c:391)
-> ==596886==    by 0x404410: my_load (kexec.c:774)
-> ==596886==    by 0x402D2D: main (kexec.c:1605)
->
-> ==596886== 15,732 (128 direct, 15,604 indirect) bytes in 1 blocks are
-> definitely lost in loss record 5 of 12
-> ==596886==    at 0x483CCE8: realloc (vg_replace_malloc.c:834)
-> ==596886==    by 0x403FB9: xrealloc (kexec.c:112)
-> ==596886==    by 0x403FB9: add_segment_phys_virt (kexec.c:357)
-> ==596886==    by 0x40410F: add_buffer_phys_virt (kexec.c:392)
-> ==596886==    by 0x404153: add_buffer_virt (kexec.c:401)
-> ==596886==    by 0x40CD11: setup_linux_bootloader_parameters_high
-> (x86-linux-setup.c:80)
-> ==596886==    by 0x410E6A: do_bzImage64_load (kexec-bzImage64.c:214)
-> ==596886==    by 0x410E6A: bzImage64_load (kexec-bzImage64.c:391)
-> ==596886==    by 0x404410: my_load (kexec.c:774)
-> ==596886==    by 0x402D2D: main (kexec.c:1605)
->
-> ==596886== 28,896 bytes in 1 blocks are indirectly lost in loss record 7 of 12
-> ==596886==    at 0x483A809: malloc (vg_replace_malloc.c:307)
-> ==596886==    by 0x40396D: xmalloc (kexec.c:101)
-> ==596886==    by 0x406781: elf_rel_load (kexec-elf-rel.c:254)
-> ==596886==    by 0x406EEA: elf_rel_build_load (kexec-elf-rel.c:432)
-> ==596886==    by 0x410CFE: do_bzImage64_load (kexec-bzImage64.c:173)
-> ==596886==    by 0x410CFE: bzImage64_load (kexec-bzImage64.c:391)
-> ==596886==    by 0x404410: my_load (kexec.c:774)
-> ==596886==    by 0x402D2D: main (kexec.c:1605)
->
-> ==596886== 30,048 (1,152 direct, 28,896 indirect) bytes in 1 blocks
-> are definitely lost in loss record 8 of 12
-> ==596886==    at 0x483A809: malloc (vg_replace_malloc.c:307)
-> ==596886==    by 0x40396D: xmalloc (kexec.c:101)
-> ==596886==    by 0x405735: build_mem_shdrs (kexec-elf.c:618)
-> ==596886==    by 0x405735: build_elf_info (kexec-elf.c:774)
-> ==596886==    by 0x406EB9: build_elf_rel_info (kexec-elf-rel.c:142)
-> ==596886==    by 0x406EB9: elf_rel_build_load (kexec-elf-rel.c:427)
-> ==596886==    by 0x410CFE: do_bzImage64_load (kexec-bzImage64.c:173)
-> ==596886==    by 0x410CFE: bzImage64_load (kexec-bzImage64.c:391)
-> ==596886==    by 0x404410: my_load (kexec.c:774)
-> ==596886==    by 0x402D2D: main (kexec.c:1605)
-> ==596886==
->
-> Note that there were 12 issues highlighted via valgrind out of which I
-> have removed the zlib related issue reports.
->
-> You can run 'valgrind' on mips, i386 and ppc64 executables (as shown
-> below) to see if all such issues are fixed by your patch:
-> $ sudo valgrind --leak-check=full --show-leak-kinds=all
-> --track-origins=yes --verbose --log-file=valgrind-out.txt ./kexec -l
-> /boot/vmlinuz-`uname -r` --initrd=/boot/initramfs-`uname -r`.img
-> --reuse-cmdline -d
->
-Hi Bhupesh,
+Thank you for catching this and the patch.
 
-Thank you for your advice.
-But it fails when installing 'valgrind' tool (arch: mips64),
-the compilation error message is as follows:
-...
-/tmp/ccF1OhPy.s:6605: Error: unrecognized opcode `cfcmsa $4,$1'
-/tmp/ccF1OhPy.s:6606: Error: unrecognized opcode `ctcmsa $1,$t0'
-/tmp/ccF1OhPy.s:6656: Warning: tried to set unrecognized symbol: msa
-/tmp/ccF1OhPy.s:6658: Error: unrecognized opcode `cfcmsa $2,$0'
-Makefile:1625: recipe for target 'priv/libvex_mips64_linux_a-guest_mips_helpers.o' failed
-make[3]: *** [priv/libvex_mips64_linux_a-guest_mips_helpers.o] Error 1
-...
+but do you know the kernel patch corresponding to this patch, i.e. adds
+the OFFSET(init_uts_ns.name) (strictly, OFFSET(uts_namespace.name) probably)
+entry to vmcoreinfo?  The makedumpfile usually just read it from vmcore,
+so cannot calculate without debug info in vmlinux.
 
-Youling,
-Thanks.
+If it has not been posted yet, we need to do.  The best situation is
+that the patch is merged into linux-next first and then merged into
+mainline together with the commit 9a56493f6942.
 
+Is it possible for you?  otherwise, anyone or I might try.
+
+Thanks,
+Kazu
+
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  makedumpfile.c | 8 ++++++--
+>  makedumpfile.h | 4 ++++
+>  2 files changed, 10 insertions(+), 2 deletions(-)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 4c4251e..2d62db8 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1159,7 +1159,7 @@ check_release(void)
+>  	if (SYMBOL(system_utsname) != NOT_FOUND_SYMBOL) {
+>  		utsname = SYMBOL(system_utsname);
+>  	} else if (SYMBOL(init_uts_ns) != NOT_FOUND_SYMBOL) {
+> -		utsname = SYMBOL(init_uts_ns) + sizeof(int);
+> +		utsname = SYMBOL(init_uts_ns) + OFFSET(init_uts_ns.name);
+>  	} else {
+>  		ERRMSG("Can't get the symbol of system_utsname.\n");
+>  		return FALSE;
+> @@ -2077,7 +2077,7 @@ get_str_osrelease_from_vmlinux(void)
+>  	if (SYMBOL(system_utsname) != NOT_FOUND_SYMBOL) {
+>  		utsname = SYMBOL(system_utsname);
+>  	} else if (SYMBOL(init_uts_ns) != NOT_FOUND_SYMBOL) {
+> -		utsname = SYMBOL(init_uts_ns) + sizeof(int);
+> +		utsname = SYMBOL(init_uts_ns) + OFFSET(init_uts_ns.name);
+>  	} else {
+>  		ERRMSG("Can't get the symbol of system_utsname.\n");
+>  		return FALSE;
+> @@ -2285,6 +2285,8 @@ write_vmcoreinfo_data(void)
+>  	WRITE_MEMBER_OFFSET("mmu_psize_def.shift", mmu_psize_def.shift);
+>  	WRITE_MEMBER_OFFSET("cpu_spec.mmu_features", cpu_spec.mmu_features);
+> 
+> +	WRITE_MEMBER_OFFSET("init_uts_ns.name", init_uts_ns.name);
+> +
+>  	if (SYMBOL(node_data) != NOT_FOUND_SYMBOL)
+>  		WRITE_ARRAY_LENGTH("node_data", node_data);
+>  	if (SYMBOL(pgdat_list) != NOT_FOUND_SYMBOL)
+> @@ -2697,6 +2699,8 @@ read_vmcoreinfo(void)
+>  		READ_MEMBER_OFFSET("log.text_len", printk_log.text_len);
+>  	}
+> 
+> +	READ_MEMBER_OFFSET("init_uts_ns.name", init_uts_ns.name);
+> +
+>  	READ_ARRAY_LENGTH("node_data", node_data);
+>  	READ_ARRAY_LENGTH("pgdat_list", pgdat_list);
+>  	READ_ARRAY_LENGTH("mem_section", mem_section);
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 03fb4ce..7d8c54d 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1880,6 +1880,10 @@ struct offset_table {
+>  	struct cpu_spec_s {
+>  		long	mmu_features;
+>  	} cpu_spec;
+> +
+> +	struct init_uts_ns_s {
+> +		long	name;
+> +	} init_uts_ns;
+>  };
+> 
+>  /*
+> --
+> 2.26.2
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
