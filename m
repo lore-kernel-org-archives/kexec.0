@@ -1,26 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x141.google.com ([2a00:1450:4864:20::141])
+Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kIyBo-0002DP-Cl
- for kexec@lists.infradead.org; Thu, 17 Sep 2020 17:59:25 +0000
-Received: by mail-lf1-x141.google.com with SMTP id b12so3150399lfp.9
- for <kexec@lists.infradead.org>; Thu, 17 Sep 2020 10:59:23 -0700 (PDT)
-Received: from mail-lj1-f173.google.com (mail-lj1-f173.google.com.
- [209.85.208.173])
- by smtp.gmail.com with ESMTPSA id t19sm52279lfg.161.2020.09.17.10.59.16
- for <kexec@lists.infradead.org>
- (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
- Thu, 17 Sep 2020 10:59:17 -0700 (PDT)
-Received: by mail-lj1-f173.google.com with SMTP id a22so2775604ljp.13
- for <kexec@lists.infradead.org>; Thu, 17 Sep 2020 10:59:16 -0700 (PDT)
+ id 1kIzjv-0007LG-S6
+ for kexec@lists.infradead.org; Thu, 17 Sep 2020 19:38:44 +0000
+From: matthias.bgg@kernel.org
+Subject: [PATCH] arm64: Add purgatory printing
+Date: Thu, 17 Sep 2020 21:38:35 +0200
+Message-Id: <20200917193835.30910-1-matthias.bgg@kernel.org>
 MIME-Version: 1.0
-References: <20200917131644.25838-1-john.ogness@linutronix.de>
- <20200917131644.25838-4-john.ogness@linutronix.de>
-In-Reply-To: <20200917131644.25838-4-john.ogness@linutronix.de>
-From: Linus Torvalds <torvalds@linux-foundation.org>
-Date: Thu, 17 Sep 2020 10:59:00 -0700
-Message-ID: <CAHk-=wiUp2=szOdVP8A7+iG8iguNvHo4gnU6f9QBuj1hh3DBvA@mail.gmail.com>
-Subject: Re: [PATCH printk 3/3] printk: remove dict ring
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,19 +20,206 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>
+To: kexec@lists.infradead.org, horms@verge.net.au
+Cc: geoff@infradead.org, Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org
 
-On Thu, Sep 17, 2020 at 6:16 AM John Ogness <john.ogness@linutronix.de> wrote:
->
-> Since there is no code that will ever store anything into the dict
-> ring, remove it. If any future dictionary properties are to be
-> added, these should be added to the struct printk_info.
+From: Matthias Brugger <mbrugger@suse.com>
 
-Ack. I'm very happy to see the dictionary stuff go. It was one of
-those over-designed things in the printk rewrite years and years ago.
+Add option to allow purgatory printing on arm64 hardware
+by passing the console name which should be used.
+Based on a patch by Geoff Levand.
 
-              Linus
+Cc: Geoff Levand <geoff@infradead.org>
+Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+---
+ kexec/arch/arm64/include/arch/options.h |  6 ++-
+ kexec/arch/arm64/kexec-arm64.c          | 61 +++++++++++++++++++++++++
+ purgatory/arch/arm64/purgatory-arm64.c  | 17 ++++++-
+ 3 files changed, 82 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
+index a17d933..be7d169 100644
+--- a/kexec/arch/arm64/include/arch/options.h
++++ b/kexec/arch/arm64/include/arch/options.h
+@@ -5,7 +5,8 @@
+ #define OPT_DTB			((OPT_MAX)+1)
+ #define OPT_INITRD		((OPT_MAX)+2)
+ #define OPT_REUSE_CMDLINE	((OPT_MAX)+3)
+-#define OPT_ARCH_MAX		((OPT_MAX)+4)
++#define OPT_CONSOLE		((OPT_MAX)+4)
++#define OPT_ARCH_MAX		((OPT_MAX)+5)
+ 
+ #define KEXEC_ARCH_OPTIONS \
+ 	KEXEC_OPTIONS \
+@@ -13,6 +14,7 @@
+ 	{ "command-line",  1, NULL, OPT_APPEND }, \
+ 	{ "dtb",           1, NULL, OPT_DTB }, \
+ 	{ "initrd",        1, NULL, OPT_INITRD }, \
++	{ "console",       1, NULL, OPT_CONSOLE }, \
+ 	{ "ramdisk",       1, NULL, OPT_INITRD }, \
+ 	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
+ 
+@@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
+ "     --command-line=STRING Set the kernel command line to STRING.\n"
+ "     --dtb=FILE            Use FILE as the device tree blob.\n"
+ "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
++"     --console=STRING      Console used for purgatory printing.\n"
+ "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+ "     --reuse-cmdline       Use kernel command line from running system.\n";
+ 
+@@ -32,6 +35,7 @@ struct arm64_opts {
+ 	const char *command_line;
+ 	const char *dtb;
+ 	const char *initrd;
++	const char *console;
+ };
+ 
+ extern struct arm64_opts arm64_opts;
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 45ebc54..44c9e6e 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
+ 			break;
+ 		case OPT_KEXEC_FILE_SYSCALL:
+ 			do_kexec_file_syscall = 1;
++		case OPT_CONSOLE:
++			arm64_opts.console = optarg;
+ 			break;
+ 		default:
+ 			break; /* Ignore core and unknown options. */
+@@ -180,12 +182,62 @@ int arch_process_options(int argc, char **argv)
+ 	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
+ 		(do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
+ 							arm64_opts.dtb));
++	dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
++		arm64_opts.console);
++
+ 	if (do_kexec_file_syscall)
+ 		arm64_opts.dtb = NULL;
+ 
+ 	return 0;
+ }
+ 
++/**
++ * find_purgatory_sink - Find a sink for purgatory output.
++ */
++
++static uint64_t find_purgatory_sink(const char *console)
++{
++	int fd, ret;
++	char folder[255], device[255], mem[255];
++	struct stat sb;
++	char buffer[18];
++	uint64_t iomem = 0x0;
++
++	if (!console)
++		return 0;
++
++	sprintf(device, "/sys/class/tty/%s", console);
++	if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
++		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
++			__func__, device);
++		return 0;
++	}
++
++	sprintf(mem, "%s%s", device, "/iomem_base");
++	printf("console memory read from %s\n", mem);
++
++	fd = open(mem, O_RDONLY);
++	if (fd < 0) {
++		fprintf(stderr, "kexec: %s: No able to open %s\n",
++			__func__, mem);
++		return 0;
++	}
++
++	memset(buffer, '\0', sizeof(char) * 18);
++	ret = read(fd, buffer, 18);
++	if (ret < 0) {
++		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
++		close(fd);
++		return 0;
++	}
++
++	sscanf(buffer, "%lx", &iomem);
++	printf("console memory is at %#lx\n", iomem);
++
++	close(fd);
++	return iomem;
++}
++
+ /**
+  * struct dtb - Info about a binary device tree.
+  *
+@@ -637,6 +689,7 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 	unsigned long hole_min;
+ 	unsigned long hole_max;
+ 	unsigned long initrd_end;
++	uint64_t purgatory_sink;
+ 	char *initrd_buf = NULL;
+ 	struct dtb dtb;
+ 	char command_line[COMMAND_LINE_SIZE] = "";
+@@ -654,6 +707,11 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 		command_line[sizeof(command_line) - 1] = 0;
+ 	}
+ 
++	purgatory_sink = find_purgatory_sink(arm64_opts.console);
++
++	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
++		purgatory_sink);
++
+ 	if (arm64_opts.dtb) {
+ 		dtb.name = "dtb_user";
+ 		dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
+@@ -742,6 +800,9 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 
+ 	info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
+ 
++	elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
++		sizeof(purgatory_sink));
++
+ 	elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &image_base,
+ 		sizeof(image_base));
+ 
+diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
+index fe50fcf..b4d8578 100644
+--- a/purgatory/arch/arm64/purgatory-arm64.c
++++ b/purgatory/arch/arm64/purgatory-arm64.c
+@@ -5,15 +5,30 @@
+ #include <stdint.h>
+ #include <purgatory.h>
+ 
++/* Symbols set by kexec. */
++
++uint8_t *arm64_sink __attribute__ ((section ("data")));
++extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
++extern uint64_t arm64_dtb_addr;
++
+ void putchar(int ch)
+ {
+-	/* Nothing for now */
++	if (!arm64_sink)
++		return;
++
++	*arm64_sink = ch;
++
++	if (ch == '\n')
++		*arm64_sink = '\r';
+ }
+ 
+ void post_verification_setup_arch(void)
+ {
++	printf("purgatory: booting kernel now\n");
+ }
+ 
+ void setup_arch(void)
+ {
++	printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
++	printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
+ }
+-- 
+2.28.0
+
 
 _______________________________________________
 kexec mailing list
