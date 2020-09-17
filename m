@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from out28-122.mail.aliyun.com ([115.124.28.122])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kItmL-0001Ry-2w
- for kexec@lists.infradead.org; Thu, 17 Sep 2020 13:16:52 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH printk 3/3] printk: remove dict ring
-Date: Thu, 17 Sep 2020 15:22:44 +0206
-Message-Id: <20200917131644.25838-4-john.ogness@linutronix.de>
-In-Reply-To: <20200917131644.25838-1-john.ogness@linutronix.de>
-References: <20200917131644.25838-1-john.ogness@linutronix.de>
+ id 1kIuLH-0006Eh-ST
+ for kexec@lists.infradead.org; Thu, 17 Sep 2020 13:52:58 +0000
+Subject: Re: [PATCH] MIPS: Loongson64: Add kexec/kdump support
+References: <1600175263-7872-1-git-send-email-hejinyang@loongson.cn>
+ <376B4B91-0736-43FA-87EA-43E12FF24EF1@flygoat.com>
+ <7b78c4d4-7ee3-cf57-71d1-95611713de2b@loongson.cn>
+ <CAAhV-H5t3KWL1O+JKVp+T2qqGXuW7OiasjnnCLmV0+GE0Ns9xQ@mail.gmail.com>
+ <647822a9-bc3b-5da1-95e7-c048a5a3b8fa@loongson.cn>
+From: Zhou Yanjie <zhouyu@wanyeetech.com>
+Message-ID: <bd73b4da-94e2-c809-2422-4071792cd9d1@wanyeetech.com>
+Date: Thu, 17 Sep 2020 21:52:31 +0800
 MIME-Version: 1.0
+In-Reply-To: <647822a9-bc3b-5da1-95e7-c048a5a3b8fa@loongson.cn>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,798 +23,222 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhc@lemote.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Xuefeng Li <lixuefeng@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
 
-Since there is no code that will ever store anything into the dict
-ring, remove it. If any future dictionary properties are to be
-added, these should be added to the struct printk_info.
-
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- kernel/printk/printk.c            |  45 +++------
- kernel/printk/printk_ringbuffer.c | 155 +++++++-----------------------
- kernel/printk/printk_ringbuffer.h |  63 +++---------
- 3 files changed, 63 insertions(+), 200 deletions(-)
-
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index b2e2bdd37028..107c09744026 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -427,7 +427,6 @@ static u32 log_buf_len = __LOG_BUF_LEN;
-  * Define the average message size. This only affects the number of
-  * descriptors that will be available. Underestimating is better than
-  * overestimating (too many available descriptors is better than not enough).
-- * The dictionary buffer will be the same size as the text buffer.
-  */
- #define PRB_AVGBITS 5	/* 32 character average length */
- 
-@@ -435,7 +434,7 @@ static u32 log_buf_len = __LOG_BUF_LEN;
- #error CONFIG_LOG_BUF_SHIFT value too small.
- #endif
- _DEFINE_PRINTKRB(printk_rb_static, CONFIG_LOG_BUF_SHIFT - PRB_AVGBITS,
--		 PRB_AVGBITS, PRB_AVGBITS, &__log_buf[0]);
-+		 PRB_AVGBITS, &__log_buf[0]);
- 
- static struct printk_ringbuffer printk_rb_dynamic;
- 
-@@ -502,12 +501,12 @@ static int log_store(u32 caller_id, int facility, int level,
- 	struct printk_record r;
- 	u16 trunc_msg_len = 0;
- 
--	prb_rec_init_wr(&r, text_len, 0);
-+	prb_rec_init_wr(&r, text_len);
- 
- 	if (!prb_reserve(&e, prb, &r)) {
- 		/* truncate the message if it is too long for empty buffer */
- 		truncate_msg(&text_len, &trunc_msg_len);
--		prb_rec_init_wr(&r, text_len + trunc_msg_len, 0);
-+		prb_rec_init_wr(&r, text_len + trunc_msg_len);
- 		/* survive when the log buffer is too small for trunc_msg */
- 		if (!prb_reserve(&e, prb, &r))
- 			return 0;
-@@ -897,8 +896,7 @@ static int devkmsg_open(struct inode *inode, struct file *file)
- 	mutex_init(&user->lock);
- 
- 	prb_rec_init_rd(&user->record, &user->info,
--			&user->text_buf[0], sizeof(user->text_buf),
--			NULL, 0);
-+			&user->text_buf[0], sizeof(user->text_buf));
- 
- 	logbuf_lock_irq();
- 	user->seq = prb_first_valid_seq(prb);
-@@ -954,7 +952,6 @@ void log_buf_vmcoreinfo_setup(void)
- 	VMCOREINFO_STRUCT_SIZE(printk_ringbuffer);
- 	VMCOREINFO_OFFSET(printk_ringbuffer, desc_ring);
- 	VMCOREINFO_OFFSET(printk_ringbuffer, text_data_ring);
--	VMCOREINFO_OFFSET(printk_ringbuffer, dict_data_ring);
- 	VMCOREINFO_OFFSET(printk_ringbuffer, fail);
- 
- 	VMCOREINFO_STRUCT_SIZE(prb_desc_ring);
-@@ -967,7 +964,6 @@ void log_buf_vmcoreinfo_setup(void)
- 	VMCOREINFO_STRUCT_SIZE(prb_desc);
- 	VMCOREINFO_OFFSET(prb_desc, state_var);
- 	VMCOREINFO_OFFSET(prb_desc, text_blk_lpos);
--	VMCOREINFO_OFFSET(prb_desc, dict_blk_lpos);
- 
- 	VMCOREINFO_STRUCT_SIZE(prb_data_blk_lpos);
- 	VMCOREINFO_OFFSET(prb_data_blk_lpos, begin);
-@@ -977,7 +973,6 @@ void log_buf_vmcoreinfo_setup(void)
- 	VMCOREINFO_OFFSET(printk_info, seq);
- 	VMCOREINFO_OFFSET(printk_info, ts_nsec);
- 	VMCOREINFO_OFFSET(printk_info, text_len);
--	VMCOREINFO_OFFSET(printk_info, dict_len);
- 	VMCOREINFO_OFFSET(printk_info, caller_id);
- 	VMCOREINFO_OFFSET(printk_info, dev_info);
- 
-@@ -1076,7 +1071,7 @@ static unsigned int __init add_to_rb(struct printk_ringbuffer *rb,
- 	struct prb_reserved_entry e;
- 	struct printk_record dest_r;
- 
--	prb_rec_init_wr(&dest_r, r->info->text_len, 0);
-+	prb_rec_init_wr(&dest_r, r->info->text_len);
- 
- 	if (!prb_reserve(&e, rb, &dest_r))
- 		return 0;
-@@ -1106,7 +1101,6 @@ void __init setup_log_buf(int early)
- 	struct printk_record r;
- 	size_t new_descs_size;
- 	unsigned long flags;
--	char *new_dict_buf;
- 	char *new_log_buf;
- 	unsigned int free;
- 	u64 seq;
-@@ -1141,20 +1135,11 @@ void __init setup_log_buf(int early)
- 		return;
- 	}
- 
--	new_dict_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
--	if (unlikely(!new_dict_buf)) {
--		pr_err("log_buf_len: %lu dict bytes not available\n",
--		       new_log_buf_len);
--		memblock_free(__pa(new_log_buf), new_log_buf_len);
--		return;
--	}
--
- 	new_descs_size = new_descs_count * sizeof(struct prb_desc);
- 	new_descs = memblock_alloc(new_descs_size, LOG_ALIGN);
- 	if (unlikely(!new_descs)) {
- 		pr_err("log_buf_len: %zu desc bytes not available\n",
- 		       new_descs_size);
--		memblock_free(__pa(new_dict_buf), new_log_buf_len);
- 		memblock_free(__pa(new_log_buf), new_log_buf_len);
- 		return;
- 	}
-@@ -1165,18 +1150,14 @@ void __init setup_log_buf(int early)
- 		pr_err("log_buf_len: %zu info bytes not available\n",
- 		       new_descs_size);
- 		memblock_free(__pa(new_descs), new_log_buf_len);
--		memblock_free(__pa(new_dict_buf), new_log_buf_len);
- 		memblock_free(__pa(new_log_buf), new_log_buf_len);
- 		return;
- 	}
- 
--	prb_rec_init_rd(&r, &info,
--			&setup_text_buf[0], sizeof(setup_text_buf),
--			NULL, 0);
-+	prb_rec_init_rd(&r, &info, &setup_text_buf[0], sizeof(setup_text_buf));
- 
- 	prb_init(&printk_rb_dynamic,
- 		 new_log_buf, ilog2(new_log_buf_len),
--		 new_dict_buf, ilog2(new_log_buf_len),
- 		 new_descs, ilog2(new_descs_count),
- 		 new_infos);
- 
-@@ -1455,7 +1436,7 @@ static int syslog_print(char __user *buf, int size)
- 	if (!text)
- 		return -ENOMEM;
- 
--	prb_rec_init_rd(&r, &info, text, LOG_LINE_MAX + PREFIX_MAX, NULL, 0);
-+	prb_rec_init_rd(&r, &info, text, LOG_LINE_MAX + PREFIX_MAX);
- 
- 	while (size > 0) {
- 		size_t n;
-@@ -1542,7 +1523,7 @@ static int syslog_print_all(char __user *buf, int size, bool clear)
- 		len -= get_record_print_text_size(&info, line_count, true, time);
- 	}
- 
--	prb_rec_init_rd(&r, &info, text, LOG_LINE_MAX + PREFIX_MAX, NULL, 0);
-+	prb_rec_init_rd(&r, &info, text, LOG_LINE_MAX + PREFIX_MAX);
- 
- 	len = 0;
- 	prb_for_each_record(seq, prb, seq, &r) {
-@@ -1912,7 +1893,7 @@ static size_t log_output(int facility, int level, enum log_flags lflags,
- 		struct prb_reserved_entry e;
- 		struct printk_record r;
- 
--		prb_rec_init_wr(&r, text_len, 0);
-+		prb_rec_init_wr(&r, text_len);
- 		if (prb_reserve_in_last(&e, prb, &r, caller_id)) {
- 			memcpy(&r.text_buf[r.info->text_len], text, text_len);
- 			r.info->text_len += text_len;
-@@ -2400,7 +2381,7 @@ void console_unlock(void)
- 		return;
- 	}
- 
--	prb_rec_init_rd(&r, &info, text, sizeof(text), NULL, 0);
-+	prb_rec_init_rd(&r, &info, text, sizeof(text));
- 
- 	/*
- 	 * Console drivers are called with interrupts disabled, so
-@@ -3258,7 +3239,7 @@ bool kmsg_dump_get_line_nolock(struct kmsg_dumper *dumper, bool syslog,
- 	size_t l = 0;
- 	bool ret = false;
- 
--	prb_rec_init_rd(&r, &info, line, size, NULL, 0);
-+	prb_rec_init_rd(&r, &info, line, size);
- 
- 	if (!dumper->active)
- 		goto out;
-@@ -3349,7 +3330,7 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
- 	bool ret = false;
- 	bool time = printk_time;
- 
--	prb_rec_init_rd(&r, &info, buf, size, NULL, 0);
-+	prb_rec_init_rd(&r, &info, buf, size);
- 
- 	if (!dumper->active || !buf || !size)
- 		goto out;
-@@ -3397,7 +3378,7 @@ bool kmsg_dump_get_buffer(struct kmsg_dumper *dumper, bool syslog,
- 		l += record_print_text(&r, syslog, time);
- 
- 		/* adjust record to store to remaining buffer space */
--		prb_rec_init_rd(&r, &info, buf + l, size - l, NULL, 0);
-+		prb_rec_init_rd(&r, &info, buf + l, size - l);
- 
- 		seq = r.info->seq + 1;
- 	}
-diff --git a/kernel/printk/printk_ringbuffer.c b/kernel/printk/printk_ringbuffer.c
-index de4b10a98623..13b94b92342e 100644
---- a/kernel/printk/printk_ringbuffer.c
-+++ b/kernel/printk/printk_ringbuffer.c
-@@ -18,18 +18,13 @@
-  *     A ring of descriptors and their meta data (such as sequence number,
-  *     timestamp, loglevel, etc.) as well as internal state information about
-  *     the record and logical positions specifying where in the other
-- *     ringbuffers the text and dictionary strings are located.
-+ *     ringbuffer the text strings are located.
-  *
-  *   text_data_ring
-  *     A ring of data blocks. A data block consists of an unsigned long
-  *     integer (ID) that maps to a desc_ring index followed by the text
-  *     string of the record.
-  *
-- *   dict_data_ring
-- *     A ring of data blocks. A data block consists of an unsigned long
-- *     integer (ID) that maps to a desc_ring index followed by the dictionary
-- *     string of the record.
-- *
-  * The internal state information of a descriptor is the key element to allow
-  * readers and writers to locklessly synchronize access to the data.
-  *
-@@ -40,8 +35,8 @@
-  * ~~~~~~~~~~~~~~~
-  * The descriptor ring is an array of descriptors. A descriptor contains
-  * essential meta data to track the data of a printk record using
-- * blk_lpos structs pointing to associated text and dictionary data blocks
-- * (see "Data Rings" below). Each descriptor is assigned an ID that maps
-+ * blk_lpos structs pointing to associated text data blocks (see
-+ * "Data Rings" below). Each descriptor is assigned an ID that maps
-  * directly to index values of the descriptor array and has a state. The ID
-  * and the state are bitwise combined into a single descriptor field named
-  * @state_var, allowing ID and state to be synchronously and atomically
-@@ -62,8 +57,8 @@
-  *     writer cannot reopen the descriptor.
-  *
-  *   reusable
-- *     The record exists, but its text and/or dictionary data may no longer
-- *     be available.
-+ *     The record exists, but its text and/or meta data may no longer be
-+ *     available.
-  *
-  * Querying the @state_var of a record requires providing the ID of the
-  * descriptor to query. This can yield a possible fifth (pseudo) state:
-@@ -77,7 +72,7 @@
-  * When a new descriptor should be created (and the ring is full), the tail
-  * descriptor is invalidated by first transitioning to the reusable state and
-  * then invalidating all tail data blocks up to and including the data blocks
-- * associated with the tail descriptor (for text and dictionary rings). Then
-+ * associated with the tail descriptor (for the text ring). Then
-  * @tail_id is advanced, followed by advancing @head_id. And finally the
-  * @state_var of the new descriptor is initialized to the new ID and reserved
-  * state.
-@@ -108,13 +103,9 @@
-  *   3) When a record is committed via prb_commit() and a newer record
-  *      already exists, the record being committed is automatically finalized.
-  *
-- * Data Rings
-- * ~~~~~~~~~~
-- * The two data rings (text and dictionary) function identically. They exist
-- * separately so that their buffer sizes can be individually set and they do
-- * not affect one another.
-- *
-- * Data rings are byte arrays composed of data blocks. Data blocks are
-+ * Data Ring
-+ * ~~~~~~~~~
-+ * The text data ring is a byte array composed of data blocks. Data blocks are
-  * referenced by blk_lpos structs that point to the logical position of the
-  * beginning of a data block and the beginning of the next adjacent data
-  * block. Logical positions are mapped directly to index values of the byte
-@@ -165,34 +156,28 @@
-  * examples a global ringbuffer (test_rb) is available (which is not the
-  * actual ringbuffer used by printk)::
-  *
-- *	DEFINE_PRINTKRB(test_rb, 15, 5, 3);
-+ *	DEFINE_PRINTKRB(test_rb, 15, 5);
-  *
-  * This ringbuffer allows up to 32768 records (2 ^ 15) and has a size of
-- * 1 MiB (2 ^ (15 + 5)) for text data and 256 KiB (2 ^ (15 + 3)) for
-- * dictionary data.
-+ * 1 MiB (2 ^ (15 + 5)) for text data.
-  *
-  * Sample writer code::
-  *
-- *	const char *dictstr = "dictionary text";
-  *	const char *textstr = "message text";
-  *	struct prb_reserved_entry e;
-  *	struct printk_record r;
-  *
-  *	// specify how much to allocate
-- *	prb_rec_init_wr(&r, strlen(textstr) + 1, strlen(dictstr) + 1);
-+ *	prb_rec_init_wr(&r, strlen(textstr) + 1);
-  *
-  *	if (prb_reserve(&e, &test_rb, &r)) {
-  *		snprintf(r.text_buf, r.text_buf_size, "%s", textstr);
-- *		r.info->text_len = strlen(textstr);
-- *
-- *		// dictionary allocation may have failed
-- *		if (r.dict_buf) {
-- *			snprintf(r.dict_buf, r.dict_buf_size, "%s", dictstr);
-- *			r.info->dict_len = strlen(dictstr);
-- *		}
-  *
-+ *		r.info->text_len = strlen(textstr);
-  *		r.info->ts_nsec = local_clock();
-+ *		r.info->caller_id = printk_caller_id();
-  *
-+ *		// commit and finalize the record
-  *		prb_final_commit(&e);
-  *	}
-  *
-@@ -203,8 +188,9 @@
-  * Sample writer code (record extending)::
-  *
-  *		// alternate rest of previous example
-- *		r.info->ts_nsec = local_clock();
-+ *
-  *		r.info->text_len = strlen(textstr);
-+ *		r.info->ts_nsec = local_clock();
-  *		r.info->caller_id = printk_caller_id();
-  *
-  *		// commit the record (but do not finalize yet)
-@@ -214,7 +200,7 @@
-  *	...
-  *
-  *	// specify additional 5 bytes text space to extend
-- *	prb_rec_init_wr(&r, 5, 0);
-+ *	prb_rec_init_wr(&r, 5);
-  *
-  *	if (prb_reserve_in_last(&e, &test_rb, &r, printk_caller_id())) {
-  *		snprintf(&r.text_buf[r.info->text_len],
-@@ -222,6 +208,7 @@
-  *
-  *		r.info->text_len += 5;
-  *
-+ *		// commit and finalize the record
-  *		prb_final_commit(&e);
-  *	}
-  *
-@@ -230,11 +217,9 @@
-  *	struct printk_info info;
-  *	struct printk_record r;
-  *	char text_buf[32];
-- *	char dict_buf[32];
-  *	u64 seq;
-  *
-- *	prb_rec_init_rd(&r, &info, &text_buf[0], sizeof(text_buf),
-- *			&dict_buf[0], sizeof(dict_buf));
-+ *	prb_rec_init_rd(&r, &info, &text_buf[0], sizeof(text_buf));
-  *
-  *	prb_for_each_record(0, &test_rb, &seq, &r) {
-  *		if (info.seq != seq)
-@@ -245,13 +230,8 @@
-  *			text_buf[r.text_buf_size - 1] = 0;
-  *		}
-  *
-- *		if (info.dict_len > r.dict_buf_size) {
-- *			pr_warn("record %llu dict truncated\n", info.seq);
-- *			dict_buf[r.dict_buf_size - 1] = 0;
-- *		}
-- *
-- *		pr_info("%llu: %llu: %s;%s\n", info.seq, info.ts_nsec,
-- *			&text_buf[0], info.dict_len ? &dict_buf[0] : "");
-+ *		pr_info("%llu: %llu: %s\n", info.seq, info.ts_nsec,
-+ *			&text_buf[0]);
-  *	}
-  *
-  * Note that additional less convenient reader functions are available to
-@@ -495,8 +475,6 @@ static enum desc_state desc_read(struct prb_desc_ring *desc_ring,
- 	 */
- 	memcpy(&desc_out->text_blk_lpos, &desc->text_blk_lpos,
- 	       sizeof(desc_out->text_blk_lpos)); /* LMM(desc_read:C) */
--	memcpy(&desc_out->dict_blk_lpos, &desc->dict_blk_lpos,
--	       sizeof(desc_out->dict_blk_lpos)); /* also part of desc_read:C */
- 	if (seq_out)
- 		*seq_out = info->seq; /* also part of desc_read:C */
- 	if (caller_id_out)
-@@ -571,7 +549,7 @@ static void desc_make_reusable(struct prb_desc_ring *desc_ring,
- }
- 
- /*
-- * Given a data ring (text or dict), put the associated descriptor of each
-+ * Given the text data ring, put the associated descriptor of each
-  * data block from @lpos_begin until @lpos_end into the reusable state.
-  *
-  * If there is any problem making the associated descriptor reusable, either
-@@ -586,21 +564,12 @@ static bool data_make_reusable(struct printk_ringbuffer *rb,
- 			       unsigned long *lpos_out)
- {
- 	struct prb_desc_ring *desc_ring = &rb->desc_ring;
--	struct prb_data_blk_lpos *blk_lpos;
- 	struct prb_data_block *blk;
- 	enum desc_state d_state;
- 	struct prb_desc desc;
-+	struct prb_data_blk_lpos *blk_lpos = &desc.text_blk_lpos;
- 	unsigned long id;
- 
--	/*
--	 * Using the provided @data_ring, point @blk_lpos to the correct
--	 * blk_lpos within the local copy of the descriptor.
--	 */
--	if (data_ring == &rb->text_data_ring)
--		blk_lpos = &desc.text_blk_lpos;
--	else
--		blk_lpos = &desc.dict_blk_lpos;
--
- 	/* Loop until @lpos_begin has advanced to or beyond @lpos_end. */
- 	while ((lpos_end - lpos_begin) - 1 < DATA_SIZE(data_ring)) {
- 		blk = to_block(data_ring, lpos_begin);
-@@ -839,8 +808,6 @@ static bool desc_push_tail(struct printk_ringbuffer *rb,
- 
- 	if (!data_push_tail(rb, &rb->text_data_ring, desc.text_blk_lpos.next))
- 		return false;
--	if (!data_push_tail(rb, &rb->dict_data_ring, desc.dict_blk_lpos.next))
--		return false;
- 
- 	/*
- 	 * Check the next descriptor after @tail_id before pushing the tail
-@@ -1347,9 +1314,8 @@ static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
-  * data.
-  *
-  * The writer specifies the text size to extend (not the new total size) by
-- * setting the @text_buf_size field of @r. Extending dictionaries is not
-- * supported, so @dict_buf_size of @r should be set to 0. To ensure proper
-- * initialization of @r, prb_rec_init_wr() should be used.
-+ * setting the @text_buf_size field of @r. To ensure proper initialization
-+ * of @r, prb_rec_init_wr() should be used.
-  *
-  * This function will fail if @caller_id does not match the caller ID of the
-  * newest record. In that case the caller must reserve new data using
-@@ -1364,9 +1330,6 @@ static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
-  *
-  *   - @r->text_buf_size is set to the new total size of the buffer.
-  *
-- *   - @r->dict_buf and @r->dict_buf_size are cleared because extending
-- *     the dict buffer is not supported.
-- *
-  *   - @r->info is not touched so that @r->info->text_len could be used
-  *     to append the text.
-  *
-@@ -1375,8 +1338,7 @@ static struct prb_desc *desc_reopen_last(struct prb_desc_ring *desc_ring,
-  *
-  * Important: All @r->info fields will already be set with the current values
-  *            for the record. I.e. @r->info->text_len will be less than
-- *            @text_buf_size and @r->info->dict_len may be set, even though
-- *            @dict_buf_size is 0. Writers can use @r->info->text_len to know
-+ *            @text_buf_size. Writers can use @r->info->text_len to know
-  *            where concatenation begins and writers should update
-  *            @r->info->text_len after concatenating.
-  */
-@@ -1454,10 +1416,6 @@ bool prb_reserve_in_last(struct prb_reserved_entry *e, struct printk_ringbuffer
- 	if (r->text_buf_size && !r->text_buf)
- 		goto fail;
- 
--	/* Although dictionary data may be in use, it cannot be extended. */
--	r->dict_buf = NULL;
--	r->dict_buf_size = 0;
--
- 	r->info = info;
- 
- 	e->text_space = space_used(&rb->text_data_ring, &d->text_blk_lpos);
-@@ -1494,27 +1452,21 @@ static void desc_make_final(struct prb_desc_ring *desc_ring, unsigned long id)
-  *
-  * This is the public function available to writers to reserve data.
-  *
-- * The writer specifies the text and dict sizes to reserve by setting the
-- * @text_buf_size and @dict_buf_size fields of @r, respectively. Dictionaries
-- * are optional, so @dict_buf_size is allowed to be 0. To ensure proper
-- * initialization of @r, prb_rec_init_wr() should be used.
-+ * The writer specifies the text size to reserve by setting the
-+ * @text_buf_size field of @r. To ensure proper initialization of @r,
-+ * prb_rec_init_wr() should be used.
-  *
-  * Context: Any context. Disables local interrupts on success.
-  * Return: true if at least text data could be allocated, otherwise false.
-  *
-- * On success, the fields @info, @text_buf, @dict_buf of @r will be set by
-- * this function and should be filled in by the writer before committing. Also
-+ * On success, the fields @info and @text_buf of @r will be set by this
-+ * function and should be filled in by the writer before committing. Also
-  * on success, prb_record_text_space() can be used on @e to query the actual
-  * space used for the text data block.
-  *
-- * If the function fails to reserve dictionary space (but all else succeeded),
-- * it will still report success. In that case @dict_buf is set to NULL and
-- * @dict_buf_size is set to 0. Writers must check this before writing to
-- * dictionary space.
-- *
-- * Important: @info->text_len and @info->dict_len need to be set correctly by
-- *            the writer in order for data to be readable and/or extended.
-- *            Their values are initialized to 0.
-+ * Important: @info->text_len needs to be set correctly by the writer in
-+ *            order for data to be readable and/or extended. Its value
-+ *            is initialized to 0.
-  */
- bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 		 struct printk_record *r)
-@@ -1528,9 +1480,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 	if (!data_check_size(&rb->text_data_ring, r->text_buf_size))
- 		goto fail;
- 
--	if (!data_check_size(&rb->dict_data_ring, r->dict_buf_size))
--		goto fail;
--
- 	/*
- 	 * Descriptors in the reserved state act as blockers to all further
- 	 * reservations once the desc_ring has fully wrapped. Disable
-@@ -1598,15 +1547,6 @@ bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
- 		goto fail;
- 	}
- 
--	r->dict_buf = data_alloc(rb, &rb->dict_data_ring, r->dict_buf_size,
--				 &d->dict_blk_lpos, id);
--	/*
--	 * If dict data allocation fails, the caller can still commit
--	 * text. But dictionary information will not be available.
--	 */
--	if (r->dict_buf_size && !r->dict_buf)
--		r->dict_buf_size = 0;
--
- 	r->info = info;
- 
- 	/* Record full text space used by record. */
-@@ -1869,17 +1809,6 @@ static int prb_read(struct printk_ringbuffer *rb, u64 seq,
- 		return -ENOENT;
- 	}
- 
--	/*
--	 * Copy dict data. Although this should not fail, dict data is not
--	 * important. So if it fails, modify the copied meta data to report
--	 * that there is no dict data, thus silently dropping the dict data.
--	 */
--	if (!copy_data(&rb->dict_data_ring, &desc.dict_blk_lpos, info->dict_len,
--		       r->dict_buf, r->dict_buf_size, NULL)) {
--		if (r->info)
--			r->info->dict_len = 0;
--	}
--
- 	/* Ensure the record is still finalized and has the same @seq. */
- 	return desc_read_finalized_seq(desc_ring, id, seq, &desc);
- }
-@@ -1974,7 +1903,7 @@ static bool _prb_read_valid(struct printk_ringbuffer *rb, u64 *seq,
-  *
-  * This is the public function available to readers to read a record.
-  *
-- * The reader provides the @info, @text_buf, @dict_buf buffers of @r to be
-+ * The reader provides the @info and @text_buf buffers of @r to be
-  * filled in. Any of the buffer pointers can be set to NULL if the reader
-  * is not interested in that data. To ensure proper initialization of @r,
-  * prb_rec_init_rd() should be used.
-@@ -2022,7 +1951,7 @@ bool prb_read_valid_info(struct printk_ringbuffer *rb, u64 seq,
- {
- 	struct printk_record r;
- 
--	prb_rec_init_rd(&r, info, NULL, 0, NULL, 0);
-+	prb_rec_init_rd(&r, info, NULL, 0);
- 
- 	return _prb_read_valid(rb, &seq, &r, line_count);
- }
-@@ -2084,8 +2013,6 @@ u64 prb_next_seq(struct printk_ringbuffer *rb)
-  * @rb:       The ringbuffer to initialize.
-  * @text_buf: The data buffer for text data.
-  * @textbits: The size of @text_buf as a power-of-2 value.
-- * @dict_buf: The data buffer for dictionary data.
-- * @dictbits: The size of @dict_buf as a power-of-2 value.
-  * @descs:    The descriptor buffer for ringbuffer records.
-  * @descbits: The count of @descs items as a power-of-2 value.
-  * @infos:    The printk_info buffer for ringbuffer records.
-@@ -2099,7 +2026,6 @@ u64 prb_next_seq(struct printk_ringbuffer *rb)
-  */
- void prb_init(struct printk_ringbuffer *rb,
- 	      char *text_buf, unsigned int textbits,
--	      char *dict_buf, unsigned int dictbits,
- 	      struct prb_desc *descs, unsigned int descbits,
- 	      struct printk_info *infos)
- {
-@@ -2117,18 +2043,11 @@ void prb_init(struct printk_ringbuffer *rb,
- 	atomic_long_set(&rb->text_data_ring.head_lpos, BLK0_LPOS(textbits));
- 	atomic_long_set(&rb->text_data_ring.tail_lpos, BLK0_LPOS(textbits));
- 
--	rb->dict_data_ring.size_bits = dictbits;
--	rb->dict_data_ring.data = dict_buf;
--	atomic_long_set(&rb->dict_data_ring.head_lpos, BLK0_LPOS(dictbits));
--	atomic_long_set(&rb->dict_data_ring.tail_lpos, BLK0_LPOS(dictbits));
--
- 	atomic_long_set(&rb->fail, 0);
- 
- 	atomic_long_set(&(descs[_DESCS_COUNT(descbits) - 1].state_var), DESC0_SV(descbits));
- 	descs[_DESCS_COUNT(descbits) - 1].text_blk_lpos.begin = FAILED_LPOS;
- 	descs[_DESCS_COUNT(descbits) - 1].text_blk_lpos.next = FAILED_LPOS;
--	descs[_DESCS_COUNT(descbits) - 1].dict_blk_lpos.begin = FAILED_LPOS;
--	descs[_DESCS_COUNT(descbits) - 1].dict_blk_lpos.next = FAILED_LPOS;
- 
- 	infos[0].seq = -(u64)_DESCS_COUNT(descbits);
- 	infos[_DESCS_COUNT(descbits) - 1].seq = 0;
-diff --git a/kernel/printk/printk_ringbuffer.h b/kernel/printk/printk_ringbuffer.h
-index 480499ce3c6b..0adaa685d1ca 100644
---- a/kernel/printk/printk_ringbuffer.h
-+++ b/kernel/printk/printk_ringbuffer.h
-@@ -9,15 +9,13 @@
- /*
-  * Meta information about each stored message.
-  *
-- * All fields are set and used by the printk code except for
-- * @seq, @text_len, @dict_len, which are set and/or modified
-- * by the ringbuffer code.
-+ * All fields are set by the printk code except for @seq, which is
-+ * set by the ringbuffer code.
-  */
- struct printk_info {
- 	u64	seq;		/* sequence number */
- 	u64	ts_nsec;	/* timestamp in nanoseconds */
- 	u16	text_len;	/* length of text message */
--	u16	dict_len;	/* length of dictionary message */
- 	u8	facility;	/* syslog facility */
- 	u8	flags:5;	/* internal record flags */
- 	u8	level:3;	/* syslog level */
-@@ -30,23 +28,20 @@ struct printk_info {
-  * A structure providing the buffers, used by writers and readers.
-  *
-  * Writers:
-- * Using prb_rec_init_wr(), a writer sets @text_buf_size and @dict_buf_size
-- * before calling prb_reserve(). On success, prb_reserve() sets @info,
-- * @text_buf, @dict_buf to buffers reserved for that writer.
-+ * Using prb_rec_init_wr(), a writer sets @text_buf_size before calling
-+ * prb_reserve(). On success, prb_reserve() sets @info and @text_buf to
-+ * buffers reserved for that writer.
-  *
-  * Readers:
-  * Using prb_rec_init_rd(), a reader sets all fields before calling
-- * prb_read_valid(). Note that the reader provides the @info, @text_buf,
-- * @dict_buf buffers. On success, the struct pointed to by @info will be
-- * filled and the char arrays pointed to by @text_buf and @dict_buf will
-- * be filled with text and dict data.
-+ * prb_read_valid(). Note that the reader provides the @info and @text_buf,
-+ * buffers. On success, the struct pointed to by @info will be filled and
-+ * the char array pointed to by @text_buf will be filled with text data.
-  */
- struct printk_record {
- 	struct printk_info	*info;
- 	char			*text_buf;
--	char			*dict_buf;
- 	unsigned int		text_buf_size;
--	unsigned int		dict_buf_size;
- };
- 
- /* Specifies the logical position and span of a data block. */
-@@ -63,7 +58,6 @@ struct prb_data_blk_lpos {
- struct prb_desc {
- 	atomic_long_t			state_var;
- 	struct prb_data_blk_lpos	text_blk_lpos;
--	struct prb_data_blk_lpos	dict_blk_lpos;
- };
- 
- /* A ringbuffer of "ID + data" elements. */
-@@ -92,7 +86,6 @@ struct prb_desc_ring {
- struct printk_ringbuffer {
- 	struct prb_desc_ring	desc_ring;
- 	struct prb_data_ring	text_data_ring;
--	struct prb_data_ring	dict_data_ring;
- 	atomic_long_t		fail;
- };
- 
-@@ -236,9 +229,7 @@ enum desc_state {
-  * Note: The specified external buffer must be of the size:
-  *       2 ^ (descbits + avgtextbits)
-  */
--#define _DEFINE_PRINTKRB(name, descbits, avgtextbits, avgdictbits, text_buf)			\
--static char _##name##_dict[1U << ((avgdictbits) + (descbits))]					\
--			__aligned(__alignof__(unsigned long));					\
-+#define _DEFINE_PRINTKRB(name, descbits, avgtextbits, text_buf)			\
- static struct prb_desc _##name##_descs[_DESCS_COUNT(descbits)] = {				\
- 	/* the initial head and tail */								\
- 	[_DESCS_COUNT(descbits) - 1] = {							\
-@@ -246,7 +237,6 @@ static struct prb_desc _##name##_descs[_DESCS_COUNT(descbits)] = {				\
- 		.state_var	= ATOMIC_INIT(DESC0_SV(descbits)),				\
- 		/* no associated data block */							\
- 		.text_blk_lpos	= FAILED_BLK_LPOS,						\
--		.dict_blk_lpos	= FAILED_BLK_LPOS,						\
- 	},											\
- };												\
- static struct printk_info _##name##_infos[_DESCS_COUNT(descbits)] = {				\
-@@ -275,12 +265,6 @@ static struct printk_ringbuffer name = {							\
- 		.head_lpos	= ATOMIC_LONG_INIT(BLK0_LPOS((avgtextbits) + (descbits))),	\
- 		.tail_lpos	= ATOMIC_LONG_INIT(BLK0_LPOS((avgtextbits) + (descbits))),	\
- 	},											\
--	.dict_data_ring = {									\
--		.size_bits	= (avgtextbits) + (descbits),					\
--		.data		= &_##name##_dict[0],						\
--		.head_lpos	= ATOMIC_LONG_INIT(BLK0_LPOS((avgtextbits) + (descbits))),	\
--		.tail_lpos	= ATOMIC_LONG_INIT(BLK0_LPOS((avgtextbits) + (descbits))),	\
--	},											\
- 	.fail			= ATOMIC_LONG_INIT(0),						\
- }
- 
-@@ -290,17 +274,15 @@ static struct printk_ringbuffer name = {							\
-  * @name:        The name of the ringbuffer variable.
-  * @descbits:    The number of descriptors as a power-of-2 value.
-  * @avgtextbits: The average text data size per record as a power-of-2 value.
-- * @avgdictbits: The average dictionary data size per record as a
-- *               power-of-2 value.
-  *
-  * This is a macro for defining a ringbuffer and all internal structures
-  * such that it is ready for immediate use. See _DEFINE_PRINTKRB() for a
-  * variant where the text data buffer can be specified externally.
-  */
--#define DEFINE_PRINTKRB(name, descbits, avgtextbits, avgdictbits)		\
-+#define DEFINE_PRINTKRB(name, descbits, avgtextbits)				\
- static char _##name##_text[1U << ((avgtextbits) + (descbits))]			\
- 			__aligned(__alignof__(unsigned long));			\
--_DEFINE_PRINTKRB(name, descbits, avgtextbits, avgdictbits, &_##name##_text[0])
-+_DEFINE_PRINTKRB(name, descbits, avgtextbits, &_##name##_text[0])
- 
- /* Writer Interface */
- 
-@@ -309,26 +291,13 @@ _DEFINE_PRINTKRB(name, descbits, avgtextbits, avgdictbits, &_##name##_text[0])
-  *
-  * @r:             The record to initialize.
-  * @text_buf_size: The needed text buffer size.
-- * @dict_buf_size: The needed dictionary buffer size.
-- *
-- * Initialize all the fields that a writer is interested in. If
-- * @dict_buf_size is 0, a dictionary buffer will not be reserved.
-- * @text_buf_size must be greater than 0.
-- *
-- * Note that although @dict_buf_size may be initialized to non-zero,
-- * its value must be rechecked after a successful call to prb_reserve()
-- * to verify a dictionary buffer was actually reserved. Dictionary buffer
-- * reservation is allowed to fail.
-  */
- static inline void prb_rec_init_wr(struct printk_record *r,
--				   unsigned int text_buf_size,
--				   unsigned int dict_buf_size)
-+				   unsigned int text_buf_size)
- {
- 	r->info = NULL;
- 	r->text_buf = NULL;
--	r->dict_buf = NULL;
- 	r->text_buf_size = text_buf_size;
--	r->dict_buf_size = dict_buf_size;
- }
- 
- bool prb_reserve(struct prb_reserved_entry *e, struct printk_ringbuffer *rb,
-@@ -340,7 +309,6 @@ void prb_final_commit(struct prb_reserved_entry *e);
- 
- void prb_init(struct printk_ringbuffer *rb,
- 	      char *text_buf, unsigned int text_buf_size,
--	      char *dict_buf, unsigned int dict_buf_size,
- 	      struct prb_desc *descs, unsigned int descs_count_bits,
- 	      struct printk_info *infos);
- unsigned int prb_record_text_space(struct prb_reserved_entry *e);
-@@ -354,8 +322,6 @@ unsigned int prb_record_text_space(struct prb_reserved_entry *e);
-  * @info:          A buffer to store record meta-data.
-  * @text_buf:      A buffer to store text data.
-  * @text_buf_size: The size of @text_buf.
-- * @dict_buf:      A buffer to store dictionary data.
-- * @dict_buf_size: The size of @dict_buf.
-  *
-  * Initialize all the fields that a reader is interested in. All arguments
-  * (except @r) are optional. Only record data for arguments that are
-@@ -363,14 +329,11 @@ unsigned int prb_record_text_space(struct prb_reserved_entry *e);
-  */
- static inline void prb_rec_init_rd(struct printk_record *r,
- 				   struct printk_info *info,
--				   char *text_buf, unsigned int text_buf_size,
--				   char *dict_buf, unsigned int dict_buf_size)
-+				   char *text_buf, unsigned int text_buf_size)
- {
- 	r->info = info;
- 	r->text_buf = text_buf;
--	r->dict_buf = dict_buf;
- 	r->text_buf_size = text_buf_size;
--	r->dict_buf_size = dict_buf_size;
- }
- 
- /**
--- 
-2.20.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8sCgrlnKggMjAyMC85LzE3IOS4i+WNiDg6NDEsIEppbnlhbmcgSGUg5YaZ6YGTOgo+IEhp
+LCBIdWFjYWksCj4KPgo+IE9uIDA5LzE2LzIwMjAgMDE6MzkgUE0sIEh1YWNhaSBDaGVuIHdyb3Rl
+Ogo+PiBIaSwgSmlueWFuZywKPj4KPj4gT24gVHVlLCBTZXAgMTUsIDIwMjAgYXQgMTA6MTcgUE0g
+SmlueWFuZyBIZSA8aGVqaW55YW5nQGxvb25nc29uLmNuPiAKPj4gd3JvdGU6Cj4+Pgo+Pj4KPj4+
+IE9uIDA5LzE2LzIwMjAgMDk6MzMgQU0sIEppYXh1biBZYW5nIHdyb3RlOgo+Pj4+IOS6jiAyMDIw
+5bm0OeaciDE15pelIEdNVCswODowMCDkuIvljYg5OjA3OjQzLCBKaW55YW5nIEhlIAo+Pj4+IDxo
+ZWppbnlhbmdAbG9vbmdzb24uY24+IOWGmeWIsDoKPj4+Pj4gQWRkIGxvb25nc29uX2tleGVjX3By
+ZXBhcmUoKSwgbG9vbmdzb25fa2V4ZWNfc2h1dGRvd24oKSBhbmQKPj4+Pj4gbG9vbmdzb25fa2V4
+ZWNfY3Jhc2hkb3duKCkgZm9yIHBhc3NpbmcgdGhlIHBhcmFtZXRlcnMgb2Yga2V4ZWNfYXJncy4K
+Pj4+Pj4KPj4+Pj4gVG8gc3RhcnQgbG9vbmdzb242NCwgQ1BVMCBuZWVkcyAzIHBhcmFtZXRlcnM6
+Cj4+Pj4+IGZ3X2FyZzA6IHRoZSBudW1iZXIgb2YgY21kLgo+Pj4+PiBmd19hcmcxOiBjbWQgc3Ry
+dWN0dXJlIHdoaWNoIHNlZW1zIHN0cmFuZ2UsIHRoZSBjbWQgYXJyYXlbaW5kZXhdJ3MKPj4+Pj4g
+wqDCoMKgwqDCoMKgwqDCoMKgIHZhbHVlIGlzIGNtZCBzdHJpbmcncyBhZGRyZXNzLCBpbmRleCA+
+PSAxLgo+Pj4+PiBmd19hcmcyOiBlbnZpcm9ubWVudC4KPj4+Pj4KPj4+Pj4gU2Vjb25kYXJ5IENQ
+VXMgZG8gbm90IG5lZWQgcGFyYW1ldGVyIGF0IG9uY2UuIFRoZXkgcXVlcnkgdGhlaXIKPj4+Pj4g
+bWFpbGJveCB0byBnZXQgUEMsIFNQIGFuZCBHUCBpbiBhIGxvb3AgYmVmb3JlIENQVTAgYnJpbmdz
+IHRoZW0gdXAKPj4+Pj4gYW5kIHBhc3NlcyB0aGVzZSBwYXJhbWV0ZXJzIHZpYSBtYWlsYm94Lgo+
+Pj4+Pgo+Pj4+PiBsb29uZ3Nvbl9rZXhlY19wcmVwYXJlKCk6IEFsbG9jIG5ldyBtZW1vcnkgdG8g
+c2F2ZSBjbWQgZm9yIGtleGVjLgo+Pj4+PiBDb21iaW5lIHRoZSBrZXhlYyBhcHBlbmQgb3B0aW9u
+IHN0cmluZyBhcyBjbWQgc3RydWN0dXJlLCBhbmQgdGhlIGNtZAo+Pj4+PiBzdHJ1Y3Qgd2lsbCBi
+ZSBwYXJzZWQgaW4gZndfaW5pdF9jbWRsaW5lKCkgb2YgCj4+Pj4+IGFyY2gvbWlwcy9mdy9saWIv
+Y21kbGluZS5jLgo+Pj4+PiBpbWFnZS0+Y29udHJvbF9jb2RlX3BhZ2UgbmVlZCBwb2ludGluZyB0
+byBhIHNhZmUgbWVtb3J5IHBhZ2UuIEluIAo+Pj4+PiBvcmRlciB0bwo+Pj4+PiBtYWludGFpbiBj
+b21wYXRpYmlsaXR5IGZvciB0aGUgb2xkIGZpcm13YXJlIHRoZSBsb3cgMk1CIGlzIHJlc2VydmVy
+ZAo+Pj4+PiBhbmQgc2FmZSBmb3IgTG9vbmdzb24uIFNvIGxldCBpdCBwb2ludHMgaGVyZS4KPj4+
+Pj4KPj4+Pj4gbG9vbmdzb25fa2V4ZWNfc2h1dGRvd24oKTogV2FrZSB1cCBhbGwgcHJlc2VudCBD
+UFVzIGFuZCBsZXQgdGhlbSBnbwo+Pj4+PiB0byByZWJvb3RfY29kZV9idWZmZXIuIFBhc3MgdGhl
+IGtleGVjIHBhcmFtZXRlcnMgdG8ga2V4ZWNfYXJncy4KPj4+Pj4KPj4+Pj4gbG9vbmdzb25fY3Jh
+c2hfc2h1dGRvd24oKTogUGFzcyB0aGUga2R1bXAgcGFyYW1ldGVycyB0byBrZXhlY19hcmdzLgo+
+Pj4+Pgo+Pj4+PiBUaGUgYXNzZW1ibHkgcGFydCBwcm92aWRlIGEgd2F5IGxpa2UgQklPUyBkb2lu
+ZyB0byBrZWVwIHNlY29uZGFyeQo+Pj4+PiBDUFVzIGluIGEgcXVlcnlpbmcgbG9vcC4KPj4+Pj4K
+Pj4+Pj4gVGhpcyBwYXRjaCByZWZlcmVuY2VkIFsxXVsyXVszXS4KPj4+Pj4KPj4+Pj4gWzFdIGFy
+Y2gvbWlwcy9jYXZpdW0tb2N0ZW9uL3NldHVwLmMKPj4+Pj4gWzJdIGh0dHBzOi8vcGF0Y2h3b3Jr
+Lmtlcm5lbC5vcmcvcGF0Y2gvMTA3OTkyMTcvCj4+Pj4+IFszXSAKPj4+Pj4gaHR0cHM6Ly9naXRl
+ZS5jb20vbG9vbmdzb25sYWIvcWVtdS9ibG9iL21hc3Rlci9ody9taXBzL2xvb25nc29uM2Ffcm9t
+LmggCj4+Pj4+Cj4+Pj4+Cj4+Pj4+IENvLWRldmVsb3BlZC1ieTogWW91bGluZyBUYW5nIDx0YW5n
+eW91bGluZ0Bsb29uZ3Nvbi5jbj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogWW91bGluZyBUYW5nIDx0
+YW5neW91bGluZ0Bsb29uZ3Nvbi5jbj4KPj4+Pj4gU2lnbmVkLW9mZi1ieTogSmlueWFuZyBIZSA8
+aGVqaW55YW5nQGxvb25nc29uLmNuPgo+Pj4+PiAtLS0KPj4+Pj4gYXJjaC9taXBzL2tlcm5lbC9y
+ZWxvY2F0ZV9rZXJuZWwuUyB8IDE5ICsrKysrKysrCj4+Pj4+IGFyY2gvbWlwcy9sb29uZ3NvbjY0
+L3Jlc2V0LmPCoMKgwqDCoMKgwqAgfCA4OCAKPj4+Pj4gKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysKPj4+Pj4gMiBmaWxlcyBjaGFuZ2VkLCAxMDcgaW5zZXJ0aW9ucygrKQo+
+Pj4+Pgo+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL2tlcm5lbC9yZWxvY2F0ZV9rZXJuZWwu
+UyAKPj4+Pj4gYi9hcmNoL21pcHMva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+Pj4+IGluZGV4
+IGFjODcwODkuLjA2MWNiZmIgMTAwNjQ0Cj4+Pj4+IC0tLSBhL2FyY2gvbWlwcy9rZXJuZWwvcmVs
+b2NhdGVfa2VybmVsLlMKPj4+Pj4gKysrIGIvYXJjaC9taXBzL2tlcm5lbC9yZWxvY2F0ZV9rZXJu
+ZWwuUwo+Pj4+PiBAQCAtMTMzLDYgKzEzMywyNSBAQCBMRUFGKGtleGVjX3NtcF93YWl0KQo+Pj4+
+PiAjZWxzZQo+Pj4+PiDCoMKgwqDCoMKgIHN5bmMKPj4+Pj4gI2VuZGlmCj4+Pj4+ICsKPj4+Pj4g
+KyNpZmRlZiBDT05GSUdfQ1BVX0xPT05HU09ONjQKPj4+Pj4gKyNkZWZpbmUgTUFJTEJPWF9CQVNF
+IDB4OTAwMDAwMDAzZmYwMTAwMAo+Pj4+IFBsZWFzZSBhdm9pZCBoYXJkY29kZWQgU01QIGluZm9y
+bWF0aW9uLiBZb3UncmUgYnJlYWtpbmcgTG9vbmdzb24gM0IgCj4+Pj4gc3VwcG9ydC4KPj4+Pgo+
+Pj4gT2ssIEkgc2VlLiBTaW5jZSBteSBtYWNoaW5lIGlzIExvb25nc29uIDNBLiBJJ2xsIHNlbmQg
+djIKPj4+IGFmdGVyIEkgdGVzdCBpdCBpbiAzQi4KPj4gMSwgTXkgb3JpZ2luYWwgdmVyc2lvbiBj
+YW4gd29yayBvbiBib3RoIExvb25nc29uLTNBIGFuZCBMb29uZ3Nvbi0zQiwKPj4gd2h5IHlvdSBt
+b2RpZnkgbXkgcGF0Y2ggYW5kIGhhZG4ndCBkaXNjdXNzIHdpdGggbWU/Cj4+Cj4+IDIsIFdpdGgg
+dGhpcyBzaW5nbGUgcGF0Y2ggYm90aCBrZXhlYyBhbmQga2R1bXAgY2Fubm90IHdvcmsgcmVsaWFi
+bHksCj4+IGJlY2F1c2Uga2V4ZWMgbmVlZCB0aGlzIHBhdGNoOgo+PiDCoMKgwqAgaHR0cHM6Ly9w
+YXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY5NTkyOS8KPj4KPj4gwqDCoMKgIGFuZCBrZHVt
+cCBuZWVkIG15IGZpcnN0IHBhdGNoIGluIG15IG9yaWdpbmFsIHZlcnNpb246Cj4+IMKgwqDCoCBo
+dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzk5MjE1Lwo+Pgo+PiDCoMKgwqAg
+WW91IG1heSBhcmd1ZSB0aGF0IHlvdSBoYXZlIHRlc3RlZC4gWWVzLCBJIGJlbGlldmUgdGhhdCwg
+SSdtIG5vdAo+PiBzYXlpbmcgdGhhdCB5b3UgaGF2ZW4ndCB0ZXN0LCBhbmQgSSdtIG5vdCBzYXlp
+bmcgdGhhdCB5b3VyIHBhdGNoCj4+IGNhbm5vdCB3b3JrLCBJJ20ganVzdCBzYXlpbmcgdGhhdCB5
+b3VyIHBhdGNoIGlzIG5vdCByb2J1c3QuCj4+Cj4+IDMsIEknbSB0aGUgb3JpZ2luYWwgYXV0aG9y
+IGFuZCBwYXlpbmcgYXR0ZW50aW9uIHRvIGtleGVjL2tkdW1wCj4+IGNvbnRpbnVvc2x5LCBJIHdp
+bGwgc2VuZCBhIG5ldyB2ZXJzaW9uIG9uY2UgdGhlIGFib3ZlIHR3byBwYXRjaGVzIGJlCj4+IGFj
+Y2VwdGVkLiBCdXQgeW91IHJlLXNlbmQgbXkgcGF0Y2ggd2l0aG91dCBhbnkgY29tbXVuaWNhdGlv
+biB3aXRoIG1lLAo+PiB3aHkgeW91IHNvIGltcGF0aWVudD8KPj4KPj4gSHVhY2FpCj4+Cj4KPiAx
+LCBZb3VyIG9yaWdpbmFsIHZlcnNpb246Cj4gwqDCoCBodHRwczovL3BhdGNod29yay5rZXJuZWwu
+b3JnL3BhdGNoLzEwNzk5MjE3Lwo+Cj4gVGhpcyBwYXRjaCBjYW4gd29yayBvbiBMb29uZ3Nvbi0z
+QSwgSSB0ZXN0ZWQgaXQuCj4KPiBCdXQgaXQgd29ya3Mgd3JvbmcgYWZ0ZXIgdGhlIGZvbGxvdyBi
+ZWhhdmlvcnMsCj4gwqDCoCBrZXhlYyAtbCB2bWxpbnV4IC0tYXBwZW5kPWNtZGxpbmVfa2V4ZWMK
+PiDCoMKgIGtleGVjIC1wIHZtbGludXggLS1hcHBlbmQ9Y21kbGluZV9rZHVtcAo+IMKgwqAga2V4
+ZWMgLWUKPgoKV2hhdCAncyB3cm9uZyB3aXRoIHlvdSBMb29uZ3NvbiBndXlzPyBXaHkgZG8geW91
+IGFsd2F5cyBzZW5kIHBhdGNoZXMgCndpdGggdGhlIHNhbWUgZnVuY3Rpb25zIGFzIHRoZSBvcmln
+aW5hbCBhdXRob3Igd2l0aG91IGFueSBjb21tdW5pY2F0aW9uIAp3aXRoIHRoZSBvcmlnaW5hbCBh
+dXRob3I/IEVzcGVjaWFsbHkgdGhlIG9yaWdpbmFsIGF1dGhvciBvZiB0aGUgcGF0Y2ggaXMgCnRo
+ZSBtYWludGFpbmVyIG9mIExvb25nc29uNjQgYXJjaGl0ZWN0dXJlLgoKSW4gdGhlIHBhc3QgeWVh
+ciwgTG9vbmdzb24gZW1wbG95ZWVzIGhhdmUgYmVlbiB2ZXJ5IGFjdGl2ZS4gVGhpcyBpcyBhIApo
+YXBweSB0aGluZywgYnV0IGF0IHRoZSBzYW1lIHRpbWUsIGl0IGlzIGNvbmZ1c2luZyB0aGF0LCBp
+biBhZGRpdGlvbiB0byAKYWx3YXlzIHNlbmRpbmcgcGF0Y2hlcyB0aGF0IG90aGVycyBoYXZlIGFs
+cmVhZHkgc2VudCwgbWFueSBwYXRjaGVzIHNlbmQgCmJ5IExvb25nc29uIGVtcGxveWVlcyBvZnRl
+biB3aXRoIG9ubHkgYSBmZXcgbGluZXMgKGxlc3MgdGhhbiAxMCBsaW5lcykuIApJIGRvbid0IHRo
+aW5rIHRoaXMgaXMgYSBub3JtYWwgcGhlbm9tZW5vbiwgaXMgdGhpcyBjYXVzZWQgYnkgYW55IG90
+aGVyIApmYWN0b3JzPyBTdWNoIGFzIEtQSXM/IElmIHRoZSBwYXRjaGVzIGFyZSBzdWJtaXR0ZWQg
+Zm9yIHRoaXMgcHVycG9zZSwgaXQgCmlzIG5vdCBhZHZpc2FibGUsIHRoaXMgYmVoYXZpb3Igd2ls
+bCBoYXJtIHRoZSBlbnRpcmUgTG9vbmdzb24uCgoKPiBJdCB3b3JrcyBidXQgY21kbGluZV9rZHVt
+cCBtZXJnZWQgY21kbGluZV9rZXhlYy4KPgo+IEFuZCB0aGlzIHBhdGNoIG1lbWNweSBmcm9tIGZ3
+X2FyZzIgdG8ga2V4ZWNfZW52cCBhbmQgbGF0ZXIgbWVtY3B5IGZyb20KPiBrZXhlY19lbnZwIHRv
+IGZ3X2FyZzIgd2hlbiBmd19hcmcyIHdhcyBub3QgY2hhbmdlZCwgaXQncyByZWR1bmRhbnQuCj4K
+PiBIb3dldmVyLCBJIGhhdmUgbm90IExvb25nc29uLTNCIG5vdywgYW5kIGRpZCBub3QgdGVzdCBp
+dC4gRm9yIHRoaXMgcGF0Y2gsCj4gZG9lcyBpdCB3b3JrIHdlbGwgb24gTG9vbmdzb24tM0IzMDAw
+L0xvb25nc29uLTNCNDAwMD8KPgo+IDIsIEkgaGF2ZSBrbm93biB0aGF0IHByb2JsZW0gYmVmb3Jl
+IHlvdXIgcGF0Y2g6Cj4gwqDCoCBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEx
+Njk1OTI5Lwo+Cj4gSSBhbHNvIGRpZCBlZmZvcnRzIGFsdGhvdWdoIEkgaGFkJ3QgY29tbWl0dGVk
+IG15IHBhdGNoLiBJdCdzIGR1ZSB0byB0aGUKPiBoYXJkd2FyZSBpc3N1ZXMsIGFuZCBJIHJlbW92
+ZWQgcGNpZV9wb3J0X2RldmljZV9yZW1vdmUoKS4gS2V4ZWMgd29ya3MKPiBub3JtYWxseSBvbiBH
+VUkuIEJ1dCBpdCB3b3JrcyB0ZXJyaWJsZWx5IG9uIENMSS4gQWZ0ZXIgdGhpcyBkaXNjdXNzOgo+
+IMKgwqAgaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEzMDQ5MTcvCj4K
+PiBXaGF0IEx1a2FzIHNhaWQgaGVscGVkIG1lLiBJIHJlbW92ZWQKPiDCoMKgIGRyaXZlcnMvcGNp
+L3BjaS1kcml2ZXIuYzogcGNpX2RldmljZV9zaHV0ZG93bigpOiBwY2lfY2xlYXJfbWFzdGVyLi4u
+Cj4gS2V4ZWMgd29ya3Mgd2VsbCBvbiBDTEkgYWxzby4KPgo+IEZvciBhbm90aGVyIHBhdGNoOgo+
+IMKgwqAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDc5OTIxNS8KPgo+IEkg
+aGF2ZSBub3QgMndheSBvciA0d2F5IG1hY2hpbmUsIGFuZCBJIGRpZCBub3QgdGVzdCBpdC4KPgo+
+IDMsIEkgdHJ5IHRvIGZpeCBMb29uZ3NvbjY0IGtleGVjIGZ1bmN0aW9uIHNpbmNlIEkgam9pbmVk
+IHRoZSBjb21tdW5pdHkuCj4gSSBmZWxsIHNvcnJ5IHRvIG5vdCBkbyBlbm91Z2ggcmVzZWFyY2gg
+b24gTG9vbmdzb242NCBrZXhlYy4gTXkgZmlyc3QgCj4gcGF0Y2g6Cj4gwqDCoCBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzExNjg0ODQ5Lwo+Cj4gSXQgZml4ZWQgcHJvYmxlbSBh
+Ym91dCAiQ3Jhc2gga2VybmVsIiB3aGljaCBjYW4gYmUgdHJhY2VkIGJhY2sgdG8gCj4gbGludXgt
+NS40Lgo+IEF0IHRoYXQgdGltZSwgSSB0aG91Z2h0IHRoZXJlIGlzIG5vIGRldmVsb3BlciB3b3Jr
+IG9uIEtleGVjLiBUaHVzLCBJIAo+IGRpZCBhCj4gbG90IG9uIEtleGVjLiBBcmUgeW91IHJlYWxs
+eSBjb250aW51b3NseSBwYXlpbmcgYXR0ZW50aW9uIHRvIGtleGVjL2tkdW1wPwo+IFdpdGggdGhl
+IGV4cGxvcmluZyBhbmQgZGV2ZWxvcGluZyBkZWVwLCBJIGZvdW5kIHlvdXIgcGF0Y2ggc2V2ZXJh
+bCAKPiBkYXlzIGFnbwo+IGFmdGVyIEkgZGlkIGEgZHJhZnQgcGF0Y2ggd2l0Y2ggcmVmZXJlbmNl
+ZDoKPiDCoMKgIGFyY2gvbWlwcy9jYXZpdW0tb2N0ZW9uL3NldHVwLmMKPiBodHRwczovL2dpdGVl
+LmNvbS9sb29uZ3NvbmxhYi9xZW11L2Jsb2IvbWFzdGVyL2h3L21pcHMvbG9vbmdzb24zYV9yb20u
+aAo+Cj4gVGhlcmUgaXMgbm8gZG91YnQgdGhhdCB5b3VyIHBhdGNoIGdpdmVzIG1lIGNvbmZpZGVu
+Y2UgYW5kIHN1Z2dlc3Rpb24gCj4gd2hpbGUKPiBpdCBnaXZlcyBtZSB3b3JyeS4gQXMgYSBuZXdj
+b21lciwgSSBkbyBub3Qga25vdyBpZiBzaG91bGQgY29tbXVuaWNhdGUgCj4gd2l0aAo+IHlvdSBz
+aW5jZSB5b3VyIHBhdGNoIHdhcyBjb21taXR0ZWQgb25lIHllYXIgYWdvLiBBbmQgbm93IGl0IG1h
+eSBiZSBhIGdvb2QKPiBjaGFuY2UgdG8gZG8gc29tZSBjb21tdW5pY2F0aW9uLgo+Cj4gVGhhbmtz
+LAo+Cj4gLSBKaW55YW5nLgo+Cj4+Pj4+ICvCoMKgwqAgbWZjMMKgIHQxLCBDUDBfRUJBU0UKPj4+
+Pj4gK8KgwqDCoCBhbmRpwqAgdDEsIE1JUFNfRUJBU0VfQ1BVTlVNCj4+Pj4+ICvCoMKgwqAgZGxp
+wqDCoCB0MCwgTUFJTEJPWF9CQVNFCj4+Pj4+ICvCoMKgwqAgYW5kacKgIHQzLCB0MSwgMHgzCj4+
+Pj4+ICvCoMKgwqAgc2xswqDCoCB0MywgOAo+Pj4+PiArwqDCoMKgIG9ywqDCoMKgIHQwLCB0MCwg
+dDPCoMKgwqDCoMKgwqDCoCAvKiBpbnNlcnQgY29yZSBpZCAqLwo+Pj4+PiArwqDCoMKgIGFuZGnC
+oCB0MiwgdDEsIDB4Ywo+Pj4+PiArwqDCoMKgIGRzbGzCoCB0MiwgNDIKPj4+Pj4gK8KgwqDCoCBv
+csKgwqDCoCB0MCwgdDAsIHQywqDCoMKgwqDCoMKgwqAgLyogaW5zZXJ0IG5vZGUgaWQgKi8KPj4+
+Pj4gKzE6wqAgbGTCoMKgwqAgczEsIDB4MjAodDApwqDCoMKgwqDCoCAvKiBnZXQgUEMgdmlhIG1h
+aWxib3gwICovCj4+Pj4+ICvCoMKgwqAgYmVxesKgIHMxLCAxYgo+Pj4+PiArwqDCoMKgIGxkwqDC
+oMKgIHNwLCAweDI4KHQwKcKgwqDCoMKgwqAgLyogZ2V0IFNQIHZpYSBtYWlsYm94MSAqLwo+Pj4+
+PiArwqDCoMKgIGxkwqDCoMKgIGdwLCAweDMwKHQwKcKgwqDCoMKgwqAgLyogZ2V0IEdQIHZpYSBt
+YWlsYm94MiAqLwo+Pj4+PiArwqDCoMKgIGxkwqDCoMKgIGExLCAweDM4KHQwKQo+Pj4+PiArwqDC
+oMKgIGpywqDCoMKgIHMxCj4+Pj4+ICsjZW5kaWYKPj4+Pj4gwqDCoMKgwqDCoCBqwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoCBzMQo+Pj4+PiDCoMKgwqDCoMKgIEVORChrZXhlY19zbXBfd2Fp
+dCkKPj4+Pj4gI2VuZGlmCj4+Pj4+IGRpZmYgLS1naXQgYS9hcmNoL21pcHMvbG9vbmdzb242NC9y
+ZXNldC5jIAo+Pj4+PiBiL2FyY2gvbWlwcy9sb29uZ3NvbjY0L3Jlc2V0LmMKPj4+Pj4gaW5kZXgg
+M2JiOGExZS4uMzIyYzMyNiAxMDA2NDQKPj4+Pj4gLS0tIGEvYXJjaC9taXBzL2xvb25nc29uNjQv
+cmVzZXQuYwo+Pj4+PiArKysgYi9hcmNoL21pcHMvbG9vbmdzb242NC9yZXNldC5jCj4+Pj4+IEBA
+IC00NywxMiArNDcsMTAwIEBAIHN0YXRpYyB2b2lkIGxvb25nc29uX2hhbHQodm9pZCkKPj4+Pj4g
+wqDCoMKgwqDCoCB9Cj4+Pj4+IH0KPj4+Pj4KPj4+Pj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPj4+
+Pj4gKyNpbmNsdWRlIDxsaW51eC9jcHUuaD4KPj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9rZXhlYy5o
+Pgo+Pj4+PiArCj4+Pj4+ICsjaW5jbHVkZSA8YXNtL2Jvb3RpbmZvLmg+Cj4+Pj4+ICsKPj4+Pj4g
+KyNkZWZpbmUgQ09OVFJPTF9DT0RFX1BBR0XCoMKgwqAgMHhGRkZGRkZGRjgwMDAwMDAwVUwKPj4+
+Pj4gK3N0YXRpYyBpbnQga2V4ZWNfYXJnYzsKPj4+Pj4gK3N0YXRpYyBpbnQga2R1bXBfYXJnYzsK
+Pj4+Pj4gK3N0YXRpYyB2b2lkICprZXhlY19hcmd2Owo+Pj4+PiArc3RhdGljIHZvaWQgKmtkdW1w
+X2FyZ3Y7Cj4+Pj4+ICsKPj4+Pj4gK3N0YXRpYyBpbnQgbG9vbmdzb25fa2V4ZWNfcHJlcGFyZShz
+dHJ1Y3Qga2ltYWdlICppbWFnZSkKPj4+Pj4gK3sKPj4+Pj4gK8KgwqDCoCBpbnQgaSwgb2ZmdCwg
+YXJnYyA9IDA7Cj4+Pj4+ICvCoMKgwqAgaW50ICphcmd2Owo+Pj4+PiArwqDCoMKgIGNoYXIgKnN0
+ciwgKnB0ciwgKmJvb3Rsb2FkZXIgPSAia2V4ZWMiOwo+Pj4+PiArCj4+Pj4+ICvCoMKgwqAgYXJn
+diA9IGttYWxsb2MoQ09NTUFORF9MSU5FX1NJWkUsIEdGUF9LRVJORUwpOwo+Pj4+PiArwqDCoMKg
+IGlmICghYXJndikKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIC1FTk9NRU07
+Cj4+Pj4+ICsKPj4+Pj4gK8KgwqDCoCBmb3IgKGkgPSAwOyBpIDwgaW1hZ2UtPm5yX3NlZ21lbnRz
+OyBpKyspIHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAgaWYgKCFzdHJuY21wKGJvb3Rs
+b2FkZXIsIChjaGFyICopaW1hZ2UtPnNlZ21lbnRbaV0uYnVmLAo+Pj4+PiArwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHN0cmxlbihib290bG9h
+ZGVyKSkpIHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFy
+Z3ZbYXJnYysrXSA9IGZ3X2FyZzEgKyBDT01NQU5EX0xJTkVfU0laRS8yOwo+Pj4+PiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgc3RyID0gKGNoYXIgKilhcmd2ICsgQ09N
+TUFORF9MSU5FX1NJWkUvMjsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgIG1lbWNweShzdHIsIGltYWdlLT5zZWdtZW50W2ldLmJ1ZiwgCj4+Pj4+IENPTU1BTkRf
+TElORV9TSVpFLzIpOwo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqAgcHRyID0gc3RyY2hyKHN0ciwgJyAnKTsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIHdoaWxlIChwdHIpIHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAqcHRyID0gJ1wwJzsKPj4+Pj4gK8Kg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBpZiAo
+cHRyWzFdICE9ICcgJykgewo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBvZmZ0ID0gKGludCkocHRyIC0g
+c3RyICsgMSk7Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGFyZ3ZbYXJnYysrXSA9IGZ3X2FyZzEgKyAK
+Pj4+Pj4gQ09NTUFORF9MSU5FX1NJWkUvMiArIG9mZnQ7Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfQo+Pj4+PiArwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHB0ciA9IHN0cmNo
+cihwdHIgKyAxLCAnICcpOwo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqAgfQo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgYnJl
+YWs7Cj4+Pj4+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIH0KPj4+Pj4gK8KgwqDCoCB9Cj4+Pj4+
+ICsKPj4+Pj4gK8KgwqDCoCAvKiBLZXhlYy9rZHVtcCBuZWVkcyBhIHNhZmUgcGFnZSB0byBzYXZl
+IHJlYm9vdF9jb2RlX2J1ZmZlci4gKi8KPj4+Pj4gK8KgwqDCoCBpbWFnZS0+Y29udHJvbF9jb2Rl
+X3BhZ2UgPSB2aXJ0X3RvX3BhZ2UoKHZvaWQgCj4+Pj4+ICopQ09OVFJPTF9DT0RFX1BBR0UpOwo+
+Pj4+PiArCj4+Pj4+ICvCoMKgwqAgaWYgKGltYWdlLT50eXBlID09IEtFWEVDX1RZUEVfQ1JBU0gp
+IHsKPj4+Pj4gK8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAga2ZyZWUoa2R1bXBfYXJndik7Cj4+Pj4+
+ICvCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIGtkdW1wX2FyZ2MgPSBhcmdjOwo+Pj4+PiArwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBrZHVtcF9hcmd2ID0gYXJndjsKPj4+Pj4gK8KgwqDCoCB9IGVsc2Ug
+ewo+Pj4+PiArwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBrZnJlZShrZXhlY19hcmd2KTsKPj4+Pj4g
+K8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAga2V4ZWNfYXJnYyA9IGFyZ2M7Cj4+Pj4+ICvCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgIGtleGVjX2FyZ3YgPSBhcmd2Owo+Pj4+PiArwqDCoMKgIH0KPj4+Pj4g
+Kwo+Pj4+PiArwqDCoMKgIHJldHVybiAwOwo+Pj4+PiArfQo+Pj4+PiArCj4+Pj4+ICtzdGF0aWMg
+dm9pZCBsb29uZ3Nvbl9rZXhlY19zaHV0ZG93bih2b2lkKQo+Pj4+PiArewo+Pj4+PiArI2lmZGVm
+IENPTkZJR19TTVAKPj4+Pj4gK8KgwqDCoCBicmluZ3VwX25vbmJvb3RfY3B1cyhsb29uZ3Nvbl9z
+eXNjb25mLm5yX2NwdXMpOwo+Pj4+PiArI2VuZGlmCj4+Pj4+ICvCoMKgwqAgZndfYXJnMCA9IGtl
+eGVjX2FyZ2M7Cj4+Pj4+ICvCoMKgwqAgbWVtY3B5KCh2b2lkICopZndfYXJnMSwga2V4ZWNfYXJn
+diwgQ09NTUFORF9MSU5FX1NJWkUpOwo+Pj4+PiArCj4+Pj4+ICvCoMKgwqAga2V4ZWNfYXJnc1sw
+XSA9IGZ3X2FyZzA7Cj4+Pj4+ICvCoMKgwqAga2V4ZWNfYXJnc1sxXSA9IGZ3X2FyZzE7Cj4+Pj4+
+ICvCoMKgwqAga2V4ZWNfYXJnc1syXSA9IGZ3X2FyZzI7Cj4+Pj4+ICt9Cj4+Pj4+ICsKPj4+Pj4g
+K3N0YXRpYyB2b2lkIGxvb25nc29uX2NyYXNoX3NodXRkb3duKHN0cnVjdCBwdF9yZWdzICpyZWdz
+KQo+Pj4+PiArewo+Pj4+PiArwqDCoMKgIGRlZmF1bHRfbWFjaGluZV9jcmFzaF9zaHV0ZG93bihy
+ZWdzKTsKPj4+Pj4gK8KgwqDCoCBmd19hcmcwID0ga2R1bXBfYXJnYzsKPj4+Pj4gK8KgwqDCoCBt
+ZW1jcHkoKHZvaWQgKilmd19hcmcxLCBrZHVtcF9hcmd2LCBDT01NQU5EX0xJTkVfU0laRSk7Cj4+
+Pj4+ICsKPj4+Pj4gK8KgwqDCoCBrZXhlY19hcmdzWzBdID0gZndfYXJnMDsKPj4+Pj4gK8KgwqDC
+oCBrZXhlY19hcmdzWzFdID0gZndfYXJnMTsKPj4+Pj4gK8KgwqDCoCBrZXhlY19hcmdzWzJdID0g
+ZndfYXJnMjsKPj4+Pj4gK30KPj4+Pj4gKyNlbmRpZgo+Pj4+PiArCj4+Pj4+IHN0YXRpYyBpbnQg
+X19pbml0IG1pcHNfcmVib290X3NldHVwKHZvaWQpCj4+Pj4+IHsKPj4+Pj4gwqDCoMKgwqDCoCBf
+bWFjaGluZV9yZXN0YXJ0ID0gbG9vbmdzb25fcmVzdGFydDsKPj4+Pj4gwqDCoMKgwqDCoCBfbWFj
+aGluZV9oYWx0ID0gbG9vbmdzb25faGFsdDsKPj4+Pj4gwqDCoMKgwqDCoCBwbV9wb3dlcl9vZmYg
+PSBsb29uZ3Nvbl9wb3dlcm9mZjsKPj4+Pj4KPj4+Pj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPj4+
+Pj4gK8KgwqDCoCBfbWFjaGluZV9rZXhlY19wcmVwYXJlID0gbG9vbmdzb25fa2V4ZWNfcHJlcGFy
+ZTsKPj4+Pj4gK8KgwqDCoCBfbWFjaGluZV9rZXhlY19zaHV0ZG93biA9IGxvb25nc29uX2tleGVj
+X3NodXRkb3duOwo+Pj4+PiArwqDCoMKgIF9tYWNoaW5lX2NyYXNoX3NodXRkb3duID0gbG9vbmdz
+b25fY3Jhc2hfc2h1dGRvd247Cj4+Pj4+ICsjZW5kaWYKPj4+Pj4gKwo+Pj4+PiDCoMKgwqDCoMKg
+IHJldHVybiAwOwo+Pj4+PiB9Cj4+Pj4+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFk
+Lm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
