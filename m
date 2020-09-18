@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x641.google.com ([2a00:1450:4864:20::641])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJEEx-0000ZM-Dv
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 11:07:44 +0000
-Received: by mail-ej1-x641.google.com with SMTP id u21so7589905eja.2
- for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 04:07:42 -0700 (PDT)
+ id 1kJEag-0002Ls-35
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 11:30:11 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: [PATCH printk 1/3] printk: move printk_info into separate array
+In-Reply-To: <20200918100602.GB14605@alley>
+References: <20200917131644.25838-1-john.ogness@linutronix.de>
+ <20200917131644.25838-2-john.ogness@linutronix.de>
+ <20200918100602.GB14605@alley>
+Date: Fri, 18 Sep 2020 13:36:06 +0206
+Message-ID: <87k0wrb9vl.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-References: <20200917193835.30910-1-matthias.bgg@kernel.org>
- <CAFTCetQ--QcB-8Br3skQhzj-Sei_tG+0_kX1J_dpur-f7CTdvw@mail.gmail.com>
- <c5453053-bce9-626b-a162-13f37c9d5c2c@suse.com>
-In-Reply-To: <c5453053-bce9-626b-a162-13f37c9d5c2c@suse.com>
-From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Date: Fri, 18 Sep 2020 16:37:29 +0530
-Message-ID: <CAFTCetRAoYhqke+p+GhuOiSKn1ZJ1Z1PM+e=09DTyWC6rPw4BQ@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Add purgatory printing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,175 +24,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthias Brugger <mbrugger@suse.com>
-Cc: geoff@infradead.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, matthias.bgg@kernel.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-Hi Matthias,
+On 2020-09-18, Petr Mladek <pmladek@suse.com> wrote:
+>> --- a/kernel/printk/printk.c
+>> +++ b/kernel/printk/printk.c
+>> @@ -1097,6 +1097,7 @@ static char setup_dict_buf[CONSOLE_EXT_LOG_MAX] __initdata;
+>>  
+>>  void __init setup_log_buf(int early)
+>>  {
+>> +	struct printk_info *new_infos;
+>>  	unsigned int new_descs_count;
+>>  	struct prb_desc *new_descs;
+>>  	struct printk_info info;
+>> @@ -1156,6 +1157,17 @@ void __init setup_log_buf(int early)
+>>  		return;
+>>  	}
+>>  
+>> +	new_descs_size = new_descs_count * sizeof(struct printk_info);
+>
+> Must be stored into new variable, e.g.  new_infos_size.=
 
-On Fri, Sep 18, 2020 at 2:01 PM Matthias Brugger <mbrugger@suse.com> wrote:
->
->
->
-> On 18/09/2020 07:16, Bhupesh SHARMA wrote:
-> > Hi Matthias,
-> >
-> > Thanks for the patch. Some nitpicks inline:
-> >
-> > On Fri, Sep 18, 2020 at 1:09 AM <matthias.bgg@kernel.org> wrote:
-> >>
-> >> From: Matthias Brugger <mbrugger@suse.com>
-> >>
-> >> Add option to allow purgatory printing on arm64 hardware
-> >> by passing the console name which should be used.
-> >> Based on a patch by Geoff Levand.
-> >>
-> >> Cc: Geoff Levand <geoff@infradead.org>
-> >> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> >> ---
-> >>   kexec/arch/arm64/include/arch/options.h |  6 ++-
-> >>   kexec/arch/arm64/kexec-arm64.c          | 61 +++++++++++++++++++++++++
-> >>   purgatory/arch/arm64/purgatory-arm64.c  | 17 ++++++-
-> >>   3 files changed, 82 insertions(+), 2 deletions(-)
-> >
-> > Probably we also need to update the man page 'kexec/kexec.8' to add
-> > documentation about the newly introduced argument.
-> >
->
-> I checked the documentation and under "ARCHITECTURE OPTIONS" and it only
-> documents a subset of the x86(_64) architecture specific commands. So I think
-> there is more work to do to get the documentation right.
->
-> But after having a look, I think we might want to use "--serial" as option
-> instead of "--console" to be in sync with x86. Although many architectures
-> reinvent the options, if we can get it as near to x86 as possible, I think that
-> would be a good thing. I'll do that in v2.
+Ack.
 
-That's a good suggestion. I think the '--serial' option is a better
-one as compared to '--console'.
-
-> >> diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-> >> index a17d933..be7d169 100644
-> >> --- a/kexec/arch/arm64/include/arch/options.h
-> >> +++ b/kexec/arch/arm64/include/arch/options.h
-> >> @@ -5,7 +5,8 @@
-> >>   #define OPT_DTB                        ((OPT_MAX)+1)
-> >>   #define OPT_INITRD             ((OPT_MAX)+2)
-> >>   #define OPT_REUSE_CMDLINE      ((OPT_MAX)+3)
-> >> -#define OPT_ARCH_MAX           ((OPT_MAX)+4)
-> >> +#define OPT_CONSOLE            ((OPT_MAX)+4)
-> >> +#define OPT_ARCH_MAX           ((OPT_MAX)+5)
-> >>
-> >>   #define KEXEC_ARCH_OPTIONS \
-> >>          KEXEC_OPTIONS \
-> >> @@ -13,6 +14,7 @@
-> >>          { "command-line",  1, NULL, OPT_APPEND }, \
-> >>          { "dtb",           1, NULL, OPT_DTB }, \
-> >>          { "initrd",        1, NULL, OPT_INITRD }, \
-> >> +       { "console",       1, NULL, OPT_CONSOLE }, \
-> >>          { "ramdisk",       1, NULL, OPT_INITRD }, \
-> >>          { "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
-> >>
-> >> @@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
-> >>   "     --command-line=STRING Set the kernel command line to STRING.\n"
-> >>   "     --dtb=FILE            Use FILE as the device tree blob.\n"
-> >>   "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
-> >> +"     --console=STRING      Console used for purgatory printing.\n"
-> >>   "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
-> >>   "     --reuse-cmdline       Use kernel command line from running system.\n";
-> >
-> > Just a thought... sometimes the console string is also available as a
-> > part of the '--reuse-cmdline' command line argument passed to the
-> > kdump kernel. Can we also try to extract the --console string from the
-> > cmdline provided to the primary kernel itself?
-> >
+>> +	new_infos = memblock_alloc(new_descs_size, LOG_ALIGN);
+>> +	if (unlikely(!new_infos)) {
+>> +		pr_err("log_buf_len: %zu info bytes not available\n",
+>> +		       new_descs_size);
+>> +		memblock_free(__pa(new_descs), new_log_buf_len);
+>> +		memblock_free(__pa(new_dict_buf), new_log_buf_len);
 >
-> Well the problem is, that there can be more then one consoles present, so which
-> one would be the correct one?
-> I see this more like a debug feature which you use knowing which console you are
-> looking for the debug messages. In the end it only helps you to see if kdump
-> failed in the production system kernel or in the crash kernel.
-
-Indeed, I think we need to add some more comments to explain this
-option and distinguish it better from the serial port(s) mentioned in
-the '--reuse-cmdline' option.
-
-> >> @@ -32,6 +35,7 @@ struct arm64_opts {
-> >>          const char *command_line;
-> >>          const char *dtb;
-> >>          const char *initrd;
-> >> +       const char *console;
-> >>   };
-> >>
-> >>   extern struct arm64_opts arm64_opts;
-> >> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> >> index 45ebc54..44c9e6e 100644
-> >> --- a/kexec/arch/arm64/kexec-arm64.c
-> >> +++ b/kexec/arch/arm64/kexec-arm64.c
-> >> @@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
-> >>                          break;
-> >>                  case OPT_KEXEC_FILE_SYSCALL:
-> >>                          do_kexec_file_syscall = 1;
-> >> +               case OPT_CONSOLE:
-> >> +                       arm64_opts.console = optarg;
-> >>                          break;
-> >>                  default:
-> >>                          break; /* Ignore core and unknown options. */
-> >> @@ -180,12 +182,62 @@ int arch_process_options(int argc, char **argv)
-> >>          dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
-> >>                  (do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
-> >>                                                          arm64_opts.dtb));
-> >> +       dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
-> >> +               arm64_opts.console);
-> >> +
-> >>          if (do_kexec_file_syscall)
-> >>                  arm64_opts.dtb = NULL;
-> >>
-> >>          return 0;
-> >>   }
-> >>
-> >> +/**
-> >> + * find_purgatory_sink - Find a sink for purgatory output.
-> >> + */
-> >> +
-> >> +static uint64_t find_purgatory_sink(const char *console)
-> >> +{
-> >> +       int fd, ret;
-> >> +       char folder[255], device[255], mem[255];
-> >> +       struct stat sb;
-> >> +       char buffer[18];
-> >
-> > Just trying to understand the reasoning behind keeping the buffer 18
-> > chars long. Can the bytes read from the console exceed the array size
-> > here (may be a boundary check is required here to avoid overflows)?
-> >
+> The above two calls have wrong size.
 >
-> The buffer having a size of 18 is somewhat random. We use it to read the string
-> at for example
-> /sys/class/tty/ttyAMA0/iomem_base
+> The same problem is there also in the error path when new_descs
+> allocation fail. It might be better to handle this using some
+> goto err_* tagrets.
 >
-> And we read the size of the buffer, so no overflow is possible here. But: we
-> expect a value like 0x94080000 which has actually 10 characters.
->
-> >> +       uint64_t iomem = 0x0;
-> >> +
-> >> +       if (!console)
-> >> +               return 0;
-> >> +
-> >> +       sprintf(device, "/sys/class/tty/%s", console);
->
-> But your comment made me think of another thing. If the console string from the
-> command line is really long the sprintf would cause overflows. In v2 I'll update
-> the code to use snprintf instead.
+> Please, fix the old problem in a separate patch.
 
-Indeed, I am mainly worried about overflow issues with sprintf (and
-helpers), having recently spent time debugging several such overflow
-issues in upstream code. If we have concerns we can allocate the char
-array dynamically and free it after use. Also we can add some boundary
-checks for the dynamically allocated char array and how it is printed
-in the purgatory code (to make sure that there are no overflows here).
+The "old problem" didn't exist. The problem is introduced with this
+series. I will fix it with appropriate goto err_* targets for v2.
 
-Thanks,
-Bhupesh
+>> --- a/kernel/printk/printk_ringbuffer.c
+>> +++ b/kernel/printk/printk_ringbuffer.c
+>> @@ -1726,12 +1762,12 @@ static bool copy_data(struct prb_data_ring *data_ring,
+>>  	/*
+>>  	 * Actual cannot be less than expected. It can be more than expected
+>>  	 * because of the trailing alignment padding.
+>> +	 *
+>> +	 * Note that invalid @len values can occur because the caller loads
+>> +	 * the value during an allowed data race.
+>
+> I hope that this will not bite us in the future. The fact is that
+> copying the entire struct printk_info in get_desc() is ugly and
+> copy_data() has to be careful anyway.
+
+It isn't an issue because the state is verified again at the end of
+prb_read(). I added the comment because if all you are looking at is
+copy_data(), you may not know that @len was read on a data-race. Whereas
+inside of prb_read(), it is obvious that the memcpy() is a data-race.
+
+John Ogness
 
 _______________________________________________
 kexec mailing list
