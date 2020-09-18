@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mail-eopbgr1400048.outbound.protection.outlook.com
+ ([40.107.140.48] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ8va-0000r1-Dz
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 05:27:23 +0000
-Date: Fri, 18 Sep 2020 13:26:57 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel[_low]()
-Message-ID: <20200918052657.GA35322@dhcp-128-65.nay.redhat.com>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
- <20200907134745.25732-4-chenzhou10@huawei.com>
- <20200918030112.GA3356@dhcp-128-65.nay.redhat.com>
- <d4296985-7296-b5c9-45f3-b03d28bc7bd8@huawei.com>
+ id 1kJ9BR-0001pC-HW
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 05:43:47 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v5 1/3] tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from
+ vmcoreinfo (if available)
+Date: Fri, 18 Sep 2020 05:43:38 +0000
+Message-ID: <TYAPR01MB1999FAD45DB7A31BFBBDEEBADD3F0@TYAPR01MB1999.jpnprd01.prod.outlook.com>
+References: <20200910053305.323365-1-bhsharma@redhat.com>
+ <20200910053305.323365-2-bhsharma@redhat.com>
+In-Reply-To: <20200910053305.323365-2-bhsharma@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <d4296985-7296-b5c9-45f3-b03d28bc7bd8@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,41 +27,591 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>
 
-On 09/18/20 at 11:57am, chenzhou wrote:
-> Hi Dave,
-> 
-> 
-> On 2020/9/18 11:01, Dave Young wrote:
-> > On 09/07/20 at 09:47pm, Chen Zhou wrote:
-> >> To make the functions reserve_crashkernel[_low]() as generic,
-> >> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
-> >>
-> >> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> >> ---
-> >>  arch/x86/kernel/setup.c | 11 ++++++-----
-> >>  1 file changed, 6 insertions(+), 5 deletions(-)
-> >>
-> >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> >> index d7fd90c52dae..71a6a6e7ca5b 100644
-> >> --- a/arch/x86/kernel/setup.c
-> >> +++ b/arch/x86/kernel/setup.c
-> >> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
-> >>  	unsigned long total_low_mem;
-> >>  	int ret;
-> >>  
-> >> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> >> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
-> > total_low_mem != CRASH_ADDR_LOW_MAX
-> I just replace the magic number with macro, no other change.
-> Besides, function memblock_mem_size(limit_pfn) will compute the memory size
-> according to the actual system ram.
-> 
+Hi Bhupesh,
 
-Ok, it is not obvious in patch this is 64bit only, I'm fine with this
-then.
+-----Original Message-----
+> This patch adds a common feature for archs (except arm64, for which
+> similar support is added via subsequent patch) to retrieve
+> 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
+> 
+> I recently posted a kernel patch (see [0]) which appends
+> 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself rather than
+> in arch-specific code, so that user-space code can also benefit from
+> this addition to the vmcoreinfo and use it as a standard way of
+> determining 'SECTIONS_SHIFT' value in 'makedumpfile' utility.
+> 
+> This patch ensures backward compatibility for kernel versions in which
+> 'MAX_PHYSMEM_BITS' is not available in vmcoreinfo.
+> 
+> [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023960.html
+
+This archive page appears gone..  I modified the commit message.
+Please see comments below.
+
+> 
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Cc: John Donnelly <john.p.donnelly@oracle.com>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  arch/arm.c     |  8 +++++++-
+>  arch/ia64.c    |  7 ++++++-
+>  arch/ppc.c     |  8 +++++++-
+>  arch/ppc64.c   | 49 ++++++++++++++++++++++++++++---------------------
+>  arch/s390x.c   | 29 ++++++++++++++++++-----------
+>  arch/sparc64.c |  9 +++++++--
+>  arch/x86.c     | 34 ++++++++++++++++++++--------------
+>  arch/x86_64.c  | 27 ++++++++++++++++-----------
+>  8 files changed, 109 insertions(+), 62 deletions(-)
+> 
+> diff --git a/arch/arm.c b/arch/arm.c
+> index af7442ac70bf..33536fc4dfc9 100644
+> --- a/arch/arm.c
+> +++ b/arch/arm.c
+> @@ -81,7 +81,13 @@ int
+>  get_machdep_info_arm(void)
+>  {
+>  	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
+> -	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
+> +
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	else
+> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
+> +
+>  	info->kernel_start = SYMBOL(_stext);
+>  	info->section_size_bits = _SECTION_SIZE_BITS;
+> 
+> diff --git a/arch/ia64.c b/arch/ia64.c
+> index 6c33cc7c8288..fb44dda47172 100644
+> --- a/arch/ia64.c
+> +++ b/arch/ia64.c
+> @@ -85,7 +85,12 @@ get_machdep_info_ia64(void)
+>  	}
+> 
+>  	info->section_size_bits = _SECTION_SIZE_BITS;
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	else
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> 
+>  	return TRUE;
+>  }
+> diff --git a/arch/ppc.c b/arch/ppc.c
+> index 37c6a3b60cd3..ed9447427a30 100644
+> --- a/arch/ppc.c
+> +++ b/arch/ppc.c
+> @@ -31,7 +31,13 @@ get_machdep_info_ppc(void)
+>  	unsigned long vmlist, vmap_area_list, vmalloc_start;
+> 
+>  	info->section_size_bits = _SECTION_SIZE_BITS;
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	else
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +
+>  	info->page_offset = __PAGE_OFFSET;
+> 
+>  	if (SYMBOL(_stext) != NOT_FOUND_SYMBOL)
+> diff --git a/arch/ppc64.c b/arch/ppc64.c
+> index 9d8f2525f608..a3984eebdced 100644
+> --- a/arch/ppc64.c
+> +++ b/arch/ppc64.c
+> @@ -466,30 +466,37 @@ int
+>  set_ppc64_max_physmem_bits(void)
+>  {
+>  	long array_len = ARRAY_LENGTH(mem_section);
+> -	/*
+> -	 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> -	 * newer kernels 3.7 onwards uses 46 bits.
+> -	 */
+> -
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> -		return TRUE;
+> -
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> -		return TRUE;
+> 
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+>  		return TRUE;
+> +	} else {
+> +		/*
+> +		 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> +		 * newer kernels 3.7 onwards uses 46 bits.
+> +		 */
+> 
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> -		return TRUE;
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +	}
+> 
+>  	return FALSE;
+>  }
+
+That else block is not needed?  I will replace this hunk with:
+
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -466,6 +466,13 @@ int
+ set_ppc64_max_physmem_bits(void)
+ {
+        long array_len = ARRAY_LENGTH(mem_section);
++
++       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
++               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++               return TRUE;
++       }
++
+        /*
+         * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+         * newer kernels 3.7 onwards uses 46 bits.
+
+
+> diff --git a/arch/s390x.c b/arch/s390x.c
+> index bf9d58e54fb7..4d17a783e5bd 100644
+> --- a/arch/s390x.c
+> +++ b/arch/s390x.c
+> @@ -63,20 +63,27 @@ int
+>  set_s390x_max_physmem_bits(void)
+>  {
+>  	long array_len = ARRAY_LENGTH(mem_section);
+> -	/*
+> -	 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> -	 * newer kernels uses 46 bits.
+> -	 */
+> 
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+>  		return TRUE;
+> +	} else {
+> +		/*
+> +		 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+> +		 * newer kernels uses 46 bits.
+> +		 */
+> 
+> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
+> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> -		return TRUE;
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +
+> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
+> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
+> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
+> +			return TRUE;
+> +	}
+> 
+>  	return FALSE;
+>  }
+
+Ditto.
+
+--- a/arch/s390x.c
++++ b/arch/s390x.c
+@@ -63,6 +63,13 @@ int
+ set_s390x_max_physmem_bits(void)
+ {
+        long array_len = ARRAY_LENGTH(mem_section);
++
++       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
++               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++               return TRUE;
++       }
++
+        /*
+         * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+         * newer kernels uses 46 bits.
+
+
+> diff --git a/arch/sparc64.c b/arch/sparc64.c
+> index 1cfaa854ce6d..b93a05bdfe59 100644
+> --- a/arch/sparc64.c
+> +++ b/arch/sparc64.c
+> @@ -25,10 +25,15 @@ int get_versiondep_info_sparc64(void)
+>  {
+>  	info->section_size_bits = _SECTION_SIZE_BITS;
+> 
+> -	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	else if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+>  		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
+> -	else {
+> +	else
+>  		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
+> +
+> +	if (info->kernel_version < KERNEL_VERSION(3, 8, 13)) {
+>  		info->flag_vmemmap = TRUE;
+>  		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
+>  		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
+> diff --git a/arch/x86.c b/arch/x86.c
+> index 3fdae93084b8..f1b43d4c8179 100644
+> --- a/arch/x86.c
+> +++ b/arch/x86.c
+> @@ -72,21 +72,27 @@ get_machdep_info_x86(void)
+>  {
+>  	unsigned long vmlist, vmap_area_list, vmalloc_start;
+> 
+> -	/* PAE */
+> -	if ((vt.mem_flags & MEMORY_X86_PAE)
+> -	    || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
+> -	      && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
+> -	      && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
+> -	      == 512)) {
+> -		DEBUG_MSG("\n");
+> -		DEBUG_MSG("PAE          : ON\n");
+> -		vt.mem_flags |= MEMORY_X86_PAE;
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
+> -	} else {
+> -		DEBUG_MSG("\n");
+> -		DEBUG_MSG("PAE          : OFF\n");
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	else {
+> +		/* PAE */
+> +		if ((vt.mem_flags & MEMORY_X86_PAE)
+> +				|| ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
+> +					&& (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
+> +					&& ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
+> +					== 512)) {
+> +			DEBUG_MSG("\n");
+> +			DEBUG_MSG("PAE          : ON\n");
+> +			vt.mem_flags |= MEMORY_X86_PAE;
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
+> +		} else {
+> +			DEBUG_MSG("\n");
+> +			DEBUG_MSG("PAE          : OFF\n");
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +		}
+
+If we can get MAX_PHYSMEM_BITS from vmcoreinfo,
+1. No "PAE : ON " or "PAE : OFF" debug message
+2. No vt.mem_flags |= MEMORY_X86_PAE if pkmap check is true.
+
+The latter will not occur with MAX_PHYSMEM_BITS in vmcoreinfo,
+but for simplicity, I'd like to replace the hunk with the following.
+
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -87,6 +87,11 @@ get_machdep_info_x86(void)
+                DEBUG_MSG("PAE          : OFF\n");
+                info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+        }
++
++       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++
+        info->page_offset = __PAGE_OFFSET;
+ 
+        if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
+
+
+
+>  	}
+> +
+>  	info->page_offset = __PAGE_OFFSET;
+> 
+>  	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
+> diff --git a/arch/x86_64.c b/arch/x86_64.c
+> index b5e295452964..10eed83df655 100644
+> --- a/arch/x86_64.c
+> +++ b/arch/x86_64.c
+> @@ -268,17 +268,22 @@ get_machdep_info_x86_64(void)
+>  int
+>  get_versiondep_info_x86_64(void)
+>  {
+> -	/*
+> -	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+> -	 */
+> -	if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+> -	else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+> -	else if(check_5level_paging())
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
+> -	else
+> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
+> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
+> +	} else {
+> +		/*
+> +		 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+> +		 */
+> +		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+> +		else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+> +		else if(check_5level_paging())
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
+> +		else
+> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
+> +	}
+
+Ditto.
+
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -268,10 +268,10 @@ get_machdep_info_x86_64(void)
+ int
+ get_versiondep_info_x86_64(void)
+ {
+-       /*
+-        * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+-        */
+-       if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
++       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++       else if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+                info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+        else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+                info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+
+> 
+>  	if (!get_page_offset_x86_64())
+>  		return FALSE;
+> --
+> 2.26.2
+
+
+
+So I modified the above hunks, could you check the following?
+And I'm going to merge this patch separately from the 2/3 and 3/3 patch,
+because those patches don't depend on this patch.
+
+
+From 93d32474eb18f955bb57cdc2b63dd2cb447a33fc Mon Sep 17 00:00:00 2001
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Thu, 10 Sep 2020 11:03:03 +0530
+Subject: [PATCH] tree-wide: Retrieve MAX_PHYSMEM_BITS from vmcoreinfo
+
+Add a common feature for architectures (except arm64, for which
+similar support is added via a subsequent patch) to retrieve
+MAX_PHYSMEM_BITS from vmcoreinfo, which was added by kernel commit
+1d50e5d0c505 ("crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS'
+to vmcoreinfo").  This makes makedumpfile adaptable for future
+MAX_PHYSMEM_BITS changes.
+
+Also ensure backward compatibility for kernel versions in which
+MAX_PHYSMEM_BITS is not available in vmcoreinfo.
+
+Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
+---
+ arch/arm.c     | 8 +++++++-
+ arch/ia64.c    | 7 ++++++-
+ arch/ppc.c     | 8 +++++++-
+ arch/ppc64.c   | 7 +++++++
+ arch/s390x.c   | 7 +++++++
+ arch/sparc64.c | 9 +++++++--
+ arch/x86.c     | 5 +++++
+ arch/x86_64.c  | 8 ++++----
+ 8 files changed, 50 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm.c b/arch/arm.c
+index af7442ac70bf..33536fc4dfc9 100644
+--- a/arch/arm.c
++++ b/arch/arm.c
+@@ -81,7 +81,13 @@ int
+ get_machdep_info_arm(void)
+ {
+ 	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
+-	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else
++		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
++
+ 	info->kernel_start = SYMBOL(_stext);
+ 	info->section_size_bits = _SECTION_SIZE_BITS;
+ 
+diff --git a/arch/ia64.c b/arch/ia64.c
+index 6c33cc7c8288..fb44dda47172 100644
+--- a/arch/ia64.c
++++ b/arch/ia64.c
+@@ -85,7 +85,12 @@ get_machdep_info_ia64(void)
+ 	}
+ 
+ 	info->section_size_bits = _SECTION_SIZE_BITS;
+-	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else
++		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+ 
+ 	return TRUE;
+ }
+diff --git a/arch/ppc.c b/arch/ppc.c
+index 37c6a3b60cd3..ed9447427a30 100644
+--- a/arch/ppc.c
++++ b/arch/ppc.c
+@@ -31,7 +31,13 @@ get_machdep_info_ppc(void)
+ 	unsigned long vmlist, vmap_area_list, vmalloc_start;
+ 
+ 	info->section_size_bits = _SECTION_SIZE_BITS;
+-	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else
++		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
++
+ 	info->page_offset = __PAGE_OFFSET;
+ 
+ 	if (SYMBOL(_stext) != NOT_FOUND_SYMBOL)
+diff --git a/arch/ppc64.c b/arch/ppc64.c
+index 9d8f2525f608..5e70acb51aba 100644
+--- a/arch/ppc64.c
++++ b/arch/ppc64.c
+@@ -466,6 +466,13 @@ int
+ set_ppc64_max_physmem_bits(void)
+ {
+ 	long array_len = ARRAY_LENGTH(mem_section);
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++		return TRUE;
++	}
++
+ 	/*
+ 	 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
+ 	 * newer kernels 3.7 onwards uses 46 bits.
+diff --git a/arch/s390x.c b/arch/s390x.c
+index bf9d58e54fb7..c4fed6f3bbd0 100644
+--- a/arch/s390x.c
++++ b/arch/s390x.c
+@@ -63,6 +63,13 @@ int
+ set_s390x_max_physmem_bits(void)
+ {
+ 	long array_len = ARRAY_LENGTH(mem_section);
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++		return TRUE;
++	}
++
+ 	/*
+ 	 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
+ 	 * newer kernels uses 46 bits.
+diff --git a/arch/sparc64.c b/arch/sparc64.c
+index 1cfaa854ce6d..b93a05bdfe59 100644
+--- a/arch/sparc64.c
++++ b/arch/sparc64.c
+@@ -25,10 +25,15 @@ int get_versiondep_info_sparc64(void)
+ {
+ 	info->section_size_bits = _SECTION_SIZE_BITS;
+ 
+-	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
+ 		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
+-	else {
++	else
+ 		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
++
++	if (info->kernel_version < KERNEL_VERSION(3, 8, 13)) {
+ 		info->flag_vmemmap = TRUE;
+ 		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
+ 		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
+diff --git a/arch/x86.c b/arch/x86.c
+index 3fdae93084b8..7899329c821f 100644
+--- a/arch/x86.c
++++ b/arch/x86.c
+@@ -87,6 +87,11 @@ get_machdep_info_x86(void)
+ 		DEBUG_MSG("PAE          : OFF\n");
+ 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+ 	}
++
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++
+ 	info->page_offset = __PAGE_OFFSET;
+ 
+ 	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
+diff --git a/arch/x86_64.c b/arch/x86_64.c
+index b5e295452964..58b5c0b7af40 100644
+--- a/arch/x86_64.c
++++ b/arch/x86_64.c
+@@ -268,10 +268,10 @@ get_machdep_info_x86_64(void)
+ int
+ get_versiondep_info_x86_64(void)
+ {
+-	/*
+-	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
+-	 */
+-	if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
+ 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
+ 	else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
+ 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
+-- 
+1.8.3.1
 
 
 _______________________________________________
