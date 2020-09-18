@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kIzjv-0007LG-S6
- for kexec@lists.infradead.org; Thu, 17 Sep 2020 19:38:44 +0000
-From: matthias.bgg@kernel.org
-Subject: [PATCH] arm64: Add purgatory printing
-Date: Thu, 17 Sep 2020 21:38:35 +0200
-Message-Id: <20200917193835.30910-1-matthias.bgg@kernel.org>
+ id 1kJ5iy-0001zH-AI
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 02:02:09 +0000
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 5.4 047/330] x86/kdump: Always reserve the low 1M when
+ the crashkernel option is specified
+Date: Thu, 17 Sep 2020 21:56:27 -0400
+Message-Id: <20200918020110.2063155-47-sashal@kernel.org>
+In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
+References: <20200918020110.2063155-1-sashal@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -16,212 +19,89 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
-Cc: geoff@infradead.org, Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>, dhowells@redhat.com, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, d.hatayama@fujitsu.com, vgoyal@redhat.com
 
-From: Matthias Brugger <mbrugger@suse.com>
-
-Add option to allow purgatory printing on arm64 hardware
-by passing the console name which should be used.
-Based on a patch by Geoff Levand.
-
-Cc: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
----
- kexec/arch/arm64/include/arch/options.h |  6 ++-
- kexec/arch/arm64/kexec-arm64.c          | 61 +++++++++++++++++++++++++
- purgatory/arch/arm64/purgatory-arm64.c  | 17 ++++++-
- 3 files changed, 82 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-index a17d933..be7d169 100644
---- a/kexec/arch/arm64/include/arch/options.h
-+++ b/kexec/arch/arm64/include/arch/options.h
-@@ -5,7 +5,8 @@
- #define OPT_DTB			((OPT_MAX)+1)
- #define OPT_INITRD		((OPT_MAX)+2)
- #define OPT_REUSE_CMDLINE	((OPT_MAX)+3)
--#define OPT_ARCH_MAX		((OPT_MAX)+4)
-+#define OPT_CONSOLE		((OPT_MAX)+4)
-+#define OPT_ARCH_MAX		((OPT_MAX)+5)
- 
- #define KEXEC_ARCH_OPTIONS \
- 	KEXEC_OPTIONS \
-@@ -13,6 +14,7 @@
- 	{ "command-line",  1, NULL, OPT_APPEND }, \
- 	{ "dtb",           1, NULL, OPT_DTB }, \
- 	{ "initrd",        1, NULL, OPT_INITRD }, \
-+	{ "console",       1, NULL, OPT_CONSOLE }, \
- 	{ "ramdisk",       1, NULL, OPT_INITRD }, \
- 	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
- 
-@@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
- "     --command-line=STRING Set the kernel command line to STRING.\n"
- "     --dtb=FILE            Use FILE as the device tree blob.\n"
- "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
-+"     --console=STRING      Console used for purgatory printing.\n"
- "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
- "     --reuse-cmdline       Use kernel command line from running system.\n";
- 
-@@ -32,6 +35,7 @@ struct arm64_opts {
- 	const char *command_line;
- 	const char *dtb;
- 	const char *initrd;
-+	const char *console;
- };
- 
- extern struct arm64_opts arm64_opts;
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 45ebc54..44c9e6e 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
- 			break;
- 		case OPT_KEXEC_FILE_SYSCALL:
- 			do_kexec_file_syscall = 1;
-+		case OPT_CONSOLE:
-+			arm64_opts.console = optarg;
- 			break;
- 		default:
- 			break; /* Ignore core and unknown options. */
-@@ -180,12 +182,62 @@ int arch_process_options(int argc, char **argv)
- 	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
- 		(do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
- 							arm64_opts.dtb));
-+	dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
-+		arm64_opts.console);
-+
- 	if (do_kexec_file_syscall)
- 		arm64_opts.dtb = NULL;
- 
- 	return 0;
- }
- 
-+/**
-+ * find_purgatory_sink - Find a sink for purgatory output.
-+ */
-+
-+static uint64_t find_purgatory_sink(const char *console)
-+{
-+	int fd, ret;
-+	char folder[255], device[255], mem[255];
-+	struct stat sb;
-+	char buffer[18];
-+	uint64_t iomem = 0x0;
-+
-+	if (!console)
-+		return 0;
-+
-+	sprintf(device, "/sys/class/tty/%s", console);
-+	if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-+		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
-+			__func__, device);
-+		return 0;
-+	}
-+
-+	sprintf(mem, "%s%s", device, "/iomem_base");
-+	printf("console memory read from %s\n", mem);
-+
-+	fd = open(mem, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "kexec: %s: No able to open %s\n",
-+			__func__, mem);
-+		return 0;
-+	}
-+
-+	memset(buffer, '\0', sizeof(char) * 18);
-+	ret = read(fd, buffer, 18);
-+	if (ret < 0) {
-+		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
-+		close(fd);
-+		return 0;
-+	}
-+
-+	sscanf(buffer, "%lx", &iomem);
-+	printf("console memory is at %#lx\n", iomem);
-+
-+	close(fd);
-+	return iomem;
-+}
-+
- /**
-  * struct dtb - Info about a binary device tree.
-  *
-@@ -637,6 +689,7 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	unsigned long hole_min;
- 	unsigned long hole_max;
- 	unsigned long initrd_end;
-+	uint64_t purgatory_sink;
- 	char *initrd_buf = NULL;
- 	struct dtb dtb;
- 	char command_line[COMMAND_LINE_SIZE] = "";
-@@ -654,6 +707,11 @@ int arm64_load_other_segments(struct kexec_info *info,
- 		command_line[sizeof(command_line) - 1] = 0;
- 	}
- 
-+	purgatory_sink = find_purgatory_sink(arm64_opts.console);
-+
-+	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
-+		purgatory_sink);
-+
- 	if (arm64_opts.dtb) {
- 		dtb.name = "dtb_user";
- 		dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
-@@ -742,6 +800,9 @@ int arm64_load_other_segments(struct kexec_info *info,
- 
- 	info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
- 
-+	elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
-+		sizeof(purgatory_sink));
-+
- 	elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &image_base,
- 		sizeof(image_base));
- 
-diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
-index fe50fcf..b4d8578 100644
---- a/purgatory/arch/arm64/purgatory-arm64.c
-+++ b/purgatory/arch/arm64/purgatory-arm64.c
-@@ -5,15 +5,30 @@
- #include <stdint.h>
- #include <purgatory.h>
- 
-+/* Symbols set by kexec. */
-+
-+uint8_t *arm64_sink __attribute__ ((section ("data")));
-+extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
-+extern uint64_t arm64_dtb_addr;
-+
- void putchar(int ch)
- {
--	/* Nothing for now */
-+	if (!arm64_sink)
-+		return;
-+
-+	*arm64_sink = ch;
-+
-+	if (ch == '\n')
-+		*arm64_sink = '\r';
- }
- 
- void post_verification_setup_arch(void)
- {
-+	printf("purgatory: booting kernel now\n");
- }
- 
- void setup_arch(void)
- {
-+	printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
-+	printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
- }
--- 
-2.28.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+RnJvbTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+CgpbIFVwc3RyZWFtIGNvbW1p
+dCA2ZjU5OWQ4NDIzMWZkMjdlNDJmNGNhMmE3ODZhNjY0MWU4Y2RkZjAwIF0KCk9uIHg4NiwgcHVy
+Z2F0b3J5KCkgY29waWVzIHRoZSBmaXJzdCA2NDBLIG9mIG1lbW9yeSB0byBhIGJhY2t1cCByZWdp
+b24KYmVjYXVzZSB0aGUga2VybmVsIG5lZWRzIHRob3NlIGZpcnN0IDY0MEsgZm9yIHRoZSByZWFs
+IG1vZGUgdHJhbXBvbGluZQpkdXJpbmcgYm9vdCwgYW1vbmcgb3RoZXJzLgoKSG93ZXZlciwgd2hl
+biBTTUUgaXMgZW5hYmxlZCwgdGhlIGtlcm5lbCBjYW5ub3QgcHJvcGVybHkgY29weSB0aGUgb2xk
+Cm1lbW9yeSB0byB0aGUgYmFja3VwIGFyZWEgYnV0IHJlYWRzIG9ubHkgaXRzIGVuY3J5cHRlZCBj
+b250ZW50cy4gVGhlCnJlc3VsdCBpcyB0aGF0IHRoZSBjcmFzaCB0b29sIGdldHMgaW52YWxpZCBw
+b2ludGVycyB3aGVuIHBhcnNpbmcgdm1jb3JlOgoKICBjcmFzaD4ga21lbSAtc3xncmVwIC1pIGlu
+dmFsaWQKICBrbWVtOiBkbWEta21hbGxvYy01MTI6IHNsYWI6ZmZmZmQ3NzY4MDAwMWMwMCBpbnZh
+bGlkIGZyZWVwb2ludGVyOmE2MDg2YWMwOTlmMGM1YTQKICBrbWVtOiBkbWEta21hbGxvYy01MTI6
+IHNsYWI6ZmZmZmQ3NzY4MDAwMWMwMCBpbnZhbGlkIGZyZWVwb2ludGVyOmE2MDg2YWMwOTlmMGM1
+YTQKICBjcmFzaD4KClNvIHJlc2VydmUgdGhlIHJlbWFpbmluZyBsb3cgMU0gbWVtb3J5IHdoZW4g
+dGhlIGNyYXNoa2VybmVsIG9wdGlvbiBpcwpzcGVjaWZpZWQgKGFmdGVyIHJlc2VydmluZyByZWFs
+IG1vZGUgbWVtb3J5KSBzbyB0aGF0IGFsbG9jYXRlZCBtZW1vcnkKZG9lcyBub3QgZmFsbCBpbnRv
+IHRoZSBsb3cgMU0gYXJlYSBhbmQgdGh1cyB0aGUgY29weWluZyBvZiB0aGUgY29udGVudHMKb2Yg
+dGhlIGZpcnN0IDY0MGsgdG8gYSBiYWNrdXAgcmVnaW9uIGluIHB1cmdhdG9yeSgpIGNhbiBiZSBh
+dm9pZGVkCmFsdG9nZXRoZXIuCgpUaGlzIHdheSwgaXQgZG9lcyBub3QgbmVlZCB0byBiZSBpbmNs
+dWRlZCBpbiBjcmFzaCBkdW1wcyBvciB1c2VkIGZvcgphbnl0aGluZyBleGNlcHQgdGhlIHRyYW1w
+b2xpbmVzIHRoYXQgbXVzdCBsaXZlIGluIHRoZSBsb3cgMU0uCgogWyBicDogSGVhdmlseSByZXdy
+aXRlIGNvbW1pdCBtZXNzYWdlLCBmbGlwIGNoZWNrIGxvZ2ljIGluCiAgIGNyYXNoX3Jlc2VydmVf
+bG93XzFNKCkuXQoKU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5j
+b20+ClNpZ25lZC1vZmYtYnk6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5kZT4KQ2M6IGJoZUBy
+ZWRoYXQuY29tCkNjOiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KQ2M6IGQuaGF0YXlh
+bWFAZnVqaXRzdS5jb20KQ2M6IGRob3dlbGxzQHJlZGhhdC5jb20KQ2M6IGViaWVkZXJtQHhtaXNz
+aW9uLmNvbQpDYzogaG9ybXNAdmVyZ2UubmV0LmF1CkNjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFA
+enl0b3IuY29tPgpDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+CkNjOiBKw7xyZ2Vu
+IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+CkNjOiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCkNj
+OiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+CkNjOiBUaG9tYXMgR2xlaXhu
+ZXIgPHRnbHhAbGludXRyb25peC5kZT4KQ2M6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5
+QGFtZC5jb20+CkNjOiB2Z295YWxAcmVkaGF0LmNvbQpDYzogeDg2LW1sIDx4ODZAa2VybmVsLm9y
+Zz4KTGluazogaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MTEwODA5MDAyNy4xMTA4Mi0y
+LWxpamlhbmdAcmVkaGF0LmNvbQpMaW5rOiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hv
+d19idWcuY2dpP2lkPTIwNDc5MwpTaWduZWQtb2ZmLWJ5OiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtl
+cm5lbC5vcmc+Ci0tLQogYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaCB8ICA2ICsrKysrKwog
+YXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICB8IDE1ICsrKysrKysrKysrKysrKwogYXJjaC94
+ODYvcmVhbG1vZGUvaW5pdC5jICAgICB8ICAyICsrCiAzIGZpbGVzIGNoYW5nZWQsIDIzIGluc2Vy
+dGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oIGIvYXJj
+aC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaAppbmRleCBlZjU2MzhmNjQxZjJiLi44OGVhZGQwOGFk
+NzA4IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oCisrKyBiL2FyY2gv
+eDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKQEAgLTEwLDQgKzEwLDEwIEBAIGludCBjcmFzaF9zZXR1
+cF9tZW1tYXBfZW50cmllcyhzdHJ1Y3Qga2ltYWdlICppbWFnZSwKIAkJc3RydWN0IGJvb3RfcGFy
+YW1zICpwYXJhbXMpOwogdm9pZCBjcmFzaF9zbXBfc2VuZF9zdG9wKHZvaWQpOwogCisjaWZkZWYg
+Q09ORklHX0tFWEVDX0NPUkUKK3ZvaWQgX19pbml0IGNyYXNoX3Jlc2VydmVfbG93XzFNKHZvaWQp
+OworI2Vsc2UKK3N0YXRpYyBpbmxpbmUgdm9pZCBfX2luaXQgY3Jhc2hfcmVzZXJ2ZV9sb3dfMU0o
+dm9pZCkgeyB9CisjZW5kaWYKKwogI2VuZGlmIC8qIF9BU01fWDg2X0NSQVNIX0ggKi8KZGlmZiAt
+LWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMK
+aW5kZXggZWI2NTFmYmRlOTJhYy4uZmYyNWEyZWEyNzFjZiAxMDA2NDQKLS0tIGEvYXJjaC94ODYv
+a2VybmVsL2NyYXNoLmMKKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKQEAgLTI0LDYgKzI0
+LDcgQEAKICNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4KICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+
+CiAjaW5jbHVkZSA8bGludXgvdm1hbGxvYy5oPgorI2luY2x1ZGUgPGxpbnV4L21lbWJsb2NrLmg+
+CiAKICNpbmNsdWRlIDxhc20vcHJvY2Vzc29yLmg+CiAjaW5jbHVkZSA8YXNtL2hhcmRpcnEuaD4K
+QEAgLTM5LDYgKzQwLDcgQEAKICNpbmNsdWRlIDxhc20vdmlydGV4dC5oPgogI2luY2x1ZGUgPGFz
+bS9pbnRlbF9wdC5oPgogI2luY2x1ZGUgPGFzbS9jcmFzaC5oPgorI2luY2x1ZGUgPGFzbS9jbWRs
+aW5lLmg+CiAKIC8qIFVzZWQgd2hpbGUgcHJlcGFyaW5nIG1lbW9yeSBtYXAgZW50cmllcyBmb3Ig
+c2Vjb25kIGtlcm5lbCAqLwogc3RydWN0IGNyYXNoX21lbW1hcF9kYXRhIHsKQEAgLTY4LDYgKzcw
+LDE5IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBjcHVfY3Jhc2hfdm1jbGVhcl9sb2FkZWRfdm1jc3Mo
+dm9pZCkKIAlyY3VfcmVhZF91bmxvY2soKTsKIH0KIAorLyoKKyAqIFdoZW4gdGhlIGNyYXNoa2Vy
+bmVsIG9wdGlvbiBpcyBzcGVjaWZpZWQsIG9ubHkgdXNlIHRoZSBsb3cKKyAqIDFNIGZvciB0aGUg
+cmVhbCBtb2RlIHRyYW1wb2xpbmUuCisgKi8KK3ZvaWQgX19pbml0IGNyYXNoX3Jlc2VydmVfbG93
+XzFNKHZvaWQpCit7CisJaWYgKGNtZGxpbmVfZmluZF9vcHRpb24oYm9vdF9jb21tYW5kX2xpbmUs
+ICJjcmFzaGtlcm5lbCIsIE5VTEwsIDApIDwgMCkKKwkJcmV0dXJuOworCisJbWVtYmxvY2tfcmVz
+ZXJ2ZSgwLCAxPDwyMCk7CisJcHJfaW5mbygiUmVzZXJ2aW5nIHRoZSBsb3cgMU0gb2YgbWVtb3J5
+IGZvciBjcmFzaGtlcm5lbFxuIik7Cit9CisKICNpZiBkZWZpbmVkKENPTkZJR19TTVApICYmIGRl
+ZmluZWQoQ09ORklHX1g4Nl9MT0NBTF9BUElDKQogCiBzdGF0aWMgdm9pZCBrZHVtcF9ubWlfY2Fs
+bGJhY2soaW50IGNwdSwgc3RydWN0IHB0X3JlZ3MgKnJlZ3MpCmRpZmYgLS1naXQgYS9hcmNoL3g4
+Ni9yZWFsbW9kZS9pbml0LmMgYi9hcmNoL3g4Ni9yZWFsbW9kZS9pbml0LmMKaW5kZXggN2RjZTM5
+YzhjMDM0YS4uMjYyZjgzY2FkMzU1MSAxMDA2NDQKLS0tIGEvYXJjaC94ODYvcmVhbG1vZGUvaW5p
+dC5jCisrKyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYwpAQCAtOCw2ICs4LDcgQEAKICNpbmNs
+dWRlIDxhc20vcGd0YWJsZS5oPgogI2luY2x1ZGUgPGFzbS9yZWFsbW9kZS5oPgogI2luY2x1ZGUg
+PGFzbS90bGJmbHVzaC5oPgorI2luY2x1ZGUgPGFzbS9jcmFzaC5oPgogCiBzdHJ1Y3QgcmVhbF9t
+b2RlX2hlYWRlciAqcmVhbF9tb2RlX2hlYWRlcjsKIHUzMiAqdHJhbXBvbGluZV9jcjRfZmVhdHVy
+ZXM7CkBAIC0zNCw2ICszNSw3IEBAIHZvaWQgX19pbml0IHJlc2VydmVfcmVhbF9tb2RlKHZvaWQp
+CiAKIAltZW1ibG9ja19yZXNlcnZlKG1lbSwgc2l6ZSk7CiAJc2V0X3JlYWxfbW9kZV9tZW0obWVt
+KTsKKwljcmFzaF9yZXNlcnZlX2xvd18xTSgpOwogfQogCiBzdGF0aWMgdm9pZCBfX2luaXQgc2V0
+dXBfcmVhbF9tb2RlKHZvaWQpCi0tIAoyLjI1LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
+cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
+eGVjCg==
