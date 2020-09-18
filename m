@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x442.google.com ([2a00:1450:4864:20::442])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJAlD-0000xU-80
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 07:24:48 +0000
-Received: by mail-wr1-x442.google.com with SMTP id z1so4531875wrt.3
- for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 00:24:45 -0700 (PDT)
-Subject: Re: [PATCH] arm64: Add purgatory printing
-References: <20200917193835.30910-1-matthias.bgg@kernel.org>
- <fd2910d9-7268-3b8a-465a-3a7406dd0cd8@infradead.org>
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Message-ID: <c470b06c-4470-2175-f96e-e98c27352c20@gmail.com>
-Date: Fri, 18 Sep 2020 09:24:42 +0200
+ id 1kJAm5-0001Lr-4L
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 07:25:42 +0000
+Date: Fri, 18 Sep 2020 15:25:26 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel[_low]()
+Message-ID: <20200918072526.GD25604@MiWiFi-R3L-srv>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <20200907134745.25732-4-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <fd2910d9-7268-3b8a-465a-3a7406dd0cd8@infradead.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20200907134745.25732-4-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,83 +21,86 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, matthias.bgg@kernel.org, kexec@lists.infradead.org, horms@verge.net.au
-Cc: Matthias Brugger <mbrugger@suse.com>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, rppt@linux.ibm.com, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-Hi Geoff,
+Hi,
 
-On 18/09/2020 04:04, Geoff Levand wrote:
-> Hi Matthias,
+On 09/07/20 at 09:47pm, Chen Zhou wrote:
+> To make the functions reserve_crashkernel[_low]() as generic,
+> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
 > 
-> On 9/17/20 12:38 PM, matthias.bgg@kernel.org wrote:
-> Add option to allow purgatory printing on arm64 hardware
->> by passing the console name which should be used.
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  arch/x86/kernel/setup.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
 > 
->> +static uint64_t find_purgatory_sink(const char *console)
->> +{
->> +	int fd, ret;
->> +	char folder[255], device[255], mem[255];
->> +	struct stat sb;
->> +	char buffer[18];
->> +	uint64_t iomem = 0x0;
->> +
->> +	if (!console)
->> +		return 0;
->> +
->> +	sprintf(device, "/sys/class/tty/%s", console);
->> +	if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
->> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
->> +			__func__, device);
->> +		return 0;
->> +	}
->> +
->> +	sprintf(mem, "%s%s", device, "/iomem_base");
->> +	printf("console memory read from %s\n", mem);
->> +
->> +	fd = open(mem, O_RDONLY);
->> +	if (fd < 0) {
->> +		fprintf(stderr, "kexec: %s: No able to open %s\n",
->> +			__func__, mem);
->> +		return 0;
->> +	}
->> +
->> +	memset(buffer, '\0', sizeof(char) * 18);
-> 
-> I think I'd like to just see 'memset(buffer, 0, sizeof(buffer));'.
-> 
->> +	ret = read(fd, buffer, 18);
-> 
-> And 'ret = read(fd, buffer, sizeof(buffer));'.
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index d7fd90c52dae..71a6a6e7ca5b 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
+>  	unsigned long total_low_mem;
+>  	int ret;
+>  
+> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
+
+Just note that the replacement has been done in another patch from Mike
+Rapoport, partially. He seems to have done reserve_crashkernel_low()
+part, there's one left in reserve_crashkernel(), you might want to check
+that. 
+
+Mike's patch which is from a patchset has been merged into Andrew's next
+tree.
+
+commit 6e50f7672ffa362e9bd4bc0c0d2524ed872828c5
+Author: Mike Rapoport <rppt@linux.ibm.com>
+Date:   Wed Aug 26 15:22:32 2020 +1000
+
+    x86/setup: simplify reserve_crashkernel()
+
+>  
+>  	/* crashkernel=Y,low */
+>  	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+> @@ -451,7 +451,7 @@ static int __init reserve_crashkernel_low(void)
+>  			return 0;
+>  	}
+>  
+> -	low_base = memblock_find_in_range(CRASH_ALIGN, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	low_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX, low_size, CRASH_ALIGN);
+>  	if (!low_base) {
+>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>  		       (unsigned long)(low_size >> 20));
+> @@ -504,8 +504,9 @@ static void __init reserve_crashkernel(void)
+>  	if (!crash_base) {
+>  		/*
+>  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+> -		 * crashkernel=x,high reserves memory over 4G, also allocates
+> -		 * 256M extra low memory for DMA buffers and swiotlb.
+> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
+> +		 * also allocates 256M extra low memory for DMA buffers
+> +		 * and swiotlb.
+>  		 * But the extra memory is not required for all machines.
+>  		 * So try low memory first and fall back to high memory
+>  		 * unless "crashkernel=size[KMG],high" is specified.
+> @@ -539,7 +540,7 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+>  		memblock_free(crash_base, crash_size);
+>  		return;
+>  	}
+> -- 
+> 2.20.1
 > 
 
-You are correct, I'll add it to v2.
-
-Thanks for the quick review!
-
-Matthias
-
->> +	if (ret < 0) {
->> +		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
->> +		close(fd);
->> +		return 0;
->> +	}
->> +
->> +	sscanf(buffer, "%lx", &iomem);
->> +	printf("console memory is at %#lx\n", iomem);
->> +
->> +	close(fd);
->> +	return iomem;
->> +}
->> +
-> 
-> Otherwise, looks OK.
-> 
-> -Geoff
-> 
 
 _______________________________________________
 kexec mailing list
