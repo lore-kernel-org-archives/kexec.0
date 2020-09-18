@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-1.mimecast.com ([207.211.31.120]
- helo=us-smtp-1.mimecast.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ726-0003Ja-Nu
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 03:25:59 +0000
-Date: Fri, 18 Sep 2020 11:25:46 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
-Message-ID: <20200918032546.GA4180@dhcp-128-65.nay.redhat.com>
+Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel[_low]()
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <20200907134745.25732-4-chenzhou10@huawei.com>
+ <20200918030112.GA3356@dhcp-128-65.nay.redhat.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <d4296985-7296-b5c9-45f3-b03d28bc7bd8@huawei.com>
+Date: Fri, 18 Sep 2020 11:57:06 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
+In-Reply-To: <20200918030112.GA3356@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,48 +21,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, bhe@redhat.com, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-crash_kexec_post_notifiers enables running various panic notifier
-before kdump kernel booting. This increases risks of kdump failure.
-It is well documented in kernel-parameters.txt. We do not suggest
-people to enable it together with kdump unless he/she is really sure.
-This is also not suggested to be enabled by default when users are
-not aware in distributions.
+Hi Dave,
 
-But unfortunately it is enabled by default in systemd, see below
-discussions in a systemd report, we can not convince systemd to change
-it:
-https://github.com/systemd/systemd/issues/16661
 
-Actually we have got reports about kdump kernel hangs in both s390x
-and powerpcle cases caused by the systemd change,  also some x86 cases
-could also be caused by the same (although that is in Hyper-V code
-instead of systemd, that need to be addressed separately).
+On 2020/9/18 11:01, Dave Young wrote:
+> On 09/07/20 at 09:47pm, Chen Zhou wrote:
+>> To make the functions reserve_crashkernel[_low]() as generic,
+>> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+>>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>  arch/x86/kernel/setup.c | 11 ++++++-----
+>>  1 file changed, 6 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>> index d7fd90c52dae..71a6a6e7ca5b 100644
+>> --- a/arch/x86/kernel/setup.c
+>> +++ b/arch/x86/kernel/setup.c
+>> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
+>>  	unsigned long total_low_mem;
+>>  	int ret;
+>>  
+>> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+>> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
+> total_low_mem != CRASH_ADDR_LOW_MAX
+I just replace the magic number with macro, no other change.
+Besides, function memblock_mem_size(limit_pfn) will compute the memory size
+according to the actual system ram.
 
-Thus to avoid the auto enablement here just disable the param writable
-permission in sysfs.
-
-Signed-off-by: Dave Young <dyoung@redhat.com>
----
- kernel/panic.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/kernel/panic.c b/kernel/panic.c
-index aef8872ba843..bea44fc4eb3b 100644
---- a/kernel/panic.c
-+++ b/kernel/panic.c
-@@ -695,7 +695,7 @@ core_param(panic, panic_timeout, int, 0644);
- core_param(panic_print, panic_print, ulong, 0644);
- core_param(pause_on_oops, pause_on_oops, int, 0644);
- core_param(panic_on_warn, panic_on_warn, int, 0644);
--core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0644);
-+core_param(crash_kexec_post_notifiers, crash_kexec_post_notifiers, bool, 0444);
- 
- static int __init oops_setup(char *s)
- {
--- 
-2.26.2
+Thanks,
+Chen Zhou
+>
+>>  
+>>  	/* crashkernel=Y,low */
+>>  	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+> The param total_low_mem is for dynamically change crash_size according
+> to system ram size.
+>
+> Is above change a must for your arm64 patches?
+See above.
+>
+>> @@ -451,7 +451,7 @@ static int __init reserve_crashkernel_low(void)
+>>  			return 0;
+>>  	}
+>>  
+>> -	low_base = memblock_find_in_range(CRASH_ALIGN, 1ULL << 32, low_size, CRASH_ALIGN);
+>> +	low_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX, low_size, CRASH_ALIGN);
+>>  	if (!low_base) {
+>>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>  		       (unsigned long)(low_size >> 20));
+>> @@ -504,8 +504,9 @@ static void __init reserve_crashkernel(void)
+>>  	if (!crash_base) {
+>>  		/*
+>>  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+>> -		 * crashkernel=x,high reserves memory over 4G, also allocates
+>> -		 * 256M extra low memory for DMA buffers and swiotlb.
+>> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
+>> +		 * also allocates 256M extra low memory for DMA buffers
+>> +		 * and swiotlb.
+>>  		 * But the extra memory is not required for all machines.
+>>  		 * So try low memory first and fall back to high memory
+>>  		 * unless "crashkernel=size[KMG],high" is specified.
+>> @@ -539,7 +540,7 @@ static void __init reserve_crashkernel(void)
+>>  		return;
+>>  	}
+>>  
+>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+>> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+>>  		memblock_free(crash_base, crash_size);
+>>  		return;
+>>  	}
+>> -- 
+>> 2.20.1
+>>
+> .
+>
 
 
 _______________________________________________
