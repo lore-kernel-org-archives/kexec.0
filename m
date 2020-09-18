@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x544.google.com ([2a00:1450:4864:20::544])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ8lD-0000ND-0Z
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 05:16:40 +0000
-Received: by mail-ed1-x544.google.com with SMTP id n22so4812923edt.4
- for <kexec@lists.infradead.org>; Thu, 17 Sep 2020 22:16:37 -0700 (PDT)
+ id 1kJ8va-0000r1-Dz
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 05:27:23 +0000
+Date: Fri, 18 Sep 2020 13:26:57 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel[_low]()
+Message-ID: <20200918052657.GA35322@dhcp-128-65.nay.redhat.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <20200907134745.25732-4-chenzhou10@huawei.com>
+ <20200918030112.GA3356@dhcp-128-65.nay.redhat.com>
+ <d4296985-7296-b5c9-45f3-b03d28bc7bd8@huawei.com>
 MIME-Version: 1.0
-References: <20200917193835.30910-1-matthias.bgg@kernel.org>
-In-Reply-To: <20200917193835.30910-1-matthias.bgg@kernel.org>
-From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Date: Fri, 18 Sep 2020 10:46:24 +0530
-Message-ID: <CAFTCetQ--QcB-8Br3skQhzj-Sei_tG+0_kX1J_dpur-f7CTdvw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: Add purgatory printing
+Content-Disposition: inline
+In-Reply-To: <d4296985-7296-b5c9-45f3-b03d28bc7bd8@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,229 +27,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: matthias.bgg@kernel.org
-Cc: geoff@infradead.org, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
+To: chenzhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-Hi Matthias,
+On 09/18/20 at 11:57am, chenzhou wrote:
+> Hi Dave,
+> 
+> 
+> On 2020/9/18 11:01, Dave Young wrote:
+> > On 09/07/20 at 09:47pm, Chen Zhou wrote:
+> >> To make the functions reserve_crashkernel[_low]() as generic,
+> >> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+> >>
+> >> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> >> ---
+> >>  arch/x86/kernel/setup.c | 11 ++++++-----
+> >>  1 file changed, 6 insertions(+), 5 deletions(-)
+> >>
+> >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> >> index d7fd90c52dae..71a6a6e7ca5b 100644
+> >> --- a/arch/x86/kernel/setup.c
+> >> +++ b/arch/x86/kernel/setup.c
+> >> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
+> >>  	unsigned long total_low_mem;
+> >>  	int ret;
+> >>  
+> >> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> >> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
+> > total_low_mem != CRASH_ADDR_LOW_MAX
+> I just replace the magic number with macro, no other change.
+> Besides, function memblock_mem_size(limit_pfn) will compute the memory size
+> according to the actual system ram.
+> 
 
-Thanks for the patch. Some nitpicks inline:
+Ok, it is not obvious in patch this is 64bit only, I'm fine with this
+then.
 
-On Fri, Sep 18, 2020 at 1:09 AM <matthias.bgg@kernel.org> wrote:
->
-> From: Matthias Brugger <mbrugger@suse.com>
->
-> Add option to allow purgatory printing on arm64 hardware
-> by passing the console name which should be used.
-> Based on a patch by Geoff Levand.
->
-> Cc: Geoff Levand <geoff@infradead.org>
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-> ---
->  kexec/arch/arm64/include/arch/options.h |  6 ++-
->  kexec/arch/arm64/kexec-arm64.c          | 61 +++++++++++++++++++++++++
->  purgatory/arch/arm64/purgatory-arm64.c  | 17 ++++++-
->  3 files changed, 82 insertions(+), 2 deletions(-)
-
-Probably we also need to update the man page 'kexec/kexec.8' to add
-documentation about the newly introduced argument.
-
-> diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-> index a17d933..be7d169 100644
-> --- a/kexec/arch/arm64/include/arch/options.h
-> +++ b/kexec/arch/arm64/include/arch/options.h
-> @@ -5,7 +5,8 @@
->  #define OPT_DTB                        ((OPT_MAX)+1)
->  #define OPT_INITRD             ((OPT_MAX)+2)
->  #define OPT_REUSE_CMDLINE      ((OPT_MAX)+3)
-> -#define OPT_ARCH_MAX           ((OPT_MAX)+4)
-> +#define OPT_CONSOLE            ((OPT_MAX)+4)
-> +#define OPT_ARCH_MAX           ((OPT_MAX)+5)
->
->  #define KEXEC_ARCH_OPTIONS \
->         KEXEC_OPTIONS \
-> @@ -13,6 +14,7 @@
->         { "command-line",  1, NULL, OPT_APPEND }, \
->         { "dtb",           1, NULL, OPT_DTB }, \
->         { "initrd",        1, NULL, OPT_INITRD }, \
-> +       { "console",       1, NULL, OPT_CONSOLE }, \
->         { "ramdisk",       1, NULL, OPT_INITRD }, \
->         { "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
->
-> @@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
->  "     --command-line=STRING Set the kernel command line to STRING.\n"
->  "     --dtb=FILE            Use FILE as the device tree blob.\n"
->  "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
-> +"     --console=STRING      Console used for purgatory printing.\n"
->  "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
->  "     --reuse-cmdline       Use kernel command line from running system.\n";
-
-Just a thought... sometimes the console string is also available as a
-part of the '--reuse-cmdline' command line argument passed to the
-kdump kernel. Can we also try to extract the --console string from the
-cmdline provided to the primary kernel itself?
-
-> @@ -32,6 +35,7 @@ struct arm64_opts {
->         const char *command_line;
->         const char *dtb;
->         const char *initrd;
-> +       const char *console;
->  };
->
->  extern struct arm64_opts arm64_opts;
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 45ebc54..44c9e6e 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
->                         break;
->                 case OPT_KEXEC_FILE_SYSCALL:
->                         do_kexec_file_syscall = 1;
-> +               case OPT_CONSOLE:
-> +                       arm64_opts.console = optarg;
->                         break;
->                 default:
->                         break; /* Ignore core and unknown options. */
-> @@ -180,12 +182,62 @@ int arch_process_options(int argc, char **argv)
->         dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
->                 (do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
->                                                         arm64_opts.dtb));
-> +       dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
-> +               arm64_opts.console);
-> +
->         if (do_kexec_file_syscall)
->                 arm64_opts.dtb = NULL;
->
->         return 0;
->  }
->
-> +/**
-> + * find_purgatory_sink - Find a sink for purgatory output.
-> + */
-> +
-> +static uint64_t find_purgatory_sink(const char *console)
-> +{
-> +       int fd, ret;
-> +       char folder[255], device[255], mem[255];
-> +       struct stat sb;
-> +       char buffer[18];
-
-Just trying to understand the reasoning behind keeping the buffer 18
-chars long. Can the bytes read from the console exceed the array size
-here (may be a boundary check is required here to avoid overflows)?
-
-> +       uint64_t iomem = 0x0;
-> +
-> +       if (!console)
-> +               return 0;
-> +
-> +       sprintf(device, "/sys/class/tty/%s", console);
-> +       if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-> +               fprintf(stderr, "kexec: %s: No valid console found for %s\n",
-> +                       __func__, device);
-> +               return 0;
-> +       }
-> +
-> +       sprintf(mem, "%s%s", device, "/iomem_base");
-> +       printf("console memory read from %s\n", mem);
-> +
-> +       fd = open(mem, O_RDONLY);
-> +       if (fd < 0) {
-> +               fprintf(stderr, "kexec: %s: No able to open %s\n",
-> +                       __func__, mem);
-> +               return 0;
-> +       }
-> +
-> +       memset(buffer, '\0', sizeof(char) * 18);
-> +       ret = read(fd, buffer, 18);
-> +       if (ret < 0) {
-> +               fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
-> +               close(fd);
-> +               return 0;
-> +       }
-> +
-> +       sscanf(buffer, "%lx", &iomem);
-> +       printf("console memory is at %#lx\n", iomem);
-> +
-> +       close(fd);
-> +       return iomem;
-> +}
-> +
->  /**
->   * struct dtb - Info about a binary device tree.
->   *
-> @@ -637,6 +689,7 @@ int arm64_load_other_segments(struct kexec_info *info,
->         unsigned long hole_min;
->         unsigned long hole_max;
->         unsigned long initrd_end;
-> +       uint64_t purgatory_sink;
->         char *initrd_buf = NULL;
->         struct dtb dtb;
->         char command_line[COMMAND_LINE_SIZE] = "";
-> @@ -654,6 +707,11 @@ int arm64_load_other_segments(struct kexec_info *info,
->                 command_line[sizeof(command_line) - 1] = 0;
->         }
->
-> +       purgatory_sink = find_purgatory_sink(arm64_opts.console);
-> +
-> +       dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
-> +               purgatory_sink);
-> +
->         if (arm64_opts.dtb) {
->                 dtb.name = "dtb_user";
->                 dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
-> @@ -742,6 +800,9 @@ int arm64_load_other_segments(struct kexec_info *info,
->
->         info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
->
-> +       elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
-> +               sizeof(purgatory_sink));
-> +
->         elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &image_base,
->                 sizeof(image_base));
->
-> diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
-> index fe50fcf..b4d8578 100644
-> --- a/purgatory/arch/arm64/purgatory-arm64.c
-> +++ b/purgatory/arch/arm64/purgatory-arm64.c
-> @@ -5,15 +5,30 @@
->  #include <stdint.h>
->  #include <purgatory.h>
->
-> +/* Symbols set by kexec. */
-> +
-> +uint8_t *arm64_sink __attribute__ ((section ("data")));
-> +extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
-> +extern uint64_t arm64_dtb_addr;
-> +
->  void putchar(int ch)
->  {
-> -       /* Nothing for now */
-> +       if (!arm64_sink)
-> +               return;
-> +
-> +       *arm64_sink = ch;
-> +
-> +       if (ch == '\n')
-> +               *arm64_sink = '\r';
->  }
->
->  void post_verification_setup_arch(void)
->  {
-> +       printf("purgatory: booting kernel now\n");
->  }
->
->  void setup_arch(void)
->  {
-> +       printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
-> +       printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
->  }
-> --
-> 2.28.0
-
-Otherwise the patch looks ok to me.
-
-Thanks,
-Bhupesh
 
 _______________________________________________
 kexec mailing list
