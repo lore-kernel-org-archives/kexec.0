@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400048.outbound.protection.outlook.com
- ([40.107.140.48] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ9BR-0001pC-HW
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 05:43:47 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v5 1/3] tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from
- vmcoreinfo (if available)
-Date: Fri, 18 Sep 2020 05:43:38 +0000
-Message-ID: <TYAPR01MB1999FAD45DB7A31BFBBDEEBADD3F0@TYAPR01MB1999.jpnprd01.prod.outlook.com>
-References: <20200910053305.323365-1-bhsharma@redhat.com>
- <20200910053305.323365-2-bhsharma@redhat.com>
-In-Reply-To: <20200910053305.323365-2-bhsharma@redhat.com>
-Content-Language: ja-JP
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kJ9hD-0003uB-AN
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 06:16:37 +0000
+Subject: Re: [PATCH] MIPS: Loongson64: Add kexec/kdump support
+References: <1600175263-7872-1-git-send-email-hejinyang@loongson.cn>
+ <376B4B91-0736-43FA-87EA-43E12FF24EF1@flygoat.com>
+ <7b78c4d4-7ee3-cf57-71d1-95611713de2b@loongson.cn>
+ <CAAhV-H5t3KWL1O+JKVp+T2qqGXuW7OiasjnnCLmV0+GE0Ns9xQ@mail.gmail.com>
+ <647822a9-bc3b-5da1-95e7-c048a5a3b8fa@loongson.cn>
+ <bd73b4da-94e2-c809-2422-4071792cd9d1@wanyeetech.com>
+From: Jinyang He <hejinyang@loongson.cn>
+Message-ID: <270c1632-c9c4-186e-0ae5-a6f3d4c417d6@loongson.cn>
+Date: Fri, 18 Sep 2020 14:16:17 +0800
 MIME-Version: 1.0
+In-Reply-To: <bd73b4da-94e2-c809-2422-4071792cd9d1@wanyeetech.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,598 +23,240 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>
+To: Zhou Yanjie <zhouyu@wanyeetech.com>, Huacai Chen <chenhc@lemote.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Xuefeng Li <lixuefeng@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, LKML <linux-kernel@vger.kernel.org>, Youling Tang <tangyouling@loongson.cn>
 
-Hi Bhupesh,
-
------Original Message-----
-> This patch adds a common feature for archs (except arm64, for which
-> similar support is added via subsequent patch) to retrieve
-> 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
-> 
-> I recently posted a kernel patch (see [0]) which appends
-> 'MAX_PHYSMEM_BITS' to vmcoreinfo in the core code itself rather than
-> in arch-specific code, so that user-space code can also benefit from
-> this addition to the vmcoreinfo and use it as a standard way of
-> determining 'SECTIONS_SHIFT' value in 'makedumpfile' utility.
-> 
-> This patch ensures backward compatibility for kernel versions in which
-> 'MAX_PHYSMEM_BITS' is not available in vmcoreinfo.
-> 
-> [0]. http://lists.infradead.org/pipermail/kexec/2019-November/023960.html
-
-This archive page appears gone..  I modified the commit message.
-Please see comments below.
-
-> 
-> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> Cc: John Donnelly <john.p.donnelly@oracle.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  arch/arm.c     |  8 +++++++-
->  arch/ia64.c    |  7 ++++++-
->  arch/ppc.c     |  8 +++++++-
->  arch/ppc64.c   | 49 ++++++++++++++++++++++++++++---------------------
->  arch/s390x.c   | 29 ++++++++++++++++++-----------
->  arch/sparc64.c |  9 +++++++--
->  arch/x86.c     | 34 ++++++++++++++++++++--------------
->  arch/x86_64.c  | 27 ++++++++++++++++-----------
->  8 files changed, 109 insertions(+), 62 deletions(-)
-> 
-> diff --git a/arch/arm.c b/arch/arm.c
-> index af7442ac70bf..33536fc4dfc9 100644
-> --- a/arch/arm.c
-> +++ b/arch/arm.c
-> @@ -81,7 +81,13 @@ int
->  get_machdep_info_arm(void)
->  {
->  	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
-> -	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
-> +
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	else
-> +		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
-> +
->  	info->kernel_start = SYMBOL(_stext);
->  	info->section_size_bits = _SECTION_SIZE_BITS;
-> 
-> diff --git a/arch/ia64.c b/arch/ia64.c
-> index 6c33cc7c8288..fb44dda47172 100644
-> --- a/arch/ia64.c
-> +++ b/arch/ia64.c
-> @@ -85,7 +85,12 @@ get_machdep_info_ia64(void)
->  	}
-> 
->  	info->section_size_bits = _SECTION_SIZE_BITS;
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	else
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> 
->  	return TRUE;
->  }
-> diff --git a/arch/ppc.c b/arch/ppc.c
-> index 37c6a3b60cd3..ed9447427a30 100644
-> --- a/arch/ppc.c
-> +++ b/arch/ppc.c
-> @@ -31,7 +31,13 @@ get_machdep_info_ppc(void)
->  	unsigned long vmlist, vmap_area_list, vmalloc_start;
-> 
->  	info->section_size_bits = _SECTION_SIZE_BITS;
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	else
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +
->  	info->page_offset = __PAGE_OFFSET;
-> 
->  	if (SYMBOL(_stext) != NOT_FOUND_SYMBOL)
-> diff --git a/arch/ppc64.c b/arch/ppc64.c
-> index 9d8f2525f608..a3984eebdced 100644
-> --- a/arch/ppc64.c
-> +++ b/arch/ppc64.c
-> @@ -466,30 +466,37 @@ int
->  set_ppc64_max_physmem_bits(void)
->  {
->  	long array_len = ARRAY_LENGTH(mem_section);
-> -	/*
-> -	 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
-> -	 * newer kernels 3.7 onwards uses 46 bits.
-> -	 */
-> -
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> -		return TRUE;
-> -
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> -		return TRUE;
-> 
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->  		return TRUE;
-> +	} else {
-> +		/*
-> +		 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
-> +		 * newer kernels 3.7 onwards uses 46 bits.
-> +		 */
-> 
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> -		return TRUE;
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_7;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_19;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_4_20;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +	}
-> 
->  	return FALSE;
->  }
-
-That else block is not needed?  I will replace this hunk with:
-
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -466,6 +466,13 @@ int
- set_ppc64_max_physmem_bits(void)
- {
-        long array_len = ARRAY_LENGTH(mem_section);
-+
-+       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-+               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+               return TRUE;
-+       }
-+
-        /*
-         * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
-         * newer kernels 3.7 onwards uses 46 bits.
-
-
-> diff --git a/arch/s390x.c b/arch/s390x.c
-> index bf9d58e54fb7..4d17a783e5bd 100644
-> --- a/arch/s390x.c
-> +++ b/arch/s390x.c
-> @@ -63,20 +63,27 @@ int
->  set_s390x_max_physmem_bits(void)
->  {
->  	long array_len = ARRAY_LENGTH(mem_section);
-> -	/*
-> -	 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
-> -	 * newer kernels uses 46 bits.
-> -	 */
-> 
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
->  		return TRUE;
-> +	} else {
-> +		/*
-> +		 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
-> +		 * newer kernels uses 46 bits.
-> +		 */
-> 
-> -	info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
-> -	if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> -		|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> -		return TRUE;
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG ;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +
-> +		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_3_3;
-> +		if ((array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT_EXTREME()))
-> +				|| (array_len == (NR_MEM_SECTIONS() / _SECTIONS_PER_ROOT())))
-> +			return TRUE;
-> +	}
-> 
->  	return FALSE;
->  }
-
-Ditto.
-
---- a/arch/s390x.c
-+++ b/arch/s390x.c
-@@ -63,6 +63,13 @@ int
- set_s390x_max_physmem_bits(void)
- {
-        long array_len = ARRAY_LENGTH(mem_section);
-+
-+       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-+               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+               return TRUE;
-+       }
-+
-        /*
-         * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
-         * newer kernels uses 46 bits.
-
-
-> diff --git a/arch/sparc64.c b/arch/sparc64.c
-> index 1cfaa854ce6d..b93a05bdfe59 100644
-> --- a/arch/sparc64.c
-> +++ b/arch/sparc64.c
-> @@ -25,10 +25,15 @@ int get_versiondep_info_sparc64(void)
->  {
->  	info->section_size_bits = _SECTION_SIZE_BITS;
-> 
-> -	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	else if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
->  		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
-> -	else {
-> +	else
->  		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
-> +
-> +	if (info->kernel_version < KERNEL_VERSION(3, 8, 13)) {
->  		info->flag_vmemmap = TRUE;
->  		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
->  		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
-> diff --git a/arch/x86.c b/arch/x86.c
-> index 3fdae93084b8..f1b43d4c8179 100644
-> --- a/arch/x86.c
-> +++ b/arch/x86.c
-> @@ -72,21 +72,27 @@ get_machdep_info_x86(void)
->  {
->  	unsigned long vmlist, vmap_area_list, vmalloc_start;
-> 
-> -	/* PAE */
-> -	if ((vt.mem_flags & MEMORY_X86_PAE)
-> -	    || ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
-> -	      && (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
-> -	      && ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
-> -	      == 512)) {
-> -		DEBUG_MSG("\n");
-> -		DEBUG_MSG("PAE          : ON\n");
-> -		vt.mem_flags |= MEMORY_X86_PAE;
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
-> -	} else {
-> -		DEBUG_MSG("\n");
-> -		DEBUG_MSG("PAE          : OFF\n");
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	else {
-> +		/* PAE */
-> +		if ((vt.mem_flags & MEMORY_X86_PAE)
-> +				|| ((SYMBOL(pkmap_count) != NOT_FOUND_SYMBOL)
-> +					&& (SYMBOL(pkmap_count_next) != NOT_FOUND_SYMBOL)
-> +					&& ((SYMBOL(pkmap_count_next)-SYMBOL(pkmap_count))/sizeof(int))
-> +					== 512)) {
-> +			DEBUG_MSG("\n");
-> +			DEBUG_MSG("PAE          : ON\n");
-> +			vt.mem_flags |= MEMORY_X86_PAE;
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_PAE;
-> +		} else {
-> +			DEBUG_MSG("\n");
-> +			DEBUG_MSG("PAE          : OFF\n");
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-> +		}
-
-If we can get MAX_PHYSMEM_BITS from vmcoreinfo,
-1. No "PAE : ON " or "PAE : OFF" debug message
-2. No vt.mem_flags |= MEMORY_X86_PAE if pkmap check is true.
-
-The latter will not occur with MAX_PHYSMEM_BITS in vmcoreinfo,
-but for simplicity, I'd like to replace the hunk with the following.
-
---- a/arch/x86.c
-+++ b/arch/x86.c
-@@ -87,6 +87,11 @@ get_machdep_info_x86(void)
-                DEBUG_MSG("PAE          : OFF\n");
-                info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-        }
-+
-+       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+
-        info->page_offset = __PAGE_OFFSET;
- 
-        if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-
-
-
->  	}
-> +
->  	info->page_offset = __PAGE_OFFSET;
-> 
->  	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-> diff --git a/arch/x86_64.c b/arch/x86_64.c
-> index b5e295452964..10eed83df655 100644
-> --- a/arch/x86_64.c
-> +++ b/arch/x86_64.c
-> @@ -268,17 +268,22 @@ get_machdep_info_x86_64(void)
->  int
->  get_versiondep_info_x86_64(void)
->  {
-> -	/*
-> -	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
-> -	 */
-> -	if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
-> -	else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
-> -	else if(check_5level_paging())
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
-> -	else
-> -		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
-> +	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-> +	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> +		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> +	} else {
-> +		/*
-> +		 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
-> +		 */
-> +		if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
-> +		else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
-> +		else if(check_5level_paging())
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_5LEVEL;
-> +		else
-> +			info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_31;
-> +	}
-
-Ditto.
-
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -268,10 +268,10 @@ get_machdep_info_x86_64(void)
- int
- get_versiondep_info_x86_64(void)
- {
--       /*
--        * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
--        */
--       if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-+       /* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+       if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+               info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+       else if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-                info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
-        else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
-                info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
-
-> 
->  	if (!get_page_offset_x86_64())
->  		return FALSE;
-> --
-> 2.26.2
-
-
-
-So I modified the above hunks, could you check the following?
-And I'm going to merge this patch separately from the 2/3 and 3/3 patch,
-because those patches don't depend on this patch.
-
-
-From 93d32474eb18f955bb57cdc2b63dd2cb447a33fc Mon Sep 17 00:00:00 2001
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Thu, 10 Sep 2020 11:03:03 +0530
-Subject: [PATCH] tree-wide: Retrieve MAX_PHYSMEM_BITS from vmcoreinfo
-
-Add a common feature for architectures (except arm64, for which
-similar support is added via a subsequent patch) to retrieve
-MAX_PHYSMEM_BITS from vmcoreinfo, which was added by kernel commit
-1d50e5d0c505 ("crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS'
-to vmcoreinfo").  This makes makedumpfile adaptable for future
-MAX_PHYSMEM_BITS changes.
-
-Also ensure backward compatibility for kernel versions in which
-MAX_PHYSMEM_BITS is not available in vmcoreinfo.
-
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
----
- arch/arm.c     | 8 +++++++-
- arch/ia64.c    | 7 ++++++-
- arch/ppc.c     | 8 +++++++-
- arch/ppc64.c   | 7 +++++++
- arch/s390x.c   | 7 +++++++
- arch/sparc64.c | 9 +++++++--
- arch/x86.c     | 5 +++++
- arch/x86_64.c  | 8 ++++----
- 8 files changed, 50 insertions(+), 9 deletions(-)
-
-diff --git a/arch/arm.c b/arch/arm.c
-index af7442ac70bf..33536fc4dfc9 100644
---- a/arch/arm.c
-+++ b/arch/arm.c
-@@ -81,7 +81,13 @@ int
- get_machdep_info_arm(void)
- {
- 	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
--	info->max_physmem_bits = _MAX_PHYSMEM_BITS;
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else
-+		info->max_physmem_bits = _MAX_PHYSMEM_BITS;
-+
- 	info->kernel_start = SYMBOL(_stext);
- 	info->section_size_bits = _SECTION_SIZE_BITS;
- 
-diff --git a/arch/ia64.c b/arch/ia64.c
-index 6c33cc7c8288..fb44dda47172 100644
---- a/arch/ia64.c
-+++ b/arch/ia64.c
-@@ -85,7 +85,12 @@ get_machdep_info_ia64(void)
- 	}
- 
- 	info->section_size_bits = _SECTION_SIZE_BITS;
--	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else
-+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
- 
- 	return TRUE;
- }
-diff --git a/arch/ppc.c b/arch/ppc.c
-index 37c6a3b60cd3..ed9447427a30 100644
---- a/arch/ppc.c
-+++ b/arch/ppc.c
-@@ -31,7 +31,13 @@ get_machdep_info_ppc(void)
- 	unsigned long vmlist, vmap_area_list, vmalloc_start;
- 
- 	info->section_size_bits = _SECTION_SIZE_BITS;
--	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else
-+		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-+
- 	info->page_offset = __PAGE_OFFSET;
- 
- 	if (SYMBOL(_stext) != NOT_FOUND_SYMBOL)
-diff --git a/arch/ppc64.c b/arch/ppc64.c
-index 9d8f2525f608..5e70acb51aba 100644
---- a/arch/ppc64.c
-+++ b/arch/ppc64.c
-@@ -466,6 +466,13 @@ int
- set_ppc64_max_physmem_bits(void)
- {
- 	long array_len = ARRAY_LENGTH(mem_section);
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+		return TRUE;
-+	}
-+
- 	/*
- 	 * The older ppc64 kernels uses _MAX_PHYSMEM_BITS as 42 and the
- 	 * newer kernels 3.7 onwards uses 46 bits.
-diff --git a/arch/s390x.c b/arch/s390x.c
-index bf9d58e54fb7..c4fed6f3bbd0 100644
---- a/arch/s390x.c
-+++ b/arch/s390x.c
-@@ -63,6 +63,13 @@ int
- set_s390x_max_physmem_bits(void)
- {
- 	long array_len = ARRAY_LENGTH(mem_section);
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+		return TRUE;
-+	}
-+
- 	/*
- 	 * The older s390x kernels uses _MAX_PHYSMEM_BITS as 42 and the
- 	 * newer kernels uses 46 bits.
-diff --git a/arch/sparc64.c b/arch/sparc64.c
-index 1cfaa854ce6d..b93a05bdfe59 100644
---- a/arch/sparc64.c
-+++ b/arch/sparc64.c
-@@ -25,10 +25,15 @@ int get_versiondep_info_sparc64(void)
- {
- 	info->section_size_bits = _SECTION_SIZE_BITS;
- 
--	if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else if (info->kernel_version >= KERNEL_VERSION(3, 8, 13))
- 		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L4;
--	else {
-+	else
- 		info->max_physmem_bits = _MAX_PHYSMEM_BITS_L3;
-+
-+	if (info->kernel_version < KERNEL_VERSION(3, 8, 13)) {
- 		info->flag_vmemmap = TRUE;
- 		info->vmemmap_start = VMEMMAP_BASE_SPARC64;
- 		info->vmemmap_end = VMEMMAP_BASE_SPARC64 +
-diff --git a/arch/x86.c b/arch/x86.c
-index 3fdae93084b8..7899329c821f 100644
---- a/arch/x86.c
-+++ b/arch/x86.c
-@@ -87,6 +87,11 @@ get_machdep_info_x86(void)
- 		DEBUG_MSG("PAE          : OFF\n");
- 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
- 	}
-+
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+
- 	info->page_offset = __PAGE_OFFSET;
- 
- 	if (SYMBOL(_stext) == NOT_FOUND_SYMBOL) {
-diff --git a/arch/x86_64.c b/arch/x86_64.c
-index b5e295452964..58b5c0b7af40 100644
---- a/arch/x86_64.c
-+++ b/arch/x86_64.c
-@@ -268,10 +268,10 @@ get_machdep_info_x86_64(void)
- int
- get_versiondep_info_x86_64(void)
- {
--	/*
--	 * On linux-2.6.26, MAX_PHYSMEM_BITS is changed to 44 from 40.
--	 */
--	if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
-+	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
-+	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-+		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+	else if (info->kernel_version < KERNEL_VERSION(2, 6, 26))
- 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_ORIG;
- 	else if (info->kernel_version < KERNEL_VERSION(2, 6, 31))
- 		info->max_physmem_bits  = _MAX_PHYSMEM_BITS_2_6_26;
--- 
-1.8.3.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDkvMTcvMjAyMCAwOTo1MiBQTSwgWmhvdSBZYW5qaWUgd3JvdGU6Cj4gSGVsbG8sCj4KPiDl
+nKggMjAyMC85LzE3IOS4i+WNiDg6NDEsIEppbnlhbmcgSGUg5YaZ6YGTOgo+PiBIaSwgSHVhY2Fp
+LAo+Pgo+Pgo+PiBPbiAwOS8xNi8yMDIwIDAxOjM5IFBNLCBIdWFjYWkgQ2hlbiB3cm90ZToKPj4+
+IEhpLCBKaW55YW5nLAo+Pj4KPj4+IE9uIFR1ZSwgU2VwIDE1LCAyMDIwIGF0IDEwOjE3IFBNIEpp
+bnlhbmcgSGUgPGhlamlueWFuZ0Bsb29uZ3Nvbi5jbj4gCj4+PiB3cm90ZToKPj4+Pgo+Pj4+Cj4+
+Pj4gT24gMDkvMTYvMjAyMCAwOTozMyBBTSwgSmlheHVuIFlhbmcgd3JvdGU6Cj4+Pj4+IOS6jiAy
+MDIw5bm0OeaciDE15pelIEdNVCswODowMCDkuIvljYg5OjA3OjQzLCBKaW55YW5nIEhlIAo+Pj4+
+PiA8aGVqaW55YW5nQGxvb25nc29uLmNuPiDlhpnliLA6Cj4+Pj4+PiBBZGQgbG9vbmdzb25fa2V4
+ZWNfcHJlcGFyZSgpLCBsb29uZ3Nvbl9rZXhlY19zaHV0ZG93bigpIGFuZAo+Pj4+Pj4gbG9vbmdz
+b25fa2V4ZWNfY3Jhc2hkb3duKCkgZm9yIHBhc3NpbmcgdGhlIHBhcmFtZXRlcnMgb2Yga2V4ZWNf
+YXJncy4KPj4+Pj4+Cj4+Pj4+PiBUbyBzdGFydCBsb29uZ3NvbjY0LCBDUFUwIG5lZWRzIDMgcGFy
+YW1ldGVyczoKPj4+Pj4+IGZ3X2FyZzA6IHRoZSBudW1iZXIgb2YgY21kLgo+Pj4+Pj4gZndfYXJn
+MTogY21kIHN0cnVjdHVyZSB3aGljaCBzZWVtcyBzdHJhbmdlLCB0aGUgY21kIGFycmF5W2luZGV4
+XSdzCj4+Pj4+PiAgICAgICAgICAgdmFsdWUgaXMgY21kIHN0cmluZydzIGFkZHJlc3MsIGluZGV4
+ID49IDEuCj4+Pj4+PiBmd19hcmcyOiBlbnZpcm9ubWVudC4KPj4+Pj4+Cj4+Pj4+PiBTZWNvbmRh
+cnkgQ1BVcyBkbyBub3QgbmVlZCBwYXJhbWV0ZXIgYXQgb25jZS4gVGhleSBxdWVyeSB0aGVpcgo+
+Pj4+Pj4gbWFpbGJveCB0byBnZXQgUEMsIFNQIGFuZCBHUCBpbiBhIGxvb3AgYmVmb3JlIENQVTAg
+YnJpbmdzIHRoZW0gdXAKPj4+Pj4+IGFuZCBwYXNzZXMgdGhlc2UgcGFyYW1ldGVycyB2aWEgbWFp
+bGJveC4KPj4+Pj4+Cj4+Pj4+PiBsb29uZ3Nvbl9rZXhlY19wcmVwYXJlKCk6IEFsbG9jIG5ldyBt
+ZW1vcnkgdG8gc2F2ZSBjbWQgZm9yIGtleGVjLgo+Pj4+Pj4gQ29tYmluZSB0aGUga2V4ZWMgYXBw
+ZW5kIG9wdGlvbiBzdHJpbmcgYXMgY21kIHN0cnVjdHVyZSwgYW5kIHRoZSBjbWQKPj4+Pj4+IHN0
+cnVjdCB3aWxsIGJlIHBhcnNlZCBpbiBmd19pbml0X2NtZGxpbmUoKSBvZiAKPj4+Pj4+IGFyY2gv
+bWlwcy9mdy9saWIvY21kbGluZS5jLgo+Pj4+Pj4gaW1hZ2UtPmNvbnRyb2xfY29kZV9wYWdlIG5l
+ZWQgcG9pbnRpbmcgdG8gYSBzYWZlIG1lbW9yeSBwYWdlLiBJbiAKPj4+Pj4+IG9yZGVyIHRvCj4+
+Pj4+PiBtYWludGFpbiBjb21wYXRpYmlsaXR5IGZvciB0aGUgb2xkIGZpcm13YXJlIHRoZSBsb3cg
+Mk1CIGlzIHJlc2VydmVyZAo+Pj4+Pj4gYW5kIHNhZmUgZm9yIExvb25nc29uLiBTbyBsZXQgaXQg
+cG9pbnRzIGhlcmUuCj4+Pj4+Pgo+Pj4+Pj4gbG9vbmdzb25fa2V4ZWNfc2h1dGRvd24oKTogV2Fr
+ZSB1cCBhbGwgcHJlc2VudCBDUFVzIGFuZCBsZXQgdGhlbSBnbwo+Pj4+Pj4gdG8gcmVib290X2Nv
+ZGVfYnVmZmVyLiBQYXNzIHRoZSBrZXhlYyBwYXJhbWV0ZXJzIHRvIGtleGVjX2FyZ3MuCj4+Pj4+
+Pgo+Pj4+Pj4gbG9vbmdzb25fY3Jhc2hfc2h1dGRvd24oKTogUGFzcyB0aGUga2R1bXAgcGFyYW1l
+dGVycyB0byBrZXhlY19hcmdzLgo+Pj4+Pj4KPj4+Pj4+IFRoZSBhc3NlbWJseSBwYXJ0IHByb3Zp
+ZGUgYSB3YXkgbGlrZSBCSU9TIGRvaW5nIHRvIGtlZXAgc2Vjb25kYXJ5Cj4+Pj4+PiBDUFVzIGlu
+IGEgcXVlcnlpbmcgbG9vcC4KPj4+Pj4+Cj4+Pj4+PiBUaGlzIHBhdGNoIHJlZmVyZW5jZWQgWzFd
+WzJdWzNdLgo+Pj4+Pj4KPj4+Pj4+IFsxXSBhcmNoL21pcHMvY2F2aXVtLW9jdGVvbi9zZXR1cC5j
+Cj4+Pj4+PiBbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDc5OTIxNy8K
+Pj4+Pj4+IFszXSAKPj4+Pj4+IGh0dHBzOi8vZ2l0ZWUuY29tL2xvb25nc29ubGFiL3FlbXUvYmxv
+Yi9tYXN0ZXIvaHcvbWlwcy9sb29uZ3NvbjNhX3JvbS5oIAo+Pj4+Pj4KPj4+Pj4+Cj4+Pj4+PiBD
+by1kZXZlbG9wZWQtYnk6IFlvdWxpbmcgVGFuZyA8dGFuZ3lvdWxpbmdAbG9vbmdzb24uY24+Cj4+
+Pj4+PiBTaWduZWQtb2ZmLWJ5OiBZb3VsaW5nIFRhbmcgPHRhbmd5b3VsaW5nQGxvb25nc29uLmNu
+Pgo+Pj4+Pj4gU2lnbmVkLW9mZi1ieTogSmlueWFuZyBIZSA8aGVqaW55YW5nQGxvb25nc29uLmNu
+Pgo+Pj4+Pj4gLS0tCj4+Pj4+PiBhcmNoL21pcHMva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TIHwg
+MTkgKysrKysrKysKPj4+Pj4+IGFyY2gvbWlwcy9sb29uZ3NvbjY0L3Jlc2V0LmMgICAgICAgfCA4
+OCAKPj4+Pj4+ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+Pj4+PiAy
+IGZpbGVzIGNoYW5nZWQsIDEwNyBpbnNlcnRpb25zKCspCj4+Pj4+Pgo+Pj4+Pj4gZGlmZiAtLWdp
+dCBhL2FyY2gvbWlwcy9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMgCj4+Pj4+PiBiL2FyY2gvbWlw
+cy9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMKPj4+Pj4+IGluZGV4IGFjODcwODkuLjA2MWNiZmIg
+MTAwNjQ0Cj4+Pj4+PiAtLS0gYS9hcmNoL21pcHMva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+
+Pj4+PiArKysgYi9hcmNoL21pcHMva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+Pj4+PiBAQCAt
+MTMzLDYgKzEzMywyNSBAQCBMRUFGKGtleGVjX3NtcF93YWl0KQo+Pj4+Pj4gI2Vsc2UKPj4+Pj4+
+ICAgICAgIHN5bmMKPj4+Pj4+ICNlbmRpZgo+Pj4+Pj4gKwo+Pj4+Pj4gKyNpZmRlZiBDT05GSUdf
+Q1BVX0xPT05HU09ONjQKPj4+Pj4+ICsjZGVmaW5lIE1BSUxCT1hfQkFTRSAweDkwMDAwMDAwM2Zm
+MDEwMDAKPj4+Pj4gUGxlYXNlIGF2b2lkIGhhcmRjb2RlZCBTTVAgaW5mb3JtYXRpb24uIFlvdSdy
+ZSBicmVha2luZyBMb29uZ3NvbiAKPj4+Pj4gM0Igc3VwcG9ydC4KPj4+Pj4KPj4+PiBPaywgSSBz
+ZWUuIFNpbmNlIG15IG1hY2hpbmUgaXMgTG9vbmdzb24gM0EuIEknbGwgc2VuZCB2Mgo+Pj4+IGFm
+dGVyIEkgdGVzdCBpdCBpbiAzQi4KPj4+IDEsIE15IG9yaWdpbmFsIHZlcnNpb24gY2FuIHdvcmsg
+b24gYm90aCBMb29uZ3Nvbi0zQSBhbmQgTG9vbmdzb24tM0IsCj4+PiB3aHkgeW91IG1vZGlmeSBt
+eSBwYXRjaCBhbmQgaGFkbid0IGRpc2N1c3Mgd2l0aCBtZT8KPj4+Cj4+PiAyLCBXaXRoIHRoaXMg
+c2luZ2xlIHBhdGNoIGJvdGgga2V4ZWMgYW5kIGtkdW1wIGNhbm5vdCB3b3JrIHJlbGlhYmx5LAo+
+Pj4gYmVjYXVzZSBrZXhlYyBuZWVkIHRoaXMgcGF0Y2g6Cj4+PiAgICAgaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wYXRjaC8xMTY5NTkyOS8KPj4+Cj4+PiAgICAgYW5kIGtkdW1wIG5lZWQg
+bXkgZmlyc3QgcGF0Y2ggaW4gbXkgb3JpZ2luYWwgdmVyc2lvbjoKPj4+ICAgICBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzk5MjE1Lwo+Pj4KPj4+ICAgICBZb3UgbWF5IGFy
+Z3VlIHRoYXQgeW91IGhhdmUgdGVzdGVkLiBZZXMsIEkgYmVsaWV2ZSB0aGF0LCBJJ20gbm90Cj4+
+PiBzYXlpbmcgdGhhdCB5b3UgaGF2ZW4ndCB0ZXN0LCBhbmQgSSdtIG5vdCBzYXlpbmcgdGhhdCB5
+b3VyIHBhdGNoCj4+PiBjYW5ub3Qgd29yaywgSSdtIGp1c3Qgc2F5aW5nIHRoYXQgeW91ciBwYXRj
+aCBpcyBub3Qgcm9idXN0Lgo+Pj4KPj4+IDMsIEknbSB0aGUgb3JpZ2luYWwgYXV0aG9yIGFuZCBw
+YXlpbmcgYXR0ZW50aW9uIHRvIGtleGVjL2tkdW1wCj4+PiBjb250aW51b3NseSwgSSB3aWxsIHNl
+bmQgYSBuZXcgdmVyc2lvbiBvbmNlIHRoZSBhYm92ZSB0d28gcGF0Y2hlcyBiZQo+Pj4gYWNjZXB0
+ZWQuIEJ1dCB5b3UgcmUtc2VuZCBteSBwYXRjaCB3aXRob3V0IGFueSBjb21tdW5pY2F0aW9uIHdp
+dGggbWUsCj4+PiB3aHkgeW91IHNvIGltcGF0aWVudD8KPj4+Cj4+PiBIdWFjYWkKPj4+Cj4+Cj4+
+IDEsIFlvdXIgb3JpZ2luYWwgdmVyc2lvbjoKPj4gICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVs
+Lm9yZy9wYXRjaC8xMDc5OTIxNy8KPj4KPj4gVGhpcyBwYXRjaCBjYW4gd29yayBvbiBMb29uZ3Nv
+bi0zQSwgSSB0ZXN0ZWQgaXQuCj4+Cj4+IEJ1dCBpdCB3b3JrcyB3cm9uZyBhZnRlciB0aGUgZm9s
+bG93IGJlaGF2aW9ycywKPj4gICAga2V4ZWMgLWwgdm1saW51eCAtLWFwcGVuZD1jbWRsaW5lX2tl
+eGVjCj4+ICAgIGtleGVjIC1wIHZtbGludXggLS1hcHBlbmQ9Y21kbGluZV9rZHVtcAo+PiAgICBr
+ZXhlYyAtZQo+Pgo+Cj4gV2hhdCAncyB3cm9uZyB3aXRoIHlvdSBMb29uZ3NvbiBndXlzPyBXaHkg
+ZG8geW91IGFsd2F5cyBzZW5kIHBhdGNoZXMgCj4gd2l0aCB0aGUgc2FtZSBmdW5jdGlvbnMgYXMg
+dGhlIG9yaWdpbmFsIGF1dGhvciB3aXRob3UgYW55IAo+IGNvbW11bmljYXRpb24gd2l0aCB0aGUg
+b3JpZ2luYWwgYXV0aG9yPyBFc3BlY2lhbGx5IHRoZSBvcmlnaW5hbCBhdXRob3IgCj4gb2YgdGhl
+IHBhdGNoIGlzIHRoZSBtYWludGFpbmVyIG9mIExvb25nc29uNjQgYXJjaGl0ZWN0dXJlLgoKSGks
+CgpKdXN0IHRha2UgaXQgZWFzeSwgdHJ5IHRvIGtlZXAgY2FsbSBhbmQgZG8gbm90IHBhbmljLgoK
+WW91IGRvIG5vdCB1bmRlcnN0YW5kIHRoZSBzdG9yeSwgdGhlIGJhY2tncm91bmQsIHdoYXQgaGFw
+cGVuZWQgYmVmb3JlLAphbmQgd2hhdCBoYXBwZW5zIG5leHQsIHNvIHBsZWFzZSBsZXQgbWUgZXhw
+cmVzcyBteSBvcGluaW9uLgoKV2hlbiBJIHVzZSB0aGUgbWFpbmxpbmUga2VybmVsIG9uIHRoZSBM
+b29uZ3NvbiBwbGF0Zm9ybSwgSSBmaW5kIGtleGVjCmNhbiBub3Qgd29yayB3ZWxsIGFuZCBJIGZl
+ZWwgZGVwcmVzc2VkLCBzbyBJIGFuYWx5c2UgYW5kIGRlYnVnIHRoZQpyZWxhdGVkIGNvZGUsIHRo
+ZSBpbml0aWFsIGFpbSBvZiBhbGwgbXkgZWZmb3J0IGlzIHRvIG1ha2UgaXQgd29yayB3ZWxsLgoK
+SW4gb3JkZXIgdG8gY3JlYXRlIHRoZSBwb3NpdGl2ZSBlbnZpcm9ubWVudCBvZiBjb21tdW5pdHkg
+cGFydGljaXBhdGlvbiwKSSBoYXZlIHR3byBxdWVzdGlvbnMgdG8gZGlzY3VzczoKKDEpIElmIHRo
+ZXJlIGV4aXN0cyBhIHNpbWlsYXIgcGF0Y2ggd2hpY2ggaXMgc3VibWl0dGVkIG1vcmUgdGhhbiBv
+bmUKeWVhciBhZ28gYnV0IGhhcyBub3QgYmVlbiBtZXJnZWQgaW50byB0aGUgbWFpbmxpbmUgdHJl
+ZSwgY291bGQgdGhlCm5ld2NvbWVycyBkbyB0aGUgc2ltaWxhciB3b3JrIHRvIHN1cHBvcnQgdGhl
+IHNhbWUgZmVhdHVyZT8gSSB0aGluayB0aGUKYW5zd2VyIGlzIHllcywgcmlnaHQ/CigyKSBXaGVu
+IHRoZSBuZXdjb21lcnMgc3VibWl0IHRoZSBuZXcgcGF0Y2ggdG8gY29tbXVuaXR5LCB3aGF0IHNo
+b3VsZApiZSBkb25lIHRvIGF2b2lkIGFuIHVuaGFwcHkgdGltZT8gSSB0aGluayB0aGlzIGlzIHRo
+ZSBuYXR1cmUgb2YgdGhlCnByb2JsZW0sIGFkZCAiT3JpZ2luYWxseS1ieToiIHRhZz8gV2hhdCBk
+byB5b3UgdGhpbmsgb2YgaXQ/CgpJIHRoaW5rIHdlIHNob3VsZCBjb25zaWRlciB3aGF0IGlzIHRo
+ZSBwcm9wZXIgYXR0aXR1ZGUgdG8gd2VsY29tZSBhbmQKZW5jb3VyYWdlIG5ld2NvbWVycywgaG93
+ZXZlciB0ZXJyaWJsZSBvciB3cm9uZyB0aGluZ3MgdGhleSBkaWQsCmV2ZXJ5b25lIG5lZWRzIHRv
+IGhhdmUgYSBwcm9jZXNzIG9mIGdyb3d0aCwgcmlnaHQ/CgpQb3NpdGl2ZSBhbmQgd2VsbC1tZWFu
+dCBzdWdnZXN0aW9ucyB3b3VsZCBiZSBtdWNoIG1vcmUgaGVscGZ1bCBhbmQKdXNlZnVsIHRvIHRo
+ZSBjb21tdW5pdHkgaW4gdGhlIGxvbmcgcnVuLgoKCj4KPiBJbiB0aGUgcGFzdCB5ZWFyLCBMb29u
+Z3NvbiBlbXBsb3llZXMgaGF2ZSBiZWVuIHZlcnkgYWN0aXZlLiBUaGlzIGlzIGEgCj4gaGFwcHkg
+dGhpbmcsIGJ1dCBhdCB0aGUgc2FtZSB0aW1lLCBpdCBpcyBjb25mdXNpbmcgdGhhdCwgaW4gYWRk
+aXRpb24gCj4gdG8gYWx3YXlzIHNlbmRpbmcgcGF0Y2hlcyB0aGF0IG90aGVycyBoYXZlIGFscmVh
+ZHkgc2VudCwgbWFueSBwYXRjaGVzIAo+IHNlbmQgYnkgTG9vbmdzb24gZW1wbG95ZWVzIG9mdGVu
+IHdpdGggb25seSBhIGZldyBsaW5lcyAobGVzcyB0aGFuIDEwIAo+IGxpbmVzKS4gSSBkb24ndCB0
+aGluayB0aGlzIGlzIGEgbm9ybWFsIHBoZW5vbWVub24sIGlzIHRoaXMgY2F1c2VkIGJ5IAo+IGFu
+eSBvdGhlciBmYWN0b3JzPyBTdWNoIGFzIEtQSXM/IElmIHRoZSBwYXRjaGVzIGFyZSBzdWJtaXR0
+ZWQgZm9yIHRoaXMgCj4gcHVycG9zZSwgaXQgaXMgbm90IGFkdmlzYWJsZSwgdGhpcyBiZWhhdmlv
+ciB3aWxsIGhhcm0gdGhlIGVudGlyZSAKPiBMb29uZ3Nvbi4KCkVhY2ggcGF0Y2ggd2Ugc3VibWl0
+dGVkIGlzIHRvIG1ha2UgdGhlIGtlcm5lbCBjb2RlIGJldHRlciBhbmQgYmV0dGVyLApldmVuIGlm
+IGl0IGlzIGEgc21hbGwgY2xlYW51cCBwYXRjaC4KCj4KPgo+PiBJdCB3b3JrcyBidXQgY21kbGlu
+ZV9rZHVtcCBtZXJnZWQgY21kbGluZV9rZXhlYy4KPj4KPj4gQW5kIHRoaXMgcGF0Y2ggbWVtY3B5
+IGZyb20gZndfYXJnMiB0byBrZXhlY19lbnZwIGFuZCBsYXRlciBtZW1jcHkgZnJvbQo+PiBrZXhl
+Y19lbnZwIHRvIGZ3X2FyZzIgd2hlbiBmd19hcmcyIHdhcyBub3QgY2hhbmdlZCwgaXQncyByZWR1
+bmRhbnQuCj4+Cj4+IEhvd2V2ZXIsIEkgaGF2ZSBub3QgTG9vbmdzb24tM0Igbm93LCBhbmQgZGlk
+IG5vdCB0ZXN0IGl0LiBGb3IgdGhpcyAKPj4gcGF0Y2gsCj4+IGRvZXMgaXQgd29yayB3ZWxsIG9u
+IExvb25nc29uLTNCMzAwMC9Mb29uZ3Nvbi0zQjQwMDA/Cj4+Cj4+IDIsIEkgaGF2ZSBrbm93biB0
+aGF0IHByb2JsZW0gYmVmb3JlIHlvdXIgcGF0Y2g6Cj4+ICAgIGh0dHBzOi8vcGF0Y2h3b3JrLmtl
+cm5lbC5vcmcvcGF0Y2gvMTE2OTU5MjkvCj4+Cj4+IEkgYWxzbyBkaWQgZWZmb3J0cyBhbHRob3Vn
+aCBJIGhhZCd0IGNvbW1pdHRlZCBteSBwYXRjaC4gSXQncyBkdWUgdG8gdGhlCj4+IGhhcmR3YXJl
+IGlzc3VlcywgYW5kIEkgcmVtb3ZlZCBwY2llX3BvcnRfZGV2aWNlX3JlbW92ZSgpLiBLZXhlYyB3
+b3Jrcwo+PiBub3JtYWxseSBvbiBHVUkuIEJ1dCBpdCB3b3JrcyB0ZXJyaWJsZWx5IG9uIENMSS4g
+QWZ0ZXIgdGhpcyBkaXNjdXNzOgo+PiAgICBodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdv
+cmsvcGF0Y2gvMTMwNDkxNy8KPj4KPj4gV2hhdCBMdWthcyBzYWlkIGhlbHBlZCBtZS4gSSByZW1v
+dmVkCj4+ICAgIGRyaXZlcnMvcGNpL3BjaS1kcml2ZXIuYzogcGNpX2RldmljZV9zaHV0ZG93bigp
+OiBwY2lfY2xlYXJfbWFzdGVyLi4uCj4+IEtleGVjIHdvcmtzIHdlbGwgb24gQ0xJIGFsc28uCj4+
+Cj4+IEZvciBhbm90aGVyIHBhdGNoOgo+PiAgICBodHRwczovL3BhdGNod29yay5rZXJuZWwub3Jn
+L3BhdGNoLzEwNzk5MjE1Lwo+Pgo+PiBJIGhhdmUgbm90IDJ3YXkgb3IgNHdheSBtYWNoaW5lLCBh
+bmQgSSBkaWQgbm90IHRlc3QgaXQuCj4+Cj4+IDMsIEkgdHJ5IHRvIGZpeCBMb29uZ3NvbjY0IGtl
+eGVjIGZ1bmN0aW9uIHNpbmNlIEkgam9pbmVkIHRoZSBjb21tdW5pdHkuCj4+IEkgZmVsbCBzb3Jy
+eSB0byBub3QgZG8gZW5vdWdoIHJlc2VhcmNoIG9uIExvb25nc29uNjQga2V4ZWMuIE15IGZpcnN0
+IAo+PiBwYXRjaDoKPj4gICAgaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMTY4
+NDg0OS8KPj4KPj4gSXQgZml4ZWQgcHJvYmxlbSBhYm91dCAiQ3Jhc2gga2VybmVsIiB3aGljaCBj
+YW4gYmUgdHJhY2VkIGJhY2sgdG8gCj4+IGxpbnV4LTUuNC4KPj4gQXQgdGhhdCB0aW1lLCBJIHRo
+b3VnaHQgdGhlcmUgaXMgbm8gZGV2ZWxvcGVyIHdvcmsgb24gS2V4ZWMuIFRodXMsIEkgCj4+IGRp
+ZCBhCj4+IGxvdCBvbiBLZXhlYy4gQXJlIHlvdSByZWFsbHkgY29udGludW9zbHkgcGF5aW5nIGF0
+dGVudGlvbiB0byAKPj4ga2V4ZWMva2R1bXA/Cj4+IFdpdGggdGhlIGV4cGxvcmluZyBhbmQgZGV2
+ZWxvcGluZyBkZWVwLCBJIGZvdW5kIHlvdXIgcGF0Y2ggc2V2ZXJhbCAKPj4gZGF5cyBhZ28KPj4g
+YWZ0ZXIgSSBkaWQgYSBkcmFmdCBwYXRjaCB3aXRjaCByZWZlcmVuY2VkOgo+PiAgICBhcmNoL21p
+cHMvY2F2aXVtLW9jdGVvbi9zZXR1cC5jCj4+IGh0dHBzOi8vZ2l0ZWUuY29tL2xvb25nc29ubGFi
+L3FlbXUvYmxvYi9tYXN0ZXIvaHcvbWlwcy9sb29uZ3NvbjNhX3JvbS5oCj4+Cj4+IFRoZXJlIGlz
+IG5vIGRvdWJ0IHRoYXQgeW91ciBwYXRjaCBnaXZlcyBtZSBjb25maWRlbmNlIGFuZCBzdWdnZXN0
+aW9uIAo+PiB3aGlsZQo+PiBpdCBnaXZlcyBtZSB3b3JyeS4gQXMgYSBuZXdjb21lciwgSSBkbyBu
+b3Qga25vdyBpZiBzaG91bGQgY29tbXVuaWNhdGUgCj4+IHdpdGgKPj4geW91IHNpbmNlIHlvdXIg
+cGF0Y2ggd2FzIGNvbW1pdHRlZCBvbmUgeWVhciBhZ28uIEFuZCBub3cgaXQgbWF5IGJlIGEgCj4+
+IGdvb2QKPj4gY2hhbmNlIHRvIGRvIHNvbWUgY29tbXVuaWNhdGlvbi4KPj4KPj4gVGhhbmtzLAo+
+Pgo+PiAtIEppbnlhbmcuCj4+Cj4+Pj4+PiArICAgIG1mYzAgIHQxLCBDUDBfRUJBU0UKPj4+Pj4+
+ICsgICAgYW5kaSAgdDEsIE1JUFNfRUJBU0VfQ1BVTlVNCj4+Pj4+PiArICAgIGRsaSAgIHQwLCBN
+QUlMQk9YX0JBU0UKPj4+Pj4+ICsgICAgYW5kaSAgdDMsIHQxLCAweDMKPj4+Pj4+ICsgICAgc2xs
+ICAgdDMsIDgKPj4+Pj4+ICsgICAgb3IgICAgdDAsIHQwLCB0MyAgICAgICAgLyogaW5zZXJ0IGNv
+cmUgaWQgKi8KPj4+Pj4+ICsgICAgYW5kaSAgdDIsIHQxLCAweGMKPj4+Pj4+ICsgICAgZHNsbCAg
+dDIsIDQyCj4+Pj4+PiArICAgIG9yICAgIHQwLCB0MCwgdDIgICAgICAgIC8qIGluc2VydCBub2Rl
+IGlkICovCj4+Pj4+PiArMTogIGxkICAgIHMxLCAweDIwKHQwKSAgICAgIC8qIGdldCBQQyB2aWEg
+bWFpbGJveDAgKi8KPj4+Pj4+ICsgICAgYmVxeiAgczEsIDFiCj4+Pj4+PiArICAgIGxkICAgIHNw
+LCAweDI4KHQwKSAgICAgIC8qIGdldCBTUCB2aWEgbWFpbGJveDEgKi8KPj4+Pj4+ICsgICAgbGQg
+ICAgZ3AsIDB4MzAodDApICAgICAgLyogZ2V0IEdQIHZpYSBtYWlsYm94MiAqLwo+Pj4+Pj4gKyAg
+ICBsZCAgICBhMSwgMHgzOCh0MCkKPj4+Pj4+ICsgICAganIgICAgczEKPj4+Pj4+ICsjZW5kaWYK
+Pj4+Pj4+ICAgICAgIGogICAgICAgICAgICAgICBzMQo+Pj4+Pj4gICAgICAgRU5EKGtleGVjX3Nt
+cF93YWl0KQo+Pj4+Pj4gI2VuZGlmCj4+Pj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL2xvb25n
+c29uNjQvcmVzZXQuYyAKPj4+Pj4+IGIvYXJjaC9taXBzL2xvb25nc29uNjQvcmVzZXQuYwo+Pj4+
+Pj4gaW5kZXggM2JiOGExZS4uMzIyYzMyNiAxMDA2NDQKPj4+Pj4+IC0tLSBhL2FyY2gvbWlwcy9s
+b29uZ3NvbjY0L3Jlc2V0LmMKPj4+Pj4+ICsrKyBiL2FyY2gvbWlwcy9sb29uZ3NvbjY0L3Jlc2V0
+LmMKPj4+Pj4+IEBAIC00NywxMiArNDcsMTAwIEBAIHN0YXRpYyB2b2lkIGxvb25nc29uX2hhbHQo
+dm9pZCkKPj4+Pj4+ICAgICAgIH0KPj4+Pj4+IH0KPj4+Pj4+Cj4+Pj4+PiArI2lmZGVmIENPTkZJ
+R19LRVhFQwo+Pj4+Pj4gKyNpbmNsdWRlIDxsaW51eC9jcHUuaD4KPj4+Pj4+ICsjaW5jbHVkZSA8
+bGludXgva2V4ZWMuaD4KPj4+Pj4+ICsKPj4+Pj4+ICsjaW5jbHVkZSA8YXNtL2Jvb3RpbmZvLmg+
+Cj4+Pj4+PiArCj4+Pj4+PiArI2RlZmluZSBDT05UUk9MX0NPREVfUEFHRSAgICAweEZGRkZGRkZG
+ODAwMDAwMDBVTAo+Pj4+Pj4gK3N0YXRpYyBpbnQga2V4ZWNfYXJnYzsKPj4+Pj4+ICtzdGF0aWMg
+aW50IGtkdW1wX2FyZ2M7Cj4+Pj4+PiArc3RhdGljIHZvaWQgKmtleGVjX2FyZ3Y7Cj4+Pj4+PiAr
+c3RhdGljIHZvaWQgKmtkdW1wX2FyZ3Y7Cj4+Pj4+PiArCj4+Pj4+PiArc3RhdGljIGludCBsb29u
+Z3Nvbl9rZXhlY19wcmVwYXJlKHN0cnVjdCBraW1hZ2UgKmltYWdlKQo+Pj4+Pj4gK3sKPj4+Pj4+
+ICsgICAgaW50IGksIG9mZnQsIGFyZ2MgPSAwOwo+Pj4+Pj4gKyAgICBpbnQgKmFyZ3Y7Cj4+Pj4+
+PiArICAgIGNoYXIgKnN0ciwgKnB0ciwgKmJvb3Rsb2FkZXIgPSAia2V4ZWMiOwo+Pj4+Pj4gKwo+
+Pj4+Pj4gKyAgICBhcmd2ID0ga21hbGxvYyhDT01NQU5EX0xJTkVfU0laRSwgR0ZQX0tFUk5FTCk7
+Cj4+Pj4+PiArICAgIGlmICghYXJndikKPj4+Pj4+ICsgICAgICAgICAgICByZXR1cm4gLUVOT01F
+TTsKPj4+Pj4+ICsKPj4+Pj4+ICsgICAgZm9yIChpID0gMDsgaSA8IGltYWdlLT5ucl9zZWdtZW50
+czsgaSsrKSB7Cj4+Pj4+PiArICAgICAgICAgICAgaWYgKCFzdHJuY21wKGJvb3Rsb2FkZXIsIChj
+aGFyICopaW1hZ2UtPnNlZ21lbnRbaV0uYnVmLAo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICBzdHJsZW4oYm9vdGxvYWRlcikpKSB7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAg
+ICBhcmd2W2FyZ2MrK10gPSBmd19hcmcxICsgQ09NTUFORF9MSU5FX1NJWkUvMjsKPj4+Pj4+ICsg
+ICAgICAgICAgICAgICAgICAgIHN0ciA9IChjaGFyICopYXJndiArIENPTU1BTkRfTElORV9TSVpF
+LzI7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICBtZW1jcHkoc3RyLCBpbWFnZS0+c2VnbWVu
+dFtpXS5idWYsIAo+Pj4+Pj4gQ09NTUFORF9MSU5FX1NJWkUvMik7Cj4+Pj4+PiArICAgICAgICAg
+ICAgICAgICAgICBwdHIgPSBzdHJjaHIoc3RyLCAnICcpOwo+Pj4+Pj4gKyAgICAgICAgICAgICAg
+ICAgICAgd2hpbGUgKHB0cikgewo+Pj4+Pj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAq
+cHRyID0gJ1wwJzsKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYgKHB0clsx
+XSAhPSAnICcpIHsKPj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBv
+ZmZ0ID0gKGludCkocHRyIC0gc3RyICsgMSk7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgYXJndlthcmdjKytdID0gZndfYXJnMSArIAo+Pj4+Pj4gQ09NTUFORF9M
+SU5FX1NJWkUvMiArIG9mZnQ7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0K
+Pj4+Pj4+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgcHRyID0gc3RyY2hyKHB0ciArIDEs
+ICcgJyk7Cj4+Pj4+PiArICAgICAgICAgICAgICAgICAgICB9Cj4+Pj4+PiArICAgICAgICAgICAg
+ICAgICAgICBicmVhazsKPj4+Pj4+ICsgICAgICAgICAgICB9Cj4+Pj4+PiArICAgIH0KPj4+Pj4+
+ICsKPj4+Pj4+ICsgICAgLyogS2V4ZWMva2R1bXAgbmVlZHMgYSBzYWZlIHBhZ2UgdG8gc2F2ZSBy
+ZWJvb3RfY29kZV9idWZmZXIuICovCj4+Pj4+PiArICAgIGltYWdlLT5jb250cm9sX2NvZGVfcGFn
+ZSA9IHZpcnRfdG9fcGFnZSgodm9pZCAKPj4+Pj4+ICopQ09OVFJPTF9DT0RFX1BBR0UpOwo+Pj4+
+Pj4gKwo+Pj4+Pj4gKyAgICBpZiAoaW1hZ2UtPnR5cGUgPT0gS0VYRUNfVFlQRV9DUkFTSCkgewo+
+Pj4+Pj4gKyAgICAgICAgICAgIGtmcmVlKGtkdW1wX2FyZ3YpOwo+Pj4+Pj4gKyAgICAgICAgICAg
+IGtkdW1wX2FyZ2MgPSBhcmdjOwo+Pj4+Pj4gKyAgICAgICAgICAgIGtkdW1wX2FyZ3YgPSBhcmd2
+Owo+Pj4+Pj4gKyAgICB9IGVsc2Ugewo+Pj4+Pj4gKyAgICAgICAgICAgIGtmcmVlKGtleGVjX2Fy
+Z3YpOwo+Pj4+Pj4gKyAgICAgICAgICAgIGtleGVjX2FyZ2MgPSBhcmdjOwo+Pj4+Pj4gKyAgICAg
+ICAgICAgIGtleGVjX2FyZ3YgPSBhcmd2Owo+Pj4+Pj4gKyAgICB9Cj4+Pj4+PiArCj4+Pj4+PiAr
+ICAgIHJldHVybiAwOwo+Pj4+Pj4gK30KPj4+Pj4+ICsKPj4+Pj4+ICtzdGF0aWMgdm9pZCBsb29u
+Z3Nvbl9rZXhlY19zaHV0ZG93bih2b2lkKQo+Pj4+Pj4gK3sKPj4+Pj4+ICsjaWZkZWYgQ09ORklH
+X1NNUAo+Pj4+Pj4gKyAgICBicmluZ3VwX25vbmJvb3RfY3B1cyhsb29uZ3Nvbl9zeXNjb25mLm5y
+X2NwdXMpOwo+Pj4+Pj4gKyNlbmRpZgo+Pj4+Pj4gKyAgICBmd19hcmcwID0ga2V4ZWNfYXJnYzsK
+Pj4+Pj4+ICsgICAgbWVtY3B5KCh2b2lkICopZndfYXJnMSwga2V4ZWNfYXJndiwgQ09NTUFORF9M
+SU5FX1NJWkUpOwo+Pj4+Pj4gKwo+Pj4+Pj4gKyAgICBrZXhlY19hcmdzWzBdID0gZndfYXJnMDsK
+Pj4+Pj4+ICsgICAga2V4ZWNfYXJnc1sxXSA9IGZ3X2FyZzE7Cj4+Pj4+PiArICAgIGtleGVjX2Fy
+Z3NbMl0gPSBmd19hcmcyOwo+Pj4+Pj4gK30KPj4+Pj4+ICsKPj4+Pj4+ICtzdGF0aWMgdm9pZCBs
+b29uZ3Nvbl9jcmFzaF9zaHV0ZG93bihzdHJ1Y3QgcHRfcmVncyAqcmVncykKPj4+Pj4+ICt7Cj4+
+Pj4+PiArICAgIGRlZmF1bHRfbWFjaGluZV9jcmFzaF9zaHV0ZG93bihyZWdzKTsKPj4+Pj4+ICsg
+ICAgZndfYXJnMCA9IGtkdW1wX2FyZ2M7Cj4+Pj4+PiArICAgIG1lbWNweSgodm9pZCAqKWZ3X2Fy
+ZzEsIGtkdW1wX2FyZ3YsIENPTU1BTkRfTElORV9TSVpFKTsKPj4+Pj4+ICsKPj4+Pj4+ICsgICAg
+a2V4ZWNfYXJnc1swXSA9IGZ3X2FyZzA7Cj4+Pj4+PiArICAgIGtleGVjX2FyZ3NbMV0gPSBmd19h
+cmcxOwo+Pj4+Pj4gKyAgICBrZXhlY19hcmdzWzJdID0gZndfYXJnMjsKPj4+Pj4+ICt9Cj4+Pj4+
+PiArI2VuZGlmCj4+Pj4+PiArCj4+Pj4+PiBzdGF0aWMgaW50IF9faW5pdCBtaXBzX3JlYm9vdF9z
+ZXR1cCh2b2lkKQo+Pj4+Pj4gewo+Pj4+Pj4gICAgICAgX21hY2hpbmVfcmVzdGFydCA9IGxvb25n
+c29uX3Jlc3RhcnQ7Cj4+Pj4+PiAgICAgICBfbWFjaGluZV9oYWx0ID0gbG9vbmdzb25faGFsdDsK
+Pj4+Pj4+ICAgICAgIHBtX3Bvd2VyX29mZiA9IGxvb25nc29uX3Bvd2Vyb2ZmOwo+Pj4+Pj4KPj4+
+Pj4+ICsjaWZkZWYgQ09ORklHX0tFWEVDCj4+Pj4+PiArICAgIF9tYWNoaW5lX2tleGVjX3ByZXBh
+cmUgPSBsb29uZ3Nvbl9rZXhlY19wcmVwYXJlOwo+Pj4+Pj4gKyAgICBfbWFjaGluZV9rZXhlY19z
+aHV0ZG93biA9IGxvb25nc29uX2tleGVjX3NodXRkb3duOwo+Pj4+Pj4gKyAgICBfbWFjaGluZV9j
+cmFzaF9zaHV0ZG93biA9IGxvb25nc29uX2NyYXNoX3NodXRkb3duOwo+Pj4+Pj4gKyNlbmRpZgo+
+Pj4+Pj4gKwo+Pj4+Pj4gICAgICAgcmV0dXJuIDA7Cj4+Pj4+PiB9Cj4+Pj4+PgoKCl9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
+dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8va2V4ZWMK
