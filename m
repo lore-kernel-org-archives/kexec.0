@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH] arm64: Add purgatory printing
-References: <20200917193835.30910-1-matthias.bgg@kernel.org>
-From: Geoff Levand <geoff@infradead.org>
-Message-ID: <fd2910d9-7268-3b8a-465a-3a7406dd0cd8@infradead.org>
-Date: Thu, 17 Sep 2020 19:04:42 -0700
+Received: from mail-eopbgr1400071.outbound.protection.outlook.com
+ ([40.107.140.71] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kJ63u-0004hp-LC
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 02:23:48 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v2 1/1] Calculate offset to field 'init_uts_ns.name'
+Date: Fri, 18 Sep 2020 02:23:40 +0000
+Message-ID: <TYAPR01MB1999752B14E6621102B974A8DD3F0@TYAPR01MB1999.jpnprd01.prod.outlook.com>
+References: <20200916135147.1303016-1-egorenar@linux.ibm.com>
+ <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <87mu1o1i08.fsf@oc8242746057.ibm.com>
+In-Reply-To: <87mu1o1i08.fsf@oc8242746057.ibm.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20200917193835.30910-1-matthias.bgg@kernel.org>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,74 +23,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: matthias.bgg@kernel.org, kexec@lists.infradead.org, horms@verge.net.au
-Cc: Matthias Brugger <mbrugger@suse.com>
+To: Alexander Egorenkov <egorenar@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi Matthias,
-
-On 9/17/20 12:38 PM, matthias.bgg@kernel.org wrote:
-Add option to allow purgatory printing on arm64 hardware
-> by passing the console name which should be used.
-
-> +static uint64_t find_purgatory_sink(const char *console)
-> +{
-> +	int fd, ret;
-> +	char folder[255], device[255], mem[255];
-> +	struct stat sb;
-> +	char buffer[18];
-> +	uint64_t iomem = 0x0;
-> +
-> +	if (!console)
-> +		return 0;
-> +
-> +	sprintf(device, "/sys/class/tty/%s", console);
-> +	if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
-> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
-> +			__func__, device);
-> +		return 0;
-> +	}
-> +
-> +	sprintf(mem, "%s%s", device, "/iomem_base");
-> +	printf("console memory read from %s\n", mem);
-> +
-> +	fd = open(mem, O_RDONLY);
-> +	if (fd < 0) {
-> +		fprintf(stderr, "kexec: %s: No able to open %s\n",
-> +			__func__, mem);
-> +		return 0;
-> +	}
-> +
-> +	memset(buffer, '\0', sizeof(char) * 18);
-
-I think I'd like to just see 'memset(buffer, 0, sizeof(buffer));'.
-
-> +	ret = read(fd, buffer, 18);
-
-And 'ret = read(fd, buffer, sizeof(buffer));'.
-
-> +	if (ret < 0) {
-> +		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
-> +		close(fd);
-> +		return 0;
-> +	}
-> +
-> +	sscanf(buffer, "%lx", &iomem);
-> +	printf("console memory is at %#lx\n", iomem);
-> +
-> +	close(fd);
-> +	return iomem;
-> +}
-> +
-
-Otherwise, looks OK.
-
--Geoff
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgQWxleCwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSEFHSU8gS0FaVUhJVE8o
+6JCp5bC+44CA5LiA5LuBKQk8ay1oYWdpby1hYkBuZWMuY29tPiB3cml0ZXM6DQo+IA0KPiA+DQo+
+ID4gVGhhbmsgeW91IGZvciBjYXRjaGluZyB0aGlzIGFuZCB0aGUgcGF0Y2guDQo+ID4NCj4gPiBi
+dXQgZG8geW91IGtub3cgdGhlIGtlcm5lbCBwYXRjaCBjb3JyZXNwb25kaW5nIHRvIHRoaXMgcGF0
+Y2gsIGkuZS4gYWRkcw0KPiA+IHRoZSBPRkZTRVQoaW5pdF91dHNfbnMubmFtZSkgKHN0cmljdGx5
+LCBPRkZTRVQodXRzX25hbWVzcGFjZS5uYW1lKSBwcm9iYWJseSkNCj4gPiBlbnRyeSB0byB2bWNv
+cmVpbmZvPyAgVGhlIG1ha2VkdW1wZmlsZSB1c3VhbGx5IGp1c3QgcmVhZCBpdCBmcm9tIHZtY29y
+ZSwNCj4gPiBzbyBjYW5ub3QgY2FsY3VsYXRlIHdpdGhvdXQgZGVidWcgaW5mbyBpbiB2bWxpbnV4
+Lg0KPiA+DQo+ID4gSWYgaXQgaGFzIG5vdCBiZWVuIHBvc3RlZCB5ZXQsIHdlIG5lZWQgdG8gZG8u
+ICBUaGUgYmVzdCBzaXR1YXRpb24gaXMNCj4gPiB0aGF0IHRoZSBwYXRjaCBpcyBtZXJnZWQgaW50
+byBsaW51eC1uZXh0IGZpcnN0IGFuZCB0aGVuIG1lcmdlZCBpbnRvDQo+ID4gbWFpbmxpbmUgdG9n
+ZXRoZXIgd2l0aCB0aGUgY29tbWl0IDlhNTY0OTNmNjk0Mi4NCj4gPg0KPiA+IElzIGl0IHBvc3Np
+YmxlIGZvciB5b3U/ICBvdGhlcndpc2UsIGFueW9uZSBvciBJIG1pZ2h0IHRyeS4NCj4gPg0KPiAN
+Cj4gSGkgS2F6dSwNCj4gDQo+IG15IHBhdGNoIGRvZXNuJ3QgcmVhbGx5IHdvcmsgOiggVGhlIG9m
+ZnNldCBmcm9tICdpbml0X3V0c19ucycgdG8gJ25hbWUnDQo+IGhhcyBjaGFuZ2VkIGZyb20gNCB0
+byAwIGJ1dCBob3cgZG8geW91IGhhbmRsZSB0aGF0IGluIG1ha2VkdW1wZmlsZSB3L28NCj4gZmly
+c3Qga25vd2luZyB3aGF0IGtlcm5lbCB2ZXJzaW9uIHRoYXQgaXMuIEl0IGlzIGEgY2hpY2tlbi1h
+bmQtZWdnDQo+IHByb2JsZW0uIE5vdCBzdXJlIGhvdyB0byBzb2x2ZSBpdC4gVGhlIExpbnV4IGtl
+cm5lbCBkb2Vzbid0IHByb3ZpZGUNCj4gdGhlIHN5bWJvbCAnaW5pdF9uc19ucy5uYW1lJyBhcyBp
+IGluaXRpYWxseSB0aG91Z2h0IGFuZCAsdGhlcmVmb3JlLA0KPiBpIGJhc2VkIG15IHBhdGNoIG9u
+IGEgd3JvbmcgYXNzdW1wdGlvbi4gSXQgd291bGQgYmUgbmljZSBpZiBrZXJuZWwganVzdA0KPiBw
+cm92aWRlZCBhIHN5bWJvbCBmb3IgJ2luaXRfdXRzX25zLm5hbWUnIGluc3RlYWQgb2YgJ2luaXRf
+dXRzX25zJyB3aGljaA0KPiBtaWdodCBjaGFuZ2UgYW55dGltZS4NCg0KWWVzLCBJIHRoaW5rIHRo
+ZXJlIGFyZSB0d28gb3B0aW9ucyB0byBzb2x2ZSBpdDoNCg0KKDEpIFJlcGxhY2UgVk1DT1JFSU5G
+T19TWU1CT0woaW5pdF91dHNfbnMpIHdpdGggVk1DT1JFSU5GT19TWU1CT0woaW5pdF91dHNfbnMu
+bmFtZSkNCmluIHZtY29yZWluZm8gKGtlcm5lbC9jcmFzaF9jb3JlLmMsIHdoaWNoIHlvdSBjaGVj
+a2VkKQ0KDQphbmQgbWFrZWR1bXBmaWxlIHNpZGU6DQoNCiAgaWYgKFNZTUJPTChpbml0X3V0c19u
+cy5uYW1lKSAhPSBOT1RfRk9VTkRfU1lNQk9MKQ0KICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91
+dHNfbnMubmFtZSkNCiAgZWxzZSBpZiAoU1lNQk9MKGluaXRfdXRzX25zKSAhPSBOT1RfRk9VTkRf
+U1lNQk9MKQ0KICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91dHNfbnMpICsgc2l6ZW9mKGludCkN
+CiAgLi4uDQoNCkFjY29yZGluZyB0byB0aGUgZGVmaW5pdGlvbiBvZiB0aGUgVk1DT1JFSU5GT19T
+WU1CTygpIG1hY3JvLCB0aGlzIHdpbGwNCndvcmsgZmlsZSwgYnV0IEkndmUgbm90IHNlZW4gc3Vj
+aCBhIHVzYWdlIChzcGVjaWZpZXMgYSBtZW1iZXIgb2Ygc3RydWN0KQ0KYW5kIGl0IHdvdWxkIGJl
+IGJldHRlciB0byBhdm9pZC4gIEFuZCB3ZSB3aWxsIGhhdmUgdG8gaGF2ZSBhIGJpdCB0cmlja3kN
+CnBhcnQgaW4gbWFrZWR1bXBmaWxlIHNvdXJjZSBmb3IgIi14IHZtbGludXgiIG9wdGlvbiBzdXBw
+b3J0Lg0KDQpBbHNvIEknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZXJlIGFyZSBvdGhlciB1c2VycyB0
+aGFuIG1ha2VkdW1wZmlsZSBkZXBlbmRpbmcNCm9uIHRoZSBjdXJyZW50IFNZTUJPTChpbml0X3V0
+c19ucykgYW5kIHdoZXRoZXIgd2UgY2FuIGNoYW5nZSBpdC4NCihwcm9iYWJseSBubyBvdGhlciB1
+c2VyLCB0aG91Z2guLikNCg0KKDIpIEFwcGVuZCBWTUNPUkVJTkZPX09GRlNFVCh1dHNfbmFtZXNw
+YWNlLCBuYW1lKSB0byB2bWNvcmVpbmZvLg0KDQphbmQgbWFrZWR1bXBmaWxlIHNpZGU6DQoNCiAg
+aWYgKFNZTUJPTChpbml0X3V0c19ucykgIT0gTk9UX0ZPVU5EX1NZTUJPTCkgew0KICAgIGlmIChP
+RkZTRVQodXRzX25hbWVzcGFjZS5uYW1lKSAhPSBOT1RfRk9VTkRfU1RSVUNUVVJFKQ0KICAgICAg
+dXRzbmFtZSA9IFNZTUJPTChpbml0X3V0c19ucykgKyBPRkZTRVQodXRzX25hbWVzcGFjZS5uYW1l
+KQ0KICAgIGVsc2UNCiAgICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91dHNfbnMpICsgc2l6ZW9m
+KGludCkNCiAgLi4uDQoNClRoZSBWTUNPUkVJTkZPX09GRlNFVCgpIG1hY3JvIHRha2VzIGEgc3Ry
+dWN0IG5hbWUgYW5kIGl0cyBtZW1iZXIgbmFtZS4NClRoaXMgb3B0aW9uIGRvZXNuJ3QgY2hhbmdl
+IHRoZSBjdXJyZW50IFNZTUJPTChpbml0X3V0c19ucykuDQoNClNvIHBlcnNvbmFsbHkgSSB3b3Vs
+ZCBwcmVmZXIgKDIpIHJhdGhlciB0aGFuICgxKS4NCklmIHlvdSBjYW4gcG9zdCBhIGtlcm5lbCBw
+YXRjaCwgcGxlYXNlIGNjIHRoaXMga2V4ZWMgbGlzdC4NCg0KVGhhbmtzLA0KS2F6dQ0KDQpfX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
+IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
