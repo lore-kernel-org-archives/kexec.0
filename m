@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400071.outbound.protection.outlook.com
- ([40.107.140.71] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from us-smtp-1.mimecast.com ([207.211.31.81]
+ helo=us-smtp-delivery-1.mimecast.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ63u-0004hp-LC
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 02:23:48 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v2 1/1] Calculate offset to field 'init_uts_ns.name'
-Date: Fri, 18 Sep 2020 02:23:40 +0000
-Message-ID: <TYAPR01MB1999752B14E6621102B974A8DD3F0@TYAPR01MB1999.jpnprd01.prod.outlook.com>
-References: <20200916135147.1303016-1-egorenar@linux.ibm.com>
- <OSBPR01MB199111D24037A49B136EBF76DD3E0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <87mu1o1i08.fsf@oc8242746057.ibm.com>
-In-Reply-To: <87mu1o1i08.fsf@oc8242746057.ibm.com>
-Content-Language: ja-JP
+ id 1kJ6eT-0000rz-8a
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 03:01:34 +0000
+Date: Fri, 18 Sep 2020 11:01:12 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel[_low]()
+Message-ID: <20200918030112.GA3356@dhcp-128-65.nay.redhat.com>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <20200907134745.25732-4-chenzhou10@huawei.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20200907134745.25732-4-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,61 +22,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexander Egorenkov <egorenar@linux.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-SGkgQWxleCwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSEFHSU8gS0FaVUhJVE8o
-6JCp5bC+44CA5LiA5LuBKQk8ay1oYWdpby1hYkBuZWMuY29tPiB3cml0ZXM6DQo+IA0KPiA+DQo+
-ID4gVGhhbmsgeW91IGZvciBjYXRjaGluZyB0aGlzIGFuZCB0aGUgcGF0Y2guDQo+ID4NCj4gPiBi
-dXQgZG8geW91IGtub3cgdGhlIGtlcm5lbCBwYXRjaCBjb3JyZXNwb25kaW5nIHRvIHRoaXMgcGF0
-Y2gsIGkuZS4gYWRkcw0KPiA+IHRoZSBPRkZTRVQoaW5pdF91dHNfbnMubmFtZSkgKHN0cmljdGx5
-LCBPRkZTRVQodXRzX25hbWVzcGFjZS5uYW1lKSBwcm9iYWJseSkNCj4gPiBlbnRyeSB0byB2bWNv
-cmVpbmZvPyAgVGhlIG1ha2VkdW1wZmlsZSB1c3VhbGx5IGp1c3QgcmVhZCBpdCBmcm9tIHZtY29y
-ZSwNCj4gPiBzbyBjYW5ub3QgY2FsY3VsYXRlIHdpdGhvdXQgZGVidWcgaW5mbyBpbiB2bWxpbnV4
-Lg0KPiA+DQo+ID4gSWYgaXQgaGFzIG5vdCBiZWVuIHBvc3RlZCB5ZXQsIHdlIG5lZWQgdG8gZG8u
-ICBUaGUgYmVzdCBzaXR1YXRpb24gaXMNCj4gPiB0aGF0IHRoZSBwYXRjaCBpcyBtZXJnZWQgaW50
-byBsaW51eC1uZXh0IGZpcnN0IGFuZCB0aGVuIG1lcmdlZCBpbnRvDQo+ID4gbWFpbmxpbmUgdG9n
-ZXRoZXIgd2l0aCB0aGUgY29tbWl0IDlhNTY0OTNmNjk0Mi4NCj4gPg0KPiA+IElzIGl0IHBvc3Np
-YmxlIGZvciB5b3U/ICBvdGhlcndpc2UsIGFueW9uZSBvciBJIG1pZ2h0IHRyeS4NCj4gPg0KPiAN
-Cj4gSGkgS2F6dSwNCj4gDQo+IG15IHBhdGNoIGRvZXNuJ3QgcmVhbGx5IHdvcmsgOiggVGhlIG9m
-ZnNldCBmcm9tICdpbml0X3V0c19ucycgdG8gJ25hbWUnDQo+IGhhcyBjaGFuZ2VkIGZyb20gNCB0
-byAwIGJ1dCBob3cgZG8geW91IGhhbmRsZSB0aGF0IGluIG1ha2VkdW1wZmlsZSB3L28NCj4gZmly
-c3Qga25vd2luZyB3aGF0IGtlcm5lbCB2ZXJzaW9uIHRoYXQgaXMuIEl0IGlzIGEgY2hpY2tlbi1h
-bmQtZWdnDQo+IHByb2JsZW0uIE5vdCBzdXJlIGhvdyB0byBzb2x2ZSBpdC4gVGhlIExpbnV4IGtl
-cm5lbCBkb2Vzbid0IHByb3ZpZGUNCj4gdGhlIHN5bWJvbCAnaW5pdF9uc19ucy5uYW1lJyBhcyBp
-IGluaXRpYWxseSB0aG91Z2h0IGFuZCAsdGhlcmVmb3JlLA0KPiBpIGJhc2VkIG15IHBhdGNoIG9u
-IGEgd3JvbmcgYXNzdW1wdGlvbi4gSXQgd291bGQgYmUgbmljZSBpZiBrZXJuZWwganVzdA0KPiBw
-cm92aWRlZCBhIHN5bWJvbCBmb3IgJ2luaXRfdXRzX25zLm5hbWUnIGluc3RlYWQgb2YgJ2luaXRf
-dXRzX25zJyB3aGljaA0KPiBtaWdodCBjaGFuZ2UgYW55dGltZS4NCg0KWWVzLCBJIHRoaW5rIHRo
-ZXJlIGFyZSB0d28gb3B0aW9ucyB0byBzb2x2ZSBpdDoNCg0KKDEpIFJlcGxhY2UgVk1DT1JFSU5G
-T19TWU1CT0woaW5pdF91dHNfbnMpIHdpdGggVk1DT1JFSU5GT19TWU1CT0woaW5pdF91dHNfbnMu
-bmFtZSkNCmluIHZtY29yZWluZm8gKGtlcm5lbC9jcmFzaF9jb3JlLmMsIHdoaWNoIHlvdSBjaGVj
-a2VkKQ0KDQphbmQgbWFrZWR1bXBmaWxlIHNpZGU6DQoNCiAgaWYgKFNZTUJPTChpbml0X3V0c19u
-cy5uYW1lKSAhPSBOT1RfRk9VTkRfU1lNQk9MKQ0KICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91
-dHNfbnMubmFtZSkNCiAgZWxzZSBpZiAoU1lNQk9MKGluaXRfdXRzX25zKSAhPSBOT1RfRk9VTkRf
-U1lNQk9MKQ0KICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91dHNfbnMpICsgc2l6ZW9mKGludCkN
-CiAgLi4uDQoNCkFjY29yZGluZyB0byB0aGUgZGVmaW5pdGlvbiBvZiB0aGUgVk1DT1JFSU5GT19T
-WU1CTygpIG1hY3JvLCB0aGlzIHdpbGwNCndvcmsgZmlsZSwgYnV0IEkndmUgbm90IHNlZW4gc3Vj
-aCBhIHVzYWdlIChzcGVjaWZpZXMgYSBtZW1iZXIgb2Ygc3RydWN0KQ0KYW5kIGl0IHdvdWxkIGJl
-IGJldHRlciB0byBhdm9pZC4gIEFuZCB3ZSB3aWxsIGhhdmUgdG8gaGF2ZSBhIGJpdCB0cmlja3kN
-CnBhcnQgaW4gbWFrZWR1bXBmaWxlIHNvdXJjZSBmb3IgIi14IHZtbGludXgiIG9wdGlvbiBzdXBw
-b3J0Lg0KDQpBbHNvIEknbSBub3Qgc3VyZSB3aGV0aGVyIHRoZXJlIGFyZSBvdGhlciB1c2VycyB0
-aGFuIG1ha2VkdW1wZmlsZSBkZXBlbmRpbmcNCm9uIHRoZSBjdXJyZW50IFNZTUJPTChpbml0X3V0
-c19ucykgYW5kIHdoZXRoZXIgd2UgY2FuIGNoYW5nZSBpdC4NCihwcm9iYWJseSBubyBvdGhlciB1
-c2VyLCB0aG91Z2guLikNCg0KKDIpIEFwcGVuZCBWTUNPUkVJTkZPX09GRlNFVCh1dHNfbmFtZXNw
-YWNlLCBuYW1lKSB0byB2bWNvcmVpbmZvLg0KDQphbmQgbWFrZWR1bXBmaWxlIHNpZGU6DQoNCiAg
-aWYgKFNZTUJPTChpbml0X3V0c19ucykgIT0gTk9UX0ZPVU5EX1NZTUJPTCkgew0KICAgIGlmIChP
-RkZTRVQodXRzX25hbWVzcGFjZS5uYW1lKSAhPSBOT1RfRk9VTkRfU1RSVUNUVVJFKQ0KICAgICAg
-dXRzbmFtZSA9IFNZTUJPTChpbml0X3V0c19ucykgKyBPRkZTRVQodXRzX25hbWVzcGFjZS5uYW1l
-KQ0KICAgIGVsc2UNCiAgICAgIHV0c25hbWUgPSBTWU1CT0woaW5pdF91dHNfbnMpICsgc2l6ZW9m
-KGludCkNCiAgLi4uDQoNClRoZSBWTUNPUkVJTkZPX09GRlNFVCgpIG1hY3JvIHRha2VzIGEgc3Ry
-dWN0IG5hbWUgYW5kIGl0cyBtZW1iZXIgbmFtZS4NClRoaXMgb3B0aW9uIGRvZXNuJ3QgY2hhbmdl
-IHRoZSBjdXJyZW50IFNZTUJPTChpbml0X3V0c19ucykuDQoNClNvIHBlcnNvbmFsbHkgSSB3b3Vs
-ZCBwcmVmZXIgKDIpIHJhdGhlciB0aGFuICgxKS4NCklmIHlvdSBjYW4gcG9zdCBhIGtlcm5lbCBw
-YXRjaCwgcGxlYXNlIGNjIHRoaXMga2V4ZWMgbGlzdC4NCg0KVGhhbmtzLA0KS2F6dQ0KDQpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On 09/07/20 at 09:47pm, Chen Zhou wrote:
+> To make the functions reserve_crashkernel[_low]() as generic,
+> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+> 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> ---
+>  arch/x86/kernel/setup.c | 11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index d7fd90c52dae..71a6a6e7ca5b 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
+>  	unsigned long total_low_mem;
+>  	int ret;
+>  
+> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
+
+total_low_mem != CRASH_ADDR_LOW_MAX
+
+>  
+>  	/* crashkernel=Y,low */
+>  	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+
+The param total_low_mem is for dynamically change crash_size according
+to system ram size.
+
+Is above change a must for your arm64 patches?
+
+> @@ -451,7 +451,7 @@ static int __init reserve_crashkernel_low(void)
+>  			return 0;
+>  	}
+>  
+> -	low_base = memblock_find_in_range(CRASH_ALIGN, 1ULL << 32, low_size, CRASH_ALIGN);
+> +	low_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX, low_size, CRASH_ALIGN);
+>  	if (!low_base) {
+>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>  		       (unsigned long)(low_size >> 20));
+> @@ -504,8 +504,9 @@ static void __init reserve_crashkernel(void)
+>  	if (!crash_base) {
+>  		/*
+>  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+> -		 * crashkernel=x,high reserves memory over 4G, also allocates
+> -		 * 256M extra low memory for DMA buffers and swiotlb.
+> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
+> +		 * also allocates 256M extra low memory for DMA buffers
+> +		 * and swiotlb.
+>  		 * But the extra memory is not required for all machines.
+>  		 * So try low memory first and fall back to high memory
+>  		 * unless "crashkernel=size[KMG],high" is specified.
+> @@ -539,7 +540,7 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+>  		memblock_free(crash_base, crash_size);
+>  		return;
+>  	}
+> -- 
+> 2.20.1
+> 
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
