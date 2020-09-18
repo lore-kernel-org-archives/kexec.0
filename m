@@ -1,18 +1,30 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJAm5-0001Lr-4L
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 07:25:42 +0000
-Date: Fri, 18 Sep 2020 15:25:26 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v12 3/9] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel[_low]()
-Message-ID: <20200918072526.GD25604@MiWiFi-R3L-srv>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
- <20200907134745.25732-4-chenzhou10@huawei.com>
+ id 1kJBOI-00083e-G1
+ for kexec@lists.infradead.org; Fri, 18 Sep 2020 08:05:11 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+ by mx0a-001b2d01.pphosted.com (8.16.0.42/8.16.0.42) with SMTP id
+ 08I83e1j071220
+ for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 04:05:09 -0400
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com
+ [169.51.49.98])
+ by mx0a-001b2d01.pphosted.com with ESMTP id 33mre91arx-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 04:05:09 -0400
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+ by ppma03ams.nl.ibm.com (8.16.0.42/8.16.0.42) with SMTP id 08I82VLf021267
+ for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 08:05:07 GMT
+Received: from b06avi18626390.portsmouth.uk.ibm.com
+ (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
+ by ppma03ams.nl.ibm.com with ESMTP id 33k6esjxb8-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Fri, 18 Sep 2020 08:05:06 +0000
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Subject: [PATCH 1/1] kdump: append uts_namespace.name offset to VMCOREINFO
+Date: Fri, 18 Sep 2020 10:04:39 +0200
+Message-Id: <20200918080439.235190-1-egorenar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200907134745.25732-4-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,81 +37,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, rppt@linux.ibm.com, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: kexec@lists.infradead.org
+Cc: Alexander Egorenkov <egorenar@linux.ibm.com>
 
-Hi,
+The offset of the field 'init_uts_ns.name' has changed
+since commit 9a56493f6942c0e2df1579986128721da96e00d8.
+Make the offset of the field 'uts_namespace.name' available
+in VMCOREINFO because tools like 'crash-utility' and
+'makedumpfile' must be able to read it from crash dumps.
 
-On 09/07/20 at 09:47pm, Chen Zhou wrote:
-> To make the functions reserve_crashkernel[_low]() as generic,
-> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> ---
->  arch/x86/kernel/setup.c | 11 ++++++-----
->  1 file changed, 6 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index d7fd90c52dae..71a6a6e7ca5b 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -430,7 +430,7 @@ static int __init reserve_crashkernel_low(void)
->  	unsigned long total_low_mem;
->  	int ret;
->  
-> -	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
-> +	total_low_mem = memblock_mem_size(CRASH_ADDR_LOW_MAX >> PAGE_SHIFT);
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+---
+ kernel/crash_core.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-Just note that the replacement has been done in another patch from Mike
-Rapoport, partially. He seems to have done reserve_crashkernel_low()
-part, there's one left in reserve_crashkernel(), you might want to check
-that. 
-
-Mike's patch which is from a patchset has been merged into Andrew's next
-tree.
-
-commit 6e50f7672ffa362e9bd4bc0c0d2524ed872828c5
-Author: Mike Rapoport <rppt@linux.ibm.com>
-Date:   Wed Aug 26 15:22:32 2020 +1000
-
-    x86/setup: simplify reserve_crashkernel()
-
->  
->  	/* crashkernel=Y,low */
->  	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
-> @@ -451,7 +451,7 @@ static int __init reserve_crashkernel_low(void)
->  			return 0;
->  	}
->  
-> -	low_base = memblock_find_in_range(CRASH_ALIGN, 1ULL << 32, low_size, CRASH_ALIGN);
-> +	low_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX, low_size, CRASH_ALIGN);
->  	if (!low_base) {
->  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->  		       (unsigned long)(low_size >> 20));
-> @@ -504,8 +504,9 @@ static void __init reserve_crashkernel(void)
->  	if (!crash_base) {
->  		/*
->  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
-> -		 * crashkernel=x,high reserves memory over 4G, also allocates
-> -		 * 256M extra low memory for DMA buffers and swiotlb.
-> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
-> +		 * also allocates 256M extra low memory for DMA buffers
-> +		 * and swiotlb.
->  		 * But the extra memory is not required for all machines.
->  		 * So try low memory first and fall back to high memory
->  		 * unless "crashkernel=size[KMG],high" is specified.
-> @@ -539,7 +540,7 @@ static void __init reserve_crashkernel(void)
->  		return;
->  	}
->  
-> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
->  		memblock_free(crash_base, crash_size);
->  		return;
->  	}
-> -- 
-> 2.20.1
-> 
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 106e4500fd53..173fdc261882 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -447,6 +447,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+ 
+ 	VMCOREINFO_SYMBOL(init_uts_ns);
++	VMCOREINFO_OFFSET(uts_namespace, name);
+ 	VMCOREINFO_SYMBOL(node_online_map);
+ #ifdef CONFIG_MMU
+ 	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
+-- 
+2.26.2
 
 
 _______________________________________________
