@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJ5iy-0001zH-AI
- for kexec@lists.infradead.org; Fri, 18 Sep 2020 02:02:09 +0000
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 5.4 047/330] x86/kdump: Always reserve the low 1M when
- the crashkernel option is specified
-Date: Thu, 17 Sep 2020 21:56:27 -0400
-Message-Id: <20200918020110.2063155-47-sashal@kernel.org>
-In-Reply-To: <20200918020110.2063155-1-sashal@kernel.org>
-References: <20200918020110.2063155-1-sashal@kernel.org>
+Subject: Re: [PATCH] arm64: Add purgatory printing
+References: <20200917193835.30910-1-matthias.bgg@kernel.org>
+From: Geoff Levand <geoff@infradead.org>
+Message-ID: <fd2910d9-7268-3b8a-465a-3a7406dd0cd8@infradead.org>
+Date: Thu, 17 Sep 2020 19:04:42 -0700
 MIME-Version: 1.0
+In-Reply-To: <20200917193835.30910-1-matthias.bgg@kernel.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,89 +15,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: =?UTF-8?q?J=C3=BCrgen=20Gross?= <jgross@suse.com>, Tom Lendacky <thomas.lendacky@amd.com>, Lianbo Jiang <lijiang@redhat.com>, bhe@redhat.com, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, x86-ml <x86@kernel.org>, kexec@lists.infradead.org, Sasha Levin <sashal@kernel.org>, dhowells@redhat.com, horms@verge.net.au, ebiederm@xmission.com, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@suse.de>, Dave Young <dyoung@redhat.com>, d.hatayama@fujitsu.com, vgoyal@redhat.com
+To: matthias.bgg@kernel.org, kexec@lists.infradead.org, horms@verge.net.au
+Cc: Matthias Brugger <mbrugger@suse.com>
 
-RnJvbTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5jb20+CgpbIFVwc3RyZWFtIGNvbW1p
-dCA2ZjU5OWQ4NDIzMWZkMjdlNDJmNGNhMmE3ODZhNjY0MWU4Y2RkZjAwIF0KCk9uIHg4NiwgcHVy
-Z2F0b3J5KCkgY29waWVzIHRoZSBmaXJzdCA2NDBLIG9mIG1lbW9yeSB0byBhIGJhY2t1cCByZWdp
-b24KYmVjYXVzZSB0aGUga2VybmVsIG5lZWRzIHRob3NlIGZpcnN0IDY0MEsgZm9yIHRoZSByZWFs
-IG1vZGUgdHJhbXBvbGluZQpkdXJpbmcgYm9vdCwgYW1vbmcgb3RoZXJzLgoKSG93ZXZlciwgd2hl
-biBTTUUgaXMgZW5hYmxlZCwgdGhlIGtlcm5lbCBjYW5ub3QgcHJvcGVybHkgY29weSB0aGUgb2xk
-Cm1lbW9yeSB0byB0aGUgYmFja3VwIGFyZWEgYnV0IHJlYWRzIG9ubHkgaXRzIGVuY3J5cHRlZCBj
-b250ZW50cy4gVGhlCnJlc3VsdCBpcyB0aGF0IHRoZSBjcmFzaCB0b29sIGdldHMgaW52YWxpZCBw
-b2ludGVycyB3aGVuIHBhcnNpbmcgdm1jb3JlOgoKICBjcmFzaD4ga21lbSAtc3xncmVwIC1pIGlu
-dmFsaWQKICBrbWVtOiBkbWEta21hbGxvYy01MTI6IHNsYWI6ZmZmZmQ3NzY4MDAwMWMwMCBpbnZh
-bGlkIGZyZWVwb2ludGVyOmE2MDg2YWMwOTlmMGM1YTQKICBrbWVtOiBkbWEta21hbGxvYy01MTI6
-IHNsYWI6ZmZmZmQ3NzY4MDAwMWMwMCBpbnZhbGlkIGZyZWVwb2ludGVyOmE2MDg2YWMwOTlmMGM1
-YTQKICBjcmFzaD4KClNvIHJlc2VydmUgdGhlIHJlbWFpbmluZyBsb3cgMU0gbWVtb3J5IHdoZW4g
-dGhlIGNyYXNoa2VybmVsIG9wdGlvbiBpcwpzcGVjaWZpZWQgKGFmdGVyIHJlc2VydmluZyByZWFs
-IG1vZGUgbWVtb3J5KSBzbyB0aGF0IGFsbG9jYXRlZCBtZW1vcnkKZG9lcyBub3QgZmFsbCBpbnRv
-IHRoZSBsb3cgMU0gYXJlYSBhbmQgdGh1cyB0aGUgY29weWluZyBvZiB0aGUgY29udGVudHMKb2Yg
-dGhlIGZpcnN0IDY0MGsgdG8gYSBiYWNrdXAgcmVnaW9uIGluIHB1cmdhdG9yeSgpIGNhbiBiZSBh
-dm9pZGVkCmFsdG9nZXRoZXIuCgpUaGlzIHdheSwgaXQgZG9lcyBub3QgbmVlZCB0byBiZSBpbmNs
-dWRlZCBpbiBjcmFzaCBkdW1wcyBvciB1c2VkIGZvcgphbnl0aGluZyBleGNlcHQgdGhlIHRyYW1w
-b2xpbmVzIHRoYXQgbXVzdCBsaXZlIGluIHRoZSBsb3cgMU0uCgogWyBicDogSGVhdmlseSByZXdy
-aXRlIGNvbW1pdCBtZXNzYWdlLCBmbGlwIGNoZWNrIGxvZ2ljIGluCiAgIGNyYXNoX3Jlc2VydmVf
-bG93XzFNKCkuXQoKU2lnbmVkLW9mZi1ieTogTGlhbmJvIEppYW5nIDxsaWppYW5nQHJlZGhhdC5j
-b20+ClNpZ25lZC1vZmYtYnk6IEJvcmlzbGF2IFBldGtvdiA8YnBAc3VzZS5kZT4KQ2M6IGJoZUBy
-ZWRoYXQuY29tCkNjOiBEYXZlIFlvdW5nIDxkeW91bmdAcmVkaGF0LmNvbT4KQ2M6IGQuaGF0YXlh
-bWFAZnVqaXRzdS5jb20KQ2M6IGRob3dlbGxzQHJlZGhhdC5jb20KQ2M6IGViaWVkZXJtQHhtaXNz
-aW9uLmNvbQpDYzogaG9ybXNAdmVyZ2UubmV0LmF1CkNjOiAiSC4gUGV0ZXIgQW52aW4iIDxocGFA
-enl0b3IuY29tPgpDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+CkNjOiBKw7xyZ2Vu
-IEdyb3NzIDxqZ3Jvc3NAc3VzZS5jb20+CkNjOiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCkNj
-OiBQZXRlciBaaWpsc3RyYSA8cGV0ZXJ6QGluZnJhZGVhZC5vcmc+CkNjOiBUaG9tYXMgR2xlaXhu
-ZXIgPHRnbHhAbGludXRyb25peC5kZT4KQ2M6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5
-QGFtZC5jb20+CkNjOiB2Z295YWxAcmVkaGF0LmNvbQpDYzogeDg2LW1sIDx4ODZAa2VybmVsLm9y
-Zz4KTGluazogaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MTEwODA5MDAyNy4xMTA4Mi0y
-LWxpamlhbmdAcmVkaGF0LmNvbQpMaW5rOiBodHRwczovL2J1Z3ppbGxhLmtlcm5lbC5vcmcvc2hv
-d19idWcuY2dpP2lkPTIwNDc5MwpTaWduZWQtb2ZmLWJ5OiBTYXNoYSBMZXZpbiA8c2FzaGFsQGtl
-cm5lbC5vcmc+Ci0tLQogYXJjaC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaCB8ICA2ICsrKysrKwog
-YXJjaC94ODYva2VybmVsL2NyYXNoLmMgICAgICB8IDE1ICsrKysrKysrKysrKysrKwogYXJjaC94
-ODYvcmVhbG1vZGUvaW5pdC5jICAgICB8ICAyICsrCiAzIGZpbGVzIGNoYW5nZWQsIDIzIGluc2Vy
-dGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oIGIvYXJj
-aC94ODYvaW5jbHVkZS9hc20vY3Jhc2guaAppbmRleCBlZjU2MzhmNjQxZjJiLi44OGVhZGQwOGFk
-NzA4IDEwMDY0NAotLS0gYS9hcmNoL3g4Ni9pbmNsdWRlL2FzbS9jcmFzaC5oCisrKyBiL2FyY2gv
-eDg2L2luY2x1ZGUvYXNtL2NyYXNoLmgKQEAgLTEwLDQgKzEwLDEwIEBAIGludCBjcmFzaF9zZXR1
-cF9tZW1tYXBfZW50cmllcyhzdHJ1Y3Qga2ltYWdlICppbWFnZSwKIAkJc3RydWN0IGJvb3RfcGFy
-YW1zICpwYXJhbXMpOwogdm9pZCBjcmFzaF9zbXBfc2VuZF9zdG9wKHZvaWQpOwogCisjaWZkZWYg
-Q09ORklHX0tFWEVDX0NPUkUKK3ZvaWQgX19pbml0IGNyYXNoX3Jlc2VydmVfbG93XzFNKHZvaWQp
-OworI2Vsc2UKK3N0YXRpYyBpbmxpbmUgdm9pZCBfX2luaXQgY3Jhc2hfcmVzZXJ2ZV9sb3dfMU0o
-dm9pZCkgeyB9CisjZW5kaWYKKwogI2VuZGlmIC8qIF9BU01fWDg2X0NSQVNIX0ggKi8KZGlmZiAt
-LWdpdCBhL2FyY2gveDg2L2tlcm5lbC9jcmFzaC5jIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMK
-aW5kZXggZWI2NTFmYmRlOTJhYy4uZmYyNWEyZWEyNzFjZiAxMDA2NDQKLS0tIGEvYXJjaC94ODYv
-a2VybmVsL2NyYXNoLmMKKysrIGIvYXJjaC94ODYva2VybmVsL2NyYXNoLmMKQEAgLTI0LDYgKzI0
-LDcgQEAKICNpbmNsdWRlIDxsaW51eC9leHBvcnQuaD4KICNpbmNsdWRlIDxsaW51eC9zbGFiLmg+
-CiAjaW5jbHVkZSA8bGludXgvdm1hbGxvYy5oPgorI2luY2x1ZGUgPGxpbnV4L21lbWJsb2NrLmg+
-CiAKICNpbmNsdWRlIDxhc20vcHJvY2Vzc29yLmg+CiAjaW5jbHVkZSA8YXNtL2hhcmRpcnEuaD4K
-QEAgLTM5LDYgKzQwLDcgQEAKICNpbmNsdWRlIDxhc20vdmlydGV4dC5oPgogI2luY2x1ZGUgPGFz
-bS9pbnRlbF9wdC5oPgogI2luY2x1ZGUgPGFzbS9jcmFzaC5oPgorI2luY2x1ZGUgPGFzbS9jbWRs
-aW5lLmg+CiAKIC8qIFVzZWQgd2hpbGUgcHJlcGFyaW5nIG1lbW9yeSBtYXAgZW50cmllcyBmb3Ig
-c2Vjb25kIGtlcm5lbCAqLwogc3RydWN0IGNyYXNoX21lbW1hcF9kYXRhIHsKQEAgLTY4LDYgKzcw
-LDE5IEBAIHN0YXRpYyBpbmxpbmUgdm9pZCBjcHVfY3Jhc2hfdm1jbGVhcl9sb2FkZWRfdm1jc3Mo
-dm9pZCkKIAlyY3VfcmVhZF91bmxvY2soKTsKIH0KIAorLyoKKyAqIFdoZW4gdGhlIGNyYXNoa2Vy
-bmVsIG9wdGlvbiBpcyBzcGVjaWZpZWQsIG9ubHkgdXNlIHRoZSBsb3cKKyAqIDFNIGZvciB0aGUg
-cmVhbCBtb2RlIHRyYW1wb2xpbmUuCisgKi8KK3ZvaWQgX19pbml0IGNyYXNoX3Jlc2VydmVfbG93
-XzFNKHZvaWQpCit7CisJaWYgKGNtZGxpbmVfZmluZF9vcHRpb24oYm9vdF9jb21tYW5kX2xpbmUs
-ICJjcmFzaGtlcm5lbCIsIE5VTEwsIDApIDwgMCkKKwkJcmV0dXJuOworCisJbWVtYmxvY2tfcmVz
-ZXJ2ZSgwLCAxPDwyMCk7CisJcHJfaW5mbygiUmVzZXJ2aW5nIHRoZSBsb3cgMU0gb2YgbWVtb3J5
-IGZvciBjcmFzaGtlcm5lbFxuIik7Cit9CisKICNpZiBkZWZpbmVkKENPTkZJR19TTVApICYmIGRl
-ZmluZWQoQ09ORklHX1g4Nl9MT0NBTF9BUElDKQogCiBzdGF0aWMgdm9pZCBrZHVtcF9ubWlfY2Fs
-bGJhY2soaW50IGNwdSwgc3RydWN0IHB0X3JlZ3MgKnJlZ3MpCmRpZmYgLS1naXQgYS9hcmNoL3g4
-Ni9yZWFsbW9kZS9pbml0LmMgYi9hcmNoL3g4Ni9yZWFsbW9kZS9pbml0LmMKaW5kZXggN2RjZTM5
-YzhjMDM0YS4uMjYyZjgzY2FkMzU1MSAxMDA2NDQKLS0tIGEvYXJjaC94ODYvcmVhbG1vZGUvaW5p
-dC5jCisrKyBiL2FyY2gveDg2L3JlYWxtb2RlL2luaXQuYwpAQCAtOCw2ICs4LDcgQEAKICNpbmNs
-dWRlIDxhc20vcGd0YWJsZS5oPgogI2luY2x1ZGUgPGFzbS9yZWFsbW9kZS5oPgogI2luY2x1ZGUg
-PGFzbS90bGJmbHVzaC5oPgorI2luY2x1ZGUgPGFzbS9jcmFzaC5oPgogCiBzdHJ1Y3QgcmVhbF9t
-b2RlX2hlYWRlciAqcmVhbF9tb2RlX2hlYWRlcjsKIHUzMiAqdHJhbXBvbGluZV9jcjRfZmVhdHVy
-ZXM7CkBAIC0zNCw2ICszNSw3IEBAIHZvaWQgX19pbml0IHJlc2VydmVfcmVhbF9tb2RlKHZvaWQp
-CiAKIAltZW1ibG9ja19yZXNlcnZlKG1lbSwgc2l6ZSk7CiAJc2V0X3JlYWxfbW9kZV9tZW0obWVt
-KTsKKwljcmFzaF9yZXNlcnZlX2xvd18xTSgpOwogfQogCiBzdGF0aWMgdm9pZCBfX2luaXQgc2V0
-dXBfcmVhbF9tb2RlKHZvaWQpCi0tIAoyLjI1LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+Hi Matthias,
+
+On 9/17/20 12:38 PM, matthias.bgg@kernel.org wrote:
+Add option to allow purgatory printing on arm64 hardware
+> by passing the console name which should be used.
+
+> +static uint64_t find_purgatory_sink(const char *console)
+> +{
+> +	int fd, ret;
+> +	char folder[255], device[255], mem[255];
+> +	struct stat sb;
+> +	char buffer[18];
+> +	uint64_t iomem = 0x0;
+> +
+> +	if (!console)
+> +		return 0;
+> +
+> +	sprintf(device, "/sys/class/tty/%s", console);
+> +	if (!stat(folder, &sb) == 0 && S_ISDIR(sb.st_mode)) {
+> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
+> +			__func__, device);
+> +		return 0;
+> +	}
+> +
+> +	sprintf(mem, "%s%s", device, "/iomem_base");
+> +	printf("console memory read from %s\n", mem);
+> +
+> +	fd = open(mem, O_RDONLY);
+> +	if (fd < 0) {
+> +		fprintf(stderr, "kexec: %s: No able to open %s\n",
+> +			__func__, mem);
+> +		return 0;
+> +	}
+> +
+> +	memset(buffer, '\0', sizeof(char) * 18);
+
+I think I'd like to just see 'memset(buffer, 0, sizeof(buffer));'.
+
+> +	ret = read(fd, buffer, 18);
+
+And 'ret = read(fd, buffer, sizeof(buffer));'.
+
+> +	if (ret < 0) {
+> +		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
+> +		close(fd);
+> +		return 0;
+> +	}
+> +
+> +	sscanf(buffer, "%lx", &iomem);
+> +	printf("console memory is at %#lx\n", iomem);
+> +
+> +	close(fd);
+> +	return iomem;
+> +}
+> +
+
+Otherwise, looks OK.
+
+-Geoff
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
