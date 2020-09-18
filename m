@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH 3/4] mm: remove compat_sys_move_pages
-Date: Fri, 18 Sep 2020 15:24:38 +0200
-Message-Id: <20200918132439.1475479-4-arnd@arndb.de>
+Subject: [PATCH 4/4] mm: remove compat numa syscalls
+Date: Fri, 18 Sep 2020 15:24:39 +0200
+Message-Id: <20200918132439.1475479-5-arnd@arndb.de>
 In-Reply-To: <20200918132439.1475479-1-arnd@arndb.de>
 References: <20200918132439.1475479-1-arnd@arndb.de>
 MIME-Version: 1.0
@@ -21,256 +21,555 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Eric Biederman <ebiederm@xmission.com>, Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org
 
-The compat move_pages() implementation uses compat_alloc_user_space()
-for converting the pointer array. Moving the compat handling into
-the function itself is a bit simpler and lets us avoid the
-compat_alloc_user_space() call.
+The compat implementations for mbind, get_mempolicy, set_mempolicy
+and migrate_pages are just there to handle the subtly different
+layout of bitmaps on 32-bit hosts.
+
+The compat implementation however lacks some of the checks that
+are present in the native one, in particular for checking that
+the extra bits are all zero when user space has a larger mask
+size than the kernel. Worse, those extra bits do not get cleared
+when copying in or out of the kernel, which can lead to incorrect
+data as well.
+
+Unify the implementation to handle the compat bitmap layout directly
+in the get_nodes() and copy_nodes_to_user() helpers.  Splitting out
+the get_bitmap() helper from get_nodes() also helps readability of the
+native case.
+
+On x86, two additional problems are addressed by this: compat tasks can
+pass a bitmap at the end of a mapping, causing a fault when reading
+across the page boundary for a 64-bit word. x32 tasks might also run
+into problems with get_mempolicy corrupting data when an odd number of
+32-bit words gets passed.
+
+On parisc the migrate_pages() system call apparently had the wrong
+calling convention, as big-endian architectures expect the words
+inside of a bitmap to be swapped. This is not a problem though
+since parisc has no NUMA support.
 
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- arch/arm64/include/asm/unistd32.h         |  2 +-
- arch/mips/kernel/syscalls/syscall_n32.tbl |  2 +-
- arch/mips/kernel/syscalls/syscall_o32.tbl |  2 +-
- arch/parisc/kernel/syscalls/syscall.tbl   |  2 +-
- arch/powerpc/kernel/syscalls/syscall.tbl  |  2 +-
- arch/s390/kernel/syscalls/syscall.tbl     |  2 +-
- arch/sparc/kernel/syscalls/syscall.tbl    |  2 +-
- arch/x86/entry/syscalls/syscall_32.tbl    |  2 +-
- arch/x86/entry/syscalls/syscall_64.tbl    |  2 +-
- include/linux/compat.h                    |  5 ---
- include/uapi/asm-generic/unistd.h         |  2 +-
- kernel/sys_ni.c                           |  1 -
- mm/migrate.c                              | 45 +++++++++++------------
- 13 files changed, 32 insertions(+), 39 deletions(-)
+ arch/arm64/include/asm/unistd32.h         |   8 +-
+ arch/mips/kernel/syscalls/syscall_n32.tbl |   8 +-
+ arch/mips/kernel/syscalls/syscall_o32.tbl |   8 +-
+ arch/parisc/kernel/syscalls/syscall.tbl   |   6 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl  |   8 +-
+ arch/s390/kernel/syscalls/syscall.tbl     |   8 +-
+ arch/sparc/kernel/syscalls/syscall.tbl    |   8 +-
+ arch/x86/entry/syscalls/syscall_32.tbl    |   2 +-
+ include/linux/compat.h                    |  15 --
+ include/uapi/asm-generic/unistd.h         |   8 +-
+ kernel/kexec.c                            |   6 +-
+ kernel/sys_ni.c                           |   4 -
+ mm/mempolicy.c                            | 193 +++++-----------------
+ 13 files changed, 79 insertions(+), 203 deletions(-)
 
 diff --git a/arch/arm64/include/asm/unistd32.h b/arch/arm64/include/asm/unistd32.h
-index b6517df74037..af793775ba98 100644
+index af793775ba98..31479f7120a0 100644
 --- a/arch/arm64/include/asm/unistd32.h
 +++ b/arch/arm64/include/asm/unistd32.h
-@@ -699,7 +699,7 @@ __SYSCALL(__NR_tee, sys_tee)
- #define __NR_vmsplice 343
- __SYSCALL(__NR_vmsplice, compat_sys_vmsplice)
- #define __NR_move_pages 344
--__SYSCALL(__NR_move_pages, compat_sys_move_pages)
-+__SYSCALL(__NR_move_pages, sys_move_pages)
- #define __NR_getcpu 345
- __SYSCALL(__NR_getcpu, sys_getcpu)
- #define __NR_epoll_pwait 346
+@@ -649,11 +649,11 @@ __SYSCALL(__NR_inotify_add_watch, sys_inotify_add_watch)
+ #define __NR_inotify_rm_watch 318
+ __SYSCALL(__NR_inotify_rm_watch, sys_inotify_rm_watch)
+ #define __NR_mbind 319
+-__SYSCALL(__NR_mbind, compat_sys_mbind)
++__SYSCALL(__NR_mbind, sys_mbind)
+ #define __NR_get_mempolicy 320
+-__SYSCALL(__NR_get_mempolicy, compat_sys_get_mempolicy)
++__SYSCALL(__NR_get_mempolicy, sys_get_mempolicy)
+ #define __NR_set_mempolicy 321
+-__SYSCALL(__NR_set_mempolicy, compat_sys_set_mempolicy)
++__SYSCALL(__NR_set_mempolicy, sys_set_mempolicy)
+ #define __NR_openat 322
+ __SYSCALL(__NR_openat, compat_sys_openat)
+ #define __NR_mkdirat 323
+@@ -811,7 +811,7 @@ __SYSCALL(__NR_rseq, sys_rseq)
+ #define __NR_io_pgetevents 399
+ __SYSCALL(__NR_io_pgetevents, compat_sys_io_pgetevents)
+ #define __NR_migrate_pages 400
+-__SYSCALL(__NR_migrate_pages, compat_sys_migrate_pages)
++__SYSCALL(__NR_migrate_pages, sys_migrate_pages)
+ #define __NR_kexec_file_load 401
+ __SYSCALL(__NR_kexec_file_load, sys_kexec_file_load)
+ /* 402 is unused */
 diff --git a/arch/mips/kernel/syscalls/syscall_n32.tbl b/arch/mips/kernel/syscalls/syscall_n32.tbl
-index ad157aab4c09..7fa1ca45e44c 100644
+index 7fa1ca45e44c..15fda882d07e 100644
 --- a/arch/mips/kernel/syscalls/syscall_n32.tbl
 +++ b/arch/mips/kernel/syscalls/syscall_n32.tbl
-@@ -279,7 +279,7 @@
- 268	n32	sync_file_range			sys_sync_file_range
- 269	n32	tee				sys_tee
- 270	n32	vmsplice			compat_sys_vmsplice
--271	n32	move_pages			compat_sys_move_pages
-+271	n32	move_pages			sys_move_pages
- 272	n32	set_robust_list			compat_sys_set_robust_list
- 273	n32	get_robust_list			compat_sys_get_robust_list
- 274	n32	kexec_load			sys_kexec_load
+@@ -239,9 +239,9 @@
+ 228	n32	clock_nanosleep			sys_clock_nanosleep_time32
+ 229	n32	tgkill				sys_tgkill
+ 230	n32	utimes				sys_utimes_time32
+-231	n32	mbind				compat_sys_mbind
+-232	n32	get_mempolicy			compat_sys_get_mempolicy
+-233	n32	set_mempolicy			compat_sys_set_mempolicy
++231	n32	mbind				sys_mbind
++232	n32	get_mempolicy			sys_get_mempolicy
++233	n32	set_mempolicy			sys_set_mempolicy
+ 234	n32	mq_open				compat_sys_mq_open
+ 235	n32	mq_unlink			sys_mq_unlink
+ 236	n32	mq_timedsend			sys_mq_timedsend_time32
+@@ -258,7 +258,7 @@
+ 247	n32	inotify_init			sys_inotify_init
+ 248	n32	inotify_add_watch		sys_inotify_add_watch
+ 249	n32	inotify_rm_watch		sys_inotify_rm_watch
+-250	n32	migrate_pages			compat_sys_migrate_pages
++250	n32	migrate_pages			sys_migrate_pages
+ 251	n32	openat				sys_openat
+ 252	n32	mkdirat				sys_mkdirat
+ 253	n32	mknodat				sys_mknodat
 diff --git a/arch/mips/kernel/syscalls/syscall_o32.tbl b/arch/mips/kernel/syscalls/syscall_o32.tbl
-index 57baf6c8008f..194c7fbeedf7 100644
+index 194c7fbeedf7..6591388a9d88 100644
 --- a/arch/mips/kernel/syscalls/syscall_o32.tbl
 +++ b/arch/mips/kernel/syscalls/syscall_o32.tbl
-@@ -319,7 +319,7 @@
- 305	o32	sync_file_range			sys_sync_file_range		sys32_sync_file_range
- 306	o32	tee				sys_tee
- 307	o32	vmsplice			sys_vmsplice			compat_sys_vmsplice
--308	o32	move_pages			sys_move_pages			compat_sys_move_pages
-+308	o32	move_pages			sys_move_pages
- 309	o32	set_robust_list			sys_set_robust_list		compat_sys_set_robust_list
- 310	o32	get_robust_list			sys_get_robust_list		compat_sys_get_robust_list
- 311	o32	kexec_load			sys_kexec_load
+@@ -279,9 +279,9 @@
+ 265	o32	clock_nanosleep			sys_clock_nanosleep_time32
+ 266	o32	tgkill				sys_tgkill
+ 267	o32	utimes				sys_utimes_time32
+-268	o32	mbind				sys_mbind			compat_sys_mbind
+-269	o32	get_mempolicy			sys_get_mempolicy		compat_sys_get_mempolicy
+-270	o32	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
++268	o32	mbind				sys_mbind
++269	o32	get_mempolicy			sys_get_mempolicy
++270	o32	set_mempolicy			sys_set_mempolicy
+ 271	o32	mq_open				sys_mq_open			compat_sys_mq_open
+ 272	o32	mq_unlink			sys_mq_unlink
+ 273	o32	mq_timedsend			sys_mq_timedsend_time32
+@@ -298,7 +298,7 @@
+ 284	o32	inotify_init			sys_inotify_init
+ 285	o32	inotify_add_watch		sys_inotify_add_watch
+ 286	o32	inotify_rm_watch		sys_inotify_rm_watch
+-287	o32	migrate_pages			sys_migrate_pages		compat_sys_migrate_pages
++287	o32	migrate_pages			sys_migrate_pages
+ 288	o32	openat				sys_openat			compat_sys_openat
+ 289	o32	mkdirat				sys_mkdirat
+ 290	o32	mknodat				sys_mknodat
 diff --git a/arch/parisc/kernel/syscalls/syscall.tbl b/arch/parisc/kernel/syscalls/syscall.tbl
-index 778bf166d7bd..5c17edaffe70 100644
+index 5c17edaffe70..30f3c0146abf 100644
 --- a/arch/parisc/kernel/syscalls/syscall.tbl
 +++ b/arch/parisc/kernel/syscalls/syscall.tbl
-@@ -331,7 +331,7 @@
- 292	64	sync_file_range		sys_sync_file_range
- 293	common	tee			sys_tee
- 294	common	vmsplice		sys_vmsplice			compat_sys_vmsplice
--295	common	move_pages		sys_move_pages			compat_sys_move_pages
-+295	common	move_pages		sys_move_pages
- 296	common	getcpu			sys_getcpu
- 297	common	epoll_pwait		sys_epoll_pwait			compat_sys_epoll_pwait
- 298	common	statfs64		sys_statfs64			compat_sys_statfs64
+@@ -292,9 +292,9 @@
+ 258	32	clock_nanosleep		sys_clock_nanosleep_time32
+ 258	64	clock_nanosleep		sys_clock_nanosleep
+ 259	common	tgkill			sys_tgkill
+-260	common	mbind			sys_mbind			compat_sys_mbind
+-261	common	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
+-262	common	set_mempolicy		sys_set_mempolicy		compat_sys_set_mempolicy
++260	common	mbind			sys_mbind
++261	common	get_mempolicy		sys_get_mempolicy
++262	common	set_mempolicy		sys_set_mempolicy
+ # 263 was vserver
+ 264	common	add_key			sys_add_key
+ 265	common	request_key		sys_request_key
 diff --git a/arch/powerpc/kernel/syscalls/syscall.tbl b/arch/powerpc/kernel/syscalls/syscall.tbl
-index f128ba8b9a71..04fb42d7b377 100644
+index 04fb42d7b377..4f5216320721 100644
 --- a/arch/powerpc/kernel/syscalls/syscall.tbl
 +++ b/arch/powerpc/kernel/syscalls/syscall.tbl
-@@ -389,7 +389,7 @@
- 298	common	faccessat			sys_faccessat
- 299	common	get_robust_list			sys_get_robust_list		compat_sys_get_robust_list
- 300	common	set_robust_list			sys_set_robust_list		compat_sys_set_robust_list
--301	common	move_pages			sys_move_pages			compat_sys_move_pages
-+301	common	move_pages			sys_move_pages
- 302	common	getcpu				sys_getcpu
- 303	nospu	epoll_pwait			sys_epoll_pwait			compat_sys_epoll_pwait
- 304	32	utimensat			sys_utimensat_time32
+@@ -338,10 +338,10 @@
+ 256	64	sys_debug_setcontext		sys_ni_syscall
+ 256	spu	sys_debug_setcontext		sys_ni_syscall
+ # 257 reserved for vserver
+-258	nospu	migrate_pages			sys_migrate_pages		compat_sys_migrate_pages
+-259	nospu	mbind				sys_mbind			compat_sys_mbind
+-260	nospu	get_mempolicy			sys_get_mempolicy		compat_sys_get_mempolicy
+-261	nospu	set_mempolicy			sys_set_mempolicy		compat_sys_set_mempolicy
++258	nospu	migrate_pages			sys_migrate_pages
++259	nospu	mbind				sys_mbind
++260	nospu	get_mempolicy			sys_get_mempolicy
++261	nospu	set_mempolicy			sys_set_mempolicy
+ 262	nospu	mq_open				sys_mq_open			compat_sys_mq_open
+ 263	nospu	mq_unlink			sys_mq_unlink
+ 264	32	mq_timedsend			sys_mq_timedsend_time32
 diff --git a/arch/s390/kernel/syscalls/syscall.tbl b/arch/s390/kernel/syscalls/syscall.tbl
-index d45952058be2..3197965d45e9 100644
+index 3197965d45e9..70c0b830d14f 100644
 --- a/arch/s390/kernel/syscalls/syscall.tbl
 +++ b/arch/s390/kernel/syscalls/syscall.tbl
-@@ -317,7 +317,7 @@
- 307  common	sync_file_range		sys_sync_file_range		compat_sys_s390_sync_file_range
- 308  common	tee			sys_tee				sys_tee
- 309  common	vmsplice		sys_vmsplice			compat_sys_vmsplice
--310  common	move_pages		sys_move_pages			compat_sys_move_pages
-+310  common	move_pages		sys_move_pages
- 311  common	getcpu			sys_getcpu			sys_getcpu
- 312  common	epoll_pwait		sys_epoll_pwait			compat_sys_epoll_pwait
- 313  common	utimes			sys_utimes			sys_utimes_time32
+@@ -274,9 +274,9 @@
+ 265  common	statfs64		sys_statfs64			compat_sys_statfs64
+ 266  common	fstatfs64		sys_fstatfs64			compat_sys_fstatfs64
+ 267  common	remap_file_pages	sys_remap_file_pages		sys_remap_file_pages
+-268  common	mbind			sys_mbind			compat_sys_mbind
+-269  common	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
+-270  common	set_mempolicy		sys_set_mempolicy		compat_sys_set_mempolicy
++268  common	mbind			sys_mbind			sys_mbind
++269  common	get_mempolicy		sys_get_mempolicy		sys_get_mempolicy
++270  common	set_mempolicy		sys_set_mempolicy		sys_set_mempolicy
+ 271  common	mq_open			sys_mq_open			compat_sys_mq_open
+ 272  common	mq_unlink		sys_mq_unlink			sys_mq_unlink
+ 273  common	mq_timedsend		sys_mq_timedsend		sys_mq_timedsend_time32
+@@ -293,7 +293,7 @@
+ 284  common	inotify_init		sys_inotify_init		sys_inotify_init
+ 285  common	inotify_add_watch	sys_inotify_add_watch		sys_inotify_add_watch
+ 286  common	inotify_rm_watch	sys_inotify_rm_watch		sys_inotify_rm_watch
+-287  common	migrate_pages		sys_migrate_pages		compat_sys_migrate_pages
++287  common	migrate_pages		sys_migrate_pages		sys_migrate_pages
+ 288  common	openat			sys_openat			compat_sys_openat
+ 289  common	mkdirat			sys_mkdirat			sys_mkdirat
+ 290  common	mknodat			sys_mknodat			sys_mknodat
 diff --git a/arch/sparc/kernel/syscalls/syscall.tbl b/arch/sparc/kernel/syscalls/syscall.tbl
-index a46edcdd950d..e36ac364e61a 100644
+index e36ac364e61a..50ff839a2661 100644
 --- a/arch/sparc/kernel/syscalls/syscall.tbl
 +++ b/arch/sparc/kernel/syscalls/syscall.tbl
-@@ -370,7 +370,7 @@
- 304	common	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
- 305	common	set_mempolicy		sys_set_mempolicy		compat_sys_set_mempolicy
+@@ -365,10 +365,10 @@
+ 299	common	unshare			sys_unshare
+ 300	common	set_robust_list		sys_set_robust_list		compat_sys_set_robust_list
+ 301	common	get_robust_list		sys_get_robust_list		compat_sys_get_robust_list
+-302	common	migrate_pages		sys_migrate_pages		compat_sys_migrate_pages
+-303	common	mbind			sys_mbind			compat_sys_mbind
+-304	common	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
+-305	common	set_mempolicy		sys_set_mempolicy		compat_sys_set_mempolicy
++302	common	migrate_pages		sys_migrate_pages
++303	common	mbind			sys_mbind
++304	common	get_mempolicy		sys_get_mempolicy
++305	common	set_mempolicy		sys_set_mempolicy
  306	common	kexec_load		sys_kexec_load			sys_kexec_load
--307	common	move_pages		sys_move_pages			compat_sys_move_pages
-+307	common	move_pages		sys_move_pages
+ 307	common	move_pages		sys_move_pages
  308	common	getcpu			sys_getcpu
- 309	common	epoll_pwait		sys_epoll_pwait			compat_sys_epoll_pwait
- 310	32	utimensat		sys_utimensat_time32
 diff --git a/arch/x86/entry/syscalls/syscall_32.tbl b/arch/x86/entry/syscalls/syscall_32.tbl
-index 7e4140b78aad..b3263b8b2eae 100644
+index b3263b8b2eae..d07c3fbd4697 100644
 --- a/arch/x86/entry/syscalls/syscall_32.tbl
 +++ b/arch/x86/entry/syscalls/syscall_32.tbl
-@@ -328,7 +328,7 @@
- 314	i386	sync_file_range		sys_ia32_sync_file_range
- 315	i386	tee			sys_tee
- 316	i386	vmsplice		sys_vmsplice			compat_sys_vmsplice
--317	i386	move_pages		sys_move_pages			compat_sys_move_pages
-+317	i386	move_pages		sys_move_pages
- 318	i386	getcpu			sys_getcpu
- 319	i386	epoll_pwait		sys_epoll_pwait
- 320	i386	utimensat		sys_utimensat_time32
-diff --git a/arch/x86/entry/syscalls/syscall_64.tbl b/arch/x86/entry/syscalls/syscall_64.tbl
-index 9986f5f08278..4a997a0cbf47 100644
---- a/arch/x86/entry/syscalls/syscall_64.tbl
-+++ b/arch/x86/entry/syscalls/syscall_64.tbl
-@@ -389,7 +389,7 @@
- 530	x32	set_robust_list		compat_sys_set_robust_list
- 531	x32	get_robust_list		compat_sys_get_robust_list
- 532	x32	vmsplice		compat_sys_vmsplice
--533	x32	move_pages		compat_sys_move_pages
-+533	x32	move_pages		sys_move_pages
- 534	x32	preadv			compat_sys_preadv64
- 535	x32	pwritev			compat_sys_pwritev64
- 536	x32	rt_tgsigqueueinfo	compat_sys_rt_tgsigqueueinfo
+@@ -286,7 +286,7 @@
+ 272	i386	fadvise64_64		sys_ia32_fadvise64_64
+ 273	i386	vserver
+ 274	i386	mbind			sys_mbind
+-275	i386	get_mempolicy		sys_get_mempolicy		compat_sys_get_mempolicy
++275	i386	get_mempolicy		sys_get_mempolicy
+ 276	i386	set_mempolicy		sys_set_mempolicy
+ 277	i386	mq_open			sys_mq_open			compat_sys_mq_open
+ 278	i386	mq_unlink		sys_mq_unlink
 diff --git a/include/linux/compat.h b/include/linux/compat.h
-index a7a5a0ff59ef..db1d7ac2c9e0 100644
+index db1d7ac2c9e0..be06367b336c 100644
 --- a/include/linux/compat.h
 +++ b/include/linux/compat.h
-@@ -763,11 +763,6 @@ asmlinkage long compat_sys_set_mempolicy(int mode, compat_ulong_t __user *nmask,
- asmlinkage long compat_sys_migrate_pages(compat_pid_t pid,
- 		compat_ulong_t maxnode, const compat_ulong_t __user *old_nodes,
- 		const compat_ulong_t __user *new_nodes);
--asmlinkage long compat_sys_move_pages(pid_t pid, compat_ulong_t nr_pages,
--				      __u32 __user *pages,
--				      const int __user *nodes,
--				      int __user *status,
--				      int flags);
+@@ -749,21 +749,6 @@ asmlinkage long compat_sys_execve(const char __user *filename, const compat_uptr
+ /* mm/fadvise.c: No generic prototype for fadvise64_64 */
  
+ /* mm/, CONFIG_MMU only */
+-asmlinkage long compat_sys_mbind(compat_ulong_t start, compat_ulong_t len,
+-				 compat_ulong_t mode,
+-				 compat_ulong_t __user *nmask,
+-				 compat_ulong_t maxnode, compat_ulong_t flags);
+-asmlinkage long compat_sys_get_mempolicy(int __user *policy,
+-					 compat_ulong_t __user *nmask,
+-					 compat_ulong_t maxnode,
+-					 compat_ulong_t addr,
+-					 compat_ulong_t flags);
+-asmlinkage long compat_sys_set_mempolicy(int mode, compat_ulong_t __user *nmask,
+-					 compat_ulong_t maxnode);
+-asmlinkage long compat_sys_migrate_pages(compat_pid_t pid,
+-		compat_ulong_t maxnode, const compat_ulong_t __user *old_nodes,
+-		const compat_ulong_t __user *new_nodes);
+-
  asmlinkage long compat_sys_rt_tgsigqueueinfo(compat_pid_t tgid,
  					compat_pid_t pid, int sig,
+ 					struct compat_siginfo __user *uinfo);
 diff --git a/include/uapi/asm-generic/unistd.h b/include/uapi/asm-generic/unistd.h
-index 83f1fc7fd3d7..4da51702fb21 100644
+index 4da51702fb21..4e31f9b68a8f 100644
 --- a/include/uapi/asm-generic/unistd.h
 +++ b/include/uapi/asm-generic/unistd.h
-@@ -681,7 +681,7 @@ __SC_COMP(__NR_set_mempolicy, sys_set_mempolicy, compat_sys_set_mempolicy)
+@@ -673,13 +673,13 @@ __SYSCALL(__NR_madvise, sys_madvise)
+ #define __NR_remap_file_pages 234
+ __SYSCALL(__NR_remap_file_pages, sys_remap_file_pages)
+ #define __NR_mbind 235
+-__SC_COMP(__NR_mbind, sys_mbind, compat_sys_mbind)
++__SYSCALL(__NR_mbind, sys_mbind)
+ #define __NR_get_mempolicy 236
+-__SC_COMP(__NR_get_mempolicy, sys_get_mempolicy, compat_sys_get_mempolicy)
++__SYSCALL(__NR_get_mempolicy, sys_get_mempolicy)
+ #define __NR_set_mempolicy 237
+-__SC_COMP(__NR_set_mempolicy, sys_set_mempolicy, compat_sys_set_mempolicy)
++__SYSCALL(__NR_set_mempolicy, sys_set_mempolicy)
  #define __NR_migrate_pages 238
- __SC_COMP(__NR_migrate_pages, sys_migrate_pages, compat_sys_migrate_pages)
+-__SC_COMP(__NR_migrate_pages, sys_migrate_pages, compat_sys_migrate_pages)
++__SYSCALL(__NR_migrate_pages, sys_migrate_pages)
  #define __NR_move_pages 239
--__SC_COMP(__NR_move_pages, sys_move_pages, compat_sys_move_pages)
-+__SYSCALL(__NR_move_pages, sys_move_pages)
+ __SYSCALL(__NR_move_pages, sys_move_pages)
  #endif
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index 1ef7d3dc906f..0fecf2370be1 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -30,11 +30,13 @@ static int copy_user_segment_list(struct kimage *image,
+ 	image->nr_segments = nr_segments;
+ 	segment_bytes = nr_segments * sizeof(*segments);
+ 	if (in_compat_syscall()) {
+-		struct compat_kexec_segment __user *cs = (void __user *)segments;
++		struct compat_kexec_segment __user *cs;
+ 		struct compat_kexec_segment segment;
+ 		int i;
++
++		cs = (struct compat_kexec_segment __user *)segments;
+ 		for (i=0; i< nr_segments; i++) {
+-			copy_from_user(&segment, &cs[i], sizeof(segment));
++			ret = copy_from_user(&segment, &cs[i], sizeof(segment));
+ 			if (ret)
+ 				break;
  
- #define __NR_rt_tgsigqueueinfo 240
 diff --git a/kernel/sys_ni.c b/kernel/sys_ni.c
-index c925d1e1777e..783a24ceee88 100644
+index 783a24ceee88..0850111f888e 100644
 --- a/kernel/sys_ni.c
 +++ b/kernel/sys_ni.c
-@@ -290,7 +290,6 @@ COND_SYSCALL_COMPAT(set_mempolicy);
+@@ -282,13 +282,9 @@ COND_SYSCALL(mincore);
+ COND_SYSCALL(madvise);
+ COND_SYSCALL(remap_file_pages);
+ COND_SYSCALL(mbind);
+-COND_SYSCALL_COMPAT(mbind);
+ COND_SYSCALL(get_mempolicy);
+-COND_SYSCALL_COMPAT(get_mempolicy);
+ COND_SYSCALL(set_mempolicy);
+-COND_SYSCALL_COMPAT(set_mempolicy);
  COND_SYSCALL(migrate_pages);
- COND_SYSCALL_COMPAT(migrate_pages);
+-COND_SYSCALL_COMPAT(migrate_pages);
  COND_SYSCALL(move_pages);
--COND_SYSCALL_COMPAT(move_pages);
  
  COND_SYSCALL(perf_event_open);
- COND_SYSCALL(accept4);
-diff --git a/mm/migrate.c b/mm/migrate.c
-index 34a842a8eb6a..e9dfbde5f12c 100644
---- a/mm/migrate.c
-+++ b/mm/migrate.c
-@@ -1835,6 +1835,27 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
- 	mmap_read_unlock(mm);
- }
- 
-+static int put_pages_array(const void __user *chunk_pages[],
-+			   const void __user * __user *pages,
-+			   unsigned long chunk_nr)
+diff --git a/mm/mempolicy.c b/mm/mempolicy.c
+index eddbe4e56c73..2e1b90143b2c 100644
+--- a/mm/mempolicy.c
++++ b/mm/mempolicy.c
+@@ -1374,16 +1374,30 @@ static long do_mbind(unsigned long start, unsigned long len,
+ /*
+  * User space interface with variable sized bitmaps for nodelists.
+  */
++static int get_bitmap(unsigned long *mask, const unsigned long __user *nmask,
++		      unsigned long maxnode)
 +{
-+	compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
-+	compat_uptr_t p;
-+	int i;
++	unsigned long nlongs = BITS_TO_LONGS(maxnode);
++	int ret;
 +
-+	if (!in_compat_syscall())
-+		return copy_from_user(chunk_pages, pages,
-+				      chunk_nr * sizeof(*chunk_pages));
++	if (in_compat_syscall())
++		ret = compat_get_bitmap(mask, (void __user *)nmask, maxnode);
++	else
++		ret = copy_from_user(mask, nmask, nlongs*sizeof(unsigned long));
 +
-+	for (i = 0; i < chunk_nr; i++) {
-+		if (get_user(p, pages32 + i))
-+			return -EFAULT;
-+		chunk_pages[i] = compat_ptr(p);
-+	}
++	if (ret)
++		return -EFAULT;
++
++	if (maxnode % BITS_PER_LONG)
++		mask[nlongs-1] &= (1UL << (maxnode % BITS_PER_LONG)) - 1;
 +
 +	return 0;
 +}
+ 
+ /* Copy a node mask from user space. */
+ static int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
+ 		     unsigned long maxnode)
+ {
+-	unsigned long k;
+-	unsigned long t;
+-	unsigned long nlongs;
+-	unsigned long endmask;
+-
+ 	--maxnode;
+ 	nodes_clear(*nodes);
+ 	if (maxnode == 0 || !nmask)
+@@ -1391,49 +1405,29 @@ static int get_nodes(nodemask_t *nodes, const unsigned long __user *nmask,
+ 	if (maxnode > PAGE_SIZE*BITS_PER_BYTE)
+ 		return -EINVAL;
+ 
+-	nlongs = BITS_TO_LONGS(maxnode);
+-	if ((maxnode % BITS_PER_LONG) == 0)
+-		endmask = ~0UL;
+-	else
+-		endmask = (1UL << (maxnode % BITS_PER_LONG)) - 1;
+-
+ 	/*
+ 	 * When the user specified more nodes than supported just check
+-	 * if the non supported part is all zero.
+-	 *
+-	 * If maxnode have more longs than MAX_NUMNODES, check
+-	 * the bits in that area first. And then go through to
+-	 * check the rest bits which equal or bigger than MAX_NUMNODES.
+-	 * Otherwise, just check bits [MAX_NUMNODES, maxnode).
++	 * if the non supported part is all zero, one word at a time,
++	 * starting at the end.
+ 	 */
+-	if (nlongs > BITS_TO_LONGS(MAX_NUMNODES)) {
+-		for (k = BITS_TO_LONGS(MAX_NUMNODES); k < nlongs; k++) {
+-			if (get_user(t, nmask + k))
+-				return -EFAULT;
+-			if (k == nlongs - 1) {
+-				if (t & endmask)
+-					return -EINVAL;
+-			} else if (t)
+-				return -EINVAL;
+-		}
+-		nlongs = BITS_TO_LONGS(MAX_NUMNODES);
+-		endmask = ~0UL;
+-	}
+-
+-	if (maxnode > MAX_NUMNODES && MAX_NUMNODES % BITS_PER_LONG != 0) {
+-		unsigned long valid_mask = endmask;
++	while (maxnode > MAX_NUMNODES) {
++		unsigned long bits = min_t(unsigned long, maxnode, BITS_PER_LONG);
++		unsigned long t;
+ 
+-		valid_mask &= ~((1UL << (MAX_NUMNODES % BITS_PER_LONG)) - 1);
+-		if (get_user(t, nmask + nlongs - 1))
++		if (get_bitmap(&t, &nmask[maxnode / BITS_PER_LONG], bits))
+ 			return -EFAULT;
+-		if (t & valid_mask)
 +
- /*
-  * Determine the nodes of a user array of pages and store it in
-  * a user array of status.
-@@ -1854,7 +1875,7 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
- 		if (chunk_nr > DO_PAGES_STAT_CHUNK_NR)
- 			chunk_nr = DO_PAGES_STAT_CHUNK_NR;
++		if (maxnode - bits >= MAX_NUMNODES) {
++			maxnode -= bits;
++		} else {
++			maxnode = MAX_NUMNODES;
++			t &= ~((1UL << (MAX_NUMNODES % BITS_PER_LONG)) - 1);
++		}
++		if (t)
+ 			return -EINVAL;
+ 	}
  
--		if (copy_from_user(chunk_pages, pages, chunk_nr * sizeof(*chunk_pages)))
-+		if (put_pages_array(chunk_pages, pages, chunk_nr))
- 			break;
+-	if (copy_from_user(nodes_addr(*nodes), nmask, nlongs*sizeof(unsigned long)))
+-		return -EFAULT;
+-	nodes_addr(*nodes)[nlongs-1] &= endmask;
+-	return 0;
++	return get_bitmap(nodes_addr(*nodes), nmask, maxnode);
+ }
  
- 		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
-@@ -1943,28 +1964,6 @@ SYSCALL_DEFINE6(move_pages, pid_t, pid, unsigned long, nr_pages,
- 	return kernel_move_pages(pid, nr_pages, pages, nodes, status, flags);
+ /* Copy a kernel node mask to user space */
+@@ -1442,6 +1436,10 @@ static int copy_nodes_to_user(unsigned long __user *mask, unsigned long maxnode,
+ {
+ 	unsigned long copy = ALIGN(maxnode-1, 64) / 8;
+ 	unsigned int nbytes = BITS_TO_LONGS(nr_node_ids) * sizeof(long);
++	bool compat = in_compat_syscall();
++
++	if (compat)
++		nbytes = BITS_TO_COMPAT_LONGS(nr_node_ids) * sizeof(compat_long_t);
+ 
+ 	if (copy > nbytes) {
+ 		if (copy > PAGE_SIZE)
+@@ -1450,6 +1448,11 @@ static int copy_nodes_to_user(unsigned long __user *mask, unsigned long maxnode,
+ 			return -EFAULT;
+ 		copy = nbytes;
+ 	}
++
++	if (compat)
++		return compat_put_bitmap((compat_ulong_t __user *)mask,
++					 nodes_addr(*nodes), maxnode);
++
+ 	return copy_to_user(mask, nodes_addr(*nodes), copy) ? -EFAULT : 0;
+ }
+ 
+@@ -1641,116 +1644,6 @@ SYSCALL_DEFINE5(get_mempolicy, int __user *, policy,
+ 	return kernel_get_mempolicy(policy, nmask, maxnode, addr, flags);
  }
  
 -#ifdef CONFIG_COMPAT
--COMPAT_SYSCALL_DEFINE6(move_pages, pid_t, pid, compat_ulong_t, nr_pages,
--		       compat_uptr_t __user *, pages32,
--		       const int __user *, nodes,
--		       int __user *, status,
--		       int, flags)
+-
+-COMPAT_SYSCALL_DEFINE5(get_mempolicy, int __user *, policy,
+-		       compat_ulong_t __user *, nmask,
+-		       compat_ulong_t, maxnode,
+-		       compat_ulong_t, addr, compat_ulong_t, flags)
 -{
--	const void __user * __user *pages;
--	int i;
+-	long err;
+-	unsigned long __user *nm = NULL;
+-	unsigned long nr_bits, alloc_size;
+-	DECLARE_BITMAP(bm, MAX_NUMNODES);
 -
--	pages = compat_alloc_user_space(nr_pages * sizeof(void *));
--	for (i = 0; i < nr_pages; i++) {
--		compat_uptr_t p;
+-	nr_bits = min_t(unsigned long, maxnode-1, nr_node_ids);
+-	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
 -
--		if (get_user(p, pages32 + i) ||
--			put_user(compat_ptr(p), pages + i))
+-	if (nmask)
+-		nm = compat_alloc_user_space(alloc_size);
+-
+-	err = kernel_get_mempolicy(policy, nm, nr_bits+1, addr, flags);
+-
+-	if (!err && nmask) {
+-		unsigned long copy_size;
+-		copy_size = min_t(unsigned long, sizeof(bm), alloc_size);
+-		err = copy_from_user(bm, nm, copy_size);
+-		/* ensure entire bitmap is zeroed */
+-		err |= clear_user(nmask, ALIGN(maxnode-1, 8) / 8);
+-		err |= compat_put_bitmap(nmask, bm, nr_bits);
+-	}
+-
+-	return err;
+-}
+-
+-COMPAT_SYSCALL_DEFINE3(set_mempolicy, int, mode, compat_ulong_t __user *, nmask,
+-		       compat_ulong_t, maxnode)
+-{
+-	unsigned long __user *nm = NULL;
+-	unsigned long nr_bits, alloc_size;
+-	DECLARE_BITMAP(bm, MAX_NUMNODES);
+-
+-	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
+-	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
+-
+-	if (nmask) {
+-		if (compat_get_bitmap(bm, nmask, nr_bits))
+-			return -EFAULT;
+-		nm = compat_alloc_user_space(alloc_size);
+-		if (copy_to_user(nm, bm, alloc_size))
 -			return -EFAULT;
 -	}
--	return kernel_move_pages(pid, nr_pages, pages, nodes, status, flags);
+-
+-	return kernel_set_mempolicy(mode, nm, nr_bits+1);
 -}
+-
+-COMPAT_SYSCALL_DEFINE6(mbind, compat_ulong_t, start, compat_ulong_t, len,
+-		       compat_ulong_t, mode, compat_ulong_t __user *, nmask,
+-		       compat_ulong_t, maxnode, compat_ulong_t, flags)
+-{
+-	unsigned long __user *nm = NULL;
+-	unsigned long nr_bits, alloc_size;
+-	nodemask_t bm;
+-
+-	nr_bits = min_t(unsigned long, maxnode-1, MAX_NUMNODES);
+-	alloc_size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
+-
+-	if (nmask) {
+-		if (compat_get_bitmap(nodes_addr(bm), nmask, nr_bits))
+-			return -EFAULT;
+-		nm = compat_alloc_user_space(alloc_size);
+-		if (copy_to_user(nm, nodes_addr(bm), alloc_size))
+-			return -EFAULT;
+-	}
+-
+-	return kernel_mbind(start, len, mode, nm, nr_bits+1, flags);
+-}
+-
+-COMPAT_SYSCALL_DEFINE4(migrate_pages, compat_pid_t, pid,
+-		       compat_ulong_t, maxnode,
+-		       const compat_ulong_t __user *, old_nodes,
+-		       const compat_ulong_t __user *, new_nodes)
+-{
+-	unsigned long __user *old = NULL;
+-	unsigned long __user *new = NULL;
+-	nodemask_t tmp_mask;
+-	unsigned long nr_bits;
+-	unsigned long size;
+-
+-	nr_bits = min_t(unsigned long, maxnode - 1, MAX_NUMNODES);
+-	size = ALIGN(nr_bits, BITS_PER_LONG) / 8;
+-	if (old_nodes) {
+-		if (compat_get_bitmap(nodes_addr(tmp_mask), old_nodes, nr_bits))
+-			return -EFAULT;
+-		old = compat_alloc_user_space(new_nodes ? size * 2 : size);
+-		if (new_nodes)
+-			new = old + size / sizeof(unsigned long);
+-		if (copy_to_user(old, nodes_addr(tmp_mask), size))
+-			return -EFAULT;
+-	}
+-	if (new_nodes) {
+-		if (compat_get_bitmap(nodes_addr(tmp_mask), new_nodes, nr_bits))
+-			return -EFAULT;
+-		if (new == NULL)
+-			new = compat_alloc_user_space(size);
+-		if (copy_to_user(new, nodes_addr(tmp_mask), size))
+-			return -EFAULT;
+-	}
+-	return kernel_migrate_pages(pid, nr_bits + 1, old, new);
+-}
+-
 -#endif /* CONFIG_COMPAT */
 -
- #ifdef CONFIG_NUMA_BALANCING
- /*
-  * Returns true if this is a safe migration target node for misplaced NUMA
+ bool vma_migratable(struct vm_area_struct *vma)
+ {
+ 	if (vma->vm_flags & (VM_IO | VM_PFNMAP))
 -- 
 2.27.0
 
