@@ -1,17 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kJXGL-0003zw-UV
- for kexec@lists.infradead.org; Sat, 19 Sep 2020 07:26:26 +0000
-Date: Sat, 19 Sep 2020 15:26:13 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
-Message-ID: <20200919072613.GA3649@dhcp-128-65.nay.redhat.com>
-References: <20200918032546.GA4180@dhcp-128-65.nay.redhat.com>
- <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
+ id 1kJfeD-00034y-4s
+ for kexec@lists.infradead.org; Sat, 19 Sep 2020 16:23:37 +0000
+Received: from mail-wm1-f45.google.com (mail-wm1-f45.google.com
+ [209.85.128.45])
+ (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+ (No client certificate requested)
+ by mail.kernel.org (Postfix) with ESMTPSA id E800D21582
+ for <kexec@lists.infradead.org>; Sat, 19 Sep 2020 16:23:35 +0000 (UTC)
+Received: by mail-wm1-f45.google.com with SMTP id d4so8090575wmd.5
+ for <kexec@lists.infradead.org>; Sat, 19 Sep 2020 09:23:35 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
+References: <20200918132439.1475479-1-arnd@arndb.de>
+ <20200918132439.1475479-2-arnd@arndb.de>
+ <20200919053514.GI30063@infradead.org>
+In-Reply-To: <20200919053514.GI30063@infradead.org>
+From: Andy Lutomirski <luto@kernel.org>
+Date: Sat, 19 Sep 2020 09:23:22 -0700
+Message-ID: <CALCETrVDqHG2chDsLWBHF39SXh6vjzE_xcEs+AWgOg5531BLuQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] x86: add __X32_COND_SYSCALL() macro
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +32,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, bhe@redhat.com, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>, kexec@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>, Linux-MM <linux-mm@kvack.org>, Borislav Petkov <bp@alien8.de>, Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>
 
-On 09/18/20 at 05:47pm, Andrew Morton wrote:
-> On Fri, 18 Sep 2020 11:25:46 +0800 Dave Young <dyoung@redhat.com> wrote:
-> 
-> > crash_kexec_post_notifiers enables running various panic notifier
-> > before kdump kernel booting. This increases risks of kdump failure.
-> > It is well documented in kernel-parameters.txt. We do not suggest
-> > people to enable it together with kdump unless he/she is really sure.
-> > This is also not suggested to be enabled by default when users are
-> > not aware in distributions.
-> > 
-> > But unfortunately it is enabled by default in systemd, see below
-> > discussions in a systemd report, we can not convince systemd to change
-> > it:
-> > https://github.com/systemd/systemd/issues/16661
-> > 
-> > Actually we have got reports about kdump kernel hangs in both s390x
-> > and powerpcle cases caused by the systemd change,  also some x86 cases
-> > could also be caused by the same (although that is in Hyper-V code
-> > instead of systemd, that need to be addressed separately).
-> > 
-> > Thus to avoid the auto enablement here just disable the param writable
-> > permission in sysfs.
-> > 
-> 
-> Well.  I don't think this is at all a desirable way of resolving a
-> disagreement with the systemd developers
-> 
-> At the above github address I'm seeing "ryncsn added a commit to
-> ryncsn/systemd that referenced this issue 9 days ago", "pstore: don't
-> enable crash_kexec_post_notifiers by default".  So didn't that address
-> the issue?
-> 
+On Fri, Sep 18, 2020 at 10:35 PM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Fri, Sep 18, 2020 at 03:24:36PM +0200, Arnd Bergmann wrote:
+> > sys_move_pages() is an optional syscall, and once we remove
+> > the compat version of it in favor of the native one with an
+> > in_compat_syscall() check, the x32 syscall table refers to
+> > a __x32_sys_move_pages symbol that may not exist when the
+> > syscall is disabled.
+> >
+> > Change the COND_SYSCALL() definition on x86 to also include
+> > the redirection for x32.
+> >
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>
+> Adding the x86 maintainers and Brian Gerst.  Brian proposed another
+> problem to the mess that most of the compat syscall handlers used by
+> x32 here:
+>
+>    https://lkml.org/lkml/2020/6/16/664
+>
+> hpa didn't particularly like it, but with your and my pending series
+> we'll soon use more native than compat syscalls for x32, so something
+> will need to change..
 
-I hope that commit can be merged in systemd, but we are really not
-optimize about that. The discussion is clear there but we did not get
-response since Aug 6.
-
-BTW, Kairui sent the systemd pull request 15 days ago, the new update added some
-comment.
-
-Thanks
-Dave 
-
+I'm fine with either solution.
 
 _______________________________________________
 kexec mailing list
