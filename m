@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kKJk0-0000sb-6g
- for kexec@lists.infradead.org; Mon, 21 Sep 2020 11:12:17 +0000
+ id 1kKJqK-00029n-4c
+ for kexec@lists.infradead.org; Mon, 21 Sep 2020 11:18:50 +0000
 From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH printk v3 2/3] printk: move dictionary keys to dev_printk_info
-In-Reply-To: <20200921095557.GH14605@alley>
+Subject: [PATCH printk v4 2/3] printk: move dictionary keys to dev_printk_info
+In-Reply-To: <87r1qvl6yc.fsf@jogness.linutronix.de>
 References: <20200918223421.21621-1-john.ogness@linutronix.de>
  <20200918223421.21621-3-john.ogness@linutronix.de>
- <20200921095557.GH14605@alley>
-Date: Mon, 21 Sep 2020 13:18:11 +0206
-Message-ID: <87r1qvl6yc.fsf@jogness.linutronix.de>
+ <20200921095557.GH14605@alley> <87r1qvl6yc.fsf@jogness.linutronix.de>
+Date: Mon, 21 Sep 2020 13:24:45 +0206
+Message-ID: <87mu1jl6ne.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -43,8 +43,8 @@ struct printk_info to provide guaranteed availability.
 Signed-off-by: John Ogness <john.ogness@linutronix.de>
 Reviewed-by: Petr Mladek <pmladek@suse.com>
 ---
- Added Petr's fixup for msg_add_dict_text() to include the prefix
- whitespace for dictionary properties. Thanks!
+ Sorry. v3 did not include Petr's fixup correctly. @size was wrong.
+ Now it is correct.
 
  Documentation/admin-guide/kdump/gdbmacros.txt |  73 ++++----
  drivers/base/core.c                           |  46 ++---
@@ -317,7 +317,7 @@ index 660f9a6bf73a..3a8fd491758c 100644
  
  __printf(1, 0) int vprintk_default(const char *fmt, va_list args);
 diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index 25cfe4fe48af..7c613ae5c95a 100644
+index 25cfe4fe48af..f1e243cc284a 100644
 --- a/kernel/printk/printk.c
 +++ b/kernel/printk/printk.c
 @@ -296,8 +296,8 @@ static int console_msg_format = MSG_FORMAT_DEFAULT;
@@ -465,7 +465,7 @@ index 25cfe4fe48af..7c613ae5c95a 100644
 -				continue;
 -			}
 +	len = msg_add_ext_text(buf, size, "", 0, ' ');	/* dict prefix */
-+	len += msg_add_ext_text(buf + len, size, key, strlen(key), '=');
++	len += msg_add_ext_text(buf + len, size - len, key, strlen(key), '=');
 +	len += msg_add_ext_text(buf + len, size - len, val, val_len, '\n');
  
 -			if (c < ' ' || c >= 127 || c == '\\') {
