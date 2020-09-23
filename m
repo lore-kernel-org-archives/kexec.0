@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kL2Jn-00006t-5L
- for kexec@lists.infradead.org; Wed, 23 Sep 2020 10:48:12 +0000
-From: matthias.bgg@kernel.org
-Subject: [PATCH v2] arm64: Add purgatory printing
-Date: Wed, 23 Sep 2020 12:48:02 +0200
-Message-Id: <20200923104802.17964-1-matthias.bgg@kernel.org>
+ id 1kL2hm-0004HV-8q
+ for kexec@lists.infradead.org; Wed, 23 Sep 2020 11:12:59 +0000
+Received: by mail-pj1-f69.google.com with SMTP id mv5so4056453pjb.5
+ for <kexec@lists.infradead.org>; Wed, 23 Sep 2020 04:12:54 -0700 (PDT)
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Subject: [PATCH] kexec: Fix snprintf related compilation warnings
+Date: Wed, 23 Sep 2020 16:42:37 +0530
+Message-Id: <20200923111237.883383-1-bhsharma@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -16,222 +18,122 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, horms@verge.net.au
-Cc: geoff@infradead.org, bhupesh.linux@gmail.com, Matthias Brugger <mbrugger@suse.com>, matthias.bgg@kernel.org
+To: kexec@lists.infradead.org
+Cc: bhsharma@redhat.com, bhupesh.linux@gmail.com, Eric Biederman <ebiederm@xmission.com>, Simon Horman <horms@verge.net.au>
 
-From: Matthias Brugger <mbrugger@suse.com>
-
-Add option to allow purgatory printing on arm64 hardware
-by passing the console name which should be used.
-Based on a patch by Geoff Levand.
-
-Cc: Geoff Levand <geoff@infradead.org>
-Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-
----
-
-Changes in v2:
-- use sizeof(buffer)
-- user serial command option instead of console
-- reduce buffer to size 10
-- use snprintf
-- fix error handling for wrong serial console parameter
-- Update help information
-
- kexec/arch/arm64/include/arch/options.h |  6 ++-
- kexec/arch/arm64/kexec-arm64.c          | 61 +++++++++++++++++++++++++
- purgatory/arch/arm64/purgatory-arm64.c  | 17 ++++++-
- 3 files changed, 82 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
-index a17d933..8c695f3 100644
---- a/kexec/arch/arm64/include/arch/options.h
-+++ b/kexec/arch/arm64/include/arch/options.h
-@@ -5,7 +5,8 @@
- #define OPT_DTB			((OPT_MAX)+1)
- #define OPT_INITRD		((OPT_MAX)+2)
- #define OPT_REUSE_CMDLINE	((OPT_MAX)+3)
--#define OPT_ARCH_MAX		((OPT_MAX)+4)
-+#define OPT_SERIAL		((OPT_MAX)+4)
-+#define OPT_ARCH_MAX		((OPT_MAX)+5)
- 
- #define KEXEC_ARCH_OPTIONS \
- 	KEXEC_OPTIONS \
-@@ -13,6 +14,7 @@
- 	{ "command-line",  1, NULL, OPT_APPEND }, \
- 	{ "dtb",           1, NULL, OPT_DTB }, \
- 	{ "initrd",        1, NULL, OPT_INITRD }, \
-+	{ "serial",        1, NULL, OPT_SERIAL }, \
- 	{ "ramdisk",       1, NULL, OPT_INITRD }, \
- 	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
- 
-@@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
- "     --command-line=STRING Set the kernel command line to STRING.\n"
- "     --dtb=FILE            Use FILE as the device tree blob.\n"
- "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
-+"     --serial=STRING       Name of console used for purgatory printing. (e.g. ttyAMA0)\n"
- "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
- "     --reuse-cmdline       Use kernel command line from running system.\n";
- 
-@@ -32,6 +35,7 @@ struct arm64_opts {
- 	const char *command_line;
- 	const char *dtb;
- 	const char *initrd;
-+	const char *console;
- };
- 
- extern struct arm64_opts arm64_opts;
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 45ebc54..d2c3347 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
- 			break;
- 		case OPT_KEXEC_FILE_SYSCALL:
- 			do_kexec_file_syscall = 1;
-+		case OPT_SERIAL:
-+			arm64_opts.console = optarg;
- 			break;
- 		default:
- 			break; /* Ignore core and unknown options. */
-@@ -180,12 +182,62 @@ int arch_process_options(int argc, char **argv)
- 	dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
- 		(do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
- 							arm64_opts.dtb));
-+	dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
-+		arm64_opts.console);
-+
- 	if (do_kexec_file_syscall)
- 		arm64_opts.dtb = NULL;
- 
- 	return 0;
- }
- 
-+/**
-+ * find_purgatory_sink - Find a sink for purgatory output.
-+ */
-+
-+static uint64_t find_purgatory_sink(const char *console)
-+{
-+	int fd, ret;
-+	char device[255], mem[255];
-+	struct stat sb;
-+	char buffer[10];
-+	uint64_t iomem = 0x0;
-+
-+	if (!console)
-+		return 0;
-+
-+	snprintf(device, sizeof(device), "/sys/class/tty/%s", console);
-+	if (stat(device, &sb) || !S_ISDIR(sb.st_mode)) {
-+		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
-+			__func__, device);
-+		return 0;
-+	}
-+
-+	snprintf(mem, sizeof(mem), "%s%s", device, "/iomem_base");
-+	printf("console memory read from %s\n", mem);
-+
-+	fd = open(mem, O_RDONLY);
-+	if (fd < 0) {
-+		fprintf(stderr, "kexec: %s: No able to open %s\n",
-+			__func__, mem);
-+		return 0;
-+	}
-+
-+	memset(buffer, '\0', sizeof(buffer));
-+	ret = read(fd, buffer, sizeof(buffer));
-+	if (ret < 0) {
-+		fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
-+		close(fd);
-+		return 0;
-+	}
-+
-+	sscanf(buffer, "%lx", &iomem);
-+	printf("console memory is at %#lx\n", iomem);
-+
-+	close(fd);
-+	return iomem;
-+}
-+
- /**
-  * struct dtb - Info about a binary device tree.
-  *
-@@ -637,6 +689,7 @@ int arm64_load_other_segments(struct kexec_info *info,
- 	unsigned long hole_min;
- 	unsigned long hole_max;
- 	unsigned long initrd_end;
-+	uint64_t purgatory_sink;
- 	char *initrd_buf = NULL;
- 	struct dtb dtb;
- 	char command_line[COMMAND_LINE_SIZE] = "";
-@@ -654,6 +707,11 @@ int arm64_load_other_segments(struct kexec_info *info,
- 		command_line[sizeof(command_line) - 1] = 0;
- 	}
- 
-+	purgatory_sink = find_purgatory_sink(arm64_opts.console);
-+
-+	dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
-+		purgatory_sink);
-+
- 	if (arm64_opts.dtb) {
- 		dtb.name = "dtb_user";
- 		dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
-@@ -742,6 +800,9 @@ int arm64_load_other_segments(struct kexec_info *info,
- 
- 	info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
- 
-+	elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
-+		sizeof(purgatory_sink));
-+
- 	elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &image_base,
- 		sizeof(image_base));
- 
-diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
-index fe50fcf..b4d8578 100644
---- a/purgatory/arch/arm64/purgatory-arm64.c
-+++ b/purgatory/arch/arm64/purgatory-arm64.c
-@@ -5,15 +5,30 @@
- #include <stdint.h>
- #include <purgatory.h>
- 
-+/* Symbols set by kexec. */
-+
-+uint8_t *arm64_sink __attribute__ ((section ("data")));
-+extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
-+extern uint64_t arm64_dtb_addr;
-+
- void putchar(int ch)
- {
--	/* Nothing for now */
-+	if (!arm64_sink)
-+		return;
-+
-+	*arm64_sink = ch;
-+
-+	if (ch == '\n')
-+		*arm64_sink = '\r';
- }
- 
- void post_verification_setup_arch(void)
- {
-+	printf("purgatory: booting kernel now\n");
- }
- 
- void setup_arch(void)
- {
-+	printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
-+	printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
- }
--- 
-2.28.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIHNucHJpbnRmIHJlbGF0ZWQgY29tcGlsYXRp
+b24gd2FybmluZwpzZWVuIGN1cnJlbnRseSB3aXRoIGdjYyB2ZXJzaW9ucyA3IGFuZCA4IHdoZW4g
+a2V4ZWMgaXMgY29tcGlsZWQgd2l0aAotV2Zvcm1hdC10cnVuY2F0aW9uIG9wdGlvbjoKCiAgICBr
+ZXhlYy9mczJkdC5jOjY3MzozNDogd2FybmluZzog4oCYc3Rkb3V0LXBhdGjigJkgZGlyZWN0aXZl
+IG91dHB1dCBtYXkgYmUgdHJ1bmNhdGVkIHdyaXRpbmcgMTEgYnl0ZXMgaW50byBhIHJlZ2lvbiBv
+ZiBzaXplIGJldHdlZW4gMSBhbmQgMTAyNCBbLVdmb3JtYXQtdHJ1bmNhdGlvbj1dCiAgICAgICBz
+bnByaW50ZihmaWxlbmFtZSwgTUFYUEFUSCwgIiVzc3Rkb3V0LXBhdGgiLCBwYXRobmFtZSk7CiAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fn4KICAgIGtleGVj
+L2ZzMmR0LmM6NjczOjM6IG5vdGU6IOKAmHNucHJpbnRm4oCZIG91dHB1dCBiZXR3ZWVuIDEyIGFu
+ZCAxMDM1IGJ5dGVzIGludG8gYSBkZXN0aW5hdGlvbiBvZiBzaXplIDEwMjQKICAgICAgIHNucHJp
+bnRmKGZpbGVuYW1lLCBNQVhQQVRILCAiJXNzdGRvdXQtcGF0aCIsIHBhdGhuYW1lKTsKICAgICAg
+IF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fgog
+ICAga2V4ZWMvZnMyZHQuYzo2NzY6MzU6IHdhcm5pbmc6IOKAmGxpbnV4LHN0ZG91dC1wYXRo4oCZ
+IGRpcmVjdGl2ZSBvdXRwdXQgbWF5IGJlIHRydW5jYXRlZCB3cml0aW5nIDE3IGJ5dGVzIGludG8g
+YSByZWdpb24gb2Ygc2l6ZSBiZXR3ZWVuIDEgYW5kIDEwMjQgWy1XZm9ybWF0LXRydW5jYXRpb249
+XQogICAgICAgIHNucHJpbnRmKGZpbGVuYW1lLCBNQVhQQVRILCAiJXNsaW51eCxzdGRvdXQtcGF0
+aCIsIHBhdGhuYW1lKTsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+
+fn5+fn5+fn5+fn5+fn4KICAgIGtleGVjL2ZzMmR0LmM6Njc2OjQ6IG5vdGU6IOKAmHNucHJpbnRm
+4oCZIG91dHB1dCBiZXR3ZWVuIDE4IGFuZCAxMDQxIGJ5dGVzIGludG8gYSBkZXN0aW5hdGlvbiBv
+ZiBzaXplIDEwMjQKICAgICAgICBzbnByaW50ZihmaWxlbmFtZSwgTUFYUEFUSCwgIiVzbGludXgs
+c3Rkb3V0LXBhdGgiLCBwYXRobmFtZSk7CiAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+CgogICAga2V4ZWMvZmlybXdhcmVf
+bWVtbWFwLmM6MTMyOjM1OiB3YXJuaW5nOiDigJglc+KAmSBkaXJlY3RpdmUgb3V0cHV0IG1heSBi
+ZSB0cnVuY2F0ZWQgd3JpdGluZyA1IGJ5dGVzIGludG8gYSByZWdpb24gb2Ygc2l6ZSBiZXR3ZWVu
+IDAgYW5kIDQwOTUgWy1XZm9ybWF0LXRydW5jYXRpb249XQogICAgICBzbnByaW50ZihmaWxlbmFt
+ZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgXn4gICAgICAgICAgfn5+fn5+fgogICAga2V4ZWMvZmlybXdh
+cmVfbWVtbWFwLmM6MTMyOjI6IG5vdGU6IOKAmHNucHJpbnRm4oCZIG91dHB1dCBiZXR3ZWVuIDcg
+YW5kIDQxMDIgYnl0ZXMgaW50byBhIGRlc3RpbmF0aW9uIG9mIHNpemUgNDA5NgogICAgICBzbnBy
+aW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKICAgICAg
+Xn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn4KICAg
+IGtleGVjL2Zpcm13YXJlX21lbW1hcC5jOjE0MjozNTogd2FybmluZzog4oCYJXPigJkgZGlyZWN0
+aXZlIG91dHB1dCBtYXkgYmUgdHJ1bmNhdGVkIHdyaXRpbmcgMyBieXRlcyBpbnRvIGEgcmVnaW9u
+IG9mIHNpemUgYmV0d2VlbiAwIGFuZCA0MDk1IFstV2Zvcm1hdC10cnVuY2F0aW9uPV0KICAgICAg
+c25wcmludGYoZmlsZW5hbWUsIFBBVEhfTUFYLCAiJXMvJXMiLCBlbnRyeSwgImVuZCIpOwogICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefiAgICAgICAgICB+fn5+fgogICAg
+a2V4ZWMvZmlybXdhcmVfbWVtbWFwLmM6MTQyOjI6IG5vdGU6IOKAmHNucHJpbnRm4oCZIG91dHB1
+dCBiZXR3ZWVuIDUgYW5kIDQxMDAgYnl0ZXMgaW50byBhIGRlc3RpbmF0aW9uIG9mIHNpemUgNDA5
+NgogICAgICBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5LCAiZW5k
+Iik7CiAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fgogICAga2V4ZWMvZmlybXdhcmVfbWVtbWFwLmM6MTUyOjM1OiB3YXJuaW5nOiDigJglc+KA
+mSBkaXJlY3RpdmUgb3V0cHV0IG1heSBiZSB0cnVuY2F0ZWQgd3JpdGluZyA0IGJ5dGVzIGludG8g
+YSByZWdpb24gb2Ygc2l6ZSBiZXR3ZWVuIDAgYW5kIDQwOTUgWy1XZm9ybWF0LXRydW5jYXRpb249
+XQogICAgICBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5LCAidHlw
+ZSIpOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBefiAgICAgICAgICB+
+fn5+fn4KICAgIGtleGVjL2Zpcm13YXJlX21lbW1hcC5jOjE1MjoyOiBub3RlOiDigJhzbnByaW50
+ZuKAmSBvdXRwdXQgYmV0d2VlbiA2IGFuZCA0MTAxIGJ5dGVzIGludG8gYSBkZXN0aW5hdGlvbiBv
+ZiBzaXplIDQwOTYKICAgICAgc25wcmludGYoZmlsZW5hbWUsIFBBVEhfTUFYLCAiJXMvJXMiLCBl
+bnRyeSwgInR5cGUiKTsKICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fgoKU2luY2UgdGhlIHNpbXBsZXN0IG1ldGhvZCB0byBhZGRyZXNzIHRo
+ZSBnY2Mgd2FybmluZ3MgYW5kIHBvc3NpYmxlCnRydW5jYXRpb24gd291bGQgYmUgdG8gY2hlY2sg
+dGhlIHJldHVybiB2YWx1ZSBwcm92aWRlZCBmcm9tIHNucHJpbnRmCih3ZWxsIHRoZXJlIGFyZSBv
+dGhlciBtZXRob2RzIGxpa2UgdXNpbmcgJ2FzbnByaW50Zicgb3IgdXNpbmcKJ29wZW5fbWVtc3Ry
+ZWFtJyBmdW5jdGlvbiB0byBjcmVhdGUgdGhlIEZJTEUgb2JqZWN0LCBidXQgdGhlc2UgYXJlIG1v
+cmUKaW50cnVzaXZlKSwgc28gdGhpcyBwYXRjaCBkb2VzIHRoZSBzYW1lLgoKQ2M6IFNpbW9uIEhv
+cm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1PgpDYzogRXJpYyBCaWVkZXJtYW4gPGViaWVkZXJtQHht
+aXNzaW9uLmNvbT4KQ2M6IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKU2lnbmVkLW9mZi1ieTog
+Qmh1cGVzaCBTaGFybWEgPGJoc2hhcm1hQHJlZGhhdC5jb20+Ci0tLQoga2V4ZWMvZmlybXdhcmVf
+bWVtbWFwLmMgfCAyMiArKysrKysrKysrKysrKysrKysrLS0tCiBrZXhlYy9mczJkdC5jICAgICAg
+ICAgICB8IDE2ICsrKysrKysrKysrKystLS0KIDIgZmlsZXMgY2hhbmdlZCwgMzIgaW5zZXJ0aW9u
+cygrKSwgNiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9rZXhlYy9maXJtd2FyZV9tZW1tYXAu
+YyBiL2tleGVjL2Zpcm13YXJlX21lbW1hcC5jCmluZGV4IDFlZTIxNGFhOTMxNi4uNDU3YzNkYzlh
+NjA4IDEwMDY0NAotLS0gYS9rZXhlYy9maXJtd2FyZV9tZW1tYXAuYworKysgYi9rZXhlYy9maXJt
+d2FyZV9tZW1tYXAuYwpAQCAtMTI1LDExICsxMjUsMTcgQEAgc3RhdGljIGludCBwYXJzZV9tZW1t
+YXBfZW50cnkoY29uc3QgY2hhciAqZW50cnksIHN0cnVjdCBtZW1vcnlfcmFuZ2UgKnJhbmdlKQog
+ewogCWNoYXIgZmlsZW5hbWVbUEFUSF9NQVhdOwogCWNoYXIgKnR5cGU7CisJaW50IHJldDsKIAog
+CS8qCiAJICogZW50cnkvc3RhcnQKIAkgKi8KLQlzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgs
+ICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKKwlyZXQgPSBzbnByaW50ZihmaWxlbmFtZSwgUEFU
+SF9NQVgsICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKKwlpZiAocmV0IDwgMCB8fCByZXQgPj0g
+UEFUSF9NQVgpIHsKKwkJZnByaW50ZihzdGRlcnIsICJzbnByaW50ZiBmYWlsZWQ6ICVzXG4iLCBz
+dHJlcnJvcihlcnJubykpOworCQlyZXR1cm4gLTE7CisJfQorCiAJZmlsZW5hbWVbUEFUSF9NQVgt
+MV0gPSAwOwogCiAJcmFuZ2UtPnN0YXJ0ID0gcGFyc2VfbnVtZXJpY19zeXNmcyhmaWxlbmFtZSk7
+CkBAIC0xMzksNyArMTQ1LDEyIEBAIHN0YXRpYyBpbnQgcGFyc2VfbWVtbWFwX2VudHJ5KGNvbnN0
+IGNoYXIgKmVudHJ5LCBzdHJ1Y3QgbWVtb3J5X3JhbmdlICpyYW5nZSkKIAkvKgogCSAqIGVudHJ5
+L2VuZAogCSAqLwotCXNucHJpbnRmKGZpbGVuYW1lLCBQQVRIX01BWCwgIiVzLyVzIiwgZW50cnks
+ICJlbmQiKTsKKwlyZXQgPSBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVu
+dHJ5LCAiZW5kIik7CisJaWYgKHJldCA8IDAgfHwgcmV0ID49IFBBVEhfTUFYKSB7CisJCWZwcmlu
+dGYoc3RkZXJyLCAic25wcmludGYgZmFpbGVkOiAlc1xuIiwgc3RyZXJyb3IoZXJybm8pKTsKKwkJ
+cmV0dXJuIC0xOworCX0KKwogCWZpbGVuYW1lW1BBVEhfTUFYLTFdID0gMDsKIAogCXJhbmdlLT5l
+bmQgPSBwYXJzZV9udW1lcmljX3N5c2ZzKGZpbGVuYW1lKTsKQEAgLTE0OSw3ICsxNjAsMTIgQEAg
+c3RhdGljIGludCBwYXJzZV9tZW1tYXBfZW50cnkoY29uc3QgY2hhciAqZW50cnksIHN0cnVjdCBt
+ZW1vcnlfcmFuZ2UgKnJhbmdlKQogCS8qCiAJICogZW50cnkvdHlwZQogCSAqLwotCXNucHJpbnRm
+KGZpbGVuYW1lLCBQQVRIX01BWCwgIiVzLyVzIiwgZW50cnksICJ0eXBlIik7CisJcmV0ID0gc25w
+cmludGYoZmlsZW5hbWUsIFBBVEhfTUFYLCAiJXMvJXMiLCBlbnRyeSwgInR5cGUiKTsKKwlpZiAo
+cmV0IDwgMCB8fCByZXQgPj0gUEFUSF9NQVgpIHsKKwkJZnByaW50ZihzdGRlcnIsICJzbnByaW50
+ZiBmYWlsZWQ6ICVzXG4iLCBzdHJlcnJvcihlcnJubykpOworCQlyZXR1cm4gLTE7CisJfQorCiAJ
+ZmlsZW5hbWVbUEFUSF9NQVgtMV0gPSAwOwogCiAJdHlwZSA9IHBhcnNlX3N0cmluZ19zeXNmcyhm
+aWxlbmFtZSk7CmRpZmYgLS1naXQgYS9rZXhlYy9mczJkdC5jIGIva2V4ZWMvZnMyZHQuYwppbmRl
+eCAwN2E1ZTJmOTU1YzIuLjFhNDMwNThiMDE0OSAxMDA2NDQKLS0tIGEva2V4ZWMvZnMyZHQuYwor
+KysgYi9rZXhlYy9mczJkdC5jCkBAIC01NjgsNyArNTY4LDcgQEAgc3RhdGljIHZvaWQgcHV0bm9k
+ZSh2b2lkKQogCXN0cnVjdCBkaXJlbnQgKipuYW1lbGlzdDsKIAlpbnQgbnVtbGlzdCwgaTsKIAlz
+dHJ1Y3Qgc3RhdCBzdGF0YnVmOwotCWludCBwbGVuOworCWludCBwbGVuLCByZXQ7CiAKIAludW1s
+aXN0ID0gc2NhbmRpcihwYXRobmFtZSwgJm5hbWVsaXN0LCAwLCBjb21wYXJlZnVuYyk7CiAJaWYg
+KG51bWxpc3QgPCAwKQpAQCAtNjcwLDEwICs2NzAsMjAgQEAgc3RhdGljIHZvaWQgcHV0bm9kZSh2
+b2lkKQogCQkgKiBjb2RlIGNhbiBwcmludCAnSSdtIGluIHB1cmdhdG9yeScgbWVzc2FnZS4gQ3Vy
+cmVudGx5IG9ubHkKIAkJICogcHNlcmllcy9odmN0ZXJtaW5hbCBpcyBzdXBwb3J0ZWQuCiAJCSAq
+LwotCQlzbnByaW50ZihmaWxlbmFtZSwgTUFYUEFUSCwgIiVzc3Rkb3V0LXBhdGgiLCBwYXRobmFt
+ZSk7CisJCXJldCA9IHNucHJpbnRmKGZpbGVuYW1lLCBNQVhQQVRILCAiJXNzdGRvdXQtcGF0aCIs
+IHBhdGhuYW1lKTsKKwkJaWYgKHJldCA8IDAgfHwgcmV0ID49IE1BWFBBVEgpIHsKKwkJCWZwcmlu
+dGYoc3RkZXJyLCAic25wcmludGYgZmFpbGVkOiAlc1xuIiwgc3RyZXJyb3IoZXJybm8pKTsKKwkJ
+CWdvdG8gbm9fZGVidWc7CisJCX0KKwogCQlmZCA9IG9wZW4oZmlsZW5hbWUsIE9fUkRPTkxZKTsK
+IAkJaWYgKGZkID09IC0xKSB7Ci0JCQlzbnByaW50ZihmaWxlbmFtZSwgTUFYUEFUSCwgIiVzbGlu
+dXgsc3Rkb3V0LXBhdGgiLCBwYXRobmFtZSk7CisJCQlyZXQgPSBzbnByaW50ZihmaWxlbmFtZSwg
+TUFYUEFUSCwgIiVzbGludXgsc3Rkb3V0LXBhdGgiLCBwYXRobmFtZSk7CisJCQlpZiAocmV0IDwg
+MCB8fCByZXQgPj0gTUFYUEFUSCkgeworCQkJCWZwcmludGYoc3RkZXJyLCAic25wcmludGYgZmFp
+bGVkOiAlc1xuIiwgc3RyZXJyb3IoZXJybm8pKTsKKwkJCQlnb3RvIG5vX2RlYnVnOworCQkJfQor
+CiAJCQlmZCA9IG9wZW4oZmlsZW5hbWUsIE9fUkRPTkxZKTsKIAkJCWlmIChmZCA9PSAtMSkgewog
+CQkJCXByaW50ZigiVW5hYmxlIHRvIGZpbmQgJXNbbGludXgsXXN0ZG91dC1wYXRoLCBwcmludGlu
+ZyBmcm9tIHB1cmdhdG9yeSBpcyBkaXNhYmxlZFxuIiwKLS0gCjIuMjYuMgoKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8va2V4ZWMK
