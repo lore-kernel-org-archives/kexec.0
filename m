@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kKuky-0005ZC-S9
- for kexec@lists.infradead.org; Wed, 23 Sep 2020 02:43:45 +0000
-Date: Wed, 23 Sep 2020 10:43:29 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
-Message-ID: <20200923024329.GB3642@dhcp-128-65.nay.redhat.com>
-References: <20200918032546.GA4180@dhcp-128-65.nay.redhat.com>
- <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
- <20200921201811.GB3437@char.us.oracle.com>
- <87v9g6fuub.fsf@x220.int.ebiederm.org>
+ id 1kKun9-0005hU-Hn
+ for kexec@lists.infradead.org; Wed, 23 Sep 2020 02:46:00 +0000
+Date: Wed, 23 Sep 2020 10:45:48 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 1/3] MIPS: Crash kernel should be able to see old memories
+Message-ID: <20200923024548.GL25604@MiWiFi-R3L-srv>
+References: <1600828257-31316-1-git-send-email-chenhc@lemote.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <87v9g6fuub.fsf@x220.int.ebiederm.org>
+In-Reply-To: <1600828257-31316-1-git-send-email-chenhc@lemote.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,92 +23,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Wei Liu <wei.liu@kernel.org>, Tianyu Lani <Tianyu.Lan@microsoft.com>, bhe@redhat.com, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Eric DeVolder <eric.devolder@oracle.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
+To: Huacai Chen <chenhc@lemote.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@gmail.com>, kexec@lists.infradead.org, linux-mips@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>, Eric Biederman <ebiederm@xmission.com>, Fuxin Zhang <zhangfx@lemote.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-+ more people who may care about this param 
-On 09/21/20 at 08:45pm, Eric W. Biederman wrote:
-> Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> writes:
-> 
-> > On Fri, Sep 18, 2020 at 05:47:43PM -0700, Andrew Morton wrote:
-> >> On Fri, 18 Sep 2020 11:25:46 +0800 Dave Young <dyoung@redhat.com> wrote:
-> >> 
-> >> > crash_kexec_post_notifiers enables running various panic notifier
-> >> > before kdump kernel booting. This increases risks of kdump failure.
-> >> > It is well documented in kernel-parameters.txt. We do not suggest
-> >> > people to enable it together with kdump unless he/she is really sure.
-> >> > This is also not suggested to be enabled by default when users are
-> >> > not aware in distributions.
-> >> > 
-> >> > But unfortunately it is enabled by default in systemd, see below
-> >> > discussions in a systemd report, we can not convince systemd to change
-> >> > it:
-> >> > https://github.com/systemd/systemd/issues/16661
-> >> > 
-> >> > Actually we have got reports about kdump kernel hangs in both s390x
-> >> > and powerpcle cases caused by the systemd change,  also some x86 cases
-> >> > could also be caused by the same (although that is in Hyper-V code
-> >> > instead of systemd, that need to be addressed separately).
-> >
-> > Perhaps it may be better to fix the issus on s390x and PowerPC as well?
-> >
-> >> > 
-> >> > Thus to avoid the auto enablement here just disable the param writable
-> >> > permission in sysfs.
-> >> > 
-> >> 
-> >> Well.  I don't think this is at all a desirable way of resolving a
-> >> disagreement with the systemd developers
-> >> 
-> >> At the above github address I'm seeing "ryncsn added a commit to
-> >> ryncsn/systemd that referenced this issue 9 days ago", "pstore: don't
-> >> enable crash_kexec_post_notifiers by default".  So didn't that address
-> >> the issue?
-> >
-> > It does in systemd, but there is a strong interest in making this on
-> > by default.
-> 
-> There is also a strong interest in removing this code entirely from the
-> kernel.
+On 09/23/20 at 10:30am, Huacai Chen wrote:
+> Kexec-tools use mem=X@Y to pass usable memories to crash kernel, but in
+> commit a94e4f24ec836c8984f83959 ("MIPS: init: Drop boot_mem_map") all
+> BIOS passed memories are removed by early_parse_mem(). I think this is
+> reasonable for a normal kernel but not for a crash kernel, because a
+> crash kernel should be able to see all old memories, even though it is
+> not supposed to use them.
 
-Added Hyper-V people and people who created the param, it is below
-commit, I also want to remove it if possible, let's see how people
-think, but the least way should be to disable the auto setting in both systemd
-and kernel:
+I am not familiar with MIPS code, but we analyze and fill memmap= to
+pass usable memory to crashkenrel in kexec-tools, do you mean you are
+specifying memmap= or mem= by hand?
 
-    commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45
-    Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
-    Date:   Fri Jun 6 14:37:07 2014 -0700
-    
-        kernel/panic.c: add "crash_kexec_post_notifiers" option for kdump after panic_notifers
-    
-        Add a "crash_kexec_post_notifiers" boot option to run kdump after
-        running panic_notifiers and dump kmsg.  This can help rare situations
-        where kdump fails because of unstable crashed kernel or hardware failure
-        (memory corruption on critical data/code), or the 2nd kernel is already
-        broken by the 1st kernel (it's a broken behavior, but who can guarantee
-        that the "crashed" kernel works correctly?).
-    
-        Usage: add "crash_kexec_post_notifiers" to kernel boot option.
-    
-        Note that this actually increases risks of the failure of kdump.  This
-        option should be set only if you worry about the rare case of kdump
-        failure rather than increasing the chance of success.
+And we don't have mem=X@Y, only mem=nn[KMG].
 
 > 
-> This failure is a case in point.
+> Fixes: a94e4f24ec836c8984f83959 ("MIPS: init: Drop boot_mem_map")
+> Signed-off-by: Huacai Chen <chenhc@lemote.com>
+> ---
+>  arch/mips/kernel/setup.c | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
-> I think I am at my I told you so point.  This is what all of the testing
-> over all the years has said.  Leaving functionality to the peculiarities
-> of firmware when you don't have to, and can actually control what is
-> going on doesn't work.
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index 4c04a86..e2804a2 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -392,8 +392,10 @@ static int __init early_parse_mem(char *p)
+>  	 */
+>  	if (usermem == 0) {
+>  		usermem = 1;
+> +#ifndef CONFIG_CRASH_DUMP
+>  		memblock_remove(memblock_start_of_DRAM(),
+>  			memblock_end_of_DRAM() - memblock_start_of_DRAM());
+> +#endif
+>  	}
+>  	start = 0;
+>  	size = memparse(p, &p);
+> -- 
+> 2.7.0
 > 
-> Eric
-> 
-> 
-
-Thanks
-Dave
 
 
 _______________________________________________
