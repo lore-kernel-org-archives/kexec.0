@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from relay4.mymailcheap.com ([137.74.80.154])
+Received: from userp2120.oracle.com ([156.151.31.85])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kL4y8-0000ih-Nz
- for kexec@lists.infradead.org; Wed, 23 Sep 2020 13:38:02 +0000
-Subject: Re: [PATCH 3/3] MIPS: Loongson64: Add kexec/kdump support
-References: <1600828257-31316-1-git-send-email-chenhc@lemote.com>
- <1600828257-31316-3-git-send-email-chenhc@lemote.com>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <46167e76-3179-825c-606c-fc35fda8eb4e@flygoat.com>
-Date: Wed, 23 Sep 2020 21:35:50 +0800
+ id 1kL6zC-0006YV-JJ
+ for kexec@lists.infradead.org; Wed, 23 Sep 2020 15:47:15 +0000
+Date: Wed, 23 Sep 2020 11:48:25 -0400
+From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
+Subject: Re: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
+Message-ID: <20200923154825.GC7635@char.us.oracle.com>
+References: <20200918032546.GA4180@dhcp-128-65.nay.redhat.com>
+ <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
+ <20200921201811.GB3437@char.us.oracle.com>
+ <87v9g6fuub.fsf@x220.int.ebiederm.org>
+ <20200923024329.GB3642@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1600828257-31316-3-git-send-email-chenhc@lemote.com>
+Content-Disposition: inline
+In-Reply-To: <20200923024329.GB3642@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,125 +23,120 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="gbk"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huacai Chen <chenhc@lemote.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: Jinyang He <hejinyang@loongson.cn>, Huacai Chen <chenhuacai@gmail.com>, kexec@lists.infradead.org, linux-mips@vger.kernel.org, Fuxin Zhang <zhangfx@lemote.com>, Youling Tang <tangyouling@loongson.cn>
+To: Dave Young <dyoung@redhat.com>
+Cc: Wei Liu <wei.liu@kernel.org>, Tianyu Lani <Tianyu.Lan@microsoft.com>, bhe@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Michael Kelley <mikelley@microsoft.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, Andrew Morton <akpm@linux-foundation.org>, Eric DeVolder <eric.devolder@oracle.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>
 
-CgrU2iAyMDIwLzkvMjMgMTA6MzAsIEh1YWNhaSBDaGVuINC0tcA6Cj4gQWRkIGtleGVjL2tkdW1w
-IHN1cHBvcnQgZm9yIExvb25nc29uNjQgYnk6Cj4gMSwgUHJvdmlkZSBMb29uZ3Nvbi1zcGVjaWZp
-YyBrZXhlYyBmdW5jdGlvbnM6IGxvb25nc29uX2tleGVjX3ByZXBhcmUsCj4gICAgIGxvb25nc29u
-X2tleGVjX3NodXRkb3duIGFuZCBsb29uZ3Nvbl9jcmFzaF9zaHV0ZG93bjsKPiAyLCBQcm92aWRl
-IExvb25nc29uLXNwZWNpZmljIGFzc2VtYmx5IGNvZGUgaW4ga2V4ZWNfc21wX3dhaXQ7Cj4gMywg
-Q2xlYXIgbWFpbGJveCBpbiBsb29uZ3NvbjNfc21wX3NldHVwKCkgc2luY2UgS0VYRUMgYnlwYXNz
-IEJJT1M7Cj4gNCwgS0VYRUMgYWx3YXlzIHJ1biBhdCBib290IENQVSwgYnV0IEtEVU1QIG1heSB0
-cmlnZ2VyZWQgYXQgbm9uLWJvb3QKPiAgICAgQ1BVLiBMb29uZ3NvbjY0IGFzc3VtZSBib290IENQ
-VSBpcyB0aGUgZmlyc3QgcG9zc2libGUgY3B1LCBzbyBmaXgKPiAgICAgYm9vdF9jcHVfaWQgaW4g
-cHJvbV9pbml0X2VudigpOwo+Cj4gVG8gc3RhcnQgTG9vbmdzb242NCwgVGhlIGJvb3QgQ1BVIG5l
-ZWRzIDMgcGFyYW1ldGVyczoKPiBmd19hcmcwOiB0aGUgbnVtYmVyIG9mIGFyZ3VtZW50cyBpbiBj
-bWRsaW5lIChpLmUuLCBhcmdjKS4KPiBmd19hcmcxOiBzdHJ1Y3R1cmUgaG9sZHMgY21kbGluZSBz
-dWNoIGFzICJyb290PS9kZXYvc2RhMSBjb25zb2xlPXR0eSIKPiAgICAgICAgICAgKGkuZS4sIGFy
-Z3YpLgo+IGZ3X2FyZzI6IGVudmlyb25tZW50IChpLmUuLCBlbnZwLCBhZGRpdGlvbmFsIGJvb3Qg
-cGFyYW1ldGVycyBmcm9tIExFRkkpLgo+Cj4gTm9uLWJvb3QgQ1BVcyBkbyBub3QgbmVlZCBwYXJh
-bWV0ZXJzIGF0IG9uY2UuIFRoZXkgcXVlcnkgdGhlaXIgb3duIElQSQo+IG1haWxib3ggdG8gZ2V0
-IFBDLCBTUCBhbmQgR1AgaW4gYSBsb29wIHVudGlsIGJvb3QgQ1BVIGJyaW5ncyB0aGVtIHVwLgo+
-Cj4gbG9vbmdzb25fa2V4ZWNfcHJlcGFyZSgpOiBTZXR1cCBjbWRsaW5lIGZvciBrZXhlYy9rZHVt
-cC4gVGhlIGtleGVjL2tkdW1wCj4gY21kbGluZSBjb21lcyBmcm9tIGtleGVjJ3MgImFwcGVuZCIg
-b3B0aW9uIHN0cmluZy4gVGhpcyBzdHJ1Y3R1cmUgd2lsbAo+IGJlIHBhcnNlZCBpbiBmd19pbml0
-X2NtZGxpbmUoKSBvZiBhcmNoL21pcHMvZncvbGliL2NtZGxpbmUuYy4gQm90aCBpbWFnZQo+IC0+
-Y29udHJvbF9jb2RlX3BhZ2UgYW5kIHRoZSBjbWRsaW5lIG5lZWQgdG8gYmUgaW4gYSBzYWZlIG1l
-bW9yeSByZWdpb24KPiAobWVtb3J5IGFsbG9jYXRlZCBieSB0aGUgb2xkIGtlcm5lbCBtYXkgYmUg
-Y29ycnVwdGVkIGJ5IHRoZSBuZXcga2VybmVsKS4KPiBJbiBvcmRlciB0byBtYWludGFpbiBjb21w
-YXRpYmlsaXR5IGZvciB0aGUgb2xkIGZpcm13YXJlLCB0aGUgbG93IDJNQiBpcwo+IHJlc2VydmVy
-ZCBhbmQgc2FmZSBmb3IgTG9vbmdzb24uIFNvIGxldCBLRVhFQ19DVFJMX0NPREUgYW5kIEtFWEVD
-X0FSR1ZfCj4gQUREUiBiZSBoZXJlLiBMRUZJIHBhcmFtZXRlcnMgbWF5IGJlIGNvcnJ1cHRlZCBh
-dCBydW50aW1lLCBzbyBiYWNrdXAgaXQKPiBhdCBtaXBzX3JlYm9vdF9zZXR1cCgpLCBhbmQgdGhl
-biByZXN0b3JlIGl0IGF0IGxvb25nc29uX2tleGVjX3NodXRkb3duKCkKPiAvbG9vbmdzb25fY3Jh
-c2hfc2h1dGRvd24oKS4KPgo+IGxvb25nc29uX2tleGVjX3NodXRkb3duKCk6IFdha2UgdXAgYWxs
-IHByZXNlbnQgQ1BVcyBhbmQgbGV0IHRoZW0gZ28gdG8KPiByZWJvb3RfY29kZV9idWZmZXIuIFBh
-c3MgdGhlIGtleGVjIHBhcmFtZXRlcnMgdG8ga2V4ZWNfYXJncy4KPgo+IGxvb25nc29uX2NyYXNo
-X3NodXRkb3duKCk6IFBhc3MgdGhlIGtkdW1wIHBhcmFtZXRlcnMgdG8ga2V4ZWNfYXJncy4KPgo+
-IFRoZSBhc3NlbWJseSBwYXJ0IGluIGtleGVjX3NtcF93YWl0IHByb3ZpZGUgYSByb3V0aW5lIGFz
-IEJJT1MgZG9lcywgaW4KPiBvcmRlciB0byBrZWVwIHNlY29uZGFyeSBDUFVzIGluIGEgcXVlcnlp
-bmcgbG9vcC4KPgo+IENjOiBFcmljIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+
-IFNpZ25lZC1vZmYtYnk6IEh1YWNhaSBDaGVuIDxjaGVuaGNAbGVtb3RlLmNvbT4KPiBTaWduZWQt
-b2ZmLWJ5OiBKaW55YW5nIEhlIDxoZWppbnlhbmdAbG9vbmdzb24uY24+Cj4gU2lnbmVkLW9mZi1i
-eTogWW91bGluZyBUYW5nIDx0YW5neW91bGluZ0Bsb29uZ3Nvbi5jbj4KPiAtLS0KPiAgIGFyY2gv
-bWlwcy9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMgfCAgMjcgKysrKysrKysrCj4gICBhcmNoL21p
-cHMvbG9vbmdzb242NC9lbnYuYyAgICAgICAgIHwgICA3ICsrKwo+ICAgYXJjaC9taXBzL2xvb25n
-c29uNjQvcmVzZXQuYyAgICAgICB8IDExMSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrCj4gICBhcmNoL21pcHMvbG9vbmdzb242NC9zbXAuYyAgICAgICAgIHwgICA1ICsrCj4g
-ICA0IGZpbGVzIGNoYW5nZWQsIDE1MCBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJj
-aC9taXBzL2tlcm5lbC9yZWxvY2F0ZV9rZXJuZWwuUyBiL2FyY2gvbWlwcy9rZXJuZWwvcmVsb2Nh
-dGVfa2VybmVsLlMKPiBpbmRleCBhYzg3MDg5Li45MWIyOTMyIDEwMDY0NAo+IC0tLSBhL2FyY2gv
-bWlwcy9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMKPiArKysgYi9hcmNoL21pcHMva2VybmVsL3Jl
-bG9jYXRlX2tlcm5lbC5TCj4gQEAgLTEzMyw2ICsxMzMsMzMgQEAgTEVBRihrZXhlY19zbXBfd2Fp
-dCkKPiAgICNlbHNlCj4gICAJc3luYwo+ICAgI2VuZGlmCgpIaSBKaW5neWFuZywgSHVhY2FpLAoK
-VGhhbmtzIGEgbG90IGZvciB3aGF0IHlvdSBoYXZlIGRvbmUgb24gTG9vbmdzb242NCBzdXBwb3J0
-LgoKSnVzdCBhZGQgbXkgY2VudHMgaGVyZS4KCj4gKwo+ICsjaWZkZWYgQ09ORklHX0NQVV9MT09O
-R1NPTjY0Cj4gKyNkZWZpbmUgTUFJTEJPWF9CQVNFIDB4OTAwMDAwMDAzZmYwMTAwMAo+ICsJLyog
-czA6cHJpZCBzMTppbml0Zm4gKi8KPiArCS8qIHQwOmJhc2UgdDE6Y3B1aWQgdDI6bm9kZSB0OTpj
-b3VudCAqLwo+ICsJbWZjMCAgdDEsIENQMF9FQkFTRQo+ICsJYW5kaSAgdDEsIE1JUFNfRUJBU0Vf
-Q1BVTlVNCj4gKwlkbGkgICB0MCwgTUFJTEJPWF9CQVNFICAgIC8qIG1haWxib3ggYmFzZSAqLwo+
-ICsJZGlucyAgdDAsIHQxLCA4LCAyICAgICAgICAvKiBpbnNlcnQgY29yZSBpZCovCj4gKwlkZXh0
-ICB0MiwgdDEsIDIsIDIKPiArCWRpbnMgIHQwLCB0MiwgNDQsIDIgICAgICAgLyogaW5zZXJ0IG5v
-ZGUgaWQgKi8KPiArCW1mYzAgIHMwLCBDUDBfUFJJRAo+ICsJYW5kaSAgczAsIHMwLCAweGYKPiAr
-CWJsdCAgIHMwLCAweDYsIDFmICAgICAgICAgLyogTG9vbmdzb24tM0ExMDAwICovCj4gKwliZ3Qg
-ICBzMCwgMHg3LCAxZiAgICAgICAgIC8qIExvb25nc29uLTNBMjAwMC8zQTMwMDAgKi8KPiArCWRp
-bnMgIHQwLCB0MiwgMTQsIDIgICAgICAgLyogTG9vbmdzb24tM0IxMDAwLzNCMTUwMCBuZWVkIGJp
-dCAxNX4xNCAqLwo+ICsxOglsaSAgICB0OSwgMHgxMDAgICAgICAgICAgIC8qIHdhaXQgZm9yIGlu
-aXQgbG9vcCAqLwo+ICsyOglhZGRpdSB0OSwgLTEgICAgICAgICAgICAgIC8qIGxpbWl0IG1haWxi
-b3ggYWNjZXNzICovCj4gKwlibmV6ICB0OSwgMmIKPiArCWxkICAgIHMxLCAweDIwKHQwKSAgICAg
-ICAgLyogZ2V0IFBDIHZpYSBtYWlsYm94IHJlZzAgKi8KPiArCWJlcXogIHMxLCAxYgo+ICsJbGQg
-ICAgc3AsIDB4MjgodDApICAgICAgICAvKiBnZXQgU1AgdmlhIG1haWxib3ggcmVnMSAqLwo+ICsJ
-bGQgICAgZ3AsIDB4MzAodDApICAgICAgICAvKiBnZXQgR1AgdmlhIG1haWxib3ggcmVnMiAqLwo+
-ICsJbGQgICAgYTEsIDB4MzgodDApCj4gKwlqciAgICBzMSAgICAgICAgICAgICAgICAgIC8qIGp1
-bXAgdG8gaW5pdGlhbCBQQyAqLwo+ICsjZW5kaWYKPiArCgpJJ20ganVzdCBhIGxpdHRsZSBiaXQg
-dW5jb21mb3J0YWJsZSB3aXRoIHRoaXMga2luZCBvZiBoYXJkY29kZWQgYWRkcmVzcy4KSXMgaXQg
-cG9zc2libGUgdG8gZ2VuZXJhdGUga2V4ZWNfc21wX3dhaXQgd2l0aCB1YXNtLCBvciBwYXNzIHRo
-ZSBTTVAKYmFzZSBhcyBhIHBhcmFtZXRlciBvZiB0aGlzIGZ1bmN0aW9uPwoKQWxzbyBJIGRvIHRo
-aW5rIHdlIGNhbiBoYW5kbGUga2V4ZWNfZmxhZyBpbiBMb29uZ3NvbidzIHBsYXRmb3JtIFNNUCwK
-b3IgZXZlbiBnZW5lcmljIE1JUFMgU01QIGNvZGUganVzdCBsaWtlIHdoYXQgY2F2aXVtIGRpZCBz
-byB0aGlzIGtpbmQKb2YgcGxhdGZvcm0gcXVpcmsgY2FuIGJlIGF2b2lkZWQuCgo+ICAgCWoJCXMx
-Cj4gICAJRU5EKGtleGVjX3NtcF93YWl0KQo+ICAgI2VuZGlmCj4gZGlmZiAtLWdpdCBhL2FyY2gv
-bWlwcy9sb29uZ3NvbjY0L2Vudi5jIGIvYXJjaC9taXBzL2xvb25nc29uNjQvZW52LmMKPiBpbmRl
-eCAxMzRjYjhlLi5lOTM3ZjMxIDEwMDY0NAo+IC0tLSBhL2FyY2gvbWlwcy9sb29uZ3NvbjY0L2Vu
-di5jCj4gKysrIGIvYXJjaC9taXBzL2xvb25nc29uNjQvZW52LmMKPiBAQCAtMTIwLDYgKzEyMCwx
-MyBAQCB2b2lkIF9faW5pdCBwcm9tX2luaXRfZW52KHZvaWQpCj4gICAJbG9vbmdzb25fc3lzY29u
-Zi5ucl9jcHVzID0gZWNwdS0+bnJfY3B1czsKPiAgIAlsb29uZ3Nvbl9zeXNjb25mLmJvb3RfY3B1
-X2lkID0gZWNwdS0+Y3B1X3N0YXJ0dXBfY29yZV9pZDsKPiAgIAlsb29uZ3Nvbl9zeXNjb25mLnJl
-c2VydmVkX2NwdXNfbWFzayA9IGVjcHUtPnJlc2VydmVkX2NvcmVzX21hc2s7Cj4gKyNpZmRlZiBD
-T05GSUdfS0VYRUMKPiArCWxvb25nc29uX3N5c2NvbmYuYm9vdF9jcHVfaWQgPSBnZXRfZWJhc2Vf
-Y3B1bnVtKCk7Cj4gKwlsb29uZ3Nvbl9zeXNjb25mLnJlc2VydmVkX2NwdXNfbWFzayB8PQo+ICsJ
-CSgxIDw8IGxvb25nc29uX3N5c2NvbmYuYm9vdF9jcHVfaWQpIC0gMTsKPiArCXByX2luZm8oIkJv
-b3QgQ1BVIElEIGlzIGJlaW5nIGZpeGVkIGZyb20gJWQgdG8gJWRcbiIsCj4gKwkJZWNwdS0+Y3B1
-X3N0YXJ0dXBfY29yZV9pZCwgbG9vbmdzb25fc3lzY29uZi5ib290X2NwdV9pZCk7Cj4gKyNlbmRp
-ZgoKVGhpcyBjb3VsZCBiZSBkb25lIHVuY29uZGl0aW9uYWxseSBhbmQgc3BsaXQgdG8gYW5vdGhl
-ciBwYXRjaCwKIk1JUFM6IExvb25nc29uNjQ6IFF1aXJrIGluYWNjdXJhdGUgYm9vdGNvcmUgZnJv
-bSB0aGUgZmlybXdhcmUiCgo+ICAgCWlmIChlY3B1LT5ucl9jcHVzID4gTlJfQ1BVUyB8fCBlY3B1
-LT5ucl9jcHVzID09IDApCj4gICAJCWxvb25nc29uX3N5c2NvbmYubnJfY3B1cyA9IE5SX0NQVVM7
-Cj4gICAJbG9vbmdzb25fc3lzY29uZi5ucl9ub2RlcyA9IChsb29uZ3Nvbl9zeXNjb25mLm5yX2Nw
-dXMgKwo+IGRpZmYgLS1naXQgYS9hcmNoL21pcHMvbG9vbmdzb242NC9yZXNldC5jIGIvYXJjaC9t
-aXBzL2xvb25nc29uNjQvcmVzZXQuYwo+IGluZGV4IDNiYjhhMWUuLmIxZTcxZjM3IDEwMDY0NAo+
-IC0tLSBhL2FyY2gvbWlwcy9sb29uZ3NvbjY0L3Jlc2V0LmMKPiArKysgYi9hcmNoL21pcHMvbG9v
-bmdzb242NC9yZXNldC5jCj4gQEAgLTYsOSArNiwxNCBAQAo+ICAgICogQ29weXJpZ2h0IChDKSAy
-MDA5IExlbW90ZSwgSW5jLgo+ICAgICogQXV0aG9yOiBaaGFuZ2ppbiBXdSwgd3V6aGFuZ2ppbkBn
-bWFpbC5jb20KPiAgICAqLwo+ICsjaW5jbHVkZSA8bGludXgvY3B1Lmg+Cj4gKyNpbmNsdWRlIDxs
-aW51eC9kZWxheS5oPgo+ICAgI2luY2x1ZGUgPGxpbnV4L2luaXQuaD4KPiArI2luY2x1ZGUgPGxp
-bnV4L2tleGVjLmg+Cj4gICAjaW5jbHVkZSA8bGludXgvcG0uaD4KPiArI2luY2x1ZGUgPGxpbnV4
-L3NsYWIuaD4KPiAgIAo+ICsjaW5jbHVkZSA8YXNtL2Jvb3RpbmZvLmg+Cj4gICAjaW5jbHVkZSA8
-YXNtL2lkbGUuaD4KPiAgICNpbmNsdWRlIDxhc20vcmVib290Lmg+Cj4gICAKPiBAQCAtNDcsMTIg
-KzUyLDExOCBAQCBzdGF0aWMgdm9pZCBsb29uZ3Nvbl9oYWx0KHZvaWQpCj4gICAJfQo+ICAgfQo+
-ICAgCj4gKyNpZmRlZiBDT05GSUdfS0VYRUMKPiArCj4gKy8qIDBYODAwMDAwMDB+MFg4MDIwMDAw
-MCBpcyBzYWZlICovCj4gKyNkZWZpbmUgTUFYX0FSR1MJNjQKPiArI2RlZmluZSBLRVhFQ19DVFJM
-X0NPREUJMHhGRkZGRkZGRjgwMTAwMDAwVUwKPiArI2RlZmluZSBLRVhFQ19BUkdWX0FERFIJMHhG
-RkZGRkZGRjgwMTA4MDAwVUwKPiArI2RlZmluZSBLRVhFQ19BUkdWX1NJWkUJQ09NTUFORF9MSU5F
-X1NJWkUKPiArI2RlZmluZSBLRVhFQ19FTlZQX1NJWkUJNDgwMApJIHdvbid0IHNheSBpdCdzIHNh
-ZmUuCkxvb25nc29uLTJLJ3MgUE1PTiBtYXkgcGxhY2UgcmVib290IHZlY3RvciBoZXJlLCBhbHNv
-IHNvbWUKVUVGSSBmaXJtd2FyZSBtYXkgcGxhY2UgdGhlaXIgc3VzcGVuZCBzdGFjayBoZXJlLgpX
-aGF0IGlmIHdlIGFsbG9jYXRlIHRoZXNlIGJ1ZmZlciBhdCBydW50aW1lPwoKVGhhbmtzLgoKLSBK
-aWF4dW4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, Sep 23, 2020 at 10:43:29AM +0800, Dave Young wrote:
+> + more people who may care about this param 
+
+Paarty time!!
+
+(See below, didn't snip any comments)
+> On 09/21/20 at 08:45pm, Eric W. Biederman wrote:
+> > Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> writes:
+> > 
+> > > On Fri, Sep 18, 2020 at 05:47:43PM -0700, Andrew Morton wrote:
+> > >> On Fri, 18 Sep 2020 11:25:46 +0800 Dave Young <dyoung@redhat.com> wrote:
+> > >> 
+> > >> > crash_kexec_post_notifiers enables running various panic notifier
+> > >> > before kdump kernel booting. This increases risks of kdump failure.
+> > >> > It is well documented in kernel-parameters.txt. We do not suggest
+> > >> > people to enable it together with kdump unless he/she is really sure.
+> > >> > This is also not suggested to be enabled by default when users are
+> > >> > not aware in distributions.
+> > >> > 
+> > >> > But unfortunately it is enabled by default in systemd, see below
+> > >> > discussions in a systemd report, we can not convince systemd to change
+> > >> > it:
+> > >> > https://github.com/systemd/systemd/issues/16661
+> > >> > 
+> > >> > Actually we have got reports about kdump kernel hangs in both s390x
+> > >> > and powerpcle cases caused by the systemd change,  also some x86 cases
+> > >> > could also be caused by the same (although that is in Hyper-V code
+> > >> > instead of systemd, that need to be addressed separately).
+> > >
+> > > Perhaps it may be better to fix the issus on s390x and PowerPC as well?
+> > >
+> > >> > 
+> > >> > Thus to avoid the auto enablement here just disable the param writable
+> > >> > permission in sysfs.
+> > >> > 
+> > >> 
+> > >> Well.  I don't think this is at all a desirable way of resolving a
+> > >> disagreement with the systemd developers
+> > >> 
+> > >> At the above github address I'm seeing "ryncsn added a commit to
+> > >> ryncsn/systemd that referenced this issue 9 days ago", "pstore: don't
+> > >> enable crash_kexec_post_notifiers by default".  So didn't that address
+> > >> the issue?
+> > >
+> > > It does in systemd, but there is a strong interest in making this on
+> > > by default.
+> > 
+> > There is also a strong interest in removing this code entirely from the
+> > kernel.
+> 
+> Added Hyper-V people and people who created the param, it is below
+> commit, I also want to remove it if possible, let's see how people
+> think, but the least way should be to disable the auto setting in both systemd
+> and kernel:
+> 
+>     commit f06e5153f4ae2e2f3b0300f0e260e40cb7fefd45
+>     Author: Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>
+>     Date:   Fri Jun 6 14:37:07 2014 -0700
+>     
+>         kernel/panic.c: add "crash_kexec_post_notifiers" option for kdump after panic_notifers
+>     
+>         Add a "crash_kexec_post_notifiers" boot option to run kdump after
+>         running panic_notifiers and dump kmsg.  This can help rare situations
+>         where kdump fails because of unstable crashed kernel or hardware failure
+>         (memory corruption on critical data/code), or the 2nd kernel is already
+>         broken by the 1st kernel (it's a broken behavior, but who can guarantee
+>         that the "crashed" kernel works correctly?).
+>     
+>         Usage: add "crash_kexec_post_notifiers" to kernel boot option.
+>     
+>         Note that this actually increases risks of the failure of kdump.  This
+>         option should be set only if you worry about the rare case of kdump
+>         failure rather than increasing the chance of success.
+
+
+If this is such risky knob that leads to bugs where folks are backing away
+from with disgust in their faces - then perhaps the only way to go about
+this is - limit the exposure to known working situations on firmware
+that we can control?
+
+That is enable only a subset of post notifiers which determine if they
+are OK running if the conditions are blessed?
+
+I think that would satisfy the conditions where you have to to deal with unsavory
+bugs that end up on your plate - and aren't fun because there is no
+way to fixing it -  but at the same time allowing multiple ways to save the crash?
+
+Please don't take away something that is quite useful in the field. Can we
+hammer out something that will remove your pain points?
+> 
+> > 
+> > This failure is a case in point.
+> > 
+> > I think I am at my I told you so point.  This is what all of the testing
+> > over all the years has said.  Leaving functionality to the peculiarities
+> > of firmware when you don't have to, and can actually control what is
+> > going on doesn't work.
+> > 
+> > Eric
+> > 
+> > 
+> 
+> Thanks
+> Dave
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
