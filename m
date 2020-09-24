@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400083.outbound.protection.outlook.com
- ([40.107.140.83] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1400050.outbound.protection.outlook.com
+ ([40.107.140.50] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kLJS9-0003bU-6N
- for kexec@lists.infradead.org; Thu, 24 Sep 2020 05:05:58 +0000
+ id 1kLJjV-0005IX-NH
+ for kexec@lists.infradead.org; Thu, 24 Sep 2020 05:23:54 +0000
 From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
  <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v5 3/3] makedumpfile/arm64: Add support for ARMv8.2-LVA
- (52-bit kernel VA support)
-Date: Thu, 24 Sep 2020 05:05:45 +0000
-Message-ID: <OSBPR01MB199192C810AC846341D189B4DD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Subject: RE: [PATCH v5 0/3] makedumpfile/arm64: Add support for ARMv8.2
+ extensions
+Date: Thu, 24 Sep 2020 05:23:48 +0000
+Message-ID: <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 References: <20200910053305.323365-1-bhsharma@redhat.com>
- <20200910053305.323365-4-bhsharma@redhat.com>
-In-Reply-To: <20200910053305.323365-4-bhsharma@redhat.com>
+In-Reply-To: <20200910053305.323365-1-bhsharma@redhat.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -32,481 +31,129 @@ Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupe
 
 Hi Bhupesh,
 
-Thank you for the updated patch.
+sorry for my scattered comments.
 
------Original Message-----
-> With ARMv8.2-LVA architecture extension availability, arm64 hardware
-> which supports this extension can support upto 52-bit virtual
-> addresses. It is specially useful for having a 52-bit user-space virtual
-> address space while the kernel can still retain 48-bit/52-bit virtual
-> addressing.
-> 
-> Since at the moment we enable the support of this extension in the
-> kernel via a CONFIG flag (CONFIG_ARM64_VA_BITS_52), so there are
-> no clear mechanisms in user-space to determine this CONFIG
-> flag value and use it to determine the kernel-space VA address range
-> values.
-> 
-> 'makedumpfile' can instead use 'TCR_EL1.T1SZ' value from vmcoreinfo
-> which indicates the size offset of the memory region addressed by
-> TTBR1_EL1 (and hence can be used for determining the
-> vabits_actual value).
-> 
-> Using the vmcoreinfo variable exported by kernel commit
->  bbdbc11804ff ("arm64/crash_core: Export  TCR_EL1.T1SZ in vmcoreinfo"),
-> the user-space can use the following computation for determining whether
->  an address lies in the linear map range (for newer kernels >= 5.4):
-> 
->   #define __is_lm_address(addr)	(!(((u64)addr) & BIT(vabits_actual - 1)))
-> 
-> Note that for the --mem-usage case though we need to calculate
-> vabits_actual value before the vmcoreinfo read functionality is ready,
+As for 1/3 and 2/3, I think we can merge them separately with 3/3, right?
+so if you can ack the updated 1/3 I sent, I will merge them first.
+Could you check it?
 
-For this, can't we read the TCR_EL1.T1SZ from vmcoreinfo in /proc/kcore's
-ELF note?  I think we can use the common functions used to vmcore with it.
-
-I'll write a patch to do so if it sounds good.
-
-> so we can instead read the architecture register ID_AA64MMFR2_EL1
-> directly to see if the underlying hardware supports 52-bit addressing
-> and accordingly set vabits_actual as:
-> 
->    read_id_aa64mmfr2_el1();
->    if (hardware supports 52-bit addressing)
-> 	vabits_actual = 52;
->    else
-> 	vabits_actual = va_bits value calculated via _stext symbol;
-> 
-> Also make sure that the page_offset, is_linear_addr(addr) and __pa()
-> calculations work both for older (< 5.4) and newer kernels (>= 5.4).
-> 
-> I have tested several combinations with both kernel categories
-> [for e.g. with different VA (39, 42, 48 and 52-bit) and PA combinations
-> (48 and 52-bit)] on at-least 3 different boards.
-> 
-> Unfortunately, this means that we need to call 'populate_kernel_version()'
-> earlier 'get_page_offset_arm64()' as 'info->kernel_version' remains
-> uninitialized before its first use otherwise.
-
-The populate_kernel_version() uses uname(), so this means that there will
-be some cases that makedumpfile doesn't work with vmcores which were
-captured on other kernels than running one.  This is a rather big limitation
-especially to backward-compatibility test, and it would be better to
-avoid changing behavior depending on environment, not on data.
-
-Is there no room to avoid it?
-
-Just an idea, but can we use the OSRELEASE vmcoreinfo in ELF note first
-to determine the kernel version?  It's from init_uts_ns.name.release,
-why can't we use it?
+As for 3/3, you introduced a couple of new ways, so I'd like to discuss
+whether there is no better way a little more.
 
 Thanks,
 Kazu
 
+-----Original Message-----
+> Changes since v4:
+> ----------------
+> - v4 can be seen here:
+>   https://www.spinics.net/lists/kexec/msg23850.html
+> - Removed the patch (via [PATCH 4/4] in v3) which marked '--mem-usage'
+>   option as unsupported for arm64 architecture, as we now have a mechanism
+>   to read the 'vabits_actual' value from 'id_aa64mmfr2_el1' arm64 system
+>   architecture register. As per discussions with arm64 and gcc/binutils
+>   maintainers it turns out there is no standard ABI available between
+>   the kernel and user-space to export this value early enough to be used
+>   for page_offset calculation in the --mem-usage case. So, the next best
+>   option is to have the user-space read the system register to determine
+>   underlying hardware support for larger (52-bit) addressing support.
 > 
-> This patch is in accordance with ARMv8 Architecture Reference Manual
+>   This allows us to keep supporting '--mem-usage' option on arm64 even
+>   on newer kernels (with flipped VA space).
 > 
-> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> Changes since v3:
+> ----------------
+> - v3 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-March/022534.html
+> - Added a new patch (via [PATCH 4/4]) which marks '--mem-usage' option as
+>   unsupported for arm64 architecture. With the newer arm64 kernels
+>   supporting 48-bit/52-bit VA address spaces and keeping a single
+>   binary for supporting the same, the address of
+>   kernel symbols like _stext, which could be earlier used to determine
+>   VA_BITS value, can no longer to determine whether VA_BITS is set to 48
+>   or 52 in the kernel space. Hence for now, it makes sense to mark
+>   '--mem-usage' option as unsupported for arm64 architecture until
+>   we have more clarity from arm64 kernel maintainers on how to manage
+>   the same in future kernel/makedumpfile versions.
+> 
+> Changes since v2:
+> ----------------
+> - v2 can be seen here:
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
+> - I missed some comments from Kazu sent on the LVA v1 patch when I sent
+>   out the v2. So, addressing them now in v3.
+> - Also added a patch that adds a tree-wide feature to read
+>   'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
+> 
+> Changes since v1:
+> ----------------
+> - v1 was sent as two separate patches:
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
+>   (ARMv8.2-LPA)
+>   http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+>   (ARMv8.2-LVA)
+> - v2 combined the two in a single patchset and also addresses Kazu's
+>   review comments.
+> 
+> This patchset adds support for ARMv8.2 extensions in makedumpfile code.
+> I cover the following cases with this patchset:
+> - Both old (<5.4) and new kernels (>= 5.4) work well.
+> - All VA and PA bit combinations currently supported via the kernel
+>   CONFIG options work well, including:
+>  - 48-bit kernel VA + 52-bit PA (LPA)
+>  - 52-bit kernel VA (LVA) + 52-bit PA (LPA)
+> 
+> This has been tested for the following user-cases:
+> 1. Analysing page information via '--mem-usage' option.
+> 2. Creating a dumpfile using /proc/vmcore,
+> 3. Creating a dumpfile using /proc/kcore, and
+> 4. Post-processing a vmcore.
+> 
+> I have tested this patchset on the following platforms, with kernels
+> which support/do-not-support ARMv8.2 features:
+> 1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
+>    ampere-osprey.
+> 2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
+>    simulation model).
+> 
+> Also a preparation patch has been added in this patchset which adds a
+> common feature for archs (except arm64, for which similar support is
+> added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
+> vmcoreinfo (if available).
+> 
+> This patchset ensures backward compatibility for kernel versions in
+> which 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' are not available in
+> vmcoreinfo.
+> 
+> In the newer kernels (>= 5.4.0) the following patches export these
+> variables in the vmcoreinfo:
+>  - 1d50e5d0c505 ("crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo")
+>  - bbdbc11804ff ("arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo")
+> 
 > Cc: John Donnelly <john.p.donnelly@oracle.com>
+> Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
 > Cc: kexec@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  arch/arm64.c   | 233 ++++++++++++++++++++++++++++++++++++++++++-------
->  common.h       |  10 +++
+> 
+> Bhupesh Sharma (3):
+>   tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
+>   makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
+>   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
+>     support)
+> 
+>  arch/arm.c     |   8 +-
+>  arch/arm64.c   | 520 ++++++++++++++++++++++++++++++++++++++-----------
+>  arch/ia64.c    |   7 +-
+>  arch/ppc.c     |   8 +-
+>  arch/ppc64.c   |  49 +++--
+>  arch/s390x.c   |  29 +--
+>  arch/sparc64.c |   9 +-
+>  arch/x86.c     |  34 ++--
+>  arch/x86_64.c  |  27 +--
+>  common.h       |  10 +
 >  makedumpfile.c |   4 +-
 >  makedumpfile.h |   6 +-
->  4 files changed, 218 insertions(+), 35 deletions(-)
+>  12 files changed, 529 insertions(+), 182 deletions(-)
 > 
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index 709e0a506916..ccaa8641ca66 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -19,10 +19,23 @@
-> 
->  #ifdef __aarch64__
-> 
-> +#include <asm/hwcap.h>
-> +#include <sys/auxv.h>
->  #include "../elf_info.h"
->  #include "../makedumpfile.h"
->  #include "../print_info.h"
-> 
-> +/* ID_AA64MMFR2_EL1 related helpers: */
-> +#define ID_AA64MMFR2_LVA_SHIFT	16
-> +#define ID_AA64MMFR2_LVA_MASK	(0xf << ID_AA64MMFR2_LVA_SHIFT)
-> +
-> +/* CPU feature ID registers */
-> +#define get_cpu_ftr(id) ({							\
-> +		unsigned long __val;						\
-> +		asm volatile("mrs %0, " __stringify(id) : "=r" (__val));	\
-> +		__val;								\
-> +})
-> +
->  typedef struct {
->  	unsigned long pgd;
->  } pgd_t;
-> @@ -47,6 +60,7 @@ typedef struct {
->  static int lpa_52_bit_support_available;
->  static int pgtable_level;
->  static int va_bits;
-> +static int vabits_actual;
->  static unsigned long kimage_voffset;
-> 
->  #define SZ_4K			4096
-> @@ -58,7 +72,6 @@ static unsigned long kimage_voffset;
->  #define PAGE_OFFSET_42		((0xffffffffffffffffUL) << 42)
->  #define PAGE_OFFSET_47		((0xffffffffffffffffUL) << 47)
->  #define PAGE_OFFSET_48		((0xffffffffffffffffUL) << 48)
-> -#define PAGE_OFFSET_52		((0xffffffffffffffffUL) << 52)
-> 
->  #define pgd_val(x)		((x).pgd)
->  #define pud_val(x)		(pgd_val((x).pgd))
-> @@ -219,13 +232,25 @@ pmd_page_paddr(pmd_t pmd)
->  #define pte_index(vaddr) 		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
->  #define pte_offset(dir, vaddr) 		(pmd_page_paddr((*dir)) + pte_index(vaddr) * sizeof(pte_t))
-> 
-> +/*
-> + * The linear kernel range starts at the bottom of the virtual address
-> + * space. Testing the top bit for the start of the region is a
-> + * sufficient check and avoids having to worry about the tag.
-> + */
-> +#define is_linear_addr(addr)	((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
-> +	(!!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))) : \
-> +	(!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))))
-> +
->  static unsigned long long
->  __pa(unsigned long vaddr)
->  {
->  	if (kimage_voffset == NOT_FOUND_NUMBER ||
-> -			(vaddr >= PAGE_OFFSET))
-> -		return (vaddr - PAGE_OFFSET + info->phys_base);
-> -	else
-> +			is_linear_addr(vaddr)) {
-> +		if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
-> +			return ((vaddr & ~PAGE_OFFSET) + info->phys_base);
-> +		else
-> +			return (vaddr + info->phys_base - PAGE_OFFSET);
-> +	} else
->  		return (vaddr - kimage_voffset);
->  }
-> 
-> @@ -254,6 +279,7 @@ static int calculate_plat_config(void)
->  			(PAGESIZE() == SZ_64K && va_bits == 42)) {
->  		pgtable_level = 2;
->  	} else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
-> +			(PAGESIZE() == SZ_64K && va_bits == 52) ||
->  			(PAGESIZE() == SZ_4K && va_bits == 39) ||
->  			(PAGESIZE() == SZ_16K && va_bits == 47)) {
->  		pgtable_level = 3;
-> @@ -288,8 +314,14 @@ get_phys_base_arm64(void)
->  		return TRUE;
->  	}
-> 
-> +	/* Ignore the 1st PT_LOAD */
->  	if (get_num_pt_loads() && PAGE_OFFSET) {
-> -		for (i = 0;
-> +		/* Note that the following loop starts with i = 1.
-> +		 * This is required to make sure that the following logic
-> +		 * works both for old and newer kernels (with flipped
-> +		 * VA space, i.e. >= 5.4.0)
-> +		 */
-> +		for (i = 1;
->  		    get_pt_load(i, &phys_start, NULL, &virt_start, NULL);
->  		    i++) {
->  			if (virt_start != NOT_KV_ADDR
-> @@ -346,6 +378,139 @@ get_stext_symbol(void)
->  	return(found ? kallsym : FALSE);
->  }
-> 
-> +static int
-> +get_va_bits_from_stext_arm64(void)
-> +{
-> +	ulong _stext;
-> +
-> +	_stext = get_stext_symbol();
-> +	if (!_stext) {
-> +		ERRMSG("Can't get the symbol of _stext.\n");
-> +		return FALSE;
-> +	}
-> +
-> +	/* Derive va_bits as per arch/arm64/Kconfig. Note that this is a
-> +	 * best case approximation at the moment, as there can be
-> +	 * inconsistencies in this calculation (for e.g., for
-> +	 * 52-bit kernel VA case, the 48th bit is set in
-> +	 * the _stext symbol).
-> +	 *
-> +	 * So, we need to rely on the vabits_actual symbol in the
-> +	 * vmcoreinfo or read via system register for a accurate value
-> +	 * of the virtual addressing supported by the underlying kernel.
-> +	 */
-> +	if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
-> +		va_bits = 48;
-> +	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
-> +		va_bits = 47;
-> +	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-> +		va_bits = 42;
-> +	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
-> +		va_bits = 39;
-> +	} else if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
-> +		va_bits = 36;
-> +	} else {
-> +		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
-> +		return FALSE;
-> +	}
-> +
-> +	DEBUG_MSG("va_bits       : %d (approximation via _stext)\n", va_bits);
-> +
-> +	return TRUE;
-> +}
-> +
-> +/* Note that its important to note that the
-> + * ID_AA64MMFR2_EL1 architecture register can be read
-> + * only when we give an .arch hint to the gcc/binutils,
-> + * so we use the gcc construct '__attribute__ ((target ("arch=armv8.2-a")))'
-> + * here which is an .arch directive (see AArch64-Target-selection-directives
-> + * documentation from ARM for details). This is required only for
-> + * this function to make sure it compiles well with gcc/binutils.
-> + */
-> +__attribute__ ((target ("arch=armv8.2-a")))
-> +static unsigned long
-> +read_id_aa64mmfr2_el1(void)
-> +{
-> +	return get_cpu_ftr(ID_AA64MMFR2_EL1);
-> +}
-> +
-> +static int
-> +get_vabits_actual_from_id_aa64mmfr2_el1(void)
-> +{
-> +	int l_vabits_actual;
-> +	unsigned long val;
-> +
-> +	/* Check if ID_AA64MMFR2_EL1 CPU-ID register indicates
-> +	 * ARMv8.2/LVA support:
-> +	 * VARange, bits [19:16]
-> +	 *   From ARMv8.2:
-> +	 *   Indicates support for a larger virtual address.
-> +	 *   Defined values are:
-> +	 *     0b0000 VMSAv8-64 supports 48-bit VAs.
-> +	 *     0b0001 VMSAv8-64 supports 52-bit VAs when using the 64KB
-> +	 *            page size. The other translation granules support
-> +	 *            48-bit VAs.
-> +	 *
-> +	 * See ARMv8 ARM for more details.
-> +	 */
-> +	if (!(getauxval(AT_HWCAP) & HWCAP_CPUID)) {
-> +		ERRMSG("arm64 CPUID registers unavailable.\n");
-> +		return ERROR;
-> +	}
-> +
-> +	val = read_id_aa64mmfr2_el1();
-> +	val = (val & ID_AA64MMFR2_LVA_MASK) > ID_AA64MMFR2_LVA_SHIFT;
-> +
-> +	if ((val == 0x1) && (PAGESIZE() == SZ_64K))
-> +		l_vabits_actual = 52;
-> +	else
-> +		l_vabits_actual = 48;
-> +
-> +	return l_vabits_actual;
-> +}
-> +
-> +static void
-> +get_page_offset_arm64(void)
-> +{
-> +	/* Check if 'vabits_actual' is initialized yet.
-> +	 * If not, our best bet is to read ID_AA64MMFR2_EL1 CPU-ID
-> +	 * register.
-> +	 */
-> +	if (!vabits_actual) {
-> +		vabits_actual = get_vabits_actual_from_id_aa64mmfr2_el1();
-> +		if ((vabits_actual == ERROR) || (vabits_actual != 52)) {
-> +			/* If we cannot read ID_AA64MMFR2_EL1 arch
-> +			 * register or if this register does not indicate
-> +			 * support for a larger virtual address, our last
-> +			 * option is to use the VA_BITS to calculate the
-> +			 * PAGE_OFFSET value, i.e. vabits_actual = VA_BITS.
-> +			 */
-> +			vabits_actual = va_bits;
-> +			DEBUG_MSG("vabits_actual : %d (approximation via va_bits)\n",
-> +					vabits_actual);
-> +		} else
-> +			DEBUG_MSG("vabits_actual : %d (via id_aa64mmfr2_el1)\n",
-> +					vabits_actual);
-> +	}
-> +
-> +	if (!populate_kernel_version()) {
-> +		ERRMSG("Cannot get information about current kernel\n");
-> +		return;
-> +	}
-> +
-> +	/* See arch/arm64/include/asm/memory.h for more details of
-> +	 * the PAGE_OFFSET calculation.
-> +	 */
-> +	if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
-> +		info->page_offset = ((0xffffffffffffffffUL) -
-> +				((1UL) << (vabits_actual - 1)) + 1);
-> +	else
-> +		info->page_offset = (-(1UL << vabits_actual));
-> +
-> +	DEBUG_MSG("page_offset   : %lx (via vabits_actual)\n",
-> +			info->page_offset);
-> +}
-> +
->  int
->  get_machdep_info_arm64(void)
->  {
-> @@ -360,8 +525,33 @@ get_machdep_info_arm64(void)
->  	/* Check if va_bits is still not initialized. If still 0, call
->  	 * get_versiondep_info() to initialize the same.
->  	 */
-> +	if (NUMBER(VA_BITS) != NOT_FOUND_NUMBER) {
-> +		va_bits = NUMBER(VA_BITS);
-> +		DEBUG_MSG("va_bits       : %d (vmcoreinfo)\n",
-> +				va_bits);
-> +	}
-> +
-> +	/* Check if va_bits is still not initialized. If still 0, call
-> +	 * get_versiondep_info() to initialize the same from _stext
-> +	 * symbol.
-> +	 */
->  	if (!va_bits)
-> -		get_versiondep_info_arm64();
-> +		if (get_va_bits_from_stext_arm64() == FALSE)
-> +			return FALSE;
-> +
-> +	/* See TCR_EL1, Translation Control Register (EL1) register
-> +	 * description in the ARMv8 Architecture Reference Manual.
-> +	 * Basically, we can use the TCR_EL1.T1SZ
-> +	 * value to determine the virtual addressing range supported
-> +	 * in the kernel-space (i.e. vabits_actual).
-> +	 */
-> +	if (NUMBER(TCR_EL1_T1SZ) != NOT_FOUND_NUMBER) {
-> +		vabits_actual = 64 - NUMBER(TCR_EL1_T1SZ);
-> +		DEBUG_MSG("vabits_actual : %d (vmcoreinfo)\n",
-> +				vabits_actual);
-> +	}
-> +
-> +	get_page_offset_arm64();
-> 
->  	if (!calculate_plat_config()) {
->  		ERRMSG("Can't determine platform config values\n");
-> @@ -399,34 +589,11 @@ get_xen_info_arm64(void)
->  int
->  get_versiondep_info_arm64(void)
->  {
-> -	ulong _stext;
-> -
-> -	_stext = get_stext_symbol();
-> -	if (!_stext) {
-> -		ERRMSG("Can't get the symbol of _stext.\n");
-> -		return FALSE;
-> -	}
-> -
-> -	/* Derive va_bits as per arch/arm64/Kconfig */
-> -	if ((_stext & PAGE_OFFSET_36) == PAGE_OFFSET_36) {
-> -		va_bits = 36;
-> -	} else if ((_stext & PAGE_OFFSET_39) == PAGE_OFFSET_39) {
-> -		va_bits = 39;
-> -	} else if ((_stext & PAGE_OFFSET_42) == PAGE_OFFSET_42) {
-> -		va_bits = 42;
-> -	} else if ((_stext & PAGE_OFFSET_47) == PAGE_OFFSET_47) {
-> -		va_bits = 47;
-> -	} else if ((_stext & PAGE_OFFSET_48) == PAGE_OFFSET_48) {
-> -		va_bits = 48;
-> -	} else {
-> -		ERRMSG("Cannot find a proper _stext for calculating VA_BITS\n");
-> -		return FALSE;
-> -	}
-> -
-> -	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> +	if (!va_bits)
-> +		if (get_va_bits_from_stext_arm64() == FALSE)
-> +			return FALSE;
-> 
-> -	DEBUG_MSG("va_bits      : %d\n", va_bits);
-> -	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
-> +	get_page_offset_arm64();
-> 
->  	return TRUE;
->  }
-> diff --git a/common.h b/common.h
-> index 6e2f657a79c7..1901df195e9d 100644
-> --- a/common.h
-> +++ b/common.h
-> @@ -50,5 +50,15 @@
->  #define NOT_PADDR	(ULONGLONG_MAX)
->  #define BADADDR  	((ulong)(-1))
-> 
-> +/* Indirect stringification.  Doing two levels allows the parameter to be a
-> + * macro itself.  For example, compile with -DFOO=bar, __stringify(FOO)
-> + * converts to "bar".
-> + *
-> + * Copied from linux source: 'include/linux/stringify.h'
-> + */
-> +
-> +#define __stringify_1(x...)	#x
-> +#define __stringify(x...)	__stringify_1(x)
-> +
->  #endif  /* COMMON_H */
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 4c4251ea8719..5ab82fd3cf14 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -1133,7 +1133,7 @@ fallback_to_current_page_size(void)
->  	return TRUE;
->  }
-> 
-> -static int populate_kernel_version(void)
-> +int populate_kernel_version(void)
->  {
->  	struct utsname utsname;
-> 
-> @@ -2323,6 +2323,7 @@ write_vmcoreinfo_data(void)
->  	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
->  #ifdef __aarch64__
->  	WRITE_NUMBER("VA_BITS", VA_BITS);
-> +	WRITE_NUMBER_UNSIGNED("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
->  	WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
->  	WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
->  #endif
-> @@ -2729,6 +2730,7 @@ read_vmcoreinfo(void)
->  	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
->  #ifdef __aarch64__
->  	READ_NUMBER("VA_BITS", VA_BITS);
-> +	READ_NUMBER_UNSIGNED("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
->  	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
->  	READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
->  #endif
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 03fb4ce06872..dc65f002bad6 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -974,7 +974,9 @@ unsigned long long vaddr_to_paddr_arm64(unsigned long vaddr);
->  int get_versiondep_info_arm64(void);
->  int get_xen_basic_info_arm64(void);
->  int get_xen_info_arm64(void);
-> -#define paddr_to_vaddr_arm64(X) (((X) - info->phys_base) | PAGE_OFFSET)
-> +#define paddr_to_vaddr_arm64(X) ((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
-> +				 ((X) - (info->phys_base - PAGE_OFFSET)) :		\
-> +				 (((X) - info->phys_base) | PAGE_OFFSET))
-> 
->  #define find_vmemmap()		stub_false()
->  #define vaddr_to_paddr(X)	vaddr_to_paddr_arm64(X)
-> @@ -1938,6 +1940,7 @@ struct number_table {
->  	long	KERNEL_IMAGE_SIZE;
->  #ifdef __aarch64__
->  	long 	VA_BITS;
-> +	unsigned long	TCR_EL1_T1SZ;
->  	unsigned long	PHYS_OFFSET;
->  	unsigned long	kimage_voffset;
->  #endif
-> @@ -2389,5 +2392,6 @@ ulong htol(char *s, int flags);
->  int hexadecimal(char *s, int count);
->  int decimal(char *s, int count);
->  int file_exists(char *file);
-> +int populate_kernel_version(void);
-> 
->  #endif /* MAKEDUMPFILE_H */
 > --
 > 2.26.2
 
