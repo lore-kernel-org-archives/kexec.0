@@ -1,25 +1,23 @@
-Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2120.oracle.com ([141.146.126.78])
+Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
+Received: from mailout1.w1.samsung.com ([210.118.77.11])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kLp7x-0000iE-8L
- for kexec@lists.infradead.org; Fri, 25 Sep 2020 14:55:14 +0000
-Date: Fri, 25 Sep 2020 10:56:25 -0400
-From: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Subject: Re: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
-Message-ID: <20200925145625.GH30019@char.us.oracle.com>
-References: <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
- <20200921201811.GB3437@char.us.oracle.com>
- <87v9g6fuub.fsf@x220.int.ebiederm.org>
- <20200923024329.GB3642@dhcp-128-65.nay.redhat.com>
- <20200923154825.GC7635@char.us.oracle.com>
- <MW2PR2101MB10521373DD95F5AF014254DDD7390@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <874knndtvo.fsf@x220.int.ebiederm.org>
- <MW2PR2101MB1052ED1C8953135A58276F04D7390@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <4f964490-7464-0071-db38-4b16d665503e@oracle.com>
- <20200925030558.GA3446@dhcp-128-65.nay.redhat.com>
+ id 1kLt58-00009Q-2p
+ for kexec@lists.infradead.org; Fri, 25 Sep 2020 19:08:35 +0000
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+ by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id
+ 20200925190831euoutp01922c59738e2f604f3e5d36f4ae813122~4HGqE3Se92682526825euoutp01_
+ for <kexec@lists.infradead.org>; Fri, 25 Sep 2020 19:08:31 +0000 (GMT)
+Subject: Re: [PATCH printk v5 6/6] printk: reimplement log_cont using record
+ extension
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Message-ID: <f1651593-3579-5820-6863-5f4973d2bfdc@samsung.com>
+Date: Fri, 25 Sep 2020 21:08:28 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20200925030558.GA3446@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20200914123354.832-7-john.ogness@linutronix.de>
+Content-Language: en-US
+References: <20200914123354.832-1-john.ogness@linutronix.de>
+ <20200914123354.832-7-john.ogness@linutronix.de>
+ <CGME20200925190829eucas1p2f35866317389cd5e842e99b465632902@eucas1p2.samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,93 +26,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: Wei Liu <wei.liu@kernel.org>, Tianyu Lan <Tianyu.Lan@microsoft.com>, "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Kelley <mikelley@microsoft.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, boris.ostrovsky@oracle.com, Eric DeVolder <eric.devolder@oracle.com>, Andrew Morton <akpm@linux-foundation.org>
+Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+To: John Ogness <john.ogness@linutronix.de>, Petr Mladek <pmladek@suse.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri, Sep 25, 2020 at 11:05:58AM +0800, Dave Young wrote:
-> Hi,
-> 
-> On 09/24/20 at 01:16pm, boris.ostrovsky@oracle.com wrote:
-> > 
-> > On 9/24/20 12:43 PM, Michael Kelley wrote:
-> > > From: Eric W. Biederman <ebiederm@xmission.com> Sent: Thursday, September 24, 2020 9:26 AM
-> > >> Michael Kelley <mikelley@microsoft.com> writes:
-> > >>
-> > >>>>> Added Hyper-V people and people who created the param, it is below
-> > >>>>> commit, I also want to remove it if possible, let's see how people
-> > >>>>> think, but the least way should be to disable the auto setting in both systemd
-> > >>>>> and kernel:
-> > >>> Hyper-V uses a notifier to inform the host system that a Linux VM has
-> > >>> panic'ed.  Informing the host is particularly important in a public cloud
-> > >>> such as Azure so that the cloud software can alert the customer, and can
-> > >>> track cloud-wide reliability statistics.   Whether a kdump is taken is controlled
-> > >>> entirely by the customer and how he configures the VM, and we want
-> > >>> the host to be informed either way.
-> > >> Why?
-> > >>
-> > >> Why does the host care?
-> > >> Especially if the VM continues executing into a kdump kernel?
-> > > The host itself doesn't care.  But the host is a convenient out-of-band
-> > > channel for recording that a panic has occurred and to collect basic data
-> > > about the panic.  This out-of-band channel is then used to notify the end
-> > > customer that his VM has panic'ed.  Sure, the customer should be running
-> > > his own monitoring software, but customers don't always do what they
-> > > should.  Equally important, the out-of-band channel allows the cloud
-> > > infrastructure software to notice trends, such as that the rate of Linux
-> > > panics has increased, and that perhaps there is a cloud problem that
-> > > should be investigated.
-> > 
-> > 
-> > In many cases (especially in cloud environment) your dump device is remote (e.g. iscsi) and kdump sometimes (often?) gets stuck because of connectivity issues (which could be cause of the panic in the first place). So it is quite desirable to inform the infrastructure that the VM is on its way out without waiting for kdump to complete.
-> 
-> That can probably be done in kdump kernel if it is really needed.  Say
-> informing host that panic happened and a kdump kernel is runnning.
-
-If kdump kernel gets to that point. Sometimes (sadly) it ends up being
-misconfigured and it chokes up - and hence having multiple ways to emit
-the crash information before running kdump kernel is a life-saver.
-
-> 
-> But I think to set crash_kexec_post_notifiers by default is still bad. 
-
-Because of the way it is run today I presume? If there was some
-safe/unsafe policy that should work right? I would think that the
-safe ones that work properly all the time are:
-
- - HyperV CRASH_MSRs,
- - KVM PVPANIC_[PANIC,CRASHLOAD] push button knob,
- - pstore EFI variables
- - Dumping in memory,
-
-And then some that depend on firmware version (aka BIOS, and vendor) are:
- - ACPI ERST,
-
-And then the unsafe:
- - s390, PowerPC (I don't actually know what they are but that
-    was Dave's primary motivator).
-
-> 
-> > 
-> > 
-> > >
-> > >> Further like I have mentioned everytime something like this has come up
-> > >> a call on the kexec on panic code path should be a direct call (That can
-> > >> be audited) not something hidden in a notifier call chain (which can not).
-> > >>
-> > 
-> > We btw already have a direct call from panic() to kmsg_dump() which is indirectly controlled by crash_kexec_post_notifiers, and it would also be preferable to be able to call it before kdump as well.
-> 
-> Right, that is the same thing we are talking about.
-> 
-> Thanks
-> Dave
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgSm9obiwKCk9uIDE0LjA5LjIwMjAgMTQ6MzMsIEpvaG4gT2duZXNzIHdyb3RlOgo+IFVzZSB0
+aGUgcmVjb3JkIGV4dGVuZGluZyBmZWF0dXJlIG9mIHRoZSByaW5nYnVmZmVyIHRvIGltcGxlbWVu
+dAo+IGNvbnRpbnVvdXMgbWVzc2FnZXMuIFRoaXMgcHJlc2VydmVzIHRoZSBleGlzdGluZyBjb250
+aW51b3VzIG1lc3NhZ2UKPiBiZWhhdmlvci4KPgo+IFNpZ25lZC1vZmYtYnk6IEpvaG4gT2duZXNz
+IDxqb2huLm9nbmVzc0BsaW51dHJvbml4LmRlPgo+IFJldmlld2VkLWJ5OiBQZXRyIE1sYWRlayA8
+cG1sYWRla0BzdXNlLmNvbT4KClRoaXMgcGF0Y2ggbGFuZGVkIHJlY2VudGx5IGluIGxpbnV4LW5l
+eHQgYXMgY29tbWl0IGY1ZjAyMmU1M2I4NyAKKCJwcmludGs6IHJlaW1wbGVtZW50IGxvZ19jb250
+IHVzaW5nIHJlY29yZCBleHRlbnNpb24iKS4gSSd2ZSBub3RpY2VkIAp0aGF0IGl0IGNhdXNlcyBh
+IHJlZ3Jlc3Npb24gb24gbXkgdGVzdCBzeXN0ZW0gKEFSTSAzMmJpdCBTYW1zdW5nIEV4eW5vcyAK
+NDQxMi1iYXNlZCBUcmF0czIgYm9hcmQpLiBUaGUgbWVzc2FnZXMgYXJlIHByaW50ZWQgY29ycmVj
+dGx5IG9uIHRoZSAKc2VyaWFsIGNvbnNvbGUgZHVyaW5nIGJvb3QsIGJ1dCB0aGVuIHdoZW4gSSBy
+dW4gJ2RtZXNnJyBjb21tYW5kLCB0aGUgbG9nIAppcyB0cnVuY2F0ZWQuCgpIZXJlIGlzIGFyZSB0
+aGUgbGFzdCBsaW5lcyBvZiB0aGUgZG1lc2cgbG9nIGFmdGVyIHRoaXMgcGF0Y2g6CgpbwqDCoMKg
+IDYuNjQ5MDE4XSBXYWl0aW5nIDIgc2VjIGJlZm9yZSBtb3VudGluZyByb290IGRldmljZS4uLgpb
+wqDCoMKgIDYuNzY2NDIzXSBkd2MyIDEyNDgwMDAwLmhzb3RnOiBuZXcgZGV2aWNlIGlzIGhpZ2gt
+c3BlZWQKW8KgwqDCoCA2Ljg0NTI5MF0gZHdjMiAxMjQ4MDAwMC5oc290ZzogbmV3IGRldmljZSBp
+cyBoaWdoLXNwZWVkClvCoMKgwqAgNi45MTQyMTddIGR3YzIgMTI0ODAwMDAuaHNvdGc6IG5ldyBh
+ZGRyZXNzIDUxClvCoMKgwqAgOC43MTAzNTFdIFJBTURJU0s6IHNxdWFzaGZzIGZpbGVzeXN0ZW0g
+Zm91bmQgYXQgYmxvY2sgMAoKVGhlIGNvcnJlc3BvbmRpbmcgZG1lc2cgbGluZXMgYmVmb3JlIGFw
+cGx5aW5nIHRoaXMgcGF0Y2g6CgpbwqDCoMKgIDguODY0MzIwXSBSQU1ESVNLOiBzcXVhc2hmcyBm
+aWxlc3lzdGVtIGZvdW5kIGF0IGJsb2NrIDAKW8KgwqDCoCA4Ljg2ODQxMF0gUkFNRElTSzogTG9h
+ZGluZyAzNzY5MktpQiBbMSBkaXNrXSBpbnRvIHJhbSBkaXNrLi4uIC8KW8KgwqDCoCA5LjA3MTY3
+MF0gLwpbwqDCoMKgIDkuMjYyNDk4XSAvClvCoMKgwqAgOS41NDA3MTFdIC8KW8KgwqDCoCA5Ljgx
+ODAzMV0gZG9uZS4KW8KgwqAgMTAuNjYwMDc0XSBWRlM6IE1vdW50ZWQgcm9vdCAoc3F1YXNoZnMg
+ZmlsZXN5c3RlbSkgcmVhZG9ubHkgb24gCmRldmljZSAxOjAuClvCoMKgIDEwLjczOTUyNV0gRVhU
+NC1mcyAobW1jYmxrMHAxKTogSU5GTzogcmVjb3ZlcnkgcmVxdWlyZWQgb24gcmVhZG9ubHkgCmZp
+bGVzeXN0ZW0KW8KgwqAgMTAuNzQ1MzQ3XSBFWFQ0LWZzIChtbWNibGswcDEpOiB3cml0ZSBhY2Nl
+c3Mgd2lsbCBiZSBlbmFibGVkIGR1cmluZyAKcmVjb3ZlcnkKW8KgwqAgMTAuODYxMTI5XSBFWFQ0
+LWZzIChtbWNibGswcDEpOiByZWNvdmVyeSBjb21wbGV0ZQpbwqDCoCAxMC44NzgxNTBdIEVYVDQt
+ZnMgKG1tY2JsazBwMSk6IG1vdW50ZWQgZmlsZXN5c3RlbSB3aXRoIG9yZGVyZWQgZGF0YSAKbW9k
+ZS4gT3B0czogKG51bGwpClvCoMKgIDEwLjg4MTgxMV0gVkZTOiBNb3VudGVkIHJvb3QgKGV4dDQg
+ZmlsZXN5c3RlbSkgcmVhZG9ubHkgb24gZGV2aWNlIAoxNzk6NDkuClvCoMKgIDEwLjg4OTg1OF0g
+VHJ5aW5nIHRvIG1vdmUgb2xkIHJvb3QgdG8gL2luaXRyZCAuLi4KW8KgwqAgMTAuODk1MTkyXSBv
+a2F5ClvCoMKgIDEwLjkxNDQxMV0gZGV2dG1wZnM6IG1vdW50ZWQKW8KgwqAgMTAuOTI1MDg3XSBG
+cmVlaW5nIHVudXNlZCBrZXJuZWwgbWVtb3J5OiAxMDI0SwpbwqDCoCAxMC45MzMyMjJdIFJ1biAv
+c2Jpbi9pbml0IGFzIGluaXQgcHJvY2VzcwpbwqDCoCAxMC45NDE3MjNdwqDCoCB3aXRoIGFyZ3Vt
+ZW50czoKW8KgwqAgMTAuOTQ5ODkwXcKgwqDCoMKgIC9zYmluL2luaXQKW8KgwqAgMTAuOTQ5OTAw
+XcKgwqAgd2l0aCBlbnZpcm9ubWVudDoKW8KgwqAgMTAuOTQ5OTA5XcKgwqDCoMKgIEhPTUU9Lwpb
+wqDCoCAxMC45NDk5MTddwqDCoMKgwqAgVEVSTT1saW51eApbwqDCoCAxMi40MTU5OTFdIHJhbmRv
+bTogc3lzdGVtZC11ZGV2ZDogdW5pbml0aWFsaXplZCB1cmFuZG9tIHJlYWQgKDE2IApieXRlcyBy
+ZWFkKQpbwqDCoCAxMi40MjUzNjFdIHJhbmRvbTogc3lzdGVtZC11ZGV2ZDogdW5pbml0aWFsaXpl
+ZCB1cmFuZG9tIHJlYWQgKDE2IApieXRlcyByZWFkKQpbwqDCoCAxMi40Mzg1NzhdIHJhbmRvbTog
+c3lzdGVtZC11ZGV2ZDogdW5pbml0aWFsaXplZCB1cmFuZG9tIHJlYWQgKDE2IApieXRlcyByZWFk
+KQoKLi4uCgpJIGNhbiBwcm92aWRlIGEgY29tcGxldGUgbG9ncyBpZiB0aGF0IGhlbHBzLgoKQmVz
+dCByZWdhcmRzCi0tIApNYXJlayBTenlwcm93c2tpLCBQaEQKU2Ftc3VuZyBSJkQgSW5zdGl0dXRl
+IFBvbGFuZAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
+cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
