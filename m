@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
 References: <20200918132439.1475479-1-arnd@arndb.de>
- <20200918132439.1475479-5-arnd@arndb.de>
- <20200919054148.GL30063@infradead.org>
-In-Reply-To: <20200919054148.GL30063@infradead.org>
+ <20200918132439.1475479-4-arnd@arndb.de>
+ <20200919053807.GK30063@infradead.org>
+In-Reply-To: <20200919053807.GK30063@infradead.org>
 From: Arnd Bergmann <arnd@arndb.de>
-Date: Sat, 26 Sep 2020 17:14:46 +0200
-Message-ID: <CAK8P3a0VKObd8BR0x-+fHKizEwhYJ-8YwEN6rKhTHU34G=ADbg@mail.gmail.com>
-Subject: Re: [PATCH 4/4] mm: remove compat numa syscalls
+Date: Sat, 26 Sep 2020 17:21:29 +0200
+Message-ID: <CAK8P3a15GEGL8AnxTYZxD_EeGb7__v=iy6rTfCTNq2jmsQe9fQ@mail.gmail.com>
+Subject: Re: [PATCH 3/4] mm: remove compat_sys_move_pages
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,38 +23,61 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Christoph Hellwig <hch@infradead.org>
 Cc: linux-arch <linux-arch@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>
 
-On Sat, Sep 19, 2020 at 7:41 AM Christoph Hellwig <hch@infradead.org> wrote:
-> On Fri, Sep 18, 2020 at 03:24:39PM +0200, Arnd Bergmann wrote:
-
-> > +static int get_bitmap(unsigned long *mask, const unsigned long __user *nmask,
-> > +                   unsigned long maxnode)
-> > +{
-> > +     unsigned long nlongs = BITS_TO_LONGS(maxnode);
-> > +     int ret;
-> > +
-> > +     if (in_compat_syscall())
-> > +             ret = compat_get_bitmap(mask, (void __user *)nmask, maxnode);
+On Sat, Sep 19, 2020 at 7:38 AM Christoph Hellwig <hch@infradead.org> wrote:
 >
-> I'd either pass void __user all the way, or do an explicit case from
-> the native to the compat version in the compat handler.
+> I'd just keep the native version inline and have the compat one in
+> a helper, but that is just a minor detail.
 
-Changed to
+Folded in this change:
 
-        if (in_compat_syscall())
-                ret = compat_get_bitmap(mask,
-                                (const compat_ulong_t __user *)nmask,
-                                maxnode);
+diff --git a/mm/migrate.c b/mm/migrate.c
+index e9dfbde5f12c..d3fa3f4bf653 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1835,18 +1835,14 @@ static void do_pages_stat_array(struct
+mm_struct *mm, unsigned long nr_pages,
+        mmap_read_unlock(mm);
+ }
 
-> > +     else
-> > +             ret = copy_from_user(mask, nmask, nlongs*sizeof(unsigned long));
->
-> That whole BITS_TO_LONGS(b) * sizeof(unsigned long) pattern is
-> duplicated in various places including the checking of compat vs native
-> and probably want a helper that includes the in_compat_syscall() check.
+-static int put_pages_array(const void __user *chunk_pages[],
+-                          const void __user * __user *pages,
+-                          unsigned long chunk_nr)
++static int put_compat_pages_array(const void __user *chunk_pages[],
++                                 const void __user * __user *pages,
++                                 unsigned long chunk_nr)
+ {
+        compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
+        compat_uptr_t p;
+        int i;
 
-I don't see what you mean here. I can see how having the helper would
-simplify copy_nodes_to_user(), but not how it can be shared with the
-use in get_bitmap()/get_nodes().
+-       if (!in_compat_syscall())
+-               return copy_from_user(chunk_pages, pages,
+-                                     chunk_nr * sizeof(*chunk_pages));
+-
+        for (i = 0; i < chunk_nr; i++) {
+                if (get_user(p, pages32 + i))
+                        return -EFAULT;
+@@ -1875,8 +1871,15 @@ static int do_pages_stat(struct mm_struct *mm,
+unsigned long nr_pages,
+                if (chunk_nr > DO_PAGES_STAT_CHUNK_NR)
+                        chunk_nr = DO_PAGES_STAT_CHUNK_NR;
+
+-               if (put_pages_array(chunk_pages, pages, chunk_nr))
+-                       break;
++               if (in_compat_syscall()) {
++                       if (put_compat_pages_array(chunk_pages, pages,
++                                                  chunk_nr))
++                               break;
++               } else {
++                       if (copy_from_user(chunk_pages, pages,
++                                     chunk_nr * sizeof(*chunk_pages)))
++                               break;
++               }
+
+                do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
+
+It does make the separation cleaner but it's also more code, which is
+why I had it in the combined function before.
 
       Arnd
 
