@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kLwh0-0004rl-Vb
- for kexec@lists.infradead.org; Fri, 25 Sep 2020 22:59:55 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH printk v5 6/6] printk: reimplement log_cont using record
- extension
-In-Reply-To: <f1651593-3579-5820-6863-5f4973d2bfdc@samsung.com>
-References: <20200914123354.832-1-john.ogness@linutronix.de>
- <20200914123354.832-7-john.ogness@linutronix.de>
- <CGME20200925190829eucas1p2f35866317389cd5e842e99b465632902@eucas1p2.samsung.com>
- <f1651593-3579-5820-6863-5f4973d2bfdc@samsung.com>
-Date: Sat, 26 Sep 2020 01:05:51 +0206
-Message-ID: <87v9g1bgyg.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
+References: <20200918132439.1475479-1-arnd@arndb.de>
+ <20200918132439.1475479-5-arnd@arndb.de>
+ <20200919054148.GL30063@infradead.org>
+In-Reply-To: <20200919054148.GL30063@infradead.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Sat, 26 Sep 2020 17:14:46 +0200
+Message-ID: <CAK8P3a0VKObd8BR0x-+fHKizEwhYJ-8YwEN6rKhTHU34G=ADbg@mail.gmail.com>
+Subject: Re: [PATCH 4/4] mm: remove compat numa syscalls
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,40 +16,49 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marek Szyprowski <m.szyprowski@samsung.com>, Petr Mladek <pmladek@suse.com>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>
 
-T24gMjAyMC0wOS0yNSwgTWFyZWsgU3p5cHJvd3NraSA8bS5zenlwcm93c2tpQHNhbXN1bmcuY29t
-PiB3cm90ZToKPiBUaGlzIHBhdGNoIGxhbmRlZCByZWNlbnRseSBpbiBsaW51eC1uZXh0IGFzIGNv
-bW1pdCBmNWYwMjJlNTNiODcgCj4gKCJwcmludGs6IHJlaW1wbGVtZW50IGxvZ19jb250IHVzaW5n
-IHJlY29yZCBleHRlbnNpb24iKS4gSSd2ZSBub3RpY2VkIAo+IHRoYXQgaXQgY2F1c2VzIGEgcmVn
-cmVzc2lvbiBvbiBteSB0ZXN0IHN5c3RlbSAoQVJNIDMyYml0IFNhbXN1bmcgRXh5bm9zIAo+IDQ0
-MTItYmFzZWQgVHJhdHMyIGJvYXJkKS4gVGhlIG1lc3NhZ2VzIGFyZSBwcmludGVkIGNvcnJlY3Rs
-eSBvbiB0aGUgCj4gc2VyaWFsIGNvbnNvbGUgZHVyaW5nIGJvb3QsIGJ1dCB0aGVuIHdoZW4gSSBy
-dW4gJ2RtZXNnJyBjb21tYW5kLCB0aGUgbG9nIAo+IGlzIHRydW5jYXRlZC4KPgo+IEhlcmUgaXMg
-YXJlIHRoZSBsYXN0IGxpbmVzIG9mIHRoZSBkbWVzZyBsb2cgYWZ0ZXIgdGhpcyBwYXRjaDoKPgo+
-IFvCoMKgwqAgNi42NDkwMThdIFdhaXRpbmcgMiBzZWMgYmVmb3JlIG1vdW50aW5nIHJvb3QgZGV2
-aWNlLi4uCj4gW8KgwqDCoCA2Ljc2NjQyM10gZHdjMiAxMjQ4MDAwMC5oc290ZzogbmV3IGRldmlj
-ZSBpcyBoaWdoLXNwZWVkCj4gW8KgwqDCoCA2Ljg0NTI5MF0gZHdjMiAxMjQ4MDAwMC5oc290Zzog
-bmV3IGRldmljZSBpcyBoaWdoLXNwZWVkCj4gW8KgwqDCoCA2LjkxNDIxN10gZHdjMiAxMjQ4MDAw
-MC5oc290ZzogbmV3IGFkZHJlc3MgNTEKPiBbwqDCoMKgIDguNzEwMzUxXSBSQU1ESVNLOiBzcXVh
-c2hmcyBmaWxlc3lzdGVtIGZvdW5kIGF0IGJsb2NrIDAKPgo+IFRoZSBjb3JyZXNwb25kaW5nIGRt
-ZXNnIGxpbmVzIGJlZm9yZSBhcHBseWluZyB0aGlzIHBhdGNoOgo+Cj4gW8KgwqDCoCA4Ljg2NDMy
-MF0gUkFNRElTSzogc3F1YXNoZnMgZmlsZXN5c3RlbSBmb3VuZCBhdCBibG9jayAwCj4gW8KgwqDC
-oCA4Ljg2ODQxMF0gUkFNRElTSzogTG9hZGluZyAzNzY5MktpQiBbMSBkaXNrXSBpbnRvIHJhbSBk
-aXNrLi4uIC8KPiBbwqDCoMKgIDkuMDcxNjcwXSAvCj4gW8KgwqDCoCA5LjI2MjQ5OF0gLwo+IFvC
-oMKgwqAgOS41NDA3MTFdIC8KPiBbwqDCoMKgIDkuODE4MDMxXSBkb25lLgoKQWguIE9uZSBvZiB0
-aGUgbW9yZSBjcmVhdGl2ZSBwcmludGsgdXNlcnMuLi4KaW5pdC9kb19tb3VudHNfcmQuYzpyZF9s
-b2FkX2ltYWdlKCkuIFRoaXMgaXMgYSBzZXQgb2YgTE9HX0NPTlQgbWVzc2FnZXMKdGhhdCB0cnkg
-dG8gZGlzcGxheSBhIHJvdGF0aW5nIGxpbmUsIGNvbXBsZXRlIHdpdGggJ1xiJyBjb250cm9sCmNo
-YXJhY3RlcnMuIFRoZSBjb2RlIGlzIHRvdGFsbHkgYnJva2VuLCBidXQgdGhhdCBpcyBubyBleGN1
-c2UgZm9yIHByaW50awp0byBicmVhay4gSXQgc2hvdWxkIGJlIGVhc3kgdG8gcmVwcm9kdWNlIG9u
-IGFueSBhcmNoaXRlY3R1cmUuIEkgd2lsbAppbnZlc3RpZ2F0ZSBpdCBmdXJ0aGVyLiBUaGFua3Mg
-Zm9yIHJlcG9ydGluZy4KCkpvaG4gT2duZXNzCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVj
-Cg==
+On Sat, Sep 19, 2020 at 7:41 AM Christoph Hellwig <hch@infradead.org> wrote:
+> On Fri, Sep 18, 2020 at 03:24:39PM +0200, Arnd Bergmann wrote:
+
+> > +static int get_bitmap(unsigned long *mask, const unsigned long __user *nmask,
+> > +                   unsigned long maxnode)
+> > +{
+> > +     unsigned long nlongs = BITS_TO_LONGS(maxnode);
+> > +     int ret;
+> > +
+> > +     if (in_compat_syscall())
+> > +             ret = compat_get_bitmap(mask, (void __user *)nmask, maxnode);
+>
+> I'd either pass void __user all the way, or do an explicit case from
+> the native to the compat version in the compat handler.
+
+Changed to
+
+        if (in_compat_syscall())
+                ret = compat_get_bitmap(mask,
+                                (const compat_ulong_t __user *)nmask,
+                                maxnode);
+
+> > +     else
+> > +             ret = copy_from_user(mask, nmask, nlongs*sizeof(unsigned long));
+>
+> That whole BITS_TO_LONGS(b) * sizeof(unsigned long) pattern is
+> duplicated in various places including the checking of compat vs native
+> and probably want a helper that includes the in_compat_syscall() check.
+
+I don't see what you mean here. I can see how having the helper would
+simplify copy_nodes_to_user(), but not how it can be shared with the
+use in get_bitmap()/get_nodes().
+
+      Arnd
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
