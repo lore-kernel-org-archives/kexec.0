@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kNFo0-0002KX-Tu
- for kexec@lists.infradead.org; Tue, 29 Sep 2020 13:36:34 +0000
-Date: Tue, 29 Sep 2020 15:36:16 +0200
-From: Philipp Rudo <prudo@linux.ibm.com>
-Subject: Re: [PATCH] Only allow to set crash_kexec_post_notifiers on boot time
-Message-ID: <20200929153616.3cf68f16@ibm>
-In-Reply-To: <20200925145625.GH30019@char.us.oracle.com>
-References: <20200918174743.0994c59f058451948837dcb6@linux-foundation.org>
- <20200921201811.GB3437@char.us.oracle.com>
- <87v9g6fuub.fsf@x220.int.ebiederm.org>
- <20200923024329.GB3642@dhcp-128-65.nay.redhat.com>
- <20200923154825.GC7635@char.us.oracle.com>
- <MW2PR2101MB10521373DD95F5AF014254DDD7390@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <874knndtvo.fsf@x220.int.ebiederm.org>
- <MW2PR2101MB1052ED1C8953135A58276F04D7390@MW2PR2101MB1052.namprd21.prod.outlook.com>
- <4f964490-7464-0071-db38-4b16d665503e@oracle.com>
- <20200925030558.GA3446@dhcp-128-65.nay.redhat.com>
- <20200925145625.GH30019@char.us.oracle.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kNIFy-0000Am-CV
+ for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:13:35 +0000
+Date: Tue, 29 Sep 2020 18:13:25 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec-tools: Fix a prompt message when crashkernel is
+ not reserved
+Message-ID: <20200929161325.GD7355@vergenet.net>
+References: <1599874721-6903-1-git-send-email-tangyouling@loongson.cn>
+ <CAFTCetTxiOLF+2p06=KG-eTM4udgvSqa5FWg5Hbm+MDusXYNoA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAFTCetTxiOLF+2p06=KG-eTM4udgvSqa5FWg5Hbm+MDusXYNoA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,122 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>
-Cc: Wei Liu <wei.liu@kernel.org>, Tianyu Lan <Tianyu.Lan@microsoft.com>, "bhe@redhat.com" <bhe@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Kelley <mikelley@microsoft.com>, HATAYAMA Daisuke <d.hatayama@jp.fujitsu.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Masami Hiramatsu <masami.hiramatsu.pt@hitachi.com>, boris.ostrovsky@oracle.com, Eric DeVolder <eric.devolder@oracle.com>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: kexec@lists.infradead.org, Youling Tang <tangyouling@loongson.cn>, "Eric W. Biederman" <ebiederm@xmission.com>, Khalid Aziz <khalid@gonehiking.org>
 
-Hi,
-
-On Fri, 25 Sep 2020 10:56:25 -0400
-Konrad Rzeszutek Wilk <konrad.wilk@oracle.com> wrote:
-
-> On Fri, Sep 25, 2020 at 11:05:58AM +0800, Dave Young wrote:
-> > Hi,
-> > 
-> > On 09/24/20 at 01:16pm, boris.ostrovsky@oracle.com wrote:  
-> > > 
-> > > On 9/24/20 12:43 PM, Michael Kelley wrote:  
-> > > > From: Eric W. Biederman <ebiederm@xmission.com> Sent: Thursday, September 24, 2020 9:26 AM  
-> > > >> Michael Kelley <mikelley@microsoft.com> writes:
-> > > >>  
-> > > >>>>> Added Hyper-V people and people who created the param, it is below
-> > > >>>>> commit, I also want to remove it if possible, let's see how people
-> > > >>>>> think, but the least way should be to disable the auto setting in both systemd
-> > > >>>>> and kernel:  
-> > > >>> Hyper-V uses a notifier to inform the host system that a Linux VM has
-> > > >>> panic'ed.  Informing the host is particularly important in a public cloud
-> > > >>> such as Azure so that the cloud software can alert the customer, and can
-> > > >>> track cloud-wide reliability statistics.   Whether a kdump is taken is controlled
-> > > >>> entirely by the customer and how he configures the VM, and we want
-> > > >>> the host to be informed either way.  
-> > > >> Why?
-> > > >>
-> > > >> Why does the host care?
-> > > >> Especially if the VM continues executing into a kdump kernel?  
-> > > > The host itself doesn't care.  But the host is a convenient out-of-band
-> > > > channel for recording that a panic has occurred and to collect basic data
-> > > > about the panic.  This out-of-band channel is then used to notify the end
-> > > > customer that his VM has panic'ed.  Sure, the customer should be running
-> > > > his own monitoring software, but customers don't always do what they
-> > > > should.  Equally important, the out-of-band channel allows the cloud
-> > > > infrastructure software to notice trends, such as that the rate of Linux
-> > > > panics has increased, and that perhaps there is a cloud problem that
-> > > > should be investigated.  
-> > > 
-> > > 
-> > > In many cases (especially in cloud environment) your dump device is remote (e.g. iscsi) and kdump sometimes (often?) gets stuck because of connectivity issues (which could be cause of the panic in the first place). So it is quite desirable to inform the infrastructure that the VM is on its way out without waiting for kdump to complete.  
-> > 
-> > That can probably be done in kdump kernel if it is really needed.  Say
-> > informing host that panic happened and a kdump kernel is runnning.  
+On Thu, Sep 17, 2020 at 12:14:02AM +0530, Bhupesh SHARMA wrote:
+> Hi Youling,
 > 
-> If kdump kernel gets to that point. Sometimes (sadly) it ends up being
-> misconfigured and it chokes up - and hence having multiple ways to emit
-> the crash information before running kdump kernel is a life-saver.
+> On Sat, Sep 12, 2020 at 7:10 AM Youling Tang <tangyouling@loongson.cn> wrote:
+> >
+> > Where Y specifies how much memory to reserve for the dump-capture kernel
+> > and X specifies the beginning of this reserved memory. So Y should be
+> > placed before X.
+> >
+> > Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> > ---
+> >  kexec/kexec.c | 2 +-
+> >  1 file changed, 1 insertion(+), 1 deletion(-)
+> >
+> > diff --git a/kexec/kexec.c b/kexec/kexec.c
+> > index bb88caa..fd7c8d2 100644
+> > --- a/kexec/kexec.c
+> > +++ b/kexec/kexec.c
+> > @@ -1530,7 +1530,7 @@ int main(int argc, char *argv[])
+> >             !is_crashkernel_mem_reserved()) {
+> >                 die("Memory for crashkernel is not reserved\n"
+> >                     "Please reserve memory by passing"
+> > -                   "\"crashkernel=X@Y\" parameter to kernel\n"
+> > +                   "\"crashkernel=Y@X\" parameter to kernel\n"
+> >                     "Then try to loading kdump kernel\n");
+> >         }
+> >
+> > --
+> > 2.1.0
 > 
-> > 
-> > But I think to set crash_kexec_post_notifiers by default is still bad.   
-> 
-> Because of the way it is run today I presume? If there was some
-> safe/unsafe policy that should work right? I would think that the
-> safe ones that work properly all the time are:
-> 
->  - HyperV CRASH_MSRs,
->  - KVM PVPANIC_[PANIC,CRASHLOAD] push button knob,
->  - pstore EFI variables
->  - Dumping in memory,
-> 
-> And then some that depend on firmware version (aka BIOS, and vendor) are:
->  - ACPI ERST,
-> 
-> And then the unsafe:
->  - s390, PowerPC (I don't actually know what they are but that
->     was Dave's primary motivator).
+> Thanks for the patch. LGTM, so:
+> Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
 
-that won't work on s390. Let me emphasize that the problems on s390 are not the
-notifiers themselves but the fact that they are called before crash_kexec.
-
-On s390 we have multiple dump methods besides kdump. We use a panic notifier to
-trigger these dump methods from the panicking kernel. The problem is that these
-dump methods are less powerful than kdump so we only want to use them as
-fallback, i.e. only use them when either kdump wasn't configured or loading of
-the crash kernel failed for whatever reason. That's why (plus historic reasons)
-our notifier stops the machine when it is called and none of the methods is
-configured. Which means that the second crash_kexec is never reached.
-
-Long story short, the problem on s390 is caused by the two hunks in
-kernel/panic.c:panic from f06e5153f4ae ("kernel/panic.c: add
-"crash_kexec_post_notifiers" option for kdump after panic_notifers").
-
-Besides the problems on s390 I support Dave and think that setting
-crash_kexec_post_notifiers by default is wrong. We should keep in mind that
-we are in a panic situation. This means that the kernel is in a state where it
-doesn't trust itself anymore. So we should keep the code that is run to the
-bare minimum as we cannot rely on it to work properly.
-
-Thanks
-Philipp
-
-> 
-> >   
-> > > 
-> > >   
-> > > >  
-> > > >> Further like I have mentioned everytime something like this has come up
-> > > >> a call on the kexec on panic code path should be a direct call (That can
-> > > >> be audited) not something hidden in a notifier call chain (which can not).
-> > > >>  
-> > > 
-> > > We btw already have a direct call from panic() to kmsg_dump() which is indirectly controlled by crash_kexec_post_notifiers, and it would also be preferable to be able to call it before kdump as well.  
-> > 
-> > Right, that is the same thing we are talking about.
-> > 
-> > Thanks
-> > Dave
-> >   
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
