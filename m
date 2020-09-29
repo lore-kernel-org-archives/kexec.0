@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kNIMv-0000jE-Nu
- for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:20:46 +0000
-Date: Tue, 29 Sep 2020 18:20:42 +0200
+ id 1kNINE-0000l6-6O
+ for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:21:05 +0000
+Date: Tue, 29 Sep 2020 18:21:01 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm64: Add purgatory printing
-Message-ID: <20200929162042.GG7355@vergenet.net>
-References: <20200923104802.17964-1-matthias.bgg@kernel.org>
+Subject: Re: [PATCH] kexec: Fix snprintf related compilation warnings
+Message-ID: <20200929162101.GH7355@vergenet.net>
+References: <20200923111237.883383-1-bhsharma@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200923104802.17964-1-matthias.bgg@kernel.org>
+In-Reply-To: <20200923111237.883383-1-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,64 +19,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: matthias.bgg@kernel.org
-Cc: geoff@infradead.org, bhupesh.linux@gmail.com, kexec@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: bhupesh.linux@gmail.com, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-On Wed, Sep 23, 2020 at 12:48:02PM +0200, matthias.bgg@kernel.org wrote:
-> From: Matthias Brugger <mbrugger@suse.com>
-> 
-> Add option to allow purgatory printing on arm64 hardware
-> by passing the console name which should be used.
-> Based on a patch by Geoff Levand.
-> 
-> Cc: Geoff Levand <geoff@infradead.org>
-> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
-
-...
-
-> +/**
-> + * find_purgatory_sink - Find a sink for purgatory output.
-> + */
-> +
-> +static uint64_t find_purgatory_sink(const char *console)
-> +{
-> +	int fd, ret;
-> +	char device[255], mem[255];
-> +	struct stat sb;
-> +	char buffer[10];
-> +	uint64_t iomem = 0x0;
-> +
-> +	if (!console)
-> +		return 0;
-> +
-> +	snprintf(device, sizeof(device), "/sys/class/tty/%s", console);
-> +	if (stat(device, &sb) || !S_ISDIR(sb.st_mode)) {
-> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
-> +			__func__, device);
-> +		return 0;
-> +	}
-
-As per "[PATCH] kexec: Fix snprintf related compilation warning",
-I think we should be checking the output of snprintf.
-
-> +
-> +	snprintf(mem, sizeof(mem), "%s%s", device, "/iomem_base");
-> +	printf("console memory read from %s\n", mem);
-> +
-> +	fd = open(mem, O_RDONLY);
-> +	if (fd < 0) {
-> +		fprintf(stderr, "kexec: %s: No able to open %s\n",
-> +			__func__, mem);
-> +		return 0;
-> +	}
-
-...
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBTZXAgMjMsIDIwMjAgYXQgMDQ6NDI6MzdQTSArMDUzMCwgQmh1cGVzaCBTaGFybWEg
+d3JvdGU6Cj4gVGhpcyBwYXRjaCBmaXhlcyB0aGUgZm9sbG93aW5nIHNucHJpbnRmIHJlbGF0ZWQg
+Y29tcGlsYXRpb24gd2FybmluZwo+IHNlZW4gY3VycmVudGx5IHdpdGggZ2NjIHZlcnNpb25zIDcg
+YW5kIDggd2hlbiBrZXhlYyBpcyBjb21waWxlZCB3aXRoCj4gLVdmb3JtYXQtdHJ1bmNhdGlvbiBv
+cHRpb246Cj4gCj4gICAgIGtleGVjL2ZzMmR0LmM6NjczOjM0OiB3YXJuaW5nOiDigJhzdGRvdXQt
+cGF0aOKAmSBkaXJlY3RpdmUgb3V0cHV0IG1heSBiZSB0cnVuY2F0ZWQgd3JpdGluZyAxMSBieXRl
+cyBpbnRvIGEgcmVnaW9uIG9mIHNpemUgYmV0d2VlbiAxIGFuZCAxMDI0IFstV2Zvcm1hdC10cnVu
+Y2F0aW9uPV0KPiAgICAgICAgc25wcmludGYoZmlsZW5hbWUsIE1BWFBBVEgsICIlc3N0ZG91dC1w
+YXRoIiwgcGF0aG5hbWUpOwo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Xn5+fn5+fn5+fn4KPiAgICAga2V4ZWMvZnMyZHQuYzo2NzM6Mzogbm90ZTog4oCYc25wcmludGbi
+gJkgb3V0cHV0IGJldHdlZW4gMTIgYW5kIDEwMzUgYnl0ZXMgaW50byBhIGRlc3RpbmF0aW9uIG9m
+IHNpemUgMTAyNAo+ICAgICAgICBzbnByaW50ZihmaWxlbmFtZSwgTUFYUEFUSCwgIiVzc3Rkb3V0
+LXBhdGgiLCBwYXRobmFtZSk7Cj4gICAgICAgIF5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fgo+ICAgICBrZXhlYy9mczJkdC5jOjY3NjozNTogd2Fy
+bmluZzog4oCYbGludXgsc3Rkb3V0LXBhdGjigJkgZGlyZWN0aXZlIG91dHB1dCBtYXkgYmUgdHJ1
+bmNhdGVkIHdyaXRpbmcgMTcgYnl0ZXMgaW50byBhIHJlZ2lvbiBvZiBzaXplIGJldHdlZW4gMSBh
+bmQgMTAyNCBbLVdmb3JtYXQtdHJ1bmNhdGlvbj1dCj4gICAgICAgICBzbnByaW50ZihmaWxlbmFt
+ZSwgTUFYUEFUSCwgIiVzbGludXgsc3Rkb3V0LXBhdGgiLCBwYXRobmFtZSk7Cj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn4KPiAgICAga2V4
+ZWMvZnMyZHQuYzo2NzY6NDogbm90ZTog4oCYc25wcmludGbigJkgb3V0cHV0IGJldHdlZW4gMTgg
+YW5kIDEwNDEgYnl0ZXMgaW50byBhIGRlc3RpbmF0aW9uIG9mIHNpemUgMTAyNAo+ICAgICAgICAg
+c25wcmludGYoZmlsZW5hbWUsIE1BWFBBVEgsICIlc2xpbnV4LHN0ZG91dC1wYXRoIiwgcGF0aG5h
+bWUpOwo+ICAgICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+Cj4gCj4gICAgIGtleGVjL2Zpcm13YXJlX21lbW1hcC5jOjEzMjoz
+NTogd2FybmluZzog4oCYJXPigJkgZGlyZWN0aXZlIG91dHB1dCBtYXkgYmUgdHJ1bmNhdGVkIHdy
+aXRpbmcgNSBieXRlcyBpbnRvIGEgcmVnaW9uIG9mIHNpemUgYmV0d2VlbiAwIGFuZCA0MDk1IFst
+V2Zvcm1hdC10cnVuY2F0aW9uPV0KPiAgICAgICBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgs
+ICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICBefiAgICAgICAgICB+fn5+fn5+Cj4gICAgIGtleGVjL2Zpcm13YXJlX21lbW1h
+cC5jOjEzMjoyOiBub3RlOiDigJhzbnByaW50ZuKAmSBvdXRwdXQgYmV0d2VlbiA3IGFuZCA0MTAy
+IGJ5dGVzIGludG8gYSBkZXN0aW5hdGlvbiBvZiBzaXplIDQwOTYKPiAgICAgICBzbnByaW50Zihm
+aWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5LCAic3RhcnQiKTsKPiAgICAgICBefn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fgo+ICAgICBr
+ZXhlYy9maXJtd2FyZV9tZW1tYXAuYzoxNDI6MzU6IHdhcm5pbmc6IOKAmCVz4oCZIGRpcmVjdGl2
+ZSBvdXRwdXQgbWF5IGJlIHRydW5jYXRlZCB3cml0aW5nIDMgYnl0ZXMgaW50byBhIHJlZ2lvbiBv
+ZiBzaXplIGJldHdlZW4gMCBhbmQgNDA5NSBbLVdmb3JtYXQtdHJ1bmNhdGlvbj1dCj4gICAgICAg
+c25wcmludGYoZmlsZW5hbWUsIFBBVEhfTUFYLCAiJXMvJXMiLCBlbnRyeSwgImVuZCIpOwo+ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+ICAgICAgICAgIH5+fn5+Cj4g
+ICAgIGtleGVjL2Zpcm13YXJlX21lbW1hcC5jOjE0MjoyOiBub3RlOiDigJhzbnByaW50ZuKAmSBv
+dXRwdXQgYmV0d2VlbiA1IGFuZCA0MTAwIGJ5dGVzIGludG8gYSBkZXN0aW5hdGlvbiBvZiBzaXpl
+IDQwOTYKPiAgICAgICBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIsIGVudHJ5
+LCAiZW5kIik7Cj4gICAgICAgXn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+Cj4gICAgIGtleGVjL2Zpcm13YXJlX21lbW1hcC5jOjE1MjozNTogd2Fybmlu
+Zzog4oCYJXPigJkgZGlyZWN0aXZlIG91dHB1dCBtYXkgYmUgdHJ1bmNhdGVkIHdyaXRpbmcgNCBi
+eXRlcyBpbnRvIGEgcmVnaW9uIG9mIHNpemUgYmV0d2VlbiAwIGFuZCA0MDk1IFstV2Zvcm1hdC10
+cnVuY2F0aW9uPV0KPiAgICAgICBzbnByaW50ZihmaWxlbmFtZSwgUEFUSF9NQVgsICIlcy8lcyIs
+IGVudHJ5LCAidHlwZSIpOwo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IF5+ICAgICAgICAgIH5+fn5+fgo+ICAgICBrZXhlYy9maXJtd2FyZV9tZW1tYXAuYzoxNTI6Mjog
+bm90ZTog4oCYc25wcmludGbigJkgb3V0cHV0IGJldHdlZW4gNiBhbmQgNDEwMSBieXRlcyBpbnRv
+IGEgZGVzdGluYXRpb24gb2Ygc2l6ZSA0MDk2Cj4gICAgICAgc25wcmludGYoZmlsZW5hbWUsIFBB
+VEhfTUFYLCAiJXMvJXMiLCBlbnRyeSwgInR5cGUiKTsKPiAgICAgICBefn5+fn5+fn5+fn5+fn5+
+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+fn5+Cj4gCj4gU2luY2UgdGhlIHNpbXBs
+ZXN0IG1ldGhvZCB0byBhZGRyZXNzIHRoZSBnY2Mgd2FybmluZ3MgYW5kIHBvc3NpYmxlCj4gdHJ1
+bmNhdGlvbiB3b3VsZCBiZSB0byBjaGVjayB0aGUgcmV0dXJuIHZhbHVlIHByb3ZpZGVkIGZyb20g
+c25wcmludGYKPiAod2VsbCB0aGVyZSBhcmUgb3RoZXIgbWV0aG9kcyBsaWtlIHVzaW5nICdhc25w
+cmludGYnIG9yIHVzaW5nCj4gJ29wZW5fbWVtc3RyZWFtJyBmdW5jdGlvbiB0byBjcmVhdGUgdGhl
+IEZJTEUgb2JqZWN0LCBidXQgdGhlc2UgYXJlIG1vcmUKPiBpbnRydXNpdmUpLCBzbyB0aGlzIHBh
+dGNoIGRvZXMgdGhlIHNhbWUuCj4gCj4gQ2M6IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0
+LmF1Pgo+IENjOiBFcmljIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPgo+IENjOiBr
+ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gU2lnbmVkLW9mZi1ieTogQmh1cGVzaCBTaGFybWEg
+PGJoc2hhcm1hQHJlZGhhdC5jb20+CgpUaGFua3MsIGFwcGxpZWQuCgpfX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2tleGVjCg==
