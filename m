@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kNIHg-0000M1-22
- for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:15:20 +0000
-Date: Tue, 29 Sep 2020 18:15:16 +0200
+ id 1kNIKA-0000aR-Bg
+ for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:17:55 +0000
+Date: Tue, 29 Sep 2020 18:17:51 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: Add some missing free() calls
-Message-ID: <20200929161516.GE7355@vergenet.net>
-References: <1599874789-7042-1-git-send-email-tangyouling@loongson.cn>
+Subject: Re: [PATCH] vmcore-dmesg/man page: Update the vmcore-dmesg man page
+Message-ID: <20200929161751.GF7355@vergenet.net>
+References: <20200922090244.832691-1-bhsharma@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <1599874789-7042-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <20200922090244.832691-1-bhsharma@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,13 +23,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Youling Tang <tangyouling@loongson.cn>
-Cc: kexec@lists.infradead.org, "Eric W. Biederman" <ebiederm@xmission.com>, Khalid Aziz <khalid@gonehiking.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: bhupesh.linux@gmail.com, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
 
-On Sat, Sep 12, 2020 at 09:39:49AM +0800, Youling Tang wrote:
-> Add some missing free() calls.
+On Tue, Sep 22, 2020 at 02:32:44PM +0530, Bhupesh Sharma wrote:
+> The vmcore-dmesg utility has been in usage for several years,
+> and is pretty stable now.
 > 
-> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> So its useful now to modify its man page to indicate the same.
+> Also fix some minor formatting issues.
+> 
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
 
 Thanks, applied.
 
