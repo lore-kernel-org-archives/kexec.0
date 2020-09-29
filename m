@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kNIKA-0000aR-Bg
- for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:17:55 +0000
-Date: Tue, 29 Sep 2020 18:17:51 +0200
+ id 1kNIMv-0000jE-Nu
+ for kexec@lists.infradead.org; Tue, 29 Sep 2020 16:20:46 +0000
+Date: Tue, 29 Sep 2020 18:20:42 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] vmcore-dmesg/man page: Update the vmcore-dmesg man page
-Message-ID: <20200929161751.GF7355@vergenet.net>
-References: <20200922090244.832691-1-bhsharma@redhat.com>
+Subject: Re: [PATCH v2] arm64: Add purgatory printing
+Message-ID: <20200929162042.GG7355@vergenet.net>
+References: <20200923104802.17964-1-matthias.bgg@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20200922090244.832691-1-bhsharma@redhat.com>
+In-Reply-To: <20200923104802.17964-1-matthias.bgg@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,22 +23,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: bhupesh.linux@gmail.com, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>
+To: matthias.bgg@kernel.org
+Cc: geoff@infradead.org, bhupesh.linux@gmail.com, kexec@lists.infradead.org, Matthias Brugger <mbrugger@suse.com>
 
-On Tue, Sep 22, 2020 at 02:32:44PM +0530, Bhupesh Sharma wrote:
-> The vmcore-dmesg utility has been in usage for several years,
-> and is pretty stable now.
+On Wed, Sep 23, 2020 at 12:48:02PM +0200, matthias.bgg@kernel.org wrote:
+> From: Matthias Brugger <mbrugger@suse.com>
 > 
-> So its useful now to modify its man page to indicate the same.
-> Also fix some minor formatting issues.
+> Add option to allow purgatory printing on arm64 hardware
+> by passing the console name which should be used.
+> Based on a patch by Geoff Levand.
 > 
-> Cc: Simon Horman <horms@verge.net.au>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: kexec@lists.infradead.org
-> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
+> Cc: Geoff Levand <geoff@infradead.org>
+> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
 
-Thanks, applied.
+...
+
+> +/**
+> + * find_purgatory_sink - Find a sink for purgatory output.
+> + */
+> +
+> +static uint64_t find_purgatory_sink(const char *console)
+> +{
+> +	int fd, ret;
+> +	char device[255], mem[255];
+> +	struct stat sb;
+> +	char buffer[10];
+> +	uint64_t iomem = 0x0;
+> +
+> +	if (!console)
+> +		return 0;
+> +
+> +	snprintf(device, sizeof(device), "/sys/class/tty/%s", console);
+> +	if (stat(device, &sb) || !S_ISDIR(sb.st_mode)) {
+> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
+> +			__func__, device);
+> +		return 0;
+> +	}
+
+As per "[PATCH] kexec: Fix snprintf related compilation warning",
+I think we should be checking the output of snprintf.
+
+> +
+> +	snprintf(mem, sizeof(mem), "%s%s", device, "/iomem_base");
+> +	printf("console memory read from %s\n", mem);
+> +
+> +	fd = open(mem, O_RDONLY);
+> +	if (fd < 0) {
+> +		fprintf(stderr, "kexec: %s: No able to open %s\n",
+> +			__func__, mem);
+> +		return 0;
+> +	}
+
+...
 
 _______________________________________________
 kexec mailing list
