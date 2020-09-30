@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mailout1.w1.samsung.com ([210.118.77.11])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kNgTU-0000Z3-CS
- for kexec@lists.infradead.org; Wed, 30 Sep 2020 18:05:09 +0000
-Subject: Re: [PATCH v3] arm64: Add purgatory printing
-References: <20200930103621.9497-1-matthias.bgg@kernel.org>
- <370ccb82-dccc-2109-061f-794546b95768@infradead.org>
-From: Matthias Brugger <mbrugger@suse.com>
-Message-ID: <16f21b1e-90ba-9ff9-5cb1-0834b70e3d9e@suse.com>
-Date: Wed, 30 Sep 2020 20:04:57 +0200
+ id 1kNh0g-0003sr-H2
+ for kexec@lists.infradead.org; Wed, 30 Sep 2020 18:39:28 +0000
+Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
+ by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id
+ 20200930183924euoutp012cdb9859b3c5da8b4e3eaa7690c4875a~5o7qMVX1L2538725387euoutp01z
+ for <kexec@lists.infradead.org>; Wed, 30 Sep 2020 18:39:24 +0000 (GMT)
+From: =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>
+Subject: [PATCH v3 0/4] kexec_file_load() for arm
+Date: Wed, 30 Sep 2020 20:34:09 +0200
+Message-Id: <20200930183413.17023-1-l.stelmach@samsung.com>
+In-Reply-To: <20200601142754.26139-1-l.stelmach@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <370ccb82-dccc-2109-061f-794546b95768@infradead.org>
-Content-Language: en-US
+References: <20200601142754.26139-1-l.stelmach@samsung.com>
+ <CGME20200930183921eucas1p11a56f805421a614be67f869f5ed18b9b@eucas1p1.samsung.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,61 +23,59 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geoff Levand <geoff@infradead.org>, matthias.bgg@kernel.org, kexec@lists.infradead.org, horms@verge.net.au
-Cc: bhupesh.linux@gmail.com
+To: Russell King <linux@armlinux.org.uk>, Masahiro Yamada <masahiroy@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Thomas Gleixner <tglx@linutronix.de>, Enrico Weigelt <info@metux.net>, Kees Cook <keescook@chromium.org>, Ingo Molnar <mingo@kernel.org>, Ben Dooks <ben-linux@fluff.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>, =?UTF-8?q?=C5=81ukasz=20Stelmach?= <l.stelmach@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
 
-
-
-On 30/09/2020 17:20, Geoff Levand wrote:
-> Hi,
-> 
-> On 9/30/20 3:36 AM, matthias.bgg@kernel.org wrote:
->> --- a/kexec/arch/arm64/include/arch/options.h
->> +++ b/kexec/arch/arm64/include/arch/options.h
->>
->> +static uint64_t find_purgatory_sink(const char *console)
->> +{
->> +	int fd, ret;
->> +	char device[255], mem[255];
->> +	struct stat sb;
->> +	char buffer[10];
->> +	uint64_t iomem = 0x0;
->> +
->> +	if (!console)
->> +		return 0;
->> +
->> +	ret = snprintf(device, sizeof(device), "/sys/class/tty/%s", console);
->> +	if (ret < 0 || ret >= sizeof(device)) {
->> +		fprintf(stderr, "snprintf failed: %s\n", strerror(errno));
->> +		return 0;
->> +	}
->> +
->> +	if (stat(device, &sb) || !S_ISDIR(sb.st_mode)) {
->> +		fprintf(stderr, "kexec: %s: No valid console found for %s\n",
->> +			__func__, device);
->> +		return 0;
->> +	}
->> +
->> +	snprintf(mem, sizeof(mem), "%s%s", device, "/iomem_base");
->> +	if (ret < 0 || ret >= sizeof(mem)) {
-> 
-> Seems this is is just doing the same check again...
-> 
-
-Well we have to check snprintf outcome here again. Also sizeof(device) == 
-sizeof(mem) we could have the case where the first snprintf fits into the 255 
-character, while the second, where we add the "/iomem_base" does not.
-
-Or didn't I understand you correctly?
-
-Regards,
-Matthias
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhlIGZvbGxvd2luZyBzZXJpZXMgb2YgcGF0Y2hlcyBwcm92aWRlcyBpbXBsZW1lbnRhdGlvbiBv
+ZiB0aGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAKa2V4ZWNfZmlsZV9sb2FkKCkgc3lzdGVtIGNhbGwgZm9ybSB0aGUgYXJtIGFyY2hpdGVj
+dHVyZS4gekltYWdlIGFuZCB1SW1hZ2UgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKKGxlZ2FjeSBmb3JtYXQpIGZpbGVzIGFyZSBzdXBwb3J0ZWQuIExpa2Ugb24g
+YXJtNjQsIHRoZXJlIGlzIG5vICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAKcG9zc2liaWxpdHkgb2YgbG9hZGluZyBhIG5ldyBEVEIgYW5kIHRo
+ZSBjdXJyZW50bHkgbG9hZGVkIGlzIHJldXNlZC4gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAKCkNoYW5nZXMgaW4gdjM6CiAgLSBtb3ZlIHRoZSBwYXRj
+aHNldCB0byBuZXh0LTIwMjAwOTI5CiAgLSBkcm9wIHRoZSBmaXJzdCBwYXRjaDogc2V0IG1hbGxv
+YyBwb29sIHNpemUgZm9yIHRoZSBkZWNvbXByZXNzb3IKICAgIChyZXBsYWNlZCBieSBhZGM1Zjcw
+MjkzNzYwKSAgCiAgLSB1c2UgdGV4dF9vZmZzZXQgYWRkZWQgaW4gODNkZmVlZGI2NjYzZQogIC0g
+YWRkIHRleHRfb2Zmc2V0IGFuZCBtYWxsb2Nfc2l6ZSB0byBzdHJ1Y3QgemltYWdlX2tybmxfc2l6
+ZQogIC0gYWRkIGRlcGVuZGVuY3kgb24gQ09ORklHX0tFWEVDX0ZJTEUgaW4gYXJjaC9hcm0vaW5j
+bHVkZS9hc20va2V4ZWMuaAogICAgdG8gZW5hYmxlIGNvbXBpbGF0aW9uIHdpdGhvdXQgQ09ORklH
+X0tFWEVDCiAgLSBhZGQgZGVwZW5kZW5jeSBvbiBNTVUgaW4gS2NvbmZpZwoKQ2hhbmdlcyBpbiB2
+MjogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAKICAtIGFk
+ZCBDT05GSUdfS0VYRUNfRklMRV9VSU1BR0UgZm9yIG9wdGlvbmFsIHVJbWFnZSBzdXBwb3J0ICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAK
+ICAtIE1BTExPQ19TSVpFIGFzIGEgZGVmaW5lIGluc3RlYWQgb2YgYSBzeW1ib2wgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAKICAtIERDU1ogdGFnIGhvbGRzIGNvbWJpbmVkIGR5bmFtaWMgbWVtb3J5IHJlcXVpcmVt
+ZW50cyAoYnNzK3N0YWNrK21hbGxvYykgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAKICAtIHVzZSB1bmlvbiBmb3IgYSBzaW5nbGUgdGFnIHN0cnVjdHVyZSAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAKICAtIGNvcHlyaWdodCBub3RpY2UgaW5jbHVkZXMgUnVzc2VsbCBL
+aW5nICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAKCsWBdWthc3ogU3RlbG1hY2ggKDQpOgogIGFybTogYWRk
+IGltYWdlIGhlYWRlciBkZWZpbml0aW9ucwogIGFybTogZGVjb21wcmVzc29yOiBkZWZpbmUgYSBu
+ZXcgekltYWdlIHRhZwogIGFybTogQWRkIGtleGVjX2ltYWdlX2luZm8KICBhcm06IGtleGVjX2Zp
+bGU6IGxvYWQgekltYWdlIG9yIHVJbWFnZSwgaW5pdHJkIGFuZCBkdGIKCiBhcmNoL2FybS9LY29u
+ZmlnICAgICAgICAgICAgICAgICAgICAgICB8ICAyNiArKysKIGFyY2gvYXJtL2Jvb3QvY29tcHJl
+c3NlZC9oZWFkLlMgICAgICAgIHwgICAzICstCiBhcmNoL2FybS9ib290L2NvbXByZXNzZWQvdm1s
+aW51eC5sZHMuUyB8ICAyMiArLS0KIGFyY2gvYXJtL2luY2x1ZGUvYXNtL2ltYWdlLmggICAgICAg
+ICAgIHwgIDc5ICsrKysrKysrKwogYXJjaC9hcm0vaW5jbHVkZS9hc20va2V4ZWMuaCAgICAgICAg
+ICAgfCAgMTYgKy0KIGFyY2gvYXJtL2tlcm5lbC9NYWtlZmlsZSAgICAgICAgICAgICAgIHwgICA1
+ICstCiBhcmNoL2FybS9rZXJuZWwva2V4ZWNfdWltYWdlLmMgICAgICAgICB8ICA4MCArKysrKysr
+KysrCiBhcmNoL2FybS9rZXJuZWwva2V4ZWNfemltYWdlLmMgICAgICAgICB8IDE5NyArKysrKysr
+KysrKysrKysrKysrKysrKwogYXJjaC9hcm0va2VybmVsL21hY2hpbmVfa2V4ZWMuYyAgICAgICAg
+fCAgMzkgKysrKy0KIGFyY2gvYXJtL2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYyAgIHwgMjEx
+ICsrKysrKysrKysrKysrKysrKysrKysrKysKIDEwIGZpbGVzIGNoYW5nZWQsIDY2MCBpbnNlcnRp
+b25zKCspLCAxOCBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9pbmNs
+dWRlL2FzbS9pbWFnZS5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0va2VybmVsL2tleGVj
+X3VpbWFnZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0va2VybmVsL2tleGVjX3ppbWFn
+ZS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgYXJjaC9hcm0va2VybmVsL21hY2hpbmVfa2V4ZWNfZmls
+ZS5jCgotLSAKMi4yNi4yCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
+cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
