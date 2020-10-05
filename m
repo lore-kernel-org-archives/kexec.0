@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from [2001:4190:8020::2] (helo=orcam.me.uk)
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kPEYh-0002j3-Ds
- for kexec@lists.infradead.org; Mon, 05 Oct 2020 00:40:56 +0000
-Date: Mon, 5 Oct 2020 01:40:47 +0100 (BST)
-From: "Maciej W. Rozycki" <macro@linux-mips.org>
-Subject: Re: [PATCH 1/3] MIPS: Crash kernel should be able to see old memories
-In-Reply-To: <alpine.LFD.2.21.2010032200470.333514@eddie.linux-mips.org>
-Message-ID: <alpine.LFD.2.21.2010050133330.333514@eddie.linux-mips.org>
-References: <1600828257-31316-1-git-send-email-chenhc@lemote.com>
- <20200923024548.GL25604@MiWiFi-R3L-srv>
- <CAAhV-H66O77hK7kB8cCcM6XUOc-TFEg_TJG+GrCSEdD89Qxb7g@mail.gmail.com>
- <20200923030847.GM25604@MiWiFi-R3L-srv>
- <alpine.LFD.2.21.2010032200470.333514@eddie.linux-mips.org>
+Date: Mon, 5 Oct 2020 18:09:38 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v12 0/9] support reserving crashkernel above 4G on arm64
+ kdump
+Message-ID: <20201005170937.GA14576@gaia>
+References: <20200907134745.25732-1-chenzhou10@huawei.com>
+ <e9b1b5db-a848-468e-6baf-2f7b4d658805@oracle.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <e9b1b5db-a848-468e-6baf-2f7b4d658805@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,45 +21,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Eric Biederman <ebiederm@xmission.com>, Fuxin Zhang <zhangfx@lemote.com>, Huacai Chen <chenhc@lemote.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: John Donnelly <john.p.donnelly@oracle.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-On Sat, 3 Oct 2020, Maciej W. Rozycki wrote:
-
-> > Interesting. Seems MIPS does support mem=X@Y, even though the document
-> > of 'mem=' says it's used to specify amount of memory, but not memory
-> > region. Anyway, leave this to mips reviewers, thanks for replying.
-> > 
-> > ~~~~~~~~~~~~~~~~~~~
-> >         mem=nn[KMG]     [KNL,BOOT] Force usage of a specific amount of memory
-> >                         Amount of memory to be used in cases as follows:
+On Sat, Sep 12, 2020 at 06:44:29AM -0500, John Donnelly wrote:
+> On 9/7/20 8:47 AM, Chen Zhou wrote:
+> > Chen Zhou (9):
+> >    x86: kdump: move CRASH_ALIGN to 2M
+> >    x86: kdump: make the lower bound of crash kernel reservation
+> >      consistent
+> >    x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
+> >      reserve_crashkernel[_low]()
+> >    x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
+> >    arm64: kdump: introduce some macroes for crash kernel reservation
+> >    arm64: kdump: reimplement crashkernel=X
+> >    kdump: add threshold for the required memory
+> >    arm64: kdump: add memory for devices by DT property
+> >      linux,usable-memory-range
+> >    kdump: update Documentation about crashkernel
+[...]
+> I did a brief unit-test on 5.9-rc4.
 > 
->  Yep, I implemented it for the DECstation back in 2000:
+> Please add:
 > 
-> commit 97b7ae4257ef7ba8ed9b7944a4f56a49af3e8abb
-> Author: Ralf Baechle <ralf@linux-mips.org>
-> Date:   Mon Dec 11 16:41:05 2000 +0000
-> 
->     Memmap fixes from Maciej.
-> 
-> (from the LMO repo) in line with the x86 syntax.  I don't know why it 
-> hasn't ever been documented in "Kernel Parameters" (for any port), but I'm 
-> fairly sure it has been somewhere.
+> Tested-by:  John Donnelly <John.p.donnelly@oracle.com>
 
- Self-correction: documentation used to be there, but was removed around 
-Linux 2.5.65:
+Thanks for testing.
 
-commit 041a679cb20e4fcb841665b09cf7c6d24ab4ad39
-Author: Ralf Baechle <ralf@linux-mips.org>
-Date:   Thu Jun 5 00:04:28 2003 +0000
+> This activity is over a year old. It needs accepted.
 
-    Merge with Linux 2.5.65.
+It's getting there, hopefully in 5.11. There are some minor tweaks to
+address.
 
-(same repo) as the parameter was renamed to `memmap=' in the x86 port.  
-Obviously whoever did that did not bother to check other ports, even 
-though the parameter was marked (and `memmap=' still is) generic.
-
-  Maciej
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
