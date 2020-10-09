@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: ira.weiny@intel.com
-Subject: [PATCH RFC PKS/PMEM 39/58] fs/jffs2: Utilize new kmap_thread()
-Date: Fri,  9 Oct 2020 12:50:14 -0700
-Message-Id: <20201009195033.3208459-40-ira.weiny@intel.com>
+Subject: [PATCH RFC PKS/PMEM 41/58] drivers/target: Utilize new kmap_thread()
+Date: Fri,  9 Oct 2020 12:50:16 -0700
+Message-Id: <20201009195033.3208459-42-ira.weiny@intel.com>
 In-Reply-To: <20201009195033.3208459-1-ira.weiny@intel.com>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
 MIME-Version: 1.0
@@ -23,34 +23,73 @@ Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-d
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-These kmap() calls are localized to a single thread.  To avoid the over head of
-global PKRS updates use the new kmap_thread() call.
+These kmap() calls in this driver are localized to a single thread.  To
+avoid the over head of global PKRS updates use the new kmap_thread()
+call.
 
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- fs/jffs2/file.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ drivers/target/target_core_iblock.c    | 4 ++--
+ drivers/target/target_core_rd.c        | 4 ++--
+ drivers/target/target_core_transport.c | 4 ++--
+ 3 files changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/fs/jffs2/file.c b/fs/jffs2/file.c
-index 3e6d54f9b011..14dd2b18cc16 100644
---- a/fs/jffs2/file.c
-+++ b/fs/jffs2/file.c
-@@ -287,13 +287,13 @@ static int jffs2_write_end(struct file *filp, struct address_space *mapping,
+diff --git a/drivers/target/target_core_iblock.c b/drivers/target/target_core_iblock.c
+index 1c181d31f4c8..df7b1568edb3 100644
+--- a/drivers/target/target_core_iblock.c
++++ b/drivers/target/target_core_iblock.c
+@@ -415,7 +415,7 @@ iblock_execute_zero_out(struct block_device *bdev, struct se_cmd *cmd)
+ 	unsigned char *buf, *not_zero;
+ 	int ret;
  
- 	/* In 2.4, it was already kmapped by generic_file_write(). Doesn't
- 	   hurt to do it again. The alternative is ifdefs, which are ugly. */
--	kmap(pg);
-+	kmap_thread(pg);
+-	buf = kmap(sg_page(sg)) + sg->offset;
++	buf = kmap_thread(sg_page(sg)) + sg->offset;
+ 	if (!buf)
+ 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+ 	/*
+@@ -423,7 +423,7 @@ iblock_execute_zero_out(struct block_device *bdev, struct se_cmd *cmd)
+ 	 * incoming WRITE_SAME payload does not contain zeros.
+ 	 */
+ 	not_zero = memchr_inv(buf, 0x00, cmd->data_length);
+-	kunmap(sg_page(sg));
++	kunmap_thread(sg_page(sg));
  
- 	ret = jffs2_write_inode_range(c, f, ri, page_address(pg) + aligned_start,
- 				      (pg->index << PAGE_SHIFT) + aligned_start,
- 				      end - aligned_start, &writtenlen);
+ 	if (not_zero)
+ 		return TCM_LOGICAL_UNIT_COMMUNICATION_FAILURE;
+diff --git a/drivers/target/target_core_rd.c b/drivers/target/target_core_rd.c
+index 408bd975170b..dbbdd39c5bf9 100644
+--- a/drivers/target/target_core_rd.c
++++ b/drivers/target/target_core_rd.c
+@@ -159,9 +159,9 @@ static int rd_allocate_sgl_table(struct rd_dev *rd_dev, struct rd_dev_sg_table *
+ 			sg_assign_page(&sg[j], pg);
+ 			sg[j].length = PAGE_SIZE;
  
--	kunmap(pg);
-+	kunmap_thread(pg);
+-			p = kmap(pg);
++			p = kmap_thread(pg);
+ 			memset(p, init_payload, PAGE_SIZE);
+-			kunmap(pg);
++			kunmap_thread(pg);
+ 		}
  
- 	if (ret) {
- 		/* There was an error writing. */
+ 		page_offset += sg_per_table;
+diff --git a/drivers/target/target_core_transport.c b/drivers/target/target_core_transport.c
+index ff26ab0a5f60..8d0bae5a92e5 100644
+--- a/drivers/target/target_core_transport.c
++++ b/drivers/target/target_core_transport.c
+@@ -1692,11 +1692,11 @@ int target_submit_cmd_map_sgls(struct se_cmd *se_cmd, struct se_session *se_sess
+ 			unsigned char *buf = NULL;
+ 
+ 			if (sgl)
+-				buf = kmap(sg_page(sgl)) + sgl->offset;
++				buf = kmap_thread(sg_page(sgl)) + sgl->offset;
+ 
+ 			if (buf) {
+ 				memset(buf, 0, sgl->length);
+-				kunmap(sg_page(sgl));
++				kunmap_thread(sg_page(sgl));
+ 			}
+ 		}
+ 
 -- 
 2.28.0.rc0.12.gb6a658bd00c9
 
