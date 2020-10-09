@@ -1,18 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 7 Oct 2020 17:33:19 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v12 0/9] support reserving crashkernel above 4G on arm64
- kdump
-Message-ID: <20201007163319.GS3462@gaia>
-References: <20200907134745.25732-1-chenzhou10@huawei.com>
- <e9b1b5db-a848-468e-6baf-2f7b4d658805@oracle.com>
- <20201005170937.GA14576@gaia>
- <CACi5LpMWUmP1df8fB8psJY_cNGHF9MNn+TNK4B4edaRHvOXxGQ@mail.gmail.com>
- <20201006180012.GB31946@C02TF0J2HF1T.local>
- <CACi5LpMmccLX9p0ZXnEbWHgn2LRrVSDQZF9zBGzfZySe3TvXEQ@mail.gmail.com>
+Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kQhJq-0006Rv-HS
+ for kexec@lists.infradead.org; Fri, 09 Oct 2020 01:35:39 +0000
+Received: by mail-pg1-x543.google.com with SMTP id r21so2493766pgj.5
+ for <kexec@lists.infradead.org>; Thu, 08 Oct 2020 18:35:37 -0700 (PDT)
+Date: Fri, 9 Oct 2020 10:35:12 +0900
+From: Joonsoo Kim <js1304@gmail.com>
+Subject: Re: [RFC][PATCH] kexec: Teach indirect pages how to live in high
+ memory
+Message-ID: <20201009013500.GA26932@js1304-desktop>
+References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
+ <1588130803-20527-4-git-send-email-iamjoonsoo.kim@lge.com>
+ <87h7wzvjko.fsf@x220.int.ebiederm.org>
+ <CAAmzW4MrD75+Prw=fQ=d5uXKgGy3urBwmxnNtoNsw5M1m9xjYQ@mail.gmail.com>
+ <87ftcfpzjn.fsf@x220.int.ebiederm.org>
+ <87368fmkel.fsf_-_@x220.int.ebiederm.org>
+ <54a53bfe-6929-2790-9b1d-943e9f47cd62@linux.ibm.com>
+ <87sggekyzv.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CACi5LpMmccLX9p0ZXnEbWHgn2LRrVSDQZF9zBGzfZySe3TvXEQ@mail.gmail.com>
+In-Reply-To: <87sggekyzv.fsf@x220.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,74 +33,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>
-Cc: wangkefeng.wang@huawei.com, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Chen Zhou <chenzhou10@huawei.com>, huawei.libin@huawei.com, guohanjun@huawei.com, Will Deacon <will@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Ingo Molnar <mingo@redhat.com>, RuiRui Yang <dyoung@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Arnd Bergmann <arnd@arndb.de>, xiexiuqi@huawei.com, Simon Horman <horms@verge.net.au>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, James Morse <james.morse@arm.com>, Prabhakar Kushwaha <prabhakar.pkin@gmail.com>, nsaenzjulienne@suse.de
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, Rik van Riel <riel@surriel.com>, Vlastimil Babka <vbabka@suse.cz>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Minchan Kim <minchan@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>, Christoph Hellwig <hch@infradead.org>, kernel-team@lge.com, Huang Rui <ray.huang@amd.com>, Linux Memory Management List <linux-mm@kvack.org>, Pavel Machek <pavel@ucw.cz>, Kexec Mailing List <kexec@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Mel Gorman <mgorman@techsingularity.net>, Christian Koenig <christian.koenig@amd.com>, Hari Bathini <hbathini@linux.ibm.com>
 
-On Wed, Oct 07, 2020 at 12:37:49PM +0530, Bhupesh Sharma wrote:
-> On Tue, Oct 6, 2020 at 11:30 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
-> > On Mon, Oct 05, 2020 at 11:12:10PM +0530, Bhupesh Sharma wrote:
-> > > I think my earlier email with the test results on this series bounced
-> > > off the mailing list server (for some weird reason), but I still see
-> > > several issues with this patchset. I will add specific issues in the
-> > > review comments for each patch again, but overall, with a crashkernel
-> > > size of say 786M, I see the following issue:
-> > >
-> > > # cat /proc/cmdline
-> > > BOOT_IMAGE=(hd7,gpt2)/vmlinuz-5.9.0-rc7+ root=<..snip..> rd.lvm.lv=<..snip..> crashkernel=786M
-> > >
-> > > I see two regions of size 786M and 256M reserved in low and high
-> > > regions respectively, So we reserve a total of 1042M of memory, which
-> > > is an incorrect behaviour:
-> > >
-> > > # dmesg | grep -i crash
-> > > [    0.000000] Reserving 256MB of low memory at 2816MB for crashkernel (System low RAM: 768MB)
-> > > [    0.000000] Reserving 786MB of memory at 654158MB for crashkernel (System RAM: 130816MB)
-> > > [    0.000000] Kernel command line: BOOT_IMAGE=(hd2,gpt2)/vmlinuz-5.9.0-rc7+ root=/dev/mapper/rhel_ampere--hr330a--03-root ro rd.lvm.lv=rhel_ampere-hr330a-03/root rd.lvm.lv=rhel_ampere-hr330a-03/swap crashkernel=786M cma=1024M
-> > >
-> > > # cat /proc/iomem | grep -i crash
-> > >   b0000000-bfffffff : Crash kernel (low)
-> > >   bfcbe00000-bffcffffff : Crash kernel
+On Tue, May 05, 2020 at 01:39:16PM -0500, Eric W. Biederman wrote:
+> Hari Bathini <hbathini@linux.ibm.com> writes:
+> 
+> > On 05/05/20 3:29 am, Eric W. Biederman wrote:
+> >> 
+> >> Recently a patch was proposed to kimage_alloc_page to slightly alter
+> >> the logic of how pages allocated with incompatible flags were
+> >> detected.  The logic was being altered because the semantics of the
+> >> page alloctor were changing yet again.
+> >> 
+> >> Looking at that case I realized that there is no reason for it to even
+> >> exist.  Either the indirect page allocations and the source page
+> >> allocations could be separated out, or I could do as I am doing now
+> >> and simply teach the indirect pages to live in high memory.
+> >> 
+> >> This patch replaced pointers of type kimage_entry_t * with a new type
+> >> kimage_entry_pos_t.  This new type holds the physical address of the
+> >> indirect page and the offset within that page of the next indirect
+> >> entry to write.  A special constant KIMAGE_ENTRY_POS_INVALID is added
+> >> that kimage_image_pos_t variables that don't currently have a valid
+> >> may be set to.
+> >> 
+> >> Two new functions kimage_read_entry and kimage_write_entry have been
+> >> provided to write entries in way that works if they live in high
+> >> memory.
+> >> 
+> >> The now unnecessary checks to see if a destination entry is non-zero
+> >> and to increment it if so have been removed.  For safety new indrect
+> >> pages are now cleared so we have a guarantee everything that has not
+> >> been used yet is zero.  Along with this writing an extra trailing 0
+> >> entry has been removed, as it is known all trailing entries are now 0.
+> >> 
+> >> With highmem support implemented for indirect pages
+> >> kimage_image_alloc_page has been updated to always allocate
+> >> GFP_HIGHUSER pages, and handling of pages with different
+> >> gfp flags has been removed.
+> >> 
+> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
 > >
-> > As Chen said, that's the intended behaviour and how x86 works. The
-> > requested 768M goes in the high range if there's not enough low memory
-> > and an additional buffer for swiotlb is allocated, hence the low 256M.
+> > Eric, the patch failed with data access exception on ppc64. Using the below patch on top
+> > got me going...
 > 
-> I understand, but why 256M (as low) for arm64? x86_64 setups usually
-> have more system memory available as compared to several commercially
-> available arm64 setups. So is the intent, just to keep the behavior
-> similar between arm64 and x86_64?
-
-Similar in the sense of the fallback to high memory and some low memory
-allocation but the amounts can vary per architecture.
-
-> Should we have a CONFIG option / bootarg to help one select the max
-> 'low_size'? Currently the ' low_size' value is calculated as:
+> Doh!  Somehow I thought I had put that logic or something equivalent
+> into kimage_write_entry and it appears I did not.  I will see if I can
+> respin the patch.
 > 
->     /*
->          * two parts from kernel/dma/swiotlb.c:
->          * -swiotlb size: user-specified with swiotlb= or default.
->          *
->          * -swiotlb overflow buffer: now hardcoded to 32k. We round it
->          * to 8M for other buffers that may need to stay low too. Also
->          * make sure we allocate enough extra low memory so that we
->          * don't run out of DMA buffers for 32-bit devices.
->          */
->         low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
-> 
-> Since many arm64 boards ship with swiotlb=0 (turned off) via kernel
-> bootargs, the low_size, still ends up being 256M in such cases,
-> whereas this 256M can be used for some other purposes - so should we
-> be limiting this to 64M and failing the crash kernel allocation
-> request (gracefully) otherwise?
+> Thank you very much for testing.
 
-I think it makes sense to set a low_size = 0 if
-swiotlb_size_or_default() is 0. The assumption would be that if the main
-kernel doesn't need an swiotlb, the crashdump one wouldn't need it
-either. But this probably needs the ZONE_DMA for non-RPi4 platforms
-addressed as well (expanded to the whole ZONE_DMA32).
+Hello, Eric.
 
--- 
-Catalin
+It seems that this patch isn't upstreamed.
+Could you respin the patch?
+I've tested this one on x86_32 (highmem enabled) and it works well.
+
+Thanks.
 
 _______________________________________________
 kexec mailing list
