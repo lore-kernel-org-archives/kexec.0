@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from [139.28.40.42] (helo=tarta.nabijaczleweli.xyz)
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kQumQ-0000SV-3M
+ id 1kQumQ-0000SY-3N
  for kexec@lists.infradead.org; Fri, 09 Oct 2020 15:58:04 +0000
 Received: from tarta.nabijaczleweli.xyz (unknown [192.168.1.250])
- by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id EDC8A3605DD
- for <kexec@lists.infradead.org>; Fri,  9 Oct 2020 17:39:19 +0200 (CEST)
-Date: Fri, 9 Oct 2020 17:39:18 +0200
+ by tarta.nabijaczleweli.xyz (Postfix) with ESMTPSA id D19D1361227
+ for <kexec@lists.infradead.org>; Fri,  9 Oct 2020 17:39:59 +0200 (CEST)
+Date: Fri, 9 Oct 2020 17:39:58 +0200
 From: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Subject: [PATCH 0/5] x32 support
-Message-ID: <cover.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
+Subject: [PATCH 4/5] i386: fix string formatting-related warnings
+Message-ID: <138ec3f10131b2fce08840f1f70cf657b2555445.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
+References: <cover.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
 MIME-Version: 1.0
+In-Reply-To: <cover.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,76 +21,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============7160665839841291936=="
+Content-Type: multipart/mixed; boundary="===============1893289300334794153=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
 
---===============7160665839841291936==
+--===============1893289300334794153==
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7exblbj6zn43rwry"
+	protocol="application/pgp-signature"; boundary="o4tcbon72l2mjpoc"
 Content-Disposition: inline
 
 
---7exblbj6zn43rwry
+--o4tcbon72l2mjpoc
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-This patchset essentially boils down to:
-  (a) disabling -mcmodel=3Dlarge, and
-  (b) allowing ELFCLASS32 in x86_64.
+fixed the same way as in 70cca82
+"kexec: Fix snprintf related compilation warnings"
 
-I've also updated the autotools scripts so they detect x32 correctly
-and fixed some warnings.
+Signed-off-by: Ahelenia Ziemia=C5=84ska <nabijaczleweli@nabijaczleweli.xyz>
+---
+ kexec/arch/i386/x86-linux-setup.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-Ahelenia Ziemia=C5=84ska (5):
-  config: update to latest config.{sub,guess}, install-sh
-  configure.ac, arch/x86_64: handle x32 as subarch of x86_64 and don't
-    specify -mcmodel=3Dlarge there
-  i386/kexec-mb2-x86.c: cast ints to uintptr_t before pointers to avoid
-    warnings
-  i386: fix string formatting-related warnings
-  x86_64: allow ELFCLASS32 for x32 support
-
- config/config.guess                      | 1048 +++++----
- config/config.sub                        | 2603 +++++++++++-----------
- config/install-sh                        |  401 ++--
- configure.ac                             |    8 +
- kexec/arch/i386/kexec-mb2-x86.c          |    6 +-
- kexec/arch/i386/x86-linux-setup.c        |   16 +-
- kexec/arch/x86_64/kexec-elf-rel-x86_64.c |    3 +-
- purgatory/arch/x86_64/Makefile           |    2 +
- 8 files changed, 2157 insertions(+), 1930 deletions(-)
-
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-=
+setup.c
+index 057ee14..76e1185 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -232,8 +232,14 @@ static int parse_edd_extensions(const char *dir, struc=
+t edd_info *edd_info)
+ 	char line[1024];
+ 	uint16_t flags =3D 0;
+ 	FILE *fp;
++	int ret;
++
++	ret =3D snprintf(filename, PATH_MAX, "%s/%s", dir, "extensions");
++	if (ret < 0 || ret >=3D PATH_MAX) {
++		fprintf(stderr, "snprintf failed: %s\n", strerror(errno));
++		return -1;
++	}
+=20
+-	snprintf(filename, PATH_MAX, "%s/%s", dir, "extensions");
+ 	filename[PATH_MAX-1] =3D 0;
+=20
+ 	fp =3D fopen(filename, "r");
+@@ -269,8 +275,14 @@ static int read_edd_raw_data(const char *dir, struct e=
+dd_info *edd_info)
+ 	FILE *fp;
+ 	size_t read_chars;
+ 	uint16_t len;
++	int ret;
++
++	ret =3D snprintf(filename, PATH_MAX, "%s/%s", dir, "raw_data");
++	if (ret < 0 || ret >=3D PATH_MAX) {
++		fprintf(stderr, "snprintf failed: %s\n", strerror(errno));
++		return -1;
++	}
+=20
+-	snprintf(filename, PATH_MAX, "%s/%s", dir, "raw_data");
+ 	filename[PATH_MAX-1] =3D 0;
+=20
+ 	fp =3D fopen(filename, "r");
 --=20
 2.28.0
 
---7exblbj6zn43rwry
+
+--o4tcbon72l2mjpoc
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAl+AhBsACgkQvP0LAY0m
-WPEHgw//Yvy/ONmRr5Wq7qjkhN6VhAerFqmhEDNmTuvDVM6IRY+rArmUyrop+bNT
-iek4tOtpmKeT/a9ym1AM9pvNG+quUfKlSloO664WECPwfajs6gX3XsxG57aEWr9I
-NsR2v7XddUntf7Nrns233gRoERA4MmZh7NEVVEG704cCMrn3xUkDw+7RdbIXHIld
-O7aqM/6Ru9dUZQ4JSWk2M9q2kvboGuWM+PLvdhhmcyAF1T2zmsjCg9DkDk6ujmOi
-DfV1mQleK4p9XpAY+sraAEXwXscRSmaY4yc09iHkPrGp5DyTZd4G4+OXG2f2yd+x
-fo5MFOPYiQKXLZAbFGjKcR20p650FRdnMEB1K7H+lUdvpY4q99Rj+DPoVteu6YaN
-G++6fv3wQ7OFEITnE3hmmVzQYbmK0tMwLBcUJAJ/p26gZv6EzMXLnDE5Ps/tf7g3
-H+Cafe14dgCUwaKrbpC46CyMXbQiB/kETvSjekO2N4RqhFIM/TcutoT8xpq7L5Lq
-f9niQCqWRY7Iqz91oiUtWYyavnxG7EmnGKPHhjg9tqNwh2nnrK2Jj50fB95uj3IQ
-4Cg8UhUa9i+4vPAHiNBSYIWN4m0WufrgWGd1V/aVL02YucW8MbL/Y0TUnd43ClNc
-Te93A03373Idu9VQaUyt+SuLT4e9wXsJxi6OG6f3YAASs24FfN8=
-=nXzT
+iQIzBAABCgAdFiEEfWlHToQCjFzAxEFjvP0LAY0mWPEFAl+AhE4ACgkQvP0LAY0m
+WPGqNxAAl8jFHcmV7d9XTvdrMRXmYaYECPK/13xEaDIefnTr6Id5U23pvzWtK4Se
+KWCHnsKIoj3uqNQShlPn8W2bGma8lH1fKtAs7tBF4DRAJBxJZF/Zt2hf/n0U7EkB
+nGecN4/Rzob4QcqRWPw4zG1nsYCGYKJn4rethGZpW812kDTOhUldTI6NO2Q7rFGN
+Wxf3HkB0u1sAEbRu5b7OV9m4sDbLyb2tjCwedD3PrYIbH25mPWqAbY4PdROzsjTU
+KJJH6ZLOBL0DXbn+hCFW220ztsXd3jPP20u7uTgcUmnXiyiWaREkGAzitZjXSCLB
+UgNlERpOBjmibc/8vI5bnTUyA8vf2/oJTr23IMubJAEH1Kcs4JRN3wU/IV0GbM+8
+Q8H6EwPg2rayNRxbgtCGvrSSLQ3H0mxMfuAf/STErZzzYtcNOyJCsF0NC9Ct5oM8
+Mt0jR/RTaZWmh9+vKOunWFXSQYYS30ZRnOsPCAjEjEPE9JRkuzb3dp7c6g8lzTVP
+tmhH55JczrKtfIEUWrXamw+giSZq0pIwDzZD9yki0/IPTf8lkjToCSbWf4wy1P0o
+CWSiREgW2eQSgY8ZJlvVpSntR0EVEWqBMz8QR2kMwcZ/4DB8UmFsyQIv+x4smRgo
+HauQjLmrUk3qOr9HfvWJ+gNUis48BDq/TJORRak2gw4WfbeaDeg=
+=TbIL
 -----END PGP SIGNATURE-----
 
---7exblbj6zn43rwry--
+--o4tcbon72l2mjpoc--
 
 
---===============7160665839841291936==
+--===============1893289300334794153==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -99,5 +123,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============7160665839841291936==--
+--===============1893289300334794153==--
 
