@@ -1,11 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ira.weiny@intel.com
-Subject: [PATCH RFC PKS/PMEM 05/58] kmap: Introduce k[un]map_thread
-Date: Fri,  9 Oct 2020 12:49:40 -0700
-Message-Id: <20201009195033.3208459-6-ira.weiny@intel.com>
-In-Reply-To: <20201009195033.3208459-1-ira.weiny@intel.com>
+Date: Fri, 9 Oct 2020 14:34:34 -0700
+From: Eric Biggers <ebiggers@kernel.org>
+Subject: Re: [PATCH RFC PKS/PMEM 22/58] fs/f2fs: Utilize new kmap_thread()
+Message-ID: <20201009213434.GA839@sol.localdomain>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-23-ira.weiny@intel.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20201009195033.3208459-23-ira.weiny@intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,142 +20,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Ira Weiny <ira.weiny@intel.com>, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, io-uring@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+To: ira.weiny@intel.com
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org, kexec@lists.infradead.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, bpf@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, Fenghua Yu <fenghua.yu@intel.com>, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-um@lists.infradead.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Jaegeuk Kim <jaegeuk@kernel.org>, ceph-devel@vger.kernel.org, io-uring@vger.kernel.org, linux-cachefs@redhat.com, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, samba-technical@lists.samba.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, linux-erofs@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 
-From: Ira Weiny <ira.weiny@intel.com>
+On Fri, Oct 09, 2020 at 12:49:57PM -0700, ira.weiny@intel.com wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The kmap() calls in this FS are localized to a single thread.  To avoid
+> the over head of global PKRS updates use the new kmap_thread() call.
+> 
+> Cc: Jaegeuk Kim <jaegeuk@kernel.org>
+> Cc: Chao Yu <chao@kernel.org>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/f2fs/f2fs.h | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+> index d9e52a7f3702..ff72a45a577e 100644
+> --- a/fs/f2fs/f2fs.h
+> +++ b/fs/f2fs/f2fs.h
+> @@ -2410,12 +2410,12 @@ static inline struct page *f2fs_pagecache_get_page(
+>  
+>  static inline void f2fs_copy_page(struct page *src, struct page *dst)
+>  {
+> -	char *src_kaddr = kmap(src);
+> -	char *dst_kaddr = kmap(dst);
+> +	char *src_kaddr = kmap_thread(src);
+> +	char *dst_kaddr = kmap_thread(dst);
+>  
+>  	memcpy(dst_kaddr, src_kaddr, PAGE_SIZE);
+> -	kunmap(dst);
+> -	kunmap(src);
+> +	kunmap_thread(dst);
+> +	kunmap_thread(src);
+>  }
 
-To correctly support the semantics of kmap() with Kernel protection keys
-(PKS), kmap() may be required to set the protections on multiple
-processors (globally).  Enabling PKS globally can be very expensive
-depending on the requested operation.  Furthermore, enabling a domain
-globally reduces the protection afforded by PKS.
+Wouldn't it make more sense to switch cases like this to kmap_atomic()?
+The pages are only mapped to do a memcpy(), then they're immediately unmapped.
 
-Most kmap() (Aprox 209 of 229) callers use the map within a single thread and
-have no need for the protection domain to be enabled globally.  However, the
-remaining callers do not follow this pattern and, as best I can tell, expect
-the mapping to be 'global' and available to any thread who may access the
-mapping.[1]
-
-We don't anticipate global mappings to pmem, however in general there is a
-danger in changing the semantics of kmap().  Effectively, this would cause an
-unresolved page fault with little to no information about why the failure
-occurred.
-
-To resolve this a number of options were considered.
-
-1) Attempt to change all the thread local kmap() calls to kmap_atomic()[2]
-2) Introduce a flags parameter to kmap() to indicate if the mapping should be
-   global or not
-3) Change ~20 call sites to 'kmap_global()' to indicate that they require a
-   global enablement of the pages.
-4) Change ~209 call sites to 'kmap_thread()' to indicate that the mapping is to
-   be used within that thread of execution only
-
-Option 1 is simply not feasible.  Option 2 would require all of the call sites
-of kmap() to change.  Option 3 seems like a good minimal change but there is a
-danger that new code may miss the semantic change of kmap() and not get the
-behavior the developer intended.  Therefore, #4 was chosen.
-
-Subsequent patches will convert most ~90% of the kmap callers to this new call
-leaving about 10% of the existing kmap callers to enable PKS globally.
-
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Signed-off-by: Ira Weiny <ira.weiny@intel.com>
----
- include/linux/highmem.h | 34 ++++++++++++++++++++++++++--------
- 1 file changed, 26 insertions(+), 8 deletions(-)
-
-diff --git a/include/linux/highmem.h b/include/linux/highmem.h
-index 2a9806e3b8d2..ef7813544719 100644
---- a/include/linux/highmem.h
-+++ b/include/linux/highmem.h
-@@ -60,7 +60,7 @@ static inline void kmap_flush_tlb(unsigned long addr) { }
- #endif
- 
- void *kmap_high(struct page *page);
--static inline void *kmap(struct page *page)
-+static inline void *__kmap(struct page *page, bool global)
- {
- 	void *addr;
- 
-@@ -74,20 +74,20 @@ static inline void *kmap(struct page *page)
- 	 * Even non-highmem pages may have additional access protections which
- 	 * need to be checked and potentially enabled.
- 	 */
--	dev_page_enable_access(page, true);
-+	dev_page_enable_access(page, global);
- 	return addr;
- }
- 
- void kunmap_high(struct page *page);
- 
--static inline void kunmap(struct page *page)
-+static inline void __kunmap(struct page *page, bool global)
- {
- 	might_sleep();
- 	/*
- 	 * Even non-highmem pages may have additional access protections which
- 	 * need to be checked and potentially disabled.
- 	 */
--	dev_page_disable_access(page, true);
-+	dev_page_disable_access(page, global);
- 	if (!PageHighMem(page))
- 		return;
- 	kunmap_high(page);
-@@ -160,10 +160,10 @@ static inline struct page *kmap_to_page(void *addr)
- 
- static inline unsigned long totalhigh_pages(void) { return 0UL; }
- 
--static inline void *kmap(struct page *page)
-+static inline void *__kmap(struct page *page, bool global)
- {
- 	might_sleep();
--	dev_page_enable_access(page, true);
-+	dev_page_enable_access(page, global);
- 	return page_address(page);
- }
- 
-@@ -171,9 +171,9 @@ static inline void kunmap_high(struct page *page)
- {
- }
- 
--static inline void kunmap(struct page *page)
-+static inline void __kunmap(struct page *page, bool global)
- {
--	dev_page_disable_access(page, true);
-+	dev_page_disable_access(page, global);
- #ifdef ARCH_HAS_FLUSH_ON_KUNMAP
- 	kunmap_flush_on_unmap(page_address(page));
- #endif
-@@ -238,6 +238,24 @@ static inline void kmap_atomic_idx_pop(void)
- 
- #endif
- 
-+static inline void *kmap(struct page *page)
-+{
-+	return __kmap(page, true);
-+}
-+static inline void kunmap(struct page *page)
-+{
-+	__kunmap(page, true);
-+}
-+
-+static inline void *kmap_thread(struct page *page)
-+{
-+	return __kmap(page, false);
-+}
-+static inline void kunmap_thread(struct page *page)
-+{
-+	__kunmap(page, false);
-+}
-+
- /*
-  * Prevent people trying to call kunmap_atomic() as if it were kunmap()
-  * kunmap_atomic() should get the return value of kmap_atomic, not the page.
--- 
-2.28.0.rc0.12.gb6a658bd00c9
-
+- Eric
 
 _______________________________________________
 kexec mailing list
