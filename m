@@ -1,26 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x543.google.com ([2607:f8b0:4864:20::543])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kQhJq-0006Rv-HS
- for kexec@lists.infradead.org; Fri, 09 Oct 2020 01:35:39 +0000
-Received: by mail-pg1-x543.google.com with SMTP id r21so2493766pgj.5
- for <kexec@lists.infradead.org>; Thu, 08 Oct 2020 18:35:37 -0700 (PDT)
-Date: Fri, 9 Oct 2020 10:35:12 +0900
-From: Joonsoo Kim <js1304@gmail.com>
-Subject: Re: [RFC][PATCH] kexec: Teach indirect pages how to live in high
- memory
-Message-ID: <20201009013500.GA26932@js1304-desktop>
-References: <1588130803-20527-1-git-send-email-iamjoonsoo.kim@lge.com>
- <1588130803-20527-4-git-send-email-iamjoonsoo.kim@lge.com>
- <87h7wzvjko.fsf@x220.int.ebiederm.org>
- <CAAmzW4MrD75+Prw=fQ=d5uXKgGy3urBwmxnNtoNsw5M1m9xjYQ@mail.gmail.com>
- <87ftcfpzjn.fsf@x220.int.ebiederm.org>
- <87368fmkel.fsf_-_@x220.int.ebiederm.org>
- <54a53bfe-6929-2790-9b1d-943e9f47cd62@linux.ibm.com>
- <87sggekyzv.fsf@x220.int.ebiederm.org>
+From: ira.weiny@intel.com
+Subject: [PATCH RFC PKS/PMEM 08/58] drivers/firmware_loader: Utilize new
+ kmap_thread()
+Date: Fri,  9 Oct 2020 12:49:43 -0700
+Message-Id: <20201009195033.3208459-9-ira.weiny@intel.com>
+In-Reply-To: <20201009195033.3208459-1-ira.weiny@intel.com>
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87sggekyzv.fsf@x220.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,64 +19,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Michal Hocko <mhocko@suse.com>, Johannes Weiner <hannes@cmpxchg.org>, Rik van Riel <riel@surriel.com>, Vlastimil Babka <vbabka@suse.cz>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Minchan Kim <minchan@kernel.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Roman Gushchin <guro@fb.com>, Christoph Hellwig <hch@infradead.org>, kernel-team@lge.com, Huang Rui <ray.huang@amd.com>, Linux Memory Management List <linux-mm@kvack.org>, Pavel Machek <pavel@ucw.cz>, Kexec Mailing List <kexec@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Laura Abbott <labbott@redhat.com>, Mel Gorman <mgorman@techsingularity.net>, Christian Koenig <christian.koenig@amd.com>, Hari Bathini <hbathini@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Ira Weiny <ira.weiny@intel.com>, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, io-uring@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, Luis Chamberlain <mcgrof@kernel.org>, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 
-On Tue, May 05, 2020 at 01:39:16PM -0500, Eric W. Biederman wrote:
-> Hari Bathini <hbathini@linux.ibm.com> writes:
-> 
-> > On 05/05/20 3:29 am, Eric W. Biederman wrote:
-> >> 
-> >> Recently a patch was proposed to kimage_alloc_page to slightly alter
-> >> the logic of how pages allocated with incompatible flags were
-> >> detected.  The logic was being altered because the semantics of the
-> >> page alloctor were changing yet again.
-> >> 
-> >> Looking at that case I realized that there is no reason for it to even
-> >> exist.  Either the indirect page allocations and the source page
-> >> allocations could be separated out, or I could do as I am doing now
-> >> and simply teach the indirect pages to live in high memory.
-> >> 
-> >> This patch replaced pointers of type kimage_entry_t * with a new type
-> >> kimage_entry_pos_t.  This new type holds the physical address of the
-> >> indirect page and the offset within that page of the next indirect
-> >> entry to write.  A special constant KIMAGE_ENTRY_POS_INVALID is added
-> >> that kimage_image_pos_t variables that don't currently have a valid
-> >> may be set to.
-> >> 
-> >> Two new functions kimage_read_entry and kimage_write_entry have been
-> >> provided to write entries in way that works if they live in high
-> >> memory.
-> >> 
-> >> The now unnecessary checks to see if a destination entry is non-zero
-> >> and to increment it if so have been removed.  For safety new indrect
-> >> pages are now cleared so we have a guarantee everything that has not
-> >> been used yet is zero.  Along with this writing an extra trailing 0
-> >> entry has been removed, as it is known all trailing entries are now 0.
-> >> 
-> >> With highmem support implemented for indirect pages
-> >> kimage_image_alloc_page has been updated to always allocate
-> >> GFP_HIGHUSER pages, and handling of pages with different
-> >> gfp flags has been removed.
-> >> 
-> >> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> >
-> > Eric, the patch failed with data access exception on ppc64. Using the below patch on top
-> > got me going...
-> 
-> Doh!  Somehow I thought I had put that logic or something equivalent
-> into kimage_write_entry and it appears I did not.  I will see if I can
-> respin the patch.
-> 
-> Thank you very much for testing.
+From: Ira Weiny <ira.weiny@intel.com>
 
-Hello, Eric.
+The kmap() calls in this driver are localized to a single thread.  To
+avoid the over head of global PKRS updates use the new kmap_thread()
+call.
 
-It seems that this patch isn't upstreamed.
-Could you respin the patch?
-I've tested this one on x86_32 (highmem enabled) and it works well.
+Cc: Luis Chamberlain <mcgrof@kernel.org>
+Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+---
+ drivers/base/firmware_loader/fallback.c | 4 ++--
+ drivers/base/firmware_loader/main.c     | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks.
+diff --git a/drivers/base/firmware_loader/fallback.c b/drivers/base/firmware_loader/fallback.c
+index 283ca2de76d4..22dea9ba7a37 100644
+--- a/drivers/base/firmware_loader/fallback.c
++++ b/drivers/base/firmware_loader/fallback.c
+@@ -322,14 +322,14 @@ static void firmware_rw(struct fw_priv *fw_priv, char *buffer,
+ 		int page_ofs = offset & (PAGE_SIZE-1);
+ 		int page_cnt = min_t(size_t, PAGE_SIZE - page_ofs, count);
+ 
+-		page_data = kmap(fw_priv->pages[page_nr]);
++		page_data = kmap_thread(fw_priv->pages[page_nr]);
+ 
+ 		if (read)
+ 			memcpy(buffer, page_data + page_ofs, page_cnt);
+ 		else
+ 			memcpy(page_data + page_ofs, buffer, page_cnt);
+ 
+-		kunmap(fw_priv->pages[page_nr]);
++		kunmap_thread(fw_priv->pages[page_nr]);
+ 		buffer += page_cnt;
+ 		offset += page_cnt;
+ 		count -= page_cnt;
+diff --git a/drivers/base/firmware_loader/main.c b/drivers/base/firmware_loader/main.c
+index 63b9714a0154..cc884c9f8742 100644
+--- a/drivers/base/firmware_loader/main.c
++++ b/drivers/base/firmware_loader/main.c
+@@ -409,11 +409,11 @@ static int fw_decompress_xz_pages(struct device *dev, struct fw_priv *fw_priv,
+ 
+ 		/* decompress onto the new allocated page */
+ 		page = fw_priv->pages[fw_priv->nr_pages - 1];
+-		xz_buf.out = kmap(page);
++		xz_buf.out = kmap_thread(page);
+ 		xz_buf.out_pos = 0;
+ 		xz_buf.out_size = PAGE_SIZE;
+ 		xz_ret = xz_dec_run(xz_dec, &xz_buf);
+-		kunmap(page);
++		kunmap_thread(page);
+ 		fw_priv->size += xz_buf.out_pos;
+ 		/* partial decompression means either end or error */
+ 		if (xz_buf.out_pos != PAGE_SIZE)
+-- 
+2.28.0.rc0.12.gb6a658bd00c9
+
 
 _______________________________________________
 kexec mailing list
