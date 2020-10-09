@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: ira.weiny@intel.com
-Subject: [PATCH RFC PKS/PMEM 14/58] fs/cifs: Utilize new kmap_thread()
-Date: Fri,  9 Oct 2020 12:49:49 -0700
-Message-Id: <20201009195033.3208459-15-ira.weiny@intel.com>
+Subject: [PATCH RFC PKS/PMEM 07/58] drivers/drbd: Utilize new kmap_thread()
+Date: Fri,  9 Oct 2020 12:49:42 -0700
+Message-Id: <20201009195033.3208459-8-ira.weiny@intel.com>
 In-Reply-To: <20201009195033.3208459-1-ira.weiny@intel.com>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
 MIME-Version: 1.0
@@ -19,132 +19,88 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
-Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Ira Weiny <ira.weiny@intel.com>, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, io-uring@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, Steve French <sfrench@samba.org>, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Ira Weiny <ira.weiny@intel.com>, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, io-uring@vger.kernel.org, Jens Axboe <axboe@kernel.dk>, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 
 From: Ira Weiny <ira.weiny@intel.com>
 
-The kmap() calls in this FS are localized to a single thread.  To avoid
-the over head of global PKRS updates use the new kmap_thread() call.
+The kmap() calls in this driver are localized to a single thread.  To
+avoid the over head of global PKRS updates use the new kmap_thread()
+call.
 
-Cc: Steve French <sfrench@samba.org>
+Cc: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Ira Weiny <ira.weiny@intel.com>
 ---
- fs/cifs/cifsencrypt.c |  6 +++---
- fs/cifs/file.c        | 16 ++++++++--------
- fs/cifs/smb2ops.c     |  8 ++++----
- 3 files changed, 15 insertions(+), 15 deletions(-)
+ drivers/block/drbd/drbd_main.c     |  4 ++--
+ drivers/block/drbd/drbd_receiver.c | 12 ++++++------
+ 2 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/fs/cifs/cifsencrypt.c b/fs/cifs/cifsencrypt.c
-index 9daa256f69d4..2f8232d01a56 100644
---- a/fs/cifs/cifsencrypt.c
-+++ b/fs/cifs/cifsencrypt.c
-@@ -82,17 +82,17 @@ int __cifs_calc_signature(struct smb_rqst *rqst,
+diff --git a/drivers/block/drbd/drbd_main.c b/drivers/block/drbd/drbd_main.c
+index 573dbf6f0c31..f0d0c6b0745e 100644
+--- a/drivers/block/drbd/drbd_main.c
++++ b/drivers/block/drbd/drbd_main.c
+@@ -1532,9 +1532,9 @@ static int _drbd_no_send_page(struct drbd_peer_device *peer_device, struct page
+ 	int err;
  
- 		rqst_page_get_length(rqst, i, &len, &offset);
- 
--		kaddr = (char *) kmap(rqst->rq_pages[i]) + offset;
-+		kaddr = (char *) kmap_thread(rqst->rq_pages[i]) + offset;
- 
- 		rc = crypto_shash_update(shash, kaddr, len);
- 		if (rc) {
- 			cifs_dbg(VFS, "%s: Could not update with payload\n",
- 				 __func__);
--			kunmap(rqst->rq_pages[i]);
-+			kunmap_thread(rqst->rq_pages[i]);
- 			return rc;
- 		}
- 
--		kunmap(rqst->rq_pages[i]);
-+		kunmap_thread(rqst->rq_pages[i]);
- 	}
- 
- 	rc = crypto_shash_final(shash, signature);
-diff --git a/fs/cifs/file.c b/fs/cifs/file.c
-index be46fab4c96d..6db2caab8852 100644
---- a/fs/cifs/file.c
-+++ b/fs/cifs/file.c
-@@ -2145,17 +2145,17 @@ static int cifs_partialpagewrite(struct page *page, unsigned from, unsigned to)
- 	inode = page->mapping->host;
- 
- 	offset += (loff_t)from;
--	write_data = kmap(page);
-+	write_data = kmap_thread(page);
- 	write_data += from;
- 
- 	if ((to > PAGE_SIZE) || (from > to)) {
--		kunmap(page);
-+		kunmap_thread(page);
- 		return -EIO;
- 	}
- 
- 	/* racing with truncate? */
- 	if (offset > mapping->host->i_size) {
--		kunmap(page);
-+		kunmap_thread(page);
- 		return 0; /* don't care */
- 	}
- 
-@@ -2183,7 +2183,7 @@ static int cifs_partialpagewrite(struct page *page, unsigned from, unsigned to)
- 			rc = -EIO;
- 	}
- 
+ 	socket = peer_device->connection->data.socket;
+-	addr = kmap(page) + offset;
++	addr = kmap_thread(page) + offset;
+ 	err = drbd_send_all(peer_device->connection, socket, addr, size, msg_flags);
 -	kunmap(page);
 +	kunmap_thread(page);
- 	return rc;
+ 	if (!err)
+ 		peer_device->device->send_cnt += size >> 9;
+ 	return err;
+diff --git a/drivers/block/drbd/drbd_receiver.c b/drivers/block/drbd/drbd_receiver.c
+index 422363daa618..4704bc0564e2 100644
+--- a/drivers/block/drbd/drbd_receiver.c
++++ b/drivers/block/drbd/drbd_receiver.c
+@@ -1951,13 +1951,13 @@ read_in_block(struct drbd_peer_device *peer_device, u64 id, sector_t sector,
+ 	page = peer_req->pages;
+ 	page_chain_for_each(page) {
+ 		unsigned len = min_t(int, ds, PAGE_SIZE);
+-		data = kmap(page);
++		data = kmap_thread(page);
+ 		err = drbd_recv_all_warn(peer_device->connection, data, len);
+ 		if (drbd_insert_fault(device, DRBD_FAULT_RECEIVE)) {
+ 			drbd_err(device, "Fault injection: Corrupting data on receive\n");
+ 			data[0] = data[0] ^ (unsigned long)-1;
+ 		}
+-		kunmap(page);
++		kunmap_thread(page);
+ 		if (err) {
+ 			drbd_free_peer_req(device, peer_req);
+ 			return NULL;
+@@ -1992,7 +1992,7 @@ static int drbd_drain_block(struct drbd_peer_device *peer_device, int data_size)
+ 
+ 	page = drbd_alloc_pages(peer_device, 1, 1);
+ 
+-	data = kmap(page);
++	data = kmap_thread(page);
+ 	while (data_size) {
+ 		unsigned int len = min_t(int, data_size, PAGE_SIZE);
+ 
+@@ -2001,7 +2001,7 @@ static int drbd_drain_block(struct drbd_peer_device *peer_device, int data_size)
+ 			break;
+ 		data_size -= len;
+ 	}
+-	kunmap(page);
++	kunmap_thread(page);
+ 	drbd_free_pages(peer_device->device, page, 0);
+ 	return err;
  }
+@@ -2033,10 +2033,10 @@ static int recv_dless_read(struct drbd_peer_device *peer_device, struct drbd_req
+ 	D_ASSERT(peer_device->device, sector == bio->bi_iter.bi_sector);
  
-@@ -2559,10 +2559,10 @@ static int cifs_write_end(struct file *file, struct address_space *mapping,
- 		   known which we might as well	leverage */
- 		/* BB check if anything else missing out of ppw
- 		   such as updating last write time */
--		page_data = kmap(page);
-+		page_data = kmap_thread(page);
- 		rc = cifs_write(cfile, pid, page_data + offset, copied, &pos);
- 		/* if (rc < 0) should we set writebehind rc? */
--		kunmap(page);
-+		kunmap_thread(page);
- 
- 		free_xid(xid);
- 	} else {
-@@ -4511,7 +4511,7 @@ static int cifs_readpage_worker(struct file *file, struct page *page,
- 	if (rc == 0)
- 		goto read_complete;
- 
--	read_data = kmap(page);
-+	read_data = kmap_thread(page);
- 	/* for reads over a certain size could initiate async read ahead */
- 
- 	rc = cifs_read(file, read_data, PAGE_SIZE, poffset);
-@@ -4540,7 +4540,7 @@ static int cifs_readpage_worker(struct file *file, struct page *page,
- 	rc = 0;
- 
- io_error:
--	kunmap(page);
-+	kunmap_thread(page);
- 	unlock_page(page);
- 
- read_complete:
-diff --git a/fs/cifs/smb2ops.c b/fs/cifs/smb2ops.c
-index 32f90dc82c84..a3e7ebab38b6 100644
---- a/fs/cifs/smb2ops.c
-+++ b/fs/cifs/smb2ops.c
-@@ -4068,12 +4068,12 @@ smb3_init_transform_rq(struct TCP_Server_Info *server, int num_rqst,
- 
- 			rqst_page_get_length(&new_rq[i], j, &len, &offset);
- 
--			dst = (char *) kmap(new_rq[i].rq_pages[j]) + offset;
--			src = (char *) kmap(old_rq[i - 1].rq_pages[j]) + offset;
-+			dst = (char *) kmap_thread(new_rq[i].rq_pages[j]) + offset;
-+			src = (char *) kmap_thread(old_rq[i - 1].rq_pages[j]) + offset;
- 
- 			memcpy(dst, src, len);
--			kunmap(new_rq[i].rq_pages[j]);
--			kunmap(old_rq[i - 1].rq_pages[j]);
-+			kunmap_thread(new_rq[i].rq_pages[j]);
-+			kunmap_thread(old_rq[i - 1].rq_pages[j]);
- 		}
- 	}
- 
+ 	bio_for_each_segment(bvec, bio, iter) {
+-		void *mapped = kmap(bvec.bv_page) + bvec.bv_offset;
++		void *mapped = kmap_thread(bvec.bv_page) + bvec.bv_offset;
+ 		expect = min_t(int, data_size, bvec.bv_len);
+ 		err = drbd_recv_all_warn(peer_device->connection, mapped, expect);
+-		kunmap(bvec.bv_page);
++		kunmap_thread(bvec.bv_page);
+ 		if (err)
+ 			return err;
+ 		data_size -= expect;
 -- 
 2.28.0.rc0.12.gb6a658bd00c9
 
