@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410089.outbound.protection.outlook.com
- ([40.107.141.89] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kStcv-0003fF-Q6
- for kexec@lists.infradead.org; Thu, 15 Oct 2020 03:08:27 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH 3/3] Cleanup: Remove offset_pt_load_memory
-Date: Thu, 15 Oct 2020 03:07:59 +0000
-Message-ID: <OSBPR01MB19917ADD8446FD2DBA92410DDD020@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20201007065652.28160-1-ptesarik@suse.com>
- <20201007065652.28160-4-ptesarik@suse.com>
- <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
+ id 1kSPHw-0003WF-8d
+ for kexec@lists.infradead.org; Tue, 13 Oct 2020 18:44:47 +0000
+Received: by mail-ed1-x543.google.com with SMTP id p13so524681edi.7
+ for <kexec@lists.infradead.org>; Tue, 13 Oct 2020 11:44:42 -0700 (PDT)
 MIME-Version: 1.0
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-34-ira.weiny@intel.com>
+In-Reply-To: <20201009195033.3208459-34-ira.weiny@intel.com>
+From: Dan Williams <dan.j.williams@intel.com>
+Date: Tue, 13 Oct 2020 11:44:29 -0700
+Message-ID: <CAPcyv4gL3jfw4d+SJGPqAD3Dp4F_K=X3domuN4ndAA1FQDGcPg@mail.gmail.com>
+Subject: Re: [PATCH RFC PKS/PMEM 33/58] fs/cramfs: Utilize new kmap_thread()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,70 +25,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.com>, kexec-ml <kexec@lists.infradead.org>
+To: "Weiny, Ira" <ira.weiny@intel.com>
+Cc: linux-aio@kvack.org, linux-efi <linux-efi@vger.kernel.org>, KVM list <kvm@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, Linux MM <linux-mm@kvack.org>, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi <linux-scsi@vger.kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-rdma <linux-rdma@vger.kernel.org>, X86 ML <x86@kernel.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, io-uring@vger.kernel.org, cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org, xen-devel <xen-devel@lists.xenproject.org>, linux-ext4 <linux-ext4@vger.kernel.org>, Fenghua Yu <fenghua.yu@intel.com>, linux-afs@lists.infradead.org, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com, linux-nfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>, linux-ntfs-dev@lists.sourceforge.net, Netdev <netdev@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>, bpf@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-btrfs <linux-btrfs@vger.kernel.org>
 
------Original Message-----
-> > -----Original Message-----
-> > After the previous commit, this variable has become write-only, so
-> > it is clearly no longer needed.
-> >
-> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> > ---
-> >  elf_info.c | 17 -----------------
-> >  1 file changed, 17 deletions(-)
-> >
-> > diff --git a/elf_info.c b/elf_info.c
-> > index 5ed65fc..a6624b5 100644
-> > --- a/elf_info.c
-> > +++ b/elf_info.c
-> > @@ -63,7 +63,6 @@ static int			flags_memory;
-> >   */
-> >  static unsigned int		num_pt_loads;
-> >  static struct pt_load_segment	*pt_loads;
-> > -static off_t			offset_pt_load_memory;
-> >
-> >  /*
-> >   * PT_NOTE information about /proc/vmcore:
-> > @@ -843,15 +842,6 @@ int get_kcore_dump_loads(void)
-> >  			return FALSE;
-> >  		}
-> >
-> > -		if (j == 0) {
-> > -			offset_pt_load_memory = p->file_offset;
-> > -			if (offset_pt_load_memory == 0) {
-> > -				ERRMSG("Can't get the offset of page data.\n");
-> > -				free(pls);
-> > -				return FALSE;
-> > -			}
-> > -		}
-> > -
-> >  		pls[j] = *p;
-> >  		j++;
-> >  	}
-> > @@ -929,13 +919,6 @@ get_elf_info(int fd, char *filename)
-> >  		if (phdr.p_type != PT_LOAD)
-> >  			continue;
-> >
-> > -		if (j == 0) {
-> > -			offset_pt_load_memory = phdr.p_offset;
-> > -			if (offset_pt_load_memory == 0) {
-> > -				ERRMSG("Can't get the offset of page data.\n");
-> > -				return FALSE;
-> 
-> I think this part is a kind of sanity check on ELF Phdr data, but
-> checking only p_offset when j==0 doesn't make sense and there would
-> be extremely rare cases where are aborted by this check, so it would
-> be fine to remove completely.
-> 
-> So the patchset looks good to me.
-> Thank you for the cleanup!
+On Fri, Oct 9, 2020 at 12:52 PM <ira.weiny@intel.com> wrote:
+>
+> From: Ira Weiny <ira.weiny@intel.com>
+>
+> The kmap() calls in this FS are localized to a single thread.  To avoid
+> the over head of global PKRS updates use the new kmap_thread() call.
+>
+> Cc: Nicolas Pitre <nico@fluxnic.net>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+> ---
+>  fs/cramfs/inode.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+>
+> diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
+> index 912308600d39..003c014a42ed 100644
+> --- a/fs/cramfs/inode.c
+> +++ b/fs/cramfs/inode.c
+> @@ -247,8 +247,8 @@ static void *cramfs_blkdev_read(struct super_block *sb, unsigned int offset,
+>                 struct page *page = pages[i];
+>
+>                 if (page) {
+> -                       memcpy(data, kmap(page), PAGE_SIZE);
+> -                       kunmap(page);
+> +                       memcpy(data, kmap_thread(page), PAGE_SIZE);
+> +                       kunmap_thread(page);
 
-Applied.
-https://github.com/makedumpfile/makedumpfile/compare/64d2aee2c4654fa422633a683c1c3f2a8d3bf3a9...master
-
-Thanks,
-Kazu
-
+Why does this need a sleepable kmap? This looks like a textbook
+kmap_atomic() use case.
 
 _______________________________________________
 kexec mailing list
