@@ -1,20 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x643.google.com ([2a00:1450:4864:20::643])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kSQBD-0007YJ-Bh
- for kexec@lists.infradead.org; Tue, 13 Oct 2020 19:41:54 +0000
-Received: by mail-ej1-x643.google.com with SMTP id x7so1438079eje.8
- for <kexec@lists.infradead.org>; Tue, 13 Oct 2020 12:41:49 -0700 (PDT)
-MIME-Version: 1.0
+Date: Tue, 13 Oct 2020 14:36:56 -0400 (EDT)
+From: Nicolas Pitre <nico@fluxnic.net>
+Subject: Re: [PATCH RFC PKS/PMEM 33/58] fs/cramfs: Utilize new
+ kmap_thread()
+In-Reply-To: <20201009195033.3208459-34-ira.weiny@intel.com>
+Message-ID: <nycvar.YSQ.7.78.906.2010131436200.2184@knanqh.ubzr>
 References: <20201009195033.3208459-1-ira.weiny@intel.com>
  <20201009195033.3208459-34-ira.weiny@intel.com>
- <CAPcyv4gL3jfw4d+SJGPqAD3Dp4F_K=X3domuN4ndAA1FQDGcPg@mail.gmail.com>
- <20201013193643.GK20115@casper.infradead.org>
-In-Reply-To: <20201013193643.GK20115@casper.infradead.org>
-From: Dan Williams <dan.j.williams@intel.com>
-Date: Tue, 13 Oct 2020 12:41:36 -0700
-Message-ID: <CAPcyv4gL70FcLe8az7ezmpcZV=bG0Cka7daKWcCdmV4GoenSZw@mail.gmail.com>
-Subject: Re: [PATCH RFC PKS/PMEM 33/58] fs/cramfs: Utilize new kmap_thread()
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,55 +20,68 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Matthew Wilcox <willy@infradead.org>
-Cc: linux-aio@kvack.org, linux-efi <linux-efi@vger.kernel.org>, KVM list <kvm@vger.kernel.org>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Peter Zijlstra <peterz@infradead.org>, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, Linux MM <linux-mm@kvack.org>, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, "Weiny, Ira" <ira.weiny@intel.com>, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi <linux-scsi@vger.kernel.org>, linux-nvdimm <linux-nvdimm@lists.01.org>, linux-rdma <linux-rdma@vger.kernel.org>, X86 ML <x86@kernel.org>, amd-gfx list <amd-gfx@lists.freedesktop.org>, io-uring@vger.kernel.org, cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org, xen-devel <xen-devel@lists.xenproject.org>, linux-ext4 <linux-ext4@vger.kernel.org>, Fenghua Yu <fenghua.yu@intel.com>, linux-afs@lists.infradead.org, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com, linux-nfs@vger.kernel.org, Nicolas Pitre <nico@fluxnic.net>, linux-ntfs-dev@lists.sourceforge.net, Netdev <netdev@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel <linux-fsdevel@vger.kernel.org>, bpf@vger.kernel.org, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, linux-btrfs <linux-btrfs@vger.kernel.org>
+To: Ira Weiny <ira.weiny@intel.com>
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Thomas Gleixner <tglx@linutronix.de>, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, ceph-devel@vger.kernel.org, amd-gfx@lists.freedesktop.org, io-uring@vger.kernel.org, cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-afs@lists.infradead.org, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 
-On Tue, Oct 13, 2020 at 12:37 PM Matthew Wilcox <willy@infradead.org> wrote:
->
-> On Tue, Oct 13, 2020 at 11:44:29AM -0700, Dan Williams wrote:
-> > On Fri, Oct 9, 2020 at 12:52 PM <ira.weiny@intel.com> wrote:
-> > >
-> > > From: Ira Weiny <ira.weiny@intel.com>
-> > >
-> > > The kmap() calls in this FS are localized to a single thread.  To avoid
-> > > the over head of global PKRS updates use the new kmap_thread() call.
-> > >
-> > > Cc: Nicolas Pitre <nico@fluxnic.net>
-> > > Signed-off-by: Ira Weiny <ira.weiny@intel.com>
-> > > ---
-> > >  fs/cramfs/inode.c | 10 +++++-----
-> > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > >
-> > > diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
-> > > index 912308600d39..003c014a42ed 100644
-> > > --- a/fs/cramfs/inode.c
-> > > +++ b/fs/cramfs/inode.c
-> > > @@ -247,8 +247,8 @@ static void *cramfs_blkdev_read(struct super_block *sb, unsigned int offset,
-> > >                 struct page *page = pages[i];
-> > >
-> > >                 if (page) {
-> > > -                       memcpy(data, kmap(page), PAGE_SIZE);
-> > > -                       kunmap(page);
-> > > +                       memcpy(data, kmap_thread(page), PAGE_SIZE);
-> > > +                       kunmap_thread(page);
-> >
-> > Why does this need a sleepable kmap? This looks like a textbook
-> > kmap_atomic() use case.
->
-> There's a lot of code of this form.  Could we perhaps have:
->
-> static inline void copy_to_highpage(struct page *to, void *vfrom, unsigned int size)
-> {
->         char *vto = kmap_atomic(to);
->
->         memcpy(vto, vfrom, size);
->         kunmap_atomic(vto);
-> }
->
-> in linux/highmem.h ?
+On Fri, 9 Oct 2020, ira.weiny@intel.com wrote:
 
-Nice, yes, that could also replace the local ones in lib/iov_iter.c
-(memcpy_{to,from}_page())
+> From: Ira Weiny <ira.weiny@intel.com>
+> 
+> The kmap() calls in this FS are localized to a single thread.  To avoid
+> the over head of global PKRS updates use the new kmap_thread() call.
+> 
+> Cc: Nicolas Pitre <nico@fluxnic.net>
+> Signed-off-by: Ira Weiny <ira.weiny@intel.com>
+
+Acked-by: Nicolas Pitre <nico@fluxnic.net>
+
+>  fs/cramfs/inode.c | 10 +++++-----
+>  1 file changed, 5 insertions(+), 5 deletions(-)
+> 
+> diff --git a/fs/cramfs/inode.c b/fs/cramfs/inode.c
+> index 912308600d39..003c014a42ed 100644
+> --- a/fs/cramfs/inode.c
+> +++ b/fs/cramfs/inode.c
+> @@ -247,8 +247,8 @@ static void *cramfs_blkdev_read(struct super_block *sb, unsigned int offset,
+>  		struct page *page = pages[i];
+>  
+>  		if (page) {
+> -			memcpy(data, kmap(page), PAGE_SIZE);
+> -			kunmap(page);
+> +			memcpy(data, kmap_thread(page), PAGE_SIZE);
+> +			kunmap_thread(page);
+>  			put_page(page);
+>  		} else
+>  			memset(data, 0, PAGE_SIZE);
+> @@ -826,7 +826,7 @@ static int cramfs_readpage(struct file *file, struct page *page)
+>  
+>  	maxblock = (inode->i_size + PAGE_SIZE - 1) >> PAGE_SHIFT;
+>  	bytes_filled = 0;
+> -	pgdata = kmap(page);
+> +	pgdata = kmap_thread(page);
+>  
+>  	if (page->index < maxblock) {
+>  		struct super_block *sb = inode->i_sb;
+> @@ -914,13 +914,13 @@ static int cramfs_readpage(struct file *file, struct page *page)
+>  
+>  	memset(pgdata + bytes_filled, 0, PAGE_SIZE - bytes_filled);
+>  	flush_dcache_page(page);
+> -	kunmap(page);
+> +	kunmap_thread(page);
+>  	SetPageUptodate(page);
+>  	unlock_page(page);
+>  	return 0;
+>  
+>  err:
+> -	kunmap(page);
+> +	kunmap_thread(page);
+>  	ClearPageUptodate(page);
+>  	SetPageError(page);
+>  	unlock_page(page);
+> -- 
+> 2.28.0.rc0.12.gb6a658bd00c9
+> 
+> 
 
 _______________________________________________
 kexec mailing list
