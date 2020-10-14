@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400081.outbound.protection.outlook.com
- ([40.107.140.81] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kScAZ-0001E9-D7
- for kexec@lists.infradead.org; Wed, 14 Oct 2020 08:30:00 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH 3/3] Cleanup: Remove offset_pt_load_memory
-Date: Wed, 14 Oct 2020 08:29:53 +0000
-Message-ID: <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20201007065652.28160-1-ptesarik@suse.com>
- <20201007065652.28160-4-ptesarik@suse.com>
-In-Reply-To: <20201007065652.28160-4-ptesarik@suse.com>
-Content-Language: ja-JP
+ id 1kSd2Q-0006RK-V7
+ for kexec@lists.infradead.org; Wed, 14 Oct 2020 09:25:40 +0000
+From: Kairui Song <kasong@redhat.com>
+Subject: [PATCH 0/2] x86/hyperv: fix kexec/kdump hang on some VMs
+Date: Wed, 14 Oct 2020 17:24:27 +0800
+Message-Id: <20201014092429.1415040-1-kasong@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,67 +20,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Tesarik <ptesarik@suse.com>, kexec-ml <kexec@lists.infradead.org>
+To: linux-kernel@vger.kernel.org
+Cc: Wei Liu <wei.liu@kernel.org>, Kairui Song <kasong@redhat.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, kexec@lists.infradead.org, Haiyang Zhang <haiyangz@microsoft.com>, x86@kernel.org, Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, "K. Y. Srinivasan" <kys@microsoft.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>
 
-Hi Petr,
+On some HyperV machines, if kexec_file_load is used to load the kexec
+kernel, second kernel could hang with following stacktrace:
 
-> -----Original Message-----
-> After the previous commit, this variable has become write-only, so
-> it is clearly no longer needed.
-> 
-> Signed-off-by: Petr Tesarik <ptesarik@suse.com>
-> ---
->  elf_info.c | 17 -----------------
->  1 file changed, 17 deletions(-)
-> 
-> diff --git a/elf_info.c b/elf_info.c
-> index 5ed65fc..a6624b5 100644
-> --- a/elf_info.c
-> +++ b/elf_info.c
-> @@ -63,7 +63,6 @@ static int			flags_memory;
->   */
->  static unsigned int		num_pt_loads;
->  static struct pt_load_segment	*pt_loads;
-> -static off_t			offset_pt_load_memory;
-> 
->  /*
->   * PT_NOTE information about /proc/vmcore:
-> @@ -843,15 +842,6 @@ int get_kcore_dump_loads(void)
->  			return FALSE;
->  		}
-> 
-> -		if (j == 0) {
-> -			offset_pt_load_memory = p->file_offset;
-> -			if (offset_pt_load_memory == 0) {
-> -				ERRMSG("Can't get the offset of page data.\n");
-> -				free(pls);
-> -				return FALSE;
-> -			}
-> -		}
-> -
->  		pls[j] = *p;
->  		j++;
->  	}
-> @@ -929,13 +919,6 @@ get_elf_info(int fd, char *filename)
->  		if (phdr.p_type != PT_LOAD)
->  			continue;
-> 
-> -		if (j == 0) {
-> -			offset_pt_load_memory = phdr.p_offset;
-> -			if (offset_pt_load_memory == 0) {
-> -				ERRMSG("Can't get the offset of page data.\n");
-> -				return FALSE;
+[    0.591705] efifb: probing for efifb
+[    0.596869] efifb: framebuffer at 0xf8000000, using 3072k, total 3072k
+[    0.605894] efifb: mode is 1024x768x32, linelength=4096, pages=1
+[    0.617926] efifb: scrolling: redraw
+[    0.622715] efifb: Truecolor: size=8:8:8:8, shift=24:16:8:0
+[   28.039046] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [swapper/0:1]
+[   28.039046] Modules linked in:
+[   28.039046] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.18.0-230.el8.x86_64 #1
+[   28.039046] Hardware name: Microsoft Corporation Virtual Machine/Virtual Machine, BIOS Hyper-V UEFI Release v4.0 12/17/2019
+[   28.039046] RIP: 0010:cfb_imageblit+0x450/0x4c0
+[   28.039046] Code: 89 f8 b9 08 00 00 00 48 89 04 24 eb 2d 41 0f be 30 29 e9 4c 8d 5f 04 d3 fe 44 21 ee 41 8b 04 b6 44 21 c8 89 c6 44 31 d6 89 37 <85> c9 75 09 49 83 c0 01 b9 08 00 00 00 4c 89 df 48 39 df 75 ce 83
+[   28.039046] RSP: 0018:ffffc90000087830 EFLAGS: 00010246 ORIG_RAX: ffffffffffffff12
+[   28.039046] RAX: 0000000000000000 RBX: ffffc90000542000 RCX: 0000000000000003
+[   28.039046] RDX: 000000000000000e RSI: 0000000000000000 RDI: ffffc90000541bf0
+[   28.039046] RBP: 0000000000000001 R08: ffff8880f555c8df R09: 0000000000aaaaaa
+[   28.039046] R10: 0000000000000000 R11: ffffc90000541bf4 R12: 0000000000001000
+[   28.039046] R13: 0000000000000001 R14: ffffffff81e9a460 R15: ffff8880f555c880
+[   28.039046] FS:  0000000000000000(0000) GS:ffff8880f1000000(0000) knlGS:0000000000000000
+[   28.039046] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   28.039046] CR2: 00007f7b223b8000 CR3: 00000000f3a0a004 CR4: 00000000003606b0
+[   28.039046] DR0: 0000000000000000 DR1: 0000000000000000 DR2: 0000000000000000
+[   28.039046] DR3: 0000000000000000 DR6: 00000000fffe0ff0 DR7: 0000000000000400
+[   28.039046] Call Trace:
+[   28.039046]  bit_putcs+0x2a1/0x550
+[   28.039046]  ? fbcon_switch+0x33e/0x5b0
+[   28.039046]  ? bit_clear+0x120/0x120
+[   28.039046]  fbcon_putcs+0xe7/0x100
+[   28.039046]  do_update_region+0x154/0x1a0
+[   28.039046]  redraw_screen+0x209/0x240
+[   28.039046]  ? vc_do_resize+0x5c9/0x660
+[   28.039046]  fbcon_prepare_logo+0x3b3/0x430
+[   28.039046]  fbcon_init+0x436/0x630
+[   28.039046]  visual_init+0xce/0x130
+[   28.039046]  do_bind_con_driver+0x1df/0x2d0
+[   28.039046]  do_take_over_console+0x113/0x180
+[   28.039046]  do_fbcon_takeover+0x58/0xb0
+[   28.039046]  register_framebuffer+0x225/0x2f0
+[   28.039046]  efifb_probe.cold.5+0x51a/0x55d
+[   28.039046]  platform_drv_probe+0x38/0x90
+[   28.039046]  really_probe+0x212/0x440
+[   28.039046]  driver_probe_device+0x49/0xc0
+[   28.039046]  device_driver_attach+0x50/0x60
+[   28.039046]  __driver_attach+0x61/0x130
+[   28.039046]  ? device_driver_attach+0x60/0x60
+[   28.039046]  bus_for_each_dev+0x77/0xc0
+[   28.039046]  ? klist_add_tail+0x57/0x70
+[   28.039046]  bus_add_driver+0x14d/0x1e0
+[   28.039046]  ? vesafb_driver_init+0x13/0x13
+[   28.039046]  ? do_early_param+0x91/0x91
+[   28.039046]  driver_register+0x6b/0xb0
+[   28.039046]  ? vesafb_driver_init+0x13/0x13
+[   28.039046]  do_one_initcall+0x46/0x1c3
+[   28.039046]  ? do_early_param+0x91/0x91
+[   28.039046]  kernel_init_freeable+0x1b4/0x25d
+[   28.039046]  ? rest_init+0xaa/0xaa
+[   28.039046]  kernel_init+0xa/0xfa
+[   28.039046]  ret_from_fork+0x35/0x40
 
-I think this part is a kind of sanity check on ELF Phdr data, but
-checking only p_offset when j==0 doesn't make sense and there would
-be extremely rare cases where are aborted by this check, so it would
-be fine to remove completely.
+The root cause is that hyperv_fb driver will relocate the
+framebuffer address in first kernel, but kexec_file_load simply reuse
+the old framebuffer info from boot_params, which is now invalid, so
+second kernel will write to an invalid framebuffer address.
 
-So the patchset looks good to me.
-Thank you for the cleanup!
+This series fix this problem by:
 
-Kazu
+1. Let kexec_file_load use the updated copy of screen_info.
 
+  Instead of using boot_params.screen_info, use the globally available
+  screen_info variable instead (which is just an copy of
+  boot_params.screen_info on x86). This variable could be updated
+  by arch indenpendent drivers. Just keep this variable updated should
+  be a good way to keep screen_info consistent across kexec.
+
+2. Let hyperv_fb clean the screen_info copy when the boot framebuffer
+  is relocated outside the old framebuffer.
+
+  After the relocation, the framebuffer is no longer a VGA
+  framebuffer, so just clean it up should be good.
+
+Kairui Song (2):
+  x86/kexec: Use up-to-dated screen_info copy to fill boot params
+  hyperv_fb: Update screen_info after removing old framebuffer
+
+ arch/x86/kernel/kexec-bzimage64.c | 3 +--
+ drivers/video/fbdev/hyperv_fb.c   | 8 ++++++++
+ 2 files changed, 9 insertions(+), 2 deletions(-)
+
+-- 
+2.28.0
 
 
 _______________________________________________
