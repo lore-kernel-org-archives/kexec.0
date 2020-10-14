@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kSQEv-0008EK-Ip
- for kexec@lists.infradead.org; Tue, 13 Oct 2020 19:45:42 +0000
-Received: by mail-ot1-f71.google.com with SMTP id n21so271382ota.18
- for <kexec@lists.infradead.org>; Tue, 13 Oct 2020 12:45:38 -0700 (PDT)
-MIME-Version: 1.0
-References: <20201012070905.5837-1-jthierry@redhat.com>
- <CACi5LpNSnr+9v_sMPZnCQu14pML6PR1bBLKqj4tVaxk2O9k0wA@mail.gmail.com>
- <f12bb1e2-c984-68d0-f952-d6b7243c8a7e@redhat.com>
-In-Reply-To: <f12bb1e2-c984-68d0-f952-d6b7243c8a7e@redhat.com>
-From: Bhupesh Sharma <bhsharma@redhat.com>
-Date: Wed, 14 Oct 2020 01:15:26 +0530
-Message-ID: <CACi5LpM-hCjnFg6Knb57Fr7+zVnTDewYRLAFABeNrd_gy+GhGw@mail.gmail.com>
+ id 1kSYS2-0005Al-EK
+ for kexec@lists.infradead.org; Wed, 14 Oct 2020 04:31:48 +0000
 Subject: Re: [MAKDUMPFILE PATCH] Add option to estimate the size of vmcore
  dump files
+References: <20201012070905.5837-1-jthierry@redhat.com>
+ <CACi5LpNSnr+9v_sMPZnCQu14pML6PR1bBLKqj4tVaxk2O9k0wA@mail.gmail.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <ee84ff85-4c33-0ed8-eef6-611af372d40f@redhat.com>
+Date: Wed, 14 Oct 2020 12:31:30 +0800
+MIME-Version: 1.0
+In-Reply-To: <CACi5LpNSnr+9v_sMPZnCQu14pML6PR1bBLKqj4tVaxk2O9k0wA@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,356 +21,246 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Julien Thierry <jthierry@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+To: Bhupesh Sharma <bhsharma@redhat.com>, Julien Thierry <jthierry@redhat.com>
 Cc: kexec mailing list <kexec@lists.infradead.org>, Kazuhito Hagio <k-hagio-ab@nec.com>
 
-Hello Julien,
-
-On Tue, Oct 13, 2020 at 3:23 PM Julien Thierry <jthierry@redhat.com> wrote:
->
-> Hi Bhupesh,
->
-> On 10/13/20 10:27 AM, Bhupesh Sharma wrote:
-> > Hello Julien,
-> >
-> > Thanks for the patch. Some nitpicks inline:
-> >
-> > On Mon, Oct 12, 2020 at 12:39 PM Julien Thierry <jthierry@redhat.com> wrote:
-> >>
-> >> A user might want to know how much space a vmcore file will take on
-> >> the system and how much space on their disk should be available to
-> >> save it during a crash.
-> >>
-> >> The option --vmcore-size does not create the vmcore file but provides
-> >> an estimation of the size of the final vmcore file created with the
-> >> same make dumpfile options.
-> >>
-> >> Signed-off-by: Julien Thierry <jthierry@redhat.com>
-> >> Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
-> >> ---
-> >>   makedumpfile.c | 98 ++++++++++++++++++++++++++++++++++++++++++++++++--
-> >>   makedumpfile.h | 12 +++++++
-> >>   print_info.c   |  4 +++
-> >>   3 files changed, 111 insertions(+), 3 deletions(-)
-> >
-> > Please update 'makedumpfile.8' as well in v2, so that the man page can
-> > document the newly added option and how to use it to determine the
-> > vmcore-size.
-> >
->
-> Ah yes, I'll do that.
->
-> >> diff --git a/makedumpfile.c b/makedumpfile.c
-> >> index 4c4251e..0a2bfba 100644
-> >> --- a/makedumpfile.c
-> >> +++ b/makedumpfile.c
-> >> @@ -26,6 +26,7 @@
-> >>   #include <limits.h>
-> >>   #include <assert.h>
-> >>   #include <zlib.h>
-> >> +#include <libgen.h>
-> >
-> > I know we don't follow alphabetical order for include files in
-> > makedumpfile code, but it would be good to place the new - ones
-> > accordingly. So <libgen.h> can go with <limits.h> here.
-> >
->
-> Noted.
->
-> >>   struct symbol_table    symbol_table;
-> >>   struct size_table      size_table;
-> >> @@ -1366,7 +1367,25 @@ open_dump_file(void)
-> >>          if (!info->flag_force)
-> >>                  open_flags |= O_EXCL;
-> >>
-> >> -       if (info->flag_flatten) {
-> >> +       if (info->flag_vmcore_size) {
-> >> +               char *namecpy;
-> >> +               struct stat statbuf;
-> >> +               int res;
-> >> +
-> >> +               namecpy = strdup(info->name_dumpfile ?
-> >> +                                info->name_dumpfile : ".");
-> >> +
-> >> +               res = stat(dirname(namecpy), &statbuf);
-> >> +               free(namecpy);
-> >> +               if (res != 0)
-> >> +                       return FALSE;
-> >> +
-> >> +               fd = -1;
-> >> +               info->dumpsize_info.blksize = statbuf.st_blksize;
-> >> +               info->dumpsize_info.block_buff_size = BASE_NUM_BLOCKS;
-> >> +               info->dumpsize_info.block_info = calloc(BASE_NUM_BLOCKS, 1);
-> >> +               info->dumpsize_info.non_hole_blocks = 0;
-> >> +       } else if (info->flag_flatten) {
-> >>                  fd = STDOUT_FILENO;
-> >>                  info->name_dumpfile = filename_stdout;
-> >>          } else if ((fd = open(info->name_dumpfile, open_flags,
-> >> @@ -1384,6 +1403,9 @@ check_dump_file(const char *path)
-> >>   {
-> >>          char *err_str;
-> >>
-> >> +       if (info->flag_vmcore_size)
-> >> +               return TRUE;
-> >> +
-> >>          if (access(path, F_OK) != 0)
-> >>                  return TRUE; /* File does not exist */
-> >>          if (info->flag_force) {
-> >> @@ -4622,6 +4644,47 @@ write_and_check_space(int fd, void *buf, size_t buf_size, char *file_name)
-> >>          return TRUE;
-> >>   }
-> >>
-> >> +static int
-> >> +write_buffer_update_size_info(off_t offset, void *buf, size_t buf_size)
-> >> +{
-> >> +       struct dumpsize_info *dumpsize_info = &info->dumpsize_info;
-> >> +       int blk_end_idx = (offset + buf_size - 1) / dumpsize_info->blksize;
-> >> +       int i;
-> >> +
-> >> +       /* Need to grow the dumpsize block buffer? */
-> >> +       if (blk_end_idx >= dumpsize_info->block_buff_size) {
-> >> +               int alloc_size = MAX(blk_end_idx - dumpsize_info->block_buff_size, BASE_NUM_BLOCKS);
-> >> +
-> >> +               dumpsize_info->block_info = realloc(dumpsize_info->block_info,
-> >> +                                                   dumpsize_info->block_buff_size + alloc_size);
-> >> +               if (!dumpsize_info->block_info) {
-> >> +                       ERRMSG("Not enough memory\n");
-> >> +                       return FALSE;
-> >> +               }
-> >> +
-> >> +               memset(dumpsize_info->block_info + dumpsize_info->block_buff_size,
-> >> +                      0, alloc_size);
-> >> +               dumpsize_info->block_buff_size += alloc_size;
-> >> +       }
-> >> +
-> >> +       for (i = 0; i < buf_size; ++i) {
-> >> +               int blk_idx = (offset + i) / dumpsize_info->blksize;
-> >> +
-> >> +               if (dumpsize_info->block_info[blk_idx]) {
-> >> +                       i += dumpsize_info->blksize;
-> >> +                       i = i - (i % dumpsize_info->blksize) - 1;
-> >> +                       continue;
-> >> +               }
-> >> +
-> >> +               if (((char *) buf)[i] != 0) {
-> >> +                       dumpsize_info->non_hole_blocks++;
-> >> +                       dumpsize_info->block_info[blk_idx] = 1;
-> >> +               }
-> >> +       }
-> >> +
-> >> +       return TRUE;
-> >> +}
-> >> +
-> >>   int
-> >>   write_buffer(int fd, off_t offset, void *buf, size_t buf_size, char *file_name)
-> >>   {
-> >> @@ -4643,6 +4706,8 @@ write_buffer(int fd, off_t offset, void *buf, size_t buf_size, char *file_name)
-> >>                  }
-> >>                  if (!write_and_check_space(fd, &fdh, sizeof(fdh), file_name))
-> >>                          return FALSE;
-> >> +       } else if (info->flag_vmcore_size && fd == info->fd_dumpfile) {
-> >> +               return write_buffer_update_size_info(offset, buf, buf_size);
-> >>          } else {
-> >>                  if (lseek(fd, offset, SEEK_SET) == failed) {
-> >>                          ERRMSG("Can't seek the dump file(%s). %s\n",
-> >> @@ -9018,6 +9083,12 @@ close_dump_file(void)
-> >>          if (info->flag_flatten)
-> >>                  return;
-> >>
-> >> +       if (info->flag_vmcore_size && info->fd_dumpfile == -1) {
-> >> +               free(info->dumpsize_info.block_info);
-> >> +               info->dumpsize_info.block_info = NULL;
-> >> +               return;
-> >> +       }
-> >> +
-> >>          if (close(info->fd_dumpfile) < 0)
-> >>                  ERRMSG("Can't close the dump file(%s). %s\n",
-> >>                      info->name_dumpfile, strerror(errno));
-> >> @@ -10963,6 +11034,12 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
-> >>          if (info->flag_flatten && info->flag_split)
-> >>                  return FALSE;
-> >>
-> >> +       if (info->flag_flatten && info->flag_vmcore_size)
-> >> +               return FALSE;
-> >> +
-> >> +       if (info->flag_mem_usage && info->flag_vmcore_size)
-> >> +               return FALSE;
-> >> +
-> >>          if (info->name_filterconfig && !info->name_vmlinux)
-> >>                  return FALSE;
-> >>
-> >> @@ -11043,7 +11120,8 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
-> >>                   */
-> >>                  info->name_memory   = argv[optind];
-> >>
-> >> -       } else if ((argc == optind + 1) && info->flag_mem_usage) {
-> >> +       } else if ((argc == optind + 1) && (info->flag_mem_usage ||
-> >> +                                           info->flag_vmcore_size)) {
-> >>                  /*
-> >>                  * Parameter for showing the page number of memory
-> >>                  * in different use from.
-> >> @@ -11423,6 +11501,7 @@ static struct option longopts[] = {
-> >>          {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
-> >>          {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-> >>          {"check-params", no_argument, NULL, OPT_CHECK_PARAMS},
-> >> +       {"vmcore-size", no_argument, NULL, OPT_VMCORE_SIZE},
-> >>          {0, 0, 0, 0}
-> >>   };
-> >>
-> >> @@ -11589,6 +11668,9 @@ main(int argc, char *argv[])
-> >>                          info->flag_check_params = TRUE;
-> >>                          message_level = DEFAULT_MSG_LEVEL;
-> >>                          break;
-> >> +               case OPT_VMCORE_SIZE:
-> >> +                       info->flag_vmcore_size = TRUE;
-> >> +                       break;
-> >>                  case '?':
-> >>                          MSG("Commandline parameter is invalid.\n");
-> >>                          MSG("Try `makedumpfile --help' for more information.\n");
-> >> @@ -11598,6 +11680,10 @@ main(int argc, char *argv[])
-> >>          if (flag_debug)
-> >>                  message_level |= ML_PRINT_DEBUG_MSG;
-> >>
-> >> +       if (info->flag_vmcore_size)
-> >> +               /* Suppress progress indicator as dumpfile won't get written */
-> >> +               message_level &= ~ML_PRINT_PROGRESS;
-> >> +
-> >>          if (info->flag_check_params)
-> >>                  /* suppress debugging messages */
-> >>                  message_level = DEFAULT_MSG_LEVEL;
-> >> @@ -11751,7 +11837,11 @@ main(int argc, char *argv[])
-> >>                          goto out;
-> >>
-> >>                  MSG("\n");
-> >> -               if (info->flag_split) {
-> >> +
-> >> +               if (info->flag_vmcore_size) {
-> >> +                       MSG("Estimated size to save vmcore is: %lld Bytes\n",
-> >> +                           (long long)info->dumpsize_info.non_hole_blocks * info->dumpsize_info.blksize);
-> >> +               } else if (info->flag_split) {
-> >>                          MSG("The dumpfiles are saved to ");
-> >>                          for (i = 0; i < info->num_dumpfile; i++) {
-> >>                                  if (i != (info->num_dumpfile - 1))
-> >> @@ -11808,6 +11898,8 @@ out:
-> >>                          free(info->page_buf);
-> >>                  if (info->parallel_info != NULL)
-> >>                          free(info->parallel_info);
-> >> +               if (info->dumpsize_info.block_info != NULL)
-> >> +                       free(info->dumpsize_info.block_info);
-> >>                  free(info);
-> >>
-> >>                  if (splitblock) {
-> >> diff --git a/makedumpfile.h b/makedumpfile.h
-> >> index 03fb4ce..fd78d5f 100644
-> >> --- a/makedumpfile.h
-> >> +++ b/makedumpfile.h
-> >> @@ -1277,6 +1277,15 @@ struct parallel_info {
-> >>   #endif
-> >>   };
-> >>
-> >> +#define BASE_NUM_BLOCKS        50
-> >> +
-> >> +struct dumpsize_info {
-> >> +       int blksize;
-> >> +       int block_buff_size;
-> >> +       unsigned char *block_info;
-> >> +       int non_hole_blocks;
-> >> +};
-> >> +
-> >>   struct ppc64_vmemmap {
-> >>          unsigned long           phys;
-> >>          unsigned long           virt;
-> >> @@ -1321,6 +1330,7 @@ struct DumpInfo {
-> >>          int             flag_vmemmap;        /* kernel supports vmemmap address space */
-> >>          int             flag_excludevm;      /* -e - excluding unused vmemmap pages */
-> >>          int             flag_use_count;      /* _refcount is named _count in struct page */
-> >> +       int             flag_vmcore_size;    /* estimate the size of the vmcore file instead of creating it */
-> >>          unsigned long   vaddr_for_vtop;      /* virtual address for debugging */
-> >>          long            page_size;           /* size of page */
-> >>          long            page_shift;
-> >> @@ -1425,6 +1435,7 @@ struct DumpInfo {
-> >>          int                     num_dumpfile;
-> >>          struct splitting_info   *splitting_info;
-> >>          struct parallel_info    *parallel_info;
-> >> +       struct dumpsize_info    dumpsize_info;
-> >>
-> >>          /*
-> >>           * bitmap info:
-> >> @@ -2364,6 +2375,7 @@ struct elf_prstatus {
-> >>   #define OPT_NUM_THREADS         OPT_START+16
-> >>   #define OPT_PARTIAL_DMESG       OPT_START+17
-> >>   #define OPT_CHECK_PARAMS        OPT_START+18
-> >> +#define OPT_VMCORE_SIZE         OPT_START+19
-> >>
-> >>   /*
-> >>    * Function Prototype.
-> >> diff --git a/print_info.c b/print_info.c
-> >> index e0c38b4..6f5a165 100644
-> >> --- a/print_info.c
-> >> +++ b/print_info.c
-> >> @@ -308,6 +308,10 @@ print_usage(void)
-> >>          MSG("      the crashkernel range, then calculates the page number of different kind per\n");
-> >>          MSG("      vmcoreinfo. So currently /proc/kcore need be specified explicitly.\n");
-> >>          MSG("\n");
-> >> +       MSG("  [--vmcore-size]:\n");
-> >> +       MSG("      This option provides an estimation of the size needed to save VMCORE on disk.\n");
-> >> +       MSG("      This option option cannot be used in combination with -F.\n");
-> >
-> > Also not in combination with --mem-usage (as per the code changes above)?
-> > And may be the options '--mem-usage / -F' also need an update to
-> > mention they can't be used with --vmcore-size option.
-> >
->
-> Good point, I'll update those.
->
-> >> +       MSG("\n");
-> >>          MSG("  [-D]:\n");
-> >>          MSG("      Print debugging message.\n");
-> >>          MSG("\n");
-> >> --
-> >
-> > I like the idea, but sometimes we use makedumpfile to generate a
-> > dumpfile in the primary kernel as well. For example:
-> >
-> > $ makedumpfile -d 31 -x vmlinux /proc/kcore dumpfile
-> >
-> > In such use-cases it is useful to use --vmcore-size and still generate
-> > the dumpfile (right now the default behaviour is not to generate a
-> > dumpfile when --vmcore-size is specified). Maybe we need to think more
-> > on supporting this use-case as well.
-> >
->
-> The thing is, if you are generating the dumpfile, you can just check the
-> size of the file created with "du -b" or some other command.
-
-I agree, but I just was looking to replace the two  'makedumpfile +
-du' steps with a single 'makedumpfile --vmcore-size' step.
-
-> Overall I don't mind supporting your case as well. Maybe that can depend
-> on whether a vmcore/dumpfile filename is provided:
->
-> $ makedumpfile -d 31 -x vmlinux /proc/kcore    # only estimates the size
->
-> $ makedumpfile -d 31 -x vmlinux /proc/kcore dumpfile  # writes the
-> dumpfile and gives the final size
->
-> Any thought, opinions, suggestions?
-
-Let's wait for Kazu's opinion on the same, but I am ok with using a
-two-step 'makedumpfile + du' approach for now (and later expand
---vmcore-size as we encounter more use-cases).
-
-@Kazuhito Hagio : What's your opinion on the above?
-
-Regards,
-Bhupesh
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMjDlubQxMOaciDEz5pelIDE3OjI3LCBCaHVwZXNoIFNoYXJtYSDlhpnpgZM6Cj4gSGVs
+bG8gSnVsaWVuLAo+IAo+IFRoYW5rcyBmb3IgdGhlIHBhdGNoLiBTb21lIG5pdHBpY2tzIGlubGlu
+ZToKPiAKPiBPbiBNb24sIE9jdCAxMiwgMjAyMCBhdCAxMjozOSBQTSBKdWxpZW4gVGhpZXJyeSA8
+anRoaWVycnlAcmVkaGF0LmNvbT4gd3JvdGU6Cj4+Cj4+IEEgdXNlciBtaWdodCB3YW50IHRvIGtu
+b3cgaG93IG11Y2ggc3BhY2UgYSB2bWNvcmUgZmlsZSB3aWxsIHRha2Ugb24KPj4gdGhlIHN5c3Rl
+bSBhbmQgaG93IG11Y2ggc3BhY2Ugb24gdGhlaXIgZGlzayBzaG91bGQgYmUgYXZhaWxhYmxlIHRv
+Cj4+IHNhdmUgaXQgZHVyaW5nIGEgY3Jhc2guCj4+Cj4+IFRoZSBvcHRpb24gLS12bWNvcmUtc2l6
+ZSBkb2VzIG5vdCBjcmVhdGUgdGhlIHZtY29yZSBmaWxlIGJ1dCBwcm92aWRlcwo+PiBhbiBlc3Rp
+bWF0aW9uIG9mIHRoZSBzaXplIG9mIHRoZSBmaW5hbCB2bWNvcmUgZmlsZSBjcmVhdGVkIHdpdGgg
+dGhlCj4+IHNhbWUgbWFrZSBkdW1wZmlsZSBvcHRpb25zLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBK
+dWxpZW4gVGhpZXJyeSA8anRoaWVycnlAcmVkaGF0LmNvbT4KPj4gQ2M6IEthenVoaXRvIEhhZ2lv
+IDxrLWhhZ2lvLWFiQG5lYy5jb20+Cj4+IC0tLQo+PiAgbWFrZWR1bXBmaWxlLmMgfCA5OCArKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLQo+PiAgbWFrZWR1
+bXBmaWxlLmggfCAxMiArKysrKysrCj4+ICBwcmludF9pbmZvLmMgICB8ICA0ICsrKwo+PiAgMyBm
+aWxlcyBjaGFuZ2VkLCAxMTEgaW5zZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKPiAKPiBQbGVh
+c2UgdXBkYXRlICdtYWtlZHVtcGZpbGUuOCcgYXMgd2VsbCBpbiB2Miwgc28gdGhhdCB0aGUgbWFu
+IHBhZ2UgY2FuCj4gZG9jdW1lbnQgdGhlIG5ld2x5IGFkZGVkIG9wdGlvbiBhbmQgaG93IHRvIHVz
+ZSBpdCB0byBkZXRlcm1pbmUgdGhlCj4gdm1jb3JlLXNpemUuCj4gCj4+IGRpZmYgLS1naXQgYS9t
+YWtlZHVtcGZpbGUuYyBiL21ha2VkdW1wZmlsZS5jCj4+IGluZGV4IDRjNDI1MWUuLjBhMmJmYmEg
+MTAwNjQ0Cj4+IC0tLSBhL21ha2VkdW1wZmlsZS5jCj4+ICsrKyBiL21ha2VkdW1wZmlsZS5jCj4+
+IEBAIC0yNiw2ICsyNiw3IEBACj4+ICAjaW5jbHVkZSA8bGltaXRzLmg+Cj4+ICAjaW5jbHVkZSA8
+YXNzZXJ0Lmg+Cj4+ICAjaW5jbHVkZSA8emxpYi5oPgo+PiArI2luY2x1ZGUgPGxpYmdlbi5oPgo+
+IAo+IEkga25vdyB3ZSBkb24ndCBmb2xsb3cgYWxwaGFiZXRpY2FsIG9yZGVyIGZvciBpbmNsdWRl
+IGZpbGVzIGluCj4gbWFrZWR1bXBmaWxlIGNvZGUsIGJ1dCBpdCB3b3VsZCBiZSBnb29kIHRvIHBs
+YWNlIHRoZSBuZXcgLSBvbmVzCj4gYWNjb3JkaW5nbHkuIFNvIDxsaWJnZW4uaD4gY2FuIGdvIHdp
+dGggPGxpbWl0cy5oPiBoZXJlLgo+IAo+PiAgc3RydWN0IHN5bWJvbF90YWJsZSAgICBzeW1ib2xf
+dGFibGU7Cj4+ICBzdHJ1Y3Qgc2l6ZV90YWJsZSAgICAgIHNpemVfdGFibGU7Cj4+IEBAIC0xMzY2
+LDcgKzEzNjcsMjUgQEAgb3Blbl9kdW1wX2ZpbGUodm9pZCkKPj4gICAgICAgICBpZiAoIWluZm8t
+PmZsYWdfZm9yY2UpCj4+ICAgICAgICAgICAgICAgICBvcGVuX2ZsYWdzIHw9IE9fRVhDTDsKPj4K
+Pj4gLSAgICAgICBpZiAoaW5mby0+ZmxhZ19mbGF0dGVuKSB7Cj4+ICsgICAgICAgaWYgKGluZm8t
+PmZsYWdfdm1jb3JlX3NpemUpIHsKPj4gKyAgICAgICAgICAgICAgIGNoYXIgKm5hbWVjcHk7Cj4+
+ICsgICAgICAgICAgICAgICBzdHJ1Y3Qgc3RhdCBzdGF0YnVmOwo+PiArICAgICAgICAgICAgICAg
+aW50IHJlczsKPj4gKwo+PiArICAgICAgICAgICAgICAgbmFtZWNweSA9IHN0cmR1cChpbmZvLT5u
+YW1lX2R1bXBmaWxlID8KPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaW5mby0+
+bmFtZV9kdW1wZmlsZSA6ICIuIik7Cj4+ICsKPj4gKyAgICAgICAgICAgICAgIHJlcyA9IHN0YXQo
+ZGlybmFtZShuYW1lY3B5KSwgJnN0YXRidWYpOwo+PiArICAgICAgICAgICAgICAgZnJlZShuYW1l
+Y3B5KTsKPj4gKyAgICAgICAgICAgICAgIGlmIChyZXMgIT0gMCkKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgcmV0dXJuIEZBTFNFOwo+PiArCj4+ICsgICAgICAgICAgICAgICBmZCA9IC0xOwo+
+PiArICAgICAgICAgICAgICAgaW5mby0+ZHVtcHNpemVfaW5mby5ibGtzaXplID0gc3RhdGJ1Zi5z
+dF9ibGtzaXplOwo+PiArICAgICAgICAgICAgICAgaW5mby0+ZHVtcHNpemVfaW5mby5ibG9ja19i
+dWZmX3NpemUgPSBCQVNFX05VTV9CTE9DS1M7Cj4+ICsgICAgICAgICAgICAgICBpbmZvLT5kdW1w
+c2l6ZV9pbmZvLmJsb2NrX2luZm8gPSBjYWxsb2MoQkFTRV9OVU1fQkxPQ0tTLCAxKTsKPj4gKyAg
+ICAgICAgICAgICAgIGluZm8tPmR1bXBzaXplX2luZm8ubm9uX2hvbGVfYmxvY2tzID0gMDsKPj4g
+KyAgICAgICB9IGVsc2UgaWYgKGluZm8tPmZsYWdfZmxhdHRlbikgewo+PiAgICAgICAgICAgICAg
+ICAgZmQgPSBTVERPVVRfRklMRU5POwo+PiAgICAgICAgICAgICAgICAgaW5mby0+bmFtZV9kdW1w
+ZmlsZSA9IGZpbGVuYW1lX3N0ZG91dDsKPj4gICAgICAgICB9IGVsc2UgaWYgKChmZCA9IG9wZW4o
+aW5mby0+bmFtZV9kdW1wZmlsZSwgb3Blbl9mbGFncywKPj4gQEAgLTEzODQsNiArMTQwMyw5IEBA
+IGNoZWNrX2R1bXBfZmlsZShjb25zdCBjaGFyICpwYXRoKQo+PiAgewo+PiAgICAgICAgIGNoYXIg
+KmVycl9zdHI7Cj4+Cj4+ICsgICAgICAgaWYgKGluZm8tPmZsYWdfdm1jb3JlX3NpemUpCj4+ICsg
+ICAgICAgICAgICAgICByZXR1cm4gVFJVRTsKPj4gKwo+PiAgICAgICAgIGlmIChhY2Nlc3MocGF0
+aCwgRl9PSykgIT0gMCkKPj4gICAgICAgICAgICAgICAgIHJldHVybiBUUlVFOyAvKiBGaWxlIGRv
+ZXMgbm90IGV4aXN0ICovCj4+ICAgICAgICAgaWYgKGluZm8tPmZsYWdfZm9yY2UpIHsKPj4gQEAg
+LTQ2MjIsNiArNDY0NCw0NyBAQCB3cml0ZV9hbmRfY2hlY2tfc3BhY2UoaW50IGZkLCB2b2lkICpi
+dWYsIHNpemVfdCBidWZfc2l6ZSwgY2hhciAqZmlsZV9uYW1lKQo+PiAgICAgICAgIHJldHVybiBU
+UlVFOwo+PiAgfQo+Pgo+PiArc3RhdGljIGludAo+PiArd3JpdGVfYnVmZmVyX3VwZGF0ZV9zaXpl
+X2luZm8ob2ZmX3Qgb2Zmc2V0LCB2b2lkICpidWYsIHNpemVfdCBidWZfc2l6ZSkKPj4gK3sKPj4g
+KyAgICAgICBzdHJ1Y3QgZHVtcHNpemVfaW5mbyAqZHVtcHNpemVfaW5mbyA9ICZpbmZvLT5kdW1w
+c2l6ZV9pbmZvOwo+PiArICAgICAgIGludCBibGtfZW5kX2lkeCA9IChvZmZzZXQgKyBidWZfc2l6
+ZSAtIDEpIC8gZHVtcHNpemVfaW5mby0+Ymxrc2l6ZTsKPj4gKyAgICAgICBpbnQgaTsKPj4gKwo+
+PiArICAgICAgIC8qIE5lZWQgdG8gZ3JvdyB0aGUgZHVtcHNpemUgYmxvY2sgYnVmZmVyPyAqLwo+
+PiArICAgICAgIGlmIChibGtfZW5kX2lkeCA+PSBkdW1wc2l6ZV9pbmZvLT5ibG9ja19idWZmX3Np
+emUpIHsKPj4gKyAgICAgICAgICAgICAgIGludCBhbGxvY19zaXplID0gTUFYKGJsa19lbmRfaWR4
+IC0gZHVtcHNpemVfaW5mby0+YmxvY2tfYnVmZl9zaXplLCBCQVNFX05VTV9CTE9DS1MpOwo+PiAr
+Cj4+ICsgICAgICAgICAgICAgICBkdW1wc2l6ZV9pbmZvLT5ibG9ja19pbmZvID0gcmVhbGxvYyhk
+dW1wc2l6ZV9pbmZvLT5ibG9ja19pbmZvLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgZHVtcHNpemVfaW5mby0+YmxvY2tfYnVmZl9zaXplICsg
+YWxsb2Nfc2l6ZSk7Cj4+ICsgICAgICAgICAgICAgICBpZiAoIWR1bXBzaXplX2luZm8tPmJsb2Nr
+X2luZm8pIHsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgRVJSTVNHKCJOb3QgZW5vdWdoIG1l
+bW9yeVxuIik7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsKPj4gKyAg
+ICAgICAgICAgICAgIH0KPj4gKwo+PiArICAgICAgICAgICAgICAgbWVtc2V0KGR1bXBzaXplX2lu
+Zm8tPmJsb2NrX2luZm8gKyBkdW1wc2l6ZV9pbmZvLT5ibG9ja19idWZmX3NpemUsCj4+ICsgICAg
+ICAgICAgICAgICAgICAgICAgMCwgYWxsb2Nfc2l6ZSk7Cj4+ICsgICAgICAgICAgICAgICBkdW1w
+c2l6ZV9pbmZvLT5ibG9ja19idWZmX3NpemUgKz0gYWxsb2Nfc2l6ZTsKPj4gKyAgICAgICB9Cj4+
+ICsKPj4gKyAgICAgICBmb3IgKGkgPSAwOyBpIDwgYnVmX3NpemU7ICsraSkgewo+PiArICAgICAg
+ICAgICAgICAgaW50IGJsa19pZHggPSAob2Zmc2V0ICsgaSkgLyBkdW1wc2l6ZV9pbmZvLT5ibGtz
+aXplOwo+PiArCj4+ICsgICAgICAgICAgICAgICBpZiAoZHVtcHNpemVfaW5mby0+YmxvY2tfaW5m
+b1tibGtfaWR4XSkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBpICs9IGR1bXBzaXplX2lu
+Zm8tPmJsa3NpemU7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGkgPSBpIC0gKGkgJSBkdW1w
+c2l6ZV9pbmZvLT5ibGtzaXplKSAtIDE7Cj4+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbnRp
+bnVlOwo+PiArICAgICAgICAgICAgICAgfQo+PiArCj4+ICsgICAgICAgICAgICAgICBpZiAoKChj
+aGFyICopIGJ1ZilbaV0gIT0gMCkgewo+PiArICAgICAgICAgICAgICAgICAgICAgICBkdW1wc2l6
+ZV9pbmZvLT5ub25faG9sZV9ibG9ja3MrKzsKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgZHVt
+cHNpemVfaW5mby0+YmxvY2tfaW5mb1tibGtfaWR4XSA9IDE7Cj4+ICsgICAgICAgICAgICAgICB9
+Cj4+ICsgICAgICAgfQo+PiArCj4+ICsgICAgICAgcmV0dXJuIFRSVUU7Cj4+ICt9Cj4+ICsKPj4g
+IGludAo+PiAgd3JpdGVfYnVmZmVyKGludCBmZCwgb2ZmX3Qgb2Zmc2V0LCB2b2lkICpidWYsIHNp
+emVfdCBidWZfc2l6ZSwgY2hhciAqZmlsZV9uYW1lKQo+PiAgewo+PiBAQCAtNDY0Myw2ICs0NzA2
+LDggQEAgd3JpdGVfYnVmZmVyKGludCBmZCwgb2ZmX3Qgb2Zmc2V0LCB2b2lkICpidWYsIHNpemVf
+dCBidWZfc2l6ZSwgY2hhciAqZmlsZV9uYW1lKQo+PiAgICAgICAgICAgICAgICAgfQo+PiAgICAg
+ICAgICAgICAgICAgaWYgKCF3cml0ZV9hbmRfY2hlY2tfc3BhY2UoZmQsICZmZGgsIHNpemVvZihm
+ZGgpLCBmaWxlX25hbWUpKQo+PiAgICAgICAgICAgICAgICAgICAgICAgICByZXR1cm4gRkFMU0U7
+Cj4+ICsgICAgICAgfSBlbHNlIGlmIChpbmZvLT5mbGFnX3ZtY29yZV9zaXplICYmIGZkID09IGlu
+Zm8tPmZkX2R1bXBmaWxlKSB7Cj4+ICsgICAgICAgICAgICAgICByZXR1cm4gd3JpdGVfYnVmZmVy
+X3VwZGF0ZV9zaXplX2luZm8ob2Zmc2V0LCBidWYsIGJ1Zl9zaXplKTsKPj4gICAgICAgICB9IGVs
+c2Ugewo+PiAgICAgICAgICAgICAgICAgaWYgKGxzZWVrKGZkLCBvZmZzZXQsIFNFRUtfU0VUKSA9
+PSBmYWlsZWQpIHsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgRVJSTVNHKCJDYW4ndCBzZWVr
+IHRoZSBkdW1wIGZpbGUoJXMpLiAlc1xuIiwKPj4gQEAgLTkwMTgsNiArOTA4MywxMiBAQCBjbG9z
+ZV9kdW1wX2ZpbGUodm9pZCkKPj4gICAgICAgICBpZiAoaW5mby0+ZmxhZ19mbGF0dGVuKQo+PiAg
+ICAgICAgICAgICAgICAgcmV0dXJuOwo+Pgo+PiArICAgICAgIGlmIChpbmZvLT5mbGFnX3ZtY29y
+ZV9zaXplICYmIGluZm8tPmZkX2R1bXBmaWxlID09IC0xKSB7Cj4+ICsgICAgICAgICAgICAgICBm
+cmVlKGluZm8tPmR1bXBzaXplX2luZm8uYmxvY2tfaW5mbyk7Cj4+ICsgICAgICAgICAgICAgICBp
+bmZvLT5kdW1wc2l6ZV9pbmZvLmJsb2NrX2luZm8gPSBOVUxMOwo+PiArICAgICAgICAgICAgICAg
+cmV0dXJuOwo+PiArICAgICAgIH0KPj4gKwo+PiAgICAgICAgIGlmIChjbG9zZShpbmZvLT5mZF9k
+dW1wZmlsZSkgPCAwKQo+PiAgICAgICAgICAgICAgICAgRVJSTVNHKCJDYW4ndCBjbG9zZSB0aGUg
+ZHVtcCBmaWxlKCVzKS4gJXNcbiIsCj4+ICAgICAgICAgICAgICAgICAgICAgaW5mby0+bmFtZV9k
+dW1wZmlsZSwgc3RyZXJyb3IoZXJybm8pKTsKPj4gQEAgLTEwOTYzLDYgKzExMDM0LDEyIEBAIGNo
+ZWNrX3BhcmFtX2Zvcl9jcmVhdGluZ19kdW1wZmlsZShpbnQgYXJnYywgY2hhciAqYXJndltdKQo+
+PiAgICAgICAgIGlmIChpbmZvLT5mbGFnX2ZsYXR0ZW4gJiYgaW5mby0+ZmxhZ19zcGxpdCkKPj4g
+ICAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsKPj4KPj4gKyAgICAgICBpZiAoaW5mby0+Zmxh
+Z19mbGF0dGVuICYmIGluZm8tPmZsYWdfdm1jb3JlX3NpemUpCj4+ICsgICAgICAgICAgICAgICBy
+ZXR1cm4gRkFMU0U7Cj4+ICsKPj4gKyAgICAgICBpZiAoaW5mby0+ZmxhZ19tZW1fdXNhZ2UgJiYg
+aW5mby0+ZmxhZ192bWNvcmVfc2l6ZSkKPj4gKyAgICAgICAgICAgICAgIHJldHVybiBGQUxTRTsK
+Pj4gKwo+PiAgICAgICAgIGlmIChpbmZvLT5uYW1lX2ZpbHRlcmNvbmZpZyAmJiAhaW5mby0+bmFt
+ZV92bWxpbnV4KQo+PiAgICAgICAgICAgICAgICAgcmV0dXJuIEZBTFNFOwo+Pgo+PiBAQCAtMTEw
+NDMsNyArMTExMjAsOCBAQCBjaGVja19wYXJhbV9mb3JfY3JlYXRpbmdfZHVtcGZpbGUoaW50IGFy
+Z2MsIGNoYXIgKmFyZ3ZbXSkKPj4gICAgICAgICAgICAgICAgICAqLwo+PiAgICAgICAgICAgICAg
+ICAgaW5mby0+bmFtZV9tZW1vcnkgICA9IGFyZ3Zbb3B0aW5kXTsKPj4KPj4gLSAgICAgICB9IGVs
+c2UgaWYgKChhcmdjID09IG9wdGluZCArIDEpICYmIGluZm8tPmZsYWdfbWVtX3VzYWdlKSB7Cj4+
+ICsgICAgICAgfSBlbHNlIGlmICgoYXJnYyA9PSBvcHRpbmQgKyAxKSAmJiAoaW5mby0+ZmxhZ19t
+ZW1fdXNhZ2UgfHwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBpbmZvLT5mbGFnX3ZtY29yZV9zaXplKSkgewo+PiAgICAgICAgICAgICAgICAgLyoKPj4gICAg
+ICAgICAgICAgICAgICogUGFyYW1ldGVyIGZvciBzaG93aW5nIHRoZSBwYWdlIG51bWJlciBvZiBt
+ZW1vcnkKPj4gICAgICAgICAgICAgICAgICogaW4gZGlmZmVyZW50IHVzZSBmcm9tLgo+PiBAQCAt
+MTE0MjMsNiArMTE1MDEsNyBAQCBzdGF0aWMgc3RydWN0IG9wdGlvbiBsb25nb3B0c1tdID0gewo+
+PiAgICAgICAgIHsid29yay1kaXIiLCByZXF1aXJlZF9hcmd1bWVudCwgTlVMTCwgT1BUX1dPUktJ
+TkdfRElSfSwKPj4gICAgICAgICB7Im51bS10aHJlYWRzIiwgcmVxdWlyZWRfYXJndW1lbnQsIE5V
+TEwsIE9QVF9OVU1fVEhSRUFEU30sCj4+ICAgICAgICAgeyJjaGVjay1wYXJhbXMiLCBub19hcmd1
+bWVudCwgTlVMTCwgT1BUX0NIRUNLX1BBUkFNU30sCj4+ICsgICAgICAgeyJ2bWNvcmUtc2l6ZSIs
+IG5vX2FyZ3VtZW50LCBOVUxMLCBPUFRfVk1DT1JFX1NJWkV9LAo+PiAgICAgICAgIHswLCAwLCAw
+LCAwfQo+PiAgfTsKPj4KPj4gQEAgLTExNTg5LDYgKzExNjY4LDkgQEAgbWFpbihpbnQgYXJnYywg
+Y2hhciAqYXJndltdKQo+PiAgICAgICAgICAgICAgICAgICAgICAgICBpbmZvLT5mbGFnX2NoZWNr
+X3BhcmFtcyA9IFRSVUU7Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgIG1lc3NhZ2VfbGV2ZWwg
+PSBERUZBVUxUX01TR19MRVZFTDsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7Cj4+
+ICsgICAgICAgICAgICAgICBjYXNlIE9QVF9WTUNPUkVfU0laRToKPj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgaW5mby0+ZmxhZ192bWNvcmVfc2l6ZSA9IFRSVUU7Cj4+ICsgICAgICAgICAgICAg
+ICAgICAgICAgIGJyZWFrOwo+PiAgICAgICAgICAgICAgICAgY2FzZSAnPyc6Cj4+ICAgICAgICAg
+ICAgICAgICAgICAgICAgIE1TRygiQ29tbWFuZGxpbmUgcGFyYW1ldGVyIGlzIGludmFsaWQuXG4i
+KTsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgTVNHKCJUcnkgYG1ha2VkdW1wZmlsZSAtLWhl
+bHAnIGZvciBtb3JlIGluZm9ybWF0aW9uLlxuIik7Cj4+IEBAIC0xMTU5OCw2ICsxMTY4MCwxMCBA
+QCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2W10pCj4+ICAgICAgICAgaWYgKGZsYWdfZGVidWcp
+Cj4+ICAgICAgICAgICAgICAgICBtZXNzYWdlX2xldmVsIHw9IE1MX1BSSU5UX0RFQlVHX01TRzsK
+Pj4KPj4gKyAgICAgICBpZiAoaW5mby0+ZmxhZ192bWNvcmVfc2l6ZSkKPj4gKyAgICAgICAgICAg
+ICAgIC8qIFN1cHByZXNzIHByb2dyZXNzIGluZGljYXRvciBhcyBkdW1wZmlsZSB3b24ndCBnZXQg
+d3JpdHRlbiAqLwo+PiArICAgICAgICAgICAgICAgbWVzc2FnZV9sZXZlbCAmPSB+TUxfUFJJTlRf
+UFJPR1JFU1M7Cj4+ICsKPj4gICAgICAgICBpZiAoaW5mby0+ZmxhZ19jaGVja19wYXJhbXMpCj4+
+ICAgICAgICAgICAgICAgICAvKiBzdXBwcmVzcyBkZWJ1Z2dpbmcgbWVzc2FnZXMgKi8KPj4gICAg
+ICAgICAgICAgICAgIG1lc3NhZ2VfbGV2ZWwgPSBERUZBVUxUX01TR19MRVZFTDsKPj4gQEAgLTEx
+NzUxLDcgKzExODM3LDExIEBAIG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSkKPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgZ290byBvdXQ7Cj4+Cj4+ICAgICAgICAgICAgICAgICBNU0coIlxu
+Iik7Cj4+IC0gICAgICAgICAgICAgICBpZiAoaW5mby0+ZmxhZ19zcGxpdCkgewo+PiArCj4+ICsg
+ICAgICAgICAgICAgICBpZiAoaW5mby0+ZmxhZ192bWNvcmVfc2l6ZSkgewo+PiArICAgICAgICAg
+ICAgICAgICAgICAgICBNU0coIkVzdGltYXRlZCBzaXplIHRvIHNhdmUgdm1jb3JlIGlzOiAlbGxk
+IEJ5dGVzXG4iLAo+PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgKGxvbmcgbG9uZylpbmZv
+LT5kdW1wc2l6ZV9pbmZvLm5vbl9ob2xlX2Jsb2NrcyAqIGluZm8tPmR1bXBzaXplX2luZm8uYmxr
+c2l6ZSk7Cj4+ICsgICAgICAgICAgICAgICB9IGVsc2UgaWYgKGluZm8tPmZsYWdfc3BsaXQpIHsK
+Pj4gICAgICAgICAgICAgICAgICAgICAgICAgTVNHKCJUaGUgZHVtcGZpbGVzIGFyZSBzYXZlZCB0
+byAiKTsKPj4gICAgICAgICAgICAgICAgICAgICAgICAgZm9yIChpID0gMDsgaSA8IGluZm8tPm51
+bV9kdW1wZmlsZTsgaSsrKSB7Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYg
+KGkgIT0gKGluZm8tPm51bV9kdW1wZmlsZSAtIDEpKQo+PiBAQCAtMTE4MDgsNiArMTE4OTgsOCBA
+QCBvdXQ6Cj4+ICAgICAgICAgICAgICAgICAgICAgICAgIGZyZWUoaW5mby0+cGFnZV9idWYpOwo+
+PiAgICAgICAgICAgICAgICAgaWYgKGluZm8tPnBhcmFsbGVsX2luZm8gIT0gTlVMTCkKPj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgZnJlZShpbmZvLT5wYXJhbGxlbF9pbmZvKTsKPj4gKyAgICAg
+ICAgICAgICAgIGlmIChpbmZvLT5kdW1wc2l6ZV9pbmZvLmJsb2NrX2luZm8gIT0gTlVMTCkKPj4g
+KyAgICAgICAgICAgICAgICAgICAgICAgZnJlZShpbmZvLT5kdW1wc2l6ZV9pbmZvLmJsb2NrX2lu
+Zm8pOwo+PiAgICAgICAgICAgICAgICAgZnJlZShpbmZvKTsKPj4KPj4gICAgICAgICAgICAgICAg
+IGlmIChzcGxpdGJsb2NrKSB7Cj4+IGRpZmYgLS1naXQgYS9tYWtlZHVtcGZpbGUuaCBiL21ha2Vk
+dW1wZmlsZS5oCj4+IGluZGV4IDAzZmI0Y2UuLmZkNzhkNWYgMTAwNjQ0Cj4+IC0tLSBhL21ha2Vk
+dW1wZmlsZS5oCj4+ICsrKyBiL21ha2VkdW1wZmlsZS5oCj4+IEBAIC0xMjc3LDYgKzEyNzcsMTUg
+QEAgc3RydWN0IHBhcmFsbGVsX2luZm8gewo+PiAgI2VuZGlmCj4+ICB9Owo+Pgo+PiArI2RlZmlu
+ZSBCQVNFX05VTV9CTE9DS1MgICAgICAgIDUwCj4+ICsKPj4gK3N0cnVjdCBkdW1wc2l6ZV9pbmZv
+IHsKPj4gKyAgICAgICBpbnQgYmxrc2l6ZTsKPj4gKyAgICAgICBpbnQgYmxvY2tfYnVmZl9zaXpl
+Owo+PiArICAgICAgIHVuc2lnbmVkIGNoYXIgKmJsb2NrX2luZm87Cj4+ICsgICAgICAgaW50IG5v
+bl9ob2xlX2Jsb2NrczsKPj4gK307Cj4+ICsKPj4gIHN0cnVjdCBwcGM2NF92bWVtbWFwIHsKPj4g
+ICAgICAgICB1bnNpZ25lZCBsb25nICAgICAgICAgICBwaHlzOwo+PiAgICAgICAgIHVuc2lnbmVk
+IGxvbmcgICAgICAgICAgIHZpcnQ7Cj4+IEBAIC0xMzIxLDYgKzEzMzAsNyBAQCBzdHJ1Y3QgRHVt
+cEluZm8gewo+PiAgICAgICAgIGludCAgICAgICAgICAgICBmbGFnX3ZtZW1tYXA7ICAgICAgICAv
+KiBrZXJuZWwgc3VwcG9ydHMgdm1lbW1hcCBhZGRyZXNzIHNwYWNlICovCj4+ICAgICAgICAgaW50
+ICAgICAgICAgICAgIGZsYWdfZXhjbHVkZXZtOyAgICAgIC8qIC1lIC0gZXhjbHVkaW5nIHVudXNl
+ZCB2bWVtbWFwIHBhZ2VzICovCj4+ICAgICAgICAgaW50ICAgICAgICAgICAgIGZsYWdfdXNlX2Nv
+dW50OyAgICAgIC8qIF9yZWZjb3VudCBpcyBuYW1lZCBfY291bnQgaW4gc3RydWN0IHBhZ2UgKi8K
+Pj4gKyAgICAgICBpbnQgICAgICAgICAgICAgZmxhZ192bWNvcmVfc2l6ZTsgICAgLyogZXN0aW1h
+dGUgdGhlIHNpemUgb2YgdGhlIHZtY29yZSBmaWxlIGluc3RlYWQgb2YgY3JlYXRpbmcgaXQgKi8K
+Pj4gICAgICAgICB1bnNpZ25lZCBsb25nICAgdmFkZHJfZm9yX3Z0b3A7ICAgICAgLyogdmlydHVh
+bCBhZGRyZXNzIGZvciBkZWJ1Z2dpbmcgKi8KPj4gICAgICAgICBsb25nICAgICAgICAgICAgcGFn
+ZV9zaXplOyAgICAgICAgICAgLyogc2l6ZSBvZiBwYWdlICovCj4+ICAgICAgICAgbG9uZyAgICAg
+ICAgICAgIHBhZ2Vfc2hpZnQ7Cj4+IEBAIC0xNDI1LDYgKzE0MzUsNyBAQCBzdHJ1Y3QgRHVtcElu
+Zm8gewo+PiAgICAgICAgIGludCAgICAgICAgICAgICAgICAgICAgIG51bV9kdW1wZmlsZTsKPj4g
+ICAgICAgICBzdHJ1Y3Qgc3BsaXR0aW5nX2luZm8gICAqc3BsaXR0aW5nX2luZm87Cj4+ICAgICAg
+ICAgc3RydWN0IHBhcmFsbGVsX2luZm8gICAgKnBhcmFsbGVsX2luZm87Cj4+ICsgICAgICAgc3Ry
+dWN0IGR1bXBzaXplX2luZm8gICAgZHVtcHNpemVfaW5mbzsKPj4KPj4gICAgICAgICAvKgo+PiAg
+ICAgICAgICAqIGJpdG1hcCBpbmZvOgo+PiBAQCAtMjM2NCw2ICsyMzc1LDcgQEAgc3RydWN0IGVs
+Zl9wcnN0YXR1cyB7Cj4+ICAjZGVmaW5lIE9QVF9OVU1fVEhSRUFEUyAgICAgICAgIE9QVF9TVEFS
+VCsxNgo+PiAgI2RlZmluZSBPUFRfUEFSVElBTF9ETUVTRyAgICAgICBPUFRfU1RBUlQrMTcKPj4g
+ICNkZWZpbmUgT1BUX0NIRUNLX1BBUkFNUyAgICAgICAgT1BUX1NUQVJUKzE4Cj4+ICsjZGVmaW5l
+IE9QVF9WTUNPUkVfU0laRSAgICAgICAgIE9QVF9TVEFSVCsxOQo+Pgo+PiAgLyoKPj4gICAqIEZ1
+bmN0aW9uIFByb3RvdHlwZS4KPj4gZGlmZiAtLWdpdCBhL3ByaW50X2luZm8uYyBiL3ByaW50X2lu
+Zm8uYwo+PiBpbmRleCBlMGMzOGI0Li42ZjVhMTY1IDEwMDY0NAo+PiAtLS0gYS9wcmludF9pbmZv
+LmMKPj4gKysrIGIvcHJpbnRfaW5mby5jCj4+IEBAIC0zMDgsNiArMzA4LDEwIEBAIHByaW50X3Vz
+YWdlKHZvaWQpCj4+ICAgICAgICAgTVNHKCIgICAgICB0aGUgY3Jhc2hrZXJuZWwgcmFuZ2UsIHRo
+ZW4gY2FsY3VsYXRlcyB0aGUgcGFnZSBudW1iZXIgb2YgZGlmZmVyZW50IGtpbmQgcGVyXG4iKTsK
+Pj4gICAgICAgICBNU0coIiAgICAgIHZtY29yZWluZm8uIFNvIGN1cnJlbnRseSAvcHJvYy9rY29y
+ZSBuZWVkIGJlIHNwZWNpZmllZCBleHBsaWNpdGx5LlxuIik7Cj4+ICAgICAgICAgTVNHKCJcbiIp
+Owo+PiArICAgICAgIE1TRygiICBbLS12bWNvcmUtc2l6ZV06XG4iKTsKPj4gKyAgICAgICBNU0co
+IiAgICAgIFRoaXMgb3B0aW9uIHByb3ZpZGVzIGFuIGVzdGltYXRpb24gb2YgdGhlIHNpemUgbmVl
+ZGVkIHRvIHNhdmUgVk1DT1JFIG9uIGRpc2suXG4iKTsKPj4gKyAgICAgICBNU0coIiAgICAgIFRo
+aXMgb3B0aW9uIG9wdGlvbiBjYW5ub3QgYmUgdXNlZCBpbiBjb21iaW5hdGlvbiB3aXRoIC1GLlxu
+Iik7Cj4gCj4gQWxzbyBub3QgaW4gY29tYmluYXRpb24gd2l0aCAtLW1lbS11c2FnZSAoYXMgcGVy
+IHRoZSBjb2RlIGNoYW5nZXMgYWJvdmUpPwo+IEFuZCBtYXkgYmUgdGhlIG9wdGlvbnMgJy0tbWVt
+LXVzYWdlIC8gLUYnIGFsc28gbmVlZCBhbiB1cGRhdGUgdG8KPiBtZW50aW9uIHRoZXkgY2FuJ3Qg
+YmUgdXNlZCB3aXRoIC0tdm1jb3JlLXNpemUgb3B0aW9uLgo+IAo+PiArICAgICAgIE1TRygiXG4i
+KTsKPj4gICAgICAgICBNU0coIiAgWy1EXTpcbiIpOwo+PiAgICAgICAgIE1TRygiICAgICAgUHJp
+bnQgZGVidWdnaW5nIG1lc3NhZ2UuXG4iKTsKPj4gICAgICAgICBNU0coIlxuIik7Cj4+IC0tCj4g
+Cj4gSSBsaWtlIHRoZSBpZGVhLCBidXQgc29tZXRpbWVzIHdlIHVzZSBtYWtlZHVtcGZpbGUgdG8g
+Z2VuZXJhdGUgYQo+IGR1bXBmaWxlIGluIHRoZSBwcmltYXJ5IGtlcm5lbCBhcyB3ZWxsLiBGb3Ig
+ZXhhbXBsZToKPiAKPiAkIG1ha2VkdW1wZmlsZSAtZCAzMSAteCB2bWxpbnV4IC9wcm9jL2tjb3Jl
+IGR1bXBmaWxlCj4gCj4gSW4gc3VjaCB1c2UtY2FzZXMgaXQgaXMgdXNlZnVsIHRvIHVzZSAtLXZt
+Y29yZS1zaXplIGFuZCBzdGlsbCBnZW5lcmF0ZQo+IHRoZSBkdW1wZmlsZSAocmlnaHQgbm93IHRo
+ZSBkZWZhdWx0IGJlaGF2aW91ciBpcyBub3QgdG8gZ2VuZXJhdGUgYQoKVGhlIG9wdGlvbiAnLS12
+bWNvcmUtc2l6ZScgd2lsbCBnZXQgYWxsIGR1bXBhYmxlIHBhZ2VzIGxpa2UgdGhlIHByb2Nlc3Mg
+b2YKc2F2aW5nIHZtY29yZSwgY29tcHV0ZSBhbmQgcmV0dXJuIHRoZSBmaW5hbCBzaXplIG9mIHZt
+Y29yZSwgYnV0IGl0IGRvZXNuJ3QKc2F2ZSB0aGUgdm1jb3JlIGRhdGEuCgpUaGUgcmVhc29uIGlz
+IHRoYXQgaXQgZG9lc24ndCBhZmZlY3QgdGhlIHBlcmZvcm1hbmNlIG9mIG1rZHVtcHJkLCBiZWNh
+dXNlCm1rZHVtcHJkIHdhbnRzIHRvIHVzZSB0aGUgc2l6ZSBvZiB2bWNvcmUgdG8gZGV0ZXJtaW5l
+IGlmIHRoZXJlIGlzIGVub3VnaApmcmVlIGRpc2sgc3BhY2UgdG8gaG9sZCB0aGUgdm1jb3JlIGF0
+IGEgY2VydGFpbiB0aW1lIHBvaW50LgoKU2F2aW5nIHZtY29yZSBkYXRhIHdpbGwgd2FzdGUgdGlt
+ZSBhbmQgY2F1c2UgdGhlIHBlcmZvcm1hbmNlIGRlZ3JhZGF0aW9uCmluIHRoaXMgY2FzZS4KClVu
+bGVzcywgcHJvdmlkZSBhZGRpdGlvbmFsIG9wdGlvbiBhbmQgd29yayB3aXRoIHRoZSAnLS12bWNv
+cmUtc2l6ZScgdG9nZXRoZXIKaW4gb3JkZXIgdG8gY2hvb3NlIGdlbmVyYXRpbmcgYSBkdW1wZmls
+ZSBvciBub3QuCgpUaGFua3MuCkxpYW5ibwoKPiBkdW1wZmlsZSB3aGVuIC0tdm1jb3JlLXNpemUg
+aXMgc3BlY2lmaWVkKS4gTWF5YmUgd2UgbmVlZCB0byB0aGluayBtb3JlCj4gb24gc3VwcG9ydGlu
+ZyB0aGlzIHVzZS1jYXNlIGFzIHdlbGwuCj4gCj4gUmVnYXJkcywKPiBCaHVwZXNoCj4gCj4gCj4g
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBt
+YWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo+IAoKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
+aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
+dGluZm8va2V4ZWMK
