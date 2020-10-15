@@ -1,14 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 13 Oct 2020 13:52:49 -0700
-From: Ira Weiny <ira.weiny@intel.com>
-Subject: Re: [PATCH RFC PKS/PMEM 24/58] fs/freevxfs: Utilize new kmap_thread()
-Message-ID: <20201013205248.GJ2046448@iweiny-DESK2.sc.intel.com>
-References: <20201009195033.3208459-1-ira.weiny@intel.com>
- <20201009195033.3208459-25-ira.weiny@intel.com>
- <20201013112544.GA5249@infradead.org>
+Received: from de-smtp-delivery-102.mimecast.com ([62.140.7.102])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kT1vy-0003sd-Sd
+ for kexec@lists.infradead.org; Thu, 15 Oct 2020 12:00:40 +0000
+Date: Thu, 15 Oct 2020 14:00:18 +0200
+From: Petr Tesarik <ptesarik@suse.com>
+Subject: Re: [PATCH 3/3] Cleanup: Remove offset_pt_load_memory
+Message-ID: <20201015140018.36bc76ad@ezekiel.suse.cz>
+In-Reply-To: <OSBPR01MB19917ADD8446FD2DBA92410DDD020@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20201007065652.28160-1-ptesarik@suse.com>
+ <20201007065652.28160-4-ptesarik@suse.com>
+ <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <OSBPR01MB19917ADD8446FD2DBA92410DDD020@OSBPR01MB1991.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20201013112544.GA5249@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,39 +21,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, Thomas Gleixner <tglx@linutronix.de>, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, ceph-devel@vger.kernel.org, amd-gfx@lists.freedesktop.org, io-uring@vger.kernel.org, cluster-devel@redhat.com, Ingo Molnar <mingo@redhat.com>, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-afs@lists.infradead.org, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Dan Williams <dan.j.williams@intel.com>, Andrew Morton <akpm@linux-foundation.org>, linux-cachefs@redhat.com, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
+To: "HAGIO =?UTF-8?B?S0FaVUhJVE8=?=(=?UTF-8?B?6JCp5bC+44CA5LiA5LuB?=)" <k-hagio-ab@nec.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-On Tue, Oct 13, 2020 at 12:25:44PM +0100, Christoph Hellwig wrote:
-> > -	kaddr = kmap(pp);
-> > +	kaddr = kmap_thread(pp);
-> >  	memcpy(kaddr, vip->vii_immed.vi_immed + offset, PAGE_SIZE);
-> > -	kunmap(pp);
-> > +	kunmap_thread(pp);
-> 
-> You only Cced me on this particular patch, which means I have absolutely
-> no idea what kmap_thread and kunmap_thread actually do, and thus can't
-> provide an informed review.
-
-Sorry the list was so big I struggled with who to CC and on which patches.
-
-> 
-> That being said I think your life would be a lot easier if you add
-> helpers for the above code sequence and its counterpart that copies
-> to a potential hughmem page first, as that hides the implementation
-> details from most users.
-
-Matthew Wilcox and Al Viro have suggested similar ideas.
-
-https://lore.kernel.org/lkml/20201013205012.GI2046448@iweiny-DESK2.sc.intel.com/
-
-Ira
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCAxNSBPY3QgMjAyMCAwMzowNzo1OSArMDAwMApIQUdJTyBLQVpVSElUTyjokKnlsL7j
+gIDkuIDku4EpIDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOgoKPiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gPiBBZnRlciB0
+aGUgcHJldmlvdXMgY29tbWl0LCB0aGlzIHZhcmlhYmxlIGhhcyBiZWNvbWUgd3JpdGUtb25seSwg
+c28KPiA+ID4gaXQgaXMgY2xlYXJseSBubyBsb25nZXIgbmVlZGVkLgo+ID4gPgo+ID4gPiBTaWdu
+ZWQtb2ZmLWJ5OiBQZXRyIFRlc2FyaWsgPHB0ZXNhcmlrQHN1c2UuY29tPgo+ID4gPiAtLS0KPiA+
+ID4gIGVsZl9pbmZvLmMgfCAxNyAtLS0tLS0tLS0tLS0tLS0tLQo+ID4gPiAgMSBmaWxlIGNoYW5n
+ZWQsIDE3IGRlbGV0aW9ucygtKQo+ID4gPgo+ID4gPiBkaWZmIC0tZ2l0IGEvZWxmX2luZm8uYyBi
+L2VsZl9pbmZvLmMKPiA+ID4gaW5kZXggNWVkNjVmYy4uYTY2MjRiNSAxMDA2NDQKPiA+ID4gLS0t
+IGEvZWxmX2luZm8uYwo+ID4gPiArKysgYi9lbGZfaW5mby5jCj4gPiA+IEBAIC02Myw3ICs2Myw2
+IEBAIHN0YXRpYyBpbnQJCQlmbGFnc19tZW1vcnk7Cj4gPiA+ICAgKi8KPiA+ID4gIHN0YXRpYyB1
+bnNpZ25lZCBpbnQJCW51bV9wdF9sb2FkczsKPiA+ID4gIHN0YXRpYyBzdHJ1Y3QgcHRfbG9hZF9z
+ZWdtZW50CSpwdF9sb2FkczsKPiA+ID4gLXN0YXRpYyBvZmZfdAkJCW9mZnNldF9wdF9sb2FkX21l
+bW9yeTsKPiA+ID4KPiA+ID4gIC8qCj4gPiA+ICAgKiBQVF9OT1RFIGluZm9ybWF0aW9uIGFib3V0
+IC9wcm9jL3ZtY29yZToKPiA+ID4gQEAgLTg0MywxNSArODQyLDYgQEAgaW50IGdldF9rY29yZV9k
+dW1wX2xvYWRzKHZvaWQpCj4gPiA+ICAJCQlyZXR1cm4gRkFMU0U7Cj4gPiA+ICAJCX0KPiA+ID4K
+PiA+ID4gLQkJaWYgKGogPT0gMCkgewo+ID4gPiAtCQkJb2Zmc2V0X3B0X2xvYWRfbWVtb3J5ID0g
+cC0+ZmlsZV9vZmZzZXQ7Cj4gPiA+IC0JCQlpZiAob2Zmc2V0X3B0X2xvYWRfbWVtb3J5ID09IDAp
+IHsKPiA+ID4gLQkJCQlFUlJNU0coIkNhbid0IGdldCB0aGUgb2Zmc2V0IG9mIHBhZ2UgZGF0YS5c
+biIpOwo+ID4gPiAtCQkJCWZyZWUocGxzKTsKPiA+ID4gLQkJCQlyZXR1cm4gRkFMU0U7Cj4gPiA+
+IC0JCQl9Cj4gPiA+IC0JCX0KPiA+ID4gLQo+ID4gPiAgCQlwbHNbal0gPSAqcDsKPiA+ID4gIAkJ
+aisrOwo+ID4gPiAgCX0KPiA+ID4gQEAgLTkyOSwxMyArOTE5LDYgQEAgZ2V0X2VsZl9pbmZvKGlu
+dCBmZCwgY2hhciAqZmlsZW5hbWUpCj4gPiA+ICAJCWlmIChwaGRyLnBfdHlwZSAhPSBQVF9MT0FE
+KQo+ID4gPiAgCQkJY29udGludWU7Cj4gPiA+Cj4gPiA+IC0JCWlmIChqID09IDApIHsKPiA+ID4g
+LQkJCW9mZnNldF9wdF9sb2FkX21lbW9yeSA9IHBoZHIucF9vZmZzZXQ7Cj4gPiA+IC0JCQlpZiAo
+b2Zmc2V0X3B0X2xvYWRfbWVtb3J5ID09IDApIHsKPiA+ID4gLQkJCQlFUlJNU0coIkNhbid0IGdl
+dCB0aGUgb2Zmc2V0IG9mIHBhZ2UgZGF0YS5cbiIpOwo+ID4gPiAtCQkJCXJldHVybiBGQUxTRTsg
+IAo+ID4gCj4gPiBJIHRoaW5rIHRoaXMgcGFydCBpcyBhIGtpbmQgb2Ygc2FuaXR5IGNoZWNrIG9u
+IEVMRiBQaGRyIGRhdGEsIGJ1dAo+ID4gY2hlY2tpbmcgb25seSBwX29mZnNldCB3aGVuIGo9PTAg
+ZG9lc24ndCBtYWtlIHNlbnNlIGFuZCB0aGVyZSB3b3VsZAo+ID4gYmUgZXh0cmVtZWx5IHJhcmUg
+Y2FzZXMgd2hlcmUgYXJlIGFib3J0ZWQgYnkgdGhpcyBjaGVjaywgc28gaXQgd291bGQKPiA+IGJl
+IGZpbmUgdG8gcmVtb3ZlIGNvbXBsZXRlbHkuCj4gPiAKPiA+IFNvIHRoZSBwYXRjaHNldCBsb29r
+cyBnb29kIHRvIG1lLgo+ID4gVGhhbmsgeW91IGZvciB0aGUgY2xlYW51cCEgIAo+IAo+IEFwcGxp
+ZWQuCj4gaHR0cHM6Ly9naXRodWIuY29tL21ha2VkdW1wZmlsZS9tYWtlZHVtcGZpbGUvY29tcGFy
+ZS82NGQyYWVlMmM0NjU0ZmE0MjI2MzNhNjgzYzFjM2YyYThkM2JmM2E5Li4ubWFzdGVyCgpUaGFu
+ayB5b3UuCgpQZXRyIFQKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
