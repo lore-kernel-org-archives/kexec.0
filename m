@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mail-eopbgr1410089.outbound.protection.outlook.com
+ ([40.107.141.89] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kSd2a-0006T6-Pd
- for kexec@lists.infradead.org; Wed, 14 Oct 2020 09:25:49 +0000
-From: Kairui Song <kasong@redhat.com>
-Subject: [PATCH 2/2] hyperv_fb: Update screen_info after removing old
- framebuffer
-Date: Wed, 14 Oct 2020 17:24:29 +0800
-Message-Id: <20201014092429.1415040-3-kasong@redhat.com>
-In-Reply-To: <20201014092429.1415040-1-kasong@redhat.com>
-References: <20201014092429.1415040-1-kasong@redhat.com>
+ id 1kStcv-0003fF-Q6
+ for kexec@lists.infradead.org; Thu, 15 Oct 2020 03:08:27 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH 3/3] Cleanup: Remove offset_pt_load_memory
+Date: Thu, 15 Oct 2020 03:07:59 +0000
+Message-ID: <OSBPR01MB19917ADD8446FD2DBA92410DDD020@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20201007065652.28160-1-ptesarik@suse.com>
+ <20201007065652.28160-4-ptesarik@suse.com>
+ <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB19916814541649F049C22090DD050@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,43 +27,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Wei Liu <wei.liu@kernel.org>, Kairui Song <kasong@redhat.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, kexec@lists.infradead.org, Haiyang Zhang <haiyangz@microsoft.com>, x86@kernel.org, Dexuan Cui <decui@microsoft.com>, linux-hyperv@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, "K. Y. Srinivasan" <kys@microsoft.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>
+To: Petr Tesarik <ptesarik@suse.com>, kexec-ml <kexec@lists.infradead.org>
 
-On gen2 HyperV VM, hyperv_fb will remove the old framebuffer, the
-new allocated framebuffer address could be at a differnt location,
-and it's no longer VGA framebuffer. Update screen_info
-so that after kexec, kernel won't try to reuse the old invalid
-framebuffer address as VGA.
+-----Original Message-----
+> > -----Original Message-----
+> > After the previous commit, this variable has become write-only, so
+> > it is clearly no longer needed.
+> >
+> > Signed-off-by: Petr Tesarik <ptesarik@suse.com>
+> > ---
+> >  elf_info.c | 17 -----------------
+> >  1 file changed, 17 deletions(-)
+> >
+> > diff --git a/elf_info.c b/elf_info.c
+> > index 5ed65fc..a6624b5 100644
+> > --- a/elf_info.c
+> > +++ b/elf_info.c
+> > @@ -63,7 +63,6 @@ static int			flags_memory;
+> >   */
+> >  static unsigned int		num_pt_loads;
+> >  static struct pt_load_segment	*pt_loads;
+> > -static off_t			offset_pt_load_memory;
+> >
+> >  /*
+> >   * PT_NOTE information about /proc/vmcore:
+> > @@ -843,15 +842,6 @@ int get_kcore_dump_loads(void)
+> >  			return FALSE;
+> >  		}
+> >
+> > -		if (j == 0) {
+> > -			offset_pt_load_memory = p->file_offset;
+> > -			if (offset_pt_load_memory == 0) {
+> > -				ERRMSG("Can't get the offset of page data.\n");
+> > -				free(pls);
+> > -				return FALSE;
+> > -			}
+> > -		}
+> > -
+> >  		pls[j] = *p;
+> >  		j++;
+> >  	}
+> > @@ -929,13 +919,6 @@ get_elf_info(int fd, char *filename)
+> >  		if (phdr.p_type != PT_LOAD)
+> >  			continue;
+> >
+> > -		if (j == 0) {
+> > -			offset_pt_load_memory = phdr.p_offset;
+> > -			if (offset_pt_load_memory == 0) {
+> > -				ERRMSG("Can't get the offset of page data.\n");
+> > -				return FALSE;
+> 
+> I think this part is a kind of sanity check on ELF Phdr data, but
+> checking only p_offset when j==0 doesn't make sense and there would
+> be extremely rare cases where are aborted by this check, so it would
+> be fine to remove completely.
+> 
+> So the patchset looks good to me.
+> Thank you for the cleanup!
 
-Signed-off-by: Kairui Song <kasong@redhat.com>
----
- drivers/video/fbdev/hyperv_fb.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+Applied.
+https://github.com/makedumpfile/makedumpfile/compare/64d2aee2c4654fa422633a683c1c3f2a8d3bf3a9...master
 
-diff --git a/drivers/video/fbdev/hyperv_fb.c b/drivers/video/fbdev/hyperv_fb.c
-index 02411d89cb46..e36fb1a0ecdb 100644
---- a/drivers/video/fbdev/hyperv_fb.c
-+++ b/drivers/video/fbdev/hyperv_fb.c
-@@ -1114,8 +1114,15 @@ static int hvfb_getmem(struct hv_device *hdev, struct fb_info *info)
- getmem_done:
- 	remove_conflicting_framebuffers(info->apertures,
- 					KBUILD_MODNAME, false);
--	if (!gen2vm)
-+
-+	if (gen2vm) {
-+		/* framebuffer is reallocated, clear screen_info to avoid misuse from kexec */
-+		screen_info.lfb_size = 0;
-+		screen_info.lfb_base = 0;
-+		screen_info.orig_video_isVGA = 0;
-+	} else {
- 		pci_dev_put(pdev);
-+	}
- 	kfree(info->apertures);
- 
- 	return 0;
--- 
-2.28.0
+Thanks,
+Kazu
 
 
 _______________________________________________
