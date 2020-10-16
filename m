@@ -1,22 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410087.outbound.protection.outlook.com
- ([40.107.141.87] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mx2.suse.de ([195.135.220.15])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kTJUn-0000cX-K8
- for kexec@lists.infradead.org; Fri, 16 Oct 2020 06:45:46 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: [MAKDUMPFILE PATCH] Add option to estimate the size of vmcore
- dump files
-Date: Fri, 16 Oct 2020 06:45:33 +0000
-Message-ID: <OSBPR01MB19912E6BD4B99FE4915708FFDD030@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20201012070905.5837-1-jthierry@redhat.com>
- <CACi5LpNSnr+9v_sMPZnCQu14pML6PR1bBLKqj4tVaxk2O9k0wA@mail.gmail.com>
- <f12bb1e2-c984-68d0-f952-d6b7243c8a7e@redhat.com>
- <CACi5LpM-hCjnFg6Knb57Fr7+zVnTDewYRLAFABeNrd_gy+GhGw@mail.gmail.com>
-In-Reply-To: <CACi5LpM-hCjnFg6Knb57Fr7+zVnTDewYRLAFABeNrd_gy+GhGw@mail.gmail.com>
-Content-Language: ja-JP
+ id 1kTO6Z-0005WN-00
+ for kexec@lists.infradead.org; Fri, 16 Oct 2020 11:41:05 +0000
+Subject: Re: [PATCH v4] arm64: Add purgatory printing
+References: <20201002134248.21006-1-matthias.bgg@kernel.org>
+ <CACi5LpPgygXYxxqBQJtznCUDbJXh_5gVBbvc0c3u=B3jTK4uoQ@mail.gmail.com>
+From: Matthias Brugger <mbrugger@suse.com>
+Message-ID: <c66efd4e-f891-2397-d381-c86159ecfee7@suse.com>
+Date: Fri, 16 Oct 2020 13:40:57 +0200
 MIME-Version: 1.0
+In-Reply-To: <CACi5LpPgygXYxxqBQJtznCUDbJXh_5gVBbvc0c3u=B3jTK4uoQ@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,388 +20,254 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, Julien Thierry <jthierry@redhat.com>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>, matthias.bgg@kernel.org
+Cc: geoff@infradead.org, Bhupesh SHARMA <bhupesh.linux@gmail.com>, Simon Horman <horms@verge.net.au>, kexec mailing list <kexec@lists.infradead.org>
 
-Hi Julien,
+Hi,
 
------Original Message-----
-> Hello Julien,
+On 02/10/2020 20:34, Bhupesh Sharma wrote:
+> Hello Matthias,
 > 
-> On Tue, Oct 13, 2020 at 3:23 PM Julien Thierry <jthierry@redhat.com> wrote:
-> >
-> > Hi Bhupesh,
-> >
-> > On 10/13/20 10:27 AM, Bhupesh Sharma wrote:
-> > > Hello Julien,
-> > >
-> > > Thanks for the patch. Some nitpicks inline:
-> > >
-> > > On Mon, Oct 12, 2020 at 12:39 PM Julien Thierry <jthierry@redhat.com> wrote:
-> > >>
-> > >> A user might want to know how much space a vmcore file will take on
-> > >> the system and how much space on their disk should be available to
-> > >> save it during a crash.
-> > >>
-> > >> The option --vmcore-size does not create the vmcore file but provides
-> > >> an estimation of the size of the final vmcore file created with the
-> > >> same make dumpfile options.
-
-Interesting.  Do you have any actual use case?  e.g. used by kdumpctl?
-or use it in kdump initramfs?
-
-> > >>
-> > >> Signed-off-by: Julien Thierry <jthierry@redhat.com>
-> > >> Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
-> > >> ---
-> > >>   makedumpfile.c | 98 ++++++++++++++++++++++++++++++++++++++++++++++++--
-> > >>   makedumpfile.h | 12 +++++++
-> > >>   print_info.c   |  4 +++
-> > >>   3 files changed, 111 insertions(+), 3 deletions(-)
-> > >
-> > > Please update 'makedumpfile.8' as well in v2, so that the man page can
-> > > document the newly added option and how to use it to determine the
-> > > vmcore-size.
-> > >
-> >
-> > Ah yes, I'll do that.
-> >
-> > >> diff --git a/makedumpfile.c b/makedumpfile.c
-> > >> index 4c4251e..0a2bfba 100644
-> > >> --- a/makedumpfile.c
-> > >> +++ b/makedumpfile.c
-> > >> @@ -26,6 +26,7 @@
-> > >>   #include <limits.h>
-> > >>   #include <assert.h>
-> > >>   #include <zlib.h>
-> > >> +#include <libgen.h>
-> > >
-> > > I know we don't follow alphabetical order for include files in
-> > > makedumpfile code, but it would be good to place the new - ones
-> > > accordingly. So <libgen.h> can go with <limits.h> here.
-> > >
-> >
-> > Noted.
-> >
-> > >>   struct symbol_table    symbol_table;
-> > >>   struct size_table      size_table;
-> > >> @@ -1366,7 +1367,25 @@ open_dump_file(void)
-> > >>          if (!info->flag_force)
-> > >>                  open_flags |= O_EXCL;
-> > >>
-> > >> -       if (info->flag_flatten) {
-> > >> +       if (info->flag_vmcore_size) {
-> > >> +               char *namecpy;
-> > >> +               struct stat statbuf;
-> > >> +               int res;
-> > >> +
-> > >> +               namecpy = strdup(info->name_dumpfile ?
-> > >> +                                info->name_dumpfile : ".");
-> > >> +
-> > >> +               res = stat(dirname(namecpy), &statbuf);
-> > >> +               free(namecpy);
-> > >> +               if (res != 0)
-> > >> +                       return FALSE;
-> > >> +
-> > >> +               fd = -1;
-> > >> +               info->dumpsize_info.blksize = statbuf.st_blksize;
-> > >> +               info->dumpsize_info.block_buff_size = BASE_NUM_BLOCKS;
-> > >> +               info->dumpsize_info.block_info = calloc(BASE_NUM_BLOCKS, 1);
-> > >> +               info->dumpsize_info.non_hole_blocks = 0;
-> > >> +       } else if (info->flag_flatten) {
-> > >>                  fd = STDOUT_FILENO;
-> > >>                  info->name_dumpfile = filename_stdout;
-> > >>          } else if ((fd = open(info->name_dumpfile, open_flags,
-> > >> @@ -1384,6 +1403,9 @@ check_dump_file(const char *path)
-> > >>   {
-> > >>          char *err_str;
-> > >>
-> > >> +       if (info->flag_vmcore_size)
-> > >> +               return TRUE;
-> > >> +
-> > >>          if (access(path, F_OK) != 0)
-> > >>                  return TRUE; /* File does not exist */
-> > >>          if (info->flag_force) {
-> > >> @@ -4622,6 +4644,47 @@ write_and_check_space(int fd, void *buf, size_t buf_size, char *file_name)
-> > >>          return TRUE;
-> > >>   }
-> > >>
-> > >> +static int
-> > >> +write_buffer_update_size_info(off_t offset, void *buf, size_t buf_size)
-> > >> +{
-> > >> +       struct dumpsize_info *dumpsize_info = &info->dumpsize_info;
-> > >> +       int blk_end_idx = (offset + buf_size - 1) / dumpsize_info->blksize;
-> > >> +       int i;
-> > >> +
-> > >> +       /* Need to grow the dumpsize block buffer? */
-> > >> +       if (blk_end_idx >= dumpsize_info->block_buff_size) {
-> > >> +               int alloc_size = MAX(blk_end_idx - dumpsize_info->block_buff_size, BASE_NUM_BLOCKS);
-> > >> +
-> > >> +               dumpsize_info->block_info = realloc(dumpsize_info->block_info,
-> > >> +                                                   dumpsize_info->block_buff_size + alloc_size);
-> > >> +               if (!dumpsize_info->block_info) {
-> > >> +                       ERRMSG("Not enough memory\n");
-> > >> +                       return FALSE;
-> > >> +               }
-> > >> +
-> > >> +               memset(dumpsize_info->block_info + dumpsize_info->block_buff_size,
-> > >> +                      0, alloc_size);
-> > >> +               dumpsize_info->block_buff_size += alloc_size;
-> > >> +       }
-> > >> +
-> > >> +       for (i = 0; i < buf_size; ++i) {
-> > >> +               int blk_idx = (offset + i) / dumpsize_info->blksize;
-> > >> +
-> > >> +               if (dumpsize_info->block_info[blk_idx]) {
-> > >> +                       i += dumpsize_info->blksize;
-> > >> +                       i = i - (i % dumpsize_info->blksize) - 1;
-> > >> +                       continue;
-> > >> +               }
-> > >> +
-> > >> +               if (((char *) buf)[i] != 0) {
-> > >> +                       dumpsize_info->non_hole_blocks++;
-> > >> +                       dumpsize_info->block_info[blk_idx] = 1;
-> > >> +               }
-> > >> +       }
-> > >> +
-> > >> +       return TRUE;
-> > >> +}
-> > >> +
-> > >>   int
-> > >>   write_buffer(int fd, off_t offset, void *buf, size_t buf_size, char *file_name)
-> > >>   {
-> > >> @@ -4643,6 +4706,8 @@ write_buffer(int fd, off_t offset, void *buf, size_t buf_size, char *file_name)
-> > >>                  }
-> > >>                  if (!write_and_check_space(fd, &fdh, sizeof(fdh), file_name))
-> > >>                          return FALSE;
-> > >> +       } else if (info->flag_vmcore_size && fd == info->fd_dumpfile) {
-> > >> +               return write_buffer_update_size_info(offset, buf, buf_size);
-
-Why do we need this function?  makedumpfile actually writes zero-filled
-pages to the dumpfile with -d 0, and doesn't write them with -d 1.
-So isn't "write_bytes += buf_size" enough?  For example, with -d 30,
-
-# makedumpfile --vmcore-size -d30 vmcore
-
-Estimated size to save vmcore is: 147595264 Bytes
-write_bytes: 172782736 Bytes  // calculated by "write_bytes += buf_size"
-
-makedumpfile Completed.
-# makedumpfile -d30 vmcore dump.d30
-Copying data                                      : [100.0 %] /           eta: 0s
-
-The dumpfile is saved to dump.d30.
-
-makedumpfile Completed.
-# ls -ls dump.d30 
-168740 -rw------- 1 root root 172787864 Oct 16 15:14 dump.d30
-
-
-> > >>          } else {
-> > >>                  if (lseek(fd, offset, SEEK_SET) == failed) {
-> > >>                          ERRMSG("Can't seek the dump file(%s). %s\n",
-> > >> @@ -9018,6 +9083,12 @@ close_dump_file(void)
-> > >>          if (info->flag_flatten)
-> > >>                  return;
-> > >>
-> > >> +       if (info->flag_vmcore_size && info->fd_dumpfile == -1) {
-> > >> +               free(info->dumpsize_info.block_info);
-> > >> +               info->dumpsize_info.block_info = NULL;
-> > >> +               return;
-> > >> +       }
-> > >> +
-> > >>          if (close(info->fd_dumpfile) < 0)
-> > >>                  ERRMSG("Can't close the dump file(%s). %s\n",
-> > >>                      info->name_dumpfile, strerror(errno));
-> > >> @@ -10963,6 +11034,12 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
-> > >>          if (info->flag_flatten && info->flag_split)
-> > >>                  return FALSE;
-> > >>
-> > >> +       if (info->flag_flatten && info->flag_vmcore_size)
-> > >> +               return FALSE;
-> > >> +
-> > >> +       if (info->flag_mem_usage && info->flag_vmcore_size)
-> > >> +               return FALSE;
-> > >> +
-> > >>          if (info->name_filterconfig && !info->name_vmlinux)
-> > >>                  return FALSE;
-> > >>
-> > >> @@ -11043,7 +11120,8 @@ check_param_for_creating_dumpfile(int argc, char *argv[])
-> > >>                   */
-> > >>                  info->name_memory   = argv[optind];
-> > >>
-> > >> -       } else if ((argc == optind + 1) && info->flag_mem_usage) {
-> > >> +       } else if ((argc == optind + 1) && (info->flag_mem_usage ||
-> > >> +                                           info->flag_vmcore_size)) {
-> > >>                  /*
-> > >>                  * Parameter for showing the page number of memory
-> > >>                  * in different use from.
-> > >> @@ -11423,6 +11501,7 @@ static struct option longopts[] = {
-> > >>          {"work-dir", required_argument, NULL, OPT_WORKING_DIR},
-> > >>          {"num-threads", required_argument, NULL, OPT_NUM_THREADS},
-> > >>          {"check-params", no_argument, NULL, OPT_CHECK_PARAMS},
-> > >> +       {"vmcore-size", no_argument, NULL, OPT_VMCORE_SIZE},
-> > >>          {0, 0, 0, 0}
-> > >>   };
-> > >>
-> > >> @@ -11589,6 +11668,9 @@ main(int argc, char *argv[])
-> > >>                          info->flag_check_params = TRUE;
-> > >>                          message_level = DEFAULT_MSG_LEVEL;
-> > >>                          break;
-> > >> +               case OPT_VMCORE_SIZE:
-> > >> +                       info->flag_vmcore_size = TRUE;
-> > >> +                       break;
-> > >>                  case '?':
-> > >>                          MSG("Commandline parameter is invalid.\n");
-> > >>                          MSG("Try `makedumpfile --help' for more information.\n");
-> > >> @@ -11598,6 +11680,10 @@ main(int argc, char *argv[])
-> > >>          if (flag_debug)
-> > >>                  message_level |= ML_PRINT_DEBUG_MSG;
-> > >>
-> > >> +       if (info->flag_vmcore_size)
-> > >> +               /* Suppress progress indicator as dumpfile won't get written */
-> > >> +               message_level &= ~ML_PRINT_PROGRESS;
-> > >> +
-> > >>          if (info->flag_check_params)
-> > >>                  /* suppress debugging messages */
-> > >>                  message_level = DEFAULT_MSG_LEVEL;
-> > >> @@ -11751,7 +11837,11 @@ main(int argc, char *argv[])
-> > >>                          goto out;
-> > >>
-> > >>                  MSG("\n");
-> > >> -               if (info->flag_split) {
-> > >> +
-> > >> +               if (info->flag_vmcore_size) {
-> > >> +                       MSG("Estimated size to save vmcore is: %lld Bytes\n",
-> > >> +                           (long long)info->dumpsize_info.non_hole_blocks *
-> info->dumpsize_info.blksize);
-> > >> +               } else if (info->flag_split) {
-> > >>                          MSG("The dumpfiles are saved to ");
-> > >>                          for (i = 0; i < info->num_dumpfile; i++) {
-> > >>                                  if (i != (info->num_dumpfile - 1))
-> > >> @@ -11808,6 +11898,8 @@ out:
-> > >>                          free(info->page_buf);
-> > >>                  if (info->parallel_info != NULL)
-> > >>                          free(info->parallel_info);
-> > >> +               if (info->dumpsize_info.block_info != NULL)
-> > >> +                       free(info->dumpsize_info.block_info);
-> > >>                  free(info);
-> > >>
-> > >>                  if (splitblock) {
-> > >> diff --git a/makedumpfile.h b/makedumpfile.h
-> > >> index 03fb4ce..fd78d5f 100644
-> > >> --- a/makedumpfile.h
-> > >> +++ b/makedumpfile.h
-> > >> @@ -1277,6 +1277,15 @@ struct parallel_info {
-> > >>   #endif
-> > >>   };
-> > >>
-> > >> +#define BASE_NUM_BLOCKS        50
-> > >> +
-> > >> +struct dumpsize_info {
-> > >> +       int blksize;
-> > >> +       int block_buff_size;
-> > >> +       unsigned char *block_info;
-> > >> +       int non_hole_blocks;
-> > >> +};
-> > >> +
-> > >>   struct ppc64_vmemmap {
-> > >>          unsigned long           phys;
-> > >>          unsigned long           virt;
-> > >> @@ -1321,6 +1330,7 @@ struct DumpInfo {
-> > >>          int             flag_vmemmap;        /* kernel supports vmemmap address space */
-> > >>          int             flag_excludevm;      /* -e - excluding unused vmemmap pages */
-> > >>          int             flag_use_count;      /* _refcount is named _count in struct page */
-> > >> +       int             flag_vmcore_size;    /* estimate the size of the vmcore file instead of
-> creating it */
-> > >>          unsigned long   vaddr_for_vtop;      /* virtual address for debugging */
-> > >>          long            page_size;           /* size of page */
-> > >>          long            page_shift;
-> > >> @@ -1425,6 +1435,7 @@ struct DumpInfo {
-> > >>          int                     num_dumpfile;
-> > >>          struct splitting_info   *splitting_info;
-> > >>          struct parallel_info    *parallel_info;
-> > >> +       struct dumpsize_info    dumpsize_info;
-> > >>
-> > >>          /*
-> > >>           * bitmap info:
-> > >> @@ -2364,6 +2375,7 @@ struct elf_prstatus {
-> > >>   #define OPT_NUM_THREADS         OPT_START+16
-> > >>   #define OPT_PARTIAL_DMESG       OPT_START+17
-> > >>   #define OPT_CHECK_PARAMS        OPT_START+18
-> > >> +#define OPT_VMCORE_SIZE         OPT_START+19
-> > >>
-> > >>   /*
-> > >>    * Function Prototype.
-> > >> diff --git a/print_info.c b/print_info.c
-> > >> index e0c38b4..6f5a165 100644
-> > >> --- a/print_info.c
-> > >> +++ b/print_info.c
-> > >> @@ -308,6 +308,10 @@ print_usage(void)
-> > >>          MSG("      the crashkernel range, then calculates the page number of different kind per\n");
-> > >>          MSG("      vmcoreinfo. So currently /proc/kcore need be specified explicitly.\n");
-> > >>          MSG("\n");
-> > >> +       MSG("  [--vmcore-size]:\n");
-> > >> +       MSG("      This option provides an estimation of the size needed to save VMCORE on disk.\n");
-> > >> +       MSG("      This option option cannot be used in combination with -F.\n");
-> > >
-> > > Also not in combination with --mem-usage (as per the code changes above)?
-> > > And may be the options '--mem-usage / -F' also need an update to
-> > > mention they can't be used with --vmcore-size option.
-> > >
-> >
-> > Good point, I'll update those.
-> >
-> > >> +       MSG("\n");
-> > >>          MSG("  [-D]:\n");
-> > >>          MSG("      Print debugging message.\n");
-> > >>          MSG("\n");
-> > >> --
-> > >
-> > > I like the idea, but sometimes we use makedumpfile to generate a
-> > > dumpfile in the primary kernel as well. For example:
-> > >
-> > > $ makedumpfile -d 31 -x vmlinux /proc/kcore dumpfile
-> > >
-> > > In such use-cases it is useful to use --vmcore-size and still generate
-> > > the dumpfile (right now the default behaviour is not to generate a
-> > > dumpfile when --vmcore-size is specified). Maybe we need to think more
-> > > on supporting this use-case as well.
-> > >
-> >
-> > The thing is, if you are generating the dumpfile, you can just check the
-> > size of the file created with "du -b" or some other command.
+> Thanks for the updated revision.
 > 
-> I agree, but I just was looking to replace the two  'makedumpfile +
-> du' steps with a single 'makedumpfile --vmcore-size' step.
+> On Fri, Oct 2, 2020 at 7:13 PM <matthias.bgg@kernel.org> wrote:
+>>
+>> From: Matthias Brugger <mbrugger@suse.com>
+>>
+>> Add option to allow purgatory printing on arm64 hardware
+>> by passing the console name which should be used.
+>> Based on a patch by Geoff Levand.
+>>
+>> Cc: Geoff Levand <geoff@infradead.org>
+>> Signed-off-by: Matthias Brugger <mbrugger@suse.com>
+>>
+>> ---
+>>
+>> Changes in v4:
+>> - fix snprintf error handling
+>>
+>> Changes in v3:
+>> - check return value of snprintf
+>>
+>> Changes in v2:
+>> - use sizeof(buffer)
+>> - user serial command option instead of console
+>> - reduce buffer to size 10
+>> - use snprintf
+>> - fix error handling for wrong serial console parameter
+>> - Update help information
+>>
+>>   kexec/arch/arm64/include/arch/options.h |  6 ++-
+>>   kexec/arch/arm64/kexec-arm64.c          | 71 +++++++++++++++++++++++++
+>>   purgatory/arch/arm64/purgatory-arm64.c  | 17 +++++-
+>>   3 files changed, 92 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/kexec/arch/arm64/include/arch/options.h b/kexec/arch/arm64/include/arch/options.h
+>> index a17d933..8c695f3 100644
+>> --- a/kexec/arch/arm64/include/arch/options.h
+>> +++ b/kexec/arch/arm64/include/arch/options.h
+>> @@ -5,7 +5,8 @@
+>>   #define OPT_DTB                        ((OPT_MAX)+1)
+>>   #define OPT_INITRD             ((OPT_MAX)+2)
+>>   #define OPT_REUSE_CMDLINE      ((OPT_MAX)+3)
+>> -#define OPT_ARCH_MAX           ((OPT_MAX)+4)
+>> +#define OPT_SERIAL             ((OPT_MAX)+4)
+>> +#define OPT_ARCH_MAX           ((OPT_MAX)+5)
+>>
+>>   #define KEXEC_ARCH_OPTIONS \
+>>          KEXEC_OPTIONS \
+>> @@ -13,6 +14,7 @@
+>>          { "command-line",  1, NULL, OPT_APPEND }, \
+>>          { "dtb",           1, NULL, OPT_DTB }, \
+>>          { "initrd",        1, NULL, OPT_INITRD }, \
+>> +       { "serial",        1, NULL, OPT_SERIAL }, \
+>>          { "ramdisk",       1, NULL, OPT_INITRD }, \
+>>          { "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE }, \
+>>
+>> @@ -25,6 +27,7 @@ static const char arm64_opts_usage[] __attribute__ ((unused)) =
+>>   "     --command-line=STRING Set the kernel command line to STRING.\n"
+>>   "     --dtb=FILE            Use FILE as the device tree blob.\n"
+>>   "     --initrd=FILE         Use FILE as the kernel initial ramdisk.\n"
+>> +"     --serial=STRING       Name of console used for purgatory printing. (e.g. ttyAMA0)\n"
+>>   "     --ramdisk=FILE        Use FILE as the kernel initial ramdisk.\n"
+>>   "     --reuse-cmdline       Use kernel command line from running system.\n";
+>>
+>> @@ -32,6 +35,7 @@ struct arm64_opts {
+>>          const char *command_line;
+>>          const char *dtb;
+>>          const char *initrd;
+>> +       const char *console;
+>>   };
+>>
+>>   extern struct arm64_opts arm64_opts;
+>> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+>> index 45ebc54..6f572ed 100644
+>> --- a/kexec/arch/arm64/kexec-arm64.c
+>> +++ b/kexec/arch/arm64/kexec-arm64.c
+>> @@ -165,6 +165,8 @@ int arch_process_options(int argc, char **argv)
+>>                          break;
+>>                  case OPT_KEXEC_FILE_SYSCALL:
+>>                          do_kexec_file_syscall = 1;
+>> +               case OPT_SERIAL:
+>> +                       arm64_opts.console = optarg;
+>>                          break;
+>>                  default:
+>>                          break; /* Ignore core and unknown options. */
+>> @@ -180,12 +182,72 @@ int arch_process_options(int argc, char **argv)
+>>          dbgprintf("%s:%d: dtb: %s\n", __func__, __LINE__,
+>>                  (do_kexec_file_syscall && arm64_opts.dtb ? "(ignored)" :
+>>                                                          arm64_opts.dtb));
+>> +       dbgprintf("%s:%d: console: %s\n", __func__, __LINE__,
+>> +               arm64_opts.console);
+>> +
+>>          if (do_kexec_file_syscall)
+>>                  arm64_opts.dtb = NULL;
+>>
+>>          return 0;
+>>   }
+>>
+>> +/**
+>> + * find_purgatory_sink - Find a sink for purgatory output.
+>> + */
+>> +
+>> +static uint64_t find_purgatory_sink(const char *console)
+>> +{
+>> +       int fd, ret;
+>> +       char device[255], mem[255];
+>> +       struct stat sb;
+>> +       char buffer[10];
+>> +       uint64_t iomem = 0x0;
+>> +
+>> +       if (!console)
+>> +               return 0;
+>> +
+>> +       ret = snprintf(device, sizeof(device), "/sys/class/tty/%s", console);
+>> +       if (ret < 0 || ret >= sizeof(device)) {
+>> +               fprintf(stderr, "snprintf failed: %s\n", strerror(errno));
+>> +               return 0;
+>> +       }
+>> +
+>> +       if (stat(device, &sb) || !S_ISDIR(sb.st_mode)) {
+>> +               fprintf(stderr, "kexec: %s: No valid console found for %s\n",
+>> +                       __func__, device);
+>> +               return 0;
+>> +       }
+>> +
+>> +       ret = snprintf(mem, sizeof(mem), "%s%s", device, "/iomem_base");
+>> +       if (ret < 0 || ret >= sizeof(mem)) {
+>> +               fprintf(stderr, "snprintf failed: %s\n", strerror(errno));
+>> +               return 0;
+>> +       }
+>> +
+>> +       printf("console memory read from %s\n", mem);
+>> +
+>> +       fd = open(mem, O_RDONLY);
+>> +       if (fd < 0) {
+>> +               fprintf(stderr, "kexec: %s: No able to open %s\n",
+>> +                       __func__, mem);
+>> +               return 0;
+>> +       }
+>> +
+>> +       memset(buffer, '\0', sizeof(buffer));
+>> +       ret = read(fd, buffer, sizeof(buffer));
+>> +       if (ret < 0) {
+>> +               fprintf(stderr, "kexec: %s: not able to read fd\n", __func__);
+>> +               close(fd);
+>> +               return 0;
+>> +       }
+>> +
+>> +       sscanf(buffer, "%lx", &iomem);
+>> +       printf("console memory is at %#lx\n", iomem);
+>> +
+>> +       close(fd);
+>> +       return iomem;
+>> +}
+>> +
+>>   /**
+>>    * struct dtb - Info about a binary device tree.
+>>    *
+>> @@ -637,6 +699,7 @@ int arm64_load_other_segments(struct kexec_info *info,
+>>          unsigned long hole_min;
+>>          unsigned long hole_max;
+>>          unsigned long initrd_end;
+>> +       uint64_t purgatory_sink;
+>>          char *initrd_buf = NULL;
+>>          struct dtb dtb;
+>>          char command_line[COMMAND_LINE_SIZE] = "";
+>> @@ -654,6 +717,11 @@ int arm64_load_other_segments(struct kexec_info *info,
+>>                  command_line[sizeof(command_line) - 1] = 0;
+>>          }
+>>
+>> +       purgatory_sink = find_purgatory_sink(arm64_opts.console);
+>> +
+>> +       dbgprintf("%s:%d: purgatory sink: 0x%" PRIx64 "\n", __func__, __LINE__,
+>> +               purgatory_sink);
+>> +
+>>          if (arm64_opts.dtb) {
+>>                  dtb.name = "dtb_user";
+>>                  dtb.buf = slurp_file(arm64_opts.dtb, &dtb.size);
+>> @@ -742,6 +810,9 @@ int arm64_load_other_segments(struct kexec_info *info,
+>>
+>>          info->entry = (void *)elf_rel_get_addr(&info->rhdr, "purgatory_start");
+>>
+>> +       elf_rel_set_symbol(&info->rhdr, "arm64_sink", &purgatory_sink,
+>> +               sizeof(purgatory_sink));
+>> +
+>>          elf_rel_set_symbol(&info->rhdr, "arm64_kernel_entry", &image_base,
+>>                  sizeof(image_base));
+>>
+>> diff --git a/purgatory/arch/arm64/purgatory-arm64.c b/purgatory/arch/arm64/purgatory-arm64.c
+>> index fe50fcf..b4d8578 100644
+>> --- a/purgatory/arch/arm64/purgatory-arm64.c
+>> +++ b/purgatory/arch/arm64/purgatory-arm64.c
+>> @@ -5,15 +5,30 @@
+>>   #include <stdint.h>
+>>   #include <purgatory.h>
+>>
+>> +/* Symbols set by kexec. */
+>> +
+>> +uint8_t *arm64_sink __attribute__ ((section ("data")));
+>> +extern void (*arm64_kernel_entry)(uint64_t, uint64_t, uint64_t, uint64_t);
+>> +extern uint64_t arm64_dtb_addr;
+>> +
+>>   void putchar(int ch)
+>>   {
+>> -       /* Nothing for now */
+>> +       if (!arm64_sink)
+>> +               return;
+>> +
+>> +       *arm64_sink = ch;
+>> +
+>> +       if (ch == '\n')
+>> +               *arm64_sink = '\r';
+>>   }
+>>
+>>   void post_verification_setup_arch(void)
+>>   {
+>> +       printf("purgatory: booting kernel now\n");
+>>   }
+>>
+>>   void setup_arch(void)
+>>   {
+>> +       printf("purgatory: entry=%lx\n", (unsigned long)arm64_kernel_entry);
+>> +       printf("purgatory: dtb=%lx\n", arm64_dtb_addr);
+>>   }
+>> --
+>> 2.28.0
 > 
-> > Overall I don't mind supporting your case as well. Maybe that can depend
-> > on whether a vmcore/dumpfile filename is provided:
-> >
-> > $ makedumpfile -d 31 -x vmlinux /proc/kcore    # only estimates the size
-> >
-> > $ makedumpfile -d 31 -x vmlinux /proc/kcore dumpfile  # writes the
-> > dumpfile and gives the final size
-> >
-> > Any thought, opinions, suggestions?
+> Looks good to me, so:
+> Acked-by: Bhupesh Sharma <bhsharma@redhat.com>
 > 
-> Let's wait for Kazu's opinion on the same, but I am ok with using a
-> two-step 'makedumpfile + du' approach for now (and later expand
-> --vmcore-size as we encounter more use-cases).
-> 
-> @Kazuhito Hagio : What's your opinion on the above?
 
-I would prefer only estimating with the option.
+Simon: friendly reminder of this patch. Please let me know if you have any 
+concerns regarding the patch.
 
-And if the write_bytes method above is usable, it can be shown also
-in report messages when wrote the dumpfile.
-
-Thanks,
-Kazu
+Best regards,
+Matthias
 
 _______________________________________________
 kexec mailing list
