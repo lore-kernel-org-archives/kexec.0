@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kW1zR-0001eJ-M3
- for kexec@lists.infradead.org; Fri, 23 Oct 2020 18:40:38 +0000
-Date: Fri, 23 Oct 2020 20:40:26 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/5] configure.ac, arch/x86_64: handle x32 as subarch of
- x86_64 and don't specify -mcmodel=large there
-Message-ID: <20201023184023.GA20943@vergenet.net>
-References: <cover.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
- <9c10bfea476b312f98664058d4553e96b94157d2.1602257696.git.nabijaczleweli@nabijaczleweli.xyz>
- <20201023143307.GC9820@vergenet.net>
- <20201023154103.vwhdqxpguzlpvmwq@tarta.nabijaczleweli.xyz>
+Received: from mail-io1-xd41.google.com ([2607:f8b0:4864:20::d41])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kWdxI-0001bk-LE
+ for kexec@lists.infradead.org; Sun, 25 Oct 2020 11:12:57 +0000
+Received: by mail-io1-xd41.google.com with SMTP id p7so6981461ioo.6
+ for <kexec@lists.infradead.org>; Sun, 25 Oct 2020 04:12:53 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20201023154103.vwhdqxpguzlpvmwq@tarta.nabijaczleweli.xyz>
+References: <1603346163-21645-1-git-send-email-kernelfans@gmail.com>
+ <871rhq7j1h.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <871rhq7j1h.fsf@nanos.tec.linutronix.de>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Sun, 25 Oct 2020 19:12:41 +0800
+Message-ID: <CAFgQCTvFwvvtPE0Eow4cebCEe5OD5OhgAQarckpbFc38Bphaag@mail.gmail.com>
+Subject: Re: [PATCH 0/3] warn and suppress irqflood
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +21,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ahelenia =?utf-8?Q?Ziemia=C5=84ska?= <nabijaczleweli@nabijaczleweli.xyz>
-Cc: kexec@lists.infradead.org
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Maulik Shah <mkshah@codeaurora.org>, Petr Mladek <pmladek@suse.com>, Oliver Neukum <oneukum@suse.com>, Jonathan Corbet <corbet@lwn.net>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Al Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, afzal mohammed <afzal.mohd.ma@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-T24gRnJpLCBPY3QgMjMsIDIwMjAgYXQgMDU6NDE6MDNQTSArMDIwMCwgQWhlbGVuaWEgWmllbWlh
-xYRza2Egd3JvdGU6Cj4gT24gRnJpLCBPY3QgMjMsIDIwMjAgYXQgMDQ6MzM6MDdQTSArMDIwMCwg
-U2ltb24gSG9ybWFuIHdyb3RlOgo+ID4gT24gRnJpLCBPY3QgMDksIDIwMjAgYXQgMDU6Mzk6NDJQ
-TSArMDIwMCwgQWhlbGVuaWEgWmllbWlhxYRza2Egd3JvdGU6Cj4gPiA+IFNpZ25lZC1vZmYtYnk6
-IEFoZWxlbmlhIFppZW1pYcWEc2thIDxuYWJpamFjemxld2VsaUBuYWJpamFjemxld2VsaS54eXo+
-Cj4gPiA+IC0tLQo+ID4gPiAgY29uZmlndXJlLmFjICAgICAgICAgICAgICAgICAgIHwgOCArKysr
-KysrKwo+ID4gPiAgcHVyZ2F0b3J5L2FyY2gveDg2XzY0L01ha2VmaWxlIHwgMiArKwo+ID4gPiAg
-MiBmaWxlcyBjaGFuZ2VkLCAxMCBpbnNlcnRpb25zKCspCj4gPiA+IAo+ID4gPiBkaWZmIC0tZ2l0
-IGEvY29uZmlndXJlLmFjIGIvY29uZmlndXJlLmFjCj4gPiA+IGluZGV4IGYwMjU4MjMuLjRlOGY3
-YzUgMTAwNjQ0Cj4gPiA+IC0tLSBhL2NvbmZpZ3VyZS5hYwo+ID4gPiArKysgYi9jb25maWd1cmUu
-YWMKPiA+ID4gQEAgLTU0LDYgKzU0LDE0IEBAIGNhc2UgJHRhcmdldF9jcHUgaW4KPiA+ID4gIAkJ
-OzsKPiA+ID4gIAlpYTY0fHg4Nl82NHxhbHBoYXxtNjhrICkKPiA+ID4gIAkJQVJDSD0iJHRhcmdl
-dF9jcHUiCj4gPiA+ICsJCWNhc2UgJHRhcmdldCBpbgo+ID4gPiArCQkJKngzMiApCj4gPiA+ICsJ
-CQkJU1VCQVJDSD0ieDMyIgo+ID4gPiArCQkJCTs7Cj4gPiA+ICsJCQkqICkKPiA+ID4gKwkJCQlT
-VUJBUkNIPSIiCj4gPiA+ICsJCQkJOzsKPiA+ID4gKwkJZXNhYwo+ID4gCj4gPiBJcyB4MzIgdmFs
-dWUgb25seSBmb3IgeDg2XzY0IG9yIGlhNjQsIHg4ODZfNjQsIGFscGhhIGFuZCBtNjhrIGFzCj4g
-PiBzZWVtcyB0byBiZSBpbXBsaWVkIGJ5IHRoaXMgY2hhbmdlPwo+IAo+IFRoZXJlIGlzLCBpbmRl
-ZWQsIG5vIHgzMiBlcXVpdmFsZW50IGZvciBub24tYW1kNjQsCj4gYnV0IEkganVzdCBwdXQgdGhp
-cyBoZXJlIGxpa2UgdGhpcyBiZWNhdXNlIHRoZXJlIGFyZW4ndAo+IGFueSBvdGhlciB0cmlwbGVz
-IHRoYXQgZW5kIGluICJ4MzIiLiBXb3VsZCB5b3UgcmF0aGVyIHRoaXMgZ28KPiBpbiBhIHNlcGFy
-YXRlICJpZiBBUkNIPXg4Nl82NCAmJiB0YXJnZXQ9KngzMiIgY2xhdXNlIGJlbG93PwoKWWVzLCBJ
-IHRoaW5rIHRoYXQgd291bGQgYmUgc2xpZ2h0bHkgbmljZXIuCgo+ID4gQWxzbywgY291bGQgeW91
-IGxldCBtZSBrbm93IGhvdyB0byBleGVyY2lzZSBjb21waWxpbmcgdGhpcyBjaGFuZ2VzZXQ/Cj4g
-Cj4gVGhlIGVhc2llc3Qgd2F5IHdvdWxkIGJlIHRvIGluc3RhbGwgR0NDIGZvciAieDg2XzY0LWxp
-bnV4LWdudXgzMiI7Cj4gb24gQnVzdGVyLCBpbnN0YWxsaW5nIGdjYy14ODYtNjQtbGludXgtZ251
-eDMyIGZvbGxvd2VkIGJ5Cj4gICAuL2NvbmZpZ3VyZSAtLWhvc3Q9eDg2XzY0LWxpbnV4LWdudXgz
-Mgo+IHdvcmtlZCBhbmQgYnVpbHQuCgpUaGFua3MsIHRoaXMgbG9va3MgbGlrZSBpdCBzaG91bGQg
-d29yayB3ZWxsIGZvciBtZS4KSSdsbCB0cnkgaXQgb3V0LgoKPiBBbHRlcm5hdGl2ZWx5LCB5b3Ug
-Y291bGQgdXNlIGFuIHgzMiBjaHJvb3QgdmlhIHNvbWV0aGluZwo+IGFsb25nIHRoZSBsaW5lcyBv
-Zgo+ICAgZGVib290c3RyYXAgLS1hcmNoPXgzMiAtLXZhcmlhbnQ9bWluYmFzZQo+ICAgICAtLWlu
-Y2x1ZGU9ZGViaWFuLXBvcnRzLWFyY2hpdmUta2V5cmluZyAtLW5vLWNoZWNrLWdwZyBzaWQgdGFy
-Z2V0Cj4gICAgIGh0dHBzOi8vZGViLmRlYmlhbi5vcmcvZGViaWFuLXBvcnRzCj4gYW5kIHByb2Nl
-ZWRpbmcgYXMgbm9ybWFsIHdpdGhpbi4KPiAKPiBUbyB0ZXN0IHRoZSBrZXhlY3V0aW9uIGFuZC9v
-ciBnZXQgdGhlIHgzMiB1c2VybGFuZCB0byBydW4sIHlvdSdsbCBuZWVkCj4geW91ciBrZXJuZWwg
-dG8gaGF2ZSBDT05GSUdfWDg2X1gzMj15LCBvciwgb24gRGViaWFuIGFtZDY0IGtlcm5lbHMsCj4g
-dG8gcGFzcyBzeXNjYWxsLngzMj15IG9uIHRoZSBjbWRsaW5lLgo+IAo+IEJlc3QsCj4gQWhlbGVu
-aWEKCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Thu, Oct 22, 2020 at 4:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+>
+> On Thu, Oct 22 2020 at 13:56, Pingfan Liu wrote:
+> > I hit a irqflood bug on powerpc platform, and two years ago, on a x86 platform.
+> > When the bug happens, the kernel is totally occupies by irq.  Currently, there
+> > may be nothing or just soft lockup warning showed in console. It is better
+> > to warn users with irq flood info.
+> >
+> > In the kdump case, the kernel can move on by suppressing the irq flood.
+>
+> You're curing the symptom not the cause and the cure is just magic and
+> can't work reliably.
+Yeah, it is magic. But at least, it is better to printk something and
+alarm users about what happens. With current code, it may show nothing
+when system hangs.
+>
+> Where is that irq flood originated from and why is none of the
+> mechanisms we have in place to shut it up working?
+The bug originates from a driver tpm_i2c_nuvoton, which calls i2c-bus
+driver (i2c-opal.c). After i2c_opal_send_request(), the bug is
+triggered.
+
+But things are complicated by introducing a firmware layer: Skiboot.
+This software layer hides the detail of manipulating the hardware from
+Linux.
+
+I guess the software logic can not enter a sane state when kernel crashes.
+
+Cc Skiboot and ppc64 community to see whether anyone has idea about it.
+
+Thanks,
+Pingfan
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
