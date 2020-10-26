@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from youngberry.canonical.com ([91.189.89.112])
+Received: from galois.linutronix.de ([193.142.43.55])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kX45J-0000sJ-Cf
- for kexec@lists.infradead.org; Mon, 26 Oct 2020 15:06:58 +0000
-Received: from mail-ed1-f69.google.com ([209.85.208.69])
- by youngberry.canonical.com with esmtps
- (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.86_2)
- (envelope-from <guilherme.piccoli@canonical.com>) id 1kX45G-0004Pl-Mp
- for kexec@lists.infradead.org; Mon, 26 Oct 2020 15:06:54 +0000
-Received: by mail-ed1-f69.google.com with SMTP id m1so2000852edr.8
- for <kexec@lists.infradead.org>; Mon, 26 Oct 2020 08:06:54 -0700 (PDT)
-MIME-Version: 1.0
+ id 1kX8er-0005pu-Ih
+ for kexec@lists.infradead.org; Mon, 26 Oct 2020 19:59:59 +0000
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 0/3] warn and suppress irqflood
+In-Reply-To: <CAHD1Q_x99XW1zDr5HpVR27F_ksHLkaxc2W83e-N6F_xLYKyGbQ@mail.gmail.com>
 References: <1603346163-21645-1-git-send-email-kernelfans@gmail.com>
  <871rhq7j1h.fsf@nanos.tec.linutronix.de>
  <CAFgQCTvFwvvtPE0Eow4cebCEe5OD5OhgAQarckpbFc38Bphaag@mail.gmail.com>
-In-Reply-To: <CAFgQCTvFwvvtPE0Eow4cebCEe5OD5OhgAQarckpbFc38Bphaag@mail.gmail.com>
-From: Guilherme Piccoli <gpiccoli@canonical.com>
-Date: Mon, 26 Oct 2020 12:06:17 -0300
-Message-ID: <CAHD1Q_x99XW1zDr5HpVR27F_ksHLkaxc2W83e-N6F_xLYKyGbQ@mail.gmail.com>
-Subject: Re: [PATCH 0/3] warn and suppress irqflood
+ <CAHD1Q_x99XW1zDr5HpVR27F_ksHLkaxc2W83e-N6F_xLYKyGbQ@mail.gmail.com>
+Date: Mon, 26 Oct 2020 20:59:56 +0100
+Message-ID: <87y2js3ghv.fsf@nanos.tec.linutronix.de>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,45 +25,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Maulik Shah <mkshah@codeaurora.org>, Petr Mladek <pmladek@suse.com>, Oliver Neukum <oneukum@suse.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Al Viro <viro@zeniv.linux.org.uk>, Kexec Mailing List <kexec@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, afzal mohammed <afzal.mohd.ma@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Kravetz <mike.kravetz@oracle.com>
+To: Guilherme Piccoli <gpiccoli@canonical.com>, Pingfan Liu <kernelfans@gmail.com>
+Cc: Maulik Shah <mkshah@codeaurora.org>, Petr Mladek <pmladek@suse.com>, Oliver Neukum <oneukum@suse.com>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Al Viro <viro@zeniv.linux.org.uk>, Bjorn Helgaas <helgaas@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, afzal mohammed <afzal.mohd.ma@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-On Sun, Oct 25, 2020 at 8:12 AM Pingfan Liu <kernelfans@gmail.com> wrote:
+On Mon, Oct 26 2020 at 12:06, Guilherme Piccoli wrote:
+> On Sun, Oct 25, 2020 at 8:12 AM Pingfan Liu <kernelfans@gmail.com> wrote:
 >
-> On Thu, Oct 22, 2020 at 4:37 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >
-> > On Thu, Oct 22 2020 at 13:56, Pingfan Liu wrote:
-> > > I hit a irqflood bug on powerpc platform, and two years ago, on a x86 platform.
-> > > When the bug happens, the kernel is totally occupies by irq.  Currently, there
-> > > may be nothing or just soft lockup warning showed in console. It is better
-> > > to warn users with irq flood info.
-> > >
-> > > In the kdump case, the kernel can move on by suppressing the irq flood.
-> >
-> > You're curing the symptom not the cause and the cure is just magic and
-> > can't work reliably.
-> Yeah, it is magic. But at least, it is better to printk something and
-> alarm users about what happens. With current code, it may show nothing
-> when system hangs.
+> Some time ago (2 years) we faced a similar issue in x86-64, a hard to
+> debug problem in kdump, that eventually was narrowed to a buggy NIC FW
+> flooding IRQs in kdump kernel, and no messages showed (although kernel
+> changed a lot since that time, today we might have better IRQ
+> handling/warning). We tried an early-boot fix, by disabling MSIs (as
+> per PCI spec) early in x86 boot, but it wasn't accepted - Bjorn asked
+> pertinent questions that I couldn't respond (I lost the reproducer)
+> [0].
+...
+> [0] lore.kernel.org/linux-pci/20181018183721.27467-1-gpiccoli@canonical.com
 
-Thanks Pingfan and Thomas for the points - I'd like to have a
-mechanism in the kernel to warn users when an IRQ flood is potentially
-happening.
-Some time ago (2 years) we faced a similar issue in x86-64, a hard to
-debug problem in kdump, that eventually was narrowed to a buggy NIC FW
-flooding IRQs in kdump kernel, and no messages showed (although kernel
-changed a lot since that time, today we might have better IRQ
-handling/warning). We tried an early-boot fix, by disabling MSIs (as
-per PCI spec) early in x86 boot, but it wasn't accepted - Bjorn asked
-pertinent questions that I couldn't respond (I lost the reproducer)
-[0].
+With that broken firmware the NIC continued to send MSI messages to the
+vector/CPU which was assigned to it before the crash. But the crash
+kernel has no interrupt descriptor for this vector installed. So Liu's
+patches wont print anything simply because the interrupt core cannot
+detect it.
 
-Cheers,
+To answer Bjorns still open question about when the point X is:
+
+  https://lore.kernel.org/linux-pci/20181023170343.GA4587@bhelgaas-glaptop.roam.corp.google.com/
+
+It gets flooded right at the point where the crash kernel enables
+interrupts in start_kernel(). At that point there is no device driver
+and no interupt requested. All you can see on the console for this is
+
+ "common_interrupt: $VECTOR.$CPU No irq handler for vector"
+
+And contrary to Liu's patches which try to disable a requested interrupt
+if too many of them arrive, the kernel cannot do anything because there
+is nothing to disable in your case. That's why you needed to do the MSI
+disable magic in the early PCI quirks which run before interrupts get
+enabled.
+
+Also Liu's patch only works if:
+
+  1) CONFIG_IRQ_TIME_ACCOUNTING is enabled
+
+  2) the runaway interrupt has been requested by the relevant driver in
+     the dump kernel.
+
+Especially #1 is not a sensible restriction.
+
+Thanks,
+
+        tglx
 
 
-Guilherme
-
-[0] lore.kernel.org/linux-pci/20181018183721.27467-1-gpiccoli@canonical.com
 
 _______________________________________________
 kexec mailing list
