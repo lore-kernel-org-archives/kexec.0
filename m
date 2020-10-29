@@ -1,24 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kY1OA-0001An-Ox
- for kexec@lists.infradead.org; Thu, 29 Oct 2020 06:26:23 +0000
-Received: by mail-pg1-x541.google.com with SMTP id o7so1514036pgv.6
- for <kexec@lists.infradead.org>; Wed, 28 Oct 2020 23:26:21 -0700 (PDT)
-Date: Thu, 29 Oct 2020 14:26:00 +0800
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: Re: [PATCH 0/3] warn and suppress irqflood
-Message-ID: <20201029062600.GA71783@x1pad>
-References: <1603346163-21645-1-git-send-email-kernelfans@gmail.com>
- <871rhq7j1h.fsf@nanos.tec.linutronix.de>
- <CAFgQCTvFwvvtPE0Eow4cebCEe5OD5OhgAQarckpbFc38Bphaag@mail.gmail.com>
- <CAHD1Q_x99XW1zDr5HpVR27F_ksHLkaxc2W83e-N6F_xLYKyGbQ@mail.gmail.com>
- <87y2js3ghv.fsf@nanos.tec.linutronix.de>
- <CAFgQCTtnKB+p5uhRu3JpmBvHbQ8Vhv0TrKek9_3CWbtbcyM1Kw@mail.gmail.com>
- <87tuueftou.fsf@nanos.tec.linutronix.de>
+ id 1kY7Hf-0006NZ-LQ
+ for kexec@lists.infradead.org; Thu, 29 Oct 2020 12:44:05 +0000
+Subject: Re: [MAKDUMPFILE PATCH] Add option to estimate the size of vmcore
+ dump files
+References: <20201012070905.5837-1-jthierry@redhat.com>
+ <CACi5LpNSnr+9v_sMPZnCQu14pML6PR1bBLKqj4tVaxk2O9k0wA@mail.gmail.com>
+ <f12bb1e2-c984-68d0-f952-d6b7243c8a7e@redhat.com>
+ <CACi5LpM-hCjnFg6Knb57Fr7+zVnTDewYRLAFABeNrd_gy+GhGw@mail.gmail.com>
+ <OSBPR01MB19912E6BD4B99FE4915708FFDD030@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <617405cb-717f-62ee-e463-a41dc9560cbb@redhat.com>
+ <OSBPR01MB1991C4EB34CBC812E4616F26DD170@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+From: lijiang <lijiang@redhat.com>
+Message-ID: <dd88500a-a842-b053-d42d-6760a952f10b@redhat.com>
+Date: Thu, 29 Oct 2020 20:43:46 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87tuueftou.fsf@nanos.tec.linutronix.de>
+In-Reply-To: <OSBPR01MB1991C4EB34CBC812E4616F26DD170@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,155 +26,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>
-Cc: Maulik Shah <mkshah@codeaurora.org>, Petr Mladek <pmladek@suse.com>, Oliver Neukum <oneukum@suse.com>, Jonathan Corbet <corbet@lwn.net>, "Gustavo A. R. Silva" <gustavo@embeddedor.com>, Peter Zijlstra <peterz@infradead.org>, Marc Zyngier <maz@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Guilherme Piccoli <gpiccoli@canonical.com>, linux-doc@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Lina Iyer <ilina@codeaurora.org>, Jisheng Zhang <Jisheng.Zhang@synaptics.com>, Pawan Gupta <pawan.kumar.gupta@linux.intel.com>, Al Viro <viro@zeniv.linux.org.uk>, Bjorn Helgaas <helgaas@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, afzal mohammed <afzal.mohd.ma@gmail.com>, Kexec Mailing List <kexec@lists.infradead.org>, Mike Kravetz <mike.kravetz@oracle.com>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>, Julien Thierry <jthierry@redhat.com>, Bhupesh Sharma <bhsharma@redhat.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-On Wed, Oct 28, 2020 at 12:58:41PM +0100, Thomas Gleixner wrote:
-> On Wed, Oct 28 2020 at 14:02, Pingfan Liu wrote:
-> > On Tue, Oct 27, 2020 at 3:59 AM Thomas Gleixner <tglx@linutronix.de> wrote:
-> >> Also Liu's patch only works if:
-> >>
-> >>   1) CONFIG_IRQ_TIME_ACCOUNTING is enabled
-> >
-> > I wonder whether it can not be a default option or not by the following method:
-> >   DEFINE_STATIC_KEY_FALSE(irqtime_account), and enable it according to
-> > a boot param.
-> 
-> How so?
-> 
-> 	config IRQ_TIME_ACCOUNTING
-> 		depends on HAVE_IRQ_TIME_ACCOUNTING && !VIRT_CPU_ACCOUNTING_NATIVE
-> 
-Look closely at the two config value:
--1. HAVE_IRQ_TIME_ACCOUNTING, it is selected by most of the popular arches, and
-can be further relaxed.
-   It implies sched_clock() is fast enough for sampling. With current code, the
-variable sched_clock_irqtime=0 can be used to turn off irqtime accounting on
-some arches with slow sched_clock(). And it can be even better by using
-DEFINE_STATIC_KEY_FALSE(sched_clock_irqtime)
-   So the pre-requirement can be relaxed as "depends on !VIRT_CPU_ACCOUNTING_NATIVE"
-In case that I can not express clearly, could you have a look at the demo patch?
-
-   That patch _assumes_ that irqtime accounting costs much and is not turned on by
-default. If turned on, it will cost an extra jmp than current implement.
-And I think it is critical to my [1/3] whether this assumption is reasonable.
-
--2. For VIRT_CPU_ACCOUNTING_NATIVE, it can only be selected by powerpc and ia64
-
-In fact, I have a seperate patch for powerpc with
-CONFIG_VIRT_CPU_ACCOUNTING_NATIVE to utilize my [1/3].
-
----
-diff --git a/init/Kconfig b/init/Kconfig
-index c944691..16d168b 100644
---- a/init/Kconfig
-+++ b/init/Kconfig
-@@ -490,7 +490,7 @@ endchoice
- 
- config IRQ_TIME_ACCOUNTING
- 	bool "Fine granularity task level IRQ time accounting"
--	depends on HAVE_IRQ_TIME_ACCOUNTING && !VIRT_CPU_ACCOUNTING_NATIVE
-+	depends on !VIRT_CPU_ACCOUNTING_NATIVE
- 	help
- 	  Select this option to enable fine granularity task irq time
- 	  accounting. This is done by reading a timestamp on each
-diff --git a/kernel/sched/cputime.c b/kernel/sched/cputime.c
-index 5a55d23..3ab7e1d 100644
---- a/kernel/sched/cputime.c
-+++ b/kernel/sched/cputime.c
-@@ -19,7 +19,7 @@
-  */
- DEFINE_PER_CPU(struct irqtime, cpu_irqtime);
- 
--static int sched_clock_irqtime;
-+DEFINE_STATIC_KEY_FALSE(sched_clock_irqtime);
- 
- void enable_sched_clock_irqtime(void)
- {
-@@ -49,13 +49,14 @@ static void irqtime_account_delta(struct irqtime *irqtime, u64 delta,
-  */
- void irqtime_account_irq(struct task_struct *curr)
- {
--	struct irqtime *irqtime = this_cpu_ptr(&cpu_irqtime);
-+	struct irqtime *irqtime;
- 	s64 delta;
- 	int cpu;
- 
--	if (!sched_clock_irqtime)
-+	if (static_branch_unlikely(&sched_clock_irqtime))
- 		return;
- 
-+	irqtime = this_cpu_ptr(&cpu_irqtime);
- 	cpu = smp_processor_id();
- 	delta = sched_clock_cpu(cpu) - irqtime->irq_start_time;
- 	irqtime->irq_start_time += delta;
-@@ -84,16 +85,7 @@ static u64 irqtime_tick_accounted(u64 maxtime)
- 	return delta;
- }
- 
--#else /* CONFIG_IRQ_TIME_ACCOUNTING */
--
--#define sched_clock_irqtime	(0)
--
--static u64 irqtime_tick_accounted(u64 dummy)
--{
--	return 0;
--}
--
--#endif /* !CONFIG_IRQ_TIME_ACCOUNTING */
-+#endif
- 
- static inline void task_group_account_field(struct task_struct *p, int index,
- 					    u64 tmp)
-@@ -475,7 +467,7 @@ void account_process_tick(struct task_struct *p, int user_tick)
- 	if (vtime_accounting_enabled_this_cpu())
- 		return;
- 
--	if (sched_clock_irqtime) {
-+	if (static_branch_unlikely(&sched_clock_irqtime))
- 		irqtime_account_process_tick(p, user_tick, 1);
- 		return;
- 	}
-@@ -504,7 +496,7 @@ void account_idle_ticks(unsigned long ticks)
- {
- 	u64 cputime, steal;
- 
--	if (sched_clock_irqtime) {
-+	if (static_branch_unlikely(&sched_clock_irqtime))
- 		irqtime_account_idle_ticks(ticks);
- 		return;
- 	}
--- 
-2.7.5
-
-[...]
-> +
-> +static int __init irqstorm_setup(char *arg)
-> +{
-> +	int res = kstrtoul(arg, 0, &irqstorm_limit);
-> +
-> +	if (!res) {
-> +		pr_info("Interrupt storm detector enabled. Limit=%lu / s\n",
-> +			irqstorm_limit);
-> +	}
-> +	return !!res;
-> +}
-> +__setup("irqstorm_limit", irqstorm_setup);
-
-This configuration independent method looks appealing. And I am glad to have a try.
-
-But irqstorm_limit may be a hard choice. Maybe by formula:
-instruction-percpu-per-second / insn num of irq failed path ?  It is hard to
-estimate "instruction-percpu-per-second".
-
-Thanks,
-Pingfan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMjDlubQxMOaciDI45pelIDE2OjMyLCBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDk
+u4EpIOWGmemBkzoKPiBIaSBKdWxpZW4sCj4gCj4gc29ycnkgZm9yIG15IGRlbGF5ZWQgcmVwbHku
+Cj4gCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPj4+Pj4+PiBBIHVzZXIgbWlnaHQgd2Fu
+dCB0byBrbm93IGhvdyBtdWNoIHNwYWNlIGEgdm1jb3JlIGZpbGUgd2lsbCB0YWtlIG9uCj4+Pj4+
+Pj4gdGhlIHN5c3RlbSBhbmQgaG93IG11Y2ggc3BhY2Ugb24gdGhlaXIgZGlzayBzaG91bGQgYmUg
+YXZhaWxhYmxlIHRvCj4+Pj4+Pj4gc2F2ZSBpdCBkdXJpbmcgYSBjcmFzaC4KPj4+Pj4+Pgo+Pj4+
+Pj4+IFRoZSBvcHRpb24gLS12bWNvcmUtc2l6ZSBkb2VzIG5vdCBjcmVhdGUgdGhlIHZtY29yZSBm
+aWxlIGJ1dCBwcm92aWRlcwo+Pj4+Pj4+IGFuIGVzdGltYXRpb24gb2YgdGhlIHNpemUgb2YgdGhl
+IGZpbmFsIHZtY29yZSBmaWxlIGNyZWF0ZWQgd2l0aCB0aGUKPj4+Pj4+PiBzYW1lIG1ha2UgZHVt
+cGZpbGUgb3B0aW9ucy4KPj4+Cj4+PiBJbnRlcmVzdGluZy4gIERvIHlvdSBoYXZlIGFueSBhY3R1
+YWwgdXNlIGNhc2U/ICBlLmcuIHVzZWQgYnkga2R1bXBjdGw/Cj4+PiBvciB1c2UgaXQgaW4ga2R1
+bXAgaW5pdHJhbWZzPwo+Pj4KPj4KPj4gWWVzLCB0aGUgaWRlYSB3b3VsZCBiZSB0byB1c2UgdGhp
+cyBpbiBta2R1bXByZCB0byBoYXZlIGEgbW9yZSBhY2N1cmF0ZQo+PiBlc3RpbWF0ZSBvZiB0aGUg
+ZHVtcCBzaXplIChjdXJyZW50bHkgaXQgY2Fubm90IHRha2UgY29tcHJlc3Npb24gaW50bwo+PiBh
+Y2NvdW50IGFuZCB3YXJucyBhYm91dCBwb3RlbnRpYWwgbGFjayBvZiBzcGFjZSwgY29uc2lkZXJp
+bmcgdGhlIHN5c3RlbQo+PiBtZW1vcnkgc2l6ZSBhcyBhIHdob2xlKS4KPiAKPiBIbW0sIEknbSBu
+b3Qgc3VyZSBob3cgeW91IGFyZSBnb2luZyB0byBpbXBsZW1lbnQgaW4gbWtkdW1wcmQsIGJ1dCBJ
+IGRvIG5vdAo+IHJlY29tbWVuZCB0aGF0IHlvdSB1c2UgaXQgdG8gZGV0ZXJtaW5lIGhvdyBtdWNo
+IGRpc2sgc3BhY2Ugc2hvdWxkIGJlCj4gYWxsb2NhdGVkIGZvciBjcmFzaCBkdW1wLiAgQmVjYXVz
+ZSwgSSB0aGluayB0aGF0Cj4gCj4gLSBJdCBjYW5ub3QgZXN0aW1hdGUgdGhlIGR1bXAgc2l6ZSB3
+aGVuIGEgcmVhbCBjcmFzaCBvY2N1cnMsIGUuZy4gaWYgc2xhYgo+IGV4cGxvZGVzIHdpdGggbm9u
+LXplcm8gZGF0YSwgYWxtb3N0IGFsbCBtZW1vcnkgd2lsbCBiZSBjYXB0dXJlZCBieSBtYWtlZHVt
+cGZpbGUKCkkgYWdyZWUgd2l0aCB5b3UsIGJ1dCB0aGlzIGNvdWxkIGJlIHJhcmU/IElmIHllcywg
+SSdtIG5vdCBzdXJlIGlmIGl0IGlzIHdvcnRoCnRoaW5raW5nIG1vcmUgYWJvdXQgdGhlIHJhcmUg
+c2l0dWF0aW9ucy4KCj4gZXZlbiB3aXRoIC1kIDMxLCBhbmQgY29tcHJlc3Npb24gcmF0aW8gdmFy
+aWVzIHdpdGggZGF0YSBpbiBtZW1vcnkuCgpJbmRlZWQuCgo+IEFsc28sIGluIG1vc3QgY2FzZXMs
+IG1rZHVtcHJkIHJ1bnMgYXQgYm9vdCB0aW1lIG9yIGNvbnN0cnVjdGlvbiBwaGFzZQo+IHdpdGgg
+bGVzcyBtZW1vcnkgdXNhZ2UsIG5vdCBhdCB1c3VhbCBhcHBsaWNhdGlvbiBydW5uaW5nIHRpbWUu
+ICBTbyBpdAo+IGNhbiB1bmRlcmVzdGltYXRlIHRoZSBuZWVkZWQgc2l6ZSBlYXNpbHkuCj4gCklm
+IGFkbWluaXN0cmF0b3IgY2FuIG1vbml0b3IgdGhlIGVzdGltYXRlZCBzaXplIHBlcmlvZGljYWxs
+eSwgbWF5YmUgaXQKd29uJ3QgYmUgYSBwcm9ibGVtPwogCj4gLSBUaGUgc3lzdGVtIG1pZ2h0IG5l
+ZWQgYSBmdWxsIHZtY29yZSBhbmQgbmVlZCB0byBjaGFuZ2UgbWFrZWR1bXBmaWxlJ3MKPiBkdW1w
+IGxldmVsIGZvciBhbiBpc3N1ZSBpbiB0aGUgZnV0dXJlLiAgQnV0IG1hbnkgc3lzdGVtcyBjYW5u
+b3QgY2hhbmdlCj4gdGhlaXIgZGlzayBzcGFjZSBhbGxvY2F0aW9uIGVhc2lseS4gIFNvIHdlIHNo
+b3VsZCBwcmV2ZW50IHVzZXJzIGZyb20KPiBoYXZpbmcgbWluaW11bSBkaXNrIHNwYWNlIGZvciBj
+cmFzaCBkdW1wLgo+IAo+IFNvLCB0aGUgZm9sbG93aW5nIGlzIGZyb20gbWtkdW1wcmQgb24gRmVk
+b3JhIDMyLCBwZXJzb25hbGx5IEkgdGhpbmsgdGhpcwo+IGlzIGdvb2QgZm9yIG5vdy4KPiAKPiAg
+ICAgaWYgWyAkYXZhaWwgLWx0ICRtZW10b3RhbCBdOyB0aGVuCj4gICAgICAgICBlY2hvICJXYXJu
+aW5nOiBUaGVyZSBtaWdodCBub3QgYmUgZW5vdWdoIHNwYWNlIHRvIHNhdmUgYSB2bWNvcmUuIgo+
+ICAgICAgICAgZWNobyAiICAgICAgICAgVGhlIHNpemUgb2YgJDIgc2hvdWxkIGJlIGdyZWF0ZXIg
+dGhhbiAkbWVtdG90YWwga2lsbyBieXRlcy4iCj4gICAgIGZpCj4gCkN1cnJlbnRseSwgc29tZSB1
+c2VycyBhcmUgY29tcGxhaW5pbmcgdGhhdCBta2R1bXByZCBvdmVyZXN0aW1hdGVzIHRoZSBuZWVk
+ZWQgc2l6ZSwKYW5kIG1vc3Qgdm1jb3JlcyBhcmUgc2lnbmlmaWNhbnRseSBzbWFsbGVyIHRoYW4g
+dGhlIHNpemUgb2Ygc3lzdGVtIG1lbW9yeS4KCkZ1cnRoZXJtb3JlLCBpbiBtb3N0IGNhc2VzLCB0
+aGUgc3lzdGVtIG1lbW9yeSB3aWxsIG5vdCBiZSBjb21wbGV0ZWx5IGV4aGF1c3RlZCwgYnV0CnRo
+YXQgc3RpbGwgZGVwZW5kcyBvbiBob3cgdGhlIG1lbW9yeSBpcyB1c2VkIGluIHRoZSBzeXN0ZW0s
+IGZvciBleGFtcGxlOgpbMV0gbWFrZSB0aGUgc3RyZXNzZnVsIHRlc3QgZm9yIG1lbW9yeQpbMl0g
+YWx3YXlzIG9jY3VwaWVzIGFtb3VudCBvZiBtZW1vcnkgYW5kIG5vdCByZWxlYXNlIGl0LgoKRm9y
+IHRoZSBhYm92ZSB0d28gY2FzZXMsIHRoZXJlIG1heSBiZSByYXJlLiBUaGVyZWZvcmUsIGNhbiB3
+ZSBmaW5kIG91dCBhIGNvbXByb21pc2UKYmV0d2VlbiB0aGUgc2l6ZSBvZiB2bWNvcmUgYW5kIHN5
+c3RlbSBtZW1vcnkgc28gdGhhdCBtYWtlZHVtcGZpbGUgY2FuIGVzdGltYXRlIHRoZQpzaXplIG9m
+IHZtY29yZSBtb3JlIGFjY3VyYXRlbHk/CgpBbmQgZmluYWxseSwgbWtkdW1wcmQgY2FuIHVzZSB0
+aGUgZXN0aW1hdGVkIHNpemUgb2Ygdm1jb3JlIGluc3RlYWQgb2Ygc3lzdGVtIG1lbW9yeShtZW10
+b3RhbCkKdG8gZGV0ZXJtaW5lIGlmIHRoZSB0YXJnZXQgZGlzayBoYXMgZW5vdWdoIHNwYWNlIHRv
+IHN0b3JlIHZtY29yZS4KCgpUaGFua3MuCkxpYW5ibwoKPiBUaGUgcGF0Y2gncyBmdW5jdGlvbmFs
+aXR5IGl0c2VsZiBtaWdodCBiZSB1c2VmdWwgYW5kIEkgZG9uJ3QgcmVqZWN0LCB0aG91Z2guCj4g
+Cj4+Pj4+Pj4gQEAgLTQ2NDMsNiArNDcwNiw4IEBAIHdyaXRlX2J1ZmZlcihpbnQgZmQsIG9mZl90
+IG9mZnNldCwgdm9pZCAqYnVmLCBzaXplX3QgYnVmX3NpemUsIGNoYXIgKmZpbGVfbmFtZSkKPj4+
+Pj4+PiAgICAgICAgICAgICAgICAgICB9Cj4+Pj4+Pj4gICAgICAgICAgICAgICAgICAgaWYgKCF3
+cml0ZV9hbmRfY2hlY2tfc3BhY2UoZmQsICZmZGgsIHNpemVvZihmZGgpLCBmaWxlX25hbWUpKQo+
+Pj4+Pj4+ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIEZBTFNFOwo+Pj4+Pj4+ICsg
+ICAgICAgfSBlbHNlIGlmIChpbmZvLT5mbGFnX3ZtY29yZV9zaXplICYmIGZkID09IGluZm8tPmZk
+X2R1bXBmaWxlKSB7Cj4+Pj4+Pj4gKyAgICAgICAgICAgICAgIHJldHVybiB3cml0ZV9idWZmZXJf
+dXBkYXRlX3NpemVfaW5mbyhvZmZzZXQsIGJ1ZiwgYnVmX3NpemUpOwo+Pj4KPj4+IFdoeSBkbyB3
+ZSBuZWVkIHRoaXMgZnVuY3Rpb24/ICBtYWtlZHVtcGZpbGUgYWN0dWFsbHkgd3JpdGVzIHplcm8t
+ZmlsbGVkCj4+PiBwYWdlcyB0byB0aGUgZHVtcGZpbGUgd2l0aCAtZCAwLCBhbmQgZG9lc24ndCB3
+cml0ZSB0aGVtIHdpdGggLWQgMS4KPj4+IFNvIGlzbid0ICJ3cml0ZV9ieXRlcyArPSBidWZfc2l6
+ZSIgZW5vdWdoPyAgRm9yIGV4YW1wbGUsIHdpdGggLWQgMzAsCj4+Pgo+Pgo+PiBUaGUgcmVhc29u
+IEkgd2VudCB3aXRoIHRoaXMgbWV0aG9kIHdhcyB0byBtYWtlIGFuIGVzdGltYXRlIG9mIHRoZSBu
+dW1iZXIKPj4gb2YgYmxvY2tzIGFjdHVhbGx5IGFsbG9jYXRlZCBvbiB0aGUgZGlzayAoc2luY2Ug
+ZGVwZW5kaW5nIG9uIGhvdyB0aGUKPj4gZGF0YSB3cml0dGVuIGlzIHNjYXR0ZXJlZCBpbiB0aGUg
+ZmlsZSwgdGhlcmUgbWlnaHQgYmUgYSBzaWduaWZpY2FudAo+PiBkaWZmZXJlbmNlIGJldHdlZW4g
+Ynl0ZXMgd3JpdHRlbiB2cyBhY3R1YWwgc2l6ZSBhbGxvY2F0ZWQgb24gZGlzaykuIEJ1dAo+PiBJ
+IHJlYWxpemUgdGhhdCB0aGVyZSBpcyBzb21lIG1pc3VuZGVyc3RhbmRpbmcgZnJvbSBteSBlbmQg
+c2luY2Ugd3JpdHRlbgo+PiAwIGRvIG1ha2UgYmxvY2sgYWxsb2NhdGlvbiBhcyBvcHBvc2VkIHRv
+IG5vdCB3cml0aW5nIGF0IHNvbWUgb2Zmc2V0Cj4+IChza2lwcGluZyB0aGUgd2l0aCBsc2Vlaygp
+ICksIEkgd291bGQgbmVlZCB0byBmaXggdGhhdC4KPj4KPj4gVG8gaGlnaGxpZ2h0IHRoZSBiZWhh
+dmlvdXIgSSdtIHRhbGtpbmcgYWJvdXQ6Cj4+ICQgZGQgaWY9L2Rldi96ZXJvIG9mPS4vdGVzdGZp
+bGUgYnM9NDA5NiBjb3VudD0xIHNlZWs9MQo+PiAxKzAgcmVjb3JkcyBpbgo+PiAxKzAgcmVjb3Jk
+cyBvdXQKPj4gNDA5NiBieXRlcyAoNC4xIGtCLCA0LjAgS2lCKSBjb3BpZWQsIDAuMDAwMzAyNzE5
+IHMsIDEzLjUgTUIvcwo+PiAkIGR1IC1oIHRlc3RmaWxlCj4+IDQuMEsJdGVzdGZpbGUKPj4KPj4g
+JCBkZCBpZj0vZGV2L3plcm8gb2Y9Li90ZXN0ZmlsZSBicz00MDk2IGNvdW50PTIKPj4gMiswIHJl
+Y29yZHMgaW4KPj4gMiswIHJlY29yZHMgb3V0Cj4+IDgxOTIgYnl0ZXMgKDguMiBrQiwgOC4wIEtp
+QikgY29waWVkLCAwLjAwMDM3MzAwMiBzLCAyMi4wIE1CL3MKPj4gJCBkdSAtaCB0ZXN0ZmlsZQo+
+PiA4LjBLCXRlc3RmaWxlCj4+Cj4+Cj4+IFNvLCBkbyB5b3UgdGhpbmsgaXQncyBub3Qgd29ydGgg
+Ym90aGVyaW5nIGVzdGltYXRpbmcgdGhlIG51bWJlciBvZgo+PiBibG9ja3MgYWxsb2NhdGVkIGFu
+IHRoYXQgSSBzaG91bGQgb25seSBjb25zaWRlciB0aGUgbnVtYmVyIG9mIGJ5dGVzIHdyaXR0ZW4/
+Cj4gCj4gWWVzLCBtYWtlZHVtcGZpbGUgYWxtb3N0IGRvZXNuJ3QgbWFrZSBlbXB0eSAoc3BhcnNl
+KSBibG9ja3MsCj4gc28gdGhlIGVycm9yIHdvdWxkIGJlIHNtYWxsIGVub3VnaC4KPiAKPj4+Pj4+
+Cj4+Pj4+PiBJIGxpa2UgdGhlIGlkZWEsIGJ1dCBzb21ldGltZXMgd2UgdXNlIG1ha2VkdW1wZmls
+ZSB0byBnZW5lcmF0ZSBhCj4+Pj4+PiBkdW1wZmlsZSBpbiB0aGUgcHJpbWFyeSBrZXJuZWwgYXMg
+d2VsbC4gRm9yIGV4YW1wbGU6Cj4+Pj4+Pgo+Pj4+Pj4gJCBtYWtlZHVtcGZpbGUgLWQgMzEgLXgg
+dm1saW51eCAvcHJvYy9rY29yZSBkdW1wZmlsZQo+Pj4+Pj4KPj4+Pj4+IEluIHN1Y2ggdXNlLWNh
+c2VzIGl0IGlzIHVzZWZ1bCB0byB1c2UgLS12bWNvcmUtc2l6ZSBhbmQgc3RpbGwgZ2VuZXJhdGUK
+Pj4+Pj4+IHRoZSBkdW1wZmlsZSAocmlnaHQgbm93IHRoZSBkZWZhdWx0IGJlaGF2aW91ciBpcyBu
+b3QgdG8gZ2VuZXJhdGUgYQo+Pj4+Pj4gZHVtcGZpbGUgd2hlbiAtLXZtY29yZS1zaXplIGlzIHNw
+ZWNpZmllZCkuIE1heWJlIHdlIG5lZWQgdG8gdGhpbmsgbW9yZQo+Pj4+Pj4gb24gc3VwcG9ydGlu
+ZyB0aGlzIHVzZS1jYXNlIGFzIHdlbGwuCj4+Pj4+Pgo+Pj4+Pgo+Pj4+PiBUaGUgdGhpbmcgaXMs
+IGlmIHlvdSBhcmUgZ2VuZXJhdGluZyB0aGUgZHVtcGZpbGUsIHlvdSBjYW4ganVzdCBjaGVjayB0
+aGUKPj4+Pj4gc2l6ZSBvZiB0aGUgZmlsZSBjcmVhdGVkIHdpdGggImR1IC1iIiBvciBzb21lIG90
+aGVyIGNvbW1hbmQuCj4+Pj4KPj4+PiBJIGFncmVlLCBidXQgSSBqdXN0IHdhcyBsb29raW5nIHRv
+IHJlcGxhY2UgdGhlIHR3byAgJ21ha2VkdW1wZmlsZSArCj4+Pj4gZHUnIHN0ZXBzIHdpdGggYSBz
+aW5nbGUgJ21ha2VkdW1wZmlsZSAtLXZtY29yZS1zaXplJyBzdGVwLgo+Pj4+Cj4+Pj4+IE92ZXJh
+bGwgSSBkb24ndCBtaW5kIHN1cHBvcnRpbmcgeW91ciBjYXNlIGFzIHdlbGwuIE1heWJlIHRoYXQg
+Y2FuIGRlcGVuZAo+Pj4+PiBvbiB3aGV0aGVyIGEgdm1jb3JlL2R1bXBmaWxlIGZpbGVuYW1lIGlz
+IHByb3ZpZGVkOgo+Pj4+Pgo+Pj4+PiAkIG1ha2VkdW1wZmlsZSAtZCAzMSAteCB2bWxpbnV4IC9w
+cm9jL2tjb3JlICAgICMgb25seSBlc3RpbWF0ZXMgdGhlIHNpemUKPj4+Pj4KPj4+Pj4gJCBtYWtl
+ZHVtcGZpbGUgLWQgMzEgLXggdm1saW51eCAvcHJvYy9rY29yZSBkdW1wZmlsZSAgIyB3cml0ZXMg
+dGhlCj4+Pj4+IGR1bXBmaWxlIGFuZCBnaXZlcyB0aGUgZmluYWwgc2l6ZQo+Pj4+Pgo+Pj4+PiBB
+bnkgdGhvdWdodCwgb3BpbmlvbnMsIHN1Z2dlc3Rpb25zPwo+Pj4+Cj4+Pj4gTGV0J3Mgd2FpdCBm
+b3IgS2F6dSdzIG9waW5pb24gb24gdGhlIHNhbWUsIGJ1dCBJIGFtIG9rIHdpdGggdXNpbmcgYQo+
+Pj4+IHR3by1zdGVwICdtYWtlZHVtcGZpbGUgKyBkdScgYXBwcm9hY2ggZm9yIG5vdyAoYW5kIGxh
+dGVyIGV4cGFuZAo+Pj4+IC0tdm1jb3JlLXNpemUgYXMgd2UgZW5jb3VudGVyIG1vcmUgdXNlLWNh
+c2VzKS4KPj4+Pgo+Pj4+IEBLYXp1aGl0byBIYWdpbyA6IFdoYXQncyB5b3VyIG9waW5pb24gb24g
+dGhlIGFib3ZlPwo+Pj4KPj4+IEkgd291bGQgcHJlZmVyIG9ubHkgZXN0aW1hdGluZyB3aXRoIHRo
+ZSBvcHRpb24uCj4+Pgo+Pj4gQW5kIGlmIHRoZSB3cml0ZV9ieXRlcyBtZXRob2QgYWJvdmUgaXMg
+dXNhYmxlLCBpdCBjYW4gYmUgc2hvd24gYWxzbwo+Pj4gaW4gcmVwb3J0IG1lc3NhZ2VzIHdoZW4g
+d3JvdGUgdGhlIGR1bXBmaWxlLgo+Pj4KPj4KPj4gTGV0IG1lIGtub3cgeW91ciBwcmVmZXJyZWQg
+YXBwcm9hY2ggY29uc2lkZXJpbmcgbXkgY29tbWVudCBhYm92ZSBhbmQKPj4gSSdsbCBzZW5kIG91
+dCBhIHYyLgo+IAo+IEknbSByZXRoaW5raW5nIGFib3V0IHdoYXQgY29tbWFuZCBvcHRpb25zIG1h
+a2VkdW1wZmlsZSBzaG91bGQgaGF2ZS4KPiBJZiBvbmNlIHdlIGFkZCBhbiBvcHRpb24gdG8gbWFr
+ZWR1bXBmaWxlLCB3ZSBjYW5ub3QgY2hhbmdlIGl0IGVhc2lseSwKPiBzbyBJJ2QgbGlrZSB0byB0
+aGluayBjYXJlZnVsbHkuCj4gCj4gVGhlIGNhbGN1bGF0ZWQgc2l6ZSBtaWdodCBiZSB1c2VmdWwg
+aWYgaXQncyBwcmludGVkIHNvIHRoYXQgaXQgY2FuIGJlCj4gZWFzaWx5IHBvc3QtcHJvY2Vzc2Vk
+IGJ5IHNjcmlwdHMsIGUuZy4gZm9yIGF1dG9tYXRlZCB0ZXN0cy4gIElmIHNvLAo+IG1ha2VkdW1w
+ZmlsZSBhbHJlYWR5IHByaW50cyBpdHMgc3RhdGlzdGljcyB3aXRoICItLW1lc3NhZ2UtbGV2ZWwg
+MTYiLAo+IGFuZCBpdCBtaWdodCBiZSB1c2VmdWwgdG8gYWxzbyBwcmludCB0aGVtIGJ5IGFuIG9w
+dGlvbiBsaWtlICItLXNob3ctc3RhdHMiLgo+IAo+ICAgIyBtYWtlZHVtcGZpbGUgLS1zaG93LXN0
+YXRzIC1sIC1kIDMxIHZtY29yZSBkdW1wLmxkMzEKPiAgIHRvdGFsX3BhZ2VzIHh4eAo+ICAgZXhj
+bHVkZWRfcGFnZXMgeXl5Cj4gICAuLi4KPiAgIHdyaXRlX2J5dGVzIHp6ego+IAo+IEFsc28sIGlm
+IHdlIGFsc28gaGF2ZSAiLS1kcnktcnVuIiBvcHRpb24gdG8gbm90IHdyaXRlIGFjdHVhbGx5LCBp
+dCdzCj4gZXhwbGljaXQgYW5kIG1lZXRzIEJodXBlc2gncyB1c2UgY2FzZS4gIFdoYXQgZG8geW91
+IHRoaW5rPwo+IAo+IFRoYW5rcywKPiBLYXp1Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KPiBrZXhlYyBtYWlsaW5nIGxpc3QKPiBrZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
