@@ -1,9 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v13 5/8] arm64: kdump: introduce some macroes for crash kernel
- reservation
-Date: Sat, 31 Oct 2020 15:44:34 +0800
-Message-ID: <20201031074437.168008-6-chenzhou10@huawei.com>
+Subject: [PATCH v13 8/8] kdump: update Documentation about crashkernel
+Date: Sat, 31 Oct 2020 15:44:37 +0800
+Message-ID: <20201031074437.168008-9-chenzhou10@huawei.com>
 In-Reply-To: <20201031074437.168008-1-chenzhou10@huawei.com>
 References: <20201031074437.168008-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
@@ -22,83 +21,108 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
 Cc: John Donnelly <John.p.donnelly@oracle.com>, wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, chenzhou10@huawei.com, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, guohanjun@huawei.com, nsaenzjulienne@suse.de
 
-Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
-for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
-upper bound of high crash memory, use macroes instead.
+For arm64, the behavior of crashkernel=X has been changed, which
+tries low allocation in DMA zone or DMA32 zone if CONFIG_ZONE_DMA
+is disabled, and fall back to high allocation if it fails.
 
-Besides, keep consistent with x86, use CRASH_ALIGN as the lower bound
-of crash kernel reservation.
+We can also use "crashkernel=X,high" to select a high region above
+DMA zone, which also tries to allocate at least 256M low memory in
+DMA zone automatically (or the DMA32 zone if CONFIG_ZONE_DMA is disabled).
+
+"crashkernel=Y,low" can be used to allocate specified size low memory.
+
+So update the Documentation.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 ---
- arch/arm64/include/asm/kexec.h     | 6 ++++++
- arch/arm64/include/asm/processor.h | 1 +
- arch/arm64/mm/init.c               | 8 ++++----
- 3 files changed, 11 insertions(+), 4 deletions(-)
+ Documentation/admin-guide/kdump/kdump.rst     | 23 ++++++++++++++++---
+ .../admin-guide/kernel-parameters.txt         | 12 ++++++++--
+ 2 files changed, 30 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d24b527e8c00..402d208265a3 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -25,6 +25,12 @@
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 75a9dd98e76e..bde5f994d185 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -299,7 +299,16 @@ Boot into System Kernel
+    "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+    starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
  
- #define KEXEC_ARCH KEXEC_ARCH_AARCH64
- 
-+/* 2M alignment for crash kernel regions */
-+#define CRASH_ALIGN	SZ_2M
+-   On x86 and x86_64, use "crashkernel=64M@16M".
++   On x86 use "crashkernel=64M@16M".
 +
-+#define CRASH_ADDR_LOW_MAX	arm64_dma32_phys_limit
-+#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
-+
- #ifndef __ASSEMBLY__
++   On x86_64, use "crashkernel=X" to select a region under 4G first, and
++   fall back to reserve region above 4G. And go for high allocation
++   directly if the required size is too large.
++   We can also use "crashkernel=X,high" to select a region above 4G, which
++   also tries to allocate at least 256M below 4G automatically and
++   "crashkernel=Y,low" can be used to allocate specified size low memory.
++   Use "crashkernel=Y@X" if you really have to reserve memory from specified
++   start address X.
  
- /**
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index fce8cbecd6bc..12131655cab7 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -96,6 +96,7 @@
- #endif /* CONFIG_ARM64_FORCE_52BIT */
+    On ppc64, use "crashkernel=128M@32M".
  
- extern phys_addr_t arm64_dma_phys_limit;
-+extern phys_addr_t arm64_dma32_phys_limit;
- #define ARCH_LOW_ADDRESS_LIMIT	(arm64_dma_phys_limit - 1)
+@@ -316,8 +325,16 @@ Boot into System Kernel
+    kernel will automatically locate the crash kernel image within the
+    first 512MB of RAM if X is not given.
  
- struct debug_info {
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 095540667f0f..a07fd8e1f926 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -60,7 +60,7 @@ EXPORT_SYMBOL(memstart_addr);
-  * bit addressable memory area.
-  */
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
--static phys_addr_t arm64_dma32_phys_limit __ro_after_init;
-+phys_addr_t arm64_dma32_phys_limit __ro_after_init;
+-   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+-   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
++   On arm64, use "crashkernel=X" to try low allocation in DMA zone (or
++   DMA32 zone if CONFIG_ZONE_DMA is disabled), and fall back to high
++   allocation if it fails.
++   We can also use "crashkernel=X,high" to select a high region above
++   DMA zone, which also tries to allocate at least 256M low memory in
++   DMA zone automatically (or the DMA32 zone if CONFIG_ZONE_DMA is disabled).
++   "crashkernel=Y,low" can be used to allocate specified size low memory.
++   Use "crashkernel=Y@X" if you really have to reserve memory from
++   specified start address X. Note that the start address of the kernel,
++   X if explicitly specified, must be aligned to 2MiB (0x200000).
  
- #ifdef CONFIG_KEXEC_CORE
- /*
-@@ -85,8 +85,8 @@ static void __init reserve_crashkernel(void)
+ Load the Dump-capture Kernel
+ ============================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 526d65d8573a..b2955d9379e8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -738,6 +738,9 @@
+ 			[KNL, X86-64] Select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
++			[KNL, arm64] Try low allocation in DMA zone (or DMA32 zone
++			if CONFIG_ZONE_DMA is disabled), fall back to high allocation
++			if it fails when '@offset' hasn't been specified.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
  
- 	if (crash_base == 0) {
- 		/* Current arm64 boot protocol requires 2MB alignment */
--		crash_base = memblock_find_in_range(0, arm64_dma32_phys_limit,
--				crash_size, SZ_2M);
-+		crash_base = memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MAX,
-+				crash_size, CRASH_ALIGN);
- 		if (crash_base == 0) {
- 			pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
- 				crash_size);
-@@ -104,7 +104,7 @@ static void __init reserve_crashkernel(void)
- 			return;
- 		}
+ 	crashkernel=range1:size1[,range2:size2,...][@offset]
+@@ -754,6 +757,8 @@
+ 			Otherwise memory region will be allocated below 4G, if
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
++			[KNL, arm64] range in high memory.
++			Allow kernel to allocate physical memory region from top.
+ 	crashkernel=size[KMG],low
+ 			[KNL, X86-64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+@@ -762,13 +767,16 @@
+ 			requires at least 64M+32K low memory, also enough extra
+ 			low memory is needed to make sure DMA buffers for 32-bit
+ 			devices won't run out. Kernel would try to allocate at
+-			at least 256M below 4G automatically.
++			least 256M below 4G automatically.
+ 			This one let user to specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+-
++			[KNL, arm64] range in low memory.
++			This one let user to specify a low range in DMA zone for
++			crash dump kernel (or the DMA32 zone if CONFIG_ZONE_DMA
++			is disabled).
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
  
--		if (!IS_ALIGNED(crash_base, SZ_2M)) {
-+		if (!IS_ALIGNED(crash_base, CRASH_ALIGN)) {
- 			pr_warn("cannot reserve crashkernel: base address is not 2MB aligned\n");
- 			return;
- 		}
 -- 
 2.20.1
 
