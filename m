@@ -1,8 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Arnd Bergmann <arnd@kernel.org>
-Subject: [PATCH v2 0/4] syscalls: remove compat_alloc_user_space callers
-Date: Mon,  2 Nov 2020 13:31:47 +0100
-Message-Id: <20201102123151.2860165-1-arnd@kernel.org>
+Subject: [PATCH v2 1/4] kexec: simplify compat_sys_kexec_load
+Date: Mon,  2 Nov 2020 13:31:48 +0100
+Message-Id: <20201102123151.2860165-2-arnd@kernel.org>
+In-Reply-To: <20201102123151.2860165-1-arnd@kernel.org>
+References: <20201102123151.2860165-1-arnd@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,60 +23,175 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Brian G
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-Going through compat_alloc_user_space() to convert indirect system call
-arguments tends to add complexity compared to handling the native and
-compat logic in the same code.
+The compat version of sys_kexec_load() uses compat_alloc_user_space to
+convert the user-provided arguments into the native format.
 
-I have patches for all other uses of compat_alloc_user_space() as well,
-and would expect that we can subsequently remove the interface itself.
+Move the conversion into the regular implementation with
+an in_compat_syscall() check to simplify it and avoid the
+compat_alloc_user_space() call.
 
-Changes in v2:
+compat_sys_kexec_load() now behaves the same as sys_kexec_load().
 
-- address review comments from Christoph Hellwig
-- split syscall removal into a separate patch
-- replace __X32_COND_SYSCALL() with individual macros for x32
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ include/linux/kexec.h |  2 -
+ kernel/kexec.c        | 95 +++++++++++++++++++------------------------
+ 2 files changed, 42 insertions(+), 55 deletions(-)
 
-Arnd Bergmann (4):
-  kexec: simplify compat_sys_kexec_load
-  mm: simplify compat_sys_move_pages
-  mm: simplify compat numa syscalls
-  compat: remove some compat entry points
-
- arch/arm64/include/asm/unistd32.h         |  12 +-
- arch/mips/kernel/syscalls/syscall_n32.tbl |  12 +-
- arch/mips/kernel/syscalls/syscall_o32.tbl |  12 +-
- arch/parisc/kernel/syscalls/syscall.tbl   |  10 +-
- arch/powerpc/kernel/syscalls/syscall.tbl  |  12 +-
- arch/s390/kernel/syscalls/syscall.tbl     |  12 +-
- arch/sparc/kernel/syscalls/syscall.tbl    |  12 +-
- arch/x86/entry/syscall_x32.c              |   2 +
- arch/x86/entry/syscalls/syscall_32.tbl    |   6 +-
- arch/x86/entry/syscalls/syscall_64.tbl    |   4 +-
- include/linux/compat.h                    |  26 ---
- include/linux/kexec.h                     |   2 -
- include/uapi/asm-generic/unistd.h         |  12 +-
- kernel/kexec.c                            |  90 ++++------
- kernel/sys_ni.c                           |   5 -
- mm/mempolicy.c                            | 195 +++++-----------------
- mm/migrate.c                              |  50 +++---
- 17 files changed, 155 insertions(+), 319 deletions(-)
-
-Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Brian Gerst <brgerst@gmail.com>
-Cc: Christoph Hellwig <hch@infradead.org>
-Cc: Eric Biederman <ebiederm@xmission.com>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arch@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org
-Cc: kexec@lists.infradead.org
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 9e93bef52968..7b6717cd5c4a 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -88,14 +88,12 @@ struct kexec_segment {
+ 	size_t memsz;
+ };
+ 
+-#ifdef CONFIG_COMPAT
+ struct compat_kexec_segment {
+ 	compat_uptr_t buf;
+ 	compat_size_t bufsz;
+ 	compat_ulong_t mem;	/* User space sees this as a (void *) ... */
+ 	compat_size_t memsz;
+ };
+-#endif
+ 
+ #ifdef CONFIG_KEXEC_FILE
+ struct purgatory_info {
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index c82c6c06f051..ec04791eea3e 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -19,21 +19,46 @@
+ 
+ #include "kexec_internal.h"
+ 
++static int copy_user_compat_segment_list(struct kimage *image,
++					 unsigned long nr_segments,
++					 void __user *segments)
++{
++	struct compat_kexec_segment __user *cs = segments;
++	struct compat_kexec_segment segment;
++	int i;
++
++	for (i=0; i < nr_segments; i++) {
++		if (copy_from_user(&segment, &cs[i], sizeof(segment)))
++			return -EFAULT;
++
++		image->segment[i] = (struct kexec_segment) {
++			.buf   = compat_ptr(segment.buf),
++			.bufsz = segment.bufsz,
++			.mem   = segment.mem,
++			.memsz = segment.memsz,
++		};
++	}
++
++	return 0;
++}
++
++
+ static int copy_user_segment_list(struct kimage *image,
+ 				  unsigned long nr_segments,
+ 				  struct kexec_segment __user *segments)
+ {
+-	int ret;
+ 	size_t segment_bytes;
+ 
+ 	/* Read in the segments */
+ 	image->nr_segments = nr_segments;
+ 	segment_bytes = nr_segments * sizeof(*segments);
+-	ret = copy_from_user(image->segment, segments, segment_bytes);
+-	if (ret)
+-		ret = -EFAULT;
++	if (in_compat_syscall())
++		return copy_user_compat_segment_list(image, nr_segments, segments);
+ 
+-	return ret;
++	if (copy_from_user(image->segment, segments, segment_bytes))
++		return -EFAULT;
++
++	return 0;
+ }
+ 
+ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
+@@ -233,8 +258,9 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ 	return 0;
+ }
+ 
+-SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+-		struct kexec_segment __user *, segments, unsigned long, flags)
++static int kernel_kexec_load(unsigned long entry, unsigned long nr_segments,
++			     struct kexec_segment __user * segments,
++			     unsigned long flags)
+ {
+ 	int result;
+ 
+@@ -265,57 +291,20 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
+ 	return result;
+ }
+ 
++SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
++		struct kexec_segment __user *, segments, unsigned long, flags)
++{
++	return kernel_kexec_load(entry, nr_segments, segments, flags);
++}
++
+ #ifdef CONFIG_COMPAT
+ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
+ 		       compat_ulong_t, nr_segments,
+ 		       struct compat_kexec_segment __user *, segments,
+ 		       compat_ulong_t, flags)
+ {
+-	struct compat_kexec_segment in;
+-	struct kexec_segment out, __user *ksegments;
+-	unsigned long i, result;
+-
+-	result = kexec_load_check(nr_segments, flags);
+-	if (result)
+-		return result;
+-
+-	/* Don't allow clients that don't understand the native
+-	 * architecture to do anything.
+-	 */
+-	if ((flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_DEFAULT)
+-		return -EINVAL;
+-
+-	ksegments = compat_alloc_user_space(nr_segments * sizeof(out));
+-	for (i = 0; i < nr_segments; i++) {
+-		result = copy_from_user(&in, &segments[i], sizeof(in));
+-		if (result)
+-			return -EFAULT;
+-
+-		out.buf   = compat_ptr(in.buf);
+-		out.bufsz = in.bufsz;
+-		out.mem   = in.mem;
+-		out.memsz = in.memsz;
+-
+-		result = copy_to_user(&ksegments[i], &out, sizeof(out));
+-		if (result)
+-			return -EFAULT;
+-	}
+-
+-	/* Because we write directly to the reserved memory
+-	 * region when loading crash kernels we need a mutex here to
+-	 * prevent multiple crash  kernels from attempting to load
+-	 * simultaneously, and to prevent a crash kernel from loading
+-	 * over the top of a in use crash kernel.
+-	 *
+-	 * KISS: always take the mutex.
+-	 */
+-	if (!mutex_trylock(&kexec_mutex))
+-		return -EBUSY;
+-
+-	result = do_kexec_load(entry, nr_segments, ksegments, flags);
+-
+-	mutex_unlock(&kexec_mutex);
+-
+-	return result;
++	return kernel_kexec_load(entry, nr_segments,
++				 (struct kexec_segment __user *)segments,
++				 flags);
+ }
+ #endif
 -- 
 2.27.0
 
