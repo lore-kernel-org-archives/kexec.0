@@ -1,19 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kcqaU-0001Oo-12
- for kexec@lists.infradead.org; Wed, 11 Nov 2020 13:55:03 +0000
-Date: Wed, 11 Nov 2020 21:54:48 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v13 6/8] arm64: kdump: reimplement crashkernel=X
-Message-ID: <20201111135448.GF8486@MiWiFi-R3L-srv>
-References: <20201031074437.168008-1-chenzhou10@huawei.com>
- <20201031074437.168008-7-chenzhou10@huawei.com>
- <20201111015926.GD24747@MiWiFi-R3L-srv>
- <23389389-2855-50fd-25b7-4f7d4246bf0c@huawei.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH RFC PKS/PMEM 05/58] kmap: Introduce k[un]map_thread
+In-Reply-To: <20201009195033.3208459-6-ira.weiny@intel.com>
+References: <20201009195033.3208459-1-ira.weiny@intel.com>
+ <20201009195033.3208459-6-ira.weiny@intel.com>
+Date: Tue, 10 Nov 2020 02:13:56 +0100
+Message-ID: <87h7pyhv3f.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <23389389-2855-50fd-25b7-4f7d4246bf0c@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,63 +19,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: ira.weiny@intel.com, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: linux-aio@kvack.org, linux-efi@vger.kernel.org, kvm@vger.kernel.org, linux-doc@vger.kernel.org, linux-mmc@vger.kernel.org, Dave Hansen <dave.hansen@linux.intel.com>, dri-devel@lists.freedesktop.org, linux-mm@kvack.org, target-devel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kselftest@vger.kernel.org, samba-technical@lists.samba.org, ceph-devel@vger.kernel.org, drbd-dev@lists.linbit.com, devel@driverdev.osuosl.org, linux-cifs@vger.kernel.org, linux-nilfs@vger.kernel.org, linux-scsi@vger.kernel.org, linux-nvdimm@lists.01.org, linux-rdma@vger.kernel.org, x86@kernel.org, amd-gfx@lists.freedesktop.org, linux-afs@lists.infradead.org, cluster-devel@redhat.com, linux-cachefs@redhat.com, intel-wired-lan@lists.osuosl.org, xen-devel@lists.xenproject.org, linux-ext4@vger.kernel.org, Fenghua Yu <fenghua.yu@intel.com>, linux-um@lists.infradead.org, intel-gfx@lists.freedesktop.org, ecryptfs@vger.kernel.org, linux-erofs@lists.ozlabs.org, reiserfs-devel@vger.kernel.org, linux-block@vger.kernel.org, linux-bcache@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, io-uring@vger.kernel.org, linux-nfs@vger.kernel.org, linux-ntfs-dev@lists.sourceforge.net, netdev@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-f2fs-devel@lists.sourceforge.net, linux-fsdevel@vger.kernel.org, bpf@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-btrfs@vger.kernel.org
 
-On 11/11/20 at 09:27pm, chenzhou wrote:
-> Hi Baoquan,
-...
-> >>  #ifdef CONFIG_CRASH_DUMP
-> >>  static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
-> >> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-> >> index 1c0f3e02f731..c55cee290bbb 100644
-> >> --- a/arch/arm64/mm/mmu.c
-> >> +++ b/arch/arm64/mm/mmu.c
-> >> @@ -488,6 +488,10 @@ static void __init map_mem(pgd_t *pgdp)
-> >>  	 */
-> >>  	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
-> >>  #ifdef CONFIG_KEXEC_CORE
-> >> +	if (crashk_low_res.end)
-> >> +		memblock_mark_nomap(crashk_low_res.start,
-> >> +				    resource_size(&crashk_low_res));
-> >> +
-> >>  	if (crashk_res.end)
-> >>  		memblock_mark_nomap(crashk_res.start,
-> >>  				    resource_size(&crashk_res));
-> >> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> >> index d39892bdb9ae..cdef7d8c91a6 100644
-> >> --- a/kernel/crash_core.c
-> >> +++ b/kernel/crash_core.c
-> >> @@ -321,7 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
-> >>  
-> >>  int __init reserve_crashkernel_low(void)
-> >>  {
-> >> -#ifdef CONFIG_X86_64
-> >> +#if defined(CONFIG_X86_64) || defined(CONFIG_ARM64)
-> > Not very sure if a CONFIG_64BIT checking is better.
-> If doing like this, there may be some compiling errors for other 64-bit kernel, such as mips.
-> >
-> >>  	unsigned long long base, low_base = 0, low_size = 0;
-> >>  	unsigned long low_mem_limit;
-> >>  	int ret;
-> >> @@ -362,12 +362,14 @@ int __init reserve_crashkernel_low(void)
-> >>  
-> >>  	crashk_low_res.start = low_base;
-> >>  	crashk_low_res.end   = low_base + low_size - 1;
-> >> +#ifdef CONFIG_X86_64
-> >>  	insert_resource(&iomem_resource, &crashk_low_res);
-> >> +#endif
-> >>  #endif
-> >>  	return 0;
-> >>  }
-> >>  
-> >> -#ifdef CONFIG_X86
-> >> +#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
-> > Should we make this weak default so that we can remove the ARCH config?
-> The same as above, some arch may not support kdump, in that case,  compiling errors occur.
+Ira,
 
-OK, not sure if other people have better idea, oterwise, we can leave with it. 
-Thanks for telling.
+On Fri, Oct 09 2020 at 12:49, ira weiny wrote:
+> From: Ira Weiny <ira.weiny@intel.com>
+>
+> To correctly support the semantics of kmap() with Kernel protection keys
+> (PKS), kmap() may be required to set the protections on multiple
+> processors (globally).  Enabling PKS globally can be very expensive
+> depending on the requested operation.  Furthermore, enabling a domain
+> globally reduces the protection afforded by PKS.
+>
+> Most kmap() (Aprox 209 of 229) callers use the map within a single thread and
+> have no need for the protection domain to be enabled globally.  However, the
+> remaining callers do not follow this pattern and, as best I can tell, expect
+> the mapping to be 'global' and available to any thread who may access the
+> mapping.[1]
+>
+> We don't anticipate global mappings to pmem, however in general there is a
+> danger in changing the semantics of kmap().  Effectively, this would cause an
+> unresolved page fault with little to no information about why the failure
+> occurred.
+>
+> To resolve this a number of options were considered.
+>
+> 1) Attempt to change all the thread local kmap() calls to kmap_atomic()[2]
+> 2) Introduce a flags parameter to kmap() to indicate if the mapping should be
+>    global or not
+> 3) Change ~20 call sites to 'kmap_global()' to indicate that they require a
+>    global enablement of the pages.
+> 4) Change ~209 call sites to 'kmap_thread()' to indicate that the mapping is to
+>    be used within that thread of execution only
+>
+> Option 1 is simply not feasible.  Option 2 would require all of the call sites
+> of kmap() to change.  Option 3 seems like a good minimal change but there is a
+> danger that new code may miss the semantic change of kmap() and not get the
+> behavior the developer intended.  Therefore, #4 was chosen.
+
+There is Option #5:
+
+Convert the thread local kmap() invocations to the proposed kmap_local()
+interface which is coming along [1].
+
+That solves a couple of issues:
+
+ 1) It relieves the current kmap_atomic() usage sites from the implict
+    pagefault/preempt disable semantics which apply even when
+    CONFIG_HIGHMEM is disabled. kmap_local() still can be invoked from
+    atomic context.
+
+ 2) Due to #1 it allows to replace the conditional usage of kmap() and
+    kmap_atomic() for purely thread local mappings.
+
+ 3) It puts the burden on the HIGHMEM inflicted systems
+
+ 4) It is actually more efficient for most of the pure thread local use
+    cases on HIGHMEM inflicted systems because it avoids the overhead of
+    the global lock and the potential kmap slot exhaustion. A potential
+    preemption will be more expensive, but that's not really the case we
+    want to optimize for.
+
+ 5) It solves the RT issue vs. kmap_atomic()
+
+So instead of creating yet another variety of kmap() which is just
+scratching the particular PKRS itch, can we please consolidate all of
+that on the wider reaching kmap_local() approach?
+
+Thanks,
+
+        tglx
+     
+[1] https://lore.kernel.org/lkml/20201103092712.714480842@linutronix.de/
 
 
 _______________________________________________
