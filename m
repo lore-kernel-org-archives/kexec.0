@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410045.outbound.protection.outlook.com
- ([40.107.141.45] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kce6U-0006YR-0S
- for kexec@lists.infradead.org; Wed, 11 Nov 2020 00:35:15 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v5 0/3] makedumpfile/arm64: Add support for ARMv8.2
- extensions
-Date: Wed, 11 Nov 2020 00:34:56 +0000
-Message-ID: <OSBPR01MB1991879755CF3620E52BD8AEDDE80@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20200910053305.323365-1-bhsharma@redhat.com>
- <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
+ id 1kcf5k-0001c6-1r
+ for kexec@lists.infradead.org; Wed, 11 Nov 2020 01:38:34 +0000
+Date: Wed, 11 Nov 2020 09:38:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v13 1/8] x86: kdump: replace the hard-coded alignment
+ with macro CRASH_ALIGN
+Message-ID: <20201111013815.GC24747@MiWiFi-R3L-srv>
+References: <20201031074437.168008-1-chenzhou10@huawei.com>
+ <20201031074437.168008-2-chenzhou10@huawei.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20201031074437.168008-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,155 +25,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-Hi Bhupesh,
+On 10/31/20 at 03:44pm, Chen Zhou wrote:
+> Move CRASH_ALIGN to header asm/kexec.h and replace the hard-coded
+> alignment with macro CRASH_ALIGN in function reserve_crashkernel().
 
------Original Message-----
-> Hi Bhupesh,
-> 
-> sorry for my scattered comments.
-> 
-> As for 1/3 and 2/3, I think we can merge them separately with 3/3, right?
-> so if you can ack the updated 1/3 I sent, I will merge them first.
-> Could you check it?
+Seems you tell what you have done in this patch, but don't like adding
+several more words to tell why it's done like that. Please see below
+inline comments.
 
-Hopefully I'd like to release the next version of makedumpfile next week.
-
-So I'm going to merge the modified 1/3 patch and your 2/3 patch separately
-from 3/3, I think it can use "MAX_PHYSMEM_BITS" and reduce distribution-specific
-patches.  If you have any concerns about it, please let me know.
-
-Thanks,
-Kazu
+In other patches, I can also see this similar problem.
 
 > 
-> As for 3/3, you introduced a couple of new ways, so I'd like to discuss
-> whether there is no better way a little more.
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> ---
+>  arch/x86/include/asm/kexec.h | 3 +++
+>  arch/x86/kernel/setup.c      | 5 +----
+>  2 files changed, 4 insertions(+), 4 deletions(-)
 > 
-> Thanks,
-> Kazu
-> 
-> -----Original Message-----
-> > Changes since v4:
-> > ----------------
-> > - v4 can be seen here:
-> >   https://www.spinics.net/lists/kexec/msg23850.html
-> > - Removed the patch (via [PATCH 4/4] in v3) which marked '--mem-usage'
-> >   option as unsupported for arm64 architecture, as we now have a mechanism
-> >   to read the 'vabits_actual' value from 'id_aa64mmfr2_el1' arm64 system
-> >   architecture register. As per discussions with arm64 and gcc/binutils
-> >   maintainers it turns out there is no standard ABI available between
-> >   the kernel and user-space to export this value early enough to be used
-> >   for page_offset calculation in the --mem-usage case. So, the next best
-> >   option is to have the user-space read the system register to determine
-> >   underlying hardware support for larger (52-bit) addressing support.
-> >
-> >   This allows us to keep supporting '--mem-usage' option on arm64 even
-> >   on newer kernels (with flipped VA space).
-> >
-> > Changes since v3:
-> > ----------------
-> > - v3 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-March/022534.html
-> > - Added a new patch (via [PATCH 4/4]) which marks '--mem-usage' option as
-> >   unsupported for arm64 architecture. With the newer arm64 kernels
-> >   supporting 48-bit/52-bit VA address spaces and keeping a single
-> >   binary for supporting the same, the address of
-> >   kernel symbols like _stext, which could be earlier used to determine
-> >   VA_BITS value, can no longer to determine whether VA_BITS is set to 48
-> >   or 52 in the kernel space. Hence for now, it makes sense to mark
-> >   '--mem-usage' option as unsupported for arm64 architecture until
-> >   we have more clarity from arm64 kernel maintainers on how to manage
-> >   the same in future kernel/makedumpfile versions.
-> >
-> > Changes since v2:
-> > ----------------
-> > - v2 can be seen here:
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
-> > - I missed some comments from Kazu sent on the LVA v1 patch when I sent
-> >   out the v2. So, addressing them now in v3.
-> > - Also added a patch that adds a tree-wide feature to read
-> >   'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
-> >
-> > Changes since v1:
-> > ----------------
-> > - v1 was sent as two separate patches:
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
-> >   (ARMv8.2-LPA)
-> >   http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
-> >   (ARMv8.2-LVA)
-> > - v2 combined the two in a single patchset and also addresses Kazu's
-> >   review comments.
-> >
-> > This patchset adds support for ARMv8.2 extensions in makedumpfile code.
-> > I cover the following cases with this patchset:
-> > - Both old (<5.4) and new kernels (>= 5.4) work well.
-> > - All VA and PA bit combinations currently supported via the kernel
-> >   CONFIG options work well, including:
-> >  - 48-bit kernel VA + 52-bit PA (LPA)
-> >  - 52-bit kernel VA (LVA) + 52-bit PA (LPA)
-> >
-> > This has been tested for the following user-cases:
-> > 1. Analysing page information via '--mem-usage' option.
-> > 2. Creating a dumpfile using /proc/vmcore,
-> > 3. Creating a dumpfile using /proc/kcore, and
-> > 4. Post-processing a vmcore.
-> >
-> > I have tested this patchset on the following platforms, with kernels
-> > which support/do-not-support ARMv8.2 features:
-> > 1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
-> >    ampere-osprey.
-> > 2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
-> >    simulation model).
-> >
-> > Also a preparation patch has been added in this patchset which adds a
-> > common feature for archs (except arm64, for which similar support is
-> > added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
-> > vmcoreinfo (if available).
-> >
-> > This patchset ensures backward compatibility for kernel versions in
-> > which 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' are not available in
-> > vmcoreinfo.
-> >
-> > In the newer kernels (>= 5.4.0) the following patches export these
-> > variables in the vmcoreinfo:
-> >  - 1d50e5d0c505 ("crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo")
-> >  - bbdbc11804ff ("arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo")
-> >
-> > Cc: John Donnelly <john.p.donnelly@oracle.com>
-> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-> > Cc: kexec@lists.infradead.org
-> >
-> > Bhupesh Sharma (3):
-> >   tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
-> >   makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
-> >   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
-> >     support)
-> >
-> >  arch/arm.c     |   8 +-
-> >  arch/arm64.c   | 520 ++++++++++++++++++++++++++++++++++++++-----------
-> >  arch/ia64.c    |   7 +-
-> >  arch/ppc.c     |   8 +-
-> >  arch/ppc64.c   |  49 +++--
-> >  arch/s390x.c   |  29 +--
-> >  arch/sparc64.c |   9 +-
-> >  arch/x86.c     |  34 ++--
-> >  arch/x86_64.c  |  27 +--
-> >  common.h       |  10 +
-> >  makedumpfile.c |   4 +-
-> >  makedumpfile.h |   6 +-
-> >  12 files changed, 529 insertions(+), 182 deletions(-)
-> >
-> > --
-> > 2.26.2
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 6802c59e8252..8cf9d3fd31c7 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -18,6 +18,9 @@
+>  
+>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+>  
+> +/* 2M alignment for crash kernel regions */
+> +#define CRASH_ALIGN		SZ_16M
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <linux/string.h>
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 84f581c91db4..bf373422dc8a 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -395,9 +395,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> -/* 16M alignment for crash kernel regions */
+> -#define CRASH_ALIGN		SZ_16M
+> -
+>  /*
+>   * Keep the crash kernel below this limit.
+>   *
+> @@ -515,7 +512,7 @@ static void __init reserve_crashkernel(void)
+>  	} else {
+>  		unsigned long long start;
+>  
+> -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
+> +		start = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, crash_base,
+>  						  crash_base + crash_size);
+
+Here, SZ_1M is replaced with CRASH_ALIGN which is 16M. I remember I ever
+commented that this had better be told in patch log.
+
+>  		if (start != crash_base) {
+>  			pr_info("crashkernel reservation failed - memory is in use.\n");
+> -- 
+> 2.20.1
 > 
 > 
 > _______________________________________________
 > kexec mailing list
 > kexec@lists.infradead.org
 > http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
 
 _______________________________________________
 kexec mailing list
