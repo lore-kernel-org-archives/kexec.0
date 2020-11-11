@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v13 0/8] support reserving crashkernel above 4G on arm64
- kdump
-References: <20201031074437.168008-1-chenzhou10@huawei.com>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <6c710d6d-981f-8526-9e92-406bcb67e22c@huawei.com>
-Date: Mon, 9 Nov 2020 20:34:07 +0800
+Received: from mail-eopbgr1410045.outbound.protection.outlook.com
+ ([40.107.141.45] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kce6U-0006YR-0S
+ for kexec@lists.infradead.org; Wed, 11 Nov 2020 00:35:15 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v5 0/3] makedumpfile/arm64: Add support for ARMv8.2
+ extensions
+Date: Wed, 11 Nov 2020 00:34:56 +0000
+Message-ID: <OSBPR01MB1991879755CF3620E52BD8AEDDE80@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20200910053305.323365-1-bhsharma@redhat.com>
+ <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20201031074437.168008-1-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,180 +27,155 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tglx@linutronix.de, mingo@redhat.com, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
-Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, linux-doc@vger.kernel.org, xiexiuqi@huawei.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, linux-arm-kernel@lists.infradead.org, huawei.libin@huawei.com, guohanjun@huawei.com, nsaenzjulienne@suse.de
+To: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>
 
-Hi all,
+Hi Bhupesh,
 
-Friendly ping...
+-----Original Message-----
+> Hi Bhupesh,
+> 
+> sorry for my scattered comments.
+> 
+> As for 1/3 and 2/3, I think we can merge them separately with 3/3, right?
+> so if you can ack the updated 1/3 I sent, I will merge them first.
+> Could you check it?
 
+Hopefully I'd like to release the next version of makedumpfile next week.
 
-On 2020/10/31 15:44, Chen Zhou wrote:
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which
-> will fail when there is no enough low memory.
-> 2. If reserving crashkernel above 4G, in this case, crash dump
-> kernel will boot failure because there is no low memory available
-> for allocation.
-> 3. Since commit 1a8e1cef7603 ("arm64: use both ZONE_DMA and ZONE_DMA32"),
-> if the memory reserved for crash dump kernel falled in ZONE_DMA32,
-> the devices in crash dump kernel need to use ZONE_DMA will alloc
-> fail.
->
-> To solve these issues, change the behavior of crashkernel=X.
-> crashkernel=X tries low allocation in DMA zone (or the DMA32 zone if
-> CONFIG_ZONE_DMA is disabled), and fall back to high allocation if it fails.
->
-> We can also use "crashkernel=X,high" to select a high region above
-> DMA zone, which also tries to allocate at least 256M low memory in
-> DMA zone automatically (or the DMA32 zone if CONFIG_ZONE_DMA is disabled).
-> "crashkernel=Y,low" can be used to allocate specified size low memory.
->
-> When reserving crashkernel in high memory, some low memory is reserved
-> for crash dump kernel devices. So there may be two regions reserved for
-> crash dump kernel.
-> In order to distinct from the high region and make no effect to the use
-> of existing kexec-tools, rename the low region as "Crash kernel (low)",
-> and pass the low region by reusing DT property
-> "linux,usable-memory-range". We made the low memory region as the last
-> range of "linux,usable-memory-range" to keep compatibility with existing
-> user-space and older kdump kernels.
->
-> Besides, we need to modify kexec-tools:
-> arm64: support more than one crash kernel regions(see [1])
->
-> Another update is document about DT property 'linux,usable-memory-range':
-> schemas: update 'linux,usable-memory-range' node schema(see [2])
->
-> This patchset contains the following eight patches:
-> 0001-x86-kdump-replace-the-hard-coded-alignment-with-macr.patch
-> 0002-x86-kdump-make-the-lower-bound-of-crash-kernel-reser.patch
-> 0003-x86-kdump-use-macro-CRASH_ADDR_LOW_MAX-in-functions-.patch
-> 0004-x86-kdump-move-reserve_crashkernel-_low-into-crash_c.patch
-> 0005-arm64-kdump-introduce-some-macroes-for-crash-kernel-.patch
-> 0006-arm64-kdump-reimplement-crashkernel-X.patch
-> 0007-arm64-kdump-add-memory-for-devices-by-DT-property-li.patch
-> 0008-kdump-update-Documentation-about-crashkernel.patch
->
-> 0001-0003 are some x86 cleanups which prepares for making
-> functionsreserve_crashkernel[_low]() generic.
-> 0004 makes functions reserve_crashkernel[_low]() generic.
-> 0005-0006 reimplements arm64 crashkernel=X.
-> 0007 adds memory for devices by DT property linux,usable-memory-range.
-> 0008 updates the doc.
->
-> Changes since [v12]
-> - Rebased on top of 5.10-rc1.
-> - Keep CRASH_ALIGN as 16M suggested by Dave.
-> - Drop patch "kdump: add threshold for the required memory".
-> - Add Tested-by from John.
->
-> Changes since [v11]
-> - Rebased on top of 5.9-rc4.
-> - Make the function reserve_crashkernel() of x86 generic.
-> Suggested by Catalin, make the function reserve_crashkernel() of x86 generic
-> and arm64 use the generic version to reimplement crashkernel=X.
->
-> Changes since [v10]
-> - Reimplement crashkernel=X suggested by Catalin, Many thanks to Catalin.
->
-> Changes since [v9]
-> - Patch 1 add Acked-by from Dave.
-> - Update patch 5 according to Dave's comments.
-> - Update chosen schema.
->
-> Changes since [v8]
-> - Reuse DT property "linux,usable-memory-range".
-> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
-> memory region.
-> - Fix kdump broken with ZONE_DMA reintroduced.
-> - Update chosen schema.
->
-> Changes since [v7]
-> - Move x86 CRASH_ALIGN to 2M
-> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
-> - Update Documentation/devicetree/bindings/chosen.txt.
-> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
-> suggested by Arnd.
-> - Add Tested-by from Jhon and pk.
->
-> Changes since [v6]
-> - Fix build errors reported by kbuild test robot.
->
-> Changes since [v5]
-> - Move reserve_crashkernel_low() into kernel/crash_core.c.
-> - Delete crashkernel=X,high.
-> - Modify crashkernel=X,low.
-> If crashkernel=X,low is specified simultaneously, reserve spcified size low
-> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-> pass to crash dump kernel by DT property "linux,low-memory-range".
-> - Update Documentation/admin-guide/kdump/kdump.rst.
->
-> Changes since [v4]
-> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
->
-> Changes since [v3]
-> - Add memblock_cap_memory_ranges back for multiple ranges.
-> - Fix some compiling warnings.
->
-> Changes since [v2]
-> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-> patch.
->
-> Changes since [v1]:
-> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
-> in fdt_enforce_memory_region().
-> There are at most two crash kernel regions, for two crash kernel regions
-> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-> and then remove the memory range in the middle.
->
-> [1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
-> [2]: https://github.com/robherring/dt-schema/pull/19 
-> [v1]: https://lkml.org/lkml/2019/4/2/1174
-> [v2]: https://lkml.org/lkml/2019/4/9/86
-> [v3]: https://lkml.org/lkml/2019/4/9/306
-> [v4]: https://lkml.org/lkml/2019/4/15/273
-> [v5]: https://lkml.org/lkml/2019/5/6/1360
-> [v6]: https://lkml.org/lkml/2019/8/30/142
-> [v7]: https://lkml.org/lkml/2019/12/23/411
-> [v8]: https://lkml.org/lkml/2020/5/21/213
-> [v9]: https://lkml.org/lkml/2020/6/28/73
-> [v10]: https://lkml.org/lkml/2020/7/2/1443
-> [v11]: https://lkml.org/lkml/2020/8/1/150
-> [v12]: https://lkml.org/lkml/2020/9/7/1037
->
-> Chen Zhou (8):
->   x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
->   x86: kdump: make the lower bound of crash kernel reservation
->     consistent
->   x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
->     reserve_crashkernel()
->   x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
->   arm64: kdump: introduce some macroes for crash kernel reservation
->   arm64: kdump: reimplement crashkernel=X
->   arm64: kdump: add memory for devices by DT property
->     linux,usable-memory-range
->   kdump: update Documentation about crashkernel
->
->  Documentation/admin-guide/kdump/kdump.rst     |  23 ++-
->  .../admin-guide/kernel-parameters.txt         |  12 +-
->  arch/arm64/include/asm/kexec.h                |  15 ++
->  arch/arm64/include/asm/processor.h            |   1 +
->  arch/arm64/kernel/setup.c                     |  13 +-
->  arch/arm64/mm/init.c                          | 105 ++++-------
->  arch/arm64/mm/mmu.c                           |   4 +
->  arch/x86/include/asm/kexec.h                  |  28 +++
->  arch/x86/kernel/setup.c                       | 153 +---------------
->  include/linux/crash_core.h                    |   4 +
->  include/linux/kexec.h                         |   2 -
->  kernel/crash_core.c                           | 168 ++++++++++++++++++
->  kernel/kexec_core.c                           |  17 --
->  13 files changed, 301 insertions(+), 244 deletions(-)
->
+So I'm going to merge the modified 1/3 patch and your 2/3 patch separately
+from 3/3, I think it can use "MAX_PHYSMEM_BITS" and reduce distribution-specific
+patches.  If you have any concerns about it, please let me know.
 
+Thanks,
+Kazu
+
+> 
+> As for 3/3, you introduced a couple of new ways, so I'd like to discuss
+> whether there is no better way a little more.
+> 
+> Thanks,
+> Kazu
+> 
+> -----Original Message-----
+> > Changes since v4:
+> > ----------------
+> > - v4 can be seen here:
+> >   https://www.spinics.net/lists/kexec/msg23850.html
+> > - Removed the patch (via [PATCH 4/4] in v3) which marked '--mem-usage'
+> >   option as unsupported for arm64 architecture, as we now have a mechanism
+> >   to read the 'vabits_actual' value from 'id_aa64mmfr2_el1' arm64 system
+> >   architecture register. As per discussions with arm64 and gcc/binutils
+> >   maintainers it turns out there is no standard ABI available between
+> >   the kernel and user-space to export this value early enough to be used
+> >   for page_offset calculation in the --mem-usage case. So, the next best
+> >   option is to have the user-space read the system register to determine
+> >   underlying hardware support for larger (52-bit) addressing support.
+> >
+> >   This allows us to keep supporting '--mem-usage' option on arm64 even
+> >   on newer kernels (with flipped VA space).
+> >
+> > Changes since v3:
+> > ----------------
+> > - v3 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-March/022534.html
+> > - Added a new patch (via [PATCH 4/4]) which marks '--mem-usage' option as
+> >   unsupported for arm64 architecture. With the newer arm64 kernels
+> >   supporting 48-bit/52-bit VA address spaces and keeping a single
+> >   binary for supporting the same, the address of
+> >   kernel symbols like _stext, which could be earlier used to determine
+> >   VA_BITS value, can no longer to determine whether VA_BITS is set to 48
+> >   or 52 in the kernel space. Hence for now, it makes sense to mark
+> >   '--mem-usage' option as unsupported for arm64 architecture until
+> >   we have more clarity from arm64 kernel maintainers on how to manage
+> >   the same in future kernel/makedumpfile versions.
+> >
+> > Changes since v2:
+> > ----------------
+> > - v2 can be seen here:
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022456.html
+> > - I missed some comments from Kazu sent on the LVA v1 patch when I sent
+> >   out the v2. So, addressing them now in v3.
+> > - Also added a patch that adds a tree-wide feature to read
+> >   'MAX_PHYSMEM_BITS' from vmcoreinfo (if available).
+> >
+> > Changes since v1:
+> > ----------------
+> > - v1 was sent as two separate patches:
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022424.html
+> >   (ARMv8.2-LPA)
+> >   http://lists.infradead.org/pipermail/kexec/2019-February/022425.html
+> >   (ARMv8.2-LVA)
+> > - v2 combined the two in a single patchset and also addresses Kazu's
+> >   review comments.
+> >
+> > This patchset adds support for ARMv8.2 extensions in makedumpfile code.
+> > I cover the following cases with this patchset:
+> > - Both old (<5.4) and new kernels (>= 5.4) work well.
+> > - All VA and PA bit combinations currently supported via the kernel
+> >   CONFIG options work well, including:
+> >  - 48-bit kernel VA + 52-bit PA (LPA)
+> >  - 52-bit kernel VA (LVA) + 52-bit PA (LPA)
+> >
+> > This has been tested for the following user-cases:
+> > 1. Analysing page information via '--mem-usage' option.
+> > 2. Creating a dumpfile using /proc/vmcore,
+> > 3. Creating a dumpfile using /proc/kcore, and
+> > 4. Post-processing a vmcore.
+> >
+> > I have tested this patchset on the following platforms, with kernels
+> > which support/do-not-support ARMv8.2 features:
+> > 1. CPUs which don't support ARMv8.2 features, e.g. qualcomm-amberwing,
+> >    ampere-osprey.
+> > 2. Prototype models which support ARMv8.2 extensions (e.g. ARMv8 FVP
+> >    simulation model).
+> >
+> > Also a preparation patch has been added in this patchset which adds a
+> > common feature for archs (except arm64, for which similar support is
+> > added via subsequent patch) to retrieve 'MAX_PHYSMEM_BITS' from
+> > vmcoreinfo (if available).
+> >
+> > This patchset ensures backward compatibility for kernel versions in
+> > which 'TCR_EL1.T1SZ' and 'MAX_PHYSMEM_BITS' are not available in
+> > vmcoreinfo.
+> >
+> > In the newer kernels (>= 5.4.0) the following patches export these
+> > variables in the vmcoreinfo:
+> >  - 1d50e5d0c505 ("crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo")
+> >  - bbdbc11804ff ("arm64/crash_core: Export TCR_EL1.T1SZ in vmcoreinfo")
+> >
+> > Cc: John Donnelly <john.p.donnelly@oracle.com>
+> > Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
+> > Cc: kexec@lists.infradead.org
+> >
+> > Bhupesh Sharma (3):
+> >   tree-wide: Retrieve 'MAX_PHYSMEM_BITS' from vmcoreinfo (if available)
+> >   makedumpfile/arm64: Add support for ARMv8.2-LPA (52-bit PA support)
+> >   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
+> >     support)
+> >
+> >  arch/arm.c     |   8 +-
+> >  arch/arm64.c   | 520 ++++++++++++++++++++++++++++++++++++++-----------
+> >  arch/ia64.c    |   7 +-
+> >  arch/ppc.c     |   8 +-
+> >  arch/ppc64.c   |  49 +++--
+> >  arch/s390x.c   |  29 +--
+> >  arch/sparc64.c |   9 +-
+> >  arch/x86.c     |  34 ++--
+> >  arch/x86_64.c  |  27 +--
+> >  common.h       |  10 +
+> >  makedumpfile.c |   4 +-
+> >  makedumpfile.h |   6 +-
+> >  12 files changed, 529 insertions(+), 182 deletions(-)
+> >
+> > --
+> > 2.26.2
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
