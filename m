@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x443.google.com ([2607:f8b0:4864:20::443])
+Received: from mail-eopbgr1400074.outbound.protection.outlook.com
+ ([40.107.140.74] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kdKaN-0007XU-PU
- for kexec@lists.infradead.org; Thu, 12 Nov 2020 21:56:56 +0000
-Received: by mail-pf1-x443.google.com with SMTP id a18so5810335pfl.3
- for <kexec@lists.infradead.org>; Thu, 12 Nov 2020 13:56:54 -0800 (PST)
-From: Alexander Kamensky <alexander.kamensky42@gmail.com>
-Subject: [PATCH] arm64: kexec: disabled check if kaslr-seed dtb property was
- wiped
-Date: Thu, 12 Nov 2020 13:56:43 -0800
-Message-Id: <20201112215643.2970668-1-alexander.kamensky42@gmail.com>
+ id 1kdSBB-0007Rh-G2
+ for kexec@lists.infradead.org; Fri, 13 Nov 2020 06:03:26 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v5 0/3] makedumpfile/arm64: Add support for ARMv8.2
+ extensions
+Date: Fri, 13 Nov 2020 06:03:16 +0000
+Message-ID: <OSBPR01MB1991603053DAD1DFE82E61EEDDE60@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20200910053305.323365-1-bhsharma@redhat.com>
+ <OSBPR01MB199105291C7EE3FB3837538BDD390@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <OSBPR01MB1991879755CF3620E52BD8AEDDE80@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <CACi5LpOZEUz=dSojw4VNz3EuUAeWzX7=c4=dYj+6KDqg29iCpw@mail.gmail.com>
+In-Reply-To: <CACi5LpOZEUz=dSojw4VNz3EuUAeWzX7=c4=dYj+6KDqg29iCpw@mail.gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,72 +29,23 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
-Cc: Alexander Kamensky <alexander.kamensky42@gmail.com>, Bhupesh Sharma <bhsharma@redhat.com>, Ard Biesheuvel <ard.biesheuvel@linaro.org>
+To: Bhupesh Sharma <bhsharma@redhat.com>
+Cc: John Donnelly <john.p.donnelly@oracle.com>, "bhupesh.linux@gmail.com" <bhupesh.linux@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Kexec when loading arm64 kernel checks if chosen/kaslr-seed dtb property is
-wiped. It's a good assertion to verify proper behavior of kernel. However,
-if bootloader creates and fills kaslr-seed property and kernel is not
-configured with CONFIG_RANDOMIZE_BASE then logic of reading and wiping
-kaslr-seed does not run. As a result kaslr-seed property is not zero and when
-kexec tries to load secondary kernel it fails with the following message:
+Hi Bhupesh,
 
-setup_2nd_dtb: kaslr-seed is not wiped to 0.
-kexec: setup_2nd_dtb failed.
-kexec: load failed.
+-----Original Message-----
+> > Hopefully I'd like to release the next version of makedumpfile next week.
+> >
+> > So I'm going to merge the modified 1/3 patch and your 2/3 patch separately
+> > from 3/3, I think it can use "MAX_PHYSMEM_BITS" and reduce distribution-specific
+> > patches.  If you have any concerns about it, please let me know.
+> 
+> This looks fine to me. Please feel free to merge the patchset in this way.
 
-This was observed on Yocto Project on qemuarm64 machine with 5.8 kernel,
-qemu 5.1.0. Qemu created kaslr-seed property but kernel was not configured
-with CONFIG_RANDOMIZE_BASE.
+Thanks for the reply, merged the two patches.
 
-Although check has some value, there is a use-case where it breaks kexec,
-this patch removes it.
-
-Note in described use-case the fact that kaslr-seed is not wiped and user
-readable through /sys/firmware/fdt or
-/sys/firmware/devicetree/base/chosen/kaslr-seed is not a security problem
-as kaslr is disabled anyway.
-
-Signed-off-by: Alexander Kamensky <alexander.kamensky42@gmail.com>
----
- kexec/arch/arm64/kexec-arm64.c | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 6f572ed..4b9f2d5 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -493,7 +493,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
- 	int len, range_len;
- 	int nodeoffset;
- 	int new_size;
--	int result, kaslr_seed;
-+	int result;
- 
- 	result = fdt_check_header(dtb->buf);
- 
-@@ -564,18 +564,6 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
- 			return result;
- 		}
- 	} else {
--		kaslr_seed = fdt64_to_cpu(*prop);
--
--		/* kaslr_seed must be wiped clean by primary
--		 * kernel during boot
--		 */
--		if (kaslr_seed != 0) {
--			dbgprintf("%s: kaslr-seed is not wiped to 0.\n",
--					__func__);
--			result = -EINVAL;
--			goto on_error;
--		}
--
- 		/*
- 		 * Invoke the getrandom system call with
- 		 * GRND_NONBLOCK, to make sure we
--- 
-2.26.2
-
+Kazu
 
 _______________________________________________
 kexec mailing list
