@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out01.mta.xmission.com ([166.70.13.231])
+Received: from mail-mw2nam12on2136.outbound.protection.outlook.com
+ ([40.107.244.136] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kepSd-0003n3-19
- for kexec@lists.infradead.org; Tue, 17 Nov 2020 01:07:08 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20201117001907.GA1342260@bjorn-Precision-5520>
-Date: Mon, 16 Nov 2020 19:06:40 -0600
-In-Reply-To: <20201117001907.GA1342260@bjorn-Precision-5520> (Bjorn Helgaas's
- message of "Mon, 16 Nov 2020 18:19:07 -0600")
-Message-ID: <87h7poeqqn.fsf@x220.int.ebiederm.org>
+ id 1kerqN-0006gc-1V
+ for kexec@lists.infradead.org; Tue, 17 Nov 2020 03:39:48 +0000
+From: Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
+ boot params
+Date: Tue, 17 Nov 2020 03:39:44 +0000
+Message-ID: <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
+References: <20201014092429.1415040-1-kasong@redhat.com>
+ <20201014092429.1415040-2-kasong@redhat.com>
+In-Reply-To: <20201014092429.1415040-2-kasong@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,56 +26,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: Guowen Shan <gshan@redhat.com>, linux-pci@vger.kernel.org, kernelfans@gmail.com, andi@firstfloor.org, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, okaya@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, gavin.guo@canonical.com, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, bp@alien8.de, bhelgaas@google.com, Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org, kernel@gpiccoli.net, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, ddstreet@canonical.com, lukas@wunner.de, vgoyal@redhat.com
+To: Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Wei Liu <wei.liu@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Haiyang Zhang <haiyangz@microsoft.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, KY Srinivasan <kys@microsoft.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>
 
-Bjorn Helgaas <helgaas@kernel.org> writes:
+> From: Kairui Song <kasong@redhat.com>
+> Sent: Wednesday, October 14, 2020 2:24 AM
+> To: linux-kernel@vger.kernel.org
+> 
+> kexec_file_load now just reuse the old boot_params.screen_info.
+> But if drivers have change the hardware state, boot_param.screen_info
+> could contain invalid info.
+> 
+> For example, the video type might be no longer VGA, or frame buffer
+> address changed. If kexec kernel keep using the old screen_info,
+> kexec'ed kernel may attempt to write to an invalid framebuffer
+> memory region.
+> 
+> There are two screen_info globally available, boot_params.screen_info
+> and screen_info. Later one is a copy, and could be updated by drivers.
+> 
+> So let kexec_file_load use the updated copy.
+> 
+> Signed-off-by: Kairui Song <kasong@redhat.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c
+> b/arch/x86/kernel/kexec-bzimage64.c
+> index 57c2ecf43134..ce831f9448e7 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -200,8 +200,7 @@ setup_boot_parameters(struct kimage *image, struct
+> boot_params *params,
+>  	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
+> 
+>  	/* Copying screen_info will do? */
+> -	memcpy(&params->screen_info, &boot_params.screen_info,
+> -				sizeof(struct screen_info));
+> +	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info));
+> 
+>  	/* Fill in memsize later */
+>  	params->screen_info.ext_mem_k = 0;
+> --
 
-> I don't think passing the device information to the kdump kernel is
-> really practical.  The kdump kernel would use it to do PCI config
-> writes to disable MSIs before enabling IRQs, and it doesn't know how
-> to access config space that early.
+Hi Kairui,
+According to "man kexec", kdump/kexec can use 2 different syscalls to set up the
+kdump kernel:
 
-I don't think it is particularly practical either.  But in practice
-on x86 it is either mmio writes or 0xcf8 style writes and we could
-pass a magic table that would have all of that information.
+-s (--kexec-file-syscall)
+       Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
 
-> We could invent special "early config access" things, but that gets
-> really complicated really fast.  Config access depends on ACPI MCFG
-> tables, firmware interfaces, and in many cases, on the native host
-> bridge drivers in drivers/pci/controllers/.
+-c (--kexec-syscall)
+       Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
 
-I do agree that the practical problem with passing information early
-is that gets us into the weeds and creates code that we only care
-about in the case of kexec-on-panic.  It is much better to make the
-existing code more robust, so that we reduce our dependency on firmware
-doing the right thing.
+It looks I can only reproduce the call-trace 
+(https://bugzilla.redhat.com/show_bug.cgi?id=1867887#c5) with KEXEC_FILE_LOAD:
+I did kdump tests in Ubuntu 20.04 VM and by default the VM used the KEXEC_LOAD
+syscall and I couldn't reproduce the call-trace; after I added the "-s" parameter to use
+the KEXEC_FILE_LOAD syscall, I could reproduce the call-trace and I can confirm your
+patch can eliminate the call-trace because the "efifb" driver doesn't even load with 
+your patch.
 
-> I think we need to disable MSIs in the crashing kernel before the
-> kexec.  It adds a little more code in the crash_kexec() path, but it
-> seems like a worthwhile tradeoff.
+Your patch is only for the KEXEC_FILE_LOAD syscall, and I'm sure it's not used in the
+code path of the KEXEC_LOAD syscall.
 
-Disabling MSIs in the b0rken kernel is not possible.
+So, in the case of the KEXEC_LOAD syscall, do you know how the *kexec* kernel's
+boot_params.screen_info.lfb_base is intialized? I haven't figured it out yet.
 
-Walking the device tree or even a significant subset of it hugely
-decreases the chances that we will run into something that is incorrect
-in the known broken kernel.  I expect the code to do that would double
-or triple the amount of code that must be executed in the known broken
-kernel.  The last time something like that happened (switching from xchg
-to ordinary locks) we had cases that stopped working.  Walking all of
-the pci devices in the system is much more invasive.
-
-That is not to downplay the problems of figuring out how to disable
-things in early boot.
-
-My two top candidates are poking the IOMMUs early to shut things off,
-and figuring out if we can delay enabling interrupts until we have
-initialized pci.
-
-Poking at IOMMUs early should work for most systems with ``enterprise''
-hardware.  Systems where people care about kdump the most.
-
-Eric
+Thanks,
+-- Dexuan
 
 _______________________________________________
 kexec mailing list
