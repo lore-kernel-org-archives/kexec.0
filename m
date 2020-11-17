@@ -1,27 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from youngberry.canonical.com ([91.189.89.112])
+Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kemNg-0004vU-3l
- for kexec@lists.infradead.org; Mon, 16 Nov 2020 21:49:48 +0000
-Received: from mail-ed1-f71.google.com ([209.85.208.71])
- by youngberry.canonical.com with esmtps
- (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.86_2)
- (envelope-from <guilherme.piccoli@canonical.com>) id 1kemNd-0006NW-6G
- for kexec@lists.infradead.org; Mon, 16 Nov 2020 21:49:45 +0000
-Received: by mail-ed1-f71.google.com with SMTP id f20so8633550edx.23
- for <kexec@lists.infradead.org>; Mon, 16 Nov 2020 13:49:45 -0800 (PST)
-MIME-Version: 1.0
-References: <20201114212215.GA1194074@bjorn-Precision-5520>
- <87v9e6n2b2.fsf@x220.int.ebiederm.org> <87sg9almmg.fsf@x220.int.ebiederm.org>
- <874klqac40.fsf@nanos.tec.linutronix.de>
- <87lff2ic0h.fsf@x220.int.ebiederm.org>
- <c8238524-4197-c22d-7bae-df61133fcbfe@canonical.com>
- <87a6vhht71.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87a6vhht71.fsf@x220.int.ebiederm.org>
-From: Guilherme Piccoli <gpiccoli@canonical.com>
-Date: Mon, 16 Nov 2020 18:49:08 -0300
-Message-ID: <CAHD1Q_zk6Z841E1yAH-GKpDXQ=32YPb-R4Exo7UcNHnTY3bdqQ@mail.gmail.com>
+ id 1keoiE-00019k-D0
+ for kexec@lists.infradead.org; Tue, 17 Nov 2020 00:19:11 +0000
+Date: Mon, 16 Nov 2020 18:19:07 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
 Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20201117001907.GA1342260@bjorn-Precision-5520>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <c8238524-4197-c22d-7bae-df61133fcbfe@canonical.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -34,24 +22,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Guowen Shan <gshan@redhat.com>, linux-pci@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, andi@firstfloor.org, "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, Sinan Kaya <okaya@kernel.org>, Ingo Molnar <mingo@redhat.com>, Bjorn Helgaas <helgaas@kernel.org>, Jay Vosburgh <jay.vosburgh@canonical.com>, Dave Young <dyoung@redhat.com>, Gavin Guo <gavin.guo@canonical.com>, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, kexec mailing list <kexec@lists.infradead.org>, "Guilherme G. Piccoli" <kernel@gpiccoli.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Dan Streetman <ddstreet@canonical.com>, lukas@wunner.de, Vivek Goyal <vgoyal@redhat.com>
+To: "Guilherme G. Piccoli" <gpiccoli@canonical.com>
+Cc: Guowen Shan <gshan@redhat.com>, linux-pci@vger.kernel.org, kernelfans@gmail.com, andi@firstfloor.org, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, okaya@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, gavin.guo@canonical.com, bp@alien8.de, bhelgaas@google.com, Thomas Gleixner <tglx@linutronix.de>, kexec@lists.infradead.org, kernel@gpiccoli.net, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, vgoyal@redhat.com, ddstreet@canonical.com, lukas@wunner.de, "Eric W. Biederman" <ebiederm@xmission.com>
 
-On Mon, Nov 16, 2020 at 6:45 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> The way to do that would be to collect the set of pci devices when the
-> kexec on panic kernel is loaded, not during crash_kexec.  If someone
-> performs a device hotplug they would need to reload the kexec on panic
-> kernel.
->
-> I am not necessarily endorsing that just pointing out how it can be
-> done.
->
-> Eric
+On Mon, Nov 16, 2020 at 05:31:36PM -0300, Guilherme G. Piccoli wrote:
+> First of all, thanks everybody for the great insights/discussion! This
+> thread ended-up being a great learning for (at least) me.
+> 
+> Given the big amount of replies and intermixed comments, I wouldn't be
+> able to respond inline to all, so I'll try another approach below.
+> 
+> 
+> From Bjorn:
+> "I think [0] proposes using early_quirks() to disable MSIs at boot-time.
+> That doesn't seem like a robust solution because (a) the problem affects
+> all arches but early_quirks() is x86-specific and (b) even on x86
+> early_quirks() only works for PCI segment 0 because it relies on the
+> 0xCF8/0xCFC I/O ports."
+> 
+> Ah. I wasn't aware of that limitation, I thought enhancing the
+> early_quirks() search to go through all buses would fix that, thanks for
+> the clarification! And again, worth to clarify that this is not a
+> problem affecting all arches _in practice_ - PowerPC for example has the
+> FW primitives allowing a powerful PCI controller (out-of-band) reset,
+> preventing this kind of issue usually.
+> 
+> [0]
+> https://lore.kernel.org/linux-pci/20181018183721.27467-1-gpiccoli@canonical.com
+> 
+> 
+> From Bjorn:
+> "A crash_device_shutdown() could do something at the host bridge level
+> if that's possible, or reset/disable bus mastering/disable MSI/etc on
+> individual PCI devices if necessary."
+> 
+> From Lukas:
+> "Guilherme's original patches from 2018 iterate over all 256 PCI buses.
+> That might impact boot time negatively.  The reason he has to do that is
+> because the crashing kernel doesn't know which devices exist and which
+> have interrupts enabled.  However the crashing kernel has that
+> information.  It should either disable interrupts itself or pass the
+> necessary information to the crashing kernel as setup_data or whatever.
 
-Thanks Eric, I agree! I think if we use something like PKRAM (a more
-dynamic approach) we could have the PCI hotplug path updating the data
-to-be-passed to the crash kernel, so the crash kernel doesn't even
-need to be loaded again.
+I don't think passing the device information to the kdump kernel is
+really practical.  The kdump kernel would use it to do PCI config
+writes to disable MSIs before enabling IRQs, and it doesn't know how
+to access config space that early.
+
+We could invent special "early config access" things, but that gets
+really complicated really fast.  Config access depends on ACPI MCFG
+tables, firmware interfaces, and in many cases, on the native host
+bridge drivers in drivers/pci/controllers/.
+
+I think we need to disable MSIs in the crashing kernel before the
+kexec.  It adds a little more code in the crash_kexec() path, but it
+seems like a worthwhile tradeoff.
+
+Bjorn
 
 _______________________________________________
 kexec mailing list
