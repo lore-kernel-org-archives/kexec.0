@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam12on2136.outbound.protection.outlook.com
- ([40.107.244.136] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kerqN-0006gc-1V
- for kexec@lists.infradead.org; Tue, 17 Nov 2020 03:39:48 +0000
-From: Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
- boot params
-Date: Tue, 17 Nov 2020 03:39:44 +0000
-Message-ID: <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
-References: <20201014092429.1415040-1-kasong@redhat.com>
- <20201014092429.1415040-2-kasong@redhat.com>
-In-Reply-To: <20201014092429.1415040-2-kasong@redhat.com>
-Content-Language: en-US
+ id 1kexgT-0003FP-DF
+ for kexec@lists.infradead.org; Tue, 17 Nov 2020 09:53:58 +0000
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+In-Reply-To: <87h7poeqqn.fsf@x220.int.ebiederm.org>
+References: <20201117001907.GA1342260@bjorn-Precision-5520>
+ <87h7poeqqn.fsf@x220.int.ebiederm.org>
+Date: Tue, 17 Nov 2020 10:53:49 +0100
+Message-ID: <873618xqaa.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,76 +23,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kairui Song <kasong@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Wei Liu <wei.liu@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Haiyang Zhang <haiyangz@microsoft.com>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-hyperv@vger.kernel.org" <linux-hyperv@vger.kernel.org>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, KY Srinivasan <kys@microsoft.com>, Dave Young <dyoung@redhat.com>, Ard Biesheuvel <ardb@kernel.org>
+To: "Eric W. Biederman" <ebiederm@xmission.com>, Bjorn Helgaas <helgaas@kernel.org>
+Cc: Guowen Shan <gshan@redhat.com>, linux-pci@vger.kernel.org, kernelfans@gmail.com, andi@firstfloor.org, hpa@zytor.com, bhe@redhat.com, x86@kernel.org, okaya@kernel.org, mingo@redhat.com, jay.vosburgh@canonical.com, dyoung@redhat.com, vgoyal@redhat.com, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, bp@alien8.de, bhelgaas@google.com, kexec@lists.infradead.org, kernel@gpiccoli.net, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, ddstreet@canonical.com, lukas@wunner.de, gavin.guo@canonical.com
 
-> From: Kairui Song <kasong@redhat.com>
-> Sent: Wednesday, October 14, 2020 2:24 AM
-> To: linux-kernel@vger.kernel.org
-> 
-> kexec_file_load now just reuse the old boot_params.screen_info.
-> But if drivers have change the hardware state, boot_param.screen_info
-> could contain invalid info.
-> 
-> For example, the video type might be no longer VGA, or frame buffer
-> address changed. If kexec kernel keep using the old screen_info,
-> kexec'ed kernel may attempt to write to an invalid framebuffer
-> memory region.
-> 
-> There are two screen_info globally available, boot_params.screen_info
-> and screen_info. Later one is a copy, and could be updated by drivers.
-> 
-> So let kexec_file_load use the updated copy.
-> 
-> Signed-off-by: Kairui Song <kasong@redhat.com>
-> ---
->  arch/x86/kernel/kexec-bzimage64.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kexec-bzimage64.c
-> b/arch/x86/kernel/kexec-bzimage64.c
-> index 57c2ecf43134..ce831f9448e7 100644
-> --- a/arch/x86/kernel/kexec-bzimage64.c
-> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> @@ -200,8 +200,7 @@ setup_boot_parameters(struct kimage *image, struct
-> boot_params *params,
->  	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
-> 
->  	/* Copying screen_info will do? */
-> -	memcpy(&params->screen_info, &boot_params.screen_info,
-> -				sizeof(struct screen_info));
-> +	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info));
-> 
->  	/* Fill in memsize later */
->  	params->screen_info.ext_mem_k = 0;
-> --
+On Mon, Nov 16 2020 at 19:06, Eric W. Biederman wrote:
+> Bjorn Helgaas <helgaas@kernel.org> writes:
+> My two top candidates are poking the IOMMUs early to shut things off,
+> and figuring out if we can delay enabling interrupts until we have
+> initialized pci.
 
-Hi Kairui,
-According to "man kexec", kdump/kexec can use 2 different syscalls to set up the
-kdump kernel:
+Keeping interrupts disabled post PCI initialization would be nice, but
+that requires feeding the whole init machinery through a shredder and
+collecting the bits and pieces.
 
--s (--kexec-file-syscall)
-       Specify that the new KEXEC_FILE_LOAD syscall should be used exclusively.
+> Poking at IOMMUs early should work for most systems with ``enterprise''
+> hardware.  Systems where people care about kdump the most.
 
--c (--kexec-syscall)
-       Specify that the old KEXEC_LOAD syscall should be used exclusively (the default).
+The IOMMU IRQ remapping part _is_ initialized early and _before_
+interrupts are enabled.
 
-It looks I can only reproduce the call-trace 
-(https://bugzilla.redhat.com/show_bug.cgi?id=1867887#c5) with KEXEC_FILE_LOAD:
-I did kdump tests in Ubuntu 20.04 VM and by default the VM used the KEXEC_LOAD
-syscall and I couldn't reproduce the call-trace; after I added the "-s" parameter to use
-the KEXEC_FILE_LOAD syscall, I could reproduce the call-trace and I can confirm your
-patch can eliminate the call-trace because the "efifb" driver doesn't even load with 
-your patch.
+But that does not solve the problem either simply because then the IOMMU
+will catch the rogue MSIs and you get an interrupt storm on the IOMMU
+error interrupt.
 
-Your patch is only for the KEXEC_FILE_LOAD syscall, and I'm sure it's not used in the
-code path of the KEXEC_LOAD syscall.
+This one is not going to be turned off because the IOMMU error interrupt
+handler will handle each of them and tell the core code that everything
+is under control.
 
-So, in the case of the KEXEC_LOAD syscall, do you know how the *kexec* kernel's
-boot_params.screen_info.lfb_base is intialized? I haven't figured it out yet.
+As I explained several times now, the only way to shut this up reliably
+is at the source. Curing the symptom is almost never a good solution.
 
 Thanks,
--- Dexuan
+
+        tglx
 
 _______________________________________________
 kexec mailing list
