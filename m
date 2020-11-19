@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 1/1] kernel/crash_core.c - Add crashkernel=auto for x86
- and ARM
-References: <20201118232431.21832-1-saeed.mirzamohammadi@oracle.com>
-From: Randy Dunlap <rdunlap@infradead.org>
-Message-ID: <7f9e6b63-1727-379b-55b7-9ad2bbdb2e5b@infradead.org>
-Date: Wed, 18 Nov 2020 17:06:40 -0800
+Received: from mail-eopbgr1410044.outbound.protection.outlook.com
+ ([40.107.141.44] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kfZt7-0005dO-Hu
+ for kexec@lists.infradead.org; Thu, 19 Nov 2020 02:41:37 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: [PATCH] makedumpfile: printk: add support for lockless ringbuffer
+Date: Thu, 19 Nov 2020 02:41:21 +0000
+Message-ID: <OSBPR01MB1991BDA9AB4100A661E53CF6DDE00@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-In-Reply-To: <20201118232431.21832-1-saeed.mirzamohammadi@oracle.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,151 +23,594 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>, Anson Huang <Anson.Huang@nxp.com>, Jonathan Corbet <corbet@lwn.net>, x86@kernel.org, Michael Walle <michael@walle.cc>, Krzysztof Kozlowski <krzk@kernel.org>, Ingo Molnar <mingo@redhat.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, john.p.donnelly@oracle.com, Arnd Bergmann <arnd@arndb.de>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org, Li Yang <leoyang.li@nxp.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Vinod Koul <vkoul@kernel.org>, =?UTF-8?Q?Diego_Elio_Petten=c3=b2?= <flameeyes@flameeyes.com>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawnguo@kernel.org>
+To: John Ogness <john.ogness@linutronix.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi,
+From: John Ogness <john.ogness@linutronix.de>
 
-On 11/18/20 3:24 PM, Saeed Mirzamohammadi wrote:
-> This adds crashkernel=auto feature to configure reserved memory for
-> vmcore creation to both x86 and ARM platforms based on the total memory
-> size.
-> 
-> Cc: stable@vger.kernel.org
+Linux 5.10 introduces a new lockless ringbuffer.  The new ringbuffer
+is structured completely different to the previous iterations.
+Add support for retrieving the ringbuffer from debug information
+and/or using vmcoreinfo.  The new ringbuffer is detected based on
+the availability of the "prb" symbol.
 
-why?
+Signed-off-by: John Ogness <john.ogness@linutronix.de>
+Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
+---
+I've updated John's RFC makedumpfile patch to match 5.10-rc4 kernel.
+Changes from the RFC patch:
+- followed the following kernel commit
+    cfe2790b163a ("printk: move printk_info into separate array")
+- divided members of struct printk_log in offset_table into each structure
+  for readability
+- added some error handlings
+- also dump head record that was missed
 
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-> ---
->  Documentation/admin-guide/kdump/kdump.rst |  5 +++++
->  arch/arm64/Kconfig                        | 26 ++++++++++++++++++++++-
->  arch/arm64/configs/defconfig              |  1 +
->  arch/x86/Kconfig                          | 26 ++++++++++++++++++++++-
->  arch/x86/configs/x86_64_defconfig         |  1 +
->  kernel/crash_core.c                       | 20 +++++++++++++++--
->  6 files changed, 75 insertions(+), 4 deletions(-)
-> 
+ Makefile       |   2 +-
+ dwarf_info.c   |  36 +++++++++-
+ makedumpfile.c | 103 +++++++++++++++++++++++++++--
+ makedumpfile.h |  58 +++++++++++++++++
+ printk.c       | 203 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 395 insertions(+), 7 deletions(-)
+ create mode 100644 printk.c
 
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index 1515f6f153a0..d359dcffa80e 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-
-> @@ -1135,6 +1135,30 @@ config CRASH_DUMP
->  
->  	  For more details see Documentation/admin-guide/kdump/kdump.rst
->  
-> +if CRASH_DUMP
-> +
-> +config CRASH_AUTO_STR
-> +        string "Memory reserved for crash kernel"
-
-use tab instead of spaces above.
-
-> +	depends on CRASH_DUMP
-> +        default "1G-64G:128M,64G-1T:256M,1T-:512M"
-
-ditto.
-
-> +	help
-> +	  This configures the reserved memory dependent
-> +	  on the value of System RAM. The syntax is:
-> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> +	              range=start-[end]
-> +
-> +	  For example:
-> +	      crashkernel=512M-2G:64M,2G-:128M
-> +
-> +	  This would mean:
-> +
-> +	      1) if the RAM is smaller than 512M, then don't reserve anything
-> +	         (this is the "rescue" case)
-> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-> +	      3) if the RAM size is larger than 2G, then reserve 128M
-> +
-> +endif # CRASH_DUMP
-> +
->  config XEN_DOM0
->  	def_bool y
->  	depends on XEN
-
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index f6946b81f74a..bacd17312bb1 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-
-> @@ -2049,6 +2049,30 @@ config CRASH_DUMP
->  	  (CONFIG_RELOCATABLE=y).
->  	  For more details see Documentation/admin-guide/kdump/kdump.rst
->  
-> +if CRASH_DUMP
-> +
-> +config CRASH_AUTO_STR
-> +        string "Memory reserved for crash kernel" if X86_64
-
-ditto.
-
-> +	depends on CRASH_DUMP
-> +        default "1G-64G:128M,64G-1T:256M,1T-:512M"
-
-ditto.
-
-> +	help
-> +	  This configures the reserved memory dependent
-> +	  on the value of System RAM. The syntax is:
-> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> +	              range=start-[end]
-> +
-> +	  For example:
-> +	      crashkernel=512M-2G:64M,2G-:128M
-> +
-> +	  This would mean:
-> +
-> +	      1) if the RAM is smaller than 512M, then don't reserve anything
-> +	         (this is the "rescue" case)
-> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-> +	      3) if the RAM size is larger than 2G, then reserve 128M
-> +
-> +endif # CRASH_DUMP
-> +
->  config KEXEC_JUMP
->  	bool "kexec jump"
->  	depends on KEXEC && HIBERNATION
-
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 106e4500fd53..a44cd9cc12c4 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -7,6 +7,7 @@
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/kexec.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -41,6 +42,15 @@ static int __init parse_crashkernel_mem(char *cmdline,
->  					unsigned long long *crash_base)
->  {
->  	char *cur = cmdline, *tmp;
-> +	unsigned long long total_mem = system_ram;
-> +
-> +	/*
-> +	 * Firmware sometimes reserves some memory regions for it's own use.
-
-	                                                       its
-
-> +	 * so we get less than actual system memory size.
-> +	 * Workaround this by round up the total size to 128M which is
-> +	 * enough for most test cases.
-> +	 */
-> +	total_mem = roundup(total_mem, SZ_128M);
-
-
-thanks.
+diff --git a/Makefile b/Makefile
+index a0f69b4e1ad8..1fe8efe00dcb 100644
+--- a/Makefile
++++ b/Makefile
+@@ -45,7 +45,7 @@ CFLAGS_ARCH += -m32
+ endif
+ 
+ SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
+-SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c
++SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c
+ OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+ SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c
+ OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+diff --git a/dwarf_info.c b/dwarf_info.c
+index e42a9f5857f3..543588ba369b 100644
+--- a/dwarf_info.c
++++ b/dwarf_info.c
+@@ -614,6 +614,7 @@ search_structure(Dwarf_Die *die, int *found)
+ {
+ 	int tag;
+ 	const char *name;
++	Dwarf_Die die_type;
+ 
+ 	/*
+ 	 * If we get to here then we don't have any more
+@@ -622,9 +623,31 @@ search_structure(Dwarf_Die *die, int *found)
+ 	do {
+ 		tag  = dwarf_tag(die);
+ 		name = dwarf_diename(die);
+-		if ((tag != DW_TAG_structure_type) || (!name)
+-		    || strcmp(name, dwarf_info.struct_name))
++		if ((!name) || strcmp(name, dwarf_info.struct_name))
++			continue;
++
++		if (tag == DW_TAG_typedef) {
++			if (!get_die_type(die, &die_type)) {
++				ERRMSG("Can't get CU die of DW_AT_type.\n");
++				break;
++			}
++
++			/* Resolve typedefs of typedefs. */
++			while ((tag = dwarf_tag(&die_type)) == DW_TAG_typedef) {
++				if (!get_die_type(&die_type, &die_type)) {
++					ERRMSG("Can't get CU die of DW_AT_type.\n");
++					return;
++				}
++			}
++
++			if (tag != DW_TAG_structure_type)
++				continue;
++			die = &die_type;
++
++		} else if (tag != DW_TAG_structure_type) {
+ 			continue;
++		}
++
+ 		/*
+ 		 * Skip if DW_AT_byte_size is not included.
+ 		 */
+@@ -740,6 +763,15 @@ search_typedef(Dwarf_Die *die, int *found)
+ 				ERRMSG("Can't get CU die of DW_AT_type.\n");
+ 				break;
+ 			}
++
++			/* Resolve typedefs of typedefs. */
++			while ((tag = dwarf_tag(&die_type)) == DW_TAG_typedef) {
++				if (!get_die_type(&die_type, &die_type)) {
++					ERRMSG("Can't get CU die of DW_AT_type.\n");
++					return;
++				}
++			}
++
+ 			dwarf_info.struct_size = dwarf_bytesize(&die_type);
+ 			if (dwarf_info.struct_size <= 0)
+ 				continue;
+diff --git a/makedumpfile.c b/makedumpfile.c
+index cdde040e2133..061741f72a5c 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1555,6 +1555,7 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(node_data, "node_data");
+ 	SYMBOL_INIT(pgdat_list, "pgdat_list");
+ 	SYMBOL_INIT(contig_page_data, "contig_page_data");
++	SYMBOL_INIT(prb, "prb");
+ 	SYMBOL_INIT(log_buf, "log_buf");
+ 	SYMBOL_INIT(log_buf_len, "log_buf_len");
+ 	SYMBOL_INIT(log_end, "log_end");
+@@ -1971,16 +1972,47 @@ get_structure_info(void)
+ 	OFFSET_INIT(elf64_phdr.p_memsz, "elf64_phdr", "p_memsz");
+ 
+ 	SIZE_INIT(printk_log, "printk_log");
+-	if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
++	SIZE_INIT(printk_ringbuffer, "printk_ringbuffer");
++	if ((SIZE(printk_ringbuffer) != NOT_FOUND_STRUCTURE)) {
++		info->flag_use_printk_ringbuffer = TRUE;
++		info->flag_use_printk_log = FALSE;
++
++		OFFSET_INIT(printk_ringbuffer.desc_ring, "printk_ringbuffer", "desc_ring");
++		OFFSET_INIT(printk_ringbuffer.text_data_ring, "printk_ringbuffer", "text_data_ring");
++
++		OFFSET_INIT(prb_desc_ring.count_bits, "prb_desc_ring", "count_bits");
++		OFFSET_INIT(prb_desc_ring.descs, "prb_desc_ring", "descs");
++		OFFSET_INIT(prb_desc_ring.infos, "prb_desc_ring", "infos");
++		OFFSET_INIT(prb_desc_ring.head_id, "prb_desc_ring", "head_id");
++		OFFSET_INIT(prb_desc_ring.tail_id, "prb_desc_ring", "tail_id");
++
++		SIZE_INIT(prb_desc, "prb_desc");
++		OFFSET_INIT(prb_desc.state_var, "prb_desc", "state_var");
++		OFFSET_INIT(prb_desc.text_blk_lpos, "prb_desc", "text_blk_lpos");
++
++		OFFSET_INIT(prb_data_blk_lpos.begin, "prb_data_blk_lpos", "begin");
++		OFFSET_INIT(prb_data_blk_lpos.next, "prb_data_blk_lpos", "next");
++
++		OFFSET_INIT(prb_data_ring.size_bits, "prb_data_ring", "size_bits");
++		OFFSET_INIT(prb_data_ring.data, "prb_data_ring", "data");
++
++		SIZE_INIT(printk_info, "printk_info");
++		OFFSET_INIT(printk_info.ts_nsec, "printk_info", "ts_nsec");
++		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
++
++		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
++	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
+ 		/*
+ 		 * In kernel 3.11-rc4 the log structure name was renamed
+ 		 * to "printk_log".
+ 		 */
++		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = TRUE;
+ 		OFFSET_INIT(printk_log.ts_nsec, "printk_log", "ts_nsec");
+ 		OFFSET_INIT(printk_log.len, "printk_log", "len");
+ 		OFFSET_INIT(printk_log.text_len, "printk_log", "text_len");
+ 	} else {
++		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = FALSE;
+ 		SIZE_INIT(printk_log, "log");
+ 		OFFSET_INIT(printk_log.ts_nsec, "log", "ts_nsec");
+@@ -2191,6 +2223,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_SYMBOL("node_data", node_data);
+ 	WRITE_SYMBOL("pgdat_list", pgdat_list);
+ 	WRITE_SYMBOL("contig_page_data", contig_page_data);
++	WRITE_SYMBOL("prb", prb);
+ 	WRITE_SYMBOL("log_buf", log_buf);
+ 	WRITE_SYMBOL("log_buf_len", log_buf_len);
+ 	WRITE_SYMBOL("log_end", log_end);
+@@ -2222,7 +2255,11 @@ write_vmcoreinfo_data(void)
+ 	WRITE_STRUCTURE_SIZE("node_memblk_s", node_memblk_s);
+ 	WRITE_STRUCTURE_SIZE("nodemask_t", nodemask_t);
+ 	WRITE_STRUCTURE_SIZE("pageflags", pageflags);
+-	if (info->flag_use_printk_log)
++	if (info->flag_use_printk_ringbuffer) {
++		WRITE_STRUCTURE_SIZE("printk_ringbuffer", printk_ringbuffer);
++		WRITE_STRUCTURE_SIZE("prb_desc", prb_desc);
++		WRITE_STRUCTURE_SIZE("printk_info", printk_info);
++	} else if (info->flag_use_printk_log)
+ 		WRITE_STRUCTURE_SIZE("printk_log", printk_log);
+ 	else
+ 		WRITE_STRUCTURE_SIZE("log", printk_log);
+@@ -2268,7 +2305,30 @@ write_vmcoreinfo_data(void)
+ 	WRITE_MEMBER_OFFSET("vm_struct.addr", vm_struct.addr);
+ 	WRITE_MEMBER_OFFSET("vmap_area.va_start", vmap_area.va_start);
+ 	WRITE_MEMBER_OFFSET("vmap_area.list", vmap_area.list);
+-	if (info->flag_use_printk_log) {
++	if (info->flag_use_printk_ringbuffer) {
++		WRITE_MEMBER_OFFSET("printk_ringbuffer.desc_ring", printk_ringbuffer.desc_ring);
++		WRITE_MEMBER_OFFSET("printk_ringbuffer.text_data_ring", printk_ringbuffer.text_data_ring);
++
++		WRITE_MEMBER_OFFSET("prb_desc_ring.count_bits", prb_desc_ring.count_bits);
++		WRITE_MEMBER_OFFSET("prb_desc_ring.descs", prb_desc_ring.descs);
++		WRITE_MEMBER_OFFSET("prb_desc_ring.infos", prb_desc_ring.infos);
++		WRITE_MEMBER_OFFSET("prb_desc_ring.head_id", prb_desc_ring.head_id);
++		WRITE_MEMBER_OFFSET("prb_desc_ring.tail_id", prb_desc_ring.tail_id);
++
++		WRITE_MEMBER_OFFSET("prb_desc.state_var", prb_desc.state_var);
++		WRITE_MEMBER_OFFSET("prb_desc.text_blk_lpos", prb_desc.text_blk_lpos);
++
++		WRITE_MEMBER_OFFSET("prb_data_blk_lpos.begin", prb_data_blk_lpos.begin);
++		WRITE_MEMBER_OFFSET("prb_data_blk_lpos.next", prb_data_blk_lpos.next);
++
++		WRITE_MEMBER_OFFSET("prb_data_ring.size_bits", prb_data_ring.size_bits);
++		WRITE_MEMBER_OFFSET("prb_data_ring.data", prb_data_ring.data);
++
++		WRITE_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
++		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
++
++		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
++	} else if (info->flag_use_printk_log) {
+ 		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
+ 		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
+ 		WRITE_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
+@@ -2606,6 +2666,7 @@ read_vmcoreinfo(void)
+ 	READ_SYMBOL("node_data", node_data);
+ 	READ_SYMBOL("pgdat_list", pgdat_list);
+ 	READ_SYMBOL("contig_page_data", contig_page_data);
++	READ_SYMBOL("prb", prb);
+ 	READ_SYMBOL("log_buf", log_buf);
+ 	READ_SYMBOL("log_buf_len", log_buf_len);
+ 	READ_SYMBOL("log_end", log_end);
+@@ -2684,12 +2745,43 @@ read_vmcoreinfo(void)
+ 	READ_MEMBER_OFFSET("cpu_spec.mmu_features", cpu_spec.mmu_features);
+ 
+ 	READ_STRUCTURE_SIZE("printk_log", printk_log);
+-	if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
++	READ_STRUCTURE_SIZE("printk_ringbuffer", printk_ringbuffer);
++	if (SIZE(printk_ringbuffer) != NOT_FOUND_STRUCTURE) {
++		info->flag_use_printk_ringbuffer = TRUE;
++		info->flag_use_printk_log = FALSE;
++
++		READ_MEMBER_OFFSET("printk_ringbuffer.desc_ring", printk_ringbuffer.desc_ring);
++		READ_MEMBER_OFFSET("printk_ringbuffer.text_data_ring", printk_ringbuffer.text_data_ring);
++
++		READ_MEMBER_OFFSET("prb_desc_ring.count_bits", prb_desc_ring.count_bits);
++		READ_MEMBER_OFFSET("prb_desc_ring.descs", prb_desc_ring.descs);
++		READ_MEMBER_OFFSET("prb_desc_ring.infos", prb_desc_ring.infos);
++		READ_MEMBER_OFFSET("prb_desc_ring.head_id", prb_desc_ring.head_id);
++		READ_MEMBER_OFFSET("prb_desc_ring.tail_id", prb_desc_ring.tail_id);
++
++		READ_STRUCTURE_SIZE("prb_desc", prb_desc);
++		READ_MEMBER_OFFSET("prb_desc.state_var", prb_desc.state_var);
++		READ_MEMBER_OFFSET("prb_desc.text_blk_lpos", prb_desc.text_blk_lpos);
++
++		READ_MEMBER_OFFSET("prb_data_blk_lpos.begin", prb_data_blk_lpos.begin);
++		READ_MEMBER_OFFSET("prb_data_blk_lpos.next", prb_data_blk_lpos.next);
++
++		READ_MEMBER_OFFSET("prb_data_ring.size_bits", prb_data_ring.size_bits);
++		READ_MEMBER_OFFSET("prb_data_ring.data", prb_data_ring.data);
++
++		READ_STRUCTURE_SIZE("printk_info", printk_info);
++		READ_MEMBER_OFFSET("printk_info.ts_nsec", printk_info.ts_nsec);
++		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
++
++		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
++	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
++		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = TRUE;
+ 		READ_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
+ 		READ_MEMBER_OFFSET("printk_log.len", printk_log.len);
+ 		READ_MEMBER_OFFSET("printk_log.text_len", printk_log.text_len);
+ 	} else {
++		info->flag_use_printk_ringbuffer = FALSE;
+ 		info->flag_use_printk_log = FALSE;
+ 		READ_STRUCTURE_SIZE("log", printk_log);
+ 		READ_MEMBER_OFFSET("log.ts_nsec", printk_log.ts_nsec);
+@@ -5286,6 +5378,9 @@ dump_dmesg()
+ 	if (!initial())
+ 		return FALSE;
+ 
++	if ((SYMBOL(prb) != NOT_FOUND_SYMBOL))
++		return dump_lockless_dmesg();
++
+ 	if ((SYMBOL(log_buf) == NOT_FOUND_SYMBOL)
+ 	    || (SYMBOL(log_buf_len) == NOT_FOUND_SYMBOL)) {
+ 		ERRMSG("Can't find some symbols for log_buf.\n");
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 698c0547c0f2..47f7e7999014 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1317,6 +1317,7 @@ struct DumpInfo {
+ 	int             flag_partial_dmesg;  /* dmesg dump only from the last cleared index*/
+ 	int             flag_mem_usage;  /*show the page number of memory in different use*/
+ 	int		flag_use_printk_log; /* did we read printk_log symbol name? */
++	int		flag_use_printk_ringbuffer; /* using lockless printk ringbuffer? */
+ 	int		flag_nospace;	     /* the flag of "No space on device" error */
+ 	int		flag_vmemmap;        /* kernel supports vmemmap address space */
+ 	int		flag_excludevm;      /* -e - excluding unused vmemmap pages */
+@@ -1602,6 +1603,7 @@ struct symbol_table {
+ 	unsigned long long	node_data;
+ 	unsigned long long	pgdat_list;
+ 	unsigned long long	contig_page_data;
++	unsigned long long	prb;
+ 	unsigned long long	log_buf;
+ 	unsigned long long	log_buf_len;
+ 	unsigned long long	log_end;
+@@ -1690,6 +1692,13 @@ struct size_table {
+ 	long	printk_log;
+ 
+ 	/*
++	 * for lockless printk ringbuffer
++	 */
++	long	printk_ringbuffer;
++	long	prb_desc;
++	long	printk_info;
++
++	/*
+ 	 * for Xen extraction
+ 	 */
+ 	long	page_info;
+@@ -1865,6 +1874,52 @@ struct offset_table {
+ 	} printk_log;
+ 
+ 	/*
++	 * for lockless printk ringbuffer
++	 */
++	struct printk_ringbuffer_s {
++		long desc_ring;
++		long text_data_ring;
++		long fail;
++	} printk_ringbuffer;
++
++	struct prb_desc_ring_s {
++		long count_bits;
++		long descs;
++		long infos;
++		long head_id;
++		long tail_id;
++	} prb_desc_ring;
++
++	struct prb_desc_s {
++		long state_var;
++		long text_blk_lpos;
++	} prb_desc;
++
++	struct prb_data_blk_lpos_s {
++		long begin;
++		long next;
++	} prb_data_blk_lpos;
++
++	struct printk_info_s {
++		long seq;
++		long ts_nsec;
++		long text_len;
++		long caller_id;
++		long dev_info;
++	} printk_info;
++
++	struct prb_data_ring_s {
++		long size_bits;
++		long data;
++		long head_lpos;
++		long tail_lpos;
++	} prb_data_ring;
++
++	struct atomic_long_t_s {
++		long counter;
++	} atomic_long_t;
++
++	/*
+ 	 * symbols on ppc64 arch
+ 	 */
+ 	struct mmu_psize_def_s {
+@@ -2390,4 +2445,7 @@ int hexadecimal(char *s, int count);
+ int decimal(char *s, int count);
+ int file_exists(char *file);
+ 
++int open_dump_file(void);
++int dump_lockless_dmesg(void);
++
+ #endif /* MAKEDUMPFILE_H */
+diff --git a/printk.c b/printk.c
+new file mode 100644
+index 000000000000..8e00901d9494
+--- /dev/null
++++ b/printk.c
+@@ -0,0 +1,203 @@
++#include "makedumpfile.h"
++#include <ctype.h>
++
++#define DESC_SV_BITS		(sizeof(unsigned long) * 8)
++#define DESC_COMMITTED_MASK	(1UL << (DESC_SV_BITS - 1))
++#define DESC_REUSE_MASK		(1UL << (DESC_SV_BITS - 2))
++#define DESC_FLAGS_MASK		(DESC_COMMITTED_MASK | DESC_REUSE_MASK)
++#define DESC_ID_MASK		(~DESC_FLAGS_MASK)
++
++/* convenience struct for passing many values to helper functions */
++struct prb_map {
++	char		*prb;
++
++	char		*desc_ring;
++	unsigned long	desc_ring_count;
++	char		*descs;
++	char		*infos;
++
++	char		*text_data_ring;
++	unsigned long	text_data_ring_size;
++	char		*text_data;
++};
++
++static void
++dump_record(struct prb_map *m, unsigned long id)
++{
++	unsigned long long ts_nsec;
++	unsigned long state_var;
++	unsigned short text_len;
++	unsigned long begin;
++	unsigned long next;
++	char buf[BUFSIZE];
++	ulonglong nanos;
++	int indent_len;
++	int buf_need;
++	char *bufp;
++	char *text;
++	char *desc;
++	char *inf;
++	ulong rem;
++	char *p;
++	int i;
++
++	desc = m->descs + ((id % m->desc_ring_count) * SIZE(prb_desc));
++
++	/* skip non-committed record */
++	state_var = ULONG(desc + OFFSET(prb_desc.state_var) + OFFSET(atomic_long_t.counter));
++	if ((state_var & DESC_FLAGS_MASK) != DESC_COMMITTED_MASK)
++		return;
++
++	begin = ULONG(desc + OFFSET(prb_desc.text_blk_lpos) + OFFSET(prb_data_blk_lpos.begin)) %
++			m->text_data_ring_size;
++	next = ULONG(desc + OFFSET(prb_desc.text_blk_lpos) + OFFSET(prb_data_blk_lpos.next)) %
++			m->text_data_ring_size;
++
++	/* skip data-less text blocks */
++	if (begin == next)
++		return;
++
++	inf = m->infos + ((id % m->desc_ring_count) * SIZE(printk_info));
++
++	text_len = USHORT(inf + OFFSET(printk_info.text_len));
++
++	/* handle wrapping data block */
++	if (begin > next)
++		begin = 0;
++
++	/* skip over descriptor ID */
++	begin += sizeof(unsigned long);
++
++	/* handle truncated messages */
++	if (next - begin < text_len)
++		text_len = next - begin;
++
++	text = m->text_data + begin;
++
++	ts_nsec = ULONGLONG(inf + OFFSET(printk_info.ts_nsec));
++	nanos = (ulonglong)ts_nsec / (ulonglong)1000000000;
++	rem = (ulonglong)ts_nsec % (ulonglong)1000000000;
++
++	bufp = buf;
++	bufp += sprintf(buf, "[%5lld.%06ld] ", nanos, rem/1000);
++	indent_len = strlen(buf);
++
++	/* How much buffer space is needed in the worst case */
++	buf_need = MAX(sizeof("\\xXX\n"), sizeof("\n") + indent_len);
++
++	for (i = 0, p = text; i < text_len; i++, p++) {
++		if (bufp - buf >= sizeof(buf) - buf_need) {
++			if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
++				return;
++			bufp = buf;
++		}
++
++		if (*p == '\n')
++			bufp += sprintf(bufp, "\n%-*s", indent_len, "");
++		else if (isprint(*p) || isspace(*p))
++			*bufp++ = *p;
++		else
++			bufp += sprintf(bufp, "\\x%02x", *p);
++	}
++
++	*bufp++ = '\n';
++
++	write(info->fd_dumpfile, buf, bufp - buf);
++}
++
++int
++dump_lockless_dmesg(void)
++{
++	unsigned long head_id;
++	unsigned long tail_id;
++	unsigned long kaddr;
++	unsigned long id;
++	struct prb_map m;
++	int ret = FALSE;
++
++	/* setup printk_ringbuffer */
++	if (!readmem(VADDR, SYMBOL(prb), &kaddr, sizeof(kaddr))) {
++		ERRMSG("Can't get the prb address.\n");
++		return ret;
++	}
++
++	m.prb = malloc(SIZE(printk_ringbuffer));
++	if (!m.prb) {
++		ERRMSG("Can't allocate memory for prb.\n");
++		return ret;
++	}
++	if (!readmem(VADDR, kaddr, m.prb, SIZE(printk_ringbuffer))) {
++		ERRMSG("Can't get prb.\n");
++		goto out_prb;
++	}
++
++	/* setup descriptor ring */
++	m.desc_ring = m.prb + OFFSET(printk_ringbuffer.desc_ring);
++	m.desc_ring_count = 1 << UINT(m.desc_ring + OFFSET(prb_desc_ring.count_bits));
++
++	kaddr = ULONG(m.desc_ring + OFFSET(prb_desc_ring.descs));
++	m.descs = malloc(SIZE(prb_desc) * m.desc_ring_count);
++	if (!m.descs) {
++		ERRMSG("Can't allocate memory for prb.desc_ring.descs.\n");
++		goto out_prb;
++	}
++	if (!readmem(VADDR, kaddr, m.descs,
++		     SIZE(prb_desc) * m.desc_ring_count)) {
++		ERRMSG("Can't get prb.desc_ring.descs.\n");
++		goto out_descs;
++	}
++
++	kaddr = ULONG(m.desc_ring + OFFSET(prb_desc_ring.infos));
++	m.infos = malloc(SIZE(printk_info) * m.desc_ring_count);
++	if (!m.infos) {
++		ERRMSG("Can't allocate memory for prb.desc_ring.infos.\n");
++		goto out_descs;
++	}
++	if (!readmem(VADDR, kaddr, m.infos, SIZE(printk_info) * m.desc_ring_count)) {
++		ERRMSG("Can't get prb.desc_ring.infos.\n");
++		goto out_infos;
++	}
++
++	/* setup text data ring */
++	m.text_data_ring = m.prb + OFFSET(printk_ringbuffer.text_data_ring);
++	m.text_data_ring_size = 1 << UINT(m.text_data_ring + OFFSET(prb_data_ring.size_bits));
++
++	kaddr = ULONG(m.text_data_ring + OFFSET(prb_data_ring.data));
++	m.text_data = malloc(m.text_data_ring_size);
++	if (!readmem(VADDR, kaddr, m.text_data, m.text_data_ring_size)) {
++		ERRMSG("Can't get prb.text_data_ring.\n");
++		goto out_text_data;
++	}
++
++	/* ready to go */
++
++	tail_id = ULONG(m.desc_ring + OFFSET(prb_desc_ring.tail_id) +
++			OFFSET(atomic_long_t.counter));
++	head_id = ULONG(m.desc_ring + OFFSET(prb_desc_ring.head_id) +
++			OFFSET(atomic_long_t.counter));
++
++	if (!open_dump_file()) {
++		ERRMSG("Can't open output file.\n");
++		goto out_text_data;
++	}
++
++	for (id = tail_id; id != head_id; id = (id + 1) & DESC_ID_MASK)
++		dump_record(&m, id);
++
++	/* dump head record */
++	dump_record(&m, id);
++
++	if (!close_files_for_creating_dumpfile())
++		goto out_text_data;
++
++	ret = TRUE;
++out_text_data:
++	free(m.text_data);
++out_infos:
++	free(m.infos);
++out_descs:
++	free(m.descs);
++out_prb:
++	free(m.prb);
++	return ret;
++}
 -- 
-~Randy
+1.8.3.1
 
 
 _______________________________________________
