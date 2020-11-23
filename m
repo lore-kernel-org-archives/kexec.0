@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x541.google.com ([2607:f8b0:4864:20::541])
+Received: from mail-ed1-x543.google.com ([2a00:1450:4864:20::543])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kh3cV-0006zQ-4t
- for kexec@lists.infradead.org; Mon, 23 Nov 2020 04:38:31 +0000
-Received: by mail-pg1-x541.google.com with SMTP id w4so13057548pgg.13
- for <kexec@lists.infradead.org>; Sun, 22 Nov 2020 20:38:30 -0800 (PST)
-From: Alexander Kamensky <alexander.kamensky42@gmail.com>
-Subject: [RFC PATCH 3/3] arm64: use kernel version from OSRELEASE to determine
- linear mapping position
-Date: Sun, 22 Nov 2020 20:37:58 -0800
-Message-Id: <20201123043758.105713-4-alexander.kamensky42@gmail.com>
-In-Reply-To: <20201123043758.105713-1-alexander.kamensky42@gmail.com>
-References: <20201123043758.105713-1-alexander.kamensky42@gmail.com>
+ id 1kh3uV-0000xk-5E
+ for kexec@lists.infradead.org; Mon, 23 Nov 2020 04:57:08 +0000
+Received: by mail-ed1-x543.google.com with SMTP id m16so15760188edr.3
+ for <kexec@lists.infradead.org>; Sun, 22 Nov 2020 20:57:05 -0800 (PST)
 MIME-Version: 1.0
+References: <20201123043758.105713-1-alexander.kamensky42@gmail.com>
+In-Reply-To: <20201123043758.105713-1-alexander.kamensky42@gmail.com>
+From: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Date: Mon, 23 Nov 2020 10:26:53 +0530
+Message-ID: <CAFTCetQJysinU1E6kPFs9puNazNHLfOhvWz8ETetu85JHBjRxQ@mail.gmail.com>
+Subject: Re: [RFC PATCH 0/3] makedumpfile: about failing on arm64 with kernel
+ > 5.4
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,102 +25,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, Kazuhito Hagio <k-hagio-ab@nec.com>, Bhupesh Sharma <bhsharma@redhat.com>
-Cc: Alexander Kamensky <alexander.kamensky42@gmail.com>
+To: Alexander Kamensky <alexander.kamensky42@gmail.com>
+Cc: Bhupesh Sharma <bhsharma@redhat.com>, kexec@lists.infradead.org, Kazuhito Hagio <k-hagio-ab@nec.com>
 
-Address mailing list review comment that for determining linear mapping
-use (before/after 5.4 kernel linear mapping swap) of OSRELEASE from vmcore
-rather than kernel version that makedumpfile is currently running on.
+Hi Alexander,
 
-Specifically:
+Thanks for the patchset.
+I am not sure why this new patchset is needed for makedumpfile
+upstream - if you need a separate patchset for Yocto please feel free
+to submit it to the Yocto list and Cc us.
 
-- user info->release_kernel_version added by previous commit, instead of
-info->kernel_version
+However for upstream makedumpfile project these are _probably_ not
+required - I have tested my patch on several arm64 boards and it works
+fine there.
 
-- remove early call to populate_kernel_version from arm64.c
+I will send the next version of my patch once I am back from my
+holidays later this week.
+If you see any breakage with the same, please feel free to report here
+with relevant logs and I can help further
 
-Signed-off-by: Alexander Kamensky <alexander.kamensky42@gmail.com>
----
- arch/arm64.c   | 10 +++-------
- makedumpfile.c |  2 +-
- makedumpfile.h |  3 +--
- 3 files changed, 5 insertions(+), 10 deletions(-)
+Thanks,
+Bhupesh
 
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 7fd7039..f72035e 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -236,7 +236,7 @@ pmd_page_paddr(pmd_t pmd)
-  * space. Testing the top bit for the start of the region is a
-  * sufficient check and avoids having to worry about the tag.
-  */
--#define is_linear_addr(addr)	((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
-+#define is_linear_addr(addr)	((info->release_kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
- 	(!!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))) : \
- 	(!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))))
- 
-@@ -245,7 +245,7 @@ __pa(unsigned long vaddr)
- {
- 	if (kimage_voffset == NOT_FOUND_NUMBER ||
- 			is_linear_addr(vaddr)) {
--		if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
-+		if (info->release_kernel_version < KERNEL_VERSION(5, 4, 0))
- 			return ((vaddr & ~PAGE_OFFSET) + info->phys_base);
- 		else
- 			return (vaddr + info->phys_base - PAGE_OFFSET);
-@@ -492,15 +492,11 @@ get_page_offset_arm64(void)
- 					vabits_actual);
- 	}
- 
--	if (!populate_kernel_version()) {
--		ERRMSG("Cannot get information about current kernel\n");
--		return;
--	}
- 
- 	/* See arch/arm64/include/asm/memory.h for more details of
- 	 * the PAGE_OFFSET calculation.
- 	 */
--	if (info->kernel_version < KERNEL_VERSION(5, 4, 0))
-+	if (info->release_kernel_version < KERNEL_VERSION(5, 4, 0))
- 		info->page_offset = ((0xffffffffffffffffUL) -
- 				((1UL) << (vabits_actual - 1)) + 1);
- 	else
-diff --git a/makedumpfile.c b/makedumpfile.c
-index e2b0bc2..c352d4f 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -1133,7 +1133,7 @@ fallback_to_current_page_size(void)
- 	return TRUE;
- }
- 
--int populate_kernel_version(void)
-+static int populate_kernel_version(void)
- {
- 	struct utsname utsname;
- 
-diff --git a/makedumpfile.h b/makedumpfile.h
-index b36766a..58657b4 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -974,7 +974,7 @@ unsigned long long vaddr_to_paddr_arm64(unsigned long vaddr);
- int get_versiondep_info_arm64(void);
- int get_xen_basic_info_arm64(void);
- int get_xen_info_arm64(void);
--#define paddr_to_vaddr_arm64(X) ((info->kernel_version < KERNEL_VERSION(5, 4, 0)) ?	\
-+#define paddr_to_vaddr_arm64(X) ((info->release_kernel_version < KERNEL_VERSION(5, 4, 0)) ? \
- 				 ((X) - (info->phys_base - PAGE_OFFSET)) :		\
- 				 (((X) - info->phys_base) | PAGE_OFFSET))
- 
-@@ -2393,6 +2393,5 @@ ulong htol(char *s, int flags);
- int hexadecimal(char *s, int count);
- int decimal(char *s, int count);
- int file_exists(char *file);
--int populate_kernel_version(void);
- 
- #endif /* MAKEDUMPFILE_H */
--- 
-2.26.2
-
+On Mon, Nov 23, 2020 at 10:10 AM Alexander Kamensky
+<alexander.kamensky42@gmail.com> wrote:
+>
+> Hi Kazu, Bhupesh,
+>
+> I am hitting the linear mapping swap issue with makedumpfile failing on
+> arm64 Yocto Project qemuarm64 machine with 5.8 kernel as it was discussed
+> several times on this mailing list:
+>
+> root@qemuarm64:~# makedumpfile -c -F /proc/vmcore > /dev/null
+> readpage_elf: Attempt to read non-existent page at 0x0.
+> readmem: type_addr: 1, addr:440, size:8
+> vaddr_to_paddr_arm64: Can't read pmd
+> readmem: Can't convert a virtual address(ffffffc01107f94c) to physical address.
+> readmem: type_addr: 0, addr:ffffffc01107f94c, size:390
+> check_release: Can't get the address of system_utsname.
+>
+> I've have tried Bhupesh's remaining third patch [1] from [2] series,
+> it does help. But I am a bit hesitant to submit it to the Yocto Project,
+> since Kazu pointed out [3] that this patch uses current kernel version to
+> make decision how __pa is handled and it may mismatch the version where
+> vmcore was collected, and in such case it may not operate correctly.
+>
+> In this RFC series I have tried to implement Kazu's suggestion and use
+> kernel version retrieved from OSRELEASE string from vmcoreinfo note. I
+> wonder whether it will help to merge arm64 5.4+ makedumpfile fix? Is
+> there anything else outstanding that prevents such merge?
+>
+> My RFC patches series does include Bhupesh's patch [1], and I posted
+> my modifications on top of it as separate patch for readability.
+>
+> Thanks,
+> Alexander
+>
+> [1] http://lists.infradead.org/pipermail/kexec/2020-September/021336.html
+> [2] http://lists.infradead.org/pipermail/kexec/2020-September/021333.html
+> [3] http://lists.infradead.org/pipermail/kexec/2020-September/021488.html
+>
+> Alexander Kamensky (2):
+>   added way to determine kernel version that vmcore is from
+>   arm64: use kernel version from OSRELEASE to determine linear mapping
+>     position
+>
+> Bhupesh Sharma (1):
+>   makedumpfile/arm64: Add support for ARMv8.2-LVA (52-bit kernel VA
+>     support)
+>
+>  arch/arm64.c   | 229 ++++++++++++++++++++++++++++++++++++++++++-------
+>  common.h       |  10 +++
+>  makedumpfile.c |  23 +++++
+>  makedumpfile.h |   6 +-
+>  4 files changed, 234 insertions(+), 34 deletions(-)
+>
+> --
+> 2.26.2
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 _______________________________________________
 kexec mailing list
