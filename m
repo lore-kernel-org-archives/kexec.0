@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([193.142.43.55])
+Received: from mail-bn8nam08on2122.outbound.protection.outlook.com
+ ([40.107.100.122] helo=NAM04-BN8-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ki39s-0004QR-5Y
- for kexec@lists.infradead.org; Wed, 25 Nov 2020 22:21:08 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: [PATCH] printk: add support for lockless ringbuffer
-Date: Wed, 25 Nov 2020 23:26:59 +0106
-Message-Id: <20201125222059.6792-1-john.ogness@linutronix.de>
+ id 1ki4Ns-0002Xu-9g
+ for kexec@lists.infradead.org; Wed, 25 Nov 2020 23:39:37 +0000
+From: Dexuan Cui <decui@microsoft.com>
+Subject: RE: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
+ boot params
+Date: Wed, 25 Nov 2020 23:39:30 +0000
+Message-ID: <MW2PR2101MB1801B19B018FE42150449D49BFFA1@MW2PR2101MB1801.namprd21.prod.outlook.com>
+References: <20201014092429.1415040-1-kasong@redhat.com>
+ <20201014092429.1415040-2-kasong@redhat.com>
+ <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
+In-Reply-To: <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,495 +27,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: 'Kairui Song' <kasong@redhat.com>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
+Cc: 'Wei Liu' <wei.liu@kernel.org>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, Haiyang Zhang <haiyangz@microsoft.com>, "'x86@kernel.org'" <x86@kernel.org>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>, Michael Kelley <mikelley@microsoft.com>, 'Ingo Molnar' <mingo@redhat.com>, 'Borislav Petkov' <bp@alien8.de>, 'Thomas Gleixner' <tglx@linutronix.de>, KY Srinivasan <kys@microsoft.com>, 'Dave Young' <dyoung@redhat.com>, 'Ard Biesheuvel' <ardb@kernel.org>
 
-Linux 5.10 moved to a new lockless ringbuffer. The new ringbuffer
-is structured completely different to the previous iterations.
-Add support for retrieving the ringbuffer using vmcoreinfo. The
-new ringbuffer is detected based on the availability of the
-"prb" symbol.
+> From: Dexuan Cui
+> Sent: Monday, November 16, 2020 7:40 PM
+> > diff --git a/arch/x86/kernel/kexec-bzimage64.c
+> > b/arch/x86/kernel/kexec-bzimage64.c
+> > index 57c2ecf43134..ce831f9448e7 100644
+> > --- a/arch/x86/kernel/kexec-bzimage64.c
+> > +++ b/arch/x86/kernel/kexec-bzimage64.c
+> > @@ -200,8 +200,7 @@ setup_boot_parameters(struct kimage *image, struct
+> > boot_params *params,
+> >  	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
+> >
+> >  	/* Copying screen_info will do? */
+> > -	memcpy(&params->screen_info, &boot_params.screen_info,
+> > -				sizeof(struct screen_info));
+> > +	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info));
+> >
+> >  	/* Fill in memsize later */
+> >  	params->screen_info.ext_mem_k = 0;
+> > --
+> 
+> Hi Kairui,
+> According to "man kexec", kdump/kexec can use 2 different syscalls to set up
+> the
+> kdump kernel:
+> 
+> -s (--kexec-file-syscall)
+>        Specify that the new KEXEC_FILE_LOAD syscall should be used
+> exclusively.
+> 
+> -c (--kexec-syscall)
+>        Specify that the old KEXEC_LOAD syscall should be used exclusively
+> (the default).
+> 
+> It looks I can only reproduce the call-trace
+> (https://bugzilla.redhat.com/show_bug.cgi?id=1867887#c5) with
+> KEXEC_FILE_LOAD:
+> I did kdump tests in Ubuntu 20.04 VM and by default the VM used the
+> KEXEC_LOAD
+> syscall and I couldn't reproduce the call-trace; after I added the "-s" parameter
+> to use
+> the KEXEC_FILE_LOAD syscall, I could reproduce the call-trace and I can confirm
+> your
+> patch can eliminate the call-trace because the "efifb" driver doesn't even load
+> with
+> your patch.
+> 
+> Your patch is only for the KEXEC_FILE_LOAD syscall, and I'm sure it's not used in
+> the code path of the KEXEC_LOAD syscall.
+> 
+> So, in the case of the KEXEC_LOAD syscall, do you know how the *kexec*
+> kernel's boot_params.screen_info.lfb_base is intialized? I haven't figured it 
+> out yet.
 
-Signed-off-by: John Ogness <john.ogness@linutronix.de>
----
- util_lib/elf_info.c | 438 +++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 437 insertions(+), 1 deletion(-)
+FYI: in the case of the KEXEC_LOAD syscall, I think the lfb_base of the kexec
+kernel is pre-setup by the kexec tool (see the function setup_linux_vesafb()):
 
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index 7803a94..2f23a44 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -27,6 +27,32 @@ static int num_pt_loads;
- 
- static char osrelease[4096];
- 
-+/* VMCOREINFO symbols for lockless printk ringbuffer */
-+static loff_t prb_vaddr;
-+static size_t printk_ringbuffer_sz;
-+static size_t prb_desc_sz;
-+static size_t printk_info_sz;
-+static uint64_t printk_ringbuffer_desc_ring_offset;
-+static uint64_t printk_ringbuffer_text_data_ring_offset;
-+static uint64_t prb_desc_ring_count_bits_offset;
-+static uint64_t prb_desc_ring_descs_offset;
-+static uint64_t prb_desc_ring_infos_offset;
-+static uint64_t prb_data_ring_size_bits_offset;
-+static uint64_t prb_data_ring_data_offset;
-+static uint64_t prb_desc_ring_head_id_offset;
-+static uint64_t prb_desc_ring_tail_id_offset;
-+static uint64_t atomic_long_t_counter_offset;
-+static uint64_t prb_desc_state_var_offset;
-+static uint64_t prb_desc_info_offset;
-+static uint64_t prb_desc_text_blk_lpos_offset;
-+static uint64_t prb_data_blk_lpos_begin_offset;
-+static uint64_t prb_data_blk_lpos_next_offset;
-+static uint64_t printk_info_seq_offset;
-+static uint64_t printk_info_caller_id_offset;
-+static uint64_t printk_info_ts_nsec_offset;
-+static uint64_t printk_info_level_offset;
-+static uint64_t printk_info_text_len_offset;
-+
- static loff_t log_buf_vaddr;
- static loff_t log_end_vaddr;
- static loff_t log_buf_len_vaddr;
-@@ -304,6 +330,7 @@ void scan_vmcoreinfo(char *start, size_t size)
- 		size_t len;
- 		loff_t *vaddr;
- 	} symbol[] = {
-+		SYMBOL(prb),
- 		SYMBOL(log_buf),
- 		SYMBOL(log_end),
- 		SYMBOL(log_buf_len),
-@@ -361,6 +388,119 @@ void scan_vmcoreinfo(char *start, size_t size)
- 			*symbol[i].vaddr = vaddr;
- 		}
- 
-+		str = "SIZE(printk_ringbuffer)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_ringbuffer_sz = strtoull(pos + strlen(str),
-+							NULL, 10);
-+
-+		str = "SIZE(prb_desc)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_sz = strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "SIZE(printk_info)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_sz = strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_ringbuffer.desc_ring)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_ringbuffer_desc_ring_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_ringbuffer.text_data_ring)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_ringbuffer_text_data_ring_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc_ring.count_bits)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_ring_count_bits_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc_ring.descs)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_ring_descs_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc_ring.infos)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_ring_infos_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_data_ring.size_bits)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_data_ring_size_bits_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_data_ring.data)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_data_ring_data_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc_ring.head_id)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_ring_head_id_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc_ring.tail_id)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_ring_tail_id_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(atomic_long_t.counter)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			atomic_long_t_counter_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc.state_var)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_state_var_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc.info)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_info_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_desc.text_blk_lpos)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_desc_text_blk_lpos_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_data_blk_lpos.begin)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_data_blk_lpos_begin_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(prb_data_blk_lpos.next)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			prb_data_blk_lpos_next_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_info.seq)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_seq_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_info.caller_id)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_caller_id_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_info.ts_nsec)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_ts_nsec_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_info.level)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_level_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
-+		str = "OFFSET(printk_info.text_len)=";
-+		if (memcmp(str, pos, strlen(str)) == 0)
-+			printk_info_text_len_offset =
-+				strtoull(pos + strlen(str), NULL, 10);
-+
- 		/* Check for "SIZE(printk_log)" or older "SIZE(log)=" */
- 		str = "SIZE(log)=";
- 		if (memcmp(str, pos, strlen(str)) == 0)
-@@ -746,9 +886,305 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
- 		handler(out_buf, len);
- }
- 
-+/* convenience struct for passing many values to helper functions */
-+struct prb_map {
-+	char		*prb;
-+
-+	char		*desc_ring;
-+	unsigned long	desc_ring_count;
-+	char		*descs;
-+
-+	char		*infos;
-+
-+	char		*text_data_ring;
-+	unsigned long	text_data_ring_size;
-+	char		*text_data;
-+};
-+
-+/*
-+ * desc_state and DESC_* definitions taken from kernel source:
-+ *
-+ * kernel/printk/printk_ringbuffer.h
-+ *
-+ * DESC_* definitions modified to provide 32-bit and 64-bit variants.
-+ */
-+
-+/* The possible responses of a descriptor state-query. */
-+enum desc_state {
-+	desc_miss	=  -1,	/* ID mismatch (pseudo state) */
-+	desc_reserved	= 0x0,	/* reserved, in use by writer */
-+	desc_committed	= 0x1,	/* committed by writer, could get reopened */
-+	desc_finalized	= 0x2,	/* committed, no further modification allowed */
-+	desc_reusable	= 0x3,	/* free, not yet used by any writer */
-+};
-+
-+#define DESC_SV_BITS		(sizeof(uint64_t) * 8)
-+#define DESC_FLAGS_SHIFT	(DESC_SV_BITS - 2)
-+#define DESC_FLAGS_MASK		(3UL << DESC_FLAGS_SHIFT)
-+#define DESC_STATE(sv)		(3UL & (sv >> DESC_FLAGS_SHIFT))
-+#define DESC_ID_MASK		(~DESC_FLAGS_MASK)
-+#define DESC_ID(sv)		((sv) & DESC_ID_MASK)
-+
-+#define DESC32_SV_BITS		(sizeof(uint32_t) * 8)
-+#define DESC32_FLAGS_SHIFT	(DESC32_SV_BITS - 2)
-+#define DESC32_FLAGS_MASK	(3UL << DESC32_FLAGS_SHIFT)
-+#define DESC32_STATE(sv)	(3UL & (sv >> DESC32_FLAGS_SHIFT))
-+#define DESC32_ID_MASK		(~DESC32_FLAGS_MASK)
-+#define DESC32_ID(sv)		((sv) & DESC32_ID_MASK)
-+
-+/*
-+ * get_desc_state() taken from kernel source:
-+ *
-+ * kernel/printk/printk_ringbuffer.c
-+ *
-+ * get_desc32_state() added as 32-bit variant.
-+ */
-+
-+/* Query the state of a descriptor. */
-+static enum desc_state get_desc_state(unsigned long id,
-+				      uint64_t state_val)
-+{
-+	if (id != DESC_ID(state_val))
-+		return desc_miss;
-+
-+	return DESC_STATE(state_val);
-+}
-+
-+static enum desc_state get_desc32_state(unsigned long id,
-+					uint64_t state_val)
-+{
-+	if (id != DESC32_ID(state_val))
-+		return desc_miss;
-+
-+	return DESC32_STATE(state_val);
-+}
-+
-+static bool record_committed(unsigned long id, uint64_t state_var)
-+{
-+	enum desc_state state;
-+
-+	if (machine_pointer_bits() == 32)
-+		state = get_desc32_state(id, state_var);
-+	else
-+		state = get_desc_state(id, state_var);
-+
-+	return (state == desc_committed || state == desc_finalized);
-+}
-+
-+static uint64_t id_inc(uint64_t id)
-+{
-+	id++;
-+
-+	if (machine_pointer_bits() == 32)
-+		return (id & DESC32_ID_MASK);
-+
-+	return (id & DESC_ID_MASK);
-+}
-+
-+static uint64_t get_ulong(char *addr)
-+{
-+	if (machine_pointer_bits() == 32)
-+		return struct_val_u32(addr, 0);
-+	return struct_val_u64(addr, 0);
-+}
-+
-+static uint64_t sizeof_ulong(void)
-+{
-+	return (machine_pointer_bits() >> 3);
-+}
-+
-+static void dump_record(struct prb_map *m, unsigned long id,
-+			void (*handler)(char*, unsigned int))
-+{
-+#define OUT_BUF_SIZE	4096
-+	char out_buf[OUT_BUF_SIZE];
-+	imaxdiv_t imaxdiv_usec;
-+	imaxdiv_t imaxdiv_sec;
-+	uint32_t offset = 0;
-+	unsigned short len;
-+	uint64_t state_var;
-+	uint64_t ts_nsec;
-+	uint64_t begin;
-+	uint64_t next;
-+	char *info;
-+	char *text;
-+	char *desc;
-+	int i;
-+
-+	desc = m->descs + ((id % m->desc_ring_count) * prb_desc_sz);
-+	info = m->infos + ((id % m->desc_ring_count) * printk_info_sz);
-+
-+	/* skip non-committed record */
-+	state_var = get_ulong(desc + prb_desc_state_var_offset +
-+					atomic_long_t_counter_offset);
-+	if (!record_committed(id, state_var))
-+		return;
-+
-+	begin = get_ulong(desc + prb_desc_text_blk_lpos_offset +
-+			  prb_data_blk_lpos_begin_offset) %
-+		m->text_data_ring_size;
-+	next = get_ulong(desc + prb_desc_text_blk_lpos_offset +
-+			 prb_data_blk_lpos_next_offset) %
-+	       m->text_data_ring_size;
-+
-+	ts_nsec = struct_val_u64(info, printk_info_ts_nsec_offset);
-+	imaxdiv_sec = imaxdiv(ts_nsec, 1000000000);
-+	imaxdiv_usec = imaxdiv(imaxdiv_sec.rem, 1000);
-+
-+	offset += sprintf(out_buf + offset, "[%5llu.%06llu] ",
-+		(long long unsigned int)imaxdiv_sec.quot,
-+		(long long unsigned int)imaxdiv_usec.quot);
-+
-+	/* skip data-less text blocks */
-+	if (begin == next)
-+		goto out;
-+
-+	len = struct_val_u16(info, printk_info_text_len_offset);
-+
-+	/* handle wrapping data block */
-+	if (begin > next)
-+		begin = 0;
-+
-+	/* skip over descriptor ID */
-+	begin += sizeof_ulong();
-+
-+	/* handle truncated messages */
-+	if (next - begin < len)
-+		len = next - begin;
-+
-+	text = m->text_data + begin;
-+
-+	/* escape non-printable characters */
-+	for (i = 0; i < len; i++) {
-+		unsigned char c = text[i];
-+
-+		if (!isprint(c) && !isspace(c))
-+			offset += sprintf(out_buf + offset, "\\x%02x", c);
-+		else
-+			out_buf[offset++] = c;
-+
-+		if (offset >= OUT_BUF_SIZE - 64) {
-+			if (handler)
-+				handler(out_buf, offset);
-+			offset = 0;
-+		}
-+	}
-+out:
-+	out_buf[offset++] = '\n';
-+
-+	if (offset && handler)
-+		handler(out_buf, offset);
-+}
-+
-+/*
-+ *  Handle the lockless printk_ringbuffer.
-+ */
-+static void dump_dmesg_lockless(int fd, void (*handler)(char*, unsigned int))
-+{
-+	struct prb_map m;
-+	uint64_t head_id;
-+	uint64_t tail_id;
-+	uint64_t kaddr;
-+	uint64_t id;
-+	int ret;
-+
-+	/* setup printk_ringbuffer */
-+	kaddr = read_file_pointer(fd, vaddr_to_offset(prb_vaddr));
-+	m.prb = calloc(1, printk_ringbuffer_sz);
-+	if (!m.prb) {
-+		fprintf(stderr, "Failed to malloc %lu bytes for prb: %s\n",
-+			printk_ringbuffer_sz, strerror(errno));
-+		exit(64);
-+	}
-+	ret = pread(fd, m.prb, printk_ringbuffer_sz, vaddr_to_offset(kaddr));
-+	if (ret != printk_ringbuffer_sz) {
-+		fprintf(stderr, "Failed to read prb of size %lu bytes: %s\n",
-+			printk_ringbuffer_sz, strerror(errno));
-+		exit(65);
-+	}
-+
-+	/* setup descriptor ring */
-+	m.desc_ring = m.prb + printk_ringbuffer_desc_ring_offset;
-+	m.desc_ring_count = 1 << struct_val_u32(m.desc_ring,
-+					prb_desc_ring_count_bits_offset);
-+	kaddr = get_ulong(m.desc_ring + prb_desc_ring_descs_offset);
-+	m.descs = calloc(1, prb_desc_sz * m.desc_ring_count);
-+	if (!m.descs) {
-+		fprintf(stderr, "Failed to malloc %lu bytes for descs: %s\n",
-+			prb_desc_sz * m.desc_ring_count, strerror(errno));
-+		exit(64);
-+	}
-+	ret = pread(fd, m.descs, prb_desc_sz * m.desc_ring_count,
-+		    vaddr_to_offset(kaddr));
-+	if (ret != prb_desc_sz * m.desc_ring_count) {
-+		fprintf(stderr,
-+			"Failed to read descs of size %lu bytes: %s\n",
-+			prb_desc_sz * m.desc_ring_count, strerror(errno));
-+		exit(65);
-+	}
-+
-+	/* setup info ring */
-+	kaddr = get_ulong(m.prb + prb_desc_ring_infos_offset);
-+	m.infos = calloc(1, printk_info_sz * m.desc_ring_count);
-+	if (!m.infos) {
-+		fprintf(stderr, "Failed to malloc %lu bytes for infos: %s\n",
-+			printk_info_sz * m.desc_ring_count, strerror(errno));
-+		exit(64);
-+	}
-+	ret = pread(fd, m.infos, printk_info_sz * m.desc_ring_count,
-+		    vaddr_to_offset(kaddr));
-+	if (ret != printk_info_sz * m.desc_ring_count) {
-+		fprintf(stderr,
-+			"Failed to read infos of size %lu bytes: %s\n",
-+			printk_info_sz * m.desc_ring_count, strerror(errno));
-+		exit(65);
-+	}
-+
-+	/* setup text data ring */
-+	m.text_data_ring = m.prb + printk_ringbuffer_text_data_ring_offset;
-+	m.text_data_ring_size = 1 << struct_val_u32(m.text_data_ring,
-+					prb_data_ring_size_bits_offset);
-+	kaddr = get_ulong(m.text_data_ring + prb_data_ring_data_offset);
-+	m.text_data = calloc(1, m.text_data_ring_size);
-+	if (!m.text_data) {
-+		fprintf(stderr,
-+			"Failed to malloc %lu bytes for text_data: %s\n",
-+			m.text_data_ring_size, strerror(errno));
-+		exit(64);
-+	}
-+	ret = pread(fd, m.text_data, m.text_data_ring_size,
-+		    vaddr_to_offset(kaddr));
-+	if (ret != m.text_data_ring_size) {
-+		fprintf(stderr,
-+			"Failed to read text_data of size %lu bytes: %s\n",
-+			m.text_data_ring_size, strerror(errno));
-+		exit(65);
-+	}
-+
-+	/* ready to go */
-+
-+	tail_id = get_ulong(m.desc_ring + prb_desc_ring_tail_id_offset +
-+						atomic_long_t_counter_offset);
-+	head_id = get_ulong(m.desc_ring + prb_desc_ring_head_id_offset +
-+						atomic_long_t_counter_offset);
-+
-+	for (id = tail_id; id != head_id; id = id_inc(id))
-+		dump_record(&m, id, handler);
-+
-+	/* dump head record */
-+	dump_record(&m, id, handler);
-+
-+	free(m.text_data);
-+	free(m.infos);
-+	free(m.descs);
-+	free(m.prb);
-+}
-+
- void dump_dmesg(int fd, void (*handler)(char*, unsigned int))
- {
--	if (log_first_idx_vaddr)
-+	if (prb_vaddr)
-+		dump_dmesg_lockless(fd, handler);
-+	else if (log_first_idx_vaddr)
- 		dump_dmesg_structured(fd, handler);
- 	else
- 		dump_dmesg_legacy(fd, handler);
--- 
-2.20.1
+https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kexec/arch/i386/x86-linux-setup.c#n126
+static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
+{
+	struct fb_fix_screeninfo fix;
+	struct fb_var_screeninfo var;
+	int fd;
 
+	fd = open("/dev/fb0", O_RDONLY);
+	if (-1 == fd)
+		return -1;
+
+	if (-1 == ioctl(fd, FBIOGET_FSCREENINFO, &fix))
+		goto out;
+	if (-1 == ioctl(fd, FBIOGET_VSCREENINFO, &var))
+		goto out;
+	if (0 == strcmp(fix.id, "VESA VGA")) {
+		/* VIDEO_TYPE_VLFB */
+		real_mode->orig_video_isVGA = 0x23;
+	} else if (0 == strcmp(fix.id, "EFI VGA")) {
+		/* VIDEO_TYPE_EFI */
+		real_mode->orig_video_isVGA = 0x70;
+	} else if (arch_options.reuse_video_type) {
+		int err;
+		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
+
+		/* blindly try old boot time video type */
+		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
+		if (err)
+			goto out;
+	} else {
+		real_mode->orig_video_isVGA = 0;
+		close(fd);
+		return 0;
+	}
+
+When a Ubuntu 20.10 VM (kexec-tools-2.0.20) runs on Hyper-V, we should
+fall into the last condition, i.e. setting
+"real_mode->orig_video_isVGA = 0;", so the "efifb" driver does not load
+in the kdump kernel.
+
+Ubuntu 20.04 (kexec-tools-2.0.18) is a little old in that it does not have
+Kairui's patch
+https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=fb5a8792e6e4ee7de7ae3e06d193ea5beaaececc
+, so it re-uses the VRAM location set up by the hyperv_fb driver, which
+is undesirable because the "efifb" driver doesn't know it's accessing
+an "incompatible" framebuffer -- IMO this may be just a small issue,
+but anyay I hope Ubuntu 20.04's kexec-tools will pick up your patch.
+
+So, now we should cover all the combinations if we use the latest kernel
+and the latest kexec-tools, and the "efifb" driver in the kdump kernel
+doesn't load.
+
+Thanks,
+-- Dexuan
 
 _______________________________________________
 kexec mailing list
