@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn8nam08on2122.outbound.protection.outlook.com
- ([40.107.100.122] helo=NAM04-BN8-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1400054.outbound.protection.outlook.com
+ ([40.107.140.54] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ki4Ns-0002Xu-9g
- for kexec@lists.infradead.org; Wed, 25 Nov 2020 23:39:37 +0000
-From: Dexuan Cui <decui@microsoft.com>
-Subject: RE: [PATCH 1/2] x86/kexec: Use up-to-dated screen_info copy to fill
- boot params
-Date: Wed, 25 Nov 2020 23:39:30 +0000
-Message-ID: <MW2PR2101MB1801B19B018FE42150449D49BFFA1@MW2PR2101MB1801.namprd21.prod.outlook.com>
-References: <20201014092429.1415040-1-kasong@redhat.com>
- <20201014092429.1415040-2-kasong@redhat.com>
- <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
-In-Reply-To: <MWHPR21MB0861EA2C8322A7C27404258CBFE20@MWHPR21MB0861.namprd21.prod.outlook.com>
-Content-Language: en-US
+ id 1ki4vZ-0004Nj-RA
+ for kexec@lists.infradead.org; Thu, 26 Nov 2020 00:14:27 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH] makedumpfile: printk: add support for lockless ringbuffer
+Date: Thu, 26 Nov 2020 00:14:16 +0000
+Message-ID: <OSBPR01MB1991C22FD4870CACD0039ECADDF90@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <OSBPR01MB1991BDA9AB4100A661E53CF6DDE00@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <87sg94zsva.fsf@jogness.linutronix.de>
+ <OSBPR01MB199155FE684812D139FBD7F7DDFF0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <87lfer82a4.fsf@jogness.linutronix.de>
+ <OSBPR01MB1991B98F9B72C74C33BAA950DDFB0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+ <87k0u94xfv.fsf@jogness.linutronix.de>
+In-Reply-To: <87k0u94xfv.fsf@jogness.linutronix.de>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,125 +26,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Kairui Song' <kasong@redhat.com>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>
-Cc: 'Wei Liu' <wei.liu@kernel.org>, 'Bartlomiej Zolnierkiewicz' <b.zolnierkie@samsung.com>, Haiyang Zhang <haiyangz@microsoft.com>, "'x86@kernel.org'" <x86@kernel.org>, "'kexec@lists.infradead.org'" <kexec@lists.infradead.org>, "'linux-hyperv@vger.kernel.org'" <linux-hyperv@vger.kernel.org>, Michael Kelley <mikelley@microsoft.com>, 'Ingo Molnar' <mingo@redhat.com>, 'Borislav Petkov' <bp@alien8.de>, 'Thomas Gleixner' <tglx@linutronix.de>, KY Srinivasan <kys@microsoft.com>, 'Dave Young' <dyoung@redhat.com>, 'Ard Biesheuvel' <ardb@kernel.org>
+To: John Ogness <john.ogness@linutronix.de>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-> From: Dexuan Cui
-> Sent: Monday, November 16, 2020 7:40 PM
-> > diff --git a/arch/x86/kernel/kexec-bzimage64.c
-> > b/arch/x86/kernel/kexec-bzimage64.c
-> > index 57c2ecf43134..ce831f9448e7 100644
-> > --- a/arch/x86/kernel/kexec-bzimage64.c
-> > +++ b/arch/x86/kernel/kexec-bzimage64.c
-> > @@ -200,8 +200,7 @@ setup_boot_parameters(struct kimage *image, struct
-> > boot_params *params,
-> >  	params->hdr.hardware_subarch = boot_params.hdr.hardware_subarch;
-> >
-> >  	/* Copying screen_info will do? */
-> > -	memcpy(&params->screen_info, &boot_params.screen_info,
-> > -				sizeof(struct screen_info));
-> > +	memcpy(&params->screen_info, &screen_info, sizeof(struct screen_info));
-> >
-> >  	/* Fill in memsize later */
-> >  	params->screen_info.ext_mem_k = 0;
-> > --
-> 
-> Hi Kairui,
-> According to "man kexec", kdump/kexec can use 2 different syscalls to set up
-> the
-> kdump kernel:
-> 
-> -s (--kexec-file-syscall)
->        Specify that the new KEXEC_FILE_LOAD syscall should be used
-> exclusively.
-> 
-> -c (--kexec-syscall)
->        Specify that the old KEXEC_LOAD syscall should be used exclusively
-> (the default).
-> 
-> It looks I can only reproduce the call-trace
-> (https://bugzilla.redhat.com/show_bug.cgi?id=1867887#c5) with
-> KEXEC_FILE_LOAD:
-> I did kdump tests in Ubuntu 20.04 VM and by default the VM used the
-> KEXEC_LOAD
-> syscall and I couldn't reproduce the call-trace; after I added the "-s" parameter
-> to use
-> the KEXEC_FILE_LOAD syscall, I could reproduce the call-trace and I can confirm
-> your
-> patch can eliminate the call-trace because the "efifb" driver doesn't even load
-> with
-> your patch.
-> 
-> Your patch is only for the KEXEC_FILE_LOAD syscall, and I'm sure it's not used in
-> the code path of the KEXEC_LOAD syscall.
-> 
-> So, in the case of the KEXEC_LOAD syscall, do you know how the *kexec*
-> kernel's boot_params.screen_info.lfb_base is intialized? I haven't figured it 
-> out yet.
-
-FYI: in the case of the KEXEC_LOAD syscall, I think the lfb_base of the kexec
-kernel is pre-setup by the kexec tool (see the function setup_linux_vesafb()):
-
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/tree/kexec/arch/i386/x86-linux-setup.c#n126
-static int setup_linux_vesafb(struct x86_linux_param_header *real_mode)
-{
-	struct fb_fix_screeninfo fix;
-	struct fb_var_screeninfo var;
-	int fd;
-
-	fd = open("/dev/fb0", O_RDONLY);
-	if (-1 == fd)
-		return -1;
-
-	if (-1 == ioctl(fd, FBIOGET_FSCREENINFO, &fix))
-		goto out;
-	if (-1 == ioctl(fd, FBIOGET_VSCREENINFO, &var))
-		goto out;
-	if (0 == strcmp(fix.id, "VESA VGA")) {
-		/* VIDEO_TYPE_VLFB */
-		real_mode->orig_video_isVGA = 0x23;
-	} else if (0 == strcmp(fix.id, "EFI VGA")) {
-		/* VIDEO_TYPE_EFI */
-		real_mode->orig_video_isVGA = 0x70;
-	} else if (arch_options.reuse_video_type) {
-		int err;
-		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
-
-		/* blindly try old boot time video type */
-		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
-		if (err)
-			goto out;
-	} else {
-		real_mode->orig_video_isVGA = 0;
-		close(fd);
-		return 0;
-	}
-
-When a Ubuntu 20.10 VM (kexec-tools-2.0.20) runs on Hyper-V, we should
-fall into the last condition, i.e. setting
-"real_mode->orig_video_isVGA = 0;", so the "efifb" driver does not load
-in the kdump kernel.
-
-Ubuntu 20.04 (kexec-tools-2.0.18) is a little old in that it does not have
-Kairui's patch
-https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/?id=fb5a8792e6e4ee7de7ae3e06d193ea5beaaececc
-, so it re-uses the VRAM location set up by the hyperv_fb driver, which
-is undesirable because the "efifb" driver doesn't know it's accessing
-an "incompatible" framebuffer -- IMO this may be just a small issue,
-but anyay I hope Ubuntu 20.04's kexec-tools will pick up your patch.
-
-So, now we should cover all the combinations if we use the latest kernel
-and the latest kexec-tools, and the "efifb" driver in the kdump kernel
-doesn't load.
-
-Thanks,
--- Dexuan
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gT24gMjAyMC0xMS0yNCwgSEFHSU8gS0FaVUhJ
+VE8o6JCp5bC+44CA5LiA5LuBKQk8ay1oYWdpby1hYkBuZWMuY29tPiB3cm90ZToNCj4gPj4gQWZ0
+ZXIgbG9va2luZyBtb3JlIGNsb3NlbHksIEkgc2VlIHRoYXQgeW91ciBwYXRjaCBpcyBzdGlsbCB1
+c2luZyB0aGUNCj4gPj4gb2xkIHN0YXRlIGZsYWdzLiBXaXRoIHRoZSBjdXJyZW50IHZlcnNpb24s
+IHRoZXJlIGlzIG5vdyBhIHZhbHVlLWJhc2VkDQo+ID4+IHN0YXRlIGZpZWxkLg0KPiA+DQo+ID4g
+VGhhbmsgeW91IGZvciBwb2ludGluZyBpdCBvdXQhICBDb3VsZCB5b3Ugc3VibWl0IGEgZm9sbG93
+LXVwIHBhdGNoPw0KPiANCj4gSSBoYXZlIGF0dGFjaGVkIGEgZm9sbG93LXVwIHBhdGNoLiBJdCBp
+cyBwcmV0dHkgbXVjaCB0aGUgZXhhY3Qgc2FtZQ0KPiBwYXRjaCBhcyB0aGUgb25lIEkgc2VudCBm
+b3IgImNyYXNoIi4NCg0KVGhhbmsgeW91IGZvciB0aGUgcGF0Y2ggYWdhaW4sIEpvaG4uICBJIGFw
+cHJlY2lhdGUgaXQuICBXaWxsIG1lcmdlLg0KDQpBcHBhcmVudGx5IGFuIGVtYWlsIHdpdGggYXR0
+YWNoZWQgZmlsZSBpcyBoZWxkIGJ5IHRoZSBsaXN0IHN5c3RlbSwgc28NCnVuZm9sZGluZyBpdCBi
+ZWxvdyB0byBzaGFyZSBhbmQgcmVjb3JkLCBqdXN0IGluIGNhc2UuDQoNClRoYW5rcywNCkthenUN
+Cg0KDQpGcm9tIDU4Mzk2ODY3Y2IzYmZkMWNhMDYwY2Y1ZWIzYTkxMGQ3ZjhjMTkyYzIgTW9uIFNl
+cCAxNyAwMDowMDowMCAyMDAxDQpGcm9tOiBKb2huIE9nbmVzcyA8am9obi5vZ25lc3NAbGludXRy
+b25peC5kZT4NCkRhdGU6IFdlZCwgMjUgTm92IDIwMjAgMTA6MTA6MzEgKzAxMDYNClN1YmplY3Q6
+IFtQQVRDSF0gcHJpbnRrOiB1c2UgY29tbWl0dGVkL2ZpbmFsaXplZCBzdGF0ZSB2YWx1ZXMNCg0K
+VGhlIHJpbmdidWZmZXIgZW50cmllcyB1c2UgMiBzdGF0ZSB2YWx1ZXMgKGNvbW1pdHRlZCBhbmQg
+ZmluYWxpemVkKQ0KcmF0aGVyIHRoYW4gYSBzaW5nbGUgZmxhZyB0byByZXByZXNlbnQgYmVpbmcg
+YXZhaWxhYmxlIGZvciByZWFkaW5nLg0KQ29weSB0aGUgZGVmaW5pdGlvbnMgYW5kIHN0YXRlIGxv
+b2t1cCBmdW5jdGlvbiBkaXJlY3RseSBmcm9tIHRoZQ0Ka2VybmVsIHNvdXJjZSBhbmQgdXNlIHRo
+ZSBuZXcgc3RhdGVzLg0KDQpTaWduZWQtb2ZmLWJ5OiBKb2huIE9nbmVzcyA8am9obi5vZ25lc3NA
+bGludXRyb25peC5kZT4NCi0tLQ0KIHByaW50ay5jIHwgNDggKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKystLS0tLS0tDQogMSBmaWxlIGNoYW5nZWQsIDQxIGluc2VydGlv
+bnMoKyksIDcgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9wcmludGsuYyBiL3ByaW50ay5j
+DQppbmRleCA4ZTAwOTAxLi45Y2VjYmQxIDEwMDY0NA0KLS0tIGEvcHJpbnRrLmMNCisrKyBiL3By
+aW50ay5jDQpAQCAtMSwxMiArMSw2IEBADQogI2luY2x1ZGUgIm1ha2VkdW1wZmlsZS5oIg0KICNp
+bmNsdWRlIDxjdHlwZS5oPg0KIA0KLSNkZWZpbmUgREVTQ19TVl9CSVRTCQkoc2l6ZW9mKHVuc2ln
+bmVkIGxvbmcpICogOCkNCi0jZGVmaW5lIERFU0NfQ09NTUlUVEVEX01BU0sJKDFVTCA8PCAoREVT
+Q19TVl9CSVRTIC0gMSkpDQotI2RlZmluZSBERVNDX1JFVVNFX01BU0sJCSgxVUwgPDwgKERFU0Nf
+U1ZfQklUUyAtIDIpKQ0KLSNkZWZpbmUgREVTQ19GTEFHU19NQVNLCQkoREVTQ19DT01NSVRURURf
+TUFTSyB8IERFU0NfUkVVU0VfTUFTSykNCi0jZGVmaW5lIERFU0NfSURfTUFTSwkJKH5ERVNDX0ZM
+QUdTX01BU0spDQotDQogLyogY29udmVuaWVuY2Ugc3RydWN0IGZvciBwYXNzaW5nIG1hbnkgdmFs
+dWVzIHRvIGhlbHBlciBmdW5jdGlvbnMgKi8NCiBzdHJ1Y3QgcHJiX21hcCB7DQogCWNoYXIJCSpw
+cmI7DQpAQCAtMjEsMTIgKzE1LDUxIEBAIHN0cnVjdCBwcmJfbWFwIHsNCiAJY2hhcgkJKnRleHRf
+ZGF0YTsNCiB9Ow0KIA0KKy8qDQorICogZGVzY19zdGF0ZSBhbmQgREVTQ18qIGRlZmluaXRpb25z
+IHRha2VuIGZyb20ga2VybmVsIHNvdXJjZToNCisgKg0KKyAqIGtlcm5lbC9wcmludGsvcHJpbnRr
+X3JpbmdidWZmZXIuaA0KKyAqLw0KKw0KKy8qIFRoZSBwb3NzaWJsZSByZXNwb25zZXMgb2YgYSBk
+ZXNjcmlwdG9yIHN0YXRlLXF1ZXJ5LiAqLw0KK2VudW0gZGVzY19zdGF0ZSB7DQorCWRlc2NfbWlz
+cwk9ICAtMSwJLyogSUQgbWlzbWF0Y2ggKHBzZXVkbyBzdGF0ZSkgKi8NCisJZGVzY19yZXNlcnZl
+ZAk9IDB4MCwJLyogcmVzZXJ2ZWQsIGluIHVzZSBieSB3cml0ZXIgKi8NCisJZGVzY19jb21taXR0
+ZWQJPSAweDEsCS8qIGNvbW1pdHRlZCBieSB3cml0ZXIsIGNvdWxkIGdldCByZW9wZW5lZCAqLw0K
+KwlkZXNjX2ZpbmFsaXplZAk9IDB4MiwJLyogY29tbWl0dGVkLCBubyBmdXJ0aGVyIG1vZGlmaWNh
+dGlvbiBhbGxvd2VkICovDQorCWRlc2NfcmV1c2FibGUJPSAweDMsCS8qIGZyZWUsIG5vdCB5ZXQg
+dXNlZCBieSBhbnkgd3JpdGVyICovDQorfTsNCisNCisjZGVmaW5lIERFU0NfU1ZfQklUUwkJKHNp
+emVvZih1bnNpZ25lZCBsb25nKSAqIDgpDQorI2RlZmluZSBERVNDX0ZMQUdTX1NISUZUCShERVND
+X1NWX0JJVFMgLSAyKQ0KKyNkZWZpbmUgREVTQ19GTEFHU19NQVNLCQkoM1VMIDw8IERFU0NfRkxB
+R1NfU0hJRlQpDQorI2RlZmluZSBERVNDX1NUQVRFKHN2KQkJKDNVTCAmIChzdiA+PiBERVNDX0ZM
+QUdTX1NISUZUKSkNCisjZGVmaW5lIERFU0NfSURfTUFTSwkJKH5ERVNDX0ZMQUdTX01BU0spDQor
+I2RlZmluZSBERVNDX0lEKHN2KQkJKChzdikgJiBERVNDX0lEX01BU0spDQorDQorLyoNCisgKiBn
+ZXRfZGVzY19zdGF0ZSgpIHRha2VuIGZyb20ga2VybmVsIHNvdXJjZToNCisgKg0KKyAqIGtlcm5l
+bC9wcmludGsvcHJpbnRrX3JpbmdidWZmZXIuYw0KKyAqLw0KKw0KKy8qIFF1ZXJ5IHRoZSBzdGF0
+ZSBvZiBhIGRlc2NyaXB0b3IuICovDQorc3RhdGljIGVudW0gZGVzY19zdGF0ZSBnZXRfZGVzY19z
+dGF0ZSh1bnNpZ25lZCBsb25nIGlkLA0KKwkJCQkgICAgICB1bnNpZ25lZCBsb25nIHN0YXRlX3Zh
+bCkNCit7DQorCWlmIChpZCAhPSBERVNDX0lEKHN0YXRlX3ZhbCkpDQorCQlyZXR1cm4gZGVzY19t
+aXNzOw0KKw0KKwlyZXR1cm4gREVTQ19TVEFURShzdGF0ZV92YWwpOw0KK30NCisNCiBzdGF0aWMg
+dm9pZA0KIGR1bXBfcmVjb3JkKHN0cnVjdCBwcmJfbWFwICptLCB1bnNpZ25lZCBsb25nIGlkKQ0K
+IHsNCiAJdW5zaWduZWQgbG9uZyBsb25nIHRzX25zZWM7DQogCXVuc2lnbmVkIGxvbmcgc3RhdGVf
+dmFyOw0KIAl1bnNpZ25lZCBzaG9ydCB0ZXh0X2xlbjsNCisJZW51bSBkZXNjX3N0YXRlIHN0YXRl
+Ow0KIAl1bnNpZ25lZCBsb25nIGJlZ2luOw0KIAl1bnNpZ25lZCBsb25nIG5leHQ7DQogCWNoYXIg
+YnVmW0JVRlNJWkVdOw0KQEAgLTQ1LDcgKzc4LDggQEAgZHVtcF9yZWNvcmQoc3RydWN0IHByYl9t
+YXAgKm0sIHVuc2lnbmVkIGxvbmcgaWQpDQogDQogCS8qIHNraXAgbm9uLWNvbW1pdHRlZCByZWNv
+cmQgKi8NCiAJc3RhdGVfdmFyID0gVUxPTkcoZGVzYyArIE9GRlNFVChwcmJfZGVzYy5zdGF0ZV92
+YXIpICsgT0ZGU0VUKGF0b21pY19sb25nX3QuY291bnRlcikpOw0KLQlpZiAoKHN0YXRlX3ZhciAm
+IERFU0NfRkxBR1NfTUFTSykgIT0gREVTQ19DT01NSVRURURfTUFTSykNCisJc3RhdGUgPSBnZXRf
+ZGVzY19zdGF0ZShpZCwgc3RhdGVfdmFyKTsNCisJaWYgKHN0YXRlICE9IGRlc2NfY29tbWl0dGVk
+ICYmIHN0YXRlICE9IGRlc2NfZmluYWxpemVkKQ0KIAkJcmV0dXJuOw0KIA0KIAliZWdpbiA9IFVM
+T05HKGRlc2MgKyBPRkZTRVQocHJiX2Rlc2MudGV4dF9ibGtfbHBvcykgKyBPRkZTRVQocHJiX2Rh
+dGFfYmxrX2xwb3MuYmVnaW4pKSAlDQotLSANCjIuMjAuMQ0KDQpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2tleGVjCg==
