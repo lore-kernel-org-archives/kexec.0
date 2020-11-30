@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kjmEq-0004jM-A6
- for kexec@lists.infradead.org; Mon, 30 Nov 2020 16:41:21 +0000
-Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 1602925BE42
- for <kexec@lists.infradead.org>; Tue,  1 Dec 2020 03:41:19 +1100 (AEDT)
-Date: Mon, 30 Nov 2020 17:41:17 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools v2.0.21 preparation
-Message-ID: <20201130164117.GD20208@vergenet.net>
+Received: from mail.kernel.org ([198.145.29.99])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kjpeq-0006YQ-Cn
+ for kexec@lists.infradead.org; Mon, 30 Nov 2020 20:20:26 +0000
+Date: Mon, 30 Nov 2020 14:20:21 -0600
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH 1/3] x86/quirks: Scan all busses for early PCI quirks
+Message-ID: <20201130202021.GA1106292@bjorn-Precision-5520>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <CAHD1Q_yfFYrfAEHTA3mW25hK9DFFYnKQ2_1HCEnL4m=bc=rLfg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,67 +22,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Guilherme Piccoli <gpiccoli@canonical.com>
+Cc: Guowen Shan <gshan@redhat.com>, linux-pci@vger.kernel.org, Pingfan Liu <kernelfans@gmail.com>, andi@firstfloor.org, "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>, x86@kernel.org, Sinan Kaya <okaya@kernel.org>, Ingo Molnar <mingo@redhat.com>, Jay Vosburgh <jay.vosburgh@canonical.com>, Dave Young <dyoung@redhat.com>, Gavin Guo <gavin.guo@canonical.com>, Borislav Petkov <bp@alien8.de>, Bjorn Helgaas <bhelgaas@google.com>, Thomas Gleixner <tglx@linutronix.de>, kexec mailing list <kexec@lists.infradead.org>, "Guilherme G. Piccoli" <kernel@gpiccoli.net>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, LKML <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Dan Streetman <ddstreet@canonical.com>, lukas@wunner.de, "Eric W. Biederman" <ebiederm@xmission.com>
 
-Hi all,
+On Wed, Nov 18, 2020 at 07:36:08PM -0300, Guilherme Piccoli wrote:
+> Thanks a lot Bjorn! I confess except for PPC64 Server machines, I
+> never saw other "domains" or segments. Is it common in x86 to have
+> that? The early_quirks() are restricted to the first segment, no
+> matter how many host bridges we have in segment 0000?
 
-After somewhat of a hiatus between releases - sorry about that -
-I am planning to release kexec-tools v2.0.21 in the next two weeks
-to roughly coincide with the release of the v5.10 kernel.
+I don't know whether it's *common* to have multiple domains on x86,
+but they're definitely used on large systems.  This includes some
+lspci info from an HPE Superdome Flex system:
+https://lore.kernel.org/lkml/5350E02A-6457-41A8-8F33-AF67BFDAEE3E@fb.com/
 
-I would like to ask interested parties to send any patches they would like
-included in v2.0.21 within one week so that I can make an rc release.
+The early quirks in arch/x86/kernel/early-quirks.c (not the
+DECLARE_PCI_FIXUP_EARLY quirks in drivers/pci/quirks.c) are restricted
+to segment 0, no matter how many host bridges there are.  This is
+because they use read_pci_config_16(), which uses a config access
+mechanism that has no provision for a segment number.
 
-For reference the patches queued up since v2.0.20 are as follows:
-
-d4eaff6 zlib: fix resource leak when gzdirect failed
-4149df9 printk: add support for lockless ringbuffer
-6b5667d x86_64: allow ELFCLASS32 for x32 support
-5c7f47d i386: fix string formatting-related warnings
-3dce5ce i386/kexec-mb2-x86.c: cast ints to uintptr_t before pointers to avoid warnings
-6caad4c configure.ac, arch/x86_64: handle x32 as subarch of x86_64 and don't specify -mcmodel=large there
-9d33ea5 config: update to latest config.{sub,guess}, install-sh
-1e9de8e arm64: Add purgatory printing
-70cca82 kexec: Fix snprintf related compilation warnings
-15fc8cb vmcore-dmesg/man page: Update the vmcore-dmesg man page
-9fd2189 kexec-tools: Add some missing free() calls
-ec53791 kexec-tools: Fix a prompt message when crashkernel is not reserved
-7bd2516 kexec-tools: mips: Remove commandline parameter "mem"
-a47b10c kexec/kexec.c: Add missing close() call
-16168f8 AUTHORS: Update email address for Khalid
-01144be MIPS: Fix compile warnnings in kexec-elf-mips.c
-24884d1 mips: kexec-elf-mips: fix not free in elf_mips_load()
-12e643a kexec-tools: Check callback first in kexec_iomem_for_each_line()
-7a576da arm: Increase zImage length after getting the tag
-f22b6aa kexec-tools: fix the unintended fallthrough when '-d' option is used
-74c7c36 arm: redefine OPT_APPEND and OPT_RAMDISK
-5dc72de kexec-tools: s390: Reset kernel command line on syscall fallback
-65441fb kexec-xen: Introduce --exec-live-update to trigger a live update
-b13984c kexec: Introduce --load-live-update for xen
-41a9b98 kexec-xen: Introduce xen_get_kexec_range to wrap xc_kexec_get_range
-cc087b1 kexec-tools: Remove duplicated variable declarations
-cbbee58 Removing condition that will never be met after calls xmalloc and xrealloc
-618799e kexec: support parsing the string "Reserved" to get the correct e820 reserved region
-9cf7212 kexec-tools: Reset getopt before falling back to legacy syscall
-4f77da6 kexec-tools: Fix kexec_file_load(2) error handling
-a4afe68 crashdump-ppc64: crashkernel-base and crashkernel-size are big-endian
-2c9f26e kexec: build multiboot2 for i386
-66b151d ARM: Use mmap for zImage initrd
-2572b8d arm64: kdump: deal with a lot of resource entries in /proc/iomem
-f736104 arm64: kexec: allocate memory space avoiding reserved regions
-cf977b1 kexec: add variant helper functions for handling memory regions
-bd07796 kexec-tools: Fix conversion overflow when compiling on 32-bit platforms
-775f258 kexec-tools: Fix possible out-of-bounds access in ifdown
-470d5c4 kexec: add support for PARISC architecture
-b54816e kexec/arm: undefine __NR_kexec_file_load for arm
-ed2d6e3 i386/kexec-mb2-x86.c: Fix compilation warning
-a46c686 vmcore-dmesg/vmcore-dmesg.c: Fix shifting error reported by cppcheck
-fa3f0ed Limit the size of vmcore-dmesg.txt to 2G
-a7c4cb8 Cleanup: move it back from util_lib/elf_info.c
-14ad054 Fix an error definition about the variable 'fname'
-545c811 Cleanup: remove the read_elf_kcore()
-23b67f0 x86: Fix PAGE_OFFSET for kernels since 4.20
-77c8824 kexec-tools 2.0.20.git
+Bjorn
 
 _______________________________________________
 kexec mailing list
