@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kjmCl-0004D9-0j
- for kexec@lists.infradead.org; Mon, 30 Nov 2020 16:39:11 +0000
-Date: Mon, 30 Nov 2020 17:39:08 +0100
+ id 1kjmEq-0004jM-A6
+ for kexec@lists.infradead.org; Mon, 30 Nov 2020 16:41:21 +0000
+Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 1602925BE42
+ for <kexec@lists.infradead.org>; Tue,  1 Dec 2020 03:41:19 +1100 (AEDT)
+Date: Mon, 30 Nov 2020 17:41:17 +0100
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] dt-ops: fix memory leak when new_node malloc fails
-Message-ID: <20201130163907.GC20208@vergenet.net>
-References: <20201130064156.2208-1-qiuguorui1@huawei.com>
+Subject: [ANNOUNCE] kexec-tools v2.0.21 preparation
+Message-ID: <20201130164117.GD20208@vergenet.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20201130064156.2208-1-qiuguorui1@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,45 +24,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: qiuguorui1 <qiuguorui1@huawei.com>
-Cc: leeyou.li@huawei.com, bhsharma@redhat.com, kexec@lists.infradead.org, zengweilin@huawei.com
+To: kexec@lists.infradead.org
 
-On Mon, Nov 30, 2020 at 02:41:56PM +0800, qiuguorui1 wrote:
-> In function dtb_set_property, when malloc new_node fails,
-> we need to free new_dtb before return.
-> 
-> Fixes: f56cbcf4c2766 ("kexec/dt-ops.c: Fix '/chosen' v/s 'chosen' node
-> being passed to fdt helper functions")
-> Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
-> ---
->  kexec/dt-ops.c | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
-> index dd2feaa..cc5feae 100644
-> --- a/kexec/dt-ops.c
-> +++ b/kexec/dt-ops.c
-> @@ -89,6 +89,7 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
->  	new_node = malloc(strlen("/") + strlen(node) + 1);
->  	if (!new_node) {
->  		dbgprintf("%s: malloc failed\n", __func__);
-> +		free(new_dtb);
+Hi all,
 
-Can we use the goto idiom here,
-as is used elsewhere in this function?
+After somewhat of a hiatus between releases - sorry about that -
+I am planning to release kexec-tools v2.0.21 in the next two weeks
+to roughly coincide with the release of the v5.10 kernel.
 
->  		return -ENOMEM;
->  	}
->  
-> -- 
-> 2.12.3
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+I would like to ask interested parties to send any patches they would like
+included in v2.0.21 within one week so that I can make an rc release.
+
+For reference the patches queued up since v2.0.20 are as follows:
+
+d4eaff6 zlib: fix resource leak when gzdirect failed
+4149df9 printk: add support for lockless ringbuffer
+6b5667d x86_64: allow ELFCLASS32 for x32 support
+5c7f47d i386: fix string formatting-related warnings
+3dce5ce i386/kexec-mb2-x86.c: cast ints to uintptr_t before pointers to avoid warnings
+6caad4c configure.ac, arch/x86_64: handle x32 as subarch of x86_64 and don't specify -mcmodel=large there
+9d33ea5 config: update to latest config.{sub,guess}, install-sh
+1e9de8e arm64: Add purgatory printing
+70cca82 kexec: Fix snprintf related compilation warnings
+15fc8cb vmcore-dmesg/man page: Update the vmcore-dmesg man page
+9fd2189 kexec-tools: Add some missing free() calls
+ec53791 kexec-tools: Fix a prompt message when crashkernel is not reserved
+7bd2516 kexec-tools: mips: Remove commandline parameter "mem"
+a47b10c kexec/kexec.c: Add missing close() call
+16168f8 AUTHORS: Update email address for Khalid
+01144be MIPS: Fix compile warnnings in kexec-elf-mips.c
+24884d1 mips: kexec-elf-mips: fix not free in elf_mips_load()
+12e643a kexec-tools: Check callback first in kexec_iomem_for_each_line()
+7a576da arm: Increase zImage length after getting the tag
+f22b6aa kexec-tools: fix the unintended fallthrough when '-d' option is used
+74c7c36 arm: redefine OPT_APPEND and OPT_RAMDISK
+5dc72de kexec-tools: s390: Reset kernel command line on syscall fallback
+65441fb kexec-xen: Introduce --exec-live-update to trigger a live update
+b13984c kexec: Introduce --load-live-update for xen
+41a9b98 kexec-xen: Introduce xen_get_kexec_range to wrap xc_kexec_get_range
+cc087b1 kexec-tools: Remove duplicated variable declarations
+cbbee58 Removing condition that will never be met after calls xmalloc and xrealloc
+618799e kexec: support parsing the string "Reserved" to get the correct e820 reserved region
+9cf7212 kexec-tools: Reset getopt before falling back to legacy syscall
+4f77da6 kexec-tools: Fix kexec_file_load(2) error handling
+a4afe68 crashdump-ppc64: crashkernel-base and crashkernel-size are big-endian
+2c9f26e kexec: build multiboot2 for i386
+66b151d ARM: Use mmap for zImage initrd
+2572b8d arm64: kdump: deal with a lot of resource entries in /proc/iomem
+f736104 arm64: kexec: allocate memory space avoiding reserved regions
+cf977b1 kexec: add variant helper functions for handling memory regions
+bd07796 kexec-tools: Fix conversion overflow when compiling on 32-bit platforms
+775f258 kexec-tools: Fix possible out-of-bounds access in ifdown
+470d5c4 kexec: add support for PARISC architecture
+b54816e kexec/arm: undefine __NR_kexec_file_load for arm
+ed2d6e3 i386/kexec-mb2-x86.c: Fix compilation warning
+a46c686 vmcore-dmesg/vmcore-dmesg.c: Fix shifting error reported by cppcheck
+fa3f0ed Limit the size of vmcore-dmesg.txt to 2G
+a7c4cb8 Cleanup: move it back from util_lib/elf_info.c
+14ad054 Fix an error definition about the variable 'fname'
+545c811 Cleanup: remove the read_elf_kcore()
+23b67f0 x86: Fix PAGE_OFFSET for kernels since 4.20
+77c8824 kexec-tools 2.0.20.git
 
 _______________________________________________
 kexec mailing list
