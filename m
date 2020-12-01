@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+Received: from szxga06-in.huawei.com ([45.249.212.32])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kjw4a-0003Gg-5H
- for kexec@lists.infradead.org; Tue, 01 Dec 2020 03:11:27 +0000
-From: qiuguorui <qiuguorui1@huawei.com>
-Subject: Re: [PATCH] dt-ops: fix memory leak when new_node malloc fails
-Date: Tue, 1 Dec 2020 03:11:05 +0000
-Message-ID: <85F0D3A887C4C146A2824A628E698AE52009197D@dggeml525-mbx.china.huawei.com>
-Content-Language: zh-CN
+ id 1kjwfQ-0006zM-Ge
+ for kexec@lists.infradead.org; Tue, 01 Dec 2020 03:49:29 +0000
+From: qiuguorui1 <qiuguorui1@huawei.com>
+Subject: [PATCH v2] dt-ops: fix memory leak when new_node malloc fails
+Date: Tue, 1 Dec 2020 12:06:16 +0800
+Message-ID: <20201201040616.18618-1-qiuguorui1@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -17,56 +16,48 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: "Liyou (leeyou, RTOS)" <leeyou.li@huawei.com>, "bhsharma@redhat.com" <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Zengweilin <zengweilin@huawei.com>
+To: kexec@lists.infradead.org, bhsharma@redhat.com
+Cc: qiuguorui1@huawei.com, horms@verge.net.au, leeyou.li@huawei.com, zengweilin@huawei.com
 
-T24gMjAyMC8xMi8xIDAwOjM5LCBTaW1vbiBIb3JtYW4gd3JvdGU6DQo+T24gTW9uLCBOb3YgMzAs
-IDIwMjAgYXQgMDI6NDE6NTZQTSArMDgwMCwgcWl1Z3VvcnVpMSB3cm90ZToNCj4+IEluIGZ1bmN0
-aW9uIGR0Yl9zZXRfcHJvcGVydHksIHdoZW4gbWFsbG9jIG5ld19ub2RlIGZhaWxzLA0KPj4gd2Ug
-bmVlZCB0byBmcmVlIG5ld19kdGIgYmVmb3JlIHJldHVybi4NCj4+IA0KPj4gRml4ZXM6IGY1NmNi
-Y2Y0YzI3NjYgKCJrZXhlYy9kdC1vcHMuYzogRml4ICcvY2hvc2VuJyB2L3MgJ2Nob3Nlbicgbm9k
-ZQ0KPj4gYmVpbmcgcGFzc2VkIHRvIGZkdCBoZWxwZXIgZnVuY3Rpb25zIikNCj4+IFNpZ25lZC1v
-ZmYtYnk6IHFpdWd1b3J1aTEgPHFpdWd1b3J1aTFAaHVhd2VpLmNvbT4NCj4+IC0tLQ0KPj4gIGtl
-eGVjL2R0LW9wcy5jIHwgMSArDQo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+
-PiANCj4+IGRpZmYgLS1naXQgYS9rZXhlYy9kdC1vcHMuYyBiL2tleGVjL2R0LW9wcy5jDQo+PiBp
-bmRleCBkZDJmZWFhLi5jYzVmZWFlIDEwMDY0NA0KPj4gLS0tIGEva2V4ZWMvZHQtb3BzLmMNCj4+
-ICsrKyBiL2tleGVjL2R0LW9wcy5jDQo+PiBAQCAtODksNiArODksNyBAQCBpbnQgZHRiX3NldF9w
-cm9wZXJ0eShjaGFyICoqZHRiLCBvZmZfdCAqZHRiX3NpemUsIGNvbnN0IGNoYXIgKm5vZGUsDQo+
-PiAgCW5ld19ub2RlID0gbWFsbG9jKHN0cmxlbigiLyIpICsgc3RybGVuKG5vZGUpICsgMSk7DQo+
-PiAgCWlmICghbmV3X25vZGUpIHsNCj4+ICAJCWRiZ3ByaW50ZigiJXM6IG1hbGxvYyBmYWlsZWRc
-biIsIF9fZnVuY19fKTsNCj4+ICsJCWZyZWUobmV3X2R0Yik7DQo+DQo+Q2FuIHdlIHVzZSB0aGUg
-Z290byBpZGlvbSBoZXJlLA0KPmFzIGlzIHVzZWQgZWxzZXdoZXJlIGluIHRoaXMgZnVuY3Rpb24/
-DQpTdXJlISBUaGFua3MgZm9yIHlvdXIgYWR2aWNlLEkgd2lsbCBzZW5kIGEgdjIgcGF0Y2ggc29v
-bi4NCj4+ICAJCXJldHVybiAtRU5PTUVNOw0KPj4gIAl9DQo+PiAgDQo+PiAtLSANCj4+IDIuMTIu
-Mw0KDQotLS0tLdPKvP7Urbz+LS0tLS0NCreivP7IyzogU2ltb24gSG9ybWFuIFttYWlsdG86aG9y
-bXNAdmVyZ2UubmV0LmF1XSANCreiy83KsbzkOiAyMDIwxOoxMtTCMcjVIDA6MzkNCsrVvP7Iyzog
-cWl1Z3VvcnVpIDxxaXVndW9ydWkxQGh1YXdlaS5jb20+DQqzrcvNOiBrZXhlY0BsaXN0cy5pbmZy
-YWRlYWQub3JnOyBiaHNoYXJtYUByZWRoYXQuY29tOyBMaXlvdSAobGVleW91LCBSVE9TKSA8bGVl
-eW91LmxpQGh1YXdlaS5jb20+OyBaZW5nd2VpbGluIDx6ZW5nd2VpbGluQGh1YXdlaS5jb20+DQrW
-98ziOiBSZTogW1BBVENIXSBkdC1vcHM6IGZpeCBtZW1vcnkgbGVhayB3aGVuIG5ld19ub2RlIG1h
-bGxvYyBmYWlscw0KDQpPbiBNb24sIE5vdiAzMCwgMjAyMCBhdCAwMjo0MTo1NlBNICswODAwLCBx
-aXVndW9ydWkxIHdyb3RlOg0KPiBJbiBmdW5jdGlvbiBkdGJfc2V0X3Byb3BlcnR5LCB3aGVuIG1h
-bGxvYyBuZXdfbm9kZSBmYWlscywNCj4gd2UgbmVlZCB0byBmcmVlIG5ld19kdGIgYmVmb3JlIHJl
-dHVybi4NCj4gDQo+IEZpeGVzOiBmNTZjYmNmNGMyNzY2ICgia2V4ZWMvZHQtb3BzLmM6IEZpeCAn
-L2Nob3Nlbicgdi9zICdjaG9zZW4nIG5vZGUNCj4gYmVpbmcgcGFzc2VkIHRvIGZkdCBoZWxwZXIg
-ZnVuY3Rpb25zIikNCj4gU2lnbmVkLW9mZi1ieTogcWl1Z3VvcnVpMSA8cWl1Z3VvcnVpMUBodWF3
-ZWkuY29tPg0KPiAtLS0NCj4gIGtleGVjL2R0LW9wcy5jIHwgMSArDQo+ICAxIGZpbGUgY2hhbmdl
-ZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9rZXhlYy9kdC1vcHMuYyBiL2tl
-eGVjL2R0LW9wcy5jDQo+IGluZGV4IGRkMmZlYWEuLmNjNWZlYWUgMTAwNjQ0DQo+IC0tLSBhL2tl
-eGVjL2R0LW9wcy5jDQo+ICsrKyBiL2tleGVjL2R0LW9wcy5jDQo+IEBAIC04OSw2ICs4OSw3IEBA
-IGludCBkdGJfc2V0X3Byb3BlcnR5KGNoYXIgKipkdGIsIG9mZl90ICpkdGJfc2l6ZSwgY29uc3Qg
-Y2hhciAqbm9kZSwNCj4gIAluZXdfbm9kZSA9IG1hbGxvYyhzdHJsZW4oIi8iKSArIHN0cmxlbihu
-b2RlKSArIDEpOw0KPiAgCWlmICghbmV3X25vZGUpIHsNCj4gIAkJZGJncHJpbnRmKCIlczogbWFs
-bG9jIGZhaWxlZFxuIiwgX19mdW5jX18pOw0KPiArCQlmcmVlKG5ld19kdGIpOw0KDQpDYW4gd2Ug
-dXNlIHRoZSBnb3RvIGlkaW9tIGhlcmUsDQphcyBpcyB1c2VkIGVsc2V3aGVyZSBpbiB0aGlzIGZ1
-bmN0aW9uPw0KDQo+ICAJCXJldHVybiAtRU5PTUVNOw0KPiAgCX0NCj4gIA0KPiAtLSANCj4gMi4x
-Mi4zDQo+IA0KPiANCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18NCj4ga2V4ZWMgbWFpbGluZyBsaXN0DQo+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcN
-Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYw0KPiAN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+In function dtb_set_property, when malloc new_node fails,
+we need to free new_dtb before return.
+
+Fixes: f56cbcf4c2766 ("kexec/dt-ops.c: Fix '/chosen' v/s 'chosen' node
+being passed to fdt helper functions")
+Signed-off-by: qiuguorui1 <qiuguorui1@huawei.com>
+
+v2:
+  use goto instead of free here,based on Simon Horman's advice:
+  "Can we use the goto idiom here, as is used elsewhere in this function?"
+
+v1: http://lists.infradead.org/pipermail/kexec/2020-November/021809.html
+---
+ kexec/dt-ops.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/dt-ops.c b/kexec/dt-ops.c
+index dd2feaa..0a96b75 100644
+--- a/kexec/dt-ops.c
++++ b/kexec/dt-ops.c
+@@ -89,7 +89,8 @@ int dtb_set_property(char **dtb, off_t *dtb_size, const char *node,
+ 	new_node = malloc(strlen("/") + strlen(node) + 1);
+ 	if (!new_node) {
+ 		dbgprintf("%s: malloc failed\n", __func__);
+-		return -ENOMEM;
++		result = -ENOMEM;
++		goto on_error;
+ 	}
+ 
+ 	strcpy(new_node, "/");
+-- 
+2.12.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
