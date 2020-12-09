@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 8 Dec 2020 15:06:14 +0000
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2 4/4] compat: remove some compat entry points
-Message-ID: <20201208150614.GA15765@infradead.org>
-References: <20201102123151.2860165-1-arnd@kernel.org>
- <20201102123151.2860165-5-arnd@kernel.org>
- <20201103083703.GD9092@infradead.org>
- <CAK8P3a2m_VYiTY7Rg+3kfohPc2W=jHLh7dF4aVffSpwMa7C=4Q@mail.gmail.com>
+Received: from userp2130.oracle.com ([156.151.31.86])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kmtQk-0000B8-Ol
+ for kexec@lists.infradead.org; Wed, 09 Dec 2020 06:58:31 +0000
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAK8P3a2m_VYiTY7Rg+3kfohPc2W=jHLh7dF4aVffSpwMa7C=4Q@mail.gmail.com>
+Message-ID: <X9B03LFICh/QykQ6@mwanda>
+Date: Tue, 8 Dec 2020 22:55:24 -0800 (PST)
+From: Dan Carpenter <dan.carpenter@oracle.com>
+Subject: [PATCH] kexec: Fix error code in kexec_calculate_store_digests()
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,23 +20,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-arch <linux-arch@vger.kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Arnd Bergmann <arnd@arndb.de>, Brian Gerst <brgerst@gmail.com>, kexec@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Linux-MM <linux-mm@kvack.org>, Borislav Petkov <bp@alien8.de>, Alexander Viro <viro@zeniv.linux.org.uk>, Andy Lutomirski <luto@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, Andrew Morton <akpm@linux-foundation.org>, Ingo Molnar <mingo@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Eric Biederman <ebiederm@xmission.com>
+To: Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>
+Cc: kernel-janitors@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, Nov 03, 2020 at 10:45:54AM +0100, Arnd Bergmann wrote:
-> I had it there originally, I guess I should have left it there ;-)
-> 
-> When I changed it, I was considering to do the same for additional
-> syscalls that have very small differences now (timer_create,
-> rt_sigqueueinfo, rt_sigpending, recvmsg, sendmsg) and use
-> in_compat_syscall() there, but then I decided against that.
-> 
-> In the end, I did like the split, as I found the smaller three
-> patches that contain the real change easier to review, and
-> it turns the larger patch at the end into a more obvious
-> transformation.
+Return -ENOMEM on allocation failure instead of returning success.
 
-Oh well, let's just keep the split as-is then.
+Fixes: a43cac0d9dc2 ("kexec: split kexec_file syscall code to kexec_file.c")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+---
+ kernel/kexec_file.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index b02086d70492..9570f380a825 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -735,8 +735,10 @@ static int kexec_calculate_store_digests(struct kimage *image)
+ 
+ 	sha_region_sz = KEXEC_SEGMENT_MAX * sizeof(struct kexec_sha_region);
+ 	sha_regions = vzalloc(sha_region_sz);
+-	if (!sha_regions)
++	if (!sha_regions) {
++		ret = -ENOMEM;
+ 		goto out_free_desc;
++	}
+ 
+ 	desc->tfm   = tfm;
+ 
+-- 
+2.29.2
+
 
 _______________________________________________
 kexec mailing list
