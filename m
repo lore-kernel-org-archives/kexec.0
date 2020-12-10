@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kmz4r-0000lZ-K4
- for kexec@lists.infradead.org; Wed, 09 Dec 2020 13:00:18 +0000
-Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
- by kirsty.vergenet.net (Postfix) with ESMTPA id A1AE625B7C9
- for <kexec@lists.infradead.org>; Thu, 10 Dec 2020 00:00:15 +1100 (AEDT)
-Date: Wed, 9 Dec 2020 14:00:13 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.21-rc1
-Message-ID: <20201209130013.GD21612@vergenet.net>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1knBKg-0004qh-0I
+ for kexec@lists.infradead.org; Thu, 10 Dec 2020 02:05:28 +0000
+Date: Thu, 10 Dec 2020 10:05:08 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH] kexec: Fix error code in kexec_calculate_store_digests()
+Message-ID: <20201210020508.GB2950@dhcp-128-65.nay.redhat.com>
+References: <X9B03LFICh/QykQ6@mwanda>
 MIME-Version: 1.0
 Content-Disposition: inline
+In-Reply-To: <X9B03LFICh/QykQ6@mwanda>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,86 +23,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Dan Carpenter <dan.carpenter@oracle.com>
+Cc: kernel-janitors@vger.kernel.org, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-kernel@vger.kernel.org
 
-Hi all,
+On 12/08/20 at 10:55pm, Dan Carpenter wrote:
+> Return -ENOMEM on allocation failure instead of returning success.
+> 
+> Fixes: a43cac0d9dc2 ("kexec: split kexec_file syscall code to kexec_file.c")
+> Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+> ---
+>  kernel/kexec_file.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index b02086d70492..9570f380a825 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -735,8 +735,10 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  
+>  	sha_region_sz = KEXEC_SEGMENT_MAX * sizeof(struct kexec_sha_region);
+>  	sha_regions = vzalloc(sha_region_sz);
+> -	if (!sha_regions)
+> +	if (!sha_regions) {
+> +		ret = -ENOMEM;
+>  		goto out_free_desc;
+> +	}
+>  
+>  	desc->tfm   = tfm;
+>  
+> -- 
+> 2.29.2
+> 
 
-I am happy to announce the release of kexec-tools 2.0.21-rc1.
+Good catch, thanks!
 
-This is an incremental feature pre-release.
+Acked-by: Dave Young <dyoung@redhat.com>
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.21
-in a weeks time. Testing of 2.0.21-rc1 would be greatly appreciated.
+Thanks
+Dave
 
-I do not have any outstanding changes for 2.0.21 at this time.
-And I would like to only accept bug fixes at this time and take
-features patches once 2.0.21 has been released.
-
-The pre-release can be downloaded from kernel.org:
-
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.21-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
-
-I have also tagged it in git:
-
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-
-For reference the changes since v2.0.20 are:
-
-018ae8d kexec-tools 2.0.21-rc1
-0eac640 kexec: mips: Fix mem parameters
-fa91709 dt-ops: fix memory leak when new_node malloc fails
-d4eaff6 zlib: fix resource leak when gzdirect failed
-4149df9 printk: add support for lockless ringbuffer
-6b5667d x86_64: allow ELFCLASS32 for x32 support
-5c7f47d i386: fix string formatting-related warnings
-3dce5ce i386/kexec-mb2-x86.c: cast ints to uintptr_t before pointers to avoid warnings
-6caad4c configure.ac, arch/x86_64: handle x32 as subarch of x86_64 and don't specify -mcmodel=large there
-9d33ea5 config: update to latest config.{sub,guess}, install-sh
-1e9de8e arm64: Add purgatory printing
-70cca82 kexec: Fix snprintf related compilation warnings
-15fc8cb vmcore-dmesg/man page: Update the vmcore-dmesg man page
-9fd2189 kexec-tools: Add some missing free() calls
-ec53791 kexec-tools: Fix a prompt message when crashkernel is not reserved
-7bd2516 kexec-tools: mips: Remove commandline parameter "mem"
-a47b10c kexec/kexec.c: Add missing close() call
-16168f8 AUTHORS: Update email address for Khalid
-01144be MIPS: Fix compile warnnings in kexec-elf-mips.c
-24884d1 mips: kexec-elf-mips: fix not free in elf_mips_load()
-12e643a kexec-tools: Check callback first in kexec_iomem_for_each_line()
-7a576da arm: Increase zImage length after getting the tag
-f22b6aa kexec-tools: fix the unintended fallthrough when '-d' option is used
-74c7c36 arm: redefine OPT_APPEND and OPT_RAMDISK
-5dc72de kexec-tools: s390: Reset kernel command line on syscall fallback
-65441fb kexec-xen: Introduce --exec-live-update to trigger a live update
-b13984c kexec: Introduce --load-live-update for xen
-41a9b98 kexec-xen: Introduce xen_get_kexec_range to wrap xc_kexec_get_range
-cc087b1 kexec-tools: Remove duplicated variable declarations
-cbbee58 Removing condition that will never be met after calls xmalloc and xrealloc
-618799e kexec: support parsing the string "Reserved" to get the correct e820 reserved region
-9cf7212 kexec-tools: Reset getopt before falling back to legacy syscall
-4f77da6 kexec-tools: Fix kexec_file_load(2) error handling
-a4afe68 crashdump-ppc64: crashkernel-base and crashkernel-size are big-endian
-2c9f26e kexec: build multiboot2 for i386
-66b151d ARM: Use mmap for zImage initrd
-2572b8d arm64: kdump: deal with a lot of resource entries in /proc/iomem
-f736104 arm64: kexec: allocate memory space avoiding reserved regions
-cf977b1 kexec: add variant helper functions for handling memory regions
-bd07796 kexec-tools: Fix conversion overflow when compiling on 32-bit platforms
-775f258 kexec-tools: Fix possible out-of-bounds access in ifdown
-470d5c4 kexec: add support for PARISC architecture
-b54816e kexec/arm: undefine __NR_kexec_file_load for arm
-ed2d6e3 i386/kexec-mb2-x86.c: Fix compilation warning
-a46c686 vmcore-dmesg/vmcore-dmesg.c: Fix shifting error reported by cppcheck
-fa3f0ed Limit the size of vmcore-dmesg.txt to 2G
-a7c4cb8 Cleanup: move it back from util_lib/elf_info.c
-14ad054 Fix an error definition about the variable 'fname'
-545c811 Cleanup: remove the read_elf_kcore()
-23b67f0 x86: Fix PAGE_OFFSET for kernels since 4.20
-77c8824 kexec-tools 2.0.20.git
 
 _______________________________________________
 kexec mailing list
