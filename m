@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from elvis.franken.de ([193.175.24.41])
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kxZNa-0007y3-Ef
- for kexec@lists.infradead.org; Thu, 07 Jan 2021 17:47:23 +0000
-Date: Thu, 7 Jan 2021 18:26:20 +0100
-From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Subject: Re: [PATCH V3] MIPS: Loongson64: Add kexec/kdump support
-Message-ID: <20210107172620.GA13201@alpha.franken.de>
-References: <20201221120220.3186744-1-chenhuacai@kernel.org>
- <a671a323-768b-b461-2ce4-ecc1e92d4cc6@loongson.cn>
- <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1kxiWN-00055D-0L
+ for kexec@lists.infradead.org; Fri, 08 Jan 2021 03:33:04 +0000
+Date: Fri, 8 Jan 2021 11:32:48 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3 1/1] kdump: append uts_namespace.name offset to
+ VMCOREINFO
+Message-ID: <20210108033248.GA4959@MiWiFi-R3L-srv>
+References: <20200930102328.396488-1-egorenar@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
+In-Reply-To: <20200930102328.396488-1-egorenar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,43 +24,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Jinyang He <hejinyang@loongson.cn>, Baoquan He <bhe@redhat.com>, Youling Tang <tangyouling@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: gregkh@linuxfoundation.org, Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: lijiang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ktkhai@virtuozzo.com, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, christian.brauner@ubuntu.com, vgoyal@redhat.com, keescook@chromium.org
 
-On Thu, Dec 31, 2020 at 09:23:33AM +0800, Huacai Chen wrote:
-> > Thanks, :-)
-> > Jinyang
-> Any comments?
+On 09/30/20 at 12:23pm, Alexander Egorenkov wrote:
+> The offset of the field 'init_uts_ns.name' has changed
+> since commit 9a56493f6942 ("uts: Use generic ns_common::count").
 
-sure...
+This patch is merged into 5.11-rc1, but we met the makedumpfile failure
+of kdump test case in 5.10.0 kernel. Should affect 5.9 too since
+commit 9a56493f6942 is merged into 5.9-rc2.
 
-> > > --- a/arch/mips/kernel/relocate_kernel.S
-> > > +++ b/arch/mips/kernel/relocate_kernel.S
-> > > @@ -6,6 +6,7 @@
-> > >
-> > >   #include <asm/asm.h>
-> > >   #include <asm/asmmacro.h>
-> > > +#include <asm/cpu.h>
-> > >   #include <asm/regdef.h>
-> > >   #include <asm/mipsregs.h>
-> > >   #include <asm/stackframe.h>
-> > > @@ -133,6 +134,33 @@ LEAF(kexec_smp_wait)
-> > >   #else
-> > >       sync
-> > >   #endif
-> > > +
-> > > +#ifdef CONFIG_CPU_LOONGSON64
+Below tag and CC should have been added into patch when posted. 
 
-Is there a reason why you can't use the already existing infrastructure
-the way cavium-octeon is doing it ? If you can't please explain why
-so we can find a way to extend it. But having some sort of poking
-loongson registers in generic MIPS code is a non starter.
+Fixes: commit 9a56493f6942 ("uts: Use generic ns_common::count")
+Cc: <stable@vger.kernel.org>
 
-Thomas.
+Hi Greg,
 
--- 
-Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
-good idea.                                                [ RFC1925, 2.3 ]
+Do we still have chance to make it added into stable?
+
+Thanks
+Baoquan
+
+> 
+> Link: https://lore.kernel.org/r/159644978167.604812.1773586504374412107.stgit@localhost.localdomain
+> 
+> Make the offset of the field 'uts_namespace.name' available
+> in VMCOREINFO because tools like 'crash-utility' and
+> 'makedumpfile' must be able to read it from crash dumps.
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+> 
+> v2 -> v3:
+>  * Added documentation to vmcoreinfo.rst
+>  * Use the short form of the commit reference
+> 
+> v1 -> v2:
+>  * Improved commit message
+>  * Added link to the discussion of the uts namespace changes
+> 
+>  Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
+>  kernel/crash_core.c                            | 1 +
+>  2 files changed, 7 insertions(+)
+> 
+> diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> index e44a6c01f336..3861a25faae1 100644
+> --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
+> @@ -39,6 +39,12 @@ call.
+>  User-space tools can get the kernel name, host name, kernel release
+>  number, kernel version, architecture name and OS type from it.
+>  
+> +(uts_namespace, name)
+> +---------------------
+> +
+> +Offset of the name's member. Crash Utility and Makedumpfile get
+> +the start address of the init_uts_ns.name from this.
+> +
+>  node_online_map
+>  ---------------
+>  
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 106e4500fd53..173fdc261882 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -447,6 +447,7 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+>  
+>  	VMCOREINFO_SYMBOL(init_uts_ns);
+> +	VMCOREINFO_OFFSET(uts_namespace, name);
+>  	VMCOREINFO_SYMBOL(node_online_map);
+>  #ifdef CONFIG_MMU
+>  	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
+> -- 
+> 2.26.2
+> 
+
 
 _______________________________________________
 kexec mailing list
