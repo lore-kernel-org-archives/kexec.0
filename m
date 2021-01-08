@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410049.outbound.protection.outlook.com
- ([40.107.141.49] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from new4-smtp.messagingengine.com ([66.111.4.230])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1kxog9-0003rT-M1
- for kexec@lists.infradead.org; Fri, 08 Jan 2021 10:07:35 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v3 1/1] kdump: append uts_namespace.name offset to
- VMCOREINFO
-Date: Fri, 8 Jan 2021 10:07:07 +0000
-Message-ID: <OSBPR01MB1991DBFA6C4BD6818947EF6BDDAE0@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20200930102328.396488-1-egorenar@linux.ibm.com>
- <20210108033248.GA4959@MiWiFi-R3L-srv>
-In-Reply-To: <20210108033248.GA4959@MiWiFi-R3L-srv>
-Content-Language: ja-JP
+ id 1kxooM-0004bP-9E
+ for kexec@lists.infradead.org; Fri, 08 Jan 2021 10:16:03 +0000
+Subject: Re: [PATCH V3] MIPS: Loongson64: Add kexec/kdump support
+References: <20201221120220.3186744-1-chenhuacai@kernel.org>
+ <a671a323-768b-b461-2ce4-ecc1e92d4cc6@loongson.cn>
+ <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
+ <20210107172620.GA13201@alpha.franken.de>
+ <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Message-ID: <13b3f842-61e8-db13-67ff-7d2a9d894484@flygoat.com>
+Date: Fri, 8 Jan 2021 18:15:44 +0800
 MIME-Version: 1.0
+In-Reply-To: <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,111 +23,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "lijiang@redhat.com" <lijiang@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexander Egorenkov <egorenar@linux.ibm.com>, "ktkhai@virtuozzo.com" <ktkhai@virtuozzo.com>, "ebiederm@xmission.com" <ebiederm@xmission.com>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "dyoung@redhat.com" <dyoung@redhat.com>, "christian.brauner@ubuntu.com" <christian.brauner@ubuntu.com>, "vgoyal@redhat.com" <vgoyal@redhat.com>, "keescook@chromium.org" <keescook@chromium.org>
+To: Jinyang He <hejinyang@loongson.cn>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Huacai Chen <chenhuacai@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>, Youling Tang <tangyouling@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Baoquan,
-
------Original Message-----
-> On 09/30/20 at 12:23pm, Alexander Egorenkov wrote:
-> > The offset of the field 'init_uts_ns.name' has changed
-> > since commit 9a56493f6942 ("uts: Use generic ns_common::count").
-> 
-> This patch is merged into 5.11-rc1, but we met the makedumpfile failure
-> of kdump test case in 5.10.0 kernel. Should affect 5.9 too since
-> commit 9a56493f6942 is merged into 5.9-rc2.
-
-Hmm, commit 9a56493f6942 should have been merged into 5.11-rc1
-together with commit ca4a9241cc5e.
-
-Does your makedumpfile have the following patch?
-https://github.com/makedumpfile/makedumpfile/commit/54aec3878b3f91341e6bc735eda158cca5c54ec9
-
-or am I missing something?
-
-Thanks,
-Kazu
-
-> 
-> Below tag and CC should have been added into patch when posted.
-> 
-> Fixes: commit 9a56493f6942 ("uts: Use generic ns_common::count")
-> Cc: <stable@vger.kernel.org>
-> 
-> Hi Greg,
-> 
-> Do we still have chance to make it added into stable?
-> 
-> Thanks
-> Baoquan
-> 
-> >
-> > Link: https://lore.kernel.org/r/159644978167.604812.1773586504374412107.stgit@localhost.localdomain
-> >
-> > Make the offset of the field 'uts_namespace.name' available
-> > in VMCOREINFO because tools like 'crash-utility' and
-> > 'makedumpfile' must be able to read it from crash dumps.
-> >
-> > Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> > ---
-> >
-> > v2 -> v3:
-> >  * Added documentation to vmcoreinfo.rst
-> >  * Use the short form of the commit reference
-> >
-> > v1 -> v2:
-> >  * Improved commit message
-> >  * Added link to the discussion of the uts namespace changes
-> >
-> >  Documentation/admin-guide/kdump/vmcoreinfo.rst | 6 ++++++
-> >  kernel/crash_core.c                            | 1 +
-> >  2 files changed, 7 insertions(+)
-> >
-> > diff --git a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> > index e44a6c01f336..3861a25faae1 100644
-> > --- a/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> > +++ b/Documentation/admin-guide/kdump/vmcoreinfo.rst
-> > @@ -39,6 +39,12 @@ call.
-> >  User-space tools can get the kernel name, host name, kernel release
-> >  number, kernel version, architecture name and OS type from it.
-> >
-> > +(uts_namespace, name)
-> > +---------------------
-> > +
-> > +Offset of the name's member. Crash Utility and Makedumpfile get
-> > +the start address of the init_uts_ns.name from this.
-> > +
-> >  node_online_map
-> >  ---------------
-> >
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index 106e4500fd53..173fdc261882 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -447,6 +447,7 @@ static int __init crash_save_vmcoreinfo_init(void)
-> >  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-> >
-> >  	VMCOREINFO_SYMBOL(init_uts_ns);
-> > +	VMCOREINFO_OFFSET(uts_namespace, name);
-> >  	VMCOREINFO_SYMBOL(node_online_map);
-> >  #ifdef CONFIG_MMU
-> >  	VMCOREINFO_SYMBOL_ARRAY(swapper_pg_dir);
-> > --
-> > 2.26.2
-> >
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+5ZyoIDIwMjEvMS84IOS4i+WNiDY6MDcsIEppbnlhbmcgSGUg5YaZ6YGTOgo+IEhpLCBUaG9tYXMs
+Cj4KPiBPbiAwMS8wOC8yMDIxIDAxOjI2IEFNLCBUaG9tYXMgQm9nZW5kb2VyZmVyIHdyb3RlOgo+
+Pj4+PiAtLS0gYS9hcmNoL21pcHMva2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+Pj4+ICsrKyBi
+L2FyY2gvbWlwcy9rZXJuZWwvcmVsb2NhdGVfa2VybmVsLlMKPj4+Pj4gQEAgLTYsNiArNiw3IEBA
+Cj4+Pj4+Cj4+Pj4+IMKgwqAgI2luY2x1ZGUgPGFzbS9hc20uaD4KPj4+Pj4gwqDCoCAjaW5jbHVk
+ZSA8YXNtL2FzbW1hY3JvLmg+Cj4+Pj4+ICsjaW5jbHVkZSA8YXNtL2NwdS5oPgo+Pj4+PiDCoMKg
+ICNpbmNsdWRlIDxhc20vcmVnZGVmLmg+Cj4+Pj4+IMKgwqAgI2luY2x1ZGUgPGFzbS9taXBzcmVn
+cy5oPgo+Pj4+PiDCoMKgICNpbmNsdWRlIDxhc20vc3RhY2tmcmFtZS5oPgo+Pj4+PiBAQCAtMTMz
+LDYgKzEzNCwzMyBAQCBMRUFGKGtleGVjX3NtcF93YWl0KQo+Pj4+PiDCoMKgICNlbHNlCj4+Pj4+
+IMKgwqDCoMKgwqDCoCBzeW5jCj4+Pj4+IMKgwqAgI2VuZGlmCj4+Pj4+ICsKPj4+Pj4gKyNpZmRl
+ZiBDT05GSUdfQ1BVX0xPT05HU09ONjQKPj4gSXMgdGhlcmUgYSByZWFzb24gd2h5IHlvdSBjYW4n
+dCB1c2UgdGhlIGFscmVhZHkgZXhpc3RpbmcgaW5mcmFzdHJ1Y3R1cmUKPj4gdGhlIHdheSBjYXZp
+dW0tb2N0ZW9uIGlzIGRvaW5nIGl0ID8gSWYgeW91IGNhbid0IHBsZWFzZSBleHBsYWluIHdoeQo+
+PiBzbyB3ZSBjYW4gZmluZCBhIHdheSB0byBleHRlbmQgaXQuIEJ1dCBoYXZpbmcgc29tZSBzb3J0
+IG9mIHBva2luZwo+PiBsb29uZ3NvbiByZWdpc3RlcnMgaW4gZ2VuZXJpYyBNSVBTIGNvZGUgaXMg
+YSBub24gc3RhcnRlci4KPj4KPj4gVGhvbWFzLgo+Pgo+Cj4gVW5saWtlIHRoZSBjYXZpdW0tb2N0
+ZW9uIHBsYXRmb3JtLCB0aGUgTG9vbmdzb242NCBwbGF0Zm9ybSBuZWVkcyBzb21lIAo+IGNoYW5n
+ZXMuIEJlZm9yZSB0aGUga2VybmVsIHN0YXJ0cywgKGJlZm9yZSBlbnRlcmluZyB0aGUga2VybmVs
+X2VudHJ5KSwgCj4gZWFjaCBDUFUgaGFzIGl0cyBvd24gc3RhdGUgKHRoZSBTTVAgc3lzdGVtKS4g
+Rm9yIExvb25nc29uNjQsIG9ubHkgdGhlIAo+IGJvb3QgQ1BVIHdpbGwgZW50ZXIgdGhlIGtlcm5l
+bF9lbnRyeSwgYW5kIG90aGVyIENQVXMgd2lsbCBxdWVyeSB0aGVpciAKPiBtYWlsYm94IHZhbHVl
+IGluIGEgbG9vcC4gVGhpcyBpcyB3aGF0IHRoZSBCSU9TIGRvZXMgZm9yIHRoZSBDUFUuIEhlcmUg
+Cj4gaXMgZGlmZmVyZW50IGZyb20gY2F2aXVtLW9jdGVvbi4gQWxsIENQVXMgd2lsbCBlbnRlciB0
+aGUga2VybmVsX2VudHJ5IAo+IG9uIGNhdml1bS1vY3Rlb24gcGxhdGZvcm0uIFRoZW4gdGhlIGtl
+cm5lbF9lbnRyeV9zZXR1cCwgdGhlIGNvLUNQVXMgCj4gd2lsbCBlbnRlciB0aGUgcXVlcnkgbG9v
+cC4gSSBzYXcgdGhlIGtlcm5lbF9lbnRyeV9zZXR1cCBvZiBvdGhlciAKPiBwbGF0Zm9ybXMsIHN1
+Y2ggYXMgaXAyNywgbWFsdGEsIGFuZCBnZW5lcmljLiBUaGV5IGFyZSBub3QgbGlrZSAKPiBjYXZp
+dW0tb2N0ZW9uIGFuZCB0aGUgY28tQ1BVcyBlbnRlcmluZyB0aGUgbG9vcCBtYXkgYmUgZWFybGll
+ciB0aGFuIAo+IGVudGVyaW5nIGtlcm5lbF9lbnRyeS4gU28gSSBoYXZlIHJlYXNvbiB0byBndWVz
+cyB0aGF0IG1vc3QgU01QIHN5c3RlbSAKPiBwbGF0Zm9ybSBDUFVzIGFyZSBzaW1pbGFyIHRvIExv
+b25nc29uNjQuCgpIaSBKaW5neWFuZywKCkFzIEkgY29tbWVudGVkIGJlZm9yZSB5b3UgbWF5IHJl
+dXNlIHBsYXlfZGVhZCBsb2dpYyBpbiBMb29uZ3NvbidzIHNtcC5jLgoKPgo+IHJlbG9jYXRlX2tl
+cm5lbC5TIGlzIGxpa2UgQklPUyBkb2luZyBzIG9tZXRoaW5nIGZvciB0aGUgQ1BVLiBJdCBhbGxv
+d3MgCj4gdGhlIGJvb3QgQ1BVIHRvIHN0YXJ0IGZyb20gdGhlIG5ldyBrZXJuZWxfZW50cnkgYW5k
+IG1ha2VzIHRoZSBjby1DUFVzIAo+IGVudGVyIGEgbG9vcC4gVGhlIGFscmVhZHkgZXhpc3Rpbmcg
+aW5mcmFzdHJ1Y3R1cmUgbWF5IGJlIG1vcmUgc3VpdGFibGUgCj4gZm9yIG5vbi1zbXAgcGxhdGZv
+cm1zLiBBbHRob3VnaCB3ZSBjYW4gZG8gc29tZXRoaW5nIHdpdGggCj4gcGxhdF9zbXBfb3BzLmtl
+eGVjX25vbmJvb3RfY3B1LCBtb3JlIG5ldyBwcm9ibGVtcyB3aWxsIGFyaXNlIGluIHRoYXQgCj4g
+Y2FzZS4gVGhlIGtleGVjIHByb2Nlc3MgYWN0dWFsbHkgcnVucyBvbiBhIGNvcHkgb2YgcmVsb2Nh
+dGVfa2VybmVsLlMsIAo+IHdoaWNoIHdpbGwgYnJpbmcgYSBsb3Qgb2YgcHJvYmxlbXMuLi4KCkl0
+IHdvbid0IGJlIGEgcHJvYmxlbSBhcyB5b3UgY2FuIGtlZXAgYWxsIGRhdGEgb24tc3RhY2sgd2l0
+aG91dCBleHRlcm5hbCAKcmVmZXJlbmNlLgoKVGhhbmtzLgoKLSBKaWF4dW4KCj4KPiBBYm92ZSBh
+bGwganVzdCBteSBwZXJzb25hbCB0aG91Z2h0cy4KPgo+IFRoYW5rcywKPiBKaW55YW5nCj4KCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
