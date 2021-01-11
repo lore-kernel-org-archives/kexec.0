@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from new1-smtp.messagingengine.com ([66.111.4.221])
+Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1ky8pk-00084w-9Z
- for kexec@lists.infradead.org; Sat, 09 Jan 2021 07:38:49 +0000
-Subject: Re: [PATCH V3] MIPS: Loongson64: Add kexec/kdump support
-References: <20201221120220.3186744-1-chenhuacai@kernel.org>
- <a671a323-768b-b461-2ce4-ecc1e92d4cc6@loongson.cn>
- <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
- <20210107172620.GA13201@alpha.franken.de>
- <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
- <13b3f842-61e8-db13-67ff-7d2a9d894484@flygoat.com>
- <CAAhV-H5VUY20ADeXjNvOO_aP3ubikgpRJkmHJwDo71HhDGx+3A@mail.gmail.com>
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Message-ID: <3aed5286-bf91-8e51-7e30-5dbff1ed539c@flygoat.com>
-Date: Sat, 9 Jan 2021 15:38:36 +0800
+ id 1kytHE-00069C-Bp
+ for kexec@lists.infradead.org; Mon, 11 Jan 2021 09:14:17 +0000
+Date: Mon, 11 Jan 2021 10:13:00 +0100
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 1/1] kdump: append uts_namespace.name offset to
+ VMCOREINFO
+Message-ID: <X/wWnGF5ajYk0bf4@kroah.com>
+References: <20200930102328.396488-1-egorenar@linux.ibm.com>
+ <20210108033248.GA4959@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <CAAhV-H5VUY20ADeXjNvOO_aP3ubikgpRJkmHJwDo71HhDGx+3A@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20210108033248.GA4959@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,68 +21,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Huacai Chen <chenhuacai@kernel.org>
-Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jinyang He <hejinyang@loongson.cn>, Baoquan He <bhe@redhat.com>, Youling Tang <tangyouling@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: lijiang@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Alexander Egorenkov <egorenar@linux.ibm.com>, ktkhai@virtuozzo.com, ebiederm@xmission.com, akpm@linux-foundation.org, dyoung@redhat.com, christian.brauner@ubuntu.com, vgoyal@redhat.com, keescook@chromium.org
 
-5ZyoIDIwMjEvMS85IOS4iuWNiDk6MzYsIEh1YWNhaSBDaGVuIOWGmemBkzoKPiBIaSwgSmlheHVu
-LAo+Cj4gT24gRnJpLCBKYW4gOCwgMjAyMSBhdCA2OjE1IFBNIEppYXh1biBZYW5nIDxqaWF4dW4u
-eWFuZ0BmbHlnb2F0LmNvbT4gd3JvdGU6Cj4+IOWcqCAyMDIxLzEvOCDkuIvljYg2OjA3LCBKaW55
-YW5nIEhlIOWGmemBkzoKPj4+IEhpLCBUaG9tYXMsCj4+Pgo+Pj4gT24gMDEvMDgvMjAyMSAwMToy
-NiBBTSwgVGhvbWFzIEJvZ2VuZG9lcmZlciB3cm90ZToKPj4+Pj4+PiAtLS0gYS9hcmNoL21pcHMv
-a2VybmVsL3JlbG9jYXRlX2tlcm5lbC5TCj4+Pj4+Pj4gKysrIGIvYXJjaC9taXBzL2tlcm5lbC9y
-ZWxvY2F0ZV9rZXJuZWwuUwo+Pj4+Pj4+IEBAIC02LDYgKzYsNyBAQAo+Pj4+Pj4+Cj4+Pj4+Pj4g
-ICAgICNpbmNsdWRlIDxhc20vYXNtLmg+Cj4+Pj4+Pj4gICAgICNpbmNsdWRlIDxhc20vYXNtbWFj
-cm8uaD4KPj4+Pj4+PiArI2luY2x1ZGUgPGFzbS9jcHUuaD4KPj4+Pj4+PiAgICAgI2luY2x1ZGUg
-PGFzbS9yZWdkZWYuaD4KPj4+Pj4+PiAgICAgI2luY2x1ZGUgPGFzbS9taXBzcmVncy5oPgo+Pj4+
-Pj4+ICAgICAjaW5jbHVkZSA8YXNtL3N0YWNrZnJhbWUuaD4KPj4+Pj4+PiBAQCAtMTMzLDYgKzEz
-NCwzMyBAQCBMRUFGKGtleGVjX3NtcF93YWl0KQo+Pj4+Pj4+ICAgICAjZWxzZQo+Pj4+Pj4+ICAg
-ICAgICAgc3luYwo+Pj4+Pj4+ICAgICAjZW5kaWYKPj4+Pj4+PiArCj4+Pj4+Pj4gKyNpZmRlZiBD
-T05GSUdfQ1BVX0xPT05HU09ONjQKPj4+PiBJcyB0aGVyZSBhIHJlYXNvbiB3aHkgeW91IGNhbid0
-IHVzZSB0aGUgYWxyZWFkeSBleGlzdGluZyBpbmZyYXN0cnVjdHVyZQo+Pj4+IHRoZSB3YXkgY2F2
-aXVtLW9jdGVvbiBpcyBkb2luZyBpdCA/IElmIHlvdSBjYW4ndCBwbGVhc2UgZXhwbGFpbiB3aHkK
-Pj4+PiBzbyB3ZSBjYW4gZmluZCBhIHdheSB0byBleHRlbmQgaXQuIEJ1dCBoYXZpbmcgc29tZSBz
-b3J0IG9mIHBva2luZwo+Pj4+IGxvb25nc29uIHJlZ2lzdGVycyBpbiBnZW5lcmljIE1JUFMgY29k
-ZSBpcyBhIG5vbiBzdGFydGVyLgo+Pj4+Cj4+Pj4gVGhvbWFzLgo+Pj4+Cj4+PiBVbmxpa2UgdGhl
-IGNhdml1bS1vY3Rlb24gcGxhdGZvcm0sIHRoZSBMb29uZ3NvbjY0IHBsYXRmb3JtIG5lZWRzIHNv
-bWUKPj4+IGNoYW5nZXMuIEJlZm9yZSB0aGUga2VybmVsIHN0YXJ0cywgKGJlZm9yZSBlbnRlcmlu
-ZyB0aGUga2VybmVsX2VudHJ5KSwKPj4+IGVhY2ggQ1BVIGhhcyBpdHMgb3duIHN0YXRlICh0aGUg
-U01QIHN5c3RlbSkuIEZvciBMb29uZ3NvbjY0LCBvbmx5IHRoZQo+Pj4gYm9vdCBDUFUgd2lsbCBl
-bnRlciB0aGUga2VybmVsX2VudHJ5LCBhbmQgb3RoZXIgQ1BVcyB3aWxsIHF1ZXJ5IHRoZWlyCj4+
-PiBtYWlsYm94IHZhbHVlIGluIGEgbG9vcC4gVGhpcyBpcyB3aGF0IHRoZSBCSU9TIGRvZXMgZm9y
-IHRoZSBDUFUuIEhlcmUKPj4+IGlzIGRpZmZlcmVudCBmcm9tIGNhdml1bS1vY3Rlb24uIEFsbCBD
-UFVzIHdpbGwgZW50ZXIgdGhlIGtlcm5lbF9lbnRyeQo+Pj4gb24gY2F2aXVtLW9jdGVvbiBwbGF0
-Zm9ybS4gVGhlbiB0aGUga2VybmVsX2VudHJ5X3NldHVwLCB0aGUgY28tQ1BVcwo+Pj4gd2lsbCBl
-bnRlciB0aGUgcXVlcnkgbG9vcC4gSSBzYXcgdGhlIGtlcm5lbF9lbnRyeV9zZXR1cCBvZiBvdGhl
-cgo+Pj4gcGxhdGZvcm1zLCBzdWNoIGFzIGlwMjcsIG1hbHRhLCBhbmQgZ2VuZXJpYy4gVGhleSBh
-cmUgbm90IGxpa2UKPj4+IGNhdml1bS1vY3Rlb24gYW5kIHRoZSBjby1DUFVzIGVudGVyaW5nIHRo
-ZSBsb29wIG1heSBiZSBlYXJsaWVyIHRoYW4KPj4+IGVudGVyaW5nIGtlcm5lbF9lbnRyeS4gU28g
-SSBoYXZlIHJlYXNvbiB0byBndWVzcyB0aGF0IG1vc3QgU01QIHN5c3RlbQo+Pj4gcGxhdGZvcm0g
-Q1BVcyBhcmUgc2ltaWxhciB0byBMb29uZ3NvbjY0Lgo+PiBIaSBKaW5neWFuZywKPj4KPj4gQXMg
-SSBjb21tZW50ZWQgYmVmb3JlIHlvdSBtYXkgcmV1c2UgcGxheV9kZWFkIGxvZ2ljIGluIExvb25n
-c29uJ3Mgc21wLmMuCj4+Cj4+PiByZWxvY2F0ZV9rZXJuZWwuUyBpcyBsaWtlIEJJT1MgZG9pbmcg
-cyBvbWV0aGluZyBmb3IgdGhlIENQVS4gSXQgYWxsb3dzCj4+PiB0aGUgYm9vdCBDUFUgdG8gc3Rh
-cnQgZnJvbSB0aGUgbmV3IGtlcm5lbF9lbnRyeSBhbmQgbWFrZXMgdGhlIGNvLUNQVXMKPj4+IGVu
-dGVyIGEgbG9vcC4gVGhlIGFscmVhZHkgZXhpc3RpbmcgaW5mcmFzdHJ1Y3R1cmUgbWF5IGJlIG1v
-cmUgc3VpdGFibGUKPj4+IGZvciBub24tc21wIHBsYXRmb3Jtcy4gQWx0aG91Z2ggd2UgY2FuIGRv
-IHNvbWV0aGluZyB3aXRoCj4+PiBwbGF0X3NtcF9vcHMua2V4ZWNfbm9uYm9vdF9jcHUsIG1vcmUg
-bmV3IHByb2JsZW1zIHdpbGwgYXJpc2UgaW4gdGhhdAo+Pj4gY2FzZS4gVGhlIGtleGVjIHByb2Nl
-c3MgYWN0dWFsbHkgcnVucyBvbiBhIGNvcHkgb2YgcmVsb2NhdGVfa2VybmVsLlMsCj4+PiB3aGlj
-aCB3aWxsIGJyaW5nIGEgbG90IG9mIHByb2JsZW1zLi4uCj4+IEl0IHdvbid0IGJlIGEgcHJvYmxl
-bSBhcyB5b3UgY2FuIGtlZXAgYWxsIGRhdGEgb24tc3RhY2sgd2l0aG91dCBleHRlcm5hbAo+PiBy
-ZWZlcmVuY2UuCj4+Cj4+IFRoYW5rcy4KPiBBcyBJIHNhaWQgYmVmb3JlLCBvbmx5IHRoZSBjb250
-cm9sIHBhZ2UgaXMgc2FmZSBkdXJpbmcga2V4ZWMsIHNvIHdlCj4gY2Fubm90IHJldXNlIHNtcC5j
-LiBJZiBCSU9TIHByb3ZpZGVzIHBsYXlfZGVhZCgpLCB0aGF0IGlzIGFsc28gYSBzYWZlCj4gcmVn
-aW9uLCBidXQgY3VycmVudGx5IHRoZXJlIGlzIG5vIHJ1bnRpbWUgc2VydmljZSBmcm9tIEJJT1Mu
-CgpTb3JyeSwgaWdub3JlZCB0aGUgb3ZlcmxhcCBjYXNlIDotKAoKSnVtcGluZyB0byAweGJmYzAw
-MDAwIHRvIHVzZSBmaXJtd2FyZSBib290IHZlY3RvciBzZWVtcyBhIGxpdHRsZSBiaXQgCm92ZXJr
-aWxsLgoKQnV0IHdlJ2QgYmV0dGVyIGRlbGl2ZXJ5IGl0IGludG8gcGxhdGZvcm0gZm9sZGVyLCBq
-dXN0IGxpa2UgCmtlcm5lbC1lbnRyeS1pbml0LmgKClRoYW5rcy4KCi0gSmlheHVuCgo+Cj4gSHVh
-Y2FpCj4+IC0gSmlheHVuCj4+Cj4+PiBBYm92ZSBhbGwganVzdCBteSBwZXJzb25hbCB0aG91Z2h0
-cy4KPj4+Cj4+PiBUaGFua3MsCj4+PiBKaW55YW5nCj4+PgoKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On Fri, Jan 08, 2021 at 11:32:48AM +0800, Baoquan He wrote:
+> On 09/30/20 at 12:23pm, Alexander Egorenkov wrote:
+> > The offset of the field 'init_uts_ns.name' has changed
+> > since commit 9a56493f6942 ("uts: Use generic ns_common::count").
+> 
+> This patch is merged into 5.11-rc1, but we met the makedumpfile failure
+> of kdump test case in 5.10.0 kernel. Should affect 5.9 too since
+> commit 9a56493f6942 is merged into 5.9-rc2.
+> 
+> Below tag and CC should have been added into patch when posted. 
+> 
+> Fixes: commit 9a56493f6942 ("uts: Use generic ns_common::count")
+> Cc: <stable@vger.kernel.org>
+> 
+> Hi Greg,
+> 
+> Do we still have chance to make it added into stable?
+
+Wait, 9a56493f6942 ("uts: Use generic ns_common::count") is in 5.11-rc1,
+and this commit fixes that one, so why does anything need to be
+backported?
+
+Are you _SURE_ that this commit is needed in 5.10.y?
+
+thanks,
+
+greg k-h
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
