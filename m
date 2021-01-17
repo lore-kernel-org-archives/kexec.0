@@ -1,23 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410049.outbound.protection.outlook.com
- ([40.107.141.49] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail.kernel.org ([198.145.29.99])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l0Fb9-0003Tv-6f
- for kexec@lists.infradead.org; Fri, 15 Jan 2021 03:16:28 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [RFC PATCH 4/4] arm64: support flipped VA and 52-bit kernel VA
-Date: Fri, 15 Jan 2021 03:16:15 +0000
-Message-ID: <OSBPR01MB1991E802E03BE91C04AE389ADDA70@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <1610612709-18887-1-git-send-email-kazuhito.hagio@gmail.com>
- <1610612709-18887-5-git-send-email-kazuhito.hagio@gmail.com>
- <deecffd0-926a-d7ca-c0b5-87f3b6ad85e5@redhat.com>
- <CAFTCetR5BsJex=+_aZw60j+haYBThu_KDAOVgVmcwD=zc_UR4Q@mail.gmail.com>
- <OSBPR01MB199130C070943CFD27AC5C71DDA70@OSBPR01MB1991.jpnprd01.prod.outlook.com>
- <db4c9878-3a2e-61d4-c1f5-3a564ea71d7a@redhat.com>
-In-Reply-To: <db4c9878-3a2e-61d4-c1f5-3a564ea71d7a@redhat.com>
-Content-Language: ja-JP
+ id 1l0zcj-0007Nn-K0
+ for kexec@lists.infradead.org; Sun, 17 Jan 2021 04:25:10 +0000
+Received: by mail.kernel.org (Postfix) with ESMTPSA id BE33222DCC
+ for <kexec@lists.infradead.org>; Sun, 17 Jan 2021 04:25:06 +0000 (UTC)
+Received: by mail-io1-f45.google.com with SMTP id e22so2680613iog.6
+ for <kexec@lists.infradead.org>; Sat, 16 Jan 2021 20:25:06 -0800 (PST)
 MIME-Version: 1.0
+References: <20201221120220.3186744-1-chenhuacai@kernel.org>
+ <a671a323-768b-b461-2ce4-ecc1e92d4cc6@loongson.cn>
+ <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
+ <20210107172620.GA13201@alpha.franken.de>
+ <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
+ <13b3f842-61e8-db13-67ff-7d2a9d894484@flygoat.com>
+ <CAAhV-H5VUY20ADeXjNvOO_aP3ubikgpRJkmHJwDo71HhDGx+3A@mail.gmail.com>
+ <3aed5286-bf91-8e51-7e30-5dbff1ed539c@flygoat.com>
+In-Reply-To: <3aed5286-bf91-8e51-7e30-5dbff1ed539c@flygoat.com>
+From: Huacai Chen <chenhuacai@kernel.org>
+Date: Sun, 17 Jan 2021 12:24:54 +0800
+Message-ID: <CAAhV-H4cqnFGe+GfV3gBDDttGRfh9zVAjacVS6=Y6wgiOcqz1g@mail.gmail.com>
+Subject: Re: [PATCH V3] MIPS: Loongson64: Add kexec/kdump support
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,268 +29,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: piliu <piliu@redhat.com>, Bhupesh SHARMA <bhupesh.linux@gmail.com>
-Cc: Bhupesh Sharma <bhsharma@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "aadiga@qti.qualcomm.com" <aadiga@qti.qualcomm.com>, "kazuhito.hagio@gmail.com" <kazuhito.hagio@gmail.com>, Ioanna Alifieraki <ioanna-maria.alifieraki@canonical.com>, Alexander Kamensky <alexander.kamensky42@gmail.com>
+To: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Jinyang He <hejinyang@loongson.cn>, Baoquan He <bhe@redhat.com>, Youling Tang <tangyouling@loongson.cn>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Pingfan,
-
------Original Message-----
-> >>> On 1/14/21 4:25 PM, kazuhito.hagio@gmail.com wrote:
-> >>>> From: Kazuhito Hagio <k-hagio-ab@nec.com>
-> >>>>
-> >>>> Based on Bhupesh's patch and contains Pingfan's idea.
-> >>>>
-> >>>> Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-> >>>> Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
-> >>>> ---
-> >>>>    arch/arm64.c   | 95 ++++++++++++++++++++++++++++++++++++++++++++++++----------
-> >>>>    makedumpfile.c |  2 ++
-> >>>>    makedumpfile.h |  1 +
-> >>>>    3 files changed, 83 insertions(+), 15 deletions(-)
-> >>>>
-> >>>> diff --git a/arch/arm64.c b/arch/arm64.c
-> >>>> index 61ec89a..4ece19d 100644
-> >>>> --- a/arch/arm64.c
-> >>>> +++ b/arch/arm64.c
-> >>>> @@ -47,6 +47,8 @@ typedef struct {
-> >>>>    static int lpa_52_bit_support_available;
-> >>>>    static int pgtable_level;
-> >>>>    static int va_bits;
-> >>>> +static int vabits_actual;
-> >>>> +static int flipped_va;
-> >>>>    static unsigned long kimage_voffset;
-> >>>>
-> >>>>    #define SZ_4K                       4096
-> >>>> @@ -58,7 +60,6 @@ static unsigned long kimage_voffset;
-> >>>>    #define PAGE_OFFSET_42              ((0xffffffffffffffffUL) << 42)
-> >>>>    #define PAGE_OFFSET_47              ((0xffffffffffffffffUL) << 47)
-> >>>>    #define PAGE_OFFSET_48              ((0xffffffffffffffffUL) << 48)
-> >>>> -#define PAGE_OFFSET_52               ((0xffffffffffffffffUL) << 52)
-> >>>>
-> >>>>    #define pgd_val(x)          ((x).pgd)
-> >>>>    #define pud_val(x)          (pgd_val((x).pgd))
-> >>>> @@ -218,12 +219,20 @@ pmd_page_paddr(pmd_t pmd)
-> >>>>    #define pte_index(vaddr)            (((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-> >>>>    #define pte_offset(dir, vaddr)              (pmd_page_paddr((*dir)) + pte_index(vaddr) *
-> >> sizeof(pte_t))
-> >>>>
-> >>>> +/*
-> >>>> + * The linear kernel range starts at the bottom of the virtual address
-> >>>> + * space. Testing the top bit for the start of the region is a
-> >>>> + * sufficient check and avoids having to worry about the tag.
-> >>>> + */
-> >>>> +#define is_linear_addr(addr) (flipped_va ?   \
-> >>>> +     (!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))) : \
-> >>>> +     (!!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))))
-> >>>> +
-> >>>>    static unsigned long long
-> >>>>    __pa(unsigned long vaddr)
-> >>>>    {
-> >>>> -     if (kimage_voffset == NOT_FOUND_NUMBER ||
-> >>>> -                     (vaddr >= PAGE_OFFSET))
-> >>>> -             return (vaddr - PAGE_OFFSET + info->phys_base);
-> >>>> +     if (kimage_voffset == NOT_FOUND_NUMBER || is_linear_addr(vaddr))
-> >>>> +             return ((vaddr & ~PAGE_OFFSET) + info->phys_base);
-> >>>>        else
-> >>>>                return (vaddr - kimage_voffset);
-> >>>>    }
-> >>>> @@ -253,6 +262,7 @@ static int calculate_plat_config(void)
-> >>>>                        (PAGESIZE() == SZ_64K && va_bits == 42)) {
-> >>>>                pgtable_level = 2;
-> >>>>        } else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
-> >>>> +                     (PAGESIZE() == SZ_64K && va_bits == 52) ||
-> >>>>                        (PAGESIZE() == SZ_4K && va_bits == 39) ||
-> >>>>                        (PAGESIZE() == SZ_16K && va_bits == 47)) {
-> >>>>                pgtable_level = 3;
-> >>>> @@ -263,6 +273,7 @@ static int calculate_plat_config(void)
-> >>>>                                PAGESIZE(), va_bits);
-> >>>>                return FALSE;
-> >>>>        }
-> >>>> +     DEBUG_MSG("pgtable_level: %d\n", pgtable_level);
-> >>>>
-> >>>>        return TRUE;
-> >>>>    }
-> >>>> @@ -383,22 +394,54 @@ get_va_bits_from_stext_arm64(void)
-> >>>>        return TRUE;
-> >>>>    }
-> >>>>
-> >>>> +static void
-> >>>> +get_page_offset_arm64(void)
-> >>>> +{
-> >>>> +     ulong page_end;
-> >>>> +     int vabits_min;
-> >>>> +
-> >>>> +     /*
-> >>>> +      * See arch/arm64/include/asm/memory.h for more details of
-> >>>> +      * the PAGE_OFFSET calculation.
-> >>>> +      */
-> >>>> +     vabits_min = (va_bits > 48) ? 48 : va_bits;
-> >>>> +     page_end = -(1UL << (vabits_min - 1));
-> >>>> +
-> >>>> +     if (SYMBOL(_stext) > page_end) {
-> >>>> +             flipped_va = TRUE;
-> >>>> +             info->page_offset = -(1UL << vabits_actual);
-> >>>> +     } else {
-> >>>> +             flipped_va = FALSE;
-> >>>> +             info->page_offset = -(1UL << (vabits_actual - 1));
-> >>>> +     }
-> >>>> +
-> >>>> +     DEBUG_MSG("page_offset   : %lx (from page_end check)\n",
-> >>>> +             info->page_offset);
-> >>>> +}
-> >>>> +
-> >>>>    int
-> >>>>    get_machdep_info_arm64(void)
-> >>>>    {
-> >>>> +     /* Check if va_bits is still not initialized. If still 0, call
-> >>>> +      * get_versiondep_info() to initialize the same.
-> >>>> +      */
-> >>>> +     if (!va_bits)
-> >>>> +             get_versiondep_info_arm64();
-> >>>> +
-> >>>>        /* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
-> >>>>        if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
-> >>>>                info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-> >>>> +             DEBUG_MSG("max_physmem_bits : %ld (vmcoreinfo)\n", info->max_physmem_bits);
-> >>>>                if (info->max_physmem_bits == 52)
-> >>>>                        lpa_52_bit_support_available = 1;
-> >>>> -     } else
-> >>>> -             info->max_physmem_bits = 48;
-> >>>> +     } else {
-> >>>> +             if (va_bits == 52)
-> >>>> +                     info->max_physmem_bits = 52; /* just guess */
-> >>>> +             else
-> >>>> +                     info->max_physmem_bits = 48;
-> >>>>
-> >>>> -     /* Check if va_bits is still not initialized. If still 0, call
-> >>>> -      * get_versiondep_info() to initialize the same.
-> >>>> -      */
-> >>>> -     if (!va_bits)
-> >>>> -             get_versiondep_info_arm64();
-> >>>> +             DEBUG_MSG("max_physmem_bits : %ld (guess)\n", info->max_physmem_bits);
-> >>>> +     }
-> >>>>
-> >>>>        if (!calculate_plat_config()) {
-> >>>>                ERRMSG("Can't determine platform config values\n");
-> >>>> @@ -409,7 +452,6 @@ get_machdep_info_arm64(void)
-> >>>>        info->section_size_bits = SECTIONS_SIZE_BITS;
-> >>>>
-> >>>>        DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
-> >>>> -     DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
-> >>>>        DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
-> >>>>
-> >>>>        return TRUE;
-> >>>> @@ -444,10 +486,33 @@ get_versiondep_info_arm64(void)
-> >>>>                return FALSE;
-> >>>>        }
-> >>>>
-> >>>> -     info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> >>>> +     /*
-> >>>> +      * See TCR_EL1, Translation Control Register (EL1) register
-> >>>> +      * description in the ARMv8 Architecture Reference Manual.
-> >>>> +      * Basically, we can use the TCR_EL1.T1SZ
-> >>>> +      * value to determine the virtual addressing range supported
-> >>>> +      * in the kernel-space (i.e. vabits_actual) since Linux 5.9.
-> >>>> +      */
-> >>>> +     if (NUMBER(TCR_EL1_T1SZ) != NOT_FOUND_NUMBER) {
-> >>>> +             vabits_actual = 64 - NUMBER(TCR_EL1_T1SZ);
-> >>>> +             DEBUG_MSG("vabits_actual : %d (vmcoreinfo)\n", vabits_actual);
-> >>>> +     } else if ((va_bits == 52) && (SYMBOL(mem_section) != NOT_FOUND_SYMBOL)) {
-> >>>> +             /*
-> >>>> +              * Linux 5.4 through 5.10 have the following linear space:
-> >>>> +              *  48-bit: 0xffff000000000000 - 0xffff7fffffffffff
-> >>>> +              *  58-bit: 0xfff0000000000000 - 0xfff7ffffffffffff
-> >>>> +              */
-> >>>> +             if (SYMBOL(mem_section) & (1UL << (52 - 1)))
-> >>>
-> >>> Sorry but I do not think any SYMBOL(x) is inside the range of linear
-> >>> mapping address. All of them should be beyond kimage_vaddr.
-> >
-> > As for this, SYMBOL(mem_section) is a bit special and shows the value in the
-> > mem_section variable, not the address of it, by kernel commit a0b1280368d1.
-> >
-> > Actually on my tiny arm64 board..
-> >
-> > # strings /proc/kcore | less
-> > ...
-> > OSRELEASE=5.4.0-1025-raspi
-> > PAGESIZE=4096
-> > SYMBOL(init_uts_ns)=ffffd6db0fa10568
-> > SYMBOL(node_online_map)=ffffd6db0fa0a808
-> > SYMBOL(swapper_pg_dir)=ffffd6db0f42b000
-> > SYMBOL(_stext)=ffffd6db0e481000
-> > SYMBOL(vmap_area_list)=ffffd6db0fa51680
-> > SYMBOL(mem_map)=ffffd6db0fbc0240
-> > SYMBOL(contig_page_data)=ffffd6db0faed6c0
-> > SYMBOL(mem_section)=ffff0000eb809300   <<--
-> > LENGTH(mem_section)=1024
-> > SIZE(mem_section)=16
-> > OFFSET(mem_section.section_mem_map)=0
-> > ...
-> > NUMBER(VA_BITS)=48
-> >
-> > So at least if the kernel is configured with CONFIG_SPARSEMEM_EXTREME,
-> You are right. Exactly, your method works in this case.
-> 
-> > I thought this would work.  This is just a user tool effort to broaden
-> > supported kernels, instead of necessary information from the kernel,
-> > no need to support all kernels.
-> 
-> I hold a private opinion against the solution based on kernel version,
-> since it raises extra effort to cope with different releases which back
-> port some upstream patches without advancing kernel version.
-
-I agree with you, we should avoid depending on kernel version if we can.
-
-I left the 3/4 patch intact for possible use of kernel version method,
-but for now, the patchset doesn't use kernel version with your idea! :)
-
-> >
-> > And the current makedumpfile's implementation, SYMBOL(mem_section) is set
-> > to the address of the mem_section variable with -x option, so I wrote on
-> > the cover letter that this patchset doesn't support "with -x option if
-> > vabits_actual=52" case yet.
-> >
-> >>>
-> >>> Having vabits_actual is introduced and precise to resolve
-> >>> is_lm_address(), but if it is not available, could we survive?
-> >>>
-> >>> _PAGE_OFFSET(52) < _PAGE_END(52) < _PAGE_OFFSET(48) < _PAGE_END(48)
-> >>> Translating into numbers:
-> >>> 0xfff0000000000000 < 0xfff8000000000000 < 0xffff000000000000 <
-> >>> 0xffff800000000000
-> >>>
-> >>> Refer to linux/Documentation/arm64/memory.rst, the line
-> >>>       ffffa00010000000      fffff81ffffeffff         ~88TB          vmalloc
-> >>>
-> >>> It comes to the conclusion that any symbol > SYMBOL(_text) > _PAGE_END(48).
-> >>>
-> >>> So is_lm_address() can looks like
-> >>> if (addr > _PAGE_END(48)), it is kimage
-> >>> else, it is linear mapping
-> >
-> > This sounds good and will work.
-> >
-> >>>
-> >>> So even more aggressive, we can exclude the need of vabits_actual
-> >>> totally in this patch.
-> >
-> > Interesting, but if vabits_actual is not available, I wonder how we can
-> > get info->page_offset.  Seems it's used mainly for p2v conversion and
-> 
-> Ashamed. I will make the best of the fact that va_bits=52 kernel only
-> has _PAGE_OFFSET(52). It looks not elegant, but should work.
-
-ok, thanks for your help!
-
-Kazu
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksIEppYXh1biwKCk9uIFNhdCwgSmFuIDksIDIwMjEgYXQgMzozOCBQTSBKaWF4dW4gWWFuZyA8
+amlheHVuLnlhbmdAZmx5Z29hdC5jb20+IHdyb3RlOgo+Cj4g5ZyoIDIwMjEvMS85IOS4iuWNiDk6
+MzYsIEh1YWNhaSBDaGVuIOWGmemBkzoKPiA+IEhpLCBKaWF4dW4sCj4gPgo+ID4gT24gRnJpLCBK
+YW4gOCwgMjAyMSBhdCA2OjE1IFBNIEppYXh1biBZYW5nIDxqaWF4dW4ueWFuZ0BmbHlnb2F0LmNv
+bT4gd3JvdGU6Cj4gPj4g5ZyoIDIwMjEvMS84IOS4i+WNiDY6MDcsIEppbnlhbmcgSGUg5YaZ6YGT
+Ogo+ID4+PiBIaSwgVGhvbWFzLAo+ID4+Pgo+ID4+PiBPbiAwMS8wOC8yMDIxIDAxOjI2IEFNLCBU
+aG9tYXMgQm9nZW5kb2VyZmVyIHdyb3RlOgo+ID4+Pj4+Pj4gLS0tIGEvYXJjaC9taXBzL2tlcm5l
+bC9yZWxvY2F0ZV9rZXJuZWwuUwo+ID4+Pj4+Pj4gKysrIGIvYXJjaC9taXBzL2tlcm5lbC9yZWxv
+Y2F0ZV9rZXJuZWwuUwo+ID4+Pj4+Pj4gQEAgLTYsNiArNiw3IEBACj4gPj4+Pj4+Pgo+ID4+Pj4+
+Pj4gICAgICNpbmNsdWRlIDxhc20vYXNtLmg+Cj4gPj4+Pj4+PiAgICAgI2luY2x1ZGUgPGFzbS9h
+c21tYWNyby5oPgo+ID4+Pj4+Pj4gKyNpbmNsdWRlIDxhc20vY3B1Lmg+Cj4gPj4+Pj4+PiAgICAg
+I2luY2x1ZGUgPGFzbS9yZWdkZWYuaD4KPiA+Pj4+Pj4+ICAgICAjaW5jbHVkZSA8YXNtL21pcHNy
+ZWdzLmg+Cj4gPj4+Pj4+PiAgICAgI2luY2x1ZGUgPGFzbS9zdGFja2ZyYW1lLmg+Cj4gPj4+Pj4+
+PiBAQCAtMTMzLDYgKzEzNCwzMyBAQCBMRUFGKGtleGVjX3NtcF93YWl0KQo+ID4+Pj4+Pj4gICAg
+ICNlbHNlCj4gPj4+Pj4+PiAgICAgICAgIHN5bmMKPiA+Pj4+Pj4+ICAgICAjZW5kaWYKPiA+Pj4+
+Pj4+ICsKPiA+Pj4+Pj4+ICsjaWZkZWYgQ09ORklHX0NQVV9MT09OR1NPTjY0Cj4gPj4+PiBJcyB0
+aGVyZSBhIHJlYXNvbiB3aHkgeW91IGNhbid0IHVzZSB0aGUgYWxyZWFkeSBleGlzdGluZyBpbmZy
+YXN0cnVjdHVyZQo+ID4+Pj4gdGhlIHdheSBjYXZpdW0tb2N0ZW9uIGlzIGRvaW5nIGl0ID8gSWYg
+eW91IGNhbid0IHBsZWFzZSBleHBsYWluIHdoeQo+ID4+Pj4gc28gd2UgY2FuIGZpbmQgYSB3YXkg
+dG8gZXh0ZW5kIGl0LiBCdXQgaGF2aW5nIHNvbWUgc29ydCBvZiBwb2tpbmcKPiA+Pj4+IGxvb25n
+c29uIHJlZ2lzdGVycyBpbiBnZW5lcmljIE1JUFMgY29kZSBpcyBhIG5vbiBzdGFydGVyLgo+ID4+
+Pj4KPiA+Pj4+IFRob21hcy4KPiA+Pj4+Cj4gPj4+IFVubGlrZSB0aGUgY2F2aXVtLW9jdGVvbiBw
+bGF0Zm9ybSwgdGhlIExvb25nc29uNjQgcGxhdGZvcm0gbmVlZHMgc29tZQo+ID4+PiBjaGFuZ2Vz
+LiBCZWZvcmUgdGhlIGtlcm5lbCBzdGFydHMsIChiZWZvcmUgZW50ZXJpbmcgdGhlIGtlcm5lbF9l
+bnRyeSksCj4gPj4+IGVhY2ggQ1BVIGhhcyBpdHMgb3duIHN0YXRlICh0aGUgU01QIHN5c3RlbSku
+IEZvciBMb29uZ3NvbjY0LCBvbmx5IHRoZQo+ID4+PiBib290IENQVSB3aWxsIGVudGVyIHRoZSBr
+ZXJuZWxfZW50cnksIGFuZCBvdGhlciBDUFVzIHdpbGwgcXVlcnkgdGhlaXIKPiA+Pj4gbWFpbGJv
+eCB2YWx1ZSBpbiBhIGxvb3AuIFRoaXMgaXMgd2hhdCB0aGUgQklPUyBkb2VzIGZvciB0aGUgQ1BV
+LiBIZXJlCj4gPj4+IGlzIGRpZmZlcmVudCBmcm9tIGNhdml1bS1vY3Rlb24uIEFsbCBDUFVzIHdp
+bGwgZW50ZXIgdGhlIGtlcm5lbF9lbnRyeQo+ID4+PiBvbiBjYXZpdW0tb2N0ZW9uIHBsYXRmb3Jt
+LiBUaGVuIHRoZSBrZXJuZWxfZW50cnlfc2V0dXAsIHRoZSBjby1DUFVzCj4gPj4+IHdpbGwgZW50
+ZXIgdGhlIHF1ZXJ5IGxvb3AuIEkgc2F3IHRoZSBrZXJuZWxfZW50cnlfc2V0dXAgb2Ygb3RoZXIK
+PiA+Pj4gcGxhdGZvcm1zLCBzdWNoIGFzIGlwMjcsIG1hbHRhLCBhbmQgZ2VuZXJpYy4gVGhleSBh
+cmUgbm90IGxpa2UKPiA+Pj4gY2F2aXVtLW9jdGVvbiBhbmQgdGhlIGNvLUNQVXMgZW50ZXJpbmcg
+dGhlIGxvb3AgbWF5IGJlIGVhcmxpZXIgdGhhbgo+ID4+PiBlbnRlcmluZyBrZXJuZWxfZW50cnku
+IFNvIEkgaGF2ZSByZWFzb24gdG8gZ3Vlc3MgdGhhdCBtb3N0IFNNUCBzeXN0ZW0KPiA+Pj4gcGxh
+dGZvcm0gQ1BVcyBhcmUgc2ltaWxhciB0byBMb29uZ3NvbjY0Lgo+ID4+IEhpIEppbmd5YW5nLAo+
+ID4+Cj4gPj4gQXMgSSBjb21tZW50ZWQgYmVmb3JlIHlvdSBtYXkgcmV1c2UgcGxheV9kZWFkIGxv
+Z2ljIGluIExvb25nc29uJ3Mgc21wLmMuCj4gPj4KPiA+Pj4gcmVsb2NhdGVfa2VybmVsLlMgaXMg
+bGlrZSBCSU9TIGRvaW5nIHMgb21ldGhpbmcgZm9yIHRoZSBDUFUuIEl0IGFsbG93cwo+ID4+PiB0
+aGUgYm9vdCBDUFUgdG8gc3RhcnQgZnJvbSB0aGUgbmV3IGtlcm5lbF9lbnRyeSBhbmQgbWFrZXMg
+dGhlIGNvLUNQVXMKPiA+Pj4gZW50ZXIgYSBsb29wLiBUaGUgYWxyZWFkeSBleGlzdGluZyBpbmZy
+YXN0cnVjdHVyZSBtYXkgYmUgbW9yZSBzdWl0YWJsZQo+ID4+PiBmb3Igbm9uLXNtcCBwbGF0Zm9y
+bXMuIEFsdGhvdWdoIHdlIGNhbiBkbyBzb21ldGhpbmcgd2l0aAo+ID4+PiBwbGF0X3NtcF9vcHMu
+a2V4ZWNfbm9uYm9vdF9jcHUsIG1vcmUgbmV3IHByb2JsZW1zIHdpbGwgYXJpc2UgaW4gdGhhdAo+
+ID4+PiBjYXNlLiBUaGUga2V4ZWMgcHJvY2VzcyBhY3R1YWxseSBydW5zIG9uIGEgY29weSBvZiBy
+ZWxvY2F0ZV9rZXJuZWwuUywKPiA+Pj4gd2hpY2ggd2lsbCBicmluZyBhIGxvdCBvZiBwcm9ibGVt
+cy4uLgo+ID4+IEl0IHdvbid0IGJlIGEgcHJvYmxlbSBhcyB5b3UgY2FuIGtlZXAgYWxsIGRhdGEg
+b24tc3RhY2sgd2l0aG91dCBleHRlcm5hbAo+ID4+IHJlZmVyZW5jZS4KPiA+Pgo+ID4+IFRoYW5r
+cy4KPiA+IEFzIEkgc2FpZCBiZWZvcmUsIG9ubHkgdGhlIGNvbnRyb2wgcGFnZSBpcyBzYWZlIGR1
+cmluZyBrZXhlYywgc28gd2UKPiA+IGNhbm5vdCByZXVzZSBzbXAuYy4gSWYgQklPUyBwcm92aWRl
+cyBwbGF5X2RlYWQoKSwgdGhhdCBpcyBhbHNvIGEgc2FmZQo+ID4gcmVnaW9uLCBidXQgY3VycmVu
+dGx5IHRoZXJlIGlzIG5vIHJ1bnRpbWUgc2VydmljZSBmcm9tIEJJT1MuCj4KPiBTb3JyeSwgaWdu
+b3JlZCB0aGUgb3ZlcmxhcCBjYXNlIDotKAo+Cj4gSnVtcGluZyB0byAweGJmYzAwMDAwIHRvIHVz
+ZSBmaXJtd2FyZSBib290IHZlY3RvciBzZWVtcyBhIGxpdHRsZSBiaXQKPiBvdmVya2lsbC4KPgo+
+IEJ1dCB3ZSdkIGJldHRlciBkZWxpdmVyeSBpdCBpbnRvIHBsYXRmb3JtIGZvbGRlciwganVzdCBs
+aWtlCj4ga2VybmVsLWVudHJ5LWluaXQuaApFdmVuIGlmIHdlIG1vdmUgc29tZXRoaW5nIHRvIGtl
+cm5lbC1lbnRyeS1pbml0LmgsIHdlIHN0aWxsIG5lZWQgdG8KbW9kaWZ5IGFyY2gvbWlwcy9rZXJu
+ZWwvcmVsb2NhdGVfa2VybmVsLlMuCgpIdWFjYWkKPgo+IFRoYW5rcy4KPgo+IC0gSmlheHVuCj4K
+PiA+Cj4gPiBIdWFjYWkKPiA+PiAtIEppYXh1bgo+ID4+Cj4gPj4+IEFib3ZlIGFsbCBqdXN0IG15
+IHBlcnNvbmFsIHRob3VnaHRzLgo+ID4+Pgo+ID4+PiBUaGFua3MsCj4gPj4+IEppbnlhbmcKPiA+
+Pj4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
+ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
+ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
