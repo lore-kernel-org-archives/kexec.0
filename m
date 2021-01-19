@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+Received: from elvis.franken.de ([193.175.24.41])
  by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l1feQ-000159-6S
- for kexec@lists.infradead.org; Tue, 19 Jan 2021 01:17:45 +0000
-From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH] makedumpfile: Add initial mips64 support
-Date: Tue, 19 Jan 2021 09:17:26 +0800
-Message-Id: <1611019046-7291-1-git-send-email-tangyouling@loongson.cn>
+ id 1l1yF8-0002zK-2A
+ for kexec@lists.infradead.org; Tue, 19 Jan 2021 21:08:51 +0000
+Date: Tue, 19 Jan 2021 22:08:21 +0100
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Subject: Re: [PATCH V3] MIPS: Loongson64: Add kexec/kdump support
+Message-ID: <20210119210821.GA15589@alpha.franken.de>
+References: <20201221120220.3186744-1-chenhuacai@kernel.org>
+ <a671a323-768b-b461-2ce4-ecc1e92d4cc6@loongson.cn>
+ <CAAhV-H4GDxhg1YqWy-g7VuCeE7BZ0ibaVSr1ibzJqXjuaBn3_w@mail.gmail.com>
+ <20210107172620.GA13201@alpha.franken.de>
+ <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <1085845b-2c5a-dbb6-62b7-28b55aeacb4c@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,246 +23,108 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kazuhito Hagio <k-hagio-ab@nec.com>
-Cc: Jinyang He <hejinyang@loongson.cn>, Youling Tang <tangyouling@loongson.cn>, kexec-ml <kexec@lists.infradead.org>, Huacai Chen <chenhuacai@loongson.cn>
+To: Jinyang He <hejinyang@loongson.cn>
+Cc: Baoquan He <bhe@redhat.com>, Youling Tang <tangyouling@loongson.cn>, Huacai Chen <chenhuacai@kernel.org>, kexec@lists.infradead.org, "open list:MIPS" <linux-mips@vger.kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Eric Biederman <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Patch adds support for mips64 in makedumpfile. It takes care of vmalloc,
-module and directly map kernel memory region's translation. Currently we
-only support 3 leverl 16K pages and VA_BITS as 48.
+On Fri, Jan 08, 2021 at 06:07:39PM +0800, Jinyang He wrote:
+> Unlike the cavium-octeon platform, the Loongson64 platform needs some
+> changes. Before the kernel starts, (before entering the kernel_entry), each
+> CPU has its own state (the SMP system). For Loongson64, only the boot CPU
+> will enter the kernel_entry, and other CPUs will query their mailbox value
+> in a loop. This is what the BIOS does for the CPU. Here is different from
+> cavium-octeon. All CPUs will enter the kernel_entry on cavium-octeon
+> platform. Then the kernel_entry_setup, the co-CPUs will enter the query
+> loop. I saw the kernel_entry_setup of other platforms, such as ip27, malta,
+> and generic. They are not like cavium-octeon and the co-CPUs entering the
+> loop may be earlier than entering kernel_entry. So I have reason to guess
+> that most SMP system platform CPUs are similar to Loongson64.
+> 
+> relocate_kernel.S is like BIOS doing s omething for the CPU. It allows the
+> boot CPU to start from the new kernel_entry and makes the co-CPUs enter a
+> loop. The already existing infrastructure may be more suitable for non-smp
+> platforms. Although we can do something with plat_smp_ops.kexec_nonboot_cpu,
+> more new problems will arise in that case. The kexec process actually runs
+> on a copy of relocate_kernel.S, which will bring a lot of problems...
+> 
+> Above all just my personal thoughts.
 
-The changes were tested on a mips64 Loongson-3A4000 processor. The dump
-compression and filtering (for all dump levels 1,2,4,8,16 and 31) tests
-are succussfull.
+thank you for describing current state. So it looks like kexec and SMP
+is probably only working for Octeon and maybe some MIPS VPE based SMP
+systems, but not with "real" cores.
 
-Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
-Signed-off-by: Jinyang He <hejinyang@loongson.cn>
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+How about the patch below as preparation for your loongson64 kexec patch ?
+You only need to put write a kexec_smp_wait_final macro and the rest of
+your patch stays the same...
+
+Thomas.
+
+
+From 81d3e1e24a0dae48f310b8d819d625f88139ef9b Mon Sep 17 00:00:00 2001
+From: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Date: Tue, 19 Jan 2021 21:58:55 +0100
+Subject: [PATCH] MIPS: Use macro for kexec_smp_wait specials
+
+Signed-off-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 ---
- Makefile       |   2 +-
- arch/mips64.c  | 113 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- makedumpfile.h |  54 +++++++++++++++++++++++++++
- 3 files changed, 168 insertions(+), 1 deletion(-)
- create mode 100644 arch/mips64.c
+ .../include/asm/mach-cavium-octeon/kernel-entry-init.h   | 8 ++++++++
+ arch/mips/kernel/relocate_kernel.S                       | 9 ++++-----
+ 2 files changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/Makefile b/Makefile
-index cb6bd42..6f8ade0 100644
---- a/Makefile
-+++ b/Makefile
-@@ -47,7 +47,7 @@ endif
- SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
- SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c
- OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
--SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c
-+SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c arch/ppc.c arch/sparc64.c arch/mips64.c
- OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+diff --git a/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h b/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
+index c38b38ce5a3d..b071a7353ee1 100644
+--- a/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
++++ b/arch/mips/include/asm/mach-cavium-octeon/kernel-entry-init.h
+@@ -157,4 +157,12 @@
+ 	.macro	smp_slave_setup
+ 	.endm
  
- LIBS = -ldw -lbz2 -ldl -lelf -lz
-diff --git a/arch/mips64.c b/arch/mips64.c
-new file mode 100644
-index 0000000..18a9e05
---- /dev/null
-+++ b/arch/mips64.c
-@@ -0,0 +1,113 @@
-+/*
-+ * mips64.c
-+ *
-+ * Copyright (C) 2021 Loongson Technology Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation (version 2 of the License).
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ * You should have received a copy of the GNU General Public License
-+ * along with this program; if not, write to the Free Software
-+ * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-+ */
-+#ifdef __mips64__
++#define USE_KEXEC_SMP_WAIT_FINAL
++	.macro  kexec_smp_wait_final
++	.set push
++	.set noreorder
++	synci		0($0)
++	.set pop
++	.endm
 +
-+#include "../print_info.h"
-+#include "../elf_info.h"
-+#include "../makedumpfile.h"
-+
-+int
-+get_phys_base_mips64(void)
-+{
-+	info->phys_base = 0ULL;
-+
-+	DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
-+
-+	return TRUE;
-+}
-+
-+int
-+get_versiondep_info_mips64(void)
-+{
-+	info->page_offset  = 0x9800000000000000ULL;
-+	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
-+	info->section_size_bits = _SECTION_SIZE_BITS;
-+
-+	DEBUG_MSG("page_offset : %lx\n", info->page_offset);
-+	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
-+	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
-+
-+	return TRUE;
-+}
-+
-+/*
-+ * Translate a virtual address to a physical address by using 3 levels paging.
-+ */
-+unsigned long long
-+vaddr_to_paddr_mips64(unsigned long vaddr)
-+{
-+	unsigned long long paddr = NOT_PADDR;
-+	pgd_t	*pgda, pgdv;
-+	pmd_t	*pmda, pmdv;
-+	pte_t 	*ptea, ptev;
-+
-+	/*
-+	 * CKSEG0/CKSEG1
-+	 */
-+	if (vaddr >= 0xffffffff80000000ULL && vaddr < 0xffffffffc0000000ULL)
-+		return vaddr & 0x1fffffffULL;
-+
-+	/*
-+	 * XKPHYS
-+	 */
-+	if (vaddr >= 0x9000000000000000ULL && vaddr < 0xc000000000000000ULL)
-+		return vaddr & ((1ULL << MAX_PHYSMEM_BITS()) - 1);
-+
-+	if (SYMBOL(swapper_pg_dir) == NOT_FOUND_SYMBOL) {
-+		ERRMSG("Can't get the symbol of swapper_pg_dir.\n");
-+		return NOT_PADDR;
-+	}
-+
-+	pgda = pgd_offset(SYMBOL(swapper_pg_dir), vaddr);
-+	if (!readmem(PADDR, (unsigned long long)pgda, &pgdv, sizeof(pgdv))) {
-+		ERRMSG("Can't read pgd\n");
-+		return NOT_PADDR;
-+	}
-+
-+	pmda = pmd_offset(&pgdv, vaddr);
-+	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
-+		ERRMSG("Can't read pmd\n");
-+		return NOT_PADDR;
-+	}
-+
-+	switch (pmdv & (_PAGE_PRESENT|_PAGE_HUGE)) {
-+	case _PAGE_PRESENT:
-+		ptea = pte_offset(&pmdv, vaddr);
-+		/* 64k page */
-+		if (!readmem(PADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
-+			ERRMSG("Can't read pte\n");
-+			return NOT_PADDR;
-+		}
-+
-+		if (!(ptev & _PAGE_PRESENT)) {
-+			ERRMSG("Can't get a valid pte.\n");
-+			return NOT_PADDR;
-+		} else {
-+			paddr = PAGEBASE(ptev) + (vaddr & (PAGESIZE() - 1));
-+		}
-+		break;
-+	case _PAGE_PRESENT|_PAGE_HUGE:
-+		paddr = (pmdv & PMD_MASK) + (vaddr & (PMD_SIZE - 1));
-+		break;
-+	}
-+
-+	return paddr;
-+}
-+
-+#endif /* mips64 */
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 5f50080..bc86bf2 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -958,6 +958,39 @@ typedef unsigned long pgd_t;
+ #endif /* __ASM_MACH_CAVIUM_OCTEON_KERNEL_ENTRY_H */
+diff --git a/arch/mips/kernel/relocate_kernel.S b/arch/mips/kernel/relocate_kernel.S
+index ac870893ba2d..f3c908abdbb8 100644
+--- a/arch/mips/kernel/relocate_kernel.S
++++ b/arch/mips/kernel/relocate_kernel.S
+@@ -11,6 +11,8 @@
+ #include <asm/stackframe.h>
+ #include <asm/addrspace.h>
  
- #endif          /* sparc64 */
++#include <kernel-entry-init.h>
++
+ LEAF(relocate_new_kernel)
+ 	PTR_L a0,	arg0
+ 	PTR_L a1,	arg1
+@@ -125,11 +127,8 @@ LEAF(kexec_smp_wait)
+ 1:	LONG_L		s0, (t0)
+ 	bne		s0, zero,1b
  
-+#ifdef __mips64__ /* mips64 */
-+#define KVBASE			PAGE_OFFSET
-+#define _SECTION_SIZE_BITS	(28)
-+#define _MAX_PHYSMEM_BITS	(48)
-+#define _PAGE_PRESENT		(1 << 0)
-+#define _PAGE_HUGE		(1 << 4)
-+
-+typedef unsigned long pte_t;
-+typedef unsigned long pmd_t;
-+typedef unsigned long pgd_t;
-+
-+#define PAGE_MASK		(~(PAGESIZE() - 1))
-+#define PMD_MASK		(~(PMD_SIZE - 1))
-+#define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
-+#define PMD_SIZE		(1UL << PMD_SHIFT)
-+#define PGDIR_SHIFT		((PAGESHIFT() - 3) * 3 + 3)
-+#define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
-+#define PTRS_PER_PMD		PTRS_PER_PTE
-+#define PTRS_PER_PGD		PTRS_PER_PTE
-+
-+#define pte_index(vaddr)		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
-+#define pmd_page_paddr(pmd)		(pmd & (int32_t)PAGE_MASK)
-+#define pte_offset(dir, vaddr)		((pte_t *)pmd_page_paddr((*dir)) + pte_index(vaddr))
-+
-+#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
-+#define pgd_page_paddr(pgd)		(pgd & (int32_t)PAGE_MASK)
-+#define pmd_offset(pgd, vaddr)		((pmd_t *)pgd_page_paddr((*pgd)) + pmd_index(vaddr))
-+
-+#define pgd_index(vaddr)		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
-+#define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
-+
-+#endif		/* mips64 */
-+
- /*
-  * The function of dependence on machine
-  */
-@@ -1112,6 +1145,21 @@ unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
- #define arch_crashkernel_mem_size()	stub_false()
- #endif		/* sparc64 */
- 
-+#ifdef __mips64__ /* mips64 */
-+int get_phys_base_mips64(void);
-+int get_versiondep_info_mips64(void);
-+unsigned long long vaddr_to_paddr_mips64(unsigned long vaddr);
-+#define find_vmemmap()		stub_false()
-+#define get_phys_base() 	get_phys_base_mips64()
-+#define get_machdep_info()	stub_true()
-+#define get_versiondep_info()	get_versiondep_info_mips64()
-+#define get_kaslr_offset(X)	stub_false()
-+#define vaddr_to_paddr(X)	vaddr_to_paddr_mips64(X)
-+#define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
-+#define is_phys_addr(X) 	stub_true_ul(X)
-+#define arch_crashkernel_mem_size()	stub_false()
-+#endif		/* mips64 */
-+
- typedef unsigned long long mdf_pfn_t;
- 
- #ifndef ARCH_PFN_OFFSET
-@@ -2228,6 +2276,12 @@ int get_xen_info_ia64(void);
- #define get_xen_info_arch(X) FALSE
- #endif	/* sparc64 */
- 
-+#ifdef __mips64__ /* mips64 */
-+#define kvtop_xen(X)	FALSE
-+#define get_xen_basic_info_arch(X) FALSE
-+#define get_xen_info_arch(X) FALSE
-+#endif	/* mips64 */
-+
- struct cycle {
- 	mdf_pfn_t start_pfn;
- 	mdf_pfn_t end_pfn;
+-#ifdef CONFIG_CPU_CAVIUM_OCTEON
+-	.set push
+-	.set noreorder
+-	synci		0($0)
+-	.set pop
++#ifdef USE_KEXEC_SMP_WAIT_FINAL
++	kexec_smp_wait_final
+ #else
+ 	sync
+ #endif
 -- 
-2.1.0
+2.29.2
 
+
+-- 
+Crap can work. Given enough thrust pigs will fly, but it's not necessarily a
+good idea.                                                [ RFC1925, 2.3 ]
 
 _______________________________________________
 kexec mailing list
