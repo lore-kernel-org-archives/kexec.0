@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail-io1-xd29.google.com ([2607:f8b0:4864:20::d29])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l2VGB-0003Er-Po
- for kexec@lists.infradead.org; Thu, 21 Jan 2021 08:24:08 +0000
-Date: Thu, 21 Jan 2021 16:23:56 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] vmalloc: remove redundant NULL check
-Message-ID: <20210121082356.GH20161@MiWiFi-R3L-srv>
-References: <1611216753-44598-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+ id 1l2Vz4-0003WZ-MG
+ for kexec@lists.infradead.org; Thu, 21 Jan 2021 09:10:32 +0000
+Received: by mail-io1-xd29.google.com with SMTP id d81so2624428iof.3
+ for <kexec@lists.infradead.org>; Thu, 21 Jan 2021 01:10:28 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1611216753-44598-1-git-send-email-abaci-bugfix@linux.alibaba.com>
+References: <20201118185917.GA433776@mwanda>
+ <20210120093015.GE20161@MiWiFi-R3L-srv>
+In-Reply-To: <20210120093015.GE20161@MiWiFi-R3L-srv>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Thu, 21 Jan 2021 17:10:15 +0800
+Message-ID: <CAFgQCTubgqy3ANR_oPH9w_OZ1Mm0a0daWT7SAFhXx3QX+-vHBQ@mail.gmail.com>
+Subject: Re: [bug report] PM / reboot: Eliminate race between reboot and
+ suspend
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,43 +26,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Yang Li <abaci-bugfix@linux.alibaba.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, akpm@linux-foundation.org, dyoung@redhat.com, adobriyan@gmail.com, vgoyal@redhat.com
+To: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>, Kexec Mailing List <kexec@lists.infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-pm@vger.kernel.org
 
-On 01/21/21 at 04:12pm, Yang Li wrote:
-> Fix below warnings reported by coccicheck:
-> ./fs/proc/vmcore.c:1503:2-7: WARNING: NULL check before some freeing
-> functions is not needed.
-> 
-> Reported-by: Abaci Robot <abaci@linux.alibaba.com>
-> Signed-off-by: Yang Li <abaci-bugfix@linux.alibaba.com>
-> ---
->  fs/proc/vmcore.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index c3a345c..9a15334 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -1503,11 +1503,8 @@ int vmcore_add_device_dump(struct vmcoredd_data *data)
->  	return 0;
->  
->  out_err:
-> -	if (buf)
-> -		vfree(buf);
-> -
-> -	if (dump)
-> -		vfree(dump);
-> +	vfree(buf);
-> +	vfree(dump);
+On Wed, Jan 20, 2021 at 5:30 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> Hi,
+>
+> On 11/18/20 at 09:59pm, Dan Carpenter wrote:
+> > Hello Pingfan Liu,
+> >
+> > The patch 55f2503c3b69: "PM / reboot: Eliminate race between reboot
+> > and suspend" from Jul 31, 2018, leads to the following static checker
+> > warning:
+> >
+> >       kernel/power/main.c:27 lock_system_sleep()
+> >       warn: called with lock held.  '&system_transition_mutex'
+>
+> This is a good finding. I think we can simply remove the lock/unlock
+> pair of system_transition_mutex in kernel_kexec() function. The dead
+> lock should be easily triggered, but it hasn't caused any failure report
+> because the feature 'kexec jump' is almost not used by anyone as far as
+> I know. We may need to find out who is using it and where it's used
+> through an inquiry. Before that, we can just remove the lock operation
+> inside CONFIG_KEXEC_JUMP ifdeffery scope. Thanks.
+>
+>
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 80905e5aa8ae..a0b6780740c8 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1134,7 +1134,6 @@ int kernel_kexec(void)
+>
+>  #ifdef CONFIG_KEXEC_JUMP
+>         if (kexec_image->preserve_context) {
+> -               lock_system_sleep();
+>                 pm_prepare_console();
+>                 error = freeze_processes();
+>                 if (error) {
+> @@ -1197,7 +1196,6 @@ int kernel_kexec(void)
+>                 thaw_processes();
+>   Restore_console:
+>                 pm_restore_console();
+> -               unlock_system_sleep();
 
-Looks good, thx.
+This should work since the only caller syscall_reboot has already
+placed kernel_kexec() under the protection of system_transition_mutex.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Thanks for the fix.
 
-Thanks
-Baoquan
-
+Reviewed-by: Pingfan Liu <kernelfans@gmail.com>
 
 _______________________________________________
 kexec mailing list
