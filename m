@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x104a.google.com ([2607:f8b0:4864:20::104a])
+Received: from mail-ej1-x635.google.com ([2a00:1450:4864:20::635])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l36Ek-0006S5-By
- for kexec@lists.infradead.org; Fri, 22 Jan 2021 23:53:07 +0000
-Received: by mail-pj1-x104a.google.com with SMTP id l7so4320699pjy.0
- for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 15:53:03 -0800 (PST)
-Date: Fri, 22 Jan 2021 23:52:39 +0000
-In-Reply-To: <20200709132344.760-5-john.ogness@linutronix.de>
-Message-Id: <20210122235238.655049-1-elavila@google.com>
-Mime-Version: 1.0
-Subject: Issue in dmesg time with lockless ring buffer
-From: "J. Avila" <elavila@google.com>
+ id 1l36cu-0007YY-B3
+ for kexec@lists.infradead.org; Sat, 23 Jan 2021 00:18:05 +0000
+Received: by mail-ej1-x635.google.com with SMTP id by1so10155289ejc.0
+ for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 16:18:03 -0800 (PST)
+MIME-Version: 1.0
+References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+ <20200326032420.27220-2-pasha.tatashin@soleen.com>
+ <f29c53ec-a152-a4a9-6d50-7aeedd60173f@arm.com>
+In-Reply-To: <f29c53ec-a152-a4a9-6d50-7aeedd60173f@arm.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Fri, 22 Jan 2021 19:17:26 -0500
+Message-ID: <CA+CK2bCRhS9dozo0jf9mUp6woJh6_8NLLcqMdY4yHc6+mX2bXQ@mail.gmail.com>
+Subject: Re: [PATCH v9 01/18] arm64: kexec: make dtb_mem always enabled
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,31 +26,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Saravana Kannan <saravanak@google.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: James Morse <james.morse@arm.com>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-Hello,
+On Wed, Apr 29, 2020 at 1:00 PM James Morse <james.morse@arm.com> wrote:
+>
+> Hi Pavel,
+>
+> On 26/03/2020 03:24, Pavel Tatashin wrote:
+> > Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
+> > enabled. This adds ugly ifdefs to c files.
+>
+> ~s/dtb_mem/ARCH_HAS_KIMAGE_ARCH/ ?
+> dtb_mem is just one member of struct kimage_arch.
+>
+>
+> > Always enabled dtb_mem, when it is not used, it is NULL.
+> > Change the dtb_mem to phys_addr_t, as it is a physical address.
+>
+> Regardless,
+> Reviewed-by: James Morse <james.morse@arm.com>
 
-When doing some internal testing on a 5.10.4 kernel, we found that the
-time taken for dmesg seemed to increase from the order of milliseconds to
-the order of seconds when the dmesg size approached the ~1.2MB limit. After
-doing some digging, we found that by reverting all of the patches in printk/
-up to and including 896fbe20b4e2333fb55cc9b9b783ebcc49eee7c7 ("use the
-lockless ringbuffer"), we were able to once more see normal dmesg times.
+Thank you.
 
-This kernel had no meaningful diffs in the printk/ dir when compared to
-Linus' tree. This behavior was consistently reproducible using the
-following steps:
+Pasha
 
-1) In one shell, run "time dmesg > /dev/null"
-2) In another, constantly write to /dev/kmsg
-
-Within ~5 minutes, we saw that dmesg times increased to 1 second, only
-increasing further from there. Is this a known issue?
-
-Thank you,
-
-Avila
+>
+>
+> Thanks,
+>
+> James
 
 _______________________________________________
 kexec mailing list
