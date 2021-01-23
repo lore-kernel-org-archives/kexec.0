@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x534.google.com ([2a00:1450:4864:20::534])
+Received: from mail-ej1-x62c.google.com ([2a00:1450:4864:20::62c])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l36u1-0000rz-Jm
- for kexec@lists.infradead.org; Sat, 23 Jan 2021 00:35:47 +0000
-Received: by mail-ed1-x534.google.com with SMTP id d22so8602358edy.1
- for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 16:35:44 -0800 (PST)
+ id 1l37JO-0002TE-Sh
+ for kexec@lists.infradead.org; Sat, 23 Jan 2021 01:01:59 +0000
+Received: by mail-ej1-x62c.google.com with SMTP id kg20so9735366ejc.4
+ for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 17:01:58 -0800 (PST)
 MIME-Version: 1.0
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-8-pasha.tatashin@soleen.com>
- <b79b0b58-5f8e-913b-3913-b95551ef7ce1@arm.com>
-In-Reply-To: <b79b0b58-5f8e-913b-3913-b95551ef7ce1@arm.com>
+ <20200326032420.27220-9-pasha.tatashin@soleen.com>
+ <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
+In-Reply-To: <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 22 Jan 2021 19:35:08 -0500
-Message-ID: <CA+CK2bD0amaPDJgoYn2-VK_LbzCkJBa_oMBgVsDTfbZvUw=3QA@mail.gmail.com>
-Subject: Re: [PATCH v9 07/18] arm64: trans_pgd: hibernate: idmap the single
- page that holds the copy page routines
+Date: Fri, 22 Jan 2021 20:01:21 -0500
+Message-ID: <CA+CK2bAsC-ZBPh-CPhmdjdwtLshHcPOsnEu_NzJ38pvPh0YPPQ@mail.gmail.com>
+Subject: Re: [PATCH v9 08/18] arm64: kexec: move relocation function setup
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,63 +27,82 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Selin Dag <selindag@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
 On Wed, Apr 29, 2020 at 1:01 PM James Morse <james.morse@arm.com> wrote:
 >
 > Hi Pavel,
 >
 > On 26/03/2020 03:24, Pavel Tatashin wrote:
-> > From: James Morse <james.morse@arm.com>
+> > Currently, kernel relocation function is configured in machine_kexec()
+> > at the time of kexec reboot by using control_code_page.
 > >
-> > To resume from hibernate, the contents of memory are restored from
-> > the swap image. This may overwrite any page, including the running
-> > kernel and its page tables.
-> >
-> > Hibernate copies the code it uses to do the restore into a single
-> > page that it knows won't be overwritten, and maps it with page tables
-> > built from pages that won't be overwritten.
-> >
-> > Today the address it uses for this mapping is arbitrary, but to allow
-> > kexec to reuse this code, it needs to be idmapped. To idmap the page
-> > we must avoid the kernel helpers that have VA_BITS baked in.
-> >
-> > Convert create_single_mapping() to take a single PA, and idmap it.
-> > The page tables are built in the reverse order to normal using
-> > pfn_pte() to stir in any bits between 52:48. T0SZ is always increased
-> > to cover 48bits, or 52 if the copy code has bits 52:48 in its PA.
-> >
-> > Pasha: The original patch from James
-> > inux-arm-kernel/20200115143322.214247-4-james.morse@arm.com
+> > This operation, however, is more logical to be done during kexec_load,
+> > and thus remove from reboot time. Move, setup of this function to
+> > newly added machine_kexec_post_load().
 >
-> -EBROKENLINK
->
-> The convention is to use a 'Link:' tag in the signed-off area.
-> e.g. 5a3577039cbe
+> This would avoid the need to special-case the cache maintenance, so its a good cleanup...
 
-OK Fixed.
+Yes, the computation should be moved from kexec-reboot to kexec-load
+when possible.
 
 >
-> > Adopted it to trans_pgd, so it can be commonly used by both Kexec
-> > and Hibernate. Some minor clean-ups.
 >
-> Please describe your changes just before your SoB. This means each author sign's off on
-> the stuff above their SoB, and its obvious who made which changes.
+> > Because once MMU is enabled, kexec control page will contain more than
+> > relocation kernel, but also vector table, add pointer to the actual
+> > function within this page arch.kern_reloc. Currently, it equals to the
+> > beginning of page, we will add offsets later, when vector table is
+> > added.
 >
-> Search for 'Lucky K Maintainer' in process/submitting-patches.rst for an example.
+> If the vector table always comes second, wouldn't this be extra work to hold the value 0?
+> You can control the layout of this relocation code, as it has to be written in assembly.
+> I don't get why this would be necessary.
+>
+>
+> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+> > index ae1bad0156cd..ec71a153cc2d 100644
+> > --- a/arch/arm64/kernel/machine_kexec.c
+> > +++ b/arch/arm64/kernel/machine_kexec.c
+> > @@ -58,6 +59,17 @@ void machine_kexec_cleanup(struct kimage *kimage)
+> >       /* Empty routine needed to avoid build errors. */
+> >  }
+> >
+> > +int machine_kexec_post_load(struct kimage *kimage)
+> > +{
+> > +     void *reloc_code = page_to_virt(kimage->control_code_page);
+> > +
+> > +     memcpy(reloc_code, arm64_relocate_new_kernel,
+> > +            arm64_relocate_new_kernel_size);
+> > +     kimage->arch.kern_reloc = __pa(reloc_code);
+>
+> Could we move the two cache maintenance calls for this area in here too. Keeping it next
+> to the modification makes it clearer why it is required.
 
-OK, Fixed.
-eed the maximum T0SZ.
-> > + *
-> > + * Returns 0 on success, and -ENOMEM on failure.
-> > + * On success trans_ttbr0 contains page table with idmapped page, t0sz is set to
->
-> > + * maxumum T0SZ for this page.
->
-> maxumum
->
+Yes, I moved it.
 
-Ok.
+>
+> In this case we can use flush_icache_range() instead of its __variant because this now
+> happens much earlier.
+
+True.
+
+>
+>
+> > +     return 0;
+> > +}
+>
+> Regardless,
+> Reviewed-by: James Morse <james.morse@arm.com>
+
+Thank you for your review.
+
+Pasha
+
+>
+>
+> Thanks,
+>
+> James
 
 _______________________________________________
 kexec mailing list
