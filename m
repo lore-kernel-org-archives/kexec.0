@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l390V-0008Gk-RH
- for kexec@lists.infradead.org; Sat, 23 Jan 2021 02:50:38 +0000
-Received: by mail-ej1-x62f.google.com with SMTP id by1so10439234ejc.0
- for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 18:50:35 -0800 (PST)
+ id 1l39xn-0003CP-RB
+ for kexec@lists.infradead.org; Sat, 23 Jan 2021 03:51:53 +0000
+Date: Sat, 23 Jan 2021 11:51:26 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/1] kernel/crash_core.c - Add crashkernel=auto for x86
+ and ARM
+Message-ID: <20210123035126.GA6539@dhcp-128-65.nay.redhat.com>
+References: <20201118232431.21832-1-saeed.mirzamohammadi@oracle.com>
+ <CACPcB9e8p5Ayw15aOe5ZNPOa7MF3+pzPdcaZgTc_E_TZYkgD6Q@mail.gmail.com>
+ <AC36B9BC-654C-4FC1-8EA3-94B986639F1E@oracle.com>
+ <CACPcB9d7kU1TYaF-g2GH16Wg=hrQu71sGDoC8uMFFMc6oW_duQ@mail.gmail.com>
+ <CAHD1Q_yB1B4gu7EDqbZJ5dxAAkr-dVKa9yRDK-tE3oLeTTmLJQ@mail.gmail.com>
+ <20201123034705.GA5908@dhcp-128-65.nay.redhat.com>
+ <d6b5b7f3-ba38-be61-d3fe-975c3343a79d@oracle.com>
+ <20210122012254.GA3174@dhcp-128-65.nay.redhat.com>
+ <20210122031244.GA4717@dhcp-128-65.nay.redhat.com>
+ <730EBE33-5571-49C0-AF38-08C49736EB70@oracle.com>
 MIME-Version: 1.0
-References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-14-pasha.tatashin@soleen.com>
- <012e19d9-97d6-805a-bfec-8c6e7104f852@arm.com>
-In-Reply-To: <012e19d9-97d6-805a-bfec-8c6e7104f852@arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 22 Jan 2021 21:49:58 -0500
-Message-ID: <CA+CK2bCz17hX9-iPQaas_PNyBgz0sMbJT9eczy549uw74zvh6g@mail.gmail.com>
-Subject: Re: [PATCH v9 13/18] arm64: kexec: add expandable argument to
- relocation function
+Content-Disposition: inline
+In-Reply-To: <730EBE33-5571-49C0-AF38-08C49736EB70@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,88 +33,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, "H. Peter Anvin" <hpa@zytor.com>, Will Deacon <will@kernel.org>, Anson Huang <Anson.Huang@nxp.com>, Jonathan Corbet <corbet@lwn.net>, the arch/x86 maintainers <x86@kernel.org>, Vinod Koul <vkoul@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Ingo Molnar <mingo@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Arnd Bergmann <arnd@arndb.de>, Guilherme Piccoli <gpiccoli@canonical.com>, Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Kairui Song <kasong@redhat.com>, "Martin K. Petersen" <martin.petersen@oracle.com>, Randy Dunlap <rdunlap@infradead.org>, kexec mailing list <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "# v4 . 16+" <stable@vger.kernel.org>, Li Yang <leoyang.li@nxp.com>, Miguel Ojeda <miguel.ojeda.sandonis@gmail.com>, Michael Walle <michael@walle.cc>, Baoquan He <bhe@redhat.com>, Diego Elio =?iso-8859-1?Q?Petten=F2?= <flameeyes@flameeyes.com>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawnguo@kernel.org>
 
-On Thu, May 7, 2020 at 12:22 PM James Morse <james.morse@arm.com> wrote:
->
-> Hi Pavel,
->
-> On 26/03/2020 03:24, Pavel Tatashin wrote:
-> > Currently, kexec relocation function (arm64_relocate_new_kernel) accepts
-> > the following arguments:
-> >
-> > head:         start of array that contains relocation information.
-> > entry:                entry point for new kernel or purgatory.
-> > dtb_mem:      first and only argument to entry.
->
-> > The number of arguments cannot be easily expended, because this
-> > function is also called from HVC_SOFT_RESTART, which preserves only
-> > three arguments. And, also arm64_relocate_new_kernel is written in
-> > assembly but called without stack, thus no place to move extra
-> > arguments to free registers.
-> >
-> > Soon, we will need to pass more arguments: once we enable MMU we
-> > will need to pass information about page tables.
->
->
-> > Another benefit of allowing this function to accept more arguments, is that
-> > kernel can actually accept up to 4 arguments (x0-x3), however currently
-> > only one is used, but if in the future we will need for more (for example,
-> > pass information about when previous kernel exited to have a precise
-> > measurement in time spent in purgatory), we won't be easilty do that
-> > if arm64_relocate_new_kernel can't accept more arguments.
->
-> This is a niche debug hack.
-> We really don't want an ABI with purgatory. I think the register values it gets were added
-> early for compatibility with kexec_file_load().
->
->
-> > So, add a new struct: kern_reloc_arg, and place it in kexec safe page (i.e
-> > memory that is not overwritten during relocation).
-> > Thus, make arm64_relocate_new_kernel to only take one argument, that
-> > contains all the needed information.
->
-> Do we really not have enough registers?
->
-> The PCS[0] gives you 8 arguments. In this patch you use 6.
->
->
-> If this is really about the hyp-stub abi, please state that.
+Hi Saeed,
+On 01/22/21 at 05:14pm, Saeed Mirzamohammadi wrote:
+> Hi,
+> 
+> > On Jan 21, 2021, at 7:12 PM, Dave Young <dyoung@redhat.com> wrote:
+> > 
+> > On 01/22/21 at 09:22am, Dave Young wrote:
+> >> Hi John,
+> >> 
+> >> On 01/21/21 at 09:32am, john.p.donnelly@oracle.com wrote:
+> >>> On 11/22/20 9:47 PM, Dave Young wrote:
+> >>>> Hi Guilherme,
+> >>>> On 11/22/20 at 12:32pm, Guilherme Piccoli wrote:
+> >>>>> Hi Dave and Kairui, thanks for your responses! OK, if that makes sense
+> >>>>> to you I'm fine with it. I'd just recommend to test recent kernels in
+> >>>>> multiple distros with the minimum "range" to see if 64M is enough for
+> >>>>> crashkernel, maybe we'd need to bump that.
+> >>>> 
+> >>>> Giving the different kernel configs and the different userspace
+> >>>> initramfs setup it is hard to get an uniform value for all distributions,
+> >>>> but we can have an interface/kconfig-option for them to provide a value like this patch
+> >>>> is doing. And it could be improved like Kairui said about some known
+> >>>> kernel added extra values later, probably some more improvements if
+> >>>> doable.
+> >>>> 
+> >>>> Thanks
+> >>>> Dave
+> >>>> 
+> >>> 
+> >>> Hi.
+> >>> 
+> >>> Are we going to move forward with implementing this for X86 and Arm ?
+> >>> 
+> >>> If other platform maintainers want to include this CONFIG option in their
+> >>> configuration settings they have a starting point.
+> >> 
+> >> I would expect this become arch independent.
+> > 
+> > Clarify a bit, it can be a general config option under arch/Kconfig and
+> > just put the code in general arch independent part.
+> 
+> Does this mean that we need to add the option to def_configs in all archs as well?
+> 
 
-Yes, this is a hypervisor abi limitation. I will improve the commit
-log to state it clearly.
+I think we do not need to add defconfig, something like this will just work?
 
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > index cee3be586384..b1122eea627e 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -59,13 +60,35 @@ void machine_kexec_cleanup(struct kimage *kimage)
->
-> >  int machine_kexec_post_load(struct kimage *kimage)
-> >  {
-> >       void *reloc_code = page_to_virt(kimage->control_code_page);
-> > +     struct kern_reloc_arg *kern_reloc_arg = kexec_page_alloc(kimage);
-> > +
-> > +     if (!kern_reloc_arg)
-> > +             return -ENOMEM;
-> >
-> >       memcpy(reloc_code, arm64_relocate_new_kernel,
-> >              arm64_relocate_new_kernel_size);
-> >       kimage->arch.kern_reloc = __pa(reloc_code);
-> > +     kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
-> > +     kern_reloc_arg->head = kimage->head;
-> > +     kern_reloc_arg->entry_addr = kimage->start;
-> > +     kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
->
-> These kern_reloc_arg values are written via the cacheable linear map.
-> They are read in arm64_relocate_new_kernel() where the MMU is disabled an all memory
-> access are non-cacheable.
->
-> To ensure you read the values you wrote, you must clean kern_reloc_arg to the PoC.
+BTW, it should depend on CRASH_CORE instead of CRASH_DUMP, the logic of
+parsing crashkernel is in kernel/crash_core.c
 
-Thank you for catching this, I added:
- __flush_dcache_area(kern_reloc_arg, sizeof (struct kern_reloc_arg));
+diff --git a/arch/Kconfig b/arch/Kconfig
+index af14a567b493..fa6efeb52dc5 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -14,6 +14,11 @@ menu "General architecture-dependent options"
+ config CRASH_CORE
+ 	bool
+ 
++config CRASH_AUTO_STR
++	depends on CRASH_CORE
++	string "Memory reserved for crash kernel"
++	default "1G-:128M"
++	... help text [snip] ...
++
+ config KEXEC_CORE
+ 	select CRASH_CORE
+ 	bool
+
+[...]
+
+> Thanks,
+> Saeed
+> 
+> > 
+> >> 
+> >> Saeed, Kairui, would any of you like to update the patch?
+> >> 
+> >>> 
+> >>> Thank you,
+> >>> 
+> >>> John.
+> >>> 
+> >>> ( I am not currently on many of the included dist lists  in this email, so
+> >>> hopefully key contributors are included in this exchange )
+> >>> 
+> >> 
+> >> Thanks
+> >> Dave
+> 
+
+Thanks
+Dave
+
 
 _______________________________________________
 kexec mailing list
