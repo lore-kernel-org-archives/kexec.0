@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x62c.google.com ([2a00:1450:4864:20::62c])
+Received: from mail-ej1-x62f.google.com ([2a00:1450:4864:20::62f])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l37JO-0002TE-Sh
- for kexec@lists.infradead.org; Sat, 23 Jan 2021 01:01:59 +0000
-Received: by mail-ej1-x62c.google.com with SMTP id kg20so9735366ejc.4
- for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 17:01:58 -0800 (PST)
+ id 1l37WQ-0003OG-SE
+ for kexec@lists.infradead.org; Sat, 23 Jan 2021 01:15:28 +0000
+Received: by mail-ej1-x62f.google.com with SMTP id hs11so10270120ejc.1
+ for <kexec@lists.infradead.org>; Fri, 22 Jan 2021 17:15:25 -0800 (PST)
 MIME-Version: 1.0
 References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
- <20200326032420.27220-9-pasha.tatashin@soleen.com>
- <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
-In-Reply-To: <ea2b39d7-d496-d9ac-23c9-c279ec29f5d5@arm.com>
+ <20200326032420.27220-11-pasha.tatashin@soleen.com>
+ <e6faa23d-27a8-838a-33ef-2a6ad8a5c746@arm.com>
+In-Reply-To: <e6faa23d-27a8-838a-33ef-2a6ad8a5c746@arm.com>
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 22 Jan 2021 20:01:21 -0500
-Message-ID: <CA+CK2bAsC-ZBPh-CPhmdjdwtLshHcPOsnEu_NzJ38pvPh0YPPQ@mail.gmail.com>
-Subject: Re: [PATCH v9 08/18] arm64: kexec: move relocation function setup
+Date: Fri, 22 Jan 2021 20:14:49 -0500
+Message-ID: <CA+CK2bDJeYPzGyVkRJu2AOkvV8SJ=ea3jbAZtho8_VA416kZ4A@mail.gmail.com>
+Subject: Re: [PATCH v9 10/18] arm64: kexec: cpu_soft_restart change argument
+ types
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,82 +28,42 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Selin Dag <selindag@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
 On Wed, Apr 29, 2020 at 1:01 PM James Morse <james.morse@arm.com> wrote:
 >
 > Hi Pavel,
 >
 > On 26/03/2020 03:24, Pavel Tatashin wrote:
-> > Currently, kernel relocation function is configured in machine_kexec()
-> > at the time of kexec reboot by using control_code_page.
+> > Change argument types from unsigned long to a more descriptive
+> > phys_addr_t.
+>
+> For 'entry', which is a physical addresses, sure...
+>
+> > diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+> > index ed50e9587ad8..38cbd4068019 100644
+> > --- a/arch/arm64/kernel/cpu-reset.h
+> > +++ b/arch/arm64/kernel/cpu-reset.h
+> > @@ -10,17 +10,17 @@
 > >
-> > This operation, however, is more logical to be done during kexec_load,
-> > and thus remove from reboot time. Move, setup of this function to
-> > newly added machine_kexec_post_load().
->
-> This would avoid the need to special-case the cache maintenance, so its a good cleanup...
-
-Yes, the computation should be moved from kexec-reboot to kexec-load
-when possible.
-
->
->
-> > Because once MMU is enabled, kexec control page will contain more than
-> > relocation kernel, but also vector table, add pointer to the actual
-> > function within this page arch.kern_reloc. Currently, it equals to the
-> > beginning of page, we will add offsets later, when vector table is
-> > added.
->
-> If the vector table always comes second, wouldn't this be extra work to hold the value 0?
-> You can control the layout of this relocation code, as it has to be written in assembly.
-> I don't get why this would be necessary.
->
->
-> > diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-> > index ae1bad0156cd..ec71a153cc2d 100644
-> > --- a/arch/arm64/kernel/machine_kexec.c
-> > +++ b/arch/arm64/kernel/machine_kexec.c
-> > @@ -58,6 +59,17 @@ void machine_kexec_cleanup(struct kimage *kimage)
-> >       /* Empty routine needed to avoid build errors. */
-> >  }
+> >  #include <asm/virt.h>
 > >
-> > +int machine_kexec_post_load(struct kimage *kimage)
-> > +{
-> > +     void *reloc_code = page_to_virt(kimage->control_code_page);
-> > +
-> > +     memcpy(reloc_code, arm64_relocate_new_kernel,
-> > +            arm64_relocate_new_kernel_size);
-> > +     kimage->arch.kern_reloc = __pa(reloc_code);
+> > -void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+> > -     unsigned long arg0, unsigned long arg1, unsigned long arg2);
 >
-> Could we move the two cache maintenance calls for this area in here too. Keeping it next
-> to the modification makes it clearer why it is required.
-
-Yes, I moved it.
-
+> > +void __cpu_soft_restart(phys_addr_t el2_switch, phys_addr_t entry,
+> > +                     phys_addr_t arg0, phys_addr_t arg1, phys_addr_t arg2);
 >
-> In this case we can use flush_icache_range() instead of its __variant because this now
-> happens much earlier.
+> This looks weird because its re-using the hyp-stub API, because it might call the hyp-stub
+> from the idmap. entry is passed in, so this isn't tied to kexec. Without tying it to
+> kexec, how do you know arg2 is a physical address?
+> I think it tried to be re-usable because 32bit has more users for this.
 
-True.
+I will drop this patch. It was intended as a cleanup from suggestions
+in earlier versions of this series, but I see it is not really needed.
 
->
->
-> > +     return 0;
-> > +}
->
-> Regardless,
-> Reviewed-by: James Morse <james.morse@arm.com>
-
-Thank you for your review.
-
+Thank you,
 Pasha
-
->
->
-> Thanks,
->
-> James
 
 _______________________________________________
 kexec mailing list
