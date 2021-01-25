@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd29.google.com ([2607:f8b0:4864:20::d29])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l3xot-000796-Mu
- for kexec@lists.infradead.org; Mon, 25 Jan 2021 09:06:02 +0000
-Received: by mail-io1-xd29.google.com with SMTP id y19so25050281iov.2
- for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 01:05:56 -0800 (PST)
+ id 1l41zC-0007iI-KW
+ for kexec@lists.infradead.org; Mon, 25 Jan 2021 13:32:55 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: Re: Issue in dmesg time with lockless ring buffer
+In-Reply-To: <20210122235238.655049-1-elavila@google.com>
+References: <20210122235238.655049-1-elavila@google.com>
+Date: Mon, 25 Jan 2021 14:38:20 +0106
+Message-ID: <87im7l2lcr.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-References: <20210122074214.26583-1-bhe@redhat.com>
-In-Reply-To: <20210122074214.26583-1-bhe@redhat.com>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Mon, 25 Jan 2021 17:05:44 +0800
-Message-ID: <CAFgQCTuvh40hOUKS1MLnuUm_14JeKUg_c1rncAFmd1bRXML0xA@mail.gmail.com>
-Subject: Re: [PATCH] kernel/kexec: remove the lock operation of
- system_transition_mutex
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,52 +22,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Rafael Wysocki <rafael@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, linux-pm@vger.kernel.org
+To: "J. Avila" <elavila@google.com>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Saravana Kannan <saravanak@google.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Fri, Jan 22, 2021 at 3:42 PM Baoquan He <bhe@redhat.com> wrote:
+On 2021-01-22, "J. Avila" <elavila@google.com> wrote:
+> When doing some internal testing on a 5.10.4 kernel, we found that the
+> time taken for dmesg seemed to increase from the order of milliseconds
+> to the order of seconds when the dmesg size approached the ~1.2MB
+> limit. After doing some digging, we found that by reverting all of the
+> patches in printk/ up to and including
+> 896fbe20b4e2333fb55cc9b9b783ebcc49eee7c7 ("use the lockless
+> ringbuffer"), we were able to once more see normal dmesg times.
 >
-> Function kernel_kexec() is called with lock system_transition_mutex held
-> in reboot system call. While inside kernel_kexec(), it will acquire
-> system_transition_mutex agin. This will lead to dead lock.
+> This kernel had no meaningful diffs in the printk/ dir when compared
+> to Linus' tree. This behavior was consistently reproducible using the
+> following steps:
 >
-> The dead lock should be easily triggered, it hasn't caused any failure
-> report just because the feature 'kexec jump' is almost not used by anyone
-> as far as I know. An inquiry can be made about who is using 'kexec jump'
-> and where it's used. Before that, let's simply remove the lock operation
-> inside CONFIG_KEXEC_JUMP ifdeffery scope.
+> 1) In one shell, run "time dmesg > /dev/null"
+> 2) In another, constantly write to /dev/kmsg
 >
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> Reviewed-by: Pingfan Liu <kernelfans@gmail.com>
-> ---
->  kernel/kexec_core.c | 2 --
->  1 file changed, 2 deletions(-)
->
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 80905e5aa8ae..a0b6780740c8 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1134,7 +1134,6 @@ int kernel_kexec(void)
->
->  #ifdef CONFIG_KEXEC_JUMP
->         if (kexec_image->preserve_context) {
-> -               lock_system_sleep();
->                 pm_prepare_console();
->                 error = freeze_processes();
->                 if (error) {
-> @@ -1197,7 +1196,6 @@ int kernel_kexec(void)
->                 thaw_processes();
->   Restore_console:
->                 pm_restore_console();
-> -               unlock_system_sleep();
->         }
->  #endif
->
-> --
-> 2.17.2
->
-Reviewed-by: Pingfan Liu <kernelfans@gmail.com>
+> Within ~5 minutes, we saw that dmesg times increased to 1 second, only
+> increasing further from there. Is this a known issue?
+
+The last couple days I have tried to reproduce this issue with no
+success.
+
+Is your dmesg using /dev/kmsg or syslog() to read the buffer?
+
+Are there any syslog daemons or systemd running? Perhaps you can run
+your test within an initrd to see if this effect is still visible?
+
+John Ogness
 
 _______________________________________________
 kexec mailing list
