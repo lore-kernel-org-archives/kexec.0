@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-f173.google.com ([209.85.167.173])
+Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l45vM-0001nA-QS
- for kexec@lists.infradead.org; Mon, 25 Jan 2021 17:45:13 +0000
-Received: by mail-oi1-f173.google.com with SMTP id m13so7677965oig.8
- for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 09:45:12 -0800 (PST)
+ id 1l47Dk-0005PN-Q2
+ for kexec@lists.infradead.org; Mon, 25 Jan 2021 19:08:18 +0000
+Received: by mail-ed1-x531.google.com with SMTP id g1so16842109edu.4
+ for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 11:08:16 -0800 (PST)
 MIME-Version: 1.0
-References: <20210122074214.26583-1-bhe@redhat.com>
- <CAFgQCTuvh40hOUKS1MLnuUm_14JeKUg_c1rncAFmd1bRXML0xA@mail.gmail.com>
-In-Reply-To: <CAFgQCTuvh40hOUKS1MLnuUm_14JeKUg_c1rncAFmd1bRXML0xA@mail.gmail.com>
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Date: Mon, 25 Jan 2021 18:45:00 +0100
-Message-ID: <CAJZ5v0gfYJfTUm3aXQvPVoor6nE6a31EnNxxCxDBNVDLBY9ABQ@mail.gmail.com>
-Subject: Re: [PATCH] kernel/kexec: remove the lock operation of
- system_transition_mutex
+References: <20200326032420.27220-1-pasha.tatashin@soleen.com>
+ <20200326032420.27220-16-pasha.tatashin@soleen.com>
+ <e5f1ee17f8e4ac3a5f5077d85318e0ed@kernel.org>
+In-Reply-To: <e5f1ee17f8e4ac3a5f5077d85318e0ed@kernel.org>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 25 Jan 2021 14:07:39 -0500
+Message-ID: <CA+CK2bB=kLV7gamcpdBr0SJ1mR-JwosL8FH=AiFMUmvGc_FE6g@mail.gmail.com>
+Subject: Re: [PATCH v9 15/18] arm64: kexec: kexec EL2 vectors
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,56 +26,48 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>, Baoquan He <bhe@redhat.com>
-Cc: Rafael Wysocki <rafael@kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Dan Carpenter <dan.carpenter@oracle.com>, Linux PM <linux-pm@vger.kernel.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Bhupesh Sharma <bhsharma@redhat.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Selin Dag <selindag@gmail.com>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, James Morse <james.morse@arm.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Matthias Brugger <matthias.bgg@gmail.com>, rfontana@redhat.com, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-On Mon, Jan 25, 2021 at 10:05 AM Pingfan Liu <kernelfans@gmail.com> wrote:
+> > +.macro el1_sync_64
+> > +     br      x4                      /* Jump to new world from el2 */
+> > +     .fill 31, 4, 0                  /* Set other 31 instr to zeroes */
+> > +.endm
 >
-> On Fri, Jan 22, 2021 at 3:42 PM Baoquan He <bhe@redhat.com> wrote:
-> >
-> > Function kernel_kexec() is called with lock system_transition_mutex held
-> > in reboot system call. While inside kernel_kexec(), it will acquire
-> > system_transition_mutex agin. This will lead to dead lock.
-> >
-> > The dead lock should be easily triggered, it hasn't caused any failure
-> > report just because the feature 'kexec jump' is almost not used by anyone
-> > as far as I know. An inquiry can be made about who is using 'kexec jump'
-> > and where it's used. Before that, let's simply remove the lock operation
-> > inside CONFIG_KEXEC_JUMP ifdeffery scope.
-> >
-> > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > Reported-by: Dan Carpenter <dan.carpenter@oracle.com>
-> > Reviewed-by: Pingfan Liu <kernelfans@gmail.com>
-> > ---
-> >  kernel/kexec_core.c | 2 --
-> >  1 file changed, 2 deletions(-)
-> >
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index 80905e5aa8ae..a0b6780740c8 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -1134,7 +1134,6 @@ int kernel_kexec(void)
-> >
-> >  #ifdef CONFIG_KEXEC_JUMP
-> >         if (kexec_image->preserve_context) {
-> > -               lock_system_sleep();
-> >                 pm_prepare_console();
-> >                 error = freeze_processes();
-> >                 if (error) {
-> > @@ -1197,7 +1196,6 @@ int kernel_kexec(void)
-> >                 thaw_processes();
-> >   Restore_console:
-> >                 pm_restore_console();
-> > -               unlock_system_sleep();
-> >         }
-> >  #endif
-> >
-> > --
-> > 2.17.2
-> >
-> Reviewed-by: Pingfan Liu <kernelfans@gmail.com>
+> The common idiom to write this is to align the beginning of the
+> macro, and not to bother about what follows:
+>
+> .macro whatever
+>          .align 7
+>          br      x4
+> .endm
+>
+> Specially given that 0 is an undefined instruction, and I really hate to
+> see
+> those in the actual text. On the contrary, .align generates NOPs.
 
-Applied as 5.11-rc material, thanks!
+Fixed that.
+
+>
+> > +
+> > +.macro invalid_vector label
+> > +\label:
+> > +     b \label
+> > +     .fill 31, 4, 0                  /* Set other 31 instr to zeroes */
+> > +.endm
+> > +
+> > +/* el2 vectors - switch el2 here while we restore the memory image. */
+> > +     .align 11
+> > +ENTRY(kexec_el2_vectors)
+>
+> Please see commit 617a2f392c92 ("arm64: kvm: Annotate assembly using
+> modern
+> annoations"), and follow the same pattern.
+
+Fixed that as well.
+
+Thank you,
+Pasha
 
 _______________________________________________
 kexec mailing list
