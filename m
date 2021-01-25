@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf33.google.com ([2607:f8b0:4864:20::f33])
+Received: from mail-qv1-xf2d.google.com ([2607:f8b0:4864:20::f2d])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l47Ob-00073F-WE
- for kexec@lists.infradead.org; Mon, 25 Jan 2021 19:19:31 +0000
-Received: by mail-qv1-xf33.google.com with SMTP id n14so1953192qvg.5
- for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 11:19:28 -0800 (PST)
+ id 1l47Oc-00074B-Ln
+ for kexec@lists.infradead.org; Mon, 25 Jan 2021 19:19:36 +0000
+Received: by mail-qv1-xf2d.google.com with SMTP id dj6so6732285qvb.1
+ for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 11:19:29 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v10 01/18] arm64: kexec: make dtb_mem always enabled
-Date: Mon, 25 Jan 2021 14:19:06 -0500
-Message-Id: <20210125191923.1060122-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v10 02/18] arm64: hibernate: variable pudp is used instead of
+ pd4dp
+Date: Mon, 25 Jan 2021 14:19:07 -0500
+Message-Id: <20210125191923.1060122-3-pasha.tatashin@soleen.com>
 In-Reply-To: <20210125191923.1060122-1-pasha.tatashin@soleen.com>
 References: <20210125191923.1060122-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,61 +27,34 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
 
-Currently, dtb_mem is enabled only when CONFIG_KEXEC_FILE is
-enabled. This adds ugly ifdefs to c files.
+There should be p4dp used when p4d page is allocated.
+This is not a functional issue, but for the logical correctness this
+should be fixed.
 
-Always enabled dtb_mem, when it is not used, it is NULL.
-Change the dtb_mem to phys_addr_t, as it is a physical address.
-
+Fixes: e9f6376858b9 ("arm64: add support for folded p4d page tables")
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Reviewed-by: James Morse <james.morse@arm.com>
 ---
- arch/arm64/include/asm/kexec.h    | 4 ++--
- arch/arm64/kernel/machine_kexec.c | 6 +-----
- 2 files changed, 3 insertions(+), 7 deletions(-)
+ arch/arm64/kernel/hibernate.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index d24b527e8c00..61530ec3a9b1 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,18 +90,18 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 9c9f47e9f7f4..0a54d81c90f9 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -190,10 +190,10 @@ static int trans_pgd_map_page(pgd_t *trans_pgd, void *page,
  
--#ifdef CONFIG_KEXEC_FILE
- #define ARCH_HAS_KIMAGE_ARCH
+ 	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
+ 	if (pgd_none(READ_ONCE(*pgdp))) {
+-		pudp = (void *)get_safe_page(GFP_ATOMIC);
+-		if (!pudp)
++		p4dp = (void *)get_safe_page(GFP_ATOMIC);
++		if (!pgdp)
+ 			return -ENOMEM;
+-		pgd_populate(&init_mm, pgdp, pudp);
++		pgd_populate(&init_mm, pgdp, p4dp);
+ 	}
  
- struct kimage_arch {
- 	void *dtb;
--	unsigned long dtb_mem;
-+	phys_addr_t dtb_mem;
- 	/* Core ELF header buffer */
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
- 	unsigned long elf_headers_sz;
- };
- 
-+#ifdef CONFIG_KEXEC_FILE
- extern const struct kexec_file_ops kexec_image_ops;
- 
- struct kimage;
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index a0b144cfaea7..8096a6aa1d49 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -204,11 +204,7 @@ void machine_kexec(struct kimage *kimage)
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
- 	cpu_soft_restart(reboot_code_buffer_phys, kimage->head, kimage->start,
--#ifdef CONFIG_KEXEC_FILE
--						kimage->arch.dtb_mem);
--#else
--						0);
--#endif
-+			 kimage->arch.dtb_mem);
- 
- 	BUG(); /* Should never get here. */
- }
+ 	p4dp = p4d_offset(pgdp, dst_addr);
 -- 
 2.25.1
 
