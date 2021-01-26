@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
+Received: from mail-qt1-x835.google.com ([2607:f8b0:4864:20::835])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l4BmP-0001u6-PA
- for kexec@lists.infradead.org; Tue, 26 Jan 2021 00:00:22 +0000
-Received: by mail-qt1-x82b.google.com with SMTP id o18so11067807qtp.10
- for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 16:00:17 -0800 (PST)
+ id 1l4C6o-0004v2-2N
+ for kexec@lists.infradead.org; Tue, 26 Jan 2021 00:21:27 +0000
+Received: by mail-qt1-x835.google.com with SMTP id t17so11148783qtq.2
+ for <kexec@lists.infradead.org>; Mon, 25 Jan 2021 16:21:25 -0800 (PST)
+Subject: Re: [PATCH v10 16/18] arm64: kexec: configure trans_pgd page table
+ for kexec
+References: <20210125191923.1060122-1-pasha.tatashin@soleen.com>
+ <20210125191923.1060122-17-pasha.tatashin@soleen.com>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Message-ID: <d5b91732-1985-4d90-89a1-4873deaa5592@soleen.com>
+Date: Mon, 25 Jan 2021 19:21:22 -0500
 MIME-Version: 1.0
-References: <20210122235238.655049-1-elavila@google.com>
- <87im7l2lcr.fsf@jogness.linutronix.de>
-In-Reply-To: <87im7l2lcr.fsf@jogness.linutronix.de>
-From: "J. Avila" <elavila@google.com>
-Date: Mon, 25 Jan 2021 16:00:05 -0800
-Message-ID: <CAGFReeNEf7a4W4hEx5bD+v0qsdszrgPfh1Sa-B-2HeaAY5natg@mail.gmail.com>
-Subject: Re: Issue in dmesg time with lockless ring buffer
+In-Reply-To: <20210125191923.1060122-17-pasha.tatashin@soleen.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,53 +27,225 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Saravana Kannan <saravanak@google.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
+To: jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
 
-Hello,
+I forgot to make changes to arch/arm64/Kconfig. The correct patch is
+below.
 
-This dmesg uses /dev/kmsg; we've verified that we don't see this long
-dmesg time when reading from syslog (via dmesg -S).
+---
 
-We've also tried testing this with logging daemons disabled as well as
-within initrd - both result in similar behavior.
+From a2bc374320d7c7efd3c40644ad3d6d59a024b301 Mon Sep 17 00:00:00 2001
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Mon, 29 Jul 2019 21:24:25 -0400
+Subject: [PATCH v10 16/18] arm64: kexec: configure trans_pgd page table for
+ kexec
 
-If it's relevant, this was done on a toybox shell.
+Configure a page table located in kexec-safe memory that has
+the following mappings:
 
-Thanks,
+1. identity mapping for text of relocation function with executable
+   permission.
+2. va mappings for all source ranges
+3. va mappings for all destination ranges.
 
-Avila
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ arch/arm64/Kconfig                |  2 +-
+ arch/arm64/include/asm/kexec.h    | 12 ++++
+ arch/arm64/kernel/asm-offsets.c   |  6 ++
+ arch/arm64/kernel/machine_kexec.c | 91 ++++++++++++++++++++++++++++++-
+ 4 files changed, 109 insertions(+), 2 deletions(-)
 
-On Mon, Jan 25, 2021 at 5:32 AM John Ogness <john.ogness@linutronix.de> wrote:
->
-> On 2021-01-22, "J. Avila" <elavila@google.com> wrote:
-> > When doing some internal testing on a 5.10.4 kernel, we found that the
-> > time taken for dmesg seemed to increase from the order of milliseconds
-> > to the order of seconds when the dmesg size approached the ~1.2MB
-> > limit. After doing some digging, we found that by reverting all of the
-> > patches in printk/ up to and including
-> > 896fbe20b4e2333fb55cc9b9b783ebcc49eee7c7 ("use the lockless
-> > ringbuffer"), we were able to once more see normal dmesg times.
-> >
-> > This kernel had no meaningful diffs in the printk/ dir when compared
-> > to Linus' tree. This behavior was consistently reproducible using the
-> > following steps:
-> >
-> > 1) In one shell, run "time dmesg > /dev/null"
-> > 2) In another, constantly write to /dev/kmsg
-> >
-> > Within ~5 minutes, we saw that dmesg times increased to 1 second, only
-> > increasing further from there. Is this a known issue?
->
-> The last couple days I have tried to reproduce this issue with no
-> success.
->
-> Is your dmesg using /dev/kmsg or syslog() to read the buffer?
->
-> Are there any syslog daemons or systemd running? Perhaps you can run
-> your test within an initrd to see if this effect is still visible?
->
-> John Ogness
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fc0ed9d6e011..440abd0c0ee1 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1134,7 +1134,7 @@ config CRASH_DUMP
+ 
+ config TRANS_TABLE
+ 	def_bool y
+-	depends on HIBERNATION
++	depends on HIBERNATION || KEXEC_CORE
+ 
+ config XEN_DOM0
+ 	def_bool y
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index b96d8a6aac80..049cde429b1b 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -105,6 +105,12 @@ extern const char arm64_kexec_el2_vectors[];
+  * el2_vector	If present means that relocation routine will go to EL1
+  *		from EL2 to do the copy, and then back to EL2 to do the jump
+  *		to new world.
++ * trans_ttbr0	idmap for relocation function and its argument
++ * trans_ttbr1	map for source/destination addresses.
++ * trans_t0sz	t0sz for idmap page in trans_ttbr0
++ * src_addr	start address for source pages.
++ * dst_addr	start address for destination pages.
++ * copy_len	Number of bytes that need to be copied
+  */
+ struct kern_reloc_arg {
+ 	phys_addr_t head;
+@@ -114,6 +120,12 @@ struct kern_reloc_arg {
+ 	phys_addr_t kern_arg2;
+ 	phys_addr_t kern_arg3;
+ 	phys_addr_t el2_vector;
++	phys_addr_t trans_ttbr0;
++	phys_addr_t trans_ttbr1;
++	unsigned long trans_t0sz;
++	unsigned long src_addr;
++	unsigned long dst_addr;
++	unsigned long copy_len;
+ };
+ 
+ #define ARCH_HAS_KIMAGE_ARCH
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 8a9475be1b62..06278611451d 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -160,6 +160,12 @@ int main(void)
+   DEFINE(KEXEC_KRELOC_KERN_ARG2,	offsetof(struct kern_reloc_arg, kern_arg2));
+   DEFINE(KEXEC_KRELOC_KERN_ARG3,	offsetof(struct kern_reloc_arg, kern_arg3));
+   DEFINE(KEXEC_KRELOC_EL2_VECTOR,	offsetof(struct kern_reloc_arg, el2_vector));
++  DEFINE(KEXEC_KRELOC_TRANS_TTBR0,	offsetof(struct kern_reloc_arg, trans_ttbr0));
++  DEFINE(KEXEC_KRELOC_TRANS_TTBR1,	offsetof(struct kern_reloc_arg, trans_ttbr1));
++  DEFINE(KEXEC_KRELOC_TRANS_T0SZ,	offsetof(struct kern_reloc_arg, trans_t0sz));
++  DEFINE(KEXEC_KRELOC_SRC_ADDR,	offsetof(struct kern_reloc_arg, src_addr));
++  DEFINE(KEXEC_KRELOC_DST_ADDR,	offsetof(struct kern_reloc_arg, dst_addr));
++  DEFINE(KEXEC_KRELOC_COPY_LEN,	offsetof(struct kern_reloc_arg, copy_len));
+ #endif
+   return 0;
+ }
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 41d1e3ca13f8..dc1b7e5a54fb 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -21,6 +21,7 @@
+ #include <asm/mmu_context.h>
+ #include <asm/page.h>
+ #include <asm/sections.h>
++#include <asm/trans_pgd.h>
+ 
+ #include "cpu-reset.h"
+ 
+@@ -71,11 +72,91 @@ static void *kexec_page_alloc(void *arg)
+ 	return page_address(page);
+ }
+ 
++/*
++ * Map source segments starting from src_va, and map destination
++ * segments starting from dst_va, and return size of copy in
++ * *copy_len argument.
++ * Relocation function essentially needs to do:
++ * memcpy(dst_va, src_va, copy_len);
++ */
++static int map_segments(struct kimage *kimage, pgd_t *pgdp,
++			struct trans_pgd_info *info,
++			unsigned long src_va,
++			unsigned long dst_va,
++			unsigned long *copy_len)
++{
++	unsigned long *ptr = 0;
++	unsigned long dest = 0;
++	unsigned long len = 0;
++	unsigned long entry, addr;
++	int rc;
++
++	for (entry = kimage->head; !(entry & IND_DONE); entry = *ptr++) {
++		addr = entry & PAGE_MASK;
++
++		switch (entry & IND_FLAGS) {
++		case IND_DESTINATION:
++			dest = addr;
++			break;
++		case IND_INDIRECTION:
++			ptr = __va(addr);
++			if (rc)
++				return rc;
++			break;
++		case IND_SOURCE:
++			rc = trans_pgd_map_page(info, pgdp, __va(addr),
++						src_va, PAGE_KERNEL);
++			if (rc)
++				return rc;
++			rc = trans_pgd_map_page(info, pgdp, __va(dest),
++						dst_va, PAGE_KERNEL);
++			if (rc)
++				return rc;
++			dest += PAGE_SIZE;
++			src_va += PAGE_SIZE;
++			dst_va += PAGE_SIZE;
++			len += PAGE_SIZE;
++		}
++	}
++	*copy_len = len;
++
++	return 0;
++}
++
++static int mmu_relocate_setup(struct kimage *kimage, void *reloc_code,
++			      struct kern_reloc_arg *kern_reloc_arg)
++{
++	struct trans_pgd_info info = {
++		.trans_alloc_page	= kexec_page_alloc,
++		.trans_alloc_arg	= kimage,
++	};
++	pgd_t *trans_pgd = kexec_page_alloc(kimage);
++	int rc;
++
++	if (!trans_pgd)
++		return -ENOMEM;
++
++	/* idmap relocation function */
++	rc = trans_pgd_idmap_page(&info, &kern_reloc_arg->trans_ttbr0,
++				  &kern_reloc_arg->trans_t0sz, reloc_code);
++	if (rc)
++		return rc;
++
++	kern_reloc_arg->src_addr = _PAGE_OFFSET(VA_BITS_MIN);
++	kern_reloc_arg->dst_addr = _PAGE_OFFSET(VA_BITS_MIN - 1);
++	kern_reloc_arg->trans_ttbr1 = phys_to_ttbr(__pa(trans_pgd));
++
++	rc = map_segments(kimage, trans_pgd, &info, kern_reloc_arg->src_addr,
++			  kern_reloc_arg->dst_addr, &kern_reloc_arg->copy_len);
++	return rc;
++}
++
+ int machine_kexec_post_load(struct kimage *kimage)
+ {
+ 	void *reloc_code = page_to_virt(kimage->control_code_page);
+ 	struct kern_reloc_arg *kern_reloc_arg = kexec_page_alloc(kimage);
+ 	long func_offset, vector_offset, reloc_size;
++	int rc = 0;
+ 
+ 	if (!kern_reloc_arg)
+ 		return -ENOMEM;
+@@ -95,6 +176,14 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode())
+ 		kern_reloc_arg->el2_vector = __pa(reloc_code) + vector_offset;
+ 
++	/*
++	 * If relocation is not needed, we do not need to enable MMU in
++	 * relocation routine, therefore do not create page tables for
++	 * scenarios such as crash kernel
++	 */
++	if (!(kimage->head & IND_DONE))
++		rc = mmu_relocate_setup(kimage, reloc_code, kern_reloc_arg);
++
+ 	kexec_image_info(kimage);
+ 
+ 	/* Flush the reloc_code in preparation for its execution. */
+@@ -103,7 +192,7 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 			   reloc_size);
+ 	__flush_dcache_area(kern_reloc_arg, sizeof(struct kern_reloc_arg));
+ 
+-	return 0;
++	return rc;
+ }
+ 
+ /**
+-- 
+2.25.1
 
 _______________________________________________
 kexec mailing list
