@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mail-eopbgr1400083.outbound.protection.outlook.com
+ ([40.107.140.83] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l4zl9-00063p-Ee
- for kexec@lists.infradead.org; Thu, 28 Jan 2021 05:22:24 +0000
-Date: Thu, 28 Jan 2021 13:22:08 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 1/1] kexec: dump kmessage before machine_kexec
-Message-ID: <20210128052208.GB2339@MiWiFi-R3L-srv>
-References: <20210126204125.313820-1-pasha.tatashin@soleen.com>
- <20210126204125.313820-2-pasha.tatashin@soleen.com>
+ id 1l53Ab-0006Zm-DM
+ for kexec@lists.infradead.org; Thu, 28 Jan 2021 09:00:54 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [MAKEDUMPFILE PATCH 1/2] Add option to prevent writing the
+ dumpfile
+Date: Thu, 28 Jan 2021 09:00:41 +0000
+Message-ID: <OSBPR01MB199177A99EAA6F3A91CE49DADDBA9@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <20201124104525.1070885-1-jthierry@redhat.com>
+ <20201124104525.1070885-2-jthierry@redhat.com>
+ <OSAPR01MB1986854BD0AEB2927A084DDCDDA40@OSAPR01MB1986.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSAPR01MB1986854BD0AEB2927A084DDCDDA40@OSAPR01MB1986.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210126204125.313820-2-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,73 +28,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: sashal@kernel.org, pmladek@suse.com, tony.luck@intel.com, keescook@chromium.org, anton@enomsg.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, tyhicks@linux.microsoft.com, ebiederm@xmission.com, ccross@android.com, akpm@linux-foundation.org
+To: Julien Thierry <jthierry@redhat.com>, "lijiang@redhat.com" <lijiang@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-On 01/26/21 at 03:41pm, Pavel Tatashin wrote:
-> kmsg_dump(KMSG_DUMP_SHUTDOWN) is called before
-> machine_restart(), machine_halt(), machine_power_off(), the only one that
-> is missing is  machine_kexec().
+-----Original Message-----
+> Hi Julien,
 > 
-> The dmesg output that it contains can be used to study the shutdown
-> performance of both kernel and systemd during kexec reboot.
+> Thanks for the patches, and sorry for the late reply..
 > 
-> Here is example of dmesg data collected after kexec:
+> -----Original Message-----
+> > Add a --dry-run option to run all operations without writing the
+> > dump to the output file.
 > 
-> root@dplat-cp22:~# cat /sys/fs/pstore/dmesg-ramoops-0 | tail
-> ...
-> <6>[   70.914592] psci: CPU3 killed (polled 0 ms)
-> <5>[   70.915705] CPU4: shutdown
-> <6>[   70.916643] psci: CPU4 killed (polled 4 ms)
-> <5>[   70.917715] CPU5: shutdown
-> <6>[   70.918725] psci: CPU5 killed (polled 0 ms)
-> <5>[   70.919704] CPU6: shutdown
-> <6>[   70.920726] psci: CPU6 killed (polled 4 ms)
-> <5>[   70.921642] CPU7: shutdown
-> <6>[   70.922650] psci: CPU7 killed (polled 0 ms)
+> First, I think makedumpfile should not change its behavior (path checks,
+> messages emitted, etc.) and exit code except for writing the dumpfile
+> with or without the --dry-run option.  For example with this patch:
 > 
-> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-> Reviewed-by: Kees Cook <keescook@chromium.org>
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
-> ---
->  kernel/kexec_core.c | 2 ++
->  1 file changed, 2 insertions(+)
+>   $ touch dumpfile
+>   $ makedumpfile -d 1 vmcore dumpfile --dry-run  --> ok, no problem
+>   $ makedumpfile -d 1 vmcore dumpfile            --> error
 > 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 4f8efc278aa7..e253c8b59145 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -37,6 +37,7 @@
->  #include <linux/compiler.h>
->  #include <linux/hugetlb.h>
->  #include <linux/objtool.h>
-> +#include <linux/kmsg_dump.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -1180,6 +1181,7 @@ int kernel_kexec(void)
->  		machine_shutdown();
->  	}
->  
-> +	kmsg_dump(KMSG_DUMP_SHUTDOWN);
->  	machine_kexec(kexec_image);
+> This change is a bit strange to me.  So with this premise, commented inline
+> and attached a modified patch at end of this email.  Could you check those?
 
-Looks good to me, thx.
+This patchset is applied with some modifications:
+https://github.com/makedumpfile/makedumpfile/compare/54aec38...6f3e75a
 
-Acked-by: Baoquan He <bhe@redhat.com>
+I will add another for counting bytes to be written and more readable stats later..
 
->  
->  #ifdef CONFIG_KEXEC_JUMP
-> -- 
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Thanks,
+Kazu
 
 
 _______________________________________________
