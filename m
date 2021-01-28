@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf2f.google.com ([2607:f8b0:4864:20::f2f])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l4obB-0005tW-L2
- for kexec@lists.infradead.org; Wed, 27 Jan 2021 17:27:34 +0000
-Received: by mail-qv1-xf2f.google.com with SMTP id p5so1420848qvs.7
- for <kexec@lists.infradead.org>; Wed, 27 Jan 2021 09:27:19 -0800 (PST)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v11 6/6] arm64: kexec: remove head from relocation argument
-Date: Wed, 27 Jan 2021 12:27:06 -0500
-Message-Id: <20210127172706.617195-7-pasha.tatashin@soleen.com>
-In-Reply-To: <20210127172706.617195-1-pasha.tatashin@soleen.com>
-References: <20210127172706.617195-1-pasha.tatashin@soleen.com>
+ id 1l4zl9-00063p-Ee
+ for kexec@lists.infradead.org; Thu, 28 Jan 2021 05:22:24 +0000
+Date: Thu, 28 Jan 2021 13:22:08 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v2 1/1] kexec: dump kmessage before machine_kexec
+Message-ID: <20210128052208.GB2339@MiWiFi-R3L-srv>
+References: <20210126204125.313820-1-pasha.tatashin@soleen.com>
+ <20210126204125.313820-2-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210126204125.313820-2-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,64 +24,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: sashal@kernel.org, pmladek@suse.com, tony.luck@intel.com, keescook@chromium.org, anton@enomsg.org, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, tyhicks@linux.microsoft.com, ebiederm@xmission.com, ccross@android.com, akpm@linux-foundation.org
 
-Now, that relocation is done using virtual addresses, reloc_arg->head
-is not needed anymore.
+On 01/26/21 at 03:41pm, Pavel Tatashin wrote:
+> kmsg_dump(KMSG_DUMP_SHUTDOWN) is called before
+> machine_restart(), machine_halt(), machine_power_off(), the only one that
+> is missing is  machine_kexec().
+> 
+> The dmesg output that it contains can be used to study the shutdown
+> performance of both kernel and systemd during kexec reboot.
+> 
+> Here is example of dmesg data collected after kexec:
+> 
+> root@dplat-cp22:~# cat /sys/fs/pstore/dmesg-ramoops-0 | tail
+> ...
+> <6>[   70.914592] psci: CPU3 killed (polled 0 ms)
+> <5>[   70.915705] CPU4: shutdown
+> <6>[   70.916643] psci: CPU4 killed (polled 4 ms)
+> <5>[   70.917715] CPU5: shutdown
+> <6>[   70.918725] psci: CPU5 killed (polled 0 ms)
+> <5>[   70.919704] CPU6: shutdown
+> <6>[   70.920726] psci: CPU6 killed (polled 4 ms)
+> <5>[   70.921642] CPU7: shutdown
+> <6>[   70.922650] psci: CPU7 killed (polled 0 ms)
+> 
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Reviewed-by: Kees Cook <keescook@chromium.org>
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> Reviewed-by: Bhupesh Sharma <bhsharma@redhat.com>
+> ---
+>  kernel/kexec_core.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 4f8efc278aa7..e253c8b59145 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -37,6 +37,7 @@
+>  #include <linux/compiler.h>
+>  #include <linux/hugetlb.h>
+>  #include <linux/objtool.h>
+> +#include <linux/kmsg_dump.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -1180,6 +1181,7 @@ int kernel_kexec(void)
+>  		machine_shutdown();
+>  	}
+>  
+> +	kmsg_dump(KMSG_DUMP_SHUTDOWN);
+>  	machine_kexec(kexec_image);
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/kexec.h    | 2 --
- arch/arm64/kernel/asm-offsets.c   | 1 -
- arch/arm64/kernel/machine_kexec.c | 1 -
- 3 files changed, 4 deletions(-)
+Looks good to me, thx.
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 049cde429b1b..2fa4109bd582 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -97,7 +97,6 @@ extern const char arm64_kexec_el2_vectors[];
- 
- /*
-  * kern_reloc_arg is passed to kernel relocation function as an argument.
-- * head		kimage->head, allows to traverse through relocation segments.
-  * entry_addr	kimage->start, where to jump from relocation function (new
-  *		kernel, or purgatory entry address).
-  * kern_arg0	first argument to kernel is its dtb address. The other
-@@ -113,7 +112,6 @@ extern const char arm64_kexec_el2_vectors[];
-  * copy_len	Number of bytes that need to be copied
-  */
- struct kern_reloc_arg {
--	phys_addr_t head;
- 	phys_addr_t entry_addr;
- 	phys_addr_t kern_arg0;
- 	phys_addr_t kern_arg1;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 06278611451d..94f050ad6471 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -153,7 +153,6 @@ int main(void)
-   BLANK();
- #endif
- #ifdef CONFIG_KEXEC_CORE
--  DEFINE(KEXEC_KRELOC_HEAD,		offsetof(struct kern_reloc_arg, head));
-   DEFINE(KEXEC_KRELOC_ENTRY_ADDR,	offsetof(struct kern_reloc_arg, entry_addr));
-   DEFINE(KEXEC_KRELOC_KERN_ARG0,	offsetof(struct kern_reloc_arg, kern_arg0));
-   DEFINE(KEXEC_KRELOC_KERN_ARG1,	offsetof(struct kern_reloc_arg, kern_arg1));
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 9588c91f67c6..07da8d623d8e 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -166,7 +166,6 @@ int machine_kexec_post_load(struct kimage *kimage)
- 	memcpy(reloc_code, __relocate_new_kernel_start, reloc_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code) + func_offset;
- 	kimage->arch.kern_reloc_arg = __pa(kern_reloc_arg);
--	kern_reloc_arg->head = kimage->head;
- 	kern_reloc_arg->entry_addr = kimage->start;
- 	kern_reloc_arg->kern_arg0 = kimage->arch.dtb_mem;
- 
--- 
-2.25.1
+Acked-by: Baoquan He <bhe@redhat.com>
+
+>  
+>  #ifdef CONFIG_KEXEC_JUMP
+> -- 
+> 2.25.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
 
 _______________________________________________
