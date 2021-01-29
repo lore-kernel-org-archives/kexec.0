@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410057.outbound.protection.outlook.com
- ([40.107.141.57] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-oi1-x22c.google.com ([2607:f8b0:4864:20::22c])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l5Lcq-00069i-ST
- for kexec@lists.infradead.org; Fri, 29 Jan 2021 04:43:19 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: Makedumpfile compile errors on Debian 10
-Date: Fri, 29 Jan 2021 04:43:10 +0000
-Message-ID: <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
-In-Reply-To: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
-Content-Language: ja-JP
+ id 1l5MHV-00007b-3G
+ for kexec@lists.infradead.org; Fri, 29 Jan 2021 05:25:18 +0000
+Received: by mail-oi1-x22c.google.com with SMTP id k25so8666904oik.13
+ for <kexec@lists.infradead.org>; Thu, 28 Jan 2021 21:25:16 -0800 (PST)
 MIME-Version: 1.0
+References: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
+ <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+From: "Jiang Wang ." <jiang.wang@bytedance.com>
+Date: Thu, 28 Jan 2021 21:25:04 -0800
+Message-ID: <CAP_N_Z-t8v0maLe9jTDPPjYe9933JxymXGpyy6LONQ23EuYRnA@mail.gmail.com>
+Subject: Re: [External] RE: Makedumpfile compile errors on Debian 10
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,97 +21,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Jiang Wang ." <jiang.wang@bytedance.com>, kexec <kexec@lists.infradead.org>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: kexec <kexec@lists.infradead.org>
 
-Hi Jiang,
-
------Original Message-----
-> Hi there,
-> 
-> I tried to compile version 1.6.7 and master on Debian 10 and got
-> following error:
-> 
-> root@gitlab-runner-stretch:/home/gitlab-runner/makedumpfile-master# make
-> cc  -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
-> -D_LARGEFILE64_SOURCE -DVERSION='"1.6.8++"' -DRELEASE_DATE='"16 Nov
-> 2020"' -D__x86_64__   print_info.
-> o dwarf_info.o elf_info.o erase_info.o sadump_info.o cache.o tools.o
-> printk.o arch/arm.o arch/arm64.o arch/x86.o arch/x86_64.o arch/ia64.o
-> arch/ppc64.o arch/s390
-> x.o arch/ppc.o arch/sparc64.o -rdynamic -o makedumpfile makedumpfile.c
-> -lpthread -static -ldw -lbz2 -ldl -lelf -lz -llzma  -lebl
-> /usr/bin/ld: erase_info.o: in function `process_eppic_file':
-> /home/gitlab-runner/makedumpfile-master/erase_info.c:2202: warning:
-> Using 'dlopen' in statically linked applications requires at runtime
-> the shared libraries fro
-> m the glibc version used for linking
-> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_abbrev_hash.o): in function
-> `Dwarf_Abbrev_Hash_insert':
-> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
-> undefined reference to `pthread_rwlock_tryrdlock'
-> /usr/bin/ld: /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
-> undefined reference to `pthread_rwlock_tryrdlock'
-> /usr/bin/ld: /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
-> undefined reference to `pthread_rwlock_tryrdlock'
-> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_abbrev_hash.o): in function
-> `Dwarf_Abbrev_Hash_find':
-> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:461:
-> undefined reference to `pthread_rwlock_tryrdlock'
-> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_sig8_hash.o): in function
-> `Dwarf_Sig8_Hash_insert':
-> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
-> undefined reference to `pthread_rwlock_tryrdlock'
-> /usr/bin/ld:
-> //usr/local/lib/libdw.a(dwarf_sig8_hash.o):/home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsize
-> hash_concurrent.c:394:
-> more undefined referenc
-> es to `pthread_rwlock_tryrdlock' follow
-> collect2: error: ld returned 1 exit status
-> make: *** [Makefile:100: makedumpfile] Error 1
-> To fix it, I have to make the following change:
-> diff --git a/Makefile b/Makefile
-> index 388faf7..7006f81 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -65,7 +65,7 @@ LIBS := -lsnappy $(LIBS)
->  CFLAGS += -DUSESNAPPY
->  endif
-> 
-> -LIBS := -lpthread $(LIBS)
-> +LIBS := $(LIBS) -lpthread
-> 
->  try-run = $(shell set -e;              \
->         TMP=".$$$$.tmp";                \
-> Not sure if it is an issue of Debian or makedumpfile. If it is the
-> latter, please fix the Makefile. Thanks.
-
-Thanks for the report.
-
-I'm not sure why it doesn't occur on my recent Fedora machine with
-elfutils-0.182, but seems that -lpthread should be put after -ldw, so
-the change looks good to me.
-
-Would you post a formal patch?  or I can fix it with your tag
-like Signed-off-by or Reported-by.
-
-> Also, I tried the master and version 1.6.7 on Linux kernel 5.10 and
-> got a kernel not supported error. Do we know when 5.10 will be
-> supported? Thanks.
-
-The latest is makedumpfile-1.6.8, but it was tested with up to kernel 5.9.
-I've tested the current master with kernel 5.10 to 5.11-rc5 on x86_64,
-it's ok so far.  The next version will support 5.10 officially and
-will be released this spring or summer, but not scheduled yet.
-
-Thanks,
-Kazu
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgS2F6dSwKCkkgc2VlLiBJIHdpbGwgcG9zdCBhIHBhdGNoIGZvciB0aGlzLiBJIHdpbGwgdHJ5
+IDEuNi44IHRvIHNlZSBpZiBpdAp3b3JrcyBmb3IgbWUgb3Igbm90LiBUaGFua3MgZm9yIHRoZSBp
+bmZvLgoKUmVnYXJkcywKCkppYW5nCgpPbiBUaHUsIEphbiAyOCwgMjAyMSBhdCA4OjQzIFBNIEhB
+R0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4gOS7gSkKPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6
+Cj4KPiBIaSBKaWFuZywKPgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBIaSB0aGVy
+ZSwKPiA+Cj4gPiBJIHRyaWVkIHRvIGNvbXBpbGUgdmVyc2lvbiAxLjYuNyBhbmQgbWFzdGVyIG9u
+IERlYmlhbiAxMCBhbmQgZ290Cj4gPiBmb2xsb3dpbmcgZXJyb3I6Cj4gPgo+ID4gcm9vdEBnaXRs
+YWItcnVubmVyLXN0cmV0Y2g6L2hvbWUvZ2l0bGFiLXJ1bm5lci9tYWtlZHVtcGZpbGUtbWFzdGVy
+IyBtYWtlCj4gPiBjYyAgLWcgLU8yIC1XYWxsIC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQgLURfTEFS
+R0VGSUxFX1NPVVJDRQo+ID4gLURfTEFSR0VGSUxFNjRfU09VUkNFIC1EVkVSU0lPTj0nIjEuNi44
+KysiJyAtRFJFTEVBU0VfREFURT0nIjE2IE5vdgo+ID4gMjAyMCInIC1EX194ODZfNjRfXyAgIHBy
+aW50X2luZm8uCj4gPiBvIGR3YXJmX2luZm8ubyBlbGZfaW5mby5vIGVyYXNlX2luZm8ubyBzYWR1
+bXBfaW5mby5vIGNhY2hlLm8gdG9vbHMubwo+ID4gcHJpbnRrLm8gYXJjaC9hcm0ubyBhcmNoL2Fy
+bTY0Lm8gYXJjaC94ODYubyBhcmNoL3g4Nl82NC5vIGFyY2gvaWE2NC5vCj4gPiBhcmNoL3BwYzY0
+Lm8gYXJjaC9zMzkwCj4gPiB4Lm8gYXJjaC9wcGMubyBhcmNoL3NwYXJjNjQubyAtcmR5bmFtaWMg
+LW8gbWFrZWR1bXBmaWxlIG1ha2VkdW1wZmlsZS5jCj4gPiAtbHB0aHJlYWQgLXN0YXRpYyAtbGR3
+IC1sYnoyIC1sZGwgLWxlbGYgLWx6IC1sbHptYSAgLWxlYmwKPiA+IC91c3IvYmluL2xkOiBlcmFz
+ZV9pbmZvLm86IGluIGZ1bmN0aW9uIGBwcm9jZXNzX2VwcGljX2ZpbGUnOgo+ID4gL2hvbWUvZ2l0
+bGFiLXJ1bm5lci9tYWtlZHVtcGZpbGUtbWFzdGVyL2VyYXNlX2luZm8uYzoyMjAyOiB3YXJuaW5n
+Ogo+ID4gVXNpbmcgJ2Rsb3BlbicgaW4gc3RhdGljYWxseSBsaW5rZWQgYXBwbGljYXRpb25zIHJl
+cXVpcmVzIGF0IHJ1bnRpbWUKPiA+IHRoZSBzaGFyZWQgbGlicmFyaWVzIGZybwo+ID4gbSB0aGUg
+Z2xpYmMgdmVyc2lvbiB1c2VkIGZvciBsaW5raW5nCj4gPiAvdXNyL2Jpbi9sZDogLy91c3IvbG9j
+YWwvbGliL2xpYmR3LmEoZHdhcmZfYWJicmV2X2hhc2gubyk6IGluIGZ1bmN0aW9uCj4gPiBgRHdh
+cmZfQWJicmV2X0hhc2hfaW5zZXJ0JzoKPiA+IC9ob21lL2dpdGxhYi1ydW5uZXIvZWxmdXRpbHMt
+MC4xODIvbGliZHcvLi4vbGliL2R5bmFtaWNzaXplaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4g
+dW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgcHRocmVhZF9yd2xvY2tfdHJ5cmRsb2NrJwo+ID4gL3Vz
+ci9iaW4vbGQ6IC9ob21lL2dpdGxhYi1ydW5uZXIvZWxmdXRpbHMtMC4xODIvbGliZHcvLi4vbGli
+L2R5bmFtaWNzaXplaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4gdW5kZWZpbmVkIHJlZmVyZW5j
+ZSB0byBgcHRocmVhZF9yd2xvY2tfdHJ5cmRsb2NrJwo+ID4gL3Vzci9iaW4vbGQ6IC9ob21lL2dp
+dGxhYi1ydW5uZXIvZWxmdXRpbHMtMC4xODIvbGliZHcvLi4vbGliL2R5bmFtaWNzaXplaGFzaF9j
+b25jdXJyZW50LmM6Mzk0Ogo+ID4gdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgcHRocmVhZF9yd2xv
+Y2tfdHJ5cmRsb2NrJwo+ID4gL3Vzci9iaW4vbGQ6IC8vdXNyL2xvY2FsL2xpYi9saWJkdy5hKGR3
+YXJmX2FiYnJldl9oYXNoLm8pOiBpbiBmdW5jdGlvbgo+ID4gYER3YXJmX0FiYnJldl9IYXNoX2Zp
+bmQnOgo+ID4gL2hvbWUvZ2l0bGFiLXJ1bm5lci9lbGZ1dGlscy0wLjE4Mi9saWJkdy8uLi9saWIv
+ZHluYW1pY3NpemVoYXNoX2NvbmN1cnJlbnQuYzo0NjE6Cj4gPiB1bmRlZmluZWQgcmVmZXJlbmNl
+IHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snCj4gPiAvdXNyL2Jpbi9sZDogLy91c3IvbG9j
+YWwvbGliL2xpYmR3LmEoZHdhcmZfc2lnOF9oYXNoLm8pOiBpbiBmdW5jdGlvbgo+ID4gYER3YXJm
+X1NpZzhfSGFzaF9pbnNlcnQnOgo+ID4gL2hvbWUvZ2l0bGFiLXJ1bm5lci9lbGZ1dGlscy0wLjE4
+Mi9saWJkdy8uLi9saWIvZHluYW1pY3NpemVoYXNoX2NvbmN1cnJlbnQuYzozOTQ6Cj4gPiB1bmRl
+ZmluZWQgcmVmZXJlbmNlIHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snCj4gPiAvdXNyL2Jp
+bi9sZDoKPiA+IC8vdXNyL2xvY2FsL2xpYi9saWJkdy5hKGR3YXJmX3NpZzhfaGFzaC5vKTovaG9t
+ZS9naXRsYWItcnVubmVyL2VsZnV0aWxzLTAuMTgyL2xpYmR3Ly4uL2xpYi9keW5hbWljc2l6ZQo+
+ID4gaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4gbW9yZSB1bmRlZmluZWQgcmVmZXJlbmMKPiA+
+IGVzIHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snIGZvbGxvdwo+ID4gY29sbGVjdDI6IGVy
+cm9yOiBsZCByZXR1cm5lZCAxIGV4aXQgc3RhdHVzCj4gPiBtYWtlOiAqKiogW01ha2VmaWxlOjEw
+MDogbWFrZWR1bXBmaWxlXSBFcnJvciAxCj4gPiBUbyBmaXggaXQsIEkgaGF2ZSB0byBtYWtlIHRo
+ZSBmb2xsb3dpbmcgY2hhbmdlOgo+ID4gZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUK
+PiA+IGluZGV4IDM4OGZhZjcuLjcwMDZmODEgMTAwNjQ0Cj4gPiAtLS0gYS9NYWtlZmlsZQo+ID4g
+KysrIGIvTWFrZWZpbGUKPiA+IEBAIC02NSw3ICs2NSw3IEBAIExJQlMgOj0gLWxzbmFwcHkgJChM
+SUJTKQo+ID4gIENGTEFHUyArPSAtRFVTRVNOQVBQWQo+ID4gIGVuZGlmCj4gPgo+ID4gLUxJQlMg
+Oj0gLWxwdGhyZWFkICQoTElCUykKPiA+ICtMSUJTIDo9ICQoTElCUykgLWxwdGhyZWFkCj4gPgo+
+ID4gIHRyeS1ydW4gPSAkKHNoZWxsIHNldCAtZTsgICAgICAgICAgICAgIFwKPiA+ICAgICAgICAg
+VE1QPSIuJCQkJC50bXAiOyAgICAgICAgICAgICAgICBcCj4gPiBOb3Qgc3VyZSBpZiBpdCBpcyBh
+biBpc3N1ZSBvZiBEZWJpYW4gb3IgbWFrZWR1bXBmaWxlLiBJZiBpdCBpcyB0aGUKPiA+IGxhdHRl
+ciwgcGxlYXNlIGZpeCB0aGUgTWFrZWZpbGUuIFRoYW5rcy4KPgo+IFRoYW5rcyBmb3IgdGhlIHJl
+cG9ydC4KPgo+IEknbSBub3Qgc3VyZSB3aHkgaXQgZG9lc24ndCBvY2N1ciBvbiBteSByZWNlbnQg
+RmVkb3JhIG1hY2hpbmUgd2l0aAo+IGVsZnV0aWxzLTAuMTgyLCBidXQgc2VlbXMgdGhhdCAtbHB0
+aHJlYWQgc2hvdWxkIGJlIHB1dCBhZnRlciAtbGR3LCBzbwo+IHRoZSBjaGFuZ2UgbG9va3MgZ29v
+ZCB0byBtZS4KPgo+IFdvdWxkIHlvdSBwb3N0IGEgZm9ybWFsIHBhdGNoPyAgb3IgSSBjYW4gZml4
+IGl0IHdpdGggeW91ciB0YWcKPiBsaWtlIFNpZ25lZC1vZmYtYnkgb3IgUmVwb3J0ZWQtYnkuCj4K
+PiA+IEFsc28sIEkgdHJpZWQgdGhlIG1hc3RlciBhbmQgdmVyc2lvbiAxLjYuNyBvbiBMaW51eCBr
+ZXJuZWwgNS4xMCBhbmQKPiA+IGdvdCBhIGtlcm5lbCBub3Qgc3VwcG9ydGVkIGVycm9yLiBEbyB3
+ZSBrbm93IHdoZW4gNS4xMCB3aWxsIGJlCj4gPiBzdXBwb3J0ZWQ/IFRoYW5rcy4KPgo+IFRoZSBs
+YXRlc3QgaXMgbWFrZWR1bXBmaWxlLTEuNi44LCBidXQgaXQgd2FzIHRlc3RlZCB3aXRoIHVwIHRv
+IGtlcm5lbCA1LjkuCj4gSSd2ZSB0ZXN0ZWQgdGhlIGN1cnJlbnQgbWFzdGVyIHdpdGgga2VybmVs
+IDUuMTAgdG8gNS4xMS1yYzUgb24geDg2XzY0LAo+IGl0J3Mgb2sgc28gZmFyLiAgVGhlIG5leHQg
+dmVyc2lvbiB3aWxsIHN1cHBvcnQgNS4xMCBvZmZpY2lhbGx5IGFuZAo+IHdpbGwgYmUgcmVsZWFz
+ZWQgdGhpcyBzcHJpbmcgb3Igc3VtbWVyLCBidXQgbm90IHNjaGVkdWxlZCB5ZXQuCj4KPiBUaGFu
+a3MsCj4gS2F6dQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
+bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
