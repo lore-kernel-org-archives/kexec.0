@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
+Received: from mail-qv1-xf30.google.com ([2607:f8b0:4864:20::f30])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l5F5a-0001yQ-7y
- for kexec@lists.infradead.org; Thu, 28 Jan 2021 21:44:31 +0000
-Received: by mail-ed1-x531.google.com with SMTP id dj23so8310426edb.13
- for <kexec@lists.infradead.org>; Thu, 28 Jan 2021 13:44:27 -0800 (PST)
+ id 1l5Irb-0001wl-J7
+ for kexec@lists.infradead.org; Fri, 29 Jan 2021 01:46:20 +0000
+Received: by mail-qv1-xf30.google.com with SMTP id l11so3829110qvt.1
+ for <kexec@lists.infradead.org>; Thu, 28 Jan 2021 17:46:15 -0800 (PST)
 MIME-Version: 1.0
-References: <20210126204125.313820-1-pasha.tatashin@soleen.com>
- <20210126204125.313820-2-pasha.tatashin@soleen.com>
- <87lfcczvab.fsf@x220.int.ebiederm.org>
-In-Reply-To: <87lfcczvab.fsf@x220.int.ebiederm.org>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 28 Jan 2021 16:43:51 -0500
-Message-ID: <CA+CK2bBMO+USv3SE25GNQDqpY-+4cEXrKbAmaSmsko=_CS6ZPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/1] kexec: dump kmessage before machine_kexec
+References: <20210122235238.655049-1-elavila@google.com>
+ <87im7l2lcr.fsf@jogness.linutronix.de>
+ <CAGFReeNEf7a4W4hEx5bD+v0qsdszrgPfh1Sa-B-2HeaAY5natg@mail.gmail.com>
+In-Reply-To: <CAGFReeNEf7a4W4hEx5bD+v0qsdszrgPfh1Sa-B-2HeaAY5natg@mail.gmail.com>
+From: "J. Avila" <elavila@google.com>
+Date: Thu, 28 Jan 2021 17:46:03 -0800
+Message-ID: <CAGFReeOKwvsUb5hMMXLY3eTdqMDOae9mNjfp5BXx+BYfn5vMiw@mail.gmail.com>
+Subject: Re: Issue in dmesg time with lockless ring buffer
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,43 +22,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Sasha Levin <sashal@kernel.org>, Petr Mladek <pmladek@suse.com>, Tony Luck <tony.luck@intel.com>, Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, kexec mailing list <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, LKML <linux-kernel@vger.kernel.org>, Tyler Hicks <tyhicks@linux.microsoft.com>, Colin Cross <ccross@android.com>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Andrea Parri <parri.andrea@gmail.com>, Petr Mladek <pmladek@suse.com>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Paul McKenney <paulmck@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Steven Rostedt <rostedt@goodmis.org>, Saravana Kannan <saravanak@google.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Linus Torvalds <torvalds@linux-foundation.org>
 
-On Thu, Jan 28, 2021 at 3:01 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
->
-> Pavel Tatashin <pasha.tatashin@soleen.com> writes:
->
-> > kmsg_dump(KMSG_DUMP_SHUTDOWN) is called before
-> > machine_restart(), machine_halt(), machine_power_off(), the only one that
-> > is missing is  machine_kexec().
-> >
-> > The dmesg output that it contains can be used to study the shutdown
-> > performance of both kernel and systemd during kexec reboot.
-> >
-> > Here is example of dmesg data collected after kexec:
->
-> As long was we keep kmsg_dump out of the crash_kexec path where
-> it completely breaks kexec on panic this seems a reasonable thing to do.
-> On the ordinary kernel_kexec path everything is expected to be working.
-
-This is an ordinary kexec reboot path, not kdump.
-
->
-> Is kmsg_dump expected to work after all of the device drivers
-> are shut down?  Otherwise this placement of kmsg_dump is too late.
-
-Yes it is. It is called after device_shutdown(); in all other places.
-
-
-Thank you,
-Pasha
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGVsbG8gSm9obiwKCknigJl2ZSBkb25lIHNvbWUgYWRkaXRpb25hbCBkaWdnaW5nIG9uIG15IGVu
+ZC4gSSB0ZXN0ZWQgdXNpbmcgYSA1LjEwLjExCmtlcm5lbCBhbmQgb2JzZXJ2ZWQgdGhlIGZvbGxv
+d2luZzoKCjEpIFdpdGggdGhlIGRlZmF1bHQgb2YgQ09ORklHX0xPR19CVUZfU0hJRlQ9MTcsIEkg
+d2FzIG5vdCBhYmxlIHRvIHJlcHJvZHVjZQogICB0aGUgaXNzdWUuCjIpIFdpdGggQ09ORklHX0xP
+R19CVUZfU0hJRlQ9MjAsIEkgd2FzIGFibGUgdG8gcmVwcm9kdWNlIHRoZSBiZWhhdmlvcgogICBt
+ZW50aW9uZWQgYmVmb3JlLgozKSBXaXRoICgyKSArIHJldmVydGluZyB1cCB0byBhbmQgaW5jbHVk
+aW5nIDg5NmZiZTIwYjRlMiAocHJpbnRrOiB1c2UgdGhlCiAgIGxvY2tsZXNzIHJpbmdidWZmZXIp
+LCBJIHNhdyBzaG9ydCBkbWVzZyB0aW1lcyBhZ2Fpbi4KCkl0IHNlZW1zIHRoYXQgdGhpcyBpc3N1
+ZSBtYXkgb25seSBleGlzdCB3aXRoIGEgc3VmZmljaWVudGx5IGJpZyBsb2cgYnVmZmVyCnNpemUu
+IERlc3BpdGUgMU1CIGJlaW5nIGEgcmVsYXRpdmVseSB1bmNvbW1vbiBzaXplIGZvciBsaW51eCBr
+ZXJuZWwgbG9nCmJ1ZmZlcnMsIHRoaXMgc3RpbGwgaW5kaWNhdGVzIGEgcG90ZW50aWFsIGlzc3Vl
+IGluIHRoZSBjb2RlOyBkbyB5b3UgdGhpbmsKaXQncyB3b3J0aCBpbnZlc3RpZ2F0aW9uPwoKVGhh
+bmtzLAoKQXZpbGEKCk9uIE1vbiwgSmFuIDI1LCAyMDIxIGF0IDQ6MDAgUE0gSi4gQXZpbGEgPGVs
+YXZpbGFAZ29vZ2xlLmNvbT4gd3JvdGU6Cj4KPiBIZWxsbywKPgo+IFRoaXMgZG1lc2cgdXNlcyAv
+ZGV2L2ttc2c7IHdlJ3ZlIHZlcmlmaWVkIHRoYXQgd2UgZG9uJ3Qgc2VlIHRoaXMgbG9uZwo+IGRt
+ZXNnIHRpbWUgd2hlbiByZWFkaW5nIGZyb20gc3lzbG9nICh2aWEgZG1lc2cgLVMpLgo+Cj4gV2Un
+dmUgYWxzbyB0cmllZCB0ZXN0aW5nIHRoaXMgd2l0aCBsb2dnaW5nIGRhZW1vbnMgZGlzYWJsZWQg
+YXMgd2VsbCBhcwo+IHdpdGhpbiBpbml0cmQgLSBib3RoIHJlc3VsdCBpbiBzaW1pbGFyIGJlaGF2
+aW9yLgo+Cj4gSWYgaXQncyByZWxldmFudCwgdGhpcyB3YXMgZG9uZSBvbiBhIHRveWJveCBzaGVs
+bC4KPgo+IFRoYW5rcywKPgo+IEF2aWxhCj4KPiBPbiBNb24sIEphbiAyNSwgMjAyMSBhdCA1OjMy
+IEFNIEpvaG4gT2duZXNzIDxqb2huLm9nbmVzc0BsaW51dHJvbml4LmRlPiB3cm90ZToKPiA+Cj4g
+PiBPbiAyMDIxLTAxLTIyLCAiSi4gQXZpbGEiIDxlbGF2aWxhQGdvb2dsZS5jb20+IHdyb3RlOgo+
+ID4gPiBXaGVuIGRvaW5nIHNvbWUgaW50ZXJuYWwgdGVzdGluZyBvbiBhIDUuMTAuNCBrZXJuZWws
+IHdlIGZvdW5kIHRoYXQgdGhlCj4gPiA+IHRpbWUgdGFrZW4gZm9yIGRtZXNnIHNlZW1lZCB0byBp
+bmNyZWFzZSBmcm9tIHRoZSBvcmRlciBvZiBtaWxsaXNlY29uZHMKPiA+ID4gdG8gdGhlIG9yZGVy
+IG9mIHNlY29uZHMgd2hlbiB0aGUgZG1lc2cgc2l6ZSBhcHByb2FjaGVkIHRoZSB+MS4yTUIKPiA+
+ID4gbGltaXQuIEFmdGVyIGRvaW5nIHNvbWUgZGlnZ2luZywgd2UgZm91bmQgdGhhdCBieSByZXZl
+cnRpbmcgYWxsIG9mIHRoZQo+ID4gPiBwYXRjaGVzIGluIHByaW50ay8gdXAgdG8gYW5kIGluY2x1
+ZGluZwo+ID4gPiA4OTZmYmUyMGI0ZTIzMzNmYjU1Y2M5YjliNzgzZWJjYzQ5ZWVlN2M3ICgidXNl
+IHRoZSBsb2NrbGVzcwo+ID4gPiByaW5nYnVmZmVyIiksIHdlIHdlcmUgYWJsZSB0byBvbmNlIG1v
+cmUgc2VlIG5vcm1hbCBkbWVzZyB0aW1lcy4KPiA+ID4KPiA+ID4gVGhpcyBrZXJuZWwgaGFkIG5v
+IG1lYW5pbmdmdWwgZGlmZnMgaW4gdGhlIHByaW50ay8gZGlyIHdoZW4gY29tcGFyZWQKPiA+ID4g
+dG8gTGludXMnIHRyZWUuIFRoaXMgYmVoYXZpb3Igd2FzIGNvbnNpc3RlbnRseSByZXByb2R1Y2li
+bGUgdXNpbmcgdGhlCj4gPiA+IGZvbGxvd2luZyBzdGVwczoKPiA+ID4KPiA+ID4gMSkgSW4gb25l
+IHNoZWxsLCBydW4gInRpbWUgZG1lc2cgPiAvZGV2L251bGwiCj4gPiA+IDIpIEluIGFub3RoZXIs
+IGNvbnN0YW50bHkgd3JpdGUgdG8gL2Rldi9rbXNnCj4gPiA+Cj4gPiA+IFdpdGhpbiB+NSBtaW51
+dGVzLCB3ZSBzYXcgdGhhdCBkbWVzZyB0aW1lcyBpbmNyZWFzZWQgdG8gMSBzZWNvbmQsIG9ubHkK
+PiA+ID4gaW5jcmVhc2luZyBmdXJ0aGVyIGZyb20gdGhlcmUuIElzIHRoaXMgYSBrbm93biBpc3N1
+ZT8KPiA+Cj4gPiBUaGUgbGFzdCBjb3VwbGUgZGF5cyBJIGhhdmUgdHJpZWQgdG8gcmVwcm9kdWNl
+IHRoaXMgaXNzdWUgd2l0aCBubwo+ID4gc3VjY2Vzcy4KPiA+Cj4gPiBJcyB5b3VyIGRtZXNnIHVz
+aW5nIC9kZXYva21zZyBvciBzeXNsb2coKSB0byByZWFkIHRoZSBidWZmZXI/Cj4gPgo+ID4gQXJl
+IHRoZXJlIGFueSBzeXNsb2cgZGFlbW9ucyBvciBzeXN0ZW1kIHJ1bm5pbmc/IFBlcmhhcHMgeW91
+IGNhbiBydW4KPiA+IHlvdXIgdGVzdCB3aXRoaW4gYW4gaW5pdHJkIHRvIHNlZSBpZiB0aGlzIGVm
+ZmVjdCBpcyBzdGlsbCB2aXNpYmxlPwo+ID4KPiA+IEpvaG4gT2duZXNzCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
+ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCg==
