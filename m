@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x22c.google.com ([2607:f8b0:4864:20::22c])
+Received: from mail-eopbgr1410078.outbound.protection.outlook.com
+ ([40.107.141.78] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l5MHV-00007b-3G
- for kexec@lists.infradead.org; Fri, 29 Jan 2021 05:25:18 +0000
-Received: by mail-oi1-x22c.google.com with SMTP id k25so8666904oik.13
- for <kexec@lists.infradead.org>; Thu, 28 Jan 2021 21:25:16 -0800 (PST)
+ id 1l5N1w-0002Oc-A4
+ for kexec@lists.infradead.org; Fri, 29 Jan 2021 06:13:19 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH] makedumpfile: Add initial mips64 support
+Date: Fri, 29 Jan 2021 06:13:10 +0000
+Message-ID: <OSBPR01MB1991974ACAB0FE4FDBEA9182DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <1611019046-7291-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <1611019046-7291-1-git-send-email-tangyouling@loongson.cn>
+Content-Language: ja-JP
 MIME-Version: 1.0
-References: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
- <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-From: "Jiang Wang ." <jiang.wang@bytedance.com>
-Date: Thu, 28 Jan 2021 21:25:04 -0800
-Message-ID: <CAP_N_Z-t8v0maLe9jTDPPjYe9933JxymXGpyy6LONQ23EuYRnA@mail.gmail.com>
-Subject: Re: [External] RE: Makedumpfile compile errors on Debian 10
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,81 +21,278 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: kexec <kexec@lists.infradead.org>
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Jinyang He <hejinyang@loongson.cn>, kexec-ml <kexec@lists.infradead.org>, Huacai Chen <chenhuacai@loongson.cn>
 
-SGkgS2F6dSwKCkkgc2VlLiBJIHdpbGwgcG9zdCBhIHBhdGNoIGZvciB0aGlzLiBJIHdpbGwgdHJ5
-IDEuNi44IHRvIHNlZSBpZiBpdAp3b3JrcyBmb3IgbWUgb3Igbm90LiBUaGFua3MgZm9yIHRoZSBp
-bmZvLgoKUmVnYXJkcywKCkppYW5nCgpPbiBUaHUsIEphbiAyOCwgMjAyMSBhdCA4OjQzIFBNIEhB
-R0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4gOS7gSkKPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6
-Cj4KPiBIaSBKaWFuZywKPgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBIaSB0aGVy
-ZSwKPiA+Cj4gPiBJIHRyaWVkIHRvIGNvbXBpbGUgdmVyc2lvbiAxLjYuNyBhbmQgbWFzdGVyIG9u
-IERlYmlhbiAxMCBhbmQgZ290Cj4gPiBmb2xsb3dpbmcgZXJyb3I6Cj4gPgo+ID4gcm9vdEBnaXRs
-YWItcnVubmVyLXN0cmV0Y2g6L2hvbWUvZ2l0bGFiLXJ1bm5lci9tYWtlZHVtcGZpbGUtbWFzdGVy
-IyBtYWtlCj4gPiBjYyAgLWcgLU8yIC1XYWxsIC1EX0ZJTEVfT0ZGU0VUX0JJVFM9NjQgLURfTEFS
-R0VGSUxFX1NPVVJDRQo+ID4gLURfTEFSR0VGSUxFNjRfU09VUkNFIC1EVkVSU0lPTj0nIjEuNi44
-KysiJyAtRFJFTEVBU0VfREFURT0nIjE2IE5vdgo+ID4gMjAyMCInIC1EX194ODZfNjRfXyAgIHBy
-aW50X2luZm8uCj4gPiBvIGR3YXJmX2luZm8ubyBlbGZfaW5mby5vIGVyYXNlX2luZm8ubyBzYWR1
-bXBfaW5mby5vIGNhY2hlLm8gdG9vbHMubwo+ID4gcHJpbnRrLm8gYXJjaC9hcm0ubyBhcmNoL2Fy
-bTY0Lm8gYXJjaC94ODYubyBhcmNoL3g4Nl82NC5vIGFyY2gvaWE2NC5vCj4gPiBhcmNoL3BwYzY0
-Lm8gYXJjaC9zMzkwCj4gPiB4Lm8gYXJjaC9wcGMubyBhcmNoL3NwYXJjNjQubyAtcmR5bmFtaWMg
-LW8gbWFrZWR1bXBmaWxlIG1ha2VkdW1wZmlsZS5jCj4gPiAtbHB0aHJlYWQgLXN0YXRpYyAtbGR3
-IC1sYnoyIC1sZGwgLWxlbGYgLWx6IC1sbHptYSAgLWxlYmwKPiA+IC91c3IvYmluL2xkOiBlcmFz
-ZV9pbmZvLm86IGluIGZ1bmN0aW9uIGBwcm9jZXNzX2VwcGljX2ZpbGUnOgo+ID4gL2hvbWUvZ2l0
-bGFiLXJ1bm5lci9tYWtlZHVtcGZpbGUtbWFzdGVyL2VyYXNlX2luZm8uYzoyMjAyOiB3YXJuaW5n
-Ogo+ID4gVXNpbmcgJ2Rsb3BlbicgaW4gc3RhdGljYWxseSBsaW5rZWQgYXBwbGljYXRpb25zIHJl
-cXVpcmVzIGF0IHJ1bnRpbWUKPiA+IHRoZSBzaGFyZWQgbGlicmFyaWVzIGZybwo+ID4gbSB0aGUg
-Z2xpYmMgdmVyc2lvbiB1c2VkIGZvciBsaW5raW5nCj4gPiAvdXNyL2Jpbi9sZDogLy91c3IvbG9j
-YWwvbGliL2xpYmR3LmEoZHdhcmZfYWJicmV2X2hhc2gubyk6IGluIGZ1bmN0aW9uCj4gPiBgRHdh
-cmZfQWJicmV2X0hhc2hfaW5zZXJ0JzoKPiA+IC9ob21lL2dpdGxhYi1ydW5uZXIvZWxmdXRpbHMt
-MC4xODIvbGliZHcvLi4vbGliL2R5bmFtaWNzaXplaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4g
-dW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgcHRocmVhZF9yd2xvY2tfdHJ5cmRsb2NrJwo+ID4gL3Vz
-ci9iaW4vbGQ6IC9ob21lL2dpdGxhYi1ydW5uZXIvZWxmdXRpbHMtMC4xODIvbGliZHcvLi4vbGli
-L2R5bmFtaWNzaXplaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4gdW5kZWZpbmVkIHJlZmVyZW5j
-ZSB0byBgcHRocmVhZF9yd2xvY2tfdHJ5cmRsb2NrJwo+ID4gL3Vzci9iaW4vbGQ6IC9ob21lL2dp
-dGxhYi1ydW5uZXIvZWxmdXRpbHMtMC4xODIvbGliZHcvLi4vbGliL2R5bmFtaWNzaXplaGFzaF9j
-b25jdXJyZW50LmM6Mzk0Ogo+ID4gdW5kZWZpbmVkIHJlZmVyZW5jZSB0byBgcHRocmVhZF9yd2xv
-Y2tfdHJ5cmRsb2NrJwo+ID4gL3Vzci9iaW4vbGQ6IC8vdXNyL2xvY2FsL2xpYi9saWJkdy5hKGR3
-YXJmX2FiYnJldl9oYXNoLm8pOiBpbiBmdW5jdGlvbgo+ID4gYER3YXJmX0FiYnJldl9IYXNoX2Zp
-bmQnOgo+ID4gL2hvbWUvZ2l0bGFiLXJ1bm5lci9lbGZ1dGlscy0wLjE4Mi9saWJkdy8uLi9saWIv
-ZHluYW1pY3NpemVoYXNoX2NvbmN1cnJlbnQuYzo0NjE6Cj4gPiB1bmRlZmluZWQgcmVmZXJlbmNl
-IHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snCj4gPiAvdXNyL2Jpbi9sZDogLy91c3IvbG9j
-YWwvbGliL2xpYmR3LmEoZHdhcmZfc2lnOF9oYXNoLm8pOiBpbiBmdW5jdGlvbgo+ID4gYER3YXJm
-X1NpZzhfSGFzaF9pbnNlcnQnOgo+ID4gL2hvbWUvZ2l0bGFiLXJ1bm5lci9lbGZ1dGlscy0wLjE4
-Mi9saWJkdy8uLi9saWIvZHluYW1pY3NpemVoYXNoX2NvbmN1cnJlbnQuYzozOTQ6Cj4gPiB1bmRl
-ZmluZWQgcmVmZXJlbmNlIHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snCj4gPiAvdXNyL2Jp
-bi9sZDoKPiA+IC8vdXNyL2xvY2FsL2xpYi9saWJkdy5hKGR3YXJmX3NpZzhfaGFzaC5vKTovaG9t
-ZS9naXRsYWItcnVubmVyL2VsZnV0aWxzLTAuMTgyL2xpYmR3Ly4uL2xpYi9keW5hbWljc2l6ZQo+
-ID4gaGFzaF9jb25jdXJyZW50LmM6Mzk0Ogo+ID4gbW9yZSB1bmRlZmluZWQgcmVmZXJlbmMKPiA+
-IGVzIHRvIGBwdGhyZWFkX3J3bG9ja190cnlyZGxvY2snIGZvbGxvdwo+ID4gY29sbGVjdDI6IGVy
-cm9yOiBsZCByZXR1cm5lZCAxIGV4aXQgc3RhdHVzCj4gPiBtYWtlOiAqKiogW01ha2VmaWxlOjEw
-MDogbWFrZWR1bXBmaWxlXSBFcnJvciAxCj4gPiBUbyBmaXggaXQsIEkgaGF2ZSB0byBtYWtlIHRo
-ZSBmb2xsb3dpbmcgY2hhbmdlOgo+ID4gZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUK
-PiA+IGluZGV4IDM4OGZhZjcuLjcwMDZmODEgMTAwNjQ0Cj4gPiAtLS0gYS9NYWtlZmlsZQo+ID4g
-KysrIGIvTWFrZWZpbGUKPiA+IEBAIC02NSw3ICs2NSw3IEBAIExJQlMgOj0gLWxzbmFwcHkgJChM
-SUJTKQo+ID4gIENGTEFHUyArPSAtRFVTRVNOQVBQWQo+ID4gIGVuZGlmCj4gPgo+ID4gLUxJQlMg
-Oj0gLWxwdGhyZWFkICQoTElCUykKPiA+ICtMSUJTIDo9ICQoTElCUykgLWxwdGhyZWFkCj4gPgo+
-ID4gIHRyeS1ydW4gPSAkKHNoZWxsIHNldCAtZTsgICAgICAgICAgICAgIFwKPiA+ICAgICAgICAg
-VE1QPSIuJCQkJC50bXAiOyAgICAgICAgICAgICAgICBcCj4gPiBOb3Qgc3VyZSBpZiBpdCBpcyBh
-biBpc3N1ZSBvZiBEZWJpYW4gb3IgbWFrZWR1bXBmaWxlLiBJZiBpdCBpcyB0aGUKPiA+IGxhdHRl
-ciwgcGxlYXNlIGZpeCB0aGUgTWFrZWZpbGUuIFRoYW5rcy4KPgo+IFRoYW5rcyBmb3IgdGhlIHJl
-cG9ydC4KPgo+IEknbSBub3Qgc3VyZSB3aHkgaXQgZG9lc24ndCBvY2N1ciBvbiBteSByZWNlbnQg
-RmVkb3JhIG1hY2hpbmUgd2l0aAo+IGVsZnV0aWxzLTAuMTgyLCBidXQgc2VlbXMgdGhhdCAtbHB0
-aHJlYWQgc2hvdWxkIGJlIHB1dCBhZnRlciAtbGR3LCBzbwo+IHRoZSBjaGFuZ2UgbG9va3MgZ29v
-ZCB0byBtZS4KPgo+IFdvdWxkIHlvdSBwb3N0IGEgZm9ybWFsIHBhdGNoPyAgb3IgSSBjYW4gZml4
-IGl0IHdpdGggeW91ciB0YWcKPiBsaWtlIFNpZ25lZC1vZmYtYnkgb3IgUmVwb3J0ZWQtYnkuCj4K
-PiA+IEFsc28sIEkgdHJpZWQgdGhlIG1hc3RlciBhbmQgdmVyc2lvbiAxLjYuNyBvbiBMaW51eCBr
-ZXJuZWwgNS4xMCBhbmQKPiA+IGdvdCBhIGtlcm5lbCBub3Qgc3VwcG9ydGVkIGVycm9yLiBEbyB3
-ZSBrbm93IHdoZW4gNS4xMCB3aWxsIGJlCj4gPiBzdXBwb3J0ZWQ/IFRoYW5rcy4KPgo+IFRoZSBs
-YXRlc3QgaXMgbWFrZWR1bXBmaWxlLTEuNi44LCBidXQgaXQgd2FzIHRlc3RlZCB3aXRoIHVwIHRv
-IGtlcm5lbCA1LjkuCj4gSSd2ZSB0ZXN0ZWQgdGhlIGN1cnJlbnQgbWFzdGVyIHdpdGgga2VybmVs
-IDUuMTAgdG8gNS4xMS1yYzUgb24geDg2XzY0LAo+IGl0J3Mgb2sgc28gZmFyLiAgVGhlIG5leHQg
-dmVyc2lvbiB3aWxsIHN1cHBvcnQgNS4xMCBvZmZpY2lhbGx5IGFuZAo+IHdpbGwgYmUgcmVsZWFz
-ZWQgdGhpcyBzcHJpbmcgb3Igc3VtbWVyLCBidXQgbm90IHNjaGVkdWxlZCB5ZXQuCj4KPiBUaGFu
-a3MsCj4gS2F6dQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Yuling Tang,
+
+-----Original Message-----
+> Patch adds support for mips64 in makedumpfile. It takes care of vmalloc,
+> module and directly map kernel memory region's translation. Currently we
+> only support 3 leverl 16K pages and VA_BITS as 48.
+> 
+> The changes were tested on a mips64 Loongson-3A4000 processor. The dump
+> compression and filtering (for all dump levels 1,2,4,8,16 and 31) tests
+> are succussfull.
+> 
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+> ---
+>  Makefile       |   2 +-
+>  arch/mips64.c  | 113 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  makedumpfile.h |  54 +++++++++++++++++++++++++++
+>  3 files changed, 168 insertions(+), 1 deletion(-)
+>  create mode 100644 arch/mips64.c
+> 
+> diff --git a/Makefile b/Makefile
+> index cb6bd42..6f8ade0 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -47,7 +47,7 @@ endif
+>  SRC_BASE = makedumpfile.c makedumpfile.h diskdump_mod.h sadump_mod.h sadump_info.h
+>  SRC_PART = print_info.c dwarf_info.c elf_info.c erase_info.c sadump_info.c cache.c tools.c printk.c
+>  OBJ_PART=$(patsubst %.c,%.o,$(SRC_PART))
+> -SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
+> arch/ppc.c arch/sparc64.c
+> +SRC_ARCH = arch/arm.c arch/arm64.c arch/x86.c arch/x86_64.c arch/ia64.c arch/ppc64.c arch/s390x.c
+> arch/ppc.c arch/sparc64.c arch/mips64.c
+>  OBJ_ARCH=$(patsubst %.c,%.o,$(SRC_ARCH))
+> 
+>  LIBS = -ldw -lbz2 -ldl -lelf -lz
+> diff --git a/arch/mips64.c b/arch/mips64.c
+> new file mode 100644
+> index 0000000..18a9e05
+> --- /dev/null
+> +++ b/arch/mips64.c
+> @@ -0,0 +1,113 @@
+> +/*
+> + * mips64.c
+> + *
+> + * Copyright (C) 2021 Loongson Technology Co., Ltd.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation (version 2 of the License).
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program; if not, write to the Free Software
+> + * Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+> + */
+> +#ifdef __mips64__
+> +
+> +#include "../print_info.h"
+> +#include "../elf_info.h"
+> +#include "../makedumpfile.h"
+> +
+> +int
+> +get_phys_base_mips64(void)
+> +{
+> +	info->phys_base = 0ULL;
+> +
+> +	DEBUG_MSG("phys_base    : %lx\n", info->phys_base);
+> +
+> +	return TRUE;
+> +}
+> +
+> +int
+> +get_versiondep_info_mips64(void)
+> +{
+> +	info->page_offset  = 0x9800000000000000ULL;
+> +	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+> +	info->section_size_bits = _SECTION_SIZE_BITS;
+> +
+> +	DEBUG_MSG("page_offset : %lx\n", info->page_offset);
+> +	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
+> +	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
+> +
+> +	return TRUE;
+> +}
+> +
+> +/*
+> + * Translate a virtual address to a physical address by using 3 levels paging.
+> + */
+> +unsigned long long
+> +vaddr_to_paddr_mips64(unsigned long vaddr)
+> +{
+> +	unsigned long long paddr = NOT_PADDR;
+> +	pgd_t	*pgda, pgdv;
+> +	pmd_t	*pmda, pmdv;
+> +	pte_t 	*ptea, ptev;
+> +
+> +	/*
+> +	 * CKSEG0/CKSEG1
+> +	 */
+> +	if (vaddr >= 0xffffffff80000000ULL && vaddr < 0xffffffffc0000000ULL)
+> +		return vaddr & 0x1fffffffULL;
+> +
+> +	/*
+> +	 * XKPHYS
+> +	 */
+> +	if (vaddr >= 0x9000000000000000ULL && vaddr < 0xc000000000000000ULL)
+> +		return vaddr & ((1ULL << MAX_PHYSMEM_BITS()) - 1);
+
+From the current implementation, vaddr_to_paddr() is called the first time
+in the context of:
+
+initial()
+  get_machdep_info()
+  calibrate_machdep_info()
+  check_release()
+    readmem()
+      vaddr_to_paddr()
+  get_versiondep_info()
+
+So setting info->max_physmem_bits in get_versiondep_info() is late,
+but it might work because
+- The address that the readmem() reads is SYMBOL(init_uts_ns), so
+  this XKPHYS condition does not match,  or/and
+- 5.9+ kernels have NUMBER(MAX_PHYSMEM_BITS) entry in vmcoreinfo, so
+  info->max_physmem_bits is set in calibrate_machdep_info().
+
+So I would suggest moving max_physmem_bits and section_size_bits to
+get_machdep_info() for future changes and to not confuse readers.. (including me :-)
+
+Otherwise, looks good to me.  Thank you for using makedumpfile!
+
+Kazu
+
+> +
+> +	if (SYMBOL(swapper_pg_dir) == NOT_FOUND_SYMBOL) {
+> +		ERRMSG("Can't get the symbol of swapper_pg_dir.\n");
+> +		return NOT_PADDR;
+> +	}
+> +
+> +	pgda = pgd_offset(SYMBOL(swapper_pg_dir), vaddr);
+> +	if (!readmem(PADDR, (unsigned long long)pgda, &pgdv, sizeof(pgdv))) {
+> +		ERRMSG("Can't read pgd\n");
+> +		return NOT_PADDR;
+> +	}
+> +
+> +	pmda = pmd_offset(&pgdv, vaddr);
+> +	if (!readmem(PADDR, (unsigned long long)pmda, &pmdv, sizeof(pmdv))) {
+> +		ERRMSG("Can't read pmd\n");
+> +		return NOT_PADDR;
+> +	}
+> +
+> +	switch (pmdv & (_PAGE_PRESENT|_PAGE_HUGE)) {
+> +	case _PAGE_PRESENT:
+> +		ptea = pte_offset(&pmdv, vaddr);
+> +		/* 64k page */
+> +		if (!readmem(PADDR, (unsigned long long)ptea, &ptev, sizeof(ptev))) {
+> +			ERRMSG("Can't read pte\n");
+> +			return NOT_PADDR;
+> +		}
+> +
+> +		if (!(ptev & _PAGE_PRESENT)) {
+> +			ERRMSG("Can't get a valid pte.\n");
+> +			return NOT_PADDR;
+> +		} else {
+> +			paddr = PAGEBASE(ptev) + (vaddr & (PAGESIZE() - 1));
+> +		}
+> +		break;
+> +	case _PAGE_PRESENT|_PAGE_HUGE:
+> +		paddr = (pmdv & PMD_MASK) + (vaddr & (PMD_SIZE - 1));
+> +		break;
+> +	}
+> +
+> +	return paddr;
+> +}
+> +
+> +#endif /* mips64 */
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index 5f50080..bc86bf2 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -958,6 +958,39 @@ typedef unsigned long pgd_t;
+> 
+>  #endif          /* sparc64 */
+> 
+> +#ifdef __mips64__ /* mips64 */
+> +#define KVBASE			PAGE_OFFSET
+> +#define _SECTION_SIZE_BITS	(28)
+> +#define _MAX_PHYSMEM_BITS	(48)
+> +#define _PAGE_PRESENT		(1 << 0)
+> +#define _PAGE_HUGE		(1 << 4)
+> +
+> +typedef unsigned long pte_t;
+> +typedef unsigned long pmd_t;
+> +typedef unsigned long pgd_t;
+> +
+> +#define PAGE_MASK		(~(PAGESIZE() - 1))
+> +#define PMD_MASK		(~(PMD_SIZE - 1))
+> +#define PMD_SHIFT		((PAGESHIFT() - 3) * 2 + 3)
+> +#define PMD_SIZE		(1UL << PMD_SHIFT)
+> +#define PGDIR_SHIFT		((PAGESHIFT() - 3) * 3 + 3)
+> +#define PTRS_PER_PTE		(1 << (PAGESHIFT() - 3))
+> +#define PTRS_PER_PMD		PTRS_PER_PTE
+> +#define PTRS_PER_PGD		PTRS_PER_PTE
+> +
+> +#define pte_index(vaddr)		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
+> +#define pmd_page_paddr(pmd)		(pmd & (int32_t)PAGE_MASK)
+> +#define pte_offset(dir, vaddr)		((pte_t *)pmd_page_paddr((*dir)) + pte_index(vaddr))
+> +
+> +#define pmd_index(vaddr)		(((vaddr) >> PMD_SHIFT) & (PTRS_PER_PMD - 1))
+> +#define pgd_page_paddr(pgd)		(pgd & (int32_t)PAGE_MASK)
+> +#define pmd_offset(pgd, vaddr)		((pmd_t *)pgd_page_paddr((*pgd)) + pmd_index(vaddr))
+> +
+> +#define pgd_index(vaddr)		(((vaddr) >> PGDIR_SHIFT) & (PTRS_PER_PGD - 1))
+> +#define pgd_offset(pgdir, vaddr)	((pgd_t *)(pgdir) + pgd_index(vaddr))
+> +
+> +#endif		/* mips64 */
+> +
+>  /*
+>   * The function of dependence on machine
+>   */
+> @@ -1112,6 +1145,21 @@ unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
+>  #define arch_crashkernel_mem_size()	stub_false()
+>  #endif		/* sparc64 */
+> 
+> +#ifdef __mips64__ /* mips64 */
+> +int get_phys_base_mips64(void);
+> +int get_versiondep_info_mips64(void);
+> +unsigned long long vaddr_to_paddr_mips64(unsigned long vaddr);
+> +#define find_vmemmap()		stub_false()
+> +#define get_phys_base() 	get_phys_base_mips64()
+> +#define get_machdep_info()	stub_true()
+> +#define get_versiondep_info()	get_versiondep_info_mips64()
+> +#define get_kaslr_offset(X)	stub_false()
+> +#define vaddr_to_paddr(X)	vaddr_to_paddr_mips64(X)
+> +#define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
+> +#define is_phys_addr(X) 	stub_true_ul(X)
+> +#define arch_crashkernel_mem_size()	stub_false()
+> +#endif		/* mips64 */
+> +
+>  typedef unsigned long long mdf_pfn_t;
+> 
+>  #ifndef ARCH_PFN_OFFSET
+> @@ -2228,6 +2276,12 @@ int get_xen_info_ia64(void);
+>  #define get_xen_info_arch(X) FALSE
+>  #endif	/* sparc64 */
+> 
+> +#ifdef __mips64__ /* mips64 */
+> +#define kvtop_xen(X)	FALSE
+> +#define get_xen_basic_info_arch(X) FALSE
+> +#define get_xen_info_arch(X) FALSE
+> +#endif	/* mips64 */
+> +
+>  struct cycle {
+>  	mdf_pfn_t start_pfn;
+>  	mdf_pfn_t end_pfn;
+> --
+> 2.1.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
