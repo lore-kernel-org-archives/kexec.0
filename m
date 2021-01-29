@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x629.google.com ([2607:f8b0:4864:20::629])
+Received: from mail-eopbgr1410057.outbound.protection.outlook.com
+ ([40.107.141.57] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l5Ji8-0005wQ-H6
- for kexec@lists.infradead.org; Fri, 29 Jan 2021 02:40:37 +0000
-Received: by mail-pl1-x629.google.com with SMTP id d4so4451102plh.5
- for <kexec@lists.infradead.org>; Thu, 28 Jan 2021 18:40:36 -0800 (PST)
-From: kazuhito.hagio@gmail.com
-Subject: [PATCH 3/3] arm64: support flipped VA and 52-bit kernel VA
-Date: Fri, 29 Jan 2021 11:40:25 +0900
-Message-Id: <1611888025-29321-4-git-send-email-kazuhito.hagio@gmail.com>
-In-Reply-To: <1611888025-29321-1-git-send-email-kazuhito.hagio@gmail.com>
-References: <1611888025-29321-1-git-send-email-kazuhito.hagio@gmail.com>
+ id 1l5Lcq-00069i-ST
+ for kexec@lists.infradead.org; Fri, 29 Jan 2021 04:43:19 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: Makedumpfile compile errors on Debian 10
+Date: Fri, 29 Jan 2021 04:43:10 +0000
+Message-ID: <OSBPR01MB1991FCB292F9584678AB01A9DDB99@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
+In-Reply-To: <CAP_N_Z8k_TXjbCL-mEF-OY37vB-wo8PVOoz85s3Qp6Q7yzQQVg@mail.gmail.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,252 +21,94 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bhupesh.linux@gmail.com, piliu@redhat.com, kexec@lists.infradead.org
+To: "Jiang Wang ." <jiang.wang@bytedance.com>, kexec <kexec@lists.infradead.org>
 
-From: Kazuhito Hagio <k-hagio-ab@nec.com>
+Hi Jiang,
 
-Linux 5.4 and later kernels for arm64 changed the kernel VA space
-arrangement and introduced 52-bit kernel VAs by merging branch
-commit b333b0ba2346.  Support 5.9+ kernels with vmcoreinfo entries
-and 5.4+ kernels with best guessing.
+-----Original Message-----
+> Hi there,
+> 
+> I tried to compile version 1.6.7 and master on Debian 10 and got
+> following error:
+> 
+> root@gitlab-runner-stretch:/home/gitlab-runner/makedumpfile-master# make
+> cc  -g -O2 -Wall -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE
+> -D_LARGEFILE64_SOURCE -DVERSION='"1.6.8++"' -DRELEASE_DATE='"16 Nov
+> 2020"' -D__x86_64__   print_info.
+> o dwarf_info.o elf_info.o erase_info.o sadump_info.o cache.o tools.o
+> printk.o arch/arm.o arch/arm64.o arch/x86.o arch/x86_64.o arch/ia64.o
+> arch/ppc64.o arch/s390
+> x.o arch/ppc.o arch/sparc64.o -rdynamic -o makedumpfile makedumpfile.c
+> -lpthread -static -ldw -lbz2 -ldl -lelf -lz -llzma  -lebl
+> /usr/bin/ld: erase_info.o: in function `process_eppic_file':
+> /home/gitlab-runner/makedumpfile-master/erase_info.c:2202: warning:
+> Using 'dlopen' in statically linked applications requires at runtime
+> the shared libraries fro
+> m the glibc version used for linking
+> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_abbrev_hash.o): in function
+> `Dwarf_Abbrev_Hash_insert':
+> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
+> undefined reference to `pthread_rwlock_tryrdlock'
+> /usr/bin/ld: /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
+> undefined reference to `pthread_rwlock_tryrdlock'
+> /usr/bin/ld: /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
+> undefined reference to `pthread_rwlock_tryrdlock'
+> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_abbrev_hash.o): in function
+> `Dwarf_Abbrev_Hash_find':
+> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:461:
+> undefined reference to `pthread_rwlock_tryrdlock'
+> /usr/bin/ld: //usr/local/lib/libdw.a(dwarf_sig8_hash.o): in function
+> `Dwarf_Sig8_Hash_insert':
+> /home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsizehash_concurrent.c:394:
+> undefined reference to `pthread_rwlock_tryrdlock'
+> /usr/bin/ld:
+> //usr/local/lib/libdw.a(dwarf_sig8_hash.o):/home/gitlab-runner/elfutils-0.182/libdw/../lib/dynamicsize
+> hash_concurrent.c:394:
+> more undefined referenc
+> es to `pthread_rwlock_tryrdlock' follow
+> collect2: error: ld returned 1 exit status
+> make: *** [Makefile:100: makedumpfile] Error 1
+> To fix it, I have to make the following change:
+> diff --git a/Makefile b/Makefile
+> index 388faf7..7006f81 100644
+> --- a/Makefile
+> +++ b/Makefile
+> @@ -65,7 +65,7 @@ LIBS := -lsnappy $(LIBS)
+>  CFLAGS += -DUSESNAPPY
+>  endif
+> 
+> -LIBS := -lpthread $(LIBS)
+> +LIBS := $(LIBS) -lpthread
+> 
+>  try-run = $(shell set -e;              \
+>         TMP=".$$$$.tmp";                \
+> Not sure if it is an issue of Debian or makedumpfile. If it is the
+> latter, please fix the Makefile. Thanks.
 
-However, the following conditions are not supported for now due to
-no necessary information provided from kernel:
-(1) 5.4 <= kernels <= 5.8 and
-    - if PA_BITS=52 && VA_BITS!=52
-    - with -x option if vabits_actual=52
-(2) kernels < 5.4 with CONFIG_ARM64_USER_VA_BITS_52=y
+Thanks for the report.
 
-(1) should be supported with kernel commit bbdbc11804ff and
-1d50e5d0c5052 adding necessary information to vmcoreinfo.
+I'm not sure why it doesn't occur on my recent Fedora machine with
+elfutils-0.182, but seems that -lpthread should be put after -ldw, so
+the change looks good to me.
 
-Signed-off-by: Bhupesh Sharma <bhsharma@redhat.com>
-Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
----
- arch/arm64.c   | 100 ++++++++++++++++++++++++++++++++++++++++++++++++---------
- makedumpfile.c |   2 ++
- makedumpfile.h |   1 +
- 3 files changed, 88 insertions(+), 15 deletions(-)
+Would you post a formal patch?  or I can fix it with your tag
+like Signed-off-by or Reported-by.
 
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 2916b4f..0bb7230 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -47,6 +47,8 @@ typedef struct {
- static int lpa_52_bit_support_available;
- static int pgtable_level;
- static int va_bits;
-+static int vabits_actual;
-+static int flipped_va;
- static unsigned long kimage_voffset;
- 
- #define SZ_4K			4096
-@@ -58,7 +60,6 @@ static unsigned long kimage_voffset;
- #define PAGE_OFFSET_42		((0xffffffffffffffffUL) << 42)
- #define PAGE_OFFSET_47		((0xffffffffffffffffUL) << 47)
- #define PAGE_OFFSET_48		((0xffffffffffffffffUL) << 48)
--#define PAGE_OFFSET_52		((0xffffffffffffffffUL) << 52)
- 
- #define pgd_val(x)		((x).pgd)
- #define pud_val(x)		(pgd_val((x).pgd))
-@@ -218,12 +219,20 @@ pmd_page_paddr(pmd_t pmd)
- #define pte_index(vaddr)		(((vaddr) >> PAGESHIFT()) & (PTRS_PER_PTE - 1))
- #define pte_offset(dir, vaddr)		(pmd_page_paddr((*dir)) + pte_index(vaddr) * sizeof(pte_t))
- 
-+/*
-+ * The linear kernel range starts at the bottom of the virtual address
-+ * space. Testing the top bit for the start of the region is a
-+ * sufficient check and avoids having to worry about the tag.
-+ */
-+#define is_linear_addr(addr)	(flipped_va ?	\
-+	(!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))) : \
-+	(!!((unsigned long)(addr) & (1UL << (vabits_actual - 1)))))
-+
- static unsigned long long
- __pa(unsigned long vaddr)
- {
--	if (kimage_voffset == NOT_FOUND_NUMBER ||
--			(vaddr >= PAGE_OFFSET))
--		return (vaddr - PAGE_OFFSET + info->phys_base);
-+	if (kimage_voffset == NOT_FOUND_NUMBER || is_linear_addr(vaddr))
-+		return ((vaddr & ~PAGE_OFFSET) + info->phys_base);
- 	else
- 		return (vaddr - kimage_voffset);
- }
-@@ -253,6 +262,7 @@ static int calculate_plat_config(void)
- 			(PAGESIZE() == SZ_64K && va_bits == 42)) {
- 		pgtable_level = 2;
- 	} else if ((PAGESIZE() == SZ_64K && va_bits == 48) ||
-+			(PAGESIZE() == SZ_64K && va_bits == 52) ||
- 			(PAGESIZE() == SZ_4K && va_bits == 39) ||
- 			(PAGESIZE() == SZ_16K && va_bits == 47)) {
- 		pgtable_level = 3;
-@@ -263,6 +273,7 @@ static int calculate_plat_config(void)
- 				PAGESIZE(), va_bits);
- 		return FALSE;
- 	}
-+	DEBUG_MSG("pgtable_level: %d\n", pgtable_level);
- 
- 	return TRUE;
- }
-@@ -270,6 +281,9 @@ static int calculate_plat_config(void)
- unsigned long
- get_kvbase_arm64(void)
- {
-+	if (flipped_va)
-+		return PAGE_OFFSET;
-+
- 	return (0xffffffffffffffffUL << va_bits);
- }
- 
-@@ -382,22 +396,54 @@ get_va_bits_from_stext_arm64(void)
- 	return TRUE;
- }
- 
-+static void
-+get_page_offset_arm64(void)
-+{
-+	ulong page_end;
-+	int vabits_min;
-+
-+	/*
-+	 * See arch/arm64/include/asm/memory.h for more details of
-+	 * the PAGE_OFFSET calculation.
-+	 */
-+	vabits_min = (va_bits > 48) ? 48 : va_bits;
-+	page_end = -(1UL << (vabits_min - 1));
-+
-+	if (SYMBOL(_stext) > page_end) {
-+		flipped_va = TRUE;
-+		info->page_offset = -(1UL << vabits_actual);
-+	} else {
-+		flipped_va = FALSE;
-+		info->page_offset = -(1UL << (vabits_actual - 1));
-+	}
-+
-+	DEBUG_MSG("page_offset   : %lx (from page_end check)\n",
-+		info->page_offset);
-+}
-+
- int
- get_machdep_info_arm64(void)
- {
-+	/* Check if va_bits is still not initialized. If still 0, call
-+	 * get_versiondep_info() to initialize the same.
-+	 */
-+	if (!va_bits)
-+		get_versiondep_info_arm64();
-+
- 	/* Determine if the PA address range is 52-bits: ARMv8.2-LPA */
- 	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER) {
- 		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
-+		DEBUG_MSG("max_physmem_bits : %ld (vmcoreinfo)\n", info->max_physmem_bits);
- 		if (info->max_physmem_bits == 52)
- 			lpa_52_bit_support_available = 1;
--	} else
--		info->max_physmem_bits = 48;
-+	} else {
-+		if (va_bits == 52)
-+			info->max_physmem_bits = 52; /* just guess */
-+		else
-+			info->max_physmem_bits = 48;
- 
--	/* Check if va_bits is still not initialized. If still 0, call
--	 * get_versiondep_info() to initialize the same.
--	 */
--	if (!va_bits)
--		get_versiondep_info_arm64();
-+		DEBUG_MSG("max_physmem_bits : %ld (guess)\n", info->max_physmem_bits);
-+	}
- 
- 	if (!calculate_plat_config()) {
- 		ERRMSG("Can't determine platform config values\n");
-@@ -408,7 +454,6 @@ get_machdep_info_arm64(void)
- 	info->section_size_bits = SECTIONS_SIZE_BITS;
- 
- 	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
--	DEBUG_MSG("max_physmem_bits : %ld\n", info->max_physmem_bits);
- 	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
- 
- 	return TRUE;
-@@ -443,10 +488,35 @@ get_versiondep_info_arm64(void)
- 		return FALSE;
- 	}
- 
--	info->page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-+	/*
-+	 * See TCR_EL1, Translation Control Register (EL1) register
-+	 * description in the ARMv8 Architecture Reference Manual.
-+	 * Basically, we can use the TCR_EL1.T1SZ value to determine
-+	 * the virtual addressing range supported in the kernel-space
-+	 * (i.e. vabits_actual) since Linux 5.9.
-+	 */
-+	if (NUMBER(TCR_EL1_T1SZ) != NOT_FOUND_NUMBER) {
-+		vabits_actual = 64 - NUMBER(TCR_EL1_T1SZ);
-+		DEBUG_MSG("vabits_actual : %d (vmcoreinfo)\n", vabits_actual);
-+	} else if ((va_bits == 52) && (SYMBOL(mem_section) != NOT_FOUND_SYMBOL)) {
-+		/*
-+		 * Linux 5.4 through 5.10 have the following linear space:
-+		 *   48-bit: 0xffff000000000000 - 0xffff7fffffffffff
-+		 *   58-bit: 0xfff0000000000000 - 0xfff7ffffffffffff
-+		 * and SYMBOL(mem_section) should be in linear space if
-+		 * the kernel is configured with COMFIG_SPARSEMEM_EXTREME=y.
-+		 */
-+		if (SYMBOL(mem_section) & (1UL << (va_bits - 1)))
-+			vabits_actual = 48;
-+		else
-+			vabits_actual = 52;
-+		DEBUG_MSG("vabits_actual : %d (guess from mem_section)\n", vabits_actual);
-+	} else {
-+		vabits_actual = va_bits;
-+		DEBUG_MSG("vabits_actual : %d (same as va_bits)\n", vabits_actual);
-+	}
- 
--	DEBUG_MSG("va_bits      : %d\n", va_bits);
--	DEBUG_MSG("page_offset  : %lx\n", info->page_offset);
-+	get_page_offset_arm64();
- 
- 	return TRUE;
- }
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 768eda4..fcd766b 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -2397,6 +2397,7 @@ write_vmcoreinfo_data(void)
- 	WRITE_NUMBER("HUGETLB_PAGE_DTOR", HUGETLB_PAGE_DTOR);
- #ifdef __aarch64__
- 	WRITE_NUMBER("VA_BITS", VA_BITS);
-+	/* WRITE_NUMBER("TCR_EL1_T1SZ", TCR_EL1_T1SZ); should not exists */
- 	WRITE_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
- 	WRITE_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
- #endif
-@@ -2836,6 +2837,7 @@ read_vmcoreinfo(void)
- 	READ_NUMBER("KERNEL_IMAGE_SIZE", KERNEL_IMAGE_SIZE);
- #ifdef __aarch64__
- 	READ_NUMBER("VA_BITS", VA_BITS);
-+	READ_NUMBER("TCR_EL1_T1SZ", TCR_EL1_T1SZ);
- 	READ_NUMBER_UNSIGNED("PHYS_OFFSET", PHYS_OFFSET);
- 	READ_NUMBER_UNSIGNED("kimage_voffset", kimage_voffset);
- #endif
-diff --git a/makedumpfile.h b/makedumpfile.h
-index 2fcb62e..7d0efcf 100644
---- a/makedumpfile.h
-+++ b/makedumpfile.h
-@@ -2000,6 +2000,7 @@ struct number_table {
- 	long	KERNEL_IMAGE_SIZE;
- #ifdef __aarch64__
- 	long 	VA_BITS;
-+	long	TCR_EL1_T1SZ;
- 	unsigned long	PHYS_OFFSET;
- 	unsigned long	kimage_voffset;
- #endif
--- 
-2.9.3
+> Also, I tried the master and version 1.6.7 on Linux kernel 5.10 and
+> got a kernel not supported error. Do we know when 5.10 will be
+> supported? Thanks.
+
+The latest is makedumpfile-1.6.8, but it was tested with up to kernel 5.9.
+I've tested the current master with kernel 5.10 to 5.11-rc5 on x86_64,
+it's ok so far.  The next version will support 5.10 officially and
+will be released this spring or summer, but not scheduled yet.
+
+Thanks,
+Kazu
 
 
 _______________________________________________
