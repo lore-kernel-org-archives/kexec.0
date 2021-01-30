@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v14 09/11] x86,
- arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
-Date: Sat, 30 Jan 2021 15:10:23 +0800
-Message-ID: <20210130071025.65258-10-chenzhou10@huawei.com>
+Subject: [PATCH v14 06/11] x86/elf: Move vmcore_elf_check_arch_cross to
+ arch/x86/include/asm/elf.h
+Date: Sat, 30 Jan 2021 15:10:20 +0800
+Message-ID: <20210130071025.65258-7-chenzhou10@huawei.com>
 In-Reply-To: <20210130071025.65258-1-chenzhou10@huawei.com>
 References: <20210130071025.65258-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
@@ -20,97 +20,65 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: mingo@redhat.com, tglx@linutronix.de, rppt@kernel.org, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, nsaenzjulienne@suse.de, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
-Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, xiexiuqi@huawei.com, chenzhou10@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+Cc: wangkefeng.wang@huawei.com, kernel test robot <lkp@intel.com>, arnd@arndb.de, xiexiuqi@huawei.com, chenzhou10@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-We make the functions reserve_crashkernel[_low]() as generic for
-x86 and arm64. Since reserve_crashkernel[_low]() implementations
-are quite similar on other architectures as well, we can have more
-users of this later.
+Move macro vmcore_elf_check_arch_cross from arch/x86/include/asm/kexec.h
+to arch/x86/include/asm/elf.h to fix the following compiling warning:
 
-So have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in arch/Kconfig and
-select this by X86 and ARM64.
+make ARCH=i386
+In file included from arch/x86/kernel/setup.c:39:0:
+./arch/x86/include/asm/kexec.h:77:0: warning: "vmcore_elf_check_arch_cross" redefined
+ # define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
 
+In file included from arch/x86/kernel/setup.c:9:0:
+./include/linux/crash_dump.h:39:0: note: this is the location of the previous definition
+ #define vmcore_elf_check_arch_cross(x) 0
+
+The root cause is that vmcore_elf_check_arch_cross under CONFIG_CRASH_CORE
+depend on CONFIG_KEXEC_CORE. Commit 2db65f1db17d ("x86: kdump: move
+reserve_crashkernel[_low]() into crash_core.c") triggered the issue.
+
+Suggested by Mike, simply move vmcore_elf_check_arch_cross from
+arch/x86/include/asm/kexec.h to arch/x86/include/asm/elf.h to fix
+the warning.
+
+Fixes: 2db65f1db17d ("x86: kdump: move reserve_crashkernel[_low]() into crash_core.c")
+Reported-by: kernel test robot <lkp@intel.com>
 Suggested-by: Mike Rapoport <rppt@kernel.org>
-Suggested-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 ---
- arch/Kconfig        | 3 +++
- arch/arm64/Kconfig  | 1 +
- arch/x86/Kconfig    | 2 ++
- kernel/crash_core.c | 7 ++-----
- 4 files changed, 8 insertions(+), 5 deletions(-)
+ arch/x86/include/asm/elf.h   | 3 +++
+ arch/x86/include/asm/kexec.h | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 24862d15f3a3..0ca1ff5bb157 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -24,6 +24,9 @@ config KEXEC_ELF
- config HAVE_IMA_KEXEC
- 	bool
+diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+index 66bdfe838d61..5333777cc758 100644
+--- a/arch/x86/include/asm/elf.h
++++ b/arch/x86/include/asm/elf.h
+@@ -94,6 +94,9 @@ extern unsigned int vdso32_enabled;
  
-+config ARCH_WANT_RESERVE_CRASH_KERNEL
-+	bool
+ #define elf_check_arch(x)	elf_check_arch_ia32(x)
+ 
++/* We can also handle crash dumps from 64 bit kernel. */
++# define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
 +
- config SET_FS
- 	bool
+ /* SVR4/i386 ABI (pages 3-31, 3-32) says that when the program starts %edx
+    contains a pointer to a function which might be registered using `atexit'.
+    This provides a mean for the dynamic linker to call DT_FINI functions for
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 2b18f918203e..6fcae01a9cca 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -72,9 +72,6 @@ struct kimage;
  
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index f39568b28ec1..09365c7ff469 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -82,6 +82,7 @@ config ARM64
- 	select ARCH_WANT_FRAME_POINTERS
- 	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
- 	select ARCH_WANT_LD_ORPHAN_WARN
-+	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARM_AMBA
- 	select ARM_ARCH_TIMER
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 21f851179ff0..e6926fcb4a40 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -12,6 +12,7 @@ config X86_32
- 	depends on !64BIT
- 	# Options that are inherently 32-bit kernel only:
- 	select ARCH_WANT_IPC_PARSE_VERSION
-+	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
- 	select CLKSRC_I8253
- 	select CLONE_BACKWARDS
- 	select GENERIC_VDSO_32
-@@ -28,6 +29,7 @@ config X86_64
- 	select ARCH_HAS_GIGANTIC_PAGE
- 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
- 	select ARCH_USE_CMPXCHG_LOCKREF
-+	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
- 	select HAVE_ARCH_SOFT_DIRTY
- 	select MODULES_USE_ELF_RELA
- 	select NEED_DMA_MAP_STATE
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 8479be270c0b..2c5783985db5 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -320,9 +320,7 @@ int __init parse_crashkernel_low(char *cmdline,
-  * --------- Crashkernel reservation ------------------------------
-  */
- 
--#ifdef CONFIG_KEXEC_CORE
+ /* The native architecture */
+ # define KEXEC_ARCH KEXEC_ARCH_386
 -
--#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
-+#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
- static int __init reserve_crashkernel_low(void)
- {
- #ifdef CONFIG_64BIT
-@@ -450,8 +448,7 @@ void __init reserve_crashkernel(void)
- 	crashk_res.start = crash_base;
- 	crashk_res.end   = crash_base + crash_size - 1;
- }
--#endif
--#endif /* CONFIG_KEXEC_CORE */
-+#endif /* CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL */
- 
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len)
+-/* We can also handle crash dumps from 64 bit kernel. */
+-# define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
+ #else
+ /* Maximum physical address we can use pages from */
+ # define KEXEC_SOURCE_MEMORY_LIMIT      (MAXMEM-1)
 -- 
 2.20.1
 
