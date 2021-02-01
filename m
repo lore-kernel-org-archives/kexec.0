@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410049.outbound.protection.outlook.com
- ([40.107.141.49] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1400059.outbound.protection.outlook.com
+ ([40.107.140.59] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l6OF7-00047w-OW
- for kexec@lists.infradead.org; Mon, 01 Feb 2021 01:43:07 +0000
+ id 1l6OdC-0005YA-Ir
+ for kexec@lists.infradead.org; Mon, 01 Feb 2021 02:08:01 +0000
 From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
  <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile: Fix a compile error on Debian with pthread
-Date: Mon, 1 Feb 2021 01:42:54 +0000
-Message-ID: <OSBPR01MB19911206BBDE1223B48CF5B6DDB69@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20210130184920.1385887-1-jiang.wang@bytedance.com>
-In-Reply-To: <20210130184920.1385887-1-jiang.wang@bytedance.com>
+Subject: RE: [PATCH v2] makedumpfile: Add initial mips64 support
+Date: Mon, 1 Feb 2021 02:07:44 +0000
+Message-ID: <OSBPR01MB1991EE99FDCE26A9F5FA636ADDB69@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <1611908823-17601-1-git-send-email-tangyouling@loongson.cn>
+In-Reply-To: <1611908823-17601-1-git-send-email-tangyouling@loongson.cn>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -25,38 +25,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jiang Wang <jiang.wang@bytedance.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Youling Tang <tangyouling@loongson.cn>
+Cc: Jinyang He <hejinyang@loongson.cn>, kexec-ml <kexec@lists.infradead.org>, Huacai Chen <chenhuacai@loongson.cn>
 
 -----Original Message-----
-> From: "jiang.wang" <jiang.wang@bytedance.com>
+> Patch adds support for mips64 in makedumpfile. It takes care of vmalloc,
+> module and directly map kernel memory region's translation. Currently we
+> only support 3 leverl 16K pages and VA_BITS as 48.
 > 
-> On Debian 10, make reports errors about undefined reference to
-> `pthread_rwlock_tryrdlock'. To fix it, put ldw before lpthread
-> in the Makefile.
+> The changes were tested on a mips64 Loongson-3A4000 processor. The dump
+> compression and filtering (for all dump levels 1,2,4,8,16 and 31) tests
+> are succussfull.
 > 
-> Signed-off-by: Jiang Wang <jiang.wang@bytedance.com>
+> Signed-off-by: Huacai Chen <chenhuacai@loongson.cn>
+> Signed-off-by: Jinyang He <hejinyang@loongson.cn>
+> Signed-off-by: Youling Tang <tangyouling@loongson.cn>
 > ---
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index cb6bd42..010d447 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -68,7 +68,7 @@ endif
->  CFLAGS += -DUSESNAPPY
->  endif
-> 
-> -LIBS := -lpthread $(LIBS)
-> +LIBS := $(LIBS) -lpthread
-> 
->  try-run = $(shell set -e;		\
->  	TMP=".$$$$.tmp";		\
-> --
-> 2.11.0
+> v1 -> v2:
+>  - Move max_physmem_bits and section_size_bits to get_machdep_info_mips64().
 
-Thanks for the patch, applied.
-https://github.com/makedumpfile/makedumpfile/commit/01b4bd354c4a845c160d14487a93270cd1e22031
+Thanks for updating, applied.
+https://github.com/makedumpfile/makedumpfile/commit/7f185d29aa1794a82a090c748aae2f7bf240fb49
 
 Kazu
 
