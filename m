@@ -1,14 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2120.oracle.com ([141.146.126.78])
+Received: from out03.mta.xmission.com ([166.70.13.233])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l7SlM-0004jp-GI
- for kexec@lists.infradead.org; Thu, 04 Feb 2021 00:44:49 +0000
-From: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-Subject: [PATCH v2 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
- creation
-Date: Wed,  3 Feb 2021 16:43:45 -0800
-Message-Id: <20210204004347.41918-1-saeed.mirzamohammadi@oracle.com>
+ id 1l7Swf-0005Bj-Rv
+ for kexec@lists.infradead.org; Thu, 04 Feb 2021 00:56:31 +0000
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <CAN_LGv3Go0DgKbjPVHFFXU+U8RRU15m-np3F6_RrVmx6FmBoHQ@mail.gmail.com>
+ <20210128052924.GC2339@MiWiFi-R3L-srv>
+ <20210203064849.GA11522@dhcp-128-65.nay.redhat.com>
+ <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
+Date: Wed, 03 Feb 2021 18:54:41 -0600
+In-Reply-To: <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
+ (Alex Deucher's message of "Wed, 3 Feb 2021 09:46:56 -0500")
+Message-ID: <87wnvoodny.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
+Subject: Re: amdgpu problem after kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,102 +26,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-Cc: john.p.donnelly@oracle.com, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, saeed.mirzamohammadi@oracle.com, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Masahiro Yamada <masahiroy@kernel.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Sami Tolvanen <samitolvanen@google.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, YiFei Zhu <yifeifz2@illinois.edu>, Dave Young <dyoung@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Stephen Boyd <sboyd@kernel.org>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, Dave Young <dyoung@redhat.com>, "Alexander E. Patrakov" <patrakov@gmail.com>, Baoquan He <bhe@redhat.com>
 
-This adds crashkernel=auto feature to configure reserved memory for
-vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
-different kernel distributions and different archs based on their
-needs.
+Alex Deucher <alexdeucher@gmail.com> writes:
 
-Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-Tested-by: John Donnelly <john.p.donnelly@oracle.com>
----
- Documentation/admin-guide/kdump/kdump.rst |  5 +++++
- arch/Kconfig                              | 24 +++++++++++++++++++++++
- kernel/crash_core.c                       |  7 +++++++
- 3 files changed, 36 insertions(+)
+> On Wed, Feb 3, 2021 at 3:36 AM Dave Young <dyoung@redhat.com> wrote:
+>>
+>> Hi Baoquan,
+>>
+>> Thanks for ccing.
+>> On 01/28/21 at 01:29pm, Baoquan He wrote:
+>> > On 01/11/21 at 01:17pm, Alexander E. Patrakov wrote:
+>> > > Hello,
+>> > >
+>> > > I was trying out kexec on my new laptop, which is a HP EliteBook 735
+>> > > G6. The problem is, amdgpu does not have hardware acceleration after
+>> > > kexec. Also, strangely, the lines about BlueTooth are missing from
+>> > > dmesg after kexec, but I have not tried to use BlueTooth on this
+>> > > laptop yet. I don't know how to debug this, the relevant amdgpu lines
+>> > > in dmesg are:
+>> > >
+>> > > amdgpu 0000:04:00.0: [drm:amdgpu_ib_ring_tests [amdgpu]] *ERROR* IB
+>> > > test failed on gfx (-110).
+>> > > [drm:process_one_work] *ERROR* ib ring test failed (-110).
+>> > >
+>> > > The good and bad dmesg files are attached. Is it a kexec problem (and
+>> > > amdgpu is only a victim), or should I take it to amdgpu lists? Do I
+>> > > need to provide some extra kernel arguments for debugging?
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index 75a9dd98e76e..f95a2af64f59 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -285,7 +285,12 @@ This would mean:
-     2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-     3) if the RAM size is larger than 2G, then reserve 128M
- 
-+Or you can use crashkernel=auto if you have enough memory. The threshold
-+is 1G on x86_64 and arm64. If your system memory is less than the threshold,
-+crashkernel=auto will not reserve memory. The size changes according to
-+the system memory size like below:
- 
-+    x86_64/arm64: 1G-64G:128M,64G-1T:256M,1T-:512M
- 
- Boot into System Kernel
- =======================
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 56b6ccc0e32d..a772eb397d73 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -14,6 +14,30 @@ menu "General architecture-dependent options"
- config CRASH_CORE
- 	bool
- 
-+if CRASH_CORE
-+
-+config CRASH_AUTO_STR
-+	string "Memory reserved for crash kernel"
-+	depends on CRASH_CORE
-+	default "1G-64G:128M,64G-1T:256M,1T-:512M"
-+	help
-+	  This configures the reserved memory dependent
-+	  on the value of System RAM. The syntax is:
-+	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-+	              range=start-[end]
-+
-+	  For example:
-+	      crashkernel=512M-2G:64M,2G-:128M
-+
-+	  This would mean:
-+
-+	      1) if the RAM is smaller than 512M, then don't reserve anything
-+	         (this is the "rescue" case)
-+	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-+	      3) if the RAM size is larger than 2G, then reserve 128M
-+
-+endif # CRASH_CORE
-+
- config KEXEC_CORE
- 	select CRASH_CORE
- 	bool
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 106e4500fd53..ab0a2b4b1ffa 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -7,6 +7,7 @@
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-+#include <linux/kexec.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
- 	if (suffix)
- 		return parse_crashkernel_suffix(ck_cmdline, crash_size,
- 				suffix);
-+#ifdef CONFIG_CRASH_AUTO_STR
-+	if (strncmp(ck_cmdline, "auto", 4) == 0) {
-+		ck_cmdline = CONFIG_CRASH_AUTO_STR;
-+		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
-+	}
-+#endif
- 	/*
- 	 * if the commandline contains a ':', then that's the extended
- 	 * syntax -- if not, it must be the classic syntax
--- 
-2.27.0
+The best debugging I can think of is can you arrange to have the amdgpu
+modules removed before the final kexec -e?
 
+That would tell us if the code to shutdown the gpu exist in the rmmod
+path aka the .remove method and is simply missing in the kexec path aka
+the .shutdown method.
+
+
+>> > I am not familiar with graphical component. Add Dave to CC to see if
+>> > he has some comments. It would be great if amdgpu expert can have a look.
+>>
+>> It needs amdgpu driver people to help.  Since kexec bypass
+>> bios/UEFI initialization so we requires drivers to implement .shutdown
+>> method and test it to make 2nd kernel to work correctly.
+>
+> kexec is tricky to make work properly on our GPUs.  The problem is
+> that there are some engines on the GPU that cannot be re-initialized
+> once they have been initialized without an intervening device reset.
+> APUs are even trickier because they share a lot of hardware state with
+> the CPU.  Doing lots of extra resets adds latency.  The driver has
+> code to try and detect if certain engines are running at driver load
+> time and do a reset before initialization to make this work, but it
+> apparently is not working properly on your system.
+
+There are two cases that I think sometimes get mixed up.
+
+There is kexec-on-panic in which case all of the work needs to happen in
+the driver initialization.
+
+There is also a simple kexec in which case some of the work can happen
+in the kernel that is being shutdown and sometimes that is easer.
+
+Does it make sense to reset your device unconditionally on driver removal?
+Would it make sense to reset your device unconditionally on driver add?
+
+How can someone debug the smart logic of reset on driver load?
+
+Eric
 
 _______________________________________________
 kexec mailing list
