@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20210127172706.617195-1-pasha.tatashin@soleen.com>
- <a8a72826-0a27-de9b-bfb7-be8286cd61fe@arm.com>
- <CA+CK2bBSJaL9Hn_LBy78ccaCt7=r9cSaEqUVemRVmKg6cwpLnQ@mail.gmail.com>
-Date: Wed, 03 Feb 2021 19:11:10 -0600
-In-Reply-To: <CA+CK2bBSJaL9Hn_LBy78ccaCt7=r9cSaEqUVemRVmKg6cwpLnQ@mail.gmail.com>
- (Pavel Tatashin's message of "Mon, 1 Feb 2021 14:59:32 -0500")
-Message-ID: <871rdwocwh.fsf@x220.int.ebiederm.org>
+Subject: Re: [PATCH v14 11/11] kdump: update Documentation about crashkernel
+References: <20210130071025.65258-1-chenzhou10@huawei.com>
+ <20210130071025.65258-12-chenzhou10@huawei.com>
+ <686c331c-8009-1203-e8fe-b1ae67ae9652@infradead.org>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <d8c1ed02-4f9a-12cc-d6ff-762dfb80ed42@huawei.com>
+Date: Thu, 4 Feb 2021 09:53:59 +0800
 MIME-Version: 1.0
-Subject: Re: [PATCH v11 0/6] arm64: MMU enabled kexec relocation
+In-Reply-To: <686c331c-8009-1203-e8fe-b1ae67ae9652@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,127 +20,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pavel Tatashin <pasha.tatashin@soleen.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, Tyler Hicks <tyhicks@linux.microsoft.com>, James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, rfontana@redhat.com, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Randy Dunlap <rdunlap@infradead.org>, mingo@redhat.com, tglx@linutronix.de, rppt@kernel.org, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, nsaenzjulienne@suse.de, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
+Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-Pavel Tatashin <pasha.tatashin@soleen.com> writes:
+Hi Randy,
 
-> Hi James,
+
+On 2021/1/31 1:53, Randy Dunlap wrote:
+> Hi--
 >
->> The problem I see with this is rewriting the relocation code. It needs to work whether the
->> machine has enough memory to enable the MMU during kexec, or not.
+> On 1/29/21 11:10 PM, Chen Zhou wrote:
+>> ---
+>>  Documentation/admin-guide/kdump/kdump.rst     | 22 ++++++++++++++++---
+>>  .../admin-guide/kernel-parameters.txt         | 11 ++++++++--
+>>  2 files changed, 28 insertions(+), 5 deletions(-)
 >>
->> In off-list mail to Pavel I proposed an alternative implementation here:
->> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec+mmu/v0
->>
->> By using a copy of the linear map, and passing the phys_to_virt offset into
->> arm64_relocate_new_kernel() its possible to use the same code when we fail to allocate the
->> page tables, and run with the MMU off as it does today.
->> I'm convinced someone will crawl out of the woodwork screaming 'regression' if we
->> substantially increase the amount of memory needed to kexec at all.
->>
->> From that discussion: this didn't meet Pavel's timing needs.
->> If you depend on having all the src/dst pages lined up in a single line, it sounds like
->> you've over-tuned this to depend on the CPU's streaming mode. What causes the CPU to
->> start/stop that stuff is very implementation specific (and firmware configurable).
->> I don't think we should let this rule out systems that can kexec today, but don't have
->> enough extra memory for the page tables.
->> Having two copies of the relocation code is obviously a bad idea.
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index a10b545c2070..908e5c8b61ba 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> All of the "arm64" instances in [square brackets] should be "ARM64".
+Got it, thanks for your review.
+
+Thanks,
+Chen Zhou
 >
-> I understand that having an extra set of page tables could potentially
-> waste memory, especially if VAs are sparse, but in this case we use
-> page tables exclusively for contiguous VA space (copy [src, src +
-> size]). Therefore, the extra memory usage is tiny. The ratio for
-> kernels with  4K page_size is (size of relocated memory) / 512.  A
-> normal initrd + kernel is usually under 64M, an extra space which
-> means ~128K for the page table. Even with a huge relocation, where
-> initrd is ~512M the extra memory usage in the worst case is just ~1M.
-> I really doubt we will have any problem from users because of such
-> small overhead in comparison to the total kexec-load size.
-
-Foolish question.
-
-Does arm64 have something like 2M pages that it can use for the
-linear map?
-
-On x86_64 we always generate page tables, because they are necessary to
-be in 64bit mode.  As I recall on x86_64 we always use 2M pages which
-means for each 4K of page tables we map 1GiB of memory.   Which is very
-tiny.
-
-If you do as well as x86_64 for arm64 I suspect that will be good enough
-for people to not claim regression.
-
-Would a variation on the x86_64 implementation that allocates page
-tables work for arm64?
-
->> (as before: ) Instead of trying to make the relocations run quickly, can we reduce them?
->> This would benefit other architectures too.
+>> @@ -738,6 +738,9 @@
+>>  			[KNL, X86-64] Select a region under 4G first, and
+>>  			fall back to reserve region above 4G when '@offset'
+>>  			hasn't been specified.
+>> +			[KNL, arm64] Try low allocation in DMA zone and fall back
+> 			      here
 >
-> This was exactly my first approach [1] where I tried to pre-reserve
-> memory similar to how it is done for a crash kernel, but I was asked
-> to go away [2] as this is an ARM64 specific problem, where current
-> relocation performance is prohibitively slow. I have tested on x86,
-> and it does not suffer from this problem, relocation performance is
-> just as fast as with MMU enabled ARM64.
+>> +			to high allocation if it fails when '@offset' hasn't been
+>> +			specified.
+>>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+>>  
+>>  	crashkernel=range1:size1[,range2:size2,...][@offset]
+>> @@ -754,6 +757,8 @@
+>>  			Otherwise memory region will be allocated below 4G, if
+>>  			available.
+>>  			It will be ignored if crashkernel=X is specified.
+>> +			[KNL, arm64] range in high memory.
+> 			      here
 >
->>
->> Can the kexec core code allocate higher order pages, instead of doing everything page at
->> at time?
+>> +			Allow kernel to allocate physical memory region from top.
+>>  	crashkernel=size[KMG],low
+>>  			[KNL, X86-64] range under 4G. When crashkernel=X,high
+>>  			is passed, kernel could allocate physical memory region
+>> @@ -762,13 +767,15 @@
+>>  			requires at least 64M+32K low memory, also enough extra
+>>  			low memory is needed to make sure DMA buffers for 32-bit
+>>  			devices won't run out. Kernel would try to allocate at
+>> -			at least 256M below 4G automatically.
+>> +			least 256M below 4G automatically.
+>>  			This one let user to specify own low range under 4G
+>>  			for second kernel instead.
+>>  			0: to disable low allocation.
+>>  			It will be ignored when crashkernel=X,high is not used
+>>  			or memory reserved is below 4G.
+>> -
+>> +			[KNL, arm64] range in low memory.
+> 			      here
 >
-> Yes, however, failures during kexec-load due to failure to coalesce
-> huge pages can add extra hassle to users, and therefore this should be
-> only an optimization with fallback to base pages.
+>> +			This one let user to specify a low range in DMA zone for
+>> +			crash dump kernel.
 >
->>
->> If you have a crash kernel reservation, can we use that to eliminate the relocations
->> completely?
->> (I think this suggestion has been lost in translation each time I make it.
->> I mean like this:
->> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec/kexec_in_crashk/v0
->> Runes to test it:
->> | sudo ./kexec -p -u
->> | sudo cat /proc/iomem | grep Crash
->> |  b0200000-f01fffff : Crash kernel
->> | sudo ./kexec --mem-min=0xb0200000 --mem-max=0xf01ffffff -l ~/Image --reuse-cmdline
->>
->> I bet its even faster!)
+> Thanks.
 >
-> There is a problem with this approach. While, with kexec_load() call
-> it is possible to specify physical destinations for each segment, with
-> kexec_file_load() it is not possible. The secure systems that do IMA
-> checks during kexec load require kexec_file_load(), and we cannot
-> ahead of time specify destinations for these segments (at least
-> without substantially changing common kexec code which is not going to
-> happen as this arm64 specific problem).
-
-
->> I think 'as fast as possible' and 'memory constrained' are mutually exclusive
->> requirements. We need to make the page tables optional with a single implementation.
-
-In my experience the slowdown with disabling a cpus cache (which
-apparently happens on arm64 when the MMU is disabled) is freakishly
-huge.
-
-Enabling the cache shouldn't be 'as fast as possible' but simply
-disengaging the parking brake.
-
-> In my opinion having two different types of relocations will only add
-> extra corner cases, confusion about different performance, and bugs.
-> It is better to have two types: 1. crash kernel type without
-> relocation, 2. fast relocation where MMU is enabled.
->
-> [1] https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
-> [2] https://lore.kernel.org/lkml/20190710065953.GA4744@localhost.localdomain/
-
-As long as the page table provided is a linear mapping of physical
-memory (aka it looks like paging is disabled).  The the code that
-relocates memory should be pretty much the same.
-
-My experience with other architectures suggests only a couple of
-instructions need to be different to deal with a MMU being enabled.
-
-Eric
 
 
 _______________________________________________
