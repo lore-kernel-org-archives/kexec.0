@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x62c.google.com ([2a00:1450:4864:20::62c])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l6fMr-0005v7-Mt
- for kexec@lists.infradead.org; Mon, 01 Feb 2021 20:00:17 +0000
-Received: by mail-ej1-x62c.google.com with SMTP id b9so6715983ejy.12
- for <kexec@lists.infradead.org>; Mon, 01 Feb 2021 12:00:10 -0800 (PST)
+ id 1l7SlM-0004jp-GI
+ for kexec@lists.infradead.org; Thu, 04 Feb 2021 00:44:49 +0000
+From: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Subject: [PATCH v2 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
+Date: Wed,  3 Feb 2021 16:43:45 -0800
+Message-Id: <20210204004347.41918-1-saeed.mirzamohammadi@oracle.com>
 MIME-Version: 1.0
-References: <20210127172706.617195-1-pasha.tatashin@soleen.com>
- <a8a72826-0a27-de9b-bfb7-be8286cd61fe@arm.com>
-In-Reply-To: <a8a72826-0a27-de9b-bfb7-be8286cd61fe@arm.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Mon, 1 Feb 2021 14:59:32 -0500
-Message-ID: <CA+CK2bBSJaL9Hn_LBy78ccaCt7=r9cSaEqUVemRVmKg6cwpLnQ@mail.gmail.com>
-Subject: Re: [PATCH v11 0/6] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,99 +21,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, James Morris <jmorris@namei.org>, linux-mm <linux-mm@kvack.org>, Tyler Hicks <tyhicks@linux.microsoft.com>, rfontana@redhat.com, "Eric W. Biederman" <ebiederm@xmission.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: john.p.donnelly@oracle.com, Kees Cook <keescook@chromium.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, saeed.mirzamohammadi@oracle.com, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Masahiro Yamada <masahiroy@kernel.org>, linux-doc@vger.kernel.org, kexec@lists.infradead.org, Robin Murphy <robin.murphy@arm.com>, linux-kernel@vger.kernel.org, Peter Zijlstra <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Sami Tolvanen <samitolvanen@google.com>, Josh Poimboeuf <jpoimboe@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, YiFei Zhu <yifeifz2@illinois.edu>, Dave Young <dyoung@redhat.com>, Frederic Weisbecker <frederic@kernel.org>, Vivek Goyal <vgoyal@redhat.com>, Stephen Boyd <sboyd@kernel.org>
 
-Hi James,
+This adds crashkernel=auto feature to configure reserved memory for
+vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+different kernel distributions and different archs based on their
+needs.
 
-> The problem I see with this is rewriting the relocation code. It needs to work whether the
-> machine has enough memory to enable the MMU during kexec, or not.
->
-> In off-list mail to Pavel I proposed an alternative implementation here:
-> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec+mmu/v0
->
-> By using a copy of the linear map, and passing the phys_to_virt offset into
-> arm64_relocate_new_kernel() its possible to use the same code when we fail to allocate the
-> page tables, and run with the MMU off as it does today.
-> I'm convinced someone will crawl out of the woodwork screaming 'regression' if we
-> substantially increase the amount of memory needed to kexec at all.
->
-> From that discussion: this didn't meet Pavel's timing needs.
-> If you depend on having all the src/dst pages lined up in a single line, it sounds like
-> you've over-tuned this to depend on the CPU's streaming mode. What causes the CPU to
-> start/stop that stuff is very implementation specific (and firmware configurable).
-> I don't think we should let this rule out systems that can kexec today, but don't have
-> enough extra memory for the page tables.
-> Having two copies of the relocation code is obviously a bad idea.
+Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+---
+ Documentation/admin-guide/kdump/kdump.rst |  5 +++++
+ arch/Kconfig                              | 24 +++++++++++++++++++++++
+ kernel/crash_core.c                       |  7 +++++++
+ 3 files changed, 36 insertions(+)
 
-I understand that having an extra set of page tables could potentially
-waste memory, especially if VAs are sparse, but in this case we use
-page tables exclusively for contiguous VA space (copy [src, src +
-size]). Therefore, the extra memory usage is tiny. The ratio for
-kernels with  4K page_size is (size of relocated memory) / 512.  A
-normal initrd + kernel is usually under 64M, an extra space which
-means ~128K for the page table. Even with a huge relocation, where
-initrd is ~512M the extra memory usage in the worst case is just ~1M.
-I really doubt we will have any problem from users because of such
-small overhead in comparison to the total kexec-load size.
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 75a9dd98e76e..f95a2af64f59 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -285,7 +285,12 @@ This would mean:
+     2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+     3) if the RAM size is larger than 2G, then reserve 128M
+ 
++Or you can use crashkernel=auto if you have enough memory. The threshold
++is 1G on x86_64 and arm64. If your system memory is less than the threshold,
++crashkernel=auto will not reserve memory. The size changes according to
++the system memory size like below:
+ 
++    x86_64/arm64: 1G-64G:128M,64G-1T:256M,1T-:512M
+ 
+ Boot into System Kernel
+ =======================
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 56b6ccc0e32d..a772eb397d73 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -14,6 +14,30 @@ menu "General architecture-dependent options"
+ config CRASH_CORE
+ 	bool
+ 
++if CRASH_CORE
++
++config CRASH_AUTO_STR
++	string "Memory reserved for crash kernel"
++	depends on CRASH_CORE
++	default "1G-64G:128M,64G-1T:256M,1T-:512M"
++	help
++	  This configures the reserved memory dependent
++	  on the value of System RAM. The syntax is:
++	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++	              range=start-[end]
++
++	  For example:
++	      crashkernel=512M-2G:64M,2G-:128M
++
++	  This would mean:
++
++	      1) if the RAM is smaller than 512M, then don't reserve anything
++	         (this is the "rescue" case)
++	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
++	      3) if the RAM size is larger than 2G, then reserve 128M
++
++endif # CRASH_CORE
++
+ config KEXEC_CORE
+ 	select CRASH_CORE
+ 	bool
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 106e4500fd53..ab0a2b4b1ffa 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -7,6 +7,7 @@
+ #include <linux/crash_core.h>
+ #include <linux/utsname.h>
+ #include <linux/vmalloc.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+ 	if (suffix)
+ 		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+ 				suffix);
++#ifdef CONFIG_CRASH_AUTO_STR
++	if (strncmp(ck_cmdline, "auto", 4) == 0) {
++		ck_cmdline = CONFIG_CRASH_AUTO_STR;
++		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
++	}
++#endif
+ 	/*
+ 	 * if the commandline contains a ':', then that's the extended
+ 	 * syntax -- if not, it must be the classic syntax
+-- 
+2.27.0
 
->
->
-> (as before: ) Instead of trying to make the relocations run quickly, can we reduce them?
-> This would benefit other architectures too.
-
-This was exactly my first approach [1] where I tried to pre-reserve
-memory similar to how it is done for a crash kernel, but I was asked
-to go away [2] as this is an ARM64 specific problem, where current
-relocation performance is prohibitively slow. I have tested on x86,
-and it does not suffer from this problem, relocation performance is
-just as fast as with MMU enabled ARM64.
-
->
-> Can the kexec core code allocate higher order pages, instead of doing everything page at
-> at time?
-
-Yes, however, failures during kexec-load due to failure to coalesce
-huge pages can add extra hassle to users, and therefore this should be
-only an optimization with fallback to base pages.
-
->
-> If you have a crash kernel reservation, can we use that to eliminate the relocations
-> completely?
-> (I think this suggestion has been lost in translation each time I make it.
-> I mean like this:
-> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec/kexec_in_crashk/v0
-> Runes to test it:
-> | sudo ./kexec -p -u
-> | sudo cat /proc/iomem | grep Crash
-> |  b0200000-f01fffff : Crash kernel
-> | sudo ./kexec --mem-min=0xb0200000 --mem-max=0xf01ffffff -l ~/Image --reuse-cmdline
->
-> I bet its even faster!)
-
-There is a problem with this approach. While, with kexec_load() call
-it is possible to specify physical destinations for each segment, with
-kexec_file_load() it is not possible. The secure systems that do IMA
-checks during kexec load require kexec_file_load(), and we cannot
-ahead of time specify destinations for these segments (at least
-without substantially changing common kexec code which is not going to
-happen as this arm64 specific problem).
-
->
->
-> I think 'as fast as possible' and 'memory constrained' are mutually exclusive
-> requirements. We need to make the page tables optional with a single implementation.
-
-In my opinion having two different types of relocations will only add
-extra corner cases, confusion about different performance, and bugs.
-It is better to have two types: 1. crash kernel type without
-relocation, 2. fast relocation where MMU is enabled.
-
-[1] https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
-[2] https://lore.kernel.org/lkml/20190710065953.GA4744@localhost.localdomain/
-
-Thank you,
-Pasha
 
 _______________________________________________
 kexec mailing list
