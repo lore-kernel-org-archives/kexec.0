@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out03.mta.xmission.com ([166.70.13.233])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l7Swf-0005Bj-Rv
- for kexec@lists.infradead.org; Thu, 04 Feb 2021 00:56:31 +0000
 From: ebiederm@xmission.com (Eric W. Biederman)
-References: <CAN_LGv3Go0DgKbjPVHFFXU+U8RRU15m-np3F6_RrVmx6FmBoHQ@mail.gmail.com>
- <20210128052924.GC2339@MiWiFi-R3L-srv>
- <20210203064849.GA11522@dhcp-128-65.nay.redhat.com>
- <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
-Date: Wed, 03 Feb 2021 18:54:41 -0600
-In-Reply-To: <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
- (Alex Deucher's message of "Wed, 3 Feb 2021 09:46:56 -0500")
-Message-ID: <87wnvoodny.fsf@x220.int.ebiederm.org>
+References: <20210127172706.617195-1-pasha.tatashin@soleen.com>
+ <a8a72826-0a27-de9b-bfb7-be8286cd61fe@arm.com>
+ <CA+CK2bBSJaL9Hn_LBy78ccaCt7=r9cSaEqUVemRVmKg6cwpLnQ@mail.gmail.com>
+Date: Wed, 03 Feb 2021 19:11:10 -0600
+In-Reply-To: <CA+CK2bBSJaL9Hn_LBy78ccaCt7=r9cSaEqUVemRVmKg6cwpLnQ@mail.gmail.com>
+ (Pavel Tatashin's message of "Mon, 1 Feb 2021 14:59:32 -0500")
+Message-ID: <871rdwocwh.fsf@x220.int.ebiederm.org>
 MIME-Version: 1.0
-Subject: Re: amdgpu problem after kexec
+Subject: Re: [PATCH v11 0/6] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,73 +21,128 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, Dave Young <dyoung@redhat.com>, "Alexander E. Patrakov" <patrakov@gmail.com>, Baoquan He <bhe@redhat.com>
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Sasha Levin <sashal@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Selin Dag <selindag@gmail.com>, steve.capper@arm.com, kexec mailing list <kexec@lists.infradead.org>, James Morris <jmorris@namei.org>, LKML <linux-kernel@vger.kernel.org>, linux-mm <linux-mm@kvack.org>, Tyler Hicks <tyhicks@linux.microsoft.com>, James Morse <james.morse@arm.com>, Marc Zyngier <maz@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, rfontana@redhat.com, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 
-Alex Deucher <alexdeucher@gmail.com> writes:
+Pavel Tatashin <pasha.tatashin@soleen.com> writes:
 
-> On Wed, Feb 3, 2021 at 3:36 AM Dave Young <dyoung@redhat.com> wrote:
->>
->> Hi Baoquan,
->>
->> Thanks for ccing.
->> On 01/28/21 at 01:29pm, Baoquan He wrote:
->> > On 01/11/21 at 01:17pm, Alexander E. Patrakov wrote:
->> > > Hello,
->> > >
->> > > I was trying out kexec on my new laptop, which is a HP EliteBook 735
->> > > G6. The problem is, amdgpu does not have hardware acceleration after
->> > > kexec. Also, strangely, the lines about BlueTooth are missing from
->> > > dmesg after kexec, but I have not tried to use BlueTooth on this
->> > > laptop yet. I don't know how to debug this, the relevant amdgpu lines
->> > > in dmesg are:
->> > >
->> > > amdgpu 0000:04:00.0: [drm:amdgpu_ib_ring_tests [amdgpu]] *ERROR* IB
->> > > test failed on gfx (-110).
->> > > [drm:process_one_work] *ERROR* ib ring test failed (-110).
->> > >
->> > > The good and bad dmesg files are attached. Is it a kexec problem (and
->> > > amdgpu is only a victim), or should I take it to amdgpu lists? Do I
->> > > need to provide some extra kernel arguments for debugging?
-
-The best debugging I can think of is can you arrange to have the amdgpu
-modules removed before the final kexec -e?
-
-That would tell us if the code to shutdown the gpu exist in the rmmod
-path aka the .remove method and is simply missing in the kexec path aka
-the .shutdown method.
-
-
->> > I am not familiar with graphical component. Add Dave to CC to see if
->> > he has some comments. It would be great if amdgpu expert can have a look.
->>
->> It needs amdgpu driver people to help.  Since kexec bypass
->> bios/UEFI initialization so we requires drivers to implement .shutdown
->> method and test it to make 2nd kernel to work correctly.
+> Hi James,
 >
-> kexec is tricky to make work properly on our GPUs.  The problem is
-> that there are some engines on the GPU that cannot be re-initialized
-> once they have been initialized without an intervening device reset.
-> APUs are even trickier because they share a lot of hardware state with
-> the CPU.  Doing lots of extra resets adds latency.  The driver has
-> code to try and detect if certain engines are running at driver load
-> time and do a reset before initialization to make this work, but it
-> apparently is not working properly on your system.
+>> The problem I see with this is rewriting the relocation code. It needs to work whether the
+>> machine has enough memory to enable the MMU during kexec, or not.
+>>
+>> In off-list mail to Pavel I proposed an alternative implementation here:
+>> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec+mmu/v0
+>>
+>> By using a copy of the linear map, and passing the phys_to_virt offset into
+>> arm64_relocate_new_kernel() its possible to use the same code when we fail to allocate the
+>> page tables, and run with the MMU off as it does today.
+>> I'm convinced someone will crawl out of the woodwork screaming 'regression' if we
+>> substantially increase the amount of memory needed to kexec at all.
+>>
+>> From that discussion: this didn't meet Pavel's timing needs.
+>> If you depend on having all the src/dst pages lined up in a single line, it sounds like
+>> you've over-tuned this to depend on the CPU's streaming mode. What causes the CPU to
+>> start/stop that stuff is very implementation specific (and firmware configurable).
+>> I don't think we should let this rule out systems that can kexec today, but don't have
+>> enough extra memory for the page tables.
+>> Having two copies of the relocation code is obviously a bad idea.
+>
+> I understand that having an extra set of page tables could potentially
+> waste memory, especially if VAs are sparse, but in this case we use
+> page tables exclusively for contiguous VA space (copy [src, src +
+> size]). Therefore, the extra memory usage is tiny. The ratio for
+> kernels with  4K page_size is (size of relocated memory) / 512.  A
+> normal initrd + kernel is usually under 64M, an extra space which
+> means ~128K for the page table. Even with a huge relocation, where
+> initrd is ~512M the extra memory usage in the worst case is just ~1M.
+> I really doubt we will have any problem from users because of such
+> small overhead in comparison to the total kexec-load size.
 
-There are two cases that I think sometimes get mixed up.
+Foolish question.
 
-There is kexec-on-panic in which case all of the work needs to happen in
-the driver initialization.
+Does arm64 have something like 2M pages that it can use for the
+linear map?
 
-There is also a simple kexec in which case some of the work can happen
-in the kernel that is being shutdown and sometimes that is easer.
+On x86_64 we always generate page tables, because they are necessary to
+be in 64bit mode.  As I recall on x86_64 we always use 2M pages which
+means for each 4K of page tables we map 1GiB of memory.   Which is very
+tiny.
 
-Does it make sense to reset your device unconditionally on driver removal?
-Would it make sense to reset your device unconditionally on driver add?
+If you do as well as x86_64 for arm64 I suspect that will be good enough
+for people to not claim regression.
 
-How can someone debug the smart logic of reset on driver load?
+Would a variation on the x86_64 implementation that allocates page
+tables work for arm64?
+
+>> (as before: ) Instead of trying to make the relocations run quickly, can we reduce them?
+>> This would benefit other architectures too.
+>
+> This was exactly my first approach [1] where I tried to pre-reserve
+> memory similar to how it is done for a crash kernel, but I was asked
+> to go away [2] as this is an ARM64 specific problem, where current
+> relocation performance is prohibitively slow. I have tested on x86,
+> and it does not suffer from this problem, relocation performance is
+> just as fast as with MMU enabled ARM64.
+>
+>>
+>> Can the kexec core code allocate higher order pages, instead of doing everything page at
+>> at time?
+>
+> Yes, however, failures during kexec-load due to failure to coalesce
+> huge pages can add extra hassle to users, and therefore this should be
+> only an optimization with fallback to base pages.
+>
+>>
+>> If you have a crash kernel reservation, can we use that to eliminate the relocations
+>> completely?
+>> (I think this suggestion has been lost in translation each time I make it.
+>> I mean like this:
+>> https://gitlab.arm.com/linux-arm/linux-jm/-/tree/kexec/kexec_in_crashk/v0
+>> Runes to test it:
+>> | sudo ./kexec -p -u
+>> | sudo cat /proc/iomem | grep Crash
+>> |  b0200000-f01fffff : Crash kernel
+>> | sudo ./kexec --mem-min=0xb0200000 --mem-max=0xf01ffffff -l ~/Image --reuse-cmdline
+>>
+>> I bet its even faster!)
+>
+> There is a problem with this approach. While, with kexec_load() call
+> it is possible to specify physical destinations for each segment, with
+> kexec_file_load() it is not possible. The secure systems that do IMA
+> checks during kexec load require kexec_file_load(), and we cannot
+> ahead of time specify destinations for these segments (at least
+> without substantially changing common kexec code which is not going to
+> happen as this arm64 specific problem).
+
+
+>> I think 'as fast as possible' and 'memory constrained' are mutually exclusive
+>> requirements. We need to make the page tables optional with a single implementation.
+
+In my experience the slowdown with disabling a cpus cache (which
+apparently happens on arm64 when the MMU is disabled) is freakishly
+huge.
+
+Enabling the cache shouldn't be 'as fast as possible' but simply
+disengaging the parking brake.
+
+> In my opinion having two different types of relocations will only add
+> extra corner cases, confusion about different performance, and bugs.
+> It is better to have two types: 1. crash kernel type without
+> relocation, 2. fast relocation where MMU is enabled.
+>
+> [1] https://lore.kernel.org/lkml/20190709182014.16052-1-pasha.tatashin@soleen.com
+> [2] https://lore.kernel.org/lkml/20190710065953.GA4744@localhost.localdomain/
+
+As long as the page table provided is a linear mapping of physical
+memory (aka it looks like paging is disabled).  The the code that
+relocates memory should be pretty much the same.
+
+My experience with other architectures suggests only a couple of
+instructions need to be different to deal with a MMU being enabled.
 
 Eric
+
 
 _______________________________________________
 kexec mailing list
