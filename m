@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410072.outbound.protection.outlook.com
- ([40.107.141.72] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-wr1-x431.google.com ([2a00:1450:4864:20::431])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l7ocH-0007Wg-9P
- for kexec@lists.infradead.org; Fri, 05 Feb 2021 00:04:55 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile.h: fix build on sparc64
-Date: Fri, 5 Feb 2021 00:04:45 +0000
-Message-ID: <OSBPR01MB19913CC9CA5128A991790E45DDB29@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <20210204192753.1316622-1-fontaine.fabrice@gmail.com>
-In-Reply-To: <20210204192753.1316622-1-fontaine.fabrice@gmail.com>
-Content-Language: ja-JP
+ id 1l7wHi-0002vR-DX
+ for kexec@lists.infradead.org; Fri, 05 Feb 2021 08:16:11 +0000
+Received: by mail-wr1-x431.google.com with SMTP id g10so6655197wrx.1
+ for <kexec@lists.infradead.org>; Fri, 05 Feb 2021 00:16:08 -0800 (PST)
+From: Federico Pellegrin <fede@evolware.org>
+Subject: [PATCH 1/1] kexec-tools: fix build on pre 4.4 kernels
+Date: Fri,  5 Feb 2021 09:15:59 +0100
+Message-Id: <20210205081559.15956-1-fede@evolware.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,46 +22,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Fabrice Fontaine <fontaine.fabrice@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
+Cc: Federico Pellegrin <fede@evolware.org>
 
------Original Message-----
-> Fix the following build failure on sparc64:
-> 
-> /home/giuliobenetti/autobuild/run/instance-0/output-1/host/opt/ext-toolchain/bin/../lib/gcc/sparc64-bu
-> ildroot-linux-gnu/9.3.0/../../../../sparc64-buildroot-linux-gnu/bin/ld: /tmp/ccylTux8.o: in function
-> `find_kaslr_offsets':
-> /home/giuliobenetti/autobuild/run/instance-0/output-1/build/makedumpfile-1.6.8/makedumpfile.c:4017:
-> undefined reference to `get_kaslr_offset'
-> 
-> Fixes:
->  - http://autobuild.buildroot.org/results/1421f54f7599bba62c0a4bd5c65ce21c8cc7ee1a
-> 
-> Signed-off-by: Fabrice Fontaine <fontaine.fabrice@gmail.com>
-> ---
->  makedumpfile.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index 97a5554..dfc1a77 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1139,6 +1139,7 @@ unsigned long long vaddr_to_paddr_sparc64(unsigned long vaddr);
->  #define get_machdep_info()      TRUE
->  #define get_phys_base()         get_phys_base_sparc64()
->  #define get_versiondep_info()   get_versiondep_info_sparc64()
-> +#define get_kaslr_offset(X)     stub_false()
->  #define vaddr_to_paddr(X)       vaddr_to_paddr_sparc64(X)
->  #define paddr_to_vaddr(X)	paddr_to_vaddr_general(X)
->  #define is_phys_addr(X)		stub_true_ul(X)
-> --
-> 2.29.2
-> 
+kexec build will fail on older kernels (pre 4.4) as the define
+VIDEO_CAPABILITY_64BIT_BASE was not present at that time.
 
-Thanks for the patch, applied.
-https://github.com/makedumpfile/makedumpfile/commit/f8348d3efa53c14c73a8f05c495680b7af2a7fe6
+This patch adds it, as per linux/include/uapi/linux/screen_info.h,
+if not present.
 
-Kazu
+Signed-off-by: Federico Pellegrin <fede@evolware.org>
+---
+ kexec/arch/i386/x86-linux-setup.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
+diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+index 76e1185..ab54a4a 100644
+--- a/kexec/arch/i386/x86-linux-setup.c
++++ b/kexec/arch/i386/x86-linux-setup.c
+@@ -37,6 +37,10 @@
+ #include "x86-linux-setup.h"
+ #include "../../kexec/kexec-syscall.h"
+ 
++#ifndef VIDEO_CAPABILITY_64BIT_BASE
++#define VIDEO_CAPABILITY_64BIT_BASE (1 << 1)	/* Frame buffer base is 64-bit */
++#endif
++
+ void init_linux_parameters(struct x86_linux_param_header *real_mode)
+ {
+ 	/* Fill in the values that are usually provided by the kernel. */
+-- 
+2.26.2
 
 
 _______________________________________________
