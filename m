@@ -1,22 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x734.google.com ([2607:f8b0:4864:20::734])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l8xIJ-0004hg-Bg
- for kexec@lists.infradead.org; Mon, 08 Feb 2021 03:33:00 +0000
-Received: by mail-qk1-x734.google.com with SMTP id d85so13150707qkg.5
- for <kexec@lists.infradead.org>; Sun, 07 Feb 2021 19:32:57 -0800 (PST)
+Subject: Re: [PATCH v14 00/11] support reserving crashkernel above 4G on arm64
+ kdump
+References: <20210130071025.65258-1-chenzhou10@huawei.com>
+From: chenzhou <chenzhou10@huawei.com>
+Message-ID: <3b3cbe38-69bc-bbc5-2d75-d2ce3dd07e4f@huawei.com>
+Date: Mon, 8 Feb 2021 14:46:52 +0800
 MIME-Version: 1.0
-References: <CAN_LGv3Go0DgKbjPVHFFXU+U8RRU15m-np3F6_RrVmx6FmBoHQ@mail.gmail.com>
- <20210128052924.GC2339@MiWiFi-R3L-srv>
- <20210203064849.GA11522@dhcp-128-65.nay.redhat.com>
- <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
- <87wnvoodny.fsf@x220.int.ebiederm.org>
- <CADnq5_OBZmmieaUzMhtdVbJKhx5R34c8M669VKfcE0KSWcyv4A@mail.gmail.com>
-In-Reply-To: <CADnq5_OBZmmieaUzMhtdVbJKhx5R34c8M669VKfcE0KSWcyv4A@mail.gmail.com>
-From: "Alexander E. Patrakov" <patrakov@gmail.com>
-Date: Mon, 8 Feb 2021 08:32:18 +0500
-Message-ID: <CAN_LGv1gyB7mrkG=jLVryMgYpQXbxSnFCoGCSxRWf2yb6B9MZA@mail.gmail.com>
-Subject: Re: amdgpu problem after kexec
+In-Reply-To: <20210130071025.65258-1-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,115 +15,202 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
+To: mingo@redhat.com, tglx@linutronix.de, rppt@kernel.org, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, nsaenzjulienne@suse.de, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
+Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
 
-0YfRgiwgNCDRhNC10LLRgC4gMjAyMSDQsy4g0LIgMDk6MzEsIEFsZXggRGV1Y2hlciA8YWxleGRl
-dWNoZXJAZ21haWwuY29tPjoKPgo+IE9uIFdlZCwgRmViIDMsIDIwMjEgYXQgNzo1NiBQTSBFcmlj
-IFcuIEJpZWRlcm1hbiA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPiB3cm90ZToKPiA+Cj4gPiBBbGV4
-IERldWNoZXIgPGFsZXhkZXVjaGVyQGdtYWlsLmNvbT4gd3JpdGVzOgo+ID4KPiA+ID4gT24gV2Vk
-LCBGZWIgMywgMjAyMSBhdCAzOjM2IEFNIERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPiB3
-cm90ZToKPiA+ID4+Cj4gPiA+PiBIaSBCYW9xdWFuLAo+ID4gPj4KPiA+ID4+IFRoYW5rcyBmb3Ig
-Y2NpbmcuCj4gPiA+PiBPbiAwMS8yOC8yMSBhdCAwMToyOXBtLCBCYW9xdWFuIEhlIHdyb3RlOgo+
-ID4gPj4gPiBPbiAwMS8xMS8yMSBhdCAwMToxN3BtLCBBbGV4YW5kZXIgRS4gUGF0cmFrb3Ygd3Jv
-dGU6Cj4gPiA+PiA+ID4gSGVsbG8sCj4gPiA+PiA+ID4KPiA+ID4+ID4gPiBJIHdhcyB0cnlpbmcg
-b3V0IGtleGVjIG9uIG15IG5ldyBsYXB0b3AsIHdoaWNoIGlzIGEgSFAgRWxpdGVCb29rIDczNQo+
-ID4gPj4gPiA+IEc2LiBUaGUgcHJvYmxlbSBpcywgYW1kZ3B1IGRvZXMgbm90IGhhdmUgaGFyZHdh
-cmUgYWNjZWxlcmF0aW9uIGFmdGVyCj4gPiA+PiA+ID4ga2V4ZWMuIEFsc28sIHN0cmFuZ2VseSwg
-dGhlIGxpbmVzIGFib3V0IEJsdWVUb290aCBhcmUgbWlzc2luZyBmcm9tCj4gPiA+PiA+ID4gZG1l
-c2cgYWZ0ZXIga2V4ZWMsIGJ1dCBJIGhhdmUgbm90IHRyaWVkIHRvIHVzZSBCbHVlVG9vdGggb24g
-dGhpcwo+ID4gPj4gPiA+IGxhcHRvcCB5ZXQuIEkgZG9uJ3Qga25vdyBob3cgdG8gZGVidWcgdGhp
-cywgdGhlIHJlbGV2YW50IGFtZGdwdSBsaW5lcwo+ID4gPj4gPiA+IGluIGRtZXNnIGFyZToKPiA+
-ID4+ID4gPgo+ID4gPj4gPiA+IGFtZGdwdSAwMDAwOjA0OjAwLjA6IFtkcm06YW1kZ3B1X2liX3Jp
-bmdfdGVzdHMgW2FtZGdwdV1dICpFUlJPUiogSUIKPiA+ID4+ID4gPiB0ZXN0IGZhaWxlZCBvbiBn
-ZnggKC0xMTApLgo+ID4gPj4gPiA+IFtkcm06cHJvY2Vzc19vbmVfd29ya10gKkVSUk9SKiBpYiBy
-aW5nIHRlc3QgZmFpbGVkICgtMTEwKS4KPiA+ID4+ID4gPgo+ID4gPj4gPiA+IFRoZSBnb29kIGFu
-ZCBiYWQgZG1lc2cgZmlsZXMgYXJlIGF0dGFjaGVkLiBJcyBpdCBhIGtleGVjIHByb2JsZW0gKGFu
-ZAo+ID4gPj4gPiA+IGFtZGdwdSBpcyBvbmx5IGEgdmljdGltKSwgb3Igc2hvdWxkIEkgdGFrZSBp
-dCB0byBhbWRncHUgbGlzdHM/IERvIEkKPiA+ID4+ID4gPiBuZWVkIHRvIHByb3ZpZGUgc29tZSBl
-eHRyYSBrZXJuZWwgYXJndW1lbnRzIGZvciBkZWJ1Z2dpbmc/Cj4gPgo+ID4gVGhlIGJlc3QgZGVi
-dWdnaW5nIEkgY2FuIHRoaW5rIG9mIGlzIGNhbiB5b3UgYXJyYW5nZSB0byBoYXZlIHRoZSBhbWRn
-cHUKPiA+IG1vZHVsZXMgcmVtb3ZlZCBiZWZvcmUgdGhlIGZpbmFsIGtleGVjIC1lPwo+ID4KPiA+
-IFRoYXQgd291bGQgdGVsbCB1cyBpZiB0aGUgY29kZSB0byBzaHV0ZG93biB0aGUgZ3B1IGV4aXN0
-IGluIHRoZSBybW1vZAo+ID4gcGF0aCBha2EgdGhlIC5yZW1vdmUgbWV0aG9kIGFuZCBpcyBzaW1w
-bHkgbWlzc2luZyBpbiB0aGUga2V4ZWMgcGF0aCBha2EKPiA+IHRoZSAuc2h1dGRvd24gbWV0aG9k
-Lgo+ID4KPiA+Cj4gPiA+PiA+IEkgYW0gbm90IGZhbWlsaWFyIHdpdGggZ3JhcGhpY2FsIGNvbXBv
-bmVudC4gQWRkIERhdmUgdG8gQ0MgdG8gc2VlIGlmCj4gPiA+PiA+IGhlIGhhcyBzb21lIGNvbW1l
-bnRzLiBJdCB3b3VsZCBiZSBncmVhdCBpZiBhbWRncHUgZXhwZXJ0IGNhbiBoYXZlIGEgbG9vay4K
-PiA+ID4+Cj4gPiA+PiBJdCBuZWVkcyBhbWRncHUgZHJpdmVyIHBlb3BsZSB0byBoZWxwLiAgU2lu
-Y2Uga2V4ZWMgYnlwYXNzCj4gPiA+PiBiaW9zL1VFRkkgaW5pdGlhbGl6YXRpb24gc28gd2UgcmVx
-dWlyZXMgZHJpdmVycyB0byBpbXBsZW1lbnQgLnNodXRkb3duCj4gPiA+PiBtZXRob2QgYW5kIHRl
-c3QgaXQgdG8gbWFrZSAybmQga2VybmVsIHRvIHdvcmsgY29ycmVjdGx5Lgo+ID4gPgo+ID4gPiBr
-ZXhlYyBpcyB0cmlja3kgdG8gbWFrZSB3b3JrIHByb3Blcmx5IG9uIG91ciBHUFVzLiAgVGhlIHBy
-b2JsZW0gaXMKPiA+ID4gdGhhdCB0aGVyZSBhcmUgc29tZSBlbmdpbmVzIG9uIHRoZSBHUFUgdGhh
-dCBjYW5ub3QgYmUgcmUtaW5pdGlhbGl6ZWQKPiA+ID4gb25jZSB0aGV5IGhhdmUgYmVlbiBpbml0
-aWFsaXplZCB3aXRob3V0IGFuIGludGVydmVuaW5nIGRldmljZSByZXNldC4KPiA+ID4gQVBVcyBh
-cmUgZXZlbiB0cmlja2llciBiZWNhdXNlIHRoZXkgc2hhcmUgYSBsb3Qgb2YgaGFyZHdhcmUgc3Rh
-dGUgd2l0aAo+ID4gPiB0aGUgQ1BVLiAgRG9pbmcgbG90cyBvZiBleHRyYSByZXNldHMgYWRkcyBs
-YXRlbmN5LiAgVGhlIGRyaXZlciBoYXMKPiA+ID4gY29kZSB0byB0cnkgYW5kIGRldGVjdCBpZiBj
-ZXJ0YWluIGVuZ2luZXMgYXJlIHJ1bm5pbmcgYXQgZHJpdmVyIGxvYWQKPiA+ID4gdGltZSBhbmQg
-ZG8gYSByZXNldCBiZWZvcmUgaW5pdGlhbGl6YXRpb24gdG8gbWFrZSB0aGlzIHdvcmssIGJ1dCBp
-dAo+ID4gPiBhcHBhcmVudGx5IGlzIG5vdCB3b3JraW5nIHByb3Blcmx5IG9uIHlvdXIgc3lzdGVt
-Lgo+ID4KPiA+IFRoZXJlIGFyZSB0d28gY2FzZXMgdGhhdCBJIHRoaW5rIHNvbWV0aW1lcyBnZXQg
-bWl4ZWQgdXAuCj4gPgo+ID4gVGhlcmUgaXMga2V4ZWMtb24tcGFuaWMgaW4gd2hpY2ggY2FzZSBh
-bGwgb2YgdGhlIHdvcmsgbmVlZHMgdG8gaGFwcGVuIGluCj4gPiB0aGUgZHJpdmVyIGluaXRpYWxp
-emF0aW9uLgo+ID4KPiA+IFRoZXJlIGlzIGFsc28gYSBzaW1wbGUga2V4ZWMgaW4gd2hpY2ggY2Fz
-ZSBzb21lIG9mIHRoZSB3b3JrIGNhbiBoYXBwZW4KPiA+IGluIHRoZSBrZXJuZWwgdGhhdCBpcyBi
-ZWluZyBzaHV0ZG93biBhbmQgc29tZXRpbWVzIHRoYXQgaXMgZWFzZXIuCj4gPgo+ID4gRG9lcyBp
-dCBtYWtlIHNlbnNlIHRvIHJlc2V0IHlvdXIgZGV2aWNlIHVuY29uZGl0aW9uYWxseSBvbiBkcml2
-ZXIgcmVtb3ZhbD8KPgo+IEkgdGhpbmsgd2UgdHJpZWQgdGhhdCBhdCBzb21lIHBvaW50IGluIHRo
-ZSBwYXN0IGJ1dCB1c2VycyBjb21wbGFpbmVkCj4gdGhhdCBpdCBhZGRlZCBsYXRlbmN5IG9yIGFy
-dGlmYWN0cyBvbiB0aGUgZGlzcGxheSBhdCBzaHV0ZG93biBvcgo+IHJlYm9vdCB0aW1lLgo+Cj4g
-PiBXb3VsZCBpdCBtYWtlIHNlbnNlIHRvIHJlc2V0IHlvdXIgZGV2aWNlIHVuY29uZGl0aW9uYWxs
-eSBvbiBkcml2ZXIgYWRkPwo+Cj4gUHJldHR5IG11Y2ggdGhlIHNhbWUgaXNzdWUgdGhlcmUuICBJ
-dCBhZGRzIGxhdGVuY3kgYW5kIHlvdSBnZXQKPiBhcnRpZmFjdHMgb24gdGhlIGRpc3BsYXkgd2hl
-biB0aGUgcmVzZXQgaGFwcGVucy4KPgo+ID4KPiA+IEhvdyBjYW4gc29tZW9uZSBkZWJ1ZyB0aGUg
-c21hcnQgbG9naWMgb2YgcmVzZXQgb24gZHJpdmVyIGxvYWQ/Cj4KPiBTZWUgdGhpcyBibG9jayBv
-ZiBjb2RlIGluIGFtZGdwdV9kZXZpY2UuYzoKPiAgICAgICAgIC8qIGNoZWNrIGlmIHdlIG5lZWQg
-dG8gcmVzZXQgdGhlIGFzaWMKPiAgICAgICAgICAqICBFLmcuLCBkcml2ZXIgd2FzIG5vdCBjbGVh
-bmx5IHVubG9hZGVkIHByZXZpb3VzbHksIGV0Yy4KPiAgICAgICAgICAqLwo+ICAgICBpZiAoIWFt
-ZGdwdV9zcmlvdl92ZihhZGV2KSAmJiBhbWRncHVfYXNpY19uZWVkX3Jlc2V0X29uX2luaXQoYWRl
-dikpIHsKPiAgICAgICAgIHIgPSBhbWRncHVfYXNpY19yZXNldChhZGV2KTsKPiAgICAgICAgICAg
-ICAgICAgaWYgKHIpIHsKPiAgICAgICAgICAgICAgICAgICAgICAgICBkZXZfZXJyKGFkZXYtPmRl
-diwgImFzaWMgcmVzZXQgb24gaW5pdCBmYWlsZWRcbiIpOwo+ICAgICAgICAgICAgICAgICAgICAg
-ICAgIGdvdG8gZmFpbGVkOwo+ICAgICAgICAgICAgICAgICB9Cj4gICAgICAgICB9Cj4KPiBZb3Un
-bGwgd2FudCB0byBzZWUgaWYgYW1kZ3B1X2FzaWNfbmVlZF9yZXNldF9vbl9pbml0KCkgd2FzIGFi
-bGUgdG8KPiBkZXRlcm1pbmUgdGhhdCB0aGUgYXNpYyBuZWVkcyBhIHJlc2V0LiAgSWYgaXQgZG9l
-cywKPiBhbWRncHVfYXNpY19yZXNldCgpIGdldGRzIGNhbGxlZCB0byByZXNldCBpdC4KPiBUaGUg
-dHJpY2t5IHRoaW5nIGlzIHRoYXQgc29tZSByZXNldCBtZXRob2RzIHJlcXVpcmUgYSBmYWlyIGFt
-b3VudCBvZgo+IGRyaXZlciBzdGF0ZSBhbmQgc28sIHRoZXkgYXJlIG9ubHkgcG9zc2libGUgd2hl
-biB0aGUgZHJpdmVyIGlzIHVwIGFuZAo+IHJ1bm5pbmcuICBUaG9zZSBtZXRob2RzIGFyZSBub3Qg
-bmVjZXNzYXJpbHkgYXZhaWxhYmxlIGF0IGRyaXZlciBsb2FkCj4gdGltZSBiZWNhdXNlIHdlIG5l
-ZWQgdG8gcmVzZXQgdGhlIEdQVSBiZWZvcmUgd2UgY2FuIGluaXRpYWxpemUgaXQgYW5kCj4gZGV0
-ZXJtaW5lIHRoYXQgc3RhdGUgc28gd2UgZW5kIHVwIGluIGEga2luZCBvZiBjYXRjaCAyMi4KPiBV
-bmZvcnR1bmF0ZWx5LCBnZW5lcmljIFBDSSByZXNldHMgZG9uJ3QgbmVjZXNzYXJpbHkgd29yayBv
-biBtYW55IG9mCj4gb3VyIEdQVXMgc28gdGhhdCdzIG5vdCBhbiBvcHRpb24gZWl0aGVyLgo+Cj4g
-QWxleAoKU29ycnkgZm9yIHRoZSBkZWxheSB3aXRoIHRoZSByZXBseSwgSSB3YXMgZGlzdHJhY3Rl
-ZC4KCkFueXdheSwgSSBtYW5hZ2VkIHRvIHVubG9hZCB0aGUgYW1kZ3B1IG1vZHVsZSBzdWNjZXNz
-ZnVsbHksIHVzaW5nIHRoaXMKc2NyaXB0IChhcyAvdXNyL2xpYi9zeXN0ZW1kL3N5c3RlbS1zaHV0
-ZG93bi9kZWJ1Zy5zaCk6CgojIS9iaW4vc2gKbW91bnQgLW8gcmVtb3VudCxydyAvCmVjaG8gMCA+
-IC9zeXMvY2xhc3MvdnRjb25zb2xlL3Z0Y29uMS9iaW5kCnJtbW9kIGFtZGdwdSAmJiBlY2hvICc8
-ND49PT09IFN1Y2NlZWRlZCByZW1vdmluZyBhbWRncHUgbW9kdWxlID09PT0nID4gL2Rldi9rbXNn
-CmRtZXNnID4gL3Zhci9sb2cvc2h1dGRvd24tbG9nLSQoZGF0ZSArJVklbSVkLSVIJU0lUykKbW91
-bnQgLW8gcmVtb3VudCxybyAvCgpBdCB0aGUgZW5kIG9mIGEgbm9uLWtleGVjIGJvb3QsIGl0IGxv
-Z3MgdGhpczoKClsgIDExNi41MTI2MjFdIENvbnNvbGU6IHN3aXRjaGluZyB0byBjb2xvdXIgZHVt
-bXkgZGV2aWNlIDgweDI1ClsgIDExNi41MTg1OTFdIGFtZGdwdSAwMDAwOjA0OjAwLjA6IGFtZGdw
-dTogYW1kZ3B1OiBmaW5pc2hpbmcgZGV2aWNlLgpbICAxMTYuNjQ0ODk5XSBbZHJtOmRhbF9pcnFf
-c2VydmljZV9kdW1teV9hY2sgW2FtZGdwdV1dICpFUlJPUioKZGFsX2lycV9zZXJ2aWNlX2R1bW15
-X2FjazogY2FsbGVkIGZvciBub24taW1wbGVtZW50ZWQgaXJxIHNvdXJjZQpbICAxMTYuNjQ1MTY4
-XSBbZHJtOmRhbF9pcnFfc2VydmljZV9kdW1teV9zZXQgW2FtZGdwdV1dICpFUlJPUioKZGFsX2ly
-cV9zZXJ2aWNlX2R1bW15X3NldDogY2FsbGVkIGZvciBub24taW1wbGVtZW50ZWQgaXJxIHNvdXJj
-ZQpbICAxMTYuNjU4NTE1XSBbZHJtXSBmcmVlIFBTUCBUTVIgYnVmZmVyClsgIDExNi43MDYyNjVd
-IFtUVE1dIFpvbmUgIGtlcm5lbDogVXNlZCBtZW1vcnkgYXQgZXhpdDogMCBLaUIKWyAgMTE2Ljcw
-NjI3Nl0gW1RUTV0gWm9uZSAgIGRtYTMyOiBVc2VkIG1lbW9yeSBhdCBleGl0OiAwIEtpQgpbICAx
-MTYuNzA2MjgwXSBbZHJtXSBhbWRncHU6IHR0bSBmaW5hbGl6ZWQKWyAgMTE2Ljc0MDQ2MF0gPT09
-PSBTdWNjZWVkZWQgcmVtb3ZpbmcgYW1kZ3B1IG1vZHVsZSA9PT09CgpIb3dldmVyLCB0aGUgbmV4
-dCBrZXhlYy1iYXNlZCBib290IHN0aWxsIG1pc3NlcyBoYXJkd2FyZSBhY2NlbGVyYXRpb24uCgoK
-Ci0tCkFsZXhhbmRlciBFLiBQYXRyYWtvdgpDVjogaHR0cDovL3UucGMuY2Qvd1Q4b3RhbEsKCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxp
-bmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Hi all,
+
+Friendly ping...
+
+
+On 2021/1/30 15:10, Chen Zhou wrote:
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel below 4G, which
+> will fail when there is no enough low memory.
+> 2. If reserving crashkernel above 4G, in this case, crash dump
+> kernel will boot failure because there is no low memory available
+> for allocation.
+>
+> To solve these issues, change the behavior of crashkernel=X.
+> crashkernel=X tries low allocation in DMA zone and fall back to high
+> allocation if it fails.
+>
+> We can also use "crashkernel=X,high" to select a high region above
+> DMA zone, which also tries to allocate at least 256M low memory in
+> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
+> specified size low memory.
+>
+> When reserving crashkernel in high memory, some low memory is reserved
+> for crash dump kernel devices. So there may be two regions reserved for
+> crash dump kernel.
+> In order to distinct from the high region and make no effect to the use
+> of existing kexec-tools, rename the low region as "Crash kernel (low)",
+> and pass the low region by reusing DT property
+> "linux,usable-memory-range". We made the low memory region as the last
+> range of "linux,usable-memory-range" to keep compatibility with existing
+> user-space and older kdump kernels.
+>
+> Besides, we need to modify kexec-tools:
+> arm64: support more than one crash kernel regions(see [1])
+>
+> Another update is document about DT property 'linux,usable-memory-range':
+> schemas: update 'linux,usable-memory-range' node schema(see [2])
+>
+> This patchset contains the following eleven patches:
+> 0001-x86-kdump-replace-the-hard-coded-alignment-with-macr.patch
+> 0002-x86-kdump-make-the-lower-bound-of-crash-kernel-reser.patch
+> 0003-x86-kdump-use-macro-CRASH_ADDR_LOW_MAX-in-functions-.patch
+> 0004-x86-kdump-move-xen_pv_domain-check-and-insert_resour.patch
+> 0005-x86-kdump-move-reserve_crashkernel-_low-into-crash_c.patch
+> 0006-x86-elf-Move-vmcore_elf_check_arch_cross-to-arch-x86.patch
+> 0007-arm64-kdump-introduce-some-macroes-for-crash-kernel-.patch
+> 0008-arm64-kdump-reimplement-crashkernel-X.patch
+> 0009-x86-arm64-Add-ARCH_WANT_RESERVE_CRASH_KERNEL-config.patch
+> 0010-arm64-kdump-add-memory-for-devices-by-DT-property-li.patch
+> 0011-kdump-update-Documentation-about-crashkernel.patch
+>
+> 0001-0004 are some x86 cleanups which prepares for making
+> functionsreserve_crashkernel[_low]() generic.
+> 0005 makes functions reserve_crashkernel[_low]() generic.
+> 0006 fix compiling warning.
+> 0007-0009 reimplements arm64 crashkernel=X.
+> 0010 adds memory for devices by DT property linux,usable-memory-range.
+> 0011 updates the doc.
+>
+> Changes since [v13]
+> - Rebased on top of 5.11-rc5.
+> - Introduce config CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL.
+> Since reserve_crashkernel[_low]() implementations are quite similar on
+> other architectures, so have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in
+> arch/Kconfig and select this by X86 and ARM64.
+> - Some minor cleanup.
+>
+> Changes since [v12]
+> - Rebased on top of 5.10-rc1.
+> - Keep CRASH_ALIGN as 16M suggested by Dave.
+> - Drop patch "kdump: add threshold for the required memory".
+> - Add Tested-by from John.
+>
+> Changes since [v11]
+> - Rebased on top of 5.9-rc4.
+> - Make the function reserve_crashkernel() of x86 generic.
+> Suggested by Catalin, make the function reserve_crashkernel() of x86 generic
+> and arm64 use the generic version to reimplement crashkernel=X.
+>
+> Changes since [v10]
+> - Reimplement crashkernel=X suggested by Catalin, Many thanks to Catalin.
+>
+> Changes since [v9]
+> - Patch 1 add Acked-by from Dave.
+> - Update patch 5 according to Dave's comments.
+> - Update chosen schema.
+>
+> Changes since [v8]
+> - Reuse DT property "linux,usable-memory-range".
+> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
+> memory region.
+> - Fix kdump broken with ZONE_DMA reintroduced.
+> - Update chosen schema.
+>
+> Changes since [v7]
+> - Move x86 CRASH_ALIGN to 2M
+> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
+> - Update Documentation/devicetree/bindings/chosen.txt.
+> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
+> suggested by Arnd.
+> - Add Tested-by from Jhon and pk.
+>
+> Changes since [v6]
+> - Fix build errors reported by kbuild test robot.
+>
+> Changes since [v5]
+> - Move reserve_crashkernel_low() into kernel/crash_core.c.
+> - Delete crashkernel=X,high.
+> - Modify crashkernel=X,low.
+> If crashkernel=X,low is specified simultaneously, reserve spcified size low
+> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
+> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
+> pass to crash dump kernel by DT property "linux,low-memory-range".
+> - Update Documentation/admin-guide/kdump/kdump.rst.
+>
+> Changes since [v4]
+> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
+>
+> Changes since [v3]
+> - Add memblock_cap_memory_ranges back for multiple ranges.
+> - Fix some compiling warnings.
+>
+> Changes since [v2]
+> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+> patch.
+>
+> Changes since [v1]:
+> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
+> in fdt_enforce_memory_region().
+> There are at most two crash kernel regions, for two crash kernel regions
+> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+> and then remove the memory range in the middle.
+>
+> [1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
+> [2]: https://github.com/robherring/dt-schema/pull/19 
+> [v1]: https://lkml.org/lkml/2019/4/2/1174
+> [v2]: https://lkml.org/lkml/2019/4/9/86
+> [v3]: https://lkml.org/lkml/2019/4/9/306
+> [v4]: https://lkml.org/lkml/2019/4/15/273
+> [v5]: https://lkml.org/lkml/2019/5/6/1360
+> [v6]: https://lkml.org/lkml/2019/8/30/142
+> [v7]: https://lkml.org/lkml/2019/12/23/411
+> [v8]: https://lkml.org/lkml/2020/5/21/213
+> [v9]: https://lkml.org/lkml/2020/6/28/73
+> [v10]: https://lkml.org/lkml/2020/7/2/1443
+> [v11]: https://lkml.org/lkml/2020/8/1/150
+> [v12]: https://lkml.org/lkml/2020/9/7/1037
+> [v13]: https://lkml.org/lkml/2020/10/31/34
+>
+> Chen Zhou (11):
+>   x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
+>   x86: kdump: make the lower bound of crash kernel reservation
+>     consistent
+>   x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
+>     reserve_crashkernel()
+>   x86: kdump: move xen_pv_domain() check and insert_resource() to
+>     setup_arch()
+>   x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
+>   x86/elf: Move vmcore_elf_check_arch_cross to
+>     arch/x86/include/asm/elf.h
+>   arm64: kdump: introduce some macroes for crash kernel reservation
+>   arm64: kdump: reimplement crashkernel=X
+>   x86, arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
+>   arm64: kdump: add memory for devices by DT property
+>     linux,usable-memory-range
+>   kdump: update Documentation about crashkernel
+>
+>  Documentation/admin-guide/kdump/kdump.rst     |  22 ++-
+>  .../admin-guide/kernel-parameters.txt         |  11 +-
+>  arch/Kconfig                                  |   3 +
+>  arch/arm64/Kconfig                            |   1 +
+>  arch/arm64/include/asm/kexec.h                |  10 ++
+>  arch/arm64/kernel/setup.c                     |  13 +-
+>  arch/arm64/mm/init.c                          | 111 +++++-------
+>  arch/x86/Kconfig                              |   2 +
+>  arch/x86/include/asm/elf.h                    |   3 +
+>  arch/x86/include/asm/kexec.h                  |  31 +++-
+>  arch/x86/kernel/setup.c                       | 163 ++----------------
+>  include/linux/crash_core.h                    |   3 +
+>  include/linux/kexec.h                         |   2 -
+>  kernel/crash_core.c                           | 156 +++++++++++++++++
+>  kernel/kexec_core.c                           |  17 --
+>  15 files changed, 303 insertions(+), 245 deletions(-)
+>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
