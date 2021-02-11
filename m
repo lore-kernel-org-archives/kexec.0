@@ -1,25 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72c.google.com ([2607:f8b0:4864:20::72c])
+Received: from userp2120.oracle.com ([156.151.31.85])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1l9Gml-0008EX-Mv
- for kexec@lists.infradead.org; Tue, 09 Feb 2021 00:21:44 +0000
-Received: by mail-qk1-x72c.google.com with SMTP id a19so16494857qka.2
- for <kexec@lists.infradead.org>; Mon, 08 Feb 2021 16:21:43 -0800 (PST)
+ id 1lAGP5-0000F4-UW
+ for kexec@lists.infradead.org; Thu, 11 Feb 2021 18:09:25 +0000
+From: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Subject: [PATCH v3 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
+Date: Thu, 11 Feb 2021 10:08:10 -0800
+Message-Id: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
 MIME-Version: 1.0
-References: <CAN_LGv3Go0DgKbjPVHFFXU+U8RRU15m-np3F6_RrVmx6FmBoHQ@mail.gmail.com>
- <20210128052924.GC2339@MiWiFi-R3L-srv>
- <20210203064849.GA11522@dhcp-128-65.nay.redhat.com>
- <CADnq5_MdLTLvVdwFQJxuRaQcQFNkLUNRt267zaxULNH0FUvFeA@mail.gmail.com>
- <87wnvoodny.fsf@x220.int.ebiederm.org>
- <CADnq5_OBZmmieaUzMhtdVbJKhx5R34c8M669VKfcE0KSWcyv4A@mail.gmail.com>
- <CAN_LGv1gyB7mrkG=jLVryMgYpQXbxSnFCoGCSxRWf2yb6B9MZA@mail.gmail.com>
- <CAN_LGv2XEv+j4Gvssj173D9kGY=kfVq4iWVJiCnQhFuzUc+6FA@mail.gmail.com>
- <CADnq5_MAiiqoUVe=_UPYGV_vThrLT-kUWqoLbv6+91y0A7sWEQ@mail.gmail.com>
-In-Reply-To: <CADnq5_MAiiqoUVe=_UPYGV_vThrLT-kUWqoLbv6+91y0A7sWEQ@mail.gmail.com>
-From: "Alexander E. Patrakov" <patrakov@gmail.com>
-Date: Tue, 9 Feb 2021 05:21:05 +0500
-Message-ID: <CAN_LGv0Kh=nW5T6HerWyqQzY_PhkpQqr+x_Or24aibG1QFTd-A@mail.gmail.com>
-Subject: Re: amdgpu problem after kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,162 +17,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alex Deucher <alexdeucher@gmail.com>
-Cc: kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, Dave Young <dyoung@redhat.com>, "Eric W. Biederman" <ebiederm@xmission.com>, Baoquan He <bhe@redhat.com>
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, YiFei Zhu <yifeifz2@illinois.edu>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, john.p.donnelly@oracle.com, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, saeed.mirzamohammadi@oracle.com, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-0LLRgiwgOSDRhNC10LLRgC4gMjAyMSDQsy4g0LIgMDI6NDMsIEFsZXggRGV1Y2hlciA8YWxleGRl
-dWNoZXJAZ21haWwuY29tPjoKPgo+IE9uIE1vbiwgRmViIDgsIDIwMjEgYXQgMTozNCBBTSBBbGV4
-YW5kZXIgRS4gUGF0cmFrb3YgPHBhdHJha292QGdtYWlsLmNvbT4gd3JvdGU6Cj4gPgo+ID4g0L/Q
-vSwgOCDRhNC10LLRgC4gMjAyMSDQsy4g0LIgMDg6MzIsIEFsZXhhbmRlciBFLiBQYXRyYWtvdiA8
-cGF0cmFrb3ZAZ21haWwuY29tPjoKPiA+ID4KPiA+ID4g0YfRgiwgNCDRhNC10LLRgC4gMjAyMSDQ
-sy4g0LIgMDk6MzEsIEFsZXggRGV1Y2hlciA8YWxleGRldWNoZXJAZ21haWwuY29tPjoKPiA+ID4g
-Pgo+ID4gPiA+IE9uIFdlZCwgRmViIDMsIDIwMjEgYXQgNzo1NiBQTSBFcmljIFcuIEJpZWRlcm1h
-biA8ZWJpZWRlcm1AeG1pc3Npb24uY29tPiB3cm90ZToKPiA+ID4gPiA+Cj4gPiA+ID4gPiBBbGV4
-IERldWNoZXIgPGFsZXhkZXVjaGVyQGdtYWlsLmNvbT4gd3JpdGVzOgo+ID4gPiA+ID4KPiA+ID4g
-PiA+ID4gT24gV2VkLCBGZWIgMywgMjAyMSBhdCAzOjM2IEFNIERhdmUgWW91bmcgPGR5b3VuZ0By
-ZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPiA+ID4+Cj4gPiA+ID4gPiA+PiBIaSBCYW9xdWFuLAo+
-ID4gPiA+ID4gPj4KPiA+ID4gPiA+ID4+IFRoYW5rcyBmb3IgY2NpbmcuCj4gPiA+ID4gPiA+PiBP
-biAwMS8yOC8yMSBhdCAwMToyOXBtLCBCYW9xdWFuIEhlIHdyb3RlOgo+ID4gPiA+ID4gPj4gPiBP
-biAwMS8xMS8yMSBhdCAwMToxN3BtLCBBbGV4YW5kZXIgRS4gUGF0cmFrb3Ygd3JvdGU6Cj4gPiA+
-ID4gPiA+PiA+ID4gSGVsbG8sCj4gPiA+ID4gPiA+PiA+ID4KPiA+ID4gPiA+ID4+ID4gPiBJIHdh
-cyB0cnlpbmcgb3V0IGtleGVjIG9uIG15IG5ldyBsYXB0b3AsIHdoaWNoIGlzIGEgSFAgRWxpdGVC
-b29rIDczNQo+ID4gPiA+ID4gPj4gPiA+IEc2LiBUaGUgcHJvYmxlbSBpcywgYW1kZ3B1IGRvZXMg
-bm90IGhhdmUgaGFyZHdhcmUgYWNjZWxlcmF0aW9uIGFmdGVyCj4gPiA+ID4gPiA+PiA+ID4ga2V4
-ZWMuIEFsc28sIHN0cmFuZ2VseSwgdGhlIGxpbmVzIGFib3V0IEJsdWVUb290aCBhcmUgbWlzc2lu
-ZyBmcm9tCj4gPiA+ID4gPiA+PiA+ID4gZG1lc2cgYWZ0ZXIga2V4ZWMsIGJ1dCBJIGhhdmUgbm90
-IHRyaWVkIHRvIHVzZSBCbHVlVG9vdGggb24gdGhpcwo+ID4gPiA+ID4gPj4gPiA+IGxhcHRvcCB5
-ZXQuIEkgZG9uJ3Qga25vdyBob3cgdG8gZGVidWcgdGhpcywgdGhlIHJlbGV2YW50IGFtZGdwdSBs
-aW5lcwo+ID4gPiA+ID4gPj4gPiA+IGluIGRtZXNnIGFyZToKPiA+ID4gPiA+ID4+ID4gPgo+ID4g
-PiA+ID4gPj4gPiA+IGFtZGdwdSAwMDAwOjA0OjAwLjA6IFtkcm06YW1kZ3B1X2liX3JpbmdfdGVz
-dHMgW2FtZGdwdV1dICpFUlJPUiogSUIKPiA+ID4gPiA+ID4+ID4gPiB0ZXN0IGZhaWxlZCBvbiBn
-ZnggKC0xMTApLgo+ID4gPiA+ID4gPj4gPiA+IFtkcm06cHJvY2Vzc19vbmVfd29ya10gKkVSUk9S
-KiBpYiByaW5nIHRlc3QgZmFpbGVkICgtMTEwKS4KPiA+ID4gPiA+ID4+ID4gPgo+ID4gPiA+ID4g
-Pj4gPiA+IFRoZSBnb29kIGFuZCBiYWQgZG1lc2cgZmlsZXMgYXJlIGF0dGFjaGVkLiBJcyBpdCBh
-IGtleGVjIHByb2JsZW0gKGFuZAo+ID4gPiA+ID4gPj4gPiA+IGFtZGdwdSBpcyBvbmx5IGEgdmlj
-dGltKSwgb3Igc2hvdWxkIEkgdGFrZSBpdCB0byBhbWRncHUgbGlzdHM/IERvIEkKPiA+ID4gPiA+
-ID4+ID4gPiBuZWVkIHRvIHByb3ZpZGUgc29tZSBleHRyYSBrZXJuZWwgYXJndW1lbnRzIGZvciBk
-ZWJ1Z2dpbmc/Cj4gPiA+ID4gPgo+ID4gPiA+ID4gVGhlIGJlc3QgZGVidWdnaW5nIEkgY2FuIHRo
-aW5rIG9mIGlzIGNhbiB5b3UgYXJyYW5nZSB0byBoYXZlIHRoZSBhbWRncHUKPiA+ID4gPiA+IG1v
-ZHVsZXMgcmVtb3ZlZCBiZWZvcmUgdGhlIGZpbmFsIGtleGVjIC1lPwo+ID4gPiA+ID4KPiA+ID4g
-PiA+IFRoYXQgd291bGQgdGVsbCB1cyBpZiB0aGUgY29kZSB0byBzaHV0ZG93biB0aGUgZ3B1IGV4
-aXN0IGluIHRoZSBybW1vZAo+ID4gPiA+ID4gcGF0aCBha2EgdGhlIC5yZW1vdmUgbWV0aG9kIGFu
-ZCBpcyBzaW1wbHkgbWlzc2luZyBpbiB0aGUga2V4ZWMgcGF0aCBha2EKPiA+ID4gPiA+IHRoZSAu
-c2h1dGRvd24gbWV0aG9kLgo+ID4gPiA+ID4KPiA+ID4gPiA+Cj4gPiA+ID4gPiA+PiA+IEkgYW0g
-bm90IGZhbWlsaWFyIHdpdGggZ3JhcGhpY2FsIGNvbXBvbmVudC4gQWRkIERhdmUgdG8gQ0MgdG8g
-c2VlIGlmCj4gPiA+ID4gPiA+PiA+IGhlIGhhcyBzb21lIGNvbW1lbnRzLiBJdCB3b3VsZCBiZSBn
-cmVhdCBpZiBhbWRncHUgZXhwZXJ0IGNhbiBoYXZlIGEgbG9vay4KPiA+ID4gPiA+ID4+Cj4gPiA+
-ID4gPiA+PiBJdCBuZWVkcyBhbWRncHUgZHJpdmVyIHBlb3BsZSB0byBoZWxwLiAgU2luY2Uga2V4
-ZWMgYnlwYXNzCj4gPiA+ID4gPiA+PiBiaW9zL1VFRkkgaW5pdGlhbGl6YXRpb24gc28gd2UgcmVx
-dWlyZXMgZHJpdmVycyB0byBpbXBsZW1lbnQgLnNodXRkb3duCj4gPiA+ID4gPiA+PiBtZXRob2Qg
-YW5kIHRlc3QgaXQgdG8gbWFrZSAybmQga2VybmVsIHRvIHdvcmsgY29ycmVjdGx5Lgo+ID4gPiA+
-ID4gPgo+ID4gPiA+ID4gPiBrZXhlYyBpcyB0cmlja3kgdG8gbWFrZSB3b3JrIHByb3Blcmx5IG9u
-IG91ciBHUFVzLiAgVGhlIHByb2JsZW0gaXMKPiA+ID4gPiA+ID4gdGhhdCB0aGVyZSBhcmUgc29t
-ZSBlbmdpbmVzIG9uIHRoZSBHUFUgdGhhdCBjYW5ub3QgYmUgcmUtaW5pdGlhbGl6ZWQKPiA+ID4g
-PiA+ID4gb25jZSB0aGV5IGhhdmUgYmVlbiBpbml0aWFsaXplZCB3aXRob3V0IGFuIGludGVydmVu
-aW5nIGRldmljZSByZXNldC4KPiA+ID4gPiA+ID4gQVBVcyBhcmUgZXZlbiB0cmlja2llciBiZWNh
-dXNlIHRoZXkgc2hhcmUgYSBsb3Qgb2YgaGFyZHdhcmUgc3RhdGUgd2l0aAo+ID4gPiA+ID4gPiB0
-aGUgQ1BVLiAgRG9pbmcgbG90cyBvZiBleHRyYSByZXNldHMgYWRkcyBsYXRlbmN5LiAgVGhlIGRy
-aXZlciBoYXMKPiA+ID4gPiA+ID4gY29kZSB0byB0cnkgYW5kIGRldGVjdCBpZiBjZXJ0YWluIGVu
-Z2luZXMgYXJlIHJ1bm5pbmcgYXQgZHJpdmVyIGxvYWQKPiA+ID4gPiA+ID4gdGltZSBhbmQgZG8g
-YSByZXNldCBiZWZvcmUgaW5pdGlhbGl6YXRpb24gdG8gbWFrZSB0aGlzIHdvcmssIGJ1dCBpdAo+
-ID4gPiA+ID4gPiBhcHBhcmVudGx5IGlzIG5vdCB3b3JraW5nIHByb3Blcmx5IG9uIHlvdXIgc3lz
-dGVtLgo+ID4gPiA+ID4KPiA+ID4gPiA+IFRoZXJlIGFyZSB0d28gY2FzZXMgdGhhdCBJIHRoaW5r
-IHNvbWV0aW1lcyBnZXQgbWl4ZWQgdXAuCj4gPiA+ID4gPgo+ID4gPiA+ID4gVGhlcmUgaXMga2V4
-ZWMtb24tcGFuaWMgaW4gd2hpY2ggY2FzZSBhbGwgb2YgdGhlIHdvcmsgbmVlZHMgdG8gaGFwcGVu
-IGluCj4gPiA+ID4gPiB0aGUgZHJpdmVyIGluaXRpYWxpemF0aW9uLgo+ID4gPiA+ID4KPiA+ID4g
-PiA+IFRoZXJlIGlzIGFsc28gYSBzaW1wbGUga2V4ZWMgaW4gd2hpY2ggY2FzZSBzb21lIG9mIHRo
-ZSB3b3JrIGNhbiBoYXBwZW4KPiA+ID4gPiA+IGluIHRoZSBrZXJuZWwgdGhhdCBpcyBiZWluZyBz
-aHV0ZG93biBhbmQgc29tZXRpbWVzIHRoYXQgaXMgZWFzZXIuCj4gPiA+ID4gPgo+ID4gPiA+ID4g
-RG9lcyBpdCBtYWtlIHNlbnNlIHRvIHJlc2V0IHlvdXIgZGV2aWNlIHVuY29uZGl0aW9uYWxseSBv
-biBkcml2ZXIgcmVtb3ZhbD8KPiA+ID4gPgo+ID4gPiA+IEkgdGhpbmsgd2UgdHJpZWQgdGhhdCBh
-dCBzb21lIHBvaW50IGluIHRoZSBwYXN0IGJ1dCB1c2VycyBjb21wbGFpbmVkCj4gPiA+ID4gdGhh
-dCBpdCBhZGRlZCBsYXRlbmN5IG9yIGFydGlmYWN0cyBvbiB0aGUgZGlzcGxheSBhdCBzaHV0ZG93
-biBvcgo+ID4gPiA+IHJlYm9vdCB0aW1lLgo+ID4gPiA+Cj4gPiA+ID4gPiBXb3VsZCBpdCBtYWtl
-IHNlbnNlIHRvIHJlc2V0IHlvdXIgZGV2aWNlIHVuY29uZGl0aW9uYWxseSBvbiBkcml2ZXIgYWRk
-Pwo+ID4gPiA+Cj4gPiA+ID4gUHJldHR5IG11Y2ggdGhlIHNhbWUgaXNzdWUgdGhlcmUuICBJdCBh
-ZGRzIGxhdGVuY3kgYW5kIHlvdSBnZXQKPiA+ID4gPiBhcnRpZmFjdHMgb24gdGhlIGRpc3BsYXkg
-d2hlbiB0aGUgcmVzZXQgaGFwcGVucy4KPiA+ID4gPgo+ID4gPiA+ID4KPiA+ID4gPiA+IEhvdyBj
-YW4gc29tZW9uZSBkZWJ1ZyB0aGUgc21hcnQgbG9naWMgb2YgcmVzZXQgb24gZHJpdmVyIGxvYWQ/
-Cj4gPiA+ID4KPiA+ID4gPiBTZWUgdGhpcyBibG9jayBvZiBjb2RlIGluIGFtZGdwdV9kZXZpY2Uu
-YzoKPiA+ID4gPiAgICAgICAgIC8qIGNoZWNrIGlmIHdlIG5lZWQgdG8gcmVzZXQgdGhlIGFzaWMK
-PiA+ID4gPiAgICAgICAgICAqICBFLmcuLCBkcml2ZXIgd2FzIG5vdCBjbGVhbmx5IHVubG9hZGVk
-IHByZXZpb3VzbHksIGV0Yy4KPiA+ID4gPiAgICAgICAgICAqLwo+ID4gPiA+ICAgICBpZiAoIWFt
-ZGdwdV9zcmlvdl92ZihhZGV2KSAmJiBhbWRncHVfYXNpY19uZWVkX3Jlc2V0X29uX2luaXQoYWRl
-dikpIHsKPiA+ID4gPiAgICAgICAgIHIgPSBhbWRncHVfYXNpY19yZXNldChhZGV2KTsKPiA+ID4g
-PiAgICAgICAgICAgICAgICAgaWYgKHIpIHsKPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAg
-ICBkZXZfZXJyKGFkZXYtPmRldiwgImFzaWMgcmVzZXQgb24gaW5pdCBmYWlsZWRcbiIpOwo+ID4g
-PiA+ICAgICAgICAgICAgICAgICAgICAgICAgIGdvdG8gZmFpbGVkOwo+ID4gPiA+ICAgICAgICAg
-ICAgICAgICB9Cj4gPiA+ID4gICAgICAgICB9Cj4gPiA+ID4KPiA+ID4gPiBZb3UnbGwgd2FudCB0
-byBzZWUgaWYgYW1kZ3B1X2FzaWNfbmVlZF9yZXNldF9vbl9pbml0KCkgd2FzIGFibGUgdG8KPiA+
-ID4gPiBkZXRlcm1pbmUgdGhhdCB0aGUgYXNpYyBuZWVkcyBhIHJlc2V0LiAgSWYgaXQgZG9lcywK
-PiA+ID4gPiBhbWRncHVfYXNpY19yZXNldCgpIGdldGRzIGNhbGxlZCB0byByZXNldCBpdC4KPiA+
-ID4gPiBUaGUgdHJpY2t5IHRoaW5nIGlzIHRoYXQgc29tZSByZXNldCBtZXRob2RzIHJlcXVpcmUg
-YSBmYWlyIGFtb3VudCBvZgo+ID4gPiA+IGRyaXZlciBzdGF0ZSBhbmQgc28sIHRoZXkgYXJlIG9u
-bHkgcG9zc2libGUgd2hlbiB0aGUgZHJpdmVyIGlzIHVwIGFuZAo+ID4gPiA+IHJ1bm5pbmcuICBU
-aG9zZSBtZXRob2RzIGFyZSBub3QgbmVjZXNzYXJpbHkgYXZhaWxhYmxlIGF0IGRyaXZlciBsb2Fk
-Cj4gPiA+ID4gdGltZSBiZWNhdXNlIHdlIG5lZWQgdG8gcmVzZXQgdGhlIEdQVSBiZWZvcmUgd2Ug
-Y2FuIGluaXRpYWxpemUgaXQgYW5kCj4gPiA+ID4gZGV0ZXJtaW5lIHRoYXQgc3RhdGUgc28gd2Ug
-ZW5kIHVwIGluIGEga2luZCBvZiBjYXRjaCAyMi4KPiA+ID4gPiBVbmZvcnR1bmF0ZWx5LCBnZW5l
-cmljIFBDSSByZXNldHMgZG9uJ3QgbmVjZXNzYXJpbHkgd29yayBvbiBtYW55IG9mCj4gPiA+ID4g
-b3VyIEdQVXMgc28gdGhhdCdzIG5vdCBhbiBvcHRpb24gZWl0aGVyLgo+ID4gPiA+Cj4gPiA+ID4g
-QWxleAo+ID4gPgo+ID4gPiBTb3JyeSBmb3IgdGhlIGRlbGF5IHdpdGggdGhlIHJlcGx5LCBJIHdh
-cyBkaXN0cmFjdGVkLgo+ID4gPgo+ID4gPiBBbnl3YXksIEkgbWFuYWdlZCB0byB1bmxvYWQgdGhl
-IGFtZGdwdSBtb2R1bGUgc3VjY2Vzc2Z1bGx5LCB1c2luZyB0aGlzCj4gPiA+IHNjcmlwdCAoYXMg
-L3Vzci9saWIvc3lzdGVtZC9zeXN0ZW0tc2h1dGRvd24vZGVidWcuc2gpOgo+ID4gPgo+ID4gPiAj
-IS9iaW4vc2gKPiA+ID4gbW91bnQgLW8gcmVtb3VudCxydyAvCj4gPiA+IGVjaG8gMCA+IC9zeXMv
-Y2xhc3MvdnRjb25zb2xlL3Z0Y29uMS9iaW5kCj4gPiA+IHJtbW9kIGFtZGdwdSAmJiBlY2hvICc8
-ND49PT09IFN1Y2NlZWRlZCByZW1vdmluZyBhbWRncHUgbW9kdWxlID09PT0nID4gL2Rldi9rbXNn
-Cj4gPiA+IGRtZXNnID4gL3Zhci9sb2cvc2h1dGRvd24tbG9nLSQoZGF0ZSArJVklbSVkLSVIJU0l
-UykKPiA+ID4gbW91bnQgLW8gcmVtb3VudCxybyAvCj4gPiA+Cj4gPiA+IEF0IHRoZSBlbmQgb2Yg
-YSBub24ta2V4ZWMgYm9vdCwgaXQgbG9ncyB0aGlzOgo+ID4gPgo+ID4gPiBbICAxMTYuNTEyNjIx
-XSBDb25zb2xlOiBzd2l0Y2hpbmcgdG8gY29sb3VyIGR1bW15IGRldmljZSA4MHgyNQo+ID4gPiBb
-ICAxMTYuNTE4NTkxXSBhbWRncHUgMDAwMDowNDowMC4wOiBhbWRncHU6IGFtZGdwdTogZmluaXNo
-aW5nIGRldmljZS4KPiA+ID4gWyAgMTE2LjY0NDg5OV0gW2RybTpkYWxfaXJxX3NlcnZpY2VfZHVt
-bXlfYWNrIFthbWRncHVdXSAqRVJST1IqCj4gPiA+IGRhbF9pcnFfc2VydmljZV9kdW1teV9hY2s6
-IGNhbGxlZCBmb3Igbm9uLWltcGxlbWVudGVkIGlycSBzb3VyY2UKPiA+ID4gWyAgMTE2LjY0NTE2
-OF0gW2RybTpkYWxfaXJxX3NlcnZpY2VfZHVtbXlfc2V0IFthbWRncHVdXSAqRVJST1IqCj4gPiA+
-IGRhbF9pcnFfc2VydmljZV9kdW1teV9zZXQ6IGNhbGxlZCBmb3Igbm9uLWltcGxlbWVudGVkIGly
-cSBzb3VyY2UKPiA+ID4gWyAgMTE2LjY1ODUxNV0gW2RybV0gZnJlZSBQU1AgVE1SIGJ1ZmZlcgo+
-ID4gPiBbICAxMTYuNzA2MjY1XSBbVFRNXSBab25lICBrZXJuZWw6IFVzZWQgbWVtb3J5IGF0IGV4
-aXQ6IDAgS2lCCj4gPiA+IFsgIDExNi43MDYyNzZdIFtUVE1dIFpvbmUgICBkbWEzMjogVXNlZCBt
-ZW1vcnkgYXQgZXhpdDogMCBLaUIKPiA+ID4gWyAgMTE2LjcwNjI4MF0gW2RybV0gYW1kZ3B1OiB0
-dG0gZmluYWxpemVkCj4gPiA+IFsgIDExNi43NDA0NjBdID09PT0gU3VjY2VlZGVkIHJlbW92aW5n
-IGFtZGdwdSBtb2R1bGUgPT09PQo+ID4gPgo+ID4gPiBIb3dldmVyLCB0aGUgbmV4dCBrZXhlYy1i
-YXNlZCBib290IHN0aWxsIG1pc3NlcyBoYXJkd2FyZSBhY2NlbGVyYXRpb24uCj4gPgo+ID4gUmVn
-YXJkaW5nIHRoZSByZXNldCBjb25zaWRlcmF0aW9ucy4KPiA+Cj4gPiBUaGUgYW1kZ3B1IGRyaXZl
-ciBjb250YWlucyBzb21lIGxvZ2ljIHRvIHJlc2V0IHRoZSBjYXJkIG9uIGluaXQgaWYKPiA+IG5l
-ZWRlZC4gSG93ZXZlciwgZm9yIGFsbCBBUFUgY2hpcHNldHMsIGl0IHNheXMgdGhhdCByZXNldCBv
-biBpbml0IGlzCj4gPiBub3QgbmVlZGVkLiBTbyBJIHRyaWVkIHRvIGZvcmNlIHRoaXMuIEluIGFt
-ZGdwdV9kZXZpY2VfaW5pdCgpLCBJCj4gPiBjaGFuZ2VkOgo+Cj4gQWgsIHJpZ2h0LiAgT24gQVBV
-cywgdGhlIFNNVSBhbmQgUFNQIHdoaWNoIGFyZSB3aGF0IHdlIGNoZWNrIHRvIHNlZSBpZgo+IHRo
-ZXkgYXJlIHJ1bm5pbmcgb24gZEdQVSBhcmUgYWx3YXlzIHJ1bm5pbmcgb24gQVBVcyBzaW5jZSB0
-aGV5IGFyZQo+IHNoYXJlZCB3aXRoIHRoZSBDUFUgc28gaXQgZG9lc24ndCBtYWtlIHNlbnNlIHRv
-IGNoZWNrIHRoZW0uCj4KPiA+Cj4gPiAgICAgICAgIGlmICghYW1kZ3B1X3NyaW92X3ZmKGFkZXYp
-ICYmICgxIHx8Cj4gPiBhbWRncHVfYXNpY19uZWVkX3Jlc2V0X29uX2luaXQoYWRldikpKSB7Cj4g
-PiAuLi4KPiA+ICAgICAgICAgfQo+ID4KPiA+ICAgICAgICAgcGNpX2VuYWJsZV9wY2llX2Vycm9y
-X3JlcG9ydGluZyhhZGV2LT5kZGV2LnBkZXYpOwo+ID4KPiA+ICAgICAgICAgLyogUG9zdCBjYXJk
-IGlmIG5lY2Vzc2FyeSAqLwo+ID4gICAgICAgICBpZiAoMSB8fCBhbWRncHVfZGV2aWNlX25lZWRf
-cG9zdChhZGV2KSkgewo+ID4gLi4uCj4gPiAgICAgICAgIH0KPiA+Cj4gPiBUaGVuIGl0IHRyaWVk
-IHRvIHJlc2V0IHRoZSBjYXJkIHVzaW5nIE1PREUyIG1ldGhvZCwgd2hpY2ggZmFpbGVkOgo+ID4K
-PiA+IFsgICAgMS40NjcxOTJdIGFtZGdwdSAwMDAwOjA0OjAwLjA6IGFtZGdwdTogTU9ERTIgcmVz
-ZXQKPiA+IFsgICAgMS40NjcxOTRdIGFtZGdwdSAwMDAwOjA0OjAwLjA6IGFtZGdwdTogYXNpYyBy
-ZXNldCBvbiBpbml0IGZhaWxlZAo+ID4gWyAgICAxLjQ2NzE5N10gYW1kZ3B1IDAwMDA6MDQ6MDAu
-MDogYW1kZ3B1OiBGYXRhbCBlcnJvciBkdXJpbmcgR1BVIGluaXQKPiA+Cj4gPiBUaGUgb25seSBy
-ZXNldCBtZXRob2Qgd2hpY2ggZG9lc24ndCBmYWlsIGlzIEJBQ08KPiA+IChhbWRncHUucmVzZXRf
-bWV0aG9kPTQpIGJ1dCB1bmZvcnR1bmF0ZWx5IGl0IGRvZXNuJ3QgaGVscCBlaXRoZXIuIFRoZQo+
-ID4gZG1lc2cgYWZ0ZXIga2V4ZWMgaXMgYXR0YWNoZWQuIFRoZSBvbGQgd29ya2Fyb3VuZCB0aGF0
-IHJlbW92ZWQgdGhlCj4gPiBhbWRncHUgbW9kdWxlIG9uIHJlYm9vdCAoYW5kIHRodXMgYmVmb3Jl
-IGtleGVjKSBpcyBzdGlsbCBhY3RpdmUuCj4KPiBtb2RlMiByZXNldCBpcyB0aGUgb25seSByZXNl
-dCBhdmFpbGFibGUgb24gQVBVcy4gIFRoZSBvdGhlcnMgYXJlIG5vdCB2YWxpZC4KPgo+IERpZCB0
-aGlzIGV2ZXIgd29yayBpbiB0aGUgcGFzdCBvbiB0aGlzIHBsYXRmb3JtPwoKSSB0aGluayBuby4g
-VGhpcyBsYXB0b3AncyBHUFUgaXMgc3VwcG9ydGVkIHNpbmNlIGxpbnV4LTUuNyAoYmVmb3JlCnRo
-YXQsIHRoZXJlIHdlcmUgQklPUyBmZXRjaGluZyBwcm9ibGVtcyksIGFuZCB0aGUgb25seSBrZXJu
-ZWxzIHdoZXJlIEkKdGVzdGVkIGtleGVjIHdlcmUgNS4xMCBhbmQgNS4xMS1yY3s2LDd9LgoKCi0t
-IApBbGV4YW5kZXIgRS4gUGF0cmFrb3YKQ1Y6IGh0dHA6Ly91LnBjLmNkL3dUOG90YWxLCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5n
-IGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
-Zy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+This adds crashkernel=auto feature to configure reserved memory for
+vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+different kernel distributions and different archs based on their
+needs.
+
+Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+---
+ Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+ .../admin-guide/kernel-parameters.txt         |  6 +++++
+ arch/Kconfig                                  | 24 +++++++++++++++++++
+ kernel/crash_core.c                           |  7 ++++++
+ 4 files changed, 39 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 2da65fef2a1c..e55cdc404c6b 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -285,7 +285,8 @@ This would mean:
+     2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+     3) if the RAM size is larger than 2G, then reserve 128M
+ 
+-
++Or you can use crashkernel=auto to choose the crash kernel memory size
++based on the recommended configuration set for each arch.
+ 
+ Boot into System Kernel
+ =======================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 7d4e523646c3..aa2099465458 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -736,6 +736,12 @@
+ 			a memory unit (amount[KMG]). See also
+ 			Documentation/admin-guide/kdump/kdump.rst for an example.
+ 
++	crashkernel=auto
++			[KNL] This parameter will set the reserved memory for
++			the crash kernel based on the value of the CRASH_AUTO_STR
++			that is the best effort estimation for each arch. See also
++			arch/Kconfig for further details.
++
+ 	crashkernel=size[KMG],high
+ 			[KNL, X86-64] range could be above 4G. Allow kernel
+ 			to allocate physical memory region from top, so could
+diff --git a/arch/Kconfig b/arch/Kconfig
+index af14a567b493..f87c88ffa2f8 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -14,6 +14,30 @@ menu "General architecture-dependent options"
+ config CRASH_CORE
+ 	bool
+ 
++if CRASH_CORE
++
++config CRASH_AUTO_STR
++	string "Memory reserved for crash kernel"
++	depends on CRASH_CORE
++	default "1G-64G:128M,64G-1T:256M,1T-:512M"
++	help
++	  This configures the reserved memory dependent
++	  on the value of System RAM. The syntax is:
++	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++	              range=start-[end]
++
++	  For example:
++	      crashkernel=512M-2G:64M,2G-:128M
++
++	  This would mean:
++
++	      1) if the RAM is smaller than 512M, then don't reserve anything
++	         (this is the "rescue" case)
++	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
++	      3) if the RAM size is larger than 2G, then reserve 128M
++
++endif # CRASH_CORE
++
+ config KEXEC_CORE
+ 	select CRASH_CORE
+ 	bool
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 106e4500fd53..ab0a2b4b1ffa 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -7,6 +7,7 @@
+ #include <linux/crash_core.h>
+ #include <linux/utsname.h>
+ #include <linux/vmalloc.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+ 	if (suffix)
+ 		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+ 				suffix);
++#ifdef CONFIG_CRASH_AUTO_STR
++	if (strncmp(ck_cmdline, "auto", 4) == 0) {
++		ck_cmdline = CONFIG_CRASH_AUTO_STR;
++		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
++	}
++#endif
+ 	/*
+ 	 * if the commandline contains a ':', then that's the extended
+ 	 * syntax -- if not, it must be the classic syntax
+-- 
+2.27.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
