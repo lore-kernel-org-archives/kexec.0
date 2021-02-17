@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf2f.google.com ([2607:f8b0:4864:20::f2f])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lBj5V-0006S6-BY
- for kexec@lists.infradead.org; Mon, 15 Feb 2021 18:59:14 +0000
-Received: by mail-qv1-xf2f.google.com with SMTP id c25so3596436qvb.4
- for <kexec@lists.infradead.org>; Mon, 15 Feb 2021 10:59:12 -0800 (PST)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH 1/1] kexec: move machine_kexec_post_load() to public interface
-Date: Mon, 15 Feb 2021 13:59:08 -0500
-Message-Id: <20210215185908.257724-2-pasha.tatashin@soleen.com>
-In-Reply-To: <20210215185908.257724-1-pasha.tatashin@soleen.com>
-References: <20210215185908.257724-1-pasha.tatashin@soleen.com>
+ id 1lCRlx-0000gf-C4
+ for kexec@lists.infradead.org; Wed, 17 Feb 2021 18:42:02 +0000
+Subject: Re: [PATCH v3 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
+References: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
+From: john.p.donnelly@oracle.com
+Message-ID: <77fcb8e8-c3ec-6161-14a8-c142e02a9061@oracle.com>
+Date: Wed, 17 Feb 2021 12:40:43 -0600
+In-Reply-To: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,50 +20,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, linux-arm-kernel@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, tyhicks@linux.microsoft.com, will@kernel.org, james.morse@arm.com, ebiederm@xmission.com, kexec@lists.infradead.org
+To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-machine_kexec_post_load() is called after kexec load is finished. It must
-be declared in public header not in kexec_internal.h
+On 2/11/21 12:08 PM, Saeed Mirzamohammadi wrote:
+> This adds crashkernel=auto feature to configure reserved memory for
+> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+> different kernel distributions and different archs based on their
+> needs.
+> 
+> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> ---
+>   Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+>   .../admin-guide/kernel-parameters.txt         |  6 +++++
+>   arch/Kconfig                                  | 24 +++++++++++++++++++
+>   kernel/crash_core.c                           |  7 ++++++
+>   4 files changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 2da65fef2a1c..e55cdc404c6b 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -285,7 +285,8 @@ This would mean:
+>       2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>       3) if the RAM size is larger than 2G, then reserve 128M
+>   
+> -
+> +Or you can use crashkernel=auto to choose the crash kernel memory size
+> +based on the recommended configuration set for each arch.
+>   
+>   Boot into System Kernel
+>   =======================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7d4e523646c3..aa2099465458 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -736,6 +736,12 @@
+>   			a memory unit (amount[KMG]). See also
+>   			Documentation/admin-guide/kdump/kdump.rst for an example.
+>   
+> +	crashkernel=auto
+> +			[KNL] This parameter will set the reserved memory for
+> +			the crash kernel based on the value of the CRASH_AUTO_STR
+> +			that is the best effort estimation for each arch. See also
+> +			arch/Kconfig for further details.
+> +
+>   	crashkernel=size[KMG],high
+>   			[KNL, X86-64] range could be above 4G. Allow kernel
+>   			to allocate physical memory region from top, so could
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index af14a567b493..f87c88ffa2f8 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -14,6 +14,30 @@ menu "General architecture-dependent options"
+>   config CRASH_CORE
+>   	bool
+>   
+> +if CRASH_CORE
+> +
+> +config CRASH_AUTO_STR
+> +	string "Memory reserved for crash kernel"
+> +	depends on CRASH_CORE
+> +	default "1G-64G:128M,64G-1T:256M,1T-:512M"
+> +	help
+> +	  This configures the reserved memory dependent
+> +	  on the value of System RAM. The syntax is:
+> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> +	              range=start-[end]
+> +
+> +	  For example:
+> +	      crashkernel=512M-2G:64M,2G-:128M
+> +
+> +	  This would mean:
+> +
+> +	      1) if the RAM is smaller than 512M, then don't reserve anything
+> +	         (this is the "rescue" case)
+> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+> +	      3) if the RAM size is larger than 2G, then reserve 128M
+> +
+> +endif # CRASH_CORE
+> +
+>   config KEXEC_CORE
+>   	select CRASH_CORE
+>   	bool
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 106e4500fd53..ab0a2b4b1ffa 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,7 @@
+>   #include <linux/crash_core.h>
+>   #include <linux/utsname.h>
+>   #include <linux/vmalloc.h>
+> +#include <linux/kexec.h>
+>   
+>   #include <asm/page.h>
+>   #include <asm/sections.h>
+> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+>   	if (suffix)
+>   		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>   				suffix);
+> +#ifdef CONFIG_CRASH_AUTO_STR
+> +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> +		ck_cmdline = CONFIG_CRASH_AUTO_STR;
+> +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+> +	}
+> +#endif
+>   	/*
+>   	 * if the commandline contains a ':', then that's the extended
+>   	 * syntax -- if not, it must be the classic syntax
+> 
 
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- include/linux/kexec.h   | 2 ++
- kernel/kexec_internal.h | 2 --
- 2 files changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 9e93bef52968..3671b845cf28 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -309,6 +309,8 @@ extern void machine_kexec_cleanup(struct kimage *image);
- extern int kernel_kexec(void);
- extern struct page *kimage_alloc_control_pages(struct kimage *image,
- 						unsigned int order);
-+int machine_kexec_post_load(struct kimage *image);
-+
- extern void __crash_kexec(struct pt_regs *);
- extern void crash_kexec(struct pt_regs *);
- int kexec_should_crash(struct task_struct *);
-diff --git a/kernel/kexec_internal.h b/kernel/kexec_internal.h
-index 39d30ccf8d87..48aaf2ac0d0d 100644
---- a/kernel/kexec_internal.h
-+++ b/kernel/kexec_internal.h
-@@ -13,8 +13,6 @@ void kimage_terminate(struct kimage *image);
- int kimage_is_destination_range(struct kimage *image,
- 				unsigned long start, unsigned long end);
- 
--int machine_kexec_post_load(struct kimage *image);
--
- extern struct mutex kexec_mutex;
- 
- #ifdef CONFIG_KEXEC_FILE
--- 
-2.25.1
+Hello.
+
+Ping.
+
+Can we get this reviewed and staged ?
+
+Thank you.
+
+John.
+
 
 
 _______________________________________________
