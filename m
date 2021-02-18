@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lCYe1-00017B-MH
- for kexec@lists.infradead.org; Thu, 18 Feb 2021 02:02:20 +0000
-Date: Thu, 18 Feb 2021 10:02:03 +0800
+ id 1lCcqc-0007Cp-9U
+ for kexec@lists.infradead.org; Thu, 18 Feb 2021 06:31:35 +0000
+Date: Thu, 18 Feb 2021 14:31:19 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 1/1] kernel/crash_core: Add crashkernel=auto for
- vmcore creation
-Message-ID: <20210218020203.GC2871@MiWiFi-R3L-srv>
-References: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
+Subject: Re: [PATCH v14 06/11] x86/elf: Move vmcore_elf_check_arch_cross to
+ arch/x86/include/asm/elf.h
+Message-ID: <20210218062508.GH2871@MiWiFi-R3L-srv>
+References: <20210130071025.65258-1-chenzhou10@huawei.com>
+ <20210130071025.65258-7-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
+In-Reply-To: <20210130071025.65258-7-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,125 +25,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, john.p.donnelly@oracle.com, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, kernel test robot <lkp@intel.com>, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-On 02/11/21 at 10:08am, Saeed Mirzamohammadi wrote:
-> This adds crashkernel=auto feature to configure reserved memory for
-> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
-> different kernel distributions and different archs based on their
-> needs.
+On 01/30/21 at 03:10pm, Chen Zhou wrote:
+> Move macro vmcore_elf_check_arch_cross from arch/x86/include/asm/kexec.h
+> to arch/x86/include/asm/elf.h to fix the following compiling warning:
 > 
-> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> make ARCH=i386
+> In file included from arch/x86/kernel/setup.c:39:0:
+> ./arch/x86/include/asm/kexec.h:77:0: warning: "vmcore_elf_check_arch_cross" redefined
+>  # define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
+> 
+> In file included from arch/x86/kernel/setup.c:9:0:
+> ./include/linux/crash_dump.h:39:0: note: this is the location of the previous definition
+>  #define vmcore_elf_check_arch_cross(x) 0
+> 
+> The root cause is that vmcore_elf_check_arch_cross under CONFIG_CRASH_CORE
+> depend on CONFIG_KEXEC_CORE. Commit 2db65f1db17d ("x86: kdump: move
+> reserve_crashkernel[_low]() into crash_core.c") triggered the issue.
+> 
+> Suggested by Mike, simply move vmcore_elf_check_arch_cross from
+> arch/x86/include/asm/kexec.h to arch/x86/include/asm/elf.h to fix
+> the warning.
+> 
+> Fixes: 2db65f1db17d ("x86: kdump: move reserve_crashkernel[_low]() into crash_core.c")
+
+Where does this commit id '2db65f1db17d' come from? Here you are fixing
+another pathc in the same patchset. Please merge this with patch 05/11.
+
+> Reported-by: kernel test robot <lkp@intel.com>
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > ---
->  Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
->  .../admin-guide/kernel-parameters.txt         |  6 +++++
->  arch/Kconfig                                  | 24 +++++++++++++++++++
->  kernel/crash_core.c                           |  7 ++++++
->  4 files changed, 39 insertions(+), 1 deletion(-)
+>  arch/x86/include/asm/elf.h   | 3 +++
+>  arch/x86/include/asm/kexec.h | 3 ---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
 > 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 2da65fef2a1c..e55cdc404c6b 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -285,7 +285,8 @@ This would mean:
->      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
->      3) if the RAM size is larger than 2G, then reserve 128M
+> diff --git a/arch/x86/include/asm/elf.h b/arch/x86/include/asm/elf.h
+> index 66bdfe838d61..5333777cc758 100644
+> --- a/arch/x86/include/asm/elf.h
+> +++ b/arch/x86/include/asm/elf.h
+> @@ -94,6 +94,9 @@ extern unsigned int vdso32_enabled;
 >  
+>  #define elf_check_arch(x)	elf_check_arch_ia32(x)
+>  
+> +/* We can also handle crash dumps from 64 bit kernel. */
+> +# define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
+> +
+>  /* SVR4/i386 ABI (pages 3-31, 3-32) says that when the program starts %edx
+>     contains a pointer to a function which might be registered using `atexit'.
+>     This provides a mean for the dynamic linker to call DT_FINI functions for
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 2b18f918203e..6fcae01a9cca 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -72,9 +72,6 @@ struct kimage;
+>  
+>  /* The native architecture */
+>  # define KEXEC_ARCH KEXEC_ARCH_386
 > -
-> +Or you can use crashkernel=auto to choose the crash kernel memory size
-> +based on the recommended configuration set for each arch.
->  
->  Boot into System Kernel
->  =======================
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 7d4e523646c3..aa2099465458 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -736,6 +736,12 @@
->  			a memory unit (amount[KMG]). See also
->  			Documentation/admin-guide/kdump/kdump.rst for an example.
->  
-> +	crashkernel=auto
-> +			[KNL] This parameter will set the reserved memory for
-> +			the crash kernel based on the value of the CRASH_AUTO_STR
-> +			that is the best effort estimation for each arch. See also
-> +			arch/Kconfig for further details.
-> +
->  	crashkernel=size[KMG],high
->  			[KNL, X86-64] range could be above 4G. Allow kernel
->  			to allocate physical memory region from top, so could
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index af14a567b493..f87c88ffa2f8 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -14,6 +14,30 @@ menu "General architecture-dependent options"
->  config CRASH_CORE
->  	bool
->  
-> +if CRASH_CORE
-> +
-> +config CRASH_AUTO_STR
-> +	string "Memory reserved for crash kernel"
-> +	depends on CRASH_CORE
-> +	default "1G-64G:128M,64G-1T:256M,1T-:512M"
-> +	help
-> +	  This configures the reserved memory dependent
-> +	  on the value of System RAM. The syntax is:
-> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> +	              range=start-[end]
-> +
-> +	  For example:
-> +	      crashkernel=512M-2G:64M,2G-:128M
-> +
-> +	  This would mean:
-> +
-> +	      1) if the RAM is smaller than 512M, then don't reserve anything
-> +	         (this is the "rescue" case)
-> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-> +	      3) if the RAM size is larger than 2G, then reserve 128M
-> +
-> +endif # CRASH_CORE
-
-Wondering if this CRASH_CORE ifdeffery is a little redundent here
-since CRASH_CORE dependency has been added. Except of this, I like this
-patch. As we discussed in private threads, we can try to push it into
-mainline and continue improving later.
-
-
-> +
->  config KEXEC_CORE
->  	select CRASH_CORE
->  	bool
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 106e4500fd53..ab0a2b4b1ffa 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -7,6 +7,7 @@
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/kexec.h>
->  
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
->  	if (suffix)
->  		return parse_crashkernel_suffix(ck_cmdline, crash_size,
->  				suffix);
-> +#ifdef CONFIG_CRASH_AUTO_STR
-> +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
-> +		ck_cmdline = CONFIG_CRASH_AUTO_STR;
-> +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
-> +	}
-> +#endif
->  	/*
->  	 * if the commandline contains a ':', then that's the extended
->  	 * syntax -- if not, it must be the classic syntax
+> -/* We can also handle crash dumps from 64 bit kernel. */
+> -# define vmcore_elf_check_arch_cross(x) ((x)->e_machine == EM_X86_64)
+>  #else
+>  /* Maximum physical address we can use pages from */
+>  # define KEXEC_SOURCE_MEMORY_LIMIT      (MAXMEM-1)
 > -- 
-> 2.27.0
+> 2.20.1
 > 
 
 
