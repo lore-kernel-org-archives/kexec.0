@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lCemT-0007cM-Hy
- for kexec@lists.infradead.org; Thu, 18 Feb 2021 08:35:26 +0000
-Date: Thu, 18 Feb 2021 16:35:08 +0800
+ id 1lCerG-00086O-Pz
+ for kexec@lists.infradead.org; Thu, 18 Feb 2021 08:40:23 +0000
+Date: Thu, 18 Feb 2021 16:40:06 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v14 09/11] x86, arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL
- config
-Message-ID: <20210218083428.GK2871@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v14 11/11] kdump: update Documentation about crashkernel
+Message-ID: <20210218083822.GL2871@MiWiFi-R3L-srv>
 References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-10-chenzhou10@huawei.com>
+ <20210130071025.65258-12-chenzhou10@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210130071025.65258-10-chenzhou10@huawei.com>
+In-Reply-To: <20210130071025.65258-12-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,116 +28,112 @@ To: Chen Zhou <chenzhou10@huawei.com>
 Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
 On 01/30/21 at 03:10pm, Chen Zhou wrote:
-> We make the functions reserve_crashkernel[_low]() as generic for
-> x86 and arm64. Since reserve_crashkernel[_low]() implementations
-> are quite similar on other architectures as well, we can have more
-> users of this later.
+> For arm64, the behavior of crashkernel=X has been changed, which
+> tries low allocation in DMA zone and fall back to high allocation
+> if it fails.
 > 
-> So have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in arch/Kconfig and
-> select this by X86 and ARM64.
+> We can also use "crashkernel=X,high" to select a high region above
+> DMA zone, which also tries to allocate at least 256M low memory in
+> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
+> specified size low memory.
+> 
+> So update the Documentation.
 
-This looks much better with the help of
-CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL. And please take off the
-'Suggested-by' tag from me, I just don't like the old CONFIG_X86 and
-CONFIG_ARM64 ifdeffery way in v13, Mike suggested this ARCH_WANT_
-option.
-
-And the two dummy function reserve_crashkernel() in x86 and arm64 looks
-not so good, but I don't have better idea. Maybe add
-CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL iddeffery in the call site of
-reserve_crashkernel() in each ARCH? Or just leave with it for now if no
-other people has concern or suggestion about it.
-
-Anyway, ack this one.
+Nice document adding which also takes care of x86 code implementation,
+thanks. By the way, maybe you can remove John's 'Tested-by' since it
+doesn't make much sense to test a document patch.
 
 Acked-by: Baoquan He <bhe@redhat.com>
 
-Thanks
-Baoquan
-
-
 > 
-> Suggested-by: Mike Rapoport <rppt@kernel.org>
-> Suggested-by: Baoquan He <bhe@redhat.com>
 > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 > ---
->  arch/Kconfig        | 3 +++
->  arch/arm64/Kconfig  | 1 +
->  arch/x86/Kconfig    | 2 ++
->  kernel/crash_core.c | 7 ++-----
->  4 files changed, 8 insertions(+), 5 deletions(-)
+>  Documentation/admin-guide/kdump/kdump.rst     | 22 ++++++++++++++++---
+>  .../admin-guide/kernel-parameters.txt         | 11 ++++++++--
+>  2 files changed, 28 insertions(+), 5 deletions(-)
 > 
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 24862d15f3a3..0ca1ff5bb157 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -24,6 +24,9 @@ config KEXEC_ELF
->  config HAVE_IMA_KEXEC
->  	bool
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 75a9dd98e76e..0877c76f8015 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -299,7 +299,16 @@ Boot into System Kernel
+>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
 >  
-> +config ARCH_WANT_RESERVE_CRASH_KERNEL
-> +	bool
+> -   On x86 and x86_64, use "crashkernel=64M@16M".
+> +   On x86 use "crashkernel=64M@16M".
 > +
->  config SET_FS
->  	bool
+> +   On x86_64, use "crashkernel=X" to select a region under 4G first, and
+> +   fall back to reserve region above 4G. And go for high allocation
+> +   directly if the required size is too large.
+> +   We can also use "crashkernel=X,high" to select a region above 4G, which
+> +   also tries to allocate at least 256M below 4G automatically and
+> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+> +   Use "crashkernel=Y@X" if you really have to reserve memory from specified
+> +   start address X.
 >  
-> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-> index f39568b28ec1..09365c7ff469 100644
-> --- a/arch/arm64/Kconfig
-> +++ b/arch/arm64/Kconfig
-> @@ -82,6 +82,7 @@ config ARM64
->  	select ARCH_WANT_FRAME_POINTERS
->  	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
->  	select ARCH_WANT_LD_ORPHAN_WARN
-> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
->  	select ARCH_HAS_UBSAN_SANITIZE_ALL
->  	select ARM_AMBA
->  	select ARM_ARCH_TIMER
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 21f851179ff0..e6926fcb4a40 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -12,6 +12,7 @@ config X86_32
->  	depends on !64BIT
->  	# Options that are inherently 32-bit kernel only:
->  	select ARCH_WANT_IPC_PARSE_VERSION
-> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
->  	select CLKSRC_I8253
->  	select CLONE_BACKWARDS
->  	select GENERIC_VDSO_32
-> @@ -28,6 +29,7 @@ config X86_64
->  	select ARCH_HAS_GIGANTIC_PAGE
->  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
->  	select ARCH_USE_CMPXCHG_LOCKREF
-> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
->  	select HAVE_ARCH_SOFT_DIRTY
->  	select MODULES_USE_ELF_RELA
->  	select NEED_DMA_MAP_STATE
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 8479be270c0b..2c5783985db5 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -320,9 +320,7 @@ int __init parse_crashkernel_low(char *cmdline,
->   * --------- Crashkernel reservation ------------------------------
->   */
+>     On ppc64, use "crashkernel=128M@32M".
 >  
-> -#ifdef CONFIG_KEXEC_CORE
+> @@ -316,8 +325,15 @@ Boot into System Kernel
+>     kernel will automatically locate the crash kernel image within the
+>     first 512MB of RAM if X is not given.
+>  
+> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
+> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
+> +   On arm64, use "crashkernel=X" to try low allocation in DMA zone and
+> +   fall back to high allocation if it fails.
+> +   We can also use "crashkernel=X,high" to select a high region above
+> +   DMA zone, which also tries to allocate at least 256M low memory in
+> +   DMA zone automatically.
+> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
+> +   Use "crashkernel=Y@X" if you really have to reserve memory from
+> +   specified start address X. Note that the start address of the kernel,
+> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
+>  
+>  Load the Dump-capture Kernel
+>  ============================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index a10b545c2070..908e5c8b61ba 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -738,6 +738,9 @@
+>  			[KNL, X86-64] Select a region under 4G first, and
+>  			fall back to reserve region above 4G when '@offset'
+>  			hasn't been specified.
+> +			[KNL, arm64] Try low allocation in DMA zone and fall back
+> +			to high allocation if it fails when '@offset' hasn't been
+> +			specified.
+>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+>  
+>  	crashkernel=range1:size1[,range2:size2,...][@offset]
+> @@ -754,6 +757,8 @@
+>  			Otherwise memory region will be allocated below 4G, if
+>  			available.
+>  			It will be ignored if crashkernel=X is specified.
+> +			[KNL, arm64] range in high memory.
+> +			Allow kernel to allocate physical memory region from top.
+>  	crashkernel=size[KMG],low
+>  			[KNL, X86-64] range under 4G. When crashkernel=X,high
+>  			is passed, kernel could allocate physical memory region
+> @@ -762,13 +767,15 @@
+>  			requires at least 64M+32K low memory, also enough extra
+>  			low memory is needed to make sure DMA buffers for 32-bit
+>  			devices won't run out. Kernel would try to allocate at
+> -			at least 256M below 4G automatically.
+> +			least 256M below 4G automatically.
+>  			This one let user to specify own low range under 4G
+>  			for second kernel instead.
+>  			0: to disable low allocation.
+>  			It will be ignored when crashkernel=X,high is not used
+>  			or memory reserved is below 4G.
 > -
-> -#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
-> +#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
->  static int __init reserve_crashkernel_low(void)
->  {
->  #ifdef CONFIG_64BIT
-> @@ -450,8 +448,7 @@ void __init reserve_crashkernel(void)
->  	crashk_res.start = crash_base;
->  	crashk_res.end   = crash_base + crash_size - 1;
->  }
-> -#endif
-> -#endif /* CONFIG_KEXEC_CORE */
-> +#endif /* CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL */
+> +			[KNL, arm64] range in low memory.
+> +			This one let user to specify a low range in DMA zone for
+> +			crash dump kernel.
+>  	cryptomgr.notests
+>  			[KNL] Disable crypto self-tests
 >  
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len)
 > -- 
 > 2.20.1
 > 
