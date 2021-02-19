@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail-wm1-f48.google.com ([209.85.128.48])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lCerG-00086O-Pz
- for kexec@lists.infradead.org; Thu, 18 Feb 2021 08:40:23 +0000
-Date: Thu, 18 Feb 2021 16:40:06 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v14 11/11] kdump: update Documentation about crashkernel
-Message-ID: <20210218083822.GL2871@MiWiFi-R3L-srv>
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-12-chenzhou10@huawei.com>
+ id 1lCxQK-0002GT-9n
+ for kexec@lists.infradead.org; Fri, 19 Feb 2021 04:29:49 +0000
+Received: by mail-wm1-f48.google.com with SMTP id a207so5990949wmd.1
+ for <kexec@lists.infradead.org>; Thu, 18 Feb 2021 20:29:46 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210130071025.65258-12-chenzhou10@huawei.com>
+References: <20210205081559.15956-1-fede@evolware.org>
+ <20210207080013.GA7015@dhcp-128-65.nay.redhat.com>
+In-Reply-To: <20210207080013.GA7015@dhcp-128-65.nay.redhat.com>
+From: Federico Pellegrin <fede@evolware.org>
+Date: Fri, 19 Feb 2021 05:29:34 +0100
+Message-ID: <CAM6O0ZgDLLUmdwirHks_+LZV_sBSuhLCxikgzgw9v7z3g3c04Q@mail.gmail.com>
+Subject: Re: [PATCH 1/1] kexec-tools: fix build on pre 4.4 kernels
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,120 +25,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Dave Young <dyoung@redhat.com>
+Cc: kexec@lists.infradead.org, kasong@redhat.com
 
-On 01/30/21 at 03:10pm, Chen Zhou wrote:
-> For arm64, the behavior of crashkernel=X has been changed, which
-> tries low allocation in DMA zone and fall back to high allocation
-> if it fails.
-> 
-> We can also use "crashkernel=X,high" to select a high region above
-> DMA zone, which also tries to allocate at least 256M low memory in
-> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
-> specified size low memory.
-> 
-> So update the Documentation.
+Hi,
+Just trying my luck with a "ping", if someone could evaluate if the
+patch seems correct and/or eventually merge.
 
-Nice document adding which also takes care of x86 code implementation,
-thanks. By the way, maybe you can remove John's 'Tested-by' since it
-doesn't make much sense to test a document patch.
+Many thanks!
+Federico
 
-Acked-by: Baoquan He <bhe@redhat.com>
 
-> 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-> ---
->  Documentation/admin-guide/kdump/kdump.rst     | 22 ++++++++++++++++---
->  .../admin-guide/kernel-parameters.txt         | 11 ++++++++--
->  2 files changed, 28 insertions(+), 5 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 75a9dd98e76e..0877c76f8015 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -299,7 +299,16 @@ Boot into System Kernel
->     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->  
-> -   On x86 and x86_64, use "crashkernel=64M@16M".
-> +   On x86 use "crashkernel=64M@16M".
-> +
-> +   On x86_64, use "crashkernel=X" to select a region under 4G first, and
-> +   fall back to reserve region above 4G. And go for high allocation
-> +   directly if the required size is too large.
-> +   We can also use "crashkernel=X,high" to select a region above 4G, which
-> +   also tries to allocate at least 256M below 4G automatically and
-> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
-> +   Use "crashkernel=Y@X" if you really have to reserve memory from specified
-> +   start address X.
->  
->     On ppc64, use "crashkernel=128M@32M".
->  
-> @@ -316,8 +325,15 @@ Boot into System Kernel
->     kernel will automatically locate the crash kernel image within the
->     first 512MB of RAM if X is not given.
->  
-> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
-> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
-> +   On arm64, use "crashkernel=X" to try low allocation in DMA zone and
-> +   fall back to high allocation if it fails.
-> +   We can also use "crashkernel=X,high" to select a high region above
-> +   DMA zone, which also tries to allocate at least 256M low memory in
-> +   DMA zone automatically.
-> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
-> +   Use "crashkernel=Y@X" if you really have to reserve memory from
-> +   specified start address X. Note that the start address of the kernel,
-> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
->  
->  Load the Dump-capture Kernel
->  ============================
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index a10b545c2070..908e5c8b61ba 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -738,6 +738,9 @@
->  			[KNL, X86-64] Select a region under 4G first, and
->  			fall back to reserve region above 4G when '@offset'
->  			hasn't been specified.
-> +			[KNL, arm64] Try low allocation in DMA zone and fall back
-> +			to high allocation if it fails when '@offset' hasn't been
-> +			specified.
->  			See Documentation/admin-guide/kdump/kdump.rst for further details.
->  
->  	crashkernel=range1:size1[,range2:size2,...][@offset]
-> @@ -754,6 +757,8 @@
->  			Otherwise memory region will be allocated below 4G, if
->  			available.
->  			It will be ignored if crashkernel=X is specified.
-> +			[KNL, arm64] range in high memory.
-> +			Allow kernel to allocate physical memory region from top.
->  	crashkernel=size[KMG],low
->  			[KNL, X86-64] range under 4G. When crashkernel=X,high
->  			is passed, kernel could allocate physical memory region
-> @@ -762,13 +767,15 @@
->  			requires at least 64M+32K low memory, also enough extra
->  			low memory is needed to make sure DMA buffers for 32-bit
->  			devices won't run out. Kernel would try to allocate at
-> -			at least 256M below 4G automatically.
-> +			least 256M below 4G automatically.
->  			This one let user to specify own low range under 4G
->  			for second kernel instead.
->  			0: to disable low allocation.
->  			It will be ignored when crashkernel=X,high is not used
->  			or memory reserved is below 4G.
-> -
-> +			[KNL, arm64] range in low memory.
-> +			This one let user to specify a low range in DMA zone for
-> +			crash dump kernel.
->  	cryptomgr.notests
->  			[KNL] Disable crypto self-tests
->  
-> -- 
-> 2.20.1
-> 
-
+Il giorno dom 7 feb 2021 alle ore 09:00 Dave Young <dyoung@redhat.com>
+ha scritto:
+>
+> Added Kairui in cc since he contributed that part
+> On 02/05/21 at 09:15am, Federico Pellegrin wrote:
+> > kexec build will fail on older kernels (pre 4.4) as the define
+> > VIDEO_CAPABILITY_64BIT_BASE was not present at that time.
+> >
+> > This patch adds it, as per linux/include/uapi/linux/screen_info.h,
+> > if not present.
+> >
+> > Signed-off-by: Federico Pellegrin <fede@evolware.org>
+> > ---
+> >  kexec/arch/i386/x86-linux-setup.c | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+> > index 76e1185..ab54a4a 100644
+> > --- a/kexec/arch/i386/x86-linux-setup.c
+> > +++ b/kexec/arch/i386/x86-linux-setup.c
+> > @@ -37,6 +37,10 @@
+> >  #include "x86-linux-setup.h"
+> >  #include "../../kexec/kexec-syscall.h"
+> >
+> > +#ifndef VIDEO_CAPABILITY_64BIT_BASE
+> > +#define VIDEO_CAPABILITY_64BIT_BASE (1 << 1) /* Frame buffer base is 64-bit */
+> > +#endif
+> > +
+> >  void init_linux_parameters(struct x86_linux_param_header *real_mode)
+> >  {
+> >       /* Fill in the values that are usually provided by the kernel. */
+> > --
+> > 2.26.2
+> >
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
+> >
+>
 
 _______________________________________________
 kexec mailing list
