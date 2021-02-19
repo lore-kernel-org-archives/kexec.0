@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-f48.google.com ([209.85.128.48])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lCxQK-0002GT-9n
- for kexec@lists.infradead.org; Fri, 19 Feb 2021 04:29:49 +0000
-Received: by mail-wm1-f48.google.com with SMTP id a207so5990949wmd.1
- for <kexec@lists.infradead.org>; Thu, 18 Feb 2021 20:29:46 -0800 (PST)
+ id 1lD6jU-0003cK-M1
+ for kexec@lists.infradead.org; Fri, 19 Feb 2021 14:26:15 +0000
+From: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+Subject: [PATCH] powerpc/kexec_file: Restore FDT size estimation for kdump
+ kernel
+Date: Fri, 19 Feb 2021 11:25:52 -0300
+Message-Id: <20210219142552.762608-1-bauerman@linux.ibm.com>
 MIME-Version: 1.0
-References: <20210205081559.15956-1-fede@evolware.org>
- <20210207080013.GA7015@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20210207080013.GA7015@dhcp-128-65.nay.redhat.com>
-From: Federico Pellegrin <fede@evolware.org>
-Date: Fri, 19 Feb 2021 05:29:34 +0100
-Message-ID: <CAM6O0ZgDLLUmdwirHks_+LZV_sBSuhLCxikgzgw9v7z3g3c04Q@mail.gmail.com>
-Subject: Re: [PATCH 1/1] kexec-tools: fix build on pre 4.4 kernels
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,59 +21,108 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, kasong@redhat.com
+To: linuxppc-dev@lists.ozlabs.org
+Cc: Rob Herring <robh@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Hari Bathini <hbathini@linux.ibm.com>
 
-Hi,
-Just trying my luck with a "ping", if someone could evaluate if the
-patch seems correct and/or eventually merge.
+Commit 2377c92e37fe ("powerpc/kexec_file: fix FDT size estimation for kdump
+kernel") fixed how elf64_load() estimates the FDT size needed by the
+crashdump kernel.
 
-Many thanks!
-Federico
+At the same time, commit 130b2d59cec0 ("powerpc: Use common
+of_kexec_alloc_and_setup_fdt()") changed the same code to use the generic
+function of_kexec_alloc_and_setup_fdt() to calculate the FDT size. That
+change made the code overestimate it a bit by counting twice the space
+required for the kernel command line and /chosen properties.
 
+Therefore change kexec_fdt_totalsize_ppc64() to calculate just the extra
+space needed by the kdump kernel, and change the function name so that it
+better reflects what the function is now doing.
 
-Il giorno dom 7 feb 2021 alle ore 09:00 Dave Young <dyoung@redhat.com>
-ha scritto:
->
-> Added Kairui in cc since he contributed that part
-> On 02/05/21 at 09:15am, Federico Pellegrin wrote:
-> > kexec build will fail on older kernels (pre 4.4) as the define
-> > VIDEO_CAPABILITY_64BIT_BASE was not present at that time.
-> >
-> > This patch adds it, as per linux/include/uapi/linux/screen_info.h,
-> > if not present.
-> >
-> > Signed-off-by: Federico Pellegrin <fede@evolware.org>
-> > ---
-> >  kexec/arch/i386/x86-linux-setup.c | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
-> > index 76e1185..ab54a4a 100644
-> > --- a/kexec/arch/i386/x86-linux-setup.c
-> > +++ b/kexec/arch/i386/x86-linux-setup.c
-> > @@ -37,6 +37,10 @@
-> >  #include "x86-linux-setup.h"
-> >  #include "../../kexec/kexec-syscall.h"
-> >
-> > +#ifndef VIDEO_CAPABILITY_64BIT_BASE
-> > +#define VIDEO_CAPABILITY_64BIT_BASE (1 << 1) /* Frame buffer base is 64-bit */
-> > +#endif
-> > +
-> >  void init_linux_parameters(struct x86_linux_param_header *real_mode)
-> >  {
-> >       /* Fill in the values that are usually provided by the kernel. */
-> > --
-> > 2.26.2
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >
-> >
->
+Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+---
+ arch/powerpc/include/asm/kexec.h  |  2 +-
+ arch/powerpc/kexec/elf_64.c       |  2 +-
+ arch/powerpc/kexec/file_load_64.c | 26 ++++++++------------------
+ 3 files changed, 10 insertions(+), 20 deletions(-)
+
+Applies on top of next-20210219.
+
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index baab158e215c..5a11cc8d2350 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -128,7 +128,7 @@ int load_crashdump_segments_ppc64(struct kimage *image,
+ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+ 			  const void *fdt, unsigned long kernel_load_addr,
+ 			  unsigned long fdt_load_addr);
+-unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image);
++unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
+ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ 			unsigned long initrd_load_addr,
+ 			unsigned long initrd_len, const char *cmdline);
+diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+index 0492ca6003f3..5a569bb51349 100644
+--- a/arch/powerpc/kexec/elf_64.c
++++ b/arch/powerpc/kexec/elf_64.c
+@@ -104,7 +104,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 
+ 	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
+ 					   initrd_len, cmdline,
+-					   kexec_fdt_totalsize_ppc64(image));
++					   kexec_extra_fdt_size_ppc64(image));
+ 	if (!fdt) {
+ 		pr_err("Error setting up the new device tree.\n");
+ 		ret = -EINVAL;
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 3609de30a170..8541ba731908 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -927,37 +927,27 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+ }
+ 
+ /**
+- * kexec_fdt_totalsize_ppc64 - Return the estimated size needed to setup FDT
+- *                             for kexec/kdump kernel.
+- * @image:                     kexec image being loaded.
++ * kexec_extra_fdt_size_ppc63 - Return the estimated size needed to setup FDT
++ *                              for kexec/kdump kernel.
++ * @image:                      kexec image being loaded.
+  *
+- * Returns the estimated size needed for kexec/kdump kernel FDT.
++ * Returns the estimated extra size needed for kexec/kdump kernel FDT.
+  */
+-unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image)
++unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+ {
+-	unsigned int fdt_size;
+ 	u64 usm_entries;
+ 
+-	/*
+-	 * The below estimate more than accounts for a typical kexec case where
+-	 * the additional space is to accommodate things like kexec cmdline,
+-	 * chosen node with properties for initrd start & end addresses and
+-	 * a property to indicate kexec boot..
+-	 */
+-	fdt_size = fdt_totalsize(initial_boot_params) + (2 * COMMAND_LINE_SIZE);
+ 	if (image->type != KEXEC_TYPE_CRASH)
+-		return fdt_size;
++		return 0;
+ 
+ 	/*
+-	 * For kdump kernel, also account for linux,usable-memory and
++	 * For kdump kernel, account for linux,usable-memory and
+ 	 * linux,drconf-usable-memory properties. Get an approximate on the
+ 	 * number of usable memory entries and use for FDT size estimation.
+ 	 */
+ 	usm_entries = ((memblock_end_of_DRAM() / drmem_lmb_size()) +
+ 		       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
+-	fdt_size += (unsigned int)(usm_entries * sizeof(u64));
+-
+-	return fdt_size;
++	return (unsigned int)(usm_entries * sizeof(u64));
+ }
+ 
+ /**
 
 _______________________________________________
 kexec mailing list
