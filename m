@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v14 11/11] kdump: update Documentation about crashkernel
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-12-chenzhou10@huawei.com>
- <20210218083822.GL2871@MiWiFi-R3L-srv>
-From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <4fbc4cdc-9888-bf34-1fcc-f5bcb0349042@huawei.com>
-Date: Sat, 20 Feb 2021 11:25:19 +0800
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lDVoi-00067e-6c
+ for kexec@lists.infradead.org; Sat, 20 Feb 2021 17:13:17 +0000
+Subject: Re: [PATCH v2] powerpc/kexec_file: Restore FDT size estimation for
+ kdump kernel
+References: <20210220005204.1417200-1-bauerman@linux.ibm.com>
+From: Hari Bathini <hbathini@linux.ibm.com>
+Message-ID: <1739b7f8-2b2f-1ae2-1785-4fedc7a973ed@linux.ibm.com>
+Date: Sat, 20 Feb 2021 22:43:01 +0530
 MIME-Version: 1.0
-In-Reply-To: <20210218083822.GL2871@MiWiFi-R3L-srv>
+In-Reply-To: <20210220005204.1417200-1-bauerman@linux.ibm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,128 +20,127 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, catalin.marinas@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Thiago Jung Bauermann <bauerman@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Rob Herring <robh@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
 
 
 
-On 2021/2/18 16:40, Baoquan He wrote:
-> On 01/30/21 at 03:10pm, Chen Zhou wrote:
->> For arm64, the behavior of crashkernel=X has been changed, which
->> tries low allocation in DMA zone and fall back to high allocation
->> if it fails.
->>
->> We can also use "crashkernel=X,high" to select a high region above
->> DMA zone, which also tries to allocate at least 256M low memory in
->> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
->> specified size low memory.
->>
->> So update the Documentation.
-> Nice document adding which also takes care of x86 code implementation,
-> thanks. By the way, maybe you can remove John's 'Tested-by' since it
-> doesn't make much sense to test a document patch.
-I will remove the Tested-by in next version.
->
-> Acked-by: Baoquan He <bhe@redhat.com>
->
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
->> ---
->>  Documentation/admin-guide/kdump/kdump.rst     | 22 ++++++++++++++++---
->>  .../admin-guide/kernel-parameters.txt         | 11 ++++++++--
->>  2 files changed, 28 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
->> index 75a9dd98e76e..0877c76f8015 100644
->> --- a/Documentation/admin-guide/kdump/kdump.rst
->> +++ b/Documentation/admin-guide/kdump/kdump.rst
->> @@ -299,7 +299,16 @@ Boot into System Kernel
->>     "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
->>     starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
->>  
->> -   On x86 and x86_64, use "crashkernel=64M@16M".
->> +   On x86 use "crashkernel=64M@16M".
->> +
->> +   On x86_64, use "crashkernel=X" to select a region under 4G first, and
->> +   fall back to reserve region above 4G. And go for high allocation
->> +   directly if the required size is too large.
->> +   We can also use "crashkernel=X,high" to select a region above 4G, which
->> +   also tries to allocate at least 256M below 4G automatically and
->> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
->> +   Use "crashkernel=Y@X" if you really have to reserve memory from specified
->> +   start address X.
->>  
->>     On ppc64, use "crashkernel=128M@32M".
->>  
->> @@ -316,8 +325,15 @@ Boot into System Kernel
->>     kernel will automatically locate the crash kernel image within the
->>     first 512MB of RAM if X is not given.
->>  
->> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
->> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
->> +   On arm64, use "crashkernel=X" to try low allocation in DMA zone and
->> +   fall back to high allocation if it fails.
->> +   We can also use "crashkernel=X,high" to select a high region above
->> +   DMA zone, which also tries to allocate at least 256M low memory in
->> +   DMA zone automatically.
->> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
->> +   Use "crashkernel=Y@X" if you really have to reserve memory from
->> +   specified start address X. Note that the start address of the kernel,
->> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
->>  
->>  Load the Dump-capture Kernel
->>  ============================
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index a10b545c2070..908e5c8b61ba 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -738,6 +738,9 @@
->>  			[KNL, X86-64] Select a region under 4G first, and
->>  			fall back to reserve region above 4G when '@offset'
->>  			hasn't been specified.
->> +			[KNL, arm64] Try low allocation in DMA zone and fall back
->> +			to high allocation if it fails when '@offset' hasn't been
->> +			specified.
->>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
->>  
->>  	crashkernel=range1:size1[,range2:size2,...][@offset]
->> @@ -754,6 +757,8 @@
->>  			Otherwise memory region will be allocated below 4G, if
->>  			available.
->>  			It will be ignored if crashkernel=X is specified.
->> +			[KNL, arm64] range in high memory.
->> +			Allow kernel to allocate physical memory region from top.
->>  	crashkernel=size[KMG],low
->>  			[KNL, X86-64] range under 4G. When crashkernel=X,high
->>  			is passed, kernel could allocate physical memory region
->> @@ -762,13 +767,15 @@
->>  			requires at least 64M+32K low memory, also enough extra
->>  			low memory is needed to make sure DMA buffers for 32-bit
->>  			devices won't run out. Kernel would try to allocate at
->> -			at least 256M below 4G automatically.
->> +			least 256M below 4G automatically.
->>  			This one let user to specify own low range under 4G
->>  			for second kernel instead.
->>  			0: to disable low allocation.
->>  			It will be ignored when crashkernel=X,high is not used
->>  			or memory reserved is below 4G.
->> -
->> +			[KNL, arm64] range in low memory.
->> +			This one let user to specify a low range in DMA zone for
->> +			crash dump kernel.
->>  	cryptomgr.notests
->>  			[KNL] Disable crypto self-tests
->>  
->> -- 
->> 2.20.1
->>
-> .
->
+On 20/02/21 6:22 am, Thiago Jung Bauermann wrote:
+> Commit 2377c92e37fe ("powerpc/kexec_file: fix FDT size estimation for kdump
+> kernel") fixed how elf64_load() estimates the FDT size needed by the
+> crashdump kernel.
+> 
+> At the same time, commit 130b2d59cec0 ("powerpc: Use common
+> of_kexec_alloc_and_setup_fdt()") changed the same code to use the generic
+> function of_kexec_alloc_and_setup_fdt() to calculate the FDT size. That
+> change made the code overestimate it a bit by counting twice the space
+> required for the kernel command line and /chosen properties.
+> 
+> Therefore change kexec_fdt_totalsize_ppc64() to calculate just the extra
+> space needed by the kdump kernel, and change the function name so that it
+> better reflects what the function is now doing.
 
+Thanks for fixing this, Thiago.
+
+Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
+
+> 
+> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
+> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+> ---
+>   arch/powerpc/include/asm/kexec.h  |  2 +-
+>   arch/powerpc/kexec/elf_64.c       |  2 +-
+>   arch/powerpc/kexec/file_load_64.c | 26 ++++++++------------------
+>   3 files changed, 10 insertions(+), 20 deletions(-)
+> 
+> Applies on top of next-20210219.
+> 
+> Changes since v1:
+> 
+> - Adjusted comment describing kexec_extra_fdt_size_ppc64() as suggested
+>    by Lakshmi.
+> 
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index baab158e215c..5a11cc8d2350 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -128,7 +128,7 @@ int load_crashdump_segments_ppc64(struct kimage *image,
+>   int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>   			  const void *fdt, unsigned long kernel_load_addr,
+>   			  unsigned long fdt_load_addr);
+> -unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image);
+> +unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
+>   int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+>   			unsigned long initrd_load_addr,
+>   			unsigned long initrd_len, const char *cmdline);
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index 0492ca6003f3..5a569bb51349 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -104,7 +104,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>   
+>   	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
+>   					   initrd_len, cmdline,
+> -					   kexec_fdt_totalsize_ppc64(image));
+> +					   kexec_extra_fdt_size_ppc64(image));
+>   	if (!fdt) {
+>   		pr_err("Error setting up the new device tree.\n");
+>   		ret = -EINVAL;
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index 3609de30a170..297f73795a1f 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -927,37 +927,27 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+>   }
+>   
+>   /**
+> - * kexec_fdt_totalsize_ppc64 - Return the estimated size needed to setup FDT
+> - *                             for kexec/kdump kernel.
+> - * @image:                     kexec image being loaded.
+> + * kexec_extra_fdt_size_ppc64 - Return the estimated additional size needed to
+> + *                              setup FDT for kexec/kdump kernel.
+> + * @image:                      kexec image being loaded.
+>    *
+> - * Returns the estimated size needed for kexec/kdump kernel FDT.
+> + * Returns the estimated extra size needed for kexec/kdump kernel FDT.
+>    */
+> -unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image)
+> +unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+>   {
+> -	unsigned int fdt_size;
+>   	u64 usm_entries;
+>   
+> -	/*
+> -	 * The below estimate more than accounts for a typical kexec case where
+> -	 * the additional space is to accommodate things like kexec cmdline,
+> -	 * chosen node with properties for initrd start & end addresses and
+> -	 * a property to indicate kexec boot..
+> -	 */
+> -	fdt_size = fdt_totalsize(initial_boot_params) + (2 * COMMAND_LINE_SIZE);
+>   	if (image->type != KEXEC_TYPE_CRASH)
+> -		return fdt_size;
+> +		return 0;
+>   
+>   	/*
+> -	 * For kdump kernel, also account for linux,usable-memory and
+> +	 * For kdump kernel, account for linux,usable-memory and
+>   	 * linux,drconf-usable-memory properties. Get an approximate on the
+>   	 * number of usable memory entries and use for FDT size estimation.
+>   	 */
+>   	usm_entries = ((memblock_end_of_DRAM() / drmem_lmb_size()) +
+>   		       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
+> -	fdt_size += (unsigned int)(usm_entries * sizeof(u64));
+> -
+> -	return fdt_size;
+> +	return (unsigned int)(usm_entries * sizeof(u64));
+>   }
+>   
+>   /**
+> 
 
 _______________________________________________
 kexec mailing list
