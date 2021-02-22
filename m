@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lDVoi-00067e-6c
- for kexec@lists.infradead.org; Sat, 20 Feb 2021 17:13:17 +0000
-Subject: Re: [PATCH v2] powerpc/kexec_file: Restore FDT size estimation for
- kdump kernel
-References: <20210220005204.1417200-1-bauerman@linux.ibm.com>
-From: Hari Bathini <hbathini@linux.ibm.com>
-Message-ID: <1739b7f8-2b2f-1ae2-1785-4fedc7a973ed@linux.ibm.com>
-Date: Sat, 20 Feb 2021 22:43:01 +0530
-MIME-Version: 1.0
-In-Reply-To: <20210220005204.1417200-1-bauerman@linux.ibm.com>
-Content-Language: en-US
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lE04g-0005vV-PF
+ for kexec@lists.infradead.org; Mon, 22 Feb 2021 01:31:48 +0000
+From: Youling Tang <tangyouling@loongson.cn>
+Subject: [PATCH] mips64: Retrieve MAX_PHYSMEM_BITS from vmcoreinfo
+Date: Mon, 22 Feb 2021 09:31:33 +0800
+Message-Id: <1613957493-22021-1-git-send-email-tangyouling@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,127 +15,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Rob Herring <robh@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mimi Zohar <zohar@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To: Kazuhito Hagio <k-hagio-ab@nec.com>
+Cc: tangyouling@loongson.cn, kexec-ml <kexec@lists.infradead.org>
 
+Add a common feature for architectures to retrieve AX_PHYSMEM_BITS
+from vmcoreinfo, which was added by kernel commit 1d50e5d0c505 ("
+crash_core, vmcoreinfo: Append 'MAX_PHYSMEM_BITS' to vmcoreinfo").
+This makes makedumpfile adaptable for future MAX_PHYSMEM_BITS changes.
 
+Also ensure backward compatibility for kernel versions in which
+MAX_PHYSMEM_BITS is not available in vmcoreinfo.
 
-On 20/02/21 6:22 am, Thiago Jung Bauermann wrote:
-> Commit 2377c92e37fe ("powerpc/kexec_file: fix FDT size estimation for kdump
-> kernel") fixed how elf64_load() estimates the FDT size needed by the
-> crashdump kernel.
-> 
-> At the same time, commit 130b2d59cec0 ("powerpc: Use common
-> of_kexec_alloc_and_setup_fdt()") changed the same code to use the generic
-> function of_kexec_alloc_and_setup_fdt() to calculate the FDT size. That
-> change made the code overestimate it a bit by counting twice the space
-> required for the kernel command line and /chosen properties.
-> 
-> Therefore change kexec_fdt_totalsize_ppc64() to calculate just the extra
-> space needed by the kdump kernel, and change the function name so that it
-> better reflects what the function is now doing.
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ arch/mips64.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Thanks for fixing this, Thiago.
+diff --git a/arch/mips64.c b/arch/mips64.c
+index c968082..d541c3e 100644
+--- a/arch/mips64.c
++++ b/arch/mips64.c
+@@ -35,9 +35,14 @@ get_phys_base_mips64(void)
+ int
+ get_machdep_info_mips64(void)
+ {
+-	info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
+ 	info->section_size_bits = _SECTION_SIZE_BITS;
+ 
++	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
++	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
++		info->max_physmem_bits = NUMBER(MAX_PHYSMEM_BITS);
++	else
++		info->max_physmem_bits  = _MAX_PHYSMEM_BITS;
++
+ 	DEBUG_MSG("max_physmem_bits : %lx\n", info->max_physmem_bits);
+ 	DEBUG_MSG("section_size_bits: %lx\n", info->section_size_bits);
+ 
+-- 
+2.1.0
 
-Reviewed-by: Hari Bathini <hbathini@linux.ibm.com>
-
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->   arch/powerpc/include/asm/kexec.h  |  2 +-
->   arch/powerpc/kexec/elf_64.c       |  2 +-
->   arch/powerpc/kexec/file_load_64.c | 26 ++++++++------------------
->   3 files changed, 10 insertions(+), 20 deletions(-)
-> 
-> Applies on top of next-20210219.
-> 
-> Changes since v1:
-> 
-> - Adjusted comment describing kexec_extra_fdt_size_ppc64() as suggested
->    by Lakshmi.
-> 
-> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-> index baab158e215c..5a11cc8d2350 100644
-> --- a/arch/powerpc/include/asm/kexec.h
-> +++ b/arch/powerpc/include/asm/kexec.h
-> @@ -128,7 +128,7 @@ int load_crashdump_segments_ppc64(struct kimage *image,
->   int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
->   			  const void *fdt, unsigned long kernel_load_addr,
->   			  unsigned long fdt_load_addr);
-> -unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image);
-> +unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
->   int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
->   			unsigned long initrd_load_addr,
->   			unsigned long initrd_len, const char *cmdline);
-> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-> index 0492ca6003f3..5a569bb51349 100644
-> --- a/arch/powerpc/kexec/elf_64.c
-> +++ b/arch/powerpc/kexec/elf_64.c
-> @@ -104,7 +104,7 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->   
->   	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_load_addr,
->   					   initrd_len, cmdline,
-> -					   kexec_fdt_totalsize_ppc64(image));
-> +					   kexec_extra_fdt_size_ppc64(image));
->   	if (!fdt) {
->   		pr_err("Error setting up the new device tree.\n");
->   		ret = -EINVAL;
-> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> index 3609de30a170..297f73795a1f 100644
-> --- a/arch/powerpc/kexec/file_load_64.c
-> +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -927,37 +927,27 @@ int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
->   }
->   
->   /**
-> - * kexec_fdt_totalsize_ppc64 - Return the estimated size needed to setup FDT
-> - *                             for kexec/kdump kernel.
-> - * @image:                     kexec image being loaded.
-> + * kexec_extra_fdt_size_ppc64 - Return the estimated additional size needed to
-> + *                              setup FDT for kexec/kdump kernel.
-> + * @image:                      kexec image being loaded.
->    *
-> - * Returns the estimated size needed for kexec/kdump kernel FDT.
-> + * Returns the estimated extra size needed for kexec/kdump kernel FDT.
->    */
-> -unsigned int kexec_fdt_totalsize_ppc64(struct kimage *image)
-> +unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
->   {
-> -	unsigned int fdt_size;
->   	u64 usm_entries;
->   
-> -	/*
-> -	 * The below estimate more than accounts for a typical kexec case where
-> -	 * the additional space is to accommodate things like kexec cmdline,
-> -	 * chosen node with properties for initrd start & end addresses and
-> -	 * a property to indicate kexec boot..
-> -	 */
-> -	fdt_size = fdt_totalsize(initial_boot_params) + (2 * COMMAND_LINE_SIZE);
->   	if (image->type != KEXEC_TYPE_CRASH)
-> -		return fdt_size;
-> +		return 0;
->   
->   	/*
-> -	 * For kdump kernel, also account for linux,usable-memory and
-> +	 * For kdump kernel, account for linux,usable-memory and
->   	 * linux,drconf-usable-memory properties. Get an approximate on the
->   	 * number of usable memory entries and use for FDT size estimation.
->   	 */
->   	usm_entries = ((memblock_end_of_DRAM() / drmem_lmb_size()) +
->   		       (2 * (resource_size(&crashk_res) / drmem_lmb_size())));
-> -	fdt_size += (unsigned int)(usm_entries * sizeof(u64));
-> -
-> -	return fdt_size;
-> +	return (unsigned int)(usm_entries * sizeof(u64));
->   }
->   
->   /**
-> 
 
 _______________________________________________
 kexec mailing list
