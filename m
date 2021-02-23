@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 23 Feb 2021 09:45:32 +0000
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v2] kexec: move machine_kexec_post_load() to public
- interface
-Message-ID: <20210223094531.GA10254@willie-the-truck>
-References: <20210219195142.13571-1-pasha.tatashin@soleen.com>
- <161399720788.2051103.17455817952511939013.b4-ty@kernel.org>
- <m1im6jmki1.fsf@fess.ebiederm.org>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEV1A-000183-7D
+ for kexec@lists.infradead.org; Tue, 23 Feb 2021 10:34:14 +0000
+Subject: Re: [PATCH 1/1] kexec-tools: fix build on pre 4.4 kernels
+References: <20210205081559.15956-1-fede@evolware.org>
+From: Kairui Song <kasong@redhat.com>
+Message-ID: <4501fa78-355d-eb7c-69c4-5665620aa1a1@redhat.com>
+Date: Tue, 23 Feb 2021 18:32:39 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m1im6jmki1.fsf@fess.ebiederm.org>
+In-Reply-To: <20210205081559.15956-1-fede@evolware.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,44 +19,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Pavel Tatashin <pasha.tatashin@soleen.com>, catalin.marinas@arm.com, kexec@lists.infradead.org, jmorris@namei.org, linux-kernel@vger.kernel.org, tyhicks@linux.microsoft.com, james.morse@arm.com, kernel-team@android.com, linux-arm-kernel@lists.infradead.org
+To: Federico Pellegrin <fede@evolware.org>, kexec@lists.infradead.org
 
-On Mon, Feb 22, 2021 at 11:16:38PM -0600, Eric W. Biederman wrote:
-> Will Deacon <will@kernel.org> writes:
-> 
-> > On Fri, 19 Feb 2021 14:51:42 -0500, Pavel Tatashin wrote:
-> >> machine_kexec_post_load() is called after kexec load is finished. It must
-> >> declared in public header not in kexec_internal.h
-> >> 
-> >> Fixes the following compiler warning:
-> >> 
-> >> arch/arm64/kernel/machine_kexec.c:62:5: warning: no previous prototype for
-> >> function 'machine_kexec_post_load' [-Wmissing-prototypes]
-> >>    int machine_kexec_post_load(struct kimage *kimage)
-> >
-> > Applied to arm64 (for-next/fixes), thanks!
-> >
-> > [1/1] kexec: move machine_kexec_post_load() to public interface
-> >       https://git.kernel.org/arm64/c/2596b6ae412b
-> 
-> As you have already applied this it seems a bit late,
-> but I will mention that change could legitimately have the following
-> tag.
-> 
-> Fixes: de68e4daea90 ("kexec: add machine_kexec_post_load()")
-> 
-> So far arm64 is the only implementation of that hook.
+On 2/5/21 4:15 PM, Federico Pellegrin wrote:
+> kexec build will fail on older kernels (pre 4.4) as the define
+> VIDEO_CAPABILITY_64BIT_BASE was not present at that time.
+>
+> This patch adds it, as per linux/include/uapi/linux/screen_info.h,
+> if not present.
+>
+> Signed-off-by: Federico Pellegrin <fede@evolware.org>
+> ---
+>   kexec/arch/i386/x86-linux-setup.c | 4 ++++
+>   1 file changed, 4 insertions(+)
+>
+> diff --git a/kexec/arch/i386/x86-linux-setup.c b/kexec/arch/i386/x86-linux-setup.c
+> index 76e1185..ab54a4a 100644
+> --- a/kexec/arch/i386/x86-linux-setup.c
+> +++ b/kexec/arch/i386/x86-linux-setup.c
+> @@ -37,6 +37,10 @@
+>   #include "x86-linux-setup.h"
+>   #include "../../kexec/kexec-syscall.h"
+>   
+> +#ifndef VIDEO_CAPABILITY_64BIT_BASE
+> +#define VIDEO_CAPABILITY_64BIT_BASE (1 << 1)	/* Frame buffer base is 64-bit */
+> +#endif
+> +
+>   void init_linux_parameters(struct x86_linux_param_header *real_mode)
+>   {
+>   	/* Fill in the values that are usually provided by the kernel. */
 
-I added 'Fixes: 4c3c31230c91 ("arm64: kexec: move relocation function
-setup")' when I applied the patch, so at least it's clearly marked as a
-fix.
+Thanks for the fix, I didn't notice pre 4.4 kernels don't have this defined
+when I submitted that patch.
 
-Will
+Reviewed-by: Kairui Song <kasong@redhat.com>
+
 
 _______________________________________________
 kexec mailing list
