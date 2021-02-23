@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <ff12c314f3c122de9f2d9f5d826fac9e5e6248dc.camel@suse.de>
-Subject: Re: [PATCH v14 07/11] arm64: kdump: introduce some macroes for
- crash kernel reservation
-From: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Date: Thu, 04 Feb 2021 17:27:39 +0100
-In-Reply-To: <a7951d7f651681fcfd45cea4f8b173c23cc34aa0.camel@suse.de>
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-8-chenzhou10@huawei.com>
- <a7951d7f651681fcfd45cea4f8b173c23cc34aa0.camel@suse.de>
+Received: from userp2120.oracle.com ([156.151.31.85])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEbjF-0001nf-7N
+ for kexec@lists.infradead.org; Tue, 23 Feb 2021 17:44:10 +0000
+From: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Subject: [PATCH v4 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
+Date: Tue, 23 Feb 2021 09:41:50 -0800
+Message-Id: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -17,127 +17,119 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============8738293219830612563=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>, mingo@redhat.com, tglx@linutronix.de, rppt@kernel.org, dyoung@redhat.com, bhe@redhat.com, catalin.marinas@arm.com, will@kernel.org, corbet@lwn.net, John.P.donnelly@oracle.com, bhsharma@redhat.com, prabhakar.pkin@gmail.com
-Cc: wangkefeng.wang@huawei.com, arnd@arndb.de, xiexiuqi@huawei.com, linux-doc@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, horms@verge.net.au, james.morse@arm.com, huawei.libin@huawei.com, guohanjun@huawei.com, linux-arm-kernel@lists.infradead.org
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, YiFei Zhu <yifeifz2@illinois.edu>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, saeed.mirzamohammadi@oracle.com, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
+This adds crashkernel=auto feature to configure reserved memory for
+vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+different kernel distributions and different archs based on their
+needs.
 
---===============8738293219830612563==
-Content-Type: multipart/signed; micalg="pgp-sha256";
-	protocol="application/pgp-signature"; boundary="=-hF9DE29OJv+9/WzzoEGg"
+Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+---
+ Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+ .../admin-guide/kernel-parameters.txt         |  6 ++++++
+ arch/Kconfig                                  | 20 +++++++++++++++++++
+ kernel/crash_core.c                           |  7 +++++++
+ 4 files changed, 35 insertions(+), 1 deletion(-)
 
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 75a9dd98e76e..ae030111e22a 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -285,7 +285,8 @@ This would mean:
+     2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+     3) if the RAM size is larger than 2G, then reserve 128M
+ 
+-
++Or you can use crashkernel=auto to choose the crash kernel memory size
++based on the recommended configuration set for each arch.
+ 
+ Boot into System Kernel
+ =======================
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 9e3cdb271d06..a5deda5c85fe 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -747,6 +747,12 @@
+ 			a memory unit (amount[KMG]). See also
+ 			Documentation/admin-guide/kdump/kdump.rst for an example.
+ 
++	crashkernel=auto
++			[KNL] This parameter will set the reserved memory for
++			the crash kernel based on the value of the CRASH_AUTO_STR
++			that is the best effort estimation for each arch. See also
++			arch/Kconfig for further details.
++
+ 	crashkernel=size[KMG],high
+ 			[KNL, X86-64] range could be above 4G. Allow kernel
+ 			to allocate physical memory region from top, so could
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 24862d15f3a3..23d047548772 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -14,6 +14,26 @@ menu "General architecture-dependent options"
+ config CRASH_CORE
+ 	bool
+ 
++config CRASH_AUTO_STR
++	string "Memory reserved for crash kernel"
++	depends on CRASH_CORE
++	default "1G-64G:128M,64G-1T:256M,1T-:512M"
++	help
++	  This configures the reserved memory dependent
++	  on the value of System RAM. The syntax is:
++	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++	              range=start-[end]
++
++	  For example:
++	      crashkernel=512M-2G:64M,2G-:128M
++
++	  This would mean:
++
++	      1) if the RAM is smaller than 512M, then don't reserve anything
++	         (this is the "rescue" case)
++	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
++	      3) if the RAM size is larger than 2G, then reserve 128M
++
+ config KEXEC_CORE
+ 	select CRASH_CORE
+ 	bool
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 825284baaf46..90f9e4bb6704 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -7,6 +7,7 @@
+ #include <linux/crash_core.h>
+ #include <linux/utsname.h>
+ #include <linux/vmalloc.h>
++#include <linux/kexec.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+ 	if (suffix)
+ 		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+ 				suffix);
++#ifdef CONFIG_CRASH_AUTO_STR
++	if (strncmp(ck_cmdline, "auto", 4) == 0) {
++		ck_cmdline = CONFIG_CRASH_AUTO_STR;
++		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
++	}
++#endif
+ 	/*
+ 	 * if the commandline contains a ':', then that's the extended
+ 	 * syntax -- if not, it must be the classic syntax
+-- 
+2.27.0
 
---=-hF9DE29OJv+9/WzzoEGg
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 2021-02-04 at 17:20 +0100, Nicolas Saenz Julienne wrote:
-> Hi Chen,
->=20
-> On Sat, 2021-01-30 at 15:10 +0800, Chen Zhou wrote:
-> > Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
-> > for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
-> > upper bound of high crash memory, use macroes instead.
-> >=20
-> > Besides, keep consistent with x86, use CRASH_ALIGN as the lower bound
-> > of crash kernel reservation.
-> >=20
-> > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> > Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-> > ---
-> > =C2=A0arch/arm64/include/asm/kexec.h | 6 ++++++
-> > =C2=A0arch/arm64/mm/init.c           | 6 +++---
-> > =C2=A02 files changed, 9 insertions(+), 3 deletions(-)
-> >=20
-> > diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/ke=
-xec.h
-> > index d24b527e8c00..3f6ecae0bc68 100644
-> > --- a/arch/arm64/include/asm/kexec.h
-> > +++ b/arch/arm64/include/asm/kexec.h
-> > @@ -25,6 +25,12 @@
-> > =C2=A0
-> >=20
-> > =C2=A0#define KEXEC_ARCH KEXEC_ARCH_AARCH64
-> > =C2=A0
-> >=20
-> > +/* 2M alignment for crash kernel regions */
-> > +#define CRASH_ALIGN	SZ_2M
-> > +
-> > +#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
->=20
-> I wonder if you could use 'ARCH_LOW_ADDRESS_LIMIT', instead of creating a=
- new
-> define.
->=20
-> > +#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
-> > +
-> > =C2=A0#ifndef __ASSEMBLY__
-> > =C2=A0
-> >=20
-> > =C2=A0/**
-> > diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> > index 709d98fea90c..912f64f505f7 100644
-> > --- a/arch/arm64/mm/init.c
-> > +++ b/arch/arm64/mm/init.c
-> > @@ -84,8 +84,8 @@ static void __init reserve_crashkernel(void)
-> > =C2=A0
-> >=20
-> > =C2=A0	if (crash_base =3D=3D 0) {
-> > =C2=A0		/* Current arm64 boot protocol requires 2MB alignment */
-> > -		crash_base =3D memblock_find_in_range(0, arm64_dma_phys_limit,
-> > -				crash_size, SZ_2M);
-> > +		crash_base =3D memblock_find_in_range(CRASH_ALIGN, CRASH_ADDR_LOW_MA=
-X,
-> > +				crash_size, CRASH_ALIGN);
->=20
-> Actually we could get rid of CRASH_ADDR_LOW_MAX altogether if we used
-> memblock_alloc_low() here (modulo the slight refactoring needed to accomm=
-odate
-> it).
-
-Forget about these coments, I now see that you're deleting this whole funct=
-ion
-on the next patch and defaulting to a generic implementation. Sorry for the
-noise.
-
-Regards,
-Nicolas
-
-
---=-hF9DE29OJv+9/WzzoEGg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAmAcIHsACgkQlfZmHno8
-x/4koQf9FsJXXPPAo7MZvAypzOcOr8Kk3liIYdzd7FU2HxGgB/sYGnlYWzn5/Vsm
-tA7ay+h/LbTyM2lkYLQO27T8LQxl6kaaG0AzlEpMJWZKlJoxiWak6XOtNRlDROCB
-bAJ6lH8wh/DxbOKEtpYIXrCiJTiSGszErGj6qlRcGQEVe8//VeXAfVAsoR8AQ/jL
-7LRgDrTbjMakT/zrOVjNtRCtA6kpv3U04bmi53C2V1cgOlowQNJQlTJ2nQBmDwmR
-Vkze+pFW28MlYn70T8FEQCtehj41Sx83khwQysULZKQrGlEFOt8tlfNSlVL3muHv
-WQzt8y5R5NVjm51qZRewuOlnTuVoAA==
-=3xak
------END PGP SIGNATURE-----
-
---=-hF9DE29OJv+9/WzzoEGg--
-
-
-
---===============8738293219830612563==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============8738293219830612563==--
-
-
