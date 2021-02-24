@@ -1,20 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEsYW-00062C-O0
- for kexec@lists.infradead.org; Wed, 24 Feb 2021 11:42:13 +0000
-Received: by mail-pf1-f197.google.com with SMTP id z8so948964pfn.6
- for <kexec@lists.infradead.org>; Wed, 24 Feb 2021 03:42:09 -0800 (PST)
-Date: Wed, 24 Feb 2021 19:41:41 +0800
-From: Coiby Xu <coxu@redhat.com>
-Subject: Re: [RFC PATCH 4/4] i40e: don't open i40iw client for kdump
-Message-ID: <20210224114141.ziywca4dvn5fs6js@Rk>
-References: <20210222070701.16416-1-coxu@redhat.com>
- <20210222070701.16416-5-coxu@redhat.com>
- <20210223122207.08835e0b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Date: Wed, 24 Feb 2021 14:19:42 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v14 01/11] x86: kdump: replace the hard-coded alignment
+ with macro CRASH_ALIGN
+Message-ID: <20210224141939.GA28965@arm.com>
+References: <20210130071025.65258-1-chenzhou10@huawei.com>
+ <20210130071025.65258-2-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20210223122207.08835e0b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
 Content-Disposition: inline
+In-Reply-To: <20210130071025.65258-2-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +17,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jakub Kicinski <kuba@kernel.org>
-Cc: netdev@vger.kernel.org, kexec@lists.infradead.org, Jesse Brandeburg <jesse.brandeburg@intel.com>, open list <linux-kernel@vger.kernel.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, intel-wired-lan@lists.osuosl.org, "David S. Miller" <davem@davemloft.net>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
-Hi Jakub,
+On Sat, Jan 30, 2021 at 03:10:15PM +0800, Chen Zhou wrote:
+> Move CRASH_ALIGN to header asm/kexec.h for later use. Besides, the
+> alignment of crash kernel regions in x86 is 16M(CRASH_ALIGN), but
+> function reserve_crashkernel() also used 1M alignment. So just
+> replace hard-coded alignment 1M with macro CRASH_ALIGN.
+[...]
+> @@ -510,7 +507,7 @@ static void __init reserve_crashkernel(void)
+>  	} else {
+>  		unsigned long long start;
+>  
+> -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
+> +		start = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, crash_base,
+>  						  crash_base + crash_size);
+>  		if (start != crash_base) {
+>  			pr_info("crashkernel reservation failed - memory is in use.\n");
 
-Thank you for reviewing the patch!
+There is a small functional change here for x86. Prior to this patch,
+crash_base passed by the user on the command line is allowed to be 1MB
+aligned. With this patch, such reservation will fail.
 
-On Tue, Feb 23, 2021 at 12:22:07PM -0800, Jakub Kicinski wrote:
->On Mon, 22 Feb 2021 15:07:01 +0800 Coiby Xu wrote:
->> i40iw consumes huge amounts of memory. For example, on a x86_64 machine,
->> i40iw consumed 1.5GB for Intel Corporation Ethernet Connection X722 for
->> for 1GbE while "craskernel=auto" only reserved 160M. With the module
->> parameter "resource_profile=2", we can reduce the memory usage of i40iw
->> to ~300M which is still too much for kdump.
->>
->> Disabling the client registration would spare us the client interface
->> operation open , i.e., i40iw_open for iwarp/uda device. Thus memory is
->> saved for kdump.
->>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->
->Is i40iw or whatever the client is not itself under a CONFIG which
->kdump() kernels could be reasonably expected to disable?
->
-
-I'm not sure if I understand you correctly. Do you mean we shouldn't
-disable i40iw for kdump?
+Is the current behaviour a bug in the current x86 code or it does allow
+1MB-aligned reservations?
 
 -- 
-Best regards,
-Coiby
-
+Catalin
 
 _______________________________________________
 kexec mailing list
