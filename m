@@ -1,29 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEvhj-0006bW-Ev
- for kexec@lists.infradead.org; Wed, 24 Feb 2021 15:03:56 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id
- 11OF3daf075661
- for <kexec@lists.infradead.org>; Wed, 24 Feb 2021 10:03:51 -0500
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com
- [192.155.248.74])
- by mx0a-001b2d01.pphosted.com with ESMTP id 36wmmf9bv9-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Wed, 24 Feb 2021 10:03:50 -0500
-Received: from localhost
- by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
- for <kexec@lists.infradead.org> from <Bruce.Mitchell@ibm.com>;
- Wed, 24 Feb 2021 15:01:49 -0000
-In-Reply-To: <CAHD1Q_z8zhpXFUybsPX6yOW2WPuYgpxsv-k90fwgqzyP1QqPVw@mail.gmail.com>
-From: "Bruce Mitchell" <Bruce.Mitchell@ibm.com>
-Date: Wed, 24 Feb 2021 15:01:47 +0000
+Date: Wed, 24 Feb 2021 16:04:08 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v14 08/11] arm64: kdump: reimplement crashkernel=X
+Message-ID: <20210224160408.GC28965@arm.com>
+References: <20210130071025.65258-1-chenzhou10@huawei.com>
+ <20210130071025.65258-9-chenzhou10@huawei.com>
 MIME-Version: 1.0
-References: <CAHD1Q_z8zhpXFUybsPX6yOW2WPuYgpxsv-k90fwgqzyP1QqPVw@mail.gmail.com>,
- <OF267FCB7E.EA06E022-ON00258685.0074D9AA-00258685.0074D9AE@notes.na.collabserv.com>
-Message-Id: <OFFF9D2648.9979A637-ON00258686.00528F89-00258686.00528F8E@notes.na.collabserv.com>
-Subject: RE: Issues with kdump/kexec on an ARM dual-core ARM Cortex-A7.
+Content-Disposition: inline
+In-Reply-To: <20210130071025.65258-9-chenzhou10@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -36,36 +20,137 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <guilherme.piccoli@canonical.com>
-Cc: kexec mailing list <kexec@lists.infradead.org>
+To: Chen Zhou <chenzhou10@huawei.com>
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
 
->
-> On Tue, Feb 23, 2021 at 6:18 PM Bruce Mitchell <Bruce.Mitchell@ibm.com> wrote:
-> >
-> >
-> > I am having troubles getting kdump/kexec functioning on an
-> > ARM dual-core ARM Cortex-A7 (a BMC by ASPEED AST2600) and QEMU.
-> > I do have kexec -l loading the new kernel, but after kexec -e
-> > the new kernel starts booting and the I get a watchdog BUG as shown here:
-> > [240.343350] kexec_core: Starting new kernel
-> > [241.639076] IRQ36: set affinity failed(-22).
-> > [241.657868] Bye!
-> > [ 0.000000] Booting Linux on physical CPU 0xf00
-> >
->
-> Just our of curiosity, what happens when you try "kexec -p" and induce
-> a kernel panic, to jump to kdump kernel? Does it work, or it's the
-> same?
+On Sat, Jan 30, 2021 at 03:10:22PM +0800, Chen Zhou wrote:
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel below 4G, which
+> will fail when there is no enough low memory.
+> 2. If reserving crashkernel above 4G, in this case, crash dump
+> kernel will boot failure because there is no low memory available
+> for allocation.
+> 
+> To solve these issues, change the behavior of crashkernel=X and
+> introduce crashkernel=X,[high,low]. crashkernel=X tries low allocation
+> in DMA zone, and fall back to high allocation if it fails.
+> We can also use "crashkernel=X,high" to select a region above DMA zone,
+> which also tries to allocate at least 256M in DMA zone automatically.
+> "crashkernel=Y,low" can be used to allocate specified size low memory.
+> 
+> Another minor change, there may be two regions reserved for crash
+> dump kernel, in order to distinct from the high region and make no
+> effect to the use of existing kexec-tools, rename the low region as
+> "Crash kernel (low)".
 
-Same results.
+I think we discussed this but I don't remember the conclusion. Is this
+only renamed conditionally so that we don't break current kexec-tools?
 
->
-> Also, worth to try irqpoll maybe as a parameter of the second kernel,
-> to see if it can progress.
+IOW, assuming that the full crashkernel region is reserved below 4GB,
+does the "(low)" suffix still appear or it's only if a high region is
+additionally reserved?
 
-Thanks for the suggestion.
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 3f6ecae0bc68..f0caed0cb5e1 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -96,6 +96,10 @@ static inline void crash_prepare_suspend(void) {}
+>  static inline void crash_post_resume(void) {}
+>  #endif
+>  
+> +#ifdef CONFIG_KEXEC_CORE
+> +extern void __init reserve_crashkernel(void);
+> +#endif
 
+Why not have this in some generic header?
 
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index c18aacde8bb0..69c592c546de 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -238,7 +238,18 @@ static void __init request_standard_resources(void)
+>  		    kernel_data.end <= res->end)
+>  			request_resource(res, &kernel_data);
+>  #ifdef CONFIG_KEXEC_CORE
+> -		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+> +		/*
+> +		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
+> +		 * region in /proc/iomem.
+> +		 * In order to distinct from the high region and make no effect
+> +		 * to the use of existing kexec-tools, rename the low region as
+> +		 * "Crash kernel (low)".
+> +		 */
+> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
+> +				crashk_low_res.end <= res->end) {
+> +			crashk_low_res.name = "Crash kernel (low)";
+> +			request_resource(res, &crashk_low_res);
+> +		}
+>  		if (crashk_res.end && crashk_res.start >= res->start &&
+>  		    crashk_res.end <= res->end)
+>  			request_resource(res, &crashk_res);
+
+My reading of the new generic reserve_crashkernel() is that
+crashk_low_res will only be populated if crask_res is above 4GB. If
+that's correct, I'm fine with the renaming here since current systems
+would not get a renamed low reservation (as long as they don't change
+the kernel cmdline).
+
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 912f64f505f7..d20f5c444ebf 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -35,6 +35,7 @@
+>  #include <asm/fixmap.h>
+>  #include <asm/kasan.h>
+>  #include <asm/kernel-pgtable.h>
+> +#include <asm/kexec.h>
+>  #include <asm/memory.h>
+>  #include <asm/numa.h>
+>  #include <asm/sections.h>
+> @@ -61,66 +62,11 @@ EXPORT_SYMBOL(memstart_addr);
+>   */
+>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>  
+> -#ifdef CONFIG_KEXEC_CORE
+> -/*
+> - * reserve_crashkernel() - reserves memory for crash kernel
+> - *
+> - * This function reserves memory area given in "crashkernel=" kernel command
+> - * line parameter. The memory reserved is used by dump capture kernel when
+> - * primary kernel is crashing.
+> - */
+> +#ifndef CONFIG_KEXEC_CORE
+>  static void __init reserve_crashkernel(void)
+>  {
+[...]
+>  }
+> +#endif
+
+Can we not have the dummy reserve_crashkernel() in the generic code as
+well and avoid the #ifndef here?
+
+>  #ifdef CONFIG_CRASH_DUMP
+>  static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> @@ -446,6 +392,14 @@ void __init bootmem_init(void)
+>  	 * reserved, so do it here.
+>  	 */
+>  	reserve_crashkernel();
+> +#ifdef CONFIG_KEXEC_CORE
+> +	/*
+> +	 * The low region is intended to be used for crash dump kernel devices,
+> +	 * just mark the low region as "nomap" simply.
+> +	 */
+> +	if (crashk_low_res.end)
+> +		memblock_mark_nomap(crashk_low_res.start, resource_size(&crashk_low_res));
+> +#endif
+
+Do we do something similar for crashk_res?
+
+Also, I can see we call crash_exclude_mem_range() only for crashk_res.
+Do we need to do this for crashk_low_res as well?
+
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
