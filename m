@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
- by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEnYX-0002MI-FO
- for kexec@lists.infradead.org; Wed, 24 Feb 2021 06:21:54 +0000
-Received: by mail-il1-f199.google.com with SMTP id s12so773411ilh.20
- for <kexec@lists.infradead.org>; Tue, 23 Feb 2021 22:21:47 -0800 (PST)
-MIME-Version: 1.0
-References: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
-In-Reply-To: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 24 Feb 2021 14:21:35 +0800
-Message-ID: <CACPcB9dgH34bSd2WzOF3aJAx4VMH=iY4X_KZ2Lanh99ycObBiQ@mail.gmail.com>
-Subject: Re: [PATCH v4 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
- creation
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+ by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEp3d-0001tm-NA
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 07:58:07 +0000
+From: Youling Tang <tangyouling@loongson.cn>
+Subject: [PATCH] MIPS: Fix typo in comment
+Date: Wed, 24 Feb 2021 15:57:57 +0800
+Message-Id: <1614153477-13893-1-git-send-email-tangyouling@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,137 +15,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, YiFei Zhu <yifeifz2@illinois.edu>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
+To: Simon Horman <horms@verge.net.au>
+Cc: tangyouling@loongson.cn, kexec@lists.infradead.org
 
-On Wed, Feb 24, 2021 at 1:45 AM Saeed Mirzamohammadi
-<saeed.mirzamohammadi@oracle.com> wrote:
->
-> This adds crashkernel=auto feature to configure reserved memory for
-> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
-> different kernel distributions and different archs based on their
-> needs.
->
-> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
-> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
-> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
-> ---
->  Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
->  .../admin-guide/kernel-parameters.txt         |  6 ++++++
->  arch/Kconfig                                  | 20 +++++++++++++++++++
->  kernel/crash_core.c                           |  7 +++++++
->  4 files changed, 35 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-> index 75a9dd98e76e..ae030111e22a 100644
-> --- a/Documentation/admin-guide/kdump/kdump.rst
-> +++ b/Documentation/admin-guide/kdump/kdump.rst
-> @@ -285,7 +285,8 @@ This would mean:
->      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
->      3) if the RAM size is larger than 2G, then reserve 128M
->
-> -
-> +Or you can use crashkernel=auto to choose the crash kernel memory size
-> +based on the recommended configuration set for each arch.
->
->  Boot into System Kernel
->  =======================
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 9e3cdb271d06..a5deda5c85fe 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -747,6 +747,12 @@
->                         a memory unit (amount[KMG]). See also
->                         Documentation/admin-guide/kdump/kdump.rst for an example.
->
-> +       crashkernel=auto
-> +                       [KNL] This parameter will set the reserved memory for
-> +                       the crash kernel based on the value of the CRASH_AUTO_STR
-> +                       that is the best effort estimation for each arch. See also
-> +                       arch/Kconfig for further details.
-> +
->         crashkernel=size[KMG],high
->                         [KNL, X86-64] range could be above 4G. Allow kernel
->                         to allocate physical memory region from top, so could
-> diff --git a/arch/Kconfig b/arch/Kconfig
-> index 24862d15f3a3..23d047548772 100644
-> --- a/arch/Kconfig
-> +++ b/arch/Kconfig
-> @@ -14,6 +14,26 @@ menu "General architecture-dependent options"
->  config CRASH_CORE
->         bool
->
-> +config CRASH_AUTO_STR
-> +       string "Memory reserved for crash kernel"
-> +       depends on CRASH_CORE
-> +       default "1G-64G:128M,64G-1T:256M,1T-:512M"
-> +       help
-> +         This configures the reserved memory dependent
-> +         on the value of System RAM. The syntax is:
-> +         crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
-> +                     range=start-[end]
-> +
-> +         For example:
-> +             crashkernel=512M-2G:64M,2G-:128M
-> +
-> +         This would mean:
-> +
-> +             1) if the RAM is smaller than 512M, then don't reserve anything
-> +                (this is the "rescue" case)
-> +             2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
-> +             3) if the RAM size is larger than 2G, then reserve 128M
-> +
->  config KEXEC_CORE
->         select CRASH_CORE
->         bool
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 825284baaf46..90f9e4bb6704 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -7,6 +7,7 @@
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> +#include <linux/kexec.h>
->
->  #include <asm/page.h>
->  #include <asm/sections.h>
-> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
->         if (suffix)
->                 return parse_crashkernel_suffix(ck_cmdline, crash_size,
->                                 suffix);
-> +#ifdef CONFIG_CRASH_AUTO_STR
-> +       if (strncmp(ck_cmdline, "auto", 4) == 0) {
-> +               ck_cmdline = CONFIG_CRASH_AUTO_STR;
-> +               pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
-> +       }
-> +#endif
->         /*
->          * if the commandline contains a ':', then that's the extended
->          * syntax -- if not, it must be the classic syntax
-> --
-> 2.27.0
->
->
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
->
+Fix typo in comment.
 
-Thanks for help pushing the crashkernel=auto to upstream
-This patch works well.
+Signed-off-by: Youling Tang <tangyouling@loongson.cn>
+---
+ kexec/arch/mips/kexec-mips.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Tested-by: Kairui Song <kasong@redhat.com>
-
-
---
-Best Regards,
-Kairui Song
+diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
+index a9c6a09..5866e24 100644
+--- a/kexec/arch/mips/kexec-mips.c
++++ b/kexec/arch/mips/kexec-mips.c
+@@ -3,7 +3,7 @@
+  * Copyright (C) 2007 Francesco Chiechi, Alessandro Rubini
+  * Copyright (C) 2007 Tvblob s.r.l.
+  *
+- * derived from ../ppc/kexec-mips.c
++ * derived from ../ppc/kexec-ppc.c
+  * Copyright (C) 2004, 2005 Albert Herranz
+  *
+  * This source code is licensed under the GNU General Public License,
+-- 
+2.1.0
 
 
 _______________________________________________
