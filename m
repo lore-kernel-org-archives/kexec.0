@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEp3d-0001tm-NA
- for kexec@lists.infradead.org; Wed, 24 Feb 2021 07:58:07 +0000
-From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH] MIPS: Fix typo in comment
-Date: Wed, 24 Feb 2021 15:57:57 +0800
-Message-Id: <1614153477-13893-1-git-send-email-tangyouling@loongson.cn>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEsYW-00062C-O0
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 11:42:13 +0000
+Received: by mail-pf1-f197.google.com with SMTP id z8so948964pfn.6
+ for <kexec@lists.infradead.org>; Wed, 24 Feb 2021 03:42:09 -0800 (PST)
+Date: Wed, 24 Feb 2021 19:41:41 +0800
+From: Coiby Xu <coxu@redhat.com>
+Subject: Re: [RFC PATCH 4/4] i40e: don't open i40iw client for kdump
+Message-ID: <20210224114141.ziywca4dvn5fs6js@Rk>
+References: <20210222070701.16416-1-coxu@redhat.com>
+ <20210222070701.16416-5-coxu@redhat.com>
+ <20210223122207.08835e0b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+MIME-Version: 1.0
+In-Reply-To: <20210223122207.08835e0b@kicinski-fedora-pc1c0hjn.dhcp.thefacebook.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,36 +23,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: tangyouling@loongson.cn, kexec@lists.infradead.org
+To: Jakub Kicinski <kuba@kernel.org>
+Cc: netdev@vger.kernel.org, kexec@lists.infradead.org, Jesse Brandeburg <jesse.brandeburg@intel.com>, open list <linux-kernel@vger.kernel.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, intel-wired-lan@lists.osuosl.org, "David S. Miller" <davem@davemloft.net>
 
-Fix typo in comment.
+Hi Jakub,
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- kexec/arch/mips/kexec-mips.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Thank you for reviewing the patch!
 
-diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
-index a9c6a09..5866e24 100644
---- a/kexec/arch/mips/kexec-mips.c
-+++ b/kexec/arch/mips/kexec-mips.c
-@@ -3,7 +3,7 @@
-  * Copyright (C) 2007 Francesco Chiechi, Alessandro Rubini
-  * Copyright (C) 2007 Tvblob s.r.l.
-  *
-- * derived from ../ppc/kexec-mips.c
-+ * derived from ../ppc/kexec-ppc.c
-  * Copyright (C) 2004, 2005 Albert Herranz
-  *
-  * This source code is licensed under the GNU General Public License,
+On Tue, Feb 23, 2021 at 12:22:07PM -0800, Jakub Kicinski wrote:
+>On Mon, 22 Feb 2021 15:07:01 +0800 Coiby Xu wrote:
+>> i40iw consumes huge amounts of memory. For example, on a x86_64 machine,
+>> i40iw consumed 1.5GB for Intel Corporation Ethernet Connection X722 for
+>> for 1GbE while "craskernel=auto" only reserved 160M. With the module
+>> parameter "resource_profile=2", we can reduce the memory usage of i40iw
+>> to ~300M which is still too much for kdump.
+>>
+>> Disabling the client registration would spare us the client interface
+>> operation open , i.e., i40iw_open for iwarp/uda device. Thus memory is
+>> saved for kdump.
+>>
+>> Signed-off-by: Coiby Xu <coxu@redhat.com>
+>
+>Is i40iw or whatever the client is not itself under a CONFIG which
+>kdump() kernels could be reasonably expected to disable?
+>
+
+I'm not sure if I understand you correctly. Do you mean we shouldn't
+disable i40iw for kdump?
+
 -- 
-2.1.0
+Best regards,
+Coiby
 
 
 _______________________________________________
