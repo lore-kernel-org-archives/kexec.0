@@ -1,14 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 24 Feb 2021 14:35:48 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v14 02/11] x86: kdump: make the lower bound of crash
- kernel reservation consistent
-Message-ID: <20210224143547.GB28965@arm.com>
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-3-chenzhou10@huawei.com>
+Received: from youngberry.canonical.com ([91.189.89.112])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEvWI-0005ch-Ee
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 14:52:07 +0000
+Received: from mail-ej1-f70.google.com ([209.85.218.70])
+ by youngberry.canonical.com with esmtps
+ (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128) (Exim 4.86_2)
+ (envelope-from <guilherme.piccoli@canonical.com>) id 1lEvWG-0002pW-6k
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 14:52:04 +0000
+Received: by mail-ej1-f70.google.com with SMTP id m4so915207ejc.14
+ for <kexec@lists.infradead.org>; Wed, 24 Feb 2021 06:52:04 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210130071025.65258-3-chenzhou10@huawei.com>
+References: <OF267FCB7E.EA06E022-ON00258685.0074D9AA-00258685.0074D9AE@notes.na.collabserv.com>
+In-Reply-To: <OF267FCB7E.EA06E022-ON00258685.0074D9AA-00258685.0074D9AE@notes.na.collabserv.com>
+From: "Guilherme G. Piccoli" <guilherme.piccoli@canonical.com>
+Date: Wed, 24 Feb 2021 11:51:27 -0300
+Message-ID: <CAHD1Q_z8zhpXFUybsPX6yOW2WPuYgpxsv-k90fwgqzyP1QqPVw@mail.gmail.com>
+Subject: Re: Issues with kdump/kexec on an ARM dual-core ARM Cortex-A7.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,30 +29,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Chen Zhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, bhe@redhat.com, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Bruce Mitchell <Bruce.Mitchell@ibm.com>
+Cc: kexec mailing list <kexec@lists.infradead.org>
 
-On Sat, Jan 30, 2021 at 03:10:16PM +0800, Chen Zhou wrote:
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index da769845597d..27470479e4a3 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -439,7 +439,8 @@ static int __init reserve_crashkernel_low(void)
->  			return 0;
->  	}
->  
-> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
-> +			CRASH_ADDR_LOW_MAX);
->  	if (!low_base) {
->  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->  		       (unsigned long)(low_size >> 20));
+On Tue, Feb 23, 2021 at 6:18 PM Bruce Mitchell <Bruce.Mitchell@ibm.com> wrote:
+>
+>
+> I am having troubles getting kdump/kexec functioning on an
+> ARM dual-core ARM Cortex-A7 (a BMC by ASPEED AST2600) and QEMU.
+> I do have kexec -l loading the new kernel, but after kexec -e
+> the new kernel starts booting and the I get a watchdog BUG as shown here:
+> [240.343350] kexec_core: Starting new kernel
+> [241.639076] IRQ36: set affinity failed(-22).
+> [241.657868] Bye!
+> [ 0.000000] Booting Linux on physical CPU 0xf00
+>
 
-Is there any reason why the lower bound can't be 0 in all low cases
-here? (Sorry if it's been already discussed, I lost track)
+Just our of curiosity, what happens when you try "kexec -p" and induce
+a kernel panic, to jump to kdump kernel? Does it work, or it's the
+same?
 
--- 
-Catalin
+Also, worth to try irqpoll maybe as a parameter of the second kernel,
+to see if it can progress.
 
 _______________________________________________
 kexec mailing list
