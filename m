@@ -1,28 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEf2e-0007NY-8F
- for kexec@lists.infradead.org; Tue, 23 Feb 2021 21:16:26 +0000
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id
- 11NL4P3n013794
- for <kexec@lists.infradead.org>; Tue, 23 Feb 2021 16:16:22 -0500
-Received: from smtp.notes.na.collabserv.com (smtp.notes.na.collabserv.com
- [158.85.210.119])
- by mx0a-001b2d01.pphosted.com with ESMTP id 36vwmprw5w-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Tue, 23 Feb 2021 16:16:22 -0500
-Received: from localhost
- by smtp.notes.na.collabserv.com with smtp.notes.na.collabserv.com ESMTP
- for <kexec@lists.infradead.org> from <Bruce.Mitchell@ibm.com>;
- Tue, 23 Feb 2021 21:16:21 -0000
-In-Reply-To: 
-Subject: Issues with kdump/kexec on an ARM dual-core ARM Cortex-A7.
-From: "Bruce Mitchell" <Bruce.Mitchell@ibm.com>
-Date: Tue, 23 Feb 2021 21:16:19 +0000
+ id 1lEjNh-0005k6-Mh
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 01:54:27 +0000
+Date: Wed, 24 Feb 2021 09:54:10 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v3 1/1] kernel/crash_core: Add crashkernel=auto for
+ vmcore creation
+Message-ID: <20210224015410.GB3553@MiWiFi-R3L-srv>
+References: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
 MIME-Version: 1.0
-References: 
-Message-Id: <OF267FCB7E.EA06E022-ON00258685.0074D9AA-00258685.0074D9AE@notes.na.collabserv.com>
+Content-Disposition: inline
+In-Reply-To: <20210211180814.69708-1-saeed.mirzamohammadi@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -35,42 +24,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, john.p.donnelly@oracle.com, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
+On 02/11/21 at 10:08am, Saeed Mirzamohammadi wrote:
+> This adds crashkernel=auto feature to configure reserved memory for
+> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+> different kernel distributions and different archs based on their
+> needs.
+> 
+> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+>  .../admin-guide/kernel-parameters.txt         |  6 +++++
+>  arch/Kconfig                                  | 24 +++++++++++++++++++
+>  kernel/crash_core.c                           |  7 ++++++
+>  4 files changed, 39 insertions(+), 1 deletion(-)
 
-I am having troubles getting kdump/kexec functioning on an
-ARM dual-core ARM Cortex-A7 (a BMC by ASPEED AST2600) and QEMU.
-I do have kexec -l loading the new kernel, but after kexec -e
-the new kernel starts booting and the I get a watchdog BUG as shown here:
-[240.343350] kexec_core: Starting new kernel
-[241.639076] IRQ36: set affinity failed(-22).
-[241.657868] Bye!
-[ 0.000000] Booting Linux on physical CPU 0xf00
-.
-.
-.
-[ 1.640405] random: fast init done
-[ 1.683871] random: crng init done
-[ 28.104415] watchdog: BUG: soft lockup - CPU#0 stuck for 23s! [swapper/0:1]
-[ 28.108383] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.10.14-47f127c #1
+Acked-by: Baoquan He <bhe@redhat.com>
 
-This is the first time I have worked on SMP section of the kernel.
-In order to get kexec to work I had to implement the SMP HOTPLUG;
-I suspect I do not have it functioning properly. I am not finding
-good information on implementing it. Is this something unique to
-each SoC based on an ARM dual-core ARM Cortex-A7?
-
-Looking for suggestions on how to successfully proceed.
-
-
-Thank you.
-
---
-Bruce Mitchell
-
-PS - Sorry this is a separate post from the one
-I did to linux-arm-kernel@lists.infradead.org
-hadn't seen this email list at that point.
+> 
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 2da65fef2a1c..e55cdc404c6b 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -285,7 +285,8 @@ This would mean:
+>      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>      3) if the RAM size is larger than 2G, then reserve 128M
+>  
+> -
+> +Or you can use crashkernel=auto to choose the crash kernel memory size
+> +based on the recommended configuration set for each arch.
+>  
+>  Boot into System Kernel
+>  =======================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 7d4e523646c3..aa2099465458 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -736,6 +736,12 @@
+>  			a memory unit (amount[KMG]). See also
+>  			Documentation/admin-guide/kdump/kdump.rst for an example.
+>  
+> +	crashkernel=auto
+> +			[KNL] This parameter will set the reserved memory for
+> +			the crash kernel based on the value of the CRASH_AUTO_STR
+> +			that is the best effort estimation for each arch. See also
+> +			arch/Kconfig for further details.
+> +
+>  	crashkernel=size[KMG],high
+>  			[KNL, X86-64] range could be above 4G. Allow kernel
+>  			to allocate physical memory region from top, so could
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index af14a567b493..f87c88ffa2f8 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -14,6 +14,30 @@ menu "General architecture-dependent options"
+>  config CRASH_CORE
+>  	bool
+>  
+> +if CRASH_CORE
+> +
+> +config CRASH_AUTO_STR
+> +	string "Memory reserved for crash kernel"
+> +	depends on CRASH_CORE
+> +	default "1G-64G:128M,64G-1T:256M,1T-:512M"
+> +	help
+> +	  This configures the reserved memory dependent
+> +	  on the value of System RAM. The syntax is:
+> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> +	              range=start-[end]
+> +
+> +	  For example:
+> +	      crashkernel=512M-2G:64M,2G-:128M
+> +
+> +	  This would mean:
+> +
+> +	      1) if the RAM is smaller than 512M, then don't reserve anything
+> +	         (this is the "rescue" case)
+> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+> +	      3) if the RAM size is larger than 2G, then reserve 128M
+> +
+> +endif # CRASH_CORE
+> +
+>  config KEXEC_CORE
+>  	select CRASH_CORE
+>  	bool
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 106e4500fd53..ab0a2b4b1ffa 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/kexec.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+>  	if (suffix)
+>  		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>  				suffix);
+> +#ifdef CONFIG_CRASH_AUTO_STR
+> +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> +		ck_cmdline = CONFIG_CRASH_AUTO_STR;
+> +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+> +	}
+> +#endif
+>  	/*
+>  	 * if the commandline contains a ':', then that's the extended
+>  	 * syntax -- if not, it must be the classic syntax
+> -- 
+> 2.27.0
+> 
 
 
 _______________________________________________
