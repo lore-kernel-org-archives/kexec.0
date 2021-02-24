@@ -1,12 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
- by merlin.infradead.org with esmtp (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lEmkF-0007QP-HS
- for kexec@lists.infradead.org; Wed, 24 Feb 2021 05:29:58 +0000
-From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH] MIPS: Add '--reuse-cmdline' optional parameter support
-Date: Wed, 24 Feb 2021 13:29:41 +0800
-Message-Id: <1614144581-5456-1-git-send-email-tangyouling@loongson.cn>
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lEnYX-0002MI-FO
+ for kexec@lists.infradead.org; Wed, 24 Feb 2021 06:21:54 +0000
+Received: by mail-il1-f199.google.com with SMTP id s12so773411ilh.20
+ for <kexec@lists.infradead.org>; Tue, 23 Feb 2021 22:21:47 -0800 (PST)
+MIME-Version: 1.0
+References: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
+In-Reply-To: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Wed, 24 Feb 2021 14:21:35 +0800
+Message-ID: <CACPcB9dgH34bSd2WzOF3aJAx4VMH=iY4X_KZ2Lanh99ycObBiQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,78 +21,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: tangyouling@loongson.cn, kexec@lists.infradead.org
+To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, YiFei Zhu <yifeifz2@illinois.edu>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-This patch adds an option "--reuse-cmdline" for people that are lazy
-in typing --append="$(cat /proc/cmdline)", which will directly use the
-command line of the currently running system.
+On Wed, Feb 24, 2021 at 1:45 AM Saeed Mirzamohammadi
+<saeed.mirzamohammadi@oracle.com> wrote:
+>
+> This adds crashkernel=auto feature to configure reserved memory for
+> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+> different kernel distributions and different archs based on their
+> needs.
+>
+> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+>  .../admin-guide/kernel-parameters.txt         |  6 ++++++
+>  arch/Kconfig                                  | 20 +++++++++++++++++++
+>  kernel/crash_core.c                           |  7 +++++++
+>  4 files changed, 35 insertions(+), 1 deletion(-)
+>
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 75a9dd98e76e..ae030111e22a 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -285,7 +285,8 @@ This would mean:
+>      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>      3) if the RAM size is larger than 2G, then reserve 128M
+>
+> -
+> +Or you can use crashkernel=auto to choose the crash kernel memory size
+> +based on the recommended configuration set for each arch.
+>
+>  Boot into System Kernel
+>  =======================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 9e3cdb271d06..a5deda5c85fe 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -747,6 +747,12 @@
+>                         a memory unit (amount[KMG]). See also
+>                         Documentation/admin-guide/kdump/kdump.rst for an example.
+>
+> +       crashkernel=auto
+> +                       [KNL] This parameter will set the reserved memory for
+> +                       the crash kernel based on the value of the CRASH_AUTO_STR
+> +                       that is the best effort estimation for each arch. See also
+> +                       arch/Kconfig for further details.
+> +
+>         crashkernel=size[KMG],high
+>                         [KNL, X86-64] range could be above 4G. Allow kernel
+>                         to allocate physical memory region from top, so could
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 24862d15f3a3..23d047548772 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -14,6 +14,26 @@ menu "General architecture-dependent options"
+>  config CRASH_CORE
+>         bool
+>
+> +config CRASH_AUTO_STR
+> +       string "Memory reserved for crash kernel"
+> +       depends on CRASH_CORE
+> +       default "1G-64G:128M,64G-1T:256M,1T-:512M"
+> +       help
+> +         This configures the reserved memory dependent
+> +         on the value of System RAM. The syntax is:
+> +         crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> +                     range=start-[end]
+> +
+> +         For example:
+> +             crashkernel=512M-2G:64M,2G-:128M
+> +
+> +         This would mean:
+> +
+> +             1) if the RAM is smaller than 512M, then don't reserve anything
+> +                (this is the "rescue" case)
+> +             2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+> +             3) if the RAM size is larger than 2G, then reserve 128M
+> +
+>  config KEXEC_CORE
+>         select CRASH_CORE
+>         bool
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 825284baaf46..90f9e4bb6704 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/kexec.h>
+>
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+>         if (suffix)
+>                 return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>                                 suffix);
+> +#ifdef CONFIG_CRASH_AUTO_STR
+> +       if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> +               ck_cmdline = CONFIG_CRASH_AUTO_STR;
+> +               pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+> +       }
+> +#endif
+>         /*
+>          * if the commandline contains a ':', then that's the extended
+>          * syntax -- if not, it must be the classic syntax
+> --
+> 2.27.0
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+>
 
-Signed-off-by: Youling Tang <tangyouling@loongson.cn>
----
- kexec/arch/mips/include/arch/options.h | 12 +++++++-----
- kexec/arch/mips/kexec-mips.c           |  4 ++++
- 2 files changed, 11 insertions(+), 5 deletions(-)
+Thanks for help pushing the crashkernel=auto to upstream
+This patch works well.
 
-diff --git a/kexec/arch/mips/include/arch/options.h b/kexec/arch/mips/include/arch/options.h
-index 416e224..ba2f346 100644
---- a/kexec/arch/mips/include/arch/options.h
-+++ b/kexec/arch/mips/include/arch/options.h
-@@ -1,10 +1,11 @@
- #ifndef KEXEC_ARCH_MIPS_OPTIONS_H
- #define KEXEC_ARCH_MIPS_OPTIONS_H
- 
--#define OPT_ARCH_MAX	(OPT_MAX+0)
--#define OPT_APPEND	(OPT_ARCH_MAX+0)
--#define OPT_DTB		(OPT_ARCH_MAX+1)
--#define OPT_RAMDISK	(OPT_ARCH_MAX+2)
-+#define OPT_ARCH_MAX		(OPT_MAX+0)
-+#define OPT_APPEND		(OPT_ARCH_MAX+0)
-+#define OPT_DTB 		(OPT_ARCH_MAX+1)
-+#define OPT_RAMDISK		(OPT_ARCH_MAX+2)
-+#define OPT_REUSE_CMDLINE	(OPT_ARCH_MAX+3)
- 
- /* Options relevant to the architecture (excluding loader-specific ones),
-  * in this case none:
-@@ -14,7 +15,8 @@
- 	{"command-line", 1, 0, OPT_APPEND}, \
- 	{"append",	 1, 0, OPT_APPEND}, \
- 	{"dtb",		1, 0, OPT_DTB }, \
--	{"initrd",	1, 0, OPT_RAMDISK },
-+	{"initrd",	1, 0, OPT_RAMDISK }, \
-+	{ "reuse-cmdline", 0, NULL, OPT_REUSE_CMDLINE },
- 
- 
- #define KEXEC_ARCH_OPT_STR KEXEC_OPT_STR ""
-diff --git a/kexec/arch/mips/kexec-mips.c b/kexec/arch/mips/kexec-mips.c
-index 415c2ed..a9c6a09 100644
---- a/kexec/arch/mips/kexec-mips.c
-+++ b/kexec/arch/mips/kexec-mips.c
-@@ -89,6 +89,7 @@ void arch_usage(void)
- 	"    --append=STRING       Set the kernel command line to STRING.\n"
- 	"    --dtb=FILE            Use FILE as the device tree blob.\n"
- 	"    --initrd=FILE         Use FILE as initial ramdisk.\n"
-+	"    --reuse-cmdline       Use kernel command line from running system.\n"
- 	);
- }
- 
-@@ -115,6 +116,9 @@ int arch_process_options(int argc, char **argv)
- 		case OPT_APPEND:
- 			arch_options.command_line = optarg;
- 			break;
-+		case OPT_REUSE_CMDLINE:
-+			arch_options.command_line = get_command_line();
-+			break;
- 		case OPT_DTB:
- 			arch_options.dtb_file = optarg;
- 			break;
--- 
-2.1.0
+Tested-by: Kairui Song <kasong@redhat.com>
+
+
+--
+Best Regards,
+Kairui Song
 
 
 _______________________________________________
