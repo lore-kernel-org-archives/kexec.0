@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v14 01/11] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
+Subject: Re: [PATCH v14 02/11] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
 References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-2-chenzhou10@huawei.com>
- <20210224141939.GA28965@arm.com> <20210225072426.GH3553@MiWiFi-R3L-srv>
+ <20210130071025.65258-3-chenzhou10@huawei.com>
+ <20210224143547.GB28965@arm.com> <20210225070717.GG3553@MiWiFi-R3L-srv>
+ <20210225144237.GA23418@arm.com> <20210225154446.GI3553@MiWiFi-R3L-srv>
 From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <121fa1e6-f1a3-d47f-bb1d-baaacf96fddc@huawei.com>
-Date: Fri, 26 Feb 2021 14:45:25 +0800
+Message-ID: <d844360b-35c4-d9e8-12c2-2e6bac9ad911@huawei.com>
+Date: Fri, 26 Feb 2021 15:32:43 +0800
 MIME-Version: 1.0
-In-Reply-To: <20210225072426.GH3553@MiWiFi-R3L-srv>
+In-Reply-To: <20210225154446.GI3553@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,56 +22,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>, ebiederm@xmission.com
+To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org, John.P.donnelly@oracle.com, wangkefeng.wang@huawei.com, arnd@arndb.de, horms@verge.net.au, corbet@lwn.net, dyoung@redhat.com, xiexiuqi@huawei.com, guohanjun@huawei.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, rppt@kernel.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
 
 
 
-On 2021/2/25 15:25, Baoquan He wrote:
-> On 02/24/21 at 02:19pm, Catalin Marinas wrote:
->> On Sat, Jan 30, 2021 at 03:10:15PM +0800, Chen Zhou wrote:
->>> Move CRASH_ALIGN to header asm/kexec.h for later use. Besides, the
->>> alignment of crash kernel regions in x86 is 16M(CRASH_ALIGN), but
->>> function reserve_crashkernel() also used 1M alignment. So just
->>> replace hard-coded alignment 1M with macro CRASH_ALIGN.
->> [...]
->>> @@ -510,7 +507,7 @@ static void __init reserve_crashkernel(void)
->>>  	} else {
->>>  		unsigned long long start;
->>>  
->>> -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
->>> +		start = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, crash_base,
->>>  						  crash_base + crash_size);
->>>  		if (start != crash_base) {
->>>  			pr_info("crashkernel reservation failed - memory is in use.\n");
->> There is a small functional change here for x86. Prior to this patch,
->> crash_base passed by the user on the command line is allowed to be 1MB
->> aligned. With this patch, such reservation will fail.
->>
->> Is the current behaviour a bug in the current x86 code or it does allow
->> 1MB-aligned reservations?
-> Hmm, you are right. Here we should keep 1MB alignment as is because
-> users specify the address and size, their intention should be respected.
-> The 1MB alignment for fixed memory region reservation was introduced in
-> below commit, but it doesn't tell what is Eric's request at that time, I
-> guess it meant respecting users' specifying.
-I think we could make the alignment unified. Why is the alignment system reserved and
-user specified different? Besides, there is no document about the 1MB alignment.
-How about adding the alignment size(16MB) in doc  if user specified  start address as arm64 does.
+On 2021/2/25 23:44, Baoquan He wrote:
+> On 02/25/21 at 02:42pm, Catalin Marinas wrote:
+>> On Thu, Feb 25, 2021 at 03:08:46PM +0800, Baoquan He wrote:
+>>> On 02/24/21 at 02:35pm, Catalin Marinas wrote:
+>>>> On Sat, Jan 30, 2021 at 03:10:16PM +0800, Chen Zhou wrote:
+>>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+>>>>> index da769845597d..27470479e4a3 100644
+>>>>> --- a/arch/x86/kernel/setup.c
+>>>>> +++ b/arch/x86/kernel/setup.c
+>>>>> @@ -439,7 +439,8 @@ static int __init reserve_crashkernel_low(void)
+>>>>>  			return 0;
+>>>>>  	}
+>>>>>  
+>>>>> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+>>>>> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
+>>>>> +			CRASH_ADDR_LOW_MAX);
+>>>>>  	if (!low_base) {
+>>>>>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>>>>  		       (unsigned long)(low_size >> 20));
+>>>> Is there any reason why the lower bound can't be 0 in all low cases
+>>>> here? (Sorry if it's been already discussed, I lost track)
+>>> Seems like a good question.
+>>>
+>>> This reserve_crashkernel_low(), paired with reserve_crashkernel_high(), is
+>>> used to reserve memory under 4G so that kdump kernel owns memory for dma
+>>> buffer allocation. In that case, kernel usually is loaded in high
+>>> memory. In x86_64, kernel loading need be aligned to 16M because of
+>>> CONFIG_PHYSICAL_START, please see commit 32105f7fd8faa7b ("x86: find
+>>> offset for crashkernel reservation automatically"). But for crashkernel
+>>> low memory, there seems to be no reason to ask for 16M alignment, if
+>>> it's taken as dma buffer memory.
+>>>
+>>> So we can make a different alignment for low memory only, e.g 2M. But
+>>> 16M alignment consistent with crashkernel,high is also fine to me. The
+>>> only affect is smaller alignment can increase the possibility of
+>>> crashkernel low reservation.
+>> I don't mind the 16M alignment in both low and high base. But is there
+>> any reason that the lower bound (third argument) cannot be 0 in both
+>> reserve_crashkernel() (the low attempt) and reserve_crashkernel_low()
+>> cases? The comment in reserve_crashkernel() only talks about the 4G
+>> upper bound but not why we need a 16M lower bound.
+> Ah, sorry, I must have mixed this one with the alignment of fixed
+> memory region reservation in patch 1 when considering comments.
+>
+> Hmm, in x86 we always have memory reserved in low 1M, lower bound
+> being 0 or 16M (kernel alignment) doesn't make difference on crashkernel
+> low reservation. But for crashkernel reservation, the reason should be
+> kernel loading alignment being 16M, please see commit 32105f7fd8faa7b
+> ("x86: find offset for crashkernel reservation automatically").
+Sorry, i didn't mention in the commit message about this.
+
+We discussed about this and the CRASH_ALIGN sounds better, so just use CRASH_ALIGN.
+https://lkml.org/lkml/2020/9/4/82
 
 Thanks,
 Chen Zhou
 >
-> commit 44280733e71ad15377735b42d8538c109c94d7e3
-> Author: Yinghai Lu <yinghai@kernel.org>
-> Date:   Sun Nov 22 17:18:49 2009 -0800
+> So, for crashkernel low, keeping lower bound as 0 looks good to me, the
+> only reason is just as patch log tells. And it can skip the unnecessary
+> memblock searching under 16M since it will always fail, even though it
+> won't matter much. Or changing it to CRASH_ALIGN as this patch is doing,
+> and adding code comment, is also fine to me.
 >
->     x86: Change crash kernel to reserve via reserve_early()
->     
->     use find_e820_area()/reserve_early() instead.
->     
->     -v2: address Eric's request, to restore original semantics.
->          will fail, if the provided address can not be used.
+> Thanks
+> Baoquan
 >
 > .
 >
