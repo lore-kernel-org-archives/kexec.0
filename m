@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lFIp4-00014a-P8
- for kexec@lists.infradead.org; Thu, 25 Feb 2021 15:45:05 +0000
-Date: Thu, 25 Feb 2021 23:44:46 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v14 02/11] x86: kdump: make the lower bound of crash
- kernel reservation consistent
-Message-ID: <20210225154446.GI3553@MiWiFi-R3L-srv>
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-3-chenzhou10@huawei.com>
- <20210224143547.GB28965@arm.com>
- <20210225070717.GG3553@MiWiFi-R3L-srv>
- <20210225144237.GA23418@arm.com>
+ id 1lFR9b-000847-Qv
+ for kexec@lists.infradead.org; Fri, 26 Feb 2021 00:38:49 +0000
+Date: Fri, 26 Feb 2021 08:38:22 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v4 1/1] kernel/crash_core: Add crashkernel=auto for
+ vmcore creation
+Message-ID: <20210226003822.GA2953@dhcp-128-65.nay.redhat.com>
+References: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210225144237.GA23418@arm.com>
+In-Reply-To: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,70 +24,121 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Chen Zhou <chenzhou10@huawei.com>, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Cc: linux-doc@vger.kernel.org, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Christian Brauner <christian.brauner@ubuntu.com>, Ingo Molnar <mingo@kernel.org>, Baoquan He <bhe@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Vivek Goyal <vgoyal@redhat.com>, John Donnelly <john.p.donnelly@oracle.com>, Kees Cook <keescook@chromium.org>, "Paul E. McKenney" <paulmck@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Frederic Weisbecker <frederic@kernel.org>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, Josh Poimboeuf <jpoimboe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Stephen Boyd <sboyd@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, YiFei Zhu <yifeifz2@illinois.edu>, Colin Ian King <colin.king@canonical.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>
 
-On 02/25/21 at 02:42pm, Catalin Marinas wrote:
-> On Thu, Feb 25, 2021 at 03:08:46PM +0800, Baoquan He wrote:
-> > On 02/24/21 at 02:35pm, Catalin Marinas wrote:
-> > > On Sat, Jan 30, 2021 at 03:10:16PM +0800, Chen Zhou wrote:
-> > > > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> > > > index da769845597d..27470479e4a3 100644
-> > > > --- a/arch/x86/kernel/setup.c
-> > > > +++ b/arch/x86/kernel/setup.c
-> > > > @@ -439,7 +439,8 @@ static int __init reserve_crashkernel_low(void)
-> > > >  			return 0;
-> > > >  	}
-> > > >  
-> > > > -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-> > > > +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
-> > > > +			CRASH_ADDR_LOW_MAX);
-> > > >  	if (!low_base) {
-> > > >  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
-> > > >  		       (unsigned long)(low_size >> 20));
-> > > 
-> > > Is there any reason why the lower bound can't be 0 in all low cases
-> > > here? (Sorry if it's been already discussed, I lost track)
-> > 
-> > Seems like a good question.
-> > 
-> > This reserve_crashkernel_low(), paired with reserve_crashkernel_high(), is
-> > used to reserve memory under 4G so that kdump kernel owns memory for dma
-> > buffer allocation. In that case, kernel usually is loaded in high
-> > memory. In x86_64, kernel loading need be aligned to 16M because of
-> > CONFIG_PHYSICAL_START, please see commit 32105f7fd8faa7b ("x86: find
-> > offset for crashkernel reservation automatically"). But for crashkernel
-> > low memory, there seems to be no reason to ask for 16M alignment, if
-> > it's taken as dma buffer memory.
-> > 
-> > So we can make a different alignment for low memory only, e.g 2M. But
-> > 16M alignment consistent with crashkernel,high is also fine to me. The
-> > only affect is smaller alignment can increase the possibility of
-> > crashkernel low reservation.
+On 02/23/21 at 09:41am, Saeed Mirzamohammadi wrote:
+> This adds crashkernel=auto feature to configure reserved memory for
+> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+> different kernel distributions and different archs based on their
+> needs.
 > 
-> I don't mind the 16M alignment in both low and high base. But is there
-> any reason that the lower bound (third argument) cannot be 0 in both
-> reserve_crashkernel() (the low attempt) and reserve_crashkernel_low()
-> cases? The comment in reserve_crashkernel() only talks about the 4G
-> upper bound but not why we need a 16M lower bound.
+> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+> ---
+>  Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+>  .../admin-guide/kernel-parameters.txt         |  6 ++++++
+>  arch/Kconfig                                  | 20 +++++++++++++++++++
+>  kernel/crash_core.c                           |  7 +++++++
+>  4 files changed, 35 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+> index 75a9dd98e76e..ae030111e22a 100644
+> --- a/Documentation/admin-guide/kdump/kdump.rst
+> +++ b/Documentation/admin-guide/kdump/kdump.rst
+> @@ -285,7 +285,8 @@ This would mean:
+>      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>      3) if the RAM size is larger than 2G, then reserve 128M
+>  
+> -
+> +Or you can use crashkernel=auto to choose the crash kernel memory size
+> +based on the recommended configuration set for each arch.
+>  
+>  Boot into System Kernel
+>  =======================
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 9e3cdb271d06..a5deda5c85fe 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -747,6 +747,12 @@
+>  			a memory unit (amount[KMG]). See also
+>  			Documentation/admin-guide/kdump/kdump.rst for an example.
+>  
+> +	crashkernel=auto
+> +			[KNL] This parameter will set the reserved memory for
+> +			the crash kernel based on the value of the CRASH_AUTO_STR
+> +			that is the best effort estimation for each arch. See also
+> +			arch/Kconfig for further details.
+> +
+>  	crashkernel=size[KMG],high
+>  			[KNL, X86-64] range could be above 4G. Allow kernel
+>  			to allocate physical memory region from top, so could
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 24862d15f3a3..23d047548772 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -14,6 +14,26 @@ menu "General architecture-dependent options"
+>  config CRASH_CORE
+>  	bool
+>  
+> +config CRASH_AUTO_STR
+> +	string "Memory reserved for crash kernel"
+> +	depends on CRASH_CORE
+> +	default "1G-64G:128M,64G-1T:256M,1T-:512M"
+> +	help
+> +	  This configures the reserved memory dependent
+> +	  on the value of System RAM. The syntax is:
+> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+> +	              range=start-[end]
+> +
+> +	  For example:
+> +	      crashkernel=512M-2G:64M,2G-:128M
+> +
+> +	  This would mean:
+> +
+> +	      1) if the RAM is smaller than 512M, then don't reserve anything
+> +	         (this is the "rescue" case)
+> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+> +	      3) if the RAM size is larger than 2G, then reserve 128M
+> +
+>  config KEXEC_CORE
+>  	select CRASH_CORE
+>  	bool
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 825284baaf46..90f9e4bb6704 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -7,6 +7,7 @@
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/kexec.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+>  	if (suffix)
+>  		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>  				suffix);
+> +#ifdef CONFIG_CRASH_AUTO_STR
+> +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> +		ck_cmdline = CONFIG_CRASH_AUTO_STR;
+> +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+> +	}
+> +#endif
+>  	/*
+>  	 * if the commandline contains a ':', then that's the extended
+>  	 * syntax -- if not, it must be the classic syntax
+> -- 
+> 2.27.0
+> 
 
-Ah, sorry, I must have mixed this one with the alignment of fixed
-memory region reservation in patch 1 when considering comments.
 
-Hmm, in x86 we always have memory reserved in low 1M, lower bound
-being 0 or 16M (kernel alignment) doesn't make difference on crashkernel
-low reservation. But for crashkernel reservation, the reason should be
-kernel loading alignment being 16M, please see commit 32105f7fd8faa7b
-("x86: find offset for crashkernel reservation automatically").
-
-So, for crashkernel low, keeping lower bound as 0 looks good to me, the
-only reason is just as patch log tells. And it can skip the unnecessary
-memblock searching under 16M since it will always fail, even though it
-won't matter much. Or changing it to CRASH_ALIGN as this patch is doing,
-and adding code comment, is also fine to me.
+Acked-by: Dave Young <dyoung@redhat.com>
 
 Thanks
-Baoquan
+Dave
 
 
 _______________________________________________
