@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v14 02/11] x86: kdump: make the lower bound of crash
- kernel reservation consistent
+Subject: Re: [PATCH v14 08/11] arm64: kdump: reimplement crashkernel=X
 References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-3-chenzhou10@huawei.com>
- <20210224143547.GB28965@arm.com> <20210225070717.GG3553@MiWiFi-R3L-srv>
- <20210225144237.GA23418@arm.com> <20210225154446.GI3553@MiWiFi-R3L-srv>
+ <20210130071025.65258-9-chenzhou10@huawei.com>
+ <20210224160408.GC28965@arm.com>
 From: chenzhou <chenzhou10@huawei.com>
-Message-ID: <d844360b-35c4-d9e8-12c2-2e6bac9ad911@huawei.com>
-Date: Fri, 26 Feb 2021 15:32:43 +0800
+Message-ID: <94cc9191-4eff-355f-ff02-1c5da416960e@huawei.com>
+Date: Fri, 26 Feb 2021 18:31:06 +0800
 MIME-Version: 1.0
-In-Reply-To: <20210225154446.GI3553@MiWiFi-R3L-srv>
+In-Reply-To: <20210224160408.GC28965@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,78 +20,172 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, John.P.donnelly@oracle.com, wangkefeng.wang@huawei.com, arnd@arndb.de, horms@verge.net.au, corbet@lwn.net, dyoung@redhat.com, xiexiuqi@huawei.com, guohanjun@huawei.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-doc@vger.kernel.org, mingo@redhat.com, james.morse@arm.com, rppt@kernel.org, huawei.libin@huawei.com, prabhakar.pkin@gmail.com, tglx@linutronix.de, will@kernel.org, kexec@lists.infradead.org, nsaenzjulienne@suse.de
+To: Catalin Marinas <catalin.marinas@arm.com>, bhe@redhat.com
+Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, bhsharma@redhat.com, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, nsaenzjulienne@suse.de, prabhakar.pkin@gmail.com, rppt@kernel.org
 
 
 
-On 2021/2/25 23:44, Baoquan He wrote:
-> On 02/25/21 at 02:42pm, Catalin Marinas wrote:
->> On Thu, Feb 25, 2021 at 03:08:46PM +0800, Baoquan He wrote:
->>> On 02/24/21 at 02:35pm, Catalin Marinas wrote:
->>>> On Sat, Jan 30, 2021 at 03:10:16PM +0800, Chen Zhou wrote:
->>>>> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->>>>> index da769845597d..27470479e4a3 100644
->>>>> --- a/arch/x86/kernel/setup.c
->>>>> +++ b/arch/x86/kernel/setup.c
->>>>> @@ -439,7 +439,8 @@ static int __init reserve_crashkernel_low(void)
->>>>>  			return 0;
->>>>>  	}
->>>>>  
->>>>> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
->>>>> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
->>>>> +			CRASH_ADDR_LOW_MAX);
->>>>>  	if (!low_base) {
->>>>>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>>>>  		       (unsigned long)(low_size >> 20));
->>>> Is there any reason why the lower bound can't be 0 in all low cases
->>>> here? (Sorry if it's been already discussed, I lost track)
->>> Seems like a good question.
->>>
->>> This reserve_crashkernel_low(), paired with reserve_crashkernel_high(), is
->>> used to reserve memory under 4G so that kdump kernel owns memory for dma
->>> buffer allocation. In that case, kernel usually is loaded in high
->>> memory. In x86_64, kernel loading need be aligned to 16M because of
->>> CONFIG_PHYSICAL_START, please see commit 32105f7fd8faa7b ("x86: find
->>> offset for crashkernel reservation automatically"). But for crashkernel
->>> low memory, there seems to be no reason to ask for 16M alignment, if
->>> it's taken as dma buffer memory.
->>>
->>> So we can make a different alignment for low memory only, e.g 2M. But
->>> 16M alignment consistent with crashkernel,high is also fine to me. The
->>> only affect is smaller alignment can increase the possibility of
->>> crashkernel low reservation.
->> I don't mind the 16M alignment in both low and high base. But is there
->> any reason that the lower bound (third argument) cannot be 0 in both
->> reserve_crashkernel() (the low attempt) and reserve_crashkernel_low()
->> cases? The comment in reserve_crashkernel() only talks about the 4G
->> upper bound but not why we need a 16M lower bound.
-> Ah, sorry, I must have mixed this one with the alignment of fixed
-> memory region reservation in patch 1 when considering comments.
+On 2021/2/25 0:04, Catalin Marinas wrote:
+> On Sat, Jan 30, 2021 at 03:10:22PM +0800, Chen Zhou wrote:
+>> There are following issues in arm64 kdump:
+>> 1. We use crashkernel=X to reserve crashkernel below 4G, which
+>> will fail when there is no enough low memory.
+>> 2. If reserving crashkernel above 4G, in this case, crash dump
+>> kernel will boot failure because there is no low memory available
+>> for allocation.
+>>
+>> To solve these issues, change the behavior of crashkernel=X and
+>> introduce crashkernel=X,[high,low]. crashkernel=X tries low allocation
+>> in DMA zone, and fall back to high allocation if it fails.
+>> We can also use "crashkernel=X,high" to select a region above DMA zone,
+>> which also tries to allocate at least 256M in DMA zone automatically.
+>> "crashkernel=Y,low" can be used to allocate specified size low memory.
+>>
+>> Another minor change, there may be two regions reserved for crash
+>> dump kernel, in order to distinct from the high region and make no
+>> effect to the use of existing kexec-tools, rename the low region as
+>> "Crash kernel (low)".
+> I think we discussed this but I don't remember the conclusion. Is this
+> only renamed conditionally so that we don't break current kexec-tools?
+Yes.
 >
-> Hmm, in x86 we always have memory reserved in low 1M, lower bound
-> being 0 or 16M (kernel alignment) doesn't make difference on crashkernel
-> low reservation. But for crashkernel reservation, the reason should be
-> kernel loading alignment being 16M, please see commit 32105f7fd8faa7b
-> ("x86: find offset for crashkernel reservation automatically").
-Sorry, i didn't mention in the commit message about this.
+> IOW, assuming that the full crashkernel region is reserved below 4GB,
+> does the "(low)" suffix still appear or it's only if a high region is
+> additionally reserved?
+Suffix "low" only appear if a high region is additionally reserved.
+>
+>> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+>> index 3f6ecae0bc68..f0caed0cb5e1 100644
+>> --- a/arch/arm64/include/asm/kexec.h
+>> +++ b/arch/arm64/include/asm/kexec.h
+>> @@ -96,6 +96,10 @@ static inline void crash_prepare_suspend(void) {}
+>>  static inline void crash_post_resume(void) {}
+>>  #endif
+>>  
+>> +#ifdef CONFIG_KEXEC_CORE
+>> +extern void __init reserve_crashkernel(void);
+>> +#endif
+> Why not have this in some generic header?
+>
+>> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+>> index c18aacde8bb0..69c592c546de 100644
+>> --- a/arch/arm64/kernel/setup.c
+>> +++ b/arch/arm64/kernel/setup.c
+>> @@ -238,7 +238,18 @@ static void __init request_standard_resources(void)
+>>  		    kernel_data.end <= res->end)
+>>  			request_resource(res, &kernel_data);
+>>  #ifdef CONFIG_KEXEC_CORE
+>> -		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+>> +		/*
+>> +		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
+>> +		 * region in /proc/iomem.
+>> +		 * In order to distinct from the high region and make no effect
+>> +		 * to the use of existing kexec-tools, rename the low region as
+>> +		 * "Crash kernel (low)".
+>> +		 */
+>> +		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
+>> +				crashk_low_res.end <= res->end) {
+>> +			crashk_low_res.name = "Crash kernel (low)";
+>> +			request_resource(res, &crashk_low_res);
+>> +		}
+>>  		if (crashk_res.end && crashk_res.start >= res->start &&
+>>  		    crashk_res.end <= res->end)
+>>  			request_resource(res, &crashk_res);
+> My reading of the new generic reserve_crashkernel() is that
+> crashk_low_res will only be populated if crask_res is above 4GB. If
+> that's correct, I'm fine with the renaming here since current systems
+> would not get a renamed low reservation (as long as they don't change
+> the kernel cmdline).
+>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 912f64f505f7..d20f5c444ebf 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -35,6 +35,7 @@
+>>  #include <asm/fixmap.h>
+>>  #include <asm/kasan.h>
+>>  #include <asm/kernel-pgtable.h>
+>> +#include <asm/kexec.h>
+>>  #include <asm/memory.h>
+>>  #include <asm/numa.h>
+>>  #include <asm/sections.h>
+>> @@ -61,66 +62,11 @@ EXPORT_SYMBOL(memstart_addr);
+>>   */
+>>  phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>  
+>> -#ifdef CONFIG_KEXEC_CORE
+>> -/*
+>> - * reserve_crashkernel() - reserves memory for crash kernel
+>> - *
+>> - * This function reserves memory area given in "crashkernel=" kernel command
+>> - * line parameter. The memory reserved is used by dump capture kernel when
+>> - * primary kernel is crashing.
+>> - */
+>> +#ifndef CONFIG_KEXEC_CORE
+>>  static void __init reserve_crashkernel(void)
+>>  {
+> [...]
+>>  }
+>> +#endif
+> Can we not have the dummy reserve_crashkernel() in the generic code as
+> well and avoid the #ifndef here?
+You mean put the dummy reserve_crashkernel() and the relate function declaration in some generic header?
+ 
+Baoquan also mentioned about this.
+Now all the arch that support kdump have the dummy reserve_crashkernel() and
+function declaration, such as arm/arm64/ppc/s390..
 
-We discussed about this and the CRASH_ALIGN sounds better, so just use CRASH_ALIGN.
-https://lkml.org/lkml/2020/9/4/82
+But currently different arch may have different CONFIG and different function declaration about this,
+for example,
+
+for s390,
+static void __init reserve_crashkernel(void)
+{                  
+#ifdef CONFIG_CRASH_DUMP
+...
+#endif        
+}
+
+for ppc,
+#ifdef CONFIG_KEXEC_CORE
+extern void reserve_crashkernel(void);
+#else
+static inline void reserve_crashkernel(void) { ; }
+#endif
+
+If we move these to generic header we need think about:
+1. the related config in different arch
+2. function declaration(static/non static)
+
+As Baoquan said in patch 9, how about leave with it for now and i try to solve this later?
+
+>
+>>  #ifdef CONFIG_CRASH_DUMP
+>>  static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+>> @@ -446,6 +392,14 @@ void __init bootmem_init(void)
+>>  	 * reserved, so do it here.
+>>  	 */
+>>  	reserve_crashkernel();
+>> +#ifdef CONFIG_KEXEC_CORE
+>> +	/*
+>> +	 * The low region is intended to be used for crash dump kernel devices,
+>> +	 * just mark the low region as "nomap" simply.
+>> +	 */
+>> +	if (crashk_low_res.end)
+>> +		memblock_mark_nomap(crashk_low_res.start, resource_size(&crashk_low_res));
+>> +#endif
+> Do we do something similar for crashk_res?
+Not. In the primary kernel(production kernel), we need to use crashk_res memory for crash kernel
+elf core header, initrd...
+
+Different with this, the crashk_low_res is only for crash dump kernel devices.
+>
+> Also, I can see we call crash_exclude_mem_range() only for crashk_res.
+> Do we need to do this for crashk_low_res as well?
+You are right, i missed about this. Will do in next version.
 
 Thanks,
 Chen Zhou
->
-> So, for crashkernel low, keeping lower bound as 0 looks good to me, the
-> only reason is just as patch log tells. And it can skip the unnecessary
-> memblock searching under 16M since it will always fail, even though it
-> won't matter much. Or changing it to CRASH_ALIGN as this patch is doing,
-> and adding code comment, is also fine to me.
->
-> Thanks
-> Baoquan
->
-> .
 >
 
 
