@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-2-chenzhou10@huawei.com>
- <20210224141939.GA28965@arm.com>
- <20210225072426.GH3553@MiWiFi-R3L-srv>
- <121fa1e6-f1a3-d47f-bb1d-baaacf96fddc@huawei.com>
-Date: Fri, 26 Feb 2021 09:38:37 -0600
-In-Reply-To: <121fa1e6-f1a3-d47f-bb1d-baaacf96fddc@huawei.com> (chenzhou's
- message of "Fri, 26 Feb 2021 14:45:25 +0800")
-Message-ID: <m14khykfeq.fsf@fess.ebiederm.org>
+Received: from mail-pj1-x1029.google.com ([2607:f8b0:4864:20::1029])
+ by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
+ id 1lGmeA-0003of-Jm
+ for kexec@lists.infradead.org; Mon, 01 Mar 2021 17:47:55 +0000
+Received: by mail-pj1-x1029.google.com with SMTP id d2so27119pjs.4
+ for <kexec@lists.infradead.org>; Mon, 01 Mar 2021 09:47:54 -0800 (PST)
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH 0/7] Add build ID to stacktraces
+Date: Mon,  1 Mar 2021 09:47:42 -0800
+Message-Id: <20210301174749.1269154-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v14 01/11] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,72 +22,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, Baoquan He <bhe@redhat.com>, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Petr Mladek <pmladek@suse.com>, Baoquan He <bhe@redhat.com>, linux-doc@vger.kernel.org, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Jessica Yu <jeyu@kernel.org>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Evan Green <evgreen@chromium.org>, Alexei Starovoitov <ast@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Jiri Olsa <jolsa@kernel.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-chenzhou <chenzhou10@huawei.com> writes:
+This series adds the kernel's build ID to the stacktrace header printed
+in oops messages, warnings, etc. and the build ID for any module that
+appears in the stacktrace after the module name. The goal is to make the
+stacktrace more self-contained and descriptive by including the relevant
+build IDs in the kernel logs when something goes wrong. This can be used
+by post processing tools like script/decode_stacktrace.sh and kernel
+developers to easily locate the debug info associated with a kernel
+crash and line up what line and file things started falling apart at.
 
-> On 2021/2/25 15:25, Baoquan He wrote:
->> On 02/24/21 at 02:19pm, Catalin Marinas wrote:
->>> On Sat, Jan 30, 2021 at 03:10:15PM +0800, Chen Zhou wrote:
->>>> Move CRASH_ALIGN to header asm/kexec.h for later use. Besides, the
->>>> alignment of crash kernel regions in x86 is 16M(CRASH_ALIGN), but
->>>> function reserve_crashkernel() also used 1M alignment. So just
->>>> replace hard-coded alignment 1M with macro CRASH_ALIGN.
->>> [...]
->>>> @@ -510,7 +507,7 @@ static void __init reserve_crashkernel(void)
->>>>  	} else {
->>>>  		unsigned long long start;
->>>>  
->>>> -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
->>>> +		start = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, crash_base,
->>>>  						  crash_base + crash_size);
->>>>  		if (start != crash_base) {
->>>>  			pr_info("crashkernel reservation failed - memory is in use.\n");
->>> There is a small functional change here for x86. Prior to this patch,
->>> crash_base passed by the user on the command line is allowed to be 1MB
->>> aligned. With this patch, such reservation will fail.
->>>
->>> Is the current behaviour a bug in the current x86 code or it does allow
->>> 1MB-aligned reservations?
->> Hmm, you are right. Here we should keep 1MB alignment as is because
->> users specify the address and size, their intention should be respected.
->> The 1MB alignment for fixed memory region reservation was introduced in
->> below commit, but it doesn't tell what is Eric's request at that time, I
->> guess it meant respecting users' specifying.
+This also includes a patch to make the buildid.c file use more const
+arguments and consolidate logic into buildid.c from kdump. These are
+left to the end as they were mostly cleanup patches. I don't know who
+exactly maintains this so I guess Andrew is the best option to merge all
+this code.
+
+Here's an example lkdtm stacktrace
+
+ WARNING: CPU: 4 PID: 3255 at drivers/misc/lkdtm/bugs.c:83 lkdtm_WARNING+0x28/0x30 [lkdtm] (ed5019fdf5e53be37cb1ba7899292d7e143b259e)
+ Modules linked in: lkdtm rfcomm algif_hash algif_skcipher af_alg xt_cgroup uinput xt_MASQUERADE
+ CPU: 4 PID: 3255 Comm: bash Not tainted 5.11 #3 aa23f7a1231c229de205662d5a9e0d4c580f19a1
+ Hardware name: Google Lazor (rev3+) with KB Backlight (DT)
+ pstate: 00400009 (nzcv daif +PAN -UAO -TCO BTYPE=--)
+ pc : lkdtm_WARNING+0x28/0x30 [lkdtm] (ed5019fdf5e53be37cb1ba7899292d7e143b259e)
+ lr : lkdtm_do_action+0x24/0x40 [lkdtm] (ed5019fdf5e53be37cb1ba7899292d7e143b259e)
+ sp : ffffffc0134fbca0
+ x29: ffffffc0134fbca0 x28: ffffff92d53ba240
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: 0000000000000000 x24: ffffffe3622352c0
+ x23: 0000000000000020 x22: ffffffe362233366
+ x21: ffffffe3622352e0 x20: ffffffc0134fbde0
+ x19: 0000000000000008 x18: 0000000000000000
+ x17: ffffff929b6536fc x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000012
+ x13: ffffffe380ed892c x12: ffffffe381d05068
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : ffffffe362237000
+ x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+ x5 : 0000000000000000 x4 : 0000000000000001
+ x3 : 0000000000000008 x2 : ffffff93fef25a70
+ x1 : ffffff93fef15788 x0 : ffffffe3622352e0
+ Call trace:
+  lkdtm_WARNING+0x28/0x30 [lkdtm] (ed5019fdf5e53be37cb1ba7899292d7e143b259e)
+  direct_entry+0x16c/0x1b4 [lkdtm] (ed5019fdf5e53be37cb1ba7899292d7e143b259e)
+  full_proxy_write+0x74/0xa4
+  vfs_write+0xec/0x2e8
+  ksys_write+0x84/0xf0
+  __arm64_sys_write+0x24/0x30
+  el0_svc_common+0xf4/0x1c0
+  do_el0_svc_compat+0x28/0x3c
+  el0_svc_compat+0x10/0x1c
+  el0_sync_compat_handler+0xa8/0xcc
+  el0_sync_compat+0x178/0x180
+ ---[ end trace 3d95032303e59e68 ]---
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: <kexec@lists.infradead.org>
+Cc: <linux-doc@vger.kernel.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+
+Stephen Boyd (7):
+  buildid: Add method to get running kernel's build ID
+  dump_stack: Add vmlinux build ID to stack traces
+  buildid: Add API to parse build ID out of buffer
+  module: Parse and stash build ID on insertion
+  printk: Make %pS and friends print module build ID
+  buildid: Mark some arguments const
+  kdump: Use vmlinux_build_id() to simplify
+
+ Documentation/core-api/printk-formats.rst |  6 ++
+ include/linux/buildid.h                   |  4 +
+ include/linux/kallsyms.h                  |  6 +-
+ include/linux/module.h                    |  6 +-
+ kernel/crash_core.c                       | 46 ++----------
+ kernel/kallsyms.c                         | 45 ++++++++----
+ kernel/module.c                           | 24 +++++-
+ lib/buildid.c                             | 89 +++++++++++++++++++----
+ lib/dump_stack.c                          |  5 +-
+ 9 files changed, 157 insertions(+), 74 deletions(-)
 
 
-> I think we could make the alignment unified. Why is the alignment system reserved and
-> user specified different? Besides, there is no document about the 1MB alignment.
-> How about adding the alignment size(16MB) in doc  if user specified
-> start address as arm64 does.
+base-commit: fe07bfda2fb9cdef8a4d4008a409bb02f35f1bd8
+-- 
+https://chromeos.dev
 
-Looking at what the code is doing.  Attempting to reserve a crash region
-at the location the user specified.  Adding unnecessary alignment
-constraints is totally broken. 
-
-I am not even certain enforcing a 1MB alignment makes sense.  I suspect
-it was added so that we don't accidentally reserve low memory on x86.
-Frankly I am not even certain that makes sense.
-
-Now in practice there might be an argument for 2MB alignment that goes
-with huge page sizes on x86.  But until someone finds that there are
-actual problems with 1MB alignment I would not touch it.
-
-The proper response to something that isn't documented and confusing is
-not to arbitrarily change it and risk breaking users.  Especially in
-this case where it is clear that adding additional alignment is total
-nonsense.  The proper response to something that isn't clear and
-documented is to dig in and document it, or to leave it alone and let it
-be the next persons problem.
-
-In this case there is no reason for changing this bit of code.
-All CRASH_ALIGN is about is a default alignment when none is specified.
-It is not a functional requirement but just something so that things
-come out nicely.
-
-
-Eric
 
 _______________________________________________
 kexec mailing list
