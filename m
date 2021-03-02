@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHFRH-000kuj-W2
- for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:32:33 +0000
-Received: by mail-qk1-x730.google.com with SMTP id b130so10742894qkc.10
- for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:32:31 -0800 (PST)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v12 08/17] arm64: kexec: skip relocation code for inplace kexec
-Date: Tue,  2 Mar 2021 19:22:21 -0500
-Message-Id: <20210303002230.1083176-9-pasha.tatashin@soleen.com>
-In-Reply-To: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
-References: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
+ id 1lHE7b-000aG5-Hm
+ for kexec@lists.infradead.org; Tue, 02 Mar 2021 23:08:12 +0000
+Subject: Re: [PATCH v4 1/1] kernel/crash_core: Add crashkernel=auto for vmcore
+ creation
+References: <20210223174153.72802-1-saeed.mirzamohammadi@oracle.com>
+ <20210226003822.GA2953@dhcp-128-65.nay.redhat.com>
+From: john.p.donnelly@oracle.com
+Message-ID: <7718c1c5-63c7-6180-1a88-e28ce6f16ebc@oracle.com>
+Date: Tue, 2 Mar 2021 17:05:34 -0600
+In-Reply-To: <20210226003822.GA2953@dhcp-128-65.nay.redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,113 +21,135 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
+To: Dave Young <dyoung@redhat.com>, Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Jonathan Corbet <corbet@lwn.net>, "Paul E. McKenney" <paulmck@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Mike Kravetz <mike.kravetz@oracle.com>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, Kees Cook <keescook@chromium.org>, "Peter Zijlstra (Intel)" <peterz@infradead.org>, Ingo Molnar <mingo@kernel.org>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, YiFei Zhu <yifeifz2@illinois.edu>, Josh Poimboeuf <jpoimboe@redhat.com>, Mike Rapoport <rppt@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Sami Tolvanen <samitolvanen@google.com>, Frederic Weisbecker <frederic@kernel.org>, Christian Brauner <christian.brauner@ubuntu.com>, Stephen Boyd <sboyd@kernel.org>, Andrey Konovalov <andreyknvl@google.com>, Colin Ian King <colin.king@canonical.com>, kexec@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, John Donnelly <john.p.donnelly@oracle.com>
 
-In case of kdump or when segments are already in place the relocation
-is not needed, therefore the setup of relocation function and call to
-it can be skipped.
+On 2/25/21 6:38 PM, Dave Young wrote:
+> On 02/23/21 at 09:41am, Saeed Mirzamohammadi wrote:
+>> This adds crashkernel=auto feature to configure reserved memory for
+>> vmcore creation. CONFIG_CRASH_AUTO_STR is defined to be set for
+>> different kernel distributions and different archs based on their
+>> needs.
+>>
+>> Signed-off-by: Saeed Mirzamohammadi <saeed.mirzamohammadi@oracle.com>
+>> Signed-off-by: John Donnelly <john.p.donnelly@oracle.com>
+>> Tested-by: John Donnelly <john.p.donnelly@oracle.com>
+>> ---
+>>   Documentation/admin-guide/kdump/kdump.rst     |  3 ++-
+>>   .../admin-guide/kernel-parameters.txt         |  6 ++++++
+>>   arch/Kconfig                                  | 20 +++++++++++++++++++
+>>   kernel/crash_core.c                           |  7 +++++++
+>>   4 files changed, 35 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+>> index 75a9dd98e76e..ae030111e22a 100644
+>> --- a/Documentation/admin-guide/kdump/kdump.rst
+>> +++ b/Documentation/admin-guide/kdump/kdump.rst
+>> @@ -285,7 +285,8 @@ This would mean:
+>>       2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>>       3) if the RAM size is larger than 2G, then reserve 128M
+>>   
+>> -
+>> +Or you can use crashkernel=auto to choose the crash kernel memory size
+>> +based on the recommended configuration set for each arch.
+>>   
+>>   Boot into System Kernel
+>>   =======================
+>> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+>> index 9e3cdb271d06..a5deda5c85fe 100644
+>> --- a/Documentation/admin-guide/kernel-parameters.txt
+>> +++ b/Documentation/admin-guide/kernel-parameters.txt
+>> @@ -747,6 +747,12 @@
+>>   			a memory unit (amount[KMG]). See also
+>>   			Documentation/admin-guide/kdump/kdump.rst for an example.
+>>   
+>> +	crashkernel=auto
+>> +			[KNL] This parameter will set the reserved memory for
+>> +			the crash kernel based on the value of the CRASH_AUTO_STR
+>> +			that is the best effort estimation for each arch. See also
+>> +			arch/Kconfig for further details.
+>> +
+>>   	crashkernel=size[KMG],high
+>>   			[KNL, X86-64] range could be above 4G. Allow kernel
+>>   			to allocate physical memory region from top, so could
+>> diff --git a/arch/Kconfig b/arch/Kconfig
+>> index 24862d15f3a3..23d047548772 100644
+>> --- a/arch/Kconfig
+>> +++ b/arch/Kconfig
+>> @@ -14,6 +14,26 @@ menu "General architecture-dependent options"
+>>   config CRASH_CORE
+>>   	bool
+>>   
+>> +config CRASH_AUTO_STR
+>> +	string "Memory reserved for crash kernel"
+>> +	depends on CRASH_CORE
+>> +	default "1G-64G:128M,64G-1T:256M,1T-:512M"
+>> +	help
+>> +	  This configures the reserved memory dependent
+>> +	  on the value of System RAM. The syntax is:
+>> +	  crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+>> +	              range=start-[end]
+>> +
+>> +	  For example:
+>> +	      crashkernel=512M-2G:64M,2G-:128M
+>> +
+>> +	  This would mean:
+>> +
+>> +	      1) if the RAM is smaller than 512M, then don't reserve anything
+>> +	         (this is the "rescue" case)
+>> +	      2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+>> +	      3) if the RAM size is larger than 2G, then reserve 128M
+>> +
+>>   config KEXEC_CORE
+>>   	select CRASH_CORE
+>>   	bool
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index 825284baaf46..90f9e4bb6704 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -7,6 +7,7 @@
+>>   #include <linux/crash_core.h>
+>>   #include <linux/utsname.h>
+>>   #include <linux/vmalloc.h>
+>> +#include <linux/kexec.h>
+>>   
+>>   #include <asm/page.h>
+>>   #include <asm/sections.h>
+>> @@ -250,6 +251,12 @@ static int __init __parse_crashkernel(char *cmdline,
+>>   	if (suffix)
+>>   		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>>   				suffix);
+>> +#ifdef CONFIG_CRASH_AUTO_STR
+>> +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
+>> +		ck_cmdline = CONFIG_CRASH_AUTO_STR;
+>> +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+>> +	}
+>> +#endif
+>>   	/*
+>>   	 * if the commandline contains a ':', then that's the extended
+>>   	 * syntax -- if not, it must be the classic syntax
+>> -- 
+>> 2.27.0
+>>
+> 
+> 
+> Acked-by: Dave Young <dyoung@redhat.com>
+> 
+> Thanks
+> Dave
+> 
+Hi,
 
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
-Suggested-by: James Morse <james.morse@arm.com>
----
- arch/arm64/kernel/machine_kexec.c   | 34 ++++++++++++++++++-----------
- arch/arm64/kernel/relocate_kernel.S |  3 ---
- 2 files changed, 21 insertions(+), 16 deletions(-)
+   Thank you.
 
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 3a034bc25709..b150b65f0b84 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -139,21 +139,23 @@ int machine_kexec_post_load(struct kimage *kimage)
- {
- 	void *reloc_code = page_to_virt(kimage->control_code_page);
- 
--	/* If in place flush new kernel image, else flush lists and buffers */
--	if (kimage->head & IND_DONE)
-+	/* If in place, relocation is not used, only flush next kernel */
-+	if (kimage->head & IND_DONE) {
- 		kexec_segment_flush(kimage);
--	else
--		kexec_list_flush(kimage);
-+		kexec_image_info(kimage);
-+		return 0;
-+	}
- 
- 	memcpy(reloc_code, arm64_relocate_new_kernel,
- 	       arm64_relocate_new_kernel_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code);
--	kexec_image_info(kimage);
- 
- 	/* Flush the reloc_code in preparation for its execution. */
- 	__flush_dcache_area(reloc_code, arm64_relocate_new_kernel_size);
- 	flush_icache_range((uintptr_t)reloc_code, (uintptr_t)reloc_code +
- 			   arm64_relocate_new_kernel_size);
-+	kexec_list_flush(kimage);
-+	kexec_image_info(kimage);
- 
- 	return 0;
- }
-@@ -180,19 +182,25 @@ void machine_kexec(struct kimage *kimage)
- 	local_daif_mask();
- 
- 	/*
--	 * cpu_soft_restart will shutdown the MMU, disable data caches, then
--	 * transfer control to the kern_reloc which contains a copy of
--	 * the arm64_relocate_new_kernel routine.  arm64_relocate_new_kernel
--	 * uses physical addressing to relocate the new image to its final
--	 * position and transfers control to the image entry point when the
--	 * relocation is complete.
-+	 * Both restart and cpu_soft_restart will shutdown the MMU, disable data
-+	 * caches. However, restart will start new kernel or purgatory directly,
-+	 * cpu_soft_restart will transfer control to arm64_relocate_new_kernel
- 	 * In kexec case, kimage->start points to purgatory assuming that
- 	 * kernel entry and dtb address are embedded in purgatory by
- 	 * userspace (kexec-tools).
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
--	cpu_soft_restart(kimage->arch.kern_reloc, kimage->head, kimage->start,
--			 kimage->arch.dtb_mem);
-+	if (kimage->head & IND_DONE) {
-+		typeof(__cpu_soft_restart) *restart;
-+
-+		cpu_install_idmap();
-+		restart = (void *)__pa_symbol(__cpu_soft_restart);
-+		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
-+			0, 0);
-+	} else {
-+		cpu_soft_restart(kimage->arch.kern_reloc, kimage->head,
-+				 kimage->start, kimage->arch.dtb_mem);
-+	}
- 
- 	BUG(); /* Should never get here. */
- }
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index b78ea5de97a4..8058fabe0a76 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -32,8 +32,6 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- 	mov	x16, x0				/* x16 = kimage_head */
- 	mov	x14, xzr			/* x14 = entry ptr */
- 	mov	x13, xzr			/* x13 = copy dest */
--	/* Check if the new image needs relocation. */
--	tbnz	x16, IND_DONE_BIT, .Ldone
- 	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
- .Lloop:
- 	and	x12, x16, PAGE_MASK		/* x12 = addr */
-@@ -65,7 +63,6 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- .Lnext:
- 	ldr	x16, [x14], #8			/* entry = *ptr++ */
- 	tbz	x16, IND_DONE_BIT, .Lloop	/* while (!(entry & DONE)) */
--.Ldone:
- 	/* wait for writes from copy_page to finish */
- 	dsb	nsh
- 	ic	iallu
--- 
-2.25.1
+   When can  we expect this to be applied in a future build ?
+
+
+
 
 
 _______________________________________________
