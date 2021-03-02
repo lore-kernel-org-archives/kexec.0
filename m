@@ -1,22 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from z11.mailgun.us ([104.130.96.11])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lGzh8-00074K-6P
- for kexec@lists.infradead.org; Tue, 02 Mar 2021 07:43:51 +0000
-Date: Tue, 2 Mar 2021 15:43:27 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v14 01/11] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
-Message-ID: <20210302074327.GC13714@MiWiFi-R3L-srv>
-References: <20210130071025.65258-1-chenzhou10@huawei.com>
- <20210130071025.65258-2-chenzhou10@huawei.com>
- <20210224141939.GA28965@arm.com>
- <20210225072426.GH3553@MiWiFi-R3L-srv>
- <121fa1e6-f1a3-d47f-bb1d-baaacf96fddc@huawei.com>
- <m14khykfeq.fsf@fess.ebiederm.org>
+ id 1lGzjW-0007cy-WF
+ for kexec@lists.infradead.org; Tue, 02 Mar 2021 07:46:20 +0000
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 0/3] warn and suppress irqflood
+Date: Tue,  2 Mar 2021 13:15:56 +0530
+Message-Id: <20210302074556.23998-1-saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <87tuueftou.fsf@nanos.tec.linutronix.de>
+References: <87tuueftou.fsf@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <m14khykfeq.fsf@fess.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,80 +22,200 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, chenzhou <chenzhou10@huawei.com>
-Cc: wangkefeng.wang@huawei.com, linux-doc@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, huawei.libin@huawei.com, guohanjun@huawei.com, will@kernel.org, corbet@lwn.net, mingo@redhat.com, dyoung@redhat.com, John.P.donnelly@oracle.com, arnd@arndb.de, xiexiuqi@huawei.com, horms@verge.net.au, tglx@linutronix.de, linux-arm-kernel@lists.infradead.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, james.morse@arm.com, rppt@kernel.org, prabhakar.pkin@gmail.com, nsaenzjulienne@suse.de
+To: tglx@linutronix.de
+Cc: mkshah@codeaurora.org, linux-doc@vger.kernel.org, peterz@infradead.org, linus.walleij@linaro.org, kernelfans@gmail.com, afzal.mohd.ma@gmail.com, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, corbet@lwn.net, maz@kernel.org, gustavo@embeddedor.com, helgaas@kernel.org, pawan.kumar.gupta@linux.intel.com, pmladek@suse.com, gpiccoli@canonical.com, viro@zeniv.linux.org.uk, oneukum@suse.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ilina@codeaurora.org, Jisheng.Zhang@synaptics.com, akpm@linux-foundation.org, mike.kravetz@oracle.com
 
-On 02/26/21 at 09:38am, Eric W. Biederman wrote:
-> chenzhou <chenzhou10@huawei.com> writes:
-> 
-> > On 2021/2/25 15:25, Baoquan He wrote:
-> >> On 02/24/21 at 02:19pm, Catalin Marinas wrote:
-> >>> On Sat, Jan 30, 2021 at 03:10:15PM +0800, Chen Zhou wrote:
-> >>>> Move CRASH_ALIGN to header asm/kexec.h for later use. Besides, the
-> >>>> alignment of crash kernel regions in x86 is 16M(CRASH_ALIGN), but
-> >>>> function reserve_crashkernel() also used 1M alignment. So just
-> >>>> replace hard-coded alignment 1M with macro CRASH_ALIGN.
-> >>> [...]
-> >>>> @@ -510,7 +507,7 @@ static void __init reserve_crashkernel(void)
-> >>>>  	} else {
-> >>>>  		unsigned long long start;
-> >>>>  
-> >>>> -		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
-> >>>> +		start = memblock_phys_alloc_range(crash_size, CRASH_ALIGN, crash_base,
-> >>>>  						  crash_base + crash_size);
-> >>>>  		if (start != crash_base) {
-> >>>>  			pr_info("crashkernel reservation failed - memory is in use.\n");
-> >>> There is a small functional change here for x86. Prior to this patch,
-> >>> crash_base passed by the user on the command line is allowed to be 1MB
-> >>> aligned. With this patch, such reservation will fail.
-> >>>
-> >>> Is the current behaviour a bug in the current x86 code or it does allow
-> >>> 1MB-aligned reservations?
-> >> Hmm, you are right. Here we should keep 1MB alignment as is because
-> >> users specify the address and size, their intention should be respected.
-> >> The 1MB alignment for fixed memory region reservation was introduced in
-> >> below commit, but it doesn't tell what is Eric's request at that time, I
-> >> guess it meant respecting users' specifying.
-> 
-> 
-> > I think we could make the alignment unified. Why is the alignment system reserved and
-> > user specified different? Besides, there is no document about the 1MB alignment.
-> > How about adding the alignment size(16MB) in doc  if user specified
-> > start address as arm64 does.
-> 
-> Looking at what the code is doing.  Attempting to reserve a crash region
-> at the location the user specified.  Adding unnecessary alignment
-> constraints is totally broken. 
-> 
-> I am not even certain enforcing a 1MB alignment makes sense.  I suspect
-> it was added so that we don't accidentally reserve low memory on x86.
-> Frankly I am not even certain that makes sense.
-> 
-> Now in practice there might be an argument for 2MB alignment that goes
-> with huge page sizes on x86.  But until someone finds that there are
-> actual problems with 1MB alignment I would not touch it.
-> 
-> The proper response to something that isn't documented and confusing is
-> not to arbitrarily change it and risk breaking users.  Especially in
-> this case where it is clear that adding additional alignment is total
-> nonsense.  The proper response to something that isn't clear and
-> documented is to dig in and document it, or to leave it alone and let it
+Hi Thomas,
 
-Sounds reasonable. Then adding document or code comment around looks
-like a good way to go further so that people can easily get why its
-alignment is different than other reservation.
+> On Wed, Oct 28, 2020 at 12:58:41PM +0100, Thomas Gleixner wrote:
+>
 
-> be the next persons problem.
-> 
-> In this case there is no reason for changing this bit of code.
-> All CRASH_ALIGN is about is a default alignment when none is specified.
-> It is not a functional requirement but just something so that things
-> come out nicely.
-> 
-> 
-> Eric
-> 
+<snip>...
 
+> Something like the completly untested below should work independent of
+> config options.
+> 
+> Thanks,
+> 
+>         tglx
+> ---
+>  include/linux/irqdesc.h |    4 ++
+>  kernel/irq/manage.c     |    3 +
+>  kernel/irq/spurious.c   |   74 +++++++++++++++++++++++++++++++++++-------------
+>  3 files changed, 61 insertions(+), 20 deletions(-)
+> 
+> --- a/include/linux/irqdesc.h
+> +++ b/include/linux/irqdesc.h
+> @@ -30,6 +30,8 @@ struct pt_regs;
+>   * @tot_count:		stats field for non-percpu irqs
+>   * @irq_count:		stats field to detect stalled irqs
+>   * @last_unhandled:	aging timer for unhandled count
+> + * @storm_count:	Counter for irq storm detection
+> + * @storm_checked:	Timestamp for irq storm detection
+>   * @irqs_unhandled:	stats field for spurious unhandled interrupts
+>   * @threads_handled:	stats field for deferred spurious detection of threaded handlers
+>   * @threads_handled_last: comparator field for deferred spurious detection of theraded handlers
+> @@ -65,6 +67,8 @@ struct irq_desc {
+>  	unsigned int		tot_count;
+>  	unsigned int		irq_count;	/* For detecting broken IRQs */
+>  	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
+> +	unsigned long		storm_count;
+> +	unsigned long		storm_checked;
+>  	unsigned int		irqs_unhandled;
+>  	atomic_t		threads_handled;
+>  	int			threads_handled_last;
+> --- a/kernel/irq/manage.c
+> +++ b/kernel/irq/manage.c
+> @@ -1581,6 +1581,9 @@ static int
+>  	if (!shared) {
+>  		init_waitqueue_head(&desc->wait_for_threads);
+>  
+> +		/* Take a timestamp for interrupt storm detection */
+> +		desc->storm_checked = jiffies;
+> +
+>  		/* Setup the type (level, edge polarity) if configured: */
+>  		if (new->flags & IRQF_TRIGGER_MASK) {
+>  			ret = __irq_set_trigger(desc,
+> --- a/kernel/irq/spurious.c
+> +++ b/kernel/irq/spurious.c
+> @@ -21,6 +21,7 @@ static void poll_spurious_irqs(struct ti
+>  static DEFINE_TIMER(poll_spurious_irq_timer, poll_spurious_irqs);
+>  static int irq_poll_cpu;
+>  static atomic_t irq_poll_active;
+> +static unsigned long irqstorm_limit __ro_after_init;
+>  
+>  /*
+>   * We wait here for a poller to finish.
+> @@ -189,18 +190,21 @@ static inline int bad_action_ret(irqretu
+>   * (The other 100-of-100,000 interrupts may have been a correctly
+>   *  functioning device sharing an IRQ with the failing one)
+>   */
+> -static void __report_bad_irq(struct irq_desc *desc, irqreturn_t action_ret)
+> +static void __report_bad_irq(struct irq_desc *desc, irqreturn_t action_ret,
+> +			     bool storm)
+>  {
+>  	unsigned int irq = irq_desc_get_irq(desc);
+>  	struct irqaction *action;
+>  	unsigned long flags;
+>  
+> -	if (bad_action_ret(action_ret)) {
+> -		printk(KERN_ERR "irq event %d: bogus return value %x\n",
+> -				irq, action_ret);
+> -	} else {
+> -		printk(KERN_ERR "irq %d: nobody cared (try booting with "
+> +	if (!storm) {
+> +		if (bad_action_ret(action_ret)) {
+> +			pr_err("irq event %d: bogus return value %x\n",
+> +			       irq, action_ret);
+> +		} else {
+> +			pr_err("irq %d: nobody cared (try booting with "
+>  				"the \"irqpoll\" option)\n", irq);
+> +		}
+>  	}
+>  	dump_stack();
+>  	printk(KERN_ERR "handlers:\n");
+> @@ -228,7 +232,7 @@ static void report_bad_irq(struct irq_de
+>  
+>  	if (count > 0) {
+>  		count--;
+> -		__report_bad_irq(desc, action_ret);
+> +		__report_bad_irq(desc, action_ret, false);
+>  	}
+>  }
+>  
+> @@ -267,6 +271,33 @@ try_misrouted_irq(unsigned int irq, stru
+>  	return action && (action->flags & IRQF_IRQPOLL);
+>  }
+>  
+> +static void disable_stuck_irq(struct irq_desc *desc, irqreturn_t action_ret,
+> +			      const char *reason, bool storm)
+> +{
+> +	__report_bad_irq(desc, action_ret, storm);
+> +	pr_emerg("Disabling %s IRQ #%d\n", reason, irq_desc_get_irq(desc));
+> +	desc->istate |= IRQS_SPURIOUS_DISABLED;
+> +	desc->depth++;
+> +	irq_disable(desc);
+> +}
+> +
+> +/* Interrupt storm detector for runaway interrupts (handled or not). */
+> +static bool irqstorm_detected(struct irq_desc *desc)
+> +{
+> +	unsigned long now = jiffies;
+> +
+> +	if (++desc->storm_count < irqstorm_limit) {
+> +		if (time_after(now, desc->storm_checked + HZ)) {
+> +			desc->storm_count = 0;
+> +			desc->storm_checked = now;
+> +		}
+> +		return false;
+> +	}
+> +
+> +	disable_stuck_irq(desc, IRQ_NONE, "runaway", true);
+> +	return true;
+> +}
+> +
+>  #define SPURIOUS_DEFERRED	0x80000000
+>  
+>  void note_interrupt(struct irq_desc *desc, irqreturn_t action_ret)
+> @@ -403,24 +434,16 @@ void note_interrupt(struct irq_desc *des
+>  			desc->irqs_unhandled -= ok;
+>  	}
+>  
+> +	if (unlikely(irqstorm_limit && irqstorm_detected(desc)))
+> +		return;
+> +
+>  	desc->irq_count++;
+>  	if (likely(desc->irq_count < 100000))
+>  		return;
+>  
+>  	desc->irq_count = 0;
+>  	if (unlikely(desc->irqs_unhandled > 99900)) {
+> -		/*
+> -		 * The interrupt is stuck
+> -		 */
+> -		__report_bad_irq(desc, action_ret);
+> -		/*
+> -		 * Now kill the IRQ
+> -		 */
+> -		printk(KERN_EMERG "Disabling IRQ #%d\n", irq);
+> -		desc->istate |= IRQS_SPURIOUS_DISABLED;
+> -		desc->depth++;
+> -		irq_disable(desc);
+> -
+> +		disable_stuck_irq(desc, action_ret, "unhandled", false);
+>  		mod_timer(&poll_spurious_irq_timer,
+>  			  jiffies + POLL_SPURIOUS_IRQ_INTERVAL);
+>  	}
+> @@ -462,5 +485,16 @@ static int __init irqpoll_setup(char *st
+>  				"performance\n");
+>  	return 1;
+>  }
+> -
+>  __setup("irqpoll", irqpoll_setup);
+> +
+> +static int __init irqstorm_setup(char *arg)
+> +{
+> +	int res = kstrtoul(arg, 0, &irqstorm_limit);
+> +
+> +	if (!res) {
+> +		pr_info("Interrupt storm detector enabled. Limit=%lu / s\n",
+> +			irqstorm_limit);
+> +	}
+> +	return !!res;
+> +}
+> +__setup("irqstorm_limit", irqstorm_setup);
+
+This irq storm detection feature is very useful, any chance to get this merged?
+We will be happy to test. People seem to be having their own copy of such feature
+out-of-tree [1].
+
+[1] https://elinux.org/images/d/de/Oct28_InterruptStormDetectionFeature_KentoKobayashi.pdf
+
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
 
 _______________________________________________
 kexec mailing list
