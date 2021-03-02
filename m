@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from z11.mailgun.us ([104.130.96.11])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by merlin.infradead.org with esmtps (Exim 4.92.3 #3 (Red Hat Linux))
- id 1lGzjW-0007cy-WF
- for kexec@lists.infradead.org; Tue, 02 Mar 2021 07:46:20 +0000
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCH 0/3] warn and suppress irqflood
-Date: Tue,  2 Mar 2021 13:15:56 +0530
-Message-Id: <20210302074556.23998-1-saiprakash.ranjan@codeaurora.org>
-In-Reply-To: <87tuueftou.fsf@nanos.tec.linutronix.de>
-References: <87tuueftou.fsf@nanos.tec.linutronix.de>
+ id 1lH0FX-0001Vz-Fv
+ for kexec@lists.infradead.org; Tue, 02 Mar 2021 08:19:24 +0000
+Date: Tue, 2 Mar 2021 16:19:09 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 7/7] kdump: Use vmlinux_build_id() to simplify
+Message-ID: <20210302081909.GA28599@MiWiFi-R3L-srv>
+References: <20210301174749.1269154-1-swboyd@chromium.org>
+ <20210301174749.1269154-8-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210301174749.1269154-8-swboyd@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,200 +24,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: tglx@linutronix.de
-Cc: mkshah@codeaurora.org, linux-doc@vger.kernel.org, peterz@infradead.org, linus.walleij@linaro.org, kernelfans@gmail.com, afzal.mohd.ma@gmail.com, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, corbet@lwn.net, maz@kernel.org, gustavo@embeddedor.com, helgaas@kernel.org, pawan.kumar.gupta@linux.intel.com, pmladek@suse.com, gpiccoli@canonical.com, viro@zeniv.linux.org.uk, oneukum@suse.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, ilina@codeaurora.org, Jisheng.Zhang@synaptics.com, akpm@linux-foundation.org, mike.kravetz@oracle.com
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>, kexec@lists.infradead.org, Alexei Starovoitov <ast@kernel.org>, Evan Green <evgreen@chromium.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Jessica Yu <jeyu@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-Hi Thomas,
-
-> On Wed, Oct 28, 2020 at 12:58:41PM +0100, Thomas Gleixner wrote:
->
-
-<snip>...
-
-> Something like the completly untested below should work independent of
-> config options.
+On 03/01/21 at 09:47am, Stephen Boyd wrote:
+> We can use the vmlinux_build_id() helper here now instead of open coding
+> it. This consolidates code and possibly avoids calculating the build ID
+> twice in the case of a crash with a stacktrace.
 > 
-> Thanks,
-> 
->         tglx
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: <kexec@lists.infradead.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 > ---
->  include/linux/irqdesc.h |    4 ++
->  kernel/irq/manage.c     |    3 +
->  kernel/irq/spurious.c   |   74 +++++++++++++++++++++++++++++++++++-------------
->  3 files changed, 61 insertions(+), 20 deletions(-)
+>  kernel/crash_core.c | 46 ++++++++-------------------------------------
+>  1 file changed, 8 insertions(+), 38 deletions(-)
 > 
-> --- a/include/linux/irqdesc.h
-> +++ b/include/linux/irqdesc.h
-> @@ -30,6 +30,8 @@ struct pt_regs;
->   * @tot_count:		stats field for non-percpu irqs
->   * @irq_count:		stats field to detect stalled irqs
->   * @last_unhandled:	aging timer for unhandled count
-> + * @storm_count:	Counter for irq storm detection
-> + * @storm_checked:	Timestamp for irq storm detection
->   * @irqs_unhandled:	stats field for spurious unhandled interrupts
->   * @threads_handled:	stats field for deferred spurious detection of threaded handlers
->   * @threads_handled_last: comparator field for deferred spurious detection of theraded handlers
-> @@ -65,6 +67,8 @@ struct irq_desc {
->  	unsigned int		tot_count;
->  	unsigned int		irq_count;	/* For detecting broken IRQs */
->  	unsigned long		last_unhandled;	/* Aging timer for unhandled count */
-> +	unsigned long		storm_count;
-> +	unsigned long		storm_checked;
->  	unsigned int		irqs_unhandled;
->  	atomic_t		threads_handled;
->  	int			threads_handled_last;
-> --- a/kernel/irq/manage.c
-> +++ b/kernel/irq/manage.c
-> @@ -1581,6 +1581,9 @@ static int
->  	if (!shared) {
->  		init_waitqueue_head(&desc->wait_for_threads);
->  
-> +		/* Take a timestamp for interrupt storm detection */
-> +		desc->storm_checked = jiffies;
-> +
->  		/* Setup the type (level, edge polarity) if configured: */
->  		if (new->flags & IRQF_TRIGGER_MASK) {
->  			ret = __irq_set_trigger(desc,
-> --- a/kernel/irq/spurious.c
-> +++ b/kernel/irq/spurious.c
-> @@ -21,6 +21,7 @@ static void poll_spurious_irqs(struct ti
->  static DEFINE_TIMER(poll_spurious_irq_timer, poll_spurious_irqs);
->  static int irq_poll_cpu;
->  static atomic_t irq_poll_active;
-> +static unsigned long irqstorm_limit __ro_after_init;
->  
->  /*
->   * We wait here for a poller to finish.
-> @@ -189,18 +190,21 @@ static inline int bad_action_ret(irqretu
->   * (The other 100-of-100,000 interrupts may have been a correctly
->   *  functioning device sharing an IRQ with the failing one)
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 825284baaf46..07d3e1109a8c 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
 >   */
-> -static void __report_bad_irq(struct irq_desc *desc, irqreturn_t action_ret)
-> +static void __report_bad_irq(struct irq_desc *desc, irqreturn_t action_ret,
-> +			     bool storm)
+>  
+> +#include <linux/buildid.h>
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> @@ -378,51 +379,20 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  }
+>  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>  
+> -#define NOTES_SIZE (&__stop_notes - &__start_notes)
+> -#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+> -#define NT_GNU_BUILD_ID 3
+> -
+> -struct elf_note_section {
+> -	struct elf_note	n_hdr;
+> -	u8 n_data[];
+> -};
+> -
+>  /*
+>   * Add build ID from .notes section as generated by the GNU ld(1)
+>   * or LLVM lld(1) --build-id option.
+>   */
+>  static void add_build_id_vmcoreinfo(void)
 >  {
->  	unsigned int irq = irq_desc_get_irq(desc);
->  	struct irqaction *action;
->  	unsigned long flags;
->  
-> -	if (bad_action_ret(action_ret)) {
-> -		printk(KERN_ERR "irq event %d: bogus return value %x\n",
-> -				irq, action_ret);
-> -	} else {
-> -		printk(KERN_ERR "irq %d: nobody cared (try booting with "
-> +	if (!storm) {
-> +		if (bad_action_ret(action_ret)) {
-> +			pr_err("irq event %d: bogus return value %x\n",
-> +			       irq, action_ret);
-> +		} else {
-> +			pr_err("irq %d: nobody cared (try booting with "
->  				"the \"irqpoll\" option)\n", irq);
-> +		}
->  	}
->  	dump_stack();
->  	printk(KERN_ERR "handlers:\n");
-> @@ -228,7 +232,7 @@ static void report_bad_irq(struct irq_de
->  
->  	if (count > 0) {
->  		count--;
-> -		__report_bad_irq(desc, action_ret);
-> +		__report_bad_irq(desc, action_ret, false);
->  	}
->  }
->  
-> @@ -267,6 +271,33 @@ try_misrouted_irq(unsigned int irq, stru
->  	return action && (action->flags & IRQF_IRQPOLL);
->  }
->  
-> +static void disable_stuck_irq(struct irq_desc *desc, irqreturn_t action_ret,
-> +			      const char *reason, bool storm)
-> +{
-> +	__report_bad_irq(desc, action_ret, storm);
-> +	pr_emerg("Disabling %s IRQ #%d\n", reason, irq_desc_get_irq(desc));
-> +	desc->istate |= IRQS_SPURIOUS_DISABLED;
-> +	desc->depth++;
-> +	irq_disable(desc);
-> +}
+> -	char build_id[BUILD_ID_MAX * 2 + 1];
+> -	int n_remain = NOTES_SIZE;
+> -
+> -	while (n_remain >= sizeof(struct elf_note)) {
+> -		const struct elf_note_section *note_sec =
+> -			&__start_notes + NOTES_SIZE - n_remain;
+> -		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+> -
+> -		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+> -		    n_namesz != 0 &&
+> -		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
+> -			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+> -				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+> -				const u8 *s = &note_sec->n_data[n_namesz];
+> -
+> -				s = PTR_ALIGN(s, 4);
+> -				bin2hex(build_id, s, n_descsz);
+> -				build_id[2 * n_descsz] = '\0';
+> -				VMCOREINFO_BUILD_ID(build_id);
+> -				return;
+> -			}
+> -			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+> -				note_sec->n_hdr.n_descsz,
+> -				BUILD_ID_MAX);
+> -			return;
+> -		}
+> -		n_remain -= sizeof(struct elf_note) +
+> -			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+> -			ALIGN(note_sec->n_hdr.n_descsz, 4);
+> +	const char *build_id = vmlinux_build_id();
+
+It's strange that I can only see the cover letter and this patch 7,
+couldn't find the patch where vmlinux_build_id() is introduced in lkml.
+
 > +
-> +/* Interrupt storm detector for runaway interrupts (handled or not). */
-> +static bool irqstorm_detected(struct irq_desc *desc)
-> +{
-> +	unsigned long now = jiffies;
-> +
-> +	if (++desc->storm_count < irqstorm_limit) {
-> +		if (time_after(now, desc->storm_checked + HZ)) {
-> +			desc->storm_count = 0;
-> +			desc->storm_checked = now;
-> +		}
-> +		return false;
-> +	}
-> +
-> +	disable_stuck_irq(desc, IRQ_NONE, "runaway", true);
-> +	return true;
-> +}
-> +
->  #define SPURIOUS_DEFERRED	0x80000000
->  
->  void note_interrupt(struct irq_desc *desc, irqreturn_t action_ret)
-> @@ -403,24 +434,16 @@ void note_interrupt(struct irq_desc *des
->  			desc->irqs_unhandled -= ok;
->  	}
->  
-> +	if (unlikely(irqstorm_limit && irqstorm_detected(desc)))
+> +	if (build_id[0] == '\0') {
+> +		pr_warn("Build ID cannot be included in vmcoreinfo\n");
 > +		return;
-> +
->  	desc->irq_count++;
->  	if (likely(desc->irq_count < 100000))
->  		return;
->  
->  	desc->irq_count = 0;
->  	if (unlikely(desc->irqs_unhandled > 99900)) {
-> -		/*
-> -		 * The interrupt is stuck
-> -		 */
-> -		__report_bad_irq(desc, action_ret);
-> -		/*
-> -		 * Now kill the IRQ
-> -		 */
-> -		printk(KERN_EMERG "Disabling IRQ #%d\n", irq);
-> -		desc->istate |= IRQS_SPURIOUS_DISABLED;
-> -		desc->depth++;
-> -		irq_disable(desc);
-> -
-> +		disable_stuck_irq(desc, action_ret, "unhandled", false);
->  		mod_timer(&poll_spurious_irq_timer,
->  			  jiffies + POLL_SPURIOUS_IRQ_INTERVAL);
 >  	}
-> @@ -462,5 +485,16 @@ static int __init irqpoll_setup(char *st
->  				"performance\n");
->  	return 1;
+> +
+> +	VMCOREINFO_BUILD_ID(build_id);
 >  }
-> -
->  __setup("irqpoll", irqpoll_setup);
-> +
-> +static int __init irqstorm_setup(char *arg)
-> +{
-> +	int res = kstrtoul(arg, 0, &irqstorm_limit);
-> +
-> +	if (!res) {
-> +		pr_info("Interrupt storm detector enabled. Limit=%lu / s\n",
-> +			irqstorm_limit);
-> +	}
-> +	return !!res;
-> +}
-> +__setup("irqstorm_limit", irqstorm_setup);
+>  
+>  static int __init crash_save_vmcoreinfo_init(void)
+> -- 
+> https://chromeos.dev
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
 
-This irq storm detection feature is very useful, any chance to get this merged?
-We will be happy to test. People seem to be having their own copy of such feature
-out-of-tree [1].
-
-[1] https://elinux.org/images/d/de/Oct28_InterruptStormDetectionFeature_KentoKobayashi.pdf
-
-Thanks,
-Sai
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
 
 _______________________________________________
 kexec mailing list
