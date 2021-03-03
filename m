@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72c.google.com ([2607:f8b0:4864:20::72c])
+Received: from mail-qk1-x72e.google.com ([2607:f8b0:4864:20::72e])
  by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHFQM-000ksS-Ug
- for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:31:37 +0000
-Received: by mail-qk1-x72c.google.com with SMTP id a9so7798027qkn.13
- for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:31:33 -0800 (PST)
+ id 1lHFIu-000jcL-St
+ for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:53 +0000
+Received: by mail-qk1-x72e.google.com with SMTP id t4so4233880qkp.1
+ for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:23:42 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v12 11/17] arm64: kexec: kexec may require EL2 vectors
-Date: Tue,  2 Mar 2021 19:22:24 -0500
-Message-Id: <20210303002230.1083176-12-pasha.tatashin@soleen.com>
+Subject: [PATCH v12 06/17] arm64: hibernate: abstract ttrb0 setup function
+Date: Tue,  2 Mar 2021 19:22:19 -0500
+Message-Id: <20210303002230.1083176-7-pasha.tatashin@soleen.com>
 In-Reply-To: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 References: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,131 +26,87 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
 
-If we have a EL2 mode without VHE, the EL2 vectors are needed in order
-to switch to EL2 and jump to new world with hypervisor privileges.
+Currently, only hibernate sets custom ttbr0 with safe idmaped function.
+Kexec, is also going to be using this functinality when relocation code
+is going to be idmapped.
 
-In preporation to MMU enabled relocation, configure our EL2 table now.
+Move the setup seqeuence to a dedicated cpu_install_ttbr0() for custom
+ttbr0.
 
 Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/Kconfig                |  2 +-
- arch/arm64/include/asm/kexec.h    |  1 +
- arch/arm64/kernel/asm-offsets.c   |  1 +
- arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++++
- 4 files changed, 34 insertions(+), 1 deletion(-)
+ arch/arm64/include/asm/mmu_context.h | 24 ++++++++++++++++++++++++
+ arch/arm64/kernel/hibernate.c        | 21 +--------------------
+ 2 files changed, 25 insertions(+), 20 deletions(-)
 
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 1f212b47a48a..825fe88b7c08 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -1141,7 +1141,7 @@ config CRASH_DUMP
- 
- config TRANS_TABLE
- 	def_bool y
--	depends on HIBERNATION
-+	depends on HIBERNATION || KEXEC_CORE
- 
- config XEN_DOM0
- 	def_bool y
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 9befcd87e9a8..305cf0840ed3 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -96,6 +96,7 @@ struct kimage_arch {
- 	void *dtb;
- 	phys_addr_t dtb_mem;
- 	phys_addr_t kern_reloc;
-+	phys_addr_t el2_vectors;
- 	/* Core ELF header buffer */
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 0c92e193f866..2e3278df1fc3 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -157,6 +157,7 @@ int main(void)
- #endif
- #ifdef CONFIG_KEXEC_CORE
-   DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
-+  DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
-   DEFINE(KIMAGE_HEAD,			offsetof(struct kimage, head));
-   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
-   BLANK();
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 2e734e4ae12e..fb03b6676fb9 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -20,6 +20,7 @@
- #include <asm/mmu.h>
- #include <asm/mmu_context.h>
- #include <asm/page.h>
-+#include <asm/trans_pgd.h>
- 
- #include "cpu-reset.h"
- 
-@@ -42,7 +43,9 @@ static void _kexec_image_info(const char *func, int line,
- 	pr_debug("    start:       %lx\n", kimage->start);
- 	pr_debug("    head:        %lx\n", kimage->head);
- 	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
-+	pr_debug("    dtb_mem: %pa\n", &kimage->arch.dtb_mem);
- 	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
-+	pr_debug("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
- 
- 	for (i = 0; i < kimage->nr_segments; i++) {
- 		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
-@@ -137,9 +140,27 @@ static void kexec_segment_flush(const struct kimage *kimage)
- 	}
+diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+index 70ce8c1d2b07..c6521c8c06ac 100644
+--- a/arch/arm64/include/asm/mmu_context.h
++++ b/arch/arm64/include/asm/mmu_context.h
+@@ -132,6 +132,30 @@ static inline void cpu_install_idmap(void)
+ 	cpu_switch_mm(lm_alias(idmap_pg_dir), &init_mm);
  }
  
-+/* Allocates pages for kexec page table */
-+static void *kexec_page_alloc(void *arg)
++/*
++ * Load our new page tables. A strict BBM approach requires that we ensure that
++ * TLBs are free of any entries that may overlap with the global mappings we are
++ * about to install.
++ *
++ * For a real hibernate/resume/kexec cycle TTBR0 currently points to a zero
++ * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI runtime
++ * services), while for a userspace-driven test_resume cycle it points to
++ * userspace page tables (and we must point it at a zero page ourselves).
++ *
++ * We change T0SZ as part of installing the idmap. This is undone by
++ * cpu_uninstall_idmap() in __cpu_suspend_exit().
++ */
++static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
 +{
-+	struct kimage *kimage = (struct kimage *)arg;
-+	struct page *page = kimage_alloc_control_pages(kimage, 0);
++	cpu_set_reserved_ttbr0();
++	local_flush_tlb_all();
++	__cpu_set_tcr_t0sz(t0sz);
 +
-+	if (!page)
-+		return NULL;
-+
-+	memset(page_address(page), 0, PAGE_SIZE);
-+
-+	return page_address(page);
++	/* avoid cpu_switch_mm() and its SW-PAN and CNP interactions */
++	write_sysreg(ttbr0, ttbr0_el1);
++	isb();
 +}
 +
- int machine_kexec_post_load(struct kimage *kimage)
- {
- 	void *reloc_code = page_to_virt(kimage->control_code_page);
-+	struct trans_pgd_info info = {
-+		.trans_alloc_page	= kexec_page_alloc,
-+		.trans_alloc_arg	= kimage,
-+	};
+ /*
+  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
+  * avoiding the possibility of conflicting TLB entries being allocated.
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 0b8bad8bb6eb..ded5115bcb63 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -206,26 +206,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	if (rc)
+ 		return rc;
  
- 	/* If in place, relocation is not used, only flush next kernel */
- 	if (kimage->head & IND_DONE) {
-@@ -148,6 +169,14 @@ int machine_kexec_post_load(struct kimage *kimage)
- 		return 0;
- 	}
+-	/*
+-	 * Load our new page tables. A strict BBM approach requires that we
+-	 * ensure that TLBs are free of any entries that may overlap with the
+-	 * global mappings we are about to install.
+-	 *
+-	 * For a real hibernate/resume cycle TTBR0 currently points to a zero
+-	 * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI
+-	 * runtime services), while for a userspace-driven test_resume cycle it
+-	 * points to userspace page tables (and we must point it at a zero page
+-	 * ourselves).
+-	 *
+-	 * We change T0SZ as part of installing the idmap. This is undone by
+-	 * cpu_uninstall_idmap() in __cpu_suspend_exit().
+-	 */
+-	cpu_set_reserved_ttbr0();
+-	local_flush_tlb_all();
+-	__cpu_set_tcr_t0sz(t0sz);
+-	write_sysreg(trans_ttbr0, ttbr0_el1);
+-	isb();
+-
++	cpu_install_ttbr0(trans_ttbr0, t0sz);
+ 	*phys_dst_addr = virt_to_phys(page);
  
-+	kimage->arch.el2_vectors = 0;
-+	if (is_hyp_callable()) {
-+		int rc = trans_pgd_copy_el2_vectors(&info,
-+						    &kimage->arch.el2_vectors);
-+		if (rc)
-+			return rc;
-+	}
-+
- 	memcpy(reloc_code, arm64_relocate_new_kernel,
- 	       arm64_relocate_new_kernel_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code);
-@@ -200,6 +229,8 @@ void machine_kexec(struct kimage *kimage)
- 		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
- 			0, 0);
- 	} else {
-+		if (is_hyp_callable())
-+			__hyp_set_vectors(kimage->arch.el2_vectors);
- 		cpu_soft_restart(kimage->arch.kern_reloc, virt_to_phys(kimage),
- 				 0, 0);
- 	}
+ 	return 0;
 -- 
 2.25.1
 
