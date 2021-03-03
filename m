@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHFIw-000jfe-WC
- for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:58 +0000
-Received: by mail-qt1-x829.google.com with SMTP id s15so16291658qtq.0
- for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:23:54 -0800 (PST)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v12 14/17] arm64: kexec: install a copy of the linear-map
-Date: Tue,  2 Mar 2021 19:22:27 -0500
-Message-Id: <20210303002230.1083176-15-pasha.tatashin@soleen.com>
-In-Reply-To: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
-References: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
+ id 1lHO60-0023mG-On
+ for kexec@lists.infradead.org; Wed, 03 Mar 2021 09:47:09 +0000
+Received: by mail-pg1-f197.google.com with SMTP id b37so13785131pgm.2
+ for <kexec@lists.infradead.org>; Wed, 03 Mar 2021 01:45:41 -0800 (PST)
+Date: Wed, 3 Mar 2021 17:44:58 +0800
+From: Coiby Xu <coxu@redhat.com>
+Subject: Re: [RFC PATCH 4/4] i40e: don't open i40iw client for kdump
+Message-ID: <20210303094458.7yootsa5dvn5cnba@Rk>
+References: <20210222070701.16416-1-coxu@redhat.com>
+ <20210222070701.16416-5-coxu@redhat.com>
+ <CAFTCetS=G_JV4Ax6=Ty20uifoL1jscrqPGhdh7d2k+t=0d+L8g@mail.gmail.com>
 MIME-Version: 1.0
+In-Reply-To: <CAFTCetS=G_JV4Ax6=Ty20uifoL1jscrqPGhdh7d2k+t=0d+L8g@mail.gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,179 +23,101 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
+To: Bhupesh SHARMA <bhupesh.linux@gmail.com>
+Cc: netdev@vger.kernel.org, kexec@lists.infradead.org, Jesse Brandeburg <jesse.brandeburg@intel.com>, open list <linux-kernel@vger.kernel.org>, intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>, Tony Nguyen <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>
 
-To perform the kexec relocations with the MMU enabled, we need a copy
-of the linear map.
+Hi Bhupesh,
 
-Create one, and install it from the relocation code. This has to be done
-from the assembly code as it will be idmapped with TTBR0. The kernel
-runs in TTRB1, so can't use the break-before-make sequence on the mapping
-it is executing from.
+Glad to meet you here:)
 
-The makes no difference yet as the relocation code runs with the MMU
-disabled.
+On Thu, Feb 25, 2021 at 03:41:55PM +0530, Bhupesh SHARMA wrote:
+>Hello Coiby,
+>
+>On Mon, Feb 22, 2021 at 12:40 PM Coiby Xu <coxu@redhat.com> wrote:
+>>
+>> i40iw consumes huge amounts of memory. For example, on a x86_64 machine,
+>> i40iw consumed 1.5GB for Intel Corporation Ethernet Connection X722 for
+>> for 1GbE while "craskernel=auto" only reserved 160M. With the module
+>> parameter "resource_profile=2", we can reduce the memory usage of i40iw
+>> to ~300M which is still too much for kdump.
+>>
+>> Disabling the client registration would spare us the client interface
+>> operation open , i.e., i40iw_open for iwarp/uda device. Thus memory is
+>> saved for kdump.
+>>
+>> Signed-off-by: Coiby Xu <coxu@redhat.com>
+>> ---
+>>  drivers/net/ethernet/intel/i40e/i40e_client.c | 7 +++++++
+>>  1 file changed, 7 insertions(+)
+>>
+>> diff --git a/drivers/net/ethernet/intel/i40e/i40e_client.c b/drivers/net/ethernet/intel/i40e/i40e_client.c
+>> index a2dba32383f6..aafc2587f389 100644
+>> --- a/drivers/net/ethernet/intel/i40e/i40e_client.c
+>> +++ b/drivers/net/ethernet/intel/i40e/i40e_client.c
+>> @@ -4,6 +4,7 @@
+>>  #include <linux/list.h>
+>>  #include <linux/errno.h>
+>>  #include <linux/net/intel/i40e_client.h>
+>> +#include <linux/crash_dump.h>
+>>
+>>  #include "i40e.h"
+>>  #include "i40e_prototype.h"
+>> @@ -741,6 +742,12 @@ int i40e_register_client(struct i40e_client *client)
+>>  {
+>>         int ret = 0;
+>>
+>> +       /* Don't open i40iw client for kdump because i40iw will consume huge
+>> +        * amounts of memory.
+>> +        */
+>> +       if (is_kdump_kernel())
+>> +               return ret;
+>> +
+>
+>Since crashkernel size can be manually set on the command line by a
+>user, and some users might be fine with a ~300M memory usage by i40iw
+>client [with resource_profile=2"], in my view, disabling the client
+>for all kdump cases seems too restrictive.
+>
+>We can probably check the crash kernel size allocated (
+>$ cat /sys/kernel/kexec_crash_size) and then make a decision
+>accordingly, so for example something like:
+>
+> +       if (is_kdump_kernel() && kexec_crash_size < 512M)
+> +               return ret;
+>
+>What do you think?
+>
 
-Co-developed-by: James Morse <james.morse@arm.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/assembler.h  | 19 +++++++++++++++++++
- arch/arm64/include/asm/kexec.h      |  2 ++
- arch/arm64/kernel/asm-offsets.c     |  2 ++
- arch/arm64/kernel/hibernate-asm.S   | 20 --------------------
- arch/arm64/kernel/machine_kexec.c   | 16 ++++++++++++++--
- arch/arm64/kernel/relocate_kernel.S |  3 +++
- 6 files changed, 40 insertions(+), 22 deletions(-)
+Thanks for the suggestion! After having a discussion with the team, we
+think it's better to not intervene i40iw in the kernel space. Actually 
+when kexec-tools is building initramfs for kdump, i40iw is not included 
+by default unless a user explicitly asks to include i40iw by changing 
+/etc/kdump.conf, i.e., adding 'dracut_args --add-drivers "i40iw"'.
 
-diff --git a/arch/arm64/include/asm/assembler.h b/arch/arm64/include/asm/assembler.h
-index 29061b76aab6..3ce8131ad660 100644
---- a/arch/arm64/include/asm/assembler.h
-+++ b/arch/arm64/include/asm/assembler.h
-@@ -425,6 +425,25 @@ USER(\label, ic	ivau, \tmp2)			// invalidate I line PoU
- 	isb
- 	.endm
- 
-+/*
-+ * To prevent the possibility of old and new partial table walks being visible
-+ * in the tlb, switch the ttbr to a zero page when we invalidate the old
-+ * records. D4.7.1 'General TLB maintenance requirements' in ARM DDI 0487A.i
-+ * Even switching to our copied tables will cause a changed output address at
-+ * each stage of the walk.
-+ */
-+	.macro break_before_make_ttbr_switch zero_page, page_table, tmp, tmp2
-+	phys_to_ttbr \tmp, \zero_page
-+	msr	ttbr1_el1, \tmp
-+	isb
-+	tlbi	vmalle1
-+	dsb	nsh
-+	phys_to_ttbr \tmp, \page_table
-+	offset_ttbr1 \tmp, \tmp2
-+	msr	ttbr1_el1, \tmp
-+	isb
-+	.endm
-+
- /*
-  * reset_pmuserenr_el0 - reset PMUSERENR_EL0 if PMUv3 present
-  */
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 305cf0840ed3..59ac166daf53 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -97,6 +97,8 @@ struct kimage_arch {
- 	phys_addr_t dtb_mem;
- 	phys_addr_t kern_reloc;
- 	phys_addr_t el2_vectors;
-+	phys_addr_t ttbr1;
-+	phys_addr_t zero_page;
- 	/* Core ELF header buffer */
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 2e3278df1fc3..609362b5aa76 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -158,6 +158,8 @@ int main(void)
- #ifdef CONFIG_KEXEC_CORE
-   DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
-   DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
-+  DEFINE(KIMAGE_ARCH_ZERO_PAGE,		offsetof(struct kimage, arch.zero_page));
-+  DEFINE(KIMAGE_ARCH_TTBR1,		offsetof(struct kimage, arch.ttbr1));
-   DEFINE(KIMAGE_HEAD,			offsetof(struct kimage, head));
-   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
-   BLANK();
-diff --git a/arch/arm64/kernel/hibernate-asm.S b/arch/arm64/kernel/hibernate-asm.S
-index 8ccca660034e..a31e621ba867 100644
---- a/arch/arm64/kernel/hibernate-asm.S
-+++ b/arch/arm64/kernel/hibernate-asm.S
-@@ -15,26 +15,6 @@
- #include <asm/page.h>
- #include <asm/virt.h>
- 
--/*
-- * To prevent the possibility of old and new partial table walks being visible
-- * in the tlb, switch the ttbr to a zero page when we invalidate the old
-- * records. D4.7.1 'General TLB maintenance requirements' in ARM DDI 0487A.i
-- * Even switching to our copied tables will cause a changed output address at
-- * each stage of the walk.
-- */
--.macro break_before_make_ttbr_switch zero_page, page_table, tmp, tmp2
--	phys_to_ttbr \tmp, \zero_page
--	msr	ttbr1_el1, \tmp
--	isb
--	tlbi	vmalle1
--	dsb	nsh
--	phys_to_ttbr \tmp, \page_table
--	offset_ttbr1 \tmp, \tmp2
--	msr	ttbr1_el1, \tmp
--	isb
--.endm
--
--
- /*
-  * Resume from hibernate
-  *
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index f1451d807708..c875ef522e53 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -153,6 +153,8 @@ static void *kexec_page_alloc(void *arg)
- 
- int machine_kexec_post_load(struct kimage *kimage)
- {
-+	int rc;
-+	pgd_t *trans_pgd;
- 	void *reloc_code = page_to_virt(kimage->control_code_page);
- 	long reloc_size;
- 	struct trans_pgd_info info = {
-@@ -169,12 +171,22 @@ int machine_kexec_post_load(struct kimage *kimage)
- 
- 	kimage->arch.el2_vectors = 0;
- 	if (is_hyp_callable()) {
--		int rc = trans_pgd_copy_el2_vectors(&info,
--						    &kimage->arch.el2_vectors);
-+		rc = trans_pgd_copy_el2_vectors(&info,
-+						&kimage->arch.el2_vectors);
- 		if (rc)
- 			return rc;
- 	}
- 
-+	/* Create a copy of the linear map */
-+	trans_pgd = kexec_page_alloc(kimage);
-+	if (!trans_pgd)
-+		return -ENOMEM;
-+	rc = trans_pgd_create_copy(&info, &trans_pgd, PAGE_OFFSET, PAGE_END);
-+	if (rc)
-+		return rc;
-+	kimage->arch.ttbr1 = __pa(trans_pgd);
-+	kimage->arch.zero_page = __pa(empty_zero_page);
-+
- 	reloc_size = __relocate_new_kernel_end - __relocate_new_kernel_start;
- 	memcpy(reloc_code, __relocate_new_kernel_start, reloc_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code);
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index 7a600ba33ae1..e83b6380907d 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -29,10 +29,13 @@
-  */
- SYM_CODE_START(arm64_relocate_new_kernel)
- 	/* Setup the list loop variables. */
-+	ldr	x18, [x0, #KIMAGE_ARCH_ZERO_PAGE] /* x18 = zero page for BBM */
-+	ldr	x17, [x0, #KIMAGE_ARCH_TTBR1]	/* x17 = linear map copy */
- 	ldr	x16, [x0, #KIMAGE_HEAD]		/* x16 = kimage_head */
- 	mov	x14, xzr			/* x14 = entry ptr */
- 	mov	x13, xzr			/* x13 = copy dest */
- 	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
-+	break_before_make_ttbr_switch	x18, x17, x1, x2 /* set linear map */
- .Lloop:
- 	and	x12, x16, PAGE_MASK		/* x12 = addr */
- 
+
+>Regards,
+>Bhupesh
+>
+>>         if (!client) {
+>>                 ret = -EIO;
+>>                 goto out;
+>> --
+>> 2.30.1
+>>
+>>
+>> _______________________________________________
+>> kexec mailing list
+>> kexec@lists.infradead.org
+>> http://lists.infradead.org/mailman/listinfo/kexec
+>
+
 -- 
-2.25.1
+Best regards,
+Coiby
 
 
 _______________________________________________
