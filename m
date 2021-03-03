@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x82b.google.com ([2607:f8b0:4864:20::82b])
+Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
  by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHFIu-000jc2-Bw
- for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:52 +0000
-Received: by mail-qt1-x82b.google.com with SMTP id d11so15555415qtx.9
+ id 1lHFIq-000jc0-Rl
+ for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:51 +0000
+Received: by mail-qk1-x730.google.com with SMTP id l132so21138079qke.7
  for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:23:40 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v12 02/17] arm64: hyp-stub: Move invalid vector entries into
- the vectors
-Date: Tue,  2 Mar 2021 19:22:15 -0500
-Message-Id: <20210303002230.1083176-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v12 03/17] arm64: hyp-stub: Move el1_sync into the vectors
+Date: Tue,  2 Mar 2021 19:22:16 -0500
+Message-Id: <20210303002230.1083176-4-pasha.tatashin@soleen.com>
 In-Reply-To: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 References: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -29,13 +28,12 @@ To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xm
 
 From: James Morse <james.morse@arm.com>
 
-Most of the hyp-stub's vector entries are invalid. These are each
-a unique function that branches to itself. To move these into the
-vectors, merge the ventry and invalid_vector macros and give each
-one a unique name.
+The hyp-stub's el1_sync code doesn't do very much, this can easily fit
+in the vectors.
 
-This means we can copy the hyp-stub as it is self contained within
-its vectors.
+With this, all of the hyp-stubs behaviour is contained in its vectors.
+This lets kexec and hibernate copy the hyp-stub when they need its
+behaviour, instead of re-implementing it.
 
 Signed-off-by: James Morse <james.morse@arm.com>
 
@@ -43,92 +41,93 @@ Signed-off-by: James Morse <james.morse@arm.com>
 
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/hyp-stub.S | 56 +++++++++++++++---------------------
- 1 file changed, 23 insertions(+), 33 deletions(-)
+ arch/arm64/kernel/hyp-stub.S | 59 ++++++++++++++++++------------------
+ 1 file changed, 29 insertions(+), 30 deletions(-)
 
 diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 572b28646005..ff329c5c074d 100644
+index ff329c5c074d..d1a73d0f74e0 100644
 --- a/arch/arm64/kernel/hyp-stub.S
 +++ b/arch/arm64/kernel/hyp-stub.S
-@@ -16,31 +16,38 @@
- #include <asm/ptrace.h>
- #include <asm/virt.h>
- 
-+.macro invalid_vector	label
-+SYM_CODE_START_LOCAL(\label)
-+	.align 7
-+	b	\label
-+SYM_CODE_END(\label)
+@@ -21,6 +21,34 @@ SYM_CODE_START_LOCAL(\label)
+ 	.align 7
+ 	b	\label
+ SYM_CODE_END(\label)
 +.endm
 +
- 	.text
- 	.pushsection	.hyp.text, "ax"
- 
- 	.align 11
- 
- SYM_CODE_START(__hyp_stub_vectors)
--	ventry	el2_sync_invalid		// Synchronous EL2t
--	ventry	el2_irq_invalid			// IRQ EL2t
--	ventry	el2_fiq_invalid			// FIQ EL2t
--	ventry	el2_error_invalid		// Error EL2t
-+	invalid_vector	hyp_stub_el2t_sync_invalid	// Synchronous EL2t
-+	invalid_vector	hyp_stub_el2t_irq_invalid	// IRQ EL2t
-+	invalid_vector	hyp_stub_el2t_fiq_invalid	// FIQ EL2t
-+	invalid_vector	hyp_stub_el2t_error_invalid	// Error EL2t
- 
--	ventry	el2_sync_invalid		// Synchronous EL2h
--	ventry	el2_irq_invalid			// IRQ EL2h
--	ventry	el2_fiq_invalid			// FIQ EL2h
--	ventry	el2_error_invalid		// Error EL2h
-+	invalid_vector	hyp_stub_el2h_sync_invalid	// Synchronous EL2h
-+	invalid_vector	hyp_stub_el2h_irq_invalid	// IRQ EL2h
-+	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
-+	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
- 
- 	ventry	el1_sync			// Synchronous 64-bit EL1
--	ventry	el1_irq_invalid			// IRQ 64-bit EL1
--	ventry	el1_fiq_invalid			// FIQ 64-bit EL1
--	ventry	el1_error_invalid		// Error 64-bit EL1
--
--	ventry	el1_sync_invalid		// Synchronous 32-bit EL1
--	ventry	el1_irq_invalid			// IRQ 32-bit EL1
--	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
--	ventry	el1_error_invalid		// Error 32-bit EL1
-+	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
-+	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
-+	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
++.macro hyp_stub_el1_sync
++SYM_CODE_START_LOCAL(hyp_stub_el1_sync)
++	.align 7
++	cmp	x0, #HVC_SET_VECTORS
++	b.ne	2f
++	msr	vbar_el2, x1
++	b	9f
 +
-+	invalid_vector	hyp_stub_32b_el1_sync_invalid	// Synchronous 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_irq_invalid	// IRQ 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_fiq_invalid	// FIQ 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_error_invalid	// Error 32-bit EL1
- 	.align 11
- SYM_INNER_LABEL(__hyp_stub_vectors_end, SYM_L_LOCAL)
- SYM_CODE_END(__hyp_stub_vectors)
-@@ -173,23 +180,6 @@ SYM_CODE_END(enter_vhe)
++2:	cmp	x0, #HVC_SOFT_RESTART
++	b.ne	3f
++	mov	x0, x2
++	mov	x2, x4
++	mov	x4, x1
++	mov	x1, x3
++	br	x4				// no return
++
++3:	cmp	x0, #HVC_RESET_VECTORS
++	beq	9f				// Nothing to reset!
++
++	/* Someone called kvm_call_hyp() against the hyp-stub... */
++	mov_q	x0, HVC_STUB_ERR
++	eret
++
++9:	mov	x0, xzr
++	eret
++SYM_CODE_END(hyp_stub_el1_sync)
+ .endm
  
- 	.popsection
+ 	.text
+@@ -39,7 +67,7 @@ SYM_CODE_START(__hyp_stub_vectors)
+ 	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
+ 	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
  
--.macro invalid_vector	label
--SYM_CODE_START_LOCAL(\label)
--	b \label
--SYM_CODE_END(\label)
--.endm
+-	ventry	el1_sync			// Synchronous 64-bit EL1
++	hyp_stub_el1_sync				// Synchronous 64-bit EL1
+ 	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
+ 	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
+ 	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
+@@ -55,35 +83,6 @@ SYM_CODE_END(__hyp_stub_vectors)
+ # Check the __hyp_stub_vectors didn't overflow
+ .org . - (__hyp_stub_vectors_end - __hyp_stub_vectors) + SZ_2K
+ 
 -
--	invalid_vector	el2_sync_invalid
--	invalid_vector	el2_irq_invalid
--	invalid_vector	el2_fiq_invalid
--	invalid_vector	el2_error_invalid
--	invalid_vector	el1_sync_invalid
--	invalid_vector	el1_irq_invalid
--	invalid_vector	el1_fiq_invalid
--	invalid_vector	el1_error_invalid
+-SYM_CODE_START_LOCAL(el1_sync)
+-	cmp	x0, #HVC_SET_VECTORS
+-	b.ne	1f
+-	msr	vbar_el2, x1
+-	b	9f
 -
--	.popsection
+-1:	cmp	x0, #HVC_VHE_RESTART
+-	b.eq	mutate_to_vhe
 -
- /*
-  * __hyp_set_vectors: Call this after boot to set the initial hypervisor
-  * vectors as part of hypervisor installation.  On an SMP system, this should
+-2:	cmp	x0, #HVC_SOFT_RESTART
+-	b.ne	3f
+-	mov	x0, x2
+-	mov	x2, x4
+-	mov	x4, x1
+-	mov	x1, x3
+-	br	x4				// no return
+-
+-3:	cmp	x0, #HVC_RESET_VECTORS
+-	beq	9f				// Nothing to reset!
+-
+-	/* Someone called kvm_call_hyp() against the hyp-stub... */
+-	mov_q	x0, HVC_STUB_ERR
+-	eret
+-
+-9:	mov	x0, xzr
+-	eret
+-SYM_CODE_END(el1_sync)
+-
+ // nVHE? No way! Give me the real thing!
+ SYM_CODE_START_LOCAL(mutate_to_vhe)
+ 	// Sanity check: MMU *must* be off
 -- 
 2.25.1
 
