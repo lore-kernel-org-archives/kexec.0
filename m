@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
+Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
  by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHFIq-000jc0-Rl
- for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:51 +0000
-Received: by mail-qk1-x730.google.com with SMTP id l132so21138079qke.7
- for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:23:40 -0800 (PST)
+ id 1lHFIv-000jdl-EX
+ for kexec@lists.infradead.org; Wed, 03 Mar 2021 00:23:54 +0000
+Received: by mail-qt1-x830.google.com with SMTP id w1so16294191qto.2
+ for <kexec@lists.infradead.org>; Tue, 02 Mar 2021 16:23:51 -0800 (PST)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v12 03/17] arm64: hyp-stub: Move el1_sync into the vectors
-Date: Tue,  2 Mar 2021 19:22:16 -0500
-Message-Id: <20210303002230.1083176-4-pasha.tatashin@soleen.com>
+Subject: [PATCH v12 12/17] arm64: kexec: relocate in EL1 mode
+Date: Tue,  2 Mar 2021 19:22:25 -0500
+Message-Id: <20210303002230.1083176-13-pasha.tatashin@soleen.com>
 In-Reply-To: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 References: <20210303002230.1083176-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,108 +26,86 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com
 
-From: James Morse <james.morse@arm.com>
+Since we are going to keep MMU enabled during relocation, we need to
+keep EL1 mode throughout the relocation.
 
-The hyp-stub's el1_sync code doesn't do very much, this can easily fit
-in the vectors.
+Keep EL1 enabled, and switch EL2 only before enterying the new world.
 
-With this, all of the hyp-stubs behaviour is contained in its vectors.
-This lets kexec and hibernate copy the hyp-stub when they need its
-behaviour, instead of re-implementing it.
-
-Signed-off-by: James Morse <james.morse@arm.com>
-
-[Fixed merging issues]
-
+Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/hyp-stub.S | 59 ++++++++++++++++++------------------
- 1 file changed, 29 insertions(+), 30 deletions(-)
+ arch/arm64/kernel/cpu-reset.h       |  3 +--
+ arch/arm64/kernel/machine_kexec.c   |  4 ++--
+ arch/arm64/kernel/relocate_kernel.S | 13 +++++++++++--
+ 3 files changed, 14 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index ff329c5c074d..d1a73d0f74e0 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -21,6 +21,34 @@ SYM_CODE_START_LOCAL(\label)
- 	.align 7
- 	b	\label
- SYM_CODE_END(\label)
-+.endm
-+
-+.macro hyp_stub_el1_sync
-+SYM_CODE_START_LOCAL(hyp_stub_el1_sync)
-+	.align 7
-+	cmp	x0, #HVC_SET_VECTORS
-+	b.ne	2f
-+	msr	vbar_el2, x1
-+	b	9f
-+
-+2:	cmp	x0, #HVC_SOFT_RESTART
-+	b.ne	3f
-+	mov	x0, x2
-+	mov	x2, x4
-+	mov	x4, x1
-+	mov	x1, x3
-+	br	x4				// no return
-+
-+3:	cmp	x0, #HVC_RESET_VECTORS
-+	beq	9f				// Nothing to reset!
-+
-+	/* Someone called kvm_call_hyp() against the hyp-stub... */
-+	mov_q	x0, HVC_STUB_ERR
-+	eret
-+
-+9:	mov	x0, xzr
-+	eret
-+SYM_CODE_END(hyp_stub_el1_sync)
- .endm
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index 1922e7a690f8..f6d95512fec6 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -20,11 +20,10 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
+ {
+ 	typeof(__cpu_soft_restart) *restart;
  
- 	.text
-@@ -39,7 +67,7 @@ SYM_CODE_START(__hyp_stub_vectors)
- 	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
- 	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
+-	unsigned long el2_switch = is_hyp_callable();
+ 	restart = (void *)__pa_symbol(__cpu_soft_restart);
  
--	ventry	el1_sync			// Synchronous 64-bit EL1
-+	hyp_stub_el1_sync				// Synchronous 64-bit EL1
- 	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
- 	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
- 	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
-@@ -55,35 +83,6 @@ SYM_CODE_END(__hyp_stub_vectors)
- # Check the __hyp_stub_vectors didn't overflow
- .org . - (__hyp_stub_vectors_end - __hyp_stub_vectors) + SZ_2K
+ 	cpu_install_idmap();
+-	restart(el2_switch, entry, arg0, arg1, arg2);
++	restart(0, entry, arg0, arg1, arg2);
+ 	unreachable();
+ }
  
--
--SYM_CODE_START_LOCAL(el1_sync)
--	cmp	x0, #HVC_SET_VECTORS
--	b.ne	1f
--	msr	vbar_el2, x1
--	b	9f
--
--1:	cmp	x0, #HVC_VHE_RESTART
--	b.eq	mutate_to_vhe
--
--2:	cmp	x0, #HVC_SOFT_RESTART
--	b.ne	3f
--	mov	x0, x2
--	mov	x2, x4
--	mov	x4, x1
--	mov	x1, x3
--	br	x4				// no return
--
--3:	cmp	x0, #HVC_RESET_VECTORS
--	beq	9f				// Nothing to reset!
--
--	/* Someone called kvm_call_hyp() against the hyp-stub... */
--	mov_q	x0, HVC_STUB_ERR
--	eret
--
--9:	mov	x0, xzr
--	eret
--SYM_CODE_END(el1_sync)
--
- // nVHE? No way! Give me the real thing!
- SYM_CODE_START_LOCAL(mutate_to_vhe)
- 	// Sanity check: MMU *must* be off
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index fb03b6676fb9..d5940b7889f8 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -231,8 +231,8 @@ void machine_kexec(struct kimage *kimage)
+ 	} else {
+ 		if (is_hyp_callable())
+ 			__hyp_set_vectors(kimage->arch.el2_vectors);
+-		cpu_soft_restart(kimage->arch.kern_reloc, virt_to_phys(kimage),
+-				 0, 0);
++		cpu_soft_restart(kimage->arch.kern_reloc,
++				 virt_to_phys(kimage), 0, 0);
+ 	}
+ 
+ 	BUG(); /* Should never get here. */
+diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+index 36b4496524c3..df023b82544b 100644
+--- a/arch/arm64/kernel/relocate_kernel.S
++++ b/arch/arm64/kernel/relocate_kernel.S
+@@ -13,6 +13,7 @@
+ #include <asm/kexec.h>
+ #include <asm/page.h>
+ #include <asm/sysreg.h>
++#include <asm/virt.h>
+ 
+ /*
+  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
+@@ -61,12 +62,20 @@ SYM_CODE_START(arm64_relocate_new_kernel)
+ 	isb
+ 
+ 	/* Start new image. */
++	ldr	x1, [x0, #KIMAGE_ARCH_EL2_VECTORS]	/* relocation start */
++	cbz	x1, .Lel1
++	ldr	x1, [x0, #KIMAGE_START]		/* relocation start */
++	ldr	x2, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
++	mov	x3, xzr
++	mov	x4, xzr
++	mov     x0, #HVC_SOFT_RESTART
++	hvc	#0				/* Jumps from el2 */
++.Lel1:
+ 	ldr	x4, [x0, #KIMAGE_START]		/* relocation start */
+ 	ldr	x0, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
+-	mov	x1, xzr
+ 	mov	x2, xzr
+ 	mov	x3, xzr
+-	br	x4
++	br	x4				/* Jumps from el1 */
+ SYM_CODE_END(arm64_relocate_new_kernel)
+ 
+ .align 3	/* To keep the 64-bit values below naturally aligned. */
 -- 
 2.25.1
 
