@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by casper.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lHeAW-005Elg-58
- for kexec@lists.infradead.org; Thu, 04 Mar 2021 02:56:53 +0000
-Received: by mail-pl1-f198.google.com with SMTP id d11so3989481plc.19
- for <kexec@lists.infradead.org>; Wed, 03 Mar 2021 18:56:37 -0800 (PST)
-From: Coiby Xu <coxu@redhat.com>
-Subject: [PATCH v1 3/3] i40e: use minimal admin queue for kdump
-Date: Thu,  4 Mar 2021 10:55:43 +0800
-Message-Id: <20210304025543.334912-4-coxu@redhat.com>
-In-Reply-To: <20210304025543.334912-1-coxu@redhat.com>
-References: <20210304025543.334912-1-coxu@redhat.com>
+Received: from mx3.molgen.mpg.de ([141.14.17.11] helo=mx1.molgen.mpg.de)
+ by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lHnNR-008emW-1V
+ for kexec@lists.infradead.org; Thu, 04 Mar 2021 12:46:51 +0000
+From: Paul Menzel <pmenzel@molgen.mpg.de>
+Subject: [PATCH] kexec: Add kexec reboot string
+Date: Thu,  4 Mar 2021 13:46:26 +0100
+Message-Id: <20210304124626.13927-1-pmenzel@molgen.mpg.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,52 +20,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: netdev@vger.kernel.org
-Cc: kexec@lists.infradead.org, intel-wired-lan@lists.osuosl.org, Jakub Kicinski <kuba@kernel.org>, Jesse Brandeburg <jesse.brandeburg@intel.com>, Tony Nguyen <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, open list <linux-kernel@vger.kernel.org>
+To: Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Guohan Lu <lguohan@gmail.com>, Joe LeVeque <jolevequ@microsoft.com>, Paul Menzel <pmenzel@molgen.mpg.de>
 
-The minimum size of admin send/receive queue is 1 and 2 respectively.
-The admin send queue can't be set to 1 because in that case, the
-firmware would fail to init.
+From: Joe LeVeque <jolevequ@microsoft.com>
 
-Signed-off-by: Coiby Xu <coxu@redhat.com>
+The purpose is to notify the kernel module for fast reboot.
+
+Upstream a patch from the SONiC network operating system [1].
+
+[1]: https://github.com/Azure/sonic-linux-kernel/pull/46
+
+Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
 ---
- drivers/net/ethernet/intel/i40e/i40e.h      | 2 ++
- drivers/net/ethernet/intel/i40e/i40e_main.c | 9 +++++++--
- 2 files changed, 9 insertions(+), 2 deletions(-)
+ kernel/kexec_core.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/intel/i40e/i40e.h b/drivers/net/ethernet/intel/i40e/i40e.h
-index cd53981fa5e0..09217944baa4 100644
---- a/drivers/net/ethernet/intel/i40e/i40e.h
-+++ b/drivers/net/ethernet/intel/i40e/i40e.h
-@@ -66,6 +66,8 @@
- #define I40E_FDIR_RING_COUNT		32
- #define I40E_MAX_AQ_BUF_SIZE		4096
- #define I40E_AQ_LEN			256
-+#define I40E_MIN_ARQ_LEN		1
-+#define I40E_MIN_ASQ_LEN		2
- #define I40E_AQ_WORK_LIMIT		66 /* max number of VFs + a little */
- #define I40E_MAX_USER_PRIORITY		8
- #define I40E_DEFAULT_TRAFFIC_CLASS	BIT(0)
-diff --git a/drivers/net/ethernet/intel/i40e/i40e_main.c b/drivers/net/ethernet/intel/i40e/i40e_main.c
-index d6868c7aee05..5d67fb12e576 100644
---- a/drivers/net/ethernet/intel/i40e/i40e_main.c
-+++ b/drivers/net/ethernet/intel/i40e/i40e_main.c
-@@ -15327,8 +15327,13 @@ static int i40e_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index a0b6780740c8..f04d04d1b855 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1165,7 +1165,7 @@ int kernel_kexec(void)
+ #endif
+ 	{
+ 		kexec_in_progress = true;
+-		kernel_restart_prepare(NULL);
++		kernel_restart_prepare("kexec reboot");
+ 		migrate_to_reboot_cpu();
  
- 	i40e_check_recovery_mode(pf);
- 
--	hw->aq.num_arq_entries = I40E_AQ_LEN;
--	hw->aq.num_asq_entries = I40E_AQ_LEN;
-+	if (is_kdump_kernel()) {
-+		hw->aq.num_arq_entries = I40E_MIN_ARQ_LEN;
-+		hw->aq.num_asq_entries = I40E_MIN_ASQ_LEN;
-+	} else {
-+		hw->aq.num_arq_entries = I40E_AQ_LEN;
-+		hw->aq.num_asq_entries = I40E_AQ_LEN;
-+	}
- 	hw->aq.arq_buf_size = I40E_MAX_AQ_BUF_SIZE;
- 	hw->aq.asq_buf_size = I40E_MAX_AQ_BUF_SIZE;
- 	pf->adminq_work_limit = I40E_AQ_WORK_LIMIT;
+ 		/*
 -- 
 2.30.1
 
