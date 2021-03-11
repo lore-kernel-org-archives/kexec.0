@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ozlabs.org ([2401:3900:2:1::2])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lJr0T-0062qK-Up
- for kexec@lists.infradead.org; Wed, 10 Mar 2021 05:03:40 +0000
-From: Michael Ellerman <mpe@ellerman.id.au>
-Subject: Re: [PATCH v2] powerpc/kexec_file: Restore FDT size estimation for
- kdump kernel
-In-Reply-To: <CAL_JsqJatxTwSbM8a0PB2ievO_fRFeYJ8ZtBN0pRfnEjSXyUkg@mail.gmail.com>
-References: <20210220005204.1417200-1-bauerman@linux.ibm.com>
- <CAL_JsqJatxTwSbM8a0PB2ievO_fRFeYJ8ZtBN0pRfnEjSXyUkg@mail.gmail.com>
-Date: Wed, 10 Mar 2021 16:03:27 +1100
-Message-ID: <87a6rbr468.fsf@mpe.ellerman.id.au>
+ id 1lKCfY-008Kiz-9m
+ for kexec@lists.infradead.org; Thu, 11 Mar 2021 04:11:31 +0000
+Date: Thu, 11 Mar 2021 12:09:49 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] kexec: Add kexec reboot string
+Message-ID: <20210311040949.GG2962@MiWiFi-R3L-srv>
+References: <20210304124626.13927-1-pmenzel@molgen.mpg.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210304124626.13927-1-pmenzel@molgen.mpg.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,46 +23,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, kexec@lists.infradead.org, Hari Bathini <hbathini@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Mimi Zohar <zohar@linux.ibm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Guohan Lu <lguohan@gmail.com>, Joe LeVeque <jolevequ@microsoft.com>, akpm@linux-foundation.org
 
-Rob Herring <robh@kernel.org> writes:
-> On Fri, Feb 19, 2021 at 6:52 PM Thiago Jung Bauermann
-> <bauerman@linux.ibm.com> wrote:
->>
->> Commit 2377c92e37fe ("powerpc/kexec_file: fix FDT size estimation for kdump
->> kernel") fixed how elf64_load() estimates the FDT size needed by the
->> crashdump kernel.
->>
->> At the same time, commit 130b2d59cec0 ("powerpc: Use common
->> of_kexec_alloc_and_setup_fdt()") changed the same code to use the generic
->> function of_kexec_alloc_and_setup_fdt() to calculate the FDT size. That
->> change made the code overestimate it a bit by counting twice the space
->> required for the kernel command line and /chosen properties.
->>
->> Therefore change kexec_fdt_totalsize_ppc64() to calculate just the extra
->> space needed by the kdump kernel, and change the function name so that it
->> better reflects what the function is now doing.
->>
->> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
->> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
->> ---
->>  arch/powerpc/include/asm/kexec.h  |  2 +-
->>  arch/powerpc/kexec/elf_64.c       |  2 +-
->>  arch/powerpc/kexec/file_load_64.c | 26 ++++++++------------------
->>  3 files changed, 10 insertions(+), 20 deletions(-)
->
-> I ended up delaying the referenced series til 5.13, but have applied
-> it now. Can I get an ack from the powerpc maintainers on this one?
-> I'll fixup the commit log to make sense given the commit id's aren't
-> valid.
+On 03/04/21 at 01:46pm, Paul Menzel wrote:
+> From: Joe LeVeque <jolevequ@microsoft.com>
+> 
+> The purpose is to notify the kernel module for fast reboot.
 
-Thanks for handling it.
+Checked several modules which registered with reboot_notifier_list, the
+passed string is not cared. Just curious, could you tell how you have
+used or plan to use this string in your code?
 
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+No objection to this even though it's trivial if no real use case.
 
+Acked-by: Baoquan He <bhe@redhat.com>
 
-cheers
+> 
+> Upstream a patch from the SONiC network operating system [1].
+> 
+> [1]: https://github.com/Azure/sonic-linux-kernel/pull/46
+> 
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+> ---
+>  kernel/kexec_core.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index a0b6780740c8..f04d04d1b855 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1165,7 +1165,7 @@ int kernel_kexec(void)
+>  #endif
+>  	{
+>  		kexec_in_progress = true;
+> -		kernel_restart_prepare(NULL);
+> +		kernel_restart_prepare("kexec reboot");
+>  		migrate_to_reboot_cpu();
+>  
+>  		/*
+> -- 
+> 2.30.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
 
 _______________________________________________
 kexec mailing list
