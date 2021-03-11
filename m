@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f51.google.com ([209.85.166.51])
+Received: from mail-mw2nam10on2129.outbound.protection.outlook.com
+ ([40.107.94.129] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lKOYx-009cgw-Vc
- for kexec@lists.infradead.org; Thu, 11 Mar 2021 16:53:29 +0000
-Received: by mail-io1-f51.google.com with SMTP id g27so22657819iox.2
- for <kexec@lists.infradead.org>; Thu, 11 Mar 2021 08:53:26 -0800 (PST)
-Date: Thu, 11 Mar 2021 09:53:22 -0700
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] powerpc/kexec_file: Restore FDT size estimation for
- kdump kernel
-Message-ID: <20210311165322.GA860702@robh.at.kernel.org>
-References: <20210220005204.1417200-1-bauerman@linux.ibm.com>
+ id 1lKPpK-009p9f-ED
+ for kexec@lists.infradead.org; Thu, 11 Mar 2021 18:14:28 +0000
+From: Joe LeVeque <jolevequ@microsoft.com>
+Subject: RE: [EXTERNAL] Re: [PATCH] kexec: Add kexec reboot string
+Date: Thu, 11 Mar 2021 18:14:19 +0000
+Message-ID: <MWHPR21MB047848DAF9A5D35FEC1EC6D5DA909@MWHPR21MB0478.namprd21.prod.outlook.com>
+References: <20210304124626.13927-1-pmenzel@molgen.mpg.de>
+ <20210310213258.da50fe5f81086ab0147f6167@linux-foundation.org>
+In-Reply-To: <20210310213258.da50fe5f81086ab0147f6167@linux-foundation.org>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210220005204.1417200-1-bauerman@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,41 +25,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-Cc: kexec@lists.infradead.org, Mimi Zohar <zohar@linux.ibm.com>, linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, Hari Bathini <hbathini@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
+To: Andrew Morton <akpm@linux-foundation.org>, Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Eric Biederman <ebiederm@xmission.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Guohan Lu <lguohan@gmail.com>
 
-On Fri, 19 Feb 2021 21:52:04 -0300, Thiago Jung Bauermann wrote:
-> Commit 2377c92e37fe ("powerpc/kexec_file: fix FDT size estimation for kdump
-> kernel") fixed how elf64_load() estimates the FDT size needed by the
-> crashdump kernel.
-> 
-> At the same time, commit 130b2d59cec0 ("powerpc: Use common
-> of_kexec_alloc_and_setup_fdt()") changed the same code to use the generic
-> function of_kexec_alloc_and_setup_fdt() to calculate the FDT size. That
-> change made the code overestimate it a bit by counting twice the space
-> required for the kernel command line and /chosen properties.
-> 
-> Therefore change kexec_fdt_totalsize_ppc64() to calculate just the extra
-> space needed by the kdump kernel, and change the function name so that it
-> better reflects what the function is now doing.
-> 
-> Signed-off-by: Thiago Jung Bauermann <bauerman@linux.ibm.com>
-> Reviewed-by: Lakshmi Ramasubramanian <nramas@linux.microsoft.com>
-> ---
->  arch/powerpc/include/asm/kexec.h  |  2 +-
->  arch/powerpc/kexec/elf_64.c       |  2 +-
->  arch/powerpc/kexec/file_load_64.c | 26 ++++++++------------------
->  3 files changed, 10 insertions(+), 20 deletions(-)
-> 
-> Applies on top of next-20210219.
-> 
-> Changes since v1:
-> 
-> - Adjusted comment describing kexec_extra_fdt_size_ppc64() as suggested
->   by Lakshmi.
-> 
+Hi Andrew,
 
-Applied, thanks!
+Is this all your looking for? If not, please let me know.
+
+> Signed-off-by: Joe LeVeque <jolevequ@microsoft.com>
+
+Thanks,
+Joe
+
+-----Original Message-----
+From: Andrew Morton <akpm@linux-foundation.org> 
+Sent: Wednesday, March 10, 2021 9:33 PM
+To: Paul Menzel <pmenzel@molgen.mpg.de>
+Cc: Eric Biederman <ebiederm@xmission.com>; kexec@lists.infradead.org; linux-kernel@vger.kernel.org; Guohan Lu <lguohan@gmail.com>; Joe LeVeque <jolevequ@microsoft.com>
+Subject: [EXTERNAL] Re: [PATCH] kexec: Add kexec reboot string
+
+On Thu,  4 Mar 2021 13:46:26 +0100 Paul Menzel <pmenzel@molgen.mpg.de> wrote:
+
+> From: Joe LeVeque <jolevequ@microsoft.com>
+> 
+> The purpose is to notify the kernel module for fast reboot.
+> 
+> Upstream a patch from the SONiC network operating system [1].
+> 
+> [1]: 
+> https://nam06.safelinks.protection.outlook.com/?url=https%3A%2F%2Fgith
+> ub.com%2FAzure%2Fsonic-linux-kernel%2Fpull%2F46&amp;data=04%7C01%7Cjol
+> evequ%40microsoft.com%7Cddd7ea68d7d14ecdbd6608d8e44f225b%7C72f988bf86f
+> 141af91ab2d7cd011db47%7C1%7C0%7C637510375952624615%7CUnknown%7CTWFpbGZ
+> sb3d8eyJWIjoiMC4wLjAwMDAiLCJQIjoiV2luMzIiLCJBTiI6Ik1haWwiLCJXVCI6Mn0%3
+> D%7C1000&amp;sdata=0lxaoVz%2BYyu5C4HvzSGMf0NpJJUWZFWdp7m3hLlL9MM%3D&am
+> p;reserved=0
+> 
+> Signed-off-by: Paul Menzel <pmenzel@molgen.mpg.de>
+
+We should have Joe's signed-off-by: for this.  Joe, can you please send it?
+
 
 _______________________________________________
 kexec mailing list
