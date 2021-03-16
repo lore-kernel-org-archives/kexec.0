@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1044.google.com ([2607:f8b0:4864:20::1044])
+Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lL1cH-00D7Bq-Cc
- for kexec@lists.infradead.org; Sat, 13 Mar 2021 10:35:56 +0000
-Received: by mail-pj1-x1044.google.com with SMTP id
- f2-20020a17090a4a82b02900c67bf8dc69so11959922pjh.1
- for <kexec@lists.infradead.org>; Sat, 13 Mar 2021 02:35:28 -0800 (PST)
-From: menglong8.dong@gmail.com
-Subject: [PATCH] crash_dump: remove duplicate include in crash_dump.h
-Date: Sat, 13 Mar 2021 02:35:21 -0800
-Message-Id: <20210313103521.364854-1-zhang.yunkai@zte.com.cn>
+ id 1lMJBr-0021oM-Vy
+ for kexec@lists.infradead.org; Tue, 16 Mar 2021 23:33:34 +0000
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH next v1 0/3] printk: remove safe buffers
+Date: Wed, 17 Mar 2021 00:33:23 +0100
+Message-Id: <20210316233326.10778-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,34 +20,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Zhang Yunkai <zhang.yunkai@zte.com.cn>
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, =?UTF-8?q?C=C3=A9dric=20Le=20Goater?= <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Yue Hu <huyue2@yulong.com>, Alexey Kardashevskiy <aik@ozlabs.ru>, Rafael Aquini <aquini@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-From: Zhang Yunkai <zhang.yunkai@zte.com.cn>
+Hello,
 
-'linux/pgtable.h' included in 'crash_dump.h' is duplicated.
-It is also included in the 8th line.
+Here is v1 of a series to remove the safe buffers. They are no
+longer needed because messages can be stored directly into the
+log buffer from any context.
 
-Signed-off-by: Zhang Yunkai <zhang.yunkai@zte.com.cn>
----
- include/linux/crash_dump.h | 2 --
- 1 file changed, 2 deletions(-)
+However, the safe buffers also provided a form of recursion
+protection. For that reason, explicit recursion protection is
+also implemented for this series.
 
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index a5192b718dbe..6bd8a33cb740 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -8,8 +8,6 @@
- #include <linux/pgtable.h>
- #include <uapi/linux/vmcore.h>
- 
--#include <linux/pgtable.h> /* for pgprot_t */
--
- #ifdef CONFIG_CRASH_DUMP
- #define ELFCORE_ADDR_MAX	(-1ULL)
- #define ELFCORE_ADDR_ERR	(-2ULL)
+This series falls in line with the printk-rework plan as
+presented [0] at Linux Plumbers in Lisbon 2019.
+
+This series is based on next-20210316.
+
+John Ogness
+
+[0] https://linuxplumbersconf.org/event/4/contributions/290/attachments/276/463/lpc2019_jogness_printk.pdf (slide 23)
+
+John Ogness (3):
+  printk: track/limit recursion
+  printk: remove safe buffers
+  printk: convert @syslog_lock to spin_lock
+
+ arch/powerpc/kernel/traps.c    |   1 -
+ arch/powerpc/kernel/watchdog.c |   5 -
+ include/linux/printk.h         |  10 -
+ kernel/kexec_core.c            |   1 -
+ kernel/panic.c                 |   3 -
+ kernel/printk/internal.h       |   2 -
+ kernel/printk/printk.c         | 171 +++++++++--------
+ kernel/printk/printk_safe.c    | 332 +--------------------------------
+ lib/nmi_backtrace.c            |   6 -
+ 9 files changed, 100 insertions(+), 431 deletions(-)
+
 -- 
-2.25.1
+2.20.1
 
 
 _______________________________________________
