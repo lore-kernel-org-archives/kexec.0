@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from andre.telenet-ops.be ([2a02:1800:120:4::f00:15])
+Received: from xavier.telenet-ops.be ([2a02:1800:120:4::f00:14])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lMV4l-0035E0-O6
+ id 1lMV4l-0035Dl-5x
  for kexec@lists.infradead.org; Wed, 17 Mar 2021 12:15:02 +0000
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/3] Miscellaneous 32-bit fixes
-Date: Wed, 17 Mar 2021 13:14:47 +0100
-Message-Id: <20210317121450.2556349-1-geert+renesas@glider.be>
+Subject: [PATCH 2/3] printk: Use ULL suffix for 64-bit constants
+Date: Wed, 17 Mar 2021 13:14:49 +0100
+Message-Id: <20210317121450.2556349-3-geert+renesas@glider.be>
+In-Reply-To: <20210317121450.2556349-1-geert+renesas@glider.be>
+References: <20210317121450.2556349-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -16,45 +18,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: Varad Gautam <vrd@amazon.de>, John Ogness <john.ogness@linutronix.de>, kexec@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-	Hi Simon,
-
-This patch series fixes several compile warnings when building for a
-32-bit platform.  All but the last one are real bugs, from a functional
-point of view.
-
-Thanks for your comments!
-
-Geert Uytterhoeven (3):
-  kexec: Use %llu/%llx and casts to format uint64_t
-  printk: Use ULL suffix for 64-bit constants
-  printk: Use %zu to format size_t
-
- kexec/kexec.c       | 3 ++-
- util_lib/elf_info.c | 8 ++++----
- 2 files changed, 6 insertions(+), 5 deletions(-)
-
--- 
-2.25.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+V2hlbiBjb21waWxpbmcgZm9yIDMyLWJpdDoKCiAgICB1dGlsX2xpYi9lbGZfaW5mby5jOiBJbiBm
+dW5jdGlvbiDigJhnZXRfZGVzY19zdGF0ZeKAmToKICAgIHV0aWxfbGliL2VsZl9pbmZvLmM6OTIz
+OjMxOiB3YXJuaW5nOiBsZWZ0IHNoaWZ0IGNvdW50ID49IHdpZHRoIG9mIHR5cGUgWy1Xc2hpZnQt
+Y291bnQtb3ZlcmZsb3ddCiAgICAgIDkyMyB8ICNkZWZpbmUgREVTQ19GTEFHU19NQVNLICAoM1VM
+IDw8IERFU0NfRkxBR1NfU0hJRlQpCgkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Xn4KICAgIHV0aWxfbGliL2VsZl9pbmZvLmM6OTI1OjI1OiBub3RlOiBpbiBleHBhbnNpb24gb2Yg
+bWFjcm8g4oCYREVTQ19GTEFHU19NQVNL4oCZCiAgICAgIDkyNSB8ICNkZWZpbmUgREVTQ19JRF9N
+QVNLICAofkRFU0NfRkxBR1NfTUFTSykKCSAgfCAgICAgICAgICAgICAgICAgICAgICAgICBefn5+
+fn5+fn5+fn5+fn4KICAgIHV0aWxfbGliL2VsZl9pbmZvLmM6OTI2OjMwOiBub3RlOiBpbiBleHBh
+bnNpb24gb2YgbWFjcm8g4oCYREVTQ19JRF9NQVNL4oCZCiAgICAgIDkyNiB8ICNkZWZpbmUgREVT
+Q19JRChzdikgICgoc3YpICYgREVTQ19JRF9NQVNLKQoJICB8ICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgXn5+fn5+fn5+fn5+CiAgICB1dGlsX2xpYi9lbGZfaW5mby5jOjk0NzoxMjogbm90
+ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvIOKAmERFU0NfSUTigJkKICAgICAgOTQ3IHwgIGlmIChp
+ZCAhPSBERVNDX0lEKHN0YXRlX3ZhbCkpCgkgIHwgICAgICAgICAgICBefn5+fn5+CiAgICB1dGls
+X2xpYi9lbGZfaW5mby5jOiBJbiBmdW5jdGlvbiDigJhpZF9pbmPigJk6CiAgICB1dGlsX2xpYi9l
+bGZfaW5mby5jOjkyMzozMTogd2FybmluZzogbGVmdCBzaGlmdCBjb3VudCA+PSB3aWR0aCBvZiB0
+eXBlIFstV3NoaWZ0LWNvdW50LW92ZXJmbG93XQogICAgICA5MjMgfCAjZGVmaW5lIERFU0NfRkxB
+R1NfTUFTSyAgKDNVTCA8PCBERVNDX0ZMQUdTX1NISUZUKQoJICB8ICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIF5+CiAgICB1dGlsX2xpYi9lbGZfaW5mby5jOjkyNToyNTogbm90ZTogaW4g
+ZXhwYW5zaW9uIG9mIG1hY3JvIOKAmERFU0NfRkxBR1NfTUFTS+KAmQogICAgICA5MjUgfCAjZGVm
+aW5lIERFU0NfSURfTUFTSyAgKH5ERVNDX0ZMQUdTX01BU0spCgkgIHwgICAgICAgICAgICAgICAg
+ICAgICAgICAgXn5+fn5+fn5+fn5+fn5+CiAgICB1dGlsX2xpYi9lbGZfaW5mby5jOjk4MToxNTog
+bm90ZTogaW4gZXhwYW5zaW9uIG9mIG1hY3JvIOKAmERFU0NfSURfTUFTS+KAmQogICAgICA5ODEg
+fCAgcmV0dXJuIChpZCAmIERFU0NfSURfTUFTSyk7CgkgIHwgICAgICAgICAgICAgICBefn5+fn5+
+fn5+fn4KCkluZGVlZCwgInVuc2lnbmVkIGxvbmciIGNvbnN0YW50cyBhcmUgMzItYml0IG9uIDMy
+LWJpdCBwbGF0Zm9ybXMsIGFuZAo2NC1iaXQgb24gNjQtYml0IHBsYXRmb3Jtcy4KCkZpeCB0aGlz
+IGJ5IHVzaW5nIGEgIlVMTCIgc3VmZml4IGluc3RlYWQuCgpGaXhlczogNDE0OWRmOTAwNWYyY2Rk
+MiAoInByaW50azogYWRkIHN1cHBvcnQgZm9yIGxvY2tsZXNzIHJpbmdidWZmZXIiKQpTaWduZWQt
+b2ZmLWJ5OiBHZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPgotLS0K
+IHV0aWxfbGliL2VsZl9pbmZvLmMgfCA0ICsrLS0KIDEgZmlsZSBjaGFuZ2VkLCAyIGluc2VydGlv
+bnMoKyksIDIgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvdXRpbF9saWIvZWxmX2luZm8uYyBi
+L3V0aWxfbGliL2VsZl9pbmZvLmMKaW5kZXggMmYyM2E0NDhkYTA4ZWJkZC4uN2MwYTJjMzQ1Mzc5
+YTdjYSAxMDA2NDQKLS0tIGEvdXRpbF9saWIvZWxmX2luZm8uYworKysgYi91dGlsX2xpYi9lbGZf
+aW5mby5jCkBAIC05MjAsOCArOTIwLDggQEAgZW51bSBkZXNjX3N0YXRlIHsKIAogI2RlZmluZSBE
+RVNDX1NWX0JJVFMJCShzaXplb2YodWludDY0X3QpICogOCkKICNkZWZpbmUgREVTQ19GTEFHU19T
+SElGVAkoREVTQ19TVl9CSVRTIC0gMikKLSNkZWZpbmUgREVTQ19GTEFHU19NQVNLCQkoM1VMIDw8
+IERFU0NfRkxBR1NfU0hJRlQpCi0jZGVmaW5lIERFU0NfU1RBVEUoc3YpCQkoM1VMICYgKHN2ID4+
+IERFU0NfRkxBR1NfU0hJRlQpKQorI2RlZmluZSBERVNDX0ZMQUdTX01BU0sJCSgzVUxMIDw8IERF
+U0NfRkxBR1NfU0hJRlQpCisjZGVmaW5lIERFU0NfU1RBVEUoc3YpCQkoM1VMTCAmIChzdiA+PiBE
+RVNDX0ZMQUdTX1NISUZUKSkKICNkZWZpbmUgREVTQ19JRF9NQVNLCQkofkRFU0NfRkxBR1NfTUFT
+SykKICNkZWZpbmUgREVTQ19JRChzdikJCSgoc3YpICYgREVTQ19JRF9NQVNLKQogCi0tIAoyLjI1
+LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhl
+YyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5m
+cmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
