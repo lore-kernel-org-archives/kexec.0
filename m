@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from baptiste.telenet-ops.be ([2a02:1800:120:4::f00:13])
+Received: from andre.telenet-ops.be ([2a02:1800:120:4::f00:15])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lMV4k-0035Dj-IK
- for kexec@lists.infradead.org; Wed, 17 Mar 2021 12:15:00 +0000
+ id 1lMV4l-0035E0-O6
+ for kexec@lists.infradead.org; Wed, 17 Mar 2021 12:15:02 +0000
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/3] kexec: Use %llu/%llx and casts to format uint64_t
-Date: Wed, 17 Mar 2021 13:14:48 +0100
-Message-Id: <20210317121450.2556349-2-geert+renesas@glider.be>
-In-Reply-To: <20210317121450.2556349-1-geert+renesas@glider.be>
-References: <20210317121450.2556349-1-geert+renesas@glider.be>
+Subject: [PATCH 0/3] Miscellaneous 32-bit fixes
+Date: Wed, 17 Mar 2021 13:14:47 +0100
+Message-Id: <20210317121450.2556349-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,52 +16,45 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
 Cc: Varad Gautam <vrd@amazon.de>, John Ogness <john.ogness@linutronix.de>, kexec@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-V2hlbiBjb21waWxpbmcgZm9yIDMyLWJpdDoKCiAgICBrZXhlYy9rZXhlYy5jOiBJbiBmdW5jdGlv
-biDigJhjbWRsaW5lX2FkZF9saXZldXBkYXRl4oCZOgogICAga2V4ZWMva2V4ZWMuYzoxMTkyOjMw
-OiB3YXJuaW5nOiBmb3JtYXQg4oCYJWx14oCZIGV4cGVjdHMgYXJndW1lbnQgb2YgdHlwZSDigJhs
-b25nIHVuc2lnbmVkIGludOKAmSwgYnV0IGFyZ3VtZW50IDMgaGFzIHR5cGUg4oCYdWludDY0X3Ti
-gJkge2FrYSDigJhsb25nIGxvbmcgdW5zaWduZWQgaW504oCZfSBbLVdmb3JtYXQ9XQogICAgIDEx
-OTIgfCAgc3ByaW50ZihidWYsICIgbGl2ZXVwZGF0ZT0lbHVNQDB4JWx4IiwgbHVfc2l6ZU0sIGx1
-X3N0YXJ0KTsKCSAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICB+fl4gICAgICAgICAgfn5+
-fn5+fn4KCSAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgfAoJICB8
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAgICAgICAgICB1aW50NjRfdCB7YWthIGxv
-bmcgbG9uZyB1bnNpZ25lZCBpbnR9CgkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBs
-b25nIHVuc2lnbmVkIGludAoJICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICVsbHUKICAg
-IGtleGVjL2tleGVjLmM6MTE5MjozNzogd2FybmluZzogZm9ybWF0IOKAmCVseOKAmSBleHBlY3Rz
-IGFyZ3VtZW50IG9mIHR5cGUg4oCYbG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1bWVudCA0
-IGhhcyB0eXBlIOKAmHVpbnQ2NF904oCZIHtha2Eg4oCYbG9uZyBsb25nIHVuc2lnbmVkIGludOKA
-mX0gWy1XZm9ybWF0PV0KICAgICAxMTkyIHwgIHNwcmludGYoYnVmLCAiIGxpdmV1cGRhdGU9JWx1
-TUAweCVseCIsIGx1X3NpemVNLCBsdV9zdGFydCk7CgkgIHwgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIH5+XiAgICAgICAgICAgICB+fn5+fn5+fgoJICB8ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgfAoJICB8ICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHwgICAgICAgICAgICAgdWludDY0X3Qge2FrYSBsb25nIGxv
-bmcgdW5zaWduZWQgaW50fQoJICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IGxvbmcgdW5zaWduZWQgaW50CgkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICVsbHgKCkluZGVlZCwgInVpbnQ2NF90IiBpcyAidW5zaWduZWQgbG9uZyBsb25nIiBvbiAzMi1i
-aXQgZm9ybWF0cywgYW5kCiJ1bnNpZ25lZCBsb25nIiBvbiA2NC1iaXQgZm9ybWF0cy4KCkZpeCB0
-aGlzIGJ5IGNhc3RpbmcgdG8gInVuc2lnbmVkIGxvbmcgbG9uZyIsIGFuZCBmb3JtYXR0aW5nIHVz
-aW5nICIlbGx1IgpvciAiJWxseCIuCgpGaXhlczogYjEzOTg0YzZmOWVjN2ZkZCAoImtleGVjOiBJ
-bnRyb2R1Y2UgLS1sb2FkLWxpdmUtdXBkYXRlIGZvciB4ZW4iKQpTaWduZWQtb2ZmLWJ5OiBHZWVy
-dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPgotLS0KIGtleGVjL2tleGVj
-LmMgfCAzICsrLQogMSBmaWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigt
-KQoKZGlmZiAtLWdpdCBhL2tleGVjL2tleGVjLmMgYi9rZXhlYy9rZXhlYy5jCmluZGV4IGZkN2M4
-ZDJiN2E3OTc3ZjkuLmM1YThkZWMxZjA5ZjM1Y2EgMTAwNjQ0Ci0tLSBhL2tleGVjL2tleGVjLmMK
-KysrIGIva2V4ZWMva2V4ZWMuYwpAQCAtMTE4OSw3ICsxMTg5LDggQEAgdm9pZCBjbWRsaW5lX2Fk
-ZF9saXZldXBkYXRlKGNoYXIgKipiYXNlKQogCiAJeGVuX2dldF9rZXhlY19yYW5nZShLRVhFQ19S
-QU5HRV9NQV9MSVZFVVBEQVRFLCAmbHVfc3RhcnQsICZsdV9lbmQpOwogCWx1X3NpemVNID0gKGx1
-X2VuZCAtIGx1X3N0YXJ0KSAvICgxMDI0ICogMTAyNCkgKyAxOwotCXNwcmludGYoYnVmLCAiIGxp
-dmV1cGRhdGU9JWx1TUAweCVseCIsIGx1X3NpemVNLCBsdV9zdGFydCk7CisJc3ByaW50ZihidWYs
-ICIgbGl2ZXVwZGF0ZT0lbGx1TUAweCVsbHgiLCAodW5zaWduZWQgbG9uZyBsb25nKWx1X3NpemVN
-LAorCQkodW5zaWduZWQgbG9uZyBsb25nKWx1X3N0YXJ0KTsKIAlsZW4gPSBzdHJsZW4oKmJhc2Up
-ICsgc3RybGVuKGJ1ZikgKyAxOwogCXN0ciA9IHhtYWxsb2MobGVuKTsKIAlzcHJpbnRmKHN0ciwg
-IiVzJXMiLCAqYmFzZSwgYnVmKTsKLS0gCjIuMjUuMQoKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8v
-a2V4ZWMK
+	Hi Simon,
+
+This patch series fixes several compile warnings when building for a
+32-bit platform.  All but the last one are real bugs, from a functional
+point of view.
+
+Thanks for your comments!
+
+Geert Uytterhoeven (3):
+  kexec: Use %llu/%llx and casts to format uint64_t
+  printk: Use ULL suffix for 64-bit constants
+  printk: Use %zu to format size_t
+
+ kexec/kexec.c       | 3 ++-
+ util_lib/elf_info.c | 8 ++++----
+ 2 files changed, 6 insertions(+), 5 deletions(-)
+
+-- 
+2.25.1
+
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
