@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lNENT-007PZh-OW
- for kexec@lists.infradead.org; Fri, 19 Mar 2021 12:37:22 +0000
-Date: Fri, 19 Mar 2021 20:36:55 +0800
+ id 1lNEP4-007PhE-H4
+ for kexec@lists.infradead.org; Fri, 19 Mar 2021 12:39:00 +0000
+Date: Fri, 19 Mar 2021 20:38:45 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] crash_dump: Fix duplicate included pgtable.h
-Message-ID: <20210319123655.GA18717@MiWiFi-R3L-srv>
-References: <1616155393-12188-1-git-send-email-tiantao6@hisilicon.com>
+Subject: Re: [PATCH] crash_dump: remove duplicate include in crash_dump.h
+Message-ID: <20210319123845.GA2289@MiWiFi-R3L-srv>
+References: <20210313103521.364854-1-zhang.yunkai@zte.com.cn>
 MIME-Version: 1.0
-In-Reply-To: <1616155393-12188-1-git-send-email-tiantao6@hisilicon.com>
 Content-Disposition: inline
+In-Reply-To: <20210313103521.364854-1-zhang.yunkai@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,28 +23,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tian Tao <tiantao6@hisilicon.com>
-Cc: dyoung@redhat.com, kexec@lists.infradead.org
+To: menglong8.dong@gmail.com
+Cc: dyoung@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, tiantao6@hisilicon.com, Zhang Yunkai <zhang.yunkai@zte.com.cn>
 
-On 03/19/21 at 08:03pm, Tian Tao wrote:
-> linux/pgtable.h is included more than once, Remove the one that isn't
-> necessary.
+On 03/13/21 at 02:35am, menglong8.dong@gmail.com wrote:
+> From: Zhang Yunkai <zhang.yunkai@zte.com.cn>
+> 
+> 'linux/pgtable.h' included in 'crash_dump.h' is duplicated.
+> It is also included in the 8th line.
 
-This trivial clean up has been posted, I would like to ack that one.
-You can ack the patch if you have concern.
-https://lore.kernel.org/lkml/20210313103521.364854-1-zhang.yunkai@zte.com.cn/
+Tian Tao posted one to address the same issue, his log is better. Please
+update with below to repost.
 
-Thanks anyway.
+linux/pgtable.h is included more than once, Remove the one that isn't
+necessary.
 
 > 
-> Fixes: ca5999fde0a1 ("mm: introduce include/linux/pgtable.h")
-> Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+> Signed-off-by: Zhang Yunkai <zhang.yunkai@zte.com.cn>
 > ---
 >  include/linux/crash_dump.h | 2 --
 >  1 file changed, 2 deletions(-)
 > 
 > diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index a5192b7..6bd8a33 100644
+> index a5192b718dbe..6bd8a33cb740 100644
 > --- a/include/linux/crash_dump.h
 > +++ b/include/linux/crash_dump.h
 > @@ -8,8 +8,6 @@
@@ -57,7 +58,7 @@ Thanks anyway.
 >  #define ELFCORE_ADDR_MAX	(-1ULL)
 >  #define ELFCORE_ADDR_ERR	(-2ULL)
 > -- 
-> 2.7.4
+> 2.25.1
 > 
 > 
 > _______________________________________________
