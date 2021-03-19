@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from szxga05-in.huawei.com ([45.249.212.191])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lMW5K-0039ye-Pf
- for kexec@lists.infradead.org; Wed, 17 Mar 2021 13:19:40 +0000
-From: John Ogness <john.ogness@linutronix.de>
-Subject: Re: [PATCH 3/3] printk: Use %zu to format size_t
-References: <20210317121450.2556349-1-geert+renesas@glider.be>
- <20210317121450.2556349-4-geert+renesas@glider.be>
-Date: Wed, 17 Mar 2021 14:19:36 +0100
-In-Reply-To: <20210317121450.2556349-4-geert+renesas@glider.be> (Geert
- Uytterhoeven's message of "Wed, 17 Mar 2021 13:14:50 +0100")
-Message-ID: <87h7l9zzmf.fsf@jogness.linutronix.de>
+ id 1lNDpz-007NB3-Vs
+ for kexec@lists.infradead.org; Fri, 19 Mar 2021 12:02:46 +0000
+From: Tian Tao <tiantao6@hisilicon.com>
+Subject: [PATCH] crash_dump: Fix duplicate included pgtable.h
+Date: Fri, 19 Mar 2021 20:03:13 +0800
+Message-ID: <1616155393-12188-1-git-send-email-tiantao6@hisilicon.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,61 +16,40 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Varad Gautam <vrd@amazon.de>, kexec@lists.infradead.org
+To: dyoung@redhat.com, bhe@redhat.com
+Cc: kexec@lists.infradead.org
 
-T24gMjAyMS0wMy0xNywgR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2FzQGdsaWRlci5i
-ZT4gd3JvdGU6Cj4gV2hlbiBjb21waWxpbmcgZm9yIDMyLWJpdDoKPgo+ICAgICB1dGlsX2xpYi9l
-bGZfaW5mby5jOiBJbiBmdW5jdGlvbiDigJhkdW1wX2RtZXNnX2xvY2tsZXNz4oCZOgo+ICAgICB1
-dGlsX2xpYi9lbGZfaW5mby5jOjEwOTU6Mzk6IHdhcm5pbmc6IGZvcm1hdCDigJglbHXigJkgZXhw
-ZWN0cyBhcmd1bWVudCBvZiB0eXBlIOKAmGxvbmcgdW5zaWduZWQgaW504oCZLCBidXQgYXJndW1l
-bnQgMyBoYXMgdHlwZSDigJhzaXplX3TigJkge2FrYSDigJh1bnNpZ25lZCBpbnTigJl9IFstV2Zv
-cm1hdD1dCj4gICAgICAxMDk1IHwgICBmcHJpbnRmKHN0ZGVyciwgIkZhaWxlZCB0byBtYWxsb2Mg
-JWx1IGJ5dGVzIGZvciBwcmI6ICVzXG4iLAo+IAkgIHwgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfn5eCj4gCSAgfCAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgIHwKPiAJICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgbG9uZyB1
-bnNpZ25lZCBpbnQKPiAJICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICV1
-Cj4gICAgICAxMDk2IHwgICAgcHJpbnRrX3JpbmdidWZmZXJfc3osIHN0cmVycm9yKGVycm5vKSk7
-Cj4gCSAgfCAgICB+fn5+fn5+fn5+fn5+fn5+fn5+fgo+IAkgIHwgICAgfAo+IAkgIHwgICAgc2l6
-ZV90IHtha2EgdW5zaWduZWQgaW50fQo+ICAgICB1dGlsX2xpYi9lbGZfaW5mby5jOjExMDE6NDk6
-IHdhcm5pbmc6IGZvcm1hdCDigJglbHXigJkgZXhwZWN0cwo+IGFyZ3VtZW50IG9mIHR5cGUg4oCY
-bG9uZyB1bnNpZ25lZCBpbnTigJksIGJ1dCBhcmd1bWVudCAzIGhhcyB0eXBlIOKAmHNpemVfdOKA
-mQo+IHtha2Eg4oCYdW5zaWduZWQgaW504oCZfSBbLVdmb3JtYXQ9XQo+ICAgICAgMTEwMSB8ICAg
-ZnByaW50ZihzdGRlcnIsICJGYWlsZWQgdG8gcmVhZCBwcmIgb2Ygc2l6ZSAlbHUgYnl0ZXM6ICVz
-XG4iLAo+IAkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-IH5+Xgo+IAkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfAo+IAkgIHwgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgbG9uZyB1bnNpZ25lZCBpbnQKPiAJICB8ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAldQo+ICAgICAgMTEwMiB8ICAgIHByaW50a19yaW5nYnVmZmVyX3N6
-LCBzdHJlcnJvcihlcnJubykpOwo+IAkgIHwgICAgfn5+fn5+fn5+fn5+fn5+fn5+fn4KPiAJICB8
-ICAgIHwKPiAJICB8ICAgIHNpemVfdCB7YWthIHVuc2lnbmVkIGludH0KPgo+IEluZGVlZCwgInNp
-emVfdCIgaXMgInVuc2lnbmVkIGludCIgb24gMzItYml0IHBsYXRmb3JtcywgYW5kICJ1bnNpZ25l
-ZAo+IGxvbmciIG9uIDY0LWJpdCBwbGF0Zm9ybXMuCj4KPiBGaXggdGhpcyBieSBmb3JtYXR0aW5n
-IHVzaW5nICIlenUiLgo+Cj4gRml4ZXM6IDQxNDlkZjkwMDVmMmNkZDIgKCJwcmludGs6IGFkZCBz
-dXBwb3J0IGZvciBsb2NrbGVzcyByaW5nYnVmZmVyIikKPiBTaWduZWQtb2ZmLWJ5OiBHZWVydCBV
-eXR0ZXJob2V2ZW4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPgoKUmV2aWV3ZWQtYnk6IEpvaG4g
-T2duZXNzIDxqb2huLm9nbmVzc0BsaW51dHJvbml4LmRlPgoKPiAtLS0KPiAgdXRpbF9saWIvZWxm
-X2luZm8uYyB8IDQgKystLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAyIGRl
-bGV0aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL3V0aWxfbGliL2VsZl9pbmZvLmMgYi91dGlsX2xp
-Yi9lbGZfaW5mby5jCj4gaW5kZXggN2MwYTJjMzQ1Mzc5YTdjYS4uNjc2OTI2Y2E4YzVmMzc2NiAx
-MDA2NDQKPiAtLS0gYS91dGlsX2xpYi9lbGZfaW5mby5jCj4gKysrIGIvdXRpbF9saWIvZWxmX2lu
-Zm8uYwo+IEBAIC0xMDkyLDEzICsxMDkyLDEzIEBAIHN0YXRpYyB2b2lkIGR1bXBfZG1lc2dfbG9j
-a2xlc3MoaW50IGZkLCB2b2lkICgqaGFuZGxlcikoY2hhciosIHVuc2lnbmVkIGludCkpCj4gIAlr
-YWRkciA9IHJlYWRfZmlsZV9wb2ludGVyKGZkLCB2YWRkcl90b19vZmZzZXQocHJiX3ZhZGRyKSk7
-Cj4gIAltLnByYiA9IGNhbGxvYygxLCBwcmludGtfcmluZ2J1ZmZlcl9zeik7Cj4gIAlpZiAoIW0u
-cHJiKSB7Cj4gLQkJZnByaW50ZihzdGRlcnIsICJGYWlsZWQgdG8gbWFsbG9jICVsdSBieXRlcyBm
-b3IgcHJiOiAlc1xuIiwKPiArCQlmcHJpbnRmKHN0ZGVyciwgIkZhaWxlZCB0byBtYWxsb2MgJXp1
-IGJ5dGVzIGZvciBwcmI6ICVzXG4iLAo+ICAJCQlwcmludGtfcmluZ2J1ZmZlcl9zeiwgc3RyZXJy
-b3IoZXJybm8pKTsKPiAgCQlleGl0KDY0KTsKPiAgCX0KPiAgCXJldCA9IHByZWFkKGZkLCBtLnBy
-YiwgcHJpbnRrX3JpbmdidWZmZXJfc3osIHZhZGRyX3RvX29mZnNldChrYWRkcikpOwo+ICAJaWYg
-KHJldCAhPSBwcmludGtfcmluZ2J1ZmZlcl9zeikgewo+IC0JCWZwcmludGYoc3RkZXJyLCAiRmFp
-bGVkIHRvIHJlYWQgcHJiIG9mIHNpemUgJWx1IGJ5dGVzOiAlc1xuIiwKPiArCQlmcHJpbnRmKHN0
-ZGVyciwgIkZhaWxlZCB0byByZWFkIHByYiBvZiBzaXplICV6dSBieXRlczogJXNcbiIsCj4gIAkJ
-CXByaW50a19yaW5nYnVmZmVyX3N6LCBzdHJlcnJvcihlcnJubykpOwo+ICAJCWV4aXQoNjUpOwo+
-ICAJfQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4
-ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmlu
-ZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+linux/pgtable.h is included more than once, Remove the one that isn't
+necessary.
+
+Fixes: ca5999fde0a1 ("mm: introduce include/linux/pgtable.h")
+Signed-off-by: Tian Tao <tiantao6@hisilicon.com>
+---
+ include/linux/crash_dump.h | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index a5192b7..6bd8a33 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -8,8 +8,6 @@
+ #include <linux/pgtable.h>
+ #include <uapi/linux/vmcore.h>
+ 
+-#include <linux/pgtable.h> /* for pgprot_t */
+-
+ #ifdef CONFIG_CRASH_DUMP
+ #define ELFCORE_ADDR_MAX	(-1ULL)
+ #define ELFCORE_ADDR_ERR	(-2ULL)
+-- 
+2.7.4
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
