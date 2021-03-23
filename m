@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mx2.suse.de ([195.135.220.15])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOdWt-00EUQG-D3
- for kexec@lists.infradead.org; Tue, 23 Mar 2021 09:40:54 +0000
-Subject: Re: [PATCH v1 1/3] kernel/resource: make walk_system_ram_res() find
- all busy IORESOURCE_SYSTEM_RAM resources
-References: <20210322160200.19633-1-david@redhat.com>
- <20210322160200.19633-2-david@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-Message-ID: <e4a088e3-fc26-cb59-8af8-a746932b108c@redhat.com>
-Date: Tue, 23 Mar 2021 10:40:33 +0100
+ id 1lOdcU-00EVcM-8j
+ for kexec@lists.infradead.org; Tue, 23 Mar 2021 09:46:40 +0000
+Date: Tue, 23 Mar 2021 10:46:31 +0100
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH next v1 2/3] printk: remove safe buffers
+Message-ID: <YFm4994WbYdQbYoD@alley>
+References: <20210316233326.10778-1-john.ogness@linutronix.de>
+ <20210316233326.10778-3-john.ogness@linutronix.de>
+ <YFbY8kF7ilYoxvYp@google.com>
+ <87k0pzmoao.fsf@jogness.linutronix.de> <YFjbwxhZNnC52aSP@alley>
+ <87ft0mg8a0.fsf@jogness.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20210322160200.19633-2-david@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <87ft0mg8a0.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,54 +23,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Keith Busch <keith.busch@intel.com>, Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>, Oscar Salvador <osalvador@suse.de>, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org, kexec@lists.infradead.org
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Yue Hu <huyue2@yulong.com>, Alexey Kardashevskiy <aik@ozlabs.ru>, Rafael Aquini <aquini@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-On 22.03.21 17:01, David Hildenbrand wrote:
-> It used to be true that we can have busy system RAM only on the first level
-> in the resourc tree. However, this is no longer holds for driver-managed
-> system RAM (i.e., added via dax/kmem and virtio-mem), which gets added on
-> lower levels.
+On Mon 2021-03-22 22:58:47, John Ogness wrote:
+> On 2021-03-22, Petr Mladek <pmladek@suse.com> wrote:
+> > On Mon 2021-03-22 12:16:15, John Ogness wrote:
+> >> On 2021-03-21, Sergey Senozhatsky <senozhatsky@chromium.org> wrote:
+> >> >> @@ -369,7 +70,10 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
+> >> >>  	 * Use the main logbuf even in NMI. But avoid calling console
+> >> >>  	 * drivers that might have their own locks.
+> >> >>  	 */
+> >> >> -	if ((this_cpu_read(printk_context) & PRINTK_NMI_DIRECT_CONTEXT_MASK)) {
+> >> >> +	if (this_cpu_read(printk_context) &
+> >> >> +	    (PRINTK_NMI_DIRECT_CONTEXT_MASK |
+> >> >> +	     PRINTK_NMI_CONTEXT_MASK |
+> >> >> +	     PRINTK_SAFE_CONTEXT_MASK)) {
+> >> >
+
+> >> But I suppose I could switch
+> >> the 1 printk_nmi_direct_enter() user to printk_nmi_enter() so that
+> >> PRINTK_NMI_DIRECT_CONTEXT_MASK can be removed now. I would do this in a
+> >> 4th patch of the series.
+> >
+> > Yes, please unify the PRINTK_NMI_CONTEXT. One is enough.
 > 
-> We have two users of walk_system_ram_res(), which currently only
-> consideres the first level:
-> a) kernel/kexec_file.c:kexec_walk_resources() -- We properly skip
->     IORESOURCE_SYSRAM_DRIVER_MANAGED resources via
->     locate_mem_hole_callback(), so even after this change, we won't be
->     placing kexec images onto dax/kmem and virtio-mem added memory. No
->     change.
-> b) arch/x86/kernel/crash.c:fill_up_crash_elf_data() -- we're currently
->     not adding relevant ranges to the crash elf info, resulting in them
->     not getting dumped via kdump.
+> Agreed. (But I'll go even further. See below.)
 > 
-> This change fixes loading a crashkernel via kexec_file_load() and including
-> dax/kmem and virtio-mem added System RAM in the crashdump on x86-64. Note
-> that e.g,, arm64 relies on memblock data and, therefore, always considers
-> all added System RAM already.
+> > I wonder if it would make sense to go even further at this stage.
+> > What is possible?
+> >
+> > 1. We could get rid of printk_nmi_enter()/exit() and
+> >    PRINTK_NMI_CONTEXT completely already now. It is enough
+> >    to check in_nmi() in printk_func().
+> >
 > 
-> Let's find all busy IORESOURCE_SYSTEM_RAM resources, making the function
-> behave like walk_system_ram_range().
+> Agreed. in_nmi() within vprintk_emit() is enough to detect if the
+> console code should be skipped:
 > 
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
-> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
-> Cc: Signed-off-by: David Hildenbrand <david@redhat.com>
+>     if (!in_sched && !in_nmi()) {
+>         ...
+>     }
 
-^ My copy-paste action when creating the cc list slipped in a duplicate 
-  SO in all 3 patches. I can resend if desired.
+Well, we also need to make sure that the irq work is scheduled to
+call console later. We should keep this dicision in
+printk_func(). I mean to replace the current
 
--- 
-Thanks,
+	if (this_cpu_read(printk_context) &
+	    (PRINTK_NMI_DIRECT_CONTEXT_MASK |
+	     PRINTK_NMI_CONTEXT_MASK |
+	     PRINTK_SAFE_CONTEXT_MASK)) {
 
-David / dhildenb
+with
 
+	/*
+	 * Avoid calling console drivers in recursive printk()
+	 * and in NMI context.
+	 */
+	if (this_cpu_read(printk_context) || in_nmi() {
+
+That said, I am not sure how this fits your further rework.
+I do not want to complicate it too much.
+
+I am just afraid that the discussion about console rework might
+take some time. And this would remove some complexity before we
+started the more complicated or controversial changes.
+
+
+> > 2. I thought about unifying printk_safe_enter()/exit() and
+> >    printk_enter()/exit(). They both count recursion with
+> >    IRQs disabled, have similar name. But they are used
+> >    different way.
+> >
+> >    But better might be to rename printk_safe_enter()/exit() to
+> >    console_enter()/exit() or to printk_deferred_enter()/exit().
+> >    It would make more clear what it does now. And it might help
+> >    to better distinguish it from the new printk_enter()/exit().
+> >
+> >    I am not sure if it is worth it.
+> 
+> I am also not sure if it is worth the extra "noise" just to give the
+> function a more appropriate name. The plan is to remove it completely
+> soon anyway. My vote is to leave the name as it is.
+
+OK, let's keep printk_safe() name. It was just an idea. I wrote it
+primary to sort my thoughts.
+
+Best Regards,
+Petr
 
 _______________________________________________
 kexec mailing list
