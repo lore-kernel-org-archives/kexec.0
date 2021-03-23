@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mga17.intel.com ([192.55.52.151])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOeZ4-00Eeb8-7l
- for kexec@lists.infradead.org; Tue, 23 Mar 2021 10:47:12 +0000
-Date: Tue, 23 Mar 2021 11:47:06 +0100
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH next v1 2/3] printk: remove safe buffers
-Message-ID: <YFnHKlCvIA2nI41c@alley>
-References: <20210316233326.10778-1-john.ogness@linutronix.de>
- <20210316233326.10778-3-john.ogness@linutronix.de>
+ id 1lOesM-00Egba-05
+ for kexec@lists.infradead.org; Tue, 23 Mar 2021 11:07:08 +0000
+Date: Tue, 23 Mar 2021 13:06:48 +0200
+From: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH v1 1/3] kernel/resource: make walk_system_ram_res() find
+ all busy IORESOURCE_SYSTEM_RAM resources
+Message-ID: <YFnLyJF4u5HVXcc2@smile.fi.intel.com>
+References: <20210322160200.19633-1-david@redhat.com>
+ <20210322160200.19633-2-david@redhat.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210316233326.10778-3-john.ogness@linutronix.de>
+In-Reply-To: <20210322160200.19633-2-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,126 +25,88 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Yue Hu <huyue2@yulong.com>, Alexey Kardashevskiy <aik@ozlabs.ru>, Rafael Aquini <aquini@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Keith Busch <keith.busch@intel.com>, Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>, Oscar Salvador <osalvador@suse.de>, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org, kexec@lists.infradead.org
 
-On Wed 2021-03-17 00:33:25, John Ogness wrote:
-> With @logbuf_lock removed, the high level printk functions for
-> storing messages are lockless. Messages can be stored from any
-> context, so there is no need for the NMI and safe buffers anymore.
-> Remove the NMI and safe buffers.
+On Mon, Mar 22, 2021 at 05:01:58PM +0100, David Hildenbrand wrote:
+> It used to be true that we can have busy system RAM only on the first level
+> in the resourc tree. However, this is no longer holds for driver-managed
+> system RAM (i.e., added via dax/kmem and virtio-mem), which gets added on
+> lower levels.
 > 
-> Although the safe buffers are removed, the NMI and safe context
-> tracking is still in place. In these contexts, store the message
-> immediately but still use irq_work to defer the console printing.
+> We have two users of walk_system_ram_res(), which currently only
+> consideres the first level:
+> a) kernel/kexec_file.c:kexec_walk_resources() -- We properly skip
+>    IORESOURCE_SYSRAM_DRIVER_MANAGED resources via
+>    locate_mem_hole_callback(), so even after this change, we won't be
+>    placing kexec images onto dax/kmem and virtio-mem added memory. No
+>    change.
+> b) arch/x86/kernel/crash.c:fill_up_crash_elf_data() -- we're currently
+>    not adding relevant ranges to the crash elf info, resulting in them
+>    not getting dumped via kdump.
 > 
-> Since printk recursion tracking is in place, safe context tracking
-> for most of printk is not needed. Remove it. Only safe context
-> tracking relating to the console lock is left in place. This is
-> because the console lock is needed for the actual printing.
+> This change fixes loading a crashkernel via kexec_file_load() and including
 
-I have two more questions after actually checking the entire patch.
-See below.
+"...fixes..." effectively means to me that Fixes tag should be provided.
 
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1084,7 +1069,6 @@ void __init setup_log_buf(int early)
->  	struct printk_record r;
->  	size_t new_descs_size;
->  	size_t new_infos_size;
-> -	unsigned long flags;
->  	char *new_log_buf;
->  	unsigned int free;
->  	u64 seq;
-> @@ -1142,8 +1126,6 @@ void __init setup_log_buf(int early)
->  		 new_descs, ilog2(new_descs_count),
->  		 new_infos);
+> dax/kmem and virtio-mem added System RAM in the crashdump on x86-64. Note
+> that e.g,, arm64 relies on memblock data and, therefore, always considers
+> all added System RAM already.
+> 
+> Let's find all busy IORESOURCE_SYSTEM_RAM resources, making the function
+> behave like walk_system_ram_range().
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Cc: Signed-off-by: David Hildenbrand <david@redhat.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: Brijesh Singh <brijesh.singh@amd.com>
+> Cc: x86@kernel.org
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  kernel/resource.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 627e61b0c124..4efd6e912279 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -457,7 +457,7 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
+>  {
+>  	unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
 >  
-> -	printk_safe_enter_irqsave(flags);
-> -
->  	log_buf_len = new_log_buf_len;
->  	log_buf = new_log_buf;
->  	new_log_buf_len = 0;
-> @@ -1159,8 +1141,6 @@ void __init setup_log_buf(int early)
->  	 */
->  	prb = &printk_rb_dynamic;
->  
-> -	printk_safe_exit_irqrestore(flags);
-
-This will allow to add new messages from the IRQ context when we
-are copying them to the new buffer. They might get lost in
-the small race window.
-
-Also the messages from NMI might get lost because they are not
-longer stored in the per-CPU buffer.
-
-A possible solution might be to do something like this:
-
-	prb_for_each_record(0, &printk_rb_static, seq, &r)
-		free -= add_to_rb(&printk_rb_dynamic, &r);
-
-	prb = &printk_rb_dynamic;
-
-	/*
-	 * Copy the remaining messages that might have appeared
-	 * from IRQ or NMI context after we ended copying and
-	 * before we switched the buffers. They must be finalized
-	 * because only one CPU is up at this stage.
-	 */
-	prb_for_each_record(seq, &printk_rb_static, seq, &r)
-		free -= add_to_rb(&printk_rb_dynamic, &r);
-
-
-> -
->  	if (seq != prb_next_seq(&printk_rb_static)) {
->  		pr_err("dropped %llu messages\n",
->  		       prb_next_seq(&printk_rb_static) - seq);
-> @@ -2666,7 +2631,6 @@ void console_unlock(void)
->  		size_t ext_len = 0;
->  		size_t len;
->  
-> -		printk_safe_enter_irqsave(flags);
->  skip:
->  		if (!prb_read_valid(prb, console_seq, &r))
->  			break;
-> @@ -2711,6 +2675,8 @@ void console_unlock(void)
->  				printk_time);
->  		console_seq++;
->  
-> +		printk_safe_enter_irqsave(flags);
-
-What is the purpose of the printk_safe context here, please?
-
-I guess that you wanted to prevent calling console drivers
-recursively. But it is already serialized by console_lock().
-
-IMHO, the only risk is when manipulating console_sem->lock
-or console_owner_lock. But they are already guarded by
-printk_safe context, for example, in console_lock() or
-console_lock_spinning_enable().
-
-Do I miss something, please?
-
-
-> +
->  		/*
->  		 * While actively printing out messages, if another printk()
->  		 * were to occur on another CPU, it may wait for this one to
-> @@ -2745,8 +2711,6 @@ void console_unlock(void)
->  	 * flush, no worries.
->  	 */
->  	retry = prb_read_valid(prb, console_seq, NULL);
-> -	printk_safe_exit_irqrestore(flags);
-> -
->  	if (retry && console_trylock())
->  		goto again;
+> -	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+> +	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, false,
+>  				     arg, func);
 >  }
+>  
+> -- 
+> 2.29.2
+> 
 
-Heh, all these patches feels like stripping printk of an armour. I hope
-that we trained it enough to be flexible and avoid any damage.
+-- 
+With Best Regards,
+Andy Shevchenko
 
-Best Regards,
-Petr
+
 
 _______________________________________________
 kexec mailing list
