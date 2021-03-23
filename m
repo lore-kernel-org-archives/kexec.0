@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOdcU-00EVcM-8j
- for kexec@lists.infradead.org; Tue, 23 Mar 2021 09:46:40 +0000
-Date: Tue, 23 Mar 2021 10:46:31 +0100
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH next v1 2/3] printk: remove safe buffers
-Message-ID: <YFm4994WbYdQbYoD@alley>
-References: <20210316233326.10778-1-john.ogness@linutronix.de>
- <20210316233326.10778-3-john.ogness@linutronix.de>
- <YFbY8kF7ilYoxvYp@google.com>
- <87k0pzmoao.fsf@jogness.linutronix.de> <YFjbwxhZNnC52aSP@alley>
- <87ft0mg8a0.fsf@jogness.linutronix.de>
+ id 1lOdqp-00EZ7T-CO
+ for kexec@lists.infradead.org; Tue, 23 Mar 2021 10:01:29 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v1 1/3] crashdump/x86: dump any kind of "System RAM"
+Date: Tue, 23 Mar 2021 11:01:08 +0100
+Message-Id: <20210323100111.8365-2-david@redhat.com>
+In-Reply-To: <20210323100111.8365-1-david@redhat.com>
+References: <20210323100111.8365-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87ft0mg8a0.fsf@jogness.linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,94 +22,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Yue Hu <huyue2@yulong.com>, Alexey Kardashevskiy <aik@ozlabs.ru>, Rafael Aquini <aquini@redhat.com>, Tiezhu Yang <yangtiezhu@loongson.cn>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: David Hildenbrand <david@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Baoquan He <bhe@redhat.com>, Simon Horman <horms@verge.net.au>
 
-On Mon 2021-03-22 22:58:47, John Ogness wrote:
-> On 2021-03-22, Petr Mladek <pmladek@suse.com> wrote:
-> > On Mon 2021-03-22 12:16:15, John Ogness wrote:
-> >> On 2021-03-21, Sergey Senozhatsky <senozhatsky@chromium.org> wrote:
-> >> >> @@ -369,7 +70,10 @@ __printf(1, 0) int vprintk_func(const char *fmt, va_list args)
-> >> >>  	 * Use the main logbuf even in NMI. But avoid calling console
-> >> >>  	 * drivers that might have their own locks.
-> >> >>  	 */
-> >> >> -	if ((this_cpu_read(printk_context) & PRINTK_NMI_DIRECT_CONTEXT_MASK)) {
-> >> >> +	if (this_cpu_read(printk_context) &
-> >> >> +	    (PRINTK_NMI_DIRECT_CONTEXT_MASK |
-> >> >> +	     PRINTK_NMI_CONTEXT_MASK |
-> >> >> +	     PRINTK_SAFE_CONTEXT_MASK)) {
-> >> >
+Traditionally, we had "System RAM" only on the top level of in the
+kernel resource tree (-> /proc/iomem). Nowadays, we can also have
+"System RAM" on lower levels of the tree -- driver-managed device memory
+that is always detected and added via drivers. Current examples are
+memory added via dax/kmem -- ("System RAM (kmem)") and virtio-mem ("System
+RAM (virtio_mem)"). Note that in some kernel versions "System RAM
+(kmem)" was exposed as "System RAM", but similarly, on lower levels of
+the resource tree.
 
-> >> But I suppose I could switch
-> >> the 1 printk_nmi_direct_enter() user to printk_nmi_enter() so that
-> >> PRINTK_NMI_DIRECT_CONTEXT_MASK can be removed now. I would do this in a
-> >> 4th patch of the series.
-> >
-> > Yes, please unify the PRINTK_NMI_CONTEXT. One is enough.
-> 
-> Agreed. (But I'll go even further. See below.)
-> 
-> > I wonder if it would make sense to go even further at this stage.
-> > What is possible?
-> >
-> > 1. We could get rid of printk_nmi_enter()/exit() and
-> >    PRINTK_NMI_CONTEXT completely already now. It is enough
-> >    to check in_nmi() in printk_func().
-> >
-> 
-> Agreed. in_nmi() within vprintk_emit() is enough to detect if the
-> console code should be skipped:
-> 
->     if (!in_sched && !in_nmi()) {
->         ...
->     }
+Let's add anything that contains "System RAM" to the elf core header, so
+it will be dumped for kexec_load(). Handling kexec_file_load() in the
+kernel is similarly getting fixed [1].
 
-Well, we also need to make sure that the irq work is scheduled to
-call console later. We should keep this dicision in
-printk_func(). I mean to replace the current
+Loading a kdump kernel via "kexec -p -c" ... will result in the kdump
+kernel to also dump dax/kmem and virtio-mem added System RAM now.
 
-	if (this_cpu_read(printk_context) &
-	    (PRINTK_NMI_DIRECT_CONTEXT_MASK |
-	     PRINTK_NMI_CONTEXT_MASK |
-	     PRINTK_SAFE_CONTEXT_MASK)) {
+Note: We only want to dump this memory, we don't want to add this memory to
+the memmap of an ordinary kexec'ed kernel ("fast system reboot").
 
-with
+[1] https://lkml.kernel.org/r/20210322160200.19633-1-david@redhat.com
 
-	/*
-	 * Avoid calling console drivers in recursive printk()
-	 * and in NMI context.
-	 */
-	if (this_cpu_read(printk_context) || in_nmi() {
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-That said, I am not sure how this fits your further rework.
-I do not want to complicate it too much.
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index d5b5b68..a301ac8 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -271,8 +271,14 @@ static int get_crash_memory_ranges(struct memory_range **range, int *ranges,
+ 		str = line + consumed;
+ 		dbgprintf("%016llx-%016llx : %s",
+ 			start, end, str);
+-		/* Only Dumping memory of type System RAM. */
+-		if (memcmp(str, "System RAM\n", 11) == 0) {
++		/*
++		 * We want to dump any System RAM -- memory regions currently
++		 * used by the kernel. In the usual case, this is "System RAM"
++		 * on the top level. However, we can also have "System RAM
++		 * (virtio_mem)" below virtio devices or "System RAM (kmem)"
++		 * below "Persistent Memory".
++		 */
++		if (strstr(str, "System RAM")) {
+ 			type = RANGE_RAM;
+ 		} else if (memcmp(str, "ACPI Tables\n", 12) == 0) {
+ 			/*
+-- 
+2.29.2
 
-I am just afraid that the discussion about console rework might
-take some time. And this would remove some complexity before we
-started the more complicated or controversial changes.
-
-
-> > 2. I thought about unifying printk_safe_enter()/exit() and
-> >    printk_enter()/exit(). They both count recursion with
-> >    IRQs disabled, have similar name. But they are used
-> >    different way.
-> >
-> >    But better might be to rename printk_safe_enter()/exit() to
-> >    console_enter()/exit() or to printk_deferred_enter()/exit().
-> >    It would make more clear what it does now. And it might help
-> >    to better distinguish it from the new printk_enter()/exit().
-> >
-> >    I am not sure if it is worth it.
-> 
-> I am also not sure if it is worth the extra "noise" just to give the
-> function a more appropriate name. The plan is to remove it completely
-> soon anyway. My vote is to leave the name as it is.
-
-OK, let's keep printk_safe() name. It was just an idea. I wrote it
-primary to sort my thoughts.
-
-Best Regards,
-Petr
 
 _______________________________________________
 kexec mailing list
