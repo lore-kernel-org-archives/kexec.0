@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x442.google.com ([2a00:1450:4864:20::442])
+Received: from mail-wm1-x336.google.com ([2a00:1450:4864:20::336])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOl5w-00FRlV-IH
- for kexec@lists.infradead.org; Tue, 23 Mar 2021 17:45:35 +0000
-Received: by mail-wr1-x442.google.com with SMTP id 61so21652333wrm.12
- for <kexec@lists.infradead.org>; Tue, 23 Mar 2021 10:45:31 -0700 (PDT)
+ id 1lOlBA-00FSXz-So
+ for kexec@lists.infradead.org; Tue, 23 Mar 2021 17:50:58 +0000
+Received: by mail-wm1-x336.google.com with SMTP id
+ a132-20020a1c668a0000b029010f141fe7c2so11299763wmc.0
+ for <kexec@lists.infradead.org>; Tue, 23 Mar 2021 10:50:56 -0700 (PDT)
 From: Raphael Ning <raphning@gmail.com>
-Subject: [PATCH] kexec: Fix description of --status exit code
-Date: Tue, 23 Mar 2021 17:45:02 +0000
-Message-Id: <20210323174502.32673-1-raphning@gmail.com>
+Subject: [PATCH] kexec: Make --status work with normal kexec images
+Date: Tue, 23 Mar 2021 17:50:07 +0000
+Message-Id: <20210323175007.3069-1-raphning@gmail.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,51 +24,55 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Julien Grall <julien@xen.org>, Hongyan Xia <hx242@xen.org>, Raphael Ning <raphning@amazon.com>
+Cc: kexec@lists.infradead.org, Raphael Ning <raphning@gmail.com>, Julien Grall <julien@xen.org>, Hongyan Xia <hx242@xen.org>, Raphael Ning <raphning@amazon.com>
 
 From: Raphael Ning <raphning@amazon.com>
 
-On both Linux and Xen, an exit code of 0 from `kexec --status`
-indicates that the kexec image being queried is NOT loaded, which
-is contrary to what the man page and usage() say.
+According to kexec(8) manpage, --status (-S) works with both
+normal kexec (loaded by -l) and crash kernel (loaded by -p) image
+types, and defaults to the latter. However, the implementation does
+not match the description: `kexec -l -S` queries the -p image type
+as if -l were not specified. This is because there is no internal
+flag defined for the normal kexec type, and -S treats the zero flag
+as the trigger for the default behaviour (-p).
+
+Fix that by making sure the default behaviour for -S is not applied
+when the -l option is present.
 
 Signed-off-by: Raphael Ning <raphning@amazon.com>
 ---
- kexec/kexec.8 | 6 +++---
- kexec/kexec.c | 3 ++-
- 2 files changed, 5 insertions(+), 4 deletions(-)
+ kexec/kexec.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/kexec/kexec.8 b/kexec/kexec.8
-index 258072587cd0..3ebede67388e 100644
---- a/kexec/kexec.8
-+++ b/kexec/kexec.8
-@@ -108,9 +108,9 @@ command:
- Enable debugging messages.
- .TP
- .B \-S\ (\-\-status)
--Return 0 if the type (by default crash) is loaded. Can be used in conjuction
--with -l or -p to toggle the type. Note this option supersedes other options
--and it will
-+Return 1 if the type (by default crash) is loaded, 0 if not. Can be used in
-+conjuction with -l or -p to toggle the type. Note this option supersedes other
-+options and it will
- .BR not\ load\ or\ unload\ the\ kernel.
- .TP
- .B \-e\ (\-\-exec)
 diff --git a/kexec/kexec.c b/kexec/kexec.c
-index fd7c8d2b7a79..ffc689ac3d7f 100644
+index ffc689ac3d7f..0c4b9619bfd7 100644
 --- a/kexec/kexec.c
 +++ b/kexec/kexec.c
-@@ -1040,7 +1040,8 @@ void usage(void)
- 	       "                      syscall is not supported or the kernel did not\n"
- 	       "                      understand the image\n"
- 	       " -d, --debug          Enable debugging to help spot a failure.\n"
--	       " -S, --status         Return 0 if the type (by default crash) is loaded.\n"
-+	       " -S, --status         Return 1 if the type (by default crash) is loaded,\n"
-+	       "                      0 if not.\n"
- 	       "\n"
- 	       "Supported kernel file types and options: \n");
- 	for (i = 0; i < file_types; i++) {
+@@ -1336,6 +1336,7 @@ static void print_crashkernel_region_size(void)
+ 
+ int main(int argc, char *argv[])
+ {
++	int has_opt_load = 0;
+ 	int do_load = 1;
+ 	int do_exec = 0;
+ 	int do_load_jump_back_helper = 0;
+@@ -1393,6 +1394,7 @@ int main(int argc, char *argv[])
+ 			do_exec = 1;
+ 			break;
+ 		case OPT_LOAD:
++			has_opt_load = 1;
+ 			do_load = 1;
+ 			do_exec = 0;
+ 			do_shutdown = 0;
+@@ -1512,7 +1514,7 @@ int main(int argc, char *argv[])
+ 		do_sync = 0;
+ 
+ 	if (do_status) {
+-		if (kexec_flags == 0)
++		if (kexec_flags == 0 && !has_opt_load)
+ 			kexec_flags = KEXEC_ON_CRASH;
+ 		do_load = 0;
+ 		do_reuse_initrd = 0;
 -- 
 2.23.3
 
