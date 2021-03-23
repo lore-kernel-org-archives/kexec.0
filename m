@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOdqm-00EZ6i-1m
- for kexec@lists.infradead.org; Tue, 23 Mar 2021 10:01:25 +0000
+ id 1lOdqr-00EZ8G-OV
+ for kexec@lists.infradead.org; Tue, 23 Mar 2021 10:01:32 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 0/3] crashdump/x86: dump dax/kmem and virito-mem added
- System RAM
-Date: Tue, 23 Mar 2021 11:01:07 +0100
-Message-Id: <20210323100111.8365-1-david@redhat.com>
+Subject: [PATCH v1 2/3] crashdump/x86: iterate only over actual crash memory
+ ranges
+Date: Tue, 23 Mar 2021 11:01:09 +0100
+Message-Id: <20210323100111.8365-3-david@redhat.com>
+In-Reply-To: <20210323100111.8365-1-david@redhat.com>
+References: <20210323100111.8365-1-david@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,24 +24,29 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: David Hildenbrand <david@redhat.com>, Baoquan He <bhe@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>, Simon Horman <horms@verge.net.au>
+Cc: David Hildenbrand <david@redhat.com>, Simon Horman <horms@verge.net.au>
 
-Let's properly support dumping any kind of "System RAM" that is not on the
-top level of the kernel resource tree in /proc/iomem, processing any
-/proc/iomem entry that contains "System RAM". In addition, increase
-the maximum number of crash memory ranges to fully support virtio-mem
-even in corner cases where we end up with a lot of individual memory
-ranges.
+No need to iterate over empty entries.
 
-David Hildenbrand (3):
-  crashdump/x86: dump any kind of "System RAM"
-  crashdump/x86: iterate only over actual crash memory ranges
-  crashdump/x86: increase CRASH_MAX_MEMORY_RANGES to 32k
+Cc: Simon Horman <horms@verge.net.au>
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ kexec/arch/i386/crashdump-x86.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- kexec/arch/i386/crashdump-x86.c | 18 +++++++++++++-----
- kexec/arch/i386/crashdump-x86.h |  3 ++-
- 2 files changed, 15 insertions(+), 6 deletions(-)
-
+diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+index a301ac8..43e830a 100644
+--- a/kexec/arch/i386/crashdump-x86.c
++++ b/kexec/arch/i386/crashdump-x86.c
+@@ -988,7 +988,7 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+ 
+ 	/* Inform second kernel about the presence of ACPI tables. */
+-	for (i = 0; i < CRASH_MAX_MEMORY_RANGES; i++) {
++	for (i = 0; i < nr_ranges; i++) {
+ 		unsigned long start, end, size, type;
+ 		if ( !( mem_range[i].type == RANGE_ACPI
+ 			|| mem_range[i].type == RANGE_ACPI_NVS
 -- 
 2.29.2
 
