@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 24 Mar 2021 08:55:43 +0000
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2 00/12] Add build ID to stacktraces
-Message-ID: <20210324085543.GA2660708@infradead.org>
+Received: from mail-ed1-x52c.google.com ([2a00:1450:4864:20::52c])
+ by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lOzkc-00Gj0h-Nn
+ for kexec@lists.infradead.org; Wed, 24 Mar 2021 09:24:33 +0000
+Received: by mail-ed1-x52c.google.com with SMTP id h13so26779463eds.5
+ for <kexec@lists.infradead.org>; Wed, 24 Mar 2021 02:24:29 -0700 (PDT)
+Subject: Re: [PATCH v2 02/12] buildid: Add method to get running kernel's
+ build ID
 References: <20210324020443.1815557-1-swboyd@chromium.org>
+ <20210324020443.1815557-3-swboyd@chromium.org>
+From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Message-ID: <7ef21ff8-8056-3b07-31ac-bc2de89fa7a0@rasmusvillemoes.dk>
+Date: Wed, 24 Mar 2021 10:24:27 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210324020443.1815557-1-swboyd@chromium.org>
+In-Reply-To: <20210324020443.1815557-3-swboyd@chromium.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,19 +27,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Young <dyoung@redhat.com>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>, Jiri Olsa <jolsa@kernel.org>, kexec@lists.infradead.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Petr Mladek <pmladek@suse.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sasha Levin <sashal@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Will Deacon <will@kernel.org>, x86@kernel.org
+To: Stephen Boyd <swboyd@chromium.org>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-On Tue, Mar 23, 2021 at 07:04:31PM -0700, Stephen Boyd wrote:
->  x5 : 0000000000000000 x4 : 0000000000000001
->  x3 : 0000000000000008 x2 : ffffff93fef25a70
->  x1 : ffffff93fef15788 x0 : ffffffe3622352e0
->  Call trace:
->   lkdtm_WARNING+0x28/0x30 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
->   direct_entry+0x16c/0x1b4 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+On 24/03/2021 03.04, Stephen Boyd wrote:
+> Add vmlinux_build_id() so that callers can print a hex format string
+> representation of the running kernel's build ID. This will be used in
+> the kdump and dump_stack code so that developers can easily locate the
+> vmlinux debug symbols for a crash/stacktrace.
+> 
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: <kexec@lists.infradead.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  include/linux/buildid.h |  2 ++
+>  lib/buildid.c           | 19 +++++++++++++++++++
+>  2 files changed, 21 insertions(+)
+> 
+> diff --git a/include/linux/buildid.h b/include/linux/buildid.h
+> index ebce93f26d06..2ff6b1b7cc9b 100644
+> --- a/include/linux/buildid.h
+> +++ b/include/linux/buildid.h
+> @@ -10,4 +10,6 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+>  		   __u32 *size);
+>  int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
+>  
+> +const unsigned char *vmlinux_build_id(void);
+> +
+>  #endif
+> diff --git a/lib/buildid.c b/lib/buildid.c
+> index 010ab0674cb9..fa1b6466b4b8 100644
+> --- a/lib/buildid.c
+> +++ b/lib/buildid.c
+> @@ -4,6 +4,7 @@
+>  #include <linux/elf.h>
+>  #include <linux/kernel.h>
+>  #include <linux/pagemap.h>
+> +#include <linux/string.h>
+>  
+>  #define BUILD_ID 3
+>  
+> @@ -171,3 +172,21 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
+>  {
+>  	return parse_build_id_buf(build_id, NULL, buf, buf_size);
+>  }
+> +
+> +/**
+> + * vmlinux_build_id - Get the running kernel's build ID
+> + *
+> + * Return: Running kernel's build ID
+> + */
+> +const unsigned char *vmlinux_build_id(void)
+> +{
+> +	extern const void __start_notes __weak;
+> +	extern const void __stop_notes __weak;
+> +	unsigned int size = &__stop_notes - &__start_notes;
+> +	static unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
+> +
+> +	if (!memchr_inv(vmlinux_build_id, 0, BUILD_ID_SIZE_MAX))
+> +		build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
+> +
+> +	return vmlinux_build_id;
+> +}
+> 
 
-Yikes.  No, please do not make the backtraces a complete mess for
-something that serves absolutely no need.
+Hm, is there any reason to do that initialization lazily and thus need
+an accessor? If the system is coming down hard, there's a (very very
+small) risk that one thread starts finding the build id, is in the
+middle of the memcpy, another thread also ends up wanting the vmlinux
+build id, sees some non-nul byte, and proceeds to using the partially
+written vmlinux_build_id.
+
+Perhaps consider just exposing the vmlinux_build_id[] array itself,
+adding a init_vmlinux_build_id() call somewhere early in start_kernel().
+
+It could then also be made __ro_after_init.
+
+In any case, if you decide to keep the current way, please rename the
+local variable (just "build_id" is fine) so that it doesn't shadow the
+very function it resides in, that's very confusing.
+
+Rasmus
 
 _______________________________________________
 kexec mailing list
