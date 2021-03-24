@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x52c.google.com ([2a00:1450:4864:20::52c])
+Received: from mx2.suse.de ([195.135.220.15])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lOzkc-00Gj0h-Nn
- for kexec@lists.infradead.org; Wed, 24 Mar 2021 09:24:33 +0000
-Received: by mail-ed1-x52c.google.com with SMTP id h13so26779463eds.5
- for <kexec@lists.infradead.org>; Wed, 24 Mar 2021 02:24:29 -0700 (PDT)
-Subject: Re: [PATCH v2 02/12] buildid: Add method to get running kernel's
- build ID
-References: <20210324020443.1815557-1-swboyd@chromium.org>
- <20210324020443.1815557-3-swboyd@chromium.org>
-From: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Message-ID: <7ef21ff8-8056-3b07-31ac-bc2de89fa7a0@rasmusvillemoes.dk>
-Date: Wed, 24 Mar 2021 10:24:27 +0100
+ id 1lP1XG-00Gyc7-KO
+ for kexec@lists.infradead.org; Wed, 24 Mar 2021 11:18:52 +0000
+Date: Wed, 24 Mar 2021 12:18:40 +0100
+From: Oscar Salvador <osalvador@suse.de>
+Subject: Re: [PATCH v1 1/3] kernel/resource: make walk_system_ram_res() find
+ all busy IORESOURCE_SYSTEM_RAM resources
+Message-ID: <20210324111835.GA18855@linux>
+References: <20210322160200.19633-1-david@redhat.com>
+ <20210322160200.19633-2-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20210324020443.1815557-3-swboyd@chromium.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20210322160200.19633-2-david@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,94 +25,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Boyd <swboyd@chromium.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Dan Williams <dan.j.williams@intel.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Mauro Carvalho Chehab <mchehab+huawei@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Keith Busch <keith.busch@intel.com>, Michal Hocko <mhocko@suse.com>, Qian Cai <cai@lca.pw>, Eric Biederman <ebiederm@xmission.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Tom Lendacky <thomas.lendacky@amd.com>, Brijesh Singh <brijesh.singh@amd.com>, x86@kernel.org, kexec@lists.infradead.org
 
-On 24/03/2021 03.04, Stephen Boyd wrote:
-> Add vmlinux_build_id() so that callers can print a hex format string
-> representation of the running kernel's build ID. This will be used in
-> the kdump and dump_stack code so that developers can easily locate the
-> vmlinux debug symbols for a crash/stacktrace.
+On Mon, Mar 22, 2021 at 05:01:58PM +0100, David Hildenbrand wrote:
+> It used to be true that we can have busy system RAM only on the first level
+> in the resourc tree. However, this is no longer holds for driver-managed
+> system RAM (i.e., added via dax/kmem and virtio-mem), which gets added on
+> lower levels.
+
+Let me ask some rookie questions:
+
+What does "busy" term stand for here?
+Why resources coming from virtio-mem are added at a lower levels?
+
 > 
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> We have two users of walk_system_ram_res(), which currently only
+> consideres the first level:
+> a) kernel/kexec_file.c:kexec_walk_resources() -- We properly skip
+>    IORESOURCE_SYSRAM_DRIVER_MANAGED resources via
+>    locate_mem_hole_callback(), so even after this change, we won't be
+>    placing kexec images onto dax/kmem and virtio-mem added memory. No
+>    change.
+> b) arch/x86/kernel/crash.c:fill_up_crash_elf_data() -- we're currently
+>    not adding relevant ranges to the crash elf info, resulting in them
+>    not getting dumped via kdump.
+> 
+> This change fixes loading a crashkernel via kexec_file_load() and including
+> dax/kmem and virtio-mem added System RAM in the crashdump on x86-64. Note
+> that e.g,, arm64 relies on memblock data and, therefore, always considers
+> all added System RAM already.
+> 
+> Let's find all busy IORESOURCE_SYSTEM_RAM resources, making the function
+> behave like walk_system_ram_range().
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Daniel Vetter <daniel.vetter@ffwll.ch>
+> Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Cc: Mauro Carvalho Chehab <mchehab+huawei@kernel.org>
+> Cc: Signed-off-by: David Hildenbrand <david@redhat.com>
 > Cc: Dave Young <dyoung@redhat.com>
 > Cc: Baoquan He <bhe@redhat.com>
 > Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: <kexec@lists.infradead.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Keith Busch <keith.busch@intel.com>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: "H. Peter Anvin" <hpa@zytor.com>
+> Cc: Tom Lendacky <thomas.lendacky@amd.com>
+> Cc: Brijesh Singh <brijesh.singh@amd.com>
+> Cc: x86@kernel.org
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: David Hildenbrand <david@redhat.com>
 > ---
->  include/linux/buildid.h |  2 ++
->  lib/buildid.c           | 19 +++++++++++++++++++
->  2 files changed, 21 insertions(+)
+>  kernel/resource.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/include/linux/buildid.h b/include/linux/buildid.h
-> index ebce93f26d06..2ff6b1b7cc9b 100644
-> --- a/include/linux/buildid.h
-> +++ b/include/linux/buildid.h
-> @@ -10,4 +10,6 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
->  		   __u32 *size);
->  int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
->  
-> +const unsigned char *vmlinux_build_id(void);
-> +
->  #endif
-> diff --git a/lib/buildid.c b/lib/buildid.c
-> index 010ab0674cb9..fa1b6466b4b8 100644
-> --- a/lib/buildid.c
-> +++ b/lib/buildid.c
-> @@ -4,6 +4,7 @@
->  #include <linux/elf.h>
->  #include <linux/kernel.h>
->  #include <linux/pagemap.h>
-> +#include <linux/string.h>
->  
->  #define BUILD_ID 3
->  
-> @@ -171,3 +172,21 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
+> diff --git a/kernel/resource.c b/kernel/resource.c
+> index 627e61b0c124..4efd6e912279 100644
+> --- a/kernel/resource.c
+> +++ b/kernel/resource.c
+> @@ -457,7 +457,7 @@ int walk_system_ram_res(u64 start, u64 end, void *arg,
 >  {
->  	return parse_build_id_buf(build_id, NULL, buf, buf_size);
+>  	unsigned long flags = IORESOURCE_SYSTEM_RAM | IORESOURCE_BUSY;
+>  
+> -	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, true,
+> +	return __walk_iomem_res_desc(start, end, flags, IORES_DESC_NONE, false,
+>  				     arg, func);
 >  }
-> +
-> +/**
-> + * vmlinux_build_id - Get the running kernel's build ID
-> + *
-> + * Return: Running kernel's build ID
-> + */
-> +const unsigned char *vmlinux_build_id(void)
-> +{
-> +	extern const void __start_notes __weak;
-> +	extern const void __stop_notes __weak;
-> +	unsigned int size = &__stop_notes - &__start_notes;
-> +	static unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
-> +
-> +	if (!memchr_inv(vmlinux_build_id, 0, BUILD_ID_SIZE_MAX))
-> +		build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
-> +
-> +	return vmlinux_build_id;
-> +}
+>  
+> -- 
+> 2.29.2
+> 
 > 
 
-Hm, is there any reason to do that initialization lazily and thus need
-an accessor? If the system is coming down hard, there's a (very very
-small) risk that one thread starts finding the build id, is in the
-middle of the memcpy, another thread also ends up wanting the vmlinux
-build id, sees some non-nul byte, and proceeds to using the partially
-written vmlinux_build_id.
-
-Perhaps consider just exposing the vmlinux_build_id[] array itself,
-adding a init_vmlinux_build_id() call somewhere early in start_kernel().
-
-It could then also be made __ro_after_init.
-
-In any case, if you decide to keep the current way, please rename the
-local variable (just "build_id" is fine) so that it doesn't shadow the
-very function it resides in, that's very confusing.
-
-Rasmus
+-- 
+Oscar Salvador
+SUSE L3
 
 _______________________________________________
 kexec mailing list
