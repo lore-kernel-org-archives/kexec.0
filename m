@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp2120.oracle.com ([141.146.126.78])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLsq-004vUQ-6X
+ id 1lRLsq-004vUW-Oe
  for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:48 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 06/43] mm: PKRAM: implement byte stream operations
-Date: Tue, 30 Mar 2021 14:35:41 -0700
-Message-Id: <1617140178-8773-7-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 15/43] PKRAM: provide a way to ban pages from use by PKRAM
+Date: Tue, 30 Mar 2021 14:35:50 -0700
+Message-Id: <1617140178-8773-16-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,266 +25,306 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-This patch adds the ability to save an arbitrary byte streams to a
-a PKRAM object using pkram_write() to be restored later using pkram_read().
+Not all memory ranges can be used for saving preserved over-kexec data.
+For example, a kexec kernel may be loaded before pages are preserved.
+The memory regions where the kexec segments will be copied to on kexec
+must not contain preserved pages or else they will be clobbered.
 
 Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |  11 +++++
- mm/pkram.c            | 123 ++++++++++++++++++++++++++++++++++++++++++++++++--
- 2 files changed, 130 insertions(+), 4 deletions(-)
+ include/linux/pkram.h |   2 +
+ mm/pkram.c            | 205 ++++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 207 insertions(+)
 
 diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-index 9d8a6fd96dd9..4f95d4fb5339 100644
+index c2099a4f2004..97a7c2ac44a9 100644
 --- a/include/linux/pkram.h
 +++ b/include/linux/pkram.h
-@@ -14,10 +14,12 @@
-  * enum pkram_data_flags - definition of data types contained in a pkram obj
-  * @PKRAM_DATA_none: No data types configured
-  * @PKRAM_DATA_pages: obj contains file page data
-+ * @PKRAM_DATA_bytes: obj contains byte data
-  */
- enum pkram_data_flags {
- 	PKRAM_DATA_none		= 0x0,	/* No data types configured */
- 	PKRAM_DATA_pages	= 0x1,	/* Contains file page data */
-+	PKRAM_DATA_bytes	= 0x2,	/* Contains byte data */
- };
+@@ -103,10 +103,12 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name,
+ extern unsigned long pkram_reserved_pages;
+ void pkram_reserve(void);
+ void pkram_cleanup(void);
++void pkram_ban_region(unsigned long start, unsigned long end);
+ #else
+ #define pkram_reserved_pages 0UL
+ static inline void pkram_reserve(void) { }
+ static inline void pkram_cleanup(void) { }
++static inline void pkram_ban_region(unsigned long start, unsigned long end) { }
+ #endif
  
- struct pkram_data_stream {
-@@ -36,18 +38,27 @@ struct pkram_stream {
- 
- 	__u64 *pages_head_link_pfnp;
- 	__u64 *pages_tail_link_pfnp;
-+
-+	__u64 *bytes_head_link_pfnp;
-+	__u64 *bytes_tail_link_pfnp;
- };
- 
- struct pkram_pages_access {
- 	unsigned long next_index;
- };
- 
-+struct pkram_bytes_access {
-+	struct page *data_page;		/* current page */
-+	unsigned int data_offset;	/* offset into current page */
-+};
-+
- struct pkram_access {
- 	enum pkram_data_flags dtype;
- 	struct pkram_stream *ps;
- 	struct pkram_data_stream pds;
- 
- 	struct pkram_pages_access pages;
-+	struct pkram_bytes_access bytes;
- };
- 
- #define PKRAM_NAME_MAX		256	/* including nul */
+ #endif /* _LINUX_PKRAM_H */
 diff --git a/mm/pkram.c b/mm/pkram.c
-index da44a6060c5f..d81af26c9a66 100644
+index 8670d1633a9d..d15be75c1032 100644
 --- a/mm/pkram.c
 +++ b/mm/pkram.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/err.h>
- #include <linux/gfp.h>
-+#include <linux/highmem.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
- #include <linux/list.h>
-@@ -46,6 +47,9 @@ struct pkram_link {
- struct pkram_obj {
- 	__u64	pages_head_link_pfn;	/* the first pages link of the object */
- 	__u64	pages_tail_link_pfn;	/* the last pages link of the object */
-+	__u64	bytes_head_link_pfn;	/* the first bytes link of the object */
-+	__u64	bytes_tail_link_pfn;	/* the last bytes link of the object */
-+	__u64	data_len;	/* byte data size */
- 	__u64	obj_pfn;	/* points to the next object in the list */
- };
- 
-@@ -140,6 +144,11 @@ static void pkram_truncate_obj(struct pkram_obj *obj)
- 	pkram_truncate_links(obj->pages_head_link_pfn);
- 	obj->pages_head_link_pfn = 0;
- 	obj->pages_tail_link_pfn = 0;
-+
-+	pkram_truncate_links(obj->bytes_head_link_pfn);
-+	obj->bytes_head_link_pfn = 0;
-+	obj->bytes_tail_link_pfn = 0;
-+	obj->data_len = 0;
- }
- 
- static void pkram_truncate_node(struct pkram_node *node)
-@@ -315,7 +324,7 @@ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
- 
- 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
- 
--	if (flags & ~PKRAM_DATA_pages)
-+	if (flags & ~(PKRAM_DATA_pages | PKRAM_DATA_bytes))
- 		return -EINVAL;
- 
- 	page = pkram_alloc_page(ps->gfp_mask | __GFP_ZERO);
-@@ -331,6 +340,10 @@ int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
- 		ps->pages_head_link_pfnp = &obj->pages_head_link_pfn;
- 		ps->pages_tail_link_pfnp = &obj->pages_tail_link_pfn;
- 	}
-+	if (flags & PKRAM_DATA_bytes) {
-+		ps->bytes_head_link_pfnp = &obj->bytes_head_link_pfn;
-+		ps->bytes_tail_link_pfnp = &obj->bytes_tail_link_pfn;
-+	}
- 	ps->obj = obj;
- 	return 0;
- }
-@@ -438,7 +451,7 @@ int pkram_prepare_load_obj(struct pkram_stream *ps)
- 		return -ENODATA;
- 
- 	obj = pfn_to_kaddr(node->obj_pfn);
--	if (!obj->pages_head_link_pfn) {
-+	if (!obj->pages_head_link_pfn && !obj->bytes_head_link_pfn) {
- 		WARN_ON(1);
- 		return -EINVAL;
- 	}
-@@ -449,6 +462,10 @@ int pkram_prepare_load_obj(struct pkram_stream *ps)
- 		ps->pages_head_link_pfnp = &obj->pages_head_link_pfn;
- 		ps->pages_tail_link_pfnp = &obj->pages_tail_link_pfn;
- 	}
-+	if (obj->bytes_head_link_pfn) {
-+		ps->bytes_head_link_pfnp = &obj->bytes_head_link_pfn;
-+		ps->bytes_tail_link_pfnp = &obj->bytes_tail_link_pfn;
-+	}
- 	ps->obj = obj;
- 	return 0;
- }
-@@ -499,6 +516,9 @@ void pkram_finish_access(struct pkram_access *pa, bool status_ok)
- 
- 	if (pa->pds.link)
- 		pkram_truncate_link(pa->pds.link);
-+
-+	if ((pa->dtype == PKRAM_DATA_bytes) && (pa->bytes.data_page))
-+		pkram_free_page(page_address(pa->bytes.data_page));
- }
+@@ -141,6 +141,28 @@ struct pkram_super_block {
+ unsigned long __initdata pkram_reserved_pages;
  
  /*
-@@ -552,6 +572,22 @@ int pkram_save_file_page(struct pkram_access *pa, struct page *page)
- 	return __pkram_save_page(pa, page, page->index);
++ * For tracking a region of memory that PKRAM is not allowed to use.
++ */
++struct banned_region {
++	unsigned long start, end;		/* pfn, inclusive */
++};
++
++#define MAX_NR_BANNED		(32 + MAX_NUMNODES * 2)
++
++static unsigned int nr_banned;			/* number of banned regions */
++
++/* banned regions; arranged in ascending order, do not overlap */
++static struct banned_region banned[MAX_NR_BANNED];
++/*
++ * If a page allocated for PKRAM turns out to belong to a banned region,
++ * it is placed on the banned_pages list so subsequent allocation attempts
++ * do not encounter it again. The list is shrunk when system memory is low.
++ */
++static LIST_HEAD(banned_pages);			/* linked through page::lru */
++static DEFINE_SPINLOCK(banned_pages_lock);
++static unsigned long nr_banned_pages;
++
++/*
+  * The PKRAM super block pfn, see above.
+  */
+ static int __init parse_pkram_sb_pfn(char *arg)
+@@ -207,12 +229,116 @@ void __init pkram_reserve(void)
+ 	pr_info("PKRAM: %lu pages reserved\n", pkram_reserved_pages);
  }
  
-+static int __pkram_bytes_save_page(struct pkram_access *pa, struct page *page)
++/*
++ * Ban pfn range [start..end] (inclusive) from use in PKRAM.
++ */
++void pkram_ban_region(unsigned long start, unsigned long end)
 +{
-+	struct pkram_data_stream *pds = &pa->pds;
-+	struct pkram_link *link = pds->link;
++	int i, merged = -1;
 +
-+	if (!link || pds->entry_idx >= PKRAM_LINK_ENTRIES_MAX) {
-+		link = pkram_new_link(pds, pa->ps->gfp_mask);
-+		if (!link)
-+			return -ENOMEM;
++	/* first try to merge the region with an existing one */
++	for (i = nr_banned - 1; i >= 0 && start <= banned[i].end + 1; i--) {
++		if (end + 1 >= banned[i].start) {
++			start = min(banned[i].start, start);
++			end = max(banned[i].end, end);
++			if (merged < 0)
++				merged = i;
++		} else
++			/*
++			 * Regions are arranged in ascending order and do not
++			 * intersect so the merged region cannot jump over its
++			 * predecessors.
++			 */
++			BUG_ON(merged >= 0);
 +	}
 +
-+	pkram_add_link_entry(pds, page);
++	i++;
++
++	if (merged >= 0) {
++		banned[i].start = start;
++		banned[i].end = end;
++		/* shift if merged with more than one region */
++		memmove(banned + i + 1, banned + merged + 1,
++			sizeof(*banned) * (nr_banned - merged - 1));
++		nr_banned -= merged - i;
++		return;
++	}
++
++	/*
++	 * The region does not intersect with an existing one;
++	 * try to create a new one.
++	 */
++	if (nr_banned == MAX_NR_BANNED) {
++		pr_err("PKRAM: Failed to ban %lu-%lu: "
++		       "Too many banned regions\n", start, end);
++		return;
++	}
++
++	memmove(banned + i + 1, banned + i,
++		sizeof(*banned) * (nr_banned - i));
++	banned[i].start = start;
++	banned[i].end = end;
++	nr_banned++;
++}
++
++static void pkram_show_banned(void)
++{
++	int i;
++	unsigned long n, total = 0;
++
++	pr_info("PKRAM: banned regions:\n");
++	for (i = 0; i < nr_banned; i++) {
++		n = banned[i].end - banned[i].start + 1;
++		pr_info("%4d: [%08lx - %08lx] %ld pages\n",
++			i, banned[i].start, banned[i].end, n);
++		total += n;
++	}
++	pr_info("Total banned: %ld pages in %d regions\n",
++		total, nr_banned);
++}
++
++/*
++ * Returns true if the page may not be used for storing preserved data.
++ */
++static bool pkram_page_banned(struct page *page)
++{
++	unsigned long epfn, pfn = page_to_pfn(page);
++	int l = 0, r = nr_banned - 1, m;
++
++	epfn = pfn + compound_nr(page) - 1;
++
++	/* do binary search */
++	while (l <= r) {
++		m = (l + r) / 2;
++		if (epfn < banned[m].start)
++			r = m - 1;
++		else if (pfn > banned[m].end)
++			l = m + 1;
++		else
++			return true;
++	}
++	return false;
++}
++
+ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
+ {
+ 	struct page *page;
++	LIST_HEAD(list);
++	unsigned long len = 0;
+ 	int err;
+ 
+ 	page = alloc_page(gfp_mask);
++	while (page && pkram_page_banned(page)) {
++		len++;
++		list_add(&page->lru, &list);
++		page = alloc_page(gfp_mask);
++	}
++	if (len > 0) {
++		spin_lock(&banned_pages_lock);
++		nr_banned_pages += len;
++		list_splice(&list, &banned_pages);
++		spin_unlock(&banned_pages_lock);
++	}
+ 	if (page) {
+ 		err = pkram_add_identity_map(page);
+ 		if (err) {
+@@ -235,6 +361,53 @@ static inline void pkram_free_page(void *addr)
+ 	free_page((unsigned long)addr);
+ }
+ 
++static void __banned_pages_shrink(unsigned long nr_to_scan)
++{
++	struct page *page;
++
++	if (nr_to_scan <= 0)
++		return;
++
++	while (nr_banned_pages > 0) {
++		BUG_ON(list_empty(&banned_pages));
++		page = list_first_entry(&banned_pages, struct page, lru);
++		list_del(&page->lru);
++		__free_page(page);
++		nr_banned_pages--;
++		nr_to_scan--;
++		if (!nr_to_scan)
++			break;
++	}
++}
++
++static unsigned long
++banned_pages_count(struct shrinker *shrink, struct shrink_control *sc)
++{
++	return nr_banned_pages;
++}
++
++static unsigned long
++banned_pages_scan(struct shrinker *shrink, struct shrink_control *sc)
++{
++	int nr_left = nr_banned_pages;
++
++	if (!sc->nr_to_scan || !nr_left)
++		return nr_left;
++
++	spin_lock(&banned_pages_lock);
++	__banned_pages_shrink(sc->nr_to_scan);
++	nr_left = nr_banned_pages;
++	spin_unlock(&banned_pages_lock);
++
++	return nr_left;
++}
++
++static struct shrinker banned_pages_shrinker = {
++	.count_objects = banned_pages_count,
++	.scan_objects = banned_pages_scan,
++	.seeks = DEFAULT_SEEKS,
++};
++
+ static inline void pkram_insert_node(struct pkram_node *node)
+ {
+ 	list_add(&virt_to_page(node)->lru, &pkram_nodes);
+@@ -709,6 +882,31 @@ static int __pkram_save_page(struct pkram_access *pa, struct page *page,
+ 	return 0;
+ }
+ 
++static int __pkram_save_page_copy(struct pkram_access *pa, struct page *page)
++{
++	int nr_pages = compound_nr(page);
++	pgoff_t index = page->index;
++	int i, err;
++
++	for (i = 0; i < nr_pages; i++, index++) {
++		struct page *p = page + i;
++		struct page *new;
++
++		new = pkram_alloc_page(pa->ps->gfp_mask);
++		if (!new)
++			return -ENOMEM;
++
++		copy_highpage(new, p);
++		err = __pkram_save_page(pa, new, index);
++		if (err) {
++			pkram_free_page(page_address(new));
++			return err;
++		}
++	}
 +
 +	return 0;
 +}
 +
- static struct page *__pkram_prep_load_page(pkram_entry_t p)
- {
- 	struct page *page;
-@@ -646,10 +682,53 @@ struct page *pkram_load_file_page(struct pkram_access *pa, unsigned long *index)
-  *
-  * On success, returns the number of bytes written, which is always equal to
-  * @count. On failure, -errno is returned.
-+ *
-+ * Error values:
-+ *    %ENOMEM: insufficient amount of memory available
-  */
- ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count)
- {
--	return -ENOSYS;
-+	struct pkram_node *node = pa->ps->node;
-+	struct pkram_obj *obj = pa->ps->obj;
-+	size_t copy_count, write_count = 0;
-+	void *addr;
-+
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
-+
-+	while (count > 0) {
-+		if (!pa->bytes.data_page) {
-+			gfp_t gfp_mask = pa->ps->gfp_mask;
-+			struct page *page;
-+			int err;
-+
-+			page = pkram_alloc_page((gfp_mask & GFP_RECLAIM_MASK) |
-+					       __GFP_HIGHMEM | __GFP_ZERO);
-+			if (!page)
-+				return -ENOMEM;
-+			err = __pkram_bytes_save_page(pa, page);
-+			if (err) {
-+				pkram_free_page(page_address(page));
-+				return err;
-+			}
-+			pa->bytes.data_page = page;
-+			pa->bytes.data_offset = 0;
-+		}
-+
-+		copy_count = min_t(size_t, count, PAGE_SIZE - pa->bytes.data_offset);
-+		addr = kmap_atomic(pa->bytes.data_page);
-+		memcpy(addr + pa->bytes.data_offset, buf, copy_count);
-+		kunmap_atomic(addr);
-+
-+		buf += copy_count;
-+		obj->data_len += copy_count;
-+		pa->bytes.data_offset += copy_count;
-+		if (pa->bytes.data_offset >= PAGE_SIZE)
-+			pa->bytes.data_page = NULL;
-+
-+		write_count += copy_count;
-+		count -= copy_count;
-+	}
-+	return write_count;
- }
- 
  /**
-@@ -663,5 +742,41 @@ ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count)
-  */
- size_t pkram_read(struct pkram_access *pa, void *buf, size_t count)
+  * Save file page @page to the preserved memory node and object associated
+  * with pkram stream access @pa. The stream must have been initialized with
+@@ -731,6 +929,10 @@ int pkram_save_file_page(struct pkram_access *pa, struct page *page)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
+ 
++	/* if page is banned, relocate it */
++	if (pkram_page_banned(page))
++		return __pkram_save_page_copy(pa, page);
++
+ 	err = __pkram_save_page(pa, page, page->index);
+ 	if (!err)
+ 		err = pkram_add_identity_map(page);
+@@ -968,6 +1170,7 @@ static void __pkram_reboot(void)
+ 	int err = 0;
+ 
+ 	if (!list_empty(&pkram_nodes)) {
++		pkram_show_banned();
+ 		err = pkram_add_identity_map(virt_to_page(pkram_sb));
+ 		if (err) {
+ 			pr_err("PKRAM: failed to add super block to pagetable\n");
+@@ -1054,6 +1257,7 @@ static int __init pkram_init_sb(void)
+ 		page = alloc_page(GFP_KERNEL | __GFP_ZERO);
+ 		if (!page) {
+ 			pr_err("PKRAM: Failed to allocate super block\n");
++			__banned_pages_shrink(ULONG_MAX);
+ 			return 0;
+ 		}
+ 		pkram_sb = page_address(page);
+@@ -1076,6 +1280,7 @@ static int __init pkram_init(void)
  {
--	return 0;
-+	struct pkram_node *node = pa->ps->node;
-+	struct pkram_obj *obj = pa->ps->obj;
-+	size_t copy_count, read_count = 0;
-+	char *addr;
-+
-+	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_LOAD);
-+
-+	while (count > 0 && obj->data_len > 0) {
-+		if (!pa->bytes.data_page) {
-+			struct page *page;
-+
-+			page = __pkram_load_page(pa, NULL);
-+			if (!page)
-+				break;
-+			pa->bytes.data_page = page;
-+			pa->bytes.data_offset = 0;
-+		}
-+
-+		copy_count = min_t(size_t, count, PAGE_SIZE - pa->bytes.data_offset);
-+		if (copy_count > obj->data_len)
-+			copy_count = obj->data_len;
-+		addr = kmap_atomic(pa->bytes.data_page);
-+		memcpy(buf, addr + pa->bytes.data_offset, copy_count);
-+		kunmap_atomic(addr);
-+
-+		buf += copy_count;
-+		obj->data_len -= copy_count;
-+		pa->bytes.data_offset += copy_count;
-+		if (pa->bytes.data_offset >= PAGE_SIZE || !obj->data_len) {
-+			put_page(pa->bytes.data_page);
-+			pa->bytes.data_page = NULL;
-+		}
-+
-+		read_count += copy_count;
-+		count -= copy_count;
-+	}
-+	return read_count;
- }
+ 	if (pkram_init_sb()) {
+ 		register_reboot_notifier(&pkram_reboot_notifier);
++		register_shrinker(&banned_pages_shrinker);
+ 		sysfs_update_group(kernel_kobj, &pkram_attr_group);
+ 	}
+ 	return 0;
 -- 
 1.8.3.1
 
