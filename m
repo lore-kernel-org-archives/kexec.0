@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2130.oracle.com ([141.146.126.79])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLsq-004vUP-0y
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:48 +0000
+ id 1lRLsq-004vUZ-W6
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:50 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 01/43] mm: add PKRAM API stubs and Kconfig
-Date: Tue, 30 Mar 2021 14:35:36 -0700
-Message-Id: <1617140178-8773-2-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 12/43] mm: PKRAM: reserve preserved memory at boot
+Date: Tue, 30 Mar 2021 14:35:47 -0700
+Message-Id: <1617140178-8773-13-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,379 +25,205 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-Preserved-across-kexec memory or PKRAM is a method for saving memory
-pages of the currently executing kernel and restoring them after kexec
-boot into a new one. This can be utilized for preserving guest VM state,
-large in-memory databases, process memory, etc. across reboot. While
-DRAM-as-PMEM or actual persistent memory could be used to accomplish
-these things, PKRAM provides the latency of DRAM with the flexibility
-of dynamically determining the amount of memory to preserve.
+Keep preserved pages from being recycled during boot by adding them
+to the memblock reserved list during early boot. If memory reservation
+fails (e.g. a region has already been reserved), all preserved pages
+are dropped.
 
-The proposed API:
-
- * Preserved memory is divided into nodes which can be saved or loaded
-   independently of each other. The nodes are identified by unique name
-   strings. A PKRAM node is created when save is initiated by calling
-   pkram_prepare_save(). A PKRAM node is removed when load is initiated by
-   calling pkram_prepare_load(). See below
-
- * A node is further divided into objects. An object represents closely
-   coupled data in the form of a grouping of pages and/or a stream of
-   byte data.  For example, the pages and attributes of a file.
-   After initiating an operation on a PKRAM node, PKRAM objects are
-   initialized for saving or loading by calling pkram_prepare_save_obj()
-   or pkram_prepare_load_obj().
-
- * For saving/loading data from a PKRAM node/object instances of the
-   pkram_stream and pkram_access structs are used.  pkram_stream tracks
-   the node and object being operated on while pkram_access tracks the
-   data type and position within an object.
-
-   The pkram_stream struct is initialized by calling pkram_prepare_save()
-   or pkram_prepare_load() and then pkram_prepare_save_obj() or
-   pkram_prepare_load_obj().
-
-   Once a pkram_stream is fully initialized, a pkram_access struct
-   is initialized for each data type associated with the object.
-   After save or load of a data type for the object is complete,
-   pkram_finish_access() is called.
-
-   After save or load is complete for the object, pkram_finish_save_obj()
-   or pkram_finish_load_obj() must be called followed by pkram_finish_save()
-   or pkram_finish_load() when save or load is completed for the node.
-   If an error occurred during save, the saved data and the PKRAM node
-   may be freed by calling pkram_discard_save() instead of
-   pkram_finish_save().
-
- * Both page data and byte data can separately be streamed to a PKRAM
-   object.  pkram_save_file_page() and pkram_load_file_page() are used
-   to stream page data while pkram_write() and pkram_read() are used to
-   stream byte data.
-
-A sequence of operations for saving/loading data from PKRAM would
-look like:
-
-  * For saving data to PKRAM:
-
-    /* create a PKRAM node and do initial stream setup */
-    pkram_prepare_save()
-
-    /* create a PKRAM object associated with the PKRAM node and complete stream initialization */
-    pkram_prepare_save_obj()
-
-    /* save data to the node/object */
-    PKRAM_ACCESS(pa_pages,...)
-    PKRAM_ACCESS(pa_bytes,...)
-    pkram_save_file_page(pa_pages,...)[,...]  /* for file pages */
-    pkram_write(pa_bytes,...)[,...]           /* for a byte stream */
-    pkram_finish_access(pa_pages)
-    pkram_finish_access(pa_bytes)
-
-    pkram_finish_save_obj()
-
-    /* commit the save or discard and delete the node */
-    pkram_finish_save()          /* on success, or
-    pkram_discard_save()          * ... in case of error */
-
-  * For loading data from PKRAM:
-
-    /* remove a PKRAM node from the list and do initial stream setup */
-    pkram_prepare_load()
-
-    /* Remove a PKRAM object from the node and complete stream initializtion for loading data from it. */
-    pkram_prepare_load_obj()
-
-    /* load data from the node/object */
-    PKRAM_ACCESS(pa_pages,...)
-    PKRAM_ACCESS(pa_bytes,...)
-    pkram_load_file_page(pa_pages,...)[,...] /* for file pages */
-    pkram_read(pa_bytes,...)[,...]           /* for a byte stream */
-*/
-    pkram_finish_access(pa_pages)
-    pkram_finish_access(pa_bytes)
-
-    /* free the object */
-    pkram_finish_load_obj()
-
-    /* free the node */
-    pkram_finish_load()
-
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- include/linux/pkram.h |  47 +++++++++++++
- mm/Kconfig            |   9 +++
- mm/Makefile           |   1 +
- mm/pkram.c            | 179 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 236 insertions(+)
- create mode 100644 include/linux/pkram.h
- create mode 100644 mm/pkram.c
+ arch/x86/kernel/setup.c |  3 ++
+ arch/x86/mm/init_64.c   |  2 ++
+ include/linux/pkram.h   |  8 ++++++
+ mm/pkram.c              | 76 +++++++++++++++++++++++++++++++++++++++++++++++--
+ 4 files changed, 87 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/pkram.h b/include/linux/pkram.h
-new file mode 100644
-index 000000000000..a575da2d6c79
---- /dev/null
-+++ b/include/linux/pkram.h
-@@ -0,0 +1,47 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PKRAM_H
-+#define _LINUX_PKRAM_H
-+
-+#include <linux/gfp.h>
-+#include <linux/types.h>
-+#include <linux/mm_types.h>
-+
-+/**
-+ * enum pkram_data_flags - definition of data types contained in a pkram obj
-+ * @PKRAM_DATA_none: No data types configured
-+ */
-+enum pkram_data_flags {
-+	PKRAM_DATA_none		= 0x0,  /* No data types configured */
-+};
-+
-+struct pkram_stream;
-+struct pkram_access;
-+
-+#define PKRAM_NAME_MAX		256	/* including nul */
-+
-+int pkram_prepare_save(struct pkram_stream *ps, const char *name,
-+		       gfp_t gfp_mask);
-+int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags);
-+
-+void pkram_finish_save(struct pkram_stream *ps);
-+void pkram_finish_save_obj(struct pkram_stream *ps);
-+void pkram_discard_save(struct pkram_stream *ps);
-+
-+int pkram_prepare_load(struct pkram_stream *ps, const char *name);
-+int pkram_prepare_load_obj(struct pkram_stream *ps);
-+
-+void pkram_finish_load(struct pkram_stream *ps);
-+void pkram_finish_load_obj(struct pkram_stream *ps);
-+
-+#define PKRAM_ACCESS(name, stream, type)			\
-+	struct pkram_access name
-+
-+void pkram_finish_access(struct pkram_access *pa, bool status_ok);
-+
-+int pkram_save_file_page(struct pkram_access *pa, struct page *page);
-+struct page *pkram_load_file_page(struct pkram_access *pa, unsigned long *index);
-+
-+ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count);
-+size_t pkram_read(struct pkram_access *pa, void *buf, size_t count);
-+
-+#endif /* _LINUX_PKRAM_H */
-diff --git a/mm/Kconfig b/mm/Kconfig
-index 24c045b24b95..ea8242c91728 100644
---- a/mm/Kconfig
-+++ b/mm/Kconfig
-@@ -872,4 +872,13 @@ config MAPPING_DIRTY_HELPERS
- config KMAP_LOCAL
- 	bool
- 
-+config PKRAM
-+	bool "Preserved-over-kexec memory storage"
-+	default n
-+	help
-+	  This option adds the kernel API that enables saving memory pages of
-+	  the currently executing kernel and restoring them after a kexec in
-+	  the newly booted one. This can be utilized for speeding up reboot by
-+	  leaving process memory and/or FS caches in-place.
-+
- endmenu
-diff --git a/mm/Makefile b/mm/Makefile
-index 72227b24a616..ab3a724769b5 100644
---- a/mm/Makefile
-+++ b/mm/Makefile
-@@ -120,3 +120,4 @@ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
- obj-$(CONFIG_MAPPING_DIRTY_HELPERS) += mapping_dirty_helpers.o
- obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
- obj-$(CONFIG_PAGE_REPORTING) += page_reporting.o
-+obj-$(CONFIG_PKRAM) += pkram.o
-diff --git a/mm/pkram.c b/mm/pkram.c
-new file mode 100644
-index 000000000000..59e4661b2fb7
---- /dev/null
-+++ b/mm/pkram.c
-@@ -0,0 +1,179 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include <linux/err.h>
-+#include <linux/gfp.h>
-+#include <linux/kernel.h>
-+#include <linux/mm.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index d883176ef2ce..fbd85964719d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -15,6 +15,7 @@
+ #include <linux/iscsi_ibft.h>
+ #include <linux/memblock.h>
+ #include <linux/pci.h>
 +#include <linux/pkram.h>
-+#include <linux/types.h>
+ #include <linux/root_dev.h>
+ #include <linux/hugetlb.h>
+ #include <linux/tboot.h>
+@@ -1146,6 +1147,8 @@ void __init setup_arch(char **cmdline_p)
+ 	initmem_init();
+ 	dma_contiguous_reserve(max_pfn_mapped << PAGE_SHIFT);
+ 
++	pkram_reserve();
 +
-+/**
-+ * Create a preserved memory node with name @name and initialize stream @ps
-+ * for saving data to it.
-+ *
-+ * @gfp_mask specifies the memory allocation mask to be used when saving data.
-+ *
-+ * Returns 0 on success, -errno on failure.
-+ *
-+ * After the save has finished, pkram_finish_save() (or pkram_discard_save() in
-+ * case of failure) is to be called.
-+ */
-+int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask)
+ 	if (boot_cpu_has(X86_FEATURE_GBPAGES))
+ 		hugetlb_cma_reserve(PUD_SHIFT - PAGE_SHIFT);
+ 
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index b5a3fa4033d3..8efb2fb2a88b 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -33,6 +33,7 @@
+ #include <linux/nmi.h>
+ #include <linux/gfp.h>
+ #include <linux/kcore.h>
++#include <linux/pkram.h>
+ 
+ #include <asm/processor.h>
+ #include <asm/bios_ebda.h>
+@@ -1293,6 +1294,7 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
+ 
++	totalram_pages_add(pkram_reserved_pages);
+ 	/*
+ 	 * Must be done after boot memory is put on freelist, because here we
+ 	 * might set fields in deferred struct pages that have not yet been
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index 4f95d4fb5339..8d3d780d9fe1 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -99,4 +99,12 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name,
+ ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count);
+ size_t pkram_read(struct pkram_access *pa, void *buf, size_t count);
+ 
++#ifdef CONFIG_PKRAM
++extern unsigned long pkram_reserved_pages;
++void pkram_reserve(void);
++#else
++#define pkram_reserved_pages 0UL
++static inline void pkram_reserve(void) { }
++#endif
++
+ #endif /* _LINUX_PKRAM_H */
+diff --git a/mm/pkram.c b/mm/pkram.c
+index b4a14837946a..03731bb6af26 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -135,6 +135,8 @@ struct pkram_super_block {
+ static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
+ static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
+ 
++unsigned long __initdata pkram_reserved_pages;
++
+ /*
+  * The PKRAM super block pfn, see above.
+  */
+@@ -144,6 +146,59 @@ static int __init parse_pkram_sb_pfn(char *arg)
+ }
+ early_param("pkram", parse_pkram_sb_pfn);
+ 
++static void * __init pkram_map_meta(unsigned long pfn)
 +{
-+	return -ENOSYS;
++	if (pfn >= max_low_pfn)
++		return ERR_PTR(-EINVAL);
++	return pfn_to_kaddr(pfn);
 +}
 +
-+/**
-+ * Create a preserved memory object and initialize stream @ps for saving data
-+ * to it.
++int pkram_merge_with_reserved(void);
++/*
++ * Reserve pages that belong to preserved memory.
 + *
-+ * Returns 0 on success, -errno on failure.
-+ *
-+ * After the save has finished, pkram_finish_save_obj() (or pkram_discard_save()
-+ * in case of failure) is to be called.
++ * This function should be called at boot time as early as possible to prevent
++ * preserved memory from being recycled.
 + */
-+int pkram_prepare_save_obj(struct pkram_stream *ps, enum pkram_data_flags flags)
++void __init pkram_reserve(void)
 +{
-+	return -ENOSYS;
++	int err = 0;
++
++	if (!pkram_sb_pfn)
++		return;
++
++	pr_info("PKRAM: Examining preserved memory...\n");
++
++	/* Verify that nothing else has reserved the pkram_sb page */
++	if (memblock_is_region_reserved(PFN_PHYS(pkram_sb_pfn), PAGE_SIZE)) {
++		err = -EBUSY;
++		goto out;
++	}
++
++	pkram_sb = pkram_map_meta(pkram_sb_pfn);
++	if (IS_ERR(pkram_sb)) {
++		err = PTR_ERR(pkram_sb);
++		goto out;
++	}
++	/* An empty pkram_sb is not an error */
++	if (!pkram_sb->node_pfn) {
++		pkram_sb = NULL;
++		goto done;
++	}
++
++	err = pkram_merge_with_reserved();
++out:
++	if (err) {
++		pr_err("PKRAM: Reservation failed: %d\n", err);
++		WARN_ON(pkram_reserved_pages > 0);
++		pkram_sb = NULL;
++		return;
++	}
++
++done:
++	pr_info("PKRAM: %lu pages reserved\n", pkram_reserved_pages);
 +}
 +
-+/**
-+ * Commit the object started with pkram_prepare_save_obj() to preserved memory.
-+ */
-+void pkram_finish_save_obj(struct pkram_stream *ps)
-+{
-+	BUG();
-+}
+ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
+ {
+ 	struct page *page;
+@@ -163,6 +218,11 @@ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
+ 
+ static inline void pkram_free_page(void *addr)
+ {
++	/*
++	 * The page may have the reserved bit set since preserved pages
++	 * are reserved early in boot.
++	 */
++	ClearPageReserved(virt_to_page(addr));
+ 	pkram_remove_identity_map(virt_to_page(addr));
+ 	free_page((unsigned long)addr);
+ }
+@@ -201,6 +261,11 @@ static void pkram_truncate_link(struct pkram_link *link)
+ 		if (!p)
+ 			continue;
+ 		page = pfn_to_page(PHYS_PFN(p));
++		/*
++		 * The page may have the reserved bit set since preserved pages
++		 * are reserved early in boot.
++		 */
++		ClearPageReserved(page);
+ 		pkram_remove_identity_map(page);
+ 		put_page(page);
+ 	}
+@@ -684,14 +749,20 @@ static int __pkram_bytes_save_page(struct pkram_access *pa, struct page *page)
+ static struct page *__pkram_prep_load_page(pkram_entry_t p)
+ {
+ 	struct page *page;
+-	int order;
++	int i, order;
+ 	short flags;
+ 
+ 	flags = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
++	order = p & PKRAM_ENTRY_ORDER_MASK;
+ 	page = pfn_to_page(PHYS_PFN(p));
+ 
++	for (i = 0; i < (1 << order); i++) {
++		struct page *pg = page + i;
 +
-+/**
-+ * Commit the save to preserved memory started with pkram_prepare_save().
-+ * After the call, the stream may not be used any more.
-+ */
-+void pkram_finish_save(struct pkram_stream *ps)
-+{
-+	BUG();
-+}
++		ClearPageReserved(pg);
++	}
 +
-+/**
-+ * Cancel the save to preserved memory started with pkram_prepare_save() and
-+ * destroy the corresponding preserved memory node freeing any data already
-+ * saved to it.
-+ */
-+void pkram_discard_save(struct pkram_stream *ps)
-+{
-+	BUG();
-+}
-+
-+/**
-+ * Remove the preserved memory node with name @name and initialize stream @ps
-+ * for loading data from it.
-+ *
-+ * Returns 0 on success, -errno on failure.
-+ *
-+ * After the load has finished, pkram_finish_load() is to be called.
-+ */
-+int pkram_prepare_load(struct pkram_stream *ps, const char *name)
-+{
-+	return -ENOSYS;
-+}
-+
-+/**
-+ * Remove the next preserved memory object from the stream @ps and
-+ * initialize stream @ps for loading data from it.
-+ *
-+ * Returns 0 on success, -errno on failure.
-+ *
-+ * After the load has finished, pkram_finish_load_obj() is to be called.
-+ */
-+int pkram_prepare_load_obj(struct pkram_stream *ps)
-+{
-+	return -ENOSYS;
-+}
-+
-+/**
-+ * Finish the load of a preserved memory object started with
-+ * pkram_prepare_load_obj() freeing the object and any data that has not
-+ * been loaded from it.
-+ */
-+void pkram_finish_load_obj(struct pkram_stream *ps)
-+{
-+	BUG();
-+}
-+
-+/**
-+ * Finish the load from preserved memory started with pkram_prepare_load()
-+ * freeing the corresponding preserved memory node and any data that has
-+ * not been loaded from it.
-+ */
-+void pkram_finish_load(struct pkram_stream *ps)
-+{
-+	BUG();
-+}
-+
-+/**
-+ * Finish the data access to or from the preserved memory node and object
-+ * associated with pkram stream access @pa.  The access must have been
-+ * initialized with PKRAM_ACCESS(). 
-+ */
-+void pkram_finish_access(struct pkram_access *pa, bool status_ok)
-+{
-+	BUG();
-+}
-+
-+/**
-+ * Save file page @page to the preserved memory node and object associated
-+ * with pkram stream access @pa. The stream must have been initialized with
-+ * pkram_prepare_save() and pkram_prepare_save_obj() and access initialized
-+ * with PKRAM_ACCESS().
-+ *
-+ * Returns 0 on success, -errno on failure.
-+ */
-+int pkram_save_file_page(struct pkram_access *pa, struct page *page)
-+{
-+	return -ENOSYS;
-+}
-+
-+/**
-+ * Load the next page from the preserved memory node and object associated
-+ * with pkram stream access @pa. The stream must have been initialized with
-+ * pkram_prepare_load() and pkram_prepare_load_obj() and access initialized
-+ * with PKRAM_ACCESS().
-+ *
-+ * If not NULL, @index is initialized with the preserved mapping offset of the
-+ * page loaded.
-+ *
-+ * Returns the page loaded or NULL if the node is empty.
-+ *
-+ * The page loaded has its refcount incremented.
-+ */
-+struct page *pkram_load_file_page(struct pkram_access *pa, unsigned long *index)
-+{
-+	return NULL;
-+}
-+
-+/**
-+ * Copy @count bytes from @buf to the preserved memory node and object
-+ * associated with pkram stream access @pa. The stream must have been
-+ * initialized with pkram_prepare_save() and pkram_prepare_save_obj()
-+ * and access initialized with PKRAM_ACCESS();
-+ *
-+ * On success, returns the number of bytes written, which is always equal to
-+ * @count. On failure, -errno is returned.
-+ */
-+ssize_t pkram_write(struct pkram_access *pa, const void *buf, size_t count)
-+{
-+	return -ENOSYS;
-+}
-+
-+/**
-+ * Copy up to @count bytes from the preserved memory node and object
-+ * associated with pkram stream access @pa to @buf. The stream must have been
-+ * initialized with pkram_prepare_load() and pkram_prepare_load_obj() and
-+ * access initialized PKRAM_ACCESS().
-+ *
-+ * Returns the number of bytes read, which may be less than @count if the node
-+ * has fewer bytes available.
-+ */
-+size_t pkram_read(struct pkram_access *pa, void *buf, size_t count)
-+{
-+	return 0;
-+}
+ 	if (flags & PKRAM_PAGE_TRANS_HUGE) {
+-		order = p & PKRAM_ENTRY_ORDER_MASK;
+ 		prep_compound_page(page, order);
+ 		prep_transhuge_page(page);
+ 	}
+@@ -1311,6 +1382,7 @@ int __init pkram_create_merged_reserved(struct memblock_type *new)
+ 	}
+ 
+ 	WARN_ON(cnt_a + cnt_b != k);
++	pkram_reserved_pages = nr_preserved;
+ 	new->cnt = cnt_a + cnt_b;
+ 	new->total_size = total_size;
+ 
 -- 
 1.8.3.1
 
