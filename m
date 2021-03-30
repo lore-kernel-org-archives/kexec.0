@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from aserp2120.oracle.com ([141.146.126.78])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLsx-004vXy-32
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:55 +0000
+ id 1lRLsz-004vYb-Si
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:56 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 16/43] kexec: PKRAM: prevent kexec clobbering preserved pages
- in some cases
-Date: Tue, 30 Mar 2021 14:35:51 -0700
-Message-Id: <1617140178-8773-17-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 13/43] PKRAM: free the preserved ranges list
+Date: Tue, 30 Mar 2021 14:35:48 -0700
+Message-Id: <1617140178-8773-14-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -26,76 +25,71 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-When loading a kernel for kexec, dynamically update the list of physical
-ranges that are not to be used for storing preserved pages with the ranges
-where kexec segments will be copied to on reboot. This ensures no pages
-preserved after the new kernel has been loaded will reside in these ranges
-on reboot.
-
-Not yet handled is the case where pages have been preserved before a
-kexec kernel is loaded.  This will be covered by a later patch.
+Free the pages used to pass the preserved ranges to the new boot.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- kernel/kexec.c      |  9 +++++++++
- kernel/kexec_file.c | 10 ++++++++++
- 2 files changed, 19 insertions(+)
+ arch/x86/mm/init_64.c |  1 +
+ include/linux/pkram.h |  2 ++
+ mm/pkram.c            | 20 ++++++++++++++++++++
+ 3 files changed, 23 insertions(+)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index c82c6c06f051..826c8fb824d8 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -16,6 +16,7 @@
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
- #include <linux/slab.h>
-+#include <linux/pkram.h>
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 8efb2fb2a88b..69bd71996b8b 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1294,6 +1294,7 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
  
- #include "kexec_internal.h"
- 
-@@ -163,6 +164,14 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	if (ret)
- 		goto out;
- 
-+	for (i = 0; i < nr_segments; i++) {
-+		unsigned long mem = image->segment[i].mem;
-+		size_t memsz = image->segment[i].memsz;
-+
-+		if (memsz)
-+			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
-+	}
-+
- 	/* Install the new kernel and uninstall the old */
- 	image = xchg(dest_image, image);
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 5c3447cf7ad5..1ec47a3c60dd 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -27,6 +27,8 @@
- #include <linux/kernel_read_file.h>
- #include <linux/syscalls.h>
- #include <linux/vmalloc.h>
-+#include <linux/pkram.h>
-+
- #include "kexec_internal.h"
- 
- static int kexec_calculate_store_digests(struct kimage *image);
-@@ -429,6 +431,14 @@ void kimage_file_post_load_cleanup(struct kimage *image)
- 	if (ret)
- 		goto out;
- 
-+	for (i = 0; i < image->nr_segments; i++) {
-+		unsigned long mem = image->segment[i].mem;
-+		size_t memsz = image->segment[i].memsz;
-+
-+		if (memsz)
-+			pkram_ban_region(PFN_DOWN(mem), PFN_UP(mem + memsz) - 1);
-+	}
-+
++	pkram_cleanup();
+ 	totalram_pages_add(pkram_reserved_pages);
  	/*
- 	 * Free up any temporary buffers allocated which are not needed
- 	 * after image has been loaded
+ 	 * Must be done after boot memory is put on freelist, because here we
+diff --git a/include/linux/pkram.h b/include/linux/pkram.h
+index 8d3d780d9fe1..c2099a4f2004 100644
+--- a/include/linux/pkram.h
++++ b/include/linux/pkram.h
+@@ -102,9 +102,11 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name,
+ #ifdef CONFIG_PKRAM
+ extern unsigned long pkram_reserved_pages;
+ void pkram_reserve(void);
++void pkram_cleanup(void);
+ #else
+ #define pkram_reserved_pages 0UL
+ static inline void pkram_reserve(void) { }
++static inline void pkram_cleanup(void) { }
+ #endif
+ 
+ #endif /* _LINUX_PKRAM_H */
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 03731bb6af26..dab6657080bf 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -1434,3 +1434,23 @@ int __init pkram_merge_with_reserved(void)
+ 
+ 	return 0;
+ }
++
++void __init pkram_cleanup(void)
++{
++	struct pkram_region_list *rl;
++	unsigned long next_pfn;
++
++	if (!pkram_sb || !pkram_reserved_pages)
++		return;
++
++	next_pfn = pkram_sb->region_list_pfn;
++
++	while (next_pfn) {
++		struct page *page = pfn_to_page(next_pfn);
++
++		rl = pfn_to_kaddr(next_pfn);
++		next_pfn = rl->next_pfn;
++		__free_pages_core(page, 0);
++		pkram_reserved_pages--;
++	}
++}
 -- 
 1.8.3.1
 
