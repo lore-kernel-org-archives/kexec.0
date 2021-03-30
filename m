@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from aserp2130.oracle.com ([141.146.126.79])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLsp-004vUL-Ph
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:46 +0000
+ id 1lRLsq-004vUV-M5
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:48 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 00/43] PKRAM: Preserved-over-Kexec RAM
-Date: Tue, 30 Mar 2021 14:35:35 -0700
-Message-Id: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 08/43] mm: PKRAM: introduce super block
+Date: Tue, 30 Mar 2021 14:35:43 -0700
+Message-Id: <1617140178-8773-9-git-send-email-anthony.yznaga@oracle.com>
+In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
+References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,268 +25,207 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-This patchset implements preserved-over-kexec memory storage or PKRAM as a
-method for saving memory pages of the currently executing kernel so that
-they may be restored after kexec into a new kernel. The patches are adapted
-from an RFC patchset sent out in 2013 by Vladimir Davydov [1]. They
-introduce the PKRAM kernel API and implement its use within tmpfs, allowing
-tmpfs files to be preserved across kexec.
+The PKRAM super block is the starting point for restoring preserved
+memory. By providing the super block to the new kernel at boot time,
+preserved memory can be reserved and made available to be restored.
+To point the kernel to the location of the super block, one passes
+its pfn via the 'pkram' boot param. For that purpose, the pkram super
+block pfn is exported via /sys/kernel/pkram. If none is passed, any
+preserved memory will not be kept, and a new super block will be
+allocated.
 
-One use case for PKRAM is preserving guest memory and/or auxillary supporting
-data (e.g. iommu data) across kexec in support of VMM Fast Restart[2].
-VMM Fast Restart is currently using PKRAM to support preserving "Keep Alive
-State" across reboot[3].  PKRAM provides a flexible way for doing this
-without requiring that the amount of memory used by a fixed size created
-a priori.  Another use case is for databases to preserve their block caches
-in shared memory across reboot.
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+---
+ mm/pkram.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 100 insertions(+), 2 deletions(-)
 
-Changes since RFC v1
-  - Rebased onto 5.12-rc4
-  - Refined the API to reduce the number of calls
-    and better support multithreading.
-  - Allow preserving byte data of arbitrary length
-    (was previously limited to one page).
-  - Build a new memblock reserved list with the
-    preserved ranges and then substitute it for
-    the existing one. (Mike Rapoport)
-  - Use mem_avoid_overlap() to avoid kaslr stepping
-    on preserved ranges. (Kees Cook)
-
--- Usage --
-
- 1) Mount tmpfs with 'pkram=NAME' option.
-
-    NAME is an arbitrary string specifying a preserved memory node.
-    Different tmpfs trees may be saved to PKRAM if different names are
-    passed.
-
-    # mkdir -p /mnt
-    # mount -t tmpfs -o pkram=mytmpfs none /mnt
-
- 2) Populate a file under /mnt
-
-    # head -c 2G /dev/urandom > /mnt/testfile
-    # md5sum /mnt/testfile
-    e281e2f019ac3bfa3bdb28aa08c4beb3  /mnt/testfile
-
- 3) Remount tmpfs to preserve files.
-
-    # mount -o remount,preserve,ro /mnt
-
- 4) Load the new kernel image.
-
-    Pass the PKRAM super block pfn via 'pkram' boot option. The pfn is
-    exported via the sysfs file /sys/kernel/pkram.
-
-    # kexec -s -l /boot/vmlinuz-$kernel --initrd=/boot/initramfs-$kernel.img \
-            --append="$(cat /proc/cmdline|sed -e 's/pkram=[^ ]*//g') pkram=$(cat /sys/kernel/pkram)"
-
- 5) Boot to the new kernel.
-
-    # systemctl kexec
-
- 6) Mount tmpfs with 'pkram=NAME' option.
-
-    It should find the PKRAM node with the tmpfs tree saved on previous
-    unmount and restore it.
-
-    # mount -t tmpfs -o pkram=mytmpfs none /mnt
-
- 7) Use the restored file under /mnt
-
-    # md5sum /mnt/testfile
-    e281e2f019ac3bfa3bdb28aa08c4beb3  /mnt/testfile
-
-
- -- Implementation details --
-
- * When a tmpfs filesystem is mounted the first time with the 'pkram=NAME'
-   option, a shmem_pkram_info is allocated to record NAME. The shmem_pkram_info
-   and whether the filesystem is in the preserved state are tracked by
-   shmem_sb_info.
-
- * A PKRAM-enabled tmpfs filesystem is saved to PKRAM on remount when the
-  'preserve' mount option is specified and the filesystem is read-only.
-
- * Saving a file to PKRAM is done by walking the pages of the file and
-   building a list of the pages and attributes needed to restore them later.
-   The pages containing this metadata as well as the target file pages have
-   their refcount incremented to prevent them from being freed even after
-   the last user puts the pages (i.e. the filesystem is unmounted).
-
- * To aid in quickly finding contiguous ranges of memory containing
-   preserved pages a pseudo physical mapping pagetable is populated
-   with pages as they are preserved.
-
- * If a page to be preserved is found to be in range of memory that was
-   previously reserved during early boot or in range of memory where the
-   kernel will be loaded to on kexec, the page will be copied to a page
-   outside of those ranges and the new page will be preserved. A compound
-   page will be copied to and preserved as individual base pages.
-
- * A single page is allocated for the PKRAM super block. For the next kernel
-   kexec boot to find preserved memory metadata, the pfn of the PKRAM super
-   block, which is exported via /sys/kernel/pkram, is passed in the 'pkram'
-   boot option.
-
- * In the newly booted kernel, PKRAM adds all preserved pages to the memblock
-   reserve list during early boot so that they will not be recycled.
-
- * Since kexec may load the new kernel code to any memory region, it could
-   destroy preserved memory. When the kernel selects the memory region
-   (kexec_file_load syscall), kexec will avoid preserved pages.  When the
-   user selects the kexec memory region to use (kexec_load syscall) , kexec
-   load will fail if there is conflict with preserved pages. Pages preserved
-   after a kexec kernel is loaded will be relocated if they conflict with
-   the selected memory region.
-
-The current implementation has some restrictions:
-
- * Only regular tmpfs files without multiple hard links can be preserved.
-   Save to PKRAM will abort and log an error if a directory or other file
-   type is encountered.
-
- * Pages for PKRAM-enabled files are prevented from swapping out to avoid
-   the performance penalty of swapping in and the possibility of insufficient
-   memory.
-
-
--- Patches --
-
-The patches are broken down into the following groups:
-
-Patches 1-22 implement the API and supporting functionality.
-
-Patches 23-27 implement the use of PKRAM within tmpfs
-
-The remaining patches implement optimizations to the initialization of
-preserved pages and to the preservation and restoration of shmem pages.
-
-To give an idea of the improvement in performance here is an example
-comparison with and without these patches when saving and loading a 100G
-file:
-
-  Save a 100G file:
-
-              | No optimizations | Optimized (16 cpus) |
-  ------------------------------------------------------
-  huge=never  |     2265ms       |       232ms         |
-  ------------------------------------------------------
-  huge=always |       58ms       |        22ms         |
-
-
-  Load a 100G file:
-
-              | No optimizations | Optimized (16 cpus) |
-  ------------------------------------------------------
-  huge=never  |     8833ms       |       516ms         |
-  ------------------------------------------------------
-  huge=always |      752ms       |       105ms         |
-
-
-Patches 28-31 Defer initialization of page structs for preserved pages
-
-Patches 32-34 Implement multi-threading of shmem page preservation and
-restoration.
-
-Patches 35-37 Implement and use an  API for inserting shmem pages in bulk
-
-Patches 38-39: Reduce contention on the LRU lock by staging and adding pages
-in bulk to the LRU
-
-Patches 40-43: Reduce contention on the pagecache xarray lock by inserting
-pages in bulk in certain cases
-
-[1] https://lkml.org/lkml/2013/7/1/211
-
-[2] https://www.youtube.com/watch?v=pBsHnf93tcQ
-    https://static.sched.com/hosted_files/kvmforum2019/66/VMM-fast-restart_kvmforum2019.pdf
-
-[3] https://www.youtube.com/watch?v=pBsHnf93tcQ
-https://static.sched.com/hosted_files/kvmforum2020/10/Device-Keepalive-State-KVMForum2020.pdf
-
-Anthony Yznaga (43):
-  mm: add PKRAM API stubs and Kconfig
-  mm: PKRAM: implement node load and save functions
-  mm: PKRAM: implement object load and save functions
-  mm: PKRAM: implement page stream operations
-  mm: PKRAM: support preserving transparent hugepages
-  mm: PKRAM: implement byte stream operations
-  mm: PKRAM: link nodes by pfn before reboot
-  mm: PKRAM: introduce super block
-  PKRAM: track preserved pages in a physical mapping pagetable
-  PKRAM: pass a list of preserved ranges to the next kernel
-  PKRAM: prepare for adding preserved ranges to memblock reserved
-  mm: PKRAM: reserve preserved memory at boot
-  PKRAM: free the preserved ranges list
-  PKRAM: prevent inadvertent use of a stale superblock
-  PKRAM: provide a way to ban pages from use by PKRAM
-  kexec: PKRAM: prevent kexec clobbering preserved pages in some cases
-  PKRAM: provide a way to check if a memory range has preserved pages
-  kexec: PKRAM: avoid clobbering already preserved pages
-  mm: PKRAM: allow preserved memory to be freed from userspace
-  PKRAM: disable feature when running the kdump kernel
-  x86/KASLR: PKRAM: support physical kaslr
-  x86/boot/compressed/64: use 1GB pages for mappings
-  mm: shmem: introduce shmem_insert_page
-  mm: shmem: enable saving to PKRAM
-  mm: shmem: prevent swapping of PKRAM-enabled tmpfs pages
-  mm: shmem: specify the mm to use when inserting pages
-  mm: shmem: when inserting, handle pages already charged to a memcg
-  x86/mm/numa: add numa_isolate_memblocks()
-  PKRAM: ensure memblocks with preserved pages init'd for numa
-  memblock: PKRAM: mark memblocks that contain preserved pages
-  memblock, mm: defer initialization of preserved pages
-  shmem: preserve shmem files a chunk at a time
-  PKRAM: atomically add and remove link pages
-  shmem: PKRAM: multithread preserving and restoring shmem pages
-  shmem: introduce shmem_insert_pages()
-  PKRAM: add support for loading pages in bulk
-  shmem: PKRAM: enable bulk loading of preserved pages into shmem
-  mm: implement splicing a list of pages to the LRU
-  shmem: optimize adding pages to the LRU in shmem_insert_pages()
-  shmem: initial support for adding multiple pages to pagecache
-  XArray: add xas_export_node() and xas_import_node()
-  shmem: reduce time holding xa_lock when inserting pages
-  PKRAM: improve index alignment of pkram_link entries
-
- documentation/core-api/xarray.rst       |    8 +
- arch/x86/boot/compressed/Makefile       |    3 +
- arch/x86/boot/compressed/ident_map_64.c |    9 +-
- arch/x86/boot/compressed/kaslr.c        |   10 +-
- arch/x86/boot/compressed/misc.h         |   10 +
- arch/x86/boot/compressed/pkram.c        |  109 ++
- arch/x86/include/asm/numa.h             |    4 +
- arch/x86/kernel/setup.c                 |    3 +
- arch/x86/mm/init_64.c                   |    2 +
- arch/x86/mm/numa.c                      |   32 +-
- include/linux/memblock.h                |    6 +
- include/linux/mm.h                      |    2 +-
- include/linux/pkram.h                   |  120 ++
- include/linux/shmem_fs.h                |   28 +
- include/linux/swap.h                    |   13 +
- include/linux/xarray.h                  |    2 +
- kernel/kexec.c                          |    9 +
- kernel/kexec_core.c                     |    3 +
- kernel/kexec_file.c                     |   15 +
- lib/test_xarray.c                       |   45 +
- lib/xarray.c                            |  100 ++
- mm/Kconfig                              |    9 +
- mm/Makefile                             |    1 +
- mm/memblock.c                           |   11 +-
- mm/page_alloc.c                         |   55 +-
- mm/pkram.c                              | 1808 +++++++++++++++++++++++++++++++
- mm/pkram_pagetable.c                    |  376 +++++++
- mm/shmem.c                              |  494 ++++++++-
- mm/shmem_pkram.c                        |  530 +++++++++
- mm/swap.c                               |   86 ++
- 30 files changed, 3869 insertions(+), 34 deletions(-)
- create mode 100644 arch/x86/boot/compressed/pkram.c
- create mode 100644 include/linux/pkram.h
- create mode 100644 mm/pkram.c
- create mode 100644 mm/pkram_pagetable.c
- create mode 100644 mm/shmem_pkram.c
-
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 975f200aef38..2809371a9aec 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -5,15 +5,18 @@
+ #include <linux/init.h>
+ #include <linux/io.h>
+ #include <linux/kernel.h>
++#include <linux/kobject.h>
+ #include <linux/list.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
+ #include <linux/mutex.h>
+ #include <linux/notifier.h>
++#include <linux/pfn.h>
+ #include <linux/pkram.h>
+ #include <linux/reboot.h>
+ #include <linux/sched.h>
+ #include <linux/string.h>
++#include <linux/sysfs.h>
+ #include <linux/types.h>
+ 
+ #include "internal.h"
+@@ -84,12 +87,38 @@ struct pkram_node {
+ #define PKRAM_ACCMODE_MASK	3
+ 
+ /*
++ * The PKRAM super block contains data needed to restore the preserved memory
++ * structure on boot. The pointer to it (pfn) should be passed via the 'pkram'
++ * boot param if one wants to restore preserved data saved by the previously
++ * executing kernel. For that purpose the kernel exports the pfn via
++ * /sys/kernel/pkram. If none is passed, preserved memory if any will not be
++ * preserved and a new clean page will be allocated for the super block.
++ *
++ * The structure occupies a memory page.
++ */
++struct pkram_super_block {
++	__u64	node_pfn;		/* first element of the node list */
++};
++
++static unsigned long pkram_sb_pfn __initdata;
++static struct pkram_super_block *pkram_sb;
++
++/*
+  * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
+  * connected through the lru field of the page struct.
+  */
+ static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
+ static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
+ 
++/*
++ * The PKRAM super block pfn, see above.
++ */
++static int __init parse_pkram_sb_pfn(char *arg)
++{
++	return kstrtoul(arg, 16, &pkram_sb_pfn);
++}
++early_param("pkram", parse_pkram_sb_pfn);
++
+ static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
+ {
+ 	return alloc_page(gfp_mask);
+@@ -275,6 +304,7 @@ static void pkram_stream_init(struct pkram_stream *ps,
+  * @gfp_mask specifies the memory allocation mask to be used when saving data.
+  *
+  * Error values:
++ *	%ENODEV: PKRAM not available
+  *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
+  *	%ENOMEM: insufficient memory available
+  *	%EEXIST: node with specified name already exists
+@@ -290,6 +320,9 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask
+ 	struct pkram_node *node;
+ 	int err = 0;
+ 
++	if (!pkram_sb)
++		return -ENODEV;
++
+ 	if (strlen(name) >= PKRAM_NAME_MAX)
+ 		return -ENAMETOOLONG;
+ 
+@@ -410,6 +443,7 @@ void pkram_discard_save(struct pkram_stream *ps)
+  * Returns 0 on success, -errno on failure.
+  *
+  * Error values:
++ *	%ENODEV: PKRAM not available
+  *	%ENOENT: node with specified name does not exist
+  *	%EBUSY: save to required node has not finished yet
+  *
+@@ -420,6 +454,9 @@ int pkram_prepare_load(struct pkram_stream *ps, const char *name)
+ 	struct pkram_node *node;
+ 	int err = 0;
+ 
++	if (!pkram_sb)
++		return -ENODEV;
++
+ 	mutex_lock(&pkram_mutex);
+ 	node = pkram_find_node(name);
+ 	if (!node) {
+@@ -809,6 +846,13 @@ static void __pkram_reboot(void)
+ 		node->node_pfn = node_pfn;
+ 		node_pfn = page_to_pfn(page);
+ 	}
++
++	/*
++	 * Zero out pkram_sb completely since it may have been passed from
++	 * the previous boot.
++	 */
++	memset(pkram_sb, 0, PAGE_SIZE);
++	pkram_sb->node_pfn = node_pfn;
+ }
+ 
+ static int pkram_reboot(struct notifier_block *notifier,
+@@ -816,7 +860,8 @@ static int pkram_reboot(struct notifier_block *notifier,
+ {
+ 	if (val != SYS_RESTART)
+ 		return NOTIFY_DONE;
+-	__pkram_reboot();
++	if (pkram_sb)
++		__pkram_reboot();
+ 	return NOTIFY_OK;
+ }
+ 
+@@ -824,9 +869,62 @@ static int pkram_reboot(struct notifier_block *notifier,
+ 	.notifier_call = pkram_reboot,
+ };
+ 
++static ssize_t show_pkram_sb_pfn(struct kobject *kobj,
++		struct kobj_attribute *attr, char *buf)
++{
++	unsigned long pfn = pkram_sb ? PFN_DOWN(__pa(pkram_sb)) : 0;
++
++	return sprintf(buf, "%lx\n", pfn);
++}
++
++static struct kobj_attribute pkram_sb_pfn_attr =
++	__ATTR(pkram, 0444, show_pkram_sb_pfn, NULL);
++
++static struct attribute *pkram_attrs[] = {
++	&pkram_sb_pfn_attr.attr,
++	NULL,
++};
++
++static struct attribute_group pkram_attr_group = {
++	.attrs = pkram_attrs,
++};
++
++/* returns non-zero on success */
++static int __init pkram_init_sb(void)
++{
++	unsigned long pfn;
++	struct pkram_node *node;
++
++	if (!pkram_sb) {
++		struct page *page;
++
++		page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
++		if (!page) {
++			pr_err("PKRAM: Failed to allocate super block\n");
++			return 0;
++		}
++		pkram_sb = page_address(page);
++	}
++
++	/*
++	 * Build auxiliary doubly-linked list of nodes connected through
++	 * page::lru for convenience sake.
++	 */
++	pfn = pkram_sb->node_pfn;
++	while (pfn) {
++		node = pfn_to_kaddr(pfn);
++		pkram_insert_node(node);
++		pfn = node->node_pfn;
++	}
++	return 1;
++}
++
+ static int __init pkram_init(void)
+ {
+-	register_reboot_notifier(&pkram_reboot_notifier);
++	if (pkram_init_sb()) {
++		register_reboot_notifier(&pkram_reboot_notifier);
++		sysfs_update_group(kernel_kobj, &pkram_attr_group);
++	}
+ 	return 0;
+ }
+ module_init(pkram_init);
 -- 
 1.8.3.1
 
