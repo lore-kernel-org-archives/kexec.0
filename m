@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2120.oracle.com ([156.151.31.85])
+Received: from aserp2130.oracle.com ([141.146.126.79])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLtK-004vcM-8E
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:27:17 +0000
+ id 1lRLtM-004vd2-Nu
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:27:19 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 22/43] x86/boot/compressed/64: use 1GB pages for mappings
-Date: Tue, 30 Mar 2021 14:35:57 -0700
-Message-Id: <1617140178-8773-23-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 23/43] mm: shmem: introduce shmem_insert_page
+Date: Tue, 30 Mar 2021 14:35:58 -0700
+Message-Id: <1617140178-8773-24-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,56 +25,121 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-pkram kaslr code can incur multiple page faults when it walks its
-preserved ranges list called via mem_avoid_overlap().  The multiple
-faults can easily end up using up the small number of pages available
-to be allocated for page table pages.
+The function inserts a page into a shmem file at a specified offset.
+The page can be a regular PAGE_SIZE page or a transparent huge page.
+If there is something at the offset (page or swap), the function fails.
 
-This patch hacks things so that mappings are 1GB which results in the need
-for far fewer page table pages.  As is this breaks AMD SEV-ES which expects
-the mappings to be 2M.  This could possibly be fixed by updating split
-code to split 1GB page if the aren't any other issues with using 1GB
-mappings.
+The function will be used by the next patch.
 
+Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- arch/x86/boot/compressed/ident_map_64.c | 9 +++++----
- 1 file changed, 5 insertions(+), 4 deletions(-)
+ include/linux/shmem_fs.h |  3 ++
+ mm/shmem.c               | 77 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 80 insertions(+)
 
-diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
-index f7213d0943b8..6ff02da4cc1a 100644
---- a/arch/x86/boot/compressed/ident_map_64.c
-+++ b/arch/x86/boot/compressed/ident_map_64.c
-@@ -95,8 +95,8 @@ static void add_identity_map(unsigned long start, unsigned long end)
- 	int ret;
+diff --git a/include/linux/shmem_fs.h b/include/linux/shmem_fs.h
+index d82b6f396588..3f0dd95efd46 100644
+--- a/include/linux/shmem_fs.h
++++ b/include/linux/shmem_fs.h
+@@ -103,6 +103,9 @@ enum sgp_type {
+ extern int shmem_getpage(struct inode *inode, pgoff_t index,
+ 		struct page **pagep, enum sgp_type sgp);
  
- 	/* Align boundary to 2M. */
--	start = round_down(start, PMD_SIZE);
--	end = round_up(end, PMD_SIZE);
-+	start = round_down(start, PUD_SIZE);
-+	end = round_up(end, PUD_SIZE);
- 	if (start >= end)
- 		return;
++extern int shmem_insert_page(struct mm_struct *mm, struct inode *inode,
++		pgoff_t index, struct page *page);
++
+ static inline struct page *shmem_read_mapping_page(
+ 				struct address_space *mapping, pgoff_t index)
+ {
+diff --git a/mm/shmem.c b/mm/shmem.c
+index b2db4ed0fbc7..60e4f0ad23b9 100644
+--- a/mm/shmem.c
++++ b/mm/shmem.c
+@@ -755,6 +755,83 @@ static void shmem_delete_from_page_cache(struct page *page, void *radswap)
+ 	BUG_ON(error);
+ }
  
-@@ -119,6 +119,7 @@ void initialize_identity_maps(void *rmode)
- 	mapping_info.context = &pgt_data;
- 	mapping_info.page_flag = __PAGE_KERNEL_LARGE_EXEC | sme_me_mask;
- 	mapping_info.kernpg_flag = _KERNPG_TABLE;
-+	mapping_info.direct_gbpages = true;
- 
- 	/*
- 	 * It should be impossible for this not to already be true,
-@@ -329,8 +330,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
- 
- 	ghcb_fault = sev_es_check_ghcb_fault(address);
- 
--	address   &= PMD_MASK;
--	end        = address + PMD_SIZE;
-+	address   &= PUD_MASK;
-+	end        = address + PUD_SIZE;
- 
- 	/*
- 	 * Check for unexpected error codes. Unexpected are:
++int shmem_insert_page(struct mm_struct *mm, struct inode *inode, pgoff_t index,
++		      struct page *page)
++{
++	struct address_space *mapping = inode->i_mapping;
++	struct shmem_inode_info *info = SHMEM_I(inode);
++	struct shmem_sb_info *sbinfo = SHMEM_SB(inode->i_sb);
++	gfp_t gfp = mapping_gfp_mask(mapping);
++	int err;
++	int nr;
++	pgoff_t hindex = index;
++	bool on_lru = PageLRU(page);
++
++	if (index > (MAX_LFS_FILESIZE >> PAGE_SHIFT))
++		return -EFBIG;
++
++	nr = thp_nr_pages(page);
++retry:
++	err = 0;
++	if (!shmem_inode_acct_block(inode, nr))
++		err = -ENOSPC;
++	if (err) {
++		int retry = 5;
++
++		/*
++		 * Try to reclaim some space by splitting a huge page
++		 * beyond i_size on the filesystem.
++		 */
++		while (retry--) {
++			int ret;
++
++			ret = shmem_unused_huge_shrink(sbinfo, NULL, 1);
++			if (ret == SHRINK_STOP)
++				break;
++			if (ret)
++				goto retry;
++		}
++		goto failed;
++	}
++
++	if (!on_lru) {
++		__SetPageLocked(page);
++		__SetPageSwapBacked(page);
++	} else {
++		lock_page(page);
++	}
++
++	hindex = round_down(index, nr);
++	__SetPageReferenced(page);
++
++	err = shmem_add_to_page_cache(page, mapping, hindex,
++				      NULL, gfp & GFP_RECLAIM_MASK, mm);
++	if (err)
++		goto out_unlock;
++
++	if (!on_lru)
++		lru_cache_add(page);
++
++	spin_lock(&info->lock);
++	info->alloced += nr;
++	inode->i_blocks += BLOCKS_PER_PAGE << thp_order(page);
++	shmem_recalc_inode(inode);
++	spin_unlock(&info->lock);
++
++	flush_dcache_page(page);
++	SetPageUptodate(page);
++	set_page_dirty(page);
++
++	unlock_page(page);
++	return 0;
++
++out_unlock:
++	unlock_page(page);
++	shmem_inode_unacct_blocks(inode, nr);
++failed:
++	return err;
++}
++
+ /*
+  * Remove swap entry from page cache, free the swap and its page cache.
+  */
 -- 
 1.8.3.1
 
