@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from userp2120.oracle.com ([156.151.31.85])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLul-004w4H-Hz
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:28:48 +0000
+ id 1lRLuy-004w7J-C4
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:29:07 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 41/43] XArray: add xas_export_node() and xas_import_node()
-Date: Tue, 30 Mar 2021 14:36:16 -0700
-Message-Id: <1617140178-8773-42-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 31/43] memblock, mm: defer initialization of preserved pages
+Date: Tue, 30 Mar 2021 14:36:06 -0700
+Message-Id: <1617140178-8773-32-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,235 +25,190 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-Contention on the xarray lock when multiple threads are adding to the
-same xarray can be mitigated by providing a way to add entries in
-bulk.
-
-Allow a caller to allocate and populate an xarray node outside of
-the target xarray and then only take the xarray lock long enough to
-import the node into it.
+Preserved pages are represented in the memblock reserved list, but page
+structs for pages in the reserved list are initialized early while boot
+is single threaded which means that a large number of preserved pages
+can impact boot time. To mitigate, defer initialization of preserved
+pages by skipping them when other reserved pages are initialized and
+initializing them later with a separate kernel thread.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- Documentation/core-api/xarray.rst |   8 +++
- include/linux/xarray.h            |   2 +
- lib/test_xarray.c                 |  45 +++++++++++++++++
- lib/xarray.c                      | 100 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 155 insertions(+)
+ arch/x86/mm/init_64.c |  1 -
+ include/linux/mm.h    |  2 +-
+ mm/memblock.c         | 11 +++++++++--
+ mm/page_alloc.c       | 55 +++++++++++++++++++++++++++++++++++++++++++--------
+ 4 files changed, 57 insertions(+), 12 deletions(-)
 
-diff --git a/Documentation/core-api/xarray.rst b/Documentation/core-api/xarray.rst
-index a137a0e6d068..12ec59038fc8 100644
---- a/Documentation/core-api/xarray.rst
-+++ b/Documentation/core-api/xarray.rst
-@@ -444,6 +444,14 @@ called each time the XArray updates a node.  This is used by the page
- cache workingset code to maintain its list of nodes which contain only
- shadow entries.
+diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
+index 69bd71996b8b..8efb2fb2a88b 100644
+--- a/arch/x86/mm/init_64.c
++++ b/arch/x86/mm/init_64.c
+@@ -1294,7 +1294,6 @@ void __init mem_init(void)
+ 	after_bootmem = 1;
+ 	x86_init.hyper.init_after_bootmem();
  
-+xas_export_node() is used to remove and return a node from an XArray
-+while xas_import_node() is used to add a node to an XArray.  Together
-+these can be used, for example, to reduce lock contention when multiple
-+threads are updating an XArray by allowing a caller to allocate and
-+populate a node outside of the target XArray in a local XArray, export
-+the node, and then take the target XArray lock just long enough to import
-+the node.
+-	pkram_cleanup();
+ 	totalram_pages_add(pkram_reserved_pages);
+ 	/*
+ 	 * Must be done after boot memory is put on freelist, because here we
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 64a71bf20536..2a93b2a6ec8d 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -2337,7 +2337,7 @@ extern unsigned long free_reserved_area(void *start, void *end,
+ extern void adjust_managed_page_count(struct page *page, long count);
+ extern void mem_init_print_info(const char *str);
+ 
+-extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end);
++extern void reserve_bootmem_region(phys_addr_t start, phys_addr_t end, int nid);
+ 
+ /* Free the reserved page into the buddy system, so it gets managed. */
+ static inline void free_reserved_page(struct page *page)
+diff --git a/mm/memblock.c b/mm/memblock.c
+index afaefa8fc6ab..461ea0f85495 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -2007,11 +2007,18 @@ static unsigned long __init free_low_memory_core_early(void)
+ 	unsigned long count = 0;
+ 	phys_addr_t start, end;
+ 	u64 i;
++	struct memblock_region *r;
+ 
+ 	memblock_clear_hotplug(0, -1);
+ 
+-	for_each_reserved_mem_range(i, &start, &end)
+-		reserve_bootmem_region(start, end);
++	for_each_reserved_mem_region(r) {
++		if (IS_ENABLED(CONFIG_DEFERRED_STRUCT_PAGE_INIT) && memblock_is_preserved(r))
++			continue;
 +
- Multi-Index Entries
- -------------------
++		start = r->base;
++		end = r->base + r->size;
++		reserve_bootmem_region(start, end, NUMA_NO_NODE);
++	}
  
-diff --git a/include/linux/xarray.h b/include/linux/xarray.h
-index 92c0160b3352..1eda38cbe020 100644
---- a/include/linux/xarray.h
-+++ b/include/linux/xarray.h
-@@ -1506,6 +1506,8 @@ static inline bool xas_retry(struct xa_state *xas, const void *entry)
- void xas_pause(struct xa_state *);
+ 	/*
+ 	 * We need to use NUMA_NO_NODE instead of NODE_DATA(0)->node_id
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index cfc72873961d..999fcc8fe907 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -72,6 +72,7 @@
+ #include <linux/padata.h>
+ #include <linux/khugepaged.h>
+ #include <linux/buffer_head.h>
++#include <linux/pkram.h>
  
- void xas_create_range(struct xa_state *);
-+struct xa_node *xas_export_node(struct xa_state *xas);
-+void xas_import_node(struct xa_state *xas, struct xa_node *node);
- 
- #ifdef CONFIG_XARRAY_MULTI
- int xa_get_order(struct xarray *, unsigned long index);
-diff --git a/lib/test_xarray.c b/lib/test_xarray.c
-index 8294f43f4981..9cca0921cf9b 100644
---- a/lib/test_xarray.c
-+++ b/lib/test_xarray.c
-@@ -1765,6 +1765,50 @@ static noinline void check_destroy(struct xarray *xa)
- #endif
+ #include <asm/sections.h>
+ #include <asm/tlbflush.h>
+@@ -1475,15 +1476,18 @@ static void __meminit __init_single_page(struct page *page, unsigned long pfn,
  }
  
-+static noinline void check_export_import_1(struct xarray *xa,
-+		unsigned long index, unsigned int order)
-+{
-+	int xa_shift = order + XA_CHUNK_SHIFT - (order % XA_CHUNK_SHIFT);
-+	XA_STATE(xas, xa, index);
-+	struct xa_node *node;
-+	unsigned long i;
-+
-+	xa_store_many_order(xa, index, xa_shift);
-+
-+	xas_lock(&xas);
-+	xas_set_order(&xas, index, xa_shift);
-+	node = xas_export_node(&xas);
-+	xas_unlock(&xas);
-+
-+	XA_BUG_ON(xa, !xa_empty(xa));
-+
-+	do {
-+		xas_lock(&xas);
-+		xas_set_order(&xas, index, xa_shift);
-+		xas_import_node(&xas, node);
-+		xas_unlock(&xas);
-+	} while (xas_nomem(&xas, GFP_KERNEL));
-+
-+	for (i = index; i < index + (1UL << xa_shift); i++)
-+		xa_erase_index(xa, i);
-+
-+	XA_BUG_ON(xa, !xa_empty(xa));
-+}
-+
-+static noinline void check_export_import(struct xarray *xa)
-+{
-+	unsigned int order;
-+	unsigned int max_order = IS_ENABLED(CONFIG_XARRAY_MULTI) ? 12 : 1;
-+
-+	for (order = 0; order < max_order; order += XA_CHUNK_SHIFT) {
-+		int xa_shift = order + XA_CHUNK_SHIFT;
-+		unsigned long j;
-+
-+		for (j = 0; j < XA_CHUNK_SIZE; j++)
-+			check_export_import_1(xa, j << xa_shift, order);
-+	}
-+}
-+
- static DEFINE_XARRAY(array);
+ #ifdef CONFIG_DEFERRED_STRUCT_PAGE_INIT
+-static void __meminit init_reserved_page(unsigned long pfn)
++static void __meminit init_reserved_page(unsigned long pfn, int nid)
+ {
+ 	pg_data_t *pgdat;
+-	int nid, zid;
++	int zid;
  
- static int xarray_checks(void)
-@@ -1797,6 +1841,7 @@ static int xarray_checks(void)
- 	check_workingset(&array, 0);
- 	check_workingset(&array, 64);
- 	check_workingset(&array, 4096);
-+	check_export_import(&array);
- 
- 	printk("XArray: %u of %u tests passed\n", tests_passed, tests_run);
- 	return (tests_run == tests_passed) ? 0 : -EINVAL;
-diff --git a/lib/xarray.c b/lib/xarray.c
-index 5fa51614802a..58d58333f0d0 100644
---- a/lib/xarray.c
-+++ b/lib/xarray.c
-@@ -510,6 +510,30 @@ static void xas_delete_node(struct xa_state *xas)
- 		xas_shrink(xas);
- }
- 
-+static void xas_unlink_node(struct xa_state *xas)
-+{
-+	struct xa_node *node = xas->xa_node;
-+	struct xa_node *parent;
-+
-+	parent = xa_parent_locked(xas->xa, node);
-+	xas->xa_node = parent;
-+	xas->xa_offset = node->offset;
-+
-+	if (!parent) {
-+		xas->xa->xa_head = NULL;
-+		xas->xa_node = XAS_BOUNDS;
-+		return;
-+	}
-+
-+	parent->slots[xas->xa_offset] = NULL;
-+	parent->count--;
-+	XA_NODE_BUG_ON(parent, parent->count > XA_CHUNK_SIZE);
-+
-+	xas_update(xas, parent);
-+
-+	xas_delete_node(xas);
-+}
-+
- /**
-  * xas_free_nodes() - Free this node and all nodes that it references
-  * @xas: Array operation state.
-@@ -1690,6 +1714,82 @@ static void xas_set_range(struct xa_state *xas, unsigned long first,
- }
- 
- /**
-+ * xas_export_node() - remove and return a node from an XArray
-+ * @xas: XArray operation state
-+ *
-+ * The range covered by @xas must be aligned to and cover a single node
-+ * at any level of the tree.
-+ *
-+ * Return: On success, returns the removed node.  If the range is invalid,
-+ * returns %NULL and sets -EINVAL in @xas.  Otherwise returns %NULL if the
-+ * node does not exist.
-+ */
-+struct xa_node *xas_export_node(struct xa_state *xas)
-+{
-+	struct xa_node *node;
-+
-+	if (!xas->xa_shift || xas->xa_sibs) {
-+		xas_set_err(xas, -EINVAL);
-+		return NULL;
-+	}
-+
-+	xas->xa_shift -= XA_CHUNK_SHIFT;
-+
-+	if (!xas_find(xas, xas->xa_index))
-+		return NULL;
-+	node = xas->xa_node;
-+	xas_unlink_node(xas);
-+	node->parent = NULL;
-+
-+	return node;
-+}
-+
-+/**
-+ * xas_import_node() - add a node to an XArray
-+ * @xas: XArray operation state
-+ * @node: The node to add
-+ *
-+ * The range covered by @xas must be aligned to and cover a single node
-+ * at any level of the tree.  No nodes should already exist within the
-+ * range.
-+ * Sets an error in @xas if the range is invalid or xas_create() fails
-+ */
-+void xas_import_node(struct xa_state *xas, struct xa_node *node)
-+{
-+	struct xa_node *parent = NULL;
-+	void __rcu **slot = &xas->xa->xa_head;
-+	int count = 0;
-+
-+	if (!xas->xa_shift || xas->xa_sibs) {
-+		xas_set_err(xas, -EINVAL);
-+		return;
-+	}
-+
-+	if (xas->xa_index || xa_head_locked(xas->xa)) {
-+		xas_set_order(xas, xas->xa_index, node->shift + XA_CHUNK_SHIFT);
-+		xas_create(xas, true);
-+
-+		if (xas_invalid(xas))
+-	if (!early_page_uninitialised(pfn))
+-		return;
++	if (nid == NUMA_NO_NODE) {
++		if (!early_page_uninitialised(pfn))
 +			return;
 +
-+		parent = xas->xa_node;
++		nid = early_pfn_to_nid(pfn);
++	}
+ 
+-	nid = early_pfn_to_nid(pfn);
+ 	pgdat = NODE_DATA(nid);
+ 
+ 	for (zid = 0; zid < MAX_NR_ZONES; zid++) {
+@@ -1495,7 +1499,7 @@ static void __meminit init_reserved_page(unsigned long pfn)
+ 	__init_single_page(pfn_to_page(pfn), pfn, zid, nid);
+ }
+ #else
+-static inline void init_reserved_page(unsigned long pfn)
++static inline void init_reserved_page(unsigned long pfn, int nid)
+ {
+ }
+ #endif /* CONFIG_DEFERRED_STRUCT_PAGE_INIT */
+@@ -1506,7 +1510,7 @@ static inline void init_reserved_page(unsigned long pfn)
+  * marks the pages PageReserved. The remaining valid pages are later
+  * sent to the buddy page allocator.
+  */
+-void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
++void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end, int nid)
+ {
+ 	unsigned long start_pfn = PFN_DOWN(start);
+ 	unsigned long end_pfn = PFN_UP(end);
+@@ -1515,7 +1519,7 @@ void __meminit reserve_bootmem_region(phys_addr_t start, phys_addr_t end)
+ 		if (pfn_valid(start_pfn)) {
+ 			struct page *page = pfn_to_page(start_pfn);
+ 
+-			init_reserved_page(start_pfn);
++			init_reserved_page(start_pfn, nid);
+ 
+ 			/* Avoid false-positive PageTail() */
+ 			INIT_LIST_HEAD(&page->lru);
+@@ -2008,6 +2012,35 @@ static int __init deferred_init_memmap(void *data)
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_PKRAM
++static int __init deferred_init_preserved(void *dummy)
++{
++	unsigned long start = jiffies;
++	unsigned long nr_pages = 0;
++	struct memblock_region *r;
++	phys_addr_t spa, epa;
++	int nid;
++
++	for_each_reserved_mem_region(r) {
++		if (!memblock_is_preserved(r))
++			continue;
++
++		spa = r->base;
++		epa = r->base + r->size;
++		nid = memblock_get_region_node(r);
++
++		reserve_bootmem_region(spa, epa, nid);
++		nr_pages += ((epa - spa) >> PAGE_SHIFT);
 +	}
 +
-+	if (parent) {
-+		slot = &parent->slots[xas->xa_offset];
-+		node->offset = xas->xa_offset;
-+		count++;
-+	}
++	pr_info("initialised %lu preserved pages in %ums\n", nr_pages,
++					jiffies_to_msecs(jiffies - start));
 +
-+	RCU_INIT_POINTER(node->parent, parent);
-+	node->array = xas->xa;
-+
-+	rcu_assign_pointer(*slot, xa_mk_node(node));
-+
-+	update_node(xas, parent, count, 0);
++	pgdat_init_report_one_done();
++	return 0;
 +}
++#endif /* CONFIG_PKRAM */
 +
-+/**
-  * xa_store_range() - Store this entry at a range of indices in the XArray.
-  * @xa: XArray.
-  * @first: First index to affect.
+ /*
+  * If this zone has deferred pages, try to grow it by initializing enough
+  * deferred pages to satisfy the allocation specified by order, rounded up to
+@@ -2107,6 +2140,10 @@ void __init page_alloc_init_late(void)
+ 
+ 	/* There will be num_node_state(N_MEMORY) threads */
+ 	atomic_set(&pgdat_init_n_undone, num_node_state(N_MEMORY));
++#ifdef CONFIG_PKRAM
++	atomic_inc(&pgdat_init_n_undone);
++	kthread_run(deferred_init_preserved, NULL, "pgdatainit_preserved");
++#endif
+ 	for_each_node_state(nid, N_MEMORY) {
+ 		kthread_run(deferred_init_memmap, NODE_DATA(nid), "pgdatinit%d", nid);
+ 	}
+@@ -2114,6 +2151,8 @@ void __init page_alloc_init_late(void)
+ 	/* Block until all are initialised */
+ 	wait_for_completion(&pgdat_init_all_done_comp);
+ 
++	pkram_cleanup();
++
+ 	/*
+ 	 * The number of managed pages has changed due to the initialisation
+ 	 * so the pcpu batch and high limits needs to be updated or the limits
 -- 
 1.8.3.1
 
