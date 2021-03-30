@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from aserp2120.oracle.com ([141.146.126.78])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLti-004voP-Sn
+ id 1lRLti-004voK-DJ
  for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:27:43 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 14/43] PKRAM: prevent inadvertent use of a stale superblock
-Date: Tue, 30 Mar 2021 14:35:49 -0700
-Message-Id: <1617140178-8773-15-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 28/43] x86/mm/numa: add numa_isolate_memblocks()
+Date: Tue, 30 Mar 2021 14:36:03 -0700
+Message-Id: <1617140178-8773-29-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,55 +25,91 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-When pages have been saved to be preserved by the current boot, set
-a magic number on the super block to be validated by the next kernel.
+Provide a way for a caller external to numa to ensure memblocks in the
+memblock reserved list do not cross node boundaries and have a node id
+assigned to them.  This will be used by PKRAM to ensure initialization of
+page structs for preserved pages can be deferred and multithreaded
+efficiently.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- mm/pkram.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/x86/include/asm/numa.h |  4 ++++
+ arch/x86/mm/numa.c          | 32 ++++++++++++++++++++------------
+ 2 files changed, 24 insertions(+), 12 deletions(-)
 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index dab6657080bf..8670d1633a9d 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -22,6 +22,7 @@
+diff --git a/arch/x86/include/asm/numa.h b/arch/x86/include/asm/numa.h
+index e3bae2b60a0d..632b5b6d8cb3 100644
+--- a/arch/x86/include/asm/numa.h
++++ b/arch/x86/include/asm/numa.h
+@@ -41,6 +41,7 @@ static inline void set_apicid_to_node(int apicid, s16 node)
+ }
  
- #include "internal.h"
+ extern int numa_cpu_node(int cpu);
++extern void __init numa_isolate_memblocks(void);
  
-+#define PKRAM_MAGIC		0x706B726D
+ #else	/* CONFIG_NUMA */
+ static inline void set_apicid_to_node(int apicid, s16 node)
+@@ -51,6 +52,9 @@ static inline int numa_cpu_node(int cpu)
+ {
+ 	return NUMA_NO_NODE;
+ }
++static inline void numa_isolate_memblocks(void)
++{
++}
+ #endif	/* CONFIG_NUMA */
  
- /*
-  * Represents a reference to a data page saved to PKRAM.
-@@ -112,6 +113,8 @@ struct pkram_region_list {
-  * The structure occupies a memory page.
-  */
- struct pkram_super_block {
-+	__u32	magic;
+ #ifdef CONFIG_X86_32
+diff --git a/arch/x86/mm/numa.c b/arch/x86/mm/numa.c
+index 5eb4dc2b97da..dd85098f9d72 100644
+--- a/arch/x86/mm/numa.c
++++ b/arch/x86/mm/numa.c
+@@ -473,6 +473,25 @@ static bool __init numa_meminfo_cover_memory(const struct numa_meminfo *mi)
+ 	return true;
+ }
+ 
++void __init numa_isolate_memblocks(void)
++{
++	int i;
 +
- 	__u64	node_pfn;		/* first element of the node list */
- 	__u64	region_list_pfn;
- 	__u64	nr_regions;
-@@ -180,6 +183,11 @@ void __init pkram_reserve(void)
- 		err = PTR_ERR(pkram_sb);
- 		goto out;
- 	}
-+	if (pkram_sb->magic != PKRAM_MAGIC) {
-+		pr_err("PKRAM: invalid super block\n");
-+		err = -EINVAL;
-+		goto out;
++	/*
++	 * Iterate over all memory known to the x86 architecture,
++	 * and use those ranges to set the nid in memblock.reserved.
++	 * This will split up the memblock regions along node
++	 * boundaries and will set the node IDs as well.
++	 */
++	for (i = 0; i < numa_meminfo.nr_blks; i++) {
++		struct numa_memblk *mb = numa_meminfo.blk + i;
++		int ret;
++
++		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
++		WARN_ON_ONCE(ret);
 +	}
- 	/* An empty pkram_sb is not an error */
- 	if (!pkram_sb->node_pfn) {
- 		pkram_sb = NULL;
-@@ -993,6 +1001,7 @@ static void __pkram_reboot(void)
++}
++
+ /*
+  * Mark all currently memblock-reserved physical memory (which covers the
+  * kernel's own memory ranges) as hot-unswappable.
+@@ -491,19 +510,8 @@ static void __init numa_clear_kernel_node_hotplug(void)
+ 	 * used by the kernel, but those regions are not split up
+ 	 * along node boundaries yet, and don't necessarily have their
+ 	 * node ID set yet either.
+-	 *
+-	 * So iterate over all memory known to the x86 architecture,
+-	 * and use those ranges to set the nid in memblock.reserved.
+-	 * This will split up the memblock regions along node
+-	 * boundaries and will set the node IDs as well.
  	 */
- 	memset(pkram_sb, 0, PAGE_SIZE);
- 	if (!err && node_pfn) {
-+		pkram_sb->magic = PKRAM_MAGIC;
- 		pkram_sb->node_pfn = node_pfn;
- 		pkram_sb->region_list_pfn = rl_pfn;
- 		pkram_sb->nr_regions = nr_regions;
+-	for (i = 0; i < numa_meminfo.nr_blks; i++) {
+-		struct numa_memblk *mb = numa_meminfo.blk + i;
+-		int ret;
+-
+-		ret = memblock_set_node(mb->start, mb->end - mb->start, &memblock.reserved, mb->nid);
+-		WARN_ON_ONCE(ret);
+-	}
++	numa_isolate_memblocks();
+ 
+ 	/*
+ 	 * Now go over all reserved memblock regions, to construct a
 -- 
 1.8.3.1
 
