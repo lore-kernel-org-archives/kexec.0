@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x533.google.com ([2607:f8b0:4864:20::533])
+Received: from aserp2130.oracle.com ([141.146.126.79])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lS9KP-00BjJi-QT
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 02:14:32 +0000
-Received: by mail-pg1-x533.google.com with SMTP id k8so2746046pgf.4
- for <kexec@lists.infradead.org>; Thu, 01 Apr 2021 19:14:28 -0700 (PDT)
-Date: Fri, 2 Apr 2021 11:14:18 +0900
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-Subject: Re: [PATCH printk v2 2/5] printk: remove safe buffers
-Message-ID: <YGZ9+kfQKxASmVDR@google.com>
-References: <20210330153512.1182-1-john.ogness@linutronix.de>
- <20210330153512.1182-3-john.ogness@linutronix.de>
- <YGW63/elFr/gYW1u@alley> <87a6qiqgzr.fsf@jogness.linutronix.de>
- <YGXV8LJarjUJDhvy@alley>
+ id 1lRLsq-004vUN-0y
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:46 +0000
+From: Anthony Yznaga <anthony.yznaga@oracle.com>
+Subject: [RFC v2 05/43] mm: PKRAM: support preserving transparent hugepages
+Date: Tue, 30 Mar 2021 14:35:40 -0700
+Message-Id: <1617140178-8773-6-git-send-email-anthony.yznaga@oracle.com>
+In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
+References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YGXV8LJarjUJDhvy@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,29 +22,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin <npiggin@gmail.com>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, Rafael Aquini <aquini@redhat.com>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-On (21/04/01 16:17), Petr Mladek wrote:
-> > For the long term, we should introduce a printk-context API that allows
-> > callers to perfectly pack their multi-line output into a single
-> > entry. We discussed [0][1] this back in August 2020.
-> 
-> We need a "short" term solution. There are currently 3 solutions:
-> 
-> 1. Keep nmi_safe() and all the hacks around.
-> 
-> 2. Serialize nmi_cpu_backtrace() by a spin lock and later by
->    the special lock used also by atomic consoles.
-> 
-> 3. Tell complaining people how to sort the messed logs.
+Support preserving a transparent hugepage by recording the page order and
+a flag indicating it is a THP.  Use these values when the page is
+restored to reconstruct the THP.
 
-Are we talking about nmi_cpu_backtrace()->dump_stack() or some
-other path?
+Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
+---
+ mm/pkram.c | 20 ++++++++++++++++----
+ 1 file changed, 16 insertions(+), 4 deletions(-)
 
-dump_stack() seems to be already serialized by `dump_lock`. Hmm,
-show_regs() is not serialized, seems like it should be under the
-same `dump_lock` as dump_stack().
+diff --git a/mm/pkram.c b/mm/pkram.c
+index 9c42db66d022..da44a6060c5f 100644
+--- a/mm/pkram.c
++++ b/mm/pkram.c
+@@ -21,6 +21,9 @@
+ 
+ #define PKRAM_ENTRY_FLAGS_SHIFT	0x5
+ #define PKRAM_ENTRY_FLAGS_MASK	0x7f
++#define PKRAM_ENTRY_ORDER_MASK	0x1f
++
++#define PKRAM_PAGE_TRANS_HUGE	0x1	/* page is a transparent hugepage */
+ 
+ /*
+  * Keeps references to data pages saved to PKRAM.
+@@ -211,7 +214,11 @@ static void pkram_add_link_entry(struct pkram_data_stream *pds, struct page *pag
+ 	pkram_entry_t p;
+ 	short flags = 0;
+ 
++	if (PageTransHuge(page))
++		flags |= PKRAM_PAGE_TRANS_HUGE;
++
+ 	p = page_to_phys(page);
++	p |= compound_order(page);
+ 	p |= ((flags & PKRAM_ENTRY_FLAGS_MASK) << PKRAM_ENTRY_FLAGS_SHIFT);
+ 	link->entry[pds->entry_idx] = p;
+ 	pds->entry_idx++;
+@@ -516,7 +523,7 @@ static int __pkram_save_page(struct pkram_access *pa, struct page *page,
+ 
+ 	pkram_add_link_entry(pds, page);
+ 
+-	pa->pages.next_index++;
++	pa->pages.next_index += compound_nr(page);
+ 
+ 	return 0;
+ }
+@@ -542,19 +549,24 @@ int pkram_save_file_page(struct pkram_access *pa, struct page *page)
+ 
+ 	BUG_ON((node->flags & PKRAM_ACCMODE_MASK) != PKRAM_SAVE);
+ 
+-	BUG_ON(PageCompound(page));
+-
+ 	return __pkram_save_page(pa, page, page->index);
+ }
+ 
+ static struct page *__pkram_prep_load_page(pkram_entry_t p)
+ {
+ 	struct page *page;
++	int order;
+ 	short flags;
+ 
+ 	flags = (p >> PKRAM_ENTRY_FLAGS_SHIFT) & PKRAM_ENTRY_FLAGS_MASK;
+ 	page = pfn_to_page(PHYS_PFN(p));
+ 
++	if (flags & PKRAM_PAGE_TRANS_HUGE) {
++		order = p & PKRAM_ENTRY_ORDER_MASK;
++		prep_compound_page(page, order);
++		prep_transhuge_page(page);
++	}
++
+ 	return page;
+ }
+ 
+@@ -588,7 +600,7 @@ static struct page *__pkram_load_page(struct pkram_access *pa, unsigned long *in
+ 
+ 	if (index) {
+ 		*index = pa->pages.next_index;
+-		pa->pages.next_index++;
++		pa->pages.next_index += compound_nr(page);
+ 	}
+ 
+ 	/* clear to avoid double free (see pkram_truncate_link()) */
+-- 
+1.8.3.1
+
 
 _______________________________________________
 kexec mailing list
