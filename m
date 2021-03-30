@@ -1,14 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from aserp2130.oracle.com ([141.146.126.79])
- by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLsq-004vUV-M5
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:26:48 +0000
-From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 08/43] mm: PKRAM: introduce super block
-Date: Tue, 30 Mar 2021 14:35:43 -0700
-Message-Id: <1617140178-8773-9-git-send-email-anthony.yznaga@oracle.com>
-In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
-References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
+From: John Ogness <john.ogness@linutronix.de>
+Subject: [PATCH printk v2 0/5] printk: remove safe buffers
+Date: Tue, 30 Mar 2021 17:35:07 +0200
+Message-Id: <20210330153512.1182-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,212 +16,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin <npiggin@gmail.com>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, Rafael Aquini <aquini@redhat.com>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@redhat.com>, Marc Zyngier <maz@kernel.org>, Valentin Schneider <valentin.schneider@arm.com>, Mike Rapoport <rppt@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Anshuman Khandual <anshuman.khandual@arm.com>, Leonardo Bras <leobras.c@gmail.com>, Andy Lutomirski <luto@kernel.org>, Will Deacon <will@kernel.org>, Frederic Weisbecker <frederic@kernel.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Nick Terrell <terrelln@fb.com>, David Howells <dhowells@redhat.com>, Johannes Weiner <hannes@cmpxchg.org>, linux-arm-kernel@lists.infradead.org
 
-The PKRAM super block is the starting point for restoring preserved
-memory. By providing the super block to the new kernel at boot time,
-preserved memory can be reserved and made available to be restored.
-To point the kernel to the location of the super block, one passes
-its pfn via the 'pkram' boot param. For that purpose, the pkram super
-block pfn is exported via /sys/kernel/pkram. If none is passed, any
-preserved memory will not be kept, and a new super block will be
-allocated.
+Hi,
 
-Originally-by: Vladimir Davydov <vdavydov.dev@gmail.com>
-Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
----
- mm/pkram.c | 102 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++--
- 1 file changed, 100 insertions(+), 2 deletions(-)
+Here is v2 of a series to remove the safe buffers. v1 can be
+found here [0]. The safe buffers are no longer needed because
+messages can be stored directly into the log buffer from any
+context.
 
-diff --git a/mm/pkram.c b/mm/pkram.c
-index 975f200aef38..2809371a9aec 100644
---- a/mm/pkram.c
-+++ b/mm/pkram.c
-@@ -5,15 +5,18 @@
- #include <linux/init.h>
- #include <linux/io.h>
- #include <linux/kernel.h>
-+#include <linux/kobject.h>
- #include <linux/list.h>
- #include <linux/mm.h>
- #include <linux/module.h>
- #include <linux/mutex.h>
- #include <linux/notifier.h>
-+#include <linux/pfn.h>
- #include <linux/pkram.h>
- #include <linux/reboot.h>
- #include <linux/sched.h>
- #include <linux/string.h>
-+#include <linux/sysfs.h>
- #include <linux/types.h>
- 
- #include "internal.h"
-@@ -84,12 +87,38 @@ struct pkram_node {
- #define PKRAM_ACCMODE_MASK	3
- 
- /*
-+ * The PKRAM super block contains data needed to restore the preserved memory
-+ * structure on boot. The pointer to it (pfn) should be passed via the 'pkram'
-+ * boot param if one wants to restore preserved data saved by the previously
-+ * executing kernel. For that purpose the kernel exports the pfn via
-+ * /sys/kernel/pkram. If none is passed, preserved memory if any will not be
-+ * preserved and a new clean page will be allocated for the super block.
-+ *
-+ * The structure occupies a memory page.
-+ */
-+struct pkram_super_block {
-+	__u64	node_pfn;		/* first element of the node list */
-+};
-+
-+static unsigned long pkram_sb_pfn __initdata;
-+static struct pkram_super_block *pkram_sb;
-+
-+/*
-  * For convenience sake PKRAM nodes are kept in an auxiliary doubly-linked list
-  * connected through the lru field of the page struct.
-  */
- static LIST_HEAD(pkram_nodes);			/* linked through page::lru */
- static DEFINE_MUTEX(pkram_mutex);		/* serializes open/close */
- 
-+/*
-+ * The PKRAM super block pfn, see above.
-+ */
-+static int __init parse_pkram_sb_pfn(char *arg)
-+{
-+	return kstrtoul(arg, 16, &pkram_sb_pfn);
-+}
-+early_param("pkram", parse_pkram_sb_pfn);
-+
- static inline struct page *pkram_alloc_page(gfp_t gfp_mask)
- {
- 	return alloc_page(gfp_mask);
-@@ -275,6 +304,7 @@ static void pkram_stream_init(struct pkram_stream *ps,
-  * @gfp_mask specifies the memory allocation mask to be used when saving data.
-  *
-  * Error values:
-+ *	%ENODEV: PKRAM not available
-  *	%ENAMETOOLONG: name len >= PKRAM_NAME_MAX
-  *	%ENOMEM: insufficient memory available
-  *	%EEXIST: node with specified name already exists
-@@ -290,6 +320,9 @@ int pkram_prepare_save(struct pkram_stream *ps, const char *name, gfp_t gfp_mask
- 	struct pkram_node *node;
- 	int err = 0;
- 
-+	if (!pkram_sb)
-+		return -ENODEV;
-+
- 	if (strlen(name) >= PKRAM_NAME_MAX)
- 		return -ENAMETOOLONG;
- 
-@@ -410,6 +443,7 @@ void pkram_discard_save(struct pkram_stream *ps)
-  * Returns 0 on success, -errno on failure.
-  *
-  * Error values:
-+ *	%ENODEV: PKRAM not available
-  *	%ENOENT: node with specified name does not exist
-  *	%EBUSY: save to required node has not finished yet
-  *
-@@ -420,6 +454,9 @@ int pkram_prepare_load(struct pkram_stream *ps, const char *name)
- 	struct pkram_node *node;
- 	int err = 0;
- 
-+	if (!pkram_sb)
-+		return -ENODEV;
-+
- 	mutex_lock(&pkram_mutex);
- 	node = pkram_find_node(name);
- 	if (!node) {
-@@ -809,6 +846,13 @@ static void __pkram_reboot(void)
- 		node->node_pfn = node_pfn;
- 		node_pfn = page_to_pfn(page);
- 	}
-+
-+	/*
-+	 * Zero out pkram_sb completely since it may have been passed from
-+	 * the previous boot.
-+	 */
-+	memset(pkram_sb, 0, PAGE_SIZE);
-+	pkram_sb->node_pfn = node_pfn;
- }
- 
- static int pkram_reboot(struct notifier_block *notifier,
-@@ -816,7 +860,8 @@ static int pkram_reboot(struct notifier_block *notifier,
- {
- 	if (val != SYS_RESTART)
- 		return NOTIFY_DONE;
--	__pkram_reboot();
-+	if (pkram_sb)
-+		__pkram_reboot();
- 	return NOTIFY_OK;
- }
- 
-@@ -824,9 +869,62 @@ static int pkram_reboot(struct notifier_block *notifier,
- 	.notifier_call = pkram_reboot,
- };
- 
-+static ssize_t show_pkram_sb_pfn(struct kobject *kobj,
-+		struct kobj_attribute *attr, char *buf)
-+{
-+	unsigned long pfn = pkram_sb ? PFN_DOWN(__pa(pkram_sb)) : 0;
-+
-+	return sprintf(buf, "%lx\n", pfn);
-+}
-+
-+static struct kobj_attribute pkram_sb_pfn_attr =
-+	__ATTR(pkram, 0444, show_pkram_sb_pfn, NULL);
-+
-+static struct attribute *pkram_attrs[] = {
-+	&pkram_sb_pfn_attr.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group pkram_attr_group = {
-+	.attrs = pkram_attrs,
-+};
-+
-+/* returns non-zero on success */
-+static int __init pkram_init_sb(void)
-+{
-+	unsigned long pfn;
-+	struct pkram_node *node;
-+
-+	if (!pkram_sb) {
-+		struct page *page;
-+
-+		page = pkram_alloc_page(GFP_KERNEL | __GFP_ZERO);
-+		if (!page) {
-+			pr_err("PKRAM: Failed to allocate super block\n");
-+			return 0;
-+		}
-+		pkram_sb = page_address(page);
-+	}
-+
-+	/*
-+	 * Build auxiliary doubly-linked list of nodes connected through
-+	 * page::lru for convenience sake.
-+	 */
-+	pfn = pkram_sb->node_pfn;
-+	while (pfn) {
-+		node = pfn_to_kaddr(pfn);
-+		pkram_insert_node(node);
-+		pfn = node->node_pfn;
-+	}
-+	return 1;
-+}
-+
- static int __init pkram_init(void)
- {
--	register_reboot_notifier(&pkram_reboot_notifier);
-+	if (pkram_init_sb()) {
-+		register_reboot_notifier(&pkram_reboot_notifier);
-+		sysfs_update_group(kernel_kobj, &pkram_attr_group);
-+	}
- 	return 0;
- }
- module_init(pkram_init);
+However, the safe buffers also provided a form of recursion
+protection. For that reason, explicit recursion protection is
+also implemented for this series.
+
+And finally, with the removal of the safe buffers, there is no
+need for extra NMI enter/exit tracking. So this is also removed
+(which includes removing config option CONFIG_PRINTK_NMI).
+
+This series is based on the printk-rework branch of
+printk/linux.git:
+
+    commit acebb5597ff1 ("kernel/printk.c: Fixed mundane typos")
+
+Changes since v1:
+
+- remove the printk nmi enter/exit tracking
+
+- remove CONFIG_PRINTK_NMI config option
+
+- use in_nmi() to detect NMI context
+
+- remove unused printk_safe_enter/exit macros
+
+- after switching to the dynamic buffer, copy over NMI records
+  that may have arrived during the switch window
+
+- use local_irq_*() instead of printk_safe_*() for console
+  spinning
+
+- use separate variables rather than arrays for the per-cpu
+  recursion tracking
+
+- make @syslog_lock a mutex instead of a spin_lock
+
+- close the wait-read window for SYSLOG_ACTION_READ
+
+- adjust various comments and commit messages as requested
+
+John Ogness
+
+[0] https://lore.kernel.org/lkml/20210316233326.10778-1-john.ogness@linutronix.de
+
+John Ogness (5):
+  printk: track/limit recursion
+  printk: remove safe buffers
+  printk: remove NMI tracking
+  printk: convert @syslog_lock to mutex
+  printk: syslog: close window between wait and read
+
+ arch/arm/kernel/smp.c          |   2 -
+ arch/powerpc/kernel/traps.c    |   1 -
+ arch/powerpc/kernel/watchdog.c |   5 -
+ arch/powerpc/kexec/crash.c     |   3 -
+ include/linux/hardirq.h        |   2 -
+ include/linux/printk.h         |  22 --
+ init/Kconfig                   |   5 -
+ kernel/kexec_core.c            |   1 -
+ kernel/panic.c                 |   3 -
+ kernel/printk/internal.h       |  23 ---
+ kernel/printk/printk.c         | 281 +++++++++++++++----------
+ kernel/printk/printk_safe.c    | 362 +--------------------------------
+ kernel/trace/trace.c           |   2 -
+ lib/nmi_backtrace.c            |   6 -
+ 14 files changed, 171 insertions(+), 547 deletions(-)
+
 -- 
-1.8.3.1
+2.20.1
 
 
 _______________________________________________
