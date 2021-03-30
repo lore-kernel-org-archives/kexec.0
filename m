@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from userp2130.oracle.com ([156.151.31.86])
+Received: from userp2120.oracle.com ([156.151.31.85])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRLtH-004vaR-MH
- for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:27:14 +0000
+ id 1lRLtK-004vcM-8E
+ for kexec@lists.infradead.org; Tue, 30 Mar 2021 21:27:17 +0000
 From: Anthony Yznaga <anthony.yznaga@oracle.com>
-Subject: [RFC v2 21/43] x86/KASLR: PKRAM: support physical kaslr
-Date: Tue, 30 Mar 2021 14:35:56 -0700
-Message-Id: <1617140178-8773-22-git-send-email-anthony.yznaga@oracle.com>
+Subject: [RFC v2 22/43] x86/boot/compressed/64: use 1GB pages for mappings
+Date: Tue, 30 Mar 2021 14:35:57 -0700
+Message-Id: <1617140178-8773-23-git-send-email-anthony.yznaga@oracle.com>
 In-Reply-To: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 References: <1617140178-8773-1-git-send-email-anthony.yznaga@oracle.com>
 MIME-Version: 1.0
@@ -25,210 +25,56 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-mm@kvack.org, linux-kernel@vger.kernel.org
 Cc: willy@infradead.org, corbet@lwn.net, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, x86@kernel.org, hpa@zytor.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, rppt@kernel.org, akpm@linux-foundation.org, hughd@google.com, ebiederm@xmission.com, keescook@chromium.org, ardb@kernel.org, nivedita@alum.mit.edu, jroedel@suse.de, masahiroy@kernel.org, nathan@kernel.org, terrelln@fb.com, vincenzo.frascino@arm.com, martin.b.radev@gmail.com, andreyknvl@google.com, daniel.kiper@oracle.com, rafael.j.wysocki@intel.com, dan.j.williams@intel.com, Jonathan.Cameron@huawei.com, bhe@redhat.com, rminnich@gmail.com, ashish.kalra@amd.com, guro@fb.com, hannes@cmpxchg.org, mhocko@kernel.org, iamjoonsoo.kim@lge.com, vbabka@suse.cz, alex.shi@linux.alibaba.com, david@redhat.com, richard.weiyang@gmail.com, vdavydov.dev@gmail.com, graf@amazon.com, jason.zeng@intel.com, lei.l.li@intel.com, daniel.m.jordan@oracle.com, steven.sistare@oracle.com, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org
 
-Avoid regions of memory that contain preserved pages when computing
-slots used to select where to put the decompressed kernel.
+pkram kaslr code can incur multiple page faults when it walks its
+preserved ranges list called via mem_avoid_overlap().  The multiple
+faults can easily end up using up the small number of pages available
+to be allocated for page table pages.
+
+This patch hacks things so that mappings are 1GB which results in the need
+for far fewer page table pages.  As is this breaks AMD SEV-ES which expects
+the mappings to be 2M.  This could possibly be fixed by updating split
+code to split 1GB page if the aren't any other issues with using 1GB
+mappings.
 
 Signed-off-by: Anthony Yznaga <anthony.yznaga@oracle.com>
 ---
- arch/x86/boot/compressed/Makefile |   3 ++
- arch/x86/boot/compressed/kaslr.c  |  10 +++-
- arch/x86/boot/compressed/misc.h   |  10 ++++
- arch/x86/boot/compressed/pkram.c  | 109 ++++++++++++++++++++++++++++++++++++++
- 4 files changed, 130 insertions(+), 2 deletions(-)
- create mode 100644 arch/x86/boot/compressed/pkram.c
+ arch/x86/boot/compressed/ident_map_64.c | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/arch/x86/boot/compressed/Makefile b/arch/x86/boot/compressed/Makefile
-index e0bc3988c3fa..ef27d411b641 100644
---- a/arch/x86/boot/compressed/Makefile
-+++ b/arch/x86/boot/compressed/Makefile
-@@ -93,6 +93,9 @@ ifdef CONFIG_X86_64
- 	vmlinux-objs-y += $(obj)/mem_encrypt.o
- 	vmlinux-objs-y += $(obj)/pgtable_64.o
- 	vmlinux-objs-$(CONFIG_AMD_MEM_ENCRYPT) += $(obj)/sev-es.o
-+ifdef CONFIG_RANDOMIZE_BASE
-+	vmlinux-objs-$(CONFIG_PKRAM) += $(obj)/pkram.o
-+endif
- endif
+diff --git a/arch/x86/boot/compressed/ident_map_64.c b/arch/x86/boot/compressed/ident_map_64.c
+index f7213d0943b8..6ff02da4cc1a 100644
+--- a/arch/x86/boot/compressed/ident_map_64.c
++++ b/arch/x86/boot/compressed/ident_map_64.c
+@@ -95,8 +95,8 @@ static void add_identity_map(unsigned long start, unsigned long end)
+ 	int ret;
  
- vmlinux-objs-$(CONFIG_ACPI) += $(obj)/acpi.o
-diff --git a/arch/x86/boot/compressed/kaslr.c b/arch/x86/boot/compressed/kaslr.c
-index b92fffbe761f..a007363a7698 100644
---- a/arch/x86/boot/compressed/kaslr.c
-+++ b/arch/x86/boot/compressed/kaslr.c
-@@ -440,6 +440,7 @@ static bool mem_avoid_overlap(struct mem_vector *img,
- 	struct setup_data *ptr;
- 	u64 earliest = img->start + img->size;
- 	bool is_overlapping = false;
-+	struct mem_vector avoid;
- 
- 	for (i = 0; i < MEM_AVOID_MAX; i++) {
- 		if (mem_overlaps(img, &mem_avoid[i]) &&
-@@ -453,8 +454,6 @@ static bool mem_avoid_overlap(struct mem_vector *img,
- 	/* Avoid all entries in the setup_data linked list. */
- 	ptr = (struct setup_data *)(unsigned long)boot_params->hdr.setup_data;
- 	while (ptr) {
--		struct mem_vector avoid;
--
- 		avoid.start = (unsigned long)ptr;
- 		avoid.size = sizeof(*ptr) + ptr->len;
- 
-@@ -479,6 +478,12 @@ static bool mem_avoid_overlap(struct mem_vector *img,
- 		ptr = (struct setup_data *)(unsigned long)ptr->next;
- 	}
- 
-+	if (pkram_has_overlap(img, &avoid) && (avoid.start < earliest)) {
-+		*overlap = avoid;
-+		earliest = overlap->start;
-+		is_overlapping = true;
-+	}
-+
- 	return is_overlapping;
- }
- 
-@@ -840,6 +845,7 @@ void choose_random_location(unsigned long input,
+ 	/* Align boundary to 2M. */
+-	start = round_down(start, PMD_SIZE);
+-	end = round_up(end, PMD_SIZE);
++	start = round_down(start, PUD_SIZE);
++	end = round_up(end, PUD_SIZE);
+ 	if (start >= end)
  		return;
- 	}
  
-+	pkram_init();
- 	boot_params->hdr.loadflags |= KASLR_FLAG;
+@@ -119,6 +119,7 @@ void initialize_identity_maps(void *rmode)
+ 	mapping_info.context = &pgt_data;
+ 	mapping_info.page_flag = __PAGE_KERNEL_LARGE_EXEC | sme_me_mask;
+ 	mapping_info.kernpg_flag = _KERNPG_TABLE;
++	mapping_info.direct_gbpages = true;
  
- 	if (IS_ENABLED(CONFIG_X86_32))
-diff --git a/arch/x86/boot/compressed/misc.h b/arch/x86/boot/compressed/misc.h
-index 901ea5ebec22..f8232ffd8141 100644
---- a/arch/x86/boot/compressed/misc.h
-+++ b/arch/x86/boot/compressed/misc.h
-@@ -116,6 +116,16 @@ static inline void console_init(void)
- { }
- #endif
+ 	/*
+ 	 * It should be impossible for this not to already be true,
+@@ -329,8 +330,8 @@ void do_boot_page_fault(struct pt_regs *regs, unsigned long error_code)
  
-+#ifdef CONFIG_PKRAM
-+void pkram_init(void);
-+int pkram_has_overlap(struct mem_vector *entry, struct mem_vector *overlap);
-+#else
-+static inline void pkram_init(void) { }
-+static inline int pkram_has_overlap(struct mem_vector *entry,
-+				    struct mem_vector *overlap);
-+{ return 0; }
-+#endif
-+
- void set_sev_encryption_mask(void);
+ 	ghcb_fault = sev_es_check_ghcb_fault(address);
  
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-diff --git a/arch/x86/boot/compressed/pkram.c b/arch/x86/boot/compressed/pkram.c
-new file mode 100644
-index 000000000000..60380f074c3f
---- /dev/null
-+++ b/arch/x86/boot/compressed/pkram.c
-@@ -0,0 +1,109 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#include "misc.h"
-+
-+#define PKRAM_MAGIC		0x706B726D
-+
-+struct pkram_super_block {
-+	__u32	magic;
-+
-+	__u64	node_pfn;
-+	__u64	region_list_pfn;
-+	__u64	nr_regions;
-+};
-+
-+struct pkram_region {
-+	phys_addr_t base;
-+	phys_addr_t size;
-+};
-+
-+struct pkram_region_list {
-+	__u64	prev_pfn;
-+	__u64	next_pfn;
-+
-+	struct pkram_region regions[0];
-+};
-+
-+#define PKRAM_REGIONS_LIST_MAX \
-+	((PAGE_SIZE-sizeof(struct pkram_region_list))/sizeof(struct pkram_region))
-+
-+static u64 pkram_sb_pfn;
-+static struct pkram_super_block *pkram_sb;
-+
-+void pkram_init(void)
-+{
-+	struct pkram_super_block *sb;
-+	char arg[32];
-+
-+	if (cmdline_find_option("pkram", arg, sizeof(arg)) > 0) {
-+		if (kstrtoull(arg, 16, &pkram_sb_pfn) != 0)
-+			return;
-+	} else
-+		return;
-+
-+	sb = (struct pkram_super_block *)(pkram_sb_pfn << PAGE_SHIFT);
-+	if (sb->magic != PKRAM_MAGIC) {
-+		debug_putstr("PKRAM: invalid super block\n");
-+		return;
-+	}
-+
-+	pkram_sb = sb;
-+}
-+
-+static struct pkram_region *pkram_first_region(struct pkram_super_block *sb, struct pkram_region_list **rlp, int *idx)
-+{
-+	if (!sb || !sb->region_list_pfn)
-+		return NULL;
-+
-+	*rlp = (struct pkram_region_list *)(sb->region_list_pfn << PAGE_SHIFT);
-+	*idx = 0;
-+
-+	return &(*rlp)->regions[0];
-+}
-+
-+static struct pkram_region *pkram_next_region(struct pkram_region_list **rlp, int *idx)
-+{
-+	struct pkram_region_list *rl = *rlp;
-+	int i = *idx;
-+
-+	i++;
-+	if (i >= PKRAM_REGIONS_LIST_MAX) {
-+		if (!rl->next_pfn) {
-+			debug_putstr("PKRAM: no more pkram_region_list pages\n");
-+			return NULL;
-+		}
-+		rl = (struct pkram_region_list *)(rl->next_pfn << PAGE_SHIFT);
-+		*rlp = rl;
-+		i = 0;
-+	}
-+	*idx = i;
-+
-+	if (rl->regions[i].size == 0)
-+		return NULL;
-+
-+	return &rl->regions[i];
-+}
-+
-+int pkram_has_overlap(struct mem_vector *entry, struct mem_vector *overlap)
-+{
-+	struct pkram_region_list *rl;
-+	struct pkram_region *r;
-+	int idx;
-+
-+	r = pkram_first_region(pkram_sb, &rl, &idx);
-+
-+	while (r) {
-+		if (r->base + r->size <= entry->start) {
-+			r = pkram_next_region(&rl, &idx);
-+			continue;
-+		}
-+		if (r->base >= entry->start + entry->size)
-+			return 0;
-+
-+		overlap->start = r->base;
-+		overlap->size = r->size;
-+		return 1;
-+	}
-+
-+	return 0;
-+}
+-	address   &= PMD_MASK;
+-	end        = address + PMD_SIZE;
++	address   &= PUD_MASK;
++	end        = address + PUD_SIZE;
+ 
+ 	/*
+ 	 * Check for unexpected error codes. Unexpected are:
 -- 
 1.8.3.1
 
