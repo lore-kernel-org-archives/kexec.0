@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
+Received: from mail-pf1-x430.google.com ([2607:f8b0:4864:20::430])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRR9i-005LmN-5K
- for kexec@lists.infradead.org; Wed, 31 Mar 2021 03:04:33 +0000
-Received: by mail-pg1-x52c.google.com with SMTP id h25so13164705pgm.3
- for <kexec@lists.infradead.org>; Tue, 30 Mar 2021 20:04:29 -0700 (PDT)
+ id 1lRRAb-005LrO-Mz
+ for kexec@lists.infradead.org; Wed, 31 Mar 2021 03:05:28 +0000
+Received: by mail-pf1-x430.google.com with SMTP id x26so13572461pfn.0
+ for <kexec@lists.infradead.org>; Tue, 30 Mar 2021 20:05:24 -0700 (PDT)
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v3 00/12] Add build ID to stacktraces
+Date: Tue, 30 Mar 2021 20:05:08 -0700
+Message-Id: <20210331030520.3816265-1-swboyd@chromium.org>
 MIME-Version: 1.0
-References: <CAK5_k=Lao5dYtAWrBMXViM0iEdT0QOj-fPiEsuvkfTogfF=6dA@mail.gmail.com>
- <20210331024745.GB29970@MiWiFi-R3L-srv>
-In-Reply-To: <20210331024745.GB29970@MiWiFi-R3L-srv>
-From: Patrick Sung <patricksung@gmail.com>
-Date: Wed, 31 Mar 2021 11:04:16 +0800
-Message-ID: <CAK5_k=LeBQnmr7HfBZT9HismdfN65oJvrNU8KH1QgP=uYZaezg@mail.gmail.com>
-Subject: Re: kexec does not work for kernel version with patch level >= 256
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,57 +22,149 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, dyoung@redhat.com, ebiederm@xmission.com, horms@verge.net.au
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Young <dyoung@redhat.com>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>, Jiri Olsa <jolsa@kernel.org>, kexec@lists.infradead.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Petr Mladek <pmladek@suse.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sasha Levin <sashal@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Will Deacon <will@kernel.org>, x86@kernel.org, Christoph Hellwig <hch@infradead.org>, peter enderborg <peter.enderborg@sony.com>
 
-On Wed, Mar 31, 2021 at 10:47 AM Baoquan He <bhe@redhat.com> wrote:
->
-> On 03/24/21 at 12:28pm, Patrick Sung wrote:
-> > Hello all,
-> >
-> > I am using the 4.9 long term kernel which is currently at 4.9.262.
-> > When using this kernel with kexec-tools it prints out this error
-> >
-> >   Unsupported utsname.release: 4.9.262
-> >   Cannot load <kdump images path>
-> >
-> > A quick search in the code shows that kexec/kernel_version.c doing this check:
-> >
-> >   if (major >= 256 || minor >= 256 || patch >= 256) {
-> >
-> > and also in kexec/kexec.h
-> >   #define KERNEL_VERSION(major, minor, patch) \
-> >     (((major) << 16) | ((minor) << 8) | patch)
->
-> Yeah, this seems to be a good catch. The existing longterm kenrel 4.9.262
-> does cause the problem. I am not very sure about the longterm kernel
-> version numbering, maybe we can leave 16 bits for for patch number to
-> avoid the longterm kernel issue?
->
-> Is there document telling the longterm kernel version numbering, or any
-> pointer?
->
-Actually I found that the mainline kernel clamp the "patch" version to 255
+This series adds the kernel's build ID[1] to the stacktrace header printed
+in oops messages, warnings, etc. and the build ID for any module that
+appears in the stacktrace after the module name. The goal is to make the
+stacktrace more self-contained and descriptive by including the relevant
+build IDs in the kernel logs when something goes wrong. This can be used
+by post processing tools like script/decode_stacktrace.sh and kernel
+developers to easily locate the debug info associated with a kernel
+crash and line up what line and file things started falling apart at.
 
-https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/Makefile?id=9b82f13e7ef316cdc0a8858f1349f4defce3f9e0
+To show how this can be used I've included a patch to
+decode_stacktrace.sh that downloads the debuginfo from a debuginfod
+server.
 
-> Thanks
-> Baoquan
->
-> >
-> > which explains the reason for the range check in kernel_version.c
-> >
-> > Increasing the number of bits allowed in "patch" seems to fix the issue.
-> >
-> > Thanks,
-> > Patrick
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >
->
+This also includes some patches to make the buildid.c file use more
+const arguments and consolidate logic into buildid.c from kdump. These
+are left to the end as they were mostly cleanup patches. I don't know
+who exactly maintains this so I guess Andrew is the best option to merge
+all this code.
+
+Here's an example lkdtm stacktrace on arm64.
+
+ WARNING: CPU: 4 PID: 3255 at drivers/misc/lkdtm/bugs.c:83 lkdtm_WARNING+0x28/0x30 [lkdtm]
+ Modules linked in: lkdtm rfcomm algif_hash algif_skcipher af_alg xt_cgroup uinput xt_MASQUERADE
+ CPU: 4 PID: 3255 Comm: bash Not tainted 5.11 #3 aa23f7a1231c229de205662d5a9e0d4c580f19a1
+ Hardware name: Google Lazor (rev3+) with KB Backlight (DT)
+ pstate: 00400009 (nzcv daif +PAN -UAO -TCO BTYPE=--)
+ pc : lkdtm_WARNING+0x28/0x30 [lkdtm]
+ lr : lkdtm_do_action+0x24/0x40 [lkdtm]
+ sp : ffffffc0134fbca0
+ x29: ffffffc0134fbca0 x28: ffffff92d53ba240
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: 0000000000000000 x24: ffffffe3622352c0
+ x23: 0000000000000020 x22: ffffffe362233366
+ x21: ffffffe3622352e0 x20: ffffffc0134fbde0
+ x19: 0000000000000008 x18: 0000000000000000
+ x17: ffffff929b6536fc x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000012
+ x13: ffffffe380ed892c x12: ffffffe381d05068
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : ffffffe362237000
+ x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+ x5 : 0000000000000000 x4 : 0000000000000001
+ x3 : 0000000000000008 x2 : ffffff93fef25a70
+ x1 : ffffff93fef15788 x0 : ffffffe3622352e0
+ Call trace:
+  lkdtm_WARNING+0x28/0x30 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  direct_entry+0x16c/0x1b4 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  full_proxy_write+0x74/0xa4
+  vfs_write+0xec/0x2e8
+  ksys_write+0x84/0xf0
+  __arm64_sys_write+0x24/0x30
+  el0_svc_common+0xf4/0x1c0
+  do_el0_svc_compat+0x28/0x3c
+  el0_svc_compat+0x10/0x1c
+  el0_sync_compat_handler+0xa8/0xcc
+  el0_sync_compat+0x178/0x180
+ ---[ end trace 3d95032303e59e68 ]---
+
+Changes from v2 (https://lore.kernel.org/r/20210324020443.1815557-1-swboyd@chromium.org):
+ * Renamed symbol printing function to indicate build IDness
+ * Put build ID information behind Kconfig knob
+ * Build ID for vmlinux is calculated in early init instead of on demand
+ * printk format is %pS[R]b
+
+Changes from v1 (https://lore.kernel.org/r/20210301174749.1269154-1-swboyd@chromium.org):
+ * New printk format %pSb and %pSr
+ * Return binary format instead of hex format string from build ID APIs
+ * Some new patches to cleanup buildid/decode_stacktrace.sh
+ * A new patch to decode_stacktrace.sh to parse output
+
+[1] https://fedoraproject.org/wiki/Releases/FeatureBuildId
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: <kexec@lists.infradead.org>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: <linux-doc@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: <x86@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: peter enderborg <peter.enderborg@sony.com>
+
+Stephen Boyd (12):
+  buildid: Add API to parse build ID out of buffer
+  buildid: Stash away kernels build ID on init
+  dump_stack: Add vmlinux build ID to stack traces
+  module: Add printk format to add module build ID to stacktraces
+  arm64: stacktrace: Use %pSb for backtrace printing
+  x86/dumpstack: Use %pSb for backtrace printing
+  scripts/decode_stacktrace.sh: Support debuginfod
+  scripts/decode_stacktrace.sh: Silence stderr messages from
+    addr2line/nm
+  scripts/decode_stacktrace.sh: Indicate 'auto' can be used for base
+    path
+  buildid: Mark some arguments const
+  buildid: Fix kernel-doc notation
+  kdump: Use vmlinux_build_id to simplify
+
+ Documentation/core-api/printk-formats.rst |  9 +++
+ arch/arm64/kernel/stacktrace.c            |  2 +-
+ arch/x86/kernel/dumpstack.c               |  4 +-
+ include/linux/buildid.h                   |  4 +
+ include/linux/crash_core.h                |  6 +-
+ include/linux/kallsyms.h                  | 13 +++-
+ include/linux/module.h                    |  6 +-
+ init/main.c                               |  1 +
+ kernel/crash_core.c                       | 41 +----------
+ kernel/kallsyms.c                         | 73 ++++++++++++++-----
+ kernel/module.c                           | 24 +++++-
+ lib/Kconfig.debug                         | 11 +++
+ lib/buildid.c                             | 73 +++++++++++++++----
+ lib/dump_stack.c                          | 12 ++-
+ lib/vsprintf.c                            |  3 +
+ scripts/decode_stacktrace.sh              | 89 +++++++++++++++++++----
+ 16 files changed, 267 insertions(+), 104 deletions(-)
+
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+-- 
+https://chromeos.dev
+
 
 _______________________________________________
 kexec mailing list
