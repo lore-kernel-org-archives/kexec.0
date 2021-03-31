@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pf1-x434.google.com ([2607:f8b0:4864:20::434])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lRRAp-005LtG-64
- for kexec@lists.infradead.org; Wed, 31 Mar 2021 03:05:43 +0000
-Received: by mail-pf1-x434.google.com with SMTP id 11so13509275pfn.9
- for <kexec@lists.infradead.org>; Tue, 30 Mar 2021 20:05:38 -0700 (PDT)
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v3 12/12] kdump: Use vmlinux_build_id to simplify
-Date: Tue, 30 Mar 2021 20:05:20 -0700
-Message-Id: <20210331030520.3816265-13-swboyd@chromium.org>
-In-Reply-To: <20210331030520.3816265-1-swboyd@chromium.org>
-References: <20210331030520.3816265-1-swboyd@chromium.org>
+ id 1lRRqq-005QEp-3G
+ for kexec@lists.infradead.org; Wed, 31 Mar 2021 03:49:08 +0000
+Date: Wed, 31 Mar 2021 11:48:51 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: kexec does not work for kernel version with patch level >= 256
+Message-ID: <20210331034851.GH13786@MiWiFi-R3L-srv>
+References: <CAK5_k=Lao5dYtAWrBMXViM0iEdT0QOj-fPiEsuvkfTogfF=6dA@mail.gmail.com>
+ <20210331024745.GB29970@MiWiFi-R3L-srv>
+ <CAK5_k=LeBQnmr7HfBZT9HismdfN65oJvrNU8KH1QgP=uYZaezg@mail.gmail.com>
 MIME-Version: 1.0
+In-Reply-To: <CAK5_k=LeBQnmr7HfBZT9HismdfN65oJvrNU8KH1QgP=uYZaezg@mail.gmail.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,118 +25,72 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Patrick Sung <patricksung@gmail.com>
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, ebiederm@xmission.com, horms@verge.net.au
 
-We can use the vmlinux_build_id array here now instead of open coding
-it. This mostly consolidates code.
+On 03/31/21 at 11:04am, Patrick Sung wrote:
+> On Wed, Mar 31, 2021 at 10:47 AM Baoquan He <bhe@redhat.com> wrote:
+> >
+> > On 03/24/21 at 12:28pm, Patrick Sung wrote:
+> > > Hello all,
+> > >
+> > > I am using the 4.9 long term kernel which is currently at 4.9.262.
+> > > When using this kernel with kexec-tools it prints out this error
+> > >
+> > >   Unsupported utsname.release: 4.9.262
+> > >   Cannot load <kdump images path>
+> > >
+> > > A quick search in the code shows that kexec/kernel_version.c doing this check:
+> > >
+> > >   if (major >= 256 || minor >= 256 || patch >= 256) {
+> > >
+> > > and also in kexec/kexec.h
+> > >   #define KERNEL_VERSION(major, minor, patch) \
+> > >     (((major) << 16) | ((minor) << 8) | patch)
+> >
+> > Yeah, this seems to be a good catch. The existing longterm kenrel 4.9.262
+> > does cause the problem. I am not very sure about the longterm kernel
+> > version numbering, maybe we can leave 16 bits for for patch number to
+> > avoid the longterm kernel issue?
+> >
+> > Is there document telling the longterm kernel version numbering, or any
+> > pointer?
+> >
+> Actually I found that the mainline kernel clamp the "patch" version to 255
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux.git/commit/Makefile?id=9b82f13e7ef316cdc0a8858f1349f4defce3f9e0
 
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: <kexec@lists.infradead.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- include/linux/crash_core.h |  6 +-----
- kernel/crash_core.c        | 41 ++------------------------------------
- 2 files changed, 3 insertions(+), 44 deletions(-)
+Yeah, mainline kernel use below formula to construct kernel version.
+Seems longterm kernel takes a different way. While it's understandable
+that Longterm kernel using a larger patch number since it will evolve
+evolve for a longer time to get in bug fixes. Maybe we should enlarge
+patch number to 16 bits?
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 206bde8308b2..fb8ab99bb2ee 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -39,7 +39,7 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- #define VMCOREINFO_OSRELEASE(value) \
- 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
- #define VMCOREINFO_BUILD_ID(value) \
--	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-+	vmcoreinfo_append_str("BUILD-ID=%20phN\n", value)
- #define VMCOREINFO_PAGESIZE(value) \
- 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
-@@ -69,10 +69,6 @@ extern unsigned char *vmcoreinfo_data;
- extern size_t vmcoreinfo_size;
- extern u32 *vmcoreinfo_note;
- 
--/* raw contents of kernel .notes section */
--extern const void __start_notes __weak;
--extern const void __stop_notes __weak;
--
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len);
- void final_note(Elf_Word *buf);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 825284baaf46..6b560cf9f374 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-  */
- 
-+#include <linux/buildid.h>
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-@@ -378,51 +379,13 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
- }
- EXPORT_SYMBOL(paddr_vmcoreinfo_note);
- 
--#define NOTES_SIZE (&__stop_notes - &__start_notes)
--#define BUILD_ID_MAX SHA1_DIGEST_SIZE
--#define NT_GNU_BUILD_ID 3
--
--struct elf_note_section {
--	struct elf_note	n_hdr;
--	u8 n_data[];
--};
--
- /*
-  * Add build ID from .notes section as generated by the GNU ld(1)
-  * or LLVM lld(1) --build-id option.
-  */
- static void add_build_id_vmcoreinfo(void)
- {
--	char build_id[BUILD_ID_MAX * 2 + 1];
--	int n_remain = NOTES_SIZE;
--
--	while (n_remain >= sizeof(struct elf_note)) {
--		const struct elf_note_section *note_sec =
--			&__start_notes + NOTES_SIZE - n_remain;
--		const u32 n_namesz = note_sec->n_hdr.n_namesz;
--
--		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
--		    n_namesz != 0 &&
--		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
--			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
--				const u32 n_descsz = note_sec->n_hdr.n_descsz;
--				const u8 *s = &note_sec->n_data[n_namesz];
--
--				s = PTR_ALIGN(s, 4);
--				bin2hex(build_id, s, n_descsz);
--				build_id[2 * n_descsz] = '\0';
--				VMCOREINFO_BUILD_ID(build_id);
--				return;
--			}
--			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
--				note_sec->n_hdr.n_descsz,
--				BUILD_ID_MAX);
--			return;
--		}
--		n_remain -= sizeof(struct elf_note) +
--			ALIGN(note_sec->n_hdr.n_namesz, 4) +
--			ALIGN(note_sec->n_hdr.n_descsz, 4);
--	}
-+	VMCOREINFO_BUILD_ID(vmlinux_build_id);
- }
- 
- static int __init crash_save_vmcoreinfo_init(void)
--- 
-https://chromeos.dev
+echo '#define KERNEL_VERSION(a,b,c) (((a) << 16) + ((b) << 8) +  \                                                                        
+        ((c) > 255 ? 255 : (c)))';
+
+By the way, it calls 'a' version number, 'b' patch level, 'c' sub-level
+in Makefile of kernel?
+
+> 
+> > Thanks
+> > Baoquan
+> >
+> > >
+> > > which explains the reason for the range check in kernel_version.c
+> > >
+> > > Increasing the number of bits allowed in "patch" seems to fix the issue.
+> > >
+> > > Thanks,
+> > > Patrick
+> > >
+> > > _______________________________________________
+> > > kexec mailing list
+> > > kexec@lists.infradead.org
+> > > http://lists.infradead.org/mailman/listinfo/kexec
+> > >
+> >
+> 
 
 
 _______________________________________________
