@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSH0R-00Ck8h-GA
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:29 +0000
+ id 1lSH0Y-00Ck8h-Pp
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:44 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH kexec-tools 7/7] github: initial workflow
-Date: Fri,  2 Apr 2021 12:17:37 +0200
-Message-Id: <20210402101737.1886-8-horms@verge.net.au>
+Subject: [PATCH kexec-tools 6/7] build: add distcheck target
+Date: Fri,  2 Apr 2021 12:17:36 +0200
+Message-Id: <20210402101737.1886-7-horms@verge.net.au>
 In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
 References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
@@ -25,92 +25,96 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-Initial github workflow which builds kexec on a range of architectures.
+Add distcheck target which aims to exercise build, install and uninstall
+using distribution tarball.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
- .github/workflows/build.yml | 72 +++++++++++++++++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 .github/workflows/build.yml
+ Makefile.in  | 39 ++++++++++++++++++++++++++++++++++++++-
+ configure.ac |  1 +
+ 2 files changed, 39 insertions(+), 1 deletion(-)
 
-diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
-new file mode 100644
-index 0000000..df35703
---- /dev/null
-+++ b/.github/workflows/build.yml
-@@ -0,0 +1,72 @@
-+name: Build
+diff --git a/Makefile.in b/Makefile.in
+index 1569b42..09bbd5c 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -55,6 +55,8 @@ LIBS		= @LIBS@
+ 
+ # Utilities called by the makefiles
+ INSTALL		= @INSTALL@
++CHMOD		= @CHMOD@
++CD		= cd
+ MKDIR		= @MKDIR@
+ RM		= @RM@
+ CP		= @CP@
+@@ -215,6 +217,8 @@ dist: tarball
+ tarball: $(TARBALL.gz)
+ 
+ $(TARBALL): $(SRCS) $(GENERATED_SRCS)
++	[ ! -d $(PACKAGE_NAME)-$(PACKAGE_VERSION) ] || \
++	        $(CHMOD) u+w $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 	$(MKDIR) $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+ 	$(TAR) -c $(SRCS) $(GENERATED_SRCS) | \
+@@ -255,6 +259,38 @@ dist-clean: clean
+ 	$(RM) -f include/config.h.in configure $(SPEC)
+ 	$(RM) -rf autom4te.cache
+ 
++distuninstallcheck:
++	FOUND=$$(find $(distuninstallcheck_dir) ! -type d) && \
++		[ -z "$$FOUND" ] || { \
++			echo "Unexpeced files found after uninstall:" && \
++			echo "$$FOUND" && \
++			exit 1; }
 +
-+on: push
++distcheck: $(TARBALL)
++	[ ! -d $(PACKAGE_NAME)-$(PACKAGE_VERSION) ] || \
++	        $(CHMOD) u+w $(PACKAGE_NAME)-$(PACKAGE_VERSION)
++	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
++	$(TAR) -xf $(TARBALL)
++	$(MKDIR) $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_build \
++	         $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_build/sub \
++	         $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_inst \
++	         $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_dest
++	$(CHMOD) a-w $(PACKAGE_NAME)-$(PACKAGE_VERSION)
++	test -d $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_build
++	INSTALL_BASE=$$($(CD) $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_inst && pwd | sed -e 's,^[^:\\/]:[\\/],/,') &&\
++		DESTDIR="$(PACKAGE_NAME)-$(PACKAGE_VERSION)/_dest" && \
++		$(CD) $(PACKAGE_NAME)-$(PACKAGE_VERSION)/_build/sub && \
++			../../configure \
++			$(DISTCHECK_CONFIGURE_FLAGS) \
++			--srcdir=../.. --prefix="$$INSTALL_BASE" && \
++		$(MAKE) $(AM_MAKEFLAGS) && \
++		$(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$DESTDIR" install && \
++		$(MAKE) $(AM_MAKEFLAGS) DESTDIR="$$DESTDIR" uninstall && \
++		$(MAKE) $(AM_MAKEFLAGS) distuninstallcheck_dir="$$DESTDIR" \
++			distuninstallcheck
++	$(CHMOD) u+w $(PACKAGE_NAME)-$(PACKAGE_VERSION)
++	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
 +
-+jobs:
-+  build:
-+    name: Build
-+    runs-on: ubuntu-20.04
-+    strategy:
-+      matrix:
-+        arch:
-+        - arm
-+        - arm64
-+        - hppa
-+        - i686
-+        - m68k
-+        - mips
-+        - mipsel
-+        - powerpc
-+        - powerpc64
-+        - powerpc64le
-+        - sh4
-+        - s390x
-+        - x86_64-x32
-+        include:
-+          - arch: x86_64
-+          - arch: x86_64
-+            libxen: libxen
-+    steps:
-+    - name: Checkout
-+      uses: actions/checkout@v2
-+
-+    - name: Set Environment
-+      env:
-+        LIBXEN: ${{ matrix.libxen }}
-+        ARCH: ${{ matrix.arch }}
-+      run: |
-+        case $LIBXEN in
-+          libxen) EXTRA_PKGS+=" libxen-dev" ;;
-+        esac
-+
-+        case $ARCH in
-+          arm)         GNU_ARCH="arm-linux-gnueabi" ;;
-+          arm64)       GNU_ARCH="aarch64-linux-gnu" ;;
-+          x86_64)      ;;
-+          x86_64-x32)  GNU_ARCH="x86_64-linux-gnux32"
-+                       CROSS_COMPILER_PKG="gcc-x86-64-linux-gnux32" ;;
-+          *)           GNU_ARCH="$ARCH-linux-gnu" ;;
-+        esac
-+
-+        if [ -n "$GNU_ARCH" ]; then
-+          if [ -z "$CROSS_COMPILER_PKG" ]; then
-+            CROSS_COMPILER_PKG="gcc-$GNU_ARCH"
-+          fi
-+          EXTRA_PKGS+=" $CROSS_COMPILER_PKG"
-+          CONFIG_FLAGS+=" --host=$GNU_ARCH"
-+        fi
-+
-+        echo "EXTRA_PKGS=$EXTRA_PKGS" >> $GITHUB_ENV
-+        echo "CONFIG_FLAGS=$CONFIG_FLAGS" >> $GITHUB_ENV
-+
-+    - name: Install Dependencies
-+      if: env.EXTRA_PKGS != ''
-+      run: sudo apt-get -q=2 install ${{ env.EXTRA_PKGS }}
-+
-+    - name: Build
-+      run: |
-+        ./bootstrap
-+        ./configure ${{ env.CONFIG_FLAGS }}
-+        make -j"$(nproc)" distcheck \
-+          DISTCHECK_CONFIGURE_FLAGS="${{ env.CONFIG_FLAGS }}"
-+
+ install: $(TARGETS)
+ 	for file in $(TARGETS) ; do \
+ 		if test `$(DIRNAME) $$file` =     "$(SBINDIR)" ; then \
+@@ -355,5 +391,6 @@ uninstall:
+ 		done; \
+ 	done
+ 
+-.PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
++.PHONY: echo install uninstall distuninstallcheck all targets \
++	uninstall-targets clean dist-clean distclean distcheck \
+ 	maintainer-clean maintainerclean dist tarball rpm
+diff --git a/configure.ac b/configure.ac
+index 6c8e053..6469fd1 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -151,6 +151,7 @@ AC_SUBST(PURGATORY_EXTRA_CFLAGS, [$PURGATORY_EXTRA_CFLAGS])
+ 
+ dnl Find the helper functions
+ AC_PROG_INSTALL
++AC_CHECK_PROG([CHMOD],    chmod,    chmod,    "no", [$PATH])
+ AC_CHECK_PROG([MKDIR],    mkdir,    mkdir,    "no", [$PATH])
+ AC_CHECK_PROG([RM],       rm,       rm,       "no", [$PATH])
+ AC_CHECK_PROG([CP],       cp,       cp,       "no", [$PATH])
 -- 
 2.20.1
 
