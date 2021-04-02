@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSH10-00Ck8h-Ov
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:27:05 +0000
+ id 1lSH18-00Ck8h-Dz
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:27:11 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH kexec-tools 2/7] build: add dist make target
-Date: Fri,  2 Apr 2021 12:17:32 +0200
-Message-Id: <20210402101737.1886-3-horms@verge.net.au>
+Subject: [PATCH kexec-tools 4/7] build: use DESTDIR in uninstall target
+Date: Fri,  2 Apr 2021 12:17:34 +0200
+Message-Id: <20210402101737.1886-5-horms@verge.net.au>
 In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
 References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
@@ -25,33 +25,107 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-This provides a familiar alias for the existing tarball target.
-The result is a tar.gz file.
+For symmetry with the install target, also use DESTDIR in the uninstall
+target.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
- Makefile.in | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Makefile.in | 42 +++++++++++++++++++++---------------------
+ 1 file changed, 21 insertions(+), 21 deletions(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index a9c779f..dc7fb07 100644
+index 4fe1016..94e9fd8 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -198,6 +198,8 @@ Makefile: Makefile.in config.status
- configure: configure.ac
- 	cd $(srcdir) && autoheader && autoconf && rm -rf autom4te.cache
- 
-+dist: tarball
-+
- tarball: $(TARBALL.gz)
- 
- $(TARBALL): $(SRCS) $(GENERATED_SRCS)
-@@ -397,4 +399,4 @@ uninstall:
+@@ -338,67 +338,67 @@ install: $(TARGETS)
+ uninstall:
+ 	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; for file in $$UINSTALL_LIST ; do \
+ 		if test `$(DIRNAME) $$file` =     "$(sbindir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(bindir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(libexecdir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(datadir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(sysconfdir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(sharedstatedir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(localstatedir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(libdir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(infodir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man1" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man2" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man3" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man4" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man5" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man6" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man7" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(mandir)/man8" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(includedir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(pkgdatadir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(pkglibdir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
+ 		if test `$(DIRNAME) $$file` =     "$(pkgincludedir)" ; then \
+-			rm -rf $$file ; \
++			rm -rf $(DESTDIR)/$$file ; \
+ 		fi; \
  	done
  
- .PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
--	maintainer-clean maintainerclean tarball rpm
-+	maintainer-clean maintainerclean dist tarball rpm
 -- 
 2.20.1
 
