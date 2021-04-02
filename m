@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSGhH-00ChAq-7H
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:06:42 +0000
-Date: Fri, 2 Apr 2021 12:06:31 +0200
+ id 1lSH0G-00Ck5r-5Z
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:21 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v1 0/3] crashdump/x86: dump dax/kmem and virito-mem added
- System RAM
-Message-ID: <20210402100631.GG18086@vergenet.net>
-References: <20210323100111.8365-1-david@redhat.com>
- <1c014e9b-88f3-085c-2e67-38007e21c031@redhat.com>
+Subject: [PATCH kexec-tools 5/7] build: simplify uninstall target
+Date: Fri,  2 Apr 2021 12:17:35 +0200
+Message-Id: <20210402101737.1886-6-horms@verge.net.au>
+In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
+References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <1c014e9b-88f3-085c-2e67-38007e21c031@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,33 +22,119 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>
+To: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>
 
-On Tue, Mar 30, 2021 at 10:58:28AM +0200, David Hildenbrand wrote:
-> On 23.03.21 11:01, David Hildenbrand wrote:
-> > Let's properly support dumping any kind of "System RAM" that is not on the
-> > top level of the kernel resource tree in /proc/iomem, processing any
-> > /proc/iomem entry that contains "System RAM". In addition, increase
-> > the maximum number of crash memory ranges to fully support virtio-mem
-> > even in corner cases where we end up with a lot of individual memory
-> > ranges.
-> > 
-> > David Hildenbrand (3):
-> >    crashdump/x86: dump any kind of "System RAM"
-> >    crashdump/x86: iterate only over actual crash memory ranges
-> >    crashdump/x86: increase CRASH_MAX_MEMORY_RANGES to 32k
-> > 
-> >   kexec/arch/i386/crashdump-x86.c | 18 +++++++++++++-----
-> >   kexec/arch/i386/crashdump-x86.h |  3 ++-
-> >   2 files changed, 15 insertions(+), 6 deletions(-)
-> > 
-> 
-> Gentle ping.
+This appears to have been copied from some generated code.
+Simplify it by rolling repetitive operations into a for loop.
 
-Thanks, and sorry for the delay.
+Signed-off-by: Simon Horman <horms@verge.net.au>
+---
+ Makefile.in | 81 +++++++++++------------------------------------------
+ 1 file changed, 17 insertions(+), 64 deletions(-)
 
-Series applied.
+diff --git a/Makefile.in b/Makefile.in
+index 94e9fd8..1569b42 100644
+--- a/Makefile.in
++++ b/Makefile.in
+@@ -106,6 +106,14 @@ PKGDATADIR=$(DATADIR)/$(PACKAGE_NAME)
+ PKGLIBDIR=$(LIBDIR)/$(PACKAGE_NAME)
+ PKGINCLUDEIR=$(INCLUDEDIR)/$(PACKAGE_NAME)
+ 
++ALLOWED_UNINSTALL_DIRS := \
++	$(SBINDIR) \
++	$(sbindir) $(bindir) $(libexecdir) $(datadir) $(sysconfdir) \
++	$(sharedstatedir) $(localstatedir) $(libdir) $(infodir) \
++	$(mandir)/man1 $(mandir)/man2 $(mandir)/man3 $(mandir)/man4 \
++	$(mandir)/man5 $(mandir)/man6 $(mandir)/man7 $(mandir)/man8 \
++	$(includedir) $(pkgdatadir) $(pkglibdir) $(pkgincludedir)
++
+ all: targets
+ 
+ # generic build rules
+@@ -336,70 +344,15 @@ install: $(TARGETS)
+ 	done
+ 
+ uninstall:
+-	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; for file in $$UINSTALL_LIST ; do \
+-		if test `$(DIRNAME) $$file` =     "$(sbindir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(bindir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(libexecdir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(datadir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(sysconfdir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(sharedstatedir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(localstatedir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(libdir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(infodir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man1" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man2" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man3" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man4" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man5" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man6" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man7" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(mandir)/man8" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(includedir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(pkgdatadir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(pkglibdir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
+-		if test `$(DIRNAME) $$file` =     "$(pkgincludedir)" ; then \
+-			rm -rf $(DESTDIR)/$$file ; \
+-		fi; \
++	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; \
++	for file in $$UINSTALL_LIST ; do \
++		DIRS='$(ALLOWED_UNINSTALL_DIRS)'; \
++		for dir in $$DIRS ; do \
++			if test `$(DIRNAME) $$file` = "$$dir" ; then \
++				rm -rf $(DESTDIR)/$$file ; \
++				break ; \
++			fi; \
++		done; \
+ 	done
+ 
+ .PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
+-- 
+2.20.1
+
 
 _______________________________________________
 kexec mailing list
