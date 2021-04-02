@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSH0G-00Ck5r-5Z
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:21 +0000
+ id 1lSH0R-00Ck8h-GA
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:29 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH kexec-tools 5/7] build: simplify uninstall target
-Date: Fri,  2 Apr 2021 12:17:35 +0200
-Message-Id: <20210402101737.1886-6-horms@verge.net.au>
+Subject: [PATCH kexec-tools 7/7] github: initial workflow
+Date: Fri,  2 Apr 2021 12:17:37 +0200
+Message-Id: <20210402101737.1886-8-horms@verge.net.au>
 In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
 References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
@@ -25,113 +25,92 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-This appears to have been copied from some generated code.
-Simplify it by rolling repetitive operations into a for loop.
+Initial github workflow which builds kexec on a range of architectures.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
- Makefile.in | 81 +++++++++++------------------------------------------
- 1 file changed, 17 insertions(+), 64 deletions(-)
+ .github/workflows/build.yml | 72 +++++++++++++++++++++++++++++++++++++
+ 1 file changed, 72 insertions(+)
+ create mode 100644 .github/workflows/build.yml
 
-diff --git a/Makefile.in b/Makefile.in
-index 94e9fd8..1569b42 100644
---- a/Makefile.in
-+++ b/Makefile.in
-@@ -106,6 +106,14 @@ PKGDATADIR=$(DATADIR)/$(PACKAGE_NAME)
- PKGLIBDIR=$(LIBDIR)/$(PACKAGE_NAME)
- PKGINCLUDEIR=$(INCLUDEDIR)/$(PACKAGE_NAME)
- 
-+ALLOWED_UNINSTALL_DIRS := \
-+	$(SBINDIR) \
-+	$(sbindir) $(bindir) $(libexecdir) $(datadir) $(sysconfdir) \
-+	$(sharedstatedir) $(localstatedir) $(libdir) $(infodir) \
-+	$(mandir)/man1 $(mandir)/man2 $(mandir)/man3 $(mandir)/man4 \
-+	$(mandir)/man5 $(mandir)/man6 $(mandir)/man7 $(mandir)/man8 \
-+	$(includedir) $(pkgdatadir) $(pkglibdir) $(pkgincludedir)
+diff --git a/.github/workflows/build.yml b/.github/workflows/build.yml
+new file mode 100644
+index 0000000..df35703
+--- /dev/null
++++ b/.github/workflows/build.yml
+@@ -0,0 +1,72 @@
++name: Build
 +
- all: targets
- 
- # generic build rules
-@@ -336,70 +344,15 @@ install: $(TARGETS)
- 	done
- 
- uninstall:
--	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; for file in $$UINSTALL_LIST ; do \
--		if test `$(DIRNAME) $$file` =     "$(sbindir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(bindir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(libexecdir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(datadir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(sysconfdir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(sharedstatedir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(localstatedir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(libdir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(infodir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man1" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man2" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man3" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man4" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man5" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man6" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man7" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(mandir)/man8" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(includedir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(pkgdatadir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(pkglibdir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
--		if test `$(DIRNAME) $$file` =     "$(pkgincludedir)" ; then \
--			rm -rf $(DESTDIR)/$$file ; \
--		fi; \
-+	UINSTALL_LIST='$(UNINSTALL_TARGETS)'; \
-+	for file in $$UINSTALL_LIST ; do \
-+		DIRS='$(ALLOWED_UNINSTALL_DIRS)'; \
-+		for dir in $$DIRS ; do \
-+			if test `$(DIRNAME) $$file` = "$$dir" ; then \
-+				rm -rf $(DESTDIR)/$$file ; \
-+				break ; \
-+			fi; \
-+		done; \
- 	done
- 
- .PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
++on: push
++
++jobs:
++  build:
++    name: Build
++    runs-on: ubuntu-20.04
++    strategy:
++      matrix:
++        arch:
++        - arm
++        - arm64
++        - hppa
++        - i686
++        - m68k
++        - mips
++        - mipsel
++        - powerpc
++        - powerpc64
++        - powerpc64le
++        - sh4
++        - s390x
++        - x86_64-x32
++        include:
++          - arch: x86_64
++          - arch: x86_64
++            libxen: libxen
++    steps:
++    - name: Checkout
++      uses: actions/checkout@v2
++
++    - name: Set Environment
++      env:
++        LIBXEN: ${{ matrix.libxen }}
++        ARCH: ${{ matrix.arch }}
++      run: |
++        case $LIBXEN in
++          libxen) EXTRA_PKGS+=" libxen-dev" ;;
++        esac
++
++        case $ARCH in
++          arm)         GNU_ARCH="arm-linux-gnueabi" ;;
++          arm64)       GNU_ARCH="aarch64-linux-gnu" ;;
++          x86_64)      ;;
++          x86_64-x32)  GNU_ARCH="x86_64-linux-gnux32"
++                       CROSS_COMPILER_PKG="gcc-x86-64-linux-gnux32" ;;
++          *)           GNU_ARCH="$ARCH-linux-gnu" ;;
++        esac
++
++        if [ -n "$GNU_ARCH" ]; then
++          if [ -z "$CROSS_COMPILER_PKG" ]; then
++            CROSS_COMPILER_PKG="gcc-$GNU_ARCH"
++          fi
++          EXTRA_PKGS+=" $CROSS_COMPILER_PKG"
++          CONFIG_FLAGS+=" --host=$GNU_ARCH"
++        fi
++
++        echo "EXTRA_PKGS=$EXTRA_PKGS" >> $GITHUB_ENV
++        echo "CONFIG_FLAGS=$CONFIG_FLAGS" >> $GITHUB_ENV
++
++    - name: Install Dependencies
++      if: env.EXTRA_PKGS != ''
++      run: sudo apt-get -q=2 install ${{ env.EXTRA_PKGS }}
++
++    - name: Build
++      run: |
++        ./bootstrap
++        ./configure ${{ env.CONFIG_FLAGS }}
++        make -j"$(nproc)" distcheck \
++          DISTCHECK_CONFIGURE_FLAGS="${{ env.CONFIG_FLAGS }}"
++
 -- 
 2.20.1
 
