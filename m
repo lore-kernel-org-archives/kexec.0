@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSH0u-00Ck8h-Kx
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:26:57 +0000
+ id 1lSH10-00Ck8h-Ov
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:27:05 +0000
 From: Simon Horman <horms@verge.net.au>
-Subject: [PATCH kexec-tools 1/7] build: create tarball without
- self-referential hard links
-Date: Fri,  2 Apr 2021 12:17:31 +0200
-Message-Id: <20210402101737.1886-2-horms@verge.net.au>
+Subject: [PATCH kexec-tools 2/7] build: add dist make target
+Date: Fri,  2 Apr 2021 12:17:32 +0200
+Message-Id: <20210402101737.1886-3-horms@verge.net.au>
 In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
 References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
@@ -26,43 +25,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>
 
-The current method of creating the tarball, which is to the hard-link
-the source directory to the target directory, results in self-referential
-hardlinks which can be observed using tar xf.
-
-This patch resolves this by using an intermediate tarball, held in memory,
-which collects files to be distributed. This is then unpacked in the target
-directory which is finally packed into the distribution tarball, a file.
+This provides a familiar alias for the existing tarball target.
+The result is a tar.gz file.
 
 Signed-off-by: Simon Horman <horms@verge.net.au>
 ---
- Makefile.in | 11 +++++------
- 1 file changed, 5 insertions(+), 6 deletions(-)
+ Makefile.in | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Makefile.in b/Makefile.in
-index fb01134..a9c779f 100644
+index a9c779f..dc7fb07 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -201,14 +201,13 @@ configure: configure.ac
+@@ -198,6 +198,8 @@ Makefile: Makefile.in config.status
+ configure: configure.ac
+ 	cd $(srcdir) && autoheader && autoconf && rm -rf autom4te.cache
+ 
++dist: tarball
++
  tarball: $(TARBALL.gz)
  
  $(TARBALL): $(SRCS) $(GENERATED_SRCS)
--	$(RM) -f $(PACKAGE_NAME)-$(PACKAGE_VERSION)
--	$(LN) -s $(srcdir) $(PACKAGE_NAME)-$(PACKAGE_VERSION)
-+	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
-+	$(MKDIR) $(PACKAGE_NAME)-$(PACKAGE_VERSION)
-+	$(TAR) -c $(SRCS) $(GENERATED_SRCS) | \
-+	        $(TAR) -C $(PACKAGE_NAME)-$(PACKAGE_VERSION) -x
- 	$(TAR) -cf $@ $(PSRCS)
--	$(RM) -f $(PACKAGE_NAME)-$(PACKAGE_VERSION)
--	$(LN) -sf . $(PACKAGE_NAME)-$(PACKAGE_VERSION)
- 	$(TAR) -rf $@ $(PGSRCS)
--	$(RM) -f $(PACKAGE_NAME)-$(PACKAGE_VERSION)
--	@echo $(dist)
-+	$(RM) -rf $(PACKAGE_NAME)-$(PACKAGE_VERSION)
+@@ -397,4 +399,4 @@ uninstall:
+ 	done
  
- $(TARBALL.gz): $(TARBALL)
- 	gzip -c < $^ > $@
+ .PHONY: echo install uninstall all targets uninstall-targets clean dist-clean distclean \
+-	maintainer-clean maintainerclean tarball rpm
++	maintainer-clean maintainerclean dist tarball rpm
 -- 
 2.20.1
 
