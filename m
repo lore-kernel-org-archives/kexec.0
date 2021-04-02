@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lSGZP-00Cg85-PI
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 09:58:31 +0000
-Date: Fri, 2 Apr 2021 11:58:23 +0200
+ id 1lSGbR-00CgNr-Su
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 10:00:44 +0000
+Date: Fri, 2 Apr 2021 12:00:30 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/3] Miscellaneous 32-bit fixes
-Message-ID: <20210402095823.GC18086@vergenet.net>
-References: <20210317121450.2556349-1-geert+renesas@glider.be>
+Subject: Re: [PATCH] kexec: Fix description of --status exit code
+Message-ID: <20210402100030.GD18086@vergenet.net>
+References: <20210323174502.32673-1-raphning@gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210317121450.2556349-1-geert+renesas@glider.be>
+In-Reply-To: <20210323174502.32673-1-raphning@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,21 +23,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Varad Gautam <vrd@amazon.de>, John Ogness <john.ogness@linutronix.de>, kexec@lists.infradead.org
+To: Raphael Ning <raphning@gmail.com>
+Cc: kexec@lists.infradead.org, Julien Grall <julien@xen.org>, Hongyan Xia <hx242@xen.org>, Raphael Ning <raphning@amazon.com>
 
-On Wed, Mar 17, 2021 at 01:14:47PM +0100, Geert Uytterhoeven wrote:
-> 	Hi Simon,
+On Tue, Mar 23, 2021 at 05:45:02PM +0000, Raphael Ning wrote:
+> From: Raphael Ning <raphning@amazon.com>
 > 
-> This patch series fixes several compile warnings when building for a
-> 32-bit platform.  All but the last one are real bugs, from a functional
-> point of view.
+> On both Linux and Xen, an exit code of 0 from `kexec --status`
+> indicates that the kexec image being queried is NOT loaded, which
+> is contrary to what the man page and usage() say.
 > 
-> Thanks for your comments!
+> Signed-off-by: Raphael Ning <raphning@amazon.com>
 
-Thanks Geert,
-
-applied.
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
