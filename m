@@ -1,28 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mail-pg1-x533.google.com ([2607:f8b0:4864:20::533])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lS2p6-00AljJ-AV
- for kexec@lists.infradead.org; Thu, 01 Apr 2021 19:18:09 +0000
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
- by mx0a-001b2d01.pphosted.com (8.16.0.43/8.16.0.43) with SMTP id
- 131J5mjb175464
- for <kexec@lists.infradead.org>; Thu, 1 Apr 2021 15:17:38 -0400
-Received: from pps.reinject (localhost [127.0.0.1])
- by mx0a-001b2d01.pphosted.com with ESMTP id 37ng71rsjg-1
- (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
- for <kexec@lists.infradead.org>; Thu, 01 Apr 2021 15:17:37 -0400
-Received: from m0098396.ppops.net (m0098396.ppops.net [127.0.0.1])
- by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 131J62kR176539
- for <kexec@lists.infradead.org>; Thu, 1 Apr 2021 15:17:37 -0400
-Subject: Re: Regarding your presentation "CFP, #LinuxCon, Beijing, June 19-20, 
- 2017"
-From: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
-References: <d0ea2ae4-211f-8bbc-1789-72e941f865f2@linux.vnet.ibm.com>
-Message-ID: <6a13d2c5-64f5-6543-c55e-d0191bd78755@linux.vnet.ibm.com>
-Date: Thu, 1 Apr 2021 12:17:34 -0700
-In-Reply-To: <d0ea2ae4-211f-8bbc-1789-72e941f865f2@linux.vnet.ibm.com>
-Content-Language: en-US
+ id 1lS9KP-00BjJi-QT
+ for kexec@lists.infradead.org; Fri, 02 Apr 2021 02:14:32 +0000
+Received: by mail-pg1-x533.google.com with SMTP id k8so2746046pgf.4
+ for <kexec@lists.infradead.org>; Thu, 01 Apr 2021 19:14:28 -0700 (PDT)
+Date: Fri, 2 Apr 2021 11:14:18 +0900
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+Subject: Re: [PATCH printk v2 2/5] printk: remove safe buffers
+Message-ID: <YGZ9+kfQKxASmVDR@google.com>
+References: <20210330153512.1182-1-john.ogness@linutronix.de>
+ <20210330153512.1182-3-john.ogness@linutronix.de>
+ <YGW63/elFr/gYW1u@alley> <87a6qiqgzr.fsf@jogness.linutronix.de>
+ <YGXV8LJarjUJDhvy@alley>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <YGXV8LJarjUJDhvy@alley>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,52 +24,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, panand@redhat.com, vgoyal@redhat.com, maneesh@in.ibm.com, kexec@lists.infradead.org
+To: Petr Mladek <pmladek@suse.com>
+Cc: John Ogness <john.ogness@linutronix.de>, Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, Nicholas Piggin <npiggin@gmail.com>, Alistair Popple <alistair@popple.id.au>, Jordan Niethe <jniethe5@gmail.com>, Peter Zijlstra <peterz@infradead.org>, "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, Rafael Aquini <aquini@redhat.com>, "Guilherme G. Piccoli" <gpiccoli@canonical.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
 
-T24gNC8xLzIwMjEgMTI6MDQsIEJydWNlIE1pdGNoZWxsIHdyb3RlOgo+IEhlbGxvIERhdmlkLCBQ
-cmF0eXVzaCwgVml2ZWssIGFuZCBNYW5lZXNoLAo+IAo+IFRoaXMgZGlkIG5vdCBzZWVtIHRvIHNl
-bmQgcHJvcGVybHkgZnJvbSBJQk0gTm90ZXM7IHRyeWluZyBhbiBhbHRlcm5hdGl2ZSAKPiBwbGFp
-biB0ZXh0IHN0eWxlLgo+IAo+IEFuZCBJIGFtIGFsc28gcmVmZXJlbmNpbmc6Cj4gaHR0cHM6Ly9n
-aXQua2VybmVsLm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0
-L3RyZWUvRG9jdW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZHVtcC9rZHVtcC5yc3QgCj4gCj4gCj4g
-SSBhbSBTZW5pb3IgU3lzdGVtIFNvZnR3YXJlIC8gRmlybXdhcmUgLyBFbWJlZGRlZCBFbmdpbmVl
-ciBkbyBMaW51eCAKPiBLZXJuZWwgRGV2ZWxvcGVyIGZvciBPcGVuQk1DIEZpcm13YXJlIGF0wqBA
-SUJNLMKgQGlibS1vcGVuYm1jLCBhbmTCoEBvcGVuYm1jLgo+IAo+IEkgYW0gaGF2aW5nIHRyb3Vi
-bGVzIGdldHRpbmcga2R1bXAgZnVuY3Rpb25pbmcgKGZ1bGx5IGltcGxlbWVudGVkKSBvbiAKPiBv
-dXIgU29DIGlzIHRoZSBBU1BFRUQgQVNUMjYwMCB3aGljaCBpcyBhbiBBUk0gQ29ydGV4IEE3IGNv
-cmUuCj4gSSBuZWVkIGEgY3Jhc2ggZHVtcCBvbiBhIGtlcm5lbCBwYW5pYy7CoCBJIG5lZWQgdG8g
-Z2V0IGtkdW1wIHdvcmtpbmcgb24gCj4gdGhpcyBwbGF0Zm9ybS4KPiBPdXIgc3lzdGVtIGhhcyA1
-MTJNQiBvZiBSQU3CoCBhbmQgc29tZXdoZXJlIGJldHdlZW4gOEdCIGFuZCAzMkdCIG9mIGVNTUMg
-Cj4gZm9yIG1hc3Mgc3RvcmFnZTsga2VybmVsIHBhbmljIG1vdW50cyBoYXZlbid0IGFsd2F5cyBn
-b25lIHJpZ2h0LAo+IGJ1dCB0aGF0IHNlZW0gYnVpbGQgZGVwZW5kZW50Lgo+IAo+IE15IFVidW50
-dSAxOC4wNCBMVFMgU2VydmVyIGl0IGp1c3Qgd29ya2VkIGZpcnN0IHRpbWUsIG5vIGlzc3Vlcy4K
-PiAKPiBNeSBrZXJuZWwgaXM6Cj4gIMKgwqDCoMKgQnJ1Y2UuTWl0Y2hlbGxAZnN0b25lMDVwMTp+
-L3RtcC9vcGVuYm1jL2J1aWxkL3JhaW5pZXIvdG1wL3dvcmstc2hhcmVkL3JhaW5pZXIva2VybmVs
-LXNvdXJjZSQgZ2l0IGxvZyB8IGhlYWQKPiAgwqDCoMKgwqBjb21taXQgYTNlNDg2MGJhZGNhNjBh
-NzY2YjUzZDE2OWMxYzk4MjJjZDY1YjM0NAo+ICDCoMKgwqDCoEF1dGhvcjogWmV2IFdlaXNzIDx6
-ZXZAYmV3aWxkZXJiZWVzdC5uZXQ+Cj4gIMKgwqDCoMKgRGF0ZTrCoMKgIE1vbiBNYXIgMjkgMTk6
-MjM6MzggMjAyMSAtMDUwMAo+IAo+IEkgaGF2ZSBrZXhlYyAtbCBmdW5jdGlvbmluZyBhYm91dCBs
-aWtlIEkgd291bGQgZXhwZWN0Lgo+IEkgY2FuIGdldCBrZXhlYyAtcCB0byBib290IHRoZSAiY3Jh
-c2giIGtlcm5lbCAobXkgcHJpbWFyeSBrZXJuZWwgYW5kIG15IAo+IGNyYXNoIGtlcm5lbCBhcmUg
-dGhlIHNhbWUpLgo+IAo+IE15IGtleGVjIGNvbW1hbmQgbGluZTsgSSBoYXZlIHRyaWVkIHdpdGgg
-b3V0IAo+IC0taW5pdHJkPS9ob21lL2tleGVjX2ZpbGVzL2luaXRyZCBhcyB3ZWxsLgo+ICDCoMKg
-wqDCoGtleGVjIC1kIC1wIC9ob21lL2tleGVjX2ZpbGVzL2tlcm5lbC56SW1hZ2UgXAo+ICDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtLWluaXRyZD0vaG9tZS9rZXhlY19maWxlcy9pbml0cmQg
-XAo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtLWR0Yj0vaG9tZS9rZXhlY19maWxlcy9k
-dGIgXAo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCAtLWFwcGVuZD0iZWFybHljb24gY3Jh
-c2hrZXJuZWw9MjRNIGNvbnNvbGU9dHR5UzQsMTE1MjAwbjggCj4gcm9vdHdhaXQgcm9vdD1QQVJU
-TEFCRUw9cm9mcy1hIDEgcmVzZXRfZGV2aWNlcyIKPiAKPiBJIGhhdmUgbm8gY29yZSBmaWxlcyBp
-biAvcHJvYwo+ICDCoMKgwqDCoHNoLTUuMSMgbHMgLWwgL3Byb2MvIHwgZ3JlcCBjb3JlCj4gIMKg
-wqDCoMKgc2gtNS4xIwo+IFNvIHdoYXQgb3Igd2hlcmUgc2hvdWxkIEkgY29weSBmcm9tIGZvciBr
-ZHVtcD8KPiAKPiBPcGVuQk1DIGJ1aWxkcyBvbiBPcGVuRW1iZWRkZWQgYW5kIFlvY3RvIGFsbCBw
-YXJ0IG9mIFRoZSBMaW51eCAKPiBGb3VuZGF0aW9uIFByb2plY3RzLgo+IAo+IEkgZmVlbCBsaWtl
-IEkgYW0ganVzdCBtaXNzaW5nIHNvbWUgc2ltcGxlIGNsdWUgb3IgdHdvLgo+IAo+IAo+IEFueSBz
-dWdnZXN0aW9ucywgcG9pbnRlcnMsIGNyaXRpcXVlIHdvdWxkIGJlIGhpZ2hseSBhcHByZWNpYXRl
-ZCEKPiAKPiBUaGFuayB5b3UhCj4gCj4gLS0gCj4gQnJ1Y2UgTWl0Y2hlbGwKCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+On (21/04/01 16:17), Petr Mladek wrote:
+> > For the long term, we should introduce a printk-context API that allows
+> > callers to perfectly pack their multi-line output into a single
+> > entry. We discussed [0][1] this back in August 2020.
+> 
+> We need a "short" term solution. There are currently 3 solutions:
+> 
+> 1. Keep nmi_safe() and all the hacks around.
+> 
+> 2. Serialize nmi_cpu_backtrace() by a spin lock and later by
+>    the special lock used also by atomic consoles.
+> 
+> 3. Tell complaining people how to sort the messed logs.
+
+Are we talking about nmi_cpu_backtrace()->dump_stack() or some
+other path?
+
+dump_stack() seems to be already serialized by `dump_lock`. Hmm,
+show_regs() is not serialized, seems like it should be under the
+same `dump_lock` as dump_stack().
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
