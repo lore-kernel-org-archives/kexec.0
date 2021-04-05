@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([63.128.21.124])
+Received: from mail-bn7nam10on2079.outbound.protection.outlook.com
+ ([40.107.92.79] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lSHdW-00Cq0c-2a
- for kexec@lists.infradead.org; Fri, 02 Apr 2021 11:06:48 +0000
-Received: by mail-ed1-f72.google.com with SMTP id t27so4441065edi.2
- for <kexec@lists.infradead.org>; Fri, 02 Apr 2021 04:06:39 -0700 (PDT)
-From: David Hildenbrand <david@redhat.com>
-Mime-Version: 1.0 (1.0)
-Subject: Re: [PATCH v1 0/3] crashdump/x86: dump dax/kmem and virito-mem added
- System RAM
-Date: Fri, 2 Apr 2021 13:06:37 +0200
-Message-Id: <06A008AD-DFC9-430D-A7BE-A6DB64F2F9A5@redhat.com>
-References: <20210402100631.GG18086@vergenet.net>
-In-Reply-To: <20210402100631.GG18086@vergenet.net>
+ id 1lTQKh-00HPtH-Bm
+ for kexec@lists.infradead.org; Mon, 05 Apr 2021 14:36:05 +0000
+From: Ashish Kalra <Ashish.Kalra@amd.com>
+Subject: [PATCH v11 13/13] x86/kvm: Add kexec support for SEV Live Migration.
+Date: Mon,  5 Apr 2021 14:35:46 +0000
+Message-Id: <f37fea4a83aecf03198b0881a17561cdbf4e5a2b.1617302792.git.ashish.kalra@amd.com>
+In-Reply-To: <cover.1617302792.git.ashish.kalra@amd.com>
+References: <cover.1617302792.git.ashish.kalra@amd.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,32 +19,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: David Hildenbrand <david@redhat.com>, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, Dan Williams <dan.j.williams@intel.com>, Dave Hansen <dave.hansen@linux.intel.com>
+To: pbonzini@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, srutherford@google.com, seanjc@google.com, venu.busireddy@oracle.com, brijesh.singh@amd.com, kexec@lists.infradead.org
 
-Cj4gQW0gMDIuMDQuMjAyMSB1bSAxMjoxNiBzY2hyaWViIFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVy
-Z2UubmV0LmF1PjoKPiAKPiDvu79PbiBUdWUsIE1hciAzMCwgMjAyMSBhdCAxMDo1ODoyOEFNICsw
-MjAwLCBEYXZpZCBIaWxkZW5icmFuZCB3cm90ZToKPj4+IE9uIDIzLjAzLjIxIDExOjAxLCBEYXZp
-ZCBIaWxkZW5icmFuZCB3cm90ZToKPj4+IExldCdzIHByb3Blcmx5IHN1cHBvcnQgZHVtcGluZyBh
-bnkga2luZCBvZiAiU3lzdGVtIFJBTSIgdGhhdCBpcyBub3Qgb24gdGhlCj4+PiB0b3AgbGV2ZWwg
-b2YgdGhlIGtlcm5lbCByZXNvdXJjZSB0cmVlIGluIC9wcm9jL2lvbWVtLCBwcm9jZXNzaW5nIGFu
-eQo+Pj4gL3Byb2MvaW9tZW0gZW50cnkgdGhhdCBjb250YWlucyAiU3lzdGVtIFJBTSIuIEluIGFk
-ZGl0aW9uLCBpbmNyZWFzZQo+Pj4gdGhlIG1heGltdW0gbnVtYmVyIG9mIGNyYXNoIG1lbW9yeSBy
-YW5nZXMgdG8gZnVsbHkgc3VwcG9ydCB2aXJ0aW8tbWVtCj4+PiBldmVuIGluIGNvcm5lciBjYXNl
-cyB3aGVyZSB3ZSBlbmQgdXAgd2l0aCBhIGxvdCBvZiBpbmRpdmlkdWFsIG1lbW9yeQo+Pj4gcmFu
-Z2VzLgo+Pj4gCj4+PiBEYXZpZCBIaWxkZW5icmFuZCAoMyk6Cj4+PiAgIGNyYXNoZHVtcC94ODY6
-IGR1bXAgYW55IGtpbmQgb2YgIlN5c3RlbSBSQU0iCj4+PiAgIGNyYXNoZHVtcC94ODY6IGl0ZXJh
-dGUgb25seSBvdmVyIGFjdHVhbCBjcmFzaCBtZW1vcnkgcmFuZ2VzCj4+PiAgIGNyYXNoZHVtcC94
-ODY6IGluY3JlYXNlIENSQVNIX01BWF9NRU1PUllfUkFOR0VTIHRvIDMyawo+Pj4gCj4+PiAga2V4
-ZWMvYXJjaC9pMzg2L2NyYXNoZHVtcC14ODYuYyB8IDE4ICsrKysrKysrKysrKystLS0tLQo+Pj4g
-IGtleGVjL2FyY2gvaTM4Ni9jcmFzaGR1bXAteDg2LmggfCAgMyArKy0KPj4+ICAyIGZpbGVzIGNo
-YW5nZWQsIDE1IGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pCj4+PiAKPj4gCj4+IEdlbnRs
-ZSBwaW5nLgo+IAo+IFRoYW5rcywgYW5kIHNvcnJ5IGZvciB0aGUgZGVsYXkuCj4gCj4gU2VyaWVz
-IGFwcGxpZWQuCj4gCk5vIHdvcnJpZXMgLSB0aGFua3MgYSBsb3QhCgpIYXZlIGEgbmljZSB3ZWVr
-ZW5kIDopCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+From: Ashish Kalra <ashish.kalra@amd.com>
+
+Reset the host's shared pages list related to kernel
+specific page encryption status settings before we load a
+new kernel by kexec. We cannot reset the complete
+shared pages list here as we need to retain the
+UEFI/OVMF firmware specific settings.
+
+The host's shared pages list is maintained for the
+guest to keep track of all unencrypted guest memory regions,
+therefore we need to explicitly mark all shared pages as
+encrypted again before rebooting into the new guest kernel.
+
+Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
+---
+ arch/x86/kernel/kvm.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index bcc82e0c9779..4ad3ed547ff1 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -39,6 +39,7 @@
+ #include <asm/cpuidle_haltpoll.h>
+ #include <asm/ptrace.h>
+ #include <asm/svm.h>
++#include <asm/e820/api.h>
+ 
+ DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
+ 
+@@ -384,6 +385,29 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
+ 	 */
+ 	if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
+ 		wrmsrl(MSR_KVM_PV_EOI_EN, 0);
++	/*
++	 * Reset the host's shared pages list related to kernel
++	 * specific page encryption status settings before we load a
++	 * new kernel by kexec. NOTE: We cannot reset the complete
++	 * shared pages list here as we need to retain the
++	 * UEFI/OVMF firmware specific settings.
++	 */
++	if (sev_live_migration_enabled & (smp_processor_id() == 0)) {
++		int i;
++		unsigned long nr_pages;
++
++		for (i = 0; i < e820_table->nr_entries; i++) {
++			struct e820_entry *entry = &e820_table->entries[i];
++
++			if (entry->type != E820_TYPE_RAM)
++				continue;
++
++			nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
++
++			kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
++					   entry->addr, nr_pages, 1);
++		}
++	}
+ 	kvm_pv_disable_apf();
+ 	kvm_disable_steal_time();
+ }
+-- 
+2.17.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
