@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.xenproject.org ([104.130.215.37])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lTmR4-002o3q-Ss
- for kexec@lists.infradead.org; Tue, 06 Apr 2021 14:12:09 +0000
+ id 1lTmR4-002o3L-8Y
+ for kexec@lists.infradead.org; Tue, 06 Apr 2021 14:12:08 +0000
 From: Hongyan Xia <hx242@xen.org>
-Subject: [PATCH 2/2] Shrink segments to fit alignment instead of throwing them
- away
-Date: Tue,  6 Apr 2021 15:11:53 +0100
-Message-Id: <2d08a6b0d45588710e820f15f0fb235cb5a0bf02.1617716819.git.hongyxia@amazon.com>
-In-Reply-To: <cover.1617716819.git.hongyxia@amazon.com>
-References: <cover.1617716819.git.hongyxia@amazon.com>
-In-Reply-To: <cover.1617716819.git.hongyxia@amazon.com>
-References: <cover.1617716819.git.hongyxia@amazon.com>
+Subject: [PATCH 0/2] Fix early boot OOM issues for some platforms
+Date: Tue,  6 Apr 2021 15:11:51 +0100
+Message-Id: <cover.1617716819.git.hongyxia@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,41 +25,31 @@ Cc: horms@verge.net.au, raphning@amazon.com, jgrall@amazon.com, hx242@xen.org
 
 From: Hongyan Xia <hongyxia@amazon.com>
 
-We risk throwing an entire large chunk away if it is just slightly
-unaligned which then causes the crash kernel to run out of RAM. Keep
-them and shrink them to alignment.
+We have observed a couple of cases where after a successful kexec, the
+crash kernel loaded in the 2nd kernel will run out of memory and
+crash. We narrowed down to two issues:
 
-Signed-off-by: Hongyan Xia <hongyxia@amazon.com>
----
- kexec/arch/i386/crashdump-x86.c | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
+1. when preparing the memory map, kexec excludes the Interrupt Vector
+   Table. However, the end address of IVT is incorrect.
+2. The wrong end address of IVT is not 1KiB aligned. When preparing the
+   crashkernel, the memory map will reject unaligned memory chunks. On
+   many x86 platforms this means the entire bottom 1MiB range is
+   excluded from the crashkernel memory map, resulting in OOM when the
+   crashkernel boots.
 
-diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-index c79791f2b3e0..3fcb19ad76d6 100644
---- a/kexec/arch/i386/crashdump-x86.c
-+++ b/kexec/arch/i386/crashdump-x86.c
-@@ -475,9 +475,18 @@ static int add_memmap(struct memory_range *memmap_p, int *nr_memmap,
- 	int i, j, nr_entries = 0, tidx = 0, align = 1024;
- 	unsigned long long mstart, mend;
- 
--	/* Do alignment check if it's RANGE_RAM */
--	if ((type == RANGE_RAM) && ((addr%align) || (size%align)))
--		return -1;
-+	/* Shrink to 1KiB alignment if needed. */
-+	if (type == RANGE_RAM && ((addr%align) || (size%align))) {
-+		unsigned long long end = addr + size;
-+
-+		printf("%s: RAM chunk %#llx - %#llx unaligned\n", __func__, addr, end);
-+		addr = _ALIGN_UP(addr, align);
-+		end = _ALIGN_DOWN(end, align);
-+		if (addr >= end)
-+			return -1;
-+		size = end - addr;
-+		printf("%s: RAM chunk shrunk to %#llx - %#llx\n", __func__, addr, end);
-+	}
- 
- 	/* Make sure at least one entry in list is free. */
- 	for (i = 0; i < CRASH_MAX_MEMMAP_NR;  i++) {
+Patch 1 fixes 1 which is actually enough to eliminate the issue but we
+feel that such issue may happen again (e.g., with a weird BIOS that has
+unaligned e820 map), so we also have patch 2 to improve the handling of
+unaligned memory.
+
+Hongyan Xia (2):
+  Fix where the real mode interrupt vector ends
+  Shrink segments to fit alignment instead of throwing them away
+
+ kexec/arch/i386/crashdump-x86.c    | 15 ++++++++++++---
+ kexec/arch/i386/kexec-x86-common.c | 10 ++++++++--
+ 2 files changed, 20 insertions(+), 5 deletions(-)
+
 -- 
 2.23.3
 
