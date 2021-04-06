@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.xenproject.org ([104.130.215.37])
+Received: from mail-ot1-x32c.google.com ([2607:f8b0:4864:20::32c])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lTmR4-002o3R-9W
- for kexec@lists.infradead.org; Tue, 06 Apr 2021 14:12:08 +0000
-From: Hongyan Xia <hx242@xen.org>
-Subject: [PATCH 1/2] Fix where the real mode interrupt vector ends
-Date: Tue,  6 Apr 2021 15:11:52 +0100
-Message-Id: <2d61a48ed80383d361e9a05789e9140f09e4728f.1617716819.git.hongyxia@amazon.com>
-In-Reply-To: <cover.1617716819.git.hongyxia@amazon.com>
-References: <cover.1617716819.git.hongyxia@amazon.com>
-In-Reply-To: <cover.1617716819.git.hongyxia@amazon.com>
-References: <cover.1617716819.git.hongyxia@amazon.com>
+ id 1lTmiM-002r9k-A0
+ for kexec@lists.infradead.org; Tue, 06 Apr 2021 14:30:00 +0000
+Received: by mail-ot1-x32c.google.com with SMTP id
+ c24-20020a9d6c980000b02902662e210895so14304187otr.9
+ for <kexec@lists.infradead.org>; Tue, 06 Apr 2021 07:29:57 -0700 (PDT)
+Date: Tue, 6 Apr 2021 09:29:52 -0500
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
+Message-ID: <20210406142952.GG904837@yoga>
+References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,61 +22,28 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, raphning@amazon.com, jgrall@amazon.com, hx242@xen.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Michael Ellerman <mpe@ellerman.id.au>, Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>, Michael Kelley <mikelley@microsoft.com>, Mike Rapoport <rppt@kernel.org>, Corey Minyard <cminyard@mvista.com>, Mathieu Poirier <mathieu.poirier@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Vlastimil Babka <vbabka@suse.cz>, "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, openipmi-developer@lists.sourceforge.net, linux-remoteproc@vger.kernel.org, linux-arch@vger.kernel.org, kexec@lists.infradead.org, rcu@vger.kernel.org, linux-fsdevel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>, Corey Minyard <minyard@acm.org>, Ohad Ben-Cohen <ohad@wizery.com>, Arnd Bergmann <arnd@arndb.de>, Eric Biederman <ebiederm@xmission.com>, Josh Triplett <josh@joshtriplett.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, Iurii Zaikin <yzaikin@google.com>
 
-From: Hongyan Xia <hongyxia@amazon.com>
+On Tue 06 Apr 08:31 CDT 2021, Andy Shevchenko wrote:
 
-The real mode ends at 0x400, not 0x100. The code intentionally excludes
-the IVT as RAM, so use the correct address.
+> kernel.h is being used as a dump for all kinds of stuff for a long time.
+> Here is the attempt to start cleaning it up by splitting out panic and
+> oops helpers.
+> 
+> At the same time convert users in header and lib folder to use new header.
+> Though for time being include new header back to kernel.h to avoid twisted
+> indirected includes for existing users.
+> 
 
-Also, 0x100 is not 1K aligned and will be rejected by add_memmap(). We
-have observed problems that after a multiboot2 kexec, the next kexec
-will throw away such unaligned chunks, losing memory for the next next
-kernel. In some corner cases, such loss of memory can actually cause OOM
-during boot.
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-Signed-off-by: Hongyan Xia <hongyxia@amazon.com>
----
- kexec/arch/i386/kexec-x86-common.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/kexec/arch/i386/kexec-x86-common.c b/kexec/arch/i386/kexec-x86-common.c
-index 9303704a0714..ffc95a9e43f8 100644
---- a/kexec/arch/i386/kexec-x86-common.c
-+++ b/kexec/arch/i386/kexec-x86-common.c
-@@ -48,6 +48,12 @@
- #define E820_PRAM         12
- #endif
- 
-+/*
-+ * The real mode IVT ends at 0x400.
-+ * See https://wiki.osdev.org/Interrupt_Vector_Table.
-+ */
-+#define REALMODE_IVT_END 0x400
-+
- static struct memory_range memory_range[MAX_MEMORY_RANGES];
- 
- /**
-@@ -360,8 +366,8 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
- 	/* Don't report the interrupt table as ram */
- 	for (i = 0; i < *ranges; i++) {
- 		if ((*range)[i].type == RANGE_RAM &&
--				((*range)[i].start < 0x100)) {
--			(*range)[i].start = 0x100;
-+				((*range)[i].start < REALMODE_IVT_END)) {
-+			(*range)[i].start = REALMODE_IVT_END;
- 			break;
- 		}
- 	}
--- 
-2.23.3
-
+Regards,
+Bjorn
 
 _______________________________________________
 kexec mailing list
