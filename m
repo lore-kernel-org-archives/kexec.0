@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lUDqU-005q6f-Go
- for kexec@lists.infradead.org; Wed, 07 Apr 2021 19:28:19 +0000
-Date: Wed, 7 Apr 2021 21:28:07 +0200
+ id 1lUDp1-005pw3-H9
+ for kexec@lists.infradead.org; Wed, 07 Apr 2021 19:26:51 +0000
+Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 19E8B25BEFC
+ for <kexec@lists.infradead.org>; Thu,  8 Apr 2021 05:26:24 +1000 (AEST)
+Date: Wed, 7 Apr 2021 21:26:21 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] Fix early boot OOM issues for some platforms
-Message-ID: <20210407192807.GB30418@vergenet.net>
-References: <cover.1617716819.git.hongyxia@amazon.com>
+Subject: Re: [PATCH kexec-tools 0/7] build enhancements and GitHub workflow
+Message-ID: <20210407192621.GA30418@vergenet.net>
+References: <20210402101737.1886-1-horms@verge.net.au>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1617716819.git.hongyxia@amazon.com>
+In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,34 +26,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hongyan Xia <hx242@xen.org>
-Cc: kexec@lists.infradead.org, raphning@amazon.com, jgrall@amazon.com
+To: kexec@lists.infradead.org
 
-On Tue, Apr 06, 2021 at 03:11:51PM +0100, Hongyan Xia wrote:
-> From: Hongyan Xia <hongyxia@amazon.com>
+On Fri, Apr 02, 2021 at 12:17:30PM +0200, Simon Horman wrote:
+> This series aimes to:
 > 
-> We have observed a couple of cases where after a successful kexec, the
-> crash kernel loaded in the 2nd kernel will run out of memory and
-> crash. We narrowed down to two issues:
+> 1. Allow creation of dist tarball without self-referential hard links
+> 2. Add a distckeck target
+> 3. Add a GitHub workflow which to performs basic build testing
 > 
-> 1. when preparing the memory map, kexec excludes the Interrupt Vector
->    Table. However, the end address of IVT is incorrect.
-> 2. The wrong end address of IVT is not 1KiB aligned. When preparing the
->    crashkernel, the memory map will reject unaligned memory chunks. On
->    many x86 platforms this means the entire bottom 1MiB range is
->    excluded from the crashkernel memory map, resulting in OOM when the
->    crashkernel boots.
-> 
-> Patch 1 fixes 1 which is actually enough to eliminate the issue but we
-> feel that such issue may happen again (e.g., with a weird BIOS that has
-> unaligned e820 map), so we also have patch 2 to improve the handling of
-> unaligned memory.
-> 
-> Hongyan Xia (2):
->   Fix where the real mode interrupt vector ends
->   Shrink segments to fit alignment instead of throwing them away
+> A sample run of the workflow can be seen here
+> https://github.com/horms/kexec-tools/actions/runs/711376088
 
-Thanks, series applied.
+Series applied.
 
 _______________________________________________
 kexec mailing list
