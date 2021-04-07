@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-f44.google.com ([209.85.221.44])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lTvK0-003dUu-Kt
- for kexec@lists.infradead.org; Tue, 06 Apr 2021 23:41:26 +0000
-Received: by mail-wr1-f44.google.com with SMTP id x15so6728125wrq.3
- for <kexec@lists.infradead.org>; Tue, 06 Apr 2021 16:41:23 -0700 (PDT)
-Date: Tue, 6 Apr 2021 23:41:21 +0000
-From: Wei Liu <wei.liu@kernel.org>
-Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
-Message-ID: <20210406234121.4ebbaoxyrzdywdj4@liuwe-devbox-debian-v2>
-References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+ id 1lU9eW-005DuI-1M
+ for kexec@lists.infradead.org; Wed, 07 Apr 2021 14:59:34 +0000
+Subject: Re: crashkernel reservation failed - No suitable area found on a
+ cortina/gemini SoC
+References: <YG2rfzRvHIZKXkf/@Red>
+ <34ff1fcc-e9ee-02c2-b2a8-d98a24ce94c3@linux.vnet.ibm.com>
+ <YG3AZ4K2auqEz9BK@Red>
+ <7a75028b-4495-cd51-6a32-59fcf6e0f166@linux.vnet.ibm.com>
+ <YG3GWxYU02UhOnUX@Red>
+From: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
+Message-ID: <291254c6-97e3-f5ba-dcee-77f8e4d25f9b@linux.vnet.ibm.com>
+Date: Wed, 7 Apr 2021 07:59:27 -0700
+In-Reply-To: <YG3GWxYU02UhOnUX@Red>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,27 +24,96 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>, Michael Kelley <mikelley@microsoft.com>, Mike Rapoport <rppt@kernel.org>, Corey Minyard <cminyard@mvista.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Vlastimil Babka <vbabka@suse.cz>, "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, linux-hyperv@vger.kernel.org, openipmi-developer@lists.sourceforge.net, linux-remoteproc@vger.kernel.org, linux-arch@vger.kernel.org, kexec@lists.infradead.org, rcu@vger.kernel.org, linux-fsdevel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>, Corey Minyard <minyard@acm.org>, Ohad Ben-Cohen <ohad@wizery.com>, Arnd Bergmann <arnd@arndb.de>, Eric Biederman <ebiederm@xmission.com>, Josh Triplett <josh@joshtriplett.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>, Luis Chamberlain <mcgrof@kernel.org>, Kees Cook <keescook@chromium.org>, Iurii Zaikin <yzaikin@google.com>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
+Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
-> kernel.h is being used as a dump for all kinds of stuff for a long time.
-> Here is the attempt to start cleaning it up by splitting out panic and
-> oops helpers.
-> 
-> At the same time convert users in header and lib folder to use new header.
-> Though for time being include new header back to kernel.h to avoid twisted
-> indirected includes for existing users.
-> 
-> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-Acked-by: Wei Liu <wei.liu@kernel.org>
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gNC83LzIwMjEgMDc6NDgsIENvcmVudGluIExhYmJlIHdyb3RlOgo+IExlIFdlZCwgQXByIDA3
+LCAyMDIxIGF0IDA3OjI4OjI2QU0gLTA3MDAsIEJydWNlIE1pdGNoZWxsIGEgw6ljcml0IDoKPj4g
+T24gNC83LzIwMjEgMDc6MjMsIENvcmVudGluIExhYmJlIHdyb3RlOgo+Pj4gTGUgV2VkLCBBcHIg
+MDcsIDIwMjEgYXQgMDc6MTM6MDRBTSAtMDcwMCwgQnJ1Y2UgTWl0Y2hlbGwgYSDDqWNyaXQgOgo+
+Pj4+IE9uIDQvNy8yMDIxIDA1OjU0LCBDb3JlbnRpbiBMYWJiZSB3cm90ZToKPj4+Pj4gSGVsbG8K
+Pj4+Pj4KPj4+Pj4gSSB0cnkgdG8gZG8ga2V4ZWMgb24gYSBjb3J0aW5hL2dlbWluaSBTb0MuCj4+
+Pj4+IE9uIGEgIm5vcm1hbCIgYm9vdCwga2V4ZWMgZmFpbCB0byBmaW5kIG1lbW9yeSBzbyBJIGFk
+ZGVkIGNyYXNoa2VybmVsPThNIHRvIGNtZGxpbmUuIChrZXJuZWwgc2l6ZSBpcyB+Nk0pLgo+Pj4+
+PiBCdXQgbm93LCBrZXJuZWwgZmFpbCB0byByZXNlcnZlIG1lbW9yeToKPj4+Pj4gTG9hZCBLZXJu
+IGltYWdlIGZyb20gMHgzMDAyMDAwMCB0byAweDgwMDAwMCBzaXplIDczNDAwMzIKPj4+Pj4gQm9v
+dGluZyBMaW51eCBvbiBwaHlzaWNhbCBDUFUgMHgwCj4+Pj4+IExpbnV4IHZlcnNpb24gNS4xMi4w
+LXJjNS1uZXh0LTIwMjEwNDAxKyAoY29tcGlsZUBSZWQpIChhcm12N2EtdW5rbm93bi1saW51eC1n
+bnVlYWJpaGYtZ2NjIChHZW50b28gOS4zLjAtcjIgcDQpIDkuMy4wLCBHTlUgbGQgKEdlbnRvbyAy
+LjM0IHA2KSAyLjM0LjApICM5OCBQUkVFTVBUIFdlZCBBcHIgNyAxNDoxNDowOCBDRVNUIDIwMjEK
+Pj4+Pj4gQ1BVOiBGQTUyNiBbNjYwMTUyNjFdIHJldmlzaW9uIDEgKEFSTXY0KSwgY3I9MDAwMDM5
+N2YKPj4+Pj4gQ1BVOiBWSVZUIGRhdGEgY2FjaGUsIFZJVlQgaW5zdHJ1Y3Rpb24gY2FjaGUKPj4+
+Pj4gT0Y6IGZkdDogTWFjaGluZSBtb2RlbDogRWRpbWF4IE5TLTI1MDIKPj4+Pj4gTWVtb3J5IHBv
+bGljeTogRGF0YSBjYWNoZSB3cml0ZWJhY2sKPj4+Pj4gWm9uZSByYW5nZXM6Cj4+Pj4+ICAgICAg
+Tm9ybWFsICAgW21lbSAweDAwMDAwMDAwMDAwMDAwMDAtMHgwMDAwMDAwMDA3ZmZmZmZmXQo+Pj4+
+PiAgICAgIEhpZ2hNZW0gIGVtcHR5Cj4+Pj4+IE1vdmFibGUgem9uZSBzdGFydCBmb3IgZWFjaCBu
+b2RlCj4+Pj4+IEVhcmx5IG1lbW9yeSBub2RlIHJhbmdlcwo+Pj4+PiAgICAgIG5vZGUgICAwOiBb
+bWVtIDB4MDAwMDAwMDAwMDAwMDAwMC0weDAwMDAwMDAwMDdmZmZmZmZdCj4+Pj4+IEluaXRtZW0g
+c2V0dXAgbm9kZSAwIFttZW0gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDAwN2ZmZmZmZl0K
+Pj4+Pj4gY3Jhc2hrZXJuZWwgcmVzZXJ2YXRpb24gZmFpbGVkIC0gTm8gc3VpdGFibGUgYXJlYSBm
+b3VuZC4KPj4+Pj4gQnVpbHQgMSB6b25lbGlzdHMsIG1vYmlsaXR5IGdyb3VwaW5nIG9uLiAgVG90
+YWwgcGFnZXM6IDMyNTEyCj4+Pj4+IEtlcm5lbCBjb21tYW5kIGxpbmU6IGNvbnNvbGU9dHR5UzAs
+MTkyMDBuOCBpcD1kaGNwIGNyYXNoa2VybmVsPThNCj4+Pj4+IERlbnRyeSBjYWNoZSBoYXNoIHRh
+YmxlIGVudHJpZXM6IDE2Mzg0IChvcmRlcjogNCwgNjU1MzYgYnl0ZXMsIGxpbmVhcikKPj4+Pj4g
+SW5vZGUtY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiA4MTkyIChvcmRlcjogMywgMzI3NjggYnl0
+ZXMsIGxpbmVhcikKPj4+Pj4gbWVtIGF1dG8taW5pdDogc3RhY2s6b2ZmLCBoZWFwIGFsbG9jOm9m
+ZiwgaGVhcCBmcmVlOm9mZgo+Pj4+PiBNZW1vcnk6IDExOTQ3NksvMTMxMDcySyBhdmFpbGFibGUg
+KDUwMzRLIGtlcm5lbCBjb2RlLCA1NzlLIHJ3ZGF0YSwgMTM3Mksgcm9kYXRhLCAzMDIwSyBpbml0
+LCAyMTBLIGJzcywgMTE1OTZLIHJlc2VydmVkLCAwSyBjbWEtcmVzZXJ2ZWQsIDBLIGhpZ2htZW0p
+Cj4+Pj4+IFNMVUI6IEhXYWxpZ249MzIsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTEs
+IE5vZGVzPTEKPj4+Pj4KPj4+Pj4gV2hhdCBjYW4gSSBkbyA/Cj4+Pj4+Cj4+Pj4+IFRoYW5rcwo+
+Pj4+PiBSZWdhcmRzCj4+Pj4+Cj4+Pj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCj4+Pj4+IGtleGVjIG1haWxpbmcgbGlzdAo+Pj4+PiBrZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCj4+Pj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMKPj4+Pj4KPj4+Pgo+Pj4+IEhlbGxvIENvcmVudGluLAo+Pj4+Cj4+Pj4g
+SSBzZWUgbXVjaCBsYXJnZXIgY3Jhc2hrZXJuZWw9eHhNIGJlaW5nIHNob3duIGhlcmUKPj4+PiBo
+dHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9s
+aW51eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdAo+
+Pj4+IGFuZCBmcm9tIG1hbnkgb2YgbXkgb3RoZXIgc2VhcmNoZXMuCj4+Pj4KPj4+PiBIZXJlIGlz
+IGFuIGludGVyZXN0aW5nIGFydGljbGUgb24ga2R1bXAgZm9yIEFSTS0zMgo+Pj4+IGh0dHBzOi8v
+a2Fpd2FudGVjaC53b3JkcHJlc3MuY29tLzIwMTcvMDcvMTMvc2V0dGluZy11cC1rZHVtcC1hbmQt
+Y3Jhc2gtZm9yLWFybS0zMi1hbi1vbmdvaW5nLXNhZ2EvCj4+Pj4KPj4+Pgo+Pj4+IEhlcmUgaXMg
+dGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgcmVmZXJlbmNlCj4+Pj4gaHR0cHM6Ly9naXQua2VybmVs
+Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9j
+dW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQ/aD12NS4xMSNuNzMy
+Cj4+Pj4KPj4+PiBJIGZlZWwgeW91ciBmcnVzdHJhdGlvbnMgdG9vLgo+Pj4KPj4+IEhlbGxvCj4+
+Pgo+Pj4gVGhhbmtzIGJ1dCBJIGhhdmUgYWxyZWFkeSByZWFkIHRob3NlIGRvY3VtZW50YXRpb24u
+Cj4+PiBJIHNlYXJjaCB0byBrbm93IHdoeSB0aGUga2VybmVsIGNhbm5vdCBmaW5kIDhNIG9mIG1l
+bW9yeSBvdWYgb2YgMTI4Lgo+Pj4KPj4+IFJlZ2FyZHMKPj4+Cj4+Cj4+IEhvdyBtdWNoIG1vcmUg
+bWVtb3J5IGRvZXMgdGhlIGtlcm5lbCBhbmQgaW5pdHJkIGFib3ZlIGFuZCBiZXlvbmQganVzdAo+
+PiB0aGVpciBwaHlzaWNhbCBzaXplPyAgKGhlYXBzLCBzdGFja3MsIGJ1ZmZlcnMsIHZpcnR1YWwg
+ZmlsZXN5c3RlbXMpCj4gCj4gVGhlIGtlcm5lbCBzaXplIGluY2x1ZGUgYSByb290ZnMuY3Bpby5s
+em1hIG9mIDNNQiBhbmQgZHRiIGlzIGFwcGVuZGVkLgo+IFRoZSB0b3RhbCBrZXJuZWwgc2l6ZSBp
+cyA3TUIuCj4gVGhlIHVuY29tcHJlc3NlZCBzaXplIG9mIHRoZSBrZXJuZWwgaXMgMTNNIChzaXpl
+IG9mIHZtbGludXgpCj4gVGhlIHVuY29tcHJlc3NlZCBzaXplIG9mIHJvb3RmcyBpcyAxMU0uCj4g
+Cj4gY2F0IC9wcm9jL21lbWluZm8KPiBNZW1Ub3RhbDogICAgICAgICAxMjI0OTYga0IKPiBNZW1G
+cmVlOiAgICAgICAgICAxMDM3MDAga0IKPiBNZW1BdmFpbGFibGU6ICAgICAxMDE5MzYga0IKPiBC
+dWZmZXJzOiAgICAgICAgICAgICAgIDAga0IKPiBDYWNoZWQ6ICAgICAgICAgICAgMTA5MDQga0IK
+PiBTd2FwQ2FjaGVkOiAgICAgICAgICAgIDAga0IKPiBBY3RpdmU6ICAgICAgICAgICAgIDQzMDQg
+a0IKPiBJbmFjdGl2ZTogICAgICAgICAgIDgwMTIga0IKPiBBY3RpdmUoYW5vbik6ICAgICAgIDQz
+MDQga0IKPiBJbmFjdGl2ZShhbm9uKTogICAgIDgwMTIga0IKPiBBY3RpdmUoZmlsZSk6ICAgICAg
+ICAgIDAga0IKPiBJbmFjdGl2ZShmaWxlKTogICAgICAgIDAga0IKPiBVbmV2aWN0YWJsZTogICAg
+ICAgICAgIDAga0IKPiBNbG9ja2VkOiAgICAgICAgICAgICAgIDAga0IKPiBIaWdoVG90YWw6ICAg
+ICAgICAgICAgIDAga0IKPiBIaWdoRnJlZTogICAgICAgICAgICAgIDAga0IKPiBMb3dUb3RhbDog
+ICAgICAgICAxMjI0OTYga0IKPiBMb3dGcmVlOiAgICAgICAgICAxMDM3MDAga0IKPiBTd2FwVG90
+YWw6ICAgICAgICAgICAgIDAga0IKPiBTd2FwRnJlZTogICAgICAgICAgICAgIDAga0IKPiBEaXJ0
+eTogICAgICAgICAgICAgICAgIDAga0IKPiBXcml0ZWJhY2s6ICAgICAgICAgICAgIDAga0IKPiBB
+bm9uUGFnZXM6ICAgICAgICAgIDE0Mjgga0IKPiBNYXBwZWQ6ICAgICAgICAgICAgIDM1NTIga0IK
+PiBTaG1lbTogICAgICAgICAgICAgMTA5MDQga0IKPiBLUmVjbGFpbWFibGU6ICAgICAgICA2MDgg
+a0IKPiBTbGFiOiAgICAgICAgICAgICAgIDI5NjAga0IKPiBTUmVjbGFpbWFibGU6ICAgICAgICA2
+MDgga0IKPiBTVW5yZWNsYWltOiAgICAgICAgIDIzNTIga0IKPiBLZXJuZWxTdGFjazogICAgICAg
+ICAzMTIga0IKPiBQYWdlVGFibGVzOiAgICAgICAgICAxMzYga0IKPiBORlNfVW5zdGFibGU6ICAg
+ICAgICAgIDAga0IKPiBCb3VuY2U6ICAgICAgICAgICAgICAgIDAga0IKPiBXcml0ZWJhY2tUbXA6
+ICAgICAgICAgIDAga0IKPiBDb21taXRMaW1pdDogICAgICAgNjEyNDgga0IKPiBDb21taXR0ZWRf
+QVM6ICAgICAgMTQzMzYga0IKPiBWbWFsbG9jVG90YWw6ICAgICA5MDExMjAga0IKPiBWbWFsbG9j
+VXNlZDogICAgICAgICAgNjQga0IKPiBWbWFsbG9jQ2h1bms6ICAgICAgICAgIDAga0IKPiBQZXJj
+cHU6ICAgICAgICAgICAgICAgMzIga0IKPiBDbWFUb3RhbDogICAgICAgICAgICAgIDAga0IKPiBD
+bWFGcmVlOiAgICAgICAgICAgICAgIDAga0IKPiAKCkkgYmVsaWV2ZSB5b3UgbmVlZCBzcGFjZSBm
+b3IgYWxsIG9mIHRoYXQsCnRoZSBzbWFsbGVzdCB0aGF0IHdvdWxkIHdvcmsgZm9yIG1lIHdhcyAy
+ME1CLgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
