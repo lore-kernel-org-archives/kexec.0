@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lUDp1-005pw3-H9
- for kexec@lists.infradead.org; Wed, 07 Apr 2021 19:26:51 +0000
-Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 19E8B25BEFC
- for <kexec@lists.infradead.org>; Thu,  8 Apr 2021 05:26:24 +1000 (AEST)
-Date: Wed, 7 Apr 2021 21:26:21 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH kexec-tools 0/7] build enhancements and GitHub workflow
-Message-ID: <20210407192621.GA30418@vergenet.net>
-References: <20210402101737.1886-1-horms@verge.net.au>
+Received: from mail-pf1-x435.google.com ([2607:f8b0:4864:20::435])
+ by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lU9eb-005Dvl-CG
+ for kexec@lists.infradead.org; Wed, 07 Apr 2021 14:59:39 +0000
+Received: by mail-pf1-x435.google.com with SMTP id y16so1007887pfc.5
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 07:59:37 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210402101737.1886-1-horms@verge.net.au>
+References: <20210406133158.73700-1-andriy.shevchenko@linux.intel.com>
+ <20210406165108.GA4332@42.do-not-panic.com>
+ <CAHp75Ve9vBQqSegM2-ch9NUN-MdevxxOs5ZdHkk1W7AacN+Wrw@mail.gmail.com>
+ <20210407143040.GB4332@42.do-not-panic.com>
+In-Reply-To: <20210407143040.GB4332@42.do-not-panic.com>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Date: Wed, 7 Apr 2021 17:59:19 +0300
+Message-ID: <CAHp75VeXiLa0b49eoZKVR1DSqTc9hKxpSgy294hMiaUzt0ugOA@mail.gmail.com>
+Subject: Re: [PATCH v1 1/1] kernel.h: Split out panic and oops helpers
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,19 +27,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Luis Chamberlain <mcgrof@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Michael Ellerman <mpe@ellerman.id.au>, Joerg Roedel <jroedel@suse.de>, Wei Liu <wei.liu@kernel.org>, Michael Kelley <mikelley@microsoft.com>, Mike Rapoport <rppt@kernel.org>, Corey Minyard <cminyard@mvista.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Andrew Morton <akpm@linux-foundation.org>, Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>, Vlastimil Babka <vbabka@suse.cz>, "Paul E. McKenney" <paulmck@kernel.org>, "Steven Rostedt (VMware)" <rostedt@goodmis.org>, "open list:LINUX FOR POWERPC PA SEMI PWRFICIENT" <linuxppc-dev@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux on Hyper-V List <linux-hyperv@vger.kernel.org>, openipmi-developer@lists.sourceforge.net, linux-remoteproc@vger.kernel.org, Linux-Arch <linux-arch@vger.kernel.org>, kexec@lists.infradead.org, rcu@vger.kernel.org, Linux FS Devel <linux-fsdevel@vger.kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "K. Y. Srinivasan" <kys@microsoft.com>, Haiyang Zhang <haiyangz@microsoft.com>, Stephen Hemminger <sthemmin@microsoft.com>, Corey Minyard <minyard@acm.org>, Ohad Ben-Cohen <ohad@wizery.com>, Arnd Bergmann <arnd@arndb.de>, Eric Biederman <ebiederm@xmission.com>, Josh Triplett <josh@joshtriplett.org>, Mathieu Desnoyers <mathieu.desnoyers@efficios.com>, Lai Jiangshan <jiangshanlai@gmail.com>, Joel Fernandes <joel@joelfernandes.org>, Kees Cook <keescook@chromium.org>, Iurii Zaikin <yzaikin@google.com>
 
-On Fri, Apr 02, 2021 at 12:17:30PM +0200, Simon Horman wrote:
-> This series aimes to:
-> 
-> 1. Allow creation of dist tarball without self-referential hard links
-> 2. Add a distckeck target
-> 3. Add a GitHub workflow which to performs basic build testing
-> 
-> A sample run of the workflow can be seen here
-> https://github.com/horms/kexec-tools/actions/runs/711376088
+On Wed, Apr 7, 2021 at 5:30 PM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> On Wed, Apr 07, 2021 at 10:33:44AM +0300, Andy Shevchenko wrote:
+> > On Wed, Apr 7, 2021 at 10:25 AM Luis Chamberlain <mcgrof@kernel.org> wrote:
+> > > On Tue, Apr 06, 2021 at 04:31:58PM +0300, Andy Shevchenko wrote:
 
-Series applied.
+...
+
+> > > Why is it worth it to add another file just for this?
+> >
+> > The main point is to break tons of loops that prevent having clean
+> > headers anymore.
+> >
+> > In this case, see bug.h, which is very important in this sense.
+>
+> OK based on the commit log this was not clear, it seemed more of moving
+> panic stuff to its own file, so just cleanup.
+
+Sorry for that. it should have mentioned the kernel folder instead of
+lib. But I think it won't clarify the above.
+
+In any case there are several purposes in this case
+ - dropping dependency in bug.h
+ - dropping a loop by moving out panic_notifier.h
+ - unload kernel.h from something which has its own domain
+
+I think that you are referring to the commit message describing 3rd
+one, but not 1st and 2nd.
+
+I will amend this for the future splits, thanks!
+
+> > >  Seems like a very
+> > > small file.
+> >
+> > If it is an argument, it's kinda strange. We have much smaller headers.
+>
+> The motivation for such separate file was just not clear on the commit
+> log.
+
+-- 
+With Best Regards,
+Andy Shevchenko
 
 _______________________________________________
 kexec mailing list
