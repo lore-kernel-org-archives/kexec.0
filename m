@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-x334.google.com ([2a00:1450:4864:20::334])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lU95o-00583S-0I
- for kexec@lists.infradead.org; Wed, 07 Apr 2021 14:23:42 +0000
-Received: by mail-wm1-x334.google.com with SMTP id
- o20-20020a05600c4fd4b0290114265518afso1272898wmq.4
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 07:23:38 -0700 (PDT)
-Date: Wed, 7 Apr 2021 16:23:35 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
+ id 1lU9AW-0058rr-2W
+ for kexec@lists.infradead.org; Wed, 07 Apr 2021 14:28:34 +0000
 Subject: Re: crashkernel reservation failed - No suitable area found on a
  cortina/gemini SoC
-Message-ID: <YG3AZ4K2auqEz9BK@Red>
 References: <YG2rfzRvHIZKXkf/@Red>
  <34ff1fcc-e9ee-02c2-b2a8-d98a24ce94c3@linux.vnet.ibm.com>
+ <YG3AZ4K2auqEz9BK@Red>
+From: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
+Message-ID: <7a75028b-4495-cd51-6a32-59fcf6e0f166@linux.vnet.ibm.com>
+Date: Wed, 7 Apr 2021 07:28:26 -0700
+In-Reply-To: <YG3AZ4K2auqEz9BK@Red>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <34ff1fcc-e9ee-02c2-b2a8-d98a24ce94c3@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +22,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
+To: Corentin Labbe <clabbe.montjoie@gmail.com>
 Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-Le Wed, Apr 07, 2021 at 07:13:04AM -0700, Bruce Mitchell a =E9crit :
-> On 4/7/2021 05:54, Corentin Labbe wrote:
-> > Hello
-> > =
-
-> > I try to do kexec on a cortina/gemini SoC.
-> > On a "normal" boot, kexec fail to find memory so I added crashkernel=3D=
-8M to cmdline. (kernel size is ~6M).
-> > But now, kernel fail to reserve memory:
-> > Load Kern image from 0x30020000 to 0x800000 size 7340032
-> > Booting Linux on physical CPU 0x0
-> > Linux version 5.12.0-rc5-next-20210401+ (compile@Red) (armv7a-unknown-l=
-inux-gnueabihf-gcc (Gentoo 9.3.0-r2 p4) 9.3.0, GNU ld (Gentoo 2.34 p6) 2.34=
-.0) #98 PREEMPT Wed Apr 7 14:14:08 CEST 2021
-> > CPU: FA526 [66015261] revision 1 (ARMv4), cr=3D0000397f
-> > CPU: VIVT data cache, VIVT instruction cache
-> > OF: fdt: Machine model: Edimax NS-2502
-> > Memory policy: Data cache writeback
-> > Zone ranges:
-> >    Normal   [mem 0x0000000000000000-0x0000000007ffffff]
-> >    HighMem  empty
-> > Movable zone start for each node
-> > Early memory node ranges
-> >    node   0: [mem 0x0000000000000000-0x0000000007ffffff]
-> > Initmem setup node 0 [mem 0x0000000000000000-0x0000000007ffffff]
-> > crashkernel reservation failed - No suitable area found.
-> > Built 1 zonelists, mobility grouping on.  Total pages: 32512
-> > Kernel command line: console=3DttyS0,19200n8 ip=3Ddhcp crashkernel=3D8M
-> > Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, linear)
-> > Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, linear)
-> > mem auto-init: stack:off, heap alloc:off, heap free:off
-> > Memory: 119476K/131072K available (5034K kernel code, 579K rwdata, 1372=
-K rodata, 3020K init, 210K bss, 11596K reserved, 0K cma-reserved, 0K highme=
-m)
-> > SLUB: HWalign=3D32, Order=3D0-3, MinObjects=3D0, CPUs=3D1, Nodes=3D1
-> > =
-
-> > What can I do ?
-> > =
-
-> > Thanks
-> > Regards
-> > =
-
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > =
-
-> =
-
-> Hello Corentin,
-> =
-
-> I see much larger crashkernel=3DxxM being shown here
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/admin-guide/kdump/kdump.rst
-> and from many of my other searches.
-> =
-
-> Here is an interesting article on kdump for ARM-32
-> https://kaiwantech.wordpress.com/2017/07/13/setting-up-kdump-and-crash-fo=
-r-arm-32-an-ongoing-saga/
-> =
-
-> =
-
-> Here is the kernel command line reference
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/D=
-ocumentation/admin-guide/kernel-parameters.txt?h=3Dv5.11#n732
-> =
-
-> I feel your frustrations too.
-
-Hello
-
-Thanks but I have already read those documentation.
-I search to know why the kernel cannot find 8M of memory ouf of 128.
-
-Regards
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gNC83LzIwMjEgMDc6MjMsIENvcmVudGluIExhYmJlIHdyb3RlOgo+IExlIFdlZCwgQXByIDA3
+LCAyMDIxIGF0IDA3OjEzOjA0QU0gLTA3MDAsIEJydWNlIE1pdGNoZWxsIGEgw6ljcml0IDoKPj4g
+T24gNC83LzIwMjEgMDU6NTQsIENvcmVudGluIExhYmJlIHdyb3RlOgo+Pj4gSGVsbG8KPj4+Cj4+
+PiBJIHRyeSB0byBkbyBrZXhlYyBvbiBhIGNvcnRpbmEvZ2VtaW5pIFNvQy4KPj4+IE9uIGEgIm5v
+cm1hbCIgYm9vdCwga2V4ZWMgZmFpbCB0byBmaW5kIG1lbW9yeSBzbyBJIGFkZGVkIGNyYXNoa2Vy
+bmVsPThNIHRvIGNtZGxpbmUuIChrZXJuZWwgc2l6ZSBpcyB+Nk0pLgo+Pj4gQnV0IG5vdywga2Vy
+bmVsIGZhaWwgdG8gcmVzZXJ2ZSBtZW1vcnk6Cj4+PiBMb2FkIEtlcm4gaW1hZ2UgZnJvbSAweDMw
+MDIwMDAwIHRvIDB4ODAwMDAwIHNpemUgNzM0MDAzMgo+Pj4gQm9vdGluZyBMaW51eCBvbiBwaHlz
+aWNhbCBDUFUgMHgwCj4+PiBMaW51eCB2ZXJzaW9uIDUuMTIuMC1yYzUtbmV4dC0yMDIxMDQwMSsg
+KGNvbXBpbGVAUmVkKSAoYXJtdjdhLXVua25vd24tbGludXgtZ251ZWFiaWhmLWdjYyAoR2VudG9v
+IDkuMy4wLXIyIHA0KSA5LjMuMCwgR05VIGxkIChHZW50b28gMi4zNCBwNikgMi4zNC4wKSAjOTgg
+UFJFRU1QVCBXZWQgQXByIDcgMTQ6MTQ6MDggQ0VTVCAyMDIxCj4+PiBDUFU6IEZBNTI2IFs2NjAx
+NTI2MV0gcmV2aXNpb24gMSAoQVJNdjQpLCBjcj0wMDAwMzk3Zgo+Pj4gQ1BVOiBWSVZUIGRhdGEg
+Y2FjaGUsIFZJVlQgaW5zdHJ1Y3Rpb24gY2FjaGUKPj4+IE9GOiBmZHQ6IE1hY2hpbmUgbW9kZWw6
+IEVkaW1heCBOUy0yNTAyCj4+PiBNZW1vcnkgcG9saWN5OiBEYXRhIGNhY2hlIHdyaXRlYmFjawo+
+Pj4gWm9uZSByYW5nZXM6Cj4+PiAgICAgTm9ybWFsICAgW21lbSAweDAwMDAwMDAwMDAwMDAwMDAt
+MHgwMDAwMDAwMDA3ZmZmZmZmXQo+Pj4gICAgIEhpZ2hNZW0gIGVtcHR5Cj4+PiBNb3ZhYmxlIHpv
+bmUgc3RhcnQgZm9yIGVhY2ggbm9kZQo+Pj4gRWFybHkgbWVtb3J5IG5vZGUgcmFuZ2VzCj4+PiAg
+ICAgbm9kZSAgIDA6IFttZW0gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDAwN2ZmZmZmZl0K
+Pj4+IEluaXRtZW0gc2V0dXAgbm9kZSAwIFttZW0gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAw
+MDAwN2ZmZmZmZl0KPj4+IGNyYXNoa2VybmVsIHJlc2VydmF0aW9uIGZhaWxlZCAtIE5vIHN1aXRh
+YmxlIGFyZWEgZm91bmQuCj4+PiBCdWlsdCAxIHpvbmVsaXN0cywgbW9iaWxpdHkgZ3JvdXBpbmcg
+b24uICBUb3RhbCBwYWdlczogMzI1MTIKPj4+IEtlcm5lbCBjb21tYW5kIGxpbmU6IGNvbnNvbGU9
+dHR5UzAsMTkyMDBuOCBpcD1kaGNwIGNyYXNoa2VybmVsPThNCj4+PiBEZW50cnkgY2FjaGUgaGFz
+aCB0YWJsZSBlbnRyaWVzOiAxNjM4NCAob3JkZXI6IDQsIDY1NTM2IGJ5dGVzLCBsaW5lYXIpCj4+
+PiBJbm9kZS1jYWNoZSBoYXNoIHRhYmxlIGVudHJpZXM6IDgxOTIgKG9yZGVyOiAzLCAzMjc2OCBi
+eXRlcywgbGluZWFyKQo+Pj4gbWVtIGF1dG8taW5pdDogc3RhY2s6b2ZmLCBoZWFwIGFsbG9jOm9m
+ZiwgaGVhcCBmcmVlOm9mZgo+Pj4gTWVtb3J5OiAxMTk0NzZLLzEzMTA3MksgYXZhaWxhYmxlICg1
+MDM0SyBrZXJuZWwgY29kZSwgNTc5SyByd2RhdGEsIDEzNzJLIHJvZGF0YSwgMzAyMEsgaW5pdCwg
+MjEwSyBic3MsIDExNTk2SyByZXNlcnZlZCwgMEsgY21hLXJlc2VydmVkLCAwSyBoaWdobWVtKQo+
+Pj4gU0xVQjogSFdhbGlnbj0zMiwgT3JkZXI9MC0zLCBNaW5PYmplY3RzPTAsIENQVXM9MSwgTm9k
+ZXM9MQo+Pj4KPj4+IFdoYXQgY2FuIEkgZG8gPwo+Pj4KPj4+IFRoYW5rcwo+Pj4gUmVnYXJkcwo+
+Pj4KPj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+
+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4+IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPj4+IGh0
+dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMKPj4+Cj4+Cj4+
+IEhlbGxvIENvcmVudGluLAo+Pgo+PiBJIHNlZSBtdWNoIGxhcmdlciBjcmFzaGtlcm5lbD14eE0g
+YmVpbmcgc2hvd24gaGVyZQo+PiBodHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgv
+a2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1
+aWRlL2tkdW1wL2tkdW1wLnJzdAo+PiBhbmQgZnJvbSBtYW55IG9mIG15IG90aGVyIHNlYXJjaGVz
+Lgo+Pgo+PiBIZXJlIGlzIGFuIGludGVyZXN0aW5nIGFydGljbGUgb24ga2R1bXAgZm9yIEFSTS0z
+Mgo+PiBodHRwczovL2thaXdhbnRlY2gud29yZHByZXNzLmNvbS8yMDE3LzA3LzEzL3NldHRpbmct
+dXAta2R1bXAtYW5kLWNyYXNoLWZvci1hcm0tMzItYW4tb25nb2luZy1zYWdhLwo+Pgo+Pgo+PiBI
+ZXJlIGlzIHRoZSBrZXJuZWwgY29tbWFuZCBsaW5lIHJlZmVyZW5jZQo+PiBodHRwczovL2dpdC5r
+ZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9saW51eC5naXQvdHJl
+ZS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tlcm5lbC1wYXJhbWV0ZXJzLnR4dD9oPXY1LjEx
+I243MzIKPj4KPj4gSSBmZWVsIHlvdXIgZnJ1c3RyYXRpb25zIHRvby4KPiAKPiBIZWxsbwo+IAo+
+IFRoYW5rcyBidXQgSSBoYXZlIGFscmVhZHkgcmVhZCB0aG9zZSBkb2N1bWVudGF0aW9uLgo+IEkg
+c2VhcmNoIHRvIGtub3cgd2h5IHRoZSBrZXJuZWwgY2Fubm90IGZpbmQgOE0gb2YgbWVtb3J5IG91
+ZiBvZiAxMjguCj4gCj4gUmVnYXJkcwo+IAoKSG93IG11Y2ggbW9yZSBtZW1vcnkgZG9lcyB0aGUg
+a2VybmVsIGFuZCBpbml0cmQgYWJvdmUgYW5kIGJleW9uZCBqdXN0IAp0aGVpciBwaHlzaWNhbCBz
+aXplPyAgKGhlYXBzLCBzdGFja3MsIGJ1ZmZlcnMsIHZpcnR1YWwgZmlsZXN5c3RlbXMpCgoKX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
+ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
+cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
