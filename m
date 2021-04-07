@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx2.suse.de ([195.135.220.15])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lU9eW-005DuI-1M
- for kexec@lists.infradead.org; Wed, 07 Apr 2021 14:59:34 +0000
-Subject: Re: crashkernel reservation failed - No suitable area found on a
- cortina/gemini SoC
-References: <YG2rfzRvHIZKXkf/@Red>
- <34ff1fcc-e9ee-02c2-b2a8-d98a24ce94c3@linux.vnet.ibm.com>
- <YG3AZ4K2auqEz9BK@Red>
- <7a75028b-4495-cd51-6a32-59fcf6e0f166@linux.vnet.ibm.com>
- <YG3GWxYU02UhOnUX@Red>
-From: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
-Message-ID: <291254c6-97e3-f5ba-dcee-77f8e4d25f9b@linux.vnet.ibm.com>
-Date: Wed, 7 Apr 2021 07:59:27 -0700
-In-Reply-To: <YG3GWxYU02UhOnUX@Red>
-Content-Language: en-US
+ id 1lUBaU-005Z69-7v
+ for kexec@lists.infradead.org; Wed, 07 Apr 2021 17:03:32 +0000
+Date: Wed, 7 Apr 2021 19:03:28 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH v3 12/12] kdump: Use vmlinux_build_id to simplify
+Message-ID: <20210407170328.x7hgch37o7ezttb6@pathway.suse.cz>
+References: <20210331030520.3816265-1-swboyd@chromium.org>
+ <20210331030520.3816265-13-swboyd@chromium.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210331030520.3816265-13-swboyd@chromium.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,96 +20,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Corentin Labbe <clabbe.montjoie@gmail.com>
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-T24gNC83LzIwMjEgMDc6NDgsIENvcmVudGluIExhYmJlIHdyb3RlOgo+IExlIFdlZCwgQXByIDA3
-LCAyMDIxIGF0IDA3OjI4OjI2QU0gLTA3MDAsIEJydWNlIE1pdGNoZWxsIGEgw6ljcml0IDoKPj4g
-T24gNC83LzIwMjEgMDc6MjMsIENvcmVudGluIExhYmJlIHdyb3RlOgo+Pj4gTGUgV2VkLCBBcHIg
-MDcsIDIwMjEgYXQgMDc6MTM6MDRBTSAtMDcwMCwgQnJ1Y2UgTWl0Y2hlbGwgYSDDqWNyaXQgOgo+
-Pj4+IE9uIDQvNy8yMDIxIDA1OjU0LCBDb3JlbnRpbiBMYWJiZSB3cm90ZToKPj4+Pj4gSGVsbG8K
-Pj4+Pj4KPj4+Pj4gSSB0cnkgdG8gZG8ga2V4ZWMgb24gYSBjb3J0aW5hL2dlbWluaSBTb0MuCj4+
-Pj4+IE9uIGEgIm5vcm1hbCIgYm9vdCwga2V4ZWMgZmFpbCB0byBmaW5kIG1lbW9yeSBzbyBJIGFk
-ZGVkIGNyYXNoa2VybmVsPThNIHRvIGNtZGxpbmUuIChrZXJuZWwgc2l6ZSBpcyB+Nk0pLgo+Pj4+
-PiBCdXQgbm93LCBrZXJuZWwgZmFpbCB0byByZXNlcnZlIG1lbW9yeToKPj4+Pj4gTG9hZCBLZXJu
-IGltYWdlIGZyb20gMHgzMDAyMDAwMCB0byAweDgwMDAwMCBzaXplIDczNDAwMzIKPj4+Pj4gQm9v
-dGluZyBMaW51eCBvbiBwaHlzaWNhbCBDUFUgMHgwCj4+Pj4+IExpbnV4IHZlcnNpb24gNS4xMi4w
-LXJjNS1uZXh0LTIwMjEwNDAxKyAoY29tcGlsZUBSZWQpIChhcm12N2EtdW5rbm93bi1saW51eC1n
-bnVlYWJpaGYtZ2NjIChHZW50b28gOS4zLjAtcjIgcDQpIDkuMy4wLCBHTlUgbGQgKEdlbnRvbyAy
-LjM0IHA2KSAyLjM0LjApICM5OCBQUkVFTVBUIFdlZCBBcHIgNyAxNDoxNDowOCBDRVNUIDIwMjEK
-Pj4+Pj4gQ1BVOiBGQTUyNiBbNjYwMTUyNjFdIHJldmlzaW9uIDEgKEFSTXY0KSwgY3I9MDAwMDM5
-N2YKPj4+Pj4gQ1BVOiBWSVZUIGRhdGEgY2FjaGUsIFZJVlQgaW5zdHJ1Y3Rpb24gY2FjaGUKPj4+
-Pj4gT0Y6IGZkdDogTWFjaGluZSBtb2RlbDogRWRpbWF4IE5TLTI1MDIKPj4+Pj4gTWVtb3J5IHBv
-bGljeTogRGF0YSBjYWNoZSB3cml0ZWJhY2sKPj4+Pj4gWm9uZSByYW5nZXM6Cj4+Pj4+ICAgICAg
-Tm9ybWFsICAgW21lbSAweDAwMDAwMDAwMDAwMDAwMDAtMHgwMDAwMDAwMDA3ZmZmZmZmXQo+Pj4+
-PiAgICAgIEhpZ2hNZW0gIGVtcHR5Cj4+Pj4+IE1vdmFibGUgem9uZSBzdGFydCBmb3IgZWFjaCBu
-b2RlCj4+Pj4+IEVhcmx5IG1lbW9yeSBub2RlIHJhbmdlcwo+Pj4+PiAgICAgIG5vZGUgICAwOiBb
-bWVtIDB4MDAwMDAwMDAwMDAwMDAwMC0weDAwMDAwMDAwMDdmZmZmZmZdCj4+Pj4+IEluaXRtZW0g
-c2V0dXAgbm9kZSAwIFttZW0gMHgwMDAwMDAwMDAwMDAwMDAwLTB4MDAwMDAwMDAwN2ZmZmZmZl0K
-Pj4+Pj4gY3Jhc2hrZXJuZWwgcmVzZXJ2YXRpb24gZmFpbGVkIC0gTm8gc3VpdGFibGUgYXJlYSBm
-b3VuZC4KPj4+Pj4gQnVpbHQgMSB6b25lbGlzdHMsIG1vYmlsaXR5IGdyb3VwaW5nIG9uLiAgVG90
-YWwgcGFnZXM6IDMyNTEyCj4+Pj4+IEtlcm5lbCBjb21tYW5kIGxpbmU6IGNvbnNvbGU9dHR5UzAs
-MTkyMDBuOCBpcD1kaGNwIGNyYXNoa2VybmVsPThNCj4+Pj4+IERlbnRyeSBjYWNoZSBoYXNoIHRh
-YmxlIGVudHJpZXM6IDE2Mzg0IChvcmRlcjogNCwgNjU1MzYgYnl0ZXMsIGxpbmVhcikKPj4+Pj4g
-SW5vZGUtY2FjaGUgaGFzaCB0YWJsZSBlbnRyaWVzOiA4MTkyIChvcmRlcjogMywgMzI3NjggYnl0
-ZXMsIGxpbmVhcikKPj4+Pj4gbWVtIGF1dG8taW5pdDogc3RhY2s6b2ZmLCBoZWFwIGFsbG9jOm9m
-ZiwgaGVhcCBmcmVlOm9mZgo+Pj4+PiBNZW1vcnk6IDExOTQ3NksvMTMxMDcySyBhdmFpbGFibGUg
-KDUwMzRLIGtlcm5lbCBjb2RlLCA1NzlLIHJ3ZGF0YSwgMTM3Mksgcm9kYXRhLCAzMDIwSyBpbml0
-LCAyMTBLIGJzcywgMTE1OTZLIHJlc2VydmVkLCAwSyBjbWEtcmVzZXJ2ZWQsIDBLIGhpZ2htZW0p
-Cj4+Pj4+IFNMVUI6IEhXYWxpZ249MzIsIE9yZGVyPTAtMywgTWluT2JqZWN0cz0wLCBDUFVzPTEs
-IE5vZGVzPTEKPj4+Pj4KPj4+Pj4gV2hhdCBjYW4gSSBkbyA/Cj4+Pj4+Cj4+Pj4+IFRoYW5rcwo+
-Pj4+PiBSZWdhcmRzCj4+Pj4+Cj4+Pj4+IF9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCj4+Pj4+IGtleGVjIG1haWxpbmcgbGlzdAo+Pj4+PiBrZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCj4+Pj4+IGh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMKPj4+Pj4KPj4+Pgo+Pj4+IEhlbGxvIENvcmVudGluLAo+Pj4+Cj4+Pj4g
-SSBzZWUgbXVjaCBsYXJnZXIgY3Jhc2hrZXJuZWw9eHhNIGJlaW5nIHNob3duIGhlcmUKPj4+PiBo
-dHRwczovL2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC90b3J2YWxkcy9s
-aW51eC5naXQvdHJlZS9Eb2N1bWVudGF0aW9uL2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLnJzdAo+
-Pj4+IGFuZCBmcm9tIG1hbnkgb2YgbXkgb3RoZXIgc2VhcmNoZXMuCj4+Pj4KPj4+PiBIZXJlIGlz
-IGFuIGludGVyZXN0aW5nIGFydGljbGUgb24ga2R1bXAgZm9yIEFSTS0zMgo+Pj4+IGh0dHBzOi8v
-a2Fpd2FudGVjaC53b3JkcHJlc3MuY29tLzIwMTcvMDcvMTMvc2V0dGluZy11cC1rZHVtcC1hbmQt
-Y3Jhc2gtZm9yLWFybS0zMi1hbi1vbmdvaW5nLXNhZ2EvCj4+Pj4KPj4+Pgo+Pj4+IEhlcmUgaXMg
-dGhlIGtlcm5lbCBjb21tYW5kIGxpbmUgcmVmZXJlbmNlCj4+Pj4gaHR0cHM6Ly9naXQua2VybmVs
-Lm9yZy9wdWIvc2NtL2xpbnV4L2tlcm5lbC9naXQvdG9ydmFsZHMvbGludXguZ2l0L3RyZWUvRG9j
-dW1lbnRhdGlvbi9hZG1pbi1ndWlkZS9rZXJuZWwtcGFyYW1ldGVycy50eHQ/aD12NS4xMSNuNzMy
-Cj4+Pj4KPj4+PiBJIGZlZWwgeW91ciBmcnVzdHJhdGlvbnMgdG9vLgo+Pj4KPj4+IEhlbGxvCj4+
-Pgo+Pj4gVGhhbmtzIGJ1dCBJIGhhdmUgYWxyZWFkeSByZWFkIHRob3NlIGRvY3VtZW50YXRpb24u
-Cj4+PiBJIHNlYXJjaCB0byBrbm93IHdoeSB0aGUga2VybmVsIGNhbm5vdCBmaW5kIDhNIG9mIG1l
-bW9yeSBvdWYgb2YgMTI4Lgo+Pj4KPj4+IFJlZ2FyZHMKPj4+Cj4+Cj4+IEhvdyBtdWNoIG1vcmUg
-bWVtb3J5IGRvZXMgdGhlIGtlcm5lbCBhbmQgaW5pdHJkIGFib3ZlIGFuZCBiZXlvbmQganVzdAo+
-PiB0aGVpciBwaHlzaWNhbCBzaXplPyAgKGhlYXBzLCBzdGFja3MsIGJ1ZmZlcnMsIHZpcnR1YWwg
-ZmlsZXN5c3RlbXMpCj4gCj4gVGhlIGtlcm5lbCBzaXplIGluY2x1ZGUgYSByb290ZnMuY3Bpby5s
-em1hIG9mIDNNQiBhbmQgZHRiIGlzIGFwcGVuZGVkLgo+IFRoZSB0b3RhbCBrZXJuZWwgc2l6ZSBp
-cyA3TUIuCj4gVGhlIHVuY29tcHJlc3NlZCBzaXplIG9mIHRoZSBrZXJuZWwgaXMgMTNNIChzaXpl
-IG9mIHZtbGludXgpCj4gVGhlIHVuY29tcHJlc3NlZCBzaXplIG9mIHJvb3RmcyBpcyAxMU0uCj4g
-Cj4gY2F0IC9wcm9jL21lbWluZm8KPiBNZW1Ub3RhbDogICAgICAgICAxMjI0OTYga0IKPiBNZW1G
-cmVlOiAgICAgICAgICAxMDM3MDAga0IKPiBNZW1BdmFpbGFibGU6ICAgICAxMDE5MzYga0IKPiBC
-dWZmZXJzOiAgICAgICAgICAgICAgIDAga0IKPiBDYWNoZWQ6ICAgICAgICAgICAgMTA5MDQga0IK
-PiBTd2FwQ2FjaGVkOiAgICAgICAgICAgIDAga0IKPiBBY3RpdmU6ICAgICAgICAgICAgIDQzMDQg
-a0IKPiBJbmFjdGl2ZTogICAgICAgICAgIDgwMTIga0IKPiBBY3RpdmUoYW5vbik6ICAgICAgIDQz
-MDQga0IKPiBJbmFjdGl2ZShhbm9uKTogICAgIDgwMTIga0IKPiBBY3RpdmUoZmlsZSk6ICAgICAg
-ICAgIDAga0IKPiBJbmFjdGl2ZShmaWxlKTogICAgICAgIDAga0IKPiBVbmV2aWN0YWJsZTogICAg
-ICAgICAgIDAga0IKPiBNbG9ja2VkOiAgICAgICAgICAgICAgIDAga0IKPiBIaWdoVG90YWw6ICAg
-ICAgICAgICAgIDAga0IKPiBIaWdoRnJlZTogICAgICAgICAgICAgIDAga0IKPiBMb3dUb3RhbDog
-ICAgICAgICAxMjI0OTYga0IKPiBMb3dGcmVlOiAgICAgICAgICAxMDM3MDAga0IKPiBTd2FwVG90
-YWw6ICAgICAgICAgICAgIDAga0IKPiBTd2FwRnJlZTogICAgICAgICAgICAgIDAga0IKPiBEaXJ0
-eTogICAgICAgICAgICAgICAgIDAga0IKPiBXcml0ZWJhY2s6ICAgICAgICAgICAgIDAga0IKPiBB
-bm9uUGFnZXM6ICAgICAgICAgIDE0Mjgga0IKPiBNYXBwZWQ6ICAgICAgICAgICAgIDM1NTIga0IK
-PiBTaG1lbTogICAgICAgICAgICAgMTA5MDQga0IKPiBLUmVjbGFpbWFibGU6ICAgICAgICA2MDgg
-a0IKPiBTbGFiOiAgICAgICAgICAgICAgIDI5NjAga0IKPiBTUmVjbGFpbWFibGU6ICAgICAgICA2
-MDgga0IKPiBTVW5yZWNsYWltOiAgICAgICAgIDIzNTIga0IKPiBLZXJuZWxTdGFjazogICAgICAg
-ICAzMTIga0IKPiBQYWdlVGFibGVzOiAgICAgICAgICAxMzYga0IKPiBORlNfVW5zdGFibGU6ICAg
-ICAgICAgIDAga0IKPiBCb3VuY2U6ICAgICAgICAgICAgICAgIDAga0IKPiBXcml0ZWJhY2tUbXA6
-ICAgICAgICAgIDAga0IKPiBDb21taXRMaW1pdDogICAgICAgNjEyNDgga0IKPiBDb21taXR0ZWRf
-QVM6ICAgICAgMTQzMzYga0IKPiBWbWFsbG9jVG90YWw6ICAgICA5MDExMjAga0IKPiBWbWFsbG9j
-VXNlZDogICAgICAgICAgNjQga0IKPiBWbWFsbG9jQ2h1bms6ICAgICAgICAgIDAga0IKPiBQZXJj
-cHU6ICAgICAgICAgICAgICAgMzIga0IKPiBDbWFUb3RhbDogICAgICAgICAgICAgIDAga0IKPiBD
-bWFGcmVlOiAgICAgICAgICAgICAgIDAga0IKPiAKCkkgYmVsaWV2ZSB5b3UgbmVlZCBzcGFjZSBm
-b3IgYWxsIG9mIHRoYXQsCnRoZSBzbWFsbGVzdCB0aGF0IHdvdWxkIHdvcmsgZm9yIG1lIHdhcyAy
-ME1CLgoKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Tue 2021-03-30 20:05:20, Stephen Boyd wrote:
+> We can use the vmlinux_build_id array here now instead of open coding
+> it. This mostly consolidates code.
+> 
+> Cc: Jiri Olsa <jolsa@kernel.org>
+> Cc: Alexei Starovoitov <ast@kernel.org>
+> Cc: Jessica Yu <jeyu@kernel.org>
+> Cc: Evan Green <evgreen@chromium.org>
+> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: <kexec@lists.infradead.org>
+> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> ---
+>  include/linux/crash_core.h |  6 +-----
+>  kernel/crash_core.c        | 41 ++------------------------------------
+>  2 files changed, 3 insertions(+), 44 deletions(-)
+> 
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index 206bde8308b2..fb8ab99bb2ee 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -39,7 +39,7 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+>  #define VMCOREINFO_OSRELEASE(value) \
+>  	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+>  #define VMCOREINFO_BUILD_ID(value) \
+> -	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+> +	vmcoreinfo_append_str("BUILD-ID=%20phN\n", value)
+
+Please, add also build check that BUILD_ID_MAX == 20.
+
+
+>  #define VMCOREINFO_PAGESIZE(value) \
+>  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
+>  #define VMCOREINFO_SYMBOL(name) \
+> @@ -69,10 +69,6 @@ extern unsigned char *vmcoreinfo_data;
+>  extern size_t vmcoreinfo_size;
+>  extern u32 *vmcoreinfo_note;
+>  
+> -/* raw contents of kernel .notes section */
+> -extern const void __start_notes __weak;
+> -extern const void __stop_notes __weak;
+> -
+>  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+>  			  void *data, size_t data_len);
+>  void final_note(Elf_Word *buf);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 825284baaf46..6b560cf9f374 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -4,6 +4,7 @@
+>   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
+>   */
+>  
+> +#include <linux/buildid.h>
+>  #include <linux/crash_core.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> @@ -378,51 +379,13 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
+>  }
+>  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+>  
+> -#define NOTES_SIZE (&__stop_notes - &__start_notes)
+> -#define BUILD_ID_MAX SHA1_DIGEST_SIZE
+> -#define NT_GNU_BUILD_ID 3
+> -
+> -struct elf_note_section {
+> -	struct elf_note	n_hdr;
+> -	u8 n_data[];
+> -};
+> -
+>  /*
+>   * Add build ID from .notes section as generated by the GNU ld(1)
+>   * or LLVM lld(1) --build-id option.
+>   */
+>  static void add_build_id_vmcoreinfo(void)
+>  {
+> -	char build_id[BUILD_ID_MAX * 2 + 1];
+> -	int n_remain = NOTES_SIZE;
+> -
+> -	while (n_remain >= sizeof(struct elf_note)) {
+> -		const struct elf_note_section *note_sec =
+> -			&__start_notes + NOTES_SIZE - n_remain;
+> -		const u32 n_namesz = note_sec->n_hdr.n_namesz;
+> -
+> -		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
+> -		    n_namesz != 0 &&
+> -		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
+> -			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
+> -				const u32 n_descsz = note_sec->n_hdr.n_descsz;
+> -				const u8 *s = &note_sec->n_data[n_namesz];
+> -
+> -				s = PTR_ALIGN(s, 4);
+> -				bin2hex(build_id, s, n_descsz);
+> -				build_id[2 * n_descsz] = '\0';
+> -				VMCOREINFO_BUILD_ID(build_id);
+> -				return;
+> -			}
+> -			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
+> -				note_sec->n_hdr.n_descsz,
+> -				BUILD_ID_MAX);
+> -			return;
+> -		}
+> -		n_remain -= sizeof(struct elf_note) +
+> -			ALIGN(note_sec->n_hdr.n_namesz, 4) +
+> -			ALIGN(note_sec->n_hdr.n_descsz, 4);
+> -	}
+> +	VMCOREINFO_BUILD_ID(vmlinux_build_id);
+>  }
+
+The function add_build_id_vmcoreinfo() is used in
+crash_save_vmcoreinfo_init() in this context:
+
+
+	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+	add_build_id_vmcoreinfo();
+	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+
+	VMCOREINFO_SYMBOL(init_uts_ns);
+	VMCOREINFO_OFFSET(uts_namespace, name);
+	VMCOREINFO_SYMBOL(node_online_map);
+
+The function is not longer need. VMCOREINFO_BUILD_ID()
+can be used directly:
+
+	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+	VMCOREINFO_BUILD_ID(vmlinux_build_id);
+	VMCOREINFO_PAGESIZE(PAGE_SIZE);
+
+	VMCOREINFO_SYMBOL(init_uts_ns);
+	VMCOREINFO_OFFSET(uts_namespace, name);
+	VMCOREINFO_SYMBOL(node_online_map);
+
+
+Best Regards,
+Petr
+
+
+>  
+>  static int __init crash_save_vmcoreinfo_init(void)
+> -- 
+> https://chromeos.dev
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
