@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72e.google.com ([2607:f8b0:4864:20::72e])
+Received: from mail-qk1-x72f.google.com ([2607:f8b0:4864:20::72f])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULvJ-006lVB-OJ
- for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:05:46 +0000
-Received: by mail-qk1-x72e.google.com with SMTP id g15so943000qkl.4
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:41 -0700 (PDT)
+ id 1lULvK-006lWR-V2
+ for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:05:47 +0000
+Received: by mail-qk1-x72f.google.com with SMTP id c4so950944qkg.3
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:42 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 01/18] arm64: hyp-stub: Check the size of the HYP stub's
- vectors
-Date: Thu,  8 Apr 2021 00:05:20 -0400
-Message-Id: <20210408040537.2703241-2-pasha.tatashin@soleen.com>
+Subject: [PATCH v13 02/18] arm64: hyp-stub: Move invalid vector entries into
+ the vectors
+Date: Thu,  8 Apr 2021 00:05:21 -0400
+Message-Id: <20210408040537.2703241-3-pasha.tatashin@soleen.com>
 In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -29,47 +29,106 @@ To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xm
 
 From: James Morse <james.morse@arm.com>
 
-Hibernate contains a set of temporary EL2 vectors used to 'park'
-EL2 somewhere safe while all the memory is thrown in the air.
-Making kexec do its relocations with the MMU on means they have to
-be done at EL1, so EL2 has to be parked. This means yet another
-set of vectors.
+Most of the hyp-stub's vector entries are invalid. These are each
+a unique function that branches to itself. To move these into the
+vectors, merge the ventry and invalid_vector macros and give each
+one a unique name.
 
-All these things do is HVC_SET_VECTORS and HVC_SOFT_RESTART, both
-of which are implemented by the hyp-stub. Lets copy it instead
-of re-inventing it.
-
-To do this the hyp-stub's entrails need to be packed neatly inside
-its 2K vectors.
-
-Start by moving the final 2K alignment inside the end marker, and
-add a build check that we didn't overflow 2K.
+This means we can copy the hyp-stub as it is self contained within
+its vectors.
 
 Signed-off-by: James Morse <james.morse@arm.com>
+
+[Fixed merging issues]
+
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/hyp-stub.S | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/hyp-stub.S | 56 +++++++++++++++---------------------
+ 1 file changed, 23 insertions(+), 33 deletions(-)
 
 diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 5eccbd62fec8..572b28646005 100644
+index 572b28646005..ff329c5c074d 100644
 --- a/arch/arm64/kernel/hyp-stub.S
 +++ b/arch/arm64/kernel/hyp-stub.S
-@@ -41,9 +41,13 @@ SYM_CODE_START(__hyp_stub_vectors)
- 	ventry	el1_irq_invalid			// IRQ 32-bit EL1
- 	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
- 	ventry	el1_error_invalid		// Error 32-bit EL1
-+	.align 11
-+SYM_INNER_LABEL(__hyp_stub_vectors_end, SYM_L_LOCAL)
- SYM_CODE_END(__hyp_stub_vectors)
+@@ -16,31 +16,38 @@
+ #include <asm/ptrace.h>
+ #include <asm/virt.h>
  
--	.align 11
-+# Check the __hyp_stub_vectors didn't overflow
-+.org . - (__hyp_stub_vectors_end - __hyp_stub_vectors) + SZ_2K
++.macro invalid_vector	label
++SYM_CODE_START_LOCAL(\label)
++	.align 7
++	b	\label
++SYM_CODE_END(\label)
++.endm
 +
+ 	.text
+ 	.pushsection	.hyp.text, "ax"
  
- SYM_CODE_START_LOCAL(el1_sync)
- 	cmp	x0, #HVC_SET_VECTORS
+ 	.align 11
+ 
+ SYM_CODE_START(__hyp_stub_vectors)
+-	ventry	el2_sync_invalid		// Synchronous EL2t
+-	ventry	el2_irq_invalid			// IRQ EL2t
+-	ventry	el2_fiq_invalid			// FIQ EL2t
+-	ventry	el2_error_invalid		// Error EL2t
++	invalid_vector	hyp_stub_el2t_sync_invalid	// Synchronous EL2t
++	invalid_vector	hyp_stub_el2t_irq_invalid	// IRQ EL2t
++	invalid_vector	hyp_stub_el2t_fiq_invalid	// FIQ EL2t
++	invalid_vector	hyp_stub_el2t_error_invalid	// Error EL2t
+ 
+-	ventry	el2_sync_invalid		// Synchronous EL2h
+-	ventry	el2_irq_invalid			// IRQ EL2h
+-	ventry	el2_fiq_invalid			// FIQ EL2h
+-	ventry	el2_error_invalid		// Error EL2h
++	invalid_vector	hyp_stub_el2h_sync_invalid	// Synchronous EL2h
++	invalid_vector	hyp_stub_el2h_irq_invalid	// IRQ EL2h
++	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
++	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
+ 
+ 	ventry	el1_sync			// Synchronous 64-bit EL1
+-	ventry	el1_irq_invalid			// IRQ 64-bit EL1
+-	ventry	el1_fiq_invalid			// FIQ 64-bit EL1
+-	ventry	el1_error_invalid		// Error 64-bit EL1
+-
+-	ventry	el1_sync_invalid		// Synchronous 32-bit EL1
+-	ventry	el1_irq_invalid			// IRQ 32-bit EL1
+-	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
+-	ventry	el1_error_invalid		// Error 32-bit EL1
++	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
++	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
++	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
++
++	invalid_vector	hyp_stub_32b_el1_sync_invalid	// Synchronous 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_irq_invalid	// IRQ 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_fiq_invalid	// FIQ 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_error_invalid	// Error 32-bit EL1
+ 	.align 11
+ SYM_INNER_LABEL(__hyp_stub_vectors_end, SYM_L_LOCAL)
+ SYM_CODE_END(__hyp_stub_vectors)
+@@ -173,23 +180,6 @@ SYM_CODE_END(enter_vhe)
+ 
+ 	.popsection
+ 
+-.macro invalid_vector	label
+-SYM_CODE_START_LOCAL(\label)
+-	b \label
+-SYM_CODE_END(\label)
+-.endm
+-
+-	invalid_vector	el2_sync_invalid
+-	invalid_vector	el2_irq_invalid
+-	invalid_vector	el2_fiq_invalid
+-	invalid_vector	el2_error_invalid
+-	invalid_vector	el1_sync_invalid
+-	invalid_vector	el1_irq_invalid
+-	invalid_vector	el1_fiq_invalid
+-	invalid_vector	el1_error_invalid
+-
+-	.popsection
+-
+ /*
+  * __hyp_set_vectors: Call this after boot to set the initial hypervisor
+  * vectors as part of hypervisor installation.  On an SMP system, this should
 -- 
 2.25.1
 
