@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
+Received: from mail-qk1-x729.google.com ([2607:f8b0:4864:20::729])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULvb-006lhb-RR
- for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:06:03 +0000
-Received: by mail-qt1-x829.google.com with SMTP id j7so462831qtx.5
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:59 -0700 (PDT)
+ id 1lULve-006ljW-KQ
+ for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:06:05 +0000
+Received: by mail-qk1-x729.google.com with SMTP id i9so956804qka.2
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:06:02 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 15/18] arm64: kexec: keep MMU enabled during kexec
- relocation
-Date: Thu,  8 Apr 2021 00:05:34 -0400
-Message-Id: <20210408040537.2703241-16-pasha.tatashin@soleen.com>
+Subject: [PATCH v13 17/18] arm64: kexec: Remove cpu-reset.h
+Date: Thu,  8 Apr 2021 00:05:36 -0400
+Message-Id: <20210408040537.2703241-18-pasha.tatashin@soleen.com>
 In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,188 +26,130 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
 
-Now, that we have linear map page tables configured, keep MMU enabled
-to allow faster relocation of segments to final destination.
+This header contains only cpu_soft_restart() which is never used directly
+anymore. So, remove this header, and rename the helper to be
+cpu_soft_restart().
 
-
-Cavium ThunderX2:
-Kernel Image size: 38M Iniramfs size: 46M Total relocation size: 84M
-MMU-disabled:
-relocation	7.489539915s
-MMU-enabled:
-relocation	0.03946095s
-
-Broadcom Stingray:
-The performance data: for a moderate size kernel + initramfs: 25M the
-relocation was taking 0.382s, with enabled MMU it now takes
-0.019s only or x20 improvement.
-
-The time is proportional to the size of relocation, therefore if initramfs
-is larger, 100M it could take over a second.
-
+Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/kexec.h      |  3 +++
- arch/arm64/kernel/asm-offsets.c     |  1 +
- arch/arm64/kernel/machine_kexec.c   | 16 ++++++++++----
- arch/arm64/kernel/relocate_kernel.S | 33 +++++++++++++++++++----------
- 4 files changed, 38 insertions(+), 15 deletions(-)
+ arch/arm64/include/asm/kexec.h    |  6 ++++++
+ arch/arm64/kernel/cpu-reset.S     |  7 +++----
+ arch/arm64/kernel/cpu-reset.h     | 30 ------------------------------
+ arch/arm64/kernel/machine_kexec.c |  6 ++----
+ 4 files changed, 11 insertions(+), 38 deletions(-)
+ delete mode 100644 arch/arm64/kernel/cpu-reset.h
 
 diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 59ac166daf53..5fc87b51f8a9 100644
+index 5fc87b51f8a9..ee71ae3b93ed 100644
 --- a/arch/arm64/include/asm/kexec.h
 +++ b/arch/arm64/include/asm/kexec.h
-@@ -97,8 +97,11 @@ struct kimage_arch {
- 	phys_addr_t dtb_mem;
- 	phys_addr_t kern_reloc;
- 	phys_addr_t el2_vectors;
-+	phys_addr_t ttbr0;
- 	phys_addr_t ttbr1;
- 	phys_addr_t zero_page;
-+	unsigned long phys_offset;
-+	unsigned long t0sz;
- 	/* Core ELF header buffer */
- 	void *elf_headers;
- 	unsigned long elf_headers_mem;
-diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
-index 609362b5aa76..ec7bb80aedc8 100644
---- a/arch/arm64/kernel/asm-offsets.c
-+++ b/arch/arm64/kernel/asm-offsets.c
-@@ -159,6 +159,7 @@ int main(void)
-   DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
-   DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
-   DEFINE(KIMAGE_ARCH_ZERO_PAGE,		offsetof(struct kimage, arch.zero_page));
-+  DEFINE(KIMAGE_ARCH_PHYS_OFFSET,	offsetof(struct kimage, arch.phys_offset));
-   DEFINE(KIMAGE_ARCH_TTBR1,		offsetof(struct kimage, arch.ttbr1));
-   DEFINE(KIMAGE_HEAD,			offsetof(struct kimage, head));
-   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
+@@ -90,6 +90,12 @@ static inline void crash_prepare_suspend(void) {}
+ static inline void crash_post_resume(void) {}
+ #endif
+ 
++#if defined(CONFIG_KEXEC_CORE)
++void cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
++		      unsigned long arg0, unsigned long arg1,
++		      unsigned long arg2);
++#endif
++
+ #define ARCH_HAS_KIMAGE_ARCH
+ 
+ struct kimage_arch {
+diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
+index 37721eb6f9a1..5d47d6c92634 100644
+--- a/arch/arm64/kernel/cpu-reset.S
++++ b/arch/arm64/kernel/cpu-reset.S
+@@ -16,8 +16,7 @@
+ .pushsection    .idmap.text, "awx"
+ 
+ /*
+- * __cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2) - Helper for
+- * cpu_soft_restart.
++ * cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2)
+  *
+  * @el2_switch: Flag to indicate a switch to EL2 is needed.
+  * @entry: Location to jump to for soft reset.
+@@ -29,7 +28,7 @@
+  * branch to what would be the reset vector. It must be executed with the
+  * flat identity mapping.
+  */
+-SYM_CODE_START(__cpu_soft_restart)
++SYM_CODE_START(cpu_soft_restart)
+ 	/* Clear sctlr_el1 flags. */
+ 	mrs	x12, sctlr_el1
+ 	mov_q	x13, SCTLR_ELx_FLAGS
+@@ -51,6 +50,6 @@ SYM_CODE_START(__cpu_soft_restart)
+ 	mov	x1, x3				// arg1
+ 	mov	x2, x4				// arg2
+ 	br	x8
+-SYM_CODE_END(__cpu_soft_restart)
++SYM_CODE_END(cpu_soft_restart)
+ 
+ .popsection
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+deleted file mode 100644
+index f6d95512fec6..000000000000
+--- a/arch/arm64/kernel/cpu-reset.h
++++ /dev/null
+@@ -1,30 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0-only */
+-/*
+- * CPU reset routines
+- *
+- * Copyright (C) 2015 Huawei Futurewei Technologies.
+- */
+-
+-#ifndef _ARM64_CPU_RESET_H
+-#define _ARM64_CPU_RESET_H
+-
+-#include <asm/virt.h>
+-
+-void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
+-	unsigned long arg0, unsigned long arg1, unsigned long arg2);
+-
+-static inline void __noreturn cpu_soft_restart(unsigned long entry,
+-					       unsigned long arg0,
+-					       unsigned long arg1,
+-					       unsigned long arg2)
+-{
+-	typeof(__cpu_soft_restart) *restart;
+-
+-	restart = (void *)__pa_symbol(__cpu_soft_restart);
+-
+-	cpu_install_idmap();
+-	restart(0, entry, arg0, arg1, arg2);
+-	unreachable();
+-}
+-
+-#endif
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index c875ef522e53..d5c8aefc66f3 100644
+index a1c9bee0cddd..ef7ba93f2bd6 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -190,6 +190,11 @@ int machine_kexec_post_load(struct kimage *kimage)
- 	reloc_size = __relocate_new_kernel_end - __relocate_new_kernel_start;
- 	memcpy(reloc_code, __relocate_new_kernel_start, reloc_size);
- 	kimage->arch.kern_reloc = __pa(reloc_code);
-+	rc = trans_pgd_idmap_page(&info, &kimage->arch.ttbr0,
-+				  &kimage->arch.t0sz, reloc_code);
-+	if (rc)
-+		return rc;
-+	kimage->arch.phys_offset = virt_to_phys(kimage) - (long)kimage;
+@@ -23,8 +23,6 @@
+ #include <asm/sections.h>
+ #include <asm/trans_pgd.h>
  
- 	/* Flush the reloc_code in preparation for its execution. */
- 	__flush_dcache_area(reloc_code, reloc_size);
-@@ -223,9 +228,9 @@ void machine_kexec(struct kimage *kimage)
- 	local_daif_mask();
+-#include "cpu-reset.h"
+-
+ /**
+  * kexec_image_info - For debugging output.
+  */
+@@ -197,10 +195,10 @@ void machine_kexec(struct kimage *kimage)
+ 	 * In kexec_file case, the kernel starts directly without purgatory.
+ 	 */
+ 	if (kimage->head & IND_DONE) {
+-		typeof(__cpu_soft_restart) *restart;
++		typeof(cpu_soft_restart) *restart;
  
- 	/*
--	 * Both restart and cpu_soft_restart will shutdown the MMU, disable data
-+	 * Both restart and kernel_reloc will shutdown the MMU, disable data
- 	 * caches. However, restart will start new kernel or purgatory directly,
--	 * cpu_soft_restart will transfer control to arm64_relocate_new_kernel
-+	 * kernel_reloc contains the body of arm64_relocate_new_kernel
- 	 * In kexec case, kimage->start points to purgatory assuming that
- 	 * kernel entry and dtb address are embedded in purgatory by
- 	 * userspace (kexec-tools).
-@@ -239,10 +244,13 @@ void machine_kexec(struct kimage *kimage)
+ 		cpu_install_idmap();
+-		restart = (void *)__pa_symbol(__cpu_soft_restart);
++		restart = (void *)__pa_symbol(cpu_soft_restart);
  		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
  			0, 0);
  	} else {
-+		void (*kernel_reloc)(struct kimage *kimage);
-+
- 		if (is_hyp_callable())
- 			__hyp_set_vectors(kimage->arch.el2_vectors);
--		cpu_soft_restart(kimage->arch.kern_reloc,
--				 virt_to_phys(kimage), 0, 0);
-+		cpu_install_ttbr0(kimage->arch.ttbr0, kimage->arch.t0sz);
-+		kernel_reloc = (void *)kimage->arch.kern_reloc;
-+		kernel_reloc(kimage);
- 	}
- 
- 	BUG(); /* Should never get here. */
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index e83b6380907d..433a57b3d76e 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -4,6 +4,8 @@
-  *
-  * Copyright (C) Linaro.
-  * Copyright (C) Huawei Futurewei Technologies.
-+ * Copyright (C) 2020, Microsoft Corporation.
-+ * Pavel Tatashin <pasha.tatashin@soleen.com>
-  */
- 
- #include <linux/kexec.h>
-@@ -15,6 +17,15 @@
- #include <asm/sysreg.h>
- #include <asm/virt.h>
- 
-+.macro turn_off_mmu tmp1, tmp2
-+	mrs	\tmp1, sctlr_el1
-+	mov_q	\tmp2, SCTLR_ELx_FLAGS
-+	bic	\tmp1, \tmp1, \tmp2
-+	pre_disable_mmu_workaround
-+	msr	sctlr_el1, \tmp1
-+	isb
-+.endm
-+
- .pushsection    ".kexec_relocate.text", "ax"
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-@@ -32,22 +43,21 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- 	ldr	x18, [x0, #KIMAGE_ARCH_ZERO_PAGE] /* x18 = zero page for BBM */
- 	ldr	x17, [x0, #KIMAGE_ARCH_TTBR1]	/* x17 = linear map copy */
- 	ldr	x16, [x0, #KIMAGE_HEAD]		/* x16 = kimage_head */
--	mov	x14, xzr			/* x14 = entry ptr */
--	mov	x13, xzr			/* x13 = copy dest */
-+	ldr	x22, [x0, #KIMAGE_ARCH_PHYS_OFFSET]	/* x22 phys_offset */
- 	raw_dcache_line_size x15, x1		/* x15 = dcache line size */
- 	break_before_make_ttbr_switch	x18, x17, x1, x2 /* set linear map */
- .Lloop:
- 	and	x12, x16, PAGE_MASK		/* x12 = addr */
--
-+	sub	x12, x12, x22			/* Convert x12 to virt */
- 	/* Test the entry flags. */
- .Ltest_source:
- 	tbz	x16, IND_SOURCE_BIT, .Ltest_indirection
- 
- 	/* Invalidate dest page to PoC. */
--	mov	x2, x13
--	mov	x1, #PAGE_SIZE
--	dcache_by_myline_op ivac, sy, x2, x1, x15, x20
-+	mov	x19, x13
- 	copy_page x13, x12, x1, x2, x3, x4, x5, x6, x7, x8
-+	mov	x1, #PAGE_SIZE
-+	dcache_by_myline_op civac, sy, x19, x1, x15, x20
- 	b	.Lnext
- .Ltest_indirection:
- 	tbz	x16, IND_INDIRECTION_BIT, .Ltest_destination
-@@ -64,19 +74,20 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- 	ic	iallu
- 	dsb	nsh
- 	isb
-+	ldr	x4, [x0, #KIMAGE_START]			/* relocation start */
-+	ldr	x1, [x0, #KIMAGE_ARCH_EL2_VECTORS]	/* relocation start */
-+	ldr	x0, [x0, #KIMAGE_ARCH_DTB_MEM]		/* dtb address */
-+	turn_off_mmu x12, x13
- 
- 	/* Start new image. */
--	ldr	x1, [x0, #KIMAGE_ARCH_EL2_VECTORS]	/* relocation start */
- 	cbz	x1, .Lel1
--	ldr	x1, [x0, #KIMAGE_START]		/* relocation start */
--	ldr	x2, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
-+	mov	x1, x4				/* relocation start */
-+	mov	x2, x0				/* dtb address */
- 	mov	x3, xzr
- 	mov	x4, xzr
- 	mov     x0, #HVC_SOFT_RESTART
- 	hvc	#0				/* Jumps from el2 */
- .Lel1:
--	ldr	x4, [x0, #KIMAGE_START]		/* relocation start */
--	ldr	x0, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
- 	mov	x2, xzr
- 	mov	x3, xzr
- 	br	x4				/* Jumps from el1 */
 -- 
 2.25.1
 
