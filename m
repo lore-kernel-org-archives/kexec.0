@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x729.google.com ([2607:f8b0:4864:20::729])
+Received: from mail-qv1-xf36.google.com ([2607:f8b0:4864:20::f36])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULve-006ljW-KQ
+ id 1lULvZ-006lef-3n
  for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:06:05 +0000
-Received: by mail-qk1-x729.google.com with SMTP id i9so956804qka.2
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:06:02 -0700 (PDT)
+Received: by mail-qv1-xf36.google.com with SMTP id j1so260813qvp.6
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:56 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 17/18] arm64: kexec: Remove cpu-reset.h
-Date: Thu,  8 Apr 2021 00:05:36 -0400
-Message-Id: <20210408040537.2703241-18-pasha.tatashin@soleen.com>
+Subject: [PATCH v13 13/18] arm64: kexec: use ld script for relocation function
+Date: Thu,  8 Apr 2021 00:05:32 -0400
+Message-Id: <20210408040537.2703241-14-pasha.tatashin@soleen.com>
 In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,130 +26,156 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
 
-This header contains only cpu_soft_restart() which is never used directly
-anymore. So, remove this header, and rename the helper to be
-cpu_soft_restart().
+Currently, relocation code declares start and end variables
+which are used to compute its size.
 
-Suggested-by: James Morse <james.morse@arm.com>
+The better way to do this is to use ld script incited, and put relocation
+function in its own section.
+
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/kexec.h    |  6 ++++++
- arch/arm64/kernel/cpu-reset.S     |  7 +++----
- arch/arm64/kernel/cpu-reset.h     | 30 ------------------------------
- arch/arm64/kernel/machine_kexec.c |  6 ++----
- 4 files changed, 11 insertions(+), 38 deletions(-)
- delete mode 100644 arch/arm64/kernel/cpu-reset.h
+ arch/arm64/include/asm/sections.h   |  1 +
+ arch/arm64/kernel/machine_kexec.c   | 14 ++++++--------
+ arch/arm64/kernel/relocate_kernel.S | 15 ++-------------
+ arch/arm64/kernel/vmlinux.lds.S     | 19 +++++++++++++++++++
+ 4 files changed, 28 insertions(+), 21 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 5fc87b51f8a9..ee71ae3b93ed 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,6 +90,12 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/arch/arm64/include/asm/sections.h b/arch/arm64/include/asm/sections.h
+index 2f36b16a5b5d..31e459af89f6 100644
+--- a/arch/arm64/include/asm/sections.h
++++ b/arch/arm64/include/asm/sections.h
+@@ -20,5 +20,6 @@ extern char __exittext_begin[], __exittext_end[];
+ extern char __irqentry_text_start[], __irqentry_text_end[];
+ extern char __mmuoff_data_start[], __mmuoff_data_end[];
+ extern char __entry_tramp_text_start[], __entry_tramp_text_end[];
++extern char __relocate_new_kernel_start[], __relocate_new_kernel_end[];
  
-+#if defined(CONFIG_KEXEC_CORE)
-+void cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
-+		      unsigned long arg0, unsigned long arg1,
-+		      unsigned long arg2);
-+#endif
-+
- #define ARCH_HAS_KIMAGE_ARCH
- 
- struct kimage_arch {
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index 37721eb6f9a1..5d47d6c92634 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -16,8 +16,7 @@
- .pushsection    .idmap.text, "awx"
- 
- /*
-- * __cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2) - Helper for
-- * cpu_soft_restart.
-+ * cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2)
-  *
-  * @el2_switch: Flag to indicate a switch to EL2 is needed.
-  * @entry: Location to jump to for soft reset.
-@@ -29,7 +28,7 @@
-  * branch to what would be the reset vector. It must be executed with the
-  * flat identity mapping.
-  */
--SYM_CODE_START(__cpu_soft_restart)
-+SYM_CODE_START(cpu_soft_restart)
- 	/* Clear sctlr_el1 flags. */
- 	mrs	x12, sctlr_el1
- 	mov_q	x13, SCTLR_ELx_FLAGS
-@@ -51,6 +50,6 @@ SYM_CODE_START(__cpu_soft_restart)
- 	mov	x1, x3				// arg1
- 	mov	x2, x4				// arg2
- 	br	x8
--SYM_CODE_END(__cpu_soft_restart)
-+SYM_CODE_END(cpu_soft_restart)
- 
- .popsection
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-deleted file mode 100644
-index f6d95512fec6..000000000000
---- a/arch/arm64/kernel/cpu-reset.h
-+++ /dev/null
-@@ -1,30 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
--/*
-- * CPU reset routines
-- *
-- * Copyright (C) 2015 Huawei Futurewei Technologies.
-- */
--
--#ifndef _ARM64_CPU_RESET_H
--#define _ARM64_CPU_RESET_H
--
--#include <asm/virt.h>
--
--void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
--	unsigned long arg0, unsigned long arg1, unsigned long arg2);
--
--static inline void __noreturn cpu_soft_restart(unsigned long entry,
--					       unsigned long arg0,
--					       unsigned long arg1,
--					       unsigned long arg2)
--{
--	typeof(__cpu_soft_restart) *restart;
--
--	restart = (void *)__pa_symbol(__cpu_soft_restart);
--
--	cpu_install_idmap();
--	restart(0, entry, arg0, arg1, arg2);
--	unreachable();
--}
--
--#endif
+ #endif /* __ASM_SECTIONS_H */
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index a1c9bee0cddd..ef7ba93f2bd6 100644
+index d5940b7889f8..f1451d807708 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -23,8 +23,6 @@
- #include <asm/sections.h>
+@@ -20,14 +20,11 @@
+ #include <asm/mmu.h>
+ #include <asm/mmu_context.h>
+ #include <asm/page.h>
++#include <asm/sections.h>
  #include <asm/trans_pgd.h>
  
--#include "cpu-reset.h"
+ #include "cpu-reset.h"
+ 
+-/* Global variables for the arm64_relocate_new_kernel routine. */
+-extern const unsigned char arm64_relocate_new_kernel[];
+-extern const unsigned long arm64_relocate_new_kernel_size;
 -
  /**
   * kexec_image_info - For debugging output.
   */
-@@ -197,10 +195,10 @@ void machine_kexec(struct kimage *kimage)
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
- 	if (kimage->head & IND_DONE) {
--		typeof(__cpu_soft_restart) *restart;
-+		typeof(cpu_soft_restart) *restart;
+@@ -157,6 +154,7 @@ static void *kexec_page_alloc(void *arg)
+ int machine_kexec_post_load(struct kimage *kimage)
+ {
+ 	void *reloc_code = page_to_virt(kimage->control_code_page);
++	long reloc_size;
+ 	struct trans_pgd_info info = {
+ 		.trans_alloc_page	= kexec_page_alloc,
+ 		.trans_alloc_arg	= kimage,
+@@ -177,14 +175,14 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 			return rc;
+ 	}
  
- 		cpu_install_idmap();
--		restart = (void *)__pa_symbol(__cpu_soft_restart);
-+		restart = (void *)__pa_symbol(cpu_soft_restart);
- 		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
- 			0, 0);
- 	} else {
+-	memcpy(reloc_code, arm64_relocate_new_kernel,
+-	       arm64_relocate_new_kernel_size);
++	reloc_size = __relocate_new_kernel_end - __relocate_new_kernel_start;
++	memcpy(reloc_code, __relocate_new_kernel_start, reloc_size);
+ 	kimage->arch.kern_reloc = __pa(reloc_code);
+ 
+ 	/* Flush the reloc_code in preparation for its execution. */
+-	__flush_dcache_area(reloc_code, arm64_relocate_new_kernel_size);
++	__flush_dcache_area(reloc_code, reloc_size);
+ 	flush_icache_range((uintptr_t)reloc_code, (uintptr_t)reloc_code +
+-			   arm64_relocate_new_kernel_size);
++			   reloc_size);
+ 	kexec_list_flush(kimage);
+ 	kexec_image_info(kimage);
+ 
+diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
+index df023b82544b..7a600ba33ae1 100644
+--- a/arch/arm64/kernel/relocate_kernel.S
++++ b/arch/arm64/kernel/relocate_kernel.S
+@@ -15,6 +15,7 @@
+ #include <asm/sysreg.h>
+ #include <asm/virt.h>
+ 
++.pushsection    ".kexec_relocate.text", "ax"
+ /*
+  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
+  *
+@@ -77,16 +78,4 @@ SYM_CODE_START(arm64_relocate_new_kernel)
+ 	mov	x3, xzr
+ 	br	x4				/* Jumps from el1 */
+ SYM_CODE_END(arm64_relocate_new_kernel)
+-
+-.align 3	/* To keep the 64-bit values below naturally aligned. */
+-
+-.Lcopy_end:
+-.org	KEXEC_CONTROL_PAGE_SIZE
+-
+-/*
+- * arm64_relocate_new_kernel_size - Number of bytes to copy to the
+- * control_code_page.
+- */
+-.globl arm64_relocate_new_kernel_size
+-arm64_relocate_new_kernel_size:
+-	.quad	.Lcopy_end - arm64_relocate_new_kernel
++.popsection
+diff --git a/arch/arm64/kernel/vmlinux.lds.S b/arch/arm64/kernel/vmlinux.lds.S
+index 7eea7888bb02..0d9d5e6af66f 100644
+--- a/arch/arm64/kernel/vmlinux.lds.S
++++ b/arch/arm64/kernel/vmlinux.lds.S
+@@ -12,6 +12,7 @@
+ #include <asm/cache.h>
+ #include <asm/hyp_image.h>
+ #include <asm/kernel-pgtable.h>
++#include <asm/kexec.h>
+ #include <asm/memory.h>
+ #include <asm/page.h>
+ 
+@@ -92,6 +93,16 @@ jiffies = jiffies_64;
+ #define HIBERNATE_TEXT
+ #endif
+ 
++#ifdef CONFIG_KEXEC_CORE
++#define KEXEC_TEXT					\
++	. = ALIGN(SZ_4K);				\
++	__relocate_new_kernel_start = .;		\
++	*(.kexec_relocate.text)				\
++	__relocate_new_kernel_end = .;
++#else
++#define KEXEC_TEXT
++#endif
++
+ #ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ #define TRAMP_TEXT					\
+ 	. = ALIGN(PAGE_SIZE);				\
+@@ -152,6 +163,7 @@ SECTIONS
+ 			HYPERVISOR_TEXT
+ 			IDMAP_TEXT
+ 			HIBERNATE_TEXT
++			KEXEC_TEXT
+ 			TRAMP_TEXT
+ 			*(.fixup)
+ 			*(.gnu.warning)
+@@ -336,3 +348,10 @@ ASSERT(swapper_pg_dir - reserved_pg_dir == RESERVED_SWAPPER_OFFSET,
+ ASSERT(swapper_pg_dir - tramp_pg_dir == TRAMP_SWAPPER_OFFSET,
+        "TRAMP_SWAPPER_OFFSET is wrong!")
+ #endif
++
++#ifdef CONFIG_KEXEC_CORE
++/* kexec relocation code should fit into one KEXEC_CONTROL_PAGE_SIZE */
++ASSERT(__relocate_new_kernel_end - (__relocate_new_kernel_start & ~(SZ_4K - 1))
++	<= SZ_4K, "kexec relocation code is too big or misaligned")
++ASSERT(KEXEC_CONTROL_PAGE_SIZE >= SZ_4K, "KEXEC_CONTROL_PAGE_SIZE is brokern")
++#endif
 -- 
 2.25.1
 
