@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x833.google.com ([2607:f8b0:4864:20::833])
+Received: from mail-qk1-x731.google.com ([2607:f8b0:4864:20::731])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULvO-006lXZ-Tv
+ id 1lULvN-006lXM-LY
  for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:05:51 +0000
-Received: by mail-qt1-x833.google.com with SMTP id g24so461772qts.6
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:46 -0700 (PDT)
+Received: by mail-qk1-x731.google.com with SMTP id q26so928568qkm.6
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:45 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 05/18] arm64: trans_pgd: hibernate: Add
- trans_pgd_copy_el2_vectors
-Date: Thu,  8 Apr 2021 00:05:24 -0400
-Message-Id: <20210408040537.2703241-6-pasha.tatashin@soleen.com>
+Subject: [PATCH v13 04/18] arm64: kernel: add helper for booted at EL2 and not
+ VHE
+Date: Thu,  8 Apr 2021 00:05:23 -0400
+Message-Id: <20210408040537.2703241-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,142 +27,105 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
 
-Users of trans_pgd may also need a copy of vector table because it is
-also may be overwritten if a linear map can be overwritten.
+Replace places that contain logic like this:
+	is_hyp_mode_available() && !is_kernel_in_hyp_mode()
 
-Move setup of EL2 vectors from hibernate to trans_pgd, so it can be
-later shared with kexec as well.
+With a dedicated boolean function  is_hyp_callable(). This will be needed
+later in kexec in order to sooner switch back to EL2.
 
 Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/trans_pgd.h |  3 +++
- arch/arm64/include/asm/virt.h      |  3 +++
- arch/arm64/kernel/hibernate.c      | 28 ++++++++++------------------
- arch/arm64/mm/trans_pgd.c          | 20 ++++++++++++++++++++
- 4 files changed, 36 insertions(+), 18 deletions(-)
+ arch/arm64/include/asm/virt.h | 5 +++++
+ arch/arm64/kernel/cpu-reset.h | 3 +--
+ arch/arm64/kernel/hibernate.c | 9 +++------
+ arch/arm64/kernel/sdei.c      | 2 +-
+ 4 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 5d08e5adf3d5..e0760e52d36d 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -36,4 +36,7 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-+int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
-+			       phys_addr_t *el2_vectors);
-+
- #endif /* _ASM_TRANS_TABLE_H */
 diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index 4216c8623538..bfbb66018114 100644
+index 7379f35ae2c6..4216c8623538 100644
 --- a/arch/arm64/include/asm/virt.h
 +++ b/arch/arm64/include/asm/virt.h
-@@ -67,6 +67,9 @@
-  */
- extern u32 __boot_cpu_mode[2];
+@@ -128,6 +128,11 @@ static __always_inline bool is_protected_kvm_enabled(void)
+ 		return cpus_have_final_cap(ARM64_KVM_PROTECTED_MODE);
+ }
  
-+extern char __hyp_stub_vectors[];
-+#define ARM64_VECTOR_TABLE_LEN	SZ_2K
++static inline bool is_hyp_callable(void)
++{
++	return is_hyp_mode_available() && !is_kernel_in_hyp_mode();
++}
 +
- void __hyp_set_vectors(phys_addr_t phys_vector_base);
- void __hyp_reset_vectors(void);
+ #endif /* __ASSEMBLY__ */
  
+ #endif /* ! __ASM__VIRT_H */
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index ed50e9587ad8..1922e7a690f8 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -20,8 +20,7 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
+ {
+ 	typeof(__cpu_soft_restart) *restart;
+ 
+-	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
+-		is_hyp_mode_available();
++	unsigned long el2_switch = is_hyp_callable();
+ 	restart = (void *)__pa_symbol(__cpu_soft_restart);
+ 
+ 	cpu_install_idmap();
 diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index c764574a1acb..0b8bad8bb6eb 100644
+index b1cef371df2b..c764574a1acb 100644
 --- a/arch/arm64/kernel/hibernate.c
 +++ b/arch/arm64/kernel/hibernate.c
-@@ -48,12 +48,6 @@
+@@ -48,9 +48,6 @@
   */
  extern int in_suspend;
  
--/* temporary el2 vectors in the __hibernate_exit_text section. */
--extern char hibernate_el2_vectors[];
+-/* Do we need to reset el2? */
+-#define el2_reset_needed() (is_hyp_mode_available() && !is_kernel_in_hyp_mode())
 -
--/* hyp-stub vectors, used to restore el2 during resume from hibernate. */
--extern char __hyp_stub_vectors[];
--
- /*
-  * The logical cpu number we should resume on, initialised to a non-cpu
-  * number.
-@@ -428,6 +422,7 @@ int swsusp_arch_resume(void)
- 	void *zero_page;
- 	size_t exit_size;
- 	pgd_t *tmp_pg_dir;
-+	phys_addr_t el2_vectors;
- 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
- 					  void *, phys_addr_t, phys_addr_t);
- 	struct trans_pgd_info trans_info = {
-@@ -455,6 +450,14 @@ int swsusp_arch_resume(void)
- 		return -ENOMEM;
- 	}
+ /* temporary el2 vectors in the __hibernate_exit_text section. */
+ extern char hibernate_el2_vectors[];
  
-+	if (is_hyp_callable()) {
-+		rc = trans_pgd_copy_el2_vectors(&trans_info, &el2_vectors);
-+		if (rc) {
-+			pr_err("Failed to setup el2 vectors\n");
-+			return rc;
-+		}
-+	}
-+
- 	exit_size = __hibernate_exit_text_end - __hibernate_exit_text_start;
- 	/*
- 	 * Copy swsusp_arch_suspend_exit() to a safe page. This will generate
-@@ -467,25 +470,14 @@ int swsusp_arch_resume(void)
- 		return rc;
- 	}
+@@ -125,7 +122,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
+ 	hdr->reenter_kernel	= _cpu_resume;
  
--	/*
--	 * The hibernate exit text contains a set of el2 vectors, that will
--	 * be executed at el2 with the mmu off in order to reload hyp-stub.
--	 */
--	__flush_dcache_area(hibernate_exit, exit_size);
--
- 	/*
- 	 * KASLR will cause the el2 vectors to be in a different location in
- 	 * the resumed kernel. Load hibernate's temporary copy into el2.
+ 	/* We can't use __hyp_get_vectors() because kvm may still be loaded */
+-	if (el2_reset_needed())
++	if (is_hyp_callable())
+ 		hdr->__hyp_stub_vectors = __pa_symbol(__hyp_stub_vectors);
+ 	else
+ 		hdr->__hyp_stub_vectors = 0;
+@@ -387,7 +384,7 @@ int swsusp_arch_suspend(void)
+ 		dcache_clean_range(__idmap_text_start, __idmap_text_end);
+ 
+ 		/* Clean kvm setup code to PoC? */
+-		if (el2_reset_needed()) {
++		if (is_hyp_callable()) {
+ 			dcache_clean_range(__hyp_idmap_text_start, __hyp_idmap_text_end);
+ 			dcache_clean_range(__hyp_text_start, __hyp_text_end);
+ 		}
+@@ -482,7 +479,7 @@ int swsusp_arch_resume(void)
  	 *
  	 * We can skip this step if we booted at EL1, or are running with VHE.
  	 */
--	if (is_hyp_callable()) {
--		phys_addr_t el2_vectors = (phys_addr_t)hibernate_exit;
--		el2_vectors += hibernate_el2_vectors -
--			       __hibernate_exit_text_start;     /* offset */
--
-+	if (is_hyp_callable())
- 		__hyp_set_vectors(el2_vectors);
--	}
- 
- 	hibernate_exit(virt_to_phys(tmp_pg_dir), resume_hdr.ttbr1_el1,
- 		       resume_hdr.reenter_kernel, restore_pblist,
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 527f0a39c3da..61549451ed3a 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -322,3 +322,23 @@ int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 
- 	return 0;
- }
-+
-+/*
-+ * Create a copy of the vector table so we can call HVC_SET_VECTORS or
-+ * HVC_SOFT_RESTART from contexts where the table may be overwritten.
-+ */
-+int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
-+			       phys_addr_t *el2_vectors)
-+{
-+	void *hyp_stub = trans_alloc(info);
-+
-+	if (!hyp_stub)
-+		return -ENOMEM;
-+	*el2_vectors = virt_to_phys(hyp_stub);
-+	memcpy(hyp_stub, &__hyp_stub_vectors, ARM64_VECTOR_TABLE_LEN);
-+	__flush_icache_range((unsigned long)hyp_stub,
-+			     (unsigned long)hyp_stub + ARM64_VECTOR_TABLE_LEN);
-+	__flush_dcache_area(hyp_stub, ARM64_VECTOR_TABLE_LEN);
-+
-+	return 0;
-+}
+-	if (el2_reset_needed()) {
++	if (is_hyp_callable()) {
+ 		phys_addr_t el2_vectors = (phys_addr_t)hibernate_exit;
+ 		el2_vectors += hibernate_el2_vectors -
+ 			       __hibernate_exit_text_start;     /* offset */
+diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
+index 2c7ca449dd51..af0ac2f920cf 100644
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -200,7 +200,7 @@ unsigned long sdei_arch_get_entry_point(int conduit)
+ 	 * dropped to EL1 because we don't support VHE, then we can't support
+ 	 * SDEI.
+ 	 */
+-	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
++	if (is_hyp_callable()) {
+ 		pr_err("Not supported on this hardware/boot configuration\n");
+ 		goto out_err;
+ 	}
 -- 
 2.25.1
 
