@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
+Received: from mail-pg1-x52d.google.com ([2607:f8b0:4864:20::52d])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lUXWy-008d3A-Ot
- for kexec@lists.infradead.org; Thu, 08 Apr 2021 16:29:22 +0000
-Received: by mail-ej1-x62b.google.com with SMTP id r9so4100681ejj.3
- for <kexec@lists.infradead.org>; Thu, 08 Apr 2021 09:29:18 -0700 (PDT)
+ id 1lUZlW-0090mz-Vu
+ for kexec@lists.infradead.org; Thu, 08 Apr 2021 18:52:33 +0000
+Received: by mail-pg1-x52d.google.com with SMTP id t22so2075589pgu.0
+ for <kexec@lists.infradead.org>; Thu, 08 Apr 2021 11:52:30 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
- <20210408040537.2703241-4-pasha.tatashin@soleen.com>
- <480272f8fb3e46d24a0ee1418fb85809@kernel.org>
- <CA+CK2bDc+9EsH_TLTgg9Pqv_-rZfZfPohdZEfsYjT8ss+8skjg@mail.gmail.com>
- <87v98wom5n.wl-maz@kernel.org>
-In-Reply-To: <87v98wom5n.wl-maz@kernel.org>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 8 Apr 2021 12:28:42 -0400
-Message-ID: <CA+CK2bB9M05UKfvu66_wMK1u_HBvRws4R0KxPgTu4vPdKuGy9w@mail.gmail.com>
-Subject: Re: [PATCH v13 03/18] arm64: hyp-stub: Move el1_sync into the vectors
+In-Reply-To: <YG7xjbIEmrCco14F@gunter>
+References: <20210331030520.3816265-1-swboyd@chromium.org>
+ <20210331030520.3816265-3-swboyd@chromium.org> <YG7xjbIEmrCco14F@gunter>
+Subject: Re: [PATCH v3 02/12] buildid: Stash away kernels build ID on init
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Thu, 08 Apr 2021 11:52:27 -0700
+Message-ID: <161790794728.3790633.1727402698174847953@swboyd.mtv.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,29 +25,24 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>
+To: Jessica Yu <jeyu@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-> > Thank you for noticing this. Not sure how this missmerge happened. I
-> > have added the missing case, and VHE is initialized correctly during
-> > boot.
-> > [   14.698175] kvm [1]: VHE mode initialized successfully
-> >
-> > During normal boot, kexec reboot, and kdump reboot. I will respin the
-> > series and send the version 14 soon.
->
-> Please give people a chance to review this lot first. This isn't code
-> that is easy to digest, and immediate re-spinning does more harm than
-> good (this isn't targeting 5.13, I would assume).
->
+Quoting Jessica Yu (2021-04-08 05:05:33)
+> +++ Stephen Boyd [30/03/21 20:05 -0700]:
+> >+/**
+> >+ * init_vmlinux_build_id - Get the running kernel's build ID
+> >+ *
+> >+ * Return: Running kernel's build ID
+> >+ */
+> 
+> Hm, init_vmlinux_build_id() doesn't return anything, so this comment is
+> not accurate - maybe "Get the running kernel's build ID and store it in
+> vmlinux_build_id"?
+> 
+> >+void __init init_vmlinux_build_id(void)
 
-There are people who are testing this series, this is why I wanted to
-respin. But, I will wait for review comments before sending the next
-version. In the meantime I will send a fixed version of this patch as
-a reply to this thread instead.
-
-Thanks,
-Pasha
+Thanks! I've fixed it for the next round.
 
 _______________________________________________
 kexec mailing list
