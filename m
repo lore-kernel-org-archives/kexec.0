@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72b.google.com ([2607:f8b0:4864:20::72b])
+Received: from mail-pf1-x435.google.com ([2607:f8b0:4864:20::435])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULvf-006ljb-Vs
- for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:06:06 +0000
-Received: by mail-qk1-x72b.google.com with SMTP id q3so896120qkq.12
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:06:03 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 18/18] arm64/mm: remove useless trans_pgd_map_page()
-Date: Thu,  8 Apr 2021 00:05:37 -0400
-Message-Id: <20210408040537.2703241-19-pasha.tatashin@soleen.com>
-In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
-References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
+ id 1lUNLV-006zJt-Ti
+ for kexec@lists.infradead.org; Thu, 08 Apr 2021 05:36:52 +0000
+Received: by mail-pf1-x435.google.com with SMTP id n38so995350pfv.2
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 22:36:48 -0700 (PDT)
 MIME-Version: 1.0
+In-Reply-To: <20210407170328.x7hgch37o7ezttb6@pathway.suse.cz>
+References: <20210331030520.3816265-1-swboyd@chromium.org>
+ <20210331030520.3816265-13-swboyd@chromium.org>
+ <20210407170328.x7hgch37o7ezttb6@pathway.suse.cz>
+Subject: Re: [PATCH v3 12/12] kdump: Use vmlinux_build_id to simplify
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Wed, 07 Apr 2021 22:36:45 -0700
+Message-ID: <161786020531.3790633.14618419586085886962@swboyd.mtv.corp.google.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,117 +26,94 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
+To: Petr Mladek <pmladek@suse.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-From: Pingfan Liu <kernelfans@gmail.com>
+Quoting Petr Mladek (2021-04-07 10:03:28)
+> On Tue 2021-03-30 20:05:20, Stephen Boyd wrote:
+> > We can use the vmlinux_build_id array here now instead of open coding
+> > it. This mostly consolidates code.
+> > 
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: <kexec@lists.infradead.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  include/linux/crash_core.h |  6 +-----
+> >  kernel/crash_core.c        | 41 ++------------------------------------
+> >  2 files changed, 3 insertions(+), 44 deletions(-)
+> > 
+> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> > index 206bde8308b2..fb8ab99bb2ee 100644
+> > --- a/include/linux/crash_core.h
+> > +++ b/include/linux/crash_core.h
+> > @@ -39,7 +39,7 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+> >  #define VMCOREINFO_OSRELEASE(value) \
+> >       vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+> >  #define VMCOREINFO_BUILD_ID(value) \
+> > -     vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+> > +     vmcoreinfo_append_str("BUILD-ID=%20phN\n", value)
+> 
+> Please, add also build check that BUILD_ID_MAX == 20.
+> 
 
-The intend of trans_pgd_map_page() was to map contigous range of VA
-memory to the memory that is getting relocated during kexec. However,
-since we are now using linear map instead of contigous range this
-function is not needed
+I added a BUILD_BUG_ON() in kernel/crash_core.c. I tried static_assert()
+here but got mixed ISO errors from gcc-10, although it feels like it
+should work.
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-[Changed commit message]
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/trans_pgd.h |  5 +--
- arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
- 2 files changed, 1 insertion(+), 61 deletions(-)
+In file included from ./arch/arm64/include/asm/cmpxchg.h:10,
+                 from ./arch/arm64/include/asm/atomic.h:16,
+                 from ./include/linux/atomic.h:7,
+                 from ./include/linux/mm_types_task.h:13,
+                 from ./include/linux/mm_types.h:5,
+                 from ./include/linux/buildid.h:5,
+                 from kernel/crash_core.c:7:
+kernel/crash_core.c: In function 'crash_save_vmcoreinfo_init':
+./include/linux/build_bug.h:78:41: warning: ISO C90 forbids mixed declarations and code [-Wdeclaration-after-statement]
+   78 | #define __static_assert(expr, msg, ...) _Static_assert(expr, msg)
+      |                                         ^~~~~~~~~~~~~~
+./include/linux/build_bug.h:77:34: note: in expansion of macro '__static_assert'
+   77 | #define static_assert(expr, ...) __static_assert(expr, ##__VA_ARGS__, #expr)
+      |                                  ^~~~~~~~~~~~~~~
+./include/linux/crash_core.h:42:2: note: in expansion of macro 'static_assert'
+   42 |  static_assert(ARRAY_SIZE(value) == BUILD_ID_SIZE_MAX); \
+      |  ^~~~~~~~~~~~~
+kernel/crash_core.c:401:2: note: in expansion of macro 'VMCOREINFO_BUILD_ID'
+  401 |  VMCOREINFO_BUILD_ID(vmlinux_build_id);
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index e0760e52d36d..234353df2f13 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -15,7 +15,7 @@
- /*
-  * trans_alloc_page
-  *	- Allocator that should return exactly one zeroed page, if this
-- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-+ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
-  *	  return -ENOMEM error.
-  *
-  * trans_alloc_arg
-@@ -30,9 +30,6 @@ struct trans_pgd_info {
- int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
- 			  unsigned long start, unsigned long end);
- 
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot);
--
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 61549451ed3a..e24a749013c1 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
- 	return rc;
- }
- 
--/*
-- * Add map entry to trans_pgd for a base-size page at PTE level.
-- * info:	contains allocator and its argument
-- * trans_pgd:	page table in which new map is added.
-- * page:	page to be mapped.
-- * dst_addr:	new VA address for the page
-- * pgprot:	protection for the page.
-- *
-- * Returns 0 on success, and -ENOMEM on failure.
-- */
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		p4dp = trans_alloc(info);
--		if (!pgdp)
--			return -ENOMEM;
--		pgd_populate(NULL, pgdp, p4dp);
--	}
--
--	p4dp = p4d_offset(pgdp, dst_addr);
--	if (p4d_none(READ_ONCE(*p4dp))) {
--		pudp = trans_alloc(info);
--		if (!pudp)
--			return -ENOMEM;
--		p4d_populate(NULL, p4dp, pudp);
--	}
--
--	pudp = pud_offset(p4dp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = trans_alloc(info);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(NULL, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = trans_alloc(info);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(NULL, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
--
--	return 0;
--}
--
- /*
-  * The page we want to idmap may be outside the range covered by VA_BITS that
-  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
--- 
-2.25.1
+> 
+> The function add_build_id_vmcoreinfo() is used in
+> crash_save_vmcoreinfo_init() in this context:
+> 
+> 
+>         VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+>         add_build_id_vmcoreinfo();
+>         VMCOREINFO_PAGESIZE(PAGE_SIZE);
+> 
+>         VMCOREINFO_SYMBOL(init_uts_ns);
+>         VMCOREINFO_OFFSET(uts_namespace, name);
+>         VMCOREINFO_SYMBOL(node_online_map);
+> 
+> The function is not longer need. VMCOREINFO_BUILD_ID()
+> can be used directly:
+> 
+>         VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
+>         VMCOREINFO_BUILD_ID(vmlinux_build_id);
+>         VMCOREINFO_PAGESIZE(PAGE_SIZE);
+> 
+>         VMCOREINFO_SYMBOL(init_uts_ns);
+>         VMCOREINFO_OFFSET(uts_namespace, name);
+>         VMCOREINFO_SYMBOL(node_online_map);
+> 
+> 
 
+Thanks. Makes sense. I've rolled that in.
 
 _______________________________________________
 kexec mailing list
