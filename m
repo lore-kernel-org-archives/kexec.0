@@ -1,18 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lURja-007c4w-J0
- for kexec@lists.infradead.org; Thu, 08 Apr 2021 10:18:00 +0000
-Date: Thu, 8 Apr 2021 18:17:43 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 12/12] kdump: Use vmlinux_build_id to simplify
-Message-ID: <20210408101743.GB22237@MiWiFi-R3L-srv>
-References: <20210331030520.3816265-1-swboyd@chromium.org>
- <20210331030520.3816265-13-swboyd@chromium.org>
- <20210407170328.x7hgch37o7ezttb6@pathway.suse.cz>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210407170328.x7hgch37o7ezttb6@pathway.suse.cz>
+Date: Thu, 08 Apr 2021 11:24:05 +0100
+From: Marc Zyngier <maz@kernel.org>
+Subject: Re: [PATCH v13 03/18] arm64: hyp-stub: Move el1_sync into the vectors
+In-Reply-To: <20210408040537.2703241-4-pasha.tatashin@soleen.com>
+References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
+ <20210408040537.2703241-4-pasha.tatashin@soleen.com>
+Message-ID: <480272f8fb3e46d24a0ee1418fb85809@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,162 +15,129 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Petr Mladek <pmladek@suse.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
 
-On 04/07/21 at 07:03pm, Petr Mladek wrote:
-> On Tue 2021-03-30 20:05:20, Stephen Boyd wrote:
-> > We can use the vmlinux_build_id array here now instead of open coding
-> > it. This mostly consolidates code.
-> > 
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Evan Green <evgreen@chromium.org>
-> > Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: <kexec@lists.infradead.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  include/linux/crash_core.h |  6 +-----
-> >  kernel/crash_core.c        | 41 ++------------------------------------
-> >  2 files changed, 3 insertions(+), 44 deletions(-)
-> > 
-> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > index 206bde8308b2..fb8ab99bb2ee 100644
-> > --- a/include/linux/crash_core.h
-> > +++ b/include/linux/crash_core.h
-> > @@ -39,7 +39,7 @@ phys_addr_t paddr_vmcoreinfo_note(void);
-> >  #define VMCOREINFO_OSRELEASE(value) \
-> >  	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-> >  #define VMCOREINFO_BUILD_ID(value) \
-> > -	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-> > +	vmcoreinfo_append_str("BUILD-ID=%20phN\n", value)
+On 2021-04-08 05:05, Pavel Tatashin wrote:
+> From: James Morse <james.morse@arm.com>
+> 
+> The hyp-stub's el1_sync code doesn't do very much, this can easily fit
+> in the vectors.
+> 
+> With this, all of the hyp-stubs behaviour is contained in its vectors.
+> This lets kexec and hibernate copy the hyp-stub when they need its
+> behaviour, instead of re-implementing it.
+> 
+> Signed-off-by: James Morse <james.morse@arm.com>
+> 
+> [Fixed merging issues]
 
-I may miss something, wondering why we need add '20' here.
+That's a pretty odd fix IMO.
 
 > 
-> Please, add also build check that BUILD_ID_MAX == 20.
+> Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+> ---
+>  arch/arm64/kernel/hyp-stub.S | 59 ++++++++++++++++++------------------
+>  1 file changed, 29 insertions(+), 30 deletions(-)
 > 
-> 
-> >  #define VMCOREINFO_PAGESIZE(value) \
-> >  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
-> >  #define VMCOREINFO_SYMBOL(name) \
-> > @@ -69,10 +69,6 @@ extern unsigned char *vmcoreinfo_data;
-> >  extern size_t vmcoreinfo_size;
-> >  extern u32 *vmcoreinfo_note;
-> >  
-> > -/* raw contents of kernel .notes section */
-> > -extern const void __start_notes __weak;
-> > -extern const void __stop_notes __weak;
-> > -
-> >  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-> >  			  void *data, size_t data_len);
-> >  void final_note(Elf_Word *buf);
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index 825284baaf46..6b560cf9f374 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -4,6 +4,7 @@
-> >   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-> >   */
-> >  
-> > +#include <linux/buildid.h>
-> >  #include <linux/crash_core.h>
-> >  #include <linux/utsname.h>
-> >  #include <linux/vmalloc.h>
-> > @@ -378,51 +379,13 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
-> >  }
-> >  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
-> >  
-> > -#define NOTES_SIZE (&__stop_notes - &__start_notes)
-> > -#define BUILD_ID_MAX SHA1_DIGEST_SIZE
-> > -#define NT_GNU_BUILD_ID 3
-> > -
-> > -struct elf_note_section {
-> > -	struct elf_note	n_hdr;
-> > -	u8 n_data[];
-> > -};
-> > -
-> >  /*
-> >   * Add build ID from .notes section as generated by the GNU ld(1)
-> >   * or LLVM lld(1) --build-id option.
-> >   */
-> >  static void add_build_id_vmcoreinfo(void)
-> >  {
-> > -	char build_id[BUILD_ID_MAX * 2 + 1];
-> > -	int n_remain = NOTES_SIZE;
-> > -
-> > -	while (n_remain >= sizeof(struct elf_note)) {
-> > -		const struct elf_note_section *note_sec =
-> > -			&__start_notes + NOTES_SIZE - n_remain;
-> > -		const u32 n_namesz = note_sec->n_hdr.n_namesz;
-> > -
-> > -		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
-> > -		    n_namesz != 0 &&
-> > -		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
-> > -			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
-> > -				const u32 n_descsz = note_sec->n_hdr.n_descsz;
-> > -				const u8 *s = &note_sec->n_data[n_namesz];
-> > -
-> > -				s = PTR_ALIGN(s, 4);
-> > -				bin2hex(build_id, s, n_descsz);
-> > -				build_id[2 * n_descsz] = '\0';
-> > -				VMCOREINFO_BUILD_ID(build_id);
-> > -				return;
-> > -			}
-> > -			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
-> > -				note_sec->n_hdr.n_descsz,
-> > -				BUILD_ID_MAX);
-> > -			return;
-> > -		}
-> > -		n_remain -= sizeof(struct elf_note) +
-> > -			ALIGN(note_sec->n_hdr.n_namesz, 4) +
-> > -			ALIGN(note_sec->n_hdr.n_descsz, 4);
-> > -	}
-> > +	VMCOREINFO_BUILD_ID(vmlinux_build_id);
-> >  }
-> 
-> The function add_build_id_vmcoreinfo() is used in
-> crash_save_vmcoreinfo_init() in this context:
-> 
-> 
-> 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-> 	add_build_id_vmcoreinfo();
-> 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-> 
-> 	VMCOREINFO_SYMBOL(init_uts_ns);
-> 	VMCOREINFO_OFFSET(uts_namespace, name);
-> 	VMCOREINFO_SYMBOL(node_online_map);
-> 
-> The function is not longer need. VMCOREINFO_BUILD_ID()
-> can be used directly:
-> 
-> 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-> 	VMCOREINFO_BUILD_ID(vmlinux_build_id);
-> 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
-> 
-> 	VMCOREINFO_SYMBOL(init_uts_ns);
-> 	VMCOREINFO_OFFSET(uts_namespace, name);
-> 	VMCOREINFO_SYMBOL(node_online_map);
-> 
-> 
-> Best Regards,
-> Petr
-> 
-> 
-> >  
-> >  static int __init crash_save_vmcoreinfo_init(void)
-> > -- 
-> > https://chromeos.dev
-> 
+> diff --git a/arch/arm64/kernel/hyp-stub.S 
+> b/arch/arm64/kernel/hyp-stub.S
+> index ff329c5c074d..d1a73d0f74e0 100644
+> --- a/arch/arm64/kernel/hyp-stub.S
+> +++ b/arch/arm64/kernel/hyp-stub.S
+> @@ -21,6 +21,34 @@ SYM_CODE_START_LOCAL(\label)
+>  	.align 7
+>  	b	\label
+>  SYM_CODE_END(\label)
+> +.endm
+> +
+> +.macro hyp_stub_el1_sync
+> +SYM_CODE_START_LOCAL(hyp_stub_el1_sync)
+> +	.align 7
+> +	cmp	x0, #HVC_SET_VECTORS
+> +	b.ne	2f
+> +	msr	vbar_el2, x1
+> +	b	9f
+> +
+> +2:	cmp	x0, #HVC_SOFT_RESTART
+> +	b.ne	3f
+> +	mov	x0, x2
+> +	mov	x2, x4
+> +	mov	x4, x1
+> +	mov	x1, x3
+> +	br	x4				// no return
+> +
+> +3:	cmp	x0, #HVC_RESET_VECTORS
+> +	beq	9f				// Nothing to reset!
+> +
+> +	/* Someone called kvm_call_hyp() against the hyp-stub... */
+> +	mov_q	x0, HVC_STUB_ERR
+> +	eret
+> +
+> +9:	mov	x0, xzr
+> +	eret
+> +SYM_CODE_END(hyp_stub_el1_sync)
 
+You said you tested this on a TX2. I guess you don't care whether
+it runs VHE or not...
+
+         M.
+
+>  .endm
+> 
+>  	.text
+> @@ -39,7 +67,7 @@ SYM_CODE_START(__hyp_stub_vectors)
+>  	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
+>  	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
+> 
+> -	ventry	el1_sync			// Synchronous 64-bit EL1
+> +	hyp_stub_el1_sync				// Synchronous 64-bit EL1
+>  	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
+>  	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
+>  	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
+> @@ -55,35 +83,6 @@ SYM_CODE_END(__hyp_stub_vectors)
+>  # Check the __hyp_stub_vectors didn't overflow
+>  .org . - (__hyp_stub_vectors_end - __hyp_stub_vectors) + SZ_2K
+> 
+> -
+> -SYM_CODE_START_LOCAL(el1_sync)
+> -	cmp	x0, #HVC_SET_VECTORS
+> -	b.ne	1f
+> -	msr	vbar_el2, x1
+> -	b	9f
+> -
+> -1:	cmp	x0, #HVC_VHE_RESTART
+> -	b.eq	mutate_to_vhe
+> -
+> -2:	cmp	x0, #HVC_SOFT_RESTART
+> -	b.ne	3f
+> -	mov	x0, x2
+> -	mov	x2, x4
+> -	mov	x4, x1
+> -	mov	x1, x3
+> -	br	x4				// no return
+> -
+> -3:	cmp	x0, #HVC_RESET_VECTORS
+> -	beq	9f				// Nothing to reset!
+> -
+> -	/* Someone called kvm_call_hyp() against the hyp-stub... */
+> -	mov_q	x0, HVC_STUB_ERR
+> -	eret
+> -
+> -9:	mov	x0, xzr
+> -	eret
+> -SYM_CODE_END(el1_sync)
+> -
+>  // nVHE? No way! Give me the real thing!
+>  SYM_CODE_START_LOCAL(mutate_to_vhe)
+>  	// Sanity check: MMU *must* be off
+
+-- 
+Jazz is not dead. It just smells funny...
 
 _______________________________________________
 kexec mailing list
