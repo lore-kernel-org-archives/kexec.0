@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf35.google.com ([2607:f8b0:4864:20::f35])
+Received: from mail-qv1-xf31.google.com ([2607:f8b0:4864:20::f31])
  by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lULvY-006leY-1o
+ id 1lULvW-006le6-Rd
  for kexec@lists.infradead.org; Thu, 08 Apr 2021 04:05:59 +0000
-Received: by mail-qv1-xf35.google.com with SMTP id t13so258066qvs.7
- for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:55 -0700 (PDT)
+Received: by mail-qv1-xf31.google.com with SMTP id j1so260759qvp.6
+ for <kexec@lists.infradead.org>; Wed, 07 Apr 2021 21:05:54 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v13 12/18] arm64: kexec: relocate in EL1 mode
-Date: Thu,  8 Apr 2021 00:05:31 -0400
-Message-Id: <20210408040537.2703241-13-pasha.tatashin@soleen.com>
+Subject: [PATCH v13 11/18] arm64: kexec: kexec may require EL2 vectors
+Date: Thu,  8 Apr 2021 00:05:30 -0400
+Message-Id: <20210408040537.2703241-12-pasha.tatashin@soleen.com>
 In-Reply-To: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 References: <20210408040537.2703241-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,86 +26,131 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com
 
-Since we are going to keep MMU enabled during relocation, we need to
-keep EL1 mode throughout the relocation.
+If we have a EL2 mode without VHE, the EL2 vectors are needed in order
+to switch to EL2 and jump to new world with hypervisor privileges.
 
-Keep EL1 enabled, and switch EL2 only before enterying the new world.
+In preporation to MMU enabled relocation, configure our EL2 table now.
 
 Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/cpu-reset.h       |  3 +--
- arch/arm64/kernel/machine_kexec.c   |  4 ++--
- arch/arm64/kernel/relocate_kernel.S | 13 +++++++++++--
- 3 files changed, 14 insertions(+), 6 deletions(-)
+ arch/arm64/Kconfig                |  2 +-
+ arch/arm64/include/asm/kexec.h    |  1 +
+ arch/arm64/kernel/asm-offsets.c   |  1 +
+ arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++++
+ 4 files changed, 34 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-index 1922e7a690f8..f6d95512fec6 100644
---- a/arch/arm64/kernel/cpu-reset.h
-+++ b/arch/arm64/kernel/cpu-reset.h
-@@ -20,11 +20,10 @@ static inline void __noreturn cpu_soft_restart(unsigned long entry,
- {
- 	typeof(__cpu_soft_restart) *restart;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index e4e1b6550115..0e876d980a1f 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1149,7 +1149,7 @@ config CRASH_DUMP
  
--	unsigned long el2_switch = is_hyp_callable();
- 	restart = (void *)__pa_symbol(__cpu_soft_restart);
+ config TRANS_TABLE
+ 	def_bool y
+-	depends on HIBERNATION
++	depends on HIBERNATION || KEXEC_CORE
  
- 	cpu_install_idmap();
--	restart(el2_switch, entry, arg0, arg1, arg2);
-+	restart(0, entry, arg0, arg1, arg2);
- 	unreachable();
- }
- 
+ config XEN_DOM0
+ 	def_bool y
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 9befcd87e9a8..305cf0840ed3 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -96,6 +96,7 @@ struct kimage_arch {
+ 	void *dtb;
+ 	phys_addr_t dtb_mem;
+ 	phys_addr_t kern_reloc;
++	phys_addr_t el2_vectors;
+ 	/* Core ELF header buffer */
+ 	void *elf_headers;
+ 	unsigned long elf_headers_mem;
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 0c92e193f866..2e3278df1fc3 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -157,6 +157,7 @@ int main(void)
+ #endif
+ #ifdef CONFIG_KEXEC_CORE
+   DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
++  DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
+   DEFINE(KIMAGE_HEAD,			offsetof(struct kimage, head));
+   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
+   BLANK();
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index fb03b6676fb9..d5940b7889f8 100644
+index 2e734e4ae12e..fb03b6676fb9 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -231,8 +231,8 @@ void machine_kexec(struct kimage *kimage)
- 	} else {
- 		if (is_hyp_callable())
- 			__hyp_set_vectors(kimage->arch.el2_vectors);
--		cpu_soft_restart(kimage->arch.kern_reloc, virt_to_phys(kimage),
--				 0, 0);
-+		cpu_soft_restart(kimage->arch.kern_reloc,
-+				 virt_to_phys(kimage), 0, 0);
+@@ -20,6 +20,7 @@
+ #include <asm/mmu.h>
+ #include <asm/mmu_context.h>
+ #include <asm/page.h>
++#include <asm/trans_pgd.h>
+ 
+ #include "cpu-reset.h"
+ 
+@@ -42,7 +43,9 @@ static void _kexec_image_info(const char *func, int line,
+ 	pr_debug("    start:       %lx\n", kimage->start);
+ 	pr_debug("    head:        %lx\n", kimage->head);
+ 	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
++	pr_debug("    dtb_mem: %pa\n", &kimage->arch.dtb_mem);
+ 	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
++	pr_debug("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
+ 
+ 	for (i = 0; i < kimage->nr_segments; i++) {
+ 		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+@@ -137,9 +140,27 @@ static void kexec_segment_flush(const struct kimage *kimage)
+ 	}
+ }
+ 
++/* Allocates pages for kexec page table */
++static void *kexec_page_alloc(void *arg)
++{
++	struct kimage *kimage = (struct kimage *)arg;
++	struct page *page = kimage_alloc_control_pages(kimage, 0);
++
++	if (!page)
++		return NULL;
++
++	memset(page_address(page), 0, PAGE_SIZE);
++
++	return page_address(page);
++}
++
+ int machine_kexec_post_load(struct kimage *kimage)
+ {
+ 	void *reloc_code = page_to_virt(kimage->control_code_page);
++	struct trans_pgd_info info = {
++		.trans_alloc_page	= kexec_page_alloc,
++		.trans_alloc_arg	= kimage,
++	};
+ 
+ 	/* If in place, relocation is not used, only flush next kernel */
+ 	if (kimage->head & IND_DONE) {
+@@ -148,6 +169,14 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 		return 0;
  	}
  
- 	BUG(); /* Should never get here. */
-diff --git a/arch/arm64/kernel/relocate_kernel.S b/arch/arm64/kernel/relocate_kernel.S
-index 36b4496524c3..df023b82544b 100644
---- a/arch/arm64/kernel/relocate_kernel.S
-+++ b/arch/arm64/kernel/relocate_kernel.S
-@@ -13,6 +13,7 @@
- #include <asm/kexec.h>
- #include <asm/page.h>
- #include <asm/sysreg.h>
-+#include <asm/virt.h>
- 
- /*
-  * arm64_relocate_new_kernel - Put a 2nd stage image in place and boot it.
-@@ -61,12 +62,20 @@ SYM_CODE_START(arm64_relocate_new_kernel)
- 	isb
- 
- 	/* Start new image. */
-+	ldr	x1, [x0, #KIMAGE_ARCH_EL2_VECTORS]	/* relocation start */
-+	cbz	x1, .Lel1
-+	ldr	x1, [x0, #KIMAGE_START]		/* relocation start */
-+	ldr	x2, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
-+	mov	x3, xzr
-+	mov	x4, xzr
-+	mov     x0, #HVC_SOFT_RESTART
-+	hvc	#0				/* Jumps from el2 */
-+.Lel1:
- 	ldr	x4, [x0, #KIMAGE_START]		/* relocation start */
- 	ldr	x0, [x0, #KIMAGE_ARCH_DTB_MEM]	/* dtb address */
--	mov	x1, xzr
- 	mov	x2, xzr
- 	mov	x3, xzr
--	br	x4
-+	br	x4				/* Jumps from el1 */
- SYM_CODE_END(arm64_relocate_new_kernel)
- 
- .align 3	/* To keep the 64-bit values below naturally aligned. */
++	kimage->arch.el2_vectors = 0;
++	if (is_hyp_callable()) {
++		int rc = trans_pgd_copy_el2_vectors(&info,
++						    &kimage->arch.el2_vectors);
++		if (rc)
++			return rc;
++	}
++
+ 	memcpy(reloc_code, arm64_relocate_new_kernel,
+ 	       arm64_relocate_new_kernel_size);
+ 	kimage->arch.kern_reloc = __pa(reloc_code);
+@@ -200,6 +229,8 @@ void machine_kexec(struct kimage *kimage)
+ 		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
+ 			0, 0);
+ 	} else {
++		if (is_hyp_callable())
++			__hyp_set_vectors(kimage->arch.el2_vectors);
+ 		cpu_soft_restart(kimage->arch.kern_reloc, virt_to_phys(kimage),
+ 				 0, 0);
+ 	}
 -- 
 2.25.1
 
