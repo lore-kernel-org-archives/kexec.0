@@ -1,25 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x42b.google.com ([2a00:1450:4864:20::42b])
+Received: from mail-co1nam11on2138.outbound.protection.outlook.com
+ ([40.107.220.138] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lUsiN-004bnA-F3
- for kexec@lists.infradead.org; Fri, 09 Apr 2021 15:06:33 +0000
-Received: by mail-wr1-x42b.google.com with SMTP id s7so5843903wru.6
- for <kexec@lists.infradead.org>; Fri, 09 Apr 2021 08:06:31 -0700 (PDT)
-Date: Fri, 9 Apr 2021 17:06:27 +0200
-From: Corentin Labbe <clabbe.montjoie@gmail.com>
-Subject: Re: crashkernel reservation failed - No suitable area found on a
- cortina/gemini SoC
-Message-ID: <YHBtc793vFYW0Oyg@Red>
-References: <YG2rfzRvHIZKXkf/@Red>
- <34ff1fcc-e9ee-02c2-b2a8-d98a24ce94c3@linux.vnet.ibm.com>
- <YG3AZ4K2auqEz9BK@Red>
- <7a75028b-4495-cd51-6a32-59fcf6e0f166@linux.vnet.ibm.com>
- <YG3GWxYU02UhOnUX@Red>
- <291254c6-97e3-f5ba-dcee-77f8e4d25f9b@linux.vnet.ibm.com>
- <YHBqWY3+WtYY1QpW@Red>
-MIME-Version: 1.0
+ id 1lUtLQ-004d0M-VZ
+ for kexec@lists.infradead.org; Fri, 09 Apr 2021 15:46:54 +0000
+Date: Fri, 9 Apr 2021 11:46:42 -0400
+From: Joe Korty <joe.korty@concurrent-rt.com>
+Subject: [PATCH] kexec-tools: fix failure when kernel version patchlevel >255
+Message-ID: <20210409154642.GA30739@zipoli.concurrrent-rt.com>
 Content-Disposition: inline
-In-Reply-To: <YHBqWY3+WtYY1QpW@Red>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,178 +18,58 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Reply-To: Joe Korty <joe.korty@concurrent-rt.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, Khalid Aziz <khalid@gonehiking.org>, Hariprasad Nellitheertha <hari@in.ibm.com>, Tim Deegan <tjd21@cl.cam.ac.uk>, Hongyan Xia <hongyxia@amazon.com>, David Hildenbrand <david@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 
-Le Fri, Apr 09, 2021 at 04:53:13PM +0200, Corentin Labbe a =E9crit :
-> Le Wed, Apr 07, 2021 at 07:59:27AM -0700, Bruce Mitchell a =E9crit :
-> > On 4/7/2021 07:48, Corentin Labbe wrote:
-> > > Le Wed, Apr 07, 2021 at 07:28:26AM -0700, Bruce Mitchell a =E9crit :
-> > >> On 4/7/2021 07:23, Corentin Labbe wrote:
-> > >>> Le Wed, Apr 07, 2021 at 07:13:04AM -0700, Bruce Mitchell a =E9crit :
-> > >>>> On 4/7/2021 05:54, Corentin Labbe wrote:
-> > >>>>> Hello
-> > >>>>>
-> > >>>>> I try to do kexec on a cortina/gemini SoC.
-> > >>>>> On a "normal" boot, kexec fail to find memory so I added crashker=
-nel=3D8M to cmdline. (kernel size is ~6M).
-> > >>>>> But now, kernel fail to reserve memory:
-> > >>>>> Load Kern image from 0x30020000 to 0x800000 size 7340032
-> > >>>>> Booting Linux on physical CPU 0x0
-> > >>>>> Linux version 5.12.0-rc5-next-20210401+ (compile@Red) (armv7a-unk=
-nown-linux-gnueabihf-gcc (Gentoo 9.3.0-r2 p4) 9.3.0, GNU ld (Gentoo 2.34 p6=
-) 2.34.0) #98 PREEMPT Wed Apr 7 14:14:08 CEST 2021
-> > >>>>> CPU: FA526 [66015261] revision 1 (ARMv4), cr=3D0000397f
-> > >>>>> CPU: VIVT data cache, VIVT instruction cache
-> > >>>>> OF: fdt: Machine model: Edimax NS-2502
-> > >>>>> Memory policy: Data cache writeback
-> > >>>>> Zone ranges:
-> > >>>>>      Normal   [mem 0x0000000000000000-0x0000000007ffffff]
-> > >>>>>      HighMem  empty
-> > >>>>> Movable zone start for each node
-> > >>>>> Early memory node ranges
-> > >>>>>      node   0: [mem 0x0000000000000000-0x0000000007ffffff]
-> > >>>>> Initmem setup node 0 [mem 0x0000000000000000-0x0000000007ffffff]
-> > >>>>> crashkernel reservation failed - No suitable area found.
-> > >>>>> Built 1 zonelists, mobility grouping on.  Total pages: 32512
-> > >>>>> Kernel command line: console=3DttyS0,19200n8 ip=3Ddhcp crashkerne=
-l=3D8M
-> > >>>>> Dentry cache hash table entries: 16384 (order: 4, 65536 bytes, li=
-near)
-> > >>>>> Inode-cache hash table entries: 8192 (order: 3, 32768 bytes, line=
-ar)
-> > >>>>> mem auto-init: stack:off, heap alloc:off, heap free:off
-> > >>>>> Memory: 119476K/131072K available (5034K kernel code, 579K rwdata=
-, 1372K rodata, 3020K init, 210K bss, 11596K reserved, 0K cma-reserved, 0K =
-highmem)
-> > >>>>> SLUB: HWalign=3D32, Order=3D0-3, MinObjects=3D0, CPUs=3D1, Nodes=
-=3D1
-> > >>>>>
-> > >>>>> What can I do ?
-> > >>>>>
-> > >>>>> Thanks
-> > >>>>> Regards
-> > >>>>>
-> > >>>>> _______________________________________________
-> > >>>>> kexec mailing list
-> > >>>>> kexec@lists.infradead.org
-> > >>>>> http://lists.infradead.org/mailman/listinfo/kexec
-> > >>>>>
-> > >>>>
-> > >>>> Hello Corentin,
-> > >>>>
-> > >>>> I see much larger crashkernel=3DxxM being shown here
-> > >>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
-/tree/Documentation/admin-guide/kdump/kdump.rst
-> > >>>> and from many of my other searches.
-> > >>>>
-> > >>>> Here is an interesting article on kdump for ARM-32
-> > >>>> https://kaiwantech.wordpress.com/2017/07/13/setting-up-kdump-and-c=
-rash-for-arm-32-an-ongoing-saga/
-> > >>>>
-> > >>>>
-> > >>>> Here is the kernel command line reference
-> > >>>> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git=
-/tree/Documentation/admin-guide/kernel-parameters.txt?h=3Dv5.11#n732
-> > >>>>
-> > >>>> I feel your frustrations too.
-> > >>>
-> > >>> Hello
-> > >>>
-> > >>> Thanks but I have already read those documentation.
-> > >>> I search to know why the kernel cannot find 8M of memory ouf of 128.
-> > >>>
-> > >>> Regards
-> > >>>
-> > >>
-> > >> How much more memory does the kernel and initrd above and beyond just
-> > >> their physical size?  (heaps, stacks, buffers, virtual filesystems)
-> > > =
+[PATCH] kexec-tools: fix kexec failure when kernel version patchlevel >255
 
-> > > The kernel size include a rootfs.cpio.lzma of 3MB and dtb is appended.
-> > > The total kernel size is 7MB.
-> > > The uncompressed size of the kernel is 13M (size of vmlinux)
-> > > The uncompressed size of rootfs is 11M.
-> > > =
+[ 2nd try, to a larger cc: list, and this time submitted
+  with a patch rather than just a bug report   ]
 
-> > > cat /proc/meminfo
-> > > MemTotal:         122496 kB
-> > > MemFree:          103700 kB
-> > > MemAvailable:     101936 kB
-> > > Buffers:               0 kB
-> > > Cached:            10904 kB
-> > > SwapCached:            0 kB
-> > > Active:             4304 kB
-> > > Inactive:           8012 kB
-> > > Active(anon):       4304 kB
-> > > Inactive(anon):     8012 kB
-> > > Active(file):          0 kB
-> > > Inactive(file):        0 kB
-> > > Unevictable:           0 kB
-> > > Mlocked:               0 kB
-> > > HighTotal:             0 kB
-> > > HighFree:              0 kB
-> > > LowTotal:         122496 kB
-> > > LowFree:          103700 kB
-> > > SwapTotal:             0 kB
-> > > SwapFree:              0 kB
-> > > Dirty:                 0 kB
-> > > Writeback:             0 kB
-> > > AnonPages:          1428 kB
-> > > Mapped:             3552 kB
-> > > Shmem:             10904 kB
-> > > KReclaimable:        608 kB
-> > > Slab:               2960 kB
-> > > SReclaimable:        608 kB
-> > > SUnreclaim:         2352 kB
-> > > KernelStack:         312 kB
-> > > PageTables:          136 kB
-> > > NFS_Unstable:          0 kB
-> > > Bounce:                0 kB
-> > > WritebackTmp:          0 kB
-> > > CommitLimit:       61248 kB
-> > > Committed_AS:      14336 kB
-> > > VmallocTotal:     901120 kB
-> > > VmallocUsed:          64 kB
-> > > VmallocChunk:          0 kB
-> > > Percpu:               32 kB
-> > > CmaTotal:              0 kB
-> > > CmaFree:               0 kB
-> > > =
+Kexec blows up when the kernel version patchlevel is >255.
+This was first noticed when a 4.4.262 kernel was booted
+on a CentOS 7 system.  The message on the console is of
+the form:
 
-> > =
+  Unsupported utsname.release: 4.4.262
 
-> > I believe you need space for all of that,
-> > the smallest that would work for me was 20MB.
-> =
+The attached patch should fix this.  Untested.  There might
+be a few places where a hardcoded constant rather than
+KERNEL_VERSION is used, but I did not see any.
 
-> I tried without any change.
-> =
+Signed-off-by: Joe Korty <joe.korty@concurrent-rt.com
 
-> Anyway when trying to kexec I got:
-> kexec --no-ifdown --command-line=3D"console=3DttyS0,19200n8" /tmp/kernel =
-                                                                       |
-> Could not find a free area of memory of 0x668a8a bytes...
-> Cannot load /tmp/kernel
-> =
-
-> So reserving 8M is enough according to what kexec said.
-> =
-
-> So anyone know why the kernel cannot reserve 8M ?
-> Thanks
-
-It seems to be related to:
-arch/arm/kernel/setup.c:977 "The crash region must be aligned to 128MB to a=
-void"
-Hacking CRASH_ALIGN to 64 permit Linux to reserve 8M at boot.
-
-But kexec still fail after with the same reason. (Could not find a free are=
-a of memory of 0x668a8a bytes)
+diff --git a/kexec/kernel_version.c b/kexec/kernel_version.c
+index 21fb13adf095..36c06ffd603d 100644
+--- a/kexec/kernel_version.c
++++ b/kexec/kernel_version.c
+@@ -47,7 +47,7 @@ long kernel_version(void)
+ 		patch = 0;
+ 	}
+ 
+-	if (major >= 256 || minor >= 256 || patch >= 256) {
++	if (major >= 256 || minor >= 256 || patch >= 65536) {
+ 		fprintf(stderr, "Unsupported utsname.release: %s\n",
+ 			utsname.release);
+ 		return -1;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index f0f347d5e9e0..b388475ffa5a 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -180,7 +180,7 @@ extern const struct arch_map_entry arches[];
+ long physical_arch(void);
+ 
+ #define KERNEL_VERSION(major, minor, patch) \
+-	(((major) << 16) | ((minor) << 8) | patch)
++	(((major) << 24) | ((minor) << 16) | patch)
+ long kernel_version(void);
+ 
+ void usage(void);
 
 _______________________________________________
 kexec mailing list
