@@ -1,20 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx2.suse.de ([195.135.220.15])
+Received: from mail-pl1-x62e.google.com ([2607:f8b0:4864:20::62e])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lUu4X-004ett-UW
- for kexec@lists.infradead.org; Fri, 09 Apr 2021 16:33:31 +0000
-Date: Fri, 9 Apr 2021 18:33:24 +0200
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Subject: Re: [PATCHv5 2/2] powerpc/pseries: update device tree before
- ejecting hotplug uevents
-Message-ID: <20210409163323.GP6564@kitsune.suse.cz>
-References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
- <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
- <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
- <CAFgQCTs58dOcO0CGVDD1WxiOE9yaPe_WG-U=t+=at45bAipQ_A@mail.gmail.com>
+ id 1lV2o3-004tul-F2
+ for kexec@lists.infradead.org; Sat, 10 Apr 2021 01:53:05 +0000
+Received: by mail-pl1-x62e.google.com with SMTP id t22so3268633ply.1
+ for <kexec@lists.infradead.org>; Fri, 09 Apr 2021 18:53:02 -0700 (PDT)
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v4 00/13] Add build ID to stacktraces
+Date: Fri,  9 Apr 2021 18:52:47 -0700
+Message-Id: <20210410015300.3764485-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAFgQCTs58dOcO0CGVDD1WxiOE9yaPe_WG-U=t+=at45bAipQ_A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,179 +18,162 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <kernelfans@gmail.com>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>, Nathan Lynch <nathanl@linux.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Young <dyoung@redhat.com>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>, Jiri Olsa <jolsa@kernel.org>, kexec@lists.infradead.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Petr Mladek <pmladek@suse.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sasha Levin <sashal@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Will Deacon <will@kernel.org>, x86@kernel.org, Christoph Hellwig <hch@infradead.org>, peter enderborg <peter.enderborg@sony.com>
 
-Hello,
+This series adds the kernel's build ID[1] to the stacktrace header printed
+in oops messages, warnings, etc. and the build ID for any module that
+appears in the stacktrace after the module name. The goal is to make the
+stacktrace more self-contained and descriptive by including the relevant
+build IDs in the kernel logs when something goes wrong. This can be used
+by post processing tools like script/decode_stacktrace.sh and kernel
+developers to easily locate the debug info associated with a kernel
+crash and line up what line and file things started falling apart at.
 
-On Fri, Aug 28, 2020 at 04:10:09PM +0800, Pingfan Liu wrote:
-> On Thu, Aug 27, 2020 at 3:53 PM Laurent Dufour <ldufour@linux.ibm.com> wr=
-ote:
-> >
-> > Le 10/08/2020 =E0 10:52, Pingfan Liu a =E9crit :
-> > > A bug is observed on pseries by taking the following steps on rhel:
-> > > -1. drmgr -c mem -r -q 5
-> > > -2. echo c > /proc/sysrq-trigger
-> > >
-> > > And then, the failure looks like:
-> > > kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:14/
-> > > kdump: saving vmcore-dmesg.txt
-> > > kdump: saving vmcore-dmesg.txt complete
-> > > kdump: saving vmcore
-> > >   Checking for memory holes                         : [  0.0 %] /    =
-               Checking for memory holes                         : [100.0 %=
-] |                   Excluding unnecessary pages                       : [=
-100.0 %] \                   Copying data                                  =
-    : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing fai=
-lure ! EA=3D0x7fffba400000 access=3D0x8000000000000004 current=3Dmakedumpfi=
-le
-> > > [   44.337663] hash-mmu:     trap=3D0x300 vsid=3D0x13a109c ssize=3D1 =
-base psize=3D2 psize 2 pte=3D0xc000000050000504
-> > > [   44.337677] hash-mmu: mm: Hashing failure ! EA=3D0x7fffba400000 ac=
-cess=3D0x8000000000000004 current=3Dmakedumpfile
-> > > [   44.337692] hash-mmu:     trap=3D0x300 vsid=3D0x13a109c ssize=3D1 =
-base psize=3D2 psize 2 pte=3D0xc000000050000504
-> > > [   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffba400=
-000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
-> > > [   44.338548] Core dump to |/bin/false pipe failed
-> > > /lib/kdump-lib-initramfs.sh: line 98:   469 Bus error               $=
-CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-incom=
-plete
-> > > kdump: saving vmcore failed
-> > >
-> > > * Root cause *
-> > >    After analyzing, it turns out that in the current implementation,
-> > > when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt upd=
-ating as
-> > > the code __remove_memory() comes before drmem_update_dt().
-> > > So in kdump kernel, when read_from_oldmem() resorts to
-> > > pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due to
-> > > non-exist pfn. And finally, low_hash_fault() raise SIGBUS to process,=
- as it
-> > > can be observed "Bus error"
-> > >
-> > >  From a viewpoint of listener and publisher, the publisher notifies t=
-he
-> > > listener before data is ready.  This introduces a problem where udev
-> > > launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt before
-> > > updating. And in capture kernel, makedumpfile will access the memory =
-based
-> > > on the stale dt info, and hit a SIGBUS error due to an un-existed lmb.
-> > >
-> > > * Fix *
-> > > This bug is introduced by commit 063b8b1251fd
-> > > ("powerpc/pseries/memory-hotplug: Only update DT once per memory DLPAR
-> > > request"), which tried to combine all the dt updating into one.
-> > >
-> > > To fix this issue, meanwhile not to introduce a quadratic runtime
-> > > complexity by the model:
-> > >    dlpar_memory_add_by_count
-> > >      for_each_drmem_lmb             <--
-> > >        dlpar_add_lmb
-> > >          drmem_update_dt(_v1|_v2)
-> > >            for_each_drmem_lmb       <--
-> > > The dt should still be only updated once, and just before the last me=
-mory
-> > > online/offline event is ejected to user space. Achieve this by tracin=
-g the
-> > > num of lmb added or removed.
-> > >
-> > > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > > Cc: Michael Ellerman <mpe@ellerman.id.au>
-> > > Cc: Hari Bathini <hbathini@linux.ibm.com>
-> > > Cc: Nathan Lynch <nathanl@linux.ibm.com>
-> > > Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
-> > > Cc: Laurent Dufour <ldufour@linux.ibm.com>
-> > > To: linuxppc-dev@lists.ozlabs.org
-> > > Cc: kexec@lists.infradead.org
-> > > ---
-> > > v4 -> v5: change dlpar_add_lmb()/dlpar_remove_lmb() prototype to repo=
-rt
-> > >            whether dt is updated successfully.
-> > >            Fix a condition boundary check bug
-> > > v3 -> v4: resolve a quadratic runtime complexity issue.
-> > >            This series is applied on next-test branch
-> > >   arch/powerpc/platforms/pseries/hotplug-memory.c | 102 +++++++++++++=
-++++++-----
-> > >   1 file changed, 80 insertions(+), 22 deletions(-)
-> > >
-> > > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/arch/p=
-owerpc/platforms/pseries/hotplug-memory.c
-> > > index 46cbcd1..1567d9f 100644
-> > > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
-> > > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
-> > > @@ -350,13 +350,22 @@ static bool lmb_is_removable(struct drmem_lmb *=
-lmb)
-> > >       return true;
-> > >   }
-> > >
-> > > -static int dlpar_add_lmb(struct drmem_lmb *);
-> > > +enum dt_update_status {
-> > > +     DT_NOUPDATE,
-> > > +     DT_TOUPDATE,
-> > > +     DT_UPDATED,
-> > > +};
-> > > +
-> > > +/* "*dt_update" returns DT_UPDATED if updated */
-> > > +static int dlpar_add_lmb(struct drmem_lmb *lmb,
-> > > +             enum dt_update_status *dt_update);
-> > >
-> > > -static int dlpar_remove_lmb(struct drmem_lmb *lmb)
-> > > +static int dlpar_remove_lmb(struct drmem_lmb *lmb,
-> > > +             enum dt_update_status *dt_update)
-> > >   {
-> > >       unsigned long block_sz;
-> > >       phys_addr_t base_addr;
-> > > -     int rc, nid;
-> > > +     int rc, ret, nid;
-> > >
-> > >       if (!lmb_is_removable(lmb))
-> > >               return -EINVAL;
-> > > @@ -372,6 +381,13 @@ static int dlpar_remove_lmb(struct drmem_lmb *lm=
-b)
-> > >       invalidate_lmb_associativity_index(lmb);
-> > >       lmb_clear_nid(lmb);
-> > >       lmb->flags &=3D ~DRCONF_MEM_ASSIGNED;
-> > > +     if (*dt_update) {
-> Original, I plan to use it to exclude the case of DT_NOUPDATE, which is v=
-alue 0.
-> And I think it looks better by using if (*dt_update =3D=3D DT_TOUPDATE)
-> >
-> > That test is wrong, you should do:
-> >          if (*dt_update && *dt_update =3D=3D DT_TOUPDATE) {
-> I think you mean  if (dt_update && *dt_update =3D=3D DT_TOUPDATE) {
-> >
-> > With the current code, the device tree is updated all the time.
-> >
-> > Another option would be to pass a valid pointer (!=3D NULL) only when D=
-T update is
-> > required, this way you don't need the DT_TOUPDATE value. The caller wou=
-ld have
-> > to set the pointer accordingly. The advantage with this option is the c=
-aller is
-> > guaranteed that its variable is not touched by the callee when no devic=
-e tree is
-> > requested. A simple boolean pointer would be enough without the need to=
- this enum.
-> It is expected that dlpar_remove_lmb/dlpar_add_lmb can report whether
-> they successfully update dt or not. So the caller can handle the
-> different cases.
+To show how this can be used I've included a patch to
+decode_stacktrace.sh that downloads the debuginfo from a debuginfod
+server.
 
-Is there any plan to refresh this patch to apply to master?
+This also includes some patches to make the buildid.c file use more
+const arguments and consolidate logic into buildid.c from kdump. These
+are left to the end as they were mostly cleanup patches. I don't know
+who exactly maintains this so I guess Andrew is the best option to merge
+all this code.
 
-I am using an older revision of this patch so I am not in the position
-to repost an updated version.
+Here's an example lkdtm stacktrace on arm64.
 
-I lack some otimization in my patch so I probably have the quadratic
-coplexity of the add mentioned above.
+ WARNING: CPU: 4 PID: 3255 at drivers/misc/lkdtm/bugs.c:83 lkdtm_WARNING+0x28/0x30 [lkdtm]
+ Modules linked in: lkdtm rfcomm algif_hash algif_skcipher af_alg xt_cgroup uinput xt_MASQUERADE
+ CPU: 4 PID: 3255 Comm: bash Not tainted 5.11 #3 aa23f7a1231c229de205662d5a9e0d4c580f19a1
+ Hardware name: Google Lazor (rev3+) with KB Backlight (DT)
+ pstate: 00400009 (nzcv daif +PAN -UAO -TCO BTYPE=--)
+ pc : lkdtm_WARNING+0x28/0x30 [lkdtm]
+ lr : lkdtm_do_action+0x24/0x40 [lkdtm]
+ sp : ffffffc0134fbca0
+ x29: ffffffc0134fbca0 x28: ffffff92d53ba240
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: 0000000000000000 x24: ffffffe3622352c0
+ x23: 0000000000000020 x22: ffffffe362233366
+ x21: ffffffe3622352e0 x20: ffffffc0134fbde0
+ x19: 0000000000000008 x18: 0000000000000000
+ x17: ffffff929b6536fc x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000012
+ x13: ffffffe380ed892c x12: ffffffe381d05068
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : ffffffe362237000
+ x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+ x5 : 0000000000000000 x4 : 0000000000000001
+ x3 : 0000000000000008 x2 : ffffff93fef25a70
+ x1 : ffffff93fef15788 x0 : ffffffe3622352e0
+ Call trace:
+  lkdtm_WARNING+0x28/0x30 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  direct_entry+0x16c/0x1b4 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  full_proxy_write+0x74/0xa4
+  vfs_write+0xec/0x2e8
+  ksys_write+0x84/0xf0
+  __arm64_sys_write+0x24/0x30
+  el0_svc_common+0xf4/0x1c0
+  do_el0_svc_compat+0x28/0x3c
+  el0_svc_compat+0x10/0x1c
+  el0_sync_compat_handler+0xa8/0xcc
+  el0_sync_compat+0x178/0x180
+ ---[ end trace 3d95032303e59e68 ]---
 
-Thanks
+Changes from v3 (https://lore.kernel.org/r/20210331030520.3816265-1-swboyd@chromium.org):
+ * Fixed compilation warnings due to config changes
+ * Fixed kernel-doc on init_vmlinx_build_id()
+ * Totally removed add_build_id_vmcoreinfo()
+ * Added another printk format %pBb to help x86 print backtraces
+ * Some BUILD_BUG_ON() checks to make sure the buildid doesn't get bigger or smaller
 
-Michal
+Changes from v2 (https://lore.kernel.org/r/20210324020443.1815557-1-swboyd@chromium.org):
+ * Renamed symbol printing function to indicate build IDness
+ * Put build ID information behind Kconfig knob
+ * Build ID for vmlinux is calculated in early init instead of on demand
+ * printk format is %pS[R]b
+
+Changes from v1 (https://lore.kernel.org/r/20210301174749.1269154-1-swboyd@chromium.org):
+ * New printk format %pSb and %pSr
+ * Return binary format instead of hex format string from build ID APIs
+ * Some new patches to cleanup buildid/decode_stacktrace.sh
+ * A new patch to decode_stacktrace.sh to parse output
+
+[1] https://fedoraproject.org/wiki/Releases/FeatureBuildId
+
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: <kexec@lists.infradead.org>
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: <linux-doc@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: <x86@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: peter enderborg <peter.enderborg@sony.com>
+
+
+Stephen Boyd (13):
+  buildid: Only consider GNU notes for build ID parsing
+  buildid: Add API to parse build ID out of buffer
+  buildid: Stash away kernels build ID on init
+  dump_stack: Add vmlinux build ID to stack traces
+  module: Add printk formats to add module build ID to stacktraces
+  arm64: stacktrace: Use %pSb for backtrace printing
+  x86/dumpstack: Use %pSb/%pBb for backtrace printing
+  scripts/decode_stacktrace.sh: Support debuginfod
+  scripts/decode_stacktrace.sh: Silence stderr messages from
+    addr2line/nm
+  scripts/decode_stacktrace.sh: Indicate 'auto' can be used for base
+    path
+  buildid: Mark some arguments const
+  buildid: Fix kernel-doc notation
+  kdump: Use vmlinux_build_id to simplify
+
+ Documentation/core-api/printk-formats.rst | 11 +++
+ arch/arm64/kernel/stacktrace.c            |  2 +-
+ arch/x86/kernel/dumpstack.c               |  6 +-
+ include/linux/buildid.h                   |  4 +
+ include/linux/crash_core.h                |  7 +-
+ include/linux/kallsyms.h                  | 20 ++++-
+ include/linux/module.h                    |  6 +-
+ init/main.c                               |  1 +
+ kernel/crash_core.c                       | 50 +-----------
+ kernel/kallsyms.c                         | 95 ++++++++++++++++++-----
+ kernel/module.c                           | 24 +++++-
+ lib/Kconfig.debug                         | 11 +++
+ lib/buildid.c                             | 72 +++++++++++++----
+ lib/dump_stack.c                          | 13 +++-
+ lib/vsprintf.c                            |  8 +-
+ scripts/decode_stacktrace.sh              | 89 +++++++++++++++++----
+ 16 files changed, 304 insertions(+), 115 deletions(-)
+
+
+base-commit: a38fd8748464831584a19438cbb3082b5a2dab15
+-- 
+https://chromeos.dev
+
 
 _______________________________________________
 kexec mailing list
