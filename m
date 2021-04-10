@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x634.google.com ([2607:f8b0:4864:20::634])
+Received: from mail-pg1-x533.google.com ([2607:f8b0:4864:20::533])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lV2oD-004tyq-C6
- for kexec@lists.infradead.org; Sat, 10 Apr 2021 01:53:15 +0000
-Received: by mail-pl1-x634.google.com with SMTP id t22so3268749ply.1
- for <kexec@lists.infradead.org>; Fri, 09 Apr 2021 18:53:13 -0700 (PDT)
+ id 1lV2o5-004tvL-9f
+ for kexec@lists.infradead.org; Sat, 10 Apr 2021 01:53:06 +0000
+Received: by mail-pg1-x533.google.com with SMTP id t140so5176626pgb.13
+ for <kexec@lists.infradead.org>; Fri, 09 Apr 2021 18:53:04 -0700 (PDT)
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v4 13/13] kdump: Use vmlinux_build_id to simplify
-Date: Fri,  9 Apr 2021 18:53:00 -0700
-Message-Id: <20210410015300.3764485-14-swboyd@chromium.org>
+Subject: [PATCH v4 03/13] buildid: Stash away kernels build ID on init
+Date: Fri,  9 Apr 2021 18:52:50 -0700
+Message-Id: <20210410015300.3764485-4-swboyd@chromium.org>
 In-Reply-To: <20210410015300.3764485-1-swboyd@chromium.org>
 References: <20210410015300.3764485-1-swboyd@chromium.org>
 MIME-Version: 1.0
@@ -27,8 +27,11 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>
 Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-We can use the vmlinux_build_id array here now instead of open coding
-it. This mostly consolidates code.
+Parse the kernel's build ID at initialization so that other code can
+print a hex format string representation of the running kernel's build
+ID. This will be used in the kdump and dump_stack code so that
+developers can easily locate the vmlinux debug symbols for a
+crash/stacktrace.
 
 Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: Alexei Starovoitov <ast@kernel.org>
@@ -41,110 +44,65 @@ Cc: Vivek Goyal <vgoyal@redhat.com>
 Cc: <kexec@lists.infradead.org>
 Signed-off-by: Stephen Boyd <swboyd@chromium.org>
 ---
- include/linux/crash_core.h |  7 ++----
- kernel/crash_core.c        | 50 ++------------------------------------
- 2 files changed, 4 insertions(+), 53 deletions(-)
+ include/linux/buildid.h |  3 +++
+ init/main.c             |  1 +
+ lib/buildid.c           | 15 +++++++++++++++
+ 3 files changed, 19 insertions(+)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 206bde8308b2..2174dab16ba9 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -39,7 +39,8 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- #define VMCOREINFO_OSRELEASE(value) \
- 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
- #define VMCOREINFO_BUILD_ID(value) \
--	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-+	BUILD_BUG_ON(ARRAY_SIZE(value) != BUILD_ID_SIZE_MAX); \
-+	vmcoreinfo_append_str("BUILD-ID=%20phN\n", value)
- #define VMCOREINFO_PAGESIZE(value) \
- 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
-@@ -69,10 +70,6 @@ extern unsigned char *vmcoreinfo_data;
- extern size_t vmcoreinfo_size;
- extern u32 *vmcoreinfo_note;
+diff --git a/include/linux/buildid.h b/include/linux/buildid.h
+index ebce93f26d06..f375900cf9ed 100644
+--- a/include/linux/buildid.h
++++ b/include/linux/buildid.h
+@@ -10,4 +10,7 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+ 		   __u32 *size);
+ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
  
--/* raw contents of kernel .notes section */
--extern const void __start_notes __weak;
--extern const void __stop_notes __weak;
--
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len);
- void final_note(Elf_Word *buf);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 825284baaf46..f7eb752560f1 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-  */
++extern unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
++void init_vmlinux_build_id(void);
++
+ #endif
+diff --git a/init/main.c b/init/main.c
+index 53b278845b88..eaede2f41327 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -857,6 +857,7 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
++	init_vmlinux_build_id();
  
-+#include <linux/buildid.h>
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-@@ -378,53 +379,6 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
- }
- EXPORT_SYMBOL(paddr_vmcoreinfo_note);
+ 	cgroup_init_early();
  
--#define NOTES_SIZE (&__stop_notes - &__start_notes)
--#define BUILD_ID_MAX SHA1_DIGEST_SIZE
--#define NT_GNU_BUILD_ID 3
--
--struct elf_note_section {
--	struct elf_note	n_hdr;
--	u8 n_data[];
--};
--
--/*
-- * Add build ID from .notes section as generated by the GNU ld(1)
-- * or LLVM lld(1) --build-id option.
-- */
--static void add_build_id_vmcoreinfo(void)
--{
--	char build_id[BUILD_ID_MAX * 2 + 1];
--	int n_remain = NOTES_SIZE;
--
--	while (n_remain >= sizeof(struct elf_note)) {
--		const struct elf_note_section *note_sec =
--			&__start_notes + NOTES_SIZE - n_remain;
--		const u32 n_namesz = note_sec->n_hdr.n_namesz;
--
--		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
--		    n_namesz != 0 &&
--		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
--			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
--				const u32 n_descsz = note_sec->n_hdr.n_descsz;
--				const u8 *s = &note_sec->n_data[n_namesz];
--
--				s = PTR_ALIGN(s, 4);
--				bin2hex(build_id, s, n_descsz);
--				build_id[2 * n_descsz] = '\0';
--				VMCOREINFO_BUILD_ID(build_id);
--				return;
--			}
--			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
--				note_sec->n_hdr.n_descsz,
--				BUILD_ID_MAX);
--			return;
--		}
--		n_remain -= sizeof(struct elf_note) +
--			ALIGN(note_sec->n_hdr.n_namesz, 4) +
--			ALIGN(note_sec->n_hdr.n_descsz, 4);
--	}
--}
--
- static int __init crash_save_vmcoreinfo_init(void)
+diff --git a/lib/buildid.c b/lib/buildid.c
+index 6aea1c4e5e85..1103ed46214f 100644
+--- a/lib/buildid.c
++++ b/lib/buildid.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <linux/buildid.h>
++#include <linux/cache.h>
+ #include <linux/elf.h>
+ #include <linux/kernel.h>
+ #include <linux/pagemap.h>
+@@ -172,3 +173,17 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
  {
- 	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-@@ -443,7 +397,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	}
- 
- 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
--	add_build_id_vmcoreinfo();
-+	VMCOREINFO_BUILD_ID(vmlinux_build_id);
- 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
- 
- 	VMCOREINFO_SYMBOL(init_uts_ns);
+ 	return parse_build_id_buf(build_id, NULL, buf, buf_size);
+ }
++
++unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX] __ro_after_init;
++
++/**
++ * init_vmlinux_build_id - Compute and stash the running kernel's build ID
++ */
++void __init init_vmlinux_build_id(void)
++{
++	extern const void __start_notes __weak;
++	extern const void __stop_notes __weak;
++	unsigned int size = &__stop_notes - &__start_notes;
++
++	build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
++}
 -- 
 https://chromeos.dev
 
