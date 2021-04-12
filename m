@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from pandora.armlinux.org.uk ([2001:4d48:ad52:32c8:5054:ff:fe00:142])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lVu8U-0069FY-W7
- for kexec@lists.infradead.org; Mon, 12 Apr 2021 10:49:44 +0000
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
- <20210412095231.GC4282@MiWiFi-R3L-srv>
-From: lijiang <lijiang@redhat.com>
-Message-ID: <8b3807cc-41a0-9032-e586-1fa38e6d2203@redhat.com>
-Date: Mon, 12 Apr 2021 18:49:21 +0800
+ id 1lVuEM-0069LP-1A
+ for kexec@lists.infradead.org; Mon, 12 Apr 2021 10:55:47 +0000
+Date: Mon, 12 Apr 2021 11:52:35 +0100
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 1/1] arm: do not copy magic 4 bytes of appended DTB in
+ zImage
+Message-ID: <20210412105235.GK1463@shell.armlinux.org.uk>
+References: <20210408200644.19724-1-egorenar-dev@posteo.net>
 MIME-Version: 1.0
-In-Reply-To: <20210412095231.GC4282@MiWiFi-R3L-srv>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20210408200644.19724-1-egorenar-dev@posteo.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,87 +20,33 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Andy Lutomirski <luto@amacapital.net>, "H. Peter Anvin" <hpa@zytor.com>
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org, ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dvhart@infradead.org, andy@infradead.org, kexec@lists.infradead.org, dyoung@redhat.com
+To: Alexander Egorenkov <egorenar-dev@posteo.net>
+Cc: kexec@lists.infradead.org
 
-VGhhbmsgeW91IGZvciB0aGUgY29tbWVudCwgSC4gUGV0ZXIsIEFuZHkgYW5kIEJhb3F1YW4uCgrl
-nKggMjAyMeW5tDA05pyIMTLml6UgMTc6NTIsIEJhb3F1YW4gSGUg5YaZ6YGTOgo+IE9uIDA0LzEx
-LzIxIGF0IDA2OjQ5cG0sIEFuZHkgTHV0b21pcnNraSB3cm90ZToKPj4KPj4KPj4+IE9uIEFwciAx
-MSwgMjAyMSwgYXQgNjoxNCBQTSwgQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+IHdyb3RlOgo+
-Pj4KPj4+IO+7v09uIDA0LzA5LzIxIGF0IDA3OjU5cG0sIEguIFBldGVyIEFudmluIHdyb3RlOgo+
-Pj4+IFdoeSBkb24ndCB3ZSBkbyB0aGlzIHVuY29uZGl0aW9uYWxseT8gQXQgdGhlIHZlcnkgYmVz
-dCB3ZSBnYWluIGhhbGYgYSBtZWdhYnl0ZSBvZiBtZW1vcnkgKGV4Y2VwdCB0aGUgdHJhbXBvbGlu
-ZSwgd2hpY2ggaGFzIHRvIGxpdmUgdGhlcmUsIGJ1dCBpdCBpcyBvbmx5IGEgZmV3IGtpbG9ieXRl
-cy4pCj4+Pgo+Pj4gVGhpcyBpcyBhIGdyZWF0IHN1Z2dlc3Rpb24sIHRoYW5rcy4gSSB0aGluayB3
-ZSBjYW4gZml4IGl0IGluIHRoaXMgd2F5IHRvCj4+PiBtYWtlIGNvZGUgc2ltcGxlci4gVGhlbiB0
-aGUgc3BlY2lmaWMgY2FyaW5nIG9mIHJlYWwgbW9kZSBpbgo+Pj4gZWZpX2ZyZWVfYm9vdF9zZXJ2
-aWNlcygpIGNhbiBiZSByZW1vdmVkIHRvby4KPj4+Cj4+Cj4+IFRoaXMgd2hvbGUgc2l0dWF0aW9u
-IG1ha2VzIG1lIHRoaW5rIHRoYXQgdGhlIGNvZGUgaXMgYnVnZ3kgYmVmb3JlIGFuZCBidWdneSBh
-ZnRlci4KPj4KPj4gVGhlIGlzc3VlIGhlcmUgKEkgdGhpbmspIGlzIHRoYXQgdmFyaW91cyBwaWVj
-ZXMgb2YgY29kZSB3YW50IHRvIHJlc2VydmUgc3BlY2lmaWMgcGllY2VzIG9mIG90aGVyd2lzZS1h
-dmFpbGFibGUgbG93IG1lbW9yeSBmb3IgdGhlaXIgb3duIG5lZmFyaW91cyB1c2VzLiBJIGRvbuKA
-mXQga25vdyAqd2h5KiBjcmFzaCBrZXJuZWwgbmVlZHMgdGhpcywgYnV0IHRoYXQgZG9lc27igJl0
-IG1hdHRlciB0b28gbXVjaC4KPiAKPiBLZHVtcCBrZXJuZWwgYWxzbyBuZWVkIGdvIHRocm91Z2gg
-cmVhbCBtb2RlIGNvZGUgcGF0aCBkdXJpbmcgYm9vdHVwLiBJdAo+IGlzIG5vdCBkaWZmZXJlbnQg
-dGhhbiBub3JtYWwga2VybmVsIGV4Y2VwdCB0aGF0IGl0IHNraXBzIHRoZSBmaXJtd2FyZQo+IHJl
-c2V0dGluZy4gU28ga2R1bXAga2VybmVsIG5lZWRzIGxvdyAxTSBhcyBzeXN0ZW0gUkFNIGp1c3Qg
-YXMgbm9ybWFsCj4ga2VybmVsIGRvZXMuIEhlcmUgd2UgcmVzZXJ2ZSB0aGUgd2hvbGUgbG93IDFN
-IHdpdGggbWVtYmxvY2tfcmVzZXJ2ZSgpCj4gdG8gYXZvaWQgYW55IGxhdGVyIGtlcm5lbCBvciBk
-cml2ZXIgZGF0YSByZXNpZGUgaW4gdGhpcyBhcmVhLiBPdGhlcndpc2UsCj4gd2UgbmVlZCBkdW1w
-IHRoZSBjb250ZW50IG9mIHRoaXMgYXJlYSB0byB2bWNvcmUuIEFzIHdlIGtub3csIHdoZW4gY3Jh
-c2gKPiBoYXBwZW5lZCwgdGhlIG9sZCBtZW1vcnkgb2YgMXN0IGtlcm5lbCBzaG91bGQgYmUgdW50
-b3VjaGVkIHVudGlsIHZtY29yZQo+IGR1bXBpbmcgcmVhZCBvdXQgaXRzIGNvbnRlbnQuIE1lYW53
-aGlsZSwga2R1bXAga2VybmVsIG5lZWQgcmV1c2UgbG93IDFNLgo+IEluIHRoZSBwYXN0LCB3ZSB1
-c2VkIGEgYmFjayB1cCByZWdpb24gdG8gY29weSBvdXQgdGhlIGxvdyAxTSBhcmVhLCBhbmQKPiBt
-YXAgdGhlIGJhY2sgdXAgcmVnaW9uIGludG8gdGhlIGxvdyAxTSBhcmVhIGluIHZtY29yZSBlbGYg
-ZmlsZS4gSW4KPiA2ZjU5OWQ4NDIzMWZkMjcgKCJ4ODYva2R1bXA6IEFsd2F5cyByZXNlcnZlIHRo
-ZSBsb3cgMU0gd2hlbiB0aGUgY3Jhc2hrZXJuZWwKPiBvcHRpb24gaXMgc3BlY2lmaWVkIiksIHdl
-IGNoYW5nZWQgdG8gbG9jayB0aGUgd2hvbGUgbG93IDFNIHRvIGF2b2lkCj4gd3JpdHRpbmcgYW55
-IGtlcm5lbCBkYXRhIGludG8sIGxpa2UgdGhpcyB3ZSBjYW4gc2tpcCB0aGlzIGFyZWEgd2hlbgo+
-IGR1bXBpbmcgdm1jb3JlLgo+IAo+IEFib3ZlIGlzIHdoeSB3ZSB0cnkgdG8gbWVtYmxvY2sgcmVz
-ZXJ2ZSB0aGUgd2hvbGUgbG93IDFNLiBXZSBkb24ndCB3YW50Cj4gdG8gdXNlIGl0LCBqdXN0IGRv
-bid0IHdhbnQgYW55b25lIHRvIHVzZSBpdCBpbiAxc3Qga2VybmVsLgo+IAo+Pgo+PiBJIHByb3Bv
-c2UgdGhhdCB0aGUgcmlnaHQgc29sdXRpb24gaXMgdG8gZ2l2ZSBsb3ctbWVtb3J5LXJlc2Vydmlu
-ZyBjb2RlIHBhdGhzIHR3byBjaGFuY2VzIHRvIGRvIHdoYXQgdGhleSBuZWVkOiBvbmNlIGF0IHRo
-ZSB2ZXJ5IGJlZ2lubmluZyBhbmQgb25jZSBhZnRlciBFRkkgYm9vdCBzZXJ2aWNlcyBhcmUgZnJl
-ZWQuCj4+Cj4+IEFsdGVybmF0aXZlbHksIGp1c3QgcmVzZXJ2ZSAqYWxsKiBvdGhlcndpc2UgdW51
-c2VkIHN1YiAxTSBtZW1vcnkgdXAgZnJvbnQsIHRoZW4gcmVsZWFzZSBpdCByaWdodCBhZnRlciBy
-ZWxlYXNpbmcgYm9vdCBzZXJ2aWNlcywgYW5kIHRoZW4gaW52b2tlIHRoZSBzcGVjaWFsIGNhc2Vz
-IGV4YWN0bHkgb25jZS4KPiAKCkFmdGVyIEVGSSBib290IHNlcnZpY2VzIGFyZSBmcmVlZCwgSSdt
-IHdvcnJpZWQgdGhhdCBpdCdzIGEgYml0IGxhdGUuIEFsbCBzdWItMU0gbWVtb3J5IHJlZ2lvbnMg
-bmVlZCB0byBiZSByZXNlcnZlZCBlYXJseSBhcyBzb29uIGFzIHBvc3NpYmxlLgoKPiBJIGFtIG5v
-dCBzdXJlIGlmIEkgZ290IGJvdGggc3VnZ2VzdGVkIHdheXMgY2xlYXJseS4gVGhleSBsb29rIGEg
-bGl0dGxlCj4gY29tcGxpY2F0ZWQgaW4gb3VyIGNhc2UuIEFzIEkgZXhwbGFpbmVkIGF0IGFib3Zl
-LCB3ZSB3YW50IHRoZSB3aG9sZSBsb3cKPiAxTSBsb2NrZWQgdXAsIG5vdCBvbmUgcGllY2Ugb3Ig
-c29tZSBwaWVjZXMgb2YgaXQuCj4gCj4+Cj4+IEluIGVpdGhlciBjYXNlLCB0aGUgcmVzdWx0IGlz
-IHRoYXQgdGhlIGNyYXNoa2VybmVsIG1lc3MgZ2V0cyB1bmlmaWVkIHdpdGggdGhlIHRyYW1wb2xp
-bmUgbWVzcy4gIE9uZSB3YXkgdGhlIHJlc3VsdCBpcyBjYWxsZWQgdHdpY2UgYW5kIG5lZWRzIHRv
-IGJlIG1vcmUgY2FyZWZ1bCwgYW5kIHRoZSBvdGhlciB3YXkgaXTigJlzIGNhbGxlZCBvbmx5IG9u
-Y2UuCj4+CgpUaGF0IG1heSBzdGlsbCBoYXZlIGEgY2hhbmNlIHRvIGFsbG9jYXRlIG1lbW9yeSBm
-cm9tIHN1Yi0xTSByZWdpb25zIGF0IHNvbWUgcG9pbnQsIGJlY2F1c2UgRUZJIGJvb3Qgc2Vydmlj
-ZXMgd2lsbCBiZSBmcmVlZCBhZnRlciBFRkkgZW50ZXJzIHZpcnR1YWwgbW9kZSwgaXQgbG9va3Mg
-bGF0ZS4KCj4+IEp1c3Qgc2tpcHBpbmcgZnJlZWluZyBib290IHNlcnZpY2VzIHNlZW1zIHdyb25n
-LiAgSXQgZG9lc27igJl0IHVubWFwIGJvb3Qgc2VydmljZXMsIGFuZCBza2lwcGluZyB0aGF0IGlz
-IGluY29ycmVjdCwgSSB0aGluay4gQW5kIGl0IHNlZW1zIHRvIHJlc3VsdCBpbiBhIGJvZ3VzIG1l
-bW9yeSBtYXAgaW4gd2hpY2ggdGhlIHN5c3RlbSB0aGlua3MgdGhhdCBzb21lIGNyYXNoa2VybmVs
-IG1lbW9yeSBpcyBFRkkgbWVtb3J5IGluc3RlYWQuCj4gCj4gSSBsaWtlIGhwYSdzIHRob3VnaHQg
-dG8gbG9jayB0aGUgd2hvbGUgbG93IDFNIHVuY29uZGl0aW9uYWxseSBzaW5jZSBvbmx5Cj4gYSBm
-ZXcgS0IgZXhjZXB0IG9mIHRyYW1wb2xpbmUgYXJlYSBpcyB0aGVyZS4gUmV0aGlua2luZyBhYm91
-dCBpdCwgZG9pbmcKPiBpdCBpbiBjYW5fZnJlZV9yZWdpb24oKSBtYXkgYmUgcmlza3kgYmVjYXVz
-ZSBlZmkgbWVtb3J5IHJlZ2lvbiBjb3VsZAo+IGNyb3NzIHRoZSAxTSBib3VuZGFyeSwgZS5nIFs2
-NDBLLCAxMDBNXSB3aXRoIHR5cGUgb2YKPiBFRklfQk9PVF9TRVJWSUNFU19DT0RFfEVGSV9CT09U
-X1NFUlZJQ0VTX0RBVEEsIGl0IGNvdWxkIGNhdXNlIGxvc3Mgb2YgbWVtb3J5LgoKVGhlb3JldGlj
-YWxseSwgeWVzLiBCdXQgc28gZmFyIEkgaGF2ZW4ndCBzZWVuIHRoZSBzaXR1YXRpb24gb2YgY3Jv
-c3NpbmcgdGhlIDFNIGJvdW5kYXJ5LgoKVGhhbmtzLgpMaWFuYm8KCj4gSnVzdCBhIHdpbGQgZ3Vl
-c3MsIG5vdCB2ZXJ5IHN1cmUgaWYgdGhlIDFNIGJvdW5kYXJ5IGNvcnNzaW5nIGNhbiByZWFsbHkK
-PiBoYXBwZW4uIGVmaV9yZXNlcnZlX2Jvb3Rfc2VydmljZXMoKSB3b24ndCBzcGxpdCByZWdpb25z
-Lgo+IAo+IElmIG1vdmluZyBlZmlfcmVzZXJ2ZV9ib290X3NlcnZpY2VzKCkgYWZ0ZXIgcmVzZXJ2
-ZV9yZWFsX21vZGUoKSBpcyBub3QKPiBhY2NlcHRlZCwgbWF5YmUgd2UgY2FuIGNhbGwgZWZpX21l
-bV9yZXNlcnZlKDAsIDFNKSBqdXN0IGFzCj4gZWZpX2VzcnRfaW5pdCgpIGhhcyBkb25lLgo+IAoK
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
-aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
-YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Apr 08, 2021 at 10:06:44PM +0200, Alexander Egorenkov wrote:
+> If the passed zImage happens to have a DTB appended, then the magic 4 bytes
+> of the DTB are copied together with the kernel image. This leads to
+> failed kexec boots because the decompressor finds the aforementioned
+> DTB magic and falsely tries to replace the DTB passed in the register r2
+> with the non-existent appended one.
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar-dev@posteo.net>
+
+This looks correct, but I would like a comment before the assignment
+of kernel_buf_size to explain that this is the size of the compressed
+kernel image excluding any appended DTB.
+
+Thanks.
+
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTP is here! 40Mbps down 10Mbps up. Decent connectivity at last!
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
