@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lVtFN-0066Ix-Bw
- for kexec@lists.infradead.org; Mon, 12 Apr 2021 09:52:53 +0000
-Date: Mon, 12 Apr 2021 17:52:31 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-Message-ID: <20210412095231.GC4282@MiWiFi-R3L-srv>
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
+ id 1lVtyG-006STD-JM
+ for kexec@lists.infradead.org; Mon, 12 Apr 2021 10:39:11 +0000
+Date: Mon, 12 Apr 2021 12:38:53 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/1] arm: do not copy magic 4 bytes of appended DTB in
+ zImage
+Message-ID: <20210412103853.GA28946@vergenet.net>
+References: <20210408200644.19724-1-egorenar-dev@posteo.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
+In-Reply-To: <20210408200644.19724-1-egorenar-dev@posteo.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,76 +20,80 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andy Lutomirski <luto@amacapital.net>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Lianbo Jiang <lijiang@redhat.com>, linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org, ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dvhart@infradead.org, andy@infradead.org, kexec@lists.infradead.org, dyoung@redhat.com
+To: Alexander Egorenkov <egorenar-dev@posteo.net>
+Cc: rmk@armlinux.org.uk, kexec@lists.infradead.org
 
-T24gMDQvMTEvMjEgYXQgMDY6NDlwbSwgQW5keSBMdXRvbWlyc2tpIHdyb3RlOgo+IAo+IAo+ID4g
-T24gQXByIDExLCAyMDIxLCBhdCA2OjE0IFBNLCBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4g
-d3JvdGU6Cj4gPiAKPiA+IO+7v09uIDA0LzA5LzIxIGF0IDA3OjU5cG0sIEguIFBldGVyIEFudmlu
-IHdyb3RlOgo+ID4+IFdoeSBkb24ndCB3ZSBkbyB0aGlzIHVuY29uZGl0aW9uYWxseT8gQXQgdGhl
-IHZlcnkgYmVzdCB3ZSBnYWluIGhhbGYgYSBtZWdhYnl0ZSBvZiBtZW1vcnkgKGV4Y2VwdCB0aGUg
-dHJhbXBvbGluZSwgd2hpY2ggaGFzIHRvIGxpdmUgdGhlcmUsIGJ1dCBpdCBpcyBvbmx5IGEgZmV3
-IGtpbG9ieXRlcy4pCj4gPiAKPiA+IFRoaXMgaXMgYSBncmVhdCBzdWdnZXN0aW9uLCB0aGFua3Mu
-IEkgdGhpbmsgd2UgY2FuIGZpeCBpdCBpbiB0aGlzIHdheSB0bwo+ID4gbWFrZSBjb2RlIHNpbXBs
-ZXIuIFRoZW4gdGhlIHNwZWNpZmljIGNhcmluZyBvZiByZWFsIG1vZGUgaW4KPiA+IGVmaV9mcmVl
-X2Jvb3Rfc2VydmljZXMoKSBjYW4gYmUgcmVtb3ZlZCB0b28uCj4gPiAKPiAKPiBUaGlzIHdob2xl
-IHNpdHVhdGlvbiBtYWtlcyBtZSB0aGluayB0aGF0IHRoZSBjb2RlIGlzIGJ1Z2d5IGJlZm9yZSBh
-bmQgYnVnZ3kgYWZ0ZXIuCj4gCj4gVGhlIGlzc3VlIGhlcmUgKEkgdGhpbmspIGlzIHRoYXQgdmFy
-aW91cyBwaWVjZXMgb2YgY29kZSB3YW50IHRvIHJlc2VydmUgc3BlY2lmaWMgcGllY2VzIG9mIG90
-aGVyd2lzZS1hdmFpbGFibGUgbG93IG1lbW9yeSBmb3IgdGhlaXIgb3duIG5lZmFyaW91cyB1c2Vz
-LiBJIGRvbuKAmXQga25vdyAqd2h5KiBjcmFzaCBrZXJuZWwgbmVlZHMgdGhpcywgYnV0IHRoYXQg
-ZG9lc27igJl0IG1hdHRlciB0b28gbXVjaC4KCktkdW1wIGtlcm5lbCBhbHNvIG5lZWQgZ28gdGhy
-b3VnaCByZWFsIG1vZGUgY29kZSBwYXRoIGR1cmluZyBib290dXAuIEl0CmlzIG5vdCBkaWZmZXJl
-bnQgdGhhbiBub3JtYWwga2VybmVsIGV4Y2VwdCB0aGF0IGl0IHNraXBzIHRoZSBmaXJtd2FyZQpy
-ZXNldHRpbmcuIFNvIGtkdW1wIGtlcm5lbCBuZWVkcyBsb3cgMU0gYXMgc3lzdGVtIFJBTSBqdXN0
-IGFzIG5vcm1hbAprZXJuZWwgZG9lcy4gSGVyZSB3ZSByZXNlcnZlIHRoZSB3aG9sZSBsb3cgMU0g
-d2l0aCBtZW1ibG9ja19yZXNlcnZlKCkKdG8gYXZvaWQgYW55IGxhdGVyIGtlcm5lbCBvciBkcml2
-ZXIgZGF0YSByZXNpZGUgaW4gdGhpcyBhcmVhLiBPdGhlcndpc2UsCndlIG5lZWQgZHVtcCB0aGUg
-Y29udGVudCBvZiB0aGlzIGFyZWEgdG8gdm1jb3JlLiBBcyB3ZSBrbm93LCB3aGVuIGNyYXNoCmhh
-cHBlbmVkLCB0aGUgb2xkIG1lbW9yeSBvZiAxc3Qga2VybmVsIHNob3VsZCBiZSB1bnRvdWNoZWQg
-dW50aWwgdm1jb3JlCmR1bXBpbmcgcmVhZCBvdXQgaXRzIGNvbnRlbnQuIE1lYW53aGlsZSwga2R1
-bXAga2VybmVsIG5lZWQgcmV1c2UgbG93IDFNLgpJbiB0aGUgcGFzdCwgd2UgdXNlZCBhIGJhY2sg
-dXAgcmVnaW9uIHRvIGNvcHkgb3V0IHRoZSBsb3cgMU0gYXJlYSwgYW5kCm1hcCB0aGUgYmFjayB1
-cCByZWdpb24gaW50byB0aGUgbG93IDFNIGFyZWEgaW4gdm1jb3JlIGVsZiBmaWxlLiBJbgo2ZjU5
-OWQ4NDIzMWZkMjcgKCJ4ODYva2R1bXA6IEFsd2F5cyByZXNlcnZlIHRoZSBsb3cgMU0gd2hlbiB0
-aGUgY3Jhc2hrZXJuZWwKb3B0aW9uIGlzIHNwZWNpZmllZCIpLCB3ZSBjaGFuZ2VkIHRvIGxvY2sg
-dGhlIHdob2xlIGxvdyAxTSB0byBhdm9pZAp3cml0dGluZyBhbnkga2VybmVsIGRhdGEgaW50bywg
-bGlrZSB0aGlzIHdlIGNhbiBza2lwIHRoaXMgYXJlYSB3aGVuCmR1bXBpbmcgdm1jb3JlLgoKQWJv
-dmUgaXMgd2h5IHdlIHRyeSB0byBtZW1ibG9jayByZXNlcnZlIHRoZSB3aG9sZSBsb3cgMU0uIFdl
-IGRvbid0IHdhbnQKdG8gdXNlIGl0LCBqdXN0IGRvbid0IHdhbnQgYW55b25lIHRvIHVzZSBpdCBp
-biAxc3Qga2VybmVsLgoKPiAKPiBJIHByb3Bvc2UgdGhhdCB0aGUgcmlnaHQgc29sdXRpb24gaXMg
-dG8gZ2l2ZSBsb3ctbWVtb3J5LXJlc2VydmluZyBjb2RlIHBhdGhzIHR3byBjaGFuY2VzIHRvIGRv
-IHdoYXQgdGhleSBuZWVkOiBvbmNlIGF0IHRoZSB2ZXJ5IGJlZ2lubmluZyBhbmQgb25jZSBhZnRl
-ciBFRkkgYm9vdCBzZXJ2aWNlcyBhcmUgZnJlZWQuCj4gCj4gQWx0ZXJuYXRpdmVseSwganVzdCBy
-ZXNlcnZlICphbGwqIG90aGVyd2lzZSB1bnVzZWQgc3ViIDFNIG1lbW9yeSB1cCBmcm9udCwgdGhl
-biByZWxlYXNlIGl0IHJpZ2h0IGFmdGVyIHJlbGVhc2luZyBib290IHNlcnZpY2VzLCBhbmQgdGhl
-biBpbnZva2UgdGhlIHNwZWNpYWwgY2FzZXMgZXhhY3RseSBvbmNlLgoKSSBhbSBub3Qgc3VyZSBp
-ZiBJIGdvdCBib3RoIHN1Z2dlc3RlZCB3YXlzIGNsZWFybHkuIFRoZXkgbG9vayBhIGxpdHRsZQpj
-b21wbGljYXRlZCBpbiBvdXIgY2FzZS4gQXMgSSBleHBsYWluZWQgYXQgYWJvdmUsIHdlIHdhbnQg
-dGhlIHdob2xlIGxvdwoxTSBsb2NrZWQgdXAsIG5vdCBvbmUgcGllY2Ugb3Igc29tZSBwaWVjZXMg
-b2YgaXQuCgo+IAo+IEluIGVpdGhlciBjYXNlLCB0aGUgcmVzdWx0IGlzIHRoYXQgdGhlIGNyYXNo
-a2VybmVsIG1lc3MgZ2V0cyB1bmlmaWVkIHdpdGggdGhlIHRyYW1wb2xpbmUgbWVzcy4gIE9uZSB3
-YXkgdGhlIHJlc3VsdCBpcyBjYWxsZWQgdHdpY2UgYW5kIG5lZWRzIHRvIGJlIG1vcmUgY2FyZWZ1
-bCwgYW5kIHRoZSBvdGhlciB3YXkgaXTigJlzIGNhbGxlZCBvbmx5IG9uY2UuCj4gCj4gSnVzdCBz
-a2lwcGluZyBmcmVlaW5nIGJvb3Qgc2VydmljZXMgc2VlbXMgd3JvbmcuICBJdCBkb2VzbuKAmXQg
-dW5tYXAgYm9vdCBzZXJ2aWNlcywgYW5kIHNraXBwaW5nIHRoYXQgaXMgaW5jb3JyZWN0LCBJIHRo
-aW5rLiBBbmQgaXQgc2VlbXMgdG8gcmVzdWx0IGluIGEgYm9ndXMgbWVtb3J5IG1hcCBpbiB3aGlj
-aCB0aGUgc3lzdGVtIHRoaW5rcyB0aGF0IHNvbWUgY3Jhc2hrZXJuZWwgbWVtb3J5IGlzIEVGSSBt
-ZW1vcnkgaW5zdGVhZC4KCkkgbGlrZSBocGEncyB0aG91Z2h0IHRvIGxvY2sgdGhlIHdob2xlIGxv
-dyAxTSB1bmNvbmRpdGlvbmFsbHkgc2luY2Ugb25seQphIGZldyBLQiBleGNlcHQgb2YgdHJhbXBv
-bGluZSBhcmVhIGlzIHRoZXJlLiBSZXRoaW5raW5nIGFib3V0IGl0LCBkb2luZwppdCBpbiBjYW5f
-ZnJlZV9yZWdpb24oKSBtYXkgYmUgcmlza3kgYmVjYXVzZSBlZmkgbWVtb3J5IHJlZ2lvbiBjb3Vs
-ZApjcm9zcyB0aGUgMU0gYm91bmRhcnksIGUuZyBbNjQwSywgMTAwTV0gd2l0aCB0eXBlIG9mCkVG
-SV9CT09UX1NFUlZJQ0VTX0NPREV8RUZJX0JPT1RfU0VSVklDRVNfREFUQSwgaXQgY291bGQgY2F1
-c2UgbG9zcyBvZiBtZW1vcnkuCkp1c3QgYSB3aWxkIGd1ZXNzLCBub3QgdmVyeSBzdXJlIGlmIHRo
-ZSAxTSBib3VuZGFyeSBjb3Jzc2luZyBjYW4gcmVhbGx5CmhhcHBlbi4gZWZpX3Jlc2VydmVfYm9v
-dF9zZXJ2aWNlcygpIHdvbid0IHNwbGl0IHJlZ2lvbnMuCgpJZiBtb3ZpbmcgZWZpX3Jlc2VydmVf
-Ym9vdF9zZXJ2aWNlcygpIGFmdGVyIHJlc2VydmVfcmVhbF9tb2RlKCkgaXMgbm90CmFjY2VwdGVk
-LCBtYXliZSB3ZSBjYW4gY2FsbCBlZmlfbWVtX3Jlc2VydmUoMCwgMU0pIGp1c3QgYXMKZWZpX2Vz
-cnRfaW5pdCgpIGhhcyBkb25lLgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
-Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On Thu, Apr 08, 2021 at 10:06:44PM +0200, Alexander Egorenkov wrote:
+> If the passed zImage happens to have a DTB appended, then the magic 4 bytes
+> of the DTB are copied together with the kernel image. This leads to
+> failed kexec boots because the decompressor finds the aforementioned
+> DTB magic and falsely tries to replace the DTB passed in the register r2
+> with the non-existent appended one.
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar-dev@posteo.net>
+
+Hi,
+
+I also see that, on line 558 len is further expanded as follows:
+
+        /*
+         * The zImage length does not include its stack (4k) or its
+         * malloc space (64k).  Include this.
+         */
+        len += 0x11000;
+
+Is it intentional that this patch also excludes this extra length
+from the DTB? Or am I missing something?
+
+> ---
+>  kexec/arch/arm/kexec-zImage-arm.c | 5 ++++-
+>  1 file changed, 4 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+> index 925a9be..8ec289d 100644
+> --- a/kexec/arch/arm/kexec-zImage-arm.c
+> +++ b/kexec/arch/arm/kexec-zImage-arm.c
+> @@ -382,6 +382,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
+>  	unsigned int extra_size = 0x8000; /* TEXT_OFFSET */
+>  	const struct zimage_tag *tag;
+> +	size_t kernel_buf_size;
+>  	size_t kernel_mem_size;
+>  	const char *command_line;
+>  	char *modified_cmdline = NULL;
+> @@ -537,6 +538,8 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		}
+>  	}
+>  
+> +	kernel_buf_size = len;
+> +
+>  	/*
+>  	 * Always extend the zImage by four bytes to ensure that an appended
+>  	 * DTB image always sees an initialised value after _edata.
+> @@ -759,7 +762,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+>  		add_segment(info, dtb_buf, dtb_length, dtb_offset, dtb_length);
+>  	}
+>  
+> -	add_segment(info, buf, len, kernel_base, kernel_mem_size);
+> +	add_segment(info, buf, kernel_buf_size, kernel_base, kernel_mem_size);
+>  
+>  	info->entry = (void*)kernel_base;
+>  
+> -- 
+> 2.31.1
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
