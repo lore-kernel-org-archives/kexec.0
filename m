@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
+Received: from mail-mw2nam12on2139.outbound.protection.outlook.com
+ ([40.107.244.139] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lVyQY-006LAv-V7
- for kexec@lists.infradead.org; Mon, 12 Apr 2021 15:24:40 +0000
-Received: by mail-ej1-x62b.google.com with SMTP id x12so139896ejc.1
- for <kexec@lists.infradead.org>; Mon, 12 Apr 2021 08:24:38 -0700 (PDT)
+ id 1lW0Ix-006S3M-8M
+ for kexec@lists.infradead.org; Mon, 12 Apr 2021 17:24:57 +0000
+Date: Mon, 12 Apr 2021 13:24:35 -0400
+From: Joe Korty <joe.korty@concurrent-rt.com>
+Subject: Re: [CFT][PATCH] kexec: Remove the error prone kernel_version function
+Message-ID: <20210412172435.GA37849@zipoli.concurrrent-rt.com>
+References: <20210409154642.GA30739@zipoli.concurrrent-rt.com>
+ <m1blanmnqc.fsf@fess.ebiederm.org>
+Content-Disposition: inline
+In-Reply-To: <m1blanmnqc.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
- <20210412095231.GC4282@MiWiFi-R3L-srv>
-In-Reply-To: <20210412095231.GC4282@MiWiFi-R3L-srv>
-From: Andy Lutomirski <luto@amacapital.net>
-Date: Mon, 12 Apr 2021 08:24:25 -0700
-Message-ID: <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,74 +21,250 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Reply-To: Joe Korty <joe.korty@concurrent-rt.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>, Lianbo Jiang <lijiang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, X86 ML <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Khalid Aziz <khalid@gonehiking.org>, Hariprasad Nellitheertha <hari@in.ibm.com>, Tim Deegan <tjd21@cl.cam.ac.uk>, Hongyan Xia <hongyxia@amazon.com>, David Hildenbrand <david@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>
 
-T24gTW9uLCBBcHIgMTIsIDIwMjEgYXQgMjo1MiBBTSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNv
-bT4gd3JvdGU6Cj4KPiBPbiAwNC8xMS8yMSBhdCAwNjo0OXBtLCBBbmR5IEx1dG9taXJza2kgd3Jv
-dGU6Cj4gPgo+ID4KPiA+ID4gT24gQXByIDExLCAyMDIxLCBhdCA2OjE0IFBNLCBCYW9xdWFuIEhl
-IDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+Cj4gPiA+IO+7v09uIDA0LzA5LzIxIGF0IDA3
-OjU5cG0sIEguIFBldGVyIEFudmluIHdyb3RlOgo+ID4gPj4gV2h5IGRvbid0IHdlIGRvIHRoaXMg
-dW5jb25kaXRpb25hbGx5PyBBdCB0aGUgdmVyeSBiZXN0IHdlIGdhaW4gaGFsZiBhIG1lZ2FieXRl
-IG9mIG1lbW9yeSAoZXhjZXB0IHRoZSB0cmFtcG9saW5lLCB3aGljaCBoYXMgdG8gbGl2ZSB0aGVy
-ZSwgYnV0IGl0IGlzIG9ubHkgYSBmZXcga2lsb2J5dGVzLikKPiA+ID4KPiA+ID4gVGhpcyBpcyBh
-IGdyZWF0IHN1Z2dlc3Rpb24sIHRoYW5rcy4gSSB0aGluayB3ZSBjYW4gZml4IGl0IGluIHRoaXMg
-d2F5IHRvCj4gPiA+IG1ha2UgY29kZSBzaW1wbGVyLiBUaGVuIHRoZSBzcGVjaWZpYyBjYXJpbmcg
-b2YgcmVhbCBtb2RlIGluCj4gPiA+IGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKSBjYW4gYmUgcmVt
-b3ZlZCB0b28uCj4gPiA+Cj4gPgo+ID4gVGhpcyB3aG9sZSBzaXR1YXRpb24gbWFrZXMgbWUgdGhp
-bmsgdGhhdCB0aGUgY29kZSBpcyBidWdneSBiZWZvcmUgYW5kIGJ1Z2d5IGFmdGVyLgo+ID4KPiA+
-IFRoZSBpc3N1ZSBoZXJlIChJIHRoaW5rKSBpcyB0aGF0IHZhcmlvdXMgcGllY2VzIG9mIGNvZGUg
-d2FudCB0byByZXNlcnZlIHNwZWNpZmljIHBpZWNlcyBvZiBvdGhlcndpc2UtYXZhaWxhYmxlIGxv
-dyBtZW1vcnkgZm9yIHRoZWlyIG93biBuZWZhcmlvdXMgdXNlcy4gSSBkb27igJl0IGtub3cgKndo
-eSogY3Jhc2gga2VybmVsIG5lZWRzIHRoaXMsIGJ1dCB0aGF0IGRvZXNu4oCZdCBtYXR0ZXIgdG9v
-IG11Y2guCj4KPiBLZHVtcCBrZXJuZWwgYWxzbyBuZWVkIGdvIHRocm91Z2ggcmVhbCBtb2RlIGNv
-ZGUgcGF0aCBkdXJpbmcgYm9vdHVwLiBJdAo+IGlzIG5vdCBkaWZmZXJlbnQgdGhhbiBub3JtYWwg
-a2VybmVsIGV4Y2VwdCB0aGF0IGl0IHNraXBzIHRoZSBmaXJtd2FyZQo+IHJlc2V0dGluZy4gU28g
-a2R1bXAga2VybmVsIG5lZWRzIGxvdyAxTSBhcyBzeXN0ZW0gUkFNIGp1c3QgYXMgbm9ybWFsCj4g
-a2VybmVsIGRvZXMuIEhlcmUgd2UgcmVzZXJ2ZSB0aGUgd2hvbGUgbG93IDFNIHdpdGggbWVtYmxv
-Y2tfcmVzZXJ2ZSgpCj4gdG8gYXZvaWQgYW55IGxhdGVyIGtlcm5lbCBvciBkcml2ZXIgZGF0YSBy
-ZXNpZGUgaW4gdGhpcyBhcmVhLiBPdGhlcndpc2UsCj4gd2UgbmVlZCBkdW1wIHRoZSBjb250ZW50
-IG9mIHRoaXMgYXJlYSB0byB2bWNvcmUuIEFzIHdlIGtub3csIHdoZW4gY3Jhc2gKPiBoYXBwZW5l
-ZCwgdGhlIG9sZCBtZW1vcnkgb2YgMXN0IGtlcm5lbCBzaG91bGQgYmUgdW50b3VjaGVkIHVudGls
-IHZtY29yZQo+IGR1bXBpbmcgcmVhZCBvdXQgaXRzIGNvbnRlbnQuIE1lYW53aGlsZSwga2R1bXAg
-a2VybmVsIG5lZWQgcmV1c2UgbG93IDFNLgo+IEluIHRoZSBwYXN0LCB3ZSB1c2VkIGEgYmFjayB1
-cCByZWdpb24gdG8gY29weSBvdXQgdGhlIGxvdyAxTSBhcmVhLCBhbmQKPiBtYXAgdGhlIGJhY2sg
-dXAgcmVnaW9uIGludG8gdGhlIGxvdyAxTSBhcmVhIGluIHZtY29yZSBlbGYgZmlsZS4gSW4KPiA2
-ZjU5OWQ4NDIzMWZkMjcgKCJ4ODYva2R1bXA6IEFsd2F5cyByZXNlcnZlIHRoZSBsb3cgMU0gd2hl
-biB0aGUgY3Jhc2hrZXJuZWwKPiBvcHRpb24gaXMgc3BlY2lmaWVkIiksIHdlIGNoYW5nZWQgdG8g
-bG9jayB0aGUgd2hvbGUgbG93IDFNIHRvIGF2b2lkCj4gd3JpdHRpbmcgYW55IGtlcm5lbCBkYXRh
-IGludG8sIGxpa2UgdGhpcyB3ZSBjYW4gc2tpcCB0aGlzIGFyZWEgd2hlbgo+IGR1bXBpbmcgdm1j
-b3JlLgo+Cj4gQWJvdmUgaXMgd2h5IHdlIHRyeSB0byBtZW1ibG9jayByZXNlcnZlIHRoZSB3aG9s
-ZSBsb3cgMU0uIFdlIGRvbid0IHdhbnQKPiB0byB1c2UgaXQsIGp1c3QgZG9uJ3Qgd2FudCBhbnlv
-bmUgdG8gdXNlIGl0IGluIDFzdCBrZXJuZWwuCj4KPiA+Cj4gPiBJIHByb3Bvc2UgdGhhdCB0aGUg
-cmlnaHQgc29sdXRpb24gaXMgdG8gZ2l2ZSBsb3ctbWVtb3J5LXJlc2VydmluZyBjb2RlIHBhdGhz
-IHR3byBjaGFuY2VzIHRvIGRvIHdoYXQgdGhleSBuZWVkOiBvbmNlIGF0IHRoZSB2ZXJ5IGJlZ2lu
-bmluZyBhbmQgb25jZSBhZnRlciBFRkkgYm9vdCBzZXJ2aWNlcyBhcmUgZnJlZWQuCj4gPgo+ID4g
-QWx0ZXJuYXRpdmVseSwganVzdCByZXNlcnZlICphbGwqIG90aGVyd2lzZSB1bnVzZWQgc3ViIDFN
-IG1lbW9yeSB1cCBmcm9udCwgdGhlbiByZWxlYXNlIGl0IHJpZ2h0IGFmdGVyIHJlbGVhc2luZyBi
-b290IHNlcnZpY2VzLCBhbmQgdGhlbiBpbnZva2UgdGhlIHNwZWNpYWwgY2FzZXMgZXhhY3RseSBv
-bmNlLgo+Cj4gSSBhbSBub3Qgc3VyZSBpZiBJIGdvdCBib3RoIHN1Z2dlc3RlZCB3YXlzIGNsZWFy
-bHkuIFRoZXkgbG9vayBhIGxpdHRsZQo+IGNvbXBsaWNhdGVkIGluIG91ciBjYXNlLiBBcyBJIGV4
-cGxhaW5lZCBhdCBhYm92ZSwgd2Ugd2FudCB0aGUgd2hvbGUgbG93Cj4gMU0gbG9ja2VkIHVwLCBu
-b3Qgb25lIHBpZWNlIG9yIHNvbWUgcGllY2VzIG9mIGl0LgoKTXkgc2Vjb25kIHN1Z2dlc3Rpb24g
-aXMgcHJvYmFibHkgdGhlIGJldHRlciBvbmUuICBIZXJlIGl0IGlzLCBjb25jcmV0ZWx5OgoKVGhl
-IGVhcmx5IChwcmUtZnJlZV9lZmlfYm9vdF9zZXJ2aWNlcykgY29kZSBqdXN0IHJlc2VydmVzIGFs
-bAphdmFpbGFibGUgc3ViLTFNIG1lbW9yeSB1bmNvbmRpdGlvbmFsbHksIGJ1dCBpdCBzcGVjaWFs
-bHkgbWFya3MgaXQgYXMKcmVzZXJ2ZWQtYnV0LWF2YWlsYWJsZS1sYXRlci4gIFdlIHN0b3AgYWxs
-b2NhdGluZyB0aGUgdHJhbXBvbGluZSBwYWdlCmF0IHRoaXMgc3RhZ2UuCgpJbiBmcmVlX2VmaV9i
-b290X3NlcnZpY2VzLCBpbnN0ZWFkIG9mICpmcmVlaW5nKiB0aGUgc3ViLTFNIG1lbW9yeSwgd2UK
-c3RpY2sgaXQgaW4gdGhlIHBpbGUgb2YgcmVzZXJ2ZWQgbWVtb3J5IGNyZWF0ZWQgaW4gdGhlIGVh
-cmx5IHN0ZXAuClRoaXMgbWF5IGludm9sdmUgc3BsaXR0aW5nIGEgYmxvY2ssIGtpbmQgb2YgbGlr
-ZSB0aGUgY3VycmVudAp0cmFtcG9saW5lIGxhdGUgYWxsb2NhdGlvbiB3b3Jrcy4KClRoZW4sICph
-ZnRlciogZnJlZV9lZmlfYm9vdF9zZXJ2aWNlcygpLCB3ZSBydW4gYSBzaW5nbGUgYmxvY2sgb2Yg
-Y29kZQp0aGF0IGxldHMgZXZlcnl0aGluZyB0aGF0IHdhbnRzIHN1Yi0xTSBjb2RlIGNsYWltIHNv
-bWUuICBUaGlzIG1lYW5zCnRoYXQgdGhlIHRyYW1wb2xpbmUgZ2V0cyBhbGxvY2F0ZWQgYW5kLCBp
-ZiBjcmFzaGtlcm5lbCB3YW50cyB0byBjbGFpbQpldmVyeXRoaW5nIGVsc2UsIGl0IGNhbi4gIEFm
-dGVyIHRoYXQsIGV2ZXJ5dGhpbmcgc3RpbGwgdW5jbGFpbWVkIGdldHMKZnJlZWQuCgpEb2VzIHRo
-YXQgbWFrZSBzZW5zZT8KCi0tQW5keQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
-cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On Fri, Apr 09, 2021 at 11:22:51AM -0500, Eric W. Biederman wrote:
+> 
+> During kexec there are two kernel versions at play.  The version of
+> the running kernel and the version of the kernel that will be booted.
+> 
+> On powerpc it appears people have been using the version of the
+> running kernel to attempt to detect properties of the kernel to be
+> booted which is just wrong.  As the linux kernel version that is being
+> detected is a no longer supported kernel just remove that buggy and
+> confused code.
+> 
+> On x86_64 the kernel_version is used to compute the starting virtual
+> address of the running kernel so a proper core dump may be generated.
+> Using the kernel_version stopped working a while ago when the starting
+> virtual address  became randomized.
+> 
+> The old code was kept for the case where the kernel was not built with
+> randomization support, but there is nothing in reading /proc/kcore
+> that won't work to detect the starting virtual address even there.
+> In fact /proc/kcore must have the starting virtual address or a
+> debugger can not make sense of the running kernel.
+> 
+> So just make computing the starting virtual address on x86_64
+> unconditional.  With a hard coded fallback just in case something went
+> wrong.
+> 
+> Doing something with kernel_version() has become important as recent
+> stable kernels have seen the minor version to > 255.  Just removing
+> kernel_version() looks like the best option.
+> 
+> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
+> ---
+> 
+> Can folks please test this patch and verify that it works.  I really
+> think simply removing the problem code is going to be a much more robust
+> solution than papering over the bug.
+> 
+>  kexec/Makefile                     |  1 -
+>  kexec/arch/i386/crashdump-x86.c    | 28 +++++----------
+>  kexec/arch/ppc/crashdump-powerpc.c |  3 +-
+>  kexec/arch/ppc64/crashdump-ppc64.c |  3 +-
+>  kexec/kernel_version.c             | 57 ------------------------------
+>  kexec/kexec.h                      |  4 ---
+>  6 files changed, 11 insertions(+), 85 deletions(-)
+>  delete mode 100644 kexec/kernel_version.c
+> 
+> diff --git a/kexec/Makefile b/kexec/Makefile
+> index 8e3e9ea39664..e69e30950ac8 100644
+> --- a/kexec/Makefile
+> +++ b/kexec/Makefile
+> @@ -22,7 +22,6 @@ KEXEC_SRCS_base += kexec/firmware_memmap.c
+>  KEXEC_SRCS_base += kexec/crashdump.c
+>  KEXEC_SRCS_base += kexec/crashdump-xen.c
+>  KEXEC_SRCS_base += kexec/phys_arch.c
+> -KEXEC_SRCS_base += kexec/kernel_version.c
+>  KEXEC_SRCS_base += kexec/lzma.c
+>  KEXEC_SRCS_base += kexec/zlib.c
+>  KEXEC_SRCS_base += kexec/kexec-xen.c
+> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> index d5b5b6850fe8..ea3e7c73c621 100644
+> --- a/kexec/arch/i386/crashdump-x86.c
+> +++ b/kexec/arch/i386/crashdump-x86.c
+> @@ -55,16 +55,8 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+>  	int kv;
+>  
+>  	if (elf_info->machine == EM_X86_64) {
+> -		kv = kernel_version();
+> -		if (kv < 0)
+> -			return -1;
+> -
+> -		if (kv < KERNEL_VERSION(2, 6, 27))
+> -			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
+> -		else if (kv < KERNEL_VERSION(4, 20, 0))
+> -			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_4_20_0;
+> -		else
+> -			elf_info->page_offset = X86_64_PAGE_OFFSET;
+> +		/* get_kernel_vaddr_and_size will override this */
+> +		elf_info->page_offset = X86_64_PAGE_OFFSET;
+>  	}
+>  	else if (elf_info->machine == EM_386) {
+>  		elf_info->page_offset = X86_PAGE_OFFSET;
+> @@ -151,17 +143,15 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
+>  
+>  	/* Search for the real PAGE_OFFSET when KASLR memory randomization
+>  	 * is enabled */
+> -	if (get_kernel_sym("page_offset_base") != 0) {
+> -		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+> -			if (phdr->p_type == PT_LOAD) {
+> -				vaddr = phdr->p_vaddr & pud_mask;
+> -				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
+> -					lowest_vaddr = vaddr;
+> -			}
+> +	for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
+> +		if (phdr->p_type == PT_LOAD) {
+> +			vaddr = phdr->p_vaddr & pud_mask;
+> +			if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
+> +				lowest_vaddr = vaddr;
+>  		}
+> -		if (lowest_vaddr != 0)
+> -			elf_info->page_offset = lowest_vaddr;
+>  	}
+> +	if (lowest_vaddr != 0)
+> +		elf_info->page_offset = lowest_vaddr;
+>  
+>  	/* Traverse through the Elf headers and find the region where
+>  	 * _stext symbol is located in. That's where kernel is mapped */
+> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
+> index 4ad026f38dd0..15e85313ff75 100644
+> --- a/kexec/arch/ppc/crashdump-powerpc.c
+> +++ b/kexec/arch/ppc/crashdump-powerpc.c
+> @@ -255,8 +255,7 @@ static void add_cmdline(char *cmdline, char *str)
+>  	int cmdline_size;
+>  	int cmdlen = strlen(cmdline) + strlen(str);
+>  
+> -	cmdline_size = (kernel_version() < KERNEL_VERSION(3, 15, 0) ?
+> -			512 : COMMAND_LINE_SIZE);
+> +	cmdline_size = COMMAND_LINE_SIZE;
+>  	if (cmdlen > (cmdline_size - 1))
+>  		die("Command line overflow\n");
+>  	strcat(cmdline, str);
+> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
+> index 26f9a01a8174..addd769de401 100644
+> --- a/kexec/arch/ppc64/crashdump-ppc64.c
+> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
+> @@ -478,8 +478,7 @@ static int add_cmdline_param(char *cmdline, uint64_t addr, char *cmdstr,
+>  	strcat(str, byte);
+>  	len = strlen(str);
+>  	cmdlen = strlen(cmdline) + len;
+> -	cmdline_size = (kernel_version() < KERNEL_VERSION(3, 15, 0) ?
+> -			512 : COMMAND_LINE_SIZE);
+> +	cmdline_size = COMMAND_LINE_SIZE;
+>  	if (cmdlen > (cmdline_size - 1))
+>  		die("Command line overflow\n");
+>  	strcat(cmdline, str);
+> diff --git a/kexec/kernel_version.c b/kexec/kernel_version.c
+> deleted file mode 100644
+> index 21fb13adf095..000000000000
+> --- a/kexec/kernel_version.c
+> +++ /dev/null
+> @@ -1,57 +0,0 @@
+> -#include "kexec.h"
+> -#include <errno.h>
+> -#include <string.h>
+> -#include <sys/utsname.h>
+> -#include <string.h>
+> -#include <limits.h>
+> -#include <stdlib.h>
+> -
+> -long kernel_version(void)
+> -{
+> -	struct utsname utsname;
+> -	unsigned long major, minor, patch;
+> -	char *p;
+> -
+> -	if (uname(&utsname) < 0) {
+> -		fprintf(stderr, "uname failed: %s\n", strerror(errno));
+> -		return -1;
+> -	}
+> -
+> -	p = utsname.release;
+> -	major = strtoul(p, &p, 10);
+> -	if (major == ULONG_MAX) {
+> -		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
+> -		return -1;
+> -	}
+> -
+> -	if (*p++ != '.') {
+> -		fprintf(stderr, "Unsupported utsname.release: %s\n",
+> -			utsname.release);
+> -		return -1;
+> -	}
+> -
+> -	minor = strtoul(p, &p, 10);
+> -	if (minor == ULONG_MAX) {
+> -		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
+> -		return -1;
+> -	}
+> -
+> -	/* There may or may not be a patch level for this kernel */
+> -	if (*p++ == '.') {
+> -		patch = strtoul(p, &p, 10);
+> -		if (patch == ULONG_MAX) {
+> -			fprintf(stderr, "strtoul failed: %s\n",strerror(errno));
+> -			return -1;
+> -		}
+> -	} else {
+> -		patch = 0;
+> -	}
+> -
+> -	if (major >= 256 || minor >= 256 || patch >= 256) {
+> -		fprintf(stderr, "Unsupported utsname.release: %s\n",
+> -			utsname.release);
+> -		return -1;
+> -	}
+> -
+> -	return KERNEL_VERSION(major, minor, patch);
+> -}
+> diff --git a/kexec/kexec.h b/kexec/kexec.h
+> index f0f347d5e9e0..595dd681db6d 100644
+> --- a/kexec/kexec.h
+> +++ b/kexec/kexec.h
+> @@ -179,10 +179,6 @@ struct arch_map_entry {
+>  extern const struct arch_map_entry arches[];
+>  long physical_arch(void);
+>  
+> -#define KERNEL_VERSION(major, minor, patch) \
+> -	(((major) << 16) | ((minor) << 8) | patch)
+> -long kernel_version(void);
+> -
+>  void usage(void);
+>  int get_memory_ranges(struct memory_range **range, int *ranges,
+>  						unsigned long kexec_flags);
+> -- 
+> 2.30.1
+
+[ Sorry this has taken so long --jak ]
+
+Successful dump was acquired using a hand-built 4.4.262-kdump kernel.
+The new kdump tools were installed in /usr/local, and a modified kdumpctl
+(making it use the new tools) was put in in /tmp/kdumpctl.  When I do:
+ 
+    kdumpctl start
+    echo c >/proc/sysrq
+
+I get the 'Unsupported utsname.release' error message, and the 'echo c'
+fails to create a dump directory in /var/crash.  When I do:
+
+    /tmp/kdumpctl start
+    echo c >/proc/sysrq
+
+I no longer get the 'Unsupported' error message and a dump directory
+appears in /var/crash.  I did not test if the dump itself was good.
+
+Tested-by: Joe Korty <joe.korty@conurrent-rt.com>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
