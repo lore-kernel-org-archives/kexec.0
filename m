@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mout02.posteo.de ([185.67.36.66])
+Received: from mail-ej1-x62b.google.com ([2a00:1450:4864:20::62b])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lVujN-006Atz-5j
- for kexec@lists.infradead.org; Mon, 12 Apr 2021 11:27:50 +0000
-Received: from submission (posteo.de [89.146.220.130]) 
- by mout02.posteo.de (Postfix) with ESMTPS id 5BB9E240101
- for <kexec@lists.infradead.org>; Mon, 12 Apr 2021 13:27:33 +0200 (CEST)
-From: Alexander Egorenkov <egorenar@posteo.net>
-Subject: Re: [PATCH 1/1] arm: do not copy magic 4 bytes of appended DTB in
- zImage
-In-Reply-To: <20210412103853.GA28946@vergenet.net>
-References: <20210408200644.19724-1-egorenar-dev@posteo.net>
- <20210412103853.GA28946@vergenet.net>
-Date: Mon, 12 Apr 2021 13:27:27 +0200
-Message-ID: <874kgb3fq8.fsf@posteo.net>
+ id 1lVyQY-006LAv-V7
+ for kexec@lists.infradead.org; Mon, 12 Apr 2021 15:24:40 +0000
+Received: by mail-ej1-x62b.google.com with SMTP id x12so139896ejc.1
+ for <kexec@lists.infradead.org>; Mon, 12 Apr 2021 08:24:38 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210412011347.GA4282@MiWiFi-R3L-srv>
+ <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
+ <20210412095231.GC4282@MiWiFi-R3L-srv>
+In-Reply-To: <20210412095231.GC4282@MiWiFi-R3L-srv>
+From: Andy Lutomirski <luto@amacapital.net>
+Date: Mon, 12 Apr 2021 08:24:25 -0700
+Message-ID: <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
+Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
+ crashkernel option is specified
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,49 +23,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>, Alexander Egorenkov <egorenar-dev@posteo.net>
-Cc: rmk@armlinux.org.uk, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Lianbo Jiang <lijiang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, X86 ML <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
 
-Simon Horman <horms@verge.net.au> writes:
-
-> On Thu, Apr 08, 2021 at 10:06:44PM +0200, Alexander Egorenkov wrote:
->> If the passed zImage happens to have a DTB appended, then the magic 4 bytes
->> of the DTB are copied together with the kernel image. This leads to
->> failed kexec boots because the decompressor finds the aforementioned
->> DTB magic and falsely tries to replace the DTB passed in the register r2
->> with the non-existent appended one.
->> 
->> Signed-off-by: Alexander Egorenkov <egorenar-dev@posteo.net>
->
-> Hi,
->
-> I also see that, on line 558 len is further expanded as follows:
->
->         /*
->          * The zImage length does not include its stack (4k) or its
->          * malloc space (64k).  Include this.
->          */
->         len += 0x11000;
->
-> Is it intentional that this patch also excludes this extra length
-> from the DTB? Or am I missing something?
->
-
-Hi,
-
-if i understood it right, then len expresses not the length of the
-kernel image in the zImage but the length of the kernel memory segment
-into which the kernel image is being loaded. And on this line of code
-it is adjusted to account for stack and heap, i think.
-
-Regards
-Alex
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gTW9uLCBBcHIgMTIsIDIwMjEgYXQgMjo1MiBBTSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNv
+bT4gd3JvdGU6Cj4KPiBPbiAwNC8xMS8yMSBhdCAwNjo0OXBtLCBBbmR5IEx1dG9taXJza2kgd3Jv
+dGU6Cj4gPgo+ID4KPiA+ID4gT24gQXByIDExLCAyMDIxLCBhdCA2OjE0IFBNLCBCYW9xdWFuIEhl
+IDxiaGVAcmVkaGF0LmNvbT4gd3JvdGU6Cj4gPiA+Cj4gPiA+IO+7v09uIDA0LzA5LzIxIGF0IDA3
+OjU5cG0sIEguIFBldGVyIEFudmluIHdyb3RlOgo+ID4gPj4gV2h5IGRvbid0IHdlIGRvIHRoaXMg
+dW5jb25kaXRpb25hbGx5PyBBdCB0aGUgdmVyeSBiZXN0IHdlIGdhaW4gaGFsZiBhIG1lZ2FieXRl
+IG9mIG1lbW9yeSAoZXhjZXB0IHRoZSB0cmFtcG9saW5lLCB3aGljaCBoYXMgdG8gbGl2ZSB0aGVy
+ZSwgYnV0IGl0IGlzIG9ubHkgYSBmZXcga2lsb2J5dGVzLikKPiA+ID4KPiA+ID4gVGhpcyBpcyBh
+IGdyZWF0IHN1Z2dlc3Rpb24sIHRoYW5rcy4gSSB0aGluayB3ZSBjYW4gZml4IGl0IGluIHRoaXMg
+d2F5IHRvCj4gPiA+IG1ha2UgY29kZSBzaW1wbGVyLiBUaGVuIHRoZSBzcGVjaWZpYyBjYXJpbmcg
+b2YgcmVhbCBtb2RlIGluCj4gPiA+IGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKSBjYW4gYmUgcmVt
+b3ZlZCB0b28uCj4gPiA+Cj4gPgo+ID4gVGhpcyB3aG9sZSBzaXR1YXRpb24gbWFrZXMgbWUgdGhp
+bmsgdGhhdCB0aGUgY29kZSBpcyBidWdneSBiZWZvcmUgYW5kIGJ1Z2d5IGFmdGVyLgo+ID4KPiA+
+IFRoZSBpc3N1ZSBoZXJlIChJIHRoaW5rKSBpcyB0aGF0IHZhcmlvdXMgcGllY2VzIG9mIGNvZGUg
+d2FudCB0byByZXNlcnZlIHNwZWNpZmljIHBpZWNlcyBvZiBvdGhlcndpc2UtYXZhaWxhYmxlIGxv
+dyBtZW1vcnkgZm9yIHRoZWlyIG93biBuZWZhcmlvdXMgdXNlcy4gSSBkb27igJl0IGtub3cgKndo
+eSogY3Jhc2gga2VybmVsIG5lZWRzIHRoaXMsIGJ1dCB0aGF0IGRvZXNu4oCZdCBtYXR0ZXIgdG9v
+IG11Y2guCj4KPiBLZHVtcCBrZXJuZWwgYWxzbyBuZWVkIGdvIHRocm91Z2ggcmVhbCBtb2RlIGNv
+ZGUgcGF0aCBkdXJpbmcgYm9vdHVwLiBJdAo+IGlzIG5vdCBkaWZmZXJlbnQgdGhhbiBub3JtYWwg
+a2VybmVsIGV4Y2VwdCB0aGF0IGl0IHNraXBzIHRoZSBmaXJtd2FyZQo+IHJlc2V0dGluZy4gU28g
+a2R1bXAga2VybmVsIG5lZWRzIGxvdyAxTSBhcyBzeXN0ZW0gUkFNIGp1c3QgYXMgbm9ybWFsCj4g
+a2VybmVsIGRvZXMuIEhlcmUgd2UgcmVzZXJ2ZSB0aGUgd2hvbGUgbG93IDFNIHdpdGggbWVtYmxv
+Y2tfcmVzZXJ2ZSgpCj4gdG8gYXZvaWQgYW55IGxhdGVyIGtlcm5lbCBvciBkcml2ZXIgZGF0YSBy
+ZXNpZGUgaW4gdGhpcyBhcmVhLiBPdGhlcndpc2UsCj4gd2UgbmVlZCBkdW1wIHRoZSBjb250ZW50
+IG9mIHRoaXMgYXJlYSB0byB2bWNvcmUuIEFzIHdlIGtub3csIHdoZW4gY3Jhc2gKPiBoYXBwZW5l
+ZCwgdGhlIG9sZCBtZW1vcnkgb2YgMXN0IGtlcm5lbCBzaG91bGQgYmUgdW50b3VjaGVkIHVudGls
+IHZtY29yZQo+IGR1bXBpbmcgcmVhZCBvdXQgaXRzIGNvbnRlbnQuIE1lYW53aGlsZSwga2R1bXAg
+a2VybmVsIG5lZWQgcmV1c2UgbG93IDFNLgo+IEluIHRoZSBwYXN0LCB3ZSB1c2VkIGEgYmFjayB1
+cCByZWdpb24gdG8gY29weSBvdXQgdGhlIGxvdyAxTSBhcmVhLCBhbmQKPiBtYXAgdGhlIGJhY2sg
+dXAgcmVnaW9uIGludG8gdGhlIGxvdyAxTSBhcmVhIGluIHZtY29yZSBlbGYgZmlsZS4gSW4KPiA2
+ZjU5OWQ4NDIzMWZkMjcgKCJ4ODYva2R1bXA6IEFsd2F5cyByZXNlcnZlIHRoZSBsb3cgMU0gd2hl
+biB0aGUgY3Jhc2hrZXJuZWwKPiBvcHRpb24gaXMgc3BlY2lmaWVkIiksIHdlIGNoYW5nZWQgdG8g
+bG9jayB0aGUgd2hvbGUgbG93IDFNIHRvIGF2b2lkCj4gd3JpdHRpbmcgYW55IGtlcm5lbCBkYXRh
+IGludG8sIGxpa2UgdGhpcyB3ZSBjYW4gc2tpcCB0aGlzIGFyZWEgd2hlbgo+IGR1bXBpbmcgdm1j
+b3JlLgo+Cj4gQWJvdmUgaXMgd2h5IHdlIHRyeSB0byBtZW1ibG9jayByZXNlcnZlIHRoZSB3aG9s
+ZSBsb3cgMU0uIFdlIGRvbid0IHdhbnQKPiB0byB1c2UgaXQsIGp1c3QgZG9uJ3Qgd2FudCBhbnlv
+bmUgdG8gdXNlIGl0IGluIDFzdCBrZXJuZWwuCj4KPiA+Cj4gPiBJIHByb3Bvc2UgdGhhdCB0aGUg
+cmlnaHQgc29sdXRpb24gaXMgdG8gZ2l2ZSBsb3ctbWVtb3J5LXJlc2VydmluZyBjb2RlIHBhdGhz
+IHR3byBjaGFuY2VzIHRvIGRvIHdoYXQgdGhleSBuZWVkOiBvbmNlIGF0IHRoZSB2ZXJ5IGJlZ2lu
+bmluZyBhbmQgb25jZSBhZnRlciBFRkkgYm9vdCBzZXJ2aWNlcyBhcmUgZnJlZWQuCj4gPgo+ID4g
+QWx0ZXJuYXRpdmVseSwganVzdCByZXNlcnZlICphbGwqIG90aGVyd2lzZSB1bnVzZWQgc3ViIDFN
+IG1lbW9yeSB1cCBmcm9udCwgdGhlbiByZWxlYXNlIGl0IHJpZ2h0IGFmdGVyIHJlbGVhc2luZyBi
+b290IHNlcnZpY2VzLCBhbmQgdGhlbiBpbnZva2UgdGhlIHNwZWNpYWwgY2FzZXMgZXhhY3RseSBv
+bmNlLgo+Cj4gSSBhbSBub3Qgc3VyZSBpZiBJIGdvdCBib3RoIHN1Z2dlc3RlZCB3YXlzIGNsZWFy
+bHkuIFRoZXkgbG9vayBhIGxpdHRsZQo+IGNvbXBsaWNhdGVkIGluIG91ciBjYXNlLiBBcyBJIGV4
+cGxhaW5lZCBhdCBhYm92ZSwgd2Ugd2FudCB0aGUgd2hvbGUgbG93Cj4gMU0gbG9ja2VkIHVwLCBu
+b3Qgb25lIHBpZWNlIG9yIHNvbWUgcGllY2VzIG9mIGl0LgoKTXkgc2Vjb25kIHN1Z2dlc3Rpb24g
+aXMgcHJvYmFibHkgdGhlIGJldHRlciBvbmUuICBIZXJlIGl0IGlzLCBjb25jcmV0ZWx5OgoKVGhl
+IGVhcmx5IChwcmUtZnJlZV9lZmlfYm9vdF9zZXJ2aWNlcykgY29kZSBqdXN0IHJlc2VydmVzIGFs
+bAphdmFpbGFibGUgc3ViLTFNIG1lbW9yeSB1bmNvbmRpdGlvbmFsbHksIGJ1dCBpdCBzcGVjaWFs
+bHkgbWFya3MgaXQgYXMKcmVzZXJ2ZWQtYnV0LWF2YWlsYWJsZS1sYXRlci4gIFdlIHN0b3AgYWxs
+b2NhdGluZyB0aGUgdHJhbXBvbGluZSBwYWdlCmF0IHRoaXMgc3RhZ2UuCgpJbiBmcmVlX2VmaV9i
+b290X3NlcnZpY2VzLCBpbnN0ZWFkIG9mICpmcmVlaW5nKiB0aGUgc3ViLTFNIG1lbW9yeSwgd2UK
+c3RpY2sgaXQgaW4gdGhlIHBpbGUgb2YgcmVzZXJ2ZWQgbWVtb3J5IGNyZWF0ZWQgaW4gdGhlIGVh
+cmx5IHN0ZXAuClRoaXMgbWF5IGludm9sdmUgc3BsaXR0aW5nIGEgYmxvY2ssIGtpbmQgb2YgbGlr
+ZSB0aGUgY3VycmVudAp0cmFtcG9saW5lIGxhdGUgYWxsb2NhdGlvbiB3b3Jrcy4KClRoZW4sICph
+ZnRlciogZnJlZV9lZmlfYm9vdF9zZXJ2aWNlcygpLCB3ZSBydW4gYSBzaW5nbGUgYmxvY2sgb2Yg
+Y29kZQp0aGF0IGxldHMgZXZlcnl0aGluZyB0aGF0IHdhbnRzIHN1Yi0xTSBjb2RlIGNsYWltIHNv
+bWUuICBUaGlzIG1lYW5zCnRoYXQgdGhlIHRyYW1wb2xpbmUgZ2V0cyBhbGxvY2F0ZWQgYW5kLCBp
+ZiBjcmFzaGtlcm5lbCB3YW50cyB0byBjbGFpbQpldmVyeXRoaW5nIGVsc2UsIGl0IGNhbi4gIEFm
+dGVyIHRoYXQsIGV2ZXJ5dGhpbmcgc3RpbGwgdW5jbGFpbWVkIGdldHMKZnJlZWQuCgpEb2VzIHRo
+YXQgbWFrZSBzZW5zZT8KCi0tQW5keQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5v
+cmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
