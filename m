@@ -1,22 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x129.google.com ([2607:f8b0:4864:20::129])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lW8kG-006gT6-G6
- for kexec@lists.infradead.org; Tue, 13 Apr 2021 02:25:42 +0000
-Received: by mail-il1-x129.google.com with SMTP id c15so12863062ilj.1
- for <kexec@lists.infradead.org>; Mon, 12 Apr 2021 19:25:39 -0700 (PDT)
+ id 1lWFbs-006tOj-8G
+ for kexec@lists.infradead.org; Tue, 13 Apr 2021 09:45:29 +0000
+Date: Tue, 13 Apr 2021 17:45:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
+ crashkernel option is specified
+Message-ID: <20210413094515.GD4282@MiWiFi-R3L-srv>
+References: <20210412011347.GA4282@MiWiFi-R3L-srv>
+ <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
+ <20210412095231.GC4282@MiWiFi-R3L-srv>
+ <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
 MIME-Version: 1.0
-References: <cover.1618254007.git.ashish.kalra@amd.com>
- <c349516d85d9e3fc7404d564ff81d7ebecc1162c.1618254007.git.ashish.kalra@amd.com>
- <CABayD+cNLdoPHYvw0ZAXZS2wRg4cCFGTMvON0Ja2cWJ4juHNbA@mail.gmail.com>
- <CABayD+c2P9miY2pKG=k1Ey3cj6RZG98WgssLCnBJgoW9Fng7gg@mail.gmail.com>
- <20210413014821.GA3276@ashkalra_ubuntu_server>
-In-Reply-To: <20210413014821.GA3276@ashkalra_ubuntu_server>
-From: Steve Rutherford <srutherford@google.com>
-Date: Mon, 12 Apr 2021 19:25:03 -0700
-Message-ID: <CABayD+dqg+CYm4hAc6gRY6ygpbgpm-a7jo6ZGotbcA3arq9yQg@mail.gmail.com>
-Subject: Re: [PATCH v12 13/13] x86/kvm: Add kexec support for SEV Live
- Migration.
+Content-Disposition: inline
+In-Reply-To: <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,152 +23,109 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ashish Kalra <ashish.kalra@amd.com>
-Cc: Paolo Bonzini <pbonzini@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "H. Peter Anvin" <hpa@zytor.com>, Joerg Roedel <joro@8bytes.org>, Borislav Petkov <bp@suse.de>, Tom Lendacky <thomas.lendacky@amd.com>, X86 ML <x86@kernel.org>, KVM list <kvm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Sean Christopherson <seanjc@google.com>, Venu Busireddy <venu.busireddy@oracle.com>, Brijesh Singh <brijesh.singh@amd.com>, kexec@lists.infradead.org
+To: Andy Lutomirski <luto@amacapital.net>
+Cc: "H. Peter Anvin" <hpa@zytor.com>, Lianbo Jiang <lijiang@redhat.com>, LKML <linux-kernel@vger.kernel.org>, linux-efi <linux-efi@vger.kernel.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, X86 ML <x86@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>, kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
 
-On Mon, Apr 12, 2021 at 6:48 PM Ashish Kalra <ashish.kalra@amd.com> wrote:
->
-> On Mon, Apr 12, 2021 at 06:23:32PM -0700, Steve Rutherford wrote:
-> > On Mon, Apr 12, 2021 at 5:22 PM Steve Rutherford <srutherford@google.com> wrote:
-> > >
-> > > On Mon, Apr 12, 2021 at 12:48 PM Ashish Kalra <Ashish.Kalra@amd.com> wrote:
-> > > >
-> > > > From: Ashish Kalra <ashish.kalra@amd.com>
-> > > >
-> > > > Reset the host's shared pages list related to kernel
-> > > > specific page encryption status settings before we load a
-> > > > new kernel by kexec. We cannot reset the complete
-> > > > shared pages list here as we need to retain the
-> > > > UEFI/OVMF firmware specific settings.
-> > > >
-> > > > The host's shared pages list is maintained for the
-> > > > guest to keep track of all unencrypted guest memory regions,
-> > > > therefore we need to explicitly mark all shared pages as
-> > > > encrypted again before rebooting into the new guest kernel.
-> > > >
-> > > > Signed-off-by: Ashish Kalra <ashish.kalra@amd.com>
-> > > > ---
-> > > >  arch/x86/kernel/kvm.c | 24 ++++++++++++++++++++++++
-> > > >  1 file changed, 24 insertions(+)
-> > > >
-> > > > diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-> > > > index bcc82e0c9779..4ad3ed547ff1 100644
-> > > > --- a/arch/x86/kernel/kvm.c
-> > > > +++ b/arch/x86/kernel/kvm.c
-> > > > @@ -39,6 +39,7 @@
-> > > >  #include <asm/cpuidle_haltpoll.h>
-> > > >  #include <asm/ptrace.h>
-> > > >  #include <asm/svm.h>
-> > > > +#include <asm/e820/api.h>
-> > > >
-> > > >  DEFINE_STATIC_KEY_FALSE(kvm_async_pf_enabled);
-> > > >
-> > > > @@ -384,6 +385,29 @@ static void kvm_pv_guest_cpu_reboot(void *unused)
-> > > >          */
-> > > >         if (kvm_para_has_feature(KVM_FEATURE_PV_EOI))
-> > > >                 wrmsrl(MSR_KVM_PV_EOI_EN, 0);
-> > > > +       /*
-> > > > +        * Reset the host's shared pages list related to kernel
-> > > > +        * specific page encryption status settings before we load a
-> > > > +        * new kernel by kexec. NOTE: We cannot reset the complete
-> > > > +        * shared pages list here as we need to retain the
-> > > > +        * UEFI/OVMF firmware specific settings.
-> > > > +        */
-> > > > +       if (sev_live_migration_enabled & (smp_processor_id() == 0)) {
-> > > What happens if the reboot of CPU0 races with another CPU servicing a
-> > > device request (while the reboot is pending for that CPU)?
-> > > Seems like you could run into a scenario where you have hypercalls racing.
-> > >
-> > > Calling this on every core isn't free, but it is an easy way to avoid this race.
-> > > You could also count cores, and have only last core do the job, but
-> > > that seems more complicated.
-> > On second thought, I think this may be insufficient as a fix, since my
-> > read of kernel/reboot.c seems to imply that devices aren't shutdown
-> > until after these notifiers occur. As such, a single thread might be
-> > able to race with itself. I could be wrong here though.
-> >
-> > The heavy hammer would be to disable migration through the MSR (which
-> > the subsequent boot will re-enable).
-> >
-> > I'm curious if there is a less "blocking" way of handling kexecs (that
-> > strategy would block LM while the guest booted).
-> >
-> > One option that comes to mind would be for the guest to "mute" the
-> > encryption status hypercall after the call to reset the encryption
-> > status. The problem would be that the encryption status for pages
-> > would be very temporarily inaccurate in the window between that call
-> > and the start of the next boot. That isn't ideal, but, on the other
-> > hand, the VM was about to reboot anyway, so a corrupted shared page
-> > for device communication probably isn't super important. Still, I'm
-> > not really a fan of that. This would avoid corrupting the next boot,
-> > which is clearly an improvement.
-> >
-> > Each time the kernel boots it could also choose something like a
-> > generation ID, and pass that down each time it calls the hypercall.
-> > This would then let userspace identify which requests were coming from
-> > the subsequent boot.
-> >
-> > Everything here (except, perhaps, disabling migration through the MSR)
-> > seems kind of complicated. I somewhat hope my interpretation of
-> > kernel/reboot.c is wrong and this race just is not possible in the
-> > first place.
-> >
->
-> Disabling migration through the MSR after resetting the page encryption
-> status is a reasonable approach. There is a similar window existing for
-> normal VM boot during which LM is disabled, from the point where OVMF
-> checks and adds support for SEV LM and the kernel boot checks for the
-> same and enables LM using the MSR.
-
-I'm not totally confident that disabling LM through the MSR is
-sufficient. I also think the newly booted kernel needs to reset the
-state itself, since nothing stops the hypercalls after the disable
-goes through. The host won't know the difference between early boot
-(pre-enablement) hypercalls and racy just-before-restart hypercalls.
-You might disable migration through the hypercall, get a late status
-change hypercall, reboot, then re-enable migration, but still have
-stale state.
-
-I _believe_ that the kernel doesn't mark it's RAM as private on boot
-as an optimization (might be wrong about this), since it would have
-been expensive to mark all of ram as encrypted previously. I believe
-that is no longer a limitation given the KVM_EXIT, so we can reset
-this during early boot instead of just before the kexec.
-
-Thanks,
-Steve
-
->
-> Thanks,
-> Ashish
->
-> > > > +               int i;
-> > > > +               unsigned long nr_pages;
-> > > > +
-> > > > +               for (i = 0; i < e820_table->nr_entries; i++) {
-> > > > +                       struct e820_entry *entry = &e820_table->entries[i];
-> > > > +
-> > > > +                       if (entry->type != E820_TYPE_RAM)
-> > > > +                               continue;
-> > > > +
-> > > > +                       nr_pages = DIV_ROUND_UP(entry->size, PAGE_SIZE);
-> > > > +
-> > > > +                       kvm_sev_hypercall3(KVM_HC_PAGE_ENC_STATUS,
-> > > > +                                          entry->addr, nr_pages, 1);
-> > > > +               }
-> > > > +       }
-> > > >         kvm_pv_disable_apf();
-> > > >         kvm_disable_steal_time();
-> > > >  }
-> > > > --
-> > > > 2.17.1
-> > > >
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMDQvMTIvMjEgYXQgMDg6MjRhbSwgQW5keSBMdXRvbWlyc2tpIHdyb3RlOgo+IE9uIE1vbiwg
+QXByIDEyLCAyMDIxIGF0IDI6NTIgQU0gQmFvcXVhbiBIZSA8YmhlQHJlZGhhdC5jb20+IHdyb3Rl
+Ogo+ID4KPiA+IE9uIDA0LzExLzIxIGF0IDA2OjQ5cG0sIEFuZHkgTHV0b21pcnNraSB3cm90ZToK
+PiA+ID4KPiA+ID4KPiA+ID4gPiBPbiBBcHIgMTEsIDIwMjEsIGF0IDY6MTQgUE0sIEJhb3F1YW4g
+SGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IO+7v09uIDA0LzA5LzIx
+IGF0IDA3OjU5cG0sIEguIFBldGVyIEFudmluIHdyb3RlOgo+ID4gPiA+PiBXaHkgZG9uJ3Qgd2Ug
+ZG8gdGhpcyB1bmNvbmRpdGlvbmFsbHk/IEF0IHRoZSB2ZXJ5IGJlc3Qgd2UgZ2FpbiBoYWxmIGEg
+bWVnYWJ5dGUgb2YgbWVtb3J5IChleGNlcHQgdGhlIHRyYW1wb2xpbmUsIHdoaWNoIGhhcyB0byBs
+aXZlIHRoZXJlLCBidXQgaXQgaXMgb25seSBhIGZldyBraWxvYnl0ZXMuKQo+ID4gPiA+Cj4gPiA+
+ID4gVGhpcyBpcyBhIGdyZWF0IHN1Z2dlc3Rpb24sIHRoYW5rcy4gSSB0aGluayB3ZSBjYW4gZml4
+IGl0IGluIHRoaXMgd2F5IHRvCj4gPiA+ID4gbWFrZSBjb2RlIHNpbXBsZXIuIFRoZW4gdGhlIHNw
+ZWNpZmljIGNhcmluZyBvZiByZWFsIG1vZGUgaW4KPiA+ID4gPiBlZmlfZnJlZV9ib290X3NlcnZp
+Y2VzKCkgY2FuIGJlIHJlbW92ZWQgdG9vLgo+ID4gPiA+Cj4gPiA+Cj4gPiA+IFRoaXMgd2hvbGUg
+c2l0dWF0aW9uIG1ha2VzIG1lIHRoaW5rIHRoYXQgdGhlIGNvZGUgaXMgYnVnZ3kgYmVmb3JlIGFu
+ZCBidWdneSBhZnRlci4KPiA+ID4KPiA+ID4gVGhlIGlzc3VlIGhlcmUgKEkgdGhpbmspIGlzIHRo
+YXQgdmFyaW91cyBwaWVjZXMgb2YgY29kZSB3YW50IHRvIHJlc2VydmUgc3BlY2lmaWMgcGllY2Vz
+IG9mIG90aGVyd2lzZS1hdmFpbGFibGUgbG93IG1lbW9yeSBmb3IgdGhlaXIgb3duIG5lZmFyaW91
+cyB1c2VzLiBJIGRvbuKAmXQga25vdyAqd2h5KiBjcmFzaCBrZXJuZWwgbmVlZHMgdGhpcywgYnV0
+IHRoYXQgZG9lc27igJl0IG1hdHRlciB0b28gbXVjaC4KPiA+Cj4gPiBLZHVtcCBrZXJuZWwgYWxz
+byBuZWVkIGdvIHRocm91Z2ggcmVhbCBtb2RlIGNvZGUgcGF0aCBkdXJpbmcgYm9vdHVwLiBJdAo+
+ID4gaXMgbm90IGRpZmZlcmVudCB0aGFuIG5vcm1hbCBrZXJuZWwgZXhjZXB0IHRoYXQgaXQgc2tp
+cHMgdGhlIGZpcm13YXJlCj4gPiByZXNldHRpbmcuIFNvIGtkdW1wIGtlcm5lbCBuZWVkcyBsb3cg
+MU0gYXMgc3lzdGVtIFJBTSBqdXN0IGFzIG5vcm1hbAo+ID4ga2VybmVsIGRvZXMuIEhlcmUgd2Ug
+cmVzZXJ2ZSB0aGUgd2hvbGUgbG93IDFNIHdpdGggbWVtYmxvY2tfcmVzZXJ2ZSgpCj4gPiB0byBh
+dm9pZCBhbnkgbGF0ZXIga2VybmVsIG9yIGRyaXZlciBkYXRhIHJlc2lkZSBpbiB0aGlzIGFyZWEu
+IE90aGVyd2lzZSwKPiA+IHdlIG5lZWQgZHVtcCB0aGUgY29udGVudCBvZiB0aGlzIGFyZWEgdG8g
+dm1jb3JlLiBBcyB3ZSBrbm93LCB3aGVuIGNyYXNoCj4gPiBoYXBwZW5lZCwgdGhlIG9sZCBtZW1v
+cnkgb2YgMXN0IGtlcm5lbCBzaG91bGQgYmUgdW50b3VjaGVkIHVudGlsIHZtY29yZQo+ID4gZHVt
+cGluZyByZWFkIG91dCBpdHMgY29udGVudC4gTWVhbndoaWxlLCBrZHVtcCBrZXJuZWwgbmVlZCBy
+ZXVzZSBsb3cgMU0uCj4gPiBJbiB0aGUgcGFzdCwgd2UgdXNlZCBhIGJhY2sgdXAgcmVnaW9uIHRv
+IGNvcHkgb3V0IHRoZSBsb3cgMU0gYXJlYSwgYW5kCj4gPiBtYXAgdGhlIGJhY2sgdXAgcmVnaW9u
+IGludG8gdGhlIGxvdyAxTSBhcmVhIGluIHZtY29yZSBlbGYgZmlsZS4gSW4KPiA+IDZmNTk5ZDg0
+MjMxZmQyNyAoIng4Ni9rZHVtcDogQWx3YXlzIHJlc2VydmUgdGhlIGxvdyAxTSB3aGVuIHRoZSBj
+cmFzaGtlcm5lbAo+ID4gb3B0aW9uIGlzIHNwZWNpZmllZCIpLCB3ZSBjaGFuZ2VkIHRvIGxvY2sg
+dGhlIHdob2xlIGxvdyAxTSB0byBhdm9pZAo+ID4gd3JpdHRpbmcgYW55IGtlcm5lbCBkYXRhIGlu
+dG8sIGxpa2UgdGhpcyB3ZSBjYW4gc2tpcCB0aGlzIGFyZWEgd2hlbgo+ID4gZHVtcGluZyB2bWNv
+cmUuCj4gPgo+ID4gQWJvdmUgaXMgd2h5IHdlIHRyeSB0byBtZW1ibG9jayByZXNlcnZlIHRoZSB3
+aG9sZSBsb3cgMU0uIFdlIGRvbid0IHdhbnQKPiA+IHRvIHVzZSBpdCwganVzdCBkb24ndCB3YW50
+IGFueW9uZSB0byB1c2UgaXQgaW4gMXN0IGtlcm5lbC4KPiA+Cj4gPiA+Cj4gPiA+IEkgcHJvcG9z
+ZSB0aGF0IHRoZSByaWdodCBzb2x1dGlvbiBpcyB0byBnaXZlIGxvdy1tZW1vcnktcmVzZXJ2aW5n
+IGNvZGUgcGF0aHMgdHdvIGNoYW5jZXMgdG8gZG8gd2hhdCB0aGV5IG5lZWQ6IG9uY2UgYXQgdGhl
+IHZlcnkgYmVnaW5uaW5nIGFuZCBvbmNlIGFmdGVyIEVGSSBib290IHNlcnZpY2VzIGFyZSBmcmVl
+ZC4KPiA+ID4KPiA+ID4gQWx0ZXJuYXRpdmVseSwganVzdCByZXNlcnZlICphbGwqIG90aGVyd2lz
+ZSB1bnVzZWQgc3ViIDFNIG1lbW9yeSB1cCBmcm9udCwgdGhlbiByZWxlYXNlIGl0IHJpZ2h0IGFm
+dGVyIHJlbGVhc2luZyBib290IHNlcnZpY2VzLCBhbmQgdGhlbiBpbnZva2UgdGhlIHNwZWNpYWwg
+Y2FzZXMgZXhhY3RseSBvbmNlLgo+ID4KPiA+IEkgYW0gbm90IHN1cmUgaWYgSSBnb3QgYm90aCBz
+dWdnZXN0ZWQgd2F5cyBjbGVhcmx5LiBUaGV5IGxvb2sgYSBsaXR0bGUKPiA+IGNvbXBsaWNhdGVk
+IGluIG91ciBjYXNlLiBBcyBJIGV4cGxhaW5lZCBhdCBhYm92ZSwgd2Ugd2FudCB0aGUgd2hvbGUg
+bG93Cj4gPiAxTSBsb2NrZWQgdXAsIG5vdCBvbmUgcGllY2Ugb3Igc29tZSBwaWVjZXMgb2YgaXQu
+Cj4gCj4gTXkgc2Vjb25kIHN1Z2dlc3Rpb24gaXMgcHJvYmFibHkgdGhlIGJldHRlciBvbmUuICBI
+ZXJlIGl0IGlzLCBjb25jcmV0ZWx5Ogo+IAo+IFRoZSBlYXJseSAocHJlLWZyZWVfZWZpX2Jvb3Rf
+c2VydmljZXMpIGNvZGUganVzdCByZXNlcnZlcyBhbGwKPiBhdmFpbGFibGUgc3ViLTFNIG1lbW9y
+eSB1bmNvbmRpdGlvbmFsbHksIGJ1dCBpdCBzcGVjaWFsbHkgbWFya3MgaXQgYXMKPiByZXNlcnZl
+ZC1idXQtYXZhaWxhYmxlLWxhdGVyLiAgV2Ugc3RvcCBhbGxvY2F0aW5nIHRoZSB0cmFtcG9saW5l
+IHBhZ2UKPiBhdCB0aGlzIHN0YWdlLgo+IAo+IEluIGZyZWVfZWZpX2Jvb3Rfc2VydmljZXMsIGlu
+c3RlYWQgb2YgKmZyZWVpbmcqIHRoZSBzdWItMU0gbWVtb3J5LCB3ZQo+IHN0aWNrIGl0IGluIHRo
+ZSBwaWxlIG9mIHJlc2VydmVkIG1lbW9yeSBjcmVhdGVkIGluIHRoZSBlYXJseSBzdGVwLgo+IFRo
+aXMgbWF5IGludm9sdmUgc3BsaXR0aW5nIGEgYmxvY2ssIGtpbmQgb2YgbGlrZSB0aGUgY3VycmVu
+dAo+IHRyYW1wb2xpbmUgbGF0ZSBhbGxvY2F0aW9uIHdvcmtzLgo+IAo+IFRoZW4sICphZnRlciog
+ZnJlZV9lZmlfYm9vdF9zZXJ2aWNlcygpLCB3ZSBydW4gYSBzaW5nbGUgYmxvY2sgb2YgY29kZQo+
+IHRoYXQgbGV0cyBldmVyeXRoaW5nIHRoYXQgd2FudHMgc3ViLTFNIGNvZGUgY2xhaW0gc29tZS4g
+IFRoaXMgbWVhbnMKPiB0aGF0IHRoZSB0cmFtcG9saW5lIGdldHMgYWxsb2NhdGVkIGFuZCwgaWYg
+Y3Jhc2hrZXJuZWwgd2FudHMgdG8gY2xhaW0KPiBldmVyeXRoaW5nIGVsc2UsIGl0IGNhbi4gIEFm
+dGVyIHRoYXQsIGV2ZXJ5dGhpbmcgc3RpbGwgdW5jbGFpbWVkIGdldHMKPiBmcmVlZC4KCnZvaWQg
+X19pbml0IHNldHVwX2FyY2goY2hhciAqKmNtZGxpbmVfcCkKewouLi4KCWVmaV9yZXNlcnZlX2Jv
+b3Rfc2VydmljZXMoKTsKCWU4MjBfX21lbWJsb2NrX2FsbG9jX3Jlc2VydmVkX21wY19uZXcoKTsK
+I2lmZGVmIENPTkZJR19YODZfQ0hFQ0tfQklPU19DT1JSVVBUSU9OCiAgICAgICAgc2V0dXBfYmlv
+c19jb3JydXB0aW9uX2NoZWNrKCk7CiNlbmRpZgogICAgICAgIHJlc2VydmVfcmVhbF9tb2RlKCk7
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIAoKICAgICAgICB0cmltX3BsYXRmb3JtX21lbW9yeV9yYW5nZXMoKTsKICAgICAgICB0cmlt
+X2xvd19tZW1vcnlfcmFuZ2UoKTsKLi4uCn0KCkFmdGVyIGVmaV9yZXNlcnZlX2Jvb3Rfc2Vydmlj
+ZXMoKSwgdGhlcmUgYXJlIHNldmVyYWwgZnVuY3Rpb24gY2FsbGluZyB0bwpyZXF1aXJlIG1lbW9y
+eSByZXNlcnZhdGlvbiB1bmRlciBsb3cgMU0uCgoKYXNtbGlua2FnZSBfX3Zpc2libGUgdm9pZCBf
+X2luaXQgX19ub19zYW5pdGl6ZV9hZGRyZXNzIHN0YXJ0X2tlcm5lbCh2b2lkKSAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAKewouLi4KCXNldHVwX2FyY2goJmNvbW1hbmRfbGluZSk7Ci4uLgoJbW1faW5pdCgpOwoJ
+CS0tPiBtZW1faW5pdCgpOwoJCQkgLS0+bWVtYmxvY2tfZnJlZV9hbGwoKTsKCi4uLgojaWZkZWYg
+Q09ORklHX1g4NgogICAgICAgIGlmIChlZmlfZW5hYmxlZChFRklfUlVOVElNRV9TRVJWSUNFUykp
+CiAgICAgICAgICAgICAgICBlZmlfZW50ZXJfdmlydHVhbF9tb2RlKCk7CgkJCS0tPmVmaV9mcmVl
+X2Jvb3Rfc2VydmljZXMoKTsKCQkJCS0tPm1lbWJsb2NrX2ZyZWVfbGF0ZSgpOwojZW5kaWYKLi4u
+Cn0KClNvIGZyb20gdGhlIGNvZGUgZmxvdywgd2UgY2FuIHNlZSB0aGF0IGJ1ZGR5IGFsbG9jYXRv
+ciBpcyBidWlsdCBpbgptbV9pbml0KCkgd2hpY2ggcHV0cyBhbGwgbWVtb3J5IGZyb20gbWVtYmxv
+Y2subWVtb3J5IGV4Y2x1ZGluZwptZW1ibG9jay5yZXNlcnZlZCBpbnRvIGJ1ZGR5LiBBbmQgbXVj
+aCBsYXRlciwgd2UgY2FsbAplZmlfZnJlZV9ib290X3NlcnZpY2VzKCkgdG8gcmVsZWFzZSB0aG9z
+ZSByZXNlcnZlZCBlZmkgYm9vdCBtZW1vcnkgaW50bwpidWRkeSB0b28uCgpBcmUgeW91IHN1Z2dl
+c3Rpbmcgd2Ugc2hvdWxkIGRvIHRoZSBtZW1vcnkgcmVzZXJ2YXRpb24gZnJvbSBsb3cgMU0KYWZ0
+ZXIgZWZpX2ZyZWVfYm9vdF9zZXJ2aWNlcygpPyBUbyByZXF1aXJlIG1lbW9yeSBwYWdlcyBmcm9t
+IGJ1ZGR5IGZvcgp0aGVtPyBQbGVhc2UgaGVscCBwb2ludCBvdXQgbXkgbWlzdW5kZXJzdGFuZGlu
+ZyBpZiBoYXZlIGFueS4KCldpdGggbXkgdW5kZXJzdGFuZGluZywgaW4gbm9uLWVmaSBjYXNlLCB3
+ZSBoYXZlIGRvbmUgdGhlIG1lbW9yeQpyZXNlcnZhdGlvbiB3aXRoIG1lbWJsb2NrX3Jlc2VydmUo
+KSwgZS5nCmU4MjBfX21lbWJsb2NrX2FsbG9jX3Jlc2VydmVkX21wY19uZXcsIHJlc2VydmVfcmVh
+bF9tb2RlKCkgYXJlIGNhbGxpbmcKdG8gZG8uIEp1c3QgZWZpX3Jlc2VydmV8ZnJlZV9ib290X3Nl
+cnZpY2VzKCkgYnJlYWsgdGhlbSB3aGVuIGVmaSBpcwplbmFibGVkLiBXZSBjYW4gZG8gdGhlbSBh
+Z2FpbiBpbiBlZmlfZnJlZV9ib290X3NlcnZpY2VzKCkganVzdCBsaWtlIHRoZQpyZWFsX21vZGUg
+cmVzZXJ2YXRpb24gZG9lcy4KClRoYW5rcwpCYW9xdWFuCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
+LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
+by9rZXhlYwo=
