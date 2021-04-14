@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x134.google.com ([2607:f8b0:4864:20::134])
+Received: from szxga07-in.huawei.com ([45.249.212.35])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lWVtH-007SPN-Ex
- for kexec@lists.infradead.org; Wed, 14 Apr 2021 03:08:33 +0000
-Received: by mail-il1-x134.google.com with SMTP id c3so9771810ils.5
- for <kexec@lists.infradead.org>; Tue, 13 Apr 2021 20:08:30 -0700 (PDT)
+ id 1lWZbE-007YdT-Hn
+ for kexec@lists.infradead.org; Wed, 14 Apr 2021 07:06:10 +0000
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+ by szxga07-in.huawei.com (SkyGuard) with ESMTP id 4FKtjs4SskzB0jN
+ for <kexec@lists.infradead.org>; Wed, 14 Apr 2021 15:03:45 +0800 (CST)
+From: Jingxian He <hejingxian@huawei.com>
+Subject: kexec-starting-kernel-problem-on-vm
+Date: Wed, 14 Apr 2021 15:04:26 +0800
+Message-ID: <20210414070426.396692-1-hejingxian@huawei.com>
 MIME-Version: 1.0
-References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
- <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
- <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
- <CAFgQCTs58dOcO0CGVDD1WxiOE9yaPe_WG-U=t+=at45bAipQ_A@mail.gmail.com>
- <20210409163323.GP6564@kitsune.suse.cz>
-In-Reply-To: <20210409163323.GP6564@kitsune.suse.cz>
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Wed, 14 Apr 2021 11:08:19 +0800
-Message-ID: <CAFgQCTsTWiYcuiipWmnieuNTWTar30aAUOsE3L9CcrVBiQix3A@mail.gmail.com>
-Subject: Re: [PATCHv5 2/2] powerpc/pseries: update device tree before ejecting
- hotplug uevents
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,142 +19,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: multipart/mixed; boundary="===============8777880534663948233=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?Q?Michal_Such=C3=A1nek?= <msuchanek@suse.de>
-Cc: Laurent Dufour <ldufour@linux.ibm.com>, Nathan Lynch <nathanl@linux.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
+To: kexec@lists.infradead.org
+Cc: hewenliang4@huawei.com, wuxu.wu@huawei.com, horms@verge.net.au, hejingxian@huawei.com
 
-T24gU2F0LCBBcHIgMTAsIDIwMjEgYXQgMTI6MzMgQU0gTWljaGFsIFN1Y2jDoW5layA8bXN1Y2hh
-bmVrQHN1c2UuZGU+IHdyb3RlOgo+Cj4gSGVsbG8sCj4KPiBPbiBGcmksIEF1ZyAyOCwgMjAyMCBh
-dCAwNDoxMDowOVBNICswODAwLCBQaW5nZmFuIExpdSB3cm90ZToKPiA+IE9uIFRodSwgQXVnIDI3
-LCAyMDIwIGF0IDM6NTMgUE0gTGF1cmVudCBEdWZvdXIgPGxkdWZvdXJAbGludXguaWJtLmNvbT4g
-d3JvdGU6Cj4gPiA+Cj4gPiA+IExlIDEwLzA4LzIwMjAgw6AgMTA6NTIsIFBpbmdmYW4gTGl1IGEg
-w6ljcml0IDoKPiA+ID4gPiBBIGJ1ZyBpcyBvYnNlcnZlZCBvbiBwc2VyaWVzIGJ5IHRha2luZyB0
-aGUgZm9sbG93aW5nIHN0ZXBzIG9uIHJoZWw6Cj4gPiA+ID4gLTEuIGRybWdyIC1jIG1lbSAtciAt
-cSA1Cj4gPiA+ID4gLTIuIGVjaG8gYyA+IC9wcm9jL3N5c3JxLXRyaWdnZXIKPiA+ID4gPgo+ID4g
-PiA+IEFuZCB0aGVuLCB0aGUgZmFpbHVyZSBsb29rcyBsaWtlOgo+ID4gPiA+IGtkdW1wOiBzYXZp
-bmcgdG8gL3N5c3Jvb3QvL3Zhci9jcmFzaC8xMjcuMC4wLjEtMjAyMC0wMS0xNi0wMjowNjoxNC8K
-PiA+ID4gPiBrZHVtcDogc2F2aW5nIHZtY29yZS1kbWVzZy50eHQKPiA+ID4gPiBrZHVtcDogc2F2
-aW5nIHZtY29yZS1kbWVzZy50eHQgY29tcGxldGUKPiA+ID4gPiBrZHVtcDogc2F2aW5nIHZtY29y
-ZQo+ID4gPiA+ICAgQ2hlY2tpbmcgZm9yIG1lbW9yeSBob2xlcyAgICAgICAgICAgICAgICAgICAg
-ICAgICA6IFsgIDAuMCAlXSAvICAgICAgICAgICAgICAgICAgIENoZWNraW5nIGZvciBtZW1vcnkg
-aG9sZXMgICAgICAgICAgICAgICAgICAgICAgICAgOiBbMTAwLjAgJV0gfCAgICAgICAgICAgICAg
-ICAgICBFeGNsdWRpbmcgdW5uZWNlc3NhcnkgcGFnZXMgICAgICAgICAgICAgICAgICAgICAgIDog
-WzEwMC4wICVdIFwgICAgICAgICAgICAgICAgICAgQ29weWluZyBkYXRhICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICA6IFsgIDAuMyAlXSAtICAgICAgICAgIGV0YTogMzhzWyAg
-IDQ0LjMzNzYzNl0gaGFzaC1tbXU6IG1tOiBIYXNoaW5nIGZhaWx1cmUgISBFQT0weDdmZmZiYTQw
-MDAwMCBhY2Nlc3M9MHg4MDAwMDAwMDAwMDAwMDA0IGN1cnJlbnQ9bWFrZWR1bXBmaWxlCj4gPiA+
-ID4gWyAgIDQ0LjMzNzY2M10gaGFzaC1tbXU6ICAgICB0cmFwPTB4MzAwIHZzaWQ9MHgxM2ExMDlj
-IHNzaXplPTEgYmFzZSBwc2l6ZT0yIHBzaXplIDIgcHRlPTB4YzAwMDAwMDA1MDAwMDUwNAo+ID4g
-PiA+IFsgICA0NC4zMzc2NzddIGhhc2gtbW11OiBtbTogSGFzaGluZyBmYWlsdXJlICEgRUE9MHg3
-ZmZmYmE0MDAwMDAgYWNjZXNzPTB4ODAwMDAwMDAwMDAwMDAwNCBjdXJyZW50PW1ha2VkdW1wZmls
-ZQo+ID4gPiA+IFsgICA0NC4zMzc2OTJdIGhhc2gtbW11OiAgICAgdHJhcD0weDMwMCB2c2lkPTB4
-MTNhMTA5YyBzc2l6ZT0xIGJhc2UgcHNpemU9MiBwc2l6ZSAyIHB0ZT0weGMwMDAwMDAwNTAwMDA1
-MDQKPiA+ID4gPiBbICAgNDQuMzM3NzA4XSBtYWtlZHVtcGZpbGVbNDY5XTogdW5oYW5kbGVkIHNp
-Z25hbCA3IGF0IDAwMDA3ZmZmYmE0MDAwMDAgbmlwIDAwMDA3ZmZmYmJjNGQ3ZmMgbHIgMDAwMDAw
-MDExMzU2Y2EzYyBjb2RlIDIKPiA+ID4gPiBbICAgNDQuMzM4NTQ4XSBDb3JlIGR1bXAgdG8gfC9i
-aW4vZmFsc2UgcGlwZSBmYWlsZWQKPiA+ID4gPiAvbGliL2tkdW1wLWxpYi1pbml0cmFtZnMuc2g6
-IGxpbmUgOTg6ICAgNDY5IEJ1cyBlcnJvciAgICAgICAgICAgICAgICRDT1JFX0NPTExFQ1RPUiAv
-cHJvYy92bWNvcmUgJF9tcC8kS0RVTVBfUEFUSC8kSE9TVF9JUC0kREFURURJUi92bWNvcmUtaW5j
-b21wbGV0ZQo+ID4gPiA+IGtkdW1wOiBzYXZpbmcgdm1jb3JlIGZhaWxlZAo+ID4gPiA+Cj4gPiA+
-ID4gKiBSb290IGNhdXNlICoKPiA+ID4gPiAgICBBZnRlciBhbmFseXppbmcsIGl0IHR1cm5zIG91
-dCB0aGF0IGluIHRoZSBjdXJyZW50IGltcGxlbWVudGF0aW9uLAo+ID4gPiA+IHdoZW4gaG90LXJl
-bW92aW5nIGxtYiwgdGhlIEtPQkpfUkVNT1ZFIGV2ZW50IGVqZWN0cyBiZWZvcmUgdGhlIGR0IHVw
-ZGF0aW5nIGFzCj4gPiA+ID4gdGhlIGNvZGUgX19yZW1vdmVfbWVtb3J5KCkgY29tZXMgYmVmb3Jl
-IGRybWVtX3VwZGF0ZV9kdCgpLgo+ID4gPiA+IFNvIGluIGtkdW1wIGtlcm5lbCwgd2hlbiByZWFk
-X2Zyb21fb2xkbWVtKCkgcmVzb3J0cyB0bwo+ID4gPiA+IHBTZXJpZXNfbHBhcl9ocHRlX2luc2Vy
-dCgpIHRvIGluc3RhbGwgaHB0ZSwgYnV0IGZhaWxzIHdpdGggLTIgZHVlIHRvCj4gPiA+ID4gbm9u
-LWV4aXN0IHBmbi4gQW5kIGZpbmFsbHksIGxvd19oYXNoX2ZhdWx0KCkgcmFpc2UgU0lHQlVTIHRv
-IHByb2Nlc3MsIGFzIGl0Cj4gPiA+ID4gY2FuIGJlIG9ic2VydmVkICJCdXMgZXJyb3IiCj4gPiA+
-ID4KPiA+ID4gPiAgRnJvbSBhIHZpZXdwb2ludCBvZiBsaXN0ZW5lciBhbmQgcHVibGlzaGVyLCB0
-aGUgcHVibGlzaGVyIG5vdGlmaWVzIHRoZQo+ID4gPiA+IGxpc3RlbmVyIGJlZm9yZSBkYXRhIGlz
-IHJlYWR5LiAgVGhpcyBpbnRyb2R1Y2VzIGEgcHJvYmxlbSB3aGVyZSB1ZGV2Cj4gPiA+ID4gbGF1
-bmNoZXMga2V4ZWMtdG9vbHMgKGR1ZSB0byBLT0JKX1JFTU9WRSkgYW5kIGxvYWRzIGEgc3RhbGUg
-ZHQgYmVmb3JlCj4gPiA+ID4gdXBkYXRpbmcuIEFuZCBpbiBjYXB0dXJlIGtlcm5lbCwgbWFrZWR1
-bXBmaWxlIHdpbGwgYWNjZXNzIHRoZSBtZW1vcnkgYmFzZWQKPiA+ID4gPiBvbiB0aGUgc3RhbGUg
-ZHQgaW5mbywgYW5kIGhpdCBhIFNJR0JVUyBlcnJvciBkdWUgdG8gYW4gdW4tZXhpc3RlZCBsbWIu
-Cj4gPiA+ID4KPiA+ID4gPiAqIEZpeCAqCj4gPiA+ID4gVGhpcyBidWcgaXMgaW50cm9kdWNlZCBi
-eSBjb21taXQgMDYzYjhiMTI1MWZkCj4gPiA+ID4gKCJwb3dlcnBjL3BzZXJpZXMvbWVtb3J5LWhv
-dHBsdWc6IE9ubHkgdXBkYXRlIERUIG9uY2UgcGVyIG1lbW9yeSBETFBBUgo+ID4gPiA+IHJlcXVl
-c3QiKSwgd2hpY2ggdHJpZWQgdG8gY29tYmluZSBhbGwgdGhlIGR0IHVwZGF0aW5nIGludG8gb25l
-Lgo+ID4gPiA+Cj4gPiA+ID4gVG8gZml4IHRoaXMgaXNzdWUsIG1lYW53aGlsZSBub3QgdG8gaW50
-cm9kdWNlIGEgcXVhZHJhdGljIHJ1bnRpbWUKPiA+ID4gPiBjb21wbGV4aXR5IGJ5IHRoZSBtb2Rl
-bDoKPiA+ID4gPiAgICBkbHBhcl9tZW1vcnlfYWRkX2J5X2NvdW50Cj4gPiA+ID4gICAgICBmb3Jf
-ZWFjaF9kcm1lbV9sbWIgICAgICAgICAgICAgPC0tCj4gPiA+ID4gICAgICAgIGRscGFyX2FkZF9s
-bWIKPiA+ID4gPiAgICAgICAgICBkcm1lbV91cGRhdGVfZHQoX3YxfF92MikKPiA+ID4gPiAgICAg
-ICAgICAgIGZvcl9lYWNoX2RybWVtX2xtYiAgICAgICA8LS0KPiA+ID4gPiBUaGUgZHQgc2hvdWxk
-IHN0aWxsIGJlIG9ubHkgdXBkYXRlZCBvbmNlLCBhbmQganVzdCBiZWZvcmUgdGhlIGxhc3QgbWVt
-b3J5Cj4gPiA+ID4gb25saW5lL29mZmxpbmUgZXZlbnQgaXMgZWplY3RlZCB0byB1c2VyIHNwYWNl
-LiBBY2hpZXZlIHRoaXMgYnkgdHJhY2luZyB0aGUKPiA+ID4gPiBudW0gb2YgbG1iIGFkZGVkIG9y
-IHJlbW92ZWQuCj4gPiA+ID4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBQaW5nZmFuIExpdSA8a2Vy
-bmVsZmFuc0BnbWFpbC5jb20+Cj4gPiA+ID4gQ2M6IE1pY2hhZWwgRWxsZXJtYW4gPG1wZUBlbGxl
-cm1hbi5pZC5hdT4KPiA+ID4gPiBDYzogSGFyaSBCYXRoaW5pIDxoYmF0aGluaUBsaW51eC5pYm0u
-Y29tPgo+ID4gPiA+IENjOiBOYXRoYW4gTHluY2ggPG5hdGhhbmxAbGludXguaWJtLmNvbT4KPiA+
-ID4gPiBDYzogTmF0aGFuIEZvbnRlbm90IDxuZm9udEBsaW51eC52bmV0LmlibS5jb20+Cj4gPiA+
-ID4gQ2M6IExhdXJlbnQgRHVmb3VyIDxsZHVmb3VyQGxpbnV4LmlibS5jb20+Cj4gPiA+ID4gVG86
-IGxpbnV4cHBjLWRldkBsaXN0cy5vemxhYnMub3JnCj4gPiA+ID4gQ2M6IGtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKPiA+ID4gPiAtLS0KPiA+ID4gPiB2NCAtPiB2NTogY2hhbmdlIGRscGFyX2Fk
-ZF9sbWIoKS9kbHBhcl9yZW1vdmVfbG1iKCkgcHJvdG90eXBlIHRvIHJlcG9ydAo+ID4gPiA+ICAg
-ICAgICAgICAgd2hldGhlciBkdCBpcyB1cGRhdGVkIHN1Y2Nlc3NmdWxseS4KPiA+ID4gPiAgICAg
-ICAgICAgIEZpeCBhIGNvbmRpdGlvbiBib3VuZGFyeSBjaGVjayBidWcKPiA+ID4gPiB2MyAtPiB2
-NDogcmVzb2x2ZSBhIHF1YWRyYXRpYyBydW50aW1lIGNvbXBsZXhpdHkgaXNzdWUuCj4gPiA+ID4g
-ICAgICAgICAgICBUaGlzIHNlcmllcyBpcyBhcHBsaWVkIG9uIG5leHQtdGVzdCBicmFuY2gKPiA+
-ID4gPiAgIGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jIHwg
-MTAyICsrKysrKysrKysrKysrKysrKystLS0tLQo+ID4gPiA+ICAgMSBmaWxlIGNoYW5nZWQsIDgw
-IGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQo+ID4gPiA+Cj4gPiA+ID4gZGlmZiAtLWdp
-dCBhL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jIGIvYXJj
-aC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVzL2hvdHBsdWctbWVtb3J5LmMKPiA+ID4gPiBpbmRl
-eCA0NmNiY2QxLi4xNTY3ZDlmIDEwMDY0NAo+ID4gPiA+IC0tLSBhL2FyY2gvcG93ZXJwYy9wbGF0
-Zm9ybXMvcHNlcmllcy9ob3RwbHVnLW1lbW9yeS5jCj4gPiA+ID4gKysrIGIvYXJjaC9wb3dlcnBj
-L3BsYXRmb3Jtcy9wc2VyaWVzL2hvdHBsdWctbWVtb3J5LmMKPiA+ID4gPiBAQCAtMzUwLDEzICsz
-NTAsMjIgQEAgc3RhdGljIGJvb2wgbG1iX2lzX3JlbW92YWJsZShzdHJ1Y3QgZHJtZW1fbG1iICps
-bWIpCj4gPiA+ID4gICAgICAgcmV0dXJuIHRydWU7Cj4gPiA+ID4gICB9Cj4gPiA+ID4KPiA+ID4g
-PiAtc3RhdGljIGludCBkbHBhcl9hZGRfbG1iKHN0cnVjdCBkcm1lbV9sbWIgKik7Cj4gPiA+ID4g
-K2VudW0gZHRfdXBkYXRlX3N0YXR1cyB7Cj4gPiA+ID4gKyAgICAgRFRfTk9VUERBVEUsCj4gPiA+
-ID4gKyAgICAgRFRfVE9VUERBVEUsCj4gPiA+ID4gKyAgICAgRFRfVVBEQVRFRCwKPiA+ID4gPiAr
-fTsKPiA+ID4gPiArCj4gPiA+ID4gKy8qICIqZHRfdXBkYXRlIiByZXR1cm5zIERUX1VQREFURUQg
-aWYgdXBkYXRlZCAqLwo+ID4gPiA+ICtzdGF0aWMgaW50IGRscGFyX2FkZF9sbWIoc3RydWN0IGRy
-bWVtX2xtYiAqbG1iLAo+ID4gPiA+ICsgICAgICAgICAgICAgZW51bSBkdF91cGRhdGVfc3RhdHVz
-ICpkdF91cGRhdGUpOwo+ID4gPiA+Cj4gPiA+ID4gLXN0YXRpYyBpbnQgZGxwYXJfcmVtb3ZlX2xt
-YihzdHJ1Y3QgZHJtZW1fbG1iICpsbWIpCj4gPiA+ID4gK3N0YXRpYyBpbnQgZGxwYXJfcmVtb3Zl
-X2xtYihzdHJ1Y3QgZHJtZW1fbG1iICpsbWIsCj4gPiA+ID4gKyAgICAgICAgICAgICBlbnVtIGR0
-X3VwZGF0ZV9zdGF0dXMgKmR0X3VwZGF0ZSkKPiA+ID4gPiAgIHsKPiA+ID4gPiAgICAgICB1bnNp
-Z25lZCBsb25nIGJsb2NrX3N6Owo+ID4gPiA+ICAgICAgIHBoeXNfYWRkcl90IGJhc2VfYWRkcjsK
-PiA+ID4gPiAtICAgICBpbnQgcmMsIG5pZDsKPiA+ID4gPiArICAgICBpbnQgcmMsIHJldCwgbmlk
-Owo+ID4gPiA+Cj4gPiA+ID4gICAgICAgaWYgKCFsbWJfaXNfcmVtb3ZhYmxlKGxtYikpCj4gPiA+
-ID4gICAgICAgICAgICAgICByZXR1cm4gLUVJTlZBTDsKPiA+ID4gPiBAQCAtMzcyLDYgKzM4MSwx
-MyBAQCBzdGF0aWMgaW50IGRscGFyX3JlbW92ZV9sbWIoc3RydWN0IGRybWVtX2xtYiAqbG1iKQo+
-ID4gPiA+ICAgICAgIGludmFsaWRhdGVfbG1iX2Fzc29jaWF0aXZpdHlfaW5kZXgobG1iKTsKPiA+
-ID4gPiAgICAgICBsbWJfY2xlYXJfbmlkKGxtYik7Cj4gPiA+ID4gICAgICAgbG1iLT5mbGFncyAm
-PSB+RFJDT05GX01FTV9BU1NJR05FRDsKPiA+ID4gPiArICAgICBpZiAoKmR0X3VwZGF0ZSkgewo+
-ID4gT3JpZ2luYWwsIEkgcGxhbiB0byB1c2UgaXQgdG8gZXhjbHVkZSB0aGUgY2FzZSBvZiBEVF9O
-T1VQREFURSwgd2hpY2ggaXMgdmFsdWUgMC4KPiA+IEFuZCBJIHRoaW5rIGl0IGxvb2tzIGJldHRl
-ciBieSB1c2luZyBpZiAoKmR0X3VwZGF0ZSA9PSBEVF9UT1VQREFURSkKPiA+ID4KPiA+ID4gVGhh
-dCB0ZXN0IGlzIHdyb25nLCB5b3Ugc2hvdWxkIGRvOgo+ID4gPiAgICAgICAgICBpZiAoKmR0X3Vw
-ZGF0ZSAmJiAqZHRfdXBkYXRlID09IERUX1RPVVBEQVRFKSB7Cj4gPiBJIHRoaW5rIHlvdSBtZWFu
-ICBpZiAoZHRfdXBkYXRlICYmICpkdF91cGRhdGUgPT0gRFRfVE9VUERBVEUpIHsKPiA+ID4KPiA+
-ID4gV2l0aCB0aGUgY3VycmVudCBjb2RlLCB0aGUgZGV2aWNlIHRyZWUgaXMgdXBkYXRlZCBhbGwg
-dGhlIHRpbWUuCj4gPiA+Cj4gPiA+IEFub3RoZXIgb3B0aW9uIHdvdWxkIGJlIHRvIHBhc3MgYSB2
-YWxpZCBwb2ludGVyICghPSBOVUxMKSBvbmx5IHdoZW4gRFQgdXBkYXRlIGlzCj4gPiA+IHJlcXVp
-cmVkLCB0aGlzIHdheSB5b3UgZG9uJ3QgbmVlZCB0aGUgRFRfVE9VUERBVEUgdmFsdWUuIFRoZSBj
-YWxsZXIgd291bGQgaGF2ZQo+ID4gPiB0byBzZXQgdGhlIHBvaW50ZXIgYWNjb3JkaW5nbHkuIFRo
-ZSBhZHZhbnRhZ2Ugd2l0aCB0aGlzIG9wdGlvbiBpcyB0aGUgY2FsbGVyIGlzCj4gPiA+IGd1YXJh
-bnRlZWQgdGhhdCBpdHMgdmFyaWFibGUgaXMgbm90IHRvdWNoZWQgYnkgdGhlIGNhbGxlZSB3aGVu
-IG5vIGRldmljZSB0cmVlIGlzCj4gPiA+IHJlcXVlc3RlZC4gQSBzaW1wbGUgYm9vbGVhbiBwb2lu
-dGVyIHdvdWxkIGJlIGVub3VnaCB3aXRob3V0IHRoZSBuZWVkIHRvIHRoaXMgZW51bS4KPiA+IEl0
-IGlzIGV4cGVjdGVkIHRoYXQgZGxwYXJfcmVtb3ZlX2xtYi9kbHBhcl9hZGRfbG1iIGNhbiByZXBv
-cnQgd2hldGhlcgo+ID4gdGhleSBzdWNjZXNzZnVsbHkgdXBkYXRlIGR0IG9yIG5vdC4gU28gdGhl
-IGNhbGxlciBjYW4gaGFuZGxlIHRoZQo+ID4gZGlmZmVyZW50IGNhc2VzLgo+Cj4gSXMgdGhlcmUg
-YW55IHBsYW4gdG8gcmVmcmVzaCB0aGlzIHBhdGNoIHRvIGFwcGx5IHRvIG1hc3Rlcj8KPgpTcHJl
-YWRpbmcgdGhlIGZhaWx1cmUgYW5kIHJvbGxiYWNrIGxvZ2ljIGFyb3VuZCB0aGUgY29kZSBsb29r
-cyB1cmdseS4KRXZlbiBteXNlbGYgZGlzbGlrZSBpdC4gQnV0IEkgaGF2ZSBub3QgZm91bmQgYSBi
-ZXR0ZXIgd2F5IG91dC4KCj4gSSBhbSB1c2luZyBhbiBvbGRlciByZXZpc2lvbiBvZiB0aGlzIHBh
-dGNoIHNvIEkgYW0gbm90IGluIHRoZSBwb3NpdGlvbgo+IHRvIHJlcG9zdCBhbiB1cGRhdGVkIHZl
-cnNpb24uCj4KPiBJIGxhY2sgc29tZSBvdGltaXphdGlvbiBpbiBteSBwYXRjaCBzbyBJIHByb2Jh
-Ymx5IGhhdmUgdGhlIHF1YWRyYXRpYwo+IGNvcGxleGl0eSBvZiB0aGUgYWRkIG1lbnRpb25lZCBh
-Ym92ZS4KPgpEbyB5b3UgaGF2ZSBhbnkgZ29vZCBpZGVhcz8KClRoYW5rcywKUGluZ2ZhbgoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGlu
-ZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5v
-cmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+--===============8777880534663948233==
+Content-Type: text/plain
+
+We use ���kexec ���l��� and ���kexec ���e��� on our virtual machine to upgrade the
+linux kernel. We find that the new kernel may start fail due to checking
+the sha256 sum of the initrd segment checking fail with low probability.
+
+The related code is as following:
+/* arch/x86/purgatory/purgatory.c */
+static int verify_sha256_digest(void)
+{
+	struct kexec_sha_region *ptr, *end;
+	u8 digest[SHA256_DIGEST_SIZE];
+	struct sha256_state sctx;
+
+	sha256_init(&sctx);
+	end = purgatory_sha_regions + ARRAY_SIZE(purgatory_sha_regions);
+
+	for (ptr = purgatory_sha_regions; ptr < end; ptr++)
+		sha256_update(&sctx, (uint8_t *)(ptr->start), ptr->len);
+
+	sha256_final(&sctx, digest);
+
+	if (memcmp(digest, purgatory_sha256_digest, sizeof(digest)))
+		return 1;
+
+	return 0;
+}
+
+void purgatory(void)
+{
+	int ret;
+
+	ret = verify_sha256_digest();
+	if (ret) { //<------verify_sha256 fail, entering loop forever
+		/* loop forever */
+		for (;;)
+			;
+	}
+	copy_backup_region();
+}
+
+
+Our opnion of this problem:
+We think that the process of relocating the new kernel depending on the
+boot cpu running without interruption. However, the vcpus may be interrupted
+by the qemu process with async_page_fault interruption.
+There exists memory overriding risk when the boot vcpu relocate the new kernel.
+
+When we enable the KVM_GUEST feature, and make the memory less than 500M,
+The new kernel starting problem with ���kexec -l/-e��� will happen at every time.
+
+My last question is:
+Are ���kexec ���l��� and ���kexec ���e��� commands not applicable on virtual machines?
+
+
+
+--===============8777880534663948233==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--===============8777880534663948233==--
