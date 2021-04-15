@@ -1,19 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by desiato.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lWb3w-00C0k0-V4
- for kexec@lists.infradead.org; Wed, 14 Apr 2021 08:39:58 +0000
-Received: by mail-pg1-f199.google.com with SMTP id m1so492751pgp.4
- for <kexec@lists.infradead.org>; Wed, 14 Apr 2021 01:39:37 -0700 (PDT)
-Date: Wed, 14 Apr 2021 16:39:27 +0800
-From: Tao Liu <ltao@redhat.com>
-Subject: Re: [CFT][PATCH] kexec: Remove the error prone kernel_version function
-Message-ID: <YHaqPwaFRB8u+TiN@MiWiFi-RA69-srv>
-References: <20210409154642.GA30739@zipoli.concurrrent-rt.com>
- <m1blanmnqc.fsf@fess.ebiederm.org>
+Received: from mx2.suse.de ([195.135.220.15])
+ by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lX0nz-008YIY-VB
+ for kexec@lists.infradead.org; Thu, 15 Apr 2021 12:09:09 +0000
+Date: Thu, 15 Apr 2021 14:09:02 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Subject: Re: [PATCHv5 2/2] powerpc/pseries: update device tree before
+ ejecting hotplug uevents
+Message-ID: <20210415120902.GI6564@kitsune.suse.cz>
+References: <1597049570-19536-1-git-send-email-kernelfans@gmail.com>
+ <1597049570-19536-2-git-send-email-kernelfans@gmail.com>
+ <17369122-3e37-1360-0f68-827a8104cd35@linux.ibm.com>
+ <CAFgQCTs58dOcO0CGVDD1WxiOE9yaPe_WG-U=t+=at45bAipQ_A@mail.gmail.com>
+ <20210409163323.GP6564@kitsune.suse.cz>
+ <CAFgQCTsTWiYcuiipWmnieuNTWTar30aAUOsE3L9CcrVBiQix3A@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <m1blanmnqc.fsf@fess.ebiederm.org>
 Content-Disposition: inline
+In-Reply-To: <CAFgQCTsTWiYcuiipWmnieuNTWTar30aAUOsE3L9CcrVBiQix3A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,251 +25,216 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Joe Korty <joe.korty@concurrent-rt.com>, Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Khalid Aziz <khalid@gonehiking.org>, Hariprasad Nellitheertha <hari@in.ibm.com>, Tim Deegan <tjd21@cl.cam.ac.uk>, Hongyan Xia <hongyxia@amazon.com>, David Hildenbrand <david@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Pingfan Liu <kernelfans@gmail.com>
+Cc: Laurent Dufour <ldufour@linux.ibm.com>, Nathan Lynch <nathanl@linux.ibm.com>, Kexec Mailing List <kexec@lists.infradead.org>, Nathan Fontenot <nfont@linux.vnet.ibm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Hari Bathini <hbathini@linux.ibm.com>
 
-On Fri, Apr 09, 2021 at 11:22:51AM -0500, Eric W. Biederman wrote:
-> 
-> During kexec there are two kernel versions at play.  The version of
-> the running kernel and the version of the kernel that will be booted.
-> 
-> On powerpc it appears people have been using the version of the
-> running kernel to attempt to detect properties of the kernel to be
-> booted which is just wrong.  As the linux kernel version that is being
-> detected is a no longer supported kernel just remove that buggy and
-> confused code.
-> 
-> On x86_64 the kernel_version is used to compute the starting virtual
-> address of the running kernel so a proper core dump may be generated.
-> Using the kernel_version stopped working a while ago when the starting
-> virtual address  became randomized.
-> 
-> The old code was kept for the case where the kernel was not built with
-> randomization support, but there is nothing in reading /proc/kcore
-> that won't work to detect the starting virtual address even there.
-> In fact /proc/kcore must have the starting virtual address or a
-> debugger can not make sense of the running kernel.
-> 
-> So just make computing the starting virtual address on x86_64
-> unconditional.  With a hard coded fallback just in case something went
-> wrong.
-> 
-> Doing something with kernel_version() has become important as recent
-> stable kernels have seen the minor version to > 255.  Just removing
-> kernel_version() looks like the best option.
-> 
-> Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> ---
-> 
-> Can folks please test this patch and verify that it works.  I really
-> think simply removing the problem code is going to be a much more robust
-> solution than papering over the bug.
+Hello,
 
-Hello Eric,
+On Wed, Apr 14, 2021 at 11:08:19AM +0800, Pingfan Liu wrote:
+> On Sat, Apr 10, 2021 at 12:33 AM Michal Such=E1nek <msuchanek@suse.de> wr=
+ote:
+> >
+> > Hello,
+> >
+> > On Fri, Aug 28, 2020 at 04:10:09PM +0800, Pingfan Liu wrote:
+> > > On Thu, Aug 27, 2020 at 3:53 PM Laurent Dufour <ldufour@linux.ibm.com=
+> wrote:
+> > > >
+> > > > Le 10/08/2020 =E0 10:52, Pingfan Liu a =E9crit :
+> > > > > A bug is observed on pseries by taking the following steps on rhe=
+l:
+> > > > > -1. drmgr -c mem -r -q 5
+> > > > > -2. echo c > /proc/sysrq-trigger
+> > > > >
+> > > > > And then, the failure looks like:
+> > > > > kdump: saving to /sysroot//var/crash/127.0.0.1-2020-01-16-02:06:1=
+4/
+> > > > > kdump: saving vmcore-dmesg.txt
+> > > > > kdump: saving vmcore-dmesg.txt complete
+> > > > > kdump: saving vmcore
+> > > > >   Checking for memory holes                         : [  0.0 %] /=
+                   Checking for memory holes                         : [100=
+.0 %] |                   Excluding unnecessary pages                      =
+ : [100.0 %] \                   Copying data                              =
+        : [  0.3 %] -          eta: 38s[   44.337636] hash-mmu: mm: Hashing=
+ failure ! EA=3D0x7fffba400000 access=3D0x8000000000000004 current=3Dmakedu=
+mpfile
+> > > > > [   44.337663] hash-mmu:     trap=3D0x300 vsid=3D0x13a109c ssize=
+=3D1 base psize=3D2 psize 2 pte=3D0xc000000050000504
+> > > > > [   44.337677] hash-mmu: mm: Hashing failure ! EA=3D0x7fffba40000=
+0 access=3D0x8000000000000004 current=3Dmakedumpfile
+> > > > > [   44.337692] hash-mmu:     trap=3D0x300 vsid=3D0x13a109c ssize=
+=3D1 base psize=3D2 psize 2 pte=3D0xc000000050000504
+> > > > > [   44.337708] makedumpfile[469]: unhandled signal 7 at 00007fffb=
+a400000 nip 00007fffbbc4d7fc lr 000000011356ca3c code 2
+> > > > > [   44.338548] Core dump to |/bin/false pipe failed
+> > > > > /lib/kdump-lib-initramfs.sh: line 98:   469 Bus error            =
+   $CORE_COLLECTOR /proc/vmcore $_mp/$KDUMP_PATH/$HOST_IP-$DATEDIR/vmcore-i=
+ncomplete
+> > > > > kdump: saving vmcore failed
+> > > > >
+> > > > > * Root cause *
+> > > > >    After analyzing, it turns out that in the current implementati=
+on,
+> > > > > when hot-removing lmb, the KOBJ_REMOVE event ejects before the dt=
+ updating as
+> > > > > the code __remove_memory() comes before drmem_update_dt().
+> > > > > So in kdump kernel, when read_from_oldmem() resorts to
+> > > > > pSeries_lpar_hpte_insert() to install hpte, but fails with -2 due=
+ to
+> > > > > non-exist pfn. And finally, low_hash_fault() raise SIGBUS to proc=
+ess, as it
+> > > > > can be observed "Bus error"
+> > > > >
+> > > > >  From a viewpoint of listener and publisher, the publisher notifi=
+es the
+> > > > > listener before data is ready.  This introduces a problem where u=
+dev
+> > > > > launches kexec-tools (due to KOBJ_REMOVE) and loads a stale dt be=
+fore
+> > > > > updating. And in capture kernel, makedumpfile will access the mem=
+ory based
+> > > > > on the stale dt info, and hit a SIGBUS error due to an un-existed=
+ lmb.
+> > > > >
+> > > > > * Fix *
+> > > > > This bug is introduced by commit 063b8b1251fd
+> > > > > ("powerpc/pseries/memory-hotplug: Only update DT once per memory =
+DLPAR
+> > > > > request"), which tried to combine all the dt updating into one.
+> > > > >
+> > > > > To fix this issue, meanwhile not to introduce a quadratic runtime
+> > > > > complexity by the model:
+> > > > >    dlpar_memory_add_by_count
+> > > > >      for_each_drmem_lmb             <--
+> > > > >        dlpar_add_lmb
+> > > > >          drmem_update_dt(_v1|_v2)
+> > > > >            for_each_drmem_lmb       <--
+> > > > > The dt should still be only updated once, and just before the las=
+t memory
+> > > > > online/offline event is ejected to user space. Achieve this by tr=
+acing the
+> > > > > num of lmb added or removed.
+> > > > >
+> > > > > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > > > > Cc: Michael Ellerman <mpe@ellerman.id.au>
+> > > > > Cc: Hari Bathini <hbathini@linux.ibm.com>
+> > > > > Cc: Nathan Lynch <nathanl@linux.ibm.com>
+> > > > > Cc: Nathan Fontenot <nfont@linux.vnet.ibm.com>
+> > > > > Cc: Laurent Dufour <ldufour@linux.ibm.com>
+> > > > > To: linuxppc-dev@lists.ozlabs.org
+> > > > > Cc: kexec@lists.infradead.org
+> > > > > ---
+> > > > > v4 -> v5: change dlpar_add_lmb()/dlpar_remove_lmb() prototype to =
+report
+> > > > >            whether dt is updated successfully.
+> > > > >            Fix a condition boundary check bug
+> > > > > v3 -> v4: resolve a quadratic runtime complexity issue.
+> > > > >            This series is applied on next-test branch
+> > > > >   arch/powerpc/platforms/pseries/hotplug-memory.c | 102 +++++++++=
+++++++++++-----
+> > > > >   1 file changed, 80 insertions(+), 22 deletions(-)
+> > > > >
+> > > > > diff --git a/arch/powerpc/platforms/pseries/hotplug-memory.c b/ar=
+ch/powerpc/platforms/pseries/hotplug-memory.c
+> > > > > index 46cbcd1..1567d9f 100644
+> > > > > --- a/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > > > > +++ b/arch/powerpc/platforms/pseries/hotplug-memory.c
+> > > > > @@ -350,13 +350,22 @@ static bool lmb_is_removable(struct drmem_l=
+mb *lmb)
+> > > > >       return true;
+> > > > >   }
+> > > > >
+> > > > > -static int dlpar_add_lmb(struct drmem_lmb *);
+> > > > > +enum dt_update_status {
+> > > > > +     DT_NOUPDATE,
+> > > > > +     DT_TOUPDATE,
+> > > > > +     DT_UPDATED,
+> > > > > +};
+> > > > > +
+> > > > > +/* "*dt_update" returns DT_UPDATED if updated */
+> > > > > +static int dlpar_add_lmb(struct drmem_lmb *lmb,
+> > > > > +             enum dt_update_status *dt_update);
+> > > > >
+> > > > > -static int dlpar_remove_lmb(struct drmem_lmb *lmb)
+> > > > > +static int dlpar_remove_lmb(struct drmem_lmb *lmb,
+> > > > > +             enum dt_update_status *dt_update)
+> > > > >   {
+> > > > >       unsigned long block_sz;
+> > > > >       phys_addr_t base_addr;
+> > > > > -     int rc, nid;
+> > > > > +     int rc, ret, nid;
+> > > > >
+> > > > >       if (!lmb_is_removable(lmb))
+> > > > >               return -EINVAL;
+> > > > > @@ -372,6 +381,13 @@ static int dlpar_remove_lmb(struct drmem_lmb=
+ *lmb)
+> > > > >       invalidate_lmb_associativity_index(lmb);
+> > > > >       lmb_clear_nid(lmb);
+> > > > >       lmb->flags &=3D ~DRCONF_MEM_ASSIGNED;
+> > > > > +     if (*dt_update) {
+> > > Original, I plan to use it to exclude the case of DT_NOUPDATE, which =
+is value 0.
+> > > And I think it looks better by using if (*dt_update =3D=3D DT_TOUPDAT=
+E)
+> > > >
+> > > > That test is wrong, you should do:
+> > > >          if (*dt_update && *dt_update =3D=3D DT_TOUPDATE) {
+> > > I think you mean  if (dt_update && *dt_update =3D=3D DT_TOUPDATE) {
+> > > >
+> > > > With the current code, the device tree is updated all the time.
+> > > >
+> > > > Another option would be to pass a valid pointer (!=3D NULL) only wh=
+en DT update is
+> > > > required, this way you don't need the DT_TOUPDATE value. The caller=
+ would have
+> > > > to set the pointer accordingly. The advantage with this option is t=
+he caller is
+> > > > guaranteed that its variable is not touched by the callee when no d=
+evice tree is
+> > > > requested. A simple boolean pointer would be enough without the nee=
+d to this enum.
+> > > It is expected that dlpar_remove_lmb/dlpar_add_lmb can report whether
+> > > they successfully update dt or not. So the caller can handle the
+> > > different cases.
+> >
+> > Is there any plan to refresh this patch to apply to master?
+> >
+> Spreading the failure and rollback logic around the code looks urgly.
+> Even myself dislike it. But I have not found a better way out.
+> =
 
-I have the patch tested in the following cases:
+> > I am using an older revision of this patch so I am not in the position
+> > to repost an updated version.
+> >
+> > I lack some otimization in my patch so I probably have the quadratic
+> > coplexity of the add mentioned above.
+> >
+> Do you have any good ideas?
 
-x86_64,  kernel 5.11.11,      KASLR off;
-x86_64,  kernel 5.11.11,      KASLR on;
-x86_64,  kernel 5.12.0-rc7,   KASLR off;
-x86_64,  kernel 5.12.0-rc7,   KASLR on;
+I am not very familiar with the code and I am not sure I will have time
+to look closer at it anytime soon.
 
-All cases are good to me, I can dump the vmcores and
-get them analyzed in crash-utility successfully.
+Computation complexity is traded for code complexity and it is not clear
+if the tradeoff is good.
 
-Thanks!
-Tao Liu
+As a way forward I would suggest to split the patch into a minimal
+correctness fix and an additional optimization that avoids needless
+computation.
 
-> 
->  kexec/Makefile                     |  1 -
->  kexec/arch/i386/crashdump-x86.c    | 28 +++++----------
->  kexec/arch/ppc/crashdump-powerpc.c |  3 +-
->  kexec/arch/ppc64/crashdump-ppc64.c |  3 +-
->  kexec/kernel_version.c             | 57 ------------------------------
->  kexec/kexec.h                      |  4 ---
->  6 files changed, 11 insertions(+), 85 deletions(-)
->  delete mode 100644 kexec/kernel_version.c
-> 
-> diff --git a/kexec/Makefile b/kexec/Makefile
-> index 8e3e9ea39664..e69e30950ac8 100644
-> --- a/kexec/Makefile
-> +++ b/kexec/Makefile
-> @@ -22,7 +22,6 @@ KEXEC_SRCS_base += kexec/firmware_memmap.c
->  KEXEC_SRCS_base += kexec/crashdump.c
->  KEXEC_SRCS_base += kexec/crashdump-xen.c
->  KEXEC_SRCS_base += kexec/phys_arch.c
-> -KEXEC_SRCS_base += kexec/kernel_version.c
->  KEXEC_SRCS_base += kexec/lzma.c
->  KEXEC_SRCS_base += kexec/zlib.c
->  KEXEC_SRCS_base += kexec/kexec-xen.c
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index d5b5b6850fe8..ea3e7c73c621 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -55,16 +55,8 @@ static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
->  	int kv;
->  
->  	if (elf_info->machine == EM_X86_64) {
-> -		kv = kernel_version();
-> -		if (kv < 0)
-> -			return -1;
-> -
-> -		if (kv < KERNEL_VERSION(2, 6, 27))
-> -			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_2_6_27;
-> -		else if (kv < KERNEL_VERSION(4, 20, 0))
-> -			elf_info->page_offset = X86_64_PAGE_OFFSET_PRE_4_20_0;
-> -		else
-> -			elf_info->page_offset = X86_64_PAGE_OFFSET;
-> +		/* get_kernel_vaddr_and_size will override this */
-> +		elf_info->page_offset = X86_64_PAGE_OFFSET;
->  	}
->  	else if (elf_info->machine == EM_386) {
->  		elf_info->page_offset = X86_PAGE_OFFSET;
-> @@ -151,17 +143,15 @@ static int get_kernel_vaddr_and_size(struct kexec_info *UNUSED(info),
->  
->  	/* Search for the real PAGE_OFFSET when KASLR memory randomization
->  	 * is enabled */
-> -	if (get_kernel_sym("page_offset_base") != 0) {
-> -		for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> -			if (phdr->p_type == PT_LOAD) {
-> -				vaddr = phdr->p_vaddr & pud_mask;
-> -				if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-> -					lowest_vaddr = vaddr;
-> -			}
-> +	for(phdr = ehdr.e_phdr; phdr != end_phdr; phdr++) {
-> +		if (phdr->p_type == PT_LOAD) {
-> +			vaddr = phdr->p_vaddr & pud_mask;
-> +			if (lowest_vaddr == 0 || lowest_vaddr > vaddr)
-> +				lowest_vaddr = vaddr;
->  		}
-> -		if (lowest_vaddr != 0)
-> -			elf_info->page_offset = lowest_vaddr;
->  	}
-> +	if (lowest_vaddr != 0)
-> +		elf_info->page_offset = lowest_vaddr;
->  
->  	/* Traverse through the Elf headers and find the region where
->  	 * _stext symbol is located in. That's where kernel is mapped */
-> diff --git a/kexec/arch/ppc/crashdump-powerpc.c b/kexec/arch/ppc/crashdump-powerpc.c
-> index 4ad026f38dd0..15e85313ff75 100644
-> --- a/kexec/arch/ppc/crashdump-powerpc.c
-> +++ b/kexec/arch/ppc/crashdump-powerpc.c
-> @@ -255,8 +255,7 @@ static void add_cmdline(char *cmdline, char *str)
->  	int cmdline_size;
->  	int cmdlen = strlen(cmdline) + strlen(str);
->  
-> -	cmdline_size = (kernel_version() < KERNEL_VERSION(3, 15, 0) ?
-> -			512 : COMMAND_LINE_SIZE);
-> +	cmdline_size = COMMAND_LINE_SIZE;
->  	if (cmdlen > (cmdline_size - 1))
->  		die("Command line overflow\n");
->  	strcat(cmdline, str);
-> diff --git a/kexec/arch/ppc64/crashdump-ppc64.c b/kexec/arch/ppc64/crashdump-ppc64.c
-> index 26f9a01a8174..addd769de401 100644
-> --- a/kexec/arch/ppc64/crashdump-ppc64.c
-> +++ b/kexec/arch/ppc64/crashdump-ppc64.c
-> @@ -478,8 +478,7 @@ static int add_cmdline_param(char *cmdline, uint64_t addr, char *cmdstr,
->  	strcat(str, byte);
->  	len = strlen(str);
->  	cmdlen = strlen(cmdline) + len;
-> -	cmdline_size = (kernel_version() < KERNEL_VERSION(3, 15, 0) ?
-> -			512 : COMMAND_LINE_SIZE);
-> +	cmdline_size = COMMAND_LINE_SIZE;
->  	if (cmdlen > (cmdline_size - 1))
->  		die("Command line overflow\n");
->  	strcat(cmdline, str);
-> diff --git a/kexec/kernel_version.c b/kexec/kernel_version.c
-> deleted file mode 100644
-> index 21fb13adf095..000000000000
-> --- a/kexec/kernel_version.c
-> +++ /dev/null
-> @@ -1,57 +0,0 @@
-> -#include "kexec.h"
-> -#include <errno.h>
-> -#include <string.h>
-> -#include <sys/utsname.h>
-> -#include <string.h>
-> -#include <limits.h>
-> -#include <stdlib.h>
-> -
-> -long kernel_version(void)
-> -{
-> -	struct utsname utsname;
-> -	unsigned long major, minor, patch;
-> -	char *p;
-> -
-> -	if (uname(&utsname) < 0) {
-> -		fprintf(stderr, "uname failed: %s\n", strerror(errno));
-> -		return -1;
-> -	}
-> -
-> -	p = utsname.release;
-> -	major = strtoul(p, &p, 10);
-> -	if (major == ULONG_MAX) {
-> -		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
-> -		return -1;
-> -	}
-> -
-> -	if (*p++ != '.') {
-> -		fprintf(stderr, "Unsupported utsname.release: %s\n",
-> -			utsname.release);
-> -		return -1;
-> -	}
-> -
-> -	minor = strtoul(p, &p, 10);
-> -	if (minor == ULONG_MAX) {
-> -		fprintf(stderr, "strtoul failed: %s\n", strerror(errno));
-> -		return -1;
-> -	}
-> -
-> -	/* There may or may not be a patch level for this kernel */
-> -	if (*p++ == '.') {
-> -		patch = strtoul(p, &p, 10);
-> -		if (patch == ULONG_MAX) {
-> -			fprintf(stderr, "strtoul failed: %s\n",strerror(errno));
-> -			return -1;
-> -		}
-> -	} else {
-> -		patch = 0;
-> -	}
-> -
-> -	if (major >= 256 || minor >= 256 || patch >= 256) {
-> -		fprintf(stderr, "Unsupported utsname.release: %s\n",
-> -			utsname.release);
-> -		return -1;
-> -	}
-> -
-> -	return KERNEL_VERSION(major, minor, patch);
-> -}
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index f0f347d5e9e0..595dd681db6d 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -179,10 +179,6 @@ struct arch_map_entry {
->  extern const struct arch_map_entry arches[];
->  long physical_arch(void);
->  
-> -#define KERNEL_VERSION(major, minor, patch) \
-> -	(((major) << 16) | ((minor) << 8) | patch)
-> -long kernel_version(void);
-> -
->  void usage(void);
->  int get_memory_ranges(struct memory_range **range, int *ranges,
->  						unsigned long kexec_flags);
-> -- 
-> 2.30.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+That way the extra code complexity and the speed improvement brought by
+the optimization can be reviewed more easily.
 
+I don't have myself access to any big machine so can't tell if the
+optimization solves a real world problem either.
+
+Thanks
+
+Michal
 
 _______________________________________________
 kexec mailing list
