@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mout.gmx.net ([212.227.17.20])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lXNOs-009Lpy-OV
- for kexec@lists.infradead.org; Fri, 16 Apr 2021 12:16:44 +0000
-Date: Fri, 16 Apr 2021 14:16:36 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1lXOKa-009Nzx-Pm
+ for kexec@lists.infradead.org; Fri, 16 Apr 2021 13:16:23 +0000
+Message-ID: <a853ea8535151fd8b267d8e68a45b33748978d8a.camel@gmx.de>
 Subject: Re: [patch] x86/crash: fix crash_setup_memmap_entries()
  out-of-bounds access
-Message-ID: <20210416121636.GA22348@zn.tnic>
+From: Mike Galbraith <efault@gmx.de>
+Date: Fri, 16 Apr 2021 15:16:07 +0200
+In-Reply-To: <20210416121636.GA22348@zn.tnic>
 References: <9efaad2ba042b8791cbe8c3e7cad491fe05e06eb.camel@gmx.de>
  <20210416110701.GA3835@dhcp-128-65.nay.redhat.com>
  <063a63ddea914ac654cbe9a1d1d6c76986af7882.camel@gmx.de>
  <20210416114708.GB79779@dhcp-128-65.nay.redhat.com>
  <725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de>
+ <20210416121636.GA22348@zn.tnic>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,53 +28,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Galbraith <efault@gmx.de>
+To: Borislav Petkov <bp@alien8.de>
 Cc: LKML <linux-kernel@vger.kernel.org>, DaveYoung <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-On Fri, Apr 16, 2021 at 02:02:07PM +0200, Mike Galbraith wrote:
-> [   15.428011] BUG: KASAN: vmalloc-out-of-bounds in crash_setup_memmap_entries+0x17e/0x3a0
-> [   15.428018] Write of size 8 at addr ffffc90000426008 by task kexec/1187
-> 
-> (gdb) list *crash_setup_memmap_entries+0x17e
-> 0xffffffff8107cafe is in crash_setup_memmap_entries (arch/x86/kernel/crash.c:322).
-> 317                                      unsigned long long mend)
-> 318     {
-> 319             unsigned long start, end;
-> 320
-> 321             cmem->ranges[0].start = mstart;
-> 322             cmem->ranges[0].end = mend;
-> 323             cmem->nr_ranges = 1;
-> 324
-> 325             /* Exclude elf header region */
-> 326             start = image->arch.elf_load_addr;
-> (gdb)
-> 
-> Append missing struct crash_mem_range to cmem.
+On Fri, 2021-04-16 at 14:16 +0200, Borislav Petkov wrote:
+>
+> Please be more verbose and structure your commit message like this:
 
-This is winning this year's contest for most laconic patch commit
-message! :-)
+Hrmph, I thought it was too verbose for dinky one-liner if anything.  I
+showed the complaint along with an 8x10 color glossy crime scene photo,
+then explained why it happened and what to do about it with a perhaps
+terse but perfectly clear sentence.
 
-Please be more verbose and structure your commit message like this:
+	-Mike
 
-Problem is A.
-
-It happens because of B.
-
-Fix it by doing C.
-
-(Potentially do D).
-
-For more detailed info, see
-Documentation/process/submitting-patches.rst, Section "2) Describe your
-changes".
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
