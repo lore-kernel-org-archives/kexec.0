@@ -1,24 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mout.gmx.net ([212.227.17.22])
+Received: from mail-pl1-f182.google.com ([209.85.214.182])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lXYT1-009nZI-V5
- for kexec@lists.infradead.org; Sat, 17 Apr 2021 00:05:48 +0000
-Message-ID: <d725b19b4c02273eaab38a10853fa6fb6d5bc76c.camel@gmx.de>
-Subject: Re: [patch] x86/crash: fix crash_setup_memmap_entries()
- out-of-bounds access
-From: Mike Galbraith <efault@gmx.de>
-Date: Sat, 17 Apr 2021 02:05:27 +0200
-In-Reply-To: <87sg3puco5.ffs@nanos.tec.linutronix.de>
-References: <9efaad2ba042b8791cbe8c3e7cad491fe05e06eb.camel@gmx.de>
- <20210416110701.GA3835@dhcp-128-65.nay.redhat.com>
- <063a63ddea914ac654cbe9a1d1d6c76986af7882.camel@gmx.de>
- <20210416114708.GB79779@dhcp-128-65.nay.redhat.com>
- <725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de>
- <20210416121636.GA22348@zn.tnic>
- <a853ea8535151fd8b267d8e68a45b33748978d8a.camel@gmx.de>
- <20210416144459.GB22348@zn.tnic>
- <7826c19ecd583700f56d2db33360e8032e812ecf.camel@gmx.de>
- <87sg3puco5.ffs@nanos.tec.linutronix.de>
+ id 1lXYXd-009njr-DY
+ for kexec@lists.infradead.org; Sat, 17 Apr 2021 00:10:31 +0000
+Received: by mail-pl1-f182.google.com with SMTP id d8so14797435plh.11
+ for <kexec@lists.infradead.org>; Fri, 16 Apr 2021 17:10:29 -0700 (PDT)
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: [RFC v2 0/6] vfs: provide automatic kernel freeze / resume
+Date: Sat, 17 Apr 2021 00:10:20 +0000
+Message-Id: <20210417001026.23858-1-mcgrof@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,19 +22,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Borislav Petkov <bp@alien8.de>
-Cc: LKML <linux-kernel@vger.kernel.org>, DaveYoung <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: rafael@kernel.org, gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk, jack@suse.cz, bvanassche@acm.org, jeyu@kernel.org, ebiederm@xmission.com
+Cc: mchehab@kernel.org, keescook@chromium.org, linux-fsdevel@vger.kernel.org, kernel@tuxforce.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>
 
-On Fri, 2021-04-16 at 23:44 +0200, Thomas Gleixner wrote:
->
-> Can all of you involved stop this sandpit fight and do something useful
-> to fix that obvious bug already?
+This picks up where I left off in 2017, I was inclined to respin this
+up again due to a new issue Lukas reported which is easy to reproduce.
+I posted a stop-gap patch for that issue [0] and a test case, however,
+*this* is the work we want upstream to fix these sorts of issues.
 
-?? We're not fighting afaik.  Boris hated my changelog enough to offer
-to write a better one, and I'm fine with that.  It's a seven year old
-*latent* buglet of microscopic proportions, hardly a pressing issue.
+As discussed long ago though at LSFMM, we have much work to do. However,
+we can take small strides to get us closer. This is trying to take one
+step. It addresses most of the comments and feedback from the last
+series I posted, however it doesn't address the biggest two issues:
 
-	-Mike
+ o provide clean and clear semantics between userspace ioctls /
+   automatic fs freeze, and freeze bdev. This also involves moving the
+   counter stuff from bdev to the superblock. This is pending work.
+ o The loopback hack which breaks the reverse ordering isn't addressed,
+   perhaps just flagging it suffices for now?
+ o The long term desirable DAG *is* plausable and I have an initial
+   kernel graph implementation which I could use, but that may take
+   longer to merge.
+
+What this series *does* address based on the last series is:
+
+  o Rebased onto linux-next tag next-20210415
+  o Fixed RCU complaints. The issue was that I was adding new fs levels, and
+    this increated undesirably also the amount of rw semaphores, but we were
+    just using the new levels to distinguish *who* was triggering the suspend,
+    it was either inside the kernel and automatic, or triggered by userspace.
+  o thaw_super_locked() was added but that unlocks the sb sb->s_umount,
+    our exclusive reverse iterate supers however will want to hold that
+    semaphore, so we provide a helper which lets the caller do the unlocking
+    for you, and make thaw_super_locked() a user of that.
+  o WQ_FREEZABLE is now dealt with
+  o I have folded the fs freezer removal stuff into the patch which adds
+    the automatic fs frezer / thaw work from the kernel as otherwise separting
+    this would create intermediate steps which would produce kernels which
+    can stall on suspend / resume.
+
+[0] https://lkml.kernel.org/r/20210416235850.23690-1-mcgrof@kernel.org
+[1] https://lkml.kernel.org/r/20171129232356.28296-1-mcgrof@kernel.org              
+
+Luis Chamberlain (6):
+  fs: provide unlocked helper for freeze_super()
+  fs: add frozen sb state helpers
+  fs: add a helper for thaw_super_locked() which does not unlock
+  fs: distinguish between user initiated freeze and kernel initiated
+    freeze
+  fs: add iterate_supers_excl() and iterate_supers_reverse_excl()
+  fs: add automatic kernel fs freeze / thaw and remove kthread freezing
+
+ fs/btrfs/disk-io.c     |   4 +-
+ fs/btrfs/scrub.c       |   2 +-
+ fs/cifs/cifsfs.c       |  10 +-
+ fs/cifs/dfs_cache.c    |   2 +-
+ fs/ext4/ext4_jbd2.c    |   2 +-
+ fs/ext4/super.c        |   2 -
+ fs/f2fs/gc.c           |   7 +-
+ fs/f2fs/segment.c      |   6 +-
+ fs/gfs2/glock.c        |   6 +-
+ fs/gfs2/main.c         |   4 +-
+ fs/jfs/jfs_logmgr.c    |  11 +-
+ fs/jfs/jfs_txnmgr.c    |  31 ++--
+ fs/nilfs2/segment.c    |  48 +++---
+ fs/super.c             | 321 ++++++++++++++++++++++++++++++++++-------
+ fs/xfs/xfs_log.c       |   3 +-
+ fs/xfs/xfs_mru_cache.c |   2 +-
+ fs/xfs/xfs_pwork.c     |   2 +-
+ fs/xfs/xfs_super.c     |  14 +-
+ fs/xfs/xfs_trans.c     |   3 +-
+ fs/xfs/xfs_trans_ail.c |   7 +-
+ include/linux/fs.h     |  64 +++++++-
+ kernel/power/process.c |  15 +-
+ 22 files changed, 405 insertions(+), 161 deletions(-)
+
+-- 
+2.29.2
 
 
 _______________________________________________
