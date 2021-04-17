@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by desiato.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lXfDu-004e35-Rv
- for kexec@lists.infradead.org; Sat, 17 Apr 2021 07:18:39 +0000
-Date: Sat, 17 Apr 2021 09:18:18 +0200
+ id 1lXfEV-004eAW-3K
+ for kexec@lists.infradead.org; Sat, 17 Apr 2021 07:19:13 +0000
+Date: Sat, 17 Apr 2021 09:19:05 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [CFT][PATCH] kexec: Remove the error prone kernel_version function
-Message-ID: <20210417071817.GA2573@vergenet.net>
+Subject: Re: [PATCH 1/1] arm: do not copy magic 4 bytes of appended DTB in
+ zImage
+Message-ID: <20210417071905.GB2573@vergenet.net>
+References: <20210408200644.19724-1-egorenar-dev@posteo.net>
+ <20210412103853.GA28946@vergenet.net> <874kgb3fq8.fsf@posteo.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <YHaqPwaFRB8u+TiN@MiWiFi-RA69-srv>
- <20210412172435.GA37849@zipoli.concurrrent-rt.com>
+In-Reply-To: <874kgb3fq8.fsf@posteo.net>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,91 +25,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joe Korty <joe.korty@concurrent-rt.com>, Tao Liu <ltao@redhat.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, kexec@lists.infradead.org, Khalid Aziz <khalid@gonehiking.org>, Hariprasad Nellitheertha <hari@in.ibm.com>, Tim Deegan <tjd21@cl.cam.ac.uk>, Hongyan Xia <hongyxia@amazon.com>, David Hildenbrand <david@redhat.com>, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Alexander Egorenkov <egorenar@posteo.net>
+Cc: Alexander Egorenkov <egorenar-dev@posteo.net>, rmk@armlinux.org.uk, kexec@lists.infradead.org
 
-On Mon, Apr 12, 2021 at 01:24:35PM -0400, Joe Korty wrote:
-> On Fri, Apr 09, 2021 at 11:22:51AM -0500, Eric W. Biederman wrote:
-> > 
-> > During kexec there are two kernel versions at play.  The version of
-> > the running kernel and the version of the kernel that will be booted.
-> > 
-> > On powerpc it appears people have been using the version of the
-> > running kernel to attempt to detect properties of the kernel to be
-> > booted which is just wrong.  As the linux kernel version that is being
-> > detected is a no longer supported kernel just remove that buggy and
-> > confused code.
-> > 
-> > On x86_64 the kernel_version is used to compute the starting virtual
-> > address of the running kernel so a proper core dump may be generated.
-> > Using the kernel_version stopped working a while ago when the starting
-> > virtual address  became randomized.
-> > 
-> > The old code was kept for the case where the kernel was not built with
-> > randomization support, but there is nothing in reading /proc/kcore
-> > that won't work to detect the starting virtual address even there.
-> > In fact /proc/kcore must have the starting virtual address or a
-> > debugger can not make sense of the running kernel.
-> > 
-> > So just make computing the starting virtual address on x86_64
-> > unconditional.  With a hard coded fallback just in case something went
-> > wrong.
-> > 
-> > Doing something with kernel_version() has become important as recent
-> > stable kernels have seen the minor version to > 255.  Just removing
-> > kernel_version() looks like the best option.
-> > 
-> > Signed-off-by: "Eric W. Biederman" <ebiederm@xmission.com>
-> > ---
-> > 
-> > Can folks please test this patch and verify that it works.  I really
-> > think simply removing the problem code is going to be a much more robust
-> > solution than papering over the bug.
+On Mon, Apr 12, 2021 at 01:27:27PM +0200, Alexander Egorenkov wrote:
+> Simon Horman <horms@verge.net.au> writes:
+> 
+> > On Thu, Apr 08, 2021 at 10:06:44PM +0200, Alexander Egorenkov wrote:
+> >> If the passed zImage happens to have a DTB appended, then the magic 4 bytes
+> >> of the DTB are copied together with the kernel image. This leads to
+> >> failed kexec boots because the decompressor finds the aforementioned
+> >> DTB magic and falsely tries to replace the DTB passed in the register r2
+> >> with the non-existent appended one.
+> >> 
+> >> Signed-off-by: Alexander Egorenkov <egorenar-dev@posteo.net>
+> >
+> > Hi,
+> >
+> > I also see that, on line 558 len is further expanded as follows:
+> >
+> >         /*
+> >          * The zImage length does not include its stack (4k) or its
+> >          * malloc space (64k).  Include this.
+> >          */
+> >         len += 0x11000;
+> >
+> > Is it intentional that this patch also excludes this extra length
+> > from the DTB? Or am I missing something?
+> >
+> 
+> Hi,
+> 
+> if i understood it right, then len expresses not the length of the
+> kernel image in the zImage but the length of the kernel memory segment
+> into which the kernel image is being loaded. And on this line of code
+> it is adjusted to account for stack and heap, i think.
 
-...
-
-> [ Sorry this has taken so long --jak ]
-> 
-> Successful dump was acquired using a hand-built 4.4.262-kdump kernel.
-> The new kdump tools were installed in /usr/local, and a modified kdumpctl
-> (making it use the new tools) was put in in /tmp/kdumpctl.  When I do:
->  
->     kdumpctl start
->     echo c >/proc/sysrq
-> 
-> I get the 'Unsupported utsname.release' error message, and the 'echo c'
-> fails to create a dump directory in /var/crash.  When I do:
-> 
->     /tmp/kdumpctl start
->     echo c >/proc/sysrq
-> 
-> I no longer get the 'Unsupported' error message and a dump directory
-> appears in /var/crash.  I did not test if the dump itself was good.
-> 
-> Tested-by: Joe Korty <joe.korty@conurrent-rt.com>
-> 
-
-On Wed, Apr 14, 2021 at 04:39:27PM +0800, Tao Liu wrote:
-> On Fri, Apr 09, 2021 at 11:22:51AM -0500, Eric W. Biederman wrote:
-
-...
-
-> Hello Eric,
-> 
-> I have the patch tested in the following cases:
-> 
-> x86_64,  kernel 5.11.11,      KASLR off;
-> x86_64,  kernel 5.11.11,      KASLR on;
-> x86_64,  kernel 5.12.0-rc7,   KASLR off;
-> x86_64,  kernel 5.12.0-rc7,   KASLR on;
-> 
-> All cases are good to me, I can dump the vmcores and
-> get them analyzed in crash-utility successfully.
-
-Thanks,
-
-It looks like this has requested some testing, as requested by Eric.
-I've gone ahead and applied this patch.
+Thanks, I think that answers my question.
 
 _______________________________________________
 kexec mailing list
