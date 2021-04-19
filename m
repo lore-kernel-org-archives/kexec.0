@@ -1,26 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail-pj1-f46.google.com ([209.85.216.46])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lYQLk-00BEii-T8
- for kexec@lists.infradead.org; Mon, 19 Apr 2021 09:37:54 +0000
-Date: Mon, 19 Apr 2021 17:37:32 +0800
-From: DaveYoung <dyoung@redhat.com>
-Subject: Re: [patch] x86/crash: fix crash_setup_memmap_entries()
- out-of-bounds access
-Message-ID: <20210419093732.GB8618@dhcp-128-65.nay.redhat.com>
-References: <063a63ddea914ac654cbe9a1d1d6c76986af7882.camel@gmx.de>
- <20210416114708.GB79779@dhcp-128-65.nay.redhat.com>
- <725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de>
- <20210416121636.GA22348@zn.tnic>
- <a853ea8535151fd8b267d8e68a45b33748978d8a.camel@gmx.de>
- <20210416144459.GB22348@zn.tnic>
- <7826c19ecd583700f56d2db33360e8032e812ecf.camel@gmx.de>
- <87sg3puco5.ffs@nanos.tec.linutronix.de>
- <d725b19b4c02273eaab38a10853fa6fb6d5bc76c.camel@gmx.de>
- <20210419085202.GB9093@zn.tnic>
+ id 1lYYQY-00BaCm-1R
+ for kexec@lists.infradead.org; Mon, 19 Apr 2021 18:15:22 +0000
+Received: by mail-pj1-f46.google.com with SMTP id
+ ot17-20020a17090b3b51b0290109c9ac3c34so20860509pjb.4
+ for <kexec@lists.infradead.org>; Mon, 19 Apr 2021 11:15:16 -0700 (PDT)
+Date: Mon, 19 Apr 2021 18:15:14 +0000
+From: Luis Chamberlain <mcgrof@kernel.org>
+Subject: Re: [PATCH 2/2] fs/kernel_read_file: use
+ usermodehelper_read_trylock() as a stop gap
+Message-ID: <20210419181514.GM4332@42.do-not-panic.com>
+References: <20210416235850.23690-1-mcgrof@kernel.org>
+ <20210416235850.23690-3-mcgrof@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210419085202.GB9093@zn.tnic>
+In-Reply-To: <20210416235850.23690-3-mcgrof@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,85 +28,19 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Mike Galbraith <efault@gmx.de>, Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>
+To: rafael@kernel.org, gregkh@linuxfoundation.org, viro@zeniv.linux.org.uk, jack@suse.cz, bvanassche@acm.org, jeyu@kernel.org, ebiederm@xmission.com
+Cc: mchehab@kernel.org, keescook@chromium.org, linux-fsdevel@vger.kernel.org, kernel@tuxforce.de, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On 04/19/21 at 10:52am, Borislav Petkov wrote:
-> Here's an attempt to explain what this fixes:
-> 
-> ---
-> From: Mike Galbraith <efault@gmx.de>
-> Date: Fri, 16 Apr 2021 14:02:07 +0200
-> Subject: [PATCH] x86/crash: Fix crash_setup_memmap_entries() out-of-bounds
->  access
-> 
-> Commit in Fixes: added support for kexec-ing a kernel on panic using a
-> new system call. As part of it, it does prepare a memory map for the new
-> kernel.
-> 
-> However, while doing so, it wrongly accesses memory it has not
-> allocated: it accesses the first element of the cmem->ranges[] array in
-> memmap_exclude_ranges() but it has not allocated the memory for it in
-> crash_setup_memmap_entries(). As KASAN reports:
-> 
->   BUG: KASAN: vmalloc-out-of-bounds in crash_setup_memmap_entries+0x17e/0x3a0
->   Write of size 8 at addr ffffc90000426008 by task kexec/1187
-> 
->   (gdb) list *crash_setup_memmap_entries+0x17e
->   0xffffffff8107cafe is in crash_setup_memmap_entries (arch/x86/kernel/crash.c:322).
->   317                                      unsigned long long mend)
->   318     {
->   319             unsigned long start, end;
->   320
->   321             cmem->ranges[0].start = mstart;
->   322             cmem->ranges[0].end = mend;
->   323             cmem->nr_ranges = 1;
->   324
->   325             /* Exclude elf header region */
->   326             start = image->arch.elf_load_addr;
->   (gdb)
-> 
-> Make sure the ranges array becomes a single element allocated.
-> 
->  [ bp: Write a proper commit message. ]
+On Fri, Apr 16, 2021 at 11:58:50PM +0000, Luis Chamberlain wrote:
+> The endless wait for the read which the piece of hardware never got
+> stalls resume as sync calls are all asynchronous.
 
-Reviewed-by: Dave Young <dyoung@redhat.com>
+Sorry, this should read:
 
-> 
-> Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
-> Signed-off-by: Mike Galbraith <efault@gmx.de>
-> Signed-off-by: Borislav Petkov <bp@suse.de>
-> Link: https://lkml.kernel.org/r/725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de
-> ---
->  arch/x86/kernel/crash.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index a8f3af257e26..b1deacbeb266 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -337,7 +337,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
->  	struct crash_memmap_data cmd;
->  	struct crash_mem *cmem;
->  
-> -	cmem = vzalloc(sizeof(struct crash_mem));
-> +	cmem = vzalloc(struct_size(cmem, ranges, 1));
->  	if (!cmem)
->  		return -ENOMEM;
->  
-> -- 
-> 2.29.2
-> 
-> -- 
-> Regards/Gruss,
->     Boris.
-> 
-> https://people.kernel.org/tglx/notes-about-netiquette
-> 
+The endless wait for the read, which the piece of hardware never got,
+stalls resume as all pm resume calls are serialized and synchronous.
 
-Thanks
-Dave
-
+  Luis
 
 _______________________________________________
 kexec mailing list
