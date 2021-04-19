@@ -1,20 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lYPPm-00BCHY-Ao
- for kexec@lists.infradead.org; Mon, 19 Apr 2021 08:37:58 +0000
-Received: by mail-wm1-f71.google.com with SMTP id
- g144-20020a1c20960000b029012983de0c8fso3511833wmg.7
- for <kexec@lists.infradead.org>; Mon, 19 Apr 2021 01:37:48 -0700 (PDT)
-References: <20210414070426.396692-1-hejingxian@huawei.com>
- <20210419082616.GA7104@MiWiFi-R3L-srv>
-From: David Hildenbrand <david@redhat.com>
-Subject: Re: kexec-starting-kernel-problem-on-vm
-Message-ID: <b2963f35-19fe-3aff-f92b-4fa61f8310f0@redhat.com>
-Date: Mon, 19 Apr 2021 10:37:46 +0200
+ id 1lYPde-00BCzh-Uc
+ for kexec@lists.infradead.org; Mon, 19 Apr 2021 08:52:19 +0000
+Date: Mon, 19 Apr 2021 10:52:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [patch] x86/crash: fix crash_setup_memmap_entries()
+ out-of-bounds access
+Message-ID: <20210419085202.GB9093@zn.tnic>
+References: <20210416110701.GA3835@dhcp-128-65.nay.redhat.com>
+ <063a63ddea914ac654cbe9a1d1d6c76986af7882.camel@gmx.de>
+ <20210416114708.GB79779@dhcp-128-65.nay.redhat.com>
+ <725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de>
+ <20210416121636.GA22348@zn.tnic>
+ <a853ea8535151fd8b267d8e68a45b33748978d8a.camel@gmx.de>
+ <20210416144459.GB22348@zn.tnic>
+ <7826c19ecd583700f56d2db33360e8032e812ecf.camel@gmx.de>
+ <87sg3puco5.ffs@nanos.tec.linutronix.de>
+ <d725b19b4c02273eaab38a10853fa6fb6d5bc76c.camel@gmx.de>
 MIME-Version: 1.0
-In-Reply-To: <20210419082616.GA7104@MiWiFi-R3L-srv>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <d725b19b4c02273eaab38a10853fa6fb6d5bc76c.camel@gmx.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,51 +29,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Jingxian He <hejingxian@huawei.com>
-Cc: kexec@lists.infradead.org, hewenliang4@huawei.com, wuxu.wu@huawei.com, horms@verge.net.au, jasowang@redhat.com, peterx@redhat.com
+To: Mike Galbraith <efault@gmx.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, LKML <linux-kernel@vger.kernel.org>, DaveYoung <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, x86@kernel.org, Andrew Morton <akpm@linux-foundation.org>
 
-T24gMTkuMDQuMjEgMTA6MjYsIEJhb3F1YW4gSGUgd3JvdGU6Cj4gSGkgSmluZ3hpYW4sCj4gCj4g
-T24gMDQvMTQvMjEgYXQgMDM6MDRwbSwgSmluZ3hpYW4gSGUgd3JvdGU6Cj4+IFdlIHVzZSDigJhr
-ZXhlYyDigJNs4oCZIGFuZCDigJhrZXhlYyDigJNl4oCZIG9uIG91ciB2aXJ0dWFsIG1hY2hpbmUg
-dG8gdXBncmFkZSB0aGUKPj4gbGludXgga2VybmVsLiBXZSBmaW5kIHRoYXQgdGhlIG5ldyBrZXJu
-ZWwgbWF5IHN0YXJ0IGZhaWwgZHVlIHRvIGNoZWNraW5nCj4+IHRoZSBzaGEyNTYgc3VtIG9mIHRo
-ZSBpbml0cmQgc2VnbWVudCBjaGVja2luZyBmYWlsIHdpdGggbG93IHByb2JhYmlsaXR5Lgo+Pgo+
-PiBUaGUgcmVsYXRlZCBjb2RlIGlzIGFzIGZvbGxvd2luZzoKPj4gLyogYXJjaC94ODYvcHVyZ2F0
-b3J5L3B1cmdhdG9yeS5jICovCj4+IHN0YXRpYyBpbnQgdmVyaWZ5X3NoYTI1Nl9kaWdlc3Qodm9p
-ZCkKPj4gewo+PiAJc3RydWN0IGtleGVjX3NoYV9yZWdpb24gKnB0ciwgKmVuZDsKPj4gCXU4IGRp
-Z2VzdFtTSEEyNTZfRElHRVNUX1NJWkVdOwo+PiAJc3RydWN0IHNoYTI1Nl9zdGF0ZSBzY3R4Owo+
-Pgo+PiAJc2hhMjU2X2luaXQoJnNjdHgpOwo+PiAJZW5kID0gcHVyZ2F0b3J5X3NoYV9yZWdpb25z
-ICsgQVJSQVlfU0laRShwdXJnYXRvcnlfc2hhX3JlZ2lvbnMpOwo+Pgo+PiAJZm9yIChwdHIgPSBw
-dXJnYXRvcnlfc2hhX3JlZ2lvbnM7IHB0ciA8IGVuZDsgcHRyKyspCj4+IAkJc2hhMjU2X3VwZGF0
-ZSgmc2N0eCwgKHVpbnQ4X3QgKikocHRyLT5zdGFydCksIHB0ci0+bGVuKTsKPj4KPj4gCXNoYTI1
-Nl9maW5hbCgmc2N0eCwgZGlnZXN0KTsKPj4KPj4gCWlmIChtZW1jbXAoZGlnZXN0LCBwdXJnYXRv
-cnlfc2hhMjU2X2RpZ2VzdCwgc2l6ZW9mKGRpZ2VzdCkpKQo+PiAJCXJldHVybiAxOwo+Pgo+PiAJ
-cmV0dXJuIDA7Cj4+IH0KPj4KPj4gdm9pZCBwdXJnYXRvcnkodm9pZCkKPj4gewo+PiAJaW50IHJl
-dDsKPj4KPj4gCXJldCA9IHZlcmlmeV9zaGEyNTZfZGlnZXN0KCk7Cj4gCj4gSSB1c3VhbGx5IHVz
-ZSBxZW11L2t2bSBndWVzdCB0byB0ZXN0IGtlcm5lbCwga2V4ZWMgYW5kIGtkdW1wLCBoYXZlbid0
-Cj4gbWV0IHRoaXMgaXNzdWUuIGtleGVjIC1sLy1lIHdvcmtzIHdlbGwgZm9yIG1lLiBTZWVtcyB5
-b3UgYXJlIG5vdCB1c2luZwo+IHRoZSBsYXRlc3Qga2V4ZWMtdG9vbHMuIE90aGVyd2lzZSB5b3Ug
-Y2FuIHVzZSAiLWkgKC0tbm8tY2hlY2tzKSIgdG8gd29yawo+IGFyb3VuZCB0aGlzIGZvciB0aGUg
-dGltZSBiZWluZy4KPiAKPj4gCWlmIChyZXQpIHsgLy88LS0tLS0tdmVyaWZ5X3NoYTI1NiBmYWls
-LCBlbnRlcmluZyBsb29wIGZvcmV2ZXIKPj4gCQkvKiBsb29wIGZvcmV2ZXIgKi8KPj4gCQlmb3Ig
-KDs7KQo+PiAJCQk7Cj4+IAl9Cj4+IAljb3B5X2JhY2t1cF9yZWdpb24oKTsKPj4gfQo+Pgo+Pgo+
-PiBPdXIgb3BuaW9uIG9mIHRoaXMgcHJvYmxlbToKPj4gV2UgdGhpbmsgdGhhdCB0aGUgcHJvY2Vz
-cyBvZiByZWxvY2F0aW5nIHRoZSBuZXcga2VybmVsIGRlcGVuZGluZyBvbiB0aGUKPj4gYm9vdCBj
-cHUgcnVubmluZyB3aXRob3V0IGludGVycnVwdGlvbi4gSG93ZXZlciwgdGhlIHZjcHVzIG1heSBi
-ZSBpbnRlcnJ1cHRlZAo+PiBieSB0aGUgcWVtdSBwcm9jZXNzIHdpdGggYXN5bmNfcGFnZV9mYXVs
-dCBpbnRlcnJ1cHRpb24uCgpTbywgYXJlIHlvdSBzYXlpbmcgdGhhdCB0aGUgaG9zdCBzdGlsbCBk
-ZWxpdmVycyBhbiBBRlAgdG8gdGhlIGd1ZXN0LCAKZXZlbiB0aG91Z2ggaXQgaGFzIGludGVycnVw
-dHMgZGlzYWJsZWQgKGluY2x1ZGluZyBBRlApPyBIYXJkIHRvIGltYWdpbmUgCnRoYXQgdGhpcyB3
-b3VsZCBiZSB0aGUgY2FzZSByaWdodCBub3cuCgpBbnkgb3RoZXIgaG9zdCBhY3Rpdml0eSB0aGF0
-IHRlbXBvcmFyaWx5IHN0b3BzL3NjaGVkdWxlcyBvdXQgdGhlIFZDUFUgCnNob3VsZCBiZSBub3Qg
-cmVsZXZhbnQgdG8gdGhlIFZNICgidkNQVSBpbnRlcnJ1cHRlZCBieSB0aGUgUUVNVSAKcHJvY2Vz
-cyIpOyBpZiB0aGVyZSB3b3VsZCBiZSBzb21ldGhpbmcgcnVubmluZyBpbnNpZGUgdGhlIFZNIHRo
-YXQgCmRpc2FibGVzIGludGVycnVwdHMgdG8gcmVkdWNlIHRoZSBzaXplIG9mIGEgcmFjZSB3aW5k
-b3csIHRoYXQgd291bGQgbmVlZCAKZml4aW5nIGluc2lkZSB0aGUgVk0uCgotLSAKVGhhbmtzLAoK
-RGF2aWQgLyBkaGlsZGVuYgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Here's an attempt to explain what this fixes:
+
+---
+From: Mike Galbraith <efault@gmx.de>
+Date: Fri, 16 Apr 2021 14:02:07 +0200
+Subject: [PATCH] x86/crash: Fix crash_setup_memmap_entries() out-of-bounds
+ access
+
+Commit in Fixes: added support for kexec-ing a kernel on panic using a
+new system call. As part of it, it does prepare a memory map for the new
+kernel.
+
+However, while doing so, it wrongly accesses memory it has not
+allocated: it accesses the first element of the cmem->ranges[] array in
+memmap_exclude_ranges() but it has not allocated the memory for it in
+crash_setup_memmap_entries(). As KASAN reports:
+
+  BUG: KASAN: vmalloc-out-of-bounds in crash_setup_memmap_entries+0x17e/0x3a0
+  Write of size 8 at addr ffffc90000426008 by task kexec/1187
+
+  (gdb) list *crash_setup_memmap_entries+0x17e
+  0xffffffff8107cafe is in crash_setup_memmap_entries (arch/x86/kernel/crash.c:322).
+  317                                      unsigned long long mend)
+  318     {
+  319             unsigned long start, end;
+  320
+  321             cmem->ranges[0].start = mstart;
+  322             cmem->ranges[0].end = mend;
+  323             cmem->nr_ranges = 1;
+  324
+  325             /* Exclude elf header region */
+  326             start = image->arch.elf_load_addr;
+  (gdb)
+
+Make sure the ranges array becomes a single element allocated.
+
+ [ bp: Write a proper commit message. ]
+
+Fixes: dd5f726076cc ("kexec: support for kexec on panic using new system call")
+Signed-off-by: Mike Galbraith <efault@gmx.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Link: https://lkml.kernel.org/r/725fa3dc1da2737f0f6188a1a9701bead257ea9d.camel@gmx.de
+---
+ arch/x86/kernel/crash.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+index a8f3af257e26..b1deacbeb266 100644
+--- a/arch/x86/kernel/crash.c
++++ b/arch/x86/kernel/crash.c
+@@ -337,7 +337,7 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
+ 	struct crash_memmap_data cmd;
+ 	struct crash_mem *cmem;
+ 
+-	cmem = vzalloc(sizeof(struct crash_mem));
++	cmem = vzalloc(struct_size(cmem, ranges, 1));
+ 	if (!cmem)
+ 		return -ENOMEM;
+ 
+-- 
+2.29.2
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
