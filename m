@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.tuxforce.de ([84.38.66.179])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lZJgI-00DB6D-Da
- for kexec@lists.infradead.org; Wed, 21 Apr 2021 20:42:43 +0000
-Subject: Re: [PATCH 2/2] fs/kernel_read_file: use
- usermodehelper_read_trylock() as a stop gap
+ id 1lZLFX-00DEF8-SA
+ for kexec@lists.infradead.org; Wed, 21 Apr 2021 22:23:13 +0000
+Subject: Re: [PATCH 1/2] test_firmware: add suspend support to test buggy
+ drivers
 References: <20210416235850.23690-1-mcgrof@kernel.org>
- <20210416235850.23690-3-mcgrof@kernel.org>
+ <20210416235850.23690-2-mcgrof@kernel.org>
 From: Lukas Middendorf <kernel@tuxforce.de>
-Message-ID: <35ff02c7-8a76-730e-ddb9-f91634f5098b@tuxforce.de>
-Date: Wed, 21 Apr 2021 22:42:36 +0200
+Message-ID: <3ef0de52-5d17-c950-942f-29932df54880@tuxforce.de>
+Date: Thu, 22 Apr 2021 00:23:08 +0200
 MIME-Version: 1.0
-In-Reply-To: <20210416235850.23690-3-mcgrof@kernel.org>
+In-Reply-To: <20210416235850.23690-2-mcgrof@kernel.org>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -30,50 +30,72 @@ Cc: mchehab@kernel.org, keescook@chromium.org, linux-fsdevel@vger.kernel.org, ke
 
 
 On 17/04/2021 01:58, Luis Chamberlain wrote:
-> The VFS lacks support to do automatic freeze / thaw of filesystems
-> on the suspend / resume cycle. This can cause some issues, namely
-> stalls when we have reads/writes during the suspend / resume cycle.
+> Lukas Middendorf reported a situation where a driver's
+> request_firmware() call on resume caused a stall. Upon
+> inspection the issue was that the driver in question was
+> calling request_firmware() only on resume, and since we
+> currently do not have a generic kernel VFS freeze / thaw
+> solution in place we are allowing races for filesystems
+> to race against the disappearance of a block device, and
+> this is presently an issue which can lead to a stall.
 > 
-> Although for module loading / kexec the probability of this happening
-> is extremely low, maybe even impossible, its a known real issue with
-> the request_firmare() API which it does direct fs read. For this reason
-> only be chatty about the issue on the call used by the firmware API.
+> It is difficult to reproduce this unless you have hardware
+> which mimics this setup. So to test this setup, let's just
+> implement support for doing these wacky things. This lets
+> us test that corner case easily as follows.
 > 
-> Lukas Middendorf has reported an easy situation to reproduce, which can
-> be caused by questionably buggy drivers which call the request_firmware()
-> API on resume.
-> 
-[snip]
-> 
-> The VFS fs freeze work fixes this issue, however it requires a bit
-> more work, which may take a while to land upstream, and so for now
-> this provides a simple stop-gap solution.
-> 
-> We can remove this stop-gap solution once the kernel gets VFS
-> fs freeze / thaw support.
-> 
-> Reported-by: Lukas Middendorf <kernel@tuxforce.de>
 > Signed-off-by: Luis Chamberlain <mcgrof@kernel.org>
 
-Tested-by: Lukas Middendorf <kernel@tuxforce.de>
+The resume test functionality added to test_firmware works as intended 
+in reproducing the stall bug I reported.
 
+However, the fw_test_resume.sh seems to be incomplete.
 
-Works as advertised.
+> +usage()
+> +{
+> +	echo "Usage: $0 [ -v ] | [ -h | --help]"
+> +	echo ""
+> +	echo "    --check-resume-test   Verify resume test"
+> +	echo "    -h|--help             Help"
+> +	echo
+> +	echo "Without any arguments this will enable the resume firmware test"
+> +	echo "after suspend. To verify that the test went well, run with -v".
+> +	echo
+> +	exit 1
+> +}
 
-This prevents stalls on resume with buggy drivers (e.g. si2168) by 
-totally blocking uncached request_firmware() on resume. Uncached 
-request_firmware() will fail reliably (also in situations where it by 
-accident worked previously without stalling).
-If firmware caching has been set up properly before suspend (either 
-through firmware_request_cache() or through request_firmware() outside 
-of a suspend/resume situation), the call to request_firmware() will 
-still work as expected on resume. This should not break properly 
-behaving drivers.
+The "-v" is not implemented as an alias to "--check-resume-test"
 
-A failing firmware load is definitely preferable (and easier to debug 
-and fix in the respective drivers) compared to a stall on resume.
+> +
+> +verify_resume_test()
+> +{
+> +	trap "test_finish" EXIT
+> +}
 
-Lukas
+Does not seem to do anything regarding checking, just some cleanup.
+
+> +
+> +parse_args()
+> +{
+> +	if [ $# -eq 0 ]; then
+> +		config_enable_resume_test
+> +	else
+> +		if [[ "$1" = "--check-resume-test" ]]; then
+> +			config_disable_resume_test
+> +			verify_resume_test
+> +		else
+> +			usage
+> +		fi
+> +	fi
+> +}
+> +
+
+there should likely be a call
+
+parse_args "$@"
+
+> +exit 0
+
 
 _______________________________________________
 kexec mailing list
