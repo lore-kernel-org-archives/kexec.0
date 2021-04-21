@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x52d.google.com ([2607:f8b0:4864:20::52d])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lYyG8-00CRRv-9c
- for kexec@lists.infradead.org; Tue, 20 Apr 2021 21:50:19 +0000
-Received: by mail-pg1-x52d.google.com with SMTP id z16so27713012pga.1
- for <kexec@lists.infradead.org>; Tue, 20 Apr 2021 14:50:15 -0700 (PDT)
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v5 13/13] kdump: Use vmlinux_build_id to simplify
-Date: Tue, 20 Apr 2021 14:50:03 -0700
-Message-Id: <20210420215003.3510247-14-swboyd@chromium.org>
-In-Reply-To: <20210420215003.3510247-1-swboyd@chromium.org>
-References: <20210420215003.3510247-1-swboyd@chromium.org>
+ id 1lZE5M-00Cy9Q-PN
+ for kexec@lists.infradead.org; Wed, 21 Apr 2021 14:44:16 +0000
+Date: Wed, 21 Apr 2021 16:44:02 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v13 12/12] x86/kvm: Add guest support for detecting and
+ enabling SEV Live Migration feature.
+Message-ID: <20210421144402.GB5004@zn.tnic>
+References: <cover.1618498113.git.ashish.kalra@amd.com>
+ <ffd67dbc1ae6d3505d844e65928a7248ebaebdcc.1618498113.git.ashish.kalra@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <ffd67dbc1ae6d3505d844e65928a7248ebaebdcc.1618498113.git.ashish.kalra@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,135 +25,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Ashish Kalra <Ashish.Kalra@amd.com>
+Cc: pbonzini@redhat.com, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, joro@8bytes.org, bp@suse.de, thomas.lendacky@amd.com, x86@kernel.org, kvm@vger.kernel.org, linux-kernel@vger.kernel.org, srutherford@google.com, seanjc@google.com, venu.busireddy@oracle.com, brijesh.singh@amd.com, kexec@lists.infradead.org
 
-We can use the vmlinux_build_id array here now instead of open coding
-it. This mostly consolidates code.
+On Thu, Apr 15, 2021 at 04:01:16PM +0000, Ashish Kalra wrote:
+> From: Ashish Kalra <ashish.kalra@amd.com>
+> 
+> The guest support for detecting and enabling SEV Live migration
+> feature uses the following logic :
+> 
+>  - kvm_init_plaform() invokes check_kvm_sev_migration() which
+>    checks if its booted under the EFI
+> 
+>    - If not EFI,
+> 
+>      i) check for the KVM_FEATURE_CPUID
 
-Cc: Jiri Olsa <jolsa@kernel.org>
-Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: <kexec@lists.infradead.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- include/linux/crash_core.h | 12 ++++-----
- kernel/crash_core.c        | 50 ++------------------------------------
- 2 files changed, 8 insertions(+), 54 deletions(-)
+Where do you do that?
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 206bde8308b2..de62a722431e 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -38,8 +38,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
- 
- #define VMCOREINFO_OSRELEASE(value) \
- 	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
--#define VMCOREINFO_BUILD_ID(value) \
--	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-+#define VMCOREINFO_BUILD_ID()						\
-+	({								\
-+		static_assert(sizeof(vmlinux_build_id) == 20);		\
-+		vmcoreinfo_append_str("BUILD-ID=%20phN\n", vmlinux_build_id); \
-+	})
-+
- #define VMCOREINFO_PAGESIZE(value) \
- 	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
- #define VMCOREINFO_SYMBOL(name) \
-@@ -69,10 +73,6 @@ extern unsigned char *vmcoreinfo_data;
- extern size_t vmcoreinfo_size;
- extern u32 *vmcoreinfo_note;
- 
--/* raw contents of kernel .notes section */
--extern const void __start_notes __weak;
--extern const void __stop_notes __weak;
--
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len);
- void final_note(Elf_Word *buf);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 825284baaf46..29cc15398ee4 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -4,6 +4,7 @@
-  * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
-  */
- 
-+#include <linux/buildid.h>
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-@@ -378,53 +379,6 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
- }
- EXPORT_SYMBOL(paddr_vmcoreinfo_note);
- 
--#define NOTES_SIZE (&__stop_notes - &__start_notes)
--#define BUILD_ID_MAX SHA1_DIGEST_SIZE
--#define NT_GNU_BUILD_ID 3
--
--struct elf_note_section {
--	struct elf_note	n_hdr;
--	u8 n_data[];
--};
--
--/*
-- * Add build ID from .notes section as generated by the GNU ld(1)
-- * or LLVM lld(1) --build-id option.
-- */
--static void add_build_id_vmcoreinfo(void)
--{
--	char build_id[BUILD_ID_MAX * 2 + 1];
--	int n_remain = NOTES_SIZE;
--
--	while (n_remain >= sizeof(struct elf_note)) {
--		const struct elf_note_section *note_sec =
--			&__start_notes + NOTES_SIZE - n_remain;
--		const u32 n_namesz = note_sec->n_hdr.n_namesz;
--
--		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
--		    n_namesz != 0 &&
--		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
--			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
--				const u32 n_descsz = note_sec->n_hdr.n_descsz;
--				const u8 *s = &note_sec->n_data[n_namesz];
--
--				s = PTR_ALIGN(s, 4);
--				bin2hex(build_id, s, n_descsz);
--				build_id[2 * n_descsz] = '\0';
--				VMCOREINFO_BUILD_ID(build_id);
--				return;
--			}
--			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
--				note_sec->n_hdr.n_descsz,
--				BUILD_ID_MAX);
--			return;
--		}
--		n_remain -= sizeof(struct elf_note) +
--			ALIGN(note_sec->n_hdr.n_namesz, 4) +
--			ALIGN(note_sec->n_hdr.n_descsz, 4);
--	}
--}
--
- static int __init crash_save_vmcoreinfo_init(void)
- {
- 	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-@@ -443,7 +397,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	}
- 
- 	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
--	add_build_id_vmcoreinfo();
-+	VMCOREINFO_BUILD_ID();
- 	VMCOREINFO_PAGESIZE(PAGE_SIZE);
- 
- 	VMCOREINFO_SYMBOL(init_uts_ns);
+$ git grep KVM_FEATURE_CPUID
+$
+
+Do you mean
+
+	kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION)
+
+per chance?
+
+> diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+> index 78bb0fae3982..94ef16d263a7 100644
+> --- a/arch/x86/kernel/kvm.c
+> +++ b/arch/x86/kernel/kvm.c
+> @@ -26,6 +26,7 @@
+>  #include <linux/kprobes.h>
+>  #include <linux/nmi.h>
+>  #include <linux/swait.h>
+> +#include <linux/efi.h>
+>  #include <asm/timer.h>
+>  #include <asm/cpu.h>
+>  #include <asm/traps.h>
+> @@ -429,6 +430,59 @@ static inline void __set_percpu_decrypted(void *ptr, unsigned long size)
+>  	early_set_memory_decrypted((unsigned long) ptr, size);
+>  }
+>  
+> +static int __init setup_kvm_sev_migration(void)
+
+kvm_init_sev_migration() or so.
+
+...
+
+> @@ -48,6 +50,8 @@ EXPORT_SYMBOL_GPL(sev_enable_key);
+>  
+>  bool sev_enabled __section(".data");
+>  
+> +bool sev_live_migration_enabled __section(".data");
+
+Pls add a function called something like:
+
+bool sev_feature_enabled(enum sev_feature)
+
+and gets SEV_FEATURE_LIVE_MIGRATION and then use it instead of adding
+yet another boolean which contains whether some aspect of SEV has been
+enabled or not.
+
+Then add a
+
+static enum sev_feature sev_features;
+
+in mem_encrypt.c and that function above will query that sev_features
+enum for set flags.
+
+Then, if you feel bored, you could convert sme_active, sev_active,
+sev_es_active, mem_encrypt_active and whetever else code needs to query
+any aspect of SEV being enabled or not, to that function.
+
+> +void __init check_kvm_sev_migration(void)
+> +{
+> +	if (sev_active() &&
+> +	    kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION)) {
+
+Save an indentation level:
+
+	if (!sev_active() ||
+	    !kvm_para_has_feature(KVM_FEATURE_SEV_LIVE_MIGRATION))
+		return;
+
+> +		unsigned long nr_pages;
+> +		int i;
+> +
+> +		pr_info("KVM enable live migration\n");
+
+That should be at the end of the function and say:
+
+		pr_info("KVM live migration enabled.\n");
+
+> +		WRITE_ONCE(sev_live_migration_enabled, true);
+
+Why WRITE_ONCE?
+
+And that needs to go to the end of the function too.
+
+Thx.
+
 -- 
-https://chromeos.dev
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
