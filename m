@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga02.intel.com ([134.134.136.20])
+Received: from mga17.intel.com ([192.55.52.151])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lZgR5-00DzWe-P5
- for kexec@lists.infradead.org; Thu, 22 Apr 2021 21:00:33 +0000
+ id 1lZgRW-00DzXI-Hi
+ for kexec@lists.infradead.org; Thu, 22 Apr 2021 21:00:59 +0000
 From: "Switzer, David" <david.switzer@intel.com>
-Subject: RE: [PATCH v1 3/3] i40e: use minimal admin queue for kdump
-Date: Thu, 22 Apr 2021 21:00:26 +0000
-Message-ID: <MW3PR11MB474829A1CB3A794198D0B319EB469@MW3PR11MB4748.namprd11.prod.outlook.com>
+Subject: RE: [PATCH v1 1/3] i40e: use minimal tx and rx pairs for kdump
+Date: Thu, 22 Apr 2021 21:00:53 +0000
+Message-ID: <MW3PR11MB4748DAD8745E21A92A7CD38FEB469@MW3PR11MB4748.namprd11.prod.outlook.com>
 References: <20210304025543.334912-1-coxu@redhat.com>
- <20210304025543.334912-4-coxu@redhat.com>
-In-Reply-To: <20210304025543.334912-4-coxu@redhat.com>
+ <20210304025543.334912-2-coxu@redhat.com>
+In-Reply-To: <20210304025543.334912-2-coxu@redhat.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -38,20 +38,19 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "intel-wired-lan@li
 ><kuba@kernel.org>; Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen,
 >Anthony L <anthony.l.nguyen@intel.com>; David S. Miller
 ><davem@davemloft.net>; open list <linux-kernel@vger.kernel.org>
->Subject: [PATCH v1 3/3] i40e: use minimal admin queue for kdump
+>Subject: [PATCH v1 1/3] i40e: use minimal tx and rx pairs for kdump
 >
->The minimum size of admin send/receive queue is 1 and 2 respectively.
->The admin send queue can't be set to 1 because in that case, the firmware would
->fail to init.
+>Set the number of the MSI-X vectors to 1. When MSI-X is enabled, it's not allowed
+>to use more TC queue pairs than MSI-X vectors
+>(pf->num_lan_msix) exist. Thus the number of tx and rx pairs
+>(vsi->num_queue_pairs) will be equal to the number of MSI-X vectors, i.e., 1.
 >
 >Signed-off-by: Coiby Xu <coxu@redhat.com>
 >---
-> drivers/net/ethernet/intel/i40e/i40e.h      | 2 ++
-> drivers/net/ethernet/intel/i40e/i40e_main.c | 9 +++++++--
-> 2 files changed, 9 insertions(+), 2 deletions(-)
+> drivers/net/ethernet/intel/i40e/i40e_main.c | 9 +++++++++
+> 1 file changed, 9 insertions(+)
 >
 Tested-by: Dave Switzer <david.switzer@intel.com
-
 
 _______________________________________________
 kexec mailing list
