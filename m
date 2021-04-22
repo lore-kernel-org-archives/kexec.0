@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
- by bombadil.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
- id 1lZP1p-00DKJh-9x
- for kexec@lists.infradead.org; Thu, 22 Apr 2021 02:25:19 +0000
-From: Youling Tang <tangyouling@loongson.cn>
-Subject: [PATCH v2 4/4] mips: kdump: Reserve old memory to avoid the
- destruction of production kernel data
-Date: Thu, 22 Apr 2021 10:24:34 +0800
-Message-Id: <1619058274-6996-5-git-send-email-tangyouling@loongson.cn>
-In-Reply-To: <1619058274-6996-1-git-send-email-tangyouling@loongson.cn>
-References: <1619058274-6996-1-git-send-email-tangyouling@loongson.cn>
+Received: from mga09.intel.com ([134.134.136.24])
+ by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lZgQN-00DzVB-Tv
+ for kexec@lists.infradead.org; Thu, 22 Apr 2021 20:59:49 +0000
+From: "Switzer, David" <david.switzer@intel.com>
+Subject: RE: [PATCH v1 2/3] i40e: use minimal rx and tx ring buffers for kdump
+Date: Thu, 22 Apr 2021 20:59:40 +0000
+Message-ID: <MW3PR11MB474851ACCF8ADCC33EA928C6EB469@MW3PR11MB4748.namprd11.prod.outlook.com>
+References: <20210304025543.334912-1-coxu@redhat.com>
+ <20210304025543.334912-3-coxu@redhat.com>
+In-Reply-To: <20210304025543.334912-3-coxu@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,82 +20,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Baoquan He <bhe@redhat.com>, Huacai Chen <chenhuacai@kernel.org>, Jinyang He <hejinyang@loongson.cn>, kexec@lists.infradead.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Coiby Xu <coxu@redhat.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "intel-wired-lan@lists.osuosl.org" <intel-wired-lan@lists.osuosl.org>, Jakub
+ Kicinski <kuba@kernel.org>, "Brandeburg, Jesse" <jesse.brandeburg@intel.com>, "Nguyen, Anthony L" <anthony.l.nguyen@intel.com>, "David S. Miller" <davem@davemloft.net>, open
+ list <linux-kernel@vger.kernel.org>
 
-RnJvbTogSHVhY2FpIENoZW4gPGNoZW5oY0BsZW1vdGUuY29tPgoKTWVtb3J5IGxheW91dDoKCist
-LS0tLS0tLS0rIGVuZF9wZm4oZTArMTI4TSkKfCAgICAgICAgIHwKKy0tLS0tLS0tLSsgZTAKfCAg
-ICAgICAgIHwKfCAgICAgICAgIHwKfCAgICAgICAgIHwKKy0tLS0tLS0tLSsgZTEoY3Jhc2hrX3Jl
-cy5zdGFydCkKfCAgICAgICAgIHwKfCAgICAgICAgIHwKfCAgICAgICAgIHwKKy0tLS0tLS0tLSsg
-czEoY3Jhc2hrX3Jlcy5zdGFydCkKfCAgICAgICAgIHwKKy0tLS0tLS0tLSsgczAoc3RhcnRfcGZu
-KQoKWzFdIFdoZW4gcHJvZHVjaW5nIHRoZSBrZXJuZWw6ClJlc2VydmUgdGhlIGNyYXNoa2VybmVs
-IHNwYWNlIHRocm91Z2ggY3Jhc2hrZXJuZWw9IllNQFhNIiwgc28gdGhhdApbczEsIGUxXSBpcyBy
-ZXNlcnZlZCBmb3IgdGhlIGNhcHR1cmUga2VybmVsLgoKSWYgdGhlIGF2YWlsYWJsZSBtZW1vcnkg
-cmFuZ2UgaXMgZ3JlYXRlciB0aGFuIDFHLCBhbiBhZGRpdGlvbmFsIDEyOE0KcmFuZ2UgaXMgcmVz
-ZXJ2ZWQgZnJvbSB0b3AgdG8gYm90dG9tIGZvciB0aGUgY2FwdHVyZSBrZXJuZWwgKGllCltlMCwg
-ZW5kX3Bmbl0gcmFuZ2UpLiBUaGUgYWR2YW50YWdlIG9mIHRoaXMgaXMgdGhhdCBpdCBjYW4gbWFr
-ZSBtb3JlCm1lbW9yeSBhdmFpbGFibGUgdG8gdGhlIGNhcHR1cmUga2VybmVsIGFuZCBhdm9pZCB0
-cmlnZ2VyaW5nIGluc3VmZmljaWVudAptZW1vcnksIHJlc3VsdGluZyBpbiBwYW5pYy4KClsyXSBX
-aGVuIGNhcHR1cmluZyB0aGUga2VybmVsOgpGaW5hbGx5LCB0aGUgIm1lbT0iIHBhcmFtZXRlciBp
-cyBhdXRvbWF0aWNhbGx5IGFkZGVkIHRocm91Z2gga2V4ZWMtdG9vbHMKKHRoZSAibWVtPSIgcGFy
-YW1ldGVyIGFjdHVhbGx5IGNvbWVzIGZyb20gdGhlICJjcmFzaGtlcm5lbD0iIHBhcmFtZXRlciwK
-YW5kIHRoZSBzY29wZSBpcyB0aGUgc2FtZSkuCgpJdCBpcyBuZWNlc3NhcnkgdG8gcmVzZXJ2ZSB0
-aGUgYXZhaWxhYmxlIG1lbW9yeSBhcmVhIG9mIHRoZSBwcmV2aW91cwpwcm9kdWN0aW9uIGtlcm5l
-bCB0byBhdm9pZCB0aGUgY2FwdHVyZWQgZGF0YSBvZiB0aGUgcHJvZHVjdGlvbiBrZXJuZWwKZnJv
-bSBiZWluZyBkZXN0cm95ZWQuIElmIHRoaXMgYXJlYSBpbiB0aGUgbWVtb3J5IGlzIG5vdCByZXNl
-cnZlZCwgdGhlCmNhcHR1cmVkIGRhdGEgd2lsbCBiZSBkZXN0cm95ZWQsIHRoZSBnZW5lcmF0ZWQg
-dm1jb3JlIGZpbGUgaXMgaW52YWxpZAphbmQgY2Fubm90IGJlIHBhcnNlZCBieSB0aGUgY3Jhc2gt
-dXRpbGl0eS4KClszXSBPbmx5IGNvbnNpZGVyIHRoZSBtZW1vcnkgc2l0dWF0aW9uIG9mIGtkdW1w
-IG9wZXJhdGlvbiBhcyBmb2xsb3dzOgoxLiBQcm9kdWN0aW9uIGtlcm5lbDoKbWVtYmxvY2sucmVz
-ZXJ2ZTogW3MxLCBlMV0gYW5kIFtlMCwgZW5kX3Bmbl0gKE1lbW9yeSBpcyByZXNlcnZlZCkKbWVt
-YmxvY2subWVtb3J5OiAgW3MwLCBzMV0gYW5kIFtlMSwgZTBdICAgICAgKE1lbW9yeSBhdmFpbGFi
-bGUpCgoyLiBDYXB0dXJlIGtlcm5lbDoKbWVtYmxvY2sucmVzZXJ2ZTogW3MwLCBzMV0gYW5kIFtl
-MSwgZTBdICAgICAgKE1lbW9yeSBpcyByZXNlcnZlZCkKbWVtYmxvY2subWVtb3J5OiAgW3MxLCBl
-MV0gYW5kIFtlMCwgZW5kX3Bmbl0gKE1lbW9yeSBhdmFpbGFibGUpCgpJbiBjb25jbHVzaW9u77yM
-W3MwLCBzMV0gYW5kIFtlMSwgZTBdIG1lbW9yeSBhcmVhcyBzaG91bGQgYmUgcmVzZXJ2ZWQuCgpT
-aWduZWQtb2ZmLWJ5OiBIdWFjYWkgQ2hlbiA8Y2hlbmh1YWNhaUBrZXJuZWwub3JnPgpTaWduZWQt
-b2ZmLWJ5OiBZb3VsaW5nIFRhbmcgPHRhbmd5b3VsaW5nQGxvb25nc29uLmNuPgotLS0KdjI6CiAt
-IE5ldyBwYXRjaC4KCiBhcmNoL21pcHMva2VybmVsL3NldHVwLmMgfCAzOCArKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlvbnMo
-KykKCmRpZmYgLS1naXQgYS9hcmNoL21pcHMva2VybmVsL3NldHVwLmMgYi9hcmNoL21pcHMva2Vy
-bmVsL3NldHVwLmMKaW5kZXggYWYyYzg2MC4uYWE4OWYyOCAxMDA2NDQKLS0tIGEvYXJjaC9taXBz
-L2tlcm5lbC9zZXR1cC5jCisrKyBiL2FyY2gvbWlwcy9rZXJuZWwvc2V0dXAuYwpAQCAtNTUsNiAr
-NTUsOCBAQCBFWFBPUlRfU1lNQk9MKGNwdV9kYXRhKTsKIHN0cnVjdCBzY3JlZW5faW5mbyBzY3Jl
-ZW5faW5mbzsKICNlbmRpZgogCitzdGF0aWMgcGh5c19hZGRyX3QgY3Jhc2htZW1fc3RhcnQsIGNy
-YXNobWVtX3NpemU7CisKIC8qCiAgKiBTZXR1cCBpbmZvcm1hdGlvbgogICoKQEAgLTM2Nyw2ICsz
-NjksMTEgQEAgc3RhdGljIGludCBfX2luaXQgZWFybHlfcGFyc2VfbWVtKGNoYXIgKnApCiAKIAlt
-ZW1ibG9ja19hZGRfbm9kZShzdGFydCwgc2l6ZSwgcGFfdG9fbmlkKHN0YXJ0KSk7CiAKKwlpZiAo
-c3Ryc3RyKGJvb3RfY29tbWFuZF9saW5lLCAiZWxmY29yZWhkciIpICYmIHN0YXJ0ICYmIHNpemUp
-IHsKKwkJY3Jhc2htZW1fc3RhcnQgPSBzdGFydDsKKwkJY3Jhc2htZW1fc2l6ZSA9IHNpemU7CisJ
-fQorCiAJcmV0dXJuIDA7CiB9CiBlYXJseV9wYXJhbSgibWVtIiwgZWFybHlfcGFyc2VfbWVtKTsK
-QEAgLTUyNSw2ICs1MzIsMzYgQEAgc3RhdGljIHZvaWQgcmVzZXJ2ZV9jcmFzaG1fcmVnaW9uKGlu
-dCBub2RlLCB1bnNpZ25lZCBsb25nIHMwLCB1bnNpZ25lZCBsb25nIGUwKQogfQogI2VuZGlmIC8q
-ICFkZWZpbmVkKENPTkZJR19LRVhFQykgICovCiAKKy8qCisgKiBBZnRlciB0aGUga2R1bXAgb3Bl
-cmF0aW9uIGlzIHBlcmZvcm1lZCB0byBlbnRlciB0aGUgY2FwdHVyZSBrZXJuZWwsIHRoZQorICog
-bWVtb3J5IGFyZWEgdXNlZCBieSB0aGUgcHJldmlvdXMgcHJvZHVjdGlvbiBrZXJuZWwgc2hvdWxk
-IGJlIHJlc2VydmVkIHRvCisgKiBhdm9pZCBkZXN0cm95IHRvIHRoZSBjYXB0dXJlZCBkYXRhLgor
-ICovCitzdGF0aWMgdm9pZCByZXNlcnZlX29sZG1lbV9yZWdpb24oaW50IG5vZGUsIHVuc2lnbmVk
-IGxvbmcgczAsIHVuc2lnbmVkIGxvbmcgZTApCit7CisJdW5zaWduZWQgbG9uZyBzMSwgZTE7CisK
-KwlpZiAoIWlzX2tkdW1wX2tlcm5lbCgpKQorCQlyZXR1cm47CisKKwlpZiAoKGUwIC0gczApID4g
-KFNaXzFHID4+IFBBR0VfU0hJRlQpKQorCQllMCA9IGUwIC0gKFNaXzEyOE0gPj4gUEFHRV9TSElG
-VCk7CisKKwkvKiBjcmFzaG1lbV9zdGFydCBpcyBjcmFzaGtfcmVzIHJlc2VydmVkIGJ5IHByaW1h
-cnkgcHJvZHVjdGlvbiBrZXJuZWwgKi8KKwlzMSA9IFBGTl9VUChjcmFzaG1lbV9zdGFydCk7CisJ
-ZTEgPSBQRk5fRE9XTihjcmFzaG1lbV9zdGFydCArIGNyYXNobWVtX3NpemUpOworCisJaWYgKHMx
-ID09IDApCisJCXJldHVybjsKKworCWlmIChub2RlID09IDApIHsKKwkJbWVtYmxvY2tfcmVzZXJ2
-ZShQRk5fUEhZUyhzMCksIChzMSAtIHMwKSA8PCBQQUdFX1NISUZUKTsKKwkJbWVtYmxvY2tfcmVz
-ZXJ2ZShQRk5fUEhZUyhlMSksIChlMCAtIGUxKSA8PCBQQUdFX1NISUZUKTsKKwl9IGVsc2Ugewor
-CQltZW1ibG9ja19yZXNlcnZlKFBGTl9QSFlTKHMwKSwgKGUwIC0gczApIDw8IFBBR0VfU0hJRlQp
-OworCX0KK30KKwogc3RhdGljIHZvaWQgX19pbml0IGNoZWNrX2tlcm5lbF9zZWN0aW9uc19tZW0o
-dm9pZCkKIHsKIAlwaHlzX2FkZHJfdCBzdGFydCA9IF9fcGFfc3ltYm9sKCZfdGV4dCk7CkBAIC02
-OTYsNiArNzMzLDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGFyY2hfbWVtX2luaXQoY2hhciAqKmNt
-ZGxpbmVfcCkKIAlmb3JfZWFjaF9vbmxpbmVfbm9kZShub2RlKSB7CiAJCWdldF9wZm5fcmFuZ2Vf
-Zm9yX25pZChub2RlLCAmc3RhcnRfcGZuLCAmZW5kX3Bmbik7CiAJCXJlc2VydmVfY3Jhc2htX3Jl
-Z2lvbihub2RlLCBzdGFydF9wZm4sIGVuZF9wZm4pOworCQlyZXNlcnZlX29sZG1lbV9yZWdpb24o
-bm9kZSwgc3RhcnRfcGZuLCBlbmRfcGZuKTsKIAl9CiAKIAlkZXZpY2VfdHJlZV9pbml0KCk7Ci0t
-IAoyLjEuMAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+
+>-----Original Message-----
+>From: Coiby Xu <coxu@redhat.com>
+>Sent: Wednesday, March 3, 2021 6:56 PM
+>To: netdev@vger.kernel.org
+>Cc: kexec@lists.infradead.org; intel-wired-lan@lists.osuosl.org; Jakub Kicinski
+><kuba@kernel.org>; Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen,
+>Anthony L <anthony.l.nguyen@intel.com>; David S. Miller
+><davem@davemloft.net>; open list <linux-kernel@vger.kernel.org>
+>Subject: [PATCH v1 2/3] i40e: use minimal rx and tx ring buffers for kdump
+>
+>Use the minimum of the number of descriptors thus we will allocate the minimal
+>ring buffers for kdump.
+>
+>Signed-off-by: Coiby Xu <coxu@redhat.com>
+>---
+> drivers/net/ethernet/intel/i40e/i40e_main.c | 5 +++++
+> 1 file changed, 5 insertions(+)
+>
+Tested-by: Dave Switzer <david.switzer@intel.com>
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
