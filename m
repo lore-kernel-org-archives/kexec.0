@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga09.intel.com ([134.134.136.24])
+Received: from mga02.intel.com ([134.134.136.20])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lZgQN-00DzVB-Tv
- for kexec@lists.infradead.org; Thu, 22 Apr 2021 20:59:49 +0000
+ id 1lZgR5-00DzWe-P5
+ for kexec@lists.infradead.org; Thu, 22 Apr 2021 21:00:33 +0000
 From: "Switzer, David" <david.switzer@intel.com>
-Subject: RE: [PATCH v1 2/3] i40e: use minimal rx and tx ring buffers for kdump
-Date: Thu, 22 Apr 2021 20:59:40 +0000
-Message-ID: <MW3PR11MB474851ACCF8ADCC33EA928C6EB469@MW3PR11MB4748.namprd11.prod.outlook.com>
+Subject: RE: [PATCH v1 3/3] i40e: use minimal admin queue for kdump
+Date: Thu, 22 Apr 2021 21:00:26 +0000
+Message-ID: <MW3PR11MB474829A1CB3A794198D0B319EB469@MW3PR11MB4748.namprd11.prod.outlook.com>
 References: <20210304025543.334912-1-coxu@redhat.com>
- <20210304025543.334912-3-coxu@redhat.com>
-In-Reply-To: <20210304025543.334912-3-coxu@redhat.com>
+ <20210304025543.334912-4-coxu@redhat.com>
+In-Reply-To: <20210304025543.334912-4-coxu@redhat.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -38,17 +38,19 @@ Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "intel-wired-lan@li
 ><kuba@kernel.org>; Brandeburg, Jesse <jesse.brandeburg@intel.com>; Nguyen,
 >Anthony L <anthony.l.nguyen@intel.com>; David S. Miller
 ><davem@davemloft.net>; open list <linux-kernel@vger.kernel.org>
->Subject: [PATCH v1 2/3] i40e: use minimal rx and tx ring buffers for kdump
+>Subject: [PATCH v1 3/3] i40e: use minimal admin queue for kdump
 >
->Use the minimum of the number of descriptors thus we will allocate the minimal
->ring buffers for kdump.
+>The minimum size of admin send/receive queue is 1 and 2 respectively.
+>The admin send queue can't be set to 1 because in that case, the firmware would
+>fail to init.
 >
 >Signed-off-by: Coiby Xu <coxu@redhat.com>
 >---
-> drivers/net/ethernet/intel/i40e/i40e_main.c | 5 +++++
-> 1 file changed, 5 insertions(+)
+> drivers/net/ethernet/intel/i40e/i40e.h      | 2 ++
+> drivers/net/ethernet/intel/i40e/i40e_main.c | 9 +++++++--
+> 2 files changed, 9 insertions(+), 2 deletions(-)
 >
-Tested-by: Dave Switzer <david.switzer@intel.com>
+Tested-by: Dave Switzer <david.switzer@intel.com
 
 
 _______________________________________________
