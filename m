@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72b.google.com ([2607:f8b0:4864:20::72b])
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1la1la-00EfV0-81
- for kexec@lists.infradead.org; Fri, 23 Apr 2021 19:47:07 +0000
-Received: by mail-qk1-x72b.google.com with SMTP id e13so40939798qkl.6
- for <kexec@lists.infradead.org>; Fri, 23 Apr 2021 12:47:04 -0700 (PDT)
-Received: from localhost (c-73-119-27-70.hsd1.ma.comcast.net. [73.119.27.70])
- by smtp.gmail.com with ESMTPSA id
- d204sm5049036qke.3.2021.04.23.12.47.03
- for <kexec@lists.infradead.org>
- (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
- Fri, 23 Apr 2021 12:47:03 -0700 (PDT)
-Date: Fri, 23 Apr 2021 15:46:57 -0400
-From: Benjamin Moody <benjamin.moody@gmail.com>
-Subject: Setting "orig_video_isVGA" when handing off Linux framebuffer
-Message-ID: <20210423154657.40324d86@gmail.com>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.94 #2 (Red Hat Linux))
+ id 1lauLP-00FkmU-Eo
+ for kexec@lists.infradead.org; Mon, 26 Apr 2021 06:03:45 +0000
+Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 44DCB25B817
+ for <kexec@lists.infradead.org>; Mon, 26 Apr 2021 16:03:34 +1000 (AEST)
+Date: Mon, 26 Apr 2021 08:03:31 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.22-rc1
+Message-ID: <20210426060331.GA28942@vergenet.net>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,78 +26,59 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Dear kexec developers,
+Hi all,
 
-(Please let me know if there is a better place to discuss this issue.)
+I am happy to announce the release of kexec-tools 2.0.22-rc1.
 
-In setup_linux_vesafb (arch/i386/x86-linux-setup.c), we find the
-following:
+This is an incremental feature pre-release.
 
-	struct fb_fix_screeninfo fix;
-	struct fb_var_screeninfo var;
-	int fd;
+So long as no serious problems arise I intend to release kexec-tools 2.0.22
+in a weeks time. Testing of 2.0.22-rc1 would be greatly appreciated.
 
-	fd = open("/dev/fb0", O_RDONLY);
-	if (-1 == fd)
-		return -1;
+I do not have any outstanding changes for 2.0.22 at this time.
+And I would like to only accept bug fixes at this time and take
+features patches once 2.0.23 has been released.
 
-	if (-1 == ioctl(fd, FBIOGET_FSCREENINFO, &fix))
-		goto out;
-	if (-1 == ioctl(fd, FBIOGET_VSCREENINFO, &var))
-		goto out;
-	if (0 == strcmp(fix.id, "VESA VGA")) {
-		/* VIDEO_TYPE_VLFB */
-		real_mode->orig_video_isVGA = 0x23;
-	} else if (0 == strcmp(fix.id, "EFI VGA")) {
-		/* VIDEO_TYPE_EFI */
-		real_mode->orig_video_isVGA = 0x70;
-	} else if (arch_options.reuse_video_type) {
-		int err;
-		off_t offset = offsetof(typeof(*real_mode), orig_video_isVGA);
+The pre-release can be downloaded from kernel.org:
 
-		/* blindly try old boot time video type */
-		err = get_bootparam(&real_mode->orig_video_isVGA, offset, 1);
-		if (err)
-			goto out;
-	} else {
-		real_mode->orig_video_isVGA = 0;
-		close(fd);
-		return 0;
-	}
+	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.22-rc1.tar.xz
+	https://kernel.org/pub/linux/utils/kernel/kexec/
 
-What is the rationale for this logic?  What does the
-'orig_video_isVGA' parameter actually mean, what is the difference
-between VIDEO_TYPE_EFI and VIDEO_TYPE_VLFB, and why does the kernel
-care about it?
+I have also tagged it in git:
 
-I'm asking because in the context of Heads
-(https://github.com/osresearch/heads), the framebuffer has been
-configured by Linux (not by BIOS or UEFI), and indeed there *is* no
-BIOS or UEFI, only coreboot.  Thus, 'fix.id' is not "VESA VGA" or "EFI
-VGA", but rather "inteldrmfb" or "i915drmfb" or something like that,
-and 'get_bootparam' provides nothing useful.  As a result,
-'orig_video_isVGA' ends up being set to zero, and consequently the
-booted kernel either displays nothing or displays garbage.
+	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
 
-I realize that not all possible framebuffer formats can be described
-by 'struct x86_linux_param_header', and I assume that's the reason for
-checking 'fix.id'.  However, in this case, the framebuffer *is* a
-standard linear format, and if we set 'orig_video_isVGA' to either
-0x23 or 0x70, it appears to work correctly.
+Thanks to everyone who has contributed to kexec.
 
-From my naive perspective, it seems that, rather than checking the
-value of 'fix.id', kexec ought to be looking at 'fix.type',
-'fix.visual', and perhaps other fields, to determine whether the
-framebuffer format is compatible.  However, it's not apparent whether
-'orig_video_isVGA' should be set to 0x23 or 0x70, since the two seem
-to behave identically.
 
-I'm a little unsure about the purpose of the "blindly try old boot
-time video type" option but it seems like that's not really relevant
-here in any case; the original bootloader has nothing to do with the
-current framebuffer.
+For reference the changes since v2.0.21 are:
 
-Benjamin
+b4d0710 kexec-tools 2.0.22-rc1
+9817ec8 arm: do not copy magic 4 bytes of appended DTB in zImage
+bb6f6f1 kexec: Remove the error prone kernel_version function
+0b69943 Shrink segments to fit alignment instead of throwing them away
+774a16b Fix where the real mode interrupt vector ends
+28b0491 github: initial workflow
+e0a17a2 build: add distcheck target
+0eb0154 build: simplify uninstall target
+93c1e9d build: use DESTDIR in uninstall target
+fa1d7d5 build: uninstall kexec_test
+66d2b1a build: add dist make target
+41b77ed build: create tarball without self-referential hard links
+1bc7bc7 crashdump/x86: increase CRASH_MAX_MEMORY_RANGES to 32k
+77ff3d6 crashdump/x86: iterate only over actual crash memory ranges
+7175859 crashdump/x86: dump any kind of "System RAM"
+85721bd kexec-xen: Use correct image type for Live Update
+4b97ff9 kexec: Make --status work with normal kexec images
+2c30aa5 kexec: Fix description of --status exit code
+82f7de2 printk: Use %zu to format size_t
+07b272a printk: Use ULL suffix for 64-bit constants
+8519b01 kexec: Use %llu/%llx and casts to format uint64_t
+84a6ef0 mips: Fix the increased mem parameter size
+d73822b i386: fix build on pre 4.4 kernels
+6093532 mips: Fix typo in comment
+15ee19f mips: Add '--reuse-cmdline' optional parameter support
+b4feb36 kexec-tools 2.0.21.git
 
 _______________________________________________
 kexec mailing list
