@@ -1,17 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from mail-oo1-xc2c.google.com ([2607:f8b0:4864:20::c2c])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lbhCu-00HLeC-5B
- for kexec@lists.infradead.org; Wed, 28 Apr 2021 10:14:13 +0000
-Date: Wed, 28 Apr 2021 18:13:55 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v5 13/13] kdump: Use vmlinux_build_id to simplify
-Message-ID: <20210428101355.GB8374@localhost.localdomain>
+ id 1lbtOH-000Frr-DL
+ for kexec@lists.infradead.org; Wed, 28 Apr 2021 23:14:46 +0000
+Received: by mail-oo1-xc2c.google.com with SMTP id
+ e9-20020a4ada090000b02901f91091e5acso2189986oou.0
+ for <kexec@lists.infradead.org>; Wed, 28 Apr 2021 16:14:44 -0700 (PDT)
+MIME-Version: 1.0
+In-Reply-To: <20210428101355.GB8374@localhost.localdomain>
 References: <20210420215003.3510247-1-swboyd@chromium.org>
  <20210420215003.3510247-14-swboyd@chromium.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210420215003.3510247-14-swboyd@chromium.org>
+ <20210428101355.GB8374@localhost.localdomain>
+From: Stephen Boyd <swboyd@chromium.org>
+Date: Thu, 29 Apr 2021 01:14:43 +0200
+Message-ID: <CAE-0n517ZDD8ySTqT2GvKv-KNf1DFP2qmaqt3Pc=-AEndLTevg@mail.gmail.com>
+Subject: Re: [PATCH v5 13/13] kdump: Use vmlinux_build_id to simplify
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,155 +27,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Boyd <swboyd@chromium.org>
+To: Baoquan He <bhe@redhat.com>
 Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-On 04/20/21 at 02:50pm, Stephen Boyd wrote:
-> We can use the vmlinux_build_id array here now instead of open coding
-> it. This mostly consolidates code.
-> 
-> Cc: Jiri Olsa <jolsa@kernel.org>
-> Cc: Alexei Starovoitov <ast@kernel.org>
-> Cc: Jessica Yu <jeyu@kernel.org>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: <kexec@lists.infradead.org>
-> Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  include/linux/crash_core.h | 12 ++++-----
->  kernel/crash_core.c        | 50 ++------------------------------------
->  2 files changed, 8 insertions(+), 54 deletions(-)
-> 
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index 206bde8308b2..de62a722431e 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -38,8 +38,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
->  
->  #define VMCOREINFO_OSRELEASE(value) \
->  	vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-> -#define VMCOREINFO_BUILD_ID(value) \
-> -	vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-> +#define VMCOREINFO_BUILD_ID()						\
-> +	({								\
-> +		static_assert(sizeof(vmlinux_build_id) == 20);		\
-> +		vmcoreinfo_append_str("BUILD-ID=%20phN\n", vmlinux_build_id); \
+Quoting Baoquan He (2021-04-28 03:13:55)
+> On 04/20/21 at 02:50pm, Stephen Boyd wrote:
+> > We can use the vmlinux_build_id array here now instead of open coding
+> > it. This mostly consolidates code.
+> >
+> > Cc: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Alexei Starovoitov <ast@kernel.org>
+> > Cc: Jessica Yu <jeyu@kernel.org>
+> > Cc: Evan Green <evgreen@chromium.org>
+> > Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+> > Cc: Dave Young <dyoung@redhat.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > Cc: <kexec@lists.infradead.org>
+> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+> > ---
+> >  include/linux/crash_core.h | 12 ++++-----
+> >  kernel/crash_core.c        | 50 ++------------------------------------
+> >  2 files changed, 8 insertions(+), 54 deletions(-)
+> >
+> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> > index 206bde8308b2..de62a722431e 100644
+> > --- a/include/linux/crash_core.h
+> > +++ b/include/linux/crash_core.h
+> > @@ -38,8 +38,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+> >
+> >  #define VMCOREINFO_OSRELEASE(value) \
+> >       vmcoreinfo_append_str("OSRELEASE=%s\n", value)
+> > -#define VMCOREINFO_BUILD_ID(value) \
+> > -     vmcoreinfo_append_str("BUILD-ID=%s\n", value)
+> > +#define VMCOREINFO_BUILD_ID()                                                \
+> > +     ({                                                              \
+> > +             static_assert(sizeof(vmlinux_build_id) == 20);          \
+> > +             vmcoreinfo_append_str("BUILD-ID=%20phN\n", vmlinux_build_id); \
+>
+> Since there has been static_assert at above, can we remove the magic
+> number '20'?
+>
+> And I checked format_decode(), didn't find which type corresponds to
+> 'N', could you tell?
 
-Since there has been static_assert at above, can we remove the magic
-number '20'? 
+It is documented in Documentation/core-api/printk-formats.rst (see "Raw
+buffer as a hex string") where the '20' replaces the '*' to specify a
+fixed size buffer to format. We could pass the 20 as an argument instead
+of encoding it in the format, but then it would still be there twice. We
+could use a #define but then it would have to be passed as an argument.
 
-And I checked format_decode(), didn't find which type corresponds to
-'N', could you tell?
+I don't know of a good way to enforce in printk that the buffer is the
+size that matches the format size. Maybe it shouldn't be an option to
+have a size in the format string if it's a problem to put the size of
+the buffer in there.
 
-Other than these, this patch looks good to me, thanks for the effort.
+>
+> Other than these, this patch looks good to me, thanks for the effort.
+>
 
-Thanks
-Baoquan
-
-> +	})
-> +
->  #define VMCOREINFO_PAGESIZE(value) \
->  	vmcoreinfo_append_str("PAGESIZE=%ld\n", value)
->  #define VMCOREINFO_SYMBOL(name) \
-> @@ -69,10 +73,6 @@ extern unsigned char *vmcoreinfo_data;
->  extern size_t vmcoreinfo_size;
->  extern u32 *vmcoreinfo_note;
->  
-> -/* raw contents of kernel .notes section */
-> -extern const void __start_notes __weak;
-> -extern const void __stop_notes __weak;
-> -
->  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
->  			  void *data, size_t data_len);
->  void final_note(Elf_Word *buf);
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 825284baaf46..29cc15398ee4 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -4,6 +4,7 @@
->   * Copyright (C) 2002-2004 Eric Biederman  <ebiederm@xmission.com>
->   */
->  
-> +#include <linux/buildid.h>
->  #include <linux/crash_core.h>
->  #include <linux/utsname.h>
->  #include <linux/vmalloc.h>
-> @@ -378,53 +379,6 @@ phys_addr_t __weak paddr_vmcoreinfo_note(void)
->  }
->  EXPORT_SYMBOL(paddr_vmcoreinfo_note);
->  
-> -#define NOTES_SIZE (&__stop_notes - &__start_notes)
-> -#define BUILD_ID_MAX SHA1_DIGEST_SIZE
-> -#define NT_GNU_BUILD_ID 3
-> -
-> -struct elf_note_section {
-> -	struct elf_note	n_hdr;
-> -	u8 n_data[];
-> -};
-> -
-> -/*
-> - * Add build ID from .notes section as generated by the GNU ld(1)
-> - * or LLVM lld(1) --build-id option.
-> - */
-> -static void add_build_id_vmcoreinfo(void)
-> -{
-> -	char build_id[BUILD_ID_MAX * 2 + 1];
-> -	int n_remain = NOTES_SIZE;
-> -
-> -	while (n_remain >= sizeof(struct elf_note)) {
-> -		const struct elf_note_section *note_sec =
-> -			&__start_notes + NOTES_SIZE - n_remain;
-> -		const u32 n_namesz = note_sec->n_hdr.n_namesz;
-> -
-> -		if (note_sec->n_hdr.n_type == NT_GNU_BUILD_ID &&
-> -		    n_namesz != 0 &&
-> -		    !strcmp((char *)&note_sec->n_data[0], "GNU")) {
-> -			if (note_sec->n_hdr.n_descsz <= BUILD_ID_MAX) {
-> -				const u32 n_descsz = note_sec->n_hdr.n_descsz;
-> -				const u8 *s = &note_sec->n_data[n_namesz];
-> -
-> -				s = PTR_ALIGN(s, 4);
-> -				bin2hex(build_id, s, n_descsz);
-> -				build_id[2 * n_descsz] = '\0';
-> -				VMCOREINFO_BUILD_ID(build_id);
-> -				return;
-> -			}
-> -			pr_warn("Build ID is too large to include in vmcoreinfo: %u > %u\n",
-> -				note_sec->n_hdr.n_descsz,
-> -				BUILD_ID_MAX);
-> -			return;
-> -		}
-> -		n_remain -= sizeof(struct elf_note) +
-> -			ALIGN(note_sec->n_hdr.n_namesz, 4) +
-> -			ALIGN(note_sec->n_hdr.n_descsz, 4);
-> -	}
-> -}
-> -
->  static int __init crash_save_vmcoreinfo_init(void)
->  {
->  	vmcoreinfo_data = (unsigned char *)get_zeroed_page(GFP_KERNEL);
-> @@ -443,7 +397,7 @@ static int __init crash_save_vmcoreinfo_init(void)
->  	}
->  
->  	VMCOREINFO_OSRELEASE(init_uts_ns.name.release);
-> -	add_build_id_vmcoreinfo();
-> +	VMCOREINFO_BUILD_ID();
->  	VMCOREINFO_PAGESIZE(PAGE_SIZE);
->  
->  	VMCOREINFO_SYMBOL(init_uts_ns);
-> -- 
-> https://chromeos.dev
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
-
+Thanks.
 
 _______________________________________________
 kexec mailing list
