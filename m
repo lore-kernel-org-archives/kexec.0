@@ -1,8 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Marc Zyngier <maz@kernel.org>
-Subject: [PATCH 0/2] arm64: kexec_file_load vs memory reservations
-Date: Thu, 29 Apr 2021 14:35:31 +0100
-Message-Id: <20210429133533.1750721-1-maz@kernel.org>
+Subject: [PATCH 1/2] firmware/efi: Tell memblock about EFI reservations
+Date: Thu, 29 Apr 2021 14:35:32 +0100
+Message-Id: <20210429133533.1750721-2-maz@kernel.org>
+In-Reply-To: <20210429133533.1750721-1-maz@kernel.org>
+References: <20210429133533.1750721-1-maz@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,40 +21,75 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh Sharma <bhsharma@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kernel-team@android.com
 
-It recently became apparent that using kexec with kexec_file_load() on
-arm64 is pretty similar to playing Russian roulette.
+kexec_load_file() relies on the memblock infrastructure to avoid
+stamping over regions of memory that are essential to the survival
+of the system.
 
-Depending on the amount of memory, the HW supported and the firmware
-interface used, your secondary kernel may overwrite critical memory
-regions without which the secondary kernel cannot boot (the GICv3 LPI
-tables being a prime example of such reserved regions).
+However, nobody seems to agree how to flag these regions as reserved,
+and (for example) EFI only publishes its reservations in /proc/iomem
+for the benefit of the traditional, userspace based kexec tool.
 
-It turns out that there is at least two ways for reserved memory
-regions to be described to kexec: /proc/iomem for the userspace
-implementation, and memblock.reserved for kexec_file. And of course,
-our LPI tables are only reserved using the resource tree, leading to
-the aforementioned stamping. Similar things could happen with ACPI
-tables as well.
+On arm64 platforms with GICv3, this can result in the payload being
+placed at the location of the LPI tables. Shock, horror!
 
-On my 24xA53 system artificially limited to 256MB of RAM (yes, it
-boots with that little memory), trying to kexec a secondary kernel
-failed every times. I can only presume that this was mostly tested
-using kdump, which preserves the entire kernel memory range.
+Let's augment the EFI reservation code with a memblock_reserve() call,
+protecting our dear tables from the secondary kernel invasion.
 
-This small series aims at triggering a discussion on what are the
-expectations for kexec_file, and whether we should unify the two
-reservation mechanisms.
+At some point, someone will have to go and figure out a way to unify
+these multiple reservation trees, because sprinkling random reservation
+calls is only a temporary workaround.
 
-And in the meantime, it gets things going...
-
-Marc Zyngier (2):
-  firmware/efi: Tell memblock about EFI reservations
-  ACPI: arm64: Reserve the ACPI tables in memblock
-
- arch/arm64/kernel/acpi.c   |  1 +
+Signed-off-by: Marc Zyngier <maz@kernel.org>
+---
  drivers/firmware/efi/efi.c | 23 ++++++++++++++++++++++-
- 2 files changed, 23 insertions(+), 1 deletion(-)
+ 1 file changed, 22 insertions(+), 1 deletion(-)
 
+diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+index 4b7ee3fa9224..026b02f5f7d8 100644
+--- a/drivers/firmware/efi/efi.c
++++ b/drivers/firmware/efi/efi.c
+@@ -896,11 +896,25 @@ static int __init efi_memreserve_map_root(void)
+ static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+ {
+ 	struct resource *res, *parent;
++	int ret;
+ 
+ 	res = kzalloc(sizeof(struct resource), GFP_ATOMIC);
+ 	if (!res)
+ 		return -ENOMEM;
+ 
++	/*
++	 * Given that efi_mem_reserve_iomem() can be called at any
++	 * time, only call memblock_reserve() if the architecture
++	 * keeps the infrastructure around.
++	 */
++	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
++		ret = memblock_reserve(addr, size);
++		if (ret) {
++			kfree(res);
++			return ret;
++		}
++	}
++
+ 	res->name	= "reserved";
+ 	res->flags	= IORESOURCE_MEM;
+ 	res->start	= addr;
+@@ -908,7 +922,14 @@ static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+ 
+ 	/* we expect a conflict with a 'System RAM' region */
+ 	parent = request_resource_conflict(&iomem_resource, res);
+-	return parent ? request_resource(parent, res) : 0;
++	ret = parent ? request_resource(parent, res) : 0;
++	if (ret) {
++		kfree(res);
++		if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK))
++			memblock_free(addr, size);
++	}
++
++	return ret;
+ }
+ 
+ int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
 -- 
 2.29.2
 
