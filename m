@@ -1,20 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oo1-xc2c.google.com ([2607:f8b0:4864:20::c2c])
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lbtOH-000Frr-DL
- for kexec@lists.infradead.org; Wed, 28 Apr 2021 23:14:46 +0000
-Received: by mail-oo1-xc2c.google.com with SMTP id
- e9-20020a4ada090000b02901f91091e5acso2189986oou.0
- for <kexec@lists.infradead.org>; Wed, 28 Apr 2021 16:14:44 -0700 (PDT)
+From: Marc Zyngier <maz@kernel.org>
+Subject: [PATCH 0/2] arm64: kexec_file_load vs memory reservations
+Date: Thu, 29 Apr 2021 14:35:31 +0100
+Message-Id: <20210429133533.1750721-1-maz@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20210428101355.GB8374@localhost.localdomain>
-References: <20210420215003.3510247-1-swboyd@chromium.org>
- <20210420215003.3510247-14-swboyd@chromium.org>
- <20210428101355.GB8374@localhost.localdomain>
-From: Stephen Boyd <swboyd@chromium.org>
-Date: Thu, 29 Apr 2021 01:14:43 +0200
-Message-ID: <CAE-0n517ZDD8ySTqT2GvKv-KNf1DFP2qmaqt3Pc=-AEndLTevg@mail.gmail.com>
-Subject: Re: [PATCH v5 13/13] kdump: Use vmlinux_build_id to simplify
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,66 +16,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh Sharma <bhsharma@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kernel-team@android.com
 
-Quoting Baoquan He (2021-04-28 03:13:55)
-> On 04/20/21 at 02:50pm, Stephen Boyd wrote:
-> > We can use the vmlinux_build_id array here now instead of open coding
-> > it. This mostly consolidates code.
-> >
-> > Cc: Jiri Olsa <jolsa@kernel.org>
-> > Cc: Alexei Starovoitov <ast@kernel.org>
-> > Cc: Jessica Yu <jeyu@kernel.org>
-> > Cc: Evan Green <evgreen@chromium.org>
-> > Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> > Cc: Dave Young <dyoung@redhat.com>
-> > Cc: Baoquan He <bhe@redhat.com>
-> > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > Cc: <kexec@lists.infradead.org>
-> > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > ---
-> >  include/linux/crash_core.h | 12 ++++-----
-> >  kernel/crash_core.c        | 50 ++------------------------------------
-> >  2 files changed, 8 insertions(+), 54 deletions(-)
-> >
-> > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > index 206bde8308b2..de62a722431e 100644
-> > --- a/include/linux/crash_core.h
-> > +++ b/include/linux/crash_core.h
-> > @@ -38,8 +38,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
-> >
-> >  #define VMCOREINFO_OSRELEASE(value) \
-> >       vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-> > -#define VMCOREINFO_BUILD_ID(value) \
-> > -     vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-> > +#define VMCOREINFO_BUILD_ID()                                                \
-> > +     ({                                                              \
-> > +             static_assert(sizeof(vmlinux_build_id) == 20);          \
-> > +             vmcoreinfo_append_str("BUILD-ID=%20phN\n", vmlinux_build_id); \
->
-> Since there has been static_assert at above, can we remove the magic
-> number '20'?
->
-> And I checked format_decode(), didn't find which type corresponds to
-> 'N', could you tell?
+It recently became apparent that using kexec with kexec_file_load() on
+arm64 is pretty similar to playing Russian roulette.
 
-It is documented in Documentation/core-api/printk-formats.rst (see "Raw
-buffer as a hex string") where the '20' replaces the '*' to specify a
-fixed size buffer to format. We could pass the 20 as an argument instead
-of encoding it in the format, but then it would still be there twice. We
-could use a #define but then it would have to be passed as an argument.
+Depending on the amount of memory, the HW supported and the firmware
+interface used, your secondary kernel may overwrite critical memory
+regions without which the secondary kernel cannot boot (the GICv3 LPI
+tables being a prime example of such reserved regions).
 
-I don't know of a good way to enforce in printk that the buffer is the
-size that matches the format size. Maybe it shouldn't be an option to
-have a size in the format string if it's a problem to put the size of
-the buffer in there.
+It turns out that there is at least two ways for reserved memory
+regions to be described to kexec: /proc/iomem for the userspace
+implementation, and memblock.reserved for kexec_file. And of course,
+our LPI tables are only reserved using the resource tree, leading to
+the aforementioned stamping. Similar things could happen with ACPI
+tables as well.
 
->
-> Other than these, this patch looks good to me, thanks for the effort.
->
+On my 24xA53 system artificially limited to 256MB of RAM (yes, it
+boots with that little memory), trying to kexec a secondary kernel
+failed every times. I can only presume that this was mostly tested
+using kdump, which preserves the entire kernel memory range.
 
-Thanks.
+This small series aims at triggering a discussion on what are the
+expectations for kexec_file, and whether we should unify the two
+reservation mechanisms.
+
+And in the meantime, it gets things going...
+
+Marc Zyngier (2):
+  firmware/efi: Tell memblock about EFI reservations
+  ACPI: arm64: Reserve the ACPI tables in memblock
+
+ arch/arm64/kernel/acpi.c   |  1 +
+ drivers/firmware/efi/efi.c | 23 ++++++++++++++++++++++-
+ 2 files changed, 23 insertions(+), 1 deletion(-)
+
+-- 
+2.29.2
+
 
 _______________________________________________
 kexec mailing list
