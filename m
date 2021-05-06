@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lei0y-006GAz-Sw
- for kexec@lists.infradead.org; Thu, 06 May 2021 17:42:23 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
-References: <20210506093122.28607-1-joro@8bytes.org>
- <20210506093122.28607-3-joro@8bytes.org>
-Date: Thu, 06 May 2021 12:42:03 -0500
-In-Reply-To: <20210506093122.28607-3-joro@8bytes.org> (Joerg Roedel's message
- of "Thu, 6 May 2021 11:31:22 +0200")
-Message-ID: <m17dkb4v4k.fsf@fess.ebiederm.org>
+ id 1leiXt-006HMt-4V
+ for kexec@lists.infradead.org; Thu, 06 May 2021 18:16:22 +0000
+From: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>
+Subject: BUG REPORT: makedumpfile can't get the kernel version for Linux
+ 5.10.30-e8d03e3 on ARMv7 Processor rev 5 (v7l)
+Message-ID: <08dc647e-7841-4a0d-d133-d871551a4a6f@linux.vnet.ibm.com>
+Date: Thu, 6 May 2021 11:16:15 -0700
 MIME-Version: 1.0
-Subject: Re: [PATCH 2/2] x86/kexec/64: Forbid kexec when running as an SEV-ES
- guest
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,67 +18,64 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: x86@kernel.org, kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, stable@vger.kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+To: k-hagio-ab@nec.com, kexec@lists.infradead.org
 
-Joerg Roedel <joro@8bytes.org> writes:
+With commit a8250642a4ff50a2559446f4e915a1f59ac7adf7 (HEAD -> master, 
+origin/master, origin/HEAD)
 
-> From: Joerg Roedel <jroedel@suse.de>
->
-> For now, kexec is not supported when running as an SEV-ES guest. Doing
-> so requires additional hypervisor support and special code to hand
-> over the CPUs to the new kernel in a safe way.
->
-> Until this is implemented, do not support kexec in SEV-ES guests.
+This is on OpenBMC which builds on OpenEmbedded and Yocto.
 
-I don't understand this.
+sh-5.1# makedumpfile -d 31 /proc/vmcore /mnt/dumpfile
+The kernel version is not supported.
+The makedumpfile operation may be incomplete.
+check_release: Can't get the kernel version.
 
-Fundamentally kexec is about doing things more or less inspite of
-what the firmware is doing.
-
-I don't have any idea what a SEV-ES is.  But the normal x86 boot doesn't
-do anything special.  Is cross cpu IPI emulation buggy?
-
-If this is a move in your face hypervisor like Xen is sometimes I can
-see perhaps needing a little bit of different work during bootup.
-Perhaps handing back a cpu on system shutdown and asking for more cpus
-on system boot up.
-
-What is the actual problem you are trying to avoid?
-
-And yes for a temporary hack the suggestion of putting code into
-machine_kexec_prepare seems much more reasonable so we don't have to
-carry special case infrastructure for the forseeable future.
-
-Eric
+makedumpfile Failed.
 
 
-> Cc: stable@vger.kernel.org # v5.10+
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/machine_kexec_64.c | 8 ++++++++
->  1 file changed, 8 insertions(+)
->
-> diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-> index c078b0d3ab0e..f902cc9cc634 100644
-> --- a/arch/x86/kernel/machine_kexec_64.c
-> +++ b/arch/x86/kernel/machine_kexec_64.c
-> @@ -620,3 +620,11 @@ void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages)
->  	 */
->  	set_memory_encrypted((unsigned long)vaddr, pages);
->  }
-> +
-> +/*
-> + * Kexec is not supported in SEV-ES guests yet
-> + */
-> +bool arch_kexec_supported(void)
-> +{
-> +	return !sev_es_active();
-> +}
+sh-5.1# makedumpfile -v
+makedumpfile: version 1.6.8++ (released on 16 Nov 2020)
+lzo     disabled
+snappy  disabled
+
+
+sh-5.1# uname -a
+Linux p10bmc 5.10.30-e8d03e3 #1 SMP Thu May 6 15:55:30 UTC 2021 armv7l 
+GNU/Linux
+
+
+sh-5.1# cat /etc/os-release
+ID=openbmc-openpower
+NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro)"
+VERSION="2.10.0-dev"
+VERSION_ID=2.10.0-dev-1109-g322868a61-dirty
+PRETTY_NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference 
+Distro) 2.10.0-dev"
+BUILD_ID="2.10.0-dev"
+OPENBMC_TARGET_MACHINE="p10bmc"
+
+
+sh-5.1# cat /proc/cpuinfo
+processor       : 0
+model name      : ARMv7 Processor rev 5 (v7l)
+BogoMIPS        : 2400.00
+Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpv4 
+idiva idivt vfpd32 lpae evtstrm
+CPU implementer : 0x41
+CPU architecture: 7
+CPU variant     : 0x0
+CPU part        : 0xc07
+CPU revision    : 5
+
+Hardware        : Generic DT based system
+Revision        : 0000
+Serial          : 0000000000000000
+
+
 
 _______________________________________________
 kexec mailing list
