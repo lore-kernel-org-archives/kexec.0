@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from mail-pl1-x62f.google.com ([2607:f8b0:4864:20::62f])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lerjk-006YVO-Nr
- for kexec@lists.infradead.org; Fri, 07 May 2021 04:05:14 +0000
-Date: Fri, 7 May 2021 12:04:57 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v5 13/13] kdump: Use vmlinux_build_id to simplify
-Message-ID: <20210507040457.GB23668@MiWiFi-R3L-srv>
-References: <20210420215003.3510247-1-swboyd@chromium.org>
- <20210420215003.3510247-14-swboyd@chromium.org>
- <20210428101355.GB8374@localhost.localdomain>
- <CAE-0n517ZDD8ySTqT2GvKv-KNf1DFP2qmaqt3Pc=-AEndLTevg@mail.gmail.com>
- <20210507035418.GA23668@MiWiFi-R3L-srv>
+ id 1lgGQH-009Dot-9J
+ for kexec@lists.infradead.org; Tue, 11 May 2021 00:38:54 +0000
+Received: by mail-pl1-x62f.google.com with SMTP id t4so9980670plc.6
+ for <kexec@lists.infradead.org>; Mon, 10 May 2021 17:38:51 -0700 (PDT)
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: [PATCH v6 03/13] buildid: Stash away kernels build ID on init
+Date: Mon, 10 May 2021 17:38:35 -0700
+Message-Id: <20210511003845.2429846-4-swboyd@chromium.org>
+In-Reply-To: <20210511003845.2429846-1-swboyd@chromium.org>
+References: <20210511003845.2429846-1-swboyd@chromium.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210507035418.GA23668@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,99 +24,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: Andrew Morton <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>
+Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-On 05/07/21 at 11:54am, Baoquan He wrote:
-> On 04/29/21 at 01:14am, Stephen Boyd wrote:
-> > Quoting Baoquan He (2021-04-28 03:13:55)
-> > > On 04/20/21 at 02:50pm, Stephen Boyd wrote:
-> > > > We can use the vmlinux_build_id array here now instead of open coding
-> > > > it. This mostly consolidates code.
-> > > >
-> > > > Cc: Jiri Olsa <jolsa@kernel.org>
-> > > > Cc: Alexei Starovoitov <ast@kernel.org>
-> > > > Cc: Jessica Yu <jeyu@kernel.org>
-> > > > Cc: Evan Green <evgreen@chromium.org>
-> > > > Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-> > > > Cc: Dave Young <dyoung@redhat.com>
-> > > > Cc: Baoquan He <bhe@redhat.com>
-> > > > Cc: Vivek Goyal <vgoyal@redhat.com>
-> > > > Cc: <kexec@lists.infradead.org>
-> > > > Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-> > > > ---
-> > > >  include/linux/crash_core.h | 12 ++++-----
-> > > >  kernel/crash_core.c        | 50 ++------------------------------------
-> > > >  2 files changed, 8 insertions(+), 54 deletions(-)
-> > > >
-> > > > diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> > > > index 206bde8308b2..de62a722431e 100644
-> > > > --- a/include/linux/crash_core.h
-> > > > +++ b/include/linux/crash_core.h
-> > > > @@ -38,8 +38,12 @@ phys_addr_t paddr_vmcoreinfo_note(void);
-> > > >
-> > > >  #define VMCOREINFO_OSRELEASE(value) \
-> > > >       vmcoreinfo_append_str("OSRELEASE=%s\n", value)
-> > > > -#define VMCOREINFO_BUILD_ID(value) \
-> > > > -     vmcoreinfo_append_str("BUILD-ID=%s\n", value)
-> > > > +#define VMCOREINFO_BUILD_ID()                                                \
-> > > > +     ({                                                              \
-> > > > +             static_assert(sizeof(vmlinux_build_id) == 20);          \
-> > > > +             vmcoreinfo_append_str("BUILD-ID=%20phN\n", vmlinux_build_id); \
-> > >
-> > > Since there has been static_assert at above, can we remove the magic
-> > > number '20'?
-> > >
-> > > And I checked format_decode(), didn't find which type corresponds to
-> > > 'N', could you tell?
-> > 
-> > It is documented in Documentation/core-api/printk-formats.rst (see "Raw
-> > buffer as a hex string") where the '20' replaces the '*' to specify a
-> > fixed size buffer to format. We could pass the 20 as an argument instead
-> > of encoding it in the format, but then it would still be there twice. We
-> > could use a #define but then it would have to be passed as an argument.
-> 
-> Thanks for telling, I can see 'phN' is used in many places, but haven't
-> figured out how it's parsed, e.g in format_decode() it's not related.
-> Anyway, I may need dig further or search to get it.
-> 
-> > 
-> > I don't know of a good way to enforce in printk that the buffer is the
-> > size that matches the format size. Maybe it shouldn't be an option to
-> > have a size in the format string if it's a problem to put the size of
-> > the buffer in there.
-> 
-> Oh, I meant that we may not need to enforce that because the size of
-> vmlinux_build_id can be guaranteed, always 20, we do not need to specify
-> the '20'? Afaik, we usually specify the format size when the string size
-> is variable, and we want to add '0' to make the width of printing is
-                                  ~'space' I meant
-> fixed. Anyway, this dones't matter much.
-> 
-> Acked-by: Baoquan He <bhe@redhat.com>
-> 
-> Thanks
-> Baoquan
-> 
-> > 
-> > >
-> > > Other than these, this patch looks good to me, thanks for the effort.
-> > >
-> > 
-> > Thanks.
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Parse the kernel's build ID at initialization so that other code can
+print a hex format string representation of the running kernel's build
+ID. This will be used in the kdump and dump_stack code so that
+developers can easily locate the vmlinux debug symbols for a
+crash/stacktrace.
+
+Cc: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>
+Cc: Hsin-Yi Wang <hsinyi@chromium.org>
+Cc: Dave Young <dyoung@redhat.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: <kexec@lists.infradead.org>
+Signed-off-by: Stephen Boyd <swboyd@chromium.org>
+---
+ include/linux/buildid.h |  3 +++
+ init/main.c             |  1 +
+ lib/buildid.c           | 15 +++++++++++++++
+ 3 files changed, 19 insertions(+)
+
+diff --git a/include/linux/buildid.h b/include/linux/buildid.h
+index ebce93f26d06..f375900cf9ed 100644
+--- a/include/linux/buildid.h
++++ b/include/linux/buildid.h
+@@ -10,4 +10,7 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
+ 		   __u32 *size);
+ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
+ 
++extern unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
++void init_vmlinux_build_id(void);
++
+ #endif
+diff --git a/init/main.c b/init/main.c
+index 53b278845b88..eaede2f41327 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -857,6 +857,7 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
+ 	set_task_stack_end_magic(&init_task);
+ 	smp_setup_processor_id();
+ 	debug_objects_early_init();
++	init_vmlinux_build_id();
+ 
+ 	cgroup_init_early();
+ 
+diff --git a/lib/buildid.c b/lib/buildid.c
+index 6aea1c4e5e85..1103ed46214f 100644
+--- a/lib/buildid.c
++++ b/lib/buildid.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ 
+ #include <linux/buildid.h>
++#include <linux/cache.h>
+ #include <linux/elf.h>
+ #include <linux/kernel.h>
+ #include <linux/pagemap.h>
+@@ -172,3 +173,17 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
+ {
+ 	return parse_build_id_buf(build_id, NULL, buf, buf_size);
+ }
++
++unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX] __ro_after_init;
++
++/**
++ * init_vmlinux_build_id - Compute and stash the running kernel's build ID
++ */
++void __init init_vmlinux_build_id(void)
++{
++	extern const void __start_notes __weak;
++	extern const void __stop_notes __weak;
++	unsigned int size = &__stop_notes - &__start_notes;
++
++	build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
++}
+-- 
+https://chromeos.dev
 
 
 _______________________________________________
