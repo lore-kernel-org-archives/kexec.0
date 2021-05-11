@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 11 May 2021 15:35:30 +0100
-From: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v6 00/13] Add build ID to stacktraces
-Message-ID: <YJqWMgiirWPNNvnX@casper.infradead.org>
-References: <20210511003845.2429846-1-swboyd@chromium.org>
- <b30f6d396edf4db5974a2b90364b6314@AcuMS.aculab.com>
- <20210511085235.09bc38a7@gandalf.local.home>
- <37ca7834a8514a5695ed002e073a83b6@AcuMS.aculab.com>
- <YJqTB5pJiRqS1yGY@alley>
- <f09e9d68e4b14de58e881050a3c78ec1@AcuMS.aculab.com>
+Received: from mail-oi1-x229.google.com ([2607:f8b0:4864:20::229])
+ by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lgTUT-009g38-Lt
+ for kexec@lists.infradead.org; Tue, 11 May 2021 14:36:07 +0000
+Received: by mail-oi1-x229.google.com with SMTP id z3so17980411oib.5
+ for <kexec@lists.infradead.org>; Tue, 11 May 2021 07:35:57 -0700 (PDT)
+Subject: Re: [PATCH v3 1/1] kernel.h: Split out panic and oops helpers
+References: <20210511074137.33666-1-andriy.shevchenko@linux.intel.com>
+From: Alex Elder <elder@ieee.org>
+Message-ID: <c6fa5d2c-84e2-2046-19f0-66cf5dd72077@ieee.org>
+Date: Tue, 11 May 2021 09:35:54 -0500
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f09e9d68e4b14de58e881050a3c78ec1@AcuMS.aculab.com>
+In-Reply-To: <20210511074137.33666-1-andriy.shevchenko@linux.intel.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,19 +21,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Laight <David.Laight@aculab.com>
-Cc: 'Petr Mladek' <pmladek@suse.com>, 'Steven Rostedt' <rostedt@goodmis.org>, 'Stephen Boyd' <swboyd@chromium.org>, Andrew Morton <akpm@linux-foundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alexei Starovoitov <ast@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Young <dyoung@redhat.com>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>, Jiri Olsa <jolsa@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sasha Levin <sashal@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Will Deacon <will@kernel.org>, "x86@kernel.org" <x86@kernel.org>, Christoph Hellwig <hch@infradead.org>, peter enderborg <peter.enderborg@sony.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: linux-xtensa@linux-xtensa.org, openipmi-developer@lists.sourceforge.net, linux-clk@vger.kernel.org, linux-edac@vger.kernel.org, linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, sparclinux@vger.kernel.org, linux-um@lists.infradead.org, linux-hyperv@vger.kernel.org, coresight@lists.linaro.org, linux-leds@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, netdev@vger.kernel.org, linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-staging@lists.linux.dev, dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org, linux-arch@vger.kernel.org, kexec@lists.infradead.org, rcu@vger.kernel.org, linux-fsdevel@vger.kernel.org, xen-devel@lists.xenproject.org
 
-On Tue, May 11, 2021 at 02:31:38PM +0000, David Laight wrote:
-> Actually, for the use case, the id could be trimmed significantly.
-> It is only trying to differentiate between builds of a specific module.
-> So even 8 digits would be plenty.
+On 5/11/21 2:41 AM, Andy Shevchenko wrote:
+> kernel.h is being used as a dump for all kinds of stuff for a long time.
+> Here is the attempt to start cleaning it up by splitting out panic and
+> oops helpers.
+> 
+> There are several purposes of doing this:
+> - dropping dependency in bug.h
+> - dropping a loop by moving out panic_notifier.h
+> - unload kernel.h from something which has its own domain
+> 
+> At the same time convert users tree-wide to use new headers, although
+> for the time being include new header back to kernel.h to avoid twisted
+> indirected includes for existing users.
+> 
+> Signed-off-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> Acked-by: Mike Rapoport <rppt@linux.ibm.com>
+> Acked-by: Corey Minyard <cminyard@mvista.com>
+> Acked-by: Christian Brauner <christian.brauner@ubuntu.com>
+> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> Acked-by: Kees Cook <keescook@chromium.org>
+> Acked-by: Wei Liu <wei.liu@kernel.org>
+> Acked-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> Co-developed-by: Andrew Morton <akpm@linux-foundation.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> Acked-by: Sebastian Reichel <sre@kernel.org>
+> Acked-by: Luis Chamberlain <mcgrof@kernel.org>
+> Acked-by: Stephen Boyd <sboyd@kernel.org>
+> Acked-by: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
+> ---
+> v3: rebased on top of v5.13-rc1, collected a few more tags
+> 
+> Note WRT Andrew's SoB tag above: I have added it since part of the cases
+> I took from him. Andrew, feel free to amend or tell me how you want me
+> to do.
+> 
 
-asked and answered.  please review the bidding.
+Acked-by: Alex Elder <elder@kernel.org>
+
+. . .
+
+> diff --git a/drivers/net/ipa/ipa_smp2p.c b/drivers/net/ipa/ipa_smp2p.c
+> index a5f7a79a1923..34b68dc43886 100644
+> --- a/drivers/net/ipa/ipa_smp2p.c
+> +++ b/drivers/net/ipa/ipa_smp2p.c
+> @@ -8,6 +8,7 @@
+>   #include <linux/device.h>
+>   #include <linux/interrupt.h>
+>   #include <linux/notifier.h>
+> +#include <linux/panic_notifier.h>
+>   #include <linux/soc/qcom/smem.h>
+>   #include <linux/soc/qcom/smem_state.h>
+>   
+
+. . .
 
 _______________________________________________
 kexec mailing list
