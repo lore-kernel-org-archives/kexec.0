@@ -1,16 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x62f.google.com ([2607:f8b0:4864:20::62f])
+Received: from mail-pl1-x62d.google.com ([2607:f8b0:4864:20::62d])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lgGQH-009Dot-9J
- for kexec@lists.infradead.org; Tue, 11 May 2021 00:38:54 +0000
-Received: by mail-pl1-x62f.google.com with SMTP id t4so9980670plc.6
- for <kexec@lists.infradead.org>; Mon, 10 May 2021 17:38:51 -0700 (PDT)
+ id 1lgGQD-009DoO-Od
+ for kexec@lists.infradead.org; Tue, 11 May 2021 00:38:52 +0000
+Received: by mail-pl1-x62d.google.com with SMTP id t4so9980623plc.6
+ for <kexec@lists.infradead.org>; Mon, 10 May 2021 17:38:48 -0700 (PDT)
 From: Stephen Boyd <swboyd@chromium.org>
-Subject: [PATCH v6 03/13] buildid: Stash away kernels build ID on init
-Date: Mon, 10 May 2021 17:38:35 -0700
-Message-Id: <20210511003845.2429846-4-swboyd@chromium.org>
-In-Reply-To: <20210511003845.2429846-1-swboyd@chromium.org>
-References: <20210511003845.2429846-1-swboyd@chromium.org>
+Subject: [PATCH v6 00/13] Add build ID to stacktraces
+Date: Mon, 10 May 2021 17:38:32 -0700
+Message-Id: <20210511003845.2429846-1-swboyd@chromium.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,84 +23,165 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Andrew Morton <akpm@linux-foundation.org>, Petr Mladek <pmladek@suse.com>
-Cc: linux-kernel@vger.kernel.org, Jiri Olsa <jolsa@kernel.org>, Alexei Starovoitov <ast@kernel.org>, Jessica Yu <jeyu@kernel.org>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, Alexei Starovoitov <ast@kernel.org>, Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>, Catalin Marinas <catalin.marinas@arm.com>, Dave Young <dyoung@redhat.com>, Evan Green <evgreen@chromium.org>, Hsin-Yi Wang <hsinyi@chromium.org>, Ingo Molnar <mingo@redhat.com>, Jessica Yu <jeyu@kernel.org>, Jiri Olsa <jolsa@kernel.org>, kexec@lists.infradead.org, Konstantin Khlebnikov <khlebnikov@yandex-team.ru>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Matthew Wilcox <willy@infradead.org>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Sasha Levin <sashal@kernel.org>, Sergey Senozhatsky <sergey.senozhatsky@gmail.com>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, Vivek Goyal <vgoyal@redhat.com>, Will Deacon <will@kernel.org>, x86@kernel.org, Christoph Hellwig <hch@infradead.org>, peter enderborg <peter.enderborg@sony.com>
 
-Parse the kernel's build ID at initialization so that other code can
-print a hex format string representation of the running kernel's build
-ID. This will be used in the kdump and dump_stack code so that
-developers can easily locate the vmlinux debug symbols for a
-crash/stacktrace.
+This series adds the kernel's build ID[1] to the stacktrace header
+printed in oops messages, warnings, etc. and the build ID for any module
+that appears in the stacktrace after the module name. The goal is to
+make the stacktrace more self-contained and descriptive by including the
+relevant build IDs in the kernel logs when something goes wrong. This
+can be used by post processing tools like script/decode_stacktrace.sh
+and kernel developers to easily locate the debug info associated with a
+kernel crash and line up what line and file things started falling apart
+at.
 
-Cc: Jiri Olsa <jolsa@kernel.org>
+To show how this can be used I've included a patch to
+decode_stacktrace.sh that downloads the debuginfo from a debuginfod
+server. This also includes some patches to make the buildid.c file use
+more const arguments and consolidate logic into buildid.c from kdump.
+These are left to the end as they were mostly cleanup patches.
+
+I don't know who exactly maintains this so I guess Andrew is the best
+option to merge all this code. Otherwise, Petr mentioned it could
+possibly go through the printk tree given that it touches mostly printk
+things.
+
+Here's an example lkdtm stacktrace on arm64.
+
+ WARNING: CPU: 4 PID: 3255 at drivers/misc/lkdtm/bugs.c:83 lkdtm_WARNING+0x28/0x30 [lkdtm]
+ Modules linked in: lkdtm rfcomm algif_hash algif_skcipher af_alg xt_cgroup uinput xt_MASQUERADE
+ CPU: 4 PID: 3255 Comm: bash Not tainted 5.11 #3 aa23f7a1231c229de205662d5a9e0d4c580f19a1
+ Hardware name: Google Lazor (rev3+) with KB Backlight (DT)
+ pstate: 00400009 (nzcv daif +PAN -UAO -TCO BTYPE=--)
+ pc : lkdtm_WARNING+0x28/0x30 [lkdtm]
+ lr : lkdtm_do_action+0x24/0x40 [lkdtm]
+ sp : ffffffc0134fbca0
+ x29: ffffffc0134fbca0 x28: ffffff92d53ba240
+ x27: 0000000000000000 x26: 0000000000000000
+ x25: 0000000000000000 x24: ffffffe3622352c0
+ x23: 0000000000000020 x22: ffffffe362233366
+ x21: ffffffe3622352e0 x20: ffffffc0134fbde0
+ x19: 0000000000000008 x18: 0000000000000000
+ x17: ffffff929b6536fc x16: 0000000000000000
+ x15: 0000000000000000 x14: 0000000000000012
+ x13: ffffffe380ed892c x12: ffffffe381d05068
+ x11: 0000000000000000 x10: 0000000000000000
+ x9 : 0000000000000001 x8 : ffffffe362237000
+ x7 : aaaaaaaaaaaaaaaa x6 : 0000000000000000
+ x5 : 0000000000000000 x4 : 0000000000000001
+ x3 : 0000000000000008 x2 : ffffff93fef25a70
+ x1 : ffffff93fef15788 x0 : ffffffe3622352e0
+ Call trace:
+  lkdtm_WARNING+0x28/0x30 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  direct_entry+0x16c/0x1b4 [lkdtm ed5019fdf5e53be37cb1ba7899292d7e143b259e]
+  full_proxy_write+0x74/0xa4
+  vfs_write+0xec/0x2e8
+  ksys_write+0x84/0xf0
+  __arm64_sys_write+0x24/0x30
+  el0_svc_common+0xf4/0x1c0
+  do_el0_svc_compat+0x28/0x3c
+  el0_svc_compat+0x10/0x1c
+  el0_sync_compat_handler+0xa8/0xcc
+  el0_sync_compat+0x178/0x180
+ ---[ end trace 3d95032303e59e68 ]---
+
+Changes from v5 (https://lore.kernel.org/r/20210420215003.3510247-1-swboyd@chromium.org):
+ * Rebased onto v5.12
+ * Moved logic for when to include build ID code to kdump patch
+ * Simplified commit text to show before/after details
+
+Changes from v4 (https://lore.kernel.org/r/20210410015300.3764485-1-swboyd@chromium.org):
+ * Stubbed out more code when CONFIG_STACKTRACE_BUILD_ID=n
+ * Use static_assert instead of BUILD_BUG_ON()
+ * Dropped bad printk change to IP on x86
+
+Changes from v3 (https://lore.kernel.org/r/20210331030520.3816265-1-swboyd@chromium.org):
+ * Fixed compilation warnings due to config changes
+ * Fixed kernel-doc on init_vmlinx_build_id()
+ * Totally removed add_build_id_vmcoreinfo()
+ * Added another printk format %pBb to help x86 print backtraces
+ * Some BUILD_BUG_ON() checks to make sure the buildid doesn't get bigger or smaller
+
+Changes from v2 (https://lore.kernel.org/r/20210324020443.1815557-1-swboyd@chromium.org):
+ * Renamed symbol printing function to indicate build IDness
+ * Put build ID information behind Kconfig knob
+ * Build ID for vmlinux is calculated in early init instead of on demand
+ * printk format is %pS[R]b
+
+Changes from v1 (https://lore.kernel.org/r/20210301174749.1269154-1-swboyd@chromium.org):
+ * New printk format %pSb and %pSr
+ * Return binary format instead of hex format string from build ID APIs
+ * Some new patches to cleanup buildid/decode_stacktrace.sh
+ * A new patch to decode_stacktrace.sh to parse output
+
+[1] https://fedoraproject.org/wiki/Releases/FeatureBuildId
+
 Cc: Alexei Starovoitov <ast@kernel.org>
-Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Dave Young <dyoung@redhat.com>
 Cc: Evan Green <evgreen@chromium.org>
 Cc: Hsin-Yi Wang <hsinyi@chromium.org>
-Cc: Dave Young <dyoung@redhat.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jessica Yu <jeyu@kernel.org>
+Cc: Jiri Olsa <jolsa@kernel.org>
 Cc: <kexec@lists.infradead.org>
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
----
- include/linux/buildid.h |  3 +++
- init/main.c             |  1 +
- lib/buildid.c           | 15 +++++++++++++++
- 3 files changed, 19 insertions(+)
+Cc: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: <linux-doc@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
+Cc: Matthew Wilcox <willy@infradead.org>
+Cc: Petr Mladek <pmladek@suse.com>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+Cc: Steven Rostedt <rostedt@goodmis.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: <x86@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: peter enderborg <peter.enderborg@sony.com>
 
-diff --git a/include/linux/buildid.h b/include/linux/buildid.h
-index ebce93f26d06..f375900cf9ed 100644
---- a/include/linux/buildid.h
-+++ b/include/linux/buildid.h
-@@ -10,4 +10,7 @@ int build_id_parse(struct vm_area_struct *vma, unsigned char *build_id,
- 		   __u32 *size);
- int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size);
- 
-+extern unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX];
-+void init_vmlinux_build_id(void);
-+
- #endif
-diff --git a/init/main.c b/init/main.c
-index 53b278845b88..eaede2f41327 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -857,6 +857,7 @@ asmlinkage __visible void __init __no_sanitize_address start_kernel(void)
- 	set_task_stack_end_magic(&init_task);
- 	smp_setup_processor_id();
- 	debug_objects_early_init();
-+	init_vmlinux_build_id();
- 
- 	cgroup_init_early();
- 
-diff --git a/lib/buildid.c b/lib/buildid.c
-index 6aea1c4e5e85..1103ed46214f 100644
---- a/lib/buildid.c
-+++ b/lib/buildid.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- 
- #include <linux/buildid.h>
-+#include <linux/cache.h>
- #include <linux/elf.h>
- #include <linux/kernel.h>
- #include <linux/pagemap.h>
-@@ -172,3 +173,17 @@ int build_id_parse_buf(const void *buf, unsigned char *build_id, u32 buf_size)
- {
- 	return parse_build_id_buf(build_id, NULL, buf, buf_size);
- }
-+
-+unsigned char vmlinux_build_id[BUILD_ID_SIZE_MAX] __ro_after_init;
-+
-+/**
-+ * init_vmlinux_build_id - Compute and stash the running kernel's build ID
-+ */
-+void __init init_vmlinux_build_id(void)
-+{
-+	extern const void __start_notes __weak;
-+	extern const void __stop_notes __weak;
-+	unsigned int size = &__stop_notes - &__start_notes;
-+
-+	build_id_parse_buf(&__start_notes, vmlinux_build_id, size);
-+}
+Stephen Boyd (13):
+  buildid: Only consider GNU notes for build ID parsing
+  buildid: Add API to parse build ID out of buffer
+  buildid: Stash away kernels build ID on init
+  dump_stack: Add vmlinux build ID to stack traces
+  module: Add printk formats to add module build ID to stacktraces
+  arm64: stacktrace: Use %pSb for backtrace printing
+  x86/dumpstack: Use %pSb/%pBb for backtrace printing
+  scripts/decode_stacktrace.sh: Support debuginfod
+  scripts/decode_stacktrace.sh: Silence stderr messages from
+    addr2line/nm
+  scripts/decode_stacktrace.sh: Indicate 'auto' can be used for base
+    path
+  buildid: Mark some arguments const
+  buildid: Fix kernel-doc notation
+  kdump: Use vmlinux_build_id to simplify
+
+ Documentation/core-api/printk-formats.rst |  11 +++
+ arch/arm64/kernel/stacktrace.c            |   2 +-
+ arch/x86/kernel/dumpstack.c               |   2 +-
+ include/linux/buildid.h                   |   8 ++
+ include/linux/crash_core.h                |  12 +--
+ include/linux/kallsyms.h                  |  20 ++++-
+ include/linux/module.h                    |   8 +-
+ init/main.c                               |   1 +
+ kernel/crash_core.c                       |  50 +----------
+ kernel/kallsyms.c                         | 101 +++++++++++++++++-----
+ kernel/module.c                           |  31 ++++++-
+ lib/Kconfig.debug                         |  11 +++
+ lib/buildid.c                             |  74 ++++++++++++----
+ lib/dump_stack.c                          |  13 ++-
+ lib/vsprintf.c                            |   8 +-
+ scripts/decode_stacktrace.sh              |  89 +++++++++++++++----
+ 16 files changed, 327 insertions(+), 114 deletions(-)
+
+
+base-commit: 9f4ad9e425a1d3b6a34617b8ea226d56a119a717
 -- 
 https://chromeos.dev
 
