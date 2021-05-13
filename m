@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400080.outbound.protection.outlook.com
- ([40.107.140.80] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1410049.outbound.protection.outlook.com
+ ([40.107.141.49] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lgzP4-00AwQH-6E
- for kexec@lists.infradead.org; Thu, 13 May 2021 00:40:40 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ id 1lh0C4-00AxMp-LY
+ for kexec@lists.infradead.org; Thu, 13 May 2021 01:31:19 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
  <k-hagio-ab@nec.com>
-Subject: [ANNOUNCE] makedumpfile 1.6.9 is available
-Date: Thu, 13 May 2021 00:40:20 +0000
-Message-ID: <OSBPR01MB19918FBC00F42965E3E6FF92DD519@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+Subject: RE: BUG REPORT: makedumpfile can't get the kernel version for Linux
+ 5.10.30-e8d03e3 on ARMv7 Processor rev 5 (v7l)
+Date: Thu, 13 May 2021 01:31:12 +0000
+Message-ID: <OSBPR01MB1991D61F019E4785C81971FFDD519@OSBPR01MB1991.jpnprd01.prod.outlook.com>
+References: <08dc647e-7841-4a0d-d133-d871551a4a6f@linux.vnet.ibm.com>
+In-Reply-To: <08dc647e-7841-4a0d-d133-d871551a4a6f@linux.vnet.ibm.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,43 +26,71 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
+To: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi,
+-----Original Message-----
+> 
+> With commit a8250642a4ff50a2559446f4e915a1f59ac7adf7 (HEAD -> master,
+> origin/master, origin/HEAD)
+> 
+> This is on OpenBMC which builds on OpenEmbedded and Yocto.
+> 
+> sh-5.1# makedumpfile -d 31 /proc/vmcore /mnt/dumpfile
+> The kernel version is not supported.
+> The makedumpfile operation may be incomplete.
+> check_release: Can't get the kernel version.
+> 
+> makedumpfile Failed.
+> 
 
-I'm pleased to announce the release of makedumpfile-1.6.9.
-I would like to thank everyone who contributed to this release.
-Your comments/patches are always welcome.
+Thanks for the report.
 
-Download:
-The latest makedumpfile can be downloaded from the following URL.
-https://github.com/makedumpfile/makedumpfile/releases
-
-Main new features: 
-- Support for recent arm64 kernels and 52-bit kernel VA
-- Support for mips64 architecture
-- Add --dry-run option and report of write byte size
-- Support for newer kernels up to v5.12 (x86_64)
-
-decc5ef97412 [PATCH] Support newer kernels up to v5.12 (Kazuhito Hagio)
-a8250642a4ff [PATCH] x86_64: fix a use-after-free bug in -e option (Kazuhito Hagio)
-974a507447e8 [PATCH] mips64: Retrieve MAX_PHYSMEM_BITS from vmcoreinfo (Youling Tang)
-f8348d3efa53 [PATCH] fix build on sparc64 (Fabrice Fontaine)
-0ef2ca6c9fa2 [PATCH] Show write byte size in report messages (Kazuhito Hagio)
-a0216b678a95 [PATCH 3/3] arm64: support flipped VA and 52-bit kernel VA (Kazuhito Hagio)
-67d0e1d68f28 [PATCH 2/3] arm64: Make use of NUMBER(VA_BITS) in vmcoreinfo (Kazuhito Hagio)
-d8b701796f04 [PATCH 1/3] Use vmcoreinfo note in /proc/kcore for --mem-usage option (Kazuhito Hagio)
-7f185d29aa17 [PATCH v2] Add initial mips64 support (Youling Tang)
-01b4bd354c4a [PATCH] Makefile: Fix a compile error on Debian with pthread (Jiang Wang)
-6f3e75a558ed [PATCH 2/2] Add shorthand --show-stats option to show report stats (Julien Thierry)
-3422e1d6bc35 [PATCH 1/2] Add --dry-run option to prevent writing the dumpfile (Julien Thierry)
-54aec3878b3f [PATCH] make use of 'uts_namespace.name' offset in VMCOREINFO (Alexander Egorenkov)
-44b073b7ec46 [PATCH 2/2] printk: use committed/finalized state values (John Ogness)
-c617ec633392 [PATCH 1/2] printk: add support for lockless ringbuffer (John Ogness)
+Could I have the output with -D option?  That debugging output would not be
+enough to understand the issue fully but helpful to know your kernel more
+with vmcoreinfo.  (I suspect that vtop conversion might go wrong.)
 
 Thanks,
 Kazu
 
+> 
+> sh-5.1# makedumpfile -v
+> makedumpfile: version 1.6.8++ (released on 16 Nov 2020)
+> lzo     disabled
+> snappy  disabled
+> 
+> 
+> sh-5.1# uname -a
+> Linux p10bmc 5.10.30-e8d03e3 #1 SMP Thu May 6 15:55:30 UTC 2021 armv7l
+> GNU/Linux
+> 
+> 
+> sh-5.1# cat /etc/os-release
+> ID=openbmc-openpower
+> NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro)"
+> VERSION="2.10.0-dev"
+> VERSION_ID=2.10.0-dev-1109-g322868a61-dirty
+> PRETTY_NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference
+> Distro) 2.10.0-dev"
+> BUILD_ID="2.10.0-dev"
+> OPENBMC_TARGET_MACHINE="p10bmc"
+> 
+> 
+> sh-5.1# cat /proc/cpuinfo
+> processor       : 0
+> model name      : ARMv7 Processor rev 5 (v7l)
+> BogoMIPS        : 2400.00
+> Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpv4
+> idiva idivt vfpd32 lpae evtstrm
+> CPU implementer : 0x41
+> CPU architecture: 7
+> CPU variant     : 0x0
+> CPU part        : 0xc07
+> CPU revision    : 5
+> 
+> Hardware        : Generic DT based system
+> Revision        : 0000
+> Serial          : 0000000000000000
+> 
 
 _______________________________________________
 kexec mailing list
