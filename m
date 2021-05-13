@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410049.outbound.protection.outlook.com
- ([40.107.141.49] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lh0C4-00AxMp-LY
- for kexec@lists.infradead.org; Thu, 13 May 2021 01:31:19 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: BUG REPORT: makedumpfile can't get the kernel version for Linux
- 5.10.30-e8d03e3 on ARMv7 Processor rev 5 (v7l)
-Date: Thu, 13 May 2021 01:31:12 +0000
-Message-ID: <OSBPR01MB1991D61F019E4785C81971FFDD519@OSBPR01MB1991.jpnprd01.prod.outlook.com>
-References: <08dc647e-7841-4a0d-d133-d871551a4a6f@linux.vnet.ibm.com>
-In-Reply-To: <08dc647e-7841-4a0d-d133-d871551a4a6f@linux.vnet.ibm.com>
-Content-Language: ja-JP
+ id 1lh1rH-00Ayvl-4l
+ for kexec@lists.infradead.org; Thu, 13 May 2021 03:17:56 +0000
+Date: Thu, 13 May 2021 11:17:38 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 0/2] arm64: kexec_file_load vs memory reservations
+Message-ID: <20210513031503.GC45898@dhcp-128-65.nay.redhat.com>
+References: <20210429133533.1750721-1-maz@kernel.org>
+ <87fsyroml3.wl-maz@kernel.org>
 MIME-Version: 1.0
+In-Reply-To: <87fsyroml3.wl-maz@kernel.org>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,71 +24,81 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Bruce Mitchell <bruce.mitchell@linux.vnet.ibm.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Moritz Fischer <mdf@kernel.org>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh Sharma <email.bhupesh@gmail.com>, Pingfan Liu <piliu@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kernel-team@android.com
 
------Original Message-----
+Hi Marc,
+On 05/12/21 at 07:04pm, Marc Zyngier wrote:
+> + Dave Young, which I accidentally missed in my initial post
 > 
-> With commit a8250642a4ff50a2559446f4e915a1f59ac7adf7 (HEAD -> master,
-> origin/master, origin/HEAD)
+> On Thu, 29 Apr 2021 14:35:31 +0100,
+> Marc Zyngier <maz@kernel.org> wrote:
+> > 
+> > It recently became apparent that using kexec with kexec_file_load() on
+> > arm64 is pretty similar to playing Russian roulette.
+> > 
+> > Depending on the amount of memory, the HW supported and the firmware
+> > interface used, your secondary kernel may overwrite critical memory
+> > regions without which the secondary kernel cannot boot (the GICv3 LPI
+> > tables being a prime example of such reserved regions).
+> > 
+> > It turns out that there is at least two ways for reserved memory
+> > regions to be described to kexec: /proc/iomem for the userspace
+> > implementation, and memblock.reserved for kexec_file. And of course,
+> > our LPI tables are only reserved using the resource tree, leading to
+> > the aforementioned stamping. Similar things could happen with ACPI
+> > tables as well.
+> > 
+> > On my 24xA53 system artificially limited to 256MB of RAM (yes, it
+> > boots with that little memory), trying to kexec a secondary kernel
+> > failed every times. I can only presume that this was mostly tested
+> > using kdump, which preserves the entire kernel memory range.
+> > 
+> > This small series aims at triggering a discussion on what are the
+> > expectations for kexec_file, and whether we should unify the two
+> > reservation mechanisms.
+> > 
+> > And in the meantime, it gets things going...
+> > 
+> > Marc Zyngier (2):
+> >   firmware/efi: Tell memblock about EFI reservations
+> >   ACPI: arm64: Reserve the ACPI tables in memblock
+> > 
+> >  arch/arm64/kernel/acpi.c   |  1 +
+> >  drivers/firmware/efi/efi.c | 23 ++++++++++++++++++++++-
+> >  2 files changed, 23 insertions(+), 1 deletion(-)
 > 
-> This is on OpenBMC which builds on OpenEmbedded and Yocto.
+> Any comment on this?
 > 
-> sh-5.1# makedumpfile -d 31 /proc/vmcore /mnt/dumpfile
-> The kernel version is not supported.
-> The makedumpfile operation may be incomplete.
-> check_release: Can't get the kernel version.
+> I've separately started working on using the resource tree to slice
+> and dice the memblocks that are candidate for kexec_file_load(), but
+> I'd like some consensus on whether this is the right way to address
+> the issue.
 > 
-> makedumpfile Failed.
+> Without something like this, kexec_file_load() is not usable on arm64,
+> so I'm pretty eager to see the back of this bug.
+
+The arm64 memory reservation is tricky, I do not think I understand it
+correctly.  Previously there were a lot discussion, Ard and AKASHI
+should know more about it, see if they can provide comments.
+
+About the problem you see, another way is to just add an arch weak
+function like powerpc: arch_kexec_locate_mem_hole, and walking resource
+tree for kexec_file_load as well.  But I might be wrong since I did not
+follow up the arm64 specific history.
+
+> 
+> Thanks,
+> 
+> 	M.
+> 
+> -- 
+> Without deviation from the norm, progress is not possible.
 > 
 
-Thanks for the report.
+Thanks
+Dave
 
-Could I have the output with -D option?  That debugging output would not be
-enough to understand the issue fully but helpful to know your kernel more
-with vmcoreinfo.  (I suspect that vtop conversion might go wrong.)
-
-Thanks,
-Kazu
-
-> 
-> sh-5.1# makedumpfile -v
-> makedumpfile: version 1.6.8++ (released on 16 Nov 2020)
-> lzo     disabled
-> snappy  disabled
-> 
-> 
-> sh-5.1# uname -a
-> Linux p10bmc 5.10.30-e8d03e3 #1 SMP Thu May 6 15:55:30 UTC 2021 armv7l
-> GNU/Linux
-> 
-> 
-> sh-5.1# cat /etc/os-release
-> ID=openbmc-openpower
-> NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference Distro)"
-> VERSION="2.10.0-dev"
-> VERSION_ID=2.10.0-dev-1109-g322868a61-dirty
-> PRETTY_NAME="Phosphor OpenBMC (Phosphor OpenBMC Project Reference
-> Distro) 2.10.0-dev"
-> BUILD_ID="2.10.0-dev"
-> OPENBMC_TARGET_MACHINE="p10bmc"
-> 
-> 
-> sh-5.1# cat /proc/cpuinfo
-> processor       : 0
-> model name      : ARMv7 Processor rev 5 (v7l)
-> BogoMIPS        : 2400.00
-> Features        : half thumb fastmult vfp edsp neon vfpv3 tls vfpv4
-> idiva idivt vfpd32 lpae evtstrm
-> CPU implementer : 0x41
-> CPU architecture: 7
-> CPU variant     : 0x0
-> CPU part        : 0xc07
-> CPU revision    : 5
-> 
-> Hardware        : Generic DT based system
-> Revision        : 0000
-> Serial          : 0000000000000000
-> 
 
 _______________________________________________
 kexec mailing list
