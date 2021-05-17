@@ -1,15 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-db8eur05on2052.outbound.protection.outlook.com
- ([40.107.20.52] helo=EUR05-DB8-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1libJv-00Di8Q-Ke
- for kexec@lists.infradead.org; Mon, 17 May 2021 11:22:01 +0000
-From: Dong Aisheng <aisheng.dong@nxp.com>
-Subject: [PATCH 4/5] mm: rename the global section array to mem_sections
-Date: Mon, 17 May 2021 19:20:43 +0800
-Message-Id: <20210517112044.233138-5-aisheng.dong@nxp.com>
-In-Reply-To: <20210517112044.233138-1-aisheng.dong@nxp.com>
-References: <20210517112044.233138-1-aisheng.dong@nxp.com>
+From: Arnd Bergmann <arnd@kernel.org>
+Subject: [PATCH v3 0/4] compat: remove compat_alloc_user_space callers
+Date: Mon, 17 May 2021 22:33:39 +0200
+Message-Id: <20210517203343.3941777-1-arnd@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,136 +16,84 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org
-Cc: linux-kernel@vger.kernel.org, dongas86@gmail.com, Dong Aisheng <aisheng.dong@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
+To: linux-arch@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
 
-In order to distinguish the struct mem_section for a better code
-readability and align with kernel doc [1] name below, change the
-global mem section name to 'mem_sections' from 'mem_section'.
+From: Arnd Bergmann <arnd@arndb.de>
 
-[1] Documentation/vm/memory-model.rst
-"The `mem_section` objects are arranged in a two-dimensional array
-called `mem_sections`."
+Going through compat_alloc_user_space() to convert indirect system call
+arguments tends to add complexity compared to handling the native and
+compat logic in the same code.
 
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+There is one other trivial patch I resent for the atomisp staging driver
+and a longer series for networking ioctls that I need to revalidate
+before submitting again.
+
+Sorry for the long delay before resending this. Once everyone is happy
+with the latest version, I would add it to the asm-generic tree for
+a 5.14 merge.
+
+       Arnd
 ---
- include/linux/mmzone.h | 10 +++++-----
- kernel/crash_core.c    |  4 ++--
- mm/sparse.c            | 16 ++++++++--------
- 3 files changed, 15 insertions(+), 15 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index fc23e36cb165..b348a06915c5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -1297,9 +1297,9 @@ struct mem_section {
- #define SECTION_ROOT_MASK	(SECTIONS_PER_ROOT - 1)
- 
- #ifdef CONFIG_SPARSEMEM_EXTREME
--extern struct mem_section **mem_section;
-+extern struct mem_section **mem_sections;
- #else
--extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
-+extern struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
- #endif
- 
- static inline unsigned long *section_to_usemap(struct mem_section *ms)
-@@ -1310,12 +1310,12 @@ static inline unsigned long *section_to_usemap(struct mem_section *ms)
- static inline struct mem_section *__nr_to_section(unsigned long nr)
- {
- #ifdef CONFIG_SPARSEMEM_EXTREME
--	if (!mem_section)
-+	if (!mem_sections)
- 		return NULL;
- #endif
--	if (!mem_section[SECTION_NR_TO_ROOT(nr)])
-+	if (!mem_sections[SECTION_NR_TO_ROOT(nr)])
- 		return NULL;
--	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
-+	return &mem_sections[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
- }
- extern unsigned long __section_nr(struct mem_section *ms);
- extern size_t mem_section_usage_size(void);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 29cc15398ee4..fb1180d81b5a 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -414,8 +414,8 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_SYMBOL(contig_page_data);
- #endif
- #ifdef CONFIG_SPARSEMEM
--	VMCOREINFO_SYMBOL_ARRAY(mem_section);
--	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
-+	VMCOREINFO_SYMBOL_ARRAY(mem_sections);
-+	VMCOREINFO_LENGTH(mem_sections, NR_SECTION_ROOTS);
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
- 	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
-diff --git a/mm/sparse.c b/mm/sparse.c
-index df4418c12f04..a96e7e65475f 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -24,12 +24,12 @@
-  * 1) mem_section	- memory sections, mem_map's for valid memory
-  */
- #ifdef CONFIG_SPARSEMEM_EXTREME
--struct mem_section **mem_section;
-+struct mem_section **mem_sections;
- #else
--struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
-+struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
- 	____cacheline_internodealigned_in_smp;
- #endif
--EXPORT_SYMBOL(mem_section);
-+EXPORT_SYMBOL(mem_sections);
- 
- #ifdef NODE_NOT_IN_PAGE_FLAGS
- /*
-@@ -91,14 +91,14 @@ static int __meminit sparse_index_init(unsigned long section_nr, int nid)
- 	 *
- 	 * The mem_hotplug_lock resolves the apparent race below.
- 	 */
--	if (mem_section[root])
-+	if (mem_sections[root])
- 		return 0;
- 
- 	section = sparse_index_alloc(nid);
- 	if (!section)
- 		return -ENOMEM;
- 
--	mem_section[root] = section;
-+	mem_sections[root] = section;
- 
- 	return 0;
- }
-@@ -131,7 +131,7 @@ unsigned long __section_nr(struct mem_section *ms)
- #else
- unsigned long __section_nr(struct mem_section *ms)
- {
--	return (unsigned long)(ms - mem_section[0]);
-+	return (unsigned long)(ms - mem_sections[0]);
- }
- #endif
- 
-@@ -286,8 +286,8 @@ static void __init memblocks_present(void)
- #ifdef CONFIG_SPARSEMEM_EXTREME
- 	size = sizeof(struct mem_section *) * NR_SECTION_ROOTS;
- 	align = 1 << (INTERNODE_CACHE_SHIFT);
--	mem_section = memblock_alloc(size, align);
--	if (!mem_section)
-+	mem_sections = memblock_alloc(size, align);
-+	if (!mem_sections)
- 		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
- 		      __func__, size, align);
- #endif
+Changes in v3:
+
+- fix whitespace as pointed out by Christoph Hellwig
+- minor build fixes
+- rebase to v5.13-rc1
+
+Changes in v2:
+
+- address review comments from Christoph Hellwig
+- split syscall removal into a separate patch
+- replace __X32_COND_SYSCALL() with individual macros for x32
+
+Link: https://lore.kernel.org/lkml/20201208150614.GA15765@infradead.org/
+
+Arnd Bergmann (4):
+  kexec: simplify compat_sys_kexec_load
+  mm: simplify compat_sys_move_pages
+  mm: simplify compat numa syscalls
+  compat: remove some compat entry points
+
+ arch/arm64/include/asm/unistd32.h         |  12 +-
+ arch/mips/kernel/syscalls/syscall_n32.tbl |  12 +-
+ arch/mips/kernel/syscalls/syscall_o32.tbl |  12 +-
+ arch/parisc/kernel/syscalls/syscall.tbl   |  10 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl  |  12 +-
+ arch/s390/kernel/syscalls/syscall.tbl     |  12 +-
+ arch/sparc/kernel/syscalls/syscall.tbl    |  12 +-
+ arch/x86/entry/syscall_x32.c              |   2 +
+ arch/x86/entry/syscalls/syscall_32.tbl    |   6 +-
+ arch/x86/entry/syscalls/syscall_64.tbl    |   4 +-
+ include/linux/compat.h                    |  43 +----
+ include/linux/kexec.h                     |   2 -
+ include/uapi/asm-generic/unistd.h         |  12 +-
+ kernel/kexec.c                            |  90 ++++------
+ kernel/sys_ni.c                           |   5 -
+ mm/mempolicy.c                            | 195 +++++-----------------
+ mm/migrate.c                              |  50 +++---
+ 17 files changed, 164 insertions(+), 327 deletions(-)
+
 -- 
-2.25.1
+2.29.2
 
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Linux-MM <linux-mm@kvack.org>
+Cc: kexec@lists.infradead.org
 
 _______________________________________________
 kexec mailing list
