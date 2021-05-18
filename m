@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ot1-x32b.google.com ([2607:f8b0:4864:20::32b])
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lj0cz-00Ej2Y-8O
- for kexec@lists.infradead.org; Tue, 18 May 2021 14:23:22 +0000
-Received: by mail-ot1-x32b.google.com with SMTP id
- n32-20020a9d1ea30000b02902a53d6ad4bdso8779678otn.3
- for <kexec@lists.infradead.org>; Tue, 18 May 2021 07:23:20 -0700 (PDT)
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20210517203343.3941777-1-arnd@kernel.org>
+ <20210517203343.3941777-2-arnd@kernel.org>
+ <m1bl982m8c.fsf@fess.ebiederm.org>
+ <CAK8P3a27_z8zk6j5W4n+u3g2e90v-h+3AbaTZ6YjCQ0B7AbJaA@mail.gmail.com>
+ <CAK8P3a277VggQbBnXUzpwP7TKMj-S_z6rDMYYxfjyQmzGJdpCA@mail.gmail.com>
+Date: Tue, 18 May 2021 11:01:57 -0500
+In-Reply-To: <CAK8P3a277VggQbBnXUzpwP7TKMj-S_z6rDMYYxfjyQmzGJdpCA@mail.gmail.com>
+ (Arnd Bergmann's message of "Tue, 18 May 2021 16:17:53 +0200")
+Message-ID: <m18s4c1156.fsf@fess.ebiederm.org>
 MIME-Version: 1.0
-References: <20210429133533.1750721-1-maz@kernel.org>
- <20210518114857.GA7914@willie-the-truck>
-In-Reply-To: <20210518114857.GA7914@willie-the-truck>
-From: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Date: Tue, 18 May 2021 19:53:08 +0530
-Message-ID: <CAH=2NtwisNNBSN75-78AAFeW23oM-_zFqHdqw9YTcmQg5zRofQ@mail.gmail.com>
-Subject: Re: [PATCH 0/2] arm64: kexec_file_load vs memory reservations
+Subject: Re: [PATCH v3 1/4] kexec: simplify compat_sys_kexec_load
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,48 +23,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>
-Cc: Marc Zyngier <maz@kernel.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kernel-team@android.com
+To: Arnd Bergmann <arnd@kernel.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
 
-Hi Will,
+Arnd Bergmann <arnd@kernel.org> writes:
 
-On Tue, 18 May 2021 at 17:19, Will Deacon <will@kernel.org> wrote:
+> On Tue, May 18, 2021 at 4:05 PM Arnd Bergmann <arnd@kernel.org> wrote:
+>>
+>> On Tue, May 18, 2021 at 3:41 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
+>> >
+>> > Arnd Bergmann <arnd@kernel.org> writes:
+>> >
+>> > > From: Arnd Bergmann <arnd@arndb.de>KEXEC_ARCH_DEFAULT
+>> > >
+>> > > The compat version of sys_kexec_load() uses compat_alloc_user_space to
+>> > > convert the user-provided arguments into the native format.
+>> > >
+>> > > Move the conversion into the regular implementation with
+>> > > an in_compat_syscall() check to simplify it and avoid the
+>> > > compat_alloc_user_space() call.
+>> > >
+>> > > compat_sys_kexec_load() now behaves the same as sys_kexec_load().
+>> >
+>> > Nacked-by: "Eric W. Biederman" <ebiederm@xmission.com>
+>> >KEXEC_ARCH_DEFAULT
+>> > The patch is wrong.
+>> >
+>> > The logic between the compat entry point and the ordinary entry point
+>> > are by necessity different.   This unifies the logic and breaks the compat
+>> > entry point.
+>> >
+>> > The fundamentally necessity is that the code being loaded needs to know
+>> > which mode the kernel is running in so it can safely transition to the
+>> > new kernel.
+>> >
+>> > Given that the two entry points fundamentally need different logic,
+>> > and that difference was not preserved and the goal of this patchset
+>> > was to unify that which fundamentally needs to be different.  I don't
+>> > think this patch series makes any sense for kexec.
+>>
+>> Sorry, I'm not following that explanation. Can you clarify what different
+>> modes of the kernel you are referring to here, and how my patch
+>> changes this?
 >
-> [Fixing Bhupesh's email address]
+> I think I figured it out now myself after comparing the two functions:
 >
-> On Thu, Apr 29, 2021 at 02:35:31PM +0100, Marc Zyngier wrote:
-> > It recently became apparent that using kexec with kexec_file_load() on
-> > arm64 is pretty similar to playing Russian roulette.
-> >
-> > Depending on the amount of memory, the HW supported and the firmware
-> > interface used, your secondary kernel may overwrite critical memory
-> > regions without which the secondary kernel cannot boot (the GICv3 LPI
-> > tables being a prime example of such reserved regions).
-> >
-> > It turns out that there is at least two ways for reserved memory
-> > regions to be described to kexec: /proc/iomem for the userspace
-> > implementation, and memblock.reserved for kexec_file. And of course,
-> > our LPI tables are only reserved using the resource tree, leading to
-> > the aforementioned stamping. Similar things could happen with ACPI
-> > tables as well.
-> >
-> > On my 24xA53 system artificially limited to 256MB of RAM (yes, it
-> > boots with that little memory), trying to kexec a secondary kernel
-> > failed every times. I can only presume that this was mostly tested
-> > using kdump, which preserves the entire kernel memory range.
-> >
-> > This small series aims at triggering a discussion on what are the
-> > expectations for kexec_file, and whether we should unify the two
-> > reservation mechanisms.
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -269,7 +269,8 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry,
+> unsigned long, nr_segments,
 >
-> Bhupesh, since you've been involved with kexec file on arm64 before, please
-> could you take a look at these patches?
+>         /* Verify we are on the appropriate architecture */
+>         if (((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH) &&
+> -               ((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
+> +               (in_compat_syscall() ||
+> +               ((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT)))
+>                 return -EINVAL;
+>
+>         /* Because we write directly to the reserved memory
+>
+> Not sure if that's the best way of doing it, but it looks like folding this
+> in restores the current behavior.
 
-Thanks for adding me in Cc.
-Yes, I will look and test these patches asap.
+Yes.  That is pretty much all there is.
 
-Regards,
-Bhupesh
+I personally can't stand the sight of in_compat_syscall() doubly so when
+you have to lie to the type system with casts.  The cognitive dissonance
+I experience is extreme.
+
+I will be happy to help you find another way to get rid of
+compat_alloc_user, but not that way.
+
+
+There is a whole mess in there that was introduced when someone added
+do_kexec_load while I was napping in 2017 that makes the system calls an
+absolute mess.  It all needs to be cleaned up.
+
+Eric
 
 _______________________________________________
 kexec mailing list
