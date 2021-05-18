@@ -1,26 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1livxm-00EVLZ-7R
- for kexec@lists.infradead.org; Tue, 18 May 2021 09:24:32 +0000
-Date: Tue, 18 May 2021 17:24:04 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [patch 48/91] kernel/crash_core: add crashkernel=auto for vmcore
- creation
-Message-ID: <YKOHtMhOZXD/D4ij@dhcp-128-65.nay.redhat.com>
-References: <e9332e4e-57bd-9c7c-b3ba-7e3b29fad7c8@redhat.com>
- <YJkcsswrgAudo2vz@dhcp-128-65.nay.redhat.com>
- <b111806c-9103-3f77-7135-f1f773d23b80@redhat.com>
- <20210511133641.GE2834@localhost.localdomain>
- <YJqxWy63cokQZ4jQ@kernel.org>
- <c990270c-30a0-0913-df5a-2c73eb66a436@redhat.com>
- <20210512145150.GG2834@localhost.localdomain>
- <0ef02343-390b-9815-1666-24de4911c0b7@redhat.com>
- <20210518084916.GA12019@MiWiFi-R3L-srv>
- <14966fbd-d852-a240-814a-ab29e2a9b237@redhat.com>
+From: Miles Chen <miles.chen@mediatek.com>
+Subject: [PATCH v2 0/2] mm: unify the allocation of pglist_data instances
+Date: Tue, 18 May 2021 17:24:44 +0800
+Message-ID: <20210518092446.16382-1-miles.chen@mediatek.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <14966fbd-d852-a240-814a-ab29e2a9b237@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,162 +16,80 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>, hbathini@linux.ibm.com
-Cc: Baoquan He <bhe@redhat.com>, Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, christian.brauner@ubuntu.com, colin.king@canonical.com, corbet@lwn.net, frederic@kernel.org, gpiccoli@canonical.com, john.p.donnelly@oracle.com, jpoimboe@redhat.com, keescook@chromium.org, linux-mm@kvack.org, masahiroy@kernel.org, mchehab+huawei@kernel.org, mike.kravetz@oracle.com, mingo@kernel.org, mm-commits@vger.kernel.org, paulmck@kernel.org, peterz@infradead.org, rdunlap@infradead.org, rostedt@goodmis.org, saeed.mirzamohammadi@oracle.com, samitolvanen@google.com, sboyd@kernel.org, tglx@linutronix.de, torvalds@linux-foundation.org, vgoyal@redhat.com, yifeifz2@illinois.edu, Michal Hocko <mhocko@kernel.org>, kasong@redhat.com, kexec@lists.infradead.org
+To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>
+Cc: kexec@lists.infradead.org, linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Miles Chen <miles.chen@mediatek.com>
 
-[Add kexec list, for people interested about the old replies, please find in linux-mm archive]
-On 05/18/21 at 10:51am, David Hildenbrand wrote:
-> On 18.05.21 10:49, Baoquan He wrote:
-> > On 05/17/21 at 10:22am, David Hildenbrand wrote:
-> > > On 12.05.21 16:51, Baoquan He wrote:
-> > > > On 05/11/21 at 07:07pm, David Hildenbrand wrote:
-> > > > > > > If the way adding default value into kernel config is disliked,
-> > > > > > > this a) option looks good. We can get value with x% of system RAM, but
-> > > > > > > clamp it with CRASH_KERNEL_MIN/MAX. The CRASH_KERNEL_MIN/MAX may need be
-> > > > > > > defined with a default value for different ARCHes. It's very close to
-> > > > > > > our current implementation, and handling 'auto' in kernel.
-> > > > > > > 
-> > > > > > > And kernel config provided so that people can tune the MIN/MAX value,
-> > > > > > > but no need to post patch to do the tuning each time if have to?
-> > > > > > Maybe I'm missing something, but the whole point is to avoid kernel
-> > > > > > configuration option at all. If the crashkernel=auto works good for 99% of
-> > > > > > the cases, there is no need to provide build time configuration along with
-> > > > > > it. There are plenty of ways users can control crashkernel reservations
-> > > > > > with the existing 2-4 (depending on architecture) command line options.
-> > > > > > 
-> > > > > > Simply hard coding a reasonable defaults (e.g.
-> > > > > > "1G-64G:128M,64G-1T:256M,1T-:512M"), and using these defaults when
-> > > > > > crashkernel=auto is set would cover the same 99% of users you referred to.
-> > > > > 
-> > > > > Right, and we can easily allocate a bit more as a safety net temporarily
-> > > > > when we can actually shrink the area later.
-> > > > > 
-> > > > > > 
-> > > > > > If we can resize the reservation later during boot this will also address
-> > > > > > David's concern about the wasted memory.
-> > > > > > 
-> > > > > 
-> > > > > Yes.
-> > > > > 
-> > > > > > You mentioned that amount of memory that is required for crash kernel
-> > > > > > reservation depends on the devices present on the system. Is is possible to
-> > > > > > detect how much memory is required at late stages of boot?
-> > > > > 
-> > > > > Here is my thinking:
-> > > > > 
-> > > > > There seems to be some kind of formula we can roughly use to come up with
-> > > > > the final crashkernel size. Baoquan for sure knows all the dirty details, I
-> > > > > assume it's roughly "core kernel + drivers + user space".
-> > > > > 
-> > > > > In the kernel, we can only come up with "core kernel + drivers" expecting
-> > > > > that we will run
-> > > > > 
-> > > > > a) roughly the same kernel
-> > > > > b) with roughly the same drivers
-> > > > 
-> > > > As replied to Mike, kernel size is undecided for different kernel with
-> > > > different configs. We can define a default minimal size to cover kernel
-> > > > and driver on systems with not many devices, but hardcoding the size
-> > > > into upstream is not helpful. If the size is big, users will be asked to
-> > > > check and shrink always. If the size is too small, a new value need be
-> > > > got and added to cmdline and reboot.
-> > > > 
-> > > 
-> > > Hi Baoquan, Kairui, Dave,
-> > > 
-> > > so IIUC now, our "old" kernel cannot actually tell us any reliable
-> > > "crashkernel area size" because
-> > > 
-> > > a) it has no idea with which cmdline parameters the crashkernel will be
-> > >     started with, and these can have a big impact.
-> > > b) it has no idea which driver will be loaded in the crashkernel.
-> > > c) It has no idea what will be running in the crashkernel user space.
-> > > 
-> > > 
-> > > AFAIKS, best we can do without further information is, therefore, use some
-> > > heuristic to a) allocate some memory early during boot in the kernel and b)
-> > > later refine our allocation, triggered by user space (-> shrink the
-> > > crashkernel area).
-> > > 
-> > > I dislike calling a) "auto". It provides a default based on some heuristic
-> > > (boot memory size), and that default might be very unfortunate in some
-> > > scenarios (-> waste memory).
-> > > 
-> > > While we could discuss calling the current approach ( a)
-> > > )"crashkernel=default", whereby the default is encoded at compile time as
-> > > determined by a distributor, I still still quite don't like it because it
-> > > feels like this is not necessary. We have a way to pass something like that
-> > > via the cmdline, so it's just a matter of properly using that feature from
-> > > user space.
-> > > 
-> > > 
-> > > AFAIKS, all you want is most probably a more dynamic way to construct a
-> > > kernel cmdline, with some properties specific to a kernel.
-> > > 
-> > > Let's assume the following:
-> > > 
-> > > a) When a distributor ships a kernel, he also ships some kind of defaults
-> > > file. Let's assume for simplicity
-> > > 
-> > > /lib/modules/5.11.19-200.fc33.x86_64/defaults.conf
-> > > 
-> > > The file might contain
-> > > 
-> > > CRASHKERNEL_DEFAULT=WHATEVER
-> > > 
-> > > 
-> > > b) When generating the cmdline for e.g.,
-> > > /boot/loader/entries/XXX-5.11.19-200.fc33.x86_64.conf we run some script
-> > > that consult that file in addition to /etc/default/grub. For example, if the
-> > > kdump service was installed and /etc/default/grub does not contain
-> > > "crashkernel=" (except when we encounter "crashkernel=auto" for compat
-> > > handling), we add "crashkernel=WHATEVER". Of course, we might do more
-> > > involved stuff based on the current setup, user config, etc.
-> > > 
-> > > 
-> > > c) When we install the kdump service, all we have to do is re-generate the
-> > > boot entries AFAIKS. Just like we would when adding "crashkernel=auto" right
-> > > now.
-> > > 
-> > > 
-> > > The end result would also allow for having per-kernel defaults and change
-> > > them on kernel updates. Would require some thought on how to make it fly in
-> > > user space, how to "ship" the defaults etc.
-> > 
-> > Thanks for looking into this, and really appreciate your insight,
-> > comments and patience.
-> 
-> Thanks for being patient with me :)
-> 
-> > 
-> > We had a sync in team about various viable solutions the other day,
-> > and also talked about the similar one as you suggested here since
-> > it seems to be able to resolve the concerns we have for a replacement
-> > of crashkernel=auto. We will try these in userspace in our side, hope it
-> > won't introduce risk and can replace crashkernel=auto perfectly.
-> 
-> Sure, and as I said, if we want to look into shrinking of the crashkernel
-> area triggered by user space, I'm happy to help.
-> 
+This patches is created to fix the __pa() warning messages when
+CONFIG_DEBUG_VIRTUAL=y by unifying the allocation of pglist_data
+instances.
 
-David, Baoquan, thank you both for exploring the issue.  Let's try to do
-it like this in downstream.
+In current implementation of node_data, if CONFIG_NEED_MULTIPLE_NODES=y,
+pglist_data is allocated by a memblock API. If CONFIG_NEED_MULTIPLE_NODES=n,
+we use a global variable named "contig_page_data".
 
-Kdump initramfs is created for kdump needed only with less memory
-requirements, but fadump depends on the normal kernel initramfs thus
-fadump needs more memory than kdump.
+If CONFIG_DEBUG_VIRTUAL is not enabled. __pa() can handle both
+allocation and symbol cases. But if CONFIG_DEBUG_VIRTUAL is set,
+we will have the "virt_to_phys used for non-linear address" warning
+when booting.
 
-Hari, with this new no-auto approach, another thing we need to consider is how
-fadump will use same value if you do not introduce a new param.  As you
-are working in dracut to pack kdump initramfs into 1st kernel initramfs,
-it is possible that kdump and fadump can use same value, maybe kdump
-crashkernel value plus some static number for powerpc only. Anyway just
-a thought.  Please provide your comments if any.
+To fix the warning, always allocate pglist_data by memblock APIs and
+remove the usage of contig_page_data.
 
-Thanks
-Dave
+Warning message:
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] virt_to_phys used for non-linear address: (____ptrval____) (contig_page_data+0x0/0x1c00)
+[    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm64/mm/physaddr.c:15 __virt_to_phys+0x58/0x68
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W         5.13.0-rc1-00074-g1140ab592e2e #3
+[    0.000000] Hardware name: linux,dummy-virt (DT)
+[    0.000000] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO BTYPE=--)
+[    0.000000] pc : __virt_to_phys+0x58/0x68
+[    0.000000] lr : __virt_to_phys+0x54/0x68
+[    0.000000] sp : ffff800011833e70
+[    0.000000] x29: ffff800011833e70 x28: 00000000418a0018 x27: 0000000000000000
+[    0.000000] x26: 000000000000000a x25: ffff800011b70000 x24: ffff800011b70000
+[    0.000000] x23: fffffc0001c00000 x22: ffff800011b70000 x21: 0000000047ffffb0
+[    0.000000] x20: 0000000000000008 x19: ffff800011b082c0 x18: ffffffffffffffff
+[    0.000000] x17: 0000000000000000 x16: ffff800011833bf9 x15: 0000000000000004
+[    0.000000] x14: 0000000000000fff x13: ffff80001186a548 x12: 0000000000000000
+[    0.000000] x11: 0000000000000000 x10: 00000000ffffffff x9 : 0000000000000000
+[    0.000000] x8 : ffff8000115c9000 x7 : 737520737968705f x6 : ffff800011b62ef8
+[    0.000000] x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
+[    0.000000] x2 : 0000000000000000 x1 : ffff80001159585e x0 : 0000000000000058
+[    0.000000] Call trace:
+[    0.000000]  __virt_to_phys+0x58/0x68
+[    0.000000]  check_usemap_section_nr+0x50/0xfc
+[    0.000000]  sparse_init_nid+0x1ac/0x28c
+[    0.000000]  sparse_init+0x1c4/0x1e0
+[    0.000000]  bootmem_init+0x60/0x90
+[    0.000000]  setup_arch+0x184/0x1f0
+[    0.000000]  start_kernel+0x78/0x488
+[    0.000000] ---[ end trace f68728a0d3053b60 ]---
+
+[1] https://lore.kernel.org/patchwork/patch/1425110/
+
+Change since v1:
+- use memblock_alloc() to create pglist_data when CONFIG_NUMA=n
+
+Miles Chen (2):
+  mm: introduce prepare_node_data
+  mm: replace contig_page_data with node_data
+
+ Documentation/admin-guide/kdump/vmcoreinfo.rst | 13 -------------
+ arch/powerpc/kexec/core.c                      |  5 -----
+ include/linux/gfp.h                            |  3 ---
+ include/linux/mm.h                             |  2 ++
+ include/linux/mmzone.h                         |  4 ++--
+ kernel/crash_core.c                            |  1 -
+ mm/memblock.c                                  |  3 +--
+ mm/page_alloc.c                                | 16 ++++++++++++++++
+ mm/sparse.c                                    |  2 ++
+ 9 files changed, 23 insertions(+), 26 deletions(-)
 
 
+base-commit: 8ac91e6c6033ebc12c5c1e4aa171b81a662bd70f
+-- 
+2.18.0
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
