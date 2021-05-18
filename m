@@ -1,19 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.86.151])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1lj30e-00Eoxl-Nm
- for kexec@lists.infradead.org; Tue, 18 May 2021 16:55:58 +0000
-Received: by mail-yb1-f198.google.com with SMTP id
- j4-20020a2523040000b029050d0d623dccso9269197ybj.15
- for <kexec@lists.infradead.org>; Tue, 18 May 2021 09:55:49 -0700 (PDT)
+ id 1lj6cw-00ExX1-5y
+ for kexec@lists.infradead.org; Tue, 18 May 2021 20:47:43 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v3 1/4] kexec: simplify compat_sys_kexec_load
+Date: Tue, 18 May 2021 20:47:36 +0000
+Message-ID: <dcc79c4336234b6a84b597e0e39d65d0@AcuMS.aculab.com>
+References: <20210517203343.3941777-1-arnd@kernel.org>
+ <20210517203343.3941777-2-arnd@kernel.org>
+In-Reply-To: <20210517203343.3941777-2-arnd@kernel.org>
 MIME-Version: 1.0
-References: <20210423154657.40324d86@gmail.com>
- <20210504190954.46edf191@gmail.com>
-In-Reply-To: <20210504190954.46edf191@gmail.com>
-From: Kairui Song <kasong@redhat.com>
-Date: Wed, 19 May 2021 00:55:37 +0800
-Message-ID: <CACPcB9encLUW+Xf0Ce+S7dpBv6_C-Y5ynnX6pxHintzQfCyy8w@mail.gmail.com>
-Subject: Re: Setting "orig_video_isVGA" when handing off Linux framebuffer
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,89 +24,118 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Benjamin Moody <benjamin.moody@gmail.com>
-Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
+To: 'Arnd Bergmann' <arnd@kernel.org>, "linux-arch@vger.kernel.org" <linux-arch@vger.kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
- Hi Benjamin,
+From: Arnd Bergmann
+> Sent: 17 May 2021 21:34
+> 
+> The compat version of sys_kexec_load() uses compat_alloc_user_space to
+> convert the user-provided arguments into the native format.
+> 
+> Move the conversion into the regular implementation with
+> an in_compat_syscall() check to simplify it and avoid the
+> compat_alloc_user_space() call.
+> 
+> compat_sys_kexec_load() now behaves the same as sys_kexec_load().
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  include/linux/kexec.h |  2 -
+>  kernel/kexec.c        | 95 +++++++++++++++++++------------------------
+>  2 files changed, 42 insertions(+), 55 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..f61e310d7a85 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -88,14 +88,12 @@ struct kexec_segment {
+>  	size_t memsz;
+>  };
+> 
+> -#ifdef CONFIG_COMPAT
+>  struct compat_kexec_segment {
+>  	compat_uptr_t buf;
+>  	compat_size_t bufsz;
+>  	compat_ulong_t mem;	/* User space sees this as a (void *) ... */
+>  	compat_size_t memsz;
+>  };
+> -#endif
+> 
+>  #ifdef CONFIG_KEXEC_FILE
+>  struct purgatory_info {
+> diff --git a/kernel/kexec.c b/kernel/kexec.c
+> index c82c6c06f051..6618b1d9f00b 100644
+> --- a/kernel/kexec.c
+> +++ b/kernel/kexec.c
+> @@ -19,21 +19,46 @@
+> 
+>  #include "kexec_internal.h"
+> 
+> +static int copy_user_compat_segment_list(struct kimage *image,
+> +					 unsigned long nr_segments,
+> +					 void __user *segments)
+> +{
+> +	struct compat_kexec_segment __user *cs = segments;
+> +	struct compat_kexec_segment segment;
+> +	int i;
+> +
+> +	for (i = 0; i < nr_segments; i++) {
+> +		if (copy_from_user(&segment, &cs[i], sizeof(segment)))
+> +			return -EFAULT;
 
-Sorry for the late reply, I missed your email in my inbox.
+How many segments are there?
+The multiple copy_from_user() will be slow.
 
-On Wed, May 5, 2021 at 7:10 AM Benjamin Moody <benjamin.moody@gmail.com> wrote:
->
-> Hi,
->
-> In regard to how kexec hands off the framebuffer to the newly-booted
-> kernel:
->
-> Commit 060eee589dd1 (2018-01-28) added the "blindly try old boot time
-> video type" behavior, without doing any checking to see if the
-> framebuffer is compatible with the stated format.
->
-> Commit fb5a8792e6e4 (2019-03-05) made this behavior conditional on the
-> --reuse-video-type option.  The commit message observes that:
->
->     Currently kernel hanging is inspected on some hyper-v VMs after this
->     commit, because hyperv_fb will mimic EFI (or VESA) VGA on first boot
->     up, but after the real driver is loaded, it will switch to new mode
->     and no longer compatible with EFI/VESA VGA. Keep setting
->     orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded
->     and try to manipulate the framebuffer in a wrong way.
->
-> It's clear to me that various bad things *might* happen if kexec
-> pretends that the framebuffer is "VESA-compatible" or "EFI-compatible"
-> when in fact it isn't.
->
-> Yet, in many cases, the Linux framebuffer is VESA/EFI-compatible, at
-> least to the extent that blindly setting orig_video_isVGA = 0x23 or
-> 0x70 results in a usable display.  So I have to wonder, in the
-> situation mentioned above:
->
->  - was the framebuffer not in a compatible format to begin with?
->
->  - was the framebuffer address not correctly reported by the existing
->    kernel driver?
->
->  - did the original bootloader give wrong information and somehow that
->    broke the newly booted kernel?
->
-> Kairui, can you please clarify what sort of kernel hangs you were
-> seeing and what specific hardware and drivers you were using?
->
+> +
+> +		image->segment[i] = (struct kexec_segment) {
+> +			.buf   = compat_ptr(segment.buf),
+> +			.bufsz = segment.bufsz,
+> +			.mem   = segment.mem,
+> +			.memsz = segment.memsz,
+> +		};
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  static int copy_user_segment_list(struct kimage *image,
+>  				  unsigned long nr_segments,
+>  				  struct kexec_segment __user *segments)
+>  {
+> -	int ret;
+>  	size_t segment_bytes;
+> 
+>  	/* Read in the segments */
+>  	image->nr_segments = nr_segments;
+>  	segment_bytes = nr_segments * sizeof(*segments);
 
-For the commit fb5a8792e6e4, the problem is only observed with
-hyperv_fb, and it's a HyperV VM.
-The framebuffer was VESA compatible when the machine just booted, but
-after hyperv_fb driver is loaded, it will ask the hypervisor to
-relocate the framebuffer in a new location and in a new format.
+Should there be a bound check on nr_segments?
+I can't see one in the code in this patch.
 
-In a later kernel commit 3cb73bc3fa2a3cb80b88aa63b48409939e0d996b, it
-fixed the kernel side issue that after the relocation, the framebuffer
-address is not updated in boot_params. It was not updated before this
-kernel commit. Before that, the old boot_params will contain an
-invalid address and cause failures in the new booted kernel.
+> -	ret = copy_from_user(image->segment, segments, segment_bytes);
+> -	if (ret)
+> -		ret = -EFAULT;
+> +	if (in_compat_syscall())
+> +		return copy_user_compat_segment_list(image, nr_segments, segments);
+> 
+> -	return ret;
+> +	if (copy_from_user(image->segment, segments, segment_bytes))
+> +		return -EFAULT;
+> +
+> +	return 0;
 
-And I also remember blindly setting orig_video_isVGA will cause
-strange errors on some random graphic cards. If we can't make sure
-it's really VGA, this field better left zero, so kernel won't use it
-as a VGA framebuffer.
+An alternate sequence (which Eric will like even less!) is to
+do a single copy_from_user() for the entire compat size array
+into the 'normal' buffer and then do a reverse order conversion
+of each array entry from 'compat' to '64 bit'.
 
-For your case, you mentioned "'fix.id' is not "VESA VGA" or "EFI VGA",
-but rather "inteldrmfb" or "i915drmfb"",  'fix.id' can change after
-boot, I'm not familiar with heads or coreboot, but I guess the first
-kernel you booted have intel drm drivers loaded? Maybe you can try
-either don't load intel drm driver in first kernel (so the framebuffer
-is always being used in a VESA/EFI compatible way), or ensure same
-driver is loaded in the new booted kernel (this way the driver will
-reinitialize the framebuffer anyway, even if it's not set in
-boot_params).
+	David
 
-> Benjamin Moody
->
-
-
--- 
-Best Regards,
-Kairui Song
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
 
 _______________________________________________
