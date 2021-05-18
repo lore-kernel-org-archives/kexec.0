@@ -1,12 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 18 May 2021 19:09:40 +0300
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v2 0/2] mm: unify the allocation of pglist_data instances
-Message-ID: <YKPmxEu6YFDXRyTg@kernel.org>
-References: <20210518092446.16382-1-miles.chen@mediatek.com>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
+ id 1lj30e-00Eoxl-Nm
+ for kexec@lists.infradead.org; Tue, 18 May 2021 16:55:58 +0000
+Received: by mail-yb1-f198.google.com with SMTP id
+ j4-20020a2523040000b029050d0d623dccso9269197ybj.15
+ for <kexec@lists.infradead.org>; Tue, 18 May 2021 09:55:49 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210518092446.16382-1-miles.chen@mediatek.com>
+References: <20210423154657.40324d86@gmail.com>
+ <20210504190954.46edf191@gmail.com>
+In-Reply-To: <20210504190954.46edf191@gmail.com>
+From: Kairui Song <kasong@redhat.com>
+Date: Wed, 19 May 2021 00:55:37 +0800
+Message-ID: <CACPcB9encLUW+Xf0Ce+S7dpBv6_C-Y5ynnX6pxHintzQfCyy8w@mail.gmail.com>
+Subject: Re: Setting "orig_video_isVGA" when handing off Linux framebuffer
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,95 +26,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Miles Chen <miles.chen@mediatek.com>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Jonathan Corbet <corbet@lwn.net>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Andrew Morton <akpm@linux-foundation.org>, kexec@lists.infradead.org, linux-doc@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-mm@kvack.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Benjamin Moody <benjamin.moody@gmail.com>
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
 
-Hello Miles,
+ Hi Benjamin,
 
-On Tue, May 18, 2021 at 05:24:44PM +0800, Miles Chen wrote:
-> This patches is created to fix the __pa() warning messages when
-> CONFIG_DEBUG_VIRTUAL=y by unifying the allocation of pglist_data
-> instances.
-> 
-> In current implementation of node_data, if CONFIG_NEED_MULTIPLE_NODES=y,
-> pglist_data is allocated by a memblock API. If CONFIG_NEED_MULTIPLE_NODES=n,
-> we use a global variable named "contig_page_data".
-> 
-> If CONFIG_DEBUG_VIRTUAL is not enabled. __pa() can handle both
-> allocation and symbol cases. But if CONFIG_DEBUG_VIRTUAL is set,
-> we will have the "virt_to_phys used for non-linear address" warning
-> when booting.
-> 
-> To fix the warning, always allocate pglist_data by memblock APIs and
-> remove the usage of contig_page_data.
+Sorry for the late reply, I missed your email in my inbox.
 
-Somehow I was sure that we can allocate pglist_data before it is accessed
-in sparse_init() somewhere outside mm/sparse.c. It's really not the case
-and having two places that may allocated this structure is surely worth
-than your previous suggestion.
+On Wed, May 5, 2021 at 7:10 AM Benjamin Moody <benjamin.moody@gmail.com> wrote:
+>
+> Hi,
+>
+> In regard to how kexec hands off the framebuffer to the newly-booted
+> kernel:
+>
+> Commit 060eee589dd1 (2018-01-28) added the "blindly try old boot time
+> video type" behavior, without doing any checking to see if the
+> framebuffer is compatible with the stated format.
+>
+> Commit fb5a8792e6e4 (2019-03-05) made this behavior conditional on the
+> --reuse-video-type option.  The commit message observes that:
+>
+>     Currently kernel hanging is inspected on some hyper-v VMs after this
+>     commit, because hyperv_fb will mimic EFI (or VESA) VGA on first boot
+>     up, but after the real driver is loaded, it will switch to new mode
+>     and no longer compatible with EFI/VESA VGA. Keep setting
+>     orig_video_isVGA to EFI/VESA VGA flag will get wrong driver loaded
+>     and try to manipulate the framebuffer in a wrong way.
+>
+> It's clear to me that various bad things *might* happen if kexec
+> pretends that the framebuffer is "VESA-compatible" or "EFI-compatible"
+> when in fact it isn't.
+>
+> Yet, in many cases, the Linux framebuffer is VESA/EFI-compatible, at
+> least to the extent that blindly setting orig_video_isVGA = 0x23 or
+> 0x70 results in a usable display.  So I have to wonder, in the
+> situation mentioned above:
+>
+>  - was the framebuffer not in a compatible format to begin with?
+>
+>  - was the framebuffer address not correctly reported by the existing
+>    kernel driver?
+>
+>  - did the original bootloader give wrong information and somehow that
+>    broke the newly booted kernel?
+>
+> Kairui, can you please clarify what sort of kernel hangs you were
+> seeing and what specific hardware and drivers you were using?
+>
 
-Sorry about that.
- 
-> Warning message:
-> [    0.000000] ------------[ cut here ]------------
-> [    0.000000] virt_to_phys used for non-linear address: (____ptrval____) (contig_page_data+0x0/0x1c00)
-> [    0.000000] WARNING: CPU: 0 PID: 0 at arch/arm64/mm/physaddr.c:15 __virt_to_phys+0x58/0x68
-> [    0.000000] Modules linked in:
-> [    0.000000] CPU: 0 PID: 0 Comm: swapper Tainted: G        W         5.13.0-rc1-00074-g1140ab592e2e #3
-> [    0.000000] Hardware name: linux,dummy-virt (DT)
-> [    0.000000] pstate: 600000c5 (nZCv daIF -PAN -UAO -TCO BTYPE=--)
-> [    0.000000] pc : __virt_to_phys+0x58/0x68
-> [    0.000000] lr : __virt_to_phys+0x54/0x68
-> [    0.000000] sp : ffff800011833e70
-> [    0.000000] x29: ffff800011833e70 x28: 00000000418a0018 x27: 0000000000000000
-> [    0.000000] x26: 000000000000000a x25: ffff800011b70000 x24: ffff800011b70000
-> [    0.000000] x23: fffffc0001c00000 x22: ffff800011b70000 x21: 0000000047ffffb0
-> [    0.000000] x20: 0000000000000008 x19: ffff800011b082c0 x18: ffffffffffffffff
-> [    0.000000] x17: 0000000000000000 x16: ffff800011833bf9 x15: 0000000000000004
-> [    0.000000] x14: 0000000000000fff x13: ffff80001186a548 x12: 0000000000000000
-> [    0.000000] x11: 0000000000000000 x10: 00000000ffffffff x9 : 0000000000000000
-> [    0.000000] x8 : ffff8000115c9000 x7 : 737520737968705f x6 : ffff800011b62ef8
-> [    0.000000] x5 : 0000000000000000 x4 : 0000000000000001 x3 : 0000000000000000
-> [    0.000000] x2 : 0000000000000000 x1 : ffff80001159585e x0 : 0000000000000058
-> [    0.000000] Call trace:
-> [    0.000000]  __virt_to_phys+0x58/0x68
-> [    0.000000]  check_usemap_section_nr+0x50/0xfc
-> [    0.000000]  sparse_init_nid+0x1ac/0x28c
-> [    0.000000]  sparse_init+0x1c4/0x1e0
-> [    0.000000]  bootmem_init+0x60/0x90
-> [    0.000000]  setup_arch+0x184/0x1f0
-> [    0.000000]  start_kernel+0x78/0x488
-> [    0.000000] ---[ end trace f68728a0d3053b60 ]---
-> 
-> [1] https://lore.kernel.org/patchwork/patch/1425110/
-> 
-> Change since v1:
-> - use memblock_alloc() to create pglist_data when CONFIG_NUMA=n
-> 
-> Miles Chen (2):
->   mm: introduce prepare_node_data
->   mm: replace contig_page_data with node_data
-> 
->  Documentation/admin-guide/kdump/vmcoreinfo.rst | 13 -------------
->  arch/powerpc/kexec/core.c                      |  5 -----
->  include/linux/gfp.h                            |  3 ---
->  include/linux/mm.h                             |  2 ++
->  include/linux/mmzone.h                         |  4 ++--
->  kernel/crash_core.c                            |  1 -
->  mm/memblock.c                                  |  3 +--
->  mm/page_alloc.c                                | 16 ++++++++++++++++
->  mm/sparse.c                                    |  2 ++
->  9 files changed, 23 insertions(+), 26 deletions(-)
-> 
-> 
-> base-commit: 8ac91e6c6033ebc12c5c1e4aa171b81a662bd70f
-> -- 
-> 2.18.0
-> 
+For the commit fb5a8792e6e4, the problem is only observed with
+hyperv_fb, and it's a HyperV VM.
+The framebuffer was VESA compatible when the machine just booted, but
+after hyperv_fb driver is loaded, it will ask the hypervisor to
+relocate the framebuffer in a new location and in a new format.
+
+In a later kernel commit 3cb73bc3fa2a3cb80b88aa63b48409939e0d996b, it
+fixed the kernel side issue that after the relocation, the framebuffer
+address is not updated in boot_params. It was not updated before this
+kernel commit. Before that, the old boot_params will contain an
+invalid address and cause failures in the new booted kernel.
+
+And I also remember blindly setting orig_video_isVGA will cause
+strange errors on some random graphic cards. If we can't make sure
+it's really VGA, this field better left zero, so kernel won't use it
+as a VGA framebuffer.
+
+For your case, you mentioned "'fix.id' is not "VESA VGA" or "EFI VGA",
+but rather "inteldrmfb" or "i915drmfb"",  'fix.id' can change after
+boot, I'm not familiar with heads or coreboot, but I guess the first
+kernel you booted have intel drm drivers loaded? Maybe you can try
+either don't load intel drm driver in first kernel (so the framebuffer
+is always being used in a VESA/EFI compatible way), or ensure same
+driver is loaded in the new booted kernel (this way the driver will
+reinitialize the framebuffer anyway, even if it's not set in
+boot_params).
+
+> Benjamin Moody
+>
+
 
 -- 
-Sincerely yours,
-Mike.
+Best Regards,
+Kairui Song
+
 
 _______________________________________________
 kexec mailing list
