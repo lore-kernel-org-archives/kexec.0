@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 18 May 2021 07:42:01 +0100
+Date: Tue, 18 May 2021 07:52:11 +0100
 From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3 2/4] mm: simplify compat_sys_move_pages
-Message-ID: <YKNhuW+Vvi33LKcF@infradead.org>
+Subject: Re: [PATCH v3 3/4] mm: simplify compat numa syscalls
+Message-ID: <YKNkG3IzK4nl2VSX@infradead.org>
 References: <20210517203343.3941777-1-arnd@kernel.org>
- <20210517203343.3941777-3-arnd@kernel.org>
+ <20210517203343.3941777-4-arnd@kernel.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210517203343.3941777-3-arnd@kernel.org>
+In-Reply-To: <20210517203343.3941777-4-arnd@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,7 +23,7 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Arnd Bergmann <arnd@kernel.org>
 Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
 
-Looks good,
+Except for the various annoying overly long lines this looks fine to me:
 
 Reviewed-by: Christoph Hellwig <hch@lst.de>
 
