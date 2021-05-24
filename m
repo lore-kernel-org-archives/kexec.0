@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail-qk1-x733.google.com ([2607:f8b0:4864:20::733])
  by bombadil.infradead.org with esmtps (Exim 4.94 #2 (Red Hat Linux))
- id 1ll619-000lvz-8Z
- for kexec@lists.infradead.org; Mon, 24 May 2021 08:32:57 +0000
-Date: Mon, 24 May 2021 16:32:39 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] x86/efi: Do not release sub-1MB memory regions when the
- crashkernel option is specified
-Message-ID: <20210524083239.GA2872@MiWiFi-R3L-srv>
-References: <20210412011347.GA4282@MiWiFi-R3L-srv>
- <8FAA2A0E-0A09-4308-B936-CDD2C0568BAE@amacapital.net>
- <20210412095231.GC4282@MiWiFi-R3L-srv>
- <CALCETrV0dgn1=7CoB+BSHdDuzqtfpKGOPvjJg+sNo74VrcJE=A@mail.gmail.com>
- <20210413094515.GD4282@MiWiFi-R3L-srv>
- <CANU+ZydgWTSg+iUix8ggn-cSPpg8qtShaUQ47cOeeMxFmXp_zQ@mail.gmail.com>
- <CANU+ZydyKsctuFjPfBz7PuS=FaUtK0gs5Lq06pL5nuRJKe+J0w@mail.gmail.com>
+ id 1llIuy-00263h-Lf
+ for kexec@lists.infradead.org; Mon, 24 May 2021 22:19:26 +0000
+Received: by mail-qk1-x733.google.com with SMTP id i5so21325752qkf.12
+ for <kexec@lists.infradead.org>; Mon, 24 May 2021 15:19:23 -0700 (PDT)
+Date: Mon, 24 May 2021 18:19:19 -0400
+From: Benjamin Moody <benjamin.moody@gmail.com>
+Subject: Re: Setting "orig_video_isVGA" when handing off Linux framebuffer
+Message-ID: <20210524181919.76d5cbf2@gmail.com>
+In-Reply-To: <CACPcB9encLUW+Xf0Ce+S7dpBv6_C-Y5ynnX6pxHintzQfCyy8w@mail.gmail.com>
+References: <20210423154657.40324d86@gmail.com>
+ <20210504190954.46edf191@gmail.com>
+ <CACPcB9encLUW+Xf0Ce+S7dpBv6_C-Y5ynnX6pxHintzQfCyy8w@mail.gmail.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CANU+ZydyKsctuFjPfBz7PuS=FaUtK0gs5Lq06pL5nuRJKe+J0w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,176 +22,102 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lijiang <lijiang@redhat.com>, andy@infradead.org
-Cc: linux-kernel@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, x86@kernel.org, ardb@kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dvhart@infradead.org, kexec@lists.infradead.org, hpa@zytor.com, Dave Young <dyoung@redhat.com>
+To: Kairui Song <kasong@redhat.com>
+Cc: kexec@lists.infradead.org, Dave Young <dyoung@redhat.com>
 
-SGkgTGlhbmJvLAoKT24gMDUvMjQvMjEgYXQgMTE6MDBhbSwgbGlqaWFuZyB3cm90ZToKPiBBbHNv
-IGFkZCBtYWlsIGxpc3RzIGFuZCBtb3JlIHBlb3BsZSBpbiB0aGUgY2MgbGlzdC4KPiAKPiBUaGFu
-a3MuCj4gTGlhbmJvCj4gCj4gCj4gT24gRnJpLCBNYXkgMjEsIDIwMjEgYXQgODozNiBQTSBsaWpp
-YW5nIDxsaWppYW5nQHJlZGhhdC5jb20+IHdyb3RlOgo+IAo+ID4gSGksIEJhb3F1YW4sIEFuZHkK
-PiA+IFNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4KPiA+Cj4gPiBPbiBUdWUsIEFwciAxMywgMjAy
-MSBhdCA1OjQ1IFBNIEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToKPiA+Cj4gPj4g
-T24gMDQvMTIvMjEgYXQgMDg6MjRhbSwgQW5keSBMdXRvbWlyc2tpIHdyb3RlOgo+ID4+ID4gT24g
-TW9uLCBBcHIgMTIsIDIwMjEgYXQgMjo1MiBBTSBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0LmNvbT4g
-d3JvdGU6Cj4gPj4gPiA+Cj4gPj4gPiA+IE9uIDA0LzExLzIxIGF0IDA2OjQ5cG0sIEFuZHkgTHV0
-b21pcnNraSB3cm90ZToKPiA+PiA+ID4gPgo+ID4+ID4gPiA+Cj4gPj4gPiA+ID4gPiBPbiBBcHIg
-MTEsIDIwMjEsIGF0IDY6MTQgUE0sIEJhb3F1YW4gSGUgPGJoZUByZWRoYXQuY29tPiB3cm90ZToK
-PiA+PiA+ID4gPiA+Cj4gPj4gPiA+ID4gPiDvu79PbiAwNC8wOS8yMSBhdCAwNzo1OXBtLCBILiBQ
-ZXRlciBBbnZpbiB3cm90ZToKPiA+PiA+ID4gPiA+PiBXaHkgZG9uJ3Qgd2UgZG8gdGhpcyB1bmNv
-bmRpdGlvbmFsbHk/IEF0IHRoZSB2ZXJ5IGJlc3Qgd2UgZ2Fpbgo+ID4+IGhhbGYgYSBtZWdhYnl0
-ZSBvZiBtZW1vcnkgKGV4Y2VwdCB0aGUgdHJhbXBvbGluZSwgd2hpY2ggaGFzIHRvIGxpdmUgdGhl
-cmUsCj4gPj4gYnV0IGl0IGlzIG9ubHkgYSBmZXcga2lsb2J5dGVzLikKPiA+PiA+ID4gPiA+Cj4g
-Pj4gPiA+ID4gPiBUaGlzIGlzIGEgZ3JlYXQgc3VnZ2VzdGlvbiwgdGhhbmtzLiBJIHRoaW5rIHdl
-IGNhbiBmaXggaXQgaW4gdGhpcwo+ID4+IHdheSB0bwo+ID4+ID4gPiA+ID4gbWFrZSBjb2RlIHNp
-bXBsZXIuIFRoZW4gdGhlIHNwZWNpZmljIGNhcmluZyBvZiByZWFsIG1vZGUgaW4KPiA+PiA+ID4g
-PiA+IGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKSBjYW4gYmUgcmVtb3ZlZCB0b28uCj4gPj4gPiA+
-ID4gPgo+ID4+ID4gPiA+Cj4gPj4gPiA+ID4gVGhpcyB3aG9sZSBzaXR1YXRpb24gbWFrZXMgbWUg
-dGhpbmsgdGhhdCB0aGUgY29kZSBpcyBidWdneSBiZWZvcmUKPiA+PiBhbmQgYnVnZ3kgYWZ0ZXIu
-Cj4gPj4gPiA+ID4KPiA+PiA+ID4gPiBUaGUgaXNzdWUgaGVyZSAoSSB0aGluaykgaXMgdGhhdCB2
-YXJpb3VzIHBpZWNlcyBvZiBjb2RlIHdhbnQgdG8KPiA+PiByZXNlcnZlIHNwZWNpZmljIHBpZWNl
-cyBvZiBvdGhlcndpc2UtYXZhaWxhYmxlIGxvdyBtZW1vcnkgZm9yIHRoZWlyIG93bgo+ID4+IG5l
-ZmFyaW91cyB1c2VzLiBJIGRvbuKAmXQga25vdyAqd2h5KiBjcmFzaCBrZXJuZWwgbmVlZHMgdGhp
-cywgYnV0IHRoYXQKPiA+PiBkb2VzbuKAmXQgbWF0dGVyIHRvbyBtdWNoLgo+ID4+ID4gPgo+ID4+
-ID4gPiBLZHVtcCBrZXJuZWwgYWxzbyBuZWVkIGdvIHRocm91Z2ggcmVhbCBtb2RlIGNvZGUgcGF0
-aCBkdXJpbmcgYm9vdHVwLgo+ID4+IEl0Cj4gPj4gPiA+IGlzIG5vdCBkaWZmZXJlbnQgdGhhbiBu
-b3JtYWwga2VybmVsIGV4Y2VwdCB0aGF0IGl0IHNraXBzIHRoZSBmaXJtd2FyZQo+ID4+ID4gPiBy
-ZXNldHRpbmcuIFNvIGtkdW1wIGtlcm5lbCBuZWVkcyBsb3cgMU0gYXMgc3lzdGVtIFJBTSBqdXN0
-IGFzIG5vcm1hbAo+ID4+ID4gPiBrZXJuZWwgZG9lcy4gSGVyZSB3ZSByZXNlcnZlIHRoZSB3aG9s
-ZSBsb3cgMU0gd2l0aCBtZW1ibG9ja19yZXNlcnZlKCkKPiA+PiA+ID4gdG8gYXZvaWQgYW55IGxh
-dGVyIGtlcm5lbCBvciBkcml2ZXIgZGF0YSByZXNpZGUgaW4gdGhpcyBhcmVhLgo+ID4+IE90aGVy
-d2lzZSwKPiA+PiA+ID4gd2UgbmVlZCBkdW1wIHRoZSBjb250ZW50IG9mIHRoaXMgYXJlYSB0byB2
-bWNvcmUuIEFzIHdlIGtub3csIHdoZW4KPiA+PiBjcmFzaAo+ID4+ID4gPiBoYXBwZW5lZCwgdGhl
-IG9sZCBtZW1vcnkgb2YgMXN0IGtlcm5lbCBzaG91bGQgYmUgdW50b3VjaGVkIHVudGlsCj4gPj4g
-dm1jb3JlCj4gPj4gPiA+IGR1bXBpbmcgcmVhZCBvdXQgaXRzIGNvbnRlbnQuIE1lYW53aGlsZSwg
-a2R1bXAga2VybmVsIG5lZWQgcmV1c2UgbG93Cj4gPj4gMU0uCj4gPj4gPiA+IEluIHRoZSBwYXN0
-LCB3ZSB1c2VkIGEgYmFjayB1cCByZWdpb24gdG8gY29weSBvdXQgdGhlIGxvdyAxTSBhcmVhLCBh
-bmQKPiA+PiA+ID4gbWFwIHRoZSBiYWNrIHVwIHJlZ2lvbiBpbnRvIHRoZSBsb3cgMU0gYXJlYSBp
-biB2bWNvcmUgZWxmIGZpbGUuIEluCj4gPj4gPiA+IDZmNTk5ZDg0MjMxZmQyNyAoIng4Ni9rZHVt
-cDogQWx3YXlzIHJlc2VydmUgdGhlIGxvdyAxTSB3aGVuIHRoZQo+ID4+IGNyYXNoa2VybmVsCj4g
-Pj4gPiA+IG9wdGlvbiBpcyBzcGVjaWZpZWQiKSwgd2UgY2hhbmdlZCB0byBsb2NrIHRoZSB3aG9s
-ZSBsb3cgMU0gdG8gYXZvaWQKPiA+PiA+ID4gd3JpdHRpbmcgYW55IGtlcm5lbCBkYXRhIGludG8s
-IGxpa2UgdGhpcyB3ZSBjYW4gc2tpcCB0aGlzIGFyZWEgd2hlbgo+ID4+ID4gPiBkdW1waW5nIHZt
-Y29yZS4KPiA+PiA+ID4KPiA+PiA+ID4gQWJvdmUgaXMgd2h5IHdlIHRyeSB0byBtZW1ibG9jayBy
-ZXNlcnZlIHRoZSB3aG9sZSBsb3cgMU0uIFdlIGRvbid0Cj4gPj4gd2FudAo+ID4+ID4gPiB0byB1
-c2UgaXQsIGp1c3QgZG9uJ3Qgd2FudCBhbnlvbmUgdG8gdXNlIGl0IGluIDFzdCBrZXJuZWwuCj4g
-Pj4gPiA+Cj4gPj4gPiA+ID4KPiA+PiA+ID4gPiBJIHByb3Bvc2UgdGhhdCB0aGUgcmlnaHQgc29s
-dXRpb24gaXMgdG8gZ2l2ZSBsb3ctbWVtb3J5LXJlc2VydmluZwo+ID4+IGNvZGUgcGF0aHMgdHdv
-IGNoYW5jZXMgdG8gZG8gd2hhdCB0aGV5IG5lZWQ6IG9uY2UgYXQgdGhlIHZlcnkgYmVnaW5uaW5n
-IGFuZAo+ID4+IG9uY2UgYWZ0ZXIgRUZJIGJvb3Qgc2VydmljZXMgYXJlIGZyZWVkLgo+ID4+ID4g
-PiA+Cj4gPj4gPiA+ID4gQWx0ZXJuYXRpdmVseSwganVzdCByZXNlcnZlICphbGwqIG90aGVyd2lz
-ZSB1bnVzZWQgc3ViIDFNIG1lbW9yeSB1cAo+ID4+IGZyb250LCB0aGVuIHJlbGVhc2UgaXQgcmln
-aHQgYWZ0ZXIgcmVsZWFzaW5nIGJvb3Qgc2VydmljZXMsIGFuZCB0aGVuIGludm9rZQo+ID4+IHRo
-ZSBzcGVjaWFsIGNhc2VzIGV4YWN0bHkgb25jZS4KPiA+PiA+ID4KPiA+PiA+ID4gSSBhbSBub3Qg
-c3VyZSBpZiBJIGdvdCBib3RoIHN1Z2dlc3RlZCB3YXlzIGNsZWFybHkuIFRoZXkgbG9vayBhIGxp
-dHRsZQo+ID4+ID4gPiBjb21wbGljYXRlZCBpbiBvdXIgY2FzZS4gQXMgSSBleHBsYWluZWQgYXQg
-YWJvdmUsIHdlIHdhbnQgdGhlIHdob2xlCj4gPj4gbG93Cj4gPj4gPiA+IDFNIGxvY2tlZCB1cCwg
-bm90IG9uZSBwaWVjZSBvciBzb21lIHBpZWNlcyBvZiBpdC4KPiA+PiA+Cj4gPj4gPiBNeSBzZWNv
-bmQgc3VnZ2VzdGlvbiBpcyBwcm9iYWJseSB0aGUgYmV0dGVyIG9uZS4gIEhlcmUgaXQgaXMsCj4g
-Pj4gY29uY3JldGVseToKPiA+PiA+Cj4gPj4gPiBUaGUgZWFybHkgKHByZS1mcmVlX2VmaV9ib290
-X3NlcnZpY2VzKSBjb2RlIGp1c3QgcmVzZXJ2ZXMgYWxsCj4gPj4gPiBhdmFpbGFibGUgc3ViLTFN
-IG1lbW9yeSB1bmNvbmRpdGlvbmFsbHksIGJ1dCBpdCBzcGVjaWFsbHkgbWFya3MgaXQgYXMKPiA+
-PiA+IHJlc2VydmVkLWJ1dC1hdmFpbGFibGUtbGF0ZXIuICBXZSBzdG9wIGFsbG9jYXRpbmcgdGhl
-IHRyYW1wb2xpbmUgcGFnZQo+ID4+ID4gYXQgdGhpcyBzdGFnZS4KPiA+PiA+Cj4gPj4gPiBJbiBm
-cmVlX2VmaV9ib290X3NlcnZpY2VzLCBpbnN0ZWFkIG9mICpmcmVlaW5nKiB0aGUgc3ViLTFNIG1l
-bW9yeSwgd2UKPiA+PiA+IHN0aWNrIGl0IGluIHRoZSBwaWxlIG9mIHJlc2VydmVkIG1lbW9yeSBj
-cmVhdGVkIGluIHRoZSBlYXJseSBzdGVwLgo+ID4+ID4gVGhpcyBtYXkgaW52b2x2ZSBzcGxpdHRp
-bmcgYSBibG9jaywga2luZCBvZiBsaWtlIHRoZSBjdXJyZW50Cj4gPj4gPiB0cmFtcG9saW5lIGxh
-dGUgYWxsb2NhdGlvbiB3b3Jrcy4KPiA+PiA+Cj4gPj4gPiBUaGVuLCAqYWZ0ZXIqIGZyZWVfZWZp
-X2Jvb3Rfc2VydmljZXMoKSwgd2UgcnVuIGEgc2luZ2xlIGJsb2NrIG9mIGNvZGUKPiA+PiA+IHRo
-YXQgbGV0cyBldmVyeXRoaW5nIHRoYXQgd2FudHMgc3ViLTFNIGNvZGUgY2xhaW0gc29tZS4gIFRo
-aXMgbWVhbnMKPiA+PiA+IHRoYXQgdGhlIHRyYW1wb2xpbmUgZ2V0cyBhbGxvY2F0ZWQgYW5kLCBp
-ZiBjcmFzaGtlcm5lbCB3YW50cyB0byBjbGFpbQo+ID4+ID4gZXZlcnl0aGluZyBlbHNlLCBpdCBj
-YW4uICBBZnRlciB0aGF0LCBldmVyeXRoaW5nIHN0aWxsIHVuY2xhaW1lZCBnZXRzCj4gPj4gPiBm
-cmVlZC4KPiA+Pgo+ID4+IHZvaWQgX19pbml0IHNldHVwX2FyY2goY2hhciAqKmNtZGxpbmVfcCkK
-PiA+PiB7Cj4gPj4gLi4uCj4gPj4gICAgICAgICBlZmlfcmVzZXJ2ZV9ib290X3NlcnZpY2VzKCk7
-Cj4gPj4gICAgICAgICBlODIwX19tZW1ibG9ja19hbGxvY19yZXNlcnZlZF9tcGNfbmV3KCk7Cj4g
-Pj4gI2lmZGVmIENPTkZJR19YODZfQ0hFQ0tfQklPU19DT1JSVVBUSU9OCj4gPj4gICAgICAgICBz
-ZXR1cF9iaW9zX2NvcnJ1cHRpb25fY2hlY2soKTsKPiA+PiAjZW5kaWYKPiA+PiAgICAgICAgIHJl
-c2VydmVfcmVhbF9tb2RlKCk7Cj4gPj4KPiA+Pgo+ID4+ICAgICAgICAgdHJpbV9wbGF0Zm9ybV9t
-ZW1vcnlfcmFuZ2VzKCk7Cj4gPj4gICAgICAgICB0cmltX2xvd19tZW1vcnlfcmFuZ2UoKTsKPiA+
-PiAuLi4KPiA+PiB9Cj4gPj4KPiA+PiBBZnRlciBlZmlfcmVzZXJ2ZV9ib290X3NlcnZpY2VzKCks
-IHRoZXJlIGFyZSBzZXZlcmFsIGZ1bmN0aW9uIGNhbGxpbmcgdG8KPiA+PiByZXF1aXJlIG1lbW9y
-eSByZXNlcnZhdGlvbiB1bmRlciBsb3cgMU0uCj4gPj4KPiA+Pgo+ID4+IGFzbWxpbmthZ2UgX192
-aXNpYmxlIHZvaWQgX19pbml0IF9fbm9fc2FuaXRpemVfYWRkcmVzcwo+ID4+IHN0YXJ0X2tlcm5l
-bCh2b2lkKQo+ID4+Cj4gPj4gewo+ID4+IC4uLgo+ID4+ICAgICAgICAgc2V0dXBfYXJjaCgmY29t
-bWFuZF9saW5lKTsKPiA+PiAuLi4KPiA+PiAgICAgICAgIG1tX2luaXQoKTsKPiA+PiAgICAgICAg
-ICAgICAgICAgLS0+IG1lbV9pbml0KCk7Cj4gPj4gICAgICAgICAgICAgICAgICAgICAgICAgIC0t
-Pm1lbWJsb2NrX2ZyZWVfYWxsKCk7Cj4gPj4KPiA+PiAuLi4KPiA+PiAjaWZkZWYgQ09ORklHX1g4
-Ngo+ID4+ICAgICAgICAgaWYgKGVmaV9lbmFibGVkKEVGSV9SVU5USU1FX1NFUlZJQ0VTKSkKPiA+
-PiAgICAgICAgICAgICAgICAgZWZpX2VudGVyX3ZpcnR1YWxfbW9kZSgpOwo+ID4+ICAgICAgICAg
-ICAgICAgICAgICAgICAgIC0tPmVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKTsKPiA+PiAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgIC0tPm1lbWJsb2NrX2ZyZWVfbGF0ZSgpOwo+ID4+ICNl
-bmRpZgo+ID4+IC4uLgo+ID4+IH0KPiA+Pgo+ID4+IFNvIGZyb20gdGhlIGNvZGUgZmxvdywgd2Ug
-Y2FuIHNlZSB0aGF0IGJ1ZGR5IGFsbG9jYXRvciBpcyBidWlsdCBpbgo+ID4+IG1tX2luaXQoKSB3
-aGljaCBwdXRzIGFsbCBtZW1vcnkgZnJvbSBtZW1ibG9jay5tZW1vcnkgZXhjbHVkaW5nCj4gPj4g
-bWVtYmxvY2sucmVzZXJ2ZWQgaW50byBidWRkeS4gQW5kIG11Y2ggbGF0ZXIsIHdlIGNhbGwKPiA+
-PiBlZmlfZnJlZV9ib290X3NlcnZpY2VzKCkgdG8gcmVsZWFzZSB0aG9zZSByZXNlcnZlZCBlZmkg
-Ym9vdCBtZW1vcnkgaW50bwo+ID4+IGJ1ZGR5IHRvby4KPiA+Pgo+ID4+IEFyZSB5b3Ugc3VnZ2Vz
-dGluZyB3ZSBzaG91bGQgZG8gdGhlIG1lbW9yeSByZXNlcnZhdGlvbiBmcm9tIGxvdyAxTQo+ID4+
-IGFmdGVyIGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKT8gVG8gcmVxdWlyZSBtZW1vcnkgcGFnZXMg
-ZnJvbSBidWRkeSBmb3IKPiA+PiB0aGVtPyBQbGVhc2UgaGVscCBwb2ludCBvdXQgbXkgbWlzdW5k
-ZXJzdGFuZGluZyBpZiBoYXZlIGFueS4KPiA+Pgo+ID4+IFdpdGggbXkgdW5kZXJzdGFuZGluZywg
-aW4gbm9uLWVmaSBjYXNlLCB3ZSBoYXZlIGRvbmUgdGhlIG1lbW9yeQo+ID4+IHJlc2VydmF0aW9u
-IHdpdGggbWVtYmxvY2tfcmVzZXJ2ZSgpLCBlLmcKPiA+PiBlODIwX19tZW1ibG9ja19hbGxvY19y
-ZXNlcnZlZF9tcGNfbmV3LCByZXNlcnZlX3JlYWxfbW9kZSgpIGFyZSBjYWxsaW5nCj4gPj4gdG8g
-ZG8uIEp1c3QgZWZpX3Jlc2VydmV8ZnJlZV9ib290X3NlcnZpY2VzKCkgYnJlYWsgdGhlbSB3aGVu
-IGVmaSBpcwo+ID4+Cj4gPgo+ID4gIFllcy4gQnV0IEFuZHkgYWxzbyBzdWdnZXN0ZWQgdG8gcmVz
-ZXJ2ZSBhbGwgYXZhaWxhYmxlIHN1Yi0xTSBtZW1vcnkKPiA+ICoqdW5jb25kaXRpb25hbGx5KioK
-PiA+IGluIHRoZSBlYXJseSBjb2RlLgo+ID4KPiA+IGVuYWJsZWQuIFdlIGNhbiBkbyB0aGVtIGFn
-YWluIGluIGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKSBqdXN0IGxpa2UgdGhlCj4gPj4gcmVhbF9t
-b2RlIHJlc2VydmF0aW9uIGRvZXMuCj4gPj4KPiA+Cj4gPiBEbyB5b3UgbWVhbiB0byBjYWxsIHRo
-ZSBtZW1ibG9ja19yZXNlcnZlKCkgaW4KPiA+IHRoZSBlZmlfZnJlZV9ib290X3NlcnZpY2VzKCk/
-IE9yIGFueXRoaW5nIGVsc2U/Cj4gPiBXb3VsZCB5b3UgbWluZCBzaGFyaW5nIG1vcmUgZGV0YWls
-cyBhYm91dCB0aGlzPwoKSG1tLCBtYXliZSBuby4gVGhlcmUncyBubyBjaGFuY2UgdG8gY2FsbCBt
-ZW1ibG9ja19yZXNlcnZlKCkgYWZ0ZXIgCm1lbWJsb2NrX2ZyZWVfbGF0ZSgpLgoKSSBzdWdnZXN0
-ZWQgbWFraW5nIGNoYW5nZSBpbiBlZmlfZnJlZV9ib290X3NlcnZpY2VzKCkgYmVjYXVzZSB0aGUK
-c2ltaWxhciBwcm9ibGVtIGhhcyBiZWVuIGVuY291bnRlcmVkIGJ5IEFuZHkgaGltc2VsZiBhbmQg
-Zml4ZWQgaW4KZWZpX2ZyZWVfYm9vdF9zZXJ2aWNlcygpLiBQbGVhc2UgY2hlY2sgYmVsb3cgY29t
-bWl0IGZvciByZWZlcmVuY2UuClRoZSBwYXRjaCBkZXNjcmliZWQgdGhlIHBoZW5lbWVub24sIHdo
-aWxlIGV4cGxhaW5lZCB3aHkgaW4gY29kZQpjb21tZW50LgoKY29tbWl0IDViYzY1M2I3MzE4MjE3
-YzU0MjQ0YTE0ZjI0OGYxZjA3YWJlMGE4NjUKQXV0aG9yOiBBbmR5IEx1dG9taXJza2kgPGx1dG9A
-a2VybmVsLm9yZz4KRGF0ZTogICBXZWQgQXVnIDEwIDAyOjI5OjE3IDIwMTYgLTA3MDAKCiAgICB4
-ODYvZWZpOiBBbGxvY2F0ZSBhIHRyYW1wb2xpbmUgaWYgbmVlZGVkIGluIGVmaV9mcmVlX2Jvb3Rf
-c2VydmljZXMoKQoKU28gd2UgY291bGQgaGFuZGxlIGl0IGluIHRoZSBzYW1lIHBsYWNlIGJ5IGV4
-dGVuZGluZyB0aGUgYXJlYSB0byB0aGUKd2hvbGUgbG93LTFNIHVuY29uZGl0aW9uYWxseS4gVGhp
-cyBpcyAxc3Qgd2F5IG9mIHRocmVlIEkgY2FuIHRoaW5rIG9mLgoKVGhlIG90aGVyIHR3byBhcmU6
-CjIpIE1vdmUgZWZpX3Jlc2VydmVfYm9vdF9zZXJ2aWNlcygpIGRvd24gdG8gYmUgYWJvdmUgaW5p
-dF9tZW1fbWFwcGluZygpLgp1bnRpbCBpbml0X21lbV9tYXBwaW5nKCksIHdlIHN0b3AgcmVzZXJ2
-aW5nIG1lbW9yeSBmcm9tIGxvdy0xTSB3aXRoCm1lbWJsb2NrX3Jlc2VydmUoKS4gVGhlIGNoYW5n
-ZSBpcyBsaWtlIGJlbG93OgoKZGlmZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jIGIv
-YXJjaC94ODYva2VybmVsL3NldHVwLmMKaW5kZXggNzI5MjBhZjBiM2MwLi45M2IyMTA2ZDIwNTAg
-MTAwNjQ0Ci0tLSBhL2FyY2gveDg2L2tlcm5lbC9zZXR1cC5jCisrKyBiL2FyY2gveDg2L2tlcm5l
-bC9zZXR1cC5jCkBAIC0xMDY3LDcgKzEwNjcsNiBAQCB2b2lkIF9faW5pdCBzZXR1cF9hcmNoKGNo
-YXIgKipjbWRsaW5lX3ApCiAJICogVGhlIEVGSSBzcGVjaWZpY2F0aW9uIHNheXMgdGhhdCBib290
-IHNlcnZpY2UgY29kZSB3b24ndCBiZQogCSAqIGNhbGxlZCBhZnRlciBFeGl0Qm9vdFNlcnZpY2Vz
-KCkuIFRoaXMgaXMsIGluIGZhY3QsIGEgbGllLgogCSAqLwotCWVmaV9yZXNlcnZlX2Jvb3Rfc2Vy
-dmljZXMoKTsKIAogCS8qIHByZWFsbG9jYXRlIDRrIGZvciBtcHRhYmxlIG1wYyAqLwogCWU4MjBf
-X21lbWJsb2NrX2FsbG9jX3Jlc2VydmVkX21wY19uZXcoKTsKQEAgLTEwOTAsNiArMTA4OSw4IEBA
-IHZvaWQgX19pbml0IHNldHVwX2FyY2goY2hhciAqKmNtZGxpbmVfcCkKIAkgKi8KIAl0cmltX3Nu
-Yl9tZW1vcnkoKTsKIAorCWVmaV9yZXNlcnZlX2Jvb3Rfc2VydmljZXMoKTsKKwogCWluaXRfbWVt
-X21hcHBpbmcoKTsKIAogCWlkdF9zZXR1cF9lYXJseV9wZigpOwoKCjMpIERvIGl0IGluIGVmaV9y
-ZXNlcnZlX2Jvb3Rfc2VydmljZXMoKSBhcyB5b3UgYXJlIGRvaW5nIGluIHRoaXMgcGF0Y2guCgpJ
-IHByZWZlciB0aGUgMXN0IGFuZCAybmQgd2F5LgoKQW5kIGJ5IHRoZSB3YXksIHRoZSBvcmlnaW5h
-bCBjb2RlIG9mIGNvbW1pdCA1YmM2NTNiNzMxODIxKCJ4ODYvZWZpOiBBbGxvY2F0ZQphIHRyYW1w
-b2xpbmUgaWYgbmVlZGVkIGluIGVmaV9mcmVlX2Jvb3Rfc2VydmljZXMoKSIpIGNvdWxkIGJlIGJ1
-Z2d5LiBJCnJlbWVtYmVyIHlvdSBldmVyIHBhc3RlZCB0aGUgYm9vdCBsb2cgb2Ygc3lzdGVtIHdo
-ZXJlIHlvdSByZXByb2R1Y2VkCmlzc3VlIGFuZCB0ZXN0ZWQgdGhlIHRlc3RlZCBwYXRjaCwgdGhl
-cmUgYXJlIHRocmVlIHNlcGFyYXRlIHBhZ2VzIGZyb20KbG93LTFNIHJlc2VydmVkIGJ5IGJvb3Qg
-c2VydmljZXMuIElmIGFueSBvZiB0aGVtIGZhbGxzIGludG8gcmVhbCBtb2RlCmFyZWEsIGl0IHdp
-bGwgYnJlYWsgdGhlIGZpeCBvZiBjb21taXQgNWJjNjUzYjczMTgyMS4KClRoYW5rcwpCYW9xdWFu
-Cgo+ID4KPiA+IGRpZmYgLS1naXQgYS9hcmNoL3g4Ni9wbGF0Zm9ybS9lZmkvcXVpcmtzLmMKPiA+
-IGIvYXJjaC94ODYvcGxhdGZvcm0vZWZpL3F1aXJrcy5jCj4gPiBpbmRleCA3ODUwMTExMDA4YTgu
-LmQwMmYxMmE2MDQ1NyAxMDA2NDQKPiA+IC0tLSBhL2FyY2gveDg2L3BsYXRmb3JtL2VmaS9xdWly
-a3MuYwo+ID4gKysrIGIvYXJjaC94ODYvcGxhdGZvcm0vZWZpL3F1aXJrcy5jCj4gPiBAQCAtNDUz
-LDYgKzQ1Myw4IEBAIHZvaWQgX19pbml0IGVmaV9mcmVlX2Jvb3Rfc2VydmljZXModm9pZCkKPiA+
-ICAgICAgICAgICAgICAgICBtZW1ibG9ja19mcmVlX2xhdGUoc3RhcnQsIHNpemUpOwo+ID4gICAg
-ICAgICB9Cj4gPgo+ID4gKyAgICAgICBtZW1ibG9ja19yZXNlcnZlKDAsIDE8PDIwKTsKPiA+ICsK
-PiA+ICAgICAgICAgaWYgKCFudW1fZW50cmllcykKPiA+ICAgICAgICAgICAgICAgICByZXR1cm47
-Cj4gPgo+ID4gVGhhbmtzLgo+ID4gTGlhbmJvCj4gPgo+ID4KPiA+IFRoYW5rcwo+ID4+IEJhb3F1
-YW4KPiA+Pgo+ID4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Thanks, this is helpful!
+
+> For the commit fb5a8792e6e4, the problem is only observed with
+> hyperv_fb, and it's a HyperV VM.
+> The framebuffer was VESA compatible when the machine just booted, but
+> after hyperv_fb driver is loaded, it will ask the hypervisor to
+> relocate the framebuffer in a new location and in a new format.
+> 
+> In a later kernel commit 3cb73bc3fa2a3cb80b88aa63b48409939e0d996b, it
+> fixed the kernel side issue that after the relocation, the framebuffer
+> address is not updated in boot_params. It was not updated before this
+> kernel commit. Before that, the old boot_params will contain an
+> invalid address and cause failures in the new booted kernel.
+
+This doesn't seem like a HyperV issue, it seems like a general problem
+with assuming the boot-time screen parameters are valid after some
+driver has reconfigured the display.
+
+> And I also remember blindly setting orig_video_isVGA will cause
+> strange errors on some random graphic cards. If we can't make sure
+> it's really VGA, this field better left zero, so kernel won't use it
+> as a VGA framebuffer.
+> 
+> For your case, you mentioned "'fix.id' is not "VESA VGA" or "EFI VGA",
+> but rather "inteldrmfb" or "i915drmfb"",  'fix.id' can change after
+> boot, I'm not familiar with heads or coreboot, but I guess the first
+> kernel you booted have intel drm drivers loaded?
+
+Exactly.
+
+> Maybe you can try
+> either don't load intel drm driver in first kernel (so the framebuffer
+> is always being used in a VESA/EFI compatible way),
+
+Good idea, but in this case there isn't any BIOS or EFI firmware.  If I
+didn't load the DRM driver then there would be no display at all.
+
+> or ensure same
+> driver is loaded in the new booted kernel (this way the driver will
+> reinitialize the framebuffer anyway, even if it's not set in
+> boot_params).
+
+Indeed, but this is only possible if you have control over the
+kernel/OS being booted.
+
+The example that set this off is the Debian installer: the installer
+doesn't include video drivers, it only uses the framebuffer provided by
+the bootloader.
+
+But more broadly, when you're booting a new kernel, it is best to have
+some way of displaying stuff on screen, if for no other reason than to
+tell you why it is unable to load the DRM driver.
+
+From my understanding and brief perusal of the code, if the bootloader
+specifies an "EFI framebuffer", then Linux simply treats this as a big
+reserved block of memory where pixels can be drawn.  It doesn't support
+changing the resolution or format, and doesn't support pseudocolor.  If
+I understand correctly, EFI itself doesn't permit changing the
+framebuffer configuration "after boot time".
+
+So it seems to me that:
+
+ - if fix.smem_start != 0
+ - and fix.smem_len != 0
+ - and fix.type == FB_TYPE_PACKED_PIXELS
+ - and fix.visual == FB_VISUAL_TRUECOLOR
+
+then it ought to be safe to treat this as an "EFI framebuffer" and
+allow the booted kernel to draw on it.  This works, as far as I can
+see, with all the drivers I've tested (i915, radeon, cirrus, uvesafb).
+
+Looking at the hyperv_fb driver, however, it appears to be setting
+smem_start and smem_len (indicating that the framebuffer is located in
+contiguous "physical" memory) even when that is incorrect.  Perhaps
+that is the cause of the problems you saw.
+
+I notice that framebuffer_info (kexec/arch/i386/kexec-multiboot-x86.c)
+and multiboot2_make_mbi (kexec/arch/i386/kexec-mb2-x86.c) already do
+just what I'm suggesting.  So I expect that, if you tried to boot a
+Multiboot kernel that supports video handoff, you would see the same
+problems as before.
+
+It would be a good sanity check if kexec could somehow test whether
+smem_start is actually a valid physical memory address.  Is there any
+way to do that in userspace?
+
+Benjamin
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
