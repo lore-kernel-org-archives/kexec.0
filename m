@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x729.google.com ([2607:f8b0:4864:20::729])
+Received: from mail-qt1-x831.google.com ([2607:f8b0:4864:20::831])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lmHZt-0071kb-RQ
- for kexec@lists.infradead.org; Thu, 27 May 2021 15:05:44 +0000
-Received: by mail-qk1-x729.google.com with SMTP id o3so923850qke.7
- for <kexec@lists.infradead.org>; Thu, 27 May 2021 08:05:40 -0700 (PDT)
+ id 1lmHZz-0071oA-SD
+ for kexec@lists.infradead.org; Thu, 27 May 2021 15:05:50 +0000
+Received: by mail-qt1-x831.google.com with SMTP id v4so438205qtp.1
+ for <kexec@lists.infradead.org>; Thu, 27 May 2021 08:05:46 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH 07/18] arm64: kexec: flush image and lists during kexec load
- time
-Date: Thu, 27 May 2021 11:05:15 -0400
-Message-Id: <20210527150526.271941-8-pasha.tatashin@soleen.com>
+Subject: [PATCH 11/18] arm64: kexec: kexec may require EL2 vectors
+Date: Thu, 27 May 2021 11:05:19 -0400
+Message-Id: <20210527150526.271941-12-pasha.tatashin@soleen.com>
 In-Reply-To: <20210527150526.271941-1-pasha.tatashin@soleen.com>
 References: <20210527150526.271941-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,97 +26,131 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-Currently, during kexec load we are copying relocation function and
-flushing it. However, we can also flush kexec relocation buffers and
-if new kernel image is already in place (i.e. crash kernel), we can
-also flush the new kernel image itself.
+If we have a EL2 mode without VHE, the EL2 vectors are needed in order
+to switch to EL2 and jump to new world with hypervisor privileges.
 
+In preporation to MMU enabled relocation, configure our EL2 table now.
+
+Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/machine_kexec.c | 49 +++++++++++++++----------------
- 1 file changed, 23 insertions(+), 26 deletions(-)
+ arch/arm64/Kconfig                |  2 +-
+ arch/arm64/include/asm/kexec.h    |  1 +
+ arch/arm64/kernel/asm-offsets.c   |  1 +
+ arch/arm64/kernel/machine_kexec.c | 31 +++++++++++++++++++++++++++++++
+ 4 files changed, 34 insertions(+), 1 deletion(-)
 
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index 9f1d8566bbf9..e775e6fb03c5 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -1148,7 +1148,7 @@ config CRASH_DUMP
+ 
+ config TRANS_TABLE
+ 	def_bool y
+-	depends on HIBERNATION
++	depends on HIBERNATION || KEXEC_CORE
+ 
+ config XEN_DOM0
+ 	def_bool y
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 00dbcc71aeb2..753a1c398898 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -96,6 +96,7 @@ struct kimage_arch {
+ 	void *dtb;
+ 	phys_addr_t dtb_mem;
+ 	phys_addr_t kern_reloc;
++	phys_addr_t el2_vectors;
+ };
+ 
+ #ifdef CONFIG_KEXEC_FILE
+diff --git a/arch/arm64/kernel/asm-offsets.c b/arch/arm64/kernel/asm-offsets.c
+index 92c2ed846730..ee37d0e0fb6d 100644
+--- a/arch/arm64/kernel/asm-offsets.c
++++ b/arch/arm64/kernel/asm-offsets.c
+@@ -159,6 +159,7 @@ int main(void)
+ #endif
+ #ifdef CONFIG_KEXEC_CORE
+   DEFINE(KIMAGE_ARCH_DTB_MEM,		offsetof(struct kimage, arch.dtb_mem));
++  DEFINE(KIMAGE_ARCH_EL2_VECTORS,	offsetof(struct kimage, arch.el2_vectors));
+   DEFINE(KIMAGE_HEAD,			offsetof(struct kimage, head));
+   DEFINE(KIMAGE_START,			offsetof(struct kimage, start));
+   BLANK();
 diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index 90a335c74442..3a034bc25709 100644
+index 76a757954a70..9f74791cb1d0 100644
 --- a/arch/arm64/kernel/machine_kexec.c
 +++ b/arch/arm64/kernel/machine_kexec.c
-@@ -59,23 +59,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
- 	/* Empty routine needed to avoid build errors. */
- }
+@@ -20,6 +20,7 @@
+ #include <asm/mmu.h>
+ #include <asm/mmu_context.h>
+ #include <asm/page.h>
++#include <asm/trans_pgd.h>
  
--int machine_kexec_post_load(struct kimage *kimage)
--{
--	void *reloc_code = page_to_virt(kimage->control_code_page);
--
--	memcpy(reloc_code, arm64_relocate_new_kernel,
--	       arm64_relocate_new_kernel_size);
--	kimage->arch.kern_reloc = __pa(reloc_code);
--	kexec_image_info(kimage);
--
--	/* Flush the reloc_code in preparation for its execution. */
--	__flush_dcache_area(reloc_code, arm64_relocate_new_kernel_size);
--	flush_icache_range((uintptr_t)reloc_code, (uintptr_t)reloc_code +
--			   arm64_relocate_new_kernel_size);
--
--	return 0;
--}
--
- /**
-  * machine_kexec_prepare - Prepare for a kexec reboot.
-  *
-@@ -152,6 +135,29 @@ static void kexec_segment_flush(const struct kimage *kimage)
+ #include "cpu-reset.h"
+ 
+@@ -42,7 +43,9 @@ static void _kexec_image_info(const char *func, int line,
+ 	pr_debug("    start:       %lx\n", kimage->start);
+ 	pr_debug("    head:        %lx\n", kimage->head);
+ 	pr_debug("    nr_segments: %lu\n", kimage->nr_segments);
++	pr_debug("    dtb_mem: %pa\n", &kimage->arch.dtb_mem);
+ 	pr_debug("    kern_reloc: %pa\n", &kimage->arch.kern_reloc);
++	pr_debug("    el2_vectors: %pa\n", &kimage->arch.el2_vectors);
+ 
+ 	for (i = 0; i < kimage->nr_segments; i++) {
+ 		pr_debug("      segment[%lu]: %016lx - %016lx, 0x%lx bytes, %lu pages\n",
+@@ -137,9 +140,27 @@ static void kexec_segment_flush(const struct kimage *kimage)
  	}
  }
  
-+int machine_kexec_post_load(struct kimage *kimage)
++/* Allocates pages for kexec page table */
++static void *kexec_page_alloc(void *arg)
 +{
-+	void *reloc_code = page_to_virt(kimage->control_code_page);
++	struct kimage *kimage = (struct kimage *)arg;
++	struct page *page = kimage_alloc_control_pages(kimage, 0);
 +
-+	/* If in place flush new kernel image, else flush lists and buffers */
-+	if (kimage->head & IND_DONE)
-+		kexec_segment_flush(kimage);
-+	else
-+		kexec_list_flush(kimage);
++	if (!page)
++		return NULL;
 +
-+	memcpy(reloc_code, arm64_relocate_new_kernel,
-+	       arm64_relocate_new_kernel_size);
-+	kimage->arch.kern_reloc = __pa(reloc_code);
-+	kexec_image_info(kimage);
++	memset(page_address(page), 0, PAGE_SIZE);
 +
-+	/* Flush the reloc_code in preparation for its execution. */
-+	__flush_dcache_area(reloc_code, arm64_relocate_new_kernel_size);
-+	flush_icache_range((uintptr_t)reloc_code, (uintptr_t)reloc_code +
-+			   arm64_relocate_new_kernel_size);
-+
-+	return 0;
++	return page_address(page);
 +}
 +
- /**
-  * machine_kexec - Do the kexec reboot.
-  *
-@@ -169,13 +175,6 @@ void machine_kexec(struct kimage *kimage)
- 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
- 		"Some CPUs may be stale, kdump will be unreliable.\n");
- 
--	/* Flush the kimage list and its buffers. */
--	kexec_list_flush(kimage);
--
--	/* Flush the new image if already in place. */
--	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
--		kexec_segment_flush(kimage);
--
- 	pr_info("Bye!\n");
- 
- 	local_daif_mask();
-@@ -250,8 +249,6 @@ void arch_kexec_protect_crashkres(void)
+ int machine_kexec_post_load(struct kimage *kimage)
  {
- 	int i;
+ 	void *reloc_code = page_to_virt(kimage->control_code_page);
++	struct trans_pgd_info info = {
++		.trans_alloc_page	= kexec_page_alloc,
++		.trans_alloc_arg	= kimage,
++	};
  
--	kexec_segment_flush(kexec_crash_image);
--
- 	for (i = 0; i < kexec_crash_image->nr_segments; i++)
- 		set_memory_valid(
- 			__phys_to_virt(kexec_crash_image->segment[i].mem),
+ 	/* If in place, relocation is not used, only flush next kernel */
+ 	if (kimage->head & IND_DONE) {
+@@ -148,6 +169,14 @@ int machine_kexec_post_load(struct kimage *kimage)
+ 		return 0;
+ 	}
+ 
++	kimage->arch.el2_vectors = 0;
++	if (is_hyp_callable()) {
++		int rc = trans_pgd_copy_el2_vectors(&info,
++						    &kimage->arch.el2_vectors);
++		if (rc)
++			return rc;
++	}
++
+ 	memcpy(reloc_code, arm64_relocate_new_kernel,
+ 	       arm64_relocate_new_kernel_size);
+ 	kimage->arch.kern_reloc = __pa(reloc_code);
+@@ -200,6 +229,8 @@ void machine_kexec(struct kimage *kimage)
+ 		restart(is_hyp_callable(), kimage->start, kimage->arch.dtb_mem,
+ 			0, 0);
+ 	} else {
++		if (is_hyp_callable())
++			__hyp_set_vectors(kimage->arch.el2_vectors);
+ 		cpu_soft_restart(kimage->arch.kern_reloc, virt_to_phys(kimage),
+ 				 0, 0);
+ 	}
 -- 
 2.25.1
 
