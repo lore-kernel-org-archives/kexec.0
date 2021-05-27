@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x829.google.com ([2607:f8b0:4864:20::829])
+Received: from mail-qk1-x734.google.com ([2607:f8b0:4864:20::734])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lmHZn-0071gL-5r
- for kexec@lists.infradead.org; Thu, 27 May 2021 15:05:39 +0000
-Received: by mail-qt1-x829.google.com with SMTP id h21so424783qtu.5
- for <kexec@lists.infradead.org>; Thu, 27 May 2021 08:05:34 -0700 (PDT)
+ id 1lmHZo-0071hT-HY
+ for kexec@lists.infradead.org; Thu, 27 May 2021 15:05:40 +0000
+Received: by mail-qk1-x734.google.com with SMTP id v8so944265qkv.1
+ for <kexec@lists.infradead.org>; Thu, 27 May 2021 08:05:36 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH 03/18] arm64: hyp-stub: Move elx_sync into the vectors
-Date: Thu, 27 May 2021 11:05:11 -0400
-Message-Id: <20210527150526.271941-4-pasha.tatashin@soleen.com>
+Subject: [PATCH 04/18] arm64: kernel: add helper for booted at EL2 and not VHE
+Date: Thu, 27 May 2021 11:05:12 -0400
+Message-Id: <20210527150526.271941-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20210527150526.271941-1-pasha.tatashin@soleen.com>
 References: <20210527150526.271941-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,111 +26,108 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-The hyp-stub's elx_sync code fits in the vector.
+Replace places that contain logic like this:
+	is_hyp_mode_available() && !is_kernel_in_hyp_mode()
 
-With this, all of the hyp-stubs behaviour is contained in its vectors.
-This lets kexec and hibernate copy the hyp-stub when they need its
-behaviour, instead of re-implementing it.
+With a dedicated boolean function  is_hyp_callable(). This will be needed
+later in kexec in order to sooner switch back to EL2.
 
-Co-developed-by: James Morse <james.morse@arm.com>
+Suggested-by: James Morse <james.morse@arm.com>
+
+[Fixed merging issues]
+
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/kernel/hyp-stub.S | 64 +++++++++++++++++++-----------------
- 1 file changed, 33 insertions(+), 31 deletions(-)
+ arch/arm64/include/asm/virt.h | 5 +++++
+ arch/arm64/kernel/cpu-reset.h | 3 +--
+ arch/arm64/kernel/hibernate.c | 9 +++------
+ arch/arm64/kernel/sdei.c      | 2 +-
+ 4 files changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm64/kernel/hyp-stub.S b/arch/arm64/kernel/hyp-stub.S
-index 18a97bee3779..86af6c4e52b9 100644
---- a/arch/arm64/kernel/hyp-stub.S
-+++ b/arch/arm64/kernel/hyp-stub.S
-@@ -21,6 +21,37 @@ SYM_CODE_START_LOCAL(\label)
- 	.align 7
- 	b	\label
- SYM_CODE_END(\label)
-+.endm
-+
-+.macro elx_sync_vector	label
-+SYM_CODE_START_LOCAL(\label)
-+	.align 7
-+	cmp	x0, #HVC_SET_VECTORS
-+	b.ne	1f
-+	msr	vbar_el2, x1
-+	b	9f
-+
-+1:	cmp	x0, #HVC_VHE_RESTART
-+	b.eq	mutate_to_vhe
-+
-+2:	cmp	x0, #HVC_SOFT_RESTART
-+	b.ne	3f
-+	mov	x0, x2
-+	mov	x2, x4
-+	mov	x4, x1
-+	mov	x1, x3
-+	br	x4				// no return
-+
-+3:	cmp	x0, #HVC_RESET_VECTORS
-+	beq	9f				// Nothing to reset!
-+
-+	/* Someone called kvm_call_hyp() against the hyp-stub... */
-+	mov_q	x0, HVC_STUB_ERR
-+	eret
-+
-+9:	mov	x0, xzr
-+	eret
-+SYM_CODE_END(\label)
- .endm
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index 7379f35ae2c6..4216c8623538 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -128,6 +128,11 @@ static __always_inline bool is_protected_kvm_enabled(void)
+ 		return cpus_have_final_cap(ARM64_KVM_PROTECTED_MODE);
+ }
  
- 	.text
-@@ -34,12 +65,12 @@ SYM_CODE_START(__hyp_stub_vectors)
- 	invalid_vector	hyp_stub_el2t_fiq_invalid	// FIQ EL2t
- 	invalid_vector	hyp_stub_el2t_error_invalid	// Error EL2t
++static inline bool is_hyp_callable(void)
++{
++	return is_hyp_mode_available() && !is_kernel_in_hyp_mode();
++}
++
+ #endif /* __ASSEMBLY__ */
  
--	ventry	elx_sync				// Synchronous EL2h
-+	elx_sync_vector	el2h_sync			// Synchronous EL2h
- 	invalid_vector	hyp_stub_el2h_irq_invalid	// IRQ EL2h
- 	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
- 	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
+ #endif /* ! __ASM__VIRT_H */
+diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
+index 9a7b1262ef17..48d0ed48c147 100644
+--- a/arch/arm64/kernel/cpu-reset.h
++++ b/arch/arm64/kernel/cpu-reset.h
+@@ -20,8 +20,7 @@ static inline void __noreturn __nocfi cpu_soft_restart(unsigned long entry,
+ {
+ 	typeof(__cpu_soft_restart) *restart;
  
--	ventry	elx_sync				// Synchronous 64-bit EL1
-+	elx_sync_vector	el1_sync			// Synchronous 64-bit EL1
- 	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
- 	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
- 	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
-@@ -55,35 +86,6 @@ SYM_CODE_END(__hyp_stub_vectors)
- # Check the __hyp_stub_vectors didn't overflow
- .org . - (__hyp_stub_vectors_end - __hyp_stub_vectors) + SZ_2K
+-	unsigned long el2_switch = !is_kernel_in_hyp_mode() &&
+-		is_hyp_mode_available();
++	unsigned long el2_switch = is_hyp_callable();
+ 	restart = (void *)__pa_symbol(function_nocfi(__cpu_soft_restart));
  
+ 	cpu_install_idmap();
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index b1cef371df2b..c764574a1acb 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -48,9 +48,6 @@
+  */
+ extern int in_suspend;
+ 
+-/* Do we need to reset el2? */
+-#define el2_reset_needed() (is_hyp_mode_available() && !is_kernel_in_hyp_mode())
 -
--SYM_CODE_START_LOCAL(elx_sync)
--	cmp	x0, #HVC_SET_VECTORS
--	b.ne	1f
--	msr	vbar_el2, x1
--	b	9f
--
--1:	cmp	x0, #HVC_VHE_RESTART
--	b.eq	mutate_to_vhe
--
--2:	cmp	x0, #HVC_SOFT_RESTART
--	b.ne	3f
--	mov	x0, x2
--	mov	x2, x4
--	mov	x4, x1
--	mov	x1, x3
--	br	x4				// no return
--
--3:	cmp	x0, #HVC_RESET_VECTORS
--	beq	9f				// Nothing to reset!
--
--	/* Someone called kvm_call_hyp() against the hyp-stub... */
--	mov_q	x0, HVC_STUB_ERR
--	eret
--
--9:	mov	x0, xzr
--	eret
--SYM_CODE_END(elx_sync)
--
- // nVHE? No way! Give me the real thing!
- SYM_CODE_START_LOCAL(mutate_to_vhe)
- 	// Sanity check: MMU *must* be off
+ /* temporary el2 vectors in the __hibernate_exit_text section. */
+ extern char hibernate_el2_vectors[];
+ 
+@@ -125,7 +122,7 @@ int arch_hibernation_header_save(void *addr, unsigned int max_size)
+ 	hdr->reenter_kernel	= _cpu_resume;
+ 
+ 	/* We can't use __hyp_get_vectors() because kvm may still be loaded */
+-	if (el2_reset_needed())
++	if (is_hyp_callable())
+ 		hdr->__hyp_stub_vectors = __pa_symbol(__hyp_stub_vectors);
+ 	else
+ 		hdr->__hyp_stub_vectors = 0;
+@@ -387,7 +384,7 @@ int swsusp_arch_suspend(void)
+ 		dcache_clean_range(__idmap_text_start, __idmap_text_end);
+ 
+ 		/* Clean kvm setup code to PoC? */
+-		if (el2_reset_needed()) {
++		if (is_hyp_callable()) {
+ 			dcache_clean_range(__hyp_idmap_text_start, __hyp_idmap_text_end);
+ 			dcache_clean_range(__hyp_text_start, __hyp_text_end);
+ 		}
+@@ -482,7 +479,7 @@ int swsusp_arch_resume(void)
+ 	 *
+ 	 * We can skip this step if we booted at EL1, or are running with VHE.
+ 	 */
+-	if (el2_reset_needed()) {
++	if (is_hyp_callable()) {
+ 		phys_addr_t el2_vectors = (phys_addr_t)hibernate_exit;
+ 		el2_vectors += hibernate_el2_vectors -
+ 			       __hibernate_exit_text_start;     /* offset */
+diff --git a/arch/arm64/kernel/sdei.c b/arch/arm64/kernel/sdei.c
+index 2c7ca449dd51..af0ac2f920cf 100644
+--- a/arch/arm64/kernel/sdei.c
++++ b/arch/arm64/kernel/sdei.c
+@@ -200,7 +200,7 @@ unsigned long sdei_arch_get_entry_point(int conduit)
+ 	 * dropped to EL1 because we don't support VHE, then we can't support
+ 	 * SDEI.
+ 	 */
+-	if (is_hyp_mode_available() && !is_kernel_in_hyp_mode()) {
++	if (is_hyp_callable()) {
+ 		pr_err("Not supported on this hardware/boot configuration\n");
+ 		goto out_err;
+ 	}
 -- 
 2.25.1
 
