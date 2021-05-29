@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+Received: from szxga01-in.huawei.com ([45.249.212.187])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lmwkk-0052Mg-1z
+ id 1lmwkk-0052N4-Nv
  for kexec@lists.infradead.org; Sat, 29 May 2021 11:03:41 +0000
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v2 4/4] time: Fix spelling mistakes
-Date: Sat, 29 May 2021 19:03:05 +0800
-Message-ID: <20210529110305.9446-5-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 2/4] kgdb: Fix spelling mistakes
+Date: Sat, 29 May 2021 19:03:03 +0800
+Message-ID: <20210529110305.9446-3-thunder.leizhen@huawei.com>
 In-Reply-To: <20210529110305.9446-1-thunder.leizhen@huawei.com>
 References: <20210529110305.9446-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -27,80 +27,115 @@ To: Jason Wessel <jason.wessel@windriver.com>, Daniel Thompson <daniel.thompson@
 Cc: Zhen Lei <thunder.leizhen@huawei.com>
 
 Fix some spelling mistakes in comments:
-wit ==> with
-initialy ==> initially
-syncrhonized ==> synchronized
-therefor ==> therefore
+initalization ==> initialization
+detatch ==> detach
+represntation ==> representation
+hexidecimal ==> hexadecimal
+delimeter ==> delimiter
+architecure ==> architecture
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- include/linux/timekeeping.h | 2 +-
- include/linux/timer.h       | 2 +-
- kernel/time/alarmtimer.c    | 2 +-
- kernel/time/timer.c         | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
+ include/linux/kgdb.h           | 8 ++++----
+ kernel/debug/debug_core.c      | 2 +-
+ kernel/debug/kdb/kdb_main.c    | 8 ++++----
+ kernel/debug/kdb/kdb_private.h | 2 +-
+ 4 files changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/timekeeping.h b/include/linux/timekeeping.h
-index 78a98bdff76d..01bd6ff322be 100644
---- a/include/linux/timekeeping.h
-+++ b/include/linux/timekeeping.h
-@@ -28,7 +28,7 @@ extern int do_sys_settimeofday64(const struct timespec64 *tv,
-  * For other references, use the functions with "real", "clocktai",
-  * "boottime" and "raw" suffixes.
-  *
-- * To get the time in a different format, use the ones wit
-+ * To get the time in a different format, use the ones with
-  * "ns", "ts64" and "seconds" suffix.
-  *
-  * See Documentation/core-api/timekeeping.rst for more details.
-diff --git a/include/linux/timer.h b/include/linux/timer.h
-index fda13c9d1256..a7f7c7cac4c0 100644
---- a/include/linux/timer.h
-+++ b/include/linux/timer.h
-@@ -56,7 +56,7 @@ struct timer_list {
-  *
-  * Note: Because enqueuing of timers can migrate the timer from one
-  * CPU to another, pinned timers are not guaranteed to stay on the
-- * initialy selected CPU.  They move to the CPU on which the enqueue
-+ * initially selected CPU.  They move to the CPU on which the enqueue
-  * function is invoked via mod_timer() or add_timer().  If the timer
-  * should be placed on a particular CPU, then add_timer_on() has to be
-  * used.
-diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
-index 5897828b9d7e..a400139b9a9c 100644
---- a/kernel/time/alarmtimer.c
-+++ b/kernel/time/alarmtimer.c
-@@ -35,7 +35,7 @@
+diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
+index 392a3670944c..258cdde8d356 100644
+--- a/include/linux/kgdb.h
++++ b/include/linux/kgdb.h
+@@ -105,9 +105,9 @@ extern int dbg_set_reg(int regno, void *mem, struct pt_regs *regs);
+  */
  
  /**
-  * struct alarm_base - Alarm timer bases
-- * @lock:		Lock for syncrhonized access to the base
-+ * @lock:		Lock for synchronized access to the base
-  * @timerqueue:		Timerqueue head managing the list of events
-  * @get_ktime:		Function to read the time correlating to the base
-  * @get_timespec:	Function to read the namespace time correlating to the base
-diff --git a/kernel/time/timer.c b/kernel/time/timer.c
-index 84332f01dc57..df6585281713 100644
---- a/kernel/time/timer.c
-+++ b/kernel/time/timer.c
-@@ -62,7 +62,7 @@ EXPORT_SYMBOL(jiffies_64);
+- *	kgdb_arch_init - Perform any architecture specific initalization.
++ *	kgdb_arch_init - Perform any architecture specific initialization.
+  *
+- *	This function will handle the initalization of any architecture
++ *	This function will handle the initialization of any architecture
+  *	specific callbacks.
+  */
+ extern int kgdb_arch_init(void);
+@@ -229,9 +229,9 @@ extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
+ extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
+ 
+ /**
+- *	kgdb_arch_late - Perform any architecture specific initalization.
++ *	kgdb_arch_late - Perform any architecture specific initialization.
+  *
+- *	This function will handle the late initalization of any
++ *	This function will handle the late initialization of any
+  *	architecture specific callbacks.  This is an optional function for
+  *	handling things like late initialization of hw breakpoints.  The
+  *	default implementation does nothing.
+diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
+index 4708aec492df..a1f26766eb90 100644
+--- a/kernel/debug/debug_core.c
++++ b/kernel/debug/debug_core.c
+@@ -1032,7 +1032,7 @@ dbg_notify_reboot(struct notifier_block *this, unsigned long code, void *x)
+ 	/*
+ 	 * Take the following action on reboot notify depending on value:
+ 	 *    1 == Enter debugger
+-	 *    0 == [the default] detatch debug client
++	 *    0 == [the default] detach debug client
+ 	 *   -1 == Do nothing... and use this until the board resets
+ 	 */
+ 	switch (kgdbreboot) {
+diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
+index 622410c45da1..d8ee5647b732 100644
+--- a/kernel/debug/kdb/kdb_main.c
++++ b/kernel/debug/kdb/kdb_main.c
+@@ -253,7 +253,7 @@ static char *kdballocenv(size_t bytes)
+  * Parameters:
+  *	match	A character string representing a numeric value
+  * Outputs:
+- *	*value  the unsigned long represntation of the env variable 'match'
++ *	*value  the unsigned long representation of the env variable 'match'
+  * Returns:
+  *	Zero on success, a kdb diagnostic on failure.
+  */
+@@ -356,7 +356,7 @@ static void kdb_printenv(void)
+  * Parameters:
+  *	arg	A character string representing a numeric value
+  * Outputs:
+- *	*value  the unsigned long represntation of arg.
++ *	*value  the unsigned long representation of arg.
+  * Returns:
+  *	Zero on success, a kdb diagnostic on failure.
+  */
+@@ -470,7 +470,7 @@ static int kdb_check_regs(void)
+  *	symbol name, and offset to the caller.
+  *
+  *	The argument may consist of a numeric value (decimal or
+- *	hexidecimal), a symbol name, a register name (preceded by the
++ *	hexadecimal), a symbol name, a register name (preceded by the
+  *	percent sign), an environment variable with a numeric value
+  *	(preceded by a dollar sign) or a simple arithmetic expression
+  *	consisting of a symbol name, +/-, and a numeric constant value
+@@ -894,7 +894,7 @@ static void parse_grep(const char *str)
+  *	Limited to 20 tokens.
+  *
+  *	Real rudimentary tokenization. Basically only whitespace
+- *	is considered a token delimeter (but special consideration
++ *	is considered a token delimiter (but special consideration
+  *	is taken of the '=' sign as used by the 'set' command).
+  *
+  *	The algorithm used to tokenize the input string relies on
+diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
+index ccbed9089808..170c69aedebb 100644
+--- a/kernel/debug/kdb/kdb_private.h
++++ b/kernel/debug/kdb/kdb_private.h
+@@ -64,7 +64,7 @@
  
  /*
-  * The timer wheel has LVL_DEPTH array levels. Each level provides an array of
-- * LVL_SIZE buckets. Each level is driven by its own clock and therefor each
-+ * LVL_SIZE buckets. Each level is driven by its own clock and therefore each
-  * level has a different granularity.
-  *
-  * The level granularity is:		LVL_CLK_DIV ^ lvl
-@@ -70,7 +70,7 @@ EXPORT_SYMBOL(jiffies_64);
-  *
-  * The array level of a newly armed timer depends on the relative expiry
-  * time. The farther the expiry time is away the higher the array level and
-- * therefor the granularity becomes.
-+ * therefore the granularity becomes.
-  *
-  * Contrary to the original timer wheel implementation, which aims for 'exact'
-  * expiry of the timers, this implementation removes the need for recascading
+  * KDB_MAXBPT describes the total number of breakpoints
+- * supported by this architecure.
++ * supported by this architecture.
+  */
+ #define KDB_MAXBPT	16
+ 
 -- 
 2.25.1
 
