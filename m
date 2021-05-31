@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mail-eopbgr00061.outbound.protection.outlook.com ([40.107.0.61]
+ helo=EUR02-AM5-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lnduc-00BdYi-T0
- for kexec@lists.infradead.org; Mon, 31 May 2021 09:08:45 +0000
-Date: Mon, 31 May 2021 11:08:32 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2] x86/efi: unconditionally hold the whole low-1MB
- memory regions
-Message-ID: <YLSnkKeoQnokXVsK@zn.tnic>
-References: <20210531090023.16471-1-lijiang@redhat.com>
+ id 1lne5x-00BhB7-8R
+ for kexec@lists.infradead.org; Mon, 31 May 2021 09:20:27 +0000
+From: Dong Aisheng <aisheng.dong@nxp.com>
+Subject: [PATCH V2 4/6] mm: rename the global section array to mem_sections
+Date: Mon, 31 May 2021 17:19:06 +0800
+Message-Id: <20210531091908.1738465-5-aisheng.dong@nxp.com>
+In-Reply-To: <20210531091908.1738465-1-aisheng.dong@nxp.com>
+References: <20210531091908.1738465-1-aisheng.dong@nxp.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210531090023.16471-1-lijiang@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,145 +23,139 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Lianbo Jiang <lijiang@redhat.com>, Mike Rapoport <rppt@kernel.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, kexec@lists.infradead.org, ardb@kernel.org, dvhart@infradead.org, andy@infradead.org, tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com, luto@amacapital.net, bhe@redhat.com, dyoung@redhat.com
+To: linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, dongas86@gmail.com, Dong Aisheng <aisheng.dong@nxp.com>, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-+ Mike.
+In order to distinguish the struct mem_section for a better code
+readability and align with kernel doc [1] name below, change the
+global mem section name to 'mem_sections' from 'mem_section'.
 
-On Mon, May 31, 2021 at 05:00:23PM +0800, Lianbo Jiang wrote:
-> Some sub-1MB memory regions may be reserved by EFI boot services, and the
-> memory regions will be released later in the efi_free_boot_services().
-> 
-> Currently, always reserve all sub-1MB memory regions when the crashkernel
-> option is specified, but unfortunately EFI boot services may have already
-> reserved some sub-1MB memory regions before the crash_reserve_low_1M() is
-> called, which makes that the crash_reserve_low_1M() only own the
-> remaining sub-1MB memory regions, not all sub-1MB memory regions, because,
-> subsequently EFI boot services will free its own sub-1MB memory regions.
-> Eventually, DMA will be able to allocate memory from the sub-1MB area and
-> cause the following error:
-> 
-> crash> kmem -s |grep invalid
-> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
-> kmem: dma-kmalloc-512: slab: ffffd52c40001900 invalid freepointer: ffff9403c0067300
-> crash> vtop ffff9403c0067300
-> VIRTUAL           PHYSICAL
-> ffff9403c0067300  67300   --->The physical address falls into this range [0x0000000000063000-0x000000000008efff]
-> 
-> kernel debugging log:
-> ...
-> [    0.008927] memblock_reserve: [0x0000000000010000-0x0000000000013fff] efi_reserve_boot_services+0x85/0xd0
-> [    0.008930] memblock_reserve: [0x0000000000063000-0x000000000008efff] efi_reserve_boot_services+0x85/0xd0
-> ...
-> [    0.009425] memblock_reserve: [0x0000000000000000-0x00000000000fffff] crash_reserve_low_1M+0x2c/0x49
-> ...
-> [    0.010586] Zone ranges:
-> [    0.010587]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-> [    0.010589]   DMA32    [mem 0x0000000001000000-0x00000000ffffffff]
-> [    0.010591]   Normal   [mem 0x0000000100000000-0x0000000c7fffffff]
-> [    0.010593]   Device   empty
-> ...
-> [    8.814894] __memblock_free_late: [0x0000000000063000-0x000000000008efff] efi_free_boot_services+0x14b/0x23b
-> [    8.815793] __memblock_free_late: [0x0000000000010000-0x0000000000013fff] efi_free_boot_services+0x14b/0x23b
-> 
-> To fix the above issues, let's hold the whole low-1M memory regions
-> unconditionally in the efi_free_boot_services().
-> 
-> Signed-off-by: Lianbo Jiang <lijiang@redhat.com>
-> ---
-> Background(copy from bhe's comment in the patch v1):
-> 
-> Kdump kernel also need go through real mode code path during bootup. It
-> is not different than normal kernel except that it skips the firmware
-> resetting. So kdump kernel needs low 1M as system RAM just as normal
-> kernel does. Here we reserve the whole low 1M with memblock_reserve()
-> to avoid any later kernel or driver data reside in this area. Otherwise,
-> we need dump the content of this area to vmcore. As we know, when crash
-> happened, the old memory of 1st kernel should be untouched until vmcore
-> dumping read out its content. Meanwhile, kdump kernel need reuse low 1M.
-> In the past, we used a back up region to copy out the low 1M area, and
-> map the back up region into the low 1M area in vmcore elf file. In
-> 6f599d84231fd27 ("x86/kdump: Always reserve the low 1M when the crashkernel
-> option is specified"), we changed to lock the whole low 1M to avoid
-> writting any kernel data into, like this we can skip this area when
-> dumping vmcore.
-> 
-> Above is why we try to memblock reserve the whole low 1M. We don't want
-> to use it, just don't want anyone to use it in 1st kernel.
-> 
-> 
->  arch/x86/platform/efi/quirks.c | 32 +++++++++++++++-----------------
->  1 file changed, 15 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/x86/platform/efi/quirks.c b/arch/x86/platform/efi/quirks.c
-> index 7850111008a8..840b7e3b3d48 100644
-> --- a/arch/x86/platform/efi/quirks.c
-> +++ b/arch/x86/platform/efi/quirks.c
-> @@ -11,6 +11,7 @@
->  #include <linux/memblock.h>
->  #include <linux/acpi.h>
->  #include <linux/dmi.h>
-> +#include <linux/sizes.h>
->  
->  #include <asm/e820/api.h>
->  #include <asm/efi.h>
-> @@ -409,7 +410,7 @@ void __init efi_free_boot_services(void)
->  	for_each_efi_memory_desc(md) {
->  		unsigned long long start = md->phys_addr;
->  		unsigned long long size = md->num_pages << EFI_PAGE_SHIFT;
-> -		size_t rm_size;
-> +		unsigned long long end = start + size;
->  
->  		if (md->type != EFI_BOOT_SERVICES_CODE &&
->  		    md->type != EFI_BOOT_SERVICES_DATA) {
-> @@ -431,23 +432,20 @@ void __init efi_free_boot_services(void)
->  		efi_unmap_pages(md);
->  
->  		/*
-> -		 * Nasty quirk: if all sub-1MB memory is used for boot
-> -		 * services, we can get here without having allocated the
-> -		 * real mode trampoline.  It's too late to hand boot services
-> -		 * memory back to the memblock allocator, so instead
-> -		 * try to manually allocate the trampoline if needed.
-> -		 *
-> -		 * I've seen this on a Dell XPS 13 9350 with firmware
-> -		 * 1.4.4 with SGX enabled booting Linux via Fedora 24's
-> -		 * grub2-efi on a hard disk.  (And no, I don't know why
-> -		 * this happened, but Linux should still try to boot rather
-> -		 * panicking early.)
-> +		 * The sub-1MB memory may be within the range[0, SZ_1M]
-> +		 * or across the low-1M memory boundary. Let's handle
-> +		 * these two cases and hold the whole low-1M memory
-> +		 * unconditionally.
->  		 */
-> -		rm_size = real_mode_size_needed();
-> -		if (rm_size && (start + rm_size) < (1<<20) && size >= rm_size) {
-> -			set_real_mode_mem(start);
-> -			start += rm_size;
-> -			size -= rm_size;
-> +		if (start < SZ_1M) {
-> +			/* Within the range[0, SZ_1M] */
-> +			if (end <= SZ_1M)
-> +				continue;
-> +			else {
-> +				/* Across the low-1M memory boundary */
-> +				size -= (SZ_1M - start);
-> +				start = SZ_1M;
-> +			}
->  		}
->  
->  		memblock_free_late(start, size);
-> -- 
+[1] Documentation/vm/memory-model.rst
+"The `mem_section` objects are arranged in a two-dimensional array
+called `mem_sections`."
 
-I don't think this will be needed when this here happens:
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: kexec@lists.infradead.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+v1->v2:
+ * no changes
+---
+ include/linux/mmzone.h | 10 +++++-----
+ kernel/crash_core.c    |  4 ++--
+ mm/sparse.c            | 16 ++++++++--------
+ 3 files changed, 15 insertions(+), 15 deletions(-)
 
-https://lkml.kernel.org/r/YK%2Bgv0vDfLVD7Sqp@kernel.org
-
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index a6bfde85ddb0..0ed61f32d898 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -1302,9 +1302,9 @@ struct mem_section {
+ #define SECTION_ROOT_MASK	(SECTIONS_PER_ROOT - 1)
+ 
+ #ifdef CONFIG_SPARSEMEM_EXTREME
+-extern struct mem_section **mem_section;
++extern struct mem_section **mem_sections;
+ #else
+-extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
++extern struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+ #endif
+ 
+ static inline unsigned long *section_to_usemap(struct mem_section *ms)
+@@ -1315,12 +1315,12 @@ static inline unsigned long *section_to_usemap(struct mem_section *ms)
+ static inline struct mem_section *__nr_to_section(unsigned long nr)
+ {
+ #ifdef CONFIG_SPARSEMEM_EXTREME
+-	if (!mem_section)
++	if (!mem_sections)
+ 		return NULL;
+ #endif
+-	if (!mem_section[SECTION_NR_TO_ROOT(nr)])
++	if (!mem_sections[SECTION_NR_TO_ROOT(nr)])
+ 		return NULL;
+-	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
++	return &mem_sections[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
+ }
+ extern unsigned long __section_nr(struct mem_section *ms);
+ extern size_t mem_section_usage_size(void);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 29cc15398ee4..fb1180d81b5a 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -414,8 +414,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_SYMBOL(contig_page_data);
+ #endif
+ #ifdef CONFIG_SPARSEMEM
+-	VMCOREINFO_SYMBOL_ARRAY(mem_section);
+-	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
++	VMCOREINFO_SYMBOL_ARRAY(mem_sections);
++	VMCOREINFO_LENGTH(mem_sections, NR_SECTION_ROOTS);
+ 	VMCOREINFO_STRUCT_SIZE(mem_section);
+ 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+ 	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+diff --git a/mm/sparse.c b/mm/sparse.c
+index d02ee6bb7cbc..6412010478f7 100644
+--- a/mm/sparse.c
++++ b/mm/sparse.c
+@@ -24,12 +24,12 @@
+  * 1) mem_section	- memory sections, mem_map's for valid memory
+  */
+ #ifdef CONFIG_SPARSEMEM_EXTREME
+-struct mem_section **mem_section;
++struct mem_section **mem_sections;
+ #else
+-struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
++struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
+ 	____cacheline_internodealigned_in_smp;
+ #endif
+-EXPORT_SYMBOL(mem_section);
++EXPORT_SYMBOL(mem_sections);
+ 
+ #ifdef NODE_NOT_IN_PAGE_FLAGS
+ /*
+@@ -66,8 +66,8 @@ static void __init sparse_alloc_section_roots(void)
+ 
+ 	size = sizeof(struct mem_section *) * NR_SECTION_ROOTS;
+ 	align = 1 << (INTERNODE_CACHE_SHIFT);
+-	mem_section = memblock_alloc(size, align);
+-	if (!mem_section)
++	mem_sections = memblock_alloc(size, align);
++	if (!mem_sections)
+ 		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
+ 		      __func__, size, align);
+ }
+@@ -103,14 +103,14 @@ static int __meminit sparse_index_init(unsigned long section_nr, int nid)
+ 	 *
+ 	 * The mem_hotplug_lock resolves the apparent race below.
+ 	 */
+-	if (mem_section[root])
++	if (mem_sections[root])
+ 		return 0;
+ 
+ 	section = sparse_index_alloc(nid);
+ 	if (!section)
+ 		return -ENOMEM;
+ 
+-	mem_section[root] = section;
++	mem_sections[root] = section;
+ 
+ 	return 0;
+ }
+@@ -145,7 +145,7 @@ unsigned long __section_nr(struct mem_section *ms)
+ #else
+ unsigned long __section_nr(struct mem_section *ms)
+ {
+-	return (unsigned long)(ms - mem_section[0]);
++	return (unsigned long)(ms - mem_sections[0]);
+ }
+ #endif
+ 
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
