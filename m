@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lnzg1-00FI8t-7F
+ for kexec@lists.infradead.org; Tue, 01 Jun 2021 08:23:06 +0000
+Received: by mail-wr1-f71.google.com with SMTP id
+ x9-20020adfffc90000b02901178add5f60so520251wrs.5
+ for <kexec@lists.infradead.org>; Tue, 01 Jun 2021 01:22:57 -0700 (PDT)
+Subject: Re: [PATCH V2 4/6] mm: rename the global section array to mem_sections
+References: <20210531091908.1738465-1-aisheng.dong@nxp.com>
+ <20210531091908.1738465-5-aisheng.dong@nxp.com>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <42617372-c846-85fe-4739-abbe55eca8f6@redhat.com>
+Date: Tue, 1 Jun 2021 10:22:55 +0200
 MIME-Version: 1.0
-References: <20210531095720.77469-1-maz@kernel.org>
- <20210531095720.77469-2-maz@kernel.org>
-In-Reply-To: <20210531095720.77469-2-maz@kernel.org>
-From: Ard Biesheuvel <ardb@kernel.org>
-Date: Mon, 31 May 2021 21:37:49 +0200
-Message-ID: <CAMj1kXFNUAtXPzO+EbMzZQPxgst4BMEUuYbrWwYer3P9trYdLQ@mail.gmail.com>
-Subject: Re: [PATCH v2 1/5] arm64: kexec_file: Forbid non-crash kernels
+In-Reply-To: <20210531091908.1738465-5-aisheng.dong@nxp.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,67 +23,150 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: kexec@lists.infradead.org, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Mark Rutland <mark.rutland@arm.com>, James Morse <james.morse@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh SHARMA <bhupesh.sharma@linaro.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Moritz Fischer <mdf@kernel.org>, Android Kernel Team <kernel-team@android.com>, "# 3.4.x" <stable@vger.kernel.org>
+To: Dong Aisheng <aisheng.dong@nxp.com>, linux-mm@kvack.org
+Cc: linux-kernel@vger.kernel.org, dongas86@gmail.com, Andrew Morton <akpm@linux-foundation.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kexec@lists.infradead.org
 
-On Mon, 31 May 2021 at 11:57, Marc Zyngier <maz@kernel.org> wrote:
->
-> It has been reported that kexec_file doesn't really work on arm64.
-> It completely ignores any of the existing reservations, which results
-> in the secondary kernel being loaded where the GICv3 LPI tables live,
-> or even corrupting the ACPI tables.
->
-> Since only crash kernels are imune to this as they use a reserved
-> memory region, disable the non-crash kernel use case. Further
-> patches will try and restore the functionality.
->
-> Reported-by: Moritz Fischer <mdf@kernel.org>
-> Signed-off-by: Marc Zyngier <maz@kernel.org>
-> Cc: stable@vger.kernel.org # 5.10
-
-Acked-by: Ard Biesheuvel <ardb@kernel.org>
-
-... but do we really only need this in 5.10 and not earlier?
-
+On 31.05.21 11:19, Dong Aisheng wrote:
+> In order to distinguish the struct mem_section for a better code
+> readability and align with kernel doc [1] name below, change the
+> global mem section name to 'mem_sections' from 'mem_section'.
+> 
+> [1] Documentation/vm/memory-model.rst
+> "The `mem_section` objects are arranged in a two-dimensional array
+> called `mem_sections`."
+> 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Vivek Goyal <vgoyal@redhat.com>
+> Cc: kexec@lists.infradead.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->  arch/arm64/kernel/kexec_image.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 9ec34690e255..acf9cd251307 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -145,3 +145,23 @@ const struct kexec_file_ops kexec_image_ops = {
->         .verify_sig = image_verify_sig,
->  #endif
->  };
-> +
-> +/**
-> + * arch_kexec_locate_mem_hole - Find free memory to place the segments.
-> + * @kbuf:                       Parameters for the memory search.
-> + *
-> + * On success, kbuf->mem will have the start address of the memory region found.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-> +{
-> +       /*
-> +        * For the time being, kexec_file_load isn't reliable except
-> +        * for crash kernel. Say sorry to the user.
-> +        */
-> +       if (kbuf->image->type != KEXEC_TYPE_CRASH)
-> +               return -EADDRNOTAVAIL;
-> +
-> +       return kexec_locate_mem_hole(kbuf);
-> +}
-> --
-> 2.30.2
->
+> v1->v2:
+>   * no changes
+> ---
+>   include/linux/mmzone.h | 10 +++++-----
+>   kernel/crash_core.c    |  4 ++--
+>   mm/sparse.c            | 16 ++++++++--------
+>   3 files changed, 15 insertions(+), 15 deletions(-)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index a6bfde85ddb0..0ed61f32d898 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1302,9 +1302,9 @@ struct mem_section {
+>   #define SECTION_ROOT_MASK	(SECTIONS_PER_ROOT - 1)
+>   
+>   #ifdef CONFIG_SPARSEMEM_EXTREME
+> -extern struct mem_section **mem_section;
+> +extern struct mem_section **mem_sections;
+>   #else
+> -extern struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+> +extern struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT];
+>   #endif
+>   
+>   static inline unsigned long *section_to_usemap(struct mem_section *ms)
+> @@ -1315,12 +1315,12 @@ static inline unsigned long *section_to_usemap(struct mem_section *ms)
+>   static inline struct mem_section *__nr_to_section(unsigned long nr)
+>   {
+>   #ifdef CONFIG_SPARSEMEM_EXTREME
+> -	if (!mem_section)
+> +	if (!mem_sections)
+>   		return NULL;
+>   #endif
+> -	if (!mem_section[SECTION_NR_TO_ROOT(nr)])
+> +	if (!mem_sections[SECTION_NR_TO_ROOT(nr)])
+>   		return NULL;
+> -	return &mem_section[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
+> +	return &mem_sections[SECTION_NR_TO_ROOT(nr)][nr & SECTION_ROOT_MASK];
+>   }
+>   extern unsigned long __section_nr(struct mem_section *ms);
+>   extern size_t mem_section_usage_size(void);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 29cc15398ee4..fb1180d81b5a 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -414,8 +414,8 @@ static int __init crash_save_vmcoreinfo_init(void)
+>   	VMCOREINFO_SYMBOL(contig_page_data);
+>   #endif
+>   #ifdef CONFIG_SPARSEMEM
+> -	VMCOREINFO_SYMBOL_ARRAY(mem_section);
+> -	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
+> +	VMCOREINFO_SYMBOL_ARRAY(mem_sections);
+> +	VMCOREINFO_LENGTH(mem_sections, NR_SECTION_ROOTS);
+>   	VMCOREINFO_STRUCT_SIZE(mem_section);
+>   	VMCOREINFO_OFFSET(mem_section, section_mem_map);
+>   	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
+> diff --git a/mm/sparse.c b/mm/sparse.c
+> index d02ee6bb7cbc..6412010478f7 100644
+> --- a/mm/sparse.c
+> +++ b/mm/sparse.c
+> @@ -24,12 +24,12 @@
+>    * 1) mem_section	- memory sections, mem_map's for valid memory
+>    */
+>   #ifdef CONFIG_SPARSEMEM_EXTREME
+> -struct mem_section **mem_section;
+> +struct mem_section **mem_sections;
+>   #else
+> -struct mem_section mem_section[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
+> +struct mem_section mem_sections[NR_SECTION_ROOTS][SECTIONS_PER_ROOT]
+>   	____cacheline_internodealigned_in_smp;
+>   #endif
+> -EXPORT_SYMBOL(mem_section);
+> +EXPORT_SYMBOL(mem_sections);
+>   
+>   #ifdef NODE_NOT_IN_PAGE_FLAGS
+>   /*
+> @@ -66,8 +66,8 @@ static void __init sparse_alloc_section_roots(void)
+>   
+>   	size = sizeof(struct mem_section *) * NR_SECTION_ROOTS;
+>   	align = 1 << (INTERNODE_CACHE_SHIFT);
+> -	mem_section = memblock_alloc(size, align);
+> -	if (!mem_section)
+> +	mem_sections = memblock_alloc(size, align);
+> +	if (!mem_sections)
+>   		panic("%s: Failed to allocate %lu bytes align=0x%lx\n",
+>   		      __func__, size, align);
+>   }
+> @@ -103,14 +103,14 @@ static int __meminit sparse_index_init(unsigned long section_nr, int nid)
+>   	 *
+>   	 * The mem_hotplug_lock resolves the apparent race below.
+>   	 */
+> -	if (mem_section[root])
+> +	if (mem_sections[root])
+>   		return 0;
+>   
+>   	section = sparse_index_alloc(nid);
+>   	if (!section)
+>   		return -ENOMEM;
+>   
+> -	mem_section[root] = section;
+> +	mem_sections[root] = section;
+>   
+>   	return 0;
+>   }
+> @@ -145,7 +145,7 @@ unsigned long __section_nr(struct mem_section *ms)
+>   #else
+>   unsigned long __section_nr(struct mem_section *ms)
+>   {
+> -	return (unsigned long)(ms - mem_section[0]);
+> +	return (unsigned long)(ms - mem_sections[0]);
+>   }
+>   #endif
+>   
+> 
+
+I repeat: unnecessary code churn IMHO.
+
+-- 
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
