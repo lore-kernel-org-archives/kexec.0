@@ -1,23 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410081.outbound.protection.outlook.com
- ([40.107.141.81] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-ed1-x531.google.com ([2a00:1450:4864:20::531])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1loFPf-001RrE-R6
- for kexec@lists.infradead.org; Wed, 02 Jun 2021 01:11:17 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH V2 4/6] mm: rename the global section array to mem_sections
-Date: Wed, 2 Jun 2021 01:11:07 +0000
-Message-ID: <TYYPR01MB67775E2EC60DEE1195A49577DD3D9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20210531091908.1738465-1-aisheng.dong@nxp.com>
- <20210531091908.1738465-5-aisheng.dong@nxp.com>
- <42617372-c846-85fe-4739-abbe55eca8f6@redhat.com>
- <CAA+hA=Ss4j8qeoe7RtDJ14nuqy+TpOk2qi-A9+YN6=2y8c_CGg@mail.gmail.com>
- <f7f77368-72cf-e15d-cc3c-b0ddf86e14fd@redhat.com>
- <20210601165246.99d7374d07661b7e91e49cb6@linux-foundation.org>
-In-Reply-To: <20210601165246.99d7374d07661b7e91e49cb6@linux-foundation.org>
-Content-Language: ja-JP
+ id 1loFXj-001SXu-0f
+ for kexec@lists.infradead.org; Wed, 02 Jun 2021 01:19:36 +0000
+Received: by mail-ed1-x531.google.com with SMTP id y7so887588eda.2
+ for <kexec@lists.infradead.org>; Tue, 01 Jun 2021 18:19:31 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210527150526.271941-1-pasha.tatashin@soleen.com>
+ <20210527150526.271941-4-pasha.tatashin@soleen.com>
+ <87sg28rx3c.wl-maz@kernel.org>
+ <CA+CK2bDvsFX_s-G5tRcE1GreNW_xLTognosUFbPPgaUK7-cafQ@mail.gmail.com>
+ <87r1hl22qm.wl-maz@kernel.org>
+In-Reply-To: <87r1hl22qm.wl-maz@kernel.org>
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 1 Jun 2021 21:18:54 -0400
+Message-ID: <CA+CK2bBwd2+QB6qCWYQdC5x_Vkf7-64pr8UWJFoUkQgtfaAsHQ@mail.gmail.com>
+Subject: Re: [PATCH 03/18] arm64: hyp-stub: Move elx_sync into the vectors
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,35 +28,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>, David Hildenbrand <david@redhat.com>
-Cc: Dong Aisheng <dongas86@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, "linux-mm@kvack.org" <linux-mm@kvack.org>, open list <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Marc Zyngier <maz@kernel.org>
+Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
------Original Message-----
-> On Tue, 1 Jun 2021 10:40:09 +0200 David Hildenbrand <david@redhat.com> wrote:
-> 
-> > > Thanks, i explained the reason during my last reply.
-> > > Andrew has already picked this patch to -mm tree.
-> >
-> > Just because it's in Andrews tree doesn't mean it will end up upstream. ;)
-> >
-> > Anyhow, no really strong opinion, it's simply unnecessary code churn
-> > that makes bisecting harder without real value IMHO.
-> 
-> I think it's a good change - mem_sections refers to multiple instances
-> of a mem_section.  Churn is a pain, but that's the price we pay for more
-> readable code.  And for having screwed it up originally ;)
+> > It cannot call mutate_to_vhe because #HVC_VHE_RESTART is not used
+> > here. But, if it had to it would not work as we cannot return to the
+> > old kernel text after relocation.
+>
+> OK, so you are happy with having a dangling branch pointing to
+> nowhere? Something in me screams that it isn't a good idea, in
+> general.
+>
+> If HVC_SOFT_RESTART is all you need, I'd rather you have a small stub
+> that implements exactly that and nothing else. Feel free to extract it
+> as a reusable macro if you want.
 
-From a makedumpfile/crash-utility viewpoint, I don't deny kernel improvement
-and probably the change will not be hard for them to support, but I'd like
-you to remember that the tool users will need to update them for the change.
-
-The situation where we need to update the tools for new kernels is usual, but
-there are not many cases that they cannot even start session, and this change
-will cause it.  Personally I wonder the change is worth forcing users to update
-them.
+Sure, I will add in the next revision.
 
 Thanks,
-Kazu
+Pasha
 
 _______________________________________________
 kexec mailing list
