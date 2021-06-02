@@ -1,26 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga05.intel.com ([192.55.52.43])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1loMdM-002nOp-VS
- for kexec@lists.infradead.org; Wed, 02 Jun 2021 08:53:59 +0000
-Date: Wed, 2 Jun 2021 11:53:46 +0300
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v1 2/2] firmware: dmi_scan: Pass dmi_entry_point to
- kexec'ed kernel
-Message-ID: <YLdHGkQSi391EqIS@smile.fi.intel.com>
-References: <20161215122856.7d24b7a8@endymion>
- <20161216023213.GA4505@dhcp-128-65.nay.redhat.com>
- <1481890738.9552.70.camel@linux.intel.com>
- <20161216143330.69e9c8ee@endymion>
- <20161217105721.GB6922@dhcp-128-65.nay.redhat.com>
- <20200120121927.GJ32742@smile.fi.intel.com>
- <87a76i9ksr.fsf@x220.int.ebiederm.org>
- <CAHp75VdjwWfqHtJ3n-UK_n5nzpgcpERbM+_9-Z3FrjJx7nHQzQ@mail.gmail.com>
- <CAKv+Gu-sVSWNYHEjzjOfbEryOR_XruwH=qQphq4uTXMLPK18tw@mail.gmail.com>
- <YLdDSeYjgCaarCpN@smile.fi.intel.com>
+From: Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH 0/9] Remove DISCINTIGMEM memory model
+Date: Wed,  2 Jun 2021 13:53:39 +0300
+Message-Id: <20210602105348.13387-1-rppt@kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YLdDSeYjgCaarCpN@smile.fi.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,162 +16,115 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ard Biesheuvel <ardb@kernel.org>, Javier =?iso-8859-1?B?VGnh?= <javier.tia@gmail.com>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>, Dave Young <dyoung@redhat.com>, linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Jean Delvare <jdelvare@suse.de>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
 
-Fixed Ard's address
+From: Mike Rapoport <rppt@linux.ibm.com>
 
-On Wed, Jun 02, 2021 at 11:37:29AM +0300, Andy Shevchenko wrote:
-> On Tue, Jan 21, 2020 at 12:18:03AM +0100, Ard Biesheuvel wrote:
-> > On Mon, 20 Jan 2020 at 23:31, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
-> > >
-> > > On Mon, Jan 20, 2020 at 9:28 PM Eric W. Biederman <ebiederm@xmission.com> wrote:
-> > > > Andy Shevchenko <andriy.shevchenko@linux.intel.com> writes:
-> > > > > On Sat, Dec 17, 2016 at 06:57:21PM +0800, Dave Young wrote:
-> > > > >> Ccing efi people.
-> > > > >>
-> > > > >> On 12/16/16 at 02:33pm, Jean Delvare wrote:
-> > > > >> > On Fri, 16 Dec 2016 14:18:58 +0200, Andy Shevchenko wrote:
-> > > > >> > > On Fri, 2016-12-16 at 10:32 +0800, Dave Young wrote:
-> > > > >> > > > On 12/15/16 at 12:28pm, Jean Delvare wrote:
-> > > > >> > > > > I am no kexec expert but this confuses me. Shouldn't the second
-> > > > >> > > > > kernel have access to the EFI systab as the first kernel does? It
-> > > > >> > > > > includes many more pointers than just ACPI and DMI tables, and it
-> > > > >> > > > > would seem inconvenient to have to pass all these addresses
-> > > > >> > > > > individually explicitly.
-> > > > >> > > >
-> > > > >> > > > Yes, in modern linux kernel, kexec has the support for EFI, I think it
-> > > > >> > > > should work naturally at least in x86_64.
-> > > > >> > >
-> > > > >> > > Thanks for this good news!
-> > > > >> > >
-> > > > >> > > Unfortunately Intel Galileo is 32-bit platform.
-> > > > >> >
-> > > > >> > If it was done for X86_64 then maybe it can be generalized to X86?
-> > > > >>
-> > > > >> For X86_64, we have a new way for efi runtime memmory mapping, in i386
-> > > > >> code it still use old ioremap way. It is impossible to use same way as
-> > > > >> the X86_64 since the virtual address space is limited.
-> > > > >>
-> > > > >> But maybe for 32bit, kexec kernel can run in physical mode, but I'm not
-> > > > >> sure, I would suggest Andy to do a test first with efi=noruntime for
-> > > > >> kexec 2nd kernel.
-> > > > >
-> > > > > Guys, it was quite a long no hear from you. As I told you the proposed work
-> > > > > around didn't help. Today I found that Microsoft Surface 3 also affected
-> > > > > by this.
-> > > > >
-> > > > > Can we apply these patches for now until you will find better
-> > > > > solution?
-> > > >
-> > > > Not a chance.  The patches don't apply to any kernel in the git history.
-> > > >
-> > > > Which may be part of your problem.  You are or at least were running
-> > > > with code that has not been merged upstream.
-> > >
-> > > It's done against linux-next.
-> > > Applied clearly. (Not the version in this more than yearly old series
-> > > of course, that's why I told I can resend)
-> > >
-> > > > > P.S. I may resend them rebased on recent vanilla.
-> > > >
-> > > > Second.  I looked at your test results and they don't directly make
-> > > > sense.  dmidecode bypasses the kernel completely or it did last time
-> > > > I looked so I don't know why you would be using that to test if
-> > > > something in the kernel is working.
-> > > >
-> > > > However dmidecode failing suggests that the actual problem is something
-> > > > in the first kernel is stomping the dmi tables.
-> > >
-> > > See below.
-> > >
-> > > > Adding a command line option won't fix stomped tables.
-> > >
-> > > It provides a mechanism, which seems to be absent, to the second
-> > > kernel to know where to look for SMBIOS tables.
-> > >
-> > > > So what I would suggest is:
-> > > > a) Verify that dmidecode works before kexec.
-> > >
-> > > Yes, it does.
-> > >
-> > > > b) Test to see if dmidecode works after kexec.
-> > >
-> > > No, it doesn't.
-> > >
-> > > > c) Once (a) shows that dmidecode works and (b) shows that dmidecode
-> > > >    fails figure out what is stomping your dmi tables during or before
-> > > >    kexec and that is what should get fixed.
-> > >
-> > > The problem here as I can see it that EFI and kexec protocols are not
-> > > friendly to each other.
-> > > I'm not an expert in either. That's why I'm asking for possible
-> > > solutions. And this needs to be done in kernel to allow drivers to
-> > > work.
-> > >
-> > > Does the
-> > >
-> > > commit 4996c02306a25def1d352ec8e8f48895bbc7dea9
-> > > Author: Takao Indoh <indou.takao@jp.fujitsu.com>
-> > > Date:   Thu Jul 14 18:05:21 2011 -0400
-> > >
-> > >     ACPI: introduce "acpi_rsdp=" parameter for kdump
-> > >
-> > > description shed a light on this?
-> > >
-> > > > Now using a non-efi method of dmi detection relies on the
-> > > > tables being between 0xF0000 and 0x10000. AKA the last 64K
-> > > > of the first 1MiB of memory.  You might check to see if your
-> > > > dmi tables are in that address range.
-> > >
-> > > # dmidecode --no-sysfs
-> > > # dmidecode 3.2
-> > > Scanning /dev/mem for entry point.
-> > > # No SMBIOS nor DMI entry point found, sorry.
-> > >
-> > > === with patch applied ===
-> > > # dmidecode
-> > > ...
-> > >         Release Date: 03/10/2015
-> > > ...
-> > >
-> > > >
-> > > > Otherwise I suspect the good solution is to give efi it's own page
-> > > > tables in the kernel and switch to it whenever efi functions are called.
-> > > >
-> > >
-> > > > But on 32bit the Linux kernel has historically been just fine directly
-> > > > accessing the hardware, and ignoring efi and all of the other BIOS's.
-> > >
-> > > It seems not only for 32-bit Linux kernel anymore. MS Surface 3 runs
-> > > 64-bit code.
-> > >
-> > > > So if that doesn't work on Intel Galileo that is probably a firmware
-> > > > problem.
-> > >
-> > > It's not only about Galileo anymore.
-> > >
-> > 
-> > Looking at the x86 kexec EFI code, it seems that it has special
-> > handling for the legacy SMBIOS table address, but not for the SMBIOS3
-> > table address, which was introduced to accommodate SMBIOS tables
-> > living in memory that is not 32-bit addressable.
-> > 
-> > Could anyone check whether these systems provide SMBIOS 3.0 tables,
-> > and whether their address gets virtually remapped at ExitBootServices?
-> 
-> Can you tell how to do this and I will try to get information?
-> 
-> -- 
-> With Best Regards,
-> Andy Shevchenko
-> 
-> 
+Hi,
 
+SPARSEMEM memory model was supposed to entirely replace DISCONTIGMEM a
+(long) while ago. The last architectures that used DISCONTIGMEM were
+updated to use other memory models in v5.11 and it is about the time to
+entirely remove DISCONTIGMEM from the kernel.
+
+This set removes DISCONTIGMEM from alpha, arc and m68k, simplifies memory
+model selection in mm/Kconfig and replaces usage of redundant
+CONFIG_NEED_MULTIPLE_NODES and CONFIG_FLAT_NODE_MEM_MAP with CONFIG_NUMA
+and CONFIG_FLATMEM respectively. 
+
+I've also removed NUMA support on alpha that was BROKEN for more than 15
+years.
+
+There were also minor updates all over arch/ to remove mentions of
+DISCONTIGMEM in comments and #ifdefs.
+
+Mike Rapoport (9):
+  alpha: remove DISCONTIGMEM and NUMA
+  arc: update comment about HIGHMEM implementation
+  arc: remove support for DISCONTIGMEM
+  m68k: remove support for DISCONTIGMEM
+  mm: remove CONFIG_DISCONTIGMEM
+  arch, mm: remove stale mentions of DISCONIGMEM
+  docs: remove description of DISCONTIGMEM
+  mm: replace CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA
+  mm: replace CONFIG_FLAT_NODE_MEM_MAP with CONFIG_FLATMEM
+
+ Documentation/admin-guide/sysctl/vm.rst |  12 +-
+ Documentation/vm/memory-model.rst       |  45 +----
+ arch/alpha/Kconfig                      |  22 ---
+ arch/alpha/include/asm/machvec.h        |   6 -
+ arch/alpha/include/asm/mmzone.h         | 100 -----------
+ arch/alpha/include/asm/pgtable.h        |   4 -
+ arch/alpha/include/asm/topology.h       |  39 -----
+ arch/alpha/kernel/core_marvel.c         |  53 +-----
+ arch/alpha/kernel/core_wildfire.c       |  29 +--
+ arch/alpha/kernel/pci_iommu.c           |  29 ---
+ arch/alpha/kernel/proto.h               |   8 -
+ arch/alpha/kernel/setup.c               |  16 --
+ arch/alpha/kernel/sys_marvel.c          |   5 -
+ arch/alpha/kernel/sys_wildfire.c        |   5 -
+ arch/alpha/mm/Makefile                  |   2 -
+ arch/alpha/mm/init.c                    |   3 -
+ arch/alpha/mm/numa.c                    | 223 ------------------------
+ arch/arc/Kconfig                        |  13 --
+ arch/arc/include/asm/mmzone.h           |  40 -----
+ arch/arc/mm/init.c                      |  21 +--
+ arch/arm64/Kconfig                      |   2 +-
+ arch/ia64/Kconfig                       |   2 +-
+ arch/ia64/kernel/topology.c             |   5 +-
+ arch/ia64/mm/numa.c                     |   5 +-
+ arch/m68k/Kconfig.cpu                   |  10 --
+ arch/m68k/include/asm/page.h            |   2 +-
+ arch/m68k/include/asm/page_mm.h         |  33 ----
+ arch/m68k/mm/init.c                     |  20 ---
+ arch/mips/Kconfig                       |   2 +-
+ arch/mips/include/asm/mmzone.h          |   8 +-
+ arch/mips/include/asm/page.h            |   2 +-
+ arch/mips/mm/init.c                     |   7 +-
+ arch/nds32/include/asm/memory.h         |   6 -
+ arch/powerpc/Kconfig                    |   2 +-
+ arch/powerpc/include/asm/mmzone.h       |   4 +-
+ arch/powerpc/kernel/setup_64.c          |   2 +-
+ arch/powerpc/kernel/smp.c               |   2 +-
+ arch/powerpc/kexec/core.c               |   4 +-
+ arch/powerpc/mm/Makefile                |   2 +-
+ arch/powerpc/mm/mem.c                   |   4 +-
+ arch/riscv/Kconfig                      |   2 +-
+ arch/s390/Kconfig                       |   2 +-
+ arch/sh/include/asm/mmzone.h            |   4 +-
+ arch/sh/kernel/topology.c               |   2 +-
+ arch/sh/mm/Kconfig                      |   2 +-
+ arch/sh/mm/init.c                       |   2 +-
+ arch/sparc/Kconfig                      |   2 +-
+ arch/sparc/include/asm/mmzone.h         |   4 +-
+ arch/sparc/kernel/smp_64.c              |   2 +-
+ arch/sparc/mm/init_64.c                 |  12 +-
+ arch/x86/Kconfig                        |   2 +-
+ arch/x86/kernel/setup_percpu.c          |   6 +-
+ arch/x86/mm/init_32.c                   |   4 +-
+ arch/xtensa/include/asm/page.h          |   4 -
+ include/asm-generic/memory_model.h      |  37 +---
+ include/asm-generic/topology.h          |   2 +-
+ include/linux/gfp.h                     |   4 +-
+ include/linux/memblock.h                |   6 +-
+ include/linux/mm.h                      |   4 +-
+ include/linux/mmzone.h                  |  16 +-
+ kernel/crash_core.c                     |   4 +-
+ mm/Kconfig                              |  36 +---
+ mm/memblock.c                           |   8 +-
+ mm/memory.c                             |   3 +-
+ mm/page_alloc.c                         |  25 +--
+ mm/page_ext.c                           |   2 +-
+ 66 files changed, 98 insertions(+), 898 deletions(-)
+ delete mode 100644 arch/alpha/include/asm/mmzone.h
+ delete mode 100644 arch/alpha/mm/numa.c
+ delete mode 100644 arch/arc/include/asm/mmzone.h
+
+
+base-commit: c4681547bcce777daf576925a966ffa824edd09d
 -- 
-With Best Regards,
-Andy Shevchenko
-
+2.28.0
 
 
 _______________________________________________
