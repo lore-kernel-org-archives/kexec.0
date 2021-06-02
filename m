@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 2 Jun 2021 17:03:01 +0300
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH 4/9] m68k: remove support for DISCONTIGMEM
-Message-ID: <YLePlSaXR0XvtZki@kernel.org>
-References: <20210602105348.13387-1-rppt@kernel.org>
- <20210602105348.13387-5-rppt@kernel.org>
- <CAMuHMdUUzMNcWNXCjwZmH-VBC+jH1ShBpeg6EBCdRXv3mwHxsQ@mail.gmail.com>
+Subject: Re: [PATCH 0/2] arm64: kexec_file_load vs memory reservations
+References: <20210429133533.1750721-1-maz@kernel.org>
+From: James Morse <james.morse@arm.com>
+Message-ID: <edb33645-864f-6a2d-ce57-c542f8b79209@arm.com>
+Date: Wed, 2 Jun 2021 15:22:00 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdUUzMNcWNXCjwZmH-VBC+jH1ShBpeg6EBCdRXv3mwHxsQ@mail.gmail.com>
+In-Reply-To: <20210429133533.1750721-1-maz@kernel.org>
+Content-Language: en-GB
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,95 +19,76 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, alpha <linux-alpha@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Linux MM <linux-mm@kvack.org>, linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, "open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux <sparclinux@vger.kernel.org>
+To: Marc Zyngier <maz@kernel.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh Sharma <bhsharma@redhat.com>, AKASHI Takahiro <takahiro.akashi@linaro.org>, kernel-team@android.com
 
-On Wed, Jun 02, 2021 at 01:25:24PM +0200, Geert Uytterhoeven wrote:
-> Hi Mike,
-> 
-> On Wed, Jun 2, 2021 at 12:54 PM Mike Rapoport <rppt@kernel.org> wrote:
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> > DISCONTIGMEM was replaced by FLATMEM with freeing of the unused memory map
-> > in v5.11.
-> >
-> > Remove the support for DISCONTIGMEM entirely.
-> >
-> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> Thanks for your patch!
-> 
-> Reviewed-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> 
-> > --- a/arch/m68k/include/asm/page_mm.h
-> > +++ b/arch/m68k/include/asm/page_mm.h
-> > @@ -126,25 +126,7 @@ static inline void *__va(unsigned long x)
-> >
-> >  extern int m68k_virt_to_node_shift;
-> >
-> > -#ifndef CONFIG_DISCONTIGMEM
-> >  #define __virt_to_node(addr)   (&pg_data_map[0])
-> 
-> With pg_data_map[] removed, this definition can go as well.
-> Seems to be a leftover from 1008a11590b966b4 ("m68k: switch to MEMBLOCK
->  + NO_BOOTMEM")
-> 
-> There are a few more:
-> arch/m68k/include/asm/mmzone.h:extern pg_data_t pg_data_map[];
-> arch/m68k/include/asm/mmzone.h:#define NODE_DATA(nid)
-> (&pg_data_map[nid])
+Hi Marc,
 
-It seems that arch/m68k/include/asm/mmzone.h can be simply removed.
- 
-> > -#else
-> > -extern struct pglist_data *pg_data_table[];
-> > -
-> > -static inline __attribute_const__ int __virt_to_node_shift(void)
-> > -{
-> > -       int shift;
-> > -
-> > -       asm (
-> > -               "1:     moveq   #0,%0\n"
-> > -               m68k_fixup(%c1, 1b)
-> > -               : "=d" (shift)
-> > -               : "i" (m68k_fixup_vnode_shift));
-> > -       return shift;
-> > -}
-> > -
-> > -#define __virt_to_node(addr)   (pg_data_table[(unsigned long)(addr) >> __virt_to_node_shift()])
-> > -#endif
+On 29/04/2021 14:35, Marc Zyngier wrote:
+> It recently became apparent that using kexec with kexec_file_load() on
+> arm64 is pretty similar to playing Russian roulette.
 > 
-> > --- a/arch/m68k/mm/init.c
-> > +++ b/arch/m68k/mm/init.c
-> > @@ -44,28 +44,8 @@ EXPORT_SYMBOL(empty_zero_page);
-> >
-> >  int m68k_virt_to_node_shift;
-> >
-> > -#ifdef CONFIG_DISCONTIGMEM
-> > -pg_data_t pg_data_map[MAX_NUMNODES];
-> > -EXPORT_SYMBOL(pg_data_map);
-> > -
-> > -pg_data_t *pg_data_table[65];
-> > -EXPORT_SYMBOL(pg_data_table);
-> > -#endif
-> > -
+> Depending on the amount of memory, the HW supported and the firmware
+> interface used, your secondary kernel may overwrite critical memory
+> regions without which the secondary kernel cannot boot (the GICv3 LPI
+> tables being a prime example of such reserved regions).
 > 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> 
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
+> It turns out that there is at least two ways for reserved memory
+> regions to be described to kexec: /proc/iomem for the userspace
+> implementation, and memblock.reserved for kexec_file. 
 
--- 
-Sincerely yours,
-Mike.
+One is spilled into the other by request_standard_resources()...
+
+
+> And of course,
+> our LPI tables are only reserved using the resource tree, leading to
+> the aforementioned stamping.
+
+Presumably well after efi_init() has run...
+
+> Similar things could happen with ACPI tables as well.
+
+efi_init() calls reserve_regions(), which has:
+|	/* keep ACPI reclaim memory intact for kexec etc. */
+|	if (md->type == EFI_ACPI_RECLAIM_MEMORY)
+|		memblock_reserve(paddr, size);
+
+This is also what stops mm from allocating them, as memblock-reserved gets copied into the
+PG_Reserved flag by free_low_memory_core_early()'s calls to reserve_bootmem_region().
+
+Is your machines firmware putting them in a region with a different type?
+
+(The UEFI spec has something to say: see 2.3.6 "AArch64 Platforms":
+| ACPI Tables loaded at boot time can be contained in memory of type EfiACPIReclaimMemory
+| (recommended) or EfiACPIMemoryNVS
+
+NVS would fail the is_usable_memory() check earlier, so gets treated as nomap)
+
+
+Thanks,
+
+James
+
+> On my 24xA53 system artificially limited to 256MB of RAM (yes, it
+> boots with that little memory), trying to kexec a secondary kernel
+> failed every times. I can only presume that this was mostly tested
+> using kdump, which preserves the entire kernel memory range.
+> 
+> This small series aims at triggering a discussion on what are the
+> expectations for kexec_file, and whether we should unify the two
+> reservation mechanisms.
+> 
+> And in the meantime, it gets things going...
+> 
+> Marc Zyngier (2):
+>   firmware/efi: Tell memblock about EFI reservations
+>   ACPI: arm64: Reserve the ACPI tables in memblock
+> 
+>  arch/arm64/kernel/acpi.c   |  1 +
+>  drivers/firmware/efi/efi.c | 23 ++++++++++++++++++++++-
+>  2 files changed, 23 insertions(+), 1 deletion(-)
+> 
+
 
 _______________________________________________
 kexec mailing list
