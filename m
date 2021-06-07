@@ -1,17 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lq8vc-001l5s-Qp
- for kexec@lists.infradead.org; Mon, 07 Jun 2021 06:40:07 +0000
-Date: Mon, 7 Jun 2021 14:02:03 +0800
-From: Coiby Xu <coxu@redhat.com>
-Subject: Re: [PATCH]  add support for zstd
-Message-ID: <20210607060203.jdxw6czcydjwu7yc@Rk>
-References: <202106011651268624715@zte.com.cn>
- <TYYPR01MB6777A2598D252675453921A3DD389@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <TYYPR01MB6777A2598D252675453921A3DD389@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-Content-Disposition: inline
+References: <20210604064916.26580-1-rppt@kernel.org>
+In-Reply-To: <20210604064916.26580-1-rppt@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 7 Jun 2021 10:44:45 +0200
+Message-ID: <CAMuHMdWuOk2LBJunCsCjzjYnBDs1rZh_x=ez7N=gjYv_ETMAcQ@mail.gmail.com>
+Subject: Re: [PATCH v2 0/9] Remove DISCINTIGMEM memory model
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,121 +14,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HAGIO =?utf-8?B?S0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
-Cc: "yang.yang29@zte.com.cn" <yang.yang29@zte.com.cn>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "zhang.yunkai@zte.com.cn" <zhang.yunkai@zte.com.cn>, "zhang.wenya1@zte.com.cn" <zhang.wenya1@zte.com.cn>, RuiRui Yang <ruyang@redhat.com>, Kairui Song <kasong@redhat.com>
+To: Mike Rapoport <rppt@kernel.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, alpha <linux-alpha@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Linux MM <linux-mm@kvack.org>, linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, "open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux <sparclinux@vger.kernel.org>
 
-T24gTW9uLCBKdW4gMDcsIDIwMjEgYXQgMDE6MjU6NDdBTSArMDAwMCwgSEFHSU8gS0FaVUhJVE8o
-6JCp5bC+IOS4gOS7gSkgd3JvdGU6Cj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+PiBEYXRl
-OiBUdWUsIDEgSnVuIDIwMjEgMTU6NDM6MDAgKzA4MDAKPj4gU3ViamVjdDogW1BBVENIXSBhZGQg
-c3VwcG9ydCBmb3IgenN0ZAo+Pgo+PiBBZGQgc3VwcG9ydCBmb3IgenN0ZAo+Cj5UaGFua3MgZm9y
-IHRoZSBwYXRjaCwgYnV0IHdlJ3ZlIHdvcmtlZCBvbiB0aGUgenN0ZCBzdXBwb3J0IGJhc2VkIG9u
-Cj50aGVzZSB0ZXN0IHBhdGNoZXM6Cj5odHRwczovL2dpdGh1Yi5jb20vay1oYWdpby9tYWtlZHVt
-cGZpbGUvY29tbWl0L2Y2ZWFmMjQyNGY0MWQ4ZTlhZjQwZjdjZTY3ZTBmNTJiMzg3MzExYWYKPmh0
-dHBzOi8vZ2l0aHViLmNvbS9rLWhhZ2lvL2NyYXNoL2NvbW1pdC81YzU1YzM4MDEyMGQ3YjdkNDUw
-ZTA3YzQ2MDVhYWYzMzBmNjIxOWRjCj4KPkkgd291bGQgbGlrZSB0byBwcm9jZWVkIHdpdGggdGhv
-c2UsIHBsZWFzZSB3YWl0IGZvciBhIHdoaWxlLgo+Cj5Db2lieSwgZG8geW91IGhhdmUgYW55IHBh
-dGNoIHlvdSBjYW4gc2hhcmUgYW5kIGhvdyBpcyB0aGUgc3RhdGU/Cj5JSVJDLCB5b3VyIGRyYWZ0
-IHBhdGNoZXMgc3VwcG9ydGVkIGFsc28gZGVjb21wcmVzc2lvbiBldGMuCgpUaGUgbGF0ZXN0IHdv
-cmsgY2FuIGJlIGZvdW5kIG9uCmh0dHBzOi8vZ2l0aHViLmNvbS9jb2lieS9tYWtlZHVtcGZpbGUv
-dHJlZS96c3RkX2NvbnRleHQuIEkndmUgZG9uZQpzb21lIHNpbXBsZSB0ZXN0cyBmb2xsb3dpbmcg
-eW91ciBwcmV2aW91cyBzdWdnZXN0aW9ucy4gQnV0IEkgc3RpbGwgbmVlZAp0byBkbyBzb21lIHRl
-c3RzIG9uIHNvbWUgaHVnZSB2bWNvcmVzIHRvIHByb3ZpZGUgYSBiZW5jaG1hcmsgYXMKc3VnZ2Vz
-dGVkIGJ5IERhdmUuCgo+Cj5UaGFua3MsCj5LYXp1Cj4KPj4KPj4gU2lnbmVkLW9mZi1ieTogWmhh
-bmcgWXVua2FpIDx6aGFuZy55dW5rYWlAenRlLmNvbS5jbj4KPj4gLS0tCj4+ICBNYWtlZmlsZSAg
-ICAgICB8ICA1ICsrKysrCj4+ICBkaXNrZHVtcF9tb2QuaCB8ICAxICsKPj4gIG1ha2VkdW1wZmls
-ZS5jIHwgMzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrLS0tLS0tCj4+ICBtYWtlZHVt
-cGZpbGUuaCB8ICAxICsKPj4gIDQgZmlsZXMgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKSwgNiBk
-ZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL01ha2VmaWxlIGIvTWFrZWZpbGUKPj4gaW5k
-ZXggNWQ2MWE2OS4uNzI1YzE4NiAxMDA2NDQKPj4gLS0tIGEvTWFrZWZpbGUKPj4gKysrIGIvTWFr
-ZWZpbGUKPj4gQEAgLTY4LDYgKzY4LDExIEBAIGVuZGlmCj4+ICBDRkxBR1MgKz0gLURVU0VTTkFQ
-UFkKPj4gIGVuZGlmCj4+Cj4+ICtpZmVxICgkKFVTRVpTVEQpLCBvbikKPj4gK0xJQlMgOj0gLWx6
-c3RkICQoTElCUykKPj4gK0NGTEFHUyArPSAtRFVTRVpTVEQKPj4gK2VuZGlmCj4+ICsKPj4gIExJ
-QlMgOj0gJChMSUJTKSAtbHB0aHJlYWQKPj4KPj4gIHRyeS1ydW4gPSAkKHNoZWxsIHNldCAtZTsg
-ICAgICBcCj4+IGRpZmYgLS1naXQgYS9kaXNrZHVtcF9tb2QuaCBiL2Rpc2tkdW1wX21vZC5oCj4+
-IGluZGV4IDM3MzM5NTMuLmZmZDlhYjIgMTAwNjQ0Cj4+IC0tLSBhL2Rpc2tkdW1wX21vZC5oCj4+
-ICsrKyBiL2Rpc2tkdW1wX21vZC5oCj4+IEBAIC05OCw2ICs5OCw3IEBAIHN0cnVjdCBrZHVtcF9z
-dWJfaGVhZGVyIHsKPj4gICNkZWZpbmUgRFVNUF9ESF9DT01QUkVTU0VEX0lOQ09NUExFVEUgIDB4
-OAo+PiAgICAgICAgICAgICAgICAgICAgIC8qIGluZGljYXRlIGFuIGluY29tcGxldGUgZHVtcGZp
-bGUgKi8KPj4gICNkZWZpbmUgRFVNUF9ESF9FWENMVURFRF9WTUVNTUFQIDB4MTAgIC8qIHVudXNl
-ZCB2bWVtbWFwIHBhZ2VzIGFyZSBleGNsdWRlZCAqLwo+PiArI2RlZmluZSBEVU1QX0RIX0NPTVBS
-RVNTRURfWlNURCAweDIwCj4+Cj4+ICAvKiBkZXNjcmlwdG9yIG9mIGVhY2ggcGFnZSBmb3Igdm1j
-b3JlICovCj4+ICB0eXBlZGVmIHN0cnVjdCBwYWdlX2Rlc2Mgewo+PiBkaWZmIC0tZ2l0IGEvbWFr
-ZWR1bXBmaWxlLmMgYi9tYWtlZHVtcGZpbGUuYwo+PiBpbmRleCA4OTRjODhlLi4zYjU4OGMzIDEw
-MDY0NAo+PiAtLS0gYS9tYWtlZHVtcGZpbGUuYwo+PiArKysgYi9tYWtlZHVtcGZpbGUuYwo+PiBA
-QCAtMjYsNiArMjYsOSBAQAo+PiAgI2luY2x1ZGUgPGxpbWl0cy5oPgo+PiAgI2luY2x1ZGUgPGFz
-c2VydC5oPgo+PiAgI2luY2x1ZGUgPHpsaWIuaD4KPj4gKyNpZmRlZiBVU0VaU1RECj4+ICsjaW5j
-bHVkZSA8enN0ZC5oPgo+PiArI2VuZGlmCj4+Cj4+ICBzdHJ1Y3Qgc3ltYm9sX3RhYmxlICAgIHN5
-bWJvbF90YWJsZTsKPj4gIHN0cnVjdCBzaXplX3RhYmxlICBzaXplX3RhYmxlOwo+PiBAQCAtMjk2
-LDEwICsyOTksMTAgQEAgaXNfY2FjaGVfcGFnZSh1bnNpZ25lZCBsb25nIGZsYWdzKQo+PiAgc3Rh
-dGljIGlubGluZSB1bnNpZ25lZCBsb25nCj4+ICBjYWxjdWxhdGVfbGVuX2J1Zl9vdXQobG9uZyBw
-YWdlX3NpemUpCj4+ICB7Cj4+IC0gICB1bnNpZ25lZCBsb25nIGxlbl9idWZfb3V0X3psaWIsIGxl
-bl9idWZfb3V0X2x6bywgbGVuX2J1Zl9vdXRfc25hcHB5Owo+PiArICAgdW5zaWduZWQgbG9uZyBs
-ZW5fYnVmX291dF96bGliLCBsZW5fYnVmX291dF9sem8sIGxlbl9idWZfb3V0X3NuYXBweSwgbGVu
-X2J1Zl9vdXRfenN0ZDsKPj4gICAgIHVuc2lnbmVkIGxvbmcgbGVuX2J1Zl9vdXQ7Cj4+Cj4+IC0g
-ICBsZW5fYnVmX291dF96bGliID0gbGVuX2J1Zl9vdXRfbHpvID0gbGVuX2J1Zl9vdXRfc25hcHB5
-ID0gMDsKPj4gKyAgIGxlbl9idWZfb3V0X3psaWIgPSBsZW5fYnVmX291dF9sem8gPSBsZW5fYnVm
-X291dF9zbmFwcHkgPSBsZW5fYnVmX291dF96c3RkID0gMDsKPj4KPj4gICNpZmRlZiBVU0VMWk8K
-Pj4gICAgIGxlbl9idWZfb3V0X2x6byA9IHBhZ2Vfc2l6ZSArIHBhZ2Vfc2l6ZSAvIDE2ICsgNjQg
-KyAzOwo+PiBAQCAtMzA5LDExICszMTIsMTQgQEAgY2FsY3VsYXRlX2xlbl9idWZfb3V0KGxvbmcg
-cGFnZV9zaXplKQo+PiAgICAgbGVuX2J1Zl9vdXRfc25hcHB5ID0gc25hcHB5X21heF9jb21wcmVz
-c2VkX2xlbmd0aChwYWdlX3NpemUpOwo+PiAgI2VuZGlmCj4+Cj4+ICsjaWZkZWYgVVNFWlNURAo+
-PiArICAgbGVuX2J1Zl9vdXRfenN0ZCA9IFpTVERfY29tcHJlc3NCb3VuZChwYWdlX3NpemUpOwo+
-PiArI2VuZGlmCj4+ICsKPj4gICAgIGxlbl9idWZfb3V0X3psaWIgPSBjb21wcmVzc0JvdW5kKHBh
-Z2Vfc2l6ZSk7Cj4+Cj4+IC0gICBsZW5fYnVmX291dCA9IE1BWChsZW5fYnVmX291dF96bGliLAo+
-PiAtICAgICAgICAgICAgIE1BWChsZW5fYnVmX291dF9sem8sCj4+IC0gICAgICAgICAgICAgICAg
-IGxlbl9idWZfb3V0X3NuYXBweSkpOwo+PiArICAgbGVuX2J1Zl9vdXQgPSBNQVgoTUFYKGxlbl9i
-dWZfb3V0X3psaWIsbGVuX2J1Zl9vdXRfenN0ZCksCj4+ICsgICAgICAgICAgIE1BWChsZW5fYnVm
-X291dF9sem8sbGVuX2J1Zl9vdXRfc25hcHB5KSk7Cj4+Cj4+ICAgICByZXR1cm4gbGVuX2J1Zl9v
-dXQ7Cj4+ICB9Cj4+IEBAIC03MjM1LDYgKzcyNDEsMTAgQEAgd3JpdGVfa2R1bXBfaGVhZGVyKHZv
-aWQpCj4+Cj4+ICAgICBpZiAoaW5mby0+ZmxhZ19jb21wcmVzcyAmIERVTVBfREhfQ09NUFJFU1NF
-RF9aTElCKQo+PiAgICAgICAgIGRoLT5zdGF0dXMgfD0gRFVNUF9ESF9DT01QUkVTU0VEX1pMSUI7
-Cj4+ICsjaWZkZWYgVVNFWlNURAo+PiArICAgZWxzZSBpZiAoaW5mby0+ZmxhZ19jb21wcmVzcyAm
-IERVTVBfREhfQ09NUFJFU1NFRF9aU1REKQo+PiArICAgICAgIGRoLT5zdGF0dXMgfD0gRFVNUF9E
-SF9DT01QUkVTU0VEX1pTVEQ7Cj4+ICsjZW5kaWYKPj4gICNpZmRlZiBVU0VMWk8KPj4gICAgIGVs
-c2UgaWYgKGluZm8tPmZsYWdfY29tcHJlc3MgJiBEVU1QX0RIX0NPTVBSRVNTRURfTFpPKQo+PiAg
-ICAgICAgIGRoLT5zdGF0dXMgfD0gRFVNUF9ESF9DT01QUkVTU0VEX0xaTzsKPj4gQEAgLTg1ODks
-NiArODU5OSwxNyBAQCB3cml0ZV9rZHVtcF9wYWdlc19jeWNsaWMoc3RydWN0IGNhY2hlX2RhdGEg
-KmNkX2hlYWRlciwgc3RydWN0IGNhY2hlX2RhdGEgKmNkX3BhZwo+PiAgICAgICAgICAgICAmJiAo
-c2l6ZV9vdXQgPCBpbmZvLT5wYWdlX3NpemUpKSB7Cj4+ICAgICAgICAgICAgIHBkLmZsYWdzID0g
-RFVNUF9ESF9DT01QUkVTU0VEX1pMSUI7Cj4+ICAgICAgICAgICAgIHBkLnNpemUgID0gc2l6ZV9v
-dXQ7Cj4+ICsjaWZkZWYgVVNFWlNURAo+PiArICAgICAgIH0gZWxzZSBpZiAoKGluZm8tPmZsYWdf
-Y29tcHJlc3MgJiBEVU1QX0RIX0NPTVBSRVNTRURfWlNURCkKPj4gKyAgICAgICAgICAgICAgICYm
-IChzaXplX291dCA9IGxlbl9idWZfb3V0KQo+PiArICAgICAgICAgICAgICAgJiYgKGxlbl9idWZf
-b3V0ID0gWlNURF9jb21wcmVzcygodm9pZCAqKWJ1Zl9vdXQsCj4+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIHNpemVfb3V0LCAoY29uc3Qgdm9pZCAqKWJ1ZiwgaW5mby0+cGFnZV9zaXplLCAxKSkK
-Pj4gKyAgICAgICAgICAgICAgICYmIChsZW5fYnVmX291dCA8IGluZm8tPnBhZ2Vfc2l6ZSkKPj4g
-KyAgICAgICAgICAgICApIHsKPj4gKyAgICAgICAgICAgQ0hFQ0tfWlNURChsZW5fYnVmX291dCk7
-Cj4+ICsgICAgICAgICAgIHBkLmZsYWdzID0gRFVNUF9ESF9DT01QUkVTU0VEX1pTVEQ7Cj4+ICsg
-ICAgICAgICAgIHBkLnNpemUgID0gbGVuX2J1Zl9vdXQ7Cj4+ICsjZW5kaWYKPj4gICNpZmRlZiBV
-U0VMWk8KPj4gICAgICAgICB9IGVsc2UgaWYgKGluZm8tPmZsYWdfbHpvX3N1cHBvcnQKPj4gICAg
-ICAgICAgICAgICAgJiYgKGluZm8tPmZsYWdfY29tcHJlc3MgJiBEVU1QX0RIX0NPTVBSRVNTRURf
-TFpPKQo+PiBAQCAtMTE2MDUsNyArMTE2MjYsNyBAQCBtYWluKGludCBhcmdjLCBjaGFyICphcmd2
-W10pCj4+Cj4+ICAgICBpbmZvLT5ibG9ja19vcmRlciA9IERFRkFVTFRfT1JERVI7Cj4+ICAgICBt
-ZXNzYWdlX2xldmVsID0gREVGQVVMVF9NU0dfTEVWRUw7Cj4+IC0gICB3aGlsZSAoKG9wdCA9IGdl
-dG9wdF9sb25nKGFyZ2MsIGFyZ3YsICJiOmNEZDplRUZmZzpoaTpscFJ2WHg6IiwgbG9uZ29wdHMs
-Cj4+ICsgICB3aGlsZSAoKG9wdCA9IGdldG9wdF9sb25nKGFyZ2MsIGFyZ3YsICJiOmNEZDplRUZm
-ZzpoaTpscFJ2WHg6eiIsIGxvbmdvcHRzLAo+PiAgICAgICAgIE5VTEwpKSAhPSAtMSkgewo+PiAg
-ICAgICAgIHN3aXRjaCAob3B0KSB7Cj4+ICAgICAgICAgY2FzZSBPUFRfQkxPQ0tfT1JERVI6Cj4+
-IEBAIC0xMTYxNyw2ICsxMTYzOCw5IEBAIG1haW4oaW50IGFyZ2MsIGNoYXIgKmFyZ3ZbXSkKPj4g
-ICAgICAgICBjYXNlIE9QVF9DT01QUkVTU19aTElCOgo+PiAgICAgICAgICAgICBpbmZvLT5mbGFn
-X2NvbXByZXNzID0gRFVNUF9ESF9DT01QUkVTU0VEX1pMSUI7Cj4+ICAgICAgICAgICAgIGJyZWFr
-Owo+PiArICAgICAgIGNhc2UgT1BUX0NPTVBSRVNTX1pTVEQ6Cj4+ICsgICAgICAgICAgIGluZm8t
-PmZsYWdfY29tcHJlc3MgPSBEVU1QX0RIX0NPTVBSRVNTRURfWlNURDsKPj4gKyAgICAgICAgICAg
-YnJlYWs7Cj4+ICAgICAgICAgY2FzZSBPUFRfREVCVUc6Cj4+ICAgICAgICAgICAgIGZsYWdfZGVi
-dWcgPSBUUlVFOwo+PiAgICAgICAgICAgICBicmVhazsKPj4gZGlmZiAtLWdpdCBhL21ha2VkdW1w
-ZmlsZS5oIGIvbWFrZWR1bXBmaWxlLmgKPj4gaW5kZXggNzkwNDZmMi4uM2ZiMWI1NyAxMDA2NDQK
-Pj4gLS0tIGEvbWFrZWR1bXBmaWxlLmgKPj4gKysrIGIvbWFrZWR1bXBmaWxlLmgKPj4gQEAgLTI0
-NjMsNiArMjQ2Myw3IEBAIHN0cnVjdCBlbGZfcHJzdGF0dXMgewo+PiAgI2RlZmluZSBPUFRfVkVS
-U0lPTiAgICAgICAgICAgICAndicKPj4gICNkZWZpbmUgT1BUX0VYQ0xVREVfWEVOX0RPTSAgICAg
-J1gnCj4+ICAjZGVmaW5lIE9QVF9WTUxJTlVYICAgICAgICAgICAgICd4Jwo+PiArI2RlZmluZSBP
-UFRfQ09NUFJFU1NfWlNURCAgICAgICAneicKPj4gICNkZWZpbmUgT1BUX1NUQVJUICAgICAgICAg
-ICAgICAgMjU2Cj4+ICAjZGVmaW5lIE9QVF9TUExJVCAgICAgICAgICAgICAgIE9QVF9TVEFSVCsw
-Cj4+ICAjZGVmaW5lIE9QVF9SRUFTU0VNQkxFICAgICAgICAgIE9QVF9TVEFSVCsxCj4+IC0tCj4+
-IDEuOC4zLjEKCi0tIApCZXN0IHJlZ2FyZHMsCkNvaWJ5CgoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3Rz
-LmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5m
-by9rZXhlYwo=
+Hi Mike,
+
+You may want to fix the DISCINTIGMEM typo in the subject for v3, unless
+you think that makes tracking series versions more complicated ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
