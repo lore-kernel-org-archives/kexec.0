@@ -1,11 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
 References: <20210604064916.26580-1-rppt@kernel.org>
-In-Reply-To: <20210604064916.26580-1-rppt@kernel.org>
+ <20210604064916.26580-9-rppt@kernel.org>
+In-Reply-To: <20210604064916.26580-9-rppt@kernel.org>
 From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Mon, 7 Jun 2021 10:44:45 +0200
-Message-ID: <CAMuHMdWuOk2LBJunCsCjzjYnBDs1rZh_x=ez7N=gjYv_ETMAcQ@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] Remove DISCINTIGMEM memory model
+Date: Mon, 7 Jun 2021 10:53:08 +0200
+Message-ID: <CAMuHMdVa29gUQAdHjKh-qDNpOJaoGwXtUkBM2qnOTi1DWV70xA@mail.gmail.com>
+Subject: Re: [PATCH v2 8/9] mm: replace CONFIG_NEED_MULTIPLE_NODES with
+ CONFIG_NUMA
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,8 +25,46 @@ Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Iv
 
 Hi Mike,
 
-You may want to fix the DISCINTIGMEM typo in the subject for v3, unless
-you think that makes tracking series versions more complicated ;-)
+On Fri, Jun 4, 2021 at 8:50 AM Mike Rapoport <rppt@kernel.org> wrote:
+> From: Mike Rapoport <rppt@linux.ibm.com>
+>
+> After removal of DISCINTIGMEM the NEED_MULTIPLE_NODES and NUMA
+> configuration options are equivalent.
+>
+> Drop CONFIG_NEED_MULTIPLE_NODES and use CONFIG_NUMA instead.
+>
+> Done with
+>
+>         $ sed -i 's/CONFIG_NEED_MULTIPLE_NODES/CONFIG_NUMA/' \
+>                 $(git grep -wl CONFIG_NEED_MULTIPLE_NODES)
+>         $ sed -i 's/NEED_MULTIPLE_NODES/NUMA/' \
+>                 $(git grep -wl NEED_MULTIPLE_NODES)
+>
+> with manual tweaks afterwards.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+
+Thanks for your patch!
+
+As you dropped the following hunk from v2 of PATCH 5/9, there's now
+one reference left of CONFIG_NEED_MULTIPLE_NODES
+(plus the discontigmem comment):
+
+-diff --git a/mm/memory.c b/mm/memory.c
+-index f3ffab9b9e39157b..fd0ebb63be3304f5 100644
+---- a/mm/memory.c
+-+++ b/mm/memory.c
+-@@ -90,8 +90,7 @@
+- #warning Unfortunate NUMA and NUMA Balancing config, growing
+page-frame for last_cpupid.
+- #endif
+-
+--#ifndef CONFIG_NEED_MULTIPLE_NODES
+--/* use the per-pgdat data instead for discontigmem - mbligh */
+-+#ifdef CONFIG_FLATMEM
+- unsigned long max_mapnr;
+- EXPORT_SYMBOL(max_mapnr);
+-
 
 Gr{oetje,eeting}s,
 
