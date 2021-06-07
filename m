@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410078.outbound.protection.outlook.com
- ([40.107.141.78] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lq41b-001Bgi-5V
- for kexec@lists.infradead.org; Mon, 07 Jun 2021 01:25:57 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH]  add support for zstd
-Date: Mon, 7 Jun 2021 01:25:47 +0000
-Message-ID: <TYYPR01MB6777A2598D252675453921A3DD389@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lq4KR-001Cyi-Jd
+ for kexec@lists.infradead.org; Mon, 07 Jun 2021 01:45:25 +0000
+Received: by mail-wm1-f71.google.com with SMTP id
+ n21-20020a7bcbd50000b02901a2ee0826aeso3426735wmi.7
+ for <kexec@lists.infradead.org>; Sun, 06 Jun 2021 18:45:17 -0700 (PDT)
+MIME-Version: 1.0
 References: <202106011651268624715@zte.com.cn>
 In-Reply-To: <202106011651268624715@zte.com.cn>
-Content-Language: ja-JP
-MIME-Version: 1.0
+From: RuiRui Yang <ruyang@redhat.com>
+Date: Mon, 7 Jun 2021 09:45:04 +0800
+Message-ID: <CALu+AoTwoM3+veM0+jV45sKdJbkmU7mJnBrxqV=gq8Nwb4E0wA@mail.gmail.com>
+Subject: Re: [PATCH] add support for zstd
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +25,17 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "yang.yang29@zte.com.cn" <yang.yang29@zte.com.cn>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Coiby Xu <coxu@redhat.com>
-Cc: "zhang.yunkai@zte.com.cn" <zhang.yunkai@zte.com.cn>, "zhang.wenya1@zte.com.cn" <zhang.wenya1@zte.com.cn>
+To: yang.yang29@zte.com.cn
+Cc: "zhang.wenya1@zte.com.cn" <zhang.wenya1@zte.com.cn>, "zhang.yunkai@zte.com.cn" <zhang.yunkai@zte.com.cn>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Coiby Xu <coxu@redhat.com>, Kairui Song <kasong@redhat.com>
 
------Original Message-----
+Add Coiby and Kairui since they also did some experiments on this.
+On Sun, 6 Jun 2021 at 15:07, <yang.yang29@zte.com.cn> wrote:
+>
 > Date: Tue, 1 Jun 2021 15:43:00 +0800
 > Subject: [PATCH] add support for zstd
-> 
+>
 > Add support for zstd
-
-Thanks for the patch, but we've worked on the zstd support based on
-these test patches:
-https://github.com/k-hagio/makedumpfile/commit/f6eaf2424f41d8e9af40f7ce67e0f52b387311af
-https://github.com/k-hagio/crash/commit/5c55c380120d7b7d450e07c4605aaf330f6219dc
-
-I would like to proceed with those, please wait for a while.
-
-Coiby, do you have any patch you can share and how is the state?
-IIRC, your draft patches supported also decompression etc.
-
-Thanks,
-Kazu
-
-> 
+>
 > Signed-off-by: Zhang Yunkai <zhang.yunkai@zte.com.cn>
 > ---
 >  Makefile       |  5 +++++
@@ -55,7 +43,7 @@ Kazu
 >  makedumpfile.c | 36 ++++++++++++++++++++++++++++++------
 >  makedumpfile.h |  1 +
 >  4 files changed, 37 insertions(+), 6 deletions(-)
-> 
+>
 > diff --git a/Makefile b/Makefile
 > index 5d61a69..725c186 100644
 > --- a/Makefile
@@ -63,14 +51,14 @@ Kazu
 > @@ -68,6 +68,11 @@ endif
 >  CFLAGS += -DUSESNAPPY
 >  endif
-> 
+>
 > +ifeq ($(USEZSTD), on)
 > +LIBS := -lzstd $(LIBS)
 > +CFLAGS += -DUSEZSTD
 > +endif
 > +
 >  LIBS := $(LIBS) -lpthread
-> 
+>
 >  try-run = $(shell set -e;      \
 > diff --git a/diskdump_mod.h b/diskdump_mod.h
 > index 3733953..ffd9ab2 100644
@@ -81,7 +69,7 @@ Kazu
 >                     /* indicate an incomplete dumpfile */
 >  #define DUMP_DH_EXCLUDED_VMEMMAP 0x10  /* unused vmemmap pages are excluded */
 > +#define DUMP_DH_COMPRESSED_ZSTD 0x20
-> 
+>
 >  /* descriptor of each page for vmcore */
 >  typedef struct page_desc {
 > diff --git a/makedumpfile.c b/makedumpfile.c
@@ -95,7 +83,7 @@ Kazu
 > +#ifdef USEZSTD
 > +#include <zstd.h>
 > +#endif
-> 
+>
 >  struct symbol_table    symbol_table;
 >  struct size_table  size_table;
 > @@ -296,10 +299,10 @@ is_cache_page(unsigned long flags)
@@ -105,32 +93,32 @@ Kazu
 > -   unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy;
 > +   unsigned long len_buf_out_zlib, len_buf_out_lzo, len_buf_out_snappy, len_buf_out_zstd;
 >     unsigned long len_buf_out;
-> 
+>
 > -   len_buf_out_zlib = len_buf_out_lzo = len_buf_out_snappy = 0;
 > +   len_buf_out_zlib = len_buf_out_lzo = len_buf_out_snappy = len_buf_out_zstd = 0;
-> 
+>
 >  #ifdef USELZO
 >     len_buf_out_lzo = page_size + page_size / 16 + 64 + 3;
 > @@ -309,11 +312,14 @@ calculate_len_buf_out(long page_size)
 >     len_buf_out_snappy = snappy_max_compressed_length(page_size);
 >  #endif
-> 
+>
 > +#ifdef USEZSTD
 > +   len_buf_out_zstd = ZSTD_compressBound(page_size);
 > +#endif
 > +
 >     len_buf_out_zlib = compressBound(page_size);
-> 
+>
 > -   len_buf_out = MAX(len_buf_out_zlib,
 > -             MAX(len_buf_out_lzo,
 > -                 len_buf_out_snappy));
 > +   len_buf_out = MAX(MAX(len_buf_out_zlib,len_buf_out_zstd),
 > +           MAX(len_buf_out_lzo,len_buf_out_snappy));
-> 
+>
 >     return len_buf_out;
 >  }
 > @@ -7235,6 +7241,10 @@ write_kdump_header(void)
-> 
+>
 >     if (info->flag_compress & DUMP_DH_COMPRESSED_ZLIB)
 >         dh->status |= DUMP_DH_COMPRESSED_ZLIB;
 > +#ifdef USEZSTD
@@ -159,7 +147,7 @@ Kazu
 >         } else if (info->flag_lzo_support
 >                && (info->flag_compress & DUMP_DH_COMPRESSED_LZO)
 > @@ -11605,7 +11626,7 @@ main(int argc, char *argv[])
-> 
+>
 >     info->block_order = DEFAULT_ORDER;
 >     message_level = DEFAULT_MSG_LEVEL;
 > -   while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:lpRvXx:", longopts,
@@ -190,7 +178,12 @@ Kazu
 >  #define OPT_SPLIT               OPT_START+0
 >  #define OPT_REASSEMBLE          OPT_START+1
 > --
-> 1.8.3.1
+> 1.8.3.1_______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+
+
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
