@@ -1,22 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-f49.google.com ([209.85.208.49])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lqfpO-009mqk-4C
- for kexec@lists.infradead.org; Tue, 08 Jun 2021 17:47:54 +0000
-Received: by mail-ed1-f49.google.com with SMTP id b11so25541610edy.4
- for <kexec@lists.infradead.org>; Tue, 08 Jun 2021 10:47:47 -0700 (PDT)
-MIME-Version: 1.0
-References: <20210527150526.271941-1-pasha.tatashin@soleen.com>
- <20210527150526.271941-4-pasha.tatashin@soleen.com>
- <87sg28rx3c.wl-maz@kernel.org>
- <CA+CK2bDvsFX_s-G5tRcE1GreNW_xLTognosUFbPPgaUK7-cafQ@mail.gmail.com>
- <87r1hl22qm.wl-maz@kernel.org>
- <CA+CK2bBwd2+QB6qCWYQdC5x_Vkf7-64pr8UWJFoUkQgtfaAsHQ@mail.gmail.com>
-In-Reply-To: <CA+CK2bBwd2+QB6qCWYQdC5x_Vkf7-64pr8UWJFoUkQgtfaAsHQ@mail.gmail.com>
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Date: Tue, 8 Jun 2021 13:46:10 -0400
-Message-ID: <CA+CK2bB6YOmASnDJevgibdu_noDhEuBj1=5qhZ3uCdUjN_qrSg@mail.gmail.com>
-Subject: Re: [PATCH 03/18] arm64: hyp-stub: Move elx_sync into the vectors
+Date: Tue, 8 Jun 2021 14:14:10 -0700
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] crash_core, vmcoreinfo: Append 'SECTION_SIZE_BITS' to
+ vmcoreinfo
+Message-Id: <20210608141410.0026a925ba3a609b0dd4e560@linux-foundation.org>
+In-Reply-To: <20210608142432.GA587883@MiWiFi-R3L-srv>
+References: <20210608103359.84907-1-kernelfans@gmail.com>
+ <20210608142432.GA587883@MiWiFi-R3L-srv>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,35 +20,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Marc Zyngier <maz@kernel.org>
-Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
+To: Baoquan He <bhe@redhat.com>
+Cc: Pingfan Liu <kernelfans@gmail.com>, Bhupesh Sharma <bhupesh.sharma@linaro.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Dave Young <dyoung@redhat.com>, Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Jun 1, 2021 at 9:18 PM Pavel Tatashin <pasha.tatashin@soleen.com> wrote:
+On Tue, 8 Jun 2021 22:24:32 +0800 Baoquan He <bhe@redhat.com> wrote:
+
+> On 06/08/21 at 06:33am, Pingfan Liu wrote:
+> > As mentioned in kernel commit 1d50e5d0c505 ("crash_core, vmcoreinfo:
+> > Append 'MAX_PHYSMEM_BITS' to vmcoreinfo"), SECTION_SIZE_BITS in the
+> > formula:
+> >     #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+> > 
+> > Besides SECTIONS_SHIFT, SECTION_SIZE_BITS is also used to calculate
+> > PAGES_PER_SECTION in makedumpfile just like kernel.
+> > 
+> > Unfortunately, this arch-dependent macro SECTION_SIZE_BITS changes, e.g.
+> > recently in kernel commit f0b13ee23241 ("arm64/sparsemem: reduce
+> > SECTION_SIZE_BITS"). But user space wants a stable interface to get this
+> > info. Such info is impossible to be deduced from a crashdump vmcore.
+> > Hence append SECTION_SIZE_BITS to vmcoreinfo.
+> 
+> ...
 >
-> > > It cannot call mutate_to_vhe because #HVC_VHE_RESTART is not used
-> > > here. But, if it had to it would not work as we cannot return to the
-> > > old kernel text after relocation.
-> >
-> > OK, so you are happy with having a dangling branch pointing to
-> > nowhere? Something in me screams that it isn't a good idea, in
-> > general.
-> >
-> > If HVC_SOFT_RESTART is all you need, I'd rather you have a small stub
-> > that implements exactly that and nothing else. Feel free to extract it
-> > as a reusable macro if you want.
+> Add the discussion of the original thread in kexec ML for reference:
+> http://lists.infradead.org/pipermail/kexec/2021-June/022676.html
 
-Using macro won't help here to save kernel text. Optimally, we would
-want to use only one vector table to reduce kernel text memory usage.
-I could do that by overwriting sync entries in
-trans_pgd_copy_el2_vectors(). But, that would be ugly, as I would need
-to have some specific assumptions about what entries need to be
-overwritten. Therefore, I decided to move the vector table that we
-currently have in hibernate code, and make it common between kexec and
-hibernate; trans_pgd_copy_el2_vectors() will use that table's body to
-create copies.
+I added a Link: for this.
+ 
+> This looks good to me.
+> 
+> Acked-by: Baoquan He <bhe@redhat.com>
 
-Thanks,
-Pasha
+I'm thinking we should backport this at least to Fixes:f0b13ee23241. 
+But perhaps it's simpler to just backport it as far as possible, so I
+added a bare cc:stable with no Fixes:.  Thoughts?
 
 _______________________________________________
 kexec mailing list
