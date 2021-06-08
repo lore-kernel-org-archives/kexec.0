@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410043.outbound.protection.outlook.com
- ([40.107.141.43] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lqUtD-006f0S-82
- for kexec@lists.infradead.org; Tue, 08 Jun 2021 06:07:07 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile/arm64: get SECTIONS_SIZE_BITS from sysfs
-Date: Tue, 8 Jun 2021 06:06:58 +0000
-Message-ID: <TYYPR01MB67773DBBBFD1E8511E2A82F8DD379@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20210608031508.12447-1-piliu@redhat.com>
-In-Reply-To: <20210608031508.12447-1-piliu@redhat.com>
-Content-Language: ja-JP
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lqVM7-006jDZ-3y
+ for kexec@lists.infradead.org; Tue, 08 Jun 2021 06:36:56 +0000
+Received: by mail-il1-f198.google.com with SMTP id
+ o8-20020a92c0480000b02901ebb5960fb8so5005886ilf.17
+ for <kexec@lists.infradead.org>; Mon, 07 Jun 2021 23:36:52 -0700 (PDT)
 MIME-Version: 1.0
+References: <20210608031508.12447-1-piliu@redhat.com>
+ <TYYPR01MB67773DBBBFD1E8511E2A82F8DD379@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYYPR01MB67773DBBBFD1E8511E2A82F8DD379@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Tue, 8 Jun 2021 14:36:39 +0800
+Message-ID: <CAF+s44QENeo24ijWGv7WhjddYat7HLQ7Wh4YdZ7B+o9F60i0uQ@mail.gmail.com>
+Subject: Re: [PATCH] makedumpfile/arm64: get SECTIONS_SIZE_BITS from sysfs
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,82 +22,57 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
------Original Message-----
-> On arm64, memory section size changes due to the kernel commit
-> f0b13ee23241 ("arm64/sparsemem: reduce SECTION_SIZE_BITS")
-> 
-> To tackle the compatibility, it is safe to read this info from sysfs
-> "/sys/devices/system/memory/block_size_bytes"
-
-Thanks for the patch, but the place where we should put/get such
-necessary information first is vmcoreinfo, which exists for that.
-Can we add an entry for the SECTIONS_SIZE_BITS there?
-
-If we use information from a runtime environment, makedumpfile cannot
-process vmcores/dumpfiles generated from other kernels than one that
-makedumpfile is running.
-
-Thanks,
-Kazu
-
-> 
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
-> To: kexec@lists.infradead.org
-> ---
->  arch/arm64.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64.c b/arch/arm64.c
-> index 1072178..2f6f5cf 100644
-> --- a/arch/arm64.c
-> +++ b/arch/arm64.c
-> @@ -424,6 +424,11 @@ get_page_offset_arm64(void)
->  int
->  get_machdep_info_arm64(void)
->  {
-> +	const char sys_path_section_sz[] = "/sys/devices/system/memory/block_size_bytes";
-> +	char memsection_sz_str[64] = { 0 };
-> +	unsigned long memsection_sz = 0;
-> +	FILE *fp;
-> +
->  	/* Check if va_bits is still not initialized. If still 0, call
->  	 * get_versiondep_info() to initialize the same.
->  	 */
-> @@ -451,7 +456,21 @@ get_machdep_info_arm64(void)
->  	}
-> 
->  	kimage_voffset = NUMBER(kimage_voffset);
-> -	info->section_size_bits = SECTIONS_SIZE_BITS;
-> +
-> +	fp = fopen(sys_path_section_sz, "r");
-> +	if (fp) {
-> +		int i;
-> +
-> +		fread(&memsection_sz_str, 64, 1, fp);
-> +		fclose(fp);
-> +		memsection_sz = strtol(memsection_sz_str, NULL, 16);
-> +		for (i = -1; memsection_sz != 0; i++)
-> +			memsection_sz >>= 1;
-> +		info->section_size_bits = i;
-> +	}
-> +	else {
-> +		info->section_size_bits = SECTIONS_SIZE_BITS;
-> +	}
-> 
->  	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
->  	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
-> --
-> 2.29.2
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBKdW4gOCwgMjAyMSBhdCAyOjA3IFBNIEhBR0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4
+gOS7gSkgPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6Cj4KPiAtLS0tLU9yaWdpbmFsIE1lc3Nh
+Z2UtLS0tLQo+ID4gT24gYXJtNjQsIG1lbW9yeSBzZWN0aW9uIHNpemUgY2hhbmdlcyBkdWUgdG8g
+dGhlIGtlcm5lbCBjb21taXQKPiA+IGYwYjEzZWUyMzI0MSAoImFybTY0L3NwYXJzZW1lbTogcmVk
+dWNlIFNFQ1RJT05fU0laRV9CSVRTIikKPiA+Cj4gPiBUbyB0YWNrbGUgdGhlIGNvbXBhdGliaWxp
+dHksIGl0IGlzIHNhZmUgdG8gcmVhZCB0aGlzIGluZm8gZnJvbSBzeXNmcwo+ID4gIi9zeXMvZGV2
+aWNlcy9zeXN0ZW0vbWVtb3J5L2Jsb2NrX3NpemVfYnl0ZXMiCj4KPiBUaGFua3MgZm9yIHRoZSBw
+YXRjaCwgYnV0IHRoZSBwbGFjZSB3aGVyZSB3ZSBzaG91bGQgcHV0L2dldCBzdWNoCj4gbmVjZXNz
+YXJ5IGluZm9ybWF0aW9uIGZpcnN0IGlzIHZtY29yZWluZm8sIHdoaWNoIGV4aXN0cyBmb3IgdGhh
+dC4KPiBDYW4gd2UgYWRkIGFuIGVudHJ5IGZvciB0aGUgU0VDVElPTlNfU0laRV9CSVRTIHRoZXJl
+Pwo+Ck9LLCBJIHdpbGwgc2VuZCBhIHBhdGNoIHRvIGtlcm5lbCBmb3IgaXQuCgpUaGFua3MsClBp
+bmdmYW4KCj4gSWYgd2UgdXNlIGluZm9ybWF0aW9uIGZyb20gYSBydW50aW1lIGVudmlyb25tZW50
+LCBtYWtlZHVtcGZpbGUgY2Fubm90Cj4gcHJvY2VzcyB2bWNvcmVzL2R1bXBmaWxlcyBnZW5lcmF0
+ZWQgZnJvbSBvdGhlciBrZXJuZWxzIHRoYW4gb25lIHRoYXQKPiBtYWtlZHVtcGZpbGUgaXMgcnVu
+bmluZy4KPgo+IFRoYW5rcywKPiBLYXp1Cj4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBQaW5nZmFu
+IExpdSA8cGlsaXVAcmVkaGF0LmNvbT4KPiA+IENjOiBLYXp1aGl0byBIYWdpbyA8ay1oYWdpby1h
+YkBuZWMuY29tPgo+ID4gVG86IGtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKPiA+IC0tLQo+ID4g
+IGFyY2gvYXJtNjQuYyB8IDIxICsrKysrKysrKysrKysrKysrKysrLQo+ID4gIDEgZmlsZSBjaGFu
+Z2VkLCAyMCBpbnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBh
+L2FyY2gvYXJtNjQuYyBiL2FyY2gvYXJtNjQuYwo+ID4gaW5kZXggMTA3MjE3OC4uMmY2ZjVjZiAx
+MDA2NDQKPiA+IC0tLSBhL2FyY2gvYXJtNjQuYwo+ID4gKysrIGIvYXJjaC9hcm02NC5jCj4gPiBA
+QCAtNDI0LDYgKzQyNCwxMSBAQCBnZXRfcGFnZV9vZmZzZXRfYXJtNjQodm9pZCkKPiA+ICBpbnQK
+PiA+ICBnZXRfbWFjaGRlcF9pbmZvX2FybTY0KHZvaWQpCj4gPiAgewo+ID4gKyAgICAgY29uc3Qg
+Y2hhciBzeXNfcGF0aF9zZWN0aW9uX3N6W10gPSAiL3N5cy9kZXZpY2VzL3N5c3RlbS9tZW1vcnkv
+YmxvY2tfc2l6ZV9ieXRlcyI7Cj4gPiArICAgICBjaGFyIG1lbXNlY3Rpb25fc3pfc3RyWzY0XSA9
+IHsgMCB9Owo+ID4gKyAgICAgdW5zaWduZWQgbG9uZyBtZW1zZWN0aW9uX3N6ID0gMDsKPiA+ICsg
+ICAgIEZJTEUgKmZwOwo+ID4gKwo+ID4gICAgICAgLyogQ2hlY2sgaWYgdmFfYml0cyBpcyBzdGls
+bCBub3QgaW5pdGlhbGl6ZWQuIElmIHN0aWxsIDAsIGNhbGwKPiA+ICAgICAgICAqIGdldF92ZXJz
+aW9uZGVwX2luZm8oKSB0byBpbml0aWFsaXplIHRoZSBzYW1lLgo+ID4gICAgICAgICovCj4gPiBA
+QCAtNDUxLDcgKzQ1NiwyMSBAQCBnZXRfbWFjaGRlcF9pbmZvX2FybTY0KHZvaWQpCj4gPiAgICAg
+ICB9Cj4gPgo+ID4gICAgICAga2ltYWdlX3ZvZmZzZXQgPSBOVU1CRVIoa2ltYWdlX3ZvZmZzZXQp
+Owo+ID4gLSAgICAgaW5mby0+c2VjdGlvbl9zaXplX2JpdHMgPSBTRUNUSU9OU19TSVpFX0JJVFM7
+Cj4gPiArCj4gPiArICAgICBmcCA9IGZvcGVuKHN5c19wYXRoX3NlY3Rpb25fc3osICJyIik7Cj4g
+PiArICAgICBpZiAoZnApIHsKPiA+ICsgICAgICAgICAgICAgaW50IGk7Cj4gPiArCj4gPiArICAg
+ICAgICAgICAgIGZyZWFkKCZtZW1zZWN0aW9uX3N6X3N0ciwgNjQsIDEsIGZwKTsKPiA+ICsgICAg
+ICAgICAgICAgZmNsb3NlKGZwKTsKPiA+ICsgICAgICAgICAgICAgbWVtc2VjdGlvbl9zeiA9IHN0
+cnRvbChtZW1zZWN0aW9uX3N6X3N0ciwgTlVMTCwgMTYpOwo+ID4gKyAgICAgICAgICAgICBmb3Ig
+KGkgPSAtMTsgbWVtc2VjdGlvbl9zeiAhPSAwOyBpKyspCj4gPiArICAgICAgICAgICAgICAgICAg
+ICAgbWVtc2VjdGlvbl9zeiA+Pj0gMTsKPiA+ICsgICAgICAgICAgICAgaW5mby0+c2VjdGlvbl9z
+aXplX2JpdHMgPSBpOwo+ID4gKyAgICAgfQo+ID4gKyAgICAgZWxzZSB7Cj4gPiArICAgICAgICAg
+ICAgIGluZm8tPnNlY3Rpb25fc2l6ZV9iaXRzID0gU0VDVElPTlNfU0laRV9CSVRTOwo+ID4gKyAg
+ICAgfQo+ID4KPiA+ICAgICAgIERFQlVHX01TRygia2ltYWdlX3ZvZmZzZXQgICA6ICVseFxuIiwg
+a2ltYWdlX3ZvZmZzZXQpOwo+ID4gICAgICAgREVCVUdfTVNHKCJzZWN0aW9uX3NpemVfYml0czog
+JWxkXG4iLCBpbmZvLT5zZWN0aW9uX3NpemVfYml0cyk7Cj4gPiAtLQo+ID4gMi4yOS4yCj4KCgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWls
+aW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
