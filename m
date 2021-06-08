@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lqSDD-006EKd-1e
- for kexec@lists.infradead.org; Tue, 08 Jun 2021 03:15:32 +0000
-From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCH] makedumpfile/arm64: get SECTIONS_SIZE_BITS from sysfs
-Date: Tue,  8 Jun 2021 11:15:08 +0800
-Message-Id: <20210608031508.12447-1-piliu@redhat.com>
+Date: Tue, 8 Jun 2021 08:45:07 +0300
+From: Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v2 8/9] mm: replace CONFIG_NEED_MULTIPLE_NODES with
+ CONFIG_NUMA
+Message-ID: <YL8D47Ty8iXZJsK3@kernel.org>
+References: <20210604064916.26580-1-rppt@kernel.org>
+ <20210604064916.26580-9-rppt@kernel.org>
+ <CAMuHMdVa29gUQAdHjKh-qDNpOJaoGwXtUkBM2qnOTi1DWV70xA@mail.gmail.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVa29gUQAdHjKh-qDNpOJaoGwXtUkBM2qnOTi1DWV70xA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,64 +22,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Pingfan Liu <piliu@redhat.com>, Kazuhito Hagio <k-hagio-ab@nec.com>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Andrew Morton <akpm@linux-foundation.org>, Arnd Bergmann <arnd@arndb.de>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, alpha <linux-alpha@vger.kernel.org>, Linux-Arch <linux-arch@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Linux MM <linux-mm@kvack.org>, linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, arcml <linux-snps-arc@lists.infradead.org>, "open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux <sparclinux@vger.kernel.org>
 
-On arm64, memory section size changes due to the kernel commit
-f0b13ee23241 ("arm64/sparsemem: reduce SECTION_SIZE_BITS")
+Hi,
 
-To tackle the compatibility, it is safe to read this info from sysfs
-"/sys/devices/system/memory/block_size_bytes"
+On Mon, Jun 07, 2021 at 10:53:08AM +0200, Geert Uytterhoeven wrote:
+> Hi Mike,
+> 
+> On Fri, Jun 4, 2021 at 8:50 AM Mike Rapoport <rppt@kernel.org> wrote:
+> > From: Mike Rapoport <rppt@linux.ibm.com>
+> >
+> > After removal of DISCINTIGMEM the NEED_MULTIPLE_NODES and NUMA
+> > configuration options are equivalent.
+> >
+> > Drop CONFIG_NEED_MULTIPLE_NODES and use CONFIG_NUMA instead.
+> >
+> > Done with
+> >
+> >         $ sed -i 's/CONFIG_NEED_MULTIPLE_NODES/CONFIG_NUMA/' \
+> >                 $(git grep -wl CONFIG_NEED_MULTIPLE_NODES)
+> >         $ sed -i 's/NEED_MULTIPLE_NODES/NUMA/' \
+> >                 $(git grep -wl NEED_MULTIPLE_NODES)
+> >
+> > with manual tweaks afterwards.
+> >
+> > Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> 
+> Thanks for your patch!
+> 
+> As you dropped the following hunk from v2 of PATCH 5/9, there's now
+> one reference left of CONFIG_NEED_MULTIPLE_NODES
+> (plus the discontigmem comment):
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
-To: kexec@lists.infradead.org
----
- arch/arm64.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Aargh, indeed. Thanks for catching this.
 
-diff --git a/arch/arm64.c b/arch/arm64.c
-index 1072178..2f6f5cf 100644
---- a/arch/arm64.c
-+++ b/arch/arm64.c
-@@ -424,6 +424,11 @@ get_page_offset_arm64(void)
- int
- get_machdep_info_arm64(void)
- {
-+	const char sys_path_section_sz[] = "/sys/devices/system/memory/block_size_bytes";
-+	char memsection_sz_str[64] = { 0 };
-+	unsigned long memsection_sz = 0;
-+	FILE *fp;
-+
- 	/* Check if va_bits is still not initialized. If still 0, call
- 	 * get_versiondep_info() to initialize the same.
- 	 */
-@@ -451,7 +456,21 @@ get_machdep_info_arm64(void)
- 	}
+And I wondered why you suggested to fix spelling in cover letter for v3 :)
  
- 	kimage_voffset = NUMBER(kimage_voffset);
--	info->section_size_bits = SECTIONS_SIZE_BITS;
-+
-+	fp = fopen(sys_path_section_sz, "r");
-+	if (fp) {
-+		int i;
-+
-+		fread(&memsection_sz_str, 64, 1, fp);
-+		fclose(fp);
-+		memsection_sz = strtol(memsection_sz_str, NULL, 16);
-+		for (i = -1; memsection_sz != 0; i++)
-+			memsection_sz >>= 1;
-+		info->section_size_bits = i;
-+	}
-+	else {
-+		info->section_size_bits = SECTIONS_SIZE_BITS;
-+	}
- 
- 	DEBUG_MSG("kimage_voffset   : %lx\n", kimage_voffset);
- 	DEBUG_MSG("section_size_bits: %ld\n", info->section_size_bits);
+> -diff --git a/mm/memory.c b/mm/memory.c
+> -index f3ffab9b9e39157b..fd0ebb63be3304f5 100644
+> ---- a/mm/memory.c
+> -+++ b/mm/memory.c
+> -@@ -90,8 +90,7 @@
+> - #warning Unfortunate NUMA and NUMA Balancing config, growing
+> page-frame for last_cpupid.
+> - #endif
+> -
+> --#ifndef CONFIG_NEED_MULTIPLE_NODES
+> --/* use the per-pgdat data instead for discontigmem - mbligh */
+> -+#ifdef CONFIG_FLATMEM
+> - unsigned long max_mapnr;
+> - EXPORT_SYMBOL(max_mapnr);
+> -
+> 
+> Gr{oetje,eeting}s,
+> 
+>                         Geert
+> 
+> -- 
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+> 
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+>                                 -- Linus Torvalds
+
 -- 
-2.29.2
-
+Sincerely yours,
+Mike.
 
 _______________________________________________
 kexec mailing list
