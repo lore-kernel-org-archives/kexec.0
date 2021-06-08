@@ -1,19 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1310043.outbound.protection.outlook.com
- ([40.107.131.43] helo=APC01-SG2-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lqVyr-006q7Y-CX
- for kexec@lists.infradead.org; Tue, 08 Jun 2021 07:16:59 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile/arm64: get SECTIONS_SIZE_BITS from sysfs
-Date: Tue, 8 Jun 2021 07:16:51 +0000
-Message-ID: <TYYPR01MB6777BB462602AEAB26EE85A3DD379@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20210608031508.12447-1-piliu@redhat.com>
- <TYYPR01MB67773DBBBFD1E8511E2A82F8DD379@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAF+s44QENeo24ijWGv7WhjddYat7HLQ7Wh4YdZ7B+o9F60i0uQ@mail.gmail.com>
-In-Reply-To: <CAF+s44QENeo24ijWGv7WhjddYat7HLQ7Wh4YdZ7B+o9F60i0uQ@mail.gmail.com>
-Content-Language: ja-JP
+From: Mike Rapoport <rppt@kernel.org>
+Subject: [PATCH v3 0/9] Remove DISCONTIGMEM memory model
+Date: Tue,  8 Jun 2021 12:13:07 +0300
+Message-Id: <20210608091316.3622-1-rppt@kernel.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,74 +12,136 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gT24gVHVlLCBKdW4gOCwgMjAyMSBhdCAyOjA3
-IFBNIEhBR0lPIEtBWlVISVRPKOiQqeWwvuOAgOS4gOS7gSkgPGstaGFnaW8tYWJAbmVjLmNvbT4g
-d3JvdGU6DQo+ID4NCj4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gT24gYXJt
-NjQsIG1lbW9yeSBzZWN0aW9uIHNpemUgY2hhbmdlcyBkdWUgdG8gdGhlIGtlcm5lbCBjb21taXQN
-Cj4gPiA+IGYwYjEzZWUyMzI0MSAoImFybTY0L3NwYXJzZW1lbTogcmVkdWNlIFNFQ1RJT05fU0la
-RV9CSVRTIikNCj4gPiA+DQo+ID4gPiBUbyB0YWNrbGUgdGhlIGNvbXBhdGliaWxpdHksIGl0IGlz
-IHNhZmUgdG8gcmVhZCB0aGlzIGluZm8gZnJvbSBzeXNmcw0KPiA+ID4gIi9zeXMvZGV2aWNlcy9z
-eXN0ZW0vbWVtb3J5L2Jsb2NrX3NpemVfYnl0ZXMiDQo+ID4NCj4gPiBUaGFua3MgZm9yIHRoZSBw
-YXRjaCwgYnV0IHRoZSBwbGFjZSB3aGVyZSB3ZSBzaG91bGQgcHV0L2dldCBzdWNoDQo+ID4gbmVj
-ZXNzYXJ5IGluZm9ybWF0aW9uIGZpcnN0IGlzIHZtY29yZWluZm8sIHdoaWNoIGV4aXN0cyBmb3Ig
-dGhhdC4NCj4gPiBDYW4gd2UgYWRkIGFuIGVudHJ5IGZvciB0aGUgU0VDVElPTlNfU0laRV9CSVRT
-IHRoZXJlPw0KPiA+DQo+IE9LLCBJIHdpbGwgc2VuZCBhIHBhdGNoIHRvIGtlcm5lbCBmb3IgaXQu
-DQoNCkZXSVcsIG15IGV4cGVjdGF0aW9uIGlzIHRoYXQgaXQgd2lsbCBiZSBhZGRlZCB0byBrZXJu
-ZWwvY3Jhc2hfY29yZS5jLCBpLmUuDQpub3Qgb25seSBmb3IgYXJtNjQsIGJlY2F1c2Ugc29tZSBh
-cmNoaXRlY3R1cmVzIGxpa2UgYXJtIGFuZCBtaXBzIGFsc28gaGF2ZQ0KbXVsdGlwbGUgdmFsdWVz
-IGxpa2UgYXJtNjQgYW5kIHRoYXQgd2lsbCBoZWxwIHVzZSBtYWtlZHVtcGZpbGUsIGFuZCBhbHNv
-DQp3aWxsIG1ha2UgaXQgYWRhcHRhYmxlIHRvIGZ1dHVyZSBjaGFuZ2VzIG9uIGFsbCBhcmNoaXRl
-Y3R1cmVzLg0KDQokIGdpdCBncmVwIFNFQ1RJT05fU0laRV9CSVRTIGFyY2gvDQoNCmFyY2gvYXJt
-L2luY2x1ZGUvYXNtL3NwYXJzZW1lbS5oOiNkZWZpbmUgU0VDVElPTl9TSVpFX0JJVFMgICAgICAy
-OA0KYXJjaC9hcm0vbWFjaC1ycGMvaW5jbHVkZS9tYWNoL21lbW9yeS5oOiNkZWZpbmUgU0VDVElP
-Tl9TSVpFX0JJVFMgICAgICAgMjYNCmFyY2gvYXJtL21hY2gtc2ExMTAwL2luY2x1ZGUvbWFjaC9t
-ZW1vcnkuaDojZGVmaW5lIFNFQ1RJT05fU0laRV9CSVRTICAgIDI3DQoNCmFyY2gvbWlwcy9pbmNs
-dWRlL2FzbS9zcGFyc2VtZW0uaDojIGRlZmluZSBTRUNUSU9OX1NJWkVfQklUUyAgICAyOQ0KYXJj
-aC9taXBzL2luY2x1ZGUvYXNtL3NwYXJzZW1lbS5oOiMgZGVmaW5lIFNFQ1RJT05fU0laRV9CSVRT
-ICAgIDI4DQoNClRoYW5rcywNCkthenUNCg0KPiANCj4gVGhhbmtzLA0KPiBQaW5nZmFuDQo+IA0K
-PiA+IElmIHdlIHVzZSBpbmZvcm1hdGlvbiBmcm9tIGEgcnVudGltZSBlbnZpcm9ubWVudCwgbWFr
-ZWR1bXBmaWxlIGNhbm5vdA0KPiA+IHByb2Nlc3Mgdm1jb3Jlcy9kdW1wZmlsZXMgZ2VuZXJhdGVk
-IGZyb20gb3RoZXIga2VybmVscyB0aGFuIG9uZSB0aGF0DQo+ID4gbWFrZWR1bXBmaWxlIGlzIHJ1
-bm5pbmcuDQo+ID4NCj4gPiBUaGFua3MsDQo+ID4gS2F6dQ0KPiA+DQo+ID4gPg0KPiA+ID4gU2ln
-bmVkLW9mZi1ieTogUGluZ2ZhbiBMaXUgPHBpbGl1QHJlZGhhdC5jb20+DQo+ID4gPiBDYzogS2F6
-dWhpdG8gSGFnaW8gPGstaGFnaW8tYWJAbmVjLmNvbT4NCj4gPiA+IFRvOiBrZXhlY0BsaXN0cy5p
-bmZyYWRlYWQub3JnDQo+ID4gPiAtLS0NCj4gPiA+ICBhcmNoL2FybTY0LmMgfCAyMSArKysrKysr
-KysrKysrKysrKysrKy0NCj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygrKSwg
-MSBkZWxldGlvbigtKQ0KPiA+ID4NCj4gPiA+IGRpZmYgLS1naXQgYS9hcmNoL2FybTY0LmMgYi9h
-cmNoL2FybTY0LmMNCj4gPiA+IGluZGV4IDEwNzIxNzguLjJmNmY1Y2YgMTAwNjQ0DQo+ID4gPiAt
-LS0gYS9hcmNoL2FybTY0LmMNCj4gPiA+ICsrKyBiL2FyY2gvYXJtNjQuYw0KPiA+ID4gQEAgLTQy
-NCw2ICs0MjQsMTEgQEAgZ2V0X3BhZ2Vfb2Zmc2V0X2FybTY0KHZvaWQpDQo+ID4gPiAgaW50DQo+
-ID4gPiAgZ2V0X21hY2hkZXBfaW5mb19hcm02NCh2b2lkKQ0KPiA+ID4gIHsNCj4gPiA+ICsgICAg
-IGNvbnN0IGNoYXIgc3lzX3BhdGhfc2VjdGlvbl9zeltdID0gIi9zeXMvZGV2aWNlcy9zeXN0ZW0v
-bWVtb3J5L2Jsb2NrX3NpemVfYnl0ZXMiOw0KPiA+ID4gKyAgICAgY2hhciBtZW1zZWN0aW9uX3N6
-X3N0cls2NF0gPSB7IDAgfTsNCj4gPiA+ICsgICAgIHVuc2lnbmVkIGxvbmcgbWVtc2VjdGlvbl9z
-eiA9IDA7DQo+ID4gPiArICAgICBGSUxFICpmcDsNCj4gPiA+ICsNCj4gPiA+ICAgICAgIC8qIENo
-ZWNrIGlmIHZhX2JpdHMgaXMgc3RpbGwgbm90IGluaXRpYWxpemVkLiBJZiBzdGlsbCAwLCBjYWxs
-DQo+ID4gPiAgICAgICAgKiBnZXRfdmVyc2lvbmRlcF9pbmZvKCkgdG8gaW5pdGlhbGl6ZSB0aGUg
-c2FtZS4NCj4gPiA+ICAgICAgICAqLw0KPiA+ID4gQEAgLTQ1MSw3ICs0NTYsMjEgQEAgZ2V0X21h
-Y2hkZXBfaW5mb19hcm02NCh2b2lkKQ0KPiA+ID4gICAgICAgfQ0KPiA+ID4NCj4gPiA+ICAgICAg
-IGtpbWFnZV92b2Zmc2V0ID0gTlVNQkVSKGtpbWFnZV92b2Zmc2V0KTsNCj4gPiA+IC0gICAgIGlu
-Zm8tPnNlY3Rpb25fc2l6ZV9iaXRzID0gU0VDVElPTlNfU0laRV9CSVRTOw0KPiA+ID4gKw0KPiA+
-ID4gKyAgICAgZnAgPSBmb3BlbihzeXNfcGF0aF9zZWN0aW9uX3N6LCAiciIpOw0KPiA+ID4gKyAg
-ICAgaWYgKGZwKSB7DQo+ID4gPiArICAgICAgICAgICAgIGludCBpOw0KPiA+ID4gKw0KPiA+ID4g
-KyAgICAgICAgICAgICBmcmVhZCgmbWVtc2VjdGlvbl9zel9zdHIsIDY0LCAxLCBmcCk7DQo+ID4g
-PiArICAgICAgICAgICAgIGZjbG9zZShmcCk7DQo+ID4gPiArICAgICAgICAgICAgIG1lbXNlY3Rp
-b25fc3ogPSBzdHJ0b2wobWVtc2VjdGlvbl9zel9zdHIsIE5VTEwsIDE2KTsNCj4gPiA+ICsgICAg
-ICAgICAgICAgZm9yIChpID0gLTE7IG1lbXNlY3Rpb25fc3ogIT0gMDsgaSsrKQ0KPiA+ID4gKyAg
-ICAgICAgICAgICAgICAgICAgIG1lbXNlY3Rpb25fc3ogPj49IDE7DQo+ID4gPiArICAgICAgICAg
-ICAgIGluZm8tPnNlY3Rpb25fc2l6ZV9iaXRzID0gaTsNCj4gPiA+ICsgICAgIH0NCj4gPiA+ICsg
-ICAgIGVsc2Ugew0KPiA+ID4gKyAgICAgICAgICAgICBpbmZvLT5zZWN0aW9uX3NpemVfYml0cyA9
-IFNFQ1RJT05TX1NJWkVfQklUUzsNCj4gPiA+ICsgICAgIH0NCj4gPiA+DQo+ID4gPiAgICAgICBE
-RUJVR19NU0coImtpbWFnZV92b2Zmc2V0ICAgOiAlbHhcbiIsIGtpbWFnZV92b2Zmc2V0KTsNCj4g
-PiA+ICAgICAgIERFQlVHX01TRygic2VjdGlvbl9zaXplX2JpdHM6ICVsZFxuIiwgaW5mby0+c2Vj
-dGlvbl9zaXplX2JpdHMpOw0KPiA+ID4gLS0NCj4gPiA+IDIuMjkuMg0KPiA+DQoNCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlz
-dAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
-aWxtYW4vbGlzdGluZm8va2V4ZWMK
+From: Mike Rapoport <rppt@linux.ibm.com>
+
+Hi,
+
+SPARSEMEM memory model was supposed to entirely replace DISCONTIGMEM a
+(long) while ago. The last architectures that used DISCONTIGMEM were
+updated to use other memory models in v5.11 and it is about the time to
+entirely remove DISCONTIGMEM from the kernel.
+
+This set removes DISCONTIGMEM from alpha, arc and m68k, simplifies memory
+model selection in mm/Kconfig and replaces usage of redundant
+CONFIG_NEED_MULTIPLE_NODES and CONFIG_FLAT_NODE_MEM_MAP with CONFIG_NUMA
+and CONFIG_FLATMEM respectively. 
+
+I've also removed NUMA support on alpha that was BROKEN for more than 15
+years.
+
+There were also minor updates all over arch/ to remove mentions of
+DISCONTIGMEM in comments and #ifdefs.
+
+v3:
+* Remove stale reference of CONFIG_NEED_MULTIPLE_NODES and stale
+  discontigmem comment, per Geert
+* Add Vineet Acks
+* Fix spelling in cover letter subject
+
+v2: Link: https://lore.kernel.org/lkml/20210604064916.26580-1-rppt@kernel.org
+* Fix build errors reported by kbuild bot
+* Add additional cleanups in m68k as suggested by Geert
+
+v1: Link: https://lore.kernel.org/lkml/20210602105348.13387-1-rppt@kernel.org
+
+Mike Rapoport (9):
+  alpha: remove DISCONTIGMEM and NUMA
+  arc: update comment about HIGHMEM implementation
+  arc: remove support for DISCONTIGMEM
+  m68k: remove support for DISCONTIGMEM
+  mm: remove CONFIG_DISCONTIGMEM
+  arch, mm: remove stale mentions of DISCONIGMEM
+  docs: remove description of DISCONTIGMEM
+  mm: replace CONFIG_NEED_MULTIPLE_NODES with CONFIG_NUMA
+  mm: replace CONFIG_FLAT_NODE_MEM_MAP with CONFIG_FLATMEM
+
+ Documentation/admin-guide/sysctl/vm.rst |  12 +-
+ Documentation/vm/memory-model.rst       |  45 +----
+ arch/alpha/Kconfig                      |  22 ---
+ arch/alpha/include/asm/machvec.h        |   6 -
+ arch/alpha/include/asm/mmzone.h         | 100 -----------
+ arch/alpha/include/asm/pgtable.h        |   4 -
+ arch/alpha/include/asm/topology.h       |  39 -----
+ arch/alpha/kernel/core_marvel.c         |  53 +-----
+ arch/alpha/kernel/core_wildfire.c       |  29 +--
+ arch/alpha/kernel/pci_iommu.c           |  29 ---
+ arch/alpha/kernel/proto.h               |   8 -
+ arch/alpha/kernel/setup.c               |  16 --
+ arch/alpha/kernel/sys_marvel.c          |   5 -
+ arch/alpha/kernel/sys_wildfire.c        |   5 -
+ arch/alpha/mm/Makefile                  |   2 -
+ arch/alpha/mm/init.c                    |   3 -
+ arch/alpha/mm/numa.c                    | 223 ------------------------
+ arch/arc/Kconfig                        |  13 --
+ arch/arc/include/asm/mmzone.h           |  40 -----
+ arch/arc/mm/init.c                      |  21 +--
+ arch/arm64/Kconfig                      |   2 +-
+ arch/ia64/Kconfig                       |   2 +-
+ arch/ia64/kernel/topology.c             |   5 +-
+ arch/ia64/mm/numa.c                     |   5 +-
+ arch/m68k/Kconfig.cpu                   |  10 --
+ arch/m68k/include/asm/mmzone.h          |  10 --
+ arch/m68k/include/asm/page.h            |   2 +-
+ arch/m68k/include/asm/page_mm.h         |  35 ----
+ arch/m68k/mm/init.c                     |  20 ---
+ arch/mips/Kconfig                       |   2 +-
+ arch/mips/include/asm/mmzone.h          |   8 +-
+ arch/mips/include/asm/page.h            |   2 +-
+ arch/mips/mm/init.c                     |   7 +-
+ arch/nds32/include/asm/memory.h         |   6 -
+ arch/powerpc/Kconfig                    |   2 +-
+ arch/powerpc/include/asm/mmzone.h       |   4 +-
+ arch/powerpc/kernel/setup_64.c          |   2 +-
+ arch/powerpc/kernel/smp.c               |   2 +-
+ arch/powerpc/kexec/core.c               |   4 +-
+ arch/powerpc/mm/Makefile                |   2 +-
+ arch/powerpc/mm/mem.c                   |   4 +-
+ arch/riscv/Kconfig                      |   2 +-
+ arch/s390/Kconfig                       |   2 +-
+ arch/sh/include/asm/mmzone.h            |   4 +-
+ arch/sh/kernel/topology.c               |   2 +-
+ arch/sh/mm/Kconfig                      |   2 +-
+ arch/sh/mm/init.c                       |   2 +-
+ arch/sparc/Kconfig                      |   2 +-
+ arch/sparc/include/asm/mmzone.h         |   4 +-
+ arch/sparc/kernel/smp_64.c              |   2 +-
+ arch/sparc/mm/init_64.c                 |  12 +-
+ arch/x86/Kconfig                        |   2 +-
+ arch/x86/kernel/setup_percpu.c          |   6 +-
+ arch/x86/mm/init_32.c                   |   4 +-
+ arch/xtensa/include/asm/page.h          |   4 -
+ include/asm-generic/memory_model.h      |  37 +---
+ include/asm-generic/topology.h          |   2 +-
+ include/linux/gfp.h                     |   4 +-
+ include/linux/memblock.h                |   6 +-
+ include/linux/mm.h                      |   4 +-
+ include/linux/mmzone.h                  |  20 ++-
+ kernel/crash_core.c                     |   4 +-
+ mm/Kconfig                              |  36 +---
+ mm/memblock.c                           |   8 +-
+ mm/memory.c                             |   3 +-
+ mm/page_alloc.c                         |  25 +--
+ mm/page_ext.c                           |   2 +-
+ 67 files changed, 101 insertions(+), 911 deletions(-)
+ delete mode 100644 arch/alpha/include/asm/mmzone.h
+ delete mode 100644 arch/alpha/mm/numa.c
+ delete mode 100644 arch/arc/include/asm/mmzone.h
+ delete mode 100644 arch/m68k/include/asm/mmzone.h
+
+
+base-commit: c4681547bcce777daf576925a966ffa824edd09d
+-- 
+2.28.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
