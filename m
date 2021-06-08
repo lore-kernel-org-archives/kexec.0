@@ -1,10 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Pingfan Liu <kernelfans@gmail.com>
-Subject: [PATCH] crash_core,
- vmcoreinfo: Append 'SECTION_SIZE_BITS' to vmcoreinfo
-Date: Tue,  8 Jun 2021 06:33:59 -0400
-Message-Id: <20210608103359.84907-1-kernelfans@gmail.com>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lqanr-008Kcs-2F
+ for kexec@lists.infradead.org; Tue, 08 Jun 2021 12:25:56 +0000
+Date: Tue, 8 Jun 2021 20:25:40 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed kernel
+Message-ID: <YL9hxPdPj0dYMyaD@dhcp-128-65.nay.redhat.com>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <YLdEZoSWI41fcTB1@smile.fi.intel.com>
+ <YLdG91qspr19heDS@smile.fi.intel.com>
+ <YLss6ZNPMIXleLLF@dhcp-128-65.nay.redhat.com>
+ <YL5HvUqtsDXx5CzM@smile.fi.intel.com>
+ <YL5U/zSb50SnbLgW@smile.fi.intel.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <YL5U/zSb50SnbLgW@smile.fi.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,61 +28,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-Cc: Pingfan Liu <kernelfans@gmail.com>, Bhupesh Sharma <bhupesh.sharma@linaro.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Jean Delvare <jdelvare@suse.com>, linux-kernel@vger.kernel.org, Mika Westerberg <mika.westerberg@linux.intel.com>, Javier =?iso-8859-1?B?VGnh?= <javier.tia@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Ard Biesheuvel <ardb@kernel.org>
 
-As mentioned in kernel commit 1d50e5d0c505 ("crash_core, vmcoreinfo:
-Append 'MAX_PHYSMEM_BITS' to vmcoreinfo"), SECTION_SIZE_BITS in the
-formula:
-    #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+On 06/07/21 at 08:18pm, Andy Shevchenko wrote:
+> On Mon, Jun 07, 2021 at 07:22:21PM +0300, Andy Shevchenko wrote:
+> > On Sat, Jun 05, 2021 at 03:51:05PM +0800, Dave Young wrote:
+> > > On 06/02/21 at 11:53am, Andy Shevchenko wrote:
+> > > > On Wed, Jun 02, 2021 at 11:42:14AM +0300, Andy Shevchenko wrote:
+> > > > > On Fri, Dec 02, 2016 at 09:54:14PM +0200, Andy Shevchenko wrote:
+> > > > > > Until now DMI information is lost when kexec'ing. Fix this in the same way as
+> > > > > > it has been done for ACPI RSDP.
+> > > > > > 
+> > > > > > Series has been tested on Galileo Gen2 where DMI is used by drivers, in
+> > > > > > particular the default I2C host speed is choosen based on DMI system
+> > > > > > information and now gets it correct.
+> > > > > 
+> > > > > Still nothing happens for a while and problem still exists.
+> > > > > Can we do something about it, please?
+> > > 
+> > > Seems I totally missed this thread. Old emails lost.
+> > 
+> > You can always access to it via lore :-)
+> > https://lore.kernel.org/linux-efi/20161217105721.GB6922@dhcp-128-65.nay.redhat.com/T/#u
 
-Besides SECTIONS_SHIFT, SECTION_SIZE_BITS is also used to calculate
-PAGES_PER_SECTION in makedumpfile just like kernel.
+Thanks.  Hmm, this is for 32bit efi.  kexec efi boot support was only
+added for 64bit. So if 32bit dmidecode does not work I'm not surprise.
 
-Unfortunately, this arch-dependent macro SECTION_SIZE_BITS changes, e.g.
-recently in kernel commit f0b13ee23241 ("arm64/sparsemem: reduce
-SECTION_SIZE_BITS"). But user space wants a stable interface to get this
-info. Such info is impossible to be deduced from a crashdump vmcore.
-Hence append SECTION_SIZE_BITS to vmcoreinfo.
+> > 
+> > (Okay, it's not full, but contains main parts anyway)
+> > 
+> > 
+> > > The question Ard asked is to confirm if the firmware converted the
+> > > SMBIOS3 addr to a virtual address after exit boot service. I do not
+> > > remember some easy way to check it due to lost the context of the code.
+> > > But you can try to check it via dmesg|grep SMBIOS both in normal boot
+> > > and kexeced boot log.  And then compare if those addresses are
+> > > identical.
+> > > 
+> > > If the SMBIOS3 addr in kexec kernel is different then it should have
+> > > been modified by firmware. Then we need patch kernel and kexec-tools to
+> > > support it.
+> > > 
+> > > You can try below patch to see if it works:
+> > 
+> > So, AFAIU I have to apply patch to kexec tools for the fist kernel + userspace
+> > and apply kernel patch for the second kernel? Or it's all for the first one?
+> > 
+> > > apply a kexec-tools patch to kexec-tools if you do not use kexec -s
+> > > (kexec_file_load):
+> > 
+> > Here is how we are using it:
+> > https://github.com/andy-shev/buildroot/blob/intel/board/intel/common/netboot/udhcpc-script.sh#L54
+> 
+> Okay, thanks for the patches. I have applied them to both kernels, so the first
+> one and second one are the same and kexec tools have a patch provided in the
+> user space of the both kernels (only first one in use though).
+> 
+> Before applying your patch, I have reverted my hacks (as per this series).
+> 
+> Result is:
+> 
+> # uname -a
+> Linux buildroot 5.13.0-rc5+ #1 SMP Mon Jun 7 19:49:40 EEST 2021 i586 GNU/Linux
+> # dmidecode
+> # dmidecode 3.3
+> Scanning /dev/mem for entry point.
+> # No SMBIOS nor DMI entry point found, sorry.
+> 
+> I.o.w. it does NOT fix the issue. My patches do (with a hint from user space).
 
-Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-Cc: Bhupesh Sharma <bhupesh.sharma@linaro.org>
-Cc: Kazuhito Hagio <k-hagio@ab.jp.nec.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Boris Petkov <bp@alien8.de>
-Cc: Ingo Molnar <mingo@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: James Morse <james.morse@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Will Deacon <will@kernel.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Dave Anderson <anderson@redhat.com>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-kernel@vger.kernel.org
-Cc: kexec@lists.infradead.org
-Cc: x86@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
----
- kernel/crash_core.c | 1 +
- 1 file changed, 1 insertion(+)
+As I said, since it is 32bit efi, so your test results are expected,
+also no need to check the kernel log about SMBIOS3 address changed or
+not.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 825284baaf46..684a6061a13a 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -464,6 +464,7 @@ static int __init crash_save_vmcoreinfo_init(void)
- 	VMCOREINFO_LENGTH(mem_section, NR_SECTION_ROOTS);
- 	VMCOREINFO_STRUCT_SIZE(mem_section);
- 	VMCOREINFO_OFFSET(mem_section, section_mem_map);
-+	VMCOREINFO_NUMBER(SECTION_SIZE_BITS);
- 	VMCOREINFO_NUMBER(MAX_PHYSMEM_BITS);
- #endif
- 	VMCOREINFO_STRUCT_SIZE(page);
--- 
-2.29.2
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
+
+Thanks
+Dave
 
 
 _______________________________________________
