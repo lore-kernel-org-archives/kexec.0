@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 8 Jun 2021 17:25:44 -0700
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3 8/9] mm: replace CONFIG_NEED_MULTIPLE_NODES with
- CONFIG_NUMA
-Message-Id: <20210608172544.d9bf17549565d866fbb18451@linux-foundation.org>
-In-Reply-To: <20210608091316.3622-9-rppt@kernel.org>
-References: <20210608091316.3622-1-rppt@kernel.org>
- <20210608091316.3622-9-rppt@kernel.org>
-Mime-Version: 1.0
+Received: from mail-qk1-x736.google.com ([2607:f8b0:4864:20::736])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lqmKZ-00Av5D-4m
+ for kexec@lists.infradead.org; Wed, 09 Jun 2021 00:44:30 +0000
+Received: by mail-qk1-x736.google.com with SMTP id i67so22146502qkc.4
+ for <kexec@lists.infradead.org>; Tue, 08 Jun 2021 17:44:26 -0700 (PDT)
+From: Pavel Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH v15 03/15] arm64: hibernate: abstract ttrb0 setup function
+Date: Tue,  8 Jun 2021 20:44:07 -0400
+Message-Id: <20210609004419.936873-4-pasha.tatashin@soleen.com>
+In-Reply-To: <20210609004419.936873-1-pasha.tatashin@soleen.com>
+References: <20210609004419.936873-1-pasha.tatashin@soleen.com>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,43 +24,92 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-On Tue,  8 Jun 2021 12:13:15 +0300 Mike Rapoport <rppt@kernel.org> wrote:
+Currently, only hibernate sets custom ttbr0 with safe idmaped function.
+Kexec, is also going to be using this functionality when relocation code
+is going to be idmapped.
 
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> After removal of DISCINTIGMEM the NEED_MULTIPLE_NODES and NUMA
-> configuration options are equivalent.
-> 
-> Drop CONFIG_NEED_MULTIPLE_NODES and use CONFIG_NUMA instead.
-> 
-> Done with
-> 
-> 	$ sed -i 's/CONFIG_NEED_MULTIPLE_NODES/CONFIG_NUMA/' \
-> 		$(git grep -wl CONFIG_NEED_MULTIPLE_NODES)
-> 	$ sed -i 's/NEED_MULTIPLE_NODES/NUMA/' \
-> 		$(git grep -wl NEED_MULTIPLE_NODES)
-> 
-> with manual tweaks afterwards.
-> 
-> ...
->
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -987,7 +987,7 @@ extern int movable_zone;
->  #ifdef CONFIG_HIGHMEM
->  static inline int zone_movable_is_highmem(void)
->  {
-> -#ifdef CONFIG_NEED_MULTIPLE_NODES
-> +#ifdef CONFIG_NUMA
->  	return movable_zone == ZONE_HIGHMEM;
->  #else
->  	return (ZONE_MOVABLE - 1) == ZONE_HIGHMEM;
+Move the setup sequence to a dedicated cpu_install_ttbr0() for custom
+ttbr0.
 
-I dropped this hunk - your "mm/mmzone.h: simplify is_highmem_idx()"
-removed zone_movable_is_highmem().  
+Suggested-by: James Morse <james.morse@arm.com>
+Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
+---
+ arch/arm64/include/asm/mmu_context.h | 24 ++++++++++++++++++++++++
+ arch/arm64/kernel/hibernate.c        | 21 +--------------------
+ 2 files changed, 25 insertions(+), 20 deletions(-)
+
+diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
+index d3cef9133539..85eb92a2ffcb 100644
+--- a/arch/arm64/include/asm/mmu_context.h
++++ b/arch/arm64/include/asm/mmu_context.h
+@@ -115,6 +115,30 @@ static inline void cpu_install_idmap(void)
+ 	cpu_switch_mm(lm_alias(idmap_pg_dir), &init_mm);
+ }
+ 
++/*
++ * Load our new page tables. A strict BBM approach requires that we ensure that
++ * TLBs are free of any entries that may overlap with the global mappings we are
++ * about to install.
++ *
++ * For a real hibernate/resume/kexec cycle TTBR0 currently points to a zero
++ * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI runtime
++ * services), while for a userspace-driven test_resume cycle it points to
++ * userspace page tables (and we must point it at a zero page ourselves).
++ *
++ * We change T0SZ as part of installing the idmap. This is undone by
++ * cpu_uninstall_idmap() in __cpu_suspend_exit().
++ */
++static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
++{
++	cpu_set_reserved_ttbr0();
++	local_flush_tlb_all();
++	__cpu_set_tcr_t0sz(t0sz);
++
++	/* avoid cpu_switch_mm() and its SW-PAN and CNP interactions */
++	write_sysreg(ttbr0, ttbr0_el1);
++	isb();
++}
++
+ /*
+  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
+  * avoiding the possibility of conflicting TLB entries being allocated.
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index fa2d1cb844a7..39f0da125876 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -212,26 +212,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
+ 	if (rc)
+ 		return rc;
+ 
+-	/*
+-	 * Load our new page tables. A strict BBM approach requires that we
+-	 * ensure that TLBs are free of any entries that may overlap with the
+-	 * global mappings we are about to install.
+-	 *
+-	 * For a real hibernate/resume cycle TTBR0 currently points to a zero
+-	 * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI
+-	 * runtime services), while for a userspace-driven test_resume cycle it
+-	 * points to userspace page tables (and we must point it at a zero page
+-	 * ourselves).
+-	 *
+-	 * We change T0SZ as part of installing the idmap. This is undone by
+-	 * cpu_uninstall_idmap() in __cpu_suspend_exit().
+-	 */
+-	cpu_set_reserved_ttbr0();
+-	local_flush_tlb_all();
+-	__cpu_set_tcr_t0sz(t0sz);
+-	write_sysreg(trans_ttbr0, ttbr0_el1);
+-	isb();
+-
++	cpu_install_ttbr0(trans_ttbr0, t0sz);
+ 	*phys_dst_addr = virt_to_phys(page);
+ 
+ 	return 0;
+-- 
+2.25.1
+
 
 _______________________________________________
 kexec mailing list
