@@ -1,11 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lqwoZ-00DUIQ-Uo
+ for kexec@lists.infradead.org; Wed, 09 Jun 2021 11:56:09 +0000
+Date: Wed, 9 Jun 2021 19:55:54 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed kernel
+Message-ID: <YMCsSqzmG4jb1Ojo@dhcp-128-65.nay.redhat.com>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <YLdEZoSWI41fcTB1@smile.fi.intel.com>
+ <YLdG91qspr19heDS@smile.fi.intel.com>
+ <YLss6ZNPMIXleLLF@dhcp-128-65.nay.redhat.com>
+ <YL5HvUqtsDXx5CzM@smile.fi.intel.com>
+ <YL5U/zSb50SnbLgW@smile.fi.intel.com>
+ <YL9hxPdPj0dYMyaD@dhcp-128-65.nay.redhat.com>
+ <CAHp75VcPuf6BLGf7Y3RO2M-gHMFZMTeb4ftnj_tbGS4TxvThxA@mail.gmail.com>
 MIME-Version: 1.0
-References: <20210604064916.26580-1-rppt@kernel.org>
-In-Reply-To: <20210604064916.26580-1-rppt@kernel.org>
-From: Arnd Bergmann <arnd@arndb.de>
-Date: Wed, 9 Jun 2021 13:30:39 +0200
-Message-ID: <CAK8P3a2tZDJDqgr9-1vJrnbDhd_36eKq8LMEznDkU7rvuAnAag@mail.gmail.com>
-Subject: Re: [PATCH v2 0/9] Remove DISCINTIGMEM memory model
+Content-Disposition: inline
+In-Reply-To: <CAHp75VcPuf6BLGf7Y3RO2M-gHMFZMTeb4ftnj_tbGS4TxvThxA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,40 +30,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, alpha <linux-alpha@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-ia64@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux <sparclinux@vger.kernel.org>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Javier =?iso-8859-1?B?VGnh?= <javier.tia@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Ard Biesheuvel <ardb@kernel.org>
 
-On Fri, Jun 4, 2021 at 8:49 AM Mike Rapoport <rppt@kernel.org> wrote:
->
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> Hi,
->
-> SPARSEMEM memory model was supposed to entirely replace DISCONTIGMEM a
-> (long) while ago. The last architectures that used DISCONTIGMEM were
-> updated to use other memory models in v5.11 and it is about the time to
-> entirely remove DISCONTIGMEM from the kernel.
->
-> This set removes DISCONTIGMEM from alpha, arc and m68k, simplifies memory
-> model selection in mm/Kconfig and replaces usage of redundant
-> CONFIG_NEED_MULTIPLE_NODES and CONFIG_FLAT_NODE_MEM_MAP with CONFIG_NUMA
-> and CONFIG_FLATMEM respectively.
->
-> I've also removed NUMA support on alpha that was BROKEN for more than 15
-> years.
->
-> There were also minor updates all over arch/ to remove mentions of
-> DISCONTIGMEM in comments and #ifdefs.
+On 06/08/21 at 03:38pm, Andy Shevchenko wrote:
+> On Tue, Jun 8, 2021 at 3:29 PM Dave Young <dyoung@redhat.com> wrote:
+> > On 06/07/21 at 08:18pm, Andy Shevchenko wrote:
+> > > On Mon, Jun 07, 2021 at 07:22:21PM +0300, Andy Shevchenko wrote:
+> > > > On Sat, Jun 05, 2021 at 03:51:05PM +0800, Dave Young wrote:
+> > > > > On 06/02/21 at 11:53am, Andy Shevchenko wrote:
+> > > > > > On Wed, Jun 02, 2021 at 11:42:14AM +0300, Andy Shevchenko wrote:
+> > > > > > > On Fri, Dec 02, 2016 at 09:54:14PM +0200, Andy Shevchenko wrote:
+> > > > > > > > Until now DMI information is lost when kexec'ing. Fix this in the same way as
+> > > > > > > > it has been done for ACPI RSDP.
+> > > > > > > >
+> > > > > > > > Series has been tested on Galileo Gen2 where DMI is used by drivers, in
+> > > > > > > > particular the default I2C host speed is choosen based on DMI system
+> > > > > > > > information and now gets it correct.
+> > > > > > >
+> > > > > > > Still nothing happens for a while and problem still exists.
+> > > > > > > Can we do something about it, please?
+> > > > >
+> > > > > Seems I totally missed this thread. Old emails lost.
+> > > >
+> > > > You can always access to it via lore :-)
+> > > > https://lore.kernel.org/linux-efi/20161217105721.GB6922@dhcp-128-65.nay.redhat.com/T/#u
+> >
+> > Thanks.  Hmm, this is for 32bit efi.  kexec efi boot support was only
+> > added for 64bit. So if 32bit dmidecode does not work I'm not surprise.
+> >
+> > > >
+> > > > (Okay, it's not full, but contains main parts anyway)
+> > > >
+> > > >
+> > > > > The question Ard asked is to confirm if the firmware converted the
+> > > > > SMBIOS3 addr to a virtual address after exit boot service. I do not
+> > > > > remember some easy way to check it due to lost the context of the code.
+> > > > > But you can try to check it via dmesg|grep SMBIOS both in normal boot
+> > > > > and kexeced boot log.  And then compare if those addresses are
+> > > > > identical.
+> > > > >
+> > > > > If the SMBIOS3 addr in kexec kernel is different then it should have
+> > > > > been modified by firmware. Then we need patch kernel and kexec-tools to
+> > > > > support it.
+> > > > >
+> > > > > You can try below patch to see if it works:
+> > > >
+> > > > So, AFAIU I have to apply patch to kexec tools for the fist kernel + userspace
+> > > > and apply kernel patch for the second kernel? Or it's all for the first one?
+> > > >
+> > > > > apply a kexec-tools patch to kexec-tools if you do not use kexec -s
+> > > > > (kexec_file_load):
+> > > >
+> > > > Here is how we are using it:
+> > > > https://github.com/andy-shev/buildroot/blob/intel/board/intel/common/netboot/udhcpc-script.sh#L54
+> > >
+> > > Okay, thanks for the patches. I have applied them to both kernels, so the first
+> > > one and second one are the same and kexec tools have a patch provided in the
+> > > user space of the both kernels (only first one in use though).
+> > >
+> > > Before applying your patch, I have reverted my hacks (as per this series).
+> > >
+> > > Result is:
+> > >
+> > > # uname -a
+> > > Linux buildroot 5.13.0-rc5+ #1 SMP Mon Jun 7 19:49:40 EEST 2021 i586 GNU/Linux
+> > > # dmidecode
+> > > # dmidecode 3.3
+> > > Scanning /dev/mem for entry point.
+> > > # No SMBIOS nor DMI entry point found, sorry.
+> > >
+> > > I.o.w. it does NOT fix the issue. My patches do (with a hint from user space).
+> >
+> > As I said, since it is 32bit efi, so your test results are expected,
+> > also no need to check the kernel log about SMBIOS3 address changed or
+> > not.
+> 
+> So, what shall I do? It's already 5 years passed without any progress
+> while my patches definitely help here.
+> Should I rebase and resubmit?
 
-Hi Mike and Andrew,
+Probably it is doable to have kexec on 32bit efi working
+without runtime service support, that means no need the trick of fixed
+mapping.
 
-It looks like everyone is happy with this version so far. How should we merge it
-for linux-next? I'm happy to take it through the asm-generic tree, but linux-mm
-would fit at least as well. In case we go for linux-mm, feel free to add
+If I can restore my vm to boot 32bit efi on this weekend then I may provide some draft
+patches for test.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
 
-for the whole series.
+Thanks
+Dave
+
 
 _______________________________________________
 kexec mailing list
