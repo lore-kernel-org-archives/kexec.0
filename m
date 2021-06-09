@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-f179.google.com ([209.85.160.179])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lqmLn-00Avf3-ME
- for kexec@lists.infradead.org; Wed, 09 Jun 2021 00:45:45 +0000
-Received: by mail-qt1-f179.google.com with SMTP id l17so12592001qtq.12
- for <kexec@lists.infradead.org>; Tue, 08 Jun 2021 17:45:43 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v15 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-Date: Tue,  8 Jun 2021 20:44:19 -0400
-Message-Id: <20210609004419.936873-16-pasha.tatashin@soleen.com>
-In-Reply-To: <20210609004419.936873-1-pasha.tatashin@soleen.com>
-References: <20210609004419.936873-1-pasha.tatashin@soleen.com>
+ id 1lqoFb-00BT3J-DU
+ for kexec@lists.infradead.org; Wed, 09 Jun 2021 02:47:28 +0000
+Date: Wed, 9 Jun 2021 10:47:09 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH] crash_core, vmcoreinfo: Append 'SECTION_SIZE_BITS' to
+ vmcoreinfo
+Message-ID: <20210609024709.GA591017@MiWiFi-R3L-srv>
+References: <20210608103359.84907-1-kernelfans@gmail.com>
+ <20210608142432.GA587883@MiWiFi-R3L-srv>
+ <20210608141410.0026a925ba3a609b0dd4e560@linux-foundation.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210608141410.0026a925ba3a609b0dd4e560@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,113 +26,50 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Pingfan Liu <kernelfans@gmail.com>, Bhupesh Sharma <bhupesh.sharma@linaro.org>, Kazuhito Hagio <k-hagio@ab.jp.nec.com>, Dave Young <dyoung@redhat.com>, Boris Petkov <bp@alien8.de>, Ingo Molnar <mingo@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, James Morse <james.morse@arm.com>, Mark Rutland <mark.rutland@arm.com>, Will Deacon <will@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Dave Anderson <anderson@redhat.com>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, x86@kernel.org, linux-arm-kernel@lists.infradead.org
 
-The intend of trans_pgd_map_page() was to map contiguous range of VA
-memory to the memory that is getting relocated during kexec. However,
-since we are now using linear map instead of contiguous range this
-function is not needed
+On 06/08/21 at 02:14pm, Andrew Morton wrote:
+> On Tue, 8 Jun 2021 22:24:32 +0800 Baoquan He <bhe@redhat.com> wrote:
+> 
+> > On 06/08/21 at 06:33am, Pingfan Liu wrote:
+> > > As mentioned in kernel commit 1d50e5d0c505 ("crash_core, vmcoreinfo:
+> > > Append 'MAX_PHYSMEM_BITS' to vmcoreinfo"), SECTION_SIZE_BITS in the
+> > > formula:
+> > >     #define SECTIONS_SHIFT    (MAX_PHYSMEM_BITS - SECTION_SIZE_BITS)
+> > > 
+> > > Besides SECTIONS_SHIFT, SECTION_SIZE_BITS is also used to calculate
+> > > PAGES_PER_SECTION in makedumpfile just like kernel.
+> > > 
+> > > Unfortunately, this arch-dependent macro SECTION_SIZE_BITS changes, e.g.
+> > > recently in kernel commit f0b13ee23241 ("arm64/sparsemem: reduce
+> > > SECTION_SIZE_BITS"). But user space wants a stable interface to get this
+> > > info. Such info is impossible to be deduced from a crashdump vmcore.
+> > > Hence append SECTION_SIZE_BITS to vmcoreinfo.
+> > 
+> > ...
+> >
+> > Add the discussion of the original thread in kexec ML for reference:
+> > http://lists.infradead.org/pipermail/kexec/2021-June/022676.html
+> 
+> I added a Link: for this.
 
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/trans_pgd.h |  5 +--
- arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
- 2 files changed, 1 insertion(+), 61 deletions(-)
+Thanks, Andrew.
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 411323bda7a4..c373d43c07ec 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -15,7 +15,7 @@
- /*
-  * trans_alloc_page
-  *	- Allocator that should return exactly one zeroed page, if this
-- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-+ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
-  *	  return -ENOMEM error.
-  *
-  * trans_alloc_arg
-@@ -30,9 +30,6 @@ struct trans_pgd_info {
- int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
- 			  unsigned long start, unsigned long end);
- 
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot);
--
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index d4f0a6492d8f..7ae27a948145 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
- 	return rc;
- }
- 
--/*
-- * Add map entry to trans_pgd for a base-size page at PTE level.
-- * info:	contains allocator and its argument
-- * trans_pgd:	page table in which new map is added.
-- * page:	page to be mapped.
-- * dst_addr:	new VA address for the page
-- * pgprot:	protection for the page.
-- *
-- * Returns 0 on success, and -ENOMEM on failure.
-- */
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		p4dp = trans_alloc(info);
--		if (!pgdp)
--			return -ENOMEM;
--		pgd_populate(NULL, pgdp, p4dp);
--	}
--
--	p4dp = p4d_offset(pgdp, dst_addr);
--	if (p4d_none(READ_ONCE(*p4dp))) {
--		pudp = trans_alloc(info);
--		if (!pudp)
--			return -ENOMEM;
--		p4d_populate(NULL, p4dp, pudp);
--	}
--
--	pudp = pud_offset(p4dp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = trans_alloc(info);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(NULL, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = trans_alloc(info);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(NULL, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
--
--	return 0;
--}
--
- /*
-  * The page we want to idmap may be outside the range covered by VA_BITS that
-  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
--- 
-2.25.1
+>  
+> > This looks good to me.
+> > 
+> > Acked-by: Baoquan He <bhe@redhat.com>
+> 
+> I'm thinking we should backport this at least to Fixes:f0b13ee23241. 
+> But perhaps it's simpler to just backport it as far as possible, so I
+> added a bare cc:stable with no Fixes:.  Thoughts?
+
+Yeah, it should add cc:stable, thanks. Otherwise it will break
+vmcore dumping on 5.12 stable kernel even though with the updated
+makedumpfile utility. Fixes:f0b13ee23241 will help stable kernel
+maintainer easier to identify which kernel this patch need be applied
+on? If only having cc:stable with no Fixes is allowed, it's also OK. 
 
 
 _______________________________________________
