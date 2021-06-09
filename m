@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 9 Jun 2021 09:52:08 +0300
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v3 8/9] mm: replace CONFIG_NEED_MULTIPLE_NODES with
- CONFIG_NUMA
-Message-ID: <YMBlGBxaWDPV1ouT@kernel.org>
-References: <20210608091316.3622-1-rppt@kernel.org>
- <20210608091316.3622-9-rppt@kernel.org>
- <20210608172544.d9bf17549565d866fbb18451@linux-foundation.org>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lqtdX-00CO9k-1V
+ for kexec@lists.infradead.org; Wed, 09 Jun 2021 08:32:33 +0000
+Date: Wed, 9 Jun 2021 16:32:18 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3] Documentation: kdump: update kdump guide
+Message-ID: <20210609083218.GB591017@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210608172544.d9bf17549565d866fbb18451@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,51 +21,338 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-m68k@vger.kernel.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, kexec@lists.infradead.org, Jonathan Corbet <corbet@lwn.net>, akpm@linux-foundation.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, dyoung@redhat.com
 
-On Tue, Jun 08, 2021 at 05:25:44PM -0700, Andrew Morton wrote:
-> On Tue,  8 Jun 2021 12:13:15 +0300 Mike Rapoport <rppt@kernel.org> wrote:
-> 
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> > 
-> > After removal of DISCINTIGMEM the NEED_MULTIPLE_NODES and NUMA
-> > configuration options are equivalent.
-> > 
-> > Drop CONFIG_NEED_MULTIPLE_NODES and use CONFIG_NUMA instead.
-> > 
-> > Done with
-> > 
-> > 	$ sed -i 's/CONFIG_NEED_MULTIPLE_NODES/CONFIG_NUMA/' \
-> > 		$(git grep -wl CONFIG_NEED_MULTIPLE_NODES)
-> > 	$ sed -i 's/NEED_MULTIPLE_NODES/NUMA/' \
-> > 		$(git grep -wl NEED_MULTIPLE_NODES)
-> > 
-> > with manual tweaks afterwards.
-> > 
-> > ...
-> >
-> > --- a/include/linux/mmzone.h
-> > +++ b/include/linux/mmzone.h
-> > @@ -987,7 +987,7 @@ extern int movable_zone;
-> >  #ifdef CONFIG_HIGHMEM
-> >  static inline int zone_movable_is_highmem(void)
-> >  {
-> > -#ifdef CONFIG_NEED_MULTIPLE_NODES
-> > +#ifdef CONFIG_NUMA
-> >  	return movable_zone == ZONE_HIGHMEM;
-> >  #else
-> >  	return (ZONE_MOVABLE - 1) == ZONE_HIGHMEM;
-> 
-> I dropped this hunk - your "mm/mmzone.h: simplify is_highmem_idx()"
-> removed zone_movable_is_highmem().  
+Some parts of the guide are aged, hence need be updated.
 
-Ah, right.
-Thanks!
+1) The backup area of the 1st 640K on X86_64 has been removed
+   by below commits, update the description accordingly.
 
+   commit 7c321eb2b843 ("x86/kdump: Remove the backup region handling")
+   commit 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+
+2) Sort out the descripiton of "crashkernel syntax" part.
+
+3) And some other minor cleanups.
+
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+v2->v3:
+ Fix several spell checking issues pointed out by Dave.
+
+v1->v2:
+ Update the obsolete descriptions about SMP and RELOCATABLE according
+ to Dave's comment.
+
+ Documentation/admin-guide/kdump/kdump.rst | 169 ++++++++++++++--------
+ 1 file changed, 108 insertions(+), 61 deletions(-)
+
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index 75a9dd98e76e..a04fc854749d 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -2,7 +2,7 @@
+ Documentation for Kdump - The kexec-based Crash Dumping Solution
+ ================================================================
+ 
+-This document includes overview, setup and installation, and analysis
++This document includes overview, setup, installation, and analysis
+ information.
+ 
+ Overview
+@@ -13,9 +13,9 @@ dump of the system kernel's memory needs to be taken (for example, when
+ the system panics). The system kernel's memory image is preserved across
+ the reboot and is accessible to the dump-capture kernel.
+ 
+-You can use common commands, such as cp and scp, to copy the
+-memory image to a dump file on the local disk, or across the network to
+-a remote system.
++You can use common commands, such as cp, scp or makedumpfile to copy
++the memory image to a dump file on the local disk, or across the network
++to a remote system.
+ 
+ Kdump and kexec are currently supported on the x86, x86_64, ppc64, ia64,
+ s390x, arm and arm64 architectures.
+@@ -26,13 +26,15 @@ the dump-capture kernel. This ensures that ongoing Direct Memory Access
+ The kexec -p command loads the dump-capture kernel into this reserved
+ memory.
+ 
+-On x86 machines, the first 640 KB of physical memory is needed to boot,
+-regardless of where the kernel loads. Therefore, kexec backs up this
+-region just before rebooting into the dump-capture kernel.
++On x86 machines, the first 640 KB of physical memory is needed for boot,
++regardless of where the kernel loads. For simpler handling, the whole
++low 1M is reserved to avoid any later kernel or device driver writing
++data into this area. Like this, the low 1M can be reused as system RAM
++by kdump kernel without extra handling.
+ 
+-Similarly on PPC64 machines first 32KB of physical memory is needed for
+-booting regardless of where the kernel is loaded and to support 64K page
+-size kexec backs up the first 64KB memory.
++On PPC64 machines first 32KB of physical memory is needed for booting
++regardless of where the kernel is loaded and to support 64K page size
++kexec backs up the first 64KB memory.
+ 
+ For s390x, when kdump is triggered, the crashkernel region is exchanged
+ with the region [0, crashkernel region size] and then the kdump kernel
+@@ -46,14 +48,14 @@ passed to the dump-capture kernel through the elfcorehdr= boot
+ parameter. Optionally the size of the ELF header can also be passed
+ when using the elfcorehdr=[size[KMG]@]offset[KMG] syntax.
+ 
+-
+ With the dump-capture kernel, you can access the memory image through
+ /proc/vmcore. This exports the dump as an ELF-format file that you can
+-write out using file copy commands such as cp or scp. Further, you can
+-use analysis tools such as the GNU Debugger (GDB) and the Crash tool to
+-debug the dump file. This method ensures that the dump pages are correctly
+-ordered.
+-
++write out using file copy commands such as cp or scp. You can also use
++makedumpfile utility to analyze and write out filtered contents with
++options, e.g with '-d 31' it will only write out kernel data. Further,
++you can use analysis tools such as the GNU Debugger (GDB) and the Crash
++tool to debug the dump file. This method ensures that the dump pages are
++correctly ordered.
+ 
+ Setup and Installation
+ ======================
+@@ -125,9 +127,18 @@ dump-capture kernels for enabling kdump support.
+ System kernel config options
+ ----------------------------
+ 
+-1) Enable "kexec system call" in "Processor type and features."::
++1) Enable "kexec system call" or "kexec file based system call" in
++   "Processor type and features."::
++
++	CONFIG_KEXEC=y or CONFIG_KEXEC_FILE=y
++
++   And both of them will select KEXEC_CORE::
+ 
+-	CONFIG_KEXEC=y
++	CONFIG_KEXEC_CORE=y
++
++   Subsequently, CRASH_CORE is selected by KEXEC_CORE::
++
++	CONFIG_CRASH_CORE=y
+ 
+ 2) Enable "sysfs file system support" in "Filesystem" -> "Pseudo
+    filesystems." This is usually enabled by default::
+@@ -175,17 +186,19 @@ Dump-capture kernel config options (Arch Dependent, i386 and x86_64)
+ 
+ 	CONFIG_HIGHMEM4G
+ 
+-2) On i386 and x86_64, disable symmetric multi-processing support
+-   under "Processor type and features"::
++2) With CONFIG_SMP=y, usually nr_cpus=1 need specified on the kernel
++   command line when loading the dump-capture kernel because one
++   CPU is enough for kdump kernel to dump vmcore on most of systems.
+ 
+-	CONFIG_SMP=n
++   However, you can also specify nr_cpus=X to enable multiple processors
++   in kdump kernel. In this case, "disable_cpu_apicid=" is needed to
++   tell kdump kernel which cpu is 1st kernel's BSP. Please refer to
++   admin-guide/kernel-parameters.txt for more details.
+ 
+-   (If CONFIG_SMP=y, then specify maxcpus=1 on the kernel command line
+-   when loading the dump-capture kernel, see section "Load the Dump-capture
+-   Kernel".)
++   With CONFIG_SMP=n, the above things are not related.
+ 
+-3) If one wants to build and use a relocatable kernel,
+-   Enable "Build a relocatable kernel" support under "Processor type and
++3) A relocatable kernel is suggested to be built by default. If not yet,
++   enable "Build a relocatable kernel" support under "Processor type and
+    features"::
+ 
+ 	CONFIG_RELOCATABLE=y
+@@ -232,7 +245,7 @@ Dump-capture kernel config options (Arch Dependent, ia64)
+   as a dump-capture kernel if desired.
+ 
+   The crashkernel region can be automatically placed by the system
+-  kernel at run time. This is done by specifying the base address as 0,
++  kernel at runtime. This is done by specifying the base address as 0,
+   or omitting it all together::
+ 
+ 	crashkernel=256M@0
+@@ -241,10 +254,6 @@ Dump-capture kernel config options (Arch Dependent, ia64)
+ 
+ 	crashkernel=256M
+ 
+-  If the start address is specified, note that the start address of the
+-  kernel will be aligned to 64Mb, so if the start address is not then
+-  any space below the alignment point will be wasted.
+-
+ Dump-capture kernel config options (Arch Dependent, arm)
+ ----------------------------------------------------------
+ 
+@@ -260,46 +269,81 @@ Dump-capture kernel config options (Arch Dependent, arm64)
+   on non-VHE systems even if it is configured. This is because the CPU
+   will not be reset to EL2 on panic.
+ 
+-Extended crashkernel syntax
++crashkernel syntax
+ ===========================
++1) crashkernel=size@offset
+ 
+-While the "crashkernel=size[@offset]" syntax is sufficient for most
+-configurations, sometimes it's handy to have the reserved memory dependent
+-on the value of System RAM -- that's mostly for distributors that pre-setup
+-the kernel command line to avoid a unbootable system after some memory has
+-been removed from the machine.
++   Here 'size' specifies how much memory to reserve for the dump-capture kernel
++   and 'offset' specifies the beginning of this reserved memory. For example,
++   "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
++   starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
+ 
+-The syntax is::
++   The crashkernel region can be automatically placed by the system
++   kernel at run time. This is done by specifying the base address as 0,
++   or omitting it all together::
+ 
+-    crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
+-    range=start-[end]
++         crashkernel=256M@0
++   or::
+ 
+-For example::
++         crashkernel=256M
+ 
+-    crashkernel=512M-2G:64M,2G-:128M
++   If the start address is specified, note that the start address of the
++   kernel will be aligned to a value (which is Arch dependent), so if the
++   start address is not then any space below the alignment point will be
++   wasted.
+ 
+-This would mean:
++2) range1:size1[,range2:size2,...][@offset]
+ 
+-    1) if the RAM is smaller than 512M, then don't reserve anything
+-       (this is the "rescue" case)
+-    2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
+-    3) if the RAM size is larger than 2G, then reserve 128M
++   While the "crashkernel=size[@offset]" syntax is sufficient for most
++   configurations, sometimes it's handy to have the reserved memory dependent
++   on the value of System RAM -- that's mostly for distributors that pre-setup
++   the kernel command line to avoid a unbootable system after some memory has
++   been removed from the machine.
+ 
++   The syntax is::
+ 
++       crashkernel=<range1>:<size1>[,<range2>:<size2>,...][@offset]
++       range=start-[end]
+ 
+-Boot into System Kernel
+-=======================
++   For example::
++
++       crashkernel=512M-2G:64M,2G-:128M
++
++   This would mean:
+ 
++       1) if the RAM is smaller than 512M, then don't reserve anything
++          (this is the "rescue" case)
++       2) if the RAM size is between 512M and 2G (exclusive), then reserve 64M
++       3) if the RAM size is larger than 2G, then reserve 128M
++
++3) crashkernel=size,high and crashkernel=size,low
++
++   If memory above 4G is preferred, crashkernel=size,high can be used to
++   fulfill that. With it, physical memory is allowed to be allocated from top,
++   so could be above 4G if system has more than 4G RAM installed. Otherwise,
++   memory region will be allocated below 4G if available.
++
++   When crashkernel=X,high is passed, kernel could allocate physical memory
++   region above 4G, low memory under 4G is needed in this case. There are
++   three ways to get low memory:
++
++      1) Kernel will allocate at least 256M memory below 4G automatically
++         if crashkernel=Y,low is not specified.
++      2) Let user specify low memory size instead.
++      3) Specified value 0 will disable low memory allocation::
++
++            crashkernel=0,low
++
++Boot into System Kernel
++-----------------------
+ 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
+    files as necessary.
+ 
+-2) Boot the system kernel with the boot parameter "crashkernel=Y@X",
+-   where Y specifies how much memory to reserve for the dump-capture kernel
+-   and X specifies the beginning of this reserved memory. For example,
+-   "crashkernel=64M@16M" tells the system kernel to reserve 64 MB of memory
+-   starting at physical address 0x01000000 (16MB) for the dump-capture kernel.
++2) Boot the system kernel with the boot parameter "crashkernel=Y@X".
+ 
+-   On x86 and x86_64, use "crashkernel=64M@16M".
++   On x86 and x86_64, use "crashkernel=Y[@X]". Most of the time, the
++   start address 'X' is not necessary, kernel will search a suitable
++   area. Unless an explicit start address is expected.
+ 
+    On ppc64, use "crashkernel=128M@32M".
+ 
+@@ -331,8 +375,8 @@ of dump-capture kernel. Following is the summary.
+ 
+ For i386 and x86_64:
+ 
+-	- Use vmlinux if kernel is not relocatable.
+ 	- Use bzImage/vmlinuz if kernel is relocatable.
++	- Use vmlinux if kernel is not relocatable.
+ 
+ For ppc64:
+ 
+@@ -392,7 +436,7 @@ loading dump-capture kernel.
+ 
+ For i386, x86_64 and ia64:
+ 
+-	"1 irqpoll maxcpus=1 reset_devices"
++	"1 irqpoll nr_cpus=1 reset_devices"
+ 
+ For ppc64:
+ 
+@@ -400,7 +444,7 @@ For ppc64:
+ 
+ For s390x:
+ 
+-	"1 maxcpus=1 cgroup_disable=memory"
++	"1 nr_cpus=1 cgroup_disable=memory"
+ 
+ For arm:
+ 
+@@ -408,7 +452,7 @@ For arm:
+ 
+ For arm64:
+ 
+-	"1 maxcpus=1 reset_devices"
++	"1 nr_cpus=1 reset_devices"
+ 
+ Notes on loading the dump-capture kernel:
+ 
+@@ -488,6 +532,10 @@ the following command::
+ 
+    cp /proc/vmcore <dump-file>
+ 
++You can also use makedumpfile utility to write out the dump file
++with specified options to filter out unwanted contents, e.g::
++
++   makedumpfile -l --message-level 1 -d 31 /proc/vmcore <dump-file>
+ 
+ Analysis
+ ========
+@@ -535,8 +583,7 @@ This will cause a kdump to occur at the add_taint()->panic() call.
+ Contact
+ =======
+ 
+-- Vivek Goyal (vgoyal@redhat.com)
+-- Maneesh Soni (maneesh@in.ibm.com)
++- kexec@lists.infradead.org
+ 
+ GDB macros
+ ==========
 -- 
-Sincerely yours,
-Mike.
+2.17.2
+
 
 _______________________________________________
 kexec mailing list
