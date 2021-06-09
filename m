@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 9 Jun 2021 17:50:50 +0300
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v2 0/9] Remove DISCINTIGMEM memory model
-Message-ID: <YMDVSu00xXGmdCtC@kernel.org>
-References: <20210604064916.26580-1-rppt@kernel.org>
- <CAK8P3a2tZDJDqgr9-1vJrnbDhd_36eKq8LMEznDkU7rvuAnAag@mail.gmail.com>
+Date: Wed, 9 Jun 2021 15:39:57 -0700
+From: Moritz Fischer <mdf@kernel.org>
+Subject: Re: [PATCH v2 0/5] arm64: Make kexec_file_load honor iomem
+ reservations
+Message-ID: <YMFDPWjEW2/KbcvH@epycbox.lan>
+References: <20210531095720.77469-1-maz@kernel.org>
+ <41ac1e4b-3779-4cb2-5b64-d638521e67c1@arm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAK8P3a2tZDJDqgr9-1vJrnbDhd_36eKq8LMEznDkU7rvuAnAag@mail.gmail.com>
+In-Reply-To: <41ac1e4b-3779-4cb2-5b64-d638521e67c1@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,51 +21,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, alpha <linux-alpha@vger.kernel.org>, linux-arch <linux-arch@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-ia64@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-m68k <linux-m68k@lists.linux-m68k.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, Linux-MM <linux-mm@kvack.org>, linux-riscv <linux-riscv@lists.infradead.org>, linux-s390 <linux-s390@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>, "open list:SYNOPSYS ARC ARCHITECTURE" <linux-snps-arc@lists.infradead.org>, "open list:TENSILICA XTENSA PORT (xtensa)" <linux-xtensa@linux-xtensa.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, sparclinux <sparclinux@vger.kernel.org>
+To: James Morse <james.morse@arm.com>
+Cc: Marc Zyngier <maz@kernel.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh SHARMA <bhupesh.sharma@linaro.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Moritz Fischer <mdf@kernel.org>, kernel-team@android.com
 
-Hi Arnd,
+Hi James, Marc
 
-On Wed, Jun 09, 2021 at 01:30:39PM +0200, Arnd Bergmann wrote:
-> On Fri, Jun 4, 2021 at 8:49 AM Mike Rapoport <rppt@kernel.org> wrote:
-> >
-> > From: Mike Rapoport <rppt@linux.ibm.com>
-> >
-> > Hi,
-> >
-> > SPARSEMEM memory model was supposed to entirely replace DISCONTIGMEM a
-> > (long) while ago. The last architectures that used DISCONTIGMEM were
-> > updated to use other memory models in v5.11 and it is about the time to
-> > entirely remove DISCONTIGMEM from the kernel.
-> >
-> > This set removes DISCONTIGMEM from alpha, arc and m68k, simplifies memory
-> > model selection in mm/Kconfig and replaces usage of redundant
-> > CONFIG_NEED_MULTIPLE_NODES and CONFIG_FLAT_NODE_MEM_MAP with CONFIG_NUMA
-> > and CONFIG_FLATMEM respectively.
-> >
-> > I've also removed NUMA support on alpha that was BROKEN for more than 15
-> > years.
-> >
-> > There were also minor updates all over arch/ to remove mentions of
-> > DISCONTIGMEM in comments and #ifdefs.
+On Fri, Jun 04, 2021 at 05:20:38PM +0100, James Morse wrote:
+> Hi Marc,
 > 
-> Hi Mike and Andrew,
+> On 31/05/2021 10:57, Marc Zyngier wrote:
+> > This series is a complete departure from the approach I initially sent
+> > almost a month ago[0]. Instead of trying to teach EFI, ACPI and other
+> > subsystem to use memblock, I've decided to stick with the iomem
+> > resource tree and use that exclusively for arm64.
 > 
-> It looks like everyone is happy with this version so far. How should we merge it
-> for linux-next? I'm happy to take it through the asm-generic tree, but linux-mm
-> would fit at least as well. In case we go for linux-mm, feel free to add
+> > This means that my current approach is (despite what I initially
+> > replied to both Dave and Catalin) to provide an arm64-specific
+> > implementation of arch_kexec_locate_mem_hole() which walks the
+> > resource tree and excludes ranges of RAM that have been registered for
+> > any odd purpose. This is exactly what the userspace implementation
+> > does, and I don't really see a good reason to diverge from it.
+> 
+> Because in the ideal world we'd have only 'is it reserved' list to check against.
+> Memblock has been extended before. The resource-list is overly stringy, and I'm not sure
+> we can shove everything in the resource list.
+> 
+> Kexec already has problems on arm64 with memory hotplug. Fixing this for regular kexec in
+> /proc/iomem was rejected, and memblock's memblock_is_hotpluggable() is broken because
+> free_low_memory_core_early() does this:
+> |	memblock_clear_hotplug(0, -1)
+> 
+> Once that has been unpicked its clear kexec_file_load() can use
+> memblock_is_hotpluggable(). (its on the todo list, well, jira)
+> 
+> 
+> I'd prefer to keep kexec using memblock because it _shouldn't_ change after boot. Having
+> an "I want to reserve this and make it persistent over kexec" call that can happen at any
+> time can't work if the kexec image has already been loaded.
+> Practically, once user-space has started, you can't have new things you want to reserve
+> over kexec.
+> 
+> 
+> I don't see how the ACPI tables can escape short of a firmware bug. Could someone with an
+> affected platform boot with efi=debug and post the EFI memory map and the 'ACPI: FOO
+> 0xphysicaladdress' stuff at the top of the boot log?
+> 
+> 
+> efi_mem_reserve_persistent() has one caller for the GIC ITS stuff.
+> 
+> For the ITS, the reservations look like they are behind irqchip_init(), which is well
+> before the arch_initcall() that updates the resource tree from memblock. Your v1's first
+> patch should be sufficient.
+> 
+> 
+> > Again, this allows my Synquacer board to reliably use kexec_file_load
+> > with as little as 256M, something that would always fail before as it
+> > would overwrite most of the reserved tables.
+> > 
+> > Although this series still targets 5.14, the initial patch is a
+> > -stable candidate, and disables non-kdump uses of kexec_file_load. I
+> > have limited it to 5.10, as earlier kernels will require a different,
+> > probably more invasive approach.
+> > 
+> > Catalin, Ard: although this series has changed a bit compared to v1,
+> > I've kept your AB/RB tags. Should anything seem odd, please let me
+> > know and I'll drop them.
+> 
+> 
+> Thanks,
+> 
+> James
+> 
+> 
+> [0] I'm pretty sure this is enough. (Not tested)
+> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
+> index 4b7ee3fa9224..3ed45153ce7f 100644
+> --- a/drivers/firmware/efi/efi.c
+> +++ b/drivers/firmware/efi/efi.c
+> @@ -893,7 +893,7 @@ static int __init efi_memreserve_map_root(void)
+>         return 0;
+>  }
+> 
+> -static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+> +static int __efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+>  {
+>         struct resource *res, *parent;
+> 
+> @@ -911,6 +911,16 @@ static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+>         return parent ? request_resource(parent, res) : 0;
+>  }
+> 
+> +static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
+> +{
+> +       int err = __efi_mem_reserve_iomem(addr, size);
+> +
+> +       if(IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK) && !err)
+> +               memblock_reserve(addr, size);
+> +
+> +       return err;
+> +}
+> +
+>  int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
+>  {
+>         struct linux_efi_memreserve *rsv;
 
-Andrew already took to mmotm.
- 
-> Acked-by: Arnd Bergmann <arnd@arndb.de>
+Sorry for the long radio silence. Just got around to testing this.
 
-Thanks!
+I can confirm that the above change James proposed does work on the
+platform that the issue was first observed on.
 
-> for the whole series.
-
--- 
-Sincerely yours,
-Mike.
+Cheers,
+Moritz
 
 _______________________________________________
 kexec mailing list
