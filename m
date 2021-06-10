@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 9 Jun 2021 15:39:57 -0700
-From: Moritz Fischer <mdf@kernel.org>
-Subject: Re: [PATCH v2 0/5] arm64: Make kexec_file_load honor iomem
- reservations
-Message-ID: <YMFDPWjEW2/KbcvH@epycbox.lan>
-References: <20210531095720.77469-1-maz@kernel.org>
- <41ac1e4b-3779-4cb2-5b64-d638521e67c1@arm.com>
+Received: from mail-mw2nam08on2085.outbound.protection.outlook.com
+ ([40.107.101.85] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lrFzr-00HTsl-2h
+ for kexec@lists.infradead.org; Thu, 10 Jun 2021 08:25:04 +0000
+From: Benjamin Poirier <bpoirier@nvidia.com>
+Subject: [PATCH makedumpfile] Add -L option to limit output file size
+Date: Thu, 10 Jun 2021 17:24:46 +0900
+Message-ID: <20210610082446.131057-1-bpoirier@nvidia.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <41ac1e4b-3779-4cb2-5b64-d638521e67c1@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,117 +21,201 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: James Morse <james.morse@arm.com>
-Cc: Marc Zyngier <maz@kernel.org>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Hanjun Guo <guohanjun@huawei.com>, Sudeep Holla <sudeep.holla@arm.com>, Eric Biederman <ebiederm@xmission.com>, Bhupesh SHARMA <bhupesh.sharma@linaro.org>, AKASHI Takahiro <takahiro.akashi@linaro.org>, Dave Young <dyoung@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Moritz Fischer <mdf@kernel.org>, kernel-team@android.com
+To: kexec@lists.infradead.org
 
-Hi James, Marc
+This option can be used to ensure that a certain amount of free space is
+preserved. It is useful when the output of makedumpfile is on the root
+filesystem and some services fail to start at boot if there is no space
+left.
 
-On Fri, Jun 04, 2021 at 05:20:38PM +0100, James Morse wrote:
-> Hi Marc,
-> 
-> On 31/05/2021 10:57, Marc Zyngier wrote:
-> > This series is a complete departure from the approach I initially sent
-> > almost a month ago[0]. Instead of trying to teach EFI, ACPI and other
-> > subsystem to use memblock, I've decided to stick with the iomem
-> > resource tree and use that exclusively for arm64.
-> 
-> > This means that my current approach is (despite what I initially
-> > replied to both Dave and Catalin) to provide an arm64-specific
-> > implementation of arch_kexec_locate_mem_hole() which walks the
-> > resource tree and excludes ranges of RAM that have been registered for
-> > any odd purpose. This is exactly what the userspace implementation
-> > does, and I don't really see a good reason to diverge from it.
-> 
-> Because in the ideal world we'd have only 'is it reserved' list to check against.
-> Memblock has been extended before. The resource-list is overly stringy, and I'm not sure
-> we can shove everything in the resource list.
-> 
-> Kexec already has problems on arm64 with memory hotplug. Fixing this for regular kexec in
-> /proc/iomem was rejected, and memblock's memblock_is_hotpluggable() is broken because
-> free_low_memory_core_early() does this:
-> |	memblock_clear_hotplug(0, -1)
-> 
-> Once that has been unpicked its clear kexec_file_load() can use
-> memblock_is_hotpluggable(). (its on the todo list, well, jira)
-> 
-> 
-> I'd prefer to keep kexec using memblock because it _shouldn't_ change after boot. Having
-> an "I want to reserve this and make it persistent over kexec" call that can happen at any
-> time can't work if the kexec image has already been loaded.
-> Practically, once user-space has started, you can't have new things you want to reserve
-> over kexec.
-> 
-> 
-> I don't see how the ACPI tables can escape short of a firmware bug. Could someone with an
-> affected platform boot with efi=debug and post the EFI memory map and the 'ACPI: FOO
-> 0xphysicaladdress' stuff at the top of the boot log?
-> 
-> 
-> efi_mem_reserve_persistent() has one caller for the GIC ITS stuff.
-> 
-> For the ITS, the reservations look like they are behind irqchip_init(), which is well
-> before the arch_initcall() that updates the resource tree from memblock. Your v1's first
-> patch should be sufficient.
-> 
-> 
-> > Again, this allows my Synquacer board to reliably use kexec_file_load
-> > with as little as 256M, something that would always fail before as it
-> > would overwrite most of the reserved tables.
-> > 
-> > Although this series still targets 5.14, the initial patch is a
-> > -stable candidate, and disables non-kdump uses of kexec_file_load. I
-> > have limited it to 5.10, as earlier kernels will require a different,
-> > probably more invasive approach.
-> > 
-> > Catalin, Ard: although this series has changed a bit compared to v1,
-> > I've kept your AB/RB tags. Should anything seem odd, please let me
-> > know and I'll drop them.
-> 
-> 
-> Thanks,
-> 
-> James
-> 
-> 
-> [0] I'm pretty sure this is enough. (Not tested)
-> diff --git a/drivers/firmware/efi/efi.c b/drivers/firmware/efi/efi.c
-> index 4b7ee3fa9224..3ed45153ce7f 100644
-> --- a/drivers/firmware/efi/efi.c
-> +++ b/drivers/firmware/efi/efi.c
-> @@ -893,7 +893,7 @@ static int __init efi_memreserve_map_root(void)
->         return 0;
->  }
-> 
-> -static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
-> +static int __efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
->  {
->         struct resource *res, *parent;
-> 
-> @@ -911,6 +911,16 @@ static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
->         return parent ? request_resource(parent, res) : 0;
->  }
-> 
-> +static int efi_mem_reserve_iomem(phys_addr_t addr, u64 size)
-> +{
-> +       int err = __efi_mem_reserve_iomem(addr, size);
-> +
-> +       if(IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK) && !err)
-> +               memblock_reserve(addr, size);
-> +
-> +       return err;
-> +}
-> +
->  int __ref efi_mem_reserve_persistent(phys_addr_t addr, u64 size)
->  {
->         struct linux_efi_memreserve *rsv;
+Signed-off-by: Benjamin Poirier <bpoirier@nvidia.com>
+---
+ makedumpfile.8 | 12 +++++++++---
+ makedumpfile.c | 50 ++++++++++++++++++++++++++++++++++++++++++++------
+ makedumpfile.h |  2 ++
+ print_info.c   |  3 +++
+ 4 files changed, 58 insertions(+), 9 deletions(-)
 
-Sorry for the long radio silence. Just got around to testing this.
+diff --git a/makedumpfile.8 b/makedumpfile.8
+index 313a41c..9a90f0e 100644
+--- a/makedumpfile.8
++++ b/makedumpfile.8
+@@ -157,9 +157,10 @@ will be effective if you specify domain-0's \fIvmlinux\fR with \-x option.
+ Then the pages are excluded only from domain-0.
+ .br
+ If specifying multiple dump_levels with the delimiter ',', makedumpfile retries
+-to create a \fIDUMPFILE\fR by other dump_level when "No space on device" error
+-happens. For example, if dump_level is "11,31" and makedumpfile fails
+-by dump_level 11, makedumpfile retries it by dump_level 31.
++to create \fIDUMPFILE\fR using the next dump_level when the size of a dumpfile
++exceeds the limit specified with '-L' or when when a "No space on device" error
++happens. For example, if dump_level is "11,31" and makedumpfile fails with
++dump_level 11, makedumpfile retries with dump_level 31.
+ .br
+ .B Example:
+ .br
+@@ -221,6 +222,11 @@ Here is the all combinations of the bits.
+     30 |      |   X   |   X   |  X   |  X
+     31 |  X   |   X   |   X   |  X   |  X
+ 
++.TP
++\fB\-L\fR \fISIZE\fR
++Limit the size of the output file to \fISIZE\fR bytes. An incomplete
++\fIDUMPFILE\fR or \fILOGFILE\fR is written if the size would otherwise exceed
++\fISIZE\fR.
+ 
+ .TP
+ \fB\-E\fR
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 894c88e..8a443c6 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -22,6 +22,8 @@
+ #include "cache.h"
+ #include <stddef.h>
+ #include <ctype.h>
++#include <signal.h>
++#include <sys/resource.h>
+ #include <sys/time.h>
+ #include <limits.h>
+ #include <assert.h>
+@@ -1383,6 +1385,28 @@ open_dump_file(void)
+ 		return FALSE;
+ 	}
+ 	info->fd_dumpfile = fd;
++
++	if (info->size_limit != -1) {
++		struct sigaction act = {
++			.sa_handler = SIG_IGN,
++		};
++		struct rlimit rlim = {
++			.rlim_cur = info->size_limit,
++			.rlim_max = info->size_limit,
++		};
++
++		if (sigaction(SIGXFSZ, &act, NULL)) {
++			ERRMSG("Can't ignore SIGXFSZ. %s\n", strerror(errno));
++			return FALSE;
++		}
++
++		if (setrlimit(RLIMIT_FSIZE, &rlim)) {
++			ERRMSG("Can't set file size limit(%lld). %s\n",
++			       (long long) info->size_limit, strerror(errno));
++			return FALSE;
++		}
++	}
++
+ 	return TRUE;
+ }
+ 
+@@ -4729,7 +4753,7 @@ write_and_check_space(int fd, void *buf, size_t buf_size, char *file_name)
+ 			written_size += status;
+ 			continue;
+ 		}
+-		if (errno == ENOSPC)
++		if (errno == ENOSPC || errno == EFBIG)
+ 			info->flag_nospace = TRUE;
+ 		MSG("\nCan't write the dump file(%s). %s\n",
+ 		    file_name, strerror(errno));
+@@ -5308,7 +5332,7 @@ dump_log_entry(char *logptr, int fp)
+ 	for (i = 0, p = msg; i < text_len; i++, p++) {
+ 		if (bufp - buf >= sizeof(buf) - buf_need) {
+ 			if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
+-				return FALSE;
++				goto out_fail;
+ 			bufp = buf;
+ 		}
+ 
+@@ -5322,10 +5346,13 @@ dump_log_entry(char *logptr, int fp)
+ 
+ 	*bufp++ = '\n';
+ 
+-	if (write(info->fd_dumpfile, buf, bufp - buf) < 0)
+-		return FALSE;
+-	else
++	if (write(info->fd_dumpfile, buf, bufp - buf) >= 0)
+ 		return TRUE;
++
++out_fail:
++	ERRMSG("\nCan't write the log file(%s). %s\n", info->name_dumpfile,
++	       strerror(errno));
++	return FALSE;
+ }
+ 
+ /*
+@@ -11585,6 +11612,7 @@ main(int argc, char *argv[])
+ 	}
+ 	info->file_vmcoreinfo = NULL;
+ 	info->fd_vmlinux = -1;
++	info->size_limit = -1;
+ 	info->fd_xen_syms = -1;
+ 	info->fd_memory = -1;
+ 	info->fd_dumpfile = -1;
+@@ -11605,9 +11633,11 @@ main(int argc, char *argv[])
+ 
+ 	info->block_order = DEFAULT_ORDER;
+ 	message_level = DEFAULT_MSG_LEVEL;
+-	while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:lpRvXx:", longopts,
++	while ((opt = getopt_long(argc, argv, "b:cDd:eEFfg:hi:lL:pRvXx:", longopts,
+ 	    NULL)) != -1) {
+ 		switch (opt) {
++			long long val;
++
+ 		case OPT_BLOCK_ORDER:
+ 			info->block_order = atoi(optarg);
+ 			break;
+@@ -11624,6 +11654,14 @@ main(int argc, char *argv[])
+ 			if (!parse_dump_level(optarg))
+ 				goto out;
+ 			break;
++		case OPT_SIZE_LIMIT:
++			val = atoll(optarg);
++			if (val < 0) {
++				MSG("Limit size(%lld) is invalid.\n", val);
++				goto out;
++			}
++			info->size_limit = val;
++			break;
+ 		case OPT_ELF_DUMPFILE:
+ 			info->flag_elf_dumpfile = 1;
+ 			break;
+diff --git a/makedumpfile.h b/makedumpfile.h
+index 79046f2..7357ee7 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1344,6 +1344,7 @@ struct DumpInfo {
+ 	int		max_dump_level;      /* maximum dump level */
+ 	int		num_dump_level;      /* number of dump level */
+ 	int		array_dump_level[NUM_ARRAY_DUMP_LEVEL];
++	off_t		size_limit;          /* dump file size limit */
+ 	int		flag_compress;       /* flag of compression */
+ 	int		flag_lzo_support;    /* flag of LZO compression support */
+ 	int		flag_elf_dumpfile;   /* flag of creating ELF dumpfile */
+@@ -2458,6 +2459,7 @@ struct elf_prstatus {
+ #define OPT_HELP                'h'
+ #define OPT_READ_VMCOREINFO     'i'
+ #define OPT_COMPRESS_LZO        'l'
++#define OPT_SIZE_LIMIT          'L'
+ #define OPT_COMPRESS_SNAPPY     'p'
+ #define OPT_REARRANGE           'R'
+ #define OPT_VERSION             'v'
+diff --git a/print_info.c b/print_info.c
+index ad4184e..8b28554 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -144,6 +144,9 @@ print_usage(void)
+ 	MSG("        16  |                                    X\n");
+ 	MSG("        31  |   X       X        X       X       X\n");
+ 	MSG("\n");
++	MSG("  [-L SIZE]:\n");
++	MSG("      Limit the size of the output file to SIZE bytes.\n");
++	MSG("\n");
+ 	MSG("  [-E]:\n");
+ 	MSG("      Create DUMPFILE in the ELF format.\n");
+ 	MSG("      This option cannot be specified with the -c, -l or -p options,\n");
+-- 
+2.32.0.rc0
 
-I can confirm that the above change James proposed does work on the
-platform that the issue was first observed on.
-
-Cheers,
-Moritz
 
 _______________________________________________
 kexec mailing list
