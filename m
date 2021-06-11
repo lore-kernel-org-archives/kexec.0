@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-f42.google.com ([209.85.166.42])
+Received: from mail-eopbgr1410044.outbound.protection.outlook.com
+ ([40.107.141.44] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lrci1-004LxE-Eg
- for kexec@lists.infradead.org; Fri, 11 Jun 2021 08:40:11 +0000
-Received: by mail-io1-f42.google.com with SMTP id k5so20296139iow.12
- for <kexec@lists.infradead.org>; Fri, 11 Jun 2021 01:40:07 -0700 (PDT)
-MIME-Version: 1.0
-References: <TYYPR01MB67772419ADBE30A1DD4FFCC3DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DEHa22MF8itbqkRiOC3TE2KZo6yLPE23Kb5ci=80VJXw@mail.gmail.com>
-In-Reply-To: <CAB6A5-DEHa22MF8itbqkRiOC3TE2KZo6yLPE23Kb5ci=80VJXw@mail.gmail.com>
-From: manty kuma <mantykuma@gmail.com>
-Date: Fri, 11 Jun 2021 17:38:55 +0900
-Message-ID: <CAB6A5-A52hsDFve4e0SE8H0YTSFD-858Q24WB6xOJrZKC5L_yg@mail.gmail.com>
+ id 1lrd8S-004S42-Bj
+ for kexec@lists.infradead.org; Fri, 11 Jun 2021 09:07:31 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
 Subject: Re: Compiling makedumpfile from source
+Date: Fri, 11 Jun 2021 09:07:24 +0000
+Message-ID: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,80 +19,26 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+To: manty kuma <mantykuma@gmail.com>
 Cc: kexec-ml <kexec@lists.infradead.org>
 
-V2hlbiBpIHRyeSB0byBtYWtlZHVtcGZpbGUgd2l0aG91dCB2bWNvcmVmaWxlLCBpdCBjb21wbGFp
-bnMgdGhhdAoiL3RtcC92bWNvcmVpbmZvIG5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkiIGFuZCBm
-YWlscyB0byBjb2xsZWN0IHRoZSBkdW1wLgoKRnJvbSB0aGUgUkVBRE1FIGl0IGFwcGVhcnMgdG8g
-bWUgdGhhdCBtYWtlZHVtcGZpbGUgY2FuIGdldCB2bWNvcmVpbmZvCmZyb20gL3Byb2Mvdm1jb3Jl
-CklzIHRoZXJlIGFueSBzcGVjaWFsIENPTkZJRyBuZWVkZWQgdG8gc3VwcG9ydCB0aGlzPwoKVGhh
-bmsgeW91IGluIGFkdmFuY2UhCgpSZWdhcmRzLApNYW50eQoKT24gRnJpLCBKdW4gMTEsIDIwMjEg
-YXQgMjoyNyBQTSBtYW50eSBrdW1hIDxtYW50eWt1bWFAZ21haWwuY29tPiB3cm90ZToKPgo+ID4g
-bGliZHctZGV2IGxpYmVsZi1kZXYgemxpYjFnLWRldiBsaWJiejItZGV2Cj4gVGhlc2UgcGFja2Fn
-ZXMgaGVscGVkLiBJIGFtIGFibGUgdG8gY29tcGlsZSBib3RoIGVsZnV0aWxzIGFuZCBtYWtlZHVt
-cGZpbGUgbm93Lgo+IFRoYW5rIHlvdS4KPgo+IEp1c3Qgb25lIG1vcmUgcXVlc3Rpb24gSSBoYXZl
-Lgo+Cj4gSSBhbSB1c2luZyBsaW51eCBrZXJuZWwgdjUuMTAKPiBJcyBpdCBuZWNlc3NhcnkgdG8g
-Z2VuZXJhdGUgYSAidm1jb3JlaW5mbyIgZmlsZSBiZWZvcmUgaGFuZCBhbmQgcHJvdmlkZSBpdCB0
-byBgbWFrZWR1bXBmaWxlYD8gb3IgY2FuIGl0IGdldCBpciBmcm9tIGAvcHJvYy92bWNvcmVgPwo+
-Cj4gUmVnYXJkcywKPiBNYW50eQo+Cj4gT24gRnJpLCBKdW4gMTEsIDIwMjEgYXQgMjowMCBQTSBI
-QUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4EpIDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3Rl
-Ogo+Pgo+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+PiA+IFRoYW5rIHlvdS4KPj4gPiBm
-b3IgZXhhbXBsZSwgaSBhbSB0cnlpbmcgdG8gY29tcGlsZTogZWxmdXRpbHMtMC4xODIgcGFja2Fn
-ZSBkb3dubG9hZGVkCj4+ID4gZnJvbSBodHRwczovL3NvdXJjZXdhcmUub3JnL2VsZnV0aWxzL2Z0
-cC8wLjE4Mi8KPj4gPiBBZnRlciBzdWNjZXNzZnVsbHkgY29uZmlndXJpbmcgaXQsIG1ha2UgZmFp
-bHMgd2l0aCBmb2xsb3dpbmcgZXJyb3IuCj4+Cj4+IEFoLCBJIHRob3VnaHQgYnkgbWlzdGFrZSB0
-aGF0IHlvdSBmYWlsZWQgdG8gY29tcGlsZSBtYWtlZHVtcGZpbGUuCj4+IFByb2JhYmx5IHlvdSBz
-aG91bGQgYXNrIGl0IHRvIHRoZSBlbGZ1dGlscyBjb21tdW5pdHkuCj4+Cj4+IGJ0dywgaWYgeW91
-IGNhbiB1c2UgbWFrZWR1bXBmaWxlIHdpdGggZHluYW1pYyBsaWJyYXJpZXMsIG1heWJlIHlvdQo+
-PiBjYW4gdXNlIHRoZSBkaXN0cmlidXRpb24ncyBwYWNrYWdlcyB3aXRob3V0IGJ1aWxkaW5nIGVs
-ZnV0aWxzLgo+PiBJJ20gbm90IGZhbWlsaWFyIHdpdGggRGViaWFuL1VidW50dSwgYnV0IEkgYnVp
-bHQgYSBtYWtlZHVtcGZpbGUgb24KPj4gYW4gVWJ1bnR1IG1hY2hpbmUgb25jZSB3aXRoIHRoZSBm
-b2xsb3dpbmcgcGFja2FnZXM6Cj4+ICAgbGliZHctZGV2IGxpYmVsZi1kZXYgemxpYjFnLWRldiBs
-aWJiejItZGV2Cj4+IGFuZCAibWFrZSBMSU5LVFlQRT1keW5hbWljIiwgcGxlYXNlIHNlZSBGQVEu
-MDAyIGluIFJFQURNRS4KPj4KPj4gS2F6dQo+Pgo+PiA+Cj4+ID4gLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLQo+PiA+IE1ha2luZyBhbGwgaW4gbGliZHdmbAo+PiA+ICAg
-Q0MgICAgICAgenN0ZC5vCj4+ID4gSW4gZmlsZSBpbmNsdWRlZCBmcm9tIHpzdGQuYzo0OjA6Cj4+
-ID4gZ3ppcC5jOiBJbiBmdW5jdGlvbiDigJhfX2xpYmR3X3VuenN0ZOKAmToKPj4gPiBnemlwLmM6
-Mjc4OjM5OiBlcnJvcjogcGFzc2luZyBhcmd1bWVudCAxIG9mIOKAmFpTVERfZGVjb21wcmVzc1N0
-cmVhbeKAmQo+PiA+IGZyb20gaW5jb21wYXRpYmxlIHBvaW50ZXIgdHlwZSBbLVdlcnJvcj1pbmNv
-bXBhdGlibGUtcG9pbnRlci10eXBlc10KPj4gPiAgICAgICAgcmVzdWx0ID0gWlNURF9kZWNvbXBy
-ZXNzU3RyZWFtIChkY3R4LCAmb3V0cHV0LCAmaW5wdXQpOwo+PiA+ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIF5+fn4KPj4gPiBJbiBmaWxlIGluY2x1ZGVkIGZyb20gZ3pp
-cC5jOjUzOjAsCj4+ID4gICAgICAgICAgICAgICAgICBmcm9tIHpzdGQuYzo0Ogo+PiA+IC91c3Iv
-aW5jbHVkZS96c3RkLmg6MzA4OjIwOiBub3RlOiBleHBlY3RlZCDigJhaU1REX0RTdHJlYW0gKiB7
-YWthIHN0cnVjdAo+PiA+IFpTVERfRFN0cmVhbV9zICp94oCZIGJ1dCBhcmd1bWVudCBpcyBvZiB0
-eXBlIOKAmFpTVERfREN0eCAqIHtha2Egc3RydWN0Cj4+ID4gWlNURF9EQ3R4X3MgKn3igJkKPj4g
-PiAgWlNURExJQl9BUEkgc2l6ZV90IFpTVERfZGVjb21wcmVzc1N0cmVhbShaU1REX0RTdHJlYW0q
-IHpkcywKPj4gPiBaU1REX291dEJ1ZmZlciogb3V0cHV0LCBaU1REX2luQnVmZmVyKiBpbnB1dCk7
-Cj4+ID4gICAgICAgICAgICAgICAgICAgICBefn5+fn5+fn5+fn5+fn5+fn5+fn4KPj4gPiBjYzE6
-IGFsbCB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwo+PiA+IE1ha2VmaWxlOjY4MTog
-cmVjaXBlIGZvciB0YXJnZXQgJ3pzdGQubycgZmFpbGVkCj4+ID4gbWFrZVsyXTogKioqIFt6c3Rk
-Lm9dIEVycm9yIDEKPj4gPiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4+ID4KPj4gPiBTZWVtcyBsaWtlIHRoZSBjb25maWd1cmUgZmlsZSBpcyBub3QgY2hlY2tpbmcg
-Zm9yIHNwZWNpZmljIHZlcnNpb24gb2YKPj4gPiBsaWJ6c3RkLWRldiBhbmQgaXQgaXMgbm90IGNv
-bXBhdGlibGUgd2l0aCBteSBjdXJyZW50IGxpYnpzdGQtZGV2Cj4+ID4gTXkgY3VycmVudCB2ZXJz
-aW9uIGlzIGFzIGZvbGxvd3M6Cj4+ID4gLS0tCj4+ID4gJCBhcHQtc2hvdy12ZXJzaW9ucyBsaWJ6
-c3RkLWRldgo+PiA+IGxpYnpzdGQtZGV2OmFtZDY0L3N0cmV0Y2ggMS4xLjItMStkZWI5dTEgdXB0
-b2RhdGUKPj4gPiAtLS0KPj4gPgo+PiA+IFRoYW5rIHlvdS4KPj4gPgo+PiA+IFJlZ2FyZHMsCj4+
-ID4gTWFudHkKPj4gPiBPbiBGcmksIEp1biAxMSwgMjAyMSBhdCAxMDoxMyBBTSBIQUdJTyBLQVpV
-SElUTyjokKnlsL7jgIDkuIDku4EpCj4+ID4gPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6Cj4+
-ID4gPgo+PiA+ID4gSGkgTWFudHksCj4+ID4gPgo+PiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0KPj4gPiA+ID4gV2hhdCB2ZXJzaW9uIG9mIGVsZnV0aWxzIGlzIG5lZWRlZCBieSBgbWFr
-ZWR1bXBmaWxlYD8KPj4gPiA+ID4gZWxmdXRpbHMtMC4xNDQgaXMgbWVudGlvbmVkIGluIFJFQURN
-RS4KPj4gPiA+ID4gSSB0cmllZCB0aGlzIG9uZSBidXQgdGhlIGNvbXBpbGF0aW9uIGlzIGJyb2tl
-bi4KPj4gPiA+ID4KPj4gPiA+ID4gaHR0cHM6Ly9zb3VyY2V3YXJlLm9yZy9lbGZ1dGlscy9mdHAv
-MC4xNDQvCj4+ID4gPiA+Cj4+ID4gPiA+IFNob3VsZCBJIHRyeSB0byB1c2UgdGhlIGxhdGVzdCBv
-bmUgaW5zdGVhZD8KPj4gPiA+Cj4+ID4gPiBJdCBjb3VsZCBiZSBidWlsdCB3aXRoIGVsZnV0aWxz
-LTAuMTQ0IG9yIGxhdGVyIGF0IHRoZSBwb2ludCBvZiB2MS42LjcsIGFuZAo+PiA+ID4gSSBjYW4g
-YnVpbGQgdGhlIGxhdGVzdCBtYWtlZHVtcGZpbGUgd2l0aCBlbGZ1dGlscy0wLjE0OCwgMC4xNjQs
-IDAuMTgyIG9uCj4+ID4gPiBzb21lIFJIRUwgZW52aXJvbm1lbnRzIG9uIGhhbmQgd2l0aCAibWFr
-ZSBMSU5LVFlQRT1keW5hbWljIi4KPj4gPiA+Cj4+ID4gPiBXaGF0IGNvbW1hbmQgZG8geW91IHVz
-ZSB0byBidWlsZD8gIGFuZCB3aGF0IGVycm9yIGRvIHlvdSBzZWU/Cj4+ID4gPgo+PiA+ID4gVGhh
-bmtzLAo+PiA+ID4gS2F6dQo+PiA+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
-b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+-----Original Message-----
+> When i try to makedumpfile without vmcorefile, it complains that
+> "/tmp/vmcoreinfo no such file or directory" and fails to collect the dump.
+> 
+> From the README it appears to me that makedumpfile can get vmcoreinfo
+> from /proc/vmcore
+> Is there any special CONFIG needed to support this?
+
+hmm, at least CONFIG_CRASH_CORE=y would be needed.
+
+Kazu
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
