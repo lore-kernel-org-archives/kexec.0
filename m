@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd32.google.com ([2607:f8b0:4864:20::d32])
+Received: from mail-eopbgr1400077.outbound.protection.outlook.com
+ ([40.107.140.77] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lrGiS-0007QR-08
- for kexec@lists.infradead.org; Thu, 10 Jun 2021 09:11:09 +0000
-Received: by mail-io1-xd32.google.com with SMTP id q7so26084538iob.4
- for <kexec@lists.infradead.org>; Thu, 10 Jun 2021 02:11:07 -0700 (PDT)
+ id 1lrVkA-0036Ul-3l
+ for kexec@lists.infradead.org; Fri, 11 Jun 2021 01:13:57 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: Compiling makedumpfile from source
+Date: Fri, 11 Jun 2021 01:13:45 +0000
+Message-ID: <TYYPR01MB6777CB1ECE64ED0CF18FAE09DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-From: manty kuma <mantykuma@gmail.com>
-Date: Thu, 10 Jun 2021 18:10:55 +0900
-Message-ID: <CAB6A5-DjJORLex-WGihXEGp6PUPcGea0k+bx-uC=2fL1BT94bg@mail.gmail.com>
-Subject: Compiling makedumpfile (and elfutils) from source
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,18 +23,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec-ml <kexec@lists.infradead.org>
+To: manty kuma <mantykuma@gmail.com>, kexec-ml <kexec@lists.infradead.org>
 
-What version of elfutils is needed by latest `makedumpfile`?
-elfutils-0.144 is mentioned in README.
-I tried this one but the compilation is broken.
+Hi Manty,
 
-https://sourceware.org/elfutils/ftp/0.144/
+-----Original Message-----
+> What version of elfutils is needed by `makedumpfile`?
+> elfutils-0.144 is mentioned in README.
+> I tried this one but the compilation is broken.
+> 
+> https://sourceware.org/elfutils/ftp/0.144/
+> 
+> Should I try to use the latest one instead?
 
-Should I try to use the latest one instead?
+It could be built with elfutils-0.144 or later at the point of v1.6.7, and
+I can build the latest makedumpfile with elfutils-0.148, 0.164, 0.182 on
+some RHEL environments on hand with "make LINKTYPE=dynamic".
 
-Regards,
-Manty
+What command do you use to build?  and what error do you see?
+
+Thanks,
+Kazu
 
 _______________________________________________
 kexec mailing list
