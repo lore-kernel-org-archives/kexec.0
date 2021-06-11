@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400077.outbound.protection.outlook.com
- ([40.107.140.77] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from mail-il1-x134.google.com ([2607:f8b0:4864:20::134])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lrVkA-0036Ul-3l
- for kexec@lists.infradead.org; Fri, 11 Jun 2021 01:13:57 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: Compiling makedumpfile from source
-Date: Fri, 11 Jun 2021 01:13:45 +0000
-Message-ID: <TYYPR01MB6777CB1ECE64ED0CF18FAE09DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
+ id 1lrXhX-003LbY-5w
+ for kexec@lists.infradead.org; Fri, 11 Jun 2021 03:19:20 +0000
+Received: by mail-il1-x134.google.com with SMTP id t6so3814170iln.8
+ for <kexec@lists.infradead.org>; Thu, 10 Jun 2021 20:19:18 -0700 (PDT)
 MIME-Version: 1.0
+References: <TYYPR01MB6777CB1ECE64ED0CF18FAE09DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYYPR01MB6777CB1ECE64ED0CF18FAE09DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: manty kuma <mantykuma@gmail.com>
+Date: Fri, 11 Jun 2021 12:19:06 +0900
+Message-ID: <CAB6A5-BT=nN5Uway2dSs9XC=w0BjGtm3VqANifJeVMf3N-FtJA@mail.gmail.com>
+Subject: Re: Compiling makedumpfile from source
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,33 +20,50 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: manty kuma <mantykuma@gmail.com>, kexec-ml <kexec@lists.infradead.org>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-Hi Manty,
-
------Original Message-----
-> What version of elfutils is needed by `makedumpfile`?
-> elfutils-0.144 is mentioned in README.
-> I tried this one but the compilation is broken.
-> 
-> https://sourceware.org/elfutils/ftp/0.144/
-> 
-> Should I try to use the latest one instead?
-
-It could be built with elfutils-0.144 or later at the point of v1.6.7, and
-I can build the latest makedumpfile with elfutils-0.148, 0.164, 0.182 on
-some RHEL environments on hand with "make LINKTYPE=dynamic".
-
-What command do you use to build?  and what error do you see?
-
-Thanks,
-Kazu
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+VGhhbmsgeW91Lgpmb3IgZXhhbXBsZSwgaSBhbSB0cnlpbmcgdG8gY29tcGlsZTogZWxmdXRpbHMt
+MC4xODIgcGFja2FnZSBkb3dubG9hZGVkCmZyb20gaHR0cHM6Ly9zb3VyY2V3YXJlLm9yZy9lbGZ1
+dGlscy9mdHAvMC4xODIvCkFmdGVyIHN1Y2Nlc3NmdWxseSBjb25maWd1cmluZyBpdCwgbWFrZSBm
+YWlscyB3aXRoIGZvbGxvd2luZyBlcnJvci4KCi0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0KTWFraW5nIGFsbCBpbiBsaWJkd2ZsCiAgQ0MgICAgICAgenN0ZC5vCkluIGZp
+bGUgaW5jbHVkZWQgZnJvbSB6c3RkLmM6NDowOgpnemlwLmM6IEluIGZ1bmN0aW9uIOKAmF9fbGli
+ZHdfdW56c3Rk4oCZOgpnemlwLmM6Mjc4OjM5OiBlcnJvcjogcGFzc2luZyBhcmd1bWVudCAxIG9m
+IOKAmFpTVERfZGVjb21wcmVzc1N0cmVhbeKAmQpmcm9tIGluY29tcGF0aWJsZSBwb2ludGVyIHR5
+cGUgWy1XZXJyb3I9aW5jb21wYXRpYmxlLXBvaW50ZXItdHlwZXNdCiAgICAgICByZXN1bHQgPSBa
+U1REX2RlY29tcHJlc3NTdHJlYW0gKGRjdHgsICZvdXRwdXQsICZpbnB1dCk7CiAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgIF5+fn4KSW4gZmlsZSBpbmNsdWRlZCBmcm9tIGd6
+aXAuYzo1MzowLAogICAgICAgICAgICAgICAgIGZyb20genN0ZC5jOjQ6Ci91c3IvaW5jbHVkZS96
+c3RkLmg6MzA4OjIwOiBub3RlOiBleHBlY3RlZCDigJhaU1REX0RTdHJlYW0gKiB7YWthIHN0cnVj
+dApaU1REX0RTdHJlYW1fcyAqfeKAmSBidXQgYXJndW1lbnQgaXMgb2YgdHlwZSDigJhaU1REX0RD
+dHggKiB7YWthIHN0cnVjdApaU1REX0RDdHhfcyAqfeKAmQogWlNURExJQl9BUEkgc2l6ZV90IFpT
+VERfZGVjb21wcmVzc1N0cmVhbShaU1REX0RTdHJlYW0qIHpkcywKWlNURF9vdXRCdWZmZXIqIG91
+dHB1dCwgWlNURF9pbkJ1ZmZlciogaW5wdXQpOwogICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+
+fn5+fn5+fn5+fn5+fgpjYzE6IGFsbCB3YXJuaW5ncyBiZWluZyB0cmVhdGVkIGFzIGVycm9ycwpN
+YWtlZmlsZTo2ODE6IHJlY2lwZSBmb3IgdGFyZ2V0ICd6c3RkLm8nIGZhaWxlZAptYWtlWzJdOiAq
+KiogW3pzdGQub10gRXJyb3IgMQotLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tCgpTZWVtcyBsaWtlIHRoZSBjb25maWd1cmUgZmlsZSBpcyBub3QgY2hlY2tpbmcgZm9yIHNw
+ZWNpZmljIHZlcnNpb24gb2YKbGlienN0ZC1kZXYgYW5kIGl0IGlzIG5vdCBjb21wYXRpYmxlIHdp
+dGggbXkgY3VycmVudCBsaWJ6c3RkLWRldgpNeSBjdXJyZW50IHZlcnNpb24gaXMgYXMgZm9sbG93
+czoKLS0tCiQgYXB0LXNob3ctdmVyc2lvbnMgbGlienN0ZC1kZXYKbGlienN0ZC1kZXY6YW1kNjQv
+c3RyZXRjaCAxLjEuMi0xK2RlYjl1MSB1cHRvZGF0ZQotLS0KClRoYW5rIHlvdS4KClJlZ2FyZHMs
+Ck1hbnR5Ck9uIEZyaSwgSnVuIDExLCAyMDIxIGF0IDEwOjEzIEFNIEhBR0lPIEtBWlVISVRPKOiQ
+qeWwvuOAgOS4gOS7gSkKPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6Cj4KPiBIaSBNYW50eSwK
+Pgo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiBXaGF0IHZlcnNpb24gb2YgZWxmdXRp
+bHMgaXMgbmVlZGVkIGJ5IGBtYWtlZHVtcGZpbGVgPwo+ID4gZWxmdXRpbHMtMC4xNDQgaXMgbWVu
+dGlvbmVkIGluIFJFQURNRS4KPiA+IEkgdHJpZWQgdGhpcyBvbmUgYnV0IHRoZSBjb21waWxhdGlv
+biBpcyBicm9rZW4uCj4gPgo+ID4gaHR0cHM6Ly9zb3VyY2V3YXJlLm9yZy9lbGZ1dGlscy9mdHAv
+MC4xNDQvCj4gPgo+ID4gU2hvdWxkIEkgdHJ5IHRvIHVzZSB0aGUgbGF0ZXN0IG9uZSBpbnN0ZWFk
+Pwo+Cj4gSXQgY291bGQgYmUgYnVpbHQgd2l0aCBlbGZ1dGlscy0wLjE0NCBvciBsYXRlciBhdCB0
+aGUgcG9pbnQgb2YgdjEuNi43LCBhbmQKPiBJIGNhbiBidWlsZCB0aGUgbGF0ZXN0IG1ha2VkdW1w
+ZmlsZSB3aXRoIGVsZnV0aWxzLTAuMTQ4LCAwLjE2NCwgMC4xODIgb24KPiBzb21lIFJIRUwgZW52
+aXJvbm1lbnRzIG9uIGhhbmQgd2l0aCAibWFrZSBMSU5LVFlQRT1keW5hbWljIi4KPgo+IFdoYXQg
+Y29tbWFuZCBkbyB5b3UgdXNlIHRvIGJ1aWxkPyAgYW5kIHdoYXQgZXJyb3IgZG8geW91IHNlZT8K
+Pgo+IFRoYW5rcywKPiBLYXp1Cj4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
