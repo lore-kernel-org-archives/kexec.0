@@ -1,12 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Stephen Brennan <stephen@brennan.io>
-Subject: Re: [PATCH v3 5/9] mm: remove CONFIG_DISCONTIGMEM
-In-Reply-To: <20210608091316.3622-6-rppt@kernel.org>
-References: <20210608091316.3622-1-rppt@kernel.org>
- <20210608091316.3622-6-rppt@kernel.org>
-Date: Fri, 11 Jun 2021 13:53:48 -0700
-Message-ID: <87r1h886n7.fsf@stepbren-lnx.us.oracle.com>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lrvSK-007pDe-Th
+ for kexec@lists.infradead.org; Sat, 12 Jun 2021 04:41:14 +0000
+Date: Sat, 12 Jun 2021 12:40:57 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed kernel
+Message-ID: <YMQ62d1EFFjRcv6w@dhcp-128-65.nay.redhat.com>
+References: <20161202195416.58953-1-andriy.shevchenko@linux.intel.com>
+ <YLdEZoSWI41fcTB1@smile.fi.intel.com>
+ <YLdG91qspr19heDS@smile.fi.intel.com>
+ <YLss6ZNPMIXleLLF@dhcp-128-65.nay.redhat.com>
+ <YL5HvUqtsDXx5CzM@smile.fi.intel.com>
+ <YL5U/zSb50SnbLgW@smile.fi.intel.com>
+ <YL9hxPdPj0dYMyaD@dhcp-128-65.nay.redhat.com>
+ <CAHp75VcPuf6BLGf7Y3RO2M-gHMFZMTeb4ftnj_tbGS4TxvThxA@mail.gmail.com>
+ <YMCsSqzmG4jb1Ojo@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <YMCsSqzmG4jb1Ojo@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,206 +31,89 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Geert Uytterhoeven <geert@linux-m68k.org>, Ivan Kokshaysky <ink@jurassic.park.msu.ru>, Jonathan Corbet <corbet@lwn.net>, Matt Turner <mattst88@gmail.com>, Mike Rapoport <rppt@kernel.org>, Mike Rapoport <rppt@linux.ibm.com>, Richard Henderson <rth@twiddle.net>, Vineet Gupta <vgupta@synopsys.com>, kexec@lists.infradead.org, linux-alpha@vger.kernel.org, linux-arch@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-ia64@vger.kernel.org, linux-kernel@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-mm@kvack.org, linux-riscv@lists.infradead.org, linux-s390@vger.kernel.org, linux-sh@vger.kernel.org, linux-snps-arc@lists.infradead.org, linux-xtensa@linux-xtensa.org, linuxppc-dev@lists.ozlabs.org, sparclinux@vger.kernel.org
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Andy Shevchenko <andriy.shevchenko@linux.intel.com>, Jean Delvare <jdelvare@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, Javier =?iso-8859-1?B?VGnh?= <javier.tia@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>, Ard Biesheuvel <ardb@kernel.org>
 
-Mike Rapoport <rppt@kernel.org> writes:
-> From: Mike Rapoport <rppt@linux.ibm.com>
->
-> There are no architectures that support DISCONTIGMEM left.
->
-> Remove the configuration option and the dead code it was guarding in the
-> generic memory management code.
->
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  include/asm-generic/memory_model.h | 37 ++++--------------------------
->  include/linux/mmzone.h             |  8 ++++---
->  mm/Kconfig                         | 25 +++-----------------
->  mm/page_alloc.c                    | 13 -----------
->  4 files changed, 12 insertions(+), 71 deletions(-)
->
-> diff --git a/include/asm-generic/memory_model.h b/include/asm-generic/memory_model.h
-> index 7637fb46ba4f..a2c8ed60233a 100644
-> --- a/include/asm-generic/memory_model.h
-> +++ b/include/asm-generic/memory_model.h
-> @@ -6,47 +6,18 @@
->  
->  #ifndef __ASSEMBLY__
->  
-> +/*
-> + * supports 3 memory models.
-> + */
+> Probably it is doable to have kexec on 32bit efi working
+> without runtime service support, that means no need the trick of fixed
+> mapping.
+> 
+> If I can restore my vm to boot 32bit efi on this weekend then I may provide some draft
+> patches for test.
 
-This comment could either be updated to reflect 2 memory models, or
-removed entirely.
+Unfortunately I failed to setup a 32bit efi guest,  here are some
+untested draft patches, please have a try.
 
-Thanks,
-Stephen
+========= kernel draft patch ==============
 
->  #if defined(CONFIG_FLATMEM)
->  
->  #ifndef ARCH_PFN_OFFSET
->  #define ARCH_PFN_OFFSET		(0UL)
->  #endif
->  
-> -#elif defined(CONFIG_DISCONTIGMEM)
-> -
-> -#ifndef arch_pfn_to_nid
-> -#define arch_pfn_to_nid(pfn)	pfn_to_nid(pfn)
-> -#endif
-> -
-> -#ifndef arch_local_page_offset
-> -#define arch_local_page_offset(pfn, nid)	\
-> -	((pfn) - NODE_DATA(nid)->node_start_pfn)
-> -#endif
-> -
-> -#endif /* CONFIG_DISCONTIGMEM */
-> -
-> -/*
-> - * supports 3 memory models.
-> - */
-> -#if defined(CONFIG_FLATMEM)
-> -
->  #define __pfn_to_page(pfn)	(mem_map + ((pfn) - ARCH_PFN_OFFSET))
->  #define __page_to_pfn(page)	((unsigned long)((page) - mem_map) + \
->  				 ARCH_PFN_OFFSET)
-> -#elif defined(CONFIG_DISCONTIGMEM)
-> -
-> -#define __pfn_to_page(pfn)			\
-> -({	unsigned long __pfn = (pfn);		\
-> -	unsigned long __nid = arch_pfn_to_nid(__pfn);  \
-> -	NODE_DATA(__nid)->node_mem_map + arch_local_page_offset(__pfn, __nid);\
-> -})
-> -
-> -#define __page_to_pfn(pg)						\
-> -({	const struct page *__pg = (pg);					\
-> -	struct pglist_data *__pgdat = NODE_DATA(page_to_nid(__pg));	\
-> -	(unsigned long)(__pg - __pgdat->node_mem_map) +			\
-> -	 __pgdat->node_start_pfn;					\
-> -})
->  
->  #elif defined(CONFIG_SPARSEMEM_VMEMMAP)
->  
-> @@ -70,7 +41,7 @@
->  	struct mem_section *__sec = __pfn_to_section(__pfn);	\
->  	__section_mem_map_addr(__sec) + __pfn;		\
->  })
-> -#endif /* CONFIG_FLATMEM/DISCONTIGMEM/SPARSEMEM */
-> +#endif /* CONFIG_FLATMEM/SPARSEMEM */
->  
->  /*
->   * Convert a physical address to a Page Frame Number and back
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 0d53eba1c383..700032e99419 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -738,10 +738,12 @@ struct zonelist {
->  	struct zoneref _zonerefs[MAX_ZONES_PER_ZONELIST + 1];
->  };
->  
-> -#ifndef CONFIG_DISCONTIGMEM
-> -/* The array of struct pages - for discontigmem use pgdat->lmem_map */
-> +/*
-> + * The array of struct pages for flatmem.
-> + * It must be declared for SPARSEMEM as well because there are configurations
-> + * that rely on that.
-> + */
->  extern struct page *mem_map;
-> -#endif
->  
->  #ifdef CONFIG_TRANSPARENT_HUGEPAGE
->  struct deferred_split {
-> diff --git a/mm/Kconfig b/mm/Kconfig
-> index 02d44e3420f5..218b96ccc84a 100644
-> --- a/mm/Kconfig
-> +++ b/mm/Kconfig
-> @@ -19,7 +19,7 @@ choice
->  
->  config FLATMEM_MANUAL
->  	bool "Flat Memory"
-> -	depends on !(ARCH_DISCONTIGMEM_ENABLE || ARCH_SPARSEMEM_ENABLE) || ARCH_FLATMEM_ENABLE
-> +	depends on !ARCH_SPARSEMEM_ENABLE || ARCH_FLATMEM_ENABLE
->  	help
->  	  This option is best suited for non-NUMA systems with
->  	  flat address space. The FLATMEM is the most efficient
-> @@ -32,21 +32,6 @@ config FLATMEM_MANUAL
->  
->  	  If unsure, choose this option (Flat Memory) over any other.
->  
-> -config DISCONTIGMEM_MANUAL
-> -	bool "Discontiguous Memory"
-> -	depends on ARCH_DISCONTIGMEM_ENABLE
-> -	help
-> -	  This option provides enhanced support for discontiguous
-> -	  memory systems, over FLATMEM.  These systems have holes
-> -	  in their physical address spaces, and this option provides
-> -	  more efficient handling of these holes.
-> -
-> -	  Although "Discontiguous Memory" is still used by several
-> -	  architectures, it is considered deprecated in favor of
-> -	  "Sparse Memory".
-> -
-> -	  If unsure, choose "Sparse Memory" over this option.
-> -
->  config SPARSEMEM_MANUAL
->  	bool "Sparse Memory"
->  	depends on ARCH_SPARSEMEM_ENABLE
-> @@ -62,17 +47,13 @@ config SPARSEMEM_MANUAL
->  
->  endchoice
->  
-> -config DISCONTIGMEM
-> -	def_bool y
-> -	depends on (!SELECT_MEMORY_MODEL && ARCH_DISCONTIGMEM_ENABLE) || DISCONTIGMEM_MANUAL
-> -
->  config SPARSEMEM
->  	def_bool y
->  	depends on (!SELECT_MEMORY_MODEL && ARCH_SPARSEMEM_ENABLE) || SPARSEMEM_MANUAL
->  
->  config FLATMEM
->  	def_bool y
-> -	depends on (!DISCONTIGMEM && !SPARSEMEM) || FLATMEM_MANUAL
-> +	depends on !SPARSEMEM || FLATMEM_MANUAL
->  
->  config FLAT_NODE_MEM_MAP
->  	def_bool y
-> @@ -85,7 +66,7 @@ config FLAT_NODE_MEM_MAP
->  #
->  config NEED_MULTIPLE_NODES
->  	def_bool y
-> -	depends on DISCONTIGMEM || NUMA
-> +	depends on NUMA
->  
->  #
->  # SPARSEMEM_EXTREME (which is the default) does some bootmem
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index aaa1655cf682..6fc22482eaa8 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -331,20 +331,7 @@ compound_page_dtor * const compound_page_dtors[NR_COMPOUND_DTORS] = {
->  
->  int min_free_kbytes = 1024;
->  int user_min_free_kbytes = -1;
-> -#ifdef CONFIG_DISCONTIGMEM
-> -/*
-> - * DiscontigMem defines memory ranges as separate pg_data_t even if the ranges
-> - * are not on separate NUMA nodes. Functionally this works but with
-> - * watermark_boost_factor, it can reclaim prematurely as the ranges can be
-> - * quite small. By default, do not boost watermarks on discontigmem as in
-> - * many cases very high-order allocations like THP are likely to be
-> - * unsupported and the premature reclaim offsets the advantage of long-term
-> - * fragmentation avoidance.
-> - */
-> -int watermark_boost_factor __read_mostly;
-> -#else
->  int watermark_boost_factor __read_mostly = 15000;
-> -#endif
->  int watermark_scale_factor = 10;
->  
->  static unsigned long nr_kernel_pages __initdata;
-> -- 
-> 2.28.0
+---
+ arch/x86/boot/header.S         |    2 +-
+ arch/x86/platform/efi/efi.c    |    6 +++---
+ arch/x86/platform/efi/quirks.c |    3 ---
+ 3 files changed, 4 insertions(+), 7 deletions(-)
+
+--- linux-x86.orig/arch/x86/boot/header.S
++++ linux-x86/arch/x86/boot/header.S
+@@ -416,7 +416,7 @@ xloadflags:
+ # define XLF23 0
+ #endif
+ 
+-#if defined(CONFIG_X86_64) && defined(CONFIG_EFI) && defined(CONFIG_KEXEC_CORE)
++#if defined(CONFIG_EFI) && defined(CONFIG_KEXEC_CORE)
+ # define XLF4 XLF_EFI_KEXEC
+ #else
+ # define XLF4 0
+--- linux-x86.orig/arch/x86/platform/efi/efi.c
++++ linux-x86/arch/x86/platform/efi/efi.c
+@@ -710,10 +710,10 @@ static void __init kexec_enter_virtual_m
+ 	unsigned int num_pages;
+ 
+ 	/*
+-	 * We don't do virtual mode, since we don't do runtime services, on
+-	 * non-native EFI.
++	 * We don't do virtual mode, since we don't do runtime services
++	 * on non-native or IA32 EFI.
+ 	 */
+-	if (efi_is_mixed()) {
++	if (!efi_enabled(EFI_64BIT)) {
+ 		efi_memmap_unmap();
+ 		clear_bit(EFI_RUNTIME_SERVICES, &efi.flags);
+ 		return;
+--- linux-x86.orig/arch/x86/platform/efi/quirks.c
++++ linux-x86/arch/x86/platform/efi/quirks.c
+@@ -524,9 +524,6 @@ int __init efi_reuse_config(u64 tables,
+ 	if (!efi_setup)
+ 		return 0;
+ 
+-	if (!efi_enabled(EFI_64BIT))
+-		return 0;
+-
+ 	data = early_memremap(efi_setup, sizeof(*data));
+ 	if (!data) {
+ 		ret = -ENOMEM;
+
+
+========= kexec-tools draft patch =========
+
+---
+ kexec/arch/i386/kexec-bzImage.c |    5 +++++
+ 1 file changed, 5 insertions(+)
+
+--- kexec-tools.orig/kexec/arch/i386/kexec-bzImage.c
++++ kexec-tools/kexec/arch/i386/kexec-bzImage.c
+@@ -83,6 +83,11 @@ int bzImage_probe(const char *buf, off_t
+ 	if (probe_debug) {
+ 		fprintf(stderr, "It's a bzImage\n");
+ 	}
++
++#define XLF_EFI_KEXEC   (1 << 4)
++	if ((header->xloadflags & XLF_EFI_KEXEC) == XLF_EFI_KEXEC)
++		bzImage_support_efi_boot = 1;
++
+ 	return 0;
+ }
+ 
+
 
 _______________________________________________
 kexec mailing list
