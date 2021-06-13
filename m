@@ -1,13 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from email6.ustc.edu.cn ([2001:da8:d800::8] helo=ustc.edu.cn)
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1ls3UA-008ZF1-Uo
- for kexec@lists.infradead.org; Sat, 12 Jun 2021 13:15:43 +0000
-Date: Sat, 12 Jun 2021 21:09:53 +0800
-From: Jisheng Zhang <jszhang3@mail.ustc.edu.cn>
-Subject: [PATCH] fs/proc/vmcore: hide mmap_vmcore_fault() and
- vmcore_mmap_ops for nommu
-Message-ID: <20210612210953.34dff323@xhacker>
+Received: from ms.lwn.net ([2600:3c01:e000:3a1::42])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1lsZEc-00Bagc-3a
+ for kexec@lists.infradead.org; Sun, 13 Jun 2021 23:09:43 +0000
+From: Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH v3] Documentation: kdump: update kdump guide
+In-Reply-To: <20210609083218.GB591017@MiWiFi-R3L-srv>
+References: <20210609083218.GB591017@MiWiFi-R3L-srv>
+Date: Sun, 13 Jun 2021 17:09:40 -0600
+Message-ID: <878s3dbbuz.fsf@meer.lwn.net>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,49 +22,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-doc@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, dyoung@redhat.com
 
-From: Jisheng Zhang <jszhang@kernel.org>
+Baoquan He <bhe@redhat.com> writes:
 
-Without CONFIG_MMU, we get a W=1 build warning:
+> Some parts of the guide are aged, hence need be updated.
+>
+> 1) The backup area of the 1st 640K on X86_64 has been removed
+>    by below commits, update the description accordingly.
+>
+>    commit 7c321eb2b843 ("x86/kdump: Remove the backup region handling")
+>    commit 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+>
+> 2) Sort out the descripiton of "crashkernel syntax" part.
+>
+> 3) And some other minor cleanups.
+>
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-fs/proc/vmcore.c:443:42: warning: unused variable 'vmcore_mmap_ops' [-Wunused-const-variable]
-static const struct vm_operations_struct vmcore_mmap_ops = {
+Applied, thanks.
 
-The vmcore_mmap_ops is only referenced from an #ifdef'ed caller, so
-this uses the same #ifdef around vmcore_mmap_ops and mmap_vmcore_fault().
-
-Reported-by: kernel test robot <lkp@intel.com>
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- fs/proc/vmcore.c | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 9a15334da208..d902a67cc3ea 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -401,6 +401,7 @@ static ssize_t read_vmcore(struct file *file, char __user *buffer,
- 	return __read_vmcore((__force char *) buffer, buflen, fpos, 1);
- }
- 
-+#ifdef CONFIG_MMU
- /*
-  * The vmcore fault handler uses the page cache and fills data using the
-  * standard __vmcore_read() function.
-@@ -443,6 +444,7 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
- static const struct vm_operations_struct vmcore_mmap_ops = {
- 	.fault = mmap_vmcore_fault,
- };
-+#endif
- 
- /**
-  * vmcore_alloc_buf - allocate buffer in vmalloc memory
--- 
-2.32.0
-
-
+jon
 
 _______________________________________________
 kexec mailing list
