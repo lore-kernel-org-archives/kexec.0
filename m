@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
- by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lsxdP-007E65-7n
- for kexec@lists.infradead.org; Tue, 15 Jun 2021 01:13:04 +0000
-Date: Tue, 15 Jun 2021 09:08:56 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3] Documentation: kdump: update kdump guide
-Message-ID: <20210615010856.GA630506@MiWiFi-R3L-srv>
-References: <20210609083218.GB591017@MiWiFi-R3L-srv>
- <878s3dbbuz.fsf@meer.lwn.net> <87sg1l9vo5.fsf@meer.lwn.net>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87sg1l9vo5.fsf@meer.lwn.net>
+References: <20210317113130.2554368-1-geert+renesas@glider.be>
+ <CAL_JsqL3NRDpzPbOxwvP6N+K76UXmrxs=e9-1rK-PbAKUx7f6w@mail.gmail.com>
+In-Reply-To: <CAL_JsqL3NRDpzPbOxwvP6N+K76UXmrxs=e9-1rK-PbAKUx7f6w@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 15 Jun 2021 16:51:33 +0200
+Message-ID: <CAMuHMdUdB-Ux9UpeaN3H0_UWDH7_9r3s72ZP01++XzOvrwavHg@mail.gmail.com>
+Subject: Re: [PATCH v3] ARM: Parse kdump DT properties
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,41 +19,116 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, kexec@lists.infradead.org, akpm@linux-foundation.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Hari Bathini <hbathini@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Russell King <linux@armlinux.org.uk>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, "H. Peter Anvin" <hpa@zytor.com>, vgoyal@redhat.com, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, dyoung@redhat.com
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>, Ard Biesheuvel <ardb@kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Marek Szyprowski <m.szyprowski@samsung.com>, Dmitry Osipenko <digetx@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Arnd Bergmann <arnd@arndb.de>, Stephen Boyd <sboyd@kernel.org>, =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>, Lukasz Stelmach <l.stelmach@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
 
-On 06/13/21 at 05:44pm, Jonathan Corbet wrote:
-> Jonathan Corbet <corbet@lwn.net> writes:
-> 
-> > Baoquan He <bhe@redhat.com> writes:
+Hi Rob,
+
+On Mon, Mar 22, 2021 at 5:59 PM Rob Herring <robh+dt@kernel.org> wrote:
+> On Wed, Mar 17, 2021 at 5:31 AM Geert Uytterhoeven
+> <geert+renesas@glider.be> wrote:
+> > Parse the following DT properties in the crash dump kernel, to provide a
+> > modern interface between kexec and the crash dump kernel:
+> >   - linux,elfcorehdr: ELF core header segment, similar to the
+> >     "elfcorehdr=" kernel parameter.
+> >   - linux,usable-memory-range: Usable memory reserved for the crash dump
+> >     kernel.
+> >     This makes the memory reservation explicit.  If present, Linux no
+> >     longer needs to mask the program counter, and rely on the "mem="
+> >     kernel parameter to obtain the start and size of usable memory.
 > >
-> >> Some parts of the guide are aged, hence need be updated.
-> >>
-> >> 1) The backup area of the 1st 640K on X86_64 has been removed
-> >>    by below commits, update the description accordingly.
-> >>
-> >>    commit 7c321eb2b843 ("x86/kdump: Remove the backup region handling")
-> >>    commit 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
-> >>
-> >> 2) Sort out the descripiton of "crashkernel syntax" part.
-> >>
-> >> 3) And some other minor cleanups.
-> >>
-> >> Signed-off-by: Baoquan He <bhe@redhat.com>
+> > For backwards compatibility, the traditional method to derive the start
+> > of memory is still used if "linux,usable-memory-range" is absent, and
+> > the "elfcorehdr=" and "mem=" kernel parameters are still parsed.
 > >
-> > Applied, thanks.
-> 
-> Actually, this patch added a docs build warning:
-> 
->   /stuff/k/git/kernel/Documentation/admin-guide/kdump/kdump.rst:286: WARNING: Literal block ends without a blank line; unexpected unindent.
-> 
-> I've gone ahead and inserted the blank line to fix this.  In the future,
-> please build-test your changes to make sure that you are not adding new
-> warnings.
+> > Loosely based on the ARM64 version by Akashi Takahiro.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks, jon. I didn't know doc change can cause build failure, so didn't
-build. Will remember this.
+> > --- a/arch/arm/mm/init.c
+> > +++ b/arch/arm/mm/init.c
+> > @@ -4,6 +4,7 @@
+> >   *
+> >   *  Copyright (C) 1995-2005 Russell King
+> >   */
+> > +#include <linux/crash_dump.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/errno.h>
+> >  #include <linux/swap.h>
+> > @@ -210,8 +211,95 @@ void check_cpu_icache_size(int cpuid)
+> >  }
+> >  #endif
+> >
+> > +#ifdef CONFIG_OF_EARLY_FLATTREE
+> > +static int __init early_init_dt_scan_usablemem(unsigned long node,
+> > +               const char *uname, int depth, void *data)
+> > +{
+> > +       struct memblock_region *usablemem = data;
+> > +       const __be32 *reg;
+> > +       int len;
+> > +
+> > +       if (depth != 1 || strcmp(uname, "chosen") != 0)
+> > +               return 0;
+>
+> We have libfdt now, just get the '/chosen' node rather than using
+> of_scan_flat_dt().
+>
+>
+> > +
+> > +       reg = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+> > +       if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+> > +               return 1;
+> > +
+> > +       usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+> > +       usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+> > +       return 1;
+> > +}
+> > +
+> > +static void __init fdt_enforce_memory_region(void)
+> > +{
+> > +       struct memblock_region reg = {
+> > +               .size = 0,
+> > +       };
+> > +
+> > +       of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+> > +
+> > +       if (reg.size)
+> > +               memblock_cap_memory_range(reg.base, reg.size);
+>
+> We should be able to do this in the DT core code. It doesn't matter
+> that these properties are arm* only. Other arches won't find the
+> properties.
+>
+> Also, note that there is now a drivers/of/kexec.c (in -next) though
+> not sure if all this would go there or stay in fdt.c with the rest of
+> the memory parsing.
 
+It's gonna be the latter, as that file handles the FDT during early
+kernel startup, for both normal and kdump kernels.
+
+Despite the name, drivers/of/kexec.c is not for kexec, but for
+kexec_file.  This is the "new" fancy syscall that prepares the DTB
+for the new kernel itself, unlike the classic kexec syscall, where
+userspace is responsible for preparing the DTB for the new kernel.
+
+> > +#if defined(CONFIG_CRASH_DUMP) && defined(CONFIG_OF_EARLY_FLATTREE)
+> > +static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+> > +               const char *uname, int depth, void *data)
+>
+> Same comments as above.
+
+This one can indeed be handled easily by drivers/of/fdt.c.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
