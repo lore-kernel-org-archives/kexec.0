@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wr1-x42f.google.com ([2a00:1450:4864:20::42f])
+Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1ltoxe-009nWz-83
- for kexec@lists.infradead.org; Thu, 17 Jun 2021 10:09:23 +0000
-Received: by mail-wr1-x42f.google.com with SMTP id e22so2493845wrc.1
- for <kexec@lists.infradead.org>; Thu, 17 Jun 2021 03:09:20 -0700 (PDT)
-Date: Thu, 17 Jun 2021 11:09:16 +0100
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [PATCH v2 2/4] kgdb: Fix spelling mistakes
-Message-ID: <20210617100916.ynovtwbtsq7eaabw@maple.lan>
-References: <20210529110305.9446-1-thunder.leizhen@huawei.com>
- <20210529110305.9446-3-thunder.leizhen@huawei.com>
+ id 1lu5Mz-00CVWk-Aa
+ for kexec@lists.infradead.org; Fri, 18 Jun 2021 03:40:39 +0000
+Received: by mail-ed1-x52f.google.com with SMTP id z12so6675320edc.1
+ for <kexec@lists.infradead.org>; Thu, 17 Jun 2021 20:40:36 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210529110305.9446-3-thunder.leizhen@huawei.com>
+References: <20210616085118.1141101-1-omosnace@redhat.com>
+In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Thu, 17 Jun 2021 23:40:24 -0400
+Message-ID: <CAHC9VhSr2KpeBXuyoHR3_hs+qczFUaBx0oCSMfBBA5UNYU+0KA@mail.gmail.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,126 +25,143 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Jason Wessel <jason.wessel@windriver.com>, Douglas Anderson <dianders@chromium.org>, Balbir Singh <bsingharora@gmail.com>, Barry Song <song.bao.hua@hisilicon.com>, Christoph Hellwig <hch@lst.de>, Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Peter Zijlstra <peterz@infradead.org>, Darren Hart <dvhart@infradead.org>, Davidlohr Bueso <dave@stgolabs.net>, Eric Biederman <ebiederm@xmission.com>, "Naveen N . Rao" <naveen.n.rao@linux.ibm.com>, Anil S Keshavamurthy <anil.s.keshavamurthy@intel.com>, "David S . Miller" <davem@davemloft.net>, Masami Hiramatsu <mhiramat@kernel.org>, Jessica Yu <jeyu@kernel.org>, Steffen Klassert <steffen.klassert@secunet.com>, Daniel Jordan <daniel.m.jordan@oracle.com>, Oleg Nesterov <oleg@redhat.com>, John Stultz <john.stultz@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Luis Chamberlain <mcgrof@kernel.org>, Tejun Heo <tj@kernel.org>, Lai Jiangshan <jiangshanlai@gmail.com>, kgdb-bugreport <kgdb-bugreport@lists.sourceforge.net>, kexec <kexec@lists.infradead.org>, linux-crypto <linux-crypto@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
 
-On Sat, May 29, 2021 at 07:03:03PM +0800, Zhen Lei wrote:
-> Fix some spelling mistakes in comments:
-> initalization ==> initialization
-> detatch ==> detach
-> represntation ==> representation
-> hexidecimal ==> hexadecimal
-> delimeter ==> delimiter
-> architecure ==> architecture
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On Wed, Jun 16, 2021 at 4:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> lockdown") added an implementation of the locked_down LSM hook to
+> SELinux, with the aim to restrict which domains are allowed to perform
+> operations that would breach lockdown.
+>
+> However, in several places the security_locked_down() hook is called in
+> situations where the current task isn't doing any action that would
+> directly breach lockdown, leading to SELinux checks that are basically
+> bogus.
+>
+> To fix this, add an explicit struct cred pointer argument to
+> security_lockdown() and define NULL as a special value to pass instead
+> of current_cred() in such situations. LSMs that take the subject
+> credentials into account can then fall back to some default or ignore
+> such calls altogether. In the SELinux lockdown hook implementation, use
+> SECINITSID_KERNEL in case the cred argument is NULL.
+>
+> Most of the callers are updated to pass current_cred() as the cred
+> pointer, thus maintaining the same behavior. The following callers are
+> modified to pass NULL as the cred pointer instead:
+> 1. arch/powerpc/xmon/xmon.c
+>      Seems to be some interactive debugging facility. It appears that
+>      the lockdown hook is called from interrupt context here, so it
+>      should be more appropriate to request a global lockdown decision.
+> 2. fs/tracefs/inode.c:tracefs_create_file()
+>      Here the call is used to prevent creating new tracefs entries when
+>      the kernel is locked down. Assumes that locking down is one-way -
+>      i.e. if the hook returns non-zero once, it will never return zero
+>      again, thus no point in creating these files. Also, the hook is
+>      often called by a module's init function when it is loaded by
+>      userspace, where it doesn't make much sense to do a check against
+>      the current task's creds, since the task itself doesn't actually
+>      use the tracing functionality (i.e. doesn't breach lockdown), just
+>      indirectly makes some new tracepoints available to whoever is
+>      authorized to use them.
+> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+>      Here a cryptographic secret is redacted based on the value returned
+>      from the hook. There are two possible actions that may lead here:
+>      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+>         task context is relevant, since the dumped data is sent back to
+>         the current task.
+>      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+>         dumped SA is broadcasted to tasks subscribed to XFRM events -
+>         here the current task context is not relevant as it doesn't
+>         represent the tasks that could potentially see the secret.
+>      It doesn't seem worth it to try to keep using the current task's
+>      context in the a) case, since the eventual data leak can be
+>      circumvented anyway via b), plus there is no way for the task to
+>      indicate that it doesn't care about the actual key value, so the
+>      check could generate a lot of "false alert" denials with SELinux.
+>      Thus, let's pass NULL instead of current_cred() here faute de
+>      mieux.
+>
+> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
 
-Applied, thanks.
-
+This seems reasonable to me, but before I merge it into the SELinux
+tree I think it would be good to get some ACKs from the relevant
+subsystem folks.  I don't believe we ever saw a response to the last
+question for the PPC folks, did we?
 
 > ---
->  include/linux/kgdb.h           | 8 ++++----
->  kernel/debug/debug_core.c      | 2 +-
->  kernel/debug/kdb/kdb_main.c    | 8 ++++----
->  kernel/debug/kdb/kdb_private.h | 2 +-
->  4 files changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/include/linux/kgdb.h b/include/linux/kgdb.h
-> index 392a3670944c..258cdde8d356 100644
-> --- a/include/linux/kgdb.h
-> +++ b/include/linux/kgdb.h
-> @@ -105,9 +105,9 @@ extern int dbg_set_reg(int regno, void *mem, struct pt_regs *regs);
->   */
->  
->  /**
-> - *	kgdb_arch_init - Perform any architecture specific initalization.
-> + *	kgdb_arch_init - Perform any architecture specific initialization.
->   *
-> - *	This function will handle the initalization of any architecture
-> + *	This function will handle the initialization of any architecture
->   *	specific callbacks.
->   */
->  extern int kgdb_arch_init(void);
-> @@ -229,9 +229,9 @@ extern int kgdb_arch_set_breakpoint(struct kgdb_bkpt *bpt);
->  extern int kgdb_arch_remove_breakpoint(struct kgdb_bkpt *bpt);
->  
->  /**
-> - *	kgdb_arch_late - Perform any architecture specific initalization.
-> + *	kgdb_arch_late - Perform any architecture specific initialization.
->   *
-> - *	This function will handle the late initalization of any
-> + *	This function will handle the late initialization of any
->   *	architecture specific callbacks.  This is an optional function for
->   *	handling things like late initialization of hw breakpoints.  The
->   *	default implementation does nothing.
-> diff --git a/kernel/debug/debug_core.c b/kernel/debug/debug_core.c
-> index 4708aec492df..a1f26766eb90 100644
-> --- a/kernel/debug/debug_core.c
-> +++ b/kernel/debug/debug_core.c
-> @@ -1032,7 +1032,7 @@ dbg_notify_reboot(struct notifier_block *this, unsigned long code, void *x)
->  	/*
->  	 * Take the following action on reboot notify depending on value:
->  	 *    1 == Enter debugger
-> -	 *    0 == [the default] detatch debug client
-> +	 *    0 == [the default] detach debug client
->  	 *   -1 == Do nothing... and use this until the board resets
->  	 */
->  	switch (kgdbreboot) {
-> diff --git a/kernel/debug/kdb/kdb_main.c b/kernel/debug/kdb/kdb_main.c
-> index 622410c45da1..d8ee5647b732 100644
-> --- a/kernel/debug/kdb/kdb_main.c
-> +++ b/kernel/debug/kdb/kdb_main.c
-> @@ -253,7 +253,7 @@ static char *kdballocenv(size_t bytes)
->   * Parameters:
->   *	match	A character string representing a numeric value
->   * Outputs:
-> - *	*value  the unsigned long represntation of the env variable 'match'
-> + *	*value  the unsigned long representation of the env variable 'match'
->   * Returns:
->   *	Zero on success, a kdb diagnostic on failure.
->   */
-> @@ -356,7 +356,7 @@ static void kdb_printenv(void)
->   * Parameters:
->   *	arg	A character string representing a numeric value
->   * Outputs:
-> - *	*value  the unsigned long represntation of arg.
-> + *	*value  the unsigned long representation of arg.
->   * Returns:
->   *	Zero on success, a kdb diagnostic on failure.
->   */
-> @@ -470,7 +470,7 @@ static int kdb_check_regs(void)
->   *	symbol name, and offset to the caller.
->   *
->   *	The argument may consist of a numeric value (decimal or
-> - *	hexidecimal), a symbol name, a register name (preceded by the
-> + *	hexadecimal), a symbol name, a register name (preceded by the
->   *	percent sign), an environment variable with a numeric value
->   *	(preceded by a dollar sign) or a simple arithmetic expression
->   *	consisting of a symbol name, +/-, and a numeric constant value
-> @@ -894,7 +894,7 @@ static void parse_grep(const char *str)
->   *	Limited to 20 tokens.
->   *
->   *	Real rudimentary tokenization. Basically only whitespace
-> - *	is considered a token delimeter (but special consideration
-> + *	is considered a token delimiter (but special consideration
->   *	is taken of the '=' sign as used by the 'set' command).
->   *
->   *	The algorithm used to tokenize the input string relies on
-> diff --git a/kernel/debug/kdb/kdb_private.h b/kernel/debug/kdb/kdb_private.h
-> index ccbed9089808..170c69aedebb 100644
-> --- a/kernel/debug/kdb/kdb_private.h
-> +++ b/kernel/debug/kdb/kdb_private.h
-> @@ -64,7 +64,7 @@
->  
->  /*
->   * KDB_MAXBPT describes the total number of breakpoints
-> - * supported by this architecure.
-> + * supported by this architecture.
->   */
->  #define KDB_MAXBPT	16
->  
-> -- 
-> 2.25.1
+>
+> v3:
+> - add the cred argument to security_locked_down() and adapt all callers
+> - keep using current_cred() in BPF, as the hook calls have been shifted
+>   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+>   buggy SELinux lockdown permission checks"))
+> - in SELinux, don't ignore hook calls where cred == NULL, but use
+>   SECINITSID_KERNEL as the subject instead
+> - update explanations in the commit message
+>
+> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> - change to a single hook based on suggestions by Casey Schaufler
+>
+> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
+>
+>  arch/powerpc/xmon/xmon.c             |  4 ++--
+>  arch/x86/kernel/ioport.c             |  4 ++--
+>  arch/x86/kernel/msr.c                |  4 ++--
+>  arch/x86/mm/testmmiotrace.c          |  2 +-
+>  drivers/acpi/acpi_configfs.c         |  2 +-
+>  drivers/acpi/custom_method.c         |  2 +-
+>  drivers/acpi/osl.c                   |  3 ++-
+>  drivers/acpi/tables.c                |  2 +-
+>  drivers/char/mem.c                   |  2 +-
+>  drivers/cxl/mem.c                    |  2 +-
+>  drivers/firmware/efi/efi.c           |  2 +-
+>  drivers/firmware/efi/test/efi_test.c |  2 +-
+>  drivers/pci/pci-sysfs.c              |  6 +++---
+>  drivers/pci/proc.c                   |  6 +++---
+>  drivers/pci/syscall.c                |  2 +-
+>  drivers/pcmcia/cistpl.c              |  2 +-
+>  drivers/tty/serial/serial_core.c     |  2 +-
+>  fs/debugfs/file.c                    |  2 +-
+>  fs/debugfs/inode.c                   |  2 +-
+>  fs/proc/kcore.c                      |  2 +-
+>  fs/tracefs/inode.c                   |  2 +-
+>  include/linux/lsm_hook_defs.h        |  2 +-
+>  include/linux/lsm_hooks.h            |  1 +
+>  include/linux/security.h             |  4 ++--
+>  kernel/bpf/helpers.c                 | 10 ++++++----
+>  kernel/events/core.c                 |  2 +-
+>  kernel/kexec.c                       |  2 +-
+>  kernel/kexec_file.c                  |  2 +-
+>  kernel/module.c                      |  2 +-
+>  kernel/params.c                      |  2 +-
+>  kernel/power/hibernate.c             |  3 ++-
+>  kernel/trace/bpf_trace.c             | 20 ++++++++++++--------
+>  kernel/trace/ftrace.c                |  4 ++--
+>  kernel/trace/ring_buffer.c           |  2 +-
+>  kernel/trace/trace.c                 | 10 +++++-----
+>  kernel/trace/trace_events.c          |  2 +-
+>  kernel/trace/trace_events_hist.c     |  4 ++--
+>  kernel/trace/trace_events_synth.c    |  2 +-
+>  kernel/trace/trace_events_trigger.c  |  2 +-
+>  kernel/trace/trace_kprobe.c          |  6 +++---
+>  kernel/trace/trace_printk.c          |  2 +-
+>  kernel/trace/trace_stack.c           |  2 +-
+>  kernel/trace/trace_stat.c            |  2 +-
+>  kernel/trace/trace_uprobe.c          |  4 ++--
+>  net/xfrm/xfrm_user.c                 | 11 +++++++++--
+>  security/lockdown/lockdown.c         |  3 ++-
+>  security/security.c                  |  4 ++--
+>  security/selinux/hooks.c             |  7 +++++--
+>  48 files changed, 97 insertions(+), 77 deletions(-)
+
+-- 
+paul moore
+www.paul-moore.com
 
 _______________________________________________
 kexec mailing list
