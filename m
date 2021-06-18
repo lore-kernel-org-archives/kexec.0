@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x52f.google.com ([2a00:1450:4864:20::52f])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lu5Mz-00CVWk-Aa
- for kexec@lists.infradead.org; Fri, 18 Jun 2021 03:40:39 +0000
-Received: by mail-ed1-x52f.google.com with SMTP id z12so6675320edc.1
- for <kexec@lists.infradead.org>; Thu, 17 Jun 2021 20:40:36 -0700 (PDT)
+ id 1luBmC-00Djcj-86
+ for kexec@lists.infradead.org; Fri, 18 Jun 2021 10:31:06 +0000
+Received: by mail-pf1-f200.google.com with SMTP id
+ e19-20020aa78c530000b02902e9ca53899dso5451766pfd.22
+ for <kexec@lists.infradead.org>; Fri, 18 Jun 2021 03:28:54 -0700 (PDT)
+From: Tao Liu <ltao@redhat.com>
+Subject: [makedumpfile PATCH] check for invalid physical address of
+ /proc/kcore when make ELF format dumpfile
+Date: Fri, 18 Jun 2021 18:28:04 +0800
+Message-Id: <20210618102803.1042547-1-ltao@redhat.com>
 MIME-Version: 1.0
-References: <20210616085118.1141101-1-omosnace@redhat.com>
-In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Thu, 17 Jun 2021 23:40:24 -0400
-Message-ID: <CAHC9VhSr2KpeBXuyoHR3_hs+qczFUaBx0oCSMfBBA5UNYU+0KA@mail.gmail.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,143 +24,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ondrej Mosnacek <omosnace@redhat.com>
-Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+To: kexec@lists.infradead.org
+Cc: Tao Liu <ltao@redhat.com>
 
-On Wed, Jun 16, 2021 at 4:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
->
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
->
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
->
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
->
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+Previously when executing makedumpfile with -E option against /proc/kcore,
+makedumpfile will fail:
 
-This seems reasonable to me, but before I merge it into the SELinux
-tree I think it would be good to get some ACKs from the relevant
-subsystem folks.  I don't believe we ever saw a response to the last
-question for the PPC folks, did we?
+    $ sudo makedumpfile -E -d 31 /proc/kcore vmcore
+    ...
+    write_elf_load_segment: Can't convert physaddr(ffffffffffffffff) to an
+    offset.
 
-> ---
->
-> v3:
-> - add the cred argument to security_locked_down() and adapt all callers
-> - keep using current_cred() in BPF, as the hook calls have been shifted
->   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
->   buggy SELinux lockdown permission checks"))
-> - in SELinux, don't ignore hook calls where cred == NULL, but use
->   SECINITSID_KERNEL as the subject instead
-> - update explanations in the commit message
->
-> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> - change to a single hook based on suggestions by Casey Schaufler
->
-> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
->
->  arch/powerpc/xmon/xmon.c             |  4 ++--
->  arch/x86/kernel/ioport.c             |  4 ++--
->  arch/x86/kernel/msr.c                |  4 ++--
->  arch/x86/mm/testmmiotrace.c          |  2 +-
->  drivers/acpi/acpi_configfs.c         |  2 +-
->  drivers/acpi/custom_method.c         |  2 +-
->  drivers/acpi/osl.c                   |  3 ++-
->  drivers/acpi/tables.c                |  2 +-
->  drivers/char/mem.c                   |  2 +-
->  drivers/cxl/mem.c                    |  2 +-
->  drivers/firmware/efi/efi.c           |  2 +-
->  drivers/firmware/efi/test/efi_test.c |  2 +-
->  drivers/pci/pci-sysfs.c              |  6 +++---
->  drivers/pci/proc.c                   |  6 +++---
->  drivers/pci/syscall.c                |  2 +-
->  drivers/pcmcia/cistpl.c              |  2 +-
->  drivers/tty/serial/serial_core.c     |  2 +-
->  fs/debugfs/file.c                    |  2 +-
->  fs/debugfs/inode.c                   |  2 +-
->  fs/proc/kcore.c                      |  2 +-
->  fs/tracefs/inode.c                   |  2 +-
->  include/linux/lsm_hook_defs.h        |  2 +-
->  include/linux/lsm_hooks.h            |  1 +
->  include/linux/security.h             |  4 ++--
->  kernel/bpf/helpers.c                 | 10 ++++++----
->  kernel/events/core.c                 |  2 +-
->  kernel/kexec.c                       |  2 +-
->  kernel/kexec_file.c                  |  2 +-
->  kernel/module.c                      |  2 +-
->  kernel/params.c                      |  2 +-
->  kernel/power/hibernate.c             |  3 ++-
->  kernel/trace/bpf_trace.c             | 20 ++++++++++++--------
->  kernel/trace/ftrace.c                |  4 ++--
->  kernel/trace/ring_buffer.c           |  2 +-
->  kernel/trace/trace.c                 | 10 +++++-----
->  kernel/trace/trace_events.c          |  2 +-
->  kernel/trace/trace_events_hist.c     |  4 ++--
->  kernel/trace/trace_events_synth.c    |  2 +-
->  kernel/trace/trace_events_trigger.c  |  2 +-
->  kernel/trace/trace_kprobe.c          |  6 +++---
->  kernel/trace/trace_printk.c          |  2 +-
->  kernel/trace/trace_stack.c           |  2 +-
->  kernel/trace/trace_stat.c            |  2 +-
->  kernel/trace/trace_uprobe.c          |  4 ++--
->  net/xfrm/xfrm_user.c                 | 11 +++++++++--
->  security/lockdown/lockdown.c         |  3 ++-
->  security/security.c                  |  4 ++--
->  security/selinux/hooks.c             |  7 +++++--
->  48 files changed, 97 insertions(+), 77 deletions(-)
+    makedumpfile Failed.
 
+It's because /proc/kcore contains PT_LOAD program headers which have
+physaddr(ffffffffffffffff). With -E option, makedumpfile will try to convert
+the physaddr to an offset and fails.
+
+In this patch, let's skip the PT_LOAD program headers which have such physaddr.
+
+Signed-off-by: Tao Liu <ltao@redhat.com>
+---
+ makedumpfile.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 894c88e..8c93c54 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -7767,6 +7767,9 @@ write_elf_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_page)
+ 		if (load.p_type != PT_LOAD)
+ 			continue;
+ 
++		if (load.p_paddr == -1)
++			continue;
++
+ 		off_memory= load.p_offset;
+ 		paddr = load.p_paddr;
+ 		pfn_start = paddr_to_pfn(load.p_paddr);
 -- 
-paul moore
-www.paul-moore.com
+2.29.2
+
 
 _______________________________________________
 kexec mailing list
