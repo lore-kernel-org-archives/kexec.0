@@ -1,16 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from galois.linutronix.de ([2a0a:51c0:0:12e:550::1])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lueKh-00HK4i-Pa
- for kexec@lists.infradead.org; Sat, 19 Jun 2021 17:00:37 +0000
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v3] lockdown,
- selinux: fix wrong subject in some SELinux lockdown checks
-In-Reply-To: <20210616085118.1141101-1-omosnace@redhat.com>
-References: <20210616085118.1141101-1-omosnace@redhat.com>
-Date: Sat, 19 Jun 2021 19:00:30 +0200
-Message-ID: <8735tdiyc1.ffs@nanos.tec.linutronix.de>
+ id 1lv8EU-001p2o-0Y
+ for kexec@lists.infradead.org; Mon, 21 Jun 2021 00:56:11 +0000
+Received: by mail-pg1-f197.google.com with SMTP id
+ s14-20020a63450e0000b029021f631b8861so10660100pga.20
+ for <kexec@lists.infradead.org>; Sun, 20 Jun 2021 17:56:02 -0700 (PDT)
+Date: Mon, 21 Jun 2021 08:46:26 +0800
+From: Coiby Xu <coxu@redhat.com>
+Subject: Re: [MAKEDUMPFILE PATCH] makedumpfile: elf_info: check for invalid
+ physical address when finding max_paddr
+Message-ID: <20210621004626.pw3pdrvvzyszhk2m@Rk>
+References: <20210615102631.63775-1-coxu@redhat.com>
+ <TYYPR01MB677764675704385599719113DD0E9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
+In-Reply-To: <TYYPR01MB677764675704385599719113DD0E9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,40 +24,74 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ondrej Mosnacek <omosnace@redhat.com>, linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>
-Cc: Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Paul Moore <paul@paul-moore.com>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
+To: HAGIO =?utf-8?B?S0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, Xiaoying Yan <yiyan@redhat.com>
 
-On Wed, Jun 16 2021 at 10:51, Ondrej Mosnacek wrote:
-> diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
-> index bda73cb7a044..c43a13241ae8 100644
-> --- a/arch/x86/mm/testmmiotrace.c
-> +++ b/arch/x86/mm/testmmiotrace.c
-> @@ -116,7 +116,7 @@ static void do_test_bulk_ioremapping(void)
->  static int __init init(void)
->  {
->  	unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
-> -	int ret = security_locked_down(LOCKDOWN_MMIOTRACE);
-> +	int ret = security_locked_down(current_cred(), LOCKDOWN_MMIOTRACE);
-
-I have no real objection to those patches, but it strikes me odd that
-out of the 62 changed places 58 have 'current_cred()' and 4 have NULL as
-argument.
-
-I can't see why this would ever end up with anything else than
-current_cred() or NULL and NULL being the 'special' case. So why not
-having security_locked_down_no_cred() and make current_cred() implicit
-for security_locked_down() which avoids most of the churn and just makes
-the special cases special. I might be missing something though.
-
-Thanks,
-
-        tglx
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVGh1LCBKdW4gMTcsIDIwMjEgYXQgMDM6Mjg6MTBBTSArMDAwMCwgSEFHSU8gS0FaVUhJVE8o
+6JCp5bC+IOS4gOS7gSkgd3JvdGU6Cj4tLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+Pgo+PiBL
+ZXJuZWwgY29tbWl0IDQ2NDkyMDEwNGJmN2FkYWMxMjcyMjAzNWJmZWZiM2Q3NzJlYjA0ZDgKPj4g
+Ii9wcm9jL2tjb3JlOiB1cGRhdGUgcGh5c2ljYWwgYWRkcmVzcyBmb3Iga2NvcmUgcmFtIGFuZCB0
+ZXh0IiBzZXRzIGFuCj4+IGludmFsaWQgcGFkZHIgKC0xPTB4ZmZmZmZmZmZmZmZmZmZmZikgZm9y
+IFBUX0xPQUQgc2VnbWVudHMgb2Ygbm90IGRpcmVjdAo+PiBtYXBwZWQgcmVnaW9ucywKPj4gICAg
+ICQgcmVhZGVsZiAtbCAvcHJvYy9rY29yZQo+Pgo+PiAgICAgRWxmIGZpbGUgdHlwZSBpcyBDT1JF
+IChDb3JlIGZpbGUpCj4+ICAgICBFbnRyeSBwb2ludCAweDAKPj4gICAgIFRoZXJlIGFyZSA0IHBy
+b2dyYW0gaGVhZGVycywgc3RhcnRpbmcgYXQgb2Zmc2V0IDY0Cj4+Cj4+ICAgICBQcm9ncmFtIEhl
+YWRlcnM6Cj4+ICAgICAgIFR5cGUgICAgICAgICAgIE9mZnNldCAgICAgICAgICAgICBWaXJ0QWRk
+ciAgICAgICAgICAgUGh5c0FkZHIKPj4gICAgICAgICAgICAgICAgICAgICAgRmlsZVNpeiAgICAg
+ICAgICAgIE1lbVNpeiAgICAgICAgICAgICAgRmxhZ3MgIEFsaWduCj4+ICAgICAgIE5PVEUgICAg
+ICAgICAgIDB4MDAwMDAwMDAwMDAwMDEyMCAweDAwMDAwMDAwMDAwMDAwMDAgMHgwMDAwMDAwMDAw
+MDAwMDAwCj4+ICAgICAgICAgICAgICAgICAgICAgIDB4MDAwMDAwMDAwMDAwMjMyMCAweDAwMDAw
+MDAwMDAwMDAwMDAgICAgICAgICAweDAKPj4gICAgICAgTE9BRCAgICAgICAgICAgMHgxMDAwMDAw
+MDAwMDEwMDAwIDB4ZDAwMDAwMDAwMDAwMDAwMCAweGZmZmZmZmZmZmZmZmZmZmYKPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeXl5e
+Xl5eXl5eXl5eXl5eXl4KPj4gICAgICAgICAgICAgICAgICAgICAgMHgwMDAxZjgwMDAwMDAwMDAw
+IDB4MDAwMWY4MDAwMDAwMDAwMCAgUldFICAgIDB4MTAwMDAKPj4gICAgICAgTE9BRCAgICAgICAg
+ICAgMHgwMDAwMDAwMDAwMDEwMDAwIDB4YzAwMDAwMDAwMDAwMDAwMCAweDAwMDAwMDAwMDAwMDAw
+MDAKPj4gICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwM2YwMDAwMDAwIDB4MDAwMDAwMDNm
+MDAwMDAwMCAgUldFICAgIDB4MTAwMDAKPj4gICAgICAgTE9BRCAgICAgICAgICAgMHgzMDAwMDAw
+MDAwMDEwMDAwIDB4ZjAwMDAwMDAwMDAwMDAwMCAweGZmZmZmZmZmZmZmZmZmZmYKPj4gICAgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBeXl5e
+Xl5eXl5eXl5eXl5eXl4KPj4gICAgICAgICAgICAgICAgICAgICAgMHgwMDAwMDAwMDAwZmMwMDAw
+IDB4MDAwMDAwMDAwMGZjMDAwMCAgUldFICAgIDB4MTAwMDAKPj4KPj4gbWFrZWR1bXBsZSB1c2Vz
+IG1heF9wYWRkciB0byBjYWxjdWxhdGUgdGhlIG51bWJlciBvZiBzZWN0aW9ucyBmb3Igc3BhcnNl
+Cj4+IG1lbW9yeSBtb2RlbCB0aHVzIHdyb25nIG51bWJlciBpcyBvYnRhaW5lZCBiYXNlZCBvbiBt
+YXhfcGFkZHI9LTEuIFRoaXMKPj4gZXJyb3IgY291bGQgbGVhZCB0byB0aGUgZmFpbHVyZSBvZiBj
+b3B5aW5nIC9wcm9jL2tjb3JlIGZvciBSSEVMLTguNSBvbgo+PiBwcGM2NGxlIG1hY2hpbmUgWzFd
+LAo+PiAgICAgJCB1bmFtZSAtcgo+PiAgICAgNC4xOC4wLTMxMi5lbDgucHBjNjRsZQo+PiAgICAg
+JCBtYWtlZHVtcGZpbGUgL3Byb2Mva2NvcmUgdm1jb3JlMQo+PiAgICAgZ2V0X21lbV9zZWN0aW9u
+OiBDb3VsZCBub3QgdmFsaWRhdGUgbWVtX3NlY3Rpb24uCj4+ICAgICBnZXRfbW1fc3BhcnNlbWVt
+OiBDYW4ndCBnZXQgdGhlIGFkZHJlc3Mgb2YgbWVtX3NlY3Rpb24uCj4+Cj4+ICAgICBtYWtlZHVt
+cGZpbGUgRmFpbGVkLgo+Cj5JSVVDLCBtYWtlZHVtcGZpbGUgaGFzIE5PVCBiZWVuIGRldmVsb3Bl
+ZCB0byBmaWx0ZXIgL3Byb2Mva2NvcmUgc28gZmFyLAo+ZXhjZXB0IGZvciB0aGUgLS1tZW0tdXNh
+Z2Ugb3B0aW9uLCBhbmQgdGhpcyBpcyB0aGUgZmlyc3QgcGF0Y2ggZm9yIGl0Lgo+Cj5JdCBtaWdo
+dCBiZSBtb3JlIGhhbmR5IHRoYW4gY3Jhc2gncyBzbmFwLnNvIGV4dGVuc2lvbiwgc28gSSBhcHBs
+aWVkIHRoaXM6Cj5odHRwczovL2dpdGh1Yi5jb20vbWFrZWR1bXBmaWxlL21ha2VkdW1wZmlsZS9j
+b21taXQvMzhkOTIxYTJlZjUwZWJkMzYyNTgwOTc1NTM2MjY0NDNmZmUyNzQ5NgoKVGhhbmtzIGZv
+ciBhcHBseWluZyB0aGUgcGF0Y2ghCgo+Cj5CdXQgcGxlYXNlIG5vdGUgdGhhdCBtYXliZSBmaWx0
+ZXJpbmcgL3Byb2Mva2NvcmUgd2l0aCBtYWtlZHVtcGZpbGUgKGFuZAo+YWxzbyBhbmFseXppbmcg
+dGhlIGR1bXBmaWxlIHdpdGggY3Jhc2gpIGlzIHN0aWxsIG5vdCBtYXR1cmUgZW5vdWdoIGZvcgo+
+ZmllbGQgb3IgcHJvZHVjdGlvbiB1c2UuCgpUaGFua3MgZm9yIHRoZSBub3RlIQoKPgo+VGhhbmtz
+LAo+S2F6dQo+Cj4+Cj4+IExldCdzIGNoZWNrIGlmIHRoZSBwaHlzX3N0YXJ0IG9mIHRoZSBzZWdt
+ZW50IGlzIGEgdmFsaWQgcGh5c2ljYWwgYWRkcmVzcwo+PiB0byBmaXggdGhpcyBwcm9ibGVtLgo+
+Pgo+PiBbMV0gaHR0cHM6Ly9idWd6aWxsYS5yZWRoYXQuY29tL3Nob3dfYnVnLmNnaT9pZD0xOTY1
+MjY3Cj4+Cj4+IFJlcG9ydGVkLWJ5OiBYaWFveWluZyBZYW4gPHlpeWFuQHJlZGhhdC5jb20+Cj4+
+IFNpZ25lZC1vZmYtYnk6IENvaWJ5IFh1IDxjb3h1QHJlZGhhdC5jb20+Cj4+IC0tLQo+PiAgZWxm
+X2luZm8uYyB8IDIgKy0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMSBkZWxl
+dGlvbigtKQo+Pgo+PiBkaWZmIC0tZ2l0IGEvZWxmX2luZm8uYyBiL2VsZl9pbmZvLmMKPj4gaW5k
+ZXggZThhZmZiNy4uOTQ0NDg0NyAxMDA2NDQKPj4gLS0tIGEvZWxmX2luZm8uYwo+PiArKysgYi9l
+bGZfaW5mby5jCj4+IEBAIC02MjgsNyArNjI4LDcgQEAgZ2V0X21heF9wYWRkcih2b2lkKQo+Pgo+
+PiAgCWZvciAoaSA9IDA7IGkgPCBudW1fcHRfbG9hZHM7IGkrKykgewo+PiAgCQlwbHMgPSAmcHRf
+bG9hZHNbaV07Cj4+IC0JCWlmIChtYXhfcGFkZHIgPCBwbHMtPnBoeXNfZW5kKQo+PiArCQlpZiAo
+cGxzLT5waHlzX3N0YXJ0ICE9IE5PVF9QQUREUiAgJiYgbWF4X3BhZGRyIDwgcGxzLT5waHlzX2Vu
+ZCkKPj4gIAkJCW1heF9wYWRkciA9IHBscy0+cGh5c19lbmQ7Cj4+ICAJfQo+PiAgCXJldHVybiBt
+YXhfcGFkZHI7Cj4+IC0tCj4+IDIuMzEuMQo+Pgo+Pgo+PiBfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwo+PiBrZXhlYyBtYWlsaW5nIGxpc3QKPj4ga2V4ZWNA
+bGlzdHMuaW5mcmFkZWFkLm9yZwo+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2tleGVjCj4KCi0tIApCZXN0IHJlZ2FyZHMsCkNvaWJ5CgoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0Cmtl
+eGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9rZXhlYwo=
