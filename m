@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-io1-xd32.google.com ([2607:f8b0:4864:20::d32])
+Received: from mail-eopbgr1310078.outbound.protection.outlook.com
+ ([40.107.131.78] helo=APC01-SG2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lxkny-0070ts-1u
- for kexec@lists.infradead.org; Mon, 28 Jun 2021 06:31:39 +0000
-Received: by mail-io1-xd32.google.com with SMTP id i189so20967384ioa.8
- for <kexec@lists.infradead.org>; Sun, 27 Jun 2021 23:31:37 -0700 (PDT)
-MIME-Version: 1.0
+ id 1lxlMg-0079uo-Mu
+ for kexec@lists.infradead.org; Mon, 28 Jun 2021 07:07:32 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: Compiling makedumpfile from source
+Date: Mon, 28 Jun 2021 07:07:23 +0000
+Message-ID: <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-From: manty kuma <mantykuma@gmail.com>
-Date: Mon, 28 Jun 2021 15:31:25 +0900
-Message-ID: <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
-Subject: Re: Compiling makedumpfile from source
+ <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
+In-Reply-To: <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
+Content-Language: ja-JP
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,28 +22,34 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+To: manty kuma <mantykuma@gmail.com>
 Cc: kexec-ml <kexec@lists.infradead.org>
 
-SGkgS2F6dWhpdG8gc2FuLAoKSSBhbSBnZXR0aW5nIHRoZSBmb2xsb3dpbmcgZXJyb3Igd2hlbiB0
-cnlpbmcgdG8gdXNlIG1ha2VkdW1wZmlsZSB1dGlsaXR5LgoKPiBjb3B5X3ZtY29yZWluZm86IENh
-bid0IG9wZW4gdGhlIHZtY29yZWluZm8gZmlsZSgvdG1wL3ZtY29yZWluZm9MVVFjMjUpLiBObyBz
-dWNoIGZpbGUgb3IgZGlyZWN0b3J5Lgo+IG1ha2VkdW1wZmlsZSBGYWlsZWQKCkluIHlvdXIgc2V0
-dXAgaG93IGFyZSB5b3UgcHJvdmlkaW5nIHRoZSB2bWNvcmVpbmZvIGZpbGU/IEluIG15IGNhc2Ug
-aXQKaXMgY2hlY2tpbmcgL3RtcC92bWNvcmVpbmZvTFVRYzI1CldobyBnZW5lcmF0ZXMgdGhpcyBm
-aWxlPwpUaGFuayB5b3UgdmVyeSBtdWNoLgoKT24gRnJpLCBKdW4gMTEsIDIwMjEgYXQgNjowNyBQ
-TSBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDku4EpCjxrLWhhZ2lvLWFiQG5lYy5jb20+IHdy
-b3RlOgo+Cj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+IFdoZW4gaSB0cnkgdG8gbWFr
-ZWR1bXBmaWxlIHdpdGhvdXQgdm1jb3JlZmlsZSwgaXQgY29tcGxhaW5zIHRoYXQKPiA+ICIvdG1w
-L3ZtY29yZWluZm8gbm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeSIgYW5kIGZhaWxzIHRvIGNvbGxl
-Y3QgdGhlIGR1bXAuCj4gPgo+ID4gRnJvbSB0aGUgUkVBRE1FIGl0IGFwcGVhcnMgdG8gbWUgdGhh
-dCBtYWtlZHVtcGZpbGUgY2FuIGdldCB2bWNvcmVpbmZvCj4gPiBmcm9tIC9wcm9jL3ZtY29yZQo+
-ID4gSXMgdGhlcmUgYW55IHNwZWNpYWwgQ09ORklHIG5lZWRlZCB0byBzdXBwb3J0IHRoaXM/Cj4K
-PiBobW0sIGF0IGxlYXN0IENPTkZJR19DUkFTSF9DT1JFPXkgd291bGQgYmUgbmVlZGVkLgo+Cj4g
-S2F6dQo+CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+-----Original Message-----
+> Hi Kazuhito san,
+> 
+> I am getting the following error when trying to use makedumpfile utility.
+> 
+> > copy_vmcoreinfo: Can't open the vmcoreinfo file(/tmp/vmcoreinfoLUQc25). No such file or directory.
+> > makedumpfile Failed
+> 
+> In your setup how are you providing the vmcoreinfo file? In my case it
+> is checking /tmp/vmcoreinfoLUQc25
+> Who generates this file?
+
+Generally, vmcoreinfo is copied from vmcore's ELF note to /tmp/vmcoreinfoXXXXXX
+by makedumpfile, please see copy_vmcoreinfo().  So no need to provide explicitly.
+
+Is there the /tmp directory on your environment?
+
+Kazu
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
