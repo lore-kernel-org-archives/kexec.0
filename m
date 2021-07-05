@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1310078.outbound.protection.outlook.com
- ([40.107.131.78] helo=APC01-SG2-obe.outbound.protection.outlook.com)
+Received: from mail-lf1-x133.google.com ([2a00:1450:4864:20::133])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1lxlMg-0079uo-Mu
- for kexec@lists.infradead.org; Mon, 28 Jun 2021 07:07:32 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: Compiling makedumpfile from source
-Date: Mon, 28 Jun 2021 07:07:23 +0000
-Message-ID: <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
-In-Reply-To: <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
-Content-Language: ja-JP
+ id 1m0Nng-008v0K-Fe
+ for kexec@lists.infradead.org; Mon, 05 Jul 2021 12:34:13 +0000
+Received: by mail-lf1-x133.google.com with SMTP id bq39so19605099lfb.12
+ for <kexec@lists.infradead.org>; Mon, 05 Jul 2021 05:34:11 -0700 (PDT)
+From: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Subject: [PATCH] makedumpfile/arm: fix page_offset determination
+Date: Mon,  5 Jul 2021 14:33:54 +0200
+Message-Id: <20210705123354.1173984-1-grzegorz.jaszczyk@linaro.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,27 +22,37 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: manty kuma <mantykuma@gmail.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: k-hagio-ab@nec.com
+Cc: kexec@lists.infradead.org, Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
 
------Original Message-----
-> Hi Kazuhito san,
-> 
-> I am getting the following error when trying to use makedumpfile utility.
-> 
-> > copy_vmcoreinfo: Can't open the vmcoreinfo file(/tmp/vmcoreinfoLUQc25). No such file or directory.
-> > makedumpfile Failed
-> 
-> In your setup how are you providing the vmcoreinfo file? In my case it
-> is checking /tmp/vmcoreinfoLUQc25
-> Who generates this file?
+When the CONFIG_STRICT_KERNEL_RWX is enabled for the armv7 kernel the
+_stext is aligned to 1<<SECTION_SHIFT, which with hitherto code causes
+wrong page_offset determination.
 
-Generally, vmcoreinfo is copied from vmcore's ELF note to /tmp/vmcoreinfoXXXXXX
-by makedumpfile, please see copy_vmcoreinfo().  So no need to provide explicitly.
+Suit mask used for page_offset in a way that it will allow to correctly
+determine page_offset regardless of CONFIG_STRICT_KERNEL_RWX and
+CONFIG_ARM_LPAE settings.
 
-Is there the /tmp directory on your environment?
+Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+---
+ arch/arm.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Kazu
+diff --git a/arch/arm.c b/arch/arm.c
+index 33536fc..7ae9cb1 100644
+--- a/arch/arm.c
++++ b/arch/arm.c
+@@ -80,7 +80,7 @@ get_phys_base_arm(void)
+ int
+ get_machdep_info_arm(void)
+ {
+-	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
++	info->page_offset = SYMBOL(_stext) & 0xffc00000UL;
+ 
+ 	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
+ 	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
+-- 
+2.29.0
 
 
 _______________________________________________
