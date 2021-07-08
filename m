@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm6nam11on2074.outbound.protection.outlook.com
- ([40.107.223.74] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
+Received: from mail-co1nam11on2043.outbound.protection.outlook.com
+ ([40.107.220.43] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m1O8M-00GAwm-A5
- for kexec@lists.infradead.org; Thu, 08 Jul 2021 07:07:44 +0000
+ id 1m1O8M-00GAwq-S0
+ for kexec@lists.infradead.org; Thu, 08 Jul 2021 07:07:45 +0000
 From: Benjamin Poirier <bpoirier@nvidia.com>
-Subject: [PATCH v2 makedumpfile 1/3] Fix off by one error when checking
- cache_size
-Date: Thu, 8 Jul 2021 16:06:09 +0900
-Message-ID: <20210708070611.291260-2-bpoirier@nvidia.com>
-In-Reply-To: <20210708070611.291260-1-bpoirier@nvidia.com>
-References: <20210708070611.291260-1-bpoirier@nvidia.com>
+Subject: [PATCH v2 makedumpfile 0/3] Add option to limit file size
+Date: Thu, 8 Jul 2021 16:06:08 +0900
+Message-ID: <20210708070611.291260-1-bpoirier@nvidia.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,35 +23,34 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 
-Given the test in write_cache():
-	if (cd->buf_size < cd->cache_size)
-		return TRUE;
-a write is done if buf_size == cache_size.
-The test at the beginning of write_kdump_page() intends to detect cases
-when write_cache() will do a write, however it was missing this boundary
-condition. This would lead write_kdump_page() to ignore errors from
-write_cache().
+See feature description in patch "Add -L option to limit output file
+size"
 
-Signed-off-by: Benjamin Poirier <bpoirier@nvidia.com>
----
- makedumpfile.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v1:
+	http://lists.infradead.org/pipermail/kexec/2021-June/022728.html
+v2:
+	Add patches 1, 2 to support dmesg limit with different kernel
+	versions.
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index fcb571f..aa05be7 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -7993,8 +7993,8 @@ write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
- 	 * write the buffer cd_header into dumpfile and then write the cd_page.
- 	 * With that, when enospc occurs, we can save more useful information.
- 	 */
--	if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
--		|| cd_page->buf_size + pd->size > cd_page->cache_size){
-+	if (cd_header->buf_size + sizeof(*pd) >= cd_header->cache_size ||
-+	    cd_page->buf_size + pd->size >= cd_page->cache_size) {
- 		if( !write_cd_buf(cd_header) ) {
- 			memset(cd_header->buf, 0, cd_header->cache_size);
- 			write_cd_buf(cd_header);
+	Stricter parsing of -L option value.
+
+	Instead of using RLIMIT_FSIZE, use write_bytes or SEEK_CUR to
+	enforce limit. This better integrates with the -F option for
+	stdout output.
+
+Benjamin Poirier (3):
+  Fix off by one error when checking cache_size
+  Dump dmesg using write_and_check_space()
+  Add -L option to limit output file size
+
+ makedumpfile.8 |  12 ++++--
+ makedumpfile.c | 115 +++++++++++++++++++++++++++++++++++--------------
+ makedumpfile.h |   6 ++-
+ print_info.c   |   3 ++
+ printk.c       |  24 +++++++----
+ sadump_info.c  |   2 +-
+ 6 files changed, 116 insertions(+), 46 deletions(-)
+
 -- 
 2.32.0
 
