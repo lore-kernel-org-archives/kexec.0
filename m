@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400049.outbound.protection.outlook.com
- ([40.107.140.49] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
+Received: from mail-dm6nam11on2074.outbound.protection.outlook.com
+ ([40.107.223.74] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m10U3-00DZmX-2J
- for kexec@lists.infradead.org; Wed, 07 Jul 2021 05:52:33 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH] makedumpfile/arm: fix page_offset determination
-Date: Wed, 7 Jul 2021 05:52:25 +0000
-Message-ID: <TYYPR01MB677733434BF05E88B1C84ABBDD1A9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20210705123354.1173984-1-grzegorz.jaszczyk@linaro.org>
-In-Reply-To: <20210705123354.1173984-1-grzegorz.jaszczyk@linaro.org>
-Content-Language: ja-JP
+ id 1m1O8M-00GAwm-A5
+ for kexec@lists.infradead.org; Thu, 08 Jul 2021 07:07:44 +0000
+From: Benjamin Poirier <bpoirier@nvidia.com>
+Subject: [PATCH v2 makedumpfile 1/3] Fix off by one error when checking
+ cache_size
+Date: Thu, 8 Jul 2021 16:06:09 +0900
+Message-ID: <20210708070611.291260-2-bpoirier@nvidia.com>
+In-Reply-To: <20210708070611.291260-1-bpoirier@nvidia.com>
+References: <20210708070611.291260-1-bpoirier@nvidia.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,44 +24,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: kexec@lists.infradead.org
 
------Original Message-----
-> When the CONFIG_STRICT_KERNEL_RWX is enabled for the armv7 kernel the
-> _stext is aligned to 1<<SECTION_SHIFT, which with hitherto code causes
-> wrong page_offset determination.
-> 
-> Suit mask used for page_offset in a way that it will allow to correctly
-> determine page_offset regardless of CONFIG_STRICT_KERNEL_RWX and
-> CONFIG_ARM_LPAE settings.
-> 
-> Signed-off-by: Grzegorz Jaszczyk <grzegorz.jaszczyk@linaro.org>
+Given the test in write_cache():
+	if (cd->buf_size < cd->cache_size)
+		return TRUE;
+a write is done if buf_size == cache_size.
+The test at the beginning of write_kdump_page() intends to detect cases
+when write_cache() will do a write, however it was missing this boundary
+condition. This would lead write_kdump_page() to ignore errors from
+write_cache().
 
-Thanks, applied.
-https://github.com/makedumpfile/makedumpfile/commit/9df519d2f4d6d6362fd878a1e0f0890e73166055
+Signed-off-by: Benjamin Poirier <bpoirier@nvidia.com>
+---
+ makedumpfile.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Kazu
-
-> ---
->  arch/arm.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm.c b/arch/arm.c
-> index 33536fc..7ae9cb1 100644
-> --- a/arch/arm.c
-> +++ b/arch/arm.c
-> @@ -80,7 +80,7 @@ get_phys_base_arm(void)
->  int
->  get_machdep_info_arm(void)
->  {
-> -	info->page_offset = SYMBOL(_stext) & 0xffff0000UL;
-> +	info->page_offset = SYMBOL(_stext) & 0xffc00000UL;
-> 
->  	/* Check if we can get MAX_PHYSMEM_BITS from vmcoreinfo */
->  	if (NUMBER(MAX_PHYSMEM_BITS) != NOT_FOUND_NUMBER)
-> --
-> 2.29.0
+diff --git a/makedumpfile.c b/makedumpfile.c
+index fcb571f..aa05be7 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -7993,8 +7993,8 @@ write_kdump_page(struct cache_data *cd_header, struct cache_data *cd_page,
+ 	 * write the buffer cd_header into dumpfile and then write the cd_page.
+ 	 * With that, when enospc occurs, we can save more useful information.
+ 	 */
+-	if (cd_header->buf_size + sizeof(*pd) > cd_header->cache_size
+-		|| cd_page->buf_size + pd->size > cd_page->cache_size){
++	if (cd_header->buf_size + sizeof(*pd) >= cd_header->cache_size ||
++	    cd_page->buf_size + pd->size >= cd_page->cache_size) {
+ 		if( !write_cd_buf(cd_header) ) {
+ 			memset(cd_header->buf, 0, cd_header->cache_size);
+ 			write_cd_buf(cd_header);
+-- 
+2.32.0
 
 
 _______________________________________________
