@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x134.google.com ([2607:f8b0:4864:20::134])
+Received: from mail-ej1-x629.google.com ([2a00:1450:4864:20::629])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m1faj-000VP9-Bi
- for kexec@lists.infradead.org; Fri, 09 Jul 2021 01:46:10 +0000
-Received: by mail-il1-x134.google.com with SMTP id z1so8676569ils.0
- for <kexec@lists.infradead.org>; Thu, 08 Jul 2021 18:46:08 -0700 (PDT)
+ id 1m38GB-008xeU-Bz
+ for kexec@lists.infradead.org; Tue, 13 Jul 2021 02:35:00 +0000
+Received: by mail-ej1-x629.google.com with SMTP id he13so38519179ejc.11
+ for <kexec@lists.infradead.org>; Mon, 12 Jul 2021 19:34:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
- <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
-In-Reply-To: <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
-From: manty kuma <mantykuma@gmail.com>
-Date: Fri, 9 Jul 2021 10:45:57 +0900
-Message-ID: <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
-Subject: Re: Compiling makedumpfile from source
+References: <20210616085118.1141101-1-omosnace@redhat.com>
+ <8735tdiyc1.ffs@nanos.tec.linutronix.de>
+In-Reply-To: <8735tdiyc1.ffs@nanos.tec.linutronix.de>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 12 Jul 2021 22:34:45 -0400
+Message-ID: <CAHC9VhRAN4RS2c3cwpr=DQ_45MDqn2QV7nL4J3ZWXKfUNLcjdQ@mail.gmail.com>
+Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,52 +22,56 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ondrej Mosnacek <omosnace@redhat.com>, linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>
 
-SGkgS2F6dWhpdG8gc2FuLAoKSSBhbSBsb29raW5nIHRvIGJldHRlciB1bmRlcnN0YW5kIHRoZSBz
-ZWN0aW9ucyBiZWluZyBmaWx0ZXJpbmcgb3V0CndpdGggZWFjaCBvZiB0aGUgZm9sbG93aW5nIG9w
-dGlvbnMuCgpaZXJvIHBhZ2U6ClBhZ2VzIHRoYXQgYXJlIGVtcHR5LiBJZ25vcmluZyB0aGVzZSBw
-YWdlcyB3b24ndCBoYXZlIGFueSBpbXBhY3Qgb24gYW5hbHlzaXMuCgpub24tcHJpdmF0ZSBjYWNo
-ZSBhbmQgcHJpdmF0ZSBjYWNoZToKV2hhdCBleGFjdGx5IGFyZSB0aGVzZSBzZWN0aW9ucyBvZiBt
-ZW1vcnk/IEp1c3QgYSBvbmUtbGluZSBvdmVydmlldwphYm91dCB0aGVtIGlzIHN1ZmZpY2llbnQu
-CihNeSB1bmRlcnN0YW5kaW5nIHdhcyB0aGF0IGNhY2hlIGlzIG5vdCBwYXJ0IG9mIFJBTS4gSXMg
-dGhpcyBjYWNoZQpzb21ldGhpbmcgZWxzZT8gTGlrZSBzb21lIGJvb2trZWVwaW5nIGRhdGEgbWFp
-bnRhaW5lZCBieSB0aGUga2VybmVsPykKCgp1c2VyIGRhdGE6CkFyZSB0aGVzZSBzZWN0aW9ucyBv
-ZiB0aGUgbWVtb3J5IGZvciB0aGUgdXNlciBzcGFjZSBwcm9jZXNzZXMvbWVtb3J5CnNlY3Rpb25z
-IGFsbG9jYXRlZCB1c2luZyBtYWxsb2M/Ck15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBJZiBJIGV4
-Y2x1ZGUgdGhpcyBzZWN0aW9uLCBnY29yZSB3b3VsZCBub3QKd29yay4gSXMgbXkgdW5kZXJzdGFu
-ZGluZyBjb3JyZWN0PwpJIGV4cGVjdGVkIHRoaXMgc2VjdGlvbiB0byBiZSBiaWcuIEJ1dCBpbiBm
-YWN0IGV4Y2x1ZGluZyB0aGlzIGRpZCBub3QKaGF2ZSBtdWNoIGltcGFjdCBvbiB0aGUgZHVtcCBz
-aXplLgoKZnJlZSBwYWdlOgp1bmFsbG9jYXRlZCBwYWdlcy4gU2luY2UgdGhleSBhcmUgbm90IGFs
-bG9jYXRlZC4gZmlsdGVyaW5nIHRoZW0gb3V0Cndvbid0IGhhdmUgYW55IGltcGFjdCBvbiBkdW1w
-IGFuYWx5c2lzLgpQbGVhc2UgY29ycmVjdCBtZSBpZiBJIGFtIHdyb25nLgoKCklmIHRoZXJlIGlz
-IGFscmVhZHkgc29tZSBwbGFjZSB0aGF0IGV4cGxhaW5zIHdoYXQgdGhlc2Ugc2VjdGlvbnMKZmls
-dGVyIG91dCwgcGxlYXNlIGp1c3QgZHJvcCB0aGUgcmVmZXJlbmNlIHRvIHRoZW0gYW5kIGkgd2ls
-bCBsb29rCmludG8gaXQuClRoYW5rIHlvdSB2ZXJ5IG11Y2ggaW4gYWR2YW5jZSEKCk1hbnR5CgpP
-biBUaHUsIEp1bCA4LCAyMDIxIGF0IDg6MTcgUE0gbWFudHkga3VtYSA8bWFudHlrdW1hQGdtYWls
-LmNvbT4gd3JvdGU6Cj4KPiBTb3JyeS4gSSBhbSBub3Qgc3VyZSBob3cgYnV0IEkgY29tcGxldGVs
-eSBtaXNzZWQgdGhpcyBlbWFpbC4KPiBZZXMsIC90bXAgd2FzIG5vdCBhdmFpbGFibGUgaW4gbXkg
-ZW52LiBJIGp1c3QgZGlkIG1rZGlyIGJlZm9yZQo+IGV4ZWN1dGluZyBgbWFrZWR1bXBmaWxlYCBh
-bmQgaXQgaXMgbm93IHdvcmtpbmcgd2VsbC4KPiBUaGFuayB5b3UgdmVyeSBtdWNoLgo+Cj4gT24g
-TW9uLCBKdW4gMjgsIDIwMjEgYXQgNDowNyBQTSBIQUdJTyBLQVpVSElUTyjokKnlsL7jgIDkuIDk
-u4EpCj4gPGstaGFnaW8tYWJAbmVjLmNvbT4gd3JvdGU6Cj4gPgo+ID4gLS0tLS1PcmlnaW5hbCBN
-ZXNzYWdlLS0tLS0KPiA+ID4gSGkgS2F6dWhpdG8gc2FuLAo+ID4gPgo+ID4gPiBJIGFtIGdldHRp
-bmcgdGhlIGZvbGxvd2luZyBlcnJvciB3aGVuIHRyeWluZyB0byB1c2UgbWFrZWR1bXBmaWxlIHV0
-aWxpdHkuCj4gPiA+Cj4gPiA+ID4gY29weV92bWNvcmVpbmZvOiBDYW4ndCBvcGVuIHRoZSB2bWNv
-cmVpbmZvIGZpbGUoL3RtcC92bWNvcmVpbmZvTFVRYzI1KS4gTm8gc3VjaCBmaWxlIG9yIGRpcmVj
-dG9yeS4KPiA+ID4gPiBtYWtlZHVtcGZpbGUgRmFpbGVkCj4gPiA+Cj4gPiA+IEluIHlvdXIgc2V0
-dXAgaG93IGFyZSB5b3UgcHJvdmlkaW5nIHRoZSB2bWNvcmVpbmZvIGZpbGU/IEluIG15IGNhc2Ug
-aXQKPiA+ID4gaXMgY2hlY2tpbmcgL3RtcC92bWNvcmVpbmZvTFVRYzI1Cj4gPiA+IFdobyBnZW5l
-cmF0ZXMgdGhpcyBmaWxlPwo+ID4KPiA+IEdlbmVyYWxseSwgdm1jb3JlaW5mbyBpcyBjb3BpZWQg
-ZnJvbSB2bWNvcmUncyBFTEYgbm90ZSB0byAvdG1wL3ZtY29yZWluZm9YWFhYWFgKPiA+IGJ5IG1h
-a2VkdW1wZmlsZSwgcGxlYXNlIHNlZSBjb3B5X3ZtY29yZWluZm8oKS4gIFNvIG5vIG5lZWQgdG8g
-cHJvdmlkZSBleHBsaWNpdGx5Lgo+ID4KPiA+IElzIHRoZXJlIHRoZSAvdG1wIGRpcmVjdG9yeSBv
-biB5b3VyIGVudmlyb25tZW50Pwo+ID4KPiA+IEthenUKPiA+Cj4gPgoKX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVj
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9rZXhlYwo=
+On Sat, Jun 19, 2021 at 1:00 PM Thomas Gleixner <tglx@linutronix.de> wrote:
+> On Wed, Jun 16 2021 at 10:51, Ondrej Mosnacek wrote:
+> > diff --git a/arch/x86/mm/testmmiotrace.c b/arch/x86/mm/testmmiotrace.c
+> > index bda73cb7a044..c43a13241ae8 100644
+> > --- a/arch/x86/mm/testmmiotrace.c
+> > +++ b/arch/x86/mm/testmmiotrace.c
+> > @@ -116,7 +116,7 @@ static void do_test_bulk_ioremapping(void)
+> >  static int __init init(void)
+> >  {
+> >       unsigned long size = (read_far) ? (8 << 20) : (16 << 10);
+> > -     int ret = security_locked_down(LOCKDOWN_MMIOTRACE);
+> > +     int ret = security_locked_down(current_cred(), LOCKDOWN_MMIOTRACE);
+>
+> I have no real objection to those patches, but it strikes me odd that
+> out of the 62 changed places 58 have 'current_cred()' and 4 have NULL as
+> argument.
+>
+> I can't see why this would ever end up with anything else than
+> current_cred() or NULL and NULL being the 'special' case. So why not
+> having security_locked_down_no_cred() and make current_cred() implicit
+> for security_locked_down() which avoids most of the churn and just makes
+> the special cases special. I might be missing something though.
+
+Unfortunately it is not uncommon for kernel subsystems to add, move,
+or otherwise play around with LSM hooks without checking with the LSM
+folks; generally this is okay, but there have been a few problems in
+the past and I try to keep that in mind when we are introducing new
+hooks or modifying existing ones.  If we have two LSM hooks for
+roughly the same control point it has the potential to cause
+confusion, e.g. do I use the "normal" or the "no_cred" version?  What
+if I don't want to pass a credential, can I just use "no_cred"?  My
+thinking with the single, always-pass-a-cred function is that callers
+don't have to worry about choosing from multiple, similar hooks and
+they know they need to pass a cred which hopefully gets them thinking
+about what cred is appropriate.  It's not foolproof, but I believe the
+single hook approach will be less prone to accidents ... or so I hope
+:)
+
+-- 
+paul moore
+www.paul-moore.com
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
