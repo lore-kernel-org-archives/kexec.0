@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from leibniz.telenet-ops.be ([195.130.137.77])
  by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m3eLu-00HUFJ-P2
+ id 1m3eLr-00HUCb-VB
  for kexec@lists.infradead.org; Wed, 14 Jul 2021 12:51:05 +0000
-Received: from andre.telenet-ops.be (andre.telenet-ops.be
- [IPv6:2a02:1800:120:4::f00:15])
- by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M5nvwzMqfsd
+Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be
+ [IPv6:2a02:1800:120:4::f00:13])
+ by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M3Mv1zMqdpK
  for <kexec@lists.infradead.org>; Wed, 14 Jul 2021 14:50:51 +0200 (CEST)
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 06/10] riscv: Remove non-standard linux, elfcorehdr handling
-Date: Wed, 14 Jul 2021 14:50:16 +0200
-Message-Id: <170e7daa55aced148b8e57827f7c8fc65a0a8c7a.1626266516.git.geert+renesas@glider.be>
+Subject: [PATCH v4 01/10] crash_dump: Make elfcorehdr_{addr,
+ size} always visible
+Date: Wed, 14 Jul 2021 14:50:11 +0200
+Message-Id: <0721f629d5e75b7b7e655458a63cbd767baaa409.1626266516.git.geert+renesas@glider.be>
 In-Reply-To: <cover.1626266516.git.geert+renesas@glider.be>
 References: <cover.1626266516.git.geert+renesas@glider.be>
 MIME-Version: 1.0
@@ -29,55 +30,44 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>
 Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-RISC-V uses platform-specific code to locate the elf core header in
-memory.  However, this does not conform to the standard
-"linux,elfcorehdr" DT bindings, as it relies on a reserved memory node
-with the "linux,elfcorehdr" compatible value, instead of on a
-"linux,elfcorehdr" property under the "/chosen" node.
+Make the forward declarations of elfcorehdr_addr and elfcorehdr_size
+always available, like is done for phys_initrd_start and
+phys_initrd_size.  Code referring to these symbols can then just check
+for IS_ENABLED(CONFIG_CRASH_DUMP), instead of requiring conditional
+compilation using an #ifdef, thus preparing to increase compile
+coverage.
 
-The non-compliant code can just be removed, as the standard behavior is
-already implemented by platform-agnostic handling in the FDT core code.
-
-Fixes: 5640975003d0234d ("RISC-V: Add crash kernel support")
+Suggested-by: Rob Herring <robh+dt@kernel.org>
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v4:
-  - No changes.
+  - New.
 ---
- arch/riscv/mm/init.c | 20 --------------------
- 1 file changed, 20 deletions(-)
+ include/linux/crash_dump.h | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index 269fc648ef3d84b2..4aa4b6a034086df6 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -829,26 +829,6 @@ static void __init reserve_crashkernel(void)
- }
- #endif /* CONFIG_KEXEC_CORE */
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index a5192b718dbe4f9a..ad31893d13d634de 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -10,13 +10,14 @@
  
--#ifdef CONFIG_CRASH_DUMP
--/*
-- * We keep track of the ELF core header of the crashed
-- * kernel with a reserved-memory region with compatible
-- * string "linux,elfcorehdr". Here we register a callback
-- * to populate elfcorehdr_addr/size when this region is
-- * present. Note that this region will be marked as
-- * reserved once we call early_init_fdt_scan_reserved_mem()
-- * later on.
-- */
--static int __init elfcore_hdr_setup(struct reserved_mem *rmem)
--{
--	elfcorehdr_addr = rmem->base;
--	elfcorehdr_size = rmem->size;
--	return 0;
--}
+ #include <linux/pgtable.h> /* for pgprot_t */
+ 
++/* For IS_ENABLED(CONFIG_CRASH_DUMP) */
++extern unsigned long long elfcorehdr_addr;
++extern unsigned long long elfcorehdr_size;
++
+ #ifdef CONFIG_CRASH_DUMP
+ #define ELFCORE_ADDR_MAX	(-1ULL)
+ #define ELFCORE_ADDR_ERR	(-2ULL)
+ 
+-extern unsigned long long elfcorehdr_addr;
+-extern unsigned long long elfcorehdr_size;
 -
--RESERVEDMEM_OF_DECLARE(elfcorehdr, "linux,elfcorehdr", elfcore_hdr_setup);
--#endif
--
- void __init paging_init(void)
- {
- 	setup_bootmem();
+ extern int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size);
+ extern void elfcorehdr_free(unsigned long long addr);
+ extern ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos);
 -- 
 2.25.1
 
