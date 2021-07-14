@@ -1,16 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from leibniz.telenet-ops.be ([195.130.137.77])
  by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m3eLu-00HUF1-0W
+ id 1m3eLu-00HUFJ-P2
  for kexec@lists.infradead.org; Wed, 14 Jul 2021 12:51:05 +0000
 Received: from andre.telenet-ops.be (andre.telenet-ops.be
  [IPv6:2a02:1800:120:4::f00:15])
- by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M5JQ5zMqfPY
+ by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M5nvwzMqfsd
  for <kexec@lists.infradead.org>; Wed, 14 Jul 2021 14:50:51 +0200 (CEST)
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 02/10] memblock: Add variables for usable memory limitation
-Date: Wed, 14 Jul 2021 14:50:12 +0200
-Message-Id: <04c4d231fb03a3810d72a45c8a5bc2272c5975f3.1626266516.git.geert+renesas@glider.be>
+Subject: [PATCH v4 06/10] riscv: Remove non-standard linux, elfcorehdr handling
+Date: Wed, 14 Jul 2021 14:50:16 +0200
+Message-Id: <170e7daa55aced148b8e57827f7c8fc65a0a8c7a.1626266516.git.geert+renesas@glider.be>
 In-Reply-To: <cover.1626266516.git.geert+renesas@glider.be>
 References: <cover.1626266516.git.geert+renesas@glider.be>
 MIME-Version: 1.0
@@ -29,62 +29,55 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>
 Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-Add two global variables (cap_mem_addr and cap_mem_size) for storing a
-base address and size, describing a limited region in which memory may
-be considered available for use by the kernel.  If enabled, memory
-outside of this range is not available for use.
+RISC-V uses platform-specific code to locate the elf core header in
+memory.  However, this does not conform to the standard
+"linux,elfcorehdr" DT bindings, as it relies on a reserved memory node
+with the "linux,elfcorehdr" compatible value, instead of on a
+"linux,elfcorehdr" property under the "/chosen" node.
 
-These variables can by filled by firmware-specific code, and used in
-calls to memblock_cap_memory_range() by architecture-specific code.
-An example user is the parser of the "linux,usable-memory-range"
-property in the DT "/chosen" node.
+The non-compliant code can just be removed, as the standard behavior is
+already implemented by platform-agnostic handling in the FDT core code.
 
+Fixes: 5640975003d0234d ("RISC-V: Add crash kernel support")
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
-This is similar to how the initial ramdisk (phys_initrd_{start,size})
-and ELF core headers (elfcorehdr_{addr,size})) are handled.
-
-Does there exist a suitable place in the common memblock code to call
-"memblock_cap_memory_range(cap_mem_addr, cap_mem_size)", or does this
-have to be done in architecture-specific code?
-
 v4:
-  - New.
+  - No changes.
 ---
- include/linux/memblock.h | 6 ++++++
- mm/memblock.c            | 2 ++
- 2 files changed, 8 insertions(+)
+ arch/riscv/mm/init.c | 20 --------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index cbf46f56d1053b68..07e2474c4c3901e9 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -25,6 +25,12 @@ extern unsigned long max_pfn;
-  */
- extern unsigned long long max_possible_pfn;
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index 269fc648ef3d84b2..4aa4b6a034086df6 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -829,26 +829,6 @@ static void __init reserve_crashkernel(void)
+ }
+ #endif /* CONFIG_KEXEC_CORE */
  
-+/*
-+ * limited region in which memory may be considered usable by the kernel
-+ */
-+extern phys_addr_t cap_mem_addr;
-+extern phys_addr_t cap_mem_size;
-+
- /**
-  * enum memblock_flags - definition of memory region attributes
-  * @MEMBLOCK_NONE: no special request
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 0041ff62c584e7e1..66659f2b10ed40ff 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -101,6 +101,8 @@ unsigned long max_low_pfn;
- unsigned long min_low_pfn;
- unsigned long max_pfn;
- unsigned long long max_possible_pfn;
-+phys_addr_t cap_mem_addr;
-+phys_addr_t cap_mem_size;
- 
- static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
- static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
+-#ifdef CONFIG_CRASH_DUMP
+-/*
+- * We keep track of the ELF core header of the crashed
+- * kernel with a reserved-memory region with compatible
+- * string "linux,elfcorehdr". Here we register a callback
+- * to populate elfcorehdr_addr/size when this region is
+- * present. Note that this region will be marked as
+- * reserved once we call early_init_fdt_scan_reserved_mem()
+- * later on.
+- */
+-static int __init elfcore_hdr_setup(struct reserved_mem *rmem)
+-{
+-	elfcorehdr_addr = rmem->base;
+-	elfcorehdr_size = rmem->size;
+-	return 0;
+-}
+-
+-RESERVEDMEM_OF_DECLARE(elfcorehdr, "linux,elfcorehdr", elfcore_hdr_setup);
+-#endif
+-
+ void __init paging_init(void)
+ {
+ 	setup_bootmem();
 -- 
 2.25.1
 
