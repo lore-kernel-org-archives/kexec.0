@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from leibniz.telenet-ops.be ([195.130.137.77])
+Received: from newton.telenet-ops.be ([2a02:1800:120:4::f00:d])
  by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m3eLr-00HUCV-HU
- for kexec@lists.infradead.org; Wed, 14 Jul 2021 12:51:01 +0000
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be
- [IPv6:2a02:1800:120:4::f00:13])
- by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M3NfLzMqf3Y
+ id 1m3eLn-00HUAZ-1m
+ for kexec@lists.infradead.org; Wed, 14 Jul 2021 12:50:59 +0000
+Received: from andre.telenet-ops.be (andre.telenet-ops.be
+ [IPv6:2a02:1800:120:4::f00:15])
+ by newton.telenet-ops.be (Postfix) with ESMTPS id 4GPy6M5JjyzMr9gw
  for <kexec@lists.infradead.org>; Wed, 14 Jul 2021 14:50:51 +0200 (CEST)
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v4 00/10] Add generic support for kdump DT properties
-Date: Wed, 14 Jul 2021 14:50:10 +0200
-Message-Id: <cover.1626266516.git.geert+renesas@glider.be>
+Subject: [PATCH v4 03/10] of: fdt: Add generic support for parsing elf core
+ headers property
+Date: Wed, 14 Jul 2021 14:50:13 +0200
+Message-Id: <24d93c713f6faeaee6105f57c3d94ac17f12405f.1626266516.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1626266516.git.geert+renesas@glider.be>
+References: <cover.1626266516.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,88 +30,128 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>
 Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-	Hi all,
+There are two methods to specify the location of the elf core headers:
+using the "elfcorehdr=" kernel parameter, as handled by generic code in
+kernel/crash_dump.c, or using the "linux,elfcorehdr" property under the
+"/chosen" node in the Device Tree, as handled by architecture-specific
+code in arch/arm64/mm/init.c.
 
-This patch series adds generic support for parsing DT properties related
-to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
-the "/chosen" node), makes use of it on arm64, arm32, and (partially)
-riscv, and performs a few cleanups.  It is an evolution of the
-combination of [1] and [2].
+Extend support for "linux,elfcorehdr" to all platforms supporting DT by
+adding platform-agnostic handling for parsing this property to the FDT
+core code.  This can co-exist safely with the architecture-specific
+parsing, until the latter has been removed.
 
-The series consists of 5 parts:
-  1. Patches 1-2 prepare (the visibility of) variables used to hold
-     information retrieved from the DT properties.
-  2. Patches 3-5 add support to the FDT core for parsing the properties.
-     This can co-exist safely with architecture-specific parsing, until
-     the latter has been removed.
-  3. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
-     riscv.
-     I think this can be applied independently, as the non-standard
-     handling is in v5.13, but upstream riscv kdump support is still
-     incomplete.
-  4. Patches 7-9 convert arm64 to use the generic handling instead of
-     its own implementation.
-  5. Patch 10 adds support for kdump properties to arm32.
-     The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add
-     DT properties to crash dump kernel's DTB"[3], which is still valid.
+This requires moving the call to of_scan_flat_dt() up, as the code
+scanning the "/chosen" node now needs to be aware of the values of
+"#address-cells" and "#size-cells".
 
-Changes compared to the previous versions:
-  - Make elfcorehdr_{addr,size} always visible,
-  - Add variables for usable memory limitation,
-  - Use IS_ENABLED() instead of #ifdef (incl. initrd and arm64),
-  - Clarify what architecture-specific code is still responsible for,
-  - Add generic support for parsing linux,usable-memory-range,
-  - Remove custom linux,usable-memory-range parsing on arm64,
-  - Use generic handling on ARM.
-  
-This has been tested on arm32 and arm64, and compile-tested on riscv64.
+Architecture-specific code still has to reserve the memory used by the
+elf core headers, if present.
 
-Thanks for your comments!
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+About the change to chosen.txt: I have a similar change for
+schemas/chosen.yaml in dt-schema.
 
-[1] "[PATCH v3] ARM: Parse kdump DT properties"
-    https://lore.kernel.org/r/20210317113130.2554368-1-geert+renesas@glider.be/
-[2] "[PATCH 0/3] Add generic-support for linux,elfcorehdr and fix riscv"
-    https://lore.kernel.org/r/cover.1623780059.git.geert+renesas@glider.be/
-[3] "[PATCH] arm: kdump: Add DT properties to crash dump kernel's DTB"
-    https://lore.kernel.org/linux-arm-kernel/20200902154129.6358-1-geert+renesas@glider.be/
+v4:
+  - Use IS_ENABLED() instead of #ifdef,
+  - Clarify what architecture-specific code is still responsible for.
+---
+ Documentation/devicetree/bindings/chosen.txt |  6 ++--
+ drivers/of/fdt.c                             | 34 ++++++++++++++++++--
+ 2 files changed, 34 insertions(+), 6 deletions(-)
 
-
-Geert Uytterhoeven (10):
-  crash_dump: Make elfcorehdr_{addr,size} always visible
-  memblock: Add variables for usable memory limitation
-  of: fdt: Add generic support for parsing elf core headers property
-  of: fdt: Add generic support for parsing usable memory range property
-  of: fdt: Use IS_ENABLED(CONFIG_BLK_DEV_INITRD) instead of #ifdef
-  riscv: Remove non-standard linux,elfcorehdr handling
-  arm64: kdump: Remove custom linux,elfcorehdr parsing
-  arm64: kdump: Remove custom linux,usable-memory-range parsing
-  arm64: kdump: Use IS_ENABLED(CONFIG_CRASH_DUMP) instead of #ifdef
-  ARM: Parse kdump DT properties
-
- Documentation/devicetree/bindings/chosen.txt  | 12 ++--
- .../arm/boot/compressed/fdt_check_mem_start.c | 48 ++++++++++++--
- arch/arm/mm/init.c                            | 30 +++++++++
- arch/arm64/mm/init.c                          | 63 +------------------
- arch/riscv/mm/init.c                          | 20 ------
- drivers/of/fdt.c                              | 63 ++++++++++++++++---
- include/linux/crash_dump.h                    |  7 ++-
- include/linux/memblock.h                      |  6 ++
- mm/memblock.c                                 |  2 +
- 9 files changed, 148 insertions(+), 103 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
+index 45e79172a646c537..5b0b94eb2d04e79d 100644
+--- a/Documentation/devicetree/bindings/chosen.txt
++++ b/Documentation/devicetree/bindings/chosen.txt
+@@ -106,9 +106,9 @@ respectively, of the root node.
+ linux,elfcorehdr
+ ----------------
+ 
+-This property (currently used only on arm64) holds the memory range,
+-the address and the size, of the elf core header which mainly describes
+-the panicked kernel's memory layout as PT_LOAD segments of elf format.
++This property holds the memory range, the address and the size, of the elf
++core header which mainly describes the panicked kernel's memory layout as
++PT_LOAD segments of elf format.
+ e.g.
+ 
+ / {
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 344f16bb04ccf081..f797d52c5b492cb7 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -8,6 +8,7 @@
+ 
+ #define pr_fmt(fmt)	"OF: fdt: " fmt
+ 
++#include <linux/crash_dump.h>
+ #include <linux/crc32.h>
+ #include <linux/kernel.h>
+ #include <linux/initrd.h>
+@@ -908,6 +909,32 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
+ }
+ #endif /* CONFIG_BLK_DEV_INITRD */
+ 
++/**
++ * early_init_dt_check_for_elfcorehdr - Decode elfcorehdr location from flat
++ * tree
++ * @node: reference to node containing elfcorehdr location ('chosen')
++ */
++static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
++{
++	const __be32 *prop;
++	int len;
++
++	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
++		return;
++
++	pr_debug("Looking for elfcorehdr property... ");
++
++	prop = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
++	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
++		return;
++
++	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
++	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &prop);
++
++	pr_debug("elfcorehdr_start=0x%llx elfcorehdr_size=0x%llx\n",
++		 elfcorehdr_addr, elfcorehdr_size);
++}
++
+ #ifdef CONFIG_SERIAL_EARLYCON
+ 
+ int __init early_init_dt_scan_chosen_stdout(void)
+@@ -1055,6 +1082,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
+ 		return 0;
+ 
+ 	early_init_dt_check_for_initrd(node);
++	early_init_dt_check_for_elfcorehdr(node);
+ 
+ 	/* Retrieve command line */
+ 	p = of_get_flat_dt_prop(node, "bootargs", &l);
+@@ -1199,14 +1227,14 @@ void __init early_init_dt_scan_nodes(void)
+ {
+ 	int rc = 0;
+ 
++	/* Initialize {size,address}-cells info */
++	of_scan_flat_dt(early_init_dt_scan_root, NULL);
++
+ 	/* Retrieve various information from the /chosen node */
+ 	rc = of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
+ 	if (!rc)
+ 		pr_warn("No chosen node found, continuing without\n");
+ 
+-	/* Initialize {size,address}-cells info */
+-	of_scan_flat_dt(early_init_dt_scan_root, NULL);
+-
+ 	/* Setup memory, calling early_init_dt_add_memory_arch */
+ 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+ }
 -- 
 2.25.1
 
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
