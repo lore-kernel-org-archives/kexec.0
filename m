@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Arnd Bergmann <arnd@kernel.org>
-Subject: [PATCH v4 1/4] kexec: avoid compat_alloc_user_space
-Date: Tue, 20 Jul 2021 17:09:47 +0200
-Message-Id: <20210720150950.3669610-2-arnd@kernel.org>
+Subject: [PATCH v4 2/4] mm: simplify compat_sys_move_pages
+Date: Tue, 20 Jul 2021 17:09:48 +0200
+Message-Id: <20210720150950.3669610-3-arnd@kernel.org>
 In-Reply-To: <20210720150950.3669610-1-arnd@kernel.org>
 References: <20210720150950.3669610-1-arnd@kernel.org>
 MIME-Version: 1.0
@@ -19,231 +19,95 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-arch@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org, Christoph Hellwig <hch@lst.de>
 
 From: Arnd Bergmann <arnd@arndb.de>
 
-The compat version of sys_kexec_load() uses compat_alloc_user_space to
-convert the user-provided arguments into the native format, and it is
-one of the last system calls to do this after almost all other ones have
-been converted to a different solution.
+The compat move_pages() implementation uses compat_alloc_user_space()
+for converting the pointer array. Moving the compat handling into
+the function itself is a bit simpler and lets us avoid the
+compat_alloc_user_space() call.
 
-Change do_kexec_load_locked() to instead take a kernel pointer,
-and do the conversion of the compat format in the two entry points
-for native and compat mode.
-
-This approach was suggested by Eric Biederman, who posted the initial
-version as an alternative to a different patch from Arnd.
-
-Link: https://lore.kernel.org/lkml/m1y2cbzmnw.fsf@fess.ebiederm.org/
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- kernel/kexec.c | 116 +++++++++++++++++++++++++------------------------
- 1 file changed, 59 insertions(+), 57 deletions(-)
+ mm/migrate.c | 45 ++++++++++++++++++++++++++++++---------------
+ 1 file changed, 30 insertions(+), 15 deletions(-)
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index c82c6c06f051..4eae5f2aa159 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -19,26 +19,21 @@
- 
- #include "kexec_internal.h"
- 
--static int copy_user_segment_list(struct kimage *image,
-+static void copy_user_segment_list(struct kimage *image,
- 				  unsigned long nr_segments,
--				  struct kexec_segment __user *segments)
-+				  struct kexec_segment *segments)
- {
--	int ret;
- 	size_t segment_bytes;
- 
- 	/* Read in the segments */
- 	image->nr_segments = nr_segments;
- 	segment_bytes = nr_segments * sizeof(*segments);
--	ret = copy_from_user(image->segment, segments, segment_bytes);
--	if (ret)
--		ret = -EFAULT;
--
--	return ret;
-+	memcpy(image->segment, segments, segment_bytes);
+diff --git a/mm/migrate.c b/mm/migrate.c
+index 34a9ad3e0a4f..60634d2653b9 100644
+--- a/mm/migrate.c
++++ b/mm/migrate.c
+@@ -1820,6 +1820,23 @@ static void do_pages_stat_array(struct mm_struct *mm, unsigned long nr_pages,
+ 	mmap_read_unlock(mm);
  }
  
- static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 			     unsigned long nr_segments,
--			     struct kexec_segment __user *segments,
-+			     struct kexec_segment *segments,
- 			     unsigned long flags)
- {
- 	int ret;
-@@ -59,9 +54,7 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 
- 	image->start = entry;
- 
--	ret = copy_user_segment_list(image, nr_segments, segments);
--	if (ret)
--		goto out_free_image;
-+	copy_user_segment_list(image, nr_segments, segments);
- 
- 	if (kexec_on_panic) {
- 		/* Enable special crash kernel control page alloc policy. */
-@@ -103,8 +96,8 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 	return ret;
- }
- 
--static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
--		struct kexec_segment __user *segments, unsigned long flags)
-+static int do_kexec_load_locked(unsigned long entry, unsigned long nr_segments,
-+			struct kexec_segment *segments, unsigned long flags)
- {
- 	struct kimage **dest_image, *image;
- 	unsigned long i;
-@@ -174,6 +167,27 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	return ret;
- }
- 
-+static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
-+			struct kexec_segment *segments, unsigned long flags)
++static int get_compat_pages_array(const void __user *chunk_pages[],
++				  const void __user * __user *pages,
++				  unsigned long chunk_nr)
 +{
-+	int result;
++	compat_uptr_t __user *pages32 = (compat_uptr_t __user *)pages;
++	compat_uptr_t p;
++	int i;
 +
-+	/* Because we write directly to the reserved memory
-+	 * region when loading crash kernels we need a mutex here to
-+	 * prevent multiple crash  kernels from attempting to load
-+	 * simultaneously, and to prevent a crash kernel from loading
-+	 * over the top of a in use crash kernel.
-+	 *
-+	 * KISS: always take the mutex.
-+	 */
-+	if (!mutex_trylock(&kexec_mutex))
-+		return -EBUSY;
++	for (i = 0; i < chunk_nr; i++) {
++		if (get_user(p, pages32 + i))
++			return -EFAULT;
++		chunk_pages[i] = compat_ptr(p);
++	}
 +
-+	result = do_kexec_load_locked(entry, nr_segments, segments, flags);
-+	mutex_unlock(&kexec_mutex);
-+	return result;
++	return 0;
 +}
 +
  /*
-  * Exec Kernel system call: for obvious reasons only root may call it.
-  *
-@@ -224,6 +238,11 @@ static inline int kexec_load_check(unsigned long nr_segments,
- 	if ((flags & KEXEC_FLAGS) != (flags & ~KEXEC_ARCH_MASK))
- 		return -EINVAL;
+  * Determine the nodes of a user array of pages and store it in
+  * a user array of status.
+@@ -1839,8 +1856,15 @@ static int do_pages_stat(struct mm_struct *mm, unsigned long nr_pages,
+ 		if (chunk_nr > DO_PAGES_STAT_CHUNK_NR)
+ 			chunk_nr = DO_PAGES_STAT_CHUNK_NR;
  
-+	/* Verify we are on the appropriate architecture */
-+	if (((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH) &&
-+	    ((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
-+		return -EINVAL;
-+
- 	/* Put an artificial cap on the number
- 	 * of segments passed to kexec_load.
- 	 */
-@@ -236,32 +255,26 @@ static inline int kexec_load_check(unsigned long nr_segments,
- SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		struct kexec_segment __user *, segments, unsigned long, flags)
+-		if (copy_from_user(chunk_pages, pages, chunk_nr * sizeof(*chunk_pages)))
+-			break;
++		if (in_compat_syscall()) {
++			if (get_compat_pages_array(chunk_pages, pages,
++						   chunk_nr))
++				break;
++		} else {
++			if (copy_from_user(chunk_pages, pages,
++				      chunk_nr * sizeof(*chunk_pages)))
++				break;
++		}
+ 
+ 		do_pages_stat_array(mm, chunk_nr, chunk_pages, chunk_status);
+ 
+@@ -1945,23 +1969,14 @@ SYSCALL_DEFINE6(move_pages, pid_t, pid, unsigned long, nr_pages,
+ 
+ #ifdef CONFIG_COMPAT
+ COMPAT_SYSCALL_DEFINE6(move_pages, pid_t, pid, compat_ulong_t, nr_pages,
+-		       compat_uptr_t __user *, pages32,
++		       compat_uptr_t __user *, pages,
+ 		       const int __user *, nodes,
+ 		       int __user *, status,
+ 		       int, flags)
  {
--	int result;
-+	struct kexec_segment *ksegments;
-+	unsigned long bytes, result;
- 
- 	result = kexec_load_check(nr_segments, flags);
- 	if (result)
- 		return result;
- 
--	/* Verify we are on the appropriate architecture */
--	if (((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH) &&
--		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
--		return -EINVAL;
+-	const void __user * __user *pages;
+-	int i;
 -
--	/* Because we write directly to the reserved memory
--	 * region when loading crash kernels we need a mutex here to
--	 * prevent multiple crash  kernels from attempting to load
--	 * simultaneously, and to prevent a crash kernel from loading
--	 * over the top of a in use crash kernel.
--	 *
--	 * KISS: always take the mutex.
--	 */
--	if (!mutex_trylock(&kexec_mutex))
--		return -EBUSY;
-+	bytes = nr_segments * sizeof(ksegments[0]);
-+	ksegments = kmalloc(bytes, GFP_KERNEL);
-+	if (!ksegments)
-+		return -ENOMEM;
- 
--	result = do_kexec_load(entry, nr_segments, segments, flags);
-+	result = copy_from_user(ksegments, segments, bytes);
-+	if (result)
-+		goto fail;
- 
--	mutex_unlock(&kexec_mutex);
-+	result = do_kexec_load(entry, nr_segments, ksegments, flags);
- 
-+fail:
-+	kfree(ksegments);
- 	return result;
- }
- 
-@@ -272,8 +285,8 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
- 		       compat_ulong_t, flags)
- {
- 	struct compat_kexec_segment in;
--	struct kexec_segment out, __user *ksegments;
--	unsigned long i, result;
-+	struct kexec_segment *ksegments;
-+	unsigned long bytes, i, result;
- 
- 	result = kexec_load_check(nr_segments, flags);
- 	if (result)
-@@ -285,37 +298,26 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
- 	if ((flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_DEFAULT)
- 		return -EINVAL;
- 
--	ksegments = compat_alloc_user_space(nr_segments * sizeof(out));
-+	bytes = nr_segments * sizeof(ksegments[0]);
-+	ksegments = kmalloc(bytes, GFP_KERNEL);
-+	if (!ksegments)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < nr_segments; i++) {
- 		result = copy_from_user(&in, &segments[i], sizeof(in));
- 		if (result)
+-	pages = compat_alloc_user_space(nr_pages * sizeof(void *));
+-	for (i = 0; i < nr_pages; i++) {
+-		compat_uptr_t p;
+-
+-		if (get_user(p, pages32 + i) ||
+-			put_user(compat_ptr(p), pages + i))
 -			return -EFAULT;
--
--		out.buf   = compat_ptr(in.buf);
--		out.bufsz = in.bufsz;
--		out.mem   = in.mem;
--		out.memsz = in.memsz;
-+			goto fail;
- 
--		result = copy_to_user(&ksegments[i], &out, sizeof(out));
--		if (result)
--			return -EFAULT;
-+		ksegments[i].buf   = compat_ptr(in.buf);
-+		ksegments[i].bufsz = in.bufsz;
-+		ksegments[i].mem   = in.mem;
-+		ksegments[i].memsz = in.memsz;
- 	}
- 
--	/* Because we write directly to the reserved memory
--	 * region when loading crash kernels we need a mutex here to
--	 * prevent multiple crash  kernels from attempting to load
--	 * simultaneously, and to prevent a crash kernel from loading
--	 * over the top of a in use crash kernel.
--	 *
--	 * KISS: always take the mutex.
--	 */
--	if (!mutex_trylock(&kexec_mutex))
--		return -EBUSY;
--
- 	result = do_kexec_load(entry, nr_segments, ksegments, flags);
- 
--	mutex_unlock(&kexec_mutex);
--
-+fail:
-+	kfree(ksegments);
- 	return result;
+-	}
+-	return kernel_move_pages(pid, nr_pages, pages, nodes, status, flags);
++	return kernel_move_pages(pid, nr_pages,
++				 (const void __user *__user *)pages,
++				 nodes, status, flags);
  }
- #endif
+ #endif /* CONFIG_COMPAT */
+ 
 -- 
 2.29.2
 
