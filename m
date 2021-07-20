@@ -1,13 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 20 Jul 2021 16:37:21 +0100
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v4 1/4] kexec: avoid compat_alloc_user_space
-Message-ID: <YPbtsU4GX6PL7/42@infradead.org>
-References: <20210720150950.3669610-1-arnd@kernel.org>
- <20210720150950.3669610-2-arnd@kernel.org>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210720150950.3669610-2-arnd@kernel.org>
+Received: from mail-pf1-x431.google.com ([2607:f8b0:4864:20::431])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1m5ruM-00DSdV-Bu
+ for kexec@lists.infradead.org; Tue, 20 Jul 2021 15:43:49 +0000
+Received: by mail-pf1-x431.google.com with SMTP id d9so8712530pfv.4
+ for <kexec@lists.infradead.org>; Tue, 20 Jul 2021 08:43:44 -0700 (PDT)
+Date: Tue, 20 Jul 2021 08:43:43 -0700 (PDT)
+Subject: Re: [PATCH v4 06/10] riscv: Remove non-standard linux,
+ elfcorehdr handling
+In-Reply-To: <170e7daa55aced148b8e57827f7c8fc65a0a8c7a.1626266516.git.geert+renesas@glider.be>
+From: Palmer Dabbelt <palmer@dabbelt.com>
+Message-ID: <mhng-8deebbc6-f8aa-40e3-9e00-e99f12eaac92@palmerdabbelt-glaptop>
+Mime-Version: 1.0 (MHng)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,212 +20,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Arnd Bergmann <arnd@kernel.org>
-Cc: linux-arch@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
+Cc: robh+dt@kernel.org, linux@armlinux.org.uk, nico@fluxnic.net, ardb@kernel.org, linus.walleij@linaro.org, catalin.marinas@arm.com, will@kernel.org, mick@ics.forth.gr, Paul Walmsley <paul.walmsley@sifive.com>, aou@eecs.berkeley.edu, frowand.list@gmail.com, dyoung@redhat.com, rppt@kernel.org, bhe@redhat.com, vgoyal@redhat.com, akpm@linux-foundation.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-mm@kvack.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, geert+renesas@glider.be
 
-This can be simplified a little more by killing off
-copy_user_segment_list entirely, using memdup_user and dropping the
-not really required _locked wrapper.  The locking move might make
-most sense as a separate prep patch.
+On Wed, 14 Jul 2021 05:50:16 PDT (-0700), geert+renesas@glider.be wrote:
+> RISC-V uses platform-specific code to locate the elf core header in
+> memory.  However, this does not conform to the standard
+> "linux,elfcorehdr" DT bindings, as it relies on a reserved memory node
+> with the "linux,elfcorehdr" compatible value, instead of on a
+> "linux,elfcorehdr" property under the "/chosen" node.
+>
+> The non-compliant code can just be removed, as the standard behavior is
+> already implemented by platform-agnostic handling in the FDT core code.
+>
+> Fixes: 5640975003d0234d ("RISC-V: Add crash kernel support")
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v4:
+>   - No changes.
+> ---
+>  arch/riscv/mm/init.c | 20 --------------------
+>  1 file changed, 20 deletions(-)
+>
+> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+> index 269fc648ef3d84b2..4aa4b6a034086df6 100644
+> --- a/arch/riscv/mm/init.c
+> +++ b/arch/riscv/mm/init.c
+> @@ -829,26 +829,6 @@ static void __init reserve_crashkernel(void)
+>  }
+>  #endif /* CONFIG_KEXEC_CORE */
+>
+> -#ifdef CONFIG_CRASH_DUMP
+> -/*
+> - * We keep track of the ELF core header of the crashed
+> - * kernel with a reserved-memory region with compatible
+> - * string "linux,elfcorehdr". Here we register a callback
+> - * to populate elfcorehdr_addr/size when this region is
+> - * present. Note that this region will be marked as
+> - * reserved once we call early_init_fdt_scan_reserved_mem()
+> - * later on.
+> - */
+> -static int __init elfcore_hdr_setup(struct reserved_mem *rmem)
+> -{
+> -	elfcorehdr_addr = rmem->base;
+> -	elfcorehdr_size = rmem->size;
+> -	return 0;
+> -}
+> -
+> -RESERVEDMEM_OF_DECLARE(elfcorehdr, "linux,elfcorehdr", elfcore_hdr_setup);
+> -#endif
+> -
+>  void __init paging_init(void)
+>  {
+>  	setup_bootmem();
 
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index c82c6c06f051..3140fe7af801 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -19,26 +19,9 @@
- 
- #include "kexec_internal.h"
- 
--static int copy_user_segment_list(struct kimage *image,
--				  unsigned long nr_segments,
--				  struct kexec_segment __user *segments)
--{
--	int ret;
--	size_t segment_bytes;
--
--	/* Read in the segments */
--	image->nr_segments = nr_segments;
--	segment_bytes = nr_segments * sizeof(*segments);
--	ret = copy_from_user(image->segment, segments, segment_bytes);
--	if (ret)
--		ret = -EFAULT;
--
--	return ret;
--}
--
- static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 			     unsigned long nr_segments,
--			     struct kexec_segment __user *segments,
-+			     struct kexec_segment *segments,
- 			     unsigned long flags)
- {
- 	int ret;
-@@ -58,10 +41,8 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- 		return -ENOMEM;
- 
- 	image->start = entry;
--
--	ret = copy_user_segment_list(image, nr_segments, segments);
--	if (ret)
--		goto out_free_image;
-+	image->nr_segments = nr_segments;
-+	memcpy(image->segment, segments, nr_segments * sizeof(*segments));
- 
- 	if (kexec_on_panic) {
- 		/* Enable special crash kernel control page alloc policy. */
-@@ -104,11 +85,22 @@ static int kimage_alloc_init(struct kimage **rimage, unsigned long entry,
- }
- 
- static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
--		struct kexec_segment __user *segments, unsigned long flags)
-+		struct kexec_segment *segments, unsigned long flags)
- {
- 	struct kimage **dest_image, *image;
- 	unsigned long i;
--	int ret;
-+	int ret = 0;
-+
-+	/*
-+	 * Because we write directly to the reserved memory region when loading
-+	 * crash kernels we need a mutex here to prevent multiple crash kernels
-+	 * from attempting to load simultaneously, and to prevent a crash kernel
-+	 * from loading over the top of a in use crash kernel.
-+	 *
-+	 * KISS: always take the mutex.
-+	 */
-+	if (!mutex_trylock(&kexec_mutex))
-+		return -EBUSY;
- 
- 	if (flags & KEXEC_ON_CRASH) {
- 		dest_image = &kexec_crash_image;
-@@ -121,7 +113,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	if (nr_segments == 0) {
- 		/* Uninstall image */
- 		kimage_free(xchg(dest_image, NULL));
--		return 0;
-+		goto out_unlock;
- 	}
- 	if (flags & KEXEC_ON_CRASH) {
- 		/*
-@@ -134,7 +126,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 
- 	ret = kimage_alloc_init(&image, entry, nr_segments, segments, flags);
- 	if (ret)
--		return ret;
-+		goto out_unlock;
- 
- 	if (flags & KEXEC_PRESERVE_CONTEXT)
- 		image->preserve_context = 1;
-@@ -171,6 +163,8 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 		arch_kexec_protect_crashkres();
- 
- 	kimage_free(image);
-+out_unlock:
-+	mutex_unlock(&kexec_mutex);
- 	return ret;
- }
- 
-@@ -236,7 +230,8 @@ static inline int kexec_load_check(unsigned long nr_segments,
- SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		struct kexec_segment __user *, segments, unsigned long, flags)
- {
--	int result;
-+	struct kexec_segment *ksegments;
-+	unsigned long result;
- 
- 	result = kexec_load_check(nr_segments, flags);
- 	if (result)
-@@ -247,21 +242,11 @@ SYSCALL_DEFINE4(kexec_load, unsigned long, entry, unsigned long, nr_segments,
- 		((flags & KEXEC_ARCH_MASK) != KEXEC_ARCH_DEFAULT))
- 		return -EINVAL;
- 
--	/* Because we write directly to the reserved memory
--	 * region when loading crash kernels we need a mutex here to
--	 * prevent multiple crash  kernels from attempting to load
--	 * simultaneously, and to prevent a crash kernel from loading
--	 * over the top of a in use crash kernel.
--	 *
--	 * KISS: always take the mutex.
--	 */
--	if (!mutex_trylock(&kexec_mutex))
--		return -EBUSY;
--
--	result = do_kexec_load(entry, nr_segments, segments, flags);
--
--	mutex_unlock(&kexec_mutex);
--
-+	ksegments = memdup_user(segments, nr_segments * sizeof(ksegments[0]));
-+	if (IS_ERR(ksegments))
-+		return PTR_ERR(ksegments);
-+	result = do_kexec_load(entry, nr_segments, ksegments, flags);
-+	kfree(ksegments);
- 	return result;
- }
- 
-@@ -272,7 +257,7 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
- 		       compat_ulong_t, flags)
- {
- 	struct compat_kexec_segment in;
--	struct kexec_segment out, __user *ksegments;
-+	struct kexec_segment *ksegments;
- 	unsigned long i, result;
- 
- 	result = kexec_load_check(nr_segments, flags);
-@@ -285,37 +270,24 @@ COMPAT_SYSCALL_DEFINE4(kexec_load, compat_ulong_t, entry,
- 	if ((flags & KEXEC_ARCH_MASK) == KEXEC_ARCH_DEFAULT)
- 		return -EINVAL;
- 
--	ksegments = compat_alloc_user_space(nr_segments * sizeof(out));
-+	ksegments = kmalloc_array(nr_segments, sizeof(ksegments[0]),
-+			GFP_KERNEL);
-+	if (!ksegments)
-+		return -ENOMEM;
-+
- 	for (i = 0; i < nr_segments; i++) {
- 		result = copy_from_user(&in, &segments[i], sizeof(in));
- 		if (result)
--			return -EFAULT;
--
--		out.buf   = compat_ptr(in.buf);
--		out.bufsz = in.bufsz;
--		out.mem   = in.mem;
--		out.memsz = in.memsz;
--
--		result = copy_to_user(&ksegments[i], &out, sizeof(out));
--		if (result)
--			return -EFAULT;
-+			goto fail;
-+		ksegments[i].buf   = compat_ptr(in.buf);
-+		ksegments[i].bufsz = in.bufsz;
-+		ksegments[i].mem   = in.mem;
-+		ksegments[i].memsz = in.memsz;
- 	}
- 
--	/* Because we write directly to the reserved memory
--	 * region when loading crash kernels we need a mutex here to
--	 * prevent multiple crash  kernels from attempting to load
--	 * simultaneously, and to prevent a crash kernel from loading
--	 * over the top of a in use crash kernel.
--	 *
--	 * KISS: always take the mutex.
--	 */
--	if (!mutex_trylock(&kexec_mutex))
--		return -EBUSY;
--
- 	result = do_kexec_load(entry, nr_segments, ksegments, flags);
--
--	mutex_unlock(&kexec_mutex);
--
-+fail:
-+	kfree(ksegments);
- 	return result;
- }
- #endif
+Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
+Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
 
+LMK if you wanted me to take this series, otherwise I'm going to assume 
+it's going in via some other tree.
 
 _______________________________________________
 kexec mailing list
