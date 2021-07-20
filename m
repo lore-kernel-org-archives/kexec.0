@@ -1,16 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+From: Arnd Bergmann <arnd@kernel.org>
+Subject: [PATCH v4 0/4] compat: remove compat_alloc_user_space callers
+Date: Tue, 20 Jul 2021 17:09:46 +0200
+Message-Id: <20210720150950.3669610-1-arnd@kernel.org>
 MIME-Version: 1.0
-References: <cover.1626266516.git.geert+renesas@glider.be>
- <04c4d231fb03a3810d72a45c8a5bc2272c5975f3.1626266516.git.geert+renesas@glider.be>
- <20210714135101.GB2441138@robh.at.kernel.org> <YPP06QG7hfypZgYg@kernel.org>
- <CAMuHMdXfFhzm48U2Hvjz8yrjPsQbagW4aC_L-QE_Q6yx1Lo=tA@mail.gmail.com>
- <YPZh/IawtmwaYccQ@kernel.org>
-In-Reply-To: <YPZh/IawtmwaYccQ@kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 20 Jul 2021 09:23:41 +0200
-Message-ID: <CAMuHMdXO2nYY252s-tOWANF4x2ch+adDx=GO5gwV6Jfw28drgA@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] memblock: Add variables for usable memory
- limitation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,76 +16,86 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux MM <linux-mm@kvack.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: linux-arch@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Christoph Hellwig <hch@infradead.org>, Alexander Viro <viro@zeniv.linux.org.uk>, Andrew Morton <akpm@linux-foundation.org>, Borislav Petkov <bp@alien8.de>, Brian Gerst <brgerst@gmail.com>, Eric Biederman <ebiederm@xmission.com>, Ingo Molnar <mingo@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Linux-MM <linux-mm@kvack.org>, kexec@lists.infradead.org
 
-Hi Mike,
+From: Arnd Bergmann <arnd@arndb.de>
 
-On Tue, Jul 20, 2021 at 7:41 AM Mike Rapoport <rppt@kernel.org> wrote:
-> On Mon, Jul 19, 2021 at 08:59:03AM +0200, Geert Uytterhoeven wrote:
-> > On Sun, Jul 18, 2021 at 11:31 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > On Wed, Jul 14, 2021 at 07:51:01AM -0600, Rob Herring wrote:
-> > > > On Wed, Jul 14, 2021 at 02:50:12PM +0200, Geert Uytterhoeven wrote:
-> > > > > Add two global variables (cap_mem_addr and cap_mem_size) for storing a
-> > > > > base address and size, describing a limited region in which memory may
-> > > > > be considered available for use by the kernel.  If enabled, memory
-> > > > > outside of this range is not available for use.
-> > > > >
-> > > > > These variables can by filled by firmware-specific code, and used in
-> > > > > calls to memblock_cap_memory_range() by architecture-specific code.
-> > > > > An example user is the parser of the "linux,usable-memory-range"
-> > > > > property in the DT "/chosen" node.
-> > > > >
-> > > > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > > > ---
-> > > > > This is similar to how the initial ramdisk (phys_initrd_{start,size})
-> > > > > and ELF core headers (elfcorehdr_{addr,size})) are handled.
-> > > > >
-> > > > > Does there exist a suitable place in the common memblock code to call
-> > > > > "memblock_cap_memory_range(cap_mem_addr, cap_mem_size)", or does this
-> > > > > have to be done in architecture-specific code?
-> > > >
-> > > > Can't you just call it from early_init_dt_scan_usablemem? If the
-> > > > property is present, you want to call it. If the property is not
-> > > > present, nothing happens.
-> >
-> > I will have a look...
-> >
-> > > For memblock_cap_memory_range() to work properly it should be called after
-> > > memory is detected and added to memblock with memblock_add[_node]()
-> > >
-> > > I'm not huge fan of adding more globals to memblock so if such ordering can
-> > > be implemented on the DT side it would be great.
-> >
-> > Me neither ;-)
-> >
-> > > I don't see a way to actually enforce this ordering, so maybe we'd want to
-> > > add warning in memblock_cap_memory_range() if memblock.memory is empty.
+Going through compat_alloc_user_space() to convert indirect system call
+arguments tends to add complexity compared to handling the native and
+compat logic in the same code.
 
-Sorry, I misread "if memblock.memory is empty" as "if capmem is empty".
+The drivers/media portion of the longer series is already merged,
+and I just resubmitted the net/core and drivers/net portions, so this
+is the last main bit.
 
-> > "linux,usable-memory-range" is optional, and typically used only in
-> > crashdump kernels, so it would be a bad idea to add such a warning.
->
-> If I remember correctly, memblock_cap_memory_range() was added to support
-> "linux,usable-memory-range" for crasdump kernels on arm64 and if it would
-> be called before memory is registered we may silently corrupt the memory
-> because the crash kernel will see all the memory as available.
->"
-> So while WARN() maybe too much a pr_warn() seems to me quite appropriate.
+       Arnd
+---
 
-Yes, makes perfect sense now.
+Changes in v4:
 
-Gr{oetje,eeting}s,
+- Rebase to v5.14-rc2
+- Replace the kexec patch with a version based on Eric Biederman's
+  prototype
 
-                        Geert
+Changes in v3:
+
+- fix whitespace as pointed out by Christoph Hellwig
+- minor build fixes
+- rebase to v5.13-rc1
+
+Link: https://lore.kernel.org/lkml/20210517203343.3941777-1-arnd@kernel.org/
+
+Changes in v2:
+
+- address review comments from Christoph Hellwig
+- split syscall removal into a separate patch
+- replace __X32_COND_SYSCALL() with individual macros for x32
+
+Link: https://lore.kernel.org/lkml/20201208150614.GA15765@infradead.org/
+
+Arnd Bergmann (4):
+  kexec: avoid compat_alloc_user_space
+  mm: simplify compat_sys_move_pages
+  mm: simplify compat numa syscalls
+  compat: remove some compat entry points
+
+ arch/arm64/include/asm/unistd32.h         |  10 +-
+ arch/mips/kernel/syscalls/syscall_n32.tbl |  10 +-
+ arch/mips/kernel/syscalls/syscall_o32.tbl |  10 +-
+ arch/parisc/kernel/syscalls/syscall.tbl   |   8 +-
+ arch/powerpc/kernel/syscalls/syscall.tbl  |  10 +-
+ arch/s390/kernel/syscalls/syscall.tbl     |  10 +-
+ arch/sparc/kernel/syscalls/syscall.tbl    |  10 +-
+ arch/x86/entry/syscalls/syscall_32.tbl    |   4 +-
+ arch/x86/entry/syscalls/syscall_64.tbl    |   2 +-
+ include/linux/compat.h                    |  37 +---
+ include/uapi/asm-generic/unistd.h         |  10 +-
+ kernel/kexec.c                            | 116 ++++++-------
+ kernel/sys_ni.c                           |   5 -
+ mm/mempolicy.c                            | 196 +++++-----------------
+ mm/migrate.c                              |  50 +++---
+ 15 files changed, 182 insertions(+), 306 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.29.2
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: linux-arch <linux-arch@vger.kernel.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Brian Gerst <brgerst@gmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Linux ARM <linux-arm-kernel@lists.infradead.org>
+Cc: linux-kernel@vger.kernel.org
+Cc: Linux-MM <linux-mm@kvack.org>
+Cc: kexec@lists.infradead.org
 
 _______________________________________________
 kexec mailing list
