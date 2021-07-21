@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out1.suse.de ([195.135.220.28])
+Received: from mail-bn7nam10on2084.outbound.protection.outlook.com
+ ([40.107.92.84] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m6AML-00FQk5-9F
- for kexec@lists.infradead.org; Wed, 21 Jul 2021 11:25:54 +0000
-Date: Wed, 21 Jul 2021 13:25:47 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH printk v4 3/6] printk: remove safe buffers
-Message-ID: <20210721112547.fmksfm3kah5rd4ck@pathway.suse.cz>
-References: <20210715193359.25946-1-john.ogness@linutronix.de>
- <20210715193359.25946-4-john.ogness@linutronix.de>
+ id 1m6Jb6-00HHtP-Tz
+ for kexec@lists.infradead.org; Wed, 21 Jul 2021 21:17:47 +0000
+Subject: Re: [PATCH 04/12] x86/sev: Do not hardcode GHCB protocol version
+References: <20210721142015.1401-1-joro@8bytes.org>
+ <20210721142015.1401-5-joro@8bytes.org>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <1eef6235-a8d0-1012-969e-ef6f0804d054@amd.com>
+Date: Wed, 21 Jul 2021 16:17:38 -0500
+In-Reply-To: <20210721142015.1401-5-joro@8bytes.org>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210715193359.25946-4-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,31 +25,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, "Paul E. McKenney" <paulmck@kernel.org>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org
+To: Joerg Roedel <joro@8bytes.org>, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>
+Cc: kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
 
-On Thu 2021-07-15 21:39:56, John Ogness wrote:
-> With @logbuf_lock removed, the high level printk functions for
-> storing messages are lockless. Messages can be stored from any
-> context, so there is no need for the NMI and safe buffers anymore.
-> Remove the NMI and safe buffers.
+On 7/21/21 9:20 AM, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
 > 
-> Although the safe buffers are removed, the NMI and safe context
-> tracking is still in place. In these contexts, store the message
-> immediately but still use irq_work to defer the console printing.
+> Introduce the sev_get_ghcb_proto_ver() which will return the negotiated
+> GHCB protocol version and use it to set the version field in the GHCB.
 > 
-> Since printk recursion tracking is in place, safe context tracking
-> for most of printk is not needed. Remove it. Only safe context
-> tracking relating to the console and console_owner locks is left
-> in place. This is because the console and console_owner locks are
-> needed for the actual printing.
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/boot/compressed/sev.c | 5 +++++
+>  arch/x86/kernel/sev-shared.c   | 5 ++++-
+>  arch/x86/kernel/sev.c          | 5 +++++
+>  3 files changed, 14 insertions(+), 1 deletion(-)
 > 
-> Signed-off-by: John Ogness <john.ogness@linutronix.de>
+> diff --git a/arch/x86/boot/compressed/sev.c b/arch/x86/boot/compressed/sev.c
+> index 1a2e49730f8b..101e08c67296 100644
+> --- a/arch/x86/boot/compressed/sev.c
+> +++ b/arch/x86/boot/compressed/sev.c
+> @@ -119,6 +119,11 @@ static enum es_result vc_read_mem(struct es_em_ctxt *ctxt,
+>  /* Include code for early handlers */
+>  #include "../../kernel/sev-shared.c"
+>  
+> +static u64 sev_get_ghcb_proto_ver(void)
+> +{
+> +	return GHCB_PROTOCOL_MAX;
+> +}
+> +
+>  static bool early_setup_sev_es(void)
+>  {
+>  	if (!sev_es_negotiate_protocol(NULL))
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index 73eeb5897d16..36eaac2773ed 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -28,6 +28,9 @@ struct sev_ghcb_protocol_info {
+>  	unsigned int vm_proto;
+>  };
+>  
+> +/* Returns the negotiated GHCB Protocol version */
+> +static u64 sev_get_ghcb_proto_ver(void);
+> +
+>  static bool __init sev_es_check_cpu_features(void)
+>  {
+>  	if (!has_cpuflag(X86_FEATURE_RDRAND)) {
+> @@ -122,7 +125,7 @@ static enum es_result sev_es_ghcb_hv_call(struct ghcb *ghcb,
+>  	enum es_result ret;
+>  
+>  	/* Fill in protocol and format specifiers */
+> -	ghcb->protocol_version = GHCB_PROTOCOL_MAX;
+> +	ghcb->protocol_version = sev_get_ghcb_proto_ver();
 
-Reviewed-by: Petr Mladek <pmladek@suse.com>
+So this probably needs better clarification in the spec, but the GHCB
+version field is for the GHCB structure layout. So if you don't plan to
+use the XSS field that was added for version 2 of the layout, then you
+should report the GHCB structure version as 1.
 
-Best Regards,
-Petr
+Thanks,
+Tom
+
+>  	ghcb->ghcb_usage       = GHCB_DEFAULT_USAGE;
+>  
+>  	ghcb_set_sw_exit_code(ghcb, exit_code);
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 8084bfd7cce1..5d3422e8b25e 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -498,6 +498,11 @@ static enum es_result vc_slow_virt_to_phys(struct ghcb *ghcb, struct es_em_ctxt
+>  /* Negotiated GHCB protocol version */
+>  static struct sev_ghcb_protocol_info ghcb_protocol_info __ro_after_init;
+>  
+> +static u64 sev_get_ghcb_proto_ver(void)
+> +{
+> +	return ghcb_protocol_info.vm_proto;
+> +}
+> +
+>  static noinstr void __sev_put_ghcb(struct ghcb_state *state)
+>  {
+>  	struct sev_es_runtime_data *data;
+> 
 
 _______________________________________________
 kexec mailing list
