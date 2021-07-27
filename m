@@ -1,21 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x136.google.com ([2607:f8b0:4864:20::136])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m8G2f-00DUcR-2u
- for kexec@lists.infradead.org; Tue, 27 Jul 2021 05:54:14 +0000
-Received: by mail-il1-x136.google.com with SMTP id r1so11098275iln.6
- for <kexec@lists.infradead.org>; Mon, 26 Jul 2021 22:54:11 -0700 (PDT)
+Date: Tue, 27 Jul 2021 09:26:54 +0200
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH printk v4 0/6] printk: remove safe buffers
+Message-ID: <YP+1PqaKTfZXHjmU@alley>
+References: <20210715193359.25946-1-john.ogness@linutronix.de>
 MIME-Version: 1.0
-References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
- <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
- <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
-In-Reply-To: <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
-From: manty kuma <mantykuma@gmail.com>
-Date: Tue, 27 Jul 2021 14:54:00 +0900
-Message-ID: <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
-Subject: Re: Compiling makedumpfile from source
+Content-Disposition: inline
+In-Reply-To: <20210715193359.25946-1-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +15,61 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: John Ogness <john.ogness@linutronix.de>
+Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@redhat.com>, Marc Zyngier <maz@kernel.org>, Valentin Schneider <valentin.schneider@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mike Rapoport <rppt@kernel.org>, "Wolfram Sang (Renesas)" <wsa+renesas@sang-engineering.com>, Anshuman Khandual <anshuman.khandual@arm.com>, Xiongwei Song <sxwjean@gmail.com>, Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Nick Terrell <terrelln@fb.com>, Vipin Sharma <vipinsh@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Daniel Borkmann <daniel@iogearbox.net>, Vlastimil Babka <vbabka@suse.cz>, linux-arm-kernel@lists.infradead.org
 
-SGkga2F6dWhpdG8gc2FuLAoKSnVzdCBmb2xsb3dpbmcgdXAgb24gbXkgbGFzdCBlbWFpbC4KU2lu
-Y2VyZSBhcG9sb2dpZXMgZm9yIGFza2luZyBmb3IgeW91ciB0aW1lLgpJIHdhbnQgdG8gc3BlY2lm
-aWNhbGx5IHVuZGVyc3RhbmQgd2hhdCB0aGUgInVzZXIgZGF0YSIgc2VjdGlvbiBpcyBhbmQKd2hh
-dCBpdCBtZWFucyB0byBleGNsdWRlIGl0IGZyb20gdGhlIGR1bXAuCgpUaGFuayB5b3UgdmVyeSBt
-dWNoLgoKQmVzdCBSZWdhcmRzLApNYW50eQoKT24gRnJpLCBKdWwgOSwgMjAyMSBhdCAxMDo0NSBB
-TSBtYW50eSBrdW1hIDxtYW50eWt1bWFAZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIEthenVoaXRv
-IHNhbiwKPgo+IEkgYW0gbG9va2luZyB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgc2VjdGlvbnMg
-YmVpbmcgZmlsdGVyaW5nIG91dAo+IHdpdGggZWFjaCBvZiB0aGUgZm9sbG93aW5nIG9wdGlvbnMu
-Cj4KPiBaZXJvIHBhZ2U6Cj4gUGFnZXMgdGhhdCBhcmUgZW1wdHkuIElnbm9yaW5nIHRoZXNlIHBh
-Z2VzIHdvbid0IGhhdmUgYW55IGltcGFjdCBvbiBhbmFseXNpcy4KPgo+IG5vbi1wcml2YXRlIGNh
-Y2hlIGFuZCBwcml2YXRlIGNhY2hlOgo+IFdoYXQgZXhhY3RseSBhcmUgdGhlc2Ugc2VjdGlvbnMg
-b2YgbWVtb3J5PyBKdXN0IGEgb25lLWxpbmUgb3ZlcnZpZXcKPiBhYm91dCB0aGVtIGlzIHN1ZmZp
-Y2llbnQuCj4gKE15IHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgY2FjaGUgaXMgbm90IHBhcnQgb2Yg
-UkFNLiBJcyB0aGlzIGNhY2hlCj4gc29tZXRoaW5nIGVsc2U/IExpa2Ugc29tZSBib29ra2VlcGlu
-ZyBkYXRhIG1haW50YWluZWQgYnkgdGhlIGtlcm5lbD8pCj4KPgo+IHVzZXIgZGF0YToKPiBBcmUg
-dGhlc2Ugc2VjdGlvbnMgb2YgdGhlIG1lbW9yeSBmb3IgdGhlIHVzZXIgc3BhY2UgcHJvY2Vzc2Vz
-L21lbW9yeQo+IHNlY3Rpb25zIGFsbG9jYXRlZCB1c2luZyBtYWxsb2M/Cj4gTXkgdW5kZXJzdGFu
-ZGluZyBpcyB0aGF0IElmIEkgZXhjbHVkZSB0aGlzIHNlY3Rpb24sIGdjb3JlIHdvdWxkIG5vdAo+
-IHdvcmsuIElzIG15IHVuZGVyc3RhbmRpbmcgY29ycmVjdD8KPiBJIGV4cGVjdGVkIHRoaXMgc2Vj
-dGlvbiB0byBiZSBiaWcuIEJ1dCBpbiBmYWN0IGV4Y2x1ZGluZyB0aGlzIGRpZCBub3QKPiBoYXZl
-IG11Y2ggaW1wYWN0IG9uIHRoZSBkdW1wIHNpemUuCj4KPiBmcmVlIHBhZ2U6Cj4gdW5hbGxvY2F0
-ZWQgcGFnZXMuIFNpbmNlIHRoZXkgYXJlIG5vdCBhbGxvY2F0ZWQuIGZpbHRlcmluZyB0aGVtIG91
-dAo+IHdvbid0IGhhdmUgYW55IGltcGFjdCBvbiBkdW1wIGFuYWx5c2lzLgo+IFBsZWFzZSBjb3Jy
-ZWN0IG1lIGlmIEkgYW0gd3JvbmcuCj4KPgo+IElmIHRoZXJlIGlzIGFscmVhZHkgc29tZSBwbGFj
-ZSB0aGF0IGV4cGxhaW5zIHdoYXQgdGhlc2Ugc2VjdGlvbnMKPiBmaWx0ZXIgb3V0LCBwbGVhc2Ug
-anVzdCBkcm9wIHRoZSByZWZlcmVuY2UgdG8gdGhlbSBhbmQgaSB3aWxsIGxvb2sKPiBpbnRvIGl0
-Lgo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggaW4gYWR2YW5jZSEKPgo+IE1hbnR5Cj4KPiBPbiBUaHUs
-IEp1bCA4LCAyMDIxIGF0IDg6MTcgUE0gbWFudHkga3VtYSA8bWFudHlrdW1hQGdtYWlsLmNvbT4g
-d3JvdGU6Cj4gPgo+ID4gU29ycnkuIEkgYW0gbm90IHN1cmUgaG93IGJ1dCBJIGNvbXBsZXRlbHkg
-bWlzc2VkIHRoaXMgZW1haWwuCj4gPiBZZXMsIC90bXAgd2FzIG5vdCBhdmFpbGFibGUgaW4gbXkg
-ZW52LiBJIGp1c3QgZGlkIG1rZGlyIGJlZm9yZQo+ID4gZXhlY3V0aW5nIGBtYWtlZHVtcGZpbGVg
-IGFuZCBpdCBpcyBub3cgd29ya2luZyB3ZWxsLgo+ID4gVGhhbmsgeW91IHZlcnkgbXVjaC4KPiA+
-Cj4gPiBPbiBNb24sIEp1biAyOCwgMjAyMSBhdCA0OjA3IFBNIEhBR0lPIEtBWlVISVRPKOiQqeWw
-vuOAgOS4gOS7gSkKPiA+IDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gPiA+IEhpIEthenVoaXRvIHNhbiwKPiA+ID4g
-Pgo+ID4gPiA+IEkgYW0gZ2V0dGluZyB0aGUgZm9sbG93aW5nIGVycm9yIHdoZW4gdHJ5aW5nIHRv
-IHVzZSBtYWtlZHVtcGZpbGUgdXRpbGl0eS4KPiA+ID4gPgo+ID4gPiA+ID4gY29weV92bWNvcmVp
-bmZvOiBDYW4ndCBvcGVuIHRoZSB2bWNvcmVpbmZvIGZpbGUoL3RtcC92bWNvcmVpbmZvTFVRYzI1
-KS4gTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeS4KPiA+ID4gPiA+IG1ha2VkdW1wZmlsZSBGYWls
-ZWQKPiA+ID4gPgo+ID4gPiA+IEluIHlvdXIgc2V0dXAgaG93IGFyZSB5b3UgcHJvdmlkaW5nIHRo
-ZSB2bWNvcmVpbmZvIGZpbGU/IEluIG15IGNhc2UgaXQKPiA+ID4gPiBpcyBjaGVja2luZyAvdG1w
-L3ZtY29yZWluZm9MVVFjMjUKPiA+ID4gPiBXaG8gZ2VuZXJhdGVzIHRoaXMgZmlsZT8KPiA+ID4K
-PiA+ID4gR2VuZXJhbGx5LCB2bWNvcmVpbmZvIGlzIGNvcGllZCBmcm9tIHZtY29yZSdzIEVMRiBu
-b3RlIHRvIC90bXAvdm1jb3JlaW5mb1hYWFhYWAo+ID4gPiBieSBtYWtlZHVtcGZpbGUsIHBsZWFz
-ZSBzZWUgY29weV92bWNvcmVpbmZvKCkuICBTbyBubyBuZWVkIHRvIHByb3ZpZGUgZXhwbGljaXRs
-eS4KPiA+ID4KPiA+ID4gSXMgdGhlcmUgdGhlIC90bXAgZGlyZWN0b3J5IG9uIHlvdXIgZW52aXJv
-bm1lbnQ/Cj4gPiA+Cj4gPiA+IEthenUKPiA+ID4KPiA+ID4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On Thu 2021-07-15 21:39:53, John Ogness wrote:
+> Hi,
+> 
+> Here is v4 of a series to remove the safe buffers. v3 can be
+> found here [0]. The safe buffers are no longer needed because
+> messages can be stored directly into the log buffer from any
+> context.
+> 
+> However, the safe buffers also provided a form of recursion
+> protection. For that reason, explicit recursion protection is
+> implemented for this series.
+> 
+> The safe buffers also implicitly provided serialization
+> between multiple CPUs executing in NMI context. This was
+> particularly necessary for the nmi_backtrace() output. This
+> serializiation is now preserved by using the printk cpulock.
+> 
+> With the removal of the safe buffers, there is no need for
+> extra NMI enter/exit tracking. So this is also removed
+> (which includes removing the config option CONFIG_PRINTK_NMI).
+> 
+> And finally, there are a few places in the kernel that need to
+> specify code blocks where all printk calls are to be deferred
+> printing. Previously the NMI tracking API was being (mis)used
+> for this purpose. This series introduces an official and
+> explicit interface for such cases. (Note that all deferred
+> printing will be removed anyway, once printing kthreads are
+> introduced.)
+> 
+> John Ogness (6):
+>   lib/nmi_backtrace: explicitly serialize banner and regs
+>   printk: track/limit recursion
+>   printk: remove safe buffers
+>   printk: remove NMI tracking
+>   printk: convert @syslog_lock to mutex
+>   printk: syslog: close window between wait and read
+
+The entire patchset has been committed into printk/linux.git,
+branch rework/printk_safe-removal.
+
+Note that I have updated the 4th patch as discussed, see
+https://lore.kernel.org/r/20210721120026.y3dqno24ahw4sazy@pathway.suse.cz
+https://lore.kernel.org/r/20210721130852.zrjnti6b3fwjgdzj@pathway.suse.cz
+
+Best Regards,
+Petr
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
