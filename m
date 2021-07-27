@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-il1-x136.google.com ([2607:f8b0:4864:20::136])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1m8G2f-00DUcR-2u
+ for kexec@lists.infradead.org; Tue, 27 Jul 2021 05:54:14 +0000
+Received: by mail-il1-x136.google.com with SMTP id r1so11098275iln.6
+ for <kexec@lists.infradead.org>; Mon, 26 Jul 2021 22:54:11 -0700 (PDT)
 MIME-Version: 1.0
-References: <170e7daa55aced148b8e57827f7c8fc65a0a8c7a.1626266516.git.geert+renesas@glider.be>
- <mhng-8deebbc6-f8aa-40e3-9e00-e99f12eaac92@palmerdabbelt-glaptop>
-In-Reply-To: <mhng-8deebbc6-f8aa-40e3-9e00-e99f12eaac92@palmerdabbelt-glaptop>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Fri, 23 Jul 2021 17:17:08 +0200
-Message-ID: <CAMuHMdUaQW_edTRAiLb8u+=UoVNkSsgedMVTt8=qPPQ59hrfmw@mail.gmail.com>
-Subject: Re: [PATCH v4 06/10] riscv: Remove non-standard linux,
- elfcorehdr handling
+References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
+ <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
+ <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
+In-Reply-To: <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
+From: manty kuma <mantykuma@gmail.com>
+Date: Tue, 27 Jul 2021 14:54:00 +0900
+Message-ID: <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
+Subject: Re: Compiling makedumpfile from source
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,90 +24,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Palmer Dabbelt <palmer@dabbelt.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux MM <linux-mm@kvack.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-Hi Palmer,
-
-On Tue, Jul 20, 2021 at 5:43 PM Palmer Dabbelt <palmer@dabbelt.com> wrote:
-> On Wed, 14 Jul 2021 05:50:16 PDT (-0700), geert+renesas@glider.be wrote:
-> > RISC-V uses platform-specific code to locate the elf core header in
-> > memory.  However, this does not conform to the standard
-> > "linux,elfcorehdr" DT bindings, as it relies on a reserved memory node
-> > with the "linux,elfcorehdr" compatible value, instead of on a
-> > "linux,elfcorehdr" property under the "/chosen" node.
-> >
-> > The non-compliant code can just be removed, as the standard behavior is
-> > already implemented by platform-agnostic handling in the FDT core code.
-> >
-> > Fixes: 5640975003d0234d ("RISC-V: Add crash kernel support")
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > v4:
-> >   - No changes.
-> > ---
-> >  arch/riscv/mm/init.c | 20 --------------------
-> >  1 file changed, 20 deletions(-)
-> >
-> > diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> > index 269fc648ef3d84b2..4aa4b6a034086df6 100644
-> > --- a/arch/riscv/mm/init.c
-> > +++ b/arch/riscv/mm/init.c
-> > @@ -829,26 +829,6 @@ static void __init reserve_crashkernel(void)
-> >  }
-> >  #endif /* CONFIG_KEXEC_CORE */
-> >
-> > -#ifdef CONFIG_CRASH_DUMP
-> > -/*
-> > - * We keep track of the ELF core header of the crashed
-> > - * kernel with a reserved-memory region with compatible
-> > - * string "linux,elfcorehdr". Here we register a callback
-> > - * to populate elfcorehdr_addr/size when this region is
-> > - * present. Note that this region will be marked as
-> > - * reserved once we call early_init_fdt_scan_reserved_mem()
-> > - * later on.
-> > - */
-> > -static int __init elfcore_hdr_setup(struct reserved_mem *rmem)
-> > -{
-> > -     elfcorehdr_addr = rmem->base;
-> > -     elfcorehdr_size = rmem->size;
-> > -     return 0;
-> > -}
-> > -
-> > -RESERVEDMEM_OF_DECLARE(elfcorehdr, "linux,elfcorehdr", elfcore_hdr_setup);
-> > -#endif
-> > -
-> >  void __init paging_init(void)
-> >  {
-> >       setup_bootmem();
->
-> Reviewed-by: Palmer Dabbelt <palmerdabbelt@google.com>
-> Acked-by: Palmer Dabbelt <palmerdabbelt@google.com>
->
-> LMK if you wanted me to take this series, otherwise I'm going to assume
-> it's going in via some other tree.
-
-There will be a v5 of the series in response to the review comments.
-But I think this patch can already be applied.
-
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkga2F6dWhpdG8gc2FuLAoKSnVzdCBmb2xsb3dpbmcgdXAgb24gbXkgbGFzdCBlbWFpbC4KU2lu
+Y2VyZSBhcG9sb2dpZXMgZm9yIGFza2luZyBmb3IgeW91ciB0aW1lLgpJIHdhbnQgdG8gc3BlY2lm
+aWNhbGx5IHVuZGVyc3RhbmQgd2hhdCB0aGUgInVzZXIgZGF0YSIgc2VjdGlvbiBpcyBhbmQKd2hh
+dCBpdCBtZWFucyB0byBleGNsdWRlIGl0IGZyb20gdGhlIGR1bXAuCgpUaGFuayB5b3UgdmVyeSBt
+dWNoLgoKQmVzdCBSZWdhcmRzLApNYW50eQoKT24gRnJpLCBKdWwgOSwgMjAyMSBhdCAxMDo0NSBB
+TSBtYW50eSBrdW1hIDxtYW50eWt1bWFAZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIEthenVoaXRv
+IHNhbiwKPgo+IEkgYW0gbG9va2luZyB0byBiZXR0ZXIgdW5kZXJzdGFuZCB0aGUgc2VjdGlvbnMg
+YmVpbmcgZmlsdGVyaW5nIG91dAo+IHdpdGggZWFjaCBvZiB0aGUgZm9sbG93aW5nIG9wdGlvbnMu
+Cj4KPiBaZXJvIHBhZ2U6Cj4gUGFnZXMgdGhhdCBhcmUgZW1wdHkuIElnbm9yaW5nIHRoZXNlIHBh
+Z2VzIHdvbid0IGhhdmUgYW55IGltcGFjdCBvbiBhbmFseXNpcy4KPgo+IG5vbi1wcml2YXRlIGNh
+Y2hlIGFuZCBwcml2YXRlIGNhY2hlOgo+IFdoYXQgZXhhY3RseSBhcmUgdGhlc2Ugc2VjdGlvbnMg
+b2YgbWVtb3J5PyBKdXN0IGEgb25lLWxpbmUgb3ZlcnZpZXcKPiBhYm91dCB0aGVtIGlzIHN1ZmZp
+Y2llbnQuCj4gKE15IHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgY2FjaGUgaXMgbm90IHBhcnQgb2Yg
+UkFNLiBJcyB0aGlzIGNhY2hlCj4gc29tZXRoaW5nIGVsc2U/IExpa2Ugc29tZSBib29ra2VlcGlu
+ZyBkYXRhIG1haW50YWluZWQgYnkgdGhlIGtlcm5lbD8pCj4KPgo+IHVzZXIgZGF0YToKPiBBcmUg
+dGhlc2Ugc2VjdGlvbnMgb2YgdGhlIG1lbW9yeSBmb3IgdGhlIHVzZXIgc3BhY2UgcHJvY2Vzc2Vz
+L21lbW9yeQo+IHNlY3Rpb25zIGFsbG9jYXRlZCB1c2luZyBtYWxsb2M/Cj4gTXkgdW5kZXJzdGFu
+ZGluZyBpcyB0aGF0IElmIEkgZXhjbHVkZSB0aGlzIHNlY3Rpb24sIGdjb3JlIHdvdWxkIG5vdAo+
+IHdvcmsuIElzIG15IHVuZGVyc3RhbmRpbmcgY29ycmVjdD8KPiBJIGV4cGVjdGVkIHRoaXMgc2Vj
+dGlvbiB0byBiZSBiaWcuIEJ1dCBpbiBmYWN0IGV4Y2x1ZGluZyB0aGlzIGRpZCBub3QKPiBoYXZl
+IG11Y2ggaW1wYWN0IG9uIHRoZSBkdW1wIHNpemUuCj4KPiBmcmVlIHBhZ2U6Cj4gdW5hbGxvY2F0
+ZWQgcGFnZXMuIFNpbmNlIHRoZXkgYXJlIG5vdCBhbGxvY2F0ZWQuIGZpbHRlcmluZyB0aGVtIG91
+dAo+IHdvbid0IGhhdmUgYW55IGltcGFjdCBvbiBkdW1wIGFuYWx5c2lzLgo+IFBsZWFzZSBjb3Jy
+ZWN0IG1lIGlmIEkgYW0gd3JvbmcuCj4KPgo+IElmIHRoZXJlIGlzIGFscmVhZHkgc29tZSBwbGFj
+ZSB0aGF0IGV4cGxhaW5zIHdoYXQgdGhlc2Ugc2VjdGlvbnMKPiBmaWx0ZXIgb3V0LCBwbGVhc2Ug
+anVzdCBkcm9wIHRoZSByZWZlcmVuY2UgdG8gdGhlbSBhbmQgaSB3aWxsIGxvb2sKPiBpbnRvIGl0
+Lgo+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggaW4gYWR2YW5jZSEKPgo+IE1hbnR5Cj4KPiBPbiBUaHUs
+IEp1bCA4LCAyMDIxIGF0IDg6MTcgUE0gbWFudHkga3VtYSA8bWFudHlrdW1hQGdtYWlsLmNvbT4g
+d3JvdGU6Cj4gPgo+ID4gU29ycnkuIEkgYW0gbm90IHN1cmUgaG93IGJ1dCBJIGNvbXBsZXRlbHkg
+bWlzc2VkIHRoaXMgZW1haWwuCj4gPiBZZXMsIC90bXAgd2FzIG5vdCBhdmFpbGFibGUgaW4gbXkg
+ZW52LiBJIGp1c3QgZGlkIG1rZGlyIGJlZm9yZQo+ID4gZXhlY3V0aW5nIGBtYWtlZHVtcGZpbGVg
+IGFuZCBpdCBpcyBub3cgd29ya2luZyB3ZWxsLgo+ID4gVGhhbmsgeW91IHZlcnkgbXVjaC4KPiA+
+Cj4gPiBPbiBNb24sIEp1biAyOCwgMjAyMSBhdCA0OjA3IFBNIEhBR0lPIEtBWlVISVRPKOiQqeWw
+vuOAgOS4gOS7gSkKPiA+IDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiAt
+LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQo+ID4gPiA+IEhpIEthenVoaXRvIHNhbiwKPiA+ID4g
+Pgo+ID4gPiA+IEkgYW0gZ2V0dGluZyB0aGUgZm9sbG93aW5nIGVycm9yIHdoZW4gdHJ5aW5nIHRv
+IHVzZSBtYWtlZHVtcGZpbGUgdXRpbGl0eS4KPiA+ID4gPgo+ID4gPiA+ID4gY29weV92bWNvcmVp
+bmZvOiBDYW4ndCBvcGVuIHRoZSB2bWNvcmVpbmZvIGZpbGUoL3RtcC92bWNvcmVpbmZvTFVRYzI1
+KS4gTm8gc3VjaCBmaWxlIG9yIGRpcmVjdG9yeS4KPiA+ID4gPiA+IG1ha2VkdW1wZmlsZSBGYWls
+ZWQKPiA+ID4gPgo+ID4gPiA+IEluIHlvdXIgc2V0dXAgaG93IGFyZSB5b3UgcHJvdmlkaW5nIHRo
+ZSB2bWNvcmVpbmZvIGZpbGU/IEluIG15IGNhc2UgaXQKPiA+ID4gPiBpcyBjaGVja2luZyAvdG1w
+L3ZtY29yZWluZm9MVVFjMjUKPiA+ID4gPiBXaG8gZ2VuZXJhdGVzIHRoaXMgZmlsZT8KPiA+ID4K
+PiA+ID4gR2VuZXJhbGx5LCB2bWNvcmVpbmZvIGlzIGNvcGllZCBmcm9tIHZtY29yZSdzIEVMRiBu
+b3RlIHRvIC90bXAvdm1jb3JlaW5mb1hYWFhYWAo+ID4gPiBieSBtYWtlZHVtcGZpbGUsIHBsZWFz
+ZSBzZWUgY29weV92bWNvcmVpbmZvKCkuICBTbyBubyBuZWVkIHRvIHByb3ZpZGUgZXhwbGljaXRs
+eS4KPiA+ID4KPiA+ID4gSXMgdGhlcmUgdGhlIC90bXAgZGlyZWN0b3J5IG9uIHlvdXIgZW52aXJv
+bm1lbnQ/Cj4gPiA+Cj4gPiA+IEthenUKPiA+ID4KPiA+ID4KCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
