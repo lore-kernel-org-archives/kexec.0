@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 27 Jul 2021 09:26:54 +0200
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH printk v4 0/6] printk: remove safe buffers
-Message-ID: <YP+1PqaKTfZXHjmU@alley>
-References: <20210715193359.25946-1-john.ogness@linutronix.de>
+Received: from mail-mw2nam12on2075.outbound.protection.outlook.com
+ ([40.107.244.75] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1m8VX9-00GWsG-Na
+ for kexec@lists.infradead.org; Tue, 27 Jul 2021 22:26:45 +0000
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Subject: [PATCH 00/11] Implement generic prot_guest_has() helper function
+Date: Tue, 27 Jul 2021 17:26:03 -0500
+Message-Id: <cover.1627424773.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210715193359.25946-1-john.ogness@linutronix.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,55 +21,112 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Ogness <john.ogness@linutronix.de>
-Cc: Sergey Senozhatsky <senozhatsky@chromium.org>, Steven Rostedt <rostedt@goodmis.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, "Paul E. McKenney" <paulmck@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Eric Biederman <ebiederm@xmission.com>, Nicholas Piggin <npiggin@gmail.com>, Christophe Leroy <christophe.leroy@csgroup.eu>, =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>, Andrew Morton <akpm@linux-foundation.org>, Kees Cook <keescook@chromium.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, Alexey Kardashevskiy <aik@ozlabs.ru>, Yue Hu <huyue2@yulong.com>, linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org, Russell King <linux@armlinux.org.uk>, Ingo Molnar <mingo@redhat.com>, Marc Zyngier <maz@kernel.org>, Valentin Schneider <valentin.schneider@arm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mike Rapoport <rppt@kernel.org>, "Wolfram Sang (Renesas)" <wsa+renesas@sang-engineering.com>, Anshuman Khandual <anshuman.khandual@arm.com>, Xiongwei Song <sxwjean@gmail.com>, Frederic Weisbecker <frederic@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Masahiro Yamada <masahiroy@kernel.org>, Nathan Chancellor <nathan@kernel.org>, Nick Desaulniers <ndesaulniers@google.com>, Nick Terrell <terrelln@fb.com>, Vipin Sharma <vipinsh@google.com>, Rasmus Villemoes <linux@rasmusvillemoes.dk>, Daniel Borkmann <daniel@iogearbox.net>, Vlastimil Babka <vbabka@suse.cz>, linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
 
-On Thu 2021-07-15 21:39:53, John Ogness wrote:
-> Hi,
-> 
-> Here is v4 of a series to remove the safe buffers. v3 can be
-> found here [0]. The safe buffers are no longer needed because
-> messages can be stored directly into the log buffer from any
-> context.
-> 
-> However, the safe buffers also provided a form of recursion
-> protection. For that reason, explicit recursion protection is
-> implemented for this series.
-> 
-> The safe buffers also implicitly provided serialization
-> between multiple CPUs executing in NMI context. This was
-> particularly necessary for the nmi_backtrace() output. This
-> serializiation is now preserved by using the printk cpulock.
-> 
-> With the removal of the safe buffers, there is no need for
-> extra NMI enter/exit tracking. So this is also removed
-> (which includes removing the config option CONFIG_PRINTK_NMI).
-> 
-> And finally, there are a few places in the kernel that need to
-> specify code blocks where all printk calls are to be deferred
-> printing. Previously the NMI tracking API was being (mis)used
-> for this purpose. This series introduces an official and
-> explicit interface for such cases. (Note that all deferred
-> printing will be removed anyway, once printing kthreads are
-> introduced.)
-> 
-> John Ogness (6):
->   lib/nmi_backtrace: explicitly serialize banner and regs
->   printk: track/limit recursion
->   printk: remove safe buffers
->   printk: remove NMI tracking
->   printk: convert @syslog_lock to mutex
->   printk: syslog: close window between wait and read
+This patch series provides a generic helper function, prot_guest_has(),
+to replace the sme_active(), sev_active(), sev_es_active() and
+mem_encrypt_active() functions.
 
-The entire patchset has been committed into printk/linux.git,
-branch rework/printk_safe-removal.
+It is expected that as new protected virtualization technologies are
+added to the kernel, they can all be covered by a single function call
+instead of a collection of specific function calls all called from the
+same locations.
 
-Note that I have updated the 4th patch as discussed, see
-https://lore.kernel.org/r/20210721120026.y3dqno24ahw4sazy@pathway.suse.cz
-https://lore.kernel.org/r/20210721130852.zrjnti6b3fwjgdzj@pathway.suse.cz
+The powerpc and s390 patches have been compile tested only. Can the
+folks copied on this series verify that nothing breaks for them.
 
-Best Regards,
-Petr
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Ard Biesheuvel <ardb@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
+Cc: Will Deacon <will@kernel.org>
+
+---
+
+Patches based on:
+  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+  commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
+
+Tom Lendacky (11):
+  mm: Introduce a function to check for virtualization protection
+    features
+  x86/sev: Add an x86 version of prot_guest_has()
+  powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
+  x86/sme: Replace occurrences of sme_active() with prot_guest_has()
+  x86/sev: Replace occurrences of sev_active() with prot_guest_has()
+  x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
+  treewide: Replace the use of mem_encrypt_active() with
+    prot_guest_has()
+  mm: Remove the now unused mem_encrypt_active() function
+  x86/sev: Remove the now unused mem_encrypt_active() function
+  powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
+    function
+  s390/mm: Remove the now unused mem_encrypt_active() function
+
+ arch/Kconfig                               |  3 ++
+ arch/powerpc/include/asm/mem_encrypt.h     |  5 --
+ arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
+ arch/powerpc/platforms/pseries/Kconfig     |  1 +
+ arch/s390/include/asm/mem_encrypt.h        |  2 -
+ arch/x86/Kconfig                           |  1 +
+ arch/x86/include/asm/kexec.h               |  2 +-
+ arch/x86/include/asm/mem_encrypt.h         | 13 +----
+ arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
+ arch/x86/kernel/crash_dump_64.c            |  4 +-
+ arch/x86/kernel/head64.c                   |  4 +-
+ arch/x86/kernel/kvm.c                      |  3 +-
+ arch/x86/kernel/kvmclock.c                 |  4 +-
+ arch/x86/kernel/machine_kexec_64.c         | 19 +++----
+ arch/x86/kernel/pci-swiotlb.c              |  9 ++--
+ arch/x86/kernel/relocate_kernel_64.S       |  2 +-
+ arch/x86/kernel/sev.c                      |  6 +--
+ arch/x86/kvm/svm/svm.c                     |  3 +-
+ arch/x86/mm/ioremap.c                      | 16 +++---
+ arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
+ arch/x86/mm/mem_encrypt_identity.c         |  3 +-
+ arch/x86/mm/pat/set_memory.c               |  3 +-
+ arch/x86/platform/efi/efi_64.c             |  9 ++--
+ arch/x86/realmode/init.c                   |  8 +--
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
+ drivers/gpu/drm/drm_cache.c                |  4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
+ drivers/iommu/amd/init.c                   |  7 +--
+ drivers/iommu/amd/iommu.c                  |  3 +-
+ drivers/iommu/amd/iommu_v2.c               |  3 +-
+ drivers/iommu/iommu.c                      |  3 +-
+ fs/proc/vmcore.c                           |  6 +--
+ include/linux/mem_encrypt.h                |  4 --
+ include/linux/protected_guest.h            | 37 +++++++++++++
+ kernel/dma/swiotlb.c                       |  4 +-
+ 36 files changed, 218 insertions(+), 104 deletions(-)
+ create mode 100644 arch/powerpc/include/asm/protected_guest.h
+ create mode 100644 arch/x86/include/asm/protected_guest.h
+ create mode 100644 include/linux/protected_guest.h
+
+-- 
+2.32.0
+
 
 _______________________________________________
 kexec mailing list
