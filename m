@@ -1,16 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm6nam10on2052.outbound.protection.outlook.com
- ([40.107.93.52] helo=NAM10-DM6-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1400074.outbound.protection.outlook.com
+ ([40.107.140.74] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m8Vhu-00GZRw-Ia
- for kexec@lists.infradead.org; Tue, 27 Jul 2021 22:37:52 +0000
-Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
-From: Tom Lendacky <thomas.lendacky@amd.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
-Message-ID: <fc88728a-76e0-2493-1d82-9b228a67de63@amd.com>
-Date: Tue, 27 Jul 2021 17:37:43 -0500
-In-Reply-To: <cover.1627424773.git.thomas.lendacky@amd.com>
-Content-Language: en-US
+ id 1m8cM8-00H9sk-T8
+ for kexec@lists.infradead.org; Wed, 28 Jul 2021 05:43:51 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: Compiling makedumpfile from source
+Date: Wed, 28 Jul 2021 05:43:40 +0000
+Message-ID: <TYYPR01MB677795025FA9C320793AADA3DDEA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
+ <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
+ <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
+ <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
+In-Reply-To: <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,132 +26,69 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
+To: manty kuma <mantykuma@gmail.com>
+Cc: kexec-ml <kexec@lists.infradead.org>
 
-On 7/27/21 5:26 PM, Tom Lendacky wrote:
-> This patch series provides a generic helper function, prot_guest_has(),
-> to replace the sme_active(), sev_active(), sev_es_active() and
-> mem_encrypt_active() functions.
-> 
-> It is expected that as new protected virtualization technologies are
-> added to the kernel, they can all be covered by a single function call
-> instead of a collection of specific function calls all called from the
-> same locations.
-> 
-> The powerpc and s390 patches have been compile tested only. Can the
-> folks copied on this series verify that nothing breaks for them.
-
-I wanted to get this out before I head out on vacation at the end of the
-week. I'll only be out for a week, but I won't be able to respond to any
-feedback until I get back.
-
-I'm still not a fan of the name prot_guest_has() because it is used for
-some baremetal checks, but really haven't been able to come up with
-anything better. So take it with a grain of salt where the sme_active()
-calls are replaced by prot_guest_has().
-
-Also, let me know if the treewide changes in patch #7 need to be further
-split out by tree.
-
-Thanks,
-Tom
-
-> 
-> Cc: Andi Kleen <ak@linux.intel.com>
-> Cc: Andy Lutomirski <luto@kernel.org>
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-> Cc: Daniel Vetter <daniel@ffwll.ch>
-> Cc: Dave Hansen <dave.hansen@linux.intel.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: David Airlie <airlied@linux.ie>
-> Cc: Heiko Carstens <hca@linux.ibm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Joerg Roedel <joro@8bytes.org>
-> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-> Cc: Maxime Ripard <mripard@kernel.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Thomas Zimmermann <tzimmermann@suse.de>
-> Cc: Vasily Gorbik <gor@linux.ibm.com>
-> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
-> Cc: Will Deacon <will@kernel.org>
-> 
-> ---
-> 
-> Patches based on:
->   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
->   commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
-> 
-> Tom Lendacky (11):
->   mm: Introduce a function to check for virtualization protection
->     features
->   x86/sev: Add an x86 version of prot_guest_has()
->   powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
->   x86/sme: Replace occurrences of sme_active() with prot_guest_has()
->   x86/sev: Replace occurrences of sev_active() with prot_guest_has()
->   x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
->   treewide: Replace the use of mem_encrypt_active() with
->     prot_guest_has()
->   mm: Remove the now unused mem_encrypt_active() function
->   x86/sev: Remove the now unused mem_encrypt_active() function
->   powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
->     function
->   s390/mm: Remove the now unused mem_encrypt_active() function
-> 
->  arch/Kconfig                               |  3 ++
->  arch/powerpc/include/asm/mem_encrypt.h     |  5 --
->  arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
->  arch/powerpc/platforms/pseries/Kconfig     |  1 +
->  arch/s390/include/asm/mem_encrypt.h        |  2 -
->  arch/x86/Kconfig                           |  1 +
->  arch/x86/include/asm/kexec.h               |  2 +-
->  arch/x86/include/asm/mem_encrypt.h         | 13 +----
->  arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
->  arch/x86/kernel/crash_dump_64.c            |  4 +-
->  arch/x86/kernel/head64.c                   |  4 +-
->  arch/x86/kernel/kvm.c                      |  3 +-
->  arch/x86/kernel/kvmclock.c                 |  4 +-
->  arch/x86/kernel/machine_kexec_64.c         | 19 +++----
->  arch/x86/kernel/pci-swiotlb.c              |  9 ++--
->  arch/x86/kernel/relocate_kernel_64.S       |  2 +-
->  arch/x86/kernel/sev.c                      |  6 +--
->  arch/x86/kvm/svm/svm.c                     |  3 +-
->  arch/x86/mm/ioremap.c                      | 16 +++---
->  arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
->  arch/x86/mm/mem_encrypt_identity.c         |  3 +-
->  arch/x86/mm/pat/set_memory.c               |  3 +-
->  arch/x86/platform/efi/efi_64.c             |  9 ++--
->  arch/x86/realmode/init.c                   |  8 +--
->  drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
->  drivers/gpu/drm/drm_cache.c                |  4 +-
->  drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
->  drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
->  drivers/iommu/amd/init.c                   |  7 +--
->  drivers/iommu/amd/iommu.c                  |  3 +-
->  drivers/iommu/amd/iommu_v2.c               |  3 +-
->  drivers/iommu/iommu.c                      |  3 +-
->  fs/proc/vmcore.c                           |  6 +--
->  include/linux/mem_encrypt.h                |  4 --
->  include/linux/protected_guest.h            | 37 +++++++++++++
->  kernel/dma/swiotlb.c                       |  4 +-
->  36 files changed, 218 insertions(+), 104 deletions(-)
->  create mode 100644 arch/powerpc/include/asm/protected_guest.h
->  create mode 100644 arch/x86/include/asm/protected_guest.h
->  create mode 100644 include/linux/protected_guest.h
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSGkga2F6dWhpdG8gc2FuLA0KPiANCj4gSnVz
+dCBmb2xsb3dpbmcgdXAgb24gbXkgbGFzdCBlbWFpbC4NCj4gU2luY2VyZSBhcG9sb2dpZXMgZm9y
+IGFza2luZyBmb3IgeW91ciB0aW1lLg0KPiBJIHdhbnQgdG8gc3BlY2lmaWNhbGx5IHVuZGVyc3Rh
+bmQgd2hhdCB0aGUgInVzZXIgZGF0YSIgc2VjdGlvbiBpcyBhbmQNCj4gd2hhdCBpdCBtZWFucyB0
+byBleGNsdWRlIGl0IGZyb20gdGhlIGR1bXAuDQoNCiJ1c2VyIGRhdGEiIGFyZSBhbm9ueW1vdXMg
+cGFnZXMgb3IgaHVnZSBwYWdlcy4NCmh0dHBzOi8vZ2l0aHViLmNvbS9tYWtlZHVtcGZpbGUvbWFr
+ZWR1bXBmaWxlL2Jsb2IvbWFzdGVyL21ha2VkdW1wZmlsZS5jI0w2MjI0DQoNClBsZWFzZSBjb25z
+dWx0IHRoZSBfX2V4Y2x1ZGVfdW5uZWNlc3NhcnlfcGFnZXMoKSBmdW5jdGlvbiBhYm92ZSBmb3IN
+CndoYXQgY29uZGl0aW9ucyBjb3JyZXNwb25kIHRvIHRoZSB0eXBlIG9mIHBhZ2UuDQoNClRoYW5r
+cywNCkthenUNCg0KPiANCj4gVGhhbmsgeW91IHZlcnkgbXVjaC4NCj4gDQo+IEJlc3QgUmVnYXJk
+cywNCj4gTWFudHkNCj4gDQo+IE9uIEZyaSwgSnVsIDksIDIwMjEgYXQgMTA6NDUgQU0gbWFudHkg
+a3VtYSA8bWFudHlrdW1hQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBLYXp1aGl0byBz
+YW4sDQo+ID4NCj4gPiBJIGFtIGxvb2tpbmcgdG8gYmV0dGVyIHVuZGVyc3RhbmQgdGhlIHNlY3Rp
+b25zIGJlaW5nIGZpbHRlcmluZyBvdXQNCj4gPiB3aXRoIGVhY2ggb2YgdGhlIGZvbGxvd2luZyBv
+cHRpb25zLg0KPiA+DQo+ID4gWmVybyBwYWdlOg0KPiA+IFBhZ2VzIHRoYXQgYXJlIGVtcHR5LiBJ
+Z25vcmluZyB0aGVzZSBwYWdlcyB3b24ndCBoYXZlIGFueSBpbXBhY3Qgb24gYW5hbHlzaXMuDQo+
+ID4NCj4gPiBub24tcHJpdmF0ZSBjYWNoZSBhbmQgcHJpdmF0ZSBjYWNoZToNCj4gPiBXaGF0IGV4
+YWN0bHkgYXJlIHRoZXNlIHNlY3Rpb25zIG9mIG1lbW9yeT8gSnVzdCBhIG9uZS1saW5lIG92ZXJ2
+aWV3DQo+ID4gYWJvdXQgdGhlbSBpcyBzdWZmaWNpZW50Lg0KPiA+IChNeSB1bmRlcnN0YW5kaW5n
+IHdhcyB0aGF0IGNhY2hlIGlzIG5vdCBwYXJ0IG9mIFJBTS4gSXMgdGhpcyBjYWNoZQ0KPiA+IHNv
+bWV0aGluZyBlbHNlPyBMaWtlIHNvbWUgYm9va2tlZXBpbmcgZGF0YSBtYWludGFpbmVkIGJ5IHRo
+ZSBrZXJuZWw/KQ0KPiA+DQo+ID4NCj4gPiB1c2VyIGRhdGE6DQo+ID4gQXJlIHRoZXNlIHNlY3Rp
+b25zIG9mIHRoZSBtZW1vcnkgZm9yIHRoZSB1c2VyIHNwYWNlIHByb2Nlc3Nlcy9tZW1vcnkNCj4g
+PiBzZWN0aW9ucyBhbGxvY2F0ZWQgdXNpbmcgbWFsbG9jPw0KPiA+IE15IHVuZGVyc3RhbmRpbmcg
+aXMgdGhhdCBJZiBJIGV4Y2x1ZGUgdGhpcyBzZWN0aW9uLCBnY29yZSB3b3VsZCBub3QNCj4gPiB3
+b3JrLiBJcyBteSB1bmRlcnN0YW5kaW5nIGNvcnJlY3Q/DQo+ID4gSSBleHBlY3RlZCB0aGlzIHNl
+Y3Rpb24gdG8gYmUgYmlnLiBCdXQgaW4gZmFjdCBleGNsdWRpbmcgdGhpcyBkaWQgbm90DQo+ID4g
+aGF2ZSBtdWNoIGltcGFjdCBvbiB0aGUgZHVtcCBzaXplLg0KPiA+DQo+ID4gZnJlZSBwYWdlOg0K
+PiA+IHVuYWxsb2NhdGVkIHBhZ2VzLiBTaW5jZSB0aGV5IGFyZSBub3QgYWxsb2NhdGVkLiBmaWx0
+ZXJpbmcgdGhlbSBvdXQNCj4gPiB3b24ndCBoYXZlIGFueSBpbXBhY3Qgb24gZHVtcCBhbmFseXNp
+cy4NCj4gPiBQbGVhc2UgY29ycmVjdCBtZSBpZiBJIGFtIHdyb25nLg0KPiA+DQo+ID4NCj4gPiBJ
+ZiB0aGVyZSBpcyBhbHJlYWR5IHNvbWUgcGxhY2UgdGhhdCBleHBsYWlucyB3aGF0IHRoZXNlIHNl
+Y3Rpb25zDQo+ID4gZmlsdGVyIG91dCwgcGxlYXNlIGp1c3QgZHJvcCB0aGUgcmVmZXJlbmNlIHRv
+IHRoZW0gYW5kIGkgd2lsbCBsb29rDQo+ID4gaW50byBpdC4NCj4gPiBUaGFuayB5b3UgdmVyeSBt
+dWNoIGluIGFkdmFuY2UhDQo+ID4NCj4gPiBNYW50eQ0KPiA+DQo+ID4gT24gVGh1LCBKdWwgOCwg
+MjAyMSBhdCA4OjE3IFBNIG1hbnR5IGt1bWEgPG1hbnR5a3VtYUBnbWFpbC5jb20+IHdyb3RlOg0K
+PiA+ID4NCj4gPiA+IFNvcnJ5LiBJIGFtIG5vdCBzdXJlIGhvdyBidXQgSSBjb21wbGV0ZWx5IG1p
+c3NlZCB0aGlzIGVtYWlsLg0KPiA+ID4gWWVzLCAvdG1wIHdhcyBub3QgYXZhaWxhYmxlIGluIG15
+IGVudi4gSSBqdXN0IGRpZCBta2RpciBiZWZvcmUNCj4gPiA+IGV4ZWN1dGluZyBgbWFrZWR1bXBm
+aWxlYCBhbmQgaXQgaXMgbm93IHdvcmtpbmcgd2VsbC4NCj4gPiA+IFRoYW5rIHlvdSB2ZXJ5IG11
+Y2guDQo+ID4gPg0KPiA+ID4gT24gTW9uLCBKdW4gMjgsIDIwMjEgYXQgNDowNyBQTSBIQUdJTyBL
+QVpVSElUTyjokKnlsL7jgIDkuIDku4EpDQo+ID4gPiA8ay1oYWdpby1hYkBuZWMuY29tPiB3cm90
+ZToNCj4gPiA+ID4NCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4g
+PiBIaSBLYXp1aGl0byBzYW4sDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJIGFtIGdldHRpbmcgdGhl
+IGZvbGxvd2luZyBlcnJvciB3aGVuIHRyeWluZyB0byB1c2UgbWFrZWR1bXBmaWxlIHV0aWxpdHku
+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGNvcHlfdm1jb3JlaW5mbzogQ2FuJ3Qgb3BlbiB0aGUg
+dm1jb3JlaW5mbyBmaWxlKC90bXAvdm1jb3JlaW5mb0xVUWMyNSkuIE5vIHN1Y2ggZmlsZSBvciBk
+aXJlY3RvcnkuDQo+ID4gPiA+ID4gPiBtYWtlZHVtcGZpbGUgRmFpbGVkDQo+ID4gPiA+ID4NCj4g
+PiA+ID4gPiBJbiB5b3VyIHNldHVwIGhvdyBhcmUgeW91IHByb3ZpZGluZyB0aGUgdm1jb3JlaW5m
+byBmaWxlPyBJbiBteSBjYXNlIGl0DQo+ID4gPiA+ID4gaXMgY2hlY2tpbmcgL3RtcC92bWNvcmVp
+bmZvTFVRYzI1DQo+ID4gPiA+ID4gV2hvIGdlbmVyYXRlcyB0aGlzIGZpbGU/DQo+ID4gPiA+DQo+
+ID4gPiA+IEdlbmVyYWxseSwgdm1jb3JlaW5mbyBpcyBjb3BpZWQgZnJvbSB2bWNvcmUncyBFTEYg
+bm90ZSB0byAvdG1wL3ZtY29yZWluZm9YWFhYWFgNCj4gPiA+ID4gYnkgbWFrZWR1bXBmaWxlLCBw
+bGVhc2Ugc2VlIGNvcHlfdm1jb3JlaW5mbygpLiAgU28gbm8gbmVlZCB0byBwcm92aWRlIGV4cGxp
+Y2l0bHkuDQo+ID4gPiA+DQo+ID4gPiA+IElzIHRoZXJlIHRoZSAvdG1wIGRpcmVjdG9yeSBvbiB5
+b3VyIGVudmlyb25tZW50Pw0KPiA+ID4gPg0KPiA+ID4gPiBLYXp1DQo+ID4gPiA+DQo+ID4gPiA+
+DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
+YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
+ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
