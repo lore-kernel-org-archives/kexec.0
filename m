@@ -1,23 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400074.outbound.protection.outlook.com
- ([40.107.140.74] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m8cM8-00H9sk-T8
- for kexec@lists.infradead.org; Wed, 28 Jul 2021 05:43:51 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: Compiling makedumpfile from source
-Date: Wed, 28 Jul 2021 05:43:40 +0000
-Message-ID: <TYYPR01MB677795025FA9C320793AADA3DDEA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
- <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
- <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
- <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
-In-Reply-To: <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
-Content-Language: ja-JP
+Date: Wed, 28 Jul 2021 14:17:27 +0100
+From: Christoph Hellwig <hch@infradead.org>
+Subject: Re: [PATCH 01/11] mm: Introduce a function to check for
+ virtualization protection features
+Message-ID: <YQFY5/cq2thyHzUe@infradead.org>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,69 +17,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: manty kuma <mantykuma@gmail.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>
 
-LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSGkga2F6dWhpdG8gc2FuLA0KPiANCj4gSnVz
-dCBmb2xsb3dpbmcgdXAgb24gbXkgbGFzdCBlbWFpbC4NCj4gU2luY2VyZSBhcG9sb2dpZXMgZm9y
-IGFza2luZyBmb3IgeW91ciB0aW1lLg0KPiBJIHdhbnQgdG8gc3BlY2lmaWNhbGx5IHVuZGVyc3Rh
-bmQgd2hhdCB0aGUgInVzZXIgZGF0YSIgc2VjdGlvbiBpcyBhbmQNCj4gd2hhdCBpdCBtZWFucyB0
-byBleGNsdWRlIGl0IGZyb20gdGhlIGR1bXAuDQoNCiJ1c2VyIGRhdGEiIGFyZSBhbm9ueW1vdXMg
-cGFnZXMgb3IgaHVnZSBwYWdlcy4NCmh0dHBzOi8vZ2l0aHViLmNvbS9tYWtlZHVtcGZpbGUvbWFr
-ZWR1bXBmaWxlL2Jsb2IvbWFzdGVyL21ha2VkdW1wZmlsZS5jI0w2MjI0DQoNClBsZWFzZSBjb25z
-dWx0IHRoZSBfX2V4Y2x1ZGVfdW5uZWNlc3NhcnlfcGFnZXMoKSBmdW5jdGlvbiBhYm92ZSBmb3IN
-CndoYXQgY29uZGl0aW9ucyBjb3JyZXNwb25kIHRvIHRoZSB0eXBlIG9mIHBhZ2UuDQoNClRoYW5r
-cywNCkthenUNCg0KPiANCj4gVGhhbmsgeW91IHZlcnkgbXVjaC4NCj4gDQo+IEJlc3QgUmVnYXJk
-cywNCj4gTWFudHkNCj4gDQo+IE9uIEZyaSwgSnVsIDksIDIwMjEgYXQgMTA6NDUgQU0gbWFudHkg
-a3VtYSA8bWFudHlrdW1hQGdtYWlsLmNvbT4gd3JvdGU6DQo+ID4NCj4gPiBIaSBLYXp1aGl0byBz
-YW4sDQo+ID4NCj4gPiBJIGFtIGxvb2tpbmcgdG8gYmV0dGVyIHVuZGVyc3RhbmQgdGhlIHNlY3Rp
-b25zIGJlaW5nIGZpbHRlcmluZyBvdXQNCj4gPiB3aXRoIGVhY2ggb2YgdGhlIGZvbGxvd2luZyBv
-cHRpb25zLg0KPiA+DQo+ID4gWmVybyBwYWdlOg0KPiA+IFBhZ2VzIHRoYXQgYXJlIGVtcHR5LiBJ
-Z25vcmluZyB0aGVzZSBwYWdlcyB3b24ndCBoYXZlIGFueSBpbXBhY3Qgb24gYW5hbHlzaXMuDQo+
-ID4NCj4gPiBub24tcHJpdmF0ZSBjYWNoZSBhbmQgcHJpdmF0ZSBjYWNoZToNCj4gPiBXaGF0IGV4
-YWN0bHkgYXJlIHRoZXNlIHNlY3Rpb25zIG9mIG1lbW9yeT8gSnVzdCBhIG9uZS1saW5lIG92ZXJ2
-aWV3DQo+ID4gYWJvdXQgdGhlbSBpcyBzdWZmaWNpZW50Lg0KPiA+IChNeSB1bmRlcnN0YW5kaW5n
-IHdhcyB0aGF0IGNhY2hlIGlzIG5vdCBwYXJ0IG9mIFJBTS4gSXMgdGhpcyBjYWNoZQ0KPiA+IHNv
-bWV0aGluZyBlbHNlPyBMaWtlIHNvbWUgYm9va2tlZXBpbmcgZGF0YSBtYWludGFpbmVkIGJ5IHRo
-ZSBrZXJuZWw/KQ0KPiA+DQo+ID4NCj4gPiB1c2VyIGRhdGE6DQo+ID4gQXJlIHRoZXNlIHNlY3Rp
-b25zIG9mIHRoZSBtZW1vcnkgZm9yIHRoZSB1c2VyIHNwYWNlIHByb2Nlc3Nlcy9tZW1vcnkNCj4g
-PiBzZWN0aW9ucyBhbGxvY2F0ZWQgdXNpbmcgbWFsbG9jPw0KPiA+IE15IHVuZGVyc3RhbmRpbmcg
-aXMgdGhhdCBJZiBJIGV4Y2x1ZGUgdGhpcyBzZWN0aW9uLCBnY29yZSB3b3VsZCBub3QNCj4gPiB3
-b3JrLiBJcyBteSB1bmRlcnN0YW5kaW5nIGNvcnJlY3Q/DQo+ID4gSSBleHBlY3RlZCB0aGlzIHNl
-Y3Rpb24gdG8gYmUgYmlnLiBCdXQgaW4gZmFjdCBleGNsdWRpbmcgdGhpcyBkaWQgbm90DQo+ID4g
-aGF2ZSBtdWNoIGltcGFjdCBvbiB0aGUgZHVtcCBzaXplLg0KPiA+DQo+ID4gZnJlZSBwYWdlOg0K
-PiA+IHVuYWxsb2NhdGVkIHBhZ2VzLiBTaW5jZSB0aGV5IGFyZSBub3QgYWxsb2NhdGVkLiBmaWx0
-ZXJpbmcgdGhlbSBvdXQNCj4gPiB3b24ndCBoYXZlIGFueSBpbXBhY3Qgb24gZHVtcCBhbmFseXNp
-cy4NCj4gPiBQbGVhc2UgY29ycmVjdCBtZSBpZiBJIGFtIHdyb25nLg0KPiA+DQo+ID4NCj4gPiBJ
-ZiB0aGVyZSBpcyBhbHJlYWR5IHNvbWUgcGxhY2UgdGhhdCBleHBsYWlucyB3aGF0IHRoZXNlIHNl
-Y3Rpb25zDQo+ID4gZmlsdGVyIG91dCwgcGxlYXNlIGp1c3QgZHJvcCB0aGUgcmVmZXJlbmNlIHRv
-IHRoZW0gYW5kIGkgd2lsbCBsb29rDQo+ID4gaW50byBpdC4NCj4gPiBUaGFuayB5b3UgdmVyeSBt
-dWNoIGluIGFkdmFuY2UhDQo+ID4NCj4gPiBNYW50eQ0KPiA+DQo+ID4gT24gVGh1LCBKdWwgOCwg
-MjAyMSBhdCA4OjE3IFBNIG1hbnR5IGt1bWEgPG1hbnR5a3VtYUBnbWFpbC5jb20+IHdyb3RlOg0K
-PiA+ID4NCj4gPiA+IFNvcnJ5LiBJIGFtIG5vdCBzdXJlIGhvdyBidXQgSSBjb21wbGV0ZWx5IG1p
-c3NlZCB0aGlzIGVtYWlsLg0KPiA+ID4gWWVzLCAvdG1wIHdhcyBub3QgYXZhaWxhYmxlIGluIG15
-IGVudi4gSSBqdXN0IGRpZCBta2RpciBiZWZvcmUNCj4gPiA+IGV4ZWN1dGluZyBgbWFrZWR1bXBm
-aWxlYCBhbmQgaXQgaXMgbm93IHdvcmtpbmcgd2VsbC4NCj4gPiA+IFRoYW5rIHlvdSB2ZXJ5IG11
-Y2guDQo+ID4gPg0KPiA+ID4gT24gTW9uLCBKdW4gMjgsIDIwMjEgYXQgNDowNyBQTSBIQUdJTyBL
-QVpVSElUTyjokKnlsL7jgIDkuIDku4EpDQo+ID4gPiA8ay1oYWdpby1hYkBuZWMuY29tPiB3cm90
-ZToNCj4gPiA+ID4NCj4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4g
-PiBIaSBLYXp1aGl0byBzYW4sDQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBJIGFtIGdldHRpbmcgdGhl
-IGZvbGxvd2luZyBlcnJvciB3aGVuIHRyeWluZyB0byB1c2UgbWFrZWR1bXBmaWxlIHV0aWxpdHku
-DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiA+IGNvcHlfdm1jb3JlaW5mbzogQ2FuJ3Qgb3BlbiB0aGUg
-dm1jb3JlaW5mbyBmaWxlKC90bXAvdm1jb3JlaW5mb0xVUWMyNSkuIE5vIHN1Y2ggZmlsZSBvciBk
-aXJlY3RvcnkuDQo+ID4gPiA+ID4gPiBtYWtlZHVtcGZpbGUgRmFpbGVkDQo+ID4gPiA+ID4NCj4g
-PiA+ID4gPiBJbiB5b3VyIHNldHVwIGhvdyBhcmUgeW91IHByb3ZpZGluZyB0aGUgdm1jb3JlaW5m
-byBmaWxlPyBJbiBteSBjYXNlIGl0DQo+ID4gPiA+ID4gaXMgY2hlY2tpbmcgL3RtcC92bWNvcmVp
-bmZvTFVRYzI1DQo+ID4gPiA+ID4gV2hvIGdlbmVyYXRlcyB0aGlzIGZpbGU/DQo+ID4gPiA+DQo+
-ID4gPiA+IEdlbmVyYWxseSwgdm1jb3JlaW5mbyBpcyBjb3BpZWQgZnJvbSB2bWNvcmUncyBFTEYg
-bm90ZSB0byAvdG1wL3ZtY29yZWluZm9YWFhYWFgNCj4gPiA+ID4gYnkgbWFrZWR1bXBmaWxlLCBw
-bGVhc2Ugc2VlIGNvcHlfdm1jb3JlaW5mbygpLiAgU28gbm8gbmVlZCB0byBwcm92aWRlIGV4cGxp
-Y2l0bHkuDQo+ID4gPiA+DQo+ID4gPiA+IElzIHRoZXJlIHRoZSAvdG1wIGRpcmVjdG9yeSBvbiB5
-b3VyIGVudmlyb25tZW50Pw0KPiA+ID4gPg0KPiA+ID4gPiBLYXp1DQo+ID4gPiA+DQo+ID4gPiA+
-DQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Tue, Jul 27, 2021 at 05:26:04PM -0500, Tom Lendacky via iommu wrote:
+> In prep for other protected virtualization technologies, introduce a
+> generic helper function, prot_guest_has(), that can be used to check
+> for specific protection attributes, like memory encryption. This is
+> intended to eliminate having to add multiple technology-specific checks
+> to the code (e.g. if (sev_active() || tdx_active())).
+
+So common checks obviously make sense, but I really hate the stupid
+multiplexer.  Having one well-documented helper per feature is much
+easier to follow.
+
+> +#define PATTR_MEM_ENCRYPT		0	/* Encrypted memory */
+> +#define PATTR_HOST_MEM_ENCRYPT		1	/* Host encrypted memory */
+> +#define PATTR_GUEST_MEM_ENCRYPT		2	/* Guest encrypted memory */
+> +#define PATTR_GUEST_PROT_STATE		3	/* Guest encrypted state */
+
+The kerneldoc comments on these individual helpers will give you plenty
+of space to properly document what they indicate and what a (potential)
+caller should do based on them.  Something the above comments completely
+fail to.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
