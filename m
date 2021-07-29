@@ -1,23 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-il1-x136.google.com ([2607:f8b0:4864:20::136])
+Received: from mail-dm6nam08on2044.outbound.protection.outlook.com
+ ([40.107.102.44] helo=NAM04-DM6-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m8x41-002zgX-1K
- for kexec@lists.infradead.org; Thu, 29 Jul 2021 03:50:30 +0000
-Received: by mail-il1-x136.google.com with SMTP id z3so4354607ile.12
- for <kexec@lists.infradead.org>; Wed, 28 Jul 2021 20:50:27 -0700 (PDT)
+ id 1m96xl-004WKn-Qy
+ for kexec@lists.infradead.org; Thu, 29 Jul 2021 14:24:44 +0000
+Subject: Re: [PATCH 02/11] x86/sev: Add an x86 version of prot_guest_has()
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <b3e929a77303dd47fd2adc2a1011009d3bfcee20.1627424774.git.thomas.lendacky@amd.com>
+ <YQFaM7nOhD2d6SUQ@infradead.org>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <9f371091-7f73-8f60-e537-166984c650c1@amd.com>
+Date: Thu, 29 Jul 2021 09:24:34 -0500
+In-Reply-To: <YQFaM7nOhD2d6SUQ@infradead.org>
+Content-Language: en-US
 MIME-Version: 1.0
-References: <TYYPR01MB67770864ECE9A641AE5BDAA9DD349@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-DWGtWo5iQGM_ApTXU5bGL-V2mEbFhEapuABAHwXagezA@mail.gmail.com>
- <TYYPR01MB677737A58CFA82D3F238E515DD039@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAB6A5-Dkm4dYQWutZ8Wc4WDmPeSQyEMzzMzZGX-91VAr14L0fQ@mail.gmail.com>
- <CAB6A5-CjvYh_s4VBoFEUzZc95Cu6F=RJ4eY=Tzf7W-xTPuY8Mw@mail.gmail.com>
- <CAB6A5-Dtxmr-F6B=3fZ6E-D9Z8CM_pQh=Vf2rR4Htm-kYRn0Yw@mail.gmail.com>
- <TYYPR01MB677795025FA9C320793AADA3DDEA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYYPR01MB677795025FA9C320793AADA3DDEA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-From: manty kuma <mantykuma@gmail.com>
-Date: Thu, 29 Jul 2021 12:50:16 +0900
-Message-ID: <CAB6A5-CoaJ529qdDojhVR1_aif_bUK-5fq+icyTPBBugPVBVew@mail.gmail.com>
-Subject: Re: Compiling makedumpfile from source
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,73 +22,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: =?UTF-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSk=?= <k-hagio-ab@nec.com>
-Cc: kexec-ml <kexec@lists.infradead.org>
+To: Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@linux.intel.com>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Brijesh Singh <brijesh.singh@amd.com>, Thomas Gleixner <tglx@linutronix.de>
 
-VGhhbmsgeW91IEthenVoaXRvIHNhbi4KSSB3aWxsIGNoZWNrIHRoZSBtZW50aW9uZWQgc291cmNl
-LgoKTWFudHkKCk9uIFdlZCwgSnVsIDI4LCAyMDIxIGF0IDI6NDMgUE0gSEFHSU8gS0FaVUhJVE8o
-6JCp5bC+44CA5LiA5LuBKQo8ay1oYWdpby1hYkBuZWMuY29tPiB3cm90ZToKPgo+IC0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tCj4gPiBIaSBrYXp1aGl0byBzYW4sCj4gPgo+ID4gSnVzdCBmb2xs
-b3dpbmcgdXAgb24gbXkgbGFzdCBlbWFpbC4KPiA+IFNpbmNlcmUgYXBvbG9naWVzIGZvciBhc2tp
-bmcgZm9yIHlvdXIgdGltZS4KPiA+IEkgd2FudCB0byBzcGVjaWZpY2FsbHkgdW5kZXJzdGFuZCB3
-aGF0IHRoZSAidXNlciBkYXRhIiBzZWN0aW9uIGlzIGFuZAo+ID4gd2hhdCBpdCBtZWFucyB0byBl
-eGNsdWRlIGl0IGZyb20gdGhlIGR1bXAuCj4KPiAidXNlciBkYXRhIiBhcmUgYW5vbnltb3VzIHBh
-Z2VzIG9yIGh1Z2UgcGFnZXMuCj4gaHR0cHM6Ly9naXRodWIuY29tL21ha2VkdW1wZmlsZS9tYWtl
-ZHVtcGZpbGUvYmxvYi9tYXN0ZXIvbWFrZWR1bXBmaWxlLmMjTDYyMjQKPgo+IFBsZWFzZSBjb25z
-dWx0IHRoZSBfX2V4Y2x1ZGVfdW5uZWNlc3NhcnlfcGFnZXMoKSBmdW5jdGlvbiBhYm92ZSBmb3IK
-PiB3aGF0IGNvbmRpdGlvbnMgY29ycmVzcG9uZCB0byB0aGUgdHlwZSBvZiBwYWdlLgo+Cj4gVGhh
-bmtzLAo+IEthenUKPgo+ID4KPiA+IFRoYW5rIHlvdSB2ZXJ5IG11Y2guCj4gPgo+ID4gQmVzdCBS
-ZWdhcmRzLAo+ID4gTWFudHkKPiA+Cj4gPiBPbiBGcmksIEp1bCA5LCAyMDIxIGF0IDEwOjQ1IEFN
-IG1hbnR5IGt1bWEgPG1hbnR5a3VtYUBnbWFpbC5jb20+IHdyb3RlOgo+ID4gPgo+ID4gPiBIaSBL
-YXp1aGl0byBzYW4sCj4gPiA+Cj4gPiA+IEkgYW0gbG9va2luZyB0byBiZXR0ZXIgdW5kZXJzdGFu
-ZCB0aGUgc2VjdGlvbnMgYmVpbmcgZmlsdGVyaW5nIG91dAo+ID4gPiB3aXRoIGVhY2ggb2YgdGhl
-IGZvbGxvd2luZyBvcHRpb25zLgo+ID4gPgo+ID4gPiBaZXJvIHBhZ2U6Cj4gPiA+IFBhZ2VzIHRo
-YXQgYXJlIGVtcHR5LiBJZ25vcmluZyB0aGVzZSBwYWdlcyB3b24ndCBoYXZlIGFueSBpbXBhY3Qg
-b24gYW5hbHlzaXMuCj4gPiA+Cj4gPiA+IG5vbi1wcml2YXRlIGNhY2hlIGFuZCBwcml2YXRlIGNh
-Y2hlOgo+ID4gPiBXaGF0IGV4YWN0bHkgYXJlIHRoZXNlIHNlY3Rpb25zIG9mIG1lbW9yeT8gSnVz
-dCBhIG9uZS1saW5lIG92ZXJ2aWV3Cj4gPiA+IGFib3V0IHRoZW0gaXMgc3VmZmljaWVudC4KPiA+
-ID4gKE15IHVuZGVyc3RhbmRpbmcgd2FzIHRoYXQgY2FjaGUgaXMgbm90IHBhcnQgb2YgUkFNLiBJ
-cyB0aGlzIGNhY2hlCj4gPiA+IHNvbWV0aGluZyBlbHNlPyBMaWtlIHNvbWUgYm9va2tlZXBpbmcg
-ZGF0YSBtYWludGFpbmVkIGJ5IHRoZSBrZXJuZWw/KQo+ID4gPgo+ID4gPgo+ID4gPiB1c2VyIGRh
-dGE6Cj4gPiA+IEFyZSB0aGVzZSBzZWN0aW9ucyBvZiB0aGUgbWVtb3J5IGZvciB0aGUgdXNlciBz
-cGFjZSBwcm9jZXNzZXMvbWVtb3J5Cj4gPiA+IHNlY3Rpb25zIGFsbG9jYXRlZCB1c2luZyBtYWxs
-b2M/Cj4gPiA+IE15IHVuZGVyc3RhbmRpbmcgaXMgdGhhdCBJZiBJIGV4Y2x1ZGUgdGhpcyBzZWN0
-aW9uLCBnY29yZSB3b3VsZCBub3QKPiA+ID4gd29yay4gSXMgbXkgdW5kZXJzdGFuZGluZyBjb3Jy
-ZWN0Pwo+ID4gPiBJIGV4cGVjdGVkIHRoaXMgc2VjdGlvbiB0byBiZSBiaWcuIEJ1dCBpbiBmYWN0
-IGV4Y2x1ZGluZyB0aGlzIGRpZCBub3QKPiA+ID4gaGF2ZSBtdWNoIGltcGFjdCBvbiB0aGUgZHVt
-cCBzaXplLgo+ID4gPgo+ID4gPiBmcmVlIHBhZ2U6Cj4gPiA+IHVuYWxsb2NhdGVkIHBhZ2VzLiBT
-aW5jZSB0aGV5IGFyZSBub3QgYWxsb2NhdGVkLiBmaWx0ZXJpbmcgdGhlbSBvdXQKPiA+ID4gd29u
-J3QgaGF2ZSBhbnkgaW1wYWN0IG9uIGR1bXAgYW5hbHlzaXMuCj4gPiA+IFBsZWFzZSBjb3JyZWN0
-IG1lIGlmIEkgYW0gd3JvbmcuCj4gPiA+Cj4gPiA+Cj4gPiA+IElmIHRoZXJlIGlzIGFscmVhZHkg
-c29tZSBwbGFjZSB0aGF0IGV4cGxhaW5zIHdoYXQgdGhlc2Ugc2VjdGlvbnMKPiA+ID4gZmlsdGVy
-IG91dCwgcGxlYXNlIGp1c3QgZHJvcCB0aGUgcmVmZXJlbmNlIHRvIHRoZW0gYW5kIGkgd2lsbCBs
-b29rCj4gPiA+IGludG8gaXQuCj4gPiA+IFRoYW5rIHlvdSB2ZXJ5IG11Y2ggaW4gYWR2YW5jZSEK
-PiA+ID4KPiA+ID4gTWFudHkKPiA+ID4KPiA+ID4gT24gVGh1LCBKdWwgOCwgMjAyMSBhdCA4OjE3
-IFBNIG1hbnR5IGt1bWEgPG1hbnR5a3VtYUBnbWFpbC5jb20+IHdyb3RlOgo+ID4gPiA+Cj4gPiA+
-ID4gU29ycnkuIEkgYW0gbm90IHN1cmUgaG93IGJ1dCBJIGNvbXBsZXRlbHkgbWlzc2VkIHRoaXMg
-ZW1haWwuCj4gPiA+ID4gWWVzLCAvdG1wIHdhcyBub3QgYXZhaWxhYmxlIGluIG15IGVudi4gSSBq
-dXN0IGRpZCBta2RpciBiZWZvcmUKPiA+ID4gPiBleGVjdXRpbmcgYG1ha2VkdW1wZmlsZWAgYW5k
-IGl0IGlzIG5vdyB3b3JraW5nIHdlbGwuCj4gPiA+ID4gVGhhbmsgeW91IHZlcnkgbXVjaC4KPiA+
-ID4gPgo+ID4gPiA+IE9uIE1vbiwgSnVuIDI4LCAyMDIxIGF0IDQ6MDcgUE0gSEFHSU8gS0FaVUhJ
-VE8o6JCp5bC+44CA5LiA5LuBKQo+ID4gPiA+IDxrLWhhZ2lvLWFiQG5lYy5jb20+IHdyb3RlOgo+
-ID4gPiA+ID4KPiA+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tCj4gPiA+ID4gPiA+
-IEhpIEthenVoaXRvIHNhbiwKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gSSBhbSBnZXR0aW5nIHRo
-ZSBmb2xsb3dpbmcgZXJyb3Igd2hlbiB0cnlpbmcgdG8gdXNlIG1ha2VkdW1wZmlsZSB1dGlsaXR5
-Lgo+ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiA+IGNvcHlfdm1jb3JlaW5mbzogQ2FuJ3Qgb3BlbiB0
-aGUgdm1jb3JlaW5mbyBmaWxlKC90bXAvdm1jb3JlaW5mb0xVUWMyNSkuIE5vIHN1Y2ggZmlsZSBv
-ciBkaXJlY3RvcnkuCj4gPiA+ID4gPiA+ID4gbWFrZWR1bXBmaWxlIEZhaWxlZAo+ID4gPiA+ID4g
-Pgo+ID4gPiA+ID4gPiBJbiB5b3VyIHNldHVwIGhvdyBhcmUgeW91IHByb3ZpZGluZyB0aGUgdm1j
-b3JlaW5mbyBmaWxlPyBJbiBteSBjYXNlIGl0Cj4gPiA+ID4gPiA+IGlzIGNoZWNraW5nIC90bXAv
-dm1jb3JlaW5mb0xVUWMyNQo+ID4gPiA+ID4gPiBXaG8gZ2VuZXJhdGVzIHRoaXMgZmlsZT8KPiA+
-ID4gPiA+Cj4gPiA+ID4gPiBHZW5lcmFsbHksIHZtY29yZWluZm8gaXMgY29waWVkIGZyb20gdm1j
-b3JlJ3MgRUxGIG5vdGUgdG8gL3RtcC92bWNvcmVpbmZvWFhYWFhYCj4gPiA+ID4gPiBieSBtYWtl
-ZHVtcGZpbGUsIHBsZWFzZSBzZWUgY29weV92bWNvcmVpbmZvKCkuICBTbyBubyBuZWVkIHRvIHBy
-b3ZpZGUgZXhwbGljaXRseS4KPiA+ID4gPiA+Cj4gPiA+ID4gPiBJcyB0aGVyZSB0aGUgL3RtcCBk
-aXJlY3Rvcnkgb24geW91ciBlbnZpcm9ubWVudD8KPiA+ID4gPiA+Cj4gPiA+ID4gPiBLYXp1Cj4g
-PiA+ID4gPgo+ID4gPiA+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 7/28/21 8:22 AM, Christoph Hellwig wrote:
+> On Tue, Jul 27, 2021 at 05:26:05PM -0500, Tom Lendacky via iommu wrote:
+>> Introduce an x86 version of the prot_guest_has() function. This will be
+>> used in the more generic x86 code to replace vendor specific calls like
+>> sev_active(), etc.
+>>
+>> While the name suggests this is intended mainly for guests, it will
+>> also be used for host memory encryption checks in place of sme_active().
+>>
+>> The amd_prot_guest_has() function does not use EXPORT_SYMBOL_GPL for the
+>> same reasons previously stated when changing sme_active(), sev_active and
+> 
+> None of that applies here as none of the callers get pulled into
+> random macros.  The only case of that is sme_me_mask through
+> sme_mask, but that's not something this series replaces as far as I can
+> tell.
+
+Ok, let me make sure of that and I'll change to EXPORT_SYMBOL_GPL if
+that's the case.
+
+Thanks,
+Tom
+
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
