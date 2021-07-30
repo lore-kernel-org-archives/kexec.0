@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
+Received: from mail-pj1-x1033.google.com ([2607:f8b0:4864:20::1033])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m9b5X-00ARBt-AN
- for kexec@lists.infradead.org; Fri, 30 Jul 2021 22:34:45 +0000
-Received: by mail-pj1-x1031.google.com with SMTP id
- a4-20020a17090aa504b0290176a0d2b67aso22862619pjq.2
- for <kexec@lists.infradead.org>; Fri, 30 Jul 2021 15:34:42 -0700 (PDT)
-Date: Fri, 30 Jul 2021 22:34:37 +0000
+ id 1m9bDB-00ARiB-Rv
+ for kexec@lists.infradead.org; Fri, 30 Jul 2021 22:42:39 +0000
+Received: by mail-pj1-x1033.google.com with SMTP id ca5so17237218pjb.5
+ for <kexec@lists.infradead.org>; Fri, 30 Jul 2021 15:42:35 -0700 (PDT)
+Date: Fri, 30 Jul 2021 22:42:30 +0000
 From: Sean Christopherson <seanjc@google.com>
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-Message-ID: <YQR+ffO92gMfGDbs@google.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+Subject: Re: [PATCH 11/12] x86/sev: Handle CLFLUSH MMIO events
+Message-ID: <YQSAVo0CXUKHXdLF@google.com>
+References: <20210721142015.1401-1-joro@8bytes.org>
+ <20210721142015.1401-12-joro@8bytes.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+In-Reply-To: <20210721142015.1401-12-joro@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,24 +26,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
 
-On Tue, Jul 27, 2021, Tom Lendacky wrote:
-> @@ -451,7 +450,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
->  	 * The unused memory range was mapped decrypted, change the encryption
->  	 * attribute from decrypted to encrypted before freeing it.
->  	 */
-> -	if (mem_encrypt_active()) {
-> +	if (sme_me_mask) {
+On Wed, Jul 21, 2021, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Handle CLFLUSH instruction to MMIO memory in the #VC handler. The
+                               ^
+			       |- emulated
 
-Any reason this uses sme_me_mask?  The helper it calls, __set_memory_enc_dec(),
-uses prot_guest_has(PATTR_MEM_ENCRYPT) so I assume it's available?
+> instruction is ignored by the handler, as the Hypervisor is
+> responsible for cache management of emulated MMIO memory.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/sev-shared.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/sev-shared.c b/arch/x86/kernel/sev-shared.c
+> index a7a0793c4f98..682fa202444f 100644
+> --- a/arch/x86/kernel/sev-shared.c
+> +++ b/arch/x86/kernel/sev-shared.c
+> @@ -632,6 +632,15 @@ static enum es_result vc_handle_mmio_twobyte_ops(struct ghcb *ghcb,
+>  	long *reg_data;
+>  
+>  	switch (insn->opcode.bytes[1]) {
+> +		/* CLFLUSH */
+> +	case 0xae:
+> +		/*
+> +		 * Ignore CLFLUSHes - those go to emulated MMIO anyway and the
+> +		 * hypervisor is responsible for cache management.
 
->  		r = set_memory_encrypted(vaddr, npages);
->  		if (r) {
->  			pr_warn("failed to free unused decrypted pages\n");
+This wording can be misread as "the hypervisor is responsible for _all_ cache
+management".  Maybe just:
 
+		/*
+		 * Ignore CLFLUSHes - the hyperivsor is responsible for cache
+		 * management of emulated MMIO.
+		 */
+
+Side topic, out of curisoity, what's mapping/accessing emulated MMIO as non-UC?
+
+> +		 */
+> +		ret = ES_OK;
+> +		break;
+> +
+>  		/* MMIO Read w/ zero-extension */
+>  	case 0xb6:
+>  		bytes = 1;
+> -- 
+> 2.31.1
+> 
 
 _______________________________________________
 kexec mailing list
