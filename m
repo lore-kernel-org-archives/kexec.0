@@ -1,18 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam11on2044.outbound.protection.outlook.com
- ([40.107.220.44] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+Received: from mail-pj1-x1031.google.com ([2607:f8b0:4864:20::1031])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1m9JYC-006yoh-DJ
- for kexec@lists.infradead.org; Fri, 30 Jul 2021 03:51:10 +0000
-Date: Fri, 30 Jul 2021 12:51:00 +0900
-From: Benjamin Poirier <bpoirier@nvidia.com>
-Subject: Re: [PATCH v2 makedumpfile 0/3] Add option to limit file size
-Message-ID: <YQN3JOljzkSV7FZh@d3>
-References: <20210708070611.291260-1-bpoirier@nvidia.com>
- <TYYPR01MB6777627C98AFB7AB5C849B13DDEC9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ id 1m9b5X-00ARBt-AN
+ for kexec@lists.infradead.org; Fri, 30 Jul 2021 22:34:45 +0000
+Received: by mail-pj1-x1031.google.com with SMTP id
+ a4-20020a17090aa504b0290176a0d2b67aso22862619pjq.2
+ for <kexec@lists.infradead.org>; Fri, 30 Jul 2021 15:34:42 -0700 (PDT)
+Date: Fri, 30 Jul 2021 22:34:37 +0000
+From: Sean Christopherson <seanjc@google.com>
+Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
+ with prot_guest_has()
+Message-ID: <YQR+ffO92gMfGDbs@google.com>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <TYYPR01MB6777627C98AFB7AB5C849B13DDEC9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+In-Reply-To: <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,29 +24,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: HAGIO =?utf-8?B?S0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?= <k-hagio-ab@nec.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-T24gMjAyMS0wNy0zMCAwMjoxMyArMDAwMCwgSEFHSU8gS0FaVUhJVE8o6JCp5bC+IOS4gOS7gSkg
-d3JvdGU6Cj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0KPiA+IFNlZSBmZWF0dXJlIGRlc2Ny
-aXB0aW9uIGluIHBhdGNoICJBZGQgLUwgb3B0aW9uIHRvIGxpbWl0IG91dHB1dCBmaWxlCj4gPiBz
-aXplIgo+ID4gCj4gPiB2MToKPiA+IAlodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1h
-aWwva2V4ZWMvMjAyMS1KdW5lLzAyMjcyOC5odG1sCj4gPiB2MjoKPiA+IAlBZGQgcGF0Y2hlcyAx
-LCAyIHRvIHN1cHBvcnQgZG1lc2cgbGltaXQgd2l0aCBkaWZmZXJlbnQga2VybmVsCj4gPiAJdmVy
-c2lvbnMuCj4gPiAKPiA+IAlTdHJpY3RlciBwYXJzaW5nIG9mIC1MIG9wdGlvbiB2YWx1ZS4KPiA+
-IAo+ID4gCUluc3RlYWQgb2YgdXNpbmcgUkxJTUlUX0ZTSVpFLCB1c2Ugd3JpdGVfYnl0ZXMgb3Ig
-U0VFS19DVVIgdG8KPiA+IAllbmZvcmNlIGxpbWl0LiBUaGlzIGJldHRlciBpbnRlZ3JhdGVzIHdp
-dGggdGhlIC1GIG9wdGlvbiBmb3IKPiA+IAlzdGRvdXQgb3V0cHV0Lgo+IAo+IHNvcnJ5IGZvciB0
-aGUgZGVsYXksIGFuZCB0aGFuayB5b3UgZm9yIHRoZSB1cGRhdGUgYW5kIGZpeC4KPiAKPiBOb3Rl
-IHRoYXQgdGhlIHYyIHBhdGNoc2V0IGNhbm5vdCBiZSBidWlsdCBleGNlcHQgZm9yIHg4Nl82NCwg
-c28gSSBtb3ZlZAo+IHRoZSBtZW1wYXJzZSgpIGZyb20gc2FkdW1wX2luZm8uYyB0byB0b29scy5j
-LiAgT3RoZXJ3aXNlLCBsb29rcyBnb29kLgo+IAo+IGh0dHBzOi8vZ2l0aHViLmNvbS9tYWtlZHVt
-cGZpbGUvbWFrZWR1bXBmaWxlL2NvbXBhcmUvOWRmNTE5ZC4uLmYwY2ZhODYKPiAKClRoYW5rIHlv
-dSBmb3IgY2hlY2tpbmcgYW5kIGNvcnJlY3RpbmcgdGhhdC4KCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+On Tue, Jul 27, 2021, Tom Lendacky wrote:
+> @@ -451,7 +450,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
+>  	 * The unused memory range was mapped decrypted, change the encryption
+>  	 * attribute from decrypted to encrypted before freeing it.
+>  	 */
+> -	if (mem_encrypt_active()) {
+> +	if (sme_me_mask) {
+
+Any reason this uses sme_me_mask?  The helper it calls, __set_memory_enc_dec(),
+uses prot_guest_has(PATTR_MEM_ENCRYPT) so I assume it's available?
+
+>  		r = set_memory_encrypted(vaddr, npages);
+>  		if (r) {
+>  			pr_warn("failed to free unused decrypted pages\n");
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
