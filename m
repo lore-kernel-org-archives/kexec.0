@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x730.google.com ([2607:f8b0:4864:20::730])
+Received: from mail-qt1-x82d.google.com ([2607:f8b0:4864:20::82d])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mAft2-000Jlp-NA
- for kexec@lists.infradead.org; Mon, 02 Aug 2021 21:54:20 +0000
-Received: by mail-qk1-x730.google.com with SMTP id z24so18113670qkz.7
- for <kexec@lists.infradead.org>; Mon, 02 Aug 2021 14:54:16 -0700 (PDT)
+ id 1mAft4-000JmR-6n
+ for kexec@lists.infradead.org; Mon, 02 Aug 2021 21:54:21 +0000
+Received: by mail-qt1-x82d.google.com with SMTP id g11so12694076qts.11
+ for <kexec@lists.infradead.org>; Mon, 02 Aug 2021 14:54:17 -0700 (PDT)
 From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v16 03/15] arm64: hibernate: abstract ttrb0 setup function
-Date: Mon,  2 Aug 2021 17:53:56 -0400
-Message-Id: <20210802215408.804942-4-pasha.tatashin@soleen.com>
+Subject: [PATCH v16 04/15] arm64: kexec: flush image and lists during kexec
+ load time
+Date: Mon,  2 Aug 2021 17:53:57 -0400
+Message-Id: <20210802215408.804942-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20210802215408.804942-1-pasha.tatashin@soleen.com>
 References: <20210802215408.804942-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,87 +27,106 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-Currently, only hibernate sets custom ttbr0 with safe idmaped function.
-Kexec, is also going to be using this functionality when relocation code
-is going to be idmapped.
+Currently, during kexec load we are copying relocation function and
+flushing it. However, we can also flush kexec relocation buffers and
+if new kernel image is already in place (i.e. crash kernel), we can
+also flush the new kernel image itself.
 
-Move the setup sequence to a dedicated cpu_install_ttbr0() for custom
-ttbr0.
-
-Suggested-by: James Morse <james.morse@arm.com>
 Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/mmu_context.h | 24 ++++++++++++++++++++++++
- arch/arm64/kernel/hibernate.c        | 21 +--------------------
- 2 files changed, 25 insertions(+), 20 deletions(-)
+ arch/arm64/kernel/machine_kexec.c | 58 ++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/include/asm/mmu_context.h b/arch/arm64/include/asm/mmu_context.h
-index eeb210997149..edb57e075abe 100644
---- a/arch/arm64/include/asm/mmu_context.h
-+++ b/arch/arm64/include/asm/mmu_context.h
-@@ -115,6 +115,30 @@ static inline void cpu_install_idmap(void)
- 	cpu_switch_mm(lm_alias(idmap_pg_dir), &init_mm);
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 213d56c14f60..b6d5a02cba2e 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -60,29 +60,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
+ 	/* Empty routine needed to avoid build errors. */
  }
  
-+/*
-+ * Load our new page tables. A strict BBM approach requires that we ensure that
-+ * TLBs are free of any entries that may overlap with the global mappings we are
-+ * about to install.
-+ *
-+ * For a real hibernate/resume/kexec cycle TTBR0 currently points to a zero
-+ * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI runtime
-+ * services), while for a userspace-driven test_resume cycle it points to
-+ * userspace page tables (and we must point it at a zero page ourselves).
-+ *
-+ * We change T0SZ as part of installing the idmap. This is undone by
-+ * cpu_uninstall_idmap() in __cpu_suspend_exit().
-+ */
-+static inline void cpu_install_ttbr0(phys_addr_t ttbr0, unsigned long t0sz)
+-int machine_kexec_post_load(struct kimage *kimage)
+-{
+-	void *reloc_code = page_to_virt(kimage->control_code_page);
+-
+-	memcpy(reloc_code, arm64_relocate_new_kernel,
+-	       arm64_relocate_new_kernel_size);
+-	kimage->arch.kern_reloc = __pa(reloc_code);
+-	kexec_image_info(kimage);
+-
+-	/*
+-	 * For execution with the MMU off, reloc_code needs to be cleaned to the
+-	 * PoC and invalidated from the I-cache.
+-	 */
+-	dcache_clean_inval_poc((unsigned long)reloc_code,
+-			    (unsigned long)reloc_code +
+-				    arm64_relocate_new_kernel_size);
+-	icache_inval_pou((uintptr_t)reloc_code,
+-				(uintptr_t)reloc_code +
+-					arm64_relocate_new_kernel_size);
+-
+-	return 0;
+-}
+-
+ /**
+  * machine_kexec_prepare - Prepare for a kexec reboot.
+  *
+@@ -163,6 +140,32 @@ static void kexec_segment_flush(const struct kimage *kimage)
+ 	}
+ }
+ 
++int machine_kexec_post_load(struct kimage *kimage)
 +{
-+	cpu_set_reserved_ttbr0();
-+	local_flush_tlb_all();
-+	__cpu_set_tcr_t0sz(t0sz);
++	void *reloc_code = page_to_virt(kimage->control_code_page);
 +
-+	/* avoid cpu_switch_mm() and its SW-PAN and CNP interactions */
-+	write_sysreg(ttbr0, ttbr0_el1);
-+	isb();
++	/* If in place flush new kernel image, else flush lists and buffers */
++	if (kimage->head & IND_DONE)
++		kexec_segment_flush(kimage);
++	else
++		kexec_list_flush(kimage);
++
++	memcpy(reloc_code, arm64_relocate_new_kernel,
++	       arm64_relocate_new_kernel_size);
++	kimage->arch.kern_reloc = __pa(reloc_code);
++	kexec_image_info(kimage);
++
++	/* Flush the reloc_code in preparation for its execution. */
++	dcache_clean_inval_poc((unsigned long)reloc_code,
++			       (unsigned long)reloc_code +
++			       arm64_relocate_new_kernel_size);
++	icache_inval_pou((uintptr_t)reloc_code,
++			 (uintptr_t)reloc_code +
++			 arm64_relocate_new_kernel_size);
++
++	return 0;
 +}
 +
- /*
-  * Atomically replaces the active TTBR1_EL1 PGD with a new VA-compatible PGD,
-  * avoiding the possibility of conflicting TLB entries being allocated.
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index b96ef9060e4c..2758f75d6809 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -212,26 +212,7 @@ static int create_safe_exec_page(void *src_start, size_t length,
- 	if (rc)
- 		return rc;
+ /**
+  * machine_kexec - Do the kexec reboot.
+  *
+@@ -180,13 +183,6 @@ void machine_kexec(struct kimage *kimage)
+ 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
+ 		"Some CPUs may be stale, kdump will be unreliable.\n");
  
--	/*
--	 * Load our new page tables. A strict BBM approach requires that we
--	 * ensure that TLBs are free of any entries that may overlap with the
--	 * global mappings we are about to install.
--	 *
--	 * For a real hibernate/resume cycle TTBR0 currently points to a zero
--	 * page, but TLBs may contain stale ASID-tagged entries (e.g. for EFI
--	 * runtime services), while for a userspace-driven test_resume cycle it
--	 * points to userspace page tables (and we must point it at a zero page
--	 * ourselves).
--	 *
--	 * We change T0SZ as part of installing the idmap. This is undone by
--	 * cpu_uninstall_idmap() in __cpu_suspend_exit().
--	 */
--	cpu_set_reserved_ttbr0();
--	local_flush_tlb_all();
--	__cpu_set_tcr_t0sz(t0sz);
--	write_sysreg(trans_ttbr0, ttbr0_el1);
--	isb();
+-	/* Flush the kimage list and its buffers. */
+-	kexec_list_flush(kimage);
 -
-+	cpu_install_ttbr0(trans_ttbr0, t0sz);
- 	*phys_dst_addr = virt_to_phys(page);
+-	/* Flush the new image if already in place. */
+-	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
+-		kexec_segment_flush(kimage);
+-
+ 	pr_info("Bye!\n");
  
- 	return 0;
+ 	local_daif_mask();
+@@ -261,8 +257,6 @@ void arch_kexec_protect_crashkres(void)
+ {
+ 	int i;
+ 
+-	kexec_segment_flush(kexec_crash_image);
+-
+ 	for (i = 0; i < kexec_crash_image->nr_segments; i++)
+ 		set_memory_valid(
+ 			__phys_to_virt(kexec_crash_image->segment[i].mem),
 -- 
 2.25.1
 
