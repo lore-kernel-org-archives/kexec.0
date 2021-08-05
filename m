@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qk1-x72f.google.com ([2607:f8b0:4864:20::72f])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mAftI-000JwY-Gr
- for kexec@lists.infradead.org; Mon, 02 Aug 2021 21:54:34 +0000
-Received: by mail-qk1-x72f.google.com with SMTP id o13so18107074qkk.9
- for <kexec@lists.infradead.org>; Mon, 02 Aug 2021 14:54:32 -0700 (PDT)
-From: Pavel Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v16 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-Date: Mon,  2 Aug 2021 17:54:08 -0400
-Message-Id: <20210802215408.804942-16-pasha.tatashin@soleen.com>
-In-Reply-To: <20210802215408.804942-1-pasha.tatashin@soleen.com>
-References: <20210802215408.804942-1-pasha.tatashin@soleen.com>
+ id 1mBXIS-008HhD-3w
+ for kexec@lists.infradead.org; Thu, 05 Aug 2021 06:56:06 +0000
+Date: Thu, 5 Aug 2021 14:54:10 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH RFC 0/2] dma-pool: allow user to disable atomic pool
+Message-ID: <20210805065410.GA2051@MiWiFi-R3L-srv>
+References: <20210624052010.5676-1-bhe@redhat.com>
+ <YNQ258KHlzlajqo/@infradead.org>
+ <20210624092930.GA802261@MiWiFi-R3L-srv>
+ <8b3d4e02-6e94-ad59-a480-fed8e55c009a@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <8b3d4e02-6e94-ad59-a480-fed8e55c009a@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,113 +26,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
+To: Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@infradead.org>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, x86@kernel.org, rientjes@google.com, rppt@linux.ibm.com, thomas.lendacky@amd.com, brijesh.singh@amd.com, kexec@lists.infradead.org, iommu@lists.linux-foundation.org, m.szyprowski@samsung.com
 
-The intend of trans_pgd_map_page() was to map contiguous range of VA
-memory to the memory that is getting relocated during kexec. However,
-since we are now using linear map instead of contiguous range this
-function is not needed
+On 06/24/21 at 11:47am, Robin Murphy wrote:
+> On 2021-06-24 10:29, Baoquan He wrote:
+> > On 06/24/21 at 08:40am, Christoph Hellwig wrote:
+> > > So reduce the amount allocated.  But the pool is needed for proper
+> > > operation on systems with memory encryption.  And please add the right
+> > > maintainer or at least mailing list for the code you're touching next
+> > > time.
+> > 
+> > Oh, I thoutht it's memory issue only, should have run
+> > ./scripts/get_maintainer.pl. sorry.
+> > 
+> > About reducing the amount allocated, it may not help. Because on x86_64,
+> > kdump kernel doesn't put any page of memory into buddy allocator of DMA
+> > zone. Means it will defenitely OOM for atomic_pool_dma initialization.
+> > 
+> > Wondering in which case or on which device the atomic pool is needed on
+> > AMD system with mem encrytion enabled. As we can see, the OOM will
+> > happen too in kdump kernel on Intel system, even though it's not
+> > necessary.
 
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pavel Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/trans_pgd.h |  5 +--
- arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
- 2 files changed, 1 insertion(+), 61 deletions(-)
+Sorry for very late response, and thank both for your comments.
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 411323bda7a4..c373d43c07ec 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -15,7 +15,7 @@
- /*
-  * trans_alloc_page
-  *	- Allocator that should return exactly one zeroed page, if this
-- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-+ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
-  *	  return -ENOMEM error.
-  *
-  * trans_alloc_arg
-@@ -30,9 +30,6 @@ struct trans_pgd_info {
- int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
- 			  unsigned long start, unsigned long end);
- 
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot);
--
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index a08cf313c858..b70588a42c29 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
- 	return rc;
- }
- 
--/*
-- * Add map entry to trans_pgd for a base-size page at PTE level.
-- * info:	contains allocator and its argument
-- * trans_pgd:	page table in which new map is added.
-- * page:	page to be mapped.
-- * dst_addr:	new VA address for the page
-- * pgprot:	protection for the page.
-- *
-- * Returns 0 on success, and -ENOMEM on failure.
-- */
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		p4dp = trans_alloc(info);
--		if (!pgdp)
--			return -ENOMEM;
--		pgd_populate(NULL, pgdp, p4dp);
--	}
--
--	p4dp = p4d_offset(pgdp, dst_addr);
--	if (p4d_none(READ_ONCE(*p4dp))) {
--		pudp = trans_alloc(info);
--		if (!pudp)
--			return -ENOMEM;
--		p4d_populate(NULL, p4dp, pudp);
--	}
--
--	pudp = pud_offset(p4dp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = trans_alloc(info);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(NULL, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = trans_alloc(info);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(NULL, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
--
--	return 0;
--}
--
- /*
-  * The page we want to idmap may be outside the range covered by VA_BITS that
-  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
--- 
-2.25.1
+> 
+> Hmm, I think the Kconfig reshuffle has actually left a slight wrinkle here.
+> For DMA_DIRECT_REMAP=y we can assume an atomic pool is always needed, since
+> that was the original behaviour anyway. However the implications of
+> AMD_MEM_ENCRYPT=y are different - even if support is enabled, it still
+> should only be relevant if mem_encrypt_active(), so it probably does make
+> sense to have an additional runtime gate on that.
+
+> 
+> From a quick scan, use of dma_alloc_from_pool() already depends on
+> force_dma_unencrypted() so that's probably fine already, but I think we'd
+> need a bit of extra protection around dma_free_from_pool() to prevent
+> gen_pool_has_addr() dereferencing NULL if the pools are uninitialised, even
+> with your proposed patch as it is. Presumably nothing actually called
+> dma_direct_free() when you tested this?
+
+Yes, enforcing the conditional check of force_dma_unencrypted() around
+dma_free_from_pool sounds reasonable, just as we have done in
+dma_alloc_from_pool().
+
+I have tested this patchset on normal x86_64 systems and one amd system
+with SME support, disabling atomic pool can fix the issue that there's no
+managed pages in dma zone then requesting page from dma zone will cause
+allocation failure. And even disabling atomic pool in 1st kernel didn't
+cause any problem on one AMD EPYC system which supports SME. I am not
+expert of DMA area, wondering how atomic pool is supposed to do in
+SME/SEV system. 
+
+Besides, even though atomic pool is disabled, slub page for allocation
+of dma-kmalloc also triggers page allocation failure. So I change to
+take another way to fix them, please check v2 post. The atomic pool
+disabling an be a good to have change.
+
+Thanks
+Baoquan
 
 
 _______________________________________________
