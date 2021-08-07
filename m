@@ -1,21 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam11on2062.outbound.protection.outlook.com
- ([40.107.220.62] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+Received: from mx.aristanetworks.com ([162.210.129.12]
+ helo=smtp.aristanetworks.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mBwIm-00C0MN-CF
- for kexec@lists.infradead.org; Fri, 06 Aug 2021 09:38:06 +0000
-Subject: Re: [RFC PATCH 13/15] mm: convert MAX_ORDER sized static arrays to
- dynamic ones.
-References: <20210805190253.2795604-1-zi.yan@sent.com>
- <20210805190253.2795604-14-zi.yan@sent.com>
- <586dda97-dc64-ade2-6736-a531e225acbc@amd.com>
- <0D3441BA-2A11-4BCA-BFD5-CAB8EB915B8F@nvidia.com>
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <bdec12bd-9188-9f3e-c442-aa33e25303a6@amd.com>
-Date: Fri, 6 Aug 2021 11:37:53 +0200
-In-Reply-To: <0D3441BA-2A11-4BCA-BFD5-CAB8EB915B8F@nvidia.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1mCBzu-00E1jq-MN
+ for kexec@lists.infradead.org; Sat, 07 Aug 2021 02:23:41 +0000
+From: Kevin Mitchell <kevmitch@arista.com>
+Subject: [PATCH] x86: allow i386 kexec to load x86_64 bzImage anywhere
+Date: Fri,  6 Aug 2021 19:21:54 -0700
+Message-Id: <20210807022154.425449-1-kevmitch@arista.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +16,137 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zi Yan <ziy@nvidia.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Mike Kravetz <mike.kravetz@oracle.com>, Michal Hocko <mhocko@kernel.org>, John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>, kexec@lists.infradead.org, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org
+Cc: dyoung@redhat.com, kexec@lists.infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org, bhe@redhat.com, ebiederm@xmission.com, Kevin Mitchell <kevmitch@arista.com>
 
-QW0gMDUuMDguMjEgdW0gMjE6NTggc2NocmllYiBaaSBZYW46Cj4gT24gNSBBdWcgMjAyMSwgYXQg
-MTU6MTYsIENocmlzdGlhbiBLw7ZuaWcgd3JvdGU6Cj4KPj4gQW0gMDUuMDguMjEgdW0gMjE6MDIg
-c2NocmllYiBaaSBZYW46Cj4+PiBGcm9tOiBaaSBZYW4gPHppeUBudmlkaWEuY29tPgo+Pj4KPj4+
-IFRoaXMgcHJlcGFyZXMgZm9yIHRoZSB1cGNvbWluZyBjaGFuZ2VzIHRvIG1ha2UgTUFYX09SREVS
-IGEgYm9vdCB0aW1lCj4+PiBwYXJhbWV0ZXIgaW5zdGVhZCBvZiBjb21waWxhdGlvbiB0aW1lIGNv
-bnN0YW50LiBBbGwgc3RhdGljIGFycmF5cyB3aXRoCj4+PiBNQVhfT1JERVIgc2l6ZSBhcmUgY29u
-dmVydGVkIHRvIHBvaW50ZXJzIGFuZCB0aGVpciBtZW1vcnkgaXMgYWxsb2NhdGVkCj4+PiBhdCBy
-dW50aW1lLgo+PiBXZWxsIGluIGdlbmVyYWwgSSBzdHJvbmdseSBzdWdnZXN0IHRvIG5vdCB1c2Ug
-dGhlIHBhdHRlciBrbWFsbG9jKHNpemVvZihzb21lIHN0cnVjdCkgKiBNQVhfT1JERVIsLi4uKSBp
-bnN0ZWFkIHVzZSBrbWFsbG9jX2FycmF5LCBrY2FsbG9jIGV0Yy4uCj4+Cj4+IFRoZW4gd2hlbiBh
-IGFycmF5IGlzIGVtYmVkZGVkIGF0IHRoZSBlbmQgb2YgYSBzdHJ1Y3R1cmUgeW91IGNhbiB1c2Ug
-YSB0cmFpbGluZyBhcnJheSBhbmQgdGhlIHN0cnVjdF9zaXplKCkgbWFjcm8gdG8gZGV0ZXJtaW5l
-IHRoZSBhbGxvY2F0aW9uIHNpemUuCj4gU3VyZS4gV2lsbCBmaXggaXQuCj4KPj4gQWRkaXRpb25h
-bCB0byB0aGF0IHNlcGFyYXRpbmcgdGhlIHBhdGNoIGludG8gY2hhbmdlcyBmb3IgVFRNIHRvIG1h
-a2UgdGhlIG1heGltdW0gYWxsb2NhdGlvbiBvcmRlciBpbmRlcGVuZGVudCBmcm9tIE1BWF9PUkRF
-UiB3b3VsZCBiZSByYXRoZXIgZ29vZCB0byBoYXZlIEkgdGhpbmsuCj4gQ2FuIHlvdSBlbGFib3Jh
-dGUgYSBsaXR0bGUgYml0IG1vcmUgb24g4oCcbWFrZSB0aGUgbWF4aW11bSBhbGxvY2F0aW9uIG9y
-ZGVyIGluZGVwZW5kZW50IGZyb20gTUFYX09SREVS4oCdPwoKTXkgaWRlYSB3YXMgdGhhdCB5b3Ug
-aGF2ZSBhIHNpbmdsZSBwYXRjaCB0byBnaXZlIHRoZSBtYXhpbXVtIG9yZGVyIGFzIApwYXJhbWV0
-ZXIgdG8gdGhlIFRUTSBwb29sLgoKPiAgRnJvbSB3aGF0IEkgdW5kZXJzdGFuZCBvZiB0dG1fcG9v
-bF9hbGxvYygpLCBpdCB0cmllcyB0byBnZXQgbnVtX3BhZ2VzIHBhZ2VzIGJ5IGFsbG9jYXRpbmcg
-YXMgbGFyZ2UgcGFnZXMgYXMgcG9zc2libGUsIHN0YXJ0aW5nIGZyb20gTUFYX09SREVSLiBXaGF0
-IGlzIHRoZSByYXRpb25hbGUgYmVoaW5kIHRoaXMgYWxnb3JpdGhtPyBXaHkgbm90IGp1c3QgY2Fs
-bCBhbGxvY19wYWdlKG9yZGVyPTApIG51bV9wYWdlcyB0aW1lcz8KCldoYXQgd2UgZG8gaGVyZSBp
-cyBlc3NlbnRpYWxseSB0cmFuc3BhcmVudCBodWdlIHBhZ2VzIGZvciBHUFVzLgoKSW4gb3Bwb3Np
-dGUgdG8gQ1BVIHdoaWNoIGNhbiB1c3VhbGx5IG9ubHkgdXNlIGZpeGVkIHNpemVzIGxpa2UgNEtp
-QiwgCjJNaUIsIDFHaUIgYXQgbGVhc3QgQU1EIEdQVXMgY2FuIHVzZSBhbnkgcG93ZXIgb2YgdHdv
-LgoKU28gaXQgbWFrZXMgc2Vuc2UgdG8gYWxsb2NhdGUgYmlnIHBhZ2VzIGFzIG11Y2ggYXMgcG9z
-c2libGUgYW5kIG9ubHkgCmZhbGxiYWNrIHRvIDRLaUIgcGFnZXMgd2hlbiBuZWNlc3NhcnkuCgpE
-b3duIHNpZGUgaXMgdGhhdCB3ZSBwb3RlbnRpYWxseSBleGhhdXN0IGxhcmdlciBvcmRlcnMgZm9y
-IG90aGVyIHVzZSBjYXNlcy4KCj4gSXMgaXQgbWVhbiB0byByZWR1Y2UgdGhlIG51bWJlciBvZiBj
-YWxscyB0byBhbGxvY19wYWdlPwoKVGhhdCBpcyBhIG5pY2UgdG8gaGF2ZSBzaWRlIGVmZmVjdCwg
-YnV0IHRoZSBwZXJmb3JtYW5jZSBpbXByb3ZlbWVudCBmb3IgCnRoZSBUTEIgaXMgdGhlIG1haW4g
-cmVhc29uIGhlcmUuCgo+IFRoZSBhbGxvY2F0ZWQgcGFnZXMgZG8gbm90IG5lZWQgdG8gZ2V0IGFz
-IGhpZ2ggYXMgTUFYX09SREVSLCBpcyB0aGF0IHRoZSBjYXNlPwoKQWN0dWFsbHkgd2Ugd291bGQg
-cmVhbGx5IGxpa2UgdG8gaGF2ZSBwYWdlcyBhcyBsYXJnZSBhcyAxR2lCIGZvciBiZXN0IApUTEIg
-dXRpbGl6YXRpb24gOikKCj4gSWYgeWVzLCBJIHByb2JhYmx5IGNhbiBrZWVwIHR0bSBwb29sIGFz
-IHN0YXRpYyBhcnJheXMgd2l0aCBsZW5ndGggb2YgTUlOX01BWF9PUkRFUiwgd2hpY2ggSSBpbnRy
-b2R1Y2UgaW4gUGF0Y2ggMTQgYXMgdGhlIGxvd2VyIGJvdW5kIG9mIGJvb3QgdGltZSBwYXJhbWV0
-ZXIgTUFYX09SREVSLiBMZXQgbWUga25vdyB5b3VyIHRob3VnaHRzLgoKV2VsbCB5b3UgY291bGQg
-ZG8gc29tZXRoaW5nIGxpa2UgTUFYX01BWF9PUkRFUiB3aXRoIGEgdmFsdWUgb2YgYXQgbGVhc3Qg
-CjE5ICgxR2lCIHdpdGggNEtpQiBwYWdlcyBJSVJDKS4gQW5kIHRoZW4gbGltaXQgdG8gdGhlIHJl
-YWwgYXZhaWxhYmxlIAptYXhfb3JkZXIgd2hlbiB5b3UgbWFrZSB0aGF0IGEgcnVuIHRpbWUgb3B0
-aW9uLgoKU2luY2UgdGhlIGFycmF5IGVsZW1lbnRzIGNvbnNpc3RzIG9ubHkgb2YgYSBsaW5rZWQg
-bGlzdCBhbmQgYSBmZXcgZXh0cmEgCnBhcmFtZXRlcnMgLyBwb2ludGVycyB3ZSBwcm9iYWJseSB3
-b24ndCBuZWVkIG1vcmUgdGhhbiBhIHBhZ2Ugb3IgdHdvIGZvciAKdGhvc2UuCgpSZWdhcmRzLApD
-aHJpc3RpYW4uCgo+Cj4gVGhhbmtzLgo+Cj4g4oCUCj4gQmVzdCBSZWdhcmRzLAo+IFlhbiwgWmkK
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBt
-YWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFk
-ZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+In linux-5.2, the following commit allows the kdump kernel to be loaded
+at a higher address than 896M
+
+9ca5c8e632ce ("x86/kdump: Have crashkernel=X reserve under 4G by
+default")
+
+While this limit does indeed seem unnecessary for x86_64 kernels, it
+still is required to boot to or from i386 kernels. Therefore,
+kexec-tools continues to enforce it when using the i386 bzImage loader.
+
+However, the i386 bzImage loader may also be used to load an x86_64
+kernel from i386 user space to be kexeced by an x86_64 kernel. In this
+case, the limit was incorrectly enforced.
+
+This commit adds an additional check for an x86_64 image kexeced by an
+x86_64 kernel in the i386 loader and bumps the limit to the maximum
+addressable 4G in that case.
+
+Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+---
+ kexec/arch/i386/kexec-bzImage.c | 41 ++++++++++++++++++++++-----------
+ 1 file changed, 28 insertions(+), 13 deletions(-)
+
+diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+index df8985d..7b8e36e 100644
+--- a/kexec/arch/i386/kexec-bzImage.c
++++ b/kexec/arch/i386/kexec-bzImage.c
+@@ -22,6 +22,7 @@
+ #include <string.h>
+ #include <stdlib.h>
+ #include <errno.h>
++#include <limits.h>
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <fcntl.h>
+@@ -114,6 +115,7 @@ int do_bzImage_load(struct kexec_info *info,
+ 	struct entry32_regs regs32;
+ 	struct entry16_regs regs16;
+ 	unsigned int relocatable_kernel = 0;
++	unsigned int kernel64 = 0;
+ 	unsigned long kernel32_load_addr;
+ 	char *modified_cmdline;
+ 	unsigned long cmdline_end;
+@@ -155,6 +157,13 @@ int do_bzImage_load(struct kexec_info *info,
+ 		dbgprintf("bzImage is relocatable\n");
+ 	}
+ 
++	if ((setup_header.protocol_version >= 0x020C) &&
++	    (info->kexec_flags & KEXEC_ARCH_X86_64) &&
++	    (setup_header.xloadflags & 1)) {
++		kernel64 = 1;
++		dbgprintf("loading x86_64 bzImage from an x86_64 kernel\n");
++	}
++
+ 	/* Can't use bzImage for crash dump purposes with real mode entry */
+ 	if((info->kexec_flags & KEXEC_ON_CRASH) && real_mode_entry) {
+ 		fprintf(stderr, "Can't use bzImage for crash dump purposes"
+@@ -197,17 +206,17 @@ int do_bzImage_load(struct kexec_info *info,
+ 	/* Load the trampoline.  This must load at a higher address
+ 	 * than the argument/parameter segment or the kernel will stomp
+ 	 * it's gdt.
+-	 *
+-	 * x86_64 purgatory code has got relocations type R_X86_64_32S
+-	 * that means purgatory got to be loaded within first 2G otherwise
+-	 * overflow takes place while applying relocations.
+ 	 */
+-	if (!real_mode_entry && relocatable_kernel)
++	if (!real_mode_entry && relocatable_kernel) {
++		/* x86_64 purgatory could be anywhere */
++		unsigned long purg_max_addr = kernel64 ? ULONG_MAX : 0x7fffffff;
++
+ 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+-					0x3000, 0x7fffffff, -1, 0);
+-	else
++					0x3000, purg_max_addr, -1, 0);
++	} else {
+ 		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+ 					0x3000, 640*1024, -1, 0);
++	}
+ 	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
+ 
+ 	/* The argument/parameter segment */
+@@ -277,14 +286,20 @@ int do_bzImage_load(struct kexec_info *info,
+ 	if (real_mode->protocol_version >=0x0205 && relocatable_kernel) {
+ 		/* Relocatable bzImage */
+ 		unsigned long kern_align = real_mode->kernel_alignment;
+-		unsigned long kernel32_max_addr = DEFAULT_BZIMAGE_ADDR_MAX;
++		unsigned long kernel_max_addr = DEFAULT_BZIMAGE_ADDR_MAX;
+ 
+-		if (kernel32_max_addr > real_mode->initrd_addr_max)
+-			kernel32_max_addr = real_mode->initrd_addr_max;
++		/*
++		 * x86_64 kernels can be kexeced by an x86_64 kernel
++		 * from any addressable location
++		 */
++		if (kernel64)
++			kernel_max_addr = ULONG_MAX;
++		else if (kernel_max_addr > real_mode->initrd_addr_max)
++			kernel_max_addr = real_mode->initrd_addr_max;
+ 
+ 		kernel32_load_addr = add_buffer(info, kernel + kern16_size,
+ 						size, size, kern_align,
+-						0x100000, kernel32_max_addr,
++						0x100000, kernel_max_addr,
+ 						1);
+ 	}
+ 	else {
+@@ -296,9 +311,9 @@ int do_bzImage_load(struct kexec_info *info,
+ 	dbgprintf("Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
+ 
+ 	/* Tell the kernel what is going on */
+-	setup_linux_bootloader_parameters(info, real_mode, setup_base,
++	setup_linux_bootloader_parameters_high(info, real_mode, setup_base,
+ 		kern16_size_needed, command_line, command_line_len,
+-		initrd, initrd_len);
++		initrd, initrd_len, kernel64); /* put x86_64 initrd high too */
+ 
+ 	if (real_mode_entry && real_mode->protocol_version >= 0x0201) {
+ 		real_mode->loader_flags |= 0x80; /* CAN_USE_HEAP */
+-- 
+2.32.0
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
