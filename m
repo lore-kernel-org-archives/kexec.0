@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-co1nam11on2072.outbound.protection.outlook.com
- ([40.107.220.72] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+Received: from mail-pl1-x663.google.com ([2607:f8b0:4864:20::663])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mDDZi-0023yH-JF
- for kexec@lists.infradead.org; Mon, 09 Aug 2021 22:16:54 +0000
-Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <0d75f283-50b7-460d-3165-185cb955bd70@linux.intel.com>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <e4584e88-b0bf-175d-9494-4e133c03fc07@amd.com>
-Date: Mon, 9 Aug 2021 17:16:43 -0500
-In-Reply-To: <0d75f283-50b7-460d-3165-185cb955bd70@linux.intel.com>
-Content-Language: en-US
-MIME-Version: 1.0
+ id 1mDEdg-00281j-Bz
+ for kexec@lists.infradead.org; Mon, 09 Aug 2021 23:25:04 +0000
+Received: by mail-pl1-x663.google.com with SMTP id q2so18385525plr.11
+ for <kexec@lists.infradead.org>; Mon, 09 Aug 2021 16:24:59 -0700 (PDT)
+Date: Mon, 9 Aug 2021 16:24:55 -0700
+From: Kevin Mitchell <kevmitch@arista.com>
+Subject: Re: [PATCH] x86: allow i386 kexec to load x86_64 bzImage anywhere
+Message-ID: <YRG5RyazxdfIeOzw@chmeee>
+References: <20210807022154.425449-1-kevmitch@arista.com>
+ <20210809021316.GA28879@MiWiFi-R3L-srv>
+Content-Disposition: inline
+In-Reply-To: <20210809021316.GA28879@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,127 +21,186 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, x86@kernel.org, linux-kernel@vger.kernel.org
 
-T24gOC84LzIxIDg6NDEgUE0sIEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToKPiBI
-aSBUb20sCj4gCj4gT24gNy8yNy8yMSAzOjI2IFBNLCBUb20gTGVuZGFja3kgd3JvdGU6Cj4+IFRo
-aXMgcGF0Y2ggc2VyaWVzIHByb3ZpZGVzIGEgZ2VuZXJpYyBoZWxwZXIgZnVuY3Rpb24sIHByb3Rf
-Z3Vlc3RfaGFzKCksCj4+IHRvIHJlcGxhY2UgdGhlIHNtZV9hY3RpdmUoKSwgc2V2X2FjdGl2ZSgp
-LCBzZXZfZXNfYWN0aXZlKCkgYW5kCj4+IG1lbV9lbmNyeXB0X2FjdGl2ZSgpIGZ1bmN0aW9ucy4K
-Pj4KPj4gSXQgaXMgZXhwZWN0ZWQgdGhhdCBhcyBuZXcgcHJvdGVjdGVkIHZpcnR1YWxpemF0aW9u
-IHRlY2hub2xvZ2llcyBhcmUKPj4gYWRkZWQgdG8gdGhlIGtlcm5lbCwgdGhleSBjYW4gYWxsIGJl
-IGNvdmVyZWQgYnkgYSBzaW5nbGUgZnVuY3Rpb24gY2FsbAo+PiBpbnN0ZWFkIG9mIGEgY29sbGVj
-dGlvbiBvZiBzcGVjaWZpYyBmdW5jdGlvbiBjYWxscyBhbGwgY2FsbGVkIGZyb20gdGhlCj4+IHNh
-bWUgbG9jYXRpb25zLgo+Pgo+PiBUaGUgcG93ZXJwYyBhbmQgczM5MCBwYXRjaGVzIGhhdmUgYmVl
-biBjb21waWxlIHRlc3RlZCBvbmx5LiBDYW4gdGhlCj4+IGZvbGtzIGNvcGllZCBvbiB0aGlzIHNl
-cmllcyB2ZXJpZnkgdGhhdCBub3RoaW5nIGJyZWFrcyBmb3IgdGhlbS4KPiAKPiBXaXRoIHRoaXMg
-cGF0Y2ggc2V0LCBzZWxlY3QgQVJDSF9IQVNfUFJPVEVDVEVEX0dVRVNUIGFuZCBzZXQKPiBDT05G
-SUdfQU1EX01FTV9FTkNSWVBUPW4sIGNyZWF0ZXMgZm9sbG93aW5nIGVycm9yLgo+IAo+IGxkOiBh
-cmNoL3g4Ni9tbS9pb3JlbWFwLm86IGluIGZ1bmN0aW9uIGBlYXJseV9tZW1yZW1hcF9pc19zZXR1
-cF9kYXRhJzoKPiBhcmNoL3g4Ni9tbS9pb3JlbWFwLmM6NjcyOiB1bmRlZmluZWQgcmVmZXJlbmNl
-IHRvIGBlYXJseV9tZW1yZW1hcF9kZWNyeXB0ZWQnCj4gCj4gSXQgbG9va3MgbGlrZSBlYXJseV9t
-ZW1yZW1hcF9pc19zZXR1cF9kYXRhKCkgaXMgbm90IHByb3RlY3RlZCB3aXRoCj4gYXBwcm9wcmlh
-dGUgY29uZmlnLgoKT2ssIHRoYW5rcyBmb3IgZmluZGluZyB0aGF0LiBJJ2xsIGZpeCB0aGF0LgoK
-VGhhbmtzLApUb20KCj4gCj4gCj4+Cj4+IENjOiBBbmRpIEtsZWVuIDxha0BsaW51eC5pbnRlbC5j
-b20+Cj4+IENjOiBBbmR5IEx1dG9taXJza2kgPGx1dG9Aa2VybmVsLm9yZz4KPj4gQ2M6IEFyZCBC
-aWVzaGV1dmVsIDxhcmRiQGtlcm5lbC5vcmc+Cj4+IENjOiBCYW9xdWFuIEhlIDxiaGVAcmVkaGF0
-LmNvbT4KPj4gQ2M6IEJlbmphbWluIEhlcnJlbnNjaG1pZHQgPGJlbmhAa2VybmVsLmNyYXNoaW5n
-Lm9yZz4KPj4gQ2M6IEJvcmlzbGF2IFBldGtvdiA8YnBAYWxpZW44LmRlPgo+PiBDYzogQ2hyaXN0
-aWFuIEJvcm50cmFlZ2VyIDxib3JudHJhZWdlckBkZS5pYm0uY29tPgo+PiBDYzogRGFuaWVsIFZl
-dHRlciA8ZGFuaWVsQGZmd2xsLmNoPgo+PiBDYzogRGF2ZSBIYW5zZW4gPGRhdmUuaGFuc2VuQGxp
-bnV4LmludGVsLmNvbT4KPj4gQ2M6IERhdmUgWW91bmcgPGR5b3VuZ0ByZWRoYXQuY29tPgo+PiBD
-YzogRGF2aWQgQWlybGllIDxhaXJsaWVkQGxpbnV4LmllPgo+PiBDYzogSGVpa28gQ2Fyc3RlbnMg
-PGhjYUBsaW51eC5pYm0uY29tPgo+PiBDYzogSW5nbyBNb2xuYXIgPG1pbmdvQHJlZGhhdC5jb20+
-Cj4+IENjOiBKb2VyZyBSb2VkZWwgPGpvcm9AOGJ5dGVzLm9yZz4KPj4gQ2M6IE1hYXJ0ZW4gTGFu
-a2hvcnN0IDxtYWFydGVuLmxhbmtob3JzdEBsaW51eC5pbnRlbC5jb20+Cj4+IENjOiBNYXhpbWUg
-UmlwYXJkIDxtcmlwYXJkQGtlcm5lbC5vcmc+Cj4+IENjOiBNaWNoYWVsIEVsbGVybWFuIDxtcGVA
-ZWxsZXJtYW4uaWQuYXU+Cj4+IENjOiBQYXVsIE1hY2tlcnJhcyA8cGF1bHVzQHNhbWJhLm9yZz4K
-Pj4gQ2M6IFBldGVyIFppamxzdHJhIDxwZXRlcnpAaW5mcmFkZWFkLm9yZz4KPj4gQ2M6IFRob21h
-cyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPgo+PiBDYzogVGhvbWFzIFppbW1lcm1hbm4g
-PHR6aW1tZXJtYW5uQHN1c2UuZGU+Cj4+IENjOiBWYXNpbHkgR29yYmlrIDxnb3JAbGludXguaWJt
-LmNvbT4KPj4gQ2M6IFZNd2FyZSBHcmFwaGljcyA8bGludXgtZ3JhcGhpY3MtbWFpbnRhaW5lckB2
-bXdhcmUuY29tPgo+PiBDYzogV2lsbCBEZWFjb24gPHdpbGxAa2VybmVsLm9yZz4KPj4KPj4gLS0t
-Cj4+Cj4+IFBhdGNoZXMgYmFzZWQgb246Cj4+IMKgwqAKPj4gaHR0cHM6Ly9uYW0xMS5zYWZlbGlu
-a3MucHJvdGVjdGlvbi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGZ2l0Lmtlcm5lbC5v
-cmclMkZwdWIlMkZzY20lMkZsaW51eCUyRmtlcm5lbCUyRmdpdCUyRnRpcCUyRnRpcC5naXQmYW1w
-O2RhdGE9MDQlN0MwMSU3Q3Rob21hcy5sZW5kYWNreSU0MGFtZC5jb20lN0M1NjNiNWUzMGEzMjU0
-ZjY3MzlhYTA4ZDk1YWQ2ZTI0MiU3QzNkZDg5NjFmZTQ4ODRlNjA4ZTExYTgyZDk5NGUxODNkJTdD
-MCU3QzAlN0M2Mzc2NDA3MDEyMjg0MzQ1MTQlN0NVbmtub3duJTdDVFdGcGJHWnNiM2Q4ZXlKV0lq
-b2lNQzR3TGpBd01EQWlMQ0pRSWpvaVYybHVNeklpTENKQlRpSTZJazFoYVd3aUxDSlhWQ0k2TW4w
-JTNEJTdDMTAwMCZhbXA7c2RhdGE9dng5djRFbVlxVlRzSjdLU3I5N2dRYUJXSiUyRnElMkJFOU5P
-elhNaGUzRnA3VDglM0QmYW1wO3Jlc2VydmVkPTAKPj4gbWFzdGVyCj4+IMKgwqAgY29tbWl0IDc5
-ZTkyMDA2MGZhNyAoIk1lcmdlIGJyYW5jaCAnV0lQL2ZpeGVzJyIpCj4+Cj4+IFRvbSBMZW5kYWNr
-eSAoMTEpOgo+PiDCoMKgIG1tOiBJbnRyb2R1Y2UgYSBmdW5jdGlvbiB0byBjaGVjayBmb3Igdmly
-dHVhbGl6YXRpb24gcHJvdGVjdGlvbgo+PiDCoMKgwqDCoCBmZWF0dXJlcwo+PiDCoMKgIHg4Ni9z
-ZXY6IEFkZCBhbiB4ODYgdmVyc2lvbiBvZiBwcm90X2d1ZXN0X2hhcygpCj4+IMKgwqAgcG93ZXJw
-Yy9wc2VyaWVzL3N2bTogQWRkIGEgcG93ZXJwYyB2ZXJzaW9uIG9mIHByb3RfZ3Vlc3RfaGFzKCkK
-Pj4gwqDCoCB4ODYvc21lOiBSZXBsYWNlIG9jY3VycmVuY2VzIG9mIHNtZV9hY3RpdmUoKSB3aXRo
-IHByb3RfZ3Vlc3RfaGFzKCkKPj4gwqDCoCB4ODYvc2V2OiBSZXBsYWNlIG9jY3VycmVuY2VzIG9m
-IHNldl9hY3RpdmUoKSB3aXRoIHByb3RfZ3Vlc3RfaGFzKCkKPj4gwqDCoCB4ODYvc2V2OiBSZXBs
-YWNlIG9jY3VycmVuY2VzIG9mIHNldl9lc19hY3RpdmUoKSB3aXRoIHByb3RfZ3Vlc3RfaGFzKCkK
-Pj4gwqDCoCB0cmVld2lkZTogUmVwbGFjZSB0aGUgdXNlIG9mIG1lbV9lbmNyeXB0X2FjdGl2ZSgp
-IHdpdGgKPj4gwqDCoMKgwqAgcHJvdF9ndWVzdF9oYXMoKQo+PiDCoMKgIG1tOiBSZW1vdmUgdGhl
-IG5vdyB1bnVzZWQgbWVtX2VuY3J5cHRfYWN0aXZlKCkgZnVuY3Rpb24KPj4gwqDCoCB4ODYvc2V2
-OiBSZW1vdmUgdGhlIG5vdyB1bnVzZWQgbWVtX2VuY3J5cHRfYWN0aXZlKCkgZnVuY3Rpb24KPj4g
-wqDCoCBwb3dlcnBjL3BzZXJpZXMvc3ZtOiBSZW1vdmUgdGhlIG5vdyB1bnVzZWQgbWVtX2VuY3J5
-cHRfYWN0aXZlKCkKPj4gwqDCoMKgwqAgZnVuY3Rpb24KPj4gwqDCoCBzMzkwL21tOiBSZW1vdmUg
-dGhlIG5vdyB1bnVzZWQgbWVtX2VuY3J5cHRfYWN0aXZlKCkgZnVuY3Rpb24KPj4KPj4gwqAgYXJj
-aC9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgIHzCoCAzICsrCj4+IMKgIGFyY2gvcG93ZXJwYy9pbmNsdWRlL2FzbS9tZW1f
-ZW5jcnlwdC5owqDCoMKgwqAgfMKgIDUgLS0KPj4gwqAgYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNt
-L3Byb3RlY3RlZF9ndWVzdC5oIHwgMzAgKysrKysrKysrKysKPj4gwqAgYXJjaC9wb3dlcnBjL3Bs
-YXRmb3Jtcy9wc2VyaWVzL0tjb25maWfCoMKgwqDCoCB8wqAgMSArCj4+IMKgIGFyY2gvczM5MC9p
-bmNsdWRlL2FzbS9tZW1fZW5jcnlwdC5owqDCoMKgwqDCoMKgwqAgfMKgIDIgLQo+PiDCoCBhcmNo
-L3g4Ni9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoCB8wqAgMSArCj4+IMKgIGFyY2gveDg2L2luY2x1ZGUvYXNtL2tleGVjLmjCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAyICstCj4+IMKgIGFyY2gveDg2L2luY2x1ZGUvYXNt
-L21lbV9lbmNyeXB0LmjCoMKgwqDCoMKgwqDCoMKgIHwgMTMgKy0tLS0KPj4gwqAgYXJjaC94ODYv
-aW5jbHVkZS9hc20vcHJvdGVjdGVkX2d1ZXN0LmjCoMKgwqDCoCB8IDI3ICsrKysrKysrKysKPj4g
-wqAgYXJjaC94ODYva2VybmVsL2NyYXNoX2R1bXBfNjQuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqAg
-fMKgIDQgKy0KPj4gwqAgYXJjaC94ODYva2VybmVsL2hlYWQ2NC5jwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA0ICstCj4+IMKgIGFyY2gveDg2L2tlcm5lbC9rdm0uY8Kg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMyArLQo+PiDCoCBh
-cmNoL3g4Ni9rZXJuZWwva3ZtY2xvY2suY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-IHzCoCA0ICstCj4+IMKgIGFyY2gveDg2L2tlcm5lbC9tYWNoaW5lX2tleGVjXzY0LmPCoMKgwqDC
-oMKgwqDCoMKgIHwgMTkgKysrLS0tLQo+PiDCoCBhcmNoL3g4Ni9rZXJuZWwvcGNpLXN3aW90bGIu
-Y8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCA5ICsrLS0KPj4gwqAgYXJjaC94ODYva2Vy
-bmVsL3JlbG9jYXRlX2tlcm5lbF82NC5TwqDCoMKgwqDCoMKgIHzCoCAyICstCj4+IMKgIGFyY2gv
-eDg2L2tlcm5lbC9zZXYuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oCB8wqAgNiArLS0KPj4gwqAgYXJjaC94ODYva3ZtL3N2bS9zdm0uY8KgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDMgKy0KPj4gwqAgYXJjaC94ODYvbW0vaW9yZW1h
-cC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMTYgKysrLS0t
-Cj4+IMKgIGFyY2gveDg2L21tL21lbV9lbmNyeXB0LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgIHwgNjAgKysrKysrKysrKysrKysrLS0tLS0tLQo+PiDCoCBhcmNoL3g4Ni9tbS9t
-ZW1fZW5jcnlwdF9pZGVudGl0eS5jwqDCoMKgwqDCoMKgwqDCoCB8wqAgMyArLQo+PiDCoCBhcmNo
-L3g4Ni9tbS9wYXQvc2V0X21lbW9yeS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAg
-MyArLQo+PiDCoCBhcmNoL3g4Ni9wbGF0Zm9ybS9lZmkvZWZpXzY0LmPCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqAgfMKgIDkgKystLQo+PiDCoCBhcmNoL3g4Ni9yZWFsbW9kZS9pbml0LmPCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDggKy0tCj4+IMKgIGRyaXZlcnMvZ3B1
-L2RybS9hbWQvYW1kZ3B1L2FtZGdwdV9kcnYuY8KgwqDCoCB8wqAgNCArLQo+PiDCoCBkcml2ZXJz
-L2dwdS9kcm0vZHJtX2NhY2hlLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDQg
-Ky0KPj4gwqAgZHJpdmVycy9ncHUvZHJtL3Ztd2dmeC92bXdnZnhfZHJ2LmPCoMKgwqDCoMKgwqDC
-oCB8wqAgNCArLQo+PiDCoCBkcml2ZXJzL2dwdS9kcm0vdm13Z2Z4L3Ztd2dmeF9tc2cuY8KgwqDC
-oMKgwqDCoMKgIHzCoCA2ICstLQo+PiDCoCBkcml2ZXJzL2lvbW11L2FtZC9pbml0LmPCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAgfMKgIDcgKy0tCj4+IMKgIGRyaXZlcnMvaW9t
-bXUvYW1kL2lvbW11LmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoCAzICst
-Cj4+IMKgIGRyaXZlcnMvaW9tbXUvYW1kL2lvbW11X3YyLmPCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgIHzCoCAzICstCj4+IMKgIGRyaXZlcnMvaW9tbXUvaW9tbXUuY8KgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8wqAgMyArLQo+PiDCoCBmcy9wcm9jL3ZtY29y
-ZS5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCB8
-wqAgNiArLS0KPj4gwqAgaW5jbHVkZS9saW51eC9tZW1fZW5jcnlwdC5owqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgIHzCoCA0IC0tCj4+IMKgIGluY2x1ZGUvbGludXgvcHJvdGVjdGVkX2d1
-ZXN0LmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHwgMzcgKysrKysrKysrKysrKwo+PiDCoCBrZXJu
-ZWwvZG1hL3N3aW90bGIuY8KgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgIHzCoCA0ICstCj4+IMKgIDM2IGZpbGVzIGNoYW5nZWQsIDIxOCBpbnNlcnRpb25zKCspLCAx
-MDQgZGVsZXRpb25zKC0pCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL3Bvd2VycGMvaW5j
-bHVkZS9hc20vcHJvdGVjdGVkX2d1ZXN0LmgKPj4gwqAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gv
-eDg2L2luY2x1ZGUvYXNtL3Byb3RlY3RlZF9ndWVzdC5oCj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0
-NCBpbmNsdWRlL2xpbnV4L3Byb3RlY3RlZF9ndWVzdC5oCj4+Cj4gCgpfX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2tleGVjCg==
+On Mon, Aug 09, 2021 at 10:13:16AM +0800, Baoquan He wrote:
+> On 08/06/21 at 07:21pm, Kevin Mitchell wrote:
+> > In linux-5.2, the following commit allows the kdump kernel to be loaded
+> > at a higher address than 896M
+> > 
+> > 9ca5c8e632ce ("x86/kdump: Have crashkernel=X reserve under 4G by
+> > default")
+> > 
+> > While this limit does indeed seem unnecessary for x86_64 kernels, it
+> > still is required to boot to or from i386 kernels. Therefore,
+> > kexec-tools continues to enforce it when using the i386 bzImage loader.
+> > 
+> > However, the i386 bzImage loader may also be used to load an x86_64
+> > kernel from i386 user space to be kexeced by an x86_64 kernel. In this
+> > case, the limit was incorrectly enforced.
+> 
+> Are you doing kexec/kdump switching to x86_64 kernel on a i386 system?
+
+We run an x86_64 kernel, but our initrd userspace in which we load the x86_64
+kdump kernel is i386 to conserve space as many of our smaller devices are memory
+constrained. We also need to fit this initrd into our coreboot SPI flash image
+which is limited to a few megabytes.
+
+> Could you tell more about your testing or product environment so that we
+> know why we need to do that?
+
+Previous to 9ca5c8e632ce, this worked without issue because the crashkernel area
+was always reserved in a location that satisfied the limits defined in
+kexec-bzImage.c even on an x86_64 kernel. Once we switched to
+linux-5.10, we started seeing
+
+Aboot# kexec --load-panic --initrd=initrd-i386-kdump
+    --command-line="$crash_cmd_line" linux-x86_64-kdump
+Could not find a free area of memory of 0x8000 bytes...
+locate_hole failed
+
+which is the result of hitting the kexec-bzImage.c limits. However, these appear
+not to apply in the case of x86_64 kernel loaded from an x86_64 kernel even when
+using an i386 kexec.
+
+With this patch, I am able to load the kdump kernel into the new default
+crashkernel location assigned by the linux-5.10 kernel (e.g., 1968MB, 3264MB)
+and have it successfully kexeced when triggering a panic. This was tested on all
+our current CPU platforms including both AMD (eKabini, Steppe Eagle, Crowned
+Eagle, Merlin Falcon) and Intel (SandyBridge, Broadwell-DE) CPUs variously
+running on between 4Gb - 64 Gb of RAM.
+
+Conversely, I tried unconditionally removing the limits in kexec-bzImage.c, but
+found that if either or both of the running or kdump kernels were i386 and the
+crashkernel reservation was above the 896M limit (I had to force this as the
+default location selected by the kernel is below this), the kexec would hang
+indefinitely. Therefore, I have kept those limits in place when either kernel is
+i386.
+
+> AFAIK, we rarely kexec/kdump switch to
+> x86_64 kenrel from a i386 kernel.
+> 
+> Thanks
+> Baoquan
+> 
+> > 
+> > This commit adds an additional check for an x86_64 image kexeced by an
+> > x86_64 kernel in the i386 loader and bumps the limit to the maximum
+> > addressable 4G in that case.
+> > 
+> > Signed-off-by: Kevin Mitchell <kevmitch@arista.com>
+> > ---
+> >  kexec/arch/i386/kexec-bzImage.c | 41 ++++++++++++++++++++++-----------
+> >  1 file changed, 28 insertions(+), 13 deletions(-)
+> > 
+> > diff --git a/kexec/arch/i386/kexec-bzImage.c b/kexec/arch/i386/kexec-bzImage.c
+> > index df8985d..7b8e36e 100644
+> > --- a/kexec/arch/i386/kexec-bzImage.c
+> > +++ b/kexec/arch/i386/kexec-bzImage.c
+> > @@ -22,6 +22,7 @@
+> >  #include <string.h>
+> >  #include <stdlib.h>
+> >  #include <errno.h>
+> > +#include <limits.h>
+> >  #include <sys/types.h>
+> >  #include <sys/stat.h>
+> >  #include <fcntl.h>
+> > @@ -114,6 +115,7 @@ int do_bzImage_load(struct kexec_info *info,
+> >  	struct entry32_regs regs32;
+> >  	struct entry16_regs regs16;
+> >  	unsigned int relocatable_kernel = 0;
+> > +	unsigned int kernel64 = 0;
+> >  	unsigned long kernel32_load_addr;
+> >  	char *modified_cmdline;
+> >  	unsigned long cmdline_end;
+> > @@ -155,6 +157,13 @@ int do_bzImage_load(struct kexec_info *info,
+> >  		dbgprintf("bzImage is relocatable\n");
+> >  	}
+> >  
+> > +	if ((setup_header.protocol_version >= 0x020C) &&
+> > +	    (info->kexec_flags & KEXEC_ARCH_X86_64) &&
+> > +	    (setup_header.xloadflags & 1)) {
+> > +		kernel64 = 1;
+> > +		dbgprintf("loading x86_64 bzImage from an x86_64 kernel\n");
+> > +	}
+> > +
+> >  	/* Can't use bzImage for crash dump purposes with real mode entry */
+> >  	if((info->kexec_flags & KEXEC_ON_CRASH) && real_mode_entry) {
+> >  		fprintf(stderr, "Can't use bzImage for crash dump purposes"
+> > @@ -197,17 +206,17 @@ int do_bzImage_load(struct kexec_info *info,
+> >  	/* Load the trampoline.  This must load at a higher address
+> >  	 * than the argument/parameter segment or the kernel will stomp
+> >  	 * it's gdt.
+> > -	 *
+> > -	 * x86_64 purgatory code has got relocations type R_X86_64_32S
+> > -	 * that means purgatory got to be loaded within first 2G otherwise
+> > -	 * overflow takes place while applying relocations.
+> >  	 */
+> > -	if (!real_mode_entry && relocatable_kernel)
+> > +	if (!real_mode_entry && relocatable_kernel) {
+> > +		/* x86_64 purgatory could be anywhere */
+> > +		unsigned long purg_max_addr = kernel64 ? ULONG_MAX : 0x7fffffff;
+> > +
+> >  		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+> > -					0x3000, 0x7fffffff, -1, 0);
+> > -	else
+> > +					0x3000, purg_max_addr, -1, 0);
+> > +	} else {
+> >  		elf_rel_build_load(info, &info->rhdr, purgatory, purgatory_size,
+> >  					0x3000, 640*1024, -1, 0);
+> > +	}
+> >  	dbgprintf("Loaded purgatory at addr 0x%lx\n", info->rhdr.rel_addr);
+> >  
+> >  	/* The argument/parameter segment */
+> > @@ -277,14 +286,20 @@ int do_bzImage_load(struct kexec_info *info,
+> >  	if (real_mode->protocol_version >=0x0205 && relocatable_kernel) {
+> >  		/* Relocatable bzImage */
+> >  		unsigned long kern_align = real_mode->kernel_alignment;
+> > -		unsigned long kernel32_max_addr = DEFAULT_BZIMAGE_ADDR_MAX;
+> > +		unsigned long kernel_max_addr = DEFAULT_BZIMAGE_ADDR_MAX;
+> >  
+> > -		if (kernel32_max_addr > real_mode->initrd_addr_max)
+> > -			kernel32_max_addr = real_mode->initrd_addr_max;
+> > +		/*
+> > +		 * x86_64 kernels can be kexeced by an x86_64 kernel
+> > +		 * from any addressable location
+> > +		 */
+> > +		if (kernel64)
+> > +			kernel_max_addr = ULONG_MAX;
+> > +		else if (kernel_max_addr > real_mode->initrd_addr_max)
+> > +			kernel_max_addr = real_mode->initrd_addr_max;
+> >  
+> >  		kernel32_load_addr = add_buffer(info, kernel + kern16_size,
+> >  						size, size, kern_align,
+> > -						0x100000, kernel32_max_addr,
+> > +						0x100000, kernel_max_addr,
+> >  						1);
+> >  	}
+> >  	else {
+> > @@ -296,9 +311,9 @@ int do_bzImage_load(struct kexec_info *info,
+> >  	dbgprintf("Loaded 32bit kernel at 0x%lx\n", kernel32_load_addr);
+> >  
+> >  	/* Tell the kernel what is going on */
+> > -	setup_linux_bootloader_parameters(info, real_mode, setup_base,
+> > +	setup_linux_bootloader_parameters_high(info, real_mode, setup_base,
+> >  		kern16_size_needed, command_line, command_line_len,
+> > -		initrd, initrd_len);
+> > +		initrd, initrd_len, kernel64); /* put x86_64 initrd high too */
+> >  
+> >  	if (real_mode_entry && real_mode->protocol_version >= 0x0201) {
+> >  		real_mode->loader_flags |= 0x80; /* CAN_USE_HEAP */
+> > -- 
+> > 2.32.0
+> > 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
