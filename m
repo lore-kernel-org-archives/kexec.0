@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-dm6nam08on2052.outbound.protection.outlook.com
- ([40.107.102.52] helo=NAM04-DM6-obe.outbound.protection.outlook.com)
+Received: from mga02.intel.com ([134.134.136.20])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mC0Ov-00ChJp-Ek
- for kexec@lists.infradead.org; Fri, 06 Aug 2021 14:00:43 +0000
-From: Zi Yan <ziy@nvidia.com>
-Subject: Re: [RFC PATCH 13/15] mm: convert MAX_ORDER sized static arrays to
- dynamic ones.
-Date: Fri, 06 Aug 2021 10:00:29 -0400
-Message-ID: <81C3245C-6A47-4C1B-B392-CC08FBF15712@nvidia.com>
-In-Reply-To: <bdec12bd-9188-9f3e-c442-aa33e25303a6@amd.com>
-References: <20210805190253.2795604-1-zi.yan@sent.com>
- <20210805190253.2795604-14-zi.yan@sent.com>
- <586dda97-dc64-ade2-6736-a531e225acbc@amd.com>
- <0D3441BA-2A11-4BCA-BFD5-CAB8EB915B8F@nvidia.com>
- <bdec12bd-9188-9f3e-c442-aa33e25303a6@amd.com>
+ id 1mCuIm-00Gtg0-Fo
+ for kexec@lists.infradead.org; Mon, 09 Aug 2021 01:42:06 +0000
+Subject: Re: [PATCH 00/11] Implement generic prot_guest_has() helper function
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+From: "Kuppuswamy, Sathyanarayanan"
+ <sathyanarayanan.kuppuswamy@linux.intel.com>
+Message-ID: <0d75f283-50b7-460d-3165-185cb955bd70@linux.intel.com>
+Date: Sun, 8 Aug 2021 18:41:54 -0700
 MIME-Version: 1.0
+In-Reply-To: <cover.1627424773.git.thomas.lendacky@amd.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,148 +20,133 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============2427697588167177712=="
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christian =?utf-8?q?K=C3=B6nig?= <christian.koenig@amd.com>
-Cc: David Hildenbrand <david@redhat.com>, linux-mm@kvack.org, Matthew Wilcox <willy@infradead.org>, Vlastimil Babka <vbabka@suse.cz>, "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>, Mike Kravetz <mike.kravetz@oracle.com>, Michal Hocko <mhocko@kernel.org>, John Hubbard <jhubbard@nvidia.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>, kexec@lists.infradead.org, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
 
---===============2427697588167177712==
-Content-Type: multipart/signed;
- boundary="=_MailMate_2E952574-2F4B-48D5-8D2F-9B32358DA400_=";
- micalg=pgp-sha512; protocol="application/pgp-signature"
+Hi Tom,
 
---=_MailMate_2E952574-2F4B-48D5-8D2F-9B32358DA400_=
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> This patch series provides a generic helper function, prot_guest_has(),
+> to replace the sme_active(), sev_active(), sev_es_active() and
+> mem_encrypt_active() functions.
+> 
+> It is expected that as new protected virtualization technologies are
+> added to the kernel, they can all be covered by a single function call
+> instead of a collection of specific function calls all called from the
+> same locations.
+> 
+> The powerpc and s390 patches have been compile tested only. Can the
+> folks copied on this series verify that nothing breaks for them.
 
-On 6 Aug 2021, at 5:37, Christian K=C3=B6nig wrote:
+With this patch set, select ARCH_HAS_PROTECTED_GUEST and set
+CONFIG_AMD_MEM_ENCRYPT=n, creates following error.
 
-> Am 05.08.21 um 21:58 schrieb Zi Yan:
->> On 5 Aug 2021, at 15:16, Christian K=C3=B6nig wrote:
->>
->>> Am 05.08.21 um 21:02 schrieb Zi Yan:
->>>> From: Zi Yan <ziy@nvidia.com>
->>>>
->>>> This prepares for the upcoming changes to make MAX_ORDER a boot time=
+ld: arch/x86/mm/ioremap.o: in function `early_memremap_is_setup_data':
+arch/x86/mm/ioremap.c:672: undefined reference to `early_memremap_decrypted'
 
->>>> parameter instead of compilation time constant. All static arrays wi=
-th
->>>> MAX_ORDER size are converted to pointers and their memory is allocat=
-ed
->>>> at runtime.
->>> Well in general I strongly suggest to not use the patter kmalloc(size=
-of(some struct) * MAX_ORDER,...) instead use kmalloc_array, kcalloc etc..=
-
->>>
->>> Then when a array is embedded at the end of a structure you can use a=
- trailing array and the struct_size() macro to determine the allocation s=
-ize.
->> Sure. Will fix it.
->>
->>> Additional to that separating the patch into changes for TTM to make =
-the maximum allocation order independent from MAX_ORDER would be rather g=
-ood to have I think.
->> Can you elaborate a little bit more on =E2=80=9Cmake the maximum alloc=
-ation order independent from MAX_ORDER=E2=80=9D?
->
-> My idea was that you have a single patch to give the maximum order as p=
-arameter to the TTM pool.
-
-Got it. No problem.
->
->>  From what I understand of ttm_pool_alloc(), it tries to get num_pages=
- pages by allocating as large pages as possible, starting from MAX_ORDER.=
- What is the rationale behind this algorithm? Why not just call alloc_pag=
-e(order=3D0) num_pages times?
->
-> What we do here is essentially transparent huge pages for GPUs.
->
-> In opposite to CPU which can usually only use fixed sizes like 4KiB, 2M=
-iB, 1GiB at least AMD GPUs can use any power of two.
-
-FYI, Matthew Wilcox=E2=80=99s memory folio patchset adds support for arbi=
-trary THP sizes[1]. You might want to check it out. :)
-
->
-> So it makes sense to allocate big pages as much as possible and only fa=
-llback to 4KiB pages when necessary.
->
-> Down side is that we potentially exhaust larger orders for other use ca=
-ses.
->
->> Is it mean to reduce the number of calls to alloc_page?
->
-> That is a nice to have side effect, but the performance improvement for=
- the TLB is the main reason here.
->
->> The allocated pages do not need to get as high as MAX_ORDER, is that t=
-he case?
->
-> Actually we would really like to have pages as large as 1GiB for best T=
-LB utilization :)
->
->> If yes, I probably can keep ttm pool as static arrays with length of M=
-IN_MAX_ORDER, which I introduce in Patch 14 as the lower bound of boot ti=
-me parameter MAX_ORDER. Let me know your thoughts.
->
-> Well you could do something like MAX_MAX_ORDER with a value of at least=
- 19 (1GiB with 4KiB pages IIRC). And then limit to the real available max=
-_order when you make that a run time option.
->
-> Since the array elements consists only of a linked list and a few extra=
- parameters / pointers we probably won't need more than a page or two for=
- those.
-
-Thanks for you explanation. Now I understand that ttm_pool does want page=
-s as large as possible for performance reasons. I will keep the existing =
-code, so that ttm_pool can get the largest pages from buddy allocator. I =
-will separate the changes to TTM to a single patch like you suggested.
+It looks like early_memremap_is_setup_data() is not protected with
+appropriate config.
 
 
-[1] https://lore.kernel.org/linux-mm/20210715033704.692967-1-willy@infrad=
-ead.org
+> 
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
+> Cc: Will Deacon <will@kernel.org>
+> 
+> ---
+> 
+> Patches based on:
+>    https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
+>    commit 79e920060fa7 ("Merge branch 'WIP/fixes'")
+> 
+> Tom Lendacky (11):
+>    mm: Introduce a function to check for virtualization protection
+>      features
+>    x86/sev: Add an x86 version of prot_guest_has()
+>    powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
+>    x86/sme: Replace occurrences of sme_active() with prot_guest_has()
+>    x86/sev: Replace occurrences of sev_active() with prot_guest_has()
+>    x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
+>    treewide: Replace the use of mem_encrypt_active() with
+>      prot_guest_has()
+>    mm: Remove the now unused mem_encrypt_active() function
+>    x86/sev: Remove the now unused mem_encrypt_active() function
+>    powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
+>      function
+>    s390/mm: Remove the now unused mem_encrypt_active() function
+> 
+>   arch/Kconfig                               |  3 ++
+>   arch/powerpc/include/asm/mem_encrypt.h     |  5 --
+>   arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
+>   arch/powerpc/platforms/pseries/Kconfig     |  1 +
+>   arch/s390/include/asm/mem_encrypt.h        |  2 -
+>   arch/x86/Kconfig                           |  1 +
+>   arch/x86/include/asm/kexec.h               |  2 +-
+>   arch/x86/include/asm/mem_encrypt.h         | 13 +----
+>   arch/x86/include/asm/protected_guest.h     | 27 ++++++++++
+>   arch/x86/kernel/crash_dump_64.c            |  4 +-
+>   arch/x86/kernel/head64.c                   |  4 +-
+>   arch/x86/kernel/kvm.c                      |  3 +-
+>   arch/x86/kernel/kvmclock.c                 |  4 +-
+>   arch/x86/kernel/machine_kexec_64.c         | 19 +++----
+>   arch/x86/kernel/pci-swiotlb.c              |  9 ++--
+>   arch/x86/kernel/relocate_kernel_64.S       |  2 +-
+>   arch/x86/kernel/sev.c                      |  6 +--
+>   arch/x86/kvm/svm/svm.c                     |  3 +-
+>   arch/x86/mm/ioremap.c                      | 16 +++---
+>   arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
+>   arch/x86/mm/mem_encrypt_identity.c         |  3 +-
+>   arch/x86/mm/pat/set_memory.c               |  3 +-
+>   arch/x86/platform/efi/efi_64.c             |  9 ++--
+>   arch/x86/realmode/init.c                   |  8 +--
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
+>   drivers/gpu/drm/drm_cache.c                |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
+>   drivers/iommu/amd/init.c                   |  7 +--
+>   drivers/iommu/amd/iommu.c                  |  3 +-
+>   drivers/iommu/amd/iommu_v2.c               |  3 +-
+>   drivers/iommu/iommu.c                      |  3 +-
+>   fs/proc/vmcore.c                           |  6 +--
+>   include/linux/mem_encrypt.h                |  4 --
+>   include/linux/protected_guest.h            | 37 +++++++++++++
+>   kernel/dma/swiotlb.c                       |  4 +-
+>   36 files changed, 218 insertions(+), 104 deletions(-)
+>   create mode 100644 arch/powerpc/include/asm/protected_guest.h
+>   create mode 100644 arch/x86/include/asm/protected_guest.h
+>   create mode 100644 include/linux/protected_guest.h
+> 
 
-=E2=80=94
-Best Regards,
-Yan, Zi
-
---=_MailMate_2E952574-2F4B-48D5-8D2F-9B32358DA400_=
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQJDBAEBCgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAmENQH0PHHppeUBudmlk
-aWEuY29tAAoJEJ2yUfNrYfqKllQQAK5Nu3fHcUsKBNa9pN7Da8p7vJYw/Dx6wKn4
-ZA15nANRcXpPUfNnT/8EweDsgKv/PCTRpJcmqvbOjV9NjusmgB4un3KA0jqVnP7E
-5YVHfa2b+WgIThYOrsD/hkspLqxjPIqfwcYAtPNNplOtjfvneQcbKaTM4YhhrIVI
-dH+KyXeGt3HqGUk8Xv/Rhr2p3bOkJSpXF7c3k3clohjgTAAT3pXyDC4rcCMBUwvn
-D06JKXaabr8yRk4nIAQtYyUVAVS2b6nts3NdSUlC+Rr6+HyHJB9NpX2OgTq8AKRg
-8I8LFAbwUjVW1rr1GD5dPvghmeZgqziknh/W9PKbcC7ydA11ofqwib6vy9WlQr5r
-qvN/zWjWyTRzI9+owG+sa0iXr5ji2CqNpUTm3glqLyDmJW7orlyUjjVlHdLKqDBL
-PhK8IMjnpcjlFjyv5dKE5GgMe3kffJG1IJgCtCse58IJTKF5vK3liqq0HK8UIHD3
-UnGKTL45O7rCuLP7CEFmzS6EL9vtTdEq3n6/sllLZGIQQ3rRwiwkjKXykLL7f831
-8Ptm9q/Jzy0zn1rdYeMppoO9cBJq5QTpNlu+pasXwHJhVqGBRY3jk7x7q3p/XQrB
-aLcGMG0QaN90F/UA2yl/0dHRmCoV3eaSNrXz82xjDw+vEPQ4BEQXh4GREEUcP+Zx
-rZTvuv95
-=R4Zs
------END PGP SIGNATURE-----
-
---=_MailMate_2E952574-2F4B-48D5-8D2F-9B32358DA400_=--
-
-
---===============2427697588167177712==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+-- 
+Sathyanarayanan Kuppuswamy
+Linux Kernel Developer
 
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
-
---===============2427697588167177712==--
-
