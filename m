@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 11 Aug 2021 06:52:57 +0100
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH RFC 0/2] dma-pool: allow user to disable atomic pool
-Message-ID: <YRNluS1qt1YL2r7p@infradead.org>
-References: <20210624052010.5676-1-bhe@redhat.com>
- <YNQ258KHlzlajqo/@infradead.org>
- <20210624092930.GA802261@MiWiFi-R3L-srv>
- <8b3d4e02-6e94-ad59-a480-fed8e55c009a@arm.com>
- <20210805065410.GA2051@MiWiFi-R3L-srv>
- <5df93c4e-ffdd-88c5-db4a-1a09826d047a@amd.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <5df93c4e-ffdd-88c5-db4a-1a09826d047a@amd.com>
+References: <cover.1626266516.git.geert+renesas@glider.be>
+ <04c4d231fb03a3810d72a45c8a5bc2272c5975f3.1626266516.git.geert+renesas@glider.be>
+ <20210714135101.GB2441138@robh.at.kernel.org>
+In-Reply-To: <20210714135101.GB2441138@robh.at.kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Aug 2021 10:11:34 +0200
+Message-ID: <CAMuHMdVRPpHudj2svs_TYP9=GYkWFtJrG_+BHA7A+TVPdQ92aQ@mail.gmail.com>
+Subject: Re: [PATCH v4 02/10] memblock: Add variables for usable memory
+ limitation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,19 +21,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Baoquan He <bhe@redhat.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@infradead.org>, brijesh.singh@amd.com, x86@kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, linux-mm@kvack.org, iommu@lists.linux-foundation.org, rientjes@google.com
+To: Rob Herring <robh@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux MM <linux-mm@kvack.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Tue, Aug 10, 2021 at 03:52:25PM -0500, Tom Lendacky via iommu wrote:
-> I think the atomic pool is used by the NVMe driver. My understanding is
-> that driver will do a dma_alloc_coherent() from interrupt context, so it
-> needs to use GFP_ATOMIC. The pool was created because dma_alloc_coherent()
-> would perform a set_memory_decrypted() call, which can sleep. The pool
-> eliminates that issue (David can correct me if I got that wrong).
+On Wed, Jul 14, 2021 at 3:51 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Jul 14, 2021 at 02:50:12PM +0200, Geert Uytterhoeven wrote:
+> > Add two global variables (cap_mem_addr and cap_mem_size) for storing a
+> > base address and size, describing a limited region in which memory may
+> > be considered available for use by the kernel.  If enabled, memory
+> > outside of this range is not available for use.
+> >
+> > These variables can by filled by firmware-specific code, and used in
+> > calls to memblock_cap_memory_range() by architecture-specific code.
+> > An example user is the parser of the "linux,usable-memory-range"
+> > property in the DT "/chosen" node.
+> >
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> > ---
+> > This is similar to how the initial ramdisk (phys_initrd_{start,size})
+> > and ELF core headers (elfcorehdr_{addr,size})) are handled.
+> >
+> > Does there exist a suitable place in the common memblock code to call
+> > "memblock_cap_memory_range(cap_mem_addr, cap_mem_size)", or does this
+> > have to be done in architecture-specific code?
+>
+> Can't you just call it from early_init_dt_scan_usablemem? If the
+> property is present, you want to call it. If the property is not
+> present, nothing happens.
 
-Not just the NVMe driver.  We have plenty of drivers doing that, just
-do a quick grep for dma_alloc_* dma_poll_alloc, dma_pool_zalloc with
-GFP_ATOMIC (and that won't even find multi-line strings).
+Seems to work fine when called from early_init_dt_scan_nodes().
+Hence v5 will no longer need to touch memblock.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
