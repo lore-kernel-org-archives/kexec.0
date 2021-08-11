@@ -1,15 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from baptiste.telenet-ops.be ([2a02:1800:120:4::f00:13])
+Received: from andre.telenet-ops.be ([2a02:1800:120:4::f00:15])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mDjxY-0067XJ-RR
- for kexec@lists.infradead.org; Wed, 11 Aug 2021 08:51:45 +0000
+ id 1mDjxY-0067WR-1C
+ for kexec@lists.infradead.org; Wed, 11 Aug 2021 08:51:44 +0000
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 5/9] of: fdt: Use IS_ENABLED(CONFIG_BLK_DEV_INITRD) instead
- of #ifdef
-Date: Wed, 11 Aug 2021 10:51:03 +0200
-Message-Id: <604c13747f09d800da6a7c12f661e1ec146f1dfd.1628670468.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1628670468.git.geert+renesas@glider.be>
-References: <cover.1628670468.git.geert+renesas@glider.be>
+Subject: [PATCH v5 0/9] Add generic support for kdump DT properties
+Date: Wed, 11 Aug 2021 10:50:58 +0200
+Message-Id: <cover.1628670468.git.geert+renesas@glider.be>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -26,58 +23,101 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>
 Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-Replace the conditional compilation using "#ifdef CONFIG_BLK_DEV_INITRD"
-by a check for "IS_ENABLED(CONFIG_BLK_DEV_INITRD)", to increase compile
-coverage and to simplify the code.
+	Hi all,
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-v5:
-  - No changes,
+This patch series adds generic support for parsing DT properties related
+to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
+the "/chosen" node), makes use of it on arm32, and performs a few
+cleanups.  It is an evolution of the combination of [1] and [2].
 
-v4:
-  - New.
----
- drivers/of/fdt.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+The series consists of 6 parts:
+  1. Patch 1 prepares architecture-specific code (needed for MIPS only)
+     to avoid duplicating elf core header reservation later.
+  2. Patch 2 prepares the visibility of variables used to hold
+     information retrieved from the DT properties.
+  3. Patches 3-5 add support to the FDT core for handling the
+     properties.
+     This can co-exist safely with architecture-specific handling, until
+     the latter has been removed.
+  4. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
+     riscv.
+  5. Patches 7-8 convert arm64 to use the generic handling instead of
+     its own implementation.
+  6. Patch 9 adds support for kdump properties to arm32.
+     The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add
+     DT properties to crash dump kernel's DTB"[3], which is still valid.
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index bc041d8141e86e62..0142b9334559baec 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -880,7 +880,6 @@ const void * __init of_flat_dt_match_machine(const void *default_match,
- 	return best_data;
- }
- 
--#ifdef CONFIG_BLK_DEV_INITRD
- static void __early_init_dt_declare_initrd(unsigned long start,
- 					   unsigned long end)
- {
-@@ -906,6 +905,9 @@ static void __init early_init_dt_check_for_initrd(unsigned long node)
- 	int len;
- 	const __be32 *prop;
- 
-+	if (!IS_ENABLED(CONFIG_BLK_DEV_INITRD))
-+		return;
-+
- 	pr_debug("Looking for initrd properties... ");
- 
- 	prop = of_get_flat_dt_prop(node, "linux,initrd-start", &len);
-@@ -924,11 +926,6 @@ static void __init early_init_dt_check_for_initrd(unsigned long node)
- 
- 	pr_debug("initrd_start=0x%llx  initrd_end=0x%llx\n", start, end);
- }
--#else
--static inline void early_init_dt_check_for_initrd(unsigned long node)
--{
--}
--#endif /* CONFIG_BLK_DEV_INITRD */
- 
- /**
-  * early_init_dt_check_for_elfcorehdr - Decode elfcorehdr location from flat
+Changes compared to v4[4]:
+  - New patch "[PATCH v5 1/9] MIPS: Avoid future duplicate elf core
+    header reservation",
+  - Drop "memblock: Add variables for usable memory limitation", as this
+    is now handled in FDT core code,
+  - Make ELFCORE_ADDR_{MAX,ERR} visible, too,
+  - Handle the actual elf core header reservation and memory capping in
+    FDT core code,
+  - Add Reviewed-by, Acked-by,
+  - Remove all architecture-specific handling on arm64,
+  - Drop "arm64: kdump: Use IS_ENABLED(CONFIG_CRASH_DUMP) instead of
+    #ifdef", as the affected code is gone,
+  - Remove the addition of "linux,elfcorehdr" and
+    "linux,usable-memory-range" handling to arch/arm/mm/init.c.
+
+Changes compared to older versions:
+  - Make elfcorehdr_{addr,size} always visible,
+  - Add variables for usable memory limitation,
+  - Use IS_ENABLED() instead of #ifdef (incl. initrd and arm64),
+  - Clarify what architecture-specific code is still responsible for,
+  - Add generic support for parsing linux,usable-memory-range,
+  - Remove custom linux,usable-memory-range parsing on arm64,
+  - Use generic handling on ARM.
+  
+This has been tested with kexec/kdump on arm32 and arm64, and
+boot-tested on riscv64 and DT-less MIPS.
+
+Thanks!
+
+[1] "[PATCH v3] ARM: Parse kdump DT properties"
+    https://lore.kernel.org/r/20210317113130.2554368-1-geert+renesas@glider.be/
+[2] "[PATCH 0/3] Add generic-support for linux,elfcorehdr and fix riscv"
+    https://lore.kernel.org/r/cover.1623780059.git.geert+renesas@glider.be/
+[3] "[PATCH] arm: kdump: Add DT properties to crash dump kernel's DTB"
+    https://lore.kernel.org/r/20200902154129.6358-1-geert+renesas@glider.be/
+[4] "[PATCH v4 00/10] Add generic support for kdump DT properties"
+    https://lore.kernel.org/r/cover.1626266516.git.geert+renesas@glider.be
+
+Geert Uytterhoeven (9):
+  MIPS: Avoid future duplicate elf core header reservation
+  crash_dump: Make elfcorehdr address/size symbols always visible
+  of: fdt: Add generic support for handling elf core headers property
+  of: fdt: Add generic support for handling usable memory range property
+  of: fdt: Use IS_ENABLED(CONFIG_BLK_DEV_INITRD) instead of #ifdef
+  riscv: Remove non-standard linux,elfcorehdr handling
+  arm64: kdump: Remove custom linux,elfcorehdr handling
+  arm64: kdump: Remove custom linux,usable-memory-range handling
+  ARM: uncompress: Parse "linux,usable-memory-range" DT property
+
+ Documentation/devicetree/bindings/chosen.txt  | 12 +--
+ .../arm/boot/compressed/fdt_check_mem_start.c | 48 ++++++++--
+ arch/arm64/mm/init.c                          | 88 -----------------
+ arch/mips/kernel/setup.c                      |  3 +-
+ arch/riscv/mm/init.c                          | 20 ----
+ drivers/of/fdt.c                              | 94 +++++++++++++++++--
+ include/linux/crash_dump.h                    |  3 +-
+ 7 files changed, 139 insertions(+), 129 deletions(-)
+
 -- 
 2.25.1
 
+Gr{oetje,eeting}s,
+
+						Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
