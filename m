@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga12.intel.com ([192.55.52.136])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mDpby-007UGO-MR
- for kexec@lists.infradead.org; Wed, 11 Aug 2021 14:53:43 +0000
-Subject: Re: [PATCH 01/11] mm: Introduce a function to check for
- virtualization protection features
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
-From: "Kuppuswamy, Sathyanarayanan"
- <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <805946e3-5138-3565-65eb-3cb8ac6f0b3e@linux.intel.com>
-Date: Wed, 11 Aug 2021 07:53:37 -0700
 MIME-Version: 1.0
-In-Reply-To: <cbc875b1d2113225c2b44a2384d5b303d0453cf7.1627424774.git.thomas.lendacky@amd.com>
-Content-Language: en-US
+References: <cover.1628670468.git.geert+renesas@glider.be>
+ <92b6718f5618d5469f67b48fbea189cca0c12f4b.1628670468.git.geert+renesas@glider.be>
+In-Reply-To: <92b6718f5618d5469f67b48fbea189cca0c12f4b.1628670468.git.geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Wed, 11 Aug 2021 17:35:26 +0200
+Message-ID: <CAMuHMdVFJ_qGs0V7f+XhfD6v3WnkMJ98fO31sCRSNaeS89XXUQ@mail.gmail.com>
+Subject: Re: [PATCH v5 1/9] MIPS: Avoid future duplicate elf core header
+ reservation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,76 +16,60 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>
+To: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Russell King <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>
 
+On Wed, Aug 11, 2021 at 10:51 AM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> Prepare for early_init_fdt_scan_reserved_mem() reserving the memory
+> occupied by an elf core header described in the device tree.
+> As arch_mem_init() calls early_init_fdt_scan_reserved_mem() before
+> mips_reserve_vmcore(), the latter needs to check if the memory has
+> already been reserved before.
+>
+> Note that mips_reserve_vmcore() cannot just be removed, as not all MIPS
+> systems use DT.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v5:
+>   - New.
+> ---
+>  arch/mips/kernel/setup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
+> index 23a140327a0bac1b..4693add05743d78b 100644
+> --- a/arch/mips/kernel/setup.c
+> +++ b/arch/mips/kernel/setup.c
+> @@ -429,7 +429,8 @@ static void __init mips_reserve_vmcore(void)
+>         pr_info("Reserving %ldKB of memory at %ldKB for kdump\n",
+>                 (unsigned long)elfcorehdr_size >> 10, (unsigned long)elfcorehdr_addr >> 10);
+>
+> -       memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+> +       if (!memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)
 
+As pointed out by lkp, there's a closing parenthesis missing.
 
-On 7/27/21 3:26 PM, Tom Lendacky wrote:
-> diff --git a/include/linux/protected_guest.h b/include/linux/protected_guest.h
-> new file mode 100644
-> index 000000000000..f8ed7b72967b
-> --- /dev/null
-> +++ b/include/linux/protected_guest.h
-> @@ -0,0 +1,32 @@
-> +/* SPDX-License-Identifier: GPL-2.0-only */
-> +/*
-> + * Protected Guest (and Host) Capability checks
-> + *
-> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Tom Lendacky<thomas.lendacky@amd.com>
-> + */
-> +
-> +#ifndef _PROTECTED_GUEST_H
-> +#define _PROTECTED_GUEST_H
-> +
-> +#ifndef __ASSEMBLY__
+/me hides back under his rock.
 
-Can you include headers for bool type and false definition?
+> +               memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+>  #endif
 
---- a/include/linux/protected_guest.h
-+++ b/include/linux/protected_guest.h
-@@ -12,6 +12,9 @@
+Gr{oetje,eeting}s,
 
-  #ifndef __ASSEMBLY__
-
-+#include <linux/types.h>
-+#include <linux/stddef.h>
-
-Otherwise, I see following errors in multi-config auto testing.
-
-include/linux/protected_guest.h:40:15: error: unknown type name 'bool'
-include/linux/protected_guest.h:40:63: error: 'false' undeclared (first use in this functi
-
-
-> +
-> +#define PATTR_MEM_ENCRYPT		0	/* Encrypted memory */
-> +#define PATTR_HOST_MEM_ENCRYPT		1	/* Host encrypted memory */
-> +#define PATTR_GUEST_MEM_ENCRYPT		2	/* Guest encrypted memory */
-> +#define PATTR_GUEST_PROT_STATE		3	/* Guest encrypted state */
-> +
-> +#ifdef CONFIG_ARCH_HAS_PROTECTED_GUEST
-> +
-> +#include <asm/protected_guest.h>
-> +
-> +#else	/* !CONFIG_ARCH_HAS_PROTECTED_GUEST */
-> +
-> +static inline bool prot_guest_has(unsigned int attr) { return false; }
-> +
-> +#endif	/* CONFIG_ARCH_HAS_PROTECTED_GUEST */
-> +
-> +#endif	/* __ASSEMBLY__ */
-> +
-> +#endif	/* _PROTECTED_GUEST_H */
+                        Geert
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
