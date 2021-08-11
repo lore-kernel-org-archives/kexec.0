@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from xavier.telenet-ops.be ([2a02:1800:120:4::f00:14])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mDjxX-0067WJ-TF
+ for kexec@lists.infradead.org; Wed, 11 Aug 2021 08:51:40 +0000
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v5 7/9] arm64: kdump: Remove custom linux,elfcorehdr handling
+Date: Wed, 11 Aug 2021 10:51:05 +0200
+Message-Id: <3b8f801f9b92066855e87f3079fafc153ab20f69.1628670468.git.geert+renesas@glider.be>
+In-Reply-To: <cover.1628670468.git.geert+renesas@glider.be>
+References: <cover.1628670468.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-References: <cover.1626266516.git.geert+renesas@glider.be>
- <04c4d231fb03a3810d72a45c8a5bc2272c5975f3.1626266516.git.geert+renesas@glider.be>
- <20210714135101.GB2441138@robh.at.kernel.org>
-In-Reply-To: <20210714135101.GB2441138@robh.at.kernel.org>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Wed, 11 Aug 2021 10:11:34 +0200
-Message-ID: <CAMuHMdVRPpHudj2svs_TYP9=GYkWFtJrG_+BHA7A+TVPdQ92aQ@mail.gmail.com>
-Subject: Re: [PATCH v4 02/10] memblock: Add variables for usable memory
- limitation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,47 +22,99 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Mike Rapoport <rppt@kernel.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux MM <linux-mm@kvack.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Wed, Jul 14, 2021 at 3:51 PM Rob Herring <robh@kernel.org> wrote:
-> On Wed, Jul 14, 2021 at 02:50:12PM +0200, Geert Uytterhoeven wrote:
-> > Add two global variables (cap_mem_addr and cap_mem_size) for storing a
-> > base address and size, describing a limited region in which memory may
-> > be considered available for use by the kernel.  If enabled, memory
-> > outside of this range is not available for use.
-> >
-> > These variables can by filled by firmware-specific code, and used in
-> > calls to memblock_cap_memory_range() by architecture-specific code.
-> > An example user is the parser of the "linux,usable-memory-range"
-> > property in the DT "/chosen" node.
-> >
-> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > ---
-> > This is similar to how the initial ramdisk (phys_initrd_{start,size})
-> > and ELF core headers (elfcorehdr_{addr,size})) are handled.
-> >
-> > Does there exist a suitable place in the common memblock code to call
-> > "memblock_cap_memory_range(cap_mem_addr, cap_mem_size)", or does this
-> > have to be done in architecture-specific code?
->
-> Can't you just call it from early_init_dt_scan_usablemem? If the
-> property is present, you want to call it. If the property is not
-> present, nothing happens.
+Remove the architecture-specific code for handling the
+"linux,elfcorehdr" property under the "/chosen" node in DT, as the
+platform-agnostic handling in the FDT core code already takes care of
+this.
 
-Seems to work fine when called from early_init_dt_scan_nodes().
-Hence v5 will no longer need to touch memblock.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v5:
+  - Remove all handling, not just parsing,
 
-Gr{oetje,eeting}s,
+v4:
+  - s/handlng/parsing/ in patch description.
+---
+ arch/arm64/mm/init.c | 53 --------------------------------------------
+ 1 file changed, 53 deletions(-)
 
-                        Geert
-
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 8490ed2917ff2430..bac4f06bb7d900a2 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -124,57 +124,6 @@ static void __init reserve_crashkernel(void)
+ }
+ #endif /* CONFIG_KEXEC_CORE */
+ 
+-#ifdef CONFIG_CRASH_DUMP
+-static int __init early_init_dt_scan_elfcorehdr(unsigned long node,
+-		const char *uname, int depth, void *data)
+-{
+-	const __be32 *reg;
+-	int len;
+-
+-	if (depth != 1 || strcmp(uname, "chosen") != 0)
+-		return 0;
+-
+-	reg = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
+-	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+-		return 1;
+-
+-	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &reg);
+-	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &reg);
+-
+-	return 1;
+-}
+-
+-/*
+- * reserve_elfcorehdr() - reserves memory for elf core header
+- *
+- * This function reserves the memory occupied by an elf core header
+- * described in the device tree. This region contains all the
+- * information about primary kernel's core image and is used by a dump
+- * capture kernel to access the system memory on primary kernel.
+- */
+-static void __init reserve_elfcorehdr(void)
+-{
+-	of_scan_flat_dt(early_init_dt_scan_elfcorehdr, NULL);
+-
+-	if (!elfcorehdr_size)
+-		return;
+-
+-	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
+-		pr_warn("elfcorehdr is overlapped\n");
+-		return;
+-	}
+-
+-	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
+-
+-	pr_info("Reserving %lldKB of memory at 0x%llx for elfcorehdr\n",
+-		elfcorehdr_size >> 10, elfcorehdr_addr);
+-}
+-#else
+-static void __init reserve_elfcorehdr(void)
+-{
+-}
+-#endif /* CONFIG_CRASH_DUMP */
+-
+ /*
+  * Return the maximum physical address for a zone accessible by the given bits
+  * limit. If DRAM starts above 32-bit, expand the zone to the maximum
+@@ -395,8 +344,6 @@ void __init arm64_memblock_init(void)
+ 
+ 	early_init_fdt_scan_reserved_mem();
+ 
+-	reserve_elfcorehdr();
+-
+ 	high_memory = __va(memblock_end_of_DRAM() - 1) + 1;
+ }
+ 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+2.25.1
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
