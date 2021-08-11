@@ -1,20 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from leibniz.telenet-ops.be ([195.130.137.77])
- by desiato.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mDjxZ-00800z-6C
- for kexec@lists.infradead.org; Wed, 11 Aug 2021 08:51:39 +0000
-Received: from baptiste.telenet-ops.be (baptiste.telenet-ops.be
- [IPv6:2a02:1800:120:4::f00:13])
- by leibniz.telenet-ops.be (Postfix) with ESMTPS id 4Gl3TL6DkRzMqjXY
- for <kexec@lists.infradead.org>; Wed, 11 Aug 2021 10:51:34 +0200 (CEST)
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v5 3/9] of: fdt: Add generic support for handling elf core
- headers property
-Date: Wed, 11 Aug 2021 10:51:01 +0200
-Message-Id: <c7e46e50aaf87ef49bdaa61358d25b122f32b7df.1628670468.git.geert+renesas@glider.be>
-In-Reply-To: <cover.1628670468.git.geert+renesas@glider.be>
-References: <cover.1628670468.git.geert+renesas@glider.be>
+Received: from mail-lf1-x12e.google.com ([2a00:1450:4864:20::12e])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mDnCP-006xqt-0n
+ for kexec@lists.infradead.org; Wed, 11 Aug 2021 12:19:10 +0000
+Received: by mail-lf1-x12e.google.com with SMTP id w1so5068372lfq.10
+ for <kexec@lists.infradead.org>; Wed, 11 Aug 2021 05:19:07 -0700 (PDT)
+Date: Wed, 11 Aug 2021 15:19:17 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
+Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
+ with prot_guest_has()
+Message-ID: <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+ <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
+ <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,179 +25,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-There are two methods to specify the location of the elf core headers:
-using the "elfcorehdr=" kernel parameter, as handled by generic code in
-kernel/crash_dump.c, or using the "linux,elfcorehdr" property under the
-"/chosen" node in the Device Tree, as handled by architecture-specific
-code in arch/arm64/mm/init.c.
+On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
+> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
+> > =
 
-Extend support for "linux,elfcorehdr" to all platforms supporting DT by
-adding platform-agnostic handling for handling this property to the FDT
-core code.  This can co-exist safely with the architecture-specific
-handling, until the latter has been removed.
+> > =
 
-This requires moving the call to of_scan_flat_dt() up, as the code
-scanning the "/chosen" node now needs to be aware of the values of
-"#address-cells" and "#size-cells".
+> > On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> >> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> >> index de01903c3735..cafed6456d45 100644
+> >> --- a/arch/x86/kernel/head64.c
+> >> +++ b/arch/x86/kernel/head64.c
+> >> @@ -19,7 +19,7 @@
+> >> =A0 #include <linux/start_kernel.h>
+> >> =A0 #include <linux/io.h>
+> >> =A0 #include <linux/memblock.h>
+> >> -#include <linux/mem_encrypt.h>
+> >> +#include <linux/protected_guest.h>
+> >> =A0 #include <linux/pgtable.h>
+> >> =A0 =A0 #include <asm/processor.h>
+> >> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
+> >> physaddr,
+> >> =A0=A0=A0=A0=A0=A0 * there is no need to zero it after changing the me=
+mory encryption
+> >> =A0=A0=A0=A0=A0=A0 * attribute.
+> >> =A0=A0=A0=A0=A0=A0 */
+> >> -=A0=A0=A0 if (mem_encrypt_active()) {
+> >> +=A0=A0=A0 if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vaddr =3D (unsigned long)__start_bss_decry=
+pted;
+> >> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vaddr_end =3D (unsigned long)__end_bss_dec=
+rypted;
+> > =
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Notes:
-  1. To avoid reserving the region twice, this depends on "MIPS: Avoid
-     duplicate elf core header reservation",
-  2. IA64 also has custom code to reserve the region, but is not
-     affected, as IA64 does not use DT,
-  3. About the change to chosen.txt: I have a similar change for
-     schemas/chosen.yaml in dt-schema.
+> > =
 
-v5:
-  - Handle the actual reservation in generic code, too,
+> > Since this change is specific to AMD, can you replace PATTR_MEM_ENCRYPT=
+ with
+> > prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not used =
+in
+> > TDX.
+> =
 
-v4:
-  - Use IS_ENABLED() instead of #ifdef,
-  - Clarify what architecture-specific code is still responsible for.
----
- Documentation/devicetree/bindings/chosen.txt |  6 +-
- drivers/of/fdt.c                             | 59 +++++++++++++++++++-
- 2 files changed, 59 insertions(+), 6 deletions(-)
+> This is a direct replacement for now.
 
-diff --git a/Documentation/devicetree/bindings/chosen.txt b/Documentation/devicetree/bindings/chosen.txt
-index 45e79172a646c537..5b0b94eb2d04e79d 100644
---- a/Documentation/devicetree/bindings/chosen.txt
-+++ b/Documentation/devicetree/bindings/chosen.txt
-@@ -106,9 +106,9 @@ respectively, of the root node.
- linux,elfcorehdr
- ----------------
- 
--This property (currently used only on arm64) holds the memory range,
--the address and the size, of the elf core header which mainly describes
--the panicked kernel's memory layout as PT_LOAD segments of elf format.
-+This property holds the memory range, the address and the size, of the elf
-+core header which mainly describes the panicked kernel's memory layout as
-+PT_LOAD segments of elf format.
- e.g.
- 
- / {
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 9e5074d52879649b..99be3e03af29089f 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -8,6 +8,7 @@
- 
- #define pr_fmt(fmt)	"OF: fdt: " fmt
- 
-+#include <linux/crash_dump.h>
- #include <linux/crc32.h>
- #include <linux/kernel.h>
- #include <linux/initrd.h>
-@@ -581,6 +582,30 @@ static int __init __fdt_scan_reserved_mem(unsigned long node, const char *uname,
- 	return 0;
- }
- 
-+/*
-+ * reserve_elfcorehdr() - reserves memory for elf core header
-+ *
-+ * This function reserves the memory occupied by an elf core header
-+ * described in the device tree. This region contains all the
-+ * information about primary kernel's core image and is used by a dump
-+ * capture kernel to access the system memory on primary kernel.
-+ */
-+static void __init reserve_elfcorehdr(void)
-+{
-+	if (!IS_ENABLED(CONFIG_CRASH_DUMP) || !elfcorehdr_size)
-+		return;
-+
-+	if (memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)) {
-+		pr_warn("elfcorehdr is overlapped\n");
-+		return;
-+	}
-+
-+	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-+
-+	pr_info("Reserving %llu KiB of memory at 0x%llx for elfcorehdr\n",
-+		elfcorehdr_size >> 10, elfcorehdr_addr);
-+}
-+
- /**
-  * early_init_fdt_scan_reserved_mem() - create reserved memory regions
-  *
-@@ -606,6 +631,7 @@ void __init early_init_fdt_scan_reserved_mem(void)
- 
- 	of_scan_flat_dt(__fdt_scan_reserved_mem, NULL);
- 	fdt_init_reserved_mem();
-+	reserve_elfcorehdr();
- }
- 
- /**
-@@ -904,6 +930,32 @@ static inline void early_init_dt_check_for_initrd(unsigned long node)
- }
- #endif /* CONFIG_BLK_DEV_INITRD */
- 
-+/**
-+ * early_init_dt_check_for_elfcorehdr - Decode elfcorehdr location from flat
-+ * tree
-+ * @node: reference to node containing elfcorehdr location ('chosen')
-+ */
-+static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
-+{
-+	const __be32 *prop;
-+	int len;
-+
-+	if (!IS_ENABLED(CONFIG_CRASH_DUMP))
-+		return;
-+
-+	pr_debug("Looking for elfcorehdr property... ");
-+
-+	prop = of_get_flat_dt_prop(node, "linux,elfcorehdr", &len);
-+	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+		return;
-+
-+	elfcorehdr_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
-+	elfcorehdr_size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+
-+	pr_debug("elfcorehdr_start=0x%llx elfcorehdr_size=0x%llx\n",
-+		 elfcorehdr_addr, elfcorehdr_size);
-+}
-+
- #ifdef CONFIG_SERIAL_EARLYCON
- 
- int __init early_init_dt_scan_chosen_stdout(void)
-@@ -1051,6 +1103,7 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
- 		return 0;
- 
- 	early_init_dt_check_for_initrd(node);
-+	early_init_dt_check_for_elfcorehdr(node);
- 
- 	/* Retrieve command line */
- 	p = of_get_flat_dt_prop(node, "bootargs", &l);
-@@ -1195,14 +1248,14 @@ void __init early_init_dt_scan_nodes(void)
- {
- 	int rc = 0;
- 
-+	/* Initialize {size,address}-cells info */
-+	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-+
- 	/* Retrieve various information from the /chosen node */
- 	rc = of_scan_flat_dt(early_init_dt_scan_chosen, boot_command_line);
- 	if (!rc)
- 		pr_warn("No chosen node found, continuing without\n");
- 
--	/* Initialize {size,address}-cells info */
--	of_scan_flat_dt(early_init_dt_scan_root, NULL);
--
- 	/* Setup memory, calling early_init_dt_add_memory_arch */
- 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
- }
--- 
-2.25.1
+With current implementation of prot_guest_has() for TDX it breaks boot for
+me.
 
+Looking at code agains, now I *think* the reason is accessing a global
+variable from __startup_64() inside TDX version of prot_guest_has().
+
+__startup_64() is special. If you access any global variable you need to
+use fixup_pointer(). See comment before __startup_64().
+
+I'm not sure how you get away with accessing sme_me_mask directly from
+there. Any clues? Maybe just a luck and complier generates code just right
+for your case, I donno.
+
+A separate point is that TDX version of prot_guest_has() relies on
+cpu_feature_enabled() which is not ready at this point.
+
+I think __bss_decrypted fixup has to be done if sme_me_mask is non-zero.
+Or just do it uncoditionally because it's NOP for sme_me_mask =3D=3D 0.
+
+> I think the change you're requesting
+> should be done as part of the TDX support patches so it's clear why it is
+> being changed.
+> =
+
+> But, wouldn't TDX still need to do something with this shared/unencrypted
+> area, though? Or since it is shared, there's actually nothing you need to
+> do (the bss decrpyted section exists even if CONFIG_AMD_MEM_ENCRYPT is not
+> configured)?
+
+AFAICS, only kvmclock uses __bss_decrypted. We don't enable kvmclock in
+TDX at the moment. It may change in the future.
+
+-- =
+
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
