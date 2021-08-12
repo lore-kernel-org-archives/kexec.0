@@ -1,22 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam08on2067.outbound.protection.outlook.com
- ([40.107.101.67] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
+Received: from mail-lj1-x22f.google.com ([2a00:1450:4864:20::22f])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mDqXO-007cMQ-96
- for kexec@lists.infradead.org; Wed, 11 Aug 2021 15:53:08 +0000
+ id 1mE7cH-009brJ-WB
+ for kexec@lists.infradead.org; Thu, 12 Aug 2021 10:07:15 +0000
+Received: by mail-lj1-x22f.google.com with SMTP id n6so9735465ljp.9
+ for <kexec@lists.infradead.org>; Thu, 12 Aug 2021 03:07:13 -0700 (PDT)
+Date: Thu, 12 Aug 2021 13:07:24 +0300
+From: "Kirill A. Shutemov" <kirill@shutemov.name>
 Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
  with prot_guest_has()
+Message-ID: <20210812100724.t4cdh7xbkuqgnsc3@box.shutemov.name>
 References: <cover.1627424773.git.thomas.lendacky@amd.com>
  <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
  <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
  <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
  <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
-Date: Wed, 11 Aug 2021 10:52:55 -0500
-In-Reply-To: <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
-Content-Language: en-US
+ <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,75 +27,118 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
+To: Tom Lendacky <thomas.lendacky@amd.com>
 Cc: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-T24gOC8xMS8yMSA3OjE5IEFNLCBLaXJpbGwgQS4gU2h1dGVtb3Ygd3JvdGU6Cj4gT24gVHVlLCBB
-dWcgMTAsIDIwMjEgYXQgMDI6NDg6NTRQTSAtMDUwMCwgVG9tIExlbmRhY2t5IHdyb3RlOgo+PiBP
-biA4LzEwLzIxIDE6NDUgUE0sIEt1cHB1c3dhbXksIFNhdGh5YW5hcmF5YW5hbiB3cm90ZToKPj4+
-Cj4+Pgo+Pj4gT24gNy8yNy8yMSAzOjI2IFBNLCBUb20gTGVuZGFja3kgd3JvdGU6Cj4+Pj4gZGlm
-ZiAtLWdpdCBhL2FyY2gveDg2L2tlcm5lbC9oZWFkNjQuYyBiL2FyY2gveDg2L2tlcm5lbC9oZWFk
-NjQuYwo+Pj4+IGluZGV4IGRlMDE5MDNjMzczNS4uY2FmZWQ2NDU2ZDQ1IDEwMDY0NAo+Pj4+IC0t
-LSBhL2FyY2gveDg2L2tlcm5lbC9oZWFkNjQuYwo+Pj4+ICsrKyBiL2FyY2gveDg2L2tlcm5lbC9o
-ZWFkNjQuYwo+Pj4+IEBAIC0xOSw3ICsxOSw3IEBACj4+Pj4gwqAgI2luY2x1ZGUgPGxpbnV4L3N0
-YXJ0X2tlcm5lbC5oPgo+Pj4+IMKgICNpbmNsdWRlIDxsaW51eC9pby5oPgo+Pj4+IMKgICNpbmNs
-dWRlIDxsaW51eC9tZW1ibG9jay5oPgo+Pj4+IC0jaW5jbHVkZSA8bGludXgvbWVtX2VuY3J5cHQu
-aD4KPj4+PiArI2luY2x1ZGUgPGxpbnV4L3Byb3RlY3RlZF9ndWVzdC5oPgo+Pj4+IMKgICNpbmNs
-dWRlIDxsaW51eC9wZ3RhYmxlLmg+Cj4+Pj4gwqAgwqAgI2luY2x1ZGUgPGFzbS9wcm9jZXNzb3Iu
-aD4KPj4+PiBAQCAtMjg1LDcgKzI4NSw3IEBAIHVuc2lnbmVkIGxvbmcgX19oZWFkIF9fc3RhcnR1
-cF82NCh1bnNpZ25lZCBsb25nCj4+Pj4gcGh5c2FkZHIsCj4+Pj4gwqDCoMKgwqDCoMKgICogdGhl
-cmUgaXMgbm8gbmVlZCB0byB6ZXJvIGl0IGFmdGVyIGNoYW5naW5nIHRoZSBtZW1vcnkgZW5jcnlw
-dGlvbgo+Pj4+IMKgwqDCoMKgwqDCoCAqIGF0dHJpYnV0ZS4KPj4+PiDCoMKgwqDCoMKgwqAgKi8K
-Pj4+PiAtwqDCoMKgIGlmIChtZW1fZW5jcnlwdF9hY3RpdmUoKSkgewo+Pj4+ICvCoMKgwqAgaWYg
-KHByb3RfZ3Vlc3RfaGFzKFBBVFRSX01FTV9FTkNSWVBUKSkgewo+Pj4+IMKgwqDCoMKgwqDCoMKg
-wqDCoCB2YWRkciA9ICh1bnNpZ25lZCBsb25nKV9fc3RhcnRfYnNzX2RlY3J5cHRlZDsKPj4+PiDC
-oMKgwqDCoMKgwqDCoMKgwqAgdmFkZHJfZW5kID0gKHVuc2lnbmVkIGxvbmcpX19lbmRfYnNzX2Rl
-Y3J5cHRlZDsKPj4+Cj4+Pgo+Pj4gU2luY2UgdGhpcyBjaGFuZ2UgaXMgc3BlY2lmaWMgdG8gQU1E
-LCBjYW4geW91IHJlcGxhY2UgUEFUVFJfTUVNX0VOQ1JZUFQgd2l0aAo+Pj4gcHJvdF9ndWVzdF9o
-YXMoUEFUVFJfU01FKSB8fCBwcm90X2d1ZXN0X2hhcyhQQVRUUl9TRVYpLiBJdCBpcyBub3QgdXNl
-ZCBpbgo+Pj4gVERYLgo+Pgo+PiBUaGlzIGlzIGEgZGlyZWN0IHJlcGxhY2VtZW50IGZvciBub3cu
-Cj4gCj4gV2l0aCBjdXJyZW50IGltcGxlbWVudGF0aW9uIG9mIHByb3RfZ3Vlc3RfaGFzKCkgZm9y
-IFREWCBpdCBicmVha3MgYm9vdCBmb3IKPiBtZS4KPiAKPiBMb29raW5nIGF0IGNvZGUgYWdhaW5z
-LCBub3cgSSAqdGhpbmsqIHRoZSByZWFzb24gaXMgYWNjZXNzaW5nIGEgZ2xvYmFsCj4gdmFyaWFi
-bGUgZnJvbSBfX3N0YXJ0dXBfNjQoKSBpbnNpZGUgVERYIHZlcnNpb24gb2YgcHJvdF9ndWVzdF9o
-YXMoKS4KPiAKPiBfX3N0YXJ0dXBfNjQoKSBpcyBzcGVjaWFsLiBJZiB5b3UgYWNjZXNzIGFueSBn
-bG9iYWwgdmFyaWFibGUgeW91IG5lZWQgdG8KPiB1c2UgZml4dXBfcG9pbnRlcigpLiBTZWUgY29t
-bWVudCBiZWZvcmUgX19zdGFydHVwXzY0KCkuCj4gCj4gSSdtIG5vdCBzdXJlIGhvdyB5b3UgZ2V0
-IGF3YXkgd2l0aCBhY2Nlc3Npbmcgc21lX21lX21hc2sgZGlyZWN0bHkgZnJvbQo+IHRoZXJlLiBB
-bnkgY2x1ZXM/IE1heWJlIGp1c3QgYSBsdWNrIGFuZCBjb21wbGllciBnZW5lcmF0ZXMgY29kZSBq
-dXN0IHJpZ2h0Cj4gZm9yIHlvdXIgY2FzZSwgSSBkb25uby4KCkhtbS4uLiB5ZWFoLCBjb3VsZCBi
-ZSB0aGF0IHRoZSBjb21waWxlciBpcyB1c2luZyByaXAtcmVsYXRpdmUgYWRkcmVzc2luZwpmb3Ig
-aXQgYmVjYXVzZSBpdCBsaXZlcyBpbiB0aGUgLmRhdGEgc2VjdGlvbj8KCkZvciB0aGUgc3RhdGlj
-IHZhcmlhYmxlcyBpbiBtZW1fZW5jcnlwdF9pZGVudGl0eS5jIEkgZGlkIGFuIGFzc2VtYmxlciBy
-aXAKcmVsYXRpdmUgTEVBLCBidXQgcHJvYmFibHkgY291bGQgaGF2ZSBwYXNzZWQgcGh5c2FkZHIg
-dG8gc21lX2VuYWJsZSgpIGFuZAp1c2VkIGEgZml4dXBfcG9pbnRlcigpIHN0eWxlIGZ1bmN0aW9u
-LCBpbnN0ZWFkLgoKPiAKPiBBIHNlcGFyYXRlIHBvaW50IGlzIHRoYXQgVERYIHZlcnNpb24gb2Yg
-cHJvdF9ndWVzdF9oYXMoKSByZWxpZXMgb24KPiBjcHVfZmVhdHVyZV9lbmFibGVkKCkgd2hpY2gg
-aXMgbm90IHJlYWR5IGF0IHRoaXMgcG9pbnQuCgpEb2VzIFREWCBoYXZlIHRvIGRvIGFueXRoaW5n
-IHNwZWNpYWwgdG8gbWFrZSBtZW1vcnkgYWJsZSB0byBiZSBzaGFyZWQgd2l0aAp0aGUgaHlwZXJ2
-aXNvcj8gIFlvdSBtaWdodCBoYXZlIHRvIHVzZSBzb21ldGhpbmcgdGhhdCBpcyBhdmFpbGFibGUg
-ZWFybGllcgp0aGFuIGNwdV9mZWF0dXJlX2VuYWJsZWQoKSBpbiB0aGF0IGNhc2UgKHNob3VsZCB5
-b3UgZXZlbnR1YWxseSBzdXBwb3J0Cmt2bWNsb2NrKS4KCj4gCj4gSSB0aGluayBfX2Jzc19kZWNy
-eXB0ZWQgZml4dXAgaGFzIHRvIGJlIGRvbmUgaWYgc21lX21lX21hc2sgaXMgbm9uLXplcm8uCj4g
-T3IganVzdCBkbyBpdCB1bmNvZGl0aW9uYWxseSBiZWNhdXNlIGl0J3MgTk9QIGZvciBzbWVfbWVf
-bWFzayA9PSAwLgoKRm9yIFNOUCwgd2UnbGwgaGF2ZSB0byBhZGRpdGlvbmFsbHkgY2FsbCB0aGUg
-SFYgdG8gdXBkYXRlIHRoZSBSTVAgdG8gbWFrZQp0aGUgbWVtb3J5IHNoYXJlZC4gQnV0IHRoYXQg
-Y291bGQgYWxzbyBiZSBkb25lIHVuY29uZGl0aW9uYWxseSBzaW5jZSB0aGUKZWFybHlfc25wX3Nl
-dF9tZW1vcnlfc2hhcmVkKCkgcm91dGluZSB3aWxsIGNoZWNrIGZvciBTTlAgYmVmb3JlIGRvaW5n
-CmFueXRoaW5nLgoKVGhhbmtzLApUb20KCj4gCj4+IEkgdGhpbmsgdGhlIGNoYW5nZSB5b3UncmUg
-cmVxdWVzdGluZwo+PiBzaG91bGQgYmUgZG9uZSBhcyBwYXJ0IG9mIHRoZSBURFggc3VwcG9ydCBw
-YXRjaGVzIHNvIGl0J3MgY2xlYXIgd2h5IGl0IGlzCj4+IGJlaW5nIGNoYW5nZWQuCj4+Cj4+IEJ1
-dCwgd291bGRuJ3QgVERYIHN0aWxsIG5lZWQgdG8gZG8gc29tZXRoaW5nIHdpdGggdGhpcyBzaGFy
-ZWQvdW5lbmNyeXB0ZWQKPj4gYXJlYSwgdGhvdWdoPyBPciBzaW5jZSBpdCBpcyBzaGFyZWQsIHRo
-ZXJlJ3MgYWN0dWFsbHkgbm90aGluZyB5b3UgbmVlZCB0bwo+PiBkbyAodGhlIGJzcyBkZWNycHl0
-ZWQgc2VjdGlvbiBleGlzdHMgZXZlbiBpZiBDT05GSUdfQU1EX01FTV9FTkNSWVBUIGlzIG5vdAo+
-PiBjb25maWd1cmVkKT8KPiAKPiBBRkFJQ1MsIG9ubHkga3ZtY2xvY2sgdXNlcyBfX2Jzc19kZWNy
-eXB0ZWQuIFdlIGRvbid0IGVuYWJsZSBrdm1jbG9jayBpbgo+IFREWCBhdCB0aGUgbW9tZW50LiBJ
-dCBtYXkgY2hhbmdlIGluIHRoZSBmdXR1cmUuCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5m
-cmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tl
-eGVjCg==
+On Wed, Aug 11, 2021 at 10:52:55AM -0500, Tom Lendacky wrote:
+> On 8/11/21 7:19 AM, Kirill A. Shutemov wrote:
+> > On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
+> >> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
+> >>>
+> >>>
+> >>> On 7/27/21 3:26 PM, Tom Lendacky wrote:
+> >>>> diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
+> >>>> index de01903c3735..cafed6456d45 100644
+> >>>> --- a/arch/x86/kernel/head64.c
+> >>>> +++ b/arch/x86/kernel/head64.c
+> >>>> @@ -19,7 +19,7 @@
+> >>>> =A0 #include <linux/start_kernel.h>
+> >>>> =A0 #include <linux/io.h>
+> >>>> =A0 #include <linux/memblock.h>
+> >>>> -#include <linux/mem_encrypt.h>
+> >>>> +#include <linux/protected_guest.h>
+> >>>> =A0 #include <linux/pgtable.h>
+> >>>> =A0 =A0 #include <asm/processor.h>
+> >>>> @@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long
+> >>>> physaddr,
+> >>>> =A0=A0=A0=A0=A0=A0 * there is no need to zero it after changing the =
+memory encryption
+> >>>> =A0=A0=A0=A0=A0=A0 * attribute.
+> >>>> =A0=A0=A0=A0=A0=A0 */
+> >>>> -=A0=A0=A0 if (mem_encrypt_active()) {
+> >>>> +=A0=A0=A0 if (prot_guest_has(PATTR_MEM_ENCRYPT)) {
+> >>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vaddr =3D (unsigned long)__start_bss_dec=
+rypted;
+> >>>> =A0=A0=A0=A0=A0=A0=A0=A0=A0 vaddr_end =3D (unsigned long)__end_bss_d=
+ecrypted;
+> >>>
+> >>>
+> >>> Since this change is specific to AMD, can you replace PATTR_MEM_ENCRY=
+PT with
+> >>> prot_guest_has(PATTR_SME) || prot_guest_has(PATTR_SEV). It is not use=
+d in
+> >>> TDX.
+> >>
+> >> This is a direct replacement for now.
+> > =
+
+> > With current implementation of prot_guest_has() for TDX it breaks boot =
+for
+> > me.
+> > =
+
+> > Looking at code agains, now I *think* the reason is accessing a global
+> > variable from __startup_64() inside TDX version of prot_guest_has().
+> > =
+
+> > __startup_64() is special. If you access any global variable you need to
+> > use fixup_pointer(). See comment before __startup_64().
+> > =
+
+> > I'm not sure how you get away with accessing sme_me_mask directly from
+> > there. Any clues? Maybe just a luck and complier generates code just ri=
+ght
+> > for your case, I donno.
+> =
+
+> Hmm... yeah, could be that the compiler is using rip-relative addressing
+> for it because it lives in the .data section?
+
+I guess. It has to be fixed. It may break with complier upgrade or any
+random change around the code.
+
+BTW, does it work with clang for you?
+
+> For the static variables in mem_encrypt_identity.c I did an assembler rip
+> relative LEA, but probably could have passed physaddr to sme_enable() and
+> used a fixup_pointer() style function, instead.
+
+Sounds like a plan.
+
+> > A separate point is that TDX version of prot_guest_has() relies on
+> > cpu_feature_enabled() which is not ready at this point.
+> =
+
+> Does TDX have to do anything special to make memory able to be shared with
+> the hypervisor?
+
+Yes. But there's nothing that required any changes in early boot. It
+handled in ioremap/set_memory.
+
+> You might have to use something that is available earlier
+> than cpu_feature_enabled() in that case (should you eventually support
+> kvmclock).
+
+Maybe.
+
+> > I think __bss_decrypted fixup has to be done if sme_me_mask is non-zero.
+> > Or just do it uncoditionally because it's NOP for sme_me_mask =3D=3D 0.
+> =
+
+> For SNP, we'll have to additionally call the HV to update the RMP to make
+> the memory shared. But that could also be done unconditionally since the
+> early_snp_set_memory_shared() routine will check for SNP before doing
+> anything.
+
+-- =
+
+ Kirill A. Shutemov
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
