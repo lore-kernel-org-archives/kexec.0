@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mEAyB-00AHIR-0P
+ id 1mEAyB-00AHIS-0M
  for kexec@lists.infradead.org; Thu, 12 Aug 2021 13:42:04 +0000
 From: Philipp Rudo <prudo@redhat.com>
-Subject: [PATCH 2/2] makedumpfile: Fix --dry-run for incomplete dumps
-Date: Thu, 12 Aug 2021 15:39:40 +0200
-Message-Id: <20210812133940.5370-3-prudo@redhat.com>
+Subject: [PATCH 1/2] makedumpfile: Fix bad file descriptor error when using
+ --dry-run
+Date: Thu, 12 Aug 2021 15:39:39 +0200
+Message-Id: <20210812133940.5370-2-prudo@redhat.com>
 In-Reply-To: <20210812133940.5370-1-prudo@redhat.com>
 References: <20210812133940.5370-1-prudo@redhat.com>
 MIME-Version: 1.0
@@ -25,54 +26,35 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: k-hagio-ab@nec.com
 
-When running out of space during a dry run, e.g. by limiting the output
-size using the -L option, makedumpfile fails with
+When running makedumpfile with the --dry-run option it fails with
 
 	[...]
-	Can't write the dump file(vmcore). Size limit(104857600) reached.
-	get_nr_pages: Can't seek end of the dump file(vmcore).
-	__read_disk_dump_header: Can't open a file(vmcore). No such file or directory
+	write_and_check_space: Can't seek the dump file(vmcore). Bad file descriptor
 	[...]
 
 This is because for --dry-run no dump file is created and a dummy file
-descriptor of -1 is used. Thus the file operations in get_nr_pages and
-check_and_modify_*_headers fail. Fix the first error by using
-write_bytes as file size for the output file and the second one by
-always returning TRUE for check_and_modify_headers.
+descriptor of -1 is used. Thus the lseek in write_and_check_space will
+fail. Fix this by treating a dry run as if writing to STDOUT.
 
-Fixes: 3422e1d ("[PATCH 1/2] Add --dry-run option to prevent writing the dumpfile")
+Fixes: f0cfa86 ("[PATCH v2 3/3] Add -L option to limit output file size")
 Signed-off-by: Philipp Rudo <prudo@redhat.com>
 ---
- makedumpfile.c | 9 ++++++++-
- 1 file changed, 8 insertions(+), 1 deletion(-)
+ makedumpfile.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 30f9725..c063267 100644
+index b1b3b42..30f9725 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -5113,6 +5113,9 @@ check_and_modify_multiple_kdump_headers() {
- int
- check_and_modify_headers()
- {
-+	if (info->flag_dry_run)
-+		return TRUE;
-+
- 	if (info->flag_elf_dumpfile)
- 		return check_and_modify_elf_headers(info->name_dumpfile);
- 	else
-@@ -7996,7 +7999,11 @@ get_nr_pages(void *buf, struct cache_data *cd_page){
- 	int size, file_end, nr_pages;
- 	page_desc_t *pd = buf;
+@@ -4712,7 +4712,7 @@ write_and_check_space(int fd, void *buf, size_t buf_size, const char* desc,
+ 	int retval = 0;
+ 	off_t pos;
  
--	file_end = lseek(cd_page->fd, 0, SEEK_END);
-+	if (info->flag_dry_run)
-+		file_end = write_bytes;
-+	else
-+		file_end = lseek(cd_page->fd, 0, SEEK_END);
-+
- 	if (file_end < 0) {
- 		ERRMSG("Can't seek end of the dump file(%s).\n", cd_page->file_name);
- 		return -1;
+-	if (fd == STDOUT_FILENO) {
++	if (fd == STDOUT_FILENO || info->flag_dry_run) {
+ 		pos = write_bytes;
+ 	} else {
+ 		pos = lseek(fd, 0, SEEK_CUR);
 -- 
 2.31.1
 
