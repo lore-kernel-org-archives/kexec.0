@@ -2,12 +2,15 @@ Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-bn1nam07on2067.outbound.protection.outlook.com
  ([40.107.212.67] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mEaXA-00DB7R-5g
- for kexec@lists.infradead.org; Fri, 13 Aug 2021 16:59:57 +0000
+ id 1mEaXF-00DB7R-Gg
+ for kexec@lists.infradead.org; Fri, 13 Aug 2021 17:00:01 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 00/12] Implement generic prot_guest_has() helper function
-Date: Fri, 13 Aug 2021 11:59:19 -0500
-Message-Id: <cover.1628873970.git.thomas.lendacky@amd.com>
+Subject: [PATCH v2 01/12] x86/ioremap: Selectively build arch override
+ encryption functions
+Date: Fri, 13 Aug 2021 11:59:20 -0500
+Message-Id: <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
+In-Reply-To: <cover.1628873970.git.thomas.lendacky@amd.com>
+References: <cover.1628873970.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,119 +25,84 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 
-This patch series provides a generic helper function, prot_guest_has(),
-to replace the sme_active(), sev_active(), sev_es_active() and
-mem_encrypt_active() functions.
+In prep for other uses of the prot_guest_has() function besides AMD's
+memory encryption support, selectively build the AMD memory encryption
+architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
+functions are:
+- early_memremap_pgprot_adjust()
+- arch_memremap_can_ram_remap()
 
-It is expected that as new protected virtualization technologies are
-added to the kernel, they can all be covered by a single function call
-instead of a collection of specific function calls all called from the
-same locations.
+Additionally, routines that are only invoked by these architecture
+override functions can also be conditionally built. These functions are:
+- memremap_should_map_decrypted()
+- memremap_is_efi_data()
+- memremap_is_setup_data()
+- early_memremap_is_setup_data()
 
-The powerpc and s390 patches have been compile tested only. Can the
-folks copied on this series verify that nothing breaks for them.
+And finally, phys_mem_access_encrypted() is conditionally built as well,
+but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
+not set.
 
-Cc: Andi Kleen <ak@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
-Cc: Will Deacon <will@kernel.org>
-
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
+ arch/x86/include/asm/io.h | 8 ++++++++
+ arch/x86/mm/ioremap.c     | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-Patches based on:
-  https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git master
-  0b52902cd2d9 ("Merge branch 'efi/urgent'")
-
-Changes since v1:
-- Move some arch ioremap functions within #ifdef CONFIG_AMD_MEM_ENCRYPT
-  in prep for use of prot_guest_has() by TDX.
-- Add type includes to the the protected_guest.h header file to prevent
-  build errors outside of x86.
-- Make amd_prot_guest_has() EXPORT_SYMBOL_GPL
-- Use amd_prot_guest_has() in place of checking sme_me_mask in the
-  arch/x86/mm/mem_encrypt.c file.
-
-Tom Lendacky (12):
-  x86/ioremap: Selectively build arch override encryption functions
-  mm: Introduce a function to check for virtualization protection
-    features
-  x86/sev: Add an x86 version of prot_guest_has()
-  powerpc/pseries/svm: Add a powerpc version of prot_guest_has()
-  x86/sme: Replace occurrences of sme_active() with prot_guest_has()
-  x86/sev: Replace occurrences of sev_active() with prot_guest_has()
-  x86/sev: Replace occurrences of sev_es_active() with prot_guest_has()
-  treewide: Replace the use of mem_encrypt_active() with
-    prot_guest_has()
-  mm: Remove the now unused mem_encrypt_active() function
-  x86/sev: Remove the now unused mem_encrypt_active() function
-  powerpc/pseries/svm: Remove the now unused mem_encrypt_active()
-    function
-  s390/mm: Remove the now unused mem_encrypt_active() function
-
- arch/Kconfig                               |  3 ++
- arch/powerpc/include/asm/mem_encrypt.h     |  5 --
- arch/powerpc/include/asm/protected_guest.h | 30 +++++++++++
- arch/powerpc/platforms/pseries/Kconfig     |  1 +
- arch/s390/include/asm/mem_encrypt.h        |  2 -
- arch/x86/Kconfig                           |  1 +
- arch/x86/include/asm/io.h                  |  8 +++
- arch/x86/include/asm/kexec.h               |  2 +-
- arch/x86/include/asm/mem_encrypt.h         | 13 +----
- arch/x86/include/asm/protected_guest.h     | 29 +++++++++++
- arch/x86/kernel/crash_dump_64.c            |  4 +-
- arch/x86/kernel/head64.c                   |  4 +-
- arch/x86/kernel/kvm.c                      |  3 +-
- arch/x86/kernel/kvmclock.c                 |  4 +-
- arch/x86/kernel/machine_kexec_64.c         | 19 +++----
- arch/x86/kernel/pci-swiotlb.c              |  9 ++--
- arch/x86/kernel/relocate_kernel_64.S       |  2 +-
- arch/x86/kernel/sev.c                      |  6 +--
- arch/x86/kvm/svm/svm.c                     |  3 +-
- arch/x86/mm/ioremap.c                      | 18 +++----
- arch/x86/mm/mem_encrypt.c                  | 60 +++++++++++++++-------
- arch/x86/mm/mem_encrypt_identity.c         |  3 +-
- arch/x86/mm/pat/set_memory.c               |  3 +-
- arch/x86/platform/efi/efi_64.c             |  9 ++--
- arch/x86/realmode/init.c                   |  8 +--
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c    |  4 +-
- drivers/gpu/drm/drm_cache.c                |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c        |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c        |  6 +--
- drivers/iommu/amd/init.c                   |  7 +--
- drivers/iommu/amd/iommu.c                  |  3 +-
- drivers/iommu/amd/iommu_v2.c               |  3 +-
- drivers/iommu/iommu.c                      |  3 +-
- fs/proc/vmcore.c                           |  6 +--
- include/linux/mem_encrypt.h                |  4 --
- include/linux/protected_guest.h            | 40 +++++++++++++++
- kernel/dma/swiotlb.c                       |  4 +-
- 37 files changed, 232 insertions(+), 105 deletions(-)
- create mode 100644 arch/powerpc/include/asm/protected_guest.h
- create mode 100644 arch/x86/include/asm/protected_guest.h
- create mode 100644 include/linux/protected_guest.h
-
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 841a5d104afa..5c6a4af0b911 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
+ #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
+ #endif
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 					unsigned long size,
+ 					unsigned long flags);
+@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 
+ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+ 				      unsigned long size);
++#else
++static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
++					     unsigned long size)
++{
++	return true;
++}
++#endif
+ 
+ /**
+  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 60ade7dd71bd..ccff76cedd8f 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /*
+  * Examine the physical address to determine if it is an area of memory
+  * that should be mapped decrypted.  If the memory is not part of the
+@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
+ 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
+ }
+ 
+-#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /* Remap memory with encryption */
+ void __init *early_memremap_encrypted(resource_size_t phys_addr,
+ 				      unsigned long size)
 -- 
 2.32.0
 
