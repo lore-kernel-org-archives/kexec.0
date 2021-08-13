@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn1nam07on2067.outbound.protection.outlook.com
- ([40.107.212.67] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
+Received: from mail-bn1nam07on2055.outbound.protection.outlook.com
+ ([40.107.212.55] helo=NAM02-BN1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mEaXF-00DB7R-Gg
- for kexec@lists.infradead.org; Fri, 13 Aug 2021 17:00:01 +0000
+ id 1mEaXO-00DBD6-MP
+ for kexec@lists.infradead.org; Fri, 13 Aug 2021 17:00:10 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v2 01/12] x86/ioremap: Selectively build arch override
- encryption functions
-Date: Fri, 13 Aug 2021 11:59:20 -0500
-Message-Id: <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
+Subject: [PATCH v2 02/12] mm: Introduce a function to check for virtualization
+ protection features
+Date: Fri, 13 Aug 2021 11:59:21 -0500
+Message-Id: <482fe51f1671c1cd081039801b03db7ec0036332.1628873970.git.thomas.lendacky@amd.com>
 In-Reply-To: <cover.1628873970.git.thomas.lendacky@amd.com>
 References: <cover.1628873970.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
@@ -25,84 +25,81 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Joerg Roedel <jroedel@suse.de>
 
-In prep for other uses of the prot_guest_has() function besides AMD's
-memory encryption support, selectively build the AMD memory encryption
-architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
-functions are:
-- early_memremap_pgprot_adjust()
-- arch_memremap_can_ram_remap()
+In prep for other protected virtualization technologies, introduce a
+generic helper function, prot_guest_has(), that can be used to check
+for specific protection attributes, like memory encryption. This is
+intended to eliminate having to add multiple technology-specific checks
+to the code (e.g. if (sev_active() || tdx_active())).
 
-Additionally, routines that are only invoked by these architecture
-override functions can also be conditionally built. These functions are:
-- memremap_should_map_decrypted()
-- memremap_is_efi_data()
-- memremap_is_setup_data()
-- early_memremap_is_setup_data()
-
-And finally, phys_mem_access_encrypted() is conditionally built as well,
-but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
-not set.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Reviewed-by: Joerg Roedel <jroedel@suse.de>
+Co-developed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/io.h | 8 ++++++++
- arch/x86/mm/ioremap.c     | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ arch/Kconfig                    |  3 +++
+ include/linux/protected_guest.h | 35 +++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
+ create mode 100644 include/linux/protected_guest.h
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 841a5d104afa..5c6a4af0b911 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
- #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
- #endif
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 98db63496bab..bd4f60c581f1 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1231,6 +1231,9 @@ config RELR
+ config ARCH_HAS_MEM_ENCRYPT
+ 	bool
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- 					unsigned long size,
- 					unsigned long flags);
-@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- 
- extern bool phys_mem_access_encrypted(unsigned long phys_addr,
- 				      unsigned long size);
-+#else
-+static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
-+					     unsigned long size)
-+{
-+	return true;
-+}
-+#endif
- 
- /**
-  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 60ade7dd71bd..ccff76cedd8f 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
- 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
- }
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- /*
-  * Examine the physical address to determine if it is an area of memory
-  * that should be mapped decrypted.  If the memory is not part of the
-@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
- 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
- }
- 
--#ifdef CONFIG_AMD_MEM_ENCRYPT
- /* Remap memory with encryption */
- void __init *early_memremap_encrypted(resource_size_t phys_addr,
- 				      unsigned long size)
++config ARCH_HAS_PROTECTED_GUEST
++	bool
++
+ config HAVE_SPARSE_SYSCALL_NR
+        bool
+        help
+diff --git a/include/linux/protected_guest.h b/include/linux/protected_guest.h
+new file mode 100644
+index 000000000000..43d4dde94793
+--- /dev/null
++++ b/include/linux/protected_guest.h
+@@ -0,0 +1,35 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Protected Guest (and Host) Capability checks
++ *
++ * Copyright (C) 2021 Advanced Micro Devices, Inc.
++ *
++ * Author: Tom Lendacky <thomas.lendacky@amd.com>
++ */
++
++#ifndef _PROTECTED_GUEST_H
++#define _PROTECTED_GUEST_H
++
++#ifndef __ASSEMBLY__
++
++#include <linux/types.h>
++#include <linux/stddef.h>
++
++#define PATTR_MEM_ENCRYPT		0	/* Encrypted memory */
++#define PATTR_HOST_MEM_ENCRYPT		1	/* Host encrypted memory */
++#define PATTR_GUEST_MEM_ENCRYPT		2	/* Guest encrypted memory */
++#define PATTR_GUEST_PROT_STATE		3	/* Guest encrypted state */
++
++#ifdef CONFIG_ARCH_HAS_PROTECTED_GUEST
++
++#include <asm/protected_guest.h>
++
++#else	/* !CONFIG_ARCH_HAS_PROTECTED_GUEST */
++
++static inline bool prot_guest_has(unsigned int attr) { return false; }
++
++#endif	/* CONFIG_ARCH_HAS_PROTECTED_GUEST */
++
++#endif	/* __ASSEMBLY__ */
++
++#endif	/* _PROTECTED_GUEST_H */
 -- 
 2.32.0
 
