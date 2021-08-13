@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn8nam08on2079.outbound.protection.outlook.com
- ([40.107.100.79] helo=NAM04-BN8-obe.outbound.protection.outlook.com)
+Received: from mail-bn7nam10on2044.outbound.protection.outlook.com
+ ([40.107.92.44] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mEatV-00DF7n-Ol
- for kexec@lists.infradead.org; Fri, 13 Aug 2021 17:23:02 +0000
-Subject: Re: [PATCH v2 00/12] Implement generic prot_guest_has() helper
- function
+ id 1mEdcH-00DXtf-NQ
+ for kexec@lists.infradead.org; Fri, 13 Aug 2021 20:17:25 +0000
+Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
+ with prot_guest_has()
 From: Tom Lendacky <thomas.lendacky@amd.com>
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
-Message-ID: <5c5443e1-1168-078f-89d2-70275706be6a@amd.com>
-Date: Fri, 13 Aug 2021 12:22:50 -0500
-In-Reply-To: <cover.1628873970.git.thomas.lendacky@amd.com>
+References: <cover.1627424773.git.thomas.lendacky@amd.com>
+ <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
+ <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
+ <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
+ <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
+ <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
+ <20210812100724.t4cdh7xbkuqgnsc3@box.shutemov.name>
+ <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
+Message-ID: <f6399958-d161-fd58-fac7-9b849bc4f05e@amd.com>
+Date: Fri, 13 Aug 2021 15:17:12 -0500
+In-Reply-To: <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -25,29 +32,51 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
+To: "Kirill A. Shutemov" <kirill@shutemov.name>
+Cc: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
 
-On 8/13/21 11:59 AM, Tom Lendacky wrote:
-> This patch series provides a generic helper function, prot_guest_has(),
-> to replace the sme_active(), sev_active(), sev_es_active() and
-> mem_encrypt_active() functions.
+On 8/13/21 12:08 PM, Tom Lendacky wrote:
+> On 8/12/21 5:07 AM, Kirill A. Shutemov wrote:
+>> On Wed, Aug 11, 2021 at 10:52:55AM -0500, Tom Lendacky wrote:
+>>> On 8/11/21 7:19 AM, Kirill A. Shutemov wrote:
+>>>> On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
+>>>>> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
+> ...
+>>>> Looking at code agains, now I *think* the reason is accessing a global
+>>>> variable from __startup_64() inside TDX version of prot_guest_has().
+>>>>
+>>>> __startup_64() is special. If you access any global variable you need to
+>>>> use fixup_pointer(). See comment before __startup_64().
+>>>>
+>>>> I'm not sure how you get away with accessing sme_me_mask directly from
+>>>> there. Any clues? Maybe just a luck and complier generates code just 
+>>>> right
+>>>> for your case, I donno.
+>>>
+>>> Hmm... yeah, could be that the compiler is using rip-relative addressing
+>>> for it because it lives in the .data section?
+>>
+>> I guess. It has to be fixed. It may break with complier upgrade or any
+>> random change around the code.
 > 
-> It is expected that as new protected virtualization technologies are
-> added to the kernel, they can all be covered by a single function call
-> instead of a collection of specific function calls all called from the
-> same locations.
+> I'll look at doing that separate from this series.
 > 
-> The powerpc and s390 patches have been compile tested only. Can the
-> folks copied on this series verify that nothing breaks for them.
+>>
+>> BTW, does it work with clang for you?
+> 
+> I haven't tried with clang, I'll check on that.
 
-There are some patches related to PPC that added new calls to the 
-mem_encrypt_active() function that are not yet in the tip tree. After the 
-merge window, I'll need to send a v3 with those additional changes before 
-this series can be applied.
+Just as an fyi, clang also uses rip relative addressing for those 
+variables. No issues booting SME and SEV guests built with clang.
 
 Thanks,
 Tom
+
+> 
+> Thanks,
+> Tom
+> 
+>>
 
 _______________________________________________
 kexec mailing list
