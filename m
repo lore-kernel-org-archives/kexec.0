@@ -1,25 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn7nam10on2044.outbound.protection.outlook.com
- ([40.107.92.44] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mEdcH-00DXtf-NQ
- for kexec@lists.infradead.org; Fri, 13 Aug 2021 20:17:25 +0000
-Subject: Re: [PATCH 07/11] treewide: Replace the use of mem_encrypt_active()
- with prot_guest_has()
-From: Tom Lendacky <thomas.lendacky@amd.com>
-References: <cover.1627424773.git.thomas.lendacky@amd.com>
- <029791b24c6412f9427cfe6ec598156c64395964.1627424774.git.thomas.lendacky@amd.com>
- <166f30d8-9abb-02de-70d8-6e97f44f85df@linux.intel.com>
- <4b885c52-f70a-147e-86bd-c71a8f4ef564@amd.com>
- <20210811121917.ghxi7g4mctuybhbk@box.shutemov.name>
- <0a819549-e481-c004-7da8-82ba427b13ce@amd.com>
- <20210812100724.t4cdh7xbkuqgnsc3@box.shutemov.name>
- <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
-Message-ID: <f6399958-d161-fd58-fac7-9b849bc4f05e@amd.com>
-Date: Fri, 13 Aug 2021 15:17:12 -0500
-In-Reply-To: <943223d5-5949-6aba-8a49-0b07078d68e1@amd.com>
-Content-Language: en-US
+ id 1mEvWW-00ELCZ-7m
+ for kexec@lists.infradead.org; Sat, 14 Aug 2021 15:24:42 +0000
+Date: Sat, 14 Aug 2021 17:25:03 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 01/12] x86/ioremap: Selectively build arch override
+ encryption functions
+Message-ID: <YRfgTzhKCn7otSzy@zn.tnic>
+References: <cover.1628873970.git.thomas.lendacky@amd.com>
+ <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <a4338245609a6be63b162e3516d3f6614db782a4.1628873970.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,55 +21,51 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kirill A. Shutemov" <kirill@shutemov.name>
-Cc: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 
-On 8/13/21 12:08 PM, Tom Lendacky wrote:
-> On 8/12/21 5:07 AM, Kirill A. Shutemov wrote:
->> On Wed, Aug 11, 2021 at 10:52:55AM -0500, Tom Lendacky wrote:
->>> On 8/11/21 7:19 AM, Kirill A. Shutemov wrote:
->>>> On Tue, Aug 10, 2021 at 02:48:54PM -0500, Tom Lendacky wrote:
->>>>> On 8/10/21 1:45 PM, Kuppuswamy, Sathyanarayanan wrote:
-> ...
->>>> Looking at code agains, now I *think* the reason is accessing a global
->>>> variable from __startup_64() inside TDX version of prot_guest_has().
->>>>
->>>> __startup_64() is special. If you access any global variable you need to
->>>> use fixup_pointer(). See comment before __startup_64().
->>>>
->>>> I'm not sure how you get away with accessing sme_me_mask directly from
->>>> there. Any clues? Maybe just a luck and complier generates code just 
->>>> right
->>>> for your case, I donno.
->>>
->>> Hmm... yeah, could be that the compiler is using rip-relative addressing
->>> for it because it lives in the .data section?
->>
->> I guess. It has to be fixed. It may break with complier upgrade or any
->> random change around the code.
+On Fri, Aug 13, 2021 at 11:59:20AM -0500, Tom Lendacky wrote:
+> In prep for other uses of the prot_guest_has() function besides AMD's
+> memory encryption support, selectively build the AMD memory encryption
+> architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
+> functions are:
+> - early_memremap_pgprot_adjust()
+> - arch_memremap_can_ram_remap()
 > 
-> I'll look at doing that separate from this series.
+> Additionally, routines that are only invoked by these architecture
+> override functions can also be conditionally built. These functions are:
+> - memremap_should_map_decrypted()
+> - memremap_is_efi_data()
+> - memremap_is_setup_data()
+> - early_memremap_is_setup_data()
 > 
->>
->> BTW, does it work with clang for you?
+> And finally, phys_mem_access_encrypted() is conditionally built as well,
+> but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
+> not set.
 > 
-> I haven't tried with clang, I'll check on that.
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+> ---
+>  arch/x86/include/asm/io.h | 8 ++++++++
+>  arch/x86/mm/ioremap.c     | 2 +-
+>  2 files changed, 9 insertions(+), 1 deletion(-)
 
-Just as an fyi, clang also uses rip relative addressing for those 
-variables. No issues booting SME and SEV guests built with clang.
+LGTM.
 
-Thanks,
-Tom
+-- 
+Regards/Gruss,
+    Boris.
 
-> 
-> Thanks,
-> Tom
-> 
->>
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
