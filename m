@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 16 Aug 2021 08:52:12 +0300
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v5 1/9] MIPS: Avoid future duplicate elf core header
- reservation
-Message-ID: <YRn9DHlB/pdNPJyP@kernel.org>
-References: <cover.1628670468.git.geert+renesas@glider.be>
- <92b6718f5618d5469f67b48fbea189cca0c12f4b.1628670468.git.geert+renesas@glider.be>
-MIME-Version: 1.0
+Received: from mx.aristanetworks.com ([162.210.129.12]
+ helo=smtp.aristanetworks.com)
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mFlQM-000SXy-2m
+ for kexec@lists.infradead.org; Mon, 16 Aug 2021 22:49:45 +0000
+Date: Mon, 16 Aug 2021 15:49:36 -0700
+From: Ivan Delalande <colona@arista.com>
+Subject: [PATCH] makedumpfile: support --partial-dmesg on 5.10+ kernels
+Message-ID: <YRrrgKjxefeXIb3O@visor>
 Content-Disposition: inline
-In-Reply-To: <92b6718f5618d5469f67b48fbea189cca0c12f4b.1628670468.git.geert+renesas@glider.be>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,57 +17,98 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: John Ogness <john.ogness@linutronix.de>, Kazuhito Hagio <k-hagio-ab@nec.com>
+Cc: kexec@lists.infradead.org
 
-Hi Geert,
+The new printk ringbuffer implementation added in kernel v5.10 with
+commit 896fbe20b4e2 ("printk: use the lockless ringbuffer") also
+exported a new vmcore symbol "clear_seq" to keep track where dmesg had
+been cleared like "clear_idx" on previous versions. Use it in
+dump_lockless_dmesg when --partial-dmesg is passed to find and start
+dumping messages only from that index.
 
-On Wed, Aug 11, 2021 at 10:50:59AM +0200, Geert Uytterhoeven wrote:
-> Prepare for early_init_fdt_scan_reserved_mem() reserving the memory
-> occupied by an elf core header described in the device tree.
-> As arch_mem_init() calls early_init_fdt_scan_reserved_mem() before
-> mips_reserve_vmcore(), the latter needs to check if the memory has
-> already been reserved before.
+Signed-off-by: Ivan Delalande <colona@arista.com>
+---
+ makedumpfile.c |  3 +++
+ makedumpfile.h |  1 +
+ printk.c       | 10 ++++++++++
+ 3 files changed, 14 insertions(+)
 
-Doing memblock_reserve() for the same region is usually fine, did you
-encounter any issues without this patch?
+diff --git a/makedumpfile.c b/makedumpfile.c
+index b1b3b42..caf4d12 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1555,6 +1555,7 @@ get_symbol_info(void)
+ 	SYMBOL_INIT(pgdat_list, "pgdat_list");
+ 	SYMBOL_INIT(contig_page_data, "contig_page_data");
+ 	SYMBOL_INIT(prb, "prb");
++	SYMBOL_INIT(clear_seq, "clear_seq");
+ 	SYMBOL_INIT(log_buf, "log_buf");
+ 	SYMBOL_INIT(log_buf_len, "log_buf_len");
+ 	SYMBOL_INIT(log_end, "log_end");
+@@ -2231,6 +2232,7 @@ write_vmcoreinfo_data(void)
+ 	WRITE_SYMBOL("pgdat_list", pgdat_list);
+ 	WRITE_SYMBOL("contig_page_data", contig_page_data);
+ 	WRITE_SYMBOL("prb", prb);
++	WRITE_SYMBOL("clear_seq", clear_seq);
+ 	WRITE_SYMBOL("log_buf", log_buf);
+ 	WRITE_SYMBOL("log_buf_len", log_buf_len);
+ 	WRITE_SYMBOL("log_end", log_end);
+@@ -2676,6 +2678,7 @@ read_vmcoreinfo(void)
+ 	READ_SYMBOL("pgdat_list", pgdat_list);
+ 	READ_SYMBOL("contig_page_data", contig_page_data);
+ 	READ_SYMBOL("prb", prb);
++	READ_SYMBOL("clear_seq", clear_seq);
+ 	READ_SYMBOL("log_buf", log_buf);
+ 	READ_SYMBOL("log_buf_len", log_buf_len);
+ 	READ_SYMBOL("log_end", log_end);
+diff --git a/makedumpfile.h b/makedumpfile.h
+index ca50a89..c57ac7a 100644
+--- a/makedumpfile.h
++++ b/makedumpfile.h
+@@ -1656,6 +1656,7 @@ struct symbol_table {
+ 	unsigned long long	pgdat_list;
+ 	unsigned long long	contig_page_data;
+ 	unsigned long long	prb;
++	unsigned long long	clear_seq;
+ 	unsigned long long	log_buf;
+ 	unsigned long long	log_buf_len;
+ 	unsigned long long	log_end;
+diff --git a/printk.c b/printk.c
+index e8501c7..a160a5f 100644
+--- a/printk.c
++++ b/printk.c
+@@ -145,6 +145,7 @@ dump_record(struct prb_map *m, unsigned long id)
+ int
+ dump_lockless_dmesg(void)
+ {
++	unsigned long long clear_seq;
+ 	unsigned long head_id;
+ 	unsigned long tail_id;
+ 	unsigned long kaddr;
+@@ -216,6 +217,15 @@ dump_lockless_dmesg(void)
+ 			OFFSET(atomic_long_t.counter));
+ 	head_id = ULONG(m.desc_ring + OFFSET(prb_desc_ring.head_id) +
+ 			OFFSET(atomic_long_t.counter));
++	if (info->flag_partial_dmesg && SYMBOL(clear_seq) != NOT_FOUND_SYMBOL) {
++		if (!readmem(VADDR, SYMBOL(clear_seq), &clear_seq,
++			     sizeof(clear_seq))) {
++			ERRMSG("Can't get clear_seq.\n");
++			goto out_text_data;
++		}
++		tail_id = head_id - head_id % m.desc_ring_count +
++			  clear_seq % m.desc_ring_count;
++	}
  
-> Note that mips_reserve_vmcore() cannot just be removed, as not all MIPS
-> systems use DT.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v5:
->   - New.
-> ---
->  arch/mips/kernel/setup.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/mips/kernel/setup.c b/arch/mips/kernel/setup.c
-> index 23a140327a0bac1b..4693add05743d78b 100644
-> --- a/arch/mips/kernel/setup.c
-> +++ b/arch/mips/kernel/setup.c
-> @@ -429,7 +429,8 @@ static void __init mips_reserve_vmcore(void)
->  	pr_info("Reserving %ldKB of memory at %ldKB for kdump\n",
->  		(unsigned long)elfcorehdr_size >> 10, (unsigned long)elfcorehdr_addr >> 10);
->  
-> -	memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
-> +	if (!memblock_is_region_reserved(elfcorehdr_addr, elfcorehdr_size)
-> +		memblock_reserve(elfcorehdr_addr, elfcorehdr_size);
->  #endif
->  }
->  
-> -- 
-> 2.25.1
-> 
-
+ 	if (!open_dump_file()) {
+ 		ERRMSG("Can't open output file.\n");
 -- 
-Sincerely yours,
-Mike.
+2.32.0
 
 _______________________________________________
 kexec mailing list
