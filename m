@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn7nam10on2069.outbound.protection.outlook.com
- ([40.107.92.69] helo=NAM10-BN7-obe.outbound.protection.outlook.com)
+Received: from mail-dm6nam11on2059.outbound.protection.outlook.com
+ ([40.107.223.59] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mG0Mt-002ilb-Ir
- for kexec@lists.infradead.org; Tue, 17 Aug 2021 14:47:11 +0000
-Subject: Re: [PATCH v2 05/12] x86/sme: Replace occurrences of sme_active()
- with prot_guest_has()
+ id 1mG0va-002nhq-Or
+ for kexec@lists.infradead.org; Tue, 17 Aug 2021 15:23:02 +0000
+Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
 References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <c6c38d6253dc78381f9ff0f1823b6ee5ddeefacc.1628873970.git.thomas.lendacky@amd.com>
- <YRt6yCNCBLwyyx5X@zn.tnic>
+ <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
+ <YRgUxyhoqVJ0Kxvt@zn.tnic> <4710eb91-d054-7b31-5106-09e3e54bba9e@amd.com>
+ <YRknDQGUJJ/j9pth@zn.tnic>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <2996b1c8-1ea1-0e56-3aad-08b46fc207f0@amd.com>
-Date: Tue, 17 Aug 2021 09:46:58 -0500
-In-Reply-To: <YRt6yCNCBLwyyx5X@zn.tnic>
+Message-ID: <f4b8bc3c-5158-cd04-6e12-77f08036ea19@amd.com>
+Date: Tue, 17 Aug 2021 10:22:52 -0500
+In-Reply-To: <YRknDQGUJJ/j9pth@zn.tnic>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -28,110 +28,31 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Will Deacon <will@kernel.org>, Joerg Roedel <jroedel@suse.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Joerg Roedel <jroedel@suse.de>
 
-On 8/17/21 4:00 AM, Borislav Petkov wrote:
-> On Fri, Aug 13, 2021 at 11:59:24AM -0500, Tom Lendacky wrote:
->> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
->> index edc67ddf065d..5635ca9a1fbe 100644
->> --- a/arch/x86/mm/mem_encrypt.c
->> +++ b/arch/x86/mm/mem_encrypt.c
->> @@ -144,7 +144,7 @@ void __init sme_unmap_bootdata(char *real_mode_data)
->>  	struct boot_params *boot_data;
->>  	unsigned long cmdline_paddr;
->>  
->> -	if (!sme_active())
->> +	if (!amd_prot_guest_has(PATTR_SME))
->>  		return;
->>  
->>  	/* Get the command line address before unmapping the real_mode_data */
->> @@ -164,7 +164,7 @@ void __init sme_map_bootdata(char *real_mode_data)
->>  	struct boot_params *boot_data;
->>  	unsigned long cmdline_paddr;
->>  
->> -	if (!sme_active())
->> +	if (!amd_prot_guest_has(PATTR_SME))
->>  		return;
->>  
->>  	__sme_early_map_unmap_mem(real_mode_data, sizeof(boot_params), true);
->> @@ -378,7 +378,7 @@ bool sev_active(void)
->>  	return sev_status & MSR_AMD64_SEV_ENABLED;
->>  }
->>  
->> -bool sme_active(void)
->> +static bool sme_active(void)
+On 8/15/21 9:39 AM, Borislav Petkov wrote:
+> On Sun, Aug 15, 2021 at 08:53:31AM -0500, Tom Lendacky wrote:
+>> It's not a cross-vendor thing as opposed to a KVM or other hypervisor
+>> thing where the family doesn't have to be reported as AMD or HYGON.
 > 
-> Just get rid of it altogether. Also, there's an
+> What would be the use case? A HV starts a guest which is supposed to be
+> encrypted using the AMD's confidential guest technology but the HV tells
+> the guest that it is not running on an AMD SVM HV but something else?
 > 
-> EXPORT_SYMBOL_GPL(sev_active);
-> > which needs to go under the actual function. Here's a diff ontop:
+> Is that even an actual use case?
+> 
+> Or am I way off?
+> 
+> I know we have talked about this in the past but this still sounds
+> insane.
 
-Will do.
+Maybe the KVM folks have a better understanding of it...
 
-> 
-> ---
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index 5635ca9a1fbe..a3a2396362a5 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -364,8 +364,9 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
->  /*
->   * SME and SEV are very similar but they are not the same, so there are
->   * times that the kernel will need to distinguish between SME and SEV. The
-> - * sme_active() and sev_active() functions are used for this.  When a
-> - * distinction isn't needed, the mem_encrypt_active() function can be used.
-> + * PATTR_HOST_MEM_ENCRYPT and PATTR_GUEST_MEM_ENCRYPT flags to
-> + * amd_prot_guest_has() are used for this. When a distinction isn't needed,
-> + * the mem_encrypt_active() function can be used.
->   *
->   * The trampoline code is a good example for this requirement.  Before
->   * paging is activated, SME will access all memory as decrypted, but SEV
-> @@ -377,11 +378,6 @@ bool sev_active(void)
->  {
->  	return sev_status & MSR_AMD64_SEV_ENABLED;
->  }
-> -
-> -static bool sme_active(void)
-> -{
-> -	return sme_me_mask && !sev_active();
-> -}
->  EXPORT_SYMBOL_GPL(sev_active);
->  
->  /* Needs to be called from non-instrumentable code */
-> @@ -398,7 +394,7 @@ bool amd_prot_guest_has(unsigned int attr)
->  
->  	case PATTR_SME:
->  	case PATTR_HOST_MEM_ENCRYPT:
-> -		return sme_active();
-> +		return sme_me_mask && !sev_active();
->  
->  	case PATTR_SEV:
->  	case PATTR_GUEST_MEM_ENCRYPT:
-> 
->>  {
->>  	return sme_me_mask && !sev_active();
->>  }
->> @@ -428,7 +428,7 @@ bool force_dma_unencrypted(struct device *dev)
->>  	 * device does not support DMA to addresses that include the
->>  	 * encryption mask.
->>  	 */
->> -	if (sme_active()) {
->> +	if (amd_prot_guest_has(PATTR_SME)) {
-> 
-> So I'm not sure: you add PATTR_SME which you call with
-> amd_prot_guest_has() and PATTR_HOST_MEM_ENCRYPT which you call with
-> prot_guest_has() and they both end up being the same thing on AMD.
-> 
-> So why even bother with PATTR_SME?
-> 
-> This is only going to cause confusion later and I'd say let's simply use
-> prot_guest_has(PATTR_HOST_MEM_ENCRYPT) everywhere...
+I can change it to be an AMD/HYGON check...  although, I'll have to check
+to see if any (very) early use of the function will work with that.
 
-Ok, I can do that. I was trying to ensure that anything that is truly SME
-or SEV specific would be called out now.
-
-I'm ok with letting the TDX folks make changes to these calls to be SME or
-SEV specific, if necessary, later.
+At a minimum, the check in arch/x86/kernel/head64.c will have to be
+changed or removed. I'll take a closer look.
 
 Thanks,
 Tom
