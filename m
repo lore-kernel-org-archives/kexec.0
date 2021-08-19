@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam12on2060.outbound.protection.outlook.com
- ([40.107.244.60] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+Received: from mail-mw2nam12on2042.outbound.protection.outlook.com
+ ([40.107.244.42] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mGmqq-009Fbh-D7
- for kexec@lists.infradead.org; Thu, 19 Aug 2021 18:33:20 +0000
-Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
+ id 1mGmsN-009FkC-5A
+ for kexec@lists.infradead.org; Thu, 19 Aug 2021 18:34:54 +0000
+Subject: Re: [PATCH v2 04/12] powerpc/pseries/svm: Add a powerpc version of
+ prot_guest_has()
 References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
- <YR4p9TqKTLdN1A96@infradead.org>
+ <000f627ce20c6504dd8d118d85bd69e7717b752f.1628873970.git.thomas.lendacky@amd.com>
+ <YR4qfZdkv+91zNZk@infradead.org>
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
-Date: Thu, 19 Aug 2021 13:33:09 -0500
-In-Reply-To: <YR4p9TqKTLdN1A96@infradead.org>
+Message-ID: <58381b1c-79a4-e639-ba48-41b0f3da671c@amd.com>
+Date: Thu, 19 Aug 2021 13:34:45 -0500
+In-Reply-To: <YR4qfZdkv+91zNZk@infradead.org>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,54 +28,17 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Joerg Roedel <jroedel@suse.de>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
 
-On 8/19/21 4:52 AM, Christoph Hellwig wrote:
-> On Fri, Aug 13, 2021 at 11:59:22AM -0500, Tom Lendacky wrote:
->> While the name suggests this is intended mainly for guests, it will
->> also be used for host memory encryption checks in place of sme_active().
-> 
-> Which suggest that the name is not good to start with.  Maybe protected
-> hardware, system or platform might be a better choice?
-> 
+On 8/19/21 4:55 AM, Christoph Hellwig wrote:
+> On Fri, Aug 13, 2021 at 11:59:23AM -0500, Tom Lendacky wrote:
 >> +static inline bool prot_guest_has(unsigned int attr)
->> +{
->> +#ifdef CONFIG_AMD_MEM_ENCRYPT
->> +	if (sme_me_mask)
->> +		return amd_prot_guest_has(attr);
->> +#endif
->> +
->> +	return false;
->> +}
 > 
-> Shouldn't this be entirely out of line?
+> No reall need to have this inline.  In fact I'd suggest we havea the
+> prototype in a common header so that everyone must implement it out
+> of line.
 
-I did it as inline originally because the presence of the function will be
-decided based on the ARCH_HAS_PROTECTED_GUEST config. For now, that is
-only selected by the AMD memory encryption support, so if I went out of
-line I could put in mem_encrypt.c. But with TDX wanting to also use it, it
-would have to be in an always built file with some #ifdefs or in its own
-file that is conditionally built based on the ARCH_HAS_PROTECTED_GUEST
-setting (they've already tried building with ARCH_HAS_PROTECTED_GUEST=y
-and AMD_MEM_ENCRYPT not set).
-
-To take it out of line, I'm leaning towards the latter, creating a new
-file that is built based on the ARCH_HAS_PROTECTED_GUEST setting.
-
-> 
->> +/* 0x800 - 0x8ff reserved for AMD */
->> +#define PATTR_SME			0x800
->> +#define PATTR_SEV			0x801
->> +#define PATTR_SEV_ES			0x802
-> 
-> Why do we need reservations for a purely in-kernel namespace?
-> 
-> And why are you overoading a brand new generic API with weird details
-> of a specific implementation like this?
-
-There was some talk about this on the mailing list where TDX and SEV may
-need to be differentiated, so we wanted to reserve a range of values per
-technology. I guess I can remove them until they are actually needed.
+I'll do the same thing I end up doing for x86.
 
 Thanks,
 Tom
