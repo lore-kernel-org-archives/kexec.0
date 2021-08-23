@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 MIME-Version: 1.0
 References: <cover.1628670468.git.geert+renesas@glider.be>
- <92b6718f5618d5469f67b48fbea189cca0c12f4b.1628670468.git.geert+renesas@glider.be>
- <YRn9DHlB/pdNPJyP@kernel.org>
- <CAMuHMdVdqR7gw+2O2v=qv_BB=+X2wEXN9jXV=np=jRayadwj7g@mail.gmail.com>
- <YSOeGzowhV/R9QS/@kernel.org>
-In-Reply-To: <YSOeGzowhV/R9QS/@kernel.org>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Mon, 23 Aug 2021 09:44:55 -0500
-Message-ID: <CAL_JsqLMv4fKebJEOv=7UXvy_qqut0N42psS-PSgRMU-qhiFLQ@mail.gmail.com>
-Subject: Re: [PATCH v5 1/9] MIPS: Avoid future duplicate elf core header
- reservation
+ <YRkxzx/1XM3r64Ee@robh.at.kernel.org>
+ <CAMuHMdXs0+7K4N0mg6qX6X1cr_8dBr_HdTahdfORMk76wCJcEA@mail.gmail.com>
+In-Reply-To: <CAMuHMdXs0+7K4N0mg6qX6X1cr_8dBr_HdTahdfORMk76wCJcEA@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Date: Mon, 23 Aug 2021 09:52:20 -0500
+Message-ID: <CAL_JsqK63hoEMafLP+5eeQR1qrhOO76J4KEQG_By6QnLfhF=dw@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Add generic support for kdump DT properties
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,47 +20,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Mike Rapoport <rppt@kernel.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Mon, Aug 23, 2021 at 8:10 AM Mike Rapoport <rppt@kernel.org> wrote:
+On Mon, Aug 23, 2021 at 5:13 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
 >
-> On Mon, Aug 23, 2021 at 12:17:50PM +0200, Geert Uytterhoeven wrote:
-> > Hi Mike,
+> Hi Rob,
+>
+> On Sun, Aug 15, 2021 at 5:25 PM Rob Herring <robh@kernel.org> wrote:
+> > On Wed, Aug 11, 2021 at 10:50:58AM +0200, Geert Uytterhoeven wrote:
+> > > This patch series adds generic support for parsing DT properties related
+> > > to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
+> > > the "/chosen" node), makes use of it on arm32, and performs a few
+> > > cleanups.  It is an evolution of the combination of [1] and [2].
 > >
-> > On Mon, Aug 16, 2021 at 7:52 AM Mike Rapoport <rppt@kernel.org> wrote:
-> > > On Wed, Aug 11, 2021 at 10:50:59AM +0200, Geert Uytterhoeven wrote:
-> > > > Prepare for early_init_fdt_scan_reserved_mem() reserving the memory
-> > > > occupied by an elf core header described in the device tree.
-> > > > As arch_mem_init() calls early_init_fdt_scan_reserved_mem() before
-> > > > mips_reserve_vmcore(), the latter needs to check if the memory has
-> > > > already been reserved before.
-> > >
-> > > Doing memblock_reserve() for the same region is usually fine, did you
-> > > encounter any issues without this patch?
+> > The DT bits look fine to me. How do you expect this to be merged? I'm
+> > happy to take it if arch maintainers can ack it.
+>
+> I had hoped you could take the series...
+
+My current thought is I'll take 2-5, 7 and 8 given that's what I have
+acks for and the others can be applied independently.
+
+> > > The series consists of 6 parts:
+> > >   1. Patch 1 prepares architecture-specific code (needed for MIPS only)
+> > >      to avoid duplicating elf core header reservation later.
+> > >   2. Patch 2 prepares the visibility of variables used to hold
+> > >      information retrieved from the DT properties.
+> > >   3. Patches 3-5 add support to the FDT core for handling the
+> > >      properties.
+> > >      This can co-exist safely with architecture-specific handling, until
+> > >      the latter has been removed.
 > >
-> > Does it also work if the same region is part of an earlier larger
-> > reservation?  I am no memblock expert, so I don't know.
-> > I didn't run into any issues, as my MIPS platform is non-DT, but I
-> > assume arch/arm64/mm/init.c:reserve_elfcorehdr() had the check for
-> > a reason.
+> > Looks like patch 5 doesn't have any dependencies with the series?
 >
-> The memory will be reserved regardless of the earlier reservation, the
-> issue may appear when the reservations are made for different purpose. E.g.
-> if there was crash kernel allocation before the reservation of elfcorehdr.
+> Indeed. So you can take it independently.
 >
-> The check in such case will prevent the second reservation, but, at least
-> in arch/arm64/mm/init.c:reserve_elfcorehdr() it does not seem to prevent
-> different users of the overlapping regions to step on each others toes.
+> > >   4. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
+> > >      riscv.
+> >
+> > I thought this should be applied for 5.14?
+>
+> Me too, but unfortunately that hasn't happened yet...
 
-If the kernel has been passed in overlapping regions, is there
-anything you can do other than hope to get a message out?
-
-> Moreover, arm64::reserve_elfcorehdr() seems buggy to me, because of there
-> is only a partial overlap of the elfcorehdr with the previous reservation,
-> the non-overlapping part of elfcorehdr won't get reserved at all.
-
-What do you suggest as the arm64 version is not the common version?
+Buried in the middle of this series is not going to encourage it to be
+picked up as a fix.
 
 Rob
 
