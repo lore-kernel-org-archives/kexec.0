@@ -1,20 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga07.intel.com ([134.134.136.100])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mGoAk-009Nfu-4i
- for kexec@lists.infradead.org; Thu, 19 Aug 2021 19:57:55 +0000
-Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
- <YR4p9TqKTLdN1A96@infradead.org>
- <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
-From: "Kuppuswamy, Sathyanarayanan"
- <sathyanarayanan.kuppuswamy@linux.intel.com>
-Message-ID: <90316f17-e853-fd23-2ec2-4d03cf283b0b@linux.intel.com>
-Date: Thu, 19 Aug 2021 12:57:48 -0700
 MIME-Version: 1.0
-In-Reply-To: <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
-Content-Language: en-US
+References: <cover.1628670468.git.geert+renesas@glider.be>
+ <YRkxzx/1XM3r64Ee@robh.at.kernel.org>
+In-Reply-To: <YRkxzx/1XM3r64Ee@robh.at.kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 23 Aug 2021 12:13:29 +0200
+Message-ID: <CAMuHMdXs0+7K4N0mg6qX6X1cr_8dBr_HdTahdfORMk76wCJcEA@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Add generic support for kdump DT properties
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,27 +15,70 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>, Christoph Hellwig <hch@infradead.org>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Joerg Roedel <jroedel@suse.de>
+To: Rob Herring <robh@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
+Hi Rob,
 
+On Sun, Aug 15, 2021 at 5:25 PM Rob Herring <robh@kernel.org> wrote:
+> On Wed, Aug 11, 2021 at 10:50:58AM +0200, Geert Uytterhoeven wrote:
+> > This patch series adds generic support for parsing DT properties related
+> > to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
+> > the "/chosen" node), makes use of it on arm32, and performs a few
+> > cleanups.  It is an evolution of the combination of [1] and [2].
+>
+> The DT bits look fine to me. How do you expect this to be merged? I'm
+> happy to take it if arch maintainers can ack it.
 
-On 8/19/21 11:33 AM, Tom Lendacky wrote:
-> There was some talk about this on the mailing list where TDX and SEV may
-> need to be differentiated, so we wanted to reserve a range of values per
-> technology. I guess I can remove them until they are actually needed.
+I had hoped you could take the series...
 
-In TDX also we have similar requirements and we need some flags for
-TDX specific checks. So I think it is fine to leave some space for vendor
-flags.
+> > The series consists of 6 parts:
+> >   1. Patch 1 prepares architecture-specific code (needed for MIPS only)
+> >      to avoid duplicating elf core header reservation later.
+> >   2. Patch 2 prepares the visibility of variables used to hold
+> >      information retrieved from the DT properties.
+> >   3. Patches 3-5 add support to the FDT core for handling the
+> >      properties.
+> >      This can co-exist safely with architecture-specific handling, until
+> >      the latter has been removed.
+>
+> Looks like patch 5 doesn't have any dependencies with the series?
+
+Indeed. So you can take it independently.
+
+> >   4. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
+> >      riscv.
+>
+> I thought this should be applied for 5.14?
+
+Me too, but unfortunately that hasn't happened yet...
+
+> >   5. Patches 7-8 convert arm64 to use the generic handling instead of
+> >      its own implementation.
+> >   6. Patch 9 adds support for kdump properties to arm32.
+> >      The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add
+> >      DT properties to crash dump kernel's DTB"[3], which is still valid.
+>
+> This one can be applied on its own, right?
+
+While that wouldn't break anything (i.e. no regression), it still
+wouldn't work if the DT properties are present, and the now-legacy
+"mem=" kernel command line parameter is not.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Sathyanarayanan Kuppuswamy
-Linux Kernel Developer
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
