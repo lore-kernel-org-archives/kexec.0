@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 24 Aug 2021 08:14:34 +0100
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v2 03/12] x86/sev: Add an x86 version of prot_guest_has()
-Message-ID: <YSScWvpXeVXw/ed5@infradead.org>
-References: <cover.1628873970.git.thomas.lendacky@amd.com>
- <7d55bac0cf2e73f53816bce3a3097877ed9663f3.1628873970.git.thomas.lendacky@amd.com>
- <YR4p9TqKTLdN1A96@infradead.org>
- <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <4272eaf5-b654-2669-62ac-ba768acd6b91@amd.com>
+References: <cover.1628670468.git.geert+renesas@glider.be>
+ <YRkxzx/1XM3r64Ee@robh.at.kernel.org>
+ <CAMuHMdXs0+7K4N0mg6qX6X1cr_8dBr_HdTahdfORMk76wCJcEA@mail.gmail.com>
+ <CAL_JsqK63hoEMafLP+5eeQR1qrhOO76J4KEQG_By6QnLfhF=dw@mail.gmail.com>
+In-Reply-To: <CAL_JsqK63hoEMafLP+5eeQR1qrhOO76J4KEQG_By6QnLfhF=dw@mail.gmail.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Tue, 24 Aug 2021 13:55:34 +0200
+Message-ID: <CAMuHMdVNi4bh0Kp43BrVVKD8YY5ac4yi9=W3QZmw=stmwwtuiQ@mail.gmail.com>
+Subject: Re: [PATCH v5 0/9] Add generic support for kdump DT properties
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,47 +21,66 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: Christoph Hellwig <hch@infradead.org>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Joerg Roedel <jroedel@suse.de>
+To: Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>
+Cc: Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 
-On Thu, Aug 19, 2021 at 01:33:09PM -0500, Tom Lendacky wrote:
-> I did it as inline originally because the presence of the function will be
-> decided based on the ARCH_HAS_PROTECTED_GUEST config. For now, that is
-> only selected by the AMD memory encryption support, so if I went out of
-> line I could put in mem_encrypt.c. But with TDX wanting to also use it, it
-> would have to be in an always built file with some #ifdefs or in its own
-> file that is conditionally built based on the ARCH_HAS_PROTECTED_GUEST
-> setting (they've already tried building with ARCH_HAS_PROTECTED_GUEST=y
-> and AMD_MEM_ENCRYPT not set).
-> 
-> To take it out of line, I'm leaning towards the latter, creating a new
-> file that is built based on the ARCH_HAS_PROTECTED_GUEST setting.
+On Mon, Aug 23, 2021 at 4:52 PM Rob Herring <robh@kernel.org> wrote:
+> On Mon, Aug 23, 2021 at 5:13 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> > On Sun, Aug 15, 2021 at 5:25 PM Rob Herring <robh@kernel.org> wrote:
+> > > On Wed, Aug 11, 2021 at 10:50:58AM +0200, Geert Uytterhoeven wrote:
+> > > > This patch series adds generic support for parsing DT properties related
+> > > > to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
+> > > > the "/chosen" node), makes use of it on arm32, and performs a few
+> > > > cleanups.  It is an evolution of the combination of [1] and [2].
+> > >
+> > > The DT bits look fine to me. How do you expect this to be merged? I'm
+> > > happy to take it if arch maintainers can ack it.
+> >
+> > I had hoped you could take the series...
+>
+> My current thought is I'll take 2-5, 7 and 8 given that's what I have
+> acks for and the others can be applied independently.
 
-Yes.  In general everytime architectures have to provide the prototype
-and not just the implementation of something we end up with a giant mess
-sooner or later.  In a few cases that is still warranted due to
-performance concerns, but i don't think that is the case here.
+Note that Palmer did ack patch 6, so you can include it.
 
-> 
-> > 
-> >> +/* 0x800 - 0x8ff reserved for AMD */
-> >> +#define PATTR_SME			0x800
-> >> +#define PATTR_SEV			0x801
-> >> +#define PATTR_SEV_ES			0x802
-> > 
-> > Why do we need reservations for a purely in-kernel namespace?
-> > 
-> > And why are you overoading a brand new generic API with weird details
-> > of a specific implementation like this?
-> 
-> There was some talk about this on the mailing list where TDX and SEV may
-> need to be differentiated, so we wanted to reserve a range of values per
-> technology. I guess I can remove them until they are actually needed.
+Russell: any thoughts about patch 9?
 
-In that case add a flag for the differing behavior.  And only add them
-when actually needed.  And either way there is absolutely no need to
-reserve ranges.
+Thanks!
 
+> > > > The series consists of 6 parts:
+> > > >   1. Patch 1 prepares architecture-specific code (needed for MIPS only)
+> > > >      to avoid duplicating elf core header reservation later.
+> > > >   2. Patch 2 prepares the visibility of variables used to hold
+> > > >      information retrieved from the DT properties.
+> > > >   3. Patches 3-5 add support to the FDT core for handling the
+> > > >      properties.
+> > > >      This can co-exist safely with architecture-specific handling, until
+> > > >      the latter has been removed.
+> > >
+> > > Looks like patch 5 doesn't have any dependencies with the series?
+> >
+> > Indeed. So you can take it independently.
+> >
+> > > >   4. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
+> > > >      riscv.
+> > >
+> > > I thought this should be applied for 5.14?
+> >
+> > Me too, but unfortunately that hasn't happened yet...
+>
+> Buried in the middle of this series is not going to encourage it to be
+> picked up as a fix.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 
 _______________________________________________
 kexec mailing list
