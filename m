@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Date: Tue, 24 Aug 2021 19:05:56 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v16 00/15] arm64: MMU enabled kexec relocation
+Message-ID: <20210824180555.GD623@arm.com>
+References: <20210802215408.804942-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-References: <cover.1628670468.git.geert+renesas@glider.be>
- <YRkxzx/1XM3r64Ee@robh.at.kernel.org>
- <CAMuHMdXs0+7K4N0mg6qX6X1cr_8dBr_HdTahdfORMk76wCJcEA@mail.gmail.com>
- <CAL_JsqK63hoEMafLP+5eeQR1qrhOO76J4KEQG_By6QnLfhF=dw@mail.gmail.com>
-In-Reply-To: <CAL_JsqK63hoEMafLP+5eeQR1qrhOO76J4KEQG_By6QnLfhF=dw@mail.gmail.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Tue, 24 Aug 2021 13:55:34 +0200
-Message-ID: <CAMuHMdVNi4bh0Kp43BrVVKD8YY5ac4yi9=W3QZmw=stmwwtuiQ@mail.gmail.com>
-Subject: Re: [PATCH v5 0/9] Add generic support for kdump DT properties
+Content-Disposition: inline
+In-Reply-To: <20210802215408.804942-1-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,66 +19,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>, Russell King <linux@armlinux.org.uk>
-Cc: Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Nick Kossifidis <mick@ics.forth.gr>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Frank Rowand <frowand.list@gmail.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Mike Rapoport <rppt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:BROADCOM NVRAM DRIVER" <linux-mips@vger.kernel.org>, linux-riscv <linux-riscv@lists.infradead.org>, kexec@lists.infradead.org, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-On Mon, Aug 23, 2021 at 4:52 PM Rob Herring <robh@kernel.org> wrote:
-> On Mon, Aug 23, 2021 at 5:13 AM Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> > On Sun, Aug 15, 2021 at 5:25 PM Rob Herring <robh@kernel.org> wrote:
-> > > On Wed, Aug 11, 2021 at 10:50:58AM +0200, Geert Uytterhoeven wrote:
-> > > > This patch series adds generic support for parsing DT properties related
-> > > > to crash dump kernels ("linux,elfcorehdr" and "linux,elfcorehdr" under
-> > > > the "/chosen" node), makes use of it on arm32, and performs a few
-> > > > cleanups.  It is an evolution of the combination of [1] and [2].
-> > >
-> > > The DT bits look fine to me. How do you expect this to be merged? I'm
-> > > happy to take it if arch maintainers can ack it.
-> >
-> > I had hoped you could take the series...
->
-> My current thought is I'll take 2-5, 7 and 8 given that's what I have
-> acks for and the others can be applied independently.
+Hi Pavel,
 
-Note that Palmer did ack patch 6, so you can include it.
+This series is still missing reviews from those who understand kexec
+better than me.
 
-Russell: any thoughts about patch 9?
+On Mon, Aug 02, 2021 at 05:53:53PM -0400, Pavel Tatashin wrote:
+> Enable MMU during kexec relocation in order to improve reboot performance.
+> 
+> If kexec functionality is used for a fast system update, with a minimal
+> downtime, the relocation of kernel + initramfs takes a significant portion
+> of reboot.
+> 
+> The reason for slow relocation is because it is done without MMU, and thus
+> not benefiting from D-Cache.
 
-Thanks!
+The performance improvements are indeed significant on some platforms
+(going from 7s to ~40ms), so I think the merging the series is worth it.
+Some general questions so I better understand the impact:
 
-> > > > The series consists of 6 parts:
-> > > >   1. Patch 1 prepares architecture-specific code (needed for MIPS only)
-> > > >      to avoid duplicating elf core header reservation later.
-> > > >   2. Patch 2 prepares the visibility of variables used to hold
-> > > >      information retrieved from the DT properties.
-> > > >   3. Patches 3-5 add support to the FDT core for handling the
-> > > >      properties.
-> > > >      This can co-exist safely with architecture-specific handling, until
-> > > >      the latter has been removed.
-> > >
-> > > Looks like patch 5 doesn't have any dependencies with the series?
-> >
-> > Indeed. So you can take it independently.
-> >
-> > > >   4. Patch 6 removes the non-standard handling of "linux,elfcorehdr" on
-> > > >      riscv.
-> > >
-> > > I thought this should be applied for 5.14?
-> >
-> > Me too, but unfortunately that hasn't happened yet...
->
-> Buried in the middle of this series is not going to encourage it to be
-> picked up as a fix.
+- Is the kdump path affected in any way? IIUC that doesn't need any
+  relocation but we should also make sure we don't create the additional
+  page table unnecessarily (should keep as much memory intact as
+  possible). Maybe that's already handled.
 
-Gr{oetje,eeting}s,
+- What happens if trans_pgd_create_copy() fails to allocate memory. Does
+  it fall back to an MMU-off relocation?
 
-                        Geert
+And I presume this series does not introduce any changes to the kexec
+tools ABI.
+
+Thanks.
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Catalin
 
 _______________________________________________
 kexec mailing list
