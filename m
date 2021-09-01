@@ -1,16 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
+Received: from mail-eopbgr1310051.outbound.protection.outlook.com
+ ([40.107.131.51] helo=APC01-SG2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mMsfd-00FsqX-1y
- for kexec@lists.infradead.org; Sun, 05 Sep 2021 13:58:54 +0000
-Received: by mail-ej1-x633.google.com with SMTP id e21so7785037ejz.12
- for <kexec@lists.infradead.org>; Sun, 05 Sep 2021 06:58:47 -0700 (PDT)
+ id 1mLImk-003tlz-5l
+ for kexec@lists.infradead.org; Wed, 01 Sep 2021 05:27:46 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH v2] makedumpfile: support --partial-dmesg on 5.10+ kernels
+Date: Wed, 1 Sep 2021 05:27:25 +0000
+Message-ID: <TYYPR01MB6777CF81E06D391106ABC2D5DDCD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <YRrrgKjxefeXIb3O@visor>
+ <TYYPR01MB677762D7B0E7850537CDF61BDDFF9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <YS1prC+k23E964Qz@visor>
+In-Reply-To: <YS1prC+k23E964Qz@visor>
+Content-Language: ja-JP
 MIME-Version: 1.0
-From: Naresh Kamboju <naresh.kamboju@linaro.org>
-Date: Sun, 5 Sep 2021 19:28:35 +0530
-Message-ID: <CA+G9fYvMaHgSied79QBs3D=eDVETGH=3gxA8owCSRj313yEhVg@mail.gmail.com>
-Subject: kernel/kexec_file.o: failed: Cannot find symbol for section 10:
- .text.unlikely.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,59 +27,171 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, linux-stable <stable@vger.kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org
+To: Ivan Delalande <colona@arista.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, John Ogness <john.ogness@linutronix.de>
 
-Following build errors noticed while building stable rc Linux 5.13.14
-with gcc-11 for powerpc architecture.
+-----Original Message-----
+> The new printk ringbuffer implementation added in kernel v5.10 with
+> commit 896fbe20b4e2 ("printk: use the lockless ringbuffer") also
+> exported a new vmcore symbol "clear_seq" to keep track where dmesg had
+> been cleared like "clear_idx" on previous versions. Use it in
+> dump_lockless_dmesg when --partial-dmesg is passed to find and start
+> dumping messages only from that index.
+> 
+> On v5.13, commit 7d7a23a91c91 ("printk: use seqcount_latch for
+> clear_seq") converted it from a simple value, and so an additional step
+> is required to find and retrieve the sequence at the right offset in the
+> latched_seq structure it now uses.
+> 
+> Signed-off-by: Ivan Delalande <colona@arista.com>
 
-# to reproduce this build locally:
-tuxmake --target-arch=powerpc --kconfig=defconfig --toolchain=gcc-11
---wrapper=sccache --environment=KBUILD_BUILD_TIMESTAMP=@1630691419
---environment=KBUILD_BUILD_USER=tuxmake
---environment=KBUILD_BUILD_HOST=tuxmake
---environment=SCCACHE_BUCKET=sccache.tuxbuild.com --runtime=podman
---image=855116176053.dkr.ecr.us-east-1.amazonaws.com/tuxmake/powerpc_gcc-11
-config default kernel xipkernel modules dtbs dtbs-legacy debugkernel
-headers
+The v2 patch tested OK on 5.12 and 5.14.  Applied.
+https://github.com/makedumpfile/makedumpfile/commit/bccc39c147fea2b29f98f9973614c7a6697a065d
 
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=powerpc
-CROSS_COMPILE=powerpc64le-linux-gnu- 'CC=sccache
-powerpc64le-linux-gnu-gcc' 'HOSTCC=sccache gcc' defconfig
+Thanks,
+Kazu
 
-make --silent --keep-going --jobs=8
-O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=powerpc
-CROSS_COMPILE=powerpc64le-linux-gnu- 'CC=sccache
-powerpc64le-linux-gnu-gcc' 'HOSTCC=sccache gcc'
-Cannot find symbol for section 10: .text.unlikely.
-kernel/kexec_file.o: failed
-make[2]: *** [/builds/linux/scripts/Makefile.build:273:
-kernel/kexec_file.o] Error 1
-make[2]: *** Deleting file 'kernel/kexec_file.o'
-
-
-Build config:
-https://builds.tuxbuild.com/1xdiIZVZuLCW3X1WO2YT6Fsl19w/config
-
-Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
-
-meta data:
------------
-    git_repo: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
-    git_sha: a603798fb16829e56f80f57879611e67bba4910d
-    git_short_log: a603798fb168 (\Linux 5.13.14\)
-    kconfig:  defconfig
-    kernel_version: 5.13.14
-    target_arch: powerpc
-    toolchain: gcc-11
-
-steps to reproduce:
-https://builds.tuxbuild.com/1xdiIZVZuLCW3X1WO2YT6Fsl19w/tuxmake_reproducer.sh
-
---
-Linaro LKFT
-https://lkft.linaro.org
+> ---
+>  makedumpfile.c | 12 ++++++++++++
+>  makedumpfile.h |  6 ++++++
+>  printk.c       | 19 +++++++++++++++++++
+>  3 files changed, 37 insertions(+)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index b1b3b42..ac17f19 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1555,6 +1555,7 @@ get_symbol_info(void)
+>  	SYMBOL_INIT(pgdat_list, "pgdat_list");
+>  	SYMBOL_INIT(contig_page_data, "contig_page_data");
+>  	SYMBOL_INIT(prb, "prb");
+> +	SYMBOL_INIT(clear_seq, "clear_seq");
+>  	SYMBOL_INIT(log_buf, "log_buf");
+>  	SYMBOL_INIT(log_buf_len, "log_buf_len");
+>  	SYMBOL_INIT(log_end, "log_end");
+> @@ -2000,6 +2001,9 @@ get_structure_info(void)
+>  		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
+> 
+>  		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
+> +
+> +		SIZE_INIT(latched_seq, "latched_seq");
+> +		OFFSET_INIT(latched_seq.val, "latched_seq", "val");
+>  	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
+>  		/*
+>  		 * In kernel 3.11-rc4 the log structure name was renamed
+> @@ -2231,6 +2235,7 @@ write_vmcoreinfo_data(void)
+>  	WRITE_SYMBOL("pgdat_list", pgdat_list);
+>  	WRITE_SYMBOL("contig_page_data", contig_page_data);
+>  	WRITE_SYMBOL("prb", prb);
+> +	WRITE_SYMBOL("clear_seq", clear_seq);
+>  	WRITE_SYMBOL("log_buf", log_buf);
+>  	WRITE_SYMBOL("log_buf_len", log_buf_len);
+>  	WRITE_SYMBOL("log_end", log_end);
+> @@ -2266,6 +2271,7 @@ write_vmcoreinfo_data(void)
+>  		WRITE_STRUCTURE_SIZE("printk_ringbuffer", printk_ringbuffer);
+>  		WRITE_STRUCTURE_SIZE("prb_desc", prb_desc);
+>  		WRITE_STRUCTURE_SIZE("printk_info", printk_info);
+> +		WRITE_STRUCTURE_SIZE("latched_seq", latched_seq);
+>  	} else if (info->flag_use_printk_log)
+>  		WRITE_STRUCTURE_SIZE("printk_log", printk_log);
+>  	else
+> @@ -2335,6 +2341,8 @@ write_vmcoreinfo_data(void)
+>  		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
+> 
+>  		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
+> +
+> +		WRITE_MEMBER_OFFSET("latched_seq.val", latched_seq.val);
+>  	} else if (info->flag_use_printk_log) {
+>  		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
+>  		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
+> @@ -2676,6 +2684,7 @@ read_vmcoreinfo(void)
+>  	READ_SYMBOL("pgdat_list", pgdat_list);
+>  	READ_SYMBOL("contig_page_data", contig_page_data);
+>  	READ_SYMBOL("prb", prb);
+> +	READ_SYMBOL("clear_seq", clear_seq);
+>  	READ_SYMBOL("log_buf", log_buf);
+>  	READ_SYMBOL("log_buf_len", log_buf_len);
+>  	READ_SYMBOL("log_end", log_end);
+> @@ -2784,6 +2793,9 @@ read_vmcoreinfo(void)
+>  		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
+> 
+>  		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
+> +
+> +		READ_STRUCTURE_SIZE("latched_seq", latched_seq);
+> +		READ_MEMBER_OFFSET("latched_seq.val", latched_seq.val);
+>  	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
+>  		info->flag_use_printk_ringbuffer = FALSE;
+>  		info->flag_use_printk_log = TRUE;
+> diff --git a/makedumpfile.h b/makedumpfile.h
+> index ca50a89..bd9e2f6 100644
+> --- a/makedumpfile.h
+> +++ b/makedumpfile.h
+> @@ -1656,6 +1656,7 @@ struct symbol_table {
+>  	unsigned long long	pgdat_list;
+>  	unsigned long long	contig_page_data;
+>  	unsigned long long	prb;
+> +	unsigned long long	clear_seq;
+>  	unsigned long long	log_buf;
+>  	unsigned long long	log_buf_len;
+>  	unsigned long long	log_end;
+> @@ -1749,6 +1750,7 @@ struct size_table {
+>  	long	printk_ringbuffer;
+>  	long	prb_desc;
+>  	long	printk_info;
+> +	long	latched_seq;
+> 
+>  	/*
+>  	 * for Xen extraction
+> @@ -1973,6 +1975,10 @@ struct offset_table {
+>  		long counter;
+>  	} atomic_long_t;
+> 
+> +	struct latched_seq_s {
+> +		long val;
+> +	} latched_seq;
+> +
+>  	/*
+>  	 * symbols on ppc64 arch
+>  	 */
+> diff --git a/printk.c b/printk.c
+> index e8501c7..61e0b26 100644
+> --- a/printk.c
+> +++ b/printk.c
+> @@ -145,6 +145,7 @@ dump_record(struct prb_map *m, unsigned long id)
+>  int
+>  dump_lockless_dmesg(void)
+>  {
+> +	unsigned long long clear_seq;
+>  	unsigned long head_id;
+>  	unsigned long tail_id;
+>  	unsigned long kaddr;
+> @@ -216,6 +217,24 @@ dump_lockless_dmesg(void)
+>  			OFFSET(atomic_long_t.counter));
+>  	head_id = ULONG(m.desc_ring + OFFSET(prb_desc_ring.head_id) +
+>  			OFFSET(atomic_long_t.counter));
+> +	if (info->flag_partial_dmesg && SYMBOL(clear_seq) != NOT_FOUND_SYMBOL) {
+> +		if (!readmem(VADDR, SYMBOL(clear_seq), &clear_seq,
+> +			     sizeof(clear_seq))) {
+> +			ERRMSG("Can't get clear_seq.\n");
+> +			goto out_text_data;
+> +		}
+> +		if (SIZE(latched_seq) != NOT_FOUND_STRUCTURE) {
+> +			kaddr = SYMBOL(clear_seq) + OFFSET(latched_seq.val) +
+> +				(clear_seq & 0x1) * sizeof(clear_seq);
+> +			if (!readmem(VADDR, kaddr, &clear_seq,
+> +				     sizeof(clear_seq))) {
+> +				ERRMSG("Can't get latched clear_seq.\n");
+> +				goto out_text_data;
+> +			}
+> +		}
+> +		tail_id = head_id - head_id % m.desc_ring_count +
+> +			  clear_seq % m.desc_ring_count;
+> +	}
+> 
+>  	if (!open_dump_file()) {
+>  		ERRMSG("Can't open output file.\n");
+> --
+> 2.33.0
 
 _______________________________________________
 kexec mailing list
