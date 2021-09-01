@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1310051.outbound.protection.outlook.com
- ([40.107.131.51] helo=APC01-SG2-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1410054.outbound.protection.outlook.com
+ ([40.107.141.54] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mLImk-003tlz-5l
- for kexec@lists.infradead.org; Wed, 01 Sep 2021 05:27:46 +0000
+ id 1mLMGa-004mta-BM
+ for kexec@lists.infradead.org; Wed, 01 Sep 2021 09:10:48 +0000
 From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
  <k-hagio-ab@nec.com>
-Subject: RE: [PATCH v2] makedumpfile: support --partial-dmesg on 5.10+ kernels
-Date: Wed, 1 Sep 2021 05:27:25 +0000
-Message-ID: <TYYPR01MB6777CF81E06D391106ABC2D5DDCD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <YRrrgKjxefeXIb3O@visor>
- <TYYPR01MB677762D7B0E7850537CDF61BDDFF9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <YS1prC+k23E964Qz@visor>
-In-Reply-To: <YS1prC+k23E964Qz@visor>
+Subject: RE: [PATCH 1/1] fix left bit-shift overflow in
+ __exclude_unnecessary_pages()
+Date: Wed, 1 Sep 2021 09:10:39 +0000
+Message-ID: <TYYPR01MB67777DFB702E9801AA414B6ADDCD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -27,171 +24,79 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ivan Delalande <colona@arista.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, John Ogness <john.ogness@linutronix.de>
+To: Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "Discussion list
+ for crash utility usage,	maintenance and development" <crash-utility@redhat.com>
+
+Hi Alex,
++cc kexec list (the right one for makedumpfile patch)
 
 -----Original Message-----
-> The new printk ringbuffer implementation added in kernel v5.10 with
-> commit 896fbe20b4e2 ("printk: use the lockless ringbuffer") also
-> exported a new vmcore symbol "clear_seq" to keep track where dmesg had
-> been cleared like "clear_idx" on previous versions. Use it in
-> dump_lockless_dmesg when --partial-dmesg is passed to find and start
-> dumping messages only from that index.
+> Whenever the variables compound_order or private become greater than
+> 31, left bit-shift of 1 overflows, and nr_pages becomes zero. If nr_pages
+> becomes 0 and pages are being excluded at the end of the PFN loop, the
+> else branch of the last if statement is entered and pfn is decremented by
+> 1 because nr_pages is 0. Finally, this causes the loop variable pfn to
+> be assigned the same value as before when the next loop iteration begins
+> which results in an infinite loop.
 > 
-> On v5.13, commit 7d7a23a91c91 ("printk: use seqcount_latch for
-> clear_seq") converted it from a simple value, and so an additional step
-> is required to find and retrieve the sequence at the right offset in the
-> latched_seq structure it now uses.
-> 
-> Signed-off-by: Ivan Delalande <colona@arista.com>
+> This issue appeared on s390 64bit architecture with a dump of 16GB RAM.
 
-The v2 patch tested OK on 5.12 and 5.14.  Applied.
-https://github.com/makedumpfile/makedumpfile/commit/bccc39c147fea2b29f98f9973614c7a6697a065d
+The patch looks good to me, but just out of curiosity, when do the
+compound_order or private become greater than 31 on s390?
 
 Thanks,
 Kazu
 
+> 
+> This is a simple program to demonstrate the primary issue:
+> 
+> void main(void)
+> {
+>         unsigned long long n;
+>         unsigned long m;
+> 
+>         m = 32;
+>         n = 1 << m;
+>         fprintf(stderr, "%llx\n", n);
+>         n = 1UL << m;
+>         fprintf(stderr, "%llx\n", n);
+> }
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
 > ---
->  makedumpfile.c | 12 ++++++++++++
->  makedumpfile.h |  6 ++++++
->  printk.c       | 19 +++++++++++++++++++
->  3 files changed, 37 insertions(+)
+>  makedumpfile.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
 > diff --git a/makedumpfile.c b/makedumpfile.c
-> index b1b3b42..ac17f19 100644
+> index c063267f15bb..863840b13608 100644
 > --- a/makedumpfile.c
 > +++ b/makedumpfile.c
-> @@ -1555,6 +1555,7 @@ get_symbol_info(void)
->  	SYMBOL_INIT(pgdat_list, "pgdat_list");
->  	SYMBOL_INIT(contig_page_data, "contig_page_data");
->  	SYMBOL_INIT(prb, "prb");
-> +	SYMBOL_INIT(clear_seq, "clear_seq");
->  	SYMBOL_INIT(log_buf, "log_buf");
->  	SYMBOL_INIT(log_buf_len, "log_buf_len");
->  	SYMBOL_INIT(log_end, "log_end");
-> @@ -2000,6 +2001,9 @@ get_structure_info(void)
->  		OFFSET_INIT(printk_info.text_len, "printk_info", "text_len");
+> @@ -6210,7 +6210,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>  		if (OFFSET(page.private) != NOT_FOUND_STRUCTURE)
+>  			private = ULONG(pcache + OFFSET(page.private));
 > 
->  		OFFSET_INIT(atomic_long_t.counter, "atomic_long_t", "counter");
-> +
-> +		SIZE_INIT(latched_seq, "latched_seq");
-> +		OFFSET_INIT(latched_seq.val, "latched_seq", "val");
->  	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
+> -		nr_pages = 1 << compound_order;
+> +		nr_pages = 1UL << compound_order;
+>  		pfn_counter = NULL;
+> 
 >  		/*
->  		 * In kernel 3.11-rc4 the log structure name was renamed
-> @@ -2231,6 +2235,7 @@ write_vmcoreinfo_data(void)
->  	WRITE_SYMBOL("pgdat_list", pgdat_list);
->  	WRITE_SYMBOL("contig_page_data", contig_page_data);
->  	WRITE_SYMBOL("prb", prb);
-> +	WRITE_SYMBOL("clear_seq", clear_seq);
->  	WRITE_SYMBOL("log_buf", log_buf);
->  	WRITE_SYMBOL("log_buf_len", log_buf_len);
->  	WRITE_SYMBOL("log_end", log_end);
-> @@ -2266,6 +2271,7 @@ write_vmcoreinfo_data(void)
->  		WRITE_STRUCTURE_SIZE("printk_ringbuffer", printk_ringbuffer);
->  		WRITE_STRUCTURE_SIZE("prb_desc", prb_desc);
->  		WRITE_STRUCTURE_SIZE("printk_info", printk_info);
-> +		WRITE_STRUCTURE_SIZE("latched_seq", latched_seq);
->  	} else if (info->flag_use_printk_log)
->  		WRITE_STRUCTURE_SIZE("printk_log", printk_log);
->  	else
-> @@ -2335,6 +2341,8 @@ write_vmcoreinfo_data(void)
->  		WRITE_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-> 
->  		WRITE_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
-> +
-> +		WRITE_MEMBER_OFFSET("latched_seq.val", latched_seq.val);
->  	} else if (info->flag_use_printk_log) {
->  		WRITE_MEMBER_OFFSET("printk_log.ts_nsec", printk_log.ts_nsec);
->  		WRITE_MEMBER_OFFSET("printk_log.len", printk_log.len);
-> @@ -2676,6 +2684,7 @@ read_vmcoreinfo(void)
->  	READ_SYMBOL("pgdat_list", pgdat_list);
->  	READ_SYMBOL("contig_page_data", contig_page_data);
->  	READ_SYMBOL("prb", prb);
-> +	READ_SYMBOL("clear_seq", clear_seq);
->  	READ_SYMBOL("log_buf", log_buf);
->  	READ_SYMBOL("log_buf_len", log_buf_len);
->  	READ_SYMBOL("log_end", log_end);
-> @@ -2784,6 +2793,9 @@ read_vmcoreinfo(void)
->  		READ_MEMBER_OFFSET("printk_info.text_len", printk_info.text_len);
-> 
->  		READ_MEMBER_OFFSET("atomic_long_t.counter", atomic_long_t.counter);
-> +
-> +		READ_STRUCTURE_SIZE("latched_seq", latched_seq);
-> +		READ_MEMBER_OFFSET("latched_seq.val", latched_seq.val);
->  	} else if (SIZE(printk_log) != NOT_FOUND_STRUCTURE) {
->  		info->flag_use_printk_ringbuffer = FALSE;
->  		info->flag_use_printk_log = TRUE;
-> diff --git a/makedumpfile.h b/makedumpfile.h
-> index ca50a89..bd9e2f6 100644
-> --- a/makedumpfile.h
-> +++ b/makedumpfile.h
-> @@ -1656,6 +1656,7 @@ struct symbol_table {
->  	unsigned long long	pgdat_list;
->  	unsigned long long	contig_page_data;
->  	unsigned long long	prb;
-> +	unsigned long long	clear_seq;
->  	unsigned long long	log_buf;
->  	unsigned long long	log_buf_len;
->  	unsigned long long	log_end;
-> @@ -1749,6 +1750,7 @@ struct size_table {
->  	long	printk_ringbuffer;
->  	long	prb_desc;
->  	long	printk_info;
-> +	long	latched_seq;
-> 
->  	/*
->  	 * for Xen extraction
-> @@ -1973,6 +1975,10 @@ struct offset_table {
->  		long counter;
->  	} atomic_long_t;
-> 
-> +	struct latched_seq_s {
-> +		long val;
-> +	} latched_seq;
-> +
->  	/*
->  	 * symbols on ppc64 arch
->  	 */
-> diff --git a/printk.c b/printk.c
-> index e8501c7..61e0b26 100644
-> --- a/printk.c
-> +++ b/printk.c
-> @@ -145,6 +145,7 @@ dump_record(struct prb_map *m, unsigned long id)
->  int
->  dump_lockless_dmesg(void)
->  {
-> +	unsigned long long clear_seq;
->  	unsigned long head_id;
->  	unsigned long tail_id;
->  	unsigned long kaddr;
-> @@ -216,6 +217,24 @@ dump_lockless_dmesg(void)
->  			OFFSET(atomic_long_t.counter));
->  	head_id = ULONG(m.desc_ring + OFFSET(prb_desc_ring.head_id) +
->  			OFFSET(atomic_long_t.counter));
-> +	if (info->flag_partial_dmesg && SYMBOL(clear_seq) != NOT_FOUND_SYMBOL) {
-> +		if (!readmem(VADDR, SYMBOL(clear_seq), &clear_seq,
-> +			     sizeof(clear_seq))) {
-> +			ERRMSG("Can't get clear_seq.\n");
-> +			goto out_text_data;
-> +		}
-> +		if (SIZE(latched_seq) != NOT_FOUND_STRUCTURE) {
-> +			kaddr = SYMBOL(clear_seq) + OFFSET(latched_seq.val) +
-> +				(clear_seq & 0x1) * sizeof(clear_seq);
-> +			if (!readmem(VADDR, kaddr, &clear_seq,
-> +				     sizeof(clear_seq))) {
-> +				ERRMSG("Can't get latched clear_seq.\n");
-> +				goto out_text_data;
-> +			}
-> +		}
-> +		tail_id = head_id - head_id % m.desc_ring_count +
-> +			  clear_seq % m.desc_ring_count;
-> +	}
-> 
->  	if (!open_dump_file()) {
->  		ERRMSG("Can't open output file.\n");
+> @@ -6227,7 +6227,7 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>  		else if ((info->dump_level & DL_EXCLUDE_FREE)
+>  		    && info->page_is_buddy
+>  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+> -			nr_pages = 1 << private;
+> +			nr_pages = 1UL << private;
+>  			pfn_counter = &pfn_free;
+>  		}
+>  		/*
 > --
-> 2.33.0
+> 2.31.1
+> 
+> --
+> Crash-utility mailing list
+> Crash-utility@redhat.com
+> https://listman.redhat.com/mailman/listinfo/crash-utility
 
 _______________________________________________
 kexec mailing list
