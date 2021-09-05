@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ej1-x629.google.com ([2a00:1450:4864:20::629])
+Received: from mail-ej1-x633.google.com ([2a00:1450:4864:20::633])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mL8z2-002xtS-GC
- for kexec@lists.infradead.org; Tue, 31 Aug 2021 18:59:48 +0000
-Received: by mail-ej1-x629.google.com with SMTP id ia27so932820ejc.10
- for <kexec@lists.infradead.org>; Tue, 31 Aug 2021 11:59:43 -0700 (PDT)
+ id 1mMsfd-00FsqX-1y
+ for kexec@lists.infradead.org; Sun, 05 Sep 2021 13:58:54 +0000
+Received: by mail-ej1-x633.google.com with SMTP id e21so7785037ejz.12
+ for <kexec@lists.infradead.org>; Sun, 05 Sep 2021 06:58:47 -0700 (PDT)
 MIME-Version: 1.0
-References: <20210616085118.1141101-1-omosnace@redhat.com>
- <CAPcyv4jvR8CT4rYODR5KUHNdiqMwQSwJZ+OkVf61kLT3JfjC_Q@mail.gmail.com>
- <CAFqZXNtuH0329Xvcb415Kar-=o6wwrkFuiP8BZ_2OQhHLqkkAg@mail.gmail.com>
- <CAHC9VhTGECM2p+Q8n48aSdfJzY6XrpXQ5tcFurjWc4A3n8Qxjg@mail.gmail.com>
- <CAPcyv4i8YXo=xOL2vO67KLABQRDNAxzrzT=a1xtwtrts5pVPKw@mail.gmail.com>
-In-Reply-To: <CAPcyv4i8YXo=xOL2vO67KLABQRDNAxzrzT=a1xtwtrts5pVPKw@mail.gmail.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Tue, 31 Aug 2021 14:59:31 -0400
-Message-ID: <CAHC9VhReGcV=cngDMmAcEiS2NpkXZQ6b09go9m0omzxLdrUQXg@mail.gmail.com>
-Subject: Re: [PATCH v3] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
+From: Naresh Kamboju <naresh.kamboju@linaro.org>
+Date: Sun, 5 Sep 2021 19:28:35 +0530
+Message-ID: <CA+G9fYvMaHgSied79QBs3D=eDVETGH=3gxA8owCSRj313yEhVg@mail.gmail.com>
+Subject: kernel/kexec_file.o: failed: Cannot find symbol for section 10:
+ .text.unlikely.
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,58 +23,59 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dan Williams <dan.j.williams@intel.com>
-Cc: Ondrej Mosnacek <omosnace@redhat.com>, Linux Security Module list <linux-security-module@vger.kernel.org>, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, SElinux list <selinux@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, X86 ML <x86@kernel.org>, Linux ACPI <linux-acpi@vger.kernel.org>, linux-cxl@vger.kernel.org, linux-efi <linux-efi@vger.kernel.org>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, Linux PCI <linux-pci@vger.kernel.org>, Linux-pm mailing list <linux-pm@vger.kernel.org>, linux-serial@vger.kernel.org, bpf <bpf@vger.kernel.org>, Netdev <netdev@vger.kernel.org>, Kexec Mailing List <kexec@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Casey Schaufler <casey@schaufler-ca.com>
+To: Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>, linux-stable <stable@vger.kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sasha Levin <sashal@kernel.org>, lkft-triage@lists.linaro.org
 
-On Tue, Aug 31, 2021 at 2:58 PM Dan Williams <dan.j.williams@intel.com> wrote:
-> On Tue, Aug 31, 2021 at 6:53 AM Paul Moore <paul@paul-moore.com> wrote:
-> > On Tue, Aug 31, 2021 at 5:09 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> > > On Sat, Jun 19, 2021 at 12:18 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> > > > On Wed, Jun 16, 2021 at 1:51 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
-> >
-> > ...
-> >
-> > > > > diff --git a/drivers/cxl/mem.c b/drivers/cxl/mem.c
-> > > > > index 2acc6173da36..c1747b6555c7 100644
-> > > > > --- a/drivers/cxl/mem.c
-> > > > > +++ b/drivers/cxl/mem.c
-> > > > > @@ -568,7 +568,7 @@ static bool cxl_mem_raw_command_allowed(u16 opcode)
-> > > > >         if (!IS_ENABLED(CONFIG_CXL_MEM_RAW_COMMANDS))
-> > > > >                 return false;
-> > > > >
-> > > > > -       if (security_locked_down(LOCKDOWN_NONE))
-> > > > > +       if (security_locked_down(current_cred(), LOCKDOWN_NONE))
-> > > >
-> > > > Acked-by: Dan Williams <dan.j.williams@intel.com>
-> > > >
-> > > > ...however that usage looks wrong. The expectation is that if kernel
-> > > > integrity protections are enabled then raw command access should be
-> > > > disabled. So I think that should be equivalent to LOCKDOWN_PCI_ACCESS
-> > > > in terms of the command capabilities to filter.
-> > >
-> > > Yes, the LOCKDOWN_NONE seems wrong here... but it's a pre-existing bug
-> > > and I didn't want to go down yet another rabbit hole trying to fix it.
-> > > I'll look at this again once this patch is settled - it may indeed be
-> > > as simple as replacing LOCKDOWN_NONE with LOCKDOWN_PCI_ACCESS.
-> >
-> > At this point you should be well aware of my distaste for merging
-> > patches that have known bugs in them.  Yes, this is a pre-existing
-> > condition, but it seems well within the scope of this work to address
-> > it as well.
-> >
-> > This isn't something that is going to get merged while the merge
-> > window is open, so at the very least you've got almost two weeks to
-> > sort this out - please do that.
->
-> Yes, apologies, I should have sent the fix shortly after noticing the
-> problem. I'll get the CXL bug fix out of the way so Ondrej can move
-> this along.
+Following build errors noticed while building stable rc Linux 5.13.14
+with gcc-11 for powerpc architecture.
 
-Thanks Dan.
+# to reproduce this build locally:
+tuxmake --target-arch=powerpc --kconfig=defconfig --toolchain=gcc-11
+--wrapper=sccache --environment=KBUILD_BUILD_TIMESTAMP=@1630691419
+--environment=KBUILD_BUILD_USER=tuxmake
+--environment=KBUILD_BUILD_HOST=tuxmake
+--environment=SCCACHE_BUCKET=sccache.tuxbuild.com --runtime=podman
+--image=855116176053.dkr.ecr.us-east-1.amazonaws.com/tuxmake/powerpc_gcc-11
+config default kernel xipkernel modules dtbs dtbs-legacy debugkernel
+headers
 
--- 
-paul moore
-www.paul-moore.com
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=powerpc
+CROSS_COMPILE=powerpc64le-linux-gnu- 'CC=sccache
+powerpc64le-linux-gnu-gcc' 'HOSTCC=sccache gcc' defconfig
+
+make --silent --keep-going --jobs=8
+O=/home/tuxbuild/.cache/tuxmake/builds/current ARCH=powerpc
+CROSS_COMPILE=powerpc64le-linux-gnu- 'CC=sccache
+powerpc64le-linux-gnu-gcc' 'HOSTCC=sccache gcc'
+Cannot find symbol for section 10: .text.unlikely.
+kernel/kexec_file.o: failed
+make[2]: *** [/builds/linux/scripts/Makefile.build:273:
+kernel/kexec_file.o] Error 1
+make[2]: *** Deleting file 'kernel/kexec_file.o'
+
+
+Build config:
+https://builds.tuxbuild.com/1xdiIZVZuLCW3X1WO2YT6Fsl19w/config
+
+Reported-by: Linux Kernel Functional Testing <lkft@linaro.org>
+
+meta data:
+-----------
+    git_repo: https://gitlab.com/Linaro/lkft/mirrors/stable/linux-stable-rc
+    git_sha: a603798fb16829e56f80f57879611e67bba4910d
+    git_short_log: a603798fb168 (\Linux 5.13.14\)
+    kconfig:  defconfig
+    kernel_version: 5.13.14
+    target_arch: powerpc
+    toolchain: gcc-11
+
+steps to reproduce:
+https://builds.tuxbuild.com/1xdiIZVZuLCW3X1WO2YT6Fsl19w/tuxmake_reproducer.sh
+
+--
+Linaro LKFT
+https://lkft.linaro.org
 
 _______________________________________________
 kexec mailing list
