@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-mw2nam12on2075.outbound.protection.outlook.com
- ([40.107.244.75] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+Received: from mail-co1nam11on2046.outbound.protection.outlook.com
+ ([40.107.220.46] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mO6Xw-007lEF-Ol
- for kexec@lists.infradead.org; Wed, 08 Sep 2021 23:00:04 +0000
+ id 1mO6Xh-007kwz-6o
+ for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:50 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 8/8] treewide: Replace the use of mem_encrypt_active() with
+Subject: [PATCH v3 6/8] x86/sev: Replace occurrences of sev_active() with
  cc_platform_has()
-Date: Wed, 8 Sep 2021 17:58:39 -0500
-Message-ID: <46a18427dc4e9dda985b10e472965e3e4c769f1d.1631141919.git.thomas.lendacky@amd.com>
+Date: Wed, 8 Sep 2021 17:58:37 -0500
+Message-ID: <bcc39c8b469aeab871e12f8a6c1d3484a95f615c.1631141919.git.thomas.lendacky@amd.com>
 In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
@@ -26,18 +26,12 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
 Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Thomas Zimmermann <tzimmermann@suse.de>, Will Deacon <will@kernel.org>, Dave
- Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>
+ Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>
 
-Replace uses of mem_encrypt_active() with calls to cc_platform_has() with
-the CC_ATTR_MEM_ENCRYPT attribute.
-
-Remove the implementation of mem_encrypt_active() across all arches.
-
-For s390, since the default implementation of the cc_platform_has()
-matches the s390 implementation of mem_encrypt_active(), cc_platform_has()
-does not need to be implemented in s390 (the config option
-ARCH_HAS_CC_PLATFORM is not set).
+Replace uses of sev_active() with the more generic cc_platform_has()
+using CC_ATTR_GUEST_MEM_ENCRYPT. If future support is added for other
+memory encryption technologies, the use of CC_ATTR_GUEST_MEM_ENCRYPT
+can be updated, as required.
 
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Ingo Molnar <mingo@redhat.com>
@@ -45,425 +39,313 @@ Cc: Borislav Petkov <bp@alien8.de>
 Cc: Dave Hansen <dave.hansen@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: David Airlie <airlied@linux.ie>
-Cc: Daniel Vetter <daniel@ffwll.ch>
-Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Cc: Maxime Ripard <mripard@kernel.org>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>
-Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
-Cc: Joerg Roedel <joro@8bytes.org>
-Cc: Will Deacon <will@kernel.org>
-Cc: Dave Young <dyoung@redhat.com>
-Cc: Baoquan He <bhe@redhat.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Ard Biesheuvel <ardb@kernel.org>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/powerpc/include/asm/mem_encrypt.h  | 5 -----
- arch/powerpc/platforms/pseries/svm.c    | 5 +++--
- arch/s390/include/asm/mem_encrypt.h     | 2 --
- arch/x86/include/asm/mem_encrypt.h      | 5 -----
- arch/x86/kernel/head64.c                | 4 ++--
- arch/x86/mm/ioremap.c                   | 4 ++--
- arch/x86/mm/mem_encrypt.c               | 2 +-
- arch/x86/mm/pat/set_memory.c            | 3 ++-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c | 4 +++-
- drivers/gpu/drm/drm_cache.c             | 4 ++--
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c     | 4 ++--
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c     | 6 +++---
- drivers/iommu/amd/iommu.c               | 3 ++-
- drivers/iommu/amd/iommu_v2.c            | 3 ++-
- drivers/iommu/iommu.c                   | 3 ++-
- fs/proc/vmcore.c                        | 6 +++---
- include/linux/mem_encrypt.h             | 4 ----
- kernel/dma/swiotlb.c                    | 4 ++--
- 18 files changed, 31 insertions(+), 40 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |  2 --
+ arch/x86/kernel/crash_dump_64.c    |  4 +++-
+ arch/x86/kernel/kvm.c              |  3 ++-
+ arch/x86/kernel/kvmclock.c         |  4 ++--
+ arch/x86/kernel/machine_kexec_64.c |  4 ++--
+ arch/x86/kvm/svm/svm.c             |  3 ++-
+ arch/x86/mm/ioremap.c              |  6 +++---
+ arch/x86/mm/mem_encrypt.c          | 25 ++++++++++---------------
+ arch/x86/platform/efi/efi_64.c     |  9 +++++----
+ 9 files changed, 29 insertions(+), 31 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/mem_encrypt.h b/arch/powerpc/include/asm/mem_encrypt.h
-index ba9dab07c1be..2f26b8fc8d29 100644
---- a/arch/powerpc/include/asm/mem_encrypt.h
-+++ b/arch/powerpc/include/asm/mem_encrypt.h
-@@ -10,11 +10,6 @@
- 
- #include <asm/svm.h>
- 
--static inline bool mem_encrypt_active(void)
--{
--	return is_secure_guest();
--}
--
- static inline bool force_dma_unencrypted(struct device *dev)
- {
- 	return is_secure_guest();
-diff --git a/arch/powerpc/platforms/pseries/svm.c b/arch/powerpc/platforms/pseries/svm.c
-index 87f001b4c4e4..c083ecbbae4d 100644
---- a/arch/powerpc/platforms/pseries/svm.c
-+++ b/arch/powerpc/platforms/pseries/svm.c
-@@ -8,6 +8,7 @@
- 
- #include <linux/mm.h>
- #include <linux/memblock.h>
-+#include <linux/cc_platform.h>
- #include <asm/machdep.h>
- #include <asm/svm.h>
- #include <asm/swiotlb.h>
-@@ -63,7 +64,7 @@ void __init svm_swiotlb_init(void)
- 
- int set_memory_encrypted(unsigned long addr, int numpages)
- {
--	if (!mem_encrypt_active())
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return 0;
- 
- 	if (!PAGE_ALIGNED(addr))
-@@ -76,7 +77,7 @@ int set_memory_encrypted(unsigned long addr, int numpages)
- 
- int set_memory_decrypted(unsigned long addr, int numpages)
- {
--	if (!mem_encrypt_active())
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return 0;
- 
- 	if (!PAGE_ALIGNED(addr))
-diff --git a/arch/s390/include/asm/mem_encrypt.h b/arch/s390/include/asm/mem_encrypt.h
-index 2542cbf7e2d1..08a8b96606d7 100644
---- a/arch/s390/include/asm/mem_encrypt.h
-+++ b/arch/s390/include/asm/mem_encrypt.h
-@@ -4,8 +4,6 @@
- 
- #ifndef __ASSEMBLY__
- 
--static inline bool mem_encrypt_active(void) { return false; }
--
- int set_memory_encrypted(unsigned long addr, int numpages);
- int set_memory_decrypted(unsigned long addr, int numpages);
- 
 diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 499440781b39..ed954aa5c448 100644
+index 8c4f0dfe63f9..f440eebeeb2c 100644
 --- a/arch/x86/include/asm/mem_encrypt.h
 +++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -98,11 +98,6 @@ static inline void mem_encrypt_free_decrypted_mem(void) { }
+@@ -51,7 +51,6 @@ void __init mem_encrypt_free_decrypted_mem(void);
+ void __init mem_encrypt_init(void);
  
- extern char __start_bss_decrypted[], __end_bss_decrypted[], __start_bss_decrypted_unused[];
+ void __init sev_es_init_vc_handling(void);
+-bool sev_active(void);
+ bool sev_es_active(void);
+ bool amd_cc_platform_has(enum cc_attr attr);
  
--static inline bool mem_encrypt_active(void)
--{
--	return sme_me_mask;
--}
--
- static inline u64 sme_get_me_mask(void)
- {
- 	return sme_me_mask;
-diff --git a/arch/x86/kernel/head64.c b/arch/x86/kernel/head64.c
-index de01903c3735..f98c76a1d16c 100644
---- a/arch/x86/kernel/head64.c
-+++ b/arch/x86/kernel/head64.c
-@@ -19,7 +19,7 @@
- #include <linux/start_kernel.h>
+@@ -76,7 +75,6 @@ static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
+ static inline void __init sme_enable(struct boot_params *bp) { }
+ 
+ static inline void sev_es_init_vc_handling(void) { }
+-static inline bool sev_active(void) { return false; }
+ static inline bool sev_es_active(void) { return false; }
+ static inline bool amd_cc_platform_has(enum cc_attr attr) { return false; }
+ 
+diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
+index 045e82e8945b..a7f617a3981d 100644
+--- a/arch/x86/kernel/crash_dump_64.c
++++ b/arch/x86/kernel/crash_dump_64.c
+@@ -10,6 +10,7 @@
+ #include <linux/crash_dump.h>
+ #include <linux/uaccess.h>
  #include <linux/io.h>
- #include <linux/memblock.h>
--#include <linux/mem_encrypt.h>
 +#include <linux/cc_platform.h>
- #include <linux/pgtable.h>
  
- #include <asm/processor.h>
-@@ -285,7 +285,7 @@ unsigned long __head __startup_64(unsigned long physaddr,
- 	 * there is no need to zero it after changing the memory encryption
- 	 * attribute.
- 	 */
--	if (mem_encrypt_active()) {
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
- 		vaddr = (unsigned long)__start_bss_decrypted;
- 		vaddr_end = (unsigned long)__end_bss_decrypted;
- 		for (; vaddr < vaddr_end; vaddr += PMD_SIZE) {
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index b59a5cbc6bc5..026031b3b782 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -694,7 +694,7 @@ static bool __init early_memremap_is_setup_data(resource_size_t phys_addr,
- bool arch_memremap_can_ram_remap(resource_size_t phys_addr, unsigned long size,
- 				 unsigned long flags)
+ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
+ 				  unsigned long offset, int userbuf,
+@@ -73,5 +74,6 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+ 
+ ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
  {
--	if (!mem_encrypt_active())
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return true;
- 
- 	if (flags & MEMREMAP_ENC)
-@@ -724,7 +724,7 @@ pgprot_t __init early_memremap_pgprot_adjust(resource_size_t phys_addr,
+-	return read_from_oldmem(buf, count, ppos, 0, sev_active());
++	return read_from_oldmem(buf, count, ppos, 0,
++				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+ }
+diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
+index a26643dc6bd6..509a578f56a0 100644
+--- a/arch/x86/kernel/kvm.c
++++ b/arch/x86/kernel/kvm.c
+@@ -27,6 +27,7 @@
+ #include <linux/nmi.h>
+ #include <linux/swait.h>
+ #include <linux/syscore_ops.h>
++#include <linux/cc_platform.h>
+ #include <asm/timer.h>
+ #include <asm/cpu.h>
+ #include <asm/traps.h>
+@@ -418,7 +419,7 @@ static void __init sev_map_percpu_data(void)
  {
- 	bool encrypted_prot;
+ 	int cpu;
  
--	if (!mem_encrypt_active())
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return prot;
+-	if (!sev_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return;
  
- 	encrypted_prot = true;
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 47d571a2cd28..7f09b86d2467 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -432,7 +432,7 @@ void __init mem_encrypt_free_decrypted_mem(void)
- 	 * The unused memory range was mapped decrypted, change the encryption
- 	 * attribute from decrypted to encrypted before freeing it.
- 	 */
--	if (mem_encrypt_active()) {
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
- 		r = set_memory_encrypted(vaddr, npages);
- 		if (r) {
- 			pr_warn("failed to free unused decrypted pages\n");
-diff --git a/arch/x86/mm/pat/set_memory.c b/arch/x86/mm/pat/set_memory.c
-index ad8a5c586a35..527957586f3c 100644
---- a/arch/x86/mm/pat/set_memory.c
-+++ b/arch/x86/mm/pat/set_memory.c
-@@ -18,6 +18,7 @@
- #include <linux/libnvdimm.h>
- #include <linux/vmstat.h>
- #include <linux/kernel.h>
-+#include <linux/cc_platform.h>
- 
- #include <asm/e820/api.h>
- #include <asm/processor.h>
-@@ -1986,7 +1987,7 @@ static int __set_memory_enc_dec(unsigned long addr, int numpages, bool enc)
- 	int ret;
- 
- 	/* Nothing to do if memory encryption is not active */
--	if (!mem_encrypt_active())
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return 0;
- 
- 	/* Should not be working on unaligned addresses */
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-index b6640291f980..c8973bbb7d3f 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c
-@@ -38,6 +38,7 @@
- #include <drm/drm_probe_helper.h>
- #include <linux/mmu_notifier.h>
- #include <linux/suspend.h>
-+#include <linux/cc_platform.h>
- 
- #include "amdgpu.h"
- #include "amdgpu_irq.h"
-@@ -1252,7 +1253,8 @@ static int amdgpu_pci_probe(struct pci_dev *pdev,
- 	 * however, SME requires an indirect IOMMU mapping because the encryption
- 	 * bit is beyond the DMA mask of the chip.
- 	 */
--	if (mem_encrypt_active() && ((flags & AMD_ASIC_MASK) == CHIP_RAVEN)) {
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT) &&
-+	    ((flags & AMD_ASIC_MASK) == CHIP_RAVEN)) {
- 		dev_info(&pdev->dev,
- 			 "SME is not compatible with RAVEN\n");
- 		return -ENOTSUPP;
-diff --git a/drivers/gpu/drm/drm_cache.c b/drivers/gpu/drm/drm_cache.c
-index 30cc59fe6ef7..f19d9acbe959 100644
---- a/drivers/gpu/drm/drm_cache.c
-+++ b/drivers/gpu/drm/drm_cache.c
-@@ -31,7 +31,7 @@
- #include <linux/dma-buf-map.h>
- #include <linux/export.h>
- #include <linux/highmem.h>
--#include <linux/mem_encrypt.h>
-+#include <linux/cc_platform.h>
- #include <xen/xen.h>
- 
- #include <drm/drm_cache.h>
-@@ -204,7 +204,7 @@ bool drm_need_swiotlb(int dma_bits)
- 	 * Enforce dma_alloc_coherent when memory encryption is active as well
- 	 * for the same reasons as for Xen paravirtual hosts.
- 	 */
--	if (mem_encrypt_active())
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return true;
- 
- 	for (tmp = iomem_resource.child; tmp; tmp = tmp->sibling)
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-index ab9a1750e1df..bfd71c86faa5 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_drv.c
-@@ -29,7 +29,7 @@
- #include <linux/dma-mapping.h>
- #include <linux/module.h>
- #include <linux/pci.h>
--#include <linux/mem_encrypt.h>
-+#include <linux/cc_platform.h>
- 
- #include <drm/drm_aperture.h>
- #include <drm/drm_drv.h>
-@@ -666,7 +666,7 @@ static int vmw_dma_select_mode(struct vmw_private *dev_priv)
- 		[vmw_dma_map_bind] = "Giving up DMA mappings early."};
- 
- 	/* TTM currently doesn't fully support SEV encryption. */
--	if (mem_encrypt_active())
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return -EINVAL;
- 
- 	if (vmw_force_coherent)
-diff --git a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-index e50fb82a3030..2aceac7856e2 100644
---- a/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-+++ b/drivers/gpu/drm/vmwgfx/vmwgfx_msg.c
-@@ -28,7 +28,7 @@
- #include <linux/kernel.h>
- #include <linux/module.h>
+ 	for_each_possible_cpu(cpu) {
+diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
+index ad273e5861c1..fc3930c5db1b 100644
+--- a/arch/x86/kernel/kvmclock.c
++++ b/arch/x86/kernel/kvmclock.c
+@@ -16,9 +16,9 @@
+ #include <linux/mm.h>
  #include <linux/slab.h>
--#include <linux/mem_encrypt.h>
+ #include <linux/set_memory.h>
 +#include <linux/cc_platform.h>
  
  #include <asm/hypervisor.h>
- #include <drm/drm_ioctl.h>
-@@ -160,7 +160,7 @@ static unsigned long vmw_port_hb_out(struct rpc_channel *channel,
- 	unsigned long msg_len = strlen(msg);
+-#include <asm/mem_encrypt.h>
+ #include <asm/x86_init.h>
+ #include <asm/kvmclock.h>
  
- 	/* HB port can't access encrypted memory. */
--	if (hb && !mem_encrypt_active()) {
-+	if (hb && !cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
- 		unsigned long bp = channel->cookie_high;
- 		u32 channel_id = (channel->channel_id << 16);
- 
-@@ -216,7 +216,7 @@ static unsigned long vmw_port_hb_in(struct rpc_channel *channel, char *reply,
- 	unsigned long si, di, eax, ebx, ecx, edx;
- 
- 	/* HB port can't access encrypted memory */
--	if (hb && !mem_encrypt_active()) {
-+	if (hb && !cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
- 		unsigned long bp = channel->cookie_low;
- 		u32 channel_id = (channel->channel_id << 16);
- 
-diff --git a/drivers/iommu/amd/iommu.c b/drivers/iommu/amd/iommu.c
-index 1722bb161841..9e5da037d949 100644
---- a/drivers/iommu/amd/iommu.c
-+++ b/drivers/iommu/amd/iommu.c
-@@ -31,6 +31,7 @@
- #include <linux/irqdomain.h>
- #include <linux/percpu.h>
- #include <linux/io-pgtable.h>
-+#include <linux/cc_platform.h>
- #include <asm/irq_remapping.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
-@@ -2238,7 +2239,7 @@ static int amd_iommu_def_domain_type(struct device *dev)
- 	 * active, because some of those devices (AMD GPUs) don't have the
- 	 * encryption bit in their DMA-mask and require remapping.
+@@ -232,7 +232,7 @@ static void __init kvmclock_init_mem(void)
+ 	 * hvclock is shared between the guest and the hypervisor, must
+ 	 * be mapped decrypted.
  	 */
--	if (!mem_encrypt_active() && dev_data->iommu_v2)
-+	if (!cc_platform_has(CC_ATTR_MEM_ENCRYPT) && dev_data->iommu_v2)
- 		return IOMMU_DOMAIN_IDENTITY;
+-	if (sev_active()) {
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+ 		r = set_memory_decrypted((unsigned long) hvclock_mem,
+ 					 1UL << order);
+ 		if (r) {
+diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
+index 7040c0fa921c..f5da4a18070a 100644
+--- a/arch/x86/kernel/machine_kexec_64.c
++++ b/arch/x86/kernel/machine_kexec_64.c
+@@ -167,7 +167,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
+ 	}
+ 	pte = pte_offset_kernel(pmd, vaddr);
  
- 	return 0;
-diff --git a/drivers/iommu/amd/iommu_v2.c b/drivers/iommu/amd/iommu_v2.c
-index a9e568276c99..13cbeb997cc1 100644
---- a/drivers/iommu/amd/iommu_v2.c
-+++ b/drivers/iommu/amd/iommu_v2.c
-@@ -17,6 +17,7 @@
- #include <linux/wait.h>
- #include <linux/pci.h>
- #include <linux/gfp.h>
-+#include <linux/cc_platform.h>
+-	if (sev_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		prot = PAGE_KERNEL_EXEC;
  
- #include "amd_iommu.h"
+ 	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
+@@ -207,7 +207,7 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
+ 	level4p = (pgd_t *)__va(start_pgtable);
+ 	clear_page(level4p);
  
-@@ -742,7 +743,7 @@ int amd_iommu_init_device(struct pci_dev *pdev, int pasids)
- 	 * When memory encryption is active the device is likely not in a
- 	 * direct-mapped domain. Forbid using IOMMUv2 functionality for now.
- 	 */
--	if (mem_encrypt_active())
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		return -ENODEV;
- 
- 	if (!amd_iommu_v2_supported())
-diff --git a/drivers/iommu/iommu.c b/drivers/iommu/iommu.c
-index 3303d707bab4..e80261d17a49 100644
---- a/drivers/iommu/iommu.c
-+++ b/drivers/iommu/iommu.c
+-	if (sev_active()) {
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+ 		info.page_flag   |= _PAGE_ENC;
+ 		info.kernpg_flag |= _PAGE_ENC;
+ 	}
+diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
+index 69639f9624f5..eb3669154b48 100644
+--- a/arch/x86/kvm/svm/svm.c
++++ b/arch/x86/kvm/svm/svm.c
 @@ -25,6 +25,7 @@
- #include <linux/property.h>
- #include <linux/fsl/mc.h>
- #include <linux/module.h>
-+#include <linux/cc_platform.h>
- #include <trace/events/iommu.h>
- 
- static struct kset *iommu_group_kset;
-@@ -130,7 +131,7 @@ static int __init iommu_subsys_init(void)
- 		else
- 			iommu_set_default_translated(false);
- 
--		if (iommu_default_passthrough() && mem_encrypt_active()) {
-+		if (iommu_default_passthrough() && cc_platform_has(CC_ATTR_MEM_ENCRYPT)) {
- 			pr_info("Memory encryption detected - Disabling default IOMMU Passthrough\n");
- 			iommu_set_default_translated(false);
- 		}
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 9a15334da208..cdbbf819d2d6 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -26,7 +26,7 @@
- #include <linux/vmalloc.h>
  #include <linux/pagemap.h>
- #include <linux/uaccess.h>
--#include <linux/mem_encrypt.h>
+ #include <linux/swap.h>
+ #include <linux/rwsem.h>
 +#include <linux/cc_platform.h>
- #include <asm/io.h>
- #include "internal.h"
  
-@@ -177,7 +177,7 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+ #include <asm/apic.h>
+ #include <asm/perf_event.h>
+@@ -457,7 +458,7 @@ static int has_svm(void)
+ 		return 0;
+ 	}
+ 
+-	if (sev_active()) {
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
+ 		pr_info("KVM is unsupported when running as an SEV guest\n");
+ 		return 0;
+ 	}
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index a7250fa3d45f..b59a5cbc6bc5 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -92,7 +92,7 @@ static unsigned int __ioremap_check_ram(struct resource *res)
   */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
+ static unsigned int __ioremap_check_encrypted(struct resource *res)
  {
--	return read_from_oldmem(buf, count, ppos, 0, mem_encrypt_active());
-+	return read_from_oldmem(buf, count, ppos, 0, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
+-	if (!sev_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return 0;
+ 
+ 	switch (res->desc) {
+@@ -112,7 +112,7 @@ static unsigned int __ioremap_check_encrypted(struct resource *res)
+  */
+ static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
+ {
+-	if (!sev_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return;
+ 
+ 	if (!IS_ENABLED(CONFIG_EFI))
+@@ -556,7 +556,7 @@ static bool memremap_should_map_decrypted(resource_size_t phys_addr,
+ 	case E820_TYPE_NVS:
+ 	case E820_TYPE_UNUSABLE:
+ 		/* For SEV, these areas are encrypted */
+-		if (sev_active())
++		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 			break;
+ 		fallthrough;
+ 
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 4b54a2377821..22d4e152a6de 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -194,7 +194,7 @@ void __init sme_early_init(void)
+ 	for (i = 0; i < ARRAY_SIZE(protection_map); i++)
+ 		protection_map[i] = pgprot_encrypted(protection_map[i]);
+ 
+-	if (sev_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		swiotlb_force = SWIOTLB_FORCE;
  }
  
+@@ -203,7 +203,7 @@ void __init sev_setup_arch(void)
+ 	phys_addr_t total_mem = memblock_phys_mem_size();
+ 	unsigned long size;
+ 
+-	if (!sev_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return;
+ 
+ 	/*
+@@ -364,8 +364,8 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
  /*
-@@ -378,7 +378,7 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 					    buflen);
- 			start = m->paddr + *fpos - m->offset;
- 			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, mem_encrypt_active());
-+					       userbuf, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- 			if (tmp < 0)
- 				return tmp;
- 			buflen -= tsz;
-diff --git a/include/linux/mem_encrypt.h b/include/linux/mem_encrypt.h
-index 5c4a18a91f89..ae4526389261 100644
---- a/include/linux/mem_encrypt.h
-+++ b/include/linux/mem_encrypt.h
-@@ -16,10 +16,6 @@
+  * SME and SEV are very similar but they are not the same, so there are
+  * times that the kernel will need to distinguish between SME and SEV. The
+- * sme_active() and sev_active() functions are used for this.  When a
+- * distinction isn't needed, the mem_encrypt_active() function can be used.
++ * cc_platform_has() function is used for this.  When a distinction isn't
++ * needed, the CC_ATTR_MEM_ENCRYPT attribute can be used.
+  *
+  * The trampoline code is a good example for this requirement.  Before
+  * paging is activated, SME will access all memory as decrypted, but SEV
+@@ -373,11 +373,6 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
+  * up under SME the trampoline area cannot be encrypted, whereas under SEV
+  * the trampoline area must be encrypted.
+  */
+-bool sev_active(void)
+-{
+-	return sev_status & MSR_AMD64_SEV_ENABLED;
+-}
+-EXPORT_SYMBOL_GPL(sev_active);
  
- #include <asm/mem_encrypt.h>
+ /* Needs to be called from non-instrumentable code */
+ bool noinstr sev_es_active(void)
+@@ -392,10 +387,10 @@ bool amd_cc_platform_has(enum cc_attr attr)
+ 		return sme_me_mask != 0;
  
--#else	/* !CONFIG_ARCH_HAS_MEM_ENCRYPT */
--
--static inline bool mem_encrypt_active(void) { return false; }
--
- #endif	/* CONFIG_ARCH_HAS_MEM_ENCRYPT */
+ 	case CC_ATTR_HOST_MEM_ENCRYPT:
+-		return sme_me_mask && !sev_active();
++		return sme_me_mask && !(sev_status & MSR_AMD64_SEV_ENABLED);
  
- #ifdef CONFIG_AMD_MEM_ENCRYPT
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index 87c40517e822..c4ca040fdb05 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -34,7 +34,7 @@
- #include <linux/highmem.h>
- #include <linux/gfp.h>
- #include <linux/scatterlist.h>
+ 	case CC_ATTR_GUEST_MEM_ENCRYPT:
+-		return sev_active();
++		return sev_status & MSR_AMD64_SEV_ENABLED;
+ 
+ 	case CC_ATTR_GUEST_STATE_ENCRYPT:
+ 		return sev_es_active();
+@@ -411,7 +406,7 @@ bool force_dma_unencrypted(struct device *dev)
+ 	/*
+ 	 * For SEV, all DMA must be to unencrypted addresses.
+ 	 */
+-	if (sev_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		return true;
+ 
+ 	/*
+@@ -470,7 +465,7 @@ static void print_mem_encrypt_feature_info(void)
+ 	}
+ 
+ 	/* Secure Encrypted Virtualization */
+-	if (sev_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		pr_cont(" SEV");
+ 
+ 	/* Encrypted Register State */
+@@ -493,7 +488,7 @@ void __init mem_encrypt_init(void)
+ 	 * With SEV, we need to unroll the rep string I/O instructions,
+ 	 * but SEV-ES supports them through the #VC handler.
+ 	 */
+-	if (sev_active() && !sev_es_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && !sev_es_active())
+ 		static_branch_enable(&sev_enable_key);
+ 
+ 	print_mem_encrypt_feature_info();
+@@ -501,6 +496,6 @@ void __init mem_encrypt_init(void)
+ 
+ int arch_has_restricted_virtio_memory_access(void)
+ {
+-	return sev_active();
++	return cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
+ }
+ EXPORT_SYMBOL_GPL(arch_has_restricted_virtio_memory_access);
+diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
+index 7515e78ef898..1f3675453a57 100644
+--- a/arch/x86/platform/efi/efi_64.c
++++ b/arch/x86/platform/efi/efi_64.c
+@@ -33,7 +33,7 @@
+ #include <linux/reboot.h>
+ #include <linux/slab.h>
+ #include <linux/ucs2_string.h>
 -#include <linux/mem_encrypt.h>
 +#include <linux/cc_platform.h>
- #include <linux/set_memory.h>
- #ifdef CONFIG_DEBUG_FS
- #include <linux/debugfs.h>
-@@ -552,7 +552,7 @@ phys_addr_t swiotlb_tbl_map_single(struct device *dev, phys_addr_t orig_addr,
- 	if (!mem)
- 		panic("Can not allocate SWIOTLB buffer earlier and can't now provide you with the DMA bounce buffer");
+ #include <linux/sched/task.h>
  
--	if (mem_encrypt_active())
-+	if (cc_platform_has(CC_ATTR_MEM_ENCRYPT))
- 		pr_warn_once("Memory encryption is active and system is using DMA bounce buffers\n");
+ #include <asm/setup.h>
+@@ -284,7 +284,8 @@ static void __init __map_region(efi_memory_desc_t *md, u64 va)
+ 	if (!(md->attribute & EFI_MEMORY_WB))
+ 		flags |= _PAGE_PCD;
  
- 	if (mapping_size > alloc_size) {
+-	if (sev_active() && md->type != EFI_MEMORY_MAPPED_IO)
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
++	    md->type != EFI_MEMORY_MAPPED_IO)
+ 		flags |= _PAGE_ENC;
+ 
+ 	pfn = md->phys_addr >> PAGE_SHIFT;
+@@ -390,7 +391,7 @@ static int __init efi_update_mem_attr(struct mm_struct *mm, efi_memory_desc_t *m
+ 	if (!(md->attribute & EFI_MEMORY_RO))
+ 		pf |= _PAGE_RW;
+ 
+-	if (sev_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 		pf |= _PAGE_ENC;
+ 
+ 	return efi_update_mappings(md, pf);
+@@ -438,7 +439,7 @@ void __init efi_runtime_update_mappings(void)
+ 			(md->type != EFI_RUNTIME_SERVICES_CODE))
+ 			pf |= _PAGE_RW;
+ 
+-		if (sev_active())
++		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
+ 			pf |= _PAGE_ENC;
+ 
+ 		efi_update_mappings(md, pf);
 -- 
 2.33.0
 
