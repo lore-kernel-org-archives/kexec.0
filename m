@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam08on2060.outbound.protection.outlook.com
- ([40.107.101.60] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
+Received: from mail-dm3nam07on2053.outbound.protection.outlook.com
+ ([40.107.95.53] helo=NAM02-DM3-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mO6XD-007kfX-7G
- for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:16 +0000
+ id 1mO6XI-007khn-V0
+ for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:23 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 2/8] mm: Introduce a function to check for confidential
- computing features
-Date: Wed, 8 Sep 2021 17:58:33 -0500
-Message-ID: <0a7618d54e7e954ee56c22ad1b94af2ffe69543a.1631141919.git.thomas.lendacky@amd.com>
+Subject: [PATCH v3 3/8] x86/sev: Add an x86 version of cc_platform_has()
+Date: Wed, 8 Sep 2021 17:58:34 -0500
+Message-ID: <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
 In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
@@ -25,46 +24,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave
+ Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 
-In prep for other confidential computing technologies, introduce a generic
-helper function, cc_platform_has(), that can be used to check for specific
-active confidential computing attributes, like memory encryption. This is
-intended to eliminate having to add multiple technology-specific checks to
-the code (e.g. if (sev_active() || tdx_active())).
+Introduce an x86 version of the cc_platform_has() function. This will be
+used to replace vendor specific calls like sme_active(), sev_active(),
+etc.
 
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
 Co-developed-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/Kconfig                |  3 ++
- include/linux/cc_platform.h | 88 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 91 insertions(+)
- create mode 100644 include/linux/cc_platform.h
+ arch/x86/Kconfig                   |  1 +
+ arch/x86/include/asm/mem_encrypt.h |  3 +++
+ arch/x86/kernel/Makefile           |  3 +++
+ arch/x86/kernel/cc_platform.c      | 21 +++++++++++++++++++++
+ arch/x86/mm/mem_encrypt.c          | 21 +++++++++++++++++++++
+ 5 files changed, 49 insertions(+)
+ create mode 100644 arch/x86/kernel/cc_platform.c
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 3743174da870..ca7c359e5da8 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -1234,6 +1234,9 @@ config RELR
- config ARCH_HAS_MEM_ENCRYPT
- 	bool
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 4e001bbbb425..2b2a9639d8ae 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -1513,6 +1513,7 @@ config AMD_MEM_ENCRYPT
+ 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
+ 	select INSTRUCTION_DECODER
+ 	select ARCH_HAS_RESTRICTED_VIRTIO_MEMORY_ACCESS
++	select ARCH_HAS_CC_PLATFORM
+ 	help
+ 	  Say yes to enable support for the encryption of system memory.
+ 	  This requires an AMD processor that supports Secure Memory
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index 9c80c68d75b5..3d8a5e8b2e3f 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -13,6 +13,7 @@
+ #ifndef __ASSEMBLY__
  
-+config ARCH_HAS_CC_PLATFORM
-+	bool
+ #include <linux/init.h>
++#include <linux/cc_platform.h>
+ 
+ #include <asm/bootparam.h>
+ 
+@@ -53,6 +54,7 @@ void __init sev_es_init_vc_handling(void);
+ bool sme_active(void);
+ bool sev_active(void);
+ bool sev_es_active(void);
++bool amd_cc_platform_has(enum cc_attr attr);
+ 
+ #define __bss_decrypted __section(".bss..decrypted")
+ 
+@@ -78,6 +80,7 @@ static inline void sev_es_init_vc_handling(void) { }
+ static inline bool sme_active(void) { return false; }
+ static inline bool sev_active(void) { return false; }
+ static inline bool sev_es_active(void) { return false; }
++static inline bool amd_cc_platform_has(enum cc_attr attr) { return false; }
+ 
+ static inline int __init
+ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; }
+diff --git a/arch/x86/kernel/Makefile b/arch/x86/kernel/Makefile
+index 8f4e8fa6ed75..f91403a78594 100644
+--- a/arch/x86/kernel/Makefile
++++ b/arch/x86/kernel/Makefile
+@@ -147,6 +147,9 @@ obj-$(CONFIG_UNWINDER_FRAME_POINTER)	+= unwind_frame.o
+ obj-$(CONFIG_UNWINDER_GUESS)		+= unwind_guess.o
+ 
+ obj-$(CONFIG_AMD_MEM_ENCRYPT)		+= sev.o
 +
- config HAVE_SPARSE_SYSCALL_NR
-        bool
-        help
-diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
++obj-$(CONFIG_ARCH_HAS_CC_PLATFORM)	+= cc_platform.o
++
+ ###
+ # 64 bit specific files
+ ifeq ($(CONFIG_X86_64),y)
+diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
 new file mode 100644
-index 000000000000..253f3ea66cd8
+index 000000000000..3c9bacd3c3f3
 --- /dev/null
-+++ b/include/linux/cc_platform.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
++++ b/arch/x86/kernel/cc_platform.c
+@@ -0,0 +1,21 @@
++// SPDX-License-Identifier: GPL-2.0-only
 +/*
 + * Confidential Computing Platform Capability checks
 + *
@@ -73,85 +120,57 @@ index 000000000000..253f3ea66cd8
 + * Author: Tom Lendacky <thomas.lendacky@amd.com>
 + */
 +
-+#ifndef _CC_PLATFORM_H
-+#define _CC_PLATFORM_H
++#include <linux/export.h>
++#include <linux/cc_platform.h>
++#include <linux/mem_encrypt.h>
 +
-+#include <linux/types.h>
-+#include <linux/stddef.h>
++bool cc_platform_has(enum cc_attr attr)
++{
++	if (sme_me_mask)
++		return amd_cc_platform_has(attr);
 +
-+/**
-+ * enum cc_attr - Confidential computing attributes
-+ *
-+ * These attributes represent confidential computing features that are
-+ * currently active.
-+ */
-+enum cc_attr {
-+	/**
-+	 * @CC_ATTR_MEM_ENCRYPT: Memory encryption is active
-+	 *
-+	 * The platform/OS is running with active memory encryption. This
-+	 * includes running either as a bare-metal system or a hypervisor
-+	 * and actively using memory encryption or as a guest/virtual machine
-+	 * and actively using memory encryption.
-+	 *
-+	 * Examples include SME, SEV and SEV-ES.
-+	 */
-+	CC_ATTR_MEM_ENCRYPT,
++	return false;
++}
++EXPORT_SYMBOL_GPL(cc_platform_has);
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index ff08dc463634..18fe19916bc3 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -20,6 +20,7 @@
+ #include <linux/bitops.h>
+ #include <linux/dma-mapping.h>
+ #include <linux/virtio_config.h>
++#include <linux/cc_platform.h>
+ 
+ #include <asm/tlbflush.h>
+ #include <asm/fixmap.h>
+@@ -389,6 +390,26 @@ bool noinstr sev_es_active(void)
+ 	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+ }
+ 
++bool amd_cc_platform_has(enum cc_attr attr)
++{
++	switch (attr) {
++	case CC_ATTR_MEM_ENCRYPT:
++		return sme_me_mask != 0;
 +
-+	/**
-+	 * @CC_ATTR_HOST_MEM_ENCRYPT: Host memory encryption is active
-+	 *
-+	 * The platform/OS is running as a bare-metal system or a hypervisor
-+	 * and actively using memory encryption.
-+	 *
-+	 * Examples include SME.
-+	 */
-+	CC_ATTR_HOST_MEM_ENCRYPT,
++	case CC_ATTR_HOST_MEM_ENCRYPT:
++		return sme_active();
 +
-+	/**
-+	 * @CC_ATTR_GUEST_MEM_ENCRYPT: Guest memory encryption is active
-+	 *
-+	 * The platform/OS is running as a guest/virtual machine and actively
-+	 * using memory encryption.
-+	 *
-+	 * Examples include SEV and SEV-ES.
-+	 */
-+	CC_ATTR_GUEST_MEM_ENCRYPT,
++	case CC_ATTR_GUEST_MEM_ENCRYPT:
++		return sev_active();
 +
-+	/**
-+	 * @CC_ATTR_GUEST_STATE_ENCRYPT: Guest state encryption is active
-+	 *
-+	 * The platform/OS is running as a guest/virtual machine and actively
-+	 * using memory encryption and register state encryption.
-+	 *
-+	 * Examples include SEV-ES.
-+	 */
-+	CC_ATTR_GUEST_STATE_ENCRYPT,
-+};
++	case CC_ATTR_GUEST_STATE_ENCRYPT:
++		return sev_es_active();
 +
-+#ifdef CONFIG_ARCH_HAS_CC_PLATFORM
++	default:
++		return false;
++	}
++}
 +
-+/**
-+ * cc_platform_has() - Checks if the specified cc_attr attribute is active
-+ * @attr: Confidential computing attribute to check
-+ *
-+ * The cc_platform_has() function will return an indicator as to whether the
-+ * specified Confidential Computing attribute is currently active.
-+ *
-+ * Context: Any context
-+ * Return:
-+ * * TRUE  - Specified Confidential Computing attribute is active
-+ * * FALSE - Specified Confidential Computing attribute is not active
-+ */
-+bool cc_platform_has(enum cc_attr attr);
-+
-+#else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
-+
-+static inline bool cc_platform_has(enum cc_attr attr) { return false; }
-+
-+#endif	/* CONFIG_ARCH_HAS_CC_PLATFORM */
-+
-+#endif	/* _CC_PLATFORM_H */
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
+ {
 -- 
 2.33.0
 
