@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-bn8nam08on2044.outbound.protection.outlook.com
- ([40.107.100.44] helo=NAM04-BN8-obe.outbound.protection.outlook.com)
+Received: from mail-mw2nam08on2060.outbound.protection.outlook.com
+ ([40.107.101.60] helo=NAM04-MW2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mO6X2-007kdi-NB
- for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:06 +0000
+ id 1mO6XD-007kfX-7G
+ for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:16 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 1/8] x86/ioremap: Selectively build arch override
- encryption functions
-Date: Wed, 8 Sep 2021 17:58:32 -0500
-Message-ID: <3c25da5d5516afbdd868df2f6a6f7d7f241f32d4.1631141919.git.thomas.lendacky@amd.com>
+Subject: [PATCH v3 2/8] mm: Introduce a function to check for confidential
+ computing features
+Date: Wed, 8 Sep 2021 17:58:33 -0500
+Message-ID: <0a7618d54e7e954ee56c22ad1b94af2ffe69543a.1631141919.git.thomas.lendacky@amd.com>
 In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
@@ -25,85 +25,133 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>
 
-In prep for other uses of the cc_platform_has() function besides AMD's
-memory encryption support, selectively build the AMD memory encryption
-architecture override functions only when CONFIG_AMD_MEM_ENCRYPT=y. These
-functions are:
-- early_memremap_pgprot_adjust()
-- arch_memremap_can_ram_remap()
+In prep for other confidential computing technologies, introduce a generic
+helper function, cc_platform_has(), that can be used to check for specific
+active confidential computing attributes, like memory encryption. This is
+intended to eliminate having to add multiple technology-specific checks to
+the code (e.g. if (sev_active() || tdx_active())).
 
-Additionally, routines that are only invoked by these architecture
-override functions can also be conditionally built. These functions are:
-- memremap_should_map_decrypted()
-- memremap_is_efi_data()
-- memremap_is_setup_data()
-- early_memremap_is_setup_data()
-
-And finally, phys_mem_access_encrypted() is conditionally built as well,
-but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
-not set.
-
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
+Co-developed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 ---
- arch/x86/include/asm/io.h | 8 ++++++++
- arch/x86/mm/ioremap.c     | 2 +-
- 2 files changed, 9 insertions(+), 1 deletion(-)
+ arch/Kconfig                |  3 ++
+ include/linux/cc_platform.h | 88 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+)
+ create mode 100644 include/linux/cc_platform.h
 
-diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-index 841a5d104afa..5c6a4af0b911 100644
---- a/arch/x86/include/asm/io.h
-+++ b/arch/x86/include/asm/io.h
-@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
- #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
- #endif
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 3743174da870..ca7c359e5da8 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1234,6 +1234,9 @@ config RELR
+ config ARCH_HAS_MEM_ENCRYPT
+ 	bool
  
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- 					unsigned long size,
- 					unsigned long flags);
-@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
- 
- extern bool phys_mem_access_encrypted(unsigned long phys_addr,
- 				      unsigned long size);
-+#else
-+static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
-+					     unsigned long size)
-+{
-+	return true;
-+}
-+#endif
- 
- /**
-  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index 60ade7dd71bd..ccff76cedd8f 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
- 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
- }
- 
-+#ifdef CONFIG_AMD_MEM_ENCRYPT
- /*
-  * Examine the physical address to determine if it is an area of memory
-  * that should be mapped decrypted.  If the memory is not part of the
-@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
- 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
- }
- 
--#ifdef CONFIG_AMD_MEM_ENCRYPT
- /* Remap memory with encryption */
- void __init *early_memremap_encrypted(resource_size_t phys_addr,
- 				      unsigned long size)
++config ARCH_HAS_CC_PLATFORM
++	bool
++
+ config HAVE_SPARSE_SYSCALL_NR
+        bool
+        help
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+new file mode 100644
+index 000000000000..253f3ea66cd8
+--- /dev/null
++++ b/include/linux/cc_platform.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Confidential Computing Platform Capability checks
++ *
++ * Copyright (C) 2021 Advanced Micro Devices, Inc.
++ *
++ * Author: Tom Lendacky <thomas.lendacky@amd.com>
++ */
++
++#ifndef _CC_PLATFORM_H
++#define _CC_PLATFORM_H
++
++#include <linux/types.h>
++#include <linux/stddef.h>
++
++/**
++ * enum cc_attr - Confidential computing attributes
++ *
++ * These attributes represent confidential computing features that are
++ * currently active.
++ */
++enum cc_attr {
++	/**
++	 * @CC_ATTR_MEM_ENCRYPT: Memory encryption is active
++	 *
++	 * The platform/OS is running with active memory encryption. This
++	 * includes running either as a bare-metal system or a hypervisor
++	 * and actively using memory encryption or as a guest/virtual machine
++	 * and actively using memory encryption.
++	 *
++	 * Examples include SME, SEV and SEV-ES.
++	 */
++	CC_ATTR_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_HOST_MEM_ENCRYPT: Host memory encryption is active
++	 *
++	 * The platform/OS is running as a bare-metal system or a hypervisor
++	 * and actively using memory encryption.
++	 *
++	 * Examples include SME.
++	 */
++	CC_ATTR_HOST_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_GUEST_MEM_ENCRYPT: Guest memory encryption is active
++	 *
++	 * The platform/OS is running as a guest/virtual machine and actively
++	 * using memory encryption.
++	 *
++	 * Examples include SEV and SEV-ES.
++	 */
++	CC_ATTR_GUEST_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_GUEST_STATE_ENCRYPT: Guest state encryption is active
++	 *
++	 * The platform/OS is running as a guest/virtual machine and actively
++	 * using memory encryption and register state encryption.
++	 *
++	 * Examples include SEV-ES.
++	 */
++	CC_ATTR_GUEST_STATE_ENCRYPT,
++};
++
++#ifdef CONFIG_ARCH_HAS_CC_PLATFORM
++
++/**
++ * cc_platform_has() - Checks if the specified cc_attr attribute is active
++ * @attr: Confidential computing attribute to check
++ *
++ * The cc_platform_has() function will return an indicator as to whether the
++ * specified Confidential Computing attribute is currently active.
++ *
++ * Context: Any context
++ * Return:
++ * * TRUE  - Specified Confidential Computing attribute is active
++ * * FALSE - Specified Confidential Computing attribute is not active
++ */
++bool cc_platform_has(enum cc_attr attr);
++
++#else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
++
++static inline bool cc_platform_has(enum cc_attr attr) { return false; }
++
++#endif	/* CONFIG_ARCH_HAS_CC_PLATFORM */
++
++#endif	/* _CC_PLATFORM_H */
 -- 
 2.33.0
 
