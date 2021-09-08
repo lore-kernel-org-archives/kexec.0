@@ -1,16 +1,13 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from mail-co1nam11on2046.outbound.protection.outlook.com
- ([40.107.220.46] helo=NAM11-CO1-obe.outbound.protection.outlook.com)
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mail-dm6nam11on2070.outbound.protection.outlook.com
+ ([40.107.223.70] helo=NAM11-DM6-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mO6Xh-007kwz-6o
- for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:50 +0000
+ id 1mO6Ww-007kbp-NH
+ for kexec@lists.infradead.org; Wed, 08 Sep 2021 22:59:00 +0000
 From: Tom Lendacky <thomas.lendacky@amd.com>
-Subject: [PATCH v3 6/8] x86/sev: Replace occurrences of sev_active() with
- cc_platform_has()
-Date: Wed, 8 Sep 2021 17:58:37 -0500
-Message-ID: <bcc39c8b469aeab871e12f8a6c1d3484a95f615c.1631141919.git.thomas.lendacky@amd.com>
-In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
+Subject: [PATCH v3 0/8] Implement generic cc_platform_has() helper function
+Date: Wed, 8 Sep 2021 17:58:31 -0500
+Message-ID: <cover.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,329 +20,136 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave
- Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>, Ard Biesheuvel <ardb@kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan
+ He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
 
-Replace uses of sev_active() with the more generic cc_platform_has()
-using CC_ATTR_GUEST_MEM_ENCRYPT. If future support is added for other
-memory encryption technologies, the use of CC_ATTR_GUEST_MEM_ENCRYPT
-can be updated, as required.
+This patch series provides a generic helper function, cc_platform_has(),
+to replace the sme_active(), sev_active(), sev_es_active() and
+mem_encrypt_active() functions.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
+It is expected that as new confidential computing technologies are
+added to the kernel, they can all be covered by a single function call
+instead of a collection of specific function calls all called from the
+same locations.
+
+The powerpc and s390 patches have been compile tested only. Can the
+folks copied on this series verify that nothing breaks for them. Also,
+a new file, arch/powerpc/platforms/pseries/cc_platform.c, has been
+created for powerpc to hold the out of line function.
+
+Cc: Andi Kleen <ak@linux.intel.com>
 Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Ard Biesheuvel <ardb@kernel.org>
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
----
- arch/x86/include/asm/mem_encrypt.h |  2 --
- arch/x86/kernel/crash_dump_64.c    |  4 +++-
- arch/x86/kernel/kvm.c              |  3 ++-
- arch/x86/kernel/kvmclock.c         |  4 ++--
- arch/x86/kernel/machine_kexec_64.c |  4 ++--
- arch/x86/kvm/svm/svm.c             |  3 ++-
- arch/x86/mm/ioremap.c              |  6 +++---
- arch/x86/mm/mem_encrypt.c          | 25 ++++++++++---------------
- arch/x86/platform/efi/efi_64.c     |  9 +++++----
- 9 files changed, 29 insertions(+), 31 deletions(-)
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Daniel Vetter <daniel@ffwll.ch>
+Cc: Dave Hansen <dave.hansen@linux.intel.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: David Airlie <airlied@linux.ie>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Joerg Roedel <joro@8bytes.org>
+Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Cc: Maxime Ripard <mripard@kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Christoph Hellwig <hch@infradead.org>
 
-diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
-index 8c4f0dfe63f9..f440eebeeb2c 100644
---- a/arch/x86/include/asm/mem_encrypt.h
-+++ b/arch/x86/include/asm/mem_encrypt.h
-@@ -51,7 +51,6 @@ void __init mem_encrypt_free_decrypted_mem(void);
- void __init mem_encrypt_init(void);
- 
- void __init sev_es_init_vc_handling(void);
--bool sev_active(void);
- bool sev_es_active(void);
- bool amd_cc_platform_has(enum cc_attr attr);
- 
-@@ -76,7 +75,6 @@ static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
- static inline void __init sme_enable(struct boot_params *bp) { }
- 
- static inline void sev_es_init_vc_handling(void) { }
--static inline bool sev_active(void) { return false; }
- static inline bool sev_es_active(void) { return false; }
- static inline bool amd_cc_platform_has(enum cc_attr attr) { return false; }
- 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index 045e82e8945b..a7f617a3981d 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -10,6 +10,7 @@
- #include <linux/crash_dump.h>
- #include <linux/uaccess.h>
- #include <linux/io.h>
-+#include <linux/cc_platform.h>
- 
- static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 				  unsigned long offset, int userbuf,
-@@ -73,5 +74,6 @@ ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
- 
- ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, sev_active());
-+	return read_from_oldmem(buf, count, ppos, 0,
-+				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
- }
-diff --git a/arch/x86/kernel/kvm.c b/arch/x86/kernel/kvm.c
-index a26643dc6bd6..509a578f56a0 100644
---- a/arch/x86/kernel/kvm.c
-+++ b/arch/x86/kernel/kvm.c
-@@ -27,6 +27,7 @@
- #include <linux/nmi.h>
- #include <linux/swait.h>
- #include <linux/syscore_ops.h>
-+#include <linux/cc_platform.h>
- #include <asm/timer.h>
- #include <asm/cpu.h>
- #include <asm/traps.h>
-@@ -418,7 +419,7 @@ static void __init sev_map_percpu_data(void)
- {
- 	int cpu;
- 
--	if (!sev_active())
-+	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return;
- 
- 	for_each_possible_cpu(cpu) {
-diff --git a/arch/x86/kernel/kvmclock.c b/arch/x86/kernel/kvmclock.c
-index ad273e5861c1..fc3930c5db1b 100644
---- a/arch/x86/kernel/kvmclock.c
-+++ b/arch/x86/kernel/kvmclock.c
-@@ -16,9 +16,9 @@
- #include <linux/mm.h>
- #include <linux/slab.h>
- #include <linux/set_memory.h>
-+#include <linux/cc_platform.h>
- 
- #include <asm/hypervisor.h>
--#include <asm/mem_encrypt.h>
- #include <asm/x86_init.h>
- #include <asm/kvmclock.h>
- 
-@@ -232,7 +232,7 @@ static void __init kvmclock_init_mem(void)
- 	 * hvclock is shared between the guest and the hypervisor, must
- 	 * be mapped decrypted.
- 	 */
--	if (sev_active()) {
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
- 		r = set_memory_decrypted((unsigned long) hvclock_mem,
- 					 1UL << order);
- 		if (r) {
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 7040c0fa921c..f5da4a18070a 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -167,7 +167,7 @@ static int init_transition_pgtable(struct kimage *image, pgd_t *pgd)
- 	}
- 	pte = pte_offset_kernel(pmd, vaddr);
- 
--	if (sev_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		prot = PAGE_KERNEL_EXEC;
- 
- 	set_pte(pte, pfn_pte(paddr >> PAGE_SHIFT, prot));
-@@ -207,7 +207,7 @@ static int init_pgtable(struct kimage *image, unsigned long start_pgtable)
- 	level4p = (pgd_t *)__va(start_pgtable);
- 	clear_page(level4p);
- 
--	if (sev_active()) {
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
- 		info.page_flag   |= _PAGE_ENC;
- 		info.kernpg_flag |= _PAGE_ENC;
- 	}
-diff --git a/arch/x86/kvm/svm/svm.c b/arch/x86/kvm/svm/svm.c
-index 69639f9624f5..eb3669154b48 100644
---- a/arch/x86/kvm/svm/svm.c
-+++ b/arch/x86/kvm/svm/svm.c
-@@ -25,6 +25,7 @@
- #include <linux/pagemap.h>
- #include <linux/swap.h>
- #include <linux/rwsem.h>
-+#include <linux/cc_platform.h>
- 
- #include <asm/apic.h>
- #include <asm/perf_event.h>
-@@ -457,7 +458,7 @@ static int has_svm(void)
- 		return 0;
- 	}
- 
--	if (sev_active()) {
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT)) {
- 		pr_info("KVM is unsupported when running as an SEV guest\n");
- 		return 0;
- 	}
-diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
-index a7250fa3d45f..b59a5cbc6bc5 100644
---- a/arch/x86/mm/ioremap.c
-+++ b/arch/x86/mm/ioremap.c
-@@ -92,7 +92,7 @@ static unsigned int __ioremap_check_ram(struct resource *res)
-  */
- static unsigned int __ioremap_check_encrypted(struct resource *res)
- {
--	if (!sev_active())
-+	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return 0;
- 
- 	switch (res->desc) {
-@@ -112,7 +112,7 @@ static unsigned int __ioremap_check_encrypted(struct resource *res)
-  */
- static void __ioremap_check_other(resource_size_t addr, struct ioremap_desc *desc)
- {
--	if (!sev_active())
-+	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return;
- 
- 	if (!IS_ENABLED(CONFIG_EFI))
-@@ -556,7 +556,7 @@ static bool memremap_should_map_decrypted(resource_size_t phys_addr,
- 	case E820_TYPE_NVS:
- 	case E820_TYPE_UNUSABLE:
- 		/* For SEV, these areas are encrypted */
--		if (sev_active())
-+		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 			break;
- 		fallthrough;
- 
-diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-index 4b54a2377821..22d4e152a6de 100644
---- a/arch/x86/mm/mem_encrypt.c
-+++ b/arch/x86/mm/mem_encrypt.c
-@@ -194,7 +194,7 @@ void __init sme_early_init(void)
- 	for (i = 0; i < ARRAY_SIZE(protection_map); i++)
- 		protection_map[i] = pgprot_encrypted(protection_map[i]);
- 
--	if (sev_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		swiotlb_force = SWIOTLB_FORCE;
- }
- 
-@@ -203,7 +203,7 @@ void __init sev_setup_arch(void)
- 	phys_addr_t total_mem = memblock_phys_mem_size();
- 	unsigned long size;
- 
--	if (!sev_active())
-+	if (!cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return;
- 
- 	/*
-@@ -364,8 +364,8 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
- /*
-  * SME and SEV are very similar but they are not the same, so there are
-  * times that the kernel will need to distinguish between SME and SEV. The
-- * sme_active() and sev_active() functions are used for this.  When a
-- * distinction isn't needed, the mem_encrypt_active() function can be used.
-+ * cc_platform_has() function is used for this.  When a distinction isn't
-+ * needed, the CC_ATTR_MEM_ENCRYPT attribute can be used.
-  *
-  * The trampoline code is a good example for this requirement.  Before
-  * paging is activated, SME will access all memory as decrypted, but SEV
-@@ -373,11 +373,6 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
-  * up under SME the trampoline area cannot be encrypted, whereas under SEV
-  * the trampoline area must be encrypted.
-  */
--bool sev_active(void)
--{
--	return sev_status & MSR_AMD64_SEV_ENABLED;
--}
--EXPORT_SYMBOL_GPL(sev_active);
- 
- /* Needs to be called from non-instrumentable code */
- bool noinstr sev_es_active(void)
-@@ -392,10 +387,10 @@ bool amd_cc_platform_has(enum cc_attr attr)
- 		return sme_me_mask != 0;
- 
- 	case CC_ATTR_HOST_MEM_ENCRYPT:
--		return sme_me_mask && !sev_active();
-+		return sme_me_mask && !(sev_status & MSR_AMD64_SEV_ENABLED);
- 
- 	case CC_ATTR_GUEST_MEM_ENCRYPT:
--		return sev_active();
-+		return sev_status & MSR_AMD64_SEV_ENABLED;
- 
- 	case CC_ATTR_GUEST_STATE_ENCRYPT:
- 		return sev_es_active();
-@@ -411,7 +406,7 @@ bool force_dma_unencrypted(struct device *dev)
- 	/*
- 	 * For SEV, all DMA must be to unencrypted addresses.
- 	 */
--	if (sev_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		return true;
- 
- 	/*
-@@ -470,7 +465,7 @@ static void print_mem_encrypt_feature_info(void)
- 	}
- 
- 	/* Secure Encrypted Virtualization */
--	if (sev_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		pr_cont(" SEV");
- 
- 	/* Encrypted Register State */
-@@ -493,7 +488,7 @@ void __init mem_encrypt_init(void)
- 	 * With SEV, we need to unroll the rep string I/O instructions,
- 	 * but SEV-ES supports them through the #VC handler.
- 	 */
--	if (sev_active() && !sev_es_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && !sev_es_active())
- 		static_branch_enable(&sev_enable_key);
- 
- 	print_mem_encrypt_feature_info();
-@@ -501,6 +496,6 @@ void __init mem_encrypt_init(void)
- 
- int arch_has_restricted_virtio_memory_access(void)
- {
--	return sev_active();
-+	return cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT);
- }
- EXPORT_SYMBOL_GPL(arch_has_restricted_virtio_memory_access);
-diff --git a/arch/x86/platform/efi/efi_64.c b/arch/x86/platform/efi/efi_64.c
-index 7515e78ef898..1f3675453a57 100644
---- a/arch/x86/platform/efi/efi_64.c
-+++ b/arch/x86/platform/efi/efi_64.c
-@@ -33,7 +33,7 @@
- #include <linux/reboot.h>
- #include <linux/slab.h>
- #include <linux/ucs2_string.h>
--#include <linux/mem_encrypt.h>
-+#include <linux/cc_platform.h>
- #include <linux/sched/task.h>
- 
- #include <asm/setup.h>
-@@ -284,7 +284,8 @@ static void __init __map_region(efi_memory_desc_t *md, u64 va)
- 	if (!(md->attribute & EFI_MEMORY_WB))
- 		flags |= _PAGE_PCD;
- 
--	if (sev_active() && md->type != EFI_MEMORY_MAPPED_IO)
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
-+	    md->type != EFI_MEMORY_MAPPED_IO)
- 		flags |= _PAGE_ENC;
- 
- 	pfn = md->phys_addr >> PAGE_SHIFT;
-@@ -390,7 +391,7 @@ static int __init efi_update_mem_attr(struct mm_struct *mm, efi_memory_desc_t *m
- 	if (!(md->attribute & EFI_MEMORY_RO))
- 		pf |= _PAGE_RW;
- 
--	if (sev_active())
-+	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 		pf |= _PAGE_ENC;
- 
- 	return efi_update_mappings(md, pf);
-@@ -438,7 +439,7 @@ void __init efi_runtime_update_mappings(void)
- 			(md->type != EFI_RUNTIME_SERVICES_CODE))
- 			pf |= _PAGE_RW;
- 
--		if (sev_active())
-+		if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT))
- 			pf |= _PAGE_ENC;
- 
- 		efi_update_mappings(md, pf);
+---
+
+Patches based on:
+  https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+  4b93c544e90e ("thunderbolt: test: split up test cases in tb_test_credit_alloc_all")
+
+Changes since v2:
+- Changed the name from prot_guest_has() to cc_platform_has()
+- Took the cc_platform_has() function out of line. Created two new files,
+  cc_platform.c, in both x86 and ppc to implment the function. As a
+  result, also changed the attribute defines into enums.
+- Removed any received Reviewed-by's and Acked-by's given changes in this
+  version.
+- Added removal of new instances of mem_encrypt_active() usage in powerpc
+  arch.
+- Based on latest Linux tree to pick up powerpc changes related to the
+  mem_encrypt_active() function.
+
+Changes since v1:
+- Moved some arch ioremap functions within #ifdef CONFIG_AMD_MEM_ENCRYPT
+  in prep for use of prot_guest_has() by TDX.
+- Added type includes to the the protected_guest.h header file to prevent
+  build errors outside of x86.
+- Made amd_prot_guest_has() EXPORT_SYMBOL_GPL
+- Used amd_prot_guest_has() in place of checking sme_me_mask in the
+  arch/x86/mm/mem_encrypt.c file.
+
+Tom Lendacky (8):
+  x86/ioremap: Selectively build arch override encryption functions
+  mm: Introduce a function to check for confidential computing features
+  x86/sev: Add an x86 version of cc_platform_has()
+  powerpc/pseries/svm: Add a powerpc version of cc_platform_has()
+  x86/sme: Replace occurrences of sme_active() with cc_platform_has()
+  x86/sev: Replace occurrences of sev_active() with cc_platform_has()
+  x86/sev: Replace occurrences of sev_es_active() with cc_platform_has()
+  treewide: Replace the use of mem_encrypt_active() with
+    cc_platform_has()
+
+ arch/Kconfig                                 |  3 +
+ arch/powerpc/include/asm/mem_encrypt.h       |  5 --
+ arch/powerpc/platforms/pseries/Kconfig       |  1 +
+ arch/powerpc/platforms/pseries/Makefile      |  2 +
+ arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++
+ arch/powerpc/platforms/pseries/svm.c         |  5 +-
+ arch/s390/include/asm/mem_encrypt.h          |  2 -
+ arch/x86/Kconfig                             |  1 +
+ arch/x86/include/asm/io.h                    |  8 ++
+ arch/x86/include/asm/kexec.h                 |  2 +-
+ arch/x86/include/asm/mem_encrypt.h           | 14 +---
+ arch/x86/kernel/Makefile                     |  3 +
+ arch/x86/kernel/cc_platform.c                | 21 +++++
+ arch/x86/kernel/crash_dump_64.c              |  4 +-
+ arch/x86/kernel/head64.c                     |  4 +-
+ arch/x86/kernel/kvm.c                        |  3 +-
+ arch/x86/kernel/kvmclock.c                   |  4 +-
+ arch/x86/kernel/machine_kexec_64.c           | 19 +++--
+ arch/x86/kernel/pci-swiotlb.c                |  9 +-
+ arch/x86/kernel/relocate_kernel_64.S         |  2 +-
+ arch/x86/kernel/sev.c                        |  6 +-
+ arch/x86/kvm/svm/svm.c                       |  3 +-
+ arch/x86/mm/ioremap.c                        | 18 ++--
+ arch/x86/mm/mem_encrypt.c                    | 57 +++++++------
+ arch/x86/mm/mem_encrypt_identity.c           |  3 +-
+ arch/x86/mm/pat/set_memory.c                 |  3 +-
+ arch/x86/platform/efi/efi_64.c               |  9 +-
+ arch/x86/realmode/init.c                     |  8 +-
+ drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      |  4 +-
+ drivers/gpu/drm/drm_cache.c                  |  4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_drv.c          |  4 +-
+ drivers/gpu/drm/vmwgfx/vmwgfx_msg.c          |  6 +-
+ drivers/iommu/amd/init.c                     |  7 +-
+ drivers/iommu/amd/iommu.c                    |  3 +-
+ drivers/iommu/amd/iommu_v2.c                 |  3 +-
+ drivers/iommu/iommu.c                        |  3 +-
+ fs/proc/vmcore.c                             |  6 +-
+ include/linux/cc_platform.h                  | 88 ++++++++++++++++++++
+ include/linux/mem_encrypt.h                  |  4 -
+ kernel/dma/swiotlb.c                         |  4 +-
+ 40 files changed, 267 insertions(+), 114 deletions(-)
+ create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
+ create mode 100644 arch/x86/kernel/cc_platform.c
+ create mode 100644 include/linux/cc_platform.h
+
+
+base-commit: 4b93c544e90e2b28326182d31ee008eb80e02074
 -- 
 2.33.0
 
