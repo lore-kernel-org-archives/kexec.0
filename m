@@ -1,18 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from pegase2.c-s.fr ([93.17.235.10])
+Received: from mail-mw2nam12on2047.outbound.protection.outlook.com
+ ([40.107.244.47] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOEg5-008Sw0-9a
- for kexec@lists.infradead.org; Thu, 09 Sep 2021 07:40:59 +0000
-Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
+ id 1mOJpV-009k4o-Li
+ for kexec@lists.infradead.org; Thu, 09 Sep 2021 13:11:07 +0000
+Subject: Re: [PATCH v3 8/8] treewide: Replace the use of mem_encrypt_active()
+ with cc_platform_has()
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Message-ID: <b8a163b3-6357-45c9-f7ef-5d7e900b9ac8@csgroup.eu>
-Date: Thu, 9 Sep 2021 07:40:51 +0000
-MIME-Version: 1.0
-In-Reply-To: <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
+ <46a18427dc4e9dda985b10e472965e3e4c769f1d.1631141919.git.thomas.lendacky@amd.com>
+ <a9d9a6a7-b3b3-570c-ef3d-2f5f0b61eb0b@csgroup.eu>
+From: Tom Lendacky <thomas.lendacky@amd.com>
+Message-ID: <76ace164-92d8-c970-f9e5-d259c3573314@amd.com>
+Date: Thu, 9 Sep 2021 08:10:54 -0500
+In-Reply-To: <a9d9a6a7-b3b3-570c-ef3d-2f5f0b61eb0b@csgroup.eu>
 Content-Language: en-US
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,93 +23,116 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Andi Kleen <ak@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@infradead.org>, Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Paul Mackerras <paulus@samba.org>
+To: Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Brijesh Singh <brijesh.singh@amd.com>, Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@linux.intel.com>, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Andi Kleen <ak@linux.intel.com>, Baoquan He <bhe@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@infradead.org>, David Airlie <airlied@linux.ie>, Ingo Molnar <mingo@redhat.com>, Dave Young <dyoung@redhat.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Vetter <daniel@ffwll.ch>
 
-
-
-On 9/8/21 10:58 PM, Tom Lendacky wrote:
-> Introduce a powerpc version of the cc_platform_has() function. This will
-> be used to replace the powerpc mem_encrypt_active() implementation, so
-> the implementation will initially only support the CC_ATTR_MEM_ENCRYPT
-> attribute.
-> 
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->   arch/powerpc/platforms/pseries/Kconfig       |  1 +
->   arch/powerpc/platforms/pseries/Makefile      |  2 ++
->   arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++++++++++++++++
->   3 files changed, 29 insertions(+)
->   create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
-> 
-> diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-> index 5e037df2a3a1..2e57391e0778 100644
-> --- a/arch/powerpc/platforms/pseries/Kconfig
-> +++ b/arch/powerpc/platforms/pseries/Kconfig
-> @@ -159,6 +159,7 @@ config PPC_SVM
->   	select SWIOTLB
->   	select ARCH_HAS_MEM_ENCRYPT
->   	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-> +	select ARCH_HAS_CC_PLATFORM
->   	help
->   	 There are certain POWER platforms which support secure guests using
->   	 the Protected Execution Facility, with the help of an Ultravisor
-> diff --git a/arch/powerpc/platforms/pseries/Makefile b/arch/powerpc/platforms/pseries/Makefile
-> index 4cda0ef87be0..41d8aee98da4 100644
-> --- a/arch/powerpc/platforms/pseries/Makefile
-> +++ b/arch/powerpc/platforms/pseries/Makefile
-> @@ -31,3 +31,5 @@ obj-$(CONFIG_FA_DUMP)		+= rtas-fadump.o
->   
->   obj-$(CONFIG_SUSPEND)		+= suspend.o
->   obj-$(CONFIG_PPC_VAS)		+= vas.o
-> +
-> +obj-$(CONFIG_ARCH_HAS_CC_PLATFORM)	+= cc_platform.o
-> diff --git a/arch/powerpc/platforms/pseries/cc_platform.c b/arch/powerpc/platforms/pseries/cc_platform.c
-> new file mode 100644
-> index 000000000000..e8021af83a19
-> --- /dev/null
-> +++ b/arch/powerpc/platforms/pseries/cc_platform.c
-> @@ -0,0 +1,26 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Confidential Computing Platform Capability checks
-> + *
-> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
-> + */
-> +
-> +#include <linux/export.h>
-> +#include <linux/cc_platform.h>
-> +
-> +#include <asm/machdep.h>
-> +#include <asm/svm.h>
-> +
-> +bool cc_platform_has(enum cc_attr attr)
-> +{
-
-Please keep this function inline as mem_encrypt_active() is
-
-
-> +	switch (attr) {
-> +	case CC_ATTR_MEM_ENCRYPT:
-> +		return is_secure_guest();
-> +
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +EXPORT_SYMBOL_GPL(cc_platform_has);
-> 
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gOS85LzIxIDI6MjUgQU0sIENocmlzdG9waGUgTGVyb3kgd3JvdGU6Cj4gCj4gCj4gT24gOS84
+LzIxIDEwOjU4IFBNLCBUb20gTGVuZGFja3kgd3JvdGU6Cj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNo
+L3Bvd2VycGMvaW5jbHVkZS9hc20vbWVtX2VuY3J5cHQuaCAKPj4gYi9hcmNoL3Bvd2VycGMvaW5j
+bHVkZS9hc20vbWVtX2VuY3J5cHQuaAo+PiBpbmRleCBiYTlkYWIwN2MxYmUuLjJmMjZiOGZjOGQy
+OSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL21lbV9lbmNyeXB0LmgK
+Pj4gKysrIGIvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL21lbV9lbmNyeXB0LmgKPj4gQEAgLTEw
+LDExICsxMCw2IEBACj4+IMKgICNpbmNsdWRlIDxhc20vc3ZtLmg+Cj4+IC1zdGF0aWMgaW5saW5l
+IGJvb2wgbWVtX2VuY3J5cHRfYWN0aXZlKHZvaWQpCj4+IC17Cj4+IC3CoMKgwqAgcmV0dXJuIGlz
+X3NlY3VyZV9ndWVzdCgpOwo+PiAtfQo+PiAtCj4+IMKgIHN0YXRpYyBpbmxpbmUgYm9vbCBmb3Jj
+ZV9kbWFfdW5lbmNyeXB0ZWQoc3RydWN0IGRldmljZSAqZGV2KQo+PiDCoCB7Cj4+IMKgwqDCoMKg
+wqAgcmV0dXJuIGlzX3NlY3VyZV9ndWVzdCgpOwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
+L3BsYXRmb3Jtcy9wc2VyaWVzL3N2bS5jIAo+PiBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNl
+cmllcy9zdm0uYwo+PiBpbmRleCA4N2YwMDFiNGM0ZTQuLmMwODNlY2JiYWU0ZCAxMDA2NDQKPj4g
+LS0tIGEvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVzL3N2bS5jCj4+ICsrKyBiL2FyY2gv
+cG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9zdm0uYwo+PiBAQCAtOCw2ICs4LDcgQEAKPj4gwqAg
+I2luY2x1ZGUgPGxpbnV4L21tLmg+Cj4+IMKgICNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgo+
+PiArI2luY2x1ZGUgPGxpbnV4L2NjX3BsYXRmb3JtLmg+Cj4+IMKgICNpbmNsdWRlIDxhc20vbWFj
+aGRlcC5oPgo+PiDCoCAjaW5jbHVkZSA8YXNtL3N2bS5oPgo+PiDCoCAjaW5jbHVkZSA8YXNtL3N3
+aW90bGIuaD4KPj4gQEAgLTYzLDcgKzY0LDcgQEAgdm9pZCBfX2luaXQgc3ZtX3N3aW90bGJfaW5p
+dCh2b2lkKQo+PiDCoCBpbnQgc2V0X21lbW9yeV9lbmNyeXB0ZWQodW5zaWduZWQgbG9uZyBhZGRy
+LCBpbnQgbnVtcGFnZXMpCj4+IMKgIHsKPj4gLcKgwqDCoCBpZiAoIW1lbV9lbmNyeXB0X2FjdGl2
+ZSgpKQo+PiArwqDCoMKgIGlmICghY2NfcGxhdGZvcm1faGFzKENDX0FUVFJfTUVNX0VOQ1JZUFQp
+KQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgwqDCoMKgwqAgaWYgKCFQQUdF
+X0FMSUdORUQoYWRkcikpCj4+IEBAIC03Niw3ICs3Nyw3IEBAIGludCBzZXRfbWVtb3J5X2VuY3J5
+cHRlZCh1bnNpZ25lZCBsb25nIGFkZHIsIGludCAKPj4gbnVtcGFnZXMpCj4+IMKgIGludCBzZXRf
+bWVtb3J5X2RlY3J5cHRlZCh1bnNpZ25lZCBsb25nIGFkZHIsIGludCBudW1wYWdlcykKPj4gwqAg
+ewo+PiAtwqDCoMKgIGlmICghbWVtX2VuY3J5cHRfYWN0aXZlKCkpCj4+ICvCoMKgwqAgaWYgKCFj
+Y19wbGF0Zm9ybV9oYXMoQ0NfQVRUUl9NRU1fRU5DUllQVCkpCj4+IMKgwqDCoMKgwqDCoMKgwqDC
+oCByZXR1cm4gMDsKPj4gwqDCoMKgwqDCoCBpZiAoIVBBR0VfQUxJR05FRChhZGRyKSkKPiAKPiBU
+aGlzIGNoYW5nZSB1bm5lY2Vzc2FyaWx5IGNvbXBsZXhpZmllcyB0aGUgdHdvIGZ1bmN0aW9ucy4g
+VGhpcyBpcyBkdWUgdG8gCj4gY2NfcGxhdGZvcm1faGFzKCkgYmVpbmcgb3V0LWxpbmUuIEl0IHNo
+b3VsZCByZWFsbHkgcmVtYWluIGlubGluZS4KClBsZWFzZSBzZWUgcHJldmlvdXMgZGlzY3Vzc2lv
+bihzKSBvbiB0aGlzIHNlcmllcyBmb3Igd2h5IHRoZSBmdW5jdGlvbiBpcwppbXBsZW1lbnRlZCBv
+dXQgb2YgbGluZSBhbmQgZm9yIHRoZSBuYW1pbmc6CgpWMTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
+cmcvbGttbC9jb3Zlci4xNjI3NDI0NzczLmdpdC50aG9tYXMubGVuZGFja3lAYW1kLmNvbS8KClYy
+OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sL2NvdmVyLjE2Mjg4NzM5NzAuZ2l0LnRob21h
+cy5sZW5kYWNreUBhbWQuY29tLwoKVGhhbmtzLApUb20KCj4gCj4gQmVmb3JlIHRoZSBjaGFuZ2Ug
+d2UgZ290Ogo+IAo+IDAwMDAwMDAwMDAwMDAwMDAgPC5zZXRfbWVtb3J5X2VuY3J5cHRlZD46Cj4g
+IMKgwqAgMDrCoMKgwqAgN2QgMjAgMDAgYTbCoMKgwqDCoCBtZm1zcsKgwqAgcjkKPiAgwqDCoCA0
+OsKgwqDCoCA3NSAyOSAwMCA0MMKgwqDCoMKgIGFuZGlzLsKgIHI5LHI5LDY0Cj4gIMKgwqAgODrC
+oMKgwqAgNDEgODIgMDAgNDjCoMKgwqDCoCBiZXHCoMKgwqDCoCA1MCA8LnNldF9tZW1vcnlfZW5j
+cnlwdGVkKzB4NTA+Cj4gIMKgwqAgYzrCoMKgwqAgNzggNjkgMDQgMjDCoMKgwqDCoCBjbHJsZGnC
+oCByOSxyMyw0OAo+ICDCoCAxMDrCoMKgwqAgMmMgMjkgMDAgMDDCoMKgwqDCoCBjbXBkacKgwqAg
+cjksMAo+ICDCoCAxNDrCoMKgwqAgNDAgODIgMDAgNGPCoMKgwqDCoCBibmXCoMKgwqDCoCA2MCA8
+LnNldF9tZW1vcnlfZW5jcnlwdGVkKzB4NjA+Cj4gIMKgIDE4OsKgwqDCoCA3YyAwOCAwMiBhNsKg
+wqDCoMKgIG1mbHLCoMKgwqAgcjAKPiAgwqAgMWM6wqDCoMKgIDdjIDg1IDIzIDc4wqDCoMKgwqAg
+bXLCoMKgwqDCoMKgIHI1LHI0Cj4gIMKgIDIwOsKgwqDCoCA3OCA2NCA4NSAwMsKgwqDCoMKgIHJs
+ZGljbMKgIHI0LHIzLDQ4LDIwCj4gIMKgIDI0OsKgwqDCoCA2MSAyMyBmMSAzNMKgwqDCoMKgIG9y
+acKgwqDCoMKgIHIzLHI5LDYxNzQ4Cj4gIMKgIDI4OsKgwqDCoCBmOCAwMSAwMCAxMMKgwqDCoMKg
+IHN0ZMKgwqDCoMKgIHIwLDE2KHIxKQo+ICDCoCAyYzrCoMKgwqAgZjggMjEgZmYgOTHCoMKgwqDC
+oCBzdGR1wqDCoMKgIHIxLC0xMTIocjEpCj4gIMKgIDMwOsKgwqDCoCA0OCAwMCAwMCAwMcKgwqDC
+oMKgIGJswqDCoMKgwqDCoCAzMCA8LnNldF9tZW1vcnlfZW5jcnlwdGVkKzB4MzA+Cj4gIMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqAgMzA6IFJfUFBDNjRfUkVMMjTCoMKgwqAgLnVjYWxsX25vcmV0cwo+
+ICDCoCAzNDrCoMKgwqAgNjAgMDAgMDAgMDDCoMKgwqDCoCBub3AKPiAgwqAgMzg6wqDCoMKgIDM4
+IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAgM2M6wqDCoMKgIDM4IDIx
+IDAwIDcwwqDCoMKgwqAgYWRkacKgwqDCoCByMSxyMSwxMTIKPiAgwqAgNDA6wqDCoMKgIGU4IDAx
+IDAwIDEwwqDCoMKgwqAgbGTCoMKgwqDCoMKgIHIwLDE2KHIxKQo+ICDCoCA0NDrCoMKgwqAgN2Mg
+MDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIwCj4gIMKgIDQ4OsKgwqDCoCA0ZSA4MCAwMCAy
+MMKgwqDCoMKgIGJscgo+ICDCoCA1MDrCoMKgwqAgMzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDC
+oMKgwqAgcjMsMAo+ICDCoCA1NDrCoMKgwqAgNGUgODAgMDAgMjDCoMKgwqDCoCBibHIKPiAgwqAg
+NjA6wqDCoMKgIDM4IDYwIGZmIGVhwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLC0yMgo+ICDCoCA2
+NDrCoMKgwqAgNGUgODAgMDAgMjDCoMKgwqDCoCBibHIKPiAKPiBBZnRlciB0aGUgY2hhbmdlIHdl
+IGdldDoKPiAKPiAwMDAwMDAwMDAwMDAwMDAwIDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQ+Ogo+ICDC
+oMKgIDA6wqDCoMKgIDdjIDA4IDAyIGE2wqDCoMKgwqAgbWZscsKgwqDCoCByMAo+ICDCoMKgIDQ6
+wqDCoMKgIGZiIGMxIGZmIGYwwqDCoMKgwqAgc3RkwqDCoMKgwqAgcjMwLC0xNihyMSkKPiAgwqDC
+oCA4OsKgwqDCoCBmYiBlMSBmZiBmOMKgwqDCoMKgIHN0ZMKgwqDCoMKgIHIzMSwtOChyMSkKPiAg
+wqDCoCBjOsKgwqDCoCA3YyA3ZiAxYiA3OMKgwqDCoMKgIG1ywqDCoMKgwqDCoCByMzEscjMKPiAg
+wqAgMTA6wqDCoMKgIDM4IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAg
+MTQ6wqDCoMKgIDdjIDllIDIzIDc4wqDCoMKgwqAgbXLCoMKgwqDCoMKgIHIzMCxyNAo+ICDCoCAx
+ODrCoMKgwqAgZjggMDEgMDAgMTDCoMKgwqDCoCBzdGTCoMKgwqDCoCByMCwxNihyMSkKPiAgwqAg
+MWM6wqDCoMKgIGY4IDIxIGZmIDgxwqDCoMKgwqAgc3RkdcKgwqDCoCByMSwtMTI4KHIxKQo+ICDC
+oCAyMDrCoMKgwqAgNDggMDAgMDAgMDHCoMKgwqDCoCBibMKgwqDCoMKgwqAgMjAgPC5zZXRfbWVt
+b3J5X2VuY3J5cHRlZCsweDIwPgo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDIwOiBSX1BQQzY0
+X1JFTDI0wqDCoMKgIC5jY19wbGF0Zm9ybV9oYXMKPiAgwqAgMjQ6wqDCoMKgIDYwIDAwIDAwIDAw
+wqDCoMKgwqAgbm9wCj4gIMKgIDI4OsKgwqDCoCAyYyAyMyAwMCAwMMKgwqDCoMKgIGNtcGRpwqDC
+oCByMywwCj4gIMKgIDJjOsKgwqDCoCA0MSA4MiAwMCA0NMKgwqDCoMKgIGJlccKgwqDCoMKgIDcw
+IDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQrMHg3MD4KPiAgwqAgMzA6wqDCoMKgIDdiIGU5IDA0IDIw
+wqDCoMKgwqAgY2xybGRpwqAgcjkscjMxLDQ4Cj4gIMKgIDM0OsKgwqDCoCAyYyAyOSAwMCAwMMKg
+wqDCoMKgIGNtcGRpwqDCoCByOSwwCj4gIMKgIDM4OsKgwqDCoCA0MCA4MiAwMCA1OMKgwqDCoMKg
+IGJuZcKgwqDCoMKgIDkwIDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQrMHg5MD4KPiAgwqAgM2M6wqDC
+oMKgIDM4IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAgNDA6wqDCoMKg
+IDdmIGM1IGYzIDc4wqDCoMKgwqAgbXLCoMKgwqDCoMKgIHI1LHIzMAo+ICDCoCA0NDrCoMKgwqAg
+N2IgZTQgODUgMDLCoMKgwqDCoCBybGRpY2zCoCByNCxyMzEsNDgsMjAKPiAgwqAgNDg6wqDCoMKg
+IDYwIDYzIGYxIDM0wqDCoMKgwqAgb3JpwqDCoMKgwqAgcjMscjMsNjE3NDgKPiAgwqAgNGM6wqDC
+oMKgIDQ4IDAwIDAwIDAxwqDCoMKgwqAgYmzCoMKgwqDCoMKgIDRjIDwuc2V0X21lbW9yeV9lbmNy
+eXB0ZWQrMHg0Yz4KPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA0YzogUl9QUEM2NF9SRUwyNMKg
+wqDCoCAudWNhbGxfbm9yZXRzCj4gIMKgIDUwOsKgwqDCoCA2MCAwMCAwMCAwMMKgwqDCoMKgIG5v
+cAo+ICDCoCA1NDrCoMKgwqAgMzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDCoMKgwqAgcjMsMAo+
+ICDCoCA1ODrCoMKgwqAgMzggMjEgMDAgODDCoMKgwqDCoCBhZGRpwqDCoMKgIHIxLHIxLDEyOAo+
+ICDCoCA1YzrCoMKgwqAgZTggMDEgMDAgMTDCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjAsMTYocjEp
+Cj4gIMKgIDYwOsKgwqDCoCBlYiBjMSBmZiBmMMKgwqDCoMKgIGxkwqDCoMKgwqDCoCByMzAsLTE2
+KHIxKQo+ICDCoCA2NDrCoMKgwqAgZWIgZTEgZmYgZjjCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjMx
+LC04KHIxKQo+ICDCoCA2ODrCoMKgwqAgN2MgMDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIw
+Cj4gIMKgIDZjOsKgwqDCoCA0ZSA4MCAwMCAyMMKgwqDCoMKgIGJscgo+ICDCoCA3MDrCoMKgwqAg
+MzggMjEgMDAgODDCoMKgwqDCoCBhZGRpwqDCoMKgIHIxLHIxLDEyOAo+ICDCoCA3NDrCoMKgwqAg
+MzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDCoMKgwqAgcjMsMAo+ICDCoCA3ODrCoMKgwqAgZTgg
+MDEgMDAgMTDCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjAsMTYocjEpCj4gIMKgIDdjOsKgwqDCoCBl
+YiBjMSBmZiBmMMKgwqDCoMKgIGxkwqDCoMKgwqDCoCByMzAsLTE2KHIxKQo+ICDCoCA4MDrCoMKg
+wqAgZWIgZTEgZmYgZjjCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjMxLC04KHIxKQo+ICDCoCA4NDrC
+oMKgwqAgN2MgMDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIwCj4gIMKgIDg4OsKgwqDCoCA0
+ZSA4MCAwMCAyMMKgwqDCoMKgIGJscgo+ICDCoCA5MDrCoMKgwqAgMzggNjAgZmYgZWHCoMKgwqDC
+oCBsacKgwqDCoMKgwqAgcjMsLTIyCj4gIMKgIDk0OsKgwqDCoCA0YiBmZiBmZiBjNMKgwqDCoMKg
+IGLCoMKgwqDCoMKgwqAgNTggPC5zZXRfbWVtb3J5X2VuY3J5cHRlZCsweDU4Pgo+IAoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
+aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
