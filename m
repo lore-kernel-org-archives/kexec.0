@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam12on2047.outbound.protection.outlook.com
- ([40.107.244.47] helo=NAM12-MW2-obe.outbound.protection.outlook.com)
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOJpV-009k4o-Li
- for kexec@lists.infradead.org; Thu, 09 Sep 2021 13:11:07 +0000
-Subject: Re: [PATCH v3 8/8] treewide: Replace the use of mem_encrypt_active()
- with cc_platform_has()
+ id 1mOEYm-008Rm3-Qu
+ for kexec@lists.infradead.org; Thu, 09 Sep 2021 07:33:26 +0000
+Subject: Re: [PATCH v3 0/8] Implement generic cc_platform_has() helper function
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <46a18427dc4e9dda985b10e472965e3e4c769f1d.1631141919.git.thomas.lendacky@amd.com>
- <a9d9a6a7-b3b3-570c-ef3d-2f5f0b61eb0b@csgroup.eu>
-From: Tom Lendacky <thomas.lendacky@amd.com>
-Message-ID: <76ace164-92d8-c970-f9e5-d259c3573314@amd.com>
-Date: Thu, 9 Sep 2021 08:10:54 -0500
-In-Reply-To: <a9d9a6a7-b3b3-570c-ef3d-2f5f0b61eb0b@csgroup.eu>
+From: Christian Borntraeger <borntraeger@de.ibm.com>
+Message-ID: <bde05ba8-c1b7-5df7-4147-44c38f4f3acf@de.ibm.com>
+Date: Thu, 9 Sep 2021 09:32:19 +0200
+In-Reply-To: <cover.1631141919.git.thomas.lendacky@amd.com>
 Content-Language: en-US
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,116 +20,148 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christophe Leroy <christophe.leroy@csgroup.eu>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
-Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Brijesh Singh <brijesh.singh@amd.com>, Peter Zijlstra <peterz@infradead.org>, Dave Hansen <dave.hansen@linux.intel.com>, Paul Mackerras <paulus@samba.org>, Will Deacon <will@kernel.org>, Andi Kleen <ak@linux.intel.com>, Baoquan He <bhe@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Joerg Roedel <joro@8bytes.org>, Christoph Hellwig <hch@infradead.org>, David Airlie <airlied@linux.ie>, Ingo Molnar <mingo@redhat.com>, Dave Young <dyoung@redhat.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Heiko Carstens <hca@linux.ibm.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Borislav Petkov <bp@alien8.de>, Andy Lutomirski <luto@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Daniel Vetter <daniel@ffwll.ch>
+To: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org
+Cc: Borislav Petkov <bp@alien8.de>, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Daniel Vetter <daniel@ffwll.ch>, Dave Hansen <dave.hansen@linux.intel.com>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Ingo Molnar <mingo@redhat.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Peter Zijlstra <peterz@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, Will Deacon <will@kernel.org>
 
-T24gOS85LzIxIDI6MjUgQU0sIENocmlzdG9waGUgTGVyb3kgd3JvdGU6Cj4gCj4gCj4gT24gOS84
-LzIxIDEwOjU4IFBNLCBUb20gTGVuZGFja3kgd3JvdGU6Cj4+Cj4+IGRpZmYgLS1naXQgYS9hcmNo
-L3Bvd2VycGMvaW5jbHVkZS9hc20vbWVtX2VuY3J5cHQuaCAKPj4gYi9hcmNoL3Bvd2VycGMvaW5j
-bHVkZS9hc20vbWVtX2VuY3J5cHQuaAo+PiBpbmRleCBiYTlkYWIwN2MxYmUuLjJmMjZiOGZjOGQy
-OSAxMDA2NDQKPj4gLS0tIGEvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL21lbV9lbmNyeXB0LmgK
-Pj4gKysrIGIvYXJjaC9wb3dlcnBjL2luY2x1ZGUvYXNtL21lbV9lbmNyeXB0LmgKPj4gQEAgLTEw
-LDExICsxMCw2IEBACj4+IMKgICNpbmNsdWRlIDxhc20vc3ZtLmg+Cj4+IC1zdGF0aWMgaW5saW5l
-IGJvb2wgbWVtX2VuY3J5cHRfYWN0aXZlKHZvaWQpCj4+IC17Cj4+IC3CoMKgwqAgcmV0dXJuIGlz
-X3NlY3VyZV9ndWVzdCgpOwo+PiAtfQo+PiAtCj4+IMKgIHN0YXRpYyBpbmxpbmUgYm9vbCBmb3Jj
-ZV9kbWFfdW5lbmNyeXB0ZWQoc3RydWN0IGRldmljZSAqZGV2KQo+PiDCoCB7Cj4+IMKgwqDCoMKg
-wqAgcmV0dXJuIGlzX3NlY3VyZV9ndWVzdCgpOwo+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
-L3BsYXRmb3Jtcy9wc2VyaWVzL3N2bS5jIAo+PiBiL2FyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNl
-cmllcy9zdm0uYwo+PiBpbmRleCA4N2YwMDFiNGM0ZTQuLmMwODNlY2JiYWU0ZCAxMDA2NDQKPj4g
-LS0tIGEvYXJjaC9wb3dlcnBjL3BsYXRmb3Jtcy9wc2VyaWVzL3N2bS5jCj4+ICsrKyBiL2FyY2gv
-cG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9zdm0uYwo+PiBAQCAtOCw2ICs4LDcgQEAKPj4gwqAg
-I2luY2x1ZGUgPGxpbnV4L21tLmg+Cj4+IMKgICNpbmNsdWRlIDxsaW51eC9tZW1ibG9jay5oPgo+
-PiArI2luY2x1ZGUgPGxpbnV4L2NjX3BsYXRmb3JtLmg+Cj4+IMKgICNpbmNsdWRlIDxhc20vbWFj
-aGRlcC5oPgo+PiDCoCAjaW5jbHVkZSA8YXNtL3N2bS5oPgo+PiDCoCAjaW5jbHVkZSA8YXNtL3N3
-aW90bGIuaD4KPj4gQEAgLTYzLDcgKzY0LDcgQEAgdm9pZCBfX2luaXQgc3ZtX3N3aW90bGJfaW5p
-dCh2b2lkKQo+PiDCoCBpbnQgc2V0X21lbW9yeV9lbmNyeXB0ZWQodW5zaWduZWQgbG9uZyBhZGRy
-LCBpbnQgbnVtcGFnZXMpCj4+IMKgIHsKPj4gLcKgwqDCoCBpZiAoIW1lbV9lbmNyeXB0X2FjdGl2
-ZSgpKQo+PiArwqDCoMKgIGlmICghY2NfcGxhdGZvcm1faGFzKENDX0FUVFJfTUVNX0VOQ1JZUFQp
-KQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgwqDCoMKgwqAgaWYgKCFQQUdF
-X0FMSUdORUQoYWRkcikpCj4+IEBAIC03Niw3ICs3Nyw3IEBAIGludCBzZXRfbWVtb3J5X2VuY3J5
-cHRlZCh1bnNpZ25lZCBsb25nIGFkZHIsIGludCAKPj4gbnVtcGFnZXMpCj4+IMKgIGludCBzZXRf
-bWVtb3J5X2RlY3J5cHRlZCh1bnNpZ25lZCBsb25nIGFkZHIsIGludCBudW1wYWdlcykKPj4gwqAg
-ewo+PiAtwqDCoMKgIGlmICghbWVtX2VuY3J5cHRfYWN0aXZlKCkpCj4+ICvCoMKgwqAgaWYgKCFj
-Y19wbGF0Zm9ybV9oYXMoQ0NfQVRUUl9NRU1fRU5DUllQVCkpCj4+IMKgwqDCoMKgwqDCoMKgwqDC
-oCByZXR1cm4gMDsKPj4gwqDCoMKgwqDCoCBpZiAoIVBBR0VfQUxJR05FRChhZGRyKSkKPiAKPiBU
-aGlzIGNoYW5nZSB1bm5lY2Vzc2FyaWx5IGNvbXBsZXhpZmllcyB0aGUgdHdvIGZ1bmN0aW9ucy4g
-VGhpcyBpcyBkdWUgdG8gCj4gY2NfcGxhdGZvcm1faGFzKCkgYmVpbmcgb3V0LWxpbmUuIEl0IHNo
-b3VsZCByZWFsbHkgcmVtYWluIGlubGluZS4KClBsZWFzZSBzZWUgcHJldmlvdXMgZGlzY3Vzc2lv
-bihzKSBvbiB0aGlzIHNlcmllcyBmb3Igd2h5IHRoZSBmdW5jdGlvbiBpcwppbXBsZW1lbnRlZCBv
-dXQgb2YgbGluZSBhbmQgZm9yIHRoZSBuYW1pbmc6CgpWMTogaHR0cHM6Ly9sb3JlLmtlcm5lbC5v
-cmcvbGttbC9jb3Zlci4xNjI3NDI0NzczLmdpdC50aG9tYXMubGVuZGFja3lAYW1kLmNvbS8KClYy
-OiBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sL2NvdmVyLjE2Mjg4NzM5NzAuZ2l0LnRob21h
-cy5sZW5kYWNreUBhbWQuY29tLwoKVGhhbmtzLApUb20KCj4gCj4gQmVmb3JlIHRoZSBjaGFuZ2Ug
-d2UgZ290Ogo+IAo+IDAwMDAwMDAwMDAwMDAwMDAgPC5zZXRfbWVtb3J5X2VuY3J5cHRlZD46Cj4g
-IMKgwqAgMDrCoMKgwqAgN2QgMjAgMDAgYTbCoMKgwqDCoCBtZm1zcsKgwqAgcjkKPiAgwqDCoCA0
-OsKgwqDCoCA3NSAyOSAwMCA0MMKgwqDCoMKgIGFuZGlzLsKgIHI5LHI5LDY0Cj4gIMKgwqAgODrC
-oMKgwqAgNDEgODIgMDAgNDjCoMKgwqDCoCBiZXHCoMKgwqDCoCA1MCA8LnNldF9tZW1vcnlfZW5j
-cnlwdGVkKzB4NTA+Cj4gIMKgwqAgYzrCoMKgwqAgNzggNjkgMDQgMjDCoMKgwqDCoCBjbHJsZGnC
-oCByOSxyMyw0OAo+ICDCoCAxMDrCoMKgwqAgMmMgMjkgMDAgMDDCoMKgwqDCoCBjbXBkacKgwqAg
-cjksMAo+ICDCoCAxNDrCoMKgwqAgNDAgODIgMDAgNGPCoMKgwqDCoCBibmXCoMKgwqDCoCA2MCA8
-LnNldF9tZW1vcnlfZW5jcnlwdGVkKzB4NjA+Cj4gIMKgIDE4OsKgwqDCoCA3YyAwOCAwMiBhNsKg
-wqDCoMKgIG1mbHLCoMKgwqAgcjAKPiAgwqAgMWM6wqDCoMKgIDdjIDg1IDIzIDc4wqDCoMKgwqAg
-bXLCoMKgwqDCoMKgIHI1LHI0Cj4gIMKgIDIwOsKgwqDCoCA3OCA2NCA4NSAwMsKgwqDCoMKgIHJs
-ZGljbMKgIHI0LHIzLDQ4LDIwCj4gIMKgIDI0OsKgwqDCoCA2MSAyMyBmMSAzNMKgwqDCoMKgIG9y
-acKgwqDCoMKgIHIzLHI5LDYxNzQ4Cj4gIMKgIDI4OsKgwqDCoCBmOCAwMSAwMCAxMMKgwqDCoMKg
-IHN0ZMKgwqDCoMKgIHIwLDE2KHIxKQo+ICDCoCAyYzrCoMKgwqAgZjggMjEgZmYgOTHCoMKgwqDC
-oCBzdGR1wqDCoMKgIHIxLC0xMTIocjEpCj4gIMKgIDMwOsKgwqDCoCA0OCAwMCAwMCAwMcKgwqDC
-oMKgIGJswqDCoMKgwqDCoCAzMCA8LnNldF9tZW1vcnlfZW5jcnlwdGVkKzB4MzA+Cj4gIMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqAgMzA6IFJfUFBDNjRfUkVMMjTCoMKgwqAgLnVjYWxsX25vcmV0cwo+
-ICDCoCAzNDrCoMKgwqAgNjAgMDAgMDAgMDDCoMKgwqDCoCBub3AKPiAgwqAgMzg6wqDCoMKgIDM4
-IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAgM2M6wqDCoMKgIDM4IDIx
-IDAwIDcwwqDCoMKgwqAgYWRkacKgwqDCoCByMSxyMSwxMTIKPiAgwqAgNDA6wqDCoMKgIGU4IDAx
-IDAwIDEwwqDCoMKgwqAgbGTCoMKgwqDCoMKgIHIwLDE2KHIxKQo+ICDCoCA0NDrCoMKgwqAgN2Mg
-MDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIwCj4gIMKgIDQ4OsKgwqDCoCA0ZSA4MCAwMCAy
-MMKgwqDCoMKgIGJscgo+ICDCoCA1MDrCoMKgwqAgMzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDC
-oMKgwqAgcjMsMAo+ICDCoCA1NDrCoMKgwqAgNGUgODAgMDAgMjDCoMKgwqDCoCBibHIKPiAgwqAg
-NjA6wqDCoMKgIDM4IDYwIGZmIGVhwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLC0yMgo+ICDCoCA2
-NDrCoMKgwqAgNGUgODAgMDAgMjDCoMKgwqDCoCBibHIKPiAKPiBBZnRlciB0aGUgY2hhbmdlIHdl
-IGdldDoKPiAKPiAwMDAwMDAwMDAwMDAwMDAwIDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQ+Ogo+ICDC
-oMKgIDA6wqDCoMKgIDdjIDA4IDAyIGE2wqDCoMKgwqAgbWZscsKgwqDCoCByMAo+ICDCoMKgIDQ6
-wqDCoMKgIGZiIGMxIGZmIGYwwqDCoMKgwqAgc3RkwqDCoMKgwqAgcjMwLC0xNihyMSkKPiAgwqDC
-oCA4OsKgwqDCoCBmYiBlMSBmZiBmOMKgwqDCoMKgIHN0ZMKgwqDCoMKgIHIzMSwtOChyMSkKPiAg
-wqDCoCBjOsKgwqDCoCA3YyA3ZiAxYiA3OMKgwqDCoMKgIG1ywqDCoMKgwqDCoCByMzEscjMKPiAg
-wqAgMTA6wqDCoMKgIDM4IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAg
-MTQ6wqDCoMKgIDdjIDllIDIzIDc4wqDCoMKgwqAgbXLCoMKgwqDCoMKgIHIzMCxyNAo+ICDCoCAx
-ODrCoMKgwqAgZjggMDEgMDAgMTDCoMKgwqDCoCBzdGTCoMKgwqDCoCByMCwxNihyMSkKPiAgwqAg
-MWM6wqDCoMKgIGY4IDIxIGZmIDgxwqDCoMKgwqAgc3RkdcKgwqDCoCByMSwtMTI4KHIxKQo+ICDC
-oCAyMDrCoMKgwqAgNDggMDAgMDAgMDHCoMKgwqDCoCBibMKgwqDCoMKgwqAgMjAgPC5zZXRfbWVt
-b3J5X2VuY3J5cHRlZCsweDIwPgo+ICDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIDIwOiBSX1BQQzY0
-X1JFTDI0wqDCoMKgIC5jY19wbGF0Zm9ybV9oYXMKPiAgwqAgMjQ6wqDCoMKgIDYwIDAwIDAwIDAw
-wqDCoMKgwqAgbm9wCj4gIMKgIDI4OsKgwqDCoCAyYyAyMyAwMCAwMMKgwqDCoMKgIGNtcGRpwqDC
-oCByMywwCj4gIMKgIDJjOsKgwqDCoCA0MSA4MiAwMCA0NMKgwqDCoMKgIGJlccKgwqDCoMKgIDcw
-IDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQrMHg3MD4KPiAgwqAgMzA6wqDCoMKgIDdiIGU5IDA0IDIw
-wqDCoMKgwqAgY2xybGRpwqAgcjkscjMxLDQ4Cj4gIMKgIDM0OsKgwqDCoCAyYyAyOSAwMCAwMMKg
-wqDCoMKgIGNtcGRpwqDCoCByOSwwCj4gIMKgIDM4OsKgwqDCoCA0MCA4MiAwMCA1OMKgwqDCoMKg
-IGJuZcKgwqDCoMKgIDkwIDwuc2V0X21lbW9yeV9lbmNyeXB0ZWQrMHg5MD4KPiAgwqAgM2M6wqDC
-oMKgIDM4IDYwIDAwIDAwwqDCoMKgwqAgbGnCoMKgwqDCoMKgIHIzLDAKPiAgwqAgNDA6wqDCoMKg
-IDdmIGM1IGYzIDc4wqDCoMKgwqAgbXLCoMKgwqDCoMKgIHI1LHIzMAo+ICDCoCA0NDrCoMKgwqAg
-N2IgZTQgODUgMDLCoMKgwqDCoCBybGRpY2zCoCByNCxyMzEsNDgsMjAKPiAgwqAgNDg6wqDCoMKg
-IDYwIDYzIGYxIDM0wqDCoMKgwqAgb3JpwqDCoMKgwqAgcjMscjMsNjE3NDgKPiAgwqAgNGM6wqDC
-oMKgIDQ4IDAwIDAwIDAxwqDCoMKgwqAgYmzCoMKgwqDCoMKgIDRjIDwuc2V0X21lbW9yeV9lbmNy
-eXB0ZWQrMHg0Yz4KPiAgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCA0YzogUl9QUEM2NF9SRUwyNMKg
-wqDCoCAudWNhbGxfbm9yZXRzCj4gIMKgIDUwOsKgwqDCoCA2MCAwMCAwMCAwMMKgwqDCoMKgIG5v
-cAo+ICDCoCA1NDrCoMKgwqAgMzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDCoMKgwqAgcjMsMAo+
-ICDCoCA1ODrCoMKgwqAgMzggMjEgMDAgODDCoMKgwqDCoCBhZGRpwqDCoMKgIHIxLHIxLDEyOAo+
-ICDCoCA1YzrCoMKgwqAgZTggMDEgMDAgMTDCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjAsMTYocjEp
-Cj4gIMKgIDYwOsKgwqDCoCBlYiBjMSBmZiBmMMKgwqDCoMKgIGxkwqDCoMKgwqDCoCByMzAsLTE2
-KHIxKQo+ICDCoCA2NDrCoMKgwqAgZWIgZTEgZmYgZjjCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjMx
-LC04KHIxKQo+ICDCoCA2ODrCoMKgwqAgN2MgMDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIw
-Cj4gIMKgIDZjOsKgwqDCoCA0ZSA4MCAwMCAyMMKgwqDCoMKgIGJscgo+ICDCoCA3MDrCoMKgwqAg
-MzggMjEgMDAgODDCoMKgwqDCoCBhZGRpwqDCoMKgIHIxLHIxLDEyOAo+ICDCoCA3NDrCoMKgwqAg
-MzggNjAgMDAgMDDCoMKgwqDCoCBsacKgwqDCoMKgwqAgcjMsMAo+ICDCoCA3ODrCoMKgwqAgZTgg
-MDEgMDAgMTDCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjAsMTYocjEpCj4gIMKgIDdjOsKgwqDCoCBl
-YiBjMSBmZiBmMMKgwqDCoMKgIGxkwqDCoMKgwqDCoCByMzAsLTE2KHIxKQo+ICDCoCA4MDrCoMKg
-wqAgZWIgZTEgZmYgZjjCoMKgwqDCoCBsZMKgwqDCoMKgwqAgcjMxLC04KHIxKQo+ICDCoCA4NDrC
-oMKgwqAgN2MgMDggMDMgYTbCoMKgwqDCoCBtdGxywqDCoMKgIHIwCj4gIMKgIDg4OsKgwqDCoCA0
-ZSA4MCAwMCAyMMKgwqDCoMKgIGJscgo+ICDCoCA5MDrCoMKgwqAgMzggNjAgZmYgZWHCoMKgwqDC
-oCBsacKgwqDCoMKgwqAgcjMsLTIyCj4gIMKgIDk0OsKgwqDCoCA0YiBmZiBmZiBjNMKgwqDCoMKg
-IGLCoMKgwqDCoMKgwqAgNTggPC5zZXRfbWVtb3J5X2VuY3J5cHRlZCsweDU4Pgo+IAoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBs
-aXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+
+
+On 09.09.21 00:58, Tom Lendacky wrote:
+> This patch series provides a generic helper function, cc_platform_has(),
+> to replace the sme_active(), sev_active(), sev_es_active() and
+> mem_encrypt_active() functions.
+> 
+> It is expected that as new confidential computing technologies are
+> added to the kernel, they can all be covered by a single function call
+> instead of a collection of specific function calls all called from the
+> same locations.
+> 
+> The powerpc and s390 patches have been compile tested only. Can the
+> folks copied on this series verify that nothing breaks for them.
+
+Is there a tree somewhere?
+
+  Also,
+> a new file, arch/powerpc/platforms/pseries/cc_platform.c, has been
+> created for powerpc to hold the out of line function.
+> 
+> Cc: Andi Kleen <ak@linux.intel.com>
+> Cc: Andy Lutomirski <luto@kernel.org>
+> Cc: Ard Biesheuvel <ardb@kernel.org>
+> Cc: Baoquan He <bhe@redhat.com>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+> Cc: Daniel Vetter <daniel@ffwll.ch>
+> Cc: Dave Hansen <dave.hansen@linux.intel.com>
+> Cc: Dave Young <dyoung@redhat.com>
+> Cc: David Airlie <airlied@linux.ie>
+> Cc: Heiko Carstens <hca@linux.ibm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Joerg Roedel <joro@8bytes.org>
+> Cc: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+> Cc: Maxime Ripard <mripard@kernel.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Thomas Zimmermann <tzimmermann@suse.de>
+> Cc: Vasily Gorbik <gor@linux.ibm.com>
+> Cc: VMware Graphics <linux-graphics-maintainer@vmware.com>
+> Cc: Will Deacon <will@kernel.org>
+> Cc: Christoph Hellwig <hch@infradead.org>
+> 
+> ---
+> 
+> Patches based on:
+>    https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git master
+>    4b93c544e90e ("thunderbolt: test: split up test cases in tb_test_credit_alloc_all")
+> 
+> Changes since v2:
+> - Changed the name from prot_guest_has() to cc_platform_has()
+> - Took the cc_platform_has() function out of line. Created two new files,
+>    cc_platform.c, in both x86 and ppc to implment the function. As a
+>    result, also changed the attribute defines into enums.
+> - Removed any received Reviewed-by's and Acked-by's given changes in this
+>    version.
+> - Added removal of new instances of mem_encrypt_active() usage in powerpc
+>    arch.
+> - Based on latest Linux tree to pick up powerpc changes related to the
+>    mem_encrypt_active() function.
+> 
+> Changes since v1:
+> - Moved some arch ioremap functions within #ifdef CONFIG_AMD_MEM_ENCRYPT
+>    in prep for use of prot_guest_has() by TDX.
+> - Added type includes to the the protected_guest.h header file to prevent
+>    build errors outside of x86.
+> - Made amd_prot_guest_has() EXPORT_SYMBOL_GPL
+> - Used amd_prot_guest_has() in place of checking sme_me_mask in the
+>    arch/x86/mm/mem_encrypt.c file.
+> 
+> Tom Lendacky (8):
+>    x86/ioremap: Selectively build arch override encryption functions
+>    mm: Introduce a function to check for confidential computing features
+>    x86/sev: Add an x86 version of cc_platform_has()
+>    powerpc/pseries/svm: Add a powerpc version of cc_platform_has()
+>    x86/sme: Replace occurrences of sme_active() with cc_platform_has()
+>    x86/sev: Replace occurrences of sev_active() with cc_platform_has()
+>    x86/sev: Replace occurrences of sev_es_active() with cc_platform_has()
+>    treewide: Replace the use of mem_encrypt_active() with
+>      cc_platform_has()
+> 
+>   arch/Kconfig                                 |  3 +
+>   arch/powerpc/include/asm/mem_encrypt.h       |  5 --
+>   arch/powerpc/platforms/pseries/Kconfig       |  1 +
+>   arch/powerpc/platforms/pseries/Makefile      |  2 +
+>   arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++
+>   arch/powerpc/platforms/pseries/svm.c         |  5 +-
+>   arch/s390/include/asm/mem_encrypt.h          |  2 -
+>   arch/x86/Kconfig                             |  1 +
+>   arch/x86/include/asm/io.h                    |  8 ++
+>   arch/x86/include/asm/kexec.h                 |  2 +-
+>   arch/x86/include/asm/mem_encrypt.h           | 14 +---
+>   arch/x86/kernel/Makefile                     |  3 +
+>   arch/x86/kernel/cc_platform.c                | 21 +++++
+>   arch/x86/kernel/crash_dump_64.c              |  4 +-
+>   arch/x86/kernel/head64.c                     |  4 +-
+>   arch/x86/kernel/kvm.c                        |  3 +-
+>   arch/x86/kernel/kvmclock.c                   |  4 +-
+>   arch/x86/kernel/machine_kexec_64.c           | 19 +++--
+>   arch/x86/kernel/pci-swiotlb.c                |  9 +-
+>   arch/x86/kernel/relocate_kernel_64.S         |  2 +-
+>   arch/x86/kernel/sev.c                        |  6 +-
+>   arch/x86/kvm/svm/svm.c                       |  3 +-
+>   arch/x86/mm/ioremap.c                        | 18 ++--
+>   arch/x86/mm/mem_encrypt.c                    | 57 +++++++------
+>   arch/x86/mm/mem_encrypt_identity.c           |  3 +-
+>   arch/x86/mm/pat/set_memory.c                 |  3 +-
+>   arch/x86/platform/efi/efi_64.c               |  9 +-
+>   arch/x86/realmode/init.c                     |  8 +-
+>   drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      |  4 +-
+>   drivers/gpu/drm/drm_cache.c                  |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_drv.c          |  4 +-
+>   drivers/gpu/drm/vmwgfx/vmwgfx_msg.c          |  6 +-
+>   drivers/iommu/amd/init.c                     |  7 +-
+>   drivers/iommu/amd/iommu.c                    |  3 +-
+>   drivers/iommu/amd/iommu_v2.c                 |  3 +-
+>   drivers/iommu/iommu.c                        |  3 +-
+>   fs/proc/vmcore.c                             |  6 +-
+>   include/linux/cc_platform.h                  | 88 ++++++++++++++++++++
+>   include/linux/mem_encrypt.h                  |  4 -
+>   kernel/dma/swiotlb.c                         |  4 +-
+>   40 files changed, 267 insertions(+), 114 deletions(-)
+>   create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
+>   create mode 100644 arch/x86/kernel/cc_platform.c
+>   create mode 100644 include/linux/cc_platform.h
+> 
+> 
+> base-commit: 4b93c544e90e2b28326182d31ee008eb80e02074
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
