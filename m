@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by casper.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOduM-00AuoM-Sy
- for kexec@lists.infradead.org; Fri, 10 Sep 2021 10:38:30 +0000
-Received: by mail-pj1-f72.google.com with SMTP id
- m9-20020a17090ade09b029017903cc8d6cso1096770pjv.4
- for <kexec@lists.infradead.org>; Fri, 10 Sep 2021 03:33:52 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-Subject: [PATCH 10/11] makedumpfile: Add zstd manual description
-Date: Fri, 10 Sep 2021 18:33:17 +0800
-Message-Id: <20210910103318.292017-11-ltao@redhat.com>
-In-Reply-To: <20210910103318.292017-1-ltao@redhat.com>
-References: <20210910103318.292017-1-ltao@redhat.com>
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mOi2t-00CzhY-LZ
+ for kexec@lists.infradead.org; Fri, 10 Sep 2021 15:02:31 +0000
+Date: Fri, 10 Sep 2021 17:02:10 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 2/8] mm: Introduce a function to check for
+ confidential computing features
+Message-ID: <YTtzcoFdi7Ond8Kt@zn.tnic>
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <0a7618d54e7e954ee56c22ad1b94af2ffe69543a.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0a7618d54e7e954ee56c22ad1b94af2ffe69543a.1631141919.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,37 +25,47 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: k-hagio-ab@nec.com, Tao Liu <ltao@redhat.com>, Coiby Xu <coxu@redhat.com>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- makedumpfile.8 | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+On Wed, Sep 08, 2021 at 05:58:33PM -0500, Tom Lendacky wrote:
+> In prep for other confidential computing technologies, introduce a generic
 
-diff --git a/makedumpfile.8 b/makedumpfile.8
-index f782e5f..3022d9c 100644
---- a/makedumpfile.8
-+++ b/makedumpfile.8
-@@ -132,10 +132,11 @@ configuration, you need to use --diskset option.
- .SH OPTIONS
- 
- .TP
--\fB\-c,\-l,\-p\fR
-+\fB\-c,\-l,\-p,\-z\fR
- Compress dump data by each page using zlib for -c option, lzo for -l
--option or snappy for -p option.
--(-l option needs USELZO=on and -p option needs USESNAPPY=on when building)
-+option, snappy for -p option or zstd for -z option.
-+(-l option needs USELZO=on, -p option needs USESNAPPY=on and -z option needs
-+USEZSTD=on when building)
- .br
- A user cannot specify this option with \-E option, because the ELF format does
- not support compressed data.
+preparation
+
+> helper function, cc_platform_has(), that can be used to check for specific
+> active confidential computing attributes, like memory encryption. This is
+> intended to eliminate having to add multiple technology-specific checks to
+> the code (e.g. if (sev_active() || tdx_active())).
+
+...
+
+> diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+> new file mode 100644
+> index 000000000000..253f3ea66cd8
+> --- /dev/null
+> +++ b/include/linux/cc_platform.h
+> @@ -0,0 +1,88 @@
+> +/* SPDX-License-Identifier: GPL-2.0-only */
+> +/*
+> + * Confidential Computing Platform Capability checks
+> + *
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
+> + */
+> +
+> +#ifndef _CC_PLATFORM_H
+
+	_LINUX_CC_PLATFORM_H
+
+> +#define _CC_PLATFORM_H
+
 -- 
-2.29.2
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
