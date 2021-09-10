@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOdsU-00CTrN-IY
- for kexec@lists.infradead.org; Fri, 10 Sep 2021 10:35:28 +0000
-Received: by mail-pj1-f72.google.com with SMTP id
- j14-20020a17090a318e00b001796382f0caso1145474pjb.5
- for <kexec@lists.infradead.org>; Fri, 10 Sep 2021 03:33:29 -0700 (PDT)
+ id 1mOdsg-00CTuq-FB
+ for kexec@lists.infradead.org; Fri, 10 Sep 2021 10:35:39 +0000
+Received: by mail-pj1-f69.google.com with SMTP id
+ m9-20020a17090ade09b029017903cc8d6cso1096442pjv.4
+ for <kexec@lists.infradead.org>; Fri, 10 Sep 2021 03:33:34 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
-Subject: [PATCH 01/11] makedumpfile: Add dump header for zstd.
-Date: Fri, 10 Sep 2021 18:33:08 +0800
-Message-Id: <20210910103318.292017-2-ltao@redhat.com>
+Subject: [PATCH 03/11] makedumpfile: Add zstd build support
+Date: Fri, 10 Sep 2021 18:33:10 +0800
+Message-Id: <20210910103318.292017-4-ltao@redhat.com>
 In-Reply-To: <20210910103318.292017-1-ltao@redhat.com>
 References: <20210910103318.292017-1-ltao@redhat.com>
 MIME-Version: 1.0
@@ -31,21 +31,25 @@ Cc: k-hagio-ab@nec.com, Tao Liu <ltao@redhat.com>, Coiby Xu <coxu@redhat.com>
 Signed-off-by: Tao Liu <ltao@redhat.com>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- diskdump_mod.h | 1 +
- 1 file changed, 1 insertion(+)
+ Makefile | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/diskdump_mod.h b/diskdump_mod.h
-index 3733953..e4bce5c 100644
---- a/diskdump_mod.h
-+++ b/diskdump_mod.h
-@@ -98,6 +98,7 @@ struct kdump_sub_header {
- #define DUMP_DH_COMPRESSED_INCOMPLETE	0x8
- 					/* indicate an incomplete dumpfile */
- #define DUMP_DH_EXCLUDED_VMEMMAP 0x10	/* unused vmemmap pages are excluded */
-+#define DUMP_DH_COMPRESSED_ZSTD  0x20	/* page is compressed with zstd */
+diff --git a/Makefile b/Makefile
+index 5d61a69..725c186 100644
+--- a/Makefile
++++ b/Makefile
+@@ -68,6 +68,11 @@ endif
+ CFLAGS += -DUSESNAPPY
+ endif
  
- /* descriptor of each page for vmcore */
- typedef struct page_desc {
++ifeq ($(USEZSTD), on)
++LIBS := -lzstd $(LIBS)
++CFLAGS += -DUSEZSTD
++endif
++
+ LIBS := $(LIBS) -lpthread
+ 
+ try-run = $(shell set -e;		\
 -- 
 2.29.2
 
