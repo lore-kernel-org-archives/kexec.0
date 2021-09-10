@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by casper.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOdtW-00AuoN-Ew
- for kexec@lists.infradead.org; Fri, 10 Sep 2021 10:37:03 +0000
-Received: by mail-pf1-f197.google.com with SMTP id
- j21-20020aa78015000000b00412badd61e2so1081955pfi.21
- for <kexec@lists.infradead.org>; Fri, 10 Sep 2021 03:33:54 -0700 (PDT)
+ id 1mOdt9-00AuoF-42
+ for kexec@lists.infradead.org; Fri, 10 Sep 2021 10:37:22 +0000
+Received: by mail-pj1-f69.google.com with SMTP id
+ h10-20020a17090a470a00b00196ead30459so1139018pjg.0
+ for <kexec@lists.infradead.org>; Fri, 10 Sep 2021 03:33:50 -0700 (PDT)
 From: Tao Liu <ltao@redhat.com>
-Subject: [PATCH 11/11] makedumpfile: Add zstd README description
-Date: Fri, 10 Sep 2021 18:33:18 +0800
-Message-Id: <20210910103318.292017-12-ltao@redhat.com>
+Subject: [PATCH 09/11] makedumpfile: Add zstd help message
+Date: Fri, 10 Sep 2021 18:33:16 +0800
+Message-Id: <20210910103318.292017-10-ltao@redhat.com>
 In-Reply-To: <20210910103318.292017-1-ltao@redhat.com>
 References: <20210910103318.292017-1-ltao@redhat.com>
 MIME-Version: 1.0
@@ -31,25 +31,89 @@ Cc: k-hagio-ab@nec.com, Tao Liu <ltao@redhat.com>, Coiby Xu <coxu@redhat.com>
 Signed-off-by: Tao Liu <ltao@redhat.com>
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- README | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ print_info.c | 30 +++++++++++++++++++++---------
+ 1 file changed, 21 insertions(+), 9 deletions(-)
 
-diff --git a/README b/README
-index 6629440..0b17cf1 100644
---- a/README
-+++ b/README
-@@ -49,7 +49,10 @@
-   7.Build with snappy support:
-     # make USESNAPPY=on ; make install
-     The user has to prepare snappy library.
--  8.Build the extension module for --eppic option.
-+  8.Build with zstd support:
-+    # make USEZSTD=on ; make install
-+    The user has to prepare zstd library.
-+  9.Build the extension module for --eppic option.
-     # make eppic_makedumpfile.so
-     The user has to prepare eppic library from the following site:
-     http://code.google.com/p/eppic/
+diff --git a/print_info.c b/print_info.c
+index 8b28554..e4bfefc 100644
+--- a/print_info.c
++++ b/print_info.c
+@@ -38,6 +38,11 @@ show_version(void)
+ 	MSG("snappy\tenabled\n");
+ #else
+ 	MSG("snappy\tdisabled\n");
++#endif
++#ifdef USEZSTD
++	MSG("zstd\tenabled\n");
++#else
++	MSG("zstd\tdisabled\n");
+ #endif
+ 	MSG("\n");
+ }
+@@ -57,20 +62,26 @@ print_usage(void)
+ 	MSG("  enabled\n");
+ #else
+ 	MSG("  disabled ('-p' option will be ignored.)\n");
++#endif
++	MSG("zstd support:\n");
++#ifdef USEZSTD
++	MSG("  enabled\n");
++#else
++	MSG("  disabled ('-z' option will be ignored.)\n");
+ #endif
+ 	MSG("\n");
+ 	MSG("Usage:\n");
+ 	MSG("  Creating DUMPFILE:\n");
+-	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] [-e] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
++	MSG("  # makedumpfile    [-c|-l|-p|-z|-E] [-d DL] [-e] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+ 	MSG("    DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Creating DUMPFILE with filtered kernel data specified through filter config\n");
+ 	MSG("  file or eppic macro:\n");
+-	MSG("  # makedumpfile    [-c|-l|-p|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
++	MSG("  # makedumpfile    [-c|-l|-p|-z|-E] [-d DL] -x VMLINUX [--config FILTERCONFIGFILE]\n");
+ 	MSG("    [--eppic EPPICMACRO] VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Outputting the dump data in the flattened format to the standard output:\n");
+-	MSG("  # makedumpfile -F [-c|-l|-p|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
++	MSG("  # makedumpfile -F [-c|-l|-p|-z|-E] [-d DL] [-x VMLINUX|-i VMCOREINFO] VMCORE\n");
+ 	MSG("\n");
+ 	MSG("  Rearranging the dump data in the flattened format to a readable DUMPFILE:\n");
+ 	MSG("  # makedumpfile -R DUMPFILE\n");
+@@ -94,26 +105,27 @@ print_usage(void)
+ 	MSG("\n");
+ 	MSG("\n");
+ 	MSG("  Creating DUMPFILE of Xen:\n");
+-	MSG("  # makedumpfile [-c|-l|-p|-E] [--xen-syms XEN-SYMS|--xen-vmcoreinfo VMCOREINFO]\n");
++	MSG("  # makedumpfile [-c|-l|-p|-z|-E] [--xen-syms XEN-SYMS|--xen-vmcoreinfo VMCOREINFO]\n");
+ 	MSG("    VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Filtering domain-0 of Xen:\n");
+-	MSG("  # makedumpfile [-c|-l|-p|-E] -d DL -x vmlinux VMCORE DUMPFILE\n");
++	MSG("  # makedumpfile [-c|-l|-p|-z|-E] -d DL -x vmlinux VMCORE DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("  Generating VMCOREINFO of Xen:\n");
+ 	MSG("  # makedumpfile -g VMCOREINFO --xen-syms XEN-SYMS\n");
+ 	MSG("\n");
+ 	MSG("\n");
+ 	MSG("  Creating DUMPFILE from multiple VMCOREs generated on sadump diskset configuration:\n");
+-	MSG("  # makedumpfile [-c|-l|-p] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
++	MSG("  # makedumpfile [-c|-l|-p|-z] [-d DL] -x VMLINUX --diskset=VMCORE1 --diskset=VMCORE2\n");
+ 	MSG("    [--diskset=VMCORE3 ..] DUMPFILE\n");
+ 	MSG("\n");
+ 	MSG("\n");
+ 	MSG("Available options:\n");
+-	MSG("  [-c|-l|-p]:\n");
++	MSG("  [-c|-l|-p|-z]:\n");
+ 	MSG("      Compress dump data by each page using zlib for -c option, lzo for -l option\n");
+-	MSG("      or snappy for -p option. A user cannot specify either of these options with\n");
+-	MSG("      -E option, because the ELF format does not support compressed data.\n");
++	MSG("      snappy for -p option, or zstd for -z option. A user cannot specify either of\n");
++	MSG("      these options with -E option, because the ELF format does not support\n");
++	MSG("      compressed data.\n");
+ 	MSG("      THIS IS ONLY FOR THE CRASH UTILITY.\n");
+ 	MSG("\n");
+ 	MSG("  [-e]:\n");
 -- 
 2.29.2
 
