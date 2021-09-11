@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOzxt-00EeLV-RX
- for kexec@lists.infradead.org; Sat, 11 Sep 2021 10:10:31 +0000
-Date: Sat, 11 Sep 2021 12:10:14 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 3/8] x86/sev: Add an x86 version of cc_platform_has()
-Message-ID: <YTyAhmPf39Vqd7G9@zn.tnic>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
+ id 1mP5vL-00FEht-08
+ for kexec@lists.infradead.org; Sat, 11 Sep 2021 16:32:16 +0000
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Subject: [PATCH] Refer FDT tokens with symbolic names
+Date: Sat, 11 Sep 2021 22:02:00 +0530
+Message-Id: <20210911163200.71394-1-sourabhjain@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,70 +20,122 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tom Lendacky <thomas.lendacky@amd.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
+To: kexec@lists.infradead.org
+Cc: horms@verge.net.au, Sourabh Jain <sourabhjain@linux.ibm.com>
 
-On Wed, Sep 08, 2021 at 05:58:34PM -0500, Tom Lendacky wrote:
-> diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
-> new file mode 100644
-> index 000000000000..3c9bacd3c3f3
-> --- /dev/null
-> +++ b/arch/x86/kernel/cc_platform.c
-> @@ -0,0 +1,21 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +/*
-> + * Confidential Computing Platform Capability checks
-> + *
-> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
-> + *
-> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
-> + */
-> +
-> +#include <linux/export.h>
-> +#include <linux/cc_platform.h>
-> +#include <linux/mem_encrypt.h>
-> +
-> +bool cc_platform_has(enum cc_attr attr)
-> +{
-> +	if (sme_me_mask)
+Replace hardcoded FDT structure block tokens with proper names to
+improve code readability.
 
-Why are you still checking the sme_me_mask here? AFAIR, we said that
-we'll do that only when the KVM folks come with a valid use case...
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ kexec/fs2dt.c | 21 +++++++++++----------
+ 1 file changed, 11 insertions(+), 10 deletions(-)
 
-> +		return amd_cc_platform_has(attr);
-> +
-> +	return false;
-> +}
-> +EXPORT_SYMBOL_GPL(cc_platform_has);
-> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
-> index ff08dc463634..18fe19916bc3 100644
-> --- a/arch/x86/mm/mem_encrypt.c
-> +++ b/arch/x86/mm/mem_encrypt.c
-> @@ -20,6 +20,7 @@
->  #include <linux/bitops.h>
->  #include <linux/dma-mapping.h>
->  #include <linux/virtio_config.h>
-> +#include <linux/cc_platform.h>
->  
->  #include <asm/tlbflush.h>
->  #include <asm/fixmap.h>
-> @@ -389,6 +390,26 @@ bool noinstr sev_es_active(void)
->  	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
->  }
->  
-> +bool amd_cc_platform_has(enum cc_attr attr)
-> +{
-> +	switch (attr) {
-> +	case CC_ATTR_MEM_ENCRYPT:
-> +		return sme_me_mask != 0;
-
-No need for the "!= 0"
-
+diff --git a/kexec/fs2dt.c b/kexec/fs2dt.c
+index 1a43058..993b73b 100644
+--- a/kexec/fs2dt.c
++++ b/kexec/fs2dt.c
+@@ -32,6 +32,7 @@
+ #include <stdio.h>
+ #include "kexec.h"
+ #include "fs2dt.h"
++#include "libfdt/fdt.h"
+ 
+ #define MAXPATH 1024		/* max path name length */
+ #define NAMESPACE 16384		/* max bytes for property names */
+@@ -306,7 +307,7 @@ static void add_dyn_reconf_usable_mem_property__(int fd)
+ 	 * Add linux,drconf-usable-memory property.
+ 	 */
+ 	dt_reserve(&dt, 4+((rlen + 3)/4));
+-	*dt++ = cpu_to_be32(3);
++	*dt++ = cpu_to_be32(FDT_PROP);
+ 	*dt++ = cpu_to_be32(rlen);
+ 	*dt++ = cpu_to_be32(propnum("linux,drconf-usable-memory"));
+ 	pad_structure_block(rlen);
+@@ -380,7 +381,7 @@ static void add_usable_mem_property(int fd, size_t len)
+ 	 * No add linux,usable-memory property.
+ 	 */
+ 	dt_reserve(&dt, 4+((rlen + 3)/4));
+-	*dt++ = cpu_to_be32(3);
++	*dt++ = cpu_to_be32(FDT_PROP);
+ 	*dt++ = cpu_to_be32(rlen);
+ 	*dt++ = cpu_to_be32(propnum("linux,usable-memory"));
+ 	pad_structure_block(rlen);
+@@ -451,7 +452,7 @@ static void putprops(char *fn, struct dirent **nlist, int numlist)
+ 		len = statbuf.st_size;
+ 
+ 		dt_reserve(&dt, 4+((len + 3)/4));
+-		*dt++ = cpu_to_be32(3);
++		*dt++ = cpu_to_be32(FDT_PROP);
+ 		*dt++ = cpu_to_be32(len);
+ 		*dt++ = cpu_to_be32(propnum(fn));
+ 		pad_structure_block(len);
+@@ -586,7 +587,7 @@ static void putnode(void)
+ 	 * So round up & include the \0:
+ 	 */
+ 	dt_reserve(&dt, 1+((plen + 4)/4));
+-	*dt++ = cpu_to_be32(1);
++	*dt++ = cpu_to_be32(FDT_BEGIN_NODE);
+ 	strcpy((void *)dt, *basename ? basename : "");
+ 	dt += ((plen + 4)/4);
+ 
+@@ -602,7 +603,7 @@ static void putnode(void)
+ 		uint64_t bevalue;
+ 
+ 		dt_reserve(&dt, 12); /* both props, of 6 words ea. */
+-		*dt++ = cpu_to_be32(3);
++		*dt++ = cpu_to_be32(FDT_PROP);
+ 		*dt++ = cpu_to_be32(len);
+ 		*dt++ = cpu_to_be32(propnum("linux,initrd-start"));
+ 		pad_structure_block(len);
+@@ -612,7 +613,7 @@ static void putnode(void)
+ 		dt += (len + 3)/4;
+ 
+ 		len = 8;
+-		*dt++ = cpu_to_be32(3);
++		*dt++ = cpu_to_be32(FDT_PROP);
+ 		*dt++ = cpu_to_be32(len);
+ 		*dt++ = cpu_to_be32(propnum("linux,initrd-end"));
+ 
+@@ -656,7 +657,7 @@ static void putnode(void)
+ 
+ 		/* add new bootargs */
+ 		dt_reserve(&dt, 4+((cmd_len+3)/4));
+-		*dt++ = cpu_to_be32(3);
++		*dt++ = cpu_to_be32(FDT_PROP);
+ 		*dt++ = cpu_to_be32(cmd_len);
+ 		*dt++ = cpu_to_be32(propnum("bootargs"));
+ 		pad_structure_block(cmd_len);
+@@ -757,7 +758,7 @@ no_debug:
+ 	}
+ 
+ 	dt_reserve(&dt, 1);
+-	*dt++ = cpu_to_be32(2);
++	*dt++ = cpu_to_be32(FDT_END_NODE);
+ 	dn[-1] = '\0';
+ 	free(namelist);
+ }
+@@ -796,7 +797,7 @@ static void add_boot_block(char **bufp, off_t *sizep)
+ 	len = _ALIGN(len, 4);
+ 	bb->totalsize = cpu_to_be32(be32_to_cpu(bb->off_dt_strings) + len);
+ 
+-	bb->magic = cpu_to_be32(0xd00dfeed);
++	bb->magic = cpu_to_be32(FDT_MAGIC);
+ 	bb->version = cpu_to_be32(BOOT_BLOCK_VERSION);
+ 	bb->last_comp_version = cpu_to_be32(BOOT_BLOCK_LAST_COMP_VERSION);
+ 
+@@ -844,7 +845,7 @@ void create_flatten_tree(char **bufp, off_t *sizep, const char *cmdline)
+ 
+ 	putnode();
+ 	dt_reserve(&dt, 1);
+-	*dt++ = cpu_to_be32(9);
++	*dt++ = cpu_to_be32(FDT_END);
+ 
+ 	add_boot_block(bufp, sizep);
+ 	free(dt_base);
 -- 
-Regards/Gruss,
-    Boris.
+2.31.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
