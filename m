@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from out5-smtp.messagingengine.com ([66.111.4.29])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOt5m-00EAkk-19
- for kexec@lists.infradead.org; Sat, 11 Sep 2021 02:50:11 +0000
+ id 1mOt5n-00EAlT-T9
+ for kexec@lists.infradead.org; Sat, 11 Sep 2021 02:50:13 +0000
 From: Zhaofeng Li <hello@zhaofeng.li>
-Subject: [PATCH 2/3] multiboot2: Use rel_min and rel_max for mbi destination
-Date: Fri, 10 Sep 2021 19:48:59 -0700
-Message-Id: <20210911024900.1899877-3-hello@zhaofeng.li>
+Subject: [PATCH 3/3] multiboot2: Accept x86-64 images
+Date: Fri, 10 Sep 2021 19:49:00 -0700
+Message-Id: <20210911024900.1899877-4-hello@zhaofeng.li>
 In-Reply-To: <20210911024900.1899877-1-hello@zhaofeng.li>
 References: <20210911024900.1899877-1-hello@zhaofeng.li>
 MIME-Version: 1.0
@@ -25,26 +25,79 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Zhaofeng Li <hello@zhaofeng.li>, Simon Horman <horms@verge.net.au>
 
-This would segfault if mhi.rel_tag didn't exist.
-
 Signed-off-by: Zhaofeng Li <hello@zhaofeng.li>
 ---
- kexec/arch/i386/kexec-mb2-x86.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ kexec/arch/i386/kexec-mb2-x86.c  | 34 ++++++++++++++++++++++++++++++--
+ kexec/arch/x86_64/kexec-x86_64.c |  4 ++--
+ 2 files changed, 34 insertions(+), 4 deletions(-)
 
 diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
-index c10c0ef..49fcc2d 100644
+index 49fcc2d..31b4ce1 100644
 --- a/kexec/arch/i386/kexec-mb2-x86.c
 +++ b/kexec/arch/i386/kexec-mb2-x86.c
-@@ -600,7 +600,7 @@ int multiboot2_x86_load(int argc, char **argv, const char *buf, off_t len,
- 		return -1;
+@@ -72,12 +72,42 @@ struct multiboot2_header_info {
+ #define ALIGN_UP(addr, align) \
+ 	((addr + (typeof (addr)) align - 1) & ~((typeof (addr)) align - 1))
  
- 	addr = add_buffer(info, mbi_buf, mbi_bytes, mbi_bytes, 4,
--			  mhi.rel_tag->min_addr, mhi.rel_tag->max_addr, 1);
-+			  rel_min, rel_max, 1);
++static const int probe_debug = 0;
++
++static int elf_x86_or_x64_probe(const char *buf, off_t len)
++{
++	struct mem_ehdr ehdr;
++	int result;
++	result = build_elf_exec_info(buf, len, &ehdr, 0);
++	if (result < 0) {
++		if (probe_debug) {
++			fprintf(stderr, "Not an ELF executable\n");
++		}
++		goto out;
++	}
++
++	/* Verify the architecuture specific bits */
++	if ((ehdr.e_machine != EM_386) && (ehdr.e_machine != EM_486) && (ehdr.e_machine != EM_X86_64)) {
++		/* for a different architecture */
++		if (probe_debug) {
++			fprintf(stderr, "Not i386 or x86_64 ELF executable\n");
++		}
++		result = -1;
++		goto out;
++	}
++	result = 0;
++ out:
++	free_elf_info(&ehdr);
++	return result;
++}
++
+ int multiboot2_x86_probe(const char *buf, off_t buf_len)
+ /* Is it a good idea to try booting this file? */
+ {
+ 	int i, len;
+-	/* First of all, check that this is an ELF file */
+-	if ((i=elf_x86_probe(buf, buf_len)) < 0)
++
++	/* First of all, check that this is an ELF file for either x86 or x86-64 */
++	if ((i=elf_x86_or_x64_probe(buf, buf_len)) < 0)
+ 		return i;
  
- 	elf_rel_get_symbol(&info->rhdr, "entry32_regs", &regs, sizeof(regs));
- 	regs.eax = MULTIBOOT2_BOOTLOADER_MAGIC;
+ 	/* Now look for a multiboot header. */
+diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
+index 394cfca..ffd84f0 100644
+--- a/kexec/arch/x86_64/kexec-x86_64.c
++++ b/kexec/arch/x86_64/kexec-x86_64.c
+@@ -33,11 +33,11 @@
+ #include <arch/options.h>
+ 
+ struct file_type file_type[] = {
++	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
++	  multiboot2_x86_usage },
+ 	{ "elf-x86_64", elf_x86_64_probe, elf_x86_64_load, elf_x86_64_usage },
+ 	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
+ 	  multiboot_x86_usage },
+-	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
+-	  multiboot2_x86_usage },
+ 	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
+ 	{ "bzImage64", bzImage64_probe, bzImage64_load, bzImage64_usage },
+ 	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
 -- 
 2.32.0
 
