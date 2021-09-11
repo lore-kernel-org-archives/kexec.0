@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out5-smtp.messagingengine.com ([66.111.4.29])
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mOt5n-00EAlT-T9
- for kexec@lists.infradead.org; Sat, 11 Sep 2021 02:50:13 +0000
-From: Zhaofeng Li <hello@zhaofeng.li>
-Subject: [PATCH 3/3] multiboot2: Accept x86-64 images
-Date: Fri, 10 Sep 2021 19:49:00 -0700
-Message-Id: <20210911024900.1899877-4-hello@zhaofeng.li>
-In-Reply-To: <20210911024900.1899877-1-hello@zhaofeng.li>
-References: <20210911024900.1899877-1-hello@zhaofeng.li>
+ id 1mOzxt-00EeLV-RX
+ for kexec@lists.infradead.org; Sat, 11 Sep 2021 10:10:31 +0000
+Date: Sat, 11 Sep 2021 12:10:14 +0200
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v3 3/8] x86/sev: Add an x86 version of cc_platform_has()
+Message-ID: <YTyAhmPf39Vqd7G9@zn.tnic>
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <f9951644147e27772bf4512325e8ba6472e363b7.1631141919.git.thomas.lendacky@amd.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,85 +24,70 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Zhaofeng Li <hello@zhaofeng.li>, Simon Horman <horms@verge.net.au>
+To: Tom Lendacky <thomas.lendacky@amd.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Dave Hansen <dave.hansen@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Peter Zijlstra <peterz@infradead.org>
 
-Signed-off-by: Zhaofeng Li <hello@zhaofeng.li>
----
- kexec/arch/i386/kexec-mb2-x86.c  | 34 ++++++++++++++++++++++++++++++--
- kexec/arch/x86_64/kexec-x86_64.c |  4 ++--
- 2 files changed, 34 insertions(+), 4 deletions(-)
+On Wed, Sep 08, 2021 at 05:58:34PM -0500, Tom Lendacky wrote:
+> diff --git a/arch/x86/kernel/cc_platform.c b/arch/x86/kernel/cc_platform.c
+> new file mode 100644
+> index 000000000000..3c9bacd3c3f3
+> --- /dev/null
+> +++ b/arch/x86/kernel/cc_platform.c
+> @@ -0,0 +1,21 @@
+> +// SPDX-License-Identifier: GPL-2.0-only
+> +/*
+> + * Confidential Computing Platform Capability checks
+> + *
+> + * Copyright (C) 2021 Advanced Micro Devices, Inc.
+> + *
+> + * Author: Tom Lendacky <thomas.lendacky@amd.com>
+> + */
+> +
+> +#include <linux/export.h>
+> +#include <linux/cc_platform.h>
+> +#include <linux/mem_encrypt.h>
+> +
+> +bool cc_platform_has(enum cc_attr attr)
+> +{
+> +	if (sme_me_mask)
 
-diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
-index 49fcc2d..31b4ce1 100644
---- a/kexec/arch/i386/kexec-mb2-x86.c
-+++ b/kexec/arch/i386/kexec-mb2-x86.c
-@@ -72,12 +72,42 @@ struct multiboot2_header_info {
- #define ALIGN_UP(addr, align) \
- 	((addr + (typeof (addr)) align - 1) & ~((typeof (addr)) align - 1))
- 
-+static const int probe_debug = 0;
-+
-+static int elf_x86_or_x64_probe(const char *buf, off_t len)
-+{
-+	struct mem_ehdr ehdr;
-+	int result;
-+	result = build_elf_exec_info(buf, len, &ehdr, 0);
-+	if (result < 0) {
-+		if (probe_debug) {
-+			fprintf(stderr, "Not an ELF executable\n");
-+		}
-+		goto out;
-+	}
-+
-+	/* Verify the architecuture specific bits */
-+	if ((ehdr.e_machine != EM_386) && (ehdr.e_machine != EM_486) && (ehdr.e_machine != EM_X86_64)) {
-+		/* for a different architecture */
-+		if (probe_debug) {
-+			fprintf(stderr, "Not i386 or x86_64 ELF executable\n");
-+		}
-+		result = -1;
-+		goto out;
-+	}
-+	result = 0;
-+ out:
-+	free_elf_info(&ehdr);
-+	return result;
-+}
-+
- int multiboot2_x86_probe(const char *buf, off_t buf_len)
- /* Is it a good idea to try booting this file? */
- {
- 	int i, len;
--	/* First of all, check that this is an ELF file */
--	if ((i=elf_x86_probe(buf, buf_len)) < 0)
-+
-+	/* First of all, check that this is an ELF file for either x86 or x86-64 */
-+	if ((i=elf_x86_or_x64_probe(buf, buf_len)) < 0)
- 		return i;
- 
- 	/* Now look for a multiboot header. */
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 394cfca..ffd84f0 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -33,11 +33,11 @@
- #include <arch/options.h>
- 
- struct file_type file_type[] = {
-+	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-+	  multiboot2_x86_usage },
- 	{ "elf-x86_64", elf_x86_64_probe, elf_x86_64_load, elf_x86_64_usage },
- 	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
- 	  multiboot_x86_usage },
--	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
--	  multiboot2_x86_usage },
- 	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
- 	{ "bzImage64", bzImage64_probe, bzImage64_load, bzImage64_usage },
- 	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
+Why are you still checking the sme_me_mask here? AFAIR, we said that
+we'll do that only when the KVM folks come with a valid use case...
+
+> +		return amd_cc_platform_has(attr);
+> +
+> +	return false;
+> +}
+> +EXPORT_SYMBOL_GPL(cc_platform_has);
+> diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+> index ff08dc463634..18fe19916bc3 100644
+> --- a/arch/x86/mm/mem_encrypt.c
+> +++ b/arch/x86/mm/mem_encrypt.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/bitops.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/virtio_config.h>
+> +#include <linux/cc_platform.h>
+>  
+>  #include <asm/tlbflush.h>
+>  #include <asm/fixmap.h>
+> @@ -389,6 +390,26 @@ bool noinstr sev_es_active(void)
+>  	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+>  }
+>  
+> +bool amd_cc_platform_has(enum cc_attr attr)
+> +{
+> +	switch (attr) {
+> +	case CC_ATTR_MEM_ENCRYPT:
+> +		return sme_me_mask != 0;
+
+No need for the "!= 0"
+
 -- 
-2.32.0
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
