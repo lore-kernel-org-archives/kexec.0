@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mga06.intel.com ([134.134.136.31])
+Received: from mail-ed1-x532.google.com ([2a00:1450:4864:20::532])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mPoi5-002MKi-W5
- for kexec@lists.infradead.org; Mon, 13 Sep 2021 16:21:35 +0000
-Subject: Re: [PATCH v2 00/12] x86/sev: KEXEC/KDUMP support for SEV-ES guests
-References: <20210913155603.28383-1-joro@8bytes.org>
- <4e033293-b81d-1e21-6fd6-f507b6821d3c@intel.com> <YT941raolZvGTVR/@suse.de>
-From: Dave Hansen <dave.hansen@intel.com>
-Message-ID: <9aa5c10b-56ee-8b26-56d5-870c44e6fbcc@intel.com>
-Date: Mon, 13 Sep 2021 09:21:27 -0700
+ id 1mPt8m-003HvE-0J
+ for kexec@lists.infradead.org; Mon, 13 Sep 2021 21:05:25 +0000
+Received: by mail-ed1-x532.google.com with SMTP id c22so14977554edn.12
+ for <kexec@lists.infradead.org>; Mon, 13 Sep 2021 14:05:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <YT941raolZvGTVR/@suse.de>
-Content-Language: en-US
+References: <20210913140229.24797-1-omosnace@redhat.com>
+In-Reply-To: <20210913140229.24797-1-omosnace@redhat.com>
+From: Paul Moore <paul@paul-moore.com>
+Date: Mon, 13 Sep 2021 17:05:04 -0400
+Message-ID: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
+Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
+ lockdown checks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +25,109 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <jroedel@suse.de>
-Cc: Joerg Roedel <joro@8bytes.org>, x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+To: Ondrej Mosnacek <omosnace@redhat.com>
+Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>, Dan Williams <dan.j.williams@intel.com>
 
-On 9/13/21 9:14 AM, Joerg Roedel wrote:
-> On Mon, Sep 13, 2021 at 09:02:38AM -0700, Dave Hansen wrote:
->> On 9/13/21 8:55 AM, Joerg Roedel wrote:
->>> This does not work under SEV-ES, because the hypervisor has no access
->>> to the vCPU registers and can't make modifications to them. So an
->>> SEV-ES guest needs to reset the vCPU itself and park it using the
->>> AP-reset-hold protocol. Upon wakeup the guest needs to jump to
->>> real-mode and to the reset-vector configured in the AP-Jump-Table.
->> How does this end up looking to an end user that tries to kexec() from a
->> an SEV-ES kernel?  Does it just hang?
-> Yes, the kexec will just hang. This patch-set contains code to disable
-> the kexec syscalls in situations where it would not work for that
-> reason.
+On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
+>
+> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
+> lockdown") added an implementation of the locked_down LSM hook to
+> SELinux, with the aim to restrict which domains are allowed to perform
+> operations that would breach lockdown.
+>
+> However, in several places the security_locked_down() hook is called in
+> situations where the current task isn't doing any action that would
+> directly breach lockdown, leading to SELinux checks that are basically
+> bogus.
+>
+> To fix this, add an explicit struct cred pointer argument to
+> security_lockdown() and define NULL as a special value to pass instead
+> of current_cred() in such situations. LSMs that take the subject
+> credentials into account can then fall back to some default or ignore
+> such calls altogether. In the SELinux lockdown hook implementation, use
+> SECINITSID_KERNEL in case the cred argument is NULL.
+>
+> Most of the callers are updated to pass current_cred() as the cred
+> pointer, thus maintaining the same behavior. The following callers are
+> modified to pass NULL as the cred pointer instead:
+> 1. arch/powerpc/xmon/xmon.c
+>      Seems to be some interactive debugging facility. It appears that
+>      the lockdown hook is called from interrupt context here, so it
+>      should be more appropriate to request a global lockdown decision.
+> 2. fs/tracefs/inode.c:tracefs_create_file()
+>      Here the call is used to prevent creating new tracefs entries when
+>      the kernel is locked down. Assumes that locking down is one-way -
+>      i.e. if the hook returns non-zero once, it will never return zero
+>      again, thus no point in creating these files. Also, the hook is
+>      often called by a module's init function when it is loaded by
+>      userspace, where it doesn't make much sense to do a check against
+>      the current task's creds, since the task itself doesn't actually
+>      use the tracing functionality (i.e. doesn't breach lockdown), just
+>      indirectly makes some new tracepoints available to whoever is
+>      authorized to use them.
+> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
+>      Here a cryptographic secret is redacted based on the value returned
+>      from the hook. There are two possible actions that may lead here:
+>      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
+>         task context is relevant, since the dumped data is sent back to
+>         the current task.
+>      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
+>         dumped SA is broadcasted to tasks subscribed to XFRM events -
+>         here the current task context is not relevant as it doesn't
+>         represent the tasks that could potentially see the secret.
+>      It doesn't seem worth it to try to keep using the current task's
+>      context in the a) case, since the eventual data leak can be
+>      circumvented anyway via b), plus there is no way for the task to
+>      indicate that it doesn't care about the actual key value, so the
+>      check could generate a lot of "false alert" denials with SELinux.
+>      Thus, let's pass NULL instead of current_cred() here faute de
+>      mieux.
+>
+> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
+> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
+> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
+> Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
+> Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
+> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
+> ---
+>
+> v4:
+> - rebase on top of TODO
+> - fix rebase conflicts:
+>   * drivers/cxl/pci.c
+>     - trivial: the lockdown reason was corrected in mainline
+>   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
+>     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
+>       in mainline
+>   * kernel/power/hibernate.c
+>     - trivial: !secretmem_active() was added to the condition in
+>       hibernation_available()
+> - cover new security_locked_down() call in kernel/bpf/helpers.c
+>   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
+>
+> v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
+> - add the cred argument to security_locked_down() and adapt all callers
+> - keep using current_cred() in BPF, as the hook calls have been shifted
+>   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
+>   buggy SELinux lockdown permission checks"))
+> - in SELinux, don't ignore hook calls where cred == NULL, but use
+>   SECINITSID_KERNEL as the subject instead
+> - update explanations in the commit message
+>
+> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
+> - change to a single hook based on suggestions by Casey Schaufler
+>
+> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
 
-Got it.  The end-user-visible symptom just wasn't obvious.  If you
-revise these, it might be nice to add that so that folks who cherry-pick
-stable patches or update to new stable kernels have an idea what this
-might fix.
+The changes between v3 and v4 all seem sane to me, but I'm going to
+let this sit for a few days in hopes that we can collect a few more
+Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
+mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
+after it goes through a build/test cycle.
+
+-- 
+paul moore
+www.paul-moore.com
 
 _______________________________________________
 kexec mailing list
