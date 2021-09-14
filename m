@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from wout2-smtp.messagingengine.com ([64.147.123.25])
+Received: from mail-eopbgr1400077.outbound.protection.outlook.com
+ ([40.107.140.77] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mPzVp-00467V-LD
- for kexec@lists.infradead.org; Tue, 14 Sep 2021 03:53:39 +0000
-From: Zhaofeng Li <hello@zhaofeng.li>
-Subject: [PATCH v2 5/5] multiboot2: Accept x86-64 images
-Date: Mon, 13 Sep 2021 20:51:42 -0700
-Message-Id: <20210914035142.251818-6-hello@zhaofeng.li>
-In-Reply-To: <20210914035142.251818-1-hello@zhaofeng.li>
-References: <20210914035142.251818-1-hello@zhaofeng.li>
+ id 1mQ2Ua-004NCP-5w
+ for kexec@lists.infradead.org; Tue, 14 Sep 2021 07:04:34 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH 00/11] makedumpfile: Add zstd support for makedumpfile
+Date: Tue, 14 Sep 2021 07:04:24 +0000
+Message-ID: <TYYPR01MB677786B29FF77911EE5E06F2DDDA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <20210910103318.292017-1-ltao@redhat.com>
+In-Reply-To: <20210910103318.292017-1-ltao@redhat.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,53 +25,135 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: Zhaofeng Li <hello@zhaofeng.li>, Simon Horman <horms@verge.net.au>
+To: Tao Liu <ltao@redhat.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Signed-off-by: Zhaofeng Li <hello@zhaofeng.li>
----
- kexec/arch/i386/kexec-mb2-x86.c  | 6 ++++--
- kexec/arch/x86_64/kexec-x86_64.c | 4 ++--
- 2 files changed, 6 insertions(+), 4 deletions(-)
+Hi Tao Liu,
 
-diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
-index f3e6b38..36fef20 100644
---- a/kexec/arch/i386/kexec-mb2-x86.c
-+++ b/kexec/arch/i386/kexec-mb2-x86.c
-@@ -76,8 +76,10 @@ int multiboot2_x86_probe(const char *buf, off_t buf_len)
- /* Is it a good idea to try booting this file? */
- {
- 	int i, len;
--	/* First of all, check that this is an ELF file */
--	if ((i=elf_x86_probe(buf, buf_len)) < 0)
-+
-+	/* First of all, check that this is an ELF file for either x86 or x86-64 */
-+	i = elf_x86_any_probe(buf, buf_len, CORE_TYPE_UNDEF);
-+	if (i < 0)
- 		return i;
- 
- 	/* Now look for a multiboot header. */
-diff --git a/kexec/arch/x86_64/kexec-x86_64.c b/kexec/arch/x86_64/kexec-x86_64.c
-index 394cfca..ffd84f0 100644
---- a/kexec/arch/x86_64/kexec-x86_64.c
-+++ b/kexec/arch/x86_64/kexec-x86_64.c
-@@ -33,11 +33,11 @@
- #include <arch/options.h>
- 
- struct file_type file_type[] = {
-+	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
-+	  multiboot2_x86_usage },
- 	{ "elf-x86_64", elf_x86_64_probe, elf_x86_64_load, elf_x86_64_usage },
- 	{ "multiboot-x86", multiboot_x86_probe, multiboot_x86_load,
- 	  multiboot_x86_usage },
--	{ "multiboot2-x86", multiboot2_x86_probe, multiboot2_x86_load,
--	  multiboot2_x86_usage },
- 	{ "elf-x86", elf_x86_probe, elf_x86_load, elf_x86_usage },
- 	{ "bzImage64", bzImage64_probe, bzImage64_load, bzImage64_usage },
- 	{ "bzImage", bzImage_probe, bzImage_load, bzImage_usage },
--- 
-2.32.0
+Thanks for the patchset!
 
+-----Original Message-----
+> This patch set adds ZSTD compression support to makedumpfile. With ZSTD compression
+> support, the vmcore dump size and time consumption can have a better balance than
+> zlib/lzo/snappy.
+> 
+> How to build:
+> 
+>   Build using make:
+>     $ make USEZSTD=on
+> 
+> Performance Comparison:
+> 
+>   How to measure
+> 
+>     I took a x86_64 machine which had 4T memory, and the compression level
+>     range from (-3 to 4) for ZSTD, as well as zlib/lzo/snappy compression.
+>     All testing was done by makedumpfile single thread mode.
+> 
+>     As for compression performance testing, in order to avoid the performance
+>     bottle neck of disk I/O, I used the following makedumpfile cmd, which took
+>     lzo compression as an example. "--dry-run" will not write any data to disk,
+>     "--show-stat" will output the vmcore size after compression, and the time
+>     consumption can be collected from the output logs.
+> 
+>     $ makedumpfile -d 0 -l /proc/kcore vmcore --dry-run --show-stat
+> 
+> 
+>     As for decompression performance testing, I only tested the (-d 31) case,
+>     because the vmcore size of (-d 0) case is too big to fit in the disk, in
+>     addtion, to read a oversized file from disk will encounter the disk I/O
+>     bottle neck.
+> 
+>     I triggered a kernel crash and collected a vmcore. Then I converted the
+>     vmcore into specific compression format using the following makedumpfile
+>     cmd, which would get a lzo format vmcore as an example:
+> 
+>     $ makedumpfile -l vmcore vmcore.lzo
+> 
+>     After all vmcores were ready, I used the following cmd to perform the
+>     decompression, the time consumption can be collected from the logs.
+> 
+>     $ makedumpfile -F vmcore.lzo --dry-run --show-stat
+> 
+> 
+>   Result charts
+> 
+>     For compression:
+> 
+>             makedumpfile -d31			|  makedumpfile -d0
+>             Compression time	vmcore size	|  Compression time  vmcore size
+>     zstd-3  325.516446	        5285179595	|  8205.452248	     51715430204
+>     zstd-2  332.069432	        5319726604	|  8057.381371	     51732062793
+>     zstd-1  309.942773	        5730516274	|  8138.060786	     52136191571
+>     zstd0   439.773076	        4673859661	|  8873.059963	     50993669657
+>     zstd1   406.68036	        4700959521	|  8259.417132	     51036900055
+>     zstd2   397.195643	        4699263608	|  8230.308291	     51030410942
+>     zstd3   436.491632	        4673306398	|  8803.970103	     51043393637
+>     zstd4   543.363928	        4668419304	|  8991.240244	     51058088514
+>     zlib    561.217381	        8514803195      | 14381.755611	     78199283893
+>     lzo	    248.175953	       16696411879	|  6057.528781	     90020895741
+>     snappy  231.868312	       11782236674	|  5290.919894	    245661288355
+> 
+>     For decompression:
+> 
+>             makedumpfile -d31
+>             decompress time	   vmcore size
+>     zstd-3	477.543396	       5289373448
+>     zstd-2	478.034534	       5327454123
+>     zstd-1	459.066807	       5748037931
+>     zstd0	561.687525	       4680009013
+>     zstd1	547.248917	       4706358547
+>     zstd2	544.219758	       4704780719
+>     zstd3	555.726343	       4680009013
+>     zstd4	558.031721	       4675545933
+>     zlib	630.965426	       8555376229
+>     lzo	    	427.292107	      16849457649
+>     snappy	446.542806	      11841407957
+> 
+>   Discussion
+> 
+>     For zstd range from -3 to 4, compression level 2 (ZSTD_dfast) has
+>     the best time consumption and vmcore dump size balance.
+
+Do you have a result of -d 1 compression test?  I think -d 0 is not
+practical, I would like to see a -d 1 result of such a large vmcore.
+
+And just out of curiosity, what version of zstd are you using?
+When I tested zstd last time, compression level 1 was faster than 2, iirc.
+
+btw, ZSTD_dfast is an enum of ZSTD_strategy, not for compression level?
+(no need to update for now, I will review later)
+
+Thanks,
+Kazu
+
+> 
+>     For zstd2/zlib/lzo/snappy, zstd2 has the smallest vmcore size, also
+>     the best time consumption and vmcore dump size balance.
+> 
+> Tao Liu (11):
+>   Add dump header for zstd.
+>   Add command-line processing for zstd
+>   Add zstd build support
+>   Notify zstd unsupporting when disabled
+>   Add single thread zstd compression processing
+>   Add parallel threads zstd compression processing
+>   Add single thread zstd uncompression processing
+>   Add parallel threads zstd uncompression processing
+>   Add zstd help message
+>   Add zstd manual description
+>   Add zstd README description
+> 
+>  Makefile       |   5 +++
+>  README         |   5 ++-
+>  diskdump_mod.h |   1 +
+>  makedumpfile.8 |   7 ++--
+>  makedumpfile.c | 101 +++++++++++++++++++++++++++++++++++++++++++++----
+>  makedumpfile.h |  10 +++++
+>  print_info.c   |  30 ++++++++++-----
+>  7 files changed, 138 insertions(+), 21 deletions(-)
+> 
+> --
+> 2.29.2
 
 _______________________________________________
 kexec mailing list
