@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-ed1-x532.google.com ([2a00:1450:4864:20::532])
+Received: from wout2-smtp.messagingengine.com ([64.147.123.25])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mPt8m-003HvE-0J
- for kexec@lists.infradead.org; Mon, 13 Sep 2021 21:05:25 +0000
-Received: by mail-ed1-x532.google.com with SMTP id c22so14977554edn.12
- for <kexec@lists.infradead.org>; Mon, 13 Sep 2021 14:05:20 -0700 (PDT)
+ id 1mPzVi-00465Y-9n
+ for kexec@lists.infradead.org; Tue, 14 Sep 2021 03:53:31 +0000
+From: Zhaofeng Li <hello@zhaofeng.li>
+Subject: [PATCH v2 2/5] multiboot2: Correct MBI size calculation
+Date: Mon, 13 Sep 2021 20:51:39 -0700
+Message-Id: <20210914035142.251818-3-hello@zhaofeng.li>
+In-Reply-To: <20210914035142.251818-1-hello@zhaofeng.li>
+References: <20210914035142.251818-1-hello@zhaofeng.li>
 MIME-Version: 1.0
-References: <20210913140229.24797-1-omosnace@redhat.com>
-In-Reply-To: <20210913140229.24797-1-omosnace@redhat.com>
-From: Paul Moore <paul@paul-moore.com>
-Date: Mon, 13 Sep 2021 17:05:04 -0400
-Message-ID: <CAHC9VhRw-S+zZUFz5QFFLMBATjo+YbPAiR21jX6p7cT0T+MVLA@mail.gmail.com>
-Subject: Re: [PATCH v4] lockdown,selinux: fix wrong subject in some SELinux
- lockdown checks
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,109 +22,55 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ondrej Mosnacek <omosnace@redhat.com>
-Cc: linux-security-module@vger.kernel.org, James Morris <jmorris@namei.org>, Steven Rostedt <rostedt@goodmis.org>, Ingo Molnar <mingo@redhat.com>, Steffen Klassert <steffen.klassert@secunet.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S . Miller" <davem@davemloft.net>, Stephen Smalley <stephen.smalley.work@gmail.com>, selinux@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, x86@kernel.org, linux-acpi@vger.kernel.org, linux-cxl@vger.kernel.org, linux-efi@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-pci@vger.kernel.org, linux-pm@vger.kernel.org, linux-serial@vger.kernel.org, bpf@vger.kernel.org, netdev@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Casey Schaufler <casey@schaufler-ca.com>, Dan Williams <dan.j.williams@intel.com>
+To: kexec@lists.infradead.org
+Cc: Zhaofeng Li <hello@zhaofeng.li>, Simon Horman <horms@verge.net.au>
 
-On Mon, Sep 13, 2021 at 10:02 AM Ondrej Mosnacek <omosnace@redhat.com> wrote:
->
-> Commit 59438b46471a ("security,lockdown,selinux: implement SELinux
-> lockdown") added an implementation of the locked_down LSM hook to
-> SELinux, with the aim to restrict which domains are allowed to perform
-> operations that would breach lockdown.
->
-> However, in several places the security_locked_down() hook is called in
-> situations where the current task isn't doing any action that would
-> directly breach lockdown, leading to SELinux checks that are basically
-> bogus.
->
-> To fix this, add an explicit struct cred pointer argument to
-> security_lockdown() and define NULL as a special value to pass instead
-> of current_cred() in such situations. LSMs that take the subject
-> credentials into account can then fall back to some default or ignore
-> such calls altogether. In the SELinux lockdown hook implementation, use
-> SECINITSID_KERNEL in case the cred argument is NULL.
->
-> Most of the callers are updated to pass current_cred() as the cred
-> pointer, thus maintaining the same behavior. The following callers are
-> modified to pass NULL as the cred pointer instead:
-> 1. arch/powerpc/xmon/xmon.c
->      Seems to be some interactive debugging facility. It appears that
->      the lockdown hook is called from interrupt context here, so it
->      should be more appropriate to request a global lockdown decision.
-> 2. fs/tracefs/inode.c:tracefs_create_file()
->      Here the call is used to prevent creating new tracefs entries when
->      the kernel is locked down. Assumes that locking down is one-way -
->      i.e. if the hook returns non-zero once, it will never return zero
->      again, thus no point in creating these files. Also, the hook is
->      often called by a module's init function when it is loaded by
->      userspace, where it doesn't make much sense to do a check against
->      the current task's creds, since the task itself doesn't actually
->      use the tracing functionality (i.e. doesn't breach lockdown), just
->      indirectly makes some new tracepoints available to whoever is
->      authorized to use them.
-> 3. net/xfrm/xfrm_user.c:copy_to_user_*()
->      Here a cryptographic secret is redacted based on the value returned
->      from the hook. There are two possible actions that may lead here:
->      a) A netlink message XFRM_MSG_GETSA with NLM_F_DUMP set - here the
->         task context is relevant, since the dumped data is sent back to
->         the current task.
->      b) When adding/deleting/updating an SA via XFRM_MSG_xxxSA, the
->         dumped SA is broadcasted to tasks subscribed to XFRM events -
->         here the current task context is not relevant as it doesn't
->         represent the tasks that could potentially see the secret.
->      It doesn't seem worth it to try to keep using the current task's
->      context in the a) case, since the eventual data leak can be
->      circumvented anyway via b), plus there is no way for the task to
->      indicate that it doesn't care about the actual key value, so the
->      check could generate a lot of "false alert" denials with SELinux.
->      Thus, let's pass NULL instead of current_cred() here faute de
->      mieux.
->
-> Improvements-suggested-by: Casey Schaufler <casey@schaufler-ca.com>
-> Improvements-suggested-by: Paul Moore <paul@paul-moore.com>
-> Fixes: 59438b46471a ("security,lockdown,selinux: implement SELinux lockdown")
-> Acked-by: Dan Williams <dan.j.williams@intel.com>         [cxl]
-> Acked-by: Steffen Klassert <steffen.klassert@secunet.com> [xfrm]
-> Signed-off-by: Ondrej Mosnacek <omosnace@redhat.com>
-> ---
->
-> v4:
-> - rebase on top of TODO
-> - fix rebase conflicts:
->   * drivers/cxl/pci.c
->     - trivial: the lockdown reason was corrected in mainline
->   * kernel/bpf/helpers.c, kernel/trace/bpf_trace.c
->     - trivial: LOCKDOWN_BPF_READ was renamed to LOCKDOWN_BPF_READ_KERNEL
->       in mainline
->   * kernel/power/hibernate.c
->     - trivial: !secretmem_active() was added to the condition in
->       hibernation_available()
-> - cover new security_locked_down() call in kernel/bpf/helpers.c
->   (LOCKDOWN_BPF_WRITE_USER in BPF_FUNC_probe_write_user case)
->
-> v3: https://lore.kernel.org/lkml/20210616085118.1141101-1-omosnace@redhat.com/
-> - add the cred argument to security_locked_down() and adapt all callers
-> - keep using current_cred() in BPF, as the hook calls have been shifted
->   to program load time (commit ff40e51043af ("bpf, lockdown, audit: Fix
->   buggy SELinux lockdown permission checks"))
-> - in SELinux, don't ignore hook calls where cred == NULL, but use
->   SECINITSID_KERNEL as the subject instead
-> - update explanations in the commit message
->
-> v2: https://lore.kernel.org/lkml/20210517092006.803332-1-omosnace@redhat.com/
-> - change to a single hook based on suggestions by Casey Schaufler
->
-> v1: https://lore.kernel.org/lkml/20210507114048.138933-1-omosnace@redhat.com/
+tag_load_base_addr is dependent on rel_tag, and tag_framebuffer was
+not accounted for.
 
-The changes between v3 and v4 all seem sane to me, but I'm going to
-let this sit for a few days in hopes that we can collect a few more
-Reviewed-bys and ACKs.  If I don't see any objections I'll merge it
-mid-week(ish) into selinux/stable-5.15 and plan on sending it to Linus
-after it goes through a build/test cycle.
+Signed-off-by: Zhaofeng Li <hello@zhaofeng.li>
+---
+ kexec/arch/i386/kexec-mb2-x86.c | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
+diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
+index b4996bc..6bbe35e 100644
+--- a/kexec/arch/i386/kexec-mb2-x86.c
++++ b/kexec/arch/i386/kexec-mb2-x86.c
+@@ -115,17 +115,26 @@ void multiboot2_x86_usage(void)
+ static size_t
+ multiboot2_get_mbi_size(int ranges, int cmdline_size, int modcount, int modcmd_size)
+ {
+-	return (2 * sizeof (uint32_t) + sizeof (struct multiboot_tag)
+-		+ sizeof (struct multiboot_tag)
++	size_t mbi_size;
++
++	mbi_size = (2 * sizeof (uint32_t) /* u32 total_size, u32 reserved */
+ 		+ ALIGN_UP (sizeof (struct multiboot_tag_basic_meminfo), MULTIBOOT_TAG_ALIGN)
+ 		+ ALIGN_UP ((sizeof (struct multiboot_tag_mmap)
+ 			+ ranges * sizeof (struct multiboot_mmap_entry)), MULTIBOOT_TAG_ALIGN)
+-		+ ALIGN_UP (sizeof (struct multiboot_tag_load_base_addr), MULTIBOOT_TAG_ALIGN)
+ 		+ (sizeof (struct multiboot_tag_string)
+ 			+ ALIGN_UP (cmdline_size, MULTIBOOT_TAG_ALIGN))
+ 		+ (sizeof (struct multiboot_tag_string)
+ 			+ ALIGN_UP (strlen(BOOTLOADER " " BOOTLOADER_VERSION) + 1, MULTIBOOT_TAG_ALIGN))
+-		+ (modcount * sizeof (struct multiboot_tag_module) + modcmd_size));
++		+ (modcount * sizeof (struct multiboot_tag_module) + modcmd_size))
++		+ sizeof (struct multiboot_tag); /* end tag */
++
++	if (mhi.rel_tag)
++		mbi_size += ALIGN_UP (sizeof (struct multiboot_tag_load_base_addr), MULTIBOOT_TAG_ALIGN);
++
++	if (mhi.fb_tag)
++		mbi_size += ALIGN_UP (sizeof (struct multiboot_tag_framebuffer), MULTIBOOT_TAG_ALIGN);
++
++	return mbi_size;
+ }
+ 
+ static void multiboot2_read_header_tags(void)
 -- 
-paul moore
-www.paul-moore.com
+2.32.0
+
 
 _______________________________________________
 kexec mailing list
