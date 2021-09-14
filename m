@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from pegase2.c-s.fr ([93.17.235.10])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mQ74q-005XC7-SW
- for kexec@lists.infradead.org; Tue, 14 Sep 2021 11:58:18 +0000
-Date: Tue, 14 Sep 2021 13:58:04 +0200
-From: Borislav Petkov <bp@alien8.de>
+ id 1mQ9it-0063OQ-AO
+ for kexec@lists.infradead.org; Tue, 14 Sep 2021 14:47:49 +0000
 Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
  cc_platform_has()
-Message-ID: <YUCOTIPPsJJpLO/d@zn.tnic>
 References: <cover.1631141919.git.thomas.lendacky@amd.com>
  <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
+ <YUCOTIPPsJJpLO/d@zn.tnic>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <41b93dae-2f10-15a3-a079-c632381bec73@csgroup.eu>
+Date: Tue, 14 Sep 2021 16:47:41 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
+In-Reply-To: <YUCOTIPPsJJpLO/d@zn.tnic>
+Content-Language: fr-FR
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,72 +22,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+To: Borislav Petkov <bp@alien8.de>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, amd-gfx@lists.freedesktop.org, Christoph Hellwig <hch@infradead.org>, linux-graphics-maintainer@vmware.com, Tom Lendacky <thomas.lendacky@amd.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 
-On Wed, Sep 08, 2021 at 05:58:35PM -0500, Tom Lendacky wrote:
-> Introduce a powerpc version of the cc_platform_has() function. This will
-> be used to replace the powerpc mem_encrypt_active() implementation, so
-> the implementation will initially only support the CC_ATTR_MEM_ENCRYPT
-> attribute.
-> 
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-> ---
->  arch/powerpc/platforms/pseries/Kconfig       |  1 +
->  arch/powerpc/platforms/pseries/Makefile      |  2 ++
->  arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++++++++++++++++
->  3 files changed, 29 insertions(+)
->  create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
-
-Michael,
-
-can I get an ACK for the ppc bits to carry them through the tip tree
-pls?
-
-Btw, on a related note, cross-compiling this throws the following error here:
-
-$ make CROSS_COMPILE=/home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux- V=1 ARCH=powerpc
-
-...
-
-/home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/powerpc64-linux-gcc -Wp,-MD,arch/powerpc/boot/.crt0.o.d -D__ASSEMBLY__ -Wall -Wundef -Wstrict-prototypes -Wno-trigraphs -fno-strict-aliasing -O2 -msoft-float -mno-altivec -mno-vsx -pipe -fomit-frame-pointer -fno-builtin -fPIC -nostdinc -include ./include/linux/compiler_attributes.h -I./arch/powerpc/include -I./arch/powerpc/include/generated  -I./include -I./arch/powerpc/include/uapi -I./arch/powerpc/include/generated/uapi -I./include/uapi -I./include/generated/uapi -include ./include/linux/compiler-version.h -include ./include/linux/kconfig.h -m32 -isystem /home/share/src/crosstool/gcc-9.4.0-nolibc/powerpc64-linux/bin/../lib/gcc/powerpc64-linux/9.4.0/include -mbig-endian -nostdinc -c -o arch/powerpc/boot/crt0.o arch/powerpc/boot/crt0.S
-In file included from <command-line>:
-././include/linux/compiler_attributes.h:62:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
-   62 | #if __has_attribute(__assume_aligned__)
-      |     ^~~~~~~~~~~~~~~
-././include/linux/compiler_attributes.h:62:20: error: missing binary operator before token "("
-   62 | #if __has_attribute(__assume_aligned__)
-      |                    ^
-././include/linux/compiler_attributes.h:88:5: warning: "__has_attribute" is not defined, evaluates to 0 [-Wundef]
-   88 | #if __has_attribute(__copy__)
-      |     ^~~~~~~~~~~~~~~
-...
-
-Known issue?
-
-This __has_attribute() thing is supposed to be supported
-in gcc since 5.1 and I'm using the crosstool stuff from
-https://www.kernel.org/pub/tools/crosstool/ and gcc-9.4 above is pretty
-new so that should not happen actually.
-
-But it does...
-
-Hmmm.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpMZSAxNC8wOS8yMDIxIMOgIDEzOjU4LCBCb3Jpc2xhdiBQZXRrb3YgYSDDqWNyaXTCoDoKPiBP
+biBXZWQsIFNlcCAwOCwgMjAyMSBhdCAwNTo1ODozNVBNIC0wNTAwLCBUb20gTGVuZGFja3kgd3Jv
+dGU6Cj4+IEludHJvZHVjZSBhIHBvd2VycGMgdmVyc2lvbiBvZiB0aGUgY2NfcGxhdGZvcm1faGFz
+KCkgZnVuY3Rpb24uIFRoaXMgd2lsbAo+PiBiZSB1c2VkIHRvIHJlcGxhY2UgdGhlIHBvd2VycGMg
+bWVtX2VuY3J5cHRfYWN0aXZlKCkgaW1wbGVtZW50YXRpb24sIHNvCj4+IHRoZSBpbXBsZW1lbnRh
+dGlvbiB3aWxsIGluaXRpYWxseSBvbmx5IHN1cHBvcnQgdGhlIENDX0FUVFJfTUVNX0VOQ1JZUFQK
+Pj4gYXR0cmlidXRlLgo+Pgo+PiBDYzogTWljaGFlbCBFbGxlcm1hbiA8bXBlQGVsbGVybWFuLmlk
+LmF1Pgo+PiBDYzogQmVuamFtaW4gSGVycmVuc2NobWlkdCA8YmVuaEBrZXJuZWwuY3Jhc2hpbmcu
+b3JnPgo+PiBDYzogUGF1bCBNYWNrZXJyYXMgPHBhdWx1c0BzYW1iYS5vcmc+Cj4+IFNpZ25lZC1v
+ZmYtYnk6IFRvbSBMZW5kYWNreSA8dGhvbWFzLmxlbmRhY2t5QGFtZC5jb20+Cj4+IC0tLQo+PiAg
+IGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9LY29uZmlnICAgICAgIHwgIDEgKwo+PiAg
+IGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9NYWtlZmlsZSAgICAgIHwgIDIgKysKPj4g
+ICBhcmNoL3Bvd2VycGMvcGxhdGZvcm1zL3BzZXJpZXMvY2NfcGxhdGZvcm0uYyB8IDI2ICsrKysr
+KysrKysrKysrKysrKysrCj4+ICAgMyBmaWxlcyBjaGFuZ2VkLCAyOSBpbnNlcnRpb25zKCspCj4+
+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvcG93ZXJwYy9wbGF0Zm9ybXMvcHNlcmllcy9jY19w
+bGF0Zm9ybS5jCj4gCj4gTWljaGFlbCwKPiAKPiBjYW4gSSBnZXQgYW4gQUNLIGZvciB0aGUgcHBj
+IGJpdHMgdG8gY2FycnkgdGhlbSB0aHJvdWdoIHRoZSB0aXAgdHJlZQo+IHBscz8KPiAKPiBCdHcs
+IG9uIGEgcmVsYXRlZCBub3RlLCBjcm9zcy1jb21waWxpbmcgdGhpcyB0aHJvd3MgdGhlIGZvbGxv
+d2luZyBlcnJvciBoZXJlOgo+IAo+ICQgbWFrZSBDUk9TU19DT01QSUxFPS9ob21lL3NoYXJlL3Ny
+Yy9jcm9zc3Rvb2wvZ2NjLTkuNC4wLW5vbGliYy9wb3dlcnBjNjQtbGludXgvYmluL3Bvd2VycGM2
+NC1saW51eC0gVj0xIEFSQ0g9cG93ZXJwYwo+IAo+IC4uLgo+IAo+IC9ob21lL3NoYXJlL3NyYy9j
+cm9zc3Rvb2wvZ2NjLTkuNC4wLW5vbGliYy9wb3dlcnBjNjQtbGludXgvYmluL3Bvd2VycGM2NC1s
+aW51eC1nY2MgLVdwLC1NRCxhcmNoL3Bvd2VycGMvYm9vdC8uY3J0MC5vLmQgLURfX0FTU0VNQkxZ
+X18gLVdhbGwgLVd1bmRlZiAtV3N0cmljdC1wcm90b3R5cGVzIC1Xbm8tdHJpZ3JhcGhzIC1mbm8t
+c3RyaWN0LWFsaWFzaW5nIC1PMiAtbXNvZnQtZmxvYXQgLW1uby1hbHRpdmVjIC1tbm8tdnN4IC1w
+aXBlIC1mb21pdC1mcmFtZS1wb2ludGVyIC1mbm8tYnVpbHRpbiAtZlBJQyAtbm9zdGRpbmMgLWlu
+Y2x1ZGUgLi9pbmNsdWRlL2xpbnV4L2NvbXBpbGVyX2F0dHJpYnV0ZXMuaCAtSS4vYXJjaC9wb3dl
+cnBjL2luY2x1ZGUgLUkuL2FyY2gvcG93ZXJwYy9pbmNsdWRlL2dlbmVyYXRlZCAgLUkuL2luY2x1
+ZGUgLUkuL2FyY2gvcG93ZXJwYy9pbmNsdWRlL3VhcGkgLUkuL2FyY2gvcG93ZXJwYy9pbmNsdWRl
+L2dlbmVyYXRlZC91YXBpIC1JLi9pbmNsdWRlL3VhcGkgLUkuL2luY2x1ZGUvZ2VuZXJhdGVkL3Vh
+cGkgLWluY2x1ZGUgLi9pbmNsdWRlL2xpbnV4L2NvbXBpbGVyLXZlcnNpb24uaCAtaW5jbHVkZSAu
+L2luY2x1ZGUvbGludXgva2NvbmZpZy5oIC1tMzIgLWlzeXN0ZW0gL2hvbWUvc2hhcmUvc3JjL2Ny
+b3NzdG9vbC9nY2MtOS40LjAtbm9saWJjL3Bvd2VycGM2NC1saW51eC9iaW4vLi4vbGliL2djYy9w
+b3dlcnBjNjQtbGludXgvOS40LjAvaW5jbHVkZSAtbWJpZy1lbmRpYW4gLW5vc3RkaW5jIC1jIC1v
+IGFyY2gvcG93ZXJwYy9ib290L2NydDAubyBhcmNoL3Bvd2VycGMvYm9vdC9jcnQwLlMKPiBJbiBm
+aWxlIGluY2x1ZGVkIGZyb20gPGNvbW1hbmQtbGluZT46Cj4gLi8uL2luY2x1ZGUvbGludXgvY29t
+cGlsZXJfYXR0cmlidXRlcy5oOjYyOjU6IHdhcm5pbmc6ICJfX2hhc19hdHRyaWJ1dGUiIGlzIG5v
+dCBkZWZpbmVkLCBldmFsdWF0ZXMgdG8gMCBbLVd1bmRlZl0KPiAgICAgNjIgfCAjaWYgX19oYXNf
+YXR0cmlidXRlKF9fYXNzdW1lX2FsaWduZWRfXykKPiAgICAgICAgfCAgICAgXn5+fn5+fn5+fn5+
+fn5+Cj4gLi8uL2luY2x1ZGUvbGludXgvY29tcGlsZXJfYXR0cmlidXRlcy5oOjYyOjIwOiBlcnJv
+cjogbWlzc2luZyBiaW5hcnkgb3BlcmF0b3IgYmVmb3JlIHRva2VuICIoIgo+ICAgICA2MiB8ICNp
+ZiBfX2hhc19hdHRyaWJ1dGUoX19hc3N1bWVfYWxpZ25lZF9fKQo+ICAgICAgICB8ICAgICAgICAg
+ICAgICAgICAgICBeCj4gLi8uL2luY2x1ZGUvbGludXgvY29tcGlsZXJfYXR0cmlidXRlcy5oOjg4
+OjU6IHdhcm5pbmc6ICJfX2hhc19hdHRyaWJ1dGUiIGlzIG5vdCBkZWZpbmVkLCBldmFsdWF0ZXMg
+dG8gMCBbLVd1bmRlZl0KPiAgICAgODggfCAjaWYgX19oYXNfYXR0cmlidXRlKF9fY29weV9fKQo+
+ICAgICAgICB8ICAgICBefn5+fn5+fn5+fn5+fn4KPiAuLi4KPiAKPiBLbm93biBpc3N1ZT8KPiAK
+PiBUaGlzIF9faGFzX2F0dHJpYnV0ZSgpIHRoaW5nIGlzIHN1cHBvc2VkIHRvIGJlIHN1cHBvcnRl
+ZAo+IGluIGdjYyBzaW5jZSA1LjEgYW5kIEknbSB1c2luZyB0aGUgY3Jvc3N0b29sIHN0dWZmIGZy
+b20KPiBodHRwczovL3d3dy5rZXJuZWwub3JnL3B1Yi90b29scy9jcm9zc3Rvb2wvIGFuZCBnY2Mt
+OS40IGFib3ZlIGlzIHByZXR0eQo+IG5ldyBzbyB0aGF0IHNob3VsZCBub3QgaGFwcGVuIGFjdHVh
+bGx5Lgo+IAo+IEJ1dCBpdCBkb2VzLi4uCj4gCj4gSG1tbS4KPiAKCgpZZXMsIHNlZSAKaHR0cHM6
+Ly9sb3JlLmtlcm5lbC5vcmcvbGludXhwcGMtZGV2LzIwMjEwOTE0MTIzOTE5LjU4MjAzZWVmQGNh
+bmIuYXV1Zy5vcmcuYXUvVC8jdAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
