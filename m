@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from albert.telenet-ops.be ([2a02:1800:110:4::f00:1a])
+Received: from pegase2.c-s.fr ([93.17.235.10])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mQUpt-0099D7-HK
- for kexec@lists.infradead.org; Wed, 15 Sep 2021 13:20:31 +0000
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v6] ARM: uncompress: Parse "linux,
- usable-memory-range" DT property
-Date: Wed, 15 Sep 2021 14:46:20 +0200
-Message-Id: <0de07021e49ac26a8f9386f62f3e15e947d0f6d0.1631709384.git.geert+renesas@glider.be>
+ id 1mQYYd-009dJh-IC
+ for kexec@lists.infradead.org; Wed, 15 Sep 2021 17:18:53 +0000
+Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
+ cc_platform_has()
+References: <cover.1631141919.git.thomas.lendacky@amd.com>
+ <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
+ <YUCOTIPPsJJpLO/d@zn.tnic> <87lf3yk7g4.fsf@mpe.ellerman.id.au>
+ <YUHGDbtiGrDz5+NS@zn.tnic>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Message-ID: <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
+Date: Wed, 15 Sep 2021 19:18:34 +0200
 MIME-Version: 1.0
+In-Reply-To: <YUHGDbtiGrDz5+NS@zn.tnic>
+Content-Language: fr-FR
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,148 +23,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lukasz Stelmach <l.stelmach@samsung.com>
-Cc: Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Borislav Petkov <bp@alien8.de>, Michael Ellerman <mpe@ellerman.id.au>
+Cc: Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, amd-gfx@lists.freedesktop.org, Christoph Hellwig <hch@infradead.org>, linux-graphics-maintainer@vmware.com, Tom Lendacky <thomas.lendacky@amd.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 
-Add support for parsing the "linux,usable-memory-range" DT property.
-This property is used to describe the usable memory reserved for the
-crash dump kernel, and thus makes the memory reservation explicit.
-If present, Linux no longer needs to mask the program counter, and rely
-on the "mem=" kernel parameter to obtain the start and size of usable
-memory.
-
-For backwards compatibility, the traditional method to derive the start
-of memory is still used if "linux,usable-memory-range" is absent.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-KernelVersion: v5.15-rc1
----
-The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add DT
-properties to crash dump kernel's DTB", which is still valid:
-https://lore.kernel.org/r/20200902154129.6358-1-geert+renesas@glider.be/
-
-v6:
-  - All dependencies are in v5.15-rc1,
-
-v5:
-  - Remove the addition of "linux,elfcorehdr" and
-    "linux,usable-memory-range" handling to arch/arm/mm/init.c,
-
-v4:
-  - Remove references to architectures in chosen.txt, to avoid having to
-    change this again when more architectures copy kdump support,
-  - Remove the architecture-specific code for parsing
-    "linux,usable-memory-range" and "linux,elfcorehdr", as the FDT core
-    code now takes care of this,
-  - Move chosen.txt change to patch changing the FDT core,
-  - Use IS_ENABLED(CONFIG_CRASH_DUMP) instead of #ifdef,
-
-v3:
-  - Rebase on top of accepted solution for DTB memory information
-    handling, which is part of v5.12-rc1,
-
-v2:
-  - Rebase on top of reworked DTB memory information handling.
----
- .../arm/boot/compressed/fdt_check_mem_start.c | 48 ++++++++++++++++---
- 1 file changed, 42 insertions(+), 6 deletions(-)
-
-diff --git a/arch/arm/boot/compressed/fdt_check_mem_start.c b/arch/arm/boot/compressed/fdt_check_mem_start.c
-index 62450d824c3ca180..9291a2661bdfe57f 100644
---- a/arch/arm/boot/compressed/fdt_check_mem_start.c
-+++ b/arch/arm/boot/compressed/fdt_check_mem_start.c
-@@ -55,16 +55,17 @@ static uint64_t get_val(const fdt32_t *cells, uint32_t ncells)
-  * DTB, and, if out-of-range, replace it by the real start address.
-  * To preserve backwards compatibility (systems reserving a block of memory
-  * at the start of physical memory, kdump, ...), the traditional method is
-- * always used if it yields a valid address.
-+ * used if it yields a valid address, unless the "linux,usable-memory-range"
-+ * property is present.
-  *
-  * Return value: start address of physical memory to use
-  */
- uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
- {
--	uint32_t addr_cells, size_cells, base;
-+	uint32_t addr_cells, size_cells, usable_base, base;
- 	uint32_t fdt_mem_start = 0xffffffff;
--	const fdt32_t *reg, *endp;
--	uint64_t size, end;
-+	const fdt32_t *usable, *reg, *endp;
-+	uint64_t size, usable_end, end;
- 	const char *type;
- 	int offset, len;
- 
-@@ -80,6 +81,27 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
- 	if (addr_cells > 2 || size_cells > 2)
- 		return mem_start;
- 
-+	/*
-+	 * Usable memory in case of a crash dump kernel
-+	 * This property describes a limitation: memory within this range is
-+	 * only valid when also described through another mechanism
-+	 */
-+	usable = get_prop(fdt, "/chosen", "linux,usable-memory-range",
-+			  (addr_cells + size_cells) * sizeof(fdt32_t));
-+	if (usable) {
-+		size = get_val(usable + addr_cells, size_cells);
-+		if (!size)
-+			return mem_start;
-+
-+		if (addr_cells > 1 && fdt32_ld(usable)) {
-+			/* Outside 32-bit address space */
-+			return mem_start;
-+		}
-+
-+		usable_base = fdt32_ld(usable + addr_cells - 1);
-+		usable_end = usable_base + size;
-+	}
-+
- 	/* Walk all memory nodes and regions */
- 	for (offset = fdt_next_node(fdt, -1, NULL); offset >= 0;
- 	     offset = fdt_next_node(fdt, offset, NULL)) {
-@@ -107,7 +129,20 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
- 
- 			base = fdt32_ld(reg + addr_cells - 1);
- 			end = base + size;
--			if (mem_start >= base && mem_start < end) {
-+			if (usable) {
-+				/*
-+				 * Clip to usable range, which takes precedence
-+				 * over mem_start
-+				 */
-+				if (base < usable_base)
-+					base = usable_base;
-+
-+				if (end > usable_end)
-+					end = usable_end;
-+
-+				if (end <= base)
-+					continue;
-+			} else if (mem_start >= base && mem_start < end) {
- 				/* Calculated address is valid, use it */
- 				return mem_start;
- 			}
-@@ -123,7 +158,8 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
- 	}
- 
- 	/*
--	 * The calculated address is not usable.
-+	 * The calculated address is not usable, or was overridden by the
-+	 * "linux,usable-memory-range" property.
- 	 * Use the lowest usable physical memory address from the DTB instead,
- 	 * and make sure this is a multiple of 2 MiB for phys/virt patching.
- 	 */
--- 
-2.25.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpMZSAxNS8wOS8yMDIxIMOgIDEyOjA4LCBCb3Jpc2xhdiBQZXRrb3YgYSDDqWNyaXTCoDoKPiBP
+biBXZWQsIFNlcCAxNSwgMjAyMSBhdCAxMDoyODo1OUFNICsxMDAwLCBNaWNoYWVsIEVsbGVybWFu
+IHdyb3RlOgo+PiBJIGRvbid0IGxvdmUgaXQsIGEgbmV3IEMgZmlsZSBhbmQgYW4gb3V0LW9mLWxp
+bmUgY2FsbCB0byB0aGVuIGNhbGwgYmFjawo+PiB0byBhIHN0YXRpYyBpbmxpbmUgdGhhdCBmb3Ig
+bW9zdCBjb25maWd1cmF0aW9uIHdpbGwgcmV0dXJuIGZhbHNlIC4uLiBidXQKPj4gd2hhdGV2ZXIg
+OikKPiAKPiBZZWFoLCBoY2ggdGhpbmtzIGl0J2xsIGNhdXNlIGEgYmlnIG1lc3Mgb3RoZXJ3aXNl
+Ogo+IAo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xrbWwvWVNTY1d2cFhlVlh3JTJGZWQ1QGlu
+ZnJhZGVhZC5vcmcvCgpDb3VsZCB5b3UgcGxlYXNlIHByb3ZpZGUgbW9yZSBleHBsaWNpdCBleHBs
+YW5hdGlvbiB3aHkgaW5saW5pbmcgc3VjaCBhbiAKaGVscGVyIGlzIGNvbnNpZGVyZWQgYXMgYmFk
+IHByYWN0aWNlIGFuZCBtZXNzeSA/CgpCZWNhdXNlIGFzIGRlbW9uc3RyYXRlZCBpbiBteSBwcmV2
+aW91cyByZXNwb25zZSBzb21lIGRheXMgYWdvLCB0YWtpbmcgCnRoYXQgb3V0bGluZSBlbmRzIHVw
+IHdpdGggYW4gdW5uZWNjZXNzYXJ5IHVnbHkgZ2VuZXJhdGVkIGNvZGUgYW5kIHdlIApkb24ndCBi
+ZW5lZml0IGZyb250IEdDQydzIGNhcGFiaWxpdHkgdG8gZm9sZCBpbiBhbmQgb3B0IG91dCB1bnJl
+YWNoYWJsZSAKY29kZS4KCkFzIHBvaW50ZWQgYnkgTWljaGFlbCBpbiBtb3N0IGNhc2VzIHRoZSBm
+dW5jdGlvbiB3aWxsIGp1c3QgcmV0dXJuIGZhbHNlIApzbyBiZWhpbmQgdGhlIHBlcmZvcm1hbmNl
+IGNvbmNlcm4sIHRoZXJlIGlzIGFsc28gdGhlIGNvZGUgc2l6ZSBhbmQgY29kZSAKY292ZXJhZ2Ug
+dG9waWMgdGhhdCBpcyB0byBiZSB0YWtlbiBpbnRvIGFjY291bnQuIEFuZCBldmVuIHdoZW4gdGhl
+IApmdW5jdGlvbiBkb2Vzbid0IHJldHVybiBmYWxzZSwgdGhlIG9ubHkgdGhpbmcgaXQgZG9lcyBm
+b2xkcyBpbnRvIGEgCnNpbmdsZSBwb3dlcnBjIGluc3RydWN0aW9uIHNvIHRoZXJlIGlzIHJlYWxs
+eSBubyBwb2ludCBpbiBtYWtpbmcgYSAKZGVkaWNhdGVkIG91dC1vZi1saW5lIGZvbmN0aW9uIGZv
+ciB0aGF0IGFuZCBzdWZmZXIgdGhlIGNvc3QgYW5kIHRoZSBzaXplIApvZiBhIGZ1bmN0aW9uIGNh
+bGwgYW5kIHRvIGp1c3RpZnkgdGhlIGFkZGl0aW9uIG9mIGEgZGVkaWNhdGVkIEMgZmlsZS4KCgo+
+IAo+IEkgZ3Vlc3MgbGVzcyBpZmRlZmZlcnkgaXMgbmljZSB0b28uCgpJIGNhbid0IHNlZSB5b3Vy
+IHBvaW50IGhlcmUuIElubGluaW5nIHRoZSBmdW5jdGlvbiB3b3VsZG4ndCBhZGQgYW55IAppZmRl
+ZmZlcnkgYXMgZmFyIGFzIEkgY2FuIHNlZS4KClNvLCB3b3VsZCB5b3UgbWluZCByZWNvbnNpZGVy
+aW5nIHlvdXIgYXBwcm9hY2ggYW5kIGFsbG93IGFyY2hpdGVjdHVyZXMgCnRvIHByb3ZpZGUgaW5s
+aW5lIGltcGxlbWVudGF0aW9uIGJ5IGp1c3Qgbm90IGVuZm9yY2luZyBhIGdlbmVyaWMgCnByb3Rv
+dHlwZSA/IE9yIG90aGVyd2lzZSBwcm92aWRlIG1vcmUgZGV0YWlscyBhbmQgZXhlbXBsZSBvZiB3
+aHkgdGhlIApjb25zIGFyZSBtb3JlIGltcG9ydGFudCB2ZXJzdXMgdGhlIHByb3MgPwoKVGhhbmtz
+CkNocmlzdG9waGUKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9s
+aXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
