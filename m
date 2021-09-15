@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from albert.telenet-ops.be ([2a02:1800:110:4::f00:1a])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mQRqI-008nGz-2W
- for kexec@lists.infradead.org; Wed, 15 Sep 2021 10:08:39 +0000
-Date: Wed, 15 Sep 2021 12:08:13 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
-Message-ID: <YUHGDbtiGrDz5+NS@zn.tnic>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
- <YUCOTIPPsJJpLO/d@zn.tnic> <87lf3yk7g4.fsf@mpe.ellerman.id.au>
+ id 1mQUpt-0099D7-HK
+ for kexec@lists.infradead.org; Wed, 15 Sep 2021 13:20:31 +0000
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v6] ARM: uncompress: Parse "linux,
+ usable-memory-range" DT property
+Date: Wed, 15 Sep 2021 14:46:20 +0200
+Message-Id: <0de07021e49ac26a8f9386f62f3e15e947d0f6d0.1631709384.git.geert+renesas@glider.be>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <87lf3yk7g4.fsf@mpe.ellerman.id.au>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,35 +21,142 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Tom Lendacky <thomas.lendacky@amd.com>, linux-kernel@vger.kernel.org, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, linux-graphics-maintainer@vmware.com, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, Joerg Roedel <joro@8bytes.org>, Andi Kleen <ak@linux.intel.com>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, Christoph Hellwig <hch@infradead.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>
+To: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Ard Biesheuvel <ardb@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Lukasz Stelmach <l.stelmach@samsung.com>
+Cc: Simon Horman <horms@verge.net.au>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kexec@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-On Wed, Sep 15, 2021 at 10:28:59AM +1000, Michael Ellerman wrote:
-> I don't love it, a new C file and an out-of-line call to then call back
-> to a static inline that for most configuration will return false ... but
-> whatever :)
+Add support for parsing the "linux,usable-memory-range" DT property.
+This property is used to describe the usable memory reserved for the
+crash dump kernel, and thus makes the memory reservation explicit.
+If present, Linux no longer needs to mask the program counter, and rely
+on the "mem=" kernel parameter to obtain the start and size of usable
+memory.
 
-Yeah, hch thinks it'll cause a big mess otherwise:
+For backwards compatibility, the traditional method to derive the start
+of memory is still used if "linux,usable-memory-range" is absent.
 
-https://lore.kernel.org/lkml/YSScWvpXeVXw%2Fed5@infradead.org/
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+KernelVersion: v5.15-rc1
+---
+The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add DT
+properties to crash dump kernel's DTB", which is still valid:
+https://lore.kernel.org/r/20200902154129.6358-1-geert+renesas@glider.be/
 
-I guess less ifdeffery is nice too.
+v6:
+  - All dependencies are in v5.15-rc1,
 
-> Acked-by: Michael Ellerman <mpe@ellerman.id.au> (powerpc)
+v5:
+  - Remove the addition of "linux,elfcorehdr" and
+    "linux,usable-memory-range" handling to arch/arm/mm/init.c,
 
-Thx.
+v4:
+  - Remove references to architectures in chosen.txt, to avoid having to
+    change this again when more architectures copy kdump support,
+  - Remove the architecture-specific code for parsing
+    "linux,usable-memory-range" and "linux,elfcorehdr", as the FDT core
+    code now takes care of this,
+  - Move chosen.txt change to patch changing the FDT core,
+  - Use IS_ENABLED(CONFIG_CRASH_DUMP) instead of #ifdef,
 
-> Yeah, fixed in mainline today, thanks for trying to cross compile :)
+v3:
+  - Rebase on top of accepted solution for DTB memory information
+    handling, which is part of v5.12-rc1,
 
-Always!
+v2:
+  - Rebase on top of reworked DTB memory information handling.
+---
+ .../arm/boot/compressed/fdt_check_mem_start.c | 48 ++++++++++++++++---
+ 1 file changed, 42 insertions(+), 6 deletions(-)
 
-:-)
-
+diff --git a/arch/arm/boot/compressed/fdt_check_mem_start.c b/arch/arm/boot/compressed/fdt_check_mem_start.c
+index 62450d824c3ca180..9291a2661bdfe57f 100644
+--- a/arch/arm/boot/compressed/fdt_check_mem_start.c
++++ b/arch/arm/boot/compressed/fdt_check_mem_start.c
+@@ -55,16 +55,17 @@ static uint64_t get_val(const fdt32_t *cells, uint32_t ncells)
+  * DTB, and, if out-of-range, replace it by the real start address.
+  * To preserve backwards compatibility (systems reserving a block of memory
+  * at the start of physical memory, kdump, ...), the traditional method is
+- * always used if it yields a valid address.
++ * used if it yields a valid address, unless the "linux,usable-memory-range"
++ * property is present.
+  *
+  * Return value: start address of physical memory to use
+  */
+ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+ {
+-	uint32_t addr_cells, size_cells, base;
++	uint32_t addr_cells, size_cells, usable_base, base;
+ 	uint32_t fdt_mem_start = 0xffffffff;
+-	const fdt32_t *reg, *endp;
+-	uint64_t size, end;
++	const fdt32_t *usable, *reg, *endp;
++	uint64_t size, usable_end, end;
+ 	const char *type;
+ 	int offset, len;
+ 
+@@ -80,6 +81,27 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+ 	if (addr_cells > 2 || size_cells > 2)
+ 		return mem_start;
+ 
++	/*
++	 * Usable memory in case of a crash dump kernel
++	 * This property describes a limitation: memory within this range is
++	 * only valid when also described through another mechanism
++	 */
++	usable = get_prop(fdt, "/chosen", "linux,usable-memory-range",
++			  (addr_cells + size_cells) * sizeof(fdt32_t));
++	if (usable) {
++		size = get_val(usable + addr_cells, size_cells);
++		if (!size)
++			return mem_start;
++
++		if (addr_cells > 1 && fdt32_ld(usable)) {
++			/* Outside 32-bit address space */
++			return mem_start;
++		}
++
++		usable_base = fdt32_ld(usable + addr_cells - 1);
++		usable_end = usable_base + size;
++	}
++
+ 	/* Walk all memory nodes and regions */
+ 	for (offset = fdt_next_node(fdt, -1, NULL); offset >= 0;
+ 	     offset = fdt_next_node(fdt, offset, NULL)) {
+@@ -107,7 +129,20 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+ 
+ 			base = fdt32_ld(reg + addr_cells - 1);
+ 			end = base + size;
+-			if (mem_start >= base && mem_start < end) {
++			if (usable) {
++				/*
++				 * Clip to usable range, which takes precedence
++				 * over mem_start
++				 */
++				if (base < usable_base)
++					base = usable_base;
++
++				if (end > usable_end)
++					end = usable_end;
++
++				if (end <= base)
++					continue;
++			} else if (mem_start >= base && mem_start < end) {
+ 				/* Calculated address is valid, use it */
+ 				return mem_start;
+ 			}
+@@ -123,7 +158,8 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+ 	}
+ 
+ 	/*
+-	 * The calculated address is not usable.
++	 * The calculated address is not usable, or was overridden by the
++	 * "linux,usable-memory-range" property.
+ 	 * Use the lowest usable physical memory address from the DTB instead,
+ 	 * and make sure this is a multiple of 2 MiB for phys/virt patching.
+ 	 */
 -- 
-Regards/Gruss,
-    Boris.
+2.25.1
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
