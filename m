@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf29.google.com ([2607:f8b0:4864:20::f29])
+Received: from mail-qt1-x836.google.com ([2607:f8b0:4864:20::836])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mR0ZQ-00Ca3m-2j
- for kexec@lists.infradead.org; Thu, 16 Sep 2021 23:13:35 +0000
-Received: by mail-qv1-xf29.google.com with SMTP id jo30so5321573qvb.3
- for <kexec@lists.infradead.org>; Thu, 16 Sep 2021 16:13:29 -0700 (PDT)
+ id 1mR0ZQ-00Ca48-Jw
+ for kexec@lists.infradead.org; Thu, 16 Sep 2021 23:13:36 +0000
+Received: by mail-qt1-x836.google.com with SMTP id u21so7156494qtw.8
+ for <kexec@lists.infradead.org>; Thu, 16 Sep 2021 16:13:31 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v17 00/15] arm64: MMU enabled kexec relocation
-Date: Thu, 16 Sep 2021 19:13:10 -0400
-Message-Id: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+Subject: [PATCH v17 02/15] arm64: trans_pgd: hibernate: Add
+ trans_pgd_copy_el2_vectors
+Date: Thu, 16 Sep 2021 19:13:12 -0400
+Message-Id: <20210916231325.125533-3-pasha.tatashin@soleen.com>
+In-Reply-To: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,252 +27,306 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-Changelog:
-v17:
-	- Merged with 5.15-rc1 as requested by Catalin Marinas
-	- Added Tested-by: Pingfan Liu <piliu@redhat.com>
-v16:
-	- Merged with 5.14-rc4
-v15:
-	- Changed trans_pgd_copy_el2_vectors() to use vector table that
-	  only shared by kexec and hibernate. This way sync does not have
-	  dangling branch that was recently introduced. (Reported by Marc
-	  Zyngier)
-	- Renamed is_hyp_callable() to is_hyp_nvhe() as requested by Marc
-	  Zyngier
-	- Clean-ups, comment fixes.
-	- Sync with upstream 368094df48e680fa51cedb68537408cfa64b788e
-v14:
-	- Fixed a bug in "arm64: hyp-stub: Move elx_sync into the vectors"
-	  that was noticed by Marc Zyngier
-	- Merged with upstream
-v13:
-	- Fixed a hang on ThunderX2, thank you Pingfan Liu for reporting
-	  the problem. In relocation function we need civac not ivac, we
-	  need to clean data in addition to invalidating it.
-	  Since I was using ThunderX2 machine I also measured the new
-	  performance data on this large ARM64 server. The MMU improves
-	  kexec relocation 190 times on this machine! (see below for
-	  raw data). Saves 7.5s during CentOS kexec reboot.
-v12:
-	- A major change compared to previous version. Instead of using
-	  contiguous VA range a copy of linear map is now used to perform
-	  copying of segments during relocation as it was agreed in the
-	  discussion of version 11 of this project.
-	- In addition to using linear map, I also took several ideas from
-	  James Morse to better organize the kexec relocation:
-	  	1. skip relocation function entirely if that is not needed
-		2. remove the PoC flushing function since it is not needed
-		   anymore with MMU enabled.
-v11:
-	- Fixed missing KEXEC_CORE dependency for trans_pgd.c
-	- Removed useless "if(rc) return rc" statement (thank you Tyler Hicks)
-	- Another 12 patches were accepted into maintainer's get.
-	  Re-based patches against:
-	  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
-	  Branch: for-next/kexec
-v10:
-	- Addressed a lot of comments form James Morse and from  Marc Zyngier
-	- Added review-by's
-	- Synchronized with mainline
+Users of trans_pgd may also need a copy of vector table because it is
+also may be overwritten if a linear map can be overwritten.
 
-v9:	- 9 patches from previous series landed in upstream, so now series
-	  is smaller
-	- Added two patches from James Morse to address idmap issues for machines
-	  with high physical addresses.
-	- Addressed comments from Selin Dag about compiling issues. He also tested
-	  my series and got similar performance results: ~60 ms instead of ~580 ms
-	  with an initramfs size of ~120MB.
-v8:
-	- Synced with mainline to keep series up-to-date
-v7:
-	-- Addressed comments from James Morse
-	- arm64: hibernate: pass the allocated pgdp to ttbr0
-	  Removed "Fixes" tag, and added Added Reviewed-by: James Morse
-	- arm64: hibernate: check pgd table allocation
-	  Sent out as a standalone patch so it can be sent to stable
-	  Series applies on mainline + this patch
-	- arm64: hibernate: add trans_pgd public functions
-	  Remove second allocation of tmp_pg_dir in swsusp_arch_resume
-	  Added Reviewed-by: James Morse <james.morse@arm.com>
-	- arm64: kexec: move relocation function setup and clean up
-	  Fixed typo in commit log
-	  Changed kern_reloc to phys_addr_t types.
-	  Added explanation why kern_reloc is needed.
-	  Split into four patches:
-	  arm64: kexec: make dtb_mem always enabled
-	  arm64: kexec: remove unnecessary debug prints
-	  arm64: kexec: call kexec_image_info only once
-	  arm64: kexec: move relocation function setup
-	- arm64: kexec: add expandable argument to relocation function
-	  Changed types of new arguments from unsigned long to phys_addr_t.
-	  Changed offset prefix to KEXEC_*
-	  Split into four patches:
-	  arm64: kexec: cpu_soft_restart change argument types
-	  arm64: kexec: arm64_relocate_new_kernel clean-ups
-	  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
-	  arm64: kexec: add expandable argument to relocation function
-	- arm64: kexec: configure trans_pgd page table for kexec
-	  Added invalid entries into EL2 vector table
-	  Removed KEXEC_EL2_VECTOR_TABLE_SIZE and KEXEC_EL2_VECTOR_TABLE_OFFSET
-	  Copy relocation functions and table into separate pages
-	  Changed types in kern_reloc_arg.
-	  Split into three patches:
-	  arm64: kexec: offset for relocation function
-	  arm64: kexec: kexec EL2 vectors
-	  arm64: kexec: configure trans_pgd page table for kexec
-	- arm64: kexec: enable MMU during kexec relocation
-	  Split into two patches:
-	  arm64: kexec: enable MMU during kexec relocation
-	  arm64: kexec: remove head from relocation argument
-v6:
-	- Sync with mainline tip
-	- Added Acked's from Dave Young
-v5:
-	- Addressed comments from Matthias Brugger: added review-by's, improved
-	  comments, and made cleanups to swsusp_arch_resume() in addition to
-	  create_safe_exec_page().
-	- Synced with mainline tip.
-v4:
-	- Addressed comments from James Morse.
-	- Split "check pgd table allocation" into two patches, and moved to
-	  the beginning of series  for simpler backport of the fixes.
-	  Added "Fixes:" tags to commit logs.
-	- Changed "arm64, hibernate:" to "arm64: hibernate:"
-	- Added Reviewed-by's
-	- Moved "add PUD_SECT_RDONLY" earlier in series to be with other
-	  clean-ups
-	- Added "Derived from:" to arch/arm64/mm/trans_pgd.c
-	- Removed "flags" from trans_info
-	- Changed .trans_alloc_page assumption to return zeroed page.
-	- Simplify changes to trans_pgd_map_page(), by keeping the old
-	  code.
-	- Simplify changes to trans_pgd_create_copy, by keeping the old
-	  code.
-	- Removed: "add trans_pgd_create_empty"
-	- replace init_mm with NULL, and keep using non "__" version of
-	  populate functions.
-v3:
-	- Split changes to create_safe_exec_page() into several patches for
-	  easier review as request by Mark Rutland. This is why this series
-	  has 3 more patches.
-	- Renamed trans_table to tans_pgd as agreed with Mark. The header
-	  comment in trans_pgd.c explains that trans stands for
-	  transitional page tables. Meaning they are used in transition
-	  between two kernels.
-v2:
-	- Fixed hibernate bug reported by James Morse
-	- Addressed comments from James Morse:
-	  * More incremental changes to trans_table
-	  * Removed TRANS_FORCEMAP
-	  * Added kexec reboot data for image with 380M in size.
+Move setup of EL2 vectors from hibernate to trans_pgd, so it can be
+later shared with kexec as well.
 
-Enable MMU during kexec relocation in order to improve reboot performance.
-
-If kexec functionality is used for a fast system update, with a minimal
-downtime, the relocation of kernel + initramfs takes a significant portion
-of reboot.
-
-The reason for slow relocation is because it is done without MMU, and thus
-not benefiting from D-Cache.
-
-Performance data
-----------------
-
-Cavium ThunderX2:
-Kernel Image size: 38M Iniramfs size: 46M Total relocation size: 84M
-MMU-disabled:
-relocation	7.489539915s
-MMU-enabled:
-relocation	0.03946095s
-
-Relocation performance is improved 190 times.
-
-Broadcom Stingray:
-For this experiment, the size of kernel plus initramfs is small, only 25M.
-If initramfs was larger, than the improvements would be greater, as time
-spent in relocation is proportional to the size of relocation.
-
-MMU-disabled::
-kernel shutdown	0.022131328s
-relocation	0.440510736s
-kernel startup	0.294706768s
-
-Relocation was taking: 58.2% of reboot time
-
-MMU-enabled:
-kernel shutdown	0.032066576s
-relocation	0.022158152s
-kernel startup	0.296055880s
-
-Now: Relocation takes 6.3% of reboot time
-
-Total reboot is x2.16 times faster.
-
-With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
-and is reduced from 3.9s down to 0.33s
-
-Previous approaches and discussions
------------------------------------
-v16: https://lore.kernel.org/lkml/20210802215408.804942-1-pasha.tatashin@soleen.com
-v15: https://lore.kernel.org/lkml/20210609004419.936873-1-pasha.tatashin@soleen.com
-v14: https://lore.kernel.org/lkml/20210527150526.271941-1-pasha.tatashin@soleen.com
-v13: https://lore.kernel.org/lkml/20210408040537.2703241-1-pasha.tatashin@soleen.com
-v12: https://lore.kernel.org/lkml/20210303002230.1083176-1-pasha.tatashin@soleen.com
-v11: https://lore.kernel.org/lkml/20210127172706.617195-1-pasha.tatashin@soleen.com
-v10: https://lore.kernel.org/linux-arm-kernel/20210125191923.1060122-1-pasha.tatashin@soleen.com
-v9: https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com
-v8: https://lore.kernel.org/lkml/20191204155938.2279686-1-pasha.tatashin@soleen.com
-v7: https://lore.kernel.org/lkml/20191016200034.1342308-1-pasha.tatashin@soleen.com
-v6: https://lore.kernel.org/lkml/20191004185234.31471-1-pasha.tatashin@soleen.com
-v5: https://lore.kernel.org/lkml/20190923203427.294286-1-pasha.tatashin@soleen.com
-v4: https://lore.kernel.org/lkml/20190909181221.309510-1-pasha.tatashin@soleen.com
-v3: https://lore.kernel.org/lkml/20190821183204.23576-1-pasha.tatashin@soleen.com
-v2: https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
-v1: https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
-
-Pasha Tatashin (15):
-  arm64: kernel: add helper for booted at EL2 and not VHE
-  arm64: trans_pgd: hibernate: Add trans_pgd_copy_el2_vectors
-  arm64: hibernate: abstract ttrb0 setup function
-  arm64: kexec: flush image and lists during kexec load time
-  arm64: kexec: skip relocation code for inplace kexec
-  arm64: kexec: Use dcache ops macros instead of open-coding
-  arm64: kexec: pass kimage as the only argument to relocation function
-  arm64: kexec: configure EL2 vectors for kexec
-  arm64: kexec: relocate in EL1 mode
-  arm64: kexec: use ld script for relocation function
-  arm64: kexec: install a copy of the linear-map
-  arm64: kexec: keep MMU enabled during kexec relocation
-  arm64: kexec: remove the pre-kexec PoC maintenance
-  arm64: kexec: remove cpu-reset.h
-  arm64: trans_pgd: remove trans_pgd_map_page()
-
- arch/arm64/Kconfig                   |   2 +-
- arch/arm64/include/asm/assembler.h   |  49 ++++++--
- arch/arm64/include/asm/kexec.h       |  12 ++
- arch/arm64/include/asm/mmu_context.h |  24 ++++
- arch/arm64/include/asm/sections.h    |   1 +
- arch/arm64/include/asm/trans_pgd.h   |  14 ++-
- arch/arm64/include/asm/virt.h        |   7 ++
- arch/arm64/kernel/asm-offsets.c      |  11 ++
- arch/arm64/kernel/cpu-reset.S        |   7 +-
- arch/arm64/kernel/cpu-reset.h        |  32 -----
- arch/arm64/kernel/hibernate-asm.S    |  72 -----------
- arch/arm64/kernel/hibernate.c        |  49 ++------
- arch/arm64/kernel/machine_kexec.c    | 177 ++++++++++++++-------------
- arch/arm64/kernel/relocate_kernel.S  |  70 +++++------
- arch/arm64/kernel/sdei.c             |   2 +-
- arch/arm64/kernel/vmlinux.lds.S      |  19 +++
- arch/arm64/mm/Makefile               |   1 +
- arch/arm64/mm/trans_pgd-asm.S        |  65 ++++++++++
- arch/arm64/mm/trans_pgd.c            |  84 ++++---------
- 19 files changed, 358 insertions(+), 340 deletions(-)
- delete mode 100644 arch/arm64/kernel/cpu-reset.h
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
+ arch/arm64/include/asm/trans_pgd.h |  9 +++--
+ arch/arm64/include/asm/virt.h      |  2 ++
+ arch/arm64/kernel/hibernate-asm.S  | 52 ---------------------------
+ arch/arm64/kernel/hibernate.c      | 26 ++++++--------
+ arch/arm64/mm/Makefile             |  1 +
+ arch/arm64/mm/trans_pgd-asm.S      | 58 ++++++++++++++++++++++++++++++
+ arch/arm64/mm/trans_pgd.c          | 27 ++++++++++++--
+ 7 files changed, 103 insertions(+), 72 deletions(-)
  create mode 100644 arch/arm64/mm/trans_pgd-asm.S
 
-
-base-commit: ff1ffd71d5f0612cf194f5705c671d6b64bf5f91
+diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
+index 5d08e5adf3d5..7b04d32b102c 100644
+--- a/arch/arm64/include/asm/trans_pgd.h
++++ b/arch/arm64/include/asm/trans_pgd.h
+@@ -1,8 +1,8 @@
+ /* SPDX-License-Identifier: GPL-2.0 */
+ 
+ /*
+- * Copyright (c) 2020, Microsoft Corporation.
+- * Pavel Tatashin <pasha.tatashin@soleen.com>
++ * Copyright (c) 2021, Microsoft Corporation.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
+  */
+ 
+ #ifndef _ASM_TRANS_TABLE_H
+@@ -36,4 +36,9 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+ int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
+ 			 unsigned long *t0sz, void *page);
+ 
++int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
++			       phys_addr_t *el2_vectors);
++
++extern char trans_pgd_stub_vectors[];
++
+ #endif /* _ASM_TRANS_TABLE_H */
+diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
+index a9457e96203c..3c8af033a997 100644
+--- a/arch/arm64/include/asm/virt.h
++++ b/arch/arm64/include/asm/virt.h
+@@ -67,6 +67,8 @@
+  */
+ extern u32 __boot_cpu_mode[2];
+ 
++#define ARM64_VECTOR_TABLE_LEN	SZ_2K
++
+ void __hyp_set_vectors(phys_addr_t phys_vector_base);
+ void __hyp_reset_vectors(void);
+ 
+diff --git a/arch/arm64/kernel/hibernate-asm.S b/arch/arm64/kernel/hibernate-asm.S
+index 81c0186a5e32..a30a2c3f905e 100644
+--- a/arch/arm64/kernel/hibernate-asm.S
++++ b/arch/arm64/kernel/hibernate-asm.S
+@@ -112,56 +112,4 @@ alternative_insn "dc cvau, x4",  "dc civac, x4",  ARM64_WORKAROUND_CLEAN_CACHE
+ 	hvc	#0
+ 3:	ret
+ SYM_CODE_END(swsusp_arch_suspend_exit)
+-
+-/*
+- * Restore the hyp stub.
+- * This must be done before the hibernate page is unmapped by _cpu_resume(),
+- * but happens before any of the hyp-stub's code is cleaned to PoC.
+- *
+- * x24: The physical address of __hyp_stub_vectors
+- */
+-SYM_CODE_START_LOCAL(el1_sync)
+-	msr	vbar_el2, x24
+-	eret
+-SYM_CODE_END(el1_sync)
+-
+-.macro invalid_vector	label
+-SYM_CODE_START_LOCAL(\label)
+-	b \label
+-SYM_CODE_END(\label)
+-.endm
+-
+-	invalid_vector	el2_sync_invalid
+-	invalid_vector	el2_irq_invalid
+-	invalid_vector	el2_fiq_invalid
+-	invalid_vector	el2_error_invalid
+-	invalid_vector	el1_sync_invalid
+-	invalid_vector	el1_irq_invalid
+-	invalid_vector	el1_fiq_invalid
+-	invalid_vector	el1_error_invalid
+-
+-/* el2 vectors - switch el2 here while we restore the memory image. */
+-	.align 11
+-SYM_CODE_START(hibernate_el2_vectors)
+-	ventry	el2_sync_invalid		// Synchronous EL2t
+-	ventry	el2_irq_invalid			// IRQ EL2t
+-	ventry	el2_fiq_invalid			// FIQ EL2t
+-	ventry	el2_error_invalid		// Error EL2t
+-
+-	ventry	el2_sync_invalid		// Synchronous EL2h
+-	ventry	el2_irq_invalid			// IRQ EL2h
+-	ventry	el2_fiq_invalid			// FIQ EL2h
+-	ventry	el2_error_invalid		// Error EL2h
+-
+-	ventry	el1_sync			// Synchronous 64-bit EL1
+-	ventry	el1_irq_invalid			// IRQ 64-bit EL1
+-	ventry	el1_fiq_invalid			// FIQ 64-bit EL1
+-	ventry	el1_error_invalid		// Error 64-bit EL1
+-
+-	ventry	el1_sync_invalid		// Synchronous 32-bit EL1
+-	ventry	el1_irq_invalid			// IRQ 32-bit EL1
+-	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
+-	ventry	el1_error_invalid		// Error 32-bit EL1
+-SYM_CODE_END(hibernate_el2_vectors)
+-
+ .popsection
+diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
+index 4c9533f4c0c4..b96ef9060e4c 100644
+--- a/arch/arm64/kernel/hibernate.c
++++ b/arch/arm64/kernel/hibernate.c
+@@ -51,9 +51,6 @@ extern int in_suspend;
+ /* Do we need to reset el2? */
+ #define el2_reset_needed() (is_hyp_nvhe())
+ 
+-/* temporary el2 vectors in the __hibernate_exit_text section. */
+-extern char hibernate_el2_vectors[];
+-
+ /* hyp-stub vectors, used to restore el2 during resume from hibernate. */
+ extern char __hyp_stub_vectors[];
+ 
+@@ -434,6 +431,7 @@ int swsusp_arch_resume(void)
+ 	void *zero_page;
+ 	size_t exit_size;
+ 	pgd_t *tmp_pg_dir;
++	phys_addr_t el2_vectors;
+ 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
+ 					  void *, phys_addr_t, phys_addr_t);
+ 	struct trans_pgd_info trans_info = {
+@@ -461,6 +459,14 @@ int swsusp_arch_resume(void)
+ 		return -ENOMEM;
+ 	}
+ 
++	if (el2_reset_needed()) {
++		rc = trans_pgd_copy_el2_vectors(&trans_info, &el2_vectors);
++		if (rc) {
++			pr_err("Failed to setup el2 vectors\n");
++			return rc;
++		}
++	}
++
+ 	exit_size = __hibernate_exit_text_end - __hibernate_exit_text_start;
+ 	/*
+ 	 * Copy swsusp_arch_suspend_exit() to a safe page. This will generate
+@@ -473,26 +479,14 @@ int swsusp_arch_resume(void)
+ 		return rc;
+ 	}
+ 
+-	/*
+-	 * The hibernate exit text contains a set of el2 vectors, that will
+-	 * be executed at el2 with the mmu off in order to reload hyp-stub.
+-	 */
+-	dcache_clean_inval_poc((unsigned long)hibernate_exit,
+-			    (unsigned long)hibernate_exit + exit_size);
+-
+ 	/*
+ 	 * KASLR will cause the el2 vectors to be in a different location in
+ 	 * the resumed kernel. Load hibernate's temporary copy into el2.
+ 	 *
+ 	 * We can skip this step if we booted at EL1, or are running with VHE.
+ 	 */
+-	if (el2_reset_needed()) {
+-		phys_addr_t el2_vectors = (phys_addr_t)hibernate_exit;
+-		el2_vectors += hibernate_el2_vectors -
+-			       __hibernate_exit_text_start;     /* offset */
+-
++	if (el2_reset_needed())
+ 		__hyp_set_vectors(el2_vectors);
+-	}
+ 
+ 	hibernate_exit(virt_to_phys(tmp_pg_dir), resume_hdr.ttbr1_el1,
+ 		       resume_hdr.reenter_kernel, restore_pblist,
+diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
+index f188c9092696..ff1e800ba7a1 100644
+--- a/arch/arm64/mm/Makefile
++++ b/arch/arm64/mm/Makefile
+@@ -7,6 +7,7 @@ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
+ obj-$(CONFIG_PTDUMP_CORE)	+= ptdump.o
+ obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
+ obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd.o
++obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd-asm.o
+ obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
+ obj-$(CONFIG_ARM64_MTE)		+= mteswap.o
+ KASAN_SANITIZE_physaddr.o	+= n
+diff --git a/arch/arm64/mm/trans_pgd-asm.S b/arch/arm64/mm/trans_pgd-asm.S
+new file mode 100644
+index 000000000000..8c4bffe3089d
+--- /dev/null
++++ b/arch/arm64/mm/trans_pgd-asm.S
+@@ -0,0 +1,58 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++
++/*
++ * Copyright (c) 2021, Microsoft Corporation.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
++ */
++
++#include <linux/linkage.h>
++#include <asm/assembler.h>
++#include <asm/kvm_asm.h>
++
++.macro invalid_vector	label
++SYM_CODE_START_LOCAL(\label)
++	.align 7
++	b	\label
++SYM_CODE_END(\label)
++.endm
++
++.macro el1_sync_vector
++SYM_CODE_START_LOCAL(el1_sync)
++	.align 7
++	cmp	x0, #HVC_SET_VECTORS	/* Called from hibernate */
++	b.ne	1f
++	msr	vbar_el2, x1
++	mov	x0, xzr
++	eret
++1:	/* Unexpected argument, set an error */
++	mov_q	x0, HVC_STUB_ERR
++	eret
++SYM_CODE_END(el1_sync)
++.endm
++
++SYM_CODE_START(trans_pgd_stub_vectors)
++	invalid_vector	hyp_stub_el2t_sync_invalid	// Synchronous EL2t
++	invalid_vector	hyp_stub_el2t_irq_invalid	// IRQ EL2t
++	invalid_vector	hyp_stub_el2t_fiq_invalid	// FIQ EL2t
++	invalid_vector	hyp_stub_el2t_error_invalid	// Error EL2t
++
++	invalid_vector	hyp_stub_el2h_sync_invalid	// Synchronous EL2h
++	invalid_vector	hyp_stub_el2h_irq_invalid	// IRQ EL2h
++	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
++	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
++
++	el1_sync_vector					// Synchronous 64-bit EL1
++	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
++	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
++	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
++
++	invalid_vector	hyp_stub_32b_el1_sync_invalid	// Synchronous 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_irq_invalid	// IRQ 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_fiq_invalid	// FIQ 32-bit EL1
++	invalid_vector	hyp_stub_32b_el1_error_invalid	// Error 32-bit EL1
++	.align 11
++SYM_INNER_LABEL(__trans_pgd_stub_vectors_end, SYM_L_LOCAL)
++SYM_CODE_END(trans_pgd_stub_vectors)
++
++# Check the trans_pgd_stub_vectors didn't overflow
++.org . - (__trans_pgd_stub_vectors_end - trans_pgd_stub_vectors) + SZ_2K
+diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+index 527f0a39c3da..26bd8f2d95af 100644
+--- a/arch/arm64/mm/trans_pgd.c
++++ b/arch/arm64/mm/trans_pgd.c
+@@ -5,8 +5,8 @@
+  *
+  * This file derived from: arch/arm64/kernel/hibernate.c
+  *
+- * Copyright (c) 2020, Microsoft Corporation.
+- * Pavel Tatashin <pasha.tatashin@soleen.com>
++ * Copyright (c) 2021, Microsoft Corporation.
++ * Pasha Tatashin <pasha.tatashin@soleen.com>
+  *
+  */
+ 
+@@ -322,3 +322,26 @@ int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
+ 
+ 	return 0;
+ }
++
++/*
++ * Create a copy of the vector table so we can call HVC_SET_VECTORS or
++ * HVC_SOFT_RESTART from contexts where the table may be overwritten.
++ */
++int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
++			       phys_addr_t *el2_vectors)
++{
++	void *hyp_stub = trans_alloc(info);
++
++	if (!hyp_stub)
++		return -ENOMEM;
++	*el2_vectors = virt_to_phys(hyp_stub);
++	memcpy(hyp_stub, &trans_pgd_stub_vectors, ARM64_VECTOR_TABLE_LEN);
++	caches_clean_inval_pou((unsigned long)hyp_stub,
++			       (unsigned long)hyp_stub +
++			       ARM64_VECTOR_TABLE_LEN);
++	dcache_clean_inval_poc((unsigned long)hyp_stub,
++			       (unsigned long)hyp_stub +
++			       ARM64_VECTOR_TABLE_LEN);
++
++	return 0;
++}
 -- 
 2.25.1
 
