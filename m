@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+Received: from mail-qv1-xf31.google.com ([2607:f8b0:4864:20::f31])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mR0Zh-00CaH2-7D
- for kexec@lists.infradead.org; Thu, 16 Sep 2021 23:13:51 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id u4so7192062qta.2
- for <kexec@lists.infradead.org>; Thu, 16 Sep 2021 16:13:49 -0700 (PDT)
+ id 1mR0Zj-00CaI5-9z
+ for kexec@lists.infradead.org; Thu, 16 Sep 2021 23:13:53 +0000
+Received: by mail-qv1-xf31.google.com with SMTP id u4so5306903qvb.6
+ for <kexec@lists.infradead.org>; Thu, 16 Sep 2021 16:13:50 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v17 14/15] arm64: kexec: remove cpu-reset.h
-Date: Thu, 16 Sep 2021 19:13:24 -0400
-Message-Id: <20210916231325.125533-15-pasha.tatashin@soleen.com>
+Subject: [PATCH v17 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
+Date: Thu, 16 Sep 2021 19:13:25 -0400
+Message-Id: <20210916231325.125533-16-pasha.tatashin@soleen.com>
 In-Reply-To: <20210916231325.125533-1-pasha.tatashin@soleen.com>
 References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -26,130 +26,109 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
 
-This header contains only cpu_soft_restart() which is never used directly
-anymore. So, remove this header, and rename the helper to be
-cpu_soft_restart().
+The intend of trans_pgd_map_page() was to map contiguous range of VA
+memory to the memory that is getting relocated during kexec. However,
+since we are now using linear map instead of contiguous range this
+function is not needed
 
-Suggested-by: James Morse <james.morse@arm.com>
+Suggested-by: Pingfan Liu <kernelfans@gmail.com>
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 ---
- arch/arm64/include/asm/kexec.h    |  6 ++++++
- arch/arm64/kernel/cpu-reset.S     |  7 +++----
- arch/arm64/kernel/cpu-reset.h     | 30 ------------------------------
- arch/arm64/kernel/machine_kexec.c |  6 ++----
- 4 files changed, 11 insertions(+), 38 deletions(-)
- delete mode 100644 arch/arm64/kernel/cpu-reset.h
+ arch/arm64/include/asm/trans_pgd.h |  5 +--
+ arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
+ 2 files changed, 1 insertion(+), 61 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index dca6dedc3b25..9839bfc163d7 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -90,6 +90,12 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
- 
-+#if defined(CONFIG_KEXEC_CORE)
-+void cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
-+		      unsigned long arg0, unsigned long arg1,
-+		      unsigned long arg2);
-+#endif
-+
- #define ARCH_HAS_KIMAGE_ARCH
- 
- struct kimage_arch {
-diff --git a/arch/arm64/kernel/cpu-reset.S b/arch/arm64/kernel/cpu-reset.S
-index d47ff63a5b66..48a8af97faa9 100644
---- a/arch/arm64/kernel/cpu-reset.S
-+++ b/arch/arm64/kernel/cpu-reset.S
-@@ -16,8 +16,7 @@
- .pushsection    .idmap.text, "awx"
- 
+diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
+index 7b04d32b102c..033d400a4ea4 100644
+--- a/arch/arm64/include/asm/trans_pgd.h
++++ b/arch/arm64/include/asm/trans_pgd.h
+@@ -15,7 +15,7 @@
  /*
-- * __cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2) - Helper for
-- * cpu_soft_restart.
-+ * cpu_soft_restart(el2_switch, entry, arg0, arg1, arg2)
+  * trans_alloc_page
+  *	- Allocator that should return exactly one zeroed page, if this
+- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
++ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
+  *	  return -ENOMEM error.
   *
-  * @el2_switch: Flag to indicate a switch to EL2 is needed.
-  * @entry: Location to jump to for soft reset.
-@@ -29,7 +28,7 @@
-  * branch to what would be the reset vector. It must be executed with the
-  * flat identity mapping.
-  */
--SYM_CODE_START(__cpu_soft_restart)
-+SYM_CODE_START(cpu_soft_restart)
- 	mov_q	x12, INIT_SCTLR_EL1_MMU_OFF
- 	pre_disable_mmu_workaround
- 	/*
-@@ -48,6 +47,6 @@ SYM_CODE_START(__cpu_soft_restart)
- 	mov	x1, x3				// arg1
- 	mov	x2, x4				// arg2
- 	br	x8
--SYM_CODE_END(__cpu_soft_restart)
-+SYM_CODE_END(cpu_soft_restart)
+  * trans_alloc_arg
+@@ -30,9 +30,6 @@ struct trans_pgd_info {
+ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
+ 			  unsigned long start, unsigned long end);
  
- .popsection
-diff --git a/arch/arm64/kernel/cpu-reset.h b/arch/arm64/kernel/cpu-reset.h
-deleted file mode 100644
-index 296abbac7192..000000000000
---- a/arch/arm64/kernel/cpu-reset.h
-+++ /dev/null
-@@ -1,30 +0,0 @@
--/* SPDX-License-Identifier: GPL-2.0-only */
+-int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+-		       void *page, unsigned long dst_addr, pgprot_t pgprot);
+-
+ int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
+ 			 unsigned long *t0sz, void *page);
+ 
+diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
+index 26bd8f2d95af..d7da8ca40d2e 100644
+--- a/arch/arm64/mm/trans_pgd.c
++++ b/arch/arm64/mm/trans_pgd.c
+@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
+ 	return rc;
+ }
+ 
 -/*
-- * CPU reset routines
+- * Add map entry to trans_pgd for a base-size page at PTE level.
+- * info:	contains allocator and its argument
+- * trans_pgd:	page table in which new map is added.
+- * page:	page to be mapped.
+- * dst_addr:	new VA address for the page
+- * pgprot:	protection for the page.
 - *
-- * Copyright (C) 2015 Huawei Futurewei Technologies.
+- * Returns 0 on success, and -ENOMEM on failure.
 - */
--
--#ifndef _ARM64_CPU_RESET_H
--#define _ARM64_CPU_RESET_H
--
--#include <asm/virt.h>
--
--void __cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
--	unsigned long arg0, unsigned long arg1, unsigned long arg2);
--
--static inline void __noreturn __nocfi cpu_soft_restart(unsigned long entry,
--						       unsigned long arg0,
--						       unsigned long arg1,
--						       unsigned long arg2)
+-int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
+-		       void *page, unsigned long dst_addr, pgprot_t pgprot)
 -{
--	typeof(__cpu_soft_restart) *restart;
+-	pgd_t *pgdp;
+-	p4d_t *p4dp;
+-	pud_t *pudp;
+-	pmd_t *pmdp;
+-	pte_t *ptep;
 -
--	restart = (void *)__pa_symbol(function_nocfi(__cpu_soft_restart));
+-	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
+-	if (pgd_none(READ_ONCE(*pgdp))) {
+-		p4dp = trans_alloc(info);
+-		if (!pgdp)
+-			return -ENOMEM;
+-		pgd_populate(NULL, pgdp, p4dp);
+-	}
 -
--	cpu_install_idmap();
--	restart(0, entry, arg0, arg1, arg2);
--	unreachable();
+-	p4dp = p4d_offset(pgdp, dst_addr);
+-	if (p4d_none(READ_ONCE(*p4dp))) {
+-		pudp = trans_alloc(info);
+-		if (!pudp)
+-			return -ENOMEM;
+-		p4d_populate(NULL, p4dp, pudp);
+-	}
+-
+-	pudp = pud_offset(p4dp, dst_addr);
+-	if (pud_none(READ_ONCE(*pudp))) {
+-		pmdp = trans_alloc(info);
+-		if (!pmdp)
+-			return -ENOMEM;
+-		pud_populate(NULL, pudp, pmdp);
+-	}
+-
+-	pmdp = pmd_offset(pudp, dst_addr);
+-	if (pmd_none(READ_ONCE(*pmdp))) {
+-		ptep = trans_alloc(info);
+-		if (!ptep)
+-			return -ENOMEM;
+-		pmd_populate_kernel(NULL, pmdp, ptep);
+-	}
+-
+-	ptep = pte_offset_kernel(pmdp, dst_addr);
+-	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
+-
+-	return 0;
 -}
 -
--#endif
-diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
-index b1856f34cc51..6f1da3fd5320 100644
---- a/arch/arm64/kernel/machine_kexec.c
-+++ b/arch/arm64/kernel/machine_kexec.c
-@@ -24,8 +24,6 @@
- #include <asm/sections.h>
- #include <asm/trans_pgd.h>
- 
--#include "cpu-reset.h"
--
- /**
-  * kexec_image_info - For debugging output.
-  */
-@@ -201,10 +199,10 @@ void machine_kexec(struct kimage *kimage)
- 	 * In kexec_file case, the kernel starts directly without purgatory.
- 	 */
- 	if (kimage->head & IND_DONE) {
--		typeof(__cpu_soft_restart) *restart;
-+		typeof(cpu_soft_restart) *restart;
- 
- 		cpu_install_idmap();
--		restart = (void *)__pa_symbol(function_nocfi(__cpu_soft_restart));
-+		restart = (void *)__pa_symbol(function_nocfi(cpu_soft_restart));
- 		restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
- 			0, 0);
- 	} else {
+ /*
+  * The page we want to idmap may be outside the range covered by VA_BITS that
+  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
 -- 
 2.25.1
 
