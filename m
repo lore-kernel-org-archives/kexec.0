@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 16 Sep 2021 08:35:16 +0100
-From: Christoph Hellwig <hch@infradead.org>
-Subject: Re: [PATCH v3 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
-Message-ID: <YULztMRLJ55YLVU9@infradead.org>
-References: <cover.1631141919.git.thomas.lendacky@amd.com>
- <9d4fc3f8ea7b325aaa1879beab1286876f45d450.1631141919.git.thomas.lendacky@amd.com>
- <YUCOTIPPsJJpLO/d@zn.tnic> <87lf3yk7g4.fsf@mpe.ellerman.id.au>
- <YUHGDbtiGrDz5+NS@zn.tnic>
- <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
+Date: Thu, 16 Sep 2021 10:37:40 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v16 00/15] arm64: MMU enabled kexec relocation
+Message-ID: <YUMQZGLQl+82fL6G@arm.com>
+References: <20210802215408.804942-1-pasha.tatashin@soleen.com>
+ <20210824180555.GD623@arm.com>
+ <CA+CK2bCakwsqS1RqXPJr+ewe=gsO98cOxhXye8-AcRLwtqhZ+g@mail.gmail.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <f8388f18-5e90-5d0f-d681-0b17f8307dd4@csgroup.eu>
+In-Reply-To: <CA+CK2bCakwsqS1RqXPJr+ewe=gsO98cOxhXye8-AcRLwtqhZ+g@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,18 +21,58 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christophe Leroy <christophe.leroy@csgroup.eu>
-Cc: Borislav Petkov <bp@alien8.de>, Michael Ellerman <mpe@ellerman.id.au>, Sathyanarayanan Kuppuswamy <sathyanarayanan.kuppuswamy@linux.intel.com>, linux-efi@vger.kernel.org, Brijesh Singh <brijesh.singh@amd.com>, kvm@vger.kernel.org, dri-devel@lists.freedesktop.org, platform-driver-x86@vger.kernel.org, Paul Mackerras <paulus@samba.org>, linux-s390@vger.kernel.org, Andi Kleen <ak@linux.intel.com>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, amd-gfx@lists.freedesktop.org, Christoph Hellwig <hch@infradead.org>, linux-graphics-maintainer@vmware.com, Tom Lendacky <thomas.lendacky@amd.com>, Tianyu Lan <Tianyu.Lan@microsoft.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org, linux-fsdevel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+To: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
-On Wed, Sep 15, 2021 at 07:18:34PM +0200, Christophe Leroy wrote:
-> Could you please provide more explicit explanation why inlining such an
-> helper is considered as bad practice and messy ?
+On Thu, Aug 26, 2021 at 11:03:21AM -0400, Pavel Tatashin wrote:
+> On Tue, Aug 24, 2021 at 2:06 PM Catalin Marinas <catalin.marinas@arm.com> wrote:
+> > > Enable MMU during kexec relocation in order to improve reboot performance.
+> > >
+> > > If kexec functionality is used for a fast system update, with a minimal
+> > > downtime, the relocation of kernel + initramfs takes a significant portion
+> > > of reboot.
+> > >
+> > > The reason for slow relocation is because it is done without MMU, and thus
+> > > not benefiting from D-Cache.
+> >
+> > The performance improvements are indeed significant on some platforms
+> > (going from 7s to ~40ms), so I think the merging the series is worth it.
+> > Some general questions so I better understand the impact:
+> >
+> > - Is the kdump path affected in any way? IIUC that doesn't need any
+> >   relocation but we should also make sure we don't create the additional
+> >   page table unnecessarily (should keep as much memory intact as
+> >   possible). Maybe that's already handled.
+> 
+> Because kdump does not need relocation, we do not reserve pages for
+> the page table in the kdump reboot case. In fact, with this series,
+> kdump reboot becomes more straightforward as we skip the relocation
+> function entirely, and jump directly into the crash kernel (or
+> purgatory if kexec tools loaded them).
+> 
+> > - What happens if trans_pgd_create_copy() fails to allocate memory. Does
+> >   it fall back to an MMU-off relocation?
+> 
+> In case we are so low on memory that trans_pgd_create_copy() fails to
+> allocate the linear map that uses the large pages (the size of the
+> page table is tiny) the kexec fails during kexec load time (not during
+> reboot time), as out of memory. The MMU enabled kexec reboot is always
+> on, and we should not have several ways to do kexec reboot as it makes
+> the kexec reboot unpredictable in terms of performance, and also prone
+> to bugs by having a common MMU enabled path and less common path when
+> we are low on memory which is never tested.
 
-Because now we get architectures to all subly differ.  Look at the mess
-for ioremap and the ioremap* variant.
+I think this makes sense, especially since it will fail during the kexec
+load time rather than reboot.
 
-The only good reason to allow for inlines if if they are used in a hot
-path.  Which cc_platform_has is not, especially not on powerpc.
+I'm ok in principle with this series but I'd need to convince James
+Morse to have a another look since he followed it more closely than me.
+Could you please rebase it against 5.15-rc1?
+
+Thanks.
+
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
