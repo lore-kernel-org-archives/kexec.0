@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf31.google.com ([2607:f8b0:4864:20::f31])
+Received: from mail-eopbgr1410059.outbound.protection.outlook.com
+ ([40.107.141.59] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mR0Zj-00CaI5-9z
- for kexec@lists.infradead.org; Thu, 16 Sep 2021 23:13:53 +0000
-Received: by mail-qv1-xf31.google.com with SMTP id u4so5306903qvb.6
- for <kexec@lists.infradead.org>; Thu, 16 Sep 2021 16:13:50 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v17 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-Date: Thu, 16 Sep 2021 19:13:25 -0400
-Message-Id: <20210916231325.125533-16-pasha.tatashin@soleen.com>
-In-Reply-To: <20210916231325.125533-1-pasha.tatashin@soleen.com>
-References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+ id 1mR2mP-00CtXu-Rw
+ for kexec@lists.infradead.org; Fri, 17 Sep 2021 01:35:08 +0000
+From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [PATCH 00/11] makedumpfile: Add zstd support for makedumpfile
+Date: Fri, 17 Sep 2021 01:34:57 +0000
+Message-ID: <TYYPR01MB67774235656CC28211067CF6DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <20210910103318.292017-1-ltao@redhat.com>
+ <TYYPR01MB677786B29FF77911EE5E06F2DDDA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <YUBeQta7k03HU6qL@localhost.localdomain>
+In-Reply-To: <YUBeQta7k03HU6qL@localhost.localdomain>
+Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,120 +23,112 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
+To: Tao Liu <ltao@redhat.com>
+Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-The intend of trans_pgd_map_page() was to map contiguous range of VA
-memory to the memory that is getting relocated during kexec. However,
-since we are now using linear map instead of contiguous range this
-function is not needed
-
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
----
- arch/arm64/include/asm/trans_pgd.h |  5 +--
- arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
- 2 files changed, 1 insertion(+), 61 deletions(-)
-
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 7b04d32b102c..033d400a4ea4 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -15,7 +15,7 @@
- /*
-  * trans_alloc_page
-  *	- Allocator that should return exactly one zeroed page, if this
-- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-+ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
-  *	  return -ENOMEM error.
-  *
-  * trans_alloc_arg
-@@ -30,9 +30,6 @@ struct trans_pgd_info {
- int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
- 			  unsigned long start, unsigned long end);
- 
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot);
--
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 26bd8f2d95af..d7da8ca40d2e 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
- 	return rc;
- }
- 
--/*
-- * Add map entry to trans_pgd for a base-size page at PTE level.
-- * info:	contains allocator and its argument
-- * trans_pgd:	page table in which new map is added.
-- * page:	page to be mapped.
-- * dst_addr:	new VA address for the page
-- * pgprot:	protection for the page.
-- *
-- * Returns 0 on success, and -ENOMEM on failure.
-- */
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		p4dp = trans_alloc(info);
--		if (!pgdp)
--			return -ENOMEM;
--		pgd_populate(NULL, pgdp, p4dp);
--	}
--
--	p4dp = p4d_offset(pgdp, dst_addr);
--	if (p4d_none(READ_ONCE(*p4dp))) {
--		pudp = trans_alloc(info);
--		if (!pudp)
--			return -ENOMEM;
--		p4d_populate(NULL, p4dp, pudp);
--	}
--
--	pudp = pud_offset(p4dp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = trans_alloc(info);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(NULL, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = trans_alloc(info);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(NULL, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
--
--	return 0;
--}
--
- /*
-  * The page we want to idmap may be outside the range covered by VA_BITS that
-  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
--- 
-2.25.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgVGFvIExpdSwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSGkgS2F6dSwNCj4g
+DQo+IFRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaHNldCENCj4gDQo+IE9uIFR1ZSwgU2Vw
+IDE0LCAyMDIxIGF0IDA3OjA0OjI0QU0gKzAwMDAsIEhBR0lPIEtBWlVISVRPKOiQqeWwviDkuIDk
+u4EpIHdyb3RlOg0KPiA+IEhpIFRhbyBMaXUsDQo+ID4NCj4gPiBUaGFua3MgZm9yIHRoZSBwYXRj
+aHNldCENCj4gPg0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBUaGlzIHBh
+dGNoIHNldCBhZGRzIFpTVEQgY29tcHJlc3Npb24gc3VwcG9ydCB0byBtYWtlZHVtcGZpbGUuIFdp
+dGggWlNURCBjb21wcmVzc2lvbg0KPiA+ID4gc3VwcG9ydCwgdGhlIHZtY29yZSBkdW1wIHNpemUg
+YW5kIHRpbWUgY29uc3VtcHRpb24gY2FuIGhhdmUgYSBiZXR0ZXIgYmFsYW5jZSB0aGFuDQo+ID4g
+PiB6bGliL2x6by9zbmFwcHkuDQo+ID4gPg0KPiA+ID4gSG93IHRvIGJ1aWxkOg0KPiA+ID4NCj4g
+PiA+ICAgQnVpbGQgdXNpbmcgbWFrZToNCj4gPiA+ICAgICAkIG1ha2UgVVNFWlNURD1vbg0KPiA+
+ID4NCj4gPiA+IFBlcmZvcm1hbmNlIENvbXBhcmlzb246DQo+ID4gPg0KPiA+ID4gICBIb3cgdG8g
+bWVhc3VyZQ0KPiA+ID4NCj4gPiA+ICAgICBJIHRvb2sgYSB4ODZfNjQgbWFjaGluZSB3aGljaCBo
+YWQgNFQgbWVtb3J5LCBhbmQgdGhlIGNvbXByZXNzaW9uIGxldmVsDQo+ID4gPiAgICAgcmFuZ2Ug
+ZnJvbSAoLTMgdG8gNCkgZm9yIFpTVEQsIGFzIHdlbGwgYXMgemxpYi9sem8vc25hcHB5IGNvbXBy
+ZXNzaW9uLg0KPiA+ID4gICAgIEFsbCB0ZXN0aW5nIHdhcyBkb25lIGJ5IG1ha2VkdW1wZmlsZSBz
+aW5nbGUgdGhyZWFkIG1vZGUuDQo+ID4gPg0KPiA+ID4gICAgIEFzIGZvciBjb21wcmVzc2lvbiBw
+ZXJmb3JtYW5jZSB0ZXN0aW5nLCBpbiBvcmRlciB0byBhdm9pZCB0aGUgcGVyZm9ybWFuY2UNCj4g
+PiA+ICAgICBib3R0bGUgbmVjayBvZiBkaXNrIEkvTywgSSB1c2VkIHRoZSBmb2xsb3dpbmcgbWFr
+ZWR1bXBmaWxlIGNtZCwgd2hpY2ggdG9vaw0KPiA+ID4gICAgIGx6byBjb21wcmVzc2lvbiBhcyBh
+biBleGFtcGxlLiAiLS1kcnktcnVuIiB3aWxsIG5vdCB3cml0ZSBhbnkgZGF0YSB0byBkaXNrLA0K
+PiA+ID4gICAgICItLXNob3ctc3RhdCIgd2lsbCBvdXRwdXQgdGhlIHZtY29yZSBzaXplIGFmdGVy
+IGNvbXByZXNzaW9uLCBhbmQgdGhlIHRpbWUNCj4gPiA+ICAgICBjb25zdW1wdGlvbiBjYW4gYmUg
+Y29sbGVjdGVkIGZyb20gdGhlIG91dHB1dCBsb2dzLg0KPiA+ID4NCj4gPiA+ICAgICAkIG1ha2Vk
+dW1wZmlsZSAtZCAwIC1sIC9wcm9jL2tjb3JlIHZtY29yZSAtLWRyeS1ydW4gLS1zaG93LXN0YXQN
+Cj4gPiA+DQo+ID4gPg0KPiA+ID4gICAgIEFzIGZvciBkZWNvbXByZXNzaW9uIHBlcmZvcm1hbmNl
+IHRlc3RpbmcsIEkgb25seSB0ZXN0ZWQgdGhlICgtZCAzMSkgY2FzZSwNCj4gPiA+ICAgICBiZWNh
+dXNlIHRoZSB2bWNvcmUgc2l6ZSBvZiAoLWQgMCkgY2FzZSBpcyB0b28gYmlnIHRvIGZpdCBpbiB0
+aGUgZGlzaywgaW4NCj4gPiA+ICAgICBhZGR0aW9uLCB0byByZWFkIGEgb3ZlcnNpemVkIGZpbGUg
+ZnJvbSBkaXNrIHdpbGwgZW5jb3VudGVyIHRoZSBkaXNrIEkvTw0KPiA+ID4gICAgIGJvdHRsZSBu
+ZWNrLg0KPiA+ID4NCj4gPiA+ICAgICBJIHRyaWdnZXJlZCBhIGtlcm5lbCBjcmFzaCBhbmQgY29s
+bGVjdGVkIGEgdm1jb3JlLiBUaGVuIEkgY29udmVydGVkIHRoZQ0KPiA+ID4gICAgIHZtY29yZSBp
+bnRvIHNwZWNpZmljIGNvbXByZXNzaW9uIGZvcm1hdCB1c2luZyB0aGUgZm9sbG93aW5nIG1ha2Vk
+dW1wZmlsZQ0KPiA+ID4gICAgIGNtZCwgd2hpY2ggd291bGQgZ2V0IGEgbHpvIGZvcm1hdCB2bWNv
+cmUgYXMgYW4gZXhhbXBsZToNCj4gPiA+DQo+ID4gPiAgICAgJCBtYWtlZHVtcGZpbGUgLWwgdm1j
+b3JlIHZtY29yZS5sem8NCj4gPiA+DQo+ID4gPiAgICAgQWZ0ZXIgYWxsIHZtY29yZXMgd2VyZSBy
+ZWFkeSwgSSB1c2VkIHRoZSBmb2xsb3dpbmcgY21kIHRvIHBlcmZvcm0gdGhlDQo+ID4gPiAgICAg
+ZGVjb21wcmVzc2lvbiwgdGhlIHRpbWUgY29uc3VtcHRpb24gY2FuIGJlIGNvbGxlY3RlZCBmcm9t
+IHRoZSBsb2dzLg0KPiA+ID4NCj4gPiA+ICAgICAkIG1ha2VkdW1wZmlsZSAtRiB2bWNvcmUubHpv
+IC0tZHJ5LXJ1biAtLXNob3ctc3RhdA0KPiA+ID4NCj4gPiA+DQo+ID4gPiAgIFJlc3VsdCBjaGFy
+dHMNCj4gPiA+DQo+ID4gPiAgICAgRm9yIGNvbXByZXNzaW9uOg0KPiA+ID4NCj4gPiA+ICAgICAg
+ICAgICAgIG1ha2VkdW1wZmlsZSAtZDMxCQkJfCAgbWFrZWR1bXBmaWxlIC1kMA0KPiA+ID4gICAg
+ICAgICAgICAgQ29tcHJlc3Npb24gdGltZQl2bWNvcmUgc2l6ZQl8ICBDb21wcmVzc2lvbiB0aW1l
+ICB2bWNvcmUgc2l6ZQ0KPiA+ID4gICAgIHpzdGQtMyAgMzI1LjUxNjQ0NgkgICAgICAgIDUyODUx
+Nzk1OTUJfCAgODIwNS40NTIyNDgJICAgICA1MTcxNTQzMDIwNA0KPiA+ID4gICAgIHpzdGQtMiAg
+MzMyLjA2OTQzMgkgICAgICAgIDUzMTk3MjY2MDQJfCAgODA1Ny4zODEzNzEJICAgICA1MTczMjA2
+Mjc5Mw0KPiA+ID4gICAgIHpzdGQtMSAgMzA5Ljk0Mjc3MwkgICAgICAgIDU3MzA1MTYyNzQJfCAg
+ODEzOC4wNjA3ODYJICAgICA1MjEzNjE5MTU3MQ0KPiA+ID4gICAgIHpzdGQwICAgNDM5Ljc3MzA3
+NgkgICAgICAgIDQ2NzM4NTk2NjEJfCAgODg3My4wNTk5NjMJICAgICA1MDk5MzY2OTY1Nw0KPiA+
+ID4gICAgIHpzdGQxICAgNDA2LjY4MDM2CSAgICAgICAgNDcwMDk1OTUyMQl8ICA4MjU5LjQxNzEz
+MgkgICAgIDUxMDM2OTAwMDU1DQo+ID4gPiAgICAgenN0ZDIgICAzOTcuMTk1NjQzCSAgICAgICAg
+NDY5OTI2MzYwOAl8ICA4MjMwLjMwODI5MQkgICAgIDUxMDMwNDEwOTQyDQo+ID4gPiAgICAgenN0
+ZDMgICA0MzYuNDkxNjMyCSAgICAgICAgNDY3MzMwNjM5OAl8ICA4ODAzLjk3MDEwMwkgICAgIDUx
+MDQzMzkzNjM3DQo+ID4gPiAgICAgenN0ZDQgICA1NDMuMzYzOTI4CSAgICAgICAgNDY2ODQxOTMw
+NAl8ICA4OTkxLjI0MDI0NAkgICAgIDUxMDU4MDg4NTE0DQo+ID4gPiAgICAgemxpYiAgICA1NjEu
+MjE3MzgxCSAgICAgICAgODUxNDgwMzE5NSAgICAgIHwgMTQzODEuNzU1NjExCSAgICAgNzgxOTky
+ODM4OTMNCj4gPiA+ICAgICBsem8JICAgIDI0OC4xNzU5NTMJICAgICAgIDE2Njk2NDExODc5CXwg
+IDYwNTcuNTI4NzgxCSAgICAgOTAwMjA4OTU3NDENCj4gPiA+ICAgICBzbmFwcHkgIDIzMS44Njgz
+MTIJICAgICAgIDExNzgyMjM2Njc0CXwgIDUyOTAuOTE5ODk0CSAgICAyNDU2NjEyODgzNTUNCj4g
+PiA+DQo+ID4gPiAgICAgRm9yIGRlY29tcHJlc3Npb246DQo+ID4gPg0KPiA+ID4gICAgICAgICAg
+ICAgbWFrZWR1bXBmaWxlIC1kMzENCj4gPiA+ICAgICAgICAgICAgIGRlY29tcHJlc3MgdGltZQkg
+ICB2bWNvcmUgc2l6ZQ0KPiA+ID4gICAgIHpzdGQtMwk0NzcuNTQzMzk2CSAgICAgICA1Mjg5Mzcz
+NDQ4DQo+ID4gPiAgICAgenN0ZC0yCTQ3OC4wMzQ1MzQJICAgICAgIDUzMjc0NTQxMjMNCj4gPiA+
+ICAgICB6c3RkLTEJNDU5LjA2NjgwNwkgICAgICAgNTc0ODAzNzkzMQ0KPiA+ID4gICAgIHpzdGQw
+CTU2MS42ODc1MjUJICAgICAgIDQ2ODAwMDkwMTMNCj4gPiA+ICAgICB6c3RkMQk1NDcuMjQ4OTE3
+CSAgICAgICA0NzA2MzU4NTQ3DQo+ID4gPiAgICAgenN0ZDIJNTQ0LjIxOTc1OAkgICAgICAgNDcw
+NDc4MDcxOQ0KPiA+ID4gICAgIHpzdGQzCTU1NS43MjYzNDMJICAgICAgIDQ2ODAwMDkwMTMNCj4g
+PiA+ICAgICB6c3RkNAk1NTguMDMxNzIxCSAgICAgICA0Njc1NTQ1OTMzDQo+ID4gPiAgICAgemxp
+Ygk2MzAuOTY1NDI2CSAgICAgICA4NTU1Mzc2MjI5DQo+ID4gPiAgICAgbHpvCSAgICAJNDI3LjI5
+MjEwNwkgICAgICAxNjg0OTQ1NzY0OQ0KPiA+ID4gICAgIHNuYXBweQk0NDYuNTQyODA2CSAgICAg
+IDExODQxNDA3OTU3DQo+ID4gPg0KPiA+ID4gICBEaXNjdXNzaW9uDQo+ID4gPg0KPiA+ID4gICAg
+IEZvciB6c3RkIHJhbmdlIGZyb20gLTMgdG8gNCwgY29tcHJlc3Npb24gbGV2ZWwgMiAoWlNURF9k
+ZmFzdCkgaGFzDQo+ID4gPiAgICAgdGhlIGJlc3QgdGltZSBjb25zdW1wdGlvbiBhbmQgdm1jb3Jl
+IGR1bXAgc2l6ZSBiYWxhbmNlLg0KPiA+DQo+ID4gRG8geW91IGhhdmUgYSByZXN1bHQgb2YgLWQg
+MSBjb21wcmVzc2lvbiB0ZXN0PyAgSSB0aGluayAtZCAwIGlzIG5vdA0KPiA+IHByYWN0aWNhbCwg
+SSB3b3VsZCBsaWtlIHRvIHNlZSBhIC1kIDEgcmVzdWx0IG9mIHN1Y2ggYSBsYXJnZSB2bWNvcmUu
+DQo+ID4NCj4gDQo+IE5vLCBJIGhhdmVuJ3QgdGVzdGVkIHRoZSAtZCAxIGNhc2UuIEkgaGF2ZSBy
+ZXR1cm5lZCB0aGUgbWFjaGluZSB3aGljaCB1c2VkDQo+IGZvciBwZXJmb3JtYW5jZSB0ZXN0aW5n
+LCBJIHdpbGwgYm9ycm93IGFuZCB0ZXN0IG9uIGl0IGFnYWluLCBwbGVhc2Ugd2FpdCBmb3INCj4g
+YSB3aGlsZS4uLg0KDQpUaGFua3MsIGl0IHdvdWxkIGJlIGhlbHBmdWwuDQoNCj4gDQo+ID4gQW5k
+IGp1c3Qgb3V0IG9mIGN1cmlvc2l0eSwgd2hhdCB2ZXJzaW9uIG9mIHpzdGQgYXJlIHlvdSB1c2lu
+Zz8NCj4gPiBXaGVuIEkgdGVzdGVkIHpzdGQgbGFzdCB0aW1lLCBjb21wcmVzc2lvbiBsZXZlbCAx
+IHdhcyBmYXN0ZXIgdGhhbiAyLCBpaXJjLg0KPiA+DQo+IA0KPiBUaGUgT1MgcnVubmluZyBvbiB0
+aGUgbWFjaGluZSBpcyBmZWRvcmEzNCwgSSB1c2VkIGl0cyBkZWZhdWx0IHpzdGQgcGFja2FnZSwg
+d2hvc2UNCj4gdmVyc2lvbiBpcyB2MS40LjkuDQoNClRoYW5rcyBmb3IgdGhlIGluZm8uDQoNCj4g
+DQo+ID4gYnR3LCBaU1REX2RmYXN0IGlzIGFuIGVudW0gb2YgWlNURF9zdHJhdGVneSwgbm90IGZv
+ciBjb21wcmVzc2lvbiBsZXZlbD8NCj4gDQo+IFllcywgaXQncyBlbnVtIG9mIFpTVERfc3RyYXRl
+Z3kgWzFdLg0KDQpvaywgc28gaXQnbGwgaGF2ZSB0byBiZSByZXBsYWNlZCB3aXRoICIyIiB0byBh
+dm9pZCBjb25mdXNpb24uDQoNCj4gDQo+IFsxXTogaHR0cHM6Ly96c3RkLmRvY3Nmb3JnZS5jb20v
+ZGV2L2FwaS1kb2N1bWVudGF0aW9uLyNhZHZhbmNlZC1jb21wcmVzc2lvbi1hcGktcmVxdWlyZXMt
+djE0MA0KPiANCj4gVGhhbmtzLA0KPiBUYW8gTGl1DQo+IA0KPiA+IChubyBuZWVkIHRvIHVwZGF0
+ZSBmb3Igbm93LCBJIHdpbGwgcmV2aWV3IGxhdGVyKQ0KDQpUaGUgc2VyaWVzIGFsbW9zdCBsb29r
+cyBnb29kIHRvIG1lICh0aG91Z2ggSSB3aWxsIG1lcmdlIHRob3NlIGludG8gYSBwYXRjaCksDQpq
+dXN0IHR3byBxdWVzdGlvbnMgYXJlOg0KLSB3aGV0aGVyIDIgaXMgdGhlIGJlc3QgYmFsYW5jZWQg
+Y29tcHJlc3Npb24gbGV2ZWwsDQotIGhvdyBtdWNoIFpTVERfZGVjb21wcmVzc0RDdHgoKSBpcyBm
+YXN0ZXIgdGhhbiB0aGUgY3VycmVudCBaU1REX2RlY29tcHJlc3MoKS4NCg0KSSdsbCBldmFsdWF0
+ZSB0aGVzZSwgYnV0IGl0IHdvdWxkIGJlIGhlbHBmdWwgaWYgeW91IGNvdWxkIGRvIHNvbWUsIHRv
+by4NCg0KSSB0aGluayB0aGF0IGNvbXByZXNzaW9uIHRpbWUgYW5kIHJhdGlvIHdpbGwgdmFyeSB3
+aXRoIHRoZSBkYXRhLCBpdCdsbCBiZQ0KYmV0dGVyIHRvIHVzZSBzb21lIHJlYWwgZGF0YSwgSSdt
+IGxvb2tpbmcgZm9yIGl0Li4ga2VybmVsIHNvdXJjZSBvciBzb21ldGhpbmcuDQoNClRoYW5rcywN
+CkthenUNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
