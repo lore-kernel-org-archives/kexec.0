@@ -1,18 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410059.outbound.protection.outlook.com
- ([40.107.141.59] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail-eopbgr1410047.outbound.protection.outlook.com
+ ([40.107.141.47] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mR2mP-00CtXu-Rw
- for kexec@lists.infradead.org; Fri, 17 Sep 2021 01:35:08 +0000
+ id 1mR3ek-00CwI3-U6
+ for kexec@lists.infradead.org; Fri, 17 Sep 2021 02:31:17 +0000
 From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
  <k-hagio-ab@nec.com>
 Subject: RE: [PATCH 00/11] makedumpfile: Add zstd support for makedumpfile
-Date: Fri, 17 Sep 2021 01:34:57 +0000
-Message-ID: <TYYPR01MB67774235656CC28211067CF6DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Date: Fri, 17 Sep 2021 02:31:11 +0000
+Message-ID: <TYYPR01MB6777BCF88306C1D2D092E0C8DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 References: <20210910103318.292017-1-ltao@redhat.com>
  <TYYPR01MB677786B29FF77911EE5E06F2DDDA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
  <YUBeQta7k03HU6qL@localhost.localdomain>
-In-Reply-To: <YUBeQta7k03HU6qL@localhost.localdomain>
+ <TYYPR01MB67774235656CC28211067CF6DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYYPR01MB67774235656CC28211067CF6DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 Content-Language: ja-JP
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
@@ -23,112 +24,158 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Tao Liu <ltao@redhat.com>
 Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-SGkgVGFvIExpdSwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSGkgS2F6dSwNCj4g
-DQo+IFRoYW5rcyBmb3IgcmV2aWV3aW5nIHRoZSBwYXRjaHNldCENCj4gDQo+IE9uIFR1ZSwgU2Vw
-IDE0LCAyMDIxIGF0IDA3OjA0OjI0QU0gKzAwMDAsIEhBR0lPIEtBWlVISVRPKOiQqeWwviDkuIDk
-u4EpIHdyb3RlOg0KPiA+IEhpIFRhbyBMaXUsDQo+ID4NCj4gPiBUaGFua3MgZm9yIHRoZSBwYXRj
-aHNldCENCj4gPg0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiBUaGlzIHBh
-dGNoIHNldCBhZGRzIFpTVEQgY29tcHJlc3Npb24gc3VwcG9ydCB0byBtYWtlZHVtcGZpbGUuIFdp
-dGggWlNURCBjb21wcmVzc2lvbg0KPiA+ID4gc3VwcG9ydCwgdGhlIHZtY29yZSBkdW1wIHNpemUg
-YW5kIHRpbWUgY29uc3VtcHRpb24gY2FuIGhhdmUgYSBiZXR0ZXIgYmFsYW5jZSB0aGFuDQo+ID4g
-PiB6bGliL2x6by9zbmFwcHkuDQo+ID4gPg0KPiA+ID4gSG93IHRvIGJ1aWxkOg0KPiA+ID4NCj4g
-PiA+ICAgQnVpbGQgdXNpbmcgbWFrZToNCj4gPiA+ICAgICAkIG1ha2UgVVNFWlNURD1vbg0KPiA+
-ID4NCj4gPiA+IFBlcmZvcm1hbmNlIENvbXBhcmlzb246DQo+ID4gPg0KPiA+ID4gICBIb3cgdG8g
-bWVhc3VyZQ0KPiA+ID4NCj4gPiA+ICAgICBJIHRvb2sgYSB4ODZfNjQgbWFjaGluZSB3aGljaCBo
-YWQgNFQgbWVtb3J5LCBhbmQgdGhlIGNvbXByZXNzaW9uIGxldmVsDQo+ID4gPiAgICAgcmFuZ2Ug
-ZnJvbSAoLTMgdG8gNCkgZm9yIFpTVEQsIGFzIHdlbGwgYXMgemxpYi9sem8vc25hcHB5IGNvbXBy
-ZXNzaW9uLg0KPiA+ID4gICAgIEFsbCB0ZXN0aW5nIHdhcyBkb25lIGJ5IG1ha2VkdW1wZmlsZSBz
-aW5nbGUgdGhyZWFkIG1vZGUuDQo+ID4gPg0KPiA+ID4gICAgIEFzIGZvciBjb21wcmVzc2lvbiBw
-ZXJmb3JtYW5jZSB0ZXN0aW5nLCBpbiBvcmRlciB0byBhdm9pZCB0aGUgcGVyZm9ybWFuY2UNCj4g
-PiA+ICAgICBib3R0bGUgbmVjayBvZiBkaXNrIEkvTywgSSB1c2VkIHRoZSBmb2xsb3dpbmcgbWFr
-ZWR1bXBmaWxlIGNtZCwgd2hpY2ggdG9vaw0KPiA+ID4gICAgIGx6byBjb21wcmVzc2lvbiBhcyBh
-biBleGFtcGxlLiAiLS1kcnktcnVuIiB3aWxsIG5vdCB3cml0ZSBhbnkgZGF0YSB0byBkaXNrLA0K
-PiA+ID4gICAgICItLXNob3ctc3RhdCIgd2lsbCBvdXRwdXQgdGhlIHZtY29yZSBzaXplIGFmdGVy
-IGNvbXByZXNzaW9uLCBhbmQgdGhlIHRpbWUNCj4gPiA+ICAgICBjb25zdW1wdGlvbiBjYW4gYmUg
-Y29sbGVjdGVkIGZyb20gdGhlIG91dHB1dCBsb2dzLg0KPiA+ID4NCj4gPiA+ICAgICAkIG1ha2Vk
-dW1wZmlsZSAtZCAwIC1sIC9wcm9jL2tjb3JlIHZtY29yZSAtLWRyeS1ydW4gLS1zaG93LXN0YXQN
-Cj4gPiA+DQo+ID4gPg0KPiA+ID4gICAgIEFzIGZvciBkZWNvbXByZXNzaW9uIHBlcmZvcm1hbmNl
-IHRlc3RpbmcsIEkgb25seSB0ZXN0ZWQgdGhlICgtZCAzMSkgY2FzZSwNCj4gPiA+ICAgICBiZWNh
-dXNlIHRoZSB2bWNvcmUgc2l6ZSBvZiAoLWQgMCkgY2FzZSBpcyB0b28gYmlnIHRvIGZpdCBpbiB0
-aGUgZGlzaywgaW4NCj4gPiA+ICAgICBhZGR0aW9uLCB0byByZWFkIGEgb3ZlcnNpemVkIGZpbGUg
-ZnJvbSBkaXNrIHdpbGwgZW5jb3VudGVyIHRoZSBkaXNrIEkvTw0KPiA+ID4gICAgIGJvdHRsZSBu
-ZWNrLg0KPiA+ID4NCj4gPiA+ICAgICBJIHRyaWdnZXJlZCBhIGtlcm5lbCBjcmFzaCBhbmQgY29s
-bGVjdGVkIGEgdm1jb3JlLiBUaGVuIEkgY29udmVydGVkIHRoZQ0KPiA+ID4gICAgIHZtY29yZSBp
-bnRvIHNwZWNpZmljIGNvbXByZXNzaW9uIGZvcm1hdCB1c2luZyB0aGUgZm9sbG93aW5nIG1ha2Vk
-dW1wZmlsZQ0KPiA+ID4gICAgIGNtZCwgd2hpY2ggd291bGQgZ2V0IGEgbHpvIGZvcm1hdCB2bWNv
-cmUgYXMgYW4gZXhhbXBsZToNCj4gPiA+DQo+ID4gPiAgICAgJCBtYWtlZHVtcGZpbGUgLWwgdm1j
-b3JlIHZtY29yZS5sem8NCj4gPiA+DQo+ID4gPiAgICAgQWZ0ZXIgYWxsIHZtY29yZXMgd2VyZSBy
-ZWFkeSwgSSB1c2VkIHRoZSBmb2xsb3dpbmcgY21kIHRvIHBlcmZvcm0gdGhlDQo+ID4gPiAgICAg
-ZGVjb21wcmVzc2lvbiwgdGhlIHRpbWUgY29uc3VtcHRpb24gY2FuIGJlIGNvbGxlY3RlZCBmcm9t
-IHRoZSBsb2dzLg0KPiA+ID4NCj4gPiA+ICAgICAkIG1ha2VkdW1wZmlsZSAtRiB2bWNvcmUubHpv
-IC0tZHJ5LXJ1biAtLXNob3ctc3RhdA0KPiA+ID4NCj4gPiA+DQo+ID4gPiAgIFJlc3VsdCBjaGFy
-dHMNCj4gPiA+DQo+ID4gPiAgICAgRm9yIGNvbXByZXNzaW9uOg0KPiA+ID4NCj4gPiA+ICAgICAg
-ICAgICAgIG1ha2VkdW1wZmlsZSAtZDMxCQkJfCAgbWFrZWR1bXBmaWxlIC1kMA0KPiA+ID4gICAg
-ICAgICAgICAgQ29tcHJlc3Npb24gdGltZQl2bWNvcmUgc2l6ZQl8ICBDb21wcmVzc2lvbiB0aW1l
-ICB2bWNvcmUgc2l6ZQ0KPiA+ID4gICAgIHpzdGQtMyAgMzI1LjUxNjQ0NgkgICAgICAgIDUyODUx
-Nzk1OTUJfCAgODIwNS40NTIyNDgJICAgICA1MTcxNTQzMDIwNA0KPiA+ID4gICAgIHpzdGQtMiAg
-MzMyLjA2OTQzMgkgICAgICAgIDUzMTk3MjY2MDQJfCAgODA1Ny4zODEzNzEJICAgICA1MTczMjA2
-Mjc5Mw0KPiA+ID4gICAgIHpzdGQtMSAgMzA5Ljk0Mjc3MwkgICAgICAgIDU3MzA1MTYyNzQJfCAg
-ODEzOC4wNjA3ODYJICAgICA1MjEzNjE5MTU3MQ0KPiA+ID4gICAgIHpzdGQwICAgNDM5Ljc3MzA3
-NgkgICAgICAgIDQ2NzM4NTk2NjEJfCAgODg3My4wNTk5NjMJICAgICA1MDk5MzY2OTY1Nw0KPiA+
-ID4gICAgIHpzdGQxICAgNDA2LjY4MDM2CSAgICAgICAgNDcwMDk1OTUyMQl8ICA4MjU5LjQxNzEz
-MgkgICAgIDUxMDM2OTAwMDU1DQo+ID4gPiAgICAgenN0ZDIgICAzOTcuMTk1NjQzCSAgICAgICAg
-NDY5OTI2MzYwOAl8ICA4MjMwLjMwODI5MQkgICAgIDUxMDMwNDEwOTQyDQo+ID4gPiAgICAgenN0
-ZDMgICA0MzYuNDkxNjMyCSAgICAgICAgNDY3MzMwNjM5OAl8ICA4ODAzLjk3MDEwMwkgICAgIDUx
-MDQzMzkzNjM3DQo+ID4gPiAgICAgenN0ZDQgICA1NDMuMzYzOTI4CSAgICAgICAgNDY2ODQxOTMw
-NAl8ICA4OTkxLjI0MDI0NAkgICAgIDUxMDU4MDg4NTE0DQo+ID4gPiAgICAgemxpYiAgICA1NjEu
-MjE3MzgxCSAgICAgICAgODUxNDgwMzE5NSAgICAgIHwgMTQzODEuNzU1NjExCSAgICAgNzgxOTky
-ODM4OTMNCj4gPiA+ICAgICBsem8JICAgIDI0OC4xNzU5NTMJICAgICAgIDE2Njk2NDExODc5CXwg
-IDYwNTcuNTI4NzgxCSAgICAgOTAwMjA4OTU3NDENCj4gPiA+ICAgICBzbmFwcHkgIDIzMS44Njgz
-MTIJICAgICAgIDExNzgyMjM2Njc0CXwgIDUyOTAuOTE5ODk0CSAgICAyNDU2NjEyODgzNTUNCj4g
-PiA+DQo+ID4gPiAgICAgRm9yIGRlY29tcHJlc3Npb246DQo+ID4gPg0KPiA+ID4gICAgICAgICAg
-ICAgbWFrZWR1bXBmaWxlIC1kMzENCj4gPiA+ICAgICAgICAgICAgIGRlY29tcHJlc3MgdGltZQkg
-ICB2bWNvcmUgc2l6ZQ0KPiA+ID4gICAgIHpzdGQtMwk0NzcuNTQzMzk2CSAgICAgICA1Mjg5Mzcz
-NDQ4DQo+ID4gPiAgICAgenN0ZC0yCTQ3OC4wMzQ1MzQJICAgICAgIDUzMjc0NTQxMjMNCj4gPiA+
-ICAgICB6c3RkLTEJNDU5LjA2NjgwNwkgICAgICAgNTc0ODAzNzkzMQ0KPiA+ID4gICAgIHpzdGQw
-CTU2MS42ODc1MjUJICAgICAgIDQ2ODAwMDkwMTMNCj4gPiA+ICAgICB6c3RkMQk1NDcuMjQ4OTE3
-CSAgICAgICA0NzA2MzU4NTQ3DQo+ID4gPiAgICAgenN0ZDIJNTQ0LjIxOTc1OAkgICAgICAgNDcw
-NDc4MDcxOQ0KPiA+ID4gICAgIHpzdGQzCTU1NS43MjYzNDMJICAgICAgIDQ2ODAwMDkwMTMNCj4g
-PiA+ICAgICB6c3RkNAk1NTguMDMxNzIxCSAgICAgICA0Njc1NTQ1OTMzDQo+ID4gPiAgICAgemxp
-Ygk2MzAuOTY1NDI2CSAgICAgICA4NTU1Mzc2MjI5DQo+ID4gPiAgICAgbHpvCSAgICAJNDI3LjI5
-MjEwNwkgICAgICAxNjg0OTQ1NzY0OQ0KPiA+ID4gICAgIHNuYXBweQk0NDYuNTQyODA2CSAgICAg
-IDExODQxNDA3OTU3DQo+ID4gPg0KPiA+ID4gICBEaXNjdXNzaW9uDQo+ID4gPg0KPiA+ID4gICAg
-IEZvciB6c3RkIHJhbmdlIGZyb20gLTMgdG8gNCwgY29tcHJlc3Npb24gbGV2ZWwgMiAoWlNURF9k
-ZmFzdCkgaGFzDQo+ID4gPiAgICAgdGhlIGJlc3QgdGltZSBjb25zdW1wdGlvbiBhbmQgdm1jb3Jl
-IGR1bXAgc2l6ZSBiYWxhbmNlLg0KPiA+DQo+ID4gRG8geW91IGhhdmUgYSByZXN1bHQgb2YgLWQg
-MSBjb21wcmVzc2lvbiB0ZXN0PyAgSSB0aGluayAtZCAwIGlzIG5vdA0KPiA+IHByYWN0aWNhbCwg
-SSB3b3VsZCBsaWtlIHRvIHNlZSBhIC1kIDEgcmVzdWx0IG9mIHN1Y2ggYSBsYXJnZSB2bWNvcmUu
-DQo+ID4NCj4gDQo+IE5vLCBJIGhhdmVuJ3QgdGVzdGVkIHRoZSAtZCAxIGNhc2UuIEkgaGF2ZSBy
-ZXR1cm5lZCB0aGUgbWFjaGluZSB3aGljaCB1c2VkDQo+IGZvciBwZXJmb3JtYW5jZSB0ZXN0aW5n
-LCBJIHdpbGwgYm9ycm93IGFuZCB0ZXN0IG9uIGl0IGFnYWluLCBwbGVhc2Ugd2FpdCBmb3INCj4g
-YSB3aGlsZS4uLg0KDQpUaGFua3MsIGl0IHdvdWxkIGJlIGhlbHBmdWwuDQoNCj4gDQo+ID4gQW5k
-IGp1c3Qgb3V0IG9mIGN1cmlvc2l0eSwgd2hhdCB2ZXJzaW9uIG9mIHpzdGQgYXJlIHlvdSB1c2lu
-Zz8NCj4gPiBXaGVuIEkgdGVzdGVkIHpzdGQgbGFzdCB0aW1lLCBjb21wcmVzc2lvbiBsZXZlbCAx
-IHdhcyBmYXN0ZXIgdGhhbiAyLCBpaXJjLg0KPiA+DQo+IA0KPiBUaGUgT1MgcnVubmluZyBvbiB0
-aGUgbWFjaGluZSBpcyBmZWRvcmEzNCwgSSB1c2VkIGl0cyBkZWZhdWx0IHpzdGQgcGFja2FnZSwg
-d2hvc2UNCj4gdmVyc2lvbiBpcyB2MS40LjkuDQoNClRoYW5rcyBmb3IgdGhlIGluZm8uDQoNCj4g
-DQo+ID4gYnR3LCBaU1REX2RmYXN0IGlzIGFuIGVudW0gb2YgWlNURF9zdHJhdGVneSwgbm90IGZv
-ciBjb21wcmVzc2lvbiBsZXZlbD8NCj4gDQo+IFllcywgaXQncyBlbnVtIG9mIFpTVERfc3RyYXRl
-Z3kgWzFdLg0KDQpvaywgc28gaXQnbGwgaGF2ZSB0byBiZSByZXBsYWNlZCB3aXRoICIyIiB0byBh
-dm9pZCBjb25mdXNpb24uDQoNCj4gDQo+IFsxXTogaHR0cHM6Ly96c3RkLmRvY3Nmb3JnZS5jb20v
-ZGV2L2FwaS1kb2N1bWVudGF0aW9uLyNhZHZhbmNlZC1jb21wcmVzc2lvbi1hcGktcmVxdWlyZXMt
-djE0MA0KPiANCj4gVGhhbmtzLA0KPiBUYW8gTGl1DQo+IA0KPiA+IChubyBuZWVkIHRvIHVwZGF0
-ZSBmb3Igbm93LCBJIHdpbGwgcmV2aWV3IGxhdGVyKQ0KDQpUaGUgc2VyaWVzIGFsbW9zdCBsb29r
-cyBnb29kIHRvIG1lICh0aG91Z2ggSSB3aWxsIG1lcmdlIHRob3NlIGludG8gYSBwYXRjaCksDQpq
-dXN0IHR3byBxdWVzdGlvbnMgYXJlOg0KLSB3aGV0aGVyIDIgaXMgdGhlIGJlc3QgYmFsYW5jZWQg
-Y29tcHJlc3Npb24gbGV2ZWwsDQotIGhvdyBtdWNoIFpTVERfZGVjb21wcmVzc0RDdHgoKSBpcyBm
-YXN0ZXIgdGhhbiB0aGUgY3VycmVudCBaU1REX2RlY29tcHJlc3MoKS4NCg0KSSdsbCBldmFsdWF0
-ZSB0aGVzZSwgYnV0IGl0IHdvdWxkIGJlIGhlbHBmdWwgaWYgeW91IGNvdWxkIGRvIHNvbWUsIHRv
-by4NCg0KSSB0aGluayB0aGF0IGNvbXByZXNzaW9uIHRpbWUgYW5kIHJhdGlvIHdpbGwgdmFyeSB3
-aXRoIHRoZSBkYXRhLCBpdCdsbCBiZQ0KYmV0dGVyIHRvIHVzZSBzb21lIHJlYWwgZGF0YSwgSSdt
-IGxvb2tpbmcgZm9yIGl0Li4ga2VybmVsIHNvdXJjZSBvciBzb21ldGhpbmcuDQoNClRoYW5rcywN
-CkthenUNCg0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+-----Original Message-----
+> > > > This patch set adds ZSTD compression support to makedumpfile. With ZSTD compression
+> > > > support, the vmcore dump size and time consumption can have a better balance than
+> > > > zlib/lzo/snappy.
+> > > >
+> > > > How to build:
+> > > >
+> > > >   Build using make:
+> > > >     $ make USEZSTD=on
+> > > >
+> > > > Performance Comparison:
+> > > >
+> > > >   How to measure
+> > > >
+> > > >     I took a x86_64 machine which had 4T memory, and the compression level
+> > > >     range from (-3 to 4) for ZSTD, as well as zlib/lzo/snappy compression.
+> > > >     All testing was done by makedumpfile single thread mode.
+> > > >
+> > > >     As for compression performance testing, in order to avoid the performance
+> > > >     bottle neck of disk I/O, I used the following makedumpfile cmd, which took
+> > > >     lzo compression as an example. "--dry-run" will not write any data to disk,
+> > > >     "--show-stat" will output the vmcore size after compression, and the time
+> > > >     consumption can be collected from the output logs.
+> > > >
+> > > >     $ makedumpfile -d 0 -l /proc/kcore vmcore --dry-run --show-stat
+> > > >
+> > > >
+> > > >     As for decompression performance testing, I only tested the (-d 31) case,
+> > > >     because the vmcore size of (-d 0) case is too big to fit in the disk, in
+> > > >     addtion, to read a oversized file from disk will encounter the disk I/O
+> > > >     bottle neck.
+> > > >
+> > > >     I triggered a kernel crash and collected a vmcore. Then I converted the
+> > > >     vmcore into specific compression format using the following makedumpfile
+> > > >     cmd, which would get a lzo format vmcore as an example:
+> > > >
+> > > >     $ makedumpfile -l vmcore vmcore.lzo
+> > > >
+> > > >     After all vmcores were ready, I used the following cmd to perform the
+> > > >     decompression, the time consumption can be collected from the logs.
+> > > >
+> > > >     $ makedumpfile -F vmcore.lzo --dry-run --show-stat
+> > > >
+> > > >
+> > > >   Result charts
+> > > >
+> > > >     For compression:
+> > > >
+> > > >             makedumpfile -d31			|  makedumpfile -d0
+> > > >             Compression time	vmcore size	|  Compression time  vmcore size
+> > > >     zstd-3  325.516446	        5285179595	|  8205.452248	     51715430204
+> > > >     zstd-2  332.069432	        5319726604	|  8057.381371	     51732062793
+> > > >     zstd-1  309.942773	        5730516274	|  8138.060786	     52136191571
+> > > >     zstd0   439.773076	        4673859661	|  8873.059963	     50993669657
+> > > >     zstd1   406.68036	        4700959521	|  8259.417132	     51036900055
+> > > >     zstd2   397.195643	        4699263608	|  8230.308291	     51030410942
+> > > >     zstd3   436.491632	        4673306398	|  8803.970103	     51043393637
+> > > >     zstd4   543.363928	        4668419304	|  8991.240244	     51058088514
+> > > >     zlib    561.217381	        8514803195      | 14381.755611	     78199283893
+> > > >     lzo	    248.175953	       16696411879	|  6057.528781	     90020895741
+> > > >     snappy  231.868312	       11782236674	|  5290.919894	    245661288355
+> > > >
+> > > >     For decompression:
+> > > >
+> > > >             makedumpfile -d31
+> > > >             decompress time	   vmcore size
+> > > >     zstd-3	477.543396	       5289373448
+> > > >     zstd-2	478.034534	       5327454123
+> > > >     zstd-1	459.066807	       5748037931
+> > > >     zstd0	561.687525	       4680009013
+> > > >     zstd1	547.248917	       4706358547
+> > > >     zstd2	544.219758	       4704780719
+> > > >     zstd3	555.726343	       4680009013
+> > > >     zstd4	558.031721	       4675545933
+> > > >     zlib	630.965426	       8555376229
+> > > >     lzo	    	427.292107	      16849457649
+> > > >     snappy	446.542806	      11841407957
+> > > >
+> > > >   Discussion
+> > > >
+> > > >     For zstd range from -3 to 4, compression level 2 (ZSTD_dfast) has
+> > > >     the best time consumption and vmcore dump size balance.
+> > >
+> > > Do you have a result of -d 1 compression test?  I think -d 0 is not
+> > > practical, I would like to see a -d 1 result of such a large vmcore.
+> > >
+> >
+> > No, I haven't tested the -d 1 case. I have returned the machine which used
+> > for performance testing, I will borrow and test on it again, please wait for
+> > a while...
+> 
+> Thanks, it would be helpful.
+> 
+> >
+> > > And just out of curiosity, what version of zstd are you using?
+> > > When I tested zstd last time, compression level 1 was faster than 2, iirc.
+> > >
+> >
+> > The OS running on the machine is fedora34, I used its default zstd package, whose
+> > version is v1.4.9.
+> 
+> Thanks for the info.
+> 
+> >
+> > > btw, ZSTD_dfast is an enum of ZSTD_strategy, not for compression level?
+> >
+> > Yes, it's enum of ZSTD_strategy [1].
+> 
+> ok, so it'll have to be replaced with "2" to avoid confusion.
+> 
+> >
+> > [1]: https://zstd.docsforge.com/dev/api-documentation/#advanced-compression-api-requires-v140
+> >
+> > Thanks,
+> > Tao Liu
+> >
+> > > (no need to update for now, I will review later)
+> 
+> The series almost looks good to me (though I will merge those into a patch),
+> just two questions are:
+> - whether 2 is the best balanced compression level,
+
+> - how much ZSTD_decompressDCtx() is faster than the current ZSTD_decompress().
+
+Looking at this further, we will need some effort to use it especially with
+threads and decompression is not the main usage (it's only for refiltering),
+so please ignore this for now.  We can improve it later if it's very faster.
+
+Thanks,
+Kazu
+
+> 
+> I'll evaluate these, but it would be helpful if you could do some, too.
+> 
+> I think that compression time and ratio will vary with the data, it'll be
+> better to use some real data, I'm looking for it.. kernel source or something.
+> 
+> Thanks,
+> Kazu
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
