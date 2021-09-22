@@ -1,24 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1400085.outbound.protection.outlook.com
- ([40.107.140.85] helo=JPN01-TY1-obe.outbound.protection.outlook.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mSrtD-006c3C-Du
- for kexec@lists.infradead.org; Wed, 22 Sep 2021 02:21:42 +0000
-From: =?utf-8?B?SEFHSU8gS0FaVUhJVE8o6JCp5bC+44CA5LiA5LuBKQ==?=
- <k-hagio-ab@nec.com>
-Subject: RE: [PATCH 00/11] makedumpfile: Add zstd support for makedumpfile
-Date: Wed, 22 Sep 2021 02:21:28 +0000
-Message-ID: <TYYPR01MB67776B78286C35AFBF4D4A14DDA29@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20210910103318.292017-1-ltao@redhat.com>
- <TYYPR01MB677786B29FF77911EE5E06F2DDDA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <YUBeQta7k03HU6qL@localhost.localdomain>
- <TYYPR01MB67774235656CC28211067CF6DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <TYYPR01MB6777BCF88306C1D2D092E0C8DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <TYYPR01MB67772E684C0CAE16782D5788DDDD9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <YUmlKqK/CY9SfiAN@localhost.localdomain>
-In-Reply-To: <YUmlKqK/CY9SfiAN@localhost.localdomain>
-Content-Language: ja-JP
 MIME-Version: 1.0
+References: <0de07021e49ac26a8f9386f62f3e15e947d0f6d0.1631709384.git.geert+renesas@glider.be>
+In-Reply-To: <0de07021e49ac26a8f9386f62f3e15e947d0f6d0.1631709384.git.geert+renesas@glider.be>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Wed, 22 Sep 2021 09:14:46 +0200
+Message-ID: <CAMj1kXF_B1ggD8zdKn_hyzgaa1zMhL+ygXRJaWhhrStqWPn9vw@mail.gmail.com>
+Subject: Re: [PATCH v6] ARM: uncompress: Parse "linux,
+ usable-memory-range" DT property
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,187 +15,154 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tao Liu <ltao@redhat.com>
-Cc: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Russell King <linux@armlinux.org.uk>, Nicolas Pitre <nico@fluxnic.net>, Linus Walleij <linus.walleij@linaro.org>, Lukasz Stelmach <l.stelmach@samsung.com>, Simon Horman <horms@verge.net.au>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
 
-SGkgVGFvIExpdSwNCg0KLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gSGVsbG8gS2F6dSwN
-Cj4gDQo+IFNvcnJ5IGZvciB0aGUgbGF0ZSByZXBseS4NCj4gDQo+IE9uIEZyaSwgU2VwIDE3LCAy
-MDIxIGF0IDA3OjAzOjUwQU0gKzAwMDAsIEhBR0lPIEtBWlVISVRPKOiQqeWwviDkuIDku4EpIHdy
-b3RlOg0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID4gPiAtLS0tLU9yaWdpbmFs
-IE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+ID4gPiBUaGlzIHBhdGNoIHNldCBhZGRzIFpTVEQgY29t
-cHJlc3Npb24gc3VwcG9ydCB0byBtYWtlZHVtcGZpbGUuIFdpdGggWlNURCBjb21wcmVzc2lvbg0K
-PiA+ID4gPiA+ID4gPiBzdXBwb3J0LCB0aGUgdm1jb3JlIGR1bXAgc2l6ZSBhbmQgdGltZSBjb25z
-dW1wdGlvbiBjYW4gaGF2ZSBhIGJldHRlciBiYWxhbmNlIHRoYW4NCj4gPiA+ID4gPiA+ID4gemxp
-Yi9sem8vc25hcHB5Lg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBIb3cgdG8gYnVpbGQ6
-DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgQnVpbGQgdXNpbmcgbWFrZToNCj4gPiA+
-ID4gPiA+ID4gICAgICQgbWFrZSBVU0VaU1REPW9uDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4g
-PiA+IFBlcmZvcm1hbmNlIENvbXBhcmlzb246DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
-ICAgSG93IHRvIG1lYXN1cmUNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gICAgIEkgdG9v
-ayBhIHg4Nl82NCBtYWNoaW5lIHdoaWNoIGhhZCA0VCBtZW1vcnksIGFuZCB0aGUgY29tcHJlc3Np
-b24gbGV2ZWwNCj4gPiA+ID4gPiA+ID4gICAgIHJhbmdlIGZyb20gKC0zIHRvIDQpIGZvciBaU1RE
-LCBhcyB3ZWxsIGFzIHpsaWIvbHpvL3NuYXBweSBjb21wcmVzc2lvbi4NCj4gPiA+ID4gPiA+ID4g
-ICAgIEFsbCB0ZXN0aW5nIHdhcyBkb25lIGJ5IG1ha2VkdW1wZmlsZSBzaW5nbGUgdGhyZWFkIG1v
-ZGUuDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgICBBcyBmb3IgY29tcHJlc3Npb24g
-cGVyZm9ybWFuY2UgdGVzdGluZywgaW4gb3JkZXIgdG8gYXZvaWQgdGhlIHBlcmZvcm1hbmNlDQo+
-ID4gPiA+ID4gPiA+ICAgICBib3R0bGUgbmVjayBvZiBkaXNrIEkvTywgSSB1c2VkIHRoZSBmb2xs
-b3dpbmcgbWFrZWR1bXBmaWxlIGNtZCwgd2hpY2ggdG9vaw0KPiA+ID4gPiA+ID4gPiAgICAgbHpv
-IGNvbXByZXNzaW9uIGFzIGFuIGV4YW1wbGUuICItLWRyeS1ydW4iIHdpbGwgbm90IHdyaXRlIGFu
-eSBkYXRhIHRvIGRpc2ssDQo+ID4gPiA+ID4gPiA+ICAgICAiLS1zaG93LXN0YXQiIHdpbGwgb3V0
-cHV0IHRoZSB2bWNvcmUgc2l6ZSBhZnRlciBjb21wcmVzc2lvbiwgYW5kIHRoZSB0aW1lDQo+ID4g
-PiA+ID4gPiA+ICAgICBjb25zdW1wdGlvbiBjYW4gYmUgY29sbGVjdGVkIGZyb20gdGhlIG91dHB1
-dCBsb2dzLg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiAgICAgJCBtYWtlZHVtcGZpbGUg
-LWQgMCAtbCAvcHJvYy9rY29yZSB2bWNvcmUgLS1kcnktcnVuIC0tc2hvdy1zdGF0DQo+ID4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgICBBcyBmb3IgZGVjb21wcmVz
-c2lvbiBwZXJmb3JtYW5jZSB0ZXN0aW5nLCBJIG9ubHkgdGVzdGVkIHRoZSAoLWQgMzEpIGNhc2Us
-DQo+ID4gPiA+ID4gPiA+ICAgICBiZWNhdXNlIHRoZSB2bWNvcmUgc2l6ZSBvZiAoLWQgMCkgY2Fz
-ZSBpcyB0b28gYmlnIHRvIGZpdCBpbiB0aGUgZGlzaywgaW4NCj4gPiA+ID4gPiA+ID4gICAgIGFk
-ZHRpb24sIHRvIHJlYWQgYSBvdmVyc2l6ZWQgZmlsZSBmcm9tIGRpc2sgd2lsbCBlbmNvdW50ZXIg
-dGhlIGRpc2sgSS9PDQo+ID4gPiA+ID4gPiA+ICAgICBib3R0bGUgbmVjay4NCj4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ID4gICAgIEkgdHJpZ2dlcmVkIGEga2VybmVsIGNyYXNoIGFuZCBjb2xs
-ZWN0ZWQgYSB2bWNvcmUuIFRoZW4gSSBjb252ZXJ0ZWQgdGhlDQo+ID4gPiA+ID4gPiA+ICAgICB2
-bWNvcmUgaW50byBzcGVjaWZpYyBjb21wcmVzc2lvbiBmb3JtYXQgdXNpbmcgdGhlIGZvbGxvd2lu
-ZyBtYWtlZHVtcGZpbGUNCj4gPiA+ID4gPiA+ID4gICAgIGNtZCwgd2hpY2ggd291bGQgZ2V0IGEg
-bHpvIGZvcm1hdCB2bWNvcmUgYXMgYW4gZXhhbXBsZToNCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4g
-PiA+ID4gICAgICQgbWFrZWR1bXBmaWxlIC1sIHZtY29yZSB2bWNvcmUubHpvDQo+ID4gPiA+ID4g
-PiA+DQo+ID4gPiA+ID4gPiA+ICAgICBBZnRlciBhbGwgdm1jb3JlcyB3ZXJlIHJlYWR5LCBJIHVz
-ZWQgdGhlIGZvbGxvd2luZyBjbWQgdG8gcGVyZm9ybSB0aGUNCj4gPiA+ID4gPiA+ID4gICAgIGRl
-Y29tcHJlc3Npb24sIHRoZSB0aW1lIGNvbnN1bXB0aW9uIGNhbiBiZSBjb2xsZWN0ZWQgZnJvbSB0
-aGUgbG9ncy4NCj4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gICAgICQgbWFrZWR1bXBmaWxl
-IC1GIHZtY29yZS5sem8gLS1kcnktcnVuIC0tc2hvdy1zdGF0DQo+ID4gPiA+ID4gPiA+DQo+ID4g
-PiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgUmVzdWx0IGNoYXJ0cw0KPiA+ID4gPiA+ID4gPg0K
-PiA+ID4gPiA+ID4gPiAgICAgRm9yIGNvbXByZXNzaW9uOg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
-PiA+ID4gPiAgICAgICAgICAgICBtYWtlZHVtcGZpbGUgLWQzMQkJCXwgIG1ha2VkdW1wZmlsZSAt
-ZDANCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgQ29tcHJlc3Npb24gdGltZQl2bWNvcmUgc2l6
-ZQl8ICBDb21wcmVzc2lvbiB0aW1lICB2bWNvcmUgc2l6ZQ0KPiA+ID4gPiA+ID4gPiAgICAgenN0
-ZC0zICAzMjUuNTE2NDQ2CSAgICAgICAgNTI4NTE3OTU5NQl8ICA4MjA1LjQ1MjI0OAkgICAgIDUx
-NzE1NDMwMjA0DQo+ID4gPiA+ID4gPiA+ICAgICB6c3RkLTIgIDMzMi4wNjk0MzIJICAgICAgICA1
-MzE5NzI2NjA0CXwgIDgwNTcuMzgxMzcxCSAgICAgNTE3MzIwNjI3OTMNCj4gPiA+ID4gPiA+ID4g
-ICAgIHpzdGQtMSAgMzA5Ljk0Mjc3MwkgICAgICAgIDU3MzA1MTYyNzQJfCAgODEzOC4wNjA3ODYJ
-ICAgICA1MjEzNjE5MTU3MQ0KPiA+ID4gPiA+ID4gPiAgICAgenN0ZDAgICA0MzkuNzczMDc2CSAg
-ICAgICAgNDY3Mzg1OTY2MQl8ICA4ODczLjA1OTk2MwkgICAgIDUwOTkzNjY5NjU3DQo+ID4gPiA+
-ID4gPiA+ICAgICB6c3RkMSAgIDQwNi42ODAzNgkgICAgICAgIDQ3MDA5NTk1MjEJfCAgODI1OS40
-MTcxMzIJICAgICA1MTAzNjkwMDA1NQ0KPiA+ID4gPiA+ID4gPiAgICAgenN0ZDIgICAzOTcuMTk1
-NjQzCSAgICAgICAgNDY5OTI2MzYwOAl8ICA4MjMwLjMwODI5MQkgICAgIDUxMDMwNDEwOTQyDQo+
-ID4gPiA+ID4gPiA+ICAgICB6c3RkMyAgIDQzNi40OTE2MzIJICAgICAgICA0NjczMzA2Mzk4CXwg
-IDg4MDMuOTcwMTAzCSAgICAgNTEwNDMzOTM2MzcNCj4gPiA+ID4gPiA+ID4gICAgIHpzdGQ0ICAg
-NTQzLjM2MzkyOAkgICAgICAgIDQ2Njg0MTkzMDQJfCAgODk5MS4yNDAyNDQJICAgICA1MTA1ODA4
-ODUxNA0KPiA+ID4gPiA+ID4gPiAgICAgemxpYiAgICA1NjEuMjE3MzgxCSAgICAgICAgODUxNDgw
-MzE5NSAgICAgIHwgMTQzODEuNzU1NjExCSAgICAgNzgxOTkyODM4OTMNCj4gPiA+ID4gPiA+ID4g
-ICAgIGx6bwkgICAgMjQ4LjE3NTk1MwkgICAgICAgMTY2OTY0MTE4NzkJfCAgNjA1Ny41Mjg3ODEJ
-ICAgICA5MDAyMDg5NTc0MQ0KPiA+ID4gPiA+ID4gPiAgICAgc25hcHB5ICAyMzEuODY4MzEyCSAg
-ICAgICAxMTc4MjIzNjY3NAl8ICA1MjkwLjkxOTg5NAkgICAgMjQ1NjYxMjg4MzU1DQo+ID4gPiA+
-ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgICBGb3IgZGVjb21wcmVzc2lvbjoNCj4gPiA+ID4gPiA+
-ID4NCj4gPiA+ID4gPiA+ID4gICAgICAgICAgICAgbWFrZWR1bXBmaWxlIC1kMzENCj4gPiA+ID4g
-PiA+ID4gICAgICAgICAgICAgZGVjb21wcmVzcyB0aW1lCSAgIHZtY29yZSBzaXplDQo+ID4gPiA+
-ID4gPiA+ICAgICB6c3RkLTMJNDc3LjU0MzM5NgkgICAgICAgNTI4OTM3MzQ0OA0KPiA+ID4gPiA+
-ID4gPiAgICAgenN0ZC0yCTQ3OC4wMzQ1MzQJICAgICAgIDUzMjc0NTQxMjMNCj4gPiA+ID4gPiA+
-ID4gICAgIHpzdGQtMQk0NTkuMDY2ODA3CSAgICAgICA1NzQ4MDM3OTMxDQo+ID4gPiA+ID4gPiA+
-ICAgICB6c3RkMAk1NjEuNjg3NTI1CSAgICAgICA0NjgwMDA5MDEzDQo+ID4gPiA+ID4gPiA+ICAg
-ICB6c3RkMQk1NDcuMjQ4OTE3CSAgICAgICA0NzA2MzU4NTQ3DQo+ID4gPiA+ID4gPiA+ICAgICB6
-c3RkMgk1NDQuMjE5NzU4CSAgICAgICA0NzA0NzgwNzE5DQo+ID4gPiA+ID4gPiA+ICAgICB6c3Rk
-Mwk1NTUuNzI2MzQzCSAgICAgICA0NjgwMDA5MDEzDQo+ID4gPiA+ID4gPiA+ICAgICB6c3RkNAk1
-NTguMDMxNzIxCSAgICAgICA0Njc1NTQ1OTMzDQo+ID4gPiA+ID4gPiA+ICAgICB6bGliCTYzMC45
-NjU0MjYJICAgICAgIDg1NTUzNzYyMjkNCj4gPiA+ID4gPiA+ID4gICAgIGx6bwkgICAgCTQyNy4y
-OTIxMDcJICAgICAgMTY4NDk0NTc2NDkNCj4gPiA+ID4gPiA+ID4gICAgIHNuYXBweQk0NDYuNTQy
-ODA2CSAgICAgIDExODQxNDA3OTU3DQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ICAgRGlz
-Y3Vzc2lvbg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiAgICAgRm9yIHpzdGQgcmFuZ2Ug
-ZnJvbSAtMyB0byA0LCBjb21wcmVzc2lvbiBsZXZlbCAyIChaU1REX2RmYXN0KSBoYXMNCj4gPiA+
-ID4gPiA+ID4gICAgIHRoZSBiZXN0IHRpbWUgY29uc3VtcHRpb24gYW5kIHZtY29yZSBkdW1wIHNp
-emUgYmFsYW5jZS4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBEbyB5b3UgaGF2ZSBhIHJlc3Vs
-dCBvZiAtZCAxIGNvbXByZXNzaW9uIHRlc3Q/ICBJIHRoaW5rIC1kIDAgaXMgbm90DQo+ID4gPiA+
-ID4gPiBwcmFjdGljYWwsIEkgd291bGQgbGlrZSB0byBzZWUgYSAtZCAxIHJlc3VsdCBvZiBzdWNo
-IGEgbGFyZ2Ugdm1jb3JlLg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IE5vLCBJ
-IGhhdmVuJ3QgdGVzdGVkIHRoZSAtZCAxIGNhc2UuIEkgaGF2ZSByZXR1cm5lZCB0aGUgbWFjaGlu
-ZSB3aGljaCB1c2VkDQo+ID4gPiA+ID4gZm9yIHBlcmZvcm1hbmNlIHRlc3RpbmcsIEkgd2lsbCBi
-b3Jyb3cgYW5kIHRlc3Qgb24gaXQgYWdhaW4sIHBsZWFzZSB3YWl0IGZvcg0KPiA+ID4gPiA+IGEg
-d2hpbGUuLi4NCj4gPiA+ID4NCj4gPiA+ID4gVGhhbmtzLCBpdCB3b3VsZCBiZSBoZWxwZnVsLg0K
-PiA+ID4gPg0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiBBbmQganVzdCBvdXQgb2YgY3VyaW9zaXR5
-LCB3aGF0IHZlcnNpb24gb2YgenN0ZCBhcmUgeW91IHVzaW5nPw0KPiA+ID4gPiA+ID4gV2hlbiBJ
-IHRlc3RlZCB6c3RkIGxhc3QgdGltZSwgY29tcHJlc3Npb24gbGV2ZWwgMSB3YXMgZmFzdGVyIHRo
-YW4gMiwgaWlyYy4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiBUaGUgT1MgcnVu
-bmluZyBvbiB0aGUgbWFjaGluZSBpcyBmZWRvcmEzNCwgSSB1c2VkIGl0cyBkZWZhdWx0IHpzdGQg
-cGFja2FnZSwgd2hvc2UNCj4gPiA+ID4gPiB2ZXJzaW9uIGlzIHYxLjQuOS4NCj4gPiA+ID4NCj4g
-PiA+ID4gVGhhbmtzIGZvciB0aGUgaW5mby4NCj4gPiA+ID4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+
-ID4gYnR3LCBaU1REX2RmYXN0IGlzIGFuIGVudW0gb2YgWlNURF9zdHJhdGVneSwgbm90IGZvciBj
-b21wcmVzc2lvbiBsZXZlbD8NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFllcywgaXQncyBlbnVtIG9m
-IFpTVERfc3RyYXRlZ3kgWzFdLg0KPiA+ID4gPg0KPiA+ID4gPiBvaywgc28gaXQnbGwgaGF2ZSB0
-byBiZSByZXBsYWNlZCB3aXRoICIyIiB0byBhdm9pZCBjb25mdXNpb24uDQo+ID4gPiA+DQo+ID4g
-PiA+ID4NCj4gPiA+ID4gPiBbMV06IGh0dHBzOi8venN0ZC5kb2NzZm9yZ2UuY29tL2Rldi9hcGkt
-ZG9jdW1lbnRhdGlvbi8jYWR2YW5jZWQtY29tcHJlc3Npb24tYXBpLXJlcXVpcmVzLXYxNDANCj4g
-PiA+ID4gPg0KPiA+ID4gPiA+IFRoYW5rcywNCj4gPiA+ID4gPiBUYW8gTGl1DQo+ID4gPiA+ID4N
-Cj4gPiA+ID4gPiA+IChubyBuZWVkIHRvIHVwZGF0ZSBmb3Igbm93LCBJIHdpbGwgcmV2aWV3IGxh
-dGVyKQ0KPiA+ID4gPg0KPiA+ID4gPiBUaGUgc2VyaWVzIGFsbW9zdCBsb29rcyBnb29kIHRvIG1l
-ICh0aG91Z2ggSSB3aWxsIG1lcmdlIHRob3NlIGludG8gYSBwYXRjaCksDQo+ID4gPiA+IGp1c3Qg
-dHdvIHF1ZXN0aW9ucyBhcmU6DQo+ID4gPiA+IC0gd2hldGhlciAyIGlzIHRoZSBiZXN0IGJhbGFu
-Y2VkIGNvbXByZXNzaW9uIGxldmVsLA0KPiA+DQo+ID4gQXMgZmFyIGFzIEkndmUgdGVzdGVkIG9u
-IHR3byBtYWNoaW5lcyB0aGlzIHRpbWUsIGNvbXByZXNzaW9uIGxldmVsIDEgd2FzIGZhc3Rlcg0K
-PiA+IHRoYW4gMi4gIFRoZXJlIGlzIG5vIGxhcmdlIGRpZmZlcmVuY2UgYmV0d2VlbiB0aGVtLCBi
-dXQgZ2VuZXJhbGx5IDEgc2hvdWxkIGJlDQo+ID4gZmFzdGVyIHRoYW4gMiBhY2NvcmRpbmcgdG8g
-dGhlIHpzdGQgbWFudWFsOg0KPiA+ICAgIlRoZSBsb3dlciB0aGUgbGV2ZWwsIHRoZSBmYXN0ZXIg
-dGhlIHNwZWVkIChhdCB0aGUgY29zdCBvZiBjb21wcmVzc2lvbikuIg0KPiA+IEFuZCBhcyB5b3Ug
-a25vdywgbGV2ZWwgMCBpcyB1bnN0YWJsZSwgdGhhdCB3YXMgdGhlIHNhbWUgd2hlbiBJIHRlc3Rl
-ZCBiZWZvcmUuDQo+ID4NCj4gPiBTbyBjdXJyZW50bHkgSSB3b3VsZCBwcmVmZXIgMSByYXRoZXIg
-dGhhbiAyLCB3aGF0IGRvIHlvdSB0aGluaz8NCj4gDQo+IEFzIHdlIG1lbnRpb25lZCBiZWZvcmUs
-IEkgaGF2ZSB0ZXN0ZWQgdGhlIC1kIDEgY29tcHJlc3Npb24gbWVhc3VyZW1lbnQgb24NCj4gdGhl
-IHNhbWUgeDg2XzY0IG1hY2hpbmUgd2l0aCA0VCBtZW1vcnk6DQo+IA0KPiAgICAgICAgY29tcHJl
-c3Npb24gdGltZXwgdm1jb3JlIHNpemUNCj4genN0ZC0zICA0NjIwLjc5NTE5NAkzMTcyMDYzMjk4
-NQ0KPiB6c3RkLTIgIDQ1NDUuNjM2NDM3CTMxNzE2ODQ3NTAzDQo+IHpzdGQtMSAgNDUxNi4wNzYy
-OTgJMzIxMTMzMDAzOTkNCj4genN0ZDAgICA0NjYzLjE3NjE4CTMwOTY3NDk2Mjk5DQo+IHpzdGQx
-ICAgNDYxOC4zODYzMTMJMzEwMTAzMDU4MDkNCj4genN0ZDIgICA0NjMzLjUzNTc3MQkzMTAwNTA3
-MzM0NA0KPiB6c3RkMyAgIDQ2NzMuMjQwNjYzCTMwOTY3ODU1ODQxDQo+IHpzdGQ0ICAgNDc3MS4x
-NDE2CTMwOTY1OTE0ODUzDQo+IGx6byAgICAgNDgwMS45NTgzNjgJMzQ5MjA0MTc1ODQNCj4gemxp
-YiAgICA0NDQyLjI1NzEwNQk0MzQ4Mjc2NTE2OA0KPiBzbmFwcHkgIDQ0MzMuOTU3MDA1CTM4NTk0
-NzkwMzcxDQo+IA0KPiBBcyBmb3IgdGhlIGRlY29tcHJlc3Npb24sIEkgZGlkbid0IGdldCBhIG1l
-YW5pbmdmdWwgdmFsdWUsIGJlY2F1c2UgdGhlIHZtY29yZSBzaXplDQo+IHdlcmUgdG9vIGxhcmdl
-LCBhbmQgdGhlIG1vc3QgdGltZSB3YXMgc3BlbnQgb24gZGlzayBJL08sIHRodXMgdGhlIGRlY29t
-cHJlc3Npb24gdGltZQ0KPiBtZWFzdXJlbWVudCBkaWRuJ3Qgc2hvdyBhbiBvYnZpb3VzIGRpZmZl
-cmVuY2UuDQo+IA0KPiBJIGFncmVlIHRoZSBjb21wcmVzc2lvbiBsZXZlbCAxIGFuZCAyIGRvbid0
-IGhhdmUgYSBiaWcgZGlmZmVyZW5jZS4gSSdtIE9LIHdpdGgNCj4geW91ciBwcmVmZXJlbmNlLg0K
-DQpPSywgdGhhbmsgeW91IGZvciB0aGUgdGVzdGluZyEgIEFzIHdlIGhhdmUgdGVzdGVkLCB0aGUg
-Y29tcHJlc3Npb24gbGV2ZWwgMQ0KYW5kIDIgb2Z0ZW4gY2hhbmdlIHBsYWNlcyBlYWNoIG90aGVy
-LCBsZXQncyBjaG9vc2UgMSBmb3IgZ2VuZXJhbCBzcGVlZC4NCg0KSSB3aWxsIG1lcmdlIHRoZSBz
-ZXJpZXMgd2l0aCBzb21lIGFkanVzdG1lbnRzLCBwbGVhc2Ugd2FpdCBmb3IgYSB3aGlsZS4NCg0K
-PiANCj4gPg0KPiA+IFJlc3VsdHM6DQo+ID4gKiBSSEVMOC40IHdpdGggbGlienN0ZC0xLjQuNCAv
-IDY0R0IgZmlsbGVkIHdpdGggUUVNVSBtZW1vcnkvaW1hZ2VzIG1haW5seQ0KPiA+ICMgZnJlZQ0K
-PiA+ICAgICAgICAgICAgICAgdG90YWwgICAgICAgIHVzZWQgICAgICAgIGZyZWUgICAgICBzaGFy
-ZWQgIGJ1ZmYvY2FjaGUgICBhdmFpbGFibGUNCj4gPiBNZW06ICAgICAgIDY1NTk5ODI0ICAgIDIx
-NzY4MDI4ICAgICAgNTQ5MzY0ICAgICAgICA0NjY4ICAgIDQzMjgyNDMyICAgIDQzMDc4ODI4DQo+
-ID4gU3dhcDogICAgICAzMjk2NDYwNCAgICAgNDgyNzkxNiAgICAyODEzNjY4OA0KPiA+DQo+ID4g
-ICAgICAgIG1ha2VkdW1wZmlsZSAtZCAxICAgICAgICAgICBtYWtlZHVtcGZpbGUgLWQgMzENCj4g
-PiAgICAgICAgY29weSBzZWMuICAgd3JpdGUgYnl0ZXMgICAgIGNvcHkgc2VjLiAgd3JpdGUgYnl0
-ZXMNCj4gPiB6c3RkMSAgMjIwLjk3OTY4OSAgMjY0NTY2NTkyMTMgICAgIDkuMDE0MTc2ICAgNTU4
-ODQ1MDAwDQo+ID4genN0ZDIgIDIyNy43NzQ2MDIgIDI2NDAyNDM3MTkwICAgICA5LjA3ODU5OSAg
-IDU2MDY4MTI1Ng0KPiA+IGx6byAgICAgODMuNDA2MjkxICAzMzA3ODk5NTA2NSAgICAgMy42MDM3
-NzggICA4MTAyMTk4NjANCj4gPg0KPiA+ICogUkhFTCB3aXRoIGxpYnpzdGQtMS41LjAgLyA2NEdC
-IGZpbGxlZCB3aXRoIGtlcm5lbCBzb3VyY2UgY29kZSBtYWlubHkNCj4gPiAjIGZyZWUNCj4gPiAg
-ICAgICAgICAgICAgICB0b3RhbCAgICAgICAgdXNlZCAgICAgICAgZnJlZSAgICAgIHNoYXJlZCAg
-YnVmZi9jYWNoZSAgIGF2YWlsYWJsZQ0KPiA+IE1lbTogICAgICAgIDY1MzI5NjMyICAgICA5OTI1
-NTM2ICAgICAgNDU2MDIwICAgIDUzMDg2MDY4ICAgIDU0OTQ4MDc2ICAgICAxNTQ5MDg4DQo+ID4g
-U3dhcDogICAgICAgMzI4NjYzMDAgICAgIDE2MDc0MjQgICAgMzEyNTg4NzYNCj4gPg0KPiA+ICAg
-ICAgICBtYWtlZHVtcGZpbGUgLWQgMSAgICAgICAgICAgbWFrZWR1bXBmaWxlIC1kIDMxDQo+ID4g
-enN0ZDEgIDUyMC44NDQxODkgIDE1NTM3MDgwODE5ICAgICA1My40OTQ3ODIgIDEyMDA3NTQwMjMN
-Cj4gPiB6c3RkMiAgNTMzLjkxMjQ1MSAgMTU0Njk1NzU2NTEgICAgIDUzLjY0MTUxMCAgMTE5OTU2
-MTYwOQ0KPiA+IGx6byAgICAyMzMuMzcwODAwICAyMDc4MDgyMTE2NSAgICAgMjMuMjgxMzc0ICAx
-NzQwMDQxMjQ1DQo+ID4NCj4gPiAoVXNlZCAvcHJvYy9rY29yZSwgc28gbm90IHN0YWJsZSBtZW1v
-cnksIGJ1dCBtZWFzdXJlZCB6c3RkIDMgdGltZXMgYW5kDQo+ID4gcGlja2VkIHRoZSBtaWRkbGUg
-ZWxhcHNlZCB0aW1lLikNCj4gPg0KPiANCj4gVGhhbmtzIGZvciBzaGFyaW5nIHRoZSByZXN1bHRz
-LiBKdXN0IGZvciBjdXJpb3NpdHksIGNhbiB5b3Ugc2hhcmUgeW91ciB3YXkNCj4gb2YgdGVzdGlu
-ZyBhcyB3ZWxsPyBJIGNhbiBpbXByb3ZlIG1pbmUgZm9yIGxhdGVyIHVzZS4NCg0KSSBkaWQgdGhl
-c2U6DQooMSkgZmlsbCBtZW1vcnkNCi0gdGhlIGZvcm1lciBjYXNlOiBvbiBhIEtWTSBob3N0IHJ1
-bm5pbmcgb3ZlciAxMDAgZGF5cyB3aXRoIDggZ3Vlc3RzDQogICQgY2F0IGd1ZXN0LmltZyA+IC9k
-ZXYvbnVsbCAgZm9yIHNvbWUgaW1hZ2VzIHVudGlsIHN3YXAgaXMgdXNlZC4NCi0gdGhlIGxhdHRl
-ciBjYXNlOiB0YXIgeGYgbGludXgtNS4xNC50YXIueHogYW5kIGNvcHkgbXVsdGlwbGUgdGltZXMN
-CiAgaW50byAvZGV2L3NobSB1bnRpbCBzd2FwIGlzIHVzZWQuDQoNCigyKSBydW4gbWFrZWR1bXBm
-aWxlIGZvciAvcHJvYy9rY29yZQ0KSSBhbHNvIHVzZWQgdGhlIGNvbW1hbmQgeW91IHVzZWQgYW5k
-IHBpY2tlZCB1cCB0aGUgZWxhcHNlZCB0aW1lIG9mDQoiQ29weWluZyBkYXRhIiwgdG8gbWVhc3Vy
-ZSBvbmx5IHRoZSBjb21wcmVzc2lvbiB0aW1lLCBhbmQgc2l6ZSBvZg0KIldyaXRlIGJ5dGVzIi4N
-Cg0KIyBtYWtlZHVtcGZpbGUgLXogLWQgMSAtLWRyeS1ydW4gLS1zaG93LXN0YXQgL3Byb2Mva2Nv
-cmUgdm1jb3JlDQouLi4NCi4uLltDb3B5aW5nIGRhdGEgICAgICAgICAgICAgICBdIDogOS40NjMz
-NTIgc2Vjb25kcw0KLi4uDQpXcml0ZSBieXRlcyAgICAgOiA1MzUxNTEwMDgNCg0KVGhhbmtzLA0K
-S2F6dQ0KDQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
-ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+On Wed, 15 Sept 2021 at 15:20, Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+>
+> Add support for parsing the "linux,usable-memory-range" DT property.
+> This property is used to describe the usable memory reserved for the
+> crash dump kernel, and thus makes the memory reservation explicit.
+> If present, Linux no longer needs to mask the program counter, and rely
+> on the "mem=" kernel parameter to obtain the start and size of usable
+> memory.
+>
+> For backwards compatibility, the traditional method to derive the start
+> of memory is still used if "linux,usable-memory-range" is absent.
+>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Acked-by: Ard Biesheuvel <ardb@kernel.org>
+
+> ---
+> KernelVersion: v5.15-rc1
+> ---
+> The corresponding patch for kexec-tools is "[PATCH] arm: kdump: Add DT
+> properties to crash dump kernel's DTB", which is still valid:
+> https://lore.kernel.org/r/20200902154129.6358-1-geert+renesas@glider.be/
+>
+> v6:
+>   - All dependencies are in v5.15-rc1,
+>
+> v5:
+>   - Remove the addition of "linux,elfcorehdr" and
+>     "linux,usable-memory-range" handling to arch/arm/mm/init.c,
+>
+> v4:
+>   - Remove references to architectures in chosen.txt, to avoid having to
+>     change this again when more architectures copy kdump support,
+>   - Remove the architecture-specific code for parsing
+>     "linux,usable-memory-range" and "linux,elfcorehdr", as the FDT core
+>     code now takes care of this,
+>   - Move chosen.txt change to patch changing the FDT core,
+>   - Use IS_ENABLED(CONFIG_CRASH_DUMP) instead of #ifdef,
+>
+> v3:
+>   - Rebase on top of accepted solution for DTB memory information
+>     handling, which is part of v5.12-rc1,
+>
+> v2:
+>   - Rebase on top of reworked DTB memory information handling.
+> ---
+>  .../arm/boot/compressed/fdt_check_mem_start.c | 48 ++++++++++++++++---
+>  1 file changed, 42 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/compressed/fdt_check_mem_start.c b/arch/arm/boot/compressed/fdt_check_mem_start.c
+> index 62450d824c3ca180..9291a2661bdfe57f 100644
+> --- a/arch/arm/boot/compressed/fdt_check_mem_start.c
+> +++ b/arch/arm/boot/compressed/fdt_check_mem_start.c
+> @@ -55,16 +55,17 @@ static uint64_t get_val(const fdt32_t *cells, uint32_t ncells)
+>   * DTB, and, if out-of-range, replace it by the real start address.
+>   * To preserve backwards compatibility (systems reserving a block of memory
+>   * at the start of physical memory, kdump, ...), the traditional method is
+> - * always used if it yields a valid address.
+> + * used if it yields a valid address, unless the "linux,usable-memory-range"
+> + * property is present.
+>   *
+>   * Return value: start address of physical memory to use
+>   */
+>  uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+>  {
+> -       uint32_t addr_cells, size_cells, base;
+> +       uint32_t addr_cells, size_cells, usable_base, base;
+>         uint32_t fdt_mem_start = 0xffffffff;
+> -       const fdt32_t *reg, *endp;
+> -       uint64_t size, end;
+> +       const fdt32_t *usable, *reg, *endp;
+> +       uint64_t size, usable_end, end;
+>         const char *type;
+>         int offset, len;
+>
+> @@ -80,6 +81,27 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+>         if (addr_cells > 2 || size_cells > 2)
+>                 return mem_start;
+>
+> +       /*
+> +        * Usable memory in case of a crash dump kernel
+> +        * This property describes a limitation: memory within this range is
+> +        * only valid when also described through another mechanism
+> +        */
+> +       usable = get_prop(fdt, "/chosen", "linux,usable-memory-range",
+> +                         (addr_cells + size_cells) * sizeof(fdt32_t));
+> +       if (usable) {
+> +               size = get_val(usable + addr_cells, size_cells);
+> +               if (!size)
+> +                       return mem_start;
+> +
+> +               if (addr_cells > 1 && fdt32_ld(usable)) {
+> +                       /* Outside 32-bit address space */
+> +                       return mem_start;
+> +               }
+> +
+> +               usable_base = fdt32_ld(usable + addr_cells - 1);
+> +               usable_end = usable_base + size;
+> +       }
+> +
+>         /* Walk all memory nodes and regions */
+>         for (offset = fdt_next_node(fdt, -1, NULL); offset >= 0;
+>              offset = fdt_next_node(fdt, offset, NULL)) {
+> @@ -107,7 +129,20 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+>
+>                         base = fdt32_ld(reg + addr_cells - 1);
+>                         end = base + size;
+> -                       if (mem_start >= base && mem_start < end) {
+> +                       if (usable) {
+> +                               /*
+> +                                * Clip to usable range, which takes precedence
+> +                                * over mem_start
+> +                                */
+> +                               if (base < usable_base)
+> +                                       base = usable_base;
+> +
+> +                               if (end > usable_end)
+> +                                       end = usable_end;
+> +
+> +                               if (end <= base)
+> +                                       continue;
+> +                       } else if (mem_start >= base && mem_start < end) {
+>                                 /* Calculated address is valid, use it */
+>                                 return mem_start;
+>                         }
+> @@ -123,7 +158,8 @@ uint32_t fdt_check_mem_start(uint32_t mem_start, const void *fdt)
+>         }
+>
+>         /*
+> -        * The calculated address is not usable.
+> +        * The calculated address is not usable, or was overridden by the
+> +        * "linux,usable-memory-range" property.
+>          * Use the lowest usable physical memory address from the DTB instead,
+>          * and make sure this is a multiple of 2 MiB for phys/virt patching.
+>          */
+> --
+> 2.25.1
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
