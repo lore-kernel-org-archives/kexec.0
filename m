@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mTnCf-00EyLV-5a
- for kexec@lists.infradead.org; Fri, 24 Sep 2021 15:33:34 +0000
-Date: Fri, 24 Sep 2021 17:33:25 +0200
+ id 1mTnCt-00EyOy-C5
+ for kexec@lists.infradead.org; Fri, 24 Sep 2021 15:33:48 +0000
+Date: Fri, 24 Sep 2021 17:33:44 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec:Remove unused local variable in
- get_kernel_page_offset()
-Message-ID: <20210924153325.GA25765@vergenet.net>
-References: <20210923053243.8320-1-songkai01@inspur.com>
+Subject: Re: [PATCH] kexec:Fix  memory leak problem in zImage_ppc64_load()
+Message-ID: <20210924153344.GB25765@vergenet.net>
+References: <20210924010804.10406-1-songkai01@inspur.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210923053243.8320-1-songkai01@inspur.com>
+In-Reply-To: <20210924010804.10406-1-songkai01@inspur.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,26 +26,13 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Kai Song <songkai01@inspur.com>
 Cc: kexec@lists.infradead.org
 
-On Thu, Sep 23, 2021 at 01:32:43PM +0800, Kai Song wrote:
-> In get_kernel_page_offset(),the local variable kv is unused,remove it.
+On Fri, Sep 24, 2021 at 09:08:04AM +0800, Kai Song wrote:
+> When the function exits abnormally,ph should be freed.
 > 
 > Signed-off-by: Kai Song <songkai01@inspur.com>
 > ---
->  kexec/arch/i386/crashdump-x86.c | 1 -
->  1 file changed, 1 deletion(-)
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 81610dc..9826f6d 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -52,7 +52,6 @@ extern struct arch_options_t arch_options;
->  static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
->  				  struct crash_elf_info *elf_info)
->  {
-> -	int kv;
->  
->  	if (elf_info->machine == EM_X86_64) {
->  		/* get_kernel_vaddr_and_size will override this */
+>  kexec/arch/ppc64/kexec-zImage-ppc64.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 
 Thanks, applied.
 
