@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mTnCt-00EyOy-C5
- for kexec@lists.infradead.org; Fri, 24 Sep 2021 15:33:48 +0000
-Date: Fri, 24 Sep 2021 17:33:44 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec:Fix  memory leak problem in zImage_ppc64_load()
-Message-ID: <20210924153344.GB25765@vergenet.net>
-References: <20210924010804.10406-1-songkai01@inspur.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210924010804.10406-1-songkai01@inspur.com>
+Received: from smtp1.irit.fr ([141.115.24.2])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mTodh-00FAFX-HC
+ for kexec@lists.infradead.org; Fri, 24 Sep 2021 17:05:35 +0000
+From: dinhngoc.tu@irit.fr
+Subject: [PATCH] kexec-tools: multiboot2: Correct BASIC_MEMINFO memory units
+Date: Fri, 24 Sep 2021 19:03:27 +0200
+Message-Id: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,22 +15,39 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Kai Song <songkai01@inspur.com>
-Cc: kexec@lists.infradead.org
+To: kexec@lists.infradead.org
+Cc: Tu Dinh <dinhngoc.tu@irit.fr>
 
-On Fri, Sep 24, 2021 at 09:08:04AM +0800, Kai Song wrote:
-> When the function exits abnormally,ph should be freed.
-> 
-> Signed-off-by: Kai Song <songkai01@inspur.com>
-> ---
->  kexec/arch/ppc64/kexec-zImage-ppc64.c | 7 +++++++
->  1 file changed, 7 insertions(+)
+From: Tu Dinh <dinhngoc.tu@irit.fr>
 
-Thanks, applied.
+mem_lower and mem_upper are measured in kilobytes.
+---
+ kexec/arch/i386/kexec-mb2-x86.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
+index 36fef20..0d2e93b 100644
+--- a/kexec/arch/i386/kexec-mb2-x86.c
++++ b/kexec/arch/i386/kexec-mb2-x86.c
+@@ -256,8 +256,8 @@ static uint64_t multiboot2_make_mbi(struct kexec_info *info, char *cmdline, int
+ 
+ 		tag->type = MULTIBOOT_TAG_TYPE_BASIC_MEMINFO;
+ 		tag->size = sizeof (struct multiboot_tag_basic_meminfo);
+-		tag->mem_lower = mem_lower;
+-		tag->mem_upper = mem_upper;
++		tag->mem_lower = mem_lower >> 10;
++		tag->mem_upper = mem_upper >> 10;
+ 		ptrorig += ALIGN_UP (tag->size, MULTIBOOT_TAG_ALIGN) / sizeof (*ptrorig);
+ 	}
+ 
+-- 
+2.25.1
+
 
 _______________________________________________
 kexec mailing list
