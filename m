@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mUsCc-0031gL-5e
- for kexec@lists.infradead.org; Mon, 27 Sep 2021 15:06:00 +0000
+ id 1mUsCh-0031ky-Ey
+ for kexec@lists.infradead.org; Mon, 27 Sep 2021 15:06:04 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 3/4] memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
- IORESOURCE_SYSRAM_DRIVER_MANAGED
-Date: Mon, 27 Sep 2021 17:05:17 +0200
-Message-Id: <20210927150518.8607-4-david@redhat.com>
+Subject: [PATCH v1 4/4] mm/memory_hotplug: indicate MEMBLOCK_DRIVER_MANAGED
+ with IORESOURCE_SYSRAM_DRIVER_MANAGED
+Date: Mon, 27 Sep 2021 17:05:18 +0200
+Message-Id: <20210927150518.8607-5-david@redhat.com>
 In-Reply-To: <20210927150518.8607-1-david@redhat.com>
 References: <20210927150518.8607-1-david@redhat.com>
 MIME-Version: 1.0
@@ -26,119 +26,38 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
 
-Let's add a flag that corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED.
-Similar to MEMBLOCK_HOTPLUG, most infrastructure has to treat such memory
-like ordinary MEMBLOCK_NONE memory -- for example, when selecting memory
-regions to add to the vmcore for dumping in the crashkernel via
-for_each_mem_range().
-
-However, especially kexec_file is not supposed to select such memblocks via
-for_each_free_mem_range() / for_each_free_mem_range_reverse() to place
-kexec images, similar to how we handle IORESOURCE_SYSRAM_DRIVER_MANAGED
-without CONFIG_ARCH_KEEP_MEMBLOCK.
-
-Let's document why kexec_walk_memblock() won't try placing images on
-areas marked MEMBLOCK_DRIVER_MANAGED -- similar to
-IORESOURCE_SYSRAM_DRIVER_MANAGED handling in locate_mem_hole_callback()
-via kexec_walk_resources().
-
-We'll make sure that memory hotplug code sets the flag where applicable
-(IORESOURCE_SYSRAM_DRIVER_MANAGED) next. This prepares architectures
-that need CONFIG_ARCH_KEEP_MEMBLOCK, such as arm64, for virtio-mem
-support.
+Let's communicate driver-managed regions to memblock, to properly
+teach kexec_file with CONFIG_ARCH_KEEP_MEMBLOCK to not place images on
+these memory regions.
 
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- include/linux/memblock.h | 16 ++++++++++++++--
- kernel/kexec_file.c      |  5 +++++
- mm/memblock.c            |  4 ++++
- 3 files changed, 23 insertions(+), 2 deletions(-)
+ mm/memory_hotplug.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index b49a58f621bc..7d8d656d5082 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -33,12 +33,17 @@ extern unsigned long long max_possible_pfn;
-  * @MEMBLOCK_NOMAP: don't add to kernel direct mapping and treat as
-  * reserved in the memory map; refer to memblock_mark_nomap() description
-  * for further details
-+ * @MEMBLOCK_DRIVER_MANAGED: memory region that is always detected via a driver,
-+ * corresponding to IORESOURCE_SYSRAM_DRIVER_MANAGED in the kernel resource
-+ * tree. Especially kexec should never use this memory for placing images and
-+ * shouldn't expose this memory to the second kernel.
-  */
- enum memblock_flags {
- 	MEMBLOCK_NONE		= 0x0,	/* No special request */
- 	MEMBLOCK_HOTPLUG	= 0x1,	/* hotpluggable region */
- 	MEMBLOCK_MIRROR		= 0x2,	/* mirrored region */
- 	MEMBLOCK_NOMAP		= 0x4,	/* don't add to kernel direct mapping */
-+	MEMBLOCK_DRIVER_MANAGED = 0x8,	/* always detected via a driver */
- };
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 5f873e7f5b29..6d90818d4ce8 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1357,6 +1357,7 @@ bool mhp_supports_memmap_on_memory(unsigned long size)
+ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ {
+ 	struct mhp_params params = { .pgprot = pgprot_mhp(PAGE_KERNEL) };
++	enum memblock_flags memblock_flags = MEMBLOCK_NONE;
+ 	struct vmem_altmap mhp_altmap = {};
+ 	struct memory_group *group = NULL;
+ 	u64 start, size;
+@@ -1385,7 +1386,9 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
+ 	mem_hotplug_begin();
  
- /**
-@@ -209,7 +214,8 @@ static inline void __next_physmem_range(u64 *idx, struct memblock_type *type,
-  */
- #define for_each_mem_range(i, p_start, p_end) \
- 	__for_each_mem_range(i, &memblock.memory, NULL, NUMA_NO_NODE,	\
--			     MEMBLOCK_HOTPLUG, p_start, p_end, NULL)
-+			     MEMBLOCK_HOTPLUG | MEMBLOCK_DRIVER_MANAGED, \
-+			     p_start, p_end, NULL)
- 
- /**
-  * for_each_mem_range_rev - reverse iterate through memblock areas from
-@@ -220,7 +226,8 @@ static inline void __next_physmem_range(u64 *idx, struct memblock_type *type,
-  */
- #define for_each_mem_range_rev(i, p_start, p_end)			\
- 	__for_each_mem_range_rev(i, &memblock.memory, NULL, NUMA_NO_NODE, \
--				 MEMBLOCK_HOTPLUG, p_start, p_end, NULL)
-+				 MEMBLOCK_HOTPLUG | MEMBLOCK_DRIVER_MANAGED,\
-+				 p_start, p_end, NULL)
- 
- /**
-  * for_each_reserved_mem_range - iterate over all reserved memblock areas
-@@ -250,6 +257,11 @@ static inline bool memblock_is_nomap(struct memblock_region *m)
- 	return m->flags & MEMBLOCK_NOMAP;
- }
- 
-+static inline bool memblock_is_driver_managed(struct memblock_region *m)
-+{
-+	return m->flags & MEMBLOCK_DRIVER_MANAGED;
-+}
-+
- int memblock_search_pfn_nid(unsigned long pfn, unsigned long *start_pfn,
- 			    unsigned long  *end_pfn);
- void __next_mem_pfn_range(int *idx, int nid, unsigned long *out_start_pfn,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 33400ff051a8..8347fc158d2b 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -556,6 +556,11 @@ static int kexec_walk_memblock(struct kexec_buf *kbuf,
- 	if (kbuf->image->type == KEXEC_TYPE_CRASH)
- 		return func(&crashk_res, kbuf);
- 
-+	/*
-+	 * Using MEMBLOCK_NONE will properly skip MEMBLOCK_DRIVER_MANAGED. See
-+	 * IORESOURCE_SYSRAM_DRIVER_MANAGED handling in
-+	 * locate_mem_hole_callback().
-+	 */
- 	if (kbuf->top_down) {
- 		for_each_free_mem_range_reverse(i, NUMA_NO_NODE, MEMBLOCK_NONE,
- 						&mstart, &mend, NULL) {
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 47a56b223141..540a35317fb0 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -979,6 +979,10 @@ static bool should_skip_region(struct memblock_type *type,
- 	if (!(flags & MEMBLOCK_NOMAP) && memblock_is_nomap(m))
- 		return true;
- 
-+	/* skip driver-managed memory unless we were asked for it explicitly */
-+	if (!(flags & MEMBLOCK_DRIVER_MANAGED) && memblock_is_driver_managed(m))
-+		return true;
-+
- 	return false;
- }
- 
+ 	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
+-		ret = memblock_add_node(start, size, nid, MEMBLOCK_NONE);
++		if (res->flags & IORESOURCE_SYSRAM_DRIVER_MANAGED)
++			memblock_flags = MEMBLOCK_DRIVER_MANAGED;
++		ret = memblock_add_node(start, size, nid, memblock_flags);
+ 		if (ret)
+ 			goto error_mem_hotplug_end;
+ 	}
 -- 
 2.31.1
 
