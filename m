@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVHnx-008PtO-61
- for kexec@lists.infradead.org; Tue, 28 Sep 2021 18:26:15 +0000
-From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v1 8/8] virtio-mem: kdump mode to sanitize /proc/vmcore access
-Date: Tue, 28 Sep 2021 20:22:58 +0200
-Message-Id: <20210928182258.12451-9-david@redhat.com>
-In-Reply-To: <20210928182258.12451-1-david@redhat.com>
-References: <20210928182258.12451-1-david@redhat.com>
+ id 1mVIUq-008bN8-S9
+ for kexec@lists.infradead.org; Tue, 28 Sep 2021 19:10:36 +0000
+From: Borislav Petkov <bp@alien8.de>
+Subject: [PATCH 7/8] x86/sev: Replace occurrences of sev_es_active() with
+ cc_platform_has()
+Date: Tue, 28 Sep 2021 21:10:08 +0200
+Message-Id: <20210928191009.32551-8-bp@alien8.de>
+In-Reply-To: <20210928191009.32551-1-bp@alien8.de>
+References: <20210928191009.32551-1-bp@alien8.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,276 +23,148 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+To: LKML <linux-kernel@vger.kernel.org>
+Cc: Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
 
-Although virtio-mem currently supports reading unplugged memory in the
-hypervisor, this will change in the future, indicated to the device via
-a new feature flag. We similarly sanitized /proc/kcore access recently. [1]
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Let's register a vmcore callback, to allow vmcore code to check if a PFN
-belonging to a virtio-mem device is either currently plugged and should
-be dumped or is currently unplugged and should not be accessed, instead
-mapping the shared zeropage or returning zeroes when reading.
+Replace uses of sev_es_active() with the more generic cc_platform_has()
+using CC_ATTR_GUEST_STATE_ENCRYPT. If future support is added for other
+memory encyrption techonologies, the use of CC_ATTR_GUEST_STATE_ENCRYPT
+can be updated, as required.
 
-This is important when not capturing /proc/vmcore via tools like
-"makedumpfile" that can identify logically unplugged virtio-mem memory via
-PG_offline in the memmap, but simply by e.g., copying the file.
-
-Distributions that support virtio-mem+kdump have to make sure that the
-virtio_mem module will be part of the kdump kernel or the kdump initrd;
-dracut was recently [2] extended to include virtio-mem in the generated
-initrd. As long as no special kdump kernels are used, this will
-automatically make sure that virtio-mem will be around in the kdump initrd
-and sanitize /proc/vmcore access -- with dracut.
-
-With this series, we'll send one virtio-mem state request for every
-~2 MiB chunk of virtio-mem memory indicated in the vmcore that we intend
-to read/map.
-
-In the future, we might want to allow building virtio-mem for kdump
-mode only, even without CONFIG_MEMORY_HOTPLUG and friends: this way,
-we could support special stripped-down kdump kernels that have many
-other config options disabled; we'll tackle that once required. Further,
-we might want to try sensing bigger blocks (e.g., memory sections)
-first before falling back to device blocks on demand.
-
-Tested with Fedora rawhide, which contains a recent kexec-tools version
-(considering "System RAM (virtio_mem)" when creating the vmcore header) and
-a recent dracut version (including the virtio_mem module in the kdump
-initrd).
-
-[1] https://lkml.kernel.org/r/20210526093041.8800-1-david@redhat.com
-[2] https://github.com/dracutdevs/dracut/pull/1157
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
 ---
- drivers/virtio/virtio_mem.c | 136 ++++++++++++++++++++++++++++++++----
- 1 file changed, 124 insertions(+), 12 deletions(-)
+ arch/x86/include/asm/mem_encrypt.h |  2 --
+ arch/x86/kernel/sev.c              |  6 +++---
+ arch/x86/mm/mem_encrypt.c          | 24 +++---------------------
+ arch/x86/realmode/init.c           |  3 +--
+ 4 files changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 76d8aef3cfd2..ec0b2ab37acb 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -223,6 +223,9 @@ struct virtio_mem {
- 	 * When this lock is held the pointers can't change, ONLINE and
- 	 * OFFLINE blocks can't change the state and no subblocks will get
- 	 * plugged/unplugged.
-+	 *
-+	 * In kdump mode, used to serialize requests, last_block_addr and
-+	 * last_block_plugged.
- 	 */
- 	struct mutex hotplug_mutex;
- 	bool hotplug_active;
-@@ -230,6 +233,9 @@ struct virtio_mem {
- 	/* An error occurred we cannot handle - stop processing requests. */
- 	bool broken;
+diff --git a/arch/x86/include/asm/mem_encrypt.h b/arch/x86/include/asm/mem_encrypt.h
+index a5a58ccd1ee3..da14ede311aa 100644
+--- a/arch/x86/include/asm/mem_encrypt.h
++++ b/arch/x86/include/asm/mem_encrypt.h
+@@ -51,7 +51,6 @@ void __init mem_encrypt_free_decrypted_mem(void);
+ void __init mem_encrypt_init(void);
  
-+	/* Cached valued of is_kdump_kernel() when the device was probed. */
-+	bool in_kdump;
-+
- 	/* The driver is being removed. */
- 	spinlock_t removal_lock;
- 	bool removing;
-@@ -243,6 +249,13 @@ struct virtio_mem {
- 	/* Memory notifier (online/offline events). */
- 	struct notifier_block memory_notifier;
+ void __init sev_es_init_vc_handling(void);
+-bool sev_es_active(void);
  
-+#ifdef CONFIG_PROC_VMCORE
-+	/* vmcore callback for /proc/vmcore handling in kdump mode */
-+	struct vmcore_cb vmcore_cb;
-+	uint64_t last_block_addr;
-+	bool last_block_plugged;
-+#endif /* CONFIG_PROC_VMCORE */
-+
- 	/* Next device in the list of virtio-mem devices. */
- 	struct list_head next;
- };
-@@ -2293,6 +2306,12 @@ static void virtio_mem_run_wq(struct work_struct *work)
- 	uint64_t diff;
- 	int rc;
+ #define __bss_decrypted __section(".bss..decrypted")
  
-+	if (unlikely(vm->in_kdump)) {
-+		dev_warn_once(&vm->vdev->dev,
-+			     "unexpected workqueue run in kdump kernel\n");
-+		return;
-+	}
-+
- 	hrtimer_cancel(&vm->retry_timer);
+@@ -74,7 +73,6 @@ static inline void __init sme_encrypt_kernel(struct boot_params *bp) { }
+ static inline void __init sme_enable(struct boot_params *bp) { }
  
- 	if (vm->broken)
-@@ -2521,6 +2540,86 @@ static int virtio_mem_init_hotplug(struct virtio_mem *vm)
- 	return rc;
+ static inline void sev_es_init_vc_handling(void) { }
+-static inline bool sev_es_active(void) { return false; }
+ 
+ static inline int __init
+ early_set_memory_decrypted(unsigned long vaddr, unsigned long size) { return 0; }
+diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+index a6895e440bc3..53a6837d354b 100644
+--- a/arch/x86/kernel/sev.c
++++ b/arch/x86/kernel/sev.c
+@@ -11,7 +11,7 @@
+ 
+ #include <linux/sched/debug.h>	/* For show_regs() */
+ #include <linux/percpu-defs.h>
+-#include <linux/mem_encrypt.h>
++#include <linux/cc_platform.h>
+ #include <linux/printk.h>
+ #include <linux/mm_types.h>
+ #include <linux/set_memory.h>
+@@ -615,7 +615,7 @@ int __init sev_es_efi_map_ghcbs(pgd_t *pgd)
+ 	int cpu;
+ 	u64 pfn;
+ 
+-	if (!sev_es_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		return 0;
+ 
+ 	pflags = _PAGE_NX | _PAGE_RW;
+@@ -774,7 +774,7 @@ void __init sev_es_init_vc_handling(void)
+ 
+ 	BUILD_BUG_ON(offsetof(struct sev_es_runtime_data, ghcb_page) % PAGE_SIZE);
+ 
+-	if (!sev_es_active())
++	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		return;
+ 
+ 	if (!sev_es_check_cpu_features())
+diff --git a/arch/x86/mm/mem_encrypt.c b/arch/x86/mm/mem_encrypt.c
+index 932007a6913b..2d04c39bea1d 100644
+--- a/arch/x86/mm/mem_encrypt.c
++++ b/arch/x86/mm/mem_encrypt.c
+@@ -361,25 +361,6 @@ int __init early_set_memory_encrypted(unsigned long vaddr, unsigned long size)
+ 	return early_set_memory_enc_dec(vaddr, size, true);
  }
  
-+#ifdef CONFIG_PROC_VMCORE
-+static int virtio_mem_send_state_request(struct virtio_mem *vm, uint64_t addr,
-+					 uint64_t size)
-+{
-+	const uint64_t nb_vm_blocks = size / vm->device_block_size;
-+	const struct virtio_mem_req req = {
-+		.type = cpu_to_virtio16(vm->vdev, VIRTIO_MEM_REQ_STATE),
-+		.u.state.addr = cpu_to_virtio64(vm->vdev, addr),
-+		.u.state.nb_blocks = cpu_to_virtio16(vm->vdev, nb_vm_blocks),
-+	};
-+	int rc = -ENOMEM;
-+
-+	dev_dbg(&vm->vdev->dev, "requesting state: 0x%llx - 0x%llx\n", addr,
-+		addr + size - 1);
-+
-+	switch (virtio_mem_send_request(vm, &req)) {
-+	case VIRTIO_MEM_RESP_ACK:
-+		return virtio16_to_cpu(vm->vdev, vm->resp.u.state.state);
-+	case VIRTIO_MEM_RESP_ERROR:
-+		rc = -EINVAL;
-+		break;
-+	default:
-+		break;
-+	}
-+
-+	dev_dbg(&vm->vdev->dev, "requesting state failed: %d\n", rc);
-+	return rc;
-+}
-+
-+static bool virtio_mem_vmcore_pfn_is_ram(struct vmcore_cb *cb,
-+					 unsigned long pfn)
-+{
-+	struct virtio_mem *vm = container_of(cb, struct virtio_mem,
-+					     vmcore_cb);
-+	uint64_t addr = PFN_PHYS(pfn);
-+	bool is_ram;
-+	int rc;
-+
-+	if (!virtio_mem_contains_range(vm, addr, addr + PAGE_SIZE))
-+		return true;
-+	if (!vm->plugged_size)
-+		return false;
-+
-+	/*
-+	 * We have to serialize device requests and access to the information
-+	 * about the block queried last.
-+	 */
-+	mutex_lock(&vm->hotplug_mutex);
-+
-+	addr = ALIGN_DOWN(addr, vm->device_block_size);
-+	if (addr != vm->last_block_addr) {
-+		rc = virtio_mem_send_state_request(vm, addr,
-+						   vm->device_block_size);
-+		/* On any kind of error, we're going to signal !ram. */
-+		if (rc == VIRTIO_MEM_STATE_PLUGGED)
-+			vm->last_block_plugged = true;
-+		else
-+			vm->last_block_plugged = false;
-+		vm->last_block_addr = addr;
-+	}
-+
-+	is_ram = vm->last_block_plugged;
-+	mutex_unlock(&vm->hotplug_mutex);
-+	return is_ram;
-+}
-+#endif /* CONFIG_PROC_VMCORE */
-+
-+static int virtio_mem_init_kdump(struct virtio_mem *vm)
-+{
-+#ifdef CONFIG_PROC_VMCORE
-+	dev_info(&vm->vdev->dev, "memory hot(un)plug disabled in kdump kernel\n");
-+	vm->vmcore_cb.pfn_is_ram = virtio_mem_vmcore_pfn_is_ram;
-+	register_vmcore_cb(&vm->vmcore_cb);
-+	return 0;
-+#else /* CONFIG_PROC_VMCORE */
-+	dev_warn(&vm->vdev->dev, "disabled in kdump kernel without vmcore\n");
-+	return -EBUSY;
-+#endif /* CONFIG_PROC_VMCORE */
-+}
-+
- static int virtio_mem_init(struct virtio_mem *vm)
- {
- 	uint16_t node_id;
-@@ -2530,15 +2629,6 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 		return -EINVAL;
- 	}
- 
--	/*
--	 * We don't want to (un)plug or reuse any memory when in kdump. The
--	 * memory is still accessible (but not mapped).
--	 */
--	if (is_kdump_kernel()) {
--		dev_warn(&vm->vdev->dev, "disabled in kdump kernel\n");
--		return -EBUSY;
--	}
+-/*
+- * SME and SEV are very similar but they are not the same, so there are
+- * times that the kernel will need to distinguish between SME and SEV. The
+- * cc_platform_has() function is used for this.  When a distinction isn't
+- * needed, the CC_ATTR_MEM_ENCRYPT attribute can be used.
+- *
+- * The trampoline code is a good example for this requirement.  Before
+- * paging is activated, SME will access all memory as decrypted, but SEV
+- * will access all memory as encrypted.  So, when APs are being brought
+- * up under SME the trampoline area cannot be encrypted, whereas under SEV
+- * the trampoline area must be encrypted.
+- */
 -
- 	/* Fetch all properties that can't change. */
- 	virtio_cread_le(vm->vdev, struct virtio_mem_config, plugged_size,
- 			&vm->plugged_size);
-@@ -2562,6 +2652,12 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 	if (vm->nid != NUMA_NO_NODE && IS_ENABLED(CONFIG_NUMA))
- 		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
- 
-+	/*
-+	 * We don't want to (un)plug or reuse any memory when in kdump. The
-+	 * memory is still accessible (but not exposed to Linux).
-+	 */
-+	if (vm->in_kdump)
-+		return virtio_mem_init_kdump(vm);
- 	return virtio_mem_init_hotplug(vm);
- }
- 
-@@ -2640,6 +2736,7 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	hrtimer_init(&vm->retry_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	vm->retry_timer.function = virtio_mem_timer_expired;
- 	vm->retry_timer_ms = VIRTIO_MEM_RETRY_TIMER_MIN_MS;
-+	vm->in_kdump = is_kdump_kernel();
- 
- 	/* register the virtqueue */
- 	rc = virtio_mem_init_vq(vm);
-@@ -2654,8 +2751,10 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	virtio_device_ready(vdev);
- 
- 	/* trigger a config update to start processing the requested_size */
--	atomic_set(&vm->config_changed, 1);
--	queue_work(system_freezable_wq, &vm->wq);
-+	if (!vm->in_kdump) {
-+		atomic_set(&vm->config_changed, 1);
-+		queue_work(system_freezable_wq, &vm->wq);
-+	}
- 
- 	return 0;
- out_del_vq:
-@@ -2732,11 +2831,21 @@ static void virtio_mem_deinit_hotplug(struct virtio_mem *vm)
- 	}
- }
- 
-+static void virtio_mem_deinit_kdump(struct virtio_mem *vm)
-+{
-+#ifdef CONFIG_PROC_VMCORE
-+	unregister_vmcore_cb(&vm->vmcore_cb);
-+#endif /* CONFIG_PROC_VMCORE */
-+}
-+
- static void virtio_mem_remove(struct virtio_device *vdev)
+-/* Needs to be called from non-instrumentable code */
+-bool noinstr sev_es_active(void)
+-{
+-	return sev_status & MSR_AMD64_SEV_ES_ENABLED;
+-}
+-
+ /* Override for DMA direct allocation check - ARCH_HAS_FORCE_DMA_UNENCRYPTED */
+ bool force_dma_unencrypted(struct device *dev)
  {
- 	struct virtio_mem *vm = vdev->priv;
+@@ -449,7 +430,7 @@ static void print_mem_encrypt_feature_info(void)
+ 		pr_cont(" SEV");
  
--	virtio_mem_deinit_hotplug(vm);
-+	if (vm->in_kdump)
-+		virtio_mem_deinit_kdump(vm);
-+	else
-+		virtio_mem_deinit_hotplug(vm);
+ 	/* Encrypted Register State */
+-	if (sev_es_active())
++	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		pr_cont(" SEV-ES");
  
- 	/* reset the device and cleanup the queues */
- 	vdev->config->reset(vdev);
-@@ -2750,6 +2859,9 @@ static void virtio_mem_config_changed(struct virtio_device *vdev)
- {
- 	struct virtio_mem *vm = vdev->priv;
+ 	pr_cont("\n");
+@@ -468,7 +449,8 @@ void __init mem_encrypt_init(void)
+ 	 * With SEV, we need to unroll the rep string I/O instructions,
+ 	 * but SEV-ES supports them through the #VC handler.
+ 	 */
+-	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) && !sev_es_active())
++	if (cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT) &&
++	    !cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
+ 		static_branch_enable(&sev_enable_key);
  
-+	if (unlikely(vm->in_kdump))
-+		return;
-+
- 	atomic_set(&vm->config_changed, 1);
- 	virtio_mem_retry(vm);
- }
+ 	print_mem_encrypt_feature_info();
+diff --git a/arch/x86/realmode/init.c b/arch/x86/realmode/init.c
+index c878c5ee5a4c..4a3da7592b99 100644
+--- a/arch/x86/realmode/init.c
++++ b/arch/x86/realmode/init.c
+@@ -2,7 +2,6 @@
+ #include <linux/io.h>
+ #include <linux/slab.h>
+ #include <linux/memblock.h>
+-#include <linux/mem_encrypt.h>
+ #include <linux/cc_platform.h>
+ #include <linux/pgtable.h>
+ 
+@@ -48,7 +47,7 @@ static void sme_sev_setup_real_mode(struct trampoline_header *th)
+ 	if (cc_platform_has(CC_ATTR_HOST_MEM_ENCRYPT))
+ 		th->flags |= TH_FLAGS_SME_ACTIVE;
+ 
+-	if (sev_es_active()) {
++	if (cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT)) {
+ 		/*
+ 		 * Skip the call to verify_cpu() in secondary_startup_64 as it
+ 		 * will cause #VC exceptions when the AP can't handle them yet.
 -- 
-2.31.1
+2.29.2
 
 
 _______________________________________________
