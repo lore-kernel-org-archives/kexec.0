@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVIUl-008bHl-4e
+ id 1mVIUl-008bH6-5M
  for kexec@lists.infradead.org; Tue, 28 Sep 2021 19:10:31 +0000
 From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH 4/8] powerpc/pseries/svm: Add a powerpc version of
- cc_platform_has()
-Date: Tue, 28 Sep 2021 21:10:05 +0200
-Message-Id: <20210928191009.32551-5-bp@alien8.de>
+Subject: [PATCH 1/8] x86/ioremap: Selectively build arch override encryption
+ functions
+Date: Tue, 28 Sep 2021 21:10:02 +0200
+Message-Id: <20210928191009.32551-2-bp@alien8.de>
 In-Reply-To: <20210928191009.32551-1-bp@alien8.de>
 References: <20210928191009.32551-1-bp@alien8.de>
 MIME-Version: 1.0
@@ -24,79 +24,83 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
+Cc: Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
 
 From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Introduce a powerpc version of the cc_platform_has() function. This will
-be used to replace the powerpc mem_encrypt_active() implementation, so
-the implementation will initially only support the CC_ATTR_MEM_ENCRYPT
-attribute.
+In preparation for other uses of the cc_platform_has() function
+besides AMD's memory encryption support, selectively build the
+AMD memory encryption architecture override functions only when
+CONFIG_AMD_MEM_ENCRYPT=y. These functions are:
+
+- early_memremap_pgprot_adjust()
+- arch_memremap_can_ram_remap()
+
+Additionally, routines that are only invoked by these architecture
+override functions can also be conditionally built. These functions are:
+
+- memremap_should_map_decrypted()
+- memremap_is_efi_data()
+- memremap_is_setup_data()
+- early_memremap_is_setup_data()
+
+And finally, phys_mem_access_encrypted() is conditionally built as well,
+but requires a static inline version of it when CONFIG_AMD_MEM_ENCRYPT is
+not set.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Michael Ellerman <mpe@ellerman.id.au>
 ---
- arch/powerpc/platforms/pseries/Kconfig       |  1 +
- arch/powerpc/platforms/pseries/Makefile      |  2 ++
- arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++++++++++++++++
- 3 files changed, 29 insertions(+)
- create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
+ arch/x86/include/asm/io.h | 8 ++++++++
+ arch/x86/mm/ioremap.c     | 2 +-
+ 2 files changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/platforms/pseries/Kconfig b/arch/powerpc/platforms/pseries/Kconfig
-index 5e037df2a3a1..2e57391e0778 100644
---- a/arch/powerpc/platforms/pseries/Kconfig
-+++ b/arch/powerpc/platforms/pseries/Kconfig
-@@ -159,6 +159,7 @@ config PPC_SVM
- 	select SWIOTLB
- 	select ARCH_HAS_MEM_ENCRYPT
- 	select ARCH_HAS_FORCE_DMA_UNENCRYPTED
-+	select ARCH_HAS_CC_PLATFORM
- 	help
- 	 There are certain POWER platforms which support secure guests using
- 	 the Protected Execution Facility, with the help of an Ultravisor
-diff --git a/arch/powerpc/platforms/pseries/Makefile b/arch/powerpc/platforms/pseries/Makefile
-index 4cda0ef87be0..41d8aee98da4 100644
---- a/arch/powerpc/platforms/pseries/Makefile
-+++ b/arch/powerpc/platforms/pseries/Makefile
-@@ -31,3 +31,5 @@ obj-$(CONFIG_FA_DUMP)		+= rtas-fadump.o
+diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+index 841a5d104afa..5c6a4af0b911 100644
+--- a/arch/x86/include/asm/io.h
++++ b/arch/x86/include/asm/io.h
+@@ -391,6 +391,7 @@ extern void arch_io_free_memtype_wc(resource_size_t start, resource_size_t size)
+ #define arch_io_reserve_memtype_wc arch_io_reserve_memtype_wc
+ #endif
  
- obj-$(CONFIG_SUSPEND)		+= suspend.o
- obj-$(CONFIG_PPC_VAS)		+= vas.o
-+
-+obj-$(CONFIG_ARCH_HAS_CC_PLATFORM)	+= cc_platform.o
-diff --git a/arch/powerpc/platforms/pseries/cc_platform.c b/arch/powerpc/platforms/pseries/cc_platform.c
-new file mode 100644
-index 000000000000..e8021af83a19
---- /dev/null
-+++ b/arch/powerpc/platforms/pseries/cc_platform.c
-@@ -0,0 +1,26 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Confidential Computing Platform Capability checks
-+ *
-+ * Copyright (C) 2021 Advanced Micro Devices, Inc.
-+ *
-+ * Author: Tom Lendacky <thomas.lendacky@amd.com>
-+ */
-+
-+#include <linux/export.h>
-+#include <linux/cc_platform.h>
-+
-+#include <asm/machdep.h>
-+#include <asm/svm.h>
-+
-+bool cc_platform_has(enum cc_attr attr)
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 					unsigned long size,
+ 					unsigned long flags);
+@@ -398,6 +399,13 @@ extern bool arch_memremap_can_ram_remap(resource_size_t offset,
+ 
+ extern bool phys_mem_access_encrypted(unsigned long phys_addr,
+ 				      unsigned long size);
++#else
++static inline bool phys_mem_access_encrypted(unsigned long phys_addr,
++					     unsigned long size)
 +{
-+	switch (attr) {
-+	case CC_ATTR_MEM_ENCRYPT:
-+		return is_secure_guest();
-+
-+	default:
-+		return false;
-+	}
++	return true;
 +}
-+EXPORT_SYMBOL_GPL(cc_platform_has);
++#endif
+ 
+ /**
+  * iosubmit_cmds512 - copy data to single MMIO location, in 512-bit units
+diff --git a/arch/x86/mm/ioremap.c b/arch/x86/mm/ioremap.c
+index 60ade7dd71bd..ccff76cedd8f 100644
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -508,6 +508,7 @@ void unxlate_dev_mem_ptr(phys_addr_t phys, void *addr)
+ 	memunmap((void *)((unsigned long)addr & PAGE_MASK));
+ }
+ 
++#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /*
+  * Examine the physical address to determine if it is an area of memory
+  * that should be mapped decrypted.  If the memory is not part of the
+@@ -746,7 +747,6 @@ bool phys_mem_access_encrypted(unsigned long phys_addr, unsigned long size)
+ 	return arch_memremap_can_ram_remap(phys_addr, size, 0);
+ }
+ 
+-#ifdef CONFIG_AMD_MEM_ENCRYPT
+ /* Remap memory with encryption */
+ void __init *early_memremap_encrypted(resource_size_t phys_addr,
+ 				      unsigned long size)
 -- 
 2.29.2
 
