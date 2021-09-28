@@ -1,12 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVIUl-008bH7-4c
+ id 1mVIUl-008bH5-5K
  for kexec@lists.infradead.org; Tue, 28 Sep 2021 19:10:31 +0000
 From: Borislav Petkov <bp@alien8.de>
-Subject: [PATCH v4 0/8] Implement generic cc_platform_has() helper function
-Date: Tue, 28 Sep 2021 21:10:01 +0200
-Message-Id: <20210928191009.32551-1-bp@alien8.de>
+Subject: [PATCH 2/8] arch/cc: Introduce a function to check for confidential
+ computing features
+Date: Tue, 28 Sep 2021 21:10:03 +0200
+Message-Id: <20210928191009.32551-3-bp@alien8.de>
+In-Reply-To: <20210928191009.32551-1-bp@alien8.de>
+References: <20210928191009.32551-1-bp@alien8.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,75 +24,139 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: LKML <linux-kernel@vger.kernel.org>
-Cc: Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
+Cc: Andi Kleen <ak@linux.intel.com>, Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
 
-From: Borislav Petkov <bp@suse.de>
+From: Tom Lendacky <thomas.lendacky@amd.com>
 
-Hi all,
+In preparation for other confidential computing technologies, introduce
+a generic helper function, cc_platform_has(), that can be used to
+check for specific active confidential computing attributes, like
+memory encryption. This is intended to eliminate having to add multiple
+technology-specific checks to the code (e.g. if (sev_active() ||
+tdx_active() || ... ).
 
-here's v4 of the cc_platform_has() patchset with feedback incorporated.
+ [ bp: s/_CC_PLATFORM_H/_LINUX_CC_PLATFORM_H/g ]
 
-I'm going to route this through tip if there are no objections.
-
-Thx.
-
-Tom Lendacky (8):
-  x86/ioremap: Selectively build arch override encryption functions
-  arch/cc: Introduce a function to check for confidential computing
-    features
-  x86/sev: Add an x86 version of cc_platform_has()
-  powerpc/pseries/svm: Add a powerpc version of cc_platform_has()
-  x86/sme: Replace occurrences of sme_active() with cc_platform_has()
-  x86/sev: Replace occurrences of sev_active() with cc_platform_has()
-  x86/sev: Replace occurrences of sev_es_active() with cc_platform_has()
-  treewide: Replace the use of mem_encrypt_active() with
-    cc_platform_has()
-
- arch/Kconfig                                 |  3 +
- arch/powerpc/include/asm/mem_encrypt.h       |  5 --
- arch/powerpc/platforms/pseries/Kconfig       |  1 +
- arch/powerpc/platforms/pseries/Makefile      |  2 +
- arch/powerpc/platforms/pseries/cc_platform.c | 26 ++++++
- arch/powerpc/platforms/pseries/svm.c         |  5 +-
- arch/s390/include/asm/mem_encrypt.h          |  2 -
- arch/x86/Kconfig                             |  1 +
- arch/x86/include/asm/io.h                    |  8 ++
- arch/x86/include/asm/kexec.h                 |  2 +-
- arch/x86/include/asm/mem_encrypt.h           | 12 +--
- arch/x86/kernel/Makefile                     |  6 ++
- arch/x86/kernel/cc_platform.c                | 69 +++++++++++++++
- arch/x86/kernel/crash_dump_64.c              |  4 +-
- arch/x86/kernel/head64.c                     |  9 +-
- arch/x86/kernel/kvm.c                        |  3 +-
- arch/x86/kernel/kvmclock.c                   |  4 +-
- arch/x86/kernel/machine_kexec_64.c           | 19 +++--
- arch/x86/kernel/pci-swiotlb.c                |  9 +-
- arch/x86/kernel/relocate_kernel_64.S         |  2 +-
- arch/x86/kernel/sev.c                        |  6 +-
- arch/x86/kvm/svm/svm.c                       |  3 +-
- arch/x86/mm/ioremap.c                        | 18 ++--
- arch/x86/mm/mem_encrypt.c                    | 55 ++++--------
- arch/x86/mm/mem_encrypt_identity.c           |  9 +-
- arch/x86/mm/pat/set_memory.c                 |  3 +-
- arch/x86/platform/efi/efi_64.c               |  9 +-
- arch/x86/realmode/init.c                     |  8 +-
- drivers/gpu/drm/amd/amdgpu/amdgpu_drv.c      |  4 +-
- drivers/gpu/drm/drm_cache.c                  |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_drv.c          |  4 +-
- drivers/gpu/drm/vmwgfx/vmwgfx_msg.c          |  6 +-
- drivers/iommu/amd/init.c                     |  7 +-
- drivers/iommu/amd/iommu.c                    |  3 +-
- drivers/iommu/amd/iommu_v2.c                 |  3 +-
- drivers/iommu/iommu.c                        |  3 +-
- fs/proc/vmcore.c                             |  6 +-
- include/linux/cc_platform.h                  | 88 ++++++++++++++++++++
- include/linux/mem_encrypt.h                  |  4 -
- kernel/dma/swiotlb.c                         |  4 +-
- 40 files changed, 310 insertions(+), 129 deletions(-)
- create mode 100644 arch/powerpc/platforms/pseries/cc_platform.c
- create mode 100644 arch/x86/kernel/cc_platform.c
+Co-developed-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Co-developed-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>
+Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+---
+ arch/Kconfig                |  3 ++
+ include/linux/cc_platform.h | 88 +++++++++++++++++++++++++++++++++++++
+ 2 files changed, 91 insertions(+)
  create mode 100644 include/linux/cc_platform.h
 
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 8df1c7102643..d1e69d6e8498 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -1234,6 +1234,9 @@ config RELR
+ config ARCH_HAS_MEM_ENCRYPT
+ 	bool
+ 
++config ARCH_HAS_CC_PLATFORM
++	bool
++
+ config HAVE_SPARSE_SYSCALL_NR
+        bool
+        help
+diff --git a/include/linux/cc_platform.h b/include/linux/cc_platform.h
+new file mode 100644
+index 000000000000..a075b70b9a70
+--- /dev/null
++++ b/include/linux/cc_platform.h
+@@ -0,0 +1,88 @@
++/* SPDX-License-Identifier: GPL-2.0-only */
++/*
++ * Confidential Computing Platform Capability checks
++ *
++ * Copyright (C) 2021 Advanced Micro Devices, Inc.
++ *
++ * Author: Tom Lendacky <thomas.lendacky@amd.com>
++ */
++
++#ifndef _LINUX_CC_PLATFORM_H
++#define _LINUX_CC_PLATFORM_H
++
++#include <linux/types.h>
++#include <linux/stddef.h>
++
++/**
++ * enum cc_attr - Confidential computing attributes
++ *
++ * These attributes represent confidential computing features that are
++ * currently active.
++ */
++enum cc_attr {
++	/**
++	 * @CC_ATTR_MEM_ENCRYPT: Memory encryption is active
++	 *
++	 * The platform/OS is running with active memory encryption. This
++	 * includes running either as a bare-metal system or a hypervisor
++	 * and actively using memory encryption or as a guest/virtual machine
++	 * and actively using memory encryption.
++	 *
++	 * Examples include SME, SEV and SEV-ES.
++	 */
++	CC_ATTR_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_HOST_MEM_ENCRYPT: Host memory encryption is active
++	 *
++	 * The platform/OS is running as a bare-metal system or a hypervisor
++	 * and actively using memory encryption.
++	 *
++	 * Examples include SME.
++	 */
++	CC_ATTR_HOST_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_GUEST_MEM_ENCRYPT: Guest memory encryption is active
++	 *
++	 * The platform/OS is running as a guest/virtual machine and actively
++	 * using memory encryption.
++	 *
++	 * Examples include SEV and SEV-ES.
++	 */
++	CC_ATTR_GUEST_MEM_ENCRYPT,
++
++	/**
++	 * @CC_ATTR_GUEST_STATE_ENCRYPT: Guest state encryption is active
++	 *
++	 * The platform/OS is running as a guest/virtual machine and actively
++	 * using memory encryption and register state encryption.
++	 *
++	 * Examples include SEV-ES.
++	 */
++	CC_ATTR_GUEST_STATE_ENCRYPT,
++};
++
++#ifdef CONFIG_ARCH_HAS_CC_PLATFORM
++
++/**
++ * cc_platform_has() - Checks if the specified cc_attr attribute is active
++ * @attr: Confidential computing attribute to check
++ *
++ * The cc_platform_has() function will return an indicator as to whether the
++ * specified Confidential Computing attribute is currently active.
++ *
++ * Context: Any context
++ * Return:
++ * * TRUE  - Specified Confidential Computing attribute is active
++ * * FALSE - Specified Confidential Computing attribute is not active
++ */
++bool cc_platform_has(enum cc_attr attr);
++
++#else	/* !CONFIG_ARCH_HAS_CC_PLATFORM */
++
++static inline bool cc_platform_has(enum cc_attr attr) { return false; }
++
++#endif	/* CONFIG_ARCH_HAS_CC_PLATFORM */
++
++#endif	/* _LINUX_CC_PLATFORM_H */
 -- 
 2.29.2
 
