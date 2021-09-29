@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 29 Sep 2021 17:43:34 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v17 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-Message-ID: <YVSXtswhm6iTC3yz@arm.com>
-References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
- <20210916231325.125533-16-pasha.tatashin@soleen.com>
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mVcqP-00Bsot-1j
+ for kexec@lists.infradead.org; Wed, 29 Sep 2021 16:54:10 +0000
+Received: by mail-wm1-f72.google.com with SMTP id
+ m9-20020a05600c4f4900b003057c761567so2990974wmq.1
+ for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 09:54:04 -0700 (PDT)
+References: <20210927150518.8607-1-david@redhat.com>
+ <20210927150518.8607-4-david@redhat.com> <YVSW3uuu7mIcJMm3@kernel.org>
+From: David Hildenbrand <david@redhat.com>
+Subject: Re: [PATCH v1 3/4] memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
+ IORESOURCE_SYSRAM_DRIVER_MANAGED
+Message-ID: <830c1670-378b-0fb6-bd5e-208e545fa126@redhat.com>
+Date: Wed, 29 Sep 2021 18:54:01 +0200
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210916231325.125533-16-pasha.tatashin@soleen.com>
+In-Reply-To: <YVSW3uuu7mIcJMm3@kernel.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,54 +24,65 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
+To: Mike Rapoport <rppt@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
 
-On Thu, Sep 16, 2021 at 07:13:25PM -0400, Pasha Tatashin wrote:
-> The intend of trans_pgd_map_page() was to map contiguous range of VA
-> memory to the memory that is getting relocated during kexec. However,
-> since we are now using linear map instead of contiguous range this
-> function is not needed
+On 29.09.21 18:39, Mike Rapoport wrote:
+> Hi,
 > 
-> Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-> ---
->  arch/arm64/include/asm/trans_pgd.h |  5 +--
->  arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
->  2 files changed, 1 insertion(+), 61 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-> index 7b04d32b102c..033d400a4ea4 100644
-> --- a/arch/arm64/include/asm/trans_pgd.h
-> +++ b/arch/arm64/include/asm/trans_pgd.h
-> @@ -15,7 +15,7 @@
->  /*
->   * trans_alloc_page
->   *	- Allocator that should return exactly one zeroed page, if this
-> - *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-> + *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
->   *	  return -ENOMEM error.
->   *
->   * trans_alloc_arg
-> @@ -30,9 +30,6 @@ struct trans_pgd_info {
->  int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
->  			  unsigned long start, unsigned long end);
->  
-> -int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
-> -		       void *page, unsigned long dst_addr, pgprot_t pgprot);
+> On Mon, Sep 27, 2021 at 05:05:17PM +0200, David Hildenbrand wrote:
+>> Let's add a flag that corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED.
+>> Similar to MEMBLOCK_HOTPLUG, most infrastructure has to treat such memory
+>> like ordinary MEMBLOCK_NONE memory -- for example, when selecting memory
+>> regions to add to the vmcore for dumping in the crashkernel via
+>> for_each_mem_range().
+>   
+> Can you please elaborate on the difference in semantics of MEMBLOCK_HOTPLUG
+> and MEMBLOCK_DRIVER_MANAGED?
+> Unless I'm missing something they both mark memory that can be unplugged
+> anytime and so it should not be used in certain cases. Why is there a need
+> for a new flag?
 
-So this function never got used in mainline after commit 7018d467ff2d
-("arm64: trans_pgd: hibernate: idmap the single page that holds the copy
-page routines"). I guess it's because we merged part of v10 of this
-series and in v12 you dropped the contiguous VA range in favour of a
-copy of the linear map.
+In the cover letter I have "Alternative B: Reuse MEMBLOCK_HOTPLUG. 
+MEMBLOCK_HOTPLUG serves a different purpose, though.", but looking into 
+the details it won't work as is.
+
+MEMBLOCK_HOTPLUG is used to mark memory early during boot that can later 
+get hotunplugged again and should be placed into ZONE_MOVABLE if the 
+"movable_node" kernel parameter is set.
+
+The confusing part is that we talk about "hotpluggable" but really mean 
+"hotunpluggable": the reason is that HW flags DIMM slots that can later 
+be hotplugged as "hotpluggable" even though there is already something 
+hotplugged.
+
+For example, ranges in the ACPI SRAT that are marked as 
+ACPI_SRAT_MEM_HOT_PLUGGABLE will be marked MEMBLOCK_HOTPLUG early during 
+boot (drivers/acpi/numa/srat.c:acpi_numa_memory_affinity_init()). Later, 
+we use that information to size ZONE_MOVABLE 
+(mm/page_alloc.c:find_zone_movable_pfns_for_nodes()). This will make 
+sure that these "hotpluggable" DIMMs can later get hotunplugged.
+
+Also, see should_skip_region() how this relates to the "movable_node" 
+kernel parameter:
+
+	/* skip hotpluggable memory regions if needed */
+	if (movable_node_is_enabled() && memblock_is_hotpluggable(m) &&
+	    (flags & MEMBLOCK_HOTPLUG))
+		return true;
+
+Long story short: MEMBLOCK_HOTPLUG has different semantics and is a 
+special case for "movable_node".
 
 -- 
-Catalin
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
