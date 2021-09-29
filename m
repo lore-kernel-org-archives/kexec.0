@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVKq5-008u1J-BF
- for kexec@lists.infradead.org; Tue, 28 Sep 2021 21:40:38 +0000
-Date: Tue, 28 Sep 2021 23:40:28 +0200
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v4 0/8] Implement generic cc_platform_has() helper function
-Message-ID: <YVOLzMwyXP3ZSR0F@zn.tnic>
-References: <20210928191009.32551-1-bp@alien8.de>
- <80593893-c63b-d481-45f1-42a3a6fd762a@linux.intel.com>
- <YVN7vPE/7jecXcJ/@zn.tnic>
- <7319b756-55dc-c4d1-baf6-4686f0156ac4@linux.intel.com>
- <YVOB3mFV1Kj3MXAs@zn.tnic>
- <695a3bf6-5382-68df-3ab5-8841b777fca2@linux.intel.com>
+ id 1mVNxD-009Wj6-FT
+ for kexec@lists.infradead.org; Wed, 29 Sep 2021 01:00:12 +0000
+Subject: Re: [PATCH v1 2/8] x86/xen: simplify xen_oldmem_pfn_is_ram()
+References: <20210928182258.12451-1-david@redhat.com>
+ <20210928182258.12451-3-david@redhat.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <4ab2f8c2-c3d5-30b3-a670-a8b38e218b6e@oracle.com>
+Date: Tue, 28 Sep 2021 20:59:36 -0400
+In-Reply-To: <20210928182258.12451-3-david@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <695a3bf6-5382-68df-3ab5-8841b777fca2@linux.intel.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,34 +20,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Kuppuswamy, Sathyanarayanan" <sathyanarayanan.kuppuswamy@linux.intel.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, Andi Kleen <ak@linux.intel.com>, Andy Lutomirski <luto@kernel.org>, Ard Biesheuvel <ardb@kernel.org>, Baoquan He <bhe@redhat.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@de.ibm.com>, Daniel Vetter <daniel@ffwll.ch>, Dave Young <dyoung@redhat.com>, David Airlie <airlied@linux.ie>, Heiko Carstens <hca@linux.ibm.com>, Joerg Roedel <joro@8bytes.org>, "Kirill A. Shutemov" <kirill@shutemov.name>, Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <mripard@kernel.org>, Michael Ellerman <mpe@ellerman.id.au>, Paul Mackerras <paulus@samba.org>, Tom Lendacky <thomas.lendacky@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Vasily Gorbik <gor@linux.ibm.com>, VMware Graphics <linux-graphics-maintainer@vmware.com>, Will Deacon <will@kernel.org>, Christoph Hellwig <hch@infradead.org>, x86@kernel.org, linuxppc-dev@lists.ozlabs.org, linux-s390@vger.kernel.org, iommu@lists.linux-foundation.org, kvm@vger.kernel.org, linux-efi@vger.kernel.org, platform-driver-x86@vger.kernel.org, amd-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org, kexec@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 
-On Tue, Sep 28, 2021 at 02:01:57PM -0700, Kuppuswamy, Sathyanarayanan wrote:
-> Yes. But, since the check is related to TDX, I just want to confirm whether
-> you are fine with naming the function as intel_*().
-
-Why is this such a big of a deal?!
-
-There's amd_cc_platform_has() and intel_cc_platform_has() will be the
-corresponding Intel version.
-
-> Since this patch is going to have dependency on TDX code, I will include
-> this patch in TDX patch set.
-
-Ok.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDkvMjgvMjEgMjoyMiBQTSwgRGF2aWQgSGlsZGVuYnJhbmQgd3JvdGU6Cj4gTGV0J3Mgc2lt
+cGxpZnkgcmV0dXJuIGhhbmRsaW5nLgo+Cj4gU2lnbmVkLW9mZi1ieTogRGF2aWQgSGlsZGVuYnJh
+bmQgPGRhdmlkQHJlZGhhdC5jb20+Cj4gLS0tCj4gIGFyY2gveDg2L3hlbi9tbXVfaHZtLmMgfCAx
+MSArKy0tLS0tLS0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCA5IGRlbGV0
+aW9ucygtKQo+Cj4gZGlmZiAtLWdpdCBhL2FyY2gveDg2L3hlbi9tbXVfaHZtLmMgYi9hcmNoL3g4
+Ni94ZW4vbW11X2h2bS5jCj4gaW5kZXggYjI0MmQxZjRiNDI2Li5lYjYxNjIyZGY3NWIgMTAwNjQ0
+Cj4gLS0tIGEvYXJjaC94ODYveGVuL21tdV9odm0uYwo+ICsrKyBiL2FyY2gveDg2L3hlbi9tbXVf
+aHZtLmMKPiBAQCAtMjEsMjMgKzIxLDE2IEBAIHN0YXRpYyBpbnQgeGVuX29sZG1lbV9wZm5faXNf
+cmFtKHVuc2lnbmVkIGxvbmcgcGZuKQo+ICAJCS5kb21pZCA9IERPTUlEX1NFTEYsCj4gIAkJLnBm
+biA9IHBmbiwKPiAgCX07Cj4gLQlpbnQgcmFtOwo+ICAKPiAgCWlmIChIWVBFUlZJU09SX2h2bV9v
+cChIVk1PUF9nZXRfbWVtX3R5cGUsICZhKSkKPiAgCQlyZXR1cm4gLUVOWElPOwo+ICAKPiAgCXN3
+aXRjaCAoYS5tZW1fdHlwZSkgewo+ICAJY2FzZSBIVk1NRU1fbW1pb19kbToKPiAtCQlyYW0gPSAw
+Owo+IC0JCWJyZWFrOwo+IC0JY2FzZSBIVk1NRU1fcmFtX3J3Ogo+IC0JY2FzZSBIVk1NRU1fcmFt
+X3JvOgo+ICsJCXJldHVybiAwOwo+ICAJZGVmYXVsdDoKPiAtCQlyYW0gPSAxOwo+IC0JCWJyZWFr
+Owo+ICsJCXJldHVybiAxOwo+ICAJfQo+IC0KPiAtCXJldHVybiByYW07Cj4gIH0KPiAgI2VuZGlm
+Cj4gIAoKCkhvdyBhYm91dAoKwqDCoMKgIHJldHVybiBhLm1lbV90eXBlICE9IEhWTU1FTV9tbWlv
+X2RtOwoKClJlc3VsdCBzaG91bGQgYmUgcHJvbW90ZWQgdG8gaW50IGFuZCB0aGlzIGhhcyBhZGRl
+ZCBiZW5lZml0IG9mIG5vdCByZXF1aXJpbmcgY2hhbmdlcyBpbiBwYXRjaCA0LgoKCi1ib3JpcwoK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1h
+aWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
