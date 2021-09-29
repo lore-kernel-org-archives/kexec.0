@@ -1,13 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from ssh248.corpemail.net ([210.51.61.248])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVUhK-00AKk0-9g
- for kexec@lists.infradead.org; Wed, 29 Sep 2021 08:12:17 +0000
-From: Kai Song <songkai01@inspur.com>
-Subject: [PATCH] kexec-tools:Add some necessary free() calls
-Date: Wed, 29 Sep 2021 16:11:57 +0800
-Message-ID: <20210929081157.3999-1-songkai01@inspur.com>
+ id 1mVV6N-00ASUA-6n
+ for kexec@lists.infradead.org; Wed, 29 Sep 2021 08:38:08 +0000
+Received: by mail-wm1-f71.google.com with SMTP id
+ 5-20020a1c00050000b02902e67111d9f0so874677wma.4
+ for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 01:38:04 -0700 (PDT)
+Subject: Re: [PATCH v1 8/8] virtio-mem: kdump mode to sanitize /proc/vmcore
+ access
+References: <20210928182258.12451-1-david@redhat.com>
+ <20210928182258.12451-9-david@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+Message-ID: <e01cdc7f-cda8-3268-c971-1255a71fb8ac@redhat.com>
+Date: Wed, 29 Sep 2021 10:38:01 +0200
 MIME-Version: 1.0
+In-Reply-To: <20210928182258.12451-9-david@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,80 +24,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: horms@verge.net.au, Kai Song <songkai01@inspur.com>
+To: linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 
-free should be called before the function exit abnormally.
+[...]
 
-Signed-off-by: Kai Song <songkai01@inspur.com>
----
- kexec/kexec-uImage.c | 10 ++++++++--
- util_lib/elf_info.c  |  4 +++-
- 2 files changed, 11 insertions(+), 3 deletions(-)
+> +
+> +static bool virtio_mem_vmcore_pfn_is_ram(struct vmcore_cb *cb,
+> +					 unsigned long pfn)
+> +{
+> +	struct virtio_mem *vm = container_of(cb, struct virtio_mem,
+> +					     vmcore_cb);
+> +	uint64_t addr = PFN_PHYS(pfn);
+> +	bool is_ram;
+> +	int rc;
+> +
+> +	if (!virtio_mem_contains_range(vm, addr, addr + PAGE_SIZE))
 
-diff --git a/kexec/kexec-uImage.c b/kexec/kexec-uImage.c
-index eeee4be..016be10 100644
---- a/kexec/kexec-uImage.c
-+++ b/kexec/kexec-uImage.c
-@@ -157,12 +157,15 @@ static int uImage_gz_load(const char *buf, off_t len,
- 	skip = 10;
- 
- 	/* check GZ magic */
--	if (buf[0] != 0x1f || buf[1] != 0x8b)
-+	if (buf[0] != 0x1f || buf[1] != 0x8b) {
-+		free(uncomp_buf);
- 		return -1;
-+	}
- 
- 	flags = buf[3];
- 	if (buf[2] != Z_DEFLATED || (flags & RESERVED) != 0) {
- 		puts ("Error: Bad gzipped data\n");
-+		free(uncomp_buf);
- 		return -1;
- 	}
- 
-@@ -187,8 +190,10 @@ static int uImage_gz_load(const char *buf, off_t len,
- 
- 	/* - activates parsing gz headers */
- 	ret = inflateInit2(&strm, -MAX_WBITS);
--	if (ret != Z_OK)
-+	if (ret != Z_OK) {
-+		free(uncomp_buf);
- 		return -1;
-+	}
- 
- 	strm.next_out = uncomp_buf;
- 	strm.avail_out = mem_alloc;
-@@ -214,6 +219,7 @@ static int uImage_gz_load(const char *buf, off_t len,
- 			strm.next_out = uncomp_buf + mem_alloc - inc_buf;
- 			strm.avail_out = inc_buf;
- 		} else {
-+			free(uncomp_buf);
- 			printf("Error during decompression %d\n", ret);
- 			return -1;
- 		}
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index 676926c..51d8b92 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -605,8 +605,10 @@ static int scan_notes(int fd, loff_t start, loff_t lsize)
- 		scan_vmcoreinfo(n_desc, n_descsz);
- 	}
- 
--	if ((note + sizeof(Elf_Nhdr)) == last)
-+	if ((note + sizeof(Elf_Nhdr)) == last) {
-+		free(buf);
- 		return -1;
-+	}
- 
- 	free(buf);
- 
+Some more testing revealed that this has to be
+
+if (!virtio_mem_contains_range(vm, addr, PAGE_SIZE))
+
+
 -- 
-2.27.0
+Thanks,
+
+David / dhildenb
 
 
 _______________________________________________
