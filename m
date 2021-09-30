@@ -1,12 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 29 Sep 2021 18:21:42 +0100
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v17 00/15] arm64: MMU enabled kexec relocation
-Message-ID: <YVSgplQLvPg1490d@arm.com>
-References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+Received: from mail-lf1-x12f.google.com ([2a00:1450:4864:20::12f])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mVm4F-00CnjJ-N2
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 02:45:05 +0000
+Received: by mail-lf1-x12f.google.com with SMTP id x27so18876871lfa.9
+ for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 19:45:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
+ <20210916231325.125533-6-pasha.tatashin@soleen.com>
+ <20210929121336.GB21631@willie-the-truck>
+In-Reply-To: <20210929121336.GB21631@willie-the-truck>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Wed, 29 Sep 2021 22:44:23 -0400
+Message-ID: <CA+CK2bCcawYWO+EjLbSciLQaM3g4eUWQN0uokNs1zN+An9KYSA@mail.gmail.com>
+Subject: Re: [PATCH v17 05/15] arm64: kexec: skip relocation code for inplace
+ kexec
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,34 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pasha Tatashin <pasha.tatashin@soleen.com>
-Cc: jmorris@namei.org, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, tyhicks@linux.microsoft.com, kernelfans@gmail.com, akpm@linux-foundation.org, madvenka@linux.microsoft.com
+To: Will Deacon <will@kernel.org>
+Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
-On Thu, Sep 16, 2021 at 07:13:10PM -0400, Pasha Tatashin wrote:
-> Pasha Tatashin (15):
->   arm64: kernel: add helper for booted at EL2 and not VHE
->   arm64: trans_pgd: hibernate: Add trans_pgd_copy_el2_vectors
->   arm64: hibernate: abstract ttrb0 setup function
->   arm64: kexec: flush image and lists during kexec load time
->   arm64: kexec: skip relocation code for inplace kexec
->   arm64: kexec: Use dcache ops macros instead of open-coding
->   arm64: kexec: pass kimage as the only argument to relocation function
->   arm64: kexec: configure EL2 vectors for kexec
->   arm64: kexec: relocate in EL1 mode
->   arm64: kexec: use ld script for relocation function
->   arm64: kexec: install a copy of the linear-map
->   arm64: kexec: keep MMU enabled during kexec relocation
->   arm64: kexec: remove the pre-kexec PoC maintenance
->   arm64: kexec: remove cpu-reset.h
->   arm64: trans_pgd: remove trans_pgd_map_page()
+Hi Will,
 
-FWIW, I'm fine with this series. I think the only concern raised by
-James and not addressed is the possibility of the failure of the memory
-allocation for copying the page tables during kexec. If anyone will
-complain in the future, we can look into adding a fallback mechanism to
-do the relocation with the MMU off.
+> > +             cpu_install_idmap();
+> > +             restart = (void *)__pa_symbol(function_nocfi(__cpu_soft_restart));
+> > +             restart(is_hyp_nvhe(), kimage->start, kimage->arch.dtb_mem,
+> > +                     0, 0);
+>
+> Why can't you call:
+>
+>         cpu_soft_restart(kimage->start, kimage->arch.dtb_mem, 0, 0);
+>
+> here instead of open-coding it?
 
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+This is part of a cleanup to remove cpu_soft_restart() wrapper and the
+header file that contains it. The wrapper is simple enough and has
+only one call site. It makes more sense to do what is needed directly
+from machine_kexec().
+
+Pasha
 
 _______________________________________________
 kexec mailing list
