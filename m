@@ -1,19 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x12a.google.com ([2a00:1450:4864:20::12a])
+Received: from mail-lf1-x134.google.com ([2a00:1450:4864:20::134])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVnAU-00CuAb-BY
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 03:55:35 +0000
-Received: by mail-lf1-x12a.google.com with SMTP id i25so19509379lfg.6
- for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 20:55:33 -0700 (PDT)
+ id 1mVnDR-00Cuf2-Tb
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 03:58:39 +0000
+Received: by mail-lf1-x134.google.com with SMTP id b15so19393457lfe.7
+ for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 20:58:37 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
- <20210916231325.125533-9-pasha.tatashin@soleen.com>
- <20210929123513.GC21631@willie-the-truck>
-In-Reply-To: <20210929123513.GC21631@willie-the-truck>
+ <20210916231325.125533-11-pasha.tatashin@soleen.com>
+ <20210929124513.GD21631@willie-the-truck>
+In-Reply-To: <20210929124513.GD21631@willie-the-truck>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Wed, 29 Sep 2021 23:54:55 -0400
-Message-ID: <CA+CK2bDw3A7FkZoQbB-AQWHj89Azqjrm12WFQVcfQjS+2Tmgyg@mail.gmail.com>
-Subject: Re: [PATCH v17 08/15] arm64: kexec: configure EL2 vectors for kexec
+Date: Wed, 29 Sep 2021 23:57:59 -0400
+Message-ID: <CA+CK2bBY-9JAtb1Rs4OJ2mmCtqMEsJ0rJs4a5EXnmj8AejvFYQ@mail.gmail.com>
+Subject: Re: [PATCH v17 10/15] arm64: kexec: use ld script for relocation
+ function
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,31 +30,32 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Will Deacon <will@kernel.org>
 Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
-> > +/* Allocates pages for kexec page table */
-> > +static void *kexec_page_alloc(void *arg)
-> > +{
-> > +     struct kimage *kimage = (struct kimage *)arg;
-> > +     struct page *page = kimage_alloc_control_pages(kimage, 0);
-> > +
-> > +     if (!page)
-> > +             return NULL;
-> > +
-> > +     memset(page_address(page), 0, PAGE_SIZE);
+On Wed, Sep 29, 2021 at 8:45 AM Will Deacon <will@kernel.org> wrote:
 >
-> Hmm, I think we might be missing barriers here to ensure that the zeroes
-> are visible to the page-table walker before we plumb the page into the
-> page-table.
+> On Thu, Sep 16, 2021 at 07:13:20PM -0400, Pasha Tatashin wrote:
+> > Currently, relocation code declares start and end variables
+> > which are used to compute its size.
+> >
+> > The better way to do this is to use ld script incited, and put relocation
+> > function in its own section.
 >
-> Usually, that's taken care of by the smp_wmb() in __pXX_alloc() but I
-> can't see that here. Is it hiding?
+> "incited"? I don't understand ...
 
-Based on the comment in __pte_alloc() that smp_wmb() is needed in
-order to synchronize pte setup with other cpus prior to making it
-visible to them. This is not needed here. First, by the time these
-page tables are used the other cpus are offlined (kexec reboot code is
-single threaded). Second, we never insert any entry into a page table
-that is actively used by any cpu.
+I will correct it:
+s/incited//
 
+
+> > +#ifdef CONFIG_KEXEC_CORE
+> > +/* kexec relocation code should fit into one KEXEC_CONTROL_PAGE_SIZE */
+> > +ASSERT(__relocate_new_kernel_end - (__relocate_new_kernel_start & ~(SZ_4K - 1))
+> > +     <= SZ_4K, "kexec relocation code is too big or misaligned")
+> > +ASSERT(KEXEC_CONTROL_PAGE_SIZE >= SZ_4K, "KEXEC_CONTROL_PAGE_SIZE is brokern")
+>
+> Typo: "brokern",
+
+Will correct it.
+
+Thanks,
 Pasha
 
 _______________________________________________
