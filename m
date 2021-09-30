@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x12e.google.com ([2a00:1450:4864:20::12e])
+Received: from mail-lf1-x129.google.com ([2a00:1450:4864:20::129])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVnSF-00CwQg-Gs
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 04:13:56 +0000
-Received: by mail-lf1-x12e.google.com with SMTP id i4so19820388lfv.4
- for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 21:13:55 -0700 (PDT)
+ id 1mVnSk-00CwZX-Cb
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 04:14:27 +0000
+Received: by mail-lf1-x129.google.com with SMTP id y26so19669798lfa.11
+ for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 21:14:25 -0700 (PDT)
 MIME-Version: 1.0
 References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
- <20210929124900.GE21631@willie-the-truck>
-In-Reply-To: <20210929124900.GE21631@willie-the-truck>
+ <YVSgplQLvPg1490d@arm.com>
+In-Reply-To: <YVSgplQLvPg1490d@arm.com>
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 30 Sep 2021 00:13:17 -0400
-Message-ID: <CA+CK2bB+9LWNKYoFWpSTuJLEtf6Hcp7cBu95eLRAw3quoCucXw@mail.gmail.com>
+Date: Thu, 30 Sep 2021 00:13:47 -0400
+Message-ID: <CA+CK2bBJqxq9Kwei-na_mgObMe0WF=im00YtPe10sp3g2+c79Q@mail.gmail.com>
 Subject: Re: [PATCH v17 00/15] arm64: MMU enabled kexec relocation
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,22 +25,18 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>
-Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
-On Wed, Sep 29, 2021 at 8:49 AM Will Deacon <will@kernel.org> wrote:
+> FWIW, I'm fine with this series. I think the only concern raised by
+> James and not addressed is the possibility of the failure of the memory
+> allocation for copying the page tables during kexec. If anyone will
+> complain in the future, we can look into adding a fallback mechanism to
+> do the relocation with the MMU off.
 >
-> On Thu, Sep 16, 2021 at 07:13:10PM -0400, Pasha Tatashin wrote:
-> > Changelog:
-> > v17:
-> >       - Merged with 5.15-rc1 as requested by Catalin Marinas
-> >       - Added Tested-by: Pingfan Liu <piliu@redhat.com>
->
-> This looks pretty good to me. I've left some minor comments on a few of the
-> patches, but other than those I'd like to try getting these queued for
-> 5.16.
+> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 
-Thanks Will, I will send the updated series tomorrow.
+Thank you.
 
 Pasha
 
