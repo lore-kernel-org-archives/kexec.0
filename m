@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVx5w-00EhYX-Fc
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 14:31:39 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id l13so5845837qtv.3
- for <kexec@lists.infradead.org>; Thu, 30 Sep 2021 07:31:32 -0700 (PDT)
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v18 15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-Date: Thu, 30 Sep 2021 14:31:13 +0000
-Message-Id: <20210930143113.1502553-16-pasha.tatashin@soleen.com>
-In-Reply-To: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
-References: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
+Date: Thu, 30 Sep 2021 14:21:56 -0700
+From: Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v1 3/4] memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
+ IORESOURCE_SYSRAM_DRIVER_MANAGED
+Message-ID: <YVYqdN7MFdzBlCVm@kernel.org>
+References: <20210927150518.8607-1-david@redhat.com>
+ <20210927150518.8607-4-david@redhat.com>
+ <YVSW3uuu7mIcJMm3@kernel.org>
+ <830c1670-378b-0fb6-bd5e-208e545fa126@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <830c1670-378b-0fb6-bd5e-208e545fa126@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,115 +23,74 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: pasha.tatashin@soleen.com, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, kernelfans@gmail.com, akpm@linux-foundation.org
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
 
-The intend of trans_pgd_map_page() was to map contiguous range of VA
-memory to the memory that is getting relocated during kexec. However,
-since we are now using linear map instead of contiguous range this
-function is not needed
+On Wed, Sep 29, 2021 at 06:54:01PM +0200, David Hildenbrand wrote:
+> On 29.09.21 18:39, Mike Rapoport wrote:
+> > Hi,
+> > 
+> > On Mon, Sep 27, 2021 at 05:05:17PM +0200, David Hildenbrand wrote:
+> > > Let's add a flag that corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED.
+> > > Similar to MEMBLOCK_HOTPLUG, most infrastructure has to treat such memory
+> > > like ordinary MEMBLOCK_NONE memory -- for example, when selecting memory
+> > > regions to add to the vmcore for dumping in the crashkernel via
+> > > for_each_mem_range().
+> > Can you please elaborate on the difference in semantics of MEMBLOCK_HOTPLUG
+> > and MEMBLOCK_DRIVER_MANAGED?
+> > Unless I'm missing something they both mark memory that can be unplugged
+> > anytime and so it should not be used in certain cases. Why is there a need
+> > for a new flag?
+> 
+> In the cover letter I have "Alternative B: Reuse MEMBLOCK_HOTPLUG.
+> MEMBLOCK_HOTPLUG serves a different purpose, though.", but looking into the
+> details it won't work as is.
+> 
+> MEMBLOCK_HOTPLUG is used to mark memory early during boot that can later get
+> hotunplugged again and should be placed into ZONE_MOVABLE if the
+> "movable_node" kernel parameter is set.
+> 
+> The confusing part is that we talk about "hotpluggable" but really mean
+> "hotunpluggable": the reason is that HW flags DIMM slots that can later be
+> hotplugged as "hotpluggable" even though there is already something
+> hotplugged.
 
-Suggested-by: Pingfan Liu <kernelfans@gmail.com>
-Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
-Acked-by: Catalin Marinas <catalin.marinas@arm.com>
----
- arch/arm64/include/asm/trans_pgd.h |  5 +--
- arch/arm64/mm/trans_pgd.c          | 57 ------------------------------
- 2 files changed, 1 insertion(+), 61 deletions(-)
+MEMBLOCK_HOTPLUG name is indeed somewhat confusing, but still it's core
+meaning "this memory may be removed" which does not differ from what
+IORESOURCE_SYSRAM_DRIVER_MANAGED means.
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 7b04d32b102c..033d400a4ea4 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -15,7 +15,7 @@
- /*
-  * trans_alloc_page
-  *	- Allocator that should return exactly one zeroed page, if this
-- *	  allocator fails, trans_pgd_create_copy() and trans_pgd_map_page()
-+ *	  allocator fails, trans_pgd_create_copy() and trans_pgd_idmap_page()
-  *	  return -ENOMEM error.
-  *
-  * trans_alloc_arg
-@@ -30,9 +30,6 @@ struct trans_pgd_info {
- int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **trans_pgd,
- 			  unsigned long start, unsigned long end);
+MEMBLOCK_HOTPLUG regions are indeed placed into ZONE_MOVABLE, but more
+importantly, they are avoided when we allocate memory from memblock.
+
+So, in my view, both flags mean that the memory may be removed and it
+should not be used for certain types of allocations.
  
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot);
--
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 26bd8f2d95af..d7da8ca40d2e 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -217,63 +217,6 @@ int trans_pgd_create_copy(struct trans_pgd_info *info, pgd_t **dst_pgdp,
- 	return rc;
- }
- 
--/*
-- * Add map entry to trans_pgd for a base-size page at PTE level.
-- * info:	contains allocator and its argument
-- * trans_pgd:	page table in which new map is added.
-- * page:	page to be mapped.
-- * dst_addr:	new VA address for the page
-- * pgprot:	protection for the page.
-- *
-- * Returns 0 on success, and -ENOMEM on failure.
-- */
--int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
--		       void *page, unsigned long dst_addr, pgprot_t pgprot)
--{
--	pgd_t *pgdp;
--	p4d_t *p4dp;
--	pud_t *pudp;
--	pmd_t *pmdp;
--	pte_t *ptep;
--
--	pgdp = pgd_offset_pgd(trans_pgd, dst_addr);
--	if (pgd_none(READ_ONCE(*pgdp))) {
--		p4dp = trans_alloc(info);
--		if (!pgdp)
--			return -ENOMEM;
--		pgd_populate(NULL, pgdp, p4dp);
--	}
--
--	p4dp = p4d_offset(pgdp, dst_addr);
--	if (p4d_none(READ_ONCE(*p4dp))) {
--		pudp = trans_alloc(info);
--		if (!pudp)
--			return -ENOMEM;
--		p4d_populate(NULL, p4dp, pudp);
--	}
--
--	pudp = pud_offset(p4dp, dst_addr);
--	if (pud_none(READ_ONCE(*pudp))) {
--		pmdp = trans_alloc(info);
--		if (!pmdp)
--			return -ENOMEM;
--		pud_populate(NULL, pudp, pmdp);
--	}
--
--	pmdp = pmd_offset(pudp, dst_addr);
--	if (pmd_none(READ_ONCE(*pmdp))) {
--		ptep = trans_alloc(info);
--		if (!ptep)
--			return -ENOMEM;
--		pmd_populate_kernel(NULL, pmdp, ptep);
--	}
--
--	ptep = pte_offset_kernel(pmdp, dst_addr);
--	set_pte(ptep, pfn_pte(virt_to_pfn(page), pgprot));
--
--	return 0;
--}
--
- /*
-  * The page we want to idmap may be outside the range covered by VA_BITS that
-  * can be built using the kernel's p?d_populate() helpers. As a one off, for a
+> For example, ranges in the ACPI SRAT that are marked as
+> ACPI_SRAT_MEM_HOT_PLUGGABLE will be marked MEMBLOCK_HOTPLUG early during
+> boot (drivers/acpi/numa/srat.c:acpi_numa_memory_affinity_init()). Later, we
+> use that information to size ZONE_MOVABLE
+> (mm/page_alloc.c:find_zone_movable_pfns_for_nodes()). This will make sure
+> that these "hotpluggable" DIMMs can later get hotunplugged.
+> 
+> Also, see should_skip_region() how this relates to the "movable_node" kernel
+> parameter:
+> 
+> 	/* skip hotpluggable memory regions if needed */
+> 	if (movable_node_is_enabled() && memblock_is_hotpluggable(m) &&
+> 	    (flags & MEMBLOCK_HOTPLUG))
+> 		return true;
+
+Hmm, I think that the movable_node_is_enabled() check here is excessive,
+but I suspect we cannot simply remove it without breaking anything.
+
+I'll take a deeper look on the potential consequences.
+
+BTW, is there anything that prevents putting kexec to hot-unplugable memory
+that was cold-plugged on boot?
+
 -- 
-2.33.0.800.g4c38ced690-goog
-
+Sincerely yours,
+Mike.
 
 _______________________________________________
 kexec mailing list
