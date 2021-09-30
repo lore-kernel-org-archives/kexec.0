@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x136.google.com ([2a00:1450:4864:20::136])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVuj5-00E7GS-8w
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 11:59:48 +0000
-Received: by mail-lf1-x136.google.com with SMTP id x27so24342952lfu.5
- for <kexec@lists.infradead.org>; Thu, 30 Sep 2021 04:59:46 -0700 (PDT)
+ id 1mVvV3-00EGZr-DO
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 12:49:23 +0000
+Date: Thu, 30 Sep 2021 20:49:02 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 1/2] kexec, KEYS: make the code in bzImage64_verify_sig
+ public
+Message-ID: <YVWyPu3pDvnEfATe@dhcp-128-65.nay.redhat.com>
+References: <20210927005004.36367-1-coiby.xu@gmail.com>
+ <20210927005004.36367-2-coiby.xu@gmail.com>
 MIME-Version: 1.0
-References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
- <20210916231325.125533-9-pasha.tatashin@soleen.com>
- <20210929123513.GC21631@willie-the-truck>
- <CA+CK2bDw3A7FkZoQbB-AQWHj89Azqjrm12WFQVcfQjS+2Tmgyg@mail.gmail.com>
- <20210930081607.GA23250@willie-the-truck>
-In-Reply-To: <20210930081607.GA23250@willie-the-truck>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 30 Sep 2021 07:59:07 -0400
-Message-ID: <CA+CK2bBEh9dMHSVfVLNSZgjb8TKHXfCgf34g5+XsbeuhSLajFw@mail.gmail.com>
-Subject: Re: [PATCH v17 08/15] arm64: kexec: configure EL2 vectors for kexec
+Content-Disposition: inline
+In-Reply-To: <20210927005004.36367-2-coiby.xu@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,53 +25,127 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Will Deacon <will@kernel.org>
-Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
+To: Coiby Xu <coiby.xu@gmail.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Coiby Xu <coxu@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
 
-On Thu, Sep 30, 2021 at 4:16 AM Will Deacon <will@kernel.org> wrote:
->
-> On Wed, Sep 29, 2021 at 11:54:55PM -0400, Pasha Tatashin wrote:
-> > > > +/* Allocates pages for kexec page table */
-> > > > +static void *kexec_page_alloc(void *arg)
-> > > > +{
-> > > > +     struct kimage *kimage = (struct kimage *)arg;
-> > > > +     struct page *page = kimage_alloc_control_pages(kimage, 0);
-> > > > +
-> > > > +     if (!page)
-> > > > +             return NULL;
-> > > > +
-> > > > +     memset(page_address(page), 0, PAGE_SIZE);
-> > >
-> > > Hmm, I think we might be missing barriers here to ensure that the zeroes
-> > > are visible to the page-table walker before we plumb the page into the
-> > > page-table.
-> > >
-> > > Usually, that's taken care of by the smp_wmb() in __pXX_alloc() but I
-> > > can't see that here. Is it hiding?
-> >
-> > Based on the comment in __pte_alloc() that smp_wmb() is needed in
-> > order to synchronize pte setup with other cpus prior to making it
-> > visible to them. This is not needed here. First, by the time these
-> > page tables are used the other cpus are offlined (kexec reboot code is
-> > single threaded). Second, we never insert any entry into a page table
-> > that is actively used by any cpu.
->
-> I think the comment there is wrong, but the barrier is still necessary.
-> How else do you guarantee that the page-table walker reads the zeroes from
-> the memset?
+Hi Coiby,
+On 09/27/21 at 08:50am, Coiby Xu wrote:
+> From: Coiby Xu <coxu@redhat.com>
+> 
+> The code in bzImage64_verify_sig could make use of system keyrings including
+> .buitin_trusted_keys, .secondary_trusted_keys and .platform keyring to verify
+> signed kernel image as PE file. Move it to a public function.
+> 
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 13 +------------
+>  include/linux/kexec.h             |  3 +++
+>  kernel/kexec_file.c               | 15 +++++++++++++++
+>  3 files changed, 19 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 170d0fd68b1f..4136dd3be5a9 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+>  #include <linux/efi.h>
+> -#include <linux/verification.h>
+>  
+>  #include <asm/bootparam.h>
+>  #include <asm/setup.h>
+> @@ -531,17 +530,7 @@ static int bzImage64_cleanup(void *loader_data)
+>  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+>  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
+>  {
+> -	int ret;
+> -
+> -	ret = verify_pefile_signature(kernel, kernel_len,
+> -				      VERIFY_USE_SECONDARY_KEYRING,
+> -				      VERIFYING_KEXEC_PE_SIGNATURE);
+> -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> -		ret = verify_pefile_signature(kernel, kernel_len,
+> -					      VERIFY_USE_PLATFORM_KEYRING,
+> -					      VERIFYING_KEXEC_PE_SIGNATURE);
+> -	}
+> -	return ret;
+> +	return arch_kexec_kernel_verify_pe_sig(kernel, kernel_len);
+>  }
+>  #endif
+>  
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..d45f32336dbe 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -19,6 +19,7 @@
+>  #include <asm/io.h>
+>  
+>  #include <uapi/linux/kexec.h>
+> +#include <linux/verification.h>
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  #include <linux/list.h>
+> @@ -199,6 +200,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>  #ifdef CONFIG_KEXEC_SIG
+>  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>  				 unsigned long buf_len);
+> +int arch_kexec_kernel_verify_pe_sig(const char *kernel,
+> +				    unsigned long kernel_len);
+>  #endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 33400ff051a8..85ed6984ad8f 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -106,6 +106,21 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>  {
+>  	return kexec_image_verify_sig_default(image, buf, buf_len);
+>  }
+> +
+> +int arch_kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
+> +{
+> +	int ret;
+> +
+> +	ret = verify_pefile_signature(kernel, kernel_len,
+> +				      VERIFY_USE_SECONDARY_KEYRING,
+> +				      VERIFYING_KEXEC_PE_SIGNATURE);
+> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> +		ret = verify_pefile_signature(kernel, kernel_len,
+> +					      VERIFY_USE_PLATFORM_KEYRING,
+> +					      VERIFYING_KEXEC_PE_SIGNATURE);
+> +	}
+> +	return ret;
+> +}
 
-True, good point. We are still safe because we have the following:
-cpu_install_ttbr0() is used to load trans_pgd tables both in kexec and
-hibernate cases.
+Since the function is moved as generic code, the kconfig option
+CONFIG_KEXEC_BZIMAGE_VERIFY_SIG can be removed.
 
-cpu_install_ttbr0 has: local_flush_tlb_all()
+Instead a CONFIG_KEXEC_PEFILE_VERIFY_SIG can be added so that it does
+not need to be compiled for only platform which support UEFI pefile
+signature verification.  And the related arch kexec_file kconfig can
+just select it.
 
-dsb(nshst);   // Ensure prior page-table updates have completed
-__tlbi(vmalle1);  // Invalidate the TLB
-dsb(nsh);   // Ensure the TLB invalidation has completed
-isb();  // Discard any instructions fetched from the old mapping
+Coiby, can you try above?
 
-Pasha
+>  #endif
+>  
+>  /*
+> -- 
+> 2.33.0
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
+> 
+> 
+
+Thanks
+Dave
+
 
 _______________________________________________
 kexec mailing list
