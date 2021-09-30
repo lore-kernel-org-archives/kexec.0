@@ -1,19 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from mail-qt1-x830.google.com ([2607:f8b0:4864:20::830])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVvYB-00EI2r-OC
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 12:52:37 +0000
-Date: Thu, 30 Sep 2021 20:52:22 +0800
-From: Dave Young <dyoung@redhat.com>
-Subject: Re: [PATCH 1/2] kexec, KEYS: make the code in bzImage64_verify_sig
- public
-Message-ID: <YVWzBkycaSbNi18o@dhcp-128-65.nay.redhat.com>
-References: <20210927005004.36367-1-coiby.xu@gmail.com>
- <20210927005004.36367-2-coiby.xu@gmail.com>
- <YVWyPu3pDvnEfATe@dhcp-128-65.nay.redhat.com>
+ id 1mVx5h-00EhN0-8L
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 14:31:19 +0000
+Received: by mail-qt1-x830.google.com with SMTP id f15so5823867qtv.9
+ for <kexec@lists.infradead.org>; Thu, 30 Sep 2021 07:31:16 -0700 (PDT)
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Subject: [PATCH v18 00/15] arm64: MMU enabled kexec relocation
+Date: Thu, 30 Sep 2021 14:30:58 +0000
+Message-Id: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YVWyPu3pDvnEfATe@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,131 +22,258 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Coiby Xu <coiby.xu@gmail.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Coiby Xu <coxu@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: pasha.tatashin@soleen.com, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, kernelfans@gmail.com, akpm@linux-foundation.org
 
-On 09/30/21 at 08:49pm, Dave Young wrote:
-> Hi Coiby,
-> On 09/27/21 at 08:50am, Coiby Xu wrote:
-> > From: Coiby Xu <coxu@redhat.com>
-> > 
-> > The code in bzImage64_verify_sig could make use of system keyrings including
-> > .buitin_trusted_keys, .secondary_trusted_keys and .platform keyring to verify
-> > signed kernel image as PE file. Move it to a public function.
-> > 
-> > Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
-> > ---
-> >  arch/x86/kernel/kexec-bzimage64.c | 13 +------------
-> >  include/linux/kexec.h             |  3 +++
-> >  kernel/kexec_file.c               | 15 +++++++++++++++
-> >  3 files changed, 19 insertions(+), 12 deletions(-)
-> > 
-> > diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> > index 170d0fd68b1f..4136dd3be5a9 100644
-> > --- a/arch/x86/kernel/kexec-bzimage64.c
-> > +++ b/arch/x86/kernel/kexec-bzimage64.c
-> > @@ -17,7 +17,6 @@
-> >  #include <linux/kernel.h>
-> >  #include <linux/mm.h>
-> >  #include <linux/efi.h>
-> > -#include <linux/verification.h>
-> >  
-> >  #include <asm/bootparam.h>
-> >  #include <asm/setup.h>
-> > @@ -531,17 +530,7 @@ static int bzImage64_cleanup(void *loader_data)
-> >  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-> >  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
-> >  {
-> > -	int ret;
-> > -
-> > -	ret = verify_pefile_signature(kernel, kernel_len,
-> > -				      VERIFY_USE_SECONDARY_KEYRING,
-> > -				      VERIFYING_KEXEC_PE_SIGNATURE);
-> > -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-> > -		ret = verify_pefile_signature(kernel, kernel_len,
-> > -					      VERIFY_USE_PLATFORM_KEYRING,
-> > -					      VERIFYING_KEXEC_PE_SIGNATURE);
-> > -	}
-> > -	return ret;
-> > +	return arch_kexec_kernel_verify_pe_sig(kernel, kernel_len);
-> >  }
-> >  #endif
-> >  
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 0c994ae37729..d45f32336dbe 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -19,6 +19,7 @@
-> >  #include <asm/io.h>
-> >  
-> >  #include <uapi/linux/kexec.h>
-> > +#include <linux/verification.h>
-> >  
-> >  #ifdef CONFIG_KEXEC_CORE
-> >  #include <linux/list.h>
-> > @@ -199,6 +200,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
-> >  #ifdef CONFIG_KEXEC_SIG
-> >  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> >  				 unsigned long buf_len);
-> > +int arch_kexec_kernel_verify_pe_sig(const char *kernel,
-> > +				    unsigned long kernel_len);
-> >  #endif
-> >  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
-> >  
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 33400ff051a8..85ed6984ad8f 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -106,6 +106,21 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> >  {
-> >  	return kexec_image_verify_sig_default(image, buf, buf_len);
-> >  }
-> > +
-> > +int arch_kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
-> > +{
-> > +	int ret;
-> > +
-> > +	ret = verify_pefile_signature(kernel, kernel_len,
-> > +				      VERIFY_USE_SECONDARY_KEYRING,
-> > +				      VERIFYING_KEXEC_PE_SIGNATURE);
-> > +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-> > +		ret = verify_pefile_signature(kernel, kernel_len,
-> > +					      VERIFY_USE_PLATFORM_KEYRING,
-> > +					      VERIFYING_KEXEC_PE_SIGNATURE);
-> > +	}
-> > +	return ret;
-> > +}
-> 
-> Since the function is moved as generic code, the kconfig option
-> CONFIG_KEXEC_BZIMAGE_VERIFY_SIG can be removed.
-> 
-> Instead a CONFIG_KEXEC_PEFILE_VERIFY_SIG can be added so that it does
-> not need to be compiled for only platform which support UEFI pefile
+Changelog:
+v18:
+	- Addressed comments from Will Deacon
+	- Added Acks from Catalin Marinas
+v17:
+	- Merged with 5.15-rc1 as requested by Catalin Marinas
+	- Added Tested-by: Pingfan Liu <piliu@redhat.com>
+v16:
+	- Merged with 5.14-rc4
+v15:
+	- Changed trans_pgd_copy_el2_vectors() to use vector table that
+	  only shared by kexec and hibernate. This way sync does not have
+	  dangling branch that was recently introduced. (Reported by Marc
+	  Zyngier)
+	- Renamed is_hyp_callable() to is_hyp_nvhe() as requested by Marc
+	  Zyngier
+	- Clean-ups, comment fixes.
+	- Sync with upstream 368094df48e680fa51cedb68537408cfa64b788e
+v14:
+	- Fixed a bug in "arm64: hyp-stub: Move elx_sync into the vectors"
+	  that was noticed by Marc Zyngier
+	- Merged with upstream
+v13:
+	- Fixed a hang on ThunderX2, thank you Pingfan Liu for reporting
+	  the problem. In relocation function we need civac not ivac, we
+	  need to clean data in addition to invalidating it.
+	  Since I was using ThunderX2 machine I also measured the new
+	  performance data on this large ARM64 server. The MMU improves
+	  kexec relocation 190 times on this machine! (see below for
+	  raw data). Saves 7.5s during CentOS kexec reboot.
+v12:
+	- A major change compared to previous version. Instead of using
+	  contiguous VA range a copy of linear map is now used to perform
+	  copying of segments during relocation as it was agreed in the
+	  discussion of version 11 of this project.
+	- In addition to using linear map, I also took several ideas from
+	  James Morse to better organize the kexec relocation:
+	  	1. skip relocation function entirely if that is not needed
+		2. remove the PoC flushing function since it is not needed
+		   anymore with MMU enabled.
+v11:
+	- Fixed missing KEXEC_CORE dependency for trans_pgd.c
+	- Removed useless "if(rc) return rc" statement (thank you Tyler Hicks)
+	- Another 12 patches were accepted into maintainer's get.
+	  Re-based patches against:
+	  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
+	  Branch: for-next/kexec
+v10:
+	- Addressed a lot of comments form James Morse and from  Marc Zyngier
+	- Added review-by's
+	- Synchronized with mainline
 
-Fix the sick sentence: I means only to compile for x86_64 and arm64..
+v9:	- 9 patches from previous series landed in upstream, so now series
+	  is smaller
+	- Added two patches from James Morse to address idmap issues for machines
+	  with high physical addresses.
+	- Addressed comments from Selin Dag about compiling issues. He also tested
+	  my series and got similar performance results: ~60 ms instead of ~580 ms
+	  with an initramfs size of ~120MB.
+v8:
+	- Synced with mainline to keep series up-to-date
+v7:
+	-- Addressed comments from James Morse
+	- arm64: hibernate: pass the allocated pgdp to ttbr0
+	  Removed "Fixes" tag, and added Added Reviewed-by: James Morse
+	- arm64: hibernate: check pgd table allocation
+	  Sent out as a standalone patch so it can be sent to stable
+	  Series applies on mainline + this patch
+	- arm64: hibernate: add trans_pgd public functions
+	  Remove second allocation of tmp_pg_dir in swsusp_arch_resume
+	  Added Reviewed-by: James Morse <james.morse@arm.com>
+	- arm64: kexec: move relocation function setup and clean up
+	  Fixed typo in commit log
+	  Changed kern_reloc to phys_addr_t types.
+	  Added explanation why kern_reloc is needed.
+	  Split into four patches:
+	  arm64: kexec: make dtb_mem always enabled
+	  arm64: kexec: remove unnecessary debug prints
+	  arm64: kexec: call kexec_image_info only once
+	  arm64: kexec: move relocation function setup
+	- arm64: kexec: add expandable argument to relocation function
+	  Changed types of new arguments from unsigned long to phys_addr_t.
+	  Changed offset prefix to KEXEC_*
+	  Split into four patches:
+	  arm64: kexec: cpu_soft_restart change argument types
+	  arm64: kexec: arm64_relocate_new_kernel clean-ups
+	  arm64: kexec: arm64_relocate_new_kernel don't use x0 as temp
+	  arm64: kexec: add expandable argument to relocation function
+	- arm64: kexec: configure trans_pgd page table for kexec
+	  Added invalid entries into EL2 vector table
+	  Removed KEXEC_EL2_VECTOR_TABLE_SIZE and KEXEC_EL2_VECTOR_TABLE_OFFSET
+	  Copy relocation functions and table into separate pages
+	  Changed types in kern_reloc_arg.
+	  Split into three patches:
+	  arm64: kexec: offset for relocation function
+	  arm64: kexec: kexec EL2 vectors
+	  arm64: kexec: configure trans_pgd page table for kexec
+	- arm64: kexec: enable MMU during kexec relocation
+	  Split into two patches:
+	  arm64: kexec: enable MMU during kexec relocation
+	  arm64: kexec: remove head from relocation argument
+v6:
+	- Sync with mainline tip
+	- Added Acked's from Dave Young
+v5:
+	- Addressed comments from Matthias Brugger: added review-by's, improved
+	  comments, and made cleanups to swsusp_arch_resume() in addition to
+	  create_safe_exec_page().
+	- Synced with mainline tip.
+v4:
+	- Addressed comments from James Morse.
+	- Split "check pgd table allocation" into two patches, and moved to
+	  the beginning of series  for simpler backport of the fixes.
+	  Added "Fixes:" tags to commit logs.
+	- Changed "arm64, hibernate:" to "arm64: hibernate:"
+	- Added Reviewed-by's
+	- Moved "add PUD_SECT_RDONLY" earlier in series to be with other
+	  clean-ups
+	- Added "Derived from:" to arch/arm64/mm/trans_pgd.c
+	- Removed "flags" from trans_info
+	- Changed .trans_alloc_page assumption to return zeroed page.
+	- Simplify changes to trans_pgd_map_page(), by keeping the old
+	  code.
+	- Simplify changes to trans_pgd_create_copy, by keeping the old
+	  code.
+	- Removed: "add trans_pgd_create_empty"
+	- replace init_mm with NULL, and keep using non "__" version of
+	  populate functions.
+v3:
+	- Split changes to create_safe_exec_page() into several patches for
+	  easier review as request by Mark Rutland. This is why this series
+	  has 3 more patches.
+	- Renamed trans_table to tans_pgd as agreed with Mark. The header
+	  comment in trans_pgd.c explains that trans stands for
+	  transitional page tables. Meaning they are used in transition
+	  between two kernels.
+v2:
+	- Fixed hibernate bug reported by James Morse
+	- Addressed comments from James Morse:
+	  * More incremental changes to trans_table
+	  * Removed TRANS_FORCEMAP
+	  * Added kexec reboot data for image with 380M in size.
 
-> signature verification.  And the related arch kexec_file kconfig can
-> just select it.
-> 
-> Coiby, can you try above?
-> 
-> >  #endif
-> >  
-> >  /*
-> > -- 
-> > 2.33.0
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> > 
-> > 
-> 
-> Thanks
-> Dave
-> 
+Enable MMU during kexec relocation in order to improve reboot performance.
+
+If kexec functionality is used for a fast system update, with a minimal
+downtime, the relocation of kernel + initramfs takes a significant portion
+of reboot.
+
+The reason for slow relocation is because it is done without MMU, and thus
+not benefiting from D-Cache.
+
+Performance data
+----------------
+
+Cavium ThunderX2:
+Kernel Image size: 38M Iniramfs size: 46M Total relocation size: 84M
+MMU-disabled:
+relocation	7.489539915s
+MMU-enabled:
+relocation	0.03946095s
+
+Relocation performance is improved 190 times.
+
+Broadcom Stingray:
+For this experiment, the size of kernel plus initramfs is small, only 25M.
+If initramfs was larger, than the improvements would be greater, as time
+spent in relocation is proportional to the size of relocation.
+
+MMU-disabled::
+kernel shutdown	0.022131328s
+relocation	0.440510736s
+kernel startup	0.294706768s
+
+Relocation was taking: 58.2% of reboot time
+
+MMU-enabled:
+kernel shutdown	0.032066576s
+relocation	0.022158152s
+kernel startup	0.296055880s
+
+Now: Relocation takes 6.3% of reboot time
+
+Total reboot is x2.16 times faster.
+
+With bigger userland (fitImage 380M), the reboot time is improved by 3.57s,
+and is reduced from 3.9s down to 0.33s
+
+Previous approaches and discussions
+-----------------------------------
+v17: https://lore.kernel.org/lkml/20210916231325.125533-1-pasha.tatashin@soleen.com
+v16: https://lore.kernel.org/lkml/20210802215408.804942-1-pasha.tatashin@soleen.com
+v15: https://lore.kernel.org/lkml/20210609004419.936873-1-pasha.tatashin@soleen.com
+v14: https://lore.kernel.org/lkml/20210527150526.271941-1-pasha.tatashin@soleen.com
+v13: https://lore.kernel.org/lkml/20210408040537.2703241-1-pasha.tatashin@soleen.com
+v12: https://lore.kernel.org/lkml/20210303002230.1083176-1-pasha.tatashin@soleen.com
+v11: https://lore.kernel.org/lkml/20210127172706.617195-1-pasha.tatashin@soleen.com
+v10: https://lore.kernel.org/linux-arm-kernel/20210125191923.1060122-1-pasha.tatashin@soleen.com
+v9: https://lore.kernel.org/lkml/20200326032420.27220-1-pasha.tatashin@soleen.com
+v8: https://lore.kernel.org/lkml/20191204155938.2279686-1-pasha.tatashin@soleen.com
+v7: https://lore.kernel.org/lkml/20191016200034.1342308-1-pasha.tatashin@soleen.com
+v6: https://lore.kernel.org/lkml/20191004185234.31471-1-pasha.tatashin@soleen.com
+v5: https://lore.kernel.org/lkml/20190923203427.294286-1-pasha.tatashin@soleen.com
+v4: https://lore.kernel.org/lkml/20190909181221.309510-1-pasha.tatashin@soleen.com
+v3: https://lore.kernel.org/lkml/20190821183204.23576-1-pasha.tatashin@soleen.com
+v2: https://lore.kernel.org/lkml/20190817024629.26611-1-pasha.tatashin@soleen.com
+v1: https://lore.kernel.org/lkml/20190801152439.11363-1-pasha.tatashin@soleen.com
+
+Pasha Tatashin (15):
+  arm64: kernel: add helper for booted at EL2 and not VHE
+  arm64: trans_pgd: hibernate: Add trans_pgd_copy_el2_vectors
+  arm64: hibernate: abstract ttrb0 setup function
+  arm64: kexec: flush image and lists during kexec load time
+  arm64: kexec: skip relocation code for inplace kexec
+  arm64: kexec: Use dcache ops macros instead of open-coding
+  arm64: kexec: pass kimage as the only argument to relocation function
+  arm64: kexec: configure EL2 vectors for kexec
+  arm64: kexec: relocate in EL1 mode
+  arm64: kexec: use ld script for relocation function
+  arm64: kexec: install a copy of the linear-map
+  arm64: kexec: keep MMU enabled during kexec relocation
+  arm64: kexec: remove the pre-kexec PoC maintenance
+  arm64: kexec: remove cpu-reset.h
+  arm64: trans_pgd: remove trans_pgd_map_page()
+
+ arch/arm64/Kconfig                   |   2 +-
+ arch/arm64/include/asm/assembler.h   |  49 ++++++--
+ arch/arm64/include/asm/kexec.h       |  12 ++
+ arch/arm64/include/asm/mmu_context.h |  24 ++++
+ arch/arm64/include/asm/sections.h    |   1 +
+ arch/arm64/include/asm/trans_pgd.h   |  14 ++-
+ arch/arm64/include/asm/virt.h        |   7 ++
+ arch/arm64/kernel/asm-offsets.c      |  11 ++
+ arch/arm64/kernel/cpu-reset.S        |   7 +-
+ arch/arm64/kernel/cpu-reset.h        |  32 -----
+ arch/arm64/kernel/hibernate-asm.S    |  72 -----------
+ arch/arm64/kernel/hibernate.c        |  49 ++------
+ arch/arm64/kernel/machine_kexec.c    | 177 ++++++++++++++-------------
+ arch/arm64/kernel/relocate_kernel.S  |  69 +++++------
+ arch/arm64/kernel/sdei.c             |   2 +-
+ arch/arm64/kernel/vmlinux.lds.S      |  19 +++
+ arch/arm64/mm/Makefile               |   1 +
+ arch/arm64/mm/trans_pgd-asm.S        |  65 ++++++++++
+ arch/arm64/mm/trans_pgd.c            |  84 ++++---------
+ 19 files changed, 357 insertions(+), 340 deletions(-)
+ delete mode 100644 arch/arm64/kernel/cpu-reset.h
+ create mode 100644 arch/arm64/mm/trans_pgd-asm.S
+
+-- 
+2.33.0.800.g4c38ced690-goog
 
 
 _______________________________________________
