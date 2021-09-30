@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-lf1-x129.google.com ([2a00:1450:4864:20::129])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVnSk-00CwZX-Cb
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 04:14:27 +0000
-Received: by mail-lf1-x129.google.com with SMTP id y26so19669798lfa.11
- for <kexec@lists.infradead.org>; Wed, 29 Sep 2021 21:14:25 -0700 (PDT)
-MIME-Version: 1.0
+Date: Thu, 30 Sep 2021 09:16:07 +0100
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v17 08/15] arm64: kexec: configure EL2 vectors for kexec
+Message-ID: <20210930081607.GA23250@willie-the-truck>
 References: <20210916231325.125533-1-pasha.tatashin@soleen.com>
- <YVSgplQLvPg1490d@arm.com>
-In-Reply-To: <YVSgplQLvPg1490d@arm.com>
-From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 30 Sep 2021 00:13:47 -0400
-Message-ID: <CA+CK2bBJqxq9Kwei-na_mgObMe0WF=im00YtPe10sp3g2+c79Q@mail.gmail.com>
-Subject: Re: [PATCH v17 00/15] arm64: MMU enabled kexec relocation
+ <20210916231325.125533-9-pasha.tatashin@soleen.com>
+ <20210929123513.GC21631@willie-the-truck>
+ <CA+CK2bDw3A7FkZoQbB-AQWHj89Azqjrm12WFQVcfQjS+2Tmgyg@mail.gmail.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <CA+CK2bDw3A7FkZoQbB-AQWHj89Azqjrm12WFQVcfQjS+2Tmgyg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,20 +22,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Will Deacon <will@kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
+To: Pasha Tatashin <pasha.tatashin@soleen.com>
+Cc: James Morris <jmorris@namei.org>, Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, kexec mailing list <kexec@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Catalin Marinas <catalin.marinas@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Marc Zyngier <maz@kernel.org>, James Morse <james.morse@arm.com>, Vladimir Murzin <vladimir.murzin@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mm <linux-mm@kvack.org>, Mark Rutland <mark.rutland@arm.com>, steve.capper@arm.com, rfontana@redhat.com, Thomas Gleixner <tglx@linutronix.de>, Selin Dag <selindag@gmail.com>, Tyler Hicks <tyhicks@linux.microsoft.com>, Pingfan Liu <kernelfans@gmail.com>, Andrew Morton <akpm@linux-foundation.org>, madvenka@linux.microsoft.com
 
-> FWIW, I'm fine with this series. I think the only concern raised by
-> James and not addressed is the possibility of the failure of the memory
-> allocation for copying the page tables during kexec. If anyone will
-> complain in the future, we can look into adding a fallback mechanism to
-> do the relocation with the MMU off.
->
-> Acked-by: Catalin Marinas <catalin.marinas@arm.com>
+On Wed, Sep 29, 2021 at 11:54:55PM -0400, Pasha Tatashin wrote:
+> > > +/* Allocates pages for kexec page table */
+> > > +static void *kexec_page_alloc(void *arg)
+> > > +{
+> > > +     struct kimage *kimage = (struct kimage *)arg;
+> > > +     struct page *page = kimage_alloc_control_pages(kimage, 0);
+> > > +
+> > > +     if (!page)
+> > > +             return NULL;
+> > > +
+> > > +     memset(page_address(page), 0, PAGE_SIZE);
+> >
+> > Hmm, I think we might be missing barriers here to ensure that the zeroes
+> > are visible to the page-table walker before we plumb the page into the
+> > page-table.
+> >
+> > Usually, that's taken care of by the smp_wmb() in __pXX_alloc() but I
+> > can't see that here. Is it hiding?
+> 
+> Based on the comment in __pte_alloc() that smp_wmb() is needed in
+> order to synchronize pte setup with other cpus prior to making it
+> visible to them. This is not needed here. First, by the time these
+> page tables are used the other cpus are offlined (kexec reboot code is
+> single threaded). Second, we never insert any entry into a page table
+> that is actively used by any cpu.
 
-Thank you.
+I think the comment there is wrong, but the barrier is still necessary.
+How else do you guarantee that the page-table walker reads the zeroes from
+the memset?
 
-Pasha
+Will
 
 _______________________________________________
 kexec mailing list
