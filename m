@@ -1,15 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qv1-xf31.google.com ([2607:f8b0:4864:20::f31])
+Received: from mail-qv1-xf2e.google.com ([2607:f8b0:4864:20::f2e])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mVx5j-00EhNx-CH
- for kexec@lists.infradead.org; Thu, 30 Sep 2021 14:31:22 +0000
-Received: by mail-qv1-xf31.google.com with SMTP id o15so3705882qvq.4
- for <kexec@lists.infradead.org>; Thu, 30 Sep 2021 07:31:18 -0700 (PDT)
+ id 1mVx5l-00EhPS-DG
+ for kexec@lists.infradead.org; Thu, 30 Sep 2021 14:31:24 +0000
+Received: by mail-qv1-xf2e.google.com with SMTP id gs10so3665056qvb.13
+ for <kexec@lists.infradead.org>; Thu, 30 Sep 2021 07:31:20 -0700 (PDT)
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Subject: [PATCH v18 02/15] arm64: trans_pgd: hibernate: Add
- trans_pgd_copy_el2_vectors
-Date: Thu, 30 Sep 2021 14:31:00 +0000
-Message-Id: <20210930143113.1502553-3-pasha.tatashin@soleen.com>
+Subject: [PATCH v18 04/15] arm64: kexec: flush image and lists during kexec
+ load time
+Date: Thu, 30 Sep 2021 14:31:02 +0000
+Message-Id: <20210930143113.1502553-5-pasha.tatashin@soleen.com>
 In-Reply-To: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
 References: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
 MIME-Version: 1.0
@@ -27,307 +27,107 @@ Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: pasha.tatashin@soleen.com, sashal@kernel.org, ebiederm@xmission.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, corbet@lwn.net, catalin.marinas@arm.com, will@kernel.org, linux-arm-kernel@lists.infradead.org, maz@kernel.org, james.morse@arm.com, vladimir.murzin@arm.com, matthias.bgg@gmail.com, linux-mm@kvack.org, mark.rutland@arm.com, steve.capper@arm.com, rfontana@redhat.com, tglx@linutronix.de, selindag@gmail.com, kernelfans@gmail.com, akpm@linux-foundation.org
 
-Users of trans_pgd may also need a copy of vector table because it is
-also may be overwritten if a linear map can be overwritten.
-
-Move setup of EL2 vectors from hibernate to trans_pgd, so it can be
-later shared with kexec as well.
+Currently, during kexec load we are copying relocation function and
+flushing it. However, we can also flush kexec relocation buffers and
+if new kernel image is already in place (i.e. crash kernel), we can
+also flush the new kernel image itself.
 
 Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
 Acked-by: Catalin Marinas <catalin.marinas@arm.com>
 ---
- arch/arm64/include/asm/trans_pgd.h |  9 +++--
- arch/arm64/include/asm/virt.h      |  2 ++
- arch/arm64/kernel/hibernate-asm.S  | 52 ---------------------------
- arch/arm64/kernel/hibernate.c      | 26 ++++++--------
- arch/arm64/mm/Makefile             |  1 +
- arch/arm64/mm/trans_pgd-asm.S      | 58 ++++++++++++++++++++++++++++++
- arch/arm64/mm/trans_pgd.c          | 27 ++++++++++++--
- 7 files changed, 103 insertions(+), 72 deletions(-)
- create mode 100644 arch/arm64/mm/trans_pgd-asm.S
+ arch/arm64/kernel/machine_kexec.c | 58 ++++++++++++++-----------------
+ 1 file changed, 26 insertions(+), 32 deletions(-)
 
-diff --git a/arch/arm64/include/asm/trans_pgd.h b/arch/arm64/include/asm/trans_pgd.h
-index 5d08e5adf3d5..7b04d32b102c 100644
---- a/arch/arm64/include/asm/trans_pgd.h
-+++ b/arch/arm64/include/asm/trans_pgd.h
-@@ -1,8 +1,8 @@
- /* SPDX-License-Identifier: GPL-2.0 */
- 
- /*
-- * Copyright (c) 2020, Microsoft Corporation.
-- * Pavel Tatashin <pasha.tatashin@soleen.com>
-+ * Copyright (c) 2021, Microsoft Corporation.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-  */
- 
- #ifndef _ASM_TRANS_TABLE_H
-@@ -36,4 +36,9 @@ int trans_pgd_map_page(struct trans_pgd_info *info, pgd_t *trans_pgd,
- int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 			 unsigned long *t0sz, void *page);
- 
-+int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
-+			       phys_addr_t *el2_vectors);
-+
-+extern char trans_pgd_stub_vectors[];
-+
- #endif /* _ASM_TRANS_TABLE_H */
-diff --git a/arch/arm64/include/asm/virt.h b/arch/arm64/include/asm/virt.h
-index a9457e96203c..3c8af033a997 100644
---- a/arch/arm64/include/asm/virt.h
-+++ b/arch/arm64/include/asm/virt.h
-@@ -67,6 +67,8 @@
-  */
- extern u32 __boot_cpu_mode[2];
- 
-+#define ARM64_VECTOR_TABLE_LEN	SZ_2K
-+
- void __hyp_set_vectors(phys_addr_t phys_vector_base);
- void __hyp_reset_vectors(void);
- 
-diff --git a/arch/arm64/kernel/hibernate-asm.S b/arch/arm64/kernel/hibernate-asm.S
-index 81c0186a5e32..a30a2c3f905e 100644
---- a/arch/arm64/kernel/hibernate-asm.S
-+++ b/arch/arm64/kernel/hibernate-asm.S
-@@ -112,56 +112,4 @@ alternative_insn "dc cvau, x4",  "dc civac, x4",  ARM64_WORKAROUND_CLEAN_CACHE
- 	hvc	#0
- 3:	ret
- SYM_CODE_END(swsusp_arch_suspend_exit)
--
--/*
-- * Restore the hyp stub.
-- * This must be done before the hibernate page is unmapped by _cpu_resume(),
-- * but happens before any of the hyp-stub's code is cleaned to PoC.
-- *
-- * x24: The physical address of __hyp_stub_vectors
-- */
--SYM_CODE_START_LOCAL(el1_sync)
--	msr	vbar_el2, x24
--	eret
--SYM_CODE_END(el1_sync)
--
--.macro invalid_vector	label
--SYM_CODE_START_LOCAL(\label)
--	b \label
--SYM_CODE_END(\label)
--.endm
--
--	invalid_vector	el2_sync_invalid
--	invalid_vector	el2_irq_invalid
--	invalid_vector	el2_fiq_invalid
--	invalid_vector	el2_error_invalid
--	invalid_vector	el1_sync_invalid
--	invalid_vector	el1_irq_invalid
--	invalid_vector	el1_fiq_invalid
--	invalid_vector	el1_error_invalid
--
--/* el2 vectors - switch el2 here while we restore the memory image. */
--	.align 11
--SYM_CODE_START(hibernate_el2_vectors)
--	ventry	el2_sync_invalid		// Synchronous EL2t
--	ventry	el2_irq_invalid			// IRQ EL2t
--	ventry	el2_fiq_invalid			// FIQ EL2t
--	ventry	el2_error_invalid		// Error EL2t
--
--	ventry	el2_sync_invalid		// Synchronous EL2h
--	ventry	el2_irq_invalid			// IRQ EL2h
--	ventry	el2_fiq_invalid			// FIQ EL2h
--	ventry	el2_error_invalid		// Error EL2h
--
--	ventry	el1_sync			// Synchronous 64-bit EL1
--	ventry	el1_irq_invalid			// IRQ 64-bit EL1
--	ventry	el1_fiq_invalid			// FIQ 64-bit EL1
--	ventry	el1_error_invalid		// Error 64-bit EL1
--
--	ventry	el1_sync_invalid		// Synchronous 32-bit EL1
--	ventry	el1_irq_invalid			// IRQ 32-bit EL1
--	ventry	el1_fiq_invalid			// FIQ 32-bit EL1
--	ventry	el1_error_invalid		// Error 32-bit EL1
--SYM_CODE_END(hibernate_el2_vectors)
--
- .popsection
-diff --git a/arch/arm64/kernel/hibernate.c b/arch/arm64/kernel/hibernate.c
-index 4c9533f4c0c4..b96ef9060e4c 100644
---- a/arch/arm64/kernel/hibernate.c
-+++ b/arch/arm64/kernel/hibernate.c
-@@ -51,9 +51,6 @@ extern int in_suspend;
- /* Do we need to reset el2? */
- #define el2_reset_needed() (is_hyp_nvhe())
- 
--/* temporary el2 vectors in the __hibernate_exit_text section. */
--extern char hibernate_el2_vectors[];
--
- /* hyp-stub vectors, used to restore el2 during resume from hibernate. */
- extern char __hyp_stub_vectors[];
- 
-@@ -434,6 +431,7 @@ int swsusp_arch_resume(void)
- 	void *zero_page;
- 	size_t exit_size;
- 	pgd_t *tmp_pg_dir;
-+	phys_addr_t el2_vectors;
- 	void __noreturn (*hibernate_exit)(phys_addr_t, phys_addr_t, void *,
- 					  void *, phys_addr_t, phys_addr_t);
- 	struct trans_pgd_info trans_info = {
-@@ -461,6 +459,14 @@ int swsusp_arch_resume(void)
- 		return -ENOMEM;
- 	}
- 
-+	if (el2_reset_needed()) {
-+		rc = trans_pgd_copy_el2_vectors(&trans_info, &el2_vectors);
-+		if (rc) {
-+			pr_err("Failed to setup el2 vectors\n");
-+			return rc;
-+		}
-+	}
-+
- 	exit_size = __hibernate_exit_text_end - __hibernate_exit_text_start;
- 	/*
- 	 * Copy swsusp_arch_suspend_exit() to a safe page. This will generate
-@@ -473,26 +479,14 @@ int swsusp_arch_resume(void)
- 		return rc;
- 	}
- 
--	/*
--	 * The hibernate exit text contains a set of el2 vectors, that will
--	 * be executed at el2 with the mmu off in order to reload hyp-stub.
--	 */
--	dcache_clean_inval_poc((unsigned long)hibernate_exit,
--			    (unsigned long)hibernate_exit + exit_size);
--
- 	/*
- 	 * KASLR will cause the el2 vectors to be in a different location in
- 	 * the resumed kernel. Load hibernate's temporary copy into el2.
- 	 *
- 	 * We can skip this step if we booted at EL1, or are running with VHE.
- 	 */
--	if (el2_reset_needed()) {
--		phys_addr_t el2_vectors = (phys_addr_t)hibernate_exit;
--		el2_vectors += hibernate_el2_vectors -
--			       __hibernate_exit_text_start;     /* offset */
--
-+	if (el2_reset_needed())
- 		__hyp_set_vectors(el2_vectors);
--	}
- 
- 	hibernate_exit(virt_to_phys(tmp_pg_dir), resume_hdr.ttbr1_el1,
- 		       resume_hdr.reenter_kernel, restore_pblist,
-diff --git a/arch/arm64/mm/Makefile b/arch/arm64/mm/Makefile
-index f188c9092696..ff1e800ba7a1 100644
---- a/arch/arm64/mm/Makefile
-+++ b/arch/arm64/mm/Makefile
-@@ -7,6 +7,7 @@ obj-$(CONFIG_HUGETLB_PAGE)	+= hugetlbpage.o
- obj-$(CONFIG_PTDUMP_CORE)	+= ptdump.o
- obj-$(CONFIG_PTDUMP_DEBUGFS)	+= ptdump_debugfs.o
- obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd.o
-+obj-$(CONFIG_TRANS_TABLE)	+= trans_pgd-asm.o
- obj-$(CONFIG_DEBUG_VIRTUAL)	+= physaddr.o
- obj-$(CONFIG_ARM64_MTE)		+= mteswap.o
- KASAN_SANITIZE_physaddr.o	+= n
-diff --git a/arch/arm64/mm/trans_pgd-asm.S b/arch/arm64/mm/trans_pgd-asm.S
-new file mode 100644
-index 000000000000..8c4bffe3089d
---- /dev/null
-+++ b/arch/arm64/mm/trans_pgd-asm.S
-@@ -0,0 +1,58 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+
-+/*
-+ * Copyright (c) 2021, Microsoft Corporation.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-+ */
-+
-+#include <linux/linkage.h>
-+#include <asm/assembler.h>
-+#include <asm/kvm_asm.h>
-+
-+.macro invalid_vector	label
-+SYM_CODE_START_LOCAL(\label)
-+	.align 7
-+	b	\label
-+SYM_CODE_END(\label)
-+.endm
-+
-+.macro el1_sync_vector
-+SYM_CODE_START_LOCAL(el1_sync)
-+	.align 7
-+	cmp	x0, #HVC_SET_VECTORS	/* Called from hibernate */
-+	b.ne	1f
-+	msr	vbar_el2, x1
-+	mov	x0, xzr
-+	eret
-+1:	/* Unexpected argument, set an error */
-+	mov_q	x0, HVC_STUB_ERR
-+	eret
-+SYM_CODE_END(el1_sync)
-+.endm
-+
-+SYM_CODE_START(trans_pgd_stub_vectors)
-+	invalid_vector	hyp_stub_el2t_sync_invalid	// Synchronous EL2t
-+	invalid_vector	hyp_stub_el2t_irq_invalid	// IRQ EL2t
-+	invalid_vector	hyp_stub_el2t_fiq_invalid	// FIQ EL2t
-+	invalid_vector	hyp_stub_el2t_error_invalid	// Error EL2t
-+
-+	invalid_vector	hyp_stub_el2h_sync_invalid	// Synchronous EL2h
-+	invalid_vector	hyp_stub_el2h_irq_invalid	// IRQ EL2h
-+	invalid_vector	hyp_stub_el2h_fiq_invalid	// FIQ EL2h
-+	invalid_vector	hyp_stub_el2h_error_invalid	// Error EL2h
-+
-+	el1_sync_vector					// Synchronous 64-bit EL1
-+	invalid_vector	hyp_stub_el1_irq_invalid	// IRQ 64-bit EL1
-+	invalid_vector	hyp_stub_el1_fiq_invalid	// FIQ 64-bit EL1
-+	invalid_vector	hyp_stub_el1_error_invalid	// Error 64-bit EL1
-+
-+	invalid_vector	hyp_stub_32b_el1_sync_invalid	// Synchronous 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_irq_invalid	// IRQ 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_fiq_invalid	// FIQ 32-bit EL1
-+	invalid_vector	hyp_stub_32b_el1_error_invalid	// Error 32-bit EL1
-+	.align 11
-+SYM_INNER_LABEL(__trans_pgd_stub_vectors_end, SYM_L_LOCAL)
-+SYM_CODE_END(trans_pgd_stub_vectors)
-+
-+# Check the trans_pgd_stub_vectors didn't overflow
-+.org . - (__trans_pgd_stub_vectors_end - trans_pgd_stub_vectors) + SZ_2K
-diff --git a/arch/arm64/mm/trans_pgd.c b/arch/arm64/mm/trans_pgd.c
-index 527f0a39c3da..26bd8f2d95af 100644
---- a/arch/arm64/mm/trans_pgd.c
-+++ b/arch/arm64/mm/trans_pgd.c
-@@ -5,8 +5,8 @@
-  *
-  * This file derived from: arch/arm64/kernel/hibernate.c
-  *
-- * Copyright (c) 2020, Microsoft Corporation.
-- * Pavel Tatashin <pasha.tatashin@soleen.com>
-+ * Copyright (c) 2021, Microsoft Corporation.
-+ * Pasha Tatashin <pasha.tatashin@soleen.com>
-  *
-  */
- 
-@@ -322,3 +322,26 @@ int trans_pgd_idmap_page(struct trans_pgd_info *info, phys_addr_t *trans_ttbr0,
- 
- 	return 0;
+diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
+index 213d56c14f60..b6d5a02cba2e 100644
+--- a/arch/arm64/kernel/machine_kexec.c
++++ b/arch/arm64/kernel/machine_kexec.c
+@@ -60,29 +60,6 @@ void machine_kexec_cleanup(struct kimage *kimage)
+ 	/* Empty routine needed to avoid build errors. */
  }
-+
-+/*
-+ * Create a copy of the vector table so we can call HVC_SET_VECTORS or
-+ * HVC_SOFT_RESTART from contexts where the table may be overwritten.
-+ */
-+int trans_pgd_copy_el2_vectors(struct trans_pgd_info *info,
-+			       phys_addr_t *el2_vectors)
+ 
+-int machine_kexec_post_load(struct kimage *kimage)
+-{
+-	void *reloc_code = page_to_virt(kimage->control_code_page);
+-
+-	memcpy(reloc_code, arm64_relocate_new_kernel,
+-	       arm64_relocate_new_kernel_size);
+-	kimage->arch.kern_reloc = __pa(reloc_code);
+-	kexec_image_info(kimage);
+-
+-	/*
+-	 * For execution with the MMU off, reloc_code needs to be cleaned to the
+-	 * PoC and invalidated from the I-cache.
+-	 */
+-	dcache_clean_inval_poc((unsigned long)reloc_code,
+-			    (unsigned long)reloc_code +
+-				    arm64_relocate_new_kernel_size);
+-	icache_inval_pou((uintptr_t)reloc_code,
+-				(uintptr_t)reloc_code +
+-					arm64_relocate_new_kernel_size);
+-
+-	return 0;
+-}
+-
+ /**
+  * machine_kexec_prepare - Prepare for a kexec reboot.
+  *
+@@ -163,6 +140,32 @@ static void kexec_segment_flush(const struct kimage *kimage)
+ 	}
+ }
+ 
++int machine_kexec_post_load(struct kimage *kimage)
 +{
-+	void *hyp_stub = trans_alloc(info);
++	void *reloc_code = page_to_virt(kimage->control_code_page);
 +
-+	if (!hyp_stub)
-+		return -ENOMEM;
-+	*el2_vectors = virt_to_phys(hyp_stub);
-+	memcpy(hyp_stub, &trans_pgd_stub_vectors, ARM64_VECTOR_TABLE_LEN);
-+	caches_clean_inval_pou((unsigned long)hyp_stub,
-+			       (unsigned long)hyp_stub +
-+			       ARM64_VECTOR_TABLE_LEN);
-+	dcache_clean_inval_poc((unsigned long)hyp_stub,
-+			       (unsigned long)hyp_stub +
-+			       ARM64_VECTOR_TABLE_LEN);
++	/* If in place flush new kernel image, else flush lists and buffers */
++	if (kimage->head & IND_DONE)
++		kexec_segment_flush(kimage);
++	else
++		kexec_list_flush(kimage);
++
++	memcpy(reloc_code, arm64_relocate_new_kernel,
++	       arm64_relocate_new_kernel_size);
++	kimage->arch.kern_reloc = __pa(reloc_code);
++	kexec_image_info(kimage);
++
++	/* Flush the reloc_code in preparation for its execution. */
++	dcache_clean_inval_poc((unsigned long)reloc_code,
++			       (unsigned long)reloc_code +
++			       arm64_relocate_new_kernel_size);
++	icache_inval_pou((uintptr_t)reloc_code,
++			 (uintptr_t)reloc_code +
++			 arm64_relocate_new_kernel_size);
 +
 +	return 0;
 +}
++
+ /**
+  * machine_kexec - Do the kexec reboot.
+  *
+@@ -180,13 +183,6 @@ void machine_kexec(struct kimage *kimage)
+ 	WARN(in_kexec_crash && (stuck_cpus || smp_crash_stop_failed()),
+ 		"Some CPUs may be stale, kdump will be unreliable.\n");
+ 
+-	/* Flush the kimage list and its buffers. */
+-	kexec_list_flush(kimage);
+-
+-	/* Flush the new image if already in place. */
+-	if ((kimage != kexec_crash_image) && (kimage->head & IND_DONE))
+-		kexec_segment_flush(kimage);
+-
+ 	pr_info("Bye!\n");
+ 
+ 	local_daif_mask();
+@@ -261,8 +257,6 @@ void arch_kexec_protect_crashkres(void)
+ {
+ 	int i;
+ 
+-	kexec_segment_flush(kexec_crash_image);
+-
+ 	for (i = 0; i < kexec_crash_image->nr_segments; i++)
+ 		set_memory_valid(
+ 			__phys_to_virt(kexec_crash_image->segment[i].mem),
 -- 
 2.33.0.800.g4c38ced690-goog
 
