@@ -1,11 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Will Deacon <will@kernel.org>
-Subject: Re: [PATCH v18 00/15] arm64: MMU enabled kexec relocation
-Date: Fri,  1 Oct 2021 15:01:31 +0100
-Message-Id: <163309146157.2070475.7111592087053001525.b4-ty@kernel.org>
-In-Reply-To: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
-References: <20210930143113.1502553-1-pasha.tatashin@soleen.com>
+Date: Fri, 1 Oct 2021 07:03:13 -0700
+From: Mike Rapoport <rppt@kernel.org>
+Subject: Re: [PATCH v1 3/4] memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
+ IORESOURCE_SYSRAM_DRIVER_MANAGED
+Message-ID: <YVcVIej0Wlyd9JAB@kernel.org>
+References: <20210927150518.8607-1-david@redhat.com>
+ <20210927150518.8607-4-david@redhat.com>
+ <YVSW3uuu7mIcJMm3@kernel.org>
+ <830c1670-378b-0fb6-bd5e-208e545fa126@redhat.com>
+ <YVYqdN7MFdzBlCVm@kernel.org>
+ <0d6c86ba-076b-5d4b-33a8-da267f951a85@redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0d6c86ba-076b-5d4b-33a8-da267f951a85@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,104 +25,87 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-mm@kvack.org, ebiederm@xmission.com, corbet@lwn.net, Pasha Tatashin <pasha.tatashin@soleen.com>, matthias.bgg@gmail.com, akpm@linux-foundation.org, mark.rutland@arm.com, rfontana@redhat.com, maz@kernel.org, james.morse@arm.com, tglx@linutronix.de, selindag@gmail.com, linux-arm-kernel@lists.infradead.org, vladimir.murzin@arm.com, kernelfans@gmail.com, kexec@lists.infradead.org, steve.capper@arm.com, sashal@kernel.org, linux-kernel@vger.kernel.org, catalin.marinas@arm.com
-Cc: kernel-team@android.com, Will Deacon <will@kernel.org>
+To: David Hildenbrand <david@redhat.com>
+Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
 
-On Thu, 30 Sep 2021 14:30:58 +0000, Pasha Tatashin wrote:
-> Changelog:
-> v18:
-> 	- Addressed comments from Will Deacon
-> 	- Added Acks from Catalin Marinas
-> v17:
-> 	- Merged with 5.15-rc1 as requested by Catalin Marinas
-> 	- Added Tested-by: Pingfan Liu <piliu@redhat.com>
-> v16:
-> 	- Merged with 5.14-rc4
-> v15:
-> 	- Changed trans_pgd_copy_el2_vectors() to use vector table that
-> 	  only shared by kexec and hibernate. This way sync does not have
-> 	  dangling branch that was recently introduced. (Reported by Marc
-> 	  Zyngier)
-> 	- Renamed is_hyp_callable() to is_hyp_nvhe() as requested by Marc
-> 	  Zyngier
-> 	- Clean-ups, comment fixes.
-> 	- Sync with upstream 368094df48e680fa51cedb68537408cfa64b788e
-> v14:
-> 	- Fixed a bug in "arm64: hyp-stub: Move elx_sync into the vectors"
-> 	  that was noticed by Marc Zyngier
-> 	- Merged with upstream
-> v13:
-> 	- Fixed a hang on ThunderX2, thank you Pingfan Liu for reporting
-> 	  the problem. In relocation function we need civac not ivac, we
-> 	  need to clean data in addition to invalidating it.
-> 	  Since I was using ThunderX2 machine I also measured the new
-> 	  performance data on this large ARM64 server. The MMU improves
-> 	  kexec relocation 190 times on this machine! (see below for
-> 	  raw data). Saves 7.5s during CentOS kexec reboot.
-> v12:
-> 	- A major change compared to previous version. Instead of using
-> 	  contiguous VA range a copy of linear map is now used to perform
-> 	  copying of segments during relocation as it was agreed in the
-> 	  discussion of version 11 of this project.
-> 	- In addition to using linear map, I also took several ideas from
-> 	  James Morse to better organize the kexec relocation:
-> 	  	1. skip relocation function entirely if that is not needed
-> 		2. remove the PoC flushing function since it is not needed
-> 		   anymore with MMU enabled.
-> v11:
-> 	- Fixed missing KEXEC_CORE dependency for trans_pgd.c
-> 	- Removed useless "if(rc) return rc" statement (thank you Tyler Hicks)
-> 	- Another 12 patches were accepted into maintainer's get.
-> 	  Re-based patches against:
-> 	  https://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux.git
-> 	  Branch: for-next/kexec
-> v10:
-> 	- Addressed a lot of comments form James Morse and from  Marc Zyngier
-> 	- Added review-by's
-> 	- Synchronized with mainline
+On Fri, Oct 01, 2021 at 10:04:24AM +0200, David Hildenbrand wrote:
+> On 30.09.21 23:21, Mike Rapoport wrote:
+> > On Wed, Sep 29, 2021 at 06:54:01PM +0200, David Hildenbrand wrote:
+> > > On 29.09.21 18:39, Mike Rapoport wrote:
+> > > > Hi,
+> > > > 
+> > > > On Mon, Sep 27, 2021 at 05:05:17PM +0200, David Hildenbrand wrote:
+> > > > > Let's add a flag that corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED.
+> > > > > Similar to MEMBLOCK_HOTPLUG, most infrastructure has to treat such memory
+> > > > > like ordinary MEMBLOCK_NONE memory -- for example, when selecting memory
+> > > > > regions to add to the vmcore for dumping in the crashkernel via
+> > > > > for_each_mem_range().
+> > > > Can you please elaborate on the difference in semantics of MEMBLOCK_HOTPLUG
+> > > > and MEMBLOCK_DRIVER_MANAGED?
+> > > > Unless I'm missing something they both mark memory that can be unplugged
+> > > > anytime and so it should not be used in certain cases. Why is there a need
+> > > > for a new flag?
+> > > 
+> > > In the cover letter I have "Alternative B: Reuse MEMBLOCK_HOTPLUG.
+> > > MEMBLOCK_HOTPLUG serves a different purpose, though.", but looking into the
+> > > details it won't work as is.
+> > > 
+> > > MEMBLOCK_HOTPLUG is used to mark memory early during boot that can later get
+> > > hotunplugged again and should be placed into ZONE_MOVABLE if the
+> > > "movable_node" kernel parameter is set.
+> > > 
+> > > The confusing part is that we talk about "hotpluggable" but really mean
+> > > "hotunpluggable": the reason is that HW flags DIMM slots that can later be
+> > > hotplugged as "hotpluggable" even though there is already something
+> > > hotplugged.
+> > 
+> > MEMBLOCK_HOTPLUG name is indeed somewhat confusing, but still it's core
+> > meaning "this memory may be removed" which does not differ from what
+> > IORESOURCE_SYSRAM_DRIVER_MANAGED means.
+> > 
+> > MEMBLOCK_HOTPLUG regions are indeed placed into ZONE_MOVABLE, but more
+> > importantly, they are avoided when we allocate memory from memblock.
+> > 
+> > So, in my view, both flags mean that the memory may be removed and it
+> > should not be used for certain types of allocations.
 > 
-> [...]
+> The semantics are different:
+> 
+> MEMBLOCK_HOTPLUG: memory is indicated as "System RAM" in the
+> firmware-provided memory map and added to the system early during boot; we
+> want this memory to be managed by ZONE_MOVABLE with "movable_node" set on
+> the kernel command line, because only then we want it to be hotpluggable
+> again. kexec *has to* indicate this memory to the second kernel and can
+> place kexec-images on this memory. After memory hotunplug, kexec has to be
+> re-armed.
+> 
+> MEMBLOCK_DRIVER_MANAGED: memory is not indicated as System RAM" in the
+> firmware-provided memory map; this memory is always detected and added to
+> the system by a driver; memory might not actually be physically
+> hotunpluggable and the ZONE selection does not depend on "movable_core".
+> kexec *must not* indicate this memory to the second kernel and *must not*
+> place kexec-images on this memory.
 
-Applied to arm64 (for-next/kexec), thanks!
+Ok, this clarifies.
+This explanation should be a part of the changelog. The sentences about the
+zone selection could be probably skipped, because they are less important
+for this case. E.g something like:
 
-[01/15] arm64: kernel: add helper for booted at EL2 and not VHE
-        https://git.kernel.org/arm64/c/094a3684b9b6
-[02/15] arm64: trans_pgd: hibernate: Add trans_pgd_copy_el2_vectors
-        https://git.kernel.org/arm64/c/788bfdd97434
-[03/15] arm64: hibernate: abstract ttrb0 setup function
-        https://git.kernel.org/arm64/c/a347f601452f
-[04/15] arm64: kexec: flush image and lists during kexec load time
-        https://git.kernel.org/arm64/c/0d8732e461d6
-[05/15] arm64: kexec: skip relocation code for inplace kexec
-        https://git.kernel.org/arm64/c/5bb6834fc290
-[06/15] arm64: kexec: Use dcache ops macros instead of open-coding
-        https://git.kernel.org/arm64/c/3036ec599332
-[07/15] arm64: kexec: pass kimage as the only argument to relocation function
-        https://git.kernel.org/arm64/c/878fdbd70486
-[08/15] arm64: kexec: configure EL2 vectors for kexec
-        https://git.kernel.org/arm64/c/08eae0ef618f
-[09/15] arm64: kexec: relocate in EL1 mode
-        https://git.kernel.org/arm64/c/ba959fe96a1b
-[10/15] arm64: kexec: use ld script for relocation function
-        https://git.kernel.org/arm64/c/19a046f07ce5
-[11/15] arm64: kexec: install a copy of the linear-map
-        https://git.kernel.org/arm64/c/3744b5280e67
-[12/15] arm64: kexec: keep MMU enabled during kexec relocation
-        https://git.kernel.org/arm64/c/efc2d0f20a9d
-[13/15] arm64: kexec: remove the pre-kexec PoC maintenance
-        https://git.kernel.org/arm64/c/939f1b9564c6
-[14/15] arm64: kexec: remove cpu-reset.h
-        https://git.kernel.org/arm64/c/7a2512fa6493
-[15/15] arm64: trans_pgd: remove trans_pgd_map_page()
-        https://git.kernel.org/arm64/c/6091dd9eaf8e
+MEMBLOCK_HOTPLUG: memory is indicated as "System RAM" in the
+firmware-provided memory map and added to the system early during boot;
+kexec *has to* indicate this memory to the second kernel and can place
+kexec-images on this memory. After memory hotunplug, kexec has to be
+re-armed.
 
-Cheers,
+MEMBLOCK_DRIVER_MANAGED: memory is not indicated as "System RAM" in the
+firmware-provided memory map; this memory is always detected and added to
+the system by a driver; memory might not actually be physically
+hotunpluggable.  kexec *must not* indicate this memory to the second kernel
+and *must not* place kexec-images on this memory.
+
 -- 
-Will
-
-https://fixes.arm64.dev
-https://next.arm64.dev
-https://will.arm64.dev
+Sincerely yours,
+Mike.
 
 _______________________________________________
 kexec mailing list
