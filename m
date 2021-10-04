@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 1 Oct 2021 07:03:13 -0700
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v1 3/4] memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
- IORESOURCE_SYSRAM_DRIVER_MANAGED
-Message-ID: <YVcVIej0Wlyd9JAB@kernel.org>
-References: <20210927150518.8607-1-david@redhat.com>
- <20210927150518.8607-4-david@redhat.com>
- <YVSW3uuu7mIcJMm3@kernel.org>
- <830c1670-378b-0fb6-bd5e-208e545fa126@redhat.com>
- <YVYqdN7MFdzBlCVm@kernel.org>
- <0d6c86ba-076b-5d4b-33a8-da267f951a85@redhat.com>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mXKOT-005mz1-1P
+ for kexec@lists.infradead.org; Mon, 04 Oct 2021 09:36:22 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 0/5] mm/memory_hotplug: full support for
+ add_memory_driver_managed() with CONFIG_ARCH_KEEP_MEMBLOCK
+Date: Mon,  4 Oct 2021 11:36:00 +0200
+Message-Id: <20211004093605.5830-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0d6c86ba-076b-5d4b-33a8-da267f951a85@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,87 +21,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Mike Rapoport <rppt@kernel.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
 
-On Fri, Oct 01, 2021 at 10:04:24AM +0200, David Hildenbrand wrote:
-> On 30.09.21 23:21, Mike Rapoport wrote:
-> > On Wed, Sep 29, 2021 at 06:54:01PM +0200, David Hildenbrand wrote:
-> > > On 29.09.21 18:39, Mike Rapoport wrote:
-> > > > Hi,
-> > > > 
-> > > > On Mon, Sep 27, 2021 at 05:05:17PM +0200, David Hildenbrand wrote:
-> > > > > Let's add a flag that corresponds to IORESOURCE_SYSRAM_DRIVER_MANAGED.
-> > > > > Similar to MEMBLOCK_HOTPLUG, most infrastructure has to treat such memory
-> > > > > like ordinary MEMBLOCK_NONE memory -- for example, when selecting memory
-> > > > > regions to add to the vmcore for dumping in the crashkernel via
-> > > > > for_each_mem_range().
-> > > > Can you please elaborate on the difference in semantics of MEMBLOCK_HOTPLUG
-> > > > and MEMBLOCK_DRIVER_MANAGED?
-> > > > Unless I'm missing something they both mark memory that can be unplugged
-> > > > anytime and so it should not be used in certain cases. Why is there a need
-> > > > for a new flag?
-> > > 
-> > > In the cover letter I have "Alternative B: Reuse MEMBLOCK_HOTPLUG.
-> > > MEMBLOCK_HOTPLUG serves a different purpose, though.", but looking into the
-> > > details it won't work as is.
-> > > 
-> > > MEMBLOCK_HOTPLUG is used to mark memory early during boot that can later get
-> > > hotunplugged again and should be placed into ZONE_MOVABLE if the
-> > > "movable_node" kernel parameter is set.
-> > > 
-> > > The confusing part is that we talk about "hotpluggable" but really mean
-> > > "hotunpluggable": the reason is that HW flags DIMM slots that can later be
-> > > hotplugged as "hotpluggable" even though there is already something
-> > > hotplugged.
-> > 
-> > MEMBLOCK_HOTPLUG name is indeed somewhat confusing, but still it's core
-> > meaning "this memory may be removed" which does not differ from what
-> > IORESOURCE_SYSRAM_DRIVER_MANAGED means.
-> > 
-> > MEMBLOCK_HOTPLUG regions are indeed placed into ZONE_MOVABLE, but more
-> > importantly, they are avoided when we allocate memory from memblock.
-> > 
-> > So, in my view, both flags mean that the memory may be removed and it
-> > should not be used for certain types of allocations.
-> 
-> The semantics are different:
-> 
-> MEMBLOCK_HOTPLUG: memory is indicated as "System RAM" in the
-> firmware-provided memory map and added to the system early during boot; we
-> want this memory to be managed by ZONE_MOVABLE with "movable_node" set on
-> the kernel command line, because only then we want it to be hotpluggable
-> again. kexec *has to* indicate this memory to the second kernel and can
-> place kexec-images on this memory. After memory hotunplug, kexec has to be
-> re-armed.
-> 
-> MEMBLOCK_DRIVER_MANAGED: memory is not indicated as System RAM" in the
-> firmware-provided memory map; this memory is always detected and added to
-> the system by a driver; memory might not actually be physically
-> hotunpluggable and the ZONE selection does not depend on "movable_core".
-> kexec *must not* indicate this memory to the second kernel and *must not*
-> place kexec-images on this memory.
+Architectures that require CONFIG_ARCH_KEEP_MEMBLOCK=y, such as arm64,
+don't cleanly support add_memory_driver_managed() yet. Most prominently,
+kexec_file can still end up placing kexec images on such driver-managed
+memory, resulting in undesired behavior, for example, having kexec images
+located on memory not part of the firmware-provided memory map.
 
-Ok, this clarifies.
-This explanation should be a part of the changelog. The sentences about the
-zone selection could be probably skipped, because they are less important
-for this case. E.g something like:
+Teaching kexec to not place images on driver-managed memory is especially
+relevant for virtio-mem. Details can be found in commit 7b7b27214bba
+("mm/memory_hotplug: introduce add_memory_driver_managed()").
 
-MEMBLOCK_HOTPLUG: memory is indicated as "System RAM" in the
-firmware-provided memory map and added to the system early during boot;
-kexec *has to* indicate this memory to the second kernel and can place
-kexec-images on this memory. After memory hotunplug, kexec has to be
-re-armed.
+Extend memblock with a new flag and set it from memory hotplug code
+when applicable. This is required to fully support virtio-mem on
+arm64, making also kexec_file behave like on x86-64.
 
-MEMBLOCK_DRIVER_MANAGED: memory is not indicated as "System RAM" in the
-firmware-provided memory map; this memory is always detected and added to
-the system by a driver; memory might not actually be physically
-hotunpluggable.  kexec *must not* indicate this memory to the second kernel
-and *must not* place kexec-images on this memory.
+v1 -> v2:
+- "memblock: improve MEMBLOCK_HOTPLUG documentation"
+-- Added
+- "memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
+   IORESOURCE_SYSRAM_DRIVER_MANAGED"
+-- Improve documentation of MEMBLOCK_DRIVER_MANAGED
+- Refine patch descriptions
 
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Jianyong Wu <Jianyong.Wu@arm.com>
+Cc: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Cc: Vineet Gupta <vgupta@kernel.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Huacai Chen <chenhuacai@kernel.org>
+Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
+Cc: Heiko Carstens <hca@linux.ibm.com>
+Cc: Vasily Gorbik <gor@linux.ibm.com>
+Cc: Christian Borntraeger <borntraeger@de.ibm.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: linux-snps-arc@lists.infradead.org
+Cc: linux-ia64@vger.kernel.org
+Cc: linux-m68k@lists.linux-m68k.org
+Cc: linux-mips@vger.kernel.org
+Cc: linux-s390@vger.kernel.org
+Cc: linux-mm@kvack.org
+Cc: kexec@lists.infradead.org
+
+David Hildenbrand (5):
+  mm/memory_hotplug: handle memblock_add_node() failures in
+    add_memory_resource()
+  memblock: improve MEMBLOCK_HOTPLUG documentation
+  memblock: allow to specify flags with memblock_add_node()
+  memblock: add MEMBLOCK_DRIVER_MANAGED to mimic
+    IORESOURCE_SYSRAM_DRIVER_MANAGED
+  mm/memory_hotplug: indicate MEMBLOCK_DRIVER_MANAGED with
+    IORESOURCE_SYSRAM_DRIVER_MANAGED
+
+ arch/arc/mm/init.c               |  4 ++--
+ arch/ia64/mm/contig.c            |  2 +-
+ arch/ia64/mm/init.c              |  2 +-
+ arch/m68k/mm/mcfmmu.c            |  3 ++-
+ arch/m68k/mm/motorola.c          |  6 ++++--
+ arch/mips/loongson64/init.c      |  4 +++-
+ arch/mips/sgi-ip27/ip27-memory.c |  3 ++-
+ arch/s390/kernel/setup.c         |  3 ++-
+ include/linux/memblock.h         | 25 +++++++++++++++++++++----
+ include/linux/mm.h               |  2 +-
+ kernel/kexec_file.c              |  5 +++++
+ mm/memblock.c                    | 13 +++++++++----
+ mm/memory_hotplug.c              | 11 +++++++++--
+ 13 files changed, 62 insertions(+), 21 deletions(-)
+
+
+base-commit: 9e1ff307c779ce1f0f810c7ecce3d95bbae40896
 -- 
-Sincerely yours,
-Mike.
+2.31.1
+
 
 _______________________________________________
 kexec mailing list
