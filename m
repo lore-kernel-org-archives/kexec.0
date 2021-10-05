@@ -1,25 +1,17 @@
-Return-path: <kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org>
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122])
+Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXl6j-00AnWS-IS
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 14:07:51 +0000
-Received: from mail-ed1-f72.google.com (mail-ed1-f72.google.com
- [209.85.208.72])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 7E4BC3F31E
- for <kexec@lists.infradead.org>; Tue,  5 Oct 2021 14:07:45 +0000 (UTC)
-Received: by mail-ed1-f72.google.com with SMTP id
- d11-20020a50cd4b000000b003da63711a8aso20676451edj.20
- for <kexec@lists.infradead.org>; Tue, 05 Oct 2021 07:07:45 -0700 (PDT)
+ id 1mXq6P-00BefT-O2
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 19:27:50 +0000
+Subject: Re: [PATCH v2 2/9] x86/xen: simplify xen_oldmem_pfn_is_ram()
+References: <20211005121430.30136-1-david@redhat.com>
+ <20211005121430.30136-3-david@redhat.com>
+From: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Message-ID: <ded331ac-f967-fdd3-e2e6-b79c37ebaa1f@oracle.com>
+Date: Tue, 5 Oct 2021 15:26:54 -0400
+In-Reply-To: <20211005121430.30136-3-david@redhat.com>
+Content-Language: en-US
 MIME-Version: 1.0
-References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
-In-Reply-To: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
-From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
-Date: Tue, 5 Oct 2021 16:07:27 +0200
-Message-ID: <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
-Subject: Re: RISC-V: patched kexec-tools on github for review/testing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,36 +23,19 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
-Errors-To: kexec-bounces+dwmw2=twosheds.infradead.org@lists.infradead.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
+Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
+To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org
+Cc: Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 
-On Tue, Oct 5, 2021 at 2:15 PM Nick Kossifidis <mick@ics.forth.gr> wrote:
->
-> Hello all,
->
-> I've uploaded my kexec-tools patches for riscv on github for
-> testing/review before sending them upstream.
-> https://github.com/riscv-collab/kexec-tools/tree/riscv
->
-> Both kexec and kdump were tested on latest rv64 qemu, using for-next
-> branch with this patch applied:
-> https://patchwork.kernel.org/project/linux-riscv/patch/20211002122026.1451269-1-mick@ics.forth.gr/
->
 
-I'll test that asap and review your patch too.
-
-Thanks for your time Nick!
-
-Alex
-
-> Regards,
-> Nick
+On 10/5/21 8:14 AM, David Hildenbrand wrote:
+> Let's simplify return handling.
 >
-> _______________________________________________
-> linux-riscv mailing list
-> linux-riscv@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-riscv
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+
+
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+
 
 _______________________________________________
 kexec mailing list
