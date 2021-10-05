@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from michel.telenet-ops.be ([2a02:1800:110:4::f00:18])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXjQ1-00ALoX-HP
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:19:39 +0000
-From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 9/9] virtio-mem: kdump mode to sanitize /proc/vmcore access
-Date: Tue,  5 Oct 2021 14:14:30 +0200
-Message-Id: <20211005121430.30136-10-david@redhat.com>
-In-Reply-To: <20211005121430.30136-1-david@redhat.com>
-References: <20211005121430.30136-1-david@redhat.com>
+ id 1mXjkU-00ATRC-PT
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:40:49 +0000
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2] arm: kdump: Add DT properties to crash dump kernel's DTB
+Date: Tue,  5 Oct 2021 14:40:32 +0200
+Message-Id: <20211005124032.1249636-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,276 +20,270 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Lukasz Stelmach <l.stelmach@samsung.com>, Akashi Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Geert Uytterhoeven <geert+renesas@glider.be>
 
-Although virtio-mem currently supports reading unplugged memory in the
-hypervisor, this will change in the future, indicated to the device via
-a new feature flag. We similarly sanitized /proc/kcore access recently. [1]
+Pass the following properties to the crash dump kernel, to provide a
+modern DT interface between kexec and the crash dump kernel:
 
-Let's register a vmcore callback, to allow vmcore code to check if a PFN
-belonging to a virtio-mem device is either currently plugged and should
-be dumped or is currently unplugged and should not be accessed, instead
-mapping the shared zeropage or returning zeroes when reading.
+  - linux,elfcorehdr: ELF core header segment, similar to the
+    "elfcorehdr=" kernel parameter.
+  - linux,usable-memory-range: Usable memory reserved for the crash dump
+    kernel.
+    This makes the memory reservation explicit, so Linux no longer needs
+    to mask the program counter, and rely on the "mem=" kernel parameter
+    to obtain the start and size of usable memory.
 
-This is important when not capturing /proc/vmcore via tools like
-"makedumpfile" that can identify logically unplugged virtio-mem memory via
-PG_offline in the memmap, but simply by e.g., copying the file.
+For backwards compatibility, the "elfcorehdr=" and "mem=" kernel
+parameters are still appended to the kernel command line.
 
-Distributions that support virtio-mem+kdump have to make sure that the
-virtio_mem module will be part of the kdump kernel or the kdump initrd;
-dracut was recently [2] extended to include virtio-mem in the generated
-initrd. As long as no special kdump kernels are used, this will
-automatically make sure that virtio-mem will be around in the kdump initrd
-and sanitize /proc/vmcore access -- with dracut.
+Loosely based on the ARM64 version by Akashi Takahiro.
 
-With this series, we'll send one virtio-mem state request for every
-~2 MiB chunk of virtio-mem memory indicated in the vmcore that we intend
-to read/map.
-
-In the future, we might want to allow building virtio-mem for kdump
-mode only, even without CONFIG_MEMORY_HOTPLUG and friends: this way,
-we could support special stripped-down kdump kernels that have many
-other config options disabled; we'll tackle that once required. Further,
-we might want to try sensing bigger blocks (e.g., memory sections)
-first before falling back to device blocks on demand.
-
-Tested with Fedora rawhide, which contains a recent kexec-tools version
-(considering "System RAM (virtio_mem)" when creating the vmcore header) and
-a recent dracut version (including the virtio_mem module in the kdump
-initrd).
-
-[1] https://lkml.kernel.org/r/20210526093041.8800-1-david@redhat.com
-[2] https://github.com/dracutdevs/dracut/pull/1157
-
-Signed-off-by: David Hildenbrand <david@redhat.com>
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
- drivers/virtio/virtio_mem.c | 136 ++++++++++++++++++++++++++++++++----
- 1 file changed, 124 insertions(+), 12 deletions(-)
+The counterpart patch for the Linux kernel[1] has been accepted in Russell
+King's linux-arm/for-next branch[2].
 
-diff --git a/drivers/virtio/virtio_mem.c b/drivers/virtio/virtio_mem.c
-index 76d8aef3cfd2..3573b78f6b05 100644
---- a/drivers/virtio/virtio_mem.c
-+++ b/drivers/virtio/virtio_mem.c
-@@ -223,6 +223,9 @@ struct virtio_mem {
- 	 * When this lock is held the pointers can't change, ONLINE and
- 	 * OFFLINE blocks can't change the state and no subblocks will get
- 	 * plugged/unplugged.
-+	 *
-+	 * In kdump mode, used to serialize requests, last_block_addr and
-+	 * last_block_plugged.
- 	 */
- 	struct mutex hotplug_mutex;
- 	bool hotplug_active;
-@@ -230,6 +233,9 @@ struct virtio_mem {
- 	/* An error occurred we cannot handle - stop processing requests. */
- 	bool broken;
- 
-+	/* Cached valued of is_kdump_kernel() when the device was probed. */
-+	bool in_kdump;
-+
- 	/* The driver is being removed. */
- 	spinlock_t removal_lock;
- 	bool removing;
-@@ -243,6 +249,13 @@ struct virtio_mem {
- 	/* Memory notifier (online/offline events). */
- 	struct notifier_block memory_notifier;
- 
-+#ifdef CONFIG_PROC_VMCORE
-+	/* vmcore callback for /proc/vmcore handling in kdump mode */
-+	struct vmcore_cb vmcore_cb;
-+	uint64_t last_block_addr;
-+	bool last_block_plugged;
-+#endif /* CONFIG_PROC_VMCORE */
-+
- 	/* Next device in the list of virtio-mem devices. */
- 	struct list_head next;
+[1] "[PATCH v6] ARM: uncompress: Parse "linux, usable-memory-range" DT
+property"
+    https://lore.kernel.org/linux-arm-kernel/0de07021e49ac26a8f9386f62f3e15e947d0f6d0.1631709384.git.geert+renesas@glider.be/
+
+[2] http://git.armlinux.org.uk/cgit/linux-arm.git/commit/?h=for-next&id=2208287258d4e7dfa56394a286bb0f7ade388a91
+
+v2:
+  - Rebased.
+---
+ kexec/arch/arm/crashdump-arm.c    |  10 ++-
+ kexec/arch/arm/crashdump-arm.h    |   2 +
+ kexec/arch/arm/kexec-zImage-arm.c | 137 ++++++++++++++++++++++++++++++
+ 3 files changed, 147 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/arm/crashdump-arm.c b/kexec/arch/arm/crashdump-arm.c
+index daa478868b4976d7..1ec1826c24b52ed9 100644
+--- a/kexec/arch/arm/crashdump-arm.c
++++ b/kexec/arch/arm/crashdump-arm.c
+@@ -54,7 +54,7 @@ struct memory_ranges usablemem_rgns = {
  };
-@@ -2293,6 +2306,12 @@ static void virtio_mem_run_wq(struct work_struct *work)
- 	uint64_t diff;
- 	int rc;
  
-+	if (unlikely(vm->in_kdump)) {
-+		dev_warn_once(&vm->vdev->dev,
-+			     "unexpected workqueue run in kdump kernel\n");
-+		return;
-+	}
+ /* The boot-time physical memory range reserved for crashkernel region */
+-static struct memory_range crash_kernel_mem;
++struct memory_range crash_kernel_mem;
+ 
+ /* reserved regions */
+ #define CRASH_MAX_RESERVED_RANGES 2
+@@ -64,6 +64,8 @@ static struct memory_ranges crash_reserved_rgns = {
+ 	.ranges = crash_reserved_ranges,
+ };
+ 
++struct memory_range elfcorehdr_mem;
 +
- 	hrtimer_cancel(&vm->retry_timer);
+ static struct crash_elf_info elf_info = {
+ 	.class		= ELFCLASS32,
+ 	.data		= ELFDATANATIVE,
+@@ -307,7 +309,11 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline)
+ 					  crash_kernel_mem.start,
+ 					  crash_kernel_mem.end, -1, 0);
  
- 	if (vm->broken)
-@@ -2521,6 +2540,86 @@ static int virtio_mem_init_hotplug(struct virtio_mem *vm)
- 	return rc;
+-	dbgprintf("elfcorehdr: %#lx\n", elfcorehdr);
++	elfcorehdr_mem.start = elfcorehdr;
++	elfcorehdr_mem.end = elfcorehdr + bufsz - 1;
++
++	dbgprintf("elfcorehdr 0x%llx-0x%llx\n", elfcorehdr_mem.start,
++		  elfcorehdr_mem.end);
+ 	cmdline_add_elfcorehdr(mod_cmdline, elfcorehdr);
+ 
+ 	/*
+diff --git a/kexec/arch/arm/crashdump-arm.h b/kexec/arch/arm/crashdump-arm.h
+index 6e87b13c4b8c86fe..bbdf8bf9de58eb5d 100644
+--- a/kexec/arch/arm/crashdump-arm.h
++++ b/kexec/arch/arm/crashdump-arm.h
+@@ -13,6 +13,8 @@ extern "C" {
+ 
+ 
+ extern struct memory_ranges usablemem_rgns;
++extern struct memory_range crash_kernel_mem;
++extern struct memory_range elfcorehdr_mem;
+ 
+ struct kexec_info;
+ 
+diff --git a/kexec/arch/arm/kexec-zImage-arm.c b/kexec/arch/arm/kexec-zImage-arm.c
+index f4c23bf3b99b1a3a..8b474ddb6268d717 100644
+--- a/kexec/arch/arm/kexec-zImage-arm.c
++++ b/kexec/arch/arm/kexec-zImage-arm.c
+@@ -4,6 +4,7 @@
+  */
+ #define _GNU_SOURCE
+ #define _XOPEN_SOURCE
++#include <stdbool.h>
+ #include <stdio.h>
+ #include <string.h>
+ #include <stdlib.h>
+@@ -374,6 +375,103 @@ static const struct zimage_tag *find_extension_tag(const char *buf, off_t len,
+ 	return NULL;
  }
  
-+#ifdef CONFIG_PROC_VMCORE
-+static int virtio_mem_send_state_request(struct virtio_mem *vm, uint64_t addr,
-+					 uint64_t size)
++static int get_cells_size(void *fdt, uint32_t *address_cells,
++			  uint32_t *size_cells)
 +{
-+	const uint64_t nb_vm_blocks = size / vm->device_block_size;
-+	const struct virtio_mem_req req = {
-+		.type = cpu_to_virtio16(vm->vdev, VIRTIO_MEM_REQ_STATE),
-+		.u.state.addr = cpu_to_virtio64(vm->vdev, addr),
-+		.u.state.nb_blocks = cpu_to_virtio16(vm->vdev, nb_vm_blocks),
-+	};
-+	int rc = -ENOMEM;
++	int nodeoffset;
++	const uint32_t *prop = NULL;
++	int prop_len;
 +
-+	dev_dbg(&vm->vdev->dev, "requesting state: 0x%llx - 0x%llx\n", addr,
-+		addr + size - 1);
++	/* default values */
++	*address_cells = 1;
++	*size_cells = 1;
 +
-+	switch (virtio_mem_send_request(vm, &req)) {
-+	case VIRTIO_MEM_RESP_ACK:
-+		return virtio16_to_cpu(vm->vdev, vm->resp.u.state.state);
-+	case VIRTIO_MEM_RESP_ERROR:
-+		rc = -EINVAL;
-+		break;
-+	default:
-+		break;
++	/* under root node */
++	nodeoffset = fdt_path_offset(fdt, "/");
++	if (nodeoffset < 0)
++		return -1;
++
++	prop = fdt_getprop(fdt, nodeoffset, "#address-cells", &prop_len);
++	if (prop) {
++		if (prop_len != sizeof(*prop))
++			return -1;
++
++		*address_cells = fdt32_to_cpu(*prop);
 +	}
 +
-+	dev_dbg(&vm->vdev->dev, "requesting state failed: %d\n", rc);
-+	return rc;
++	prop = fdt_getprop(fdt, nodeoffset, "#size-cells", &prop_len);
++	if (prop) {
++		if (prop_len != sizeof(*prop))
++			return -1;
++
++		*size_cells = fdt32_to_cpu(*prop);
++	}
++
++	dbgprintf("%s: #address-cells:%d #size-cells:%d\n", __func__,
++		  *address_cells, *size_cells);
++	return 0;
 +}
 +
-+static bool virtio_mem_vmcore_pfn_is_ram(struct vmcore_cb *cb,
-+					 unsigned long pfn)
++static bool cells_size_fitted(uint32_t address_cells, uint32_t size_cells,
++			      struct memory_range *range)
 +{
-+	struct virtio_mem *vm = container_of(cb, struct virtio_mem,
-+					     vmcore_cb);
-+	uint64_t addr = PFN_PHYS(pfn);
-+	bool is_ram;
-+	int rc;
++	dbgprintf("%s: %llx-%llx\n", __func__, range->start, range->end);
 +
-+	if (!virtio_mem_contains_range(vm, addr, PAGE_SIZE))
-+		return true;
-+	if (!vm->plugged_size)
++	/* if *_cells >= 2, cells can hold 64-bit values anyway */
++	if ((address_cells == 1) && (range->start >= (1ULL << 32)))
 +		return false;
 +
-+	/*
-+	 * We have to serialize device requests and access to the information
-+	 * about the block queried last.
-+	 */
-+	mutex_lock(&vm->hotplug_mutex);
++	if ((size_cells == 1) &&
++	    ((range->end - range->start + 1) >= (1ULL << 32)))
++		return false;
 +
-+	addr = ALIGN_DOWN(addr, vm->device_block_size);
-+	if (addr != vm->last_block_addr) {
-+		rc = virtio_mem_send_state_request(vm, addr,
-+						   vm->device_block_size);
-+		/* On any kind of error, we're going to signal !ram. */
-+		if (rc == VIRTIO_MEM_STATE_PLUGGED)
-+			vm->last_block_plugged = true;
-+		else
-+			vm->last_block_plugged = false;
-+		vm->last_block_addr = addr;
-+	}
-+
-+	is_ram = vm->last_block_plugged;
-+	mutex_unlock(&vm->hotplug_mutex);
-+	return is_ram;
++	return true;
 +}
-+#endif /* CONFIG_PROC_VMCORE */
 +
-+static int virtio_mem_init_kdump(struct virtio_mem *vm)
++static void fill_property(void *buf, uint64_t val, uint32_t cells)
 +{
-+#ifdef CONFIG_PROC_VMCORE
-+	dev_info(&vm->vdev->dev, "memory hot(un)plug disabled in kdump kernel\n");
-+	vm->vmcore_cb.pfn_is_ram = virtio_mem_vmcore_pfn_is_ram;
-+	register_vmcore_cb(&vm->vmcore_cb);
-+	return 0;
-+#else /* CONFIG_PROC_VMCORE */
-+	dev_warn(&vm->vdev->dev, "disabled in kdump kernel without vmcore\n");
-+	return -EBUSY;
-+#endif /* CONFIG_PROC_VMCORE */
-+}
++	uint32_t val32;
++	int i;
 +
- static int virtio_mem_init(struct virtio_mem *vm)
- {
- 	uint16_t node_id;
-@@ -2530,15 +2629,6 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 		return -EINVAL;
- 	}
- 
--	/*
--	 * We don't want to (un)plug or reuse any memory when in kdump. The
--	 * memory is still accessible (but not mapped).
--	 */
--	if (is_kdump_kernel()) {
--		dev_warn(&vm->vdev->dev, "disabled in kdump kernel\n");
--		return -EBUSY;
--	}
--
- 	/* Fetch all properties that can't change. */
- 	virtio_cread_le(vm->vdev, struct virtio_mem_config, plugged_size,
- 			&vm->plugged_size);
-@@ -2562,6 +2652,12 @@ static int virtio_mem_init(struct virtio_mem *vm)
- 	if (vm->nid != NUMA_NO_NODE && IS_ENABLED(CONFIG_NUMA))
- 		dev_info(&vm->vdev->dev, "nid: %d", vm->nid);
- 
-+	/*
-+	 * We don't want to (un)plug or reuse any memory when in kdump. The
-+	 * memory is still accessible (but not exposed to Linux).
-+	 */
-+	if (vm->in_kdump)
-+		return virtio_mem_init_kdump(vm);
- 	return virtio_mem_init_hotplug(vm);
- }
- 
-@@ -2640,6 +2736,7 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	hrtimer_init(&vm->retry_timer, CLOCK_MONOTONIC, HRTIMER_MODE_REL);
- 	vm->retry_timer.function = virtio_mem_timer_expired;
- 	vm->retry_timer_ms = VIRTIO_MEM_RETRY_TIMER_MIN_MS;
-+	vm->in_kdump = is_kdump_kernel();
- 
- 	/* register the virtqueue */
- 	rc = virtio_mem_init_vq(vm);
-@@ -2654,8 +2751,10 @@ static int virtio_mem_probe(struct virtio_device *vdev)
- 	virtio_device_ready(vdev);
- 
- 	/* trigger a config update to start processing the requested_size */
--	atomic_set(&vm->config_changed, 1);
--	queue_work(system_freezable_wq, &vm->wq);
-+	if (!vm->in_kdump) {
-+		atomic_set(&vm->config_changed, 1);
-+		queue_work(system_freezable_wq, &vm->wq);
++	if (cells == 1) {
++		val32 = cpu_to_fdt32((uint32_t)val);
++		memcpy(buf, &val32, sizeof(uint32_t));
++	} else {
++		for (i = 0;
++		     i < (cells * sizeof(uint32_t) - sizeof(uint64_t)); i++)
++			*(char *)buf++ = 0;
++
++		val = cpu_to_fdt64(val);
++		memcpy(buf, &val, sizeof(uint64_t));
 +	}
- 
- 	return 0;
- out_del_vq:
-@@ -2732,11 +2831,21 @@ static void virtio_mem_deinit_hotplug(struct virtio_mem *vm)
- 	}
- }
- 
-+static void virtio_mem_deinit_kdump(struct virtio_mem *vm)
-+{
-+#ifdef CONFIG_PROC_VMCORE
-+	unregister_vmcore_cb(&vm->vmcore_cb);
-+#endif /* CONFIG_PROC_VMCORE */
 +}
 +
- static void virtio_mem_remove(struct virtio_device *vdev)
- {
- 	struct virtio_mem *vm = vdev->priv;
- 
--	virtio_mem_deinit_hotplug(vm);
-+	if (vm->in_kdump)
-+		virtio_mem_deinit_kdump(vm);
-+	else
-+		virtio_mem_deinit_hotplug(vm);
- 
- 	/* reset the device and cleanup the queues */
- 	vdev->config->reset(vdev);
-@@ -2750,6 +2859,9 @@ static void virtio_mem_config_changed(struct virtio_device *vdev)
- {
- 	struct virtio_mem *vm = vdev->priv;
- 
-+	if (unlikely(vm->in_kdump))
-+		return;
++static int setup_dtb_prop_range(char **bufp, off_t *sizep, int parentoffset,
++				const char *node_name, const char *prop_name,
++				struct memory_range *range,
++				uint32_t address_cells, uint32_t size_cells)
++{
++	void *buf, *prop;
++	size_t buf_size;
++	int result;
 +
- 	atomic_set(&vm->config_changed, 1);
- 	virtio_mem_retry(vm);
- }
++	buf_size = (address_cells + size_cells) * sizeof(uint32_t);
++	prop = buf = xmalloc(buf_size);
++
++	fill_property(prop, range->start, address_cells);
++	prop += address_cells * sizeof(uint32_t);
++
++	fill_property(prop, range->end - range->start + 1, size_cells);
++	prop += size_cells * sizeof(uint32_t);
++
++	result = setup_dtb_prop(bufp, sizep, parentoffset, node_name,
++				prop_name, buf, buf_size);
++
++	free(buf);
++
++	return result;
++}
++
+ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	struct kexec_info *info)
+ {
+@@ -381,6 +479,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	unsigned long base, kernel_base;
+ 	unsigned int atag_offset = 0x1000; /* 4k offset from memory start */
+ 	unsigned int extra_size = 0x8000; /* TEXT_OFFSET */
++	uint32_t address_cells, size_cells;
+ 	const struct zimage_tag *tag;
+ 	size_t kernel_buf_size;
+ 	size_t kernel_mem_size;
+@@ -391,6 +490,7 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 	const char *ramdisk_buf;
+ 	int opt;
+ 	int use_atags;
++	int result;
+ 	char *dtb_buf;
+ 	off_t dtb_length;
+ 	char *dtb_file;
+@@ -743,6 +843,43 @@ int zImage_arm_load(int argc, char **argv, const char *buf, off_t len,
+ 				return -1;
+ 		}
+ 
++		if (info->kexec_flags & KEXEC_ON_CRASH) {
++			/* Determine #address-cells and #size-cells */
++			result = get_cells_size(dtb_buf, &address_cells,
++						&size_cells);
++			if (result) {
++				fprintf(stderr, "Cannot determine cells-size.\n");
++				return -1;
++			}
++
++			if (!cells_size_fitted(address_cells, size_cells,
++					       &elfcorehdr_mem)) {
++				fprintf(stderr, "elfcorehdr doesn't fit cells-size.\n");
++				return -1;
++			}
++
++			if (!cells_size_fitted(address_cells, size_cells,
++					       &crash_kernel_mem)) {
++				fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
++				return -1;
++			}
++
++			/* Add linux,elfcorehdr */
++			if (setup_dtb_prop_range(&dtb_buf, &dtb_length, 0,
++						 "chosen", "linux,elfcorehdr",
++						 &elfcorehdr_mem,
++						 address_cells, size_cells))
++				return -1;
++
++			/* Add linux,usable-memory-range */
++			if (setup_dtb_prop_range(&dtb_buf, &dtb_length, 0,
++						 "chosen",
++						 "linux,usable-memory-range",
++						 &crash_kernel_mem,
++						 address_cells, size_cells))
++				return -1;
++		}
++
+ 		/*
+ 		 * The dtb must also be placed above the memory used by
+ 		 * the zImage.  We don't care about its position wrt the
 -- 
-2.31.1
+2.25.1
 
 
 _______________________________________________
