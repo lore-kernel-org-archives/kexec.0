@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from kirsty.vergenet.net ([202.4.237.240])
  by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXfev-009Vpr-Ln
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 08:18:47 +0000
-Date: Tue, 5 Oct 2021 10:18:32 +0200
+ id 1mXfvv-009YMs-Le
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 08:36:20 +0000
+Date: Tue, 5 Oct 2021 10:36:16 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: multiboot2: Correct BASIC_MEMINFO memory
- units
-Message-ID: <20211005081832.GA23961@vergenet.net>
-References: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
+Subject: Re: [PATCH] kexec:Add some necessary fclose() calls
+Message-ID: <20211005083616.GB23961@vergenet.net>
+References: <20210929080844.3870-1-songkai01@inspur.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
+In-Reply-To: <20210929080844.3870-1-songkai01@inspur.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,47 +23,15 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dinhngoc.tu@irit.fr
+To: Kai Song <songkai01@inspur.com>
 Cc: kexec@lists.infradead.org
 
-On Fri, Sep 24, 2021 at 07:03:27PM +0200, dinhngoc.tu@irit.fr wrote:
-> From: Tu Dinh <dinhngoc.tu@irit.fr>
+On Wed, Sep 29, 2021 at 04:08:44PM +0800, Kai Song wrote:
+> fclose should be called before function exits
 > 
-> mem_lower and mem_upper are measured in kilobytes.
+> Signed-off-by: Kai Song <songkai01@inspur.com>
 
-Thanks,
-
-I'm curious to know how the current code could have worked.
-Do we have some testing to verify this change?
-
-> ---
->  kexec/arch/i386/kexec-mb2-x86.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/kexec/arch/i386/kexec-mb2-x86.c b/kexec/arch/i386/kexec-mb2-x86.c
-> index 36fef20..0d2e93b 100644
-> --- a/kexec/arch/i386/kexec-mb2-x86.c
-> +++ b/kexec/arch/i386/kexec-mb2-x86.c
-> @@ -256,8 +256,8 @@ static uint64_t multiboot2_make_mbi(struct kexec_info *info, char *cmdline, int
->  
->  		tag->type = MULTIBOOT_TAG_TYPE_BASIC_MEMINFO;
->  		tag->size = sizeof (struct multiboot_tag_basic_meminfo);
-> -		tag->mem_lower = mem_lower;
-> -		tag->mem_upper = mem_upper;
-> +		tag->mem_lower = mem_lower >> 10;
-> +		tag->mem_upper = mem_upper >> 10;
->  		ptrorig += ALIGN_UP (tag->size, MULTIBOOT_TAG_ALIGN) / sizeof (*ptrorig);
->  	}
->  
-> -- 
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
+Thanks, applied.
 
 _______________________________________________
 kexec mailing list
