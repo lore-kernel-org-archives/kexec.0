@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp1.irit.fr ([141.115.24.2])
+Received: from mailgate.ics.forth.gr ([139.91.1.2])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXgWF-009iNq-Hn
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 09:13:53 +0000
-From: <dinhngoc.tu@irit.fr>
-References: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
- <20211005081832.GA23961@vergenet.net>
-In-Reply-To: <20211005081832.GA23961@vergenet.net>
-Subject: RE: [PATCH] kexec-tools: multiboot2: Correct BASIC_MEMINFO memory
- units
-Date: Tue, 5 Oct 2021 11:13:45 +0200
-Message-ID: <001601d7b9c9$4c8be2c0$e5a3a840$@irit.fr>
-Content-Language: en
+ id 1mXjKQ-00AJLi-DA
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:13:52 +0000
+Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
+ by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id
+ 195CDaaj012087
+ for <kexec@lists.infradead.org>; Tue, 5 Oct 2021 15:13:36 +0300 (EEST)
+MIME-Version: 1.0
+Date: Tue, 05 Oct 2021 15:13:30 +0300
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: RISC-V: patched kexec-tools on github for review/testing
+Message-ID: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,34 +20,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Simon Horman' <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
+To: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, alex@ghiti.fr, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, palmer@dabbelt.com, anup.patel@wdc.com, atish.patra@wdc.com
 
-> Thanks,
-> 
-> I'm curious to know how the current code could have worked.
-> Do we have some testing to verify this change?
+Hello all,
 
-Hi,
+I've uploaded my kexec-tools patches for riscv on github for 
+testing/review before sending them upstream.
+https://github.com/riscv-collab/kexec-tools/tree/riscv
 
-The current code is not actually used very often when loading Xen (which is
-one of the few things that actually support Multiboot2), as Xen uses the
-EBDA instead of the MB2 memory information on the MB2 boot path.
-However this blows up on EFI systems without CSM (as EBDA is no longer
-available).
+Both kexec and kdump were tested on latest rv64 qemu, using for-next 
+branch with this patch applied:
+https://patchwork.kernel.org/project/linux-riscv/patch/20211002122026.1451269-1-mick@ics.forth.gr/
 
-I tested the loading of KVM->Xen and Xen->Xen with this patch and a patched
-version of Xen that trusts the MB2 information, on a laptop and a server.
-
-The Multiboot2 documentation at
-https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Basic-mem
-ory-information also supports the change.
-
+Regards,
+Nick
 
 _______________________________________________
 kexec mailing list
