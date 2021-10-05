@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXjML-00AK4M-SN
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:15:51 +0000
+ id 1mXjMn-00AKEh-5O
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:16:19 +0000
 From: David Hildenbrand <david@redhat.com>
-Subject: [PATCH v2 1/9] x86/xen: update xen_oldmem_pfn_is_ram() documentation
-Date: Tue,  5 Oct 2021 14:14:22 +0200
-Message-Id: <20211005121430.30136-2-david@redhat.com>
+Subject: [PATCH v2 2/9] x86/xen: simplify xen_oldmem_pfn_is_ram()
+Date: Tue,  5 Oct 2021 14:14:23 +0200
+Message-Id: <20211005121430.30136-3-david@redhat.com>
 In-Reply-To: <20211005121430.30136-1-david@redhat.com>
 References: <20211005121430.30136-1-david@redhat.com>
 MIME-Version: 1.0
@@ -23,36 +23,44 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org, Boris Ostrovsky <boris.ostrvsky@oracle.com>
+Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 
-The callback is only used for the vmcore nowadays.
+Let's simplify return handling.
 
-Reviewed-by: Boris Ostrovsky <boris.ostrvsky@oracle.com>
 Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- arch/x86/xen/mmu_hvm.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/x86/xen/mmu_hvm.c | 15 +--------------
+ 1 file changed, 1 insertion(+), 14 deletions(-)
 
 diff --git a/arch/x86/xen/mmu_hvm.c b/arch/x86/xen/mmu_hvm.c
-index 57409373750f..b242d1f4b426 100644
+index b242d1f4b426..d1b38c77352b 100644
 --- a/arch/x86/xen/mmu_hvm.c
 +++ b/arch/x86/xen/mmu_hvm.c
-@@ -9,12 +9,9 @@
+@@ -21,23 +21,10 @@ static int xen_oldmem_pfn_is_ram(unsigned long pfn)
+ 		.domid = DOMID_SELF,
+ 		.pfn = pfn,
+ 	};
+-	int ram;
  
- #ifdef CONFIG_PROC_VMCORE
- /*
-- * This function is used in two contexts:
-- * - the kdump kernel has to check whether a pfn of the crashed kernel
-- *   was a ballooned page. vmcore is using this function to decide
-- *   whether to access a pfn of the crashed kernel.
-- * - the kexec kernel has to check whether a pfn was ballooned by the
-- *   previous kernel. If the pfn is ballooned, handle it properly.
-+ * The kdump kernel has to check whether a pfn of the crashed kernel
-+ * was a ballooned page. vmcore is using this function to decide
-+ * whether to access a pfn of the crashed kernel.
-  * Returns 0 if the pfn is not backed by a RAM page, the caller may
-  * handle the pfn special in this case.
-  */
+ 	if (HYPERVISOR_hvm_op(HVMOP_get_mem_type, &a))
+ 		return -ENXIO;
+-
+-	switch (a.mem_type) {
+-	case HVMMEM_mmio_dm:
+-		ram = 0;
+-		break;
+-	case HVMMEM_ram_rw:
+-	case HVMMEM_ram_ro:
+-	default:
+-		ram = 1;
+-		break;
+-	}
+-
+-	return ram;
++	return a.mem_type != HVMMEM_mmio_dm;
+ }
+ #endif
+ 
 -- 
 2.31.1
 
