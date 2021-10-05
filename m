@@ -1,17 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailgate.ics.forth.gr ([139.91.1.2])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mXjKQ-00AJLi-DA
- for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:13:52 +0000
-Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
- by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id
- 195CDaaj012087
- for <kexec@lists.infradead.org>; Tue, 5 Oct 2021 15:13:36 +0300 (EEST)
+ id 1mXjLn-00AJsI-2a
+ for kexec@lists.infradead.org; Tue, 05 Oct 2021 12:15:17 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v2 0/9] proc/vmcore: sanitize access to virtio-mem memory
+Date: Tue,  5 Oct 2021 14:14:21 +0200
+Message-Id: <20211005121430.30136-1-david@redhat.com>
 MIME-Version: 1.0
-Date: Tue, 05 Oct 2021 15:13:30 +0300
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: RISC-V: patched kexec-tools on github for review/testing
-Message-ID: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,24 +16,123 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv@lists.infradead.org, linux-kernel@vger.kernel.org, alex@ghiti.fr, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, palmer@dabbelt.com, anup.patel@wdc.com, atish.patra@wdc.com
+To: linux-kernel@vger.kernel.org
+Cc: David Hildenbrand <david@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>, Boris Ostrovsky <boris.ostrovsky@oracle.com>, Juergen Gross <jgross@suse.com>, Stefano Stabellini <sstabellini@kernel.org>, "Michael S. Tsirkin" <mst@redhat.com>, Jason Wang <jasowang@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Mike Rapoport <rppt@kernel.org>, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org, xen-devel@lists.xenproject.org, virtualization@lists.linux-foundation.org, kexec@lists.infradead.org, linux-fsdevel@vger.kernel.org, linux-mm@kvack.org
 
-Hello all,
+As so often with virtio-mem changes that mess with common MM
+infrastructure, this might be a good candiate to go via Andrew's tree.
 
-I've uploaded my kexec-tools patches for riscv on github for 
-testing/review before sending them upstream.
-https://github.com/riscv-collab/kexec-tools/tree/riscv
+--
 
-Both kexec and kdump were tested on latest rv64 qemu, using for-next 
-branch with this patch applied:
-https://patchwork.kernel.org/project/linux-riscv/patch/20211002122026.1451269-1-mick@ics.forth.gr/
+After removing /dev/kmem, sanitizing /proc/kcore and handling /dev/mem,
+this series tackles the last sane way how a VM could accidentially access
+logically unplugged memory managed by a virtio-mem device: /proc/vmcore
 
-Regards,
-Nick
+When dumping memory via "makedumpfile", PG_offline pages, used by
+virtio-mem to flag logically unplugged memory, are already properly
+excluded; however, especially when accessing/copying /proc/vmcore "the
+usual way", we can still end up reading logically unplugged memory part of
+a virtio-mem device.
+
+Patch #1-#3 are cleanups. Patch #4 extends the existing oldmem_pfn_is_ram
+mechanism. Patch #5-#7 are virtio-mem refactorings for patch #8, which
+implements the virtio-mem logic to query the state of device blocks.
+
+Patch #8:
+
+"
+Although virtio-mem currently supports reading unplugged memory in the
+hypervisor, this will change in the future, indicated to the device via
+a new feature flag. We similarly sanitized /proc/kcore access recently.
+[...]
+Distributions that support virtio-mem+kdump have to make sure that the
+virtio_mem module will be part of the kdump kernel or the kdump initrd;
+dracut was recently [2] extended to include virtio-mem in the generated
+initrd. As long as no special kdump kernels are used, this will
+automatically make sure that virtio-mem will be around in the kdump initrd
+and sanitize /proc/vmcore access -- with dracut.
+"
+
+This is the last remaining bit to support
+VIRTIO_MEM_F_UNPLUGGED_INACCESSIBLE [3] in the Linux implementation of
+virtio-mem.
+
+Note: this is best-effort. We'll never be able to control what runs inside
+the second kernel, really, but we also don't have to care: we only care
+about sane setups where we don't want our VM getting zapped once we
+touch the wrong memory location while dumping. While we usually expect sane
+setups to use "makedumfile", nothing really speaks against just copying
+/proc/vmcore, especially in environments where HWpoisioning isn't typically
+expected. Also, we really don't want to put all our trust completely on the
+memmap, so sanitizing also makes sense when just using "makedumpfile".
+
+[1] https://lkml.kernel.org/r/20210526093041.8800-1-david@redhat.com
+[2] https://github.com/dracutdevs/dracut/pull/1157
+[3] https://lists.oasis-open.org/archives/virtio-comment/202109/msg00021.html
+
+v1 -> v2:
+- "x86/xen: simplify xen_oldmem_pfn_is_ram()"
+-- Simplify even more
+- "x86/xen: print a warning when HVMOP_get_mem_type fails"
+-- Added
+- "virtio-mem: kdump mode to sanitize /proc/vmcore access"
+-- Fix wrong range check
+
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Stefano Stabellini <sstabellini@kernel.org>
+Cc: "Michael S. Tsirkin" <mst@redhat.com>
+Cc: Jason Wang <jasowang@redhat.com>
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Mike Rapoport <rppt@kernel.org>
+Cc: "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Cc: x86@kernel.org
+Cc: xen-devel@lists.xenproject.org
+Cc: virtualization@lists.linux-foundation.org
+Cc: kexec@lists.infradead.org
+Cc: linux-fsdevel@vger.kernel.org
+Cc: linux-mm@kvack.org
+
+David Hildenbrand (9):
+  x86/xen: update xen_oldmem_pfn_is_ram() documentation
+  x86/xen: simplify xen_oldmem_pfn_is_ram()
+  x86/xen: print a warning when HVMOP_get_mem_type fails
+  proc/vmcore: let pfn_is_ram() return a bool
+  proc/vmcore: convert oldmem_pfn_is_ram callback to more generic vmcore
+    callbacks
+  virtio-mem: factor out hotplug specifics from virtio_mem_init() into
+    virtio_mem_init_hotplug()
+  virtio-mem: factor out hotplug specifics from virtio_mem_probe() into
+    virtio_mem_init_hotplug()
+  virtio-mem: factor out hotplug specifics from virtio_mem_remove() into
+    virtio_mem_deinit_hotplug()
+  virtio-mem: kdump mode to sanitize /proc/vmcore access
+
+ arch/x86/kernel/aperture_64.c |  13 +-
+ arch/x86/xen/mmu_hvm.c        |  37 ++---
+ drivers/virtio/virtio_mem.c   | 297 ++++++++++++++++++++++++----------
+ fs/proc/vmcore.c              | 105 ++++++++----
+ include/linux/crash_dump.h    |  26 ++-
+ 5 files changed, 333 insertions(+), 145 deletions(-)
+
+
+base-commit: 9e1ff307c779ce1f0f810c7ecce3d95bbae40896
+-- 
+2.31.1
+
 
 _______________________________________________
 kexec mailing list
