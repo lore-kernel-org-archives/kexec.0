@@ -1,14 +1,26 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 5 Oct 2021 17:36:09 -0700
-From: Mike Rapoport <rppt@kernel.org>
-Subject: Re: [PATCH v2 3/5] memblock: allow to specify flags with
- memblock_add_node()
-Message-ID: <YVzvefCmvLZSZTcR@kernel.org>
-References: <20211004093605.5830-1-david@redhat.com>
- <20211004093605.5830-4-david@redhat.com>
+Received: from smtp-relay-internal-1.canonical.com ([185.125.188.123])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mY4og-00Dztc-2p
+ for kexec@lists.infradead.org; Wed, 06 Oct 2021 11:10:32 +0000
+Received: from mail-ed1-f70.google.com (mail-ed1-f70.google.com
+ [209.85.208.70])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (No client certificate requested)
+ by smtp-relay-internal-1.canonical.com (Postfix) with ESMTPS id A88A03FFE0
+ for <kexec@lists.infradead.org>; Wed,  6 Oct 2021 11:10:27 +0000 (UTC)
+Received: by mail-ed1-f70.google.com with SMTP id
+ x5-20020a50f185000000b003db0f796903so2262701edl.18
+ for <kexec@lists.infradead.org>; Wed, 06 Oct 2021 04:10:27 -0700 (PDT)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211004093605.5830-4-david@redhat.com>
+References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
+ <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
+In-Reply-To: <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
+From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Date: Wed, 6 Oct 2021 13:10:14 +0200
+Message-ID: <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
+Subject: Re: RISC-V: patched kexec-tools on github for review/testing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,249 +33,113 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>
-Cc: linux-kernel@vger.kernel.org, Andrew Morton <akpm@linux-foundation.org>, Michal Hocko <mhocko@suse.com>, Oscar Salvador <osalvador@suse.de>, Jianyong Wu <Jianyong.Wu@arm.com>, "Aneesh Kumar K . V" <aneesh.kumar@linux.ibm.com>, Vineet Gupta <vgupta@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Huacai Chen <chenhuacai@kernel.org>, Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Bogendoerfer <tsbogend@alpha.franken.de>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Eric Biederman <ebiederm@xmission.com>, Arnd Bergmann <arnd@arndb.de>, linux-snps-arc@lists.infradead.org, linux-ia64@vger.kernel.org, linux-m68k@lists.linux-m68k.org, linux-mips@vger.kernel.org, linux-s390@vger.kernel.org, linux-mm@kvack.org, kexec@lists.infradead.org
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
 
-On Mon, Oct 04, 2021 at 11:36:03AM +0200, David Hildenbrand wrote:
-> We want to specify flags when hotplugging memory. Let's prepare to pass
-> flags to memblock_add_node() by adjusting all existing users.
-> 
-> Note that when hotplugging memory the system is already up and running
-> and we might have concurrent memblock users: for example, while we're
-> hotplugging memory, kexec_file code might search for suitable memory
-> regions to place kexec images. It's important to add the memory directly
-> to memblock via a single call with the right flags, instead of adding the
-> memory first and apply flags later: otherwise, concurrent memblock users
-> might temporarily stumble over memblocks with wrong flags, which will be
-> important in a follow-up patch that introduces a new flag to properly
-> handle add_memory_driver_managed().
-> 
-> Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
-> Acked-by: Heiko Carstens <hca@linux.ibm.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
+Hi Nick,
 
-Reviewed-by: Mike Rapoport <rppt@linux.ibm.com>
+On Tue, Oct 5, 2021 at 4:07 PM Alexandre Ghiti
+<alexandre.ghiti@canonical.com> wrote:
+>
+> On Tue, Oct 5, 2021 at 2:15 PM Nick Kossifidis <mick@ics.forth.gr> wrote:
+> >
+> > Hello all,
+> >
+> > I've uploaded my kexec-tools patches for riscv on github for
+> > testing/review before sending them upstream.
+> > https://github.com/riscv-collab/kexec-tools/tree/riscv
+> >
+> > Both kexec and kdump were tested on latest rv64 qemu, using for-next
+> > branch with this patch applied:
+> > https://patchwork.kernel.org/project/linux-riscv/patch/20211002122026.1451269-1-mick@ics.forth.gr/
+> >
+>
+> I'll test that asap and review your patch too.
+>
+> Thanks for your time Nick!
+>
+> Alex
+>
 
-> ---
->  arch/arc/mm/init.c               | 4 ++--
->  arch/ia64/mm/contig.c            | 2 +-
->  arch/ia64/mm/init.c              | 2 +-
->  arch/m68k/mm/mcfmmu.c            | 3 ++-
->  arch/m68k/mm/motorola.c          | 6 ++++--
->  arch/mips/loongson64/init.c      | 4 +++-
->  arch/mips/sgi-ip27/ip27-memory.c | 3 ++-
->  arch/s390/kernel/setup.c         | 3 ++-
->  include/linux/memblock.h         | 3 ++-
->  include/linux/mm.h               | 2 +-
->  mm/memblock.c                    | 9 +++++----
->  mm/memory_hotplug.c              | 2 +-
->  12 files changed, 26 insertions(+), 17 deletions(-)
-> 
-> diff --git a/arch/arc/mm/init.c b/arch/arc/mm/init.c
-> index 699ecf119641..110eb69e9bee 100644
-> --- a/arch/arc/mm/init.c
-> +++ b/arch/arc/mm/init.c
-> @@ -59,13 +59,13 @@ void __init early_init_dt_add_memory_arch(u64 base, u64 size)
->  
->  		low_mem_sz = size;
->  		in_use = 1;
-> -		memblock_add_node(base, size, 0);
-> +		memblock_add_node(base, size, 0, MEMBLOCK_NONE);
->  	} else {
->  #ifdef CONFIG_HIGHMEM
->  		high_mem_start = base;
->  		high_mem_sz = size;
->  		in_use = 1;
-> -		memblock_add_node(base, size, 1);
-> +		memblock_add_node(base, size, 1, MEMBLOCK_NONE);
->  		memblock_reserve(base, size);
->  #endif
->  	}
-> diff --git a/arch/ia64/mm/contig.c b/arch/ia64/mm/contig.c
-> index 42e025cfbd08..24901d809301 100644
-> --- a/arch/ia64/mm/contig.c
-> +++ b/arch/ia64/mm/contig.c
-> @@ -153,7 +153,7 @@ find_memory (void)
->  	efi_memmap_walk(find_max_min_low_pfn, NULL);
->  	max_pfn = max_low_pfn;
->  
-> -	memblock_add_node(0, PFN_PHYS(max_low_pfn), 0);
-> +	memblock_add_node(0, PFN_PHYS(max_low_pfn), 0, MEMBLOCK_NONE);
->  
->  	find_initrd();
->  
-> diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
-> index 5c6da8d83c1a..5d165607bf35 100644
-> --- a/arch/ia64/mm/init.c
-> +++ b/arch/ia64/mm/init.c
-> @@ -378,7 +378,7 @@ int __init register_active_ranges(u64 start, u64 len, int nid)
->  #endif
->  
->  	if (start < end)
-> -		memblock_add_node(__pa(start), end - start, nid);
-> +		memblock_add_node(__pa(start), end - start, nid, MEMBLOCK_NONE);
->  	return 0;
->  }
->  
-> diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
-> index eac9dde65193..6f1f25125294 100644
-> --- a/arch/m68k/mm/mcfmmu.c
-> +++ b/arch/m68k/mm/mcfmmu.c
-> @@ -174,7 +174,8 @@ void __init cf_bootmem_alloc(void)
->  	m68k_memory[0].addr = _rambase;
->  	m68k_memory[0].size = _ramend - _rambase;
->  
-> -	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
-> +	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0,
-> +			  MEMBLOCK_NONE);
->  
->  	/* compute total pages in system */
->  	num_pages = PFN_DOWN(_ramend - _rambase);
-> diff --git a/arch/m68k/mm/motorola.c b/arch/m68k/mm/motorola.c
-> index 9f3f77785aa7..2b05bb2bac00 100644
-> --- a/arch/m68k/mm/motorola.c
-> +++ b/arch/m68k/mm/motorola.c
-> @@ -410,7 +410,8 @@ void __init paging_init(void)
->  
->  	min_addr = m68k_memory[0].addr;
->  	max_addr = min_addr + m68k_memory[0].size;
-> -	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0);
-> +	memblock_add_node(m68k_memory[0].addr, m68k_memory[0].size, 0,
-> +			  MEMBLOCK_NONE);
->  	for (i = 1; i < m68k_num_memory;) {
->  		if (m68k_memory[i].addr < min_addr) {
->  			printk("Ignoring memory chunk at 0x%lx:0x%lx before the first chunk\n",
-> @@ -421,7 +422,8 @@ void __init paging_init(void)
->  				(m68k_num_memory - i) * sizeof(struct m68k_mem_info));
->  			continue;
->  		}
-> -		memblock_add_node(m68k_memory[i].addr, m68k_memory[i].size, i);
-> +		memblock_add_node(m68k_memory[i].addr, m68k_memory[i].size, i,
-> +				  MEMBLOCK_NONE);
->  		addr = m68k_memory[i].addr + m68k_memory[i].size;
->  		if (addr > max_addr)
->  			max_addr = addr;
-> diff --git a/arch/mips/loongson64/init.c b/arch/mips/loongson64/init.c
-> index 76e0a9636a0e..4ac5ba80bbf6 100644
-> --- a/arch/mips/loongson64/init.c
-> +++ b/arch/mips/loongson64/init.c
-> @@ -77,7 +77,9 @@ void __init szmem(unsigned int node)
->  				(u32)node_id, mem_type, mem_start, mem_size);
->  			pr_info("       start_pfn:0x%llx, end_pfn:0x%llx, num_physpages:0x%lx\n",
->  				start_pfn, end_pfn, num_physpages);
-> -			memblock_add_node(PFN_PHYS(start_pfn), PFN_PHYS(node_psize), node);
-> +			memblock_add_node(PFN_PHYS(start_pfn),
-> +					  PFN_PHYS(node_psize), node,
-> +					  MEMBLOCK_NONE);
->  			break;
->  		case SYSTEM_RAM_RESERVED:
->  			pr_info("Node%d: mem_type:%d, mem_start:0x%llx, mem_size:0x%llx MB\n",
-> diff --git a/arch/mips/sgi-ip27/ip27-memory.c b/arch/mips/sgi-ip27/ip27-memory.c
-> index 6173684b5aaa..adc2faeecf7c 100644
-> --- a/arch/mips/sgi-ip27/ip27-memory.c
-> +++ b/arch/mips/sgi-ip27/ip27-memory.c
-> @@ -341,7 +341,8 @@ static void __init szmem(void)
->  				continue;
->  			}
->  			memblock_add_node(PFN_PHYS(slot_getbasepfn(node, slot)),
-> -					  PFN_PHYS(slot_psize), node);
-> +					  PFN_PHYS(slot_psize), node,
-> +					  MEMBLOCK_NONE);
->  		}
->  	}
->  }
-> diff --git a/arch/s390/kernel/setup.c b/arch/s390/kernel/setup.c
-> index 67e5fff96ee0..f3943f15af6e 100644
-> --- a/arch/s390/kernel/setup.c
-> +++ b/arch/s390/kernel/setup.c
-> @@ -593,7 +593,8 @@ static void __init setup_resources(void)
->  	 * part of the System RAM resource.
->  	 */
->  	if (crashk_res.end) {
-> -		memblock_add_node(crashk_res.start, resource_size(&crashk_res), 0);
-> +		memblock_add_node(crashk_res.start, resource_size(&crashk_res),
-> +				  0, MEMBLOCK_NONE);
->  		memblock_reserve(crashk_res.start, resource_size(&crashk_res));
->  		insert_resource(&iomem_resource, &crashk_res);
->  	}
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 4ee8dd2d63a7..2bc726e43a1b 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -104,7 +104,8 @@ static inline void memblock_discard(void) {}
->  #endif
->  
->  void memblock_allow_resize(void);
-> -int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
-> +int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid,
-> +		      enum memblock_flags flags);
->  int memblock_add(phys_addr_t base, phys_addr_t size);
->  int memblock_remove(phys_addr_t base, phys_addr_t size);
->  int memblock_free(phys_addr_t base, phys_addr_t size);
-> diff --git a/include/linux/mm.h b/include/linux/mm.h
-> index 73a52aba448f..0117cb35b212 100644
-> --- a/include/linux/mm.h
-> +++ b/include/linux/mm.h
-> @@ -2447,7 +2447,7 @@ static inline unsigned long get_num_physpages(void)
->   * unsigned long max_zone_pfns[MAX_NR_ZONES] = {max_dma, max_normal_pfn,
->   * 							 max_highmem_pfn};
->   * for_each_valid_physical_page_range()
-> - * 	memblock_add_node(base, size, nid)
-> + *	memblock_add_node(base, size, nid, MEMBLOCK_NONE)
->   * free_area_init(max_zone_pfns);
->   */
->  void free_area_init(unsigned long *max_zone_pfn);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 184dcd2e5d99..47a56b223141 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -655,6 +655,7 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->   * @base: base address of the new region
->   * @size: size of the new region
->   * @nid: nid of the new region
-> + * @flags: flags of the new region
->   *
->   * Add new memblock region [@base, @base + @size) to the "memory"
->   * type. See memblock_add_range() description for mode details
-> @@ -663,14 +664,14 @@ static int __init_memblock memblock_add_range(struct memblock_type *type,
->   * 0 on success, -errno on failure.
->   */
->  int __init_memblock memblock_add_node(phys_addr_t base, phys_addr_t size,
-> -				       int nid)
-> +				      int nid, enum memblock_flags flags)
->  {
->  	phys_addr_t end = base + size - 1;
->  
-> -	memblock_dbg("%s: [%pa-%pa] nid=%d %pS\n", __func__,
-> -		     &base, &end, nid, (void *)_RET_IP_);
-> +	memblock_dbg("%s: [%pa-%pa] nid=%d flags=%x %pS\n", __func__,
-> +		     &base, &end, nid, flags, (void *)_RET_IP_);
->  
-> -	return memblock_add_range(&memblock.memory, base, size, nid, 0);
-> +	return memblock_add_range(&memblock.memory, base, size, nid, flags);
->  }
->  
->  /**
-> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
-> index 917b3528636d..5f873e7f5b29 100644
-> --- a/mm/memory_hotplug.c
-> +++ b/mm/memory_hotplug.c
-> @@ -1385,7 +1385,7 @@ int __ref add_memory_resource(int nid, struct resource *res, mhp_t mhp_flags)
->  	mem_hotplug_begin();
->  
->  	if (IS_ENABLED(CONFIG_ARCH_KEEP_MEMBLOCK)) {
-> -		ret = memblock_add_node(start, size, nid);
-> +		ret = memblock_add_node(start, size, nid, MEMBLOCK_NONE);
->  		if (ret)
->  			goto error_mem_hotplug_end;
->  	}
-> -- 
-> 2.31.1
-> 
+So I followed the instructions here:
+https://documentation.suse.com/fr-fr/sles/12-SP3/html/SLES-all/cha-tuning-kexec.html#cha-tuning-kexec-basic-usage,
+below the output on an Unmatched board using a vmlinux stored on a sd
+card:
 
--- 
-Sincerely yours,
-Mike.
+ubuntu@ubuntu:~$ sudo sbin/kexec -l vmlinux --append="$(cat
+/proc/cmdline)" --initrd=/boot/initrd.img
+Warning: No cmdline provided, using append string as cmdline
+Warning: No dtb provided, using /sys/firmware/fdt
+[ 1813.472671] INFO: task kworker/1:0:988 blocked for more than 120 seconds.
+[ 1813.478751]       Not tainted 5.15.0-rc1+ #15
+[ 1813.483110] "echo 0 > /proc/sys/kernel/hung_task_timeout_secs"
+disables this message.
+Could not find a free area of memory of 0x3000 bytes...
+locate_hole failed
+
+I used the Ubuntu kernel, so this is pretty large:
+-rwxrwxr-x 1 ubuntu ubuntu 277M Oct  5 15:47 vmlinux
+-rw-r--r-- 1 root root 98M Sep 21 03:25 /boot/initrd.img
+
+Then if I don't load the initrd (I sometimes have the same warning as
+above) I can at least kexec the new kernel but it fails to boot:
+
+ubuntu@ubuntu:~$ sudo ./sbin/kexec -e
+Warning: No cmdline or append string provided
+Warning: No dtb provided, using /sys/firmware/fdt
+[...]
+[    0.000000] SBI v0.2 HSM extension detected
+[    0.000000] CPU with hartid=0 is not available
+[    0.000000] ------------[ cut here ]------------
+[    0.000000] kernel BUG at arch/riscv/kernel/smpboot.c:107!
+[    0.000000] Kernel BUG [#1]
+[    0.000000] Modules linked in:
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 5.15.0-rc1+ #15
+[    0.000000] Hardware name: SiFive HiFive Unmatched A00 (DT)
+[    0.000000] epc : setup_smp+0xcc/0x142
+[    0.000000]  ra : setup_smp+0xc4/0x142
+[    0.000000] epc : ffffffff80a04080 ra : ffffffff80a04078 sp :
+ffffffff81803ec0
+[    0.000000]  gp : ffffffff81a23220 tp : ffffffff81810500 t0 :
+ffffffff81a3551f
+[    0.000000]  t1 : ffffffffffffffff t2 : 0000000000000000 s0 :
+ffffffff81803f00
+[    0.000000]  s1 : 0000000000000000 a0 : 0000000000000000 a1 :
+0000000000000000
+[    0.000000]  a2 : 0000000000000000 a3 : 0000000000000001 a4 :
+0000000000000000
+[    0.000000]  a5 : ffffffff80c64500 a6 : 0000000000000004 a7 :
+000000000000ff00
+[    0.000000]  s2 : 0000000000000005 s3 : 0000000000000000 s4 :
+ffffffff8118f9a8
+[    0.000000]  s5 : 0000000000000007 s6 : ffffffff80c0b790 s7 :
+0000000080000200
+[    0.000000]  s8 : 0000000000000fff s9 : 0000000081000200 s10:
+0000000000000018
+[    0.000000]  s11: 000000000000000b t3 : 0000000000ff0000 t4 :
+ffffffffffffffff
+[    0.000000]  t5 : ffffffff80c0b7a0 t6 : ffffffff81803bd8
+[    0.000000] status: 0000000200000100 badaddr: 0000000000000000
+cause: 0000000000000003
+[    0.000000] [<ffffffff80a04080>] setup_smp+0xcc/0x142
+[    0.000000] [<ffffffff80a03d88>] setup_arch+0x56a/0x590
+[    0.000000] [<ffffffff80a00aa2>] start_kernel+0xaa/0xa5c
+[    0.000000] random: get_random_bytes called from
+oops_exit+0x44/0x70 with crng_init=0
+[    0.000000] ---[ end trace 0000000000000000 ]---
+[    0.000000] Kernel panic - not syncing: Attempted to kill the idle task!
+[    0.000000] ---[ end Kernel panic - not syncing: Attempted to kill
+the idle task! ]---
+
+This reliably fails here.
+
+> > Regards,
+> > Nick
+> >
+> > _______________________________________________
+> > linux-riscv mailing list
+> > linux-riscv@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-riscv
 
 _______________________________________________
 kexec mailing list
