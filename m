@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailgate.ics.forth.gr ([139.91.1.2])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mZCLk-005e1x-AP
- for kexec@lists.infradead.org; Sat, 09 Oct 2021 13:25:18 +0000
-Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
- by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id
- 199DPEa8034049
- for <kexec@lists.infradead.org>; Sat, 9 Oct 2021 16:25:14 +0300 (EEST)
+From: ebiederm@xmission.com (Eric W. Biederman)
+References: <20211009095458.297191-1-coxu@redhat.com>
+ <20211009095458.297191-2-coxu@redhat.com>
+Date: Mon, 11 Oct 2021 08:58:36 -0500
+In-Reply-To: <20211009095458.297191-2-coxu@redhat.com> (Coiby Xu's message of
+ "Sat, 9 Oct 2021 17:54:57 +0800")
+Message-ID: <87ily3br3n.fsf@disp2133>
 MIME-Version: 1.0
-Date: Sat, 09 Oct 2021 16:25:05 +0300
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: Re: RISC-V: patched kexec-tools on github for review/testing
-In-Reply-To: <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
-References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
- <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
- <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
-Message-ID: <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
+Subject: Re: [PATCH v2 1/2] kexec,
+ KEYS: make the code in bzImage64_verify_sig generic
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,81 +17,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexandre Ghiti <alexandre.ghiti@canonical.com>
-Cc: Nick Kossifidis <mick@ics.forth.gr>, ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
+To: Coiby Xu <coxu@redhat.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE 32-BIT AND 64-BIT" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE 32-BIT AND 64-BIT" <linux-kernel@vger.kernel.org>
 
-zqPPhM65z4IgMjAyMS0xMC0wNiAxNDoxMCwgQWxleGFuZHJlIEdoaXRpIM6tzrPPgc6xz4jOtToK
-PiAKPiBTbyBJIGZvbGxvd2VkIHRoZSBpbnN0cnVjdGlvbnMgaGVyZToKPiBodHRwczovL2RvY3Vt
-ZW50YXRpb24uc3VzZS5jb20vZnItZnIvc2xlcy8xMi1TUDMvaHRtbC9TTEVTLWFsbC9jaGEtdHVu
-aW5nLWtleGVjLmh0bWwjY2hhLXR1bmluZy1rZXhlYy1iYXNpYy11c2FnZSwKPiBiZWxvdyB0aGUg
-b3V0cHV0IG9uIGFuIFVubWF0Y2hlZCBib2FyZCB1c2luZyBhIHZtbGludXggc3RvcmVkIG9uIGEg
-c2QKPiBjYXJkOgo+IAo+IHVidW50dUB1YnVudHU6fiQgc3VkbyBzYmluL2tleGVjIC1sIHZtbGlu
-dXggLS1hcHBlbmQ9IiQoY2F0Cj4gL3Byb2MvY21kbGluZSkiIC0taW5pdHJkPS9ib290L2luaXRy
-ZC5pbWcKPiBXYXJuaW5nOiBObyBjbWRsaW5lIHByb3ZpZGVkLCB1c2luZyBhcHBlbmQgc3RyaW5n
-IGFzIGNtZGxpbmUKPiBXYXJuaW5nOiBObyBkdGIgcHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdh
-cmUvZmR0Cj4gWyAxODEzLjQ3MjY3MV0gSU5GTzogdGFzayBrd29ya2VyLzE6MDo5ODggYmxvY2tl
-ZCBmb3IgbW9yZSB0aGFuIDEyMCAKPiBzZWNvbmRzLgo+IFsgMTgxMy40Nzg3NTFdICAgICAgIE5v
-dCB0YWludGVkIDUuMTUuMC1yYzErICMxNQo+IFsgMTgxMy40ODMxMTBdICJlY2hvIDAgPiAvcHJv
-Yy9zeXMva2VybmVsL2h1bmdfdGFza190aW1lb3V0X3NlY3MiCj4gZGlzYWJsZXMgdGhpcyBtZXNz
-YWdlLgo+IENvdWxkIG5vdCBmaW5kIGEgZnJlZSBhcmVhIG9mIG1lbW9yeSBvZiAweDMwMDAgYnl0
-ZXMuLi4KPiBsb2NhdGVfaG9sZSBmYWlsZWQKPiAKPiBJIHVzZWQgdGhlIFVidW50dSBrZXJuZWws
-IHNvIHRoaXMgaXMgcHJldHR5IGxhcmdlOgo+IC1yd3hyd3hyLXggMSB1YnVudHUgdWJ1bnR1IDI3
-N00gT2N0ICA1IDE1OjQ3IHZtbGludXgKPiAtcnctci0tci0tIDEgcm9vdCByb290IDk4TSBTZXAg
-MjEgMDM6MjUgL2Jvb3QvaW5pdHJkLmltZwo+IAoKQUNLLCBJIGhhdmVuJ3QgdGVzdGVkIGluaXRy
-ZCBtdWNoIFRCSCwgSSB1c3VhbGx5IGRvbid0IHVzZSBhbiBpbml0cmQsIAphbmQgd2hlbiBJIGRv
-IGl0J3MgYSBzbWFsbCBidXN5Ym94LWJhc2VkIHJvb3Rmcy4KCj4gVGhlbiBpZiBJIGRvbid0IGxv
-YWQgdGhlIGluaXRyZCAoSSBzb21ldGltZXMgaGF2ZSB0aGUgc2FtZSB3YXJuaW5nIGFzCj4gYWJv
-dmUpIEkgY2FuIGF0IGxlYXN0IGtleGVjIHRoZSBuZXcga2VybmVsIGJ1dCBpdCBmYWlscyB0byBi
-b290Ogo+IAo+IHVidW50dUB1YnVudHU6fiQgc3VkbyAuL3NiaW4va2V4ZWMgLWUKPiBXYXJuaW5n
-OiBObyBjbWRsaW5lIG9yIGFwcGVuZCBzdHJpbmcgcHJvdmlkZWQKPiBXYXJuaW5nOiBObyBkdGIg
-cHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdhcmUvZmR0Cj4gWy4uLl0KPiBbICAgIDAuMDAwMDAw
-XSBTQkkgdjAuMiBIU00gZXh0ZW5zaW9uIGRldGVjdGVkCj4gWyAgICAwLjAwMDAwMF0gQ1BVIHdp
-dGggaGFydGlkPTAgaXMgbm90IGF2YWlsYWJsZQo+IFsgICAgMC4wMDAwMDBdIC0tLS0tLS0tLS0t
-LVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+IFsgICAgMC4wMDAwMDBdIGtlcm5lbCBCVUcgYXQg
-YXJjaC9yaXNjdi9rZXJuZWwvc21wYm9vdC5jOjEwNyEKPiBbICAgIDAuMDAwMDAwXSBLZXJuZWwg
-QlVHIFsjMV0KPiBbICAgIDAuMDAwMDAwXSBNb2R1bGVzIGxpbmtlZCBpbjoKPiBbICAgIDAuMDAw
-MDAwXSBDUFU6IDAgUElEOiAwIENvbW06IHN3YXBwZXIgTm90IHRhaW50ZWQgNS4xNS4wLXJjMSsg
-IzE1Cj4gWyAgICAwLjAwMDAwMF0gSGFyZHdhcmUgbmFtZTogU2lGaXZlIEhpRml2ZSBVbm1hdGNo
-ZWQgQTAwIChEVCkKPiBbICAgIDAuMDAwMDAwXSBlcGMgOiBzZXR1cF9zbXArMHhjYy8weDE0Mgo+
-IFsgICAgMC4wMDAwMDBdICByYSA6IHNldHVwX3NtcCsweGM0LzB4MTQyCj4gWyAgICAwLjAwMDAw
-MF0gZXBjIDogZmZmZmZmZmY4MGEwNDA4MCByYSA6IGZmZmZmZmZmODBhMDQwNzggc3AgOgo+IGZm
-ZmZmZmZmODE4MDNlYzAKPiBbICAgIDAuMDAwMDAwXSAgZ3AgOiBmZmZmZmZmZjgxYTIzMjIwIHRw
-IDogZmZmZmZmZmY4MTgxMDUwMCB0MCA6Cj4gZmZmZmZmZmY4MWEzNTUxZgo+IFsgICAgMC4wMDAw
-MDBdICB0MSA6IGZmZmZmZmZmZmZmZmZmZmYgdDIgOiAwMDAwMDAwMDAwMDAwMDAwIHMwIDoKPiBm
-ZmZmZmZmZjgxODAzZjAwCj4gWyAgICAwLjAwMDAwMF0gIHMxIDogMDAwMDAwMDAwMDAwMDAwMCBh
-MCA6IDAwMDAwMDAwMDAwMDAwMDAgYTEgOgo+IDAwMDAwMDAwMDAwMDAwMDAKPiBbICAgIDAuMDAw
-MDAwXSAgYTIgOiAwMDAwMDAwMDAwMDAwMDAwIGEzIDogMDAwMDAwMDAwMDAwMDAwMSBhNCA6Cj4g
-MDAwMDAwMDAwMDAwMDAwMAo+IFsgICAgMC4wMDAwMDBdICBhNSA6IGZmZmZmZmZmODBjNjQ1MDAg
-YTYgOiAwMDAwMDAwMDAwMDAwMDA0IGE3IDoKPiAwMDAwMDAwMDAwMDBmZjAwCj4gWyAgICAwLjAw
-MDAwMF0gIHMyIDogMDAwMDAwMDAwMDAwMDAwNSBzMyA6IDAwMDAwMDAwMDAwMDAwMDAgczQgOgo+
-IGZmZmZmZmZmODExOGY5YTgKPiBbICAgIDAuMDAwMDAwXSAgczUgOiAwMDAwMDAwMDAwMDAwMDA3
-IHM2IDogZmZmZmZmZmY4MGMwYjc5MCBzNyA6Cj4gMDAwMDAwMDA4MDAwMDIwMAo+IFsgICAgMC4w
-MDAwMDBdICBzOCA6IDAwMDAwMDAwMDAwMDBmZmYgczkgOiAwMDAwMDAwMDgxMDAwMjAwIHMxMDoK
-PiAwMDAwMDAwMDAwMDAwMDE4Cj4gWyAgICAwLjAwMDAwMF0gIHMxMTogMDAwMDAwMDAwMDAwMDAw
-YiB0MyA6IDAwMDAwMDAwMDBmZjAwMDAgdDQgOgo+IGZmZmZmZmZmZmZmZmZmZmYKPiBbICAgIDAu
-MDAwMDAwXSAgdDUgOiBmZmZmZmZmZjgwYzBiN2EwIHQ2IDogZmZmZmZmZmY4MTgwM2JkOAo+IFsg
-ICAgMC4wMDAwMDBdIHN0YXR1czogMDAwMDAwMDIwMDAwMDEwMCBiYWRhZGRyOiAwMDAwMDAwMDAw
-MDAwMDAwCj4gY2F1c2U6IDAwMDAwMDAwMDAwMDAwMDMKPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZm
-ZmZmODBhMDQwODA+XSBzZXR1cF9zbXArMHhjYy8weDE0Mgo+IFsgICAgMC4wMDAwMDBdIFs8ZmZm
-ZmZmZmY4MGEwM2Q4OD5dIHNldHVwX2FyY2grMHg1NmEvMHg1OTAKPiBbICAgIDAuMDAwMDAwXSBb
-PGZmZmZmZmZmODBhMDBhYTI+XSBzdGFydF9rZXJuZWwrMHhhYS8weGE1Ywo+IFsgICAgMC4wMDAw
-MDBdIHJhbmRvbTogZ2V0X3JhbmRvbV9ieXRlcyBjYWxsZWQgZnJvbQo+IG9vcHNfZXhpdCsweDQ0
-LzB4NzAgd2l0aCBjcm5nX2luaXQ9MAo+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIHRyYWNlIDAw
-MDAwMDAwMDAwMDAwMDAgXS0tLQo+IFsgICAgMC4wMDAwMDBdIEtlcm5lbCBwYW5pYyAtIG5vdCBz
-eW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCB0aGUgaWRsZSAKPiB0YXNrIQo+IFsgICAgMC4wMDAw
-MDBdIC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2ls
-bAo+IHRoZSBpZGxlIHRhc2shIF0tLS0KPiAKPiBUaGlzIHJlbGlhYmx5IGZhaWxzIGhlcmUuCj4g
-CgpUaGlzIGxvb2tzIHdlaXJkLCBJJ2xsIGNoZWNrIGl0IG91dCAod2UgaGF2ZSBhbiB1bm1hdGNo
-ZWQgaGVyZSBzbyBJJ2xsIAp0cnkgdG8gZ2V0IG15IGhhbmRzIG9uIGl0IHNvbWV0aW1lIG5leHQg
-d2VlaykuCgpEaWQgeW91IHRyeSBrZHVtcCA/IERvIHlvdSBnZXQgdGhlIHNhbWUgZXJyb3IgPwoK
-QlRXIHRoaXMgaXMgd2hhdCBJIHVzZSBmb3IgdGVzdGluZyBtb3N0IG9mIHRoZSB0aW1lOgoKRm9y
-IGtleGVjOgprZXhlYyAtbCAvbW50L3NoYXJlZC92bWxpbnV4IC0tcmV1c2UtY21kbGluZQprZXhl
-YyAtZQoKRm9yIGtkdW1wOgprZXhlYyAtcCAvbW50L3NoYXJlZC92bWxpbnV4CmVjaG8gYyA+IC9w
-cm9jL3N5c3JxLXRyaWdnZXIKClRoYW5rcyBhIGxvdCBmb3IgeW91ciB0aW1lICEKClJlZ2FyZHMs
-Ck5pY2sKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtl
-eGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5p
-bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Coiby Xu <coxu@redhat.com> writes:
+
+> The code in bzImage64_verify_sig could make use of system keyrings including
+> .buitin_trusted_keys, .secondary_trusted_keys and .platform keyring to verify
+> signed kernel image as PE file. Make it generic so both x86_64 and arm64 can 
+> use it.
+
+The naming is problematic.
+
+At a minimum please name the new function kexec_kernel_verify_pe_sig.
+AKA what you named it without the "arch_" prefix.  A function named with
+an "arch_" prefix  implies that it has an architecture specific
+implementation.
+
+It looks like arch_kexec_kernel_verify_sig should be killed as well
+as it only has one implementation in the generic code.  And the code
+should always call kexec_image_verify_sig_default.  Not that you should
+do that but I am pointing it out as it seems that is the bad example you
+are copying.
+
+Eric
+
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  arch/x86/kernel/kexec-bzimage64.c | 13 +------------
+>  include/linux/kexec.h             |  3 +++
+>  kernel/kexec_file.c               | 17 +++++++++++++++++
+>  3 files changed, 21 insertions(+), 12 deletions(-)
+>
+> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+> index 170d0fd68b1f..4136dd3be5a9 100644
+> --- a/arch/x86/kernel/kexec-bzimage64.c
+> +++ b/arch/x86/kernel/kexec-bzimage64.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/kernel.h>
+>  #include <linux/mm.h>
+>  #include <linux/efi.h>
+> -#include <linux/verification.h>
+>  
+>  #include <asm/bootparam.h>
+>  #include <asm/setup.h>
+> @@ -531,17 +530,7 @@ static int bzImage64_cleanup(void *loader_data)
+>  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
+>  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
+>  {
+> -	int ret;
+> -
+> -	ret = verify_pefile_signature(kernel, kernel_len,
+> -				      VERIFY_USE_SECONDARY_KEYRING,
+> -				      VERIFYING_KEXEC_PE_SIGNATURE);
+> -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> -		ret = verify_pefile_signature(kernel, kernel_len,
+> -					      VERIFY_USE_PLATFORM_KEYRING,
+> -					      VERIFYING_KEXEC_PE_SIGNATURE);
+> -	}
+> -	return ret;
+> +	return arch_kexec_kernel_verify_pe_sig(kernel, kernel_len);
+>  }
+>  #endif
+>  
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..d45f32336dbe 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -19,6 +19,7 @@
+>  #include <asm/io.h>
+>  
+>  #include <uapi/linux/kexec.h>
+> +#include <linux/verification.h>
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  #include <linux/list.h>
+> @@ -199,6 +200,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>  #ifdef CONFIG_KEXEC_SIG
+>  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>  				 unsigned long buf_len);
+> +int arch_kexec_kernel_verify_pe_sig(const char *kernel,
+> +				    unsigned long kernel_len);
+>  #endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 33400ff051a8..0530275b7aa3 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -106,6 +106,23 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>  {
+>  	return kexec_image_verify_sig_default(image, buf, buf_len);
+>  }
+> +
+> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
+> +int arch_kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
+> +{
+> +	int ret;
+> +
+> +	ret = verify_pefile_signature(kernel, kernel_len,
+> +				      VERIFY_USE_SECONDARY_KEYRING,
+> +				      VERIFYING_KEXEC_PE_SIGNATURE);
+> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
+> +		ret = verify_pefile_signature(kernel, kernel_len,
+> +					      VERIFY_USE_PLATFORM_KEYRING,
+> +					      VERIFYING_KEXEC_PE_SIGNATURE);
+> +	}
+> +	return ret;
+> +}
+> +#endif
+>  #endif
+>  
+>  /*
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
