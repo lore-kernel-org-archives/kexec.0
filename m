@@ -1,21 +1,28 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1ma8tL-00BNhx-HI
- for kexec@lists.infradead.org; Tue, 12 Oct 2021 03:55:53 +0000
-Received: by mail-pf1-f198.google.com with SMTP id
- t79-20020a627852000000b0044d0ecd9f7aso2590779pfc.13
- for <kexec@lists.infradead.org>; Mon, 11 Oct 2021 20:55:47 -0700 (PDT)
-Date: Tue, 12 Oct 2021 11:53:24 +0800
-From: Coiby Xu <coxu@redhat.com>
-Subject: Re: [PATCH v2 1/2] kexec, KEYS: make the code in
- bzImage64_verify_sig generic
-Message-ID: <20211012035324.ctwuaaaig5yin7ve@localhost.localdomain>
-References: <20211009095458.297191-1-coxu@redhat.com>
- <20211009095458.297191-2-coxu@redhat.com> <87ily3br3n.fsf@disp2133>
+ id 1mbHJn-005ecV-Ds
+ for kexec@lists.infradead.org; Fri, 15 Oct 2021 07:07:53 +0000
+Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
+ [209.85.208.69])
+ (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+ key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
+ (No client certificate requested)
+ by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1FDF63F077
+ for <kexec@lists.infradead.org>; Fri, 15 Oct 2021 07:07:40 +0000 (UTC)
+Received: by mail-ed1-f69.google.com with SMTP id
+ l22-20020aa7c316000000b003dbbced0731so7397652edq.6
+ for <kexec@lists.infradead.org>; Fri, 15 Oct 2021 00:07:40 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <87ily3br3n.fsf@disp2133>
-Content-Disposition: inline
+References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
+ <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
+ <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
+ <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
+In-Reply-To: <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
+From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Date: Fri, 15 Oct 2021 09:07:28 +0200
+Message-ID: <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
+Subject: Re: RISC-V: patched kexec-tools on github for review/testing
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,151 +31,91 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>, "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <linux-kernel@vger.kernel.org>
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
 
-On Mon, Oct 11, 2021 at 08:58:36AM -0500, Eric W. Biederman wrote:
->Coiby Xu <coxu@redhat.com> writes:
->
->> The code in bzImage64_verify_sig could make use of system keyrings including
->> .buitin_trusted_keys, .secondary_trusted_keys and .platform keyring to verify
->> signed kernel image as PE file. Make it generic so both x86_64 and arm64 can
->> use it.
->
->The naming is problematic.
->
->At a minimum please name the new function kexec_kernel_verify_pe_sig.
->AKA what you named it without the "arch_" prefix.  A function named with
->an "arch_" prefix  implies that it has an architecture specific
->implementation.
-
-Thanks for bringing up this issue and providing the fix and the explanation.
-
->
->It looks like arch_kexec_kernel_verify_sig should be killed as well
->as it only has one implementation in the generic code.  And the code
->should always call kexec_image_verify_sig_default.  Not that you should
->do that but I am pointing it out as it seems that is the bad example you
->are copying.
-
-Yes, you are right about it. This is a leftover issue of commit 
-9ec4ecef0af7790551109283ca039a7c52de343c ("kexec_file,x86,powerpc: factor 
-out kexec_file_ops functions"),
-     
-     As arch_kexec_kernel_image_{probe,load}(),
-     arch_kimage_file_post_load_cleanup() and arch_kexec_kernel_verify_sig()
-     are almost duplicated among architectures, they can be commonalized with
-     an architecture-defined kexec_file_ops array.  So let's factor them out.
-
-That commit moves the architecture specific implementation of 
-arch_kexec_kernel_verify_sig to kexec_file_ops->verify_sig. So actually 
-arch_kexec_kernel_verify_sig should be removed. Then we rename
-kexec_image_verify_sig_default to kimage_validate_signature and call 
-it in kimage_validate_signature directly. I'll include a new patch to do 
-the clean-up work in v3.
-
->
->Eric
->
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  arch/x86/kernel/kexec-bzimage64.c | 13 +------------
->>  include/linux/kexec.h             |  3 +++
->>  kernel/kexec_file.c               | 17 +++++++++++++++++
->>  3 files changed, 21 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->> index 170d0fd68b1f..4136dd3be5a9 100644
->> --- a/arch/x86/kernel/kexec-bzimage64.c
->> +++ b/arch/x86/kernel/kexec-bzimage64.c
->> @@ -17,7 +17,6 @@
->>  #include <linux/kernel.h>
->>  #include <linux/mm.h>
->>  #include <linux/efi.h>
->> -#include <linux/verification.h>
->>
->>  #include <asm/bootparam.h>
->>  #include <asm/setup.h>
->> @@ -531,17 +530,7 @@ static int bzImage64_cleanup(void *loader_data)
->>  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
->>  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
->>  {
->> -	int ret;
->> -
->> -	ret = verify_pefile_signature(kernel, kernel_len,
->> -				      VERIFY_USE_SECONDARY_KEYRING,
->> -				      VERIFYING_KEXEC_PE_SIGNATURE);
->> -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
->> -		ret = verify_pefile_signature(kernel, kernel_len,
->> -					      VERIFY_USE_PLATFORM_KEYRING,
->> -					      VERIFYING_KEXEC_PE_SIGNATURE);
->> -	}
->> -	return ret;
->> +	return arch_kexec_kernel_verify_pe_sig(kernel, kernel_len);
->>  }
->>  #endif
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 0c994ae37729..d45f32336dbe 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -19,6 +19,7 @@
->>  #include <asm/io.h>
->>
->>  #include <uapi/linux/kexec.h>
->> +#include <linux/verification.h>
->>
->>  #ifdef CONFIG_KEXEC_CORE
->>  #include <linux/list.h>
->> @@ -199,6 +200,8 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image);
->>  #ifdef CONFIG_KEXEC_SIG
->>  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->>  				 unsigned long buf_len);
->> +int arch_kexec_kernel_verify_pe_sig(const char *kernel,
->> +				    unsigned long kernel_len);
->>  #endif
->>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->>
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 33400ff051a8..0530275b7aa3 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -106,6 +106,23 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->>  {
->>  	return kexec_image_verify_sig_default(image, buf, buf_len);
->>  }
->> +
->> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
->> +int arch_kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
->> +{
->> +	int ret;
->> +
->> +	ret = verify_pefile_signature(kernel, kernel_len,
->> +				      VERIFY_USE_SECONDARY_KEYRING,
->> +				      VERIFYING_KEXEC_PE_SIGNATURE);
->> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
->> +		ret = verify_pefile_signature(kernel, kernel_len,
->> +					      VERIFY_USE_PLATFORM_KEYRING,
->> +					      VERIFYING_KEXEC_PE_SIGNATURE);
->> +	}
->> +	return ret;
->> +}
->> +#endif
->>  #endif
->>
->>  /*
->
-
--- 
-Best regards,
-Coiby
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gU2F0LCBPY3QgOSwgMjAyMSBhdCAzOjI1IFBNIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3Mu
+Zm9ydGguZ3I+IHdyb3RlOgo+Cj4gzqPPhM65z4IgMjAyMS0xMC0wNiAxNDoxMCwgQWxleGFuZHJl
+IEdoaXRpIM6tzrPPgc6xz4jOtToKPiA+Cj4gPiBTbyBJIGZvbGxvd2VkIHRoZSBpbnN0cnVjdGlv
+bnMgaGVyZToKPiA+IGh0dHBzOi8vZG9jdW1lbnRhdGlvbi5zdXNlLmNvbS9mci1mci9zbGVzLzEy
+LVNQMy9odG1sL1NMRVMtYWxsL2NoYS10dW5pbmcta2V4ZWMuaHRtbCNjaGEtdHVuaW5nLWtleGVj
+LWJhc2ljLXVzYWdlLAo+ID4gYmVsb3cgdGhlIG91dHB1dCBvbiBhbiBVbm1hdGNoZWQgYm9hcmQg
+dXNpbmcgYSB2bWxpbnV4IHN0b3JlZCBvbiBhIHNkCj4gPiBjYXJkOgo+ID4KPiA+IHVidW50dUB1
+YnVudHU6fiQgc3VkbyBzYmluL2tleGVjIC1sIHZtbGludXggLS1hcHBlbmQ9IiQoY2F0Cj4gPiAv
+cHJvYy9jbWRsaW5lKSIgLS1pbml0cmQ9L2Jvb3QvaW5pdHJkLmltZwo+ID4gV2FybmluZzogTm8g
+Y21kbGluZSBwcm92aWRlZCwgdXNpbmcgYXBwZW5kIHN0cmluZyBhcyBjbWRsaW5lCj4gPiBXYXJu
+aW5nOiBObyBkdGIgcHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdhcmUvZmR0Cj4gPiBbIDE4MTMu
+NDcyNjcxXSBJTkZPOiB0YXNrIGt3b3JrZXIvMTowOjk4OCBibG9ja2VkIGZvciBtb3JlIHRoYW4g
+MTIwCj4gPiBzZWNvbmRzLgo+ID4gWyAxODEzLjQ3ODc1MV0gICAgICAgTm90IHRhaW50ZWQgNS4x
+NS4wLXJjMSsgIzE1Cj4gPiBbIDE4MTMuNDgzMTEwXSAiZWNobyAwID4gL3Byb2Mvc3lzL2tlcm5l
+bC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIgo+ID4gZGlzYWJsZXMgdGhpcyBtZXNzYWdlLgo+ID4g
+Q291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVtb3J5IG9mIDB4MzAwMCBieXRlcy4uLgo+
+ID4gbG9jYXRlX2hvbGUgZmFpbGVkCj4gPgo+ID4gSSB1c2VkIHRoZSBVYnVudHUga2VybmVsLCBz
+byB0aGlzIGlzIHByZXR0eSBsYXJnZToKPiA+IC1yd3hyd3hyLXggMSB1YnVudHUgdWJ1bnR1IDI3
+N00gT2N0ICA1IDE1OjQ3IHZtbGludXgKPiA+IC1ydy1yLS1yLS0gMSByb290IHJvb3QgOThNIFNl
+cCAyMSAwMzoyNSAvYm9vdC9pbml0cmQuaW1nCj4gPgo+Cj4gQUNLLCBJIGhhdmVuJ3QgdGVzdGVk
+IGluaXRyZCBtdWNoIFRCSCwgSSB1c3VhbGx5IGRvbid0IHVzZSBhbiBpbml0cmQsCj4gYW5kIHdo
+ZW4gSSBkbyBpdCdzIGEgc21hbGwgYnVzeWJveC1iYXNlZCByb290ZnMuCj4KPiA+IFRoZW4gaWYg
+SSBkb24ndCBsb2FkIHRoZSBpbml0cmQgKEkgc29tZXRpbWVzIGhhdmUgdGhlIHNhbWUgd2Fybmlu
+ZyBhcwo+ID4gYWJvdmUpIEkgY2FuIGF0IGxlYXN0IGtleGVjIHRoZSBuZXcga2VybmVsIGJ1dCBp
+dCBmYWlscyB0byBib290Ogo+ID4KPiA+IHVidW50dUB1YnVudHU6fiQgc3VkbyAuL3NiaW4va2V4
+ZWMgLWUKPiA+IFdhcm5pbmc6IE5vIGNtZGxpbmUgb3IgYXBwZW5kIHN0cmluZyBwcm92aWRlZAo+
+ID4gV2FybmluZzogTm8gZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13YXJlL2ZkdAo+ID4g
+Wy4uLl0KPiA+IFsgICAgMC4wMDAwMDBdIFNCSSB2MC4yIEhTTSBleHRlbnNpb24gZGV0ZWN0ZWQK
+PiA+IFsgICAgMC4wMDAwMDBdIENQVSB3aXRoIGhhcnRpZD0wIGlzIG5vdCBhdmFpbGFibGUKPiA+
+IFsgICAgMC4wMDAwMDBdIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+ID4g
+WyAgICAwLjAwMDAwMF0ga2VybmVsIEJVRyBhdCBhcmNoL3Jpc2N2L2tlcm5lbC9zbXBib290LmM6
+MTA3IQo+ID4gWyAgICAwLjAwMDAwMF0gS2VybmVsIEJVRyBbIzFdCj4gPiBbICAgIDAuMDAwMDAw
+XSBNb2R1bGVzIGxpbmtlZCBpbjoKPiA+IFsgICAgMC4wMDAwMDBdIENQVTogMCBQSUQ6IDAgQ29t
+bTogc3dhcHBlciBOb3QgdGFpbnRlZCA1LjE1LjAtcmMxKyAjMTUKPiA+IFsgICAgMC4wMDAwMDBd
+IEhhcmR3YXJlIG5hbWU6IFNpRml2ZSBIaUZpdmUgVW5tYXRjaGVkIEEwMCAoRFQpCj4gPiBbICAg
+IDAuMDAwMDAwXSBlcGMgOiBzZXR1cF9zbXArMHhjYy8weDE0Mgo+ID4gWyAgICAwLjAwMDAwMF0g
+IHJhIDogc2V0dXBfc21wKzB4YzQvMHgxNDIKPiA+IFsgICAgMC4wMDAwMDBdIGVwYyA6IGZmZmZm
+ZmZmODBhMDQwODAgcmEgOiBmZmZmZmZmZjgwYTA0MDc4IHNwIDoKPiA+IGZmZmZmZmZmODE4MDNl
+YzAKPiA+IFsgICAgMC4wMDAwMDBdICBncCA6IGZmZmZmZmZmODFhMjMyMjAgdHAgOiBmZmZmZmZm
+ZjgxODEwNTAwIHQwIDoKPiA+IGZmZmZmZmZmODFhMzU1MWYKPiA+IFsgICAgMC4wMDAwMDBdICB0
+MSA6IGZmZmZmZmZmZmZmZmZmZmYgdDIgOiAwMDAwMDAwMDAwMDAwMDAwIHMwIDoKPiA+IGZmZmZm
+ZmZmODE4MDNmMDAKPiA+IFsgICAgMC4wMDAwMDBdICBzMSA6IDAwMDAwMDAwMDAwMDAwMDAgYTAg
+OiAwMDAwMDAwMDAwMDAwMDAwIGExIDoKPiA+IDAwMDAwMDAwMDAwMDAwMDAKPiA+IFsgICAgMC4w
+MDAwMDBdICBhMiA6IDAwMDAwMDAwMDAwMDAwMDAgYTMgOiAwMDAwMDAwMDAwMDAwMDAxIGE0IDoK
+PiA+IDAwMDAwMDAwMDAwMDAwMDAKPiA+IFsgICAgMC4wMDAwMDBdICBhNSA6IGZmZmZmZmZmODBj
+NjQ1MDAgYTYgOiAwMDAwMDAwMDAwMDAwMDA0IGE3IDoKPiA+IDAwMDAwMDAwMDAwMGZmMDAKPiA+
+IFsgICAgMC4wMDAwMDBdICBzMiA6IDAwMDAwMDAwMDAwMDAwMDUgczMgOiAwMDAwMDAwMDAwMDAw
+MDAwIHM0IDoKPiA+IGZmZmZmZmZmODExOGY5YTgKPiA+IFsgICAgMC4wMDAwMDBdICBzNSA6IDAw
+MDAwMDAwMDAwMDAwMDcgczYgOiBmZmZmZmZmZjgwYzBiNzkwIHM3IDoKPiA+IDAwMDAwMDAwODAw
+MDAyMDAKPiA+IFsgICAgMC4wMDAwMDBdICBzOCA6IDAwMDAwMDAwMDAwMDBmZmYgczkgOiAwMDAw
+MDAwMDgxMDAwMjAwIHMxMDoKPiA+IDAwMDAwMDAwMDAwMDAwMTgKPiA+IFsgICAgMC4wMDAwMDBd
+ICBzMTE6IDAwMDAwMDAwMDAwMDAwMGIgdDMgOiAwMDAwMDAwMDAwZmYwMDAwIHQ0IDoKPiA+IGZm
+ZmZmZmZmZmZmZmZmZmYKPiA+IFsgICAgMC4wMDAwMDBdICB0NSA6IGZmZmZmZmZmODBjMGI3YTAg
+dDYgOiBmZmZmZmZmZjgxODAzYmQ4Cj4gPiBbICAgIDAuMDAwMDAwXSBzdGF0dXM6IDAwMDAwMDAy
+MDAwMDAxMDAgYmFkYWRkcjogMDAwMDAwMDAwMDAwMDAwMAo+ID4gY2F1c2U6IDAwMDAwMDAwMDAw
+MDAwMDMKPiA+IFsgICAgMC4wMDAwMDBdIFs8ZmZmZmZmZmY4MGEwNDA4MD5dIHNldHVwX3NtcCsw
+eGNjLzB4MTQyCj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBhMDNkODg+XSBzZXR1cF9h
+cmNoKzB4NTZhLzB4NTkwCj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBhMDBhYTI+XSBz
+dGFydF9rZXJuZWwrMHhhYS8weGE1Ywo+ID4gWyAgICAwLjAwMDAwMF0gcmFuZG9tOiBnZXRfcmFu
+ZG9tX2J5dGVzIGNhbGxlZCBmcm9tCj4gPiBvb3BzX2V4aXQrMHg0NC8weDcwIHdpdGggY3JuZ19p
+bml0PTAKPiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAg
+XS0tLQo+ID4gWyAgICAwLjAwMDAwMF0gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEF0dGVt
+cHRlZCB0byBraWxsIHRoZSBpZGxlCj4gPiB0YXNrIQo+ID4gWyAgICAwLjAwMDAwMF0gLS0tWyBl
+bmQgS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEF0dGVtcHRlZCB0byBraWxsCj4gPiB0aGUg
+aWRsZSB0YXNrISBdLS0tCj4gPgo+ID4gVGhpcyByZWxpYWJseSBmYWlscyBoZXJlLgo+ID4KPgo+
+IFRoaXMgbG9va3Mgd2VpcmQsIEknbGwgY2hlY2sgaXQgb3V0ICh3ZSBoYXZlIGFuIHVubWF0Y2hl
+ZCBoZXJlIHNvIEknbGwKPiB0cnkgdG8gZ2V0IG15IGhhbmRzIG9uIGl0IHNvbWV0aW1lIG5leHQg
+d2VlaykuCj4KPiBEaWQgeW91IHRyeSBrZHVtcCA/IERvIHlvdSBnZXQgdGhlIHNhbWUgZXJyb3Ig
+PwoKa2R1bXAgd29ya3MgZmluZSwgaXQgZmFpbHMgdG8gZmluZCB0aGUgcm9vdGZzIGJ1dCBJIHRo
+aW5rIG15IHNldHVwIGlzCmZhdWx0eSBoZXJlLgpJIHRvb2sgYSBxdWljayBsb29rIGF0IGtleGVj
+X3JlbG9jYXRlLlMsIGFuZCB0aGUgdXNlIG9mIHZhX3BhX29mZnNldAppcyBhbHNvIHdyb25nIGhl
+cmUsIHdlIHNob3VsZCB1c2UgdmFfa2VybmVsX3BhX29mZnNldCBhcyBpdCBpcyB1c2VkIHRvCm1v
+ZGlmeSBhIHRleHQgYWRkcmVzcyBCdXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4K
+CkFsZXgKCgoKCj4KPiBCVFcgdGhpcyBpcyB3aGF0IEkgdXNlIGZvciB0ZXN0aW5nIG1vc3Qgb2Yg
+dGhlIHRpbWU6Cj4KPiBGb3Iga2V4ZWM6Cj4ga2V4ZWMgLWwgL21udC9zaGFyZWQvdm1saW51eCAt
+LXJldXNlLWNtZGxpbmUKPiBrZXhlYyAtZQo+Cj4gRm9yIGtkdW1wOgo+IGtleGVjIC1wIC9tbnQv
+c2hhcmVkL3ZtbGludXgKPiBlY2hvIGMgPiAvcHJvYy9zeXNycS10cmlnZ2VyCj4KPiBUaGFua3Mg
+YSBsb3QgZm9yIHlvdXIgdGltZSAhCj4KPiBSZWdhcmRzLAo+IE5pY2sKCl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
+Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8va2V4ZWMK
