@@ -1,28 +1,29 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-relay-internal-0.canonical.com ([185.125.188.122])
+Received: from mail.kernel.org ([198.145.29.99])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mbHJn-005ecV-Ds
- for kexec@lists.infradead.org; Fri, 15 Oct 2021 07:07:53 +0000
-Received: from mail-ed1-f69.google.com (mail-ed1-f69.google.com
- [209.85.208.69])
- (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
- key-exchange X25519 server-signature RSA-PSS (2048 bits) server-digest SHA256)
- (No client certificate requested)
- by smtp-relay-internal-0.canonical.com (Postfix) with ESMTPS id 1FDF63F077
- for <kexec@lists.infradead.org>; Fri, 15 Oct 2021 07:07:40 +0000 (UTC)
-Received: by mail-ed1-f69.google.com with SMTP id
- l22-20020aa7c316000000b003dbbced0731so7397652edq.6
- for <kexec@lists.infradead.org>; Fri, 15 Oct 2021 00:07:40 -0700 (PDT)
+ id 1mc6G9-00Ceiw-Av
+ for kexec@lists.infradead.org; Sun, 17 Oct 2021 13:31:30 +0000
+Received: by mail.kernel.org (Postfix) with ESMTPSA id C7A0E61261
+ for <kexec@lists.infradead.org>; Sun, 17 Oct 2021 13:31:28 +0000 (UTC)
+Received: by mail-oi1-f175.google.com with SMTP id o204so20620468oih.13
+ for <kexec@lists.infradead.org>; Sun, 17 Oct 2021 06:31:28 -0700 (PDT)
 MIME-Version: 1.0
-References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
- <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
- <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
- <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
-In-Reply-To: <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
-From: Alexandre Ghiti <alexandre.ghiti@canonical.com>
-Date: Fri, 15 Oct 2021 09:07:28 +0200
-Message-ID: <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
-Subject: Re: RISC-V: patched kexec-tools on github for review/testing
+References: <YLss6ZNPMIXleLLF@dhcp-128-65.nay.redhat.com>
+ <YL5HvUqtsDXx5CzM@smile.fi.intel.com>
+ <YL5U/zSb50SnbLgW@smile.fi.intel.com>
+ <YL9hxPdPj0dYMyaD@dhcp-128-65.nay.redhat.com>
+ <CAHp75VcPuf6BLGf7Y3RO2M-gHMFZMTeb4ftnj_tbGS4TxvThxA@mail.gmail.com>
+ <YMCsSqzmG4jb1Ojo@dhcp-128-65.nay.redhat.com>
+ <YMQ62d1EFFjRcv6w@dhcp-128-65.nay.redhat.com>
+ <YMd39tIPercgljll@smile.fi.intel.com> <YMeM1Xee9Yg3j21D@smile.fi.intel.com>
+ <YMeRiDMet2JyOV4P@smile.fi.intel.com> <YV3Oonc5s3UpzRq0@smile.fi.intel.com>
+ <CAMj1kXHjXcFePeRWDtxZnC6eHEeELA6kZXOU=sA9oDZ1HzW_Vg@mail.gmail.com>
+ <CAHp75VdLLZsJnektx+n=BGvGeaogN0r=viNJpbR-au5RUURi9Q@mail.gmail.com>
+In-Reply-To: <CAHp75VdLLZsJnektx+n=BGvGeaogN0r=viNJpbR-au5RUURi9Q@mail.gmail.com>
+From: Ard Biesheuvel <ardb@kernel.org>
+Date: Sun, 17 Oct 2021 15:31:17 +0200
+Message-ID: <CAMj1kXFn+6AfVEksrEhPtPTHx-DmfTPwq=F7xpgs6D7EmKHMmA@mail.gmail.com>
+Subject: Re: [PATCH v1 0/2] firmware: dmi_scan: Make it work in kexec'ed kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,91 +32,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
+To: Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc: Dave Young <dyoung@redhat.com>, Jean Delvare <jdelvare@suse.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Mika Westerberg <mika.westerberg@linux.intel.com>, =?UTF-8?Q?Javier_Ti=C3=A1?= <javier.tia@gmail.com>, kexec@lists.infradead.org, Eric Biederman <ebiederm@xmission.com>, linux-efi <linux-efi@vger.kernel.org>, Matt Fleming <matt@codeblueprint.co.uk>
 
-T24gU2F0LCBPY3QgOSwgMjAyMSBhdCAzOjI1IFBNIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3Mu
-Zm9ydGguZ3I+IHdyb3RlOgo+Cj4gzqPPhM65z4IgMjAyMS0xMC0wNiAxNDoxMCwgQWxleGFuZHJl
-IEdoaXRpIM6tzrPPgc6xz4jOtToKPiA+Cj4gPiBTbyBJIGZvbGxvd2VkIHRoZSBpbnN0cnVjdGlv
-bnMgaGVyZToKPiA+IGh0dHBzOi8vZG9jdW1lbnRhdGlvbi5zdXNlLmNvbS9mci1mci9zbGVzLzEy
-LVNQMy9odG1sL1NMRVMtYWxsL2NoYS10dW5pbmcta2V4ZWMuaHRtbCNjaGEtdHVuaW5nLWtleGVj
-LWJhc2ljLXVzYWdlLAo+ID4gYmVsb3cgdGhlIG91dHB1dCBvbiBhbiBVbm1hdGNoZWQgYm9hcmQg
-dXNpbmcgYSB2bWxpbnV4IHN0b3JlZCBvbiBhIHNkCj4gPiBjYXJkOgo+ID4KPiA+IHVidW50dUB1
-YnVudHU6fiQgc3VkbyBzYmluL2tleGVjIC1sIHZtbGludXggLS1hcHBlbmQ9IiQoY2F0Cj4gPiAv
-cHJvYy9jbWRsaW5lKSIgLS1pbml0cmQ9L2Jvb3QvaW5pdHJkLmltZwo+ID4gV2FybmluZzogTm8g
-Y21kbGluZSBwcm92aWRlZCwgdXNpbmcgYXBwZW5kIHN0cmluZyBhcyBjbWRsaW5lCj4gPiBXYXJu
-aW5nOiBObyBkdGIgcHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdhcmUvZmR0Cj4gPiBbIDE4MTMu
-NDcyNjcxXSBJTkZPOiB0YXNrIGt3b3JrZXIvMTowOjk4OCBibG9ja2VkIGZvciBtb3JlIHRoYW4g
-MTIwCj4gPiBzZWNvbmRzLgo+ID4gWyAxODEzLjQ3ODc1MV0gICAgICAgTm90IHRhaW50ZWQgNS4x
-NS4wLXJjMSsgIzE1Cj4gPiBbIDE4MTMuNDgzMTEwXSAiZWNobyAwID4gL3Byb2Mvc3lzL2tlcm5l
-bC9odW5nX3Rhc2tfdGltZW91dF9zZWNzIgo+ID4gZGlzYWJsZXMgdGhpcyBtZXNzYWdlLgo+ID4g
-Q291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVtb3J5IG9mIDB4MzAwMCBieXRlcy4uLgo+
-ID4gbG9jYXRlX2hvbGUgZmFpbGVkCj4gPgo+ID4gSSB1c2VkIHRoZSBVYnVudHUga2VybmVsLCBz
-byB0aGlzIGlzIHByZXR0eSBsYXJnZToKPiA+IC1yd3hyd3hyLXggMSB1YnVudHUgdWJ1bnR1IDI3
-N00gT2N0ICA1IDE1OjQ3IHZtbGludXgKPiA+IC1ydy1yLS1yLS0gMSByb290IHJvb3QgOThNIFNl
-cCAyMSAwMzoyNSAvYm9vdC9pbml0cmQuaW1nCj4gPgo+Cj4gQUNLLCBJIGhhdmVuJ3QgdGVzdGVk
-IGluaXRyZCBtdWNoIFRCSCwgSSB1c3VhbGx5IGRvbid0IHVzZSBhbiBpbml0cmQsCj4gYW5kIHdo
-ZW4gSSBkbyBpdCdzIGEgc21hbGwgYnVzeWJveC1iYXNlZCByb290ZnMuCj4KPiA+IFRoZW4gaWYg
-SSBkb24ndCBsb2FkIHRoZSBpbml0cmQgKEkgc29tZXRpbWVzIGhhdmUgdGhlIHNhbWUgd2Fybmlu
-ZyBhcwo+ID4gYWJvdmUpIEkgY2FuIGF0IGxlYXN0IGtleGVjIHRoZSBuZXcga2VybmVsIGJ1dCBp
-dCBmYWlscyB0byBib290Ogo+ID4KPiA+IHVidW50dUB1YnVudHU6fiQgc3VkbyAuL3NiaW4va2V4
-ZWMgLWUKPiA+IFdhcm5pbmc6IE5vIGNtZGxpbmUgb3IgYXBwZW5kIHN0cmluZyBwcm92aWRlZAo+
-ID4gV2FybmluZzogTm8gZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13YXJlL2ZkdAo+ID4g
-Wy4uLl0KPiA+IFsgICAgMC4wMDAwMDBdIFNCSSB2MC4yIEhTTSBleHRlbnNpb24gZGV0ZWN0ZWQK
-PiA+IFsgICAgMC4wMDAwMDBdIENQVSB3aXRoIGhhcnRpZD0wIGlzIG5vdCBhdmFpbGFibGUKPiA+
-IFsgICAgMC4wMDAwMDBdIC0tLS0tLS0tLS0tLVsgY3V0IGhlcmUgXS0tLS0tLS0tLS0tLQo+ID4g
-WyAgICAwLjAwMDAwMF0ga2VybmVsIEJVRyBhdCBhcmNoL3Jpc2N2L2tlcm5lbC9zbXBib290LmM6
-MTA3IQo+ID4gWyAgICAwLjAwMDAwMF0gS2VybmVsIEJVRyBbIzFdCj4gPiBbICAgIDAuMDAwMDAw
-XSBNb2R1bGVzIGxpbmtlZCBpbjoKPiA+IFsgICAgMC4wMDAwMDBdIENQVTogMCBQSUQ6IDAgQ29t
-bTogc3dhcHBlciBOb3QgdGFpbnRlZCA1LjE1LjAtcmMxKyAjMTUKPiA+IFsgICAgMC4wMDAwMDBd
-IEhhcmR3YXJlIG5hbWU6IFNpRml2ZSBIaUZpdmUgVW5tYXRjaGVkIEEwMCAoRFQpCj4gPiBbICAg
-IDAuMDAwMDAwXSBlcGMgOiBzZXR1cF9zbXArMHhjYy8weDE0Mgo+ID4gWyAgICAwLjAwMDAwMF0g
-IHJhIDogc2V0dXBfc21wKzB4YzQvMHgxNDIKPiA+IFsgICAgMC4wMDAwMDBdIGVwYyA6IGZmZmZm
-ZmZmODBhMDQwODAgcmEgOiBmZmZmZmZmZjgwYTA0MDc4IHNwIDoKPiA+IGZmZmZmZmZmODE4MDNl
-YzAKPiA+IFsgICAgMC4wMDAwMDBdICBncCA6IGZmZmZmZmZmODFhMjMyMjAgdHAgOiBmZmZmZmZm
-ZjgxODEwNTAwIHQwIDoKPiA+IGZmZmZmZmZmODFhMzU1MWYKPiA+IFsgICAgMC4wMDAwMDBdICB0
-MSA6IGZmZmZmZmZmZmZmZmZmZmYgdDIgOiAwMDAwMDAwMDAwMDAwMDAwIHMwIDoKPiA+IGZmZmZm
-ZmZmODE4MDNmMDAKPiA+IFsgICAgMC4wMDAwMDBdICBzMSA6IDAwMDAwMDAwMDAwMDAwMDAgYTAg
-OiAwMDAwMDAwMDAwMDAwMDAwIGExIDoKPiA+IDAwMDAwMDAwMDAwMDAwMDAKPiA+IFsgICAgMC4w
-MDAwMDBdICBhMiA6IDAwMDAwMDAwMDAwMDAwMDAgYTMgOiAwMDAwMDAwMDAwMDAwMDAxIGE0IDoK
-PiA+IDAwMDAwMDAwMDAwMDAwMDAKPiA+IFsgICAgMC4wMDAwMDBdICBhNSA6IGZmZmZmZmZmODBj
-NjQ1MDAgYTYgOiAwMDAwMDAwMDAwMDAwMDA0IGE3IDoKPiA+IDAwMDAwMDAwMDAwMGZmMDAKPiA+
-IFsgICAgMC4wMDAwMDBdICBzMiA6IDAwMDAwMDAwMDAwMDAwMDUgczMgOiAwMDAwMDAwMDAwMDAw
-MDAwIHM0IDoKPiA+IGZmZmZmZmZmODExOGY5YTgKPiA+IFsgICAgMC4wMDAwMDBdICBzNSA6IDAw
-MDAwMDAwMDAwMDAwMDcgczYgOiBmZmZmZmZmZjgwYzBiNzkwIHM3IDoKPiA+IDAwMDAwMDAwODAw
-MDAyMDAKPiA+IFsgICAgMC4wMDAwMDBdICBzOCA6IDAwMDAwMDAwMDAwMDBmZmYgczkgOiAwMDAw
-MDAwMDgxMDAwMjAwIHMxMDoKPiA+IDAwMDAwMDAwMDAwMDAwMTgKPiA+IFsgICAgMC4wMDAwMDBd
-ICBzMTE6IDAwMDAwMDAwMDAwMDAwMGIgdDMgOiAwMDAwMDAwMDAwZmYwMDAwIHQ0IDoKPiA+IGZm
-ZmZmZmZmZmZmZmZmZmYKPiA+IFsgICAgMC4wMDAwMDBdICB0NSA6IGZmZmZmZmZmODBjMGI3YTAg
-dDYgOiBmZmZmZmZmZjgxODAzYmQ4Cj4gPiBbICAgIDAuMDAwMDAwXSBzdGF0dXM6IDAwMDAwMDAy
-MDAwMDAxMDAgYmFkYWRkcjogMDAwMDAwMDAwMDAwMDAwMAo+ID4gY2F1c2U6IDAwMDAwMDAwMDAw
-MDAwMDMKPiA+IFsgICAgMC4wMDAwMDBdIFs8ZmZmZmZmZmY4MGEwNDA4MD5dIHNldHVwX3NtcCsw
-eGNjLzB4MTQyCj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBhMDNkODg+XSBzZXR1cF9h
-cmNoKzB4NTZhLzB4NTkwCj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBhMDBhYTI+XSBz
-dGFydF9rZXJuZWwrMHhhYS8weGE1Ywo+ID4gWyAgICAwLjAwMDAwMF0gcmFuZG9tOiBnZXRfcmFu
-ZG9tX2J5dGVzIGNhbGxlZCBmcm9tCj4gPiBvb3BzX2V4aXQrMHg0NC8weDcwIHdpdGggY3JuZ19p
-bml0PTAKPiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIHRyYWNlIDAwMDAwMDAwMDAwMDAwMDAg
-XS0tLQo+ID4gWyAgICAwLjAwMDAwMF0gS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEF0dGVt
-cHRlZCB0byBraWxsIHRoZSBpZGxlCj4gPiB0YXNrIQo+ID4gWyAgICAwLjAwMDAwMF0gLS0tWyBl
-bmQgS2VybmVsIHBhbmljIC0gbm90IHN5bmNpbmc6IEF0dGVtcHRlZCB0byBraWxsCj4gPiB0aGUg
-aWRsZSB0YXNrISBdLS0tCj4gPgo+ID4gVGhpcyByZWxpYWJseSBmYWlscyBoZXJlLgo+ID4KPgo+
-IFRoaXMgbG9va3Mgd2VpcmQsIEknbGwgY2hlY2sgaXQgb3V0ICh3ZSBoYXZlIGFuIHVubWF0Y2hl
-ZCBoZXJlIHNvIEknbGwKPiB0cnkgdG8gZ2V0IG15IGhhbmRzIG9uIGl0IHNvbWV0aW1lIG5leHQg
-d2VlaykuCj4KPiBEaWQgeW91IHRyeSBrZHVtcCA/IERvIHlvdSBnZXQgdGhlIHNhbWUgZXJyb3Ig
-PwoKa2R1bXAgd29ya3MgZmluZSwgaXQgZmFpbHMgdG8gZmluZCB0aGUgcm9vdGZzIGJ1dCBJIHRo
-aW5rIG15IHNldHVwIGlzCmZhdWx0eSBoZXJlLgpJIHRvb2sgYSBxdWljayBsb29rIGF0IGtleGVj
-X3JlbG9jYXRlLlMsIGFuZCB0aGUgdXNlIG9mIHZhX3BhX29mZnNldAppcyBhbHNvIHdyb25nIGhl
-cmUsIHdlIHNob3VsZCB1c2UgdmFfa2VybmVsX3BhX29mZnNldCBhcyBpdCBpcyB1c2VkIHRvCm1v
-ZGlmeSBhIHRleHQgYWRkcmVzcyBCdXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4K
-CkFsZXgKCgoKCj4KPiBCVFcgdGhpcyBpcyB3aGF0IEkgdXNlIGZvciB0ZXN0aW5nIG1vc3Qgb2Yg
-dGhlIHRpbWU6Cj4KPiBGb3Iga2V4ZWM6Cj4ga2V4ZWMgLWwgL21udC9zaGFyZWQvdm1saW51eCAt
-LXJldXNlLWNtZGxpbmUKPiBrZXhlYyAtZQo+Cj4gRm9yIGtkdW1wOgo+IGtleGVjIC1wIC9tbnQv
-c2hhcmVkL3ZtbGludXgKPiBlY2hvIGMgPiAvcHJvYy9zeXNycS10cmlnZ2VyCj4KPiBUaGFua3Mg
-YSBsb3QgZm9yIHlvdXIgdGltZSAhCj4KPiBSZWdhcmRzLAo+IE5pY2sKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On Thu, 7 Oct 2021 at 09:23, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Oct 7, 2021 at 10:20 AM Ard Biesheuvel <ardb@kernel.org> wrote:
+> > On Wed, 6 Oct 2021 at 18:28, Andy Shevchenko <andy.shevchenko@gmail.com> wrote:
+> > > On Mon, Jun 14, 2021 at 08:27:36PM +0300, Andy Shevchenko wrote:
+> > > > On Mon, Jun 14, 2021 at 08:07:33PM +0300, Andy Shevchenko wrote:
+>
+> ...
+>
+> > > > Double checked, confirmed that it's NOT working.
+> > >
+> > > Any news here?
+> > >
+> > > Shall I resend my series?
+> >
+> > As I said before:
+> >
+> > """
+> > I would still prefer to get to the bottom of this before papering over
+> > it with command line options. If the memory gets corrupted by the
+> > first kernel, maybe we are not preserving it correctly in the first
+> > kernel.
+> > """
+>
+> And I can't agree more, but above I asked about news, implying if
+> there is anything to test?
+> The issue is still there and it becomes a bit annoying to see my hack
+> patches in every tree I have been using.
+>
+
+If nobody can be bothered to properly diagnose this, how important is
+it, really?
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
