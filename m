@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v15 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel()
-Date: Wed, 20 Oct 2021 10:03:10 +0800
-Message-ID: <20211020020317.1220-4-thunder.leizhen@huawei.com>
+Subject: [PATCH v15 06/10] arm64: kdump: introduce some macros for crash
+ kernel reservation
+Date: Wed, 20 Oct 2021 10:03:13 +0800
+Message-ID: <20211020020317.1220-7-thunder.leizhen@huawei.com>
 In-Reply-To: <20211020020317.1220-1-thunder.leizhen@huawei.com>
 References: <20211020020317.1220-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,41 +25,59 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-To make the functions reserve_crashkernel() as generic,
-replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
+for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
+upper bound of high crash memory, use macros instead.
+
+Besides, keep consistent with x86, use CRASH_ALIGN as the lower bound
+of crash kernel reservation.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/kexec.h | 6 ++++++
+ arch/arm64/mm/init.c           | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 5bebd46c7ce81f5..1b2c9f5c71a870e 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -489,8 +489,9 @@ static void __init reserve_crashkernel(void)
- 	if (!crash_base) {
- 		/*
- 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
--		 * crashkernel=x,high reserves memory over 4G, also allocates
--		 * 256M extra low memory for DMA buffers and swiotlb.
-+		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
-+		 * also allocates 256M extra low memory for DMA buffers
-+		 * and swiotlb.
- 		 * But the extra memory is not required for all machines.
- 		 * So try low memory first and fall back to high memory
- 		 * unless "crashkernel=size[KMG],high" is specified.
-@@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
- 		}
- 	}
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 00dbcc71aeb2918..b51ceb143cbbdb0 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -25,6 +25,12 @@
  
--	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-+	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
- 		memblock_free(crash_base, crash_size);
- 		return;
- 	}
+ #define KEXEC_ARCH KEXEC_ARCH_AARCH64
+ 
++/* 2M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_2M
++
++#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
++#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
++
+ #ifndef __ASSEMBLY__
+ 
+ /**
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 37a81754d9b61f7..2c94ae13b160834 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -75,7 +75,7 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size;
+-	unsigned long long crash_max = arm64_dma_phys_limit;
++	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+ 	int ret;
+ 
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+@@ -91,7 +91,7 @@ static void __init reserve_crashkernel(void)
+ 		crash_max = crash_base + crash_size;
+ 
+ 	/* Current arm64 boot protocol requires 2MB alignment */
+-	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
++	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+ 					       crash_base, crash_max);
+ 	if (!crash_base) {
+ 		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
 -- 
 2.25.1
 
