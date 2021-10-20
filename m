@@ -1,17 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1md7Z5-003wCS-8V
- for kexec@lists.infradead.org; Wed, 20 Oct 2021 09:07:16 +0000
-Received: by mail-pl1-x62b.google.com with SMTP id v20so15661287plo.7
- for <kexec@lists.infradead.org>; Wed, 20 Oct 2021 02:07:14 -0700 (PDT)
-From: cgel.zte@gmail.com
-Subject: [PATCH v2] crash_dump: remove duplicate include in crash_dump.h
-Date: Wed, 20 Oct 2021 09:06:59 +0000
-Message-Id: <20211020090659.1038877-1-ye.guojin@zte.com.cn>
-In-Reply-To: <20211020015357.GD27625@MiWiFi-R3L-srv>
-References: <20211020015357.GD27625@MiWiFi-R3L-srv>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1md8Q3-00469i-9N
+ for kexec@lists.infradead.org; Wed, 20 Oct 2021 10:02:00 +0000
+Date: Wed, 20 Oct 2021 12:01:51 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] kexec-tools: multiboot2: Correct BASIC_MEMINFO memory
+ units
+Message-ID: <20211020100151.GA19898@vergenet.net>
+References: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
+ <20211005081832.GA23961@vergenet.net>
+ <001601d7b9c9$4c8be2c0$e5a3a840$@irit.fr>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <001601d7b9c9$4c8be2c0$e5a3a840$@irit.fr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,44 +26,33 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: bhe@redhat.com
-Cc: cgel.zte@gmail.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, vgoyal@redhat.com, ye.guojin@zte.com.cn, zealci@zte.com.cn
+To: dinhngoc.tu@irit.fr
+Cc: kexec@lists.infradead.org
 
-From: Ye Guojin <ye.guojin@zte.com.cn>
+On Tue, Oct 05, 2021 at 11:13:45AM +0200, dinhngoc.tu@irit.fr wrote:
+> > Thanks,
+> > 
+> > I'm curious to know how the current code could have worked.
+> > Do we have some testing to verify this change?
+> 
+> Hi,
+> 
+> The current code is not actually used very often when loading Xen (which is
+> one of the few things that actually support Multiboot2), as Xen uses the
+> EBDA instead of the MB2 memory information on the MB2 boot path.
+> However this blows up on EFI systems without CSM (as EBDA is no longer
+> available).
+> 
+> I tested the loading of KVM->Xen and Xen->Xen with this patch and a patched
+> version of Xen that trusts the MB2 information, on a laptop and a server.
+> 
+> The Multiboot2 documentation at
+> https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Basic-mem
+> ory-information also supports the change.
 
-In crash_dump.h, header file <linux/pgtable.h> is included twice. This
-duplication was introduced in commit 65fddcfca8ad("mm: reorder includes
-after introduction of linux/pgtable.h") where the order of the header
-files is adjusted, while the old one was not removed.
+Thanks, and sorry for the delay.
 
-Clean it up here.
-
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Acked-by: Baoquan He <bhe@redhat.com>
-Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
----
-v2:
-- update the commit log
----
- include/linux/crash_dump.h | 2 --
- 1 file changed, 2 deletions(-)
-
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 0c547d866f1e..b7b255b23b99 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -8,8 +8,6 @@
- #include <linux/pgtable.h>
- #include <uapi/linux/vmcore.h>
-
--#include <linux/pgtable.h> /* for pgprot_t */
--
- /* For IS_ENABLED(CONFIG_CRASH_DUMP) */
- #define ELFCORE_ADDR_MAX       (-1ULL)
- #define ELFCORE_ADDR_ERR       (-2ULL)
--- 
-2.25.1
-
+Applied.
 
 _______________________________________________
 kexec mailing list
