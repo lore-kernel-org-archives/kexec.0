@@ -1,19 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1md8Q3-00469i-9N
- for kexec@lists.infradead.org; Wed, 20 Oct 2021 10:02:00 +0000
-Date: Wed, 20 Oct 2021 12:01:51 +0200
+Date: Wed, 20 Oct 2021 12:11:44 +0200
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] kexec-tools: multiboot2: Correct BASIC_MEMINFO memory
- units
-Message-ID: <20211020100151.GA19898@vergenet.net>
-References: <20210924170327.6775-1-dinhngoc.tu@irit.fr>
- <20211005081832.GA23961@vergenet.net>
- <001601d7b9c9$4c8be2c0$e5a3a840$@irit.fr>
+Subject: Re: [PATCH v2] arm: kdump: Add DT properties to crash dump kernel's
+ DTB
+Message-ID: <20211020101144.GB19898@vergenet.net>
+References: <20211005124032.1249636-1-geert+renesas@glider.be>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <001601d7b9c9$4c8be2c0$e5a3a840$@irit.fr>
+In-Reply-To: <20211005124032.1249636-1-geert+renesas@glider.be>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,33 +20,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dinhngoc.tu@irit.fr
-Cc: kexec@lists.infradead.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Lukasz Stelmach <l.stelmach@samsung.com>, Akashi Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 
-On Tue, Oct 05, 2021 at 11:13:45AM +0200, dinhngoc.tu@irit.fr wrote:
-> > Thanks,
-> > 
-> > I'm curious to know how the current code could have worked.
-> > Do we have some testing to verify this change?
+On Tue, Oct 05, 2021 at 02:40:32PM +0200, Geert Uytterhoeven wrote:
+> Pass the following properties to the crash dump kernel, to provide a
+> modern DT interface between kexec and the crash dump kernel:
 > 
-> Hi,
+>   - linux,elfcorehdr: ELF core header segment, similar to the
+>     "elfcorehdr=" kernel parameter.
+>   - linux,usable-memory-range: Usable memory reserved for the crash dump
+>     kernel.
+>     This makes the memory reservation explicit, so Linux no longer needs
+>     to mask the program counter, and rely on the "mem=" kernel parameter
+>     to obtain the start and size of usable memory.
 > 
-> The current code is not actually used very often when loading Xen (which is
-> one of the few things that actually support Multiboot2), as Xen uses the
-> EBDA instead of the MB2 memory information on the MB2 boot path.
-> However this blows up on EFI systems without CSM (as EBDA is no longer
-> available).
+> For backwards compatibility, the "elfcorehdr=" and "mem=" kernel
+> parameters are still appended to the kernel command line.
 > 
-> I tested the loading of KVM->Xen and Xen->Xen with this patch and a patched
-> version of Xen that trusts the MB2 information, on a laptop and a server.
+> Loosely based on the ARM64 version by Akashi Takahiro.
 > 
-> The Multiboot2 documentation at
-> https://www.gnu.org/software/grub/manual/multiboot2/multiboot.html#Basic-mem
-> ory-information also supports the change.
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-Thanks, and sorry for the delay.
-
-Applied.
+Thanks Geert, applied.
 
 _______________________________________________
 kexec mailing list
