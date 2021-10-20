@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1md0po-0039nS-U2
- for kexec@lists.infradead.org; Wed, 20 Oct 2021 01:56:07 +0000
-Date: Wed, 20 Oct 2021 09:53:57 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] crash_dump: remove duplicate include in crash_dump.h
-Message-ID: <20211020015357.GD27625@MiWiFi-R3L-srv>
-References: <20211020012318.1035952-1-ye.guojin@zte.com.cn>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v15 02/10] x86: kdump: make the lower bound of crash kernel
+ reservation consistent
+Date: Wed, 20 Oct 2021 10:03:09 +0800
+Message-ID: <20211020020317.1220-3-thunder.leizhen@huawei.com>
+In-Reply-To: <20211020020317.1220-1-thunder.leizhen@huawei.com>
+References: <20211020020317.1220-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211020012318.1035952-1-ye.guojin@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,61 +19,38 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cgel.zte@gmail.com
-Cc: dyoung@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Ye Guojin <ye.guojin@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>, rppt@linux.ibm.com
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
 
-On 10/20/21 at 01:23am, cgel.zte@gmail.com wrote:
-> From: Ye Guojin <ye.guojin@zte.com.cn>
-> 
-> 'linux/pgtable.h' included in 'crash_dump.h' is duplicated.
-> it's also included at line 8.
+From: Chen Zhou <chenzhou10@huawei.com>
 
-OK, in below commit the including order is adjusted, but the old one was
-not removed.
-commit 65fddcfca8ad("mm: reorder includes after introduction of linux/pgtable.h")
+The lower bounds of crash kernel reservation and crash kernel low
+reservation are different, use the consistent value CRASH_ALIGN.
 
-Could you rephrase the commit log? , the below sentences is for your reference.
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+---
+ arch/x86/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-============
-In crash_dump.h, header file linux/pgtable.h is included twice. This
-duplication was introduced in commit 65fddcfca8ad("mm: reorder includes
-after introduction of linux/pgtable.h") where the order of include is
-adjusted, while the old one was not removed.
-
-Clean it up here.
-============
-
-Thanks for fixing this. when you finish polishing the patch log, please
-feel free to add:
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-Thanks
-Baoquan
-
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
-> ---
->  include/linux/crash_dump.h | 2 --
->  1 file changed, 2 deletions(-)
-> 
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index 0c547d866f1e..b7b255b23b99 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -8,8 +8,6 @@
->  #include <linux/pgtable.h>
->  #include <uapi/linux/vmcore.h>
->  
-> -#include <linux/pgtable.h> /* for pgprot_t */
-> -
->  /* For IS_ENABLED(CONFIG_CRASH_DUMP) */
->  #define ELFCORE_ADDR_MAX	(-1ULL)
->  #define ELFCORE_ADDR_ERR	(-2ULL)
-> -- 
-> 2.25.1
-> 
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3d394127dc03d20..5bebd46c7ce81f5 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
+ 			return 0;
+ 	}
+ 
+-	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
++	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
++			CRASH_ADDR_LOW_MAX);
+ 	if (!low_base) {
+ 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+ 		       (unsigned long)(low_size >> 20));
+-- 
+2.25.1
 
 
 _______________________________________________
