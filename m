@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v15 09/10] of: fdt: Add memory for devices by DT property
- "linux, usable-memory-range"
-Date: Wed, 20 Oct 2021 10:03:16 +0800
-Message-ID: <20211020020317.1220-10-thunder.leizhen@huawei.com>
+Subject: [PATCH v15 08/10] x86,
+ arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
+Date: Wed, 20 Oct 2021 10:03:15 +0800
+Message-ID: <20211020020317.1220-9-thunder.leizhen@huawei.com>
 In-Reply-To: <20211020020317.1220-1-thunder.leizhen@huawei.com>
 References: <20211020020317.1220-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,112 +25,95 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-When reserving crashkernel in high memory, some low memory is reserved
-for crash dump kernel devices and never mapped by the first kernel.
-This memory range is advertised to crash dump kernel via DT property
-under /chosen,
-        linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+We make the functions reserve_crashkernel[_low]() as generic for
+x86 and arm64. Since reserve_crashkernel[_low]() implementations
+are quite similar on other architectures as well, we can have more
+users of this later.
 
-We reused the DT property linux,usable-memory-range and made the low
-memory region as the second range "BASE2 SIZE2", which keeps compatibility
-with existing user-space and older kdump kernels.
+So have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in arch/Kconfig and
+select this by X86 and ARM64.
 
-Crash dump kernel reads this property at boot time and call memblock_add()
-to add the low memory region after memblock_cap_memory_range() has been
-called.
-
+Suggested-by: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/of/fdt.c | 47 ++++++++++++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 11 deletions(-)
+ arch/Kconfig        | 3 +++
+ arch/arm64/Kconfig  | 1 +
+ arch/x86/Kconfig    | 2 ++
+ kernel/crash_core.c | 7 ++-----
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index 4546572af24bbf1..cf59c847b2c28a5 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -969,8 +969,16 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
- 		 elfcorehdr_addr, elfcorehdr_size);
- }
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 8df1c71026435df..d0585ce1b81b9cb 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -24,6 +24,9 @@ config KEXEC_ELF
+ config HAVE_IMA_KEXEC
+ 	bool
  
--static phys_addr_t cap_mem_addr;
--static phys_addr_t cap_mem_size;
-+/*
-+ * The main usage of linux,usable-memory-range is for crash dump kernel.
-+ * Originally, the number of usable-memory regions is one. Now there may
-+ * be two regions, low region and high region.
-+ * To make compatibility with existing user-space and older kdump, the low
-+ * region is always the last range of linux,usable-memory-range if exist.
-+ */
-+#define MAX_USABLE_RANGES		2
++config ARCH_WANT_RESERVE_CRASH_KERNEL
++	bool
 +
-+static struct memblock_region cap_mem_regions[MAX_USABLE_RANGES];
+ config SET_FS
+ 	bool
  
- /**
-  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
-@@ -979,20 +987,30 @@ static phys_addr_t cap_mem_size;
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index fee914c716aa262..0ddf06afe625584 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -94,6 +94,7 @@ config ARM64
+ 	select ARCH_WANT_FRAME_POINTERS
+ 	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+ 	select ARCH_WANT_LD_ORPHAN_WARN
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARM_AMBA
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index d9830e7e1060f7c..66eb5d088695c77 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -12,6 +12,7 @@ config X86_32
+ 	depends on !64BIT
+ 	# Options that are inherently 32-bit kernel only:
+ 	select ARCH_WANT_IPC_PARSE_VERSION
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select CLKSRC_I8253
+ 	select CLONE_BACKWARDS
+ 	select GENERIC_VDSO_32
+@@ -28,6 +29,7 @@ config X86_64
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select HAVE_ARCH_SOFT_DIRTY
+ 	select MODULES_USE_ELF_RELA
+ 	select NEED_DMA_MAP_STATE
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 4d81b9ff42db88b..4d5bf55ed71c253 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -321,9 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
+  * --------- Crashkernel reservation ------------------------------
   */
- static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
+ 
+-#ifdef CONFIG_KEXEC_CORE
+-
+-#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
++#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
+ static int __init reserve_crashkernel_low(void)
  {
--	const __be32 *prop;
--	int len;
-+	const __be32 *prop, *endp;
-+	int len, nr = 0;
-+	struct memblock_region *rgn = &cap_mem_regions[0];
- 
- 	pr_debug("Looking for usable-memory-range property... ");
- 
- 	prop = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
--	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+	if (!prop)
- 		return;
- 
--	cap_mem_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
--	cap_mem_size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+	endp = prop + (len / sizeof(__be32));
-+	while ((endp - prop) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		rgn->base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-+		rgn->size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+
-+		pr_debug("cap_mem_regions[%d]: base=%pa, size=%pa\n",
-+			 nr, &rgn->base, &rgn->size);
-+
-+		if (++nr >= MAX_USABLE_RANGES)
-+			break;
-+
-+		rgn++;
-+	}
- 
--	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
--		 &cap_mem_size);
+ #ifdef CONFIG_64BIT
+@@ -451,8 +449,7 @@ void __init reserve_crashkernel(void)
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end   = crash_base + crash_size - 1;
  }
+-#endif
+-#endif /* CONFIG_KEXEC_CORE */
++#endif /* CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL */
  
- #ifdef CONFIG_SERIAL_EARLYCON
-@@ -1265,7 +1283,8 @@ bool __init early_init_dt_verify(void *params)
- 
- void __init early_init_dt_scan_nodes(void)
- {
--	int rc = 0;
-+	int i, rc = 0;
-+	struct memblock_region *rgn = &cap_mem_regions[0];
- 
- 	/* Initialize {size,address}-cells info */
- 	of_scan_flat_dt(early_init_dt_scan_root, NULL);
-@@ -1279,7 +1298,13 @@ void __init early_init_dt_scan_nodes(void)
- 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
- 
- 	/* Handle linux,usable-memory-range property */
--	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
-+	memblock_cap_memory_range(rgn->base, rgn->size);
-+	for (i = 1; i < MAX_USABLE_RANGES; i++) {
-+		rgn++;
-+
-+		if (rgn->size)
-+			memblock_add(rgn->base, rgn->size);
-+	}
- }
- 
- bool __init early_init_dt_scan(void *params)
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len)
 -- 
 2.25.1
 
