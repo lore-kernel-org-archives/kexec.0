@@ -1,13 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Wed, 20 Oct 2021 12:11:44 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v2] arm: kdump: Add DT properties to crash dump kernel's
- DTB
-Message-ID: <20211020101144.GB19898@vergenet.net>
-References: <20211005124032.1249636-1-geert+renesas@glider.be>
+Received: from mail.kernel.org ([198.145.29.99])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1md8dE-0048Og-9g
+ for kexec@lists.infradead.org; Wed, 20 Oct 2021 10:15:37 +0000
+Date: Wed, 20 Oct 2021 12:15:31 +0200
+From: Simon Horman <horms@kernel.org>
+Subject: Re: [PATCH] crash_dump: fix boolreturn.cocci warning
+Message-ID: <20211020101531.GA22371@kernel.org>
+References: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211005124032.1249636-1-geert+renesas@glider.be>
+In-Reply-To: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,29 +23,22 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Lukasz Stelmach <l.stelmach@samsung.com>, Akashi Takahiro <takahiro.akashi@linaro.org>, kexec@lists.infradead.org, linux-renesas-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: cgel.zte@gmail.com
+Cc: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Changcheng Deng <deng.changcheng@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
 
-On Tue, Oct 05, 2021 at 02:40:32PM +0200, Geert Uytterhoeven wrote:
-> Pass the following properties to the crash dump kernel, to provide a
-> modern DT interface between kexec and the crash dump kernel:
+On Wed, Oct 20, 2021 at 08:39:05AM +0000, cgel.zte@gmail.com wrote:
+> From: Changcheng Deng <deng.changcheng@zte.com.cn>
 > 
->   - linux,elfcorehdr: ELF core header segment, similar to the
->     "elfcorehdr=" kernel parameter.
->   - linux,usable-memory-range: Usable memory reserved for the crash dump
->     kernel.
->     This makes the memory reservation explicit, so Linux no longer needs
->     to mask the program counter, and rely on the "mem=" kernel parameter
->     to obtain the start and size of usable memory.
+> ./include/linux/crash_dump.h: 119: 50-51: WARNING: return of 0/1 in
+> function 'is_kdump_kernel' with return type bool
 > 
-> For backwards compatibility, the "elfcorehdr=" and "mem=" kernel
-> parameters are still appended to the kernel command line.
+> Return statements in functions returning bool should use true/false
+> instead of 1/0.
 > 
-> Loosely based on the ARM64 version by Akashi Takahiro.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reported-by: Zeal Robot <zealci@zte.com.cn>
+> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
 
-Thanks Geert, applied.
+Reviewed-by: Simon Horman <horms@kernel.org>
 
 _______________________________________________
 kexec mailing list
