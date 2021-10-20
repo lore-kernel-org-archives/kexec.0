@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x22b.google.com ([2607:f8b0:4864:20::22b])
+Received: from mail-pl1-x62b.google.com ([2607:f8b0:4864:20::62b])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1md7VH-003vLS-Jq
- for kexec@lists.infradead.org; Wed, 20 Oct 2021 09:03:20 +0000
-Received: by mail-oi1-x22b.google.com with SMTP id o83so8849595oif.4
- for <kexec@lists.infradead.org>; Wed, 20 Oct 2021 02:03:17 -0700 (PDT)
+ id 1md7Z5-003wCS-8V
+ for kexec@lists.infradead.org; Wed, 20 Oct 2021 09:07:16 +0000
+Received: by mail-pl1-x62b.google.com with SMTP id v20so15661287plo.7
+ for <kexec@lists.infradead.org>; Wed, 20 Oct 2021 02:07:14 -0700 (PDT)
 From: cgel.zte@gmail.com
-Subject: [PATCH] crash_dump: fix boolreturn.cocci warning
-Date: Wed, 20 Oct 2021 08:39:05 +0000
-Message-Id: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
+Subject: [PATCH v2] crash_dump: remove duplicate include in crash_dump.h
+Date: Wed, 20 Oct 2021 09:06:59 +0000
+Message-Id: <20211020090659.1038877-1-ye.guojin@zte.com.cn>
+In-Reply-To: <20211020015357.GD27625@MiWiFi-R3L-srv>
+References: <20211020015357.GD27625@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,36 +24,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com
-Cc: bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Changcheng Deng <deng.changcheng@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
+To: bhe@redhat.com
+Cc: cgel.zte@gmail.com, dyoung@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, rppt@linux.ibm.com, vgoyal@redhat.com, ye.guojin@zte.com.cn, zealci@zte.com.cn
 
-From: Changcheng Deng <deng.changcheng@zte.com.cn>
+From: Ye Guojin <ye.guojin@zte.com.cn>
 
-./include/linux/crash_dump.h: 119: 50-51: WARNING: return of 0/1 in
-function 'is_kdump_kernel' with return type bool
+In crash_dump.h, header file <linux/pgtable.h> is included twice. This
+duplication was introduced in commit 65fddcfca8ad("mm: reorder includes
+after introduction of linux/pgtable.h") where the order of the header
+files is adjusted, while the old one was not removed.
 
-Return statements in functions returning bool should use true/false
-instead of 1/0.
+Clean it up here.
 
 Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Ye Guojin <ye.guojin@zte.com.cn>
 ---
- include/linux/crash_dump.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+v2:
+- update the commit log
+---
+ include/linux/crash_dump.h | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 0c547d866f1e..979c26176c1d 100644
+index 0c547d866f1e..b7b255b23b99 100644
 --- a/include/linux/crash_dump.h
 +++ b/include/linux/crash_dump.h
-@@ -116,7 +116,7 @@ extern void register_vmcore_cb(struct vmcore_cb *cb);
- extern void unregister_vmcore_cb(struct vmcore_cb *cb);
- 
- #else /* !CONFIG_CRASH_DUMP */
--static inline bool is_kdump_kernel(void) { return 0; }
-+static inline bool is_kdump_kernel(void) { return false; }
- #endif /* CONFIG_CRASH_DUMP */
- 
- /* Device Dump information to be filled by drivers */
+@@ -8,8 +8,6 @@
+ #include <linux/pgtable.h>
+ #include <uapi/linux/vmcore.h>
+
+-#include <linux/pgtable.h> /* for pgprot_t */
+-
+ /* For IS_ENABLED(CONFIG_CRASH_DUMP) */
+ #define ELFCORE_ADDR_MAX       (-1ULL)
+ #define ELFCORE_ADDR_ERR       (-2ULL)
 -- 
 2.25.1
 
