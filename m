@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.kernel.org ([198.145.29.99])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1md8dE-0048Og-9g
- for kexec@lists.infradead.org; Wed, 20 Oct 2021 10:15:37 +0000
-Date: Wed, 20 Oct 2021 12:15:31 +0200
-From: Simon Horman <horms@kernel.org>
-Subject: Re: [PATCH] crash_dump: fix boolreturn.cocci warning
-Message-ID: <20211020101531.GA22371@kernel.org>
-References: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1md8fe-0048bA-6F
+ for kexec@lists.infradead.org; Wed, 20 Oct 2021 10:18:07 +0000
+Received: from madeliefje.horms.nl (tulip.horms.nl [83.161.246.101])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 641AB25AED3
+ for <kexec@lists.infradead.org>; Wed, 20 Oct 2021 21:18:04 +1100 (AEDT)
+Date: Wed, 20 Oct 2021 12:18:02 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools v2.0.23 preparation
+Message-ID: <20211020101802.GC19898@vergenet.net>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,22 +24,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cgel.zte@gmail.com
-Cc: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Changcheng Deng <deng.changcheng@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
+To: kexec@lists.infradead.org
 
-On Wed, Oct 20, 2021 at 08:39:05AM +0000, cgel.zte@gmail.com wrote:
-> From: Changcheng Deng <deng.changcheng@zte.com.cn>
-> 
-> ./include/linux/crash_dump.h: 119: 50-51: WARNING: return of 0/1 in
-> function 'is_kdump_kernel' with return type bool
-> 
-> Return statements in functions returning bool should use true/false
-> instead of 1/0.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+Hi all,
 
-Reviewed-by: Simon Horman <horms@kernel.org>
+I am planning to release kexec-tools v2.0.23 in the next two weeks
+to roughly coincide with the release of the v5.15 kernel.
+
+I would like to ask interested parties to send any patches they would like
+included in v2.0.23 within one week so they can be considered for inclusion
+in an rc release.
+
+For reference the patches queued up since v2.0.22 are as follows.
+
+Thanks to everyone who has contributed to kexec-tools!
+
+5f8d632 arm: kdump: Add DT properties to crash dump kernel's DTB
+bb1c95c kexec-tools: multiboot2: Correct BASIC_MEMINFO memory units
+a4d49e8 Add some necessary free() calls
+bcee4f2 Add some necessary fclose() calls
+84ef6cb ppc64: Fix memory leak problem in zImage_ppc64_load()
+35dec3d i386: Remove unused local variable in get_kernel_page_offset()
+dbc151e multiboot2: Accept x86-64 images
+e388195 multiboot2: Avoid first 0x500 bytes
+1d02758 multiboot2: Use rel_min and rel_max for buffer destinations
+4f8d667 multiboot2: Correct MBI size calculation
+bfaebfb x86: Consolidate elf_x86_probe routines
+091f9e9 Refer FDT tokens with symbolic names
+61b8c79 arm64/crashdump-arm64: deduce the paddr of _text
+5e7ce27 kexec-tools: Remove duplicate definition of ramdisk
+a2ba3cd kexec-tools 2.0.21.git
 
 _______________________________________________
 kexec mailing list
