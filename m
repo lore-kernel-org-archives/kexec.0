@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v15 09/10] of: fdt: Add memory for devices by DT property
- "linux,usable-memory-range"
-References: <20211020020317.1220-1-thunder.leizhen@huawei.com>
- <20211020020317.1220-10-thunder.leizhen@huawei.com>
- <YXAlgdZ5q7CdBXw4@robh.at.kernel.org>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <f1d767a3-a616-adfa-454b-5980f8683892@huawei.com>
-Date: Thu, 21 Oct 2021 09:14:26 +0800
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mg40p-007kBS-1K
+ for kexec@lists.infradead.org; Thu, 28 Oct 2021 11:56:04 +0000
+Received: from momiji.horms.nl (82-95-191-104.ip.xs4all.nl [82.95.191.104])
+ by kirsty.vergenet.net (Postfix) with ESMTPA id 1213525B260
+ for <kexec@lists.infradead.org>; Thu, 28 Oct 2021 22:55:57 +1100 (AEDT)
+Date: Thu, 28 Oct 2021 13:55:53 +0200
+From: Simon Horman <horms@verge.net.au>
+Subject: [ANNOUNCE] kexec-tools 2.0.23-rc1
+Message-ID: <20211028115553.GA16371@vergenet.net>
 MIME-Version: 1.0
-In-Reply-To: <YXAlgdZ5q7CdBXw4@robh.at.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,150 +24,51 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Frank
- Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan
- Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>
+To: kexec@lists.infradead.org
+
+Hi all,
+
+I am happy to announce the release of kexec-tools 2.0.23-rc1.
+
+This is an incremental feature pre-release.
+
+So long as no serious problems arise I intend to release kexec-tools 2.0.23
+in a weeks time. Testing of 2.0.23-rc1 would be greatly appreciated.
+
+I do not have any outstanding changes for 2.0.23 at this time.
+And I would like to only accept bug fixes at this time and take
+features patches once 2.0.23 has been released.
+
+The pre-release can be downloaded from kernel.org:
+
+	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.23-rc1.tar.xz
+	https://kernel.org/pub/linux/utils/kernel/kexec/
+
+I have also tagged it in git:
+
+	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+
+Thanks to everyone who has contributed to kexec.
 
 
+For reference the changes since v2.0.22 are:
 
-On 2021/10/20 22:19, Rob Herring wrote:
-> On Wed, Oct 20, 2021 at 10:03:16AM +0800, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
->>
->> When reserving crashkernel in high memory, some low memory is reserved
->> for crash dump kernel devices and never mapped by the first kernel.
->> This memory range is advertised to crash dump kernel via DT property
->> under /chosen,
->>         linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>
->> We reused the DT property linux,usable-memory-range and made the low
->> memory region as the second range "BASE2 SIZE2", which keeps compatibility
->> with existing user-space and older kdump kernels.
->>
->> Crash dump kernel reads this property at boot time and call memblock_add()
->> to add the low memory region after memblock_cap_memory_range() has been
->> called.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  drivers/of/fdt.c | 47 ++++++++++++++++++++++++++++++++++++-----------
->>  1 file changed, 36 insertions(+), 11 deletions(-)
->>
->> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
->> index 4546572af24bbf1..cf59c847b2c28a5 100644
->> --- a/drivers/of/fdt.c
->> +++ b/drivers/of/fdt.c
->> @@ -969,8 +969,16 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
->>  		 elfcorehdr_addr, elfcorehdr_size);
->>  }
->>  
->> -static phys_addr_t cap_mem_addr;
->> -static phys_addr_t cap_mem_size;
->> +/*
->> + * The main usage of linux,usable-memory-range is for crash dump kernel.
->> + * Originally, the number of usable-memory regions is one. Now there may
->> + * be two regions, low region and high region.
->> + * To make compatibility with existing user-space and older kdump, the low
->> + * region is always the last range of linux,usable-memory-range if exist.
->> + */
->> +#define MAX_USABLE_RANGES		2
->> +
->> +static struct memblock_region cap_mem_regions[MAX_USABLE_RANGES];
->>  
->>  /**
->>   * early_init_dt_check_for_usable_mem_range - Decode usable memory range
->> @@ -979,20 +987,30 @@ static phys_addr_t cap_mem_size;
->>   */
->>  static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
->>  {
->> -	const __be32 *prop;
->> -	int len;
->> +	const __be32 *prop, *endp;
->> +	int len, nr = 0;
->> +	struct memblock_region *rgn = &cap_mem_regions[0];
->>  
->>  	pr_debug("Looking for usable-memory-range property... ");
->>  
->>  	prop = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
->> -	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
->> +	if (!prop)
->>  		return;
->>  
->> -	cap_mem_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
->> -	cap_mem_size = dt_mem_next_cell(dt_root_size_cells, &prop);
->> +	endp = prop + (len / sizeof(__be32));
->> +	while ((endp - prop) >= (dt_root_addr_cells + dt_root_size_cells)) {
->> +		rgn->base = dt_mem_next_cell(dt_root_addr_cells, &prop);
->> +		rgn->size = dt_mem_next_cell(dt_root_size_cells, &prop);
->> +
->> +		pr_debug("cap_mem_regions[%d]: base=%pa, size=%pa\n",
->> +			 nr, &rgn->base, &rgn->size);
->> +
->> +		if (++nr >= MAX_USABLE_RANGES)
->> +			break;
->> +
->> +		rgn++;
->> +	}
->>  
->> -	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
->> -		 &cap_mem_size);
->>  }
->>  
->>  #ifdef CONFIG_SERIAL_EARLYCON
->> @@ -1265,7 +1283,8 @@ bool __init early_init_dt_verify(void *params)
->>  
->>  void __init early_init_dt_scan_nodes(void)
->>  {
->> -	int rc = 0;
->> +	int i, rc = 0;
->> +	struct memblock_region *rgn = &cap_mem_regions[0];
->>  
->>  	/* Initialize {size,address}-cells info */
->>  	of_scan_flat_dt(early_init_dt_scan_root, NULL);
->> @@ -1279,7 +1298,13 @@ void __init early_init_dt_scan_nodes(void)
->>  	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
->>  
->>  	/* Handle linux,usable-memory-range property */
->> -	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
->> +	memblock_cap_memory_range(rgn->base, rgn->size);
->> +	for (i = 1; i < MAX_USABLE_RANGES; i++) {
->> +		rgn++;
-> 
-> Just use rgn[i].
-
-OK.
-
-> 
->> +
->> +		if (rgn->size)
-> 
-> This check can be in the 'for' conditions check.
-
-Yes, this node is added by kexec tool, it is impossible that
-the first range is zero and the second range is not zero.
-
-> 
->> +			memblock_add(rgn->base, rgn->size);
->> +	}
-> 
-> 
-> There's not really any point in doing all this in 2 steps. I'm 
-> assuming this needs to be handled after scanning the memory nodes, so 
-> can you refactor this moving early_init_dt_check_for_usable_mem_range 
-> out of early_init_dt_scan_chosen() and call it here. You'll have to get 
-> the offset for /chosen twice or save the offset.
-
-This's a good suggestion. I'll refactor it. Thanks.
-
-Zhen Lei
-
-> 
-> Rob
-> .
-> 
+41725a0 kexec-tools 2.0.23-rc1
+5f8d632 arm: kdump: Add DT properties to crash dump kernel's DTB
+bb1c95c kexec-tools: multiboot2: Correct BASIC_MEMINFO memory units
+a4d49e8 Add some necessary free() calls
+bcee4f2 Add some necessary fclose() calls
+84ef6cb ppc64: Fix memory leak problem in zImage_ppc64_load()
+35dec3d i386: Remove unused local variable in get_kernel_page_offset()
+dbc151e multiboot2: Accept x86-64 images
+e388195 multiboot2: Avoid first 0x500 bytes
+1d02758 multiboot2: Use rel_min and rel_max for buffer destinations
+4f8d667 multiboot2: Correct MBI size calculation
+bfaebfb x86: Consolidate elf_x86_probe routines
+091f9e9 Refer FDT tokens with symbolic names
+61b8c79 arm64/crashdump-arm64: deduce the paddr of _text
+5e7ce27 kexec-tools: Remove duplicate definition of ramdisk
+a2ba3cd kexec-tools 2.0.21.git
 
 _______________________________________________
 kexec mailing list
