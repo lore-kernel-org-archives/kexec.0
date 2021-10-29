@@ -1,17 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mg40p-007kBS-1K
- for kexec@lists.infradead.org; Thu, 28 Oct 2021 11:56:04 +0000
-Received: from momiji.horms.nl (82-95-191-104.ip.xs4all.nl [82.95.191.104])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 1213525B260
- for <kexec@lists.infradead.org>; Thu, 28 Oct 2021 22:55:57 +1100 (AEDT)
-Date: Thu, 28 Oct 2021 13:55:53 +0200
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.23-rc1
-Message-ID: <20211028115553.GA16371@vergenet.net>
-MIME-Version: 1.0
-Content-Disposition: inline
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mgMFt-00A1aE-DO
+ for kexec@lists.infradead.org; Fri, 29 Oct 2021 07:24:50 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH 0/3] x86/kexec: fix memory leak of elf header buffer
+Date: Fri, 29 Oct 2021 15:24:21 +0800
+Message-Id: <20211029072424.9109-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,55 +15,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: kexec@lists.infradead.org, dyoung@redhat.com, akpm@linux-foundation.org, Baoquan He <bhe@redhat.com>
 
-Hi all,
+The memory leak is reported by kmemleak detector, has been existing
+for very long time. It could casue much memory loss on large machine
+with huge memory hotplug which will trigger kdump kernel reloading
+many times, with kexec_file_load interface.
 
-I am happy to announce the release of kexec-tools 2.0.23-rc1.
+And in patch 2, 3, clean up is done to remove unnecessary elf header
+buffer freeing and unneeded arch_kexec_kernel_image_load().
 
-This is an incremental feature pre-release.
+Baoquan He (3):
+  x86/kexec: fix memory leak of elf header buffer
+  x86/kexec: remove incorrect elf header buffer freeing
+  kexec_file: clean up arch_kexec_kernel_image_load
 
-So long as no serious problems arise I intend to release kexec-tools 2.0.23
-in a weeks time. Testing of 2.0.23-rc1 would be greatly appreciated.
+ arch/x86/kernel/machine_kexec_64.c | 23 +++++++++--------------
+ include/linux/kexec.h              |  1 -
+ kernel/kexec_file.c                |  9 ++-------
+ 3 files changed, 11 insertions(+), 22 deletions(-)
 
-I do not have any outstanding changes for 2.0.23 at this time.
-And I would like to only accept bug fixes at this time and take
-features patches once 2.0.23 has been released.
+-- 
+2.17.2
 
-The pre-release can be downloaded from kernel.org:
-
-	https://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.23-rc1.tar.xz
-	https://kernel.org/pub/linux/utils/kernel/kexec/
-
-I have also tagged it in git:
-
-	https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
-
-Thanks to everyone who has contributed to kexec.
-
-
-For reference the changes since v2.0.22 are:
-
-41725a0 kexec-tools 2.0.23-rc1
-5f8d632 arm: kdump: Add DT properties to crash dump kernel's DTB
-bb1c95c kexec-tools: multiboot2: Correct BASIC_MEMINFO memory units
-a4d49e8 Add some necessary free() calls
-bcee4f2 Add some necessary fclose() calls
-84ef6cb ppc64: Fix memory leak problem in zImage_ppc64_load()
-35dec3d i386: Remove unused local variable in get_kernel_page_offset()
-dbc151e multiboot2: Accept x86-64 images
-e388195 multiboot2: Avoid first 0x500 bytes
-1d02758 multiboot2: Use rel_min and rel_max for buffer destinations
-4f8d667 multiboot2: Correct MBI size calculation
-bfaebfb x86: Consolidate elf_x86_probe routines
-091f9e9 Refer FDT tokens with symbolic names
-61b8c79 arm64/crashdump-arm64: deduce the paddr of _text
-5e7ce27 kexec-tools: Remove duplicate definition of ramdisk
-a2ba3cd kexec-tools 2.0.21.git
 
 _______________________________________________
 kexec mailing list
