@@ -1,17 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from usb-smtp-delivery-124.mimecast.com ([170.10.153.124]
- helo=us-smtp-delivery-124.mimecast.com)
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mgOER-00AUbZ-EM
- for kexec@lists.infradead.org; Fri, 29 Oct 2021 09:31:28 +0000
-Date: Fri, 29 Oct 2021 17:31:07 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] crash_dump: fix boolreturn.cocci warning
-Message-ID: <20211029093107.GK27625@MiWiFi-R3L-srv>
-References: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
+ id 1mgUp9-00BT7n-5b
+ for kexec@lists.infradead.org; Fri, 29 Oct 2021 16:33:49 +0000
+Date: Fri, 29 Oct 2021 18:31:32 +0200
+From: Philipp Rudo <prudo@redhat.com>
+Subject: Re: [PATCH] s390/kexec: fix memory leak of ipl report buffer
+Message-ID: <20211029183132.20839ad0@rhtmp>
+In-Reply-To: <20211029092635.14804-1-bhe@redhat.com>
+References: <20211029092635.14804-1-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211020083905.1037952-1-deng.changcheng@zte.com.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,45 +22,101 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: cgel.zte@gmail.com
-Cc: dyoung@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, akpm@linux-foundation.org, linux-kernel@vger.kernel.org, Changcheng Deng <deng.changcheng@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, dyoung@redhat.com, akpm@linux-foundation.org
 
-On 10/20/21 at 08:39am, cgel.zte@gmail.com wrote:
-> From: Changcheng Deng <deng.changcheng@zte.com.cn>
-> 
-> ./include/linux/crash_dump.h: 119: 50-51: WARNING: return of 0/1 in
-> function 'is_kdump_kernel' with return type bool
-> 
-> Return statements in functions returning bool should use true/false
-> instead of 1/0.
-> 
-> Reported-by: Zeal Robot <zealci@zte.com.cn>
-> Signed-off-by: Changcheng Deng <deng.changcheng@zte.com.cn>
+Hi Baoquan,
 
-Looks good to me, thanks.
+On Fri, 29 Oct 2021 17:26:35 +0800
+Baoquan He <bhe@redhat.com> wrote:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+> A memory leak is reported by kmemleak scanning:
+> 
+> unreferenced object 0x38000195000 (size 4096):
+>   comm "kexec", pid 8548, jiffies 4294953647 (age 32443.270s)
+>   hex dump (first 32 bytes):
+>     00 00 00 c8 20 00 00 00 00 00 00 c0 02 80 00 00  .... ...........
+>     40 40 40 40 40 40 40 40 00 00 00 00 00 00 00 00  @@@@@@@@........
+>   backtrace:
+>     [<0000000011a2f199>] __vmalloc_node_range+0xc0/0x140
+>     [<0000000081fa2752>] vzalloc+0x5a/0x70
+>     [<0000000063a4c92d>] ipl_report_finish+0x2c/0x180
+>     [<00000000553304da>] kexec_file_add_ipl_report+0xf4/0x150
+>     [<00000000862d033f>] kexec_file_add_components+0x124/0x160
+>     [<000000000d2717bb>] arch_kexec_kernel_image_load+0x62/0x90
+>     [<000000002e0373b6>] kimage_file_alloc_init+0x1aa/0x2e0
+>     [<0000000060f2d14f>] __do_sys_kexec_file_load+0x17c/0x2c0
+>     [<000000008c86fe5a>] __s390x_sys_kexec_file_load+0x40/0x50
+>     [<000000001fdb9dac>] __do_syscall+0x1bc/0x1f0
+>     [<000000003ee4258d>] system_call+0x78/0xa0
+> 
+> The ipl report buffer is allocated via vmalloc, while has no chance to free
+> if the kexe loading is unloaded. This will cause obvious memory leak
+> when kexec/kdump kernel is reloaded, manually, or triggered, e.g by
+> memory hotplug.
+> 
+> Here, add struct kimage_arch to s390 to pass out the ipl report buffer
+> address, and introduce arch dependent function
+> arch_kimage_file_post_load_cleanup() to free it when unloaded.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+
+other than a missing
+
+Fixes: 99feaa717e55 ("s390/kexec_file: Create ipl report and pass to
+next kernel")
+
+the patch looks good to me.
+
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
 
 > ---
->  include/linux/crash_dump.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+>  arch/s390/include/asm/kexec.h         | 7 +++++++
+>  arch/s390/kernel/machine_kexec_file.c | 9 +++++++++
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-> index 0c547d866f1e..979c26176c1d 100644
-> --- a/include/linux/crash_dump.h
-> +++ b/include/linux/crash_dump.h
-> @@ -116,7 +116,7 @@ extern void register_vmcore_cb(struct vmcore_cb *cb);
->  extern void unregister_vmcore_cb(struct vmcore_cb *cb);
+> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+> index ea398a05f643..9f16e99fb882 100644
+> --- a/arch/s390/include/asm/kexec.h
+> +++ b/arch/s390/include/asm/kexec.h
+> @@ -74,6 +74,13 @@ void *kexec_file_add_components(struct kimage *image,
+>  int arch_kexec_do_relocs(int r_type, void *loc, unsigned long val,
+>  			 unsigned long addr);
 >  
->  #else /* !CONFIG_CRASH_DUMP */
-> -static inline bool is_kdump_kernel(void) { return 0; }
-> +static inline bool is_kdump_kernel(void) { return false; }
->  #endif /* CONFIG_CRASH_DUMP */
+> +#define ARCH_HAS_KIMAGE_ARCH
+> +
+> +struct kimage_arch {
+> +	void *ipl_buf;
+> +};
+> +
+> +
+>  extern const struct kexec_file_ops s390_kexec_image_ops;
+>  extern const struct kexec_file_ops s390_kexec_elf_ops;
 >  
->  /* Device Dump information to be filled by drivers */
-> -- 
-> 2.25.1
-> 
+> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+> index f9e4baa64b67..584c48b631b2 100644
+> --- a/arch/s390/kernel/machine_kexec_file.c
+> +++ b/arch/s390/kernel/machine_kexec_file.c
+> @@ -202,6 +202,7 @@ static int kexec_file_add_ipl_report(struct kimage *image,
+>  	buf.buffer = ipl_report_finish(data->report);
+>  	buf.bufsz = data->report->size;
+>  	buf.memsz = buf.bufsz;
+> +	image->arch.ipl_buf = buf.buffer;
+>  
+>  	data->memsz += buf.memsz;
+>  
+> @@ -321,3 +322,11 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>  
+>  	return kexec_image_probe_default(image, buf, buf_len);
+>  }
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> +{
+> +	kvfree(image->arch.ipl_buf);
+> +	image->arch.ipl_buf = NULL;
+> +
+> +	return kexec_image_post_load_cleanup_default(image);
+> +}
 
 
 _______________________________________________
