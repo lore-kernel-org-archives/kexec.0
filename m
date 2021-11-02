@@ -1,14 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH 2/3] RISC-V: use memcpy for kexec_file mode
-References: <20211030031832.165457-1-liaochang1@huawei.com>
- <20211030031832.165457-3-liaochang1@huawei.com> <87ee83goju.fsf@disp2133>
- <CAJ+HfNjaBQrBtOuMvTccbb2K-Ua=T1eZk0+70hp0_aOAc83A-Q@mail.gmail.com>
- <87a6inbmrl.fsf@disp2133>
-From: "liaochang (A)" <liaochang1@huawei.com>
-Message-ID: <fb0d251a-8c94-0710-757a-7cd9bbdb008c@huawei.com>
-Date: Tue, 2 Nov 2021 11:52:11 +0800
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mhktM-000UcH-EW
+ for kexec@lists.infradead.org; Tue, 02 Nov 2021 03:55:21 +0000
+Received: by mail-pg1-f200.google.com with SMTP id
+ p20-20020a63fe14000000b002cc2a31eaf6so4044300pgh.6
+ for <kexec@lists.infradead.org>; Mon, 01 Nov 2021 20:55:16 -0700 (PDT)
+Date: Tue, 2 Nov 2021 11:52:27 +0800
+From: Coiby Xu <coxu@redhat.com>
+Subject: Re: [PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+Message-ID: <20211102035227.4c4kvqqunpwgcuup@Rk>
+References: <20211018083137.338757-1-coxu@redhat.com>
+ <20211018083137.338757-2-coxu@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <87a6inbmrl.fsf@disp2133>
+In-Reply-To: <20211018083137.338757-2-coxu@redhat.com>
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,54 +23,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Eric W. Biederman" <ebiederm@xmission.com>, =?UTF-8?B?QmrDtnJuIFTDtnBlbA==?= <bjorn.topel@gmail.com>
-Cc: Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Nick Kossifidis <mick@ics.forth.gr>, jszhang@kernel.org, guoren@linux.alibaba.com, Pekka Enberg <penberg@kernel.org>, sunnanyong@huawei.com, wangkefeng.wang@huawei.com, changbin.du@intel.com, Alex Ghiti <alex@ghiti.fr>, linux-riscv <linux-riscv@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
 
-CgrlnKggMjAyMS8xMS8yIDU6MTUsIEVyaWMgVy4gQmllZGVybWFuIOWGmemBkzoKPiBCasO2cm4g
-VMO2cGVsIDxiam9ybi50b3BlbEBnbWFpbC5jb20+IHdyaXRlczoKPiAKPj4gT24gU2F0LCAzMCBP
-Y3QgMjAyMSBhdCAwNTo1MSwgRXJpYyBXLiBCaWVkZXJtYW4gPGViaWVkZXJtQHhtaXNzaW9uLmNv
-bT4gd3JvdGU6Cj4+Pgo+Pj4gTGlhbyBDaGFuZyA8bGlhb2NoYW5nMUBodWF3ZWkuY29tPiB3cml0
-ZXM6Cj4+Pgo+Pj4+IFRoZSBwb2ludGVyIHRvIGJ1ZmZlciBsb2FkaW5nIGtlcm5lbCBiaW5hcmll
-cyBpcyBpbiBrZXJuZWwgc3BhY2UgZm9yCj4+Pj4ga2V4ZWNfZmlsIG1vZGUsIFdoZW4gY29weV9m
-cm9tX3VzZXIgY29waWVzIGRhdGEgZnJvbSBwb2ludGVyIHRvIGEgYmxvY2sKPj4+PiBvZiBtZW1v
-cnksIGl0IGNoZWNrZXMgdGhhdCB0aGUgcG9pbnRlciBpcyBpbiB0aGUgdXNlciBzcGFjZSByYW5n
-ZSwgb24KPj4+PiBSSVNDVi1WIHRoYXQgaXM6Cj4+Pj4KPj4+PiBzdGF0aWMgaW5saW5lIGJvb2wg
-X19hY2Nlc3Nfb2sodW5zaWduZWQgbG9uZyBhZGRyLCB1bnNpZ25lZCBsb25nIHNpemUpCj4+Pj4g
-ewo+Pj4+ICAgICAgIHJldHVybiBzaXplIDw9IFRBU0tfU0laRSAmJiBhZGRyIDw9IFRBU0tfU0la
-RSAtIHNpemU7Cj4+Pj4gfQo+Pj4+Cj4+Pj4gYW5kIFRBU0tfU0laRSBpcyAweDQwMDAwMDAwMDAg
-Zm9yIDY0LWJpdHMsIHdoaWNoIG5vdyBjYXVzZXMKPj4+PiBjb3B5X2Zyb21fdXNlciB0byByZWpl
-Y3QgdGhlIGFjY2VzcyBvZiB0aGUgZmllbGQgJ2J1Zicgb2Ygc3RydWN0Cj4+Pj4ga2V4ZWNfc2Vn
-bWVudCB0aGF0IGlzIGluIHJhbmdlIFtDT05GSUdfUEFHRV9PRkZTRVQgLSBWTUFMTE9DX1NJWkUs
-Cj4+Pj4gQ09ORklHX1BBR0VfT0ZGU0VUKSwgaXMgaW52YWxpZCB1c2VyIHNwYWNlIHBvaW50ZXIu
-Cj4+Pj4KPj4+PiBUaGlzIHBhdGNoIGZpeGVzIHRoaXMgaXNzdWUgYnkgc2tpcHBpbmcgYWNjZXNz
-X29rKCksIHVzZSBtZW1wY3koKSBpbnN0ZWFkLgo+Pj4KPj4+IEkgYW0gYSBiaXQgY29uZnVzZWQu
-Cj4+Pgo+Pj4gV2h5IGlzIG1hY2hpbmVfa2V4ZWMgZXZlciBjYWxsaW5nIGNvcHlfZnJvbV91c2Vy
-PyAgVGhhdCBzZWVtcyB3cm9uZyBpbgo+Pj4gYWxsIGNhc2VzLgo+Pj4KPj4KPj4gSXQncyBub3Qg
-bWFjaGluZV9rZXhlYyAtLSBpdCdzIG1hY2hpbmVfa2V4ZWNfcHJlcGFyZSwgd2hpY2ggcHVsbHMg
-b3V0Cj4+IHRoZSBGRFQgZnJvbSB0aGUgaW1hZ2UuIEl0IGxvb2tzIGxpa2UgTUlQUyBkb2VzIGl0
-IHNpbWlsYXJseS4KPj4KPj4gKENhdmVhdDogSSBtaWdodCBiZSBjb25mdXNlZCBhcyB3ZWxsISA7
-LSkpCj4gCj4gVHJ1ZSBpdCBpcyBtYWNoaW5lX2tleGVjX3ByZXBhcmUuICBCdXQgc3RpbGwuICBj
-b3B5X2Zyb21fdXNlciBkb2VzIG5vdAo+IGJlbG9uZyBpbiB0aGVyZS4gIEl0IGlzIG5vdCBwYXNz
-ZWQgYSB1c2Vyc3BhY2UgcG9pbnRlci4KPiAKPiBUaGlzIGxvb2tzIG1vcmUgbGlrZSBhIGNhc2Ug
-Zm9yIGttYXAgdG8gcmVhZCBhIHRhYmxlIGZyb20gdGhlIGZpcm13YXJlLgoKVGhhbmtzIGZvciBh
-bGwgeW91ciBjb21tZW50cy4KCkFzIEkga25vdywgdGhlc2UgYnVmZmVyIHBvaW50ZWQgYnkga2V4
-ZWNfc2VnbWVudCBvYmplY3QgaGVyZSBhcmUgYWxsb2NhdGVkIGluCnVzZXJzcGFjZSBhbmQgcGFz
-c2VkIGludG8ga2VybmVsIHZpYSBzeXNfa2V4ZWNfbG9hZCBzeXNjYWxsLCB0aGF0IGlzIHdoeSBp
-dAp1c2VzIGNvcHlfZnJvbV91c2VyIHRvIHJlYWQgZGF0YSBmcm9tIHRoZXNlIG1lbW9yeSwgcGVy
-aGFwcyBOaWNrIEtvc3NpZmlkcwpjb3VsZCBleHBsYWluIGl0IGZ1cnRoZXIuCgpEbyB5b3UgbWVh
-biBpdCBtYWtlcyBzZW5zZSB0byByZW1hcCB0aGUgcG9pbnRlciB0byBrZXJuZWwgc3BhY2UgdXNp
-bmcgQVBJIGxpa2UKdmlydF90b19wYWdlIGFuZCBrYW1wLHRoZW4gcmVhZCBkYXRhIHZpYSBtZW1j
-cHksIHNvIHRoYXQgbm8gbWF0dGVyIHdoaWNoIGFkZHJlc3MKc3BhY2UgdGhlIG9yaWdpbmFsIHBv
-aW50ZXIgYmVsb25ncyB0byx0aGUgYWJzdHJhY3Rpb24gd2lsbCBzbWVsbCBiZXR0ZXIuCgo+IAo+
-IEV2ZW4gaWYgaXQgc29tZW9uZSBtYWRlIHNlbnNlIGl0IGRlZmluaXRlbHkgZG9lcyBub3QgbWFr
-ZSBzZW5zZSB0bwo+IG1ha2UgaXQgYSBjb25kaXRpb25hbCBjb3B5X2Zyb21fdXNlci4gIFRoYXQg
-d2F5IGxpZXMgbWFkbmVzcy4KPiAKPiBUaGUgZW50aXJlIGNoYW5nZSBpcyBhIHNtZWxsIHRoYXQg
-dGhlcmUgaXMgc29tZSBhYnN0cmFjdGlvbiB0aGF0IGlzCj4gZ29pbmcgd3JvbmcsIGFuZCB0aGF0
-IGFic3RyYWN0aW9uIG5lZWRzIHRvIGdldCBmaXhlZC4KPiAKPiBFcmljCj4gCj4gLgo+IAoKLS0g
-CkJSLApMaWFvLCBDaGFuZwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+Hi Eric,
+
+Does this patch and "[PATCH v3 2/3] kexec, KEYS: make the code in
+bzImage64_verify_sig generic" look good you?
+
+On Mon, Oct 18, 2021 at 04:31:35PM +0800, Coiby Xu wrote:
+>commit 9ec4ecef0af7790551109283ca039a7c52de343c ("kexec_file,x86,
+>powerpc: factor out kexec_file_ops functions" allows implementing
+>the arch-specific implementation of kernel image verification
+>in kexec_file_ops->verify_sig. Currently, there is no arch-specific
+>implementation of arch_kexec_kernel_verify_sig. So clean it up.
+>
+>Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+>Signed-off-by: Coiby Xu <coxu@redhat.com>
+>---
+> include/linux/kexec.h |  4 ----
+> kernel/kexec_file.c   | 34 +++++++++++++---------------------
+> 2 files changed, 13 insertions(+), 25 deletions(-)
+>
+>diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>index 0c994ae37729..755fed183224 100644
+>--- a/include/linux/kexec.h
+>+++ b/include/linux/kexec.h
+>@@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+> 				 const Elf_Shdr *relsec,
+> 				 const Elf_Shdr *symtab);
+> int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>-#ifdef CONFIG_KEXEC_SIG
+>-int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>-				 unsigned long buf_len);
+>-#endif
+> int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>
+> extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>index 33400ff051a8..42b3ac34e4ee 100644
+>--- a/kernel/kexec_file.c
+>+++ b/kernel/kexec_file.c
+>@@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+> 	return kexec_image_post_load_cleanup_default(image);
+> }
+>
+>-#ifdef CONFIG_KEXEC_SIG
+>-static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>-					  unsigned long buf_len)
+>-{
+>-	if (!image->fops || !image->fops->verify_sig) {
+>-		pr_debug("kernel loader does not support signature verification.\n");
+>-		return -EKEYREJECTED;
+>-	}
+>-
+>-	return image->fops->verify_sig(buf, buf_len);
+>-}
+>-
+>-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>-					unsigned long buf_len)
+>-{
+>-	return kexec_image_verify_sig_default(image, buf, buf_len);
+>-}
+>-#endif
+>-
+> /*
+>  * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>  * @pi:		Purgatory to be relocated.
+>@@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+> }
+>
+> #ifdef CONFIG_KEXEC_SIG
+>+static int kexec_image_verify_sig(struct kimage *image, void *buf,
+>+		unsigned long buf_len)
+>+{
+>+	if (!image->fops || !image->fops->verify_sig) {
+>+		pr_debug("kernel loader does not support signature verification.\n");
+>+		return -EKEYREJECTED;
+>+	}
+>+
+>+	return image->fops->verify_sig(buf, buf_len);
+>+}
+>+
+> static int
+> kimage_validate_signature(struct kimage *image)
+> {
+> 	int ret;
+>
+>-	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>-					   image->kernel_buf_len);
+>+	ret = kexec_image_verify_sig(image, image->kernel_buf,
+>+			image->kernel_buf_len);
+> 	if (ret) {
+>
+> 		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+>-- 
+>2.31.1
+>
+
+-- 
+Best regards,
+Coiby
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
