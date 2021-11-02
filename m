@@ -1,20 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
+Received: from smtp-out1.suse.de ([195.135.220.28])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mhktM-000UcH-EW
- for kexec@lists.infradead.org; Tue, 02 Nov 2021 03:55:21 +0000
-Received: by mail-pg1-f200.google.com with SMTP id
- p20-20020a63fe14000000b002cc2a31eaf6so4044300pgh.6
- for <kexec@lists.infradead.org>; Mon, 01 Nov 2021 20:55:16 -0700 (PDT)
-Date: Tue, 2 Nov 2021 11:52:27 +0800
-From: Coiby Xu <coxu@redhat.com>
-Subject: Re: [PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
-Message-ID: <20211102035227.4c4kvqqunpwgcuup@Rk>
-References: <20211018083137.338757-1-coxu@redhat.com>
- <20211018083137.338757-2-coxu@redhat.com>
+ id 1mhwml-002Iui-Nm
+ for kexec@lists.infradead.org; Tue, 02 Nov 2021 16:37:21 +0000
+Date: Tue, 2 Nov 2021 17:37:13 +0100
+From: Joerg Roedel <jroedel@suse.de>
+Subject: Re: [PATCH v2 01/12] kexec: Allow architecture code to opt-out at
+ runtime
+Message-ID: <YYFpOfovSN2Af+ux@suse.de>
+References: <20210913155603.28383-1-joro@8bytes.org>
+ <20210913155603.28383-2-joro@8bytes.org> <YYARccITlowHABg1@zn.tnic>
+ <87pmrjbmy9.fsf@disp2133>
 MIME-Version: 1.0
-In-Reply-To: <20211018083137.338757-2-coxu@redhat.com>
 Content-Disposition: inline
+In-Reply-To: <87pmrjbmy9.fsf@disp2133>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,112 +22,41 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-arm-kernel@lists.infradead.org, Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>, kexec@lists.infradead.org, open list <linux-kernel@vger.kernel.org>
+Cc: Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kexec@lists.infradead.org, stable@vger.kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
 
-Hi Eric,
+On Mon, Nov 01, 2021 at 04:11:42PM -0500, Eric W. Biederman wrote:
+> I seem to remember the consensus when this was reviewed that it was
+> unnecessary and there is already support for doing something like
+> this at a more fine grained level so we don't need a new kexec hook.
 
-Does this patch and "[PATCH v3 2/3] kexec, KEYS: make the code in
-bzImage64_verify_sig generic" look good you?
+It was a discussion, no consenus :)
 
-On Mon, Oct 18, 2021 at 04:31:35PM +0800, Coiby Xu wrote:
->commit 9ec4ecef0af7790551109283ca039a7c52de343c ("kexec_file,x86,
->powerpc: factor out kexec_file_ops functions" allows implementing
->the arch-specific implementation of kernel image verification
->in kexec_file_ops->verify_sig. Currently, there is no arch-specific
->implementation of arch_kexec_kernel_verify_sig. So clean it up.
->
->Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
->Signed-off-by: Coiby Xu <coxu@redhat.com>
->---
-> include/linux/kexec.h |  4 ----
-> kernel/kexec_file.c   | 34 +++++++++++++---------------------
-> 2 files changed, 13 insertions(+), 25 deletions(-)
->
->diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->index 0c994ae37729..755fed183224 100644
->--- a/include/linux/kexec.h
->+++ b/include/linux/kexec.h
->@@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
-> 				 const Elf_Shdr *relsec,
-> 				 const Elf_Shdr *symtab);
-> int arch_kimage_file_post_load_cleanup(struct kimage *image);
->-#ifdef CONFIG_KEXEC_SIG
->-int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->-				 unsigned long buf_len);
->-#endif
-> int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->
-> extern int kexec_add_buffer(struct kexec_buf *kbuf);
->diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->index 33400ff051a8..42b3ac34e4ee 100644
->--- a/kernel/kexec_file.c
->+++ b/kernel/kexec_file.c
->@@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
-> 	return kexec_image_post_load_cleanup_default(image);
-> }
->
->-#ifdef CONFIG_KEXEC_SIG
->-static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
->-					  unsigned long buf_len)
->-{
->-	if (!image->fops || !image->fops->verify_sig) {
->-		pr_debug("kernel loader does not support signature verification.\n");
->-		return -EKEYREJECTED;
->-	}
->-
->-	return image->fops->verify_sig(buf, buf_len);
->-}
->-
->-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->-					unsigned long buf_len)
->-{
->-	return kexec_image_verify_sig_default(image, buf, buf_len);
->-}
->-#endif
->-
-> /*
->  * arch_kexec_apply_relocations_add - apply relocations of type RELA
->  * @pi:		Purgatory to be relocated.
->@@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
-> }
->
-> #ifdef CONFIG_KEXEC_SIG
->+static int kexec_image_verify_sig(struct kimage *image, void *buf,
->+		unsigned long buf_len)
->+{
->+	if (!image->fops || !image->fops->verify_sig) {
->+		pr_debug("kernel loader does not support signature verification.\n");
->+		return -EKEYREJECTED;
->+	}
->+
->+	return image->fops->verify_sig(buf, buf_len);
->+}
->+
-> static int
-> kimage_validate_signature(struct kimage *image)
-> {
-> 	int ret;
->
->-	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
->-					   image->kernel_buf_len);
->+	ret = kexec_image_verify_sig(image, image->kernel_buf,
->+			image->kernel_buf_len);
-> 	if (ret) {
->
-> 		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
->-- 
->2.31.1
->
+I still think it is better to solve this in generic code for everybody
+to re-use than with an hack in the architecture hooks.
 
--- 
-Best regards,
-Coiby
+More and more platforms which enable confidential computing features
+may need this hook in the future.
 
+Regards,
+
+-- =
+
+J=F6rg R=F6del
+jroedel@suse.de
+
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5
+90409 N=FCrnberg
+Germany
+ =
+
+(HRB 36809, AG N=FCrnberg)
+Gesch=E4ftsf=FChrer: Ivo Totev
 
 _______________________________________________
 kexec mailing list
