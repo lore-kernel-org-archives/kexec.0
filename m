@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from out02.mta.xmission.com ([166.70.13.232])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mhyM4-002erH-QC
- for kexec@lists.infradead.org; Tue, 02 Nov 2021 18:17:54 +0000
-From: ebiederm@xmission.com (Eric W. Biederman)
+ id 1miHEe-005R7d-0n
+ for kexec@lists.infradead.org; Wed, 03 Nov 2021 14:27:29 +0000
+Date: Wed, 3 Nov 2021 15:27:23 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 03/12] x86/sev: Save and print negotiated GHCB
+ protocol version
+Message-ID: <YYKcS2OIzAV+MTzr@zn.tnic>
 References: <20210913155603.28383-1-joro@8bytes.org>
- <20210913155603.28383-2-joro@8bytes.org> <YYARccITlowHABg1@zn.tnic>
- <87pmrjbmy9.fsf@disp2133> <YYFupTJjUljpuZgL@suse.de>
-Date: Tue, 02 Nov 2021 13:17:26 -0500
-In-Reply-To: <YYFupTJjUljpuZgL@suse.de> (Joerg Roedel's message of "Tue, 2 Nov
- 2021 18:00:21 +0100")
-Message-ID: <87k0hq777t.fsf@disp2133>
+ <20210913155603.28383-4-joro@8bytes.org>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2 01/12] kexec: Allow architecture code to opt-out at
- runtime
+Content-Disposition: inline
+In-Reply-To: <20210913155603.28383-4-joro@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,62 +25,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <jroedel@suse.de>
-Cc: Borislav Petkov <bp@alien8.de>, Joerg Roedel <joro@8bytes.org>, x86@kernel.org, kexec@lists.infradead.org, stable@vger.kernel.org, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
 
-Joerg Roedel <jroedel@suse.de> writes:
+On Mon, Sep 13, 2021 at 05:55:54PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Save the results of the GHCB protocol negotiation into a data structure
+> and print information about versions supported and used to the kernel
+> log.
 
-> Hi again,
->
-> On Mon, Nov 01, 2021 at 04:11:42PM -0500, Eric W. Biederman wrote:
->> I seem to remember the consensus when this was reviewed that it was
->> unnecessary and there is already support for doing something like
->> this at a more fine grained level so we don't need a new kexec hook.
->
-> Forgot to state to problem again which these patches solve:
->
-> Currently a Linux kernel running as an SEV-ES guest has no way to
-> successfully kexec into a new kernel. The normal SIPI sequence to reset
-> the non-boot VCPUs does not work in SEV-ES guests and special code is
-> needed in Linux to safely hand over the VCPUs from one kernel to the
-> next. What happens currently is that the kexec'ed kernel will just hang.
->
-> The code which implements the VCPU hand-over is also included in this
-> patch-set, but it requires a certain level of Hypervisor support which
-> is not available everywhere.
->
-> To make it clear to the user that kexec will not work in their
-> environment, it is best to disable the respected syscalls. This is what
-> the hook is needed for.
+Which is useful for?
 
-Note this is environmental.  This is the equivalent of a driver for a
-device without some feature.
+> +/*
+> + * struct sev_ghcb_protocol_info - Used to return GHCB protocol
+> + *				   negotiation details.
+> + *
+> + * @hv_proto_min:	Minimum GHCB protocol version supported by Hypervisor
+> + * @hv_proto_max:	Maximum GHCB protocol version supported by Hypervisor
+> + * @vm_proto:		Protocol version the VM (this kernel) will use
+> + */
+> +struct sev_ghcb_protocol_info {
 
-The kernel already has machine_kexec_prepare, which is perfectly capable
-of detecting this is a problem and causing kexec_load to fail.  Which
-is all that is required.
+Too long a name - ghcb_info is perfectly fine.
 
-We don't need a new hook and a new code path to test for one
-architecture.
+-- 
+Regards/Gruss,
+    Boris.
 
-So when we can reliably cause the system call to fail with a specific
-error code I don't think it makes sense to make clutter up generic code
-because of one architecture's design mistakes.
-
-
-My honest preference would be to go farther and have a
-firmware/hypervisor/platform independent rendezvous for the cpus so we
-don't have to worry about what bugs the code under has implemented for
-this special case.  Because frankly there when there are layers of
-software if a bug can slip through it always seems to and causes
-problems.
-
-
-But definitely there is no reason to add another generic hook when the
-existing hook is quite good enough.
-
-Eric
-
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
