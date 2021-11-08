@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mieLQ-009Ck7-5T
- for kexec@lists.infradead.org; Thu, 04 Nov 2021 15:08:01 +0000
-Received: from madeliefje.horms.nl (ip-80-113-23-202.ip.prioritytelecom.net
- [80.113.23.202])
- by kirsty.vergenet.net (Postfix) with ESMTPA id 8142525AE8A
- for <kexec@lists.infradead.org>; Fri,  5 Nov 2021 02:07:48 +1100 (AEDT)
-Date: Thu, 4 Nov 2021 16:07:46 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: [ANNOUNCE] kexec-tools 2.0.23
-Message-ID: <20211104150746.GA2452@vergenet.net>
+Received: from mail-eopbgr1410048.outbound.protection.outlook.com
+ ([40.107.141.48] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mjte3-00FG5h-P1
+ for kexec@lists.infradead.org; Mon, 08 Nov 2021 01:40:25 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: [ANNOUNCE] makedumpfile 1.7.0
+Date: Mon, 8 Nov 2021 01:40:13 +0000
+Message-ID: <TYYPR01MB67777664799956E4E3CCF7C7DD919@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,45 +23,69 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
 
-Hi all,
+Hi,
 
-I am happy to announce the release of kexec-tools 2.0.22.
+I'm pleased to announce the release of makedumpfile 1.7.0.
+Thank you everyone for your help to maintain the tool.
 
-This is a feature release coinciding with the release of v5.12
-of the Linux Kernel.
+Download:
+The latest makedumpfile can be downloaded from the following URL.
+  https://github.com/makedumpfile/makedumpfile/releases
 
-This release can be downloaded from kernel.org:
+New features:
+- Zstandard (zstd) compression support
+- New -L option to limit output file size
+- Support of kernels up to v5.15 (x86_64)
 
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.23.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
+Special thanks to Philipp Rudo, who has been working on hardening
+makedumpfile.  This release contains a part of the work, such as
+buffer overflow fix, removal of strcpy() and etc.  We will continue
+to do this also for the next release.
+Note that due to some reasons the work has been done internally,
+please check out the commits if you have interest.
 
-It is also tagged it in git:
+Commits since v1.6.9:
+06ef8e2 [v1.7.0] Update version (Kazuhito Hagio)
+4541b18 [PATCH] Support newer kernels up to v5.15 (Kazuhito Hagio)
+a32da03 [PATCH 14/14] fix type mismatch in parse_line() (Philipp Rudo)
+d155b76 [PATCH 13/14] fix out of range comparison in count_bits() (Philipp Rudo)
+247afd6 [PATCH 12/14] fix potential dereference of NULL in is_cyclic_region() (Philipp Rudo)
+2651d57 [PATCH 11/14] fix memory leak in init_xen_crash_info() (Philipp Rudo)
+4577898 [PATCH 10/14] fix compiler warning in ordinal() (Philipp Rudo)
+35e31db [PATCH 09/14] remove use of strcpy() in __load_module_symbol() (Philipp Rudo)
+faea305 [PATCH 08/14] remove use of strcpy() in strip_beginning_whitespace() (Philipp Rudo)
+cc11fcd [PATCH 07/14] remove use of strcpy() in eta_to_human_short() (Philipp Rudo)
+a854064 [PATCH 06/14] remove use of strcpy() in open_dump_bitmap() (Philipp Rudo)
+6b69167 [PATCH 05/14] make sure sc.sc_buf is initalized (Philipp Rudo)
+d813c3d [PATCH 04/14] fix buffer overflow in init_save_control() (Philipp Rudo)
+38c1428 [PATCH 03/14] fix buffer overflow in DumpInfo in read_vmcoreinfo_basic_info() (Philipp Rudo)
+d5c95fc [PATCH 02/14] fix buffer overflow on stack in copy_vmcoreinfo() (Philipp Rudo)
+4ce9d2c [PATCH 01/14] Makefile: add DEBUG option (Philipp Rudo)
+afd0a6d [PATCH] Add Zstandard compression support (Tao Liu)
+bccc39c [PATCH v2] support --partial-dmesg on 5.10+ kernels (Ivan Delalande)
+5684d4c [PATCH 2/2] Fix --dry-run for incomplete dumps (Philipp Rudo)
+6e53b9d [PATCH 1/2] Fix bad file descriptor error when using --dry-run (Philipp Rudo)
+efef023 [PATCH] Cleanup: Remove verbose names and code in calculate_log_buf_len() (Kazuhito Hagio)
+f0cfa86 [PATCH v2 3/3] Add -L option to limit output file size (Benjamin Poirier)
+2f5697e [PATCH v2 2/3] Make --dump-dmesg option use write_and_check_space() (Benjamin Poirier)
+047b921 [PATCH v2 1/3] Fix off-by-one error when checking cache_size (Benjamin Poirier)
+9df519d [PATCH] arm: fix page_offset determination (Grzegorz Jaszczyk)
+9a6f589 [PATCH] check for invalid physical address of /proc/kcore when making ELF dumpfile (Tao Liu)
+38d921a [PATCH] check for invalid physical address of /proc/kcore when finding max_paddr (Coiby Xu)
+6464568 [PATCH] Increase SECTION_MAP_LAST_BIT to 5 (Kazuhito Hagio)
+0bb2f15 [PATCH] Mark start of 1.7.0 development phase with version 1.6.9++ (Kazuhito Hagio)
 
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+Description of makedumpfile:
+The makedumpfile is a tool for creating a dumpfile from /proc/vmcore
+with filtering out unnecessary pages for analysis and compressing the
+remaining pages, in order to shorten the size of the dumpfile and the
+time of creating it.
+https://github.com/makedumpfile/makedumpfile
 
-Thanks to everyone who has contributed to kexec!
-
-Commits since v2.0.22:
-
-91ff1e7 kexec-tools 2.0.23
-41725a0 kexec-tools 2.0.23-rc1
-5f8d632 arm: kdump: Add DT properties to crash dump kernel's DTB
-bb1c95c kexec-tools: multiboot2: Correct BASIC_MEMINFO memory units
-a4d49e8 Add some necessary free() calls
-bcee4f2 Add some necessary fclose() calls
-84ef6cb ppc64: Fix memory leak problem in zImage_ppc64_load()
-35dec3d i386: Remove unused local variable in get_kernel_page_offset()
-dbc151e multiboot2: Accept x86-64 images
-e388195 multiboot2: Avoid first 0x500 bytes
-1d02758 multiboot2: Use rel_min and rel_max for buffer destinations
-4f8d667 multiboot2: Correct MBI size calculation
-bfaebfb x86: Consolidate elf_x86_probe routines
-091f9e9 Refer FDT tokens with symbolic names
-61b8c79 arm64/crashdump-arm64: deduce the paddr of _text
-5e7ce27 kexec-tools: Remove duplicate definition of ramdisk
-a2ba3cd kexec-tools 2.0.21.git
+Thanks,
+Kazu
 
 _______________________________________________
 kexec mailing list
