@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-eopbgr1410048.outbound.protection.outlook.com
- ([40.107.141.48] helo=JPN01-OS2-obe.outbound.protection.outlook.com)
+Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mjte3-00FG5h-P1
- for kexec@lists.infradead.org; Mon, 08 Nov 2021 01:40:25 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: [ANNOUNCE] makedumpfile 1.7.0
-Date: Mon, 8 Nov 2021 01:40:13 +0000
-Message-ID: <TYYPR01MB67777664799956E4E3CCF7C7DD919@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-Content-Language: ja-JP
+ id 1mk99w-00H8oX-JI
+ for kexec@lists.infradead.org; Mon, 08 Nov 2021 18:14:22 +0000
+Date: Mon, 8 Nov 2021 19:14:12 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v2 06/12] x86/sev: Cache AP Jump Table Address
+Message-ID: <YYlo9IhvDNr2FvK4@zn.tnic>
+References: <20210913155603.28383-1-joro@8bytes.org>
+ <20210913155603.28383-7-joro@8bytes.org>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20210913155603.28383-7-joro@8bytes.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,69 +24,43 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+To: Joerg Roedel <joro@8bytes.org>
+Cc: x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
 
-Hi,
+On Mon, Sep 13, 2021 at 05:55:57PM +0200, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Store the physical address of the AP Jump Table in kernel memory so
+> that it does not need to be fetched from the Hypervisor again.
+> 
+> Signed-off-by: Joerg Roedel <jroedel@suse.de>
+> ---
+>  arch/x86/kernel/sev.c | 26 ++++++++++++++------------
+>  1 file changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
+> index 5d3422e8b25e..eedba56b6bac 100644
+> --- a/arch/x86/kernel/sev.c
+> +++ b/arch/x86/kernel/sev.c
+> @@ -42,6 +42,9 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
+>   */
+>  static struct ghcb __initdata *boot_ghcb;
+>  
+> +/* Cached AP Jump Table Address */
+> +static phys_addr_t sev_es_jump_table_pa;
 
-I'm pleased to announce the release of makedumpfile 1.7.0.
-Thank you everyone for your help to maintain the tool.
+This is static, so "jump_table_pa" should be enough.
 
-Download:
-The latest makedumpfile can be downloaded from the following URL.
-  https://github.com/makedumpfile/makedumpfile/releases
+Also, to the prefixes, everything which is not SEV-ES only, should be
+simply prefixed with "sev_" if externally visible.
 
-New features:
-- Zstandard (zstd) compression support
-- New -L option to limit output file size
-- Support of kernels up to v5.15 (x86_64)
+Thx.
 
-Special thanks to Philipp Rudo, who has been working on hardening
-makedumpfile.  This release contains a part of the work, such as
-buffer overflow fix, removal of strcpy() and etc.  We will continue
-to do this also for the next release.
-Note that due to some reasons the work has been done internally,
-please check out the commits if you have interest.
+-- 
+Regards/Gruss,
+    Boris.
 
-Commits since v1.6.9:
-06ef8e2 [v1.7.0] Update version (Kazuhito Hagio)
-4541b18 [PATCH] Support newer kernels up to v5.15 (Kazuhito Hagio)
-a32da03 [PATCH 14/14] fix type mismatch in parse_line() (Philipp Rudo)
-d155b76 [PATCH 13/14] fix out of range comparison in count_bits() (Philipp Rudo)
-247afd6 [PATCH 12/14] fix potential dereference of NULL in is_cyclic_region() (Philipp Rudo)
-2651d57 [PATCH 11/14] fix memory leak in init_xen_crash_info() (Philipp Rudo)
-4577898 [PATCH 10/14] fix compiler warning in ordinal() (Philipp Rudo)
-35e31db [PATCH 09/14] remove use of strcpy() in __load_module_symbol() (Philipp Rudo)
-faea305 [PATCH 08/14] remove use of strcpy() in strip_beginning_whitespace() (Philipp Rudo)
-cc11fcd [PATCH 07/14] remove use of strcpy() in eta_to_human_short() (Philipp Rudo)
-a854064 [PATCH 06/14] remove use of strcpy() in open_dump_bitmap() (Philipp Rudo)
-6b69167 [PATCH 05/14] make sure sc.sc_buf is initalized (Philipp Rudo)
-d813c3d [PATCH 04/14] fix buffer overflow in init_save_control() (Philipp Rudo)
-38c1428 [PATCH 03/14] fix buffer overflow in DumpInfo in read_vmcoreinfo_basic_info() (Philipp Rudo)
-d5c95fc [PATCH 02/14] fix buffer overflow on stack in copy_vmcoreinfo() (Philipp Rudo)
-4ce9d2c [PATCH 01/14] Makefile: add DEBUG option (Philipp Rudo)
-afd0a6d [PATCH] Add Zstandard compression support (Tao Liu)
-bccc39c [PATCH v2] support --partial-dmesg on 5.10+ kernels (Ivan Delalande)
-5684d4c [PATCH 2/2] Fix --dry-run for incomplete dumps (Philipp Rudo)
-6e53b9d [PATCH 1/2] Fix bad file descriptor error when using --dry-run (Philipp Rudo)
-efef023 [PATCH] Cleanup: Remove verbose names and code in calculate_log_buf_len() (Kazuhito Hagio)
-f0cfa86 [PATCH v2 3/3] Add -L option to limit output file size (Benjamin Poirier)
-2f5697e [PATCH v2 2/3] Make --dump-dmesg option use write_and_check_space() (Benjamin Poirier)
-047b921 [PATCH v2 1/3] Fix off-by-one error when checking cache_size (Benjamin Poirier)
-9df519d [PATCH] arm: fix page_offset determination (Grzegorz Jaszczyk)
-9a6f589 [PATCH] check for invalid physical address of /proc/kcore when making ELF dumpfile (Tao Liu)
-38d921a [PATCH] check for invalid physical address of /proc/kcore when finding max_paddr (Coiby Xu)
-6464568 [PATCH] Increase SECTION_MAP_LAST_BIT to 5 (Kazuhito Hagio)
-0bb2f15 [PATCH] Mark start of 1.7.0 development phase with version 1.6.9++ (Kazuhito Hagio)
-
-Description of makedumpfile:
-The makedumpfile is a tool for creating a dumpfile from /proc/vmcore
-with filtering out unnecessary pages for analysis and compressing the
-remaining pages, in order to shorten the size of the dumpfile and the
-time of creating it.
-https://github.com/makedumpfile/makedumpfile
-
-Thanks,
-Kazu
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
