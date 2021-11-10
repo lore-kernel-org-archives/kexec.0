@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([2a01:4f8:190:11c2::b:1457])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mk99w-00H8oX-JI
- for kexec@lists.infradead.org; Mon, 08 Nov 2021 18:14:22 +0000
-Date: Mon, 8 Nov 2021 19:14:12 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v2 06/12] x86/sev: Cache AP Jump Table Address
-Message-ID: <YYlo9IhvDNr2FvK4@zn.tnic>
-References: <20210913155603.28383-1-joro@8bytes.org>
- <20210913155603.28383-7-joro@8bytes.org>
+ id 1mkpN3-005iww-6o
+ for kexec@lists.infradead.org; Wed, 10 Nov 2021 15:18:43 +0000
+Date: Wed, 10 Nov 2021 16:18:26 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH] s390/kexec: fix memory leak of ipl report buffer
+Message-ID: <YYviwi3PVD11xcCs@osiris>
+References: <20211029092635.14804-1-bhe@redhat.com>
+ <20211029183132.20839ad0@rhtmp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20210913155603.28383-7-joro@8bytes.org>
+In-Reply-To: <20211029183132.20839ad0@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,43 +25,57 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: x86@kernel.org, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Joerg Roedel <jroedel@suse.de>, hpa@zytor.com, Andy Lutomirski <luto@kernel.org>, Dave Hansen <dave.hansen@linux.intel.com>, Peter Zijlstra <peterz@infradead.org>, Jiri Slaby <jslaby@suse.cz>, Dan Williams <dan.j.williams@intel.com>, Tom Lendacky <thomas.lendacky@amd.com>, Juergen Gross <jgross@suse.com>, Kees Cook <keescook@chromium.org>, David Rientjes <rientjes@google.com>, Cfir Cohen <cfir@google.com>, Erdem Aktas <erdemaktas@google.com>, Masami Hiramatsu <mhiramat@kernel.org>, Mike Stunes <mstunes@vmware.com>, Sean Christopherson <seanjc@google.com>, Martin Radev <martin.b.radev@gmail.com>, Arvind Sankar <nivedita@alum.mit.edu>, linux-coco@lists.linux.dev, linux-kernel@vger.kernel.org, kvm@vger.kernel.org, virtualization@lists.linux-foundation.org
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, dyoung@redhat.com, akpm@linux-foundation.org
 
-On Mon, Sep 13, 2021 at 05:55:57PM +0200, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
+On Fri, Oct 29, 2021 at 06:31:32PM +0200, Philipp Rudo wrote:
+> Hi Baoquan,
 > 
-> Store the physical address of the AP Jump Table in kernel memory so
-> that it does not need to be fetched from the Hypervisor again.
+> On Fri, 29 Oct 2021 17:26:35 +0800
+> Baoquan He <bhe@redhat.com> wrote:
 > 
-> Signed-off-by: Joerg Roedel <jroedel@suse.de>
-> ---
->  arch/x86/kernel/sev.c | 26 ++++++++++++++------------
->  1 file changed, 14 insertions(+), 12 deletions(-)
+> > A memory leak is reported by kmemleak scanning:
+...
+> > The ipl report buffer is allocated via vmalloc, while has no chance to free
+> > if the kexe loading is unloaded. This will cause obvious memory leak
+> > when kexec/kdump kernel is reloaded, manually, or triggered, e.g by
+> > memory hotplug.
+> > 
+> > Here, add struct kimage_arch to s390 to pass out the ipl report buffer
+> > address, and introduce arch dependent function
+> > arch_kimage_file_post_load_cleanup() to free it when unloaded.
+> > 
+> > Signed-off-by: Baoquan He <bhe@redhat.com>
 > 
-> diff --git a/arch/x86/kernel/sev.c b/arch/x86/kernel/sev.c
-> index 5d3422e8b25e..eedba56b6bac 100644
-> --- a/arch/x86/kernel/sev.c
-> +++ b/arch/x86/kernel/sev.c
-> @@ -42,6 +42,9 @@ static struct ghcb boot_ghcb_page __bss_decrypted __aligned(PAGE_SIZE);
->   */
->  static struct ghcb __initdata *boot_ghcb;
->  
-> +/* Cached AP Jump Table Address */
-> +static phys_addr_t sev_es_jump_table_pa;
+> other than a missing
+> 
+> Fixes: 99feaa717e55 ("s390/kexec_file: Create ipl report and pass to
+> next kernel")
+> 
+> the patch looks good to me.
+> 
+> Reviewed-by: Philipp Rudo <prudo@redhat.com>
+...
+> >  	buf.buffer = ipl_report_finish(data->report);
+> >  	buf.bufsz = data->report->size;
+> >  	buf.memsz = buf.bufsz;
+> > +	image->arch.ipl_buf = buf.buffer;
 
-This is static, so "jump_table_pa" should be enough.
+This seems (still) to be incorrect: ipl_report_finish() may return
+-ENOMEN, but there is no error checking anywhere, as far as I can
+tell, which would make this:
 
-Also, to the prefixes, everything which is not SEV-ES only, should be
-simply prefixed with "sev_" if externally visible.
+> > +int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> > +{
+> > +	kvfree(image->arch.ipl_buf);
+> > +	image->arch.ipl_buf = NULL;
+> > +
+> > +	return kexec_image_post_load_cleanup_default(image);
+> > +}
 
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+most likely not do what we want. That is: if this code is reached at
+all in such a case. I'll check and might add a patch before this to
+fix this also.
 
 _______________________________________________
 kexec mailing list
