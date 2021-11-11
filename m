@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([216.205.24.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mkxri-006ffA-9F
- for kexec@lists.infradead.org; Thu, 11 Nov 2021 00:22:55 +0000
-Date: Thu, 11 Nov 2021 08:22:33 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] s390/kexec: fix memory leak of ipl report buffer
-Message-ID: <20211111002233.GA10944@MiWiFi-R3L-srv>
-References: <20211029092635.14804-1-bhe@redhat.com>
- <20211029183132.20839ad0@rhtmp> <YYviwi3PVD11xcCs@osiris>
+ id 1mlFaS-008ccj-K4
+ for kexec@lists.infradead.org; Thu, 11 Nov 2021 19:18:18 +0000
+From: David Hildenbrand <david@redhat.com>
+Subject: [PATCH v1] proc/vmcore: fix clearing user buffer by properly using
+ clear_user()
+Date: Thu, 11 Nov 2021 20:18:00 +0100
+Message-Id: <20211111191800.21281-1-david@redhat.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YYviwi3PVD11xcCs@osiris>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,62 +21,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: Philipp Rudo <prudo@redhat.com>, linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, dyoung@redhat.com, akpm@linux-foundation.org
+To: linux-kernel@vger.kernel.org
+Cc: David Hildenbrand <david@redhat.com>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, Philipp Rudo <prudo@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
 
-On 11/10/21 at 04:18pm, Heiko Carstens wrote:
-> On Fri, Oct 29, 2021 at 06:31:32PM +0200, Philipp Rudo wrote:
-> > Hi Baoquan,
-> > 
-> > On Fri, 29 Oct 2021 17:26:35 +0800
-> > Baoquan He <bhe@redhat.com> wrote:
-> > 
-> > > A memory leak is reported by kmemleak scanning:
-> ...
-> > > The ipl report buffer is allocated via vmalloc, while has no chance to free
-> > > if the kexe loading is unloaded. This will cause obvious memory leak
-> > > when kexec/kdump kernel is reloaded, manually, or triggered, e.g by
-> > > memory hotplug.
-> > > 
-> > > Here, add struct kimage_arch to s390 to pass out the ipl report buffer
-> > > address, and introduce arch dependent function
-> > > arch_kimage_file_post_load_cleanup() to free it when unloaded.
-> > > 
-> > > Signed-off-by: Baoquan He <bhe@redhat.com>
-> > 
-> > other than a missing
-> > 
-> > Fixes: 99feaa717e55 ("s390/kexec_file: Create ipl report and pass to
-> > next kernel")
-> > 
-> > the patch looks good to me.
-> > 
-> > Reviewed-by: Philipp Rudo <prudo@redhat.com>
-> ...
-> > >  	buf.buffer = ipl_report_finish(data->report);
-> > >  	buf.bufsz = data->report->size;
-> > >  	buf.memsz = buf.bufsz;
-> > > +	image->arch.ipl_buf = buf.buffer;
-> 
-> This seems (still) to be incorrect: ipl_report_finish() may return
-> -ENOMEN, but there is no error checking anywhere, as far as I can
-> tell, which would make this:
-> 
-> > > +int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> > > +{
-> > > +	kvfree(image->arch.ipl_buf);
-> > > +	image->arch.ipl_buf = NULL;
-> > > +
-> > > +	return kexec_image_post_load_cleanup_default(image);
-> > > +}
-> 
-> most likely not do what we want. That is: if this code is reached at
-> all in such a case. I'll check and might add a patch before this to
-> fix this also.
+To clear a user buffer we cannot simply use memset, we have to use
+clear_user(). Using a kernel config based on rawhide Fedora and a
+virtio-mem device that registers a vmcore_cb, I can easily trigger:
 
-Right, we should check the returned value firstly. Thanks a lot for
-reivewing, Heiko. I will post v2 to add a patch to check the returned
-value as you suggested, and also update this patch to add missing Fixes tag. 
+[   11.327580] systemd[1]: Starting Kdump Vmcore Save Service...
+[   11.339697] kdump[420]: Kdump is using the default log level(3).
+[   11.370964] kdump[453]: saving to /sysroot/var/crash/127.0.0.1-2021-11-11-14:59:22/
+[   11.373997] kdump[458]: saving vmcore-dmesg.txt to /sysroot/var/crash/127.0.0.1-2021-11-11-14:59:22/
+[   11.385357] kdump[465]: saving vmcore-dmesg.txt complete
+[   11.386722] kdump[467]: saving vmcore
+[   16.531275] BUG: unable to handle page fault for address: 00007f2374e01000
+[   16.531705] #PF: supervisor write access in kernel mode
+[   16.532037] #PF: error_code(0x0003) - permissions violation
+[   16.532396] PGD 7a523067 P4D 7a523067 PUD 7a528067 PMD 7a525067 PTE 800000007048f867
+[   16.532872] Oops: 0003 [#1] PREEMPT SMP NOPTI
+[   16.533154] CPU: 0 PID: 468 Comm: cp Not tainted 5.15.0+ #6
+[   16.533513] Hardware name: QEMU Standard PC (Q35 + ICH9, 2009), BIOS rel-1.14.0-27-g64f37cc530f1-prebuilt.qemu.org 04/01/2014
+[   16.534198] RIP: 0010:read_from_oldmem.part.0.cold+0x1d/0x86
+[   16.534552] Code: ff ff ff e8 05 ff fe ff e9 b9 e9 7f ff 48 89 de 48 c7 c7 38 3b 60 82 e8 f1 fe fe ff 83 fd 08 72 3c 49 8d 7d 08 4c 89 e9 89 e8 <49> c7 45 00 00 00 00 00 49 c7 44 05 f8 00 00 00 00 48 83 e7 f81
+[   16.535670] RSP: 0018:ffffc9000073be08 EFLAGS: 00010212
+[   16.535998] RAX: 0000000000001000 RBX: 00000000002fd000 RCX: 00007f2374e01000
+[   16.536441] RDX: 0000000000000001 RSI: 00000000ffffdfff RDI: 00007f2374e01008
+[   16.536878] RBP: 0000000000001000 R08: 0000000000000000 R09: ffffc9000073bc50
+[   16.537315] R10: ffffc9000073bc48 R11: ffffffff829461a8 R12: 000000000000f000
+[   16.537755] R13: 00007f2374e01000 R14: 0000000000000000 R15: ffff88807bd421e8
+[   16.538200] FS:  00007f2374e12140(0000) GS:ffff88807f000000(0000) knlGS:0000000000000000
+[   16.538696] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   16.539055] CR2: 00007f2374e01000 CR3: 000000007a4aa000 CR4: 0000000000350eb0
+[   16.539510] Call Trace:
+[   16.539679]  <TASK>
+[   16.539828]  read_vmcore+0x236/0x2c0
+[   16.540063]  ? enqueue_hrtimer+0x2f/0x80
+[   16.540323]  ? inode_security+0x22/0x60
+[   16.540572]  proc_reg_read+0x55/0xa0
+[   16.540807]  vfs_read+0x95/0x190
+[   16.541022]  ksys_read+0x4f/0xc0
+[   16.541238]  do_syscall_64+0x3b/0x90
+[   16.541475]  entry_SYSCALL_64_after_hwframe+0x44/0xae
+
+To fix, properly use clear_user() when required.
+
+Fixes: 997c136f518c ("fs/proc/vmcore.c: add hook to read_from_oldmem() to check for non-ram pages")
+Cc: Dave Young <dyoung@redhat.com>
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Philipp Rudo <prudo@redhat.com>
+Cc: kexec@lists.infradead.org
+Cc: linux-mm@kvack.org
+Cc: linux-fsdevel@vger.kernel.org
+Signed-off-by: David Hildenbrand <david@redhat.com>
+---
+ fs/proc/vmcore.c | 20 ++++++++++++--------
+ 1 file changed, 12 insertions(+), 8 deletions(-)
+
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 30a3b66f475a..509f85148fee 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -154,9 +154,13 @@ ssize_t read_from_oldmem(char *buf, size_t count,
+ 			nr_bytes = count;
+ 
+ 		/* If pfn is not ram, return zeros for sparse dump files */
+-		if (!pfn_is_ram(pfn))
+-			memset(buf, 0, nr_bytes);
+-		else {
++		if (!pfn_is_ram(pfn)) {
++			tmp = 0;
++			if (!userbuf)
++				memset(buf, 0, nr_bytes);
++			else if (clear_user(buf, nr_bytes))
++				tmp = -EFAULT;
++		} else {
+ 			if (encrypted)
+ 				tmp = copy_oldmem_page_encrypted(pfn, buf,
+ 								 nr_bytes,
+@@ -165,12 +169,12 @@ ssize_t read_from_oldmem(char *buf, size_t count,
+ 			else
+ 				tmp = copy_oldmem_page(pfn, buf, nr_bytes,
+ 						       offset, userbuf);
+-
+-			if (tmp < 0) {
+-				up_read(&vmcore_cb_rwsem);
+-				return tmp;
+-			}
+ 		}
++		if (tmp < 0) {
++			up_read(&vmcore_cb_rwsem);
++			return tmp;
++		}
++
+ 		*ppos += nr_bytes;
+ 		count -= nr_bytes;
+ 		buf += nr_bytes;
+
+base-commit: debe436e77c72fcee804fb867f275e6d31aa999c
+-- 
+2.31.1
 
 
 _______________________________________________
