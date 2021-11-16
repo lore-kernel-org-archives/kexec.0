@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mmp6v-000DDh-1x
- for kexec@lists.infradead.org; Tue, 16 Nov 2021 03:26:18 +0000
+ id 1mmpBe-000DVj-8m
+ for kexec@lists.infradead.org; Tue, 16 Nov 2021 03:31:11 +0000
+Date: Tue, 16 Nov 2021 11:31:01 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 2/2] s390/kexec: fix kmemleak
-Date: Tue, 16 Nov 2021 11:25:57 +0800
-Message-Id: <20211116032557.14075-2-bhe@redhat.com>
-In-Reply-To: <20211116032557.14075-1-bhe@redhat.com>
+Subject: [PATCH v2 RESEND 2/2] s390/kexec: fix memory leak of ipl report buffer
+Message-ID: <20211116033101.GD21646@MiWiFi-R3L-srv>
 References: <20211116032557.14075-1-bhe@redhat.com>
+ <20211116032557.14075-2-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20211116032557.14075-2-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,13 +20,12 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, hca@linux.ibm.com, prudo@redhat.com, Baoquan He <bhe@redhat.com>
+Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, hca@linux.ibm.com, prudo@redhat.com
 
 unreferenced object 0x38000195000 (size 4096):
   comm "kexec", pid 8548, jiffies 4294953647 (age 32443.270s)
@@ -46,6 +48,9 @@ unreferenced object 0x38000195000 (size 4096):
 Signed-off-by: Baoquan He <bhe@redhat.com>
 Fixes: 99feaa717e55 ("s390/kexec_file: Create ipl report and pass to next kernel")
 ---
+RESEND:
+  Fix the incorrect subject.
+
  arch/s390/include/asm/kexec.h         | 7 +++++++
  arch/s390/kernel/machine_kexec_file.c | 9 +++++++++
  2 files changed, 16 insertions(+)
