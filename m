@@ -1,21 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mmtQM-000dpP-Bg
- for kexec@lists.infradead.org; Tue, 16 Nov 2021 08:02:40 +0000
-Received: by mail-wm1-f72.google.com with SMTP id
- j193-20020a1c23ca000000b003306ae8bfb7so7001122wmj.7
- for <kexec@lists.infradead.org>; Tue, 16 Nov 2021 00:02:34 -0800 (PST)
-Message-ID: <4289b936-e40c-cde8-eb08-0bd13c44eba3@redhat.com>
-Date: Tue, 16 Nov 2021 09:02:31 +0100
+ id 1mmwT6-001NBc-LW
+ for kexec@lists.infradead.org; Tue, 16 Nov 2021 11:17:42 +0000
+Date: Tue, 16 Nov 2021 12:17:15 +0100
+From: Heiko Carstens <hca@linux.ibm.com>
+Subject: Re: [PATCH v2 1/2] s390/kexec: check the return value of
+ ipl_report_finish
+Message-ID: <YZOTO+37BbIwOpUK@osiris>
+References: <20211116032557.14075-1-bhe@redhat.com>
 MIME-Version: 1.0
-Subject: Re: [PATCH v2] proc/vmcore: fix clearing user buffer by properly
- using clear_user()
-References: <20211112092750.6921-1-david@redhat.com>
- <20211115140444.bca2b88cfdd992760a413442@linux-foundation.org>
-From: David Hildenbrand <david@redhat.com>
-In-Reply-To: <20211115140444.bca2b88cfdd992760a413442@linux-foundation.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211116032557.14075-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,49 +21,92 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Philipp Rudo <prudo@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, prudo@redhat.com
 
-On 15.11.21 23:04, Andrew Morton wrote:
-> On Fri, 12 Nov 2021 10:27:50 +0100 David Hildenbrand <david@redhat.com> wrote:
-> 
->> To clear a user buffer we cannot simply use memset, we have to use
->> clear_user(). With a virtio-mem device that registers a vmcore_cb and has
->> some logically unplugged memory inside an added Linux memory block, I can
->> easily trigger a BUG by copying the vmcore via "cp":
->>
->> ...
->>
->> Some x86-64 CPUs have a CPU feature called "Supervisor Mode Access
->> Prevention (SMAP)", which is used to detect wrong access from the kernel to
->> user buffers like this: SMAP triggers a permissions violation on wrong
->> access. In the x86-64 variant of clear_user(), SMAP is properly
->> handled via clac()+stac().
->>
->> To fix, properly use clear_user() when we're dealing with a user buffer.
->>
-> 
-> I added cc:stable, OK?
-> 
-
-I was a bit hesitant because this would (beofe the virtio-mem changes)
-only trigger under XEN and I was wondering why nobody notices under XEN
-so far. But yes, even though it only applies to the kdump kernel,
-cc:stable sounds like the right think to do!
-
-Thanks Andrew!
-
--- 
-Thanks,
-
-David / dhildenb
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gVHVlLCBOb3YgMTYsIDIwMjEgYXQgMTE6MjU6NTZBTSArMDgwMCwgQmFvcXVhbiBIZSB3cm90
+ZToKPiBJbiBmdW5jdGlvbiBpcGxfcmVwb3J0X2ZpbmlzaCgpLCBpdCBjb3VsZCBmYWlsIGJ5IG1l
+bW9yeSBhbGxvY2F0aW9uCj4gZmFpbHVyZSwgc28gY2hlY2sgdGhlIHJldHVybiB2YWx1ZSB0byBo
+YW5kbGUgdGhlIGNhc2UuCj4gCj4gU2lnbmVkLW9mZi1ieTogQmFvcXVhbiBIZSA8YmhlQHJlZGhh
+dC5jb20+Cj4gLS0tCj4gIGFyY2gvczM5MC9pbmNsdWRlL2FzbS9pcGwuaCAgICAgICAgICAgfCAy
+ICstCj4gIGFyY2gvczM5MC9rZXJuZWwvaXBsLmMgICAgICAgICAgICAgICAgfCA2ICsrKystLQo+
+ICBhcmNoL3MzOTAva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jIHwgNSArKysrLQo+ICAzIGZp
+bGVzIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKPiAKPiBkaWZmIC0t
+Z2l0IGEvYXJjaC9zMzkwL2luY2x1ZGUvYXNtL2lwbC5oIGIvYXJjaC9zMzkwL2luY2x1ZGUvYXNt
+L2lwbC5oCj4gaW5kZXggM2Y4ZWUyNTdmOWFhLi44NjRhYjVkMjg5MGMgMTAwNjQ0Cj4gLS0tIGEv
+YXJjaC9zMzkwL2luY2x1ZGUvYXNtL2lwbC5oCj4gKysrIGIvYXJjaC9zMzkwL2luY2x1ZGUvYXNt
+L2lwbC5oCj4gQEAgLTEyMiw3ICsxMjIsNyBAQCBzdHJ1Y3QgaXBsX3JlcG9ydF9jZXJ0aWZpY2F0
+ZSB7Cj4gIAo+ICBzdHJ1Y3Qga2V4ZWNfYnVmOwo+ICBzdHJ1Y3QgaXBsX3JlcG9ydCAqaXBsX3Jl
+cG9ydF9pbml0KHN0cnVjdCBpcGxfcGFyYW1ldGVyX2Jsb2NrICppcGliKTsKPiAtdm9pZCAqaXBs
+X3JlcG9ydF9maW5pc2goc3RydWN0IGlwbF9yZXBvcnQgKnJlcG9ydCk7Cj4gK2ludCBpcGxfcmVw
+b3J0X2ZpbmlzaChzdHJ1Y3QgaXBsX3JlcG9ydCAqcmVwb3J0LCB2b2lkICoqaXBsX2J1Zik7Cj4g
+IGludCBpcGxfcmVwb3J0X2ZyZWUoc3RydWN0IGlwbF9yZXBvcnQgKnJlcG9ydCk7Cj4gIGludCBp
+cGxfcmVwb3J0X2FkZF9jb21wb25lbnQoc3RydWN0IGlwbF9yZXBvcnQgKnJlcG9ydCwgc3RydWN0
+IGtleGVjX2J1ZiAqa2J1ZiwKPiAgCQkJICAgICB1bnNpZ25lZCBjaGFyIGZsYWdzLCB1bnNpZ25l
+ZCBzaG9ydCBjZXJ0KTsKPiBkaWZmIC0tZ2l0IGEvYXJjaC9zMzkwL2tlcm5lbC9pcGwuYyBiL2Fy
+Y2gvczM5MC9rZXJuZWwvaXBsLmMKPiBpbmRleCBlMmNjMzU3NzViOTkuLmEwYWYwYjIzMTQ4ZCAx
+MDA2NDQKPiAtLS0gYS9hcmNoL3MzOTAva2VybmVsL2lwbC5jCj4gKysrIGIvYXJjaC9zMzkwL2tl
+cm5lbC9pcGwuYwo+IEBAIC0yMTQ0LDcgKzIxNDQsNyBAQCBzdHJ1Y3QgaXBsX3JlcG9ydCAqaXBs
+X3JlcG9ydF9pbml0KHN0cnVjdCBpcGxfcGFyYW1ldGVyX2Jsb2NrICppcGliKQo+ICAJcmV0dXJu
+IHJlcG9ydDsKPiAgfQo+ICAKPiAtdm9pZCAqaXBsX3JlcG9ydF9maW5pc2goc3RydWN0IGlwbF9y
+ZXBvcnQgKnJlcG9ydCkKPiAraW50IGlwbF9yZXBvcnRfZmluaXNoKHN0cnVjdCBpcGxfcmVwb3J0
+ICpyZXBvcnQsIHZvaWQgKippcGxfYnVmKQo+ICB7Cj4gIAlzdHJ1Y3QgaXBsX3JlcG9ydF9jZXJ0
+aWZpY2F0ZSAqY2VydDsKPiAgCXN0cnVjdCBpcGxfcmVwb3J0X2NvbXBvbmVudCAqY29tcDsKPiBA
+QCAtMjE5NSw3ICsyMTk1LDkgQEAgdm9pZCAqaXBsX3JlcG9ydF9maW5pc2goc3RydWN0IGlwbF9y
+ZXBvcnQgKnJlcG9ydCkKPiAgCX0KPiAgCj4gIAlCVUdfT04ocHRyID4gYnVmICsgcmVwb3J0LT5z
+aXplKTsKPiAtCXJldHVybiBidWY7Cj4gKwkqaXBsX2J1ZiA9IGJ1ZjsKPiArCj4gKwlyZXR1cm4g
+MDsKClRoaXMgZG9lcyBub3QgY29tcGlsZToKCiAgQ0MgICAgICBhcmNoL3MzOTAva2VybmVsL2lw
+bC5vCmFyY2gvczM5MC9rZXJuZWwvaXBsLmM6IEluIGZ1bmN0aW9uIOKAmGlwbF9yZXBvcnRfZmlu
+aXNo4oCZOgphcmNoL3MzOTAva2VybmVsL2lwbC5jOjIxNTk6MjQ6IHdhcm5pbmc6IHJldHVybmlu
+ZyDigJh2b2lkICrigJkgZnJvbSBhIGZ1bmN0aW9uIHdpdGggcmV0dXJuIHR5cGUg4oCYaW504oCZ
+IG1ha2VzIGludGVnZXIgZnJvbSBwb2ludGVyIHdpdGhvdXQgYSBjYXN0IFstV2ludC1jb252ZXJz
+aW9uXQogMjE1OSB8ICAgICAgICAgICAgICAgICByZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKICAg
+ICAgfCAgICAgICAgICAgICAgICAgICAgICAgIF5+fn5+fn5+fn5+fn5+fn4KCkFueXdheSwgYmVm
+b3JlIHdlIGFyZSBnb2luZyB0byBoYXZlIG1vcmUgaXRlcmF0aW9ucyBJIGp1c3QgYXBwbGllZCB0
+aGUKcGF0Y2ggYmVsb3cgaW5zdGVhZCBiZWZvcmUgYXBwbHlpbmcgeW91ciBtZW1vcnkgbGVhayBm
+aXguCgpGcm9tIDc4ZTVmMjY4ZDFiZTc3NTM1NGFiODNjMWUwMzlkY2ZhY2FhNWUyNTggTW9uIFNl
+cCAxNyAwMDowMDowMCAyMDAxCkZyb206IEhlaWtvIENhcnN0ZW5zIDxoY2FAbGludXguaWJtLmNv
+bT4KRGF0ZTogVHVlLCAxNiBOb3YgMjAyMSAxMTowNjozOCArMDEwMApTdWJqZWN0OiBzMzkwL2tl
+eGVjOiBmaXggcmV0dXJuIGNvZGUgaGFuZGxpbmcKCmtleGVjX2ZpbGVfYWRkX2lwbF9yZXBvcnQg
+aWdub3JlcyB0aGF0IGlwbF9yZXBvcnRfZmluaXNoIG1heSBmYWlsIGFuZApjYW4gcmV0dXJuIGFu
+IGVycm9yIHBvaW50ZXIgaW5zdGVhZCBvZiBhIHZhbGlkIHBvaW50ZXIuCkZpeCB0aGlzIGFuZCBz
+aW1wbGlmeSBieSByZXR1cm5pbmcgTlVMTCBpbiBjYXNlIG9mIGFuIGVycm9yIGFuZCBsZXQKdGhl
+IG9ubHkgY2FsbGVyIGhhbmRsZSB0aGlzIGNhc2UuCgpGaXhlczogOTlmZWFhNzE3ZTU1ICgiczM5
+MC9rZXhlY19maWxlOiBDcmVhdGUgaXBsIHJlcG9ydCBhbmQgcGFzcyB0byBuZXh0IGtlcm5lbCIp
+ClNpZ25lZC1vZmYtYnk6IEhlaWtvIENhcnN0ZW5zIDxoY2FAbGludXguaWJtLmNvbT4KLS0tCiBh
+cmNoL3MzOTAva2VybmVsL2lwbC5jICAgICAgICAgICAgICAgIHwgMyArKy0KIGFyY2gvczM5MC9r
+ZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMgfCA4ICsrKysrKystCiAyIGZpbGVzIGNoYW5nZWQs
+IDkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL3MzOTAv
+a2VybmVsL2lwbC5jIGIvYXJjaC9zMzkwL2tlcm5lbC9pcGwuYwppbmRleCBlMmNjMzU3NzViOTku
+LjVhZDFkZGUyM2RjNSAxMDA2NDQKLS0tIGEvYXJjaC9zMzkwL2tlcm5lbC9pcGwuYworKysgYi9h
+cmNoL3MzOTAva2VybmVsL2lwbC5jCkBAIC0yMTU2LDcgKzIxNTYsNyBAQCB2b2lkICppcGxfcmVw
+b3J0X2ZpbmlzaChzdHJ1Y3QgaXBsX3JlcG9ydCAqcmVwb3J0KQogCiAJYnVmID0gdnphbGxvYyhy
+ZXBvcnQtPnNpemUpOwogCWlmICghYnVmKQotCQlyZXR1cm4gRVJSX1BUUigtRU5PTUVNKTsKKwkJ
+Z290byBvdXQ7CiAJcHRyID0gYnVmOwogCiAJbWVtY3B5KHB0ciwgcmVwb3J0LT5pcGliLCByZXBv
+cnQtPmlwaWItPmhkci5sZW4pOwpAQCAtMjE5NSw2ICsyMTk1LDcgQEAgdm9pZCAqaXBsX3JlcG9y
+dF9maW5pc2goc3RydWN0IGlwbF9yZXBvcnQgKnJlcG9ydCkKIAl9CiAKIAlCVUdfT04ocHRyID4g
+YnVmICsgcmVwb3J0LT5zaXplKTsKK291dDoKIAlyZXR1cm4gYnVmOwogfQogCmRpZmYgLS1naXQg
+YS9hcmNoL3MzOTAva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jIGIvYXJjaC9zMzkwL2tlcm5l
+bC9tYWNoaW5lX2tleGVjX2ZpbGUuYwppbmRleCA1MjhlZGZmMDg1ZDkuLmYwMjAwYjUwM2Y5NCAx
+MDA2NDQKLS0tIGEvYXJjaC9zMzkwL2tlcm5lbC9tYWNoaW5lX2tleGVjX2ZpbGUuYworKysgYi9h
+cmNoL3MzOTAva2VybmVsL21hY2hpbmVfa2V4ZWNfZmlsZS5jCkBAIC0xNzAsNiArMTcwLDcgQEAg
+c3RhdGljIGludCBrZXhlY19maWxlX2FkZF9pcGxfcmVwb3J0KHN0cnVjdCBraW1hZ2UgKmltYWdl
+LAogCXN0cnVjdCBrZXhlY19idWYgYnVmOwogCXVuc2lnbmVkIGxvbmcgYWRkcjsKIAl2b2lkICpw
+dHIsICplbmQ7CisJaW50IHJldDsKIAogCWJ1Zi5pbWFnZSA9IGltYWdlOwogCkBAIC0xOTksNyAr
+MjAwLDEwIEBAIHN0YXRpYyBpbnQga2V4ZWNfZmlsZV9hZGRfaXBsX3JlcG9ydChzdHJ1Y3Qga2lt
+YWdlICppbWFnZSwKIAkJcHRyICs9IGxlbjsKIAl9CiAKKwlyZXQgPSAtRU5PTUVNOwogCWJ1Zi5i
+dWZmZXIgPSBpcGxfcmVwb3J0X2ZpbmlzaChkYXRhLT5yZXBvcnQpOworCWlmICghYnVmLmJ1ZmZl
+cikKKwkJZ290byBvdXQ7CiAJYnVmLmJ1ZnN6ID0gZGF0YS0+cmVwb3J0LT5zaXplOwogCWJ1Zi5t
+ZW1zeiA9IGJ1Zi5idWZzejsKIApAQCAtMjA5LDcgKzIxMyw5IEBAIHN0YXRpYyBpbnQga2V4ZWNf
+ZmlsZV9hZGRfaXBsX3JlcG9ydChzdHJ1Y3Qga2ltYWdlICppbWFnZSwKIAkJZGF0YS0+a2VybmVs
+X2J1ZiArIG9mZnNldG9mKHN0cnVjdCBsb3djb3JlLCBpcGxfcGFybWJsb2NrX3B0cik7CiAJKmxj
+X2lwbF9wYXJtYmxvY2tfcHRyID0gKF9fdTMyKWJ1Zi5tZW07CiAKLQlyZXR1cm4ga2V4ZWNfYWRk
+X2J1ZmZlcigmYnVmKTsKKwlyZXQgPSBrZXhlY19hZGRfYnVmZmVyKCZidWYpOworb3V0OgorCXJl
+dHVybiByZXQ7CiB9CiAKIHZvaWQgKmtleGVjX2ZpbGVfYWRkX2NvbXBvbmVudHMoc3RydWN0IGtp
+bWFnZSAqaW1hZ2UsCi0tIAoyLjMxLjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQu
+b3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
