@@ -1,17 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mmpBe-000DVj-8m
- for kexec@lists.infradead.org; Tue, 16 Nov 2021 03:31:11 +0000
-Date: Tue, 16 Nov 2021 11:31:01 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v2 RESEND 2/2] s390/kexec: fix memory leak of ipl report buffer
-Message-ID: <20211116033101.GD21646@MiWiFi-R3L-srv>
-References: <20211116032557.14075-1-bhe@redhat.com>
- <20211116032557.14075-2-bhe@redhat.com>
+ id 1mmtQM-000dpP-Bg
+ for kexec@lists.infradead.org; Tue, 16 Nov 2021 08:02:40 +0000
+Received: by mail-wm1-f72.google.com with SMTP id
+ j193-20020a1c23ca000000b003306ae8bfb7so7001122wmj.7
+ for <kexec@lists.infradead.org>; Tue, 16 Nov 2021 00:02:34 -0800 (PST)
+Message-ID: <4289b936-e40c-cde8-eb08-0bd13c44eba3@redhat.com>
+Date: Tue, 16 Nov 2021 09:02:31 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211116032557.14075-2-bhe@redhat.com>
+Subject: Re: [PATCH v2] proc/vmcore: fix clearing user buffer by properly
+ using clear_user()
+References: <20211112092750.6921-1-david@redhat.com>
+ <20211115140444.bca2b88cfdd992760a413442@linux-foundation.org>
+From: David Hildenbrand <david@redhat.com>
+In-Reply-To: <20211115140444.bca2b88cfdd992760a413442@linux-foundation.org>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,81 +28,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-s390@vger.kernel.org, kexec@lists.infradead.org, hca@linux.ibm.com, prudo@redhat.com
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Philipp Rudo <prudo@redhat.com>, kexec@lists.infradead.org, linux-mm@kvack.org, linux-fsdevel@vger.kernel.org
 
-unreferenced object 0x38000195000 (size 4096):
-  comm "kexec", pid 8548, jiffies 4294953647 (age 32443.270s)
-  hex dump (first 32 bytes):
-    00 00 00 c8 20 00 00 00 00 00 00 c0 02 80 00 00  .... ...........
-    40 40 40 40 40 40 40 40 00 00 00 00 00 00 00 00  @@@@@@@@........
-  backtrace:
-    [<0000000011a2f199>] __vmalloc_node_range+0xc0/0x140
-    [<0000000081fa2752>] vzalloc+0x5a/0x70
-    [<0000000063a4c92d>] ipl_report_finish+0x2c/0x180
-    [<00000000553304da>] kexec_file_add_ipl_report+0xf4/0x150
-    [<00000000862d033f>] kexec_file_add_components+0x124/0x160
-    [<000000000d2717bb>] arch_kexec_kernel_image_load+0x62/0x90
-    [<000000002e0373b6>] kimage_file_alloc_init+0x1aa/0x2e0
-    [<0000000060f2d14f>] __do_sys_kexec_file_load+0x17c/0x2c0
-    [<000000008c86fe5a>] __s390x_sys_kexec_file_load+0x40/0x50
-    [<000000001fdb9dac>] __do_syscall+0x1bc/0x1f0
-    [<000000003ee4258d>] system_call+0x78/0xa0
+On 15.11.21 23:04, Andrew Morton wrote:
+> On Fri, 12 Nov 2021 10:27:50 +0100 David Hildenbrand <david@redhat.com> wrote:
+> 
+>> To clear a user buffer we cannot simply use memset, we have to use
+>> clear_user(). With a virtio-mem device that registers a vmcore_cb and has
+>> some logically unplugged memory inside an added Linux memory block, I can
+>> easily trigger a BUG by copying the vmcore via "cp":
+>>
+>> ...
+>>
+>> Some x86-64 CPUs have a CPU feature called "Supervisor Mode Access
+>> Prevention (SMAP)", which is used to detect wrong access from the kernel to
+>> user buffers like this: SMAP triggers a permissions violation on wrong
+>> access. In the x86-64 variant of clear_user(), SMAP is properly
+>> handled via clac()+stac().
+>>
+>> To fix, properly use clear_user() when we're dealing with a user buffer.
+>>
+> 
+> I added cc:stable, OK?
+> 
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Fixes: 99feaa717e55 ("s390/kexec_file: Create ipl report and pass to next kernel")
----
-RESEND:
-  Fix the incorrect subject.
+I was a bit hesitant because this would (beofe the virtio-mem changes)
+only trigger under XEN and I was wondering why nobody notices under XEN
+so far. But yes, even though it only applies to the kdump kernel,
+cc:stable sounds like the right think to do!
 
- arch/s390/include/asm/kexec.h         | 7 +++++++
- arch/s390/kernel/machine_kexec_file.c | 9 +++++++++
- 2 files changed, 16 insertions(+)
+Thanks Andrew!
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index ea398a05f643..bbe125dd0329 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -74,6 +74,13 @@ void *kexec_file_add_components(struct kimage *image,
- int arch_kexec_do_relocs(int r_type, void *loc, unsigned long val,
- 			 unsigned long addr);
- 
-+#define ARCH_HAS_KIMAGE_ARCH
-+
-+struct kimage_arch {
-+        void *ipl_buf;
-+};
-+
-+
- extern const struct kexec_file_ops s390_kexec_image_ops;
- extern const struct kexec_file_ops s390_kexec_elf_ops;
- 
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 17e961975624..7f51837e9bc2 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -205,6 +205,7 @@ static int kexec_file_add_ipl_report(struct kimage *image,
- 		return ret;
- 	buf.bufsz = data->report->size;
- 	buf.memsz = buf.bufsz;
-+	image->arch.ipl_buf = buf.buffer;
- 
- 	data->memsz += buf.memsz;
- 
-@@ -325,3 +326,11 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 	}
- 	return 0;
- }
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image)
-+{
-+	kvfree(image->arch.ipl_buf);
-+	image->arch.ipl_buf = NULL;
-+
-+	return kexec_image_post_load_cleanup_default(image);
-+}
 -- 
-2.17.2
+Thanks,
+
+David / dhildenb
 
 
 _______________________________________________
