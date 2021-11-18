@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mnlYZ-008UJG-5V
- for kexec@lists.infradead.org; Thu, 18 Nov 2021 17:50:45 +0000
+ id 1mnlYb-008UKI-4X
+ for kexec@lists.infradead.org; Thu, 18 Nov 2021 17:50:46 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [RFC v1 4/8] crash hp: generic crash hotplug support infrastructure
-Date: Thu, 18 Nov 2021 12:49:44 -0500
-Message-Id: <20211118174948.37435-5-eric.devolder@oracle.com>
+Subject: [RFC v1 5/8] crash hp: kexec_file changes for use by crash hotplug
+ handler
+Date: Thu, 18 Nov 2021 12:49:45 -0500
+Message-Id: <20211118174948.37435-6-eric.devolder@oracle.com>
 In-Reply-To: <20211118174948.37435-1-eric.devolder@oracle.com>
 References: <20211118174948.37435-1-eric.devolder@oracle.com>
 MIME-Version: 1.0
@@ -25,176 +26,83 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com, eric.devolder@oracle.com
 
-This patch introduces a generic crash hot plug/unplug handler for CPU
-and memory changes. This crash_update_elfcorehdr() handler is invoked
-upon CPU and memory changes.  This generic handler obtains the
-appropriate lock, does some important house keeping and then
-dispatches the hot plug/unplug event to the architecture specific
-handler arch_update_crash_elfcorehdr(), and when that architecture
-specific handler returns, the lock is released.
+Three minor changes are made to this file to facilitate re-using
+the functions from within a crash hotplug handler.
 
-This patch modifies crash_core.c to implement a subsys_initcall()
-function that installs handlers for hot plug/unplug events. If CPU
-hotplug is enabled, then cpuhp_setup_state() is invoked to register a
-handler for CPU changes. Similarly, if memory hotplug is enabled, then
-register_memory_notifier() is invoked to install a handler for memory
-changes. These handlers in turn invoke the common handler
-crash_update_elfcorehdr().
+The prototype for kexec_calculate_store_digests() was hoisted to
+linux/kexec.h and the function made non-static.
 
-On the CPU side, cpuhp_setup_state_nocalls() is invoked with parameter
-CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
-the CPU still shows up in foreach_present_cpu() during the regeneration
-of the elfcorehdr, thus the need to explicitly check and exclude the
-soon-to-be offlined CPU in crash_prepare_elf64_headers().
+The crash_prepare_elf64_headers() had the struct kimage parameter
+added so that the check for the offlinecpu could be performed and
+this routine re-used by the crash hotplug handler.
 
-On the memory side, each un/plugged memory block passes through the
-handler. For example, if a 1GiB DIMM is hotplugged, that generate 8
-memory events, one for each 128MiB memblock.
+Finally, kexec_add_buffer() changed slightly so that it does not
+attempt to add the buffer to the kimage when being called from
+the crash hotplug handler.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kernel/crash_core.c | 118 ++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 118 insertions(+)
+ kernel/kexec_file.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index eb53f5ec62c9..d567839b476c 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -8,12 +8,16 @@
- #include <linux/crash_core.h>
- #include <linux/utsname.h>
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 8347fc158d2b..c9e8e5b94382 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -29,8 +29,6 @@
  #include <linux/vmalloc.h>
-+#include <linux/memory.h>
-+#include <linux/cpuhotplug.h>
+ #include "kexec_internal.h"
  
- #include <asm/page.h>
- #include <asm/sections.h>
+-static int kexec_calculate_store_digests(struct kimage *image);
+-
+ /*
+  * Currently this is the only default function that is exported as some
+  * architectures need it to do additional handlings.
+@@ -674,6 +672,12 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
+ 	struct kexec_segment *ksegment;
+ 	int ret;
  
- #include <crypto/sha1.h>
- 
-+#include "kexec_internal.h"
++#ifdef CONFIG_CRASH_HOTPLUG
++	/* When servicing a hotplug event, do not add buffers to the image */
++	if (kbuf->image->hotplug_event)
++		return 0;
++#endif
 +
- /* vmcoreinfo stuff */
- unsigned char *vmcoreinfo_data;
- size_t vmcoreinfo_size;
-@@ -480,3 +484,117 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	/* Currently adding segment this way is allowed only in file mode */
+ 	if (!kbuf->image->file_mode)
+ 		return -EINVAL;
+@@ -713,7 +717,7 @@ int kexec_add_buffer(struct kexec_buf *kbuf)
  }
  
- subsys_initcall(crash_save_vmcoreinfo_init);
-+
+ /* Calculate and store the digest of segments */
+-static int kexec_calculate_store_digests(struct kimage *image)
++int kexec_calculate_store_digests(struct kimage *image)
+ {
+ 	struct crypto_shash *tfm;
+ 	struct shash_desc *desc;
+@@ -1260,8 +1264,8 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+ 	return 0;
+ }
+ 
+-int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+-			  void **addr, unsigned long *sz)
++int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
++	int kernel_map, void **addr, unsigned long *sz)
+ {
+ 	Elf64_Ehdr *ehdr;
+ 	Elf64_Phdr *phdr;
+@@ -1308,6 +1312,11 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+ 
+ 	/* Prepare one phdr of type PT_NOTE for each present CPU */
+ 	for_each_present_cpu(cpu) {
 +#ifdef CONFIG_CRASH_HOTPLUG
-+void __weak arch_update_crash_elfcorehdr(struct kimage *image,
-+	unsigned int hp_action, unsigned long a, unsigned long b)
-+{
-+	pr_warn("crash hp: %s not implemented", __func__);
-+}
-+
-+static void crash_update_elfcorehdr(unsigned int hp_action,
-+	unsigned long a, unsigned long b)
-+{
-+	/* Obtain lock while changing crash information */
-+	if (!mutex_trylock(&kexec_mutex))
-+		return;
-+
-+	/* Check kdump is loaded */
-+	if (kexec_crash_image) {
-+		pr_debug("crash hp: hp_action %u, a %lu, b %lu", hp_action,
-+			a, b);
-+
-+		/* Needed in order for the segments to be updated */
-+		arch_kexec_unprotect_crashkres();
-+
-+		/* Flag to differentiate between normal load and hotplug */
-+		kexec_crash_image->hotplug_event = 1;
-+
-+		/*
-+		 * Due to use of CPUHP_AP_ONLINE_DYN, upon unplug and during
-+		 * this callback, the CPU is still in the present list. Must
-+		 * explicitly look to exclude it when building new elfcorehdr.
-+		 */
-+		kexec_crash_image->offlinecpu =
-+			(hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
-+				(unsigned int)a : ~0U;
-+
-+		/* Now update the elfcorehdr and friends */
-+		arch_update_crash_elfcorehdr(kexec_crash_image, hp_action,
-+			a, b);
-+
-+		/* No longer in hotplug */
-+		kexec_crash_image->hotplug_event = 0;
-+
-+		/* Change back to read-only */
-+		arch_kexec_protect_crashkres();
-+	}
-+
-+	/* Release lock now that update complete */
-+	mutex_unlock(&kexec_mutex);
-+}
-+
-+#if defined(CONFIG_MEMORY_HOTPLUG)
-+static int crash_memhp_notifier(struct notifier_block *nb,
-+	unsigned long val, void *v)
-+{
-+	struct memory_notify *mhp = v;
-+	unsigned long start, end;
-+
-+	start = mhp->start_pfn << PAGE_SHIFT;
-+	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
-+
-+	switch (val) {
-+	case MEM_GOING_ONLINE:
-+		crash_update_elfcorehdr(KEXEC_CRASH_HP_ADD_MEMORY,
-+			start, end-start);
-+		break;
-+
-+	case MEM_OFFLINE:
-+	case MEM_CANCEL_ONLINE:
-+		crash_update_elfcorehdr(KEXEC_CRASH_HP_REMOVE_MEMORY,
-+			start, end-start);
-+		break;
-+	}
-+	return NOTIFY_OK;
-+}
-+
-+static struct notifier_block crash_memhp_nb = {
-+	.notifier_call = crash_memhp_notifier,
-+	.priority = 0
-+};
++		/* Skip the soon-to-be offlined cpu */
++		if (image->hotplug_event && (cpu == image->offlinecpu))
++			continue;
 +#endif
-+
-+#if defined(CONFIG_HOTPLUG_CPU)
-+static int crash_cpuhp_online(unsigned int cpu)
-+{
-+	crash_update_elfcorehdr(KEXEC_CRASH_HP_ADD_CPU, cpu, 0);
-+	return 0;
-+}
-+
-+static int crash_cpuhp_offline(unsigned int cpu)
-+{
-+	crash_update_elfcorehdr(KEXEC_CRASH_HP_REMOVE_CPU, cpu, 0);
-+	return 0;
-+}
-+#endif
-+
-+static int __init crash_hotplug_init(void)
-+{
-+	int result = 0;
-+
-+#if defined(CONFIG_MEMORY_HOTPLUG)
-+	register_memory_notifier(&crash_memhp_nb);
-+#endif
-+
-+#if defined(CONFIG_HOTPLUG_CPU)
-+	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+				"crash/cpuhp",
-+				crash_cpuhp_online, crash_cpuhp_offline);
-+#endif
-+
-+	return result;
-+}
-+
-+subsys_initcall(crash_hotplug_init);
-+#endif /* CONFIG_CRASH_HOTPLUG */
+ 		phdr->p_type = PT_NOTE;
+ 		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
+ 		phdr->p_offset = phdr->p_paddr = notes_addr;
 -- 
 2.27.0
 
