@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mnlYY-008UIW-9I
+ id 1mnlYY-008UIb-Ta
  for kexec@lists.infradead.org; Thu, 18 Nov 2021 17:50:44 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [RFC v1 2/8] crash hp: Introduce CRASH_HOTPLUG configuration options
-Date: Thu, 18 Nov 2021 12:49:42 -0500
-Message-Id: <20211118174948.37435-3-eric.devolder@oracle.com>
+Subject: [RFC v1 6/8] crash hp: Add x86 crash hotplug state items to kimage
+Date: Thu, 18 Nov 2021 12:49:46 -0500
+Message-Id: <20211118174948.37435-7-eric.devolder@oracle.com>
 In-Reply-To: <20211118174948.37435-1-eric.devolder@oracle.com>
 References: <20211118174948.37435-1-eric.devolder@oracle.com>
 MIME-Version: 1.0
@@ -25,55 +25,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com, eric.devolder@oracle.com
 
-The bulk of the support for CPU and memory hotplug support for
-crash is controlled by the CRASH_HOTPLUG configuration option,
-introduced by this patch.
+To facilitate hotplug updates of the crash elfcorehdr, a few members
+are added to the kimage arch struct.
 
-The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
-also introduced with this patch.
+The indices of the elfcorehdr and purgatory segments are recorded
+here so that upon a hotplug event, those segments can be efficiently
+located and updated accordingly.
+
+The purgatory image also requires a few register context values in
+order to transition from purgatory to the next/capture kernel.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
- 1 file changed, 26 insertions(+)
+ arch/x86/include/asm/kexec.h | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 95dd1ee01546..5feb829adb60 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -2046,6 +2046,32 @@ config CRASH_DUMP
- 	  (CONFIG_RELOCATABLE=y).
- 	  For more details see Documentation/admin-guide/kdump/kdump.rst
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 11b7c06e2828..b08fe56239c8 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -150,6 +150,16 @@ struct kimage_arch {
+ 	pud_t *pud;
+ 	pmd_t *pmd;
+ 	pte_t *pte;
++#ifdef CONFIG_CRASH_HOTPLUG
++	struct {
++		int elf_index;
++		int purg_index;
++		unsigned long rbx;
++		unsigned long rsi;
++		unsigned long rip;
++		unsigned long rsp;
++	} hp;
++#endif
+ };
+ #endif /* CONFIG_X86_32 */
  
-+config CRASH_HOTPLUG
-+	bool "kernel updates of crash elfcorehdr"
-+	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
-+	help
-+	  Enable the kernel to update the crash elfcorehdr (which contains
-+	  the list of CPUs and memory regions) directly when hot plug/unplug
-+	  of CPUs or memory. Otherwise userspace must monitor these hot
-+	  plug/unplug change notifications via udev in order to
-+	  unload-then-reload the crash kernel so that the list of CPUs and
-+	  memory regions is kept up-to-date. Note that the udev CPU and
-+	  memory change notifications still occur (however, userspace is not
-+	  required to monitor for crash dump purposes).
-+
-+config CRASH_HOTPLUG_ELFCOREHDR_SZ
-+	depends on CRASH_HOTPLUG
-+	int
-+	default 131072
-+	help
-+	  Specify the maximum size of the elfcorehdr buffer/segment.
-+	  The 128KiB default is sized so that it can accommodate 2048
-+	  Elf64_Phdr, where each Phdr represents either a CPU or a
-+	  region of memory.
-+	  For example, this size can accommodate hotplugging a machine
-+	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
-+	  with 1024 1GiB memory DIMMs).
-+
- config KEXEC_JUMP
- 	bool "kexec jump"
- 	depends on KEXEC && HIBERNATION
 -- 
 2.27.0
 
