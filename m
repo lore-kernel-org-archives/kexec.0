@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mntkm-009H1n-DO
- for kexec@lists.infradead.org; Fri, 19 Nov 2021 02:35:53 +0000
-Date: Fri, 19 Nov 2021 10:35:31 +0800
+ id 1mntml-009HCx-2K
+ for kexec@lists.infradead.org; Fri, 19 Nov 2021 02:37:56 +0000
+Date: Fri, 19 Nov 2021 10:37:35 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v2 2/2] s390/kexec: fix kmemleak
-Message-ID: <20211119023531.GB12774@MiWiFi-R3L-srv>
-References: <20211116032557.14075-2-bhe@redhat.com>
- <202111180539.e7kmpOSP-lkp@intel.com>
- <20211118071327.GF21646@MiWiFi-R3L-srv> <YZYUi9XMyjtpGmAQ@osiris>
+Subject: Re: [RFC v1 0/8] RFC v1: Kernel handling of CPU and memory hot
+ un/plug for crash
+Message-ID: <20211119023735.GH21646@MiWiFi-R3L-srv>
+References: <20211118174948.37435-1-eric.devolder@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <YZYUi9XMyjtpGmAQ@osiris>
+In-Reply-To: <20211118174948.37435-1-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,48 +24,155 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Heiko Carstens <hca@linux.ibm.com>
-Cc: kernel test robot <lkp@intel.com>, linux-kernel@vger.kernel.org, kbuild-all@lists.01.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, prudo@redhat.com
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
 
-On 11/18/21 at 09:53am, Heiko Carstens wrote:
-> On Thu, Nov 18, 2021 at 03:13:27PM +0800, Baoquan He wrote:
-> > On 11/18/21 at 05:46am, kernel test robot wrote:
-> > >    arch/s390/kernel/machine_kexec_file.c: In function 'arch_kimage_file_post_load_cleanup':
-> > > >> arch/s390/kernel/machine_kexec_file.c:332:9: error: implicit declaration of function 'kvfree'; did you mean 'vfree'? [-Werror=implicit-function-declaration]
-> > >      332 |         kvfree(image->arch.ipl_buf);
-> > >          |         ^~~~~~
-> > >          |         vfree
-> > 
-> > OK, kvfree is not wrong, seems vfree is more appropriate since it's
-> > clear the ipl_buf is allocated with zvalloc() in ipl_report_finish().
-> > 
-> > Hi Heiko,
-> > 
-> > Could you help modify the code in your tree or append below patch to
-> > mute the lkp complaint? Sorry for the inconvenience.
-> ...
-> >  arch/s390/kernel/machine_kexec_file.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> > index 7f51837e9bc2..351a7ff69a43 100644
-> > --- a/arch/s390/kernel/machine_kexec_file.c
-> > +++ b/arch/s390/kernel/machine_kexec_file.c
-> > @@ -329,7 +329,7 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> >  
-> >  int arch_kimage_file_post_load_cleanup(struct kimage *image)
-> >  {
-> > -	kvfree(image->arch.ipl_buf);
-> > +	vfree(image->arch.ipl_buf);
+Hi Eric,
+
+On 11/18/21 at 12:49pm, Eric DeVolder wrote:
+> When the kdump service is loaded, if a CPU or memory is hot
+> un/plugged, the crash elfcorehdr which describes the CPUs and memory
+> in the system, must also be updated, else the resulting vmcore is
+> inaccurate (eg. missing either CPU context or memory regions).
 > 
-> The problem reported above indicates that slab.h was not
-> included. With your patch, while it fixes the problem for this
-> particular configuration, this requires vmalloc.h to be included.
+> The current solution utilizes udev to initiate an unload-then-reload
+> of the kdump image (e. kernel, initrd, boot_params, puratory and
+> elfcorehdr) by the userspace kexec utility.
+> 
+> In the post https://lkml.org/lkml/2020/12/14/532 I outlined two
+> problems with this userspace-initiated unload-then-reload approach as
+> it pertains to supporting CPU and memory hot un/plug for kdump.
+> (Note in that post, I erroneously called the elfcorehdr the vmcoreinfo
+> structure. There is a vmcoreinfo structure, but it has a different
+> purpose. So in that post substitute "elfcorehdr" for "vmcoreinfo".)
 
-Indeed, thanks.
+It's great you finally make this patchset to address the cpu/mem hotplug
+issues raised before, I will review it carefully. And I have to say
+sorry, because I ever promised you to do this but didn't keep it due to
+personal reasons.
+
+Thanks again for doing this.
 
 > 
-> I'll merge your patch and add the missing include as well.
+> The first problem being the time needed to complete the unload-then-
+> reload of the kdump image, and the second being the effective race
+> window that unload-then-reload effort creates.
+> 
+> The scenario I measured was a 32GiB guest being resized to 512GiB and
+> observing it took over 4 minutes for udev to "settle down" and
+> complete the unload-then-reload of the resulting 3840 hot plug events.
+> Empirical evidence within our fleet substantiates this problem.
+> 
+> Each unload-then-reload creates a race window the size of which is the
+> time it takes to reload the complete kdump image. Within the race
+> window, kdump is not loaded and should a panic occur, the kernel halts
+> rather than dumping core via kdump.
+> 
+> This patchset significantly improves upon the current solution by
+> enabling the kernel to update only the necessary items of the kdump
+> image. In the case of x86_64, that is just the elfcorehdr and the
+> purgatory segments. These updates occur as fast as the hot un/plug
+> events and significantly reduce the size of the race window.
+> 
+> This patchset introduces a generic crash hot un/plug handler that
+> registers with the CPU and memory notifiers. Upon CPU or memory
+> changes, this generic handler is invoked and performs important
+> housekeeping, for example obtaining the appropriate lock, and then
+> invokes an architecture specific handler to do the appropriate
+> updates.
+> 
+> In the case of x86_64, the arch specific handler generates a new
+> elfcorehdr, which reflects the current CPUs and memory regions, into a
+> buffer. Since purgatory also does an integrity check via hash digests
+> of the loaded segments, purgatory must also be updated with the new
+> digests. The arch handler also generates a new purgatory into a
+> buffer, performs the hash digests of the new memory segments, and then
+> patches purgatory with the new digests.  If all succeeds, then the
+> elfcorehdr and purgatory buffers over write the existing buffers and
+> the new kdump image is live and ready to go. No involvement with
+> userspace at all.
+> 
+> To accommodate a growing number of resources via hotplug, the
+> elfcorehdr memory must be sufficiently large enough to accommodate
+> changes. The CRASH_HOTPLUG_ELFCOREHDR_SZ configure item does just
+> this.
+> 
+> To realize the benefits/test this patchset, one must make a couple
+> of minor changes to userspace:
+> 
+>  - Disable the udev rule for updating kdump on hot un/plug changes
+>    Eg. on RHEL: rm -f /usr/lib/udev/rules.d/98-kexec.rules
+>    or other technique to neuter the rule.
+> 
+>  - Change to the kexec_file_load for loading the kdump kernel:
+>    Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+>     standard_kexec_args="-p -d -s"
+>    which adds the -s to select kexec_file_load syscall.
+> 
+> This work has raised the following questions for me:
+> 
+> First and foremost, this patch only works for the kexec_file_load
+> syscall path (via "kexec -s -p" utility). The reason being that, for
+> x86_64 anyway, the purgatory blob provided by userspace can not be
+> readily decoded in order to update the hash digest. (The
+> kexec_file_load purgatory is actually a small ELF object with symbols,
+> so can be patched at run time.) With no way to update purgatory, the
+> integrity check will always fail and and cause purgatory to hang at
+> panic time.
+> 
+> That being said, I actually developed this against the kexec_load path
+> and did have that working by making two one-line changes to userspace
+> kexec utility: one change that effectively is
+> CRASH_HOTPLUG_ELFCOREHDR_SZ and the other to disable the integrity
+> check. But that does not seem to be a long term solution. A possible
+> long term solution would be to allow the use of the kexec_file_load
+> purgatory ELF object with the kexec_load path. While I believe that
+> would work, I am unsure if there are any downsides to doing so.
+> 
+> The second problem is the use of CPUHP_AP_ONLINE_DYN.  The
+> cpuhp_setup_state_nocalls() is invoked with parameter
+> CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
+> the CPU still shows up in foreach_present_cpu() during the
+> regeneration of the elfcorehdr, thus the need to explicitly check and
+> exclude the soon-to-be offlined CPU in crash_prepare_elf64_headers().
+> Perhaps if value(s) new/different than CPUHP_AP_ONLINE_DYN to
+> cpuhp_setup_state() was utilized, then the offline cpu would no longer
+> be in foreach_present_cpu(), and this change could be eliminated. I do
+> not understand cpuhp_setup_state() well enough to choose, or create,
+> appropriate value(s).
+> 
+> The third problem is the number of memory hot un/plug events.  If, for
+> example, a 1GiB DIMM is hotplugged, that generate 8 memory events, one
+> for each 128MiB memblock, yet the walk_system_ram_res() that is used
+> to obtain the list of memory regions reports the single 1GiB; thus
+> there are 7 un-necessary trips through this crash hotplug handler.
+> Perhaps there is another way of handling memory events that would see
+> the single 1GiB DIMM rather than each memblock?
+> 
+> Regards,
+> eric
+> 
+> Eric DeVolder (8):
+>   crash: fix minor typo/bug in debug message
+>   crash hp: Introduce CRASH_HOTPLUG configuration options
+>   crash hp: definitions and prototypes for crash hotplug support
+>   crash hp: generic crash hotplug support infrastructure
+>   crash hp: kexec_file changes for use by crash hotplug handler
+>   crash hp: Add x86 crash hotplug state items to kimage
+>   crash hp: Add x86 crash hotplug support for kexec_file_load
+>   crash hp: Add x86 crash hotplug support for bzImage
+> 
+>  arch/x86/Kconfig                  |  26 +++
+>  arch/x86/include/asm/kexec.h      |  10 ++
+>  arch/x86/kernel/crash.c           | 257 +++++++++++++++++++++++++++++-
+>  arch/x86/kernel/kexec-bzimage64.c |  12 ++
+>  include/linux/kexec.h             |  22 ++-
+>  kernel/crash_core.c               | 118 ++++++++++++++
+>  kernel/kexec_file.c               |  19 ++-
+>  7 files changed, 455 insertions(+), 9 deletions(-)
+> 
+> -- 
+> 2.27.0
 > 
 
 
