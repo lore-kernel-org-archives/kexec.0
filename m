@@ -1,12 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mp3Wq-00F3sR-Be
+ id 1mp3Wq-00F3sX-Hh
  for kexec@lists.infradead.org; Mon, 22 Nov 2021 07:14:18 +0000
 From: Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH 0/3] s390: add support for extended cmdline length
-Date: Mon, 22 Nov 2021 08:13:58 +0100
-Message-Id: <20211122071401.3106858-1-svens@linux.ibm.com>
+Subject: [PATCH 3/3] s390: add support for --reuse-cmdline
+Date: Mon, 22 Nov 2021 08:14:01 +0100
+Message-Id: <20211122071401.3106858-4-svens@linux.ibm.com>
+In-Reply-To: <20211122071401.3106858-1-svens@linux.ibm.com>
+References: <20211122071401.3106858-1-svens@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,31 +23,80 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>
+Cc: kexec@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>, Alexander Egorenkov <egorenar@linux.ibm.com>
 
-Hi,
+--reuse-cmdline reads the command line of the currently
+running kernel from /proc/cmdline and uses that for the
+kernel that should be kexec'd.
 
-this patchset adds support for extended command line lengths on s390.
-The former limit of 896 has been too short in a some configurations. The
-linux kernel now provides an additional field in the parameter area
-which contains the maximum allowed command line length. In older kernels
-this field is zero. In that case the old limit of 896 bytes is used.
-This was introduced with 5ecb2da660ab ("s390: support command lines
-longer than 896 bytes") in linux.
+Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+---
+ kexec/arch/s390/include/arch/options.h | 10 ++++++----
+ kexec/arch/s390/kexec-image.c          |  9 +++++++++
+ 2 files changed, 15 insertions(+), 4 deletions(-)
 
-And while at it, also add the --reuse-cmdline option and use
-KEXEC_ALL_OPTIONS.
-
-Sven Schnelle (3):
-  s390: add variable command line size
-  s390: use KEXEC_ALL_OPTIONS
-  s390: add support for --reuse-cmdline
-
- kexec/arch/s390/include/arch/options.h | 10 ++--
- kexec/arch/s390/kexec-image.c          | 72 +++++++++++++++++---------
- kexec/arch/s390/kexec-s390.h           | 19 +++----
- 3 files changed, 63 insertions(+), 38 deletions(-)
-
+diff --git a/kexec/arch/s390/include/arch/options.h b/kexec/arch/s390/include/arch/options.h
+index 76044a301ceb..b030b61d61be 100644
+--- a/kexec/arch/s390/include/arch/options.h
++++ b/kexec/arch/s390/include/arch/options.h
+@@ -1,9 +1,10 @@
+ #ifndef KEXEC_ARCH_S390_OPTIONS_H
+ #define KEXEC_ARCH_S390_OPTIONS_H
+ 
+-#define OPT_ARCH_MAX	(OPT_MAX+0)
+-#define OPT_APPEND	OPT_MAX+0
+-#define OPT_RAMDISK	OPT_MAX+1
++#define OPT_ARCH_MAX		(OPT_MAX+0)
++#define OPT_APPEND		(OPT_MAX+0)
++#define OPT_RAMDISK		(OPT_MAX+1)
++#define OPT_REUSE_CMDLINE	(OPT_MAX+2)
+ 
+ /* Options relevant to the architecture (excluding loader-specific ones),
+  * in this case none:
+@@ -31,7 +32,8 @@
+ 	KEXEC_ARCH_OPTIONS				\
+ 	{"command-line",     1, 0, OPT_APPEND},		\
+ 	{"append",           1, 0, OPT_APPEND},		\
+-	{"initrd",	     1, 0, OPT_RAMDISK},
++	{"initrd",	     1, 0, OPT_RAMDISK},	\
++	{"reuse-cmdline",    0, 0, OPT_REUSE_CMDLINE },
+ 
+ #define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
+ 
+diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+index dbeb689b830a..310d967ea331 100644
+--- a/kexec/arch/s390/kexec-image.c
++++ b/kexec/arch/s390/kexec-image.c
+@@ -72,6 +72,10 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
+ 		case OPT_RAMDISK:
+ 			ramdisk = optarg;
+ 			break;
++		case OPT_REUSE_CMDLINE:
++			free(command_line);
++			command_line = get_command_line();
++			break;
+ 		}
+ 	}
+ 
+@@ -123,6 +127,10 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+ 			if (command_line_add(optarg))
+ 				return -1;
+ 			break;
++		case OPT_REUSE_CMDLINE:
++			free(command_line);
++			command_line = get_command_line();
++			break;
+ 		case OPT_RAMDISK:
+ 			ramdisk = optarg;
+ 			break;
+@@ -223,5 +231,6 @@ image_s390_usage(void)
+ 	printf("--command-line=STRING Set the kernel command line to STRING.\n"
+ 	       "--append=STRING       Set the kernel command line to STRING.\n"
+ 	       "--initrd=FILENAME     Use the file FILENAME as a ramdisk.\n"
++	       "--reuse-cmdline       Use kernel command line from running system.\n"
+ 		);
+ }
 -- 
 2.25.1
 
