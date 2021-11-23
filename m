@@ -1,16 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mpTeY-001pq3-1M
- for kexec@lists.infradead.org; Tue, 23 Nov 2021 11:07:59 +0000
-Date: Tue, 23 Nov 2021 19:07:43 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH] MAINTAINERS: update kdump maintainers
-Message-ID: <20211123110743.GJ21646@MiWiFi-R3L-srv>
-References: <YZyKilzKFsWJYdgn@dhcp-128-65.nay.redhat.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v16 01/11] x86: kdump: replace the hard-coded alignment with
+ macro CRASH_ALIGN
+Date: Tue, 23 Nov 2021 20:46:36 +0800
+Message-ID: <20211123124646.1995-2-thunder.leizhen@huawei.com>
+In-Reply-To: <20211123124646.1995-1-thunder.leizhen@huawei.com>
+References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YZyKilzKFsWJYdgn@dhcp-128-65.nay.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,42 +19,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, vgoyal@redhat.com, Andrew Morton <akpm@linux-foundation.org>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-Hi Dave,
+From: Chen Zhou <chenzhou10@huawei.com>
 
-On 11/23/21 at 02:30pm, Dave Young wrote:
-> Remove myself from kdump maintainers as I have no enough time to
-> maintain it now. But I can review patches on demand though.
-> 
-> Signed-off-by: Dave Young <dyoung@redhat.com>
-> ---
->  MAINTAINERS |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Index: linux-x86/MAINTAINERS
-> ===================================================================
-> --- linux-x86.orig/MAINTAINERS
-> +++ linux-x86/MAINTAINERS
-> @@ -10122,9 +10122,9 @@ F:	lib/Kconfig.kcsan
->  F:	scripts/Makefile.kcsan
->  
->  KDUMP
-> -M:	Dave Young <dyoung@redhat.com>
->  M:	Baoquan He <bhe@redhat.com>
->  R:	Vivek Goyal <vgoyal@redhat.com>
-> +R:	Dave Young <dyoung@redhat.com>
+Move CRASH_ALIGN to header asm/kexec.h for later use.
 
-Thanks for the great work on reviewing kexec/kdump related patches, bug
-fixing and improvement on kdump.
+Suggested-by: Dave Young <dyoung@redhat.com>
+Suggested-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+---
+ arch/x86/include/asm/kexec.h | 3 +++
+ arch/x86/kernel/setup.c      | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Acked-by: Baoquan He <bhe@redhat.com>
-
->  L:	kexec@lists.infradead.org
->  S:	Maintained
->  W:	http://lse.sourceforge.net/kdump/
-> 
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 11b7c06e2828c30..3a22e65262aa70b 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -18,6 +18,9 @@
+ 
+ # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ 
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN		SZ_16M
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/string.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index c410be738ae78e0..b7286d4c389dd33 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ 
+-/* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		SZ_16M
+-
+ /*
+  * Keep the crash kernel below this limit.
+  *
+-- 
+2.25.1
 
 
 _______________________________________________
