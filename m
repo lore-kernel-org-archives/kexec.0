@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v16 03/11] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel()
-Date: Tue, 23 Nov 2021 20:46:38 +0800
-Message-ID: <20211123124646.1995-4-thunder.leizhen@huawei.com>
+Subject: [PATCH v16 04/11] x86: kdump: move xen_pv_domain() check and
+ insert_resource() to setup_arch()
+Date: Tue, 23 Nov 2021 20:46:39 +0800
+Message-ID: <20211123124646.1995-5-thunder.leizhen@huawei.com>
 In-Reply-To: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,41 +25,71 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-To make the functions reserve_crashkernel() as generic,
-replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+We will make the functions reserve_crashkernel() as generic, the
+xen_pv_domain() check in reserve_crashkernel() is relevant only to
+x86, the same as insert_resource() in reserve_crashkernel[_low]().
+So move xen_pv_domain() check and insert_resource() to setup_arch()
+to keep them in x86.
 
+Suggested-by: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 7 ++++---
- 1 file changed, 4 insertions(+), 3 deletions(-)
+ arch/x86/kernel/setup.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
 diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index a31352d8c404f6c..2330dcb83e8f06a 100644
+index 2330dcb83e8f06a..63ed089f9778fc3 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -489,8 +489,9 @@ static void __init reserve_crashkernel(void)
- 	if (!crash_base) {
- 		/*
- 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
--		 * crashkernel=x,high reserves memory over 4G, also allocates
--		 * 256M extra low memory for DMA buffers and swiotlb.
-+		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
-+		 * also allocates 256M extra low memory for DMA buffers
-+		 * and swiotlb.
- 		 * But the extra memory is not required for all machines.
- 		 * So try low memory first and fall back to high memory
- 		 * unless "crashkernel=size[KMG],high" is specified.
-@@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
- 		}
+@@ -456,7 +456,6 @@ static int __init reserve_crashkernel_low(void)
+ 
+ 	crashk_low_res.start = low_base;
+ 	crashk_low_res.end   = low_base + low_size - 1;
+-	insert_resource(&iomem_resource, &crashk_low_res);
+ #endif
+ 	return 0;
+ }
+@@ -480,11 +479,6 @@ static void __init reserve_crashkernel(void)
+ 		high = true;
  	}
  
--	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-+	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
- 		memblock_phys_free(crash_base, crash_size);
- 		return;
- 	}
+-	if (xen_pv_domain()) {
+-		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+-		return;
+-	}
+-
+ 	/* 0 means: find the address automatically */
+ 	if (!crash_base) {
+ 		/*
+@@ -531,7 +525,6 @@ static void __init reserve_crashkernel(void)
+ 
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end   = crash_base + crash_size - 1;
+-	insert_resource(&iomem_resource, &crashk_res);
+ }
+ #else
+ static void __init reserve_crashkernel(void)
+@@ -1143,7 +1136,17 @@ void __init setup_arch(char **cmdline_p)
+ 	 * Reserve memory for crash kernel after SRAT is parsed so that it
+ 	 * won't consume hotpluggable memory.
+ 	 */
+-	reserve_crashkernel();
++	if (xen_pv_domain())
++		pr_info("Ignoring crashkernel for a Xen PV domain\n");
++	else {
++		reserve_crashkernel();
++#ifdef CONFIG_KEXEC_CORE
++		if (crashk_res.end > crashk_res.start)
++			insert_resource(&iomem_resource, &crashk_res);
++		if (crashk_low_res.end > crashk_low_res.start)
++			insert_resource(&iomem_resource, &crashk_low_res);
++#endif
++	}
+ 
+ 	memblock_find_dma_reserve();
+ 
 -- 
 2.25.1
 
