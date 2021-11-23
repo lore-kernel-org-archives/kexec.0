@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v16 02/11] x86: kdump: make the lower bound of crash kernel
- reservation consistent
-Date: Tue, 23 Nov 2021 20:46:37 +0800
-Message-ID: <20211123124646.1995-3-thunder.leizhen@huawei.com>
+Subject: [PATCH v16 03/11] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Date: Tue, 23 Nov 2021 20:46:38 +0800
+Message-ID: <20211123124646.1995-4-thunder.leizhen@huawei.com>
 In-Reply-To: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,30 +25,41 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-The lower bounds of crash kernel reservation and crash kernel low
-reservation are different, use the consistent value CRASH_ALIGN.
+To make the functions reserve_crashkernel() as generic,
+replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/x86/kernel/setup.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
 diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index b7286d4c389dd33..a31352d8c404f6c 100644
+index a31352d8c404f6c..2330dcb83e8f06a 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
- 			return 0;
+@@ -489,8 +489,9 @@ static void __init reserve_crashkernel(void)
+ 	if (!crash_base) {
+ 		/*
+ 		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+-		 * crashkernel=x,high reserves memory over 4G, also allocates
+-		 * 256M extra low memory for DMA buffers and swiotlb.
++		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
++		 * also allocates 256M extra low memory for DMA buffers
++		 * and swiotlb.
+ 		 * But the extra memory is not required for all machines.
+ 		 * So try low memory first and fall back to high memory
+ 		 * unless "crashkernel=size[KMG],high" is specified.
+@@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
+ 		}
  	}
  
--	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-+	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
-+			CRASH_ADDR_LOW_MAX);
- 	if (!low_base) {
- 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
- 		       (unsigned long)(low_size >> 20));
+-	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
++	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
+ 	}
 -- 
 2.25.1
 
