@@ -1,15 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mp3Wq-00F3sX-Hh
- for kexec@lists.infradead.org; Mon, 22 Nov 2021 07:14:18 +0000
-From: Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH 3/3] s390: add support for --reuse-cmdline
-Date: Mon, 22 Nov 2021 08:14:01 +0100
-Message-Id: <20211122071401.3106858-4-svens@linux.ibm.com>
-In-Reply-To: <20211122071401.3106858-1-svens@linux.ibm.com>
-References: <20211122071401.3106858-1-svens@linux.ibm.com>
+ id 1mpPKJ-000zv0-Ud
+ for kexec@lists.infradead.org; Tue, 23 Nov 2021 06:30:49 +0000
+Date: Tue, 23 Nov 2021 14:30:34 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: [PATCH] MAINTAINERS: update kdump maintainers
+Message-ID: <YZyKilzKFsWJYdgn@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,83 +21,32 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, Sven Schnelle <svens@linux.ibm.com>, Alexander Egorenkov <egorenar@linux.ibm.com>
+To: bhe@redhat.com, kexec@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org, vgoyal@redhat.com
 
---reuse-cmdline reads the command line of the currently
-running kernel from /proc/cmdline and uses that for the
-kernel that should be kexec'd.
+Remove myself from kdump maintainers as I have no enough time to
+maintain it now. But I can review patches on demand though.
 
-Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Signed-off-by: Dave Young <dyoung@redhat.com>
 ---
- kexec/arch/s390/include/arch/options.h | 10 ++++++----
- kexec/arch/s390/kexec-image.c          |  9 +++++++++
- 2 files changed, 15 insertions(+), 4 deletions(-)
+ MAINTAINERS |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kexec/arch/s390/include/arch/options.h b/kexec/arch/s390/include/arch/options.h
-index 76044a301ceb..b030b61d61be 100644
---- a/kexec/arch/s390/include/arch/options.h
-+++ b/kexec/arch/s390/include/arch/options.h
-@@ -1,9 +1,10 @@
- #ifndef KEXEC_ARCH_S390_OPTIONS_H
- #define KEXEC_ARCH_S390_OPTIONS_H
+Index: linux-x86/MAINTAINERS
+===================================================================
+--- linux-x86.orig/MAINTAINERS
++++ linux-x86/MAINTAINERS
+@@ -10122,9 +10122,9 @@ F:	lib/Kconfig.kcsan
+ F:	scripts/Makefile.kcsan
  
--#define OPT_ARCH_MAX	(OPT_MAX+0)
--#define OPT_APPEND	OPT_MAX+0
--#define OPT_RAMDISK	OPT_MAX+1
-+#define OPT_ARCH_MAX		(OPT_MAX+0)
-+#define OPT_APPEND		(OPT_MAX+0)
-+#define OPT_RAMDISK		(OPT_MAX+1)
-+#define OPT_REUSE_CMDLINE	(OPT_MAX+2)
- 
- /* Options relevant to the architecture (excluding loader-specific ones),
-  * in this case none:
-@@ -31,7 +32,8 @@
- 	KEXEC_ARCH_OPTIONS				\
- 	{"command-line",     1, 0, OPT_APPEND},		\
- 	{"append",           1, 0, OPT_APPEND},		\
--	{"initrd",	     1, 0, OPT_RAMDISK},
-+	{"initrd",	     1, 0, OPT_RAMDISK},	\
-+	{"reuse-cmdline",    0, 0, OPT_REUSE_CMDLINE },
- 
- #define KEXEC_ALL_OPT_STR KEXEC_ARCH_OPT_STR
- 
-diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
-index dbeb689b830a..310d967ea331 100644
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -72,6 +72,10 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
- 		case OPT_RAMDISK:
- 			ramdisk = optarg;
- 			break;
-+		case OPT_REUSE_CMDLINE:
-+			free(command_line);
-+			command_line = get_command_line();
-+			break;
- 		}
- 	}
- 
-@@ -123,6 +127,10 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
- 			if (command_line_add(optarg))
- 				return -1;
- 			break;
-+		case OPT_REUSE_CMDLINE:
-+			free(command_line);
-+			command_line = get_command_line();
-+			break;
- 		case OPT_RAMDISK:
- 			ramdisk = optarg;
- 			break;
-@@ -223,5 +231,6 @@ image_s390_usage(void)
- 	printf("--command-line=STRING Set the kernel command line to STRING.\n"
- 	       "--append=STRING       Set the kernel command line to STRING.\n"
- 	       "--initrd=FILENAME     Use the file FILENAME as a ramdisk.\n"
-+	       "--reuse-cmdline       Use kernel command line from running system.\n"
- 		);
- }
--- 
-2.25.1
+ KDUMP
+-M:	Dave Young <dyoung@redhat.com>
+ M:	Baoquan He <bhe@redhat.com>
+ R:	Vivek Goyal <vgoyal@redhat.com>
++R:	Dave Young <dyoung@redhat.com>
+ L:	kexec@lists.infradead.org
+ S:	Maintained
+ W:	http://lse.sourceforge.net/kdump/
 
 
 _______________________________________________
