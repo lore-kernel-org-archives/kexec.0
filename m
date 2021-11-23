@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v16 04/11] x86: kdump: move xen_pv_domain() check and
- insert_resource() to setup_arch()
-Date: Tue, 23 Nov 2021 20:46:39 +0800
-Message-ID: <20211123124646.1995-5-thunder.leizhen@huawei.com>
+Subject: [PATCH v16 08/11] x86,
+ arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
+Date: Tue, 23 Nov 2021 20:46:43 +0800
+Message-ID: <20211123124646.1995-9-thunder.leizhen@huawei.com>
 In-Reply-To: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,71 +25,95 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-We will make the functions reserve_crashkernel() as generic, the
-xen_pv_domain() check in reserve_crashkernel() is relevant only to
-x86, the same as insert_resource() in reserve_crashkernel[_low]().
-So move xen_pv_domain() check and insert_resource() to setup_arch()
-to keep them in x86.
+We make the functions reserve_crashkernel[_low]() as generic for
+x86 and arm64. Since reserve_crashkernel[_low]() implementations
+are quite similar on other architectures as well, we can have more
+users of this later.
+
+So have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in arch/Kconfig and
+select this by X86 and ARM64.
 
 Suggested-by: Mike Rapoport <rppt@kernel.org>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ arch/Kconfig        | 3 +++
+ arch/arm64/Kconfig  | 1 +
+ arch/x86/Kconfig    | 2 ++
+ kernel/crash_core.c | 7 ++-----
+ 4 files changed, 8 insertions(+), 5 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 2330dcb83e8f06a..63ed089f9778fc3 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -456,7 +456,6 @@ static int __init reserve_crashkernel_low(void)
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 26b8ed11639da46..19256aa924c3b2c 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -24,6 +24,9 @@ config KEXEC_ELF
+ config HAVE_IMA_KEXEC
+ 	bool
  
- 	crashk_low_res.start = low_base;
- 	crashk_low_res.end   = low_base + low_size - 1;
--	insert_resource(&iomem_resource, &crashk_low_res);
- #endif
- 	return 0;
- }
-@@ -480,11 +479,6 @@ static void __init reserve_crashkernel(void)
- 		high = true;
- 	}
++config ARCH_WANT_RESERVE_CRASH_KERNEL
++	bool
++
+ config SET_FS
+ 	bool
  
--	if (xen_pv_domain()) {
--		pr_info("Ignoring crashkernel for a Xen PV domain\n");
--		return;
--	}
+diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+index c4207cf9bb17ffb..4b99efa36da3793 100644
+--- a/arch/arm64/Kconfig
++++ b/arch/arm64/Kconfig
+@@ -95,6 +95,7 @@ config ARM64
+ 	select ARCH_WANT_FRAME_POINTERS
+ 	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+ 	select ARCH_WANT_LD_ORPHAN_WARN
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select ARCH_WANTS_NO_INSTR
+ 	select ARCH_HAS_UBSAN_SANITIZE_ALL
+ 	select ARM_AMBA
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 7399327d1eff79d..528034b4276ecf8 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -12,6 +12,7 @@ config X86_32
+ 	depends on !64BIT
+ 	# Options that are inherently 32-bit kernel only:
+ 	select ARCH_WANT_IPC_PARSE_VERSION
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select CLKSRC_I8253
+ 	select CLONE_BACKWARDS
+ 	select GENERIC_VDSO_32
+@@ -28,6 +29,7 @@ config X86_64
+ 	select ARCH_HAS_GIGANTIC_PAGE
+ 	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+ 	select ARCH_USE_CMPXCHG_LOCKREF
++	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+ 	select HAVE_ARCH_SOFT_DIRTY
+ 	select MODULES_USE_ELF_RELA
+ 	select NEED_DMA_MAP_STATE
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 4dc2643fcbccf99..b23cfc0ca8905fd 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -321,9 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
+  * --------- Crashkernel reservation ------------------------------
+  */
+ 
+-#ifdef CONFIG_KEXEC_CORE
 -
- 	/* 0 means: find the address automatically */
- 	if (!crash_base) {
- 		/*
-@@ -531,7 +525,6 @@ static void __init reserve_crashkernel(void)
- 
+-#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
++#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
+ static int __init reserve_crashkernel_low(void)
+ {
+ #ifdef CONFIG_64BIT
+@@ -451,8 +449,7 @@ void __init reserve_crashkernel(void)
  	crashk_res.start = crash_base;
  	crashk_res.end   = crash_base + crash_size - 1;
--	insert_resource(&iomem_resource, &crashk_res);
  }
- #else
- static void __init reserve_crashkernel(void)
-@@ -1143,7 +1136,17 @@ void __init setup_arch(char **cmdline_p)
- 	 * Reserve memory for crash kernel after SRAT is parsed so that it
- 	 * won't consume hotpluggable memory.
- 	 */
--	reserve_crashkernel();
-+	if (xen_pv_domain())
-+		pr_info("Ignoring crashkernel for a Xen PV domain\n");
-+	else {
-+		reserve_crashkernel();
-+#ifdef CONFIG_KEXEC_CORE
-+		if (crashk_res.end > crashk_res.start)
-+			insert_resource(&iomem_resource, &crashk_res);
-+		if (crashk_low_res.end > crashk_low_res.start)
-+			insert_resource(&iomem_resource, &crashk_low_res);
-+#endif
-+	}
+-#endif
+-#endif /* CONFIG_KEXEC_CORE */
++#endif /* CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL */
  
- 	memblock_find_dma_reserve();
- 
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len)
 -- 
 2.25.1
 
