@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v16 07/11] arm64: kdump: reimplement crashkernel=X
-Date: Tue, 23 Nov 2021 20:46:42 +0800
-Message-ID: <20211123124646.1995-8-thunder.leizhen@huawei.com>
+Subject: [PATCH v16 10/11] of: fdt: Add memory for devices by DT property
+ "linux, usable-memory-range"
+Date: Tue, 23 Nov 2021 20:46:45 +0800
+Message-ID: <20211123124646.1995-11-thunder.leizhen@huawei.com>
 In-Reply-To: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -24,212 +25,91 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-There are following issues in arm64 kdump:
-1. We use crashkernel=X to reserve crashkernel below 4G, which
-will fail when there is no enough low memory.
-2. If reserving crashkernel above 4G, in this case, crash dump
-kernel will boot failure because there is no low memory available
-for allocation.
+When reserving crashkernel in high memory, some low memory is reserved
+for crash dump kernel devices and never mapped by the first kernel.
+This memory range is advertised to crash dump kernel via DT property
+under /chosen,
+        linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
 
-To solve these issues, change the behavior of crashkernel=X and
-introduce crashkernel=X,[high,low]. crashkernel=X tries low allocation
-in DMA zone, and fall back to high allocation if it fails.
-We can also use "crashkernel=X,high" to select a region above DMA zone,
-which also tries to allocate at least 256M in DMA zone automatically.
-"crashkernel=Y,low" can be used to allocate specified size low memory.
+We reused the DT property linux,usable-memory-range and made the low
+memory region as the second range "BASE2 SIZE2", which keeps compatibility
+with existing user-space and older kdump kernels.
 
-Another minor change, there may be two regions reserved for crash
-dump kernel, in order to distinct from the high region and make no
-effect to the use of existing kexec-tools, rename the low region as
-"Crash kernel (low)".
+Crash dump kernel reads this property at boot time and call memblock_add()
+to add the low memory region after memblock_cap_memory_range() has been
+called.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/arm64/include/asm/kexec.h         |  4 ++
- arch/arm64/kernel/machine_kexec_file.c | 12 +++++-
- arch/arm64/kernel/setup.c              | 13 +++++-
- arch/arm64/mm/init.c                   | 59 +++++---------------------
- kernel/crash_core.c                    |  6 +--
- 5 files changed, 40 insertions(+), 54 deletions(-)
+ drivers/of/fdt.c | 36 ++++++++++++++++++++++++++----------
+ 1 file changed, 26 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 1b9edc69f0244ca..3bde0079925d771 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -96,6 +96,10 @@ static inline void crash_prepare_suspend(void) {}
- static inline void crash_post_resume(void) {}
- #endif
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 37b477a51175359..1ea2a0b1657e3a9 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -967,6 +967,15 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
  
-+#ifdef CONFIG_KEXEC_CORE
-+extern void __init reserve_crashkernel(void);
-+#endif
-+
- #if defined(CONFIG_KEXEC_CORE)
- void cpu_soft_restart(unsigned long el2_switch, unsigned long entry,
- 		      unsigned long arg0, unsigned long arg1,
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 63634b4d72c158f..6f3fa059ca4e816 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -65,10 +65,18 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
+ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
  
- 	/* Exclude crashkernel region */
- 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
-+	if (ret)
-+		goto out;
++/*
++ * The main usage of linux,usable-memory-range is for crash dump kernel.
++ * Originally, the number of usable-memory regions is one. Now there may
++ * be two regions, low region and high region.
++ * To make compatibility with existing user-space and older kdump, the low
++ * region is always the last range of linux,usable-memory-range if exist.
++ */
++#define MAX_USABLE_RANGES		2
 +
-+	if (crashk_low_res.end) {
-+		ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
-+		if (ret)
-+			goto out;
+ /**
+  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
+  * location from flat tree
+@@ -974,10 +983,9 @@ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
+  */
+ static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
+ {
+-	const __be32 *prop;
+-	int len;
+-	phys_addr_t cap_mem_addr;
+-	phys_addr_t cap_mem_size;
++	struct memblock_region rgn[MAX_USABLE_RANGES] = {0};
++	const __be32 *prop, *endp;
++	int len, i = 0;
+ 
+ 	if ((long)node < 0)
+ 		return;
+@@ -985,16 +993,24 @@ static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
+ 	pr_debug("Looking for usable-memory-range property... ");
+ 
+ 	prop = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+-	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
++	if (!prop)
+ 		return;
+ 
+-	cap_mem_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
+-	cap_mem_size = dt_mem_next_cell(dt_root_size_cells, &prop);
++	endp = prop + (len / sizeof(__be32));
++	while ((endp - prop) >= (dt_root_addr_cells + dt_root_size_cells)) {
++		rgn[i].base = dt_mem_next_cell(dt_root_addr_cells, &prop);
++		rgn[i].size = dt_mem_next_cell(dt_root_size_cells, &prop);
++
++		pr_debug("cap_mem_regions[%d]: base=%pa, size=%pa\n",
++			 i, &rgn[i].base, &rgn[i].size);
+ 
+-	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
+-		 &cap_mem_size);
++		if (++i >= MAX_USABLE_RANGES)
++			break;
 +	}
  
--	if (!ret)
--		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+	ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
- 
-+out:
- 	kfree(cmem);
- 	return ret;
+-	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
++	memblock_cap_memory_range(rgn[0].base, rgn[0].size);
++	for (i = 1; i < MAX_USABLE_RANGES && rgn[i].size; i++)
++		memblock_add(rgn[i].base, rgn[i].size);
  }
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index be5f85b0a24de69..4bb2e55366be64d 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -248,7 +248,18 @@ static void __init request_standard_resources(void)
- 		    kernel_data.end <= res->end)
- 			request_resource(res, &kernel_data);
- #ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
-+		/*
-+		 * Userspace will find "Crash kernel" or "Crash kernel (low)"
-+		 * region in /proc/iomem.
-+		 * In order to distinct from the high region and make no effect
-+		 * to the use of existing kexec-tools, rename the low region as
-+		 * "Crash kernel (low)".
-+		 */
-+		if (crashk_low_res.end && crashk_low_res.start >= res->start &&
-+				crashk_low_res.end <= res->end) {
-+			crashk_low_res.name = "Crash kernel (low)";
-+			request_resource(res, &crashk_low_res);
-+		}
- 		if (crashk_res.end && crashk_res.start >= res->start &&
- 		    crashk_res.end <= res->end)
- 			request_resource(res, &crashk_res);
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index be4595dc7459115..85c83e4eff2b6c4 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -36,6 +36,7 @@
- #include <asm/fixmap.h>
- #include <asm/kasan.h>
- #include <asm/kernel-pgtable.h>
-+#include <asm/kexec.h>
- #include <asm/kvm_host.h>
- #include <asm/memory.h>
- #include <asm/numa.h>
-@@ -64,57 +65,11 @@ EXPORT_SYMBOL(memstart_addr);
-  */
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
  
--#ifdef CONFIG_KEXEC_CORE
--/*
-- * reserve_crashkernel() - reserves memory for crash kernel
-- *
-- * This function reserves memory area given in "crashkernel=" kernel command
-- * line parameter. The memory reserved is used by dump capture kernel when
-- * primary kernel is crashing.
-- */
-+#ifndef CONFIG_KEXEC_CORE
- static void __init reserve_crashkernel(void)
- {
--	unsigned long long crash_base, crash_size;
--	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
--	int ret;
--
--	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
--				&crash_size, &crash_base);
--	/* no crashkernel= or invalid value specified */
--	if (ret || !crash_size)
--		return;
--
--	crash_size = PAGE_ALIGN(crash_size);
--
--	/* User specifies base address explicitly. */
--	if (crash_base)
--		crash_max = crash_base + crash_size;
--
--	/* Current arm64 boot protocol requires 2MB alignment */
--	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
--					       crash_base, crash_max);
--	if (!crash_base) {
--		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
--			crash_size);
--		return;
--	}
--
--	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
--		crash_base, crash_base + crash_size, crash_size >> 20);
--
--	/*
--	 * The crashkernel memory will be removed from the kernel linear
--	 * map. Inform kmemleak so that it won't try to access it.
--	 */
--	kmemleak_ignore_phys(crash_base);
--	crashk_res.start = crash_base;
--	crashk_res.end = crash_base + crash_size - 1;
- }
--#else
--static void __init reserve_crashkernel(void)
--{
--}
--#endif /* CONFIG_KEXEC_CORE */
-+#endif
- 
- /*
-  * Return the maximum physical address for a zone accessible by the given bits
-@@ -362,6 +317,14 @@ void __init bootmem_init(void)
- 	 * reserved, so do it here.
- 	 */
- 	reserve_crashkernel();
-+#ifdef CONFIG_KEXEC_CORE
-+	/*
-+	 * The low region is intended to be used for crash dump kernel devices,
-+	 * just mark the low region as "nomap" simply.
-+	 */
-+	if (crashk_low_res.end)
-+		memblock_mark_nomap(crashk_low_res.start, resource_size(&crashk_low_res));
-+#endif
- 
- 	memblock_dump_all();
- }
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 336794a5abc6997..4dc2643fcbccf99 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -323,10 +323,10 @@ int __init parse_crashkernel_low(char *cmdline,
- 
- #ifdef CONFIG_KEXEC_CORE
- 
--#ifdef CONFIG_X86
-+#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
- static int __init reserve_crashkernel_low(void)
- {
--#ifdef CONFIG_X86_64
-+#ifdef CONFIG_64BIT
- 	unsigned long long base, low_base = 0, low_size = 0;
- 	unsigned long low_mem_limit;
- 	int ret;
-@@ -451,7 +451,7 @@ void __init reserve_crashkernel(void)
- 	crashk_res.start = crash_base;
- 	crashk_res.end   = crash_base + crash_size - 1;
- }
--#endif /* CONFIG_X86 */
-+#endif
- #endif /* CONFIG_KEXEC_CORE */
- 
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ #ifdef CONFIG_SERIAL_EARLYCON
 -- 
 2.25.1
 
