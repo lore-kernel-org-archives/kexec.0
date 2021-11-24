@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mpgux-003mQm-7R
- for kexec@lists.infradead.org; Wed, 24 Nov 2021 01:17:48 +0000
-Date: Wed, 24 Nov 2021 09:17:33 +0800
+ id 1mpoB9-004KhX-BY
+ for kexec@lists.infradead.org; Wed, 24 Nov 2021 09:03:01 +0000
+Date: Wed, 24 Nov 2021 17:02:27 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [RFC v1 1/8] crash: fix minor typo/bug in debug message
-Message-ID: <20211124011733.GA23043@MiWiFi-R3L-srv>
+Subject: Re: [RFC v1 0/8] RFC v1: Kernel handling of CPU and memory hot
+ un/plug for crash
+Message-ID: <20211124090227.GA8026@MiWiFi-R3L-srv>
 References: <20211118174948.37435-1-eric.devolder@oracle.com>
- <20211118174948.37435-2-eric.devolder@oracle.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211118174948.37435-2-eric.devolder@oracle.com>
+In-Reply-To: <20211118174948.37435-1-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,37 +27,40 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Eric DeVolder <eric.devolder@oracle.com>
 Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
 
+Hi,
+
 On 11/18/21 at 12:49pm, Eric DeVolder wrote:
-> The pr_debug() intends to display the memsz member, but the
-> parameter is actually the bufsz member (which is already
-> displayed). Correct this to display memsz value.
+......
+> This patchset introduces a generic crash hot un/plug handler that
+> registers with the CPU and memory notifiers. Upon CPU or memory
+> changes, this generic handler is invoked and performs important
+> housekeeping, for example obtaining the appropriate lock, and then
+> invokes an architecture specific handler to do the appropriate
+> updates.
 > 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> ---
->  arch/x86/kernel/crash.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index e8326a8d1c5d..9730c88530fc 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -407,7 +407,7 @@ int crash_load_segments(struct kimage *image)
->  	}
->  	image->elf_load_addr = kbuf.mem;
->  	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-> -		 image->elf_load_addr, kbuf.bufsz, kbuf.bufsz);
-> +		 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+> In the case of x86_64, the arch specific handler generates a new
+> elfcorehdr, which reflects the current CPUs and memory regions, into a
+> buffer. Since purgatory also does an integrity check via hash digests
+> of the loaded segments, purgatory must also be updated with the new
 
-Good catch, thx.
+When I tried to address this with a draft patch, I started with a
+different way in which udev rule triggers reloading and only elfcorehdr
+segment is updated. The update should be less time consuming. Seems
+internal notifier is better in your way. But I didn't update purgatory
+since I just skipped the elfcorehdr part when calculate the digest of
+segments. The reason from my mind is kernel text, initrd must contribute
+most part of the digest, elfcorehdr is much less, and it will simplify
+code change more. Doing so let us have no need to touch purgatory at
+all. What do you think?
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Still reviewing.
 
->  
->  	return ret;
->  }
-> -- 
-> 2.27.0
-> 
+> digests. The arch handler also generates a new purgatory into a
+> buffer, performs the hash digests of the new memory segments, and then
+> patches purgatory with the new digests.  If all succeeds, then the
+> elfcorehdr and purgatory buffers over write the existing buffers and
+> the new kdump image is live and ready to go. No involvement with
+> userspace at all.
 
 
 _______________________________________________
