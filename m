@@ -1,16 +1,23 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out2.suse.de ([195.135.220.29])
+Received: from mailgate.ics.forth.gr ([139.91.1.2])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mqJ5t-008R0G-0I
- for kexec@lists.infradead.org; Thu, 25 Nov 2021 18:03:40 +0000
-From: Michal Suchanek <msuchanek@suse.de>
-Subject: [PATCH v2 3/6] kexec_file: Don't opencode appended signature
- verification.
-Date: Thu, 25 Nov 2021 19:02:41 +0100
-Message-Id: <911210845d863b06de2404acae6fff06241f0458.1637862358.git.msuchanek@suse.de>
-In-Reply-To: <cover.1637862358.git.msuchanek@suse.de>
-References: <cover.1637862358.git.msuchanek@suse.de>
+ id 1mqOOj-008tMv-St
+ for kexec@lists.infradead.org; Thu, 25 Nov 2021 23:43:28 +0000
+Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
+ by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id
+ 1APNhDig068688
+ for <kexec@lists.infradead.org>; Fri, 26 Nov 2021 01:43:13 +0200 (EET)
 MIME-Version: 1.0
+Date: Fri, 26 Nov 2021 01:43:06 +0200
+From: Nick Kossifidis <mick@ics.forth.gr>
+Subject: Re: RISC-V: patched kexec-tools on github for review/testing
+In-Reply-To: <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
+References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
+ <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
+ <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
+ <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
+ <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
+Message-ID: <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,211 +26,106 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: keyrings@vger.kernel.org
-Cc: Michal Suchanek <msuchanek@suse.de>, kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Alexandre Ghiti <alexandre.ghiti@canonical.com>
+Cc: Nick Kossifidis <mick@ics.forth.gr>, ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
 
-Module verification already implements appeded signature verification.
-
-Reuse it for kexec_file.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
----
- arch/powerpc/kexec/elf_64.c           | 21 ++++-----------------
- arch/s390/kernel/machine_kexec_file.c | 21 ++++-----------------
- include/linux/verification.h          |  3 +++
- kernel/module-internal.h              |  2 --
- kernel/module.c                       |  4 +++-
- kernel/module_signing.c               | 24 +++++++++++++++---------
- 6 files changed, 29 insertions(+), 46 deletions(-)
-
-diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-index 25dc1071feec..266cb26d3ca0 100644
---- a/arch/powerpc/kexec/elf_64.c
-+++ b/arch/powerpc/kexec/elf_64.c
-@@ -153,12 +153,10 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- }
- 
- #ifdef CONFIG_KEXEC_SIG
--int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
-+int elf64_verify_sig(const char *kernel, unsigned long length)
- {
-+	size_t kernel_len = length;
- 	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
--	struct module_signature *ms;
--	unsigned long sig_len;
--	int ret;
- 
- 	if (marker_len > kernel_len)
- 		return -EKEYREJECTED;
-@@ -168,19 +166,8 @@ int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
- 		return -EKEYREJECTED;
- 	kernel_len -= marker_len;
- 
--	ms = (void *)kernel + kernel_len - sizeof(*ms);
--	ret = mod_check_sig(ms, kernel_len, "kexec");
--	if (ret)
--		return ret;
--
--	sig_len = be32_to_cpu(ms->sig_len);
--	kernel_len -= sizeof(*ms) + sig_len;
--
--	return verify_pkcs7_signature(kernel, kernel_len,
--				      kernel + kernel_len, sig_len,
--				      VERIFY_USE_PLATFORM_KEYRING,
--				      VERIFYING_MODULE_SIGNATURE,
--				      NULL, NULL);
-+	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
-+					"kexec_file");
- }
- #endif /* CONFIG_KEXEC_SIG */
- 
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 43a9abe48abd..432797249db3 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -24,12 +24,10 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- };
- 
- #ifdef CONFIG_KEXEC_SIG
--int s390_verify_sig(const char *kernel, unsigned long kernel_len)
-+int s390_verify_sig(const char *kernel, unsigned long length)
- {
-+	size_t kernel_len = length;
- 	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
--	struct module_signature *ms;
--	unsigned long sig_len;
--	int ret;
- 
- 	/* Skip signature verification when not secure IPLed. */
- 	if (!ipl_secure_flag)
-@@ -43,19 +41,8 @@ int s390_verify_sig(const char *kernel, unsigned long kernel_len)
- 		return -EKEYREJECTED;
- 	kernel_len -= marker_len;
- 
--	ms = (void *)kernel + kernel_len - sizeof(*ms);
--	ret = mod_check_sig(ms, kernel_len, "kexec");
--	if (ret)
--		return ret;
--
--	sig_len = be32_to_cpu(ms->sig_len);
--	kernel_len -= sizeof(*ms) + sig_len;
--
--	return verify_pkcs7_signature(kernel, kernel_len,
--				      kernel + kernel_len, sig_len,
--				      VERIFY_USE_PLATFORM_KEYRING,
--				      VERIFYING_MODULE_SIGNATURE,
--				      NULL, NULL);
-+	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
-+					"kexec_file");
- }
- #endif /* CONFIG_KEXEC_SIG */
- 
-diff --git a/include/linux/verification.h b/include/linux/verification.h
-index a655923335ae..c1cf0582012a 100644
---- a/include/linux/verification.h
-+++ b/include/linux/verification.h
-@@ -60,5 +60,8 @@ extern int verify_pefile_signature(const void *pebuf, unsigned pelen,
- 				   enum key_being_used_for usage);
- #endif
- 
-+int verify_appended_signature(const void *data, size_t *len, struct key *trusted_keys,
-+			      const char *what);
-+
- #endif /* CONFIG_SYSTEM_DATA_VERIFICATION */
- #endif /* _LINUX_VERIFY_PEFILE_H */
-diff --git a/kernel/module-internal.h b/kernel/module-internal.h
-index 33783abc377b..80461e14bf29 100644
---- a/kernel/module-internal.h
-+++ b/kernel/module-internal.h
-@@ -27,5 +27,3 @@ struct load_info {
- 		unsigned int sym, str, mod, vers, info, pcpu;
- 	} index;
- };
--
--extern int mod_verify_sig(const void *mod, struct load_info *info);
-diff --git a/kernel/module.c b/kernel/module.c
-index 84a9141a5e15..8481933dfa92 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -57,6 +57,7 @@
- #include <linux/bsearch.h>
- #include <linux/dynamic_debug.h>
- #include <linux/audit.h>
-+#include <linux/verification.h>
- #include <uapi/linux/module.h>
- #include "module-internal.h"
- 
-@@ -2894,7 +2895,8 @@ static int module_sig_check(struct load_info *info, int flags)
- 	    memcmp(mod + info->len - markerlen, MODULE_SIG_STRING, markerlen) == 0) {
- 		/* We truncate the module to discard the signature */
- 		info->len -= markerlen;
--		err = mod_verify_sig(mod, info);
-+		err = verify_appended_signature(mod, &info->len,
-+						VERIFY_USE_SECONDARY_KEYRING, "module");
- 		if (!err) {
- 			info->sig_ok = true;
- 			return 0;
-diff --git a/kernel/module_signing.c b/kernel/module_signing.c
-index 8723ae70ea1f..f492e410564d 100644
---- a/kernel/module_signing.c
-+++ b/kernel/module_signing.c
-@@ -14,13 +14,19 @@
- #include <crypto/public_key.h>
- #include "module-internal.h"
- 
--/*
-- * Verify the signature on a module.
-+/**
-+ * verify_appended_signature - Verify the signature on a module with the
-+ * signature marker stripped.
-+ * @data: The data to be verified
-+ * @len: Size of @data.
-+ * @trusted_keys: Keyring to use for verification
-+ * @what: Informational string for log messages
-  */
--int mod_verify_sig(const void *mod, struct load_info *info)
-+int verify_appended_signature(const void *data, size_t *len,
-+			      struct key *trusted_keys, const char *what)
- {
- 	struct module_signature ms;
--	size_t sig_len, modlen = info->len;
-+	size_t sig_len, modlen = *len;
- 	int ret;
- 
- 	pr_devel("==>%s(,%zu)\n", __func__, modlen);
-@@ -28,18 +34,18 @@ int mod_verify_sig(const void *mod, struct load_info *info)
- 	if (modlen <= sizeof(ms))
- 		return -EBADMSG;
- 
--	memcpy(&ms, mod + (modlen - sizeof(ms)), sizeof(ms));
-+	memcpy(&ms, data + (modlen - sizeof(ms)), sizeof(ms));
- 
--	ret = mod_check_sig(&ms, modlen, "module");
-+	ret = mod_check_sig(&ms, modlen, what);
- 	if (ret)
- 		return ret;
- 
- 	sig_len = be32_to_cpu(ms.sig_len);
- 	modlen -= sig_len + sizeof(ms);
--	info->len = modlen;
-+	*len = modlen;
- 
--	return verify_pkcs7_signature(mod, modlen, mod + modlen, sig_len,
--				      VERIFY_USE_SECONDARY_KEYRING,
-+	return verify_pkcs7_signature(data, modlen, data + modlen, sig_len,
-+				      trusted_keys,
- 				      VERIFYING_MODULE_SIGNATURE,
- 				      NULL, NULL);
- }
--- 
-2.31.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+zqPPhM65z4IgMjAyMS0xMC0xNSAxMDowNywgQWxleGFuZHJlIEdoaXRpIM6tzrPPgc6xz4jOtToK
+PiBPbiBTYXQsIE9jdCA5LCAyMDIxIGF0IDM6MjUgUE0gTmljayBLb3NzaWZpZGlzIDxtaWNrQGlj
+cy5mb3J0aC5ncj4gCj4gd3JvdGU6Cj4+IAo+PiDOo8+EzrnPgiAyMDIxLTEwLTA2IDE0OjEwLCBB
+bGV4YW5kcmUgR2hpdGkgzq3Os8+BzrHPiM61Ogo+PiA+Cj4+ID4gU28gSSBmb2xsb3dlZCB0aGUg
+aW5zdHJ1Y3Rpb25zIGhlcmU6Cj4+ID4gaHR0cHM6Ly9kb2N1bWVudGF0aW9uLnN1c2UuY29tL2Zy
+LWZyL3NsZXMvMTItU1AzL2h0bWwvU0xFUy1hbGwvY2hhLXR1bmluZy1rZXhlYy5odG1sI2NoYS10
+dW5pbmcta2V4ZWMtYmFzaWMtdXNhZ2UsCj4+ID4gYmVsb3cgdGhlIG91dHB1dCBvbiBhbiBVbm1h
+dGNoZWQgYm9hcmQgdXNpbmcgYSB2bWxpbnV4IHN0b3JlZCBvbiBhIHNkCj4+ID4gY2FyZDoKPj4g
+Pgo+PiA+IHVidW50dUB1YnVudHU6fiQgc3VkbyBzYmluL2tleGVjIC1sIHZtbGludXggLS1hcHBl
+bmQ9IiQoY2F0Cj4+ID4gL3Byb2MvY21kbGluZSkiIC0taW5pdHJkPS9ib290L2luaXRyZC5pbWcK
+Pj4gPiBXYXJuaW5nOiBObyBjbWRsaW5lIHByb3ZpZGVkLCB1c2luZyBhcHBlbmQgc3RyaW5nIGFz
+IGNtZGxpbmUKPj4gPiBXYXJuaW5nOiBObyBkdGIgcHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdh
+cmUvZmR0Cj4+ID4gWyAxODEzLjQ3MjY3MV0gSU5GTzogdGFzayBrd29ya2VyLzE6MDo5ODggYmxv
+Y2tlZCBmb3IgbW9yZSB0aGFuIDEyMAo+PiA+IHNlY29uZHMuCj4+ID4gWyAxODEzLjQ3ODc1MV0g
+ICAgICAgTm90IHRhaW50ZWQgNS4xNS4wLXJjMSsgIzE1Cj4+ID4gWyAxODEzLjQ4MzExMF0gImVj
+aG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVvdXRfc2VjcyIKPj4gPiBkaXNh
+YmxlcyB0aGlzIG1lc3NhZ2UuCj4+ID4gQ291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVt
+b3J5IG9mIDB4MzAwMCBieXRlcy4uLgo+PiA+IGxvY2F0ZV9ob2xlIGZhaWxlZAo+PiA+Cj4+ID4g
+SSB1c2VkIHRoZSBVYnVudHUga2VybmVsLCBzbyB0aGlzIGlzIHByZXR0eSBsYXJnZToKPj4gPiAt
+cnd4cnd4ci14IDEgdWJ1bnR1IHVidW50dSAyNzdNIE9jdCAgNSAxNTo0NyB2bWxpbnV4Cj4+ID4g
+LXJ3LXItLXItLSAxIHJvb3Qgcm9vdCA5OE0gU2VwIDIxIDAzOjI1IC9ib290L2luaXRyZC5pbWcK
+Pj4gPgo+PiAKPj4gQUNLLCBJIGhhdmVuJ3QgdGVzdGVkIGluaXRyZCBtdWNoIFRCSCwgSSB1c3Vh
+bGx5IGRvbid0IHVzZSBhbiBpbml0cmQsCj4+IGFuZCB3aGVuIEkgZG8gaXQncyBhIHNtYWxsIGJ1
+c3lib3gtYmFzZWQgcm9vdGZzLgo+PiAKPj4gPiBUaGVuIGlmIEkgZG9uJ3QgbG9hZCB0aGUgaW5p
+dHJkIChJIHNvbWV0aW1lcyBoYXZlIHRoZSBzYW1lIHdhcm5pbmcgYXMKPj4gPiBhYm92ZSkgSSBj
+YW4gYXQgbGVhc3Qga2V4ZWMgdGhlIG5ldyBrZXJuZWwgYnV0IGl0IGZhaWxzIHRvIGJvb3Q6Cj4+
+ID4KPj4gPiB1YnVudHVAdWJ1bnR1On4kIHN1ZG8gLi9zYmluL2tleGVjIC1lCj4+ID4gV2Fybmlu
+ZzogTm8gY21kbGluZSBvciBhcHBlbmQgc3RyaW5nIHByb3ZpZGVkCj4+ID4gV2FybmluZzogTm8g
+ZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13YXJlL2ZkdAo+PiA+IFsuLi5dCj4+ID4gWyAg
+ICAwLjAwMDAwMF0gU0JJIHYwLjIgSFNNIGV4dGVuc2lvbiBkZXRlY3RlZAo+PiA+IFsgICAgMC4w
+MDAwMDBdIENQVSB3aXRoIGhhcnRpZD0wIGlzIG5vdCBhdmFpbGFibGUKPj4gPiBbICAgIDAuMDAw
+MDAwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPj4gPiBbICAgIDAuMDAw
+MDAwXSBrZXJuZWwgQlVHIGF0IGFyY2gvcmlzY3Yva2VybmVsL3NtcGJvb3QuYzoxMDchCj4+ID4g
+WyAgICAwLjAwMDAwMF0gS2VybmVsIEJVRyBbIzFdCj4+ID4gWyAgICAwLjAwMDAwMF0gTW9kdWxl
+cyBsaW5rZWQgaW46Cj4+ID4gWyAgICAwLjAwMDAwMF0gQ1BVOiAwIFBJRDogMCBDb21tOiBzd2Fw
+cGVyIE5vdCB0YWludGVkIDUuMTUuMC1yYzErICMxNQo+PiA+IFsgICAgMC4wMDAwMDBdIEhhcmR3
+YXJlIG5hbWU6IFNpRml2ZSBIaUZpdmUgVW5tYXRjaGVkIEEwMCAoRFQpCj4+ID4gWyAgICAwLjAw
+MDAwMF0gZXBjIDogc2V0dXBfc21wKzB4Y2MvMHgxNDIKPj4gPiBbICAgIDAuMDAwMDAwXSAgcmEg
+OiBzZXR1cF9zbXArMHhjNC8weDE0Mgo+PiA+IFsgICAgMC4wMDAwMDBdIGVwYyA6IGZmZmZmZmZm
+ODBhMDQwODAgcmEgOiBmZmZmZmZmZjgwYTA0MDc4IHNwIDoKPj4gPiBmZmZmZmZmZjgxODAzZWMw
+Cj4+ID4gWyAgICAwLjAwMDAwMF0gIGdwIDogZmZmZmZmZmY4MWEyMzIyMCB0cCA6IGZmZmZmZmZm
+ODE4MTA1MDAgdDAgOgo+PiA+IGZmZmZmZmZmODFhMzU1MWYKPj4gPiBbICAgIDAuMDAwMDAwXSAg
+dDEgOiBmZmZmZmZmZmZmZmZmZmZmIHQyIDogMDAwMDAwMDAwMDAwMDAwMCBzMCA6Cj4+ID4gZmZm
+ZmZmZmY4MTgwM2YwMAo+PiA+IFsgICAgMC4wMDAwMDBdICBzMSA6IDAwMDAwMDAwMDAwMDAwMDAg
+YTAgOiAwMDAwMDAwMDAwMDAwMDAwIGExIDoKPj4gPiAwMDAwMDAwMDAwMDAwMDAwCj4+ID4gWyAg
+ICAwLjAwMDAwMF0gIGEyIDogMDAwMDAwMDAwMDAwMDAwMCBhMyA6IDAwMDAwMDAwMDAwMDAwMDEg
+YTQgOgo+PiA+IDAwMDAwMDAwMDAwMDAwMDAKPj4gPiBbICAgIDAuMDAwMDAwXSAgYTUgOiBmZmZm
+ZmZmZjgwYzY0NTAwIGE2IDogMDAwMDAwMDAwMDAwMDAwNCBhNyA6Cj4+ID4gMDAwMDAwMDAwMDAw
+ZmYwMAo+PiA+IFsgICAgMC4wMDAwMDBdICBzMiA6IDAwMDAwMDAwMDAwMDAwMDUgczMgOiAwMDAw
+MDAwMDAwMDAwMDAwIHM0IDoKPj4gPiBmZmZmZmZmZjgxMThmOWE4Cj4+ID4gWyAgICAwLjAwMDAw
+MF0gIHM1IDogMDAwMDAwMDAwMDAwMDAwNyBzNiA6IGZmZmZmZmZmODBjMGI3OTAgczcgOgo+PiA+
+IDAwMDAwMDAwODAwMDAyMDAKPj4gPiBbICAgIDAuMDAwMDAwXSAgczggOiAwMDAwMDAwMDAwMDAw
+ZmZmIHM5IDogMDAwMDAwMDA4MTAwMDIwMCBzMTA6Cj4+ID4gMDAwMDAwMDAwMDAwMDAxOAo+PiA+
+IFsgICAgMC4wMDAwMDBdICBzMTE6IDAwMDAwMDAwMDAwMDAwMGIgdDMgOiAwMDAwMDAwMDAwZmYw
+MDAwIHQ0IDoKPj4gPiBmZmZmZmZmZmZmZmZmZmZmCj4+ID4gWyAgICAwLjAwMDAwMF0gIHQ1IDog
+ZmZmZmZmZmY4MGMwYjdhMCB0NiA6IGZmZmZmZmZmODE4MDNiZDgKPj4gPiBbICAgIDAuMDAwMDAw
+XSBzdGF0dXM6IDAwMDAwMDAyMDAwMDAxMDAgYmFkYWRkcjogMDAwMDAwMDAwMDAwMDAwMAo+PiA+
+IGNhdXNlOiAwMDAwMDAwMDAwMDAwMDAzCj4+ID4gWyAgICAwLjAwMDAwMF0gWzxmZmZmZmZmZjgw
+YTA0MDgwPl0gc2V0dXBfc21wKzB4Y2MvMHgxNDIKPj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZm
+ZmZmODBhMDNkODg+XSBzZXR1cF9hcmNoKzB4NTZhLzB4NTkwCj4+ID4gWyAgICAwLjAwMDAwMF0g
+WzxmZmZmZmZmZjgwYTAwYWEyPl0gc3RhcnRfa2VybmVsKzB4YWEvMHhhNWMKPj4gPiBbICAgIDAu
+MDAwMDAwXSByYW5kb206IGdldF9yYW5kb21fYnl0ZXMgY2FsbGVkIGZyb20KPj4gPiBvb3BzX2V4
+aXQrMHg0NC8weDcwIHdpdGggY3JuZ19pbml0PTAKPj4gPiBbICAgIDAuMDAwMDAwXSAtLS1bIGVu
+ZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0KPj4gPiBbICAgIDAuMDAwMDAwXSBLZXJuZWwg
+cGFuaWMgLSBub3Qgc3luY2luZzogQXR0ZW1wdGVkIHRvIGtpbGwgdGhlIGlkbGUKPj4gPiB0YXNr
+IQo+PiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5n
+OiBBdHRlbXB0ZWQgdG8ga2lsbAo+PiA+IHRoZSBpZGxlIHRhc2shIF0tLS0KPj4gPgo+PiA+IFRo
+aXMgcmVsaWFibHkgZmFpbHMgaGVyZS4KPj4gPgo+PiAKPj4gVGhpcyBsb29rcyB3ZWlyZCwgSSds
+bCBjaGVjayBpdCBvdXQgKHdlIGhhdmUgYW4gdW5tYXRjaGVkIGhlcmUgc28gSSdsbAo+PiB0cnkg
+dG8gZ2V0IG15IGhhbmRzIG9uIGl0IHNvbWV0aW1lIG5leHQgd2VlaykuCj4+IAo+PiBEaWQgeW91
+IHRyeSBrZHVtcCA/IERvIHlvdSBnZXQgdGhlIHNhbWUgZXJyb3IgPwo+IAo+IGtkdW1wIHdvcmtz
+IGZpbmUsIGl0IGZhaWxzIHRvIGZpbmQgdGhlIHJvb3RmcyBidXQgSSB0aGluayBteSBzZXR1cCBp
+cwo+IGZhdWx0eSBoZXJlLgo+IEkgdG9vayBhIHF1aWNrIGxvb2sgYXQga2V4ZWNfcmVsb2NhdGUu
+UywgYW5kIHRoZSB1c2Ugb2YgdmFfcGFfb2Zmc2V0Cj4gaXMgYWxzbyB3cm9uZyBoZXJlLCB3ZSBz
+aG91bGQgdXNlIHZhX2tlcm5lbF9wYV9vZmZzZXQgYXMgaXQgaXMgdXNlZCB0bwo+IG1vZGlmeSBh
+IHRleHQgYWRkcmVzcyBCdXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4KPiAKPiBB
+bGV4Cj4gCgpTb3JyeSBmb3IgdGhlIGRlbGF5LCBJIGZpbmFsbHkgZ290IHNvbWUgdGltZSB0byB3
+b3JrIG9uIHRoaXMuIEFzIGl0IAp0dXJucyBvdXQgSSdtIHBhc3NpbmcgY3B1IGlkIGluc3RlYWQg
+b2YgaGFydCBpZCB0byB0aGUgbmV4dCBrZXJuZWwgKHRoYXQgCmNvbW1lbnQgb24gc21wLmggY2xh
+aW1pbmcgdGhhdCByYXdfc21wX3Byb2Nlc3Nvcl9pZCByZXR1cm5zIHRoZSBoYXJ0IGlkIApkaWRu
+J3QgaGVscCBtdWNoKSBhbmQgaW50ZXJlc3RpbmdseSBlbm91Z2ggY3B1IGlkIGFuZCBoYXJ0IGlk
+IG1hdGNoIG9uIApxZW11IGFuZCBhbHNvIHNvbWV0aW1lcyBtYXRjaCBvbiB0aGUgdW5tYXRjaGVk
+IC8gdW5sZWFzaGVkIGJvYXJkLiBBbHNvIApvbiB1bm1hdGNoZWQgLyB1bmxlYXNoZWQsIGhhcnQg
+aWQgMCBpcyB1c2VkIGJ5IHRoZSBub24tbGludXggaGFydCBzbyBpZiAKd2UgcGFzcyB0aGUgY3B1
+IGlkIG9mIHRoZSBib290IGNwdSB0aGF0J3MgYWx3YXlzIGdvaW5nIHRvIGJlIDAgaXQnbGwgYmUg
+CmludmFsaWQsIGJ1dCB0aGF0J3Mgbm90IGFsd2F5cyB0aGUgY2FzZSwgZXNwZWNpYWxseSBmb3Ig
+a2R1bXAuIEknbSBhbHNvIApnZXR0aW5nIGFuIGVycm9yIHdoZW4gdHJ5aW5nIHRvIG1vdW50IHRo
+ZSByb290ZnMgb24ga2R1bXAgb24gdGhlIAp1bm1hdGNoZWQgYm9hcmQsIGJlY2F1c2Ugc3dpb3Rs
+YiBjYW4ndCBhbGxvY2F0ZSBib3VuY2UgYnVmZmVycyBhbmQgdGhlIApwY2llIGRyaXZlciBkb2Vz
+bid0IHdvcmssIHNvIG5vIG52bWUgYWNjZXNzLiBJJ20gbG9va2luZyBmb3IgYSB3YXkgdG8gCm1h
+a2UgdGhpcyB3b3JrIHdpdGhvdXQgbWVzc2luZyB0aGluZ3MgdXAsIGluIGFueSBjYXNlIEknbGwg
+c2VuZCBzb21lIApwYXRjaGVzIG92ZXIgdGhlIHdlZWtlbmQuIEZvciB0aGUgaW5pdHJkIGlzc3Vl
+IEkgbmVlZCB0byBwYXRjaCAKa2V4ZWMtdG9vbHMuCgpSZWdhcmRzLApOaWNrCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
