@@ -1,23 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mailgate.ics.forth.gr ([139.91.1.2])
+Received: from mga06.intel.com ([134.134.136.31])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mqOOj-008tMv-St
- for kexec@lists.infradead.org; Thu, 25 Nov 2021 23:43:28 +0000
-Received: from av3.ics.forth.gr (av3in.ics.forth.gr [139.91.1.77])
- by mailgate.ics.forth.gr (8.15.2/ICS-FORTH/V10-1.8-GATE) with ESMTP id
- 1APNhDig068688
- for <kexec@lists.infradead.org>; Fri, 26 Nov 2021 01:43:13 +0200 (EET)
+ id 1mqWV0-009bDB-Hc
+ for kexec@lists.infradead.org; Fri, 26 Nov 2021 08:22:28 +0000
+Date: Fri, 26 Nov 2021 16:21:30 +0800
+From: kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2 1/2] s390/kexec: check the return value of
+ ipl_report_finish
+Message-ID: <202111261649.WZQbFG5g-lkp@intel.com>
+References: <20211116032557.14075-1-bhe@redhat.com>
 MIME-Version: 1.0
-Date: Fri, 26 Nov 2021 01:43:06 +0200
-From: Nick Kossifidis <mick@ics.forth.gr>
-Subject: Re: RISC-V: patched kexec-tools on github for review/testing
-In-Reply-To: <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
-References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
- <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
- <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
- <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr>
- <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
-Message-ID: <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
+Content-Disposition: inline
+In-Reply-To: <20211116032557.14075-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,106 +20,114 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexandre Ghiti <alexandre.ghiti@canonical.com>
-Cc: Nick Kossifidis <mick@ics.forth.gr>, ebiederm@xmission.com, kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, rppt@kernel.org, geert+renesas@glider.be, Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, Atish Patra <atish.patra@wdc.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: kbuild-all@lists.01.org, linux-s390@vger.kernel.org, kexec@lists.infradead.org, hca@linux.ibm.com, prudo@redhat.com, Baoquan He <bhe@redhat.com>
 
-zqPPhM65z4IgMjAyMS0xMC0xNSAxMDowNywgQWxleGFuZHJlIEdoaXRpIM6tzrPPgc6xz4jOtToK
-PiBPbiBTYXQsIE9jdCA5LCAyMDIxIGF0IDM6MjUgUE0gTmljayBLb3NzaWZpZGlzIDxtaWNrQGlj
-cy5mb3J0aC5ncj4gCj4gd3JvdGU6Cj4+IAo+PiDOo8+EzrnPgiAyMDIxLTEwLTA2IDE0OjEwLCBB
-bGV4YW5kcmUgR2hpdGkgzq3Os8+BzrHPiM61Ogo+PiA+Cj4+ID4gU28gSSBmb2xsb3dlZCB0aGUg
-aW5zdHJ1Y3Rpb25zIGhlcmU6Cj4+ID4gaHR0cHM6Ly9kb2N1bWVudGF0aW9uLnN1c2UuY29tL2Zy
-LWZyL3NsZXMvMTItU1AzL2h0bWwvU0xFUy1hbGwvY2hhLXR1bmluZy1rZXhlYy5odG1sI2NoYS10
-dW5pbmcta2V4ZWMtYmFzaWMtdXNhZ2UsCj4+ID4gYmVsb3cgdGhlIG91dHB1dCBvbiBhbiBVbm1h
-dGNoZWQgYm9hcmQgdXNpbmcgYSB2bWxpbnV4IHN0b3JlZCBvbiBhIHNkCj4+ID4gY2FyZDoKPj4g
-Pgo+PiA+IHVidW50dUB1YnVudHU6fiQgc3VkbyBzYmluL2tleGVjIC1sIHZtbGludXggLS1hcHBl
-bmQ9IiQoY2F0Cj4+ID4gL3Byb2MvY21kbGluZSkiIC0taW5pdHJkPS9ib290L2luaXRyZC5pbWcK
-Pj4gPiBXYXJuaW5nOiBObyBjbWRsaW5lIHByb3ZpZGVkLCB1c2luZyBhcHBlbmQgc3RyaW5nIGFz
-IGNtZGxpbmUKPj4gPiBXYXJuaW5nOiBObyBkdGIgcHJvdmlkZWQsIHVzaW5nIC9zeXMvZmlybXdh
-cmUvZmR0Cj4+ID4gWyAxODEzLjQ3MjY3MV0gSU5GTzogdGFzayBrd29ya2VyLzE6MDo5ODggYmxv
-Y2tlZCBmb3IgbW9yZSB0aGFuIDEyMAo+PiA+IHNlY29uZHMuCj4+ID4gWyAxODEzLjQ3ODc1MV0g
-ICAgICAgTm90IHRhaW50ZWQgNS4xNS4wLXJjMSsgIzE1Cj4+ID4gWyAxODEzLjQ4MzExMF0gImVj
-aG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVvdXRfc2VjcyIKPj4gPiBkaXNh
-YmxlcyB0aGlzIG1lc3NhZ2UuCj4+ID4gQ291bGQgbm90IGZpbmQgYSBmcmVlIGFyZWEgb2YgbWVt
-b3J5IG9mIDB4MzAwMCBieXRlcy4uLgo+PiA+IGxvY2F0ZV9ob2xlIGZhaWxlZAo+PiA+Cj4+ID4g
-SSB1c2VkIHRoZSBVYnVudHUga2VybmVsLCBzbyB0aGlzIGlzIHByZXR0eSBsYXJnZToKPj4gPiAt
-cnd4cnd4ci14IDEgdWJ1bnR1IHVidW50dSAyNzdNIE9jdCAgNSAxNTo0NyB2bWxpbnV4Cj4+ID4g
-LXJ3LXItLXItLSAxIHJvb3Qgcm9vdCA5OE0gU2VwIDIxIDAzOjI1IC9ib290L2luaXRyZC5pbWcK
-Pj4gPgo+PiAKPj4gQUNLLCBJIGhhdmVuJ3QgdGVzdGVkIGluaXRyZCBtdWNoIFRCSCwgSSB1c3Vh
-bGx5IGRvbid0IHVzZSBhbiBpbml0cmQsCj4+IGFuZCB3aGVuIEkgZG8gaXQncyBhIHNtYWxsIGJ1
-c3lib3gtYmFzZWQgcm9vdGZzLgo+PiAKPj4gPiBUaGVuIGlmIEkgZG9uJ3QgbG9hZCB0aGUgaW5p
-dHJkIChJIHNvbWV0aW1lcyBoYXZlIHRoZSBzYW1lIHdhcm5pbmcgYXMKPj4gPiBhYm92ZSkgSSBj
-YW4gYXQgbGVhc3Qga2V4ZWMgdGhlIG5ldyBrZXJuZWwgYnV0IGl0IGZhaWxzIHRvIGJvb3Q6Cj4+
-ID4KPj4gPiB1YnVudHVAdWJ1bnR1On4kIHN1ZG8gLi9zYmluL2tleGVjIC1lCj4+ID4gV2Fybmlu
-ZzogTm8gY21kbGluZSBvciBhcHBlbmQgc3RyaW5nIHByb3ZpZGVkCj4+ID4gV2FybmluZzogTm8g
-ZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13YXJlL2ZkdAo+PiA+IFsuLi5dCj4+ID4gWyAg
-ICAwLjAwMDAwMF0gU0JJIHYwLjIgSFNNIGV4dGVuc2lvbiBkZXRlY3RlZAo+PiA+IFsgICAgMC4w
-MDAwMDBdIENQVSB3aXRoIGhhcnRpZD0wIGlzIG5vdCBhdmFpbGFibGUKPj4gPiBbICAgIDAuMDAw
-MDAwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPj4gPiBbICAgIDAuMDAw
-MDAwXSBrZXJuZWwgQlVHIGF0IGFyY2gvcmlzY3Yva2VybmVsL3NtcGJvb3QuYzoxMDchCj4+ID4g
-WyAgICAwLjAwMDAwMF0gS2VybmVsIEJVRyBbIzFdCj4+ID4gWyAgICAwLjAwMDAwMF0gTW9kdWxl
-cyBsaW5rZWQgaW46Cj4+ID4gWyAgICAwLjAwMDAwMF0gQ1BVOiAwIFBJRDogMCBDb21tOiBzd2Fw
-cGVyIE5vdCB0YWludGVkIDUuMTUuMC1yYzErICMxNQo+PiA+IFsgICAgMC4wMDAwMDBdIEhhcmR3
-YXJlIG5hbWU6IFNpRml2ZSBIaUZpdmUgVW5tYXRjaGVkIEEwMCAoRFQpCj4+ID4gWyAgICAwLjAw
-MDAwMF0gZXBjIDogc2V0dXBfc21wKzB4Y2MvMHgxNDIKPj4gPiBbICAgIDAuMDAwMDAwXSAgcmEg
-OiBzZXR1cF9zbXArMHhjNC8weDE0Mgo+PiA+IFsgICAgMC4wMDAwMDBdIGVwYyA6IGZmZmZmZmZm
-ODBhMDQwODAgcmEgOiBmZmZmZmZmZjgwYTA0MDc4IHNwIDoKPj4gPiBmZmZmZmZmZjgxODAzZWMw
-Cj4+ID4gWyAgICAwLjAwMDAwMF0gIGdwIDogZmZmZmZmZmY4MWEyMzIyMCB0cCA6IGZmZmZmZmZm
-ODE4MTA1MDAgdDAgOgo+PiA+IGZmZmZmZmZmODFhMzU1MWYKPj4gPiBbICAgIDAuMDAwMDAwXSAg
-dDEgOiBmZmZmZmZmZmZmZmZmZmZmIHQyIDogMDAwMDAwMDAwMDAwMDAwMCBzMCA6Cj4+ID4gZmZm
-ZmZmZmY4MTgwM2YwMAo+PiA+IFsgICAgMC4wMDAwMDBdICBzMSA6IDAwMDAwMDAwMDAwMDAwMDAg
-YTAgOiAwMDAwMDAwMDAwMDAwMDAwIGExIDoKPj4gPiAwMDAwMDAwMDAwMDAwMDAwCj4+ID4gWyAg
-ICAwLjAwMDAwMF0gIGEyIDogMDAwMDAwMDAwMDAwMDAwMCBhMyA6IDAwMDAwMDAwMDAwMDAwMDEg
-YTQgOgo+PiA+IDAwMDAwMDAwMDAwMDAwMDAKPj4gPiBbICAgIDAuMDAwMDAwXSAgYTUgOiBmZmZm
-ZmZmZjgwYzY0NTAwIGE2IDogMDAwMDAwMDAwMDAwMDAwNCBhNyA6Cj4+ID4gMDAwMDAwMDAwMDAw
-ZmYwMAo+PiA+IFsgICAgMC4wMDAwMDBdICBzMiA6IDAwMDAwMDAwMDAwMDAwMDUgczMgOiAwMDAw
-MDAwMDAwMDAwMDAwIHM0IDoKPj4gPiBmZmZmZmZmZjgxMThmOWE4Cj4+ID4gWyAgICAwLjAwMDAw
-MF0gIHM1IDogMDAwMDAwMDAwMDAwMDAwNyBzNiA6IGZmZmZmZmZmODBjMGI3OTAgczcgOgo+PiA+
-IDAwMDAwMDAwODAwMDAyMDAKPj4gPiBbICAgIDAuMDAwMDAwXSAgczggOiAwMDAwMDAwMDAwMDAw
-ZmZmIHM5IDogMDAwMDAwMDA4MTAwMDIwMCBzMTA6Cj4+ID4gMDAwMDAwMDAwMDAwMDAxOAo+PiA+
-IFsgICAgMC4wMDAwMDBdICBzMTE6IDAwMDAwMDAwMDAwMDAwMGIgdDMgOiAwMDAwMDAwMDAwZmYw
-MDAwIHQ0IDoKPj4gPiBmZmZmZmZmZmZmZmZmZmZmCj4+ID4gWyAgICAwLjAwMDAwMF0gIHQ1IDog
-ZmZmZmZmZmY4MGMwYjdhMCB0NiA6IGZmZmZmZmZmODE4MDNiZDgKPj4gPiBbICAgIDAuMDAwMDAw
-XSBzdGF0dXM6IDAwMDAwMDAyMDAwMDAxMDAgYmFkYWRkcjogMDAwMDAwMDAwMDAwMDAwMAo+PiA+
-IGNhdXNlOiAwMDAwMDAwMDAwMDAwMDAzCj4+ID4gWyAgICAwLjAwMDAwMF0gWzxmZmZmZmZmZjgw
-YTA0MDgwPl0gc2V0dXBfc21wKzB4Y2MvMHgxNDIKPj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZm
-ZmZmODBhMDNkODg+XSBzZXR1cF9hcmNoKzB4NTZhLzB4NTkwCj4+ID4gWyAgICAwLjAwMDAwMF0g
-WzxmZmZmZmZmZjgwYTAwYWEyPl0gc3RhcnRfa2VybmVsKzB4YWEvMHhhNWMKPj4gPiBbICAgIDAu
-MDAwMDAwXSByYW5kb206IGdldF9yYW5kb21fYnl0ZXMgY2FsbGVkIGZyb20KPj4gPiBvb3BzX2V4
-aXQrMHg0NC8weDcwIHdpdGggY3JuZ19pbml0PTAKPj4gPiBbICAgIDAuMDAwMDAwXSAtLS1bIGVu
-ZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0KPj4gPiBbICAgIDAuMDAwMDAwXSBLZXJuZWwg
-cGFuaWMgLSBub3Qgc3luY2luZzogQXR0ZW1wdGVkIHRvIGtpbGwgdGhlIGlkbGUKPj4gPiB0YXNr
-IQo+PiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5n
-OiBBdHRlbXB0ZWQgdG8ga2lsbAo+PiA+IHRoZSBpZGxlIHRhc2shIF0tLS0KPj4gPgo+PiA+IFRo
-aXMgcmVsaWFibHkgZmFpbHMgaGVyZS4KPj4gPgo+PiAKPj4gVGhpcyBsb29rcyB3ZWlyZCwgSSds
-bCBjaGVjayBpdCBvdXQgKHdlIGhhdmUgYW4gdW5tYXRjaGVkIGhlcmUgc28gSSdsbAo+PiB0cnkg
-dG8gZ2V0IG15IGhhbmRzIG9uIGl0IHNvbWV0aW1lIG5leHQgd2VlaykuCj4+IAo+PiBEaWQgeW91
-IHRyeSBrZHVtcCA/IERvIHlvdSBnZXQgdGhlIHNhbWUgZXJyb3IgPwo+IAo+IGtkdW1wIHdvcmtz
-IGZpbmUsIGl0IGZhaWxzIHRvIGZpbmQgdGhlIHJvb3RmcyBidXQgSSB0aGluayBteSBzZXR1cCBp
-cwo+IGZhdWx0eSBoZXJlLgo+IEkgdG9vayBhIHF1aWNrIGxvb2sgYXQga2V4ZWNfcmVsb2NhdGUu
-UywgYW5kIHRoZSB1c2Ugb2YgdmFfcGFfb2Zmc2V0Cj4gaXMgYWxzbyB3cm9uZyBoZXJlLCB3ZSBz
-aG91bGQgdXNlIHZhX2tlcm5lbF9wYV9vZmZzZXQgYXMgaXQgaXMgdXNlZCB0bwo+IG1vZGlmeSBh
-IHRleHQgYWRkcmVzcyBCdXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4KPiAKPiBB
-bGV4Cj4gCgpTb3JyeSBmb3IgdGhlIGRlbGF5LCBJIGZpbmFsbHkgZ290IHNvbWUgdGltZSB0byB3
-b3JrIG9uIHRoaXMuIEFzIGl0IAp0dXJucyBvdXQgSSdtIHBhc3NpbmcgY3B1IGlkIGluc3RlYWQg
-b2YgaGFydCBpZCB0byB0aGUgbmV4dCBrZXJuZWwgKHRoYXQgCmNvbW1lbnQgb24gc21wLmggY2xh
-aW1pbmcgdGhhdCByYXdfc21wX3Byb2Nlc3Nvcl9pZCByZXR1cm5zIHRoZSBoYXJ0IGlkIApkaWRu
-J3QgaGVscCBtdWNoKSBhbmQgaW50ZXJlc3RpbmdseSBlbm91Z2ggY3B1IGlkIGFuZCBoYXJ0IGlk
-IG1hdGNoIG9uIApxZW11IGFuZCBhbHNvIHNvbWV0aW1lcyBtYXRjaCBvbiB0aGUgdW5tYXRjaGVk
-IC8gdW5sZWFzaGVkIGJvYXJkLiBBbHNvIApvbiB1bm1hdGNoZWQgLyB1bmxlYXNoZWQsIGhhcnQg
-aWQgMCBpcyB1c2VkIGJ5IHRoZSBub24tbGludXggaGFydCBzbyBpZiAKd2UgcGFzcyB0aGUgY3B1
-IGlkIG9mIHRoZSBib290IGNwdSB0aGF0J3MgYWx3YXlzIGdvaW5nIHRvIGJlIDAgaXQnbGwgYmUg
-CmludmFsaWQsIGJ1dCB0aGF0J3Mgbm90IGFsd2F5cyB0aGUgY2FzZSwgZXNwZWNpYWxseSBmb3Ig
-a2R1bXAuIEknbSBhbHNvIApnZXR0aW5nIGFuIGVycm9yIHdoZW4gdHJ5aW5nIHRvIG1vdW50IHRo
-ZSByb290ZnMgb24ga2R1bXAgb24gdGhlIAp1bm1hdGNoZWQgYm9hcmQsIGJlY2F1c2Ugc3dpb3Rs
-YiBjYW4ndCBhbGxvY2F0ZSBib3VuY2UgYnVmZmVycyBhbmQgdGhlIApwY2llIGRyaXZlciBkb2Vz
-bid0IHdvcmssIHNvIG5vIG52bWUgYWNjZXNzLiBJJ20gbG9va2luZyBmb3IgYSB3YXkgdG8gCm1h
-a2UgdGhpcyB3b3JrIHdpdGhvdXQgbWVzc2luZyB0aGluZ3MgdXAsIGluIGFueSBjYXNlIEknbGwg
-c2VuZCBzb21lIApwYXRjaGVzIG92ZXIgdGhlIHdlZWtlbmQuIEZvciB0aGUgaW5pdHJkIGlzc3Vl
-IEkgbmVlZCB0byBwYXRjaCAKa2V4ZWMtdG9vbHMuCgpSZWdhcmRzLApOaWNrCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Hi Baoquan,
+
+I love your patch! Perhaps something to improve:
+
+[auto build test WARNING on s390/features]
+[also build test WARNING on kvms390/next]
+[cannot apply to linux/master linus/master v5.16-rc2 next-20211126]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Baoquan-He/s390-kexec-check-the-return-value-of-ipl_report_finish/20211116-112827
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/s390/linux.git features
+config: s390-allyesconfig (https://download.01.org/0day-ci/archive/20211126/202111261649.WZQbFG5g-lkp@intel.com/config)
+compiler: s390-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/27ed543b2d76a1d948c64d4404c180ba31ca8cff
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Baoquan-He/s390-kexec-check-the-return-value-of-ipl_report_finish/20211116-112827
+        git checkout 27ed543b2d76a1d948c64d4404c180ba31ca8cff
+        # save the config file to linux build tree
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross ARCH=s390 
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All warnings (new ones prefixed by >>):
+
+   arch/s390/kernel/ipl.c: In function 'ipl_report_finish':
+>> arch/s390/kernel/ipl.c:2159:24: warning: returning 'void *' from a function with return type 'int' makes integer from pointer without a cast [-Wint-conversion]
+    2159 |                 return ERR_PTR(-ENOMEM);
+         |                        ^~~~~~~~~~~~~~~~
+
+
+vim +2159 arch/s390/kernel/ipl.c
+
+937347ac56bfca Martin Schwidefsky 2019-02-25  2146  
+27ed543b2d76a1 Baoquan He         2021-11-16  2147  int ipl_report_finish(struct ipl_report *report, void **ipl_buf)
+937347ac56bfca Martin Schwidefsky 2019-02-25  2148  {
+937347ac56bfca Martin Schwidefsky 2019-02-25  2149  	struct ipl_report_certificate *cert;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2150  	struct ipl_report_component *comp;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2151  	struct ipl_rb_certificates *certs;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2152  	struct ipl_parameter_block *ipib;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2153  	struct ipl_rb_components *comps;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2154  	struct ipl_rl_hdr *rl_hdr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2155  	void *buf, *ptr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2156  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2157  	buf = vzalloc(report->size);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2158  	if (!buf)
+937347ac56bfca Martin Schwidefsky 2019-02-25 @2159  		return ERR_PTR(-ENOMEM);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2160  	ptr = buf;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2161  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2162  	memcpy(ptr, report->ipib, report->ipib->hdr.len);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2163  	ipib = ptr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2164  	if (ipl_secure_flag)
+937347ac56bfca Martin Schwidefsky 2019-02-25  2165  		ipib->hdr.flags |= IPL_PL_FLAG_SIPL;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2166  	ipib->hdr.flags |= IPL_PL_FLAG_IPLSR;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2167  	ptr += report->ipib->hdr.len;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2168  	ptr = PTR_ALIGN(ptr, 8);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2169  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2170  	rl_hdr = ptr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2171  	ptr += sizeof(*rl_hdr);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2172  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2173  	comps = ptr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2174  	comps->rbt = IPL_RBT_COMPONENTS;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2175  	ptr += sizeof(*comps);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2176  	list_for_each_entry(comp, &report->components, list) {
+937347ac56bfca Martin Schwidefsky 2019-02-25  2177  		memcpy(ptr, &comp->entry, sizeof(comp->entry));
+937347ac56bfca Martin Schwidefsky 2019-02-25  2178  		ptr += sizeof(comp->entry);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2179  	}
+937347ac56bfca Martin Schwidefsky 2019-02-25  2180  	comps->len = ptr - (void *)comps;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2181  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2182  	certs = ptr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2183  	certs->rbt = IPL_RBT_CERTIFICATES;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2184  	ptr += sizeof(*certs);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2185  	list_for_each_entry(cert, &report->certificates, list) {
+937347ac56bfca Martin Schwidefsky 2019-02-25  2186  		memcpy(ptr, &cert->entry, sizeof(cert->entry));
+937347ac56bfca Martin Schwidefsky 2019-02-25  2187  		ptr += sizeof(cert->entry);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2188  	}
+937347ac56bfca Martin Schwidefsky 2019-02-25  2189  	certs->len = ptr - (void *)certs;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2190  	rl_hdr->len = ptr - (void *)rl_hdr;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2191  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2192  	list_for_each_entry(cert, &report->certificates, list) {
+937347ac56bfca Martin Schwidefsky 2019-02-25  2193  		memcpy(ptr, cert->key, cert->entry.len);
+937347ac56bfca Martin Schwidefsky 2019-02-25  2194  		ptr += cert->entry.len;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2195  	}
+937347ac56bfca Martin Schwidefsky 2019-02-25  2196  
+937347ac56bfca Martin Schwidefsky 2019-02-25  2197  	BUG_ON(ptr > buf + report->size);
+27ed543b2d76a1 Baoquan He         2021-11-16  2198  	*ipl_buf = buf;
+27ed543b2d76a1 Baoquan He         2021-11-16  2199  
+27ed543b2d76a1 Baoquan He         2021-11-16  2200  	return 0;
+937347ac56bfca Martin Schwidefsky 2019-02-25  2201  }
+937347ac56bfca Martin Schwidefsky 2019-02-25  2202  
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
