@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
- helo=mx0a-001b2d01.pphosted.com)
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1ms55Y-005u2K-NC
- for kexec@lists.infradead.org; Tue, 30 Nov 2021 15:30:38 +0000
-Date: Tue, 30 Nov 2021 16:28:26 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH v2 0/6] KEXEC_SIG with appended signature
-Message-ID: <YaZDGjKSaH2YKl/h@osiris>
-References: <cover.1637862358.git.msuchanek@suse.de>
+Date: Tue, 30 Nov 2021 16:05:25 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v16 09/11] of: fdt: Aggregate the processing of
+ "linux,usable-memory-range"
+Message-ID: <YaagJQqq2Cx2zyVw@robh.at.kernel.org>
+References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
+ <20211123124646.1995-10-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <cover.1637862358.git.msuchanek@suse.de>
+In-Reply-To: <20211123124646.1995-10-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,53 +21,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Chen Zhou <dingguo.cz@antgroup.com>, Frank Rowand <frowand.list@gmail.com>, linux-doc@vger.kernel.org, Ingo Molnar <mingo@redhat.com>, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Eric Biederman <ebiederm@xmission.com>, Feng Zhou <zhoufeng.zf@bytedance.com>, "H . Peter Anvin" <hpa@zytor.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, Borislav Petkov <bp@alien8.de>, x86@kernel.org, Randy Dunlap <rdunlap@infradead.org>, Baoquan He <bhe@redhat.com>, kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Kefeng Wang <wangkefeng.wang@huawei.com>, Will Deacon <will@kernel.org>, Dave Young <dyoung@redhat.com>, Thomas Gleixner <tglx@linutronix.de>
 
-On Thu, Nov 25, 2021 at 07:02:38PM +0100, Michal Suchanek wrote:
-> Hello,
+On Tue, 23 Nov 2021 20:46:44 +0800, Zhen Lei wrote:
+> Currently, we parse the "linux,usable-memory-range" property in
+> early_init_dt_scan_chosen(), to obtain the specified memory range of the
+> crash kernel. We then reserve the required memory after
+> early_init_dt_scan_memory() has identified all available physical memory.
+> Because the two pieces of code are separated far, the readability and
+> maintainability are reduced. So bring them together.
 > 
-> This is resend of the KEXEC_SIG patchset.
+> Suggested-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  drivers/of/fdt.c | 15 +++++++++++----
+>  1 file changed, 11 insertions(+), 4 deletions(-)
 > 
-> The first patch is new because it'a a cleanup that does not require any
-> change to the module verification code.
-> 
-> The second patch is the only one that is intended to change any
-> functionality.
-> 
-> The rest only deduplicates code but I did not receive any review on that
-> part so I don't know if it's desirable as implemented.
-> 
-> The first two patches can be applied separately without the rest.
-> 
-> Thanks
-> 
-> Michal
-> 
-> Michal Suchanek (6):
->   s390/kexec_file: Don't opencode appended signature check.
->   powerpc/kexec_file: Add KEXEC_SIG support.
->   kexec_file: Don't opencode appended signature verification.
->   module: strip the signature marker in the verification function.
->   module: Use key_being_used_for for log messages in
->     verify_appended_signature
->   module: Move duplicate mod_check_sig users code to mod_parse_sig
-> 
->  arch/powerpc/Kconfig                     | 11 +++++
->  arch/powerpc/kexec/elf_64.c              | 14 ++++++
->  arch/s390/kernel/machine_kexec_file.c    | 42 ++----------------
->  crypto/asymmetric_keys/asymmetric_type.c |  1 +
->  include/linux/module_signature.h         |  1 +
->  include/linux/verification.h             |  4 ++
->  kernel/module-internal.h                 |  2 -
->  kernel/module.c                          | 12 +++--
->  kernel/module_signature.c                | 56 +++++++++++++++++++++++-
->  kernel/module_signing.c                  | 33 +++++++-------
->  security/integrity/ima/ima_modsig.c      | 22 ++--------
->  11 files changed, 113 insertions(+), 85 deletions(-)
 
-For all patches which touch s390:
-Acked-by: Heiko Carstens <hca@linux.ibm.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 
 _______________________________________________
 kexec mailing list
