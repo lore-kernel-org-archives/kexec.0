@@ -1,15 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x22a.google.com ([2607:f8b0:4864:20::22a])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwP6U-006ad4-Qv
- for kexec@lists.infradead.org; Sun, 12 Dec 2021 13:41:28 +0000
-Received: by mail-oi1-x22a.google.com with SMTP id t23so19895893oiw.3
- for <kexec@lists.infradead.org>; Sun, 12 Dec 2021 05:41:25 -0800 (PST)
+ id 1msFEj-007JTX-UK
+ for kexec@lists.infradead.org; Wed, 01 Dec 2021 02:20:47 +0000
+Received: by mail-pf1-f197.google.com with SMTP id
+ z13-20020a627e0d000000b004a2849e589aso14104178pfc.0
+ for <kexec@lists.infradead.org>; Tue, 30 Nov 2021 18:20:40 -0800 (PST)
+Date: Wed, 1 Dec 2021 10:19:26 +0800
+From: Coiby Xu <coxu@redhat.com>
+Subject: Re: Compile error ppc64le: Cannot find symbol for section 11:
+ .text.unlikely.
+Message-ID: <20211201021926.3xfabf5zbzidvrwa@Rk>
+References: <CA+tGwnkDsuwOyDoZUNvi9ExhSsiF1MiGvegwjpQem8c3BPJ=6g@mail.gmail.com>
+ <20211124134743.GB11728@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-From: Sushmita Ghan <sushghan11@gmail.com>
-Date: Sun, 12 Dec 2021 19:11:24 +0530
-Message-ID: <CABB0pWAo43Gh5V729-bc+CkM=XeJ9uVH-TLZnytV_rFA7RKk6w@mail.gmail.com>
-Subject: kexec -p does not work consistently
+In-Reply-To: <20211124134743.GB11728@MiWiFi-R3L-srv>
+Content-Type: multipart/mixed; boundary="mwagphe7g4346xwu"
+Content-Disposition: inline
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,42 +25,227 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Veronika Kabatova <vkabatov@redhat.com>, kexec@lists.infradead.org, ebiederm@xmission.com
 
-SGksCgpJIGFtIHRyeWluZyB0byBzZXR1cCBrZHVtcCBvbiBteSBMaW51eCh4ODYgbWFjaGluZSks
-CndoZXJlIEkgYW0gdXNpbmcga2V4ZWMtdG9vbHMtMi4wLjIyLgpSZXNlcnZpbmcgNTEyTSBvZiBt
-ZW1vcnkgb2YgcHJvZHVjdGlvbiBrZXJuZWwgZm9yIGNyYXNoIGR1bXAga2VybmVsLgoKIyBkbWVz
-ZyB8IGdyZXAgY3Jhc2gKWyAgICAwLjAwMDAwMF0gQ29tbWFuZCBsaW5lOiBCT09UX0lNQUdFPS92
-bWxpbnV6LTQuMTkuMjEzLXBjNjQKY29uc29sZT10dHkwIGNvbnNvbGU9dHR5UzAsMTE1MjAwIGFj
-cGlfb3NpPUxpbnV4IGludGVsX2lvbW11PW9uCmlvbW11PXB0IGNyYXNoa2VybmVsPTUxMk0gcm9v
-dD0vZGV2L1ZHX1N5c3RlbS9zeXNpbWcKWyAgICAwLjAwNjg5M10gUmVzZXJ2aW5nIDUxMk1CIG9m
-IG1lbW9yeSBhdCAzNTJNQiBmb3IgY3Jhc2hrZXJuZWwKKFN5c3RlbSBSQU06IDE2MzUyTUIpClsg
-ICAgMC4zMTk1NDhdIEtlcm5lbCBjb21tYW5kIGxpbmU6IEJPT1RfSU1BR0U9L3ZtbGludXotNC4x
-OS4yMTMtcGM2NApjb25zb2xlPXR0eTAgY29uc29sZT10dHlTMCwxMTUyMDAgYWNwaV9vc2k9TGlu
-dXggaW50ZWxfaW9tbXU9b24KaW9tbXU9cHQgY3Jhc2hrZXJuZWw9NTEyTSByb290PS9kZXYvVkdf
-U3lzdGVtL3N5c2ltZwoKClVzaW5nIGJlbG93IG9wdGlvbnMgd2l0aCBrZXhlYyAtcDoKCmtleGVj
-IC1wIC9tbnQvaW1hZ2VzL2Jvb3QkQk9PVF9JTUFHRSAtLXJldXNlLWNtZGxpbmUKLS1hcHBlbmQ9
-Im1heGNwdXM9MSByZXNldF9kZXZpY2VzIGlycXBvbGwiLgoKSGVyZSBpbiBteSBjYXNlIHNvbWV0
-aW1lcyBpdCBzdWNjZXNzZnVsbHkgbG9hZHMgc2Vjb25kIGtlcm5lbCwgYnV0CnNvbWV0aW1lcyBp
-dCBnZXRzIHN0dWNrIHdoaWxlIGxvYWRpbmcgc2Vjb25kIGtlcm5lbChjcmFzaCBkdW1wCmtlcm5l
-bCkuCgpBY2NvcmRpbmcgdG8gYmVsb3cgZG9jdW1lbnQsCmh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcv
-ZG9jL2h0bWwvbGF0ZXN0L2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLmh0bWwKCkZvbGxvd2luZyBh
-cmUgdGhlIGFyY2ggc3BlY2lmaWMgY29tbWFuZCBsaW5lIG9wdGlvbnMgdG8gYmUgdXNlZCB3aGls
-ZQpsb2FkaW5nIGR1bXAtY2FwdHVyZSBrZXJuZWwuCgpGb3IgaTM4NiwgeDg2XzY0IGFuZCBpYTY0
-OgoK4oCcMSBpcnFwb2xsIG5yX2NwdXM9MSByZXNldF9kZXZpY2Vz4oCdCgpXaXRoIGFib3ZlIHBh
-cmFtZXRlcnMgc3lzdGVtIGdldHMgc3R1Y2sgd2hpbGUgbG9hZGluZyBjcmFzaCBkdW1wCmtlcm5l
-bC5UaGlzIGJlaGF2aW9yIGlzIGluY29uc2lzdGVudC4KQnV0IHdoZW4gdGVzdGVkIHdpdGhvdXQg
-ImlycXBvbGwiIHBhcmFtZXRlcmUsIGl0IHNlZW1zIHdvcmtpbmcgY29uc2lzdGVudGx5LgoKSXMg
-dGhpcyBzeXNjdGwgcGFyYW1ldGVyIGNoYW5nZXMgcmVxdWlyZWQgd2l0aCBuZXcga2V4ZWMgdmVy
-c2lvbgpvciBhbnkgcG9pbnRlcnMgcmVnYXJkaW5nIHRoaXMgaXNzdWU/CgpDYW4gSSB1c2Ugb25s
-eSBwcm92aWRlZCBiZWxvdyBvcHRpb25zIGZvciBjcmFzaCBkdW1wIGtlcm5lbD8KCiMga2V4ZWMg
-LXAgL2Jvb3Qvdm1saW51ei00LjE5LjIxMy1wYzY0IC0tcmV1c2UtY21kbGluZQotLWFwcGVuZD0i
-bWF4Y3B1cz0xIHJlc2V0X2RldmljZXMiCgpBbnkgY2x1ZSB3b3VsZCBiZSBhIGdyZWF0IGhlbHAg
-Zm9yIG1lLgoKVGhhbmtzICYgcmVnYXJkcywKU3VzaG1pdGEKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8va2V4ZWMK
+--mwagphe7g4346xwu
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+
+On Wed, Nov 24, 2021 at 09:47:43PM +0800, Baoquan He wrote:
+>On 11/24/21 at 01:47pm, Veronika Kabatova wrote:
+>> Hi,
+>>
+>> for a while we've been seen the following error when compiling
+>> the mainline kernel with gcc 11.2 and binutils 2.37:
+>>
+>> 00:02:32 Cannot find symbol for section 11: .text.unlikely.
+>> 00:02:32 kernel/kexec_file.o: failed
+>> 00:02:32 make[3]: *** [scripts/Makefile.build:287: kernel/kexec_file.o] Error 1
+>> 00:02:32 make[3]: *** Deleting file 'kernel/kexec_file.o'
+>> 00:02:32 make[2]: *** [Makefile:1846: kernel] Error 2
+>> 00:02:32 make[2]: *** Waiting for unfinished jobs....
+>>
+>> The error only happens with ppc64le. I've tested this with cross
+>> compilation, but the only reference to the error I found suggests
+>> the same happens with the native compiles as well:
+>>
+>> https://github.com/groeck/linux-build-test/commit/142cbefbc0d37962c9a6c7f28ee415ecd5fd1e98
+>>
+>> In case it matters, the config used is the Fedora config with
+>> kselftest options enabled, which you can grab from
+>>
+>> https://gitlab.com/redhat/red-hat-ci-tools/kernel/cki-internal-pipelines/cki-trusted-contributors/-/jobs/1760752896/artifacts/raw/artifacts/kernel-mainline.kernel.org-ppc64le-e4e737bb5c170df6135a127739a9e6148ee3da82.config
+>>
+>>
+>> I've reached out to the Fedora compiler folks and Nick Clifton
+>> suggested this is a problem with the kernel:
+>>
+>>     This message comes from the recordmcount tool, which is part of the kernel
+>>     sources:
+>>
+>>     linux/scripts/recordmcount.[ch]
+>>
+>>     It appears to be triggered when a compiler update causes code to be
+>>     rearranged. The problem has been reported before in various forums,
+>>     but in particular I found this reference:
+>>
+>>     https://lore.kernel.org/lkml/20201204165742.3815221-2-arnd@kernel.org/
+>>
+>>     The point of which to me at least is that this is a kernel issue rather than
+>>     a compiler issue.  Ie there must be some weak symbols in kexec_file.o file
+>>     which need to be moved elsewhere.
+>
+>It could be arch_kexec_kernel_verify_sig() in kernel/kexec_file.c which
+>is __weak, but not implemented in any ARCH. If true, this has been
+>pointed out by Eric in one patch thread from Coiby.
+>
+>[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+>http://lkml.kernel.org/r/20211018083137.338757-2-coxu@redhat.com
+>
+>Maybe Coiby can fetch above config file and run the test to check.
+
+"[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig" alone
+would fix the error. If I turn arch_kexec_apply_relocations{_add,} into
+static function, the error would be gone. As attached is the patch would
+make this error disappear. 
+
+However, s390 and x86 have its own implementation of
+arch_kexec_apply_relocations_add. This makes it looks like to be gcc's
+issue.
+
+
+>
+>Thanks
+>Baoquan
+>
+
+-- 
+Best regards,
+Coiby
+
+--mwagphe7g4346xwu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: attachment;
+	filename="0001-fix-error-ppc64le-Cannot-find-symbol-for-section-11-.patch"
+
+From 49e0333f5a0743cdcc99777218524d6a6cd5ec34 Mon Sep 17 00:00:00 2001
+From: Coiby Xu <coxu@redhat.com>
+Date: Mon, 18 Oct 2021 15:52:46 +0800
+Subject: [PATCH] fix error "ppc64le: Cannot find symbol for section 11:
+ .text.unlikely."
+
+---
+ include/linux/kexec.h | 13 -------------
+ kernel/kexec_file.c   | 40 ++++++++++++++++------------------------
+ 2 files changed, 16 insertions(+), 37 deletions(-)
+
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 0c994ae37..1476470a1 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -186,20 +186,7 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+ /* Architectures may override the below functions */
+ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+ 				  unsigned long buf_len);
+-void *arch_kexec_kernel_image_load(struct kimage *image);
+-int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+-				     Elf_Shdr *section,
+-				     const Elf_Shdr *relsec,
+-				     const Elf_Shdr *symtab);
+-int arch_kexec_apply_relocations(struct purgatory_info *pi,
+-				 Elf_Shdr *section,
+-				 const Elf_Shdr *relsec,
+-				 const Elf_Shdr *symtab);
+ int arch_kimage_file_post_load_cleanup(struct kimage *image);
+-#ifdef CONFIG_KEXEC_SIG
+-int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-				 unsigned long buf_len);
+-#endif
+ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ 
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 8347fc158..e0afe36d3 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -71,7 +71,7 @@ static void *kexec_image_load_default(struct kimage *image)
+ 				 image->cmdline_buf_len);
+ }
+ 
+-void * __weak arch_kexec_kernel_image_load(struct kimage *image)
++static void * arch_kexec_kernel_image_load(struct kimage *image)
+ {
+ 	return kexec_image_load_default(image);
+ }
+@@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+ 	return kexec_image_post_load_cleanup_default(image);
+ }
+ 
+-#ifdef CONFIG_KEXEC_SIG
+-static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+-					  unsigned long buf_len)
+-{
+-	if (!image->fops || !image->fops->verify_sig) {
+-		pr_debug("kernel loader does not support signature verification.\n");
+-		return -EKEYREJECTED;
+-	}
+-
+-	return image->fops->verify_sig(buf, buf_len);
+-}
+-
+-int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+-					unsigned long buf_len)
+-{
+-	return kexec_image_verify_sig_default(image, buf, buf_len);
+-}
+-#endif
+-
+ /*
+  * arch_kexec_apply_relocations_add - apply relocations of type RELA
+  * @pi:		Purgatory to be relocated.
+@@ -117,7 +98,7 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+  *
+  * Return: 0 on success, negative errno on error.
+  */
+-int __weak
++static int
+ arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
+ 				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+ {
+@@ -134,7 +115,7 @@ arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
+  *
+  * Return: 0 on success, negative errno on error.
+  */
+-int __weak
++static int
+ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
+ 			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+ {
+@@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+ }
+ 
+ #ifdef CONFIG_KEXEC_SIG
++static int kexec_image_verify_sig(struct kimage *image, void *buf,
++		unsigned long buf_len)
++{
++	if (!image->fops || !image->fops->verify_sig) {
++		pr_debug("kernel loader does not support signature verification.\n");
++		return -EKEYREJECTED;
++	}
++
++	return image->fops->verify_sig(buf, buf_len);
++}
++
+ static int
+ kimage_validate_signature(struct kimage *image)
+ {
+ 	int ret;
+ 
+-	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+-					   image->kernel_buf_len);
++	ret = kexec_image_verify_sig(image, image->kernel_buf,
++			image->kernel_buf_len);
+ 	if (ret) {
+ 
+ 		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+-- 
+2.33.1
+
+
+--mwagphe7g4346xwu
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
+
+--mwagphe7g4346xwu--
+
+
