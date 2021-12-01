@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v16 10/11] of: fdt: Add memory for devices by DT property
- "linux,usable-memory-range"
-References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
- <20211123124646.1995-11-thunder.leizhen@huawei.com>
- <YaaitPTArUZEriob@robh.at.kernel.org>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <0dc664f7-65ae-767c-3fe6-d1bcf50d41e1@huawei.com>
-Date: Wed, 1 Dec 2021 10:55:46 +0800
+Received: from smtp-out1.suse.de ([195.135.220.28])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1msO6N-008FzO-Ht
+ for kexec@lists.infradead.org; Wed, 01 Dec 2021 11:48:45 +0000
+Date: Wed, 1 Dec 2021 12:48:36 +0100
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Subject: Re: [PATCH v2 0/6] KEXEC_SIG with appended signature
+Message-ID: <20211201114836.GD117207@kunlun.suse.cz>
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <20211201023747.GN21646@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-In-Reply-To: <YaaitPTArUZEriob@robh.at.kernel.org>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211201023747.GN21646@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,93 +20,88 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Frank
- Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan
- Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Nayna <nayna@linux.vnet.ibm.com>, Mimi Zohar <zohar@linux.ibm.com>, David Howells <dhowells@redhat.com>, keyrings@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Alexander Gordeev <agordeev@linux.ibm.com>, Rob Herring <robh@kernel.org>, Herbert Xu <herbert@gondor.apana.org.au>, Christian Borntraeger <borntraeger@de.ibm.com>, James Morris <jmorris@namei.org>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Christian Borntraeger <borntraeger@linux.ibm.com>, "Serge E. Hallyn" <serge@hallyn.com>, Vasily Gorbik <gor@linux.ibm.com>, linux-s390@vger.kernel.org, Heiko Carstens <hca@linux.ibm.com>, linux-crypto@vger.kernel.org, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, Hari Bathini <hbathini@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, Philipp Rudo <prudo@redhat.com>, Frank van der Linden <fllinden@amazon.com>, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Luis Chamberlain <mcgrof@kernel.org>, Sven Schnelle <svens@linux.ibm.com>, linux-security-module@vger.kernel.org, Jessica Yu <jeyu@kernel.org>, linux-integrity@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, "David S. Miller" <davem@davemloft.net>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, buendgen@de.ibm.com
 
-CgpPbiAyMDIxLzEyLzEgNjoxNiwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gT24gVHVlLCBOb3YgMjMs
-IDIwMjEgYXQgMDg6NDY6NDVQTSArMDgwMCwgWmhlbiBMZWkgd3JvdGU6Cj4+IEZyb206IENoZW4g
-WmhvdSA8Y2hlbnpob3UxMEBodWF3ZWkuY29tPgo+Pgo+PiBXaGVuIHJlc2VydmluZyBjcmFzaGtl
-cm5lbCBpbiBoaWdoIG1lbW9yeSwgc29tZSBsb3cgbWVtb3J5IGlzIHJlc2VydmVkCj4+IGZvciBj
-cmFzaCBkdW1wIGtlcm5lbCBkZXZpY2VzIGFuZCBuZXZlciBtYXBwZWQgYnkgdGhlIGZpcnN0IGtl
-cm5lbC4KPj4gVGhpcyBtZW1vcnkgcmFuZ2UgaXMgYWR2ZXJ0aXNlZCB0byBjcmFzaCBkdW1wIGtl
-cm5lbCB2aWEgRFQgcHJvcGVydHkKPj4gdW5kZXIgL2Nob3NlbiwKPj4gICAgICAgICBsaW51eCx1
-c2FibGUtbWVtb3J5LXJhbmdlID0gPEJBU0UxIFNJWkUxIFtCQVNFMiBTSVpFMl0+Cj4+Cj4+IFdl
-IHJldXNlZCB0aGUgRFQgcHJvcGVydHkgbGludXgsdXNhYmxlLW1lbW9yeS1yYW5nZSBhbmQgbWFk
-ZSB0aGUgbG93Cj4+IG1lbW9yeSByZWdpb24gYXMgdGhlIHNlY29uZCByYW5nZSAiQkFTRTIgU0la
-RTIiLCB3aGljaCBrZWVwcyBjb21wYXRpYmlsaXR5Cj4+IHdpdGggZXhpc3RpbmcgdXNlci1zcGFj
-ZSBhbmQgb2xkZXIga2R1bXAga2VybmVscy4KPj4KPj4gQ3Jhc2ggZHVtcCBrZXJuZWwgcmVhZHMg
-dGhpcyBwcm9wZXJ0eSBhdCBib290IHRpbWUgYW5kIGNhbGwgbWVtYmxvY2tfYWRkKCkKPj4gdG8g
-YWRkIHRoZSBsb3cgbWVtb3J5IHJlZ2lvbiBhZnRlciBtZW1ibG9ja19jYXBfbWVtb3J5X3Jhbmdl
-KCkgaGFzIGJlZW4KPj4gY2FsbGVkLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBDaGVuIFpob3UgPGNo
-ZW56aG91MTBAaHVhd2VpLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTogWmhlbiBMZWkgPHRodW5kZXIu
-bGVpemhlbkBodWF3ZWkuY29tPgo+PiAtLS0KPj4gIGRyaXZlcnMvb2YvZmR0LmMgfCAzNiArKysr
-KysrKysrKysrKysrKysrKysrKysrKy0tLS0tLS0tLS0KPj4gIDEgZmlsZSBjaGFuZ2VkLCAyNiBp
-bnNlcnRpb25zKCspLCAxMCBkZWxldGlvbnMoLSkKPj4KPj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-b2YvZmR0LmMgYi9kcml2ZXJzL29mL2ZkdC5jCj4+IGluZGV4IDM3YjQ3N2E1MTE3NTM1OS4uMWVh
-MmEwYjE2NTdlM2E5IDEwMDY0NAo+PiAtLS0gYS9kcml2ZXJzL29mL2ZkdC5jCj4+ICsrKyBiL2Ry
-aXZlcnMvb2YvZmR0LmMKPj4gQEAgLTk2Nyw2ICs5NjcsMTUgQEAgc3RhdGljIHZvaWQgX19pbml0
-IGVhcmx5X2luaXRfZHRfY2hlY2tfZm9yX2VsZmNvcmVoZHIodW5zaWduZWQgbG9uZyBub2RlKQo+
-PiAgCj4+ICBzdGF0aWMgdW5zaWduZWQgbG9uZyBjaG9zZW5fbm9kZV9vZmZzZXQgPSAtRkRUX0VS
-Ul9OT1RGT1VORDsKPj4gIAo+PiArLyoKPj4gKyAqIFRoZSBtYWluIHVzYWdlIG9mIGxpbnV4LHVz
-YWJsZS1tZW1vcnktcmFuZ2UgaXMgZm9yIGNyYXNoIGR1bXAga2VybmVsLgo+PiArICogT3JpZ2lu
-YWxseSwgdGhlIG51bWJlciBvZiB1c2FibGUtbWVtb3J5IHJlZ2lvbnMgaXMgb25lLiBOb3cgdGhl
-cmUgbWF5Cj4+ICsgKiBiZSB0d28gcmVnaW9ucywgbG93IHJlZ2lvbiBhbmQgaGlnaCByZWdpb24u
-Cj4+ICsgKiBUbyBtYWtlIGNvbXBhdGliaWxpdHkgd2l0aCBleGlzdGluZyB1c2VyLXNwYWNlIGFu
-ZCBvbGRlciBrZHVtcCwgdGhlIGxvdwo+PiArICogcmVnaW9uIGlzIGFsd2F5cyB0aGUgbGFzdCBy
-YW5nZSBvZiBsaW51eCx1c2FibGUtbWVtb3J5LXJhbmdlIGlmIGV4aXN0Lgo+PiArICovCj4+ICsj
-ZGVmaW5lIE1BWF9VU0FCTEVfUkFOR0VTCQkyCj4+ICsKPj4gIC8qKgo+PiAgICogZWFybHlfaW5p
-dF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5nZSAtIERlY29kZSB1c2FibGUgbWVtb3J5IHJh
-bmdlCj4+ICAgKiBsb2NhdGlvbiBmcm9tIGZsYXQgdHJlZQo+PiBAQCAtOTc0LDEwICs5ODMsOSBA
-QCBzdGF0aWMgdW5zaWduZWQgbG9uZyBjaG9zZW5fbm9kZV9vZmZzZXQgPSAtRkRUX0VSUl9OT1RG
-T1VORDsKPj4gICAqLwo+PiAgc3RhdGljIHZvaWQgX19pbml0IGVhcmx5X2luaXRfZHRfY2hlY2tf
-Zm9yX3VzYWJsZV9tZW1fcmFuZ2UodW5zaWduZWQgbG9uZyBub2RlKQo+PiAgewo+PiAtCWNvbnN0
-IF9fYmUzMiAqcHJvcDsKPj4gLQlpbnQgbGVuOwo+PiAtCXBoeXNfYWRkcl90IGNhcF9tZW1fYWRk
-cjsKPj4gLQlwaHlzX2FkZHJfdCBjYXBfbWVtX3NpemU7Cj4+ICsJc3RydWN0IG1lbWJsb2NrX3Jl
-Z2lvbiByZ25bTUFYX1VTQUJMRV9SQU5HRVNdID0gezB9Owo+PiArCWNvbnN0IF9fYmUzMiAqcHJv
-cCwgKmVuZHA7Cj4+ICsJaW50IGxlbiwgaSA9IDA7Cj4+ICAKPj4gIAlpZiAoKGxvbmcpbm9kZSA8
-IDApCj4+ICAJCXJldHVybjsKPj4gQEAgLTk4NSwxNiArOTkzLDI0IEBAIHN0YXRpYyB2b2lkIF9f
-aW5pdCBlYXJseV9pbml0X2R0X2NoZWNrX2Zvcl91c2FibGVfbWVtX3JhbmdlKHVuc2lnbmVkIGxv
-bmcgbm9kZSkKPj4gIAlwcl9kZWJ1ZygiTG9va2luZyBmb3IgdXNhYmxlLW1lbW9yeS1yYW5nZSBw
-cm9wZXJ0eS4uLiAiKTsKPj4gIAo+PiAgCXByb3AgPSBvZl9nZXRfZmxhdF9kdF9wcm9wKG5vZGUs
-ICJsaW51eCx1c2FibGUtbWVtb3J5LXJhbmdlIiwgJmxlbik7Cj4+IC0JaWYgKCFwcm9wIHx8IChs
-ZW4gPCAoZHRfcm9vdF9hZGRyX2NlbGxzICsgZHRfcm9vdF9zaXplX2NlbGxzKSkpCj4+ICsJaWYg
-KCFwcm9wKQo+IAo+IGlmICghcHJvcCB8fCAobGVuICUgKGR0X3Jvb3RfYWRkcl9jZWxscyArIGR0
-X3Jvb3Rfc2l6ZV9jZWxscykpKQoKT0suCgo+IAo+PiAgCQlyZXR1cm47Cj4+ICAKPj4gLQljYXBf
-bWVtX2FkZHIgPSBkdF9tZW1fbmV4dF9jZWxsKGR0X3Jvb3RfYWRkcl9jZWxscywgJnByb3ApOwo+
-PiAtCWNhcF9tZW1fc2l6ZSA9IGR0X21lbV9uZXh0X2NlbGwoZHRfcm9vdF9zaXplX2NlbGxzLCAm
-cHJvcCk7Cj4+ICsJZW5kcCA9IHByb3AgKyAobGVuIC8gc2l6ZW9mKF9fYmUzMikpOwo+PiArCXdo
-aWxlICgoZW5kcCAtIHByb3ApID49IChkdF9yb290X2FkZHJfY2VsbHMgKyBkdF9yb290X3NpemVf
-Y2VsbHMpKSB7Cj4gCj4gZm9yIChpID0gMDsgaSA8IE1BWF9VU0FCTEVfUkFOR0VTLCBwcm9wIDwg
-ZW5kcDsgaSsrKSB7Cj4gCj4+ICsJCXJnbltpXS5iYXNlID0gZHRfbWVtX25leHRfY2VsbChkdF9y
-b290X2FkZHJfY2VsbHMsICZwcm9wKTsKPj4gKwkJcmduW2ldLnNpemUgPSBkdF9tZW1fbmV4dF9j
-ZWxsKGR0X3Jvb3Rfc2l6ZV9jZWxscywgJnByb3ApOwo+PiArCj4+ICsJCXByX2RlYnVnKCJjYXBf
-bWVtX3JlZ2lvbnNbJWRdOiBiYXNlPSVwYSwgc2l6ZT0lcGFcbiIsCj4+ICsJCQkgaSwgJnJnbltp
-XS5iYXNlLCAmcmduW2ldLnNpemUpOwo+PiAgCj4+IC0JcHJfZGVidWcoImNhcF9tZW1fc3RhcnQ9
-JXBhIGNhcF9tZW1fc2l6ZT0lcGFcbiIsICZjYXBfbWVtX2FkZHIsCj4+IC0JCSAmY2FwX21lbV9z
-aXplKTsKPj4gKwkJaWYgKCsraSA+PSBNQVhfVVNBQkxFX1JBTkdFUykKPj4gKwkJCWJyZWFrOwo+
-IAo+IEFuZCBkcm9wIHRoaXMgaWYuCgpPSy4KCj4gCj4+ICsJfQo+PiAgCj4+IC0JbWVtYmxvY2tf
-Y2FwX21lbW9yeV9yYW5nZShjYXBfbWVtX2FkZHIsIGNhcF9tZW1fc2l6ZSk7Cj4+ICsJbWVtYmxv
-Y2tfY2FwX21lbW9yeV9yYW5nZShyZ25bMF0uYmFzZSwgcmduWzBdLnNpemUpOwo+PiArCWZvciAo
-aSA9IDE7IGkgPCBNQVhfVVNBQkxFX1JBTkdFUyAmJiByZ25baV0uc2l6ZTsgaSsrKQo+IAo+IHMv
-ICYmLywvCgpIaSBSb2I6CgpUaGUgY29tbWEgb3BlcmF0b3IgbWF5IG5vdCBiZSBzdWl0YWJsZSBm
-b3IgbG9naWNhbCBqdWRnbWVudC4gVGhlIGxvZ2ljYWwganVkZ21lbnQKYmVmb3JlIGNvbW1hcyAo
-LCkgaXMgaWdub3JlZC4KCkhlcmUncyBteSB0ZXN077yaCgpDIGNvZGXvvJoKaW50IG1haW4oKQp7
-CiAgICAgICAgaW50IGksIGo7CgogICAgICAgIHByaW50ZigiJiY6XG4iKTsKICAgICAgICBmb3Ig
-KGkgPSAwLCBqID0gMDsgaSA8IDIgJiYgaiA8IDM7IGkrKywgaisrKQogICAgICAgICAgICAgICAg
-cHJpbnRmKCJpPSVkLCBqPSVkXG4iLCBpLCBqKTsKCiAgICAgICAgcHJpbnRmKCJcbmNvbW1hOlxu
-Iik7CiAgICAgICAgZm9yIChpID0gMCwgaiA9IDA7IGkgPCAyLCBqIDwgMzsgaSsrLCBqKyspCS8v
-KGkgPCAy77yJIGJlZm9yZSBjb21tYSBpcyBpZ25vcmVkCiAgICAgICAgICAgICAgICBwcmludGYo
-Imk9JWQsIGo9JWRcbiIsIGksIGopOwoKICAgICAgICByZXR1cm4gMDsKfQoKT3V0cHV077yaCiYm
-OgppPTAsIGo9MAppPTEsIGo9MQoKY29tbWE6Cmk9MCwgaj0wCmk9MSwgaj0xCmk9Miwgaj0yCgoK
-PiAKPj4gKwkJbWVtYmxvY2tfYWRkKHJnbltpXS5iYXNlLCByZ25baV0uc2l6ZSk7Cj4+ICB9Cj4+
-ICAKPj4gICNpZmRlZiBDT05GSUdfU0VSSUFMX0VBUkxZQ09OCj4+IC0tIAo+PiAyLjI1LjEKPj4K
-Pj4KPiAKPiAuCj4gCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
+Hello,
+
+On Wed, Dec 01, 2021 at 10:37:47AM +0800, Baoquan He wrote:
+> Hi,
+> 
+> On 11/25/21 at 07:02pm, Michal Suchanek wrote:
+> > Hello,
+> > 
+> > This is resend of the KEXEC_SIG patchset.
+> > 
+> > The first patch is new because it'a a cleanup that does not require any
+> > change to the module verification code.
+> > 
+> > The second patch is the only one that is intended to change any
+> > functionality.
+> > 
+> > The rest only deduplicates code but I did not receive any review on that
+> > part so I don't know if it's desirable as implemented.
+> 
+> Do you have the link of your 1st version?
+
+This is the previous version:
+https://lore.kernel.org/lkml/cover.1635948742.git.msuchanek@suse.de/
+
+Thanks
+
+Michal
+
+> And after going through the whole series, it doesn't tell what this
+> patch series intends to do in cover-letter or patch log.
+> 
+> Thanks
+> Baoquan
+> 
+> > 
+> > The first two patches can be applied separately without the rest.
+> > 
+> > Thanks
+> > 
+> > Michal
+> > 
+> > Michal Suchanek (6):
+> >   s390/kexec_file: Don't opencode appended signature check.
+> >   powerpc/kexec_file: Add KEXEC_SIG support.
+> >   kexec_file: Don't opencode appended signature verification.
+> >   module: strip the signature marker in the verification function.
+> >   module: Use key_being_used_for for log messages in
+> >     verify_appended_signature
+> >   module: Move duplicate mod_check_sig users code to mod_parse_sig
+> > 
+> >  arch/powerpc/Kconfig                     | 11 +++++
+> >  arch/powerpc/kexec/elf_64.c              | 14 ++++++
+> >  arch/s390/kernel/machine_kexec_file.c    | 42 ++----------------
+> >  crypto/asymmetric_keys/asymmetric_type.c |  1 +
+> >  include/linux/module_signature.h         |  1 +
+> >  include/linux/verification.h             |  4 ++
+> >  kernel/module-internal.h                 |  2 -
+> >  kernel/module.c                          | 12 +++--
+> >  kernel/module_signature.c                | 56 +++++++++++++++++++++++-
+> >  kernel/module_signing.c                  | 33 +++++++-------
+> >  security/integrity/ima/ima_modsig.c      | 22 ++--------
+> >  11 files changed, 113 insertions(+), 85 deletions(-)
+> > 
+> > -- 
+> > 2.31.1
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> > 
+> 
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
