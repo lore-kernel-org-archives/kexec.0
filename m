@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mail-ed1-x533.google.com ([2a00:1450:4864:20::533])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1msPxh-008slg-J3
- for kexec@lists.infradead.org; Wed, 01 Dec 2021 13:47:55 +0000
-Received: by mail-ed1-x533.google.com with SMTP id e3so101986281edu.4
- for <kexec@lists.infradead.org>; Wed, 01 Dec 2021 05:47:52 -0800 (PST)
+ id 1msPxh-008sm6-Mw
+ for kexec@lists.infradead.org; Wed, 01 Dec 2021 13:47:56 +0000
+Received: by mail-ed1-x533.google.com with SMTP id x15so101739225edv.1
+ for <kexec@lists.infradead.org>; Wed, 01 Dec 2021 05:47:53 -0800 (PST)
 From: Ivan Khoronzhuk <ivan.khoronzhuk@gmail.com>
-Subject: [RFC PATCH] makedumpfile: add userinfo elf section 0/4]
-Date: Wed,  1 Dec 2021 15:47:26 +0200
-Message-Id: <20211201134730.15943-1-ikhoronz@cisco.com>
+Subject: [RFC makedumpfile: add userinfo elf section 1/4] makedumpfile: rename
+ check_dump_file() on check_file_is_writable()
+Date: Wed,  1 Dec 2021 15:47:27 +0200
+Message-Id: <20211201134730.15943-2-ikhoronz@cisco.com>
+In-Reply-To: <20211201134730.15943-1-ikhoronz@cisco.com>
+References: <20211201134730.15943-1-ikhoronz@cisco.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,32 +28,77 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: k-hagio-ab@nec.com, kexec@lists.infradead.org
 Cc: Ivan Khoronzhuk <ikhoronz@cisco.com>
 
-These patchset suggests feature to add user specific information along
-with dumpfile. One of usecases could be a platform build information
-containing dubug file addresses, sources of daily build, some
-platform related information and more, it's gracefully simplifies
-debugging process, since an engineer doesn't need to spend time on
-finding to which platform this core file is related, where to get
-debugging counter part and so on. As user info can be added along with
-dumpfile it frees platform from creating tar achieve spending doubled
-space or using specific tools. Since this information is sorted and
-selected by user it can't be standardized and should be placed in some
-special generic section. This patchset roughly proposes the variant when
-user information is placed/retrieved as subsection of note elf
-section.
+Make function for checking the file can be written to be more flex
+by renaming check_dump_file() on check_file_is_writable().
 
-Ivan Khoronzhuk (4):
-  makedumpfile: rename check_dump_file() on check_file_is_writable()
-  elf: add new "userinfo" ELF section to traverse debug information
-  elf_info: make int note_descsz() and offset_next_note() public
-  elf: add ability to read the userinfo data from note segment
+Signed-off-by: Ivan Khoronzhuk <ikhoronz@cisco.com>
+---
+ makedumpfile.c | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- elf_info.c     |   4 +-
- elf_info.h     |   5 +
- makedumpfile.c | 393 ++++++++++++++++++++++++++++++++++++++++++++++++-
- makedumpfile.h |  12 ++
- 4 files changed, 404 insertions(+), 10 deletions(-)
-
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 3d1d412..6b62b92 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -1397,7 +1397,7 @@ open_dump_file(void)
+ }
+ 
+ int
+-check_dump_file(const char *path)
++check_file_is_writable(const char *path)
+ {
+ 	char *err_str;
+ 
+@@ -1410,7 +1410,7 @@ check_dump_file(const char *path)
+ 	} else {
+ 		err_str = strerror(EEXIST);
+ 	}
+-	ERRMSG("Can't open the dump file (%s). %s\n", path, err_str);
++	ERRMSG("Can't open the file (%s). %s\n", path, err_str);
+ 	return FALSE;
+ }
+ 
+@@ -11954,7 +11954,7 @@ main(int argc, char *argv[])
+ 		if (info->flag_check_params)
+ 			goto check_ok;
+ 
+-		if (!check_dump_file(info->name_dumpfile))
++		if (!check_file_is_writable(info->name_dumpfile))
+ 			goto out;
+ 
+ 		if (!open_files_for_rearranging_dumpdata())
+@@ -11977,7 +11977,7 @@ main(int argc, char *argv[])
+ 		if (info->flag_check_params)
+ 			goto check_ok;
+ 
+-		if (!check_dump_file(info->name_dumpfile))
++		if (!check_file_is_writable(info->name_dumpfile))
+ 			goto out;
+ 
+ 		if (!reassemble_dumpfile())
+@@ -11993,7 +11993,7 @@ main(int argc, char *argv[])
+ 		if (info->flag_check_params)
+ 			goto check_ok;
+ 
+-		if (!check_dump_file(info->name_dumpfile))
++		if (!check_file_is_writable(info->name_dumpfile))
+ 			goto out;
+ 		if (!dump_dmesg())
+ 			goto out;
+@@ -12033,11 +12033,11 @@ main(int argc, char *argv[])
+ 		if (info->flag_split) {
+ 			for (i = 0; i < info->num_dumpfile; i++) {
+ 				SPLITTING_FD_BITMAP(i) = -1;
+-				if (!check_dump_file(SPLITTING_DUMPFILE(i)))
++				if (!check_file_is_writable(SPLITTING_DUMPFILE(i)))
+ 					goto out;
+ 			}
+ 		} else {
+-			if (!check_dump_file(info->name_dumpfile))
++			if (!check_file_is_writable(info->name_dumpfile))
+ 				goto out;
+ 		}
+ 
 -- 
 2.20.1
 
