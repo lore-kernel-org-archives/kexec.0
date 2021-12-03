@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from foss.arm.com ([217.140.110.172])
  by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mt62c-00FCjY-0Q
- for kexec@lists.infradead.org; Fri, 03 Dec 2021 10:43:47 +0000
+ id 1mt62U-00FCeH-CC
+ for kexec@lists.infradead.org; Fri, 03 Dec 2021 10:43:40 +0000
 From: Amit Daniel Kachhap <amit.kachhap@arm.com>
-Subject: [RFC PATCH 13/14] s390/crash_dump: Use the new interface
+Subject: [RFC PATCH 11/14] powerpc/crash_dump: Use the new interface
  copy_oldmem_page_buf
-Date: Fri,  3 Dec 2021 16:12:30 +0530
-Message-Id: <20211203104231.17597-14-amit.kachhap@arm.com>
+Date: Fri,  3 Dec 2021 16:12:28 +0530
+Message-Id: <20211203104231.17597-12-amit.kachhap@arm.com>
 In-Reply-To: <20211203104231.17597-1-amit.kachhap@arm.com>
 References: <20211203104231.17597-1-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,7 +24,7 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: Christoph Hellwig <hch@lst.de>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Heiko Carstens <hca@linux.ibm.com>, Vasily Gorbik <gor@linux.ibm.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linux-s390 <linux-s390@vger.kernel.org>
+Cc: Christoph Hellwig <hch@lst.de>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Amit Daniel Kachhap <amit.kachhap@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, linuxppc <linuxppc-dev@lists.ozlabs.org>
 
 The current interface copy_oldmem_page() passes user pointer without
 __user annotation and hence does unnecessary user/kernel pointer
@@ -32,54 +32,81 @@ conversions during its implementation.
 
 Use the interface copy_oldmem_page_buf() to avoid this issue.
 
-Cc: Heiko Carstens <hca@linux.ibm.com>
-Cc: Vasily Gorbik <gor@linux.ibm.com>
-Cc: Christian Borntraeger <borntraeger@de.ibm.com>
-CC: Alexander Gordeev <agordeev@linux.ibm.com>
-Cc: linux-s390 <linux-s390@vger.kernel.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+CC: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: linuxppc <linuxppc-dev@lists.ozlabs.org>
 Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
 ---
- arch/s390/kernel/crash_dump.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/powerpc/kernel/crash_dump.c | 33 ++++++++++++++++----------------
+ 1 file changed, 17 insertions(+), 16 deletions(-)
 
-diff --git a/arch/s390/kernel/crash_dump.c b/arch/s390/kernel/crash_dump.c
-index 785d54c9350c..b1f8a908e8ca 100644
---- a/arch/s390/kernel/crash_dump.c
-+++ b/arch/s390/kernel/crash_dump.c
-@@ -214,8 +214,8 @@ static int copy_oldmem_user(void __user *dst, void *src, size_t count)
- /*
-  * Copy one page from "oldmem"
+diff --git a/arch/powerpc/kernel/crash_dump.c b/arch/powerpc/kernel/crash_dump.c
+index 5693e1c67c2b..a1c8a3a11694 100644
+--- a/arch/powerpc/kernel/crash_dump.c
++++ b/arch/powerpc/kernel/crash_dump.c
+@@ -68,33 +68,34 @@ void __init setup_kdump_trampoline(void)
+ }
+ #endif /* CONFIG_NONSTATIC_KERNEL */
+ 
+-static size_t copy_oldmem_vaddr(void *vaddr, char *buf, size_t csize,
+-                               unsigned long offset, int userbuf)
++static size_t copy_oldmem_vaddr(void *vaddr, char __user *ubuf, char *kbuf,
++				size_t csize, unsigned long offset)
+ {
+-	if (userbuf) {
+-		if (copy_to_user((char __user *)buf, (vaddr + offset), csize))
++	if (ubuf) {
++		if (copy_to_user(ubuf, (vaddr + offset), csize))
+ 			return -EFAULT;
+ 	} else
+-		memcpy(buf, (vaddr + offset), csize);
++		memcpy(kbuf, (vaddr + offset), csize);
+ 
+ 	return csize;
+ }
+ 
+ /**
+- * copy_oldmem_page - copy one page from "oldmem"
++ * copy_oldmem_page_buf - copy one page from "oldmem"
+  * @pfn: page frame number to be copied
+- * @buf: target memory address for the copy; this can be in kernel address
+- *      space or user address space (see @userbuf)
++ * @ubuf: target user memory address for the copy; use copy_to_user() if this
++ * address is present
++ * @kbuf: target kernel memory address for the copy; use memcpy() if this
++ * address is present
+  * @csize: number of bytes to copy
+  * @offset: offset in bytes into the page (based on pfn) to begin the copy
+- * @userbuf: if set, @buf is in user address space, use copy_to_user(),
+- *      otherwise @buf is in kernel address space, use memcpy().
+  *
+- * Copy a page from "oldmem". For this page, there is no pte mapped
+- * in the current kernel. We stitch up a pte, similar to kmap_atomic.
++ * Copy a page from "oldmem" into buffer pointed by either @ubuf or @kbuf. For
++ * this page, there is no pte mapped in the current kernel. We stitch up a pte,
++ * similar to kmap_atomic.
   */
--ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
--			 unsigned long offset, int userbuf)
+-ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+-			size_t csize, unsigned long offset, int userbuf)
 +ssize_t copy_oldmem_page_buf(unsigned long pfn, char __user *ubuf, char *kbuf,
 +			     size_t csize, unsigned long offset)
  {
- 	void *src;
- 	int rc;
-@@ -223,10 +223,10 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 	if (!csize)
- 		return 0;
- 	src = (void *) (pfn << PAGE_SHIFT) + offset;
--	if (userbuf)
--		rc = copy_oldmem_user((void __force __user *) buf, src, csize);
-+	if (ubuf)
-+		rc = copy_oldmem_user((void __user *) ubuf, src, csize);
- 	else
--		rc = copy_oldmem_kernel((void *) buf, src, csize);
-+		rc = copy_oldmem_kernel((void *) kbuf, src, csize);
- 	return rc;
- }
+ 	void  *vaddr;
+ 	phys_addr_t paddr;
+@@ -107,10 +108,10 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
  
-@@ -261,7 +261,7 @@ static int remap_oldmem_pfn_range_kdump(struct vm_area_struct *vma,
-  * Remap "oldmem" for zfcp/nvme dump
-  *
-  * We only map available memory above HSA size. Memory below HSA size
-- * is read on demand using the copy_oldmem_page() function.
-+ * is read on demand using the copy_oldmem_page_buf() function.
-  */
- static int remap_oldmem_pfn_range_zfcpdump(struct vm_area_struct *vma,
- 					   unsigned long from,
+ 	if (memblock_is_region_memory(paddr, csize)) {
+ 		vaddr = __va(paddr);
+-		csize = copy_oldmem_vaddr(vaddr, buf, csize, offset, userbuf);
++		csize = copy_oldmem_vaddr(vaddr, ubuf, kbuf, csize, offset);
+ 	} else {
+ 		vaddr = ioremap_cache(paddr, PAGE_SIZE);
+-		csize = copy_oldmem_vaddr(vaddr, buf, csize, offset, userbuf);
++		csize = copy_oldmem_vaddr(vaddr, ubuf, kbuf, csize, offset);
+ 		iounmap(vaddr);
+ 	}
+ 
 -- 
 2.17.1
 
