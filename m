@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Jisheng Zhang <jszhang@kernel.org>
-Subject: [RFC PATCH 4/5] arm64: mm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
- of #ifdef
-Date: Fri,  3 Dec 2021 13:11:56 +0800
-Message-Id: <20211203051157.2160-5-jszhang@kernel.org>
+Subject: [RFC PATCH 5/5] arm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of
+ #ifdef
+Date: Fri,  3 Dec 2021 13:11:57 +0800
+Message-Id: <20211203051157.2160-6-jszhang@kernel.org>
 In-Reply-To: <20211203051157.2160-1-jszhang@kernel.org>
 References: <20211203051157.2160-1-jszhang@kernel.org>
 MIME-Version: 1.0
@@ -28,43 +28,41 @@ code and increase compile coverage.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- arch/arm64/mm/init.c | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ arch/arm/kernel/setup.c | 7 +++----
+ 1 file changed, 3 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index a8834434af99..b4b8b4dc2d31 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -64,7 +64,6 @@ EXPORT_SYMBOL(memstart_addr);
-  */
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
+diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+index 284a80c0b6e1..f9a054a344c0 100644
+--- a/arch/arm/kernel/setup.c
++++ b/arch/arm/kernel/setup.c
+@@ -973,7 +973,6 @@ static int __init init_machine_late(void)
+ }
+ late_initcall(init_machine_late);
  
--#ifdef CONFIG_KEXEC_CORE
+-#ifdef CONFIG_KEXEC
  /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -78,6 +77,9 @@ static void __init reserve_crashkernel(void)
- 	unsigned long long crash_max = arm64_dma_phys_limit;
+  * The crash region must be aligned to 128MB to avoid
+  * zImage relocating below the reserved region.
+@@ -1001,6 +1000,9 @@ static void __init reserve_crashkernel(void)
+ 	unsigned long long total_mem;
  	int ret;
  
 +	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
 +		return;
 +
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 	total_mem = get_total_mem();
+ 	ret = parse_crashkernel(boot_command_line, total_mem,
  				&crash_size, &crash_base);
- 	/* no crashkernel= or invalid value specified */
-@@ -110,11 +112,6 @@ static void __init reserve_crashkernel(void)
- 	crashk_res.start = crash_base;
- 	crashk_res.end = crash_base + crash_size - 1;
+@@ -1056,9 +1058,6 @@ static void __init reserve_crashkernel(void)
+ 		insert_resource(&iomem_resource, &crashk_boot_res);
+ 	}
  }
 -#else
--static void __init reserve_crashkernel(void)
--{
--}
--#endif /* CONFIG_KEXEC_CORE */
+-static inline void reserve_crashkernel(void) {}
+-#endif /* CONFIG_KEXEC */
  
- /*
-  * Return the maximum physical address for a zone accessible by the given bits
+ void __init hyp_mode_check(void)
+ {
 -- 
 2.34.1
 
