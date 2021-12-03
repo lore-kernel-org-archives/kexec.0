@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Jisheng Zhang <jszhang@kernel.org>
-Subject: [RFC PATCH 5/5] arm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of
- #ifdef
-Date: Fri,  3 Dec 2021 13:11:57 +0800
-Message-Id: <20211203051157.2160-6-jszhang@kernel.org>
-In-Reply-To: <20211203051157.2160-1-jszhang@kernel.org>
-References: <20211203051157.2160-1-jszhang@kernel.org>
-MIME-Version: 1.0
+Received: from foss.arm.com ([217.140.110.172])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mt61i-00FC9g-0N
+ for kexec@lists.infradead.org; Fri, 03 Dec 2021 10:42:51 +0000
+From: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Subject: [RFC PATCH 00/14] fs/proc/vmcore: Remove unnecessary user pointer
+ conversions 
+Date: Fri,  3 Dec 2021 16:12:17 +0530
+Message-Id: <20211203104231.17597-1-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -15,56 +16,78 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, hpa@zytor.com, Eric Biederman <ebiederm@xmission.com>, Alexandre Ghiti <alex@ghiti.fr>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+Cc: Christoph Hellwig <hch@lst.de>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Amit Daniel Kachhap <amit.kachhap@arm.com>
 
-Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
-by a check for "IS_ENABLED(CONFIG_BLK_DEV_INITRD)", to simplify the
-code and increase compile coverage.
+Hi,
 
-Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
----
- arch/arm/kernel/setup.c | 7 +++----
- 1 file changed, 3 insertions(+), 4 deletions(-)
+This series aims to restructure the external interfaces as well internal
+code used in fs/proc/vmcore.c by removing the interchangeable use of user
+and kernel pointers. This unnecessary conversion may obstruct the tools
+such as sparse in generating meaningful results. This also simplifies
+the things by keeping the user and kernel pointers separate during
+propagation.
 
-diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
-index 284a80c0b6e1..f9a054a344c0 100644
---- a/arch/arm/kernel/setup.c
-+++ b/arch/arm/kernel/setup.c
-@@ -973,7 +973,6 @@ static int __init init_machine_late(void)
- }
- late_initcall(init_machine_late);
- 
--#ifdef CONFIG_KEXEC
- /*
-  * The crash region must be aligned to 128MB to avoid
-  * zImage relocating below the reserved region.
-@@ -1001,6 +1000,9 @@ static void __init reserve_crashkernel(void)
- 	unsigned long long total_mem;
- 	int ret;
- 
-+	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-+		return;
-+
- 	total_mem = get_total_mem();
- 	ret = parse_crashkernel(boot_command_line, total_mem,
- 				&crash_size, &crash_base);
-@@ -1056,9 +1058,6 @@ static void __init reserve_crashkernel(void)
- 		insert_resource(&iomem_resource, &crashk_boot_res);
- 	}
- }
--#else
--static inline void reserve_crashkernel(void) {}
--#endif /* CONFIG_KEXEC */
- 
- void __init hyp_mode_check(void)
- {
+The external interfaces such as copy_oldmem_page, copy_oldmem_page_encrypted
+and read_from_oldmem are used across different architectures. The goal
+here is to update one architecture at a time and hence there is an extra
+cleanup done in the end to remove the intermediaries.
+
+In this series, an extra user pointer is added as a parameter to all the
+above functions instead of an union as there were disagreement in earlier ideas
+of using universal pointer [1,2]. This series is posted as RFC so as to
+find out an acceptable way of handling this use case.
+
+This series is based on v5.16-rc3 and is compile tested for modified
+architectures and boot tested in qemu for all architectures except ia64.
+
+Note: This patch series breaks the crash dump functionality after patch
+3 and is restored after each arch implements its own
+copy_oldmem_page_buf() interface.
+
+Thanks,
+Amit Daniel
+
+[1]: https://lore.kernel.org/lkml/20200624162901.1814136-2-hch@lst.de/
+[2]: https://lore.kernel.org/lkml/CAHk-=wit9enePELG=-HnLsr0nY5bucFNjqAqWoFTuYDGR1P4KA@mail.gmail.com/
+
+Amit Daniel Kachhap (14):
+  fs/proc/vmcore: Update read_from_oldmem() for user pointer
+  fs/proc/vmcore: Update copy_oldmem_page_encrypted() for user buffer
+  fs/proc/vmcore: Update copy_oldmem_page() for user buffer
+  x86/crash_dump_64: Use the new interface copy_oldmem_page_buf
+  x86/crash_dump_32: Use the new interface copy_oldmem_page_buf
+  arm64/crash_dump: Use the new interface copy_oldmem_page_buf
+  arm/crash_dump: Use the new interface copy_oldmem_page_buf
+  mips/crash_dump: Use the new interface copy_oldmem_page_buf
+  sh/crash_dump: Use the new interface copy_oldmem_page_buf
+  riscv/crash_dump: Use the new interface copy_oldmem_page_buf
+  powerpc/crash_dump: Use the new interface copy_oldmem_page_buf
+  ia64/crash_dump: Use the new interface copy_oldmem_page_buf
+  s390/crash_dump: Use the new interface copy_oldmem_page_buf
+  fs/proc/vmcore: Remove the unused old interface copy_oldmem_page
+
+ arch/arm/kernel/crash_dump.c     | 21 ++++----
+ arch/arm64/kernel/crash_dump.c   | 21 ++++----
+ arch/ia64/kernel/crash_dump.c    | 25 +++++-----
+ arch/mips/kernel/crash_dump.c    | 24 ++++-----
+ arch/powerpc/kernel/crash_dump.c | 33 +++++++------
+ arch/riscv/kernel/crash_dump.c   | 25 +++++-----
+ arch/s390/kernel/crash_dump.c    | 12 ++---
+ arch/sh/kernel/crash_dump.c      | 25 +++++-----
+ arch/x86/kernel/crash_dump_32.c  | 24 ++++-----
+ arch/x86/kernel/crash_dump_64.c  | 48 +++++++++---------
+ fs/proc/vmcore.c                 | 85 +++++++++++++++++---------------
+ include/linux/crash_dump.h       | 23 +++++----
+ 12 files changed, 189 insertions(+), 177 deletions(-)
+
 -- 
-2.34.1
+2.17.1
 
 
 _______________________________________________
