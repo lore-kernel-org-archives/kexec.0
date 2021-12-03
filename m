@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Jisheng Zhang <jszhang@kernel.org>
-Subject: [RFC PATCH 1/5] kexec: make crashk_res,
- crashk_low_res and crash_notes symbols always visible
-Date: Fri,  3 Dec 2021 13:11:53 +0800
-Message-Id: <20211203051157.2160-2-jszhang@kernel.org>
+Subject: [RFC PATCH 2/5] riscv: mm: init: use IS_ENABLED(CONFIG_KEXEC_CORE)
+ instead of #ifdef
+Date: Fri,  3 Dec 2021 13:11:54 +0800
+Message-Id: <20211203051157.2160-3-jszhang@kernel.org>
 In-Reply-To: <20211203051157.2160-1-jszhang@kernel.org>
 References: <20211203051157.2160-1-jszhang@kernel.org>
 MIME-Version: 1.0
@@ -22,46 +22,53 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Paul Walmsley <paul.walmsley@sifive.com>, Will Deacon <will@kernel.org>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, hpa@zytor.com, Eric Biederman <ebiederm@xmission.com>, Alexandre Ghiti <alex@ghiti.fr>
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org
 
-Make the forward declarations of crashk_res, crashk_low_res and
-crash_notes always visible. Code referring to these symbols can then
-just check for IS_ENABLED(CONFIG_KEXEC_CORE), instead of requiring
-conditional compilation using an #ifdef, thus preparing to increase
-compile coverage and simplify the code.
+Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
+by a check for "IS_ENABLED(CONFIG_BLK_DEV_INITRD)", to simplify the
+code and increase compile coverage.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- include/linux/kexec.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/riscv/mm/init.c | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0c994ae37729..58d1b58a971e 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -20,6 +20,12 @@
+diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
+index aeae7d6b2fee..704e2463e976 100644
+--- a/arch/riscv/mm/init.c
++++ b/arch/riscv/mm/init.c
+@@ -755,7 +755,6 @@ static inline void setup_vm_final(void)
+ }
+ #endif /* CONFIG_MMU */
  
- #include <uapi/linux/kexec.h>
+-#ifdef CONFIG_KEXEC_CORE
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -772,6 +771,8 @@ static void __init reserve_crashkernel(void)
  
-+/* Location of a reserved region to hold the crash kernel.
-+ */
-+extern struct resource crashk_res;
-+extern struct resource crashk_low_res;
-+extern note_buf_t __percpu *crash_notes;
-+
- #ifdef CONFIG_KEXEC_CORE
- #include <linux/list.h>
- #include <linux/compat.h>
-@@ -350,12 +356,6 @@ extern int kexec_load_disabled;
- #define KEXEC_FILE_FLAGS	(KEXEC_FILE_UNLOAD | KEXEC_FILE_ON_CRASH | \
- 				 KEXEC_FILE_NO_INITRAMFS)
+ 	int ret = 0;
  
--/* Location of a reserved region to hold the crash kernel.
-- */
--extern struct resource crashk_res;
--extern struct resource crashk_low_res;
--extern note_buf_t __percpu *crash_notes;
--
- /* flag to track if kexec reboot is in progress */
- extern bool kexec_in_progress;
++	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
++		return;
+ 	/*
+ 	 * Don't reserve a region for a crash kernel on a crash kernel
+ 	 * since it doesn't make much sense and we have limited memory
+@@ -812,7 +813,6 @@ static void __init reserve_crashkernel(void)
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
+ }
+-#endif /* CONFIG_KEXEC_CORE */
+ 
+ void __init paging_init(void)
+ {
+@@ -826,9 +826,7 @@ void __init misc_mem_init(void)
+ 	arch_numa_init();
+ 	sparse_init();
+ 	zone_sizes_init();
+-#ifdef CONFIG_KEXEC_CORE
+ 	reserve_crashkernel();
+-#endif
+ 	memblock_dump_all();
+ }
  
 -- 
 2.34.1
