@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Jisheng Zhang <jszhang@kernel.org>
-Subject: [RFC PATCH 3/5] x86/setup: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
+Subject: [RFC PATCH 4/5] arm64: mm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
  of #ifdef
-Date: Fri,  3 Dec 2021 13:11:55 +0800
-Message-Id: <20211203051157.2160-4-jszhang@kernel.org>
+Date: Fri,  3 Dec 2021 13:11:56 +0800
+Message-Id: <20211203051157.2160-5-jszhang@kernel.org>
 In-Reply-To: <20211203051157.2160-1-jszhang@kernel.org>
 References: <20211203051157.2160-1-jszhang@kernel.org>
 MIME-Version: 1.0
@@ -28,44 +28,43 @@ code and increase compile coverage.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- arch/x86/kernel/setup.c | 10 +++-------
- 1 file changed, 3 insertions(+), 7 deletions(-)
+ arch/arm64/mm/init.c | 9 +++------
+ 1 file changed, 3 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index c410be738ae7..56b738c1ca33 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -390,8 +390,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
-  * --------- Crashkernel reservation ------------------------------
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index a8834434af99..b4b8b4dc2d31 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -64,7 +64,6 @@ EXPORT_SYMBOL(memstart_addr);
   */
+ phys_addr_t arm64_dma_phys_limit __ro_after_init;
  
 -#ifdef CONFIG_KEXEC_CORE
--
- /* 16M alignment for crash kernel regions */
- #define CRASH_ALIGN		SZ_16M
- 
-@@ -469,6 +467,9 @@ static void __init reserve_crashkernel(void)
- 	bool high = false;
+ /*
+  * reserve_crashkernel() - reserves memory for crash kernel
+  *
+@@ -78,6 +77,9 @@ static void __init reserve_crashkernel(void)
+ 	unsigned long long crash_max = arm64_dma_phys_limit;
  	int ret;
  
 +	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
 +		return;
 +
- 	total_mem = memblock_phys_mem_size();
- 
- 	/* crashkernel=XM */
-@@ -534,11 +535,6 @@ static void __init reserve_crashkernel(void)
- 	crashk_res.end   = crash_base + crash_size - 1;
- 	insert_resource(&iomem_resource, &crashk_res);
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+ 				&crash_size, &crash_base);
+ 	/* no crashkernel= or invalid value specified */
+@@ -110,11 +112,6 @@ static void __init reserve_crashkernel(void)
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
  }
 -#else
 -static void __init reserve_crashkernel(void)
 -{
 -}
--#endif
+-#endif /* CONFIG_KEXEC_CORE */
  
- static struct resource standard_io_resources[] = {
- 	{ .name = "dma1", .start = 0x00, .end = 0x1f,
+ /*
+  * Return the maximum physical address for a zone accessible by the given bits
 -- 
 2.34.1
 
