@@ -1,17 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 6 Dec 2021 15:07:15 +0000
-From: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [RFC PATCH 01/14] fs/proc/vmcore: Update read_from_oldmem() for
- user pointer
-Message-ID: <Ya4nI7ly15pJA5xp@casper.infradead.org>
-References: <20211203104231.17597-1-amit.kachhap@arm.com>
- <20211203104231.17597-2-amit.kachhap@arm.com>
- <20211206140451.GA4936@lst.de>
- <Ya4bdB0UBJCZhUSo@casper.infradead.org>
- <20211206145422.GA8794@lst.de>
+From: Jisheng Zhang <jszhang@kernel.org>
+Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of
+ #ifdef
+Date: Tue,  7 Dec 2021 00:05:09 +0800
+Message-Id: <20211206160514.2000-1-jszhang@kernel.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211206145422.GA8794@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,27 +17,39 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Amit Daniel Kachhap <amit.kachhap@arm.com>, linux-kernel@vger.kernel.org, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, x86 <x86@kernel.org>
+To: Russell King <linux@armlinux.org.uk>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, Paul Walmsley <paul.walmsley@sifive.com>, Palmer Dabbelt <palmer@dabbelt.com>, Albert Ou <aou@eecs.berkeley.edu>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Hansen <dave.hansen@linux.intel.com>, x86@kernel.org, hpa@zytor.com, Eric Biederman <ebiederm@xmission.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, kexec@lists.infradead.org, Alexandre ghiti <alex@ghiti.fr>
 
-On Mon, Dec 06, 2021 at 03:54:22PM +0100, Christoph Hellwig wrote:
-> On Mon, Dec 06, 2021 at 02:17:24PM +0000, Matthew Wilcox wrote:
-> > On Mon, Dec 06, 2021 at 03:04:51PM +0100, Christoph Hellwig wrote:
-> > > This looks like a huge mess.  What speak against using an iov_iter
-> > > here?
-> > 
-> > I coincidentally made a start on this last night.  Happy to stop.
-> 
-> Don't stop!
-> 
-> > What do you think to adding a generic copy_pfn_to_iter()?  Not sure
-> > which APIs to use to implement it ... some architectures have weird
-> > requirements about which APIs can be used for what kinds of PFNs.
-> 
-> Hmm.  I though kmap_local_pfn(_prot) is all we need?
+Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
+by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
+and increase compile coverage.
 
-In the !HIGHMEM case, that calls pfn_to_page(), and I think the
-point of this path is that we don't have a struct page for this pfn.
+I only modify x86, arm, arm64 and riscv, other architectures such as
+sh, powerpc and s390 are better to be kept kexec code as-is so they
+are not touched.
+
+Since v1:
+ - collect Reviewed-by tag
+ - fix misleading commit msg.
+
+Jisheng Zhang (5):
+  kexec: make crashk_res, crashk_low_res and crash_notes symbols always
+    visible
+  riscv: mm: init: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef
+  x86/setup: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef
+  arm64: mm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef
+  arm: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef
+
+ arch/arm/kernel/setup.c |  7 +++----
+ arch/arm64/mm/init.c    |  9 +++------
+ arch/riscv/mm/init.c    |  6 ++----
+ arch/x86/kernel/setup.c | 10 +++-------
+ include/linux/kexec.h   | 12 ++++++------
+ 5 files changed, 17 insertions(+), 27 deletions(-)
+
+-- 
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
