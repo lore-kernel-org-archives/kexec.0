@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from verein.lst.de ([213.95.11.211])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muC1g-003XR4-Th
- for kexec@lists.infradead.org; Mon, 06 Dec 2021 11:19:22 +0000
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com
- [10.5.11.12])
- (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
- (No client certificate requested)
- by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 9E4E9814316
- for <kexec@lists.infradead.org>; Mon,  6 Dec 2021 11:17:40 +0000 (UTC)
-From: Philipp Rudo <prudo@redhat.com>
-Subject: [PATCH] kernel/crash_core: suppress unknown crashkernel parameter
- warning
-Date: Mon,  6 Dec 2021 12:17:33 +0100
-Message-Id: <20211206111733.4602-1-prudo@redhat.com>
+ id 1muEbw-0048OB-QW
+ for kexec@lists.infradead.org; Mon, 06 Dec 2021 14:04:58 +0000
+Date: Mon, 6 Dec 2021 15:04:51 +0100
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [RFC PATCH 01/14] fs/proc/vmcore: Update read_from_oldmem()
+ for user pointer
+Message-ID: <20211206140451.GA4936@lst.de>
+References: <20211203104231.17597-1-amit.kachhap@arm.com>
+ <20211203104231.17597-2-amit.kachhap@arm.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20211203104231.17597-2-amit.kachhap@arm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,59 +25,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
-Cc: ahalaney@redhat.com
+To: Amit Daniel Kachhap <amit.kachhap@arm.com>
+Cc: linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, x86 <x86@kernel.org>
 
-When booting with crashkernel= on the kernel command line a warning
-similar to
+On Fri, Dec 03, 2021 at 04:12:18PM +0530, Amit Daniel Kachhap wrote:
+> +	return read_from_oldmem_to_kernel(buf, count, ppos,
+> +					  cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
 
-[    0.038294] Kernel command line: ro console=ttyS0 crashkernel=256M
-[    0.038353] Unknown kernel command line parameters "crashkernel=256M", will be passed to user space.
+Overly long line.
 
-is printed. This originates from crashkernel= being parsed independent from
-the early_param() mechanism. So the code in init/main.c doesn't know
-that crashkernel= is a valid kernel parameter and prints this incorrect
-warning. Suppress the warning by adding a dummy early_param handler for
-crashkernel=.
+> +ssize_t read_from_oldmem(char __user *ubuf, char *kbuf, size_t count,
+> +			 u64 *ppos, bool encrypted)
+>  {
+>  	unsigned long pfn, offset;
+>  	size_t nr_bytes;
+> @@ -156,19 +163,27 @@ ssize_t read_from_oldmem(char *buf, size_t count,
+>  		/* If pfn is not ram, return zeros for sparse dump files */
+>  		if (!pfn_is_ram(pfn)) {
+>  			tmp = 0;
+> -			if (!userbuf)
+> -				memset(buf, 0, nr_bytes);
+> -			else if (clear_user(buf, nr_bytes))
+> +			if (kbuf)
+> +				memset(kbuf, 0, nr_bytes);
+> +			else if (clear_user(ubuf, nr_bytes))
+>  				tmp = -EFAULT;
 
-Fixes: 86d1919a4fb0 ("init: print out unknown kernel parameters")
-Signed-off-by: Philipp Rudo <prudo@redhat.com>
----
- kernel/crash_core.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index eb53f5ec62c9..256cf6db573c 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -6,6 +6,7 @@
- 
- #include <linux/buildid.h>
- #include <linux/crash_core.h>
-+#include <linux/init.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
- 
-@@ -295,6 +296,16 @@ int __init parse_crashkernel_low(char *cmdline,
- 				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
- }
- 
-+/*
-+ * Add a dummy early_param handler to mark crashkernel= as a known command line
-+ * parameter and suppress incorrect warnings in init/main.c.
-+ */
-+static int __init parse_crashkernel_dummy(char *arg)
-+{
-+	return 0;
-+}
-+early_param("crashkernel", parse_crashkernel_dummy);
-+
- Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
- 			  void *data, size_t data_len)
- {
--- 
-2.31.1
-
+This looks like a huge mess.  What speak against using an iov_iter
+here?
 
 _______________________________________________
 kexec mailing list
