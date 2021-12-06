@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Jisheng Zhang <jszhang@kernel.org>
-Subject: [PATCH v2 2/5] riscv: mm: init: use IS_ENABLED(CONFIG_KEXEC_CORE)
- instead of #ifdef
-Date: Tue,  7 Dec 2021 00:05:11 +0800
-Message-Id: <20211206160514.2000-3-jszhang@kernel.org>
+Subject: [PATCH v2 3/5] x86/setup: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
+ of #ifdef
+Date: Tue,  7 Dec 2021 00:05:12 +0800
+Message-Id: <20211206160514.2000-4-jszhang@kernel.org>
 In-Reply-To: <20211206160514.2000-1-jszhang@kernel.org>
 References: <20211206160514.2000-1-jszhang@kernel.org>
 MIME-Version: 1.0
@@ -28,48 +28,44 @@ and increase compile coverage.
 
 Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
 ---
- arch/riscv/mm/init.c | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/x86/kernel/setup.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-index a15640eeb334..84879a5ce818 100644
---- a/arch/riscv/mm/init.c
-+++ b/arch/riscv/mm/init.c
-@@ -748,7 +748,6 @@ static inline void setup_vm_final(void)
- }
- #endif /* CONFIG_MMU */
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index c410be738ae7..56b738c1ca33 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -390,8 +390,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+  * --------- Crashkernel reservation ------------------------------
+  */
  
 -#ifdef CONFIG_KEXEC_CORE
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -765,6 +764,8 @@ static void __init reserve_crashkernel(void)
+-
+ /* 16M alignment for crash kernel regions */
+ #define CRASH_ALIGN		SZ_16M
  
- 	int ret = 0;
+@@ -469,6 +467,9 @@ static void __init reserve_crashkernel(void)
+ 	bool high = false;
+ 	int ret;
  
 +	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
 +		return;
- 	/*
- 	 * Don't reserve a region for a crash kernel on a crash kernel
- 	 * since it doesn't make much sense and we have limited memory
-@@ -805,7 +806,6 @@ static void __init reserve_crashkernel(void)
- 	crashk_res.start = crash_base;
- 	crashk_res.end = crash_base + crash_size - 1;
- }
--#endif /* CONFIG_KEXEC_CORE */
++
+ 	total_mem = memblock_phys_mem_size();
  
- void __init paging_init(void)
- {
-@@ -819,9 +819,7 @@ void __init misc_mem_init(void)
- 	arch_numa_init();
- 	sparse_init();
- 	zone_sizes_init();
--#ifdef CONFIG_KEXEC_CORE
- 	reserve_crashkernel();
+ 	/* crashkernel=XM */
+@@ -534,11 +535,6 @@ static void __init reserve_crashkernel(void)
+ 	crashk_res.end   = crash_base + crash_size - 1;
+ 	insert_resource(&iomem_resource, &crashk_res);
+ }
+-#else
+-static void __init reserve_crashkernel(void)
+-{
+-}
 -#endif
- 	memblock_dump_all();
- }
  
+ static struct resource standard_io_resources[] = {
+ 	{ .name = "dma1", .start = 0x00, .end = 0x1f,
 -- 
 2.34.1
 
