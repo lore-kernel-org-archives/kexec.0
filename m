@@ -1,15 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muQqP-006pis-TA
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:43 +0000
+ id 1muQyH-006qfX-3L
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:16:51 +0000
+Date: Tue, 7 Dec 2021 11:16:31 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH RESEND v2 5/5] mm/slub: do not create dma-kmalloc if no
- managed pages in DMA zone
-Date: Tue,  7 Dec 2021 11:07:50 +0800
-Message-Id: <20211207030750.30824-6-bhe@redhat.com>
-In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+Message-ID: <20211207031631.GA5604@MiWiFi-R3L-srv>
 References: <20211207030750.30824-1-bhe@redhat.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,109 +20,140 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+To: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, rppt@linux.ibm.com
 
-Dma-kmalloc will be created as long as CONFIG_ZONE_DMA is enabled.
-However, it will fail if DMA zone has no managed pages. The failure
-can be seen in kdump kernel of x86_64 as below:
+Sorry, forgot adding x86 and x86/mm maintainers
 
- kworker/u2:2: page allocation failure: order:0, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0                          
- CPU: 0 PID: 36 Comm: kworker/u2:2 Not tainted 5.16.0-rc3+ #6
- Hardware name: Dell Inc. PowerEdge R815/06JC9T, BIOS 3.2.2 09/15/2014
- Workqueue: events_unbound async_run_entry_fn
- Call Trace:
-  dump_stack_lvl+0x57/0x72
-  warn_alloc.cold+0x72/0xd6
-  __alloc_pages_slowpath.constprop.0+0xf56/0xf70
-  __alloc_pages+0x23b/0x2b0
-  allocate_slab+0x406/0x630
-  ___slab_alloc+0x4b1/0x7e0
-  ? sr_probe+0x200/0x600
-  ? lock_acquire+0xc4/0x2e0
-  ? fs_reclaim_acquire+0x4d/0xe0
-  ? lock_is_held_type+0xa7/0x120
-  ? sr_probe+0x200/0x600
-  ? __slab_alloc+0x67/0x90
-  __slab_alloc+0x67/0x90
-  ? sr_probe+0x200/0x600
-  ? sr_probe+0x200/0x600
-  kmem_cache_alloc_trace+0x259/0x270
-  sr_probe+0x200/0x600
-  ......
-  bus_probe_device+0x9f/0xb0
-  device_add+0x3d2/0x970
-  ......
-  __scsi_add_device+0xea/0x100
-  ata_scsi_scan_host+0x97/0x1d0
-  async_run_entry_fn+0x30/0x130
-  process_one_work+0x2b0/0x5c0
-  worker_thread+0x55/0x3c0
-  ? process_one_work+0x5c0/0x5c0
-  kthread+0x149/0x170
-  ? set_kthread_struct+0x40/0x40
-  ret_from_fork+0x22/0x30
- Mem-Info:
- ......
-
-The above failure happened when calling kmalloc() to allocate buffer with
-GFP_DMA. It requests to allocate slab page from DMA zone while no managed
-pages in there.
- sr_probe()
- --> get_capabilities()
-     --> buffer = kmalloc(512, GFP_KERNEL | GFP_DMA);
-
-The DMA zone should be checked if it has managed pages, then try to create
-dma-kmalloc.
-
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
----
- mm/slab_common.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index e5d080a93009..ae4ef0f8903a 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -878,6 +878,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- {
- 	int i;
- 	enum kmalloc_cache_type type;
-+#ifdef CONFIG_ZONE_DMA
-+	bool managed_dma;
-+#endif
- 
- 	/*
- 	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
-@@ -905,10 +908,16 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 	slab_state = UP;
- 
- #ifdef CONFIG_ZONE_DMA
-+	managed_dma = has_managed_dma();
-+
- 	for (i = 0; i <= KMALLOC_SHIFT_HIGH; i++) {
- 		struct kmem_cache *s = kmalloc_caches[KMALLOC_NORMAL][i];
- 
- 		if (s) {
-+			if (!managed_dma) {
-+				kmalloc_caches[KMALLOC_DMA][i] = kmalloc_caches[KMALLOC_NORMAL][i];
-+				continue;
-+			}
- 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
- 				kmalloc_info[i].name[KMALLOC_DMA],
- 				kmalloc_info[i].size,
--- 
-2.17.2
+On 12/07/21 at 11:07am, Baoquan He wrote:
+> ***Problem observed:
+> On x86_64, when crash is triggered and entering into kdump kernel, page
+> allocation failure can always be seen.
+> 
+>  ---------------------------------
+>  DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+>  swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+>  CPU: 0 PID: 1 Comm: swapper/0 
+>  Call Trace:
+>   dump_stack+0x7f/0xa1
+>   warn_alloc.cold+0x72/0xd6
+>   ......
+>   __alloc_pages+0x24d/0x2c0
+>   ......
+>   dma_atomic_pool_init+0xdb/0x176
+>   do_one_initcall+0x67/0x320
+>   ? rcu_read_lock_sched_held+0x3f/0x80
+>   kernel_init_freeable+0x290/0x2dc
+>   ? rest_init+0x24f/0x24f
+>   kernel_init+0xa/0x111
+>   ret_from_fork+0x22/0x30
+>  Mem-Info:
+>  ------------------------------------
+> 
+> ***Root cause:
+> In the current kernel, it assumes that DMA zone must have managed pages
+> and try to request pages if CONFIG_ZONE_DMA is enabled. While this is not
+> always true. E.g in kdump kernel of x86_64, only low 1M is presented and
+> locked down at very early stage of boot, so that this low 1M won't be
+> added into buddy allocator to become managed pages of DMA zone. This
+> exception will always cause page allocation failure if page is requested
+> from DMA zone.
+> 
+> ***Investigation:
+> This failure happens since below commit merged into linus's tree.
+>   1a6a9044b967 x86/setup: Remove CONFIG_X86_RESERVE_LOW and reservelow= options
+>   23721c8e92f7 x86/crash: Remove crash_reserve_low_1M()
+>   f1d4d47c5851 x86/setup: Always reserve the first 1M of RAM
+>   7c321eb2b843 x86/kdump: Remove the backup region handling
+>   6f599d84231f x86/kdump: Always reserve the low 1M when the crashkernel option is specified
+> 
+> Before them, on x86_64, the low 640K area will be reused by kdump kernel.
+> So in kdump kernel, the content of low 640K area is copied into a backup
+> region for dumping before jumping into kdump. Then except of those firmware
+> reserved region in [0, 640K], the left area will be added into buddy
+> allocator to become available managed pages of DMA zone.
+> 
+> However, after above commits applied, in kdump kernel of x86_64, the low
+> 1M is reserved by memblock, but not released to buddy allocator. So any
+> later page allocation requested from DMA zone will fail. 
+> 
+> This low 1M lock down is needed because AMD SME encrypts memory making
+> the old backup region mechanims impossible when switching into kdump
+> kernel. And Intel engineer mentioned their TDX (Trusted domain extensions)
+> which is under development in kernel also needs lock down the low 1M.
+> So we can't simply revert above commits to fix the page allocation
+> failure from DMA zone as someone suggested.
+> 
+> ***Solution:
+> Currently, only DMA atomic pool and dma-kmalloc will initialize and
+> request page allocation with GFP_DMA during bootup. So only initialize
+> them when DMA zone has available managed pages, otherwise just skip the
+> initialization. From testing and code, this doesn't matter. In kdump
+> kernel of x86_64, the page allocation failure disappear.
+> 
+> ***Further thinking
+> On x86_64, it consistently takes [0, 16M] into ZONE_DMA, and (16M, 4G]
+> into ZONE_DMA32 by default. The zone DMA covering low 16M is used to
+> take care of antique ISA devices. In fact, on 64bit system, it rarely
+> need ZONE_DMA (which is low 16M) to support almost extinct ISA devices. 
+> However, some components treat DMA as a generic concept, e.g
+> kmalloc-dma, slab allocator initializes it for later any DMA related
+> buffer allocation, but not limited to ISA DMA. 
+> 
+> On arm64, even though both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 
+> are enabled, it makes ZONE_DMA covers the low 4G area, and ZONE_DMA32
+> empty. Unless on specific platforms (e.g. 30-bit on Raspberry Pi 4),
+> then zone DMA covers the 1st 1G area, zone DMA32 covers the rest of
+> the 32-bit addressable memory. 
+> 
+> I am wondering if we can also change the size of DMA and DMA32 ZONE as
+> dynamically adjusted, just as arm64 is doing? On x86_64, we can make
+> zone DMA covers the 32-bit addressable memory, and empty zone DMA32 by
+> default. Once ISA_DMA_API is enabled, we go back to make zone DMA covers
+> low 16M area, zone DMA32 covers the rest of 32-bit addressable memory.
+> (I am not familiar with ISA_DMA_API, will it require 24-bit addressable
+> memory when enabled?)
+> 
+> Change history:
+> 
+> v2 post:
+> https://lore.kernel.org/all/20210810094835.13402-1-bhe@redhat.com/T/#u
+> 
+> v1 post:
+> https://lore.kernel.org/all/20210624052010.5676-1-bhe@redhat.com/T/#u
+> 
+> v2->v2 RESEND:
+>  John pinged to push the repost of this patchset. So fix one typo of
+>  suject of patch 3/5; Fix a building error caused by mix declaration in
+>  patch 5/5. Both of them are found by John from his testing.
+> 
+> v1->v2:
+>  Change to check if managed DMA zone exists. If DMA zone has managed
+>  pages, go further to request page from DMA zone to initialize. Otherwise,
+>  just skip to initialize stuffs which need pages from DMA zone.
+> 
+> Baoquan He (5):
+>   docs: kernel-parameters: Update to reflect the current default size of
+>     atomic pool
+>   dma-pool: allow user to disable atomic pool
+>   mm_zone: add function to check if managed dma zone exists
+>   dma/pool: create dma atomic pool only if dma zone has managed pages
+>   mm/slub: do not create dma-kmalloc if no managed pages in DMA zone
+> 
+>  .../admin-guide/kernel-parameters.txt         |  5 ++++-
+>  include/linux/mmzone.h                        | 21 +++++++++++++++++++
+>  kernel/dma/pool.c                             | 11 ++++++----
+>  mm/page_alloc.c                               | 11 ++++++++++
+>  mm/slab_common.c                              |  9 ++++++++
+>  5 files changed, 52 insertions(+), 5 deletions(-)
+> 
+> -- 
+> 2.17.2
+> 
 
 
 _______________________________________________
