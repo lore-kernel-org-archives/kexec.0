@@ -1,16 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muaWc-008hbS-4S
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 13:28:56 +0000
-Date: Tue, 7 Dec 2021 14:28:43 +0100
+ id 1mubTX-008wRk-FO
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 14:29:49 +0000
+Date: Tue, 7 Dec 2021 15:29:40 +0100
 From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH] kernel/crash_core: suppress unknown crashkernel
- parameter warning
-Message-ID: <20211207142843.0a27d71b@rhtmp>
-In-Reply-To: <20211207033446.GC5604@MiWiFi-R3L-srv>
-References: <20211206111733.4602-1-prudo@redhat.com>
- <20211207033446.GC5604@MiWiFi-R3L-srv>
+Subject: Re: [PATCH 1/3] s390: add variable command line size
+Message-ID: <20211207152940.2f6536e6@rhtmp>
+In-Reply-To: <20211122071401.3106858-2-svens@linux.ibm.com>
+References: <20211122071401.3106858-1-svens@linux.ibm.com>
+ <20211122071401.3106858-2-svens@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,107 +23,191 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: kexec@lists.infradead.org, ahalaney@redhat.com, akpm@linux-foundation.org
+To: Sven Schnelle <svens@linux.ibm.com>, Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: kexec@lists.infradead.org
 
-Hi Baoquan,
+Hi Sven,
 
-On Tue, 7 Dec 2021 11:34:46 +0800
-Baoquan He <bhe@redhat.com> wrote:
+On Mon, 22 Nov 2021 08:13:59 +0100
+Sven Schnelle <svens@linux.ibm.com> wrote:
 
-> On 12/06/21 at 12:17pm, Philipp Rudo wrote:
-> > When booting with crashkernel= on the kernel command line a warning
-> > similar to
-> > 
-> > [    0.038294] Kernel command line: ro console=ttyS0 crashkernel=256M
-> > [    0.038353] Unknown kernel command line parameters "crashkernel=256M", will be passed to user space.
-> > 
-> > is printed. This originates from crashkernel= being parsed independent from
-> > the early_param() mechanism. So the code in init/main.c doesn't know  
+> Newer s390 kernels support a command line size longer than 896
+> bytes. Such kernels contain a new member in the parameter area,
+> which might be utilized by tools like kexec. Older kernels have
+> the location initialized to zero, so we check whether there's a
+> non-zero number present and use that. If there isn't, we fallback
+> to the legacy command line size of 896 bytes.
 > 
-> Not only the early_param(), __setup() also takes the same mechanism.
-> It's just handled in different stage. You might need to call it kernel
-> param handling mechanism, not sure if it's accurate.
-
-you are right, "kernel param handling" is better. I used early_param as
-that's where we would need to hook into if we wanted to use the common
-kernel param handling. But I don't think it is worth it.
-
-@akpm: do you update the commit message before sending the patch to
-       Linus or shall I send a v2?
-
-> > that crashkernel= is a valid kernel parameter and prints this incorrect
-> > warning. Suppress the warning by adding a dummy early_param handler for
-> > crashkernel=.  
+> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+> Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  kexec/arch/s390/kexec-image.c | 53 ++++++++++++++++++++++++-----------
+>  kexec/arch/s390/kexec-s390.h  | 19 +++++++------
+>  2 files changed, 46 insertions(+), 26 deletions(-)
 > 
-> The fix looks good to me, thanks.
-> 
-> Acked-by: Baoquan He <bhe@redhat.com>
+> diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+> index 3c24fdfe3c7c..7747d02399db 100644
+> --- a/kexec/arch/s390/kexec-image.c
+> +++ b/kexec/arch/s390/kexec-image.c
+> @@ -25,7 +25,7 @@
+>  #include <fcntl.h>
+>  
+>  static uint64_t crash_base, crash_end;
+> -static char command_line[COMMAND_LINESIZE];
+> +static char *command_line;
 
-Thanks
+isn't this the perfect opportunity to get rid of this global variable
+and...
 
-> By the way, on which arch did you find this issue? Ask because I am
-> wondering whether there's any other similiar independent kernel cmdline
-> handling from __setup_param(). If have, is there a chance to take a
-> common method to handle them, e.g a generic function or a place to
-> identify them. Just wild thought, I have no idea yet. Otherwise, we may
-> need several this kind of dummy handler for each one.
+>  static void add_segment_check(struct kexec_info *info, const void *buf,
+>  			      size_t bufsz, unsigned long base, size_t memsz)
+> @@ -38,11 +38,16 @@ static void add_segment_check(struct kexec_info *info, const void *buf,
+>  
+>  int command_line_add(const char *str)
 
-The issue was first reported on s390 but I used x86 to test the fix.
-The only other reported parameter I encountered was BOOT_IMAGE= which
-is not a kernel parameter and thus correct. But in the corresponding
-bugzilla Andrew (on cc) said "Gah! I thought I had squashed all of
-these interesting uses of the kernel command line, it is like playing whack-a-mole."
-So I believe there were multiple other parameters that had the same problem.
+... simply pass the pointer as an argument ;)
 
 Thanks
 Philipp
 
-> > Fixes: 86d1919a4fb0 ("init: print out unknown kernel parameters")
-> > Signed-off-by: Philipp Rudo <prudo@redhat.com>
-> > ---
-> >  kernel/crash_core.c | 11 +++++++++++
-> >  1 file changed, 11 insertions(+)
-> > 
-> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > index eb53f5ec62c9..256cf6db573c 100644
-> > --- a/kernel/crash_core.c
-> > +++ b/kernel/crash_core.c
-> > @@ -6,6 +6,7 @@
-> >  
-> >  #include <linux/buildid.h>
-> >  #include <linux/crash_core.h>
-> > +#include <linux/init.h>
-> >  #include <linux/utsname.h>
-> >  #include <linux/vmalloc.h>
-> >  
-> > @@ -295,6 +296,16 @@ int __init parse_crashkernel_low(char *cmdline,
-> >  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
-> >  }
-> >  
-> > +/*
-> > + * Add a dummy early_param handler to mark crashkernel= as a known command line
-> > + * parameter and suppress incorrect warnings in init/main.c.
-> > + */
-> > +static int __init parse_crashkernel_dummy(char *arg)
-> > +{
-> > +	return 0;
-> > +}
-> > +early_param("crashkernel", parse_crashkernel_dummy);
-> > +
-> >  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
-> >  			  void *data, size_t data_len)
-> >  {
-> > -- 
-> > 2.31.1
-> > 
-> > 
-> > _______________________________________________
-> > kexec mailing list
-> > kexec@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> >   
-> 
+>  {
+> -	if (strlen(command_line) + strlen(str) + 1 > COMMAND_LINESIZE) {
+> -		fprintf(stderr, "Command line too long.\n");
+> +	char *tmp = NULL;
+> +
+> +	tmp = concat_cmdline(command_line, str);
+> +	if (!tmp) {
+> +		fprintf(stderr, "out of memory\n");
+>  		return -1;
+>  	}
+> -	strcat(command_line, str);
+> +
+> +	free(command_line);
+> +	command_line = tmp;
+>  	return 0;
+>  }
+>  
+> @@ -78,6 +83,8 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
+>  		if (info->initrd_fd == -1) {
+>  			fprintf(stderr, "Could not open initrd file %s:%s\n",
+>  					ramdisk, strerror(errno));
+> +			free(command_line);
+> +			command_line = NULL;
+>  			return -1;
+>  		}
+>  	}
+> @@ -97,7 +104,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  	const char *ramdisk;
+>  	off_t ramdisk_len;
+>  	unsigned int ramdisk_origin;
+> -	int opt;
+> +	int opt, ret = -1;
+>  
+>  	if (info->file_mode)
+>  		return image_s390_load_file(argc, argv, info);
+> @@ -112,7 +119,6 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  		};
+>  	static const char short_options[] = KEXEC_OPT_STR "";
+>  
+> -	command_line[0] = 0;
+>  	ramdisk = NULL;
+>  	ramdisk_len = 0;
+>  	ramdisk_origin = 0;
+> @@ -132,7 +138,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  	if (info->kexec_flags & KEXEC_ON_CRASH) {
+>  		if (parse_iomem_single("Crash kernel\n", &crash_base,
+>  				       &crash_end))
+> -			return -1;
+> +			goto out;
+>  	}
+>  
+>  	/* Add kernel segment */
+> @@ -151,7 +157,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  		rd_buffer = slurp_file_mmap(ramdisk, &ramdisk_len);
+>  		if (rd_buffer == NULL) {
+>  			fprintf(stderr, "Could not read ramdisk.\n");
+> -			return -1;
+> +			goto out;
+>  		}
+>  		ramdisk_origin = MAX(RAMDISK_ORIGIN_ADDR, kernel_size);
+>  		ramdisk_origin = _ALIGN_UP(ramdisk_origin, 0x100000);
+> @@ -160,7 +166,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  	}
+>  	if (info->kexec_flags & KEXEC_ON_CRASH) {
+>  		if (load_crashdump_segments(info, crash_base, crash_end))
+> -			return -1;
+> +			goto out;
+>  	} else {
+>  		info->entry = (void *) IMAGE_READ_OFFSET;
+>  	}
+> @@ -183,15 +189,28 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+>  			*tmp = crash_end - crash_base + 1;
+>  		}
+>  	}
+> -	/*
+> -	 * We will write a probably given command line.
+> -	 * First, erase the old area, then setup the new parameters:
+> -	 */
+> -	if (strlen(command_line) != 0) {
+> -		memset(krnl_buffer + COMMAND_LINE_OFFS, 0, COMMAND_LINESIZE);
+> -		memcpy(krnl_buffer + COMMAND_LINE_OFFS, command_line, strlen(command_line));
+> +
+> +	if (command_line) {
+> +		unsigned long maxsize;
+> +		char *dest = krnl_buffer + COMMAND_LINE_OFFS;
+> +
+> +		maxsize = *(unsigned long *)(krnl_buffer + MAX_COMMAND_LINESIZE_OFFS);
+> +		if (!maxsize)
+> +			maxsize = LEGACY_COMMAND_LINESIZE;
+> +
+> +		if (strlen(command_line) > maxsize-1) {
+> +			fprintf(stderr, "command line too long, maximum allowed size %ld\n",
+> +				maxsize-1);
+> +			goto out;
+> +		}
+> +		strncpy(dest, command_line, maxsize-1);
+> +		dest[maxsize-1] = '\0';
+>  	}
+> -	return 0;
+> +	ret = 0;
+> +out:
+> +	free(command_line);
+> +	command_line = NULL;
+> +	return ret;
+>  }
+>  
+>  int 
+> diff --git a/kexec/arch/s390/kexec-s390.h b/kexec/arch/s390/kexec-s390.h
+> index ef53b111e167..1b0e04848460 100644
+> --- a/kexec/arch/s390/kexec-s390.h
+> +++ b/kexec/arch/s390/kexec-s390.h
+> @@ -10,16 +10,17 @@
+>  #ifndef KEXEC_S390_H
+>  #define KEXEC_S390_H
+>  
+> -#define IMAGE_READ_OFFSET     0x10000
+> +#define IMAGE_READ_OFFSET           0x10000
+>  
+> -#define RAMDISK_ORIGIN_ADDR   0x800000
+> -#define INITRD_START_OFFS     0x408
+> -#define INITRD_SIZE_OFFS      0x410
+> -#define OLDMEM_BASE_OFFS      0x418
+> -#define OLDMEM_SIZE_OFFS      0x420
+> -#define COMMAND_LINE_OFFS     0x480
+> -#define COMMAND_LINESIZE      896
+> -#define MAX_MEMORY_RANGES     1024
+> +#define RAMDISK_ORIGIN_ADDR         0x800000
+> +#define INITRD_START_OFFS           0x408
+> +#define INITRD_SIZE_OFFS            0x410
+> +#define OLDMEM_BASE_OFFS            0x418
+> +#define OLDMEM_SIZE_OFFS            0x420
+> +#define MAX_COMMAND_LINESIZE_OFFS   0x430
+> +#define COMMAND_LINE_OFFS           0x480
+> +#define LEGACY_COMMAND_LINESIZE     896
+> +#define MAX_MEMORY_RANGES           1024
+>  
+>  #define MAX(x, y) ((x) > (y) ? (x) : (y))
+>  #define MIN(x, y) ((x) < (y) ? (x) : (y))
 
 
 _______________________________________________
