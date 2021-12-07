@@ -1,18 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from foss.arm.com ([217.140.110.172])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muUdw-007BPw-Nb
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 07:12:06 +0000
-Subject: Re: [RFC PATCH 01/14] fs/proc/vmcore: Update read_from_oldmem() for
- user pointer
-References: <20211203104231.17597-1-amit.kachhap@arm.com>
- <20211203104231.17597-2-amit.kachhap@arm.com> <20211206140451.GA4936@lst.de>
-From: Amit Kachhap <amit.kachhap@arm.com>
-Message-ID: <08e4e9d8-2c42-115a-f440-d7f44fb19280@arm.com>
-Date: Tue, 7 Dec 2021 12:41:52 +0530
+Received: from gentwo.de ([2a02:c206:2048:5042::1])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1muVTe-007NQZ-PM
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 08:05:32 +0000
+Date: Tue, 7 Dec 2021 09:05:26 +0100 (CET)
+From: Christoph Lameter <cl@gentwo.org>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
+Message-ID: <alpine.DEB.2.22.394.2112070859420.201880@gentwo.de>
+References: <20211207030750.30824-1-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20211206140451.GA4936@lst.de>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,46 +19,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-kernel@vger.kernel.org, Vincenzo Frascino <Vincenzo.Frascino@arm.com>, Kevin Brodsky <kevin.brodsky@arm.com>, linux-fsdevel <linux-fsdevel@vger.kernel.org>, kexec <kexec@lists.infradead.org>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, x86 <x86@kernel.org>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
 
+On Tue, 7 Dec 2021, Baoquan He wrote:
 
+> into ZONE_DMA32 by default. The zone DMA covering low 16M is used to
+> take care of antique ISA devices. In fact, on 64bit system, it rarely
+> need ZONE_DMA (which is low 16M) to support almost extinct ISA devices.
+> However, some components treat DMA as a generic concept, e.g
+> kmalloc-dma, slab allocator initializes it for later any DMA related
+> buffer allocation, but not limited to ISA DMA.
 
-On 12/6/21 7:34 PM, Christoph Hellwig wrote:
-> On Fri, Dec 03, 2021 at 04:12:18PM +0530, Amit Daniel Kachhap wrote:
->> +	return read_from_oldmem_to_kernel(buf, count, ppos,
->> +					  cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
-> 
-> Overly long line.
-> 
->> +ssize_t read_from_oldmem(char __user *ubuf, char *kbuf, size_t count,
->> +			 u64 *ppos, bool encrypted)
->>   {
->>   	unsigned long pfn, offset;
->>   	size_t nr_bytes;
->> @@ -156,19 +163,27 @@ ssize_t read_from_oldmem(char *buf, size_t count,
->>   		/* If pfn is not ram, return zeros for sparse dump files */
->>   		if (!pfn_is_ram(pfn)) {
->>   			tmp = 0;
->> -			if (!userbuf)
->> -				memset(buf, 0, nr_bytes);
->> -			else if (clear_user(buf, nr_bytes))
->> +			if (kbuf)
->> +				memset(kbuf, 0, nr_bytes);
->> +			else if (clear_user(ubuf, nr_bytes))
->>   				tmp = -EFAULT;
-> 
-> This looks like a huge mess.  What speak against using an iov_iter
-> here?
+The idea of the slab allocator DMA support is to have memory available
+for devices that can only support a limited range of physical addresses.
+These are only to be enabled for platforms that have such requirements.
 
-iov_iter seems to be a reasonable way. As a start I thought of adding
-minimal changes.
+The slab allocators guarantee that all kmalloc allocations are DMA able
+indepent of specifying ZONE_DMA/ZONE_DMA32
 
-> 
+> On arm64, even though both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32
+> are enabled, it makes ZONE_DMA covers the low 4G area, and ZONE_DMA32
+> empty. Unless on specific platforms (e.g. 30-bit on Raspberry Pi 4),
+> then zone DMA covers the 1st 1G area, zone DMA32 covers the rest of
+> the 32-bit addressable memory.
+
+ZONE_NORMAL should cover all memory. ARM does not need ZONE_DMA32.
+
+> I am wondering if we can also change the size of DMA and DMA32 ZONE as
+> dynamically adjusted, just as arm64 is doing? On x86_64, we can make
+> zone DMA covers the 32-bit addressable memory, and empty zone DMA32 by
+> default. Once ISA_DMA_API is enabled, we go back to make zone DMA covers
+> low 16M area, zone DMA32 covers the rest of 32-bit addressable memory.
+> (I am not familiar with ISA_DMA_API, will it require 24-bit addressable
+> memory when enabled?)
+
+The size of ZONE_DMA is traditionally depending on the platform. On some
+it is 16MB, on some 1G and on some 4GB. ZONE32 is always 4GB and should
+only be used if ZONE_DMA has already been used.
+
+ZONE_DMA is dynamic in the sense of being different on different
+platforms.
+
+Generally I guess it would be possible to use ZONE_DMA for generic tagging
+of special memory that can be configured to have a dynamic size but that is
+not what it was designed to do.
 
 _______________________________________________
 kexec mailing list
