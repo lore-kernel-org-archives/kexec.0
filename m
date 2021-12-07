@@ -1,14 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mugWD-009wGI-2U
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 19:52:54 +0000
+ id 1mugWD-009wFu-3u
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 19:52:55 +0000
 From: Eric DeVolder <eric.devolder@oracle.com>
-Subject: [RFC v2 3/6] crash hp: definitions and prototype changes
-Date: Tue,  7 Dec 2021 14:52:01 -0500
-Message-Id: <20211207195204.1582-4-eric.devolder@oracle.com>
-In-Reply-To: <20211207195204.1582-1-eric.devolder@oracle.com>
-References: <20211207195204.1582-1-eric.devolder@oracle.com>
+Subject: [RFC v2 0/6] crash: Kernel handling of CPU and memory hot un/plug
+Date: Tue,  7 Dec 2021 14:51:58 -0500
+Message-Id: <20211207195204.1582-1-eric.devolder@oracle.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -25,63 +23,79 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
 Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com, eric.devolder@oracle.com
 
-This change adds members to struct kimage to facilitate crash
-hotplug support.
+When the kdump service is loaded, if a CPU or memory is hot
+un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
+and memory in the system, must also be updated, else the resulting
+vmcore is inaccurate (eg. missing either CPU context or memory
+regions).
 
-This change also defines crash hotplug events and associated
-prototypes.
+The current solution utilizes udev to initiate an unload-then-reload
+of the kdump image (e. kernel, initrd, boot_params, puratory and
+elfcorehdr) by the userspace kexec utility. In previous posts I have
+outlined the significant performance problems related to offloading
+this activity to userspace.
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+This patchset introduces a generic crash hot un/plug handler that
+registers with the CPU and memory notifiers. Upon CPU or memory
+changes, this generic handler is invoked and performs important
+housekeeping, for example obtaining the appropriate lock, and then
+invokes an architecture specific handler to do the appropriate
+updates.
+
+In the case of x86_64, the arch specific handler generates a new
+elfcorehdr, and overwrites the old one in memory. No involvement
+with userspace needed.
+
+To realize the benefits/test this patchset, one must make a couple
+of minor changes to userspace:
+
+ - Disable the udev rule for updating kdump on hot un/plug changes
+   Eg. on RHEL: rm -f /usr/lib/udev/rules.d/98-kexec.rules
+   or other technique to neuter the rule.
+
+ - Change to the kexec_file_load for loading the kdump kernel:
+   Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+    standard_kexec_args="-p -d -s"
+   which adds the -s to select kexec_file_load syscall.
+
+This patchset supports kexec_load with a modified kexec userspace
+utility, on which I am current working to provide separately.
+
+Regards,
+eric
 ---
- include/linux/kexec.h | 21 +++++++++++++++++++--
- 1 file changed, 19 insertions(+), 2 deletions(-)
+RFC v2: 7dec2021
+ - Acting upon Baoquan He suggestion of removing elfcorehdr from
+   the purgatory list of segments, removed purgatory code from
+   patchset, and it is signficiantly simpler now.
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0c994ae37729..068f853f1c65 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -221,8 +221,9 @@ struct crash_mem {
- extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mstart,
- 				   unsigned long long mend);
--extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--				       void **addr, unsigned long *sz);
-+extern int crash_prepare_elf64_headers(struct kimage *image,
-+					struct crash_mem *mem, int kernel_map,
-+					void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_KEXEC_ELF
-@@ -299,6 +300,13 @@ struct kimage {
- 
- 	/* Information for loading purgatory */
- 	struct purgatory_info purgatory_info;
-+
-+#ifdef CONFIG_CRASH_HOTPLUG
-+	bool hotplug_event;
-+	int offlinecpu;
-+	bool elf_index_valid;
-+	int elf_index;
-+#endif
- #endif
- 
- #ifdef CONFIG_IMA_KEXEC
-@@ -315,6 +323,15 @@ struct kimage {
- 	unsigned long elf_load_addr;
- };
- 
-+#ifdef CONFIG_CRASH_HOTPLUG
-+void arch_crash_hotplug_handler(struct kimage *image,
-+	unsigned int hp_action, unsigned long a, unsigned long b);
-+#define KEXEC_CRASH_HP_REMOVE_CPU   0
-+#define KEXEC_CRASH_HP_ADD_CPU      1
-+#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
-+#define KEXEC_CRASH_HP_ADD_MEMORY   3
-+#endif /* CONFIG_CRASH_HOTPLUG */
-+
- /* kexec interface functions */
- extern void machine_kexec(struct kimage *image);
- extern int machine_kexec_prepare(struct kimage *image);
+RFC v1: 18nov2021
+ https://lkml.org/lkml/2021/11/18/845
+ - working patchset demonstrating kernel handling of hotplug
+   updates to x86 elfcorehdr for kexec_file_load
+
+RFC: 14dec2020
+ https://lkml.org/lkml/2020/12/14/532
+ - proposed concept of allowing kernel to handle hotplug update
+   of elfcorehdr
+---
+
+
+Eric DeVolder (6):
+  crash: fix minor typo/bug in debug message
+  crash hp: Introduce CRASH_HOTPLUG configuration options
+  crash hp: definitions and prototype changes
+  crash hp: generic crash hotplug support infrastructure
+  crash hp: kexec_file changes for crash hotplug support
+  crash hp: Add x86 crash hotplug support
+
+ arch/x86/Kconfig        |  26 ++++++++
+ arch/x86/kernel/crash.c | 140 +++++++++++++++++++++++++++++++++++++++-
+ include/linux/kexec.h   |  21 +++++-
+ kernel/crash_core.c     | 118 +++++++++++++++++++++++++++++++++
+ kernel/kexec_file.c     |  15 ++++-
+ 5 files changed, 314 insertions(+), 6 deletions(-)
+
 -- 
 2.27.0
 
