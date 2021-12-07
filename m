@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muQq5-006pZa-PP
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:23 +0000
+ id 1muQqB-006pbP-4A
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:28 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH RESEND v2 2/5] dma-pool: allow user to disable atomic pool
-Date: Tue,  7 Dec 2021 11:07:47 +0800
-Message-Id: <20211207030750.30824-3-bhe@redhat.com>
+Subject: [PATCH RESEND v2 3/5] mm_zone: add function to check if managed dma
+ zone exists
+Date: Tue,  7 Dec 2021 11:07:48 +0800
+Message-Id: <20211207030750.30824-4-bhe@redhat.com>
 In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
 References: <20211207030750.30824-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -25,66 +26,89 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
 
-In the current code, three atomic memory pools are always created,
-atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
-specified in kernel command line. In fact, atomic pool is only
-necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
-which are needed on few ARCHes.
+In some places of the current kernel, it assumes that dma zone must have
+managed pages if CONFIG_ZONE_DMA is enabled. While this is not always true.
+E.g in kdump kernel of x86_64, only low 1M is presented and locked down
+at very early stage of boot, so that there's no managed pages at all in
+DMA zone. This exception will always cause page allocation failure if page
+is requested from DMA zone.
 
-So change code to allow user to disable atomic pool by specifying
-'coherent_pool=0'.
-
-Meanwhile, update the relevant document in kernel-parameter.txt.
+Here add function has_managed_dma() and the relevant helper functions to
+check if there's DMA zone with managed pages. It will be used in later
+patches.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 3 ++-
- kernel/dma/pool.c                               | 7 +++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ include/linux/mmzone.h | 21 +++++++++++++++++++++
+ mm/page_alloc.c        | 11 +++++++++++
+ 2 files changed, 32 insertions(+)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ec4d25e854a8..d7015309614b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -664,7 +664,8 @@
+diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+index 58e744b78c2c..82d23e13e0e5 100644
+--- a/include/linux/mmzone.h
++++ b/include/linux/mmzone.h
+@@ -998,6 +998,18 @@ static inline bool zone_is_zone_device(struct zone *zone)
+ }
+ #endif
  
- 	coherent_pool=nn[KMG]	[ARM,KNL]
- 			Sets the size of memory pool for coherent, atomic dma
--			allocations. Otherwise the default size will be scaled
-+			allocations. A value of 0 disables the three atomic
-+			memory pool. Otherwise the default size will be scaled
- 			with memory capacity, while clamped between 128K and
- 			1 << (PAGE_SHIFT + MAX_ORDER-1).
- 
-diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 5f84e6cdb78e..5a85804b5beb 100644
---- a/kernel/dma/pool.c
-+++ b/kernel/dma/pool.c
-@@ -21,7 +21,7 @@ static struct gen_pool *atomic_pool_kernel __ro_after_init;
- static unsigned long pool_size_kernel;
- 
- /* Size can be defined by the coherent_pool command line */
--static size_t atomic_pool_size;
-+static unsigned long atomic_pool_size = -1;
- 
- /* Dynamic background expansion when the atomic pool is near capacity */
- static struct work_struct atomic_pool_work;
-@@ -188,11 +188,14 @@ static int __init dma_atomic_pool_init(void)
- {
- 	int ret = 0;
- 
-+	if (!atomic_pool_size)
-+		return 0;
++#ifdef CONFIG_ZONE_DMA
++static inline bool zone_is_dma(struct zone *zone)
++{
++	return zone_idx(zone) == ZONE_DMA;
++}
++#else
++static inline bool zone_is_dma(struct zone *zone)
++{
++	return false;
++}
++#endif
 +
- 	/*
- 	 * If coherent_pool was not used on the command line, default the pool
- 	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER-1.
- 	 */
--	if (!atomic_pool_size) {
-+	if (atomic_pool_size == -1) {
- 		unsigned long pages = totalram_pages() / (SZ_1G / SZ_128K);
- 		pages = min_t(unsigned long, pages, MAX_ORDER_NR_PAGES);
- 		atomic_pool_size = max_t(size_t, pages << PAGE_SHIFT, SZ_128K);
+ /*
+  * Returns true if a zone has pages managed by the buddy allocator.
+  * All the reclaim decisions have to use this function rather than
+@@ -1046,6 +1058,7 @@ static inline int is_highmem_idx(enum zone_type idx)
+ #endif
+ }
+ 
++bool has_managed_dma(void);
+ /**
+  * is_highmem - helper function to quickly check if a struct zone is a
+  *              highmem zone or not.  This is an attempt to keep references
+@@ -1131,6 +1144,14 @@ extern struct zone *next_zone(struct zone *zone);
+ 			; /* do nothing */		\
+ 		else
+ 
++#define for_each_managed_zone(zone)		        \
++	for (zone = (first_online_pgdat())->node_zones; \
++	     zone;					\
++	     zone = next_zone(zone))			\
++		if (!managed_zone(zone))		\
++			; /* do nothing */		\
++		else
++
+ static inline struct zone *zonelist_zone(struct zoneref *zoneref)
+ {
+ 	return zoneref->zone;
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index c5952749ad40..ac0ea42a4e5f 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -9459,4 +9459,15 @@ bool take_page_off_buddy(struct page *page)
+ 	spin_unlock_irqrestore(&zone->lock, flags);
+ 	return ret;
+ }
++
++bool has_managed_dma(void)
++{
++	struct zone *zone;
++
++	for_each_managed_zone(zone) {
++		if (zone_is_dma(zone))
++			return true;
++	}
++	return false;
++}
+ #endif
 -- 
 2.17.2
 
