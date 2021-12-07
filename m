@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muYZi-008G0L-VG
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 11:24:00 +0000
-Received: by mail-wm1-f72.google.com with SMTP id
- z138-20020a1c7e90000000b003319c5f9164so1070551wmc.7
- for <kexec@lists.infradead.org>; Tue, 07 Dec 2021 03:23:53 -0800 (PST)
-Message-ID: <0a9bc228-21ba-abe3-d9c8-b9d52b936366@redhat.com>
-Date: Tue, 7 Dec 2021 12:23:50 +0100
+ id 1muaWc-008hbS-4S
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 13:28:56 +0000
+Date: Tue, 7 Dec 2021 14:28:43 +0100
+From: Philipp Rudo <prudo@redhat.com>
+Subject: Re: [PATCH] kernel/crash_core: suppress unknown crashkernel
+ parameter warning
+Message-ID: <20211207142843.0a27d71b@rhtmp>
+In-Reply-To: <20211207033446.GC5604@MiWiFi-R3L-srv>
+References: <20211206111733.4602-1-prudo@redhat.com>
+ <20211207033446.GC5604@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Subject: Re: [PATCH RESEND v2 3/5] mm_zone: add function to check if managed
- dma zone exists
-References: <20211207030750.30824-1-bhe@redhat.com>
- <20211207030750.30824-4-bhe@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-In-Reply-To: <20211207030750.30824-4-bhe@redhat.com>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,101 +24,107 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
+To: Baoquan He <bhe@redhat.com>
+Cc: kexec@lists.infradead.org, ahalaney@redhat.com, akpm@linux-foundation.org
 
-On 07.12.21 04:07, Baoquan He wrote:
-> In some places of the current kernel, it assumes that dma zone must have
-> managed pages if CONFIG_ZONE_DMA is enabled. While this is not always true.
-> E.g in kdump kernel of x86_64, only low 1M is presented and locked down
-> at very early stage of boot, so that there's no managed pages at all in
-> DMA zone. This exception will always cause page allocation failure if page
-> is requested from DMA zone.
+Hi Baoquan,
+
+On Tue, 7 Dec 2021 11:34:46 +0800
+Baoquan He <bhe@redhat.com> wrote:
+
+> On 12/06/21 at 12:17pm, Philipp Rudo wrote:
+> > When booting with crashkernel= on the kernel command line a warning
+> > similar to
+> > 
+> > [    0.038294] Kernel command line: ro console=ttyS0 crashkernel=256M
+> > [    0.038353] Unknown kernel command line parameters "crashkernel=256M", will be passed to user space.
+> > 
+> > is printed. This originates from crashkernel= being parsed independent from
+> > the early_param() mechanism. So the code in init/main.c doesn't know  
 > 
-> Here add function has_managed_dma() and the relevant helper functions to
-> check if there's DMA zone with managed pages. It will be used in later
-> patches.
+> Not only the early_param(), __setup() also takes the same mechanism.
+> It's just handled in different stage. You might need to call it kernel
+> param handling mechanism, not sure if it's accurate.
+
+you are right, "kernel param handling" is better. I used early_param as
+that's where we would need to hook into if we wanted to use the common
+kernel param handling. But I don't think it is worth it.
+
+@akpm: do you update the commit message before sending the patch to
+       Linus or shall I send a v2?
+
+> > that crashkernel= is a valid kernel parameter and prints this incorrect
+> > warning. Suppress the warning by adding a dummy early_param handler for
+> > crashkernel=.  
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  include/linux/mmzone.h | 21 +++++++++++++++++++++
->  mm/page_alloc.c        | 11 +++++++++++
->  2 files changed, 32 insertions(+)
+> The fix looks good to me, thanks.
 > 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 58e744b78c2c..82d23e13e0e5 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -998,6 +998,18 @@ static inline bool zone_is_zone_device(struct zone *zone)
->  }
->  #endif
->  
-> +#ifdef CONFIG_ZONE_DMA
-> +static inline bool zone_is_dma(struct zone *zone)
-> +{
-> +	return zone_idx(zone) == ZONE_DMA;
-> +}
-> +#else
-> +static inline bool zone_is_dma(struct zone *zone)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->  /*
->   * Returns true if a zone has pages managed by the buddy allocator.
->   * All the reclaim decisions have to use this function rather than
-> @@ -1046,6 +1058,7 @@ static inline int is_highmem_idx(enum zone_type idx)
->  #endif
->  }
->  
-> +bool has_managed_dma(void);
->  /**
->   * is_highmem - helper function to quickly check if a struct zone is a
->   *              highmem zone or not.  This is an attempt to keep references
-> @@ -1131,6 +1144,14 @@ extern struct zone *next_zone(struct zone *zone);
->  			; /* do nothing */		\
->  		else
->  
-> +#define for_each_managed_zone(zone)		        \
-> +	for (zone = (first_online_pgdat())->node_zones; \
-> +	     zone;					\
-> +	     zone = next_zone(zone))			\
-> +		if (!managed_zone(zone))		\
-> +			; /* do nothing */		\
-> +		else
-> +
->  static inline struct zone *zonelist_zone(struct zoneref *zoneref)
->  {
->  	return zoneref->zone;
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c5952749ad40..ac0ea42a4e5f 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -9459,4 +9459,15 @@ bool take_page_off_buddy(struct page *page)
->  	spin_unlock_irqrestore(&zone->lock, flags);
->  	return ret;
->  }
-> +
-> +bool has_managed_dma(void)
-> +{
-> +	struct zone *zone;
-> +
-> +	for_each_managed_zone(zone) {
-> +		if (zone_is_dma(zone))
-> +			return true;
-> +	}
-> +	return false;
-> +}
+> Acked-by: Baoquan He <bhe@redhat.com>
 
-Wouldn't it be "easier/faster" to just iterate online nodes and directly
-obtain the ZONE_DMA, checking if there are managed pages?
+Thanks
 
+> By the way, on which arch did you find this issue? Ask because I am
+> wondering whether there's any other similiar independent kernel cmdline
+> handling from __setup_param(). If have, is there a chance to take a
+> common method to handle them, e.g a generic function or a place to
+> identify them. Just wild thought, I have no idea yet. Otherwise, we may
+> need several this kind of dummy handler for each one.
 
--- 
-Thanks,
+The issue was first reported on s390 but I used x86 to test the fix.
+The only other reported parameter I encountered was BOOT_IMAGE= which
+is not a kernel parameter and thus correct. But in the corresponding
+bugzilla Andrew (on cc) said "Gah! I thought I had squashed all of
+these interesting uses of the kernel command line, it is like playing whack-a-mole."
+So I believe there were multiple other parameters that had the same problem.
 
-David / dhildenb
+Thanks
+Philipp
+
+> > Fixes: 86d1919a4fb0 ("init: print out unknown kernel parameters")
+> > Signed-off-by: Philipp Rudo <prudo@redhat.com>
+> > ---
+> >  kernel/crash_core.c | 11 +++++++++++
+> >  1 file changed, 11 insertions(+)
+> > 
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > index eb53f5ec62c9..256cf6db573c 100644
+> > --- a/kernel/crash_core.c
+> > +++ b/kernel/crash_core.c
+> > @@ -6,6 +6,7 @@
+> >  
+> >  #include <linux/buildid.h>
+> >  #include <linux/crash_core.h>
+> > +#include <linux/init.h>
+> >  #include <linux/utsname.h>
+> >  #include <linux/vmalloc.h>
+> >  
+> > @@ -295,6 +296,16 @@ int __init parse_crashkernel_low(char *cmdline,
+> >  				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+> >  }
+> >  
+> > +/*
+> > + * Add a dummy early_param handler to mark crashkernel= as a known command line
+> > + * parameter and suppress incorrect warnings in init/main.c.
+> > + */
+> > +static int __init parse_crashkernel_dummy(char *arg)
+> > +{
+> > +	return 0;
+> > +}
+> > +early_param("crashkernel", parse_crashkernel_dummy);
+> > +
+> >  Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+> >  			  void *data, size_t data_len)
+> >  {
+> > -- 
+> > 2.31.1
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >   
+> 
 
 
 _______________________________________________
