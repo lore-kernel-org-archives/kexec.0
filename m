@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mud3x-009P5t-JH
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 16:11:31 +0000
-Date: Tue, 7 Dec 2021 17:11:12 +0100
-From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH v2 4/6] module: strip the signature marker in the
- verification function.
-Message-ID: <20211207171112.03850036@rhtmp>
-In-Reply-To: <0f9bbbc4800d5329485b6bdabbbe1ef3b2169b02.1637862358.git.msuchanek@suse.de>
-References: <cover.1637862358.git.msuchanek@suse.de>
- <0f9bbbc4800d5329485b6bdabbbe1ef3b2169b02.1637862358.git.msuchanek@suse.de>
+ id 1mud5J-009PQr-4c
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 16:12:54 +0000
+From: Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH 3/3] s390: add support for --reuse-cmdline
+References: <20211122071401.3106858-1-svens@linux.ibm.com>
+ <20211122071401.3106858-4-svens@linux.ibm.com>
+ <20211207153404.4ff7f7fd@rhtmp>
+Date: Tue, 07 Dec 2021 17:12:42 +0100
+In-Reply-To: <20211207153404.4ff7f7fd@rhtmp> (Philipp Rudo's message of "Tue, 
+ 7 Dec 2021 15:34:04 +0100")
+Message-ID: <yt9dsfv4pf5x.fsf@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -24,141 +26,34 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal Suchanek <msuchanek@suse.de>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org, Alexander Egorenkov <egorenar@linux.ibm.com>
 
-Hi Michal,
+Hi Philipp,
 
-On Thu, 25 Nov 2021 19:02:42 +0100
-Michal Suchanek <msuchanek@suse.de> wrote:
+Philipp Rudo <prudo@redhat.com> writes:
 
-> It is stripped by each caller separately.
-> 
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  arch/powerpc/kexec/elf_64.c           |  9 ---------
->  arch/s390/kernel/machine_kexec_file.c |  9 ---------
->  kernel/module.c                       |  7 +------
->  kernel/module_signing.c               | 12 ++++++++++--
+>> diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
+>> index dbeb689b830a..310d967ea331 100644
+>> --- a/kexec/arch/s390/kexec-image.c
+>> +++ b/kexec/arch/s390/kexec-image.c
+>> @@ -72,6 +72,10 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
+>>  		case OPT_RAMDISK:
+>>  			ramdisk = optarg;
+>>  			break;
+>> +		case OPT_REUSE_CMDLINE:
+>> +			free(command_line);
+>> +			command_line = get_command_line();
+>
+> get_command_line reads a maximum of 2048 bytes from /prc/cmdline. With
+> the configurable size on s390 defaulting to 4096 bytes this will
+> ultimately cause problems. So you need to make get_command_line more
+> flexible first.
 
-kernel/module_signing.c is only compiled with MODULE_SIG enabled but
-KEXEC_SIG only selects MODULE_SIG_FORMAT. In the unlikely case that
-KEXEC_SIG is enabled but MODULE_SIG isn't this causes a build breakage.
-So you need to update KEXEC_SIG to select MODULE_SIG instead of
-MODULE_SIG_FORMAT for s390 and ppc.
+Thanks for pointing this out, i wasn't aware of that limitation. So we
+likely want to change that to some dynamic allocation.
 
-Thanks
-Philipp
-
->  4 files changed, 11 insertions(+), 26 deletions(-)
-> 
-> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-> index 266cb26d3ca0..63634c95265d 100644
-> --- a/arch/powerpc/kexec/elf_64.c
-> +++ b/arch/powerpc/kexec/elf_64.c
-> @@ -156,15 +156,6 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->  int elf64_verify_sig(const char *kernel, unsigned long length)
->  {
->  	size_t kernel_len = length;
-> -	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
-> -
-> -	if (marker_len > kernel_len)
-> -		return -EKEYREJECTED;
-> -
-> -	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
-> -		   marker_len))
-> -		return -EKEYREJECTED;
-> -	kernel_len -= marker_len;
->  
->  	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
->  					"kexec_file");
-> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-> index 432797249db3..c4632c1a1b59 100644
-> --- a/arch/s390/kernel/machine_kexec_file.c
-> +++ b/arch/s390/kernel/machine_kexec_file.c
-> @@ -27,20 +27,11 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
->  int s390_verify_sig(const char *kernel, unsigned long length)
->  {
->  	size_t kernel_len = length;
-> -	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
->  
->  	/* Skip signature verification when not secure IPLed. */
->  	if (!ipl_secure_flag)
->  		return 0;
->  
-> -	if (marker_len > kernel_len)
-> -		return -EKEYREJECTED;
-> -
-> -	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
-> -		   marker_len))
-> -		return -EKEYREJECTED;
-> -	kernel_len -= marker_len;
-> -
->  	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
->  					"kexec_file");
->  }
-> diff --git a/kernel/module.c b/kernel/module.c
-> index 8481933dfa92..d91ca0f93a40 100644
-> --- a/kernel/module.c
-> +++ b/kernel/module.c
-> @@ -2882,7 +2882,6 @@ static inline void kmemleak_load_module(const struct module *mod,
->  static int module_sig_check(struct load_info *info, int flags)
->  {
->  	int err = -ENODATA;
-> -	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
->  	const char *reason;
->  	const void *mod = info->hdr;
->  
-> @@ -2890,11 +2889,7 @@ static int module_sig_check(struct load_info *info, int flags)
->  	 * Require flags == 0, as a module with version information
->  	 * removed is no longer the module that was signed
->  	 */
-> -	if (flags == 0 &&
-> -	    info->len > markerlen &&
-> -	    memcmp(mod + info->len - markerlen, MODULE_SIG_STRING, markerlen) == 0) {
-> -		/* We truncate the module to discard the signature */
-> -		info->len -= markerlen;
-> +	if (flags == 0) {
->  		err = verify_appended_signature(mod, &info->len,
->  						VERIFY_USE_SECONDARY_KEYRING, "module");
->  		if (!err) {
-> diff --git a/kernel/module_signing.c b/kernel/module_signing.c
-> index f492e410564d..4c28cb55275f 100644
-> --- a/kernel/module_signing.c
-> +++ b/kernel/module_signing.c
-> @@ -15,8 +15,7 @@
->  #include "module-internal.h"
->  
->  /**
-> - * verify_appended_signature - Verify the signature on a module with the
-> - * signature marker stripped.
-> + * verify_appended_signature - Verify the signature on a module
->   * @data: The data to be verified
->   * @len: Size of @data.
->   * @trusted_keys: Keyring to use for verification
-> @@ -25,12 +24,21 @@
->  int verify_appended_signature(const void *data, size_t *len,
->  			      struct key *trusted_keys, const char *what)
->  {
-> +	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
->  	struct module_signature ms;
->  	size_t sig_len, modlen = *len;
->  	int ret;
->  
->  	pr_devel("==>%s(,%zu)\n", __func__, modlen);  
->  
-> +	if (markerlen > modlen)
-> +		return -ENODATA;
-> +
-> +	if (memcmp(data + modlen - markerlen, MODULE_SIG_STRING,
-> +		   markerlen))
-> +		return -ENODATA;
-> +	modlen -= markerlen;
-> +
->  	if (modlen <= sizeof(ms))
->  		return -EBADMSG;
->  
-
+Sven
 
 _______________________________________________
 kexec mailing list
