@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muQqB-006pbP-4A
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:28 +0000
+ id 1muQqK-006pfp-0E
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:37 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH RESEND v2 3/5] mm_zone: add function to check if managed dma
- zone exists
-Date: Tue,  7 Dec 2021 11:07:48 +0800
-Message-Id: <20211207030750.30824-4-bhe@redhat.com>
+Subject: [PATCH RESEND v2 4/5] dma/pool: create dma atomic pool only if dma
+ zone has managed pages
+Date: Tue,  7 Dec 2021 11:07:49 +0800
+Message-Id: <20211207030750.30824-5-bhe@redhat.com>
 In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
 References: <20211207030750.30824-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -24,91 +24,81 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>, iommu@lists.linux-foundation.org
 
-In some places of the current kernel, it assumes that dma zone must have
-managed pages if CONFIG_ZONE_DMA is enabled. While this is not always true.
-E.g in kdump kernel of x86_64, only low 1M is presented and locked down
-at very early stage of boot, so that there's no managed pages at all in
-DMA zone. This exception will always cause page allocation failure if page
-is requested from DMA zone.
+Currently three dma atomic pools are initialized as long as the relevant
+kernel codes are built in. While in kdump kernel of x86_64, this is not
+right when trying to create atomic_pool_dma, because there's no managed
+pages in DMA zone. In the case, DMA zone only has low 1M memory presented
+and locked down by memblock allocator. So no pages are added into buddy
+of DMA zone. Please check commit f1d4d47c5851 ("x86/setup: Always reserve
+the first 1M of RAM").
 
-Here add function has_managed_dma() and the relevant helper functions to
-check if there's DMA zone with managed pages. It will be used in later
-patches.
+Then in kdump kernel of x86_64, it always prints below failure message:
+
+ DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+ swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+ CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.16.0-rc3+ #1
+ Call Trace:
+  dump_stack+0x7f/0xa1
+  warn_alloc.cold+0x72/0xd6
+  ? _raw_spin_unlock_irq+0x24/0x40
+  ? __alloc_pages_direct_compact+0x90/0x1b0
+  __alloc_pages_slowpath.constprop.0+0xf29/0xf50
+  ? __cond_resched+0x16/0x50
+  ? prepare_alloc_pages.constprop.0+0x19d/0x1b0
+  __alloc_pages+0x24d/0x2c0
+  ? __dma_atomic_pool_init+0x93/0x93
+  alloc_page_interleave+0x13/0xb0
+  atomic_pool_expand+0x118/0x210
+  ? __dma_atomic_pool_init+0x93/0x93
+  __dma_atomic_pool_init+0x45/0x93
+  dma_atomic_pool_init+0xdb/0x176
+  do_one_initcall+0x67/0x320
+  ? rcu_read_lock_sched_held+0x3f/0x80
+  kernel_init_freeable+0x290/0x2dc
+  ? rest_init+0x24f/0x24f
+  kernel_init+0xa/0x111
+  ret_from_fork+0x22/0x30
+ Mem-Info:
+ ......
+ DMA: failed to allocate 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
+ DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+
+Here, let's check if DMA zone has managed pages, then create atomic_pool_dma
+if yes. Otherwise just skip it.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux-foundation.org
 ---
- include/linux/mmzone.h | 21 +++++++++++++++++++++
- mm/page_alloc.c        | 11 +++++++++++
- 2 files changed, 32 insertions(+)
+ kernel/dma/pool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 58e744b78c2c..82d23e13e0e5 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -998,6 +998,18 @@ static inline bool zone_is_zone_device(struct zone *zone)
- }
- #endif
- 
-+#ifdef CONFIG_ZONE_DMA
-+static inline bool zone_is_dma(struct zone *zone)
-+{
-+	return zone_idx(zone) == ZONE_DMA;
-+}
-+#else
-+static inline bool zone_is_dma(struct zone *zone)
-+{
-+	return false;
-+}
-+#endif
-+
- /*
-  * Returns true if a zone has pages managed by the buddy allocator.
-  * All the reclaim decisions have to use this function rather than
-@@ -1046,6 +1058,7 @@ static inline int is_highmem_idx(enum zone_type idx)
- #endif
- }
- 
-+bool has_managed_dma(void);
- /**
-  * is_highmem - helper function to quickly check if a struct zone is a
-  *              highmem zone or not.  This is an attempt to keep references
-@@ -1131,6 +1144,14 @@ extern struct zone *next_zone(struct zone *zone);
- 			; /* do nothing */		\
- 		else
- 
-+#define for_each_managed_zone(zone)		        \
-+	for (zone = (first_online_pgdat())->node_zones; \
-+	     zone;					\
-+	     zone = next_zone(zone))			\
-+		if (!managed_zone(zone))		\
-+			; /* do nothing */		\
-+		else
-+
- static inline struct zone *zonelist_zone(struct zoneref *zoneref)
- {
- 	return zoneref->zone;
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index c5952749ad40..ac0ea42a4e5f 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -9459,4 +9459,15 @@ bool take_page_off_buddy(struct page *page)
- 	spin_unlock_irqrestore(&zone->lock, flags);
- 	return ret;
- }
-+
-+bool has_managed_dma(void)
-+{
-+	struct zone *zone;
-+
-+	for_each_managed_zone(zone) {
-+		if (zone_is_dma(zone))
-+			return true;
-+	}
-+	return false;
-+}
- #endif
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 5a85804b5beb..00df3edd6c5d 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -206,7 +206,7 @@ static int __init dma_atomic_pool_init(void)
+ 						    GFP_KERNEL);
+ 	if (!atomic_pool_kernel)
+ 		ret = -ENOMEM;
+-	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
++	if (has_managed_dma()) {
+ 		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
+ 						GFP_KERNEL | GFP_DMA);
+ 		if (!atomic_pool_dma)
+@@ -229,7 +229,7 @@ static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
+ 	if (prev == NULL) {
+ 		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
+ 			return atomic_pool_dma32;
+-		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
++		if (atomic_pool_dma && (gfp & GFP_DMA))
+ 			return atomic_pool_dma;
+ 		return atomic_pool_kernel;
+ 	}
 -- 
 2.17.2
 
