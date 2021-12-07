@@ -1,13 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1muQpy-006pWs-Rg
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:16 +0000
+ id 1muQq5-006pZa-PP
+ for kexec@lists.infradead.org; Tue, 07 Dec 2021 03:08:23 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH RESEND v2 1/5] docs: kernel-parameters: Update to reflect the
- current default size of atomic pool
-Date: Tue,  7 Dec 2021 11:07:46 +0800
-Message-Id: <20211207030750.30824-2-bhe@redhat.com>
+Subject: [PATCH RESEND v2 2/5] dma-pool: allow user to disable atomic pool
+Date: Tue,  7 Dec 2021 11:07:47 +0800
+Message-Id: <20211207030750.30824-3-bhe@redhat.com>
 In-Reply-To: <20211207030750.30824-1-bhe@redhat.com>
 References: <20211207030750.30824-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -26,31 +25,66 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, Baoquan He <bhe@redhat.com>
 
-Since commit 1d659236fb43("dma-pool: scale the default DMA coherent pool
-size with memory capacity"), the default size of atomic pool has been
-changed to take by scaling with system memory capacity. So update the
-document in kerenl-parameter.txt accordingly.
+In the current code, three atomic memory pools are always created,
+atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
+specified in kernel command line. In fact, atomic pool is only
+necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
+which are needed on few ARCHes.
+
+So change code to allow user to disable atomic pool by specifying
+'coherent_pool=0'.
+
+Meanwhile, update the relevant document in kernel-parameter.txt.
 
 Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- Documentation/admin-guide/kernel-parameters.txt | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt | 3 ++-
+ kernel/dma/pool.c                               | 7 +++++--
+ 2 files changed, 7 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 9725c546a0d4..ec4d25e854a8 100644
+index ec4d25e854a8..d7015309614b 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -664,7 +664,9 @@
+@@ -664,7 +664,8 @@
  
  	coherent_pool=nn[KMG]	[ARM,KNL]
  			Sets the size of memory pool for coherent, atomic dma
--			allocations, by default set to 256K.
-+			allocations. Otherwise the default size will be scaled
-+			with memory capacity, while clamped between 128K and
-+			1 << (PAGE_SHIFT + MAX_ORDER-1).
+-			allocations. Otherwise the default size will be scaled
++			allocations. A value of 0 disables the three atomic
++			memory pool. Otherwise the default size will be scaled
+ 			with memory capacity, while clamped between 128K and
+ 			1 << (PAGE_SHIFT + MAX_ORDER-1).
  
- 	com20020=	[HW,NET] ARCnet - COM20020 chipset
- 			Format:
+diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+index 5f84e6cdb78e..5a85804b5beb 100644
+--- a/kernel/dma/pool.c
++++ b/kernel/dma/pool.c
+@@ -21,7 +21,7 @@ static struct gen_pool *atomic_pool_kernel __ro_after_init;
+ static unsigned long pool_size_kernel;
+ 
+ /* Size can be defined by the coherent_pool command line */
+-static size_t atomic_pool_size;
++static unsigned long atomic_pool_size = -1;
+ 
+ /* Dynamic background expansion when the atomic pool is near capacity */
+ static struct work_struct atomic_pool_work;
+@@ -188,11 +188,14 @@ static int __init dma_atomic_pool_init(void)
+ {
+ 	int ret = 0;
+ 
++	if (!atomic_pool_size)
++		return 0;
++
+ 	/*
+ 	 * If coherent_pool was not used on the command line, default the pool
+ 	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER-1.
+ 	 */
+-	if (!atomic_pool_size) {
++	if (atomic_pool_size == -1) {
+ 		unsigned long pages = totalram_pages() / (SZ_1G / SZ_128K);
+ 		pages = min_t(unsigned long, pages, MAX_ORDER_NR_PAGES);
+ 		atomic_pool_size = max_t(size_t, pages << PAGE_SHIFT, SZ_128K);
 -- 
 2.17.2
 
