@@ -1,16 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mutfW-00C0Rx-16
- for kexec@lists.infradead.org; Wed, 08 Dec 2021 09:55:23 +0000
-Date: Wed, 8 Dec 2021 10:54:55 +0100
-From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH v2 0/6] KEXEC_SIG with appended signature
-Message-ID: <20211208105455.00085532@rhtmp>
-In-Reply-To: <20211207173221.GM117207@kunlun.suse.cz>
-References: <cover.1637862358.git.msuchanek@suse.de>
- <20211207171014.2cfc4a54@rhtmp>
- <20211207173221.GM117207@kunlun.suse.cz>
+ id 1muwSU-00Cc7J-3X
+ for kexec@lists.infradead.org; Wed, 08 Dec 2021 12:54:08 +0000
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com (8.16.1.2/8.16.1.2) with SMTP id 1B8CemFx023635
+ for <kexec@lists.infradead.org>; Wed, 8 Dec 2021 12:54:02 GMT
+Received: from pps.reinject (localhost [127.0.0.1])
+ by mx0b-001b2d01.pphosted.com with ESMTP id 3ctuq29smv-1
+ (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT)
+ for <kexec@lists.infradead.org>; Wed, 08 Dec 2021 12:54:02 +0000
+Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
+ by pps.reinject (8.16.0.43/8.16.0.43) with SMTP id 1B8CfT9h025270
+ for <kexec@lists.infradead.org>; Wed, 8 Dec 2021 12:54:02 GMT
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Subject: [PATCH 1/1] s390: handle R_390_PLT32DBL reloc entries in
+ machine_apply_elf_rel()
+Date: Wed,  8 Dec 2021 13:53:55 +0100
+Message-Id: <20211208125355.256391-1-egorenar@linux.ibm.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,76 +28,107 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: ltao@redhat.com, prudo@redhat.com
+Cc: hca@linux.ibm.com, kexec@lists.infradead.org
 
-SGkgTWljaGFsLAoKT24gVHVlLCA3IERlYyAyMDIxIDE4OjMyOjIxICswMTAwCk1pY2hhbCBTdWNo
-w6FuZWsgPG1zdWNoYW5la0BzdXNlLmRlPiB3cm90ZToKCj4gT24gVHVlLCBEZWMgMDcsIDIwMjEg
-YXQgMDU6MTA6MTRQTSArMDEwMCwgUGhpbGlwcCBSdWRvIHdyb3RlOgo+ID4gSGkgTWljaGFsLAo+
-ID4gCj4gPiBpIGZpbmFsbHkgaGFkIHRoZSB0aW1lIHRvIHRha2UgYSBjbG9zZXIgbG9vayBhdCB0
-aGUgc2VyaWVzLiBFeGNlcHQgZm9yCj4gPiB0aGUgbml0IGluIHBhdGNoIDQgYW5kIG15IHBlcnNv
-bmFsIHByZWZlcmVuY2UgaW4gcGF0Y2ggNiB0aGUgY29kZSBsb29rcwo+ID4gZ29vZCB0byBtZS4K
-PiA+IAo+ID4gV2hhdCBJIGRvbid0IGxpa2UgYXJlIHRoZSBjb21taXQgbWVzc2FnZXMgb24gdGhl
-IGZpcnN0IGNvbW1pdHMuIEluIG15Cj4gPiBvcGluaW9uIHRoZXkgYXJlIHNvIHNob3J0IHRoYXQg
-dGhleSBhcmUgYWxtb3N0IHVzZWxlc3MuIEZvciBleGFtcGxlIGluCj4gPiBwYXRjaCAyIHRoZXJl
-IGlzIGFic29sdXRlbHkgbm8gZXhwbGFuYXRpb24gd2h5IHlvdSBjYW4gc2ltcGx5IGNvcHkgdGhl
-Cj4gPiBzMzkwIG92ZXIgdG8gcHBjLiAgCj4gCj4gVGhleSB1c2UgdGhlIHNhbWUgc2lnbmF0dXJl
-IGZvcm1hdC4gSSBzdXBwb3NlIEkgY2FuIGFkZCBhIG5vdGUgc2F5aW5nCj4gdGhhdC4KClRoZSBu
-b3RlIGlzIHdoYXQgSSB3YXMgYXNraW5nIGZvci4gRm9yIG1lIHRoZSBjb21taXQgbWVzc2FnZSBp
-cyBhbgppbXBvcnRhbnQgcGllY2Ugb2YgZG9jdW1lbnRhdGlvbiBmb3Igb3RoZXIgZGV2ZWxvcGVy
-cyAob3IgeW91cnNlbGYgaW4gYQp5ZWFyKS4gVGhhdCdzIHdoeSBpbiBteSBvcGluaW9uIGl0J3Mg
-aW1wb3J0YW50IHRvIGRlc2NyaWJlIF93aHlfIHlvdSBkbwpzb21ldGhpbmcgaW4gaXQgYXMgeW91
-IGNhbm5vdCBnZXQgdGhlIF93aHlfIGJ5IHJlYWRpbmcgdGhlIGNvZGUuCgo+ID4gT3IgaW4gcGF0
-Y2ggMyB5b3UgYXJlIHNpbGVudGx5IGNoYW5naW5nIHRoZSBlcnJvcgo+ID4gY29kZSBpbiBrZXhl
-YyBmcm9tIEVLRVlSRUpFQ1QgdG8gRU5PREFUQS4gU28gSSB3b3VsZCBhcHByZWNpYXRlIGl0IGlm
-ICAKPiAKPiBOb3Qgc3VyZSB3aGF0IEkgc2hvdWxkIGRvIGFib3V0IHRoaXMuIFRoZSBkaWZmZXJl
-bnQgaW1wbGVtZW50YXRpb25zIHVzZQo+IGRpZmZlcmVudCByYW5kb20gZXJyb3IgY29kZXMsIGFu
-ZCB3aGVuIHRoZXkgYXJlIHVuaWZpZWQgdGhlIGVycm9yIGNvZGUKPiBjbGVhcmx5IGNoYW5nZXMg
-Zm9yIG9uZSBvciB0aGUgb3RoZXIuCgpNeSBjb21wbGFpbnQgd2Fzbid0IHRoYXQgeW91IGNoYW5n
-ZSB0aGUgcmV0dXJuIGNvZGUuIFRoZXJlJ3Mgbm8gd2F5IHRvCmF2b2lkIGNob29zaW5nIG9uZSBv
-dmVyIHRoZSBvdGhlci4gSXQncyBhZ2FpbiB0aGF0IHlvdSBkb24ndCBkb2N1bWVudAp0aGUgY2hh
-bmdlIGluIHRoZSBjb21taXQgbWVzc2FnZSBmb3Igb3RoZXJzLgoKPiBEb2VzIGFueXRoaW5nIGRl
-cGVuZCBvbiBhIHBhcnRpY3VsYXIgZXJyb3IgY29kZSByZXR1cm5lZD8KCk5vdCB0aGF0IEkga25v
-dyBvZi4gQXQgbGVhc3QgaW4gdGhlIGtleGVjLXRvb2xzIEVOT0RBVEEgYW5kIEVLRVlSRUpFQ1QK
-YXJlIGhhbmRsZWQgdGhlIHNhbWUgd2F5LgoKVGhhbmtzClBoaWxpcHAKCgo+IFRoYW5rcwo+IAo+
-IE1pY2hhbAo+IAo+ID4geW91IGNvdWxkIGltcHJvdmUgdGhlbSBhIGxpdHRsZS4KPiA+IAo+ID4g
-VGhhbmtzCj4gPiBQaGlsaXBwCj4gPiAKPiA+IE9uIFRodSwgMjUgTm92IDIwMjEgMTk6MDI6Mzgg
-KzAxMDAKPiA+IE1pY2hhbCBTdWNoYW5layA8bXN1Y2hhbmVrQHN1c2UuZGU+IHdyb3RlOgo+ID4g
-ICAKPiA+ID4gSGVsbG8sCj4gPiA+IAo+ID4gPiBUaGlzIGlzIHJlc2VuZCBvZiB0aGUgS0VYRUNf
-U0lHIHBhdGNoc2V0Lgo+ID4gPiAKPiA+ID4gVGhlIGZpcnN0IHBhdGNoIGlzIG5ldyBiZWNhdXNl
-IGl0J2EgYSBjbGVhbnVwIHRoYXQgZG9lcyBub3QgcmVxdWlyZSBhbnkKPiA+ID4gY2hhbmdlIHRv
-IHRoZSBtb2R1bGUgdmVyaWZpY2F0aW9uIGNvZGUuCj4gPiA+IAo+ID4gPiBUaGUgc2Vjb25kIHBh
-dGNoIGlzIHRoZSBvbmx5IG9uZSB0aGF0IGlzIGludGVuZGVkIHRvIGNoYW5nZSBhbnkKPiA+ID4g
-ZnVuY3Rpb25hbGl0eS4KPiA+ID4gCj4gPiA+IFRoZSByZXN0IG9ubHkgZGVkdXBsaWNhdGVzIGNv
-ZGUgYnV0IEkgZGlkIG5vdCByZWNlaXZlIGFueSByZXZpZXcgb24gdGhhdAo+ID4gPiBwYXJ0IHNv
-IEkgZG9uJ3Qga25vdyBpZiBpdCdzIGRlc2lyYWJsZSBhcyBpbXBsZW1lbnRlZC4KPiA+ID4gCj4g
-PiA+IFRoZSBmaXJzdCB0d28gcGF0Y2hlcyBjYW4gYmUgYXBwbGllZCBzZXBhcmF0ZWx5IHdpdGhv
-dXQgdGhlIHJlc3QuCj4gPiA+IAo+ID4gPiBUaGFua3MKPiA+ID4gCj4gPiA+IE1pY2hhbAo+ID4g
-PiAKPiA+ID4gTWljaGFsIFN1Y2hhbmVrICg2KToKPiA+ID4gICBzMzkwL2tleGVjX2ZpbGU6IERv
-bid0IG9wZW5jb2RlIGFwcGVuZGVkIHNpZ25hdHVyZSBjaGVjay4KPiA+ID4gICBwb3dlcnBjL2tl
-eGVjX2ZpbGU6IEFkZCBLRVhFQ19TSUcgc3VwcG9ydC4KPiA+ID4gICBrZXhlY19maWxlOiBEb24n
-dCBvcGVuY29kZSBhcHBlbmRlZCBzaWduYXR1cmUgdmVyaWZpY2F0aW9uLgo+ID4gPiAgIG1vZHVs
-ZTogc3RyaXAgdGhlIHNpZ25hdHVyZSBtYXJrZXIgaW4gdGhlIHZlcmlmaWNhdGlvbiBmdW5jdGlv
-bi4KPiA+ID4gICBtb2R1bGU6IFVzZSBrZXlfYmVpbmdfdXNlZF9mb3IgZm9yIGxvZyBtZXNzYWdl
-cyBpbgo+ID4gPiAgICAgdmVyaWZ5X2FwcGVuZGVkX3NpZ25hdHVyZQo+ID4gPiAgIG1vZHVsZTog
-TW92ZSBkdXBsaWNhdGUgbW9kX2NoZWNrX3NpZyB1c2VycyBjb2RlIHRvIG1vZF9wYXJzZV9zaWcK
-PiA+ID4gCj4gPiA+ICBhcmNoL3Bvd2VycGMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwg
-MTEgKysrKysKPiA+ID4gIGFyY2gvcG93ZXJwYy9rZXhlYy9lbGZfNjQuYyAgICAgICAgICAgICAg
-fCAxNCArKysrKysKPiA+ID4gIGFyY2gvczM5MC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMg
-ICAgfCA0MiArKy0tLS0tLS0tLS0tLS0tLS0KPiA+ID4gIGNyeXB0by9hc3ltbWV0cmljX2tleXMv
-YXN5bW1ldHJpY190eXBlLmMgfCAgMSArCj4gPiA+ICBpbmNsdWRlL2xpbnV4L21vZHVsZV9zaWdu
-YXR1cmUuaCAgICAgICAgIHwgIDEgKwo+ID4gPiAgaW5jbHVkZS9saW51eC92ZXJpZmljYXRpb24u
-aCAgICAgICAgICAgICB8ICA0ICsrCj4gPiA+ICBrZXJuZWwvbW9kdWxlLWludGVybmFsLmggICAg
-ICAgICAgICAgICAgIHwgIDIgLQo+ID4gPiAga2VybmVsL21vZHVsZS5jICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8IDEyICsrKy0tCj4gPiA+ICBrZXJuZWwvbW9kdWxlX3NpZ25hdHVyZS5jICAg
-ICAgICAgICAgICAgIHwgNTYgKysrKysrKysrKysrKysrKysrKysrKystCj4gPiA+ICBrZXJuZWwv
-bW9kdWxlX3NpZ25pbmcuYyAgICAgICAgICAgICAgICAgIHwgMzMgKysrKysrKy0tLS0tLS0KPiA+
-ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21vZHNpZy5jICAgICAgfCAyMiArKy0tLS0t
-LS0tCj4gPiA+ICAxMSBmaWxlcyBjaGFuZ2VkLCAxMTMgaW5zZXJ0aW9ucygrKSwgODUgZGVsZXRp
-b25zKC0pCj4gPiA+ICAgCj4gPiAgIAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
-YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+Starting with gcc 11.3, the C compiler will generate PLT-relative function
+calls even if they are local and do not require it. Later on during linking,
+the linker will replace all PLT-relative calls to local functions with
+PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
+not being linked as a regular executable or shared library would have been,
+and therefore, all PLT-relative addresses remain in the generated purgatory
+object code unresolved. This leads to the situation where the purgatory
+code is being executed during kdump with all PLT-relative addresses
+unresolved. And this results in endless loops within the purgatory code.
+
+Furthermore, the clang C compiler has always behaved like described above
+and this commit should fix the purgatory code built with the latter.
+
+Because the purgatory code is no regular executable or shared library,
+contains only calls to local functions and has no PLT, all R_390_PLT32DBL
+relocation entries can be resolved just like a R_390_PC32DBL one.
+
+* https://refspecs.linuxfoundation.org/ELF/zSeries/lzsabi0_zSeries/x1633.html#AEN1699
+
+Relocation entries of purgatory code generated with gcc 11.3
+------------------------------------------------------------
+
+$ readelf -r purgatory/purgatory.o
+
+Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+00000000000c  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+00000000001a  001000000014 R_390_PLT32DBL    0000000000000000 sha256_starts + 2
+000000000030  001100000014 R_390_PLT32DBL    0000000000000000 sha256_update + 2
+000000000046  001200000014 R_390_PLT32DBL    0000000000000000 sha256_finish + 2
+000000000050  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
+00000000005a  001300000014 R_390_PLT32DBL    0000000000000000 memcmp + 2
+...
+000000000118  001600000014 R_390_PLT32DBL    0000000000000000 setup_arch + 2
+00000000011e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+00000000012c  000f00000014 R_390_PLT32DBL    0000000000000000 verify_sha256_digest + 2
+000000000142  001700000014 R_390_PLT32DBL    0000000000000000
+post_verification[...] + 2
+
+Relocation entries of purgatory code generated with gcc 11.2
+------------------------------------------------------------
+
+$ readelf -r purgatory/purgatory.o
+
+Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
+  Offset          Info           Type           Sym. Value    Sym. Name + Addend
+00000000000e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+00000000001c  001000000013 R_390_PC32DBL     0000000000000000 sha256_starts + 2
+000000000036  001100000013 R_390_PC32DBL     0000000000000000 sha256_update + 2
+000000000048  001200000013 R_390_PC32DBL     0000000000000000 sha256_finish + 2
+000000000052  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
+00000000005c  001300000013 R_390_PC32DBL     0000000000000000 memcmp + 2
+...
+00000000011a  001600000013 R_390_PC32DBL     0000000000000000 setup_arch + 2
+000000000120  000300000013 R_390_PC32DBL     0000000000000000 .data + 122
+000000000130  000f00000013 R_390_PC32DBL     0000000000000000 verify_sha256_digest + 2
+000000000146  001700000013 R_390_PC32DBL     0000000000000000 post_verification[...] + 2
+
+Corresponding s390 kernel discussion:
+* https://lore.kernel.org/linux-s390/20211208105801.188140-1-egorenar@linux.ibm.com/T/#u
+
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+Reported-by: Tao Liu <ltao@redhat.com>
+Suggested-by: Philipp Rudo <prudo@redhat.com>
+---
+ kexec/arch/s390/kexec-elf-rel-s390.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
+
+diff --git a/kexec/arch/s390/kexec-elf-rel-s390.c b/kexec/arch/s390/kexec-elf-rel-s390.c
+index a5e1b7345578..91ba86a9991d 100644
+--- a/kexec/arch/s390/kexec-elf-rel-s390.c
++++ b/kexec/arch/s390/kexec-elf-rel-s390.c
+@@ -56,6 +56,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+ 	case R_390_PC16:	/* PC relative 16 bit.  */
+ 	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
+ 	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
++	case R_390_PLT32DBL:	/* 32 bit PC rel. PLT shifted by 1.  */
+ 	case R_390_PC32:	/* PC relative 32 bit.  */
+ 	case R_390_PC64:	/* PC relative 64 bit.	*/
+ 		val -= address;
+@@ -63,7 +64,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+ 			*(unsigned short *) loc = val;
+ 		else if (r_type == R_390_PC16DBL)
+ 			*(unsigned short *) loc = val >> 1;
+-		else if (r_type == R_390_PC32DBL)
++		else if (r_type == R_390_PC32DBL || r_type == R_390_PLT32DBL)
+ 			*(unsigned int *) loc = val >> 1;
+ 		else if (r_type == R_390_PC32)
+ 			*(unsigned int *) loc = val;
+-- 
+2.31.1
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
