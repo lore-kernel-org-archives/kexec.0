@@ -1,20 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0b-00069f02.pphosted.com ([205.220.177.32])
+Received: from sin.source.kernel.org ([145.40.73.55])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mughz-009yf7-8I
- for kexec@lists.infradead.org; Tue, 07 Dec 2021 20:05:04 +0000
-Message-ID: <9e5a712c-2304-0721-64c8-991dace19b6f@oracle.com>
-Date: Tue, 7 Dec 2021 14:04:38 -0600
-Subject: Re: [RFC v1 0/8] RFC v1: Kernel handling of CPU and memory hot
- un/plug for crash
-Content-Language: en-US
-References: <20211118174948.37435-1-eric.devolder@oracle.com>
- <20211124090227.GA8026@MiWiFi-R3L-srv>
- <200f923a-d196-7475-99e3-63ff3e73b28e@oracle.com>
- <20211201125903.GQ21646@MiWiFi-R3L-srv>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <20211201125903.GQ21646@MiWiFi-R3L-srv>
-MIME-Version: 1.0
+ id 1muoe7-00BDKU-54
+ for kexec@lists.infradead.org; Wed, 08 Dec 2021 04:33:36 +0000
+Date: Tue, 7 Dec 2021 20:33:28 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+Message-Id: <20211207203328.2cda72e37b8c944e4276554a@linux-foundation.org>
+In-Reply-To: <01b4831f-7136-80af-a6cb-93698cb31fc4@oracle.com>
+References: <20211207030750.30824-1-bhe@redhat.com>
+ <20211207031631.GA5604@MiWiFi-R3L-srv>
+ <01b4831f-7136-80af-a6cb-93698cb31fc4@oracle.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,108 +21,30 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com, akpm@linux-foundation.org
+To: John Donnelly <John.p.donnelly@oracle.com>
+Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, linux-mm@kvack.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, kexec@lists.infradead.org, rppt@linux.ibm.com
 
-See below, thanks, eric
+On Mon, 6 Dec 2021 22:03:59 -0600 John Donnelly <John.p.donnelly@oracle.com> wrote:
 
-On 12/1/21 06:59, Baoquan He wrote:
-> + akpm
+> On 12/6/21 9:16 PM, Baoquan He wrote:
+> > Sorry, forgot adding x86 and x86/mm maintainers
 > 
-> On 11/29/21 at 01:42pm, Eric DeVolder wrote:
->> Hi, see below.
->> eric
->>
->> On 11/24/21 03:02, Baoquan He wrote:
->>> Hi,
->>>
->>> On 11/18/21 at 12:49pm, Eric DeVolder wrote:
->>> ......
->>>> This patchset introduces a generic crash hot un/plug handler that
->>>> registers with the CPU and memory notifiers. Upon CPU or memory
->>>> changes, this generic handler is invoked and performs important
->>>> housekeeping, for example obtaining the appropriate lock, and then
->>>> invokes an architecture specific handler to do the appropriate
->>>> updates.
->>>>
->>>> In the case of x86_64, the arch specific handler generates a new
->>>> elfcorehdr, which reflects the current CPUs and memory regions, into a
->>>> buffer. Since purgatory also does an integrity check via hash digests
->>>> of the loaded segments, purgatory must also be updated with the new
->>>
->>> When I tried to address this with a draft patch, I started with a
->>> different way in which udev rule triggers reloading and only elfcorehdr
->>> segment is updated. The update should be less time consuming. Seems
->>> internal notifier is better in your way. But I didn't update purgatory
->>> since I just skipped the elfcorehdr part when calculate the digest of
->>> segments. The reason from my mind is kernel text, initrd must contribute
->>> most part of the digest, elfcorehdr is much less, and it will simplify
->>> code change more. Doing so let us have no need to touch purgatory at
->>> all. What do you think?
->>
->> Well certainly if purgatory did not need to be updated, then that simplifies
->> matters quite a bit!
->>
->> I do not have any context on the history of including elfcorehdr in the purgatory
->> integrity check. I do agree with you that checking kernel, initrd, boot_params
->> is most important. Perhaps allowing the elfcorehdr data structure to change
->> isn't too bad without including in the integrity check is ok as there is some
->> sanity checking of it by the capture kernel as it reads it for /proc/vmcore setup.
+> Hi,
 > 
-> Well, I think the check has included elfcorehdr since user space
-> kexec-tools added the check. We can do the skipping in kexec_file load
-> in kernel for the time being, see if anyone has concern about the
-> safety or security. Since agreement has been reached, can you split out
-> the purgatory update and repost a new patchset with the current
-> frame work to only update elfcorehdr?
-
-I reworked the patchset as you suggested and removed the reload of purgatory.
-It simplified things considerably.
-
+>    These commits need applied to Linux-5.15.0 (LTS) too since it has the 
+> original regression :
 > 
-> Any by the way, I think you have written a very great cover letter which
-> tells almost all details about the change. However, pity that they are
-> not put in patch log. In your patch log, you just tell what change is
-> made in the patch, but the why we need it which is the most important part
-> is not seen. Most of time, we can get what change has been made from the
-> code, surely it's very helpful if patch log has told it and can save
-> reviewers much time, but it's not easy to get why it's needed or
-> introduced if not being involved in earlier discussion or any context.
-> And as you know, cover letter will be stripped away whem maintainers
-> merge patch, only patch log is kept.
-
-I've tried to place more information in the individual patch commit messages,
-or the code itself.
-
-I just posted v2!
-
-Thanks for your interest and review!
-eric
-
+>   1d659236fb43 ("dma-pool: scale the default DMA coherent pool
+> size with memory capacity")
 > 
-> Thanks
-> Baoquan
-> 
->>
->>>
->>> Still reviewing.
->>
->> Thank you!
->>
->>>
->>>> digests. The arch handler also generates a new purgatory into a
->>>> buffer, performs the hash digests of the new memory segments, and then
->>>> patches purgatory with the new digests.  If all succeeds, then the
->>>> elfcorehdr and purgatory buffers over write the existing buffers and
->>>> the new kdump image is live and ready to go. No involvement with
->>>> userspace at all.
->>>
->>
-> 
+> Maybe add "Fixes" to the other commits ?
+
+And cc:stable, please.  "Fixes:" doesn't always mean "should be
+backported".
 
 _______________________________________________
 kexec mailing list
