@@ -1,21 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mux9a-00Cobd-Cq
- for kexec@lists.infradead.org; Wed, 08 Dec 2021 13:38:39 +0000
-Received: by mail-wm1-f70.google.com with SMTP id
- j193-20020a1c23ca000000b003306ae8bfb7so1308068wmj.7
- for <kexec@lists.infradead.org>; Wed, 08 Dec 2021 05:38:28 -0800 (PST)
-Message-ID: <9230f9cc-1001-e3ce-aa74-10b766c8cdb0@redhat.com>
-Date: Wed, 8 Dec 2021 14:38:22 +0100
+Date: Wed, 8 Dec 2021 17:09:24 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v16 08/11] x86, arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL
+ config
+Message-ID: <YbDmxIPdk7TKIKAU@arm.com>
+References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
+ <20211123124646.1995-9-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Subject: Re: [RFC v2 4/6] crash hp: generic crash hotplug support
- infrastructure
-References: <20211207195204.1582-1-eric.devolder@oracle.com>
- <20211207195204.1582-5-eric.devolder@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-In-Reply-To: <20211207195204.1582-5-eric.devolder@oracle.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211123124646.1995-9-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,38 +21,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-> +#if defined(CONFIG_MEMORY_HOTPLUG)
-> +static int crash_memhp_notifier(struct notifier_block *nb,
-> +	unsigned long val, void *v)
-> +{
-> +	struct memory_notify *mhp = v;
-> +	unsigned long start, end;
+On Tue, Nov 23, 2021 at 08:46:43PM +0800, Zhen Lei wrote:
+> diff --git a/arch/Kconfig b/arch/Kconfig
+> index 26b8ed11639da46..19256aa924c3b2c 100644
+> --- a/arch/Kconfig
+> +++ b/arch/Kconfig
+> @@ -24,6 +24,9 @@ config KEXEC_ELF
+>  config HAVE_IMA_KEXEC
+>  	bool
+>  
+> +config ARCH_WANT_RESERVE_CRASH_KERNEL
+> +	bool
 > +
-> +	start = mhp->start_pfn << PAGE_SHIFT;
-> +	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
-> +
-> +	switch (val) {
-> +	case MEM_GOING_ONLINE:
-> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
-> +			start, end-start);
-> +		break;
-> +
-> +	case MEM_OFFLINE:
-> +	case MEM_CANCEL_ONLINE:
-> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
-> +			start, end-start);
+>  config SET_FS
+>  	bool
+>  
+> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+> index c4207cf9bb17ffb..4b99efa36da3793 100644
+> --- a/arch/arm64/Kconfig
+> +++ b/arch/arm64/Kconfig
+> @@ -95,6 +95,7 @@ config ARM64
+>  	select ARCH_WANT_FRAME_POINTERS
+>  	select ARCH_WANT_HUGE_PMD_SHARE if ARM64_4K_PAGES || (ARM64_16K_PAGES && !ARM64_VA_BITS_36)
+>  	select ARCH_WANT_LD_ORPHAN_WARN
+> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+>  	select ARCH_WANTS_NO_INSTR
+>  	select ARCH_HAS_UBSAN_SANITIZE_ALL
+>  	select ARM_AMBA
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 7399327d1eff79d..528034b4276ecf8 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -12,6 +12,7 @@ config X86_32
+>  	depends on !64BIT
+>  	# Options that are inherently 32-bit kernel only:
+>  	select ARCH_WANT_IPC_PARSE_VERSION
+> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+>  	select CLKSRC_I8253
+>  	select CLONE_BACKWARDS
+>  	select GENERIC_VDSO_32
+> @@ -28,6 +29,7 @@ config X86_64
+>  	select ARCH_HAS_GIGANTIC_PAGE
+>  	select ARCH_SUPPORTS_INT128 if CC_HAS_INT128
+>  	select ARCH_USE_CMPXCHG_LOCKREF
+> +	select ARCH_WANT_RESERVE_CRASH_KERNEL if KEXEC_CORE
+>  	select HAVE_ARCH_SOFT_DIRTY
+>  	select MODULES_USE_ELF_RELA
+>  	select NEED_DMA_MAP_STATE
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 4dc2643fcbccf99..b23cfc0ca8905fd 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -321,9 +321,7 @@ int __init parse_crashkernel_low(char *cmdline,
+>   * --------- Crashkernel reservation ------------------------------
+>   */
+>  
+> -#ifdef CONFIG_KEXEC_CORE
+> -
+> -#if defined(CONFIG_X86) || defined(CONFIG_ARM64)
+> +#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
+>  static int __init reserve_crashkernel_low(void)
+>  {
+>  #ifdef CONFIG_64BIT
+> @@ -451,8 +449,7 @@ void __init reserve_crashkernel(void)
+>  	crashk_res.start = crash_base;
+>  	crashk_res.end   = crash_base + crash_size - 1;
+>  }
+> -#endif
+> -#endif /* CONFIG_KEXEC_CORE */
+> +#endif /* CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL */
 
-Any reason you don't handle this after the effects completely, meaning
-MEM_ONLINE and MEM_OFFLINE?
+Nitpick mostly but it may simplify the patches if the x86, arch/Kconfig
+and crash_core.c changes here could be moved to patch 5. The remaining
+select for arm64 should be moved to patch 7 and drop the #if change in
+that patch.
+
+This way we can keep the x86 patches on a separate branch.
+
+Thanks.
 
 -- 
-Thanks,
-
-David / dhildenb
-
+Catalin
 
 _______________________________________________
 kexec mailing list
