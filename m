@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mup1Z-00BHuU-Nn
- for kexec@lists.infradead.org; Wed, 08 Dec 2021 04:57:52 +0000
-Message-ID: <c8e76c03-6fae-4a9a-aa25-826327e9d5a5@oracle.com>
-Date: Tue, 7 Dec 2021 22:56:47 -0600
-Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when no
- managed pages
-Content-Language: en-US
-References: <20211207030750.30824-1-bhe@redhat.com>
- <20211207031631.GA5604@MiWiFi-R3L-srv>
- <01b4831f-7136-80af-a6cb-93698cb31fc4@oracle.com>
- <20211207203328.2cda72e37b8c944e4276554a@linux-foundation.org>
-From: John Donnelly <john.p.donnelly@oracle.com>
-In-Reply-To: <20211207203328.2cda72e37b8c944e4276554a@linux-foundation.org>
+ id 1mutfW-00C0Rx-16
+ for kexec@lists.infradead.org; Wed, 08 Dec 2021 09:55:23 +0000
+Date: Wed, 8 Dec 2021 10:54:55 +0100
+From: Philipp Rudo <prudo@redhat.com>
+Subject: Re: [PATCH v2 0/6] KEXEC_SIG with appended signature
+Message-ID: <20211208105455.00085532@rhtmp>
+In-Reply-To: <20211207173221.GM117207@kunlun.suse.cz>
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <20211207171014.2cfc4a54@rhtmp>
+ <20211207173221.GM117207@kunlun.suse.cz>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,41 +20,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Andrew Morton <akpm@linux-foundation.org>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, linux-mm@kvack.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, kexec@lists.infradead.org, rppt@linux.ibm.com
+To: Michal =?UTF-8?B?U3VjaMOhbmVr?= <msuchanek@suse.de>
+Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
 
-On 12/7/21 22:33, Andrew Morton wrote:
-> On Mon, 6 Dec 2021 22:03:59 -0600 John Donnelly <John.p.donnelly@oracle.com> wrote:
-> 
->> On 12/6/21 9:16 PM, Baoquan He wrote:
->>> Sorry, forgot adding x86 and x86/mm maintainers
->>
->> Hi,
->>
->>     These commits need applied to Linux-5.15.0 (LTS) too since it has the
->> original regression :
->>
->>    1d659236fb43 ("dma-pool: scale the default DMA coherent pool
->> size with memory capacity")
->>
->> Maybe add "Fixes" to the other commits ?
-> 
-> And cc:stable, please.  "Fixes:" doesn't always mean "should be
-> backported
->
-
-Hi.
-
-
-Does this mean we need a v3 version ?
-
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGkgTWljaGFsLAoKT24gVHVlLCA3IERlYyAyMDIxIDE4OjMyOjIxICswMTAwCk1pY2hhbCBTdWNo
+w6FuZWsgPG1zdWNoYW5la0BzdXNlLmRlPiB3cm90ZToKCj4gT24gVHVlLCBEZWMgMDcsIDIwMjEg
+YXQgMDU6MTA6MTRQTSArMDEwMCwgUGhpbGlwcCBSdWRvIHdyb3RlOgo+ID4gSGkgTWljaGFsLAo+
+ID4gCj4gPiBpIGZpbmFsbHkgaGFkIHRoZSB0aW1lIHRvIHRha2UgYSBjbG9zZXIgbG9vayBhdCB0
+aGUgc2VyaWVzLiBFeGNlcHQgZm9yCj4gPiB0aGUgbml0IGluIHBhdGNoIDQgYW5kIG15IHBlcnNv
+bmFsIHByZWZlcmVuY2UgaW4gcGF0Y2ggNiB0aGUgY29kZSBsb29rcwo+ID4gZ29vZCB0byBtZS4K
+PiA+IAo+ID4gV2hhdCBJIGRvbid0IGxpa2UgYXJlIHRoZSBjb21taXQgbWVzc2FnZXMgb24gdGhl
+IGZpcnN0IGNvbW1pdHMuIEluIG15Cj4gPiBvcGluaW9uIHRoZXkgYXJlIHNvIHNob3J0IHRoYXQg
+dGhleSBhcmUgYWxtb3N0IHVzZWxlc3MuIEZvciBleGFtcGxlIGluCj4gPiBwYXRjaCAyIHRoZXJl
+IGlzIGFic29sdXRlbHkgbm8gZXhwbGFuYXRpb24gd2h5IHlvdSBjYW4gc2ltcGx5IGNvcHkgdGhl
+Cj4gPiBzMzkwIG92ZXIgdG8gcHBjLiAgCj4gCj4gVGhleSB1c2UgdGhlIHNhbWUgc2lnbmF0dXJl
+IGZvcm1hdC4gSSBzdXBwb3NlIEkgY2FuIGFkZCBhIG5vdGUgc2F5aW5nCj4gdGhhdC4KClRoZSBu
+b3RlIGlzIHdoYXQgSSB3YXMgYXNraW5nIGZvci4gRm9yIG1lIHRoZSBjb21taXQgbWVzc2FnZSBp
+cyBhbgppbXBvcnRhbnQgcGllY2Ugb2YgZG9jdW1lbnRhdGlvbiBmb3Igb3RoZXIgZGV2ZWxvcGVy
+cyAob3IgeW91cnNlbGYgaW4gYQp5ZWFyKS4gVGhhdCdzIHdoeSBpbiBteSBvcGluaW9uIGl0J3Mg
+aW1wb3J0YW50IHRvIGRlc2NyaWJlIF93aHlfIHlvdSBkbwpzb21ldGhpbmcgaW4gaXQgYXMgeW91
+IGNhbm5vdCBnZXQgdGhlIF93aHlfIGJ5IHJlYWRpbmcgdGhlIGNvZGUuCgo+ID4gT3IgaW4gcGF0
+Y2ggMyB5b3UgYXJlIHNpbGVudGx5IGNoYW5naW5nIHRoZSBlcnJvcgo+ID4gY29kZSBpbiBrZXhl
+YyBmcm9tIEVLRVlSRUpFQ1QgdG8gRU5PREFUQS4gU28gSSB3b3VsZCBhcHByZWNpYXRlIGl0IGlm
+ICAKPiAKPiBOb3Qgc3VyZSB3aGF0IEkgc2hvdWxkIGRvIGFib3V0IHRoaXMuIFRoZSBkaWZmZXJl
+bnQgaW1wbGVtZW50YXRpb25zIHVzZQo+IGRpZmZlcmVudCByYW5kb20gZXJyb3IgY29kZXMsIGFu
+ZCB3aGVuIHRoZXkgYXJlIHVuaWZpZWQgdGhlIGVycm9yIGNvZGUKPiBjbGVhcmx5IGNoYW5nZXMg
+Zm9yIG9uZSBvciB0aGUgb3RoZXIuCgpNeSBjb21wbGFpbnQgd2Fzbid0IHRoYXQgeW91IGNoYW5n
+ZSB0aGUgcmV0dXJuIGNvZGUuIFRoZXJlJ3Mgbm8gd2F5IHRvCmF2b2lkIGNob29zaW5nIG9uZSBv
+dmVyIHRoZSBvdGhlci4gSXQncyBhZ2FpbiB0aGF0IHlvdSBkb24ndCBkb2N1bWVudAp0aGUgY2hh
+bmdlIGluIHRoZSBjb21taXQgbWVzc2FnZSBmb3Igb3RoZXJzLgoKPiBEb2VzIGFueXRoaW5nIGRl
+cGVuZCBvbiBhIHBhcnRpY3VsYXIgZXJyb3IgY29kZSByZXR1cm5lZD8KCk5vdCB0aGF0IEkga25v
+dyBvZi4gQXQgbGVhc3QgaW4gdGhlIGtleGVjLXRvb2xzIEVOT0RBVEEgYW5kIEVLRVlSRUpFQ1QK
+YXJlIGhhbmRsZWQgdGhlIHNhbWUgd2F5LgoKVGhhbmtzClBoaWxpcHAKCgo+IFRoYW5rcwo+IAo+
+IE1pY2hhbAo+IAo+ID4geW91IGNvdWxkIGltcHJvdmUgdGhlbSBhIGxpdHRsZS4KPiA+IAo+ID4g
+VGhhbmtzCj4gPiBQaGlsaXBwCj4gPiAKPiA+IE9uIFRodSwgMjUgTm92IDIwMjEgMTk6MDI6Mzgg
+KzAxMDAKPiA+IE1pY2hhbCBTdWNoYW5layA8bXN1Y2hhbmVrQHN1c2UuZGU+IHdyb3RlOgo+ID4g
+ICAKPiA+ID4gSGVsbG8sCj4gPiA+IAo+ID4gPiBUaGlzIGlzIHJlc2VuZCBvZiB0aGUgS0VYRUNf
+U0lHIHBhdGNoc2V0Lgo+ID4gPiAKPiA+ID4gVGhlIGZpcnN0IHBhdGNoIGlzIG5ldyBiZWNhdXNl
+IGl0J2EgYSBjbGVhbnVwIHRoYXQgZG9lcyBub3QgcmVxdWlyZSBhbnkKPiA+ID4gY2hhbmdlIHRv
+IHRoZSBtb2R1bGUgdmVyaWZpY2F0aW9uIGNvZGUuCj4gPiA+IAo+ID4gPiBUaGUgc2Vjb25kIHBh
+dGNoIGlzIHRoZSBvbmx5IG9uZSB0aGF0IGlzIGludGVuZGVkIHRvIGNoYW5nZSBhbnkKPiA+ID4g
+ZnVuY3Rpb25hbGl0eS4KPiA+ID4gCj4gPiA+IFRoZSByZXN0IG9ubHkgZGVkdXBsaWNhdGVzIGNv
+ZGUgYnV0IEkgZGlkIG5vdCByZWNlaXZlIGFueSByZXZpZXcgb24gdGhhdAo+ID4gPiBwYXJ0IHNv
+IEkgZG9uJ3Qga25vdyBpZiBpdCdzIGRlc2lyYWJsZSBhcyBpbXBsZW1lbnRlZC4KPiA+ID4gCj4g
+PiA+IFRoZSBmaXJzdCB0d28gcGF0Y2hlcyBjYW4gYmUgYXBwbGllZCBzZXBhcmF0ZWx5IHdpdGhv
+dXQgdGhlIHJlc3QuCj4gPiA+IAo+ID4gPiBUaGFua3MKPiA+ID4gCj4gPiA+IE1pY2hhbAo+ID4g
+PiAKPiA+ID4gTWljaGFsIFN1Y2hhbmVrICg2KToKPiA+ID4gICBzMzkwL2tleGVjX2ZpbGU6IERv
+bid0IG9wZW5jb2RlIGFwcGVuZGVkIHNpZ25hdHVyZSBjaGVjay4KPiA+ID4gICBwb3dlcnBjL2tl
+eGVjX2ZpbGU6IEFkZCBLRVhFQ19TSUcgc3VwcG9ydC4KPiA+ID4gICBrZXhlY19maWxlOiBEb24n
+dCBvcGVuY29kZSBhcHBlbmRlZCBzaWduYXR1cmUgdmVyaWZpY2F0aW9uLgo+ID4gPiAgIG1vZHVs
+ZTogc3RyaXAgdGhlIHNpZ25hdHVyZSBtYXJrZXIgaW4gdGhlIHZlcmlmaWNhdGlvbiBmdW5jdGlv
+bi4KPiA+ID4gICBtb2R1bGU6IFVzZSBrZXlfYmVpbmdfdXNlZF9mb3IgZm9yIGxvZyBtZXNzYWdl
+cyBpbgo+ID4gPiAgICAgdmVyaWZ5X2FwcGVuZGVkX3NpZ25hdHVyZQo+ID4gPiAgIG1vZHVsZTog
+TW92ZSBkdXBsaWNhdGUgbW9kX2NoZWNrX3NpZyB1c2VycyBjb2RlIHRvIG1vZF9wYXJzZV9zaWcK
+PiA+ID4gCj4gPiA+ICBhcmNoL3Bvd2VycGMvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwg
+MTEgKysrKysKPiA+ID4gIGFyY2gvcG93ZXJwYy9rZXhlYy9lbGZfNjQuYyAgICAgICAgICAgICAg
+fCAxNCArKysrKysKPiA+ID4gIGFyY2gvczM5MC9rZXJuZWwvbWFjaGluZV9rZXhlY19maWxlLmMg
+ICAgfCA0MiArKy0tLS0tLS0tLS0tLS0tLS0KPiA+ID4gIGNyeXB0by9hc3ltbWV0cmljX2tleXMv
+YXN5bW1ldHJpY190eXBlLmMgfCAgMSArCj4gPiA+ICBpbmNsdWRlL2xpbnV4L21vZHVsZV9zaWdu
+YXR1cmUuaCAgICAgICAgIHwgIDEgKwo+ID4gPiAgaW5jbHVkZS9saW51eC92ZXJpZmljYXRpb24u
+aCAgICAgICAgICAgICB8ICA0ICsrCj4gPiA+ICBrZXJuZWwvbW9kdWxlLWludGVybmFsLmggICAg
+ICAgICAgICAgICAgIHwgIDIgLQo+ID4gPiAga2VybmVsL21vZHVsZS5jICAgICAgICAgICAgICAg
+ICAgICAgICAgICB8IDEyICsrKy0tCj4gPiA+ICBrZXJuZWwvbW9kdWxlX3NpZ25hdHVyZS5jICAg
+ICAgICAgICAgICAgIHwgNTYgKysrKysrKysrKysrKysrKysrKysrKystCj4gPiA+ICBrZXJuZWwv
+bW9kdWxlX3NpZ25pbmcuYyAgICAgICAgICAgICAgICAgIHwgMzMgKysrKysrKy0tLS0tLS0KPiA+
+ID4gIHNlY3VyaXR5L2ludGVncml0eS9pbWEvaW1hX21vZHNpZy5jICAgICAgfCAyMiArKy0tLS0t
+LS0tCj4gPiA+ICAxMSBmaWxlcyBjaGFuZ2VkLCAxMTMgaW5zZXJ0aW9ucygrKSwgODUgZGVsZXRp
+b25zKC0pCj4gPiA+ICAgCj4gPiAgIAo+IAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRl
+YWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
