@@ -1,19 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+Received: from fanzine2.igalia.com ([213.97.179.56])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvLXY-00GZsy-1S
- for kexec@lists.infradead.org; Thu, 09 Dec 2021 15:41:01 +0000
-Message-ID: <5e468446-264d-ed8c-33f8-13f717bc6f9d@oracle.com>
-Date: Thu, 9 Dec 2021 09:40:18 -0600
-Subject: Re: [RFC v2 4/6] crash hp: generic crash hotplug support
- infrastructure
-Content-Language: en-US
-References: <20211207195204.1582-1-eric.devolder@oracle.com>
- <20211207195204.1582-5-eric.devolder@oracle.com>
- <9230f9cc-1001-e3ce-aa74-10b766c8cdb0@redhat.com>
-From: Eric DeVolder <eric.devolder@oracle.com>
-In-Reply-To: <9230f9cc-1001-e3ce-aa74-10b766c8cdb0@redhat.com>
+ id 1mvLqx-00GcJB-J0
+ for kexec@lists.infradead.org; Thu, 09 Dec 2021 16:01:06 +0000
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: Reuse framebuffer after a kexec (amdgpu / efifb)
+Message-ID: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
+Date: Thu, 9 Dec 2021 13:00:04 -0300
 MIME-Version: 1.0
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,44 +17,54 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Hildenbrand <david@redhat.com>, linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com, dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com, thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org, konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
+To: linux-fbdev@vger.kernel.org, kexec@lists.infradead.org, amd-gfx@lists.freedesktop.org
+Cc: dri-devel@lists.freedesktop.org, alexander.deucher@amd.com, christian.koenig@amd.com, Xinhui.Pan@amd.com, pjones@redhat.com, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, kraxel@redhat.com, kasong@redhat.com, =?UTF-8?Q?Samuel_Iglesias_Gons=c3=a1lvez?= <siglesias@igalia.com>, gpiccoli@igalia.com, kernel@gpiccoli.net
+
+Hi all, I have a question about the possibility of reusing a framebuffer
+after a regular (or panic) kexec - my case is with amdgpu (APU, aka, not
+a separate GPU hardware), but I guess the question is kinda generic
+hence I've looped most of the lists / people I think does make sense
+(apologies for duplicates).
 
 
+The context is: we have a hardware that has an amdgpu-controlled device
+(Vangogh model) and as soon as the machine boots, efifb is providing
+graphics - I understand the UEFI/GRUB outputs rely in EFI framebuffer as
+well. As soon amdgpu module is available, kernel loads it and it takes
+over the GPU, providing graphics. The kexec_file_load syscall allows to
+pass a valid screen_info structure, so by kexec'ing a new kernel, we
+have again efifb taking over on boot time, but this time I see nothing
+in the screen. I've manually blacklisted amdgpu in this new kexec'ed
+kernel, I'd like to rely in the simple framebuffer - the goal is to have
+a tiny kernel kexec'ed. I'm using kernel version 5.16.0-rc4.
 
-On 12/8/21 07:38, David Hildenbrand wrote:
->> +#if defined(CONFIG_MEMORY_HOTPLUG)
->> +static int crash_memhp_notifier(struct notifier_block *nb,
->> +	unsigned long val, void *v)
->> +{
->> +	struct memory_notify *mhp = v;
->> +	unsigned long start, end;
->> +
->> +	start = mhp->start_pfn << PAGE_SHIFT;
->> +	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
->> +
->> +	switch (val) {
->> +	case MEM_GOING_ONLINE:
->> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
->> +			start, end-start);
->> +		break;
->> +
->> +	case MEM_OFFLINE:
->> +	case MEM_CANCEL_ONLINE:
->> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
->> +			start, end-start);
-> 
-> Any reason you don't handle this after the effects completely, meaning
-> MEM_ONLINE and MEM_OFFLINE?
-> 
+I've done some other experiments, for exemple: I've forced screen_info
+model to match VLFB, so vesafb took over after the kexec, with the same
+result. Also noticed that BusMaster bit was off after kexec, in the AMD
+APU PCIe device, so I've set it on efifb before probe, and finally
+tested the same things in qemu, with qxl, all with the same result
+(blank screen).
+The most interesting result I got (both with amdgpu and qemu/qxl) is
+that if I blacklist these drivers and let the machine continue using
+efifb since the beginning, after kexec the efifb is still able to
+produce graphics.
 
-No, no reason. Great catch! I've changed it to use MEM_ONLINE/OFFLINE only.
-Thanks!
-eric
+Which then led me to think that likely there's something fundamentally
+"blocking" the reuse of the simple framebuffer after kexec, like maybe
+DRM stack is destroying the old framebuffer somehow? What kind of
+preparation is required at firmware level to make the simple EFI VGA
+framebuffer work, and could we perform this in a kexec (or "save it"
+before the amdgpu/qxl drivers take over and reuse later)?
+
+Any advice is greatly appreciated!
+Thanks in advance,
+
+
+Guilherme
 
 _______________________________________________
 kexec mailing list
