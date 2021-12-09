@@ -1,17 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x22b.google.com ([2607:f8b0:4864:20::22b])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvNH9-00GyiE-33
- for kexec@lists.infradead.org; Thu, 09 Dec 2021 17:32:12 +0000
-Received: by mail-oi1-x22b.google.com with SMTP id be32so9597678oib.11
- for <kexec@lists.infradead.org>; Thu, 09 Dec 2021 09:32:03 -0800 (PST)
 MIME-Version: 1.0
-References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
-In-Reply-To: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 9 Dec 2021 12:31:50 -0500
-Message-ID: <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
-Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
+References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
+ <20211123124646.1995-11-thunder.leizhen@huawei.com>
+ <YaaitPTArUZEriob@robh.at.kernel.org>
+ <0dc664f7-65ae-767c-3fe6-d1bcf50d41e1@huawei.com>
+ <281c8196-2a5c-28cf-346a-0ae2f7182f1b@huawei.com>
+In-Reply-To: <281c8196-2a5c-28cf-346a-0ae2f7182f1b@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Date: Thu, 9 Dec 2021 11:40:32 -0600
+Message-ID: <CAL_Jsq+2nt0Kr9jykq-SELk-6E4BAyFCVrRaNRC01Uz5Jqf-Jw@mail.gmail.com>
+Subject: Re: [PATCH v16 10/11] of: fdt: Add memory for devices by DT property
+ "linux, usable-memory-range"
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,72 +19,35 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, kasong@redhat.com, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, Gerd Hoffmann <kraxel@redhat.com>, "Deucher,
- Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
+To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On Thu, Dec 9, 2021 at 12:04 PM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> Hi all, I have a question about the possibility of reusing a framebuffer
-> after a regular (or panic) kexec - my case is with amdgpu (APU, aka, not
-> a separate GPU hardware), but I guess the question is kinda generic
-> hence I've looped most of the lists / people I think does make sense
-> (apologies for duplicates).
->
->
-> The context is: we have a hardware that has an amdgpu-controlled device
-> (Vangogh model) and as soon as the machine boots, efifb is providing
-> graphics - I understand the UEFI/GRUB outputs rely in EFI framebuffer as
-> well. As soon amdgpu module is available, kernel loads it and it takes
-> over the GPU, providing graphics. The kexec_file_load syscall allows to
-> pass a valid screen_info structure, so by kexec'ing a new kernel, we
-> have again efifb taking over on boot time, but this time I see nothing
-> in the screen. I've manually blacklisted amdgpu in this new kexec'ed
-> kernel, I'd like to rely in the simple framebuffer - the goal is to have
-> a tiny kernel kexec'ed. I'm using kernel version 5.16.0-rc4.
->
-> I've done some other experiments, for exemple: I've forced screen_info
-> model to match VLFB, so vesafb took over after the kexec, with the same
-> result. Also noticed that BusMaster bit was off after kexec, in the AMD
-> APU PCIe device, so I've set it on efifb before probe, and finally
-> tested the same things in qemu, with qxl, all with the same result
-> (blank screen).
-> The most interesting result I got (both with amdgpu and qemu/qxl) is
-> that if I blacklist these drivers and let the machine continue using
-> efifb since the beginning, after kexec the efifb is still able to
-> produce graphics.
->
-> Which then led me to think that likely there's something fundamentally
-> "blocking" the reuse of the simple framebuffer after kexec, like maybe
-> DRM stack is destroying the old framebuffer somehow? What kind of
-> preparation is required at firmware level to make the simple EFI VGA
-> framebuffer work, and could we perform this in a kexec (or "save it"
-> before the amdgpu/qxl drivers take over and reuse later)?
->
-
-Once the driver takes over, none of the pre-driver state is retained.
-You'll need to load the driver in the new kernel to initialize the
-displays.  Note the efifb doesn't actually have the ability to program
-any hardware, it just takes over the memory region that was used for
-the pre-OS framebuffer and whatever display timing was set up by the
-GOP driver prior to the OS loading.  Once that OS driver has loaded
-the area is gone and the display configuration may have changed.
-
-Alex
-
-
-> Any advice is greatly appreciated!
-> Thanks in advance,
->
->
-> Guilherme
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gV2VkLCBEZWMgOCwgMjAyMSBhdCA3OjU5IFBNIExlaXpoZW4gKFRodW5kZXJUb3duKQo8dGh1
+bmRlci5sZWl6aGVuQGh1YXdlaS5jb20+IHdyb3RlOgo+Cj4KPgo+IE9uIDIwMjEvMTIvMSAxMDo1
+NSwgTGVpemhlbiAoVGh1bmRlclRvd24pIHdyb3RlOgo+ID4+PiArICAgfQo+ID4+Pgo+ID4+PiAt
+ICAgbWVtYmxvY2tfY2FwX21lbW9yeV9yYW5nZShjYXBfbWVtX2FkZHIsIGNhcF9tZW1fc2l6ZSk7
+Cj4gPj4+ICsgICBtZW1ibG9ja19jYXBfbWVtb3J5X3JhbmdlKHJnblswXS5iYXNlLCByZ25bMF0u
+c2l6ZSk7Cj4gPj4+ICsgICBmb3IgKGkgPSAxOyBpIDwgTUFYX1VTQUJMRV9SQU5HRVMgJiYgcmdu
+W2ldLnNpemU7IGkrKykKPiA+PiBzLyAmJi8sLwo+Cj4gSGkgUm9iOgo+ICAgSSB3YW50IHRvIGtl
+ZXAgIiYmIiB1bmNoYW5nZWQsIGRvIHlvdSBtaW5kPyBJJ20gZ29pbmcgdG8gcG9zdCBhbgo+IHVw
+ZGF0ZWQgdmVyc2lvbiB0b21vcnJvdywgaG9wZWZ1bGx5IHRoZSBsYXN0LgoKTG9va3MgbGlrZSB0
+aGF0IHdhcyBvYnZpb3VzbHkgY29ycmVjdCwgc28gbm8gb2JqZWN0aW9ucy4KClJvYgoKPgo+ID4g
+SGkgUm9iOgo+ID4KPiA+IFRoZSBjb21tYSBvcGVyYXRvciBtYXkgbm90IGJlIHN1aXRhYmxlIGZv
+ciBsb2dpY2FsIGp1ZGdtZW50LiBUaGUgbG9naWNhbCBqdWRnbWVudAo+ID4gYmVmb3JlIGNvbW1h
+cyAoLCkgaXMgaWdub3JlZC4KPiA+Cj4gPiBIZXJlJ3MgbXkgdGVzdO+8mgo+ID4KPiA+IEMgY29k
+Ze+8mgo+ID4gaW50IG1haW4oKQo+ID4gewo+ID4gICAgICAgICBpbnQgaSwgajsKPiA+Cj4gPiAg
+ICAgICAgIHByaW50ZigiJiY6XG4iKTsKPiA+ICAgICAgICAgZm9yIChpID0gMCwgaiA9IDA7IGkg
+PCAyICYmIGogPCAzOyBpKyssIGorKykKPiA+ICAgICAgICAgICAgICAgICBwcmludGYoImk9JWQs
+IGo9JWRcbiIsIGksIGopOwo+ID4KPiA+ICAgICAgICAgcHJpbnRmKCJcbmNvbW1hOlxuIik7Cj4g
+PiAgICAgICAgIGZvciAoaSA9IDAsIGogPSAwOyBpIDwgMiwgaiA8IDM7IGkrKywgaisrKSAgICAv
+LyhpIDwgMu+8iSBiZWZvcmUgY29tbWEgaXMgaWdub3JlZAo+ID4gICAgICAgICAgICAgICAgIHBy
+aW50ZigiaT0lZCwgaj0lZFxuIiwgaSwgaik7Cj4gPgo+ID4gICAgICAgICByZXR1cm4gMDsKPiA+
+IH0KPiA+Cj4gPiBPdXRwdXTvvJoKPiA+ICYmOgo+ID4gaT0wLCBqPTAKPiA+IGk9MSwgaj0xCj4g
+Pgo+ID4gY29tbWE6Cj4gPiBpPTAsIGo9MAo+ID4gaT0xLCBqPTEKPiA+IGk9Miwgaj0yCj4gPgo+
+ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
+IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
+YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
