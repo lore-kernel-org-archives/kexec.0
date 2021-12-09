@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x230.google.com ([2607:f8b0:4864:20::230])
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvOyO-00HLTH-Pq
- for kexec@lists.infradead.org; Thu, 09 Dec 2021 19:20:58 +0000
-Received: by mail-oi1-x230.google.com with SMTP id m6so10106786oim.2
- for <kexec@lists.infradead.org>; Thu, 09 Dec 2021 11:20:56 -0800 (PST)
+ id 1mvRMU-0008KI-Ev
+ for kexec@lists.infradead.org; Thu, 09 Dec 2021 21:54:00 +0000
+Message-ID: <790c68ce-070d-c391-0c3a-4637c616fa5e@linux.vnet.ibm.com>
+Date: Thu, 9 Dec 2021 16:53:33 -0500
 MIME-Version: 1.0
-References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
- <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
- <a1f4d263-b3d2-4ceb-8a89-948c8129500f@igalia.com>
- <CADnq5_N9ptK4c86LO77YcrF5_M==hket+L7eYjsGCaKbORO=ug@mail.gmail.com>
- <eaea0143-a961-b83c-3c6c-4d612cd003bc@igalia.com>
-In-Reply-To: <eaea0143-a961-b83c-3c6c-4d612cd003bc@igalia.com>
-From: Alex Deucher <alexdeucher@gmail.com>
-Date: Thu, 9 Dec 2021 14:20:44 -0500
-Message-ID: <CADnq5_P+J_xxJ62zmTPGY0NfQR05Vnp51M_bYGXmdY1cXARfLA@mail.gmail.com>
-Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
+Subject: Re: [PATCH v2 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
+Content-Language: en-US
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
+ <c3c9c6e4-6371-2f5a-ac94-fa4389d5dbe5@linux.vnet.ibm.com>
+ <20211209092155.GO117207@kunlun.suse.cz>
+From: Nayna <nayna@linux.vnet.ibm.com>
+In-Reply-To: <20211209092155.GO117207@kunlun.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,60 +22,37 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, Gerd Hoffmann <kraxel@redhat.com>, "Deucher,
- Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
+To: =?UTF-8?Q?Michal_Such=c3=a1nek?= <msuchanek@suse.de>
+Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
 
-On Thu, Dec 9, 2021 at 1:18 PM Guilherme G. Piccoli <gpiccoli@igalia.com> wrote:
->
-> Thanks again Alex! Some comments inlined below:
->
-> On 09/12/2021 15:06, Alex Deucher wrote:
-> > Not really in a generic way.  It's asic and platform specific.  In
-> > addition most modern displays require link training to bring up the
-> > display, so you can't just save and restore registers.
->
-> Oh sure, I understand that. My question is more like: is there a way,
-> inside amdgpu driver, to save this state before taking
-> over/overwriting/reprogramming the device? So we could (again, from
-> inside the amdgpu driver) dump this pre-saved state in the shutdown
-> handler, for example, having the device in a "pre-OS" state when the new
-> kexec'ed kernel starts.
-
-Sure, it could be done, it's just a fair amount of work.  Things like
-legacy vga text mode is a bit more of a challenge, but that tends to
-be less relevant as non-legacy UEFI becomes more pervasive.
-
->
-> >
-> > The drivers are asic and platform specific.  E.g., the driver for
-> > vangogh is different from renoir is different from skylake, etc.  The
-> > display programming interfaces are asic specific.
->
-> Cool, that makes sense! But if you (or anybody here) know some of these
-> GOP drivers, e.g. for the qemu/qxl device, I'm just curious to
-> see/understand how complex is the FW driver to just put the
-> device/screen in a usable state.
-
-Most of the asic init and display setup on AMD GPUs is handled via
-atombios command tables (basically little scripted stored in the
-vbios) which are shared by the driver and the GOP driver for most
-programming sequences.  In our case, the GOP driver is pretty simple.
-Take a look at the pre-DC display code in amdgpu to see what a basic
-display driver would look like (e.g., dce_v11_0.c).  The GOP driver
-would call the atombios asic_init table to make sure the chip itself
-is initialized (e.g., memory controller, etc.), then walk the display
-data tables in the vbios to determine the display configuration
-specific to this board, then probe the displays and use the atombios
-display command tables to light them up.
-
-Alex
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDEyLzkvMjEgMDQ6MjEsIE1pY2hhbCBTdWNow6FuZWsgd3JvdGU6Cj4gSGVsbG8sCkhpLAo+
+IE9uIFdlZCwgRGVjIDA4LCAyMDIxIGF0IDA4OjUxOjQ3UE0gLTA1MDAsIE5heW5hIHdyb3RlOgo+
+PiBPbiAxMS8yNS8yMSAxMzowMiwgTWljaGFsIFN1Y2hhbmVrIHdyb3RlOgo+Pj4gQ29weSB0aGUg
+Y29kZSBmcm9tIHMzOTB4Cj4+Pgo+Pj4gU2lnbmVkLW9mZi1ieTogTWljaGFsIFN1Y2hhbmVrPG1z
+dWNoYW5la0BzdXNlLmRlPgo+Pj4gLS0tCj4+PiAgICBhcmNoL3Bvd2VycGMvS2NvbmZpZyAgICAg
+ICAgfCAxMSArKysrKysrKysrKwo+Pj4gICAgYXJjaC9wb3dlcnBjL2tleGVjL2VsZl82NC5jIHwg
+MzYgKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4+PiAgICAyIGZpbGVzIGNo
+YW5nZWQsIDQ3IGluc2VydGlvbnMoKykKPj4+Cj4+PiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBj
+L0tjb25maWcgYi9hcmNoL3Bvd2VycGMvS2NvbmZpZwo+Pj4gaW5kZXggYWMwYzUxNTU1MmZkLi5l
+Y2MxMjI3YTc3ZjEgMTAwNjQ0Cj4+PiAtLS0gYS9hcmNoL3Bvd2VycGMvS2NvbmZpZwo+Pj4gKysr
+IGIvYXJjaC9wb3dlcnBjL0tjb25maWcKPj4+IEBAIC01NjEsNiArNTYxLDE3IEBAIGNvbmZpZyBL
+RVhFQ19GSUxFCj4+PiAgICBjb25maWcgQVJDSF9IQVNfS0VYRUNfUFVSR0FUT1JZCj4+PiAgICAJ
+ZGVmX2Jvb2wgS0VYRUNfRklMRQo+Pj4KPj4+ICtjb25maWcgS0VYRUNfU0lHCj4+PiArCWJvb2wg
+IlZlcmlmeSBrZXJuZWwgc2lnbmF0dXJlIGR1cmluZyBrZXhlY19maWxlX2xvYWQoKSBzeXNjYWxs
+Igo+Pj4gKwlkZXBlbmRzIG9uIEtFWEVDX0ZJTEUgJiYgTU9EVUxFX1NJR19GT1JNQVQKPj4gQWZ0
+ZXIgbWFudWFsbHkgYXBwbHlpbmcgdGhlIHBhdGNoLCB0aGUgYnVpbGQgaXMgZmFpbGluZyB3aXRo
+IHRoZSBmb2xsb3dpbmcKPj4gZXJyb3I6Cj4+Cj4+IGJ1aWxkIGZhaWxlZCB3aXRoIGVycm9yICJh
+cmNoL3Bvd2VycGMva2V4ZWMvZWxmXzY0Lm86IEluIGZ1bmN0aW9uCj4+IGBlbGY2NF92ZXJpZnlf
+c2lnJzoKPj4gL3Jvb3Qva2VybmVsL2xpbnVzL2xpbnV4L2FyY2gvcG93ZXJwYy9rZXhlYy9lbGZf
+NjQuYzoxNjA6IHVuZGVmaW5lZAo+PiByZWZlcmVuY2UgdG8gYHZlcmlmeV9hcHBlbmRlZF9zaWdu
+YXR1cmUnIgo+IFRoaXMgcGF0Y2ggZG9lcyBub3QgYWRkIGNhbGwgdG8gdmVyaWZ5X2FwcGVuZGVk
+X3NpZ25hdHVyZS4KPgo+IE1heWJlIHlvdSBhcHBsaWVkIHRoZSBmb2xsb3dpbmcgcGF0Y2ggYXMg
+d2VsbD8KClllcywgSSB0cmllZCBidWlsZCBhZnRlciBhcHBseWluZyBhbGwgdGhlIHBhdGNoZXMu
+CgpUaGFua3MgJiBSZWdhcmRzLAoKIMKgwqDCoCAtIE5heW5hCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
