@@ -1,16 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
+Received: from fanzine2.igalia.com ([213.97.179.56])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mvNiP-00H6k4-4J
+ for kexec@lists.infradead.org; Thu, 09 Dec 2021 18:00:22 +0000
+Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
+References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
+ <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Message-ID: <a1f4d263-b3d2-4ceb-8a89-948c8129500f@igalia.com>
+Date: Thu, 9 Dec 2021 14:59:52 -0300
 MIME-Version: 1.0
-References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
- <20211123124646.1995-11-thunder.leizhen@huawei.com>
- <YaaitPTArUZEriob@robh.at.kernel.org>
- <0dc664f7-65ae-767c-3fe6-d1bcf50d41e1@huawei.com>
- <281c8196-2a5c-28cf-346a-0ae2f7182f1b@huawei.com>
-In-Reply-To: <281c8196-2a5c-28cf-346a-0ae2f7182f1b@huawei.com>
-From: Rob Herring <robh@kernel.org>
-Date: Thu, 9 Dec 2021 11:40:32 -0600
-Message-ID: <CAL_Jsq+2nt0Kr9jykq-SELk-6E4BAyFCVrRaNRC01Uz5Jqf-Jw@mail.gmail.com>
-Subject: Re: [PATCH v16 10/11] of: fdt: Add memory for devices by DT property
- "linux, usable-memory-range"
+In-Reply-To: <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,35 +20,36 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, X86 ML <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Alex Deucher <alexdeucher@gmail.com>
+Cc: "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, kasong@redhat.com, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=c3=a1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, Gerd Hoffmann <kraxel@redhat.com>, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
 
-T24gV2VkLCBEZWMgOCwgMjAyMSBhdCA3OjU5IFBNIExlaXpoZW4gKFRodW5kZXJUb3duKQo8dGh1
-bmRlci5sZWl6aGVuQGh1YXdlaS5jb20+IHdyb3RlOgo+Cj4KPgo+IE9uIDIwMjEvMTIvMSAxMDo1
-NSwgTGVpemhlbiAoVGh1bmRlclRvd24pIHdyb3RlOgo+ID4+PiArICAgfQo+ID4+Pgo+ID4+PiAt
-ICAgbWVtYmxvY2tfY2FwX21lbW9yeV9yYW5nZShjYXBfbWVtX2FkZHIsIGNhcF9tZW1fc2l6ZSk7
-Cj4gPj4+ICsgICBtZW1ibG9ja19jYXBfbWVtb3J5X3JhbmdlKHJnblswXS5iYXNlLCByZ25bMF0u
-c2l6ZSk7Cj4gPj4+ICsgICBmb3IgKGkgPSAxOyBpIDwgTUFYX1VTQUJMRV9SQU5HRVMgJiYgcmdu
-W2ldLnNpemU7IGkrKykKPiA+PiBzLyAmJi8sLwo+Cj4gSGkgUm9iOgo+ICAgSSB3YW50IHRvIGtl
-ZXAgIiYmIiB1bmNoYW5nZWQsIGRvIHlvdSBtaW5kPyBJJ20gZ29pbmcgdG8gcG9zdCBhbgo+IHVw
-ZGF0ZWQgdmVyc2lvbiB0b21vcnJvdywgaG9wZWZ1bGx5IHRoZSBsYXN0LgoKTG9va3MgbGlrZSB0
-aGF0IHdhcyBvYnZpb3VzbHkgY29ycmVjdCwgc28gbm8gb2JqZWN0aW9ucy4KClJvYgoKPgo+ID4g
-SGkgUm9iOgo+ID4KPiA+IFRoZSBjb21tYSBvcGVyYXRvciBtYXkgbm90IGJlIHN1aXRhYmxlIGZv
-ciBsb2dpY2FsIGp1ZGdtZW50LiBUaGUgbG9naWNhbCBqdWRnbWVudAo+ID4gYmVmb3JlIGNvbW1h
-cyAoLCkgaXMgaWdub3JlZC4KPiA+Cj4gPiBIZXJlJ3MgbXkgdGVzdO+8mgo+ID4KPiA+IEMgY29k
-Ze+8mgo+ID4gaW50IG1haW4oKQo+ID4gewo+ID4gICAgICAgICBpbnQgaSwgajsKPiA+Cj4gPiAg
-ICAgICAgIHByaW50ZigiJiY6XG4iKTsKPiA+ICAgICAgICAgZm9yIChpID0gMCwgaiA9IDA7IGkg
-PCAyICYmIGogPCAzOyBpKyssIGorKykKPiA+ICAgICAgICAgICAgICAgICBwcmludGYoImk9JWQs
-IGo9JWRcbiIsIGksIGopOwo+ID4KPiA+ICAgICAgICAgcHJpbnRmKCJcbmNvbW1hOlxuIik7Cj4g
-PiAgICAgICAgIGZvciAoaSA9IDAsIGogPSAwOyBpIDwgMiwgaiA8IDM7IGkrKywgaisrKSAgICAv
-LyhpIDwgMu+8iSBiZWZvcmUgY29tbWEgaXMgaWdub3JlZAo+ID4gICAgICAgICAgICAgICAgIHBy
-aW50ZigiaT0lZCwgaj0lZFxuIiwgaSwgaik7Cj4gPgo+ID4gICAgICAgICByZXR1cm4gMDsKPiA+
-IH0KPiA+Cj4gPiBPdXRwdXTvvJoKPiA+ICYmOgo+ID4gaT0wLCBqPTAKPiA+IGk9MSwgaj0xCj4g
-Pgo+ID4gY29tbWE6Cj4gPiBpPTAsIGo9MAo+ID4gaT0xLCBqPTEKPiA+IGk9Miwgaj0yCj4gPgo+
-ID4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVj
-IG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZy
-YWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
+On 09/12/2021 14:31, Alex Deucher wrote:
+> [...] 
+> Once the driver takes over, none of the pre-driver state is retained.
+> You'll need to load the driver in the new kernel to initialize the
+> displays.  Note the efifb doesn't actually have the ability to program
+> any hardware, it just takes over the memory region that was used for
+> the pre-OS framebuffer and whatever display timing was set up by the
+> GOP driver prior to the OS loading.  Once that OS driver has loaded
+> the area is gone and the display configuration may have changed.
+> 
+
+Hi Christian and Alex, thanks for the clarifications!
+
+Is there any way to save/retain this state before amdgpu takes over?
+Would simpledrm be able to program the device again, to a working state?
+
+Finally, do you have any example of such a GOP driver (open source) so I
+can take a look? I tried to find something like that in Tianocore
+project, but didn't find anything that seemed useful for my issue.
+
+Thanks again!
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
