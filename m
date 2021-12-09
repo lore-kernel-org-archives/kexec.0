@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out2.suse.de ([195.135.220.29])
+Received: from gentwo.de ([161.97.139.209])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvFcn-00FP3R-F1
- for kexec@lists.infradead.org; Thu, 09 Dec 2021 09:22:02 +0000
-Date: Thu, 9 Dec 2021 10:21:55 +0100
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Subject: Re: [PATCH v2 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
-Message-ID: <20211209092155.GO117207@kunlun.suse.cz>
-References: <cover.1637862358.git.msuchanek@suse.de>
- <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
- <c3c9c6e4-6371-2f5a-ac94-fa4389d5dbe5@linux.vnet.ibm.com>
+ id 1mvJ1n-00FzV4-1X
+ for kexec@lists.infradead.org; Thu, 09 Dec 2021 13:00:04 +0000
+Date: Thu, 9 Dec 2021 13:59:58 +0100 (CET)
+From: Christoph Lameter <cl@gentwo.org>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+In-Reply-To: <20211209080540.GA3050@MiWiFi-R3L-srv>
+Message-ID: <alpine.DEB.2.22.394.2112091355510.270348@gentwo.de>
+References: <20211207030750.30824-1-bhe@redhat.com>
+ <alpine.DEB.2.22.394.2112070859420.201880@gentwo.de>
+ <20211209080540.GA3050@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <c3c9c6e4-6371-2f5a-ac94-fa4389d5dbe5@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +25,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna <nayna@linux.vnet.ibm.com>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
 
-Hello,
+On Thu, 9 Dec 2021, Baoquan He wrote:
 
-On Wed, Dec 08, 2021 at 08:51:47PM -0500, Nayna wrote:
-> 
-> On 11/25/21 13:02, Michal Suchanek wrote:
-> > Copy the code from s390x
-> > 
-> > Signed-off-by: Michal Suchanek<msuchanek@suse.de>
-> > ---
-> >   arch/powerpc/Kconfig        | 11 +++++++++++
-> >   arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
-> >   2 files changed, 47 insertions(+)
-> > 
-> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > index ac0c515552fd..ecc1227a77f1 100644
-> > --- a/arch/powerpc/Kconfig
-> > +++ b/arch/powerpc/Kconfig
-> > @@ -561,6 +561,17 @@ config KEXEC_FILE
-> >   config ARCH_HAS_KEXEC_PURGATORY
-> >   	def_bool KEXEC_FILE
-> > 
-> > +config KEXEC_SIG
-> > +	bool "Verify kernel signature during kexec_file_load() syscall"
-> > +	depends on KEXEC_FILE && MODULE_SIG_FORMAT
-> 
-> After manually applying the patch, the build is failing with the following
-> error:
-> 
-> build failed with error "arch/powerpc/kexec/elf_64.o: In function
-> `elf64_verify_sig':
-> /root/kernel/linus/linux/arch/powerpc/kexec/elf_64.c:160: undefined
-> reference to `verify_appended_signature'"
+> > The slab allocators guarantee that all kmalloc allocations are DMA able
+> > indepent of specifying ZONE_DMA/ZONE_DMA32
+>
+> Here you mean we guarantee dma-kmalloc will be DMA able independent of
+> specifying ZONE_DMA/DMA32, or the whole sla/ub allocator?
 
-This patch does not add call to verify_appended_signature.
+All memory obtained via kmalloc --independent of "dma-alloc", ZONE_DMA
+etc-- must be dmaable.
 
-Maybe you applied the following patch as well?
+> With my understanding, isn't the reasonable sequence zone DMA firstly if
+> GFP_DMA, then zone DMA32, finaly zone NORMAL. At least, on x86_64, I
+> believe device driver developer prefer to see this because most of time,
+> zone DMA and zone DMA32 are both used for dma buffer allocation, if
+> IOMMU is not enabled. However, memory got from zone NORMAL when required
+> with GFP_DMA, and it succeeds, does it mean that the developer doesn't
+> take the GFP_DMA flag seriously, just try to get buffer for allocation?
 
-Thanks
+ZONE_NORMAL is also used for DMA allocations. ZONE_DMA and ZONE_DMA32 are
+only used if the physical range of memory supported by a device does not
+include all of normal memory.
 
-Michal
+> > The size of ZONE_DMA is traditionally depending on the platform. On some
+> > it is 16MB, on some 1G and on some 4GB. ZONE32 is always 4GB and should
+> > only be used if ZONE_DMA has already been used.
+>
+> As said at above, ia64 and riscv don't have ZONE_DMA at all, they just
+> cover low 4G with ZONE_DMA32 alone.
+
+If you do not have devices that are crap and cannot address the full
+memory then you dont need these special zones.
+
+Sorry this subject has caused confusion multiple times over the years and
+there are still arches that are not implementing this in a consistent way.
+
 
 _______________________________________________
 kexec mailing list
