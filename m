@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <db65cd76-e2c0-4d35-0dcc-d9f8c164f77e@oracle.com>
-Date: Fri, 10 Dec 2021 13:53:59 -0600
-Subject: Re: [PATCH v16 00/11] support reserving crashkernel above 4G on arm64
- kdump
-Content-Language: en-US
-References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
- <YbDnwol20HrRl4uL@arm.com>
-From: john.p.donnelly@oracle.com
-In-Reply-To: <YbDnwol20HrRl4uL@arm.com>
+Subject: Re: [PATCH 1/2] kdump: vmcore: move copy_to() from vmcore.c to
+ uaccess.h
+References: <1639143361-17773-1-git-send-email-yangtiezhu@loongson.cn>
+ <1639143361-17773-2-git-send-email-yangtiezhu@loongson.cn>
+ <20211210085903.e7820815e738d7dc6da06050@linux-foundation.org>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Message-ID: <249b17ea-171a-49f7-b438-488c03fa1f9b@loongson.cn>
+Date: Sat, 11 Dec 2021 07:50:26 +0800
 MIME-Version: 1.0
+In-Reply-To: <20211210085903.e7820815e738d7dc6da06050@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,62 +21,87 @@ Content-Transfer-Encoding: 7bit
 Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Catalin Marinas <catalin.marinas@arm.com>, Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Andrew Morton <akpm@linux-foundation.org>
+Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
 
-On 12/8/21 11:13 AM, Catalin Marinas wrote:
-> On Tue, Nov 23, 2021 at 08:46:35PM +0800, Zhen Lei wrote:
->> Chen Zhou (10):
->>    x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
->>    x86: kdump: make the lower bound of crash kernel reservation
->>      consistent
->>    x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
->>      reserve_crashkernel()
->>    x86: kdump: move xen_pv_domain() check and insert_resource() to
->>      setup_arch()
->>    x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
->>    arm64: kdump: introduce some macros for crash kernel reservation
->>    arm64: kdump: reimplement crashkernel=X
->>    x86, arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
->>    of: fdt: Add memory for devices by DT property
->>      "linux,usable-memory-range"
->>    kdump: update Documentation about crashkernel
+On 12/11/2021 12:59 AM, Andrew Morton wrote:
+> On Fri, 10 Dec 2021 21:36:00 +0800 Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
+>
+>> In arch/*/kernel/crash_dump*.c, there exist similar code about
+>> copy_oldmem_page(), move copy_to() from vmcore.c to uaccess.h,
+>> and then we can use copy_to() to simplify the related code.
 >>
->> Zhen Lei (1):
->>    of: fdt: Aggregate the processing of "linux,usable-memory-range"
-> 
-> Apart from a minor comment I made on patch 8 and some comments from Rob
-> that need addressing, the rest looks fine to me.
-> 
-> Ingo stated in the past that he's happy to ack the x86 changes as long
-> as there's no functional change (and that's the case AFAICT). Ingo, does
-> your conditional ack still stand?
-> 
-> In terms of merging, I'm happy to take it all through the arm64 tree
-> with acks from the x86 maintainers. Alternatively, with the change I
-> mentioned for patch 8, the first 5 patches could be queued via the tip
-> tree on a stable branch and I can base the rest of the arm64 on top.
-> 
-> Thomas, Ingo, Peter, any preference?
-> 
-> Thanks.
-> 
+>> ...
+>>
+>> --- a/fs/proc/vmcore.c
+>> +++ b/fs/proc/vmcore.c
+>> @@ -238,20 +238,6 @@ copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+>>  	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
+>>  }
+>>
+>> -/*
+>> - * Copy to either kernel or user space
+>> - */
+>> -static int copy_to(void *target, void *src, size_t size, int userbuf)
+>> -{
+>> -	if (userbuf) {
+>> -		if (copy_to_user((char __user *) target, src, size))
+>> -			return -EFAULT;
+>> -	} else {
+>> -		memcpy(target, src, size);
+>> -	}
+>> -	return 0;
+>> -}
+>> -
+>>  #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+>>  static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
+>>  {
+>> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+>> index ac03940..4a6c3e4 100644
+>> --- a/include/linux/uaccess.h
+>> +++ b/include/linux/uaccess.h
+>> @@ -201,6 +201,20 @@ copy_to_user(void __user *to, const void *from, unsigned long n)
+>>  	return n;
+>>  }
+>>
+>> +/*
+>> + * Copy to either kernel or user space
+>> + */
+>> +static inline int copy_to(void *target, void *src, size_t size, int userbuf)
+>> +{
+>> +	if (userbuf) {
+>> +		if (copy_to_user((char __user *) target, src, size))
+>> +			return -EFAULT;
+>> +	} else {
+>> +		memcpy(target, src, size);
+>> +	}
+>> +	return 0;
+>> +}
+>> +
+>
+> Ordinarily I'd say "this is too large to be inlined".  But the function
+> has only a single callsite per architecture so inlining it won't cause
+> bloat at present.
+>
+> But hopefully copy_to() will get additional callers in the future, in
+> which case it shouldn't be inlined.  So I'm thinking it would be best
+> to start out with this as a regular non-inlined function, in
+> lib/usercopy.c.
+>
+> Also, copy_to() is a very poor name for a globally-visible helper
+> function.  Better would be copy_to_user_or_kernel(), although that's
+> perhaps a bit long.
+>
+> And the `userbuf' arg should have type bool, yes?
+>
 
-Hi,
+Hi Andrew,
 
-If you notice the trend over the past year , some of additional review 
-requests are because the submitter had to rebase to the next version.
+Thank you very much for your reply and suggestion, I agree with you,
+I will send v2 later.
 
-Can we get this acked and placed in a build so others can test and start 
-using it ?
-
-Thank you,
-JD
-
-
-
-
-
+Thanks,
+Tiezhu
 
 
 _______________________________________________
