@@ -1,9 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-mw2nam10on2075.outbound.protection.outlook.com
- ([40.107.94.75] helo=NAM10-MW2-obe.outbound.protection.outlook.com)
+Received: from fanzine2.igalia.com ([213.97.179.56])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvhaz-002LBP-OG
- for kexec@lists.infradead.org; Fri, 10 Dec 2021 15:14:04 +0000
+ id 1mvhlK-002Pyp-6B
+ for kexec@lists.infradead.org; Fri, 10 Dec 2021 15:24:45 +0000
 Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
 References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
  <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
@@ -14,12 +13,13 @@ References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
  <99b38881-8c63-de04-50f8-aa4119b52b25@igalia.com>
  <CADnq5_NqPEY6vPSsBQSst5Gsw-VpJ-sp-5DHMeB+EGA2t7KoAQ@mail.gmail.com>
  <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
-From: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>
-Message-ID: <d1de6ca3-11ae-af9e-a2fb-7bcb6fae01d6@amd.com>
-Date: Fri, 10 Dec 2021 16:13:48 +0100
-In-Reply-To: <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
-Content-Language: en-US
+ <d1de6ca3-11ae-af9e-a2fb-7bcb6fae01d6@amd.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Message-ID: <0847ff12-8b1c-a046-eb05-f0011f81e172@igalia.com>
+Date: Fri, 10 Dec 2021 12:24:08 -0300
 MIME-Version: 1.0
+In-Reply-To: <d1de6ca3-11ae-af9e-a2fb-7bcb6fae01d6@amd.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,40 +28,24 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>, Alex Deucher <alexdeucher@gmail.com>
+To: =?UTF-8?Q?Christian_K=c3=b6nig?= <christian.koenig@amd.com>, Alex Deucher <alexdeucher@gmail.com>
 Cc: Thomas Zimmermann <tzimmermann@suse.de>, Gerd Hoffmann <kraxel@redhat.com>, "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=c3=a1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-
-
-Am 10.12.21 um 15:25 schrieb Guilherme G. Piccoli:
-> On 10/12/2021 11:16, Alex Deucher wrote:> [...]
->> Why not just reload the driver after kexec?
->>
->> Alex
-> Because the original issue is the kdump case, and we want a very very
-> tiny kernel - also, the crash originally could have been caused by
-> amdgpu itself, so if it's a GPU issue, we don't want to mess with that
-> in kdump. And I confess I tried modprobe amdgpu after a kdump, no
-> success - kdump won't call shutdown handlers, so GPU will be in a
-> "rogue" state...
->
-> My question was about regular kexec because it's much simpler usually,
-> we can do whatever we want there. My line of thought was: if I make it
-> work in regular kexec with a simple framebuffer, I might be able to get
-> it working on kdump heheh
-
-How about issuing a PCIe reset and re-initializing the ASIC with just 
-the VBIOS?
-
-That should be pretty straightforward I think.
-
-Christian.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gMTAvMTIvMjAyMSAxMjoxMywgQ2hyaXN0aWFuIEvDtm5pZyB3cm90ZToKPiBbLi4uXQo+IEhv
+dyBhYm91dCBpc3N1aW5nIGEgUENJZSByZXNldCBhbmQgcmUtaW5pdGlhbGl6aW5nIHRoZSBBU0lD
+IHdpdGgganVzdCAKPiB0aGUgVkJJT1M/Cj4gCj4gVGhhdCBzaG91bGQgYmUgcHJldHR5IHN0cmFp
+Z2h0Zm9yd2FyZCBJIHRoaW5rLgo+IAo+IENocmlzdGlhbi4KCgpUaGFua3MgQ2hyaXN0aWFuLCB0
+aGF0J2QgYmUgcGVyZmVjdCEgSXMgaXQgZmVhc2libGU/IFBlciBBbGV4IGNvbW1lbnQsCndlJ2Qg
+bmVlZCB0byBydW4gYXRvbWJpb3MgY29tbWFuZHMgdG8gcmVwcm9ncmFtIHRoZSB0aW1pbmdzLCBk
+aXNwbGF5CmluZm8sIGV0Yy4uLmxpa2UgYSBzbWFsbCBkcml2ZXIgd291bGQgZG8sIGEgZnVsbCBp
+bml0LgoKQWxzbywgd2hhdCBraW5kIG9mIFBDSWUgcmVzZXQgaXMgcmVjb21tZW5kZWQgZm9yIHRo
+aXMgYWRhcHRlcj8gTGlrZSBhCmhvdCByZXNldCwgcG93ZXJpbmctb2ZmL3JlLXBvd2VyLCBGTFIg
+b3IgdGhhdCBNT0RFMiByZXNldCBwcmVzZW50IGluCmFtZGdwdSBjb2RlPyBSZW1lbWJlcmluZyB0
+aGlzIGlzIGFuIEFQVSBkZXZpY2UuCgpUaGFua3MgYSBsb3QhCgoKX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxp
+c3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0
+aW5mby9rZXhlYwo=
