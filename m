@@ -1,20 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvaDQ-0012wA-2m
- for kexec@lists.infradead.org; Fri, 10 Dec 2021 07:21:13 +0000
-Date: Fri, 10 Dec 2021 08:19:14 +0100
-From: Gerd Hoffmann <kraxel@redhat.com>
-Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
-Message-ID: <20211210071914.n4l2mdknbv3yeqtq@sirius.home.kraxel.org>
-References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
- <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
- <a1f4d263-b3d2-4ceb-8a89-948c8129500f@igalia.com>
- <CADnq5_N9ptK4c86LO77YcrF5_M==hket+L7eYjsGCaKbORO=ug@mail.gmail.com>
- <eaea0143-a961-b83c-3c6c-4d612cd003bc@igalia.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <eaea0143-a961-b83c-3c6c-4d612cd003bc@igalia.com>
+From: Tiezhu Yang <yangtiezhu@loongson.cn>
+Subject: [PATCH 1/2] kdump: vmcore: move copy_to() from vmcore.c to uaccess.h
+Date: Fri, 10 Dec 2021 21:36:00 +0800
+Message-Id: <1639143361-17773-2-git-send-email-yangtiezhu@loongson.cn>
+In-Reply-To: <1639143361-17773-1-git-send-email-yangtiezhu@loongson.cn>
+References: <1639143361-17773-1-git-send-email-yangtiezhu@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,48 +13,76 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Alex Deucher <alexdeucher@gmail.com>, "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, Samuel Iglesias =?utf-8?Q?Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
+To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-  Hi,
+In arch/*/kernel/crash_dump*.c, there exist similar code about
+copy_oldmem_page(), move copy_to() from vmcore.c to uaccess.h,
+and then we can use copy_to() to simplify the related code.
 
-> > The drivers are asic and platform specific.  E.g., the driver for
-> > vangogh is different from renoir is different from skylake, etc.  The
-> > display programming interfaces are asic specific.
-> 
-> Cool, that makes sense! But if you (or anybody here) know some of these
-> GOP drivers, e.g. for the qemu/qxl device,
+Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+---
+ fs/proc/vmcore.c        | 14 --------------
+ include/linux/uaccess.h | 14 ++++++++++++++
+ 2 files changed, 14 insertions(+), 14 deletions(-)
 
-OvmfPkg/QemuVideoDxe in tianocore source tree.
-
-> I'm just curious to see/understand how complex is the FW driver to
-> just put the device/screen in a usable state.
-
-Note that qemu has a paravirtual interface for vesa vga mode programming
-where you basically program a handful of registers with xres, yres,
-depth etc. (after resetting the device to put it into vga compatibility
-mode) and you are done.
-
-Initializing physical hardware is an order of magnitude harder than
-that.
-
-With qxl you could also go figure the current state of the hardware and
-fill screen_info with that to get a working boot framebuffer in the
-kexec'ed kernel.
-
-Problem with this approach is this works only in case the framebuffer
-happens to be in a format usable by vesafb/efifb.  So no modifiers
-(tiling etc.) and continuous in physical address space.  That is true
-for qxl.  With virtio-gpu it wouldn't work though (framebuffer can be
-scattered), and I expect with most modern physical hardware it wouldn't
-work either.
-
-take care,
-  Gerd
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 509f851..c5976a8 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -238,20 +238,6 @@ copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
+ 	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
+ }
+ 
+-/*
+- * Copy to either kernel or user space
+- */
+-static int copy_to(void *target, void *src, size_t size, int userbuf)
+-{
+-	if (userbuf) {
+-		if (copy_to_user((char __user *) target, src, size))
+-			return -EFAULT;
+-	} else {
+-		memcpy(target, src, size);
+-	}
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+ static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
+ {
+diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
+index ac03940..4a6c3e4 100644
+--- a/include/linux/uaccess.h
++++ b/include/linux/uaccess.h
+@@ -201,6 +201,20 @@ copy_to_user(void __user *to, const void *from, unsigned long n)
+ 	return n;
+ }
+ 
++/*
++ * Copy to either kernel or user space
++ */
++static inline int copy_to(void *target, void *src, size_t size, int userbuf)
++{
++	if (userbuf) {
++		if (copy_to_user((char __user *) target, src, size))
++			return -EFAULT;
++	} else {
++		memcpy(target, src, size);
++	}
++	return 0;
++}
++
+ #ifndef copy_mc_to_kernel
+ /*
+  * Without arch opt-in this generic copy_mc_to_kernel() will not handle
+-- 
+2.1.0
 
 
 _______________________________________________
