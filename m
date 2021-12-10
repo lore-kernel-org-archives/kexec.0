@@ -1,13 +1,25 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Fri, 10 Dec 2021 08:59:03 -0800
-From: Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH 1/2] kdump: vmcore: move copy_to() from vmcore.c to
- uaccess.h
-Message-Id: <20211210085903.e7820815e738d7dc6da06050@linux-foundation.org>
-In-Reply-To: <1639143361-17773-2-git-send-email-yangtiezhu@loongson.cn>
-References: <1639143361-17773-1-git-send-email-yangtiezhu@loongson.cn>
- <1639143361-17773-2-git-send-email-yangtiezhu@loongson.cn>
-Mime-Version: 1.0
+Received: from mail-oi1-x22b.google.com ([2607:f8b0:4864:20::22b])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mvlD8-003O9Y-0C
+ for kexec@lists.infradead.org; Fri, 10 Dec 2021 19:05:40 +0000
+Received: by mail-oi1-x22b.google.com with SMTP id 7so14434073oip.12
+ for <kexec@lists.infradead.org>; Fri, 10 Dec 2021 11:05:36 -0800 (PST)
+MIME-Version: 1.0
+References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
+ <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
+ <a1f4d263-b3d2-4ceb-8a89-948c8129500f@igalia.com>
+ <CADnq5_N9ptK4c86LO77YcrF5_M==hket+L7eYjsGCaKbORO=ug@mail.gmail.com>
+ <eaea0143-a961-b83c-3c6c-4d612cd003bc@igalia.com>
+ <6d3c7acf-a23f-3073-56ed-375ccb8cc815@suse.de>
+ <99b38881-8c63-de04-50f8-aa4119b52b25@igalia.com>
+ <CADnq5_NqPEY6vPSsBQSst5Gsw-VpJ-sp-5DHMeB+EGA2t7KoAQ@mail.gmail.com>
+ <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
+In-Reply-To: <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
+From: Alex Deucher <alexdeucher@gmail.com>
+Date: Fri, 10 Dec 2021 14:05:25 -0500
+Message-ID: <CADnq5_NphKQwa=sPWEWPTDbQVHGXQd0Ue8GNJR975jCvka7dQA@mail.gmail.com>
+Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,78 +32,35 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Tiezhu Yang <yangtiezhu@loongson.cn>
-Cc: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: Thomas Zimmermann <tzimmermann@suse.de>, Gerd Hoffmann <kraxel@redhat.com>, "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, 10 Dec 2021 21:36:00 +0800 Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
-
-> In arch/*/kernel/crash_dump*.c, there exist similar code about
-> copy_oldmem_page(), move copy_to() from vmcore.c to uaccess.h,
-> and then we can use copy_to() to simplify the related code.
-> 
-> ...
+On Fri, Dec 10, 2021 at 9:25 AM Guilherme G. Piccoli
+<gpiccoli@igalia.com> wrote:
 >
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -238,20 +238,6 @@ copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
->  	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
->  }
->  
-> -/*
-> - * Copy to either kernel or user space
-> - */
-> -static int copy_to(void *target, void *src, size_t size, int userbuf)
-> -{
-> -	if (userbuf) {
-> -		if (copy_to_user((char __user *) target, src, size))
-> -			return -EFAULT;
-> -	} else {
-> -		memcpy(target, src, size);
-> -	}
-> -	return 0;
-> -}
-> -
->  #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
->  static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
->  {
-> diff --git a/include/linux/uaccess.h b/include/linux/uaccess.h
-> index ac03940..4a6c3e4 100644
-> --- a/include/linux/uaccess.h
-> +++ b/include/linux/uaccess.h
-> @@ -201,6 +201,20 @@ copy_to_user(void __user *to, const void *from, unsigned long n)
->  	return n;
->  }
->  
-> +/*
-> + * Copy to either kernel or user space
-> + */
-> +static inline int copy_to(void *target, void *src, size_t size, int userbuf)
-> +{
-> +	if (userbuf) {
-> +		if (copy_to_user((char __user *) target, src, size))
-> +			return -EFAULT;
-> +	} else {
-> +		memcpy(target, src, size);
-> +	}
-> +	return 0;
-> +}
-> +
+> On 10/12/2021 11:16, Alex Deucher wrote:> [...]
+> > Why not just reload the driver after kexec?
+> >
+> > Alex
+>
+> Because the original issue is the kdump case, and we want a very very
+> tiny kernel - also, the crash originally could have been caused by
+> amdgpu itself, so if it's a GPU issue, we don't want to mess with that
+> in kdump. And I confess I tried modprobe amdgpu after a kdump, no
+> success - kdump won't call shutdown handlers, so GPU will be in a
+> "rogue" state...
+>
+> My question was about regular kexec because it's much simpler usually,
+> we can do whatever we want there. My line of thought was: if I make it
+> work in regular kexec with a simple framebuffer, I might be able to get
+> it working on kdump heheh
+>
 
-Ordinarily I'd say "this is too large to be inlined".  But the function
-has only a single callsite per architecture so inlining it won't cause
-bloat at present.
+Well if the GPU is hung, I'm not sure if you'll be able to get back
+the display environment without a GPU reset and once you do that,
+you've lost any state you might have been trying to preserve.
 
-But hopefully copy_to() will get additional callers in the future, in
-which case it shouldn't be inlined.  So I'm thinking it would be best
-to start out with this as a regular non-inlined function, in
-lib/usercopy.c.
-
-Also, copy_to() is a very poor name for a globally-visible helper
-function.  Better would be copy_to_user_or_kernel(), although that's
-perhaps a bit long.
-
-And the `userbuf' arg should have type bool, yes?
-
+Alex
 
 _______________________________________________
 kexec mailing list
