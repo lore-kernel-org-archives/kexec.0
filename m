@@ -1,10 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-oi1-x22b.google.com ([2607:f8b0:4864:20::22b])
+Received: from mail-oi1-x231.google.com ([2607:f8b0:4864:20::231])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvlD8-003O9Y-0C
- for kexec@lists.infradead.org; Fri, 10 Dec 2021 19:05:40 +0000
-Received: by mail-oi1-x22b.google.com with SMTP id 7so14434073oip.12
- for <kexec@lists.infradead.org>; Fri, 10 Dec 2021 11:05:36 -0800 (PST)
+ id 1mvlIs-003QZz-Mm
+ for kexec@lists.infradead.org; Fri, 10 Dec 2021 19:11:36 +0000
+Received: by mail-oi1-x231.google.com with SMTP id bf8so14523408oib.6
+ for <kexec@lists.infradead.org>; Fri, 10 Dec 2021 11:11:34 -0800 (PST)
 MIME-Version: 1.0
 References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
  <CADnq5_O8x3_8f7GZ=tme55-QW+nqMJ2YoqvROjDPg2YZP2catQ@mail.gmail.com>
@@ -15,10 +15,12 @@ References: <62aab616-53cb-ff9f-c5f3-169c547bd1ee@igalia.com>
  <99b38881-8c63-de04-50f8-aa4119b52b25@igalia.com>
  <CADnq5_NqPEY6vPSsBQSst5Gsw-VpJ-sp-5DHMeB+EGA2t7KoAQ@mail.gmail.com>
  <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
-In-Reply-To: <56dfb915-036b-0584-f0ef-83c786970d6e@igalia.com>
+ <d1de6ca3-11ae-af9e-a2fb-7bcb6fae01d6@amd.com>
+ <0847ff12-8b1c-a046-eb05-f0011f81e172@igalia.com>
+In-Reply-To: <0847ff12-8b1c-a046-eb05-f0011f81e172@igalia.com>
 From: Alex Deucher <alexdeucher@gmail.com>
-Date: Fri, 10 Dec 2021 14:05:25 -0500
-Message-ID: <CADnq5_NphKQwa=sPWEWPTDbQVHGXQd0Ue8GNJR975jCvka7dQA@mail.gmail.com>
+Date: Fri, 10 Dec 2021 14:11:22 -0500
+Message-ID: <CADnq5_O4+8r_NKCK3JBtHPf03hniR9Q53r-A2PFFFBR9X1nFMQ@mail.gmail.com>
 Subject: Re: Reuse framebuffer after a kexec (amdgpu / efifb)
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -28,41 +30,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Cc: Thomas Zimmermann <tzimmermann@suse.de>, Gerd Hoffmann <kraxel@redhat.com>, "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Christian Koenig <christian.koenig@amd.com>, Vivek Goyal <vgoyal@redhat.com>
+Cc: =?UTF-8?Q?Christian_K=C3=B6nig?= <christian.koenig@amd.com>, Thomas Zimmermann <tzimmermann@suse.de>, Gerd Hoffmann <kraxel@redhat.com>, "open list:EFIFB FRAMEBUFFER DRIVER" <linux-fbdev@vger.kernel.org>, kexec@lists.infradead.org, amd-gfx list <amd-gfx@lists.freedesktop.org>, kernel@gpiccoli.net, Baoquan He <bhe@redhat.com>, =?UTF-8?Q?Samuel_Iglesias_Gons=C3=A1lvez?= <siglesias@igalia.com>, xinhui pan <Xinhui.Pan@amd.com>, Maling list - DRI developers <dri-devel@lists.freedesktop.org>, pjones@redhat.com, "Deucher, Alexander" <alexander.deucher@amd.com>, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>
 
-On Fri, Dec 10, 2021 at 9:25 AM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> On 10/12/2021 11:16, Alex Deucher wrote:> [...]
-> > Why not just reload the driver after kexec?
-> >
-> > Alex
->
-> Because the original issue is the kdump case, and we want a very very
-> tiny kernel - also, the crash originally could have been caused by
-> amdgpu itself, so if it's a GPU issue, we don't want to mess with that
-> in kdump. And I confess I tried modprobe amdgpu after a kdump, no
-> success - kdump won't call shutdown handlers, so GPU will be in a
-> "rogue" state...
->
-> My question was about regular kexec because it's much simpler usually,
-> we can do whatever we want there. My line of thought was: if I make it
-> work in regular kexec with a simple framebuffer, I might be able to get
-> it working on kdump heheh
->
-
-Well if the GPU is hung, I'm not sure if you'll be able to get back
-the display environment without a GPU reset and once you do that,
-you've lost any state you might have been trying to preserve.
-
-Alex
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+T24gRnJpLCBEZWMgMTAsIDIwMjEgYXQgMTA6MjQgQU0gR3VpbGhlcm1lIEcuIFBpY2NvbGkKPGdw
+aWNjb2xpQGlnYWxpYS5jb20+IHdyb3RlOgo+Cj4gT24gMTAvMTIvMjAyMSAxMjoxMywgQ2hyaXN0
+aWFuIEvDtm5pZyB3cm90ZToKPiA+IFsuLi5dCj4gPiBIb3cgYWJvdXQgaXNzdWluZyBhIFBDSWUg
+cmVzZXQgYW5kIHJlLWluaXRpYWxpemluZyB0aGUgQVNJQyB3aXRoIGp1c3QKPiA+IHRoZSBWQklP
+Uz8KPiA+Cj4gPiBUaGF0IHNob3VsZCBiZSBwcmV0dHkgc3RyYWlnaHRmb3J3YXJkIEkgdGhpbmsu
+Cj4gPgo+ID4gQ2hyaXN0aWFuLgo+Cj4KPiBUaGFua3MgQ2hyaXN0aWFuLCB0aGF0J2QgYmUgcGVy
+ZmVjdCEgSXMgaXQgZmVhc2libGU/IFBlciBBbGV4IGNvbW1lbnQsCj4gd2UnZCBuZWVkIHRvIHJ1
+biBhdG9tYmlvcyBjb21tYW5kcyB0byByZXByb2dyYW0gdGhlIHRpbWluZ3MsIGRpc3BsYXkKPiBp
+bmZvLCBldGMuLi5saWtlIGEgc21hbGwgZHJpdmVyIHdvdWxkIGRvLCBhIGZ1bGwgaW5pdC4KPgoK
+WW91IG5lZWQgdGhlIGVxdWl2YWxlbnQgb2YgYSBHT1AgZHJpdmVyIG9yIGEgZnVsbCBHUFUgZHJp
+dmVyLiAgSSB0aGluawppdCB3b3VsZCBiZSBsZXNzIGVmZm9ydCB0byBqdXN0IGZpeCB1cCBhbnkg
+cHJvYmxlbXMgYW1kZ3B1IGhhcyB3aGVuCnRyeWluZyB0byBsb2FkIGFmdGVyIHRoZSBjcmFzaCB0
+aGFuIHRvIHdyaXRlIGEgbmV3IG1pbmkgZHJpdmVyLiAgQnkKdGhlIHRpbWUgeW91IGFkZCBldmVy
+eXRoaW5nIHlvdSdkIG5lZWQsIHlvdSdkIGJlIHByZXR0eSBjbG9zZSB0byBhCmZ1bGwgR1BVIGRy
+aXZlci4KCj4gQWxzbywgd2hhdCBraW5kIG9mIFBDSWUgcmVzZXQgaXMgcmVjb21tZW5kZWQgZm9y
+IHRoaXMgYWRhcHRlcj8gTGlrZSBhCj4gaG90IHJlc2V0LCBwb3dlcmluZy1vZmYvcmUtcG93ZXIs
+IEZMUiBvciB0aGF0IE1PREUyIHJlc2V0IHByZXNlbnQgaW4KPiBhbWRncHUgY29kZT8gUmVtZW1i
+ZXJpbmcgdGhpcyBpcyBhbiBBUFUgZGV2aWNlLgoKWW91J2QgbmVlZCB0byBpc3N1ZSB0aGUgcmVs
+ZXZhbnQgZGV2aWNlIHNwZWNpZmljIHJlc2V0IHNlcXVlbmNlLiAgSXQKd291bGQgYmUgYSBtb2Rl
+MiByZXNldCBvbiB2YW5nb2doLCBidXQgdmFyaWVzIG9uIG90aGVyIGFzaWNzLiAgSXQKd291bGQg
+cHJvYmFibHkgYmUgZWFzaWVzdCB0byBqdXN0IGZpeCB1cCB0aGUgbG9naWMgaW4gYW1kZ3B1IHRv
+IGRldGVjdApiYWQgR1BVIHN0YXRlIG9uIGRyaXZlciBsb2FkIGFuZCBkbyBhIEdQVSByZXNldCBi
+ZWZvcmUgZHJpdmVyIGluaXQuCldlIGFscmVhZHkgaGF2ZSB0aGUgbG9naWMgaW4gcGxhY2UgZm9y
+IHNvbWUgZEdQVXMsIGJ1dCBBUFVzIG9ubHkKcmVjZW50bHkgZ290IGZ1bGwgR1BVIHJlc2V0IHN1
+cHBvcnQgZHVlIHRvIGFyY2hpdGVjdHVyYWwgbGltaXRhdGlvbnMKYW5kIGhhcmR3YXJlIGJ1Z3Mu
+CgpBbGV4CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpr
+ZXhlYyBtYWlsaW5nIGxpc3QKa2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
+aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2tleGVjCg==
