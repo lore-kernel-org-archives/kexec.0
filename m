@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v17 04/10] x86: kdump: move xen_pv_domain() check and
- insert_resource() to setup_arch()
-Date: Fri, 10 Dec 2021 14:55:27 +0800
-Message-ID: <20211210065533.2023-5-thunder.leizhen@huawei.com>
+Subject: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment with
+ macro CRASH_ALIGN
+Date: Fri, 10 Dec 2021 14:55:24 +0800
+Message-ID: <20211210065533.2023-2-thunder.leizhen@huawei.com>
 In-Reply-To: <20211210065533.2023-1-thunder.leizhen@huawei.com>
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,73 +25,47 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-We will make the functions reserve_crashkernel() as generic, the
-xen_pv_domain() check in reserve_crashkernel() is relevant only to
-x86, the same as insert_resource() in reserve_crashkernel[_low]().
-So move xen_pv_domain() check and insert_resource() to setup_arch()
-to keep them in x86.
+Move CRASH_ALIGN to header asm/kexec.h for later use.
 
-Suggested-by: Mike Rapoport <rppt@kernel.org>
+Suggested-by: Dave Young <dyoung@redhat.com>
+Suggested-by: Baoquan He <bhe@redhat.com>
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/setup.c | 19 +++++++++++--------
- 1 file changed, 11 insertions(+), 8 deletions(-)
+ arch/x86/include/asm/kexec.h | 3 +++
+ arch/x86/kernel/setup.c      | 3 ---
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 11b7c06e2828c30..3a22e65262aa70b 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -18,6 +18,9 @@
+ 
+ # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ 
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN		SZ_16M
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/string.h>
 diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index bb2a0973b98059e..7ae00716a208f82 100644
+index 6a190c7f4d71b05..5cc60996eac56d6 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -456,7 +456,6 @@ static int __init reserve_crashkernel_low(void)
+@@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
  
- 	crashk_low_res.start = low_base;
- 	crashk_low_res.end   = low_base + low_size - 1;
--	insert_resource(&iomem_resource, &crashk_low_res);
- #endif
- 	return 0;
- }
-@@ -480,11 +479,6 @@ static void __init reserve_crashkernel(void)
- 		high = true;
- 	}
+ #ifdef CONFIG_KEXEC_CORE
  
--	if (xen_pv_domain()) {
--		pr_info("Ignoring crashkernel for a Xen PV domain\n");
--		return;
--	}
+-/* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		SZ_16M
 -
- 	/* 0 means: find the address automatically */
- 	if (!crash_base) {
- 		/*
-@@ -531,7 +525,6 @@ static void __init reserve_crashkernel(void)
- 
- 	crashk_res.start = crash_base;
- 	crashk_res.end   = crash_base + crash_size - 1;
--	insert_resource(&iomem_resource, &crashk_res);
- }
- #else
- static void __init reserve_crashkernel(void)
-@@ -1143,7 +1136,17 @@ void __init setup_arch(char **cmdline_p)
- 	 * Reserve memory for crash kernel after SRAT is parsed so that it
- 	 * won't consume hotpluggable memory.
- 	 */
--	reserve_crashkernel();
-+	if (xen_pv_domain())
-+		pr_info("Ignoring crashkernel for a Xen PV domain\n");
-+	else {
-+		reserve_crashkernel();
-+#ifdef CONFIG_KEXEC_CORE
-+		if (crashk_res.end > crashk_res.start)
-+			insert_resource(&iomem_resource, &crashk_res);
-+		if (crashk_low_res.end > crashk_low_res.start)
-+			insert_resource(&iomem_resource, &crashk_low_res);
-+#endif
-+	}
- 
- 	memblock_find_dma_reserve();
- 
+ /*
+  * Keep the crash kernel below this limit.
+  *
 -- 
 2.25.1
 
