@@ -1,12 +1,11 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from m12-13.163.com ([220.181.12.13])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mvWSZ-000jIb-Lh
- for kexec@lists.infradead.org; Fri, 10 Dec 2021 03:20:37 +0000
-From: lizhe <sensor1010@163.com>
-Subject: [PATCH] kernel/crash_core.c: No judgment required
-Date: Thu,  9 Dec 2021 19:20:03 -0800
-Message-Id: <20211210032003.16278-1-sensor1010@163.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v17 02/10] x86: kdump: make the lower bound of crash kernel
+ reservation consistent
+Date: Fri, 10 Dec 2021 14:55:25 +0800
+Message-ID: <20211210065533.2023-3-thunder.leizhen@huawei.com>
+In-Reply-To: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -20,35 +19,40 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, sensor1010@163.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-No judgment required ck_cmdline is NULL
-its caller has alreadly judged, see __parse_crashkernel
-function
+From: Chen Zhou <chenzhou10@huawei.com>
 
-Signed-off-by: lizhe <sensor1010@163.com>
+The lower bounds of crash kernel reservation and crash kernel low
+reservation are different, use the consistent value CRASH_ALIGN.
+
+Suggested-by: Dave Young <dyoung@redhat.com>
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 ---
- kernel/crash_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+ arch/x86/kernel/setup.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index eb53f5ec62c9..9981cf9b9fe4 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -221,9 +221,6 @@ static __init char *get_last_crashkernel(char *cmdline,
- 		p = strstr(p+1, name);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 5cc60996eac56d6..6424ee4f23da2cf 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
+ 			return 0;
  	}
  
--	if (!ck_cmdline)
--		return NULL;
--
- 	return ck_cmdline;
- }
- 
+-	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
++	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
++			CRASH_ADDR_LOW_MAX);
+ 	if (!low_base) {
+ 		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+ 		       (unsigned long)(low_size >> 20));
 -- 
 2.25.1
-
 
 
 _______________________________________________
