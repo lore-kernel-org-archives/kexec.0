@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment with
- macro CRASH_ALIGN
-Date: Fri, 10 Dec 2021 14:55:24 +0800
-Message-ID: <20211210065533.2023-2-thunder.leizhen@huawei.com>
+Subject: [PATCH v17 06/10] arm64: kdump: introduce some macros for crash
+ kernel reservation
+Date: Fri, 10 Dec 2021 14:55:29 +0800
+Message-ID: <20211210065533.2023-7-thunder.leizhen@huawei.com>
 In-Reply-To: <20211210065533.2023-1-thunder.leizhen@huawei.com>
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -25,47 +25,61 @@ Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>,
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-Move CRASH_ALIGN to header asm/kexec.h for later use.
+Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
+for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
+upper bound of high crash memory, use macros instead.
 
-Suggested-by: Dave Young <dyoung@redhat.com>
-Suggested-by: Baoquan He <bhe@redhat.com>
+Besides, keep consistent with x86, use CRASH_ALIGN as the lower bound
+of crash kernel reservation.
+
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 ---
- arch/x86/include/asm/kexec.h | 3 +++
- arch/x86/kernel/setup.c      | 3 ---
- 2 files changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/include/asm/kexec.h | 6 ++++++
+ arch/arm64/mm/init.c           | 4 ++--
+ 2 files changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 11b7c06e2828c30..3a22e65262aa70b 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -18,6 +18,9 @@
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 9839bfc163d7147..1b9edc69f0244ca 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -25,6 +25,12 @@
  
- # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ #define KEXEC_ARCH KEXEC_ARCH_AARCH64
  
-+/* 16M alignment for crash kernel regions */
-+#define CRASH_ALIGN		SZ_16M
++/* 2M alignment for crash kernel regions */
++#define CRASH_ALIGN	SZ_2M
++
++#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
++#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
 +
  #ifndef __ASSEMBLY__
  
- #include <linux/string.h>
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 6a190c7f4d71b05..5cc60996eac56d6 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ /**
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index a8834434af99ae0..be4595dc7459115 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -75,7 +75,7 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_base, crash_size;
+-	unsigned long long crash_max = arm64_dma_phys_limit;
++	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+ 	int ret;
  
- #ifdef CONFIG_KEXEC_CORE
+ 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+@@ -91,7 +91,7 @@ static void __init reserve_crashkernel(void)
+ 		crash_max = crash_base + crash_size;
  
--/* 16M alignment for crash kernel regions */
--#define CRASH_ALIGN		SZ_16M
--
- /*
-  * Keep the crash kernel below this limit.
-  *
+ 	/* Current arm64 boot protocol requires 2MB alignment */
+-	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
++	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+ 					       crash_base, crash_max);
+ 	if (!crash_base) {
+ 		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
 -- 
 2.25.1
 
