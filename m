@@ -1,11 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Subject: [PATCH v2 2/2] kdump: crashdump: use copy_to_user_or_kernel() to
- simplify code
-Date: Sat, 11 Dec 2021 11:33:08 +0800
-Message-Id: <1639193588-7027-3-git-send-email-yangtiezhu@loongson.cn>
-In-Reply-To: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
+From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Subject: Re: [PATCH 1/2] kdump: vmcore: move copy_to() from vmcore.c to
+ uaccess.h
+Date: Sat, 11 Dec 2021 07:37:21 +0000
+Message-ID: <d72f6169-4779-0901-ae1d-743a93a196c4@csgroup.eu>
+References: <1639143361-17773-1-git-send-email-yangtiezhu@loongson.cn>
+ <1639143361-17773-2-git-send-email-yangtiezhu@loongson.cn>
+ <20211210085903.e7820815e738d7dc6da06050@linux-foundation.org>
+In-Reply-To: <20211210085903.e7820815e738d7dc6da06050@linux-foundation.org>
+Content-Language: en-US
+Content-ID: <A7114388A094A546AFAC6B136F6A9CD4@FRAP264.PROD.OUTLOOK.COM>
+MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,372 +19,166 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-ia64@vger.kernel.org, linux-mips@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-riscv@lists.infradead.org, linux-sh@vger.kernel.org, x86@kernel.org, linux-fsdevel@vger.kernel.org, kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Xuefeng Li <lixuefeng@loongson.cn>
+To: Andrew Morton <akpm@linux-foundation.org>, Tiezhu Yang <yangtiezhu@loongson.cn>
+Cc: "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, Baoquan He <bhe@redhat.com>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Vivek Goyal <vgoyal@redhat.com>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, Dave Young <dyoung@redhat.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 
-Use copy_to_user_or_kernel() to simplify the related code about
-copy_oldmem_page() in arch/*/kernel/crash_dump*.c files.
-
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- arch/arm/kernel/crash_dump.c     | 12 +++---------
- arch/arm64/kernel/crash_dump.c   | 12 +++---------
- arch/ia64/kernel/crash_dump.c    | 12 +++++-------
- arch/mips/kernel/crash_dump.c    | 11 +++--------
- arch/powerpc/kernel/crash_dump.c | 11 ++++-------
- arch/riscv/kernel/crash_dump.c   | 11 +++--------
- arch/sh/kernel/crash_dump.c      | 11 +++--------
- arch/x86/kernel/crash_dump_32.c  | 11 +++--------
- arch/x86/kernel/crash_dump_64.c  | 15 +++++----------
- fs/proc/vmcore.c                 |  4 ++--
- include/linux/crash_dump.h       |  8 ++++----
- 11 files changed, 38 insertions(+), 80 deletions(-)
-
-diff --git a/arch/arm/kernel/crash_dump.c b/arch/arm/kernel/crash_dump.c
-index 53cb924..a27c5df 100644
---- a/arch/arm/kernel/crash_dump.c
-+++ b/arch/arm/kernel/crash_dump.c
-@@ -29,7 +29,7 @@
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 			 size_t csize, unsigned long offset,
--			 int userbuf)
-+			 bool userbuf)
- {
- 	void *vaddr;
- 
-@@ -40,14 +40,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 	if (!vaddr)
- 		return -ENOMEM;
- 
--	if (userbuf) {
--		if (copy_to_user(buf, vaddr + offset, csize)) {
--			iounmap(vaddr);
--			return -EFAULT;
--		}
--	} else {
--		memcpy(buf, vaddr + offset, csize);
--	}
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	iounmap(vaddr);
- 	return csize;
-diff --git a/arch/arm64/kernel/crash_dump.c b/arch/arm64/kernel/crash_dump.c
-index 58303a9..d22988f 100644
---- a/arch/arm64/kernel/crash_dump.c
-+++ b/arch/arm64/kernel/crash_dump.c
-@@ -27,7 +27,7 @@
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 			 size_t csize, unsigned long offset,
--			 int userbuf)
-+			 bool userbuf)
- {
- 	void *vaddr;
- 
-@@ -38,14 +38,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 	if (!vaddr)
- 		return -ENOMEM;
- 
--	if (userbuf) {
--		if (copy_to_user((char __user *)buf, vaddr + offset, csize)) {
--			memunmap(vaddr);
--			return -EFAULT;
--		}
--	} else {
--		memcpy(buf, vaddr + offset, csize);
--	}
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	memunmap(vaddr);
- 
-diff --git a/arch/ia64/kernel/crash_dump.c b/arch/ia64/kernel/crash_dump.c
-index 0ed3c3d..12128f8 100644
---- a/arch/ia64/kernel/crash_dump.c
-+++ b/arch/ia64/kernel/crash_dump.c
-@@ -33,19 +33,17 @@
-  */
- ssize_t
- copy_oldmem_page(unsigned long pfn, char *buf,
--		size_t csize, unsigned long offset, int userbuf)
-+		size_t csize, unsigned long offset, bool userbuf)
- {
- 	void  *vaddr;
- 
- 	if (!csize)
- 		return 0;
-+
- 	vaddr = __va(pfn<<PAGE_SHIFT);
--	if (userbuf) {
--		if (copy_to_user(buf, (vaddr + offset), csize)) {
--			return -EFAULT;
--		}
--	} else
--		memcpy(buf, (vaddr + offset), csize);
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		return -EFAULT;
-+
- 	return csize;
- }
- 
-diff --git a/arch/mips/kernel/crash_dump.c b/arch/mips/kernel/crash_dump.c
-index 2e50f551..7670915 100644
---- a/arch/mips/kernel/crash_dump.c
-+++ b/arch/mips/kernel/crash_dump.c
-@@ -16,7 +16,7 @@
-  * in the current kernel.
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--			 size_t csize, unsigned long offset, int userbuf)
-+			 size_t csize, unsigned long offset, bool userbuf)
- {
- 	void  *vaddr;
- 
-@@ -24,13 +24,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 		return 0;
- 
- 	vaddr = kmap_local_pfn(pfn);
--
--	if (!userbuf) {
--		memcpy(buf, vaddr + offset, csize);
--	} else {
--		if (copy_to_user(buf, vaddr + offset, csize))
--			csize = -EFAULT;
--	}
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	kunmap_local(vaddr);
- 
-diff --git a/arch/powerpc/kernel/crash_dump.c b/arch/powerpc/kernel/crash_dump.c
-index 5693e1c67..e2e9612 100644
---- a/arch/powerpc/kernel/crash_dump.c
-+++ b/arch/powerpc/kernel/crash_dump.c
-@@ -69,13 +69,10 @@ void __init setup_kdump_trampoline(void)
- #endif /* CONFIG_NONSTATIC_KERNEL */
- 
- static size_t copy_oldmem_vaddr(void *vaddr, char *buf, size_t csize,
--                               unsigned long offset, int userbuf)
-+				unsigned long offset, bool userbuf)
- {
--	if (userbuf) {
--		if (copy_to_user((char __user *)buf, (vaddr + offset), csize))
--			return -EFAULT;
--	} else
--		memcpy(buf, (vaddr + offset), csize);
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		return -EFAULT;
- 
- 	return csize;
- }
-@@ -94,7 +91,7 @@ static size_t copy_oldmem_vaddr(void *vaddr, char *buf, size_t csize,
-  * in the current kernel. We stitch up a pte, similar to kmap_atomic.
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--			size_t csize, unsigned long offset, int userbuf)
-+			size_t csize, unsigned long offset, bool userbuf)
- {
- 	void  *vaddr;
- 	phys_addr_t paddr;
-diff --git a/arch/riscv/kernel/crash_dump.c b/arch/riscv/kernel/crash_dump.c
-index 86cc0ad..4167437 100644
---- a/arch/riscv/kernel/crash_dump.c
-+++ b/arch/riscv/kernel/crash_dump.c
-@@ -22,7 +22,7 @@
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 			 size_t csize, unsigned long offset,
--			 int userbuf)
-+			 bool userbuf)
- {
- 	void *vaddr;
- 
-@@ -33,13 +33,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 	if (!vaddr)
- 		return -ENOMEM;
- 
--	if (userbuf) {
--		if (copy_to_user((char __user *)buf, vaddr + offset, csize)) {
--			memunmap(vaddr);
--			return -EFAULT;
--		}
--	} else
--		memcpy(buf, vaddr + offset, csize);
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	memunmap(vaddr);
- 	return csize;
-diff --git a/arch/sh/kernel/crash_dump.c b/arch/sh/kernel/crash_dump.c
-index 5b41b59..4bc071a 100644
---- a/arch/sh/kernel/crash_dump.c
-+++ b/arch/sh/kernel/crash_dump.c
-@@ -24,7 +24,7 @@
-  * in the current kernel. We stitch up a pte, similar to kmap_atomic.
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
--                               size_t csize, unsigned long offset, int userbuf)
-+			 size_t csize, unsigned long offset, bool userbuf)
- {
- 	void  __iomem *vaddr;
- 
-@@ -33,13 +33,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
- 
- 	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
- 
--	if (userbuf) {
--		if (copy_to_user((void __user *)buf, (vaddr + offset), csize)) {
--			iounmap(vaddr);
--			return -EFAULT;
--		}
--	} else
--	memcpy(buf, (vaddr + offset), csize);
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	iounmap(vaddr);
- 	return csize;
-diff --git a/arch/x86/kernel/crash_dump_32.c b/arch/x86/kernel/crash_dump_32.c
-index 5fcac46..3eff124 100644
---- a/arch/x86/kernel/crash_dump_32.c
-+++ b/arch/x86/kernel/crash_dump_32.c
-@@ -43,7 +43,7 @@ static inline bool is_crashed_pfn_valid(unsigned long pfn)
-  * in the current kernel.
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
--			 unsigned long offset, int userbuf)
-+			 unsigned long offset, bool userbuf)
- {
- 	void  *vaddr;
- 
-@@ -54,13 +54,8 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 		return -EFAULT;
- 
- 	vaddr = kmap_local_pfn(pfn);
--
--	if (!userbuf) {
--		memcpy(buf, vaddr + offset, csize);
--	} else {
--		if (copy_to_user(buf, vaddr + offset, csize))
--			csize = -EFAULT;
--	}
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	kunmap_local(vaddr);
- 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index a7f617a..e8fffdf 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -13,7 +13,7 @@
- #include <linux/cc_platform.h>
- 
- static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
--				  unsigned long offset, int userbuf,
-+				  unsigned long offset, bool userbuf,
- 				  bool encrypted)
- {
- 	void  *vaddr;
-@@ -29,13 +29,8 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
- 	if (!vaddr)
- 		return -ENOMEM;
- 
--	if (userbuf) {
--		if (copy_to_user((void __user *)buf, vaddr + offset, csize)) {
--			iounmap((void __iomem *)vaddr);
--			return -EFAULT;
--		}
--	} else
--		memcpy(buf, vaddr + offset, csize);
-+	if (copy_to_user_or_kernel(buf, vaddr + offset, csize, userbuf))
-+		csize = -EFAULT;
- 
- 	set_iounmap_nonlazy();
- 	iounmap((void __iomem *)vaddr);
-@@ -56,7 +51,7 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-  * mapped in the current kernel. We stitch up a pte, similar to kmap_atomic.
-  */
- ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
--			 unsigned long offset, int userbuf)
-+			 unsigned long offset, bool userbuf)
- {
- 	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, false);
- }
-@@ -67,7 +62,7 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-  * machines.
-  */
- ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
--				   unsigned long offset, int userbuf)
-+				   unsigned long offset, bool userbuf)
- {
- 	return __copy_oldmem_page(pfn, buf, csize, offset, userbuf, true);
- }
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index f67fd77..bba52aa 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -133,7 +133,7 @@ static int open_vmcore(struct inode *inode, struct file *file)
- 
- /* Reads a page from the oldmem device from given offset. */
- ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
-+			 u64 *ppos, bool userbuf,
- 			 bool encrypted)
- {
- 	unsigned long pfn, offset;
-@@ -233,7 +233,7 @@ int __weak remap_oldmem_pfn_range(struct vm_area_struct *vma,
-  */
- ssize_t __weak
- copy_oldmem_page_encrypted(unsigned long pfn, char *buf, size_t csize,
--			   unsigned long offset, int userbuf)
-+			   unsigned long offset, bool userbuf)
- {
- 	return copy_oldmem_page(pfn, buf, csize, offset, userbuf);
- }
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 6208215..033448b 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -25,10 +25,10 @@ extern int remap_oldmem_pfn_range(struct vm_area_struct *vma,
- 				  unsigned long size, pgprot_t prot);
- 
- extern ssize_t copy_oldmem_page(unsigned long, char *, size_t,
--						unsigned long, int);
-+						unsigned long, bool);
- extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
- 					  size_t csize, unsigned long offset,
--					  int userbuf);
-+					  bool userbuf);
- 
- void vmcore_cleanup(void);
- 
-@@ -136,11 +136,11 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
- 
- #ifdef CONFIG_PROC_VMCORE
- ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
-+			 u64 *ppos, bool userbuf,
- 			 bool encrypted);
- #else
- static inline ssize_t read_from_oldmem(char *buf, size_t count,
--				       u64 *ppos, int userbuf,
-+				       u64 *ppos, bool userbuf,
- 				       bool encrypted)
- {
- 	return -EOPNOTSUPP;
--- 
-2.1.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+DQoNCkxlIDEwLzEyLzIwMjEgw6AgMTc6NTksIEFuZHJldyBNb3J0b24gYSDDqWNyaXTCoDoNCj4g
+T24gRnJpLCAxMCBEZWMgMjAyMSAyMTozNjowMCArMDgwMCBUaWV6aHUgWWFuZyA8eWFuZ3RpZXpo
+dUBsb29uZ3Nvbi5jbj4gd3JvdGU6DQo+IA0KPj4gSW4gYXJjaC8qL2tlcm5lbC9jcmFzaF9kdW1w
+Ki5jLCB0aGVyZSBleGlzdCBzaW1pbGFyIGNvZGUgYWJvdXQNCj4+IGNvcHlfb2xkbWVtX3BhZ2Uo
+KSwgbW92ZSBjb3B5X3RvKCkgZnJvbSB2bWNvcmUuYyB0byB1YWNjZXNzLmgsDQo+PiBhbmQgdGhl
+biB3ZSBjYW4gdXNlIGNvcHlfdG8oKSB0byBzaW1wbGlmeSB0aGUgcmVsYXRlZCBjb2RlLg0KPj4N
+Cj4+IC4uLg0KPj4NCj4+IC0tLSBhL2ZzL3Byb2Mvdm1jb3JlLmMNCj4+ICsrKyBiL2ZzL3Byb2Mv
+dm1jb3JlLmMNCj4+IEBAIC0yMzgsMjAgKzIzOCw2IEBAIGNvcHlfb2xkbWVtX3BhZ2VfZW5jcnlw
+dGVkKHVuc2lnbmVkIGxvbmcgcGZuLCBjaGFyICpidWYsIHNpemVfdCBjc2l6ZSwNCj4+ICAgCXJl
+dHVybiBjb3B5X29sZG1lbV9wYWdlKHBmbiwgYnVmLCBjc2l6ZSwgb2Zmc2V0LCB1c2VyYnVmKTsN
+Cj4+ICAgfQ0KPj4gICANCj4+IC0vKg0KPj4gLSAqIENvcHkgdG8gZWl0aGVyIGtlcm5lbCBvciB1
+c2VyIHNwYWNlDQo+PiAtICovDQo+PiAtc3RhdGljIGludCBjb3B5X3RvKHZvaWQgKnRhcmdldCwg
+dm9pZCAqc3JjLCBzaXplX3Qgc2l6ZSwgaW50IHVzZXJidWYpDQo+PiAtew0KPj4gLQlpZiAodXNl
+cmJ1Zikgew0KPj4gLQkJaWYgKGNvcHlfdG9fdXNlcigoY2hhciBfX3VzZXIgKikgdGFyZ2V0LCBz
+cmMsIHNpemUpKQ0KPj4gLQkJCXJldHVybiAtRUZBVUxUOw0KPj4gLQl9IGVsc2Ugew0KPj4gLQkJ
+bWVtY3B5KHRhcmdldCwgc3JjLCBzaXplKTsNCj4+IC0JfQ0KPj4gLQlyZXR1cm4gMDsNCj4+IC19
+DQo+PiAtDQo+PiAgICNpZmRlZiBDT05GSUdfUFJPQ19WTUNPUkVfREVWSUNFX0RVTVANCj4+ICAg
+c3RhdGljIGludCB2bWNvcmVkZF9jb3B5X2R1bXBzKHZvaWQgKmRzdCwgdTY0IHN0YXJ0LCBzaXpl
+X3Qgc2l6ZSwgaW50IHVzZXJidWYpDQo+PiAgIHsNCj4+IGRpZmYgLS1naXQgYS9pbmNsdWRlL2xp
+bnV4L3VhY2Nlc3MuaCBiL2luY2x1ZGUvbGludXgvdWFjY2Vzcy5oDQo+PiBpbmRleCBhYzAzOTQw
+Li40YTZjM2U0IDEwMDY0NA0KPj4gLS0tIGEvaW5jbHVkZS9saW51eC91YWNjZXNzLmgNCj4+ICsr
+KyBiL2luY2x1ZGUvbGludXgvdWFjY2Vzcy5oDQo+PiBAQCAtMjAxLDYgKzIwMSwyMCBAQCBjb3B5
+X3RvX3VzZXIodm9pZCBfX3VzZXIgKnRvLCBjb25zdCB2b2lkICpmcm9tLCB1bnNpZ25lZCBsb25n
+IG4pDQo+PiAgIAlyZXR1cm4gbjsNCj4+ICAgfQ0KPj4gICANCj4+ICsvKg0KPj4gKyAqIENvcHkg
+dG8gZWl0aGVyIGtlcm5lbCBvciB1c2VyIHNwYWNlDQo+PiArICovDQo+PiArc3RhdGljIGlubGlu
+ZSBpbnQgY29weV90byh2b2lkICp0YXJnZXQsIHZvaWQgKnNyYywgc2l6ZV90IHNpemUsIGludCB1
+c2VyYnVmKQ0KPj4gK3sNCj4+ICsJaWYgKHVzZXJidWYpIHsNCj4+ICsJCWlmIChjb3B5X3RvX3Vz
+ZXIoKGNoYXIgX191c2VyICopIHRhcmdldCwgc3JjLCBzaXplKSkNCj4+ICsJCQlyZXR1cm4gLUVG
+QVVMVDsNCj4+ICsJfSBlbHNlIHsNCj4+ICsJCW1lbWNweSh0YXJnZXQsIHNyYywgc2l6ZSk7DQo+
+PiArCX0NCj4+ICsJcmV0dXJuIDA7DQo+PiArfQ0KPj4gKw0KPiANCj4gT3JkaW5hcmlseSBJJ2Qg
+c2F5ICJ0aGlzIGlzIHRvbyBsYXJnZSB0byBiZSBpbmxpbmVkIi4gIEJ1dCB0aGUgZnVuY3Rpb24N
+Cj4gaGFzIG9ubHkgYSBzaW5nbGUgY2FsbHNpdGUgcGVyIGFyY2hpdGVjdHVyZSBzbyBpbmxpbmlu
+ZyBpdCB3b24ndCBjYXVzZQ0KPiBibG9hdCBhdCBwcmVzZW50Lg0KPiANCj4gQnV0IGhvcGVmdWxs
+eSBjb3B5X3RvKCkgd2lsbCBnZXQgYWRkaXRpb25hbCBjYWxsZXJzIGluIHRoZSBmdXR1cmUsIGlu
+DQo+IHdoaWNoIGNhc2UgaXQgc2hvdWxkbid0IGJlIGlubGluZWQuICBTbyBJJ20gdGhpbmtpbmcg
+aXQgd291bGQgYmUgYmVzdA0KPiB0byBzdGFydCBvdXQgd2l0aCB0aGlzIGFzIGEgcmVndWxhciBu
+b24taW5saW5lZCBmdW5jdGlvbiwgaW4NCj4gbGliL3VzZXJjb3B5LmMuDQo+IA0KPiBBbHNvLCBj
+b3B5X3RvKCkgaXMgYSB2ZXJ5IHBvb3IgbmFtZSBmb3IgYSBnbG9iYWxseS12aXNpYmxlIGhlbHBl
+cg0KPiBmdW5jdGlvbi4gIEJldHRlciB3b3VsZCBiZSBjb3B5X3RvX3VzZXJfb3Jfa2VybmVsKCks
+IGFsdGhvdWdoIHRoYXQncw0KPiBwZXJoYXBzIGEgYml0IGxvbmcuDQo+IA0KPiBBbmQgdGhlIGB1
+c2VyYnVmJyBhcmcgc2hvdWxkIGhhdmUgdHlwZSBib29sLCB5ZXM/DQo+IA0KDQpJIHRoaW5rIGtl
+ZXBpbmcgaXQgaW5saW5lZCBpcyBiZXR0ZXIuDQoNCmNvcHlfb2xkbWVtX3BhZ2UoKSBpcyBiaWdn
+ZXIgd2l0aCB2MiAob3V0bGluZWQpIHRoYW4gd2l0aCB2MSAoaW5saW5lZCksIA0Kc2VlIGJvdGgg
+YmVsb3c6DQoNCnYxOg0KDQowMDAwMDAwMCA8Y29weV9vbGRtZW1fcGFnZT46DQogICAgMDoJOTQg
+MjEgZmYgZTAgCXN0d3UgICAgcjEsLTMyKHIxKQ0KICAgIDQ6CTkzIGUxIDAwIDFjIAlzdHcgICAg
+IHIzMSwyOChyMSkNCiAgICA4Ogk3YyBiZiAyYiA3OSAJbXIuICAgICByMzEscjUNCiAgICBjOgk0
+MCA4MiAwMCAxNCAJYm5lICAgICAyMCA8Y29weV9vbGRtZW1fcGFnZSsweDIwPg0KICAgMTA6CTgz
+IGUxIDAwIDFjIAlsd3ogICAgIHIzMSwyOChyMSkNCiAgIDE0OgkzOCA2MCAwMCAwMCAJbGkgICAg
+ICByMywwDQogICAxODoJMzggMjEgMDAgMjAgCWFkZGkgICAgcjEscjEsMzINCiAgIDFjOgk0ZSA4
+MCAwMCAyMCAJYmxyDQogICAyMDoJMjggMWYgMTAgMDAgCWNtcGx3aSAgcjMxLDQwOTYNCiAgIDI0
+Ogk5MyA2MSAwMCAwYyAJc3R3ICAgICByMjcsMTIocjEpDQogICAyODoJN2MgMDggMDIgYTYgCW1m
+bHIgICAgcjANCiAgIDJjOgk5MyA4MSAwMCAxMCAJc3R3ICAgICByMjgsMTYocjEpDQogICAzMDoJ
+OTMgYTEgMDAgMTQgCXN0dyAgICAgcjI5LDIwKHIxKQ0KICAgMzQ6CTdjIDliIDIzIDc4IAltciAg
+ICAgIHIyNyxyNA0KICAgMzg6CTkwIDAxIDAwIDI0IAlzdHcgICAgIHIwLDM2KHIxKQ0KICAgM2M6
+CTdjIGRkIDMzIDc4IAltciAgICAgIHIyOSxyNg0KICAgNDA6CTkzIGMxIDAwIDE4IAlzdHcgICAg
+IHIzMCwyNChyMSkNCiAgIDQ0Ogk3YyBmYyAzYiA3OCAJbXIgICAgICByMjgscjcNCiAgIDQ4Ogk0
+MCA4MSAwMCAwOCAJYmxlICAgICA1MCA8Y29weV9vbGRtZW1fcGFnZSsweDUwPg0KICAgNGM6CTNi
+IGUwIDEwIDAwIAlsaSAgICAgIHIzMSw0MDk2DQogICA1MDoJNTQgN2UgNjAgMjYgCXJsd2lubSAg
+cjMwLHIzLDEyLDAsMTkNCiAgIDU0Ogk3ZiBjMyBmMyA3OCAJbXIgICAgICByMyxyMzANCiAgIDU4
+Ogk3ZiBlNCBmYiA3OCAJbXIgICAgICByNCxyMzENCiAgIDVjOgk0OCAwMCAwMCAwMSAJYmwgICAg
+ICA1YyA8Y29weV9vbGRtZW1fcGFnZSsweDVjPg0KCQkJNWM6IFJfUFBDX1JFTDI0CW1lbWJsb2Nr
+X2lzX3JlZ2lvbl9tZW1vcnkNCiAgIDYwOgkyYyAwMyAwMCAwMCAJY21wd2kgICByMywwDQogICA2
+NDoJNDEgODIgMDAgMzAgCWJlcSAgICAgOTQgPGNvcHlfb2xkbWVtX3BhZ2UrMHg5ND4NCiAgIDY4
+OgkyYyAxYyAwMCAwMCAJY21wd2kgICByMjgsMA0KICAgNmM6CTNmIGRlIGMwIDAwIAlhZGRpcyAg
+IHIzMCxyMzAsLTE2Mzg0DQogICA3MDoJN2YgNjMgZGIgNzggCW1yICAgICAgcjMscjI3DQogICA3
+NDoJN2YgZTUgZmIgNzggCW1yICAgICAgcjUscjMxDQogICA3ODoJN2MgOWUgZWEgMTQgCWFkZCAg
+ICAgcjQscjMwLHIyOQ0KICAgN2M6CTQxIDgyIDAwIDdjIAliZXEgICAgIGY4IDxjb3B5X29sZG1l
+bV9wYWdlKzB4Zjg+DQogICA4MDoJNDggMDAgMDAgMDEgCWJsICAgICAgODAgPGNvcHlfb2xkbWVt
+X3BhZ2UrMHg4MD4NCgkJCTgwOiBSX1BQQ19SRUwyNAlfY29weV90b191c2VyDQogICA4NDoJMmMg
+MDMgMDAgMDAgCWNtcHdpICAgcjMsMA0KICAgODg6CTQxIGEyIDAwIDQ4IAliZXEgICAgIGQwIDxj
+b3B5X29sZG1lbV9wYWdlKzB4ZDA+DQogICA4YzoJM2IgZTAgZmYgZjIgCWxpICAgICAgcjMxLC0x
+NA0KICAgOTA6CTQ4IDAwIDAwIDQwIAliICAgICAgIGQwIDxjb3B5X29sZG1lbV9wYWdlKzB4ZDA+
+DQogICA5NDoJN2YgYzMgZjMgNzggCW1yICAgICAgcjMscjMwDQogICA5ODoJMzggYTAgMDUgOTEg
+CWxpICAgICAgcjUsMTQyNQ0KICAgOWM6CTM4IDgwIDEwIDAwIAlsaSAgICAgIHI0LDQwOTYNCiAg
+IGEwOgk0OCAwMCAwMCAwMSAJYmwgICAgICBhMCA8Y29weV9vbGRtZW1fcGFnZSsweGEwPg0KCQkJ
+YTA6IFJfUFBDX1JFTDI0CWlvcmVtYXBfcHJvdA0KICAgYTQ6CTJjIDFjIDAwIDAwIAljbXB3aSAg
+IHIyOCwwDQogICBhODoJN2MgN2UgMWIgNzggCW1yICAgICAgcjMwLHIzDQogICBhYzoJN2MgODMg
+ZWEgMTQgCWFkZCAgICAgcjQscjMscjI5DQogICBiMDoJN2YgZTUgZmIgNzggCW1yICAgICAgcjUs
+cjMxDQogICBiNDoJN2YgNjMgZGIgNzggCW1yICAgICAgcjMscjI3DQogICBiODoJNDEgODIgMDAg
+NDggCWJlcSAgICAgMTAwIDxjb3B5X29sZG1lbV9wYWdlKzB4MTAwPg0KICAgYmM6CTQ4IDAwIDAw
+IDAxIAlibCAgICAgIGJjIDxjb3B5X29sZG1lbV9wYWdlKzB4YmM+DQoJCQliYzogUl9QUENfUkVM
+MjQJX2NvcHlfdG9fdXNlcg0KICAgYzA6CTJjIDAzIDAwIDAwIAljbXB3aSAgIHIzLDANCiAgIGM0
+Ogk0MCA4MiAwMCA0NCAJYm5lICAgICAxMDggPGNvcHlfb2xkbWVtX3BhZ2UrMHgxMDg+DQogICBj
+ODoJN2YgYzMgZjMgNzggCW1yICAgICAgcjMscjMwDQogICBjYzoJNDggMDAgMDAgMDEgCWJsICAg
+ICAgY2MgPGNvcHlfb2xkbWVtX3BhZ2UrMHhjYz4NCgkJCWNjOiBSX1BQQ19SRUwyNAlpb3VubWFw
+DQogICBkMDoJODAgMDEgMDAgMjQgCWx3eiAgICAgcjAsMzYocjEpDQogICBkNDoJN2YgZTMgZmIg
+NzggCW1yICAgICAgcjMscjMxDQogICBkODoJODMgNjEgMDAgMGMgCWx3eiAgICAgcjI3LDEyKHIx
+KQ0KICAgZGM6CTgzIDgxIDAwIDEwIAlsd3ogICAgIHIyOCwxNihyMSkNCiAgIGUwOgk3YyAwOCAw
+MyBhNiAJbXRsciAgICByMA0KICAgZTQ6CTgzIGExIDAwIDE0IAlsd3ogICAgIHIyOSwyMChyMSkN
+CiAgIGU4Ogk4MyBjMSAwMCAxOCAJbHd6ICAgICByMzAsMjQocjEpDQogICBlYzoJODMgZTEgMDAg
+MWMgCWx3eiAgICAgcjMxLDI4KHIxKQ0KICAgZjA6CTM4IDIxIDAwIDIwIAlhZGRpICAgIHIxLHIx
+LDMyDQogICBmNDoJNGUgODAgMDAgMjAgCWJscg0KICAgZjg6CTQ4IDAwIDAwIDAxIAlibCAgICAg
+IGY4IDxjb3B5X29sZG1lbV9wYWdlKzB4Zjg+DQoJCQlmODogUl9QUENfUkVMMjQJbWVtY3B5DQog
+ICBmYzoJNGIgZmYgZmYgZDQgCWIgICAgICAgZDAgPGNvcHlfb2xkbWVtX3BhZ2UrMHhkMD4NCiAg
+MTAwOgk0OCAwMCAwMCAwMSAJYmwgICAgICAxMDAgPGNvcHlfb2xkbWVtX3BhZ2UrMHgxMDA+DQoJ
+CQkxMDA6IFJfUFBDX1JFTDI0CW1lbWNweQ0KICAxMDQ6CTRiIGZmIGZmIGM0IAliICAgICAgIGM4
+IDxjb3B5X29sZG1lbV9wYWdlKzB4Yzg+DQogIDEwODoJM2IgZTAgZmYgZjIgCWxpICAgICAgcjMx
+LC0xNA0KICAxMGM6CTRiIGZmIGZmIGJjIAliICAgICAgIGM4IDxjb3B5X29sZG1lbV9wYWdlKzB4
+Yzg+DQoNCg0KdjI6DQoNCjAwMDAwMDAwIDxjb3B5X29sZG1lbV9wYWdlPjoNCiAgICAwOgk5NCAy
+MSBmZiBlMCAJc3R3dSAgICByMSwtMzIocjEpDQogICAgNDoJOTMgZTEgMDAgMWMgCXN0dyAgICAg
+cjMxLDI4KHIxKQ0KICAgIDg6CTdjIGJmIDJiIDc5IAltci4gICAgIHIzMSxyNQ0KICAgIGM6CTkz
+IGMxIDAwIDE4IAlzdHcgICAgIHIzMCwyNChyMSkNCiAgIDEwOgkzYiBjMCAwMCAwMCAJbGkgICAg
+ICByMzAsMA0KICAgMTQ6CTQwIDgyIDAwIDE4IAlibmUgICAgIDJjIDxjb3B5X29sZG1lbV9wYWdl
+KzB4MmM+DQogICAxODoJN2YgYzMgZjMgNzggCW1yICAgICAgcjMscjMwDQogICAxYzoJODMgZTEg
+MDAgMWMgCWx3eiAgICAgcjMxLDI4KHIxKQ0KICAgMjA6CTgzIGMxIDAwIDE4IAlsd3ogICAgIHIz
+MCwyNChyMSkNCiAgIDI0OgkzOCAyMSAwMCAyMCAJYWRkaSAgICByMSxyMSwzMg0KICAgMjg6CTRl
+IDgwIDAwIDIwIAlibHINCiAgIDJjOgkyOCAxZiAxMCAwMCAJY21wbHdpICByMzEsNDA5Ng0KICAg
+MzA6CTkzIDYxIDAwIDBjIAlzdHcgICAgIHIyNywxMihyMSkNCiAgIDM0Ogk3YyAwOCAwMiBhNiAJ
+bWZsciAgICByMA0KICAgMzg6CTkzIDgxIDAwIDEwIAlzdHcgICAgIHIyOCwxNihyMSkNCiAgIDNj
+Ogk5MyBhMSAwMCAxNCAJc3R3ICAgICByMjksMjAocjEpDQogICA0MDoJN2MgZGIgMzMgNzggCW1y
+ICAgICAgcjI3LHI2DQogICA0NDoJOTAgMDEgMDAgMjQgCXN0dyAgICAgcjAsMzYocjEpDQogICA0
+ODoJN2MgOWQgMjMgNzggCW1yICAgICAgcjI5LHI0DQogICA0YzoJN2MgZmMgM2IgNzggCW1yICAg
+ICAgcjI4LHI3DQogICA1MDoJNDAgODEgMDAgMDggCWJsZSAgICAgNTggPGNvcHlfb2xkbWVtX3Bh
+Z2UrMHg1OD4NCiAgIDU0OgkzYiBlMCAxMCAwMCAJbGkgICAgICByMzEsNDA5Ng0KICAgNTg6CTU0
+IDdlIDYwIDI2IAlybHdpbm0gIHIzMCxyMywxMiwwLDE5DQogICA1YzoJN2YgYzMgZjMgNzggCW1y
+ICAgICAgcjMscjMwDQogICA2MDoJN2YgZTQgZmIgNzggCW1yICAgICAgcjQscjMxDQogICA2NDoJ
+NDggMDAgMDAgMDEgCWJsICAgICAgNjQgPGNvcHlfb2xkbWVtX3BhZ2UrMHg2ND4NCgkJCTY0OiBS
+X1BQQ19SRUwyNAltZW1ibG9ja19pc19yZWdpb25fbWVtb3J5DQogICA2ODoJMmMgMDMgMDAgMDAg
+CWNtcHdpICAgcjMsMA0KICAgNmM6CTQxIDgyIDAwIDU0IAliZXEgICAgIGMwIDxjb3B5X29sZG1l
+bV9wYWdlKzB4YzA+DQogICA3MDoJM2YgZGUgYzAgMDAgCWFkZGlzICAgcjMwLHIzMCwtMTYzODQN
+CiAgIDc0Ogk3YyA5ZSBkYSAxNCAJYWRkICAgICByNCxyMzAscjI3DQogICA3ODoJN2YgODYgZTMg
+NzggCW1yICAgICAgcjYscjI4DQogICA3YzoJN2YgYTMgZWIgNzggCW1yICAgICAgcjMscjI5DQog
+ICA4MDoJN2YgZTUgZmIgNzggCW1yICAgICAgcjUscjMxDQogICA4NDoJNDggMDAgMDAgMDEgCWJs
+ICAgICAgODQgPGNvcHlfb2xkbWVtX3BhZ2UrMHg4ND4NCgkJCTg0OiBSX1BQQ19SRUwyNAljb3B5
+X3RvX3VzZXJfb3Jfa2VybmVsDQogICA4ODoJM2IgYzAgZmYgZjIgCWxpICAgICAgcjMwLC0xNA0K
+ICAgOGM6CTJjIDAzIDAwIDAwIAljbXB3aSAgIHIzLDANCiAgIDkwOgk0MCA4MiAwMCAwOCAJYm5l
+ICAgICA5OCA8Y29weV9vbGRtZW1fcGFnZSsweDk4Pg0KICAgOTQ6CTdmIGZlIGZiIDc4IAltciAg
+ICAgIHIzMCxyMzENCiAgIDk4Ogk4MCAwMSAwMCAyNCAJbHd6ICAgICByMCwzNihyMSkNCiAgIDlj
+Ogk4MyA2MSAwMCAwYyAJbHd6ICAgICByMjcsMTIocjEpDQogICBhMDoJODMgODEgMDAgMTAgCWx3
+eiAgICAgcjI4LDE2KHIxKQ0KICAgYTQ6CTdjIDA4IDAzIGE2IAltdGxyICAgIHIwDQogICBhODoJ
+ODMgYTEgMDAgMTQgCWx3eiAgICAgcjI5LDIwKHIxKQ0KICAgYWM6CTdmIGMzIGYzIDc4IAltciAg
+ICAgIHIzLHIzMA0KICAgYjA6CTgzIGUxIDAwIDFjIAlsd3ogICAgIHIzMSwyOChyMSkNCiAgIGI0
+Ogk4MyBjMSAwMCAxOCAJbHd6ICAgICByMzAsMjQocjEpDQogICBiODoJMzggMjEgMDAgMjAgCWFk
+ZGkgICAgcjEscjEsMzINCiAgIGJjOgk0ZSA4MCAwMCAyMCAJYmxyDQogICBjMDoJN2YgYzMgZjMg
+NzggCW1yICAgICAgcjMscjMwDQogICBjNDoJOTMgNDEgMDAgMDggCXN0dyAgICAgcjI2LDgocjEp
+DQogICBjODoJMzggYTAgMDUgOTEgCWxpICAgICAgcjUsMTQyNQ0KICAgY2M6CTM4IDgwIDEwIDAw
+IAlsaSAgICAgIHI0LDQwOTYNCiAgIGQwOgk0OCAwMCAwMCAwMSAJYmwgICAgICBkMCA8Y29weV9v
+bGRtZW1fcGFnZSsweGQwPg0KCQkJZDA6IFJfUFBDX1JFTDI0CWlvcmVtYXBfcHJvdA0KICAgZDQ6
+CTdmIDg2IGUzIDc4IAltciAgICAgIHI2LHIyOA0KICAgZDg6CTdjIDgzIGRhIDE0IAlhZGQgICAg
+IHI0LHIzLHIyNw0KICAgZGM6CTdjIDdhIDFiIDc4IAltciAgICAgIHIyNixyMw0KICAgZTA6CTdm
+IGU1IGZiIDc4IAltciAgICAgIHI1LHIzMQ0KICAgZTQ6CTdmIGEzIGViIDc4IAltciAgICAgIHIz
+LHIyOQ0KICAgZTg6CTQ4IDAwIDAwIDAxIAlibCAgICAgIGU4IDxjb3B5X29sZG1lbV9wYWdlKzB4
+ZTg+DQoJCQllODogUl9QUENfUkVMMjQJY29weV90b191c2VyX29yX2tlcm5lbA0KICAgZWM6CTNi
+IGMwIGZmIGYyIAlsaSAgICAgIHIzMCwtMTQNCiAgIGYwOgkyYyAwMyAwMCAwMCAJY21wd2kgICBy
+MywwDQogICBmNDoJNDAgODIgMDAgMDggCWJuZSAgICAgZmMgPGNvcHlfb2xkbWVtX3BhZ2UrMHhm
+Yz4NCiAgIGY4Ogk3ZiBmZSBmYiA3OCAJbXIgICAgICByMzAscjMxDQogICBmYzoJN2YgNDMgZDMg
+NzggCW1yICAgICAgcjMscjI2DQogIDEwMDoJNDggMDAgMDAgMDEgCWJsICAgICAgMTAwIDxjb3B5
+X29sZG1lbV9wYWdlKzB4MTAwPg0KCQkJMTAwOiBSX1BQQ19SRUwyNAlpb3VubWFwDQogIDEwNDoJ
+ODAgMDEgMDAgMjQgCWx3eiAgICAgcjAsMzYocjEpDQogIDEwODoJODMgNDEgMDAgMDggCWx3eiAg
+ICAgcjI2LDgocjEpDQogIDEwYzoJODMgNjEgMDAgMGMgCWx3eiAgICAgcjI3LDEyKHIxKQ0KICAx
+MTA6CTdjIDA4IDAzIGE2IAltdGxyICAgIHIwDQogIDExNDoJODMgODEgMDAgMTAgCWx3eiAgICAg
+cjI4LDE2KHIxKQ0KICAxMTg6CTgzIGExIDAwIDE0IAlsd3ogICAgIHIyOSwyMChyMSkNCiAgMTFj
+Ogk0YiBmZiBmZiA5MCAJYiAgICAgICBhYyA8Y29weV9vbGRtZW1fcGFnZSsweGFjPg0KDQoNCkNo
+cmlzdG9waGUKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+a2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
