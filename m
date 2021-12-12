@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Sun, 12 Dec 2021 11:47:35 +0000
-From: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 0/2] kdump: simplify code
-Message-ID: <YbXhVxRJfjvKw++W@casper.infradead.org>
-References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
- <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
+Received: from mail-oi1-x22a.google.com ([2607:f8b0:4864:20::22a])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwP6U-006ad4-Qv
+ for kexec@lists.infradead.org; Sun, 12 Dec 2021 13:41:28 +0000
+Received: by mail-oi1-x22a.google.com with SMTP id t23so19895893oiw.3
+ for <kexec@lists.infradead.org>; Sun, 12 Dec 2021 05:41:25 -0800 (PST)
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
+From: Sushmita Ghan <sushghan11@gmail.com>
+Date: Sun, 12 Dec 2021 19:11:24 +0530
+Message-ID: <CABB0pWAo43Gh5V729-bc+CkM=XeJ9uVH-TLZnytV_rFA7RKk6w@mail.gmail.com>
+Subject: kexec -p does not work consistently
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -16,31 +18,42 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Laight <David.Laight@aculab.com>
-Cc: 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>
+To: kexec@lists.infradead.org
 
-On Sat, Dec 11, 2021 at 05:53:46PM +0000, David Laight wrote:
-> From: Tiezhu Yang
-> > Sent: 11 December 2021 03:33
-> > 
-> > v2:
-> >   -- add copy_to_user_or_kernel() in lib/usercopy.c
-> >   -- define userbuf as bool type
-> 
-> Instead of having a flag to indicate whether the buffer is user or kernel,
-> would it be better to have two separate buffer pointers.
-> One for a user space buffer, the other for a kernel space buffer.
-> Exactly one of the buffers should always be NULL.
-
-No.  You should be using an iov_iter instead.  See
-https://lore.kernel.org/all/Ya4bdB0UBJCZhUSo@casper.infradead.org/
-for a start on this.
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+SGksCgpJIGFtIHRyeWluZyB0byBzZXR1cCBrZHVtcCBvbiBteSBMaW51eCh4ODYgbWFjaGluZSks
+CndoZXJlIEkgYW0gdXNpbmcga2V4ZWMtdG9vbHMtMi4wLjIyLgpSZXNlcnZpbmcgNTEyTSBvZiBt
+ZW1vcnkgb2YgcHJvZHVjdGlvbiBrZXJuZWwgZm9yIGNyYXNoIGR1bXAga2VybmVsLgoKIyBkbWVz
+ZyB8IGdyZXAgY3Jhc2gKWyAgICAwLjAwMDAwMF0gQ29tbWFuZCBsaW5lOiBCT09UX0lNQUdFPS92
+bWxpbnV6LTQuMTkuMjEzLXBjNjQKY29uc29sZT10dHkwIGNvbnNvbGU9dHR5UzAsMTE1MjAwIGFj
+cGlfb3NpPUxpbnV4IGludGVsX2lvbW11PW9uCmlvbW11PXB0IGNyYXNoa2VybmVsPTUxMk0gcm9v
+dD0vZGV2L1ZHX1N5c3RlbS9zeXNpbWcKWyAgICAwLjAwNjg5M10gUmVzZXJ2aW5nIDUxMk1CIG9m
+IG1lbW9yeSBhdCAzNTJNQiBmb3IgY3Jhc2hrZXJuZWwKKFN5c3RlbSBSQU06IDE2MzUyTUIpClsg
+ICAgMC4zMTk1NDhdIEtlcm5lbCBjb21tYW5kIGxpbmU6IEJPT1RfSU1BR0U9L3ZtbGludXotNC4x
+OS4yMTMtcGM2NApjb25zb2xlPXR0eTAgY29uc29sZT10dHlTMCwxMTUyMDAgYWNwaV9vc2k9TGlu
+dXggaW50ZWxfaW9tbXU9b24KaW9tbXU9cHQgY3Jhc2hrZXJuZWw9NTEyTSByb290PS9kZXYvVkdf
+U3lzdGVtL3N5c2ltZwoKClVzaW5nIGJlbG93IG9wdGlvbnMgd2l0aCBrZXhlYyAtcDoKCmtleGVj
+IC1wIC9tbnQvaW1hZ2VzL2Jvb3QkQk9PVF9JTUFHRSAtLXJldXNlLWNtZGxpbmUKLS1hcHBlbmQ9
+Im1heGNwdXM9MSByZXNldF9kZXZpY2VzIGlycXBvbGwiLgoKSGVyZSBpbiBteSBjYXNlIHNvbWV0
+aW1lcyBpdCBzdWNjZXNzZnVsbHkgbG9hZHMgc2Vjb25kIGtlcm5lbCwgYnV0CnNvbWV0aW1lcyBp
+dCBnZXRzIHN0dWNrIHdoaWxlIGxvYWRpbmcgc2Vjb25kIGtlcm5lbChjcmFzaCBkdW1wCmtlcm5l
+bCkuCgpBY2NvcmRpbmcgdG8gYmVsb3cgZG9jdW1lbnQsCmh0dHBzOi8vd3d3Lmtlcm5lbC5vcmcv
+ZG9jL2h0bWwvbGF0ZXN0L2FkbWluLWd1aWRlL2tkdW1wL2tkdW1wLmh0bWwKCkZvbGxvd2luZyBh
+cmUgdGhlIGFyY2ggc3BlY2lmaWMgY29tbWFuZCBsaW5lIG9wdGlvbnMgdG8gYmUgdXNlZCB3aGls
+ZQpsb2FkaW5nIGR1bXAtY2FwdHVyZSBrZXJuZWwuCgpGb3IgaTM4NiwgeDg2XzY0IGFuZCBpYTY0
+OgoK4oCcMSBpcnFwb2xsIG5yX2NwdXM9MSByZXNldF9kZXZpY2Vz4oCdCgpXaXRoIGFib3ZlIHBh
+cmFtZXRlcnMgc3lzdGVtIGdldHMgc3R1Y2sgd2hpbGUgbG9hZGluZyBjcmFzaCBkdW1wCmtlcm5l
+bC5UaGlzIGJlaGF2aW9yIGlzIGluY29uc2lzdGVudC4KQnV0IHdoZW4gdGVzdGVkIHdpdGhvdXQg
+ImlycXBvbGwiIHBhcmFtZXRlcmUsIGl0IHNlZW1zIHdvcmtpbmcgY29uc2lzdGVudGx5LgoKSXMg
+dGhpcyBzeXNjdGwgcGFyYW1ldGVyIGNoYW5nZXMgcmVxdWlyZWQgd2l0aCBuZXcga2V4ZWMgdmVy
+c2lvbgpvciBhbnkgcG9pbnRlcnMgcmVnYXJkaW5nIHRoaXMgaXNzdWU/CgpDYW4gSSB1c2Ugb25s
+eSBwcm92aWRlZCBiZWxvdyBvcHRpb25zIGZvciBjcmFzaCBkdW1wIGtlcm5lbD8KCiMga2V4ZWMg
+LXAgL2Jvb3Qvdm1saW51ei00LjE5LjIxMy1wYzY0IC0tcmV1c2UtY21kbGluZQotLWFwcGVuZD0i
+bWF4Y3B1cz0xIHJlc2V0X2RldmljZXMiCgpBbnkgY2x1ZSB3b3VsZCBiZSBhIGdyZWF0IGhlbHAg
+Zm9yIG1lLgoKVGhhbmtzICYgcmVnYXJkcywKU3VzaG1pdGEKCl9fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0
+cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
+Zm8va2V4ZWMK
