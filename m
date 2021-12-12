@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
+Date: Sun, 12 Dec 2021 11:47:35 +0000
+From: Matthew Wilcox <willy@infradead.org>
 Subject: Re: [PATCH v2 0/2] kdump: simplify code
-Date: Sat, 11 Dec 2021 19:32:16 +0000
-Message-ID: <2dad13be-dcf7-3a96-c287-9452f0dc027e@csgroup.eu>
+Message-ID: <YbXhVxRJfjvKw++W@casper.infradead.org>
 References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
  <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
-In-Reply-To: <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
-Content-Language: en-US
-Content-ID: <C87DC5B0CA5964499922F1A3114944DC@FRAP264.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,30 +16,31 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Laight <David.Laight@ACULAB.COM>, 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>, "x86@kernel.org" <x86@kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: David Laight <David.Laight@aculab.com>
+Cc: 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>
 
-DQoNCkxlIDExLzEyLzIwMjEgw6AgMTg6NTMsIERhdmlkIExhaWdodCBhIMOpY3JpdMKgOg0KPiBG
-cm9tOiBUaWV6aHUgWWFuZw0KPj4gU2VudDogMTEgRGVjZW1iZXIgMjAyMSAwMzozMw0KPj4NCj4+
-IHYyOg0KPj4gICAgLS0gYWRkIGNvcHlfdG9fdXNlcl9vcl9rZXJuZWwoKSBpbiBsaWIvdXNlcmNv
-cHkuYw0KPj4gICAgLS0gZGVmaW5lIHVzZXJidWYgYXMgYm9vbCB0eXBlDQo+IA0KPiBJbnN0ZWFk
-IG9mIGhhdmluZyBhIGZsYWcgdG8gaW5kaWNhdGUgd2hldGhlciB0aGUgYnVmZmVyIGlzIHVzZXIg
-b3Iga2VybmVsLA0KPiB3b3VsZCBpdCBiZSBiZXR0ZXIgdG8gaGF2ZSB0d28gc2VwYXJhdGUgYnVm
-ZmVyIHBvaW50ZXJzLg0KPiBPbmUgZm9yIGEgdXNlciBzcGFjZSBidWZmZXIsIHRoZSBvdGhlciBm
-b3IgYSBrZXJuZWwgc3BhY2UgYnVmZmVyLg0KPiBFeGFjdGx5IG9uZSBvZiB0aGUgYnVmZmVycyBz
-aG91bGQgYWx3YXlzIGJlIE5VTEwuDQo+IA0KPiBUaGF0IHdheSB0aGUgZmxhZyBpcyBuZXZlciBp
-bmNvcnJlY3RseSBzZXQuDQo+IA0KDQpJdCdzIGEgdmVyeSBnb29kIGlkZWEuDQoNCkkgd2FzIHdv
-cnJpZWQgYWJvdXQgdGhlIGNhc3RzIGZvcmNpbmcgdGhlIF9fdXNlciBwcm9wZXJ0eSBhd2F5IGFu
-ZCBiYWNrLiANCldpdGggdGhhdCBhcHByb2FjaCB3ZSB3aWxsIHByZXNlcnZlIHRoZSBfX3VzZXIg
-dGFncyBvbiB1c2VyIGJ1ZmZlcnMgYW5kIA0KZW5hYmxlIHNwYXJzZSBjaGVja2luZy4NCg0KVGhl
-IG9ubHkgbGl0dGxlIGRyYXdiYWNrIEkgc2VlIGlzIHRoYXQgYXBwYXJlbnRseSBHQ0MgZG9lc24n
-dCBjb25zaWRlciANCnRoZSBOVUxMIHZhbHVlIGFzIGEgY29uc3RhbnQgYW5kIHRoZXJlZm9yZSBk
-b2Vzbid0IHBlcmZvcm0gY29uc3RhbnQgDQpmb2xkaW5nIG9uIHBvaW50ZXJzLiBOb3Qgc3VyZSBp
-ZiB0aGlzIGlzIGEgcHJvYmxlbSBoZXJlLg0KDQpDaHJpc3RvcGhlCl9fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0Bs
-aXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMK
+On Sat, Dec 11, 2021 at 05:53:46PM +0000, David Laight wrote:
+> From: Tiezhu Yang
+> > Sent: 11 December 2021 03:33
+> > 
+> > v2:
+> >   -- add copy_to_user_or_kernel() in lib/usercopy.c
+> >   -- define userbuf as bool type
+> 
+> Instead of having a flag to indicate whether the buffer is user or kernel,
+> would it be better to have two separate buffer pointers.
+> One for a user space buffer, the other for a kernel space buffer.
+> Exactly one of the buffers should always be NULL.
+
+No.  You should be using an iov_iter instead.  See
+https://lore.kernel.org/all/Ya4bdB0UBJCZhUSo@casper.infradead.org/
+for a start on this.
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
