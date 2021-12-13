@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail.skyhub.de ([5.9.137.197])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwlKu-009fVg-9z
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:25:51 +0000
-Date: Mon, 13 Dec 2021 14:25:39 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
- no managed pages
-Message-ID: <YbdJ00wRFvi0aqze@zn.tnic>
-References: <20211207030750.30824-1-bhe@redhat.com>
- <20211207031631.GA5604@MiWiFi-R3L-srv>
+ id 1mwlWX-009kEN-3g
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:37:50 +0000
+Date: Mon, 13 Dec 2021 21:37:35 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
+Message-ID: <20211213133735.GB23510@MiWiFi-R3L-srv>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-3-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211207031631.GA5604@MiWiFi-R3L-srv>
+In-Reply-To: <20211210065533.2023-3-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,29 +25,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, rppt@linux.ibm.com
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On Tue, Dec 07, 2021 at 11:16:31AM +0800, Baoquan He wrote:
-> > This low 1M lock down is needed because AMD SME encrypts memory making
-> > the old backup region mechanims impossible when switching into kdump
-> > kernel. And Intel engineer mentioned their TDX (Trusted domain extensions)
-> > which is under development in kernel also needs lock down the low 1M.
-> > So we can't simply revert above commits to fix the page allocation
-> > failure from DMA zone as someone suggested.
+On 12/10/21 at 02:55pm, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
+> 
+> The lower bounds of crash kernel reservation and crash kernel low
+> reservation are different, use the consistent value CRASH_ALIGN.
+> 
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-Did you read
+You may need add Co-developed-by to clarify who is author, and who is
+co-author. Please check section "When to use Acked-by:, Cc:, and Co-developed-by:"
+of Documentation/process/submitting-patches.rst. Otherwise, 
 
-  f1d4d47c5851 ("x86/setup: Always reserve the first 1M of RAM")
+Acked-by: Baoquan He <bhe@redhat.com>
 
-carefully for a more generically important reason as to why the first 1M
-should not be used?
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+> ---
+>  arch/x86/kernel/setup.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 5cc60996eac56d6..6424ee4f23da2cf 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
+>  			return 0;
+>  	}
+>  
+> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
+> +			CRASH_ADDR_LOW_MAX);
+>  	if (!low_base) {
+>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>  		       (unsigned long)(low_size >> 20));
+> -- 
+> 2.25.1
+> 
 
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
