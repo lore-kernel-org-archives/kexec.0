@@ -1,13 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwkQf-009TmN-Hy
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:27:43 +0000
+ id 1mwkQk-009Tmv-50
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:27:47 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 0/5] Avoid requesting page from DMA zone when no managed
- pages
-Date: Mon, 13 Dec 2021 20:27:07 +0800
-Message-Id: <20211213122712.23805-1-bhe@redhat.com>
+Subject: [PATCH v3 1/5] docs: kernel-parameters: Update to reflect the current
+ default size of atomic pool
+Date: Mon, 13 Dec 2021 20:27:08 +0800
+Message-Id: <20211213122712.23805-2-bhe@redhat.com>
+In-Reply-To: <20211213122712.23805-1-bhe@redhat.com>
+References: <20211213122712.23805-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,52 +26,31 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
 Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Background information can be checked in cover letter of v2 RESEND POST
-as below:
-https://lore.kernel.org/all/20211207030750.30824-1-bhe@redhat.com/T/#u
+Since commit 1d659236fb43("dma-pool: scale the default DMA coherent pool
+size with memory capacity"), the default size of atomic pool has been
+changed to take by scaling with system memory capacity. So update the
+document in kerenl-parameter.txt accordingly.
 
-Changelog:
-v2-Resend -> v3:
- - Re-implement has_managed_dma() according to David's suggestion.
- - Add Fixes tag and cc stable.
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-v2->v2 RESEND:
- - John pinged to push the repost of this patchset. So fix one typo of
-   suject of patch 3/5; Fix a building error caused by mix declaration in
-   patch 5/5. Both of them are found by John from his testing.
- - Rewrite cover letter to add more information.
-
-v1->v2:
- Change to check if managed DMA zone exists. If DMA zone has managed
- pages, go further to request page from DMA zone to initialize. Otherwise,
- just skip to initialize stuffs which need pages from DMA zone.
-  
-
-V2 RESEND post:
-https://lore.kernel.org/all/20211207030750.30824-1-bhe@redhat.com/T/#u
-
-v2 post:
-https://lore.kernel.org/all/20210810094835.13402-1-bhe@redhat.com/T/#u
-
-v1 post:
-https://lore.kernel.org/all/20210624052010.5676-1-bhe@redhat.com/T/#u
-
-
-Baoquan He (5):
-  docs: kernel-parameters: Update to reflect the current default size of
-    atomic pool
-  dma-pool: allow user to disable atomic pool
-  mm_zone: add function to check if managed dma zone exists
-  dma/pool: create dma atomic pool only if dma zone has managed pages
-  mm/slub: do not create dma-kmalloc if no managed pages in DMA zone
-
- Documentation/admin-guide/kernel-parameters.txt |  5 ++++-
- include/linux/mmzone.h                          |  9 +++++++++
- kernel/dma/pool.c                               | 11 +++++++----
- mm/page_alloc.c                                 | 15 +++++++++++++++
- mm/slab_common.c                                |  9 +++++++++
- 5 files changed, 44 insertions(+), 5 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 9725c546a0d4..ec4d25e854a8 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -664,7 +664,9 @@
+ 
+ 	coherent_pool=nn[KMG]	[ARM,KNL]
+ 			Sets the size of memory pool for coherent, atomic dma
+-			allocations, by default set to 256K.
++			allocations. Otherwise the default size will be scaled
++			with memory capacity, while clamped between 128K and
++			1 << (PAGE_SHIFT + MAX_ORDER-1).
+ 
+ 	com20020=	[HW,NET] ARCnet - COM20020 chipset
+ 			Format:
 -- 
 2.17.2
 
