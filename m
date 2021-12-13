@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwlWX-009kEN-3g
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:37:50 +0000
-Date: Mon, 13 Dec 2021 21:37:35 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
- kernel reservation consistent
-Message-ID: <20211213133735.GB23510@MiWiFi-R3L-srv>
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-3-thunder.leizhen@huawei.com>
+Date: Mon, 13 Dec 2021 13:42:34 +0000
+From: Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
+Message-ID: <YbdNyjqSugLqsEXN@casper.infradead.org>
+References: <20211213000636.2932569-1-willy@infradead.org>
+ <20211213000636.2932569-4-willy@infradead.org>
+ <20211213080257.GC20986@lst.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211210065533.2023-3-thunder.leizhen@huawei.com>
+In-Reply-To: <20211213080257.GC20986@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,49 +21,64 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Christoph Hellwig <hch@lst.de>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
 
-On 12/10/21 at 02:55pm, Zhen Lei wrote:
-> From: Chen Zhou <chenzhou10@huawei.com>
+On Mon, Dec 13, 2021 at 09:02:57AM +0100, Christoph Hellwig wrote:
+> >  
+> >  ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+> >  {
+> > -	return read_from_oldmem(buf, count, ppos, 0,
+> > +	struct kvec kvec = { .iov_base = buf, .iov_len = count };
+> > +	struct iov_iter iter;
+> > +
+> > +	iov_iter_kvec(&iter, READ, &kvec, 1, count);
+> > +
+> > +	return read_from_oldmem(&iter, count, ppos,
+> >  				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+> >  }
 > 
-> The lower bounds of crash kernel reservation and crash kernel low
-> reservation are different, use the consistent value CRASH_ALIGN.
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> elfcorehdr_read should probably also take an iov_iter while we're at it.
 
-You may need add Co-developed-by to clarify who is author, and who is
-co-author. Please check section "When to use Acked-by:, Cc:, and Co-developed-by:"
-of Documentation/process/submitting-patches.rst. Otherwise, 
+I don't like how that looks.  For example:
 
-Acked-by: Baoquan He <bhe@redhat.com>
+@@ -1246,11 +1247,14 @@ static int __init parse_crash_elf64_headers(void)
+        int rc=0;
+        Elf64_Ehdr ehdr;
+        u64 addr;
++       struct iov_iter iter;
++       struct kvec kvec = { .iov_base = &ehdr, .iov_len = sizeof(ehdr) };
 
-> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
-> ---
->  arch/x86/kernel/setup.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 5cc60996eac56d6..6424ee4f23da2cf 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
->  			return 0;
->  	}
->  
-> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
-> +			CRASH_ADDR_LOW_MAX);
->  	if (!low_base) {
->  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->  		       (unsigned long)(low_size >> 20));
-> -- 
-> 2.25.1
-> 
+        addr = elfcorehdr_addr;
 
+        /* Read Elf header */
+-       rc = elfcorehdr_read((char *)&ehdr, sizeof(Elf64_Ehdr), &addr);
++       iov_iter_kvec(&iter, READ, &kvec, 1, sizeof(ehdr));
++       rc = elfcorehdr_read(&iter, &addr);
+        if (rc < 0)
+                return rc;
+
+@@ -1277,7 +1281,10 @@ static int __init parse_crash_elf64_headers(void)
+        if (!elfcorebuf)
+                return -ENOMEM;
+        addr = elfcorehdr_addr;
+-       rc = elfcorehdr_read(elfcorebuf, elfcorebuf_sz_orig, &addr);
++       kvec.iov_base = elfcorebuf;
++       kvec.iov_len = elfcorebuf_sz_orig;
++       iov_iter_kvec(&iter, READ, &kvec, 1, elfcorebuf_sz_orig);
++       rc = elfcorehdr_read(&iter, &addr);
+        if (rc < 0)
+                goto fail;
+
+
+I don't think this makes the code clearer, and it's already pretty ugly
+code.  I'd rather leave constructing the iov_iter to elfcorehdr_read().
+(Same remarks apply to elfcorehdr_read_notes())
+
+> I also don't quite understand why we even need the arch overrides for it,
+> but that would require some digging into the history of this interface.
+
+I decided I didn't want to know ;-)
 
 _______________________________________________
 kexec mailing list
