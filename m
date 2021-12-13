@@ -1,17 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from verein.lst.de ([213.95.11.211])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwgGB-008COy-9s
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:00:36 +0000
-Date: Mon, 13 Dec 2021 09:00:31 +0100
+ id 1mwgIX-008D2E-4O
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:03:02 +0000
+Date: Mon, 13 Dec 2021 09:02:57 +0100
 From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 2/3] vmcore: Convert __read_vmcore to use an iov_iter
-Message-ID: <20211213080031.GB20986@lst.de>
+Subject: Re: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
+Message-ID: <20211213080257.GC20986@lst.de>
 References: <20211213000636.2932569-1-willy@infradead.org>
- <20211213000636.2932569-3-willy@infradead.org>
+ <20211213000636.2932569-4-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213000636.2932569-3-willy@infradead.org>
+In-Reply-To: <20211213000636.2932569-4-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,14 +27,23 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
 Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 12:06:35AM +0000, Matthew Wilcox (Oracle) wrote:
-> +	/* trim iter to not go beyond EOF */
-> +	if (iter->count > vmcore_size - *fpos)
-> +		iter->count = vmcore_size - *fpos;
+>  
+>  ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+>  {
+> -	return read_from_oldmem(buf, count, ppos, 0,
+> +	struct kvec kvec = { .iov_base = buf, .iov_len = count };
+> +	struct iov_iter iter;
+> +
+> +	iov_iter_kvec(&iter, READ, &kvec, 1, count);
+> +
+> +	return read_from_oldmem(&iter, count, ppos,
+>  				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+>  }
 
-Nit: iov_iter_truncate()
+elfcorehdr_read should probably also take an iov_iter while we're at it.
 
-Otherwise this looks good from a cursory view.
+I also don't quite understand why we even need the arch overrides for it,
+but that would require some digging into the history of this interface.
 
 _______________________________________________
 kexec mailing list
