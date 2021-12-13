@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <0d3e6361-0850-4273-6d43-8e40a80c6916@oracle.com>
-Date: Mon, 13 Dec 2021 08:28:14 -0600
-Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel()
+Message-ID: <a9070375-e4d0-d17f-6749-a7701c1a9bf3@oracle.com>
+Date: Mon, 13 Dec 2021 08:29:07 -0600
+Subject: Re: [PATCH v17 04/10] x86: kdump: move xen_pv_domain() check and
+ insert_resource() to setup_arch()
 Content-Language: en-US
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-4-thunder.leizhen@huawei.com>
+ <20211210065533.2023-5-thunder.leizhen@huawei.com>
 From: john.p.donnelly@oracle.com
-In-Reply-To: <20211210065533.2023-4-thunder.leizhen@huawei.com>
+In-Reply-To: <20211210065533.2023-5-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,9 +27,13 @@ Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
 On 12/10/21 12:55 AM, Zhen Lei wrote:
 > From: Chen Zhou <chenzhou10@huawei.com>
 > 
-> To make the functions reserve_crashkernel() as generic,
-> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
+> We will make the functions reserve_crashkernel() as generic, the
+> xen_pv_domain() check in reserve_crashkernel() is relevant only to
+> x86, the same as insert_resource() in reserve_crashkernel[_low]().
+> So move xen_pv_domain() check and insert_resource() to setup_arch()
+> to keep them in x86.
 > 
+> Suggested-by: Mike Rapoport <rppt@kernel.org>
 > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 > Tested-by: John Donnelly <John.p.donnelly@oracle.com>
@@ -39,34 +43,60 @@ On 12/10/21 12:55 AM, Zhen Lei wrote:
   Acked-by: John Donnelly <john.p.donnelly@oracle.com>
 
 > ---
->   arch/x86/kernel/setup.c | 7 ++++---
->   1 file changed, 4 insertions(+), 3 deletions(-)
+>   arch/x86/kernel/setup.c | 19 +++++++++++--------
+>   1 file changed, 11 insertions(+), 8 deletions(-)
 > 
 > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 6424ee4f23da2cf..bb2a0973b98059e 100644
+> index bb2a0973b98059e..7ae00716a208f82 100644
 > --- a/arch/x86/kernel/setup.c
 > +++ b/arch/x86/kernel/setup.c
-> @@ -489,8 +489,9 @@ static void __init reserve_crashkernel(void)
->   	if (!crash_base) {
->   		/*
->   		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
-> -		 * crashkernel=x,high reserves memory over 4G, also allocates
-> -		 * 256M extra low memory for DMA buffers and swiotlb.
-> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
-> +		 * also allocates 256M extra low memory for DMA buffers
-> +		 * and swiotlb.
->   		 * But the extra memory is not required for all machines.
->   		 * So try low memory first and fall back to high memory
->   		 * unless "crashkernel=size[KMG],high" is specified.
-> @@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
->   		}
+> @@ -456,7 +456,6 @@ static int __init reserve_crashkernel_low(void)
+>   
+>   	crashk_low_res.start = low_base;
+>   	crashk_low_res.end   = low_base + low_size - 1;
+> -	insert_resource(&iomem_resource, &crashk_low_res);
+>   #endif
+>   	return 0;
+>   }
+> @@ -480,11 +479,6 @@ static void __init reserve_crashkernel(void)
+>   		high = true;
 >   	}
 >   
-> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
-> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
->   		memblock_phys_free(crash_base, crash_size);
->   		return;
->   	}
+> -	if (xen_pv_domain()) {
+> -		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+> -		return;
+> -	}
+> -
+>   	/* 0 means: find the address automatically */
+>   	if (!crash_base) {
+>   		/*
+> @@ -531,7 +525,6 @@ static void __init reserve_crashkernel(void)
+>   
+>   	crashk_res.start = crash_base;
+>   	crashk_res.end   = crash_base + crash_size - 1;
+> -	insert_resource(&iomem_resource, &crashk_res);
+>   }
+>   #else
+>   static void __init reserve_crashkernel(void)
+> @@ -1143,7 +1136,17 @@ void __init setup_arch(char **cmdline_p)
+>   	 * Reserve memory for crash kernel after SRAT is parsed so that it
+>   	 * won't consume hotpluggable memory.
+>   	 */
+> -	reserve_crashkernel();
+> +	if (xen_pv_domain())
+> +		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+> +	else {
+> +		reserve_crashkernel();
+> +#ifdef CONFIG_KEXEC_CORE
+> +		if (crashk_res.end > crashk_res.start)
+> +			insert_resource(&iomem_resource, &crashk_res);
+> +		if (crashk_low_res.end > crashk_low_res.start)
+> +			insert_resource(&iomem_resource, &crashk_low_res);
+> +#endif
+> +	}
+>   
+>   	memblock_find_dma_reserve();
+>   
 
 
 _______________________________________________
