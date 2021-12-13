@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mail.skyhub.de ([5.9.137.197])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwlD3-009e4P-0G
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:17:43 +0000
-Date: Mon, 13 Dec 2021 21:17:13 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
-Message-ID: <20211213131713.GA23510@MiWiFi-R3L-srv>
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-2-thunder.leizhen@huawei.com>
+ id 1mwlKu-009fVg-9z
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:25:51 +0000
+Date: Mon, 13 Dec 2021 14:25:39 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+Message-ID: <YbdJ00wRFvi0aqze@zn.tnic>
+References: <20211207030750.30824-1-bhe@redhat.com>
+ <20211207031631.GA5604@MiWiFi-R3L-srv>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211210065533.2023-2-thunder.leizhen@huawei.com>
+In-Reply-To: <20211207031631.GA5604@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,65 +25,29 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, rppt@linux.ibm.com
 
-On 12/10/21 at 02:55pm, Zhen Lei wrote:
-> From: Chen Zhou <chenzhou10@huawei.com>
-> 
-> Move CRASH_ALIGN to header asm/kexec.h for later use.
-> 
-> Suggested-by: Dave Young <dyoung@redhat.com>
-> Suggested-by: Baoquan He <bhe@redhat.com>
+On Tue, Dec 07, 2021 at 11:16:31AM +0800, Baoquan He wrote:
+> > This low 1M lock down is needed because AMD SME encrypts memory making
+> > the old backup region mechanims impossible when switching into kdump
+> > kernel. And Intel engineer mentioned their TDX (Trusted domain extensions)
+> > which is under development in kernel also needs lock down the low 1M.
+> > So we can't simply revert above commits to fix the page allocation
+> > failure from DMA zone as someone suggested.
 
-I remember Dave and I discussed and suggested this when reviewing.
-You can remove my Suggested-by.
+Did you read
 
-For this one, I would like to add ack:
+  f1d4d47c5851 ("x86/setup: Always reserve the first 1M of RAM")
 
-Acked-by: Baoquan He <bhe@redhat.com>
+carefully for a more generically important reason as to why the first 1M
+should not be used?
 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
-> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
-> ---
->  arch/x86/include/asm/kexec.h | 3 +++
->  arch/x86/kernel/setup.c      | 3 ---
->  2 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index 11b7c06e2828c30..3a22e65262aa70b 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -18,6 +18,9 @@
->  
->  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
->  
-> +/* 16M alignment for crash kernel regions */
-> +#define CRASH_ALIGN		SZ_16M
-> +
->  #ifndef __ASSEMBLY__
->  
->  #include <linux/string.h>
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 6a190c7f4d71b05..5cc60996eac56d6 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
->  
->  #ifdef CONFIG_KEXEC_CORE
->  
-> -/* 16M alignment for crash kernel regions */
-> -#define CRASH_ALIGN		SZ_16M
-> -
->  /*
->   * Keep the crash kernel below this limit.
->   *
-> -- 
-> 2.25.1
-> 
+-- 
+Regards/Gruss,
+    Boris.
 
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
