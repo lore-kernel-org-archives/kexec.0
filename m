@@ -1,13 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <01cf00c1-0371-b896-9a76-78df036e2b02@oracle.com>
-Date: Mon, 13 Dec 2021 08:26:29 -0600
-Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
+Message-ID: <7ffcc677-a557-5453-c866-9ee17d2e760f@oracle.com>
+Date: Mon, 13 Dec 2021 08:27:20 -0600
+Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
 Content-Language: en-US
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-2-thunder.leizhen@huawei.com>
+ <20211210065533.2023-3-thunder.leizhen@huawei.com>
 From: john.p.donnelly@oracle.com
-In-Reply-To: <20211210065533.2023-2-thunder.leizhen@huawei.com>
+In-Reply-To: <20211210065533.2023-3-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,51 +27,35 @@ Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>,
 On 12/10/21 12:55 AM, Zhen Lei wrote:
 > From: Chen Zhou <chenzhou10@huawei.com>
 > 
-> Move CRASH_ALIGN to header asm/kexec.h for later use.
+> The lower bounds of crash kernel reservation and crash kernel low
+> reservation are different, use the consistent value CRASH_ALIGN.
 > 
 > Suggested-by: Dave Young <dyoung@redhat.com>
-> Suggested-by: Baoquan He <bhe@redhat.com>
 > Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 > Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 > Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 > Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
- >
+
   Acked-by: John Donnelly <john.p.donnelly@oracle.com>
 
-
 > ---
->   arch/x86/include/asm/kexec.h | 3 +++
->   arch/x86/kernel/setup.c      | 3 ---
->   2 files changed, 3 insertions(+), 3 deletions(-)
+>   arch/x86/kernel/setup.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-> index 11b7c06e2828c30..3a22e65262aa70b 100644
-> --- a/arch/x86/include/asm/kexec.h
-> +++ b/arch/x86/include/asm/kexec.h
-> @@ -18,6 +18,9 @@
->   
->   # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
->   
-> +/* 16M alignment for crash kernel regions */
-> +#define CRASH_ALIGN		SZ_16M
-> +
->   #ifndef __ASSEMBLY__
->   
->   #include <linux/string.h>
 > diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index 6a190c7f4d71b05..5cc60996eac56d6 100644
+> index 5cc60996eac56d6..6424ee4f23da2cf 100644
 > --- a/arch/x86/kernel/setup.c
 > +++ b/arch/x86/kernel/setup.c
-> @@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+> @@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
+>   			return 0;
+>   	}
 >   
->   #ifdef CONFIG_KEXEC_CORE
->   
-> -/* 16M alignment for crash kernel regions */
-> -#define CRASH_ALIGN		SZ_16M
-> -
->   /*
->    * Keep the crash kernel below this limit.
->    *
+> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
+> +			CRASH_ADDR_LOW_MAX);
+>   	if (!low_base) {
+>   		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>   		       (unsigned long)(low_size >> 20));
 
 
 _______________________________________________
