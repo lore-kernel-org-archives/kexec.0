@@ -1,19 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mga02.intel.com ([134.134.136.20])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwcQ0-007io4-1f
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 03:54:30 +0000
-Date: Mon, 13 Dec 2021 11:54:12 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
- no managed pages
-Message-ID: <20211213035412.GA24932@MiWiFi-R3L-srv>
-References: <20211207030750.30824-1-bhe@redhat.com>
- <20211207031631.GA5604@MiWiFi-R3L-srv>
- <01b4831f-7136-80af-a6cb-93698cb31fc4@oracle.com>
+ id 1mwcav-007jZY-4V
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 04:05:47 +0000
+Date: Mon, 13 Dec 2021 12:04:52 +0800
+From: kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
+Message-ID: <202112131249.lfVULc7X-lkp@intel.com>
+References: <20211213000636.2932569-4-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <01b4831f-7136-80af-a6cb-93698cb31fc4@oracle.com>
+In-Reply-To: <20211213000636.2932569-4-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,167 +23,177 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: John Donnelly <John.p.donnelly@oracle.com>
-Cc: linux-kernel@vger.kernel.org, tglx@linutronix.de, mingo@redhat.com, bp@alien8.de, dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, kexec@lists.infradead.org, rppt@linux.ibm.com
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: kbuild-all@lists.01.org, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org
 
-On 12/06/21 at 10:03pm, John Donnelly wrote:
-> On 12/6/21 9:16 PM, Baoquan He wrote:
-> > Sorry, forgot adding x86 and x86/mm maintainers
-> 
-> Hi,
-> 
->   These commits need applied to Linux-5.15.0 (LTS) too since it has the
-> original regression :
-> 
->  1d659236fb43 ("dma-pool: scale the default DMA coherent pool
-> size with memory capacity")
+Hi "Matthew,
 
-Yeah, Fixes and stable need be added. Thanks for pointing out.
+Thank you for the patch! Yet something to improve:
 
-As I have said in cover letter, this issue didn't occur until below
-commits applied. So I will add 'Fixes: 6f599d84231f ("x86/kdump: Always
-reserve the low 1M when the crashkernel option is specified")' to patch
-4, 5. The patch 1, 2 are cleanup|improvement, not related to this issue.
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on arm64/for-next/core powerpc/next s390/features linus/master v5.16-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-  1a6a9044b967 x86/setup: Remove CONFIG_X86_RESERVE_LOW and reservelow= options
-  23721c8e92f7 x86/crash: Remove crash_reserve_low_1M()
-  f1d4d47c5851 x86/setup: Always reserve the first 1M of RAM
-  7c321eb2b843 x86/kdump: Remove the backup region handling
-  6f599d84231f x86/kdump: Always reserve the low 1M when the crashkernel option is specified
+url:    https://github.com/0day-ci/linux/commits/Matthew-Wilcox-Oracle/Convert-vmcore-to-use-an-iov_iter/20211213-080748
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e463a09af2f0677b9485a7e8e4e70b396b2ffb6f
+config: riscv-randconfig-r012-20211213 (https://download.01.org/0day-ci/archive/20211213/202112131249.lfVULc7X-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/22576d6aef6fb4cffad0a4e85953662c147dfe66
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Matthew-Wilcox-Oracle/Convert-vmcore-to-use-an-iov_iter/20211213-080748
+        git checkout 22576d6aef6fb4cffad0a4e85953662c147dfe66
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=riscv SHELL=/bin/bash fs/proc/
 
-> 
-> Maybe add "Fixes" to the other commits ?
-> 
-> 
-> > 
-> > On 12/07/21 at 11:07am, Baoquan He wrote:
-> > > ***Problem observed:
-> > > On x86_64, when crash is triggered and entering into kdump kernel, page
-> > > allocation failure can always be seen.
-> > > 
-> > >   ---------------------------------
-> > >   DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
-> > >   swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
-> > >   CPU: 0 PID: 1 Comm: swapper/0
-> > >   Call Trace:
-> > >    dump_stack+0x7f/0xa1
-> > >    warn_alloc.cold+0x72/0xd6
-> > >    ......
-> > >    __alloc_pages+0x24d/0x2c0
-> > >    ......
-> > >    dma_atomic_pool_init+0xdb/0x176
-> > >    do_one_initcall+0x67/0x320
-> > >    ? rcu_read_lock_sched_held+0x3f/0x80
-> > >    kernel_init_freeable+0x290/0x2dc
-> > >    ? rest_init+0x24f/0x24f
-> > >    kernel_init+0xa/0x111
-> > >    ret_from_fork+0x22/0x30
-> > >   Mem-Info:
-> > >   ------------------------------------
-> > > 
-> > > ***Root cause:
-> > > In the current kernel, it assumes that DMA zone must have managed pages
-> > > and try to request pages if CONFIG_ZONE_DMA is enabled. While this is not
-> > > always true. E.g in kdump kernel of x86_64, only low 1M is presented and
-> > > locked down at very early stage of boot, so that this low 1M won't be
-> > > added into buddy allocator to become managed pages of DMA zone. This
-> > > exception will always cause page allocation failure if page is requested
-> > > from DMA zone.
-> > > 
-> > > ***Investigation:
-> > > This failure happens since below commit merged into linus's tree.
-> > >    1a6a9044b967 x86/setup: Remove CONFIG_X86_RESERVE_LOW and reservelow= options
-> > >    23721c8e92f7 x86/crash: Remove crash_reserve_low_1M()
-> > >    f1d4d47c5851 x86/setup: Always reserve the first 1M of RAM
-> > >    7c321eb2b843 x86/kdump: Remove the backup region handling
-> > >    6f599d84231f x86/kdump: Always reserve the low 1M when the crashkernel option is specified
-> > > 
-> > > Before them, on x86_64, the low 640K area will be reused by kdump kernel.
-> > > So in kdump kernel, the content of low 640K area is copied into a backup
-> > > region for dumping before jumping into kdump. Then except of those firmware
-> > > reserved region in [0, 640K], the left area will be added into buddy
-> > > allocator to become available managed pages of DMA zone.
-> > > 
-> > > However, after above commits applied, in kdump kernel of x86_64, the low
-> > > 1M is reserved by memblock, but not released to buddy allocator. So any
-> > > later page allocation requested from DMA zone will fail.
-> > > 
-> > > This low 1M lock down is needed because AMD SME encrypts memory making
-> > > the old backup region mechanims impossible when switching into kdump
-> > > kernel. And Intel engineer mentioned their TDX (Trusted domain extensions)
-> > > which is under development in kernel also needs lock down the low 1M.
-> > > So we can't simply revert above commits to fix the page allocation
-> > > failure from DMA zone as someone suggested.
-> > > 
-> > > ***Solution:
-> > > Currently, only DMA atomic pool and dma-kmalloc will initialize and
-> > > request page allocation with GFP_DMA during bootup. So only initialize
-> > > them when DMA zone has available managed pages, otherwise just skip the
-> > > initialization. From testing and code, this doesn't matter. In kdump
-> > > kernel of x86_64, the page allocation failure disappear.
-> > > 
-> > > ***Further thinking
-> > > On x86_64, it consistently takes [0, 16M] into ZONE_DMA, and (16M, 4G]
-> > > into ZONE_DMA32 by default. The zone DMA covering low 16M is used to
-> > > take care of antique ISA devices. In fact, on 64bit system, it rarely
-> > > need ZONE_DMA (which is low 16M) to support almost extinct ISA devices.
-> > > However, some components treat DMA as a generic concept, e.g
-> > > kmalloc-dma, slab allocator initializes it for later any DMA related
-> > > buffer allocation, but not limited to ISA DMA.
-> > > 
-> > > On arm64, even though both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32
-> > > are enabled, it makes ZONE_DMA covers the low 4G area, and ZONE_DMA32
-> > > empty. Unless on specific platforms (e.g. 30-bit on Raspberry Pi 4),
-> > > then zone DMA covers the 1st 1G area, zone DMA32 covers the rest of
-> > > the 32-bit addressable memory.
-> > > 
-> > > I am wondering if we can also change the size of DMA and DMA32 ZONE as
-> > > dynamically adjusted, just as arm64 is doing? On x86_64, we can make
-> > > zone DMA covers the 32-bit addressable memory, and empty zone DMA32 by
-> > > default. Once ISA_DMA_API is enabled, we go back to make zone DMA covers
-> > > low 16M area, zone DMA32 covers the rest of 32-bit addressable memory.
-> > > (I am not familiar with ISA_DMA_API, will it require 24-bit addressable
-> > > memory when enabled?)
-> > > 
-> > > Change history:
-> > > 
-> > > v2 post:
-> > > https://urldefense.com/v3/__https://lore.kernel.org/all/20210810094835.13402-1-bhe@redhat.com/T/*u__;Iw!!ACWV5N9M2RV99hQ!beOGaLK9suYILSZ8uvbAt4Xd7raHP_p6tcVTvcnZMWCq_eL1VQxSMIJdw-z6EjaERCi0$
-> > > 
-> > > v1 post:
-> > > https://urldefense.com/v3/__https://lore.kernel.org/all/20210624052010.5676-1-bhe@redhat.com/T/*u__;Iw!!ACWV5N9M2RV99hQ!beOGaLK9suYILSZ8uvbAt4Xd7raHP_p6tcVTvcnZMWCq_eL1VQxSMIJdw-z6EgRgBiPP$
-> > > 
-> > > v2->v2 RESEND:
-> > >   John pinged to push the repost of this patchset. So fix one typo of
-> > >   suject of patch 3/5; Fix a building error caused by mix declaration in
-> > >   patch 5/5. Both of them are found by John from his testing.
-> > > 
-> > > v1->v2:
-> > >   Change to check if managed DMA zone exists. If DMA zone has managed
-> > >   pages, go further to request page from DMA zone to initialize. Otherwise,
-> > >   just skip to initialize stuffs which need pages from DMA zone.
-> > > 
-> > > Baoquan He (5):
-> > >    docs: kernel-parameters: Update to reflect the current default size of
-> > >      atomic pool
-> > >    dma-pool: allow user to disable atomic pool
-> > >    mm_zone: add function to check if managed dma zone exists
-> > >    dma/pool: create dma atomic pool only if dma zone has managed pages
-> > >    mm/slub: do not create dma-kmalloc if no managed pages in DMA zone
-> > > 
-> > >   .../admin-guide/kernel-parameters.txt         |  5 ++++-
-> > >   include/linux/mmzone.h                        | 21 +++++++++++++++++++
-> > >   kernel/dma/pool.c                             | 11 ++++++----
-> > >   mm/page_alloc.c                               | 11 ++++++++++
-> > >   mm/slab_common.c                              |  9 ++++++++
-> > >   5 files changed, 52 insertions(+), 5 deletions(-)
-> > > 
-> > > -- 
-> > > 2.17.2
-> > > 
-> > 
-> 
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
+All error/warnings (new ones prefixed by >>):
+
+   fs/proc/vmcore.c: In function 'read_from_oldmem':
+   fs/proc/vmcore.c:157:31: error: implicit declaration of function 'iov_iter_zero' [-Werror=implicit-function-declaration]
+     157 |                         tmp = iov_iter_zero(nr_bytes, iter);
+         |                               ^~~~~~~~~~~~~
+   fs/proc/vmcore.c: In function 'elfcorehdr_read':
+>> fs/proc/vmcore.c:202:16: error: variable 'kvec' has initializer but incomplete type
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                ^~~~
+>> fs/proc/vmcore.c:202:31: error: 'struct kvec' has no member named 'iov_base'
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                               ^~~~~~~~
+>> fs/proc/vmcore.c:202:42: warning: excess elements in struct initializer
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                          ^~~
+   fs/proc/vmcore.c:202:42: note: (near initialization for 'kvec')
+>> fs/proc/vmcore.c:202:48: error: 'struct kvec' has no member named 'iov_len'
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                                ^~~~~~~
+   fs/proc/vmcore.c:202:58: warning: excess elements in struct initializer
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                                          ^~~~~
+   fs/proc/vmcore.c:202:58: note: (near initialization for 'kvec')
+   fs/proc/vmcore.c:202:21: error: storage size of 'kvec' isn't known
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                     ^~~~
+   fs/proc/vmcore.c:203:25: error: storage size of 'iter' isn't known
+     203 |         struct iov_iter iter;
+         |                         ^~~~
+   fs/proc/vmcore.c:205:9: error: implicit declaration of function 'iov_iter_kvec' [-Werror=implicit-function-declaration]
+     205 |         iov_iter_kvec(&iter, READ, &kvec, 1, count);
+         |         ^~~~~~~~~~~~~
+   fs/proc/vmcore.c:203:25: warning: unused variable 'iter' [-Wunused-variable]
+     203 |         struct iov_iter iter;
+         |                         ^~~~
+   fs/proc/vmcore.c:202:21: warning: unused variable 'kvec' [-Wunused-variable]
+     202 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                     ^~~~
+   fs/proc/vmcore.c: In function 'elfcorehdr_read_notes':
+   fs/proc/vmcore.c:215:16: error: variable 'kvec' has initializer but incomplete type
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                ^~~~
+   fs/proc/vmcore.c:215:31: error: 'struct kvec' has no member named 'iov_base'
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                               ^~~~~~~~
+   fs/proc/vmcore.c:215:42: warning: excess elements in struct initializer
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                          ^~~
+   fs/proc/vmcore.c:215:42: note: (near initialization for 'kvec')
+   fs/proc/vmcore.c:215:48: error: 'struct kvec' has no member named 'iov_len'
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                                ^~~~~~~
+   fs/proc/vmcore.c:215:58: warning: excess elements in struct initializer
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                                                          ^~~~~
+   fs/proc/vmcore.c:215:58: note: (near initialization for 'kvec')
+   fs/proc/vmcore.c:215:21: error: storage size of 'kvec' isn't known
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                     ^~~~
+   fs/proc/vmcore.c:216:25: error: storage size of 'iter' isn't known
+     216 |         struct iov_iter iter;
+         |                         ^~~~
+   fs/proc/vmcore.c:216:25: warning: unused variable 'iter' [-Wunused-variable]
+   fs/proc/vmcore.c:215:21: warning: unused variable 'kvec' [-Wunused-variable]
+     215 |         struct kvec kvec = { .iov_base = buf, .iov_len = count };
+         |                     ^~~~
+   fs/proc/vmcore.c: In function '__read_vmcore':
+   fs/proc/vmcore.c:327:17: error: invalid use of undefined type 'struct iov_iter'
+     327 |         if (iter->count == 0 || *fpos >= vmcore_size)
+         |                 ^~
+   fs/proc/vmcore.c:331:17: error: invalid use of undefined type 'struct iov_iter'
+     331 |         if (iter->count > vmcore_size - *fpos)
+         |                 ^~
+   fs/proc/vmcore.c:332:21: error: invalid use of undefined type 'struct iov_iter'
+     332 |                 iter->count = vmcore_size - *fpos;
+         |                     ^~
+   In file included from include/linux/kernel.h:17,
+                    from include/linux/cpumask.h:10,
+                    from include/linux/smp.h:13,
+                    from include/linux/lockdep.h:14,
+                    from include/linux/spinlock.h:62,
+                    from include/linux/mmzone.h:8,
+                    from include/linux/gfp.h:6,
+                    from include/linux/mm.h:10,
+                    from fs/proc/vmcore.c:11:
+   fs/proc/vmcore.c:336:62: error: invalid use of undefined type 'struct iov_iter'
+     336 |                 tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
+         |                                                              ^~
+   include/linux/minmax.h:20:46: note: in definition of macro '__typecheck'
+      20 |         (!!(sizeof((typeof(x) *)1 == (typeof(y) *)1)))
+         |                                              ^
+   include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~
+   include/linux/minmax.h:45:25: note: in expansion of macro '__careful_cmp'
+      45 | #define min(x, y)       __careful_cmp(x, y, <)
+         |                         ^~~~~~~~~~~~~
+   fs/proc/vmcore.c:336:23: note: in expansion of macro 'min'
+     336 |                 tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
+         |                       ^~~
+   In file included from arch/riscv/include/asm/bug.h:10,
+                    from include/linux/bug.h:5,
+                    from include/linux/mmdebug.h:5,
+                    from include/linux/mm.h:9,
+                    from fs/proc/vmcore.c:11:
+   fs/proc/vmcore.c:336:62: error: invalid use of undefined type 'struct iov_iter'
+     336 |                 tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
+         |                                                              ^~
+   include/linux/const.h:12:55: note: in definition of macro '__is_constexpr'
+      12 |         (sizeof(int) == sizeof(*(8 ? ((void *)((long)(x) * 0l)) : (int *)8)))
+         |                                                       ^
+   include/linux/minmax.h:26:39: note: in expansion of macro '__no_side_effects'
+      26 |                 (__typecheck(x, y) && __no_side_effects(x, y))
+         |                                       ^~~~~~~~~~~~~~~~~
+   include/linux/minmax.h:36:31: note: in expansion of macro '__safe_cmp'
+      36 |         __builtin_choose_expr(__safe_cmp(x, y), \
+         |                               ^~~~~~~~~~
+
+
+vim +/kvec +202 fs/proc/vmcore.c
+
+   196	
+   197	/*
+   198	 * Architectures may override this function to read from ELF header
+   199	 */
+   200	ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+   201	{
+ > 202		struct kvec kvec = { .iov_base = buf, .iov_len = count };
+   203		struct iov_iter iter;
+   204	
+   205		iov_iter_kvec(&iter, READ, &kvec, 1, count);
+   206	
+   207		return read_from_oldmem(&iter, count, ppos, false);
+   208	}
+   209	
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
 _______________________________________________
 kexec mailing list
