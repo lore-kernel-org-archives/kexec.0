@@ -1,17 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
+Received: from mail-pg1-x531.google.com ([2607:f8b0:4864:20::531])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwmCy-00A0U1-Tl
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 14:21:45 +0000
-Message-ID: <89c24193-5826-d956-a6ec-17e18c329547@oracle.com>
-Date: Mon, 13 Dec 2021 08:21:29 -0600
-Subject: Re: [PATCH v3 2/5] dma-pool: allow user to disable atomic pool
-Content-Language: en-US
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-3-bhe@redhat.com>
-From: john.p.donnelly@oracle.com
-In-Reply-To: <20211213122712.23805-3-bhe@redhat.com>
+ id 1mwmD8-00A0WS-C5
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 14:21:51 +0000
+Received: by mail-pg1-x531.google.com with SMTP id 133so14684018pgc.12
+ for <kexec@lists.infradead.org>; Mon, 13 Dec 2021 06:21:49 -0800 (PST)
+Date: Mon, 13 Dec 2021 14:21:42 +0000
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
+ no managed pages
+Message-ID: <20211213142142.GA999996@odroid>
+References: <20211207030750.30824-1-bhe@redhat.com>
+ <alpine.DEB.2.22.394.2112070859420.201880@gentwo.de>
+ <20211209080540.GA3050@MiWiFi-R3L-srv>
+ <alpine.DEB.2.22.394.2112091355510.270348@gentwo.de>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.22.394.2112091355510.270348@gentwo.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -20,79 +25,67 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
+To: Christoph Lameter <cl@gentwo.org>
+Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
 
-On 12/13/21 6:27 AM, Baoquan He wrote:
-> In the current code, three atomic memory pools are always created,
-> atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
-> specified in kernel command line. In fact, atomic pool is only
-> necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
-> which are needed on few ARCHes.
+On Thu, Dec 09, 2021 at 01:59:58PM +0100, Christoph Lameter wrote:
+> On Thu, 9 Dec 2021, Baoquan He wrote:
 > 
-> So change code to allow user to disable atomic pool by specifying
-> 'coherent_pool=0'.
+> > > The slab allocators guarantee that all kmalloc allocations are DMA able
+> > > indepent of specifying ZONE_DMA/ZONE_DMA32
+> >
+> > Here you mean we guarantee dma-kmalloc will be DMA able independent of
+> > specifying ZONE_DMA/DMA32, or the whole sla/ub allocator?
 > 
-> Meanwhile, update the relevant document in kernel-parameter.txt.
+> All memory obtained via kmalloc --independent of "dma-alloc", ZONE_DMA
+> etc-- must be dmaable.
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
- >
-  Acked-by: John Donnelly <john.p.donnelly@oracle.com>
-  Tested-by:  John Donnelly <john.p.donnelly@oracle.com>
+> > With my understanding, isn't the reasonable sequence zone DMA firstly if
+> > GFP_DMA, then zone DMA32, finaly zone NORMAL. At least, on x86_64, I
+> > believe device driver developer prefer to see this because most of time,
+> > zone DMA and zone DMA32 are both used for dma buffer allocation, if
+> > IOMMU is not enabled. However, memory got from zone NORMAL when required
+> > with GFP_DMA, and it succeeds, does it mean that the developer doesn't
+> > take the GFP_DMA flag seriously, just try to get buffer for allocation?
+> 
+> ZONE_NORMAL is also used for DMA allocations. ZONE_DMA and ZONE_DMA32 are
+> only used if the physical range of memory supported by a device does not
+> include all of normal memory.
+> 
+> > > The size of ZONE_DMA is traditionally depending on the platform. On some
+> > > it is 16MB, on some 1G and on some 4GB. ZONE32 is always 4GB and should
+> > > only be used if ZONE_DMA has already been used.
+> >
+> > As said at above, ia64 and riscv don't have ZONE_DMA at all, they just
+> > cover low 4G with ZONE_DMA32 alone.
+> 
+> If you do not have devices that are crap and cannot address the full
+> memory then you dont need these special zones.
+> 
+> Sorry this subject has caused confusion multiple times over the years and
+> there are still arches that are not implementing this in a consistent way.
 
-> ---
->   Documentation/admin-guide/kernel-parameters.txt | 3 ++-
->   kernel/dma/pool.c                               | 7 +++++--
->   2 files changed, 7 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index ec4d25e854a8..d7015309614b 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -664,7 +664,8 @@
->   
->   	coherent_pool=nn[KMG]	[ARM,KNL]
->   			Sets the size of memory pool for coherent, atomic dma
-> -			allocations. Otherwise the default size will be scaled
-> +			allocations. A value of 0 disables the three atomic
-> +			memory pool. Otherwise the default size will be scaled
->   			with memory capacity, while clamped between 128K and
->   			1 << (PAGE_SHIFT + MAX_ORDER-1).
->   
-> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> index 5f84e6cdb78e..5a85804b5beb 100644
-> --- a/kernel/dma/pool.c
-> +++ b/kernel/dma/pool.c
-> @@ -21,7 +21,7 @@ static struct gen_pool *atomic_pool_kernel __ro_after_init;
->   static unsigned long pool_size_kernel;
->   
->   /* Size can be defined by the coherent_pool command line */
-> -static size_t atomic_pool_size;
-> +static unsigned long atomic_pool_size = -1;
->   
->   /* Dynamic background expansion when the atomic pool is near capacity */
->   static struct work_struct atomic_pool_work;
-> @@ -188,11 +188,14 @@ static int __init dma_atomic_pool_init(void)
->   {
->   	int ret = 0;
->   
-> +	if (!atomic_pool_size)
-> +		return 0;
-> +
->   	/*
->   	 * If coherent_pool was not used on the command line, default the pool
->   	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER-1.
->   	 */
-> -	if (!atomic_pool_size) {
-> +	if (atomic_pool_size == -1) {
->   		unsigned long pages = totalram_pages() / (SZ_1G / SZ_128K);
->   		pages = min_t(unsigned long, pages, MAX_ORDER_NR_PAGES);
->   		atomic_pool_size = max_t(size_t, pages << PAGE_SHIFT, SZ_128K);
+Hello Baoquan and Christoph.
 
+I'm the confused one here too. :)
+
+So the point is that ZONE_NORMAL is also dma-able if the device can access
+normal memory. (which is false for ISA devices, ancient PCI devices,
+...etc.)
+
+Then if I understand right, I think the patch 5/5 (mm/slub: Avoid ...) should be removing
+GFP_DMA flag from the function sr_probe() -> get_capabilities, rather than
+copying copying normal kmalloc caches to dma kmalloc caches. (If the device does
+not have limitation in its address space.)
+
+Please let me know If I got it wrong :)
+
+Thanks,
+Hyeonggon.
 
 _______________________________________________
 kexec mailing list
