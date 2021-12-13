@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 13 Dec 2021 14:43:52 +0000
-From: Matthew Wilcox <willy@infradead.org>
-Subject: Re: [PATCH v2 0/2] kdump: simplify code
-Message-ID: <YbdcKK3Cq6ITTg/l@casper.infradead.org>
-References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
- <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
- <YbXhVxRJfjvKw++W@casper.infradead.org>
- <b7a75ae9253445af81ff2fedd5268af4@AcuMS.aculab.com>
+Received: from smtp-out2.suse.de ([195.135.220.29])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwpiP-00Atus-DE
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 18:06:23 +0000
+Date: Mon, 13 Dec 2021 19:06:11 +0100
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+Subject: Re: [PATCH v2 6/6] module: Move duplicate mod_check_sig users code
+ to mod_parse_sig
+Message-ID: <20211213180611.GU117207@kunlun.suse.cz>
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <d464e1f45d21a29cbbe828dea412206cdc94866b.1637862358.git.msuchanek@suse.de>
+ <20211207171034.0b782d82@rhtmp>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <b7a75ae9253445af81ff2fedd5268af4@AcuMS.aculab.com>
+In-Reply-To: <20211207171034.0b782d82@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,33 +26,223 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: David Laight <David.Laight@aculab.com>
-Cc: 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Mimi Zohar <zohar@linux.ibm.com>, Nayna <nayna@linux.vnet.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 08:30:33AM +0000, David Laight wrote:
-> From: Matthew Wilcox
-> > Sent: 12 December 2021 11:48
-> > 
-> > On Sat, Dec 11, 2021 at 05:53:46PM +0000, David Laight wrote:
-> > > From: Tiezhu Yang
-> > > > Sent: 11 December 2021 03:33
-> > > >
-> > > > v2:
-> > > >   -- add copy_to_user_or_kernel() in lib/usercopy.c
-> > > >   -- define userbuf as bool type
-> > >
-> > > Instead of having a flag to indicate whether the buffer is user or kernel,
-> > > would it be better to have two separate buffer pointers.
-> > > One for a user space buffer, the other for a kernel space buffer.
-> > > Exactly one of the buffers should always be NULL.
-> > 
-> > No.  You should be using an iov_iter instead.  See
-> > https://lore.kernel.org/all/Ya4bdB0UBJCZhUSo@casper.infradead.org/
-> > for a start on this.
+Hello,
+
+On Tue, Dec 07, 2021 at 05:10:34PM +0100, Philipp Rudo wrote:
+> Hi Michal,
 > 
-> iov_iter gets horribly expensive...
+> On Thu, 25 Nov 2021 19:02:44 +0100
+> Michal Suchanek <msuchanek@suse.de> wrote:
+> 
+> > Multiple users of mod_check_sig check for the marker, then call
+> > mod_check_sig, extract signature length, and remove the signature.
+> > 
+> > Put this code in one place together with mod_check_sig.
+> > 
+> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> > ---
+> >  include/linux/module_signature.h    |  1 +
+> >  kernel/module_signature.c           | 56 ++++++++++++++++++++++++++++-
+> >  kernel/module_signing.c             | 26 +++-----------
+> >  security/integrity/ima/ima_modsig.c | 22 ++----------
+> >  4 files changed, 63 insertions(+), 42 deletions(-)
+> > 
+> > diff --git a/include/linux/module_signature.h b/include/linux/module_signature.h
+> > index 7eb4b00381ac..1343879b72b3 100644
+> > --- a/include/linux/module_signature.h
+> > +++ b/include/linux/module_signature.h
+> > @@ -42,5 +42,6 @@ struct module_signature {
+> >  
+> >  int mod_check_sig(const struct module_signature *ms, size_t file_len,
+> >  		  const char *name);
+> > +int mod_parse_sig(const void *data, size_t *len, size_t *sig_len, const char *name);
+> >  
+> >  #endif /* _LINUX_MODULE_SIGNATURE_H */
+> > diff --git a/kernel/module_signature.c b/kernel/module_signature.c
+> > index 00132d12487c..784b40575ee4 100644
+> > --- a/kernel/module_signature.c
+> > +++ b/kernel/module_signature.c
+> > @@ -8,14 +8,36 @@
+> >  
+> >  #include <linux/errno.h>
+> >  #include <linux/printk.h>
+> > +#include <linux/string.h>
+> >  #include <linux/module_signature.h>
+> >  #include <asm/byteorder.h>
+> >  
+> > +/**
+> > + * mod_check_sig_marker - check that the given data has signature marker at the end
+> > + *
+> > + * @data:	Data with appended signature
+> > + * @len:	Length of data. Signature marker length is subtracted on success.
+> > + */
+> > +static inline int mod_check_sig_marker(const void *data, size_t *len)
+> 
+> I personally don't like it when a function has a "check" in it's name
+> as it doesn't describe what the function is checking for. For me
 
-Oh, right.  Reading the kcore is a high-performance path, my mistake.
+It is consistent with mod_check_sig
+
+> mod_has_sig_marker is much more precise. I would use that instead.
+
+It actually would not because it does more than that.
+
+Thanks
+
+Michal
+
+> 
+> Thanks
+> Philipp
+> 
+> > +{
+> > +	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+> > +
+> > +	if (markerlen > *len)
+> > +		return -ENODATA;
+> > +
+> > +	if (memcmp(data + *len - markerlen, MODULE_SIG_STRING,
+> > +		   markerlen))
+> > +		return -ENODATA;
+> > +
+> > +	*len -= markerlen;
+> > +	return 0;
+> > +}
+> > +
+> >  /**
+> >   * mod_check_sig - check that the given signature is sane
+> >   *
+> >   * @ms:		Signature to check.
+> > - * @file_len:	Size of the file to which @ms is appended.
+> > + * @file_len:	Size of the file to which @ms is appended (without the marker).
+> >   * @name:	What is being checked. Used for error messages.
+> >   */
+> >  int mod_check_sig(const struct module_signature *ms, size_t file_len,
+> > @@ -44,3 +66,35 @@ int mod_check_sig(const struct module_signature *ms, size_t file_len,
+> >  
+> >  	return 0;
+> >  }
+> > +
+> > +/**
+> > + * mod_parse_sig - check that the given signature is sane and determine signature length
+> > + *
+> > + * @data:	Data with appended signature.
+> > + * @len:	Length of data. Signature and marker length is subtracted on success.
+> > + * @sig_len:	Length of signature. Filled on success.
+> > + * @name:	What is being checked. Used for error messages.
+> > + */
+> > +int mod_parse_sig(const void *data, size_t *len, size_t *sig_len, const char *name)
+> > +{
+> > +	const struct module_signature *sig;
+> > +	int rc;
+> > +
+> > +	rc = mod_check_sig_marker(data, len);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	if (*len < sizeof(*sig))
+> > +		return -ENODATA;
+> > +
+> > +	sig = (const struct module_signature *)(data + (*len - sizeof(*sig)));
+> > +
+> > +	rc = mod_check_sig(sig, *len, name);
+> > +	if (rc)
+> > +		return rc;
+> > +
+> > +	*sig_len = be32_to_cpu(sig->sig_len);
+> > +	*len -= *sig_len + sizeof(*sig);
+> > +
+> > +	return 0;
+> > +}
+> > diff --git a/kernel/module_signing.c b/kernel/module_signing.c
+> > index cef72a6f6b5d..02bbca90f467 100644
+> > --- a/kernel/module_signing.c
+> > +++ b/kernel/module_signing.c
+> > @@ -25,35 +25,17 @@ int verify_appended_signature(const void *data, size_t *len,
+> >  			      struct key *trusted_keys,
+> >  			      enum key_being_used_for purpose)
+> >  {
+> > -	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
+> >  	struct module_signature ms;
+> > -	size_t sig_len, modlen = *len;
+> > +	size_t sig_len;
+> >  	int ret;
+> >  
+> > -	pr_devel("==>%s %s(,%zu)\n", __func__, key_being_used_for[purpose], modlen);  
+> > +	pr_devel("==>%s %s(,%zu)\n", __func__, key_being_used_for[purpose], *len);
+> >  
+> > -	if (markerlen > modlen)
+> > -		return -ENODATA;
+> > -
+> > -	if (memcmp(data + modlen - markerlen, MODULE_SIG_STRING,
+> > -		   markerlen))
+> > -		return -ENODATA;
+> > -	modlen -= markerlen;
+> > -
+> > -	if (modlen <= sizeof(ms))
+> > -		return -EBADMSG;
+> > -
+> > -	memcpy(&ms, data + (modlen - sizeof(ms)), sizeof(ms));
+> > -
+> > -	ret = mod_check_sig(&ms, modlen, key_being_used_for[purpose]);
+> > +	ret = mod_parse_sig(data, len, &sig_len, key_being_used_for[purpose]);
+> >  	if (ret)
+> >  		return ret;
+> >  
+> > -	sig_len = be32_to_cpu(ms.sig_len);
+> > -	modlen -= sig_len + sizeof(ms);
+> > -	*len = modlen;
+> > -
+> > -	return verify_pkcs7_signature(data, modlen, data + modlen, sig_len,
+> > +	return verify_pkcs7_signature(data, *len, data + *len, sig_len,
+> >  				      trusted_keys,
+> >  				      purpose,
+> >  				      NULL, NULL);
+> > diff --git a/security/integrity/ima/ima_modsig.c b/security/integrity/ima/ima_modsig.c
+> > index fb25723c65bc..46917eb37fd8 100644
+> > --- a/security/integrity/ima/ima_modsig.c
+> > +++ b/security/integrity/ima/ima_modsig.c
+> > @@ -37,33 +37,17 @@ struct modsig {
+> >   *
+> >   * Return: 0 on success, error code otherwise.
+> >   */
+> > -int ima_read_modsig(enum ima_hooks func, const void *buf, loff_t buf_len,
+> > +int ima_read_modsig(enum ima_hooks func, const void *buf, loff_t len,
+> >  		    struct modsig **modsig)
+> >  {
+> > -	const size_t marker_len = strlen(MODULE_SIG_STRING);
+> > -	const struct module_signature *sig;
+> >  	struct modsig *hdr;
+> > -	size_t sig_len;
+> > -	const void *p;
+> > +	size_t sig_len, buf_len = len;
+> >  	int rc;
+> >  
+> > -	if (buf_len <= marker_len + sizeof(*sig))
+> > -		return -ENOENT;
+> > -
+> > -	p = buf + buf_len - marker_len;
+> > -	if (memcmp(p, MODULE_SIG_STRING, marker_len))
+> > -		return -ENOENT;
+> > -
+> > -	buf_len -= marker_len;
+> > -	sig = (const struct module_signature *)(p - sizeof(*sig));
+> > -
+> > -	rc = mod_check_sig(sig, buf_len, func_tokens[func]);
+> > +	rc = mod_parse_sig(buf, &buf_len, &sig_len, func_tokens[func]);
+> >  	if (rc)
+> >  		return rc;
+> >  
+> > -	sig_len = be32_to_cpu(sig->sig_len);
+> > -	buf_len -= sig_len + sizeof(*sig);
+> > -
+> >  	/* Allocate sig_len additional bytes to hold the raw PKCS#7 data. */
+> >  	hdr = kzalloc(sizeof(*hdr) + sig_len, GFP_KERNEL);
+> >  	if (!hdr)
+> 
 
 _______________________________________________
 kexec mailing list
