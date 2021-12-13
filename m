@@ -1,18 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out1.suse.de ([195.135.220.28])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwptx-00AuoQ-AP
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 18:18:18 +0000
-Date: Mon, 13 Dec 2021 19:18:13 +0100
-From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
-Subject: Re: [PATCH v2 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
-Message-ID: <20211213181813.GV117207@kunlun.suse.cz>
-References: <cover.1637862358.git.msuchanek@suse.de>
- <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
- <17153a1c-86c6-6ffd-35d6-5329829661df@linux.vnet.ibm.com>
+Date: Mon, 13 Dec 2021 18:50:55 +0000
+From: Will Deacon <will@kernel.org>
+Subject: Re: [PATCH v17 00/10] support reserving crashkernel above 4G on
+ arm64 kdump
+Message-ID: <20211213185054.GH12405@willie-the-truck>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <afde1574-23b6-a36a-445e-5fb03873fe86@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <17153a1c-86c6-6ffd-35d6-5329829661df@linux.vnet.ibm.com>
+In-Reply-To: <afde1574-23b6-a36a-445e-5fb03873fe86@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,63 +21,73 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Nayna <nayna@linux.vnet.ibm.com>
-Cc: keyrings@vger.kernel.org, kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Chen Zhou <dingguo.cz@antgroup.com>, gregkh@linuxfoundation.org
 
-Hello,
-
-On Sun, Dec 12, 2021 at 07:46:53PM -0500, Nayna wrote:
+On Fri, Dec 10, 2021 at 03:15:00PM +0800, Kefeng Wang wrote:
 > 
-> On 11/25/21 13:02, Michal Suchanek wrote:
-> > Copy the code from s390x
+> On 2021/12/10 14:55, Zhen Lei wrote:
+> > There are following issues in arm64 kdump:
+> > 1. We use crashkernel=X to reserve crashkernel below 4G, which
+> > will fail when there is no enough low memory.
+> > 2. If reserving crashkernel above 4G, in this case, crash dump
+> > kernel will boot failure because there is no low memory available
+> > for allocation.
 > > 
-> > Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> > ---
-> >   arch/powerpc/Kconfig        | 11 +++++++++++
-> >   arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
-> >   2 files changed, 47 insertions(+)
+> > To solve these issues, change the behavior of crashkernel=X.
+> > crashkernel=X tries low allocation in DMA zone and fall back to high
+> > allocation if it fails.
 > > 
-> > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > index ac0c515552fd..ecc1227a77f1 100644
-> > --- a/arch/powerpc/Kconfig
-> > +++ b/arch/powerpc/Kconfig
-> > @@ -561,6 +561,17 @@ config KEXEC_FILE
-> >   config ARCH_HAS_KEXEC_PURGATORY
-> >   	def_bool KEXEC_FILE
+> > We can also use "crashkernel=X,high" to select a high region above
+> > DMA zone, which also tries to allocate at least 256M low memory in
+> > DMA zone automatically and "crashkernel=Y,low" can be used to allocate
+> > specified size low memory.
 > > 
-> > +config KEXEC_SIG
-> > +	bool "Verify kernel signature during kexec_file_load() syscall"
-> > +	depends on KEXEC_FILE && MODULE_SIG_FORMAT
-> > +	help
-> > +	  This option makes kernel signature verification mandatory for
-> > +	  the kexec_file_load() syscall.
-> > +
+> > When reserving crashkernel in high memory, some low memory is reserved
+> > for crash dump kernel devices. So there may be two regions reserved for
+> > crash dump kernel.
+> > In order to distinct from the high region and make no effect to the use
+> > of existing kexec-tools, rename the low region as "Crash kernel (low)",
+> > and pass the low region by reusing DT property
+> > "linux,usable-memory-range". We made the low memory region as the last
+> > range of "linux,usable-memory-range" to keep compatibility with existing
+> > user-space and older kdump kernels.
+> > 
+> > Besides, we need to modify kexec-tools:
+> > arm64: support more than one crash kernel regions(see [1])
+> > 
+> > Another update is document about DT property 'linux,usable-memory-range':
+> > schemas: update 'linux,usable-memory-range' node schema(see [2])
+> > 
+> > This patchset contains the following 10 patches:
+> > 
+> > 0001-0004 are some x86 cleanups which prepares for making functionsreserve_crashkernel[_low]() generic.
+> > 0005 makes functions reserve_crashkernel[_low]() generic.
+> > 0006-0007 reimplements arm64 crashkernel=X.
+> > 0008-0009 adds memory for devices by DT property linux,usable-memory-range.
+> > 0010 updates the doc.
+> > 
+> > Changes since [v16]
+> > - Because no functional changes in this version, so add
+> >    "Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>" for patch 1-9
+> > - Add "Reviewed-by: Rob Herring <robh@kernel.org>" for patch 8
+> > - Update patch 9 based on the review comments of Rob Herring
+> > - As Catalin Marinas's suggestion, merge the implementation of
+> >    ARCH_WANT_RESERVE_CRASH_KERNEL into patch 5. Ensure that the
+> >    contents of X86 and ARM64 do not overlap, and reduce unnecessary
+> >    temporary differences.
 > 
-> Resending my last response as looks like it didn't go through mailing list
-> because of some wrong formatting. My apologies to those who are receiving it
-> twice.
+> An Internal review has been done, so for this series,
 > 
-> Since powerpc also supports IMA_ARCH_POLICY for kernel image signature
-> verification, please include the following:
-> 
-> "An alternative implementation for the powerpc arch is IMA_ARCH_POLICY. It
-> verifies the appended kernel image signature and additionally includes both
-> the signed and unsigned file hashes in the IMA measurement list, extends the
-> IMA PCR in the TPM, and prevents blacklisted binary kernel images from being
-> kexec'd."
+> Reviewed-by: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-It also does blacklist based on the file hash?
+That's good, but it would be _much_ better if you could do these reviews
+on the public mailing list in future. Is that possible? Otherwise, it's
+hard for maintainers to know what the reviews actually covered.
 
-There is a downstream patch that adds the support for the module
-signatures, and when the code is reused for KEXEC_SIG the blacklist
-also applies to it.
+Thanks,
 
-Which kind of shows that people really want to use the IMA features but
-with no support on some major architectures it's not going to work.
-
-Thanks
-
-Michal
+Will
 
 _______________________________________________
 kexec mailing list
