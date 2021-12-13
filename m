@@ -1,14 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 13 Dec 2021 20:54:09 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
-Message-ID: <Ybek4VRr8RaLM7kD@zn.tnic>
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-2-thunder.leizhen@huawei.com>
-MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211210065533.2023-2-thunder.leizhen@huawei.com>
+Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwsVu-00BOQc-5d
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 21:05:39 +0000
+Date: Mon, 13 Dec 2021 13:05:34 -0800
+From: Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v3 0/5] Avoid requesting page from DMA zone when no
+ managed pages
+Message-Id: <20211213130534.af47c7956c219797e6b56687@linux-foundation.org>
+In-Reply-To: <20211213122712.23805-1-bhe@redhat.com>
+References: <20211213122712.23805-1-bhe@redhat.com>
+Mime-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,34 +23,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
 
-> Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
+On Mon, 13 Dec 2021 20:27:07 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-From Documentation/process/maintainer-tip.rst:
+> Background information can be checked in cover letter of v2 RESEND POST
+> as below:
+> https://lore.kernel.org/all/20211207030750.30824-1-bhe@redhat.com/T/#u
 
-"Patch subject
- ^^^^^^^^^^^^^
+Please include all relevant info right here, in the [0/n].  For a
+number of reasons, one of which is that the text is more likely to be
+up to date as the patchset evolves.
 
-The tip tree preferred format for patch subject prefixes is
-'subsys/component:', e.g. 'x86/apic:', 'x86/mm/fault:', 'sched/fair:',
-'genirq/core:'. Please do not use file names or complete file paths as
-prefix. 'git log path/to/file' should give you a reasonable hint in most
-cases.
+It's unusual that this patchset has two non-urgent patches and the
+final three patches are cc:stable.  It makes one worry that patches 3-5
+might have dependencies on 1-2.  Also, I'd expect to merge the three
+-stable patches during 5.16-rcX which means I have to reorder things,
+redo changelogs, update links and blah blah.
 
-The condensed patch description in the subject line should start with a
-uppercase letter and should be written in imperative tone."
+So can I ask that you redo all of this as two patch series?  A 3-patch
+series which is targeted at -stable, followed by a separate two-patch
+series which is targeted at 5.17-rc1.  Each series with its own fully
+prepared [0/n] cover.
 
-Please fix 1-5 for your next submission.
-
-Thx.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
+Thanks.
 
 _______________________________________________
 kexec mailing list
