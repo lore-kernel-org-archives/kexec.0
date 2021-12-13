@@ -1,12 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <5ef3ef54-33db-3cb2-4908-8bd1254749e3@oracle.com>
-Date: Mon, 13 Dec 2021 08:37:48 -0600
-Subject: Re: [PATCH v17 00/10] support reserving crashkernel above 4G on arm64
- kdump
-Content-Language: en-US
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
-From: john.p.donnelly@oracle.com
-In-Reply-To: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Subject: [PATCH v3 2/3] vmcore: Convert __read_vmcore to use an iov_iter
+Date: Mon, 13 Dec 2021 14:39:26 +0000
+Message-Id: <20211213143927.3069508-3-willy@infradead.org>
+In-Reply-To: <20211213143927.3069508-1-willy@infradead.org>
+References: <20211213143927.3069508-1-willy@infradead.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -16,227 +14,228 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
 
-On 12/10/21 12:55 AM, Zhen Lei wrote:
-> There are following issues in arm64 kdump:
-> 1. We use crashkernel=X to reserve crashkernel below 4G, which
-> will fail when there is no enough low memory.
-> 2. If reserving crashkernel above 4G, in this case, crash dump
-> kernel will boot failure because there is no low memory available
-> for allocation.
-> 
-> To solve these issues, change the behavior of crashkernel=X.
-> crashkernel=X tries low allocation in DMA zone and fall back to high
-> allocation if it fails.
-> 
-> We can also use "crashkernel=X,high" to select a high region above
-> DMA zone, which also tries to allocate at least 256M low memory in
-> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
-> specified size low memory.
-> 
-> When reserving crashkernel in high memory, some low memory is reserved
-> for crash dump kernel devices. So there may be two regions reserved for
-> crash dump kernel.
-> In order to distinct from the high region and make no effect to the use
-> of existing kexec-tools, rename the low region as "Crash kernel (low)",
-> and pass the low region by reusing DT property
-> "linux,usable-memory-range". We made the low memory region as the last
-> range of "linux,usable-memory-range" to keep compatibility with existing
-> user-space and older kdump kernels.
-> 
-> Besides, we need to modify kexec-tools:
-> arm64: support more than one crash kernel regions(see [1])
-> 
-> Another update is document about DT property 'linux,usable-memory-range':
-> schemas: update 'linux,usable-memory-range' node schema(see [2])
-> 
-> This patchset contains the following 10 patches:
-> 
-> 0001-0004 are some x86 cleanups which prepares for making functionsreserve_crashkernel[_low]() generic.
-> 0005 makes functions reserve_crashkernel[_low]() generic.
-> 0006-0007 reimplements arm64 crashkernel=X.
-> 0008-0009 adds memory for devices by DT property linux,usable-memory-range.
-> 0010 updates the doc.
-> 
-> Changes since [v16]
-> - Because no functional changes in this version, so add
->    "Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>" for patch 1-9
-> - Add "Reviewed-by: Rob Herring <robh@kernel.org>" for patch 8
-> - Update patch 9 based on the review comments of Rob Herring
-> - As Catalin Marinas's suggestion, merge the implementation of
->    ARCH_WANT_RESERVE_CRASH_KERNEL into patch 5. Ensure that the
->    contents of X86 and ARM64 do not overlap, and reduce unnecessary
->    temporary differences.
-> 
-> Changes since [v15]
-> -  Aggregate the processing of "linux,usable-memory-range" into one function.
->     Only patch 9-10 have been updated.
-> 
-> Changes since [v14]
-> - Recovering the requirement that the CrashKernel memory regions on X86
->    only requires 1 MiB alignment.
-> - Combine patches 5 and 6 in v14 into one. The compilation warning fixed
->    by patch 6 was introduced by patch 5 in v14.
-> - As with crashk_res, crashk_low_res is also processed by
->    crash_exclude_mem_range() in patch 7.
-> - Due to commit b261dba2fdb2 ("arm64: kdump: Remove custom linux,usable-memory-range handling")
->    has removed the architecture-specific code, extend the property "linux,usable-memory-range"
->    in the platform-agnostic FDT core code. See patch 9.
-> - Discard the x86 description update in the document, because the description
->    has been updated by commit b1f4c363666c ("Documentation: kdump: update kdump guide").
-> - Change "arm64" to "ARM64" in Doc.
-> 
-> 
-> Changes since [v13]
-> - Rebased on top of 5.11-rc5.
-> - Introduce config CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL.
-> Since reserve_crashkernel[_low]() implementations are quite similar on
-> other architectures, so have CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL in
-> arch/Kconfig and select this by X86 and ARM64.
-> - Some minor cleanup.
-> 
-> Changes since [v12]
-> - Rebased on top of 5.10-rc1.
-> - Keep CRASH_ALIGN as 16M suggested by Dave.
-> - Drop patch "kdump: add threshold for the required memory".
-> - Add Tested-by from John.
-> 
-> Changes since [v11]
-> - Rebased on top of 5.9-rc4.
-> - Make the function reserve_crashkernel() of x86 generic.
-> Suggested by Catalin, make the function reserve_crashkernel() of x86 generic
-> and arm64 use the generic version to reimplement crashkernel=X.
-> 
-> Changes since [v10]
-> - Reimplement crashkernel=X suggested by Catalin, Many thanks to Catalin.
-> 
-> Changes since [v9]
-> - Patch 1 add Acked-by from Dave.
-> - Update patch 5 according to Dave's comments.
-> - Update chosen schema.
-> 
-> Changes since [v8]
-> - Reuse DT property "linux,usable-memory-range".
-> Suggested by Rob, reuse DT property "linux,usable-memory-range" to pass the low
-> memory region.
-> - Fix kdump broken with ZONE_DMA reintroduced.
-> - Update chosen schema.
-> 
-> Changes since [v7]
-> - Move x86 CRASH_ALIGN to 2M
-> Suggested by Dave and do some test, move x86 CRASH_ALIGN to 2M.
-> - Update Documentation/devicetree/bindings/chosen.txt.
-> Add corresponding documentation to Documentation/devicetree/bindings/chosen.txt
-> suggested by Arnd.
-> - Add Tested-by from Jhon and pk.
-> 
-> Changes since [v6]
-> - Fix build errors reported by kbuild test robot.
-> 
-> Changes since [v5]
-> - Move reserve_crashkernel_low() into kernel/crash_core.c.
-> - Delete crashkernel=X,high.
-> - Modify crashkernel=X,low.
-> If crashkernel=X,low is specified simultaneously, reserve spcified size low
-> memory for crash kdump kernel devices firstly and then reserve memory above 4G.
-> In addition, rename crashk_low_res as "Crash kernel (low)" for arm64, and then
-> pass to crash dump kernel by DT property "linux,low-memory-range".
-> - Update Documentation/admin-guide/kdump/kdump.rst.
-> 
-> Changes since [v4]
-> - Reimplement memblock_cap_memory_ranges for multiple ranges by Mike.
-> 
-> Changes since [v3]
-> - Add memblock_cap_memory_ranges back for multiple ranges.
-> - Fix some compiling warnings.
-> 
-> Changes since [v2]
-> - Split patch "arm64: kdump: support reserving crashkernel above 4G" as
-> two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
-> patch.
-> 
-> Changes since [v1]:
-> - Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
-> - Remove memblock_cap_memory_ranges() i added in v1 and implement that
-> in fdt_enforce_memory_region().
-> There are at most two crash kernel regions, for two crash kernel regions
-> case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
-> and then remove the memory range in the middle.
-> 
-> [1]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
-> [2]: https://github.com/robherring/dt-schema/pull/19
-> [v1]: https://lkml.org/lkml/2019/4/2/1174
-> [v2]: https://lkml.org/lkml/2019/4/9/86
-> [v3]: https://lkml.org/lkml/2019/4/9/306
-> [v4]: https://lkml.org/lkml/2019/4/15/273
-> [v5]: https://lkml.org/lkml/2019/5/6/1360
-> [v6]: https://lkml.org/lkml/2019/8/30/142
-> [v7]: https://lkml.org/lkml/2019/12/23/411
-> [v8]: https://lkml.org/lkml/2020/5/21/213
-> [v9]: https://lkml.org/lkml/2020/6/28/73
-> [v10]: https://lkml.org/lkml/2020/7/2/1443
-> [v11]: https://lkml.org/lkml/2020/8/1/150
-> [v12]: https://lkml.org/lkml/2020/9/7/1037
-> [v13]: https://lkml.org/lkml/2020/10/31/34
-> [v14]: https://lkml.org/lkml/2021/1/30/53
-> [v15]: https://lkml.org/lkml/2021/10/19/1405
-> [v16]: https://lkml.org/lkml/2021/11/23/435
-> 
-> 
-> Chen Zhou (9):
->    x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
->    x86: kdump: make the lower bound of crash kernel reservation
->      consistent
->    x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
->      reserve_crashkernel()
->    x86: kdump: move xen_pv_domain() check and insert_resource() to
->      setup_arch()
->    x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
->    arm64: kdump: introduce some macros for crash kernel reservation
->    arm64: kdump: reimplement crashkernel=X
->    of: fdt: Add memory for devices by DT property
->      "linux,usable-memory-range"
->    kdump: update Documentation about crashkernel
-> 
-> Zhen Lei (1):
->    of: fdt: Aggregate the processing of "linux,usable-memory-range"
-> 
->   Documentation/admin-guide/kdump/kdump.rst     |  11 +-
->   .../admin-guide/kernel-parameters.txt         |  11 +-
->   arch/Kconfig                                  |   3 +
->   arch/arm64/Kconfig                            |   1 +
->   arch/arm64/include/asm/kexec.h                |  10 ++
->   arch/arm64/kernel/machine_kexec_file.c        |  12 +-
->   arch/arm64/kernel/setup.c                     |  13 +-
->   arch/arm64/mm/init.c                          |  59 ++-----
->   arch/x86/Kconfig                              |   2 +
->   arch/x86/include/asm/elf.h                    |   3 +
->   arch/x86/include/asm/kexec.h                  |  31 +++-
->   arch/x86/kernel/setup.c                       | 163 ++----------------
->   drivers/of/fdt.c                              |  42 +++--
->   include/linux/crash_core.h                    |   3 +
->   include/linux/kexec.h                         |   2 -
->   kernel/crash_core.c                           | 156 +++++++++++++++++
->   kernel/kexec_core.c                           |  17 --
->   17 files changed, 301 insertions(+), 238 deletions(-)
-> 
+This gets rid of copy_to() and let us use proc_read_iter() instead
+of proc_read().
 
+Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
+---
+ fs/proc/vmcore.c | 81 +++++++++++++++++-------------------------------
+ 1 file changed, 29 insertions(+), 52 deletions(-)
 
-Hello ,
+diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+index 958cad6476e6..7b25f568d20d 100644
+--- a/fs/proc/vmcore.c
++++ b/fs/proc/vmcore.c
+@@ -252,22 +252,8 @@ ssize_t __weak copy_oldmem_page_encrypted(struct iov_iter *iter,
+ 	return copy_oldmem_page(iter, pfn, csize, offset);
+ }
+ 
+-/*
+- * Copy to either kernel or user space
+- */
+-static int copy_to(void *target, void *src, size_t size, int userbuf)
+-{
+-	if (userbuf) {
+-		if (copy_to_user((char __user *) target, src, size))
+-			return -EFAULT;
+-	} else {
+-		memcpy(target, src, size);
+-	}
+-	return 0;
+-}
+-
+ #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+-static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
++static int vmcoredd_copy_dumps(struct iov_iter *iter, u64 start, size_t size)
+ {
+ 	struct vmcoredd_node *dump;
+ 	u64 offset = 0;
+@@ -280,14 +266,13 @@ static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
+ 		if (start < offset + dump->size) {
+ 			tsz = min(offset + (u64)dump->size - start, (u64)size);
+ 			buf = dump->buf + start - offset;
+-			if (copy_to(dst, buf, tsz, userbuf)) {
++			if (copy_to_iter(buf, tsz, iter) < tsz) {
+ 				ret = -EFAULT;
+ 				goto out_unlock;
+ 			}
+ 
+ 			size -= tsz;
+ 			start += tsz;
+-			dst += tsz;
+ 
+ 			/* Leave now if buffer filled already */
+ 			if (!size)
+@@ -343,33 +328,28 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
+ /* Read from the ELF header and then the crash dump. On error, negative value is
+  * returned otherwise number of bytes read are returned.
+  */
+-static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+-			     int userbuf)
++static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ {
+ 	ssize_t acc = 0, tmp;
+ 	size_t tsz;
+ 	u64 start;
+ 	struct vmcore *m = NULL;
+ 
+-	if (buflen == 0 || *fpos >= vmcore_size)
++	if (iter->count == 0 || *fpos >= vmcore_size)
+ 		return 0;
+ 
+-	/* trim buflen to not go beyond EOF */
+-	if (buflen > vmcore_size - *fpos)
+-		buflen = vmcore_size - *fpos;
++	iov_iter_truncate(iter, vmcore_size - *fpos);
+ 
+ 	/* Read ELF core header */
+ 	if (*fpos < elfcorebuf_sz) {
+-		tsz = min(elfcorebuf_sz - (size_t)*fpos, buflen);
+-		if (copy_to(buffer, elfcorebuf + *fpos, tsz, userbuf))
++		tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
++		if (copy_to_iter(elfcorebuf + *fpos, tsz, iter) < tsz)
+ 			return -EFAULT;
+-		buflen -= tsz;
+ 		*fpos += tsz;
+-		buffer += tsz;
+ 		acc += tsz;
+ 
+ 		/* leave now if filled buffer already */
+-		if (buflen == 0)
++		if (iter->count == 0)
+ 			return acc;
+ 	}
+ 
+@@ -390,35 +370,31 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+ 		/* Read device dumps */
+ 		if (*fpos < elfcorebuf_sz + vmcoredd_orig_sz) {
+ 			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
+-				  (size_t)*fpos, buflen);
++				  (size_t)*fpos, iter->count);
+ 			start = *fpos - elfcorebuf_sz;
+-			if (vmcoredd_copy_dumps(buffer, start, tsz, userbuf))
++			if (vmcoredd_copy_dumps(iter, start, tsz))
+ 				return -EFAULT;
+ 
+-			buflen -= tsz;
+ 			*fpos += tsz;
+-			buffer += tsz;
+ 			acc += tsz;
+ 
+ 			/* leave now if filled buffer already */
+-			if (!buflen)
++			if (!iter->count)
+ 				return acc;
+ 		}
+ #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+ 
+ 		/* Read remaining elf notes */
+-		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
++		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, iter->count);
+ 		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz - vmcoredd_orig_sz;
+-		if (copy_to(buffer, kaddr, tsz, userbuf))
++		if (copy_to_iter(kaddr, tsz, iter) < tsz)
+ 			return -EFAULT;
+ 
+-		buflen -= tsz;
+ 		*fpos += tsz;
+-		buffer += tsz;
+ 		acc += tsz;
+ 
+ 		/* leave now if filled buffer already */
+-		if (buflen == 0)
++		if (iter->count == 0)
+ 			return acc;
+ 	}
+ 
+@@ -426,19 +402,17 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+ 		if (*fpos < m->offset + m->size) {
+ 			tsz = (size_t)min_t(unsigned long long,
+ 					    m->offset + m->size - *fpos,
+-					    buflen);
++					    iter->count);
+ 			start = m->paddr + *fpos - m->offset;
+-			tmp = read_from_oldmem(buffer, tsz, &start,
+-					       userbuf, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
++			tmp = read_from_oldmem_iter(iter, tsz, &start,
++					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
+ 			if (tmp < 0)
+ 				return tmp;
+-			buflen -= tsz;
+ 			*fpos += tsz;
+-			buffer += tsz;
+ 			acc += tsz;
+ 
+ 			/* leave now if filled buffer already */
+-			if (buflen == 0)
++			if (iter->count == 0)
+ 				return acc;
+ 		}
+ 	}
+@@ -446,15 +420,14 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+ 	return acc;
+ }
+ 
+-static ssize_t read_vmcore(struct file *file, char __user *buffer,
+-			   size_t buflen, loff_t *fpos)
++static ssize_t read_vmcore(struct kiocb *iocb, struct iov_iter *iter)
+ {
+-	return __read_vmcore((__force char *) buffer, buflen, fpos, 1);
++	return __read_vmcore(iter, &iocb->ki_pos);
+ }
+ 
+ /*
+  * The vmcore fault handler uses the page cache and fills data using the
+- * standard __vmcore_read() function.
++ * standard __read_vmcore() function.
+  *
+  * On s390 the fault handler is used for memory regions that can't be mapped
+  * directly with remap_pfn_range().
+@@ -464,9 +437,10 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
+ #ifdef CONFIG_S390
+ 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+ 	pgoff_t index = vmf->pgoff;
++	struct iov_iter iter;
++	struct kvec kvec;
+ 	struct page *page;
+ 	loff_t offset;
+-	char *buf;
+ 	int rc;
+ 
+ 	page = find_or_create_page(mapping, index, GFP_KERNEL);
+@@ -474,8 +448,11 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
+ 		return VM_FAULT_OOM;
+ 	if (!PageUptodate(page)) {
+ 		offset = (loff_t) index << PAGE_SHIFT;
+-		buf = __va((page_to_pfn(page) << PAGE_SHIFT));
+-		rc = __read_vmcore(buf, PAGE_SIZE, &offset, 0);
++		kvec.iov_base = page_address(page);
++		kvec.iov_len = PAGE_SIZE;
++		iov_iter_kvec(&iter, READ, &kvec, 1, PAGE_SIZE);
++
++		rc = __read_vmcore(&iter, &offset);
+ 		if (rc < 0) {
+ 			unlock_page(page);
+ 			put_page(page);
+@@ -725,7 +702,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+ 
+ static const struct proc_ops vmcore_proc_ops = {
+ 	.proc_open	= open_vmcore,
+-	.proc_read	= read_vmcore,
++	.proc_read_iter	= read_vmcore,
+ 	.proc_lseek	= default_llseek,
+ 	.proc_mmap	= mmap_vmcore,
+ };
+-- 
+2.33.0
 
-After 2 years, and 17 versions, can we now get this series promoted into 
-a build ?
-
-
-Thank you,
-
-JD
 
 _______________________________________________
 kexec mailing list
