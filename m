@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwkRa-009U66-Fr
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:28:39 +0000
+ id 1mwlD3-009e4P-0G
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 13:17:43 +0000
+Date: Mon, 13 Dec 2021 21:17:13 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed pages
- in DMA zone
-Date: Mon, 13 Dec 2021 20:27:12 +0800
-Message-Id: <20211213122712.23805-6-bhe@redhat.com>
-In-Reply-To: <20211213122712.23805-1-bhe@redhat.com>
-References: <20211213122712.23805-1-bhe@redhat.com>
+Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment
+ with macro CRASH_ALIGN
+Message-ID: <20211213131713.GA23510@MiWiFi-R3L-srv>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-2-thunder.leizhen@huawei.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20211210065533.2023-2-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,110 +21,68 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-Dma-kmalloc will be created as long as CONFIG_ZONE_DMA is enabled.
-However, it will fail if DMA zone has no managed pages. The failure
-can be seen in kdump kernel of x86_64 as below:
+On 12/10/21 at 02:55pm, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
+> 
+> Move CRASH_ALIGN to header asm/kexec.h for later use.
+> 
+> Suggested-by: Dave Young <dyoung@redhat.com>
+> Suggested-by: Baoquan He <bhe@redhat.com>
 
- CPU: 0 PID: 65 Comm: kworker/u2:1 Not tainted 5.14.0-rc2+ #9
- Hardware name: Intel Corporation SandyBridge Platform/To be filled by O.E.M., BIOS RMLSDP.86I.R2.28.D690.1306271008 06/27/2013
- Workqueue: events_unbound async_run_entry_fn
- Call Trace:
-  dump_stack_lvl+0x57/0x72
-  warn_alloc.cold+0x72/0xd6
-  __alloc_pages_slowpath.constprop.0+0xf56/0xf70
-  __alloc_pages+0x23b/0x2b0
-  allocate_slab+0x406/0x630
-  ___slab_alloc+0x4b1/0x7e0
-  ? sr_probe+0x200/0x600
-  ? lock_acquire+0xc4/0x2e0
-  ? fs_reclaim_acquire+0x4d/0xe0
-  ? lock_is_held_type+0xa7/0x120
-  ? sr_probe+0x200/0x600
-  ? __slab_alloc+0x67/0x90
-  __slab_alloc+0x67/0x90
-  ? sr_probe+0x200/0x600
-  ? sr_probe+0x200/0x600
-  kmem_cache_alloc_trace+0x259/0x270
-  sr_probe+0x200/0x600
-  ......
-  bus_probe_device+0x9f/0xb0
-  device_add+0x3d2/0x970
-  ......
-  __scsi_add_device+0xea/0x100
-  ata_scsi_scan_host+0x97/0x1d0
-  async_run_entry_fn+0x30/0x130
-  process_one_work+0x2b0/0x5c0
-  worker_thread+0x55/0x3c0
-  ? process_one_work+0x5c0/0x5c0
-  kthread+0x149/0x170
-  ? set_kthread_struct+0x40/0x40
-  ret_from_fork+0x22/0x30
- Mem-Info:
- ......
+I remember Dave and I discussed and suggested this when reviewing.
+You can remove my Suggested-by.
 
-The above failure happened when calling kmalloc() to allocate buffer with
-GFP_DMA. It requests to allocate slab page from DMA zone while no managed
-pages in there.
- sr_probe()
- --> get_capabilities()
-     --> buffer = kmalloc(512, GFP_KERNEL | GFP_DMA);
+For this one, I would like to add ack:
 
-The DMA zone should be checked if it has managed pages, then try to create
-dma-kmalloc.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
-Cc: stable@vger.kernel.org
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
----
- mm/slab_common.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/mm/slab_common.c b/mm/slab_common.c
-index e5d080a93009..ae4ef0f8903a 100644
---- a/mm/slab_common.c
-+++ b/mm/slab_common.c
-@@ -878,6 +878,9 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- {
- 	int i;
- 	enum kmalloc_cache_type type;
-+#ifdef CONFIG_ZONE_DMA
-+	bool managed_dma;
-+#endif
- 
- 	/*
- 	 * Including KMALLOC_CGROUP if CONFIG_MEMCG_KMEM defined
-@@ -905,10 +908,16 @@ void __init create_kmalloc_caches(slab_flags_t flags)
- 	slab_state = UP;
- 
- #ifdef CONFIG_ZONE_DMA
-+	managed_dma = has_managed_dma();
-+
- 	for (i = 0; i <= KMALLOC_SHIFT_HIGH; i++) {
- 		struct kmem_cache *s = kmalloc_caches[KMALLOC_NORMAL][i];
- 
- 		if (s) {
-+			if (!managed_dma) {
-+				kmalloc_caches[KMALLOC_DMA][i] = kmalloc_caches[KMALLOC_NORMAL][i];
-+				continue;
-+			}
- 			kmalloc_caches[KMALLOC_DMA][i] = create_kmalloc_cache(
- 				kmalloc_info[i].name[KMALLOC_DMA],
- 				kmalloc_info[i].size,
--- 
-2.17.2
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+> ---
+>  arch/x86/include/asm/kexec.h | 3 +++
+>  arch/x86/kernel/setup.c      | 3 ---
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 11b7c06e2828c30..3a22e65262aa70b 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -18,6 +18,9 @@
+>  
+>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+>  
+> +/* 16M alignment for crash kernel regions */
+> +#define CRASH_ALIGN		SZ_16M
+> +
+>  #ifndef __ASSEMBLY__
+>  
+>  #include <linux/string.h>
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 6a190c7f4d71b05..5cc60996eac56d6 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  
+> -/* 16M alignment for crash kernel regions */
+> -#define CRASH_ALIGN		SZ_16M
+> -
+>  /*
+>   * Keep the crash kernel below this limit.
+>   *
+> -- 
+> 2.25.1
+> 
 
 
 _______________________________________________
