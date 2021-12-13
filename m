@@ -1,17 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from verein.lst.de ([213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwgIX-008D2E-4O
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:03:02 +0000
-Date: Mon, 13 Dec 2021 09:02:57 +0100
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
-Message-ID: <20211213080257.GC20986@lst.de>
-References: <20211213000636.2932569-1-willy@infradead.org>
- <20211213000636.2932569-4-willy@infradead.org>
+ id 1mwgVx-008GgK-8o
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:16:54 +0000
+Date: Mon, 13 Dec 2021 16:16:41 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH RESEND v2 2/5] dma-pool: allow user to disable atomic pool
+Message-ID: <20211213081641.GB29905@MiWiFi-R3L-srv>
+References: <20211207030750.30824-1-bhe@redhat.com>
+ <20211207030750.30824-3-bhe@redhat.com>
+ <20211213074404.GA20758@lst.de>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213000636.2932569-4-willy@infradead.org>
+In-Reply-To: <20211213074404.GA20758@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,26 +25,31 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
 
->  
->  ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
->  {
-> -	return read_from_oldmem(buf, count, ppos, 0,
-> +	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-> +	struct iov_iter iter;
-> +
-> +	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-> +
-> +	return read_from_oldmem(&iter, count, ppos,
->  				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
->  }
+On 12/13/21 at 08:44am, Christoph Hellwig wrote:
+> On Tue, Dec 07, 2021 at 11:07:47AM +0800, Baoquan He wrote:
+> > In the current code, three atomic memory pools are always created,
+> > atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
+> > specified in kernel command line. In fact, atomic pool is only
+> > necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
+> > which are needed on few ARCHes.
+> 
+> And only these select the atomic pool, so it won't get created otherwise.
+> What problem are you trying to solve?
 
-elfcorehdr_read should probably also take an iov_iter while we're at it.
+This tries to make "coherent_pool=0" behave normally. As you see,
+'coherent_pool=0' will behave like no 'coherent_pool' being specified.
+This is not consistent with other similar kernel parameter, e.g cma=.
 
-I also don't quite understand why we even need the arch overrides for it,
-but that would require some digging into the history of this interface.
+At the beginning, I planned to add a knob to allow user to disable one
+or all atomic pool. Later I changed. However I think this patch makes
+sense on fixing the a little bizarre behaviour, 'coherent_pool=0' but
+still get atomic pool created.
+
+I can drop it if you think it's unnecessary.
+
 
 _______________________________________________
 kexec mailing list
