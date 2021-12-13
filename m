@@ -1,15 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 13 Dec 2021 10:18:06 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v16 00/11] support reserving crashkernel above 4G on
- arm64 kdump
-Message-ID: <Ybcd3r9AeV9vzuG4@arm.com>
-References: <20211123124646.1995-1-thunder.leizhen@huawei.com>
- <YbDnwol20HrRl4uL@arm.com>
- <db65cd76-e2c0-4d35-0dcc-d9f8c164f77e@oracle.com>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwip6-0097J3-S4
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 10:44:50 +0000
+Date: Mon, 13 Dec 2021 11:44:30 +0100
+From: Philipp Rudo <prudo@redhat.com>
+Subject: Re: [PATCH 1/1] s390: handle R_390_PLT32DBL reloc entries in
+ machine_apply_elf_rel()
+Message-ID: <20211213114430.77f28a67@rhtmp>
+In-Reply-To: <20211208125355.256391-1-egorenar@linux.ibm.com>
+References: <20211208125355.256391-1-egorenar@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <db65cd76-e2c0-4d35-0dcc-d9f8c164f77e@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,71 +23,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: john.p.donnelly@oracle.com
-Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: ltao@redhat.com, hca@linux.ibm.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
 
-On Fri, Dec 10, 2021 at 01:53:59PM -0600, john.p.donnelly@oracle.com wrote:
-> On 12/8/21 11:13 AM, Catalin Marinas wrote:
-> > On Tue, Nov 23, 2021 at 08:46:35PM +0800, Zhen Lei wrote:
-> > > Chen Zhou (10):
-> > >    x86: kdump: replace the hard-coded alignment with macro CRASH_ALIGN
-> > >    x86: kdump: make the lower bound of crash kernel reservation
-> > >      consistent
-> > >    x86: kdump: use macro CRASH_ADDR_LOW_MAX in functions
-> > >      reserve_crashkernel()
-> > >    x86: kdump: move xen_pv_domain() check and insert_resource() to
-> > >      setup_arch()
-> > >    x86: kdump: move reserve_crashkernel[_low]() into crash_core.c
-> > >    arm64: kdump: introduce some macros for crash kernel reservation
-> > >    arm64: kdump: reimplement crashkernel=X
-> > >    x86, arm64: Add ARCH_WANT_RESERVE_CRASH_KERNEL config
-> > >    of: fdt: Add memory for devices by DT property
-> > >      "linux,usable-memory-range"
-> > >    kdump: update Documentation about crashkernel
-> > > 
-> > > Zhen Lei (1):
-> > >    of: fdt: Aggregate the processing of "linux,usable-memory-range"
-> > 
-> > Apart from a minor comment I made on patch 8 and some comments from Rob
-> > that need addressing, the rest looks fine to me.
-> > 
-> > Ingo stated in the past that he's happy to ack the x86 changes as long
-> > as there's no functional change (and that's the case AFAICT). Ingo, does
-> > your conditional ack still stand?
-> > 
-> > In terms of merging, I'm happy to take it all through the arm64 tree
-> > with acks from the x86 maintainers. Alternatively, with the change I
-> > mentioned for patch 8, the first 5 patches could be queued via the tip
-> > tree on a stable branch and I can base the rest of the arm64 on top.
-> > 
-> > Thomas, Ingo, Peter, any preference?
-> > 
-> > Thanks.
+Hi Alexander,
+
+@Alexander: Thanks for taking care of this.
+
+On Wed,  8 Dec 2021 13:53:55 +0100
+Alexander Egorenkov <egorenar@linux.ibm.com> wrote:
+
+> Starting with gcc 11.3, the C compiler will generate PLT-relative function
+> calls even if they are local and do not require it. Later on during linking,
+> the linker will replace all PLT-relative calls to local functions with
+> PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
+> not being linked as a regular executable or shared library would have been,
+> and therefore, all PLT-relative addresses remain in the generated purgatory
+> object code unresolved. This leads to the situation where the purgatory
+> code is being executed during kdump with all PLT-relative addresses
+> unresolved. And this results in endless loops within the purgatory code.
+
+Tiny nit. The last two sentences describe the situation in the kernel.
+Luckily the kexec-tools do proper error checking and die with
+
+	"Unknown rela relocation: 0x14 0x73c0901c"
+
+when they encounter an unknown relocation type.
+
+Anyway, the code is correct
+
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
+
+> Furthermore, the clang C compiler has always behaved like described above
+> and this commit should fix the purgatory code built with the latter.
 > 
-> If you notice the trend over the past year , some of additional review
-> requests are because the submitter had to rebase to the next version.
+> Because the purgatory code is no regular executable or shared library,
+> contains only calls to local functions and has no PLT, all R_390_PLT32DBL
+> relocation entries can be resolved just like a R_390_PC32DBL one.
+> 
+> * https://refspecs.linuxfoundation.org/ELF/zSeries/lzsabi0_zSeries/x1633.html#AEN1699
+> 
+> Relocation entries of purgatory code generated with gcc 11.3
+> ------------------------------------------------------------
+> 
+> $ readelf -r purgatory/purgatory.o
+> 
+> Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
+>   Offset          Info           Type           Sym. Value    Sym. Name + Addend
+> 00000000000c  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+> 00000000001a  001000000014 R_390_PLT32DBL    0000000000000000 sha256_starts + 2
+> 000000000030  001100000014 R_390_PLT32DBL    0000000000000000 sha256_update + 2
+> 000000000046  001200000014 R_390_PLT32DBL    0000000000000000 sha256_finish + 2
+> 000000000050  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
+> 00000000005a  001300000014 R_390_PLT32DBL    0000000000000000 memcmp + 2
+> ...
+> 000000000118  001600000014 R_390_PLT32DBL    0000000000000000 setup_arch + 2
+> 00000000011e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+> 00000000012c  000f00000014 R_390_PLT32DBL    0000000000000000 verify_sha256_digest + 2
+> 000000000142  001700000014 R_390_PLT32DBL    0000000000000000
+> post_verification[...] + 2
+> 
+> Relocation entries of purgatory code generated with gcc 11.2
+> ------------------------------------------------------------
+> 
+> $ readelf -r purgatory/purgatory.o
+> 
+> Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
+>   Offset          Info           Type           Sym. Value    Sym. Name + Addend
+> 00000000000e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
+> 00000000001c  001000000013 R_390_PC32DBL     0000000000000000 sha256_starts + 2
+> 000000000036  001100000013 R_390_PC32DBL     0000000000000000 sha256_update + 2
+> 000000000048  001200000013 R_390_PC32DBL     0000000000000000 sha256_finish + 2
+> 000000000052  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
+> 00000000005c  001300000013 R_390_PC32DBL     0000000000000000 memcmp + 2
+> ...
+> 00000000011a  001600000013 R_390_PC32DBL     0000000000000000 setup_arch + 2
+> 000000000120  000300000013 R_390_PC32DBL     0000000000000000 .data + 122
+> 000000000130  000f00000013 R_390_PC32DBL     0000000000000000 verify_sha256_digest + 2
+> 000000000146  001700000013 R_390_PC32DBL     0000000000000000 post_verification[...] + 2
+> 
+> Corresponding s390 kernel discussion:
+> * https://lore.kernel.org/linux-s390/20211208105801.188140-1-egorenar@linux.ibm.com/T/#u
+> 
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> Reported-by: Tao Liu <ltao@redhat.com>
+> Suggested-by: Philipp Rudo <prudo@redhat.com>
+> ---
+>  kexec/arch/s390/kexec-elf-rel-s390.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/s390/kexec-elf-rel-s390.c b/kexec/arch/s390/kexec-elf-rel-s390.c
+> index a5e1b7345578..91ba86a9991d 100644
+> --- a/kexec/arch/s390/kexec-elf-rel-s390.c
+> +++ b/kexec/arch/s390/kexec-elf-rel-s390.c
+> @@ -56,6 +56,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+>  	case R_390_PC16:	/* PC relative 16 bit.  */
+>  	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
+>  	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
+> +	case R_390_PLT32DBL:	/* 32 bit PC rel. PLT shifted by 1.  */
+>  	case R_390_PC32:	/* PC relative 32 bit.  */
+>  	case R_390_PC64:	/* PC relative 64 bit.	*/
+>  		val -= address;
+> @@ -63,7 +64,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
+>  			*(unsigned short *) loc = val;
+>  		else if (r_type == R_390_PC16DBL)
+>  			*(unsigned short *) loc = val >> 1;
+> -		else if (r_type == R_390_PC32DBL)
+> +		else if (r_type == R_390_PC32DBL || r_type == R_390_PLT32DBL)
+>  			*(unsigned int *) loc = val >> 1;
+>  		else if (r_type == R_390_PC32)
+>  			*(unsigned int *) loc = val;
 
-Normally the reviews stand even if the series is rebased. You only drop
-them if there were non-trivial changes to the patches, not just because
-of a rebase.
-
-Ingo acked the x86 changes in the past but there were some functional
-changes to the minimum alignment, so the series had to be reworked and
-the ack not applied.
-
-https://lore.kernel.org/r/20200806133627.GB2077191@gmail.com
-
-> Can we get this acked and placed in a build so others can test and start
-> using it ?
-
-If Ingo's conditional ack (no functional changes, just a move) still
-stands over the five x86 patches now, I'm happy to queue them all via
-the arm64 tree. The latest series here:
-
-https://lore.kernel.org/r/20211210065533.2023-1-thunder.leizhen@huawei.com
-
--- 
-Catalin
 
 _______________________________________________
 kexec mailing list
