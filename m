@@ -1,11 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH 2/3] vmcore: Convert __read_vmcore to use an iov_iter
-Date: Mon, 13 Dec 2021 00:06:35 +0000
-Message-Id: <20211213000636.2932569-3-willy@infradead.org>
-In-Reply-To: <20211213000636.2932569-1-willy@infradead.org>
-References: <20211213000636.2932569-1-willy@infradead.org>
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwZVC-007Y2W-1m
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 00:47:39 +0000
+Message-ID: <17153a1c-86c6-6ffd-35d6-5329829661df@linux.vnet.ibm.com>
+Date: Sun, 12 Dec 2021 19:46:53 -0500
 MIME-Version: 1.0
+Subject: Re: [PATCH v2 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
+Content-Language: en-US
+References: <cover.1637862358.git.msuchanek@suse.de>
+ <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
+From: Nayna <nayna@linux.vnet.ibm.com>
+In-Reply-To: <8b30a3c6a4e845eb77f276298424811897efdebf.1637862358.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -14,232 +20,38 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+To: Michal Suchanek <msuchanek@suse.de>, keyrings@vger.kernel.org
+Cc: kexec@lists.infradead.org, Philipp Rudo <prudo@redhat.com>, Mimi Zohar <zohar@linux.ibm.com>, Rob Herring <robh@kernel.org>, linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Lakshmi Ramasubramanian <nramas@linux.microsoft.com>, Heiko Carstens <hca@linux.ibm.com>, Jessica Yu <jeyu@kernel.org>, linux-kernel@vger.kernel.org, David Howells <dhowells@redhat.com>, Christian Borntraeger <borntraeger@de.ibm.com>, Luis Chamberlain <mcgrof@kernel.org>, Paul Mackerras <paulus@samba.org>, Hari Bathini <hbathini@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>, linuxppc-dev@lists.ozlabs.org, Frank van der Linden <fllinden@amazon.com>, Thiago Jung Bauermann <bauerman@linux.ibm.com>, Daniel Axtens <dja@axtens.net>, buendgen@de.ibm.com, Michael Ellerman <mpe@ellerman.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Christian Borntraeger <borntraeger@linux.ibm.com>, Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Dmitry Kasatkin <dmitry.kasatkin@gmail.com>, James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>, Sven Schnelle <svens@linux.ibm.com>, Baoquan He <bhe@redhat.com>, linux-crypto@vger.kernel.org, linux-integrity@vger.kernel.org, linux-security-module@vger.kernel.org
 
-This gets rid of copy_to() and let us use proc_read_iter() instead
-of proc_read().
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- fs/proc/vmcore.c | 83 ++++++++++++++++++------------------------------
- 1 file changed, 31 insertions(+), 52 deletions(-)
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 049bafe9c007..443cbaf16ec8 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -251,22 +251,8 @@ ssize_t __weak copy_oldmem_page_encrypted(struct iov_iter *iter,
- 	return copy_oldmem_page(iter, pfn, csize, offset);
- }
- 
--/*
-- * Copy to either kernel or user space
-- */
--static int copy_to(void *target, void *src, size_t size, int userbuf)
--{
--	if (userbuf) {
--		if (copy_to_user((char __user *) target, src, size))
--			return -EFAULT;
--	} else {
--		memcpy(target, src, size);
--	}
--	return 0;
--}
--
- #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
--static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
-+static int vmcoredd_copy_dumps(struct iov_iter *iter, u64 start, size_t size)
- {
- 	struct vmcoredd_node *dump;
- 	u64 offset = 0;
-@@ -279,14 +265,13 @@ static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
- 		if (start < offset + dump->size) {
- 			tsz = min(offset + (u64)dump->size - start, (u64)size);
- 			buf = dump->buf + start - offset;
--			if (copy_to(dst, buf, tsz, userbuf)) {
-+			if (copy_to_iter(buf, tsz, iter) < tsz) {
- 				ret = -EFAULT;
- 				goto out_unlock;
- 			}
- 
- 			size -= tsz;
- 			start += tsz;
--			dst += tsz;
- 
- 			/* Leave now if buffer filled already */
- 			if (!size)
-@@ -342,33 +327,30 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
- /* Read from the ELF header and then the crash dump. On error, negative value is
-  * returned otherwise number of bytes read are returned.
-  */
--static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
--			     int userbuf)
-+static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
- {
- 	ssize_t acc = 0, tmp;
- 	size_t tsz;
- 	u64 start;
- 	struct vmcore *m = NULL;
- 
--	if (buflen == 0 || *fpos >= vmcore_size)
-+	if (iter->count == 0 || *fpos >= vmcore_size)
- 		return 0;
- 
--	/* trim buflen to not go beyond EOF */
--	if (buflen > vmcore_size - *fpos)
--		buflen = vmcore_size - *fpos;
-+	/* trim iter to not go beyond EOF */
-+	if (iter->count > vmcore_size - *fpos)
-+		iter->count = vmcore_size - *fpos;
- 
- 	/* Read ELF core header */
- 	if (*fpos < elfcorebuf_sz) {
--		tsz = min(elfcorebuf_sz - (size_t)*fpos, buflen);
--		if (copy_to(buffer, elfcorebuf + *fpos, tsz, userbuf))
-+		tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
-+		if (copy_to_iter(elfcorebuf + *fpos, tsz, iter) < tsz)
- 			return -EFAULT;
--		buflen -= tsz;
- 		*fpos += tsz;
--		buffer += tsz;
- 		acc += tsz;
- 
- 		/* leave now if filled buffer already */
--		if (buflen == 0)
-+		if (iter->count == 0)
- 			return acc;
- 	}
- 
-@@ -389,35 +371,31 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 		/* Read device dumps */
- 		if (*fpos < elfcorebuf_sz + vmcoredd_orig_sz) {
- 			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
--				  (size_t)*fpos, buflen);
-+				  (size_t)*fpos, iter->count);
- 			start = *fpos - elfcorebuf_sz;
--			if (vmcoredd_copy_dumps(buffer, start, tsz, userbuf))
-+			if (vmcoredd_copy_dumps(iter, start, tsz))
- 				return -EFAULT;
- 
--			buflen -= tsz;
- 			*fpos += tsz;
--			buffer += tsz;
- 			acc += tsz;
- 
- 			/* leave now if filled buffer already */
--			if (!buflen)
-+			if (!iter->count)
- 				return acc;
- 		}
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- 		/* Read remaining elf notes */
--		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
-+		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, iter->count);
- 		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz - vmcoredd_orig_sz;
--		if (copy_to(buffer, kaddr, tsz, userbuf))
-+		if (copy_to_iter(kaddr, tsz, iter) < tsz)
- 			return -EFAULT;
- 
--		buflen -= tsz;
- 		*fpos += tsz;
--		buffer += tsz;
- 		acc += tsz;
- 
- 		/* leave now if filled buffer already */
--		if (buflen == 0)
-+		if (iter->count == 0)
- 			return acc;
- 	}
- 
-@@ -425,19 +403,17 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 		if (*fpos < m->offset + m->size) {
- 			tsz = (size_t)min_t(unsigned long long,
- 					    m->offset + m->size - *fpos,
--					    buflen);
-+					    iter->count);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem(buffer, tsz, &start,
--					       userbuf, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
-+			tmp = read_from_oldmem_iter(iter, tsz, &start,
-+					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- 			if (tmp < 0)
- 				return tmp;
--			buflen -= tsz;
- 			*fpos += tsz;
--			buffer += tsz;
- 			acc += tsz;
- 
- 			/* leave now if filled buffer already */
--			if (buflen == 0)
-+			if (iter->count == 0)
- 				return acc;
- 		}
- 	}
-@@ -445,15 +421,14 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
- 	return acc;
- }
- 
--static ssize_t read_vmcore(struct file *file, char __user *buffer,
--			   size_t buflen, loff_t *fpos)
-+static ssize_t read_vmcore(struct kiocb *iocb, struct iov_iter *iter)
- {
--	return __read_vmcore((__force char *) buffer, buflen, fpos, 1);
-+	return __read_vmcore(iter, &iocb->ki_pos);
- }
- 
- /*
-  * The vmcore fault handler uses the page cache and fills data using the
-- * standard __vmcore_read() function.
-+ * standard __read_vmcore() function.
-  *
-  * On s390 the fault handler is used for memory regions that can't be mapped
-  * directly with remap_pfn_range().
-@@ -463,9 +438,10 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
- #ifdef CONFIG_S390
- 	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
- 	pgoff_t index = vmf->pgoff;
-+	struct iov_iter iter;
-+	struct kvec kvec;
- 	struct page *page;
- 	loff_t offset;
--	char *buf;
- 	int rc;
- 
- 	page = find_or_create_page(mapping, index, GFP_KERNEL);
-@@ -473,8 +449,11 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
- 		return VM_FAULT_OOM;
- 	if (!PageUptodate(page)) {
- 		offset = (loff_t) index << PAGE_SHIFT;
--		buf = __va((page_to_pfn(page) << PAGE_SHIFT));
--		rc = __read_vmcore(buf, PAGE_SIZE, &offset, 0);
-+		kvec.iov_base = page_address(page);
-+		kvec.iov_len = PAGE_SIZE;
-+		iov_iter_kvec(&iter, READ, &kvec, 1, PAGE_SIZE);
-+
-+		rc = __read_vmcore(&iter, &offset);
- 		if (rc < 0) {
- 			unlock_page(page);
- 			put_page(page);
-@@ -724,7 +703,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
- 
- static const struct proc_ops vmcore_proc_ops = {
- 	.proc_open	= open_vmcore,
--	.proc_read	= read_vmcore,
-+	.proc_read_iter	= read_vmcore,
- 	.proc_lseek	= default_llseek,
- 	.proc_mmap	= mmap_vmcore,
- };
--- 
-2.33.0
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDExLzI1LzIxIDEzOjAyLCBNaWNoYWwgU3VjaGFuZWsgd3JvdGU6Cj4gQ29weSB0aGUgY29k
+ZSBmcm9tIHMzOTB4Cj4KPiBTaWduZWQtb2ZmLWJ5OiBNaWNoYWwgU3VjaGFuZWsgPG1zdWNoYW5l
+a0BzdXNlLmRlPgo+IC0tLQo+ICAgYXJjaC9wb3dlcnBjL0tjb25maWcgICAgICAgIHwgMTEgKysr
+KysrKysrKysKPiAgIGFyY2gvcG93ZXJwYy9rZXhlYy9lbGZfNjQuYyB8IDM2ICsrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCA0NyBpbnNlcnRp
+b25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL0tjb25maWcgYi9hcmNoL3Bvd2Vy
+cGMvS2NvbmZpZwo+IGluZGV4IGFjMGM1MTU1NTJmZC4uZWNjMTIyN2E3N2YxIDEwMDY0NAo+IC0t
+LSBhL2FyY2gvcG93ZXJwYy9LY29uZmlnCj4gKysrIGIvYXJjaC9wb3dlcnBjL0tjb25maWcKPiBA
+QCAtNTYxLDYgKzU2MSwxNyBAQCBjb25maWcgS0VYRUNfRklMRQo+ICAgY29uZmlnIEFSQ0hfSEFT
+X0tFWEVDX1BVUkdBVE9SWQo+ICAgCWRlZl9ib29sIEtFWEVDX0ZJTEUKPgo+ICtjb25maWcgS0VY
+RUNfU0lHCj4gKwlib29sICJWZXJpZnkga2VybmVsIHNpZ25hdHVyZSBkdXJpbmcga2V4ZWNfZmls
+ZV9sb2FkKCkgc3lzY2FsbCIKPiArCWRlcGVuZHMgb24gS0VYRUNfRklMRSAmJiBNT0RVTEVfU0lH
+X0ZPUk1BVAo+ICsJaGVscAo+ICsJICBUaGlzIG9wdGlvbiBtYWtlcyBrZXJuZWwgc2lnbmF0dXJl
+IHZlcmlmaWNhdGlvbiBtYW5kYXRvcnkgZm9yCj4gKwkgIHRoZSBrZXhlY19maWxlX2xvYWQoKSBz
+eXNjYWxsLgo+ICsKClJlc2VuZGluZyBteSBsYXN0IHJlc3BvbnNlIGFzIGxvb2tzIGxpa2UgaXQg
+ZGlkbid0IGdvIHRocm91Z2ggbWFpbGluZyAKbGlzdCBiZWNhdXNlIG9mIHNvbWUgd3JvbmcgZm9y
+bWF0dGluZy4gTXkgYXBvbG9naWVzIHRvIHRob3NlIHdobyBhcmUgCnJlY2VpdmluZyBpdCB0d2lj
+ZS4KClNpbmNlIHBvd2VycGMgYWxzbyBzdXBwb3J0cyBJTUFfQVJDSF9QT0xJQ1kgZm9yIGtlcm5l
+bCBpbWFnZSBzaWduYXR1cmUgCnZlcmlmaWNhdGlvbiwgcGxlYXNlIGluY2x1ZGUgdGhlIGZvbGxv
+d2luZzoKCiJBbiBhbHRlcm5hdGl2ZSBpbXBsZW1lbnRhdGlvbiBmb3IgdGhlIHBvd2VycGMgYXJj
+aCBpcyBJTUFfQVJDSF9QT0xJQ1kuIApJdCB2ZXJpZmllcyB0aGUgYXBwZW5kZWQga2VybmVsIGlt
+YWdlIHNpZ25hdHVyZSBhbmQgYWRkaXRpb25hbGx5IAppbmNsdWRlcyBib3RoIHRoZSBzaWduZWQg
+YW5kIHVuc2lnbmVkIGZpbGUgaGFzaGVzIGluIHRoZSBJTUEgbWVhc3VyZW1lbnQgCmxpc3QsIGV4
+dGVuZHMgdGhlIElNQSBQQ1IgaW4gdGhlIFRQTSwgYW5kIHByZXZlbnRzIGJsYWNrbGlzdGVkIGJp
+bmFyeSAKa2VybmVsIGltYWdlcyBmcm9tIGJlaW5nIGtleGVjJ2QuIgoKVGhhbmtzICYgUmVnYXJk
+cywKCiDCoMKgwqAgLSBOYXluYQoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhlY0BsaXN0cy5pbmZyYWRlYWQub3Jn
+Cmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8va2V4ZWMK
