@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwgVx-008GgK-8o
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:16:54 +0000
-Date: Mon, 13 Dec 2021 16:16:41 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH RESEND v2 2/5] dma-pool: allow user to disable atomic pool
-Message-ID: <20211213081641.GB29905@MiWiFi-R3L-srv>
-References: <20211207030750.30824-1-bhe@redhat.com>
- <20211207030750.30824-3-bhe@redhat.com>
- <20211213074404.GA20758@lst.de>
+ id 1mwgjN-008IR8-Il
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:30:47 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v2 0/2] kdump: simplify code
+Date: Mon, 13 Dec 2021 08:30:33 +0000
+Message-ID: <b7a75ae9253445af81ff2fedd5268af4@AcuMS.aculab.com>
+References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
+ <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
+ <YbXhVxRJfjvKw++W@casper.infradead.org>
+In-Reply-To: <YbXhVxRJfjvKw++W@casper.infradead.org>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211213074404.GA20758@lst.de>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,30 +25,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, robin.murphy@arm.com, cl@linux.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
+To: 'Matthew Wilcox' <willy@infradead.org>
+Cc: 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>
 
-On 12/13/21 at 08:44am, Christoph Hellwig wrote:
-> On Tue, Dec 07, 2021 at 11:07:47AM +0800, Baoquan He wrote:
-> > In the current code, three atomic memory pools are always created,
-> > atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
-> > specified in kernel command line. In fact, atomic pool is only
-> > necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
-> > which are needed on few ARCHes.
+From: Matthew Wilcox
+> Sent: 12 December 2021 11:48
 > 
-> And only these select the atomic pool, so it won't get created otherwise.
-> What problem are you trying to solve?
+> On Sat, Dec 11, 2021 at 05:53:46PM +0000, David Laight wrote:
+> > From: Tiezhu Yang
+> > > Sent: 11 December 2021 03:33
+> > >
+> > > v2:
+> > >   -- add copy_to_user_or_kernel() in lib/usercopy.c
+> > >   -- define userbuf as bool type
+> >
+> > Instead of having a flag to indicate whether the buffer is user or kernel,
+> > would it be better to have two separate buffer pointers.
+> > One for a user space buffer, the other for a kernel space buffer.
+> > Exactly one of the buffers should always be NULL.
+> 
+> No.  You should be using an iov_iter instead.  See
+> https://lore.kernel.org/all/Ya4bdB0UBJCZhUSo@casper.infradead.org/
+> for a start on this.
 
-This tries to make "coherent_pool=0" behave normally. As you see,
-'coherent_pool=0' will behave like no 'coherent_pool' being specified.
-This is not consistent with other similar kernel parameter, e.g cma=.
+iov_iter gets horribly expensive...
 
-At the beginning, I planned to add a knob to allow user to disable one
-or all atomic pool. Later I changed. However I think this patch makes
-sense on fixing the a little bizarre behaviour, 'coherent_pool=0' but
-still get atomic pool created.
+	David
 
-I can drop it if you think it's unnecessary.
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
 
 _______________________________________________
