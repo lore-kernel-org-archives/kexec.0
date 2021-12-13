@@ -1,10 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Mon, 13 Dec 2021 01:34:14 +0000
-From: Matthew Wilcox <willy@infradead.org>
+Received: from mga05.intel.com ([192.55.52.43])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mwbAm-007dIK-KW
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 02:34:42 +0000
+Date: Mon, 13 Dec 2021 10:33:41 +0800
+From: kernel test robot <lkp@intel.com>
 Subject: Re: [PATCH 1/3] vmcore: Convert copy_oldmem_page() to take an iov_iter
-Message-ID: <YbajFsMwJvQ6MC7N@casper.infradead.org>
-References: <20211213000636.2932569-1-willy@infradead.org>
- <20211213000636.2932569-2-willy@infradead.org>
+Message-ID: <202112131020.pSJ77Cjj-lkp@intel.com>
+References: <20211213000636.2932569-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
 In-Reply-To: <20211213000636.2932569-2-willy@infradead.org>
@@ -20,28 +23,117 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
-Cc: Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
+Cc: kbuild-all@lists.01.org, "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 12:06:34AM +0000, Matthew Wilcox (Oracle) wrote:
-> +++ b/arch/arm/kernel/crash_dump.c
-> @@ -27,9 +27,8 @@
->   * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
->   * copied or negative error in case of failure.
->   */
-> -ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-> -			 size_t csize, unsigned long offset,
-> -			 int userbuf)
-> +ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
-> +			 size_t csize, unsigned long offset)
->  {
->  	void *vaddr;
->  
+Hi "Matthew,
 
-I forgot to mention that I didn't adjust the kernel-doc.  I'm tempted to
-remove it entirely, to be honest.  It's not included into the rst files,
-and having the documentation repeated ten times across arch directories
-isn't useful.
+Thank you for the patch! Yet something to improve:
+
+[auto build test ERROR on tip/x86/core]
+[also build test ERROR on arm64/for-next/core powerpc/next s390/features linus/master v5.16-rc5]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
+
+url:    https://github.com/0day-ci/linux/commits/Matthew-Wilcox-Oracle/Convert-vmcore-to-use-an-iov_iter/20211213-080748
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/tip/tip.git e463a09af2f0677b9485a7e8e4e70b396b2ffb6f
+config: riscv-randconfig-r012-20211213 (https://download.01.org/0day-ci/archive/20211213/202112131020.pSJ77Cjj-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.2.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/0day-ci/linux/commit/e1684ad72e2cce57ac90ae1270668753f1aa6c60
+        git remote add linux-review https://github.com/0day-ci/linux
+        git fetch --no-tags linux-review Matthew-Wilcox-Oracle/Convert-vmcore-to-use-an-iov_iter/20211213-080748
+        git checkout e1684ad72e2cce57ac90ae1270668753f1aa6c60
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross O=build_dir ARCH=riscv SHELL=/bin/bash arch/riscv/kernel/ fs/proc/
+
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
+
+All errors (new ones prefixed by >>):
+
+   arch/riscv/kernel/crash_dump.c: In function 'copy_oldmem_page':
+>> arch/riscv/kernel/crash_dump.c:35:17: error: implicit declaration of function 'copy_to_iter'; did you mean 'copy_to_user'? [-Werror=implicit-function-declaration]
+      35 |         csize = copy_to_iter(vaddr + offset, csize, iter);
+         |                 ^~~~~~~~~~~~
+         |                 copy_to_user
+   cc1: some warnings being treated as errors
+--
+   fs/proc/vmcore.c:135:9: warning: no previous prototype for 'read_from_oldmem_iter' [-Wmissing-prototypes]
+     135 | ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
+         |         ^~~~~~~~~~~~~~~~~~~~~
+   fs/proc/vmcore.c: In function 'read_from_oldmem_iter':
+>> fs/proc/vmcore.c:157:31: error: implicit declaration of function 'iov_iter_zero' [-Werror=implicit-function-declaration]
+     157 |                         tmp = iov_iter_zero(nr_bytes, iter);
+         |                               ^~~~~~~~~~~~~
+   fs/proc/vmcore.c: In function 'read_from_oldmem':
+>> fs/proc/vmcore.c:187:25: error: storage size of 'iter' isn't known
+     187 |         struct iov_iter iter;
+         |                         ^~~~
+   fs/proc/vmcore.c:188:22: error: storage size of 'iov' isn't known
+     188 |         struct iovec iov;
+         |                      ^~~
+>> fs/proc/vmcore.c:189:21: error: storage size of 'kvec' isn't known
+     189 |         struct kvec kvec;
+         |                     ^~~~
+   fs/proc/vmcore.c:194:17: error: implicit declaration of function 'iov_iter_init'; did you mean 'klist_iter_init'? [-Werror=implicit-function-declaration]
+     194 |                 iov_iter_init(&iter, READ, &iov, 1, count);
+         |                 ^~~~~~~~~~~~~
+         |                 klist_iter_init
+>> fs/proc/vmcore.c:198:17: error: implicit declaration of function 'iov_iter_kvec' [-Werror=implicit-function-declaration]
+     198 |                 iov_iter_kvec(&iter, READ, &kvec, 1, count);
+         |                 ^~~~~~~~~~~~~
+   fs/proc/vmcore.c:189:21: warning: unused variable 'kvec' [-Wunused-variable]
+     189 |         struct kvec kvec;
+         |                     ^~~~
+   fs/proc/vmcore.c:188:22: warning: unused variable 'iov' [-Wunused-variable]
+     188 |         struct iovec iov;
+         |                      ^~~
+   fs/proc/vmcore.c:187:25: warning: unused variable 'iter' [-Wunused-variable]
+     187 |         struct iov_iter iter;
+         |                         ^~~~
+   fs/proc/vmcore.c:202:1: error: control reaches end of non-void function [-Werror=return-type]
+     202 | }
+         | ^
+   cc1: some warnings being treated as errors
+
+
+vim +35 arch/riscv/kernel/crash_dump.c
+
+    10	
+    11	/**
+    12	 * copy_oldmem_page() - copy one page from old kernel memory
+    13	 * @pfn: page frame number to be copied
+    14	 * @buf: buffer where the copied page is placed
+    15	 * @csize: number of bytes to copy
+    16	 * @offset: offset in bytes into the page
+    17	 * @userbuf: if set, @buf is in a user address space
+    18	 *
+    19	 * This function copies one page from old kernel memory into buffer pointed by
+    20	 * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
+    21	 * copied or negative error in case of failure.
+    22	 */
+    23	ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+    24				 size_t csize, unsigned long offset)
+    25	{
+    26		void *vaddr;
+    27	
+    28		if (!csize)
+    29			return 0;
+    30	
+    31		vaddr = memremap(__pfn_to_phys(pfn), PAGE_SIZE, MEMREMAP_WB);
+    32		if (!vaddr)
+    33			return -ENOMEM;
+    34	
+  > 35		csize = copy_to_iter(vaddr + offset, csize, iter);
+
+---
+0-DAY CI Kernel Test Service, Intel Corporation
+https://lists.01.org/hyperkitty/list/kbuild-all@lists.01.org
 
 _______________________________________________
 kexec mailing list
