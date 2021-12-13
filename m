@@ -1,18 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwgjN-008IR8-Il
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 08:30:47 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v2 0/2] kdump: simplify code
-Date: Mon, 13 Dec 2021 08:30:33 +0000
-Message-ID: <b7a75ae9253445af81ff2fedd5268af4@AcuMS.aculab.com>
-References: <1639193588-7027-1-git-send-email-yangtiezhu@loongson.cn>
- <0c5cb37139af4f3e85cc2c5115d7d006@AcuMS.aculab.com>
- <YbXhVxRJfjvKw++W@casper.infradead.org>
-In-Reply-To: <YbXhVxRJfjvKw++W@casper.infradead.org>
+ id 1mwheH-008dip-QY
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 09:29:35 +0000
+Date: Mon, 13 Dec 2021 17:29:15 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH 3/3] vmcore: Convert read_from_oldmem() to take an iov_iter
+Message-ID: <20211213092915.GC29905@MiWiFi-R3L-srv>
+References: <20211213000636.2932569-1-willy@infradead.org>
+ <20211213000636.2932569-4-willy@infradead.org>
+ <20211213080257.GC20986@lst.de>
 MIME-Version: 1.0
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211213080257.GC20986@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,36 +25,44 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Matthew Wilcox' <willy@infradead.org>
-Cc: 'Tiezhu Yang' <yangtiezhu@loongson.cn>, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Andrew Morton <akpm@linux-foundation.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "x86@kernel.org" <x86@kernel.org>, "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Xuefeng Li <lixuefeng@loongson.cn>
+To: Christoph Hellwig <hch@lst.de>
+Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
 
-From: Matthew Wilcox
-> Sent: 12 December 2021 11:48
+On 12/13/21 at 09:02am, Christoph Hellwig wrote:
+> >  
+> >  ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
+> >  {
+> > -	return read_from_oldmem(buf, count, ppos, 0,
+> > +	struct kvec kvec = { .iov_base = buf, .iov_len = count };
+> > +	struct iov_iter iter;
+> > +
+> > +	iov_iter_kvec(&iter, READ, &kvec, 1, count);
+> > +
+> > +	return read_from_oldmem(&iter, count, ppos,
+> >  				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
+> >  }
 > 
-> On Sat, Dec 11, 2021 at 05:53:46PM +0000, David Laight wrote:
-> > From: Tiezhu Yang
-> > > Sent: 11 December 2021 03:33
-> > >
-> > > v2:
-> > >   -- add copy_to_user_or_kernel() in lib/usercopy.c
-> > >   -- define userbuf as bool type
-> >
-> > Instead of having a flag to indicate whether the buffer is user or kernel,
-> > would it be better to have two separate buffer pointers.
-> > One for a user space buffer, the other for a kernel space buffer.
-> > Exactly one of the buffers should always be NULL.
+> elfcorehdr_read should probably also take an iov_iter while we're at it.
 > 
-> No.  You should be using an iov_iter instead.  See
-> https://lore.kernel.org/all/Ya4bdB0UBJCZhUSo@casper.infradead.org/
-> for a start on this.
+> I also don't quite understand why we even need the arch overrides for it,
+> but that would require some digging into the history of this interface.
+> 
 
-iov_iter gets horribly expensive...
+Below patchset removing sec_active() from generic code added this arch
+override on x86_64. Before that, s390 and arm64 have had arch overrides. 
+And arm64 says "elfcorehdr_read() is simple as the region is always mapped."
+in commit e62aaeac42 "arm64: kdump: provide /proc/vmcore file".
 
-	David
+[v3,0/6] Remove x86-specific code from generic headers
+https://patchwork.kernel.org/project/linux-fsdevel/cover/20190718032858.28744-1-bauerman@linux.ibm.com/
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+5cbdaeefb655 s390/mm: Remove sev_active() function
+ae7eb82a92fa fs/core/vmcore: Move sev_active() reference to x86 arch code
+284e21fab2cf x86, s390/mm: Move sme_active() and sme_me_mask to x86-specific header
+e740815a97e2 dma-mapping: Remove dma_check_mask()
+47e5d8f9ed34 swiotlb: Remove call to sme_active()
+0c9c1d563975 x86, s390: Move ARCH_HAS_MEM_ENCRYPT definition to arch/Kconfig
+
 
 
 _______________________________________________
