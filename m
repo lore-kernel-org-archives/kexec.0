@@ -1,10 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Subject: [PATCH v2 2/3] vmcore: Convert read_from_oldmem() to take an iov_iter
-Date: Mon, 13 Dec 2021 14:19:06 +0000
-Message-Id: <20211213141907.3064347-3-willy@infradead.org>
-In-Reply-To: <20211213141907.3064347-1-willy@infradead.org>
-References: <20211213141907.3064347-1-willy@infradead.org>
+Subject: [PATCH v2 0/3] Convert vmcore to use an iov_iter
+Date: Mon, 13 Dec 2021 14:19:04 +0000
+Message-Id: <20211213141907.3064347-1-willy@infradead.org>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -21,134 +19,33 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org
 Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
 
-Remove the read_from_oldmem() wrapper introduced earlier and convert
-all the remaining callers to pass an iov_iter.
+For some reason several people have been sending bad patches to fix
+compiler warnings in vmcore recently.  Here's how it should be done.
+Compile-tested only on x86.  As noted in the first patch, s390 should
+take this conversion a bit further, but I'm not inclined to do that
+work myself.
 
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
----
- arch/x86/kernel/crash_dump_64.c |  7 +++++-
- fs/proc/vmcore.c                | 40 +++++++++++++--------------------
- include/linux/crash_dump.h      | 10 ++++-----
- 3 files changed, 25 insertions(+), 32 deletions(-)
+v2:
+ - Removed unnecessary kernel-doc
+ - Included uio.h to fix compilation problems
+ - Made read_from_oldmem_iter static to avoid compile warnings during the
+   conversion
+ - Use iov_iter_truncate() (Christoph)
 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index f922d51c9d1f..0fa87648e55c 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -55,6 +55,11 @@ ssize_t copy_oldmem_page_encrypted(struct iov_iter *iter, unsigned long pfn,
- 
- ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0,
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
- 				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
- }
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 7b25f568d20d..bee05b40196b 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -133,7 +133,7 @@ static int open_vmcore(struct inode *inode, struct file *file)
- }
- 
- /* Reads a page from the oldmem device from given offset. */
--static ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
- 			 u64 *ppos, bool encrypted)
- {
- 	unsigned long pfn, offset;
-@@ -181,27 +181,6 @@ static ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
- 	return read;
- }
- 
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted)
--{
--	struct iov_iter iter;
--	struct iovec iov;
--	struct kvec kvec;
--
--	if (userbuf) {
--		iov.iov_base = (__force void __user *)buf;
--		iov.iov_len = count;
--		iov_iter_init(&iter, READ, &iov, 1, count);
--	} else {
--		kvec.iov_base = buf;
--		kvec.iov_len = count;
--		iov_iter_kvec(&iter, READ, &kvec, 1, count);
--	}
--
--	return read_from_oldmem_iter(&iter, count, ppos, encrypted);
--}
--
- /*
-  * Architectures may override this function to allocate ELF header in 2nd kernel
-  */
-@@ -221,7 +200,12 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos, false);
- }
- 
- /*
-@@ -229,7 +213,13 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
-+			cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- }
- 
- /*
-@@ -404,7 +394,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
- 					    m->offset + m->size - *fpos,
- 					    iter->count);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem_iter(iter, tsz, &start,
-+			tmp = read_from_oldmem(iter, tsz, &start,
- 					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- 			if (tmp < 0)
- 				return tmp;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index a1cf7d5c03c7..0f3a656293b0 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -134,13 +134,11 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
- #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
- 
- #ifdef CONFIG_PROC_VMCORE
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted);
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+			 u64 *ppos, bool encrypted);
- #else
--static inline ssize_t read_from_oldmem(char *buf, size_t count,
--				       u64 *ppos, int userbuf,
--				       bool encrypted)
-+static inline ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+				       u64 *ppos, bool encrypted)
- {
- 	return -EOPNOTSUPP;
- }
+Matthew Wilcox (Oracle) (3):
+  vmcore: Convert __read_vmcore to use an iov_iter
+  vmcore: Convert read_from_oldmem() to take an iov_iter
+  iov-kaddr
+
+ arch/x86/kernel/crash_dump_64.c |   7 +-
+ fs/9p/vfs_dir.c                 |   5 +-
+ fs/9p/xattr.c                   |   6 +-
+ fs/proc/vmcore.c                | 119 ++++++++++++--------------------
+ include/linux/crash_dump.h      |  10 ++-
+ include/linux/uio.h             |   9 +++
+ lib/iov_iter.c                  |  32 +++++++++
+ 7 files changed, 97 insertions(+), 91 deletions(-)
+
 -- 
 2.33.0
 
