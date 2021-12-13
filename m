@@ -1,16 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwip6-0097J3-S4
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 10:44:50 +0000
-Date: Mon, 13 Dec 2021 11:44:30 +0100
-From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH 1/1] s390: handle R_390_PLT32DBL reloc entries in
- machine_apply_elf_rel()
-Message-ID: <20211213114430.77f28a67@rhtmp>
-In-Reply-To: <20211208125355.256391-1-egorenar@linux.ibm.com>
-References: <20211208125355.256391-1-egorenar@linux.ibm.com>
-MIME-Version: 1.0
+ id 1mwkQf-009TmN-Hy
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:27:43 +0000
+From: Baoquan He <bhe@redhat.com>
+Subject: [PATCH v3 0/5] Avoid requesting page from DMA zone when no managed
+ pages
+Date: Mon, 13 Dec 2021 20:27:07 +0800
+Message-Id: <20211213122712.23805-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -19,120 +16,62 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Alexander Egorenkov <egorenar@linux.ibm.com>
-Cc: ltao@redhat.com, hca@linux.ibm.com, kexec@lists.infradead.org, Simon Horman <horms@verge.net.au>
+To: linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, bhe@redhat.com
 
-Hi Alexander,
+Background information can be checked in cover letter of v2 RESEND POST
+as below:
+https://lore.kernel.org/all/20211207030750.30824-1-bhe@redhat.com/T/#u
 
-@Alexander: Thanks for taking care of this.
+Changelog:
+v2-Resend -> v3:
+ - Re-implement has_managed_dma() according to David's suggestion.
+ - Add Fixes tag and cc stable.
 
-On Wed,  8 Dec 2021 13:53:55 +0100
-Alexander Egorenkov <egorenar@linux.ibm.com> wrote:
+v2->v2 RESEND:
+ - John pinged to push the repost of this patchset. So fix one typo of
+   suject of patch 3/5; Fix a building error caused by mix declaration in
+   patch 5/5. Both of them are found by John from his testing.
+ - Rewrite cover letter to add more information.
 
-> Starting with gcc 11.3, the C compiler will generate PLT-relative function
-> calls even if they are local and do not require it. Later on during linking,
-> the linker will replace all PLT-relative calls to local functions with
-> PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
-> not being linked as a regular executable or shared library would have been,
-> and therefore, all PLT-relative addresses remain in the generated purgatory
-> object code unresolved. This leads to the situation where the purgatory
-> code is being executed during kdump with all PLT-relative addresses
-> unresolved. And this results in endless loops within the purgatory code.
+v1->v2:
+ Change to check if managed DMA zone exists. If DMA zone has managed
+ pages, go further to request page from DMA zone to initialize. Otherwise,
+ just skip to initialize stuffs which need pages from DMA zone.
+  
 
-Tiny nit. The last two sentences describe the situation in the kernel.
-Luckily the kexec-tools do proper error checking and die with
+V2 RESEND post:
+https://lore.kernel.org/all/20211207030750.30824-1-bhe@redhat.com/T/#u
 
-	"Unknown rela relocation: 0x14 0x73c0901c"
+v2 post:
+https://lore.kernel.org/all/20210810094835.13402-1-bhe@redhat.com/T/#u
 
-when they encounter an unknown relocation type.
+v1 post:
+https://lore.kernel.org/all/20210624052010.5676-1-bhe@redhat.com/T/#u
 
-Anyway, the code is correct
 
-Reviewed-by: Philipp Rudo <prudo@redhat.com>
+Baoquan He (5):
+  docs: kernel-parameters: Update to reflect the current default size of
+    atomic pool
+  dma-pool: allow user to disable atomic pool
+  mm_zone: add function to check if managed dma zone exists
+  dma/pool: create dma atomic pool only if dma zone has managed pages
+  mm/slub: do not create dma-kmalloc if no managed pages in DMA zone
 
-> Furthermore, the clang C compiler has always behaved like described above
-> and this commit should fix the purgatory code built with the latter.
-> 
-> Because the purgatory code is no regular executable or shared library,
-> contains only calls to local functions and has no PLT, all R_390_PLT32DBL
-> relocation entries can be resolved just like a R_390_PC32DBL one.
-> 
-> * https://refspecs.linuxfoundation.org/ELF/zSeries/lzsabi0_zSeries/x1633.html#AEN1699
-> 
-> Relocation entries of purgatory code generated with gcc 11.3
-> ------------------------------------------------------------
-> 
-> $ readelf -r purgatory/purgatory.o
-> 
-> Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
->   Offset          Info           Type           Sym. Value    Sym. Name + Addend
-> 00000000000c  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-> 00000000001a  001000000014 R_390_PLT32DBL    0000000000000000 sha256_starts + 2
-> 000000000030  001100000014 R_390_PLT32DBL    0000000000000000 sha256_update + 2
-> 000000000046  001200000014 R_390_PLT32DBL    0000000000000000 sha256_finish + 2
-> 000000000050  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
-> 00000000005a  001300000014 R_390_PLT32DBL    0000000000000000 memcmp + 2
-> ...
-> 000000000118  001600000014 R_390_PLT32DBL    0000000000000000 setup_arch + 2
-> 00000000011e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-> 00000000012c  000f00000014 R_390_PLT32DBL    0000000000000000 verify_sha256_digest + 2
-> 000000000142  001700000014 R_390_PLT32DBL    0000000000000000
-> post_verification[...] + 2
-> 
-> Relocation entries of purgatory code generated with gcc 11.2
-> ------------------------------------------------------------
-> 
-> $ readelf -r purgatory/purgatory.o
-> 
-> Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
->   Offset          Info           Type           Sym. Value    Sym. Name + Addend
-> 00000000000e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-> 00000000001c  001000000013 R_390_PC32DBL     0000000000000000 sha256_starts + 2
-> 000000000036  001100000013 R_390_PC32DBL     0000000000000000 sha256_update + 2
-> 000000000048  001200000013 R_390_PC32DBL     0000000000000000 sha256_finish + 2
-> 000000000052  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
-> 00000000005c  001300000013 R_390_PC32DBL     0000000000000000 memcmp + 2
-> ...
-> 00000000011a  001600000013 R_390_PC32DBL     0000000000000000 setup_arch + 2
-> 000000000120  000300000013 R_390_PC32DBL     0000000000000000 .data + 122
-> 000000000130  000f00000013 R_390_PC32DBL     0000000000000000 verify_sha256_digest + 2
-> 000000000146  001700000013 R_390_PC32DBL     0000000000000000 post_verification[...] + 2
-> 
-> Corresponding s390 kernel discussion:
-> * https://lore.kernel.org/linux-s390/20211208105801.188140-1-egorenar@linux.ibm.com/T/#u
-> 
-> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> Reported-by: Tao Liu <ltao@redhat.com>
-> Suggested-by: Philipp Rudo <prudo@redhat.com>
-> ---
->  kexec/arch/s390/kexec-elf-rel-s390.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/kexec/arch/s390/kexec-elf-rel-s390.c b/kexec/arch/s390/kexec-elf-rel-s390.c
-> index a5e1b7345578..91ba86a9991d 100644
-> --- a/kexec/arch/s390/kexec-elf-rel-s390.c
-> +++ b/kexec/arch/s390/kexec-elf-rel-s390.c
-> @@ -56,6 +56,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->  	case R_390_PC16:	/* PC relative 16 bit.  */
->  	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
->  	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
-> +	case R_390_PLT32DBL:	/* 32 bit PC rel. PLT shifted by 1.  */
->  	case R_390_PC32:	/* PC relative 32 bit.  */
->  	case R_390_PC64:	/* PC relative 64 bit.	*/
->  		val -= address;
-> @@ -63,7 +64,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
->  			*(unsigned short *) loc = val;
->  		else if (r_type == R_390_PC16DBL)
->  			*(unsigned short *) loc = val >> 1;
-> -		else if (r_type == R_390_PC32DBL)
-> +		else if (r_type == R_390_PC32DBL || r_type == R_390_PLT32DBL)
->  			*(unsigned int *) loc = val >> 1;
->  		else if (r_type == R_390_PC32)
->  			*(unsigned int *) loc = val;
+ Documentation/admin-guide/kernel-parameters.txt |  5 ++++-
+ include/linux/mmzone.h                          |  9 +++++++++
+ kernel/dma/pool.c                               | 11 +++++++----
+ mm/page_alloc.c                                 | 15 +++++++++++++++
+ mm/slab_common.c                                |  9 +++++++++
+ 5 files changed, 44 insertions(+), 5 deletions(-)
+
+-- 
+2.17.2
 
 
 _______________________________________________
