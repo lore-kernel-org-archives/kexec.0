@@ -1,21 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from verein.lst.de ([213.95.11.211])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwg5N-0089o3-6h
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 07:49:26 +0000
-Date: Mon, 13 Dec 2021 08:49:19 +0100
+ id 1mwgDA-008BsD-Fw
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 07:57:29 +0000
+Date: Mon, 13 Dec 2021 08:57:25 +0100
 From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH RESEND v2 0/5] Avoid requesting page from DMA zone when
- no managed pages
-Message-ID: <20211213074919.GC20758@lst.de>
-References: <20211207030750.30824-1-bhe@redhat.com>
- <alpine.DEB.2.22.394.2112070859420.201880@gentwo.de>
- <20211209080540.GA3050@MiWiFi-R3L-srv>
- <alpine.DEB.2.22.394.2112091355510.270348@gentwo.de>
- <20211213073925.GA29905@MiWiFi-R3L-srv>
+Subject: Re: [PATCH 1/3] vmcore: Convert copy_oldmem_page() to take an iov_iter
+Message-ID: <20211213075725.GA20986@lst.de>
+References: <20211213000636.2932569-1-willy@infradead.org>
+ <20211213000636.2932569-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213073925.GA29905@MiWiFi-R3L-srv>
+In-Reply-To: <20211213000636.2932569-2-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,27 +24,20 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: Christoph Lameter <cl@gentwo.org>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, robin.murphy@arm.com, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, m.szyprowski@samsung.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 03:39:25PM +0800, Baoquan He wrote:
-> > > As said at above, ia64 and riscv don't have ZONE_DMA at all, they just
-> > > cover low 4G with ZONE_DMA32 alone.
-> > 
-> > If you do not have devices that are crap and cannot address the full
-> > memory then you dont need these special zones.
+On Mon, Dec 13, 2021 at 12:06:34AM +0000, Matthew Wilcox (Oracle) wrote:
+> Instead of passing in a 'buf' and 'userbuf' argument, pass in an iov_iter.
+> s390 needs more work to pass the iov_iter down further, or refactor,
+> but I'd be more comfortable if someone who can test on s390 did that work.
 > 
-> I am not a DMA expert, with my understanding, on x86_64 and arm64, we
-> have PCIe devices which dma mask is 32bit
+> It's more convenient to convert the whole of read_from_oldmem() to
+> take an iov_iter at the same time, so rename it to read_from_oldmem_iter()
+> and add a temporary read_from_oldmem() wrapper that creates an iov_iter.
 
-Yes, way to many, and they keep getting newly introduce as well.  Also
-weirdo masks like 40, 44 or 48 bits.
-
-> , means they can only address
-> ZONE_DMA32.
-
-Yes and no.  Offset between cpu physical and device address make this
-complicated, even ignoring iommus.
+This looks pretty reasonable.  s390 could use some love from people that
+know the code, and yes, the kerneldoc comments should go away.
 
 _______________________________________________
 kexec mailing list
