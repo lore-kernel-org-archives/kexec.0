@@ -1,12 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mwkQt-009TpO-Bf
- for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:27:56 +0000
+ id 1mwkRK-009U07-Pj
+ for kexec@lists.infradead.org; Mon, 13 Dec 2021 12:28:24 +0000
 From: Baoquan He <bhe@redhat.com>
-Subject: [PATCH v3 2/5] dma-pool: allow user to disable atomic pool
-Date: Mon, 13 Dec 2021 20:27:09 +0800
-Message-Id: <20211213122712.23805-3-bhe@redhat.com>
+Subject: [PATCH v3 4/5] dma/pool: create dma atomic pool only if dma zone has
+ managed pages
+Date: Mon, 13 Dec 2021 20:27:11 +0800
+Message-Id: <20211213122712.23805-5-bhe@redhat.com>
 In-Reply-To: <20211213122712.23805-1-bhe@redhat.com>
 References: <20211213122712.23805-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
@@ -23,68 +24,84 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, bhe@redhat.com
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, stable@vger.kernel.org, Marek Szyprowski <m.szyprowski@samsung.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org
 
-In the current code, three atomic memory pools are always created,
-atomic_pool_kernel|dma|dma32, even though 'coherent_pool=0' is
-specified in kernel command line. In fact, atomic pool is only
-necessary when CONFIG_DMA_DIRECT_REMAP=y or mem_encrypt_active=y
-which are needed on few ARCHes.
+Currently three dma atomic pools are initialized as long as the relevant
+kernel codes are built in. While in kdump kernel of x86_64, this is not
+right when trying to create atomic_pool_dma, because there's no managed
+pages in DMA zone. In the case, DMA zone only has low 1M memory presented
+and locked down by memblock allocator. So no pages are added into buddy
+of DMA zone. Please check commit f1d4d47c5851 ("x86/setup: Always reserve
+the first 1M of RAM").
 
-So change code to allow user to disable atomic pool by specifying
-'coherent_pool=0'.
+Then in kdump kernel of x86_64, it always prints below failure message:
 
-Meanwhile, update the relevant document in kernel-parameter.txt.
+ DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+ swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+ CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.13.0-0.rc5.20210611git929d931f2b40.42.fc35.x86_64 #1
+ Hardware name: Dell Inc. PowerEdge R910/0P658H, BIOS 2.12.0 06/04/2018
+ Call Trace:
+  dump_stack+0x7f/0xa1
+  warn_alloc.cold+0x72/0xd6
+  ? _raw_spin_unlock_irq+0x24/0x40
+  ? __alloc_pages_direct_compact+0x90/0x1b0
+  __alloc_pages_slowpath.constprop.0+0xf29/0xf50
+  ? __cond_resched+0x16/0x50
+  ? prepare_alloc_pages.constprop.0+0x19d/0x1b0
+  __alloc_pages+0x24d/0x2c0
+  ? __dma_atomic_pool_init+0x93/0x93
+  alloc_page_interleave+0x13/0xb0
+  atomic_pool_expand+0x118/0x210
+  ? __dma_atomic_pool_init+0x93/0x93
+  __dma_atomic_pool_init+0x45/0x93
+  dma_atomic_pool_init+0xdb/0x176
+  do_one_initcall+0x67/0x320
+  ? rcu_read_lock_sched_held+0x3f/0x80
+  kernel_init_freeable+0x290/0x2dc
+  ? rest_init+0x24f/0x24f
+  kernel_init+0xa/0x111
+  ret_from_fork+0x22/0x30
+ Mem-Info:
+ ......
+ DMA: failed to allocate 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
+ DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
 
+Here, let's check if DMA zone has managed pages, then create atomic_pool_dma
+if yes. Otherwise just skip it.
+
+Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+Cc: stable@vger.kernel.org
 Signed-off-by: Baoquan He <bhe@redhat.com>
+Cc: Christoph Hellwig <hch@lst.de>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Robin Murphy <robin.murphy@arm.com>
+Cc: iommu@lists.linux-foundation.org
 ---
- Documentation/admin-guide/kernel-parameters.txt | 3 ++-
- kernel/dma/pool.c                               | 7 +++++--
- 2 files changed, 7 insertions(+), 3 deletions(-)
+ kernel/dma/pool.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ec4d25e854a8..d7015309614b 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -664,7 +664,8 @@
- 
- 	coherent_pool=nn[KMG]	[ARM,KNL]
- 			Sets the size of memory pool for coherent, atomic dma
--			allocations. Otherwise the default size will be scaled
-+			allocations. A value of 0 disables the three atomic
-+			memory pool. Otherwise the default size will be scaled
- 			with memory capacity, while clamped between 128K and
- 			1 << (PAGE_SHIFT + MAX_ORDER-1).
- 
 diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-index 5f84e6cdb78e..5a85804b5beb 100644
+index 5a85804b5beb..00df3edd6c5d 100644
 --- a/kernel/dma/pool.c
 +++ b/kernel/dma/pool.c
-@@ -21,7 +21,7 @@ static struct gen_pool *atomic_pool_kernel __ro_after_init;
- static unsigned long pool_size_kernel;
- 
- /* Size can be defined by the coherent_pool command line */
--static size_t atomic_pool_size;
-+static unsigned long atomic_pool_size = -1;
- 
- /* Dynamic background expansion when the atomic pool is near capacity */
- static struct work_struct atomic_pool_work;
-@@ -188,11 +188,14 @@ static int __init dma_atomic_pool_init(void)
- {
- 	int ret = 0;
- 
-+	if (!atomic_pool_size)
-+		return 0;
-+
- 	/*
- 	 * If coherent_pool was not used on the command line, default the pool
- 	 * sizes to 128KB per 1GB of memory, min 128KB, max MAX_ORDER-1.
- 	 */
--	if (!atomic_pool_size) {
-+	if (atomic_pool_size == -1) {
- 		unsigned long pages = totalram_pages() / (SZ_1G / SZ_128K);
- 		pages = min_t(unsigned long, pages, MAX_ORDER_NR_PAGES);
- 		atomic_pool_size = max_t(size_t, pages << PAGE_SHIFT, SZ_128K);
+@@ -206,7 +206,7 @@ static int __init dma_atomic_pool_init(void)
+ 						    GFP_KERNEL);
+ 	if (!atomic_pool_kernel)
+ 		ret = -ENOMEM;
+-	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
++	if (has_managed_dma()) {
+ 		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
+ 						GFP_KERNEL | GFP_DMA);
+ 		if (!atomic_pool_dma)
+@@ -229,7 +229,7 @@ static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
+ 	if (prev == NULL) {
+ 		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
+ 			return atomic_pool_dma32;
+-		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
++		if (atomic_pool_dma && (gfp & GFP_DMA))
+ 			return atomic_pool_dma;
+ 		return atomic_pool_kernel;
+ 	}
 -- 
 2.17.2
 
