@@ -1,15 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
- kernel reservation consistent
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mx3aL-00D8Sv-Ui
+ for kexec@lists.infradead.org; Tue, 14 Dec 2021 08:54:59 +0000
+Date: Tue, 14 Dec 2021 16:54:40 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <20211214085440.GA3023@MiWiFi-R3L-srv>
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-3-thunder.leizhen@huawei.com>
- <20211213133735.GB23510@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <a6143bcb-e380-2270-7ccc-02309866ccab@huawei.com>
-Date: Tue, 14 Dec 2021 16:48:15 +0800
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20211213133735.GB23510@MiWiFi-R3L-srv>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211210065533.2023-4-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,57 +25,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-
-
-On 2021/12/13 21:37, Baoquan He wrote:
-> On 12/10/21 at 02:55pm, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
->>
->> The lower bounds of crash kernel reservation and crash kernel low
->> reservation are different, use the consistent value CRASH_ALIGN.
->>
->> Suggested-by: Dave Young <dyoung@redhat.com>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+On 12/10/21 at 02:55pm, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
 > 
-> You may need add Co-developed-by to clarify who is author, and who is
-> co-author. Please check section "When to use Acked-by:, Cc:, and Co-developed-by:"
-> of Documentation/process/submitting-patches.rst. Otherwise, 
-
-Okay, thanks for the heads-up. I will modify it.
-
+> To make the functions reserve_crashkernel() as generic,
+> replace some hard-coded numbers with macro CRASH_ADDR_LOW_MAX.
 > 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+
+If you made change to this patch, please remove the old Acked-by. If you
+didn't contribute change, Signed-off-by should be taken off.
+
+Compared this with the version I acked, only see
+memblock_free() -> memblock_phys_free() update which should be done
+from the rebase.
+
+So ack this one again, and please also consider adding Co-developed-by.
+
+> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 > Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/x86/kernel/setup.c | 7 ++++---
+>  1 file changed, 4 insertions(+), 3 deletions(-)
 > 
->> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
->> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
->> ---
->>  arch/x86/kernel/setup.c | 3 ++-
->>  1 file changed, 2 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 5cc60996eac56d6..6424ee4f23da2cf 100644
->> --- a/arch/x86/kernel/setup.c
->> +++ b/arch/x86/kernel/setup.c
->> @@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
->>  			return 0;
->>  	}
->>  
->> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
->> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
->> +			CRASH_ADDR_LOW_MAX);
->>  	if (!low_base) {
->>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
->>  		       (unsigned long)(low_size >> 20));
->> -- 
->> 2.25.1
->>
+> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+> index 6424ee4f23da2cf..bb2a0973b98059e 100644
+> --- a/arch/x86/kernel/setup.c
+> +++ b/arch/x86/kernel/setup.c
+> @@ -489,8 +489,9 @@ static void __init reserve_crashkernel(void)
+>  	if (!crash_base) {
+>  		/*
+>  		 * Set CRASH_ADDR_LOW_MAX upper bound for crash memory,
+> -		 * crashkernel=x,high reserves memory over 4G, also allocates
+> -		 * 256M extra low memory for DMA buffers and swiotlb.
+> +		 * crashkernel=x,high reserves memory over CRASH_ADDR_LOW_MAX,
+> +		 * also allocates 256M extra low memory for DMA buffers
+> +		 * and swiotlb.
+>  		 * But the extra memory is not required for all machines.
+>  		 * So try low memory first and fall back to high memory
+>  		 * unless "crashkernel=size[KMG],high" is specified.
+> @@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
+>  		}
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+>  		memblock_phys_free(crash_base, crash_size);
+>  		return;
+>  	}
+> -- 
+> 2.25.1
 > 
-> .
-> 
+
 
 _______________________________________________
 kexec mailing list
