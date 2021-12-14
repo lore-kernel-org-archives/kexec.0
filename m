@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from verein.lst.de ([213.95.11.211])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxAiC-00EtaW-Qs
- for kexec@lists.infradead.org; Tue, 14 Dec 2021 16:31:34 +0000
-Date: Tue, 14 Dec 2021 17:31:24 +0100
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no
- managed pages in DMA zone
-Message-ID: <20211214163124.GA21762@lst.de>
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com>
+ id 1mxAjz-00EuNT-CB
+ for kexec@lists.infradead.org; Tue, 14 Dec 2021 16:33:24 +0000
+Date: Tue, 14 Dec 2021 17:32:42 +0100
+From: Philipp Rudo <prudo@redhat.com>
+Subject: Re: [PATCH] kernel/crash_core.c: No judgment required
+Message-ID: <20211214173242.192f47e8@rhtmp>
+In-Reply-To: <20211210032003.16278-1-sensor1010@163.com>
+References: <20211210032003.16278-1-sensor1010@163.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211213122712.23805-6-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,20 +22,56 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
+To: lizhe <sensor1010@163.com>
+Cc: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 08:27:12PM +0800, Baoquan He wrote:
-> Dma-kmalloc will be created as long as CONFIG_ZONE_DMA is enabled.
-> However, it will fail if DMA zone has no managed pages. The failure
-> can be seen in kdump kernel of x86_64 as below:
+Hi lizhe,
 
-Please just switch the sr allocation to use GFP_KERNEL without GFP_DMA.
-The block layer will do the proper bounce buffering underneath for the
-very unlikely case that we're actually using the single HBA driver that
-has ISA DMA addressing limitations.
+On Thu,  9 Dec 2021 19:20:03 -0800
+lizhe <sensor1010@163.com> wrote:
 
-Same for the ch drive, btw.
+> No judgment required ck_cmdline is NULL
+> its caller has alreadly judged, see __parse_crashkernel
+> function
+> 
+> Signed-off-by: lizhe <sensor1010@163.com>
+> ---
+>  kernel/crash_core.c | 3 ---
+>  1 file changed, 3 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index eb53f5ec62c9..9981cf9b9fe4 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -221,9 +221,6 @@ static __init char *get_last_crashkernel(char *cmdline,
+>  		p = strstr(p+1, name);
+>  	}
+>  
+> -	if (!ck_cmdline)
+> -		return NULL;
+> -
+>  	return ck_cmdline;
+>  }
+>  
+
+I agree that the if-block is not needed and can be removed. However, I
+cannot follow your reasoning in the commit message. Could you please
+explain it in more detail.
+
+The reason why I think that the 'if' can be removed is that the
+expression can only be true when ck_cmdline = NULL. But with that the
+last three lines are equivalent to
+
+	if (!ck_cmdline)
+		return ck_cmdline;
+
+	return ck_cmdline;
+
+Which simply doesn't make any sense.
+
+Thanks
+Philipp
+
 
 _______________________________________________
 kexec mailing list
