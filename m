@@ -1,14 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from mx0a-00069f02.pphosted.com ([205.220.165.32])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxAjz-00EuNT-CB
- for kexec@lists.infradead.org; Tue, 14 Dec 2021 16:33:24 +0000
-Date: Tue, 14 Dec 2021 17:32:42 +0100
-From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH] kernel/crash_core.c: No judgment required
-Message-ID: <20211214173242.192f47e8@rhtmp>
-In-Reply-To: <20211210032003.16278-1-sensor1010@163.com>
-References: <20211210032003.16278-1-sensor1010@163.com>
+ id 1mxBHc-00F2k9-4y
+ for kexec@lists.infradead.org; Tue, 14 Dec 2021 17:08:09 +0000
+Message-ID: <dc648afe-6dbe-55c9-ebf6-9334d71706b4@oracle.com>
+Date: Tue, 14 Dec 2021 11:07:34 -0600
+Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
+ pages in DMA zone
+Content-Language: en-US
+References: <20211213122712.23805-1-bhe@redhat.com>
+ <20211213122712.23805-6-bhe@redhat.com> <20211214163124.GA21762@lst.de>
+From: john.p.donnelly@oracle.com
+In-Reply-To: <20211214163124.GA21762@lst.de>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -18,59 +21,29 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: lizhe <sensor1010@163.com>
-Cc: dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com, kexec@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Christoph Hellwig <hch@lst.de>, Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
 
-Hi lizhe,
-
-On Thu,  9 Dec 2021 19:20:03 -0800
-lizhe <sensor1010@163.com> wrote:
-
-> No judgment required ck_cmdline is NULL
-> its caller has alreadly judged, see __parse_crashkernel
-> function
+On 12/14/21 10:31 AM, Christoph Hellwig wrote:
+> On Mon, Dec 13, 2021 at 08:27:12PM +0800, Baoquan He wrote:
+>> Dma-kmalloc will be created as long as CONFIG_ZONE_DMA is enabled.
+>> However, it will fail if DMA zone has no managed pages. The failure
+>> can be seen in kdump kernel of x86_64 as below:
 > 
-> Signed-off-by: lizhe <sensor1010@163.com>
-> ---
->  kernel/crash_core.c | 3 ---
->  1 file changed, 3 deletions(-)
+> Please just switch the sr allocation to use GFP_KERNEL without GFP_DMA.
+> The block layer will do the proper bounce buffering underneath for the
+> very unlikely case that we're actually using the single HBA driver that
+> has ISA DMA addressing limitations.
 > 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index eb53f5ec62c9..9981cf9b9fe4 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -221,9 +221,6 @@ static __init char *get_last_crashkernel(char *cmdline,
->  		p = strstr(p+1, name);
->  	}
->  
-> -	if (!ck_cmdline)
-> -		return NULL;
-> -
->  	return ck_cmdline;
->  }
->  
+> Same for the ch drive, btw.
 
-I agree that the if-block is not needed and can be removed. However, I
-cannot follow your reasoning in the commit message. Could you please
-explain it in more detail.
+Hi,
 
-The reason why I think that the 'if' can be removed is that the
-expression can only be true when ck_cmdline = NULL. But with that the
-last three lines are equivalent to
-
-	if (!ck_cmdline)
-		return ck_cmdline;
-
-	return ck_cmdline;
-
-Which simply doesn't make any sense.
-
-Thanks
-Philipp
+Is CONFIG_ZONE_DMA even needed anymore in x86_64  ?
 
 
 _______________________________________________
