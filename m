@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v17 01/10] x86: kdump: replace the hard-coded alignment
- with macro CRASH_ALIGN
+Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
 References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-2-thunder.leizhen@huawei.com>
- <20211213131713.GA23510@MiWiFi-R3L-srv>
+ <20211210065533.2023-3-thunder.leizhen@huawei.com>
+ <20211213133735.GB23510@MiWiFi-R3L-srv>
 From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <6ad868b9-6c00-f515-074d-e6f980fea7fa@huawei.com>
-Date: Tue, 14 Dec 2021 16:41:46 +0800
+Message-ID: <a6143bcb-e380-2270-7ccc-02309866ccab@huawei.com>
+Date: Tue, 14 Dec 2021 16:48:15 +0800
 MIME-Version: 1.0
-In-Reply-To: <20211213131713.GA23510@MiWiFi-R3L-srv>
+In-Reply-To: <20211213133735.GB23510@MiWiFi-R3L-srv>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,62 +27,46 @@ Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 
 
 
-On 2021/12/13 21:17, Baoquan He wrote:
+On 2021/12/13 21:37, Baoquan He wrote:
 > On 12/10/21 at 02:55pm, Zhen Lei wrote:
 >> From: Chen Zhou <chenzhou10@huawei.com>
 >>
->> Move CRASH_ALIGN to header asm/kexec.h for later use.
+>> The lower bounds of crash kernel reservation and crash kernel low
+>> reservation are different, use the consistent value CRASH_ALIGN.
 >>
 >> Suggested-by: Dave Young <dyoung@redhat.com>
->> Suggested-by: Baoquan He <bhe@redhat.com>
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 > 
-> I remember Dave and I discussed and suggested this when reviewing.
-> You can remove my Suggested-by.
+> You may need add Co-developed-by to clarify who is author, and who is
+> co-author. Please check section "When to use Acked-by:, Cc:, and Co-developed-by:"
+> of Documentation/process/submitting-patches.rst. Otherwise, 
 
-OK, I will do it.
+Okay, thanks for the heads-up. I will modify it.
 
-> 
-> For this one, I would like to add ack:
 > 
 > Acked-by: Baoquan He <bhe@redhat.com>
 > 
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 >> Tested-by: John Donnelly <John.p.donnelly@oracle.com>
 >> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 >> ---
->>  arch/x86/include/asm/kexec.h | 3 +++
->>  arch/x86/kernel/setup.c      | 3 ---
->>  2 files changed, 3 insertions(+), 3 deletions(-)
+>>  arch/x86/kernel/setup.c | 3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
 >>
->> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
->> index 11b7c06e2828c30..3a22e65262aa70b 100644
->> --- a/arch/x86/include/asm/kexec.h
->> +++ b/arch/x86/include/asm/kexec.h
->> @@ -18,6 +18,9 @@
->>  
->>  # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
->>  
->> +/* 16M alignment for crash kernel regions */
->> +#define CRASH_ALIGN		SZ_16M
->> +
->>  #ifndef __ASSEMBLY__
->>  
->>  #include <linux/string.h>
 >> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
->> index 6a190c7f4d71b05..5cc60996eac56d6 100644
+>> index 5cc60996eac56d6..6424ee4f23da2cf 100644
 >> --- a/arch/x86/kernel/setup.c
 >> +++ b/arch/x86/kernel/setup.c
->> @@ -392,9 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+>> @@ -441,7 +441,8 @@ static int __init reserve_crashkernel_low(void)
+>>  			return 0;
+>>  	}
 >>  
->>  #ifdef CONFIG_KEXEC_CORE
->>  
->> -/* 16M alignment for crash kernel regions */
->> -#define CRASH_ALIGN		SZ_16M
->> -
->>  /*
->>   * Keep the crash kernel below this limit.
->>   *
+>> -	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+>> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, CRASH_ALIGN,
+>> +			CRASH_ADDR_LOW_MAX);
+>>  	if (!low_base) {
+>>  		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+>>  		       (unsigned long)(low_size >> 20));
 >> -- 
 >> 2.25.1
 >>
