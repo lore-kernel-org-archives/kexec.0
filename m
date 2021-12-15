@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 14 Dec 2021 19:24:14 +0000
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
- kernel reservation consistent
-Message-ID: <YbjvXl51hc6GZa71@arm.com>
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-3-thunder.leizhen@huawei.com>
- <YbjrjpehprvoRXbV@zn.tnic>
+Received: from mail-tycjpn01on20622.outbound.protection.outlook.com
+ ([2a01:111:f403:7010::622]
+ helo=JPN01-TYC-obe.outbound.protection.outlook.com)
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mxIdS-00GEYS-No
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 00:59:12 +0000
+From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
+ <k-hagio-ab@nec.com>
+Subject: RE: [RFC PATCH] makedumpfile: add userinfo elf section 0/4]
+Date: Wed, 15 Dec 2021 00:58:55 +0000
+Message-ID: <TYYPR01MB6777405BB7E0B8F2F0220FB6DD769@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <20211201134730.15943-1-ikhoronz@cisco.com>
+In-Reply-To: <20211201134730.15943-1-ikhoronz@cisco.com>
+Content-Language: ja-JP
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YbjrjpehprvoRXbV@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,31 +26,53 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: Ivan Khoronzhuk <ivan.khoronzhuk@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Cc: Ivan Khoronzhuk <ikhoronz@cisco.com>
 
-On Tue, Dec 14, 2021 at 08:07:58PM +0100, Borislav Petkov wrote:
-> On Fri, Dec 10, 2021 at 02:55:25PM +0800, Zhen Lei wrote:
-> > From: Chen Zhou <chenzhou10@huawei.com>
-> > 
-> > The lower bounds of crash kernel reservation and crash kernel low
-> > reservation are different, use the consistent value CRASH_ALIGN.
+Hi Ivan,
+
+sorry for the delay.
+
+-----Original Message-----
+> These patchset suggests feature to add user specific information along
+> with dumpfile. One of usecases could be a platform build information
+> containing dubug file addresses, sources of daily build, some
+> platform related information and more, it's gracefully simplifies
+> debugging process, since an engineer doesn't need to spend time on
+> finding to which platform this core file is related, where to get
+> debugging counter part and so on. As user info can be added along with
+> dumpfile it frees platform from creating tar achieve spending doubled
+> space or using specific tools.
+
+Hmm, currently I don't think it will be worth making makedumpfile have
+the memo-like feature even with accepting some code and complexity.
+If makedumpfile can access that helpful data in 2nd kernel, kdump tool
+will be able to place it next to the dumpfile.  There will become two
+files to be handled, but I'm not sure what the problem is with it..
+
+Thanks,
+Kazu
+
+> Since this information is sorted and
+> selected by user it can't be standardized and should be placed in some
+> special generic section. This patchset roughly proposes the variant when
+> user information is placed/retrieved as subsection of note elf
+> section.
 > 
-> A big WHY is missing here to explain why the lower bound of the
-> allocation range needs to be 16M and why was 0 wrong?
-
-I asked the same here:
-
-https://lore.kernel.org/r/20210224143547.GB28965@arm.com
-
-IIRC Baoquan said that there is a 1MB reserved for x86 anyway in the
-lower part, so that's equivalent in practice to starting from
-CRASH_ALIGN.
-
-Anyway, I agree the commit log should describe this.
-
--- 
-Catalin
+> Ivan Khoronzhuk (4):
+>   makedumpfile: rename check_dump_file() on check_file_is_writable()
+>   elf: add new "userinfo" ELF section to traverse debug information
+>   elf_info: make int note_descsz() and offset_next_note() public
+>   elf: add ability to read the userinfo data from note segment
+> 
+>  elf_info.c     |   4 +-
+>  elf_info.h     |   5 +
+>  makedumpfile.c | 393 ++++++++++++++++++++++++++++++++++++++++++++++++-
+>  makedumpfile.h |  12 ++
+>  4 files changed, 404 insertions(+), 10 deletions(-)
+> 
+> --
+> 2.20.1
 
 _______________________________________________
 kexec mailing list
