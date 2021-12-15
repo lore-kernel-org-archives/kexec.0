@@ -1,21 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxUR0-000wHk-8v
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 13:35:07 +0000
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com
- [10.5.11.23])
+ id 1mxURE-000wLx-3x
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 13:35:21 +0000
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com
+ [10.5.11.13])
  (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
  (No client certificate requested)
- by mimecast-mx01.redhat.com (Postfix) with ESMTPS id B03541842BE3
- for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 13:34:57 +0000 (UTC)
-Date: Wed, 15 Dec 2021 14:34:31 +0100
+ by mimecast-mx01.redhat.com (Postfix) with ESMTPS id 26E131006AA4
+ for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 13:35:17 +0000 (UTC)
+Date: Wed, 15 Dec 2021 14:35:12 +0100
 From: Philipp Rudo <prudo@redhat.com>
-Subject: Re: [PATCH 3/3] arm64: read VA_BITS from kcore for 52-bits VA kernel
-Message-ID: <20211215143431.5ec72a36@rhtmp>
-In-Reply-To: <20211210030735.53155-4-piliu@redhat.com>
+Subject: Re: [PATCH 2/3] arm64/crashdump: unify routine to get page_offset
+Message-ID: <20211215143512.4b0d745c@rhtmp>
+In-Reply-To: <20211210030735.53155-3-piliu@redhat.com>
 References: <20211210030735.53155-1-piliu@redhat.com>
- <20211210030735.53155-4-piliu@redhat.com>
+ <20211210030735.53155-3-piliu@redhat.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -32,144 +32,76 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Pingfan Liu <piliu@redhat.com>
 Cc: kexec@lists.infradead.org
 
-Hi Pingfang,
+Hi Pinfang,
 
-On Fri, 10 Dec 2021 11:07:35 +0800
+On Fri, 10 Dec 2021 11:07:34 +0800
 Pingfan Liu <piliu@redhat.com> wrote:
 
-> phys_to_virt() calculates virtual address. As a important factor,
-> page_offset is excepted to be accurate.
+> There are two funcs to get page_offset:
+>   get_kernel_page_offset()
+>   get_page_offset()
 > 
-> Since arm64 kernel exposes va_bits through vmcore, using it.
+> Since get_kernel_page_offset() does not observe the kernel formula, and
+> remove it. Unify them in order to introduce 52-bits VA kernel more
+> easily in the coming patch.
 > 
 > Signed-off-by: Pingfan Liu <piliu@redhat.com>
 > ---
->  kexec/arch/arm64/kexec-arm64.c | 31 +++++++++++++++++++++++++++----
->  kexec/arch/arm64/kexec-arm64.h |  1 +
->  util_lib/elf_info.c            |  5 +++++
->  3 files changed, 33 insertions(+), 4 deletions(-)
+>  kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
+>  kexec/arch/arm64/kexec-arm64.c     |  4 ++--
+>  kexec/arch/arm64/kexec-arm64.h     |  1 +
+>  3 files changed, 4 insertions(+), 24 deletions(-)
 > 
+> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+> index a02019a..0a8d44c 100644
+> --- a/kexec/arch/arm64/crashdump-arm64.c
+> +++ b/kexec/arch/arm64/crashdump-arm64.c
+
+[...]
+
 > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index bd650e6..ccc92db 100644
+> index 7373fa3..bd650e6 100644
 > --- a/kexec/arch/arm64/kexec-arm64.c
 > +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -54,7 +54,7 @@
->  static bool try_read_phys_offset_from_kcore = false;
->  
->  /* Machine specific details. */
-> -static int va_bits;
-> +static int va_bits = -1;
->  static unsigned long page_offset;
->  
->  /* Global varables the core kexec routines expect. */
-> @@ -876,7 +876,15 @@ static inline void set_phys_offset(long v, char *set_method)
->  
->  static int get_va_bits(void)
->  {
-> -	unsigned long long stext_sym_addr = get_kernel_sym("_stext");
-> +	unsigned long long stext_sym_addr;
-> +
-> +	/*
-> +	 * if already got from kcore
-> +	 */
-> +	if (va_bits != -1)
-> +		goto out;
-> +
-> +	stext_sym_addr = get_kernel_sym("_stext");
->  
->  	if (stext_sym_addr == 0) {
->  		fprintf(stderr, "Can't get the symbol of _stext.\n");
-> @@ -900,6 +908,7 @@ static int get_va_bits(void)
->  		return -1;
->  	}
->  
-> +out:
->  	dbgprintf("va_bits : %d\n", va_bits);
->  
->  	return 0;
-> @@ -917,14 +926,27 @@ int get_page_offset(unsigned long *page_offset)
->  	if (ret < 0)
->  		return ret;
->  
-> -	page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> +	if (va_bits < 52)
-> +		*page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> +	else
-> +		*page_offset = (0xffffffffffffffffUL) << va_bits;
-
-wouldn't it make sense to use ULONG_MAX here? At least for me it would
-be much better readable.
-
->  	dbgprintf("page_offset : %lx\n", page_offset);
->  
->  	return 0;
->  }
->  
-> +static void arm64_scan_vmcoreinfo(char *pos)
-> +{
-> +	const char *str;
-> +
-> +	str = "NUMBER(VA_BITS)=";
-> +	if (memcmp(str, pos, strlen(str)) == 0)
-> +		va_bits = strtoul(pos + strlen(str), NULL, 10);
-> +}
-> +
->  /**
-> - * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET
-> + * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET (and va_bits)
->   * from VMCOREINFO note inside 'kcore'.
+> @@ -909,7 +909,7 @@ static int get_va_bits(void)
+>   * get_page_offset - Helper for getting PAGE_OFFSET
 >   */
 >  
-> @@ -937,6 +959,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
->  		return EFAILED;
->  	}
+> -static int get_page_offset(void)
+> +int get_page_offset(unsigned long *page_offset)
+>  {
+>  	int ret;
 >  
-> +	arch_scan_vmcoreinfo = arm64_scan_vmcoreinfo;
->  	ret = read_phys_offset_elf_kcore(fd, phys_offset);
->  
->  	close(fd);
-> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> index ed99d9d..d291705 100644
-> --- a/kexec/arch/arm64/kexec-arm64.h
-> +++ b/kexec/arch/arm64/kexec-arm64.h
-> @@ -66,6 +66,7 @@ struct arm64_mem {
->  
->  #define arm64_mem_ngv UINT64_MAX
->  extern struct arm64_mem arm64_mem;
-> +extern void (*arch_scan_vmcoreinfo)(char *pos);
 
-This definition isn't arm64 specific. I think this should go to
-util_lib/include/elf_info.h.
+The new page_offset is never used in this patch. There's still the line
+left with the global page_offset but that will cause a type miss-match
+(unsigend long vs unsigned log *). In the next patch you do the update
+(page_offset -> *page_offset) but in the meantime the code is broken.
 
 Thanks
 Philipp
 
+> @@ -954,7 +954,7 @@ int get_phys_base_from_pt_load(long *phys_offset)
+>  	unsigned long long phys_start;
+>  	unsigned long long virt_start;
+>  
+> -	ret = get_page_offset();
+> +	ret = get_page_offset(&page_offset);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> index 1844b67..ed99d9d 100644
+> --- a/kexec/arch/arm64/kexec-arm64.h
+> +++ b/kexec/arch/arm64/kexec-arm64.h
+> @@ -69,6 +69,7 @@ extern struct arm64_mem arm64_mem;
 >  
 >  uint64_t get_phys_offset(void);
 >  uint64_t get_vp_offset(void);
-> diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-> index 5574c7f..d252eff 100644
-> --- a/util_lib/elf_info.c
-> +++ b/util_lib/elf_info.c
-> @@ -310,6 +310,8 @@ int get_pt_load(int idx,
+> +int get_page_offset(unsigned long *offset);
 >  
->  #define NOT_FOUND_LONG_VALUE		(-1)
->  
-> +void (*arch_scan_vmcoreinfo)(char *pos);
-> +
->  void scan_vmcoreinfo(char *start, size_t size)
+>  static inline void reset_vp_offset(void)
 >  {
->  	char *last = start + size - 1;
-> @@ -551,6 +553,9 @@ void scan_vmcoreinfo(char *start, size_t size)
->  			}
->  		}
->  
-> +		if (arch_scan_vmcoreinfo != NULL)
-> +			(*arch_scan_vmcoreinfo)(pos);
-> +
->  		if (last_line)
->  			break;
->  	}
 
 
 _______________________________________________
