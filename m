@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-qt1-x82c.google.com ([2607:f8b0:4864:20::82c])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxNJy-00GlZn-Tv
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 05:59:24 +0000
-Received: by mail-qt1-x82c.google.com with SMTP id 8so20765847qtx.5
- for <kexec@lists.infradead.org>; Tue, 14 Dec 2021 21:59:22 -0800 (PST)
-From: cgel.zte@gmail.com
-Subject: [PATCH kernel-next] kernel: remove redundant result variable
-Date: Wed, 15 Dec 2021 05:59:13 +0000
-Message-Id: <20211215055913.441464-1-chi.minghao@zte.com.cn>
+ id 1mxNM9-00GlwW-KW
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 06:01:39 +0000
+Date: Wed, 15 Dec 2021 14:01:23 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <20211215060123.GC10336@MiWiFi-R3L-srv>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
+ <20211214085440.GA3023@MiWiFi-R3L-srv> <YbhmF3+AzvRtGimD@zn.tnic>
+ <20211214095657.GB3023@MiWiFi-R3L-srv> <YbipBGn5saLscIMn@zn.tnic>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <YbipBGn5saLscIMn@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,52 +27,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: ebiederm@xmission.com
-Cc: kexec@lists.infradead.org, linux-kernel@vger.kernel.org, Minghao Chi <chi.minghao@zte.com.cn>, Zeal Robot <zealci@zte.com.cn>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-From: Minghao Chi <chi.minghao@zte.com.cn>
+On 12/14/21 at 03:24pm, Borislav Petkov wrote:
+> On Tue, Dec 14, 2021 at 05:56:57PM +0800, Baoquan He wrote:
+> > Ah, OK, I see the new paragraph from you added in below commit.
+> 
+> That is supposed to make it absolutely clear and explicit. There are
+> other hints as to what a subsequent SOB means in that document already.
+> 
+> Just the next section says:
+> 
+> "The Signed-off-by: tag indicates that the signer was involved in the
+> development of the patch, or that he/she was in the patch's delivery
+> path."
+> 
+> It wouldn't hurt if people would look at that doc from time to time - we
+> end up referring to it on a daily basis.
 
-Return value from kimage_add_entry() directly instead
-of taking this in another redundant variable.
 
-Reported-by: Zeal Robot <zealci@zte.com.cn>
-Signed-off-by: Minghao Chi <chi.minghao@zte.com.cn>
----
- kernel/kexec_core.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
-
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 5a5d192a89ac..574391de1f83 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -561,23 +561,17 @@ static int kimage_add_entry(struct kimage *image, kimage_entry_t entry)
- static int kimage_set_destination(struct kimage *image,
- 				   unsigned long destination)
- {
--	int result;
--
- 	destination &= PAGE_MASK;
--	result = kimage_add_entry(image, destination | IND_DESTINATION);
- 
--	return result;
-+	return kimage_add_entry(image, destination | IND_DESTINATION);
- }
- 
- 
- static int kimage_add_page(struct kimage *image, unsigned long page)
- {
--	int result;
--
- 	page &= PAGE_MASK;
--	result = kimage_add_entry(image, page | IND_SOURCE);
- 
--	return result;
-+	return kimage_add_entry(image, page | IND_SOURCE);
- }
- 
- 
--- 
-2.25.1
+Thanks, I need read this completely, and often check if anything new
+is added.
 
 
 _______________________________________________
