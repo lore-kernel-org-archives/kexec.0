@@ -1,22 +1,16 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from smtp-out2.suse.de ([195.135.220.29])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxRbq-000BKE-5z
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 10:34:07 +0000
-Message-ID: <f7c1f169-f9b3-6930-f933-d69ab0287069@suse.cz>
-Date: Wed, 15 Dec 2021 11:34:03 +0100
+Date: Wed, 15 Dec 2021 11:01:03 +0000
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
+Message-ID: <YbnK79c0YokJ1ahu@arm.com>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-3-thunder.leizhen@huawei.com>
+ <YbjrjpehprvoRXbV@zn.tnic> <YbjvXl51hc6GZa71@arm.com>
+ <20211215034219.GB10336@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Content-Language: en-US
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com> <20211213134319.GA997240@odroid>
- <20211214053253.GB2216@MiWiFi-R3L-srv>
- <f5ff82eb-73b6-55b5-53d7-04ab73ce5035@suse.cz>
- <20211215044818.GB1097530@odroid> <20211215070335.GA1165926@odroid>
- <20211215072710.GA3010@lst.de>
-From: Vlastimil Babka <vbabka@suse.cz>
-Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
- pages in DMA zone
-In-Reply-To: <20211215072710.GA3010@lst.de>
+Content-Disposition: inline
+In-Reply-To: <20211215034219.GB10336@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,70 +23,46 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>, Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On 12/15/21 08:27, Christoph Hellwig wrote:
-> On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
->> I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
->> for kdump kernel is nice way to solve this problem.
+On Wed, Dec 15, 2021 at 11:42:19AM +0800, Baoquan He wrote:
+> On 12/14/21 at 07:24pm, Catalin Marinas wrote:
+> > On Tue, Dec 14, 2021 at 08:07:58PM +0100, Borislav Petkov wrote:
+> > > On Fri, Dec 10, 2021 at 02:55:25PM +0800, Zhen Lei wrote:
+> > > > From: Chen Zhou <chenzhou10@huawei.com>
+> > > > 
+> > > > The lower bounds of crash kernel reservation and crash kernel low
+> > > > reservation are different, use the consistent value CRASH_ALIGN.
+> > > 
+> > > A big WHY is missing here to explain why the lower bound of the
+> > > allocation range needs to be 16M and why was 0 wrong?
+> > 
+> > I asked the same here:
+> > 
+> > https://lore.kernel.org/r/20210224143547.GB28965@arm.com
+> > 
+> > IIRC Baoquan said that there is a 1MB reserved for x86 anyway in the
+> > lower part, so that's equivalent in practice to starting from
+> > CRASH_ALIGN.
 > 
-> What is the problem with zones in kdump kernels?
+> Yeah, even for i386, there's area reserved by BIOS inside low 1M.
+> Considering the existing alignment CRASH_ALIGN which is 16M, we
+> definitely have no chance to get memory starting from 0. So starting
+> from 16M can skip the useless memblock searching, and make the
+> crashkernel low reservation consisten with crashkernel reservation on
+> allocation code.
 
-My understanding is that kdump kernel can only use physical memory that it
-got reserved by the main kernel, and the main kernel will reserve some block
-of memory that doesn't include any pages from ZONE_DMA (first 16MB of
-physical memory or whatnot). By looking at the "crashkernel" parameter
-documentation in kernel-parameters.txt it seems we only care about
-below-4GB/above-4GB split.
-So it can easily happen that ZONE_DMA in the kdump kernel will be completely
-empty because the main kernel was using all of it.
+That's the x86 assumption. Is it valid for other architectures once the
+code has been made generic in patch 6? It should be ok for arm64, RAM
+tends to start from higher up but other architectures may start using
+this common code.
 
->> Devices that requires ZONE_DMA memory is rare but we still support them.
-> 
-> Indeed.
-> 
->> >     1) Do not call warn_alloc in page allocator if will always fail
->> >     to allocate ZONE_DMA pages.
->> > 
->> > 
->> >     2) let's check all callers of kmalloc with GFP_DMA
->> >     if they really need GFP_DMA flag and replace those by DMA API or
->> >     just remove GFP_DMA from kmalloc()
->> > 
->> >     3) Drop support for allocating DMA memory from slab allocator
->> >     (as Christoph Hellwig said) and convert them to use DMA32
->> 
->> 	(as Christoph Hellwig said) and convert them to use *DMA API*
->> 
->> >     and see what happens
-> 
-> This is the right thing to do, but it will take a while.  In fact
-> I dont think we really need the warning in step 1, a simple grep
-> already allows to go over them.  I just looked at the uses of GFP_DMA
-> in drivers/scsi for example, and all but one look bogus.
-> 
->> > > > Yeah, I have the same guess too for get_capabilities(), not sure about other
->> > > > callers. Or, as ChristophL and ChristophH said(Sorry, not sure if this is
->> > > > the right way to call people when the first name is the same. Correct me if
->> > > > it's wrong), any buffer requested from kmalloc can be used by device driver.
->> > > > Means device enforces getting memory inside addressing limit for those
->> > > > DMA transferring buffer which is usually large, Megabytes level with
->> > > > vmalloc() or alloc_pages(), but doesn't care about this kind of small
->> > > > piece buffer memory allocated with kmalloc()? Just a guess, please tell
->> > > > a counter example if anyone happens to know, it could be easy.
-> 
-> The way this works is that the dma_map* calls will bounce buffer memory
+If you want to keep the same semantics as before, just leave it as 0.
+It's not that the additional lower bound makes the search slower.
 
-But if ZONE_DMA is not populated, where will it get the bounce buffer from?
-I guess nowhere and the problem still exists?
-
-> that does to fall into the addressing limitations.  This is a performance
-> overhead, but allows drivers to address all memory in a system.  If the
-> driver controls memory allocation it should use one of the dma_alloc_*
-> APIs that allocate addressable memory from the start.  The allocator
-> will dip into ZONE_DMA and ZONE_DMA32 when needed.
-
+-- 
+Catalin
 
 _______________________________________________
 kexec mailing list
