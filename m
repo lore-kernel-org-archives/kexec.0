@@ -1,19 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-tycjpn01on20622.outbound.protection.outlook.com
- ([2a01:111:f403:7010::622]
- helo=JPN01-TYC-obe.outbound.protection.outlook.com)
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxIdS-00GEYS-No
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 00:59:12 +0000
-From: =?iso-2022-jp?B?SEFHSU8gS0FaVUhJVE8oGyRCR2tIeCEhMGw/ThsoQik=?=
- <k-hagio-ab@nec.com>
-Subject: RE: [RFC PATCH] makedumpfile: add userinfo elf section 0/4]
-Date: Wed, 15 Dec 2021 00:58:55 +0000
-Message-ID: <TYYPR01MB6777405BB7E0B8F2F0220FB6DD769@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <20211201134730.15943-1-ikhoronz@cisco.com>
-In-Reply-To: <20211201134730.15943-1-ikhoronz@cisco.com>
-Content-Language: ja-JP
+ id 1mxJKE-00GJ6H-Pt
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 01:43:24 +0000
+Received: by mail-io1-f72.google.com with SMTP id
+ o11-20020a0566022e0b00b005e95edf792dso19479384iow.14
+ for <kexec@lists.infradead.org>; Tue, 14 Dec 2021 17:43:19 -0800 (PST)
 MIME-Version: 1.0
+References: <20211210030735.53155-1-piliu@redhat.com>
+In-Reply-To: <20211210030735.53155-1-piliu@redhat.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Wed, 15 Dec 2021 09:43:06 +0800
+Message-ID: <CAF+s44SwFXFbD1tKBKtFK2p43wCnYc8rfkpSyoQn7_jb-8LNUA@mail.gmail.com>
+Subject: Re: [PATCH 0/3] arm64: make phys_to_virt() correct
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,53 +25,41 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@gmail.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>
-Cc: Ivan Khoronzhuk <ikhoronz@cisco.com>
+To: kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
 
-Hi Ivan,
++ AKASHI Takahiro
++ Simon Horman
 
-sorry for the delay.
-
------Original Message-----
-> These patchset suggests feature to add user specific information along
-> with dumpfile. One of usecases could be a platform build information
-> containing dubug file addresses, sources of daily build, some
-> platform related information and more, it's gracefully simplifies
-> debugging process, since an engineer doesn't need to spend time on
-> finding to which platform this core file is related, where to get
-> debugging counter part and so on. As user info can be added along with
-> dumpfile it frees platform from creating tar achieve spending doubled
-> space or using specific tools.
-
-Hmm, currently I don't think it will be worth making makedumpfile have
-the memo-like feature even with accepting some code and complexity.
-If makedumpfile can access that helpful data in 2nd kernel, kdump tool
-will be able to place it next to the dumpfile.  There will become two
-files to be handled, but I'm not sure what the problem is with it..
+Thank you guys for any suggestions.
+And vmcore-dmesg just can not work for 52-bits VA arm64 now.
 
 Thanks,
-Kazu
+Pingfan
 
-> Since this information is sorted and
-> selected by user it can't be standardized and should be placed in some
-> special generic section. This patchset roughly proposes the variant when
-> user information is placed/retrieved as subsection of note elf
-> section.
-> 
-> Ivan Khoronzhuk (4):
->   makedumpfile: rename check_dump_file() on check_file_is_writable()
->   elf: add new "userinfo" ELF section to traverse debug information
->   elf_info: make int note_descsz() and offset_next_note() public
->   elf: add ability to read the userinfo data from note segment
-> 
->  elf_info.c     |   4 +-
->  elf_info.h     |   5 +
->  makedumpfile.c | 393 ++++++++++++++++++++++++++++++++++++++++++++++++-
->  makedumpfile.h |  12 ++
->  4 files changed, 404 insertions(+), 10 deletions(-)
-> 
+On Fri, Dec 10, 2021 at 11:07 AM Pingfan Liu <piliu@redhat.com> wrote:
+>
+> Currently phys_to_virt() does not work well on 52-bits VA arm64 kernel.
+> One issue is contributed by phys_offset not signed.
+> The other is contributed by wrong page_offset.
+>
+> This series fixes them so vmcore-dmesg can work on 52-bits VA kernel
+>
+> Pingfan Liu (3):
+>   arm64: make phys_offset signed
+>   arm64/crashdump: unify routine to get page_offset
+>   arm64: read VA_BITS from kcore for 52-bits VA kernel
+>
+>  kexec/arch/arm64/crashdump-arm64.c | 23 +---------------
+>  kexec/arch/arm64/kexec-arm64.c     | 43 +++++++++++++++++++++++-------
+>  kexec/arch/arm64/kexec-arm64.h     |  4 ++-
+>  util_lib/elf_info.c                |  7 ++++-
+>  util_lib/include/elf_info.h        |  2 +-
+>  5 files changed, 44 insertions(+), 35 deletions(-)
+>
 > --
-> 2.20.1
+> 2.31.1
+>
+
 
 _______________________________________________
 kexec mailing list
