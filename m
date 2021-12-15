@@ -1,17 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from kirsty.vergenet.net ([202.4.237.240])
- by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxU1q-000u2o-2i
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 13:09:07 +0000
-Date: Wed, 15 Dec 2021 14:09:03 +0100
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] arm64/crashdump: deduce paddr of _text based on kernel
- code size
-Message-ID: <20211215130903.GC4314@vergenet.net>
-References: <20211210025733.52605-1-piliu@redhat.com>
+Date: Wed, 15 Dec 2021 14:28:22 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <YbntdtQo2jfbO4cO@zn.tnic>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211210025733.52605-1-piliu@redhat.com>
+In-Reply-To: <20211210065533.2023-4-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -24,35 +21,27 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Pingfan Liu <piliu@redhat.com>
-Cc: kexec@lists.infradead.org
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On Fri, Dec 10, 2021 at 10:57:33AM +0800, Pingfan Liu wrote:
-> kexec-tools commit 61b8c79b0fb7 ("arm64/crashdump-arm64: deduce the
-> paddr of _text") tries to deduce the paddr of _text, but turns out
-> partially.
-> 
-> That commit is based on "The Image must be placed text_offset bytes from
-> a 2MB aligned base address anywhere in usable system RAM and called
-> there" in linux/Documentation/arm64/booting.rst, plus text_offset field
-> is zero.
-> 
-> But in practice, some boot loaders does not obey the convention, and
-> still boots up the kernel successfully.
-> 
-> Revisiting kernel commit e2a073dde921 ("arm64: omit [_text, _stext) from
-> permanent kernel mapping"), the kernel code size changes from (unsigned
-> long)__init_begin - (unsigned long)_text to (unsigned long)__init_begin
-> - (unsigned long)_stext
-> 
-> And it should be a better factor to decide which label starts the
-> "Kernel code" in /proc/iomem.
-> 
-> Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> Cc: Simon Horman <horms@verge.net.au>
-> To: kexec@lists.infradead.org
+On Fri, Dec 10, 2021 at 02:55:26PM +0800, Zhen Lei wrote:
+> @@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
+>  		}
+>  	}
+>  
+> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+>  		memblock_phys_free(crash_base, crash_size);
+>  		return;
+>  	}
 
-Thanks, applied.
+That's not a equivalent transformation on X86_32.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
