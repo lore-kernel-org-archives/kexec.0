@@ -1,22 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxSp8-000ezM-QH
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 11:51:56 +0000
-From: David Laight <David.Laight@ACULAB.COM>
-Subject: RE: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
- pages in DMA zone
-Date: Wed, 15 Dec 2021 11:51:50 +0000
-Message-ID: <67ff367b7a90452f8c009707a00e67b2@AcuMS.aculab.com>
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com> <20211213134319.GA997240@odroid>
- <20211214053253.GB2216@MiWiFi-R3L-srv>
- <f5ff82eb-73b6-55b5-53d7-04ab73ce5035@suse.cz>
- <20211215044818.GB1097530@odroid> <20211215070335.GA1165926@odroid>
- <20211215072710.GA3010@lst.de> <f7c1f169-f9b3-6930-f933-d69ab0287069@suse.cz>
-In-Reply-To: <f7c1f169-f9b3-6930-f933-d69ab0287069@suse.cz>
+Received: from kirsty.vergenet.net ([202.4.237.240])
+ by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mxTm1-000qKR-4B
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 12:52:46 +0000
+Date: Wed, 15 Dec 2021 13:43:00 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 1/1] s390: handle R_390_PLT32DBL reloc entries in
+ machine_apply_elf_rel()
+Message-ID: <20211215124300.GA4314@vergenet.net>
+References: <20211208125355.256391-1-egorenar@linux.ibm.com>
+ <20211213114430.77f28a67@rhtmp>
 MIME-Version: 1.0
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211213114430.77f28a67@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,45 +25,42 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: 'Vlastimil Babka' <vbabka@suse.cz>, Christoph Hellwig <hch@lst.de>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cl@linux.com" <cl@linux.com>, "John.p.donnelly@oracle.com" <John.p.donnelly@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: Alexander Egorenkov <egorenar@linux.ibm.com>, ltao@redhat.com, hca@linux.ibm.com, kexec@lists.infradead.org
 
-From: Vlastimil Babka
-> Sent: 15 December 2021 10:34
+On Mon, Dec 13, 2021 at 11:44:30AM +0100, Philipp Rudo wrote:
+> Hi Alexander,
 > 
-> On 12/15/21 08:27, Christoph Hellwig wrote:
-> > On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
-> >> I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
-> >> for kdump kernel is nice way to solve this problem.
-> >
-> > What is the problem with zones in kdump kernels?
+> @Alexander: Thanks for taking care of this.
 > 
-> My understanding is that kdump kernel can only use physical memory that it
-> got reserved by the main kernel, and the main kernel will reserve some block
-> of memory that doesn't include any pages from ZONE_DMA (first 16MB of
-> physical memory or whatnot). 
-...
+> On Wed,  8 Dec 2021 13:53:55 +0100
+> Alexander Egorenkov <egorenar@linux.ibm.com> wrote:
+> 
+> > Starting with gcc 11.3, the C compiler will generate PLT-relative function
+> > calls even if they are local and do not require it. Later on during linking,
+> > the linker will replace all PLT-relative calls to local functions with
+> > PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
+> > not being linked as a regular executable or shared library would have been,
+> > and therefore, all PLT-relative addresses remain in the generated purgatory
+> > object code unresolved. This leads to the situation where the purgatory
+> > code is being executed during kdump with all PLT-relative addresses
+> > unresolved. And this results in endless loops within the purgatory code.
+> 
+> Tiny nit. The last two sentences describe the situation in the kernel.
+> Luckily the kexec-tools do proper error checking and die with
+> 
+> 	"Unknown rela relocation: 0x14 0x73c0901c"
+> 
+> when they encounter an unknown relocation type.
+> 
+> Anyway, the code is correct
+> 
+> Reviewed-by: Philipp Rudo <prudo@redhat.com>
 
-Is there still any support for any of the very old hardware that could only
-support 24bit DMA?
+Thanks.
 
-I think the AMD PCnet-ISA and PCnet-PCI ethernet (lance) were both 32bit masters.
-(I don't remember ever having to worry about physical addresses.)
-I'm sure I remember some old SCSI boards only being able to do 24bit DMA.
-But I can't remember which bus interface they were.
-Unlikely to be ISA because it has always been hard to get a motherboard
-DMA channel into 'cascade mode'.
+Alexander would you care to post a v2 with an updated patch description?
 
-Might have been some EISA boards - anyone still use those?
-So we are left with early PCI boards.
-
-It really is worth looking at what actually needs it at all.
-
-	David
-
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
