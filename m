@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxRN2-0009Zs-5V
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 10:18:49 +0000
+ id 1mxRN2-0009Zg-NH
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 10:18:50 +0000
 From: Sven Schnelle <svens@linux.ibm.com>
-Subject: [PATCH v2 2/5] s390: use KEXEC_ALL_OPTIONS
-Date: Wed, 15 Dec 2021 11:18:33 +0100
-Message-Id: <20211215101836.1181165-3-svens@linux.ibm.com>
+Subject: [PATCH v2 4/5] use slurp_proc_file() in get_command_line()
+Date: Wed, 15 Dec 2021 11:18:35 +0100
+Message-Id: <20211215101836.1181165-5-svens@linux.ibm.com>
 In-Reply-To: <20211215101836.1181165-1-svens@linux.ibm.com>
 References: <20211215101836.1181165-1-svens@linux.ibm.com>
 MIME-Version: 1.0
@@ -23,47 +23,56 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org, prudo@redhat.com, Sven Schnelle <svens@linux.ibm.com>, Alexander Egorenkov <egorenar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, prudo@redhat.com, Sven Schnelle <svens@linux.ibm.com>
 
-KEXEC_ALL_OPTIONS could be used instead defining the same
-array several times. This makes code easier to maintain when
-new options are added.
+This way the size of the command line that get_command_line() can handle
+is no longer fixed.
 
-Suggested-by: Alexander Egorenkov <egorenar@linux.ibm.com>
 Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
-Reviewed-by: Alexander Egorenkov <egorenar@linux.ibm.com>
 ---
- kexec/arch/s390/kexec-image.c | 10 ++--------
- 1 file changed, 2 insertions(+), 8 deletions(-)
+ kexec/kexec.c | 26 ++++++++++----------------
+ 1 file changed, 10 insertions(+), 16 deletions(-)
 
-diff --git a/kexec/arch/s390/kexec-image.c b/kexec/arch/s390/kexec-image.c
-index a52399eafd2a..209ab77ddccb 100644
---- a/kexec/arch/s390/kexec-image.c
-+++ b/kexec/arch/s390/kexec-image.c
-@@ -57,10 +57,7 @@ int image_s390_load_file(int argc, char **argv, struct kexec_info *info)
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index a1acba2adf2a..e2c58de48565 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -1153,25 +1153,19 @@ static char *slurp_proc_file(const char *filename, size_t *len)
+  */
+ char *get_command_line(void)
+ {
+-	FILE *fp;
+-	char *line;
+-	const int sizeof_line = 2048;
+-
+-	line = malloc(sizeof_line);
+-	if (line == NULL)
+-		die("Could not allocate memory to read /proc/cmdline.");
+-
+-	fp = fopen("/proc/cmdline", "r");
+-	if (!fp)
+-		die("Could not open /proc/cmdline.");
+-
+-	if (fgets(line, sizeof_line, fp) == NULL)
+-		die("Can't read /proc/cmdline.");
++	char *p, *line;
++	size_t size;
  
- 	static const struct option options[] =
- 		{
--			KEXEC_OPTIONS
--			{"command-line",     1, 0, OPT_APPEND},
--			{"append",           1, 0, OPT_APPEND},
--			{"initrd",           1, 0, OPT_RAMDISK},
-+			KEXEC_ALL_OPTIONS
- 			{0,                  0, 0, 0},
- 		};
- 	static const char short_options[] = KEXEC_OPT_STR "";
-@@ -111,10 +108,7 @@ image_s390_load(int argc, char **argv, const char *kernel_buf,
+-	fclose(fp);
++	line = slurp_proc_file("/proc/cmdline", &size);
++	if (!line || !size)
++		die("Failed to read /proc/cmdline\n");
  
- 	static const struct option options[] =
- 		{
--			KEXEC_OPTIONS
--			{"command-line",     1, 0, OPT_APPEND},
--			{"append",           1, 0, OPT_APPEND},
--			{"initrd",           1, 0, OPT_RAMDISK},
-+			KEXEC_ALL_OPTIONS
- 			{0,                  0, 0, 0},
- 		};
- 	static const char short_options[] = KEXEC_OPT_STR "";
+ 	/* strip newline */
+-	line[strlen(line) - 1] = '\0';
++	line[size-1] = '\0';
++
++	p = strpbrk(line, "\r\n");
++	if (p)
++		*p = '\0';
+ 
+ 	remove_parameter(line, "BOOT_IMAGE");
+ 	if (kexec_flags & KEXEC_ON_CRASH)
 -- 
 2.32.0
 
