@@ -1,15 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
- kernel reservation consistent
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-3-thunder.leizhen@huawei.com> <YbjrjpehprvoRXbV@zn.tnic>
- <YbjvXl51hc6GZa71@arm.com> <20211215034219.GB10336@MiWiFi-R3L-srv>
- <YbnK79c0YokJ1ahu@arm.com> <20211215111643.GF3023@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <b947e66b-1a23-9095-08c1-439e6c70d191@huawei.com>
-Date: Wed, 15 Dec 2021 19:45:46 +0800
+Received: from eu-smtp-delivery-151.mimecast.com ([185.58.85.151])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mxSp8-000ezM-QH
+ for kexec@lists.infradead.org; Wed, 15 Dec 2021 11:51:56 +0000
+From: David Laight <David.Laight@ACULAB.COM>
+Subject: RE: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
+ pages in DMA zone
+Date: Wed, 15 Dec 2021 11:51:50 +0000
+Message-ID: <67ff367b7a90452f8c009707a00e67b2@AcuMS.aculab.com>
+References: <20211213122712.23805-1-bhe@redhat.com>
+ <20211213122712.23805-6-bhe@redhat.com> <20211213134319.GA997240@odroid>
+ <20211214053253.GB2216@MiWiFi-R3L-srv>
+ <f5ff82eb-73b6-55b5-53d7-04ab73ce5035@suse.cz>
+ <20211215044818.GB1097530@odroid> <20211215070335.GA1165926@odroid>
+ <20211215072710.GA3010@lst.de> <f7c1f169-f9b3-6930-f933-d69ab0287069@suse.cz>
+In-Reply-To: <f7c1f169-f9b3-6930-f933-d69ab0287069@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <20211215111643.GF3023@MiWiFi-R3L-srv>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -23,61 +29,45 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>
-Cc: Borislav Petkov <bp@alien8.de>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
- Zhou <dingguo.cz@antgroup.com>
+To: 'Vlastimil Babka' <vbabka@suse.cz>, Christoph Hellwig <hch@lst.de>, Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: Baoquan He <bhe@redhat.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mm@kvack.org" <linux-mm@kvack.org>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "cl@linux.com" <cl@linux.com>, "John.p.donnelly@oracle.com" <John.p.donnelly@oracle.com>, "kexec@lists.infradead.org" <kexec@lists.infradead.org>, "stable@vger.kernel.org" <stable@vger.kernel.org>, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-
-
-On 2021/12/15 19:16, Baoquan He wrote:
-> On 12/15/21 at 11:01am, Catalin Marinas wrote:
->> On Wed, Dec 15, 2021 at 11:42:19AM +0800, Baoquan He wrote:
->>> On 12/14/21 at 07:24pm, Catalin Marinas wrote:
->>>> On Tue, Dec 14, 2021 at 08:07:58PM +0100, Borislav Petkov wrote:
->>>>> On Fri, Dec 10, 2021 at 02:55:25PM +0800, Zhen Lei wrote:
->>>>>> From: Chen Zhou <chenzhou10@huawei.com>
->>>>>>
->>>>>> The lower bounds of crash kernel reservation and crash kernel low
->>>>>> reservation are different, use the consistent value CRASH_ALIGN.
->>>>>
->>>>> A big WHY is missing here to explain why the lower bound of the
->>>>> allocation range needs to be 16M and why was 0 wrong?
->>>>
->>>> I asked the same here:
->>>>
->>>> https://lore.kernel.org/r/20210224143547.GB28965@arm.com
->>>>
->>>> IIRC Baoquan said that there is a 1MB reserved for x86 anyway in the
->>>> lower part, so that's equivalent in practice to starting from
->>>> CRASH_ALIGN.
->>>
->>> Yeah, even for i386, there's area reserved by BIOS inside low 1M.
->>> Considering the existing alignment CRASH_ALIGN which is 16M, we
->>> definitely have no chance to get memory starting from 0. So starting
->>> from 16M can skip the useless memblock searching, and make the
->>> crashkernel low reservation consisten with crashkernel reservation on
->>> allocation code.
->>
->> That's the x86 assumption. Is it valid for other architectures once the
->> code has been made generic in patch 6? It should be ok for arm64, RAM
->> tends to start from higher up but other architectures may start using
->> this common code.
+From: Vlastimil Babka
+> Sent: 15 December 2021 10:34
 > 
-> Good point. I didn't think of this from generic code side, then let's
-> keep it as 0.
+> On 12/15/21 08:27, Christoph Hellwig wrote:
+> > On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
+> >> I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
+> >> for kdump kernel is nice way to solve this problem.
+> >
+> > What is the problem with zones in kdump kernels?
 > 
->>
->> If you want to keep the same semantics as before, just leave it as 0.
->> It's not that the additional lower bound makes the search slower.
-> 
-> Agree.
+> My understanding is that kdump kernel can only use physical memory that it
+> got reserved by the main kernel, and the main kernel will reserve some block
+> of memory that doesn't include any pages from ZONE_DMA (first 16MB of
+> physical memory or whatnot). 
+...
 
-OK, I will drop this patch.
+Is there still any support for any of the very old hardware that could only
+support 24bit DMA?
 
-> 
-> .
-> 
+I think the AMD PCnet-ISA and PCnet-PCI ethernet (lance) were both 32bit masters.
+(I don't remember ever having to worry about physical addresses.)
+I'm sure I remember some old SCSI boards only being able to do 24bit DMA.
+But I can't remember which bus interface they were.
+Unlikely to be ISA because it has always been hard to get a motherboard
+DMA channel into 'cascade mode'.
 
+Might have been some EISA boards - anyone still use those?
+So we are left with early PCI boards.
+
+It really is worth looking at what actually needs it at all.
+
+	David
+
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
