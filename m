@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxJKE-00GJ6H-Pt
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 01:43:24 +0000
-Received: by mail-io1-f72.google.com with SMTP id
- o11-20020a0566022e0b00b005e95edf792dso19479384iow.14
- for <kexec@lists.infradead.org>; Tue, 14 Dec 2021 17:43:19 -0800 (PST)
+Subject: Re: [PATCH v17 02/10] x86: kdump: make the lower bound of crash
+ kernel reservation consistent
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-3-thunder.leizhen@huawei.com> <YbjrjpehprvoRXbV@zn.tnic>
+ <YbjvXl51hc6GZa71@arm.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <07e41d65-bc3a-49c4-c041-752f1765f37a@huawei.com>
+Date: Wed, 15 Dec 2021 10:10:34 +0800
 MIME-Version: 1.0
-References: <20211210030735.53155-1-piliu@redhat.com>
-In-Reply-To: <20211210030735.53155-1-piliu@redhat.com>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Wed, 15 Dec 2021 09:43:06 +0800
-Message-ID: <CAF+s44SwFXFbD1tKBKtFK2p43wCnYc8rfkpSyoQn7_jb-8LNUA@mail.gmail.com>
-Subject: Re: [PATCH 0/3] arm64: make phys_to_virt() correct
+In-Reply-To: <YbjvXl51hc6GZa71@arm.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,41 +22,36 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org, AKASHI Takahiro <takahiro.akashi@linaro.org>, horms@verge.net.au
+To: Catalin Marinas <catalin.marinas@arm.com>, Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
+ Zhou <dingguo.cz@antgroup.com>
 
-+ AKASHI Takahiro
-+ Simon Horman
 
-Thank you guys for any suggestions.
-And vmcore-dmesg just can not work for 52-bits VA arm64 now.
 
-Thanks,
-Pingfan
+On 2021/12/15 3:24, Catalin Marinas wrote:
+> On Tue, Dec 14, 2021 at 08:07:58PM +0100, Borislav Petkov wrote:
+>> On Fri, Dec 10, 2021 at 02:55:25PM +0800, Zhen Lei wrote:
+>>> From: Chen Zhou <chenzhou10@huawei.com>
+>>>
+>>> The lower bounds of crash kernel reservation and crash kernel low
+>>> reservation are different, use the consistent value CRASH_ALIGN.
+>>
+>> A big WHY is missing here to explain why the lower bound of the
+>> allocation range needs to be 16M and why was 0 wrong?
+> 
+> I asked the same here:
+> 
+> https://lore.kernel.org/r/20210224143547.GB28965@arm.com
+> 
+> IIRC Baoquan said that there is a 1MB reserved for x86 anyway in the
+> lower part, so that's equivalent in practice to starting from
+> CRASH_ALIGN.
+> 
+> Anyway, I agree the commit log should describe this.
 
-On Fri, Dec 10, 2021 at 11:07 AM Pingfan Liu <piliu@redhat.com> wrote:
->
-> Currently phys_to_virt() does not work well on 52-bits VA arm64 kernel.
-> One issue is contributed by phys_offset not signed.
-> The other is contributed by wrong page_offset.
->
-> This series fixes them so vmcore-dmesg can work on 52-bits VA kernel
->
-> Pingfan Liu (3):
->   arm64: make phys_offset signed
->   arm64/crashdump: unify routine to get page_offset
->   arm64: read VA_BITS from kcore for 52-bits VA kernel
->
->  kexec/arch/arm64/crashdump-arm64.c | 23 +---------------
->  kexec/arch/arm64/kexec-arm64.c     | 43 +++++++++++++++++++++++-------
->  kexec/arch/arm64/kexec-arm64.h     |  4 ++-
->  util_lib/elf_info.c                |  7 ++++-
->  util_lib/include/elf_info.h        |  2 +-
->  5 files changed, 44 insertions(+), 35 deletions(-)
->
-> --
-> 2.31.1
->
+OK, I will add the description.
 
+> 
 
 _______________________________________________
 kexec mailing list
