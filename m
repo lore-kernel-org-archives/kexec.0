@@ -1,20 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxgyJ-003Nod-17
- for kexec@lists.infradead.org; Thu, 16 Dec 2021 02:58:20 +0000
-Received: by mail-io1-f70.google.com with SMTP id
- m6-20020a0566022e8600b005ec18906edaso22198864iow.6
- for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 18:58:15 -0800 (PST)
+ id 1mxh5r-003PZI-Jx
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 03:06:09 +0000
+Received: by mail-io1-f71.google.com with SMTP id
+ r199-20020a6b2bd0000000b005e234972ddfso22245121ior.23
+ for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 19:06:05 -0800 (PST)
 MIME-Version: 1.0
 References: <20211210030735.53155-1-piliu@redhat.com>
- <20211210030735.53155-3-piliu@redhat.com>
- <20211215143512.4b0d745c@rhtmp>
-In-Reply-To: <20211215143512.4b0d745c@rhtmp>
+ <20211210030735.53155-4-piliu@redhat.com>
+ <20211215143431.5ec72a36@rhtmp>
+ <CAF+s44SaE=+OxOQcrbcYEs=76-ycJV3pyxRRYdN2bfACyR-iyw@mail.gmail.com>
+In-Reply-To: <CAF+s44SaE=+OxOQcrbcYEs=76-ycJV3pyxRRYdN2bfACyR-iyw@mail.gmail.com>
 From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 16 Dec 2021 10:58:03 +0800
-Message-ID: <CAF+s44RzmLG1HasRtHkcof-ymURceWrZXpsOrAPDrNx-FnN_aw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] arm64/crashdump: unify routine to get page_offset
+Date: Thu, 16 Dec 2021 11:05:53 +0800
+Message-ID: <CAF+s44SWwjfQhhVVxf23dUffq-pxCwVPO=bbrefEg+c1oRWaqg@mail.gmail.com>
+Subject: Re: [PATCH 3/3] arm64: read VA_BITS from kcore for 52-bits VA kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -30,59 +31,85 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Philipp Rudo <prudo@redhat.com>
 Cc: kexec@lists.infradead.org
 
-On Wed, Dec 15, 2021 at 9:35 PM Philipp Rudo <prudo@redhat.com> wrote:
+On Thu, Dec 16, 2021 at 10:46 AM Pingfan Liu <piliu@redhat.com> wrote:
 >
-> Hi Pinfang,
->
-> On Fri, 10 Dec 2021 11:07:34 +0800
-> Pingfan Liu <piliu@redhat.com> wrote:
->
-> > There are two funcs to get page_offset:
-> >   get_kernel_page_offset()
-> >   get_page_offset()
+> On Wed, Dec 15, 2021 at 9:35 PM Philipp Rudo <prudo@redhat.com> wrote:
 > >
-> > Since get_kernel_page_offset() does not observe the kernel formula, and
-> > remove it. Unify them in order to introduce 52-bits VA kernel more
-> > easily in the coming patch.
+> > Hi Pingfang,
 > >
-> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> > ---
-> >  kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
-> >  kexec/arch/arm64/kexec-arm64.c     |  4 ++--
-> >  kexec/arch/arm64/kexec-arm64.h     |  1 +
-> >  3 files changed, 4 insertions(+), 24 deletions(-)
+> > On Fri, 10 Dec 2021 11:07:35 +0800
+> > Pingfan Liu <piliu@redhat.com> wrote:
 > >
-> > diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-> > index a02019a..0a8d44c 100644
-> > --- a/kexec/arch/arm64/crashdump-arm64.c
-> > +++ b/kexec/arch/arm64/crashdump-arm64.c
->
-> [...]
->
-> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> > index 7373fa3..bd650e6 100644
-> > --- a/kexec/arch/arm64/kexec-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-arm64.c
-> > @@ -909,7 +909,7 @@ static int get_va_bits(void)
-> >   * get_page_offset - Helper for getting PAGE_OFFSET
-> >   */
+> > > phys_to_virt() calculates virtual address. As a important factor,
+> > > page_offset is excepted to be accurate.
+> > >
+> > > Since arm64 kernel exposes va_bits through vmcore, using it.
+> > >
+> > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > > ---
+> > >  kexec/arch/arm64/kexec-arm64.c | 31 +++++++++++++++++++++++++++----
+> > >  kexec/arch/arm64/kexec-arm64.h |  1 +
+> > >  util_lib/elf_info.c            |  5 +++++
+> > >  3 files changed, 33 insertions(+), 4 deletions(-)
+> > >
+> > > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > > index bd650e6..ccc92db 100644
+> > > --- a/kexec/arch/arm64/kexec-arm64.c
+> > > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > > @@ -54,7 +54,7 @@
+> > >  static bool try_read_phys_offset_from_kcore = false;
+> > >
+> > >  /* Machine specific details. */
+> > > -static int va_bits;
+> > > +static int va_bits = -1;
+> > >  static unsigned long page_offset;
+> > >
+> > >  /* Global varables the core kexec routines expect. */
+> > > @@ -876,7 +876,15 @@ static inline void set_phys_offset(long v, char *set_method)
+> > >
+> > >  static int get_va_bits(void)
+> > >  {
+> > > -     unsigned long long stext_sym_addr = get_kernel_sym("_stext");
+> > > +     unsigned long long stext_sym_addr;
+> > > +
+> > > +     /*
+> > > +      * if already got from kcore
+> > > +      */
+> > > +     if (va_bits != -1)
+> > > +             goto out;
+> > > +
+> > > +     stext_sym_addr = get_kernel_sym("_stext");
+> > >
+> > >       if (stext_sym_addr == 0) {
+> > >               fprintf(stderr, "Can't get the symbol of _stext.\n");
+> > > @@ -900,6 +908,7 @@ static int get_va_bits(void)
+> > >               return -1;
+> > >       }
+> > >
+> > > +out:
+> > >       dbgprintf("va_bits : %d\n", va_bits);
+> > >
+> > >       return 0;
+> > > @@ -917,14 +926,27 @@ int get_page_offset(unsigned long *page_offset)
+> > >       if (ret < 0)
+> > >               return ret;
+> > >
+> > > -     page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> > > +     if (va_bits < 52)
+> > > +             *page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> > > +     else
+> > > +             *page_offset = (0xffffffffffffffffUL) << va_bits;
 > >
-> > -static int get_page_offset(void)
-> > +int get_page_offset(unsigned long *page_offset)
-> >  {
-> >       int ret;
+> > wouldn't it make sense to use ULONG_MAX here? At least for me it would
+> > be much better readable.
 > >
 >
-> The new page_offset is never used in this patch. There's still the line
-> left with the global page_offset but that will cause a type miss-match
-> (unsigend long vs unsigned log *). In the next patch you do the update
-> (page_offset -> *page_offset) but in the meantime the code is broken.
+> Yes, I tend to agree and will update it in V2 (if there is no need to
+> compile it on 32-bits machine, which I consider as a rare case
+> nowadays.)
 >
-I will fix it in V2.
 
-Thanks,
-
-Pingfan
+I think UINT64_MAX can free of this issue
 
 
 _______________________________________________
