@@ -1,19 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxg3r-003HmY-38
- for kexec@lists.infradead.org; Thu, 16 Dec 2021 02:00:00 +0000
-Received: by mail-il1-f197.google.com with SMTP id
- 9-20020a056e0216c900b002acc1b44b91so8554299ilx.17
- for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 17:59:54 -0800 (PST)
+ id 1mxgmj-003L5u-4x
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 02:46:22 +0000
+Received: by mail-io1-f72.google.com with SMTP id
+ i20-20020a0566022c9400b005ec5bb1e85eso22288382iow.1
+ for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 18:46:18 -0800 (PST)
 MIME-Version: 1.0
 References: <20211210030735.53155-1-piliu@redhat.com>
  <20211210030735.53155-4-piliu@redhat.com>
- <20211215130557.GB4314@vergenet.net>
-In-Reply-To: <20211215130557.GB4314@vergenet.net>
+ <20211215143431.5ec72a36@rhtmp>
+In-Reply-To: <20211215143431.5ec72a36@rhtmp>
 From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 16 Dec 2021 09:59:42 +0800
-Message-ID: <CAF+s44TYhz0_MG0Fpv2e7kTqyLgS2SwpB=+_=QQGv0vdx1qs1A@mail.gmail.com>
+Date: Thu, 16 Dec 2021 10:46:07 +0800
+Message-ID: <CAF+s44SaE=+OxOQcrbcYEs=76-ycJV3pyxRRYdN2bfACyR-iyw@mail.gmail.com>
 Subject: Re: [PATCH 3/3] arm64: read VA_BITS from kcore for 52-bits VA kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -27,13 +27,16 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Signed-off-by@vergenet.net:Simon Horman" <horms@verge.net.au>
+To: Philipp Rudo <prudo@redhat.com>
 Cc: kexec@lists.infradead.org
 
-On Wed, Dec 15, 2021 at 9:06 PM Signed-off-by@vergenet.net:Simon
-Horman <horms@verge.net.au> wrote:
+On Wed, Dec 15, 2021 at 9:35 PM Philipp Rudo <prudo@redhat.com> wrote:
 >
-> On Fri, Dec 10, 2021 at 11:07:35AM +0800, Pingfan Liu wrote:
+> Hi Pingfang,
+>
+> On Fri, 10 Dec 2021 11:07:35 +0800
+> Pingfan Liu <piliu@redhat.com> wrote:
+>
 > > phys_to_virt() calculates virtual address. As a important factor,
 > > page_offset is excepted to be accurate.
 > >
@@ -71,18 +74,6 @@ Horman <horms@verge.net.au> wrote:
 > > +      */
 > > +     if (va_bits != -1)
 > > +             goto out;
->
-> If va_bits is exposed by the kernel then it will be used.
-> Else we continue here. Are there actually cases (old kernels) where
-> we expect to continue. Or could we get rid of the fallback code here?
->
-
-va_bits is exposed by kernel commit 84c57dbd3c48 ("arm64: kernel:
-arch_crash_save_vmcoreinfo() should depend on CONFIG_CRASH_CORE")
-And the first kernel which contains VA_BITS is v4.19.
-I have no idea about the need for old kernels. Maybe just keep the
-compatible code and throw a warning to remind users?
-
 > > +
 > > +     stext_sym_addr = get_kernel_sym("_stext");
 > >
@@ -100,19 +91,63 @@ compatible code and throw a warning to remind users?
 > >       if (ret < 0)
 > >               return ret;
 > >
+> > -     page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> > +     if (va_bits < 52)
+> > +             *page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> > +     else
+> > +             *page_offset = (0xffffffffffffffffUL) << va_bits;
 >
-> I'm confused about why there is both a (va_bits - 1)
-> and va_bits case here.
+> wouldn't it make sense to use ULONG_MAX here? At least for me it would
+> be much better readable.
 >
 
-It originates from the changes of memory layout on arm64.
-And mostly it is contributed by kernel commit 14c127c957c1 ("arm64:
-mm: Flip kernel VA space"),
-where sees the changes:
--#define PAGE_OFFSET            (UL(0xffffffffffffffff) - \
-        (UL(1) << (VA_BITS - 1)) + 1)
-+#define PAGE_OFFSET            (UL(0xffffffffffffffff) - \
-+       (UL(1) << VA_BITS) + 1)
+Yes, I tend to agree and will update it in V2 (if there is no need to
+compile it on 32-bits machine, which I consider as a rare case
+nowadays.)
+
+
+> >       dbgprintf("page_offset : %lx\n", page_offset);
+> >
+> >       return 0;
+> >  }
+> >
+> > +static void arm64_scan_vmcoreinfo(char *pos)
+> > +{
+> > +     const char *str;
+> > +
+> > +     str = "NUMBER(VA_BITS)=";
+> > +     if (memcmp(str, pos, strlen(str)) == 0)
+> > +             va_bits = strtoul(pos + strlen(str), NULL, 10);
+> > +}
+> > +
+> >  /**
+> > - * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET
+> > + * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET (and va_bits)
+> >   * from VMCOREINFO note inside 'kcore'.
+> >   */
+> >
+> > @@ -937,6 +959,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
+> >               return EFAILED;
+> >       }
+> >
+> > +     arch_scan_vmcoreinfo = arm64_scan_vmcoreinfo;
+> >       ret = read_phys_offset_elf_kcore(fd, phys_offset);
+> >
+> >       close(fd);
+> > diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> > index ed99d9d..d291705 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.h
+> > +++ b/kexec/arch/arm64/kexec-arm64.h
+> > @@ -66,6 +66,7 @@ struct arm64_mem {
+> >
+> >  #define arm64_mem_ngv UINT64_MAX
+> >  extern struct arm64_mem arm64_mem;
+> > +extern void (*arch_scan_vmcoreinfo)(char *pos);
+>
+> This definition isn't arm64 specific. I think this should go to
+> util_lib/include/elf_info.h.
+>
+Good suggestion and update it in V2.
 
 
 Thanks,
