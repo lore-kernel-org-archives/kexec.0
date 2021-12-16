@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 16 Dec 2021 10:28:36 +0100
-From: Heiko Carstens <hca@linux.ibm.com>
-Subject: Re: [PATCH 1/3] vmcore: Convert copy_oldmem_page() to take an iov_iter
-Message-ID: <YbsGxJRo1153aykr@osiris>
-References: <20211213000636.2932569-1-willy@infradead.org>
- <20211213000636.2932569-2-willy@infradead.org>
- <20211213075725.GA20986@lst.de>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mxoNF-004wX1-NM
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 10:52:35 +0000
+Received: by mail-wm1-f70.google.com with SMTP id
+ bg20-20020a05600c3c9400b0033a9300b44bso10138373wmb.2
+ for <kexec@lists.infradead.org>; Thu, 16 Dec 2021 02:52:29 -0800 (PST)
+Message-ID: <0091b689-54b6-7cc9-d5ee-ae12a2f8376d@redhat.com>
+Date: Thu, 16 Dec 2021 11:52:27 +0100
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211213075725.GA20986@lst.de>
+Subject: Re: [PATCH v3 3/5] mm_zone: add function to check if managed dma zone
+ exists
+References: <20211213122712.23805-1-bhe@redhat.com>
+ <20211213122712.23805-4-bhe@redhat.com>
+From: David Hildenbrand <david@redhat.com>
+In-Reply-To: <20211213122712.23805-4-bhe@redhat.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,23 +28,85 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: "Matthew Wilcox (Oracle)" <willy@infradead.org>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, linux-s390@vger.kernel.org, linux-fsdevel@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>, Alexander Gordeev <agordeev@linux.ibm.com>
+To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
+Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org
 
-On Mon, Dec 13, 2021 at 08:57:25AM +0100, Christoph Hellwig wrote:
-> On Mon, Dec 13, 2021 at 12:06:34AM +0000, Matthew Wilcox (Oracle) wrote:
-> > Instead of passing in a 'buf' and 'userbuf' argument, pass in an iov_iter.
-> > s390 needs more work to pass the iov_iter down further, or refactor,
-> > but I'd be more comfortable if someone who can test on s390 did that work.
-> > 
-> > It's more convenient to convert the whole of read_from_oldmem() to
-> > take an iov_iter at the same time, so rename it to read_from_oldmem_iter()
-> > and add a temporary read_from_oldmem() wrapper that creates an iov_iter.
+On 13.12.21 13:27, Baoquan He wrote:
+> In some places of the current kernel, it assumes that dma zone must have
+> managed pages if CONFIG_ZONE_DMA is enabled. While this is not always true.
+> E.g in kdump kernel of x86_64, only low 1M is presented and locked down
+> at very early stage of boot, so that there's no managed pages at all in
+> DMA zone. This exception will always cause page allocation failure if page
+> is requested from DMA zone.
 > 
-> This looks pretty reasonable.  s390 could use some love from people that
-> know the code, and yes, the kerneldoc comments should go away.
+> Here add function has_managed_dma() and the relevant helper functions to
+> check if there's DMA zone with managed pages. It will be used in later
+> patches.
+> 
+> Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+> v2->v3:
+>  Rewrite has_managed_dma() in a simpler and more efficient way which is
+>  sugggested by DavidH. 
+> 
+>  include/linux/mmzone.h |  9 +++++++++
+>  mm/page_alloc.c        | 15 +++++++++++++++
+>  2 files changed, 24 insertions(+)
+> 
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 58e744b78c2c..6e1b726e9adf 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -1046,6 +1046,15 @@ static inline int is_highmem_idx(enum zone_type idx)
+>  #endif
+>  }
+>  
+> +#ifdef CONFIG_ZONE_DMA
+> +bool has_managed_dma(void);
+> +#else
+> +static inline bool has_managed_dma(void)
+> +{
+> +	return false;
+> +}
+> +#endif
+> +
+>  /**
+>   * is_highmem - helper function to quickly check if a struct zone is a
+>   *              highmem zone or not.  This is an attempt to keep references
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index c5952749ad40..7c7a0b5de2ff 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -9460,3 +9460,18 @@ bool take_page_off_buddy(struct page *page)
+>  	return ret;
+>  }
+>  #endif
+> +
+> +#ifdef CONFIG_ZONE_DMA
+> +bool has_managed_dma(void)
+> +{
+> +	struct pglist_data *pgdat;
+> +
+> +	for_each_online_pgdat(pgdat) {
+> +		struct zone *zone = &pgdat->node_zones[ZONE_DMA];
+> +
+> +		if (managed_zone(zone))
+> +			return true;
+> +	}
+> +	return false;
+> +}
+> +#endif /* CONFIG_ZONE_DMA */
+> 
 
-Sure, we will take care of this. Added to ToDo list.
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
+
 
 _______________________________________________
 kexec mailing list
