@@ -1,15 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel()
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-4-thunder.leizhen@huawei.com> <YbntdtQo2jfbO4cO@zn.tnic>
- <20211216011040.GG3023@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <9513d74c-d4c7-babd-f823-8999e195d96d@huawei.com>
-Date: Thu, 16 Dec 2021 10:46:12 +0800
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1mxgyJ-003Nod-17
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 02:58:20 +0000
+Received: by mail-io1-f70.google.com with SMTP id
+ m6-20020a0566022e8600b005ec18906edaso22198864iow.6
+ for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 18:58:15 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20211216011040.GG3023@MiWiFi-R3L-srv>
-Content-Language: en-US
+References: <20211210030735.53155-1-piliu@redhat.com>
+ <20211210030735.53155-3-piliu@redhat.com>
+ <20211215143512.4b0d745c@rhtmp>
+In-Reply-To: <20211215143512.4b0d745c@rhtmp>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Thu, 16 Dec 2021 10:58:03 +0800
+Message-ID: <CAF+s44RzmLG1HasRtHkcof-ymURceWrZXpsOrAPDrNx-FnN_aw@mail.gmail.com>
+Subject: Re: [PATCH 2/3] arm64/crashdump: unify routine to get page_offset
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -22,51 +27,63 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
- Zhou <dingguo.cz@antgroup.com>
+To: Philipp Rudo <prudo@redhat.com>
+Cc: kexec@lists.infradead.org
 
+On Wed, Dec 15, 2021 at 9:35 PM Philipp Rudo <prudo@redhat.com> wrote:
+>
+> Hi Pinfang,
+>
+> On Fri, 10 Dec 2021 11:07:34 +0800
+> Pingfan Liu <piliu@redhat.com> wrote:
+>
+> > There are two funcs to get page_offset:
+> >   get_kernel_page_offset()
+> >   get_page_offset()
+> >
+> > Since get_kernel_page_offset() does not observe the kernel formula, and
+> > remove it. Unify them in order to introduce 52-bits VA kernel more
+> > easily in the coming patch.
+> >
+> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > ---
+> >  kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
+> >  kexec/arch/arm64/kexec-arm64.c     |  4 ++--
+> >  kexec/arch/arm64/kexec-arm64.h     |  1 +
+> >  3 files changed, 4 insertions(+), 24 deletions(-)
+> >
+> > diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+> > index a02019a..0a8d44c 100644
+> > --- a/kexec/arch/arm64/crashdump-arm64.c
+> > +++ b/kexec/arch/arm64/crashdump-arm64.c
+>
+> [...]
+>
+> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > index 7373fa3..bd650e6 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.c
+> > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > @@ -909,7 +909,7 @@ static int get_va_bits(void)
+> >   * get_page_offset - Helper for getting PAGE_OFFSET
+> >   */
+> >
+> > -static int get_page_offset(void)
+> > +int get_page_offset(unsigned long *page_offset)
+> >  {
+> >       int ret;
+> >
+>
+> The new page_offset is never used in this patch. There's still the line
+> left with the global page_offset but that will cause a type miss-match
+> (unsigend long vs unsigned log *). In the next patch you do the update
+> (page_offset -> *page_offset) but in the meantime the code is broken.
+>
+I will fix it in V2.
 
+Thanks,
 
-On 2021/12/16 9:10, Baoquan He wrote:
-> On 12/15/21 at 02:28pm, Borislav Petkov wrote:
->> On Fri, Dec 10, 2021 at 02:55:26PM +0800, Zhen Lei wrote:
->>> @@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
->>>  		}
->>>  	}
->>>  
->>> -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
->>> +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
->>>  		memblock_phys_free(crash_base, crash_size);
->>>  		return;
->>>  	}
->>
->> That's not a equivalent transformation on X86_32.
+Pingfan
 
-The original value (1ULL << 32) is inaccurate, and it enlarged the CRASH_ADDR_LOW
-upper limit. This is because when the memory is allocated from the low end,
-the address cannot exceed CRASH_ADDR_LOW_MAX, see "if (!high)" branch. If
-the memory is allocated from the high end, 'crash_base' is greater than or
-equal to (1ULL << 32), and naturally, it is greater than CRASH_ADDR_LOW_MAX.
-
-I think I should update the description, thanks.
-
-                if (!high)
-                        crash_base = memblock_phys_alloc_range(crash_size,
-                                                CRASH_ALIGN, CRASH_ALIGN,
-                                                CRASH_ADDR_LOW_MAX);
-                if (!crash_base)
-                        crash_base = memblock_phys_alloc_range(crash_size,
-                                                CRASH_ALIGN, CRASH_ALIGN,
-                                                CRASH_ADDR_HIGH_MAX);
-
-> 
-> reserve_crashkernel_low() always return 0 on x86_32, so the not equivalent
-> transformation for x86_32 doesn't matter, I think.
-> 
-> .
-> 
 
 _______________________________________________
 kexec mailing list
