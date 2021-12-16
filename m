@@ -1,21 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxoNF-004wX1-NM
- for kexec@lists.infradead.org; Thu, 16 Dec 2021 10:52:35 +0000
-Received: by mail-wm1-f70.google.com with SMTP id
- bg20-20020a05600c3c9400b0033a9300b44bso10138373wmb.2
- for <kexec@lists.infradead.org>; Thu, 16 Dec 2021 02:52:29 -0800 (PST)
-Message-ID: <0091b689-54b6-7cc9-d5ee-ae12a2f8376d@redhat.com>
-Date: Thu, 16 Dec 2021 11:52:27 +0100
+Date: Thu, 16 Dec 2021 11:55:55 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <YbsbO1XnrzLAIBEu@zn.tnic>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
+ <YbntdtQo2jfbO4cO@zn.tnic> <20211216011040.GG3023@MiWiFi-R3L-srv>
 MIME-Version: 1.0
-Subject: Re: [PATCH v3 3/5] mm_zone: add function to check if managed dma zone
- exists
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-4-bhe@redhat.com>
-From: David Hildenbrand <david@redhat.com>
-In-Reply-To: <20211213122712.23805-4-bhe@redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211216011040.GG3023@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -28,85 +22,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org
-Cc: linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org
+To: Baoquan He <bhe@redhat.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On 13.12.21 13:27, Baoquan He wrote:
-> In some places of the current kernel, it assumes that dma zone must have
-> managed pages if CONFIG_ZONE_DMA is enabled. While this is not always true.
-> E.g in kdump kernel of x86_64, only low 1M is presented and locked down
-> at very early stage of boot, so that there's no managed pages at all in
-> DMA zone. This exception will always cause page allocation failure if page
-> is requested from DMA zone.
-> 
-> Here add function has_managed_dma() and the relevant helper functions to
-> check if there's DMA zone with managed pages. It will be used in later
-> patches.
-> 
-> Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
-> v2->v3:
->  Rewrite has_managed_dma() in a simpler and more efficient way which is
->  sugggested by DavidH. 
-> 
->  include/linux/mmzone.h |  9 +++++++++
->  mm/page_alloc.c        | 15 +++++++++++++++
->  2 files changed, 24 insertions(+)
-> 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 58e744b78c2c..6e1b726e9adf 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -1046,6 +1046,15 @@ static inline int is_highmem_idx(enum zone_type idx)
->  #endif
->  }
->  
-> +#ifdef CONFIG_ZONE_DMA
-> +bool has_managed_dma(void);
-> +#else
-> +static inline bool has_managed_dma(void)
-> +{
-> +	return false;
-> +}
-> +#endif
-> +
->  /**
->   * is_highmem - helper function to quickly check if a struct zone is a
->   *              highmem zone or not.  This is an attempt to keep references
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c5952749ad40..7c7a0b5de2ff 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -9460,3 +9460,18 @@ bool take_page_off_buddy(struct page *page)
->  	return ret;
->  }
->  #endif
-> +
-> +#ifdef CONFIG_ZONE_DMA
-> +bool has_managed_dma(void)
-> +{
-> +	struct pglist_data *pgdat;
-> +
-> +	for_each_online_pgdat(pgdat) {
-> +		struct zone *zone = &pgdat->node_zones[ZONE_DMA];
-> +
-> +		if (managed_zone(zone))
-> +			return true;
-> +	}
-> +	return false;
-> +}
-> +#endif /* CONFIG_ZONE_DMA */
-> 
+On Thu, Dec 16, 2021 at 09:10:40AM +0800, Baoquan He wrote:
+> reserve_crashkernel_low() always return 0 on x86_32, so the not equivalent
+> transformation for x86_32 doesn't matter, I think.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+That is, of course, very obvious... not!
+
+Why is that function parsing crashkernel=XM, and crashkernel=X,high,
+then it attempts some low memory reservation too? Why isn't
+crashkernel=Y,low parsed there too?
+
+I guess this alludes to why:
+
+        crashkernel=size[KMG],low
+                        [KNL, X86-64] range under 4G. When crashkernel=X,high
+                        is passed, kernel could allocate physical memory region
+                        above 4G, that cause second kernel crash on system
+                        that require some amount of low memory, e.g. swiotlb
+                        requires at least 64M+32K low memory, also enough extra
+                        low memory is needed to make sure DMA buffers for 32-bit
+                        devices won't run out.
+
+So, before this is going anywhere, I'd like to see this function
+documented properly. I see Documentation/admin-guide/kdump/kdump.rst
+explains the crashkernel= options too so you can refer to it in the
+comments so that when someone looks at that code, someone can follow why
+it is doing what it is doing.
+
+Then, as a future work, all that parsing of crashkernel= cmdline options
+should be concentrated at the beginning and once it is clear what the
+user requests, the reservations should be done.
+
+As it is, reserve_crashkernel() is pretty unwieldy and hard to read.
+
+Thx.
 
 -- 
-Thanks,
+Regards/Gruss,
+    Boris.
 
-David / dhildenb
-
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
