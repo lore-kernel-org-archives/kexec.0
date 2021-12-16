@@ -1,21 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]
+ helo=mx0a-001b2d01.pphosted.com)
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxh5r-003PZI-Jx
- for kexec@lists.infradead.org; Thu, 16 Dec 2021 03:06:09 +0000
-Received: by mail-io1-f71.google.com with SMTP id
- r199-20020a6b2bd0000000b005e234972ddfso22245121ior.23
- for <kexec@lists.infradead.org>; Wed, 15 Dec 2021 19:06:05 -0800 (PST)
+ id 1mxlBs-003ykr-Pb
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 07:28:38 +0000
+From: Sven Schnelle <svens@linux.ibm.com>
+Subject: Re: [PATCH v2 3/5] add slurp_proc_file()
+References: <20211215101836.1181165-1-svens@linux.ibm.com>
+ <20211215101836.1181165-4-svens@linux.ibm.com>
+ <20211215183602.2797fdf5@rhtmp>
+Date: Thu, 16 Dec 2021 08:28:29 +0100
+In-Reply-To: <20211215183602.2797fdf5@rhtmp> (Philipp Rudo's message of "Wed, 
+ 15 Dec 2021 18:36:02 +0100")
+Message-ID: <yt9dlf0lj9eq.fsf@linux.ibm.com>
 MIME-Version: 1.0
-References: <20211210030735.53155-1-piliu@redhat.com>
- <20211210030735.53155-4-piliu@redhat.com>
- <20211215143431.5ec72a36@rhtmp>
- <CAF+s44SaE=+OxOQcrbcYEs=76-ycJV3pyxRRYdN2bfACyR-iyw@mail.gmail.com>
-In-Reply-To: <CAF+s44SaE=+OxOQcrbcYEs=76-ycJV3pyxRRYdN2bfACyR-iyw@mail.gmail.com>
-From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 16 Dec 2021 11:05:53 +0800
-Message-ID: <CAF+s44SWwjfQhhVVxf23dUffq-pxCwVPO=bbrefEg+c1oRWaqg@mail.gmail.com>
-Subject: Re: [PATCH 3/3] arm64: read VA_BITS from kcore for 52-bits VA kernel
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -29,88 +27,94 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Philipp Rudo <prudo@redhat.com>
-Cc: kexec@lists.infradead.org
+Cc: Simon Horman <horms@verge.net.au>, kexec@lists.infradead.org
 
-On Thu, Dec 16, 2021 at 10:46 AM Pingfan Liu <piliu@redhat.com> wrote:
->
-> On Wed, Dec 15, 2021 at 9:35 PM Philipp Rudo <prudo@redhat.com> wrote:
-> >
-> > Hi Pingfang,
-> >
-> > On Fri, 10 Dec 2021 11:07:35 +0800
-> > Pingfan Liu <piliu@redhat.com> wrote:
-> >
-> > > phys_to_virt() calculates virtual address. As a important factor,
-> > > page_offset is excepted to be accurate.
-> > >
-> > > Since arm64 kernel exposes va_bits through vmcore, using it.
-> > >
-> > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> > > ---
-> > >  kexec/arch/arm64/kexec-arm64.c | 31 +++++++++++++++++++++++++++----
-> > >  kexec/arch/arm64/kexec-arm64.h |  1 +
-> > >  util_lib/elf_info.c            |  5 +++++
-> > >  3 files changed, 33 insertions(+), 4 deletions(-)
-> > >
-> > > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> > > index bd650e6..ccc92db 100644
-> > > --- a/kexec/arch/arm64/kexec-arm64.c
-> > > +++ b/kexec/arch/arm64/kexec-arm64.c
-> > > @@ -54,7 +54,7 @@
-> > >  static bool try_read_phys_offset_from_kcore = false;
-> > >
-> > >  /* Machine specific details. */
-> > > -static int va_bits;
-> > > +static int va_bits = -1;
-> > >  static unsigned long page_offset;
-> > >
-> > >  /* Global varables the core kexec routines expect. */
-> > > @@ -876,7 +876,15 @@ static inline void set_phys_offset(long v, char *set_method)
-> > >
-> > >  static int get_va_bits(void)
-> > >  {
-> > > -     unsigned long long stext_sym_addr = get_kernel_sym("_stext");
-> > > +     unsigned long long stext_sym_addr;
-> > > +
-> > > +     /*
-> > > +      * if already got from kcore
-> > > +      */
-> > > +     if (va_bits != -1)
-> > > +             goto out;
-> > > +
-> > > +     stext_sym_addr = get_kernel_sym("_stext");
-> > >
-> > >       if (stext_sym_addr == 0) {
-> > >               fprintf(stderr, "Can't get the symbol of _stext.\n");
-> > > @@ -900,6 +908,7 @@ static int get_va_bits(void)
-> > >               return -1;
-> > >       }
-> > >
-> > > +out:
-> > >       dbgprintf("va_bits : %d\n", va_bits);
-> > >
-> > >       return 0;
-> > > @@ -917,14 +926,27 @@ int get_page_offset(unsigned long *page_offset)
-> > >       if (ret < 0)
-> > >               return ret;
-> > >
-> > > -     page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> > > +     if (va_bits < 52)
-> > > +             *page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> > > +     else
-> > > +             *page_offset = (0xffffffffffffffffUL) << va_bits;
-> >
-> > wouldn't it make sense to use ULONG_MAX here? At least for me it would
-> > be much better readable.
-> >
->
-> Yes, I tend to agree and will update it in V2 (if there is no need to
-> compile it on 32-bits machine, which I consider as a rare case
-> nowadays.)
->
+Philipp Rudo <prudo@redhat.com> writes:
 
-I think UINT64_MAX can free of this issue
+> On Wed, 15 Dec 2021 11:18:34 +0100
+> Sven Schnelle <svens@linux.ibm.com> wrote:
+>
+>> slurp_file() cannot be used to read proc files, as they are returning
+>> a size of zero in stat(). Add a function slurp_proc_file() which is
+>> similar to slurp_file(), but doesn't require the size of the file to
+>> be known.
+>> 
+>> Signed-off-by: Sven Schnelle <svens@linux.ibm.com>
+>> ---
+>>  kexec/kexec.c | 32 ++++++++++++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
+>> 
+>> diff --git a/kexec/kexec.c b/kexec/kexec.c
+>> index f63b36b771eb..a1acba2adf2a 100644
+>> --- a/kexec/kexec.c
+>> +++ b/kexec/kexec.c
+>> @@ -1106,6 +1106,38 @@ static void remove_parameter(char *line, const char *param_name)
+>>  	}
+>>  }
+>>  
+>> +static char *slurp_proc_file(const char *filename, size_t *len)
+>> +{
+>> +	ssize_t ret, startpos = 0;
+>> +	unsigned int size = 64;
+>> +	char *buf = NULL, *tmp;
+>> +	int fd;
+>> +
+>> +	fd = open(filename, O_RDONLY);
+>> +	if (fd == -1)
+>> +		return NULL;
+>> +
+>> +	do {
+>> +		size *= 2;
+>> +		tmp = realloc(buf, size);
+>> +		if (!tmp) {
+>> +			free(buf);
+>> +			return NULL;
+>> +		}
+>> +		buf = tmp;
+>> +
+>> +		ret = read(fd, buf + startpos, size - startpos);
+>> +		if (ret < 0) {
+>> +			free(buf);
+>> +			return NULL;
+>> +		}
+>> +		startpos += ret;
+>> +		*len = startpos;
+>> +	} while (ret == size);
+>
+> I don't think this will work as intended. 
+>
+> 1) read returns the bytes read. So ret has a maximum value of
+>    size - startpos and thus can only be equal to size on the first pass
+>    when startpos = 0.
+>
+> 2) it's not an error when read reads less bytes than requested but can
+>    happen when, e.g. it get's interrupted.
+>
+> The simplest solution I see is to simply use 'while (ret)' Even when
+> that means that there is an extra pass in the loop with an extra
+> call to realloc.
+>
+> The cleaner solution probably would be to put the read into a second
+> loop. I.e. the following should work (no tested)
+>
+> 	do {
+> 		[...]
+> 		do {
+> 			ret = read(fd, buf + startpos, size - startpos);
+> 			if (ret < 0) {
+> 				free(buf);
+> 				return NULL;
+> 			}
+> 			startpos += ret;
+> 		while (ret && startpos != size);
+>
+> 		*len = startpos;
+> 	} while (ret);
+>
+> Thanks
+> Philipp
 
+Sigh. True. I'll prepare a v3...
 
 _______________________________________________
 kexec mailing list
