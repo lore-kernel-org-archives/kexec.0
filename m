@@ -1,16 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mxYOh-0029ma-VR
- for kexec@lists.infradead.org; Wed, 15 Dec 2021 17:49:01 +0000
-From: Heiko Carstens <hca@linux.ibm.com>
-Subject: [PATCHv2 1/1] s390: handle R_390_PLT32DBL reloc entries in
- machine_apply_elf_rel()
-Date: Wed, 15 Dec 2021 18:48:53 +0100
-Message-Id: <20211215174853.7520-2-hca@linux.ibm.com>
-In-Reply-To: <20211215174853.7520-1-hca@linux.ibm.com>
-References: <20211215174853.7520-1-hca@linux.ibm.com>
+ id 1mxfIK-003Dwy-ST
+ for kexec@lists.infradead.org; Thu, 16 Dec 2021 01:10:54 +0000
+Date: Thu, 16 Dec 2021 09:10:40 +0800
+From: Baoquan He <bhe@redhat.com>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <20211216011040.GG3023@MiWiFi-R3L-srv>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
+ <YbntdtQo2jfbO4cO@zn.tnic>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <YbntdtQo2jfbO4cO@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,104 +26,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Philipp Rudo <prudo@redhat.com>, Tao Liu <ltao@redhat.com>, kexec@lists.infradead.org, Alexander Egorenkov <egorenar@linux.ibm.com>
+To: Borislav Petkov <bp@alien8.de>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-From: Alexander Egorenkov <egorenar@linux.ibm.com>
+On 12/15/21 at 02:28pm, Borislav Petkov wrote:
+> On Fri, Dec 10, 2021 at 02:55:26PM +0800, Zhen Lei wrote:
+> > @@ -518,7 +519,7 @@ static void __init reserve_crashkernel(void)
+> >  		}
+> >  	}
+> >  
+> > -	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+> > +	if (crash_base >= CRASH_ADDR_LOW_MAX && reserve_crashkernel_low()) {
+> >  		memblock_phys_free(crash_base, crash_size);
+> >  		return;
+> >  	}
+> 
+> That's not a equivalent transformation on X86_32.
 
-Starting with gcc 11.3, the C compiler will generate PLT-relative function
-calls even if they are local and do not require it. Later on during linking,
-the linker will replace all PLT-relative calls to local functions with
-PC-relative ones. Unfortunately, the purgatory code of kexec/kdump is
-not being linked as a regular executable or shared library would have been,
-and therefore, all PLT-relative addresses remain in the generated purgatory
-object code unresolved. This in turn lets kexec-tools fail with
-"Unknown rela relocation: 0x14 0x73c0901c" for such relocation types.
-
-Furthermore, the clang C compiler has always behaved like described above
-and this commit should fix the purgatory code built with the latter.
-
-Because the purgatory code is no regular executable or shared library,
-contains only calls to local functions and has no PLT, all R_390_PLT32DBL
-relocation entries can be resolved just like a R_390_PC32DBL one.
-
-* https://refspecs.linuxfoundation.org/ELF/zSeries/lzsabi0_zSeries/x1633.html#AEN1699
-
-Relocation entries of purgatory code generated with gcc 11.3
-------------------------------------------------------------
-
-$ readelf -r purgatory/purgatory.o
-
-Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
-  Offset          Info           Type           Sym. Value    Sym. Name + Addend
-00000000000c  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-00000000001a  001000000014 R_390_PLT32DBL    0000000000000000 sha256_starts + 2
-000000000030  001100000014 R_390_PLT32DBL    0000000000000000 sha256_update + 2
-000000000046  001200000014 R_390_PLT32DBL    0000000000000000 sha256_finish + 2
-000000000050  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
-00000000005a  001300000014 R_390_PLT32DBL    0000000000000000 memcmp + 2
-...
-000000000118  001600000014 R_390_PLT32DBL    0000000000000000 setup_arch + 2
-00000000011e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-00000000012c  000f00000014 R_390_PLT32DBL    0000000000000000 verify_sha256_digest + 2
-000000000142  001700000014 R_390_PLT32DBL    0000000000000000
-post_verification[...] + 2
-
-Relocation entries of purgatory code generated with gcc 11.2
-------------------------------------------------------------
-
-$ readelf -r purgatory/purgatory.o
-
-Relocation section '.rela.text' at offset 0x6e8 contains 27 entries:
-  Offset          Info           Type           Sym. Value    Sym. Name + Addend
-00000000000e  000300000013 R_390_PC32DBL     0000000000000000 .data + 2
-00000000001c  001000000013 R_390_PC32DBL     0000000000000000 sha256_starts + 2
-000000000036  001100000013 R_390_PC32DBL     0000000000000000 sha256_update + 2
-000000000048  001200000013 R_390_PC32DBL     0000000000000000 sha256_finish + 2
-000000000052  000300000013 R_390_PC32DBL     0000000000000000 .data + 102
-00000000005c  001300000013 R_390_PC32DBL     0000000000000000 memcmp + 2
-...
-00000000011a  001600000013 R_390_PC32DBL     0000000000000000 setup_arch + 2
-000000000120  000300000013 R_390_PC32DBL     0000000000000000 .data + 122
-000000000130  000f00000013 R_390_PC32DBL     0000000000000000 verify_sha256_digest + 2
-000000000146  001700000013 R_390_PC32DBL     0000000000000000 post_verification[...] + 2
-
-Corresponding s390 kernel discussion:
-* https://lore.kernel.org/linux-s390/20211208105801.188140-1-egorenar@linux.ibm.com/T/#u
-
-Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-Reported-by: Tao Liu <ltao@redhat.com>
-Suggested-by: Philipp Rudo <prudo@redhat.com>
-Reviewed-by: Philipp Rudo <prudo@redhat.com>
-[hca@linux.ibm.com: changed commit message as requested by Philipp Rudo]
-Signed-off-by: Heiko Carstens <hca@linux.ibm.com>
----
- kexec/arch/s390/kexec-elf-rel-s390.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/kexec/arch/s390/kexec-elf-rel-s390.c b/kexec/arch/s390/kexec-elf-rel-s390.c
-index a5e1b7345578..91ba86a9991d 100644
---- a/kexec/arch/s390/kexec-elf-rel-s390.c
-+++ b/kexec/arch/s390/kexec-elf-rel-s390.c
-@@ -56,6 +56,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
- 	case R_390_PC16:	/* PC relative 16 bit.  */
- 	case R_390_PC16DBL:	/* PC relative 16 bit shifted by 1.  */
- 	case R_390_PC32DBL:	/* PC relative 32 bit shifted by 1.  */
-+	case R_390_PLT32DBL:	/* 32 bit PC rel. PLT shifted by 1.  */
- 	case R_390_PC32:	/* PC relative 32 bit.  */
- 	case R_390_PC64:	/* PC relative 64 bit.	*/
- 		val -= address;
-@@ -63,7 +64,7 @@ void machine_apply_elf_rel(struct mem_ehdr *UNUSED(ehdr),
- 			*(unsigned short *) loc = val;
- 		else if (r_type == R_390_PC16DBL)
- 			*(unsigned short *) loc = val >> 1;
--		else if (r_type == R_390_PC32DBL)
-+		else if (r_type == R_390_PC32DBL || r_type == R_390_PLT32DBL)
- 			*(unsigned int *) loc = val >> 1;
- 		else if (r_type == R_390_PC32)
- 			*(unsigned int *) loc = val;
--- 
-2.32.0
+reserve_crashkernel_low() always return 0 on x86_32, so the not equivalent
+transformation for x86_32 doesn't matter, I think.
 
 
 _______________________________________________
