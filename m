@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1my4j3-008Y8b-S1
- for kexec@lists.infradead.org; Fri, 17 Dec 2021 04:20:11 +0000
+ id 1my4jL-008YGv-5W
+ for kexec@lists.infradead.org; Fri, 17 Dec 2021 04:20:28 +0000
 From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCHv2 2/3] arm64/crashdump: unify routine to get page_offset
-Date: Fri, 17 Dec 2021 12:19:13 +0800
-Message-Id: <20211217041914.68692-3-piliu@redhat.com>
+Subject: [PATCHv2 3/3] arm64: read VA_BITS from kcore for 52-bits VA kernel
+Date: Fri, 17 Dec 2021 12:19:14 +0800
+Message-Id: <20211217041914.68692-4-piliu@redhat.com>
 In-Reply-To: <20211217041914.68692-1-piliu@redhat.com>
 References: <20211217041914.68692-1-piliu@redhat.com>
 MIME-Version: 1.0
@@ -25,107 +25,131 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
 Cc: Simon Horman <horms@verge.net.au>, Philipp Rudo <prudo@redhat.com>, Pingfan Liu <piliu@redhat.com>
 
-There are two funcs to get page_offset:
-  get_kernel_page_offset()
-  get_page_offset()
+phys_to_virt() calculates virtual address. As a important factor,
+page_offset is excepted to be accurate.
 
-Since get_kernel_page_offset() does not observe the kernel formula, and
-remove it. Unify them in order to introduce 52-bits VA kernel more
-easily in the coming patch.
+Since arm64 kernel exposes va_bits through vmcore, using it.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 ---
- kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
- kexec/arch/arm64/kexec-arm64.c     |  8 ++++----
- kexec/arch/arm64/kexec-arm64.h     |  1 +
- 3 files changed, 6 insertions(+), 26 deletions(-)
+ kexec/arch/arm64/kexec-arm64.c | 34 ++++++++++++++++++++++++++++++----
+ util_lib/elf_info.c            |  5 +++++
+ util_lib/include/elf_info.h    |  1 +
+ 3 files changed, 36 insertions(+), 4 deletions(-)
 
-diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-index a02019a..0a8d44c 100644
---- a/kexec/arch/arm64/crashdump-arm64.c
-+++ b/kexec/arch/arm64/crashdump-arm64.c
-@@ -46,27 +46,6 @@ static struct crash_elf_info elf_info = {
- 	.machine	= EM_AARCH64,
- };
- 
--/*
-- * Note: The returned value is correct only if !CONFIG_RANDOMIZE_BASE.
-- */
--static uint64_t get_kernel_page_offset(void)
--{
--	int i;
--
--	if (elf_info.kern_vaddr_start == UINT64_MAX)
--		return UINT64_MAX;
--
--	/* Current max virtual memory range is 48-bits. */
--	for (i = 48; i > 0; i--)
--		if (!(elf_info.kern_vaddr_start & (1UL << i)))
--			break;
--
--	if (i <= 0)
--		return UINT64_MAX;
--	else
--		return UINT64_MAX << i;
--}
--
- /*
-  * iomem_range_callback() - callback called for each iomem region
-  * @data: not used
-@@ -198,7 +177,7 @@ int load_crashdump_segments(struct kexec_info *info)
- 	if (err)
- 		return EFAILED;
- 
--	elf_info.page_offset = get_kernel_page_offset();
-+	get_page_offset(&elf_info.page_offset);
- 	dbgprintf("%s: page_offset:   %016llx\n", __func__,
- 			elf_info.page_offset);
- 
 diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 7373fa3..037e51c 100644
+index 037e51c..86aadf0 100644
 --- a/kexec/arch/arm64/kexec-arm64.c
 +++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -909,7 +909,7 @@ static int get_va_bits(void)
-  * get_page_offset - Helper for getting PAGE_OFFSET
-  */
+@@ -54,7 +54,7 @@
+ static bool try_read_phys_offset_from_kcore = false;
  
--static int get_page_offset(void)
-+int get_page_offset(unsigned long *page_offset)
+ /* Machine specific details. */
+-static int va_bits;
++static int va_bits = -1;
+ static unsigned long page_offset;
+ 
+ /* Global varables the core kexec routines expect. */
+@@ -876,7 +876,18 @@ static inline void set_phys_offset(long v, char *set_method)
+ 
+ static int get_va_bits(void)
  {
- 	int ret;
+-	unsigned long long stext_sym_addr = get_kernel_sym("_stext");
++	unsigned long long stext_sym_addr;
++
++	/*
++	 * if already got from kcore
++	 */
++	if (va_bits != -1)
++		goto out;
++
++
++	/* For kernel older than v4.19 */
++	fprintf(stderr, "Warning, can't get the VA_BITS from kcore\n");
++	stext_sym_addr = get_kernel_sym("_stext");
  
-@@ -917,8 +917,8 @@ static int get_page_offset(void)
+ 	if (stext_sym_addr == 0) {
+ 		fprintf(stderr, "Can't get the symbol of _stext.\n");
+@@ -900,6 +911,7 @@ static int get_va_bits(void)
+ 		return -1;
+ 	}
+ 
++out:
+ 	dbgprintf("va_bits : %d\n", va_bits);
+ 
+ 	return 0;
+@@ -917,14 +929,27 @@ int get_page_offset(unsigned long *page_offset)
  	if (ret < 0)
  		return ret;
  
--	page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
--	dbgprintf("page_offset : %lx\n", page_offset);
-+	*page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-+	dbgprintf("page_offset : %lx\n", *page_offset);
+-	*page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
++	if (va_bits < 52)
++		*page_offset = UINT64_MAX << (va_bits - 1);
++	else
++		*page_offset = UINT64_MAX << va_bits;
++
+ 	dbgprintf("page_offset : %lx\n", *page_offset);
  
  	return 0;
  }
-@@ -954,7 +954,7 @@ int get_phys_base_from_pt_load(long *phys_offset)
- 	unsigned long long phys_start;
- 	unsigned long long virt_start;
  
--	ret = get_page_offset();
-+	ret = get_page_offset(&page_offset);
- 	if (ret < 0)
- 		return ret;
++static void arm64_scan_vmcoreinfo(char *pos)
++{
++	const char *str;
++
++	str = "NUMBER(VA_BITS)=";
++	if (memcmp(str, pos, strlen(str)) == 0)
++		va_bits = strtoul(pos + strlen(str), NULL, 10);
++}
++
+ /**
+- * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET
++ * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET (and va_bits)
+  * from VMCOREINFO note inside 'kcore'.
+  */
  
-diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-index 1844b67..ed99d9d 100644
---- a/kexec/arch/arm64/kexec-arm64.h
-+++ b/kexec/arch/arm64/kexec-arm64.h
-@@ -69,6 +69,7 @@ extern struct arm64_mem arm64_mem;
+@@ -937,6 +962,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
+ 		return EFAILED;
+ 	}
  
- uint64_t get_phys_offset(void);
- uint64_t get_vp_offset(void);
-+int get_page_offset(unsigned long *offset);
++	arch_scan_vmcoreinfo = arm64_scan_vmcoreinfo;
+ 	ret = read_phys_offset_elf_kcore(fd, phys_offset);
  
- static inline void reset_vp_offset(void)
+ 	close(fd);
+diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+index 5574c7f..d252eff 100644
+--- a/util_lib/elf_info.c
++++ b/util_lib/elf_info.c
+@@ -310,6 +310,8 @@ int get_pt_load(int idx,
+ 
+ #define NOT_FOUND_LONG_VALUE		(-1)
+ 
++void (*arch_scan_vmcoreinfo)(char *pos);
++
+ void scan_vmcoreinfo(char *start, size_t size)
  {
+ 	char *last = start + size - 1;
+@@ -551,6 +553,9 @@ void scan_vmcoreinfo(char *start, size_t size)
+ 			}
+ 		}
+ 
++		if (arch_scan_vmcoreinfo != NULL)
++			(*arch_scan_vmcoreinfo)(pos);
++
+ 		if (last_line)
+ 			break;
+ 	}
+diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
+index f550d86..fdf4c3d 100644
+--- a/util_lib/include/elf_info.h
++++ b/util_lib/include/elf_info.h
+@@ -31,5 +31,6 @@ int get_pt_load(int idx,
+ int read_phys_offset_elf_kcore(int fd, long *phys_off);
+ int read_elf(int fd);
+ void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
++extern void (*arch_scan_vmcoreinfo)(char *pos);
+ 
+ #endif /* ELF_INFO_H */
 -- 
 2.31.1
 
