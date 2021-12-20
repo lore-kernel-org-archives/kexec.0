@@ -1,15 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x536.google.com ([2607:f8b0:4864:20::536])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1myBZi-009t78-H5
- for kexec@lists.infradead.org; Fri, 17 Dec 2021 11:39:00 +0000
-Received: by mail-pg1-x536.google.com with SMTP id y9so1829480pgj.5
- for <kexec@lists.infradead.org>; Fri, 17 Dec 2021 03:38:57 -0800 (PST)
-Date: Fri, 17 Dec 2021 11:38:52 +0000
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+ id 1mzD9j-0012Xi-ON
+ for kexec@lists.infradead.org; Mon, 20 Dec 2021 07:32:25 +0000
+Date: Mon, 20 Dec 2021 15:32:10 +0800
+From: Baoquan He <bhe@redhat.com>
 Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
  pages in DMA zone
-Message-ID: <Ybx2zGCvWGTmm2Ed@ip-172-31-30-232.ap-northeast-1.compute.internal>
+Message-ID: <20211220073210.GA31681@MiWiFi-R3L-srv>
 References: <20211213122712.23805-1-bhe@redhat.com>
  <20211213122712.23805-6-bhe@redhat.com>
  <20211213134319.GA997240@odroid>
@@ -17,9 +15,10 @@ References: <20211213122712.23805-1-bhe@redhat.com>
  <f5ff82eb-73b6-55b5-53d7-04ab73ce5035@suse.cz>
  <20211215044818.GB1097530@odroid> <20211215070335.GA1165926@odroid>
  <20211215072710.GA3010@lst.de>
+ <Ybx2zGCvWGTmm2Ed@ip-172-31-30-232.ap-northeast-1.compute.internal>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211215072710.GA3010@lst.de>
+In-Reply-To: <Ybx2zGCvWGTmm2Ed@ip-172-31-30-232.ap-northeast-1.compute.internal>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -32,66 +31,83 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Vlastimil Babka <vbabka@suse.cz>, Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
 
-On Wed, Dec 15, 2021 at 08:27:10AM +0100, Christoph Hellwig wrote:
-> On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
-> > I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
-> > for kdump kernel is nice way to solve this problem.
-> 
-> What is the problem with zones in kdump kernels?
-> 
-> > Devices that requires ZONE_DMA memory is rare but we still support them.
-> 
-> Indeed.
-> 
-> > >     1) Do not call warn_alloc in page allocator if will always fail
-> > >     to allocate ZONE_DMA pages.
-> > > 
-> > > 
-> > >     2) let's check all callers of kmalloc with GFP_DMA
-> > >     if they really need GFP_DMA flag and replace those by DMA API or
-> > >     just remove GFP_DMA from kmalloc()
-> > > 
-> > >     3) Drop support for allocating DMA memory from slab allocator
-> > >     (as Christoph Hellwig said) and convert them to use DMA32
+On 12/17/21 at 11:38am, Hyeonggon Yoo wrote:
+> On Wed, Dec 15, 2021 at 08:27:10AM +0100, Christoph Hellwig wrote:
+> > On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
+> > > I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
+> > > for kdump kernel is nice way to solve this problem.
 > > 
-> > 	(as Christoph Hellwig said) and convert them to use *DMA API*
+> > What is the problem with zones in kdump kernels?
 > > 
-> > >     and see what happens
+> > > Devices that requires ZONE_DMA memory is rare but we still support them.
+> > 
+> > Indeed.
+> > 
+> > > >     1) Do not call warn_alloc in page allocator if will always fail
+> > > >     to allocate ZONE_DMA pages.
+> > > > 
+> > > > 
+> > > >     2) let's check all callers of kmalloc with GFP_DMA
+> > > >     if they really need GFP_DMA flag and replace those by DMA API or
+> > > >     just remove GFP_DMA from kmalloc()
+> > > > 
+> > > >     3) Drop support for allocating DMA memory from slab allocator
+> > > >     (as Christoph Hellwig said) and convert them to use DMA32
+> > > 
+> > > 	(as Christoph Hellwig said) and convert them to use *DMA API*
+> > > 
+> > > >     and see what happens
+> > 
+> > This is the right thing to do, but it will take a while.  In fact
+> > I dont think we really need the warning in step 1,
 > 
-> This is the right thing to do, but it will take a while.  In fact
-> I dont think we really need the warning in step 1,
+> Hmm I think step 1) will be needed if someone is allocating pages from
+> DMA zone not using kmalloc or DMA API. (for example directly allocating
+> from buddy allocator) is there such cases?
 
-Hmm I think step 1) will be needed if someone is allocating pages from
-DMA zone not using kmalloc or DMA API. (for example directly allocating
-from buddy allocator) is there such cases?
+I think Christoph meant to take off the warning. I will post a patch to
+mute the warning if it's requesting page from DMA zone which has no
+managed pages.
 
-> a simple grep
-> already allows to go over them.  I just looked at the uses of GFP_DMA
-> in drivers/scsi for example, and all but one look bogus.
->
-
-That's good. this cleanup will also remove unnecessary limitations.
-
-> > > > > Yeah, I have the same guess too for get_capabilities(), not sure about other
-> > > > > callers. Or, as ChristophL and ChristophH said(Sorry, not sure if this is
-> > > > > the right way to call people when the first name is the same. Correct me if
-> > > > > it's wrong), any buffer requested from kmalloc can be used by device driver.
-> > > > > Means device enforces getting memory inside addressing limit for those
-> > > > > DMA transferring buffer which is usually large, Megabytes level with
-> > > > > vmalloc() or alloc_pages(), but doesn't care about this kind of small
-> > > > > piece buffer memory allocated with kmalloc()? Just a guess, please tell
-> > > > > a counter example if anyone happens to know, it could be
-> > > > > easy.
 > 
-> The way this works is that the dma_map* calls will bounce buffer memory
-> that does to fall into the addressing limitations.  This is a performance
-> overhead, but allows drivers to address all memory in a system.  If the
-> driver controls memory allocation it should use one of the dma_alloc_*
-> APIs that allocate addressable memory from the start.  The allocator
-> will dip into ZONE_DMA and ZONE_DMA32 when needed.
+> > a simple grep
+> > already allows to go over them.  I just looked at the uses of GFP_DMA
+> > in drivers/scsi for example, and all but one look bogus.
+> >
+> 
+> That's good. this cleanup will also remove unnecessary limitations.
+
+I searched and investigated several callsites where kmalloc(GFP_DMA) is
+called. E.g drivers/scsi/sr.c: sr_probe(). The scsi sr driver doesn't
+check DMA supporting capibility at all, e.g the dma limit, to set the
+dma mask or coherent_dma_mask. If we want to convert the
+kmalloc(GFP_DMA) to dma_alloc* API, scsi sr drvier developer/expert's
+suggestion and help is necessary. Either someone who knows this well
+help to change it, or give suggestion how to change so that I can do it. 
+
+> 
+> > > > > > Yeah, I have the same guess too for get_capabilities(), not sure about other
+> > > > > > callers. Or, as ChristophL and ChristophH said(Sorry, not sure if this is
+> > > > > > the right way to call people when the first name is the same. Correct me if
+> > > > > > it's wrong), any buffer requested from kmalloc can be used by device driver.
+> > > > > > Means device enforces getting memory inside addressing limit for those
+> > > > > > DMA transferring buffer which is usually large, Megabytes level with
+> > > > > > vmalloc() or alloc_pages(), but doesn't care about this kind of small
+> > > > > > piece buffer memory allocated with kmalloc()? Just a guess, please tell
+> > > > > > a counter example if anyone happens to know, it could be
+> > > > > > easy.
+> > 
+> > The way this works is that the dma_map* calls will bounce buffer memory
+> > that does to fall into the addressing limitations.  This is a performance
+> > overhead, but allows drivers to address all memory in a system.  If the
+> > driver controls memory allocation it should use one of the dma_alloc_*
+> > APIs that allocate addressable memory from the start.  The allocator
+> > will dip into ZONE_DMA and ZONE_DMA32 when needed.
+> 
+
 
 _______________________________________________
 kexec mailing list
