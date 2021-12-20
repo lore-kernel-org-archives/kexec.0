@@ -1,24 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mzD9j-0012Xi-ON
- for kexec@lists.infradead.org; Mon, 20 Dec 2021 07:32:25 +0000
-Date: Mon, 20 Dec 2021 15:32:10 +0800
+ id 1mzDl0-0018Vz-Uq
+ for kexec@lists.infradead.org; Mon, 20 Dec 2021 08:10:56 +0000
+Date: Mon, 20 Dec 2021 16:10:45 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
- pages in DMA zone
-Message-ID: <20211220073210.GA31681@MiWiFi-R3L-srv>
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com>
- <20211213134319.GA997240@odroid>
- <20211214053253.GB2216@MiWiFi-R3L-srv>
- <f5ff82eb-73b6-55b5-53d7-04ab73ce5035@suse.cz>
- <20211215044818.GB1097530@odroid> <20211215070335.GA1165926@odroid>
- <20211215072710.GA3010@lst.de>
- <Ybx2zGCvWGTmm2Ed@ip-172-31-30-232.ap-northeast-1.compute.internal>
+Subject: Re: [PATCH v3 1/3] vmcore: Convert copy_oldmem_page() to take an
+ iov_iter
+Message-ID: <20211220081045.GC31681@MiWiFi-R3L-srv>
+References: <20211213143927.3069508-1-willy@infradead.org>
+ <20211213143927.3069508-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Ybx2zGCvWGTmm2Ed@ip-172-31-30-232.ap-northeast-1.compute.internal>
+In-Reply-To: <20211213143927.3069508-2-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,82 +25,67 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Christoph Hellwig <hch@lst.de>, Vlastimil Babka <vbabka@suse.cz>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
 
-On 12/17/21 at 11:38am, Hyeonggon Yoo wrote:
-> On Wed, Dec 15, 2021 at 08:27:10AM +0100, Christoph Hellwig wrote:
-> > On Wed, Dec 15, 2021 at 07:03:35AM +0000, Hyeonggon Yoo wrote:
-> > > I'm not sure that allocating from ZONE_DMA32 instead of ZONE_DMA
-> > > for kdump kernel is nice way to solve this problem.
-> > 
-> > What is the problem with zones in kdump kernels?
-> > 
-> > > Devices that requires ZONE_DMA memory is rare but we still support them.
-> > 
-> > Indeed.
-> > 
-> > > >     1) Do not call warn_alloc in page allocator if will always fail
-> > > >     to allocate ZONE_DMA pages.
-> > > > 
-> > > > 
-> > > >     2) let's check all callers of kmalloc with GFP_DMA
-> > > >     if they really need GFP_DMA flag and replace those by DMA API or
-> > > >     just remove GFP_DMA from kmalloc()
-> > > > 
-> > > >     3) Drop support for allocating DMA memory from slab allocator
-> > > >     (as Christoph Hellwig said) and convert them to use DMA32
-> > > 
-> > > 	(as Christoph Hellwig said) and convert them to use *DMA API*
-> > > 
-> > > >     and see what happens
-> > 
-> > This is the right thing to do, but it will take a while.  In fact
-> > I dont think we really need the warning in step 1,
+On 12/13/21 at 02:39pm, Matthew Wilcox (Oracle) wrote:
+> Instead of passing in a 'buf' and 'userbuf' argument, pass in an iov_iter.
+> s390 needs more work to pass the iov_iter down further, or refactor,
+> but I'd be more comfortable if someone who can test on s390 did that work.
 > 
-> Hmm I think step 1) will be needed if someone is allocating pages from
-> DMA zone not using kmalloc or DMA API. (for example directly allocating
-> from buddy allocator) is there such cases?
+> It's more convenient to convert the whole of read_from_oldmem() to
+> take an iov_iter at the same time, so rename it to read_from_oldmem_iter()
+> and add a temporary read_from_oldmem() wrapper that creates an iov_iter.
+> 
+> Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-I think Christoph meant to take off the warning. I will post a patch to
-mute the warning if it's requesting page from DMA zone which has no
-managed pages.
 
-> 
-> > a simple grep
-> > already allows to go over them.  I just looked at the uses of GFP_DMA
-> > in drivers/scsi for example, and all but one look bogus.
-> >
-> 
-> That's good. this cleanup will also remove unnecessary limitations.
+Thanks for making this to do an awesome clean up. This one looks good to
+me.
 
-I searched and investigated several callsites where kmalloc(GFP_DMA) is
-called. E.g drivers/scsi/sr.c: sr_probe(). The scsi sr driver doesn't
-check DMA supporting capibility at all, e.g the dma limit, to set the
-dma mask or coherent_dma_mask. If we want to convert the
-kmalloc(GFP_DMA) to dma_alloc* API, scsi sr drvier developer/expert's
-suggestion and help is necessary. Either someone who knows this well
-help to change it, or give suggestion how to change so that I can do it. 
+Acked-by: Baoquan He <bhe@redhat.com>
 
-> 
-> > > > > > Yeah, I have the same guess too for get_capabilities(), not sure about other
-> > > > > > callers. Or, as ChristophL and ChristophH said(Sorry, not sure if this is
-> > > > > > the right way to call people when the first name is the same. Correct me if
-> > > > > > it's wrong), any buffer requested from kmalloc can be used by device driver.
-> > > > > > Means device enforces getting memory inside addressing limit for those
-> > > > > > DMA transferring buffer which is usually large, Megabytes level with
-> > > > > > vmalloc() or alloc_pages(), but doesn't care about this kind of small
-> > > > > > piece buffer memory allocated with kmalloc()? Just a guess, please tell
-> > > > > > a counter example if anyone happens to know, it could be
-> > > > > > easy.
-> > 
-> > The way this works is that the dma_map* calls will bounce buffer memory
-> > that does to fall into the addressing limitations.  This is a performance
-> > overhead, but allows drivers to address all memory in a system.  If the
-> > driver controls memory allocation it should use one of the dma_alloc_*
-> > APIs that allocate addressable memory from the start.  The allocator
-> > will dip into ZONE_DMA and ZONE_DMA32 when needed.
-> 
+...... 
+> -/**
+> - * copy_oldmem_page() - copy one page from old kernel memory
+> - * @pfn: page frame number to be copied
+> - * @buf: buffer where the copied page is placed
+> - * @csize: number of bytes to copy
+> - * @offset: offset in bytes into the page
+> - * @userbuf: if set, @buf is int he user address space
+> - *
+> - * This function copies one page from old kernel memory into buffer pointed by
+> - * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
+> - * copied or negative error in case of failure.
+> - */
+> -ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+> -			 size_t csize, unsigned long offset,
+> -			 int userbuf)
+> +ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+> +			 size_t csize, unsigned long offset)
+                                ^^^^^^
+I am curious why this parameter is called 'csize', but not 'size' directly.
+This is not related to this patch, it's an old naming.
+
+>  {
+>  	void *vaddr;
+>  
+> @@ -40,14 +28,7 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
+>  	if (!vaddr)
+>  		return -ENOMEM;
+>  
+> -	if (userbuf) {
+> -		if (copy_to_user(buf, vaddr + offset, csize)) {
+> -			iounmap(vaddr);
+> -			return -EFAULT;
+> -		}
+> -	} else {
+> -		memcpy(buf, vaddr + offset, csize);
+> -	}
+> +	csize = copy_to_iter(vaddr + offset, csize, iter);
+>  
+>  	iounmap(vaddr);
+>  	return csize;
 
 
 _______________________________________________
