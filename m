@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mzDl0-0018Vz-Uq
- for kexec@lists.infradead.org; Mon, 20 Dec 2021 08:10:56 +0000
-Date: Mon, 20 Dec 2021 16:10:45 +0800
+ id 1mzZ0k-005fS0-Gd
+ for kexec@lists.infradead.org; Tue, 21 Dec 2021 06:52:36 +0000
+Date: Tue, 21 Dec 2021 14:52:16 +0800
 From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 1/3] vmcore: Convert copy_oldmem_page() to take an
- iov_iter
-Message-ID: <20211220081045.GC31681@MiWiFi-R3L-srv>
+Subject: Re: [PATCH v3 2/3] vmcore: Convert __read_vmcore to use an iov_iter
+Message-ID: <20211221065216.GA7986@MiWiFi-R3L-srv>
 References: <20211213143927.3069508-1-willy@infradead.org>
- <20211213143927.3069508-2-willy@infradead.org>
+ <20211213143927.3069508-3-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213143927.3069508-2-willy@infradead.org>
+In-Reply-To: <20211213143927.3069508-3-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -26,66 +25,227 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, akpm@linux-foundation.org, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
+Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
 
 On 12/13/21 at 02:39pm, Matthew Wilcox (Oracle) wrote:
-> Instead of passing in a 'buf' and 'userbuf' argument, pass in an iov_iter.
-> s390 needs more work to pass the iov_iter down further, or refactor,
-> but I'd be more comfortable if someone who can test on s390 did that work.
-> 
-> It's more convenient to convert the whole of read_from_oldmem() to
-> take an iov_iter at the same time, so rename it to read_from_oldmem_iter()
-> and add a temporary read_from_oldmem() wrapper that creates an iov_iter.
+> This gets rid of copy_to() and let us use proc_read_iter() instead
+> of proc_read().
 > 
 > Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
 
-
-Thanks for making this to do an awesome clean up. This one looks good to
-me.
-
 Acked-by: Baoquan He <bhe@redhat.com>
 
-...... 
-> -/**
-> - * copy_oldmem_page() - copy one page from old kernel memory
-> - * @pfn: page frame number to be copied
-> - * @buf: buffer where the copied page is placed
-> - * @csize: number of bytes to copy
-> - * @offset: offset in bytes into the page
-> - * @userbuf: if set, @buf is int he user address space
-> - *
-> - * This function copies one page from old kernel memory into buffer pointed by
-> - * @buf. If @buf is in userspace, set @userbuf to %1. Returns number of bytes
-> - * copied or negative error in case of failure.
+> ---
+>  fs/proc/vmcore.c | 81 +++++++++++++++++-------------------------------
+>  1 file changed, 29 insertions(+), 52 deletions(-)
+> 
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 958cad6476e6..7b25f568d20d 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -252,22 +252,8 @@ ssize_t __weak copy_oldmem_page_encrypted(struct iov_iter *iter,
+>  	return copy_oldmem_page(iter, pfn, csize, offset);
+>  }
+>  
+> -/*
+> - * Copy to either kernel or user space
 > - */
-> -ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
-> -			 size_t csize, unsigned long offset,
-> -			 int userbuf)
-> +ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
-> +			 size_t csize, unsigned long offset)
-                                ^^^^^^
-I am curious why this parameter is called 'csize', but not 'size' directly.
-This is not related to this patch, it's an old naming.
-
->  {
->  	void *vaddr;
->  
-> @@ -40,14 +28,7 @@ ssize_t copy_oldmem_page(unsigned long pfn, char *buf,
->  	if (!vaddr)
->  		return -ENOMEM;
->  
+> -static int copy_to(void *target, void *src, size_t size, int userbuf)
+> -{
 > -	if (userbuf) {
-> -		if (copy_to_user(buf, vaddr + offset, csize)) {
-> -			iounmap(vaddr);
+> -		if (copy_to_user((char __user *) target, src, size))
 > -			return -EFAULT;
-> -		}
 > -	} else {
-> -		memcpy(buf, vaddr + offset, csize);
+> -		memcpy(target, src, size);
 > -	}
-> +	csize = copy_to_iter(vaddr + offset, csize, iter);
+> -	return 0;
+> -}
+> -
+>  #ifdef CONFIG_PROC_VMCORE_DEVICE_DUMP
+> -static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
+> +static int vmcoredd_copy_dumps(struct iov_iter *iter, u64 start, size_t size)
+>  {
+>  	struct vmcoredd_node *dump;
+>  	u64 offset = 0;
+> @@ -280,14 +266,13 @@ static int vmcoredd_copy_dumps(void *dst, u64 start, size_t size, int userbuf)
+>  		if (start < offset + dump->size) {
+>  			tsz = min(offset + (u64)dump->size - start, (u64)size);
+>  			buf = dump->buf + start - offset;
+> -			if (copy_to(dst, buf, tsz, userbuf)) {
+> +			if (copy_to_iter(buf, tsz, iter) < tsz) {
+>  				ret = -EFAULT;
+>  				goto out_unlock;
+>  			}
 >  
->  	iounmap(vaddr);
->  	return csize;
+>  			size -= tsz;
+>  			start += tsz;
+> -			dst += tsz;
+>  
+>  			/* Leave now if buffer filled already */
+>  			if (!size)
+> @@ -343,33 +328,28 @@ static int vmcoredd_mmap_dumps(struct vm_area_struct *vma, unsigned long dst,
+>  /* Read from the ELF header and then the crash dump. On error, negative value is
+>   * returned otherwise number of bytes read are returned.
+>   */
+> -static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+> -			     int userbuf)
+> +static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+>  {
+>  	ssize_t acc = 0, tmp;
+>  	size_t tsz;
+>  	u64 start;
+>  	struct vmcore *m = NULL;
+>  
+> -	if (buflen == 0 || *fpos >= vmcore_size)
+> +	if (iter->count == 0 || *fpos >= vmcore_size)
+>  		return 0;
+>  
+> -	/* trim buflen to not go beyond EOF */
+> -	if (buflen > vmcore_size - *fpos)
+> -		buflen = vmcore_size - *fpos;
+> +	iov_iter_truncate(iter, vmcore_size - *fpos);
+>  
+>  	/* Read ELF core header */
+>  	if (*fpos < elfcorebuf_sz) {
+> -		tsz = min(elfcorebuf_sz - (size_t)*fpos, buflen);
+> -		if (copy_to(buffer, elfcorebuf + *fpos, tsz, userbuf))
+> +		tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
+> +		if (copy_to_iter(elfcorebuf + *fpos, tsz, iter) < tsz)
+>  			return -EFAULT;
+> -		buflen -= tsz;
+>  		*fpos += tsz;
+> -		buffer += tsz;
+>  		acc += tsz;
+>  
+>  		/* leave now if filled buffer already */
+> -		if (buflen == 0)
+> +		if (iter->count == 0)
+>  			return acc;
+>  	}
+>  
+> @@ -390,35 +370,31 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>  		/* Read device dumps */
+>  		if (*fpos < elfcorebuf_sz + vmcoredd_orig_sz) {
+>  			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
+> -				  (size_t)*fpos, buflen);
+> +				  (size_t)*fpos, iter->count);
+>  			start = *fpos - elfcorebuf_sz;
+> -			if (vmcoredd_copy_dumps(buffer, start, tsz, userbuf))
+> +			if (vmcoredd_copy_dumps(iter, start, tsz))
+>  				return -EFAULT;
+>  
+> -			buflen -= tsz;
+>  			*fpos += tsz;
+> -			buffer += tsz;
+>  			acc += tsz;
+>  
+>  			/* leave now if filled buffer already */
+> -			if (!buflen)
+> +			if (!iter->count)
+>  				return acc;
+>  		}
+>  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
+>  
+>  		/* Read remaining elf notes */
+> -		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, buflen);
+> +		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, iter->count);
+>  		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz - vmcoredd_orig_sz;
+> -		if (copy_to(buffer, kaddr, tsz, userbuf))
+> +		if (copy_to_iter(kaddr, tsz, iter) < tsz)
+>  			return -EFAULT;
+>  
+> -		buflen -= tsz;
+>  		*fpos += tsz;
+> -		buffer += tsz;
+>  		acc += tsz;
+>  
+>  		/* leave now if filled buffer already */
+> -		if (buflen == 0)
+> +		if (iter->count == 0)
+>  			return acc;
+>  	}
+>  
+> @@ -426,19 +402,17 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>  		if (*fpos < m->offset + m->size) {
+>  			tsz = (size_t)min_t(unsigned long long,
+>  					    m->offset + m->size - *fpos,
+> -					    buflen);
+> +					    iter->count);
+>  			start = m->paddr + *fpos - m->offset;
+> -			tmp = read_from_oldmem(buffer, tsz, &start,
+> -					       userbuf, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
+> +			tmp = read_from_oldmem_iter(iter, tsz, &start,
+> +					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
+>  			if (tmp < 0)
+>  				return tmp;
+> -			buflen -= tsz;
+>  			*fpos += tsz;
+> -			buffer += tsz;
+>  			acc += tsz;
+>  
+>  			/* leave now if filled buffer already */
+> -			if (buflen == 0)
+> +			if (iter->count == 0)
+>  				return acc;
+>  		}
+>  	}
+> @@ -446,15 +420,14 @@ static ssize_t __read_vmcore(char *buffer, size_t buflen, loff_t *fpos,
+>  	return acc;
+>  }
+>  
+> -static ssize_t read_vmcore(struct file *file, char __user *buffer,
+> -			   size_t buflen, loff_t *fpos)
+> +static ssize_t read_vmcore(struct kiocb *iocb, struct iov_iter *iter)
+>  {
+> -	return __read_vmcore((__force char *) buffer, buflen, fpos, 1);
+> +	return __read_vmcore(iter, &iocb->ki_pos);
+>  }
+>  
+>  /*
+>   * The vmcore fault handler uses the page cache and fills data using the
+> - * standard __vmcore_read() function.
+> + * standard __read_vmcore() function.
+>   *
+>   * On s390 the fault handler is used for memory regions that can't be mapped
+>   * directly with remap_pfn_range().
+> @@ -464,9 +437,10 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
+>  #ifdef CONFIG_S390
+>  	struct address_space *mapping = vmf->vma->vm_file->f_mapping;
+>  	pgoff_t index = vmf->pgoff;
+> +	struct iov_iter iter;
+> +	struct kvec kvec;
+>  	struct page *page;
+>  	loff_t offset;
+> -	char *buf;
+>  	int rc;
+>  
+>  	page = find_or_create_page(mapping, index, GFP_KERNEL);
+> @@ -474,8 +448,11 @@ static vm_fault_t mmap_vmcore_fault(struct vm_fault *vmf)
+>  		return VM_FAULT_OOM;
+>  	if (!PageUptodate(page)) {
+>  		offset = (loff_t) index << PAGE_SHIFT;
+> -		buf = __va((page_to_pfn(page) << PAGE_SHIFT));
+> -		rc = __read_vmcore(buf, PAGE_SIZE, &offset, 0);
+> +		kvec.iov_base = page_address(page);
+> +		kvec.iov_len = PAGE_SIZE;
+> +		iov_iter_kvec(&iter, READ, &kvec, 1, PAGE_SIZE);
+> +
+> +		rc = __read_vmcore(&iter, &offset);
+>  		if (rc < 0) {
+>  			unlock_page(page);
+>  			put_page(page);
+> @@ -725,7 +702,7 @@ static int mmap_vmcore(struct file *file, struct vm_area_struct *vma)
+>  
+>  static const struct proc_ops vmcore_proc_ops = {
+>  	.proc_open	= open_vmcore,
+> -	.proc_read	= read_vmcore,
+> +	.proc_read_iter	= read_vmcore,
+>  	.proc_lseek	= default_llseek,
+>  	.proc_mmap	= mmap_vmcore,
+>  };
+> -- 
+> 2.33.0
+> 
 
 
 _______________________________________________
