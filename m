@@ -1,16 +1,18 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from verein.lst.de ([213.95.11.211])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mzaAa-005siq-8t
- for kexec@lists.infradead.org; Tue, 21 Dec 2021 08:06:49 +0000
-Date: Tue, 21 Dec 2021 16:06:26 +0800
-From: Baoquan He <bhe@redhat.com>
-Subject: Re: [PATCH v3 0/3] Convert vmcore to use an iov_iter
-Message-ID: <20211221080626.GB7986@MiWiFi-R3L-srv>
+ id 1mzaWR-005wYL-1i
+ for kexec@lists.infradead.org; Tue, 21 Dec 2021 08:29:24 +0000
+Date: Tue, 21 Dec 2021 09:29:20 +0100
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 1/3] vmcore: Convert copy_oldmem_page() to take an
+ iov_iter
+Message-ID: <20211221082920.GA6008@lst.de>
 References: <20211213143927.3069508-1-willy@infradead.org>
+ <20211213143927.3069508-2-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213143927.3069508-1-willy@infradead.org>
+In-Reply-To: <20211213143927.3069508-2-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -23,53 +25,12 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Matthew Wilcox (Oracle)" <willy@infradead.org>, akpm@linux-foundation.org
-Cc: Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
+To: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+Cc: Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Dave Young <dyoung@redhat.com>, kexec@lists.infradead.org, Tiezhu Yang <yangtiezhu@loongson.cn>, linux-kernel@vger.kernel.org, Amit Daniel Kachhap <amit.kachhap@arm.com>, Christoph Hellwig <hch@lst.de>, linux-fsdevel@vger.kernel.org
 
-On 12/13/21 at 02:39pm, Matthew Wilcox (Oracle) wrote:
-> For some reason several people have been sending bad patches to fix
-> compiler warnings in vmcore recently.  Here's how it should be done.
-> Compile-tested only on x86.  As noted in the first patch, s390 should
-> take this conversion a bit further, but I'm not inclined to do that
-> work myself.
+Looks good,
 
-Ack this series of patches.
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> 
-> v3:
->  - Send the correct patches this time
-> v2:
->  - Removed unnecessary kernel-doc
->  - Included uio.h to fix compilation problems
->  - Made read_from_oldmem_iter static to avoid compile warnings during the
->    conversion
->  - Use iov_iter_truncate() (Christoph)
-> 
-> Matthew Wilcox (Oracle) (3):
->   vmcore: Convert copy_oldmem_page() to take an iov_iter
->   vmcore: Convert __read_vmcore to use an iov_iter
->   vmcore: Convert read_from_oldmem() to take an iov_iter
-> 
->  arch/arm/kernel/crash_dump.c     |  27 +------
->  arch/arm64/kernel/crash_dump.c   |  29 +------
->  arch/ia64/kernel/crash_dump.c    |  32 +-------
->  arch/mips/kernel/crash_dump.c    |  27 +------
->  arch/powerpc/kernel/crash_dump.c |  35 ++-------
->  arch/riscv/kernel/crash_dump.c   |  26 +------
->  arch/s390/kernel/crash_dump.c    |  13 ++--
->  arch/sh/kernel/crash_dump.c      |  29 ++-----
->  arch/x86/kernel/crash_dump_32.c  |  29 +------
->  arch/x86/kernel/crash_dump_64.c  |  48 ++++--------
->  fs/proc/vmcore.c                 | 129 +++++++++++++------------------
->  include/linux/crash_dump.h       |  19 ++---
->  12 files changed, 122 insertions(+), 321 deletions(-)
-> 
-> -- 
-> 2.33.0
-> 
-
+Reviewed-by: Christoph Hellwig <hch@lst.de>
 
 _______________________________________________
 kexec mailing list
