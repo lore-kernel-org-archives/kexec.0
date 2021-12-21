@@ -1,18 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from verein.lst.de ([213.95.11.211])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mzaWR-005wYL-1i
- for kexec@lists.infradead.org; Tue, 21 Dec 2021 08:29:24 +0000
-Date: Tue, 21 Dec 2021 09:29:20 +0100
+ id 1mzaWr-005wbu-5k
+ for kexec@lists.infradead.org; Tue, 21 Dec 2021 08:29:50 +0000
+Date: Tue, 21 Dec 2021 09:29:45 +0100
 From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 1/3] vmcore: Convert copy_oldmem_page() to take an
- iov_iter
-Message-ID: <20211221082920.GA6008@lst.de>
+Subject: Re: [PATCH v3 2/3] vmcore: Convert __read_vmcore to use an iov_iter
+Message-ID: <20211221082945.GB6008@lst.de>
 References: <20211213143927.3069508-1-willy@infradead.org>
- <20211213143927.3069508-2-willy@infradead.org>
+ <20211213143927.3069508-3-willy@infradead.org>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20211213143927.3069508-2-willy@infradead.org>
+In-Reply-To: <20211213143927.3069508-3-willy@infradead.org>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
