@@ -1,20 +1,20 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from verein.lst.de ([213.95.11.211])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1mzawe-005zeh-6l
- for kexec@lists.infradead.org; Tue, 21 Dec 2021 08:56:29 +0000
-Date: Tue, 21 Dec 2021 09:56:23 +0100
-From: Christoph Hellwig <hch@lst.de>
-Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no
- managed pages in DMA zone
-Message-ID: <20211221085623.GA7733@lst.de>
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com> <20211213134319.GA997240@odroid>
- <20211214053253.GB2216@MiWiFi-R3L-srv>
- <Ybx2szXEgl1tN4MD@ip-172-31-30-232.ap-northeast-1.compute.internal>
+Date: Tue, 21 Dec 2021 23:23:38 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
+ functions reserve_crashkernel()
+Message-ID: <YcJT6lylm1KZ6Hdc@zn.tnic>
+References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
+ <20211210065533.2023-4-thunder.leizhen@huawei.com>
+ <YbntdtQo2jfbO4cO@zn.tnic> <20211216011040.GG3023@MiWiFi-R3L-srv>
+ <9513d74c-d4c7-babd-f823-8999e195d96d@huawei.com>
+ <YbseAX6X1VHUF12f@zn.tnic>
+ <35810a61-604e-9b90-2a7f-cfca6ae042ac@huawei.com>
+ <YbtRs3Tq1UpCOpg8@zn.tnic>
+ <d2b199b7-584e-8ad4-9626-09bb86cf92c5@huawei.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Ybx2szXEgl1tN4MD@ip-172-31-30-232.ap-northeast-1.compute.internal>
+In-Reply-To: <d2b199b7-584e-8ad4-9626-09bb86cf92c5@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,33 +27,25 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
+To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Cc: Baoquan He <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
 
-On Fri, Dec 17, 2021 at 11:38:27AM +0000, Hyeonggon Yoo wrote:
-> My understanding is any buffer requested from kmalloc (without
-> GFP_DMA/DMA32) can be used by device driver because it allocates
-> continuous physical memory. It doesn't mean that buffer allocated
-> with kmalloc is free of addressing limitation.
+On Fri, Dec 17, 2021 at 10:51:04AM +0800, Leizhen (ThunderTown) wrote:
+> [KNL, X86-64], This doc is for X86-64, not for X86-32
 
-Yes.
+reserve_crashkernel() runs on both.
 
-> 
-> the addressing limitation comes from the capability of device, not
-> allocation size. if you allocate memory using alloc_pages() or kmalloc(),
-> the device has same limitation. and vmalloc can't be used for
-> devices because they have no MMU.
+> If there is no such restriction, we can make CRASH_ADDR_LOW_MAX equal
+> to (1ULL << 32) minus 1 on X86_32.
 
-vmalloc can be used as well, it just needs to be setup as a scatterlist
-and needs a little lover for DMA challenged platforms with the
-invalidate_kernel_vmap_range and flush_kernel_vmap_range helpers.
+Again, the 4G limit check is relevant only for 64-bit kernels - not
+32-bit ones.
 
-> But we can map memory outside DMA zone into bounce buffer (which resides
-> in DMA zone) using DMA API.
+-- 
+Regards/Gruss,
+    Boris.
 
-Yes, although in a few specific cases the bounce buffer could also come
-from somewhere else.
-
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
