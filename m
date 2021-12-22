@@ -1,20 +1,17 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Tue, 21 Dec 2021 23:23:38 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v17 03/10] x86: kdump: use macro CRASH_ADDR_LOW_MAX in
- functions reserve_crashkernel()
-Message-ID: <YcJT6lylm1KZ6Hdc@zn.tnic>
-References: <20211210065533.2023-1-thunder.leizhen@huawei.com>
- <20211210065533.2023-4-thunder.leizhen@huawei.com>
- <YbntdtQo2jfbO4cO@zn.tnic> <20211216011040.GG3023@MiWiFi-R3L-srv>
- <9513d74c-d4c7-babd-f823-8999e195d96d@huawei.com>
- <YbseAX6X1VHUF12f@zn.tnic>
- <35810a61-604e-9b90-2a7f-cfca6ae042ac@huawei.com>
- <YbtRs3Tq1UpCOpg8@zn.tnic>
- <d2b199b7-584e-8ad4-9626-09bb86cf92c5@huawei.com>
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n003z-00A9zP-BL
+ for kexec@lists.infradead.org; Wed, 22 Dec 2021 11:45:44 +0000
+Date: Wed, 22 Dec 2021 19:45:18 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 3/3] panic: Allow printing extra panic information on kdump
+Message-ID: <YcMPzs6t8MKpEacq@dhcp-128-65.nay.redhat.com>
+References: <20211109202848.610874-1-gpiccoli@igalia.com>
+ <20211109202848.610874-4-gpiccoli@igalia.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <d2b199b7-584e-8ad4-9626-09bb86cf92c5@huawei.com>
+In-Reply-To: <20211109202848.610874-4-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -27,25 +24,90 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc: Baoquan He <bhe@redhat.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com, akpm@linux-foundation.org, feng.tang@intel.com, siglesias@igalia.com, kernel@gpiccoli.net, kexec@lists.infradead.org
 
-On Fri, Dec 17, 2021 at 10:51:04AM +0800, Leizhen (ThunderTown) wrote:
-> [KNL, X86-64], This doc is for X86-64, not for X86-32
+Hi Guilherme,
 
-reserve_crashkernel() runs on both.
+Thanks for you patch.  Could you add kexec list for any following up
+patches?  This could change kdump behavior so let's see if any comments
+from kexec list.
 
-> If there is no such restriction, we can make CRASH_ADDR_LOW_MAX equal
-> to (1ULL << 32) minus 1 on X86_32.
+Kudos for the lore+lei tool so that I can catch this by seeing this
+coming into Andrews tree :)
+On 11/09/21 at 05:28pm, Guilherme G. Piccoli wrote:
+> Currently we have the "panic_print" parameter/sysctl to allow some extra
+> information to be printed in a panic event. On the other hand, the kdump
+> mechanism allows to kexec a new kernel to collect a memory dump for the
+> running kernel in case of panic.
+> Right now these options are incompatible: the user either sets the kdump
+> or makes use of "panic_print". The code path of "panic_print" isn't
+> reached when kdump is configured.
+> 
+> There are situations though in which this would be interesting: for
+> example, in systems that are very memory constrained, a handcrafted
+> tiny kernel/initrd for kdump might be used in order to only collect the
+> dmesg in kdump kernel. Even more common, systems with no disk space for
+> the full (compressed) memory dump might very well rely in this
+> functionality too, dumping only the dmesg with the additional information
+> provided by "panic_print".
+> 
+> So, this is what the patch does: allows both functionality to co-exist;
+> if "panic_print" is set and the system performs a kdump, the extra
+> information is printed on dmesg before the kexec. Some notes about the
+> design choices here:
+> 
+> (a) We could have introduced a sysctl or an extra bit on "panic_print"
+> to allow enabling the co-existence of kdump and "panic_print", but seems
+> that would be over-engineering; we have 3 cases, let's check how this
+> patch change things:
+> 
+> - if the user have kdump set and not "panic_print", nothing changes;
+> - if the user have "panic_print" set and not kdump, nothing changes;
+> - if both are enabled, now we print the extra information before kdump,
+> which is exactly the goal of the patch (and should be the goal of the
+> user, since they enabled both options).
 
-Again, the 4G limit check is relevant only for 64-bit kernels - not
-32-bit ones.
+People may enable kdump crashkernel and panic_print together but
+they are not aware the extra panic print could cause kdump not reliable
+(in theory).  So at least some words in kernel-parameters.txt would
+help.
+ 
+> 
+> (b) We assume that the code path won't return from __crash_kexec()
+> so we didn't guard against double execution of panic_print_sys_info().
+> 
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+>  kernel/panic.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 5da71fa4e5f1..439dbf93b406 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -243,6 +243,13 @@ void panic(const char *fmt, ...)
+>  	 */
+>  	kgdb_panic(buf);
+>  
+> +	/*
+> +	 * If we have a kdump kernel loaded, give a chance to panic_print
+> +	 * show some extra information on kernel log if it was set...
+> +	 */
+> +	if (kexec_crash_loaded())
+> +		panic_print_sys_info();
+> +
+>  	/*
+>  	 * If we have crashed and we have a crash kernel loaded let it handle
+>  	 * everything else.
+> -- 
+> 2.33.1
+> 
+> 
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks
+Dave
 
-https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
