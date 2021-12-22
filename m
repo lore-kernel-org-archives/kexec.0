@@ -1,24 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1n00rl-00AIBS-OR
- for kexec@lists.infradead.org; Wed, 22 Dec 2021 12:37:11 +0000
-Received: by mail-pg1-x52c.google.com with SMTP id 2so1983231pgb.12
- for <kexec@lists.infradead.org>; Wed, 22 Dec 2021 04:37:09 -0800 (PST)
-Date: Wed, 22 Dec 2021 12:37:03 +0000
-From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
-Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
- pages in DMA zone
-Message-ID: <YcMb7+RESj1nEx9l@ip-172-31-30-232.ap-northeast-1.compute.internal>
-References: <20211213122712.23805-1-bhe@redhat.com>
- <20211213122712.23805-6-bhe@redhat.com>
- <20211213134319.GA997240@odroid>
- <20211214053253.GB2216@MiWiFi-R3L-srv>
- <Ybx2szXEgl1tN4MD@ip-172-31-30-232.ap-northeast-1.compute.internal>
- <20211221085623.GA7733@lst.de>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Subject: [PATCH v18 01/17] x86/setup: Move CRASH_ALIGN and
+ CRASH_ADDR_{LOW|HIGH}_MAX to asm/kexec.h
+Date: Wed, 22 Dec 2021 21:08:04 +0800
+Message-ID: <20211222130820.1754-2-thunder.leizhen@huawei.com>
+In-Reply-To: <20211222130820.1754-1-thunder.leizhen@huawei.com>
+References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211221085623.GA7733@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -31,49 +19,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Christoph Hellwig <hch@lst.de>
-Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
+ Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
+ Donnelly <John.p.donnelly@oracle.com>
 
-Hello Christoph.
+From: Chen Zhou <chenzhou10@huawei.com>
 
-On Tue, Dec 21, 2021 at 09:56:23AM +0100, Christoph Hellwig wrote:
-> On Fri, Dec 17, 2021 at 11:38:27AM +0000, Hyeonggon Yoo wrote:
-> > My understanding is any buffer requested from kmalloc (without
-> > GFP_DMA/DMA32) can be used by device driver because it allocates
-> > continuous physical memory. It doesn't mean that buffer allocated
-> > with kmalloc is free of addressing limitation.
-> 
-> Yes.
-> 
-> > 
-> > the addressing limitation comes from the capability of device, not
-> > allocation size. if you allocate memory using alloc_pages() or kmalloc(),
-> > the device has same limitation. and vmalloc can't be used for
-> > devices because they have no MMU.
-> 
-> vmalloc can be used as well, it just needs to be setup as a scatterlist
-> and needs a little lover for DMA challenged platforms with the
-> invalidate_kernel_vmap_range and flush_kernel_vmap_range helpers.
+We want to make function reserve_crashkernel[_low](), which is implemented
+by X86, available to other architectures. It references macro CRASH_ALIGN
+and will be moved to public crash_core.c. But the defined values of
+CRASH_ALIGN may be different in different architectures. So moving the
+definition of CRASH_ALIGN to asm/kexec.h is a good choice.
 
-Oh I misunderstood this. Underlying physical address of vmalloc()-allocated memory
-can be mapped using DMA API, and it needs to be setup as scatterlist because
-the allocated memory is not physically continuous. Right?
+The reason for moving CRASH_ADDR_{LOW|HIGH}_MAX is the same as above.
 
-BTW, looking at the API I think the scsi case can be converted to use
-dma_alloc_pages(). but driver requires 512 bytes of buffer and the API
-supports allocating by at least page size.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ arch/x86/include/asm/kexec.h | 24 ++++++++++++++++++++++++
+ arch/x86/kernel/setup.c      | 24 ------------------------
+ 2 files changed, 24 insertions(+), 24 deletions(-)
 
-It's not a big problem as it allocates a single buffer but in other
-cases maybe not. Can't we use dma pool for non-coherent pages?
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 11b7c06e2828c30..a0223a6c0238a15 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -18,6 +18,30 @@
+ 
+ # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ 
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN		SZ_16M
++
++/*
++ * Keep the crash kernel below this limit.
++ *
++ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
++ * due to mapping restrictions.
++ *
++ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
++ * the upper limit of system RAM in 4-level paging mode. Since the kdump
++ * jump could be from 5-level paging to 4-level paging, the jump will fail if
++ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
++ * no good way to detect the paging mode of the target kernel which will be
++ * loaded for dumping.
++ */
++#ifdef CONFIG_X86_32
++# define CRASH_ADDR_LOW_MAX	SZ_512M
++# define CRASH_ADDR_HIGH_MAX	SZ_512M
++#else
++# define CRASH_ADDR_LOW_MAX	SZ_4G
++# define CRASH_ADDR_HIGH_MAX	SZ_64T
++#endif
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/string.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 6a190c7f4d71b05..ae8f63661363e25 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -392,30 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ 
+-/* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		SZ_16M
+-
+-/*
+- * Keep the crash kernel below this limit.
+- *
+- * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
+- * due to mapping restrictions.
+- *
+- * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
+- * the upper limit of system RAM in 4-level paging mode. Since the kdump
+- * jump could be from 5-level paging to 4-level paging, the jump will fail if
+- * the kernel is put above 64 TB, and during the 1st kernel bootup there's
+- * no good way to detect the paging mode of the target kernel which will be
+- * loaded for dumping.
+- */
+-#ifdef CONFIG_X86_32
+-# define CRASH_ADDR_LOW_MAX	SZ_512M
+-# define CRASH_ADDR_HIGH_MAX	SZ_512M
+-#else
+-# define CRASH_ADDR_LOW_MAX	SZ_4G
+-# define CRASH_ADDR_HIGH_MAX	SZ_64T
+-#endif
+-
+ static int __init reserve_crashkernel_low(void)
+ {
+ #ifdef CONFIG_X86_64
+-- 
+2.25.1
 
-Thanks,
-Hyeonggon.
-
-> > But we can map memory outside DMA zone into bounce buffer (which resides
-> > in DMA zone) using DMA API.
-> 
-> Yes, although in a few specific cases the bounce buffer could also come
-> from somewhere else.
 
 _______________________________________________
 kexec mailing list
