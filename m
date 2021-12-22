@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v18 11/17] kdump: Make parse_crashkernel_{high|low} static
-Date: Wed, 22 Dec 2021 21:08:14 +0800
-Message-ID: <20211222130820.1754-12-thunder.leizhen@huawei.com>
+Subject: [PATCH v18 12/17] kdump: Reduce unused parameters of
+ parse_crashkernel_{high|low}
+Date: Wed, 22 Dec 2021 21:08:15 +0800
+Message-ID: <20211222130820.1754-13-thunder.leizhen@huawei.com>
 In-Reply-To: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -23,74 +24,64 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-Currently, parse_crashkernel_{high|low} is only referenced by
-parse_crashkernel_in_order(), and they are in the same file. So make it
-static, and move it into "#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL".
+The parameters 'system_ram' and 'crash_base' is only needed by the case of
+"crashkernel=X@[offset]". The argument list of parse_crashkernel_suffix()
+can help prove this point.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- include/linux/crash_core.h |  4 ----
- kernel/crash_core.c        | 19 ++++++++++---------
- 2 files changed, 10 insertions(+), 13 deletions(-)
+ kernel/crash_core.c | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index de62a722431e7db..529a0a783190bfe 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -79,9 +79,5 @@ void final_note(Elf_Word *buf);
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
- 
- #endif /* LINUX_CRASH_CORE_H */
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 496dae2718cf026..a037076b89a9bb2 100644
+index a037076b89a9bb2..67f5065e3c3cfcc 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -279,7 +279,15 @@ int __init parse_crashkernel(char *cmdline,
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_NULL);
- }
+@@ -288,19 +288,19 @@ int __init parse_crashkernel(char *cmdline,
  
--int __init parse_crashkernel_high(char *cmdline,
-+
-+/*
-+ * --------- Crashkernel reservation ------------------------------
-+ */
-+
-+#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
-+
-+#ifdef CONFIG_64BIT
-+static int __init parse_crashkernel_high(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
-@@ -287,7 +295,7 @@ int __init parse_crashkernel_high(char *cmdline,
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_HIGH);
- }
- 
--int __init parse_crashkernel_low(char *cmdline,
-+static int __init parse_crashkernel_low(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
-@@ -295,13 +303,6 @@ int __init parse_crashkernel_low(char *cmdline,
- 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_LOW);
- }
- 
--/*
-- * --------- Crashkernel reservation ------------------------------
-- */
--
--#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
--
--#ifdef CONFIG_64BIT
- static int __init reserve_crashkernel_low(unsigned long long low_size)
+ #ifdef CONFIG_64BIT
+ static int __init parse_crashkernel_high(char *cmdline,
+-			     unsigned long long system_ram,
+-			     unsigned long long *crash_size,
+-			     unsigned long long *crash_base)
++					 unsigned long long *crash_size)
  {
- 	unsigned long long low_base = 0;
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_HIGH);
++	unsigned long long base;
++
++	return __parse_crashkernel(cmdline, 0, crash_size, &base, SUFFIX_HIGH);
+ }
+ 
+ static int __init parse_crashkernel_low(char *cmdline,
+-			     unsigned long long system_ram,
+-			     unsigned long long *crash_size,
+-			     unsigned long long *crash_base)
++					unsigned long long *crash_size)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_LOW);
++	unsigned long long base;
++
++	return __parse_crashkernel(cmdline, 0, crash_size, &base, SUFFIX_LOW);
+ }
+ 
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+@@ -368,14 +368,14 @@ static int __init parse_crashkernel_in_order(char *cmdline,
+ 
+ #ifdef CONFIG_64BIT
+ 	/* crashkernel=X,high */
+-	ret = parse_crashkernel_high(cmdline, system_ram, crash_size, crash_base);
++	ret = parse_crashkernel_high(cmdline, crash_size);
+ 	if (ret || crash_size <= 0)
+ 		return CRASHKERNEL_MEM_NONE;
+ 
+ 	flag = CRASHKERNEL_MEM_HIGH;
+ 
+ 	/* crashkernel=Y,low */
+-	ret = parse_crashkernel_low(cmdline, system_ram, low_size, crash_base);
++	ret = parse_crashkernel_low(cmdline, low_size);
+ 	if (!ret)
+ 		flag |= CRASHKERNEL_MEM_LOW;
+ #endif
 -- 
 2.25.1
 
