@@ -1,18 +1,24 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from fanzine2.igalia.com ([213.97.179.56])
+Received: from mail-pg1-x52c.google.com ([2607:f8b0:4864:20::52c])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1n00pE-00AHqt-Ge
- for kexec@lists.infradead.org; Wed, 22 Dec 2021 12:34:33 +0000
-Subject: Re: [PATCH 3/3] panic: Allow printing extra panic information on kdump
-References: <20211109202848.610874-1-gpiccoli@igalia.com>
- <20211109202848.610874-4-gpiccoli@igalia.com>
- <YcMPzs6t8MKpEacq@dhcp-128-65.nay.redhat.com>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-Message-ID: <2d24ea70-e315-beb5-0028-683880c438be@igalia.com>
-Date: Wed, 22 Dec 2021 09:34:13 -0300
+ id 1n00rl-00AIBS-OR
+ for kexec@lists.infradead.org; Wed, 22 Dec 2021 12:37:11 +0000
+Received: by mail-pg1-x52c.google.com with SMTP id 2so1983231pgb.12
+ for <kexec@lists.infradead.org>; Wed, 22 Dec 2021 04:37:09 -0800 (PST)
+Date: Wed, 22 Dec 2021 12:37:03 +0000
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no managed
+ pages in DMA zone
+Message-ID: <YcMb7+RESj1nEx9l@ip-172-31-30-232.ap-northeast-1.compute.internal>
+References: <20211213122712.23805-1-bhe@redhat.com>
+ <20211213122712.23805-6-bhe@redhat.com>
+ <20211213134319.GA997240@odroid>
+ <20211214053253.GB2216@MiWiFi-R3L-srv>
+ <Ybx2szXEgl1tN4MD@ip-172-31-30-232.ap-northeast-1.compute.internal>
+ <20211221085623.GA7733@lst.de>
 MIME-Version: 1.0
-In-Reply-To: <YcMPzs6t8MKpEacq@dhcp-128-65.nay.redhat.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211221085623.GA7733@lst.de>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,39 +31,49 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Young <dyoung@redhat.com>
-Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com, akpm@linux-foundation.org, feng.tang@intel.com, siglesias@igalia.com, kernel@gpiccoli.net, kexec@lists.infradead.org
+To: Christoph Hellwig <hch@lst.de>
+Cc: Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
 
-On 22/12/2021 08:45, Dave Young wrote:
-> Hi Guilherme,
+Hello Christoph.
+
+On Tue, Dec 21, 2021 at 09:56:23AM +0100, Christoph Hellwig wrote:
+> On Fri, Dec 17, 2021 at 11:38:27AM +0000, Hyeonggon Yoo wrote:
+> > My understanding is any buffer requested from kmalloc (without
+> > GFP_DMA/DMA32) can be used by device driver because it allocates
+> > continuous physical memory. It doesn't mean that buffer allocated
+> > with kmalloc is free of addressing limitation.
 > 
-> Thanks for you patch.  Could you add kexec list for any following up
-> patches?  This could change kdump behavior so let's see if any comments
-> from kexec list.
+> Yes.
 > 
-> Kudos for the lore+lei tool so that I can catch this by seeing this
-> coming into Andrews tree :)
+> > 
+> > the addressing limitation comes from the capability of device, not
+> > allocation size. if you allocate memory using alloc_pages() or kmalloc(),
+> > the device has same limitation. and vmalloc can't be used for
+> > devices because they have no MMU.
+> 
+> vmalloc can be used as well, it just needs to be setup as a scatterlist
+> and needs a little lover for DMA challenged platforms with the
+> invalidate_kernel_vmap_range and flush_kernel_vmap_range helpers.
 
-Hi Dave, I'm really sorry for not adding the kexec list, I forgot. But I
-will do next time for sure, my apologies. And thanks for taking a look
-after you noticed that on lore, I appreciate your feedback!
+Oh I misunderstood this. Underlying physical address of vmalloc()-allocated memory
+can be mapped using DMA API, and it needs to be setup as scatterlist because
+the allocated memory is not physically continuous. Right?
 
-> [...]
-> People may enable kdump crashkernel and panic_print together but
-> they are not aware the extra panic print could cause kdump not reliable
-> (in theory).  So at least some words in kernel-parameters.txt would
-> help.
->  
+BTW, looking at the API I think the scsi case can be converted to use
+dma_alloc_pages(). but driver requires 512 bytes of buffer and the API
+supports allocating by at least page size.
 
-That makes sense, I'll improve that in a follow-up patch, how about
-that? Indeed it's a good idea to let people be sure that panic_print
-might affect kdump reliability, although I consider the risk to be
-pretty low. And I'll loop the kexec list for sure!
+It's not a big problem as it allocates a single buffer but in other
+cases maybe not. Can't we use dma pool for non-coherent pages?
 
-Cheers,
+Thanks,
+Hyeonggon.
 
-
-Guilherme
+> > But we can map memory outside DMA zone into bounce buffer (which resides
+> > in DMA zone) using DMA API.
+> 
+> Yes, although in a few specific cases the bounce buffer could also come
+> from somewhere else.
 
 _______________________________________________
 kexec mailing list
