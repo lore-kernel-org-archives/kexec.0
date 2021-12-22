@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v18 01/17] x86/setup: Move CRASH_ALIGN and
- CRASH_ADDR_{LOW|HIGH}_MAX to asm/kexec.h
-Date: Wed, 22 Dec 2021 21:08:04 +0800
-Message-ID: <20211222130820.1754-2-thunder.leizhen@huawei.com>
+Subject: [PATCH v18 03/17] x86/setup: Adjust the range of codes separated by
+ CONFIG_X86_64
+Date: Wed, 22 Dec 2021 21:08:06 +0800
+Message-ID: <20211222130820.1754-4-thunder.leizhen@huawei.com>
 In-Reply-To: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -24,94 +24,55 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-From: Chen Zhou <chenzhou10@huawei.com>
+Currently, only X86_64 requires that at least 256M low memory be reserved.
+X86_32 does not have this requirement. So move all the code related to
+reserve_crashkernel_low() into macro CONFIG_X86_64.
 
-We want to make function reserve_crashkernel[_low](), which is implemented
-by X86, available to other architectures. It references macro CRASH_ALIGN
-and will be moved to public crash_core.c. But the defined values of
-CRASH_ALIGN may be different in different architectures. So moving the
-definition of CRASH_ALIGN to asm/kexec.h is a good choice.
-
-The reason for moving CRASH_ADDR_{LOW|HIGH}_MAX is the same as above.
-
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/x86/include/asm/kexec.h | 24 ++++++++++++++++++++++++
- arch/x86/kernel/setup.c      | 24 ------------------------
- 2 files changed, 24 insertions(+), 24 deletions(-)
+ arch/x86/kernel/setup.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 11b7c06e2828c30..a0223a6c0238a15 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -18,6 +18,30 @@
- 
- # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
- 
-+/* 16M alignment for crash kernel regions */
-+#define CRASH_ALIGN		SZ_16M
-+
-+/*
-+ * Keep the crash kernel below this limit.
-+ *
-+ * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
-+ * due to mapping restrictions.
-+ *
-+ * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
-+ * the upper limit of system RAM in 4-level paging mode. Since the kdump
-+ * jump could be from 5-level paging to 4-level paging, the jump will fail if
-+ * the kernel is put above 64 TB, and during the 1st kernel bootup there's
-+ * no good way to detect the paging mode of the target kernel which will be
-+ * loaded for dumping.
-+ */
-+#ifdef CONFIG_X86_32
-+# define CRASH_ADDR_LOW_MAX	SZ_512M
-+# define CRASH_ADDR_HIGH_MAX	SZ_512M
-+#else
-+# define CRASH_ADDR_LOW_MAX	SZ_4G
-+# define CRASH_ADDR_HIGH_MAX	SZ_64T
-+#endif
-+
- #ifndef __ASSEMBLY__
- 
- #include <linux/string.h>
 diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 6a190c7f4d71b05..ae8f63661363e25 100644
+index acf2f2eedfe3415..d9080bfa131a654 100644
 --- a/arch/x86/kernel/setup.c
 +++ b/arch/x86/kernel/setup.c
-@@ -392,30 +392,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+@@ -392,9 +392,9 @@ static void __init memblock_x86_reserve_range_setup_data(void)
  
  #ifdef CONFIG_KEXEC_CORE
  
--/* 16M alignment for crash kernel regions */
--#define CRASH_ALIGN		SZ_16M
--
--/*
-- * Keep the crash kernel below this limit.
-- *
-- * Earlier 32-bits kernels would limit the kernel to the low 512 MB range
-- * due to mapping restrictions.
-- *
-- * 64-bit kdump kernels need to be restricted to be under 64 TB, which is
-- * the upper limit of system RAM in 4-level paging mode. Since the kdump
-- * jump could be from 5-level paging to 4-level paging, the jump will fail if
-- * the kernel is put above 64 TB, and during the 1st kernel bootup there's
-- * no good way to detect the paging mode of the target kernel which will be
-- * loaded for dumping.
-- */
--#ifdef CONFIG_X86_32
--# define CRASH_ADDR_LOW_MAX	SZ_512M
--# define CRASH_ADDR_HIGH_MAX	SZ_512M
--#else
--# define CRASH_ADDR_LOW_MAX	SZ_4G
--# define CRASH_ADDR_HIGH_MAX	SZ_64T
--#endif
--
++#ifdef CONFIG_X86_64
  static int __init reserve_crashkernel_low(void)
  {
- #ifdef CONFIG_X86_64
+-#ifdef CONFIG_X86_64
+ 	unsigned long long base, low_base = 0, low_size = 0;
+ 	unsigned long low_mem_limit;
+ 	int ret;
+@@ -434,9 +434,10 @@ static int __init reserve_crashkernel_low(void)
+ 
+ 	crashk_low_res.start = low_base;
+ 	crashk_low_res.end   = low_base + low_size - 1;
+-#endif
++
+ 	return 0;
+ }
++#endif
+ 
+ static void __init reserve_crashkernel(void)
+ {
+@@ -490,10 +491,12 @@ static void __init reserve_crashkernel(void)
+ 		}
+ 	}
+ 
++#ifdef CONFIG_X86_64
+ 	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
+ 	}
++#endif
+ 
+ 	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+ 		(unsigned long)(crash_size >> 20),
 -- 
 2.25.1
 
