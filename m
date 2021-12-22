@@ -1,9 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v18 07/17] x86/setup: Eliminate a magic number in
- reserve_crashkernel()
-Date: Wed, 22 Dec 2021 21:08:10 +0800
-Message-ID: <20211222130820.1754-8-thunder.leizhen@huawei.com>
+Subject: [PATCH v18 11/17] kdump: Make parse_crashkernel_{high|low} static
+Date: Wed, 22 Dec 2021 21:08:14 +0800
+Message-ID: <20211222130820.1754-12-thunder.leizhen@huawei.com>
 In-Reply-To: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -24,30 +23,74 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-From: Chen Zhou <chenzhou10@huawei.com>
+Currently, parse_crashkernel_{high|low} is only referenced by
+parse_crashkernel_in_order(), and they are in the same file. So make it
+static, and move it into "#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL".
 
-Replace '(1ULL << 32)' with CRASH_ADDR_LOW_MAX to improve readability,
-they are equal.
-
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/x86/kernel/setup.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/crash_core.h |  4 ----
+ kernel/crash_core.c        | 19 ++++++++++---------
+ 2 files changed, 10 insertions(+), 13 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 52aa925877ca787..abff57ffbe92884 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -523,7 +523,7 @@ static void __init reserve_crashkernel(void)
- 	}
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index de62a722431e7db..529a0a783190bfe 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -79,9 +79,5 @@ void final_note(Elf_Word *buf);
  
- #ifdef CONFIG_X86_64
--	if (crash_base >= (1ULL << 32)) {
-+	if (crash_base >= CRASH_ADDR_LOW_MAX) {
- 		/*
- 		 * Ensure that at least 256M extra low memory is allocated for
- 		 * DMA buffers and swiotlb, if low memory size is not specified.
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+ 
+ #endif /* LINUX_CRASH_CORE_H */
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 496dae2718cf026..a037076b89a9bb2 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -279,7 +279,15 @@ int __init parse_crashkernel(char *cmdline,
+ 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_NULL);
+ }
+ 
+-int __init parse_crashkernel_high(char *cmdline,
++
++/*
++ * --------- Crashkernel reservation ------------------------------
++ */
++
++#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
++
++#ifdef CONFIG_64BIT
++static int __init parse_crashkernel_high(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+@@ -287,7 +295,7 @@ int __init parse_crashkernel_high(char *cmdline,
+ 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_HIGH);
+ }
+ 
+-int __init parse_crashkernel_low(char *cmdline,
++static int __init parse_crashkernel_low(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+@@ -295,13 +303,6 @@ int __init parse_crashkernel_low(char *cmdline,
+ 	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base, SUFFIX_LOW);
+ }
+ 
+-/*
+- * --------- Crashkernel reservation ------------------------------
+- */
+-
+-#ifdef CONFIG_ARCH_WANT_RESERVE_CRASH_KERNEL
+-
+-#ifdef CONFIG_64BIT
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ {
+ 	unsigned long long low_base = 0;
 -- 
 2.25.1
 
