@@ -1,14 +1,14 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Message-ID: <e9f66aca-f399-bf79-3e01-91d419442788@oracle.com>
-Date: Thu, 23 Dec 2021 09:48:18 -0600
-Subject: Re: [PATCH v18 15/17] of: fdt: Aggregate the processing of
- "linux,usable-memory-range"
-Content-Language: en-US
+Date: Thu, 23 Dec 2021 18:26:06 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCH v18 02/17] x86/setup: Move xen_pv_domain() check and
+ insert_resource() to setup_arch()
+Message-ID: <YcSxLodOnxXHx0sV@zn.tnic>
 References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-16-thunder.leizhen@huawei.com>
-From: Dave Kleikamp <dave.kleikamp@oracle.com>
-In-Reply-To: <20211222130820.1754-16-thunder.leizhen@huawei.com>
+ <20211222130820.1754-3-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20211222130820.1754-3-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,95 +17,93 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, Pingfan Liu <kernelfans@gmail.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>
 
-On 12/22/21 7:08AM, Zhen Lei wrote:
-> Currently, we parse the "linux,usable-memory-range" property in
-> early_init_dt_scan_chosen(), to obtain the specified memory range of the
-> crash kernel. We then reserve the required memory after
-> early_init_dt_scan_memory() has identified all available physical memory.
-> Because the two pieces of code are separated far, the readability and
-> maintainability are reduced. So bring them together.
-
-Rob Herring is pushing a modified version of this patch (changes made by
-Pingfan Liu) to fix a regression. This will cause a conflict when it hits
-mainline.
-
-https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git/log/?h=dt/linus
-
-https://lore.kernel.org/linux-arm-kernel/20211214040157.27443-1-kernelfans@gmail.com/
-
+On Wed, Dec 22, 2021 at 09:08:05PM +0800, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
 > 
-> Suggested-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
-> ---
->   drivers/of/fdt.c | 15 +++++++++++----
->   1 file changed, 11 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index bdca35284cebd56..37b477a51175359 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -965,8 +965,7 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
->   		 elfcorehdr_addr, elfcorehdr_size);
->   }
->   
-> -static phys_addr_t cap_mem_addr;
-> -static phys_addr_t cap_mem_size;
-> +static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
->   
->   /**
->    * early_init_dt_check_for_usable_mem_range - Decode usable memory range
-> @@ -977,6 +976,11 @@ static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
->   {
->   	const __be32 *prop;
->   	int len;
-> +	phys_addr_t cap_mem_addr;
-> +	phys_addr_t cap_mem_size;
-> +
-> +	if ((long)node < 0)
-> +		return;
->   
->   	pr_debug("Looking for usable-memory-range property... ");
->   
-> @@ -989,6 +993,8 @@ static void __init early_init_dt_check_for_usable_mem_range(unsigned long node)
->   
->   	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
->   		 &cap_mem_size);
-> +
-> +	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
->   }
->   
->   #ifdef CONFIG_SERIAL_EARLYCON
-> @@ -1137,9 +1143,10 @@ int __init early_init_dt_scan_chosen(unsigned long node, const char *uname,
->   	    (strcmp(uname, "chosen") != 0 && strcmp(uname, "chosen@0") != 0))
->   		return 0;
->   
-> +	chosen_node_offset = node;
-> +
->   	early_init_dt_check_for_initrd(node);
->   	early_init_dt_check_for_elfcorehdr(node);
-> -	early_init_dt_check_for_usable_mem_range(node);
->   
->   	/* Retrieve command line */
->   	p = of_get_flat_dt_prop(node, "bootargs", &l);
-> @@ -1275,7 +1282,7 @@ void __init early_init_dt_scan_nodes(void)
->   	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
->   
->   	/* Handle linux,usable-memory-range property */
-> -	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
-> +	early_init_dt_check_for_usable_mem_range(chosen_node_offset);
->   }
->   
->   bool __init early_init_dt_scan(void *params)
+> We will make the functions reserve_crashkernel() as generic, the
+> xen_pv_domain() check in reserve_crashkernel() is relevant only to
+> x86,
 
+Why is that so? Is Xen-PV x86-only?
+
+> the same as insert_resource() in reserve_crashkernel[_low]().
+
+Why?
+
+Looking at
+
+  0212f9159694 ("x86: Add Crash kernel low reservation")
+
+it *surprisingly* explains why that resources thing is being added:
+
+    We need to add another range in /proc/iomem like "Crash kernel low",
+    so kexec-tools could find that info and append to kdump kernel
+    command line.
+
+Then,
+
+  157752d84f5d ("kexec: use Crash kernel for Crash kernel low")
+
+renamed it because, as it states, kexec-tools was taught to handle
+multiple resources of the same name.
+
+So why does kexec-tools on arm *not* need those iomem resources? How
+does it parse the ranges there? Questions over questions...
+
+So last time I told you to sit down and take your time with this cleanup.
+From reading this here, it doesn't look like it. Rather, it looks like
+hastily done in a hurry and hurrying stuff doesn't help you one bit - it
+actually makes it worse.
+
+Your commit messages need to explain *why* a change is being done and
+why is that ok. This one doesn't.
+
+> @@ -1120,7 +1109,17 @@ void __init setup_arch(char **cmdline_p)
+>  	 * Reserve memory for crash kernel after SRAT is parsed so that it
+>  	 * won't consume hotpluggable memory.
+>  	 */
+> -	reserve_crashkernel();
+> +#ifdef CONFIG_KEXEC_CORE
+> +	if (xen_pv_domain())
+> +		pr_info("Ignoring crashkernel for a Xen PV domain\n");
+
+This is wrong - the check is currently being done inside
+reserve_crashkernel(), *after* it has parsed a crashkernel= cmdline
+correctly - and not before.
+
+Your change would print on Xen PV, regardless of whether it has received
+crashkernel= on the cmdline or not.
+
+This is exactly why I say that making those functions generic and shared
+might not be such a good idea, after all, because then you'd have to
+sprinkle around arch-specific stuff.
+
+One of the ways how to address this particular case here would be:
+
+1. Add a x86-specific wrapper around parse_crashkernel() which does
+all the parsing. When that wrapper finishes, you should have parsed
+everything that has crashkernel= on the cmdline.
+
+2. At the end of that wrapper, you do arch-specific checks and setup
+like the xen_pv_domain() one.
+
+3. Now, you do reserve_crashkernel(), if those checks pass.
+
+The question is, whether the flow on arm64 can do the same. Probably but
+it needs careful auditing.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
 _______________________________________________
 kexec mailing list
