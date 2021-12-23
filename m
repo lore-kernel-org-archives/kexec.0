@@ -1,14 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v18 01/17] x86/setup: Move CRASH_ALIGN and
- CRASH_ADDR_{LOW|HIGH}_MAX to asm/kexec.h
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-2-thunder.leizhen@huawei.com> <YcON5Y7DKitiQhHu@zn.tnic>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <c7b8ed2f-7280-faf9-66e8-ad329dbc10f6@huawei.com>
-Date: Thu, 23 Dec 2021 10:09:25 +0800
+Received: from verein.lst.de ([213.95.11.211])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n0Jq9-00CLTf-93
+ for kexec@lists.infradead.org; Thu, 23 Dec 2021 08:52:46 +0000
+Date: Thu, 23 Dec 2021 09:52:38 +0100
+From: Christoph Hellwig <hch@lst.de>
+Subject: Re: [PATCH v3 5/5] mm/slub: do not create dma-kmalloc if no
+ managed pages in DMA zone
+Message-ID: <20211223085238.GA7555@lst.de>
+References: <20211213122712.23805-1-bhe@redhat.com>
+ <20211213122712.23805-6-bhe@redhat.com> <20211213134319.GA997240@odroid>
+ <20211214053253.GB2216@MiWiFi-R3L-srv>
+ <Ybx2szXEgl1tN4MD@ip-172-31-30-232.ap-northeast-1.compute.internal>
+ <20211221085623.GA7733@lst.de>
+ <YcMb7+RESj1nEx9l@ip-172-31-30-232.ap-northeast-1.compute.internal>
 MIME-Version: 1.0
-In-Reply-To: <YcON5Y7DKitiQhHu@zn.tnic>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <YcMb7+RESj1nEx9l@ip-172-31-30-232.ap-northeast-1.compute.internal>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,62 +29,28 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
- Donnelly <John.p.donnelly@oracle.com>
+To: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Cc: Christoph Hellwig <hch@lst.de>, Baoquan He <bhe@redhat.com>, linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, stable@vger.kernel.org, Pekka Enberg <penberg@kernel.org>, David Rientjes <rientjes@google.com>, Joonsoo Kim <iamjoonsoo.kim@lge.com>, Vlastimil Babka <vbabka@suse.cz>
 
+On Wed, Dec 22, 2021 at 12:37:03PM +0000, Hyeonggon Yoo wrote:
+> Oh I misunderstood this. Underlying physical address of vmalloc()-allocated memory
+> can be mapped using DMA API, and it needs to be setup as scatterlist because
+> the allocated memory is not physically continuous. Right?
 
+Yes.
 
-On 2021/12/23 4:43, Borislav Petkov wrote:
-> On Wed, Dec 22, 2021 at 09:08:04PM +0800, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
->>
->> We want to make function reserve_crashkernel[_low](), which is implemented
->   ^^
-> 
-> Please use passive voice in your commit message: no "we" or "I", etc,
-> and describe your changes in imperative mood.
+> BTW, looking at the API I think the scsi case can be converted to use
+> dma_alloc_pages(). but driver requires 512 bytes of buffer and the API
+> supports allocating by at least page size.
 
-My bad language habits. I've made this mistake several times.
+Overallocating is not generally a problem, but if the allocations are for
+a slow path it might make more sense to stick to dma_map_* and bounce
+buffer if needed.
 
-> 
-> Also, pls read section "2) Describe your changes" in
-> Documentation/process/submitting-patches.rst for more details.
-> 
-> Bottom line is: personal pronouns are ambiguous in text, especially with
-> so many parties/companies/etc developing the kernel so let's avoid them
-> please.
+> It's not a big problem as it allocates a single buffer but in other
+> cases maybe not. Can't we use dma pool for non-coherent pages?
 
-OK, I'll check the description of the other patches.
-
-> 
->> by X86, available to other architectures. It references macro CRASH_ALIGN
-> 
-> "x86"
-
-OK
-
-> 
->> and will be moved to public crash_core.c. But the defined values of
->> CRASH_ALIGN may be different in different architectures. So moving the
->> definition of CRASH_ALIGN to asm/kexec.h is a good choice.
->>
->> The reason for moving CRASH_ADDR_{LOW|HIGH}_MAX is the same as above.
-> 
-> This commit message needs to say something along the lines of:
-> 
-> "Move CRASH_ALIGN and ... to the arch-specific header in preparation
-> of making reserve_crashkernel[_low]() generic, used by other
-> architectures."
-
-OK, I will use this one, thanks.
-
-By the way, patch 0004-0006 were written based on your suggestion. Can you
-take a moment to review it? I think I forgot to add "Suggested-by".
-
-> 
-> or so.
-> 
+No.
 
 _______________________________________________
 kexec mailing list
