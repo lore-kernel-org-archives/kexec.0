@@ -1,14 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Date: Thu, 23 Dec 2021 18:26:06 +0100
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCH v18 02/17] x86/setup: Move xen_pv_domain() check and
- insert_resource() to setup_arch()
-Message-ID: <YcSxLodOnxXHx0sV@zn.tnic>
+Subject: Re: [PATCH v18 15/17] of: fdt: Aggregate the processing of
+ "linux,usable-memory-range"
 References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-3-thunder.leizhen@huawei.com>
+ <20211222130820.1754-16-thunder.leizhen@huawei.com>
+ <e9f66aca-f399-bf79-3e01-91d419442788@oracle.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <de34f381-6165-7c30-b78d-e4b80479ca1d@huawei.com>
+Date: Fri, 24 Dec 2021 09:03:45 +0800
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20211222130820.1754-3-thunder.leizhen@huawei.com>
+In-Reply-To: <e9f66aca-f399-bf79-3e01-91d419442788@oracle.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -17,95 +18,75 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Zhen Lei <thunder.leizhen@huawei.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>
+To: Dave Kleikamp <dave.kleikamp@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
+Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
+ Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, Pingfan Liu <kernelfans@gmail.com>
 
-On Wed, Dec 22, 2021 at 09:08:05PM +0800, Zhen Lei wrote:
-> From: Chen Zhou <chenzhou10@huawei.com>
-> 
-> We will make the functions reserve_crashkernel() as generic, the
-> xen_pv_domain() check in reserve_crashkernel() is relevant only to
-> x86,
-
-Why is that so? Is Xen-PV x86-only?
-
-> the same as insert_resource() in reserve_crashkernel[_low]().
-
-Why?
-
-Looking at
-
-  0212f9159694 ("x86: Add Crash kernel low reservation")
-
-it *surprisingly* explains why that resources thing is being added:
-
-    We need to add another range in /proc/iomem like "Crash kernel low",
-    so kexec-tools could find that info and append to kdump kernel
-    command line.
-
-Then,
-
-  157752d84f5d ("kexec: use Crash kernel for Crash kernel low")
-
-renamed it because, as it states, kexec-tools was taught to handle
-multiple resources of the same name.
-
-So why does kexec-tools on arm *not* need those iomem resources? How
-does it parse the ranges there? Questions over questions...
-
-So last time I told you to sit down and take your time with this cleanup.
-From reading this here, it doesn't look like it. Rather, it looks like
-hastily done in a hurry and hurrying stuff doesn't help you one bit - it
-actually makes it worse.
-
-Your commit messages need to explain *why* a change is being done and
-why is that ok. This one doesn't.
-
-> @@ -1120,7 +1109,17 @@ void __init setup_arch(char **cmdline_p)
->  	 * Reserve memory for crash kernel after SRAT is parsed so that it
->  	 * won't consume hotpluggable memory.
->  	 */
-> -	reserve_crashkernel();
-> +#ifdef CONFIG_KEXEC_CORE
-> +	if (xen_pv_domain())
-> +		pr_info("Ignoring crashkernel for a Xen PV domain\n");
-
-This is wrong - the check is currently being done inside
-reserve_crashkernel(), *after* it has parsed a crashkernel= cmdline
-correctly - and not before.
-
-Your change would print on Xen PV, regardless of whether it has received
-crashkernel= on the cmdline or not.
-
-This is exactly why I say that making those functions generic and shared
-might not be such a good idea, after all, because then you'd have to
-sprinkle around arch-specific stuff.
-
-One of the ways how to address this particular case here would be:
-
-1. Add a x86-specific wrapper around parse_crashkernel() which does
-all the parsing. When that wrapper finishes, you should have parsed
-everything that has crashkernel= on the cmdline.
-
-2. At the end of that wrapper, you do arch-specific checks and setup
-like the xen_pv_domain() one.
-
-3. Now, you do reserve_crashkernel(), if those checks pass.
-
-The question is, whether the flow on arm64 can do the same. Probably but
-it needs careful auditing.
-
--- 
-Regards/Gruss,
-    Boris.
-
-https://people.kernel.org/tglx/notes-about-netiquette
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+CgpPbiAyMDIxLzEyLzIzIDIzOjQ4LCBEYXZlIEtsZWlrYW1wIHdyb3RlOgo+IE9uIDEyLzIyLzIx
+IDc6MDhBTSwgWmhlbiBMZWkgd3JvdGU6Cj4+IEN1cnJlbnRseSwgd2UgcGFyc2UgdGhlICJsaW51
+eCx1c2FibGUtbWVtb3J5LXJhbmdlIiBwcm9wZXJ0eSBpbgo+PiBlYXJseV9pbml0X2R0X3NjYW5f
+Y2hvc2VuKCksIHRvIG9idGFpbiB0aGUgc3BlY2lmaWVkIG1lbW9yeSByYW5nZSBvZiB0aGUKPj4g
+Y3Jhc2gga2VybmVsLiBXZSB0aGVuIHJlc2VydmUgdGhlIHJlcXVpcmVkIG1lbW9yeSBhZnRlcgo+
+PiBlYXJseV9pbml0X2R0X3NjYW5fbWVtb3J5KCkgaGFzIGlkZW50aWZpZWQgYWxsIGF2YWlsYWJs
+ZSBwaHlzaWNhbCBtZW1vcnkuCj4+IEJlY2F1c2UgdGhlIHR3byBwaWVjZXMgb2YgY29kZSBhcmUg
+c2VwYXJhdGVkIGZhciwgdGhlIHJlYWRhYmlsaXR5IGFuZAo+PiBtYWludGFpbmFiaWxpdHkgYXJl
+IHJlZHVjZWQuIFNvIGJyaW5nIHRoZW0gdG9nZXRoZXIuCj4gCj4gUm9iIEhlcnJpbmcgaXMgcHVz
+aGluZyBhIG1vZGlmaWVkIHZlcnNpb24gb2YgdGhpcyBwYXRjaCAoY2hhbmdlcyBtYWRlIGJ5Cj4g
+UGluZ2ZhbiBMaXUpIHRvIGZpeCBhIHJlZ3Jlc3Npb24uIFRoaXMgd2lsbCBjYXVzZSBhIGNvbmZs
+aWN0IHdoZW4gaXQgaGl0cwo+IG1haW5saW5lLgoKWWVzLCBJIHNhdyBpdCB5ZXN0ZXJkYXksIGFu
+ZCBJJ2xsIGRlbGV0ZSBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLiBUaGFua3MuCgo+IAo+IGh0dHBz
+Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3JvYmgvbGludXguZ2l0
+L2xvZy8/aD1kdC9saW51cwo+IAo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWFybS1r
+ZXJuZWwvMjAyMTEyMTQwNDAxNTcuMjc0NDMtMS1rZXJuZWxmYW5zQGdtYWlsLmNvbS8KPiAKPj4K
+Pj4gU3VnZ2VzdGVkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+PiBTaWduZWQt
+b2ZmLWJ5OiBaaGVuIExlaSA8dGh1bmRlci5sZWl6aGVuQGh1YXdlaS5jb20+Cj4+IFJldmlld2Vk
+LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+PiBUZXN0ZWQtYnk6IERhdmUgS2xl
+aWthbXAgPGRhdmUua2xlaWthbXBAb3JhY2xlLmNvbT4KPj4gLS0tCj4+IMKgIGRyaXZlcnMvb2Yv
+ZmR0LmMgfCAxNSArKysrKysrKysrKy0tLS0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2Vy
+dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Zk
+dC5jIGIvZHJpdmVycy9vZi9mZHQuYwo+PiBpbmRleCBiZGNhMzUyODRjZWJkNTYuLjM3YjQ3N2E1
+MTE3NTM1OSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYwo+PiArKysgYi9kcml2ZXJz
+L29mL2ZkdC5jCj4+IEBAIC05NjUsOCArOTY1LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGVhcmx5
+X2luaXRfZHRfY2hlY2tfZm9yX2VsZmNvcmVoZHIodW5zaWduZWQgbG9uZyBub2RlKQo+PiDCoMKg
+wqDCoMKgwqDCoMKgwqDCoCBlbGZjb3JlaGRyX2FkZHIsIGVsZmNvcmVoZHJfc2l6ZSk7Cj4+IMKg
+IH0KPj4gwqAgLXN0YXRpYyBwaHlzX2FkZHJfdCBjYXBfbWVtX2FkZHI7Cj4+IC1zdGF0aWMgcGh5
+c19hZGRyX3QgY2FwX21lbV9zaXplOwo+PiArc3RhdGljIHVuc2lnbmVkIGxvbmcgY2hvc2VuX25v
+ZGVfb2Zmc2V0ID0gLUZEVF9FUlJfTk9URk9VTkQ7Cj4+IMKgIMKgIC8qKgo+PiDCoMKgICogZWFy
+bHlfaW5pdF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5nZSAtIERlY29kZSB1c2FibGUgbWVt
+b3J5IHJhbmdlCj4+IEBAIC05NzcsNiArOTc2LDExIEBAIHN0YXRpYyB2b2lkIF9faW5pdCBlYXJs
+eV9pbml0X2R0X2NoZWNrX2Zvcl91c2FibGVfbWVtX3JhbmdlKHVuc2lnbmVkIGxvbmcgbm9kZSkK
+Pj4gwqAgewo+PiDCoMKgwqDCoMKgIGNvbnN0IF9fYmUzMiAqcHJvcDsKPj4gwqDCoMKgwqDCoCBp
+bnQgbGVuOwo+PiArwqDCoMKgIHBoeXNfYWRkcl90IGNhcF9tZW1fYWRkcjsKPj4gK8KgwqDCoCBw
+aHlzX2FkZHJfdCBjYXBfbWVtX3NpemU7Cj4+ICsKPj4gK8KgwqDCoCBpZiAoKGxvbmcpbm9kZSA8
+IDApCj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4+IMKgIMKgwqDCoMKgwqAgcHJfZGVidWco
+Ikxvb2tpbmcgZm9yIHVzYWJsZS1tZW1vcnktcmFuZ2UgcHJvcGVydHkuLi4gIik7Cj4+IMKgIEBA
+IC05ODksNiArOTkzLDggQEAgc3RhdGljIHZvaWQgX19pbml0IGVhcmx5X2luaXRfZHRfY2hlY2tf
+Zm9yX3VzYWJsZV9tZW1fcmFuZ2UodW5zaWduZWQgbG9uZyBub2RlKQo+PiDCoCDCoMKgwqDCoMKg
+IHByX2RlYnVnKCJjYXBfbWVtX3N0YXJ0PSVwYSBjYXBfbWVtX3NpemU9JXBhXG4iLCAmY2FwX21l
+bV9hZGRyLAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAmY2FwX21lbV9zaXplKTsKPj4gKwo+PiAr
+wqDCoMKgIG1lbWJsb2NrX2NhcF9tZW1vcnlfcmFuZ2UoY2FwX21lbV9hZGRyLCBjYXBfbWVtX3Np
+emUpOwo+PiDCoCB9Cj4+IMKgIMKgICNpZmRlZiBDT05GSUdfU0VSSUFMX0VBUkxZQ09OCj4+IEBA
+IC0xMTM3LDkgKzExNDMsMTAgQEAgaW50IF9faW5pdCBlYXJseV9pbml0X2R0X3NjYW5fY2hvc2Vu
+KHVuc2lnbmVkIGxvbmcgbm9kZSwgY29uc3QgY2hhciAqdW5hbWUsCj4+IMKgwqDCoMKgwqDCoMKg
+wqDCoCAoc3RyY21wKHVuYW1lLCAiY2hvc2VuIikgIT0gMCAmJiBzdHJjbXAodW5hbWUsICJjaG9z
+ZW5AMCIpICE9IDApKQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgICvCoMKg
+wqAgY2hvc2VuX25vZGVfb2Zmc2V0ID0gbm9kZTsKPj4gKwo+PiDCoMKgwqDCoMKgIGVhcmx5X2lu
+aXRfZHRfY2hlY2tfZm9yX2luaXRyZChub2RlKTsKPj4gwqDCoMKgwqDCoCBlYXJseV9pbml0X2R0
+X2NoZWNrX2Zvcl9lbGZjb3JlaGRyKG5vZGUpOwo+PiAtwqDCoMKgIGVhcmx5X2luaXRfZHRfY2hl
+Y2tfZm9yX3VzYWJsZV9tZW1fcmFuZ2Uobm9kZSk7Cj4+IMKgIMKgwqDCoMKgwqAgLyogUmV0cmll
+dmUgY29tbWFuZCBsaW5lICovCj4+IMKgwqDCoMKgwqAgcCA9IG9mX2dldF9mbGF0X2R0X3Byb3Ao
+bm9kZSwgImJvb3RhcmdzIiwgJmwpOwo+PiBAQCAtMTI3NSw3ICsxMjgyLDcgQEAgdm9pZCBfX2lu
+aXQgZWFybHlfaW5pdF9kdF9zY2FuX25vZGVzKHZvaWQpCj4+IMKgwqDCoMKgwqAgb2Zfc2Nhbl9m
+bGF0X2R0KGVhcmx5X2luaXRfZHRfc2Nhbl9tZW1vcnksIE5VTEwpOwo+PiDCoCDCoMKgwqDCoMKg
+IC8qIEhhbmRsZSBsaW51eCx1c2FibGUtbWVtb3J5LXJhbmdlIHByb3BlcnR5ICovCj4+IC3CoMKg
+wqAgbWVtYmxvY2tfY2FwX21lbW9yeV9yYW5nZShjYXBfbWVtX2FkZHIsIGNhcF9tZW1fc2l6ZSk7
+Cj4+ICvCoMKgwqAgZWFybHlfaW5pdF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5nZShjaG9z
+ZW5fbm9kZV9vZmZzZXQpOwo+PiDCoCB9Cj4+IMKgIMKgIGJvb2wgX19pbml0IGVhcmx5X2luaXRf
+ZHRfc2Nhbih2b2lkICpwYXJhbXMpCj4gCj4gLgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
+ZXhlYwo=
