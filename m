@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v18 15/17] of: fdt: Aggregate the processing of
- "linux,usable-memory-range"
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-16-thunder.leizhen@huawei.com>
- <e9f66aca-f399-bf79-3e01-91d419442788@oracle.com>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <de34f381-6165-7c30-b78d-e4b80479ca1d@huawei.com>
-Date: Fri, 24 Dec 2021 09:03:45 +0800
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n0ZUe-00Dckc-VX
+ for kexec@lists.infradead.org; Fri, 24 Dec 2021 01:35:38 +0000
+Date: Fri, 24 Dec 2021 09:35:12 +0800
+From: Dave Young <dyoung@redhat.com>
+Subject: Re: [PATCH 3/3] panic: Allow printing extra panic information on kdump
+Message-ID: <YcUj0EJvQt77OVs2@dhcp-128-65.nay.redhat.com>
+References: <20211109202848.610874-1-gpiccoli@igalia.com>
+ <20211109202848.610874-4-gpiccoli@igalia.com>
+ <YcMPzs6t8MKpEacq@dhcp-128-65.nay.redhat.com>
+ <2d24ea70-e315-beb5-0028-683880c438be@igalia.com>
 MIME-Version: 1.0
-In-Reply-To: <e9f66aca-f399-bf79-3e01-91d419442788@oracle.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <2d24ea70-e315-beb5-0028-683880c438be@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -18,75 +22,63 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Dave Kleikamp <dave.kleikamp@oracle.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
- Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, Pingfan Liu <kernelfans@gmail.com>
+To: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com, akpm@linux-foundation.org, feng.tang@intel.com, siglesias@igalia.com, kernel@gpiccoli.net, kexec@lists.infradead.org
 
-CgpPbiAyMDIxLzEyLzIzIDIzOjQ4LCBEYXZlIEtsZWlrYW1wIHdyb3RlOgo+IE9uIDEyLzIyLzIx
-IDc6MDhBTSwgWmhlbiBMZWkgd3JvdGU6Cj4+IEN1cnJlbnRseSwgd2UgcGFyc2UgdGhlICJsaW51
-eCx1c2FibGUtbWVtb3J5LXJhbmdlIiBwcm9wZXJ0eSBpbgo+PiBlYXJseV9pbml0X2R0X3NjYW5f
-Y2hvc2VuKCksIHRvIG9idGFpbiB0aGUgc3BlY2lmaWVkIG1lbW9yeSByYW5nZSBvZiB0aGUKPj4g
-Y3Jhc2gga2VybmVsLiBXZSB0aGVuIHJlc2VydmUgdGhlIHJlcXVpcmVkIG1lbW9yeSBhZnRlcgo+
-PiBlYXJseV9pbml0X2R0X3NjYW5fbWVtb3J5KCkgaGFzIGlkZW50aWZpZWQgYWxsIGF2YWlsYWJs
-ZSBwaHlzaWNhbCBtZW1vcnkuCj4+IEJlY2F1c2UgdGhlIHR3byBwaWVjZXMgb2YgY29kZSBhcmUg
-c2VwYXJhdGVkIGZhciwgdGhlIHJlYWRhYmlsaXR5IGFuZAo+PiBtYWludGFpbmFiaWxpdHkgYXJl
-IHJlZHVjZWQuIFNvIGJyaW5nIHRoZW0gdG9nZXRoZXIuCj4gCj4gUm9iIEhlcnJpbmcgaXMgcHVz
-aGluZyBhIG1vZGlmaWVkIHZlcnNpb24gb2YgdGhpcyBwYXRjaCAoY2hhbmdlcyBtYWRlIGJ5Cj4g
-UGluZ2ZhbiBMaXUpIHRvIGZpeCBhIHJlZ3Jlc3Npb24uIFRoaXMgd2lsbCBjYXVzZSBhIGNvbmZs
-aWN0IHdoZW4gaXQgaGl0cwo+IG1haW5saW5lLgoKWWVzLCBJIHNhdyBpdCB5ZXN0ZXJkYXksIGFu
-ZCBJJ2xsIGRlbGV0ZSBpdCBpbiB0aGUgbmV4dCB2ZXJzaW9uLiBUaGFua3MuCgo+IAo+IGh0dHBz
-Oi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3JvYmgvbGludXguZ2l0
-L2xvZy8/aD1kdC9saW51cwo+IAo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL2xpbnV4LWFybS1r
-ZXJuZWwvMjAyMTEyMTQwNDAxNTcuMjc0NDMtMS1rZXJuZWxmYW5zQGdtYWlsLmNvbS8KPiAKPj4K
-Pj4gU3VnZ2VzdGVkLWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+PiBTaWduZWQt
-b2ZmLWJ5OiBaaGVuIExlaSA8dGh1bmRlci5sZWl6aGVuQGh1YXdlaS5jb20+Cj4+IFJldmlld2Vk
-LWJ5OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+PiBUZXN0ZWQtYnk6IERhdmUgS2xl
-aWthbXAgPGRhdmUua2xlaWthbXBAb3JhY2xlLmNvbT4KPj4gLS0tCj4+IMKgIGRyaXZlcnMvb2Yv
-ZmR0LmMgfCAxNSArKysrKysrKysrKy0tLS0KPj4gwqAgMSBmaWxlIGNoYW5nZWQsIDExIGluc2Vy
-dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCj4+Cj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL29mL2Zk
-dC5jIGIvZHJpdmVycy9vZi9mZHQuYwo+PiBpbmRleCBiZGNhMzUyODRjZWJkNTYuLjM3YjQ3N2E1
-MTE3NTM1OSAxMDA2NDQKPj4gLS0tIGEvZHJpdmVycy9vZi9mZHQuYwo+PiArKysgYi9kcml2ZXJz
-L29mL2ZkdC5jCj4+IEBAIC05NjUsOCArOTY1LDcgQEAgc3RhdGljIHZvaWQgX19pbml0IGVhcmx5
-X2luaXRfZHRfY2hlY2tfZm9yX2VsZmNvcmVoZHIodW5zaWduZWQgbG9uZyBub2RlKQo+PiDCoMKg
-wqDCoMKgwqDCoMKgwqDCoCBlbGZjb3JlaGRyX2FkZHIsIGVsZmNvcmVoZHJfc2l6ZSk7Cj4+IMKg
-IH0KPj4gwqAgLXN0YXRpYyBwaHlzX2FkZHJfdCBjYXBfbWVtX2FkZHI7Cj4+IC1zdGF0aWMgcGh5
-c19hZGRyX3QgY2FwX21lbV9zaXplOwo+PiArc3RhdGljIHVuc2lnbmVkIGxvbmcgY2hvc2VuX25v
-ZGVfb2Zmc2V0ID0gLUZEVF9FUlJfTk9URk9VTkQ7Cj4+IMKgIMKgIC8qKgo+PiDCoMKgICogZWFy
-bHlfaW5pdF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5nZSAtIERlY29kZSB1c2FibGUgbWVt
-b3J5IHJhbmdlCj4+IEBAIC05NzcsNiArOTc2LDExIEBAIHN0YXRpYyB2b2lkIF9faW5pdCBlYXJs
-eV9pbml0X2R0X2NoZWNrX2Zvcl91c2FibGVfbWVtX3JhbmdlKHVuc2lnbmVkIGxvbmcgbm9kZSkK
-Pj4gwqAgewo+PiDCoMKgwqDCoMKgIGNvbnN0IF9fYmUzMiAqcHJvcDsKPj4gwqDCoMKgwqDCoCBp
-bnQgbGVuOwo+PiArwqDCoMKgIHBoeXNfYWRkcl90IGNhcF9tZW1fYWRkcjsKPj4gK8KgwqDCoCBw
-aHlzX2FkZHJfdCBjYXBfbWVtX3NpemU7Cj4+ICsKPj4gK8KgwqDCoCBpZiAoKGxvbmcpbm9kZSA8
-IDApCj4+ICvCoMKgwqDCoMKgwqDCoCByZXR1cm47Cj4+IMKgIMKgwqDCoMKgwqAgcHJfZGVidWco
-Ikxvb2tpbmcgZm9yIHVzYWJsZS1tZW1vcnktcmFuZ2UgcHJvcGVydHkuLi4gIik7Cj4+IMKgIEBA
-IC05ODksNiArOTkzLDggQEAgc3RhdGljIHZvaWQgX19pbml0IGVhcmx5X2luaXRfZHRfY2hlY2tf
-Zm9yX3VzYWJsZV9tZW1fcmFuZ2UodW5zaWduZWQgbG9uZyBub2RlKQo+PiDCoCDCoMKgwqDCoMKg
-IHByX2RlYnVnKCJjYXBfbWVtX3N0YXJ0PSVwYSBjYXBfbWVtX3NpemU9JXBhXG4iLCAmY2FwX21l
-bV9hZGRyLAo+PiDCoMKgwqDCoMKgwqDCoMKgwqDCoCAmY2FwX21lbV9zaXplKTsKPj4gKwo+PiAr
-wqDCoMKgIG1lbWJsb2NrX2NhcF9tZW1vcnlfcmFuZ2UoY2FwX21lbV9hZGRyLCBjYXBfbWVtX3Np
-emUpOwo+PiDCoCB9Cj4+IMKgIMKgICNpZmRlZiBDT05GSUdfU0VSSUFMX0VBUkxZQ09OCj4+IEBA
-IC0xMTM3LDkgKzExNDMsMTAgQEAgaW50IF9faW5pdCBlYXJseV9pbml0X2R0X3NjYW5fY2hvc2Vu
-KHVuc2lnbmVkIGxvbmcgbm9kZSwgY29uc3QgY2hhciAqdW5hbWUsCj4+IMKgwqDCoMKgwqDCoMKg
-wqDCoCAoc3RyY21wKHVuYW1lLCAiY2hvc2VuIikgIT0gMCAmJiBzdHJjbXAodW5hbWUsICJjaG9z
-ZW5AMCIpICE9IDApKQo+PiDCoMKgwqDCoMKgwqDCoMKgwqAgcmV0dXJuIDA7Cj4+IMKgICvCoMKg
-wqAgY2hvc2VuX25vZGVfb2Zmc2V0ID0gbm9kZTsKPj4gKwo+PiDCoMKgwqDCoMKgIGVhcmx5X2lu
-aXRfZHRfY2hlY2tfZm9yX2luaXRyZChub2RlKTsKPj4gwqDCoMKgwqDCoCBlYXJseV9pbml0X2R0
-X2NoZWNrX2Zvcl9lbGZjb3JlaGRyKG5vZGUpOwo+PiAtwqDCoMKgIGVhcmx5X2luaXRfZHRfY2hl
-Y2tfZm9yX3VzYWJsZV9tZW1fcmFuZ2Uobm9kZSk7Cj4+IMKgIMKgwqDCoMKgwqAgLyogUmV0cmll
-dmUgY29tbWFuZCBsaW5lICovCj4+IMKgwqDCoMKgwqAgcCA9IG9mX2dldF9mbGF0X2R0X3Byb3Ao
-bm9kZSwgImJvb3RhcmdzIiwgJmwpOwo+PiBAQCAtMTI3NSw3ICsxMjgyLDcgQEAgdm9pZCBfX2lu
-aXQgZWFybHlfaW5pdF9kdF9zY2FuX25vZGVzKHZvaWQpCj4+IMKgwqDCoMKgwqAgb2Zfc2Nhbl9m
-bGF0X2R0KGVhcmx5X2luaXRfZHRfc2Nhbl9tZW1vcnksIE5VTEwpOwo+PiDCoCDCoMKgwqDCoMKg
-IC8qIEhhbmRsZSBsaW51eCx1c2FibGUtbWVtb3J5LXJhbmdlIHByb3BlcnR5ICovCj4+IC3CoMKg
-wqAgbWVtYmxvY2tfY2FwX21lbW9yeV9yYW5nZShjYXBfbWVtX2FkZHIsIGNhcF9tZW1fc2l6ZSk7
-Cj4+ICvCoMKgwqAgZWFybHlfaW5pdF9kdF9jaGVja19mb3JfdXNhYmxlX21lbV9yYW5nZShjaG9z
-ZW5fbm9kZV9vZmZzZXQpOwo+PiDCoCB9Cj4+IMKgIMKgIGJvb2wgX19pbml0IGVhcmx5X2luaXRf
-ZHRfc2Nhbih2b2lkICpwYXJhbXMpCj4gCj4gLgo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9r
-ZXhlYwo=
+Hi Guilherme,
+On 12/22/21 at 09:34am, Guilherme G. Piccoli wrote:
+> On 22/12/2021 08:45, Dave Young wrote:
+> > Hi Guilherme,
+> > 
+> > Thanks for you patch.  Could you add kexec list for any following up
+> > patches?  This could change kdump behavior so let's see if any comments
+> > from kexec list.
+> > 
+> > Kudos for the lore+lei tool so that I can catch this by seeing this
+> > coming into Andrews tree :)
+> 
+> Hi Dave, I'm really sorry for not adding the kexec list, I forgot. But I
+> will do next time for sure, my apologies. And thanks for taking a look
+> after you noticed that on lore, I appreciate your feedback!
+
+Thanks!
+
+> 
+> > [...]
+> > People may enable kdump crashkernel and panic_print together but
+> > they are not aware the extra panic print could cause kdump not reliable
+> > (in theory).  So at least some words in kernel-parameters.txt would
+> > help.
+> >  
+> 
+> That makes sense, I'll improve that in a follow-up patch, how about
+> that? Indeed it's a good idea to let people be sure that panic_print
+> might affect kdump reliability, although I consider the risk to be
+> pretty low. And I'll loop the kexec list for sure!
+
+If only the doc update, I think it is fine to be another follup-up
+patch.
+
+About your 1st option in patch log, there is crash_kexec_post_notifiers
+kernel param which can be used to switch on panic notifiers before kdump
+bootup.   Another way probably you can try to move panic print to be
+panic notifier. Have this been discussed before? 
+
+> 
+> Cheers,
+> 
+> 
+> Guilherme
+
+Thanks
+Dave
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
