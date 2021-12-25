@@ -1,8 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 3/4] kdump: make parse_crashkernel_{high|low}() static
-Date: Sat, 25 Dec 2021 15:23:26 +0800
-Message-ID: <20211225072327.1807-4-thunder.leizhen@huawei.com>
+Subject: [PATCH 4/4] kdump: reduce unnecessary parameters of
+ parse_crashkernel_{high|low}()
+Date: Sat, 25 Dec 2021 15:23:27 +0800
+Message-ID: <20211225072327.1807-5-thunder.leizhen@huawei.com>
 In-Reply-To: <20211225072327.1807-1-thunder.leizhen@huawei.com>
 References: <20211225072327.1807-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -23,52 +24,71 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-Make parse_crashkernel_{high|low}() static, they are only referenced by
-parse_crashkernel_high_low() in the same file. The latter is recommended.
+Delete confusing parameters 'system_ram' and 'crash_base' of
+parse_crashkernel_{high|low}(), they are only needed by the case of
+"crashkernel=X@[offset]".
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- include/linux/crash_core.h | 4 ----
- kernel/crash_core.c        | 4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ kernel/crash_core.c | 21 ++++++++++-----------
+ 1 file changed, 10 insertions(+), 11 deletions(-)
 
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 2d3a64761d18998..598fd55d83c169e 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -79,10 +79,6 @@ void final_note(Elf_Word *buf);
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
- int __init parse_crashkernel_high_low(char *cmdline,
- 				      unsigned long long *high_size,
- 				      unsigned long long *low_size);
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 8ab59a0e04f178f..97001820396295e 100644
+index 97001820396295e..0ebf5efce3119c5 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -277,7 +277,7 @@ int __init parse_crashkernel(char *cmdline,
- 					"crashkernel=", NULL);
+@@ -278,20 +278,20 @@ int __init parse_crashkernel(char *cmdline,
  }
  
--int __init parse_crashkernel_high(char *cmdline,
-+static int __init parse_crashkernel_high(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
-@@ -286,7 +286,7 @@ int __init parse_crashkernel_high(char *cmdline,
+ static int __init parse_crashkernel_high(char *cmdline,
+-			     unsigned long long system_ram,
+-			     unsigned long long *crash_size,
+-			     unsigned long long *crash_base)
++					 unsigned long long *crash_size)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
++	unsigned long long base;
++
++	return __parse_crashkernel(cmdline, 0, crash_size, &base,
  				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
  }
  
--int __init parse_crashkernel_low(char *cmdline,
-+static int __init parse_crashkernel_low(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
+ static int __init parse_crashkernel_low(char *cmdline,
+-			     unsigned long long system_ram,
+-			     unsigned long long *crash_size,
+-			     unsigned long long *crash_base)
++					unsigned long long *crash_size)
+ {
+-	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
++	unsigned long long base;
++
++	return __parse_crashkernel(cmdline, 0, crash_size, &base,
+ 				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
+ }
+ 
+@@ -310,12 +310,11 @@ int __init parse_crashkernel_high_low(char *cmdline,
+ 				      unsigned long long *low_size)
+ {
+ 	int ret;
+-	unsigned long long base;
+ 
+ 	BUG_ON(!high_size || !low_size);
+ 
+ 	/* crashkernel=X,high */
+-	ret = parse_crashkernel_high(cmdline, 0, high_size, &base);
++	ret = parse_crashkernel_high(cmdline, high_size);
+ 	if (ret)
+ 		return ret;
+ 
+@@ -323,7 +322,7 @@ int __init parse_crashkernel_high_low(char *cmdline,
+ 		return -EINVAL;
+ 
+ 	/* crashkernel=Y,low */
+-	ret = parse_crashkernel_low(cmdline, 0, low_size, &base);
++	ret = parse_crashkernel_low(cmdline, low_size);
+ 	if (ret)
+ 		*low_size = -1;
+ 
 -- 
 2.25.1
 
