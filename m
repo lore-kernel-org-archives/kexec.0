@@ -1,9 +1,9 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 4/4] kdump: reduce unnecessary parameters of
- parse_crashkernel_{high|low}()
-Date: Sat, 25 Dec 2021 15:23:27 +0800
-Message-ID: <20211225072327.1807-5-thunder.leizhen@huawei.com>
+Subject: [PATCH 2/4] x86/setup: Use parse_crashkernel_high_low() to simplify
+ code
+Date: Sat, 25 Dec 2021 15:23:25 +0800
+Message-ID: <20211225072327.1807-3-thunder.leizhen@huawei.com>
 In-Reply-To: <20211225072327.1807-1-thunder.leizhen@huawei.com>
 References: <20211225072327.1807-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -24,71 +24,75 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-Delete confusing parameters 'system_ram' and 'crash_base' of
-parse_crashkernel_{high|low}(), they are only needed by the case of
-"crashkernel=X@[offset]".
+Use parse_crashkernel_high_low() to bring the parsing of
+"crashkernel=X,high" and the parsing of "crashkernel=Y,low" together, they
+are strongly dependent, make code logic clear and more readable.
 
+Suggested-by: Borislav Petkov <bp@alien8.de>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- kernel/crash_core.c | 21 ++++++++++-----------
- 1 file changed, 10 insertions(+), 11 deletions(-)
+ arch/x86/kernel/setup.c | 21 +++++++++------------
+ 1 file changed, 9 insertions(+), 12 deletions(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 97001820396295e..0ebf5efce3119c5 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -278,20 +278,20 @@ int __init parse_crashkernel(char *cmdline,
- }
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 6a190c7f4d71b05..93d78aae1937db3 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -416,18 +416,16 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ # define CRASH_ADDR_HIGH_MAX	SZ_64T
+ #endif
  
- static int __init parse_crashkernel_high(char *cmdline,
--			     unsigned long long system_ram,
--			     unsigned long long *crash_size,
--			     unsigned long long *crash_base)
-+					 unsigned long long *crash_size)
+-static int __init reserve_crashkernel_low(void)
++static int __init reserve_crashkernel_low(unsigned long long low_size)
  {
--	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-+	unsigned long long base;
-+
-+	return __parse_crashkernel(cmdline, 0, crash_size, &base,
- 				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
- }
+ #ifdef CONFIG_X86_64
+-	unsigned long long base, low_base = 0, low_size = 0;
++	unsigned long long low_base = 0;
+ 	unsigned long low_mem_limit;
+-	int ret;
  
- static int __init parse_crashkernel_low(char *cmdline,
--			     unsigned long long system_ram,
--			     unsigned long long *crash_size,
--			     unsigned long long *crash_base)
-+					unsigned long long *crash_size)
- {
--	return __parse_crashkernel(cmdline, system_ram, crash_size, crash_base,
-+	unsigned long long base;
-+
-+	return __parse_crashkernel(cmdline, 0, crash_size, &base,
- 				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
- }
+ 	low_mem_limit = min(memblock_phys_mem_size(), CRASH_ADDR_LOW_MAX);
  
-@@ -310,12 +310,11 @@ int __init parse_crashkernel_high_low(char *cmdline,
- 				      unsigned long long *low_size)
+-	/* crashkernel=Y,low */
+-	ret = parse_crashkernel_low(boot_command_line, low_mem_limit, &low_size, &base);
+-	if (ret) {
++	/* crashkernel=Y,low is not specified */
++	if ((long)low_size < 0) {
+ 		/*
+ 		 * two parts from kernel/dma/swiotlb.c:
+ 		 * -swiotlb size: user-specified with swiotlb= or default.
+@@ -465,7 +463,7 @@ static int __init reserve_crashkernel_low(void)
+ 
+ static void __init reserve_crashkernel(void)
  {
+-	unsigned long long crash_size, crash_base, total_mem;
++	unsigned long long crash_size, crash_base, total_mem, low_size;
+ 	bool high = false;
  	int ret;
--	unsigned long long base;
  
- 	BUG_ON(!high_size || !low_size);
+@@ -474,10 +472,9 @@ static void __init reserve_crashkernel(void)
+ 	/* crashkernel=XM */
+ 	ret = parse_crashkernel(boot_command_line, total_mem, &crash_size, &crash_base);
+ 	if (ret != 0 || crash_size <= 0) {
+-		/* crashkernel=X,high */
+-		ret = parse_crashkernel_high(boot_command_line, total_mem,
+-					     &crash_size, &crash_base);
+-		if (ret != 0 || crash_size <= 0)
++		/* crashkernel=X,high and possible crashkernel=Y,low */
++		ret = parse_crashkernel_high_low(boot_command_line, &crash_size, &low_size);
++		if (ret)
+ 			return;
+ 		high = true;
+ 	}
+@@ -520,7 +517,7 @@ static void __init reserve_crashkernel(void)
+ 		}
+ 	}
  
- 	/* crashkernel=X,high */
--	ret = parse_crashkernel_high(cmdline, 0, high_size, &base);
-+	ret = parse_crashkernel_high(cmdline, high_size);
- 	if (ret)
- 		return ret;
- 
-@@ -323,7 +322,7 @@ int __init parse_crashkernel_high_low(char *cmdline,
- 		return -EINVAL;
- 
- 	/* crashkernel=Y,low */
--	ret = parse_crashkernel_low(cmdline, 0, low_size, &base);
-+	ret = parse_crashkernel_low(cmdline, low_size);
- 	if (ret)
- 		*low_size = -1;
- 
+-	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
++	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low(low_size)) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
+ 	}
 -- 
 2.25.1
 
