@@ -1,9 +1,10 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH 0/4] kdump: add parse_crashkernel_high_low() to replace
- parse_crashkernel_{high|low}()
-Date: Sat, 25 Dec 2021 15:23:23 +0800
-Message-ID: <20211225072327.1807-1-thunder.leizhen@huawei.com>
+Subject: [PATCH 3/4] kdump: make parse_crashkernel_{high|low}() static
+Date: Sat, 25 Dec 2021 15:23:26 +0800
+Message-ID: <20211225072327.1807-4-thunder.leizhen@huawei.com>
+In-Reply-To: <20211225072327.1807-1-thunder.leizhen@huawei.com>
+References: <20211225072327.1807-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -22,40 +23,52 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-The bootup command line option crashkernel=Y,low is valid only when
-crashkernel=X,high is specified. Putting their parsing into a separate
-function makes the code logic clearer and easier to understand the strong
-dependencies between them. So add parse_crashkernel_high_low() and use it
-to repalce parse_crashkernel_{high|low}(). Then make the latter static,
-and reduce two confusing parameters 'system_ram' and 'crash_base' of them.
+Make parse_crashkernel_{high|low}() static, they are only referenced by
+parse_crashkernel_high_low() in the same file. The latter is recommended.
 
-All four patches in this series do the cleanups, no functional change. This
-patchset is also a preparation for supporting reserve crashkernel above 4G
-on arm64, and share code with x86.
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ include/linux/crash_core.h | 4 ----
+ kernel/crash_core.c        | 4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-The main proposal was made by Borislav Petkov.
-> As I've already alluded to in another mail, ontop of this there should
-> be a patch or multiple patches which clean this up more and perhaps even
-> split it into separate functions doing stuff in this order:
->
-> 1. Parse all crashkernel= cmdline options
-> 2. Do all crash_base, crash_size etc checks
-> 3. Do the memory reservations
->
-> And all that supplied with comments explaining why stuff is being done.
-
-
-Zhen Lei (4):
-  kdump: add helper parse_crashkernel_high_low()
-  x86/setup: Use parse_crashkernel_high_low() to simplify code
-  kdump: make parse_crashkernel_{high|low}() static
-  kdump: reduce unnecessary parameters of parse_crashkernel_{high|low}()
-
- arch/x86/kernel/setup.c    | 21 +++++++--------
- include/linux/crash_core.h |  7 +++--
- kernel/crash_core.c        | 54 +++++++++++++++++++++++++++++++-------
- 3 files changed, 56 insertions(+), 26 deletions(-)
-
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 2d3a64761d18998..598fd55d83c169e 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -79,10 +79,6 @@ void final_note(Elf_Word *buf);
+ 
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+ int __init parse_crashkernel_high_low(char *cmdline,
+ 				      unsigned long long *high_size,
+ 				      unsigned long long *low_size);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 8ab59a0e04f178f..97001820396295e 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -277,7 +277,7 @@ int __init parse_crashkernel(char *cmdline,
+ 					"crashkernel=", NULL);
+ }
+ 
+-int __init parse_crashkernel_high(char *cmdline,
++static int __init parse_crashkernel_high(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+@@ -286,7 +286,7 @@ int __init parse_crashkernel_high(char *cmdline,
+ 				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
+ }
+ 
+-int __init parse_crashkernel_low(char *cmdline,
++static int __init parse_crashkernel_low(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
 -- 
 2.25.1
 
