@@ -1,14 +1,21 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v18 04/17] x86/setup: Add helper
- parse_crashkernel_in_order()
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-5-thunder.leizhen@huawei.com>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <9291bf01-d295-583c-399c-ea5b544be474@huawei.com>
-Date: Sat, 25 Dec 2021 09:58:57 +0800
+Received: from mail-pj1-x1034.google.com ([2607:f8b0:4864:20::1034])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n100N-00Eiwk-1Z
+ for kexec@lists.infradead.org; Sat, 25 Dec 2021 05:54:08 +0000
+Received: by mail-pj1-x1034.google.com with SMTP id
+ rj2-20020a17090b3e8200b001b1944bad25so9851362pjb.5
+ for <kexec@lists.infradead.org>; Fri, 24 Dec 2021 21:54:06 -0800 (PST)
+Date: Sat, 25 Dec 2021 05:53:59 +0000
+From: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+Subject: Re: [PATCH v4 3/3] mm/page_alloc.c: do not warn allocation failure
+ on zone DMA if no managed pages
+Message-ID: <Ycax90Xex3THEZTi@ip-172-31-30-232.ap-northeast-1.compute.internal>
+References: <20211223094435.248523-1-bhe@redhat.com>
+ <20211223094435.248523-4-bhe@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20211222130820.1754-5-thunder.leizhen@huawei.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20211223094435.248523-4-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,100 +28,104 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will
- Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Cc: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen
- Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>
+To: Baoquan He <bhe@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-mm@kvack.org, akpm@linux-foundation.org, hch@lst.de, cl@linux.com, John.p.donnelly@oracle.com, kexec@lists.infradead.org, penberg@kernel.org, rientjes@google.com, iamjoonsoo.kim@lge.com, vbabka@suse.cz, David.Laight@aculab.com, david@redhat.com, x86@kernel.org, bp@alien8.de
 
-
-
-On 2021/12/22 21:08, Zhen Lei wrote:
-> Currently, there are two possible combinations of configurations.
-> (1) crashkernel=X[@offset]
-> (2) crashkernel=X,high, with or without crashkernel=X,low
+On Thu, Dec 23, 2021 at 05:44:35PM +0800, Baoquan He wrote:
+> In kdump kernel of x86_64, page allocation failure is observed:
 > 
-> (1) has the highest priority, if it is configured correctly, (2) will be
-> ignored. Similarly, in combination (2), crashkernel=X,low is valid only
-> when crashkernel=X,high is valid.
+>  kworker/u2:2: page allocation failure: order:0, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+>  CPU: 0 PID: 55 Comm: kworker/u2:2 Not tainted 5.16.0-rc4+ #5
+>  Hardware name: AMD Dinar/Dinar, BIOS RDN1505B 06/05/2013
+>  Workqueue: events_unbound async_run_entry_fn
+>  Call Trace:
+>   <TASK>
+>   dump_stack_lvl+0x48/0x5e
+>   warn_alloc.cold+0x72/0xd6
+>   __alloc_pages_slowpath.constprop.0+0xc69/0xcd0
+>   __alloc_pages+0x1df/0x210
+>   new_slab+0x389/0x4d0
+>   ___slab_alloc+0x58f/0x770
+>   __slab_alloc.constprop.0+0x4a/0x80
+>   kmem_cache_alloc_trace+0x24b/0x2c0
+>   sr_probe+0x1db/0x620
+>   ......
+>   device_add+0x405/0x920
+>   ......
+>   __scsi_add_device+0xe5/0x100
+>   ata_scsi_scan_host+0x97/0x1d0
+>   async_run_entry_fn+0x30/0x130
+>   process_one_work+0x1e8/0x3c0
+>   worker_thread+0x50/0x3b0
+>   ? rescuer_thread+0x350/0x350
+>   kthread+0x16b/0x190
+>   ? set_kthread_struct+0x40/0x40
+>   ret_from_fork+0x22/0x30
+>   </TASK>
+>  Mem-Info:
+>  ......
 > 
-> Putting the operations of parsing all "crashkernel=" configurations in one
-> function helps to sort out the strong dependency.
+> The above failure happened when calling kmalloc() to allocate buffer with
+> GFP_DMA. It requests to allocate slab page from DMA zone while no managed
+> pages at all in there.
+>  sr_probe()
+>  --> get_capabilities()
+>      --> buffer = kmalloc(512, GFP_KERNEL | GFP_DMA);
 > 
-> So add helper parse_crashkernel_in_order(). The "__maybe_unused" will be
-> removed in the next patch.
+> Because in the current kernel, dma-kmalloc will be created as long as
+> CONFIG_ZONE_DMA is enabled. However, kdump kernel of x86_64 doesn't have
+> managed pages on DMA zone since commit 6f599d84231f ("x86/kdump: Always
+> reserve the low 1M when the crashkernel option is specified"). The failure
+> can be always reproduced.
 > 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> For now, let's mute the warning of allocation failure if requesting pages
+> from DMA zone while no managed pages.
+> 
+> Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: Christoph Lameter <cl@linux.com>
+> Cc: Pekka Enberg <penberg@kernel.org>
+> Cc: David Rientjes <rientjes@google.com>
+> Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+> Cc: Vlastimil Babka <vbabka@suse.cz>
 > ---
->  arch/x86/kernel/setup.c | 51 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 51 insertions(+)
+>  mm/page_alloc.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-> index d9080bfa131a654..f997074d36f2484 100644
-> --- a/arch/x86/kernel/setup.c
-> +++ b/arch/x86/kernel/setup.c
-> @@ -439,6 +439,57 @@ static int __init reserve_crashkernel_low(void)
->  }
->  #endif
+> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+> index 7c7a0b5de2ff..843bc8e5550a 100644
+> --- a/mm/page_alloc.c
+> +++ b/mm/page_alloc.c
+> @@ -4204,7 +4204,8 @@ void warn_alloc(gfp_t gfp_mask, nodemask_t *nodemask, const char *fmt, ...)
+>  	va_list args;
+>  	static DEFINE_RATELIMIT_STATE(nopage_rs, 10*HZ, 1);
 >  
-> +#define CRASHKERNEL_MEM_NONE		0x0	/* crashkernel= is not exist or invalid */
-> +#define CRASHKERNEL_MEM_CLASSIC		0x1	/* crashkernel=X[@offset] is valid */
-> +#define CRASHKERNEL_MEM_HIGH		0x2	/* crashkernel=X,high is valid */
-> +#define CRASHKERNEL_MEM_LOW		0x4	/* crashkernel=X,low is valid */
-> +
-> +/**
-> + * parse_crashkernel_in_order - Parse all "crashkernel=" configurations in
-> + *				priority order until a valid combination is found.
-> + * @cmdline:	The bootup command line.
-> + * @system_ram: Total system memory size.
-> + * @crash_size: Save the memory size specified by "crashkernel=X[@offset]" or
-> + *		"crashkernel=X,high".
-> + * @crash_base: Save the base address specified by "crashkernel=X@offset"
-> + * @low_size:	Save the memory size specified by "crashkernel=X,low"
-> + *
-> + * Returns the status flag of the parsing result of "crashkernel=", such as
-> + * CRASHKERNEL_MEM_NONE, CRASHKERNEL_MEM_HIGH.
-> + */
-> +__maybe_unused
-> +static int __init parse_crashkernel_in_order(char *cmdline,
-> +					     unsigned long long system_ram,
-> +					     unsigned long long *crash_size,
-> +					     unsigned long long *crash_base,
-> +					     unsigned long long *low_size)
+> -	if ((gfp_mask & __GFP_NOWARN) || !__ratelimit(&nopage_rs))
+> +	if ((gfp_mask & __GFP_NOWARN) || !__ratelimit(&nopage_rs) ||
+> +		(gfp_mask & __GFP_DMA) && !has_managed_dma())
+>  		return;
+>
 
-I rethought yesterday that this function name is not self-annotated. In addition,
-the meaning of the return value is not mainstream. It would be better to change it
-to parse_crashkernel_high_low().
+Warning when there's always no page in DMA zone is unnecessary 
+and it confuses user.
 
-> +{
-> +	int ret, flag = CRASHKERNEL_MEM_NONE;
-> +
-> +	BUG_ON(!crash_size || !crash_base || !low_size);
-> +
-> +	/* crashkernel=X[@offset] */
-> +	ret = parse_crashkernel(cmdline, system_ram, crash_size, crash_base);
-> +	if (!ret && crash_size > 0)
-> +		return CRASHKERNEL_MEM_CLASSIC;
-> +
-> +#ifdef CONFIG_X86_64
-> +	/* crashkernel=X,high */
-> +	ret = parse_crashkernel_high(cmdline, system_ram, crash_size, crash_base);
-> +	if (ret || crash_size <= 0)
-> +		return CRASHKERNEL_MEM_NONE;
-> +
-> +	flag = CRASHKERNEL_MEM_HIGH;
-> +
-> +	/* crashkernel=Y,low */
-> +	ret = parse_crashkernel_low(cmdline, system_ram, low_size, crash_base);
-> +	if (!ret)
-> +		flag |= CRASHKERNEL_MEM_LOW;
-> +#endif
-> +
-> +	return flag;
-> +}
-> +
->  static void __init reserve_crashkernel(void)
->  {
->  	unsigned long long crash_size, crash_base, total_mem;
+The patch looks good.
+Reviewed-by: Hyeonggon Yoo <42.hyeyoo@gmail.com>
+
+And there is some driers that allocate memory with GFP_DMA
+even if that flag is unnecessary. We need to do cleanup later.
+
+Baoquan Are you planning to do it soon?
+I want to help that.
+
+Merry Christmas,
+Hyeonggon
+
+>  	va_start(args, fmt);
+> -- 
+> 2.26.3
+> 
 > 
 
 _______________________________________________
