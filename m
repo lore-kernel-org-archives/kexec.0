@@ -1,15 +1,19 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v18 02/17] x86/setup: Move xen_pv_domain() check and
- insert_resource() to setup_arch()
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-3-thunder.leizhen@huawei.com> <YcSxLodOnxXHx0sV@zn.tnic>
- <d6226aa2-f1f2-24cc-c9d2-9762bd615686@huawei.com>
- <5d8aed79-b20f-2575-3c3f-8945d8cbac3f@huawei.com>
-Message-ID: <aaa219c5-aca6-adb5-58d8-365693be249c@huawei.com>
-Date: Sat, 25 Dec 2021 18:16:55 +0800
+Received: from fanzine2.igalia.com ([213.97.179.56])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n1CcI-00F4km-AW
+ for kexec@lists.infradead.org; Sat, 25 Dec 2021 19:22:09 +0000
+Subject: Re: [PATCH 3/3] panic: Allow printing extra panic information on kdump
+References: <20211109202848.610874-1-gpiccoli@igalia.com>
+ <20211109202848.610874-4-gpiccoli@igalia.com>
+ <YcMPzs6t8MKpEacq@dhcp-128-65.nay.redhat.com>
+ <2d24ea70-e315-beb5-0028-683880c438be@igalia.com>
+ <YcUj0EJvQt77OVs2@dhcp-128-65.nay.redhat.com>
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Message-ID: <5b817a4f-0bba-7d79-8aab-33c58e922293@igalia.com>
+Date: Sat, 25 Dec 2021 16:21:17 -0300
 MIME-Version: 1.0
-In-Reply-To: <5d8aed79-b20f-2575-3c3f-8945d8cbac3f@huawei.com>
+In-Reply-To: <YcUj0EJvQt77OVs2@dhcp-128-65.nay.redhat.com>
 Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
@@ -19,93 +23,47 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
- Donnelly <John.p.donnelly@oracle.com>
+To: Dave Young <dyoung@redhat.com>
+Cc: linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org, linux-doc@vger.kernel.org, mcgrof@kernel.org, keescook@chromium.org, yzaikin@google.com, akpm@linux-foundation.org, feng.tang@intel.com, siglesias@igalia.com, kernel@gpiccoli.net, kexec@lists.infradead.org
 
-CgpPbiAyMDIxLzEyLzI1IDk6NTMsIExlaXpoZW4gKFRodW5kZXJUb3duKSB3cm90ZToKPj4+IFRo
-aXMgaXMgZXhhY3RseSB3aHkgSSBzYXkgdGhhdCBtYWtpbmcgdGhvc2UgZnVuY3Rpb25zIGdlbmVy
-aWMgYW5kIHNoYXJlZAo+Pj4gbWlnaHQgbm90IGJlIHN1Y2ggYSBnb29kIGlkZWEsIGFmdGVyIGFs
-bCwgYmVjYXVzZSB0aGVuIHlvdSdkIGhhdmUgdG8KPj4+IHNwcmlua2xlIGFyb3VuZCBhcmNoLXNw
-ZWNpZmljIHN0dWZmLgoKSGkgQm9yaXNsYXYgYW5kIGFsbDoKICBNZXJyeSBDaHJpc3RtYXMhCgog
-IEkgaGF2ZSBhIG5ldyBpZGVhIG5vdy4gSXQgaGVscHMgdXMgZ2V0IGFyb3VuZCBhbGwgdGhlIGFy
-Z3VtZW50cyBhbmQKbWluaW1pemVzIGNoYW5nZXMgdG8gdGhlIHg4NiAoYWxzbyB0byBhcm02NCku
-CiAgUHJldmlvdXNseSwgQ2hlbiBaaG91IGFuZCBJIHRyaWVkIHRvIHNoYXJlIHRoZSBlbnRpcmUg
-ZnVuY3Rpb24KcmVzZXJ2ZV9jcmFzaGtlcm5lbCgpLCB3aGljaCBsZWQgdG8gdGhlIGZvbGxvd2lu
-ZyBzZXJpZXMgb2YgcHJvYmxlbXM6CjEuIHJlc2VydmVfY3Jhc2hrZXJuZWwoKSBpcyBhbHNvIGRl
-ZmluZWQgb24gb3RoZXIgYXJjaGl0ZWN0dXJlcywgc28gd2Ugc2hvdWxkCiAgIGFkZCBidWlsZCBv
-cHRpb24gQVJDSF9XQU5UX1JFU0VSVkVfQ1JBU0hfS0VSTkVMIHRvIGF2b2lkIGNvbmZsaWN0cy4K
-Mi4gTW92ZSB4ZW5fcHZfZG9tYWluKCkgY2hlY2sgb3V0IG9mIHJlc2VydmVfY3Jhc2hrZXJuZWwo
-KS4KMy4gTW92ZSBpbnNlcnRfcmVzb3VyY2UoKSBvdXQgb2YgcmVzZXJ2ZV9jcmFzaGtlcm5lbCgp
-CgpPdGhlcnM6CjQuIHN0YXJ0ID0gbWVtYmxvY2tfcGh5c19hbGxvY19yYW5nZShjcmFzaF9zaXpl
-LCBTWl8xTSwgY3Jhc2hfYmFzZSwKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICBjcmFzaF9iYXNlICsgY3Jhc2hfc2l6ZSk7CiAgIENoYW5nZSBTWl8xTSB0
-byBDUkFTSF9BTElHTiwgb3Iga2VlcCBpdCBubyBjaGFuZ2UuCiAgIFRoZSBjdXJyZW50IGNvbmNs
-dXNpb24gaXMgbm8gY2hhbmdlLiBCdXQgSSB0aGluayBhZGRpbmcgYSBuZXcgbWFjcm8KICAgQ1JB
-U0hfRklYRURfQUxJR04gaXMgYWxzbyBhIHdheS4gMk0gYWxpZ25tZW50IGFsbG93cyBwYWdlIHRh
-YmxlcyB0bwogICB1c2UgYmxvY2sgbWFwcGluZ3MgZm9yIG1vc3QgYXJjaGl0ZWN0dXJlcy4KNS4g
-aWYgKGNyYXNoX2Jhc2UgPj0gKDFVTEwgPDwgMzIpICYmIHJlc2VydmVfY3Jhc2hrZXJuZWxfbG93
-KCkpCiAgIENoYW5nZSAoMVVMTCA8PCAzMikgdG8gQ1JBU0hfQUREUl9MT1dfTUFYLCBvciBrZWVw
-IGl0IG5vIGNoYW5nZS4KICAgSSByZWFuYWx5emVkIGl0LCBhbmQgdGhpcyBkb2Vzbid0IG5lZWQg
-dG8gYmUgY2hhbmdlZC4KClNvIGZvciAxLTPvvIx3aHkgbm90IGFkZCBhIG5ldyBmdW5jdGlvbiBy
-ZXNlcnZlX2NyYXNoa2VybmVsX21lbSgpIGFuZCByZW5hbWUKcmVzZXJ2ZV9jcmFzaGtlcm5lbF9s
-b3coKSB0byByZXNlcnZlX2NyYXNoa2VybmVsX21lbV9sb3coKS4KT24geDg2OgpzdGF0aWMgdm9p
-ZCBfX2luaXQgcmVzZXJ2ZV9jcmFzaGtlcm5lbCh2b2lkKQp7CgkvL1BhcnNlIGFsbCAiY3Jhc2hr
-ZXJuZWw9IiBjb25maWd1cmF0aW9ucyBpbiBwcmlvcml0eSBvcmRlciB1bnRpbAogICAgICAgIC8v
-YSB2YWxpZCBjb21iaW5hdGlvbiBpcyBmb3VuZC4gT3IgcmV0dXJuIHVwb24gZmFpbHVyZS4KCQoJ
-aWYgKHhlbl9wdl9kb21haW4oKSkgewogICAgICAgICAgICAgICAgcHJfaW5mbygiSWdub3Jpbmcg
-Y3Jhc2hrZXJuZWwgZm9yIGEgWGVuIFBWIGRvbWFpblxuIik7CiAgICAgICAgICAgICAgICByZXR1
-cm47CiAgICAgICAgfQoKCS8vQ2FsbCByZXNlcnZlX2NyYXNoa2VybmVsX21lbSgpIHRvIHJlc2Vy
-dmUgY3Jhc2hrZXJuZWwgbWVtb3J5LCBpdCB3aWxsCgkvL2NhbGwgcmVzZXJ2ZV9jcmFzaGtlcm5l
-bF9tZW1fbG93KCkgaWYgbmVlZGVkLgoKCWlmIChjcmFzaGtfbG93X3Jlcy5lbmQpCgkJaW5zZXJ0
-X3Jlc291cmNlKCZpb21lbV9yZXNvdXJjZSwgJmNyYXNoa19sb3dfcmVzKTsKCWluc2VydF9yZXNv
-dXJjZSgmaW9tZW1fcmVzb3VyY2UsICZjcmFzaGtfcmVzKTsKfQoKT24gYXJtNjQ6CnN0YXRpYyB2
-b2lkIF9faW5pdCByZXNlcnZlX2NyYXNoa2VybmVsKHZvaWQpCnsKCS8vUGFyc2UgYWxsICJjcmFz
-aGtlcm5lbD0iIGNvbmZpZ3VyYXRpb25zIGluIHByaW9yaXR5IG9yZGVyIHVudGlsCiAgICAgICAg
-Ly9hIHZhbGlkIGNvbWJpbmF0aW9uIGlzIGZvdW5kLiBPciByZXR1cm4gdXBvbiBmYWlsdXJlLgoJ
-CgkvL0NhbGwgcmVzZXJ2ZV9jcmFzaGtlcm5lbF9tZW0oKSB0byByZXNlcnZlIGNyYXNoa2VybmVs
-IG1lbW9yeSwgaXQgd2lsbAoJLy9jYWxsIHJlc2VydmVfY3Jhc2hrZXJuZWxfbWVtX2xvdygpIGlm
-IG5lZWRlZC4KfQoKCjEuIHJlc2VydmVfY3Jhc2hrZXJuZWwoKSBpcyBzdGlsbCBzdGF0aWMsIHNv
-IHRoYXQgdGhlcmUgaXMgbm8KICAgbmVlZCB0byBhZGQgQVJDSF9XQU5UX1JFU0VSVkVfQ1JBU0hf
-S0VSTkVMLgoyLiBUaGUgeGVuX3B2X2RvbWFpbigpIGNoZWNrIGhhdmUgbm90IGJlZW4gYWZmZWN0
-ZWQgaW4gYW55IHdheS4KICAgSGkgQm9yaXNsYXY6CiAgICAgQXMgeW91IG1lbnRpb25lZCwgdGhp
-cyBjaGVjayBtYXkgYWxzbyBiZSBuZWVkZWQgb24gYXJtNjQuIEJ1dCBpdCBtYXkgYmUKICAgYmV0
-dGVyIG5vdCB0byBhZGQgaXQgdW50aWwgdGhlIHByb2JsZW0gaXMgYWN0dWFsbHkgdHJpZ2dlcmVk
-IG9uIGFybTY0LgozLiBpbnNlcnRfcmVzb3VyY2UoKSBpcyBub3QgbW92ZWQgb3V0c2lkZSByZXNl
-cnZlX2NyYXNoa2VybmVsKCkgb24geDg2LgogICBIaSBCb3Jpc2xhdjoKICAgICBDdXJyZW50bHks
-IEkgaGF2ZW4ndCBmaWd1cmVkIG91dCB3aHkgcmVxdWVzdF9yZXNvdXJjZSgpIGNhbid0IGJlIHJl
-cGxhY2VkCiAgIHdpdGggaW5zZXJ0X3Jlc291cmNlKCkgb24gYXJtNjQuIEJ1dCBJIGhhdmUgYSBo
-dW5jaCB0aGF0IHRoZSBrZXhlYyB0b29sIG1heQogICBiZSBpbnZvbHZlZC4gVGhlIGNvc3Qgb2Yg
-bW9kaWZpY2F0aW9uIG9uIGFybTY0IGlzIGRlZmluaXRlbHkgaGlnaGVyIHRoYW4gdGhhdAogICBv
-biB4ODYuIE90aGVyIGFyY2hpdGVjdHVyZXMgdGhhdCB3YW50IHRvIHVzZSByZXNlcnZlX2NyYXNo
-a2VybmVsX21lbSgpIG1heQogICBhbHNvIGZhY2UgdGhlIHNhbWUgcHJvYmxlbS4gU28gaXQncyBw
-cm9iYWJseSBiZXR0ZXIgdGhhdCBmdW5jdGlvbgogICByZXNlcnZlX2NyYXNoa2VybmVsX21lbSgp
-IGRvZXNuJ3QgaW52b2tlIGluc2VydF9yZXNvdXJjZSgpLgoKSSBndWVzcyB5b3UgaGF2ZSBhIGxv
-bmcgQ2hyaXN0bWFzIGhvbGlkYXkuIFNvIEknbSBnb2luZyB0byBzZW5kIHRoZSBuZXh0IHZlcnNp
-b24Kd2l0aG91dCB3YWl0aW5nIGZvciB5b3VyIHJlc3BvbnNlLgoKCj4+IFllcywgSSdtIHRoaW5r
-aW5nIGFib3V0IHRoYXQgdG9vLiBQZXJoYXBzIHRoZXkgYXJlIG5vdCBzdWl0YWJsZSBmb3IgZnVs
-bAo+PiBjb2RlIHNoYXJpbmcsIGJ1dCBpdCBsb29rcyBsaWtlIHRoZXJlJ3Mgc29tZSBjb2RlIHRo
-YXQgY2FuIGJlIHNoYXJlZC4KPj4gRm9yIGV4YW1wbGUsIHRoZSBmdW5jdGlvbiBwYXJzZV9jcmFz
-aGtlcm5lbF9pbl9vcmRlcigpIHRoYXQgSSBleHRyYWN0ZWQKPj4gYmFzZWQgb24geW91ciBzdWdn
-ZXN0aW9uLCBpdCBjb3VsZCBhbHNvIGJlIHBhcnNlX2NyYXNoa2VybmVsX2hpZ2hfbG93KCkuCj4+
-IE9yIHRoZSBmdW5jdGlvbiByZXNlcnZlX2NyYXNoa2VybmVsX2xvdygpLgo+Pgo+PiBUaGVyZSBh
-cmUgdHdvIHdheXMgdG8gcmVzZXJ2ZSBtZW1vcnkgYWJvdmUgNEc6Cj4+IDEuIFVzZSBjcmFzaGtl
-cm5lbD1YLGhpZ2gsIHdpdGggb3Igd2l0aG91dCBjcmFzaGtlcm5lbD1YLGxvdwo+PiAyLiBVc2Ug
-Y3Jhc2hrZXJuZWw9WCxbb2Zmc2V0XSwgYnV0IHRyeSBsb3cgbWVtb3J5IGZpcnN0LiBJZiBmYWls
-ZWQsIHRoZW4KPj4gICAgdHJ5IGhpZ2ggbWVtb3J5LCBhbmQgcmV0cnkgYXQgbGVhc3QgMjU2TSBs
-b3cgbWVtb3J5Lgo+Pgo+PiBJIHBsYW4gdG8gb25seSBpbXBsZW1lbnQgMiBpbiB0aGUgbmV4dCB2
-ZXJzaW9uIHNvIHRoYXQgdGhlcmUgY2FuIGJlIGZld2VyCj4+IGNoYW5nZXMuIFRoZW4gaW1wbGVt
-ZW50IDEgYWZ0ZXIgMiBpcyBhcHBsaWVkLgo+IEkgdHJpZWQgaXQgeWVzdGVyZGF5IGFuZCBpdCBk
-aWRuJ3Qgd29yay4gSSBzdGlsbCBoYXZlIHRvIGRlYWwgd2l0aCB0aGUKPiBwcm9ibGVtIG9mIGFk
-anVzdGluZyBpbnNlcnRfcmVzb3VyY2UoKS4KPiAKPiBIb3cgYWJvdXQgSSBpc29sYXRlIHNvbWUg
-Y2xlYW51cCBwYXRjaGVzIGZpcnN0PyBTdHJpdmUgZm9yIHRoZW0gdG8gYmUKPiBtZXJnZWQgaW50
-byB2NS4xNy4gVGhpcyB3YXksIHdlIGNhbiBmb2N1cyBvbiB0aGUgY29yZSBjaGFuZ2VzIGluIHRo
-ZQo+IG5leHQgdmVyc2lvbi4gQW5kIEkgY2FuIGFsc28gc2F2ZSBzb21lIHJlcGV0aXRpdmUgcmVi
-YXNlIHdvcmtsb2FkLgo+IAoKLS0gClJlZ2FyZHMsCiAgWmhlbiBMZWkKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdAprZXhl
-Y0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8va2V4ZWMK
+On 23/12/2021 22:35, Dave Young wrote:
+> Hi Guilherme,
+> [...]
+> If only the doc update, I think it is fine to be another follup-up
+> patch.
+> 
+> About your 1st option in patch log, there is crash_kexec_post_notifiers
+> kernel param which can be used to switch on panic notifiers before kdump
+> bootup.   Another way probably you can try to move panic print to be
+> panic notifier. Have this been discussed before? 
+> 
+
+Hey Dave, thanks for the suggestion. I've considered that but didn't
+like the idea. My reasoning was: allowing post notifiers on kdump will
+highly compromise the reliability, whereas the panic_print is a solo
+option, and not very invasive.
+
+To mix it with all panic notifiers would just increase a lot the risk of
+a kdump failure. Put in other words: if I'm a kdump user and in order to
+have this panic_print setting I'd also need to enable post notifiers,
+certainly I'll not use the feature, 'cause I don't wanna risk kdump too
+much.
+
+One other option I've considered however, and I'd appreciate your
+opinion here, would be a new option on crash_kexec_post_notifiers that
+allows the users to select *which few notifiers* they want to enable.
+Currently it's all or nothing, and this approach is too heavy/risky I
+believe. Allowing customization on which post notifiers the user wants
+would be much better and in this case, having a post notifier for
+panic_print makes a lot of sense. What do you think?
+
+Thanks!
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
