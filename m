@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v19 03/13] kdump: make parse_crashkernel_{high|low}() static
-Date: Tue, 28 Dec 2021 21:26:02 +0800
-Message-ID: <20211228132612.1860-4-thunder.leizhen@huawei.com>
+Subject: [PATCH v19 01/13] kdump: add helper parse_crashkernel_high_low()
+Date: Tue, 28 Dec 2021 21:26:00 +0800
+Message-ID: <20211228132612.1860-2-thunder.leizhen@huawei.com>
 In-Reply-To: <20211228132612.1860-1-thunder.leizhen@huawei.com>
 References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -23,52 +23,76 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-Make parse_crashkernel_{high|low}() static, they are only referenced by
-parse_crashkernel_high_low() in the same file. The latter is recommended.
+The bootup command line option crashkernel=Y,low is valid only when
+crashkernel=X,high is specified. Putting their parsing into a separate
+function makes the code logic clearer and easier to understand the strong
+dependencies between them.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- include/linux/crash_core.h | 4 ----
- kernel/crash_core.c        | 4 ++--
- 2 files changed, 2 insertions(+), 6 deletions(-)
+ include/linux/crash_core.h |  3 +++
+ kernel/crash_core.c        | 35 +++++++++++++++++++++++++++++++++++
+ 2 files changed, 38 insertions(+)
 
 diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index 2d3a64761d18998..598fd55d83c169e 100644
+index de62a722431e7db..2d3a64761d18998 100644
 --- a/include/linux/crash_core.h
 +++ b/include/linux/crash_core.h
-@@ -79,10 +79,6 @@ void final_note(Elf_Word *buf);
- 
- int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+@@ -83,5 +83,8 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
  		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
--int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
--		unsigned long long *crash_size, unsigned long long *crash_base);
- int __init parse_crashkernel_high_low(char *cmdline,
- 				      unsigned long long *high_size,
- 				      unsigned long long *low_size);
+ int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
++int __init parse_crashkernel_high_low(char *cmdline,
++				      unsigned long long *high_size,
++				      unsigned long long *low_size);
+ 
+ #endif /* LINUX_CRASH_CORE_H */
 diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 8966beaf7c4fd52..3b9e01fc450b2a4 100644
+index eb53f5ec62c900f..8966beaf7c4fd52 100644
 --- a/kernel/crash_core.c
 +++ b/kernel/crash_core.c
-@@ -277,7 +277,7 @@ int __init parse_crashkernel(char *cmdline,
- 					"crashkernel=", NULL);
+@@ -295,6 +295,41 @@ int __init parse_crashkernel_low(char *cmdline,
+ 				"crashkernel=", suffix_tbl[SUFFIX_LOW]);
  }
  
--int __init parse_crashkernel_high(char *cmdline,
-+static int __init parse_crashkernel_high(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
-@@ -286,7 +286,7 @@ int __init parse_crashkernel_high(char *cmdline,
- 				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
- }
- 
--int __init parse_crashkernel_low(char *cmdline,
-+static int __init parse_crashkernel_low(char *cmdline,
- 			     unsigned long long system_ram,
- 			     unsigned long long *crash_size,
- 			     unsigned long long *crash_base)
++/**
++ * parse_crashkernel_high_low - Parsing "crashkernel=X,high" and possible
++ *				"crashkernel=Y,low".
++ * @cmdline:	The bootup command line.
++ * @high_size:	Save the memory size specified by "crashkernel=X,high".
++ * @low_size:	Save the memory size specified by "crashkernel=Y,low" or "-1"
++ *		if it's not specified.
++ *
++ * Returns 0 on success, else a negative status code.
++ */
++int __init parse_crashkernel_high_low(char *cmdline,
++				      unsigned long long *high_size,
++				      unsigned long long *low_size)
++{
++	int ret;
++	unsigned long long base;
++
++	BUG_ON(!high_size || !low_size);
++
++	/* crashkernel=X,high */
++	ret = parse_crashkernel_high(cmdline, 0, high_size, &base);
++	if (ret)
++		return ret;
++
++	if (*high_size <= 0)
++		return -EINVAL;
++
++	/* crashkernel=Y,low */
++	ret = parse_crashkernel_low(cmdline, 0, low_size, &base);
++	if (ret)
++		*low_size = -1;
++
++	return 0;
++}
++
+ Elf_Word *append_elf_note(Elf_Word *buf, char *name, unsigned int type,
+ 			  void *data, size_t data_len)
+ {
 -- 
 2.25.1
 
