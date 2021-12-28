@@ -1,8 +1,8 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Subject: [PATCH v19 05/13] x86/setup: Add and use CRASH_BASE_ALIGN
-Date: Tue, 28 Dec 2021 21:26:04 +0800
-Message-ID: <20211228132612.1860-6-thunder.leizhen@huawei.com>
+Subject: [PATCH v19 03/13] kdump: make parse_crashkernel_{high|low}() static
+Date: Tue, 28 Dec 2021 21:26:02 +0800
+Message-ID: <20211228132612.1860-4-thunder.leizhen@huawei.com>
 In-Reply-To: <20211228132612.1860-1-thunder.leizhen@huawei.com>
 References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
@@ -23,42 +23,52 @@ To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borisl
 Cc: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
  Donnelly <John.p.donnelly@oracle.com>
 
-Add macro CRASH_BASE_ALIGN to indicate the alignment for crash kernel
-fixed region, in preparation for making partial implementation of
-reserve_crashkernel[_low]() generic.
+Make parse_crashkernel_{high|low}() static, they are only referenced by
+parse_crashkernel_high_low() in the same file. The latter is recommended.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/x86/kernel/setup.c | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ include/linux/crash_core.h | 4 ----
+ kernel/crash_core.c        | 4 ++--
+ 2 files changed, 2 insertions(+), 6 deletions(-)
 
-diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
-index 93d78aae1937db3..cb7f237a2ae0dfa 100644
---- a/arch/x86/kernel/setup.c
-+++ b/arch/x86/kernel/setup.c
-@@ -392,9 +392,12 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index 2d3a64761d18998..598fd55d83c169e 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -79,10 +79,6 @@ void final_note(Elf_Word *buf);
  
- #ifdef CONFIG_KEXEC_CORE
+ int __init parse_crashkernel(char *cmdline, unsigned long long system_ram,
+ 		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+-int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+-		unsigned long long *crash_size, unsigned long long *crash_base);
+ int __init parse_crashkernel_high_low(char *cmdline,
+ 				      unsigned long long *high_size,
+ 				      unsigned long long *low_size);
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 8966beaf7c4fd52..3b9e01fc450b2a4 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -277,7 +277,7 @@ int __init parse_crashkernel(char *cmdline,
+ 					"crashkernel=", NULL);
+ }
  
--/* 16M alignment for crash kernel regions */
-+/* alignment for crash kernel dynamic regions */
- #define CRASH_ALIGN		SZ_16M
+-int __init parse_crashkernel_high(char *cmdline,
++static int __init parse_crashkernel_high(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
+@@ -286,7 +286,7 @@ int __init parse_crashkernel_high(char *cmdline,
+ 				"crashkernel=", suffix_tbl[SUFFIX_HIGH]);
+ }
  
-+/* alignment for crash kernel fixed region */
-+#define CRASH_BASE_ALIGN	SZ_1M
-+
- /*
-  * Keep the crash kernel below this limit.
-  *
-@@ -509,7 +512,7 @@ static void __init reserve_crashkernel(void)
- 	} else {
- 		unsigned long long start;
- 
--		start = memblock_phys_alloc_range(crash_size, SZ_1M, crash_base,
-+		start = memblock_phys_alloc_range(crash_size, CRASH_BASE_ALIGN, crash_base,
- 						  crash_base + crash_size);
- 		if (start != crash_base) {
- 			pr_info("crashkernel reservation failed - memory is in use.\n");
+-int __init parse_crashkernel_low(char *cmdline,
++static int __init parse_crashkernel_low(char *cmdline,
+ 			     unsigned long long system_ram,
+ 			     unsigned long long *crash_size,
+ 			     unsigned long long *crash_base)
 -- 
 2.25.1
 
