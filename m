@@ -1,12 +1,12 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1n2CVm-000yVK-KL
- for kexec@lists.infradead.org; Tue, 28 Dec 2021 13:27:32 +0000
+ id 1n2CVq-000yWu-S1
+ for kexec@lists.infradead.org; Tue, 28 Dec 2021 13:27:36 +0000
 From: Pingfan Liu <piliu@redhat.com>
-Subject: [PATCHv3 3/4] arm64: read VA_BITS from kcore for 52-bits VA kernel
-Date: Tue, 28 Dec 2021 21:26:58 +0800
-Message-Id: <20211228132659.40102-4-piliu@redhat.com>
+Subject: [PATCHv3 4/4] arm64: fix PAGE_OFFSET calc for flipped mm
+Date: Tue, 28 Dec 2021 21:26:59 +0800
+Message-Id: <20211228132659.40102-5-piliu@redhat.com>
 In-Reply-To: <20211228132659.40102-1-piliu@redhat.com>
 References: <20211228132659.40102-1-piliu@redhat.com>
 MIME-Version: 1.0
@@ -23,143 +23,89 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: kexec@lists.infradead.org
-Cc: Pingfan Liu <piliu@redhat.com>, Kairui Song <kasong@tencent.com>, Simon Horman <horms@verge.net.au>, Philipp Rudo <prudo@redhat.com>
+Cc: Kairui Song <kasong@tencent.com>, Pingfan Liu <piliu@redhat.com>, Simon Horman <horms@verge.net.au>, Philipp Rudo <prudo@redhat.com>
 
-phys_to_virt() calculates virtual address. As a important factor,
-page_offset is excepted to be accurate.
+From: Kairui Song <kasong@tencent.com>
 
-Since arm64 kernel exposes va_bits through vmcore, using it.
+Since kernel commit 14c127c957c1 ('arm64: mm: Flip kernel VA space'),
+the memory layout on arm64 have changed, and kexec-tools can no longer
+get the the right PAGE_OFFSET based on _text symbol.
 
-And for 52-bits kernel, due to flipped mm layout, the PAGE_OFFSET
-formula should be:
-  UNIT64_MAX << va_bits
-instead of
-  UNIT64_MAX << (va_bits - 1)
+Prior to that, the kimage (_text) lays above PAGE_END with this layout:
+0               -> VA_START                 : Usespace
+VA_START        -> VA_START + 256M          : BPF JIT, Modules
+VA_START + 256M -> PAGE_OFFSET - (~GB misc) : Vmalloc (KERNEL _text HERE)
+PAGE_OFFSET     -> ...                      : * Linear map *
 
+And here we have:
+VA_START    = -1UL << VA_BITS
+PAGE_OFFSET = -1UL << (VA_BITS - 1)
+_text < -1UL << (VA_BITS - 1)
+
+Kernel image lays somewhere between VA_START and PAGE_OFFSET, so we just
+calc VA_BITS by getting the highest unset bit of _text symbol address,
+and shift one less bit of VA_BITS to get page offset. This works as long
+as KASLR don't put kernel in a too high location (which is commented inline).
+
+And after that commit, kernel layout have changed:
+0               -> PAGE_OFFSET              : Userspace
+PAGE_OFFSET     -> PAGE_END                 : * Linear map *
+PAGE_END        -> PAGE_END + 128M          : bpf jit region
+PAGE_END + 128M -> PAGE_END + 256MB         : modules
+PAGE_END + 256M -> ...                      : vmalloc (KERNEL _text HERE)
+
+Here we have:
+PAGE_OFFSET = -1UL << VA_BITS
+PAGE_END    = -1UL << (VA_BITS - 1)
+_text > -1UL << (VA_BITS - 1)
+
+Kernel image now lays above PAGE_END, so we have to shift one more bit to
+get the VA_BITS, and shift the exact VA_BITS for PAGE_OFFSET.
+
+We can simply check if "_text > -1UL << (VA_BITS - 1)" is true to judge
+which layout is being used and shift the page offset occordingly.
+
+Signed-off-by: Kairui Song <kasong@tencent.com>
+(rebased and stripped by Pingfan )
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Kairui Song <kasong@tencent.com>
 Cc: Simon Horman <horms@verge.net.au>
 Cc: Philipp Rudo <prudo@redhat.com>
 To: kexec@lists.infradead.org
 ---
- kexec/arch/arm64/kexec-arm64.c | 34 ++++++++++++++++++++++++++++++----
- util_lib/elf_info.c            |  5 +++++
- util_lib/include/elf_info.h    |  1 +
- 3 files changed, 36 insertions(+), 4 deletions(-)
+ kexec/arch/arm64/kexec-arm64.c | 14 +++++++++++++-
+ 1 file changed, 13 insertions(+), 1 deletion(-)
 
 diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 037e51c..86aadf0 100644
+index 86aadf0..2e2fa8e 100644
 --- a/kexec/arch/arm64/kexec-arm64.c
 +++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -54,7 +54,7 @@
- static bool try_read_phys_offset_from_kcore = false;
+@@ -923,13 +923,25 @@ out:
  
- /* Machine specific details. */
--static int va_bits;
-+static int va_bits = -1;
- static unsigned long page_offset;
- 
- /* Global varables the core kexec routines expect. */
-@@ -876,7 +876,18 @@ static inline void set_phys_offset(long v, char *set_method)
- 
- static int get_va_bits(void)
+ int get_page_offset(unsigned long *page_offset)
  {
--	unsigned long long stext_sym_addr = get_kernel_sym("_stext");
-+	unsigned long long stext_sym_addr;
-+
-+	/*
-+	 * if already got from kcore
-+	 */
-+	if (va_bits != -1)
-+		goto out;
-+
-+
-+	/* For kernel older than v4.19 */
-+	fprintf(stderr, "Warning, can't get the VA_BITS from kcore\n");
-+	stext_sym_addr = get_kernel_sym("_stext");
++	unsigned long long text_sym_addr, kernel_va_mid;
+ 	int ret;
  
- 	if (stext_sym_addr == 0) {
- 		fprintf(stderr, "Can't get the symbol of _stext.\n");
-@@ -900,6 +911,7 @@ static int get_va_bits(void)
- 		return -1;
- 	}
- 
-+out:
- 	dbgprintf("va_bits : %d\n", va_bits);
- 
- 	return 0;
-@@ -917,14 +929,27 @@ int get_page_offset(unsigned long *page_offset)
++	text_sym_addr = get_kernel_sym("_text");
++	if (text_sym_addr == 0) {
++		fprintf(stderr, "Can't get the symbol of _text to calculate page_offset.\n");
++		return -1;
++	}
++
+ 	ret = get_va_bits();
  	if (ret < 0)
  		return ret;
  
--	*page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-+	if (va_bits < 52)
-+		*page_offset = UINT64_MAX << (va_bits - 1);
-+	else
-+		*page_offset = UINT64_MAX << va_bits;
-+
- 	dbgprintf("page_offset : %lx\n", *page_offset);
- 
- 	return 0;
- }
- 
-+static void arm64_scan_vmcoreinfo(char *pos)
-+{
-+	const char *str;
-+
-+	str = "NUMBER(VA_BITS)=";
-+	if (memcmp(str, pos, strlen(str)) == 0)
-+		va_bits = strtoul(pos + strlen(str), NULL, 10);
-+}
-+
- /**
-- * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET
-+ * get_phys_offset_from_vmcoreinfo_pt_note - Helper for getting PHYS_OFFSET (and va_bits)
-  * from VMCOREINFO note inside 'kcore'.
-  */
- 
-@@ -937,6 +962,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
- 		return EFAILED;
- 	}
- 
-+	arch_scan_vmcoreinfo = arm64_scan_vmcoreinfo;
- 	ret = read_phys_offset_elf_kcore(fd, phys_offset);
- 
- 	close(fd);
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index 5574c7f..d252eff 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -310,6 +310,8 @@ int get_pt_load(int idx,
- 
- #define NOT_FOUND_LONG_VALUE		(-1)
- 
-+void (*arch_scan_vmcoreinfo)(char *pos);
-+
- void scan_vmcoreinfo(char *start, size_t size)
- {
- 	char *last = start + size - 1;
-@@ -551,6 +553,9 @@ void scan_vmcoreinfo(char *start, size_t size)
- 			}
- 		}
- 
-+		if (arch_scan_vmcoreinfo != NULL)
-+			(*arch_scan_vmcoreinfo)(pos);
-+
- 		if (last_line)
- 			break;
- 	}
-diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
-index f550d86..fdf4c3d 100644
---- a/util_lib/include/elf_info.h
-+++ b/util_lib/include/elf_info.h
-@@ -31,5 +31,6 @@ int get_pt_load(int idx,
- int read_phys_offset_elf_kcore(int fd, long *phys_off);
- int read_elf(int fd);
- void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
-+extern void (*arch_scan_vmcoreinfo)(char *pos);
- 
- #endif /* ELF_INFO_H */
+-	if (va_bits < 52)
++	/* Since kernel 5.4, kernel image is put above
++	 * UINT64_MAX << (va_bits - 1)
++	 */
++	kernel_va_mid = UINT64_MAX << (va_bits - 1);
++	/* older kernel */
++	if (text_sym_addr < kernel_va_mid)
+ 		*page_offset = UINT64_MAX << (va_bits - 1);
+ 	else
+ 		*page_offset = UINT64_MAX << va_bits;
 -- 
 2.31.1
 
