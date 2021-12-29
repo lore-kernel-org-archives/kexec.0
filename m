@@ -1,23 +1,22 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
  by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1n2WMN-002dKL-UR
- for kexec@lists.infradead.org; Wed, 29 Dec 2021 10:39:09 +0000
-Date: Wed, 29 Dec 2021 18:38:43 +0800
+ id 1n2WUH-002dxc-2j
+ for kexec@lists.infradead.org; Wed, 29 Dec 2021 10:47:18 +0000
+Date: Wed, 29 Dec 2021 18:46:55 +0800
 From: Dave Young <dyoung@redhat.com>
 Subject: Re: [PATCH v19 02/13] x86/setup: Use parse_crashkernel_high_low() to
  simplify code
-Message-ID: <Ycw6s6DwZuHjckXL@dhcp-128-65.nay.redhat.com>
+Message-ID: <Ycw8n2BvJzH9wJKG@dhcp-128-65.nay.redhat.com>
 References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
  <20211228132612.1860-3-thunder.leizhen@huawei.com>
  <Ycs3kpZD/vpoo1AX@zn.tnic>
  <b017a8ea-989b-c251-f5c8-a8a7940877cf@huawei.com>
  <YcwN9Mfwsh/lPbbd@dhcp-128-65.nay.redhat.com>
- <YcwSCAuEgO10DFDT@dhcp-128-65.nay.redhat.com>
- <Ycw0V1CmBPCPqexn@zn.tnic>
+ <YcwyZRDJUMniSaY9@zn.tnic>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <Ycw0V1CmBPCPqexn@zn.tnic>
+In-Reply-To: <YcwyZRDJUMniSaY9@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -33,54 +32,42 @@ Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
 To: Borislav Petkov <bp@alien8.de>
 Cc: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>
 
-On 12/29/21 at 11:11am, Borislav Petkov wrote:
-> On Wed, Dec 29, 2021 at 03:45:12PM +0800, Dave Young wrote:
-> > BTW, I would suggest to wait for reviewers to response (eg. one week at
-> > least, or more due to the holidays) before updating another version
-> > 
-> > Do not worry to miss the 5.17.  I would say take it easy if it will
-> > miss then let's just leave with it and continue to work on the future
-> > improvements.  I think one reason this issue takes too long time is that it was
-> > discussed some time but no followup and later people need to warm up
-> > again.  Just keep it warm and continue to engage in the improvements, do
-> > not hurry for the specific mainline release.
+On 12/29/21 at 11:03am, Borislav Petkov wrote:
+> On Wed, Dec 29, 2021 at 03:27:48PM +0800, Dave Young wrote:
+> > So I think you can unify the parse_crashkernel* in x86 first with just
+> > one function.  And leave the further improvements to later work. But
+> > let's see how Boris think about this.
 > 
-> Can you tell this to *all* patch submitters please?
+> Well, I think this all unnecessary work. Why?
+> 
+> If the goal is to support crashkernel...high,low on arm64, then you
+> should simply *copy* the functionality on arm64 and be done with it.
+> 
+> Unification is done by looking at code which is duplicated across
+> architectures and which has been untouched for a while now, i.e., no
+> new or arch-specific changes are going to it so a unification can be
+> as simple as trivially switching the architectures to call a generic
+> function.
+> 
+> What this does is carve out the "generic" parts and then try not to
+> break existing usage.
+> 
+> Which is a total waste of energy and resources. And it is casting that
+> functionality in stone so that when x86 wants to change something there,
+> it should do it in a way not to break arm64. And I fail to see the
+> advantage of all that. Code sharing ain't it.
+> 
+> So what it should do is simply copy the necessary code to arm64.
+> Unifications can always be done later, when the dust settles.
 
-I appreciate you further explanation below to describe the situation.  I do not
-see how can I tell this to *all* submitters,  but I am and I will try to do this
-as far as I can.  Maintainers and patch submitters, it would help for both
-parties show sympathy with each other, some soft reminders will help
-people to understand each other, especially for new comers.
+I think I agree with you about the better way is to doing some
+improvements so that arches can logically doing things better.  I can
+leave with the way I suggested although it is not the best.  But I think
+Leizhen needs a clear direction about how to do it. It is very clear
+now.  See how he will handle this. 
 
 > 
-> I can't count the times where people simply hurry to send the new
-> revision just to get it in the next kernel, and make silly mistakes
-> while doing so. Or not think things straight and misdesign it all.
-> 
-> And what this causes is the opposite of what they wanna achieve - pissed
-> maintainers and ignored threads.
-> 
-> And they all *know* that the next kernel is around the corner. So why
-> the hell does it even matter when?
-> 
-> What most submitters fail to realize is, the moment your code hits
-> upstream, it becomes the maintainers' problem and submitters can relax.
-> 
-> But maintainers get to deal with this code forever. So after a while
-> maintainers learn that they either accept ready code and it all just
-> works or they make the mistake to take half-baked crap in and then they
-> themselves get to clean it up and fix it.
-> 
-> So maintainers learn quickly to push back.
-> 
-> But it is annoying and it would help immensely if submitters would
-> consider this and stop hurrying the code in but try to do a *good* job
-> first, design-wise and code-wise by thinking hard about what they're
-> trying to do.
-> 
-> Yeah, things could be a lot simpler and easier - it only takes a little
-> bit of effort...
+> IMNSVHO.
 > 
 > -- 
 > Regards/Gruss,
@@ -88,9 +75,6 @@ people to understand each other, especially for new comers.
 > 
 > https://people.kernel.org/tglx/notes-about-netiquette
 > 
-
-Thanks
-Dave
 
 
 _______________________________________________
