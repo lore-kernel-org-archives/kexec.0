@@ -1,14 +1,13 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Subject: Re: [PATCH v19 01/13] kdump: add helper parse_crashkernel_high_low()
-References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
- <20211228132612.1860-2-thunder.leizhen@huawei.com>
- <4878dda9-871d-228d-21ac-3ac7c8a84322@huawei.com> <Yc2MprJJsm7LagGc@zn.tnic>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <7a703955-cd1c-e074-17dd-a9155aa7690a@huawei.com>
-Date: Thu, 30 Dec 2021 19:08:56 +0800
+Received: from fanzine2.igalia.com ([213.97.179.56])
+ by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+ id 1n2y9o-004kBD-CN
+ for kexec@lists.infradead.org; Thu, 30 Dec 2021 16:20:01 +0000
+From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
+Subject: [PATCH] panic: Move panic_print before kmsg dumpers
+Date: Thu, 30 Dec 2021 13:18:28 -0300
+Message-Id: <20211230161828.121858-1-gpiccoli@igalia.com>
 MIME-Version: 1.0
-In-Reply-To: <Yc2MprJJsm7LagGc@zn.tnic>
-Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -21,44 +20,62 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: Borislav Petkov <bp@alien8.de>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
- Donnelly <John.p.donnelly@oracle.com>
+To: linux-kernel@vger.kernel.org, akpm@linux-foundation.org
+Cc: gpiccoli@igalia.com, kernel@gpiccoli.net, pmladek@suse.com, senozhatsky@chromium.org, rostedt@goodmis.org, john.ogness@linutronix.de, feng.tang@intel.com, kexec@lists.infradead.org, dyoung@redhat.com, keescook@chromium.org, anton@enomsg.org, ccross@android.com, tony.luck@intel.com
+
+The panic_print setting allows users to collect more information in a
+panic event, like memory stats, tasks, CPUs backtraces, etc.
+This is a pretty interesting debug mechanism, but currently the print
+event happens *after* kmsg_dump(), meaning that Pstore, for example,
+cannot collect a dmesg with the panic_print information.
+
+This patch changes that by moving the panic_print_sys_info() function
+call up some lines, in order kmsg_dump() accounts this new information
+and exposes it through Pstore or other kmsg dumpers.
+
+Cc: Feng Tang <feng.tang@intel.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
 
 
+Hey folks, thanks in advance for reviews/comments!
+One alternative I've considered was to move kmsg_dump() some
+lines down, I'm not sure which approach is better, can't see
+much difference. Opinions are very welcome =)
+Cheers,
 
-On 2021/12/30 18:40, Borislav Petkov wrote:
-> On Thu, Dec 30, 2021 at 06:14:59PM +0800, Leizhen (ThunderTown) wrote:
->>
->> Hi, Dave, Baoquan, Borislav:
->>   What do you think about the introduction of parse_crashkernel_high_low()? If everyone
->> doesn't object, I'll bring it to the next version. But I'll make some adjustments to the
->> patches, see below. If there's any objection, I still strongly recommend removing the
->> parameters "system_ram" and "crash_base" of parse_crashkernel_{high,low}().
->>
->> How about splitting __parse_crashkernel() into two parts? One for parsing
->> "crashkernel=X[@offset]", another one for parsing "crashkernel=X,{high,low}" and other
->> suffixes in the future. So the parameter requirements are clear at the lowest level.
-> 
-> First of all, please do not top post!
-> 
-> Now, I already explained to you what I'd like to see:
-> 
-> https://lore.kernel.org/r/Ycs3kpZD/vpoo1AX@zn.tnic
-> 
-> yet you still don't get it.
-> 
-> So let me make myself clear: in its current form, this is not really an
-> improvement so for all x86 changes:
-> 
-> NAKed-by: Borislav Petkov <bp@suse.de>
-> 
 
-OK, thanks for your immediate reply, so I can take less detours.
+Guilherme
 
+
+ kernel/panic.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/panic.c b/kernel/panic.c
+index cefd7d82366f..d918da0a1c29 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -271,6 +271,8 @@ void panic(const char *fmt, ...)
+ 	 */
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+ 
++	panic_print_sys_info();
++
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 
+ 	/*
+@@ -301,8 +303,6 @@ void panic(const char *fmt, ...)
+ 	debug_locks_off();
+ 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+ 
+-	panic_print_sys_info();
+-
+ 	if (!panic_blink)
+ 		panic_blink = no_blink;
+ 
 -- 
-Regards,
-  Zhen Lei
+2.34.1
+
 
 _______________________________________________
 kexec mailing list
