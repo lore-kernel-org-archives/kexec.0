@@ -1,18 +1,15 @@
 Return-path: <kexec-bounces+dwmw2=infradead.org@lists.infradead.org>
-Received: from mail-wm1-x335.google.com ([2a00:1450:4864:20::335])
- by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
- id 1n3E6m-005r0y-9J
- for kexec@lists.infradead.org; Fri, 31 Dec 2021 09:21:57 +0000
-Received: by mail-wm1-x335.google.com with SMTP id
- v10-20020a05600c214a00b00345e59928eeso10685149wml.0
- for <kexec@lists.infradead.org>; Fri, 31 Dec 2021 01:21:55 -0800 (PST)
+Subject: Re: [PATCH v19 01/13] kdump: add helper parse_crashkernel_high_low()
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
+ <20211228132612.1860-2-thunder.leizhen@huawei.com>
+ <4878dda9-871d-228d-21ac-3ac7c8a84322@huawei.com> <Yc2MprJJsm7LagGc@zn.tnic>
+ <7a703955-cd1c-e074-17dd-a9155aa7690a@huawei.com>
+Message-ID: <207b6257-22bc-c9fe-6206-4096d8e0d276@huawei.com>
+Date: Fri, 31 Dec 2021 17:22:56 +0800
 MIME-Version: 1.0
-References: <CAC7+mTga2bGEmK4RotbiO1XvSK2U7bNK9taAoiysVXj5xkMP2Q@mail.gmail.com>
-In-Reply-To: <CAC7+mTga2bGEmK4RotbiO1XvSK2U7bNK9taAoiysVXj5xkMP2Q@mail.gmail.com>
-From: Rostyslav Spolyak <rspolyak@leobit.com>
-Date: Fri, 31 Dec 2021 11:21:43 +0200
-Message-ID: <CAC7+mTiNGENZZxv3JtPpSc__k2treNZhWiR5sfxP140beCqo=w@mail.gmail.com>
-Subject: kexec fails with "locate_hole failed"
+In-Reply-To: <7a703955-cd1c-e074-17dd-a9155aa7690a@huawei.com>
+Content-Language: en-US
 List-Id: <kexec.lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=unsubscribe>
@@ -25,56 +22,102 @@ Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+dwmw2=infradead.org@lists.infradead.org
-To: kexec@lists.infradead.org
+To: Borislav Petkov <bp@alien8.de>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>, linux-kernel@vger.kernel.org, Dave Young <dyoung@redhat.com>, Baoquan He <bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>, Eric Biederman <ebiederm@xmission.com>, kexec@lists.infradead.org, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, John
+ Donnelly <John.p.donnelly@oracle.com>
 
-Kexec (version 2.0.20) fails to launch crashdump kernel with following error:
-> root@device:~# kexec --type zImage -p /boot/zImage --append="root=/dev/mmcblk1p1 1 maxcpus=1 reset_devices"
-> syscall kexec_file_load not available.
-> Could not find a free area of memory of 0x1000 bytes...
-> locate_hole failed
 
-The kernel (version 4.1.52) was configured with CONFIG_KEXEC and
-CONFIG_SYSFS enabled. Additionally u-boot was updated to pass the
-kernel command line "crashkernel=96M@64M" to reserve RAM for the crash
-kernel.
 
-Can you please help to understand why kexec fails to find a free area
-of 0x1000 bytes if 96M should be available.
-Attaching "/proc/iomem" for reference:
-> root@device:~# cat /proc/iomem
-> 00905000-0091ffff : 905000.sram
-> 02008000-0200bfff : /soc/aips-bus@02000000/spba-bus@02000000/ecspi@02008000
-> 02020000-02023fff : /soc/aips-bus@02000000/spba-bus@02000000/serial@02020000
-> 02034000-02037fff : /soc/aips-bus@02000000/spba-bus@02000000/serial@02034000
-> 0209c000-0209ffff : /soc/aips-bus@02000000/gpio@0209c000
-> 020a0000-020a3fff : /soc/aips-bus@02000000/gpio@020a0000
-> 020a4000-020a7fff : /soc/aips-bus@02000000/gpio@020a4000
-> 020a8000-020abfff : /soc/aips-bus@02000000/gpio@020a8000
-> 020ac000-020affff : /soc/aips-bus@02000000/gpio@020ac000
-> 020b8000-020bbfff : /soc/aips-bus@02000000/kpp@020b8000
-> 020bc000-020bffff : /soc/aips-bus@02000000/wdog@020bc000
-> 020c9000-020c9fff : /soc/aips-bus@02000000/usbphy@020c9000
-> 020ca000-020cafff : /soc/aips-bus@02000000/usbphy@020ca000
-> 020e0000-020e3fff : /soc/aips-bus@02000000/iomuxc@020e0000
-> 020ec000-020effff : /soc/aips-bus@02000000/sdma@020ec000
-> 020f0000-020f3fff : /soc/aips-bus@02000000/pxp@020f0000
-> 020f8000-020fbfff : /soc/aips-bus@02000000/lcdif@020f8000
-> 020fc000-020fffff : /soc/aips-bus@02000000/dcp@020fc000
-> 02184000-021841ff : /soc/aips-bus@02100000/usb@02184000
->   02184000-021841ff : /soc/aips-bus@02100000/usb@02184000
-> 02184800-021849ff : /soc/aips-bus@02100000/usbmisc@02184800
-> 02194000-02197fff : mmc1
-> 021a0000-021a3fff : /soc/aips-bus@02100000/i2c@021a0000
-> 021bc000-021bffff : /soc/aips-bus@02100000/ocotp@021bc000
-> 02200000-02203fff : galcore register region
-> 02204000-02207fff : galcore register region
-> 04000000-09ffffff : Crash kernel
-> 80000000-8fffffff : System RAM
->   80008000-8082633f : Kernel code
->   80890000-8094ee93 : Kernel data
+On 2021/12/30 19:08, Leizhen (ThunderTown) wrote:
+> 
+> 
+> On 2021/12/30 18:40, Borislav Petkov wrote:
+>> On Thu, Dec 30, 2021 at 06:14:59PM +0800, Leizhen (ThunderTown) wrote:
+>>>
+>>> Hi, Dave, Baoquan, Borislav:
+>>>   What do you think about the introduction of parse_crashkernel_high_low()? If everyone
+>>> doesn't object, I'll bring it to the next version. But I'll make some adjustments to the
+>>> patches, see below. If there's any objection, I still strongly recommend removing the
+>>> parameters "system_ram" and "crash_base" of parse_crashkernel_{high,low}().
+>>>
+>>> How about splitting __parse_crashkernel() into two parts? One for parsing
+>>> "crashkernel=X[@offset]", another one for parsing "crashkernel=X,{high,low}" and other
+>>> suffixes in the future. So the parameter requirements are clear at the lowest level.
+>>
+>> First of all, please do not top post!
+>>
+>> Now, I already explained to you what I'd like to see:
+>>
+>> https://lore.kernel.org/r/Ycs3kpZD/vpoo1AX@zn.tnic
+>>
+>> yet you still don't get it.
+>>
+>> So let me make myself clear: in its current form, this is not really an
+>> improvement so for all x86 changes:
+>>
+>> NAKed-by: Borislav Petkov <bp@suse.de>
 
-Thanks,
-Ros
+Hi Borislav:
+  I'm sorry to bother you again. Do you mind if I make the following changes?
+I can't stand so many comments appearing twice. Even if the size needs to be
+changed in the future, mode "low_size = CRASH_LOW_SIZE_MIN + <increment>" can
+be used for adaptation without affecting other architectures.
+
+
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index e04f5e6eb33f453..da485ee51a9929e 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -428,16 +428,7 @@ static int __init reserve_crashkernel_low(void)
+        /* crashkernel=Y,low */
+        ret = parse_crashkernel_low(boot_command_line, low_mem_limit, &low_size, &base);
+        if (ret) {
+-               /*
+-                * two parts from kernel/dma/swiotlb.c:
+-                * -swiotlb size: user-specified with swiotlb= or default.
+-                *
+-                * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+-                * to 8M for other buffers that may need to stay low too. Also
+-                * make sure we allocate enough extra low memory so that we
+-                * don't run out of DMA buffers for 32-bit devices.
+-                */
+-               low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
++               low_size = CRASH_LOW_SIZE_MIN;
+        } else {
+                /* passed with crashkernel=0,low ? */
+                if (!low_size)
+diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+index de62a722431e7db..c85b15814312b7e 100644
+--- a/include/linux/crash_core.h
++++ b/include/linux/crash_core.h
+@@ -69,6 +69,17 @@ phys_addr_t paddr_vmcoreinfo_note(void);
+ #define VMCOREINFO_CONFIG(name) \
+        vmcoreinfo_append_str("CONFIG_%s=y\n", #name)
+
++/*
++ * two parts from kernel/dma/swiotlb.c:
++ * -swiotlb size: user-specified with swiotlb= or default.
++ *
++ * -swiotlb overflow buffer: now hardcoded to 32k. We round it
++ * to 8M for other buffers that may need to stay low too. Also
++ * make sure we allocate enough extra low memory so that we
++ * don't run out of DMA buffers for 32-bit devices.
++ */
++#define CRASH_LOW_SIZE_MIN     max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
++
+ extern unsigned char *vmcoreinfo_data;
+ extern size_t vmcoreinfo_size;
+ extern u32 *vmcoreinfo_note;
+
+
+>>
+> 
+> OK, thanks for your immediate reply, so I can take less detours.
+> 
+
+-- 
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
