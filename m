@@ -1,24 +1,103 @@
-From: Al Viro <viro@zeniv.linux.org.uk>
-Date: Sat, 1 Jan 2022 00:36:26 +0000
-Subject: [PATCH v3 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <20211213143927.3069508-1-willy@infradead.org>
-References: <20211213143927.3069508-1-willy@infradead.org>
-Message-ID: <Yc+iCla9zjUFkBXt@zeniv-ca.linux.org.uk>
+From: David Hildenbrand <david@redhat.com>
+Date: Mon, 3 Jan 2022 10:34:09 +0100
+Subject: [PATCH v4 2/3] dma/pool: create dma atomic pool only if dma zone
+ has managed pages
+In-Reply-To: <20211223094435.248523-3-bhe@redhat.com>
+References: <20211223094435.248523-1-bhe@redhat.com>
+ <20211223094435.248523-3-bhe@redhat.com>
+Message-ID: <88f1e4b1-b823-1af6-06b3-8d31564e6077@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Dec 13, 2021 at 02:39:24PM +0000, Matthew Wilcox (Oracle) wrote:
-> For some reason several people have been sending bad patches to fix
-> compiler warnings in vmcore recently.  Here's how it should be done.
-> Compile-tested only on x86.  As noted in the first patch, s390 should
-> take this conversion a bit further, but I'm not inclined to do that
-> work myself.
+On 23.12.21 10:44, Baoquan He wrote:
+> Currently three dma atomic pools are initialized as long as the relevant
+> kernel codes are built in. While in kdump kernel of x86_64, this is not
+> right when trying to create atomic_pool_dma, because there's no managed
+> pages in DMA zone. In the case, DMA zone only has low 1M memory presented
+> and locked down by memblock allocator. So no pages are added into buddy
+> of DMA zone. Please check commit f1d4d47c5851 ("x86/setup: Always reserve
+> the first 1M of RAM").
+> 
+> Then in kdump kernel of x86_64, it always prints below failure message:
+> 
+>  DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
+>  swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
+>  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.13.0-0.rc5.20210611git929d931f2b40.42.fc35.x86_64 #1
+>  Hardware name: Dell Inc. PowerEdge R910/0P658H, BIOS 2.12.0 06/04/2018
+>  Call Trace:
+>   dump_stack+0x7f/0xa1
+>   warn_alloc.cold+0x72/0xd6
+>   ? _raw_spin_unlock_irq+0x24/0x40
+>   ? __alloc_pages_direct_compact+0x90/0x1b0
+>   __alloc_pages_slowpath.constprop.0+0xf29/0xf50
+>   ? __cond_resched+0x16/0x50
+>   ? prepare_alloc_pages.constprop.0+0x19d/0x1b0
+>   __alloc_pages+0x24d/0x2c0
+>   ? __dma_atomic_pool_init+0x93/0x93
+>   alloc_page_interleave+0x13/0xb0
+>   atomic_pool_expand+0x118/0x210
+>   ? __dma_atomic_pool_init+0x93/0x93
+>   __dma_atomic_pool_init+0x45/0x93
+>   dma_atomic_pool_init+0xdb/0x176
+>   do_one_initcall+0x67/0x320
+>   ? rcu_read_lock_sched_held+0x3f/0x80
+>   kernel_init_freeable+0x290/0x2dc
+>   ? rest_init+0x24f/0x24f
+>   kernel_init+0xa/0x111
+>   ret_from_fork+0x22/0x30
+>  Mem-Info:
+>  ......
+>  DMA: failed to allocate 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
+>  DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
+> 
+> Here, let's check if DMA zone has managed pages, then create atomic_pool_dma
+> if yes. Otherwise just skip it.
+> 
+> Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
+> Cc: stable at vger.kernel.org
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: iommu at lists.linux-foundation.org
+> ---
+>  kernel/dma/pool.c | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
+> index 5a85804b5beb..00df3edd6c5d 100644
+> --- a/kernel/dma/pool.c
+> +++ b/kernel/dma/pool.c
+> @@ -206,7 +206,7 @@ static int __init dma_atomic_pool_init(void)
+>  						    GFP_KERNEL);
+>  	if (!atomic_pool_kernel)
+>  		ret = -ENOMEM;
+> -	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
+> +	if (has_managed_dma()) {
+>  		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
+>  						GFP_KERNEL | GFP_DMA);
+>  		if (!atomic_pool_dma)
+> @@ -229,7 +229,7 @@ static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
+>  	if (prev == NULL) {
+>  		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
+>  			return atomic_pool_dma32;
+> -		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
+> +		if (atomic_pool_dma && (gfp & GFP_DMA))
+>  			return atomic_pool_dma;
+>  		return atomic_pool_kernel;
+>  	}
 
-A couple of notes: please, use iov_iter_count(i) instead of open-coding
-i->count.  And there's a preexisting nastiness in read_vmcore() -
-generally, a fault halfway through the read() is treated as a short read,
-rather than -EFAULT...
+I thought for a second that we might have to tweak
+atomic_pool_work_fn(), but atomic_pool_resize() handles it properly already.
+
+Reviewed-by: David Hildenbrand <david@redhat.com>
+
+-- 
+Thanks,
+
+David / dhildenb
+
 
