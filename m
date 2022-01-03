@@ -1,103 +1,71 @@
-From: David Hildenbrand <david@redhat.com>
-Date: Mon, 3 Jan 2022 10:34:09 +0100
-Subject: [PATCH v4 2/3] dma/pool: create dma atomic pool only if dma zone
- has managed pages
-In-Reply-To: <20211223094435.248523-3-bhe@redhat.com>
-References: <20211223094435.248523-1-bhe@redhat.com>
- <20211223094435.248523-3-bhe@redhat.com>
-Message-ID: <88f1e4b1-b823-1af6-06b3-8d31564e6077@redhat.com>
+From: Petr Mladek <pmladek@suse.com>
+Date: Mon, 3 Jan 2022 15:58:47 +0100
+Subject: [PATCH] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <20211230161828.121858-1-gpiccoli@igalia.com>
+References: <20211230161828.121858-1-gpiccoli@igalia.com>
+Message-ID: <YdMPJwkfcjRA48sM@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 23.12.21 10:44, Baoquan He wrote:
-> Currently three dma atomic pools are initialized as long as the relevant
-> kernel codes are built in. While in kdump kernel of x86_64, this is not
-> right when trying to create atomic_pool_dma, because there's no managed
-> pages in DMA zone. In the case, DMA zone only has low 1M memory presented
-> and locked down by memblock allocator. So no pages are added into buddy
-> of DMA zone. Please check commit f1d4d47c5851 ("x86/setup: Always reserve
-> the first 1M of RAM").
-> 
-> Then in kdump kernel of x86_64, it always prints below failure message:
-> 
->  DMA: preallocated 128 KiB GFP_KERNEL pool for atomic allocations
->  swapper/0: page allocation failure: order:5, mode:0xcc1(GFP_KERNEL|GFP_DMA), nodemask=(null),cpuset=/,mems_allowed=0
->  CPU: 0 PID: 1 Comm: swapper/0 Not tainted 5.13.0-0.rc5.20210611git929d931f2b40.42.fc35.x86_64 #1
->  Hardware name: Dell Inc. PowerEdge R910/0P658H, BIOS 2.12.0 06/04/2018
->  Call Trace:
->   dump_stack+0x7f/0xa1
->   warn_alloc.cold+0x72/0xd6
->   ? _raw_spin_unlock_irq+0x24/0x40
->   ? __alloc_pages_direct_compact+0x90/0x1b0
->   __alloc_pages_slowpath.constprop.0+0xf29/0xf50
->   ? __cond_resched+0x16/0x50
->   ? prepare_alloc_pages.constprop.0+0x19d/0x1b0
->   __alloc_pages+0x24d/0x2c0
->   ? __dma_atomic_pool_init+0x93/0x93
->   alloc_page_interleave+0x13/0xb0
->   atomic_pool_expand+0x118/0x210
->   ? __dma_atomic_pool_init+0x93/0x93
->   __dma_atomic_pool_init+0x45/0x93
->   dma_atomic_pool_init+0xdb/0x176
->   do_one_initcall+0x67/0x320
->   ? rcu_read_lock_sched_held+0x3f/0x80
->   kernel_init_freeable+0x290/0x2dc
->   ? rest_init+0x24f/0x24f
->   kernel_init+0xa/0x111
->   ret_from_fork+0x22/0x30
->  Mem-Info:
->  ......
->  DMA: failed to allocate 128 KiB GFP_KERNEL|GFP_DMA pool for atomic allocation
->  DMA: preallocated 128 KiB GFP_KERNEL|GFP_DMA32 pool for atomic allocations
-> 
-> Here, let's check if DMA zone has managed pages, then create atomic_pool_dma
-> if yes. Otherwise just skip it.
-> 
-> Fixes: 6f599d84231f ("x86/kdump: Always reserve the low 1M when the crashkernel option is specified")
-> Cc: stable at vger.kernel.org
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Marek Szyprowski <m.szyprowski@samsung.com>
-> Cc: Robin Murphy <robin.murphy@arm.com>
-> Cc: iommu at lists.linux-foundation.org
+On Thu 2021-12-30 13:18:28, Guilherme G. Piccoli wrote:
+> The panic_print setting allows users to collect more information in a
+> panic event, like memory stats, tasks, CPUs backtraces, etc.
+> This is a pretty interesting debug mechanism, but currently the print
+> event happens *after* kmsg_dump(), meaning that Pstore, for example,
+> cannot collect a dmesg with the panic_print information.
+
+I see the point. Unfortunately, there is some risk in this change
+so I have to ask:
+
+Did you miss this behavior in practice?
+Or does it just look like something that might be useful?
+
+
+> This patch changes that by moving the panic_print_sys_info() function
+> call up some lines, in order kmsg_dump() accounts this new information
+> and exposes it through Pstore or other kmsg dumpers.
+
+Note that panic_print_sys_info() might produce a lot of lines. There is
+non-trivial chance that a lot of information might get lost because
+of the limited log buffer size.
+
+It might cause regression even when no dumpers are registered and
+crash kernel is not loaded. panic_print_sys_info() might overwrite
+the existing messages before we try hard to flush them via
+console_flush_on_panic().
+
+
+> Cc: Feng Tang <feng.tang@intel.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 > ---
->  kernel/dma/pool.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> diff --git a/kernel/dma/pool.c b/kernel/dma/pool.c
-> index 5a85804b5beb..00df3edd6c5d 100644
-> --- a/kernel/dma/pool.c
-> +++ b/kernel/dma/pool.c
-> @@ -206,7 +206,7 @@ static int __init dma_atomic_pool_init(void)
->  						    GFP_KERNEL);
->  	if (!atomic_pool_kernel)
->  		ret = -ENOMEM;
-> -	if (IS_ENABLED(CONFIG_ZONE_DMA)) {
-> +	if (has_managed_dma()) {
->  		atomic_pool_dma = __dma_atomic_pool_init(atomic_pool_size,
->  						GFP_KERNEL | GFP_DMA);
->  		if (!atomic_pool_dma)
-> @@ -229,7 +229,7 @@ static inline struct gen_pool *dma_guess_pool(struct gen_pool *prev, gfp_t gfp)
->  	if (prev == NULL) {
->  		if (IS_ENABLED(CONFIG_ZONE_DMA32) && (gfp & GFP_DMA32))
->  			return atomic_pool_dma32;
-> -		if (IS_ENABLED(CONFIG_ZONE_DMA) && (gfp & GFP_DMA))
-> +		if (atomic_pool_dma && (gfp & GFP_DMA))
->  			return atomic_pool_dma;
->  		return atomic_pool_kernel;
->  	}
+> Hey folks, thanks in advance for reviews/comments!
+> One alternative I've considered was to move kmsg_dump() some
+> lines down, I'm not sure which approach is better, can't see
+> much difference. Opinions are very welcome =)
 
-I thought for a second that we might have to tweak
-atomic_pool_work_fn(), but atomic_pool_resize() handles it properly already.
+This does not look like a good idea either. The comment below
+kmsg_dump(KMSG_DUMP_PANIC) says that it should be called
+before crash_kexec() that might fail.
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
 
--- 
-Thanks,
+IMHO, the best solution would be to allow dumping messages produced
+by panic_print_sys_info() using the registered dumpers directly.
+But it might require redesigning the kmsg_dump API.
 
-David / dhildenb
 
+After all, the proposed patch might be good enough.
+panic_print_sys_info() does nothing by default.
+It might be enough to document that a large enough log buffer
+should be used when some output is enabled, especially when
+a dumper is used.
+
+Also we should mention these pitfalls and risks in the commit
+message.
+
+Best Regards,
+Petr
 
