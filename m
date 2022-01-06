@@ -1,7 +1,7 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Thu,  6 Jan 2022 13:27:10 -0300
-Subject: [PATCH] notifier/panic: Introduce panic_notifier_filter
-Message-ID: <20220106162710.97544-1-gpiccoli@igalia.com>
+Date: Thu,  6 Jan 2022 17:00:07 -0300
+Subject: [PATCH V2] notifier/panic: Introduce panic_notifier_filter
+Message-ID: <20220106200007.112357-1-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -55,6 +55,12 @@ only for the panic notifiers and has no effect in the other notifiers.
 
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
+
+
+V2: Sorry, I've made a confusion/typo in the header file, by
+inverting the types of 2 variables. Fixed now, and below I kept
+the design comments. Cheers!
+
 
 Hi folks, thanks in advance for reviews/suggestions! Some design
 decisions are worth to mention:
@@ -131,7 +137,7 @@ index 2fba82431efb..2dc4e98823ae 100644
  	parkbd.port=	[HW] Parallel port number the keyboard adapter is
  			connected to, default is 0.
 diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
-index 41e32483d7a7..c84b31c342fd 100644
+index 41e32483d7a7..9a96753e96d8 100644
 --- a/include/linux/panic_notifier.h
 +++ b/include/linux/panic_notifier.h
 @@ -5,6 +5,16 @@
@@ -145,8 +151,8 @@ index 41e32483d7a7..c84b31c342fd 100644
 + * notifier list. This setting is useful for kdump, since users may want
 + * some panic notifiers to execute, but not all of them.
 + */
-+extern unsigned int panic_nf_functions[];
-+extern long panic_nf_count;
++extern unsigned long panic_nf_functions[];
++extern int panic_nf_count;
 +
  extern struct atomic_notifier_head panic_notifier_list;
  
