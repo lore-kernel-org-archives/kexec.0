@@ -1,80 +1,57 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Fri, 7 Jan 2022 16:13:00 +0800
-Subject: [PATCH v18 02/17] x86/setup: Move xen_pv_domain() check and
- insert_resource() to setup_arch()
-In-Reply-To: <5d8aed79-b20f-2575-3c3f-8945d8cbac3f@huawei.com>
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-3-thunder.leizhen@huawei.com> <YcSxLodOnxXHx0sV@zn.tnic>
- <d6226aa2-f1f2-24cc-c9d2-9762bd615686@huawei.com>
- <5d8aed79-b20f-2575-3c3f-8945d8cbac3f@huawei.com>
-Message-ID: <7e7c8d93-e745-2bfd-b93d-aecb3b70bf33@huawei.com>
+From: Michal Suchanek <msuchanek@suse.de>
+Date: Fri,  7 Jan 2022 12:53:44 +0100
+Subject: [PATCH v3 0/6] KEXEC_SIG with appended signature
+Message-ID: <cover.1641555875.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+Hello,
 
+This is a refresh of the KEXEC_SIG series.
 
-On 2021/12/25 9:53, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2021/12/24 14:36, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2021/12/24 1:26, Borislav Petkov wrote:
->>> On Wed, Dec 22, 2021 at 09:08:05PM +0800, Zhen Lei wrote:
->>>> From: Chen Zhou <chenzhou10@huawei.com>
->>>>
->>>> We will make the functions reserve_crashkernel() as generic, the
->>>> xen_pv_domain() check in reserve_crashkernel() is relevant only to
->>>> x86,
->>>
->>> Why is that so? Is Xen-PV x86-only?
->>>
->>>> the same as insert_resource() in reserve_crashkernel[_low]().
->>>
->>> Why?
->>>
->>> Looking at
->>>
->>>   0212f9159694 ("x86: Add Crash kernel low reservation")
->>>
->>> it *surprisingly* explains why that resources thing is being added:
->>>
->>>     We need to add another range in /proc/iomem like "Crash kernel low",
->>>     so kexec-tools could find that info and append to kdump kernel
->>>     command line.
->>>
->>> Then,
->>>
->>>   157752d84f5d ("kexec: use Crash kernel for Crash kernel low")
->>>
->>> renamed it because, as it states, kexec-tools was taught to handle
->>> multiple resources of the same name.
->>>
->>> So why does kexec-tools on arm *not* need those iomem resources? How
->>> does it parse the ranges there? Questions over questions...
+This adds KEXEC_SIG support on powerpc and deduplicates the code dealing
+with appended signatures in the kernel.
 
-Hi Borislav:
-  The reason why insert_resource() cannot be used in reserve_crashkernel[_low]()
-on arm64 is clear. The parent resource node of crashk[_low]_res is added by
-request_resource() in request_standard_resources(), so that it will be conflicted.
-All request_resource() in request_standard_resources() should be changed to
-insert_resource(), to make insert_resource() can be used in reserve_crashkernel[_low]().
+powerpc supports IMA_KEXEC but that's an exception rather than the norm.
+On the other hand, KEXEC_SIG is portable across platforms.
 
-  I found commit e25e6e7593ca ("kdump, x86: Process multiple Crash kernel in /proc/iomem")
-in kexec-tools. I'm trying to port it to arm64, or make it generic.
+For distributions to have uniform security features across platforms one
+option should be used on all platforms.
 
-  Thanks.
+Thanks
 
-> 
-> It's a good question worth figuring out. I'm going to dig into this.
-> I admire your rigorous style and sharp vision.
-> 
+Michal
 
+Previous revision: https://lore.kernel.org/linuxppc-dev/cover.1637862358.git.msuchanek at suse.de/
+Patched kernel tree: https://github.com/hramrach/kernel/tree/kexec_sig
+
+Michal Suchanek (6):
+  s390/kexec_file: Don't opencode appended signature check.
+  powerpc/kexec_file: Add KEXEC_SIG support.
+  kexec_file: Don't opencode appended signature verification.
+  module: strip the signature marker in the verification function.
+  module: Use key_being_used_for for log messages in
+    verify_appended_signature
+  module: Move duplicate mod_check_sig users code to mod_parse_sig
+
+ arch/powerpc/Kconfig                     | 16 +++++++
+ arch/powerpc/kexec/elf_64.c              | 14 ++++++
+ arch/s390/Kconfig                        |  2 +-
+ arch/s390/kernel/machine_kexec_file.c    | 43 ++----------------
+ crypto/asymmetric_keys/asymmetric_type.c |  1 +
+ include/linux/module_signature.h         |  1 +
+ include/linux/verification.h             |  4 ++
+ kernel/module-internal.h                 |  2 -
+ kernel/module.c                          | 12 +++--
+ kernel/module_signature.c                | 56 +++++++++++++++++++++++-
+ kernel/module_signing.c                  | 33 +++++++-------
+ security/integrity/ima/ima_modsig.c      | 22 ++--------
+ 12 files changed, 119 insertions(+), 87 deletions(-)
 
 -- 
-Regards,
-  Zhen Lei
+2.31.1
+
 
