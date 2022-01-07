@@ -1,91 +1,41 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Fri, 7 Jan 2022 21:09:26 +0800
-Subject: [PATCH v18 02/17] x86/setup: Move xen_pv_domain() check and
- insert_resource() to setup_arch()
-In-Reply-To: <7e7c8d93-e745-2bfd-b93d-aecb3b70bf33@huawei.com>
-References: <20211222130820.1754-1-thunder.leizhen@huawei.com>
- <20211222130820.1754-3-thunder.leizhen@huawei.com> <YcSxLodOnxXHx0sV@zn.tnic>
- <d6226aa2-f1f2-24cc-c9d2-9762bd615686@huawei.com>
- <5d8aed79-b20f-2575-3c3f-8945d8cbac3f@huawei.com>
- <7e7c8d93-e745-2bfd-b93d-aecb3b70bf33@huawei.com>
-Message-ID: <681a2403-1e1c-1b06-54d0-ca92a7f07e71@huawei.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Fri, 7 Jan 2022 11:39:52 -0300
+Subject: [PATCH V2] notifier/panic: Introduce panic_notifier_filter
+In-Reply-To: <YdgtNvd68kWakErr@smile.fi.intel.com>
+References: <20220106200007.112357-1-gpiccoli@igalia.com>
+ <YdgtNvd68kWakErr@smile.fi.intel.com>
+Message-ID: <9a6e628e-a6fc-9879-288b-eedc32151234@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-
-
-On 2022/1/7 16:13, Leizhen (ThunderTown) wrote:
+On 07/01/2022 09:08, Andy Shevchenko wrote:
+> [...]
+>> +	while (buf) {
+>> +		func = strsep(&buf, ",");
 > 
+> Don't we have a parser of this format already?
+> Anyway, you may reduce code by
 > 
-> On 2021/12/25 9:53, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2021/12/24 14:36, Leizhen (ThunderTown) wrote:
->>>
->>>
->>> On 2021/12/24 1:26, Borislav Petkov wrote:
->>>> On Wed, Dec 22, 2021 at 09:08:05PM +0800, Zhen Lei wrote:
->>>>> From: Chen Zhou <chenzhou10@huawei.com>
->>>>>
->>>>> We will make the functions reserve_crashkernel() as generic, the
->>>>> xen_pv_domain() check in reserve_crashkernel() is relevant only to
->>>>> x86,
->>>>
->>>> Why is that so? Is Xen-PV x86-only?
->>>>
->>>>> the same as insert_resource() in reserve_crashkernel[_low]().
->>>>
->>>> Why?
->>>>
->>>> Looking at
->>>>
->>>>   0212f9159694 ("x86: Add Crash kernel low reservation")
->>>>
->>>> it *surprisingly* explains why that resources thing is being added:
->>>>
->>>>     We need to add another range in /proc/iomem like "Crash kernel low",
->>>>     so kexec-tools could find that info and append to kdump kernel
->>>>     command line.
->>>>
->>>> Then,
->>>>
->>>>   157752d84f5d ("kexec: use Crash kernel for Crash kernel low")
->>>>
->>>> renamed it because, as it states, kexec-tools was taught to handle
->>>> multiple resources of the same name.
->>>>
->>>> So why does kexec-tools on arm *not* need those iomem resources? How
->>>> does it parse the ranges there? Questions over questions...
+> 	unsigned long addr;
+> 	char *func = buf;
 > 
-> Hi Borislav:
->   The reason why insert_resource() cannot be used in reserve_crashkernel[_low]()
-> on arm64 is clear. The parent resource node of crashk[_low]_res is added by
-> request_resource() in request_standard_resources(), so that it will be conflicted.
-> All request_resource() in request_standard_resources() should be changed to
-> insert_resource(), to make insert_resource() can be used in reserve_crashkernel[_low]().
-> 
->   I found commit e25e6e7593ca ("kdump, x86: Process multiple Crash kernel in /proc/iomem")
-> in kexec-tools. I'm trying to port it to arm64, or make it generic.
-
-Chen Zhou's done it before. But the "Crash kernel (low)" can really be eliminated. Chen
-Zhou just used it to distinguish whether the crashkernel memory range is crashkernel load
-range or not. We can use get_crash_kernel_load_range() to get and check the load range.
-
-
-> 
->   Thanks.
-> 
->>
->> It's a good question worth figuring out. I'm going to dig into this.
->> I admire your rigorous style and sharp vision.
->>
-> 
+> 	while ((func = strsep(&func, ",")) {
 > 
 
--- 
-Regards,
-  Zhen Lei
+Hi Andy, thanks for the review! Looking the kernel code for some similar
+parameters, I couldn't see any better alternative (like a helper) to do
+this parsing - checked for example the ftrace parameters (borrowed my
+code from there, in fact heh), initcall_blacklist, module_blacklist,
+usbcore.quirks, etc.
+
+I'll try to follow your suggestion, to reduce a bit the code...though I
+confess the original code reads more clearly for me.
+
+Cheers,
+
+
+Guilherme
 
