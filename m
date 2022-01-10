@@ -1,214 +1,370 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 10 Jan 2022 16:04:56 +0800
-Subject: [RFC v2 0/6] crash: Kernel handling of CPU and memory hot un/plug
-In-Reply-To: <d2d301e2-62df-512d-058a-a9b890e12dfb@oracle.com>
-References: <20211207195204.1582-1-eric.devolder@oracle.com>
- <d2d301e2-62df-512d-058a-a9b890e12dfb@oracle.com>
-Message-ID: <20220110080456.GG2731@MiWiFi-R3L-srv>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Date: Mon, 10 Jan 2022 18:20:08 +0800
+Subject: [PATCH v5] arm64: support more than one crash kernel regions
+Message-ID: <20220110102008.502-1-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Eric,
+From: Chen Zhou <chenzhou10@huawei.com>
 
-On 01/05/22 at 08:25am, Eric DeVolder wrote:
-> Nudge...
-> 
-> Fwiw, below is a working changeset to kexec userspace utility that allows the kexec_load
-> path to work similarly to the kexec_file_load path of this RFC. With both the following
-> userspace kexec patch and this RFC, both kexec_load and kexec_file_load work with changes
-> due to hotplug *without* unloading-then-reloading the kdump/capture kernel.
+When crashkernel is reserved above 4G in memory, kernel should
+reserve some amount of low memory for swiotlb and some DMA buffers.
+So there may be two crash kernel regions, one is below 4G, the other
+is above 4G.
 
-Thanks for taking a try on that, and sorry for late response because of
-somethings at hand.
+Currently, there is only one crash kernel region on arm64, and pass
+"linux,usable-memory-range = <BASE SIZE>" property to crash dump
+kernel.
+Now, we pass "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>"
+to crash dump kernel to support two crash kernel regions and load crash
+kernel high. Make the low memory region as the second range "BASE2 SIZE2"
+to keep compatibility with existing user-space and older kdump kernels.
 
-I will review this v2 round. When applying them, I encountered some
-conflict, could you please rebase these on the ltest 5.16 and send me
-a tar ball privately, or a github branch is also welcome. Thanks in
-advance.
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ kexec/arch/arm64/crashdump-arm64.c | 44 +++++++++-------
+ kexec/arch/arm64/crashdump-arm64.h |  5 +-
+ kexec/arch/arm64/kexec-arm64.c     | 84 ++++++++++++++++++++----------
+ 3 files changed, 86 insertions(+), 47 deletions(-)
 
 
-Thanks
-Baoquan
+Changes since [v4]:
+1. Repalce "Crash kernel (low)" with "Crash kernel", consistent with the
+   x86 implementation. See:
+   e25e6e7593ca ("kdump, x86: Process multiple Crash kernel in /proc/iomem")
+2. Expand fdt_setprop_range() to fdt_setprop_ranges() instead of adding the
+   latter. Parameter 'reverse' is added to control whether to reversely
+   output data to fdt.
 
-> 
-> diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
-> index 9826f6d..06adb7e 100644
-> --- a/kexec/arch/i386/crashdump-x86.c
-> +++ b/kexec/arch/i386/crashdump-x86.c
-> @@ -48,6 +48,7 @@
->  #include <x86/x86-linux.h>
-> 
->  extern struct arch_options_t arch_options;
-> +extern unsigned long long hotplug_size;
-> 
->  static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
->  				  struct crash_elf_info *elf_info)
-> @@ -975,6 +976,13 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
->  	} else {
->  		memsz = bufsz;
->  	}
-> +
-> +    /* If hotplug support enabled, use that size */
-> +    if (hotplug_size) {
-> +        memsz = hotplug_size;
-> +    }
-> +
-> +    info->elfcorehdr =
->  	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
->  							max_addr, -1);
->  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index f63b36b..9569d9a 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -58,6 +58,7 @@
-> 
->  unsigned long long mem_min = 0;
->  unsigned long long mem_max = ULONG_MAX;
-> +unsigned long long hotplug_size = 0;
->  static unsigned long kexec_flags = 0;
->  /* Flags for kexec file (fd) based syscall */
->  static unsigned long kexec_file_flags = 0;
-> @@ -672,6 +673,12 @@ static void update_purgatory(struct kexec_info *info)
->  		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
->  			continue;
->  		}
-> +        /* Don't include elfcorehdr in the checksum, if hotplug
-> +         * support enabled.
-> +         */
-> +        if (hotplug_size && (info->segment[i].mem == (void *)info->elfcorehdr)) {
-> +			continue;
-> +		}
->  		sha256_update(&ctx, info->segment[i].buf,
->  			      info->segment[i].bufsz);
->  		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
-> @@ -1504,6 +1511,17 @@ int main(int argc, char *argv[])
->  		case OPT_PRINT_CKR_SIZE:
->  			print_crashkernel_region_size();
->  			return 0;
-> +		case OPT_HOTPLUG_SIZE:
-> +            /* Reserved the specified size for hotplug growth */
-> +			hotplug_size = strtoul(optarg, &endptr, 0);
-> +			if (*endptr) {
-> +				fprintf(stderr,
-> +					"Bad option value in --hotplug-size=%s\n",
-> +					optarg);
-> +				usage();
-> +				return 1;
-> +			}
-> +			break;
->  		default:
->  			break;
->  		}
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 595dd68..b30dda4 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -169,6 +169,7 @@ struct kexec_info {
->  	int command_line_len;
-> 
->  	int skip_checks;
-> +    unsigned long elfcorehdr;
->  };
-> 
->  struct arch_map_entry {
-> @@ -231,7 +232,8 @@ extern int file_types;
->  #define OPT_PRINT_CKR_SIZE	262
->  #define OPT_LOAD_LIVE_UPDATE	263
->  #define OPT_EXEC_LIVE_UPDATE	264
-> -#define OPT_MAX			265
-> +#define OPT_HOTPLUG_SIZE	265
-> +#define OPT_MAX			266
->  #define KEXEC_OPTIONS \
->  	{ "help",		0, 0, OPT_HELP }, \
->  	{ "version",		0, 0, OPT_VERSION }, \
-> @@ -258,6 +260,7 @@ extern int file_types;
->  	{ "debug",		0, 0, OPT_DEBUG }, \
->  	{ "status",		0, 0, OPT_STATUS }, \
->  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
-> +	{ "hotplug-size",     2, 0, OPT_HOTPLUG_SIZE }, \
-> 
->  #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
-> 
-> 
-> 
-> On 12/7/21 13:51, Eric DeVolder wrote:
-> > When the kdump service is loaded, if a CPU or memory is hot
-> > un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
-> > and memory in the system, must also be updated, else the resulting
-> > vmcore is inaccurate (eg. missing either CPU context or memory
-> > regions).
-> > 
-> > The current solution utilizes udev to initiate an unload-then-reload
-> > of the kdump image (e. kernel, initrd, boot_params, puratory and
-> > elfcorehdr) by the userspace kexec utility. In previous posts I have
-> > outlined the significant performance problems related to offloading
-> > this activity to userspace.
-> > 
-> > This patchset introduces a generic crash hot un/plug handler that
-> > registers with the CPU and memory notifiers. Upon CPU or memory
-> > changes, this generic handler is invoked and performs important
-> > housekeeping, for example obtaining the appropriate lock, and then
-> > invokes an architecture specific handler to do the appropriate
-> > updates.
-> > 
-> > In the case of x86_64, the arch specific handler generates a new
-> > elfcorehdr, and overwrites the old one in memory. No involvement
-> > with userspace needed.
-> > 
-> > To realize the benefits/test this patchset, one must make a couple
-> > of minor changes to userspace:
-> > 
-> >   - Disable the udev rule for updating kdump on hot un/plug changes
-> >     Eg. on RHEL: rm -f /usr/lib/udev/rules.d/98-kexec.rules
-> >     or other technique to neuter the rule.
-> > 
-> >   - Change to the kexec_file_load for loading the kdump kernel:
-> >     Eg. on RHEL: in /usr/bin/kdumpctl, change to:
-> >      standard_kexec_args="-p -d -s"
-> >     which adds the -s to select kexec_file_load syscall.
-> > 
-> > This patchset supports kexec_load with a modified kexec userspace
-> > utility, on which I am current working to provide separately.
-> > 
-> > Regards,
-> > eric
-> > ---
-> > RFC v2: 7dec2021
-> >   - Acting upon Baoquan He suggestion of removing elfcorehdr from
-> >     the purgatory list of segments, removed purgatory code from
-> >     patchset, and it is signficiantly simpler now.
-> > 
-> > RFC v1: 18nov2021
-> >   https://lkml.org/lkml/2021/11/18/845
-> >   - working patchset demonstrating kernel handling of hotplug
-> >     updates to x86 elfcorehdr for kexec_file_load
-> > 
-> > RFC: 14dec2020
-> >   https://lkml.org/lkml/2020/12/14/532
-> >   - proposed concept of allowing kernel to handle hotplug update
-> >     of elfcorehdr
-> > ---
-> > 
-> > 
-> > Eric DeVolder (6):
-> >    crash: fix minor typo/bug in debug message
-> >    crash hp: Introduce CRASH_HOTPLUG configuration options
-> >    crash hp: definitions and prototype changes
-> >    crash hp: generic crash hotplug support infrastructure
-> >    crash hp: kexec_file changes for crash hotplug support
-> >    crash hp: Add x86 crash hotplug support
-> > 
-> >   arch/x86/Kconfig        |  26 ++++++++
-> >   arch/x86/kernel/crash.c | 140 +++++++++++++++++++++++++++++++++++++++-
-> >   include/linux/kexec.h   |  21 +++++-
-> >   kernel/crash_core.c     | 118 +++++++++++++++++++++++++++++++++
-> >   kernel/kexec_file.c     |  15 ++++-
-> >   5 files changed, 314 insertions(+), 6 deletions(-)
-> > 
-> 
+Changes since [v3]:
+- Reuse DT property "linux,usable-memory-range".
+Reuse DT property "linux,usable-memory-range" to pass the low 
+memory region.
+
+Changes since [v2]:
+- Rebase to latest kexec-tools code.
+
+Changes since [v1]:
+- Add another DT property "linux,low-memory-range" to crash dump kernel's
+dtb to pass the low region instead of reusing "linux,usable-memory-range".
+
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[2]: http://lists.infradead.org/pipermail/kexec/2019-August/023569.html
+[3]: http://lists.infradead.org/pipermail/kexec/2020-May/025128.html
+[4]: http://lists.infradead.org/pipermail/kexec/2020-June/020737.html
+
+diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+index 03d6204c9611dab..8558f260dc2b6b4 100644
+--- a/kexec/arch/arm64/crashdump-arm64.c
++++ b/kexec/arch/arm64/crashdump-arm64.c
+@@ -27,11 +27,11 @@
+ static struct memory_ranges system_memory_rgns;
+ 
+ /* memory range reserved for crashkernel */
+-struct memory_range crash_reserved_mem;
++struct memory_range crash_reserved_mem[CRASH_MAX_RESERVED_RANGES];
+ struct memory_ranges usablemem_rgns = {
+ 	.size = 0,
+-	.max_size = 1,
+-	.ranges = &crash_reserved_mem,
++	.max_size = CRASH_MAX_RESERVED_RANGES,
++	.ranges = crash_reserved_mem,
+ };
+ 
+ struct memory_range elfcorehdr_mem;
+@@ -111,7 +111,7 @@ int is_crashkernel_mem_reserved(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	return crash_reserved_mem.start != crash_reserved_mem.end;
++	return usablemem_rgns.size;
+ }
+ 
+ /*
+@@ -125,6 +125,8 @@ int is_crashkernel_mem_reserved(void)
+  */
+ static int crash_get_memory_ranges(void)
+ {
++	int i;
++
+ 	/*
+ 	 * First read all memory regions that can be considered as
+ 	 * system memory including the crash area.
+@@ -132,16 +134,19 @@ static int crash_get_memory_ranges(void)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	/* allow only a single region for crash dump kernel */
+-	if (usablemem_rgns.size != 1)
++	/* allow one or two regions for crash dump kernel */
++	if (!usablemem_rgns.size)
+ 		return -EINVAL;
+ 
+-	dbgprint_mem_range("Reserved memory range", &crash_reserved_mem, 1);
++	dbgprint_mem_range("Reserved memory range",
++			usablemem_rgns.ranges, usablemem_rgns.size);
+ 
+-	if (mem_regions_alloc_and_exclude(&system_memory_rgns,
+-						&crash_reserved_mem)) {
+-		fprintf(stderr, "Cannot allocate memory for ranges\n");
+-		return -ENOMEM;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (mem_regions_alloc_and_exclude(&system_memory_rgns,
++					&crash_reserved_mem[i])) {
++			fprintf(stderr, "Cannot allocate memory for ranges\n");
++			return -ENOMEM;
++		}
+ 	}
+ 
+ 	/*
+@@ -202,7 +207,8 @@ int load_crashdump_segments(struct kexec_info *info)
+ 		return EFAILED;
+ 
+ 	elfcorehdr = add_buffer_phys_virt(info, buf, bufsz, bufsz, 0,
+-		crash_reserved_mem.start, crash_reserved_mem.end,
++		crash_reserved_mem[usablemem_rgns.size - 1].start,
++		crash_reserved_mem[usablemem_rgns.size - 1].end,
+ 		-1, 0);
+ 
+ 	elfcorehdr_mem.start = elfcorehdr;
+@@ -220,21 +226,23 @@ int load_crashdump_segments(struct kexec_info *info)
+  * virt_to_phys() in add_segment().
+  * So let's fix up those values for later use so the memory base
+  * (arm64_mm.phys_offset) will be correctly replaced with
+- * crash_reserved_mem.start.
++ * crash_reserved_mem[usablemem_rgns.size - 1].start.
+  */
+ void fixup_elf_addrs(struct mem_ehdr *ehdr)
+ {
+ 	struct mem_phdr *phdr;
+ 	int i;
+ 
+-	ehdr->e_entry += - arm64_mem.phys_offset + crash_reserved_mem.start;
++	ehdr->e_entry += -arm64_mem.phys_offset +
++		crash_reserved_mem[usablemem_rgns.size - 1].start;
+ 
+ 	for (i = 0; i < ehdr->e_phnum; i++) {
+ 		phdr = &ehdr->e_phdr[i];
+ 		if (phdr->p_type != PT_LOAD)
+ 			continue;
+ 		phdr->p_paddr +=
+-			(-arm64_mem.phys_offset + crash_reserved_mem.start);
++			(-arm64_mem.phys_offset +
++			 crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 	}
+ }
+ 
+@@ -243,11 +251,11 @@ int get_crash_kernel_load_range(uint64_t *start, uint64_t *end)
+ 	if (!usablemem_rgns.size)
+ 		kexec_iomem_for_each_line(NULL, iomem_range_callback, NULL);
+ 
+-	if (!crash_reserved_mem.end)
++	if (!usablemem_rgns.size)
+ 		return -1;
+ 
+-	*start = crash_reserved_mem.start;
+-	*end = crash_reserved_mem.end;
++	*start = crash_reserved_mem[usablemem_rgns.size - 1].start;
++	*end = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 
+ 	return 0;
+ }
+diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+index 880b83aa3d0f80f..12f43087d8b32bf 100644
+--- a/kexec/arch/arm64/crashdump-arm64.h
++++ b/kexec/arch/arm64/crashdump-arm64.h
+@@ -16,8 +16,11 @@
+ 
+ #define CRASH_MAX_MEMORY_RANGES	32
+ 
++/* crash dump kernel support at most two regions, low_region and high region. */
++#define CRASH_MAX_RESERVED_RANGES	2
++
+ extern struct memory_ranges usablemem_rgns;
+-extern struct memory_range crash_reserved_mem;
++extern struct memory_range crash_reserved_mem[];
+ extern struct memory_range elfcorehdr_mem;
+ 
+ extern int load_crashdump_segments(struct kexec_info *info);
+diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+index 6f572ed5f7daad8..44ca3dba10baf36 100644
+--- a/kexec/arch/arm64/kexec-arm64.c
++++ b/kexec/arch/arm64/kexec-arm64.c
+@@ -456,22 +456,32 @@ static void fill_property(void *buf, uint64_t val, uint32_t cells)
+ 	}
+ }
+ 
+-static int fdt_setprop_range(void *fdt, int nodeoffset,
+-				const char *name, struct memory_range *range,
++static int fdt_setprop_ranges(void *fdt, int nodeoffset, const char *name,
++				struct memory_range *ranges, int nr_ranges, bool reverse,
+ 				uint32_t address_cells, uint32_t size_cells)
+ {
+ 	void *buf, *prop;
+ 	size_t buf_size;
+-	int result;
++	int i, result;
++	struct memory_range *range;
+ 
+-	buf_size = (address_cells + size_cells) * sizeof(uint32_t);
++	buf_size = (address_cells + size_cells) * sizeof(uint32_t) * nr_ranges;
+ 	prop = buf = xmalloc(buf_size);
++	if (!buf)
++		return -ENOMEM;
+ 
+-	fill_property(prop, range->start, address_cells);
+-	prop += address_cells * sizeof(uint32_t);
++	for (i = 0; i < nr_ranges; i++) {
++		if (reverse)
++			range = ranges + (nr_ranges - 1 - i);
++		else
++			range = ranges + i;
+ 
+-	fill_property(prop, range->end - range->start + 1, size_cells);
+-	prop += size_cells * sizeof(uint32_t);
++		fill_property(prop, range->start, address_cells);
++		prop += address_cells * sizeof(uint32_t);
++
++		fill_property(prop, range->end - range->start + 1, size_cells);
++		prop += size_cells * sizeof(uint32_t);
++	}
+ 
+ 	result = fdt_setprop(fdt, nodeoffset, name, buf, buf_size);
+ 
+@@ -493,7 +503,7 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 	int len, range_len;
+ 	int nodeoffset;
+ 	int new_size;
+-	int result, kaslr_seed;
++	int i, result, kaslr_seed;
+ 
+ 	result = fdt_check_header(dtb->buf);
+ 
+@@ -524,18 +534,20 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 		goto on_error;
+ 	}
+ 
+-	if (!cells_size_fitted(address_cells, size_cells,
+-				&crash_reserved_mem)) {
+-		fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
+-		result = -EINVAL;
+-		goto on_error;
++	for (i = 0; i < usablemem_rgns.size; i++) {
++		if (!cells_size_fitted(address_cells, size_cells,
++					&crash_reserved_mem[i])) {
++			fprintf(stderr, "kexec: usable memory range doesn't fit cells-size.\n");
++			result = -EINVAL;
++			goto on_error;
++		}
+ 	}
+ 
+ 	/* duplicate dt blob */
+ 	range_len = sizeof(uint32_t) * (address_cells + size_cells);
+ 	new_size = fdt_totalsize(dtb->buf)
+ 		+ fdt_prop_len(PROP_ELFCOREHDR, range_len)
+-		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len);
++		+ fdt_prop_len(PROP_USABLE_MEM_RANGE, range_len * usablemem_rgns.size);
+ 
+ 	new_buf = xmalloc(new_size);
+ 	result = fdt_open_into(dtb->buf, new_buf, new_size);
+@@ -619,8 +631,8 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 	if (on_crash) {
+ 		/* add linux,elfcorehdr */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+-		result = fdt_setprop_range(new_buf, nodeoffset,
+-				PROP_ELFCOREHDR, &elfcorehdr_mem,
++		result = fdt_setprop_ranges(new_buf, nodeoffset,
++				PROP_ELFCOREHDR, &elfcorehdr_mem, 1, false,
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+@@ -629,10 +641,17 @@ static int setup_2nd_dtb(struct dtb *dtb, char *command_line, int on_crash)
+ 			goto on_error;
+ 		}
+ 
+-		/* add linux,usable-memory-range */
++		/*
++		 * add linux,usable-memory-range
++		 *
++		 * crash dump kernel support one or two regions, to make
++		 * compatibility with existing user-space and older kdump, the
++		 * low region is always the last one.
++		 */
+ 		nodeoffset = fdt_path_offset(new_buf, "/chosen");
+-		result = fdt_setprop_range(new_buf, nodeoffset,
+-				PROP_USABLE_MEM_RANGE, &crash_reserved_mem,
++		result = fdt_setprop_ranges(new_buf, nodeoffset,
++				PROP_USABLE_MEM_RANGE,
++				usablemem_rgns.ranges, usablemem_rgns.size, true,
+ 				address_cells, size_cells);
+ 		if (result) {
+ 			dbgprintf("%s: fdt_setprop failed: %s\n", __func__,
+@@ -665,13 +684,13 @@ unsigned long arm64_locate_kernel_segment(struct kexec_info *info)
+ 	if (info->kexec_flags & KEXEC_ON_CRASH) {
+ 		unsigned long hole_end;
+ 
+-		hole = (crash_reserved_mem.start < mem_min ?
+-				mem_min : crash_reserved_mem.start);
++		hole = (crash_reserved_mem[usablemem_rgns.size - 1].start < mem_min ?
++				mem_min : crash_reserved_mem[usablemem_rgns.size - 1].start);
+ 		hole = _ALIGN_UP(hole, MiB(2));
+ 		hole_end = hole + arm64_mem.text_offset + arm64_mem.image_size;
+ 
+ 		if ((hole_end > mem_max) ||
+-		    (hole_end > crash_reserved_mem.end)) {
++		    (hole_end > crash_reserved_mem[usablemem_rgns.size - 1].end)) {
+ 			dbgprintf("%s: Crash kernel out of range\n", __func__);
+ 			hole = ULONG_MAX;
+ 		}
+@@ -745,7 +764,7 @@ int arm64_load_other_segments(struct kexec_info *info,
+ 
+ 	hole_min = image_base + arm64_mem.image_size;
+ 	if (info->kexec_flags & KEXEC_ON_CRASH)
+-		hole_max = crash_reserved_mem.end;
++		hole_max = crash_reserved_mem[usablemem_rgns.size - 1].end;
+ 	else
+ 		hole_max = ULONG_MAX;
+ 
+@@ -979,12 +998,21 @@ int get_phys_base_from_pt_load(unsigned long *phys_offset)
+ 	return 0;
+ }
+ 
+-static bool to_be_excluded(char *str)
++static bool to_be_excluded(char *str, unsigned long long start, unsigned long long end)
+ {
++	if (!strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL))) {
++		uint64_t load_start, load_end;
++
++		if (!get_crash_kernel_load_range(&load_start, &load_end) &&
++		    (load_start == start) && (load_end == end))
++			return false;
++
++		return true;
++	}
++
+ 	if (!strncmp(str, SYSTEM_RAM, strlen(SYSTEM_RAM)) ||
+ 	    !strncmp(str, KERNEL_CODE, strlen(KERNEL_CODE)) ||
+-	    !strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)) ||
+-	    !strncmp(str, CRASH_KERNEL, strlen(CRASH_KERNEL)))
++	    !strncmp(str, KERNEL_DATA, strlen(KERNEL_DATA)))
+ 		return false;
+ 	else
+ 		return true;
+@@ -1066,7 +1094,7 @@ int get_memory_ranges(struct memory_range **range, int *ranges,
+ 				memranges.size - 1,
+ 				memranges.ranges[memranges.size - 1].start,
+ 				memranges.ranges[memranges.size - 1].end);
+-		} else if (to_be_excluded(str)) {
++		} else if (to_be_excluded(str, start, end)) {
+ 			if (!memranges.size)
+ 				continue;
+ 
+-- 
+2.26.0.106.g9fadedd
 
 
