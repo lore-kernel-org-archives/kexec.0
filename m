@@ -1,74 +1,72 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Mon, 10 Jan 2022 14:57:26 -0500
-Subject: [PATCH v3 5/6] crash hp: kexec_file changes for crash hotplug support
+Date: Mon, 10 Jan 2022 14:57:24 -0500
+Subject: [PATCH v3 3/6] crash hp: definitions and prototype changes
 In-Reply-To: <20220110195727.1682-1-eric.devolder@oracle.com>
 References: <20220110195727.1682-1-eric.devolder@oracle.com>
-Message-ID: <20220110195727.1682-6-eric.devolder@oracle.com>
+Message-ID: <20220110195727.1682-4-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Two important changes to note:
+This change adds members to struct kimage to facilitate crash
+hotplug support.
 
-The kexec_calculate_store_digests() changed to specifically EXCLUDE
-the elfcorehdr segment from its list of segments to check.
-This is an important change as it allows, in a hotplug environment,
-for the elfcorehdr segment (which contains the list of CPUs and
-memory regions) to change dynamically without the need to update
-purgatory (with the hash/digests of the segments it checks) as well.
-
-The crash_prepare_elf64_headers() changed to look for the offline'd
-CPU and exclude it. This due to the fact that the offline'd CPU is
-still in the for_each_present_cpu() list at this point in time on
-the cpu hotplug handler path.
+This change also defines crash hotplug events and associated
+prototypes.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kernel/kexec_file.c | 15 +++++++++++++--
- 1 file changed, 13 insertions(+), 2 deletions(-)
+ include/linux/kexec.h | 21 +++++++++++++++++++--
+ 1 file changed, 19 insertions(+), 2 deletions(-)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b..339995d42169 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -765,6 +765,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	for (j = i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 0c994ae37729..068f853f1c65 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -221,8 +221,9 @@ struct crash_mem {
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mstart,
+ 				   unsigned long long mend);
+-extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+-				       void **addr, unsigned long *sz);
++extern int crash_prepare_elf64_headers(struct kimage *image,
++					struct crash_mem *mem, int kernel_map,
++					void **addr, unsigned long *sz);
+ #endif /* CONFIG_KEXEC_FILE */
  
-+#ifdef CONFIG_CRASH_HOTPLUG
-+		/* This segment excluded to allow future changes via hotplug */
-+		if (image->elf_index_valid && (j == image->elf_index))
-+			continue;
-+#endif
+ #ifdef CONFIG_KEXEC_ELF
+@@ -299,6 +300,13 @@ struct kimage {
+ 
+ 	/* Information for loading purgatory */
+ 	struct purgatory_info purgatory_info;
 +
- 		ksegment = &image->segment[i];
- 		/*
- 		 * Skip purgatory as it will be modified once we put digest
-@@ -1260,8 +1266,8 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 	return 0;
- }
- 
--int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--			  void **addr, unsigned long *sz)
-+int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
-+	int kernel_map, void **addr, unsigned long *sz)
- {
- 	Elf64_Ehdr *ehdr;
- 	Elf64_Phdr *phdr;
-@@ -1308,6 +1314,11 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 
- 	/* Prepare one phdr of type PT_NOTE for each present CPU */
- 	for_each_present_cpu(cpu) {
 +#ifdef CONFIG_CRASH_HOTPLUG
-+		/* Skip the soon-to-be offlined cpu */
-+		if (image->hotplug_event && (cpu == image->offlinecpu))
-+			continue;
++	bool hotplug_event;
++	int offlinecpu;
++	bool elf_index_valid;
++	int elf_index;
 +#endif
- 		phdr->p_type = PT_NOTE;
- 		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
- 		phdr->p_offset = phdr->p_paddr = notes_addr;
+ #endif
+ 
+ #ifdef CONFIG_IMA_KEXEC
+@@ -315,6 +323,15 @@ struct kimage {
+ 	unsigned long elf_load_addr;
+ };
+ 
++#ifdef CONFIG_CRASH_HOTPLUG
++void arch_crash_hotplug_handler(struct kimage *image,
++	unsigned int hp_action, unsigned long a, unsigned long b);
++#define KEXEC_CRASH_HP_REMOVE_CPU   0
++#define KEXEC_CRASH_HP_ADD_CPU      1
++#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
++#define KEXEC_CRASH_HP_ADD_MEMORY   3
++#endif /* CONFIG_CRASH_HOTPLUG */
++
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+ extern int machine_kexec_prepare(struct kimage *image);
 -- 
 2.27.0
 
