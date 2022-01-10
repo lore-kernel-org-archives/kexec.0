@@ -1,45 +1,37 @@
 From: Frank van der Linden <fllinden@amazon.com>
-Date: Mon, 10 Jan 2022 21:08:09 +0000
-Subject: [PATCH 3/3] efi: enforce usable memory range after reserving regions
+Date: Mon, 10 Jan 2022 21:08:08 +0000
+Subject: [PATCH 2/3] of: fdt: use memblock usable range interface
 In-Reply-To: <20220110210809.3528-1-fllinden@amazon.com>
 References: <20220110210809.3528-1-fllinden@amazon.com>
-Message-ID: <20220110210809.3528-4-fllinden@amazon.com>
+Message-ID: <20220110210809.3528-3-fllinden@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The usable memory range may be restricted through parameters that
-did not come from EFI, like the FDT "linux,usable-memory-range"
-property.
-
-Enforce this range after the EFI memory map regions have been
-processed.
+Use the memblock usable range interface to set and enforce the
+usable memory range (if any).
 
 Signed-off-by: Frank van der Linden <fllinden@amazon.com>
 ---
- drivers/firmware/efi/efi-init.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/of/fdt.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/firmware/efi/efi-init.c b/drivers/firmware/efi/efi-init.c
-index b19ce1a83f91..280e9178c7df 100644
---- a/drivers/firmware/efi/efi-init.c
-+++ b/drivers/firmware/efi/efi-init.c
-@@ -204,6 +204,13 @@ static __init void reserve_regions(void)
- 				memblock_reserve(paddr, size);
- 		}
- 	}
-+
-+	/*
-+	 * Done, filter !nomap memory we just added so that the
-+	 * usable range is enforced. This is normally only set
-+	 * for crash kernels on some architectures.
-+	 */
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index 4546572af24b..b3c2a4124518 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -1279,7 +1279,8 @@ void __init early_init_dt_scan_nodes(void)
+ 	of_scan_flat_dt(early_init_dt_scan_memory, NULL);
+ 
+ 	/* Handle linux,usable-memory-range property */
+-	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
++	memblock_set_usable_range(cap_mem_addr, cap_mem_size);
 +	memblock_enforce_usable_range();
  }
  
- void __init efi_init(void)
+ bool __init early_init_dt_scan(void *params)
 -- 
 2.32.0
 
