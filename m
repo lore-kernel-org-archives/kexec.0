@@ -1,68 +1,49 @@
-From: Palmer Dabbelt <palmer@dabbelt.com>
-Date: Tue, 11 Jan 2022 09:29:30 -0800 (PST)
-Subject: [PATCH v2 2/5] riscv: mm: init: use IS_ENABLED(CONFIG_KEXEC_CORE)
- instead of #ifdef
-In-Reply-To: <20211206160514.2000-3-jszhang@kernel.org>
-Message-ID: <mhng-ef554c87-32d1-443f-805d-3f74b88cd1f0@palmer-ri-x1c9>
+From: Frank van der Linden <fllinden@amazon.com>
+Date: Tue, 11 Jan 2022 20:44:41 +0000
+Subject: [PATCH 1/3] memblock: define functions to set the usable memory
+ range
+In-Reply-To: <Yd1cnquQFZoNE7FP@kernel.org>
+References: <20220110210809.3528-1-fllinden@amazon.com>
+ <20220110210809.3528-2-fllinden@amazon.com> <Yd1cnquQFZoNE7FP@kernel.org>
+Message-ID: <20220111204441.GA36458@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, 06 Dec 2021 08:05:11 PST (-0800), jszhang at kernel.org wrote:
-> Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
-> by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
-> and increase compile coverage.
->
-> Signed-off-by: Jisheng Zhang <jszhang@kernel.org>
-> ---
->  arch/riscv/mm/init.c | 6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/riscv/mm/init.c b/arch/riscv/mm/init.c
-> index a15640eeb334..84879a5ce818 100644
-> --- a/arch/riscv/mm/init.c
-> +++ b/arch/riscv/mm/init.c
-> @@ -748,7 +748,6 @@ static inline void setup_vm_final(void)
->  }
->  #endif /* CONFIG_MMU */
->
-> -#ifdef CONFIG_KEXEC_CORE
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
-> @@ -765,6 +764,8 @@ static void __init reserve_crashkernel(void)
->
->  	int ret = 0;
->
-> +	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
-> +		return;
->  	/*
->  	 * Don't reserve a region for a crash kernel on a crash kernel
->  	 * since it doesn't make much sense and we have limited memory
-> @@ -805,7 +806,6 @@ static void __init reserve_crashkernel(void)
->  	crashk_res.start = crash_base;
->  	crashk_res.end = crash_base + crash_size - 1;
->  }
-> -#endif /* CONFIG_KEXEC_CORE */
->
->  void __init paging_init(void)
->  {
-> @@ -819,9 +819,7 @@ void __init misc_mem_init(void)
->  	arch_numa_init();
->  	sparse_init();
->  	zone_sizes_init();
-> -#ifdef CONFIG_KEXEC_CORE
->  	reserve_crashkernel();
-> -#endif
->  	memblock_dump_all();
->  }
+On Tue, Jan 11, 2022 at 12:31:58PM +0200, Mike Rapoport wrote:
+> > --- a/include/linux/memblock.h
+> > +++ b/include/linux/memblock.h
+> > @@ -481,6 +481,8 @@ phys_addr_t memblock_reserved_size(void);
+> >  phys_addr_t memblock_start_of_DRAM(void);
+> >  phys_addr_t memblock_end_of_DRAM(void);
+> >  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
+> > +void memblock_set_usable_range(phys_addr_t base, phys_addr_t size);
+> > +void memblock_enforce_usable_range(void);
+> >  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
+> >  void memblock_mem_limit_remove_map(phys_addr_t limit);
+> 
+> We already have 3 very similar interfaces that deal with memory capping.
+> Now you suggest to add fourth that will "generically" solve a single use
+> case of DT, EFI and kdump interaction on arm64.
+> 
+> Looks like a workaround for a fundamental issue of incompatibility between
+> DT and EFI wrt memory registration.
 
-Acked-by: Palmer Dabbelt <palmer@rivosinc.com>
+Yep, I figured this would be the main argument against this - arm64
+already added several other more-or-less special cased interfaces over
+time.
 
-LMK if you wanted me to take this through the RISC-V tree, otherwise I'm 
-going to assume all these are going in together.
+I'm more than happy to solve this in a different way.
 
-Thanks!
+What would you suggest:
+
+1) Try to merge the similar interfaces in to one.
+2) Just deal with it at a lower (arm64) level?
+3) Some other way?
+
+Thanks,
+
+- Frank
 
