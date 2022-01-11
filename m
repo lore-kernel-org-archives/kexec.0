@@ -1,156 +1,114 @@
 From: Michal Suchanek <msuchanek@suse.de>
-Date: Tue, 11 Jan 2022 12:37:46 +0100
-Subject: [PATCH v5 4/6] module: strip the signature marker in the verification
- function.
+Date: Tue, 11 Jan 2022 12:37:44 +0100
+Subject: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
 In-Reply-To: <cover.1641900831.git.msuchanek@suse.de>
 References: <cover.1641900831.git.msuchanek@suse.de>
-Message-ID: <96d29773b9ef418a71b1d8bbfd0a456a0f996ec6.1641900831.git.msuchanek@suse.de>
+Message-ID: <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-It is stripped by each caller separately.
+Copy the code from s390x
 
-Note: this changes the error for kexec_file from EKEYREJECTED to ENODATA
-when the signature marker is missing.
+Both powerpc and s390x use appended signature format (as opposed to EFI
+based patforms using PE format).
 
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
-v3: - Philipp Rudo <prudo@redhat.com>: Update the commit with note about
-      change of raturn value
-    - the module_signature.h is now no longer needed for kexec_file
+v3: - Philipp Rudo <prudo@redhat.com>: Update the comit message with
+      explanation why the s390 code is usable on powerpc.
+    - Include correct header for mod_check_sig
+    - Nayna <nayna@linux.vnet.ibm.com>: Mention additional IMA features
+      in kconfig text
 ---
- arch/powerpc/kexec/elf_64.c           | 11 -----------
- arch/s390/kernel/machine_kexec_file.c | 11 -----------
- kernel/module.c                       |  7 +------
- kernel/module_signing.c               | 12 ++++++++++--
- 4 files changed, 11 insertions(+), 30 deletions(-)
+ arch/powerpc/Kconfig        | 16 ++++++++++++++++
+ arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
+ 2 files changed, 52 insertions(+)
 
+diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+index dea74d7717c0..1cde9b6c5987 100644
+--- a/arch/powerpc/Kconfig
++++ b/arch/powerpc/Kconfig
+@@ -560,6 +560,22 @@ config KEXEC_FILE
+ config ARCH_HAS_KEXEC_PURGATORY
+ 	def_bool KEXEC_FILE
+ 
++config KEXEC_SIG
++	bool "Verify kernel signature during kexec_file_load() syscall"
++	depends on KEXEC_FILE && MODULE_SIG_FORMAT
++	help
++	  This option makes kernel signature verification mandatory for
++	  the kexec_file_load() syscall.
++
++	  In addition to that option, you need to enable signature
++	  verification for the corresponding kernel image type being
++	  loaded in order for this to work.
++
++	  Note: on powerpc IMA_ARCH_POLICY also implements kexec'ed kernel
++	  verification. In addition IMA adds kernel hashes to the measurement
++	  list, extends IMA PCR in the TPM, and implements kernel image
++	  blacklist by hash.
++
+ config RELOCATABLE
+ 	bool "Build a relocatable kernel"
+ 	depends on PPC64 || (FLATMEM && (44x || FSL_BOOKE))
 diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-index 64cd314cce0d..6dec8151ef73 100644
+index eeb258002d1e..98d1cb5135b4 100644
 --- a/arch/powerpc/kexec/elf_64.c
 +++ b/arch/powerpc/kexec/elf_64.c
-@@ -24,7 +24,6 @@
+@@ -23,6 +23,7 @@
+ #include <linux/of_fdt.h>
  #include <linux/slab.h>
  #include <linux/types.h>
- #include <linux/verification.h>
--#include <linux/module_signature.h>
++#include <linux/module_signature.h>
  
  static void *elf64_load(struct kimage *image, char *kernel_buf,
  			unsigned long kernel_len, char *initrd,
-@@ -156,16 +155,6 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- #ifdef CONFIG_KEXEC_SIG
- int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
- {
--	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
--
--	if (marker_len > kernel_len)
--		return -EKEYREJECTED;
--
--	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
--		   marker_len))
--		return -EKEYREJECTED;
--	kernel_len -= marker_len;
--
- 	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
- 					 "kexec_file");
+@@ -151,7 +152,42 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+ 	return ret ? ERR_PTR(ret) : NULL;
  }
-diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
-index 345f2eab6e04..c3deccf1da83 100644
---- a/arch/s390/kernel/machine_kexec_file.c
-+++ b/arch/s390/kernel/machine_kexec_file.c
-@@ -12,7 +12,6 @@
- #include <linux/elf.h>
- #include <linux/errno.h>
- #include <linux/kexec.h>
--#include <linux/module_signature.h>
- #include <linux/verification.h>
- #include <linux/vmalloc.h>
- #include <asm/boot_data.h>
-@@ -28,20 +27,10 @@ const struct kexec_file_ops * const kexec_file_loaders[] = {
- #ifdef CONFIG_KEXEC_SIG
- int s390_verify_sig(const char *kernel, unsigned long kernel_len)
- {
--	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
--
- 	/* Skip signature verification when not secure IPLed. */
- 	if (!ipl_secure_flag)
- 		return 0;
  
--	if (marker_len > kernel_len)
--		return -EKEYREJECTED;
--
--	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
--		   marker_len))
--		return -EKEYREJECTED;
--	kernel_len -= marker_len;
--
- 	return verify_appended_signature(kernel, &kernel_len, VERIFY_USE_PLATFORM_KEYRING,
- 					"kexec_file");
- }
-diff --git a/kernel/module.c b/kernel/module.c
-index 8481933dfa92..d91ca0f93a40 100644
---- a/kernel/module.c
-+++ b/kernel/module.c
-@@ -2882,7 +2882,6 @@ static inline void kmemleak_load_module(const struct module *mod,
- static int module_sig_check(struct load_info *info, int flags)
- {
- 	int err = -ENODATA;
--	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
- 	const char *reason;
- 	const void *mod = info->hdr;
- 
-@@ -2890,11 +2889,7 @@ static int module_sig_check(struct load_info *info, int flags)
- 	 * Require flags == 0, as a module with version information
- 	 * removed is no longer the module that was signed
- 	 */
--	if (flags == 0 &&
--	    info->len > markerlen &&
--	    memcmp(mod + info->len - markerlen, MODULE_SIG_STRING, markerlen) == 0) {
--		/* We truncate the module to discard the signature */
--		info->len -= markerlen;
-+	if (flags == 0) {
- 		err = verify_appended_signature(mod, &info->len,
- 						VERIFY_USE_SECONDARY_KEYRING, "module");
- 		if (!err) {
-diff --git a/kernel/module_signing.c b/kernel/module_signing.c
-index 30149969f21f..39a6dd7c6dd2 100644
---- a/kernel/module_signing.c
-+++ b/kernel/module_signing.c
-@@ -15,8 +15,7 @@
- #include "module-internal.h"
- 
- /**
-- * verify_appended_signature - Verify the signature on a module with the
-- * signature marker stripped.
-+ * verify_appended_signature - Verify the signature on a module
-  * @data: The data to be verified
-  * @len: Size of @data.
-  * @trusted_keys: Keyring to use for verification
-@@ -25,12 +24,21 @@
- int verify_appended_signature(const void *data, unsigned long *len,
- 			      struct key *trusted_keys, const char *what)
- {
-+	const unsigned long markerlen = sizeof(MODULE_SIG_STRING) - 1;
- 	struct module_signature *ms;
- 	unsigned long sig_len, modlen = *len;
- 	int ret;
- 
- 	pr_devel("==>%s(,%lu)\n", __func__, modlen);
- 
-+	if (markerlen > modlen)
-+		return -ENODATA;
++#ifdef CONFIG_KEXEC_SIG
++int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
++{
++	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
++	struct module_signature *ms;
++	unsigned long sig_len;
++	int ret;
 +
-+	if (memcmp(data + modlen - markerlen, MODULE_SIG_STRING,
-+		   markerlen))
-+		return -ENODATA;
-+	modlen -= markerlen;
++	if (marker_len > kernel_len)
++		return -EKEYREJECTED;
 +
- 	if (modlen <= sizeof(*ms))
- 		return -EBADMSG;
- 
++	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
++		   marker_len))
++		return -EKEYREJECTED;
++	kernel_len -= marker_len;
++
++	ms = (void *)kernel + kernel_len - sizeof(*ms);
++	ret = mod_check_sig(ms, kernel_len, "kexec");
++	if (ret)
++		return ret;
++
++	sig_len = be32_to_cpu(ms->sig_len);
++	kernel_len -= sizeof(*ms) + sig_len;
++
++	return verify_pkcs7_signature(kernel, kernel_len,
++				      kernel + kernel_len, sig_len,
++				      VERIFY_USE_PLATFORM_KEYRING,
++				      VERIFYING_MODULE_SIGNATURE,
++				      NULL, NULL);
++}
++#endif /* CONFIG_KEXEC_SIG */
++
+ const struct kexec_file_ops kexec_elf64_ops = {
+ 	.probe = kexec_elf_probe,
+ 	.load = elf64_load,
++#ifdef CONFIG_KEXEC_SIG
++	.verify_sig = elf64_verify_sig,
++#endif
+ };
 -- 
 2.31.1
 
