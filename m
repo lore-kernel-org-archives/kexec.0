@@ -1,113 +1,57 @@
-From: Mike Rapoport <rppt@kernel.org>
-Date: Tue, 11 Jan 2022 12:31:58 +0200
-Subject: [PATCH 1/3] memblock: define functions to set the usable memory
- range
-In-Reply-To: <20220110210809.3528-2-fllinden@amazon.com>
-References: <20220110210809.3528-1-fllinden@amazon.com>
- <20220110210809.3528-2-fllinden@amazon.com>
-Message-ID: <Yd1cnquQFZoNE7FP@kernel.org>
+From: Michal Suchanek <msuchanek@suse.de>
+Date: Tue, 11 Jan 2022 12:37:42 +0100
+Subject: [PATCH v5 0/6] KEXEC_SIG with appended signature
+Message-ID: <cover.1641900831.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Jan 10, 2022 at 09:08:07PM +0000, Frank van der Linden wrote:
-> Some architectures might limit the usable memory range based
-> on a firmware property, like "linux,usable-memory-range"
-> for ARM crash kernels. This limit needs to be enforced after
-> firmware memory map processing has been done, which might be
-> e.g. FDT or EFI, or both.
-> 
-> Define an interface for it that is firmware type agnostic.
-> 
-> Signed-off-by: Frank van der Linden <fllinden@amazon.com>
-> ---
->  include/linux/memblock.h |  2 ++
->  mm/memblock.c            | 37 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 39 insertions(+)
-> 
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 34de69b3b8ba..6128efa50d33 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -481,6 +481,8 @@ phys_addr_t memblock_reserved_size(void);
->  phys_addr_t memblock_start_of_DRAM(void);
->  phys_addr_t memblock_end_of_DRAM(void);
->  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
-> +void memblock_set_usable_range(phys_addr_t base, phys_addr_t size);
-> +void memblock_enforce_usable_range(void);
->  void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
->  void memblock_mem_limit_remove_map(phys_addr_t limit);
+Hello,
 
-We already have 3 very similar interfaces that deal with memory capping.
-Now you suggest to add fourth that will "generically" solve a single use
-case of DT, EFI and kdump interaction on arm64.
+This is a refresh of the KEXEC_SIG series.
 
-Looks like a workaround for a fundamental issue of incompatibility between
-DT and EFI wrt memory registration.
+This adds KEXEC_SIG support on powerpc and deduplicates the code dealing
+with appended signatures in the kernel.
 
->  bool memblock_is_memory(phys_addr_t addr);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index 5096500b2647..cb961965f3ad 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -101,6 +101,7 @@ unsigned long max_low_pfn;
->  unsigned long min_low_pfn;
->  unsigned long max_pfn;
->  unsigned long long max_possible_pfn;
-> +phys_addr_t usable_start, usable_size;
->
->  static struct memblock_region memblock_memory_init_regions[INIT_MEMBLOCK_REGIONS] __initdata_memblock;
->  static struct memblock_region memblock_reserved_init_regions[INIT_MEMBLOCK_RESERVED_REGIONS] __initdata_memblock;
-> @@ -1715,6 +1716,42 @@ void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
->  			base + size, PHYS_ADDR_MAX);
->  }
->  
-> +/**
-> + * memblock_set_usable_range - set usable memory range
-> + * @base: physical address that is the start of the range
-> + * @size: size of the range.
-> + *
-> + * Used when a firmware property limits the range of usable
-> + * memory, like for the linux,usable-memory-range property
-> + * used by ARM crash kernels.
-> + */
-> +void __init memblock_set_usable_range(phys_addr_t base, phys_addr_t size)
-> +{
-> +	usable_start = base;
-> +	usable_size = size;
-> +}
-> +
-> +/**
-> + * memblock_enforce_usable_range - cap memory ranges to usable range
-> + *
-> + * Some architectures call this during boot after firmware memory ranges
-> + * have been scanned, to make sure they fall within the usable range
-> + * set by memblock_set_usable_range.
-> + *
-> + * This may be called more than once if there are multiple firmware sources
-> + * for memory ranges.
-> + *
-> + * Avoid "no memory registered" warning - the warning itself is
-> + * useful, but we know this can be called with no registered
-> + * memory (e.g. when the synthetic DT for the crash kernel has
-> + * been parsed on EFI arm64 systems).
-> + */
-> +void __init memblock_enforce_usable_range(void)
-> +{
-> +	if (memblock_memory->total_size)
-> +		memblock_cap_memory_range(usable_start, usable_size);
-> +}
-> +
->  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->  {
->  	phys_addr_t max_addr;
-> -- 
-> 2.32.0
-> 
+powerpc supports IMA_KEXEC but that's an exception rather than the norm.
+On the other hand, KEXEC_SIG is portable across platforms.
+
+For distributions to have uniform security features across platforms one
+option should be used on all platforms.
+
+Thanks
+
+Michal
+
+Previous revision: https://lore.kernel.org/linuxppc-dev/cover.1637862358.git.msuchanek at suse.de/
+Patched kernel tree: https://github.com/hramrach/kernel/tree/kexec_sig
+
+Michal Suchanek (6):
+  s390/kexec_file: Don't opencode appended signature check.
+  powerpc/kexec_file: Add KEXEC_SIG support.
+  kexec_file: Don't opencode appended signature verification.
+  module: strip the signature marker in the verification function.
+  module: Use key_being_used_for for log messages in
+    verify_appended_signature
+  module: Move duplicate mod_check_sig users code to mod_parse_sig
+
+ arch/powerpc/Kconfig                     | 16 +++++++
+ arch/powerpc/kexec/elf_64.c              | 12 +++++
+ arch/s390/Kconfig                        |  2 +-
+ arch/s390/kernel/machine_kexec_file.c    | 41 +----------------
+ crypto/asymmetric_keys/asymmetric_type.c |  1 +
+ include/linux/module_signature.h         |  4 +-
+ include/linux/verification.h             |  5 ++
+ kernel/module-internal.h                 |  2 -
+ kernel/module.c                          | 12 ++---
+ kernel/module_signature.c                | 58 +++++++++++++++++++++++-
+ kernel/module_signing.c                  | 34 ++++++--------
+ security/integrity/ima/ima_modsig.c      | 22 ++-------
+ 12 files changed, 119 insertions(+), 90 deletions(-)
 
 -- 
-Sincerely yours,
-Mike.
+2.31.1
+
 
