@@ -1,97 +1,76 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Thu, 13 Jan 2022 15:22:29 +0100
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Thu, 13 Jan 2022 12:15:08 -0300
 Subject: [PATCH V2] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <ba0e29ba-0e08-df6e-ade5-eb58ae2495e3@igalia.com>
+In-Reply-To: <YeA1pXz7f0wqSnah@alley>
 References: <20220106212835.119409-1-gpiccoli@igalia.com>
- <Yd/0K1x7ILw3Qa46@alley>
- <ba0e29ba-0e08-df6e-ade5-eb58ae2495e3@igalia.com>
-Message-ID: <YeA1pXz7f0wqSnah@alley>
+ <Yd/0K1x7ILw3Qa46@alley> <ba0e29ba-0e08-df6e-ade5-eb58ae2495e3@igalia.com>
+ <YeA1pXz7f0wqSnah@alley>
+Message-ID: <f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu 2022-01-13 09:34:01, Guilherme G. Piccoli wrote:
-> On 13/01/2022 08:50, Petr Mladek wrote:
-> >> @@ -249,7 +252,7 @@ void panic(const char *fmt, ...)
-> >>  	 * show some extra information on kernel log if it was set...
-> >>  	 */
-> >>  	if (kexec_crash_loaded())
-> >> -		panic_print_sys_info();
-> >> +		panic_print_sys_info(false);
-> > 
-> > panic_print_sys_info(false) will be called twice when both
-> > kexec_crash_loaded() and _crash_kexec_post_notifiers are true.
-> > 
-> > Do we really need to call panic_print_sys_info() here? All information
-> > provided by panic_print_sys_info(false) can be found also in
-> > the crash dump.
-> > 
-> >>  	/*
-> >>  	 * If we have crashed and we have a crash kernel loaded let it handle
-> >> @@ -283,6 +286,8 @@ void panic(const char *fmt, ...)
-> >>  	 */
-> >>  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
-> >>  
-> >> +	panic_print_sys_info(false);
-> > 
-> > This is where the info might be printed 2nd time.
-> > 
-> >> +
-> >>  	kmsg_dump(KMSG_DUMP_PANIC);
-
-> Thanks for catching this issue - indeed, if
-> "_crash_kexec_post_notifiers" is true, with this patch we print stuff
-> twice. I will submit a V3 that guards against that, using a bool, makes
-> sense to you?
-
-It might be possible to check kexec_crash_loaded() on the two
-locations. But I think about even easier solution, see below.
-
-
-> The interesting question here is:
-> > Do we really need to call panic_print_sys_info() here? All information
-> > provided by panic_print_sys_info(false) can be found also in
-> > the crash dump.
+On 13/01/2022 11:22, Petr Mladek wrote:
+> [...]
+> OK, do we have any specific reason why panic_print_sys_info()
+> should get called right before kmsg_dump() when this code patch
+> is used?
 > 
-> So, we indeed need that in our use case. Crash is meant to be used
-> post-mortem, i.e., you made a full vmcore collection and then, of
-> course, you have basically all the data you need accessible though the
-> crash tool.
+> Alternative solution would be to remove the check of
+> kexec_crash_loaded() and always call panic_print_sys_info(false)
+> at the beginning (after kgdb_panic(buf)).
 > 
-> Problem is: in our use case, we want more data than a regular dmesg in a
-> panic event (hence we use panic_print), but we don't collect a full
-> crash dump, due to its big size. Also, as you can imagine, we do favor
-> pstore over kdump, but it might fail due to a variety of reasons (like
-> not having a free RAM buffer for ramoops), so kdump is our fallback.
-> Hence, we'd like to be able to use panic_print with both kdump and
-> pstore, and for that, both patches are needed.
+> The advantage is that panic_print_sys_info(false) will be always
+> called on the same location. It will give the same results
+> in all code paths so that it will be easier to interpret them.
+> And it will have the same problems so it should be easier
+> to debug and maintain.
+> 
+> It is possible that it will not work for some users. Also it is
+> possible that it might cause some problems. But it is hard to
+> guess at least for me.
+> 
+> I think that we might try it and see if anyone complains.
+> Honestly, I think that only few people use panic_printk_sys_info().
+> And your use-case makes sense.
+> 
+> Best Regards,
+> Petr
 
-Fair enough.
+Hi Petr, thanks for your idea - it's simple and effective, would resolve
+the problems in a straightforward way. But there are some cons, let me
+detail more.
 
-OK, do we have any specific reason why panic_print_sys_info()
-should get called right before kmsg_dump() when this code patch
-is used?
+Currently (in linux-next), if users set panic_print but not kdump, the
+panic_print_sys_info() is called *after* the panic notifiers. If user
+has kdump configured and still sets panic_print (which is our use case),
+then panic_print_sys_info() is called _before_ the panic notifiers. In
+other words, the behavior for non-kdump users is the same as before,
+since the merge of panic_print functionality.
 
-Alternative solution would be to remove the check of
-kexec_crash_loaded() and always call panic_print_sys_info(false)
-at the beginning (after kgdb_panic(buf)).
+Your idea brings the printing earlier, always before the panic
+notifiers. This isn't terrible, but might lead to unfortunate and
+hard-to-debug problems; for example, some panic notifiers are
+rcu_panic() and hung_task_panic(), both are simple functions to disable
+RCU warnings and hung task detector in panic scenarios. If we go with
+your idea, these won't get called before panic_print_sys_info(), even if
+kdump is not set. So, since the panic_print triggers a lot of printing
+in the console, we could face a stall and trigger RCU messages, maybe
+intermixed with the panic_print information.
 
-The advantage is that panic_print_sys_info(false) will be always
-called on the same location. It will give the same results
-in all code paths so that it will be easier to interpret them.
-And it will have the same problems so it should be easier
-to debug and maintain.
+Again, this is not the end of the world, we could live with that. But
+keeping two calls - and guarding against double print using
+kexec_crash_loaded() as per your idea - is completely non-invasive and
+doesn't change the current behavior.
 
-It is possible that it will not work for some users. Also it is
-possible that it might cause some problems. But it is hard to
-guess at least for me.
+So, let me know if we should go with your idea or keep both calls but
+guarding against double printing to keep the current behavior untouched.
+Both ways work for me, I'm slightly inclined to the latter, but I can
+rework the patch if you prefer and use your idea!
+Cheers,
 
-I think that we might try it and see if anyone complains.
-Honestly, I think that only few people use panic_printk_sys_info().
-And your use-case makes sense.
 
-Best Regards,
-Petr
+Guilherme
 
