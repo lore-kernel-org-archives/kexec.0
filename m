@@ -1,187 +1,55 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Thu, 13 Jan 2022 09:17:38 +0800
-Subject: [PATCH v19 11/13] arm64: kdump: reimplement crashkernel=X
-In-Reply-To: <e48ac849-cc3d-3c0b-e159-7408af61eece@oracle.com>
-References: <20211228132612.1860-1-thunder.leizhen@huawei.com>
- <20211228132612.1860-12-thunder.leizhen@huawei.com>
- <e48ac849-cc3d-3c0b-e159-7408af61eece@oracle.com>
-Message-ID: <6bcea8a4-c244-bb0c-ff55-92cbe463b4cc@huawei.com>
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 13 Jan 2022 12:50:06 +0100
+Subject: [PATCH V2] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <20220106212835.119409-1-gpiccoli@igalia.com>
+References: <20220106212835.119409-1-gpiccoli@igalia.com>
+Message-ID: <Yd/0K1x7ILw3Qa46@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Thu 2022-01-06 18:28:35, Guilherme G. Piccoli wrote:
+> The panic_print setting allows users to collect more information in a
+> panic event, like memory stats, tasks, CPUs backtraces, etc.
+> This is a pretty interesting debug mechanism, but currently the print
+> event happens *after* kmsg_dump(), meaning that pstore, for example,
+> cannot collect a dmesg with the panic_print information.
 
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -249,7 +252,7 @@ void panic(const char *fmt, ...)
+>  	 * show some extra information on kernel log if it was set...
+>  	 */
+>  	if (kexec_crash_loaded())
+> -		panic_print_sys_info();
+> +		panic_print_sys_info(false);
 
-On 2022/1/12 22:45, Dave Kleikamp wrote:
-> On 12/28/21 7:26AM, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
->>
->> There are following issues in arm64 kdump:
->> 1. We use crashkernel=X to reserve crashkernel below 4G, which
->> will fail when there is no enough low memory.
->> 2. If reserving crashkernel above 4G, in this case, crash dump
->> kernel will boot failure because there is no low memory available
->> for allocation.
->>
->> To solve these issues, change the behavior of crashkernel=X and
->> introduce crashkernel=X,[high,low]. crashkernel=X tries low allocation
->> in DMA zone, and fall back to high allocation if it fails.
->> We can also use "crashkernel=X,high" to select a region above DMA zone,
->> which also tries to allocate at least 256M in DMA zone automatically.
->> "crashkernel=Y,low" can be used to allocate specified size low memory.
->>
->> Another minor change, there may be two regions reserved for crash
->> dump kernel, in order to distinct from the high region and make no
->> effect to the use of existing kexec-tools, rename the low region as
->> "Crash kernel (low)".
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->> ? arch/arm64/kernel/machine_kexec.c????? |? 5 +++-
->> ? arch/arm64/kernel/machine_kexec_file.c | 12 ++++++--
->> ? arch/arm64/kernel/setup.c????????????? | 13 +++++++-
->> ? arch/arm64/mm/init.c?????????????????? | 41 ++++++++++----------------
->> ? 4 files changed, 42 insertions(+), 29 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
->> index 6fb31c117ebe08c..6665bf31f6b6a19 100644
->> --- a/arch/arm64/kernel/machine_kexec.c
->> +++ b/arch/arm64/kernel/machine_kexec.c
->> @@ -327,7 +327,10 @@ bool crash_is_nosave(unsigned long pfn)
->> ? ????? /* in reserved memory? */
->> ????? addr = __pfn_to_phys(pfn);
->> -??? if ((addr < crashk_res.start) || (crashk_res.end < addr))
->> +??? if (((addr < crashk_res.start) || (crashk_res.end < addr)) && !crashk_low_res.end)
->> +??????? return false;
->> +
->> +??? if ((addr < crashk_low_res.start) || (crashk_low_res.end < addr))
->> ????????? return false;
->> ? ????? if (!kexec_crash_image)
->> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
->> index 59c648d51848886..889951291cc0f9c 100644
->> --- a/arch/arm64/kernel/machine_kexec_file.c
->> +++ b/arch/arm64/kernel/machine_kexec_file.c
->> @@ -65,10 +65,18 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->> ? ????? /* Exclude crashkernel region */
->> ????? ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
->> +??? if (ret)
->> +??????? goto out;
->> +
->> +??? if (crashk_low_res.end) {
->> +??????? ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
->> +??????? if (ret)
->> +??????????? goto out;
->> +??? }
->> ? -??? if (!ret)
->> -??????? ret =? crash_prepare_elf64_headers(cmem, true, addr, sz);
->> +??? ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
->> ? +out:
->> ????? kfree(cmem);
->> ????? return ret;
->> ? }
->> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
->> index be5f85b0a24de69..4bb2e55366be64d 100644
->> --- a/arch/arm64/kernel/setup.c
->> +++ b/arch/arm64/kernel/setup.c
->> @@ -248,7 +248,18 @@ static void __init request_standard_resources(void)
->> ????????????? kernel_data.end <= res->end)
->> ????????????? request_resource(res, &kernel_data);
->> ? #ifdef CONFIG_KEXEC_CORE
->> -??????? /* Userspace will find "Crash kernel" region in /proc/iomem. */
->> +??????? /*
->> +???????? * Userspace will find "Crash kernel" or "Crash kernel (low)"
->> +???????? * region in /proc/iomem.
->> +???????? * In order to distinct from the high region and make no effect
->> +???????? * to the use of existing kexec-tools, rename the low region as
->> +???????? * "Crash kernel (low)".
->> +???????? */
->> +??????? if (crashk_low_res.end && crashk_low_res.start >= res->start &&
->> +??????????????? crashk_low_res.end <= res->end) {
->> +??????????? crashk_low_res.name = "Crash kernel (low)";
->> +??????????? request_resource(res, &crashk_low_res);
->> +??????? }
->> ????????? if (crashk_res.end && crashk_res.start >= res->start &&
->> ????????????? crashk_res.end <= res->end)
->> ????????????? request_resource(res, &crashk_res);
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index be4595dc7459115..91b8038a1529068 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -74,41 +74,32 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->> ?? */
->> ? static void __init reserve_crashkernel(void)
->> ? {
->> -??? unsigned long long crash_base, crash_size;
->> -??? unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
->> +??? unsigned long long crash_size, crash_base, total_mem, low_size;
-> 
-> low_size needs to be initialized to -1.
-> 
-> If parse_crashkernel() succeeds, then an uninitialized low_size will be passed to reserve_crashkernel_mem().
+panic_print_sys_info(false) will be called twice when both
+kexec_crash_loaded() and _crash_kexec_post_notifiers are true.
 
-Right, thanks, I noticed that too. I'm waiting for v5.17-rc1 to release v20.
+Do we really need to call panic_print_sys_info() here? All information
+provided by panic_print_sys_info(false) can be found also in
+the crash dump.
 
-In addition, I found that the current implementation on x86 was problematic in case
-"crashkernel=4G crashkernel=512M,low". According to the document, "crashkernel=512M,low"
-should not take effect at this case. But reserve_crashkernel_low() didn't do that well.
+>  	/*
+>  	 * If we have crashed and we have a crash kernel loaded let it handle
+> @@ -283,6 +286,8 @@ void panic(const char *fmt, ...)
+>  	 */
+>  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>  
+> +	panic_print_sys_info(false);
 
-> 
->> +??? bool high = false;
->> ????? int ret;
->> ? -??? ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->> -??????????????? &crash_size, &crash_base);
->> -??? /* no crashkernel= or invalid value specified */
->> -??? if (ret || !crash_size)
->> -??????? return;
->> -
->> -??? crash_size = PAGE_ALIGN(crash_size);
->> -
->> -??? /* User specifies base address explicitly. */
->> -??? if (crash_base)
->> -??????? crash_max = crash_base + crash_size;
->> +??? total_mem = memblock_phys_mem_size();
->> ? -??? /* Current arm64 boot protocol requires 2MB alignment */
->> -??? crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
->> -?????????????????????????? crash_base, crash_max);
->> -??? if (!crash_base) {
->> -??????? pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->> -??????????? crash_size);
->> -??????? return;
->> +??? ret = parse_crashkernel(boot_command_line, total_mem, &crash_size, &crash_base);
->> +??? if (ret != 0 || crash_size <= 0) {
->> +??????? /* crashkernel=X,high and possible crashkernel=Y,low */
->> +??????? ret = parse_crashkernel_high_low(boot_command_line, &crash_size, &low_size);
->> +??????? if (ret)
->> +??????????? return;
->> +??????? high = true;
->> ????? }
->> ? -??? pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->> -??????? crash_base, crash_base + crash_size, crash_size >> 20);
->> +??? ret = reserve_crashkernel_mem(total_mem, crash_size, crash_base, low_size, high);
->> +??? if (ret)
->> +??????? return;
->> ? ????? /*
->> ?????? * The crashkernel memory will be removed from the kernel linear
->> ?????? * map. Inform kmemleak so that it won't try to access it.
->> ?????? */
->> -??? kmemleak_ignore_phys(crash_base);
->> -??? crashk_res.start = crash_base;
->> -??? crashk_res.end = crash_base + crash_size - 1;
->> +??? kmemleak_ignore_phys(crashk_res.start);
->> +??? if (crashk_low_res.end)
->> +??????? kmemleak_ignore_phys(crashk_low_res.start);
->> ? }
->> ? #else
->> ? static void __init reserve_crashkernel(void)
-> 
-> .
-> 
+This is where the info might be printed 2nd time.
 
--- 
-Regards,
-  Zhen Lei
+> +
+>  	kmsg_dump(KMSG_DUMP_PANIC);
+>  
+>  	/*
+
+Otherwise, the change makes sense to me.
+
+Best Regards,
+Petr
 
