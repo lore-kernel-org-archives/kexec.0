@@ -1,29 +1,84 @@
-From: Frank van der Linden <fllinden@amazon.com>
-Date: Fri, 14 Jan 2022 00:22:52 +0000
-Subject: [PATCH 1/3] memblock: define functions to set the usable memory
- range
-In-Reply-To: <20220114001046.GA10609@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
-References: <20220110210809.3528-1-fllinden@amazon.com>
- <20220110210809.3528-2-fllinden@amazon.com> <Yd1cnquQFZoNE7FP@kernel.org>
- <20220111204441.GA36458@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
- <YeBiV8fuCCLWyHYb@kernel.org>
- <20220114001046.GA10609@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
-Message-ID: <20220114002252.GA22602@dev-dsk-fllinden-2c-d7720709.us-west-2.amazon.com>
+From: Petr Mladek <pmladek@suse.com>
+Date: Fri, 14 Jan 2022 13:26:51 +0100
+Subject: [PATCH V2] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a@igalia.com>
+References: <20220106212835.119409-1-gpiccoli@igalia.com>
+ <Yd/0K1x7ILw3Qa46@alley>
+ <ba0e29ba-0e08-df6e-ade5-eb58ae2495e3@igalia.com>
+ <YeA1pXz7f0wqSnah@alley>
+ <f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a@igalia.com>
+Message-ID: <20220114122651.GB17817@pathway.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Jan 14, 2022 at 12:10:46AM +0000, Frank van der Linden wrote:
-> Thanks for discussing this further! I tried the above change, although
-> I wrapped it in an if (cap_mem_size != 0), so that a normal kernel
-> doesn't get its entire memory marked as reserved.
+On Thu 2022-01-13 12:15:08, Guilherme G. Piccoli wrote:
+> On 13/01/2022 11:22, Petr Mladek wrote:
+> > [...]
+> > OK, do we have any specific reason why panic_print_sys_info()
+> > should get called right before kmsg_dump() when this code patch
+> > is used?
+> > 
+> > Alternative solution would be to remove the check of
+> > kexec_crash_loaded() and always call panic_print_sys_info(false)
+> > at the beginning (after kgdb_panic(buf)).
+> > 
+> > The advantage is that panic_print_sys_info(false) will be always
+> > called on the same location. It will give the same results
+> > in all code paths so that it will be easier to interpret them.
+> > And it will have the same problems so it should be easier
+> > to debug and maintain.
+> > 
+> > It is possible that it will not work for some users. Also it is
+> > possible that it might cause some problems. But it is hard to
+> > guess at least for me.
+> > 
+> > I think that we might try it and see if anyone complains.
+> > Honestly, I think that only few people use panic_printk_sys_info().
+> > And your use-case makes sense.
+> > 
+> > Best Regards,
+> > Petr
+> 
+> Hi Petr, thanks for your idea - it's simple and effective, would resolve
+> the problems in a straightforward way. But there are some cons, let me
+> detail more.
+> 
+> Currently (in linux-next), if users set panic_print but not kdump, the
+> panic_print_sys_info() is called *after* the panic notifiers. If user
+> has kdump configured and still sets panic_print (which is our use case),
+> then panic_print_sys_info() is called _before_ the panic notifiers. In
+> other words, the behavior for non-kdump users is the same as before,
+> since the merge of panic_print functionality.
+> 
+> Your idea brings the printing earlier, always before the panic
+> notifiers. This isn't terrible, but might lead to unfortunate and
+> hard-to-debug problems; for example, some panic notifiers are
+> rcu_panic() and hung_task_panic(), both are simple functions to disable
+> RCU warnings and hung task detector in panic scenarios. If we go with
+> your idea, these won't get called before panic_print_sys_info(), even if
+> kdump is not set. So, since the panic_print triggers a lot of printing
+> in the console, we could face a stall and trigger RCU messages, maybe
+> intermixed with the panic_print information.
 
-Just to clarify: I had to do that because the code is slightly different
-on 5.15, where I tried it. It wasn't a bug in the proposed patch.
+I see. OK, it makes sense to call it after the panic notifiers when
+they are used. It would be nice to mention the above in the commit
+message and explain why the 2nd call is there.
 
-Anyway, will try 5.17-rc tomorrow, I'll let you know, thanks again.
+Just an idea. It might be better to move the 1st call below
+if (!_crash_kexec_post_notifiers). It would make it more
+clear that it is intended for this code path. I mean:
 
-- Frank
+	if (!_crash_kexec_post_notifiers) {
+		/* ... */
+		if (kexec_crash_loaded())
+			panic_print_sys_info(false);
+
+		__crash_kexec(NULL);
+	...
+
+Best Regards,
+Petr
 
