@@ -1,34 +1,36 @@
 From: Simon Horman <horms@verge.net.au>
-Date: Fri, 14 Jan 2022 15:56:01 +0100
-Subject: [PATCH v5] arm64: support more than one crash kernel regions
-In-Reply-To: <20220110102008.502-1-thunder.leizhen@huawei.com>
-References: <20220110102008.502-1-thunder.leizhen@huawei.com>
-Message-ID: <20220114145601.GH16732@vergenet.net>
+Date: Fri, 14 Jan 2022 16:05:06 +0100
+Subject: [PATCH v3 0/5] s390: add support for extended cmdline length
+In-Reply-To: <20211216114356.605851-1-svens@linux.ibm.com>
+References: <20211216114356.605851-1-svens@linux.ibm.com>
+Message-ID: <20220114150506.GI16732@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Jan 10, 2022 at 06:20:08PM +0800, Zhen Lei wrote:
-> From: Chen Zhou <chenzhou10@huawei.com>
+On Thu, Dec 16, 2021 at 12:43:51PM +0100, Sven Schnelle wrote:
+> Hi,
 > 
-> When crashkernel is reserved above 4G in memory, kernel should
-> reserve some amount of low memory for swiotlb and some DMA buffers.
-> So there may be two crash kernel regions, one is below 4G, the other
-> is above 4G.
+> this patchset adds support for extended command line lengths on s390.
+> The former limit of 896 has been too short in a some configurations. The
+> linux kernel now provides an additional field in the parameter area
+> which contains the maximum allowed command line length. In older kernels
+> this field is zero. In that case the old limit of 896 bytes is used.
+> This was introduced with 5ecb2da660ab ("s390: support command lines
+> longer than 896 bytes") in linux.
 > 
-> Currently, there is only one crash kernel region on arm64, and pass
-> "linux,usable-memory-range = <BASE SIZE>" property to crash dump
-> kernel.
-> Now, we pass "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>"
-> to crash dump kernel to support two crash kernel regions and load crash
-> kernel high. Make the low memory region as the second range "BASE2 SIZE2"
-> to keep compatibility with existing user-space and older kdump kernels.
+> And while at it, also add the --reuse-cmdline option and use
+> KEXEC_ALL_OPTIONS.
 > 
-> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-> Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> Changes in v3:
+> - handle short reads and interruptions in slurp_proc_file()
+> 
+> Changes in v2:
+> 
+> - add slurp_proc_file() to read proc files without knowing the size upfront
+> - move command_line string from global to function scope
 
 Thanks, applied.
 
