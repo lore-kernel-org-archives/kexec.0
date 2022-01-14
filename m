@@ -1,43 +1,139 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Fri, 14 Jan 2022 09:32:58 -0300
-Subject: [PATCH V2] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <20220114122651.GB17817@pathway.suse.cz>
-References: <20220106212835.119409-1-gpiccoli@igalia.com>
- <Yd/0K1x7ILw3Qa46@alley> <ba0e29ba-0e08-df6e-ade5-eb58ae2495e3@igalia.com>
- <YeA1pXz7f0wqSnah@alley> <f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a@igalia.com>
- <20220114122651.GB17817@pathway.suse.cz>
-Message-ID: <811109b0-ada6-83b4-6d6d-b26b156d279d@igalia.com>
+From: Simon Horman <horms@verge.net.au>
+Date: Fri, 14 Jan 2022 15:35:26 +0100
+Subject: [PATCHv3 1/4] arm64: make phys_offset signed
+In-Reply-To: <20211228132659.40102-2-piliu@redhat.com>
+References: <20211228132659.40102-1-piliu@redhat.com>
+ <20211228132659.40102-2-piliu@redhat.com>
+Message-ID: <20220114143526.GC16732@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 14/01/2022 09:26, Petr Mladek wrote:
-> [...]
-> I see. OK, it makes sense to call it after the panic notifiers when
-> they are used. It would be nice to mention the above in the commit
-> message and explain why the 2nd call is there.
+On Tue, Dec 28, 2021 at 09:26:56PM +0800, Pingfan Liu wrote:
+> After kernel commit 7bc1a0f9e176 ("arm64: mm: use single quantity to
+> represent the PA to VA translation"), phys_offset can be negative if
+> running 52-bits kernel on 48-bits hardware.
 > 
-> Just an idea. It might be better to move the 1st call below
-> if (!_crash_kexec_post_notifiers). It would make it more
-> clear that it is intended for this code path. I mean:
+> So changing phys_offset from unsigned to signed.
 > 
-> 	if (!_crash_kexec_post_notifiers) {
-> 		/* ... */
-> 		if (kexec_crash_loaded())
-> 			panic_print_sys_info(false);
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Kairui Song <kasong@tencent.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> To: kexec at lists.infradead.org
+> ---
+>  kexec/arch/arm64/kexec-arm64.c | 8 ++++----
+>  kexec/arch/arm64/kexec-arm64.h | 2 +-
+>  util_lib/elf_info.c            | 2 +-
+>  util_lib/include/elf_info.h    | 2 +-
+>  4 files changed, 7 insertions(+), 7 deletions(-)
 > 
-> 		__crash_kexec(NULL);
-> 	...
-> 
-> Best Regards,
-> Petr
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 6f572ed..7373fa3 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -859,7 +859,7 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
+>  	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
+>  }
+>  
+> -static inline void set_phys_offset(uint64_t v, char *set_method)
+> +static inline void set_phys_offset(long v, char *set_method)
 
-Perfect Petr, thanks again for the very good ideas! I'll work on V3 and
-submit today.
-Cheers,
+Perhaps it would be more in keeping with the current implementation
+to use int64_t rather than long ?
+
+>  {
+>  	if (arm64_mem.phys_offset == arm64_mem_ngv
+>  		|| v < arm64_mem.phys_offset) {
+> @@ -928,7 +928,7 @@ static int get_page_offset(void)
+>   * from VMCOREINFO note inside 'kcore'.
+>   */
+>  
+> -static int get_phys_offset_from_vmcoreinfo_pt_note(unsigned long *phys_offset)
+> +static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
+>  {
+>  	int fd, ret = 0;
+>  
+> @@ -948,7 +948,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(unsigned long *phys_offset)
+>   * from PT_LOADs inside 'kcore'.
+>   */
+>  
+> -int get_phys_base_from_pt_load(unsigned long *phys_offset)
+> +int get_phys_base_from_pt_load(long *phys_offset)
+>  {
+>  	int i, fd, ret;
+>  	unsigned long long phys_start;
+> @@ -997,7 +997,7 @@ static bool to_be_excluded(char *str)
+>  int get_memory_ranges(struct memory_range **range, int *ranges,
+>  	unsigned long kexec_flags)
+>  {
+> -	unsigned long phys_offset = UINT64_MAX;
+> +	long phys_offset = (long)UINT64_MAX;
+
+Effectively this sets phys_offset to -1.
+Is that ok / intended ? If so, perhaps it's clearer to just use -1.
+
+Regardless, can clean up other uses of long with UINT64_MAX introduced
+by this patch?
+
+I see the following:
+
+make
+...
+kexec/arch/arm64/kexec-arm64.c: In function ?get_memory_ranges?:
+kexec/arch/arm64/kexec-arm64.c:1022:20: warning: comparison between signed and u
+nsigned integer expressions [-Wsign-compare]
+    if (phys_offset != UINT64_MAX)
+...
+kexec/arch/arm64/kexec-arm64.c:1034:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
+     if (phys_offset != UINT64_MAX)
 
 
-Guilherme
+>  	FILE *fp;
+>  	const char *iomem = proc_iomem();
+>  	char line[MAX_LINE], *str;
+> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> index ed447ac..1844b67 100644
+> --- a/kexec/arch/arm64/kexec-arm64.h
+> +++ b/kexec/arch/arm64/kexec-arm64.h
+> @@ -58,7 +58,7 @@ extern off_t initrd_size;
+>   */
+>  
+>  struct arm64_mem {
+> -	uint64_t phys_offset;
+> +	long phys_offset;
+>  	uint64_t text_offset;
+>  	uint64_t image_size;
+>  	uint64_t vp_offset;
+> diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
+> index 51d8b92..5574c7f 100644
+> --- a/util_lib/elf_info.c
+> +++ b/util_lib/elf_info.c
+> @@ -1236,7 +1236,7 @@ int read_elf(int fd)
+>  	return 0;
+>  }
+>  
+> -int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off)
+> +int read_phys_offset_elf_kcore(int fd, long *phys_off)
+>  {
+>  	int ret;
+>  
+> diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
+> index 4bc9279..f550d86 100644
+> --- a/util_lib/include/elf_info.h
+> +++ b/util_lib/include/elf_info.h
+> @@ -28,7 +28,7 @@ int get_pt_load(int idx,
+>  	unsigned long long *phys_end,
+>  	unsigned long long *virt_start,
+>  	unsigned long long *virt_end);
+> -int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off);
+> +int read_phys_offset_elf_kcore(int fd, long *phys_off);
+>  int read_elf(int fd);
+>  void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
+>  
+> -- 
+> 2.31.1
+> 
 
