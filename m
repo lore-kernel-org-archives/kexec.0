@@ -1,22 +1,24 @@
 From: Simon Horman <horms@verge.net.au>
-Date: Fri, 14 Jan 2022 15:35:26 +0100
-Subject: [PATCHv3 1/4] arm64: make phys_offset signed
-In-Reply-To: <20211228132659.40102-2-piliu@redhat.com>
+Date: Fri, 14 Jan 2022 15:41:32 +0100
+Subject: [PATCHv3 2/4] arm64/crashdump: unify routine to get page_offset
+In-Reply-To: <20211228132659.40102-3-piliu@redhat.com>
 References: <20211228132659.40102-1-piliu@redhat.com>
- <20211228132659.40102-2-piliu@redhat.com>
-Message-ID: <20220114143526.GC16732@vergenet.net>
+ <20211228132659.40102-3-piliu@redhat.com>
+Message-ID: <20220114144132.GD16732@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue, Dec 28, 2021 at 09:26:56PM +0800, Pingfan Liu wrote:
-> After kernel commit 7bc1a0f9e176 ("arm64: mm: use single quantity to
-> represent the PA to VA translation"), phys_offset can be negative if
-> running 52-bits kernel on 48-bits hardware.
+On Tue, Dec 28, 2021 at 09:26:57PM +0800, Pingfan Liu wrote:
+> There are two funcs to get page_offset:
+>   get_kernel_page_offset()
+>   get_page_offset()
 > 
-> So changing phys_offset from unsigned to signed.
+> Since get_kernel_page_offset() does not observe the kernel formula, and
+> remove it. Unify them in order to introduce 52-bits VA kernel more
+> easily in the coming patch.
 > 
 > Signed-off-by: Pingfan Liu <piliu@redhat.com>
 > Cc: Kairui Song <kasong@tencent.com>
@@ -24,115 +26,101 @@ On Tue, Dec 28, 2021 at 09:26:56PM +0800, Pingfan Liu wrote:
 > Cc: Philipp Rudo <prudo@redhat.com>
 > To: kexec at lists.infradead.org
 > ---
->  kexec/arch/arm64/kexec-arm64.c | 8 ++++----
->  kexec/arch/arm64/kexec-arm64.h | 2 +-
->  util_lib/elf_info.c            | 2 +-
->  util_lib/include/elf_info.h    | 2 +-
->  4 files changed, 7 insertions(+), 7 deletions(-)
+>  kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
+>  kexec/arch/arm64/kexec-arm64.c     |  8 ++++----
+>  kexec/arch/arm64/kexec-arm64.h     |  1 +
+>  3 files changed, 6 insertions(+), 26 deletions(-)
 > 
+> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
+> index a02019a..0a8d44c 100644
+> --- a/kexec/arch/arm64/crashdump-arm64.c
+> +++ b/kexec/arch/arm64/crashdump-arm64.c
+> @@ -46,27 +46,6 @@ static struct crash_elf_info elf_info = {
+>  	.machine	= EM_AARCH64,
+>  };
+>  
+> -/*
+> - * Note: The returned value is correct only if !CONFIG_RANDOMIZE_BASE.
+> - */
+> -static uint64_t get_kernel_page_offset(void)
+> -{
+> -	int i;
+> -
+> -	if (elf_info.kern_vaddr_start == UINT64_MAX)
+> -		return UINT64_MAX;
+> -
+> -	/* Current max virtual memory range is 48-bits. */
+> -	for (i = 48; i > 0; i--)
+> -		if (!(elf_info.kern_vaddr_start & (1UL << i)))
+> -			break;
+> -
+> -	if (i <= 0)
+> -		return UINT64_MAX;
+> -	else
+> -		return UINT64_MAX << i;
+> -}
+> -
+>  /*
+>   * iomem_range_callback() - callback called for each iomem region
+>   * @data: not used
+> @@ -198,7 +177,7 @@ int load_crashdump_segments(struct kexec_info *info)
+>  	if (err)
+>  		return EFAILED;
+>  
+> -	elf_info.page_offset = get_kernel_page_offset();
+> +	get_page_offset(&elf_info.page_offset);
+>  	dbgprintf("%s: page_offset:   %016llx\n", __func__,
+>  			elf_info.page_offset);
+>  
 > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index 6f572ed..7373fa3 100644
+> index 7373fa3..037e51c 100644
 > --- a/kexec/arch/arm64/kexec-arm64.c
 > +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -859,7 +859,7 @@ void add_segment(struct kexec_info *info, const void *buf, size_t bufsz,
->  	add_segment_phys_virt(info, buf, bufsz, base, memsz, 1);
->  }
->  
-> -static inline void set_phys_offset(uint64_t v, char *set_method)
-> +static inline void set_phys_offset(long v, char *set_method)
-
-Perhaps it would be more in keeping with the current implementation
-to use int64_t rather than long ?
-
->  {
->  	if (arm64_mem.phys_offset == arm64_mem_ngv
->  		|| v < arm64_mem.phys_offset) {
-> @@ -928,7 +928,7 @@ static int get_page_offset(void)
->   * from VMCOREINFO note inside 'kcore'.
+> @@ -909,7 +909,7 @@ static int get_va_bits(void)
+>   * get_page_offset - Helper for getting PAGE_OFFSET
 >   */
 >  
-> -static int get_phys_offset_from_vmcoreinfo_pt_note(unsigned long *phys_offset)
-> +static int get_phys_offset_from_vmcoreinfo_pt_note(long *phys_offset)
->  {
->  	int fd, ret = 0;
->  
-> @@ -948,7 +948,7 @@ static int get_phys_offset_from_vmcoreinfo_pt_note(unsigned long *phys_offset)
->   * from PT_LOADs inside 'kcore'.
->   */
->  
-> -int get_phys_base_from_pt_load(unsigned long *phys_offset)
-> +int get_phys_base_from_pt_load(long *phys_offset)
->  {
->  	int i, fd, ret;
->  	unsigned long long phys_start;
-> @@ -997,7 +997,7 @@ static bool to_be_excluded(char *str)
->  int get_memory_ranges(struct memory_range **range, int *ranges,
->  	unsigned long kexec_flags)
->  {
-> -	unsigned long phys_offset = UINT64_MAX;
-> +	long phys_offset = (long)UINT64_MAX;
-
-Effectively this sets phys_offset to -1.
-Is that ok / intended ? If so, perhaps it's clearer to just use -1.
-
-Regardless, can clean up other uses of long with UINT64_MAX introduced
-by this patch?
-
-I see the following:
-
-make
-...
-kexec/arch/arm64/kexec-arm64.c: In function ?get_memory_ranges?:
-kexec/arch/arm64/kexec-arm64.c:1022:20: warning: comparison between signed and u
-nsigned integer expressions [-Wsign-compare]
-    if (phys_offset != UINT64_MAX)
-...
-kexec/arch/arm64/kexec-arm64.c:1034:21: warning: comparison between signed and unsigned integer expressions [-Wsign-compare]
-     if (phys_offset != UINT64_MAX)
-
-
->  	FILE *fp;
->  	const char *iomem = proc_iomem();
->  	char line[MAX_LINE], *str;
-> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> index ed447ac..1844b67 100644
-> --- a/kexec/arch/arm64/kexec-arm64.h
-> +++ b/kexec/arch/arm64/kexec-arm64.h
-> @@ -58,7 +58,7 @@ extern off_t initrd_size;
->   */
->  
->  struct arm64_mem {
-> -	uint64_t phys_offset;
-> +	long phys_offset;
->  	uint64_t text_offset;
->  	uint64_t image_size;
->  	uint64_t vp_offset;
-> diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-> index 51d8b92..5574c7f 100644
-> --- a/util_lib/elf_info.c
-> +++ b/util_lib/elf_info.c
-> @@ -1236,7 +1236,7 @@ int read_elf(int fd)
->  	return 0;
->  }
->  
-> -int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off)
-> +int read_phys_offset_elf_kcore(int fd, long *phys_off)
+> -static int get_page_offset(void)
+> +int get_page_offset(unsigned long *page_offset)
 >  {
 >  	int ret;
 >  
-> diff --git a/util_lib/include/elf_info.h b/util_lib/include/elf_info.h
-> index 4bc9279..f550d86 100644
-> --- a/util_lib/include/elf_info.h
-> +++ b/util_lib/include/elf_info.h
-> @@ -28,7 +28,7 @@ int get_pt_load(int idx,
->  	unsigned long long *phys_end,
->  	unsigned long long *virt_start,
->  	unsigned long long *virt_end);
-> -int read_phys_offset_elf_kcore(int fd, unsigned long *phys_off);
-> +int read_phys_offset_elf_kcore(int fd, long *phys_off);
->  int read_elf(int fd);
->  void dump_dmesg(int fd, void (*handler)(char*, unsigned int));
+> @@ -917,8 +917,8 @@ static int get_page_offset(void)
+>  	if (ret < 0)
+>  		return ret;
 >  
+> -	page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+> -	dbgprintf("page_offset : %lx\n", page_offset);
+> +	*page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
+
+As this line is being updated, perhaps we could also make use of
+UINT64_MAX or ULONG_MAX here.
+
+> +	dbgprintf("page_offset : %lx\n", *page_offset);
+>  
+>  	return 0;
+>  }
+> @@ -954,7 +954,7 @@ int get_phys_base_from_pt_load(long *phys_offset)
+>  	unsigned long long phys_start;
+>  	unsigned long long virt_start;
+>  
+> -	ret = get_page_offset();
+> +	ret = get_page_offset(&page_offset);
+>  	if (ret < 0)
+>  		return ret;
+>  
+> diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> index 1844b67..ed99d9d 100644
+> --- a/kexec/arch/arm64/kexec-arm64.h
+> +++ b/kexec/arch/arm64/kexec-arm64.h
+> @@ -69,6 +69,7 @@ extern struct arm64_mem arm64_mem;
+>  
+>  uint64_t get_phys_offset(void);
+>  uint64_t get_vp_offset(void);
+> +int get_page_offset(unsigned long *offset);
+>  
+>  static inline void reset_vp_offset(void)
+>  {
 > -- 
 > 2.31.1
 > 
