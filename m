@@ -1,29 +1,34 @@
 From: Simon Horman <horms@verge.net.au>
-Date: Fri, 14 Jan 2022 15:55:48 +0100
-Subject: [PATCH 1/1] s390: handle R_390_PLT32DBL reloc entries in
- machine_apply_elf_rel()
-In-Reply-To: <YdxsXlGW9QVeiMv1@osiris>
-References: <20211208125355.256391-1-egorenar@linux.ibm.com>
- <20211213114430.77f28a67@rhtmp>
- <20211215124300.GA4314@vergenet.net> <YboqYTz8NziIYJwC@osiris>
- <87mtk3lina.fsf@oc8242746057.ibm.com> <YdxsXlGW9QVeiMv1@osiris>
-Message-ID: <20220114145547.GG16732@vergenet.net>
+Date: Fri, 14 Jan 2022 15:56:01 +0100
+Subject: [PATCH v5] arm64: support more than one crash kernel regions
+In-Reply-To: <20220110102008.502-1-thunder.leizhen@huawei.com>
+References: <20220110102008.502-1-thunder.leizhen@huawei.com>
+Message-ID: <20220114145601.GH16732@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Jan 10, 2022 at 06:26:54PM +0100, Heiko Carstens wrote:
-> On Mon, Jan 10, 2022 at 04:23:05PM +0100, Alexander Egorenkov wrote:
-> > Heiko Carstens <hca@linux.ibm.com> writes:
-> > > Given that Alexander is currently not available, I will resend his
-> > > patch with an updated commit message.
-> > 
-> > Many thanks for the review and taking care of the review finding.
+On Mon, Jan 10, 2022 at 06:20:08PM +0800, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
 > 
-> But it looks like this still hasn't been applied to the kexec-tools
-> git tree, unless I'm mistaken(?)
+> When crashkernel is reserved above 4G in memory, kernel should
+> reserve some amount of low memory for swiotlb and some DMA buffers.
+> So there may be two crash kernel regions, one is below 4G, the other
+> is above 4G.
+> 
+> Currently, there is only one crash kernel region on arm64, and pass
+> "linux,usable-memory-range = <BASE SIZE>" property to crash dump
+> kernel.
+> Now, we pass "linux,usable-memory-range = <BASE1 SIZE1 BASE2 SIZE2>"
+> to crash dump kernel to support two crash kernel regions and load crash
+> kernel high. Make the low memory region as the second range "BASE2 SIZE2"
+> to keep compatibility with existing user-space and older kdump kernels.
+> 
+> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+> Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-Sorry for the delay, I have now applied v2.
+Thanks, applied.
 
