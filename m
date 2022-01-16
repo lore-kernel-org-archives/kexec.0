@@ -1,37 +1,35 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Sun, 16 Jan 2022 21:11:29 +0800
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <20220108153451.195121-1-gpiccoli@igalia.com>
-References: <20220108153451.195121-1-gpiccoli@igalia.com>
-Message-ID: <20220116131129.GD2388@MiWiFi-R3L-srv>
+Date: Sun, 16 Jan 2022 21:38:47 +0800
+Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
+ of #ifdef
+In-Reply-To: <20211206160514.2000-1-jszhang@kernel.org>
+References: <20211206160514.2000-1-jszhang@kernel.org>
+Message-ID: <20220116133847.GE2388@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/08/22 at 12:34pm, Guilherme G. Piccoli wrote:
-...... 
-> So, this patch aims to ease this decision: we hereby introduce a filter
-> for the panic notifier list, in which users may select specifically
-> which callbacks they wish to run, allowing a safer kdump. The allowlist
-> should be provided using the parameter "panic_notifier_filter=a,b,..."
-> where a, b are valid callback names. Invalid symbols are discarded.
-> 
-> Currently up to 16 symbols may be passed in this list, we consider
-> that this numbers allows enough flexibility (and no matter what
-> architecture is used, at most 30 panic callbacks are registered).
-> In an experiment using a qemu x86 virtual machine, by default only
-> six callbacks are registered in the panic notifier list.
-> Once a valid callback name is provided in the list, such function
-> is allowed to be registered/unregistered in the panic_notifier_list;
-> all other panic callbacks are ignored. Notice that this filter is
-> only for the panic notifiers and has no effect in the other notifiers.
-> 
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Hi Jisheng,
 
-This patch looks good to me, thx.
+On 12/07/21 at 12:05am, Jisheng Zhang wrote:
+> Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
+> by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
+> and increase compile coverage.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+I go through this patchset, You mention the benefits it brings are
+1) simplity the code;
+2) increase compile coverage;
+
+For benefit 1), it mainly removes the dummy function in x86, arm and
+arm64, right?
+
+For benefit 2), increasing compile coverage, could you tell more how it
+achieves and why it matters? What if people disables CONFIG_KEXEC_CORE in
+purpose? Please forgive my poor compiling knowledge.
+
+Thanks
+Baoquan
 
 
