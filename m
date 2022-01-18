@@ -1,27 +1,62 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Tue, 18 Jan 2022 10:22:09 -0300
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <CALu+AoR+GrCpf0gqsx_XYETBGUAfRyP+SPNarK179hT7iQmCqQ@mail.gmail.com>
-References: <20220108153451.195121-1-gpiccoli@igalia.com>
- <16f01572-7d23-9455-ef52-67fc87f73730@igalia.com>
- <CALu+AoR+GrCpf0gqsx_XYETBGUAfRyP+SPNarK179hT7iQmCqQ@mail.gmail.com>
-Message-ID: <0651945b-ade2-c8b6-9963-df995049fcd6@igalia.com>
+From: Jisheng Zhang <jszhang@kernel.org>
+Date: Tue, 18 Jan 2022 22:13:03 +0800
+Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
+ of #ifdef
+In-Reply-To: <20220116133847.GE2388@MiWiFi-R3L-srv>
+References: <20211206160514.2000-1-jszhang@kernel.org>
+ <20220116133847.GE2388@MiWiFi-R3L-srv>
+Message-ID: <YebK70Sx4w8zLfj/@xhacker>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 17/01/2022 23:31, Dave Young wrote:
-> [...]
-> Hi Guilherme,? thank you for making it a formal patch!? Yes, it is a
-> nice improvement.
-> I'm sorry I did not get time to review the code,? I will leave it to
-> other people to review :)
+On Sun, Jan 16, 2022 at 09:38:47PM +0800, Baoquan He wrote:
+> Hi Jisheng,
 
-Hi Dave, no worries - thanks for your opinion, much appreciated!
-Cheers,
+Hi Baoquan,
 
+> 
+> On 12/07/21 at 12:05am, Jisheng Zhang wrote:
+> > Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
+> > by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
+> > and increase compile coverage.
+> 
+> I go through this patchset, You mention the benefits it brings are
+> 1) simplity the code;
+> 2) increase compile coverage;
+> 
+> For benefit 1), it mainly removes the dummy function in x86, arm and
+> arm64, right?
 
-Guilherme
+Another benefit: remove those #ifdef #else #endif usage. Recently, I
+fixed a bug due to lots of "#ifdefs":
+http://lists.infradead.org/pipermail/linux-riscv/2021-December/010607.html
+
+> 
+> For benefit 2), increasing compile coverage, could you tell more how it
+> achieves and why it matters? What if people disables CONFIG_KEXEC_CORE in
+> purpose? Please forgive my poor compiling knowledge.
+
+Just my humble opinion, let's compare the code::
+
+#ifdef CONFIG_KEXEC_CORE
+
+code block A;
+
+#endif
+
+If KEXEC_CORE is disabled, code block A won't be compiled at all, the
+preprocessor will remove code block A;
+
+If we convert the code to:
+
+if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
+	code block A;
+}
+
+Even if KEXEC_CORE is disabled, code block A is still compiled.
+
+Thanks
 
