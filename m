@@ -1,70 +1,222 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 19 Jan 2022 13:03:15 -0300
+From: Petr Mladek <pmladek@suse.com>
+Date: Wed, 19 Jan 2022 19:38:20 +0100
 Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <YegytkfED+QI56Y8@alley>
+In-Reply-To: <20220114183046.428796-1-gpiccoli@igalia.com>
 References: <20220114183046.428796-1-gpiccoli@igalia.com>
- <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
-Message-ID: <94bb12a2-a788-cee6-7d4f-dc0ac581fb39@igalia.com>
+Message-ID: <YehanMqSvL81DLqg@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Thanks again Petr, for the deep analysis! Much appreciated.
-Some comments inline below:
+On Fri 2022-01-14 15:30:46, Guilherme G. Piccoli wrote:
+> The panic_print setting allows users to collect more information in a
+> panic event, like memory stats, tasks, CPUs backtraces, etc.
+> This is a pretty interesting debug mechanism, but currently the print
+> event happens *after* kmsg_dump(), meaning that pstore, for example,
+> cannot collect a dmesg with the panic_print information.
+
+The above text is OK.
+
+The below commit message is quite hard to follow. The sentences are very
+long and complex. I tend to do the same mistakes. I will try to
+suggest some improvements.
 
 
-On 19/01/2022 12:48, Petr Mladek wrote:
->[...]
-> From my POV, the function of panic notifiers is not well defined. They
-> do various things, for example:
-> [...] 
+> This patch changes that in 2 ways:
+
+> (a) First, after a good discussion with Petr in the mailing-list[0],
+> he noticed
+
+The above is not needed ;-) It is better to just describe the problem
+and the solution a directive way.
+
+> that one specific setting of panic_print (the console replay,
+> bit 5) should not be executed before console proper flushing; hence we
+> hereby split the panic_print_sys_info() function in upper and lower
+> portions: if the parameter "after_kmsg_dumpers" is passed, only bit 5
+> (the console replay thing) is evaluated and the function returns - this
+> is the lower portion. Otherwise all other bits are checked and the
+> function prints the user required information; this is the upper/earlier
+> mode.
+
+The meaning of the boolean parameter might be explained by:
+
+    "panic_print_sys_info() allows to print additional information into the
+    kernel log. In addition, it allows to reply the existing log on the
+    console first.
+
+    The extra information is useful also when generating crash dump or
+    kmsg_dump. But the replay functionality makes sense only at the end
+    of panic().
+
+    Allow to distinguish the two situations by a boolean parameter."
+
+
+
+> (b) With the above change, we can safely insert a panic_print_sys_info()
+> call up some lines, in order kmsg_dump() accounts this new information
+> and exposes it through pstore or other kmsg dumpers. Notice that this
+> new earlier call doesn't set "after_kmsg_dumpers" so we print the
+> information set by user in panic_print, except the console replay that,
+> if set, will be executed after the console flushing.
+
+This paragraph is too complicated. The important information here is:
+
+     "panic_print_sys_info() is moved above kmsg_dump(). It allows to dump
+     the extra information."
+
+The trick with the boolean is already explained elsewhere. It is not
+needed to repeat it in this paragraph.
+
+
+> Also, worth to notice we needed to guard the panic_print_sys_info(false)
+> calls against double print - we use kexec_crash_loaded() helper for that
+> (see discussion [1] for more details).
+
+This should be explained together with the reason to call it on two
+locations, see below.
+
+
+> In the first version of this patch we discussed the risks in the
+> mailing-list [0], and seems this approach is the least terrible,
+
+the above is not needed.
+
+> despite still having risks of polluting the log with the bulk of
+> information that panic_print may bring, losing older messages.
+> In order to attenuate that, we've added a warning in the
+> kernel-parameters.txt so that users enabling this mechanism consider
+> to increase the log buffer size via "log_buf_len" as well.
+
+Again, I would describe the problem and solution a directive way.
+
+    "The additional messages might overwrite the oldest messages when
+     the buffer is full. The only reasonable solution is to use large
+     enough log buffer. The advice is added into kernel-parameters.txt."
+
+
+
+> Finally, another decision was to keep 2 panic_print_sys_info(false)
+> calls (instead of just bringing it up some code lines and keep a single
+> call) due to the panic notifiers:
+
+The above is too complicated and not important.
+
+> if kdump is not set, currently the
+> panic_print information is collected after the notifiers and since
+> it's a bit safer this way,
+
+The important information is why it is safer. Honestly, I am still not sure
+about this claim. I have checked several notifiers today and they did
+not added much stability.
+
+
+> we decided to keep it as is, only modifying
+> the kdump case as per the previous commit [2] (see more details about
+> this discussion also in thread [1]).
+
+This does not provide much information. Link to linux-next is bad
+idea, see below.
+
+
+> [0] https://lore.kernel.org/lkml/20211230161828.121858-1-gpiccoli at igalia.com
+> [1] https://lore.kernel.org/lkml/f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a at igalia.com
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=5613b7538f69
+
+linux-next is regularly rebased and Andrew's patches are always newly
+imported from quilt. The commit probably already has another hash.
+
 > 
-> The do more that just providing information. Some are risky. It is not
-> easy to disable a particular one.
-
-We are trying to change that here:
-https://lore.kernel.org/lkml/20220108153451.195121-1-gpiccoli at igalia.com/
-
-Your review/comments are very welcome =)
-
-
-> [...] 
-> It might make sense to allow to call kmsg_dump before panic notifiers
-> to reduce the risk of a breakage. But I do not have enough experience
-> with them to judge this.
+> Cc: Feng Tang <feng.tang@intel.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
 > 
-> I can't remember any bug report in this code. I guess that only
-> few people use kmsg_dump.
-
-One of the problems doing that is that RCU and hung task detector, for
-example, have panic notifiers to disable themselves in the panic
-scenario - if we kmsg_dump() _before_ the panic notifiers, we may have
-intermixed messages, all messy...so for me it makes sense to keep the
-kmsg_dump() after panic notifiers.
-
-
-> [...]
-> Yes, panic_print_sys_info() increases the risk that the crash dump
-> will not succeed. But the change makes sense because:
 > 
->   + panic_print_sys_info() does nothing by default. Most users will
->     not enable it together with crash dump.
+> V3: Added a guard in the 2nd panic_print_sys_info(false) to prevent
+> double print - thanks for catching this Petr!
 > 
->   + Guilherme uses crash dump only to dump the kernel log. It might
->     be more reliable than kmsg_dump. In this case, panic_print_sys_info()
->     is the only way to get the extra information.
+> I didn't implement your final suggestion Petr, i.e., putting the first
+> panic_print_sys_info(false) inside the if (!_crash_kexec_post_notifiers)
+> block, and the reason is that when we do this, there's 4 cases to consider:
+
+But then it does not make sense to call panic_print_sys_info(false)
+from both locations.
+
+You say that it is called after kexec_post_notifiers because
+it is more safe. If this is true then it would make sense to
+always call it after the notifiers when _crash_kexec_post_notifiers
+is set.
+
+> !kexec_crash_load() && !_crash_kexec_post_notifiers
+> kexec_crash_load() && !_crash_kexec_post_notifiers
+> kexec_crash_load() && _crash_kexec_post_notifiers
+> !kexec_crash_load() && _crash_kexec_post_notifiers
 > 
->   + panic_print_sys_info() might be useful even with full crash dump.
->     For example, ftrace messages are not easy to read from the memory
->     dump.
+> The 3rd case, which means user enabled kdump and set the post_notifiers
+> in the cmdline fails - we end-up not reaching panic_print_sys_info(false)
+> in this case, unless we add another variable to track the function call
+> and prevent double print. My preference was to keep the first call
+> as introduced by commit [2] (mentioned above) and not rely in another
+> variable.
 
-The last point is really good, I didn't consider that before but makes a
-lot of sense - we can now dump (a hopefully small!) ftrace/event trace
-buffer to dmesg before a kdump, making it pretty easy to read that later.
-Cheers,
+You could do:
+
+	if (!_crash_kexec_post_notifiers) {
+		if (kexec_crash_loaded())
+			panic_print_sys_info(false);
+
+		__crash_kexec(NULL);
+		smp_send_stop();
+	} else {
+		crash_smp_send_stop();
+	}
+
+	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+
+	/* Just negate the condition here */
+	if (_crash_kexec_post_notifiers || !kexec_crash_loaded())
+		panic_print_sys_info(false);
+
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 41ecf9ab824a..4ae712665f75 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -249,7 +252,7 @@ void panic(const char *fmt, ...)
+>  	 * show some extra information on kernel log if it was set...
+>  	 */
+>  	if (kexec_crash_loaded())
+> -		panic_print_sys_info();
+> +		panic_print_sys_info(false);
+>  
+>  	/*
+>  	 * If we have crashed and we have a crash kernel loaded let it handle
+> @@ -283,6 +286,15 @@ void panic(const char *fmt, ...)
+>  	 */
+>  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>  
+> +	/*
+> +	 * If kexec_crash_loaded() is true and we still reach this point,
+> +	 * kernel would double print the information from panic_print; so
+> +	 * let's guard against that possibility (it happens if kdump users
+> +	 * also set crash_kexec_post_notifiers in the command-line).
+> +	 */
+
+Too many words. Most of it is obvious from the code. The most important
+information is why it is called after the notifiers when the crash
+kernel is not loaded. And why it does not depend on _crash_kexec_post_notifiers
+setting.
 
 
-Guilherme
+> +	if (!kexec_crash_loaded())
+> +		panic_print_sys_info(false);
+> +
+>  	kmsg_dump(KMSG_DUMP_PANIC);
+>  
+>  	/*
+
+Best Regards,
+Petr
 
