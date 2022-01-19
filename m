@@ -1,73 +1,80 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 19 Jan 2022 16:08:59 +0800
-Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
- of #ifdef
-In-Reply-To: <YebK70Sx4w8zLfj/@xhacker>
-References: <20211206160514.2000-1-jszhang@kernel.org>
- <20220116133847.GE2388@MiWiFi-R3L-srv> <YebK70Sx4w8zLfj/@xhacker>
-Message-ID: <20220119080859.GB4977@MiWiFi-R3L-srv>
+Date: Wed, 19 Jan 2022 16:23:06 +0800
+Subject: [RFC v2 3/6] crash hp: definitions and prototype changes
+In-Reply-To: <20211207195204.1582-4-eric.devolder@oracle.com>
+References: <20211207195204.1582-1-eric.devolder@oracle.com>
+ <20211207195204.1582-4-eric.devolder@oracle.com>
+Message-ID: <20220119082306.GA5158@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/18/22 at 10:13pm, Jisheng Zhang wrote:
-> On Sun, Jan 16, 2022 at 09:38:47PM +0800, Baoquan He wrote:
-> > Hi Jisheng,
+On 12/07/21 at 02:52pm, Eric DeVolder wrote:
+> This change adds members to struct kimage to facilitate crash
+> hotplug support.
 > 
-> Hi Baoquan,
+> This change also defines crash hotplug events and associated
+> prototypes.
 > 
-> > 
-> > On 12/07/21 at 12:05am, Jisheng Zhang wrote:
-> > > Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
-> > > by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
-> > > and increase compile coverage.
-> > 
-> > I go through this patchset, You mention the benefits it brings are
-> > 1) simplity the code;
-> > 2) increase compile coverage;
-> > 
-> > For benefit 1), it mainly removes the dummy function in x86, arm and
-> > arm64, right?
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  include/linux/kexec.h | 21 +++++++++++++++++++--
+>  1 file changed, 19 insertions(+), 2 deletions(-)
 > 
-> Another benefit: remove those #ifdef #else #endif usage. Recently, I
-> fixed a bug due to lots of "#ifdefs":
-> http://lists.infradead.org/pipermail/linux-riscv/2021-December/010607.html
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..068f853f1c65 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -221,8 +221,9 @@ struct crash_mem {
+>  extern int crash_exclude_mem_range(struct crash_mem *mem,
+>  				   unsigned long long mstart,
+>  				   unsigned long long mend);
+> -extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+> -				       void **addr, unsigned long *sz);
+> +extern int crash_prepare_elf64_headers(struct kimage *image,
+> +					struct crash_mem *mem, int kernel_map,
+> +					void **addr, unsigned long *sz);
+>  #endif /* CONFIG_KEXEC_FILE */
+>  
+>  #ifdef CONFIG_KEXEC_ELF
+> @@ -299,6 +300,13 @@ struct kimage {
+>  
+>  	/* Information for loading purgatory */
+>  	struct purgatory_info purgatory_info;
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	bool hotplug_event;
+> +	int offlinecpu;
+> +	bool elf_index_valid;
+> +	int elf_index;
 
-Glad to know the fix. While, sometime the ifdeffery is necessary. I am
-sorry about the one in riscv and you have fixed, it's truly a bug . But,
-the increasing compile coverage at below you tried to make, it may cause
-issue. Please see below my comment.
+Do we really need elf_index_valid? Can we initialize elf_index to , e.g '-1',
+then check if the value is valid?
 
+> +#endif
+>  #endif
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+> @@ -315,6 +323,15 @@ struct kimage {
+>  	unsigned long elf_load_addr;
+>  };
+>  
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +void arch_crash_hotplug_handler(struct kimage *image,
+> +	unsigned int hp_action, unsigned long a, unsigned long b);
+> +#define KEXEC_CRASH_HP_REMOVE_CPU   0
+> +#define KEXEC_CRASH_HP_ADD_CPU      1
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
+> +#define KEXEC_CRASH_HP_ADD_MEMORY   3
+> +#endif /* CONFIG_CRASH_HOTPLUG */
+> +
+>  /* kexec interface functions */
+>  extern void machine_kexec(struct kimage *image);
+>  extern int machine_kexec_prepare(struct kimage *image);
+> -- 
+> 2.27.0
 > 
-> > 
-> > For benefit 2), increasing compile coverage, could you tell more how it
-> > achieves and why it matters? What if people disables CONFIG_KEXEC_CORE in
-> > purpose? Please forgive my poor compiling knowledge.
-> 
-> Just my humble opinion, let's compare the code::
-> 
-> #ifdef CONFIG_KEXEC_CORE
-> 
-> code block A;
-> 
-> #endif
-> 
-> If KEXEC_CORE is disabled, code block A won't be compiled at all, the
-> preprocessor will remove code block A;
-> 
-> If we convert the code to:
-> 
-> if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
-> 	code block A;
-> }
-> 
-> Even if KEXEC_CORE is disabled, code block A is still compiled.
-
-This is what I am worried about. Before, if CONFIG_KEXEC_CORE is
-unset, those relevant codes are not compiled in. I can't see what
-benefit is brought in if compiled in the unneeded code block. Do I miss
-anything?
 
 
