@@ -1,62 +1,205 @@
-From: Jisheng Zhang <jszhang@kernel.org>
-Date: Tue, 18 Jan 2022 22:13:03 +0800
-Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
- of #ifdef
-In-Reply-To: <20220116133847.GE2388@MiWiFi-R3L-srv>
-References: <20211206160514.2000-1-jszhang@kernel.org>
- <20220116133847.GE2388@MiWiFi-R3L-srv>
-Message-ID: <YebK70Sx4w8zLfj/@xhacker>
+From: Baoquan He <bhe@redhat.com>
+Date: Wed, 19 Jan 2022 15:13:18 +0800
+Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <20220114183046.428796-1-gpiccoli@igalia.com>
+References: <20220114183046.428796-1-gpiccoli@igalia.com>
+Message-ID: <20220119071318.GA4977@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Sun, Jan 16, 2022 at 09:38:47PM +0800, Baoquan He wrote:
-> Hi Jisheng,
+On 01/14/22 at 03:30pm, Guilherme G. Piccoli wrote:
+> The panic_print setting allows users to collect more information in a
+> panic event, like memory stats, tasks, CPUs backtraces, etc.
+> This is a pretty interesting debug mechanism, but currently the print
+> event happens *after* kmsg_dump(), meaning that pstore, for example,
+> cannot collect a dmesg with the panic_print information.
+...... 
 
-Hi Baoquan,
+Thanks for the effort.                                                                                                                  
 
-> 
-> On 12/07/21 at 12:05am, Jisheng Zhang wrote:
-> > Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
-> > by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
-> > and increase compile coverage.
-> 
-> I go through this patchset, You mention the benefits it brings are
-> 1) simplity the code;
-> 2) increase compile coverage;
-> 
-> For benefit 1), it mainly removes the dummy function in x86, arm and
-> arm64, right?
+I have some concerns about this patch, and it's still not clear to me
+why the thing done in this patch is needed. Hope you don't mind if I ask
+stupid question or things have been discussed in the earlier post.
 
-Another benefit: remove those #ifdef #else #endif usage. Recently, I
-fixed a bug due to lots of "#ifdefs":
-http://lists.infradead.org/pipermail/linux-riscv/2021-December/010607.html
+Firstly, let me add some background information and details about the
+problem with my understanding, please correct me if anthing is wrong.
 
-> 
-> For benefit 2), increasing compile coverage, could you tell more how it
-> achieves and why it matters? What if people disables CONFIG_KEXEC_CORE in
-> purpose? Please forgive my poor compiling knowledge.
+Background:
+===========
+Currently, in panic(), there are 5 different ways to try best to
+collect information:
+1) Vmcore dumping
+   done via kdump, high weight, almost get all information we want;
+   need switch to kdump kernel immediately.
+2) Panic notifier
+   iterating those registered handlers, light weight, information got
+   depends on those panic handlers. Try its best after panic, do not reboot.
+3) kmsg_dump
+   iterating registered dumpers to collect as much kernel log as possible
+   to store. E.g on pstore, light weight, only kernel log, do not reboot,
+   log can be checked after system reboot.
+4)console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+   Flush to get the pending logbuf printed out to console.
+5)panic_print
+   Print out more system info, including all dmesg, task states, mem
+   info, etc.
+===========
 
-Just my humble opinion, let's compare the code::
 
-#ifdef CONFIG_KEXEC_CORE
+The problem encoutered:
+=======
+Currently panic_print is done after kmsg_dump. This caused an issue that
+system info poked by panic_print to expose to logbuf have no chance to
+be collected by kmsg_dump. E.g pstore_dumper registered and handled in
+kmsg_dump(), is a light weight and helpful panic info collecting
+mechanism, will miss those lots of and helful message poked by
+panic_print.
+======
 
-code block A;
 
-#endif
+> Finally, another decision was to keep 2 panic_print_sys_info(false)
+> calls (instead of just bringing it up some code lines and keep a single
+> call) due to the panic notifiers: if kdump is not set, currently the
+> panic_print information is collected after the notifiers and since
+> it's a bit safer this way, we decided to keep it as is, only modifying
+> the kdump case as per the previous commit [2] (see more details about
+> this discussion also in thread [1]).
 
-If KEXEC_CORE is disabled, code block A won't be compiled at all, the
-preprocessor will remove code block A;
+About the change, my question is why not packing
+console_flush_on_panic(CONSOLE_FLUSH_PENDING) into panic_print(), and
+move panic_print() up to be above kmsg_dump(). The pending console
+flusing and replaying all flush are all only called inside panic(), and
+aim to print out more information.
 
-If we convert the code to:
+And adding panic_print_sys_info(false) before kdump might not be a good
+idea. Firstly, panicked system is very unstable, kdump need switch to
+2nd kernel asap w/o any extra action so that it can survive and collect
+tons of information. Added panic_print_sys_info(false) is obviously
+unnecessary to kdump, and increase risk to kernel switching.
 
-if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
-	code block A;
-}
-
-Even if KEXEC_CORE is disabled, code block A is still compiled.
+If I missing anything, please help point out so that I can have a
+complete view on this isuse and its fix.
 
 Thanks
+Baoquan
+
+> 
+> [0] https://lore.kernel.org/lkml/20211230161828.121858-1-gpiccoli at igalia.com
+> [1] https://lore.kernel.org/lkml/f25672a4-e4dd-29e8-b2db-f92dd9ff9f8a at igalia.com
+> [2] https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=5613b7538f69
+> 
+> Cc: Feng Tang <feng.tang@intel.com>
+> Cc: Petr Mladek <pmladek@suse.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+> 
+> 
+> V3: Added a guard in the 2nd panic_print_sys_info(false) to prevent
+> double print - thanks for catching this Petr!
+> 
+> I didn't implement your final suggestion Petr, i.e., putting the first
+> panic_print_sys_info(false) inside the if (!_crash_kexec_post_notifiers)
+> block, and the reason is that when we do this, there's 4 cases to consider:
+> 
+> !kexec_crash_load() && !_crash_kexec_post_notifiers
+> kexec_crash_load() && !_crash_kexec_post_notifiers
+> kexec_crash_load() && _crash_kexec_post_notifiers
+> !kexec_crash_load() && _crash_kexec_post_notifiers
+> 
+> The 3rd case, which means user enabled kdump and set the post_notifiers
+> in the cmdline fails - we end-up not reaching panic_print_sys_info(false)
+> in this case, unless we add another variable to track the function call
+> and prevent double print. My preference was to keep the first call
+> as introduced by commit [2] (mentioned above) and not rely in another
+> variable.
+> Thanks again for the great reviews,
+> 
+> Guilherme
+> 
+> 
+> V2: https://lore.kernel.org/lkml/20220106212835.119409-1-gpiccoli at igalia.com
+> 
+> 
+> 
+>  .../admin-guide/kernel-parameters.txt         |  4 ++++
+>  kernel/panic.c                                | 22 ++++++++++++++-----
+>  2 files changed, 21 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index a069d8fe2fee..0f5cbe141bfd 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -3727,6 +3727,10 @@
+>  			bit 4: print ftrace buffer
+>  			bit 5: print all printk messages in buffer
+>  			bit 6: print all CPUs backtrace (if available in the arch)
+> +			*Be aware* that this option may print a _lot_ of lines,
+> +			so there are risks of losing older messages in the log.
+> +			Use this option carefully, maybe worth to setup a
+> +			bigger log buffer with "log_buf_len" along with this.
+>  
+>  	panic_on_taint=	Bitmask for conditionally calling panic() in add_taint()
+>  			Format: <hex>[,nousertaint]
+> diff --git a/kernel/panic.c b/kernel/panic.c
+> index 41ecf9ab824a..4ae712665f75 100644
+> --- a/kernel/panic.c
+> +++ b/kernel/panic.c
+> @@ -148,10 +148,13 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
+>  }
+>  EXPORT_SYMBOL(nmi_panic);
+>  
+> -static void panic_print_sys_info(void)
+> +static void panic_print_sys_info(bool after_kmsg_dumpers)
+>  {
+> -	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> -		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> +	if (after_kmsg_dumpers) {
+> +		if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> +			console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> +		return;
+> +	}
+>  
+>  	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+>  		trigger_all_cpu_backtrace();
+> @@ -249,7 +252,7 @@ void panic(const char *fmt, ...)
+>  	 * show some extra information on kernel log if it was set...
+>  	 */
+>  	if (kexec_crash_loaded())
+> -		panic_print_sys_info();
+> +		panic_print_sys_info(false);
+>  
+>  	/*
+>  	 * If we have crashed and we have a crash kernel loaded let it handle
+> @@ -283,6 +286,15 @@ void panic(const char *fmt, ...)
+>  	 */
+>  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>  
+> +	/*
+> +	 * If kexec_crash_loaded() is true and we still reach this point,
+> +	 * kernel would double print the information from panic_print; so
+> +	 * let's guard against that possibility (it happens if kdump users
+> +	 * also set crash_kexec_post_notifiers in the command-line).
+> +	 */
+> +	if (!kexec_crash_loaded())
+> +		panic_print_sys_info(false);
+> +
+>  	kmsg_dump(KMSG_DUMP_PANIC);
+>  
+>  	/*
+> @@ -313,7 +325,7 @@ void panic(const char *fmt, ...)
+>  	debug_locks_off();
+>  	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+>  
+> -	panic_print_sys_info();
+> +	panic_print_sys_info(true);
+>  
+>  	if (!panic_blink)
+>  		panic_blink = no_blink;
+> -- 
+> 2.34.1
+> 
+
 
