@@ -1,51 +1,111 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Thu, 20 Jan 2022 12:51:11 -0300
-Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <YektvNyN6mAHv9jJ@alley>
-References: <20220114183046.428796-1-gpiccoli@igalia.com>
- <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
- <94bb12a2-a788-cee6-7d4f-dc0ac581fb39@igalia.com> <YektvNyN6mAHv9jJ@alley>
-Message-ID: <4de89aeb-c127-908c-b403-f9cea128a0b0@igalia.com>
+From: Philipp Rudo <prudo@redhat.com>
+Date: Thu, 20 Jan 2022 19:08:56 +0100
+Subject: [PATCHv4 4/4] arm64: fix PAGE_OFFSET calc for flipped mm
+In-Reply-To: <20220118074812.27702-5-piliu@redhat.com>
+References: <20220118074812.27702-1-piliu@redhat.com>
+ <20220118074812.27702-5-piliu@redhat.com>
+Message-ID: <20220120190856.683a2923@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 20/01/2022 06:39, Petr Mladek wrote:
-> [...]
-> It makes perfect sense to disable the watchdogs during panic().
-> For example, rcu_panic() just sets a variable:
-> 
-> static int rcu_panic(struct notifier_block *this, unsigned long ev, void *ptr)
-> {
-> 	rcu_cpu_stall_suppress = 1;
-> 	return NOTIFY_DONE;
-> }
-> 
-> It is quick and super-safe. It might make sense to implement similar
-> thing for other watchdogs and do something like:
-> 
-> void panic_supress_watchdogs(void)
-> {
-> 	rcu_panic();
-> 	softlockup_watchog_panic();
-> 	wq_watchog_panic();
-> }
-> 
-> It might be caller early in panic().
-> 
+Hi Pingfan,
 
-For reference, I saw your great input about this subject in another
-related thread, which I think we should mention here:
+On Tue, 18 Jan 2022 15:48:12 +0800
+Pingfan Liu <piliu@redhat.com> wrote:
 
-https://lore.kernel.org/lkml/Yel8WQiBn%2FHNQN83 at alley/
-
-
-> JFYI, there is an extension for the crash tool that might be able to read
-> the trace log, see https://crash-utility.github.io/extensions.html
+> From: Kairui Song <kasong@tencent.com>
 > 
-> I haven't tested it myself yet.
+> Since kernel commit 14c127c957c1 ('arm64: mm: Flip kernel VA space'),
+> the memory layout on arm64 have changed, and kexec-tools can no longer
+> get the the right PAGE_OFFSET based on _text symbol.
+> 
+> Prior to that, the kimage (_text) lays above PAGE_END with this layout:
+> 0               -> VA_START                 : Usespace
+> VA_START        -> VA_START + 256M          : BPF JIT, Modules
+> VA_START + 256M -> PAGE_OFFSET - (~GB misc) : Vmalloc (KERNEL _text HERE)
+> PAGE_OFFSET     -> ...                      : * Linear map *
+> 
+> And here we have:
+> VA_START    = -1UL << VA_BITS
+> PAGE_OFFSET = -1UL << (VA_BITS - 1)
+> _text < -1UL << (VA_BITS - 1)
+> 
+> Kernel image lays somewhere between VA_START and PAGE_OFFSET, so we just
+> calc VA_BITS by getting the highest unset bit of _text symbol address,
+> and shift one less bit of VA_BITS to get page offset. This works as long
+> as KASLR don't put kernel in a too high location (which is commented inline).
+> 
+> And after that commit, kernel layout have changed:
+> 0               -> PAGE_OFFSET              : Userspace
+> PAGE_OFFSET     -> PAGE_END                 : * Linear map *
+> PAGE_END        -> PAGE_END + 128M          : bpf jit region
+> PAGE_END + 128M -> PAGE_END + 256MB         : modules
+> PAGE_END + 256M -> ...                      : vmalloc (KERNEL _text HERE)
+> 
+> Here we have:
+> PAGE_OFFSET = -1UL << VA_BITS
+> PAGE_END    = -1UL << (VA_BITS - 1)
+> _text > -1UL << (VA_BITS - 1)
+> 
+> Kernel image now lays above PAGE_END, so we have to shift one more bit to
+> get the VA_BITS, and shift the exact VA_BITS for PAGE_OFFSET.
+> 
+> We can simply check if "_text > -1UL << (VA_BITS - 1)" is true to judge
+> which layout is being used and shift the page offset occordingly.
+> 
+> Signed-off-by: Kairui Song <kasong@tencent.com>
+> (rebased and stripped by Pingfan )
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> To: kexec at lists.infradead.org
+> ---
+>  kexec/arch/arm64/kexec-arm64.c | 14 +++++++++++++-
+>  1 file changed, 13 insertions(+), 1 deletion(-)
+> 
+> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> index 793799b..ce7a5bb 100644
+> --- a/kexec/arch/arm64/kexec-arm64.c
+> +++ b/kexec/arch/arm64/kexec-arm64.c
+> @@ -923,13 +923,25 @@ out:
+>  
+>  int get_page_offset(unsigned long *page_offset)
+>  {
+> +	unsigned long long text_sym_addr, kernel_va_mid;
+>  	int ret;
+>  
+> +	text_sym_addr = get_kernel_sym("_text");
+> +	if (text_sym_addr == 0) {
+> +		fprintf(stderr, "Can't get the symbol of _text to calculate page_offset.\n");
+> +		return -1;
+> +	}
+> +
+>  	ret = get_va_bits();
+>  	if (ret < 0)
+>  		return ret;
+>  
+> -	if (va_bits < 52)
+> +	/* Since kernel 5.4, kernel image is put above
+> +	 * UINT64_MAX << (va_bits - 1)
+> +	 */
+> +	kernel_va_mid = UINT64_MAX << (va_bits - 1);
+> +	/* older kernel */
+> +	if (text_sym_addr < kernel_va_mid)
+>  		*page_offset = UINT64_MAX << (va_bits - 1);
+>  	else
+>  		*page_offset = UINT64_MAX << va_bits;
 
-Thanks, nice to know =)
+I would drop the kernel_va_mid and simply use
+
+	*page_offset = UINT64_MAX << (va_bits - 1)
+	if (*page_offset > text_sym_addr > *page_offset)
+		*page_offset = UINT64_MAX << va_bits
+
+but that's more a matter of taste.
+
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
+
 
