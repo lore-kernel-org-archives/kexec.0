@@ -1,10 +1,10 @@
 From: Philipp Rudo <prudo@redhat.com>
-Date: Thu, 20 Jan 2022 19:09:20 +0100
-Subject: [PATCHv4 2/4] arm64/crashdump: unify routine to get page_offset
-In-Reply-To: <20220118074812.27702-3-piliu@redhat.com>
+Date: Thu, 20 Jan 2022 19:09:32 +0100
+Subject: [PATCHv4 1/4] arm64: make phys_offset signed
+In-Reply-To: <20220118074812.27702-2-piliu@redhat.com>
 References: <20220118074812.27702-1-piliu@redhat.com>
- <20220118074812.27702-3-piliu@redhat.com>
-Message-ID: <20220120190920.671089d4@rhtmp>
+ <20220118074812.27702-2-piliu@redhat.com>
+Message-ID: <20220120190932.269510dc@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,118 +13,48 @@ To: kexec@lists.infradead.org
 
 Hi Pingfan,
 
-On Tue, 18 Jan 2022 15:48:10 +0800
+On Tue, 18 Jan 2022 15:48:09 +0800
 Pingfan Liu <piliu@redhat.com> wrote:
 
-> There are two funcs to get page_offset:
->   get_kernel_page_offset()
->   get_page_offset()
+> After kernel commit 7bc1a0f9e176 ("arm64: mm: use single quantity to
+> represent the PA to VA translation"), phys_offset can be negative if
+> running 52-bits kernel on 48-bits hardware.
 > 
-> Since get_kernel_page_offset() does not observe the kernel formula, and
-> remove it. Unify them in order to introduce 52-bits VA kernel more
-> easily in the coming patch.
+> So changing phys_offset from unsigned to signed.
 > 
 > Signed-off-by: Pingfan Liu <piliu@redhat.com>
 > Cc: Kairui Song <kasong@tencent.com>
 > Cc: Simon Horman <horms@verge.net.au>
 > Cc: Philipp Rudo <prudo@redhat.com>
 > To: kexec at lists.infradead.org
-
-looks good
-
-Reviewed-by: Philipp Rudo <prudo@redhat.com>
-
 > ---
->  kexec/arch/arm64/crashdump-arm64.c | 23 +----------------------
->  kexec/arch/arm64/kexec-arm64.c     |  8 ++++----
->  kexec/arch/arm64/kexec-arm64.h     |  1 +
->  3 files changed, 6 insertions(+), 26 deletions(-)
+>  kexec/arch/arm64/kexec-arm64.c | 12 ++++++------
+>  kexec/arch/arm64/kexec-arm64.h |  2 +-
+>  util_lib/elf_info.c            |  2 +-
+>  util_lib/include/elf_info.h    |  2 +-
+>  4 files changed, 9 insertions(+), 9 deletions(-)
 > 
-> diff --git a/kexec/arch/arm64/crashdump-arm64.c b/kexec/arch/arm64/crashdump-arm64.c
-> index a02019a..0a8d44c 100644
-> --- a/kexec/arch/arm64/crashdump-arm64.c
-> +++ b/kexec/arch/arm64/crashdump-arm64.c
-> @@ -46,27 +46,6 @@ static struct crash_elf_info elf_info = {
->  	.machine	= EM_AARCH64,
->  };
->  
-> -/*
-> - * Note: The returned value is correct only if !CONFIG_RANDOMIZE_BASE.
-> - */
-> -static uint64_t get_kernel_page_offset(void)
-> -{
-> -	int i;
-> -
-> -	if (elf_info.kern_vaddr_start == UINT64_MAX)
-> -		return UINT64_MAX;
-> -
-> -	/* Current max virtual memory range is 48-bits. */
-> -	for (i = 48; i > 0; i--)
-> -		if (!(elf_info.kern_vaddr_start & (1UL << i)))
-> -			break;
-> -
-> -	if (i <= 0)
-> -		return UINT64_MAX;
-> -	else
-> -		return UINT64_MAX << i;
-> -}
-> -
->  /*
->   * iomem_range_callback() - callback called for each iomem region
->   * @data: not used
-> @@ -198,7 +177,7 @@ int load_crashdump_segments(struct kexec_info *info)
->  	if (err)
->  		return EFAILED;
->  
-> -	elf_info.page_offset = get_kernel_page_offset();
-> +	get_page_offset(&elf_info.page_offset);
->  	dbgprintf("%s: page_offset:   %016llx\n", __func__,
->  			elf_info.page_offset);
->  
-> diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> index c6c67e8..33cc258 100644
-> --- a/kexec/arch/arm64/kexec-arm64.c
-> +++ b/kexec/arch/arm64/kexec-arm64.c
-> @@ -909,7 +909,7 @@ static int get_va_bits(void)
->   * get_page_offset - Helper for getting PAGE_OFFSET
->   */
->  
-> -static int get_page_offset(void)
-> +int get_page_offset(unsigned long *page_offset)
->  {
->  	int ret;
->  
-> @@ -917,8 +917,8 @@ static int get_page_offset(void)
->  	if (ret < 0)
->  		return ret;
->  
-> -	page_offset = (0xffffffffffffffffUL) << (va_bits - 1);
-> -	dbgprintf("page_offset : %lx\n", page_offset);
-> +	*page_offset = UINT64_MAX << (va_bits - 1);
-> +	dbgprintf("page_offset : %lx\n", *page_offset);
->  
->  	return 0;
->  }
-> @@ -954,7 +954,7 @@ int get_phys_base_from_pt_load(long *phys_offset)
->  	unsigned long long phys_start;
->  	unsigned long long virt_start;
->  
-> -	ret = get_page_offset();
-> +	ret = get_page_offset(&page_offset);
->  	if (ret < 0)
->  		return ret;
->  
+
+[...]
+
 > diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> index 1844b67..ed99d9d 100644
+> index ed447ac..1844b67 100644
 > --- a/kexec/arch/arm64/kexec-arm64.h
 > +++ b/kexec/arch/arm64/kexec-arm64.h
-> @@ -69,6 +69,7 @@ extern struct arm64_mem arm64_mem;
+> @@ -58,7 +58,7 @@ extern off_t initrd_size;
+>   */
 >  
->  uint64_t get_phys_offset(void);
->  uint64_t get_vp_offset(void);
-> +int get_page_offset(unsigned long *offset);
->  
->  static inline void reset_vp_offset(void)
->  {
+>  struct arm64_mem {
+> -	uint64_t phys_offset;
+> +	long phys_offset;
+
+I think this one should be int64_t as well.
+
+Other than that
+Reviewed-by: Philipp Rudo <prudo@redhat.com>
+
+>  	uint64_t text_offset;
+>  	uint64_t image_size;
+>  	uint64_t vp_offset;
 
 
