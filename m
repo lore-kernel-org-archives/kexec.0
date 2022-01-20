@@ -1,91 +1,111 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Thu, 20 Jan 2022 10:39:08 +0100
-Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <94bb12a2-a788-cee6-7d4f-dc0ac581fb39@igalia.com>
-References: <20220114183046.428796-1-gpiccoli@igalia.com>
- <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
- <94bb12a2-a788-cee6-7d4f-dc0ac581fb39@igalia.com>
-Message-ID: <YektvNyN6mAHv9jJ@alley>
+From: Baoquan He <bhe@redhat.com>
+Date: Thu, 20 Jan 2022 17:45:39 +0800
+Subject: [PATCH v2 0/5] kexec: use IS_ENABLED(CONFIG_KEXEC_CORE) instead
+ of #ifdef
+In-Reply-To: <Yef5oz/XiZT/Pxfy@xhacker>
+References: <20211206160514.2000-1-jszhang@kernel.org>
+ <20220116133847.GE2388@MiWiFi-R3L-srv> <YebK70Sx4w8zLfj/@xhacker>
+ <20220119080859.GB4977@MiWiFi-R3L-srv>
+ <CA+zEjCvqYAWaWW9hVbHqYm_GbV-BaiOM4c77WHnxDNh+SRDUuw@mail.gmail.com>
+ <20220119093322.GC4977@MiWiFi-R3L-srv> <Yef5oz/XiZT/Pxfy@xhacker>
+Message-ID: <20220120094539.GC18398@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed 2022-01-19 13:03:15, Guilherme G. Piccoli wrote:
-> Thanks again Petr, for the deep analysis! Much appreciated.
-> Some comments inline below:
-> 
-> 
-> On 19/01/2022 12:48, Petr Mladek wrote:
-> >[...]
-> > From my POV, the function of panic notifiers is not well defined. They
-> > do various things, for example:
-> > [...] 
+On 01/19/22 at 07:44pm, Jisheng Zhang wrote:
+> On Wed, Jan 19, 2022 at 05:33:22PM +0800, Baoquan He wrote:
+> > On 01/19/22 at 09:52am, Alexandre Ghiti wrote:
+> > > Hi Baoquan,
+> > > 
+> > > On Wed, Jan 19, 2022 at 9:11 AM Baoquan He <bhe@redhat.com> wrote:
+> > > >
+> > > > On 01/18/22 at 10:13pm, Jisheng Zhang wrote:
+> > > > > On Sun, Jan 16, 2022 at 09:38:47PM +0800, Baoquan He wrote:
+> > > > > > Hi Jisheng,
+> > > > >
+> > > > > Hi Baoquan,
+> > > > >
+> > > > > >
+> > > > > > On 12/07/21 at 12:05am, Jisheng Zhang wrote:
+> > > > > > > Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE"
+> > > > > > > by a check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code
+> > > > > > > and increase compile coverage.
+> > > > > >
+> > > > > > I go through this patchset, You mention the benefits it brings are
+> > > > > > 1) simplity the code;
+> > > > > > 2) increase compile coverage;
+> > > > > >
+> > > > > > For benefit 1), it mainly removes the dummy function in x86, arm and
+> > > > > > arm64, right?
+> > > > >
+> > > > > Another benefit: remove those #ifdef #else #endif usage. Recently, I
+> > > > > fixed a bug due to lots of "#ifdefs":
+> > > > > http://lists.infradead.org/pipermail/linux-riscv/2021-December/010607.html
+> > > >
+> > > > Glad to know the fix. While, sometime the ifdeffery is necessary. I am
+> > > > sorry about the one in riscv and you have fixed, it's truly a bug . But,
+> > > > the increasing compile coverage at below you tried to make, it may cause
+> > > > issue. Please see below my comment.
+> > > >
+> > > > >
+> > > > > >
+> > > > > > For benefit 2), increasing compile coverage, could you tell more how it
+> > > > > > achieves and why it matters? What if people disables CONFIG_KEXEC_CORE in
+> > > > > > purpose? Please forgive my poor compiling knowledge.
+> > > > >
+> > > > > Just my humble opinion, let's compare the code::
+> > > > >
+> > > > > #ifdef CONFIG_KEXEC_CORE
+> > > > >
+> > > > > code block A;
+> > > > >
+> > > > > #endif
+> > > > >
+> > > > > If KEXEC_CORE is disabled, code block A won't be compiled at all, the
+> > > > > preprocessor will remove code block A;
+> > > > >
+> > > > > If we convert the code to:
+> > > > >
+> > > > > if (IS_ENABLED(CONFIG_KEXEC_CORE)) {
+> > > > >       code block A;
+> > > > > }
+> > > > >
+> > > > > Even if KEXEC_CORE is disabled, code block A is still compiled.
+> > > >
+> > > > This is what I am worried about. Before, if CONFIG_KEXEC_CORE is
+> > > > unset, those relevant codes are not compiled in. I can't see what
+> > > > benefit is brought in if compiled in the unneeded code block. Do I miss
+> > > > anything?
+> > > >
+> > > 
+> > > This is explained in Documentation/process/coding-style.rst "21)
+> > > Conditional Compilation".
 > > 
-> > The do more that just providing information. Some are risky. It is not
-> > easy to disable a particular one.
-> 
-> We are trying to change that here:
-> https://lore.kernel.org/lkml/20220108153451.195121-1-gpiccoli at igalia.com/
-> 
-> Your review/comments are very welcome =)
-> 
-> 
-> > [...] 
-> > It might make sense to allow to call kmsg_dump before panic notifiers
-> > to reduce the risk of a breakage. But I do not have enough experience
-> > with them to judge this.
+> > Thanks for the pointer, Alex.
 > > 
-> > I can't remember any bug report in this code. I guess that only
-> > few people use kmsg_dump.
+> > I read that part, while my confusion isn't gone. With the current code,
+> > CONFIG_KEXEC_CORE is set,
+> >   - reserve_crashkernel_low() and reserve_crashkernel() compiled in.
 > 
-> One of the problems doing that is that RCU and hung task detector, for
-> example, have panic notifiers to disable themselves in the panic
-> scenario - if we kmsg_dump() _before_ the panic notifiers, we may have
-> intermixed messages, all messy...so for me it makes sense to keep the
-> kmsg_dump() after panic notifiers.
-
-It makes perfect sense to disable the watchdogs during panic().
-For example, rcu_panic() just sets a variable:
-
-static int rcu_panic(struct notifier_block *this, unsigned long ev, void *ptr)
-{
-	rcu_cpu_stall_suppress = 1;
-	return NOTIFY_DONE;
-}
-
-It is quick and super-safe. It might make sense to implement similar
-thing for other watchdogs and do something like:
-
-void panic_supress_watchdogs(void)
-{
-	rcu_panic();
-	softlockup_watchog_panic();
-	wq_watchog_panic();
-}
-
-It might be caller early in panic().
-
+> Although the code block will be compiled, but the code block will be
+> optimized out.
 > 
-> > [...]
-> > Yes, panic_print_sys_info() increases the risk that the crash dump
-> > will not succeed. But the change makes sense because:
+> > CONFIG_KEXEC_CORE is unset,
+> >   - reserve_crashkernel_low() and reserve_crashkernel() compiled out. 
 > > 
-> >   + panic_print_sys_info() might be useful even with full crash dump.
-> >     For example, ftrace messages are not easy to read from the memory
-> >     dump.
+> > After this patch applied, does it have the same effect as the old code?
 > 
-> The last point is really good, I didn't consider that before but makes a
-> lot of sense - we can now dump (a hopefully small!) ftrace/event trace
-> buffer to dmesg before a kdump, making it pretty easy to read that later.
-> Cheers,
+> I compared the .o, and can confirm they acchieve the same effect.
 
-JFYI, there is an extension for the crash tool that might be able to read
-the trace log, see https://crash-utility.github.io/extensions.html
+Checked the .o, it's truly as you said. I didn't know this before,
+thank you and Alex, learned this now.
 
-I haven't tested it myself yet.
+Seems only static function has this effect. I tested your x86 patch,
+those two functions are all optimized out. If I remove the static,
+the entire reserve_crashkernel_low() exists, while reserve_crashkernel()
+will be optimized as a empty function. 
 
-Best Regards,
-Petr
 
