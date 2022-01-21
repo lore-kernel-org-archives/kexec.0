@@ -1,293 +1,193 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Fri, 21 Jan 2022 08:06:50 -0600
-Subject: [PATCH v3 6/6] crash hp: Add x86 crash hotplug support
-In-Reply-To: <20220119102323.GB6349@MiWiFi-R3L-srv>
-References: <20220110195727.1682-1-eric.devolder@oracle.com>
- <20220110195727.1682-7-eric.devolder@oracle.com>
- <20220119102323.GB6349@MiWiFi-R3L-srv>
-Message-ID: <280485c9-4612-892c-0e3e-9e8b09e60cf9@oracle.com>
+From: Michael Kelley (LINUX) <mikelley@microsoft.com>
+Date: Fri, 21 Jan 2022 15:00:20 +0000
+Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <20220121023119.GB4579@MiWiFi-R3L-srv>
+References: <20220114183046.428796-1-gpiccoli@igalia.com>
+ <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
+ <20220120085115.GB18398@MiWiFi-R3L-srv>
+ <63621138-2a41-26c2-524e-d889068f157a@igalia.com>
+ <20220121023119.GB4579@MiWiFi-R3L-srv>
+Message-ID: <MWHPR21MB1593A32A3433F5F262796FCFD75B9@MWHPR21MB1593.namprd21.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Baoquan,
-Thanks for the feedback, inline responses below!
-eric
-
-
-On 1/19/22 04:23, Baoquan He wrote:
-> On 01/10/22 at 02:57pm, Eric DeVolder wrote:
->> For x86_64, when CPU or memory is hot un/plugged, the crash
->> elfcorehdr, which describes the CPUs and memory in the system,
->> must also be updated.
->>
->> To update the elfcorehdr for x86_64, a new elfcorehdr must be
->> generated from the available CPUs and memory. The new elfcorehdr
->> is prepared into a buffer, and if no errors occur, it is
->> installed over the top of the existing elfcorehdr.
->>
->> In the patch 'crash hp: kexec_file changes for crash hotplug support'
->> the need to update purgatory due to the change in elfcorehdr was
->> eliminated.  As a result, no changes to purgatory or boot_params
->> (as the elfcorehdr= kernel command line parameter pointer
->> remains unchanged and correct) are needed, just elfcorehdr.
->>
->> To accommodate a growing number of resources via hotplug, the
->> elfcorehdr segment must be sufficiently large enough to accommodate
->> changes, see the CRASH_HOTPLUG_ELFCOREHDR_SZ configure item.
->>
->> NOTE that this supports both kexec_load and kexec_file_load. Support
->> for kexec_load is made possible by identifying the elfcorehdr segment
->> at load time and updating it as previously described. However, it is
->> the responsibility of the userspace kexec utility to ensure that:
->>   - the elfcorehdr segment is sufficiently large enough to accommodate
->>     hotplug changes, ala CRASH_HOTPLUG_ELFCOREHDR_SZ.
->>   - provides a purgatory that excludes the elfcorehdr from its list of
->>     run-time segments to check.
->> These changes to the userspace kexec utility are not yet available.
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
->>   arch/x86/kernel/crash.c | 138 +++++++++++++++++++++++++++++++++++++++-
->>   1 file changed, 137 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index 9730c88530fc..d185137b33d4 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -25,6 +25,7 @@
->>   #include <linux/slab.h>
->>   #include <linux/vmalloc.h>
->>   #include <linux/memblock.h>
->> +#include <linux/highmem.h>
->>   
->>   #include <asm/processor.h>
->>   #include <asm/hardirq.h>
->> @@ -265,7 +266,8 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
->>   		goto out;
->>   
->>   	/* By default prepare 64bit headers */
->> -	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
->> +	ret =  crash_prepare_elf64_headers(image, cmem,
->> +				IS_ENABLED(CONFIG_X86_64), addr, sz);
->>   
->>   out:
->>   	vfree(cmem);
->> @@ -397,7 +399,17 @@ int crash_load_segments(struct kimage *image)
->>   	image->elf_headers = kbuf.buffer;
->>   	image->elf_headers_sz = kbuf.bufsz;
->>   
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
->> +	kbuf.memsz = CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ;
+From: Baoquan He <bhe@redhat.com> Sent: Thursday, January 20, 2022 6:31 PM
 > 
-> I would define a default value for the size, meantime provide a Kconfig
-> option to allow user to customize.
-
-In patch 2/6 of this series, "crash hp: Introduce CRASH_HOTPLUG configuration options", I provide 
-the following:
-
-+config CRASH_HOTPLUG_ELFCOREHDR_SZ
-+   depends on CRASH_HOTPLUG
-+   int
-+   default 131072
-+   help
-+     Specify the maximum size of the elfcorehdr buffer/segment.
-
-which defines a default value of 128KiB, and can be overriden at configure time.
-
-Are you asking for a different technique?
-
+> On 01/20/22 at 06:36pm, Guilherme G. Piccoli wrote:
+> > Hi Baoquan, some comments inline below:
+> >
+> >
+> > On 20/01/2022 05:51, Baoquan He wrote:
+> > > [...]
+> > >> From my POV, the function of panic notifiers is not well defined. They
+> > >> do various things, for example:
+> > >> [...]
+> > >> The do more that just providing information. Some are risky. It is not
+> > >> easy to disable a particular one.
+> > >
+> > > Yes, agree. Not all of them just provide information.
+> > >
+> > > Now panic_notifier_filter Guilherme added can help to disable some of
+> > > them.
+> >
+> > So, just for completeness, worth to mention Petr had some interesting
+> > suggestions in the other thread (about the filter) and we may end-up not
+> > having this implemented - in other words, maybe a refactor of that
+> > mechanism is going to be proposed.
 > 
->> +	/* For marking as usable to crash kernel */
->> +	image->elf_headers_sz = kbuf.memsz;
->> +	/* Record the index of the elfcorehdr segment */
->> +	image->elf_index = image->nr_segments;
->> +	image->elf_index_valid = true;
->> +#else
->>   	kbuf.memsz = kbuf.bufsz;
->> +#endif
->>   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->>   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>   	ret = kexec_add_buffer(&kbuf);
->> @@ -412,3 +424,127 @@ int crash_load_segments(struct kimage *image)
->>   	return ret;
->>   }
->>   #endif /* CONFIG_KEXEC_FILE */
->> +
->> +#ifdef CONFIG_CRASH_HOTPLUG
+> OK, saw that. We can continue discuss that there.
 > 
-> These two helper function should be carved out into a separate patch as
-> a preparatory one. I am considering how to rearrange and split the
-> patches, will reply to cover letter.
-
-OK, I look forward to that insight!
-
+> >
+> >
+> > > [...]
+> > >>
+> > >>   + Guilherme uses crash dump only to dump the kernel log. It might
+> > >>     be more reliable than kmsg_dump. In this case, panic_print_sys_info()
+> > >>     is the only way to get the extra information.
+> > >
+> > > Hmm, I haven't made clear what Guilherme really wants in his recent
+> > > post. In this patch he wants to get panic print info into pstore. He
+> > > also want to dump the kernel log poked by panic_print in kdump kernel.
+> > > And it's very weird people try to collect kernel log via crash dump
+> > > mechnism, that is obviously using a sledgehammer to crack a nut.
+> > > Sometime, we should not add or change code to a too specific corner
+> > > case.
+> >
+> > OK, I'll try to be really clear, hopefully I can explain the use case in
+> > better and simpler words. First of all, I wouldn't call it a corner case
+> > - it's just a valid use case that, in my opinion, should be allowed. Why
+> > not, right? Kernel shouldn't push policy on users, we should instead let
+> > the users decide how to use the tools/options.
 > 
->> +void *map_crash_pages(unsigned long paddr, unsigned long size)
->> +{
->> +	/*
->> +	 * NOTE: The addresses and sizes passed to this routine have
->> +	 * already been fully aligned on page boundaries. There is no
->> +	 * need for massaging the address or size.
->> +	 */
->> +	void *ptr = NULL;
->> +
->> +	/* NOTE: requires arch_kexec_[un]protect_crashkres() for write access */
->> +	if (size > 0) {
->> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
->> +
->> +		ptr = kmap(page);
->> +	}
->> +
->> +	return ptr;
->> +}
->> +
->> +void unmap_crash_pages(void **ptr)
->> +{
->> +	if (ptr) {
->> +		if (*ptr)
->> +			kunmap(*ptr);
->> +		*ptr = NULL;
->> +	}
->> +}
->> +
->> +void arch_crash_hotplug_handler(struct kimage *image,
->> +	unsigned int hp_action, unsigned long a, unsigned long b)
->> +{
->> +	/*
->> +	 * To accurately reflect hot un/plug changes, the elfcorehdr (which
->> +	 * is passed to the crash kernel via the elfcorehdr= parameter)
->> +	 * must be updated with the new list of CPUs and memories. The new
->> +	 * elfcorehdr is prepared in a kernel buffer, and if no errors,
->> +	 * then it is written on top of the existing/old elfcorehdr.
->> +	 *
->> +	 * Due to the change to the elfcorehdr, purgatory must explicitly
->> +	 * exclude the elfcorehdr from the list of segments it checks.
->> +	 */
+> Agree, sorry about my wrong expression.
 > 
-> Please move this code comment to above function as kernel-doc if you
-> this it benefits the entire function. Otherwise should move them above
-> the code block they are explaining. For this place, I think moving them
-> to above arch_crash_hotplug_handler() is better.
-
-ok, I will do that!
-
+> >
+> > So imagine you cannot collect a vmcore, due to the lack of storage
+> > space. Yet, you want the most information as possible to investigate the
+> > cause of a panic. The kernel flag "panic_print" is the perfect fit, we
+> > can dump backtraces, task list, memory info...right on a panic event.
+> >
+> > But then, how to save this panic log with lots of information after a
+> > reboot? There are 2 ways in my understanding:
+> >
+> > (a) pstore/kmsg_dump()
+> > (b) kdump
+> >
+> > The option (a) is easily the best - we don't need to reserve lots of
+> > memory, then boot another kernel, etc. This patch (being hereby
+> > discussed) aims to enable the "panic_print" output for this case!
+> > But...there are cases in which option (a) cannot work. We need a backend
+> > of persistent storage, either a block device or, more common, RAM memory
+> > that is persistent across a reboot. What if it's not available?
+> >
+> > Then, we fallback to option (b) - kind of a sledgehammer, in your words heh
+> > It's not ideal, but might be a last resort for users wanting to collect
+> > the most information they can without saving a full vmcore. And for
+> > that, we need to be able to invoke "panic_print" function before the
+> > __crash_kexec() call. Continue below...
 > 
->> +	struct kexec_segment *ksegment;
->> +	unsigned char *ptr = NULL;
->> +	unsigned long elfsz = 0;
->> +	void *elfbuf = NULL;
->> +	unsigned long mem, memsz;
->> +	unsigned int n;
->> +
->> +	/*
->> +	 * When the struct kimage is alloced, it is wiped to zero, so
->> +	 * the elf_index_valid defaults to false. It is set on the
->> +	 * kexec_file_load path, or here for kexec_load.
->> +	 */
+> OK, pstore via kmsg_dump is first option, then fallback to kdump.
+> This is what I suggested at below. This is what panic notifier has done
+> at below. I think both of them are similar, thus should take the same
+> way to handle.
 > 
-> I think this kexec loading part should be taken out and post after this
-> whole patchset being accepted. At least, it's worth to put them in a
-> separate patch.
+>  void panic()
+>  {
+>          if (!_crash_kexec_post_notifiers && !panic_print) {
+>                  __crash_kexec(NULL);
+>                  smp_send_stop();
+>          } else {
+>                  crash_smp_send_stop();
+>          }
+> 
+>  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+>  	panic_print_sys_info(false);
+>  	kmsg_dump(KMSG_DUMP_PANIC);
+>  	if (_crash_kexec_post_notifiers || panic_print)
+>                  __crash_kexec(NULL);
+>  	...
+>  	debug_locks_off();
+>          console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> 
+>          panic_print_sys_info(true);
+>  	......
+>  }
+> > >
+> >
+> > So, your idea is good and it mostly works, except it *requires* users to
+> > make use of "crash_kexec_post_notifiers" in order to use "panic_print"
+> > in the case (b) above discussed.
+> 
+> I don't get. Why it has to *require* users to make use of
+> "crash_kexec_post_notifiers" in order to use "panic_print"?
+> To enable panic notifiers and panic_print, we need add below parameter
+> to kernel cmdline separately.
+> 
+> 	crash_kexec_post_notifiers=1
+>         panic_print=0x7f
+> 
+> With above code, we have:
+> 1) None specified in cmdline, only kdump enabled.
+>    Crash dump will work to get vmcore.
+> 2) crash_kexec_post_notifiers=1 , kdump enabled
+>    panic_notifers are executed, then crash dump
+> 3) panic_print=0x7f, kdump enabled,
+>    Panic_print get system info printed, then crash dump
+> 4) crash_kexec_post_notifiers=1 panic_print=0x7f, kdump enabled
+>    panic_notifers are executed firstly, then panic_print, at last crash dump
+> 
+> Here I don't list the no kdump enabled case. Please help point out if I
+> misunderstood anything.
+> >
+> > Do you think it should be necessary?
+> > How about if we allow users to just "panic_print" with or without the
+> > "crash_kexec_post_notifiers", then we pursue Petr suggestion of
+> > refactoring the panic notifiers? So, after this future refactor, we
+> > might have a much clear code.
+> 
+> I haven't read Petr's reply in another panic notifier filter thread. For
+> panic notifier, it's only enforced to use on HyperV platform, excepto of
+> that, users need to explicitly add "crash_kexec_post_notifiers=1" to enable
+> it. And we got bug report on the HyperV issue. In our internal discussion,
+> we strongly suggest HyperV dev to change the default enablement, instead
+> leave it to user to decide.
+>
 
-This little bit of code that identifies the incoming elfcorehdr is all that is needed to support 
-kexec_load (and the userspace changes of course). I'm happy to split as a separate patch, but I 
-would think that be maintaining it with this series, then when it is accepted, both the kexec_load 
-and kexec_file_load paths would be supported? Your call.
+Regarding Hyper-V:   Invoking the Hyper-V notifier prior to running the
+kdump kernel is necessary for correctness.  During initial boot of the
+main kernel, the Hyper-V and VMbus code in Linux sets up several guest
+physical memory pages that are shared with Hyper-V, and that Hyper-V
+may write to.   A VMbus connection is also established. Before kexec'ing
+into the kdump kernel, the sharing of these pages must be rescinded
+and the VMbus connection must be terminated.   If this isn't done, the
+kdump kernel will see strange memory overwrites if these shared guest
+physical memory pages get used for something else.
+
+I hope we've found and fixed all the problems where the Hyper-V
+notifier could get hung.  Unfortunately, the Hyper-V interfaces were
+designed long ago without the Linux kexec scenario in mind, and they
+don't provide a simple way to reset everything except by doing a
+reboot that goes back through the virtual BIOS/UEFI.  So the Hyper-V
+notifier code is more complicated than would be desirable, and in
+particular, terminating the VMbus connection is tricky.
+
+This has been an evolving area of understanding.  It's only been the last
+couple of years that we've fully understood the implications of these
+shared memory pages on the kexec/kdump scenario and what it takes
+to reset everything so the kexec'ed kernel will work.
+
+Michael
 
 > 
->> +	if (!image->elf_index_valid) {
->> +		for (n = 0; n < image->nr_segments; n++) {
->> +			mem = image->segment[n].mem;
->> +			memsz = image->segment[n].memsz;
->> +			ptr = map_crash_pages(mem, memsz);
->> +			if (ptr) {
->> +				/* The segment containing elfcorehdr */
->> +				if ((ptr[0] == 0x7F) &&
->> +					(ptr[1] == 'E') &&
->> +					(ptr[2] == 'L') &&
->> +					(ptr[3] == 'F')) {
+> > > Please, don't name 'after_kmsg_dumpers', that's too nerd, bro :-)
+> > > static void panic_print_sys_info(bool console_flush)
+> >
+> > Sure, I'll rename "after_kmsg_dumpers" to "console_flush" in next
+> > iteration, although my nerd side won't be so happy ;-)
 > 
->                                        Is this for safety checking later?
-No, this code is here to support the kexec_load path; the incoming elfcorehdr has to be identified 
-in order to make changes to it later.
-> 
->> +					image->elf_index = (int)n;
->> +					image->elf_index_valid = true;
->> +				}
->> +			}
->> +			unmap_crash_pages((void **)&ptr);
->> +		}
->> +	}
->> +
->> +	/* Must have valid elfcorehdr index */
->> +	if (!image->elf_index_valid) {
->> +		pr_err("crash hp: unable to locate elfcorehdr segment");
->> +		goto out;
->> +	}
->> +
->> +	/*
->> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
->> +	 * memory resources. The elfcorehdr segment memsz must be
->> +	 * sufficiently large to accommodate increases due to hotplug
->> +	 * activity. See CRASH_HOTPLUG_ELFCOREHDR_SZ.
->> +	 */
->> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
->> +		pr_err("crash hp: unable to prepare elfcore headers");
->> +		goto out;
->> +	}
->> +	ksegment = &image->segment[image->elf_index];
->> +	memsz = ksegment->memsz;
->> +	if (elfsz > memsz) {
->> +		pr_err("crash hp: update elfcorehdr elfsz %lu > memsz %lu",
->> +			elfsz, memsz);
->> +		goto out;
->> +	}
->> +
->> +	/*
->> +	 * At this point, we are all but assured of success.
->> +	 * Copy new elfcorehdr into destination.
->> +	 */
->> +	ksegment = &image->segment[image->elf_index];
->> +	mem = ksegment->mem;
->> +	memsz = ksegment->memsz;
-> 
-> The ksegment and memsz have repeated assignment.
+> No offence at all. My wife always call me nerd. Sorry about that.
 
-Ah, good catch! I will correct.
-
-> 
->> +	ptr = map_crash_pages(mem, memsz);
->> +	if (ptr) {
->> +		/* Temporarily invalidate the crash image while it is replaced */
->> +		xchg(&kexec_crash_image, NULL);
->> +		/* Write the new elfcorehdr into memory */
->> +		memcpy((void *)ptr, elfbuf, elfsz);
->> +		/* The crash image is now valid once again */
->> +		xchg(&kexec_crash_image, image);
->> +	}
->> +	unmap_crash_pages((void **)&ptr);
->> +	pr_debug("crash hp: re-loaded elfcorehdr at 0x%lx\n", mem);
->> +
->> +//FIX??? somekind of cache flush perhaps?
-> 
-> You might mean memcpy_flushcache() on x86.
-
-Thanks, I'll look into this and hopefully use it above.
-
-> 
-> 
->> +
->> +out:
->> +	if (elfbuf)
->> +		vfree(elfbuf);
->> +}
->> +#endif /* CONFIG_CRASH_HOTPLUG */
->> -- 
->> 2.27.0
->>
-> 
 
