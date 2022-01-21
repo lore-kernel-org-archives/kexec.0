@@ -1,11 +1,11 @@
 From: Pingfan Liu <piliu@redhat.com>
-Date: Fri, 21 Jan 2022 09:36:11 +0800
-Subject: [PATCHv4 4/4] arm64: fix PAGE_OFFSET calc for flipped mm
-In-Reply-To: <20220120190856.683a2923@rhtmp>
+Date: Fri, 21 Jan 2022 09:38:49 +0800
+Subject: [PATCHv4 1/4] arm64: make phys_offset signed
+In-Reply-To: <20220120190932.269510dc@rhtmp>
 References: <20220118074812.27702-1-piliu@redhat.com>
- <20220118074812.27702-5-piliu@redhat.com>
- <20220120190856.683a2923@rhtmp>
-Message-ID: <CAF+s44QcZ7148G6amQbZefZkZSTwe9aCgp9U0H1bVUFoSP0qWA@mail.gmail.com>
+ <20220118074812.27702-2-piliu@redhat.com>
+ <20220120190932.269510dc@rhtmp>
+Message-ID: <CAF+s44RcLL2=TLMKZMyCJV0DQTO6HSrodmWXgTHShwmNXsnmKw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -16,107 +16,49 @@ On Fri, Jan 21, 2022 at 2:09 AM Philipp Rudo <prudo@redhat.com> wrote:
 >
 > Hi Pingfan,
 >
-> On Tue, 18 Jan 2022 15:48:12 +0800
+> On Tue, 18 Jan 2022 15:48:09 +0800
 > Pingfan Liu <piliu@redhat.com> wrote:
 >
-> > From: Kairui Song <kasong@tencent.com>
+> > After kernel commit 7bc1a0f9e176 ("arm64: mm: use single quantity to
+> > represent the PA to VA translation"), phys_offset can be negative if
+> > running 52-bits kernel on 48-bits hardware.
 > >
-> > Since kernel commit 14c127c957c1 ('arm64: mm: Flip kernel VA space'),
-> > the memory layout on arm64 have changed, and kexec-tools can no longer
-> > get the the right PAGE_OFFSET based on _text symbol.
+> > So changing phys_offset from unsigned to signed.
 > >
-> > Prior to that, the kimage (_text) lays above PAGE_END with this layout:
-> > 0               -> VA_START                 : Usespace
-> > VA_START        -> VA_START + 256M          : BPF JIT, Modules
-> > VA_START + 256M -> PAGE_OFFSET - (~GB misc) : Vmalloc (KERNEL _text HERE)
-> > PAGE_OFFSET     -> ...                      : * Linear map *
-> >
-> > And here we have:
-> > VA_START    = -1UL << VA_BITS
-> > PAGE_OFFSET = -1UL << (VA_BITS - 1)
-> > _text < -1UL << (VA_BITS - 1)
-> >
-> > Kernel image lays somewhere between VA_START and PAGE_OFFSET, so we just
-> > calc VA_BITS by getting the highest unset bit of _text symbol address,
-> > and shift one less bit of VA_BITS to get page offset. This works as long
-> > as KASLR don't put kernel in a too high location (which is commented inline).
-> >
-> > And after that commit, kernel layout have changed:
-> > 0               -> PAGE_OFFSET              : Userspace
-> > PAGE_OFFSET     -> PAGE_END                 : * Linear map *
-> > PAGE_END        -> PAGE_END + 128M          : bpf jit region
-> > PAGE_END + 128M -> PAGE_END + 256MB         : modules
-> > PAGE_END + 256M -> ...                      : vmalloc (KERNEL _text HERE)
-> >
-> > Here we have:
-> > PAGE_OFFSET = -1UL << VA_BITS
-> > PAGE_END    = -1UL << (VA_BITS - 1)
-> > _text > -1UL << (VA_BITS - 1)
-> >
-> > Kernel image now lays above PAGE_END, so we have to shift one more bit to
-> > get the VA_BITS, and shift the exact VA_BITS for PAGE_OFFSET.
-> >
-> > We can simply check if "_text > -1UL << (VA_BITS - 1)" is true to judge
-> > which layout is being used and shift the page offset occordingly.
-> >
-> > Signed-off-by: Kairui Song <kasong@tencent.com>
-> > (rebased and stripped by Pingfan )
 > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > Cc: Kairui Song <kasong@tencent.com>
 > > Cc: Simon Horman <horms@verge.net.au>
 > > Cc: Philipp Rudo <prudo@redhat.com>
 > > To: kexec at lists.infradead.org
 > > ---
-> >  kexec/arch/arm64/kexec-arm64.c | 14 +++++++++++++-
-> >  1 file changed, 13 insertions(+), 1 deletion(-)
+> >  kexec/arch/arm64/kexec-arm64.c | 12 ++++++------
+> >  kexec/arch/arm64/kexec-arm64.h |  2 +-
+> >  util_lib/elf_info.c            |  2 +-
+> >  util_lib/include/elf_info.h    |  2 +-
+> >  4 files changed, 9 insertions(+), 9 deletions(-)
 > >
-> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-> > index 793799b..ce7a5bb 100644
-> > --- a/kexec/arch/arm64/kexec-arm64.c
-> > +++ b/kexec/arch/arm64/kexec-arm64.c
-> > @@ -923,13 +923,25 @@ out:
+>
+> [...]
+>
+> > diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
+> > index ed447ac..1844b67 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.h
+> > +++ b/kexec/arch/arm64/kexec-arm64.h
+> > @@ -58,7 +58,7 @@ extern off_t initrd_size;
+> >   */
 > >
-> >  int get_page_offset(unsigned long *page_offset)
-> >  {
-> > +     unsigned long long text_sym_addr, kernel_va_mid;
-> >       int ret;
-> >
-> > +     text_sym_addr = get_kernel_sym("_text");
-> > +     if (text_sym_addr == 0) {
-> > +             fprintf(stderr, "Can't get the symbol of _text to calculate page_offset.\n");
-> > +             return -1;
-> > +     }
-> > +
-> >       ret = get_va_bits();
-> >       if (ret < 0)
-> >               return ret;
-> >
-> > -     if (va_bits < 52)
-> > +     /* Since kernel 5.4, kernel image is put above
-> > +      * UINT64_MAX << (va_bits - 1)
-> > +      */
-> > +     kernel_va_mid = UINT64_MAX << (va_bits - 1);
-> > +     /* older kernel */
-> > +     if (text_sym_addr < kernel_va_mid)
-> >               *page_offset = UINT64_MAX << (va_bits - 1);
-> >       else
-> >               *page_offset = UINT64_MAX << va_bits;
+> >  struct arm64_mem {
+> > -     uint64_t phys_offset;
+> > +     long phys_offset;
 >
-> I would drop the kernel_va_mid and simply use
+> I think this one should be int64_t as well.
 >
->         *page_offset = UINT64_MAX << (va_bits - 1)
->         if (*page_offset > text_sym_addr > *page_offset)
->                 *page_offset = UINT64_MAX << va_bits
->
-> but that's more a matter of taste.
->
-Ah, I kept kernel_va_mid dedicatedly to illustrate the purpose.
+Yes, you are right. Thanks for your careful review.
 
-> Reviewed-by: Philipp Rudo <prudo@redhat.com>
->
-Thanks for your reviewing.
+@Simon, could you help to correct it or prefer my V5 to fix it.
 
-Regards,
+Thanks,
 
-Pingfan
+PIngfan
 
 
