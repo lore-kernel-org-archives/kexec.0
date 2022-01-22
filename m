@@ -1,81 +1,93 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Sat, 22 Jan 2022 18:55:14 +0800
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
-References: <20220108153451.195121-1-gpiccoli@igalia.com>
- <Yel8WQiBn/HNQN83@alley>
- <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
-Message-ID: <20220122105514.GA18258@MiWiFi-R3L-srv>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Sat, 22 Jan 2022 10:49:38 -0300
+Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <20220122103121.GB2596@MiWiFi-R3L-srv>
+References: <20220114183046.428796-1-gpiccoli@igalia.com>
+ <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
+ <20220120085115.GB18398@MiWiFi-R3L-srv>
+ <63621138-2a41-26c2-524e-d889068f157a@igalia.com>
+ <20220121023119.GB4579@MiWiFi-R3L-srv>
+ <c7796467-ee32-942f-6011-860a3600f4ef@igalia.com>
+ <20220122103121.GB2596@MiWiFi-R3L-srv>
+Message-ID: <ed18ba1e-4792-22c5-3ece-4d518a8a4a2d@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/21/22 at 05:31pm, Guilherme G. Piccoli wrote:
-......
-> > IMHO, the right solution is to split the callbacks into 2 or more
-> > notifier list. Then we might rework panic() to do:
-> > 
-> > void panic(void)
-> > {
-> > 	[...]
-> > 
-> > 	/* stop watchdogs + extra info */
-> > 	atomic_notifier_call_chain(&panic_disable_watchdogs_notifier_list, 0, buf);
-> > 	atomic_notifier_call_chain(&panic_info_notifier_list, 0, buf);
-> > 	panic_print_sys_info();
-> > 
-> > 	/* crash_kexec + kmsg_dump in configurable order */
-> > 	if (!_crash_kexec_post_kmsg_dump) {
-> > 		__crash_kexec(NULL);
-> > 		smp_send_stop();
-> > 	} else {
-> > 		crash_smp_send_stop();
-> > 	}
-> > 
-> > 	kmsg_dump();
-> > 	if (_crash_kexec_post_kmsg_dump)
-> > 		__crash_kexec(NULL);
-> > 
-> > 	/* infinite loop or reboot */
-> > 	atomic_notifier_call_chain(&panic_hypervisor_notifier_list, 0, buf);
-> > 	atomic_notifier_call_chain(&panic_rest_notifier_list, 0, buf);
-> > 
-> > 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > [...] 
-> > Two notifier lists might be enough in the above scenario. I would call
-> > them:
-> > 
-> > 	panic_pre_dump_notifier_list
-> > 	panic_post_dump_notifier_list
-> > 
-> > 
-> > It is a real solution that will help everyone. It is more complicated now
-> > but it will makes things much easier in the long term. And it might be done
-> > step by step:
-> > 
-> >      1. introduce the two notifier lists
-> >      2. convert all users: one by one
-> >      3. remove the original notifier list when there is no user
+On 22/01/2022 07:31, Baoquan He wrote:
+> [...]
+> From my old POV, I took pstore as a necessity on handheld devices or
+> embeded system, e.g on Andriod. In that case, reserving crashkernel
+> memory to enable kdump to save kernel log, it sounds not so
+> cost-effective, since memory on those systems is usually not big.
+> I am also interested in any new use case where people deploy these
+> and why it's needed, to widen my view.
+
+Hi Baoquan, that's great to hear. Indeed, I feel pstore is unfortunately
+not very used in non-embedded devices - if you see kdump/error-report
+userspace tooling, like on Red Hat/Fedora, Debian/Ubuntu and so on, they
+never rely on pstore. And the configuration is not straightforward for
+the users...I think that's a good thing to change, since pstore is much
+less resource consuming than kdump.
+But of course, not a discussion related to this patch specifically, just
+me thinking out loud heh
+
+
+> [...] 
+> It's my bad. My thought is panic_print and kmsg_dump can be coupled, but
+> they should decouple with panic_notifier. When panic_print is enabled,
+> we do not expect to execute panic_notifier? My personal opinion.
 > 
-> That's a great idea! I'm into it, if we have a consensus. The thing that
-> scares me most here is that this is a big change and consumes time to
-> implement - I'd not risk such time if somebody is really against that.
-> So, let's see more opinions, maybe the kdump maintainers have good input.
+> I missed the change at line 8, sorry for the caused misunderstanding. 
+> Now the chance of holding C-programmer-prize of the year comes back
+> again.
+> 
+>   void panic()
+>   {
+> 1         if (!_crash_kexec_post_notifiers && !panic_print) {
+> 2                 __crash_kexec(NULL);
+> 3                 smp_send_stop();
+> 4         } else {
+> 5                 crash_smp_send_stop();
+> 6         }
+>   
+>   	if (_crash_kexec_post_notifiers)
+> 8  		atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+> 9  	panic_print_sys_info(false);
+> 10  	kmsg_dump(KMSG_DUMP_PANIC);
+> 11  	if (_crash_kexec_post_notifiers || panic_print)
+> 12                 __crash_kexec(NULL);
+>   	...
+>   	debug_locks_off();
+>           console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+>           panic_print_sys_info(true);
 
-I am fine with it. As long as thing is made clear, glad to see code is
-refactored to be more understandable and improved. Earlier, during several
-rounds of discussion between you and Petr, seveal pitfalls have been
-pointed out and avoided.
+Hmm, yeah, I still don't think I'm a brilliant C programmer heh
+Again, in the code above, I can't see how we would reach
+"__crash_kexec(NULL)" after printing the extra info of panic_print, if
+we don't have panic notifiers enabled.
 
-Meanwhile, I would suggest Masa and HATAYAMA to help give input about
-panic_notifier usage and refactory. AFAIK, they contributed code and use
-panic_notifier in their product or environment a lot, that will be very
-helpful to get the first hand information from them.
+So, indeed the code currently don't really tightly couple "panic_print"
+with the panic notifiers. We could change that in another patch series,
+based on what Petr suggested in the filter thread (I know you're
+following there as well, thanks bu the way!), but for now, they are
+completely independent. My plan, following Petr suggestions here and if
+you agree, is to re-submit this patch with some changes, but in the end
+the code will allow users that have kdump enabled + panic_print
+-"crash_kexec_post_notifiers" to have "panic_print_sys_info(false)"
+executing before the "__crash_kexec(NULL)".
 
-Hi Masa, HATAYANA,
+But also, we can add "crash_kexec_post_notifiers" and it will still
+work; finally, pstore is gonna be able to collect the logs from
+"panic_print" as well (the main purpose of this patch).
 
-Any comment on this? (Please ignore this if it's not in your care.)
+Once that's all resolved, my goal is to jump into the panic notifiers
+refactor suggested in the other thread. Let me know if you agree with
+these steps/plans, and I'll work them.
+Cheers,
 
+
+Guilherme
 
