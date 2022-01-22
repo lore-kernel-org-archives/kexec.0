@@ -1,95 +1,46 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Sat, 22 Jan 2022 12:33:51 +0800
+Date: Sat, 22 Jan 2022 18:31:21 +0800
 Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <MWHPR21MB1593A32A3433F5F262796FCFD75B9@MWHPR21MB1593.namprd21.prod.outlook.com>
+In-Reply-To: <c7796467-ee32-942f-6011-860a3600f4ef@igalia.com>
 References: <20220114183046.428796-1-gpiccoli@igalia.com>
  <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
  <20220120085115.GB18398@MiWiFi-R3L-srv>
  <63621138-2a41-26c2-524e-d889068f157a@igalia.com>
  <20220121023119.GB4579@MiWiFi-R3L-srv>
- <MWHPR21MB1593A32A3433F5F262796FCFD75B9@MWHPR21MB1593.namprd21.prod.outlook.com>
-Message-ID: <20220122043351.GA2596@MiWiFi-R3L-srv>
+ <c7796467-ee32-942f-6011-860a3600f4ef@igalia.com>
+Message-ID: <20220122103121.GB2596@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/21/22 at 03:00pm, Michael Kelley (LINUX) wrote:
-> From: Baoquan He <bhe@redhat.com> Sent: Thursday, January 20, 2022 6:31 PM
-> > 
-> > On 01/20/22 at 06:36pm, Guilherme G. Piccoli wrote:
-> > > Hi Baoquan, some comments inline below:
-> > >
-> > >
-> > > On 20/01/2022 05:51, Baoquan He wrote:
-> > > > [...]
-> > > >> From my POV, the function of panic notifiers is not well defined. They
-> > > >> do various things, for example:
-> > > >> [...]
-> > > >> The do more that just providing information. Some are risky. It is not
-> > > >> easy to disable a particular one.
-> > > >
-> > > > Yes, agree. Not all of them just provide information.
-> > > >
-> > > > Now panic_notifier_filter Guilherme added can help to disable some of
-> > > > them.
-> > >
-> > > So, just for completeness, worth to mention Petr had some interesting
-> > > suggestions in the other thread (about the filter) and we may end-up not
-> > > having this implemented - in other words, maybe a refactor of that
-> > > mechanism is going to be proposed.
-> > 
-> > OK, saw that. We can continue discuss that there.
-> > 
-> > >
-> > >
-> > > > [...]
-> > > >>
-> > > >>   + Guilherme uses crash dump only to dump the kernel log. It might
-> > > >>     be more reliable than kmsg_dump. In this case, panic_print_sys_info()
-> > > >>     is the only way to get the extra information.
-> > > >
-> > > > Hmm, I haven't made clear what Guilherme really wants in his recent
-> > > > post. In this patch he wants to get panic print info into pstore. He
-> > > > also want to dump the kernel log poked by panic_print in kdump kernel.
-> > > > And it's very weird people try to collect kernel log via crash dump
-> > > > mechnism, that is obviously using a sledgehammer to crack a nut.
-> > > > Sometime, we should not add or change code to a too specific corner
-> > > > case.
-> > >
-> > > OK, I'll try to be really clear, hopefully I can explain the use case in
-> > > better and simpler words. First of all, I wouldn't call it a corner case
-> > > - it's just a valid use case that, in my opinion, should be allowed. Why
-> > > not, right? Kernel shouldn't push policy on users, we should instead let
-> > > the users decide how to use the tools/options.
+On 01/21/22 at 10:17am, Guilherme G. Piccoli wrote:
+> Hi Baoquan , thanks again for your prompt reply!
+> Comments inline below:
+> 
+> 
+> On 20/01/2022 23:31, Baoquan He wrote:
+> > [...]
+> >> OK, I'll try to be really clear, hopefully I can explain the use case in
+> >> better and simpler words. First of all, I wouldn't call it a corner case
+> >> - it's just a valid use case that, in my opinion, should be allowed. Why
+> >> not, right? Kernel shouldn't push policy on users, we should instead let
+> >> the users decide how to use the tools/options.
 > > 
 > > Agree, sorry about my wrong expression.
-> > 
-> > >
-> > > So imagine you cannot collect a vmcore, due to the lack of storage
-> > > space. Yet, you want the most information as possible to investigate the
-> > > cause of a panic. The kernel flag "panic_print" is the perfect fit, we
-> > > can dump backtraces, task list, memory info...right on a panic event.
-> > >
-> > > But then, how to save this panic log with lots of information after a
-> > > reboot? There are 2 ways in my understanding:
-> > >
-> > > (a) pstore/kmsg_dump()
-> > > (b) kdump
-> > >
-> > > The option (a) is easily the best - we don't need to reserve lots of
-> > > memory, then boot another kernel, etc. This patch (being hereby
-> > > discussed) aims to enable the "panic_print" output for this case!
-> > > But...there are cases in which option (a) cannot work. We need a backend
-> > > of persistent storage, either a block device or, more common, RAM memory
-> > > that is persistent across a reboot. What if it's not available?
-> > >
-> > > Then, we fallback to option (b) - kind of a sledgehammer, in your words heh
-> > > It's not ideal, but might be a last resort for users wanting to collect
-> > > the most information they can without saving a full vmcore. And for
-> > > that, we need to be able to invoke "panic_print" function before the
-> > > __crash_kexec() call. Continue below...
+> 
+> No need to be sorry at all! And if you indeed consider that a corner
+> case, feel free to express that and we should take it into account =)
+> Your opinion is much appreciated!
+
+From my old POV, I took pstore as a necessity on handheld devices or
+embeded system, e.g on Andriod. In that case, reserving crashkernel
+memory to enable kdump to save kernel log, it sounds not so
+cost-effective, since memory on those systems is usually not big.
+I am also interested in any new use case where people deploy these
+and why it's needed, to widen my view.
+> 
 > > 
 > > OK, pstore via kmsg_dump is first option, then fallback to kdump.
 > > This is what I suggested at below. This is what panic notifier has done
@@ -98,33 +49,28 @@ On 01/21/22 at 03:00pm, Michael Kelley (LINUX) wrote:
 > > 
 > >  void panic()
 > >  {
-> >          if (!_crash_kexec_post_notifiers && !panic_print) {
-> >                  __crash_kexec(NULL);
-> >                  smp_send_stop();
-> >          } else {
-> >                  crash_smp_send_stop();
-> >          }
-> > 
-> >  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
-> >  	panic_print_sys_info(false);
-> >  	kmsg_dump(KMSG_DUMP_PANIC);
-> >  	if (_crash_kexec_post_notifiers || panic_print)
-> >                  __crash_kexec(NULL);
+> >1         if (!_crash_kexec_post_notifiers && !panic_print) {
+> >2                 __crash_kexec(NULL);
+> >3                 smp_send_stop();
+> >4         } else {
+> >5                 crash_smp_send_stop();
+> >6         }
+> >  
+> >8  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+> >9  	panic_print_sys_info(false);
+> >10  	kmsg_dump(KMSG_DUMP_PANIC);
+> >11  	if (_crash_kexec_post_notifiers || panic_print)
+> >12                 __crash_kexec(NULL);
 > >  	...
 > >  	debug_locks_off();
 > >          console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > 
+> >  
 > >          panic_print_sys_info(true);
 > >  	......
 > >  }
-> > > >
-> > >
-> > > So, your idea is good and it mostly works, except it *requires* users to
-> > > make use of "crash_kexec_post_notifiers" in order to use "panic_print"
-> > > in the case (b) above discussed.
-> > 
+> >[...] 
 > > I don't get. Why it has to *require* users to make use of
-> > "crash_kexec_post_notifiers" in order to use "panic_print"?
+> > "crash_kexec_post_notifiers" in order to use "panic_print"? 
 > > To enable panic notifiers and panic_print, we need add below parameter
 > > to kernel cmdline separately.
 > > 
@@ -143,65 +89,67 @@ On 01/21/22 at 03:00pm, Michael Kelley (LINUX) wrote:
 > > 
 > > Here I don't list the no kdump enabled case. Please help point out if I
 > > misunderstood anything.
-> > >
-> > > Do you think it should be necessary?
-> > > How about if we allow users to just "panic_print" with or without the
-> > > "crash_kexec_post_notifiers", then we pursue Petr suggestion of
-> > > refactoring the panic notifiers? So, after this future refactor, we
-> > > might have a much clear code.
+> 
+> OK, this is a really great summary list of the possible cases, thanks
+> for that. I might be wrong here, this code is a bit confusing for
+> me...so I put line numbers in your code and we can discuss based on that.
+> 
+> Case (1) - Line L2 is reached, we jump to the kdump kernel, right?
+> Case (2) - Line L5 and lines L8->L12 executed, correct?
+> 
+> Case (3) - I don't understand this case! If kdump is enabled and
+> panic_print as well, we execute Line L2 right? If that's not the case,
+> then we jump to kdump kernel at line L12, but that means L8 was
+> executed, the notifiers list. Right?
+> 
+> So, how is it possible in your code to execute
+> "panic_print_sys_info(false);" and then jump to kdump *without* reaching L8?
+> 
+> I apologize in advance if I'm silly and it's obvious - I guess I won't
+> get the C-programmer-prize of the year anyway heheh
+
+It's my bad. My thought is panic_print and kmsg_dump can be coupled, but
+they should decouple with panic_notifier. When panic_print is enabled,
+we do not expect to execute panic_notifier? My personal opinion.
+
+I missed the change at line 8, sorry for the caused misunderstanding. 
+Now the chance of holding C-programmer-prize of the year comes back
+again.
+
+  void panic()
+  {
+1         if (!_crash_kexec_post_notifiers && !panic_print) {
+2                 __crash_kexec(NULL);
+3                 smp_send_stop();
+4         } else {
+5                 crash_smp_send_stop();
+6         }
+  
+  	if (_crash_kexec_post_notifiers)
+8  		atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+9  	panic_print_sys_info(false);
+10  	kmsg_dump(KMSG_DUMP_PANIC);
+11  	if (_crash_kexec_post_notifiers || panic_print)
+12                 __crash_kexec(NULL);
+  	...
+  	debug_locks_off();
+          console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+  
+          panic_print_sys_info(true);
+  	......
+  }
+
+> 
+> 
+> >> Sure, I'll rename "after_kmsg_dumpers" to "console_flush" in next
+> >> iteration, although my nerd side won't be so happy ;-)
 > > 
-> > I haven't read Petr's reply in another panic notifier filter thread. For
-> > panic notifier, it's only enforced to use on HyperV platform, excepto of
-> > that, users need to explicitly add "crash_kexec_post_notifiers=1" to enable
-> > it. And we got bug report on the HyperV issue. In our internal discussion,
-> > we strongly suggest HyperV dev to change the default enablement, instead
-> > leave it to user to decide.
-> >
+> > No offence at all. My wife always call me nerd. Sorry about that.
 > 
-> Regarding Hyper-V:   Invoking the Hyper-V notifier prior to running the
-> kdump kernel is necessary for correctness.  During initial boot of the
-> main kernel, the Hyper-V and VMbus code in Linux sets up several guest
-> physical memory pages that are shared with Hyper-V, and that Hyper-V
-> may write to.   A VMbus connection is also established. Before kexec'ing
-> into the kdump kernel, the sharing of these pages must be rescinded
-> and the VMbus connection must be terminated.   If this isn't done, the
-> kdump kernel will see strange memory overwrites if these shared guest
-> physical memory pages get used for something else.
+> No offense taken, and no need to be sorry - we're cool!
+> I got the joke =D
 > 
-> I hope we've found and fixed all the problems where the Hyper-V
-> notifier could get hung.  Unfortunately, the Hyper-V interfaces were
-> designed long ago without the Linux kexec scenario in mind, and they
-> don't provide a simple way to reset everything except by doing a
-> reboot that goes back through the virtual BIOS/UEFI.  So the Hyper-V
-> notifier code is more complicated than would be desirable, and in
-> particular, terminating the VMbus connection is tricky.
+> And the variable name suggestion was indeed good.
 > 
-> This has been an evolving area of understanding.  It's only been the last
-> couple of years that we've fully understood the implications of these
-> shared memory pages on the kexec/kdump scenario and what it takes
-> to reset everything so the kexec'ed kernel will work.
-
-Glad to know these background details, thx, Michael. While from the
-commit which introduced it and the code comment above code, I thought
-Hyper-V wants to collect data before crash dump. If this is the true,
-it might be helpful to add these in commit log or add as code comment,
-and also help to defend you when people question it.
-
-int __init hv_common_init(void)
-{
-        int i;
-
-        /*
-         * Hyper-V expects to get crash register data or kmsg when
-         * crash enlightment is available and system crashes. Set
-         * crash_kexec_post_notifiers to be true to make sure that
-         * calling crash enlightment interface before running kdump
-         * kernel.
-         */
-        if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
-                crash_kexec_post_notifiers = true;
-
-	......
-}
 
 
