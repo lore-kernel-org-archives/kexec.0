@@ -1,51 +1,99 @@
-From: Pingfan Liu <piliu@redhat.com>
-Date: Mon, 24 Jan 2022 17:53:34 +0800
-Subject: [PATCHv4 0/4] arm64: make phys_to_virt() correct
-In-Reply-To: <20220124091023.GB8955@vergenet.net>
-References: <20220118074812.27702-1-piliu@redhat.com>
- <20220124091023.GB8955@vergenet.net>
-Message-ID: <CAF+s44Qq55jVs8NZ-KPcq0SJ87yRDSuwq_qynGqWSyYrtyOhVQ@mail.gmail.com>
+From: d.hatayama@fujitsu.com <d.hatayama@fujitsu.com>
+Date: Mon, 24 Jan 2022 11:43:34 +0000
+Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
+In-Reply-To: <20220122105514.GA18258@MiWiFi-R3L-srv>
+References: <20220108153451.195121-1-gpiccoli@igalia.com>
+ <Yel8WQiBn/HNQN83@alley> <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
+ <20220122105514.GA18258@MiWiFi-R3L-srv>
+Message-ID: <TYAPR01MB650732FAB4E24D839DFF9EFD955E9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Jan 24, 2022 at 5:10 PM Simon Horman <horms@verge.net.au> wrote:
->
-> On Tue, Jan 18, 2022 at 03:48:08PM +0800, Pingfan Liu wrote:
-> > Currently phys_to_virt() does not work well on 52-bits VA arm64 kernel.
-> > One issue is contributed by phys_offset not signed.
-> > The other is contributed by wrong page_offset.
-> >
-> > v3 -> v4:
-> > address the date type in [1/4] and [2/4]
-> >
-> > v2 -> v3:
-> > Discussed with Kairui off-list, 48-bits VA kernel can not handle flipped
-> > mm yet. So introducing [4/4], which judges whether the kernel is with
-> > flipped mm layout and adopt different formula accordingly.
-> >
-> > As for [1-3/4], they are the same as [1-3/3] in V2.
-> >
-> > v1 -> v2
-> > Fix broken patch [2/3] in v1
-> > Move arch_scan_vmcoreinfo declaration to util_lib/include/elf_info.h
-> > Using UINT64_MAX instread of 0xffffffffffffffff
-> >
-> >
-> > Cc: Kairui Song <kasong@tencent.com>
-> > Cc: Simon Horman <horms@verge.net.au>
-> > Cc: Philipp Rudo <prudo@redhat.com>
-> > To: kexec at lists.infradead.org
->
-> Thanks, series applied.
->
 
-Hi Simon and Philipp, appreciate the help and patient review.
+> On 01/21/22 at 05:31pm, Guilherme G. Piccoli wrote:
+> ......
+> > > IMHO, the right solution is to split the callbacks into 2 or more
+> > > notifier list. Then we might rework panic() to do:
+> > >
+> > > void panic(void)
+> > > {
+> > >     [...]
+> > >
+> > >     /* stop watchdogs + extra info */
+> > >     atomic_notifier_call_chain(&panic_disable_watchdogs_notifier_list, 0, buf);
+> > >     atomic_notifier_call_chain(&panic_info_notifier_list, 0, buf);
+> > >     panic_print_sys_info();
+> > >
+> > >     /* crash_kexec + kmsg_dump in configurable order */
+> > >     if (!_crash_kexec_post_kmsg_dump) {
+> > >             __crash_kexec(NULL);
+> > >             smp_send_stop();
+> > >     } else {
+> > >             crash_smp_send_stop();
+> > >     }
+> > >
+> > >     kmsg_dump();
+> > >     if (_crash_kexec_post_kmsg_dump)
+> > >             __crash_kexec(NULL);
+> > >
+> > >     /* infinite loop or reboot */
+> > >     atomic_notifier_call_chain(&panic_hypervisor_notifier_list, 0, buf);
+> > >     atomic_notifier_call_chain(&panic_rest_notifier_list, 0, buf);
+> > >
+> > >     console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> > > [...]
+> > > Two notifier lists might be enough in the above scenario. I would call
+> > > them:
+> > >
+> > >     panic_pre_dump_notifier_list
+> > >     panic_post_dump_notifier_list
+> > >
+> > >
+> > > It is a real solution that will help everyone. It is more complicated now
+> > > but it will makes things much easier in the long term. And it might be done
+> > > step by step:
+> > >
+> > >      1. introduce the two notifier lists
+> > >      2. convert all users: one by one
+> > >      3. remove the original notifier list when there is no user
+> >
+> > That's a great idea! I'm into it, if we have a consensus. The thing that
+> > scares me most here is that this is a big change and consumes time to
+> > implement - I'd not risk such time if somebody is really against that.
+> > So, let's see more opinions, maybe the kdump maintainers have good input.
+> 
+> I am fine with it. As long as thing is made clear, glad to see code is
+> refactored to be more understandable and improved. Earlier, during several
+> rounds of discussion between you and Petr, seveal pitfalls have been
+> pointed out and avoided.
+> 
+> Meanwhile, I would suggest Masa and HATAYAMA to help give input about
+> panic_notifier usage and refactory. AFAIK, they contributed code and use
+> panic_notifier in their product or environment a lot, that will be very
+> helpful to get the first hand information from them.
+> 
+> Hi Masa, HATAYANA,
+> 
+> Any comment on this? (Please ignore this if it's not in your care.)
+> 
 
-Best Regards,
+Thanks for CCing to me. I like this patch set. I have same motivation.
 
-Pingfan
+For example, when I used crash_kexec_post_notifiers, I sometimes ran into
+deadlock in printk's exclusion logic during the call of panic notifiers since
+kaslr outputs kernel offset at panic by dump_kernel_offset() via panic notifers
+(although this might never happen now thanks to lockless implementation).
 
+The problem is that in the current design, we have to run all the
+tasks registered, although most of them are actually unnecessary for
+other users' requirements. Each user wants to call only their own handlers
+in order to keep kdump as reliable as possible.
+
+I've just started reading this patch set and have no other comments for now.
+
+Thanks.
+HATAYAMA, Daisuke
 
