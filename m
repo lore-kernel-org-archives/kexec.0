@@ -1,10 +1,10 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Mon, 24 Jan 2022 16:47:05 +0800
-Subject: [PATCH v20 2/5] arm64: kdump: introduce some macros for crash kernel
- reservation
+Date: Mon, 24 Jan 2022 16:47:07 +0800
+Subject: [PATCH v20 4/5] of: fdt: Add memory for devices by DT property "linux,
+ usable-memory-range"
 In-Reply-To: <20220124084708.683-1-thunder.leizhen@huawei.com>
 References: <20220124084708.683-1-thunder.leizhen@huawei.com>
-Message-ID: <20220124084708.683-3-thunder.leizhen@huawei.com>
+Message-ID: <20220124084708.683-5-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,54 +13,90 @@ To: kexec@lists.infradead.org
 
 From: Chen Zhou <chenzhou10@huawei.com>
 
-Introduce macro CRASH_ALIGN for alignment, macro CRASH_ADDR_LOW_MAX
-for upper bound of low crash memory, macro CRASH_ADDR_HIGH_MAX for
-upper bound of high crash memory, use macros instead.
+When reserving crashkernel in high memory, some low memory is reserved
+for crash dump kernel devices and never mapped by the first kernel.
+This memory range is advertised to crash dump kernel via DT property
+under /chosen,
+        linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+
+We reused the DT property linux,usable-memory-range and made the low
+memory region as the second range "BASE2 SIZE2", which keeps compatibility
+with existing user-space and older kdump kernels.
+
+Crash dump kernel reads this property at boot time and call memblock_add()
+to add the low memory region after memblock_cap_memory_range() has been
+called.
 
 Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Tested-by: John Donnelly <John.p.donnelly@oracle.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
 ---
- arch/arm64/mm/init.c | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ drivers/of/fdt.c | 33 +++++++++++++++++++++++----------
+ 1 file changed, 23 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 90f276d46b93bc6..6c653a2c7cff052 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -65,6 +65,12 @@ EXPORT_SYMBOL(memstart_addr);
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index ad85ff6474ff139..df4b9d2418a13d4 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -973,16 +973,24 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
  
- #ifdef CONFIG_KEXEC_CORE
-+/* Current arm64 boot protocol requires 2MB alignment */
-+#define CRASH_ALIGN		SZ_2M
+ static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
+ 
++/*
++ * The main usage of linux,usable-memory-range is for crash dump kernel.
++ * Originally, the number of usable-memory regions is one. Now there may
++ * be two regions, low region and high region.
++ * To make compatibility with existing user-space and older kdump, the low
++ * region is always the last range of linux,usable-memory-range if exist.
++ */
++#define MAX_USABLE_RANGES		2
 +
-+#define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
-+#define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
-+
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -75,7 +81,7 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
- static void __init reserve_crashkernel(void)
+ /**
+  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
+  * location from flat tree
+  */
+ void __init early_init_dt_check_for_usable_mem_range(void)
  {
- 	unsigned long long crash_base, crash_size;
--	unsigned long long crash_max = arm64_dma_phys_limit;
-+	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
- 	int ret;
+-	const __be32 *prop;
+-	int len;
+-	phys_addr_t cap_mem_addr;
+-	phys_addr_t cap_mem_size;
++	struct memblock_region rgn[MAX_USABLE_RANGES] = {0};
++	const __be32 *prop, *endp;
++	int len, i;
+ 	unsigned long node = chosen_node_offset;
  
- 	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-@@ -90,8 +96,7 @@ static void __init reserve_crashkernel(void)
- 	if (crash_base)
- 		crash_max = crash_base + crash_size;
+ 	if ((long)node < 0)
+@@ -991,16 +999,21 @@ void __init early_init_dt_check_for_usable_mem_range(void)
+ 	pr_debug("Looking for usable-memory-range property... ");
  
--	/* Current arm64 boot protocol requires 2MB alignment */
--	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
-+	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
- 					       crash_base, crash_max);
- 	if (!crash_base) {
- 		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+ 	prop = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
+-	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
++	if (!prop || (len % (dt_root_addr_cells + dt_root_size_cells)))
+ 		return;
+ 
+-	cap_mem_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
+-	cap_mem_size = dt_mem_next_cell(dt_root_size_cells, &prop);
++	endp = prop + (len / sizeof(__be32));
++	for (i = 0; i < MAX_USABLE_RANGES && prop < endp; i++) {
++		rgn[i].base = dt_mem_next_cell(dt_root_addr_cells, &prop);
++		rgn[i].size = dt_mem_next_cell(dt_root_size_cells, &prop);
+ 
+-	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
+-		 &cap_mem_size);
++		pr_debug("cap_mem_regions[%d]: base=%pa, size=%pa\n",
++			 i, &rgn[i].base, &rgn[i].size);
++	}
+ 
+-	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
++	memblock_cap_memory_range(rgn[0].base, rgn[0].size);
++	for (i = 1; i < MAX_USABLE_RANGES && rgn[i].size; i++)
++		memblock_add(rgn[i].base, rgn[i].size);
+ }
+ 
+ #ifdef CONFIG_SERIAL_EARLYCON
 -- 
 2.25.1
 
