@@ -1,63 +1,40 @@
 From: Simon Horman <horms@verge.net.au>
-Date: Mon, 24 Jan 2022 09:58:09 +0100
-Subject: [PATCHv4 1/4] arm64: make phys_offset signed
-In-Reply-To: <CAF+s44RcLL2=TLMKZMyCJV0DQTO6HSrodmWXgTHShwmNXsnmKw@mail.gmail.com>
+Date: Mon, 24 Jan 2022 10:10:23 +0100
+Subject: [PATCHv4 0/4] arm64: make phys_to_virt() correct
+In-Reply-To: <20220118074812.27702-1-piliu@redhat.com>
 References: <20220118074812.27702-1-piliu@redhat.com>
- <20220118074812.27702-2-piliu@redhat.com>
- <20220120190932.269510dc@rhtmp>
- <CAF+s44RcLL2=TLMKZMyCJV0DQTO6HSrodmWXgTHShwmNXsnmKw@mail.gmail.com>
-Message-ID: <20220124085804.GA8955@vergenet.net>
+Message-ID: <20220124091023.GB8955@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Jan 21, 2022 at 09:38:49AM +0800, Pingfan Liu wrote:
-> On Fri, Jan 21, 2022 at 2:09 AM Philipp Rudo <prudo@redhat.com> wrote:
-> >
-> > Hi Pingfan,
-> >
-> > On Tue, 18 Jan 2022 15:48:09 +0800
-> > Pingfan Liu <piliu@redhat.com> wrote:
-> >
-> > > After kernel commit 7bc1a0f9e176 ("arm64: mm: use single quantity to
-> > > represent the PA to VA translation"), phys_offset can be negative if
-> > > running 52-bits kernel on 48-bits hardware.
-> > >
-> > > So changing phys_offset from unsigned to signed.
-> > >
-> > > Signed-off-by: Pingfan Liu <piliu@redhat.com>
-> > > Cc: Kairui Song <kasong@tencent.com>
-> > > Cc: Simon Horman <horms@verge.net.au>
-> > > Cc: Philipp Rudo <prudo@redhat.com>
-> > > To: kexec at lists.infradead.org
-> > > ---
-> > >  kexec/arch/arm64/kexec-arm64.c | 12 ++++++------
-> > >  kexec/arch/arm64/kexec-arm64.h |  2 +-
-> > >  util_lib/elf_info.c            |  2 +-
-> > >  util_lib/include/elf_info.h    |  2 +-
-> > >  4 files changed, 9 insertions(+), 9 deletions(-)
-> > >
-> >
-> > [...]
-> >
-> > > diff --git a/kexec/arch/arm64/kexec-arm64.h b/kexec/arch/arm64/kexec-arm64.h
-> > > index ed447ac..1844b67 100644
-> > > --- a/kexec/arch/arm64/kexec-arm64.h
-> > > +++ b/kexec/arch/arm64/kexec-arm64.h
-> > > @@ -58,7 +58,7 @@ extern off_t initrd_size;
-> > >   */
-> > >
-> > >  struct arm64_mem {
-> > > -     uint64_t phys_offset;
-> > > +     long phys_offset;
-> >
-> > I think this one should be int64_t as well.
-> >
-> Yes, you are right. Thanks for your careful review.
+On Tue, Jan 18, 2022 at 03:48:08PM +0800, Pingfan Liu wrote:
+> Currently phys_to_virt() does not work well on 52-bits VA arm64 kernel.
+> One issue is contributed by phys_offset not signed.
+> The other is contributed by wrong page_offset.
 > 
-> @Simon, could you help to correct it or prefer my V5 to fix it.
+> v3 -> v4:
+> address the date type in [1/4] and [2/4] 
+> 
+> v2 -> v3:
+> Discussed with Kairui off-list, 48-bits VA kernel can not handle flipped
+> mm yet. So introducing [4/4], which judges whether the kernel is with
+> flipped mm layout and adopt different formula accordingly.
+> 
+> As for [1-3/4], they are the same as [1-3/3] in V2.
+> 
+> v1 -> v2
+> Fix broken patch [2/3] in v1
+> Move arch_scan_vmcoreinfo declaration to util_lib/include/elf_info.h
+> Using UINT64_MAX instread of 0xffffffffffffffff
+> 
+> 
+> Cc: Kairui Song <kasong@tencent.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> Cc: Philipp Rudo <prudo@redhat.com>
+> To: kexec at lists.infradead.org
 
-I think I can fix this while applying this patchset :)
+Thanks, series applied.
 
