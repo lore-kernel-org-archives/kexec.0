@@ -1,113 +1,40 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 24 Jan 2022 22:15:39 +0800
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Mon, 24 Jan 2022 11:48:44 -0300
 Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <TYAPR01MB650732FAB4E24D839DFF9EFD955E9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
+In-Reply-To: <20220124135902.GB8305@MiWiFi-R3L-srv>
 References: <20220108153451.195121-1-gpiccoli@igalia.com>
- <Yel8WQiBn/HNQN83@alley>
- <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
+ <Yel8WQiBn/HNQN83@alley> <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
  <20220122105514.GA18258@MiWiFi-R3L-srv>
- <TYAPR01MB650732FAB4E24D839DFF9EFD955E9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
-Message-ID: <20220124141539.GC8305@MiWiFi-R3L-srv>
+ <20220123220711.44f1484c9b510eea8cda9c47@kernel.org>
+ <20220124135902.GB8305@MiWiFi-R3L-srv>
+Message-ID: <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/24/22 at 11:43am, d.hatayama at fujitsu.com wrote:
-> 
-> > On 01/21/22 at 05:31pm, Guilherme G. Piccoli wrote:
-> > ......
-> > > > IMHO, the right solution is to split the callbacks into 2 or more
-> > > > notifier list. Then we might rework panic() to do:
-> > > >
-> > > > void panic(void)
-> > > > {
-> > > >     [...]
-> > > >
-> > > >     /* stop watchdogs + extra info */
-> > > >     atomic_notifier_call_chain(&panic_disable_watchdogs_notifier_list, 0, buf);
-> > > >     atomic_notifier_call_chain(&panic_info_notifier_list, 0, buf);
-> > > >     panic_print_sys_info();
-> > > >
-> > > >     /* crash_kexec + kmsg_dump in configurable order */
-> > > >     if (!_crash_kexec_post_kmsg_dump) {
-> > > >             __crash_kexec(NULL);
-> > > >             smp_send_stop();
-> > > >     } else {
-> > > >             crash_smp_send_stop();
-> > > >     }
-> > > >
-> > > >     kmsg_dump();
-> > > >     if (_crash_kexec_post_kmsg_dump)
-> > > >             __crash_kexec(NULL);
-> > > >
-> > > >     /* infinite loop or reboot */
-> > > >     atomic_notifier_call_chain(&panic_hypervisor_notifier_list, 0, buf);
-> > > >     atomic_notifier_call_chain(&panic_rest_notifier_list, 0, buf);
-> > > >
-> > > >     console_flush_on_panic(CONSOLE_FLUSH_PENDING);
-> > > > [...]
-> > > > Two notifier lists might be enough in the above scenario. I would call
-> > > > them:
-> > > >
-> > > >     panic_pre_dump_notifier_list
-> > > >     panic_post_dump_notifier_list
-> > > >
-> > > >
-> > > > It is a real solution that will help everyone. It is more complicated now
-> > > > but it will makes things much easier in the long term. And it might be done
-> > > > step by step:
-> > > >
-> > > >      1. introduce the two notifier lists
-> > > >      2. convert all users: one by one
-> > > >      3. remove the original notifier list when there is no user
-> > >
-> > > That's a great idea! I'm into it, if we have a consensus. The thing that
-> > > scares me most here is that this is a big change and consumes time to
-> > > implement - I'd not risk such time if somebody is really against that.
-> > > So, let's see more opinions, maybe the kdump maintainers have good input.
-> > 
-> > I am fine with it. As long as thing is made clear, glad to see code is
-> > refactored to be more understandable and improved. Earlier, during several
-> > rounds of discussion between you and Petr, seveal pitfalls have been
-> > pointed out and avoided.
-> > 
-> > Meanwhile, I would suggest Masa and HATAYAMA to help give input about
-> > panic_notifier usage and refactory. AFAIK, they contributed code and use
-> > panic_notifier in their product or environment a lot, that will be very
-> > helpful to get the first hand information from them.
-> > 
-> > Hi Masa, HATAYANA,
-> > 
-> > Any comment on this? (Please ignore this if it's not in your care.)
-> > 
-> 
-> Thanks for CCing to me. I like this patch set. I have same motivation.
-> 
-> For example, when I used crash_kexec_post_notifiers, I sometimes ran into
-> deadlock in printk's exclusion logic during the call of panic notifiers since
-> kaslr outputs kernel offset at panic by dump_kernel_offset() via panic notifers
-> (although this might never happen now thanks to lockless implementation).
-> 
-> The problem is that in the current design, we have to run all the
-> tasks registered, although most of them are actually unnecessary for
-> other users' requirements. Each user wants to call only their own handlers
-> in order to keep kdump as reliable as possible.
+On 24/01/2022 10:59, Baoquan He wrote:
+> [...]
+> About pre_dump, if the dump is crash dump, hope those pre_dump notifiers
+> will be executed under conditional check, e.g only if 'crash_kexec_post_notifiers'
+> is specified in kernel cmdline. 
 
-If I unerstand you correclty, you are expressing your favour to the
-panic_notifier filter this patch adds. I personally like it very much
-either because I know users only expect to run those one or several
-handlers they added or cared about, from discussing reported cases
-realted to them, just as you said.
+Hi Baoquan, based on Petr's suggestion, I think pre_dump would be
+responsible for really *non-intrusive/non-risky* tasks and should be
+always executed in the panic path (before kdump), regardless of
+"crash_kexec_post_notifiers".
 
-Now comments to patch lean to split and classify the current panic
-notifiers list into two or several sub-lists and execute them in
-different order. I think this improvement will benefit people who
-defaults to execute all panic notifiers, while the panic notifier
-fileter is also very helpful if can be added.
+The idea is that the majority of the notifiers would be executed in the
+post_dump portion, and for that, we have the
+"crash_kexec_post_notifiers" conditional. I also suggest we have
+blacklist options (based on function names) for both notifiers, in order
+to make kdump issues debug easier.
 
-Hope I got you right, HATAYAMA. And thanks a lot for your quick
-response.
+Do you agree with that? Feel free to comment with suggestions!
+Cheers,
+
+
+Guilherme
 
 
