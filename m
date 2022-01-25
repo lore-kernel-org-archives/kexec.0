@@ -1,117 +1,74 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Date: Tue, 25 Jan 2022 16:29:50 +0000
-Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
- stable
-In-Reply-To: <20220125033913.15374-1-kernelfans@gmail.com>
-References: <20220125033913.15374-1-kernelfans@gmail.com>
-Message-ID: <87wnin3hj5.mognet@arm.com>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Date: Tue, 25 Jan 2022 11:50:40 -0800
+Subject: [PATCH v4 1/6] s390/kexec_file: Don't opencode appended
+ signature check.
+In-Reply-To: <940cd6a0e88793060cdf5ddb7880c03564b38bdd.1641822505.git.msuchanek@suse.de>
+References: <cover.1641822505.git.msuchanek@suse.de>
+ <940cd6a0e88793060cdf5ddb7880c03564b38bdd.1641822505.git.msuchanek@suse.de>
+Message-ID: <YfBUkIlvQc0U0ylo@bombadil.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 25/01/22 11:39, Pingfan Liu wrote:
-> The following identical code piece appears in both
-> migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
->
-> 	if (!cpu_online(primary_cpu))
-> 		primary_cpu = cpumask_first(cpu_online_mask);
->
-> Although the kexec-reboot task can get through a cpu_down() on its cpu,
-> this code looks a little confusing.
->
-> Make things straight forward by keep cpu hotplug disabled until
-> smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
-> rebooting cpu can keep unchanged.
->
-
-So is this supposed to be a refactor with no change in behaviour? AFAICT it
-actually does change things (and isn't necessarily clearer).
-
-> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Valentin Schneider <valentin.schneider@arm.com>
-> Cc: Vincent Donnefort <vincent.donnefort@arm.com>
-> Cc: Ingo Molnar <mingo@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: YueHaibing <yuehaibing@huawei.com>
-> Cc: Baokun Li <libaokun1@huawei.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Cc: kexec at lists.infradead.org
-> To: linux-kernel at vger.kernel.org
+On Mon, Jan 10, 2022 at 02:49:53PM +0100, Michal Suchanek wrote:
+> Module verification already implements appeded signature check.
+> 
+> Reuse it for kexec_file.
+> 
+> The kexec_file implementation uses EKEYREJECTED error in some cases when
+> there is no key and the common implementation uses ENOPKG or EBADMSG
+> instead.
+> 
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> Acked-by: Heiko Carstens <hca@linux.ibm.com>
 > ---
->  kernel/cpu.c        | 16 ++++++++++------
->  kernel/kexec_core.c | 10 ++++------
->  2 files changed, 14 insertions(+), 12 deletions(-)
->
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 407a2568f35e..bc687d59ca90 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -1227,20 +1227,24 @@ int remove_cpu(unsigned int cpu)
->  }
->  EXPORT_SYMBOL_GPL(remove_cpu);
+> v3: Philipp Rudo <prudo@redhat.com>: Update the commit with note about
+> change of return value
+> ---
+>  arch/s390/kernel/machine_kexec_file.c | 22 +++++-----------------
+>  1 file changed, 5 insertions(+), 17 deletions(-)
+> 
+> diff --git a/arch/s390/kernel/machine_kexec_file.c b/arch/s390/kernel/machine_kexec_file.c
+> index 8f43575a4dd3..c944d71316c7 100644
+> --- a/arch/s390/kernel/machine_kexec_file.c
+> +++ b/arch/s390/kernel/machine_kexec_file.c
+> @@ -31,6 +31,7 @@ int s390_verify_sig(const char *kernel, unsigned long kernel_len)
+>  	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
+>  	struct module_signature *ms;
+>  	unsigned long sig_len;
+> +	int ret;
 >  
-> +/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
->  void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
->  {
->  	unsigned int cpu;
->  	int error;
+>  	/* Skip signature verification when not secure IPLed. */
+>  	if (!ipl_secure_flag)
+> @@ -45,25 +46,12 @@ int s390_verify_sig(const char *kernel, unsigned long kernel_len)
+>  	kernel_len -= marker_len;
 >  
-> +	/*
-> +	 * Block other cpu hotplug event, so primary_cpu is always online if
-> +	 * it is not touched by us
-> +	 */
->  	cpu_maps_update_begin();
-> -
->  	/*
-> -	 * Make certain the cpu I'm about to reboot on is online.
-> -	 *
-> -	 * This is inline to what migrate_to_reboot_cpu() already do.
-> +	 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> +	 * no further code needs to use CPU hotplug (which is true in
-> +	 * the reboot case). However, the kexec path depends on using
-> +	 * CPU hotplug again; so re-enable it here.
->  	 */
-> -	if (!cpu_online(primary_cpu))
-> -		primary_cpu = cpumask_first(cpu_online_mask);
-> +	__cpu_hotplug_enable();
+>  	ms = (void *)kernel + kernel_len - sizeof(*ms);
+> -	kernel_len -= sizeof(*ms);
+> +	ret = mod_check_sig(ms, kernel_len, "kexec");
+> +	if (ret)
+> +		return ret;
 >  
->  	for_each_online_cpu(cpu) {
->  		if (cpu == primary_cpu)
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 68480f731192..db4fa6b174e3 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
->  		kexec_in_progress = true;
->  		kernel_restart_prepare("kexec reboot");
->  		migrate_to_reboot_cpu();
-> -
->  		/*
-> -		 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> -		 * no further code needs to use CPU hotplug (which is true in
-> -		 * the reboot case). However, the kexec path depends on using
-> -		 * CPU hotplug again; so re-enable it here.
-> +		 * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
-> +		 * relies on the cpu teardown to achieve reboot, it needs to
-> +		 * re-enable CPU hotplug there.
->  		 */
-> -		cpu_hotplug_enable();
-> +
+>  	sig_len = be32_to_cpu(ms->sig_len);
+> -	if (sig_len >= kernel_len)
+> -		return -EKEYREJECTED;
 
-Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
-archs will now be missing a cpu_hotplug_enable() prior to a kexec
-machine_shutdown(). That said, AFAICT none of those archs rely on the
-hotplug machinery in machine_shutdown(), so it might be OK, but that's not
-obvious at all.
+There is a small minor fix here, where by using mod_check_sig() now
+decreased the kernel_len by the sizeof(*ms). It is minor though.
 
->  		pr_notice("Starting new kernel\n");
->  		machine_shutdown();
->  	}
-> -- 
-> 2.31.1
+> -	kernel_len -= sig_len;
+> -
+> -	if (ms->id_type != PKEY_ID_PKCS7)
+> -		return -EKEYREJECTED;
+
+More importantly is the return value used here changes but given the
+Ack by Heiko I suspect this if fine and does not break old userspace,
+the only change here is the possible error value returned by the
+kexec_file_load() system call.
+
+Reviewed-by: Luis Chamberlain <mcgrof@kernel.org>
+
+   Luis
 
