@@ -1,102 +1,80 @@
-From: Valentin Schneider <valentin.schneider@arm.com>
-Date: Wed, 26 Jan 2022 15:06:39 +0000
-Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
- stable
-In-Reply-To: <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
-References: <20220125033913.15374-1-kernelfans@gmail.com>
- <87wnin3hj5.mognet@arm.com>
- <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
-Message-ID: <87tudq35a8.mognet@arm.com>
+From: john.p.donnelly@oracle.com <john.p.donnelly@oracle.com>
+Date: Wed, 26 Jan 2022 09:16:38 -0600
+Subject: [PATCH v20 1/5] arm64: Use insert_resource() to simplify code
+In-Reply-To: <20220124084708.683-2-thunder.leizhen@huawei.com>
+References: <20220124084708.683-1-thunder.leizhen@huawei.com>
+ <20220124084708.683-2-thunder.leizhen@huawei.com>
+Message-ID: <171196ee-8c61-2ebd-b74d-87c0a15ae4ea@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 26/01/22 10:45, Pingfan Liu wrote:
-> On Wed, Jan 26, 2022 at 12:29 AM Valentin Schneider
-> <valentin.schneider@arm.com> wrote:
->>
->> On 25/01/22 11:39, Pingfan Liu wrote:
->> > The following identical code piece appears in both
->> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
->> >
->> >       if (!cpu_online(primary_cpu))
->> >               primary_cpu = cpumask_first(cpu_online_mask);
->> >
->> > Although the kexec-reboot task can get through a cpu_down() on its cpu,
->> > this code looks a little confusing.
->> >
->> > Make things straight forward by keep cpu hotplug disabled until
->> > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
->> > rebooting cpu can keep unchanged.
->> >
->>
->> So is this supposed to be a refactor with no change in behaviour? AFAICT it
->> actually does change things (and isn't necessarily clearer).
->>
-> Yes, as you have seen, it does change behavior. Before this patch,
-> there is a breakage:
->   migrate_to_reboot_cpu();
->   cpu_hotplug_enable();
->                                      ----------> technical, here can
-> comes a cpu_down(this_cpu)
->   machine_shutdown();
->
-> And this patch squeezes out this breakage.
->
+On 1/24/22 2:47 AM, Zhen Lei wrote:
+> insert_resource() traverses the subtree layer by layer from the root node
+> until a proper location is found. Compared with request_resource(), the
+> parent node does not need to be determined in advance.
+> 
+> In addition, move the insertion of node 'crashk_res' into function
+> reserve_crashkernel() to make the associated code close together.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-Ok, that's worth pointing out in the changelog.
 
->> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
->> > index 68480f731192..db4fa6b174e3 100644
->> > --- a/kernel/kexec_core.c
->> > +++ b/kernel/kexec_core.c
->> > @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
->> >               kexec_in_progress = true;
->> >               kernel_restart_prepare("kexec reboot");
->> >               migrate_to_reboot_cpu();
->> > -
->> >               /*
->> > -              * migrate_to_reboot_cpu() disables CPU hotplug assuming that
->> > -              * no further code needs to use CPU hotplug (which is true in
->> > -              * the reboot case). However, the kexec path depends on using
->> > -              * CPU hotplug again; so re-enable it here.
->> > +              * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
->> > +              * relies on the cpu teardown to achieve reboot, it needs to
->> > +              * re-enable CPU hotplug there.
->> >                */
->> > -             cpu_hotplug_enable();
->> > +
->>
->> Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
->> archs will now be missing a cpu_hotplug_enable() prior to a kexec
->> machine_shutdown(). That said, AFAICT none of those archs rely on the
->> hotplug machinery in machine_shutdown(), so it might be OK, but that's not
->> obvious at all.
->>
-> At the first glance, it may be not obvious, but tracing down
-> cpu_hotplug_enable() to the variable cpu_hotplug_disabled, you can
-> find out the limited involved functions are all related to
-> cpu_up/cpu_down.
->
-> IOW, if no code path connects with the interface of cpu_up/cpu_down,
-> then kexec-reboot will not be affected.
->
+Acked-by: John Donnelly  <john.p.donnelly@oracle.com>
 
-That's my point, this only works if the other archs truly do not rely on
-hotplug for machine_shutdown(), which seems to be the case but it wouldn't
-hurt for you to double-check that and explicitely call it out in the
-changelog.
+> ---
+>   arch/arm64/kernel/setup.c | 17 +++--------------
+>   arch/arm64/mm/init.c      |  1 +
+>   2 files changed, 4 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index f70573928f1bff0..a81efcc359e4e78 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
+>   	kernel_code.end     = __pa_symbol(__init_begin - 1);
+>   	kernel_data.start   = __pa_symbol(_sdata);
+>   	kernel_data.end     = __pa_symbol(_end - 1);
+> +	insert_resource(&iomem_resource, &kernel_code);
+> +	insert_resource(&iomem_resource, &kernel_data);
+>   
+>   	num_standard_resources = memblock.memory.cnt;
+>   	res_size = num_standard_resources * sizeof(*standard_resources);
+> @@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
+>   			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
+>   		}
+>   
+> -		request_resource(&iomem_resource, res);
+> -
+> -		if (kernel_code.start >= res->start &&
+> -		    kernel_code.end <= res->end)
+> -			request_resource(res, &kernel_code);
+> -		if (kernel_data.start >= res->start &&
+> -		    kernel_data.end <= res->end)
+> -			request_resource(res, &kernel_data);
+> -#ifdef CONFIG_KEXEC_CORE
+> -		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+> -		if (crashk_res.end && crashk_res.start >= res->start &&
+> -		    crashk_res.end <= res->end)
+> -			request_resource(res, &crashk_res);
+> -#endif
+> +		insert_resource(&iomem_resource, res);
+>   	}
+>   }
+>   
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index db63cc885771a52..90f276d46b93bc6 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -109,6 +109,7 @@ static void __init reserve_crashkernel(void)
+>   	kmemleak_ignore_phys(crash_base);
+>   	crashk_res.start = crash_base;
+>   	crashk_res.end = crash_base + crash_size - 1;
+> +	insert_resource(&iomem_resource, &crashk_res);
+>   }
+>   #else
+>   static void __init reserve_crashkernel(void)
 
-> And after this patch, it is more clear how to handle the following cases:
-> arch/arm/kernel/reboot.c:94:    smp_shutdown_nonboot_cpus(reboot_cpu);
-> arch/arm64/kernel/process.c:88: smp_shutdown_nonboot_cpus(reboot_cpu);
-> arch/ia64/kernel/process.c:578: smp_shutdown_nonboot_cpus(reboot_cpu);
->
-
-FWIW riscv is also concerned.
-
-> Thanks,
-> Pingfan
 
