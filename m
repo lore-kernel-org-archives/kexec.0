@@ -1,312 +1,141 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 26 Jan 2022 10:33:34 +0800
-Subject: [PATCH v2] proc/vmcore: fix possible deadlock on concurrent mmap
- and read
-In-Reply-To: <20220119193417.100385-1-david@redhat.com>
-References: <20220119193417.100385-1-david@redhat.com>
-Message-ID: <20220126023334.GA30295@MiWiFi-R3L-srv>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Wed, 26 Jan 2022 10:45:12 +0800
+Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
+ stable
+In-Reply-To: <87wnin3hj5.mognet@arm.com>
+References: <20220125033913.15374-1-kernelfans@gmail.com>
+ <87wnin3hj5.mognet@arm.com>
+Message-ID: <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/19/22 at 08:34pm, David Hildenbrand wrote:
-> Lockdep noticed that there is chance for a deadlock if we have
-> concurrent mmap, concurrent read, and the addition/removal of a
-> callback.
-> 
-> As nicely explained by Boqun:
-> 
-> "
-> Lockdep warned about the above sequences because rw_semaphore is a fair
-> read-write lock, and the following can cause a deadlock:
-> 
-> 	TASK 1			TASK 2		TASK 3
-> 	======			======		======
-> 	down_write(mmap_lock);
-> 				down_read(vmcore_cb_rwsem)
-> 						down_write(vmcore_cb_rwsem); // blocked
-> 	down_read(vmcore_cb_rwsem); // cannot get the lock because of the fairness
-> 				down_read(mmap_lock); // blocked
+On Wed, Jan 26, 2022 at 12:29 AM Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> On 25/01/22 11:39, Pingfan Liu wrote:
+> > The following identical code piece appears in both
+> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
+> >
+> >       if (!cpu_online(primary_cpu))
+> >               primary_cpu = cpumask_first(cpu_online_mask);
+> >
+> > Although the kexec-reboot task can get through a cpu_down() on its cpu,
+> > this code looks a little confusing.
+> >
+> > Make things straight forward by keep cpu hotplug disabled until
+> > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+> > rebooting cpu can keep unchanged.
+> >
+>
+> So is this supposed to be a refactor with no change in behaviour? AFAICT it
+> actually does change things (and isn't necessarily clearer).
+>
+Yes, as you have seen, it does change behavior. Before this patch,
+there is a breakage:
+  migrate_to_reboot_cpu();
+  cpu_hotplug_enable();
+                                     ----------> technical, here can
+comes a cpu_down(this_cpu)
+  machine_shutdown();
 
-It's almost impossible to have chance to register or unregister vmcore
-cb during vmcore dumping, so the deadlock can only exist theorictically.
-While muting the lockdep is still good. This patch looks good to me.
-Thanks for the fix.
+And this patch squeezes out this breakage.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Eric Biederman <ebiederm@xmission.com>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Valentin Schneider <valentin.schneider@arm.com>
+> > Cc: Vincent Donnefort <vincent.donnefort@arm.com>
+> > Cc: Ingo Molnar <mingo@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: YueHaibing <yuehaibing@huawei.com>
+> > Cc: Baokun Li <libaokun1@huawei.com>
+> > Cc: Randy Dunlap <rdunlap@infradead.org>
+> > Cc: kexec at lists.infradead.org
+> > To: linux-kernel at vger.kernel.org
+> > ---
+> >  kernel/cpu.c        | 16 ++++++++++------
+> >  kernel/kexec_core.c | 10 ++++------
+> >  2 files changed, 14 insertions(+), 12 deletions(-)
+> >
+> > diff --git a/kernel/cpu.c b/kernel/cpu.c
+> > index 407a2568f35e..bc687d59ca90 100644
+> > --- a/kernel/cpu.c
+> > +++ b/kernel/cpu.c
+> > @@ -1227,20 +1227,24 @@ int remove_cpu(unsigned int cpu)
+> >  }
+> >  EXPORT_SYMBOL_GPL(remove_cpu);
+> >
+> > +/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
+> >  void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
+> >  {
+> >       unsigned int cpu;
+> >       int error;
+> >
+> > +     /*
+> > +      * Block other cpu hotplug event, so primary_cpu is always online if
+> > +      * it is not touched by us
+> > +      */
+> >       cpu_maps_update_begin();
+> > -
+> >       /*
+> > -      * Make certain the cpu I'm about to reboot on is online.
+> > -      *
+> > -      * This is inline to what migrate_to_reboot_cpu() already do.
+> > +      * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> > +      * no further code needs to use CPU hotplug (which is true in
+> > +      * the reboot case). However, the kexec path depends on using
+> > +      * CPU hotplug again; so re-enable it here.
+> >        */
+> > -     if (!cpu_online(primary_cpu))
+> > -             primary_cpu = cpumask_first(cpu_online_mask);
+> > +     __cpu_hotplug_enable();
+> >
+> >       for_each_online_cpu(cpu) {
+> >               if (cpu == primary_cpu)
+> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> > index 68480f731192..db4fa6b174e3 100644
+> > --- a/kernel/kexec_core.c
+> > +++ b/kernel/kexec_core.c
+> > @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
+> >               kexec_in_progress = true;
+> >               kernel_restart_prepare("kexec reboot");
+> >               migrate_to_reboot_cpu();
+> > -
+> >               /*
+> > -              * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> > -              * no further code needs to use CPU hotplug (which is true in
+> > -              * the reboot case). However, the kexec path depends on using
+> > -              * CPU hotplug again; so re-enable it here.
+> > +              * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
+> > +              * relies on the cpu teardown to achieve reboot, it needs to
+> > +              * re-enable CPU hotplug there.
+> >                */
+> > -             cpu_hotplug_enable();
+> > +
+>
+> Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
+> archs will now be missing a cpu_hotplug_enable() prior to a kexec
+> machine_shutdown(). That said, AFAICT none of those archs rely on the
+> hotplug machinery in machine_shutdown(), so it might be OK, but that's not
+> obvious at all.
+>
+At the first glance, it may be not obvious, but tracing down
+cpu_hotplug_enable() to the variable cpu_hotplug_disabled, you can
+find out the limited involved functions are all related to
+cpu_up/cpu_down.
 
-> 
-> IOW, a reader can block another read if there is a writer queued by the
-> second reader and the lock is fair.
-> "
-> 
-> To fix, convert to srcu to make this deadlock impossible. We need srcu as
-> our callbacks can sleep. With this change, I cannot trigger any lockdep
-> warnings.
-> 
-> [    6.386519] ======================================================
-> [    6.387203] WARNING: possible circular locking dependency detected
-> [    6.387965] 5.17.0-0.rc0.20220117git0c947b893d69.68.test.fc36.x86_64 #1 Not tainted
-> [    6.388899] ------------------------------------------------------
-> [    6.389657] makedumpfile/542 is trying to acquire lock:
-> [    6.390308] ffffffff832d2eb8 (vmcore_cb_rwsem){.+.+}-{3:3}, at: mmap_vmcore+0x340/0x580
-> [    6.391290]
-> [    6.391290] but task is already holding lock:
-> [    6.391978] ffff8880af226438 (&mm->mmap_lock#2){++++}-{3:3}, at: vm_mmap_pgoff+0x84/0x150
-> [    6.392898]
-> [    6.392898] which lock already depends on the new lock.
-> [    6.392898]
-> [    6.393866]
-> [    6.393866] the existing dependency chain (in reverse order) is:
-> [    6.394762]
-> [    6.394762] -> #1 (&mm->mmap_lock#2){++++}-{3:3}:
-> [    6.395530]        lock_acquire+0xc3/0x1a0
-> [    6.396047]        __might_fault+0x4e/0x70
-> [    6.396562]        _copy_to_user+0x1f/0x90
-> [    6.397093]        __copy_oldmem_page+0x72/0xc0
-> [    6.397663]        read_from_oldmem+0x77/0x1e0
-> [    6.398229]        read_vmcore+0x2c2/0x310
-> [    6.398742]        proc_reg_read+0x47/0xa0
-> [    6.399265]        vfs_read+0x101/0x340
-> [    6.399751]        __x64_sys_pread64+0x5d/0xa0
-> [    6.400314]        do_syscall_64+0x43/0x90
-> [    6.400778]        entry_SYSCALL_64_after_hwframe+0x44/0xae
-> [    6.401390]
-> [    6.401390] -> #0 (vmcore_cb_rwsem){.+.+}-{3:3}:
-> [    6.402063]        validate_chain+0x9f4/0x2670
-> [    6.402560]        __lock_acquire+0x8f7/0xbc0
-> [    6.403054]        lock_acquire+0xc3/0x1a0
-> [    6.403509]        down_read+0x4a/0x140
-> [    6.403948]        mmap_vmcore+0x340/0x580
-> [    6.404403]        proc_reg_mmap+0x3e/0x90
-> [    6.404866]        mmap_region+0x504/0x880
-> [    6.405322]        do_mmap+0x38a/0x520
-> [    6.405744]        vm_mmap_pgoff+0xc1/0x150
-> [    6.406258]        ksys_mmap_pgoff+0x178/0x200
-> [    6.406823]        do_syscall_64+0x43/0x90
-> [    6.407339]        entry_SYSCALL_64_after_hwframe+0x44/0xae
-> [    6.407975]
-> [    6.407975] other info that might help us debug this:
-> [    6.407975]
-> [    6.408945]  Possible unsafe locking scenario:
-> [    6.408945]
-> [    6.409684]        CPU0                    CPU1
-> [    6.410196]        ----                    ----
-> [    6.410703]   lock(&mm->mmap_lock#2);
-> [    6.411121]                                lock(vmcore_cb_rwsem);
-> [    6.411792]                                lock(&mm->mmap_lock#2);
-> [    6.412465]   lock(vmcore_cb_rwsem);
-> [    6.412873]
-> [    6.412873]  *** DEADLOCK ***
-> [    6.412873]
-> [    6.413522] 1 lock held by makedumpfile/542:
-> [    6.414006]  #0: ffff8880af226438 (&mm->mmap_lock#2){++++}-{3:3}, at: vm_mmap_pgoff+0x84/0x150
-> [    6.414944]
-> [    6.414944] stack backtrace:
-> [    6.415432] CPU: 0 PID: 542 Comm: makedumpfile Not tainted 5.17.0-0.rc0.20220117git0c947b893d69.68.test.fc36.x86_64 #1
-> [    6.416581] Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
-> [    6.417272] Call Trace:
-> [    6.417593]  <TASK>
-> [    6.417882]  dump_stack_lvl+0x5d/0x78
-> [    6.418346]  print_circular_bug+0x5d7/0x5f0
-> [    6.418821]  ? stack_trace_save+0x3a/0x50
-> [    6.419273]  ? save_trace+0x3d/0x330
-> [    6.419681]  check_noncircular+0xd1/0xe0
-> [    6.420217]  validate_chain+0x9f4/0x2670
-> [    6.420715]  ? __lock_acquire+0x8f7/0xbc0
-> [    6.421234]  ? __lock_acquire+0x8f7/0xbc0
-> [    6.421685]  __lock_acquire+0x8f7/0xbc0
-> [    6.422127]  lock_acquire+0xc3/0x1a0
-> [    6.422535]  ? mmap_vmcore+0x340/0x580
-> [    6.422965]  ? lock_is_held_type+0xe2/0x140
-> [    6.423432]  ? mmap_vmcore+0x340/0x580
-> [    6.423893]  down_read+0x4a/0x140
-> [    6.424321]  ? mmap_vmcore+0x340/0x580
-> [    6.424800]  mmap_vmcore+0x340/0x580
-> [    6.425237]  ? vm_area_alloc+0x1c/0x60
-> [    6.425661]  ? trace_kmem_cache_alloc+0x30/0xe0
-> [    6.426174]  ? kmem_cache_alloc+0x1e0/0x2f0
-> [    6.426641]  proc_reg_mmap+0x3e/0x90
-> [    6.427052]  mmap_region+0x504/0x880
-> [    6.427462]  do_mmap+0x38a/0x520
-> [    6.427842]  vm_mmap_pgoff+0xc1/0x150
-> [    6.428260]  ksys_mmap_pgoff+0x178/0x200
-> [    6.428701]  do_syscall_64+0x43/0x90
-> [    6.429126]  entry_SYSCALL_64_after_hwframe+0x44/0xae
-> [    6.429745] RIP: 0033:0x7fc7359b8fc7
-> [    6.430157] Code: 00 00 00 89 ef e8 69 b3 ff ff eb e4 e8 c2 64 01 00 66 90 f3 0f 1e fa 41 89 ca 41 f7 c1 ff 0f 00 00 75 10 b8 09 00 00 00 0f 05 <48> 3d 00 f0 ff ff 77 21 c3 48 8b 05 21 7e 0e 00 64 c7 00 16 00 00
-> [    6.432147] RSP: 002b:00007fff35b4c208 EFLAGS: 00000246 ORIG_RAX: 0000000000000009
-> [    6.432970] RAX: ffffffffffffffda RBX: 0000000000000001 RCX: 00007fc7359b8fc7
-> [    6.433746] RDX: 0000000000000001 RSI: 0000000000400000 RDI: 0000000000000000
-> [    6.434529] RBP: 000055a1125ecf10 R08: 0000000000000003 R09: 0000000000002000
-> [    6.435310] R10: 0000000000000002 R11: 0000000000000246 R12: 0000000000002000
-> [    6.436093] R13: 0000000000400000 R14: 000055a1124269e2 R15: 0000000000000000
-> [    6.436887]  </TASK>
-> 
-> Reported-by: Baoquan He <bhe@redhat.com>
-> Fixes: cc5f2704c934 ("proc/vmcore: convert oldmem_pfn_is_ram callback to more generic vmcore callbacks")
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Baoquan He <bhe@redhat.com>
-> Cc: Vivek Goyal <vgoyal@redhat.com>
-> Cc: Dave Young <dyoung@redhat.com>
-> Cc: "Paul E. McKenney" <paulmck@kernel.org>
-> Cc: Josh Triplett <josh@joshtriplett.org>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> Cc: Boqun Feng <boqun.feng@gmail.com>
-> Signed-off-by: David Hildenbrand <david@redhat.com>
-> ---
-> 
-> Was: [PATCH v1] proc/vmcore: fix false positive lockdep warning
-> 
-> v1 -> v2:
-> - Adjust subject/description
-> - Add Fixes:
-> 
-> ---
->  fs/proc/vmcore.c | 41 ++++++++++++++++++++++-------------------
->  1 file changed, 22 insertions(+), 19 deletions(-)
-> 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 702754dd1daf..edeb01dfe05d 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -62,7 +62,8 @@ core_param(novmcoredd, vmcoredd_disabled, bool, 0);
->  /* Device Dump Size */
->  static size_t vmcoredd_orig_sz;
->  
-> -static DECLARE_RWSEM(vmcore_cb_rwsem);
-> +static DEFINE_SPINLOCK(vmcore_cb_lock);
-> +DEFINE_STATIC_SRCU(vmcore_cb_srcu);
->  /* List of registered vmcore callbacks. */
->  static LIST_HEAD(vmcore_cb_list);
->  /* Whether the vmcore has been opened once. */
-> @@ -70,8 +71,8 @@ static bool vmcore_opened;
->  
->  void register_vmcore_cb(struct vmcore_cb *cb)
->  {
-> -	down_write(&vmcore_cb_rwsem);
->  	INIT_LIST_HEAD(&cb->next);
-> +	spin_lock(&vmcore_cb_lock);
->  	list_add_tail(&cb->next, &vmcore_cb_list);
->  	/*
->  	 * Registering a vmcore callback after the vmcore was opened is
-> @@ -79,14 +80,14 @@ void register_vmcore_cb(struct vmcore_cb *cb)
->  	 */
->  	if (vmcore_opened)
->  		pr_warn_once("Unexpected vmcore callback registration\n");
-> -	up_write(&vmcore_cb_rwsem);
-> +	spin_unlock(&vmcore_cb_lock);
->  }
->  EXPORT_SYMBOL_GPL(register_vmcore_cb);
->  
->  void unregister_vmcore_cb(struct vmcore_cb *cb)
->  {
-> -	down_write(&vmcore_cb_rwsem);
-> -	list_del(&cb->next);
-> +	spin_lock(&vmcore_cb_lock);
-> +	list_del_rcu(&cb->next);
->  	/*
->  	 * Unregistering a vmcore callback after the vmcore was opened is
->  	 * very unusual (e.g., forced driver removal), but we cannot stop
-> @@ -94,7 +95,9 @@ void unregister_vmcore_cb(struct vmcore_cb *cb)
->  	 */
->  	if (vmcore_opened)
->  		pr_warn_once("Unexpected vmcore callback unregistration\n");
-> -	up_write(&vmcore_cb_rwsem);
-> +	spin_unlock(&vmcore_cb_lock);
-> +
-> +	synchronize_srcu(&vmcore_cb_srcu);
->  }
->  EXPORT_SYMBOL_GPL(unregister_vmcore_cb);
->  
-> @@ -103,9 +106,8 @@ static bool pfn_is_ram(unsigned long pfn)
->  	struct vmcore_cb *cb;
->  	bool ret = true;
->  
-> -	lockdep_assert_held_read(&vmcore_cb_rwsem);
-> -
-> -	list_for_each_entry(cb, &vmcore_cb_list, next) {
-> +	list_for_each_entry_srcu(cb, &vmcore_cb_list, next,
-> +				 srcu_read_lock_held(&vmcore_cb_srcu)) {
->  		if (unlikely(!cb->pfn_is_ram))
->  			continue;
->  		ret = cb->pfn_is_ram(cb, pfn);
-> @@ -118,9 +120,9 @@ static bool pfn_is_ram(unsigned long pfn)
->  
->  static int open_vmcore(struct inode *inode, struct file *file)
->  {
-> -	down_read(&vmcore_cb_rwsem);
-> +	spin_lock(&vmcore_cb_lock);
->  	vmcore_opened = true;
-> -	up_read(&vmcore_cb_rwsem);
-> +	spin_unlock(&vmcore_cb_lock);
->  
->  	return 0;
->  }
-> @@ -133,6 +135,7 @@ ssize_t read_from_oldmem(char *buf, size_t count,
->  	unsigned long pfn, offset;
->  	size_t nr_bytes;
->  	ssize_t read = 0, tmp;
-> +	int idx;
->  
->  	if (!count)
->  		return 0;
-> @@ -140,7 +143,7 @@ ssize_t read_from_oldmem(char *buf, size_t count,
->  	offset = (unsigned long)(*ppos % PAGE_SIZE);
->  	pfn = (unsigned long)(*ppos / PAGE_SIZE);
->  
-> -	down_read(&vmcore_cb_rwsem);
-> +	idx = srcu_read_lock(&vmcore_cb_srcu);
->  	do {
->  		if (count > (PAGE_SIZE - offset))
->  			nr_bytes = PAGE_SIZE - offset;
-> @@ -165,7 +168,7 @@ ssize_t read_from_oldmem(char *buf, size_t count,
->  						       offset, userbuf);
->  		}
->  		if (tmp < 0) {
-> -			up_read(&vmcore_cb_rwsem);
-> +			srcu_read_unlock(&vmcore_cb_srcu, idx);
->  			return tmp;
->  		}
->  
-> @@ -176,8 +179,8 @@ ssize_t read_from_oldmem(char *buf, size_t count,
->  		++pfn;
->  		offset = 0;
->  	} while (count);
-> +	srcu_read_unlock(&vmcore_cb_srcu, idx);
->  
-> -	up_read(&vmcore_cb_rwsem);
->  	return read;
->  }
->  
-> @@ -568,18 +571,18 @@ static int vmcore_remap_oldmem_pfn(struct vm_area_struct *vma,
->  			    unsigned long from, unsigned long pfn,
->  			    unsigned long size, pgprot_t prot)
->  {
-> -	int ret;
-> +	int ret, idx;
->  
->  	/*
-> -	 * Check if oldmem_pfn_is_ram was registered to avoid
-> -	 * looping over all pages without a reason.
-> +	 * Check if a callback was registered to avoid looping over all
-> +	 * pages without a reason.
->  	 */
-> -	down_read(&vmcore_cb_rwsem);
-> +	idx = srcu_read_lock(&vmcore_cb_srcu);
->  	if (!list_empty(&vmcore_cb_list))
->  		ret = remap_oldmem_pfn_checked(vma, from, pfn, size, prot);
->  	else
->  		ret = remap_oldmem_pfn_range(vma, from, pfn, size, prot);
-> -	up_read(&vmcore_cb_rwsem);
-> +	srcu_read_unlock(&vmcore_cb_srcu, idx);
->  	return ret;
->  }
->  
-> -- 
-> 2.34.1
-> 
+IOW, if no code path connects with the interface of cpu_up/cpu_down,
+then kexec-reboot will not be affected.
 
+And after this patch, it is more clear how to handle the following cases:
+arch/arm/kernel/reboot.c:94:    smp_shutdown_nonboot_cpus(reboot_cpu);
+arch/arm64/kernel/process.c:88: smp_shutdown_nonboot_cpus(reboot_cpu);
+arch/ia64/kernel/process.c:578: smp_shutdown_nonboot_cpus(reboot_cpu);
+
+Thanks,
+Pingfan
 
