@@ -1,48 +1,38 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Date: Tue, 25 Jan 2022 12:30:52 -0800
-Subject: [PATCH v5 0/6] KEXEC_SIG with appended signature
-In-Reply-To: <cover.1641900831.git.msuchanek@suse.de>
-References: <cover.1641900831.git.msuchanek@suse.de>
-Message-ID: <YfBd/EDGUx9UIHcb@bombadil.infradead.org>
+From: Andrew Morton <akpm@linux-foundation.org>
+Date: Tue, 25 Jan 2022 17:09:00 -0800
+Subject: [PATCH v2] proc/vmcore: fix possible deadlock on concurrent
+ mmap and read
+In-Reply-To: <20220119193417.100385-1-david@redhat.com>
+References: <20220119193417.100385-1-david@redhat.com>
+Message-ID: <20220125170900.472fdb649312e77a4a60d9da@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue, Jan 11, 2022 at 12:37:42PM +0100, Michal Suchanek wrote:
-> Hello,
-> 
-> This is a refresh of the KEXEC_SIG series.
-> 
-> This adds KEXEC_SIG support on powerpc and deduplicates the code dealing
-> with appended signatures in the kernel.
-> 
-> powerpc supports IMA_KEXEC but that's an exception rather than the norm.
-> On the other hand, KEXEC_SIG is portable across platforms.
-> 
-> For distributions to have uniform security features across platforms one
-> option should be used on all platforms.
-> 
-> Thanks
-> 
-> Michal
-> 
-> Previous revision: https://lore.kernel.org/linuxppc-dev/cover.1637862358.git.msuchanek at suse.de/
-> Patched kernel tree: https://github.com/hramrach/kernel/tree/kexec_sig
-> 
-> Michal Suchanek (6):
->   s390/kexec_file: Don't opencode appended signature check.
->   powerpc/kexec_file: Add KEXEC_SIG support.
->   kexec_file: Don't opencode appended signature verification.
->   module: strip the signature marker in the verification function.
->   module: Use key_being_used_for for log messages in
->     verify_appended_signature
->   module: Move duplicate mod_check_sig users code to mod_parse_sig
+On Wed, 19 Jan 2022 20:34:17 +0100 David Hildenbrand <david@redhat.com> wrote:
 
-What tree should this go through? I'd prefer if over through modules
-tree as it can give a chance for Aaron Tomlin to work with this for his
-code refactoring of kernel/module*.c to kernel/module/
+> Lockdep noticed that there is chance for a deadlock if we have
+> concurrent mmap, concurrent read, and the addition/removal of a
+> callback.
+> 
+> As nicely explained by Boqun:
+> 
+> "
+> Lockdep warned about the above sequences because rw_semaphore is a fair
+> read-write lock, and the following can cause a deadlock:
+> 
+> 	TASK 1			TASK 2		TASK 3
+> 	======			======		======
+> 	down_write(mmap_lock);
+> 				down_read(vmcore_cb_rwsem)
+> 						down_write(vmcore_cb_rwsem); // blocked
+> 	down_read(vmcore_cb_rwsem); // cannot get the lock because of the fairness
+> 				down_read(mmap_lock); // blocked
 
-  Luis
+I'm wondering about cc:stable.  It's hard to believe that this is
+likely to be observed in real life.  But the ongoing reports of lockdep
+splats will be irritating.
+
 
