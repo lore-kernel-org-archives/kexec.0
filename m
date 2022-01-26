@@ -1,121 +1,81 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Wed, 26 Jan 2022 12:51:42 +0100
-Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <MWHPR21MB15933573F5C81C5250BF6A1CD75E9@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20220114183046.428796-1-gpiccoli@igalia.com>
- <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
- <20220120085115.GB18398@MiWiFi-R3L-srv>
- <63621138-2a41-26c2-524e-d889068f157a@igalia.com>
- <20220121023119.GB4579@MiWiFi-R3L-srv>
- <MWHPR21MB1593A32A3433F5F262796FCFD75B9@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20220122043351.GA2596@MiWiFi-R3L-srv>
- <MWHPR21MB15933573F5C81C5250BF6A1CD75E9@MWHPR21MB1593.namprd21.prod.outlook.com>
-Message-ID: <YfE1zuhB2Qz73wqF@alley>
+From: d.hatayama@fujitsu.com <d.hatayama@fujitsu.com>
+Date: Wed, 26 Jan 2022 12:20:02 +0000
+Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
+In-Reply-To: <20220126031039.GA26064@MiWiFi-R3L-srv>
+References: <20220108153451.195121-1-gpiccoli@igalia.com>
+ <Yel8WQiBn/HNQN83@alley> <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
+ <20220122105514.GA18258@MiWiFi-R3L-srv>
+ <20220123220711.44f1484c9b510eea8cda9c47@kernel.org>
+ <20220124135902.GB8305@MiWiFi-R3L-srv>
+ <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
+ <20220126031039.GA26064@MiWiFi-R3L-srv>
+Message-ID: <TYAPR01MB6507D068393A20E075F041FF95209@TYAPR01MB6507.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon 2022-01-24 16:57:17, Michael Kelley (LINUX) wrote:
-> From: Baoquan He <bhe@redhat.com> Sent: Friday, January 21, 2022 8:34 PM
-> > 
-> > On 01/21/22 at 03:00pm, Michael Kelley (LINUX) wrote:
-> > > From: Baoquan He <bhe@redhat.com> Sent: Thursday, January 20, 2022 6:31 PM
-> > > >
-> > > > On 01/20/22 at 06:36pm, Guilherme G. Piccoli wrote:
-> > > > > Hi Baoquan, some comments inline below:
-> > > > >
-> > > > > On 20/01/2022 05:51, Baoquan He wrote:
-> 
-> [snip]
-> 
-> > > > > Do you think it should be necessary?
-> > > > > How about if we allow users to just "panic_print" with or without the
-> > > > > "crash_kexec_post_notifiers", then we pursue Petr suggestion of
-> > > > > refactoring the panic notifiers? So, after this future refactor, we
-> > > > > might have a much clear code.
-> > > >
-> > > > I haven't read Petr's reply in another panic notifier filter thread. For
-> > > > panic notifier, it's only enforced to use on HyperV platform, excepto of
-> > > > that, users need to explicitly add "crash_kexec_post_notifiers=1" to enable
-> > > > it. And we got bug report on the HyperV issue. In our internal discussion,
-> > > > we strongly suggest HyperV dev to change the default enablement, instead
-> > > > leave it to user to decide.
-> > > >
-> > >
-> > > Regarding Hyper-V:   Invoking the Hyper-V notifier prior to running the
-> > > kdump kernel is necessary for correctness.  During initial boot of the
-> > > main kernel, the Hyper-V and VMbus code in Linux sets up several guest
-> > > physical memory pages that are shared with Hyper-V, and that Hyper-V
-> > > may write to.   A VMbus connection is also established. Before kexec'ing
-> > > into the kdump kernel, the sharing of these pages must be rescinded
-> > > and the VMbus connection must be terminated.   If this isn't done, the
-> > > kdump kernel will see strange memory overwrites if these shared guest
-> > > physical memory pages get used for something else.
-> 
-> In the Azure cloud, collecting data before crash dumps is a motivation
-> as well for setting crash_kexec_post_notifiers to true.   That way as
-> cloud operator we can see broad failure trends, and in specific cases
-> customers often expect the cloud operator to be able to provide info
-> about a problem even if they have taken a kdump.  Where did you
-> envision adding a comment in the code to help clarify these intentions?
-> 
-> I looked at the code again, and should revise my previous comments
-> somewhat.   The Hyper-V resets that I described indeed must be done
-> prior to kexec'ing the kdump kernel.   Most such resets are actually
-> done via __crash_kexec() -> machine_crash_shutdown(), not via the
-> panic notifier. However, the Hyper-V panic notifier must terminate the
-> VMbus connection, because that must be done even if kdump is not
-> being invoked.  See commit 74347a99e73.
+> On 01/24/22 at 11:48am, Guilherme G. Piccoli wrote:
+> > On 24/01/2022 10:59, Baoquan He wrote:
+> > > [...]
+> > > About pre_dump, if the dump is crash dump, hope those pre_dump notifiers
+> > > will be executed under conditional check, e.g only if 'crash_kexec_post_notifiers'
+> > > is specified in kernel cmdline.
+> >
+> > Hi Baoquan, based on Petr's suggestion, I think pre_dump would be
+> > responsible for really *non-intrusive/non-risky* tasks and should be
+> > always executed in the panic path (before kdump), regardless of
+> > "crash_kexec_post_notifiers".
+> >
+> > The idea is that the majority of the notifiers would be executed in the
+> > post_dump portion, and for that, we have the
+> > "crash_kexec_post_notifiers" conditional. I also suggest we have
+> > blacklist options (based on function names) for both notifiers, in order
+> > to make kdump issues debug easier.
+> >
+> > Do you agree with that? Feel free to comment with suggestions!
+> > Cheers,
 >
-> Most of the hangs seen in getting into the kdump kernel on Hyper-V/Azure 
-> were probably due to the machine_crash_shutdown() path, and not due
-> to running the panic notifiers prior to kexec'ing the kdump kernel.  The
-> exception is terminating the VMbus connection, which had problems that
-> are hopefully now fixed because of adding a timeout.
+> I would say "please NO" cautiously.
+>
+> As Petr said, kdump mostly works only if people configure it correctly.
+> That's because we try best to switch to kdump kernel from the fragile
+> panicked kernel immediately. When we try to add anthing before the switching,
+> please consider carefully and ask if that adding is mandatory, otherwise
+> switching into kdump kernel may fail. If the answer is yes, the adding
+> is needed and welcomed. Othewise, any unnecessary action, including any
+> "non-intrusive/non-risky" tasks, would be unwelcomed.
+>
+> Surely, we don't oppose the "non-intrusive/non-risky" or completely
+> "intrusive/risky" action adding before kdump kernel switching, with a
+> conditional limitation. When we handle customers' kdump support, we
+> explicitly declare we only support normal and default kdump operation.
+> If any action which is done before switching into kdump kernel is specified,
+> e.g panic_notifier, panic_print, they need take care of their own kdump
+> failure.
 
-My undestanding is that we could split the actions into three groups:
+Sorry for bringing back the past discussion, but how about
+reconsidering the following design?
 
-  1. Actions that has to be before kexec'ing kdump kernel, like
-     resetting physicall memory shared with Hyper-V.
+- kdump-specific notifier list within crash_kexec()
 
-     These operation(s) are needed only for kexec and can be done
-     in kexec.
+I don't think that the current implementation of
+crash_kexec_post_notifiers is ideal, where panic() and panic notifier
+are used, which contains the code that is unnecessary for kdump, and
+it unnecessarily decreases kdump's reliability. The presence of kdump
+code in panic() also conversely makes panic()'s code unnecessarily
+complicated.
 
+I use crash_kexec_post_notifiers with the understanding that it
+affects kdump's reliability to some degree, but at the same time I
+want it to be as reliable as possible.
 
-   2. Notify Hyper-V so that, for example, Azure cloud, could collect
-      data before crash dump.
+I think introducing kdump-specific notifier list will resolve the
+issues caused by dependencies to panic()'s code.
 
-      It is nice to have.
-
-      It should be configurable if it is not completely safe. I mean
-      that there should be a way to disable it when it might increase
-      the risk that kexec'ing kdump kernel might fail.
-
-
-   3. Some actions are needed only when panic() ends up in the
-      infinite loop.
-
-      For example, unloading vmbus channel. At least the commit
-      74347a99e73ae00b8385f ("x86/Hyper-V: Unload vmbus channel in
-      hv panic callback") says that it is done in kdump path
-      out of box.
-
-All these operations are needed and used only when the kernel is
-running under Hyper-V.
-
-My mine intention is to understand if we need 2 or 3 notifier lists
-or the current one is enough.
-
-The 3 notifier lists would be:
-
-   + always do (even before kdump)
-   + optionally do before or after kdump
-   + needed only when kdump is not called
-
-Thanks a lot for the very valuable input.
-
-Best Regards,
-Petr
+In addition, as I already said in another mail, I want to avoid
+invoking any other handlers passed by users other than me, in order to
+keep kdump's reliability. For such purpose, I think some feature like
+Guilherme's panic notifier filter is needed.
 
