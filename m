@@ -1,98 +1,89 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Wed, 26 Jan 2022 14:20:10 +0100
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <20220126031039.GA26064@MiWiFi-R3L-srv>
-References: <20220108153451.195121-1-gpiccoli@igalia.com>
- <Yel8WQiBn/HNQN83@alley>
- <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
- <20220122105514.GA18258@MiWiFi-R3L-srv>
- <20220123220711.44f1484c9b510eea8cda9c47@kernel.org>
- <20220124135902.GB8305@MiWiFi-R3L-srv>
- <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
- <20220126031039.GA26064@MiWiFi-R3L-srv>
-Message-ID: <YfFKiscTVckEy2E8@alley>
+From: Joerg Roedel <jroedel@suse.de>
+Date: Wed, 26 Jan 2022 15:26:01 +0100
+Subject: [PATCH v2 07/12] x86/sev: Setup code to park APs in the AP Jump
+ Table
+In-Reply-To: <YYv1TPawuorQv1PR@zn.tnic>
+References: <20210913155603.28383-1-joro@8bytes.org>
+ <20210913155603.28383-8-joro@8bytes.org> <YYv1TPawuorQv1PR@zn.tnic>
+Message-ID: <YfFZ+SRutJhDoAkz@suse.de>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed 2022-01-26 11:10:39, Baoquan He wrote:
-> On 01/24/22 at 11:48am, Guilherme G. Piccoli wrote:
-> > On 24/01/2022 10:59, Baoquan He wrote:
-> > > [...]
-> > > About pre_dump, if the dump is crash dump, hope those pre_dump notifiers
-> > > will be executed under conditional check, e.g only if 'crash_kexec_post_notifiers'
-> > > is specified in kernel cmdline. 
-> > 
-> > Hi Baoquan, based on Petr's suggestion, I think pre_dump would be
-> > responsible for really *non-intrusive/non-risky* tasks and should be
-> > always executed in the panic path (before kdump), regardless of
-> > "crash_kexec_post_notifiers".
-> > 
-> > The idea is that the majority of the notifiers would be executed in the
-> > post_dump portion, and for that, we have the
-> > "crash_kexec_post_notifiers" conditional. I also suggest we have
-> > blacklist options (based on function names) for both notifiers, in order
-> > to make kdump issues debug easier.
-> > 
-> > Do you agree with that? Feel free to comment with suggestions!
-> > Cheers,
+On Wed, Nov 10, 2021 at 05:37:32PM +0100, Borislav Petkov wrote:
+> On Mon, Sep 13, 2021 at 05:55:58PM +0200, Joerg Roedel wrote:
+> >  extern unsigned char real_mode_blob[];
+> > diff --git a/arch/x86/include/asm/sev-ap-jumptable.h b/arch/x86/include/asm/sev-ap-jumptable.h
+> > new file mode 100644
+> > index 000000000000..1c8b2ce779e2
+> > --- /dev/null
+> > +++ b/arch/x86/include/asm/sev-ap-jumptable.h
 > 
-> I would say "please NO" cautiously.
+> Why a separate header? arch/x86/include/asm/sev.h looks small enough.
+
+The header is included in assembly, so I made a separate one.
+
+> > +void __init sev_es_setup_ap_jump_table_data(void *base, u32 pa)
 > 
-> As Petr said, kdump mostly works only if people configure it correctly.
-> That's because we try best to switch to kdump kernel from the fragile
-> panicked kernel immediately. When we try to add anthing before the switching,
-> please consider carefully and ask if that adding is mandatory, otherwise
-> switching into kdump kernel may fail. If the answer is yes, the adding
-> is needed and welcomed. Othewise, any unnecessary action, including any
-> "non-intrusive/non-risky" tasks, would be unwelcomed.
+> Why is this a separate function?
+> 
+> It is all part of the jump table setup.
 
-I still do not have the complete picture. But it seems that some
-actions make always sense even for kdump:
+Right, but the sev_es_setup_ap_jump_table_blob() function is already
+pretty big and I wanted to keep things readable.
 
-    + Super safe operations that might disable churn from broken
-      system. For examle, disabling watchdogs by setting a single
-      variable, see rcu_panic() notifier
+> 
+> > +		return 0;
+> 
+> Why are you returning 0 here and below?
 
-    + Actions needed that allow to kexec the crash kernel a safe
-      way under some hypervisor, see
-      https://lore.kernel.org/r/MWHPR21MB15933573F5C81C5250BF6A1CD75E9 at MWHPR21MB1593.namprd21.prod.outlook.com
+This is in an initcall and it returns just 0 when the environment is not
+ready to setup the ap jump table. Returning non-zero would create a
+warning message in the caller for something that is not a bug in the
+kernel.
 
+> > + * This file contains the source code for the binary blob which gets copied to
+> > + * the SEV-ES AP Jumptable to park APs while offlining CPUs or booting a new
+> 
+> I've seen "Jumptable", "Jump Table" and "jump table" at least. I'd say, do
+> the last one everywhere pls.
 
-> Surely, we don't oppose the "non-intrusive/non-risky" or completely
-> "intrusive/risky" action adding before kdump kernel switching, with a
-> conditional limitation. When we handle customers' kdump support, we
-> explicitly declare we only support normal and default kdump operation.
-> If any action which is done before switching into kdump kernel is specified,
-> e.g panic_notifier, panic_print, they need take care of their own kdump
-> failure.
+Fair, sorry for my english being too german :) I changed everything to
+'jump table'.
 
-All this actually started because of kmsg_dump. It might make sense to
-allow both kmsg_dump and kdump together. The messages stored by
-kmsg_dump might be better than nothing when kdump fails.
+> > +	/* Reset remaining registers */
+> > +	movl	$0, %esp
+> > +	movl	$0, %eax
+> > +	movl	$0, %ebx
+> > +	movl	$0, %edx
+> 
+> All 4: use xor
 
-It actually seems to be the main motivation to introduce
-"crash_kexec_post_notifier" parameter, see the commit
-f06e5153f4ae2e2f3b03 ("kernel/panic.c: add "crash_kexec_post_notifiers"
-option for kdump after panic_notifers").
+XOR changes EFLAGS, can not use them here.
 
-And this patch introduces panic_notifier_filter that tries to select
-notifiers that are helpful and harmful. IMHO, it is almost unusable.
-It seems that even kernel developers do not understand what exactly
-some notifiers do and why they are needed. Usually only the author
-and people familiar with the subsystem have some idea. It makes
-it pretty hard for anyone to create a reasonable filter.
+> > +
+> > +	/* Reset CR0 to get out of protected mode */
+> > +	movl	$0x60000010, %ecx
+> 
+> Another magic naked number.
 
-I am pretty sure that we could do better. I propose to add more
-notifier lists that will be called at various places with reasonable
-rules and restrictions. Then the susbsystem maintainers could decide
-where exactly a given action must be done.
+This is the CR0 reset value. I have updated the comment to make this
+more clear.
 
-The result might be that we will need only few options that will
-enable/disable some well defined optional features.
+Thanks,
 
-Best Regards,
-Petr
+-- 
+J?rg R?del
+jroedel at suse.de
+
+SUSE Software Solutions Germany GmbH
+Maxfeldstr. 5
+90409 N?rnberg
+Germany
+ 
+(HRB 36809, AG N?rnberg)
+Gesch?ftsf?hrer: Ivo Totev
+
 
