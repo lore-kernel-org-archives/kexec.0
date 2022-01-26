@@ -1,141 +1,58 @@
-From: Pingfan Liu <kernelfans@gmail.com>
-Date: Wed, 26 Jan 2022 10:45:12 +0800
-Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
- stable
-In-Reply-To: <87wnin3hj5.mognet@arm.com>
-References: <20220125033913.15374-1-kernelfans@gmail.com>
- <87wnin3hj5.mognet@arm.com>
-Message-ID: <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Wed, 26 Jan 2022 11:10:39 +0800
+Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
+In-Reply-To: <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
+References: <20220108153451.195121-1-gpiccoli@igalia.com>
+ <Yel8WQiBn/HNQN83@alley>
+ <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
+ <20220122105514.GA18258@MiWiFi-R3L-srv>
+ <20220123220711.44f1484c9b510eea8cda9c47@kernel.org>
+ <20220124135902.GB8305@MiWiFi-R3L-srv>
+ <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
+Message-ID: <20220126031039.GA26064@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, Jan 26, 2022 at 12:29 AM Valentin Schneider
-<valentin.schneider@arm.com> wrote:
->
-> On 25/01/22 11:39, Pingfan Liu wrote:
-> > The following identical code piece appears in both
-> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
-> >
-> >       if (!cpu_online(primary_cpu))
-> >               primary_cpu = cpumask_first(cpu_online_mask);
-> >
-> > Although the kexec-reboot task can get through a cpu_down() on its cpu,
-> > this code looks a little confusing.
-> >
-> > Make things straight forward by keep cpu hotplug disabled until
-> > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
-> > rebooting cpu can keep unchanged.
-> >
->
-> So is this supposed to be a refactor with no change in behaviour? AFAICT it
-> actually does change things (and isn't necessarily clearer).
->
-Yes, as you have seen, it does change behavior. Before this patch,
-there is a breakage:
-  migrate_to_reboot_cpu();
-  cpu_hotplug_enable();
-                                     ----------> technical, here can
-comes a cpu_down(this_cpu)
-  machine_shutdown();
+On 01/24/22 at 11:48am, Guilherme G. Piccoli wrote:
+> On 24/01/2022 10:59, Baoquan He wrote:
+> > [...]
+> > About pre_dump, if the dump is crash dump, hope those pre_dump notifiers
+> > will be executed under conditional check, e.g only if 'crash_kexec_post_notifiers'
+> > is specified in kernel cmdline. 
+> 
+> Hi Baoquan, based on Petr's suggestion, I think pre_dump would be
+> responsible for really *non-intrusive/non-risky* tasks and should be
+> always executed in the panic path (before kdump), regardless of
+> "crash_kexec_post_notifiers".
+> 
+> The idea is that the majority of the notifiers would be executed in the
+> post_dump portion, and for that, we have the
+> "crash_kexec_post_notifiers" conditional. I also suggest we have
+> blacklist options (based on function names) for both notifiers, in order
+> to make kdump issues debug easier.
+> 
+> Do you agree with that? Feel free to comment with suggestions!
+> Cheers,
 
-And this patch squeezes out this breakage.
+I would say "please NO" cautiously.
 
-> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
-> > Cc: Eric Biederman <ebiederm@xmission.com>
-> > Cc: Peter Zijlstra <peterz@infradead.org>
-> > Cc: Thomas Gleixner <tglx@linutronix.de>
-> > Cc: Valentin Schneider <valentin.schneider@arm.com>
-> > Cc: Vincent Donnefort <vincent.donnefort@arm.com>
-> > Cc: Ingo Molnar <mingo@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: YueHaibing <yuehaibing@huawei.com>
-> > Cc: Baokun Li <libaokun1@huawei.com>
-> > Cc: Randy Dunlap <rdunlap@infradead.org>
-> > Cc: kexec at lists.infradead.org
-> > To: linux-kernel at vger.kernel.org
-> > ---
-> >  kernel/cpu.c        | 16 ++++++++++------
-> >  kernel/kexec_core.c | 10 ++++------
-> >  2 files changed, 14 insertions(+), 12 deletions(-)
-> >
-> > diff --git a/kernel/cpu.c b/kernel/cpu.c
-> > index 407a2568f35e..bc687d59ca90 100644
-> > --- a/kernel/cpu.c
-> > +++ b/kernel/cpu.c
-> > @@ -1227,20 +1227,24 @@ int remove_cpu(unsigned int cpu)
-> >  }
-> >  EXPORT_SYMBOL_GPL(remove_cpu);
-> >
-> > +/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
-> >  void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
-> >  {
-> >       unsigned int cpu;
-> >       int error;
-> >
-> > +     /*
-> > +      * Block other cpu hotplug event, so primary_cpu is always online if
-> > +      * it is not touched by us
-> > +      */
-> >       cpu_maps_update_begin();
-> > -
-> >       /*
-> > -      * Make certain the cpu I'm about to reboot on is online.
-> > -      *
-> > -      * This is inline to what migrate_to_reboot_cpu() already do.
-> > +      * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> > +      * no further code needs to use CPU hotplug (which is true in
-> > +      * the reboot case). However, the kexec path depends on using
-> > +      * CPU hotplug again; so re-enable it here.
-> >        */
-> > -     if (!cpu_online(primary_cpu))
-> > -             primary_cpu = cpumask_first(cpu_online_mask);
-> > +     __cpu_hotplug_enable();
-> >
-> >       for_each_online_cpu(cpu) {
-> >               if (cpu == primary_cpu)
-> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> > index 68480f731192..db4fa6b174e3 100644
-> > --- a/kernel/kexec_core.c
-> > +++ b/kernel/kexec_core.c
-> > @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
-> >               kexec_in_progress = true;
-> >               kernel_restart_prepare("kexec reboot");
-> >               migrate_to_reboot_cpu();
-> > -
-> >               /*
-> > -              * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> > -              * no further code needs to use CPU hotplug (which is true in
-> > -              * the reboot case). However, the kexec path depends on using
-> > -              * CPU hotplug again; so re-enable it here.
-> > +              * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
-> > +              * relies on the cpu teardown to achieve reboot, it needs to
-> > +              * re-enable CPU hotplug there.
-> >                */
-> > -             cpu_hotplug_enable();
-> > +
->
-> Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
-> archs will now be missing a cpu_hotplug_enable() prior to a kexec
-> machine_shutdown(). That said, AFAICT none of those archs rely on the
-> hotplug machinery in machine_shutdown(), so it might be OK, but that's not
-> obvious at all.
->
-At the first glance, it may be not obvious, but tracing down
-cpu_hotplug_enable() to the variable cpu_hotplug_disabled, you can
-find out the limited involved functions are all related to
-cpu_up/cpu_down.
+As Petr said, kdump mostly works only if people configure it correctly.
+That's because we try best to switch to kdump kernel from the fragile
+panicked kernel immediately. When we try to add anthing before the switching,
+please consider carefully and ask if that adding is mandatory, otherwise
+switching into kdump kernel may fail. If the answer is yes, the adding
+is needed and welcomed. Othewise, any unnecessary action, including any
+"non-intrusive/non-risky" tasks, would be unwelcomed.
 
-IOW, if no code path connects with the interface of cpu_up/cpu_down,
-then kexec-reboot will not be affected.
+Surely, we don't oppose the "non-intrusive/non-risky" or completely
+"intrusive/risky" action adding before kdump kernel switching, with a
+conditional limitation. When we handle customers' kdump support, we
+explicitly declare we only support normal and default kdump operation.
+If any action which is done before switching into kdump kernel is specified,
+e.g panic_notifier, panic_print, they need take care of their own kdump
+failure.
 
-And after this patch, it is more clear how to handle the following cases:
-arch/arm/kernel/reboot.c:94:    smp_shutdown_nonboot_cpus(reboot_cpu);
-arch/arm64/kernel/process.c:88: smp_shutdown_nonboot_cpus(reboot_cpu);
-arch/ia64/kernel/process.c:578: smp_shutdown_nonboot_cpus(reboot_cpu);
-
-Thanks,
-Pingfan
 
