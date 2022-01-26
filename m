@@ -1,89 +1,102 @@
-From: Joerg Roedel <jroedel@suse.de>
-Date: Wed, 26 Jan 2022 15:26:01 +0100
-Subject: [PATCH v2 07/12] x86/sev: Setup code to park APs in the AP Jump
- Table
-In-Reply-To: <YYv1TPawuorQv1PR@zn.tnic>
-References: <20210913155603.28383-1-joro@8bytes.org>
- <20210913155603.28383-8-joro@8bytes.org> <YYv1TPawuorQv1PR@zn.tnic>
-Message-ID: <YfFZ+SRutJhDoAkz@suse.de>
+From: Valentin Schneider <valentin.schneider@arm.com>
+Date: Wed, 26 Jan 2022 15:06:39 +0000
+Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
+ stable
+In-Reply-To: <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
+References: <20220125033913.15374-1-kernelfans@gmail.com>
+ <87wnin3hj5.mognet@arm.com>
+ <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
+Message-ID: <87tudq35a8.mognet@arm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, Nov 10, 2021 at 05:37:32PM +0100, Borislav Petkov wrote:
-> On Mon, Sep 13, 2021 at 05:55:58PM +0200, Joerg Roedel wrote:
-> >  extern unsigned char real_mode_blob[];
-> > diff --git a/arch/x86/include/asm/sev-ap-jumptable.h b/arch/x86/include/asm/sev-ap-jumptable.h
-> > new file mode 100644
-> > index 000000000000..1c8b2ce779e2
-> > --- /dev/null
-> > +++ b/arch/x86/include/asm/sev-ap-jumptable.h
-> 
-> Why a separate header? arch/x86/include/asm/sev.h looks small enough.
+On 26/01/22 10:45, Pingfan Liu wrote:
+> On Wed, Jan 26, 2022 at 12:29 AM Valentin Schneider
+> <valentin.schneider@arm.com> wrote:
+>>
+>> On 25/01/22 11:39, Pingfan Liu wrote:
+>> > The following identical code piece appears in both
+>> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
+>> >
+>> >       if (!cpu_online(primary_cpu))
+>> >               primary_cpu = cpumask_first(cpu_online_mask);
+>> >
+>> > Although the kexec-reboot task can get through a cpu_down() on its cpu,
+>> > this code looks a little confusing.
+>> >
+>> > Make things straight forward by keep cpu hotplug disabled until
+>> > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+>> > rebooting cpu can keep unchanged.
+>> >
+>>
+>> So is this supposed to be a refactor with no change in behaviour? AFAICT it
+>> actually does change things (and isn't necessarily clearer).
+>>
+> Yes, as you have seen, it does change behavior. Before this patch,
+> there is a breakage:
+>   migrate_to_reboot_cpu();
+>   cpu_hotplug_enable();
+>                                      ----------> technical, here can
+> comes a cpu_down(this_cpu)
+>   machine_shutdown();
+>
+> And this patch squeezes out this breakage.
+>
 
-The header is included in assembly, so I made a separate one.
+Ok, that's worth pointing out in the changelog.
 
-> > +void __init sev_es_setup_ap_jump_table_data(void *base, u32 pa)
-> 
-> Why is this a separate function?
-> 
-> It is all part of the jump table setup.
+>> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+>> > index 68480f731192..db4fa6b174e3 100644
+>> > --- a/kernel/kexec_core.c
+>> > +++ b/kernel/kexec_core.c
+>> > @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
+>> >               kexec_in_progress = true;
+>> >               kernel_restart_prepare("kexec reboot");
+>> >               migrate_to_reboot_cpu();
+>> > -
+>> >               /*
+>> > -              * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+>> > -              * no further code needs to use CPU hotplug (which is true in
+>> > -              * the reboot case). However, the kexec path depends on using
+>> > -              * CPU hotplug again; so re-enable it here.
+>> > +              * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
+>> > +              * relies on the cpu teardown to achieve reboot, it needs to
+>> > +              * re-enable CPU hotplug there.
+>> >                */
+>> > -             cpu_hotplug_enable();
+>> > +
+>>
+>> Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
+>> archs will now be missing a cpu_hotplug_enable() prior to a kexec
+>> machine_shutdown(). That said, AFAICT none of those archs rely on the
+>> hotplug machinery in machine_shutdown(), so it might be OK, but that's not
+>> obvious at all.
+>>
+> At the first glance, it may be not obvious, but tracing down
+> cpu_hotplug_enable() to the variable cpu_hotplug_disabled, you can
+> find out the limited involved functions are all related to
+> cpu_up/cpu_down.
+>
+> IOW, if no code path connects with the interface of cpu_up/cpu_down,
+> then kexec-reboot will not be affected.
+>
 
-Right, but the sev_es_setup_ap_jump_table_blob() function is already
-pretty big and I wanted to keep things readable.
+That's my point, this only works if the other archs truly do not rely on
+hotplug for machine_shutdown(), which seems to be the case but it wouldn't
+hurt for you to double-check that and explicitely call it out in the
+changelog.
 
-> 
-> > +		return 0;
-> 
-> Why are you returning 0 here and below?
+> And after this patch, it is more clear how to handle the following cases:
+> arch/arm/kernel/reboot.c:94:    smp_shutdown_nonboot_cpus(reboot_cpu);
+> arch/arm64/kernel/process.c:88: smp_shutdown_nonboot_cpus(reboot_cpu);
+> arch/ia64/kernel/process.c:578: smp_shutdown_nonboot_cpus(reboot_cpu);
+>
 
-This is in an initcall and it returns just 0 when the environment is not
-ready to setup the ap jump table. Returning non-zero would create a
-warning message in the caller for something that is not a bug in the
-kernel.
+FWIW riscv is also concerned.
 
-> > + * This file contains the source code for the binary blob which gets copied to
-> > + * the SEV-ES AP Jumptable to park APs while offlining CPUs or booting a new
-> 
-> I've seen "Jumptable", "Jump Table" and "jump table" at least. I'd say, do
-> the last one everywhere pls.
-
-Fair, sorry for my english being too german :) I changed everything to
-'jump table'.
-
-> > +	/* Reset remaining registers */
-> > +	movl	$0, %esp
-> > +	movl	$0, %eax
-> > +	movl	$0, %ebx
-> > +	movl	$0, %edx
-> 
-> All 4: use xor
-
-XOR changes EFLAGS, can not use them here.
-
-> > +
-> > +	/* Reset CR0 to get out of protected mode */
-> > +	movl	$0x60000010, %ecx
-> 
-> Another magic naked number.
-
-This is the CR0 reset value. I have updated the comment to make this
-more clear.
-
-Thanks,
-
--- 
-J?rg R?del
-jroedel at suse.de
-
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5
-90409 N?rnberg
-Germany
- 
-(HRB 36809, AG N?rnberg)
-Gesch?ftsf?hrer: Ivo Totev
-
+> Thanks,
+> Pingfan
 
