@@ -1,46 +1,62 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 26 Jan 2022 09:22:04 +0800
-Subject: [PATCH v2] proc/vmcore: fix possible deadlock on concurrent mmap
- and read
-In-Reply-To: <20220125170900.472fdb649312e77a4a60d9da@linux-foundation.org>
-References: <20220119193417.100385-1-david@redhat.com>
- <20220125170900.472fdb649312e77a4a60d9da@linux-foundation.org>
-Message-ID: <20220126012204.GA2086@MiWiFi-R3L-srv>
+From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
+Date: Wed, 26 Jan 2022 01:43:31 +0000
+Subject: [PATCH] sadump, kaslr: fix failure of calculating kaslr_offset
+In-Reply-To: <TYAPR01MB6507256A4DFD279894910A24955F9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
+References: <TYAPR01MB6507256A4DFD279894910A24955F9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
+Message-ID: <TYYPR01MB6777E076C8EE6339CA3A1937DD209@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/25/22 at 05:09pm, Andrew Morton wrote:
-> On Wed, 19 Jan 2022 20:34:17 +0100 David Hildenbrand <david@redhat.com> wrote:
+-----Original Message-----
+> On kernels v5.8 or later, makedumpfile fails for memory dumps in the
+> sadump-related formats as follows:
 > 
-> > Lockdep noticed that there is chance for a deadlock if we have
-> > concurrent mmap, concurrent read, and the addition/removal of a
-> > callback.
-> > 
-> > As nicely explained by Boqun:
-> > 
-> > "
-> > Lockdep warned about the above sequences because rw_semaphore is a fair
-> > read-write lock, and the following can cause a deadlock:
-> > 
-> > 	TASK 1			TASK 2		TASK 3
-> > 	======			======		======
-> > 	down_write(mmap_lock);
-> > 				down_read(vmcore_cb_rwsem)
-> > 						down_write(vmcore_cb_rwsem); // blocked
-> > 	down_read(vmcore_cb_rwsem); // cannot get the lock because of the fairness
-> > 				down_read(mmap_lock); // blocked
+>     # makedumpfile -f -l -d 31 -x ./vmlinux /dev/sdd4 /root/vmcore-ld31
+>     __vtop4_x86_64: Can't get a valid pud_pte.
+>     ...110 lines of the same message...
+>     __vtop4_x86_64: Can't get a valid pud_pte.
+>     calc_kaslr_offset: failed to calculate kaslr_offset and phys_base; default to 0
+>     readmem: type_addr: 1, addr:ffffffff85411858, size:8
+>     __vtop4_x86_64: Can't get pgd (page_dir:ffffffff85411858).
+>     readmem: Can't convert a virtual address(ffffffff059be980) to physical address.
+>     readmem: type_addr: 0, addr:ffffffff059be980, size:1024
+>     cpu_online_mask_init: Can't read cpu_online_mask memory.
 > 
-> I'm wondering about cc:stable.  It's hard to believe that this is
-> likely to be observed in real life.  But the ongoing reports of lockdep
-> splats will be irritating.
+>     makedumpfile Failed.
+> 
+> This is caused by the kernel commit 9d06c4027f21 ("x86/entry: Convert
+> Divide Error to IDTENTRY") that renamed divide_error to
+> asm_exc_divide_error, breaking logic for calculating kaslr offset.
+> 
+> Fix this by adding initialization of asm_exc_divide_error.
+> 
+> Signed-off-by: HATAYAMA Daisuke <d.hatayama@fujitsu.com>
+> ---
+>  makedumpfile.c | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index a51bdaf..7ed9756 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -1667,6 +1667,8 @@ get_symbol_info(void)
+>  	SYMBOL_INIT(cur_cpu_spec, "cur_cpu_spec");
+> 
+>  	SYMBOL_INIT(divide_error, "divide_error");
+> +	if (SYMBOL(divide_error) == NOT_FOUND_SYMBOL)
+> +		SYMBOL_INIT(divide_error, "asm_exc_divide_error");
+>  	SYMBOL_INIT(idt_table, "idt_table");
+>  	SYMBOL_INIT(saved_command_line, "saved_command_line");
+>  	SYMBOL_INIT(pti_init, "pti_init");
+> --
+> 2.31.1
 
-This is reported by Redhat CKI on Fedora ARK kernel. That kernel enables
-many debug feature by default, that's why lockdep detected that. Usually
-kdump kernel add 'nr_cpus=1' by default in our distros, so it won't
-hurt. It may cause lock issue in theory, so should be false positive
-warning. Since it has Fixes tag, cc:stable should be OK.
+Thanks, applied.
+https://github.com/makedumpfile/makedumpfile/commit/59b1726fbcc251155140c8a1972384498fee4daf
+
+Kazu
 
 
