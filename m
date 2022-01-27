@@ -1,82 +1,119 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 27 Jan 2022 15:51:32 +0800
-Subject: [PATCH v3 6/6] crash hp: Add x86 crash hotplug support
-In-Reply-To: <cf834659-3d8c-7ab5-ccd4-c877b0b9a2f0@oracle.com>
-References: <20220110195727.1682-1-eric.devolder@oracle.com>
- <20220110195727.1682-7-eric.devolder@oracle.com>
- <20220119102323.GB6349@MiWiFi-R3L-srv>
- <280485c9-4612-892c-0e3e-9e8b09e60cf9@oracle.com>
- <20220126091243.GB6588@MiWiFi-R3L-srv>
- <cf834659-3d8c-7ab5-ccd4-c877b0b9a2f0@oracle.com>
-Message-ID: <20220127075132.GB13508@MiWiFi-R3L-srv>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Thu, 27 Jan 2022 16:44:19 +0800
+Subject: [PATCH] kexec: disable cpu hotplug until the rebooting cpu is
+ stable
+In-Reply-To: <87tudq35a8.mognet@arm.com>
+References: <20220125033913.15374-1-kernelfans@gmail.com>
+ <87wnin3hj5.mognet@arm.com>
+ <CAFgQCTvbsh5UhefhDgOu8ZdUKww6FQXw-Hxnz5mC4vs0C+WP1w@mail.gmail.com>
+ <87tudq35a8.mognet@arm.com>
+Message-ID: <CAFgQCTv_fYqtKYmn4nmXYxBMEZaCKFUQnDTRaeEkQPMBL-1amA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/26/22 at 11:32am, Eric DeVolder wrote:
-..snip.... 
-> > > > > +void arch_crash_hotplug_handler(struct kimage *image,
-> > > > > +	unsigned int hp_action, unsigned long a, unsigned long b)
-> > > > > +{
-> > > > > +	/*
-> > > > > +	 * To accurately reflect hot un/plug changes, the elfcorehdr (which
-> > > > > +	 * is passed to the crash kernel via the elfcorehdr= parameter)
-> > > > > +	 * must be updated with the new list of CPUs and memories. The new
-> > > > > +	 * elfcorehdr is prepared in a kernel buffer, and if no errors,
-> > > > > +	 * then it is written on top of the existing/old elfcorehdr.
-> > > > > +	 *
-> > > > > +	 * Due to the change to the elfcorehdr, purgatory must explicitly
-> > > > > +	 * exclude the elfcorehdr from the list of segments it checks.
-> > > > > +	 */
-> > > > 
-> > > > Please move this code comment to above function as kernel-doc if you
-> > > > this it benefits the entire function. Otherwise should move them above
-> > > > the code block they are explaining. For this place, I think moving them
-> > > > to above arch_crash_hotplug_handler() is better.
-> > > 
-> > > ok, I will do that!
-> > > 
-> > > > 
-> > > > > +	struct kexec_segment *ksegment;
-> > > > > +	unsigned char *ptr = NULL;
-> > > > > +	unsigned long elfsz = 0;
-> > > > > +	void *elfbuf = NULL;
-> > > > > +	unsigned long mem, memsz;
-> > > > > +	unsigned int n;
-> > > > > +
-> > > > > +	/*
-> > > > > +	 * When the struct kimage is alloced, it is wiped to zero, so
-> > > > > +	 * the elf_index_valid defaults to false. It is set on the
-> > > > > +	 * kexec_file_load path, or here for kexec_load.
-> > > > > +	 */
-> > > > 
-> > > > I think this kexec loading part should be taken out and post after this
-> > > > whole patchset being accepted. At least, it's worth to put them in a
-> > > > separate patch.
-> > > 
-> > > This little bit of code that identifies the incoming elfcorehdr is all that
-> > > is needed to support kexec_load (and the userspace changes of course). I'm
-> > > happy to split as a separate patch, but I would think that be maintaining it
-> > > with this series, then when it is accepted, both the kexec_load and
-> > > kexec_file_load paths would be supported? Your call.
-> > 
-> > Hmm, at first, let's split it out from this patch since it's an
-> > independent action to kdump. I would suggest we don't carry it in this
-> > series. After this series is done, you can post another patchset
-> > including this part as kernel patch, and also the code change in
-> > kexec_tools as user space patch.
-> > 
-> > ......
-> > 
-> 
-> OK, I'll remove the bit of code that supports kexec_load, so it can be introduced
-> later coincident with the changes to kexec-tools.
-> 
-> In a previous message you mentioned making changes to the order of the patches,
-> was this it, or is there more to come?
+On Wed, Jan 26, 2022 at 11:06 PM Valentin Schneider
+<valentin.schneider@arm.com> wrote:
+>
+> On 26/01/22 10:45, Pingfan Liu wrote:
+> > On Wed, Jan 26, 2022 at 12:29 AM Valentin Schneider
+> > <valentin.schneider@arm.com> wrote:
+> >>
+> >> On 25/01/22 11:39, Pingfan Liu wrote:
+> >> > The following identical code piece appears in both
+> >> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
+> >> >
+> >> >       if (!cpu_online(primary_cpu))
+> >> >               primary_cpu = cpumask_first(cpu_online_mask);
+> >> >
+> >> > Although the kexec-reboot task can get through a cpu_down() on its cpu,
+> >> > this code looks a little confusing.
+> >> >
+> >> > Make things straight forward by keep cpu hotplug disabled until
+> >> > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+> >> > rebooting cpu can keep unchanged.
+> >> >
+> >>
+> >> So is this supposed to be a refactor with no change in behaviour? AFAICT it
+> >> actually does change things (and isn't necessarily clearer).
+> >>
+> > Yes, as you have seen, it does change behavior. Before this patch,
+> > there is a breakage:
+> >   migrate_to_reboot_cpu();
+> >   cpu_hotplug_enable();
+> >                                      ----------> technical, here can
+> > comes a cpu_down(this_cpu)
+> >   machine_shutdown();
+> >
+> > And this patch squeezes out this breakage.
+> >
+>
+> Ok, that's worth pointing out in the changelog.
+>
+Sure, I will update it.
 
-Yeah, replied to cover letter, please check it there.
+> >> > diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> >> > index 68480f731192..db4fa6b174e3 100644
+> >> > --- a/kernel/kexec_core.c
+> >> > +++ b/kernel/kexec_core.c
+> >> > @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
+> >> >               kexec_in_progress = true;
+> >> >               kernel_restart_prepare("kexec reboot");
+> >> >               migrate_to_reboot_cpu();
+> >> > -
+> >> >               /*
+> >> > -              * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> >> > -              * no further code needs to use CPU hotplug (which is true in
+> >> > -              * the reboot case). However, the kexec path depends on using
+> >> > -              * CPU hotplug again; so re-enable it here.
+> >> > +              * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
+> >> > +              * relies on the cpu teardown to achieve reboot, it needs to
+> >> > +              * re-enable CPU hotplug there.
+> >> >                */
+> >> > -             cpu_hotplug_enable();
+> >> > +
+> >>
+> >> Not all archs map machine_shutdown() to smp_shutdown_nonboot_cpus(), other
+> >> archs will now be missing a cpu_hotplug_enable() prior to a kexec
+> >> machine_shutdown(). That said, AFAICT none of those archs rely on the
+> >> hotplug machinery in machine_shutdown(), so it might be OK, but that's not
+> >> obvious at all.
+> >>
+> > At the first glance, it may be not obvious, but tracing down
+> > cpu_hotplug_enable() to the variable cpu_hotplug_disabled, you can
+> > find out the limited involved functions are all related to
+> > cpu_up/cpu_down.
+> >
+> > IOW, if no code path connects with the interface of cpu_up/cpu_down,
+> > then kexec-reboot will not be affected.
+> >
+>
+> That's my point, this only works if the other archs truly do not rely on
+> hotplug for machine_shutdown(), which seems to be the case but it wouldn't
+> hurt for you to double-check that and explicitely call it out in the
+> changelog.
+>
+OK, I will update the change log. BTW, besides x86, I have just
+finished the test on powerpc, both of them works fine with this patch
 
+> > And after this patch, it is more clear how to handle the following cases:
+> > arch/arm/kernel/reboot.c:94:    smp_shutdown_nonboot_cpus(reboot_cpu);
+> > arch/arm64/kernel/process.c:88: smp_shutdown_nonboot_cpus(reboot_cpu);
+> > arch/ia64/kernel/process.c:578: smp_shutdown_nonboot_cpus(reboot_cpu);
+> >
+>
+> FWIW riscv is also concerned.
+
+I think its current statement is right.
+arch/riscv/kernel/machine_kexec.c:135:
+smp_shutdown_nonboot_cpus(smp_processor_id());
+
+Thanks,
+
+Pingfan
+>
+> > Thanks,
+> > Pingfan
 
