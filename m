@@ -1,98 +1,134 @@
-From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Thu, 27 Jan 2022 17:31:51 +0800
-Subject: [RFC PATCH] kdump: Add support for crashkernel=auto
-Message-ID: <1643275911-19489-1-git-send-email-yangtiezhu@loongson.cn>
+From: Baoquan He <bhe@redhat.com>
+Date: Thu, 27 Jan 2022 17:41:44 +0800
+Subject: [PATCHv2] kexec: disable cpu hotplug until the rebooting cpu is
+ stable
+In-Reply-To: <20220127090215.32000-1-kernelfans@gmail.com>
+References: <20220127090215.32000-1-kernelfans@gmail.com>
+Message-ID: <20220127094144.GC13508@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Set the reserved memory automatically for the crash kernel based on
-architecture.
+Hi Pingfan,
 
-Most code of this patch come from:
-https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-8/-/tree/c8s
+On 01/27/22 at 05:02pm, Pingfan Liu wrote:
+> The following identical code piece appears in both
+> migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
+> 
+> 	if (!cpu_online(primary_cpu))
+> 		primary_cpu = cpumask_first(cpu_online_mask);
+> 
+> This is due to a breakage like the following:
+>    migrate_to_reboot_cpu();
+>    cpu_hotplug_enable();
+>                           --> comes a cpu_down(this_cpu) on other cpu
+>    machine_shutdown();
+> 
+> Although the kexec-reboot task can get through a cpu_down() on its cpu,
+> this code looks a little confusing.
+> 
+> Make things straight forward by keeping cpu hotplug disabled until
+> smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+> breakage is squashed out and the rebooting cpu can keep unchanged.
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- Documentation/admin-guide/kdump/kdump.rst       | 13 +++++++++++++
- Documentation/admin-guide/kernel-parameters.txt |  5 +++++
- kernel/crash_core.c                             | 20 ++++++++++++++++++++
- 3 files changed, 38 insertions(+)
+If I didn't go through code wrongly, you may miss the x86 case.
+Several ARCHes do call smp_shutdown_nonboot_cpus() in machine_shutdown()
+in kexec reboot code path, while x86 doesn't. If I am right, you may
+need reconsider if this patch is needed or need be adjustd.
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index cb30ca3d..8f8a9cc 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -335,6 +335,19 @@ crashkernel syntax
- 
-             crashkernel=0,low
- 
-+4) crashkernel=auto
-+
-+   You can use crashkernel=auto if you have enough memory. The threshold
-+   is 1G on x86_64 and s390x, 2G on arm64, ppc64 and ppc64le. If your system
-+   memory is less than the threshold crashkernel=auto will not reserve memory.
-+
-+   The automatically reserved memory size varies based on architecture.
-+   The size changes according to system memory size like below:
-+       x86_64: 1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M
-+       s390x:  1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M
-+       arm64:  2G-:448M
-+       ppc64:  2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G
-+
- Boot into System Kernel
- -----------------------
- 1) Update the boot loader (such as grub, yaboot, or lilo) configuration
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f5a27f0..14f052d 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -783,6 +783,11 @@
- 			Format:
- 			<first_slot>,<last_slot>,<port>,<enum_bit>[,<debug>]
- 
-+	crashkernel=auto
-+			[KNL] Set the reserved memory automatically for the crash kernel
-+			based on architecture.
-+			See Documentation/admin-guide/kdump/kdump.rst for further details.
-+
- 	crashkernel=size[KMG][@offset[KMG]]
- 			[KNL] Using kexec, Linux can switch to a 'crash kernel'
- 			upon panic. This parameter reserves the physical
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 256cf6d..32c51e2 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -252,6 +252,26 @@ static int __init __parse_crashkernel(char *cmdline,
- 	if (suffix)
- 		return parse_crashkernel_suffix(ck_cmdline, crash_size,
- 				suffix);
-+
-+	if (strncmp(ck_cmdline, "auto", 4) == 0) {
-+#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
-+		ck_cmdline = "1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M";
-+#elif defined(CONFIG_ARM64)
-+		ck_cmdline = "2G-:448M";
-+#elif defined(CONFIG_PPC64)
-+		char *fadump_cmdline;
-+
-+		fadump_cmdline = get_last_crashkernel(cmdline, "fadump=", NULL);
-+		fadump_cmdline = fadump_cmdline ?
-+				fadump_cmdline + strlen("fadump=") : NULL;
-+		if (!fadump_cmdline || (strncmp(fadump_cmdline, "off", 3) == 0))
-+			ck_cmdline = "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
-+		else
-+			ck_cmdline = "4G-16G:768M,16G-64G:1G,64G-128G:2G,128G-1T:4G,1T-2T:6G,2T-4T:12G,4T-8T:20G,8T-16T:36G,16T-32T:64G,32T-64T:128G,64T-:180G";
-+#endif
-+		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
-+	}
-+
- 	/*
- 	 * if the commandline contains a ':', then that's the extended
- 	 * syntax -- if not, it must be the classic syntax
--- 
-2.1.0
+Are you optimizing code path, or you meet a real problem? I haven't
+checked v1, but I also didn't see it's told in patch log which case it
+is.
+
+
+> 
+> Note: this patch only affects the kexec-reboot on arches, which rely on
+> cpu hotplug mechanism.
+> 
+> Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> Cc: Eric Biederman <ebiederm@xmission.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: Vincent Donnefort <vincent.donnefort@arm.com>
+> Cc: Ingo Molnar <mingo@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: YueHaibing <yuehaibing@huawei.com>
+> Cc: Baokun Li <libaokun1@huawei.com>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Valentin Schneider <valentin.schneider@arm.com>
+> Cc: kexec at lists.infradead.org
+> To: linux-kernel at vger.kernel.org
+> ---
+> v1 -> v2:
+>  improve commit log
+> 
+>  kernel/cpu.c        | 16 ++++++++++------
+>  kernel/kexec_core.c | 10 ++++------
+>  2 files changed, 14 insertions(+), 12 deletions(-)
+> 
+> diff --git a/kernel/cpu.c b/kernel/cpu.c
+> index 9c92147f0812..87bdf21de950 100644
+> --- a/kernel/cpu.c
+> +++ b/kernel/cpu.c
+> @@ -1240,20 +1240,24 @@ int remove_cpu(unsigned int cpu)
+>  }
+>  EXPORT_SYMBOL_GPL(remove_cpu);
+>  
+> +/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
+>  void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
+>  {
+>  	unsigned int cpu;
+>  	int error;
+>  
+> +	/*
+> +	 * Block other cpu hotplug event, so primary_cpu is always online if
+> +	 * it is not touched by us
+> +	 */
+>  	cpu_maps_update_begin();
+> -
+>  	/*
+> -	 * Make certain the cpu I'm about to reboot on is online.
+> -	 *
+> -	 * This is inline to what migrate_to_reboot_cpu() already do.
+> +	 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> +	 * no further code needs to use CPU hotplug (which is true in
+> +	 * the reboot case). However, the kexec path depends on using
+> +	 * CPU hotplug again; so re-enable it here.
+>  	 */
+> -	if (!cpu_online(primary_cpu))
+> -		primary_cpu = cpumask_first(cpu_online_mask);
+> +	__cpu_hotplug_enable();
+>  
+>  	for_each_online_cpu(cpu) {
+>  		if (cpu == primary_cpu)
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 68480f731192..db4fa6b174e3 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -1168,14 +1168,12 @@ int kernel_kexec(void)
+>  		kexec_in_progress = true;
+>  		kernel_restart_prepare("kexec reboot");
+>  		migrate_to_reboot_cpu();
+> -
+>  		/*
+> -		 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> -		 * no further code needs to use CPU hotplug (which is true in
+> -		 * the reboot case). However, the kexec path depends on using
+> -		 * CPU hotplug again; so re-enable it here.
+> +		 * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
+> +		 * relies on the cpu teardown to achieve reboot, it needs to
+> +		 * re-enable CPU hotplug there.
+>  		 */
+> -		cpu_hotplug_enable();
+> +
+>  		pr_notice("Starting new kernel\n");
+>  		machine_shutdown();
+>  	}
+> -- 
+> 2.31.1
+> 
 
 
