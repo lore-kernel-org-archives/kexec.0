@@ -1,48 +1,116 @@
-From: Joerg Roedel <jroedel@suse.de>
-Date: Thu, 27 Jan 2022 10:01:31 +0100
-Subject: [PATCH v2 08/12] x86/sev: Park APs on AP Jump Table with GHCB
- protocol version 2
-In-Reply-To: <YY6XQfmvmpmUiIGj@zn.tnic>
-References: <20210913155603.28383-1-joro@8bytes.org>
- <20210913155603.28383-9-joro@8bytes.org> <YY6XQfmvmpmUiIGj@zn.tnic>
-Message-ID: <YfJfa955Pkg1y6Gv@suse.de>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Thu, 27 Jan 2022 17:02:15 +0800
+Subject: [PATCHv2] kexec: disable cpu hotplug until the rebooting cpu is stable
+Message-ID: <20220127090215.32000-1-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Nov 12, 2021 at 05:33:05PM +0100, Borislav Petkov wrote:
-> On Mon, Sep 13, 2021 at 05:55:59PM +0200, Joerg Roedel wrote:
-> > +		     "ljmpl	*%0" : :
-> > +		     "m" (real_mode_header->sev_real_ap_park_asm),
-> > +		     "b" (sev_es_jump_table_pa >> 4));
-> 
-> In any case, this asm needs comments: why those regs, why
-> sev_es_jump_table_pa >> 4 in rbx (I found later in the patch why) and so
-> on.
+The following identical code piece appears in both
+migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
 
-Turned out the jump_table_pa is not used in asm code anymore. It was a
-left-over from a previous version of the patch, it is removed now.
+	if (!cpu_online(primary_cpu))
+		primary_cpu = cpumask_first(cpu_online_mask);
 
-> > +SYM_INNER_LABEL(sev_ap_park_paging_off, SYM_L_GLOBAL)
-> 
-> Global symbol but used only in this file. .L-prefix then?
+This is due to a breakage like the following:
+   migrate_to_reboot_cpu();
+   cpu_hotplug_enable();
+                          --> comes a cpu_down(this_cpu) on other cpu
+   machine_shutdown();
 
-It needs to be a global symbol so the pa_ variant can be generated.
+Although the kexec-reboot task can get through a cpu_down() on its cpu,
+this code looks a little confusing.
 
-Regards,
+Make things straight forward by keeping cpu hotplug disabled until
+smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+breakage is squashed out and the rebooting cpu can keep unchanged.
 
--- 
-J?rg R?del
-jroedel at suse.de
+Note: this patch only affects the kexec-reboot on arches, which rely on
+cpu hotplug mechanism.
 
-SUSE Software Solutions Germany GmbH
-Maxfeldstr. 5
-90409 N?rnberg
-Germany
+Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Vincent Donnefort <vincent.donnefort@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Baokun Li <libaokun1@huawei.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: kexec at lists.infradead.org
+To: linux-kernel@vger.kernel.org
+---
+v1 -> v2:
+ improve commit log
+
+ kernel/cpu.c        | 16 ++++++++++------
+ kernel/kexec_core.c | 10 ++++------
+ 2 files changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index 9c92147f0812..87bdf21de950 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -1240,20 +1240,24 @@ int remove_cpu(unsigned int cpu)
+ }
+ EXPORT_SYMBOL_GPL(remove_cpu);
  
-(HRB 36809, AG N?rnberg)
-Gesch?ftsf?hrer: Ivo Totev
++/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
+ void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
+ {
+ 	unsigned int cpu;
+ 	int error;
+ 
++	/*
++	 * Block other cpu hotplug event, so primary_cpu is always online if
++	 * it is not touched by us
++	 */
+ 	cpu_maps_update_begin();
+-
+ 	/*
+-	 * Make certain the cpu I'm about to reboot on is online.
+-	 *
+-	 * This is inline to what migrate_to_reboot_cpu() already do.
++	 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
++	 * no further code needs to use CPU hotplug (which is true in
++	 * the reboot case). However, the kexec path depends on using
++	 * CPU hotplug again; so re-enable it here.
+ 	 */
+-	if (!cpu_online(primary_cpu))
+-		primary_cpu = cpumask_first(cpu_online_mask);
++	__cpu_hotplug_enable();
+ 
+ 	for_each_online_cpu(cpu) {
+ 		if (cpu == primary_cpu)
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 68480f731192..db4fa6b174e3 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1168,14 +1168,12 @@ int kernel_kexec(void)
+ 		kexec_in_progress = true;
+ 		kernel_restart_prepare("kexec reboot");
+ 		migrate_to_reboot_cpu();
+-
+ 		/*
+-		 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+-		 * no further code needs to use CPU hotplug (which is true in
+-		 * the reboot case). However, the kexec path depends on using
+-		 * CPU hotplug again; so re-enable it here.
++		 * migrate_to_reboot_cpu() disables CPU hotplug. If an arch
++		 * relies on the cpu teardown to achieve reboot, it needs to
++		 * re-enable CPU hotplug there.
+ 		 */
+-		cpu_hotplug_enable();
++
+ 		pr_notice("Starting new kernel\n");
+ 		machine_shutdown();
+ 	}
+-- 
+2.31.1
 
 
