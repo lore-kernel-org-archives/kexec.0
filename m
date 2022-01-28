@@ -1,37 +1,26 @@
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Fri, 28 Jan 2022 19:42:22 +0800
-Subject: [PATCH 2/5] docs: kdump: add scp sample to write out the dump file
-In-Reply-To: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
-References: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <1643370145-26831-3-git-send-email-yangtiezhu@loongson.cn>
+Date: Fri, 28 Jan 2022 19:42:20 +0800
+Subject: [PATCH 0/5] Update doc and fix some issues about kdump
+Message-ID: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Except cp and makedumpfile, add scp sample to write out the dump file.
+Tiezhu Yang (5):
+  docs: kdump: update description about sysfs file system support
+  docs: kdump: add scp sample to write out the dump file
+  kcsan: unset panic_on_warn before calling panic()
+  sched: unset panic_on_warn before calling panic()
+  kfence: unset panic_on_warn before calling panic()
 
-Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
----
- Documentation/admin-guide/kdump/kdump.rst | 4 ++++
- 1 file changed, 4 insertions(+)
+ Documentation/admin-guide/kdump/kdump.rst | 10 +++++++---
+ kernel/kcsan/report.c                     | 10 +++++++++-
+ kernel/sched/core.c                       | 11 ++++++++++-
+ mm/kfence/report.c                        | 10 +++++++++-
+ 4 files changed, 35 insertions(+), 6 deletions(-)
 
-diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index d187df2..a748e7e 100644
---- a/Documentation/admin-guide/kdump/kdump.rst
-+++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -533,6 +533,10 @@ the following command::
- 
-    cp /proc/vmcore <dump-file>
- 
-+or use scp to write out the dump file between hosts on a network, e.g::
-+
-+   scp /proc/vmcore remote_username at remote_ip:<dump-file>
-+
- You can also use makedumpfile utility to write out the dump file
- with specified options to filter out unwanted contents, e.g::
- 
 -- 
 2.1.0
 
