@@ -1,9 +1,9 @@
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Fri, 28 Jan 2022 19:42:25 +0800
-Subject: [PATCH 5/5] kfence: unset panic_on_warn before calling panic()
+Date: Fri, 28 Jan 2022 19:42:24 +0800
+Subject: [PATCH 4/5] sched: unset panic_on_warn before calling panic()
 In-Reply-To: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <1643370145-26831-6-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <1643370145-26831-5-git-send-email-yangtiezhu@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,18 +15,19 @@ before calling panic() to avoid recursive panics.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- mm/kfence/report.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ kernel/sched/core.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/mm/kfence/report.c b/mm/kfence/report.c
-index f93a7b2..9d61a23 100644
---- a/mm/kfence/report.c
-+++ b/mm/kfence/report.c
-@@ -267,8 +267,16 @@ void kfence_report_error(unsigned long address, bool is_write, struct pt_regs *r
- 
- 	lockdep_on();
- 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 848eaa0..f5b0886 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -5524,8 +5524,17 @@ static noinline void __schedule_bug(struct task_struct *prev)
+ 		pr_err("Preemption disabled at:");
+ 		print_ip_sym(KERN_ERR, preempt_disable_ip);
+ 	}
 -	if (panic_on_warn)
++
 +	if (panic_on_warn) {
 +		/*
 +		 * This thread may hit another WARN() in the panic path.
@@ -35,11 +36,11 @@ index f93a7b2..9d61a23 100644
 +		 * panic_mutex in panic().
 +		 */
 +		panic_on_warn = 0;
- 		panic("panic_on_warn set ...\n");
+ 		panic("scheduling while atomic\n");
 +	}
  
- 	/* We encountered a memory safety error, taint the kernel! */
- 	add_taint(TAINT_BAD_PAGE, LOCKDEP_STILL_OK);
+ 	dump_stack();
+ 	add_taint(TAINT_WARN, LOCKDEP_STILL_OK);
 -- 
 2.1.0
 
