@@ -1,132 +1,125 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 28 Jan 2022 17:03:11 +0800
-Subject: [PATCH V3] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <MWHPR21MB15933573F5C81C5250BF6A1CD75E9@MWHPR21MB1593.namprd21.prod.outlook.com>
-References: <20220114183046.428796-1-gpiccoli@igalia.com>
- <20220119071318.GA4977@MiWiFi-R3L-srv> <YegytkfED+QI56Y8@alley>
- <20220120085115.GB18398@MiWiFi-R3L-srv>
- <63621138-2a41-26c2-524e-d889068f157a@igalia.com>
- <20220121023119.GB4579@MiWiFi-R3L-srv>
- <MWHPR21MB1593A32A3433F5F262796FCFD75B9@MWHPR21MB1593.namprd21.prod.outlook.com>
- <20220122043351.GA2596@MiWiFi-R3L-srv>
- <MWHPR21MB15933573F5C81C5250BF6A1CD75E9@MWHPR21MB1593.namprd21.prod.outlook.com>
-Message-ID: <20220128090311.GA27201@MiWiFi-R3L-srv>
+From: Petr =?unknown-8bit?b?VGVzYcWZw61r?= <ptesarik@suse.cz>
+Date: Fri, 28 Jan 2022 11:31:49 +0100
+Subject: [RFC PATCH] kdump: Add support for crashkernel=auto
+In-Reply-To: <f28c65f0-9bbb-6bf8-a223-0e18b861c805@loongson.cn>
+References: <1643275911-19489-1-git-send-email-yangtiezhu@loongson.cn>
+ <d513dea3-7300-9684-73af-0b51f5f0e572@suse.cz>
+ <f28c65f0-9bbb-6bf8-a223-0e18b861c805@loongson.cn>
+Message-ID: <ba065272-78bd-65d0-1e76-08455519b6db@suse.cz>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/24/22 at 04:57pm, Michael Kelley (LINUX) wrote:
-> From: Baoquan He <bhe@redhat.com> Sent: Friday, January 21, 2022 8:34 PM
-> > 
-> > On 01/21/22 at 03:00pm, Michael Kelley (LINUX) wrote:
-> > > From: Baoquan He <bhe@redhat.com> Sent: Thursday, January 20, 2022 6:31 PM
-> > > >
-> > > > On 01/20/22 at 06:36pm, Guilherme G. Piccoli wrote:
-> > > > > Hi Baoquan, some comments inline below:
-> > > > >
-> > > > > On 20/01/2022 05:51, Baoquan He wrote:
-> 
-> [snip]
-> 
-> > > > > Do you think it should be necessary?
-> > > > > How about if we allow users to just "panic_print" with or without the
-> > > > > "crash_kexec_post_notifiers", then we pursue Petr suggestion of
-> > > > > refactoring the panic notifiers? So, after this future refactor, we
-> > > > > might have a much clear code.
-> > > >
-> > > > I haven't read Petr's reply in another panic notifier filter thread. For
-> > > > panic notifier, it's only enforced to use on HyperV platform, excepto of
-> > > > that, users need to explicitly add "crash_kexec_post_notifiers=1" to enable
-> > > > it. And we got bug report on the HyperV issue. In our internal discussion,
-> > > > we strongly suggest HyperV dev to change the default enablement, instead
-> > > > leave it to user to decide.
-> > > >
-> > >
-> > > Regarding Hyper-V:   Invoking the Hyper-V notifier prior to running the
-> > > kdump kernel is necessary for correctness.  During initial boot of the
-> > > main kernel, the Hyper-V and VMbus code in Linux sets up several guest
-> > > physical memory pages that are shared with Hyper-V, and that Hyper-V
-> > > may write to.   A VMbus connection is also established. Before kexec'ing
-> > > into the kdump kernel, the sharing of these pages must be rescinded
-> > > and the VMbus connection must be terminated.   If this isn't done, the
-> > > kdump kernel will see strange memory overwrites if these shared guest
-> > > physical memory pages get used for something else.
-> > >
-> > > I hope we've found and fixed all the problems where the Hyper-V
-> > > notifier could get hung.  Unfortunately, the Hyper-V interfaces were
-> > > designed long ago without the Linux kexec scenario in mind, and they
-> > > don't provide a simple way to reset everything except by doing a
-> > > reboot that goes back through the virtual BIOS/UEFI.  So the Hyper-V
-> > > notifier code is more complicated than would be desirable, and in
-> > > particular, terminating the VMbus connection is tricky.
-> > >
-> > > This has been an evolving area of understanding.  It's only been the last
-> > > couple of years that we've fully understood the implications of these
-> > > shared memory pages on the kexec/kdump scenario and what it takes
-> > > to reset everything so the kexec'ed kernel will work.
-> > 
-> > Glad to know these background details, thx, Michael. While from the
-> > commit which introduced it and the code comment above code, I thought
-> > Hyper-V wants to collect data before crash dump. If this is the true,
-> > it might be helpful to add these in commit log or add as code comment,
-> > and also help to defend you when people question it.
-> > 
-> > int __init hv_common_init(void)
-> > {
-> >         int i;
-> > 
-> >         /*
-> >          * Hyper-V expects to get crash register data or kmsg when
-> >          * crash enlightment is available and system crashes. Set
-> >          * crash_kexec_post_notifiers to be true to make sure that
-> >          * calling crash enlightment interface before running kdump
-> >          * kernel.
-> >          */
-> >         if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE)
-> >                 crash_kexec_post_notifiers = true;
-> > 
-> > 	......
-> > }
-> 
-> In the Azure cloud, collecting data before crash dumps is a motivation
-> as well for setting crash_kexec_post_notifiers to true.   That way as
-> cloud operator we can see broad failure trends, and in specific cases
-> customers often expect the cloud operator to be able to provide info
-> about a problem even if they have taken a kdump.  Where did you
-> envision adding a comment in the code to help clarify these intentions?
-> 
-> I looked at the code again, and should revise my previous comments
-> somewhat.   The Hyper-V resets that I described indeed must be done
-> prior to kexec'ing the kdump kernel.   Most such resets are actually
-> done via __crash_kexec() -> machine_crash_shutdown(), not via the
-> panic notifier. However, the Hyper-V panic notifier must terminate the
-> VMbus connection, because that must be done even if kdump is not
-> being invoked.  See commit 74347a99e73.
-> 
-> Most of the hangs seen in getting into the kdump kernel on Hyper-V/Azure 
-> were probably due to the machine_crash_shutdown() path, and not due
-> to running the panic notifiers prior to kexec'ing the kdump kernel.  The
-> exception is terminating the VMbus connection, which had problems that
-> are hopefully now fixed because of adding a timeout.
-Thanks for detailed information.
+Hi Tiezhu Yang,
 
-So I can understand the status as:
-===
-Hyper-V needed panic_notifier to execute before __crash_kexec() in
-the past, because VMbus connection need be terminated, that's done in
-commit 74347a99e73 as a workaround when panic happened, whether kdump is
-enabled or not. But now, the VMbus connection termination is not needed
-anymore since it's fixed by adding a timeout on Hyper-V.
+On Jan 28, 2022 at 02:20 Tiezhu Yang wrote:
+>[...]
+> Hi Petr,
+> 
+> Thank you for your reply.
+> 
+> This is a RFC patch, the initial aim of this patch is to discuss what is 
+> the proper way to support crashkernel=auto.
 
-Then, in the current kernel, panic_notifier is taken to execute on Hyper-V
-by default just because of one reason, Hyper-V wants to collect data
-before crash dump. The data collecting is motivate by trying to see
-broad failure trends as cloud operator on Azure cloud, and in specific
-cases providing info to customer even if they have taken vmcore.
-===
+Well, the point I'm trying to make is that crashkernel=auto cannot be 
+implemented. Your code would have to know what happens in the future, 
+and AFAIK time travel has not been discovered yet. ;-)
 
-Do I get it right?
+A better approach is to make a very large allocation initially, e.g. 
+half of available RAM. The remaining RAM should still be big enough to 
+start booting the system. Later, when a kdump user-space service knows 
+what it wants to load, it can shrink the reservation by writing a lower 
+value into /sys/kernel/kexec_crash_size.
 
+The alternative approach does not need any changes to the kernel, except 
+maybe adding something like "crashkernel=max".
+
+Just my two cents,
+Petr T
+
+> A moment ago, I find the following patch, it is more flexible, but it is 
+> not merged into the upstream kernel now.
+> 
+> kernel/crash_core: Add crashkernel=auto for vmcore creation
+> 
+> https://lore.kernel.org/lkml/20210223174153.72802-1-saeed.mirzamohammadi at oracle.com/ 
+> 
+> 
+>>
+>>> [...]
+>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>>> index 256cf6d..32c51e2 100644
+>>> --- a/kernel/crash_core.c
+>>> +++ b/kernel/crash_core.c
+>>> @@ -252,6 +252,26 @@ static int __init __parse_crashkernel(char 
+>>> *cmdline,
+>>> ????? if (suffix)
+>>> ????????? return parse_crashkernel_suffix(ck_cmdline, crash_size,
+>>> ????????????????? suffix);
+>>> +
+>>> +??? if (strncmp(ck_cmdline, "auto", 4) == 0) {
+>>> +#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
+>>> +??????? ck_cmdline = "1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M";
+>>> +#elif defined(CONFIG_ARM64)
+>>> +??????? ck_cmdline = "2G-:448M";
+>>> +#elif defined(CONFIG_PPC64)
+>>> +??????? char *fadump_cmdline;
+>>> +
+>>> +??????? fadump_cmdline = get_last_crashkernel(cmdline, "fadump=", 
+>>> NULL);
+>>> +??????? fadump_cmdline = fadump_cmdline ?
+>>> +??????????????? fadump_cmdline + strlen("fadump=") : NULL;
+>>> +??????? if (!fadump_cmdline || (strncmp(fadump_cmdline, "off", 3) == 
+>>> 0))
+>>> +??????????? ck_cmdline =
+>>> "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
+>>> +??????? else
+>>> +??????????? ck_cmdline =
+>>> "4G-16G:768M,16G-64G:1G,64G-128G:2G,128G-1T:4G,1T-2T:6G,2T-4T:12G,4T-8T:20G,8T-16T:36G,16T-32T:64G,32T-64T:128G,64T-:180G"; 
+>>>
+>>>
+>>> +#endif
+>>> +??????? pr_info("Using crashkernel=auto, the size chosen is a best
+>>> effort estimation.\n");
+>>> +??? }
+>>> +
+>>
+>> How did you even arrive at the above numbers?
+> 
+> Memory requirements for kdump:
+> 
+> https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/supported-kdump-configurations-and-targets_managing-monitoring-and-updating-the-kernel#memory-requirements-for-kdump_supported-kdump-configurations-and-targets 
+> 
+> 
+> I've done some research on
+>> this topic recently (ie. during the last 7 years or so). My x86_64
+>> system with 8G RAM running openSUSE Leap 15.3 seems needs 188M for
+>> saving to the local disk, and 203M to save over the network (using
+>> SFTP). My PPC64 LPAR with 16G RAM running latest Beta of SLES 15 SP4
+>> needs 587M, i.e. with the above numbers it may run out of memory while
+>> saving the dump.
+>>
+>> Since this is not the first time, I'm trying to explain things, I've
+>> written a blog post now:
+>>
+>> https://sigillatum.tesarici.cz/2022-01-27-whats-wrong-with-crashkernel-auto.html 
+>>
+>>
+> 
+> Thank you, this is useful.
+> 
+> Thanks,
+> Tiezhu
+> 
+>>
+>> HTH
+>> Petr Tesarik
+> 
+> 
+> _______________________________________________
+> kexec mailing list
+> kexec at lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
