@@ -1,45 +1,43 @@
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Fri, 28 Jan 2022 19:42:23 +0800
-Subject: [PATCH 3/5] kcsan: unset panic_on_warn before calling panic()
+Date: Fri, 28 Jan 2022 19:42:21 +0800
+Subject: [PATCH 1/5] docs: kdump: update description about sysfs file system
+ support
 In-Reply-To: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1643370145-26831-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <1643370145-26831-4-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <1643370145-26831-2-git-send-email-yangtiezhu@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-As done in the full WARN() handler, panic_on_warn needs to be cleared
-before calling panic() to avoid recursive panics.
+After commit 6a108a14fa35 ("kconfig: rename CONFIG_EMBEDDED to
+CONFIG_EXPERT"), "Configure standard kernel features (for small
+systems)" is not exist, we should use "Configure standard kernel
+features (expert users)" now.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 ---
- kernel/kcsan/report.c | 10 +++++++++-
- 1 file changed, 9 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/kdump/kdump.rst | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/kernel/kcsan/report.c b/kernel/kcsan/report.c
-index 6779440..752ab33 100644
---- a/kernel/kcsan/report.c
-+++ b/kernel/kcsan/report.c
-@@ -492,8 +492,16 @@ static void print_report(enum kcsan_value_change value_change,
- 	dump_stack_print_info(KERN_DEFAULT);
- 	pr_err("==================================================================\n");
+diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
+index cb30ca3d..d187df2 100644
+--- a/Documentation/admin-guide/kdump/kdump.rst
++++ b/Documentation/admin-guide/kdump/kdump.rst
+@@ -146,9 +146,9 @@ System kernel config options
+ 	CONFIG_SYSFS=y
  
--	if (panic_on_warn)
-+	if (panic_on_warn) {
-+		/*
-+		 * This thread may hit another WARN() in the panic path.
-+		 * Resetting this prevents additional WARN() from panicking the
-+		 * system on this thread.  Other threads are blocked by the
-+		 * panic_mutex in panic().
-+		 */
-+		panic_on_warn = 0;
- 		panic("panic_on_warn set ...\n");
-+	}
- }
+    Note that "sysfs file system support" might not appear in the "Pseudo
+-   filesystems" menu if "Configure standard kernel features (for small
+-   systems)" is not enabled in "General Setup." In this case, check the
+-   .config file itself to ensure that sysfs is turned on, as follows::
++   filesystems" menu if "Configure standard kernel features (expert users)"
++   is not enabled in "General Setup." In this case, check the .config file
++   itself to ensure that sysfs is turned on, as follows::
  
- static void release_report(unsigned long *flags, struct other_info *other_info)
+ 	grep 'CONFIG_SYSFS' .config
+ 
 -- 
 2.1.0
 
