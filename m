@@ -1,125 +1,164 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Sun, 30 Jan 2022 16:50:38 +0800
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <YfFKiscTVckEy2E8@alley>
-References: <20220108153451.195121-1-gpiccoli@igalia.com>
- <Yel8WQiBn/HNQN83@alley>
- <ccd9332e-2917-3020-3590-447fa660ff56@igalia.com>
- <20220122105514.GA18258@MiWiFi-R3L-srv>
- <20220123220711.44f1484c9b510eea8cda9c47@kernel.org>
- <20220124135902.GB8305@MiWiFi-R3L-srv>
- <ff3bc2cf-80bf-3bb0-0dcd-7f9cacdae45a@igalia.com>
- <20220126031039.GA26064@MiWiFi-R3L-srv> <YfFKiscTVckEy2E8@alley>
-Message-ID: <20220130085038.GC29425@MiWiFi-R3L-srv>
+From: Philipp Rudo <prudo@redhat.com>
+Date: Mon, 31 Jan 2022 11:33:51 +0100
+Subject: [RFC PATCH] kdump: Add support for crashkernel=auto
+In-Reply-To: <ba065272-78bd-65d0-1e76-08455519b6db@suse.cz>
+References: <1643275911-19489-1-git-send-email-yangtiezhu@loongson.cn>
+ <d513dea3-7300-9684-73af-0b51f5f0e572@suse.cz>
+ <f28c65f0-9bbb-6bf8-a223-0e18b861c805@loongson.cn>
+ <ba065272-78bd-65d0-1e76-08455519b6db@suse.cz>
+Message-ID: <20220131113351.49a47caf@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/26/22 at 02:20pm, Petr Mladek wrote:
-> On Wed 2022-01-26 11:10:39, Baoquan He wrote:
-> > On 01/24/22 at 11:48am, Guilherme G. Piccoli wrote:
-> > > On 24/01/2022 10:59, Baoquan He wrote:
-> > > > [...]
-> > > > About pre_dump, if the dump is crash dump, hope those pre_dump notifiers
-> > > > will be executed under conditional check, e.g only if 'crash_kexec_post_notifiers'
-> > > > is specified in kernel cmdline. 
-> > > 
-> > > Hi Baoquan, based on Petr's suggestion, I think pre_dump would be
-> > > responsible for really *non-intrusive/non-risky* tasks and should be
-> > > always executed in the panic path (before kdump), regardless of
-> > > "crash_kexec_post_notifiers".
-> > > 
-> > > The idea is that the majority of the notifiers would be executed in the
-> > > post_dump portion, and for that, we have the
-> > > "crash_kexec_post_notifiers" conditional. I also suggest we have
-> > > blacklist options (based on function names) for both notifiers, in order
-> > > to make kdump issues debug easier.
-> > > 
-> > > Do you agree with that? Feel free to comment with suggestions!
-> > > Cheers,
+Hi,
+
+On Fri, 28 Jan 2022 11:31:49 +0100
+Petr Tesa??k <ptesarik@suse.cz> wrote:
+
+> Hi Tiezhu Yang,
+> 
+> On Jan 28, 2022 at 02:20 Tiezhu Yang wrote:
+> >[...]
+> > Hi Petr,
 > > 
-> > I would say "please NO" cautiously.
+> > Thank you for your reply.
 > > 
-> > As Petr said, kdump mostly works only if people configure it correctly.
-> > That's because we try best to switch to kdump kernel from the fragile
-> > panicked kernel immediately. When we try to add anthing before the switching,
-> > please consider carefully and ask if that adding is mandatory, otherwise
-> > switching into kdump kernel may fail. If the answer is yes, the adding
-> > is needed and welcomed. Othewise, any unnecessary action, including any
-> > "non-intrusive/non-risky" tasks, would be unwelcomed.
+> > This is a RFC patch, the initial aim of this patch is to discuss what is 
+> > the proper way to support crashkernel=auto.  
 > 
-> I still do not have the complete picture. But it seems that some
-> actions make always sense even for kdump:
+> Well, the point I'm trying to make is that crashkernel=auto cannot be 
+> implemented. Your code would have to know what happens in the future, 
+> and AFAIK time travel has not been discovered yet. ;-)
+>
+> A better approach is to make a very large allocation initially, e.g. 
+> half of available RAM. The remaining RAM should still be big enough to 
+> start booting the system. Later, when a kdump user-space service knows 
+> what it wants to load, it can shrink the reservation by writing a lower 
+> value into /sys/kernel/kexec_crash_size.
+
+Even this approach doesn't work in every situation. For example it
+requires that the system has at least twice the RAM it requires to
+safely boot. That's not always given for e.g minimalistic VMs or
+embedded systems.
+Furthermore the memory requirement can also change during runtime due
+to, e.g. workload spikes, device hot plug, moving the dump target from
+an un-encrypted to an encrypted disk, etc.. So even when your user-space
+program can exactly calculate the memory requirement at the moment
+it loads kdump it might be too little at the moment the system panics.
+In order for it to work the user-space would constantly need to monitor
+how much memory is needed and adjust the requirement. But that would
+also require to increase the reservation during runtime which would be
+extremely expensive (if possible at all).
+
+All in all I support Petr that time travel is the only proper solution
+for implementing crashkernel=auto. But once we have time travel I
+would prefer to use the gained knowledge to fix the bug that triggered
+the panic rather than calculating the memory requirement for kdump.
+ 
+> The alternative approach does not need any changes to the kernel, except 
+> maybe adding something like "crashkernel=max".
+
+A slightly different approach is for the user-space tool to simply set
+the crashkernel= parameter on the kernel commandline for the next boot.
+This also works for memory restrained systems. Needs a reboot though...
+
+> > A moment ago, I find the following patch, it is more flexible, but it is 
+> > not merged into the upstream kernel now.
+> > 
+> > kernel/crash_core: Add crashkernel=auto for vmcore creation
+> > 
+> > https://lore.kernel.org/lkml/20210223174153.72802-1-saeed.mirzamohammadi at oracle.com/ 
+
+The patch was ultimately rejected by Linus
+
+https://lore.kernel.org/linux-mm/20210507010432.IN24PudKT%25akpm at linux-foundation.org/
+
+Thanks
+Philipp
+
+> >   
+> >>  
+> >>> [...]
+> >>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> >>> index 256cf6d..32c51e2 100644
+> >>> --- a/kernel/crash_core.c
+> >>> +++ b/kernel/crash_core.c
+> >>> @@ -252,6 +252,26 @@ static int __init __parse_crashkernel(char 
+> >>> *cmdline,
+> >>> ????? if (suffix)
+> >>> ????????? return parse_crashkernel_suffix(ck_cmdline, crash_size,
+> >>> ????????????????? suffix);
+> >>> +
+> >>> +??? if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> >>> +#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
+> >>> +??????? ck_cmdline = "1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M";
+> >>> +#elif defined(CONFIG_ARM64)
+> >>> +??????? ck_cmdline = "2G-:448M";
+> >>> +#elif defined(CONFIG_PPC64)
+> >>> +??????? char *fadump_cmdline;
+> >>> +
+> >>> +??????? fadump_cmdline = get_last_crashkernel(cmdline, "fadump=", 
+> >>> NULL);
+> >>> +??????? fadump_cmdline = fadump_cmdline ?
+> >>> +??????????????? fadump_cmdline + strlen("fadump=") : NULL;
+> >>> +??????? if (!fadump_cmdline || (strncmp(fadump_cmdline, "off", 3) == 
+> >>> 0))
+> >>> +??????????? ck_cmdline =
+> >>> "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
+> >>> +??????? else
+> >>> +??????????? ck_cmdline =
+> >>> "4G-16G:768M,16G-64G:1G,64G-128G:2G,128G-1T:4G,1T-2T:6G,2T-4T:12G,4T-8T:20G,8T-16T:36G,16T-32T:64G,32T-64T:128G,64T-:180G"; 
+> >>>
+> >>>
+> >>> +#endif
+> >>> +??????? pr_info("Using crashkernel=auto, the size chosen is a best
+> >>> effort estimation.\n");
+> >>> +??? }
+> >>> +  
+> >>
+> >> How did you even arrive at the above numbers?  
+> > 
+> > Memory requirements for kdump:
+> > 
+> > https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/supported-kdump-configurations-and-targets_managing-monitoring-and-updating-the-kernel#memory-requirements-for-kdump_supported-kdump-configurations-and-targets 
+> > 
+> > 
+> > I've done some research on  
+> >> this topic recently (ie. during the last 7 years or so). My x86_64
+> >> system with 8G RAM running openSUSE Leap 15.3 seems needs 188M for
+> >> saving to the local disk, and 203M to save over the network (using
+> >> SFTP). My PPC64 LPAR with 16G RAM running latest Beta of SLES 15 SP4
+> >> needs 587M, i.e. with the above numbers it may run out of memory while
+> >> saving the dump.
+> >>
+> >> Since this is not the first time, I'm trying to explain things, I've
+> >> written a blog post now:
+> >>
+> >> https://sigillatum.tesarici.cz/2022-01-27-whats-wrong-with-crashkernel-auto.html 
+> >>
+> >>  
+> > 
+> > Thank you, this is useful.
+> > 
+> > Thanks,
+> > Tiezhu
+> >   
+> >>
+> >> HTH
+> >> Petr Tesarik  
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec at lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec  
 > 
->     + Super safe operations that might disable churn from broken
->       system. For examle, disabling watchdogs by setting a single
->       variable, see rcu_panic() notifier
-> 
->     + Actions needed that allow to kexec the crash kernel a safe
->       way under some hypervisor, see
->       https://lore.kernel.org/r/MWHPR21MB15933573F5C81C5250BF6A1CD75E9 at MWHPR21MB1593.namprd21.prod.outlook.com
-
-Yes, I agree with this after going through threads of discussion again.
-There is much space we can do something for panic_notifier, and it might
-be a good time to do now with these discussion and some clarification.
-
-> 
-> 
-> > Surely, we don't oppose the "non-intrusive/non-risky" or completely
-> > "intrusive/risky" action adding before kdump kernel switching, with a
-> > conditional limitation. When we handle customers' kdump support, we
-> > explicitly declare we only support normal and default kdump operation.
-> > If any action which is done before switching into kdump kernel is specified,
-> > e.g panic_notifier, panic_print, they need take care of their own kdump
-> > failure.
-> 
-> All this actually started because of kmsg_dump. It might make sense to
-> allow both kmsg_dump and kdump together. The messages stored by
-> kmsg_dump might be better than nothing when kdump fails.
-
-I think this can be done later, after panics notifiers are combed and
-tidied up.
-
-> 
-> It actually seems to be the main motivation to introduce
-> "crash_kexec_post_notifier" parameter, see the commit
-> f06e5153f4ae2e2f3b03 ("kernel/panic.c: add "crash_kexec_post_notifiers"
-> option for kdump after panic_notifers").
-
-From discussion with Hitachi and FJ engineers, they use
-crash_kexec_post_notifiers when 1st kernel panicked and kdump kernel is
-not so stable to function. In that case, the captured information 
-with best effort after panic in 1st kernel can help analyze what
-happened in 1st kernel, and also might give hint on why kdump kernel
-is unstbale. But they will not add crash_kexec_post_notifiers in kernel
-cmdline by default. The unstable kdump kernel rarely happened, need be
-debugged and investigated. 
-
-> 
-> And this patch introduces panic_notifier_filter that tries to select
-> notifiers that are helpful and harmful. IMHO, it is almost unusable.
-> It seems that even kernel developers do not understand what exactly
-> some notifiers do and why they are needed. Usually only the author
-> and people familiar with the subsystem have some idea. It makes
-> it pretty hard for anyone to create a reasonable filter.
-
-Then people can select the notifiers they know to execute. E.g for
-Hyper-V, they can run the notifiers related. And as HATAYAMA mentioned,
-they have the same expection. This kind of filter is not for people to
-blindly pick and run, but for the professional.
-
-I think the chaos is from not being monitored entirely. People can
-freely register one when they need. The priority, impaction to the
-entirety is not considered by subsystem developer.
-
-> 
-> I am pretty sure that we could do better. I propose to add more
-> notifier lists that will be called at various places with reasonable
-> rules and restrictions. Then the susbsystem maintainers could decide
-> where exactly a given action must be done.
-
-Agree that we can do something to improve.
+> _______________________________________________
+> kexec mailing list
+> kexec at lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
 
