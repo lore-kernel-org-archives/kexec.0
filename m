@@ -1,43 +1,37 @@
 From: Tiezhu Yang <yangtiezhu@loongson.cn>
-Date: Tue,  8 Feb 2022 20:51:02 +0800
-Subject: [PATCH v2 1/5] docs: kdump: update description about sysfs file
- system support
+Date: Tue,  8 Feb 2022 20:51:03 +0800
+Subject: [PATCH v2 2/5] docs: kdump: add scp example to write out the dump file
 In-Reply-To: <1644324666-15947-1-git-send-email-yangtiezhu@loongson.cn>
 References: <1644324666-15947-1-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <1644324666-15947-2-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <1644324666-15947-3-git-send-email-yangtiezhu@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-After commit 6a108a14fa35 ("kconfig: rename CONFIG_EMBEDDED to
-CONFIG_EXPERT"), "Configure standard kernel features (for small
-systems)" is not exist, we should use "Configure standard kernel
-features (expert users)" now.
+Except cp and makedumpfile, add scp example to write out the dump file.
 
 Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 Acked-by: Baoquan He <bhe@redhat.com>
 ---
- Documentation/admin-guide/kdump/kdump.rst | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ Documentation/admin-guide/kdump/kdump.rst | 4 ++++
+ 1 file changed, 4 insertions(+)
 
 diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
-index cb30ca3d..d187df2 100644
+index d187df2..a748e7e 100644
 --- a/Documentation/admin-guide/kdump/kdump.rst
 +++ b/Documentation/admin-guide/kdump/kdump.rst
-@@ -146,9 +146,9 @@ System kernel config options
- 	CONFIG_SYSFS=y
+@@ -533,6 +533,10 @@ the following command::
  
-    Note that "sysfs file system support" might not appear in the "Pseudo
--   filesystems" menu if "Configure standard kernel features (for small
--   systems)" is not enabled in "General Setup." In this case, check the
--   .config file itself to ensure that sysfs is turned on, as follows::
-+   filesystems" menu if "Configure standard kernel features (expert users)"
-+   is not enabled in "General Setup." In this case, check the .config file
-+   itself to ensure that sysfs is turned on, as follows::
+    cp /proc/vmcore <dump-file>
  
- 	grep 'CONFIG_SYSFS' .config
++or use scp to write out the dump file between hosts on a network, e.g::
++
++   scp /proc/vmcore remote_username at remote_ip:<dump-file>
++
+ You can also use makedumpfile utility to write out the dump file
+ with specified options to filter out unwanted contents, e.g::
  
 -- 
 2.1.0
