@@ -1,84 +1,84 @@
-From: Sean Christopherson <seanjc@google.com>
-Date: Mon, 7 Feb 2022 22:11:53 +0000
-Subject: [PATCH v3 05/10] x86/sev: Setup code to park APs in the AP Jump
- Table
-In-Reply-To: <20220127101044.13803-6-joro@8bytes.org>
-References: <20220127101044.13803-1-joro@8bytes.org>
- <20220127101044.13803-6-joro@8bytes.org>
-Message-ID: <YgGZKdbr3RrzU+xk@google.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Tue, 8 Feb 2022 09:43:07 +0800
+Subject: [PATCH v20 1/5] arm64: Use insert_resource() to simplify code
+In-Reply-To: <20220124084708.683-2-thunder.leizhen@huawei.com>
+References: <20220124084708.683-1-thunder.leizhen@huawei.com>
+ <20220124084708.683-2-thunder.leizhen@huawei.com>
+Message-ID: <YgHKq7o2Efb1JK7H@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, Jan 27, 2022, Joerg Roedel wrote:
-> +static int __init sev_setup_ap_jump_table(void)
+On 01/24/22 at 04:47pm, Zhen Lei wrote:
+> insert_resource() traverses the subtree layer by layer from the root node
+> until a proper location is found. Compared with request_resource(), the
+> parent node does not need to be determined in advance.
+> 
+> In addition, move the insertion of node 'crashk_res' into function
+> reserve_crashkernel() to make the associated code close together.
 
-This name is really confusing.  AFAICT, it's specific to SEV-ES, but used only
-"sev" for the namespace because sev_es_setup_ap_jump_table() already exists.
-I assume this variant is purely for parking/offlining vCPUs?  Adding that in the
-name would be helpful.
+This is nice cleanup.
 
-The two flows are also very, very similar, but apparently do slightly different
-things.  Even more odd is that this version applies different sanity checks on
-the address than the existing code.  It should be fairly simple to extract a
-common helper.  That would likely help with naming problem too.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-> +{
-> +	size_t blob_size = rm_ap_jump_table_blob_end - rm_ap_jump_table_blob;
-> +	u16 startup_cs, startup_ip;
-> +	u16 __iomem *jump_table;
-> +	phys_addr_t pa;
-> +
-> +	if (!cc_platform_has(CC_ATTR_GUEST_STATE_ENCRYPT))
-> +		return 0;
-> +
-> +	if (ghcb_info.vm_proto < 2) {
-> +		pr_warn("AP jump table parking requires at least GHCB protocol version 2\n");
-> +		return 0;
-> +	}
-> +
-> +	pa = get_jump_table_addr();
-> +
-> +	/* On UP guests there is no jump table so this is not a failure */
-> +	if (!pa)
-> +		return 0;
-> +
-> +	/* Check overflow and size for untrusted jump table address */
-> +	if (pa + PAGE_SIZE < pa || pa + PAGE_SIZE > SZ_4G) {
-> +		pr_info("AP jump table is above 4GB or address overflow - not enabling AP jump table parking\n");
-> +		return 0;
-> +	}
-> +
-> +	jump_table = ioremap_encrypted(pa, PAGE_SIZE);
-> +	if (WARN_ON(!jump_table))
-> +		return -EINVAL;
-> +
-> +	/*
-> +	 * Save reset vector to restore it later because the blob will
-> +	 * overwrite it.
-> +	 */
-> +	startup_ip = jump_table[0];
-> +	startup_cs = jump_table[1];
-> +
-> +	/* Install AP jump table Blob with real mode AP parking code */
-> +	memcpy_toio(jump_table, rm_ap_jump_table_blob, blob_size);
-> +
-> +	/* Setup AP jump table GDT */
-> +	sev_es_setup_ap_jump_table_data(jump_table, (u32)pa);
-> +
-> +	writew(startup_ip, &jump_table[0]);
-> +	writew(startup_cs, &jump_table[1]);
-> +
-> +	iounmap(jump_table);
-> +
-> +	pr_info("AP jump table Blob successfully set up\n");
-> +
-> +	/* Mark AP jump table blob as available */
-> +	sev_ap_jumptable_blob_installed = true;
-> +
-> +	return 0;
-> +}
-> +core_initcall(sev_setup_ap_jump_table);
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  arch/arm64/kernel/setup.c | 17 +++--------------
+>  arch/arm64/mm/init.c      |  1 +
+>  2 files changed, 4 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+> index f70573928f1bff0..a81efcc359e4e78 100644
+> --- a/arch/arm64/kernel/setup.c
+> +++ b/arch/arm64/kernel/setup.c
+> @@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
+>  	kernel_code.end     = __pa_symbol(__init_begin - 1);
+>  	kernel_data.start   = __pa_symbol(_sdata);
+>  	kernel_data.end     = __pa_symbol(_end - 1);
+> +	insert_resource(&iomem_resource, &kernel_code);
+> +	insert_resource(&iomem_resource, &kernel_data);
+>  
+>  	num_standard_resources = memblock.memory.cnt;
+>  	res_size = num_standard_resources * sizeof(*standard_resources);
+> @@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
+>  			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
+>  		}
+>  
+> -		request_resource(&iomem_resource, res);
+> -
+> -		if (kernel_code.start >= res->start &&
+> -		    kernel_code.end <= res->end)
+> -			request_resource(res, &kernel_code);
+> -		if (kernel_data.start >= res->start &&
+> -		    kernel_data.end <= res->end)
+> -			request_resource(res, &kernel_data);
+> -#ifdef CONFIG_KEXEC_CORE
+> -		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+> -		if (crashk_res.end && crashk_res.start >= res->start &&
+> -		    crashk_res.end <= res->end)
+> -			request_resource(res, &crashk_res);
+> -#endif
+> +		insert_resource(&iomem_resource, res);
+>  	}
+>  }
+>  
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index db63cc885771a52..90f276d46b93bc6 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -109,6 +109,7 @@ static void __init reserve_crashkernel(void)
+>  	kmemleak_ignore_phys(crash_base);
+>  	crashk_res.start = crash_base;
+>  	crashk_res.end = crash_base + crash_size - 1;
+> +	insert_resource(&iomem_resource, &crashk_res);
+>  }
+>  #else
+>  static void __init reserve_crashkernel(void)
+> -- 
+> 2.25.1
+> 
+
 
