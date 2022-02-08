@@ -1,11 +1,11 @@
 From: Marco Elver <elver@google.com>
-Date: Tue, 8 Feb 2022 14:39:05 +0100
-Subject: [PATCH v2 4/5] ubsan: no need to unset panic_on_warn in
- ubsan_epilogue()
-In-Reply-To: <1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn>
+Date: Tue, 8 Feb 2022 14:39:34 +0100
+Subject: [PATCH v2 5/5] kasan: no need to unset panic_on_warn in
+ end_report()
+In-Reply-To: <1644324666-15947-6-git-send-email-yangtiezhu@loongson.cn>
 References: <1644324666-15947-1-git-send-email-yangtiezhu@loongson.cn>
- <1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <CANpmjNOFL1vTZS28z_DWSz+X64_ghXBiGj3Fhee=wpRexZy7kA@mail.gmail.com>
+ <1644324666-15947-6-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <CANpmjNPxLgosrY=CH9GpwHmOKFbCuPQfLBFS+QBZGKiQC-od9w@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,7 +15,7 @@ To: kexec@lists.infradead.org
 On Tue, 8 Feb 2022 at 13:51, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
 > panic_on_warn is unset inside panic(), so no need to unset it
-> before calling panic() in ubsan_epilogue().
+> before calling panic() in end_report().
 >
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
@@ -23,18 +23,18 @@ Reviewed-by: Marco Elver <elver@google.com>
 
 
 > ---
->  lib/ubsan.c | 10 +---------
+>  mm/kasan/report.c | 10 +---------
 >  1 file changed, 1 insertion(+), 9 deletions(-)
 >
-> diff --git a/lib/ubsan.c b/lib/ubsan.c
-> index bdc380f..36bd75e 100644
-> --- a/lib/ubsan.c
-> +++ b/lib/ubsan.c
-> @@ -154,16 +154,8 @@ static void ubsan_epilogue(void)
->
->         current->in_ubsan--;
->
-> -       if (panic_on_warn) {
+> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
+> index 3ad9624..f141465 100644
+> --- a/mm/kasan/report.c
+> +++ b/mm/kasan/report.c
+> @@ -117,16 +117,8 @@ static void end_report(unsigned long *flags, unsigned long addr)
+>         pr_err("==================================================================\n");
+>         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
+>         spin_unlock_irqrestore(&report_lock, *flags);
+> -       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags)) {
 > -               /*
 > -                * This thread may hit another WARN() in the panic path.
 > -                * Resetting this prevents additional WARN() from panicking the
@@ -42,17 +42,17 @@ Reviewed-by: Marco Elver <elver@google.com>
 > -                * panic_mutex in panic().
 > -                */
 > -               panic_on_warn = 0;
-> +       if (panic_on_warn)
+> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
 >                 panic("panic_on_warn set ...\n");
 > -       }
->  }
->
->  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
+>         if (kasan_arg_fault == KASAN_ARG_FAULT_PANIC)
+>                 panic("kasan.fault=panic set ...\n");
+>         kasan_enable_current();
 > --
 > 2.1.0
 >
 > --
 > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe at googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1644324666-15947-5-git-send-email-yangtiezhu%40loongson.cn.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1644324666-15947-6-git-send-email-yangtiezhu%40loongson.cn.
 
