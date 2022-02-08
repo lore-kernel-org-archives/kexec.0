@@ -1,58 +1,30 @@
-From: Marco Elver <elver@google.com>
-Date: Tue, 8 Feb 2022 14:39:34 +0100
-Subject: [PATCH v2 5/5] kasan: no need to unset panic_on_warn in
- end_report()
-In-Reply-To: <1644324666-15947-6-git-send-email-yangtiezhu@loongson.cn>
-References: <1644324666-15947-1-git-send-email-yangtiezhu@loongson.cn>
- <1644324666-15947-6-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <CANpmjNPxLgosrY=CH9GpwHmOKFbCuPQfLBFS+QBZGKiQC-od9w@mail.gmail.com>
+From: Tobias Powalowski <tobias.powalowski@googlemail.com>
+Date: Tue, 8 Feb 2022 16:36:01 +0100
+Subject: Is it possible to use a stream for initrd=
+Message-ID: <CAHfPjO9MPOP4ZhmLtoyp+YxdreMNCOiy7nApm+uweaSJX5XvpQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue, 8 Feb 2022 at 13:51, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
->
-> panic_on_warn is unset inside panic(), so no need to unset it
-> before calling panic() in end_report().
->
-> Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
+Hi,
+just a quick question, is it possible to use a stream for initrd= parameter?
+I want to save RAM/Space and directly load the ramdisk into memory for reboot.
+initrd=< ... does not work.
+Thanks.
+greetings
+tpowa
 
-Reviewed-by: Marco Elver <elver@google.com>
+-- 
+Tobias Powalowski
+Archlinux Developer & Package Maintainer (tpowa)
+https://www.archlinux.org
+tpowa at archlinux.org
 
-
-> ---
->  mm/kasan/report.c | 10 +---------
->  1 file changed, 1 insertion(+), 9 deletions(-)
->
-> diff --git a/mm/kasan/report.c b/mm/kasan/report.c
-> index 3ad9624..f141465 100644
-> --- a/mm/kasan/report.c
-> +++ b/mm/kasan/report.c
-> @@ -117,16 +117,8 @@ static void end_report(unsigned long *flags, unsigned long addr)
->         pr_err("==================================================================\n");
->         add_taint(TAINT_BAD_PAGE, LOCKDEP_NOW_UNRELIABLE);
->         spin_unlock_irqrestore(&report_lock, *flags);
-> -       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags)) {
-> -               /*
-> -                * This thread may hit another WARN() in the panic path.
-> -                * Resetting this prevents additional WARN() from panicking the
-> -                * system on this thread.  Other threads are blocked by the
-> -                * panic_mutex in panic().
-> -                */
-> -               panic_on_warn = 0;
-> +       if (panic_on_warn && !test_bit(KASAN_BIT_MULTI_SHOT, &kasan_flags))
->                 panic("panic_on_warn set ...\n");
-> -       }
->         if (kasan_arg_fault == KASAN_ARG_FAULT_PANIC)
->                 panic("kasan.fault=panic set ...\n");
->         kasan_enable_current();
-> --
-> 2.1.0
->
-> --
-> You received this message because you are subscribed to the Google Groups "kasan-dev" group.
-> To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe at googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1644324666-15947-6-git-send-email-yangtiezhu%40loongson.cn.
+St. Martin-Apotheke
+Herzog-Georg-Str. 25
+89415 Lauingen
+https://www.st-martin-apo.de
+info@st-martin-apo.de
 
