@@ -1,10 +1,11 @@
 From: Marco Elver <elver@google.com>
-Date: Tue, 8 Feb 2022 14:38:22 +0100
-Subject: [PATCH v2 3/5] panic: unset panic_on_warn inside panic()
-In-Reply-To: <1644324666-15947-4-git-send-email-yangtiezhu@loongson.cn>
+Date: Tue, 8 Feb 2022 14:39:05 +0100
+Subject: [PATCH v2 4/5] ubsan: no need to unset panic_on_warn in
+ ubsan_epilogue()
+In-Reply-To: <1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn>
 References: <1644324666-15947-1-git-send-email-yangtiezhu@loongson.cn>
- <1644324666-15947-4-git-send-email-yangtiezhu@loongson.cn>
-Message-ID: <CANpmjNOySkeK6u-JieNBQ4DmAO3LogdZ6gXv1Noz8jUOi3ThDA@mail.gmail.com>
+ <1644324666-15947-5-git-send-email-yangtiezhu@loongson.cn>
+Message-ID: <CANpmjNOFL1vTZS28z_DWSz+X64_ghXBiGj3Fhee=wpRexZy7kA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,16 +14,8 @@ To: kexec@lists.infradead.org
 
 On Tue, 8 Feb 2022 at 13:51, Tiezhu Yang <yangtiezhu@loongson.cn> wrote:
 >
-> In the current code, the following three places need to unset
-> panic_on_warn before calling panic() to avoid recursive panics:
->
-> kernel/kcsan/report.c: print_report()
-> kernel/sched/core.c: __schedule_bug()
-> mm/kfence/report.c: kfence_report_error()
->
-> In order to avoid copy-pasting "panic_on_warn = 0" all over the
-> places, it is better to move it inside panic() and then remove
-> it from the other places.
+> panic_on_warn is unset inside panic(), so no need to unset it
+> before calling panic() in ubsan_epilogue().
 >
 > Signed-off-by: Tiezhu Yang <yangtiezhu@loongson.cn>
 
@@ -30,39 +23,16 @@ Reviewed-by: Marco Elver <elver@google.com>
 
 
 > ---
->  kernel/panic.c | 20 +++++++++++---------
->  1 file changed, 11 insertions(+), 9 deletions(-)
+>  lib/ubsan.c | 10 +---------
+>  1 file changed, 1 insertion(+), 9 deletions(-)
 >
-> diff --git a/kernel/panic.c b/kernel/panic.c
-> index 55b50e0..95ba825 100644
-> --- a/kernel/panic.c
-> +++ b/kernel/panic.c
-> @@ -185,6 +185,16 @@ void panic(const char *fmt, ...)
->         int old_cpu, this_cpu;
->         bool _crash_kexec_post_notifiers = crash_kexec_post_notifiers;
+> diff --git a/lib/ubsan.c b/lib/ubsan.c
+> index bdc380f..36bd75e 100644
+> --- a/lib/ubsan.c
+> +++ b/lib/ubsan.c
+> @@ -154,16 +154,8 @@ static void ubsan_epilogue(void)
 >
-> +       if (panic_on_warn) {
-> +               /*
-> +                * This thread may hit another WARN() in the panic path.
-
-Alas, this may actually fix another problem: doing a panic() not from
-a WARN(), but then hitting a WARN() along in the panic path. So
-"another WARN" is irrelevant, just "a WARN" would be enough to break
-things.
-
-> +                * Resetting this prevents additional WARN() from panicking the
-> +                * system on this thread.  Other threads are blocked by the
-> +                * panic_mutex in panic().
-> +                */
-> +               panic_on_warn = 0;
-> +       }
-> +
->         /*
->          * Disable local interrupts. This will prevent panic_smp_self_stop
->          * from deadlocking the first cpu that invokes the panic, since
-> @@ -576,16 +586,8 @@ void __warn(const char *file, int line, void *caller, unsigned taint,
->         if (regs)
->                 show_regs(regs);
+>         current->in_ubsan--;
 >
 > -       if (panic_on_warn) {
 > -               /*
@@ -75,14 +45,14 @@ things.
 > +       if (panic_on_warn)
 >                 panic("panic_on_warn set ...\n");
 > -       }
+>  }
 >
->         if (!regs)
->                 dump_stack();
+>  void __ubsan_handle_divrem_overflow(void *_data, void *lhs, void *rhs)
 > --
 > 2.1.0
 >
 > --
 > You received this message because you are subscribed to the Google Groups "kasan-dev" group.
 > To unsubscribe from this group and stop receiving emails from it, send an email to kasan-dev+unsubscribe at googlegroups.com.
-> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1644324666-15947-4-git-send-email-yangtiezhu%40loongson.cn.
+> To view this discussion on the web visit https://groups.google.com/d/msgid/kasan-dev/1644324666-15947-5-git-send-email-yangtiezhu%40loongson.cn.
 
