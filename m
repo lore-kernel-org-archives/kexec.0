@@ -1,22 +1,38 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 9 Feb 2022 11:21:56 +0800
-Subject: Is it possible to use a stream for initrd=
-In-Reply-To: <CAHfPjO9MPOP4ZhmLtoyp+YxdreMNCOiy7nApm+uweaSJX5XvpQ@mail.gmail.com>
-References: <CAHfPjO9MPOP4ZhmLtoyp+YxdreMNCOiy7nApm+uweaSJX5XvpQ@mail.gmail.com>
-Message-ID: <YgMzVA7rzLYAHWNi@MiWiFi-R3L-srv>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Date: Wed, 09 Feb 2022 15:43:17 +1100
+Subject: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
+In-Reply-To: <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
+References: <cover.1641900831.git.msuchanek@suse.de>
+ <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
+Message-ID: <87sfsslkey.fsf@mpe.ellerman.id.au>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/08/22 at 04:36pm, Tobias Powalowski wrote:
-> Hi,
-> just a quick question, is it possible to use a stream for initrd= parameter?
-> I want to save RAM/Space and directly load the ramdisk into memory for reboot.
-> initrd=< ... does not work.
+Michal Suchanek <msuchanek@suse.de> writes:
+> Copy the code from s390x
+>
+> Both powerpc and s390x use appended signature format (as opposed to EFI
+> based patforms using PE format).
+>
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+> v3: - Philipp Rudo <prudo@redhat.com>: Update the comit message with
+>       explanation why the s390 code is usable on powerpc.
+>     - Include correct header for mod_check_sig
+>     - Nayna <nayna@linux.vnet.ibm.com>: Mention additional IMA features
+>       in kconfig text
+> ---
+>  arch/powerpc/Kconfig        | 16 ++++++++++++++++
+>  arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
+>  2 files changed, 52 insertions(+)
 
-Are you using kexec -l or kexec -p to reboot? Can you write down your
-operation steps?
+I haven't tested this on powerpc, but assuming you have Michal this
+looks OK to me.
 
+Acked-by: Michael Ellerman <mpe@ellerman.id.au>
+
+cheers
 
