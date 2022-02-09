@@ -1,141 +1,111 @@
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Date: Wed, 9 Feb 2022 07:44:15 +0100
-Subject: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
-In-Reply-To: <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
-References: <cover.1641900831.git.msuchanek@suse.de>
- <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
-Message-ID: <b56fe3a2-b145-9d4e-acf2-4991204b3102@molgen.mpg.de>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Wed, 9 Feb 2022 15:31:46 +0800
+Subject: [PATCHv2] kexec: disable cpu hotplug until the rebooting cpu is
+ stable
+In-Reply-To: <YgI5AFoL4b/5MJEp@MiWiFi-R3L-srv>
+References: <20220127090215.32000-1-kernelfans@gmail.com>
+ <20220127094144.GC13508@MiWiFi-R3L-srv>
+ <YfOeL6B4CowkCQBC@piliu.users.ipa.redhat.com>
+ <YgI5AFoL4b/5MJEp@MiWiFi-R3L-srv>
+Message-ID: <YgNt4slCVxHRex8z@piliu.users.ipa.redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Dear Michal,
-
-
-Thank you for the patch.
-
-
-Am 11.01.22 um 12:37 schrieb Michal Suchanek:
-
-Could you please remove the dot/period at the end of the git commit 
-message summary?
-
-> Copy the code from s390x
+On Tue, Feb 08, 2022 at 05:33:52PM +0800, Baoquan He wrote:
+> On 01/28/22 at 03:41pm, Pingfan Liu wrote:
+> > On Thu, Jan 27, 2022 at 05:41:44PM +0800, Baoquan He wrote:
+> > Hi Baoquan,
+> > 
+> > Thanks for reviewing, please see comment inlined
+> > > Hi Pingfan,
+> > > 
+> > > On 01/27/22 at 05:02pm, Pingfan Liu wrote:
+> > > > The following identical code piece appears in both
+> > > > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
+> > > > 
+> > > > 	if (!cpu_online(primary_cpu))
+> > > > 		primary_cpu = cpumask_first(cpu_online_mask);
+> > > > 
+> > > > This is due to a breakage like the following:
+> > > >    migrate_to_reboot_cpu();
+> > > >    cpu_hotplug_enable();
+> > > >                           --> comes a cpu_down(this_cpu) on other cpu
+> > > >    machine_shutdown();
+> > > > 
+> > > > Although the kexec-reboot task can get through a cpu_down() on its cpu,
+> > > > this code looks a little confusing.
+> > > > 
+> > > > Make things straight forward by keeping cpu hotplug disabled until
+> > > > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
+> > > > breakage is squashed out and the rebooting cpu can keep unchanged.
+> > > 
+> > > If I didn't go through code wrongly, you may miss the x86 case.
+> > > Several ARCHes do call smp_shutdown_nonboot_cpus() in machine_shutdown()
+> > > in kexec reboot code path, while x86 doesn't. If I am right, you may
+> > > need reconsider if this patch is needed or need be adjustd.
+> > > 
+> > Citing the code piece in kernel_kexec()
+> > 
+> >                 migrate_to_reboot_cpu();
+> > 
+> >                 /*
+> >                  * migrate_to_reboot_cpu() disables CPU hotplug assuming that
+> >                  * no further code needs to use CPU hotplug (which is true in
+> >                  * the reboot case). However, the kexec path depends on using
+> >                  * CPU hotplug again; so re-enable it here.
+> >                  */
+> >                 cpu_hotplug_enable();
+> >                 pr_notice("Starting new kernel\n");
+> >                 machine_shutdown();
+> > 
+> > So maybe it can be considered in such way: "cpu_hotplug_enable()" is not
+> > needed by x86 and ppc, so this patch removes it, while re-displace it in
+> > a more appropriate place for arm64/riscv ...
 > 
-> Both powerpc and s390x use appended signature format (as opposed to EFI
-> based patforms using PE format).
-
-patforms ? platforms
-
-How can this be tested?
-
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
-> v3: - Philipp Rudo <prudo@redhat.com>: Update the comit message with
->        explanation why the s390 code is usable on powerpc.
->      - Include correct header for mod_check_sig
->      - Nayna <nayna@linux.vnet.ibm.com>: Mention additional IMA features
->        in kconfig text
-> ---
->   arch/powerpc/Kconfig        | 16 ++++++++++++++++
->   arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
->   2 files changed, 52 insertions(+)
+> OK, so the thing is:
 > 
-> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> index dea74d7717c0..1cde9b6c5987 100644
-> --- a/arch/powerpc/Kconfig
-> +++ b/arch/powerpc/Kconfig
-> @@ -560,6 +560,22 @@ config KEXEC_FILE
->   config ARCH_HAS_KEXEC_PURGATORY
->   	def_bool KEXEC_FILE
->   
-> +config KEXEC_SIG
-> +	bool "Verify kernel signature during kexec_file_load() syscall"
-> +	depends on KEXEC_FILE && MODULE_SIG_FORMAT
-> +	help
-> +	  This option makes kernel signature verification mandatory for
-> +	  the kexec_file_load() syscall.
-> +
-> +	  In addition to that option, you need to enable signature
-> +	  verification for the corresponding kernel image type being
-> +	  loaded in order for this to work.
-> +
-> +	  Note: on powerpc IMA_ARCH_POLICY also implements kexec'ed kernel
-> +	  verification. In addition IMA adds kernel hashes to the measurement
-> +	  list, extends IMA PCR in the TPM, and implements kernel image
-> +	  blacklist by hash.
+> ==
+> In the current code of kexec, we disable cpu hotplug and check reboot cpu
+> validity in migrate_to_reboot_cpu(), then enable cpu hotplug. Then in
+> machine_shutdown()->smp_shutdown_nonboot_cpus(), check the reboot cpu and
+> disable cpu hotplug again.
+  ^^^
+No, there is no any new call to cpu_hotplug_disable() after
+migrate_to_reboot_cpu(). smp_shutdown_nonboot_cpus() just leaves
+cpu_hotplug_disabled==0 as it is.
+> 
+> In this patch, it disables cpu hotplug in migrate_to_reboot_cpu() and
+> keep it till entering into smp_shutdown_nonboot_cpus() to shutdown all
+> other cpu with hotplug mechanism, then disable it again. With this
+                                         ^^^
+Here is enable, i.e. smp_shutdown_nonboot_cpus() makes
+cpu_hotplug_disabled switch from 1 to 0, so the following fn can work
+||	static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
+||	{
+||		if (cpu_hotplug_disabled)
+||			return -EBUSY;
+||		return _cpu_down(cpu, 0, target);
+||	}
 
-So, what is the takeaway for the user? IMA_ARCH_POLICY is preferred? 
-What is the disadvantage, and two implementations(?) needed then? More 
-overhead?
+> change, it won't need to double check the reboot cpu validity. 
+> 
+> This change only affect ARCHes relying on hotplug to shutdown cpu before
+> kexec reboot, e.g arm64, risc-v. Other ARCH like x86 is not affected.
 
-> +
->   config RELOCATABLE
->   	bool "Build a relocatable kernel"
->   	depends on PPC64 || (FLATMEM && (44x || FSL_BOOKE))
-> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-> index eeb258002d1e..98d1cb5135b4 100644
-> --- a/arch/powerpc/kexec/elf_64.c
-> +++ b/arch/powerpc/kexec/elf_64.c
-> @@ -23,6 +23,7 @@
->   #include <linux/of_fdt.h>
->   #include <linux/slab.h>
->   #include <linux/types.h>
-> +#include <linux/module_signature.h>
->   
->   static void *elf64_load(struct kimage *image, char *kernel_buf,
->   			unsigned long kernel_len, char *initrd,
-> @@ -151,7 +152,42 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->   	return ret ? ERR_PTR(ret) : NULL;
->   }
->   
-> +#ifdef CONFIG_KEXEC_SIG
-> +int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
-> +{
-> +	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
-> +	struct module_signature *ms;
-> +	unsigned long sig_len;
+Yes.
+> ==
+> 
+> Do I got it right?
+> 
+Here, neither the original code nor this patch has another
+cpu_hotplug_disable(), the only change is the shift of cpu_hotplug_enable() to an onwards place.
 
-Use size_t to match the signature of `verify_pkcs7_signature()`?
+And I think you should get my idea except this.
 
-> +	int ret;
-> +
-> +	if (marker_len > kernel_len)
-> +		return -EKEYREJECTED;
-> +
-> +	if (memcmp(kernel + kernel_len - marker_len, MODULE_SIG_STRING,
-> +		   marker_len))
-> +		return -EKEYREJECTED;
-> +	kernel_len -= marker_len;
-> +
-> +	ms = (void *)kernel + kernel_len - sizeof(*ms);
-> +	ret = mod_check_sig(ms, kernel_len, "kexec");
-> +	if (ret)
-> +		return ret;
-> +
-> +	sig_len = be32_to_cpu(ms->sig_len);
-> +	kernel_len -= sizeof(*ms) + sig_len;
-> +
-> +	return verify_pkcs7_signature(kernel, kernel_len,
-> +				      kernel + kernel_len, sig_len,
-> +				      VERIFY_USE_PLATFORM_KEYRING,
-> +				      VERIFYING_MODULE_SIGNATURE,
-> +				      NULL, NULL);
-> +}
-> +#endif /* CONFIG_KEXEC_SIG */
-> +
->   const struct kexec_file_ops kexec_elf64_ops = {
->   	.probe = kexec_elf_probe,
->   	.load = elf64_load,
-> +#ifdef CONFIG_KEXEC_SIG
-> +	.verify_sig = elf64_verify_sig,
-> +#endif
->   };
+Thanks,
 
-
-Kind regards,
-
-Paul
+	Pingfan
 
