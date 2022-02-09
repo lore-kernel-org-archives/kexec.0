@@ -1,123 +1,117 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 9 Feb 2022 16:44:10 +0800
-Subject: [PATCHv2] kexec: disable cpu hotplug until the rebooting cpu is
- stable
-In-Reply-To: <YgNt4slCVxHRex8z@piliu.users.ipa.redhat.com>
-References: <20220127090215.32000-1-kernelfans@gmail.com>
- <20220127094144.GC13508@MiWiFi-R3L-srv>
- <YfOeL6B4CowkCQBC@piliu.users.ipa.redhat.com>
- <YgI5AFoL4b/5MJEp@MiWiFi-R3L-srv>
- <YgNt4slCVxHRex8z@piliu.users.ipa.redhat.com>
-Message-ID: <YgN+2gAoeyp05MV7@MiWiFi-R3L-srv>
+Date: Wed, 9 Feb 2022 17:15:41 +0800
+Subject: [RFC PATCH] kdump: Add support for crashkernel=auto
+In-Reply-To: <d513dea3-7300-9684-73af-0b51f5f0e572@suse.cz>
+References: <1643275911-19489-1-git-send-email-yangtiezhu@loongson.cn>
+ <d513dea3-7300-9684-73af-0b51f5f0e572@suse.cz>
+Message-ID: <YgOGPbdtQIhPNen7@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/09/22 at 03:31pm, Pingfan Liu wrote:
-> On Tue, Feb 08, 2022 at 05:33:52PM +0800, Baoquan He wrote:
-> > On 01/28/22 at 03:41pm, Pingfan Liu wrote:
-> > > On Thu, Jan 27, 2022 at 05:41:44PM +0800, Baoquan He wrote:
-> > > Hi Baoquan,
-> > > 
-> > > Thanks for reviewing, please see comment inlined
-> > > > Hi Pingfan,
-> > > > 
-> > > > On 01/27/22 at 05:02pm, Pingfan Liu wrote:
-> > > > > The following identical code piece appears in both
-> > > > > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
-> > > > > 
-> > > > > 	if (!cpu_online(primary_cpu))
-> > > > > 		primary_cpu = cpumask_first(cpu_online_mask);
-> > > > > 
-> > > > > This is due to a breakage like the following:
-> > > > >    migrate_to_reboot_cpu();
-> > > > >    cpu_hotplug_enable();
-> > > > >                           --> comes a cpu_down(this_cpu) on other cpu
-> > > > >    machine_shutdown();
-> > > > > 
-> > > > > Although the kexec-reboot task can get through a cpu_down() on its cpu,
-> > > > > this code looks a little confusing.
-> > > > > 
-> > > > > Make things straight forward by keeping cpu hotplug disabled until
-> > > > > smp_shutdown_nonboot_cpus() holds cpu_add_remove_lock. By this way, the
-> > > > > breakage is squashed out and the rebooting cpu can keep unchanged.
-> > > > 
-> > > > If I didn't go through code wrongly, you may miss the x86 case.
-> > > > Several ARCHes do call smp_shutdown_nonboot_cpus() in machine_shutdown()
-> > > > in kexec reboot code path, while x86 doesn't. If I am right, you may
-> > > > need reconsider if this patch is needed or need be adjustd.
-> > > > 
-> > > Citing the code piece in kernel_kexec()
-> > > 
-> > >                 migrate_to_reboot_cpu();
-> > > 
-> > >                 /*
-> > >                  * migrate_to_reboot_cpu() disables CPU hotplug assuming that
-> > >                  * no further code needs to use CPU hotplug (which is true in
-> > >                  * the reboot case). However, the kexec path depends on using
-> > >                  * CPU hotplug again; so re-enable it here.
-> > >                  */
-> > >                 cpu_hotplug_enable();
-> > >                 pr_notice("Starting new kernel\n");
-> > >                 machine_shutdown();
-> > > 
-> > > So maybe it can be considered in such way: "cpu_hotplug_enable()" is not
-> > > needed by x86 and ppc, so this patch removes it, while re-displace it in
-> > > a more appropriate place for arm64/riscv ...
-> > 
-> > OK, so the thing is:
-> > 
-> > ==
-> > In the current code of kexec, we disable cpu hotplug and check reboot cpu
-> > validity in migrate_to_reboot_cpu(), then enable cpu hotplug. Then in
-> > machine_shutdown()->smp_shutdown_nonboot_cpus(), check the reboot cpu and
-> > disable cpu hotplug again.
->   ^^^
-> No, there is no any new call to cpu_hotplug_disable() after
-> migrate_to_reboot_cpu(). smp_shutdown_nonboot_cpus() just leaves
-> cpu_hotplug_disabled==0 as it is.
+Hi,
 
-Hmm, there's 'cpu_hotplug_disabled++;' at the end of
-smp_shutdown_nonboot_cpus(). It's disabling cpu hotplug again, I think.
+On 01/27/22 at 04:53pm, Petr Tesa??k wrote:
+> Hi Tiezhu Yang,
+> 
+> I'm afraid the whole concept is broken by design. See below.
+> 
+> Dne 27. 01. 22 v 10:31 Tiezhu Yang napsal(a):
+> > Set the reserved memory automatically for the crash kernel based on
+> > architecture.
+> > 
+> > Most code of this patch come from:
+> > https://gitlab.com/redhat/centos-stream/src/kernel/centos-stream-8/-/tree/c8s
 
-> > 
-> > In this patch, it disables cpu hotplug in migrate_to_reboot_cpu() and
-> > keep it till entering into smp_shutdown_nonboot_cpus() to shutdown all
-> > other cpu with hotplug mechanism, then disable it again. With this
->                                          ^^^
-> Here is enable, i.e. smp_shutdown_nonboot_cpus() makes
-> cpu_hotplug_disabled switch from 1 to 0, so the following fn can work
+This code is from RHEL8/Centos8 which Redhat has been using. It's
+working pretty well, except of those big box with dozens of pcie
+devices, or exceptional device driver costing very much memory.
+See below patchset in i40e NIC case, it eats out 1.5G meory on
+ppc64le for a NIC driver init.
 
-Right, you keep the cpu hotplug disabled till in
-smp_shutdown_nonboot_cpus(), then enable it to shut down all other cpus.
+[PATCH v1 0/3] Reducing memory usage of i40e for kdump
+https://www.spinics.net/lists/kexec/msg26521.html
 
-> ||	static int cpu_down_maps_locked(unsigned int cpu, enum cpuhp_state target)
-> ||	{
-> ||		if (cpu_hotplug_disabled)
-> ||			return -EBUSY;
-> ||		return _cpu_down(cpu, 0, target);
-> ||	}
+I agree asking customer to estimate the needed reservation size firstly,
+then adding the value to cmdline and reboot is much easier. The thing is
+it needs customer to operate. And no matter how much reservation is
+needed, it mostly will be satisfied, including the above crazy i40e.
+You won't get report about the exception, unless user check that
+carefully each time. And you can't cover the hotplugged case.
+
+The thing is which side is in lazy mode. Customer do the
+estimation and set, developer is easy. If customer want to be easy,
+developer need do more.
+
+https://sigillatum.tesarici.cz/2022-01-27-whats-wrong-with-crashkernel-auto.html
+
+I read Petr's above article, I have some different opinion about part of
+them. Crashkernel=auto is not for upstream kernel, or customized kernel,
+it is for distros. For distros, the kernel config is fixed in one
+release, the kernel code, data is fixed. In rhel8, crashkernel=160M
+is a default value, and works on most of cases. The kernel modules are
+different, we filter out the unneeded according to user's kdump config.
+We only keep the needed user space tools certainly. We have document to
+note user that nfs needs more memory, some big end server need more memory.
+We try to reserve a little more memory propotional to the total memory.
+With these effort, we hope more people can try kdump w/o worrying about
+no knowledge.
+
+About the effort trying to get crashkernel=auto into kernel, Philipp
+pasted a patch from Oracle. The kernel config way is expected but
+rejected by Linus. We gave up too soon. RHEL instead make it in
+userspace package. We will see, we may try again if it's not going well.
+
+
+> And that's the problem, I think. The solution might be good for this
+> specific OS, but not for others.
 > 
-> > change, it won't need to double check the reboot cpu validity. 
-> > 
-> > This change only affect ARCHes relying on hotplug to shutdown cpu before
-> > kexec reboot, e.g arm64, risc-v. Other ARCH like x86 is not affected.
+> > [...]
+> > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > index 256cf6d..32c51e2 100644
+> > --- a/kernel/crash_core.c
+> > +++ b/kernel/crash_core.c
+> > @@ -252,6 +252,26 @@ static int __init __parse_crashkernel(char *cmdline,
+> >   	if (suffix)
+> >   		return parse_crashkernel_suffix(ck_cmdline, crash_size,
+> >   				suffix);
+> > +
+> > +	if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> > +#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
+> > +		ck_cmdline = "1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M";
+> > +#elif defined(CONFIG_ARM64)
+> > +		ck_cmdline = "2G-:448M";
+> > +#elif defined(CONFIG_PPC64)
+> > +		char *fadump_cmdline;
+> > +
+> > +		fadump_cmdline = get_last_crashkernel(cmdline, "fadump=", NULL);
+> > +		fadump_cmdline = fadump_cmdline ?
+> > +				fadump_cmdline + strlen("fadump=") : NULL;
+> > +		if (!fadump_cmdline || (strncmp(fadump_cmdline, "off", 3) == 0))
+> > +			ck_cmdline = "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
+> > +		else
+> > +			ck_cmdline = "4G-16G:768M,16G-64G:1G,64G-128G:2G,128G-1T:4G,1T-2T:6G,2T-4T:12G,4T-8T:20G,8T-16T:36G,16T-32T:64G,32T-64T:128G,64T-:180G";
+> > +#endif
+> > +		pr_info("Using crashkernel=auto, the size chosen is a best effort estimation.\n");
+> > +	}
+> > +
 > 
-> Yes.
-> > ==
-> > 
-> > Do I got it right?
-> > 
-> Here, neither the original code nor this patch has another
-> cpu_hotplug_disable(), the only change is the shift of cpu_hotplug_enable() to an onwards place.
+> How did you even arrive at the above numbers? I've done some research on
+> this topic recently (ie. during the last 7 years or so). My x86_64 system
+> with 8G RAM running openSUSE Leap 15.3 seems needs 188M for saving to the
+> local disk, and 203M to save over the network (using SFTP). My PPC64 LPAR
+> with 16G RAM running latest Beta of SLES 15 SP4 needs 587M, i.e. with the
+> above numbers it may run out of memory while saving the dump.
 > 
-> And I think you should get my idea except this.
+> Since this is not the first time, I'm trying to explain things, I've written
+> a blog post now:
 > 
-> Thanks,
+> https://sigillatum.tesarici.cz/2022-01-27-whats-wrong-with-crashkernel-auto.html
 > 
-> 	Pingfan
+> HTH
+> Petr Tesarik
 > 
 
 
