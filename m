@@ -1,52 +1,64 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Wed,  9 Feb 2022 14:57:03 -0500
-Subject: [PATCH v4 07/10] crash hp: exclude elfcorehdr from the segment digest
+Date: Wed,  9 Feb 2022 14:56:58 -0500
+Subject: [PATCH v4 02/10] crash hp: Introduce CRASH_HOTPLUG configuration
+ options
 In-Reply-To: <20220209195706.51522-1-eric.devolder@oracle.com>
 References: <20220209195706.51522-1-eric.devolder@oracle.com>
-Message-ID: <20220209195706.51522-8-eric.devolder@oracle.com>
+Message-ID: <20220209195706.51522-3-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-When a crash kernel is loaded via the kexec_file_load syscall, the
-kernel places the various segments (ie crash kernel, crash initrd,
-boot_params, elfcorehdr, purgatory, etc) in memory. For those
-architectures that utilize purgatory, a hash digest of the segments
-is calculated for integrity checking. This digest is embedded into
-the purgatory image prior to placing purgatory in memory.
+Support for CPU and memory hotplug for crash is controlled by the
+CRASH_HOTPLUG configuration option, introduced by this patch.
 
-Since hotplug events cause changes to the elfcorehdr, purgatory
-integrity checking fails (at crash time, and no kdump created).
-As a result, this change explicitly excludes the elfcorehdr segment
-from the list of segments used to create the digest. By doing so,
-this permits changes to the elfcorehdr in response to hotplug events,
-without having to also reload purgatory due to the change to the
-digest.
+The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
+also introduced with this patch.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- kernel/kexec_file.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 801d0d0a5012..93bb0c0ce66c 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -765,6 +765,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
- 	for (j = i = 0; i < image->nr_segments; i++) {
- 		struct kexec_segment *ksegment;
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index ebe8fc76949a..4e3374edab02 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2060,6 +2060,32 @@ config CRASH_DUMP
+ 	  (CONFIG_RELOCATABLE=y).
+ 	  For more details see Documentation/admin-guide/kdump/kdump.rst
  
-+#ifdef CONFIG_CRASH_HOTPLUG
-+		/* This segment excluded to allow future changes via hotplug */
-+		if (image->elf_index_valid && (j == image->elf_index))
-+			continue;
-+#endif
++config CRASH_HOTPLUG
++	bool "kernel updates of crash elfcorehdr"
++	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
++	help
++	  Enable the kernel to update the crash elfcorehdr (which contains
++	  the list of CPUs and memory regions) directly when hot plug/unplug
++	  of CPUs or memory. Otherwise userspace must monitor these hot
++	  plug/unplug change notifications via udev in order to
++	  unload-then-reload the crash kernel so that the list of CPUs and
++	  memory regions is kept up-to-date. Note that the udev CPU and
++	  memory change notifications still occur (however, userspace is not
++	  required to monitor for crash dump purposes).
 +
- 		ksegment = &image->segment[i];
- 		/*
- 		 * Skip purgatory as it will be modified once we put digest
++config CRASH_HOTPLUG_ELFCOREHDR_SZ
++	depends on CRASH_HOTPLUG
++	int
++	default 131072
++	help
++	  Specify the maximum size of the elfcorehdr buffer/segment.
++	  The 128KiB default is sized so that it can accommodate 2048
++	  Elf64_Phdr, where each Phdr represents either a CPU or a
++	  region of memory.
++	  For example, this size can accommodate hotplugging a machine
++	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
++	  with 1024 1GiB memory DIMMs).
++
+ config KEXEC_JUMP
+ 	bool "kexec jump"
+ 	depends on KEXEC && HIBERNATION
 -- 
 2.27.0
 
