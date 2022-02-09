@@ -1,38 +1,60 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Wed,  9 Feb 2022 14:56:57 -0500
-Subject: [PATCH v4 01/10] crash: fix minor typo/bug in debug message
+Date: Wed,  9 Feb 2022 14:56:59 -0500
+Subject: [PATCH v4 03/10] crash hp: definitions and prototype changes
 In-Reply-To: <20220209195706.51522-1-eric.devolder@oracle.com>
 References: <20220209195706.51522-1-eric.devolder@oracle.com>
-Message-ID: <20220209195706.51522-2-eric.devolder@oracle.com>
+Message-ID: <20220209195706.51522-4-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The pr_debug() intends to display the memsz member, but the
-parameter is actually the bufsz member (which is already
-displayed). Correct this to display memsz value.
+This change adds members to struct kimage to facilitate crash
+hotplug support.
+
+This change also defines crash hotplug events and associated
+prototypes.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/crash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/kexec.h | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e8326a8d1c5d..9730c88530fc 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -407,7 +407,7 @@ int crash_load_segments(struct kimage *image)
- 	}
- 	image->elf_load_addr = kbuf.mem;
- 	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		 image->elf_load_addr, kbuf.bufsz, kbuf.bufsz);
-+		 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 0c994ae37729..13c238c2da48 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -299,6 +299,13 @@ struct kimage {
  
- 	return ret;
- }
+ 	/* Information for loading purgatory */
+ 	struct purgatory_info purgatory_info;
++
++#ifdef CONFIG_CRASH_HOTPLUG
++	bool hotplug_event;
++	int offlinecpu;
++	bool elf_index_valid;
++	int elf_index;
++#endif
+ #endif
+ 
+ #ifdef CONFIG_IMA_KEXEC
+@@ -315,6 +322,15 @@ struct kimage {
+ 	unsigned long elf_load_addr;
+ };
+ 
++#ifdef CONFIG_CRASH_HOTPLUG
++void arch_crash_hotplug_handler(struct kimage *image,
++	unsigned int hp_action, unsigned long a, unsigned long b);
++#define KEXEC_CRASH_HP_REMOVE_CPU   0
++#define KEXEC_CRASH_HP_ADD_CPU      1
++#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
++#define KEXEC_CRASH_HP_ADD_MEMORY   3
++#endif /* CONFIG_CRASH_HOTPLUG */
++
+ /* kexec interface functions */
+ extern void machine_kexec(struct kimage *image);
+ extern int machine_kexec_prepare(struct kimage *image);
 -- 
 2.27.0
 
