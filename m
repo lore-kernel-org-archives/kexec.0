@@ -1,164 +1,115 @@
-From: Paul Menzel <pmenzel@molgen.mpg.de>
-Date: Fri, 11 Feb 2022 16:31:00 +0100
-Subject: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
-In-Reply-To: <20220209120154.GC3113@kunlun.suse.cz>
-References: <cover.1641900831.git.msuchanek@suse.de>
- <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
- <b56fe3a2-b145-9d4e-acf2-4991204b3102@molgen.mpg.de>
- <20220209120154.GC3113@kunlun.suse.cz>
-Message-ID: <53069280-73e6-4502-d366-4990b74cf059@molgen.mpg.de>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Fri, 11 Feb 2022 18:55:39 -0300
+Subject: [PATCH V5] panic: Move panic_print before kmsg dumpers
+Message-ID: <20220211215539.822466-1-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Dear Michal,
+The panic_print setting allows users to collect more information in a
+panic event, like memory stats, tasks, CPUs backtraces, etc.
+This is an interesting debug mechanism, but currently the print event
+happens *after* kmsg_dump(), meaning that pstore, for example, cannot
+collect a dmesg with the panic_print extra information.
+
+This patch changes that in 2 ways:
+
+(a) The panic_print setting allows to replay the existing kernel log
+buffer to the console (bit 5), besides the extra information dump.
+This functionality makes sense only at the end of the panic() function.
+So, we hereby allow to distinguish the two situations by a new boolean
+parameter in the function panic_print_sys_info().
+
+(b) With the above change, we can safely call panic_print_sys_info()
+before kmsg_dump(), allowing to dump the extra information when using
+pstore or other kmsg dumpers.
+
+The additional messages from panic_print could overwrite the oldest
+messages when the buffer is full. The only reasonable solution is to
+use a large enough log buffer, hence we added an advice into the kernel
+parameters documentation about that.
+
+Cc: Baoquan He <bhe@redhat.com>
+Cc: Feng Tang <feng.tang@intel.com>
+Cc: Petr Mladek <pmladek@suse.com>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
 
 
-Am 09.02.22 um 13:01 schrieb Michal Such?nek:
+V5:
+* Rebased against next-20220211.
+* Removed code dealing with kdump, based on Baoquan concerns.
+  This was possible after asking Stephen to remove a patch from
+  linux-next[0] to address Baoquan sugestions, so this version
+  is more simple and doesn't ever panic_print before kdump, unless
+  "crash_kexec_post_notifiers" is passed in the kernel cmdline.
 
-> On Wed, Feb 09, 2022 at 07:44:15AM +0100, Paul Menzel wrote:
+[0] https://lore.kernel.org/lkml/c10fc4fc-58c9-0b3f-5f1e-6f44b0c190d2 at igalia.com/
 
->> Am 11.01.22 um 12:37 schrieb Michal Suchanek:
-
-[?]
-
->> How can this be tested?
-> 
-> Apparently KEXEC_SIG_FORCE is x86 only although the use of the option is
-> arch neutral:
-> 
-> arch/x86/Kconfig:config KEXEC_SIG_FORCE
-> kernel/kexec_file.c:            if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE))
-> {
-> 
-> Maybe it should be moved?
-
-Sounds good.
-
-> I used a patched kernel that enables lockdown in secure boot, and then
-> verified that signed kernel can be loaded by kexec and unsigned not,
-> with KEXEC_SIG enabled and IMA_KEXEC disabled.
-> 
-> The lockdown support can be enabled on any platform, and although I
-> can't find it documented anywhere there appears to be code in kexec_file
-> to take it into account:
-> kernel/kexec.c: result = security_locked_down(LOCKDOWN_KEXEC);
-> kernel/kexec_file.c:                security_locked_down(LOCKDOWN_KEXEC))
-> kernel/module.c:        return security_locked_down(LOCKDOWN_MODULE_SIGNATURE);
-> kernel/params.c:            security_locked_down(LOCKDOWN_MODULE_PARAMETERS))
-> and lockdown can be enabled with a buildtime option, a kernel parameter, or a
-> debugfs file.
-> 
-> Still for testing lifting KEXEC_SIG_FORCE to some arch-neutral Kconfig file is
-> probably the simplest option.
-> 
-> kexec -s option should be used to select kexec_file rather than the old
-> style kexec which would either fail always or succeed always regardelss
-> of signature.
-
-Thank you.
-
->>> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->>> ---
->>> v3: - Philipp Rudo <prudo@redhat.com>: Update the comit message with
->>>         explanation why the s390 code is usable on powerpc.
->>>       - Include correct header for mod_check_sig
->>>       - Nayna <nayna@linux.vnet.ibm.com>: Mention additional IMA features
->>>         in kconfig text
->>> ---
->>>    arch/powerpc/Kconfig        | 16 ++++++++++++++++
->>>    arch/powerpc/kexec/elf_64.c | 36 ++++++++++++++++++++++++++++++++++++
->>>    2 files changed, 52 insertions(+)
->>>
->>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->>> index dea74d7717c0..1cde9b6c5987 100644
->>> --- a/arch/powerpc/Kconfig
->>> +++ b/arch/powerpc/Kconfig
->>> @@ -560,6 +560,22 @@ config KEXEC_FILE
->>>    config ARCH_HAS_KEXEC_PURGATORY
->>>    	def_bool KEXEC_FILE
->>> +config KEXEC_SIG
->>> +	bool "Verify kernel signature during kexec_file_load() syscall"
->>> +	depends on KEXEC_FILE && MODULE_SIG_FORMAT
->>> +	help
->>> +	  This option makes kernel signature verification mandatory for
->>> +	  the kexec_file_load() syscall.
->>> +
->>> +	  In addition to that option, you need to enable signature
->>> +	  verification for the corresponding kernel image type being
->>> +	  loaded in order for this to work.
->>> +
->>> +	  Note: on powerpc IMA_ARCH_POLICY also implements kexec'ed kernel
->>> +	  verification. In addition IMA adds kernel hashes to the measurement
->>> +	  list, extends IMA PCR in the TPM, and implements kernel image
->>> +	  blacklist by hash.
->>
->> So, what is the takeaway for the user? IMA_ARCH_POLICY is preferred? What is
->> the disadvantage, and two implementations(?) needed then? More overhead?
-> 
-> IMA_KEXEC does more than KEXEC_SIG. The overhead is probably not big
-> unless you are trying to really minimize the kernel code size.
-> 
-> Arguably the simpler implementation has less potential for bugs, too.
-> Both in code and in user configuration required to enable the feature.
-> 
-> Interestingly IMA_ARCH_POLICY depends on KEXEC_SIG rather than
-> IMA_KEXEC. Just mind-boggling.
-
-I have not looked into that.
-
-> The main problem with IMA_KEXEC from my point of view is it is not portable.
-> To record the measurements TPM support is requireed which is not available on
-> all platforms. It does not support PE so it cannot be used on platforms
-> that use PE kernel signature format.
-
-Could you add that to the comment please?
-
->>> +
->>>    config RELOCATABLE
->>>    	bool "Build a relocatable kernel"
->>>    	depends on PPC64 || (FLATMEM && (44x || FSL_BOOKE))
->>> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
->>> index eeb258002d1e..98d1cb5135b4 100644
->>> --- a/arch/powerpc/kexec/elf_64.c
->>> +++ b/arch/powerpc/kexec/elf_64.c
->>> @@ -23,6 +23,7 @@
->>>    #include <linux/of_fdt.h>
->>>    #include <linux/slab.h>
->>>    #include <linux/types.h>
->>> +#include <linux/module_signature.h>
->>>    static void *elf64_load(struct kimage *image, char *kernel_buf,
->>>    			unsigned long kernel_len, char *initrd,
->>> @@ -151,7 +152,42 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
->>>    	return ret ? ERR_PTR(ret) : NULL;
->>>    }
->>> +#ifdef CONFIG_KEXEC_SIG
->>> +int elf64_verify_sig(const char *kernel, unsigned long kernel_len)
->>> +{
->>> +	const unsigned long marker_len = sizeof(MODULE_SIG_STRING) - 1;
->>> +	struct module_signature *ms;
->>> +	unsigned long sig_len;
->>
->> Use size_t to match the signature of `verify_pkcs7_signature()`?
-> 
-> Nope. struct module_signature uses unsigned long, and this needs to be
-> matched to avoid type errors on 32bit.
-
-I meant for `sig_len`.
-
-> Technically using size_t for in-memory buffers is misguided because
-> AFAICT no memory buffer can be bigger than ULONG_MAX, and size_t is
-> non-native type on 32bit.
-> 
-> Sure, the situation with ssize_t/int is different but that's not what we
-> are dealing with here.
-True. In my experience it prevents compiler warnings when building for 
-32 bit or 64 bit. Anyway, not that important.
+V4: https://lore.kernel.org/lkml/20220124203101.216051-1-gpiccoli at igalia.com/
 
 
-Kind regards,
+ Documentation/admin-guide/kernel-parameters.txt |  4 ++++
+ kernel/panic.c                                  | 13 +++++++++----
+ 2 files changed, 13 insertions(+), 4 deletions(-)
 
-Paul
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 3c2b3e24e8f5..2cf7078eaa95 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -3766,6 +3766,10 @@
+ 			bit 4: print ftrace buffer
+ 			bit 5: print all printk messages in buffer
+ 			bit 6: print all CPUs backtrace (if available in the arch)
++			*Be aware* that this option may print a _lot_ of lines,
++			so there are risks of losing older messages in the log.
++			Use this option carefully, maybe worth to setup a
++			bigger log buffer with "log_buf_len" along with this.
+ 
+ 	panic_on_taint=	Bitmask for conditionally calling panic() in add_taint()
+ 			Format: <hex>[,nousertaint]
+diff --git a/kernel/panic.c b/kernel/panic.c
+index 3c3fb36d8d41..eb4dfb932c85 100644
+--- a/kernel/panic.c
++++ b/kernel/panic.c
+@@ -148,10 +148,13 @@ void nmi_panic(struct pt_regs *regs, const char *msg)
+ }
+ EXPORT_SYMBOL(nmi_panic);
+ 
+-static void panic_print_sys_info(void)
++static void panic_print_sys_info(bool console_flush)
+ {
+-	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+-		console_flush_on_panic(CONSOLE_REPLAY_ALL);
++	if (console_flush) {
++		if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
++			console_flush_on_panic(CONSOLE_REPLAY_ALL);
++		return;
++	}
+ 
+ 	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+ 		trigger_all_cpu_backtrace();
+@@ -286,6 +289,8 @@ void panic(const char *fmt, ...)
+ 	 */
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
+ 
++	panic_print_sys_info(false);
++
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+ 
+ 	/*
+@@ -316,7 +321,7 @@ void panic(const char *fmt, ...)
+ 	debug_locks_off();
+ 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+ 
+-	panic_print_sys_info();
++	panic_print_sys_info(true);
+ 
+ 	if (!panic_blink)
+ 		panic_blink = no_blink;
+-- 
+2.35.0
+
 
