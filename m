@@ -1,12 +1,9 @@
 From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Sun, 13 Feb 2022 12:50:31 -0500
-Subject: [PATCH v5 2/6] powerpc/kexec_file: Add KEXEC_SIG support.
-In-Reply-To: <20220209120154.GC3113@kunlun.suse.cz>
+Date: Sun, 13 Feb 2022 13:53:12 -0500
+Subject: [PATCH v5 0/6] KEXEC_SIG with appended signature
+In-Reply-To: <cover.1641900831.git.msuchanek@suse.de>
 References: <cover.1641900831.git.msuchanek@suse.de>
- <d95f7c6865bcad5ee37dcbec240e79aa742f5e1d.1641900831.git.msuchanek@suse.de>
- <b56fe3a2-b145-9d4e-acf2-4991204b3102@molgen.mpg.de>
- <20220209120154.GC3113@kunlun.suse.cz>
-Message-ID: <b49cb41873655f4fc1269faab5729111d55ce9da.camel@linux.ibm.com>
+Message-ID: <0278ab6a2891effd9b1eb8c0221769e332ec6082.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,68 +12,41 @@ To: kexec@lists.infradead.org
 
 Hi Michal,
 
-On Wed, 2022-02-09 at 13:01 +0100, Michal Such?nek wrote:
-> > > diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-> > > index dea74d7717c0..1cde9b6c5987 100644
-> > > --- a/arch/powerpc/Kconfig
-> > > +++ b/arch/powerpc/Kconfig
-> > > @@ -560,6 +560,22 @@ config KEXEC_FILE
-> > >   config ARCH_HAS_KEXEC_PURGATORY
-> > >     def_bool KEXEC_FILE
-> > > +config KEXEC_SIG
-> > > +   bool "Verify kernel signature during kexec_file_load() syscall"
-> > > +   depends on KEXEC_FILE && MODULE_SIG_FORMAT
-> > > +   help
-> > > +     This option makes kernel signature verification mandatory for
-> > > +     the kexec_file_load() syscall.
-> > > +
-> > > +     In addition to that option, you need to enable signature
-> > > +     verification for the corresponding kernel image type being
-> > > +     loaded in order for this to work.
-> > > +
-> > > +     Note: on powerpc IMA_ARCH_POLICY also implements kexec'ed kernel
-> > > +     verification. In addition IMA adds kernel hashes to the measurement
-> > > +     list, extends IMA PCR in the TPM, and implements kernel image
-> > > +     blacklist by hash.
-> > 
-> > So, what is the takeaway for the user? IMA_ARCH_POLICY is preferred? What is
-> > the disadvantage, and two implementations(?) needed then? More overhead?
+On Tue, 2022-01-11 at 12:37 +0100, Michal Suchanek wrote:
+> Hello,
 > 
-> IMA_KEXEC does more than KEXEC_SIG. The overhead is probably not big
-> unless you are trying to really minimize the kernel code size.
-> 
-> Arguably the simpler implementation hass less potential for bugs, too.
-> Both in code and in user configuration required to enable the feature.
-> 
-> Interestingly IMA_ARCH_POLICY depends on KEXEC_SIG rather than
-> IMA_KEXEC. Just mind-boggling.
+> This is a refresh of the KEXEC_SIG series.
 
-FYI, a soft boot doesn't clear the TPM PCRs.  To be able to verify the
-IMA measurement list after a kexec against a TPM quote, requires
-carrying the measurement list across kexec.
+> This adds KEXEC_SIG support on powerpc and deduplicates the code dealing
+> with appended signatures in the kernel.
+> 
+> powerpc supports IMA_KEXEC but that's an exception rather than the norm.
+> On the other hand, KEXEC_SIG is portable across platforms.
 
-The "IMA_KEXEC" config enables carrying the IMA measurement list across
-kexec.  It has nothing to do with verifying the appended signature. 
-That is based on kernel module appended signature code.
+This Kconfig carries the IMA measurement list across kexec.  This has
+nothing to do with appended signatures.
+
+config IMA_KEXEC
+        bool "Enable carrying the IMA measurement list across a soft
+boot"
+        depends on IMA && TCG_TPM && HAVE_IMA_KEXEC
+
+In addition to powerpc, arm64 sets HAVE_IMA_KEXEC.
+
+Even prior to the kexec appended signature support, like all other
+files, the kexec kernel image signature could be stored in
+security.ima.
 
 > 
-> The main problem with IMA_KEXEC from my point of view is it is not portable.
-> To record the measurements TPM support is requireed which is not available on
-> all platforms.
+> For distributions to have uniform security features across platforms one
+> option should be used on all platforms.
 
-Measuring the kexec kernel image and extending the TPM with the
-measurement is required for trusted boot.  Boot loaders extend the
-TPM's BIOS measurements. Similarly, IMA does not require a TPM, but if
-one is available the kexec kernel image measurement is extended into
-the IMA measurement list.  Otherwise, IMA goes into "TPM by-pass" mode.
-
-> It does not support PE so it cannot be used on platforms
-> that use PE kernel signature format.
-
-True.  However, a kernel image with an appended signature may be
-kexec'ed, regardless of the architecture.  Because some boot loaders
-don't support appended signatures, from my point of view does not make
-IMA kexec support not portable.
+The kexec kernel image measurement will not be included in the BIOS
+event log.  Even if the measurement is included in the IMA measurement
+list, without the IMA_KEXEC Kconfig the measurement list will not be
+carried across kexec.  For those not interested in "trusted boot" or
+those who do not need it for compliance, the simplification should be
+fine.
 
 -- 
 thanks,
