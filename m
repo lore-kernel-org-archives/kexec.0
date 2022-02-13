@@ -1,14 +1,16 @@
 From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Sun, 13 Feb 2022 13:53:12 -0500
+Date: Sun, 13 Feb 2022 15:27:54 -0500
 Subject: [PATCH v5 0/6] KEXEC_SIG with appended signature
 In-Reply-To: <cover.1641900831.git.msuchanek@suse.de>
 References: <cover.1641900831.git.msuchanek@suse.de>
-Message-ID: <0278ab6a2891effd9b1eb8c0221769e332ec6082.camel@linux.ibm.com>
+Message-ID: <c769b62e02e48e2eb2d50de9db90773f5f0acb5f.camel@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
+
+[Cc'ing  Nageswara R Sastry]
 
 Hi Michal,
 
@@ -16,37 +18,15 @@ On Tue, 2022-01-11 at 12:37 +0100, Michal Suchanek wrote:
 > Hello,
 > 
 > This is a refresh of the KEXEC_SIG series.
-
+> 
 > This adds KEXEC_SIG support on powerpc and deduplicates the code dealing
 > with appended signatures in the kernel.
-> 
-> powerpc supports IMA_KEXEC but that's an exception rather than the norm.
-> On the other hand, KEXEC_SIG is portable across platforms.
 
-This Kconfig carries the IMA measurement list across kexec.  This has
-nothing to do with appended signatures.
+tools/testing/selftests/kexec/test_kexec_file_load.sh probably needs to
+be updated to reflect the new Kconfig support.
 
-config IMA_KEXEC
-        bool "Enable carrying the IMA measurement list across a soft
-boot"
-        depends on IMA && TCG_TPM && HAVE_IMA_KEXEC
-
-In addition to powerpc, arm64 sets HAVE_IMA_KEXEC.
-
-Even prior to the kexec appended signature support, like all other
-files, the kexec kernel image signature could be stored in
-security.ima.
-
-> 
-> For distributions to have uniform security features across platforms one
-> option should be used on all platforms.
-
-The kexec kernel image measurement will not be included in the BIOS
-event log.  Even if the measurement is included in the IMA measurement
-list, without the IMA_KEXEC Kconfig the measurement list will not be
-carried across kexec.  For those not interested in "trusted boot" or
-those who do not need it for compliance, the simplification should be
-fine.
+FYI, commit 65e38e32a959 ("selftests/kexec: Enable secureboot tests for
+PowerPC") recently was upstreamed.
 
 -- 
 thanks,
