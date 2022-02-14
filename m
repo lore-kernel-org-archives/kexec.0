@@ -1,212 +1,245 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 14 Feb 2022 15:09:58 +0800
+From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
+Date: Mon, 14 Feb 2022 15:53:31 +0800
 Subject: [PATCH v20 3/5] arm64: kdump: reimplement crashkernel=X
-In-Reply-To: <441c2917-bd86-da71-22d2-f526baf1457f@huawei.com>
+In-Reply-To: <YgnSCxlr1O2ZZ1sO@MiWiFi-R3L-srv>
 References: <20220124084708.683-1-thunder.leizhen@huawei.com>
  <20220124084708.683-4-thunder.leizhen@huawei.com>
- <YgY6yvX7PEeZpdTr@MiWiFi-R3L-srv>
- <6ac0c60c-78bc-9789-9f5c-659fb5fa3e9a@huawei.com>
- <YgY/qQUkBF0eZ9zc@MiWiFi-R3L-srv>
- <441c2917-bd86-da71-22d2-f526baf1457f@huawei.com>
-Message-ID: <YgoARncp0jCMTDEX@MiWiFi-R3L-srv>
+ <YgnSCxlr1O2ZZ1sO@MiWiFi-R3L-srv>
+Message-ID: <0e84548b-179a-1bad-8f49-963d66426e43@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/14/22 at 02:44pm, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2022/2/11 18:51, Baoquan He wrote:
-> > On 02/11/22 at 06:41pm, Leizhen (ThunderTown) wrote:
-> >>
-> >>
-> >> On 2022/2/11 18:30, Baoquan He wrote:
-> >>> On 01/24/22 at 04:47pm, Zhen Lei wrote:
-> >>>> From: Chen Zhou <chenzhou10@huawei.com>
-> >>> ......
-> >>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> >>>> index 6c653a2c7cff052..a5d43feac0d7d96 100644
-> >>>> --- a/arch/arm64/mm/init.c
-> >>>> +++ b/arch/arm64/mm/init.c
-> >>>> @@ -71,6 +71,30 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
-> >>>>  #define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
-> >>>>  #define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
-> >>>>  
-> >>>> +static int __init reserve_crashkernel_low(unsigned long long low_size)
-> >>>> +{
-> >>>> +	unsigned long long low_base;
-> >>>> +
-> >>>> +	/* passed with crashkernel=0,low ? */
-> >>>> +	if (!low_size)
-> >>>> +		return 0;
-> >>>> +
-> >>>> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
-> >>>> +	if (!low_base) {
-> >>>> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
-> >>>> +		return -ENOMEM;
-> >>>> +	}
-> >>>> +
-> >>>> +	pr_info("crashkernel low memory reserved: 0x%llx - 0x%llx (%lld MB)\n",
-> >>>> +		low_base, low_base + low_size, low_size >> 20);
-> >>>> +
-> >>>> +	crashk_low_res.start = low_base;
-> >>>> +	crashk_low_res.end   = low_base + low_size - 1;
-> >>>> +	insert_resource(&iomem_resource, &crashk_low_res);
-> >>>> +
-> >>>> +	return 0;
-> >>>> +}
-> >>>> +
-> >>>>  /*
-> >>>>   * reserve_crashkernel() - reserves memory for crash kernel
-> >>>>   *
-> >>>> @@ -81,29 +105,62 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
-> >>>>  static void __init reserve_crashkernel(void)
-> >>>>  {
-> >>>>  	unsigned long long crash_base, crash_size;
-> >>>> +	unsigned long long crash_low_size = SZ_256M;
-> >>>>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
-> >>>>  	int ret;
-> >>>> +	bool fixed_base;
-> >>>> +	char *cmdline = boot_command_line;
-> >>>>  
-> >>>> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
-> >>>> +	/* crashkernel=X[@offset] */
-> >>>> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
-> >>>>  				&crash_size, &crash_base);
-> >>>> -	/* no crashkernel= or invalid value specified */
-> >>>> -	if (ret || !crash_size)
-> >>>> -		return;
-> >>>> +	if (ret || !crash_size) {
-> >>>> +		unsigned long long low_size;
-> >>>>  
-> >>>> +		/* crashkernel=X,high */
-> >>>> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
-> >>>> +		if (ret || !crash_size)
-> >>>> +			return;
-> >>>> +
-> >>>> +		/* crashkernel=X,low */
-> >>>> +		ret = parse_crashkernel_low(cmdline, 0, &low_size, &crash_base);
-> >>>> +		if (!ret)
-> >>>> +			crash_low_size = low_size;
-> >>>
-> >>> Here, the error case is not checked and handled. But it still gets
-> >>> expeced result which is the default SZ_256M. Is this designed on
-> >>> purpose?
-> >>
-> >> Yes, we can specify only "crashkernel=X,high".
-> >>
-> >> This is mentioned in Documentation/admin-guide/kernel-parameters.txt
-> >>
-> >>         crashkernel=size[KMG],low
-> >>                         [KNL, X86-64] range under 4G. When crashkernel=X,high
-> >>                         is passed, kernel could allocate physical memory region
-> >>                         above 4G, that cause second kernel crash on system
-> >>                         that require some amount of low memory, e.g. swiotlb
-> >>                         requires at least 64M+32K low memory, also enough extra
-> >>                         low memory is needed to make sure DMA buffers for 32-bit
-> >>                         devices won't run out. Kernel would try to allocate at     <---------
-> >>                         least 256M below 4G automatically.                         <---------
-> > 
-> > Yeah, that is expected becasue no crahskernel=,low is a right usage. The
-> > 'ret' is 0 in the case. If I gave below string, it works too.
-> > "crashkernel=256M,high crashkernel=aaabbadfadfd,low"
-> 
-> Yes, so maybe we should change the error code in __parse_crashkernel()
-> from "-EINVAL" to "-ENOENT" when the specified option does not exist.
 
-Good point. I also thought of this, it could be next step clean up. X86
-code need this too. In crashkernel='messy code',high, it will fail to
-reserve. For consistency, we should fail crashkrenel='messy code',low
-too.
+
+On 2022/2/14 11:52, Baoquan He wrote:
+> On 01/24/22 at 04:47pm, Zhen Lei wrote:
+> ......
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 6c653a2c7cff052..a5d43feac0d7d96 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -71,6 +71,30 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>  #define CRASH_ADDR_LOW_MAX	arm64_dma_phys_limit
+>>  #define CRASH_ADDR_HIGH_MAX	MEMBLOCK_ALLOC_ACCESSIBLE
+>>  
+>> +static int __init reserve_crashkernel_low(unsigned long long low_size)
+>> +{
+>> +	unsigned long long low_base;
+>> +
+>> +	/* passed with crashkernel=0,low ? */
+>> +	if (!low_size)
+>> +		return 0;
+>> +
+>> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+>> +	if (!low_base) {
+>> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
+>> +		return -ENOMEM;
+>> +	}
+>> +
+>> +	pr_info("crashkernel low memory reserved: 0x%llx - 0x%llx (%lld MB)\n",
+>> +		low_base, low_base + low_size, low_size >> 20);
+>> +
+>> +	crashk_low_res.start = low_base;
+>> +	crashk_low_res.end   = low_base + low_size - 1;
+>> +	insert_resource(&iomem_resource, &crashk_low_res);
+>> +
+>> +	return 0;
+>> +}
+>> +
+>>  /*
+>>   * reserve_crashkernel() - reserves memory for crash kernel
+> 
+> My another concern is the crashkernel=,low handling. In this patch, the
+> code related to low memory is obscure. Wondering if we should make them
+> explicit with a little redundant but very clear code flows. Saying this
+> because the code must be very clear to you and reviewers, it may be
+> harder for later code reader or anyone interested to understand.
+> 
+> 1) crashkernel=X,high
+> 2) crashkernel=X,high crashkernel=Y,low
+> 3) crashkernel=X,high crashkernel=0,low
+> 4) crashkernel=X,high crashkernel='messy code',low
+> 5) crashkernel=X //fall back to high memory, low memory is required then.
+> 
+> It could be me thinking about it too much. I made changes to your patch
+> with a tuning, not sure if it's OK to you. Otherwise, this patchset
+
+I think it's good.
+
+> works very well for all above test cases, it's ripe to be merged for
+> wider testing.
+
+I will test it tomorrow. I've prepared a little more use cases than yours.
+
+1) crashkernel=4G						//high=4G, low=256M
+2) crashkernel=4G crashkernel=512M,high crashkernel=512M,low	//high=4G, low=256M, high and low are ignored
+3) crashkernel=4G crashkernel=512M,high				//high=4G, low=256M, high is ignored
+4) crashkernel=4G crashkernel=512M,low				//high=4G, low=256M, low is ignored
+5) crashkernel=4G at 0xe0000000					//high=0G, low=0M, cannot allocate, failed
+6) crashkernel=512M						//high=0G, low=512M
+7) crashkernel=128M						//high=0G, low=128M
+8) crashkernel=512M at 0xde000000		//512M at 3552M		//high=0G, low=512M
+9) crashkernel=4G,high						//high=4G, low=256M
+a) crashkernel=4G,high crashkernel=512M,low			//high=4G, low=512M
+b) crashkernel=512M,high crashkernel=128M,low			//high=512M, low=128M
+c) crashkernel=512M,low						//high=0G, low=0M, invalid
+
 
 > 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 256cf6db573cd09..395f4fac1773f28 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
->         *crash_base = 0;
-> 
->         ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index a5d43feac0d7..671862c56d7d 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -94,7 +94,8 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+>  
+>  	return 0;
+>  }
 > -
->         if (!ck_cmdline)
-> -               return -EINVAL;
-> +               return -ENOENT;
+> +/*Words explaining why it's 256M*/
+> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE SZ_256M
+>  /*
+>   * reserve_crashkernel() - reserves memory for crash kernel
+>   *
+> @@ -105,10 +106,10 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_base, crash_size;
+> -	unsigned long long crash_low_size = SZ_256M;
+> +	unsigned long long crash_low_size;
+>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>  	int ret;
+> -	bool fixed_base;
+> +	bool fixed_base, high;
+>  	char *cmdline = boot_command_line;
+>  
+>  	/* crashkernel=X[@offset] */
+> @@ -126,7 +127,10 @@ static void __init reserve_crashkernel(void)
+>  		ret = parse_crashkernel_low(cmdline, 0, &low_size, &crash_base);
+>  		if (!ret)
+>  			crash_low_size = low_size;
+> +		else
+> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+>  
+> +		high = true;
+>  		crash_max = CRASH_ADDR_HIGH_MAX;
+>  	}
+>  
+> @@ -134,7 +138,7 @@ static void __init reserve_crashkernel(void)
+>  	crash_size = PAGE_ALIGN(crash_size);
+>  
+>  	/* User specifies base address explicitly. */
+> -	if (crash_base)
+> +	if (fixed_base)
+>  		crash_max = crash_base + crash_size;
+>  
+>  retry:
+> @@ -156,7 +160,10 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_base >= SZ_4G && reserve_crashkernel_low(crash_low_size)) {
+> +	if (crash_base >= SZ_4G && !high) 
+> +		crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
+> +
+> +	if (reserve_crashkernel_low(crash_low_size)) {
+>  		memblock_phys_free(crash_base, crash_size);
+>  		return;
+>  	}
+
+It feels like {} may need to be added here so that it is in branch "if (crash_base >= SZ_4G)".
+The case of "crashkernel=128M" will not fall back to high memory and does not need to reserve
+low memory again.
+
 > 
->         ck_cmdline += strlen(name);
+>>   *
+>> @@ -81,29 +105,62 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>  static void __init reserve_crashkernel(void)
+>>  {
+>>  	unsigned long long crash_base, crash_size;
+>> +	unsigned long long crash_low_size = SZ_256M;
+>>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>>  	int ret;
+>> +	bool fixed_base;
+>> +	char *cmdline = boot_command_line;
+>>  
+>> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+>> +	/* crashkernel=X[@offset] */
+>> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>>  				&crash_size, &crash_base);
+>> -	/* no crashkernel= or invalid value specified */
+>> -	if (ret || !crash_size)
+>> -		return;
+>> +	if (ret || !crash_size) {
+>> +		unsigned long long low_size;
+>>  
+>> +		/* crashkernel=X,high */
+>> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+>> +		if (ret || !crash_size)
+>> +			return;
+>> +
+>> +		/* crashkernel=X,low */
+>> +		ret = parse_crashkernel_low(cmdline, 0, &low_size, &crash_base);
+>> +		if (!ret)
+>> +			crash_low_size = low_size;
+>> +
+>> +		crash_max = CRASH_ADDR_HIGH_MAX;
+>> +	}
+>> +
+>> +	fixed_base = !!crash_base;
+>>  	crash_size = PAGE_ALIGN(crash_size);
+>>  
+>>  	/* User specifies base address explicitly. */
+>>  	if (crash_base)
+>>  		crash_max = crash_base + crash_size;
+>>  
+>> +retry:
+>>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>>  					       crash_base, crash_max);
+>>  	if (!crash_base) {
+>> +		/*
+>> +		 * Attempt to fully allocate low memory failed, fall back
+>> +		 * to high memory, the minimum required low memory will be
+>> +		 * reserved later.
+>> +		 */
+>> +		if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
+>> +			crash_max = CRASH_ADDR_HIGH_MAX;
+>> +			goto retry;
+>> +		}
+>> +
+>>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+>>  			crash_size);
+>>  		return;
+>>  	}
+>>  
+>> +	if (crash_base >= SZ_4G && reserve_crashkernel_low(crash_low_size)) {
+>> +		memblock_phys_free(crash_base, crash_size);
+>> +		return;
+>> +	}
+>> +
+>>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+>>  		crash_base, crash_base + crash_size, crash_size >> 20);
+>>  
+>> @@ -112,6 +169,9 @@ static void __init reserve_crashkernel(void)
+>>  	 * map. Inform kmemleak so that it won't try to access it.
+>>  	 */
+>>  	kmemleak_ignore_phys(crash_base);
+>> +	if (crashk_low_res.end)
+>> +		kmemleak_ignore_phys(crashk_low_res.start);
+>> +
+>>  	crashk_res.start = crash_base;
+>>  	crashk_res.end = crash_base + crash_size - 1;
+>>  	insert_resource(&iomem_resource, &crashk_res);
+>> -- 
+>> 2.25.1
+>>
 > 
-> 
-> > 
-> >>
-> >>>
-> >>>> +
-> >>>> +		crash_max = CRASH_ADDR_HIGH_MAX;
-> >>>> +	}
-> >>>> +
-> >>>> +	fixed_base = !!crash_base;
-> >>>>  	crash_size = PAGE_ALIGN(crash_size);
-> >>>>  
-> >>>>  	/* User specifies base address explicitly. */
-> >>>>  	if (crash_base)
-> >>>>  		crash_max = crash_base + crash_size;
-> >>>>  
-> >>>> +retry:
-> >>>>  	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
-> >>>>  					       crash_base, crash_max);
-> >>>>  	if (!crash_base) {
-> >>>> +		/*
-> >>>> +		 * Attempt to fully allocate low memory failed, fall back
-> >>>> +		 * to high memory, the minimum required low memory will be
-> >>>> +		 * reserved later.
-> >>>> +		 */
-> >>>> +		if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
-> >>>> +			crash_max = CRASH_ADDR_HIGH_MAX;
-> >>>> +			goto retry;
-> >>>> +		}
-> >>>> +
-> >>>>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
-> >>>>  			crash_size);
-> >>>>  		return;
-> >>>>  	}
-> >>>>  
-> >>>> +	if (crash_base >= SZ_4G && reserve_crashkernel_low(crash_low_size)) {
-> >>>> +		memblock_phys_free(crash_base, crash_size);
-> >>>> +		return;
-> >>>> +	}
-> >>>> +
-> >>>>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
-> >>>>  		crash_base, crash_base + crash_size, crash_size >> 20);
-> >>>>  
-> >>>> @@ -112,6 +169,9 @@ static void __init reserve_crashkernel(void)
-> >>>>  	 * map. Inform kmemleak so that it won't try to access it.
-> >>>>  	 */
-> >>>>  	kmemleak_ignore_phys(crash_base);
-> >>>> +	if (crashk_low_res.end)
-> >>>> +		kmemleak_ignore_phys(crashk_low_res.start);
-> >>>> +
-> >>>>  	crashk_res.start = crash_base;
-> >>>>  	crashk_res.end = crash_base + crash_size - 1;
-> >>>>  	insert_resource(&iomem_resource, &crashk_res);
-> >>>> -- 
-> >>>> 2.25.1
-> >>>>
-> >>>
-> >>> .
-> >>>
-> >>
-> >> -- 
-> >> Regards,
-> >>   Zhen Lei
-> >>
-> > 
-> > .
-> > 
-> 
-> -- 
-> Regards,
->   Zhen Lei
+> .
 > 
 
+-- 
+Regards,
+  Zhen Lei
 
