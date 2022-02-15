@@ -1,80 +1,204 @@
-From: Tobias Powalowski <tobias.powalowski@googlemail.com>
-Date: Tue, 15 Feb 2022 11:31:00 +0100
-Subject: Is it possible to use a stream for initrd=
-In-Reply-To: <20220215112740.587048c7@rhtmp>
-References: <CAHfPjO9MPOP4ZhmLtoyp+YxdreMNCOiy7nApm+uweaSJX5XvpQ@mail.gmail.com>
- <YgMzVA7rzLYAHWNi@MiWiFi-R3L-srv>
- <CAHfPjO-RXk4vo0noptQJ28LxTRQWGCd6yifBqGqPup_aD7h6Ug@mail.gmail.com>
- <YgOJSlK/0UW6rJIS@MiWiFi-R3L-srv>
- <CAHfPjO8XAmK9tbPNpMZO9D9h7MJqMjixhn9hTYmgVK1T2Fxcig@mail.gmail.com>
- <20220215112740.587048c7@rhtmp>
-Message-ID: <CAHfPjO-4_Kh1DgOgoPnZPzsafK-cj=cm4fUe-YYBimpJEveOVw@mail.gmail.com>
+From: Philipp Rudo <prudo@redhat.com>
+Date: Tue, 15 Feb 2022 11:38:54 +0100
+Subject: [RFC PATCH] kdump: Add support for crashkernel=auto
+In-Reply-To: <e58be621-be9f-ea10-502c-82b95bee63e4@suse.cz>
+References: <1643275911-19489-1-git-send-email-yangtiezhu@loongson.cn>
+ <d513dea3-7300-9684-73af-0b51f5f0e572@suse.cz>
+ <f28c65f0-9bbb-6bf8-a223-0e18b861c805@loongson.cn>
+ <ba065272-78bd-65d0-1e76-08455519b6db@suse.cz>
+ <20220131113351.49a47caf@rhtmp>
+ <e58be621-be9f-ea10-502c-82b95bee63e4@suse.cz>
+Message-ID: <20220215113854.7c7e3686@rhtmp>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
-thanks for your answers, would be really cool if someone could implement it.
-Would help my Arch Linux project to save even more RAM.
-https://wiki.archlinux.org/title/Archboot
-greetings
-tpowa
+Hi Petr,
 
-Am Di., 15. Feb. 2022 um 11:27 Uhr schrieb Philipp Rudo <prudo@redhat.com>:
->
-> Hi Tobias,
->
-> On Wed, 9 Feb 2022 10:32:24 +0100
-> Tobias Powalowski <tobias.powalowski@googlemail.com> wrote:
->
-> > Sorry you misunderstood, I don't want to create the initrd.img file.
-> > I want to pass the zstd directly to kexec initrd= option.
->
-> sorry, that is not possible. The kexec-tools expect a file name with
-> --initrd. Simply passing a binary blob to be used as initrd isn't
-> implemented.
->
-> Thanks
-> Philipp
->
-> > greetings
-> > tpowa
-> >
-> > Am Mi., 9. Feb. 2022 um 10:28 Uhr schrieb Baoquan He <bhe@redhat.com>:
-> > >
-> > > On 02/09/22 at 10:16am, Tobias Powalowski wrote:
-> > > > Hi,
-> > > > I have a tmp directory with all files placed in:
-> > > > find . -mindepth 1 -printf '%P\0' | sort -z | LANG=C bsdtar --uid 0
-> > > > --gid 0 --null -cnf - -T - |\
-> > > >     LANG=C bsdtar --null -cf - --format=newc @- | zstd -T0 > /initrd.img
-> > > >
-> > > > and this initrd.img I want to write into kexec without creating the initrd file.
-> > > >
-> > > > kexec -l /vmlinuz-linux --initrd=/initrd.img --reuse-cmdline
-> > > >  systemctl kexec
-> > >
-> > > See manpage of kexec, the EXAMPLE part:
-> > >
-> > > kexec -l /boot/vmlinux  --initrd=/boot/initrd --reuse-cmdline
-> > > kexec -e
-> > >
-> >
-> >
->
+On Fri, 4 Feb 2022 06:34:19 +0100
+Petr Tesa??k <ptesarik@suse.cz> wrote:
 
+> Hi Philipp,
+> 
+> Dne 31. 01. 22 v 11:33 Philipp Rudo napsal(a):
+> > Hi,
+> > 
+> > On Fri, 28 Jan 2022 11:31:49 +0100
+> > Petr Tesa??k <ptesarik@suse.cz> wrote:
+> >   
+> >> Hi Tiezhu Yang,
+> >>
+> >> On Jan 28, 2022 at 02:20 Tiezhu Yang wrote:  
+> >>> [...]
+> >>> Hi Petr,
+> >>>
+> >>> Thank you for your reply.
+> >>>
+> >>> This is a RFC patch, the initial aim of this patch is to discuss what is
+> >>> the proper way to support crashkernel=auto.  
+> >>
+> >> Well, the point I'm trying to make is that crashkernel=auto cannot be
+> >> implemented. Your code would have to know what happens in the future,
+> >> and AFAIK time travel has not been discovered yet. ;-)
+> >>
+> >> A better approach is to make a very large allocation initially, e.g.
+> >> half of available RAM. The remaining RAM should still be big enough to
+> >> start booting the system. Later, when a kdump user-space service knows
+> >> what it wants to load, it can shrink the reservation by writing a lower
+> >> value into /sys/kernel/kexec_crash_size.  
+> > 
+> > Even this approach doesn't work in every situation. For example it
+> > requires that the system has at least twice the RAM it requires to
+> > safely boot. That's not always given for e.g minimalistic VMs or
+> > embedded systems.  
+> 
+> If you reserve more RAM for the panic kernel than for running your 
+> actual workload, then you definitely have very special needs, and you 
+> should not expect that everything works out of the box.
 
--- 
-Tobias Powalowski
-Archlinux Developer & Package Maintainer (tpowa)
-https://www.archlinux.org
-tpowa at archlinux.org
+That was basically the point I was trying to make. There is always a
+scenario with special needs so that is is basically impossible to find
+that one solution that works for everybody.
 
-St. Martin-Apotheke
-Herzog-Georg-Str. 25
-89415 Lauingen
-https://www.st-martin-apo.de
-info at st-martin-apo.de
+> > Furthermore the memory requirement can also change during runtime due
+> > to, e.g. workload spikes, device hot plug, moving the dump target from
+> > an un-encrypted to an encrypted disk, etc.. So even when your user-space
+> > program can exactly calculate the memory requirement at the moment
+> > it loads kdump it might be too little at the moment the system panics.
+> > In order for it to work the user-space would constantly need to monitor
+> > how much memory is needed and adjust the requirement. But that would
+> > also require to increase the reservation during runtime which would be
+> > extremely expensive (if possible at all).
+> > 
+> > All in all I support Petr that time travel is the only proper solution
+> > for implementing crashkernel=auto. But once we have time travel I
+> > would prefer to use the gained knowledge to fix the bug that triggered
+> > the panic rather than calculating the memory requirement for kdump.  
+> 
+> Yeah, long live patching! :-)
+> 
+> >> The alternative approach does not need any changes to the kernel, except
+> >> maybe adding something like "crashkernel=max".  
+> > 
+> > A slightly different approach is for the user-space tool to simply set
+> > the crashkernel= parameter on the kernel commandline for the next boot.
+> > This also works for memory restrained systems. Needs a reboot though...  
+> 
+> The downside is that if you remove some memory while your system is off, 
+> then a reservation calculate for the previous RAM size may no longer be 
+> possible on the next boot, and the kernel will boot up without any 
+> reservation. That's where "crashkernel=max" would come in handy. Let me 
+> send a patch and see the discussion.
+
+True, in that situation our approach will fail. I'm looking forward to
+see your patch.
+
+Thanks
+Philipp
+
+> >>> A moment ago, I find the following patch, it is more flexible, but it is
+> >>> not merged into the upstream kernel now.
+> >>>
+> >>> kernel/crash_core: Add crashkernel=auto for vmcore creation
+> >>>
+> >>> https://lore.kernel.org/lkml/20210223174153.72802-1-saeed.mirzamohammadi at oracle.com/  
+> > 
+> > The patch was ultimately rejected by Linus
+> > 
+> > https://lore.kernel.org/linux-mm/20210507010432.IN24PudKT%25akpm at linux-foundation.org/
+> > 
+> > Thanks
+> > Philipp
+> >   
+> >>>      
+> >>>>     
+> >>>>> [...]
+> >>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> >>>>> index 256cf6d..32c51e2 100644
+> >>>>> --- a/kernel/crash_core.c
+> >>>>> +++ b/kernel/crash_core.c
+> >>>>> @@ -252,6 +252,26 @@ static int __init __parse_crashkernel(char
+> >>>>> *cmdline,
+> >>>>>  ????? if (suffix)
+> >>>>>  ????????? return parse_crashkernel_suffix(ck_cmdline, crash_size,
+> >>>>>  ????????????????? suffix);
+> >>>>> +
+> >>>>> +??? if (strncmp(ck_cmdline, "auto", 4) == 0) {
+> >>>>> +#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
+> >>>>> +??????? ck_cmdline = "1G-4G:160M,4G-64G:192M,64G-1T:256M,1T-:512M";
+> >>>>> +#elif defined(CONFIG_ARM64)
+> >>>>> +??????? ck_cmdline = "2G-:448M";
+> >>>>> +#elif defined(CONFIG_PPC64)
+> >>>>> +??????? char *fadump_cmdline;
+> >>>>> +
+> >>>>> +??????? fadump_cmdline = get_last_crashkernel(cmdline, "fadump=",
+> >>>>> NULL);
+> >>>>> +??????? fadump_cmdline = fadump_cmdline ?
+> >>>>> +??????????????? fadump_cmdline + strlen("fadump=") : NULL;
+> >>>>> +??????? if (!fadump_cmdline || (strncmp(fadump_cmdline, "off", 3) ==
+> >>>>> 0))
+> >>>>> +??????????? ck_cmdline =
+> >>>>> "2G-4G:384M,4G-16G:512M,16G-64G:1G,64G-128G:2G,128G-:4G";
+> >>>>> +??????? else
+> >>>>> +??????????? ck_cmdline =
+> >>>>> "4G-16G:768M,16G-64G:1G,64G-128G:2G,128G-1T:4G,1T-2T:6G,2T-4T:12G,4T-8T:20G,8T-16T:36G,16T-32T:64G,32T-64T:128G,64T-:180G";
+> >>>>>
+> >>>>>
+> >>>>> +#endif
+> >>>>> +??????? pr_info("Using crashkernel=auto, the size chosen is a best
+> >>>>> effort estimation.\n");
+> >>>>> +??? }
+> >>>>> +  
+> >>>>
+> >>>> How did you even arrive at the above numbers?  
+> >>>
+> >>> Memory requirements for kdump:
+> >>>
+> >>> https://access.redhat.com/documentation/en-us/red_hat_enterprise_linux/8/html/managing_monitoring_and_updating_the_kernel/supported-kdump-configurations-and-targets_managing-monitoring-and-updating-the-kernel#memory-requirements-for-kdump_supported-kdump-configurations-and-targets
+> >>>
+> >>>
+> >>> I've done some research on  
+> >>>> this topic recently (ie. during the last 7 years or so). My x86_64
+> >>>> system with 8G RAM running openSUSE Leap 15.3 seems needs 188M for
+> >>>> saving to the local disk, and 203M to save over the network (using
+> >>>> SFTP). My PPC64 LPAR with 16G RAM running latest Beta of SLES 15 SP4
+> >>>> needs 587M, i.e. with the above numbers it may run out of memory while
+> >>>> saving the dump.
+> >>>>
+> >>>> Since this is not the first time, I'm trying to explain things, I've
+> >>>> written a blog post now:
+> >>>>
+> >>>> https://sigillatum.tesarici.cz/2022-01-27-whats-wrong-with-crashkernel-auto.html
+> >>>>
+> >>>>     
+> >>>
+> >>> Thank you, this is useful.
+> >>>
+> >>> Thanks,
+> >>> Tiezhu
+> >>>      
+> >>>>
+> >>>> HTH
+> >>>> Petr Tesarik  
+> >>>
+> >>>
+> >>> _______________________________________________
+> >>> kexec mailing list
+> >>> kexec at lists.infradead.org
+> >>> http://lists.infradead.org/mailman/listinfo/kexec  
+> >>
+> >> _______________________________________________
+> >> kexec mailing list
+> >> kexec at lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/kexec  
+> > 
+> > 
+> > _______________________________________________
+> > kexec mailing list
+> > kexec at lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec  
+> 
+
 
