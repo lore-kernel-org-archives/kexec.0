@@ -1,51 +1,56 @@
 From: Michal Suchanek <msuchanek@suse.de>
-Date: Tue, 15 Feb 2022 20:39:38 +0100
-Subject: [PATCH 1/4] Fix arm64 kexec forbidding kernels signed with keys in
- the secondary keyring to boot
+Date: Tue, 15 Feb 2022 20:39:39 +0100
+Subject: [PATCH 2/4] kexec, KEYS,
+ arm64: Make use of platform keyring for signature verification
 In-Reply-To: <cover.1644953683.git.msuchanek@suse.de>
 References: <cover.1644953683.git.msuchanek@suse.de>
-Message-ID: <83b3583f35c50c609739a8d857d14e8410293373.1644953683.git.msuchanek@suse.de>
+Message-ID: <7581dcfe676024aa438beddecbf162e4ec81ccfc.1644953683.git.msuchanek@suse.de>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-commit d3bfe84129f6 ("certs: Add a secondary system keyring that can be added to dynamically")
-split of .system_keyring into .builtin_trusted_keys and
-.secondary_trusted_keys broke kexec, thereby preventing kernels signed by
-keys which are now in the secondary keyring from being kexec'd.
+commit 278311e417be ("kexec, KEYS: Make use of platform keyring for signature verify")
+adds platform keyring support on x86 kexec but not arm64.
 
-Fix this by passing VERIFY_USE_SECONDARY_KEYRING to
-verify_pefile_signature().
+Add platform keyring support on arm64 as well.
 
-Cherry-picked from
-commit ea93102f3224 ("Fix kexec forbidding kernels signed with keys in the secondary keyring to boot")
-
-Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+Fixes: 278311e417be ("kexec, KEYS: Make use of platform keyring for signature verify")
 Cc: kexec at lists.infradead.org
 Cc: keyrings at vger.kernel.org
 Cc: linux-security-module at vger.kernel.org
 Cc: stable at kernel.org
 Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 ---
- arch/arm64/kernel/kexec_image.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/kexec_image.c | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
 diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 9ec34690e255..1fbf2ee7c005 100644
+index 1fbf2ee7c005..3dee7b2d8336 100644
 --- a/arch/arm64/kernel/kexec_image.c
 +++ b/arch/arm64/kernel/kexec_image.c
-@@ -133,7 +133,8 @@ static void *image_load(struct kimage *image,
+@@ -133,9 +133,17 @@ static void *image_load(struct kimage *image,
  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
  static int image_verify_sig(const char *kernel, unsigned long kernel_len)
  {
--	return verify_pefile_signature(kernel, kernel_len, NULL,
-+	return verify_pefile_signature(kernel, kernel_len,
-+				       VERIFY_USE_SECONDARY_KEYRING,
- 				       VERIFYING_KEXEC_PE_SIGNATURE);
+-	return verify_pefile_signature(kernel, kernel_len,
+-				       VERIFY_USE_SECONDARY_KEYRING,
+-				       VERIFYING_KEXEC_PE_SIGNATURE);
++	int ret;
++
++	ret = verify_pefile_signature(kernel, kernel_len,
++				      VERIFY_USE_SECONDARY_KEYRING,
++				      VERIFYING_KEXEC_PE_SIGNATURE);
++	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
++		ret = verify_pefile_signature(kernel, kernel_len,
++					      VERIFY_USE_PLATFORM_KEYRING,
++					      VERIFYING_KEXEC_PE_SIGNATURE);
++	}
++	return ret;
  }
  #endif
+ 
 -- 
 2.31.1
 
