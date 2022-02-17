@@ -1,228 +1,562 @@
 From: Ross Philipson <ross.philipson@oracle.com>
-Date: Wed, 16 Feb 2022 22:54:41 -0500
-Subject: [PATCH v5 08/12] x86: Secure Launch SMP bringup support
+Date: Wed, 16 Feb 2022 22:54:37 -0500
+Subject: [PATCH v5 04/12] x86: Secure Launch main header file
 In-Reply-To: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
 References: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
-Message-ID: <1645070085-14255-9-git-send-email-ross.philipson@oracle.com>
+Message-ID: <1645070085-14255-5-git-send-email-ross.philipson@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Intel, the APs are left in a well documented state after TXT performs
-the late launch. Specifically they cannot have #INIT asserted on them so
-a standard startup via INIT/SIPI/SIPI cannot be performed. Instead the
-early SL stub code parked the APs in a pause/jmp loop waiting for an NMI.
-The modified SMP boot code is called for the Secure Launch case. The
-jump address for the RM piggy entry point is fixed up in the jump where
-the APs are waiting and an NMI IPI is sent to the AP. The AP vectors to
-the Secure Launch entry point in the RM piggy which mimics what the real
-mode code would do then jumps to the standard RM piggy protected mode
-entry point.
+Introduce the main Secure Launch header file used in the early SL stub
+and the early setup code.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/include/asm/realmode.h      |  3 ++
- arch/x86/kernel/smpboot.c            | 86 ++++++++++++++++++++++++++++++++++++
- arch/x86/realmode/rm/header.S        |  3 ++
- arch/x86/realmode/rm/trampoline_64.S | 37 ++++++++++++++++
- 4 files changed, 129 insertions(+)
+ include/linux/slaunch.h | 532 ++++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 532 insertions(+)
+ create mode 100644 include/linux/slaunch.h
 
-diff --git a/arch/x86/include/asm/realmode.h b/arch/x86/include/asm/realmode.h
-index 331474b..151d09a 100644
---- a/arch/x86/include/asm/realmode.h
-+++ b/arch/x86/include/asm/realmode.h
-@@ -37,6 +37,9 @@ struct real_mode_header {
- #ifdef CONFIG_X86_64
- 	u32	machine_real_restart_seg;
- #endif
-+#ifdef CONFIG_SECURE_LAUNCH
-+	u32	sl_trampoline_start32;
-+#endif
- };
- 
- /* This must match data at realmode/rm/trampoline_{32,64}.S */
-diff --git a/arch/x86/kernel/smpboot.c b/arch/x86/kernel/smpboot.c
-index 617012f..94b37ab 100644
---- a/arch/x86/kernel/smpboot.c
-+++ b/arch/x86/kernel/smpboot.c
-@@ -57,6 +57,7 @@
- #include <linux/pgtable.h>
- #include <linux/overflow.h>
- #include <linux/syscore_ops.h>
-+#include <linux/slaunch.h>
- 
- #include <asm/acpi.h>
- #include <asm/desc.h>
-@@ -1073,6 +1074,83 @@ int common_cpu_up(unsigned int cpu, struct task_struct *idle)
- 	return 0;
- }
- 
-+#ifdef CONFIG_SECURE_LAUNCH
+diff --git a/include/linux/slaunch.h b/include/linux/slaunch.h
+new file mode 100644
+index 00000000..87ab663
+--- /dev/null
++++ b/include/linux/slaunch.h
+@@ -0,0 +1,532 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Main Secure Launch header file.
++ *
++ * Copyright (c) 2022, Oracle and/or its affiliates.
++ */
 +
-+static atomic_t first_ap_only = {1};
++#ifndef _LINUX_SLAUNCH_H
++#define _LINUX_SLAUNCH_H
 +
 +/*
-+ * Called to fix the long jump address for the waiting APs to vector to
-+ * the correct startup location in the Secure Launch stub in the rmpiggy.
++ * Secure Launch Defined State Flags
 + */
-+static int
-+slaunch_fixup_jump_vector(void)
++#define SL_FLAG_ACTIVE		0x00000001
++#define SL_FLAG_ARCH_SKINIT	0x00000002
++#define SL_FLAG_ARCH_TXT	0x00000004
++
++/*
++ * Secure Launch CPU Type
++ */
++#define SL_CPU_AMD	1
++#define SL_CPU_INTEL	2
++
++#if IS_ENABLED(CONFIG_SECURE_LAUNCH)
++
++#define __SL32_CS	0x0008
++#define __SL32_DS	0x0010
++
++/*
++ * Intel Safer Mode Extensions (SMX)
++ *
++ * Intel SMX provides a programming interface to establish a Measured Launched
++ * Environment (MLE). The measurement and protection mechanisms supported by the
++ * capabilities of an Intel Trusted Execution Technology (TXT) platform. SMX is
++ * the processor?s programming interface in an Intel TXT platform.
++ *
++ * See Intel SDM Volume 2 - 6.1 "Safer Mode Extensions Reference"
++ */
++
++/*
++ * SMX GETSEC Leaf Functions
++ */
++#define SMX_X86_GETSEC_SEXIT	5
++#define SMX_X86_GETSEC_SMCTRL	7
++#define SMX_X86_GETSEC_WAKEUP	8
++
++/*
++ * Intel Trusted Execution Technology MMIO Registers Banks
++ */
++#define TXT_PUB_CONFIG_REGS_BASE	0xfed30000
++#define TXT_PRIV_CONFIG_REGS_BASE	0xfed20000
++#define TXT_NR_CONFIG_PAGES     ((TXT_PUB_CONFIG_REGS_BASE - \
++				  TXT_PRIV_CONFIG_REGS_BASE) >> PAGE_SHIFT)
++
++/*
++ * Intel Trusted Execution Technology (TXT) Registers
++ */
++#define TXT_CR_STS			0x0000
++#define TXT_CR_ESTS			0x0008
++#define TXT_CR_ERRORCODE		0x0030
++#define TXT_CR_CMD_RESET		0x0038
++#define TXT_CR_CMD_CLOSE_PRIVATE	0x0048
++#define TXT_CR_DIDVID			0x0110
++#define TXT_CR_VER_EMIF			0x0200
++#define TXT_CR_CMD_UNLOCK_MEM_CONFIG	0x0218
++#define TXT_CR_SINIT_BASE		0x0270
++#define TXT_CR_SINIT_SIZE		0x0278
++#define TXT_CR_MLE_JOIN			0x0290
++#define TXT_CR_HEAP_BASE		0x0300
++#define TXT_CR_HEAP_SIZE		0x0308
++#define TXT_CR_SCRATCHPAD		0x0378
++#define TXT_CR_CMD_OPEN_LOCALITY1	0x0380
++#define TXT_CR_CMD_CLOSE_LOCALITY1	0x0388
++#define TXT_CR_CMD_OPEN_LOCALITY2	0x0390
++#define TXT_CR_CMD_CLOSE_LOCALITY2	0x0398
++#define TXT_CR_CMD_SECRETS		0x08e0
++#define TXT_CR_CMD_NO_SECRETS		0x08e8
++#define TXT_CR_E2STS			0x08f0
++
++/* TXT default register value */
++#define TXT_REGVALUE_ONE		0x1ULL
++
++/* TXTCR_STS status bits */
++#define TXT_SENTER_DONE_STS		(1<<0)
++#define TXT_SEXIT_DONE_STS		(1<<1)
++
++/*
++ * SINIT/MLE Capabilities Field Bit Definitions
++ */
++#define TXT_SINIT_MLE_CAP_WAKE_GETSEC	0
++#define TXT_SINIT_MLE_CAP_WAKE_MONITOR	1
++
++/*
++ * OS/MLE Secure Launch Specific Definitions
++ */
++#define TXT_OS_MLE_STRUCT_VERSION	1
++#define TXT_OS_MLE_MAX_VARIABLE_MTRRS	32
++
++/*
++ * TXT Heap Table Enumeration
++ */
++#define TXT_BIOS_DATA_TABLE		1
++#define TXT_OS_MLE_DATA_TABLE		2
++#define TXT_OS_SINIT_DATA_TABLE		3
++#define TXT_SINIT_MLE_DATA_TABLE	4
++#define TXT_SINIT_TABLE_MAX		TXT_SINIT_MLE_DATA_TABLE
++
++/*
++ * Secure Launch Defined Error Codes used in MLE-initiated TXT resets.
++ *
++ * TXT Specification
++ * Appendix I ACM Error Codes
++ */
++#define SL_ERROR_GENERIC		0xc0008001
++#define SL_ERROR_TPM_INIT		0xc0008002
++#define SL_ERROR_TPM_INVALID_LOG20	0xc0008003
++#define SL_ERROR_TPM_LOGGING_FAILED	0xc0008004
++#define SL_ERROR_REGION_STRADDLE_4GB	0xc0008005
++#define SL_ERROR_TPM_EXTEND		0xc0008006
++#define SL_ERROR_MTRR_INV_VCNT		0xc0008007
++#define SL_ERROR_MTRR_INV_DEF_TYPE	0xc0008008
++#define SL_ERROR_MTRR_INV_BASE		0xc0008009
++#define SL_ERROR_MTRR_INV_MASK		0xc000800a
++#define SL_ERROR_MSR_INV_MISC_EN	0xc000800b
++#define SL_ERROR_INV_AP_INTERRUPT	0xc000800c
++#define SL_ERROR_INTEGER_OVERFLOW	0xc000800d
++#define SL_ERROR_HEAP_WALK		0xc000800e
++#define SL_ERROR_HEAP_MAP		0xc000800f
++#define SL_ERROR_REGION_ABOVE_4GB	0xc0008010
++#define SL_ERROR_HEAP_INVALID_DMAR	0xc0008011
++#define SL_ERROR_HEAP_DMAR_SIZE		0xc0008012
++#define SL_ERROR_HEAP_DMAR_MAP		0xc0008013
++#define SL_ERROR_HI_PMR_BASE		0xc0008014
++#define SL_ERROR_HI_PMR_SIZE		0xc0008015
++#define SL_ERROR_LO_PMR_BASE		0xc0008016
++#define SL_ERROR_LO_PMR_MLE		0xc0008017
++#define SL_ERROR_INITRD_TOO_BIG		0xc0008018
++#define SL_ERROR_HEAP_ZERO_OFFSET	0xc0008019
++#define SL_ERROR_WAKE_BLOCK_TOO_SMALL	0xc000801a
++#define SL_ERROR_MLE_BUFFER_OVERLAP	0xc000801b
++#define SL_ERROR_BUFFER_BEYOND_PMR	0xc000801c
++#define SL_ERROR_OS_SINIT_BAD_VERSION	0xc000801d
++#define SL_ERROR_EVENTLOG_MAP		0xc000801e
++#define SL_ERROR_TPM_NUMBER_ALGS	0xc000801f
++#define SL_ERROR_TPM_UNKNOWN_DIGEST	0xc0008020
++#define SL_ERROR_TPM_INVALID_EVENT	0xc0008021
++
++/*
++ * Secure Launch Defined Limits
++ */
++#define TXT_MAX_CPUS		512
++#define TXT_BOOT_STACK_SIZE	24
++
++/*
++ * Secure Launch event log entry type. The TXT specification defines the
++ * base event value as 0x400 for DRTM values.
++ */
++#define TXT_EVTYPE_BASE			0x400
++#define TXT_EVTYPE_SLAUNCH		(TXT_EVTYPE_BASE + 0x102)
++#define TXT_EVTYPE_SLAUNCH_START	(TXT_EVTYPE_BASE + 0x103)
++#define TXT_EVTYPE_SLAUNCH_END		(TXT_EVTYPE_BASE + 0x104)
++
++/*
++ * Measured Launch PCRs
++ */
++#define SL_DEF_DLME_DETAIL_PCR17	17
++#define SL_DEF_DLME_AUTHORITY_PCR18	18
++#define SL_ALT_DLME_AUTHORITY_PCR19	19
++#define SL_ALT_DLME_DETAIL_PCR20	20
++
++/*
++ * MLE scratch area offsets
++ */
++#define SL_SCRATCH_AP_EBX		0
++#define SL_SCRATCH_AP_JMP_OFFSET	4
++#define SL_SCRATCH_AP_PAUSE		8
++
++#ifndef __ASSEMBLY__
++
++#include <linux/io.h>
++#include <linux/tpm.h>
++#include <linux/tpm_eventlog.h>
++
++/*
++ * Secure Launch AP wakeup information fetched in SMP boot code.
++ */
++struct sl_ap_wake_info {
++	u32 ap_wake_block;
++	u32 ap_wake_block_size;
++	u32 ap_jmp_offset;
++};
++
++/*
++ * TXT heap extended data elements.
++ */
++struct txt_heap_ext_data_element {
++	u32 type;
++	u32 size;
++	/* Data */
++} __packed;
++
++#define TXT_HEAP_EXTDATA_TYPE_END			0
++
++struct txt_heap_end_element {
++	u32 type;
++	u32 size;
++} __packed;
++
++#define TXT_HEAP_EXTDATA_TYPE_TPM_EVENT_LOG_PTR		5
++
++struct txt_heap_event_log_element {
++	u64 event_log_phys_addr;
++} __packed;
++
++#define TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1	8
++
++struct txt_heap_event_log_pointer2_1_element {
++	u64 phys_addr;
++	u32 allocated_event_container_size;
++	u32 first_record_offset;
++	u32 next_record_offset;
++} __packed;
++
++/*
++ * Secure Launch defined MTRR saving structures
++ */
++struct txt_mtrr_pair {
++	u64 mtrr_physbase;
++	u64 mtrr_physmask;
++} __packed;
++
++struct txt_mtrr_state {
++	u64 default_mem_type;
++	u64 mtrr_vcnt;
++	struct txt_mtrr_pair mtrr_pair[TXT_OS_MLE_MAX_VARIABLE_MTRRS];
++} __packed;
++
++/*
++ * Secure Launch defined OS/MLE TXT Heap table
++ */
++struct txt_os_mle_data {
++	u32 version;
++	u32 boot_params_addr;
++	u64 saved_misc_enable_msr;
++	struct txt_mtrr_state saved_bsp_mtrrs;
++	u32 ap_wake_block;
++	u32 ap_wake_block_size;
++	u64 evtlog_addr;
++	u32 evtlog_size;
++	u8 mle_scratch[64];
++} __packed;
++
++/*
++ * TXT specification defined BIOS data TXT Heap table
++ */
++struct txt_bios_data {
++	u32 version; /* Currently 5 for TPM 1.2 and 6 for TPM 2.0 */
++	u32 bios_sinit_size;
++	u64 reserved1;
++	u64 reserved2;
++	u32 num_logical_procs;
++	/* Versions >= 5 with updates in version 6 */
++	u32 sinit_flags;
++	u32 mle_flags;
++	/* Versions >= 4 */
++	/* Ext Data Elements */
++} __packed;
++
++/*
++ * TXT specification defined OS/SINIT TXT Heap table
++ */
++struct txt_os_sinit_data {
++	u32 version; /* Currently 6 for TPM 1.2 and 7 for TPM 2.0 */
++	u32 flags;
++	u64 mle_ptab;
++	u64 mle_size;
++	u64 mle_hdr_base;
++	u64 vtd_pmr_lo_base;
++	u64 vtd_pmr_lo_size;
++	u64 vtd_pmr_hi_base;
++	u64 vtd_pmr_hi_size;
++	u64 lcp_po_base;
++	u64 lcp_po_size;
++	u32 capabilities;
++	/* Version = 5 */
++	u64 efi_rsdt_ptr;
++	/* Versions >= 6 */
++	/* Ext Data Elements */
++} __packed;
++
++/*
++ * TXT specification defined SINIT/MLE TXT Heap table
++ */
++struct txt_sinit_mle_data {
++	u32 version;             /* Current values are 6 through 9 */
++	/* Versions <= 8 */
++	u8 bios_acm_id[20];
++	u32 edx_senter_flags;
++	u64 mseg_valid;
++	u8 sinit_hash[20];
++	u8 mle_hash[20];
++	u8 stm_hash[20];
++	u8 lcp_policy_hash[20];
++	u32 lcp_policy_control;
++	/* Versions >= 7 */
++	u32 rlp_wakeup_addr;
++	u32 reserved;
++	u32 num_of_sinit_mdrs;
++	u32 sinit_mdrs_table_offset;
++	u32 sinit_vtd_dmar_table_size;
++	u32 sinit_vtd_dmar_table_offset;
++	/* Versions >= 8 */
++	u32 processor_scrtm_status;
++	/* Versions >= 9 */
++	/* Ext Data Elements */
++} __packed;
++
++/*
++ * TXT data reporting structure for memory types
++ */
++struct txt_sinit_memory_descriptor_record {
++	u64 address;
++	u64 length;
++	u8 type;
++	u8 reserved[7];
++} __packed;
++
++/*
++ * TXT data structure used by a responsive local processor (RLP) to start
++ * execution in response to a GETSEC[WAKEUP].
++ */
++struct smx_rlp_mle_join {
++	u32 rlp_gdt_limit;
++	u32 rlp_gdt_base;
++	u32 rlp_seg_sel;     /* cs (ds, es, ss are seg_sel+8) */
++	u32 rlp_entry_point; /* phys addr */
++} __packed;
++
++/*
++ * TPM event log structures defined in both the TXT specification and
++ * the TCG documentation.
++ */
++#define TPM12_EVTLOG_SIGNATURE "TXT Event Container"
++
++struct tpm12_event_log_header {
++	char signature[20];
++	char reserved[12];
++	u8 container_ver_major;
++	u8 container_ver_minor;
++	u8 pcr_event_ver_major;
++	u8 pcr_event_ver_minor;
++	u32 container_size;
++	u32 pcr_events_offset;
++	u32 next_event_offset;
++	/* PCREvents[] */
++} __packed;
++
++/*
++ * Functions to extract data from the Intel TXT Heap Memory. The layout
++ * of the heap is as follows:
++ *  +----------------------------+
++ *  | Size Bios Data table (u64) |
++ *  +----------------------------+
++ *  | Bios Data table            |
++ *  +----------------------------+
++ *  | Size OS MLE table (u64)    |
++ *  +----------------------------+
++ *  | OS MLE table               |
++ *  +--------------------------- +
++ *  | Size OS SINIT table (u64)  |
++ *  +----------------------------+
++ *  | OS SINIT table             |
++ *  +----------------------------+
++ *  | Size SINIT MLE table (u64) |
++ *  +----------------------------+
++ *  | SINIT MLE table            |
++ *  +----------------------------+
++ *
++ *  NOTE: the table size fields include the 8 byte size field itself.
++ */
++static inline u64 txt_bios_data_size(void *heap)
 +{
-+	struct sl_ap_wake_info *ap_wake_info;
-+	u32 *ap_jmp_ptr = NULL;
++	return *((u64 *)heap);
++}
 +
-+	if (!atomic_dec_and_test(&first_ap_only))
-+		return 0;
++static inline void *txt_bios_data_start(void *heap)
++{
++	return heap + sizeof(u64);
++}
 +
-+	ap_wake_info = slaunch_get_ap_wake_info();
++static inline u64 txt_os_mle_data_size(void *heap)
++{
++	return *((u64 *)(heap + txt_bios_data_size(heap)));
++}
 +
-+	ap_jmp_ptr = (u32 *)__va(ap_wake_info->ap_wake_block +
-+				 ap_wake_info->ap_jmp_offset);
++static inline void *txt_os_mle_data_start(void *heap)
++{
++	return heap + txt_bios_data_size(heap) + sizeof(u64);
++}
 +
-+	*ap_jmp_ptr = real_mode_header->sl_trampoline_start32;
++static inline u64 txt_os_sinit_data_size(void *heap)
++{
++	return *((u64 *)(heap + txt_bios_data_size(heap) +
++			txt_os_mle_data_size(heap)));
++}
 +
-+	pr_debug("TXT AP long jump address updated\n");
++static inline void *txt_os_sinit_data_start(void *heap)
++{
++	return heap + txt_bios_data_size(heap) +
++		txt_os_mle_data_size(heap) + sizeof(u64);
++}
++
++static inline u64 txt_sinit_mle_data_size(void *heap)
++{
++	return *((u64 *)(heap + txt_bios_data_size(heap) +
++			txt_os_mle_data_size(heap) +
++			txt_os_sinit_data_size(heap)));
++}
++
++static inline void *txt_sinit_mle_data_start(void *heap)
++{
++	return heap + txt_bios_data_size(heap) +
++		txt_os_mle_data_size(heap) +
++		txt_sinit_mle_data_size(heap) + sizeof(u64);
++}
++
++/*
++ * TPM event logging functions.
++ */
++static inline struct txt_heap_event_log_pointer2_1_element*
++tpm20_find_log2_1_element(struct txt_os_sinit_data *os_sinit_data)
++{
++	struct txt_heap_ext_data_element *ext_elem;
++
++	/* The extended element array as at the end of this table */
++	ext_elem = (struct txt_heap_ext_data_element *)
++		((u8 *)os_sinit_data + sizeof(struct txt_os_sinit_data));
++
++	while (ext_elem->type != TXT_HEAP_EXTDATA_TYPE_END) {
++		if (ext_elem->type ==
++		    TXT_HEAP_EXTDATA_TYPE_EVENT_LOG_POINTER2_1) {
++			return (struct txt_heap_event_log_pointer2_1_element *)
++				((u8 *)ext_elem +
++					sizeof(struct txt_heap_ext_data_element));
++		}
++		ext_elem =
++			(struct txt_heap_ext_data_element *)
++			((u8 *)ext_elem + ext_elem->size);
++	}
++
++	return NULL;
++}
++
++static inline int tpm12_log_event(void *evtlog_base, u32 evtlog_size,
++				  u32 event_size, void *event)
++{
++	struct tpm12_event_log_header *evtlog =
++		(struct tpm12_event_log_header *)evtlog_base;
++
++	if (memcmp(evtlog->signature, TPM12_EVTLOG_SIGNATURE,
++		   sizeof(TPM12_EVTLOG_SIGNATURE)))
++		return -EINVAL;
++
++	if (evtlog->container_size > evtlog_size)
++		return -EINVAL;
++
++	if (evtlog->next_event_offset + event_size > evtlog->container_size)
++		return -E2BIG;
++
++	memcpy(evtlog_base + evtlog->next_event_offset, event, event_size);
++	evtlog->next_event_offset += event_size;
++
++	return 0;
++}
++
++static inline int tpm20_log_event(struct txt_heap_event_log_pointer2_1_element *elem,
++				  void *evtlog_base, u32 evtlog_size,
++				  u32 event_size, void *event)
++{
++	struct tcg_pcr_event *header =
++		(struct tcg_pcr_event *)evtlog_base;
++
++	/* Has to be at least big enough for the signature */
++	if (header->event_size < sizeof(TCG_SPECID_SIG))
++		return -EINVAL;
++
++	if (memcmp((u8 *)header + sizeof(struct tcg_pcr_event),
++		   TCG_SPECID_SIG, sizeof(TCG_SPECID_SIG)))
++		return -EINVAL;
++
++	if (elem->allocated_event_container_size > evtlog_size)
++		return -EINVAL;
++
++	if (elem->next_record_offset + event_size >
++	    elem->allocated_event_container_size)
++		return -E2BIG;
++
++	memcpy(evtlog_base + elem->next_record_offset, event, event_size);
++	elem->next_record_offset += event_size;
 +
 +	return 0;
 +}
 +
 +/*
-+ * TXT AP startup is quite different than normal. The APs cannot have #INIT
-+ * asserted on them or receive SIPIs. The early Secure Launch code has parked
-+ * the APs in a pause loop waiting to receive an NMI. This will wake the APs
-+ * and have them jump to the protected mode code in the rmpiggy where the rest
-+ * of the SMP boot of the AP will proceed normally.
++ * External functions avalailable in compressed kernel.
 + */
-+static int
-+slaunch_wakeup_cpu_from_txt(int cpu, int apicid)
-+{
-+	unsigned long send_status = 0, accept_status = 0;
++extern u32 slaunch_get_cpu_type(void);
 +
-+	/* Only done once */
-+	if (slaunch_fixup_jump_vector())
-+		return -1;
++/*
++ * External functions avalailable in mainline kernel.
++ */
++extern void slaunch_setup_txt(void);
++extern u32 slaunch_get_flags(void);
++extern struct sl_ap_wake_info *slaunch_get_ap_wake_info(void);
++extern struct acpi_table_header *slaunch_get_dmar_table(struct acpi_table_header *dmar);
++extern void __noreturn slaunch_txt_reset(void __iomem *txt,
++					 const char *msg, u64 error);
++extern void slaunch_finalize(int do_sexit);
 +
-+	/* Send NMI IPI to idling AP and wake it up */
-+	apic_icr_write(APIC_DM_NMI, apicid);
-+
-+	if (init_udelay == 0)
-+		udelay(10);
-+	else
-+		udelay(300);
-+
-+	send_status = safe_apic_wait_icr_idle();
-+
-+	if (init_udelay == 0)
-+		udelay(10);
-+	else
-+		udelay(300);
-+
-+	accept_status = (apic_read(APIC_ESR) & 0xEF);
-+
-+	if (send_status)
-+		pr_err("Secure Launch IPI never delivered???\n");
-+	if (accept_status)
-+		pr_err("Secure Launch IPI delivery error (%lx)\n",
-+			accept_status);
-+
-+	return (send_status | accept_status);
-+}
++#endif /* !__ASSEMBLY */
 +
 +#else
 +
-+#define slaunch_wakeup_cpu_from_txt(cpu, apicid)	0
++#define slaunch_get_cpu_type()		0
++#define slaunch_setup_txt()		do { } while (0)
++#define slaunch_get_flags()		0
++#define slaunch_get_dmar_table(d)	(d)
++#define slaunch_finalize(d)		do { } while (0)
 +
-+#endif  /* !CONFIG_SECURE_LAUNCH */
++#endif /* !IS_ENABLED(CONFIG_SECURE_LAUNCH) */
 +
- /*
-  * NOTE - on most systems this is a PHYSICAL apic ID, but on multiquad
-  * (ie clustered apic addressing mode), this is a LOGICAL apic ID.
-@@ -1127,6 +1205,13 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
- 	cpumask_clear_cpu(cpu, cpu_initialized_mask);
- 	smp_mb();
- 
-+	/* With Intel TXT, the AP startup is totally different */
-+	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) ==
-+	   (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) {
-+		boot_error = slaunch_wakeup_cpu_from_txt(cpu, apicid);
-+		goto txt_wake;
-+	}
-+
- 	/*
- 	 * Wake up a CPU in difference cases:
- 	 * - Use the method in the APIC driver if it's defined
-@@ -1139,6 +1224,7 @@ static int do_boot_cpu(int apicid, int cpu, struct task_struct *idle,
- 		boot_error = wakeup_cpu_via_init_nmi(cpu, start_ip, apicid,
- 						     cpu0_nmi_registered);
- 
-+txt_wake:
- 	if (!boot_error) {
- 		/*
- 		 * Wait 10s total for first sign of life from AP
-diff --git a/arch/x86/realmode/rm/header.S b/arch/x86/realmode/rm/header.S
-index 8c1db5b..9136bd5 100644
---- a/arch/x86/realmode/rm/header.S
-+++ b/arch/x86/realmode/rm/header.S
-@@ -36,6 +36,9 @@ SYM_DATA_START(real_mode_header)
- #ifdef CONFIG_X86_64
- 	.long	__KERNEL32_CS
- #endif
-+#ifdef CONFIG_SECURE_LAUNCH
-+	.long	pa_sl_trampoline_start32
-+#endif
- SYM_DATA_END(real_mode_header)
- 
- 	/* End signature, used to verify integrity */
-diff --git a/arch/x86/realmode/rm/trampoline_64.S b/arch/x86/realmode/rm/trampoline_64.S
-index cc8391f..cdfc2c2 100644
---- a/arch/x86/realmode/rm/trampoline_64.S
-+++ b/arch/x86/realmode/rm/trampoline_64.S
-@@ -104,6 +104,43 @@ SYM_CODE_END(sev_es_trampoline_start)
- 
- 	.section ".text32","ax"
- 	.code32
-+#ifdef CONFIG_SECURE_LAUNCH
-+	.balign 4
-+SYM_CODE_START(sl_trampoline_start32)
-+	/*
-+	 * The early secure launch stub AP wakeup code has taken care of all
-+	 * the vagaries of launching out of TXT. This bit just mimics what the
-+	 * 16b entry code does and jumps off to the real startup_32.
-+	 */
-+	cli
-+	wbinvd
-+
-+	/*
-+	 * The %ebx provided is not terribly useful since it is the physical
-+	 * address of tb_trampoline_start and not the base of the image.
-+	 * Use pa_real_mode_base, which is fixed up, to get a run time
-+	 * base register to use for offsets to location that do not have
-+	 * pa_ symbols.
-+	 */
-+	movl    $pa_real_mode_base, %ebx
-+
-+	/*
-+	 * This may seem a little odd but this is what %esp would have had in
-+	 * it on the jmp from real mode because all real mode fixups were done
-+	 * via the code segment. The base is added at the 32b entry.
-+	 */
-+	movl	rm_stack_end, %esp
-+
-+	lgdt    tr_gdt(%ebx)
-+	lidt    tr_idt(%ebx)
-+
-+	movw	$__KERNEL_DS, %dx	# Data segment descriptor
-+
-+	/* Jump to where the 16b code would have jumped */
-+	ljmpl	$__KERNEL32_CS, $pa_startup_32
-+SYM_CODE_END(sl_trampoline_start32)
-+#endif
-+
- 	.balign 4
- SYM_CODE_START(startup_32)
- 	movl	%edx, %ss
++#endif /* _LINUX_SLAUNCH_H */
 -- 
 1.8.3.1
 
