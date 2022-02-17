@@ -1,68 +1,79 @@
 From: Ross Philipson <ross.philipson@oracle.com>
-Date: Wed, 16 Feb 2022 22:54:36 -0500
-Subject: [PATCH v5 03/12] x86: Secure Launch Kconfig
+Date: Wed, 16 Feb 2022 22:54:43 -0500
+Subject: [PATCH v5 10/12] reboot: Secure Launch SEXIT support on reboot paths
 In-Reply-To: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
 References: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
-Message-ID: <1645070085-14255-4-git-send-email-ross.philipson@oracle.com>
+Message-ID: <1645070085-14255-11-git-send-email-ross.philipson@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Initial bits to bring in Secure Launch functionality. Add Kconfig
-options for compiling in/out the Secure Launch code.
+If the MLE kernel is being powered off, rebooted or halted,
+then SEXIT must be called. Note that the SEXIT GETSEC leaf
+can only be called after a machine_shutdown() has been done on
+these paths. The machine_shutdown() is not called on a few paths
+like when poweroff action does not have a poweroff callback (into
+ACPI code) or when an emergency reset is done. In these cases,
+just the TXT registers are finalized but SEXIT is skipped.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/Kconfig | 34 ++++++++++++++++++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ arch/x86/kernel/reboot.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index 9f5bd41..3f69aeb 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1983,6 +1983,40 @@ config EFI_MIXED
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index fa700b4..96d9c78 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -12,6 +12,7 @@
+ #include <linux/delay.h>
+ #include <linux/objtool.h>
+ #include <linux/pgtable.h>
++#include <linux/slaunch.h>
+ #include <acpi/reboot.h>
+ #include <asm/io.h>
+ #include <asm/apic.h>
+@@ -724,6 +725,7 @@ static void native_machine_restart(char *__unused)
  
- 	   If unsure, say N.
+ 	if (!reboot_force)
+ 		machine_shutdown();
++	slaunch_finalize(!reboot_force);
+ 	__machine_emergency_restart(0);
+ }
  
-+config SECURE_LAUNCH
-+	bool "Secure Launch support"
-+	default n
-+	depends on X86_64 && X86_X2APIC
-+	help
-+	   The Secure Launch feature allows a kernel to be loaded
-+	   directly through an Intel TXT measured launch. Intel TXT
-+	   establishes a Dynamic Root of Trust for Measurement (DRTM)
-+	   where the CPU measures the kernel image. This feature then
-+	   continues the measurement chain over kernel configuration
-+	   information and init images.
-+
-+config SECURE_LAUNCH_ALT_DLME_AUTHORITY
-+	bool "Secure Launch Alternate DLME Authority PCR"
-+	default n
-+	depends on SECURE_LAUNCH
-+	help
-+	   As the DLME environment, Secure Launch by default measures
-+	   the configuration information as the DLME Authority into
-+	   PCR18. This feature allows separating these measurements
-+	   into the TCG DRTM specification PCR (PCR.DLME_AUTHORITY),
-+	   PCR19.
-+
-+config SECURE_LAUNCH_ALT_DLME_DETAIL
-+	bool "Secure Launch Alternate DLME Detail PCR"
-+	default n
-+	depends on SECURE_LAUNCH
-+	help
-+	   As the DLME environment, Secure Launch by default measures
-+	   the image data like any external initrd as a DRTM Detail
-+	   into PCR17. This feature allows separating these
-+	   measurements into the Secure Launch's Detail PCR
-+	   (PCR.DLME_DETAIL), PCR20.
-+
- source "kernel/Kconfig.hz"
+@@ -734,6 +736,9 @@ static void native_machine_halt(void)
  
- config KEXEC
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ 
++	/* SEXIT done after machine_shutdown() to meet TXT requirements */
++	slaunch_finalize(1);
++
+ 	stop_this_cpu(NULL);
+ }
+ 
+@@ -742,8 +747,12 @@ static void native_machine_power_off(void)
+ 	if (pm_power_off) {
+ 		if (!reboot_force)
+ 			machine_shutdown();
++		slaunch_finalize(!reboot_force);
+ 		pm_power_off();
++	} else {
++		slaunch_finalize(0);
+ 	}
++
+ 	/* A fallback in case there is no PM info available */
+ 	tboot_shutdown(TB_SHUTDOWN_HALT);
+ }
+@@ -771,6 +780,7 @@ void machine_shutdown(void)
+ 
+ void machine_emergency_restart(void)
+ {
++	slaunch_finalize(0);
+ 	__machine_emergency_restart(1);
+ }
+ 
 -- 
 1.8.3.1
 
