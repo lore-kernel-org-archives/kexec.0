@@ -1,78 +1,57 @@
 From: Ross Philipson <ross.philipson@oracle.com>
-Date: Wed, 16 Feb 2022 22:54:43 -0500
-Subject: [PATCH v5 10/12] reboot: Secure Launch SEXIT support on reboot paths
+Date: Wed, 16 Feb 2022 22:54:45 -0500
+Subject: [PATCH v5 12/12] tpm: Allow locality 2 to be set when initializing
+ the TPM for Secure Launch
 In-Reply-To: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
 References: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
-Message-ID: <1645070085-14255-11-git-send-email-ross.philipson@oracle.com>
+Message-ID: <1645070085-14255-13-git-send-email-ross.philipson@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-If the MLE kernel is being powered off, rebooted or halted,
-then SEXIT must be called. Note that the SEXIT GETSEC leaf
-can only be called after a machine_shutdown() has been done on
-these paths. The machine_shutdown() is not called on a few paths
-like when poweroff action does not have a poweroff callback (into
-ACPI code) or when an emergency reset is done. In these cases,
-just the TXT registers are finalized but SEXIT is skipped.
+The Secure Launch MLE environment uses PCRs that are only accessible from
+the DRTM locality 2. By default the TPM drivers always initialize the
+locality to 0. When a Secure Launch is in progress, initialize the
+locality to 2.
 
 Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
 ---
- arch/x86/kernel/reboot.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/char/tpm/tpm-chip.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index fa700b4..96d9c78 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -12,6 +12,7 @@
- #include <linux/delay.h>
- #include <linux/objtool.h>
- #include <linux/pgtable.h>
+diff --git a/drivers/char/tpm/tpm-chip.c b/drivers/char/tpm/tpm-chip.c
+index b009e74..7b8d4bb 100644
+--- a/drivers/char/tpm/tpm-chip.c
++++ b/drivers/char/tpm/tpm-chip.c
+@@ -23,6 +23,7 @@
+ #include <linux/major.h>
+ #include <linux/tpm_eventlog.h>
+ #include <linux/hw_random.h>
 +#include <linux/slaunch.h>
- #include <acpi/reboot.h>
- #include <asm/io.h>
- #include <asm/apic.h>
-@@ -724,6 +725,7 @@ static void native_machine_restart(char *__unused)
+ #include "tpm.h"
  
- 	if (!reboot_force)
- 		machine_shutdown();
-+	slaunch_finalize(!reboot_force);
- 	__machine_emergency_restart(0);
- }
+ DEFINE_IDR(dev_nums_idr);
+@@ -34,12 +35,18 @@
  
-@@ -734,6 +736,9 @@ static void native_machine_halt(void)
- 
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- 
-+	/* SEXIT done after machine_shutdown() to meet TXT requirements */
-+	slaunch_finalize(1);
-+
- 	stop_this_cpu(NULL);
- }
- 
-@@ -742,8 +747,12 @@ static void native_machine_power_off(void)
- 	if (pm_power_off) {
- 		if (!reboot_force)
- 			machine_shutdown();
-+		slaunch_finalize(!reboot_force);
- 		pm_power_off();
-+	} else {
-+		slaunch_finalize(0);
- 	}
-+
- 	/* A fallback in case there is no PM info available */
- 	tboot_shutdown(TB_SHUTDOWN_HALT);
- }
-@@ -771,6 +780,7 @@ void machine_shutdown(void)
- 
- void machine_emergency_restart(void)
+ static int tpm_request_locality(struct tpm_chip *chip)
  {
-+	slaunch_finalize(0);
- 	__machine_emergency_restart(1);
- }
++	int locality;
+ 	int rc;
+ 
+ 	if (!chip->ops->request_locality)
+ 		return 0;
+ 
+-	rc = chip->ops->request_locality(chip, 0);
++	if (slaunch_get_flags() & SL_FLAG_ACTIVE)
++		locality = 2;
++	else
++		locality = 0;
++
++	rc = chip->ops->request_locality(chip, locality);
+ 	if (rc < 0)
+ 		return rc;
  
 -- 
 1.8.3.1
