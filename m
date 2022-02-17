@@ -1,203 +1,124 @@
 From: Ross Philipson <ross.philipson@oracle.com>
-Date: Wed, 16 Feb 2022 22:54:33 -0500
-Subject: [PATCH v5 00/12] x86: Trenchboot secure dynamic launch Linux kernel
- support
-Message-ID: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
+Date: Wed, 16 Feb 2022 22:54:42 -0500
+Subject: [PATCH v5 09/12] kexec: Secure Launch kexec SEXIT support
+In-Reply-To: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
+References: <1645070085-14255-1-git-send-email-ross.philipson@oracle.com>
+Message-ID: <1645070085-14255-10-git-send-email-ross.philipson@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The larger focus of the TrenchBoot project (https://github.com/TrenchBoot) is to
-enhance the boot security and integrity in a unified manner. The first area of
-focus has been on the Trusted Computing Group's Dynamic Launch for establishing
-a hardware Root of Trust for Measurement, also know as DRTM (Dynamic Root of
-Trust for Measurement). The project has been and continues to work on providing
-a unified means to Dynamic Launch that is a cross-platform (Intel and AMD) and
-cross-architecture (x86 and Arm), with our recent involvment in the upcoming
-Arm DRTM specification. The order of introducing DRTM to the Linux kernel
-follows the maturity of DRTM in the architectures. Intel's Trusted eXecution
-Technology (TXT) is present today and only requires a preamble loader, e.g. a
-boot loader, and an OS kernel that is TXT-aware. AMD DRTM implementation has
-been present since the introduction of AMD-V but requires an additional
-component that is AMD specific and referred to in the specification as the
-Secure Loader, which the TrenchBoot project has an active prototype in
-development. Finally Arm's implementation is in specification development stage
-and the project is looking to support it when it becomes available.
+Prior to running the next kernel via kexec, the Secure Launch code
+closes down private SMX resources and does an SEXIT. This allows the
+next kernel to start normally without any issues starting the APs etc.
 
-This patchset provides detailed documentation of DRTM, the approach used for
-adding the capbility, and relevant API/ABI documentation. In addition to the
-documentation the patch set introduces Intel TXT support as the first platform
-for Linux Secure Launch.
+Signed-off-by: Ross Philipson <ross.philipson@oracle.com>
+---
+ arch/x86/kernel/slaunch.c | 69 +++++++++++++++++++++++++++++++++++++++++++++++
+ kernel/kexec_core.c       |  4 +++
+ 2 files changed, 73 insertions(+)
 
-A quick note on terminology. The larger open source project itself is called
-TrenchBoot, which is hosted on Github (links below). The kernel feature enabling
-the use of Dynamic Launch technology is referred to as "Secure Launch" within
-the kernel code. As such the prefixes sl_/SL_ or slaunch/SLAUNCH will be seen
-in the code. The stub code discussed above is referred to as the SL stub.
-
-The Secure Launch feature starts with patch #2. Patch #1 was authored by Arvind
-Sankar. There is no further status on this patch at this point but
-Secure Launch depends on it so it is included with the set.
-
-Links:
-
-The TrenchBoot project including documentation:
-
-https://github.com/trenchboot
-
-Intel TXT is documented in its own specification and in the SDM Instruction Set volume:
-
-https://www.intel.com/content/dam/www/public/us/en/documents/guides/intel-txt-software-development-guide.pdf
-https://software.intel.com/en-us/articles/intel-sdm
-
-AMD SKINIT is documented in the System Programming manual:
-
-https://www.amd.com/system/files/TechDocs/24593.pdf
-
-GRUB2 pre-launch support patchset (WIP):
-
-https://lists.gnu.org/archive/html/grub-devel/2020-05/msg00011.html
-
-Thanks
-Ross Philipson and Daniel P. Smith
-
-Changes in v2:
-
- - Modified 32b entry code to prevent causing relocations in the compressed
-   kernel.
- - Dropped patches for compressed kernel TPM PCR extender.
- - Modified event log code to insert log delimiter events and not rely
-   on TPM access.
- - Stop extending PCRs in the early Secure Launch stub code.
- - Removed Kconfig options for hash algorithms and use the algorithms the
-   ACM used.
- - Match Secure Launch measurement algorithm use to those reported in the
-   TPM 2.0 event log.
- - Read the TPM events out of the TPM and extend them into the PCRs using
-   the mainline TPM driver. This is done in the late initcall module.
- - Allow use of alternate PCR 19 and 20 for post ACM measurements.
- - Add Kconfig constraints needed by Secure Launch (disable KASLR
-   and add x2apic dependency).
- - Fix testing of SL_FLAGS when determining if Secure Launch is active
-   and the architecture is TXT.
- - Use SYM_DATA_START_LOCAL macros in early entry point code.
- - Security audit changes:
-   - Validate buffers passed to MLE do not overlap the MLE and are
-     properly laid out.
-   - Validate buffers and memory regions used by the MLE are
-     protected by IOMMU PMRs.
- - Force IOMMU to not use passthrough mode during a Secure Launch.
- - Prevent KASLR use during a Secure Launch.
-
-Changes in v3:
-
- - Introduce x86 documentation patch to provide background, overview
-   and configuration/ABI information for the Secure Launch kernel
-   feature.
- - Remove the IOMMU patch with special cases for disabling IOMMU
-   passthrough. Configuring the IOMMU is now a documentation matter
-   in the previously mentioned new patch.
- - Remove special case KASLR disabling code. Configuring KASLR is now
-   a documentation matter in the previously mentioned new patch.
- - Fix incorrect panic on TXT public register read.
- - Properly handle and measure setup_indirect bootparams in the early
-   launch code.
- - Use correct compressed kernel image base address when testing buffers
-   in the early launch stub code. This bug was introduced by the changes
-   to avoid relocation in the compressed kernel.
- - Use CPUID feature bits instead of CPUID vendor strings to determine
-   if SMX mode is supported and the system is Intel.
- - Remove early NMI re-enable on the BSP. This can be safely done later
-   on the BSP after an IDT is setup.
-
-Changes in v4:
- - Expand the cover letter to provide more context to the order that DRTM
-   support will be added.
- - Removed debug tracing in TPM request locality funciton and fixed
-   local variable declarations.
- - Fixed missing break in default case in slmodule.c.
- - Reworded commit messages in patches 1 and 2 per suggestions.
-
-Changes in v5:
- - Comprehensive documentation rewrite.
- - Use boot param loadflags to communicate Secure Launch status to
-   kernel proper.
- - Fix incorrect check of X86_FEATURE_BIT_SMX bit.
- - Rename the alternate details and authorities PCR support.
- - Refactor the securityfs directory and file setup in slmodule.c.
- - Misc. cleanup from internal code reviews.
- - Use reverse fir tree format for variables.
-
-Arvind Sankar (1):
-  x86/boot: Place kernel_info at a fixed offset
-
-Daniel P. Smith (2):
-  x86: Add early SHA support for Secure Launch early measurements
-  x86: Secure Launch late initcall platform module
-
-Ross Philipson (9):
-  Documentation/x86: Secure Launch kernel documentation
-  x86: Secure Launch Kconfig
-  x86: Secure Launch main header file
-  x86: Secure Launch kernel early boot stub
-  x86: Secure Launch kernel late boot stub
-  x86: Secure Launch SMP bringup support
-  kexec: Secure Launch kexec SEXIT support
-  reboot: Secure Launch SEXIT support on reboot paths
-  tpm: Allow locality 2 to be set when initializing the TPM for Secure
-    Launch
-
- Documentation/security/index.rst                   |   1 +
- Documentation/security/launch-integrity/index.rst  |  10 +
- .../security/launch-integrity/principles.rst       | 313 ++++++++++
- .../launch-integrity/secure_launch_details.rst     | 552 +++++++++++++++++
- .../launch-integrity/secure_launch_overview.rst    | 214 +++++++
- Documentation/x86/boot.rst                         |  21 +
- arch/x86/Kconfig                                   |  34 +
- arch/x86/boot/compressed/Makefile                  |   3 +
- arch/x86/boot/compressed/early_sha1.c              |  97 +++
- arch/x86/boot/compressed/early_sha1.h              |  17 +
- arch/x86/boot/compressed/early_sha256.c            |   7 +
- arch/x86/boot/compressed/head_64.S                 |  37 ++
- arch/x86/boot/compressed/kernel_info.S             |  53 +-
- arch/x86/boot/compressed/kernel_info.h             |  12 +
- arch/x86/boot/compressed/sl_main.c                 | 556 +++++++++++++++++
- arch/x86/boot/compressed/sl_stub.S                 | 685 +++++++++++++++++++++
- arch/x86/boot/compressed/vmlinux.lds.S             |   6 +
- arch/x86/include/asm/realmode.h                    |   3 +
- arch/x86/include/uapi/asm/bootparam.h              |   1 +
- arch/x86/kernel/Makefile                           |   2 +
- arch/x86/kernel/asm-offsets.c                      |  19 +
- arch/x86/kernel/reboot.c                           |  10 +
- arch/x86/kernel/setup.c                            |   3 +
- arch/x86/kernel/slaunch.c                          | 536 ++++++++++++++++
- arch/x86/kernel/slmodule.c                         | 493 +++++++++++++++
- arch/x86/kernel/smpboot.c                          |  86 +++
- arch/x86/realmode/rm/header.S                      |   3 +
- arch/x86/realmode/rm/trampoline_64.S               |  37 ++
- drivers/char/tpm/tpm-chip.c                        |   9 +-
- drivers/iommu/intel/dmar.c                         |   4 +
- include/linux/slaunch.h                            | 532 ++++++++++++++++
- kernel/kexec_core.c                                |   4 +
- lib/crypto/sha256.c                                |   8 +
- lib/sha1.c                                         |   4 +
- 34 files changed, 4367 insertions(+), 5 deletions(-)
- create mode 100644 Documentation/security/launch-integrity/index.rst
- create mode 100644 Documentation/security/launch-integrity/principles.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_details.rst
- create mode 100644 Documentation/security/launch-integrity/secure_launch_overview.rst
- create mode 100644 arch/x86/boot/compressed/early_sha1.c
- create mode 100644 arch/x86/boot/compressed/early_sha1.h
- create mode 100644 arch/x86/boot/compressed/early_sha256.c
- create mode 100644 arch/x86/boot/compressed/kernel_info.h
- create mode 100644 arch/x86/boot/compressed/sl_main.c
- create mode 100644 arch/x86/boot/compressed/sl_stub.S
- create mode 100644 arch/x86/kernel/slaunch.c
- create mode 100644 arch/x86/kernel/slmodule.c
- create mode 100644 include/linux/slaunch.h
-
+diff --git a/arch/x86/kernel/slaunch.c b/arch/x86/kernel/slaunch.c
+index ef6ef08..d3ea491 100644
+--- a/arch/x86/kernel/slaunch.c
++++ b/arch/x86/kernel/slaunch.c
+@@ -465,3 +465,72 @@ void __init slaunch_setup_txt(void)
+ 
+ 	pr_info("Intel TXT setup complete\n");
+ }
++
++static inline void smx_getsec_sexit(void)
++{
++	asm volatile (".byte 0x0f,0x37\n"
++		      : : "a" (SMX_X86_GETSEC_SEXIT));
++}
++
++void slaunch_finalize(int do_sexit)
++{
++	u64 one = TXT_REGVALUE_ONE, val;
++	void __iomem *config;
++
++	if ((slaunch_get_flags() & (SL_FLAG_ACTIVE|SL_FLAG_ARCH_TXT)) !=
++	    (SL_FLAG_ACTIVE | SL_FLAG_ARCH_TXT))
++		return;
++
++	config = ioremap(TXT_PRIV_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
++			 PAGE_SIZE);
++	if (!config) {
++		pr_emerg("Error SEXIT failed to ioremap TXT private reqs\n");
++		return;
++	}
++
++	/* Clear secrets bit for SEXIT */
++	memcpy_toio(config + TXT_CR_CMD_NO_SECRETS, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/* Unlock memory configurations */
++	memcpy_toio(config + TXT_CR_CMD_UNLOCK_MEM_CONFIG, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/* Close the TXT private register space */
++	memcpy_toio(config + TXT_CR_CMD_CLOSE_PRIVATE, &one, sizeof(one));
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	/*
++	 * Calls to iounmap are not being done because of the state of the
++	 * system this late in the kexec process. Local IRQs are disabled and
++	 * iounmap causes a TLB flush which in turn causes a warning. Leaving
++	 * thse mappings is not an issue since the next kernel is going to
++	 * completely re-setup memory management.
++	 */
++
++	/* Map public registers and do a final read fence */
++	config = ioremap(TXT_PUB_CONFIG_REGS_BASE, TXT_NR_CONFIG_PAGES *
++			 PAGE_SIZE);
++	if (!config) {
++		pr_emerg("Error SEXIT failed to ioremap TXT public reqs\n");
++		return;
++	}
++
++	memcpy_fromio(&val, config + TXT_CR_E2STS, sizeof(val));
++
++	pr_emerg("TXT clear secrets bit and unlock memory complete.\n");
++
++	if (!do_sexit)
++		return;
++
++	if (smp_processor_id() != 0)
++		panic("Error TXT SEXIT must be called on CPU 0\n");
++
++	/* Disable SMX mode */
++	cr4_set_bits(X86_CR4_SMXE);
++
++	/* Do the SEXIT SMX operation */
++	smx_getsec_sexit();
++
++	pr_info("TXT SEXIT complete.\n");
++}
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 68480f7..cb67bfb 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -39,6 +39,7 @@
+ #include <linux/hugetlb.h>
+ #include <linux/objtool.h>
+ #include <linux/kmsg_dump.h>
++#include <linux/slaunch.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -1178,6 +1179,9 @@ int kernel_kexec(void)
+ 		cpu_hotplug_enable();
+ 		pr_notice("Starting new kernel\n");
+ 		machine_shutdown();
++
++		/* Finalize TXT registers and do SEXIT */
++		slaunch_finalize(1);
+ 	}
+ 
+ 	kmsg_dump(KMSG_DUMP_SHUTDOWN);
 -- 
 1.8.3.1
 
