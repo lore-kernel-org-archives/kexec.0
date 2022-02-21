@@ -1,77 +1,70 @@
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Mon, 21 Feb 2022 14:16:23 +0530
-Subject: [RFC PATCH 4/5] powerpc/kdump: enable kexec_file_load system call to
- use kexec crash FDT
+Date: Mon, 21 Feb 2022 14:16:24 +0530
+Subject: [RFC PATCH 5/5] powerpc/kdump: export kexec crash FDT details via
+ sysfs
 In-Reply-To: <20220221084624.85792-1-sourabhjain@linux.ibm.com>
 References: <20220221084624.85792-1-sourabhjain@linux.ibm.com>
-Message-ID: <20220221084624.85792-5-sourabhjain@linux.ibm.com>
+Message-ID: <20220221084624.85792-6-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-This patch enables the kexec_file_load system to utilize the pre-allocated
-space for kexec crash FDT during the system boot.
+Export kexec crash FDT address and size to /sys/kernel/kexec_crash_fdt
+and /sys/kernel/kexec_crash_fdt_size files to enabled kexec tool to
+utilize pre-allocated space kdump FDT.
 
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
- arch/powerpc/kexec/elf_64.c       | 22 +++++++++++++++++++---
- arch/powerpc/kexec/file_load_64.c |  4 ++++
- 2 files changed, 23 insertions(+), 3 deletions(-)
+ arch/powerpc/kexec/core_64.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
-index eeb258002d1e..3176dea0910d 100644
---- a/arch/powerpc/kexec/elf_64.c
-+++ b/arch/powerpc/kexec/elf_64.c
-@@ -116,13 +116,29 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
- 	if (ret)
- 		goto out_free_fdt;
+diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+index 57afceee53a6..9bc9973ab3d3 100644
+--- a/arch/powerpc/kexec/core_64.c
++++ b/arch/powerpc/kexec/core_64.c
+@@ -677,6 +677,23 @@ static u32 get_kexec_crash_fdt_size(void)
+ 	return 1024*1024;
+ }
  
--	fdt_pack(fdt);
-+#ifdef CONFIG_KEXEC_CRASH_FDT
-+	if (kexec_crash_fdt && image->type == KEXEC_TYPE_CRASH) {
-+		memcpy(kexec_crash_fdt, fdt, fdt_totalsize(fdt));
-+		/* retain the original total size */
-+		((struct fdt_header *)(kexec_crash_fdt))->totalsize = cpu_to_fdt32(kexec_crash_fdt_size);
-+	} else
-+#endif
-+	{
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	}
- 
- 	kbuf.buffer = fdt;
--	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
++static ssize_t kexec_crash_fdt_show(struct kobject *kobj,
++				    struct kobj_attribute *attr, char *buf)
++{
++	return sprintf(buf, "%lx\n", __pa(kexec_crash_fdt));
++}
++static struct kobj_attribute kexec_crash_fdt_attr = __ATTR_RO(kexec_crash_fdt);
 +
-+#ifdef CONFIG_KEXEC_CRASH_FDT
-+	if (kexec_crash_fdt && image->type == KEXEC_TYPE_CRASH) {
-+		kbuf.bufsz = kbuf.memsz = fdt_totalsize(kexec_crash_fdt);
-+	} else
-+#endif
-+	{
-+		kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
-+	}
- 	kbuf.buf_align = PAGE_SIZE;
- 	kbuf.top_down = true;
--	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
- 	ret = kexec_add_buffer(&kbuf);
- 	if (ret)
- 		goto out_free_fdt;
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index 02bb2adb1fe2..7a320d9e2098 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -906,6 +906,10 @@ int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	u64 buf_min, buf_max;
- 	int ret;
- 
-+	/* kbuf.mem is already pointing to validate memory hole */
-+	if (kbuf->mem != KEXEC_BUF_MEM_UNKNOWN)
-+		return 0;
++static ssize_t kexec_crash_fdt_size_show(struct kobject *kobj,
++					 struct kobj_attribute *attr,
++					 char *buf)
++{
++	return sprintf(buf, "%d\n", kexec_crash_fdt_size);
++}
++static struct kobj_attribute kexec_crash_fdt_size_attr = \
++			__ATTR_RO(kexec_crash_fdt_size);
 +
- 	/* Look up the exclude ranges list while locating the memory hole */
- 	emem = &(kbuf->image->arch.exclude_ranges);
- 	if (!(*emem) || ((*emem)->nr_ranges == 0)) {
++
+ /* Setup the memory hole for kdump fdt in reserved region below RMA.
+  */
+ static int __init setup_kexec_crash_fdt(void)
+@@ -707,6 +724,16 @@ static int __init setup_kexec_crash_fdt(void)
+ 	kexec_crash_fdt = __va(kbuf.mem);
+ 	kexec_crash_fdt_size = kbuf.memsz;
+ 
++	if (sysfs_create_file(kernel_kobj, &kexec_crash_fdt_attr.attr)) {
++		pr_err("unable to create kdump_fdt sysfs file\n.");
++		return -1;
++	}
++
++	if (sysfs_create_file(kernel_kobj, &kexec_crash_fdt_size_attr.attr)) {
++		pr_err("unable to cerate kexec_crash_fdt_size sysfs file.\n");
++		return -1;
++	}
++
+ out:
+ 	return ret;
+ }
 -- 
 2.34.1
 
