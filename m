@@ -1,141 +1,262 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Mon, 21 Feb 2022 14:38:35 +0800
-Subject: [PATCH v20 5/5] kdump: update Documentation about crashkernel
-In-Reply-To: <YhMLoUvxteZVVwqQ@MiWiFi-R3L-srv>
-References: <20220124084708.683-1-thunder.leizhen@huawei.com>
- <20220124084708.683-6-thunder.leizhen@huawei.com>
- <YhMLoUvxteZVVwqQ@MiWiFi-R3L-srv>
-Message-ID: <8ada665b-1917-2f01-477f-baaa562f5502@huawei.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Mon, 21 Feb 2022 14:16:19 +0530
+Subject: [RFC PATCH 0/5] Avoid kdump service reload on CPU hotplug events
+Message-ID: <20220221084624.85792-1-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On hotplug event (CPU/memory) the CPU information prepared for the kdump kernel
+becomes stale unless it is prepared again. To keep the CPU information
+up-to-date a kdump service reload is triggered via the udev rule.
+
+The above approach has two downsides:
+
+1) The udev rules are prone to races if hotplug event is frequent. The time is
+   taken to settle down all the kdump service reload requested is significant
+   when multiple CPU/memory hotplug is performed at the same time. This creates
+   a window where kernel crash might not lead to successfully dump collection.
+
+2) Unnecessary CPU cycles are consumed to reload all the kdump components
+   including initrd, vmlinux, FDT, etc. whereas only one component needs to
+   update that is FDT.
+
+How this patch series solve the above issue?
+--------------------------------------------
+As mentioned above the only kexec segment that gets updated during
+the kdump service reload (due to hotplug event) is FDT. So, instead
+of re-creating the FDT on every hotplug event, it is just created
+once and updated on every hotplug event. This FDT is referred as kexec
+crash FDT.
 
 
-On 2022/2/21 11:48, Baoquan He wrote:
-> On 01/24/22 at 04:47pm, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
->>
->> For arm64, the behavior of crashkernel=X has been changed, which
->> tries low allocation in DMA zone and fall back to high allocation
->> if it fails.
->>
->> We can also use "crashkernel=X,high" to select a high region above
->> DMA zone, which also tries to allocate at least 256M low memory in
->> DMA zone automatically and "crashkernel=Y,low" can be used to allocate
->> specified size low memory.
->>
->> So update the Documentation.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
->> ---
->>  Documentation/admin-guide/kdump/kdump.rst       | 11 +++++++++--
->>  Documentation/admin-guide/kernel-parameters.txt | 11 +++++++++--
->>  2 files changed, 18 insertions(+), 4 deletions(-)
->>
->> diff --git a/Documentation/admin-guide/kdump/kdump.rst b/Documentation/admin-guide/kdump/kdump.rst
->> index cb30ca3df27c9b2..d4c287044be0c70 100644
->> --- a/Documentation/admin-guide/kdump/kdump.rst
->> +++ b/Documentation/admin-guide/kdump/kdump.rst
->> @@ -361,8 +361,15 @@ Boot into System Kernel
->>     kernel will automatically locate the crash kernel image within the
->>     first 512MB of RAM if X is not given.
->>  
->> -   On arm64, use "crashkernel=Y[@X]".  Note that the start address of
->> -   the kernel, X if explicitly specified, must be aligned to 2MiB (0x200000).
->> +   On arm64, use "crashkernel=X" to try low allocation in DMA zone and
->> +   fall back to high allocation if it fails.
->> +   We can also use "crashkernel=X,high" to select a high region above
->> +   DMA zone, which also tries to allocate at least 256M low memory in
->> +   DMA zone automatically.
->> +   "crashkernel=Y,low" can be used to allocate specified size low memory.
->> +   Use "crashkernel=Y at X" if you really have to reserve memory from
->> +   specified start address X. Note that the start address of the kernel,
->> +   X if explicitly specified, must be aligned to 2MiB (0x200000).
-> 
-> Hmm, we may not need the details related to crashkernel,high|low in this
-> section. This just gives examples of basic configation for each ARCH.
-> The detailed configuration of all crashkernel setting can be found in
-> "crashkernel syntax" section, I don't think arm64 is so special to need
-> a specific one.
-> 
->>  
->>  Load the Dump-capture Kernel
->>  ============================
->> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
->> index f5a27f067db9ed9..65780c2ca830be0 100644
->> --- a/Documentation/admin-guide/kernel-parameters.txt
->> +++ b/Documentation/admin-guide/kernel-parameters.txt
->> @@ -792,6 +792,9 @@
->>  			[KNL, X86-64] Select a region under 4G first, and
->>  			fall back to reserve region above 4G when '@offset'
->>  			hasn't been specified.
->> +			[KNL, ARM64] Try low allocation in DMA zone and fall back
->> +			to high allocation if it fails when '@offset' hasn't been
->> +			specified.
->>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
-> 
-> How about add ARM64 like below to avoid redundant words?
->   			[KNL, X86-64, ARM64] Select a region under 4G first, and
->   			fall back to reserve region above 4G when '@offset'
->   			hasn't been specified.
+How kexec crash FDT is managed?
+-------------------------------
+During the kernel boot, a hole is allocated for kexec crash FDT in the kdump
+reserved region. On kdump service start a fresh copy of kdump FDT
+(created by kexec tool or kernel-based on which system call is used) is
+copied to the pre-allocated hole for kexec crash FDT. Once a kexec crash
+FDT is loaded all the subsequent updates needed due to CPU hot-add event
+can directly be done to kexec crash FDT without reloading all the kexec
+segment again. A hook is added on the CPU hot-add path to update the kexec
+crash FDT.
 
-I agree very much, and I think that's the right thing to do. Thanks.
 
-I wanted to do the same before, just wasn't sure if the format was correct. I just
-looked at the other descriptions in kernel-parameters.txt and found that there are
-many precedents.
+How kexec crash FDT is accessed in kexec_load and kexec_file_load system call?
+------------------------------------------------------------------------------
+Since kexec_file_load creates all kexec segments are prepared in the kernel,
+it can easily access the kexec crash FDT with help of two global variables,
+that holds the start address and the size of the kexec crash FDT.
 
-"movablecore=    [KNL,X86,IA-64,PPC]"
+In kexec_load system call, the kexec segments are prepared by the kexec tool in
+userspace. The start address and the size of kexec crash fdt is provided to
+userspace via two sysfs files /sys/kernel/kexec_crash_fdt and
+/sys/kernel/kexec_crash_fdt_size.
 
-> 
->>  
->>  	crashkernel=range1:size1[,range2:size2,...][@offset]
->> @@ -808,6 +811,8 @@
->>  			Otherwise memory region will be allocated below 4G, if
->>  			available.
->>  			It will be ignored if crashkernel=X is specified.
->> +			[KNL, ARM64] range in high memory.
->> +			Allow kernel to allocate physical memory region from top.
-> 
-> Ditto, please don't add redundent words if it's similar to x86_64
-> handling.
-> 
->>  	crashkernel=size[KMG],low
->>  			[KNL, X86-64] range under 4G. When crashkernel=X,high
->>  			is passed, kernel could allocate physical memory region
->> @@ -816,13 +821,15 @@
->>  			requires at least 64M+32K low memory, also enough extra
->>  			low memory is needed to make sure DMA buffers for 32-bit
->>  			devices won't run out. Kernel would try to allocate at
->> -			at least 256M below 4G automatically.
->> +			least 256M below 4G automatically.
->>  			This one let user to specify own low range under 4G
->>  			for second kernel instead.
->>  			0: to disable low allocation.
->>  			It will be ignored when crashkernel=X,high is not used
->>  			or memory reserved is below 4G.
->> -
->> +			[KNL, ARM64] range in low memory.
->> +			This one let user to specify a low range in DMA zone for
->> +			crash dump kernel.
-> 
-> Ditto.
-> 
->>  	cryptomgr.notests
->>  			[KNL] Disable crypto self-tests
->>  
->> -- 
->> 2.25.1
->>
-> 
-> .
-> 
+
+A couple of minor changes are required to realise the benefit of the patch
+series:
+
+- disalble the udev rule:
+
+  comment out the below line in kdump udev rule file:
+  RHEL: /usr/lib/udev/rules.d/98-kexec.rules
+  # SUBSYSTEM=="cpu", ACTION=="online", GOTO="kdump_reload_cpu"
+
+- kexec tool needs to be updated with patch for kexec_load system call
+  to work (not needed if -s option is used during kexec panic load):
+
+---
+From 37aa38713c163b31d9c6e80ddc059424c9fcd66d Mon Sep 17 00:00:00 2001
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Mon, 22 Nov 2021 14:12:52 +0530
+Subject: [PATCH] kexec/ppc64: use pre-allocated memory hole for kexec crash
+ FDT
+
+Enabled kexec to use the per allocated memory hole for kexec crash FDT
+which is exported via /sys/kernel/kexec_crash_fdt and
+/sys/kernel/kexec_crash_fdt_size sysfs files. Using this pre-allocated
+memory hole for kdump fdt will allow the kernel to keep the kdump fdt
+up-to-date with the latest CPU information.
+
+In case a pre-allocated memory hole is used for kdump fdt, the kdump fdt
+the segment is not included in SHA calculation because kdump fdt will be
+modified by the kernel.
+
+To maintain the backward compatibility, we fall back to the old option of
+finding hole for kdump fdt segment if the pre-allocated buffer is not provided
+by the kernel.
+
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ kexec/arch/ppc64/kexec-elf-ppc64.c | 11 +++++--
+ kexec/arch/ppc64/kexec-ppc64.c     | 49 ++++++++++++++++++++++++++++++
+ kexec/kexec.c                      |  9 ++++++
+ kexec/kexec.h                      |  4 +++
+ 4 files changed, 71 insertions(+), 2 deletions(-)
+
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index 695b8b0..8e66ef0 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -329,8 +329,15 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (result < 0)
+ 		return result;
+ 
+-	my_dt_offset = add_buffer(info, seg_buf, seg_size, seg_size,
+-				0, 0, max_addr, -1);
++        if (kexec_crash_fdt) {
++                my_dt_offset = kexec_crash_fdt;
++                add_segment_phys_virt(info, seg_buf, seg_size,
++				      my_dt_offset, kexec_crash_fdt_size, 0);
++        }
++        else {
++                my_dt_offset = add_buffer(info, seg_buf, seg_size, seg_size,
++                                          0, 0, max_addr, -1);
++        }
+ 
+ #ifdef NEED_RESERVE_DTB
+ 	/* patch reserve map address for flattened device-tree
+diff --git a/kexec/arch/ppc64/kexec-ppc64.c b/kexec/arch/ppc64/kexec-ppc64.c
+index 5b17740..d4385bd 100644
+--- a/kexec/arch/ppc64/kexec-ppc64.c
++++ b/kexec/arch/ppc64/kexec-ppc64.c
+@@ -24,6 +24,7 @@
+ #include <errno.h>
+ #include <stdint.h>
+ #include <string.h>
++#include <fcntl.h>
+ #include <sys/stat.h>
+ #include <sys/types.h>
+ #include <dirent.h>
+@@ -373,6 +374,52 @@ void scan_reserved_ranges(unsigned long kexec_flags, int *range_index)
+ 	*range_index = i;
+ }
+ 
++void get_kexec_crash_fdt_details(unsigned long kexec_flags)
++{
++	int fd, len;
++	char buf[MAXBYTES] = { 0 };
++
++	const char * const kexec_fdt_sysfs = "/sys/kernel/kexec_crash_fdt";
++	const char * const kexec_fdt_size_sysfs = "/sys/kernel/kexec_crash_fdt_size";
++
++        fd = open(kexec_fdt_sysfs, O_RDONLY);
++        if (fd < 0)
++                return;
++
++        len = read(fd, buf, MAXBYTES);
++        if (len < 0)
++                goto err_out;
++
++        kexec_crash_fdt = strtoul(buf, NULL, 16);
++
++	fd = open(kexec_fdt_size_sysfs, O_RDONLY);
++	if (fd < 0)
++		goto err_out;
++
++	len = read(fd, buf, MAXBYTES);
++	if (len < 0)
++		goto err_out;
++
++	kexec_crash_fdt_size = strtoul(buf, NULL, 10);
++
++        exclude_range[nr_exclude_ranges].start = kexec_crash_fdt;
++        exclude_range[nr_exclude_ranges].end = kexec_crash_fdt + \
++					       kexec_crash_fdt_size;
++        nr_exclude_ranges++;
++
++        if (nr_exclude_ranges >= max_memory_ranges)
++                realloc_memory_ranges();
++
++	goto out;
++
++err_out:
++	kexec_crash_fdt = kexec_fdt_size = 0;
++
++out:
++        close (fd);
++        return;
++}
++
+ /* Return 0 if fname/value valid, -1 otherwise */
+ int get_devtree_value(const char *fname, unsigned long long *value)
+ {
+@@ -804,6 +851,8 @@ int setup_memory_ranges(unsigned long kexec_flags)
+ 		goto out;
+ 	if (get_devtree_details(kexec_flags))
+ 		goto out;
++	if (kexec_flags & KEXEC_ON_CRASH)
++		get_kexec_crash_fdt_details(kexec_flags);
+ 
+ 	for (i = 0; i < nr_exclude_ranges; i++) {
+ 		/* If first exclude range does not start with 0, include the
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index f63b36b..89283f7 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -62,6 +62,10 @@ static unsigned long kexec_flags = 0;
+ /* Flags for kexec file (fd) based syscall */
+ static unsigned long kexec_file_flags = 0;
+ int kexec_debug = 0;
++#if defined(__powerpc__) || defined(__powerpc64__)
++uint64_t kexec_crash_fdt;
++uint32_t kexec_cras_fdt_size;
++#endif
+ 
+ void dbgprint_mem_range(const char *prefix, struct memory_range *mr, int nr_mr)
+ {
+@@ -672,6 +676,11 @@ static void update_purgatory(struct kexec_info *info)
+ 		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+ 			continue;
+ 		}
++
++#if defined(__powerpc__) || defined(__powerpc64__)
++		if (kexec_crash_fdt && (unsigned long)info->segment[i].mem == kexec_crash_fdt)
++			continue;
++#endif
+ 		sha256_update(&ctx, info->segment[i].buf,
+ 			      info->segment[i].bufsz);
+ 		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 595dd68..48e8b9f 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -205,6 +205,10 @@ struct file_type {
+ 
+ extern struct file_type file_type[];
+ extern int file_types;
++#if defined(__powerpc__) || defined(__powerpc64__)
++extern uint64_t fdt;
++extern uint32_t fdt_size;
++#endif
+ 
+ #define OPT_HELP		'h'
+ #define OPT_VERSION		'v'
+-- 
+2.34.1
+---
+
+
+Sourabh Jain (5):
+  powerpc/kdump: export functions from file_load_64.c
+  powerpc/kdump: setup kexec crash FDT
+  powerpc/kdump: update kexec crash FDT on CPU hot add event
+  powerpc/kdump: enable kexec_file_load system call to use kexec crash
+    FDT
+  powerpc/kdump: export kexec crash FDT details via sysfs
+
+ arch/powerpc/Kconfig                         |  11 +
+ arch/powerpc/include/asm/kexec.h             |  10 +
+ arch/powerpc/kexec/core_64.c                 | 318 +++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c                  |  22 +-
+ arch/powerpc/kexec/file_load_64.c            | 239 +-------------
+ arch/powerpc/platforms/pseries/hotplug-cpu.c |   7 +
+ 6 files changed, 369 insertions(+), 238 deletions(-)
 
 -- 
-Regards,
-  Zhen Lei
+2.34.1
+
 
