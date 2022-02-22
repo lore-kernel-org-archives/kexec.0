@@ -1,9 +1,9 @@
 From: Sergey Senozhatsky <senozhatsky@chromium.org>
-Date: Tue, 22 Feb 2022 10:45:29 +0900
+Date: Tue, 22 Feb 2022 11:06:44 +0900
 Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
 In-Reply-To: <20220214141308.841525-1-gpiccoli@igalia.com>
 References: <20220214141308.841525-1-gpiccoli@igalia.com>
-Message-ID: <YhRAOQbH15E7y9s8@google.com>
+Message-ID: <YhRFNKtxSE8Xrbfw@google.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -11,40 +11,39 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 On (22/02/14 11:13), Guilherme G. Piccoli wrote:
-> -static void panic_print_sys_info(void)
-> +static void panic_print_sys_info(bool console_flush)
->  {
-> -	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-> -		console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> +	if (console_flush) {
-> +		if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
-> +			console_flush_on_panic(CONSOLE_REPLAY_ALL);
-> +		return;
-> +	}
+> 
+> The additional messages from panic_print could overwrite the oldest
+> messages when the buffer is full. The only reasonable solution is to
+> use a large enough log buffer, hence we added an advice into the kernel
+> parameters documentation about that.
 
-Yeah, if Petr is fine with that then I'm OK. But at the same time,
-we have `panic_print' which is a bit mask of what panic_print_sys_info()
-should do. And now we also have a boolean `console_flush` flag that tells
-panic_print_sys_info() to ignore some (one as of now) bits of `panic_print'.
+By additional panic_print messages you mean that panic_print_sys_info()
+will print everything (except PANIC_PRINT_ALL_PRINTK_MSG) twice?
 
-So _maybe_ panic_print_sys_info() can just accept panic_print as
-its parameter and then we can do something like this (as an example)
+Do we really need to dump everything twice? show_mem(), show_state(),
+ftrace_dump(DUMP_ALL). That's quite a bit of extra data.
 
-	panic_print_sys_info(panic_print & ~PANIC_PRINT_ALL_PRINTK_MSG);
+Can instead this be something like (?):
+
+@@ -286,6 +289,8 @@ void panic(const char *fmt, ...)
+ 	 */
+ 	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
 
 
->  	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
->  		trigger_all_cpu_backtrace();
-> @@ -286,6 +289,8 @@ void panic(const char *fmt, ...)
->  	 */
->  	atomic_notifier_call_chain(&panic_notifier_list, 0, buf);
++	panic_print_sys_info(panic_print & ~PANIC_PRINT_ALL_PRINTK_MSG);
 
-[..]
 
-> +	panic_print_sys_info(false);
+ 	kmsg_dump(KMSG_DUMP_PANIC);
+  
+ 	/*
+@@ -316,7 +321,7 @@ void panic(const char *fmt, ...)
+ 	debug_locks_off();
+ 	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
 
-Merely because `panic_print_sys_info(false);` doesn't tell much to a reader.
-Like what is print sys info false?
 
-Or did you already discuss this?
++	panic_print_sys_info(PANIC_PRINT_ALL_PRINTK_MSG);
+
+
+ 	if (!panic_blink)
+ 		panic_blink = no_blink;
 
