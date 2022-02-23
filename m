@@ -1,11 +1,11 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 23 Feb 2022 11:58:01 +0800
-Subject: [PATCH v4 05/10] crash hp: introduce helper functions
- un/map_crash_pages
-In-Reply-To: <20220209195706.51522-6-eric.devolder@oracle.com>
+Date: Wed, 23 Feb 2022 11:59:54 +0800
+Subject: [PATCH v4 06/10] crash hp: generic crash hotplug support
+ infrastructure
+In-Reply-To: <20220209195706.51522-7-eric.devolder@oracle.com>
 References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-6-eric.devolder@oracle.com>
-Message-ID: <YhWwyTZuXxM4w+Fu@MiWiFi-R3L-srv>
+ <20220209195706.51522-7-eric.devolder@oracle.com>
+Message-ID: <YhWxOoB3n2O2vLHB@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,90 +13,167 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 On 02/09/22 at 02:57pm, Eric DeVolder wrote:
-> This change introduces two new functions un/map_crash_pages()
-> which are used to enable/disable access to the segments in the
-> crash memory region. (Upon loading of a crash kernel, the
-> crash memory regions are made inaccessible for integrity purposes.)
+> This patch introduces a generic crash hot plug/unplug infrastructure
+> for CPU and memory changes. Upon CPU and memory changes, a generic
+> crash_hotplug_handler() obtains the appropriate lock, does some
+> important house keeping and then dispatches the hot plug/unplug event
+> to the architecture specific arch_crash_hotplug_handler(), and when
+> that handler returns, the lock is released.
 > 
-> For example, on x86_64, one of the segments is the elfcorehdr,
-> which contains the list of CPUs and memories. This segment
-> needs to be modified in response to hotplug events. These functions
-> are used to obtain (and subsequenntly release) access to the crash
-> memory region in order to make the modifications.
+> This patch modifies crash_core.c to implement a subsys_initcall()
+> function that installs handlers for hot plug/unplug events. If CPU
+> hotplug is enabled, then cpuhp_setup_state() is invoked to register a
+> handler for CPU changes. Similarly, if memory hotplug is enabled, then
+> register_memory_notifier() is invoked to install a handler for memory
+> changes. These handlers in turn invoke the common generic handler
+> crash_hotplug_handler().
 > 
-> QUESTION: These might need to be in arch/x86 as I'm not certain
-> the implementatin is valid for all archs?
+> On the CPU side, cpuhp_setup_state_nocalls() is invoked with parameter
+> CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
+> the CPU still shows up in foreach_present_cpu() during the regeneration
+> of the new CPU list, thus the need to explicitly check and exclude the
+> soon-to-be offlined CPU in crash_prepare_elf64_headers().
+> 
+> On the memory side, each un/plugged memory block passes through the
+> handler. For example, if a 1GiB DIMM is hotplugged, that generate 8
+> memory events, one for each 128MiB memblock.
 
-Since only x86_64 uses them, I would suggest putting them into x86_64,
-near the caller.
+This looks good to me. As I commented in patch 3, these both may need be
+merged.
 
 > 
 > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 > ---
->  include/linux/kexec.h |  2 ++
->  kernel/crash_core.c   | 32 ++++++++++++++++++++++++++++++++
->  2 files changed, 34 insertions(+)
+>  kernel/crash_core.c | 104 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 104 insertions(+)
 > 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index b11d75a6b2bc..e00c373c4095 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -324,6 +324,8 @@ struct kimage {
->  };
->  
->  #ifdef CONFIG_CRASH_HOTPLUG
-> +void *map_crash_pages(unsigned long paddr, unsigned long size);
-> +void unmap_crash_pages(void **ptr);
->  void arch_crash_hotplug_handler(struct kimage *image,
->  	unsigned int hp_action, unsigned long a, unsigned long b);
->  #define KEXEC_CRASH_HP_REMOVE_CPU   0
 > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 256cf6db573c..0ff06d0698ad 100644
+> index 0ff06d0698ad..524470e18883 100644
 > --- a/kernel/crash_core.c
 > +++ b/kernel/crash_core.c
-> @@ -9,6 +9,7 @@
->  #include <linux/init.h>
+> @@ -10,12 +10,16 @@
 >  #include <linux/utsname.h>
 >  #include <linux/vmalloc.h>
-> +#include <linux/highmem.h>
+>  #include <linux/highmem.h>
+> +#include <linux/memory.h>
+> +#include <linux/cpuhotplug.h>
 >  
 >  #include <asm/page.h>
 >  #include <asm/sections.h>
-> @@ -491,3 +492,34 @@ static int __init crash_save_vmcoreinfo_init(void)
->  }
 >  
->  subsys_initcall(crash_save_vmcoreinfo_init);
+>  #include <crypto/sha1.h>
+>  
+> +#include "kexec_internal.h"
 > +
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +void *map_crash_pages(unsigned long paddr, unsigned long size)
+>  /* vmcoreinfo stuff */
+>  unsigned char *vmcoreinfo_data;
+>  size_t vmcoreinfo_size;
+> @@ -521,5 +525,105 @@ void unmap_crash_pages(void **ptr)
+>  		*ptr = NULL;
+>  	}
+>  }
+> +
+> +void __weak arch_crash_hotplug_handler(struct kimage *image,
+> +	unsigned int hp_action, unsigned long a, unsigned long b)
 > +{
-> +	/*
-> +	 * NOTE: The addresses and sizes passed to this routine have
-> +	 * already been fully aligned on page boundaries. There is no
-> +	 * need for massaging the address or size.
-> +	 */
-> +	void *ptr = NULL;
-> +
-> +	/* NOTE: requires arch_kexec_[un]protect_crashkres() for write access */
-> +	if (size > 0) {
-> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
-> +
-> +		ptr = kmap(page);
-> +	}
-> +
-> +	return ptr;
+> +	pr_warn("crash hp: %s not implemented", __func__);
 > +}
 > +
-> +void unmap_crash_pages(void **ptr)
+> +static void crash_hotplug_handler(unsigned int hp_action,
+> +	unsigned long a, unsigned long b)
 > +{
-> +	if (ptr) {
-> +		if (*ptr)
-> +			kunmap(*ptr);
-> +		*ptr = NULL;
+> +	/* Obtain lock while changing crash information */
+> +	if (!mutex_trylock(&kexec_mutex))
+> +		return;
+> +
+> +	/* Check kdump is loaded */
+> +	if (kexec_crash_image) {
+> +		pr_debug("crash hp: hp_action %u, a %lu, b %lu", hp_action,
+> +			a, b);
+> +
+> +		/* Needed in order for the segments to be updated */
+> +		arch_kexec_unprotect_crashkres();
+> +
+> +		/* Flag to differentiate between normal load and hotplug */
+> +		kexec_crash_image->hotplug_event = true;
+> +
+> +		/* Now invoke arch-specific update handler */
+> +		arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
+> +
+> +		/* No longer handling a hotplug event */
+> +		kexec_crash_image->hotplug_event = false;
+> +
+> +		/* Change back to read-only */
+> +		arch_kexec_protect_crashkres();
 > +	}
+> +
+> +	/* Release lock now that update complete */
+> +	mutex_unlock(&kexec_mutex);
+> +}
+> +
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +static int crash_memhp_notifier(struct notifier_block *nb,
+> +	unsigned long val, void *v)
+> +{
+> +	struct memory_notify *mhp = v;
+> +	unsigned long start, end;
+> +
+> +	start = mhp->start_pfn << PAGE_SHIFT;
+> +	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
+> +
+> +	switch (val) {
+> +	case MEM_ONLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
+> +			start, end-start);
+> +		break;
+> +
+> +	case MEM_OFFLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
+> +			start, end-start);
+> +		break;
+> +	}
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block crash_memhp_nb = {
+> +	.notifier_call = crash_memhp_notifier,
+> +	.priority = 0
+> +};
+>  #endif
+>  
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +static int crash_cpuhp_online(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu, 0);
+> +	return 0;
+> +}
+> +
+> +static int crash_cpuhp_offline(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu, 0);
+> +	return 0;
 > +}
 > +#endif
 > +
+> +static int __init crash_hotplug_init(void)
+> +{
+> +	int result = 0;
+> +
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +	register_memory_notifier(&crash_memhp_nb);
+> +#endif
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +				"crash/cpuhp",
+> +				crash_cpuhp_online, crash_cpuhp_offline);
+> +#endif
+> +
+> +	return result;
+> +}
+> +
+> +subsys_initcall(crash_hotplug_init);
+> +#endif /* CONFIG_CRASH_HOTPLUG */
 > -- 
 > 2.27.0
 > 
