@@ -1,100 +1,22 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 23 Feb 2022 19:32:25 +0800
-Subject: [PATCH v2 2/2] kexec_file: clean up arch_kexec_kernel_image_load
-In-Reply-To: <20220223113225.63106-1-bhe@redhat.com>
-References: <20220223113225.63106-1-bhe@redhat.com>
-Message-ID: <20220223113225.63106-3-bhe@redhat.com>
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+Date: Wed, 23 Feb 2022 11:41:09 +0000
+Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <YgvRe92hEvj5mEUS@alley>
+References: <20220214141308.841525-1-gpiccoli@igalia.com>
+ <YgvRe92hEvj5mEUS@alley>
+Message-ID: <YhYdVYYapkaVdvZE@google.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Function arch_kexec_kernel_image_load() has a common weak version which
-is a wrapper of kexec_image_load_default() , and has only one arch
-dependent version in x86_64. Now the x86_64 dependent function is not
-needed any more. So clean it up.
+On (22/02/15 17:14), Petr Mladek wrote:
+> Makes sense and looks good to me.
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-And also rename kexec_image_load_default() to kexec_kernel_image_load() for
-better reflecting its functionality.
+FWIW
 
-Signed-off-by: Baoquan He <bhe@redhat.com>
-Acked-by: Dave Young <dyoung@redhat.com>
----
- arch/x86/kernel/machine_kexec_64.c | 11 -----------
- include/linux/kexec.h              |  1 -
- kernel/kexec_file.c                |  9 ++-------
- 3 files changed, 2 insertions(+), 19 deletions(-)
-
-diff --git a/arch/x86/kernel/machine_kexec_64.c b/arch/x86/kernel/machine_kexec_64.c
-index 1f0eb0eed546..6b14d9274def 100644
---- a/arch/x86/kernel/machine_kexec_64.c
-+++ b/arch/x86/kernel/machine_kexec_64.c
-@@ -372,17 +372,6 @@ void machine_kexec(struct kimage *image)
- /* arch-dependent functionality related to kexec file-based syscall */
- 
- #ifdef CONFIG_KEXEC_FILE
--void *arch_kexec_kernel_image_load(struct kimage *image)
--{
--	if (!image->fops || !image->fops->load)
--		return ERR_PTR(-ENOEXEC);
--
--	return image->fops->load(image, image->kernel_buf,
--				 image->kernel_buf_len, image->initrd_buf,
--				 image->initrd_buf_len, image->cmdline_buf,
--				 image->cmdline_buf_len);
--}
--
- /*
-  * Apply purgatory relocations.
-  *
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 0c994ae37729..47b70402c0a4 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -186,7 +186,6 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
- /* Architectures may override the below functions */
- int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 				  unsigned long buf_len);
--void *arch_kexec_kernel_image_load(struct kimage *image);
- int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 				     Elf_Shdr *section,
- 				     const Elf_Shdr *relsec,
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b..b6a1347f546e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -60,7 +60,7 @@ int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 	return kexec_image_probe_default(image, buf, buf_len);
- }
- 
--static void *kexec_image_load_default(struct kimage *image)
-+static void *kexec_kernel_image_load(struct kimage *image)
- {
- 	if (!image->fops || !image->fops->load)
- 		return ERR_PTR(-ENOEXEC);
-@@ -71,11 +71,6 @@ static void *kexec_image_load_default(struct kimage *image)
- 				 image->cmdline_buf_len);
- }
- 
--void * __weak arch_kexec_kernel_image_load(struct kimage *image)
--{
--	return kexec_image_load_default(image);
--}
--
- int kexec_image_post_load_cleanup_default(struct kimage *image)
- {
- 	if (!image->fops || !image->fops->cleanup)
-@@ -279,7 +274,7 @@ kimage_file_prepare_segments(struct kimage *image, int kernel_fd, int initrd_fd,
- 	ima_add_kexec_buffer(image);
- 
- 	/* Call arch image load handlers */
--	ldata = arch_kexec_kernel_image_load(image);
-+	ldata = kexec_kernel_image_load(image);
- 
- 	if (IS_ERR(ldata)) {
- 		ret = PTR_ERR(ldata);
--- 
-2.31.1
-
+Reviewed-by: Sergey Senozhatsky <senozhatsky@chromium.org>
 
