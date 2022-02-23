@@ -1,173 +1,95 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 23 Feb 2022 12:10:51 +0800
-Subject: [PATCH v4 09/10] crash hp: Add x86 crash hotplug support for
- kexec_file_load
-In-Reply-To: <20220209195706.51522-10-eric.devolder@oracle.com>
-References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-10-eric.devolder@oracle.com>
-Message-ID: <YhWzy87O4Y66LHH1@MiWiFi-R3L-srv>
+Date: Wed, 23 Feb 2022 16:30:09 +0800
+Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls
+ into its own file
+In-Reply-To: <20220223030318.213093-1-yingelin@huawei.com>
+References: <20220223030318.213093-1-yingelin@huawei.com>
+Message-ID: <YhXwkTCwt3a4Dn9T@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/09/22 at 02:57pm, Eric DeVolder wrote:
-> For x86_64, when CPU or memory is hot un/plugged, the crash
-> elfcorehdr, which describes the CPUs and memory in the system,
-> must also be updated.
+On 02/23/22 at 11:03am, yingelin wrote:
+> This move the kernel/kexec_core.c respective sysctls to its own file.
 
-Please mark the patch as X86 related by adding:
+Hmm, why is the move needed? 
 
-x86/kexec: Add x86 crash hotplug support for kexec_file_load
-
-And also update other subject to reflect under which component the
-changes are made, crash hp is the feature name.
-
-Otherwise, this looks good to me.
+With my understanding, sysctls are all put in kernel/sysctl.c,
+why is kexec special?
 
 > 
-> To update the elfcorehdr for x86_64, a new elfcorehdr must be
-> generated from the available CPUs and memory. The new elfcorehdr
-> is prepared into a buffer, and if no errors occur, it is
-> installed over the top of the existing elfcorehdr.
-> 
-> In the patch 'crash hp: exclude elfcorehdr from the segment digest'
-> the need to update purgatory due to the change in elfcorehdr was
-> eliminated.  As a result, no changes to purgatory or boot_params
-> (as the elfcorehdr= kernel command line parameter pointer
-> remains unchanged and correct) are needed, just elfcorehdr.
-> 
-> To accommodate a growing number of resources via hotplug, the
-> elfcorehdr segment must be sufficiently large enough to accommodate
-> changes, see the CRASH_HOTPLUG_ELFCOREHDR_SZ configure item.
-> 
-> With this change, the kexec_file_load syscall (not kexec_load)
-> is supported. When loading the crash kernel via kexec_file_load,
-> the elfcorehdr is identified at load time in crash_load_segments().
-> 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Signed-off-by: yingelin <yingelin@huawei.com>
 > ---
->  arch/x86/kernel/crash.c | 92 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 92 insertions(+)
+>  kernel/kexec_core.c | 20 ++++++++++++++++++++
+>  kernel/sysctl.c     | 13 -------------
+>  2 files changed, 20 insertions(+), 13 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 9db41cce8d97..6215c51919db 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -25,6 +25,7 @@
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
->  #include <linux/memblock.h>
-> +#include <linux/highmem.h>
->  
->  #include <asm/processor.h>
->  #include <asm/hardirq.h>
-> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
->  	image->elf_headers = kbuf.buffer;
->  	image->elf_headers_sz = kbuf.bufsz;
->  
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
-> +	kbuf.memsz = CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ;
-> +	/* For marking as usable to crash kernel */
-> +	image->elf_headers_sz = kbuf.memsz;
-> +	/* Record the index of the elfcorehdr segment */
-> +	image->elf_index = image->nr_segments;
-> +	image->elf_index_valid = true;
-> +#else
->  	kbuf.memsz = kbuf.bufsz;
-> +#endif
->  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->  	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  	ret = kexec_add_buffer(&kbuf);
-> @@ -413,3 +424,84 @@ int crash_load_segments(struct kimage *image)
->  	return ret;
->  }
->  #endif /* CONFIG_KEXEC_FILE */
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 68480f731192..e57339d49439 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -936,6 +936,26 @@ int kimage_load_segment(struct kimage *image,
+>  struct kimage *kexec_image;
+>  struct kimage *kexec_crash_image;
+>  int kexec_load_disabled;
+> +static struct ctl_table kexec_core_sysctls[] = {
+> +	{
+> +		.procname	= "kexec_load_disabled",
+> +		.data		= &kexec_load_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{ }
+> +};
 > +
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +/**
-> + * arch_crash_hotplug_handler() - Handle hotplug elfcorehdr changes
-> + * @image: the active struct kimage
-> + * @hp_action: the hot un/plug action being handled
-> + * @a: first parameter dependent upon hp_action
-> + * @b: first parameter dependent upon hp_action
-> + *
-> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
-> + * is passed to the crash kernel via the elfcorehdr= parameter)
-> + * must be updated with the new list of CPUs and memories. The new
-> + * elfcorehdr is prepared in a kernel buffer, and if no errors,
-> + * then it is written on top of the existing/old elfcorehdr.
-> + *
-> + * For hotplug changes to elfcorehdr to work, two conditions are
-> + * needed:
-> + * First, the segment containing the elfcorehdr must be large enough
-> + * to permit a growing number of resources. See
-> + * CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ.
-> + * Second, purgatory must explicitly exclude the elfcorehdr from the
-> + * list of segments it checks (since the elfcorehdr changes and thus
-> + * would require an update to purgatory itself to update the digest).
-> + *
-> + */
-> +void arch_crash_hotplug_handler(struct kimage *image,
-> +	unsigned int hp_action, unsigned long a, unsigned long b)
+> +static int __init kexec_core_sysctl_init(void)
 > +{
-> +	struct kexec_segment *ksegment;
-> +	unsigned char *ptr = NULL;
-> +	unsigned long elfsz = 0;
-> +	void *elfbuf = NULL;
-> +	unsigned long mem, memsz;
-> +
-> +	/* Must have valid elfcorehdr index */
-> +	if (!image->elf_index_valid) {
-> +		pr_err("crash hp: unable to locate elfcorehdr segment");
-> +		goto out;
-> +	}
-> +
-> +	ksegment = &image->segment[image->elf_index];
-> +	mem = ksegment->mem;
-> +	memsz = ksegment->memsz;
-> +
-> +	/*
-> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-> +	 * memory resources. The elfcorehdr segment memsz must be
-> +	 * sufficiently large to accommodate increases due to hotplug
-> +	 * activity. See CRASH_HOTPLUG_ELFCOREHDR_SZ.
-> +	 */
-> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
-> +		pr_err("crash hp: unable to prepare elfcore headers");
-> +		goto out;
-> +	}
-> +	if (elfsz > memsz) {
-> +		pr_err("crash hp: update elfcorehdr elfsz %lu > memsz %lu",
-> +			elfsz, memsz);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * At this point, we are all but assured of success.
-> +	 * Copy new elfcorehdr into destination.
-> +	 */
-> +	ptr = map_crash_pages(mem, memsz);
-> +	if (ptr) {
-> +		/* Temporarily invalidate the crash image while it is replaced */
-> +		xchg(&kexec_crash_image, NULL);
-> +		/* Write the new elfcorehdr into memory */
-> +		memcpy_flushcache((void *)ptr, elfbuf, elfsz);
-> +		/* The crash image is now valid once again */
-> +		xchg(&kexec_crash_image, image);
-> +	}
-> +	unmap_crash_pages((void **)&ptr);
-> +	pr_debug("crash hp: re-loaded elfcorehdr at 0x%lx\n", mem);
-> +
-> +out:
-> +	if (elfbuf)
-> +		vfree(elfbuf);
+> +	register_sysctl_init("kernel", kexec_core_sysctls);
+> +	return 0;
 > +}
-> +#endif /* CONFIG_CRASH_HOTPLUG */
+> +late_initcall(kexec_core_sysctl_init);
+>  
+>  /*
+>   * No panic_cpu check version of crash_kexec().  This function is called
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index ae5e59396b5d..00e97c6d6576 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -61,7 +61,6 @@
+>  #include <linux/capability.h>
+>  #include <linux/binfmts.h>
+>  #include <linux/sched/sysctl.h>
+> -#include <linux/kexec.h>
+>  #include <linux/bpf.h>
+>  #include <linux/mount.h>
+>  #include <linux/userfaultfd_k.h>
+> @@ -1839,18 +1838,6 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= tracepoint_printk_sysctl,
+>  	},
+>  #endif
+> -#ifdef CONFIG_KEXEC_CORE
+> -	{
+> -		.procname	= "kexec_load_disabled",
+> -		.data		= &kexec_load_disabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+>  #ifdef CONFIG_MODULES
+>  	{
+>  		.procname	= "modprobe",
 > -- 
-> 2.27.0
+> 2.26.2
 > 
 
 
