@@ -1,95 +1,39 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 23 Feb 2022 16:30:09 +0800
-Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls
- into its own file
-In-Reply-To: <20220223030318.213093-1-yingelin@huawei.com>
-References: <20220223030318.213093-1-yingelin@huawei.com>
-Message-ID: <YhXwkTCwt3a4Dn9T@MiWiFi-R3L-srv>
+Date: Wed, 23 Feb 2022 19:32:23 +0800
+Subject: [PATCH v2 0/2] x86/kexec: fix memory leak of elf header buffer
+Message-ID: <20220223113225.63106-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/23/22 at 11:03am, yingelin wrote:
-> This move the kernel/kexec_core.c respective sysctls to its own file.
+The memory leak is reported by kmemleak detector, has been existing
+for very long time. It casue much memory loss on large machine
+with huge memory hotplug which will trigger kdump kernel reloading
+many times, with kexec_file_load interface.
 
-Hmm, why is the move needed? 
+And in patch 2, clean up is done to remove unneeded
+arch_kexec_kernel_image_load() and rename functions.
 
-With my understanding, sysctls are all put in kernel/sysctl.c,
-why is kexec special?
+V1 post can be found here:
+https://lore.kernel.org/all/20211029072424.9109-1-bhe at redhat.com/T/#u
 
-> 
-> Signed-off-by: yingelin <yingelin@huawei.com>
-> ---
->  kernel/kexec_core.c | 20 ++++++++++++++++++++
->  kernel/sysctl.c     | 13 -------------
->  2 files changed, 20 insertions(+), 13 deletions(-)
-> 
-> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-> index 68480f731192..e57339d49439 100644
-> --- a/kernel/kexec_core.c
-> +++ b/kernel/kexec_core.c
-> @@ -936,6 +936,26 @@ int kimage_load_segment(struct kimage *image,
->  struct kimage *kexec_image;
->  struct kimage *kexec_crash_image;
->  int kexec_load_disabled;
-> +static struct ctl_table kexec_core_sysctls[] = {
-> +	{
-> +		.procname	= "kexec_load_disabled",
-> +		.data		= &kexec_load_disabled,
-> +		.maxlen		= sizeof(int),
-> +		.mode		= 0644,
-> +		/* only handle a transition from default "0" to "1" */
-> +		.proc_handler	= proc_dointvec_minmax,
-> +		.extra1		= SYSCTL_ONE,
-> +		.extra2		= SYSCTL_ONE,
-> +	},
-> +	{ }
-> +};
-> +
-> +static int __init kexec_core_sysctl_init(void)
-> +{
-> +	register_sysctl_init("kernel", kexec_core_sysctls);
-> +	return 0;
-> +}
-> +late_initcall(kexec_core_sysctl_init);
->  
->  /*
->   * No panic_cpu check version of crash_kexec().  This function is called
-> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-> index ae5e59396b5d..00e97c6d6576 100644
-> --- a/kernel/sysctl.c
-> +++ b/kernel/sysctl.c
-> @@ -61,7 +61,6 @@
->  #include <linux/capability.h>
->  #include <linux/binfmts.h>
->  #include <linux/sched/sysctl.h>
-> -#include <linux/kexec.h>
->  #include <linux/bpf.h>
->  #include <linux/mount.h>
->  #include <linux/userfaultfd_k.h>
-> @@ -1839,18 +1838,6 @@ static struct ctl_table kern_table[] = {
->  		.proc_handler	= tracepoint_printk_sysctl,
->  	},
->  #endif
-> -#ifdef CONFIG_KEXEC_CORE
-> -	{
-> -		.procname	= "kexec_load_disabled",
-> -		.data		= &kexec_load_disabled,
-> -		.maxlen		= sizeof(int),
-> -		.mode		= 0644,
-> -		/* only handle a transition from default "0" to "1" */
-> -		.proc_handler	= proc_dointvec_minmax,
-> -		.extra1		= SYSCTL_ONE,
-> -		.extra2		= SYSCTL_ONE,
-> -	},
-> -#endif
->  #ifdef CONFIG_MODULES
->  	{
->  		.procname	= "modprobe",
-> -- 
-> 2.26.2
-> 
+v1->v2:
+ No code change. The v1 post has been acked by Dave Young but not
+merged. In v2, just merging the old patch 1 and 2 as per Dave's concern
+in v1 post.
+
+Baoquan He (2):
+  x86/kexec: fix memory leak of elf header buffer
+  kexec_file: clean up arch_kexec_kernel_image_load
+
+ arch/x86/kernel/machine_kexec_64.c | 23 +++++++++--------------
+ include/linux/kexec.h              |  1 -
+ kernel/kexec_file.c                |  9 ++-------
+ 3 files changed, 11 insertions(+), 22 deletions(-)
+
+-- 
+2.31.1
 
 
