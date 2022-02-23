@@ -1,85 +1,75 @@
-From: yingelin <yingelin@huawei.com>
-Date: Wed, 23 Feb 2022 11:03:18 +0800
-Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls into
- its own file
-Message-ID: <20220223030318.213093-1-yingelin@huawei.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Wed, 23 Feb 2022 11:25:11 +0800
+Subject: [PATCH v4 02/10] crash hp: Introduce CRASH_HOTPLUG configuration
+ options
+In-Reply-To: <20220209195706.51522-3-eric.devolder@oracle.com>
+References: <20220209195706.51522-1-eric.devolder@oracle.com>
+ <20220209195706.51522-3-eric.devolder@oracle.com>
+Message-ID: <YhWpF/Cj/V+Cx6+d@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-This move the kernel/kexec_core.c respective sysctls to its own file.
+On 02/09/22 at 02:56pm, Eric DeVolder wrote:
+> Support for CPU and memory hotplug for crash is controlled by the
+> CRASH_HOTPLUG configuration option, introduced by this patch.
+> 
+> The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
+> also introduced with this patch.
+> 
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index ebe8fc76949a..4e3374edab02 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2060,6 +2060,32 @@ config CRASH_DUMP
+>  	  (CONFIG_RELOCATABLE=y).
+>  	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>  
+> +config CRASH_HOTPLUG
+> +	bool "kernel updates of crash elfcorehdr"
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
+> +	help
+> +	  Enable the kernel to update the crash elfcorehdr (which contains
+> +	  the list of CPUs and memory regions) directly when hot plug/unplug
+> +	  of CPUs or memory. Otherwise userspace must monitor these hot
+> +	  plug/unplug change notifications via udev in order to
+> +	  unload-then-reload the crash kernel so that the list of CPUs and
+> +	  memory regions is kept up-to-date. Note that the udev CPU and
+> +	  memory change notifications still occur (however, userspace is not
+> +	  required to monitor for crash dump purposes).
+> +
+> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+> +	depends on CRASH_HOTPLUG
+> +	int
+> +	default 131072
+> +	help
+> +	  Specify the maximum size of the elfcorehdr buffer/segment.
+> +	  The 128KiB default is sized so that it can accommodate 2048
+> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
+> +	  region of memory.
+> +	  For example, this size can accommodate hotplugging a machine
+> +	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
+> +	  with 1024 1GiB memory DIMMs).
 
-Signed-off-by: yingelin <yingelin@huawei.com>
----
- kernel/kexec_core.c | 20 ++++++++++++++++++++
- kernel/sysctl.c     | 13 -------------
- 2 files changed, 20 insertions(+), 13 deletions(-)
+This example of memory could be a little misleading. The memory regions
+may not be related to memory DIMMs. System could split them into many
+smaller regions during bootup.
 
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 68480f731192..e57339d49439 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -936,6 +936,26 @@ int kimage_load_segment(struct kimage *image,
- struct kimage *kexec_image;
- struct kimage *kexec_crash_image;
- int kexec_load_disabled;
-+static struct ctl_table kexec_core_sysctls[] = {
-+	{
-+		.procname	= "kexec_load_disabled",
-+		.data		= &kexec_load_disabled,
-+		.maxlen		= sizeof(int),
-+		.mode		= 0644,
-+		/* only handle a transition from default "0" to "1" */
-+		.proc_handler	= proc_dointvec_minmax,
-+		.extra1		= SYSCTL_ONE,
-+		.extra2		= SYSCTL_ONE,
-+	},
-+	{ }
-+};
-+
-+static int __init kexec_core_sysctl_init(void)
-+{
-+	register_sysctl_init("kernel", kexec_core_sysctls);
-+	return 0;
-+}
-+late_initcall(kexec_core_sysctl_init);
- 
- /*
-  * No panic_cpu check version of crash_kexec().  This function is called
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index ae5e59396b5d..00e97c6d6576 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -61,7 +61,6 @@
- #include <linux/capability.h>
- #include <linux/binfmts.h>
- #include <linux/sched/sysctl.h>
--#include <linux/kexec.h>
- #include <linux/bpf.h>
- #include <linux/mount.h>
- #include <linux/userfaultfd_k.h>
-@@ -1839,18 +1838,6 @@ static struct ctl_table kern_table[] = {
- 		.proc_handler	= tracepoint_printk_sysctl,
- 	},
- #endif
--#ifdef CONFIG_KEXEC_CORE
--	{
--		.procname	= "kexec_load_disabled",
--		.data		= &kexec_load_disabled,
--		.maxlen		= sizeof(int),
--		.mode		= 0644,
--		/* only handle a transition from default "0" to "1" */
--		.proc_handler	= proc_dointvec_minmax,
--		.extra1		= SYSCTL_ONE,
--		.extra2		= SYSCTL_ONE,
--	},
--#endif
- #ifdef CONFIG_MODULES
- 	{
- 		.procname	= "modprobe",
--- 
-2.26.2
+Otherwise, this patch looks good to me.
+
+> +
+>  config KEXEC_JUMP
+>  	bool "kexec jump"
+>  	depends on KEXEC && HIBERNATION
+> -- 
+> 2.27.0
+> 
 
 
