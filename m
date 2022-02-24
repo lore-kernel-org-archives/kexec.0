@@ -1,73 +1,57 @@
-From: Sergey Senozhatsky <senozhatsky@chromium.org>
-Date: Thu, 24 Feb 2022 11:52:46 +0900
-Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <5eeba935-d73a-5539-4eb1-298fb6ee0578@igalia.com>
-References: <20220214141308.841525-1-gpiccoli@igalia.com>
- <YhRFNKtxSE8Xrbfw@google.com>
- <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
- <YhWNhzacAVDuFtwB@google.com>
- <5eeba935-d73a-5539-4eb1-298fb6ee0578@igalia.com>
-Message-ID: <Yhby/n4P+E15zjKj@google.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Thu, 24 Feb 2022 13:21:40 +0530
+Subject: [RFC PATCH 0/5] Avoid kdump service reload on CPU hotplug events
+In-Reply-To: <YhRdfu++s5dJMS5L@MiWiFi-R3L-srv>
+References: <20220221084624.85792-1-sourabhjain@linux.ibm.com>
+ <YhRdfu++s5dJMS5L@MiWiFi-R3L-srv>
+Message-ID: <091f4e0b-540b-ee5b-c07c-0362d53821df@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
+Hello Baoquan,
 
-On (22/02/23 10:15), Guilherme G. Piccoli wrote:
-> On 22/02/2022 22:27, Sergey Senozhatsky wrote:
-> > [...]
-> > Hmm. Yeah, well, that's a bit of a tricky interface now
-> > 
-> > 	panic()
-> > 		// everything (if corresponding bits set), no console flush
-> > 		panic_print_sys_info(false)
-> > 		...
-> > 		// console flush only if corresponding bit set
-> > 		panic_print_sys_info(true)
-> > 
-> > 
-> > 
-> > If everyone is fine then OK.
-> > 
-> > But I _personally_ would look into changing this to something like this:
-> > 
-> > 	#define EARLY_PANIC_MASK (PANIC_PRINT_FOO | PANIC_PRINT_BAR | ...)
-> > 	#define LATE_PANIC_MASK (PANIC_PRINT_ALL_PRINTK_MSG)
-> > 	panic()
-> > 		panic_print_sys_info(panic_print & EARLY_PANIC_MASK)
-> > 		...
-> > 		panic_print_sys_info(panic_print & LATE_PANIC_MASK)
-> 
-> Hi Sergey, notice that panic_print_sys_info() currently doesn't have a
-> parameter! The prototype (without this patch) is:
-
-Correct.
-
-> static void panic_print_sys_info(void);
+> Hi,
 >
-> So, it consumes the "panic_print" global variable (which matches the
-> command-line parameter / sysctl), hence to implement your suggestion
-> either we need a refactor in panic_print_sys_info(), adding a parameter
+> On 02/21/22 at 02:16pm, Sourabh Jain wrote:
+>> On hotplug event (CPU/memory) the CPU information prepared for the kdump kernel
+>> becomes stale unless it is prepared again. To keep the CPU information
+>> up-to-date a kdump service reload is triggered via the udev rule.
+>>
+>> The above approach has two downsides:
+>>
+>> 1) The udev rules are prone to races if hotplug event is frequent. The time is
+>>     taken to settle down all the kdump service reload requested is significant
+>>     when multiple CPU/memory hotplug is performed at the same time. This creates
+>>     a window where kernel crash might not lead to successfully dump collection.
+>>
+>> 2) Unnecessary CPU cycles are consumed to reload all the kdump components
+>>     including initrd, vmlinux, FDT, etc. whereas only one component needs to
+>>     update that is FDT.
+> I roughly went through this sereis, while haven't read the code
+> carefully. Seems the issue and the approach are similar to what below
+> patchset is doing. Do you notice below patchset from Oracle engineer?
+> And is there stuff the ppc code can be rebased on and reused?
+>
+> [PATCH v4 00/10] crash: Kernel handling of CPU and memory hot un/plug
+> https://lore.kernel.org/all/20220209195706.51522-1-eric.devolder at oracle.com/T/#u
 
-Correct. That's the idea. Since you are already adding a parameter,
-what I'm talking is turning that parameter from true/false to something
-more verbose.
+Thanks for the suggestion. I have seen earlier versions of this patch series
+but since it did not have support for kexec_load system call we tried 
+implementing
+something from scratch.
 
-> (more or less what the patch is already doing, but with a bit more
-> changes) or we override the global variable twice in panic(), before the
-> function calls.
+Since Eric's added support for kexec_load and has a generic handler for 
+CPU and
+memory hotplug let me see if I can rebase my PowerPC changes on top of 
+his patches.
+The major difference across the distro is that on PowerPC we need to 
+update FDT instead
+of elfcorehdr on hotplug event.
 
-We don't need to overwrite the global var. We pass "permitted bits at
-this stage of panic" mask to panic_print_sys_info(). The global var
-stays intact.
+Thanks,
+Sourabh Jain
 
-> As you said, it's possible and a matter of personal coding style. I'd be
-> fine if more people ask that, but if everyone is fine with the current
-> implementation, I'd rather get this patch merged as is, since we need it
-> and couldn't even make it for 5.17 heh
-
-Sure, works for me.
 
