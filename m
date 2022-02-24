@@ -1,57 +1,91 @@
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Thu, 24 Feb 2022 13:21:40 +0530
-Subject: [RFC PATCH 0/5] Avoid kdump service reload on CPU hotplug events
-In-Reply-To: <YhRdfu++s5dJMS5L@MiWiFi-R3L-srv>
-References: <20220221084624.85792-1-sourabhjain@linux.ibm.com>
- <YhRdfu++s5dJMS5L@MiWiFi-R3L-srv>
-Message-ID: <091f4e0b-540b-ee5b-c07c-0362d53821df@linux.ibm.com>
+From: Petr Mladek <pmladek@suse.com>
+Date: Thu, 24 Feb 2022 15:33:42 +0100
+Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <YhWNhzacAVDuFtwB@google.com>
+References: <20220214141308.841525-1-gpiccoli@igalia.com>
+ <YhRFNKtxSE8Xrbfw@google.com>
+ <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
+ <YhWNhzacAVDuFtwB@google.com>
+Message-ID: <YheXRmmWr619Qxin@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hello Baoquan,
+On Wed 2022-02-23 01:27:35, Sergey Senozhatsky wrote:
+> On (22/02/22 11:10), Guilherme G. Piccoli wrote:
+> > On 21/02/2022 23:06, Sergey Senozhatsky wrote:
+> > > On (22/02/14 11:13), Guilherme G. Piccoli wrote:
+> > > [...]
+> > > By additional panic_print messages you mean that panic_print_sys_info()
+> > > will print everything (except PANIC_PRINT_ALL_PRINTK_MSG) twice?
+> > > 
+> > > Do we really need to dump everything twice? show_mem(), show_state(),
+> > > ftrace_dump(DUMP_ALL). That's quite a bit of extra data.
+> > > 
+> > 
+> > Oh no, we don't print everything twice, that'd be insane heh
+> 
+> My bad! I did not spot the `return` at the end of the new branch.
+> 
+> +       if (console_flush) {
+> +               if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> +                       console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> +               return;
+> +       }
+> 
+> Hmm. Yeah, well, that's a bit of a tricky interface now
+> 
+> 	panic()
+> 		// everything (if corresponding bits set), no console flush
+> 		panic_print_sys_info(false)
+> 		...
+> 		// console flush only if corresponding bit set
+> 		panic_print_sys_info(true)
 
-> Hi,
->
-> On 02/21/22 at 02:16pm, Sourabh Jain wrote:
->> On hotplug event (CPU/memory) the CPU information prepared for the kdump kernel
->> becomes stale unless it is prepared again. To keep the CPU information
->> up-to-date a kdump service reload is triggered via the udev rule.
->>
->> The above approach has two downsides:
->>
->> 1) The udev rules are prone to races if hotplug event is frequent. The time is
->>     taken to settle down all the kdump service reload requested is significant
->>     when multiple CPU/memory hotplug is performed at the same time. This creates
->>     a window where kernel crash might not lead to successfully dump collection.
->>
->> 2) Unnecessary CPU cycles are consumed to reload all the kdump components
->>     including initrd, vmlinux, FDT, etc. whereas only one component needs to
->>     update that is FDT.
-> I roughly went through this sereis, while haven't read the code
-> carefully. Seems the issue and the approach are similar to what below
-> patchset is doing. Do you notice below patchset from Oracle engineer?
-> And is there stuff the ppc code can be rebased on and reused?
->
-> [PATCH v4 00/10] crash: Kernel handling of CPU and memory hot un/plug
-> https://lore.kernel.org/all/20220209195706.51522-1-eric.devolder at oracle.com/T/#u
+I agree that self-explaining names are always better than true/false.
+It is pity that replay the log is handled in panic_print at all.
 
-Thanks for the suggestion. I have seen earlier versions of this patch series
-but since it did not have support for kexec_load system call we tried 
-implementing
-something from scratch.
+I sometimes hide these tricks into wrappers. We could rename:
 
-Since Eric's added support for kexec_load and has a generic handler for 
-CPU and
-memory hotplug let me see if I can rebase my PowerPC changes on top of 
-his patches.
-The major difference across the distro is that on PowerPC we need to 
-update FDT instead
-of elfcorehdr on hotplug event.
+    panic_printk_sys_info() -> panic_print_handler()
 
-Thanks,
-Sourabh Jain
+and add wrappers:
 
+void panic_print_sys_info()
+{
+	panic_printk_handler(false);
+}
+
+void panic_print_log_replay()
+{
+	panic_printk_handler(true);
+}
+
+Or just split panic_printk_sys_info() into these two functions.
+
+> If everyone is fine then OK.
+> 
+> But I _personally_ would look into changing this to something like this:
+> 
+> 	#define EARLY_PANIC_MASK (PANIC_PRINT_FOO | PANIC_PRINT_BAR | ...)
+> 	#define LATE_PANIC_MASK (PANIC_PRINT_ALL_PRINTK_MSG)
+
+These lists cause merge and backporting conflicts. I vote to avoid
+this approach ;-)
+
+
+> 	panic()
+> 		panic_print_sys_info(panic_print & EARLY_PANIC_MASK)
+> 		...
+> 		panic_print_sys_info(panic_print & LATE_PANIC_MASK)
+
+That said, I could live with the patch as is. I leave the decision
+to Andrew. Feel free to use:
+
+Reviewed-by: Petr Mladek <pmladek@suse.com>
+
+Best Regards,
+Petr
 
