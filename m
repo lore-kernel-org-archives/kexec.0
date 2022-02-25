@@ -1,39 +1,141 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Thu, 24 Feb 2022 11:45:42 -0300
-Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <YheXRmmWr619Qxin@alley>
-References: <20220214141308.841525-1-gpiccoli@igalia.com>
- <YhRFNKtxSE8Xrbfw@google.com>
- <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
- <YhWNhzacAVDuFtwB@google.com> <YheXRmmWr619Qxin@alley>
-Message-ID: <39f64d7d-714f-0be4-2854-10c00bcc9cda@igalia.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Fri, 25 Feb 2022 11:46:41 +0800
+Subject: Compile error ppc64le: Cannot find symbol for section 11:
+ .text.unlikely.
+In-Reply-To: <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
+References: <CA+tGwnkDsuwOyDoZUNvi9ExhSsiF1MiGvegwjpQem8c3BPJ=6g@mail.gmail.com>
+ <20211124134743.GB11728@MiWiFi-R3L-srv>
+ <20211201021926.3xfabf5zbzidvrwa@Rk>
+ <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
+Message-ID: <20220225034641.zvg3jfxu3vhazdms@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 24/02/2022 11:33, Petr Mladek wrote:
-> [...]
-> That said, I could live with the patch as is. I leave the decision
-> to Andrew. Feel free to use:
-> 
-> Reviewed-by: Petr Mladek <pmladek@suse.com>
-> 
-> Best Regards,
-> Petr
+On Fri, Dec 03, 2021 at 04:54:19PM +0100, Veronika Kabatova wrote:
+>On Wed, Dec 1, 2021 at 3:20 AM Coiby Xu <coxu@redhat.com> wrote:
+>>
+>> On Wed, Nov 24, 2021 at 09:47:43PM +0800, Baoquan He wrote:
+>> >On 11/24/21 at 01:47pm, Veronika Kabatova wrote:
+>> >> Hi,
+>> >>
+>> >> for a while we've been seen the following error when compiling
+>> >> the mainline kernel with gcc 11.2 and binutils 2.37:
+>> >>
+>> >> 00:02:32 Cannot find symbol for section 11: .text.unlikely.
+>> >> 00:02:32 kernel/kexec_file.o: failed
+>> >> 00:02:32 make[3]: *** [scripts/Makefile.build:287: kernel/kexec_file.o] Error 1
+>> >> 00:02:32 make[3]: *** Deleting file 'kernel/kexec_file.o'
+>> >> 00:02:32 make[2]: *** [Makefile:1846: kernel] Error 2
+>> >> 00:02:32 make[2]: *** Waiting for unfinished jobs....
+>> >>
+>> >> The error only happens with ppc64le. I've tested this with cross
+>> >> compilation, but the only reference to the error I found suggests
+>> >> the same happens with the native compiles as well:
+>> >>
+>> >> https://github.com/groeck/linux-build-test/commit/142cbefbc0d37962c9a6c7f28ee415ecd5fd1e98
+>> >>
+>> >> In case it matters, the config used is the Fedora config with
+>> >> kselftest options enabled, which you can grab from
+>> >>
+>> >> https://gitlab.com/redhat/red-hat-ci-tools/kernel/cki-internal-pipelines/cki-trusted-contributors/-/jobs/1760752896/artifacts/raw/artifacts/kernel-mainline.kernel.org-ppc64le-e4e737bb5c170df6135a127739a9e6148ee3da82.config
+>> >>
+>> >>
+>> >> I've reached out to the Fedora compiler folks and Nick Clifton
+>> >> suggested this is a problem with the kernel:
+>> >>
+>> >>     This message comes from the recordmcount tool, which is part of the kernel
+>> >>     sources:
+>> >>
+>> >>     linux/scripts/recordmcount.[ch]
+>> >>
+>> >>     It appears to be triggered when a compiler update causes code to be
+>> >>     rearranged. The problem has been reported before in various forums,
+>> >>     but in particular I found this reference:
+>> >>
+>> >>     https://lore.kernel.org/lkml/20201204165742.3815221-2-arnd at kernel.org/
+>> >>
+>> >>     The point of which to me at least is that this is a kernel issue rather than
+>> >>     a compiler issue.  Ie there must be some weak symbols in kexec_file.o file
+>> >>     which need to be moved elsewhere.
+>> >
+>> >It could be arch_kexec_kernel_verify_sig() in kernel/kexec_file.c which
+>> >is __weak, but not implemented in any ARCH. If true, this has been
+>> >pointed out by Eric in one patch thread from Coiby.
+>> >
+>> >[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+>> >http://lkml.kernel.org/r/20211018083137.338757-2-coxu at redhat.com
+>> >
+>> >Maybe Coiby can fetch above config file and run the test to check.
+>>
+>> "[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig" alone
+>> would fix the error. If I turn arch_kexec_apply_relocations{_add,} into
 
-Thanks a bunch Petr and Sergey for the reviews (and the tags).
+Sorry I meant "alone won't fix the error".
 
-I also vote to keep the patch as-is and get it merged, maybe eventually
-improving that along with the complex panic notifiers task [0]. I could
-definitely do it over there...
+>> static function, the error would be gone. As attached is the patch would
+>> make this error disappear.
+>>
+>
+>Thank you! I can confirm the attached patch fixes the problem.
+>
+>
+>Veronika
+>
+>> However, s390 and x86 have its own implementation of
+>> arch_kexec_apply_relocations_add. This makes it looks like to be gcc's
+>> issue.
 
-Andrew, is this fine for you?
-Thanks,
+Based on the above point and further investigation, I think the root cause is
+find_secsym_ndx in linux/scripts/recordmcount.h,
+  /*
+   * Find a symbol in the given section, to be used as the base for relocating
+   * the table of offsets of calls to mcount.  A local or global symbol suffices,
+   * but avoid a Weak symbol because it may be overridden; the change in value
+   * would invalidate the relocations of the offsets of the calls to mcount.
+   * Often the found symbol will be the unnamed local symbol generated by
+   * GNU 'as' for the start of each section.  For example:
+   *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+   *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
+   */
+  static int find_secsym_ndx(unsigned const txtndx,
+  				char const *const txtname,
+  				uint_t *const recvalp,
+  				unsigned int *sym_index,
+  				Elf_Shdr const *const symhdr,
+  				Elf32_Word const *symtab,
+  				Elf32_Word const *symtab_shndx,
+  				Elf_Ehdr const *const ehdr)
+  {
+         ...
+		if (txtndx == get_symindex(symp, symtab, symtab_shndx)
+			/* avoid STB_WEAK */
 
+	 fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+		txtndx, txtname);
 
-Guilherme
+This function prints the above warning after failing to find
+arch_kexec_kernel_verify_sig or arch_kexec_apply_relocations{_add,} in
+section 11: .text.unlikely. because it ignores the weak symbol and ppc64le
+doesn't its arch implementations of these functions. I'll see if I can fix
+it in linux/scripts/recordmcount.h.
 
-[0] https://lore.kernel.org/lkml/YfPxvzSzDLjO5ldp at alley/
+>>
+>>
+>> >
+>> >Thanks
+>> >Baoquan
+>> >
+>>
+>> --
+>> Best regards,
+>> Coiby
+>
+
+-- 
+Best regards,
+Coiby
+
 
