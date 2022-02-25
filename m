@@ -1,141 +1,144 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 25 Feb 2022 11:46:41 +0800
-Subject: Compile error ppc64le: Cannot find symbol for section 11:
- .text.unlikely.
-In-Reply-To: <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
-References: <CA+tGwnkDsuwOyDoZUNvi9ExhSsiF1MiGvegwjpQem8c3BPJ=6g@mail.gmail.com>
- <20211124134743.GB11728@MiWiFi-R3L-srv>
- <20211201021926.3xfabf5zbzidvrwa@Rk>
- <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
-Message-ID: <20220225034641.zvg3jfxu3vhazdms@Rk>
+From: Sergey Senozhatsky <senozhatsky@chromium.org>
+Date: Fri, 25 Feb 2022 14:18:22 +0900
+Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <YheXRmmWr619Qxin@alley>
+References: <20220214141308.841525-1-gpiccoli@igalia.com>
+ <YhRFNKtxSE8Xrbfw@google.com>
+ <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
+ <YhWNhzacAVDuFtwB@google.com> <YheXRmmWr619Qxin@alley>
+Message-ID: <YhhmnmgAlVCcVqSV@google.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Dec 03, 2021 at 04:54:19PM +0100, Veronika Kabatova wrote:
->On Wed, Dec 1, 2021 at 3:20 AM Coiby Xu <coxu@redhat.com> wrote:
->>
->> On Wed, Nov 24, 2021 at 09:47:43PM +0800, Baoquan He wrote:
->> >On 11/24/21 at 01:47pm, Veronika Kabatova wrote:
->> >> Hi,
->> >>
->> >> for a while we've been seen the following error when compiling
->> >> the mainline kernel with gcc 11.2 and binutils 2.37:
->> >>
->> >> 00:02:32 Cannot find symbol for section 11: .text.unlikely.
->> >> 00:02:32 kernel/kexec_file.o: failed
->> >> 00:02:32 make[3]: *** [scripts/Makefile.build:287: kernel/kexec_file.o] Error 1
->> >> 00:02:32 make[3]: *** Deleting file 'kernel/kexec_file.o'
->> >> 00:02:32 make[2]: *** [Makefile:1846: kernel] Error 2
->> >> 00:02:32 make[2]: *** Waiting for unfinished jobs....
->> >>
->> >> The error only happens with ppc64le. I've tested this with cross
->> >> compilation, but the only reference to the error I found suggests
->> >> the same happens with the native compiles as well:
->> >>
->> >> https://github.com/groeck/linux-build-test/commit/142cbefbc0d37962c9a6c7f28ee415ecd5fd1e98
->> >>
->> >> In case it matters, the config used is the Fedora config with
->> >> kselftest options enabled, which you can grab from
->> >>
->> >> https://gitlab.com/redhat/red-hat-ci-tools/kernel/cki-internal-pipelines/cki-trusted-contributors/-/jobs/1760752896/artifacts/raw/artifacts/kernel-mainline.kernel.org-ppc64le-e4e737bb5c170df6135a127739a9e6148ee3da82.config
->> >>
->> >>
->> >> I've reached out to the Fedora compiler folks and Nick Clifton
->> >> suggested this is a problem with the kernel:
->> >>
->> >>     This message comes from the recordmcount tool, which is part of the kernel
->> >>     sources:
->> >>
->> >>     linux/scripts/recordmcount.[ch]
->> >>
->> >>     It appears to be triggered when a compiler update causes code to be
->> >>     rearranged. The problem has been reported before in various forums,
->> >>     but in particular I found this reference:
->> >>
->> >>     https://lore.kernel.org/lkml/20201204165742.3815221-2-arnd at kernel.org/
->> >>
->> >>     The point of which to me at least is that this is a kernel issue rather than
->> >>     a compiler issue.  Ie there must be some weak symbols in kexec_file.o file
->> >>     which need to be moved elsewhere.
->> >
->> >It could be arch_kexec_kernel_verify_sig() in kernel/kexec_file.c which
->> >is __weak, but not implemented in any ARCH. If true, this has been
->> >pointed out by Eric in one patch thread from Coiby.
->> >
->> >[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
->> >http://lkml.kernel.org/r/20211018083137.338757-2-coxu at redhat.com
->> >
->> >Maybe Coiby can fetch above config file and run the test to check.
->>
->> "[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig" alone
->> would fix the error. If I turn arch_kexec_apply_relocations{_add,} into
+On (22/02/24 15:33), Petr Mladek wrote:
+> > My bad! I did not spot the `return` at the end of the new branch.
+> > 
+> > +       if (console_flush) {
+> > +               if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> > +                       console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> > +               return;
+> > +       }
+> > 
+> > Hmm. Yeah, well, that's a bit of a tricky interface now
+> > 
+> > 	panic()
+> > 		// everything (if corresponding bits set), no console flush
+> > 		panic_print_sys_info(false)
+> > 		...
+> > 		// console flush only if corresponding bit set
+> > 		panic_print_sys_info(true)
+> 
+> I agree that self-explaining names are always better than true/false.
+> It is pity that replay the log is handled in panic_print at all.
+> 
+> I sometimes hide these tricks into wrappers. We could rename:
+> 
+>     panic_printk_sys_info() -> panic_print_handler()
+> 
+> and add wrappers:
+> 
+> void panic_print_sys_info()
+> {
+> 	panic_printk_handler(false);
+> }
+> 
+> void panic_print_log_replay()
+> {
+> 	panic_printk_handler(true);
+> }
+> 
+> Or just split panic_printk_sys_info() into these two functions.
 
-Sorry I meant "alone won't fix the error".
+Agreed. I also tend to think that panic_printk_sys_info() is needed anyway,
+just because now we do
 
->> static function, the error would be gone. As attached is the patch would
->> make this error disappear.
->>
->
->Thank you! I can confirm the attached patch fixes the problem.
->
->
->Veronika
->
->> However, s390 and x86 have its own implementation of
->> arch_kexec_apply_relocations_add. This makes it looks like to be gcc's
->> issue.
+	debug_locks_off();
+	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
 
-Based on the above point and further investigation, I think the root cause is
-find_secsym_ndx in linux/scripts/recordmcount.h,
-  /*
-   * Find a symbol in the given section, to be used as the base for relocating
-   * the table of offsets of calls to mcount.  A local or global symbol suffices,
-   * but avoid a Weak symbol because it may be overridden; the change in value
-   * would invalidate the relocations of the offsets of the calls to mcount.
-   * Often the found symbol will be the unnamed local symbol generated by
-   * GNU 'as' for the start of each section.  For example:
-   *    Num:    Value  Size Type    Bind   Vis      Ndx Name
-   *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
-   */
-  static int find_secsym_ndx(unsigned const txtndx,
-  				char const *const txtname,
-  				uint_t *const recvalp,
-  				unsigned int *sym_index,
-  				Elf_Shdr const *const symhdr,
-  				Elf32_Word const *symtab,
-  				Elf32_Word const *symtab_shndx,
-  				Elf_Ehdr const *const ehdr)
-  {
-         ...
-		if (txtndx == get_symindex(symp, symtab, symtab_shndx)
-			/* avoid STB_WEAK */
+It probably would be better if we do
 
-	 fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
-		txtndx, txtname);
+	debug_locks_off();
+	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+	else
+		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
 
-This function prints the above warning after failing to find
-arch_kexec_kernel_verify_sig or arch_kexec_apply_relocations{_add,} in
-section 11: .text.unlikely. because it ignores the weak symbol and ppc64le
-doesn't its arch implementations of these functions. I'll see if I can fix
-it in linux/scripts/recordmcount.h.
+instead.
 
->>
->>
->> >
->> >Thanks
->> >Baoquan
->> >
->>
->> --
->> Best regards,
->> Coiby
->
+IOW move console_flush_on_panic() handling out of panic_print_sys_info().
+console_flush_on_panic() isn't really related to "print sys info" stuff
+that panic_print_sys_info() does.
 
--- 
-Best regards,
-Coiby
+Something like this may be:
 
+---
+ static void panic_print_sys_info(void)
+ {
+-	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+-		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+-
+ 	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+ 		trigger_all_cpu_backtrace();
+ 
+@@ -196,6 +193,23 @@ static void panic_print_sys_info(void)
+ 		ftrace_dump(DUMP_ALL);
+ }
+ 
++static void panic_console_flush(void)
++{
++	/*
++	 * We may have ended up stopping the CPU holding the lock (in
++	 * smp_send_stop()) while still having some valuable data in the console
++	 * buffer.  Try to acquire the lock then release it regardless of the
++	 * result.  The release will also print the buffers out.  Locks debug
++	 * should be disabled to avoid reporting bad unlock balance when
++	 * panic() is not being callled from OOPS.
++	 */
++	debug_locks_off();
++	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
++		console_flush_on_panic(CONSOLE_REPLAY_ALL);
++	else
++		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
++}
++
+ /**
+  *	panic - halt the system
+  *	@fmt: The text string to print
+@@ -329,17 +343,7 @@ void panic(const char *fmt, ...)
+ #endif
+ 	console_unblank();
+ 
+-	/*
+-	 * We may have ended up stopping the CPU holding the lock (in
+-	 * smp_send_stop()) while still having some valuable data in the console
+-	 * buffer.  Try to acquire the lock then release it regardless of the
+-	 * result.  The release will also print the buffers out.  Locks debug
+-	 * should be disabled to avoid reporting bad unlock balance when
+-	 * panic() is not being callled from OOPS.
+-	 */
+-	debug_locks_off();
+-	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+-
++	panic_console_flush();
+ 	panic_print_sys_info();
+ 
+ 	if (!panic_blink)
+---
+
+> > If everyone is fine then OK.
+> > 
+> > But I _personally_ would look into changing this to something like this:
+> > 
+> > 	#define EARLY_PANIC_MASK (PANIC_PRINT_FOO | PANIC_PRINT_BAR | ...)
+> > 	#define LATE_PANIC_MASK (PANIC_PRINT_ALL_PRINTK_MSG)
+> 
+> These lists cause merge and backporting conflicts. I vote to avoid
+> this approach ;-)
+
+OK :)
 
