@@ -1,49 +1,80 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 25 Feb 2022 16:28:39 +0800
-Subject: [PATCH v3 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <Yc+iCla9zjUFkBXt@zeniv-ca.linux.org.uk>
-References: <20211213143927.3069508-1-willy@infradead.org>
- <Yc+iCla9zjUFkBXt@zeniv-ca.linux.org.uk>
-Message-ID: <YhiTN0MORoQmFFkO@MiWiFi-R3L-srv>
+From: Petr Mladek <pmladek@suse.com>
+Date: Fri, 25 Feb 2022 13:16:48 +0100
+Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <YhhmnmgAlVCcVqSV@google.com>
+References: <20220214141308.841525-1-gpiccoli@igalia.com>
+ <YhRFNKtxSE8Xrbfw@google.com>
+ <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
+ <YhWNhzacAVDuFtwB@google.com> <YheXRmmWr619Qxin@alley>
+ <YhhmnmgAlVCcVqSV@google.com>
+Message-ID: <YhjIsPpA0kN1yeOM@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01/01/22 at 12:36am, Al Viro wrote:
-> On Mon, Dec 13, 2021 at 02:39:24PM +0000, Matthew Wilcox (Oracle) wrote:
-> > For some reason several people have been sending bad patches to fix
-> > compiler warnings in vmcore recently.  Here's how it should be done.
-> > Compile-tested only on x86.  As noted in the first patch, s390 should
-> > take this conversion a bit further, but I'm not inclined to do that
-> > work myself.
+On Fri 2022-02-25 14:18:22, Sergey Senozhatsky wrote:
+> IOW move console_flush_on_panic() handling out of panic_print_sys_info().
+> console_flush_on_panic() isn't really related to "print sys info" stuff
+> that panic_print_sys_info() does.
 > 
-> A couple of notes: please, use iov_iter_count(i) instead of open-coding
-> i->count.  And there's a preexisting nastiness in read_vmcore() -
-> generally, a fault halfway through the read() is treated as a short read,
-> rather than -EFAULT...
+> Something like this may be:
+> 
+>  static void panic_print_sys_info(void)
+>  {
+> -	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> -		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> -
+>  	if (panic_print & PANIC_PRINT_ALL_CPU_BT)
+>  		trigger_all_cpu_backtrace();
+>  
+> @@ -196,6 +193,23 @@ static void panic_print_sys_info(void)
+>  		ftrace_dump(DUMP_ALL);
+>  }
+>  
+> +static void panic_console_flush(void)
+> +{
+> +	/*
+> +	 * We may have ended up stopping the CPU holding the lock (in
+> +	 * smp_send_stop()) while still having some valuable data in the console
+> +	 * buffer.  Try to acquire the lock then release it regardless of the
+> +	 * result.  The release will also print the buffers out.  Locks debug
+> +	 * should be disabled to avoid reporting bad unlock balance when
+> +	 * panic() is not being callled from OOPS.
+> +	 */
+> +	debug_locks_off();
+> +	if (panic_print & PANIC_PRINT_ALL_PRINTK_MSG)
+> +		console_flush_on_panic(CONSOLE_REPLAY_ALL);
+> +	else
+> +		console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> +}
+> +
+>  /**
+>   *	panic - halt the system
+>   *	@fmt: The text string to print
+> @@ -329,17 +343,7 @@ void panic(const char *fmt, ...)
+>  #endif
+>  	console_unblank();
+>  
+> -	/*
+> -	 * We may have ended up stopping the CPU holding the lock (in
+> -	 * smp_send_stop()) while still having some valuable data in the console
+> -	 * buffer.  Try to acquire the lock then release it regardless of the
+> -	 * result.  The release will also print the buffers out.  Locks debug
+> -	 * should be disabled to avoid reporting bad unlock balance when
+> -	 * panic() is not being callled from OOPS.
+> -	 */
+> -	debug_locks_off();
+> -	console_flush_on_panic(CONSOLE_FLUSH_PENDING);
+> -
+> +	panic_console_flush();
+>  	panic_print_sys_info();
+>  
+>  	if (!panic_blink)
 
-Sorry for being late to work on this.
+The result looks good to me. We could do it as a followup patch.
 
-While checking it, I noticed it's generic to return -EFAULT in kernel.
-E.g in kernfs_file_read_iter(). Even though 'man 3 read' does give the
-same words as you noted.
-
-However, the manpage says the less then nbyte case happened just in case
-the number of bytes left in the file is less than nbyte. The returning
--EFAULT in read_vmcore() seems to be a little different and not
-satisfying the condition, because the left bytes should be greater than
-the nbyte when reading out the elf note, or the middle of the vmcore. So
-we should leave it as is?
-
-Abstract from man page of read:
-====
-Upon successful completion, where nbyte is greater than 0, read() shall mark for update the last data access timestamp of the
-file, and shall return the number of bytes read.  This number shall never be greater than nbyte.  The value returned  may  be
-less  than  nbyte if the number of bytes left in the file is less than nbyte, if the read() request was interrupted by a sig?
-nal, or if the file is a pipe or FIFO or special file and has fewer than nbyte bytes immediately available for  reading.  For
-example, a read() from a file associated with a terminal may return one typed line of data.
-====
-
+Best Regards,
+Petr
 
