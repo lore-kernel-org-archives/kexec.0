@@ -1,77 +1,62 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Sun, 27 Feb 2022 11:07:14 +0800
-Subject: [PATCH v21 2/5] arm64: Use insert_resource() to simplify code
+Date: Sun, 27 Feb 2022 11:07:17 +0800
+Subject: [PATCH v21 5/5] docs: kdump: Update the crashkernel description for
+ arm64
 In-Reply-To: <20220227030717.1464-1-thunder.leizhen@huawei.com>
 References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
-Message-ID: <20220227030717.1464-3-thunder.leizhen@huawei.com>
+Message-ID: <20220227030717.1464-6-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-insert_resource() traverses the subtree layer by layer from the root node
-until a proper location is found. Compared with request_resource(), the
-parent node does not need to be determined in advance.
-
-In addition, move the insertion of node 'crashk_res' into function
-reserve_crashkernel() to make the associated code close together.
+Now arm64 has added support for "crashkernel=X,high" and
+"crashkernel=Y,low", and implements "crashkernel=X[@offset]" in the
+same way as x86. So update the Documentation.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: John Donnelly  <john.p.donnelly@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/arm64/kernel/setup.c | 17 +++--------------
- arch/arm64/mm/init.c      |  1 +
- 2 files changed, 4 insertions(+), 14 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index f70573928f1bff0..a81efcc359e4e78 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
- 	kernel_code.end     = __pa_symbol(__init_begin - 1);
- 	kernel_data.start   = __pa_symbol(_sdata);
- 	kernel_data.end     = __pa_symbol(_end - 1);
-+	insert_resource(&iomem_resource, &kernel_code);
-+	insert_resource(&iomem_resource, &kernel_data);
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index f5a27f067db9ed9..63098786c93828c 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -789,7 +789,7 @@
+ 			memory region [offset, offset + size] for that kernel
+ 			image. If '@offset' is omitted, then a suitable offset
+ 			is selected automatically.
+-			[KNL, X86-64] Select a region under 4G first, and
++			[KNL, X86-64, ARM64] Select a region under 4G first, and
+ 			fall back to reserve region above 4G when '@offset'
+ 			hasn't been specified.
+ 			See Documentation/admin-guide/kdump/kdump.rst for further details.
+@@ -802,20 +802,20 @@
+ 			Documentation/admin-guide/kdump/kdump.rst for an example.
  
- 	num_standard_resources = memblock.memory.cnt;
- 	res_size = num_standard_resources * sizeof(*standard_resources);
-@@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
- 			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
- 		}
- 
--		request_resource(&iomem_resource, res);
--
--		if (kernel_code.start >= res->start &&
--		    kernel_code.end <= res->end)
--			request_resource(res, &kernel_code);
--		if (kernel_data.start >= res->start &&
--		    kernel_data.end <= res->end)
--			request_resource(res, &kernel_data);
--#ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
--		if (crashk_res.end && crashk_res.start >= res->start &&
--		    crashk_res.end <= res->end)
--			request_resource(res, &crashk_res);
--#endif
-+		insert_resource(&iomem_resource, res);
- 	}
- }
- 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index db63cc885771a52..90f276d46b93bc6 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -109,6 +109,7 @@ static void __init reserve_crashkernel(void)
- 	kmemleak_ignore_phys(crash_base);
- 	crashk_res.start = crash_base;
- 	crashk_res.end = crash_base + crash_size - 1;
-+	insert_resource(&iomem_resource, &crashk_res);
- }
- #else
- static void __init reserve_crashkernel(void)
+ 	crashkernel=size[KMG],high
+-			[KNL, X86-64] range could be above 4G. Allow kernel
++			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
+ 			to allocate physical memory region from top, so could
+ 			be above 4G if system have more than 4G ram installed.
+ 			Otherwise memory region will be allocated below 4G, if
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
+ 	crashkernel=size[KMG],low
+-			[KNL, X86-64] range under 4G. When crashkernel=X,high
++			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+ 			above 4G, that cause second kernel crash on system
+ 			that require some amount of low memory, e.g. swiotlb
+ 			requires at least 64M+32K low memory, also enough extra
+ 			low memory is needed to make sure DMA buffers for 32-bit
+-			devices won't run out. Kernel would try to allocate at
++			devices won't run out. Kernel would try to allocate
+ 			at least 256M below 4G automatically.
+ 			This one let user to specify own low range under 4G
+ 			for second kernel instead.
 -- 
 2.25.1
 
