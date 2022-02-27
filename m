@@ -1,36 +1,42 @@
-From: Luis Chamberlain <mcgrof@kernel.org>
-Date: Sat, 26 Feb 2022 12:20:44 -0800
-Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls
- into its own file
-In-Reply-To: <Yhbu6UxoYXFtDyFk@fedora>
-References: <20220223030318.213093-1-yingelin@huawei.com>
- <YhXwkTCwt3a4Dn9T@MiWiFi-R3L-srv>
- <c60419f8-422b-660d-8254-291182a06cbe@huawei.com>
- <Yhbu6UxoYXFtDyFk@fedora>
-Message-ID: <YhqLnIjopfoBEBcV@bombadil.infradead.org>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Date: Sun, 27 Feb 2022 11:07:13 +0800
+Subject: [PATCH v21 1/5] kdump: return -ENOENT if required cmdline option does
+ not exist
+In-Reply-To: <20220227030717.1464-1-thunder.leizhen@huawei.com>
+References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
+Message-ID: <20220227030717.1464-2-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, Feb 24, 2022 at 10:35:21AM +0800, Baoquan He wrote:
-> That seems to be an issue everything related to sysctl are all added to
-> kernel/sysctl.c. Do you have a pointer that someone complained about it
-> and people agree to scatter them into their own component code?
+The crashkernel=Y,low is an optional command-line option. When it doesn't
+exist, kernel will try to allocate minimum required memory below 4G
+automatically. Give it a unique error code to distinguish it from other
+error scenarios.
 
-https://lkml.kernel.org/r/20220226031054.47DF8C340E7 at smtp.kernel.org
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ kernel/crash_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-> I understand your concern now, I am personally not confused by that
-> maybe because I haven't got stuff adding or changing into sysctls. My
-> concern is if we only care and move kexec knob, or we have plan to try
-> to move all of them. If there's some background information or
-> discussion with a link, that would be helpful.
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 256cf6db573cd09..4d57c03714f4e13 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
+ 	*crash_base = 0;
+ 
+ 	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
+-
+ 	if (!ck_cmdline)
+-		return -EINVAL;
++		return -ENOENT;
+ 
+ 	ck_cmdline += strlen(name);
+ 
+-- 
+2.25.1
 
-We're moving them all out. Sorry, yingelin's commit log message sucks
-and it needs to be fixed to account for the justification. All the
-filesystem sysctls are already moved out. Slowly we are moving the other
-ones out and also doing minor optimizations along the way.
-
-  Luis
 
