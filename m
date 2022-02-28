@@ -1,46 +1,35 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 28 Feb 2022 11:18:01 +0800
-Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls
- into its own file
-In-Reply-To: <b07af605-ab74-a313-f8e4-da794dcde111@huawei.com>
-References: <20220223030318.213093-1-yingelin@huawei.com>
- <YhXwkTCwt3a4Dn9T@MiWiFi-R3L-srv>
- <c60419f8-422b-660d-8254-291182a06cbe@huawei.com>
- <Yhbu6UxoYXFtDyFk@fedora> <YhqLnIjopfoBEBcV@bombadil.infradead.org>
- <b07af605-ab74-a313-f8e4-da794dcde111@huawei.com>
-Message-ID: <20220228031801.GB150756@MiWiFi-R3L-srv>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Mon, 28 Feb 2022 09:33:56 -0300
+Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
+In-Reply-To: <YhmPCE4zn5Nup+ou@google.com>
+References: <20220214141308.841525-1-gpiccoli@igalia.com>
+ <YhRFNKtxSE8Xrbfw@google.com>
+ <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
+ <YhWNhzacAVDuFtwB@google.com> <YheXRmmWr619Qxin@alley>
+ <YhhmnmgAlVCcVqSV@google.com> <YhjIsPpA0kN1yeOM@alley>
+ <YhmPCE4zn5Nup+ou@google.com>
+Message-ID: <561910c7-ad9a-7f0f-ea98-125989146fdd@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 02/28/22 at 09:43am, yingelin wrote:
+On 25/02/2022 23:23, Sergey Senozhatsky wrote:
+> On (22/02/25 13:16), Petr Mladek wrote:
+>>
+>> The result looks good to me. We could do it as a followup patch.
 > 
-> ? 2022/2/27 4:20, Luis Chamberlain ??:
-> > On Thu, Feb 24, 2022 at 10:35:21AM +0800, Baoquan He wrote:
-> > > That seems to be an issue everything related to sysctl are all added to
-> > > kernel/sysctl.c. Do you have a pointer that someone complained about it
-> > > and people agree to scatter them into their own component code?
-> > https://lkml.kernel.org/r/20220226031054.47DF8C340E7 at smtp.kernel.org
-> > 
-> > > I understand your concern now, I am personally not confused by that
-> > > maybe because I haven't got stuff adding or changing into sysctls. My
-> > > concern is if we only care and move kexec knob, or we have plan to try
-> > > to move all of them. If there's some background information or
-> > > discussion with a link, that would be helpful.
-> > We're moving them all out. Sorry, yingelin's commit log message sucks
-> > and it needs to be fixed to account for the justification. All the
-> > filesystem sysctls are already moved out. Slowly we are moving the other
-> > ones out and also doing minor optimizations along the way.
+> Yup, sounds good to me. Thanks.
 
-Thanks for the explanation. Yeah, not like code chaging for fixing or
-improvement, providing justification is very helpful and imporant for
-this kind of code moving.
+Cool, I also agree.
+
+So Andrew: is there anything missing in order to get this patch merged?
+If you prefer, I can send a new version...with the reviews' tags.
+Lemme know =D
+
+Thanks,
 
 
-> I'm sorry I didn't express it clearly. I'll fix it in v2 patch.
-
-That's OK, look forward to seeing the v2.
-
+Guilherme
 
