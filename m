@@ -1,12 +1,12 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 1 Mar 2022 14:07:50 -0600
-Subject: [PATCH v4 07/10] crash hp: exclude elfcorehdr from the segment
- digest
-In-Reply-To: <YhWxeSG3GfJwOGOV@MiWiFi-R3L-srv>
+Date: Tue, 1 Mar 2022 14:08:34 -0600
+Subject: [PATCH v4 08/10] crash hp: exclude hot remove cpu from elfcorehdr
+ notes
+In-Reply-To: <YhWySYFks0qwk2JB@MiWiFi-R3L-srv>
 References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-8-eric.devolder@oracle.com>
- <YhWxeSG3GfJwOGOV@MiWiFi-R3L-srv>
-Message-ID: <dbe84151-e3dc-7a1a-6cb2-2021d8dfb461@oracle.com>
+ <20220209195706.51522-9-eric.devolder@oracle.com>
+ <YhWySYFks0qwk2JB@MiWiFi-R3L-srv>
+Message-ID: <75f0637f-262e-1650-2a30-e7cbe2962448@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,51 +15,68 @@ To: kexec@lists.infradead.org
 
 
 
-On 2/22/22 22:00, Baoquan He wrote:
+On 2/22/22 22:04, Baoquan He wrote:
 > On 02/09/22 at 02:57pm, Eric DeVolder wrote:
->> When a crash kernel is loaded via the kexec_file_load syscall, the
->> kernel places the various segments (ie crash kernel, crash initrd,
->> boot_params, elfcorehdr, purgatory, etc) in memory. For those
->> architectures that utilize purgatory, a hash digest of the segments
->> is calculated for integrity checking. This digest is embedded into
->> the purgatory image prior to placing purgatory in memory.
+>> Due to use of CPUHP_AP_ONLINE_DYN, upon CPU unplug, the CPU is
+>> still in the for_each_present_cpu() list when within the
+>> crash_hotplug_handler(). Thus the CPU must be explicitly excluded
+>> when building the new list of CPUs.
 >>
->> Since hotplug events cause changes to the elfcorehdr, purgatory
->> integrity checking fails (at crash time, and no kdump created).
->> As a result, this change explicitly excludes the elfcorehdr segment
->> from the list of segments used to create the digest. By doing so,
->> this permits changes to the elfcorehdr in response to hotplug events,
->> without having to also reload purgatory due to the change to the
->> digest.
+>> This change identifies in crash_hotplug_handler() the CPU to be
+>> excluded, and the check for excluding the CPU in
+>> crash_prepare_elf64_headers().
+> 
+> This looks good to me, and the particularity of cpu hotplug can be
+> understood well by other code reader. Thanks.
 > 
 > Acked-by: Baoquan He <bhe@redhat.com>
 Thank you!
 eric
-
 > 
 >>
 >> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 >> ---
->>   kernel/kexec_file.c | 6 ++++++
->>   1 file changed, 6 insertions(+)
+>>   kernel/crash_core.c | 10 ++++++++++
+>>   kernel/kexec_file.c |  5 +++++
+>>   2 files changed, 15 insertions(+)
 >>
+>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>> index 524470e18883..b6942e04a188 100644
+>> --- a/kernel/crash_core.c
+>> +++ b/kernel/crash_core.c
+>> @@ -550,6 +550,16 @@ static void crash_hotplug_handler(unsigned int hp_action,
+>>   		/* Flag to differentiate between normal load and hotplug */
+>>   		kexec_crash_image->hotplug_event = true;
+>>   
+>> +		/*
+>> +		 * Due to use of CPUHP_AP_ONLINE_DYN, upon unplug and during
+>> +		 * this callback, the CPU is still in the for_each_present_cpu()
+>> +		 * list. Must explicitly look to exclude this CPU when building
+>> +		 * new list.
+>> +		 */
+>> +		kexec_crash_image->offlinecpu =
+>> +			(hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
+>> +				(unsigned int)a : ~0U;
+>> +
+>>   		/* Now invoke arch-specific update handler */
+>>   		arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
+>>   
 >> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 801d0d0a5012..93bb0c0ce66c 100644
+>> index 93bb0c0ce66c..339995d42169 100644
 >> --- a/kernel/kexec_file.c
 >> +++ b/kernel/kexec_file.c
->> @@ -765,6 +765,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
->>   	for (j = i = 0; i < image->nr_segments; i++) {
->>   		struct kexec_segment *ksegment;
+>> @@ -1314,6 +1314,11 @@ int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
 >>   
+>>   	/* Prepare one phdr of type PT_NOTE for each present CPU */
+>>   	for_each_present_cpu(cpu) {
 >> +#ifdef CONFIG_CRASH_HOTPLUG
->> +		/* This segment excluded to allow future changes via hotplug */
->> +		if (image->elf_index_valid && (j == image->elf_index))
+>> +		/* Skip the soon-to-be offlined cpu */
+>> +		if (image->hotplug_event && (cpu == image->offlinecpu))
 >> +			continue;
 >> +#endif
->> +
->>   		ksegment = &image->segment[i];
->>   		/*
->>   		 * Skip purgatory as it will be modified once we put digest
+>>   		phdr->p_type = PT_NOTE;
+>>   		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
+>>   		phdr->p_offset = phdr->p_paddr = notes_addr;
 >> -- 
 >> 2.27.0
 >>
