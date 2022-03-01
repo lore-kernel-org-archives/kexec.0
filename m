@@ -1,35 +1,83 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 28 Feb 2022 09:33:56 -0300
-Subject: [PATCH V6] panic: Move panic_print before kmsg dumpers
-In-Reply-To: <YhmPCE4zn5Nup+ou@google.com>
-References: <20220214141308.841525-1-gpiccoli@igalia.com>
- <YhRFNKtxSE8Xrbfw@google.com>
- <7e15bc6a-ceae-aa3a-0a86-18d24181b0ed@igalia.com>
- <YhWNhzacAVDuFtwB@google.com> <YheXRmmWr619Qxin@alley>
- <YhhmnmgAlVCcVqSV@google.com> <YhjIsPpA0kN1yeOM@alley>
- <YhmPCE4zn5Nup+ou@google.com>
-Message-ID: <561910c7-ad9a-7f0f-ea98-125989146fdd@igalia.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Tue, 1 Mar 2022 14:04:08 -0600
+Subject: [PATCH v4 02/10] crash hp: Introduce CRASH_HOTPLUG configuration
+ options
+In-Reply-To: <YhWpF/Cj/V+Cx6+d@MiWiFi-R3L-srv>
+References: <20220209195706.51522-1-eric.devolder@oracle.com>
+ <20220209195706.51522-3-eric.devolder@oracle.com>
+ <YhWpF/Cj/V+Cx6+d@MiWiFi-R3L-srv>
+Message-ID: <10d67f14-c5fe-0a17-e8b5-97702823cc1c@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 25/02/2022 23:23, Sergey Senozhatsky wrote:
-> On (22/02/25 13:16), Petr Mladek wrote:
+
+
+On 2/22/22 21:25, Baoquan He wrote:
+> On 02/09/22 at 02:56pm, Eric DeVolder wrote:
+>> Support for CPU and memory hotplug for crash is controlled by the
+>> CRASH_HOTPLUG configuration option, introduced by this patch.
 >>
->> The result looks good to me. We could do it as a followup patch.
+>> The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
+>> also introduced with this patch.
+>>
+>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>> ---
+>>   arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index ebe8fc76949a..4e3374edab02 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -2060,6 +2060,32 @@ config CRASH_DUMP
+>>   	  (CONFIG_RELOCATABLE=y).
+>>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>>   
+>> +config CRASH_HOTPLUG
+>> +	bool "kernel updates of crash elfcorehdr"
+>> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
+>> +	help
+>> +	  Enable the kernel to update the crash elfcorehdr (which contains
+>> +	  the list of CPUs and memory regions) directly when hot plug/unplug
+>> +	  of CPUs or memory. Otherwise userspace must monitor these hot
+>> +	  plug/unplug change notifications via udev in order to
+>> +	  unload-then-reload the crash kernel so that the list of CPUs and
+>> +	  memory regions is kept up-to-date. Note that the udev CPU and
+>> +	  memory change notifications still occur (however, userspace is not
+>> +	  required to monitor for crash dump purposes).
+>> +
+>> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+>> +	depends on CRASH_HOTPLUG
+>> +	int
+>> +	default 131072
+>> +	help
+>> +	  Specify the maximum size of the elfcorehdr buffer/segment.
+>> +	  The 128KiB default is sized so that it can accommodate 2048
+>> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
+>> +	  region of memory.
+>> +	  For example, this size can accommodate hotplugging a machine
+>> +	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
+>> +	  with 1024 1GiB memory DIMMs).
 > 
-> Yup, sounds good to me. Thanks.
+> This example of memory could be a little misleading. The memory regions
+> may not be related to memory DIMMs. System could split them into many
+> smaller regions during bootup.
 
-Cool, I also agree.
+I changed "with 1024 1GiB memory DIMMs" to "with 1024 1GiB hotplug memories".
+eric
 
-So Andrew: is there anything missing in order to get this patch merged?
-If you prefer, I can send a new version...with the reviews' tags.
-Lemme know =D
-
-Thanks,
-
-
-Guilherme
+> 
+> Otherwise, this patch looks good to me.
+> 
+>> +
+>>   config KEXEC_JUMP
+>>   	bool "kexec jump"
+>>   	depends on KEXEC && HIBERNATION
+>> -- 
+>> 2.27.0
+>>
+> 
 
