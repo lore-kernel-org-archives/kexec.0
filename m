@@ -1,12 +1,12 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 1 Mar 2022 14:08:34 -0600
-Subject: [PATCH v4 08/10] crash hp: exclude hot remove cpu from elfcorehdr
- notes
-In-Reply-To: <YhWySYFks0qwk2JB@MiWiFi-R3L-srv>
+Date: Tue, 1 Mar 2022 14:12:01 -0600
+Subject: [PATCH v4 09/10] crash hp: Add x86 crash hotplug support for
+ kexec_file_load
+In-Reply-To: <YhWzy87O4Y66LHH1@MiWiFi-R3L-srv>
 References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-9-eric.devolder@oracle.com>
- <YhWySYFks0qwk2JB@MiWiFi-R3L-srv>
-Message-ID: <75f0637f-262e-1650-2a30-e7cbe2962448@oracle.com>
+ <20220209195706.51522-10-eric.devolder@oracle.com>
+ <YhWzy87O4Y66LHH1@MiWiFi-R3L-srv>
+Message-ID: <e2e1c555-603d-0834-c9c5-06b75c590ab6@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,68 +15,176 @@ To: kexec@lists.infradead.org
 
 
 
-On 2/22/22 22:04, Baoquan He wrote:
+On 2/22/22 22:10, Baoquan He wrote:
 > On 02/09/22 at 02:57pm, Eric DeVolder wrote:
->> Due to use of CPUHP_AP_ONLINE_DYN, upon CPU unplug, the CPU is
->> still in the for_each_present_cpu() list when within the
->> crash_hotplug_handler(). Thus the CPU must be explicitly excluded
->> when building the new list of CPUs.
->>
->> This change identifies in crash_hotplug_handler() the CPU to be
->> excluded, and the check for excluding the CPU in
->> crash_prepare_elf64_headers().
+>> For x86_64, when CPU or memory is hot un/plugged, the crash
+>> elfcorehdr, which describes the CPUs and memory in the system,
+>> must also be updated.
 > 
-> This looks good to me, and the particularity of cpu hotplug can be
-> understood well by other code reader. Thanks.
+> Please mark the patch as X86 related by adding:
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>
-Thank you!
+> x86/kexec: Add x86 crash hotplug support for kexec_file_load
+Done!
+> 
+> And also update other subject to reflect under which component the
+> changes are made, crash hp is the feature name.
+Here's what I have at the moment, is this matching expectation?
+
+pick 891fcff41a8f crash: fix minor typo/bug in debug message
+pick 8f44e0d695be crash hp: Introduce CRASH_HOTPLUG configuration options
+pick bae60e9db6ad crash: prototype change for crash_prepare_elf64_headers
+pick cb98d1d923c8 crash: generic crash hotplug support infrastructure
+pick 40e4434abad4 kexec: exclude elfcorehdr from the segment digest
+pick 75039922aedc kexec: exclude hot remove cpu from elfcorehdr notes
+pick 0be483dadeb8 x86/kexec: Add x86 crash hotplug support for kexec_file_load
+pick 388bb5e4bf9a x86/kexec: Add x86 crash hotplug support for kexec_load
+
+> 
+> Otherwise, this looks good to me.
+Thanks!
 eric
+
 > 
+>>
+>> To update the elfcorehdr for x86_64, a new elfcorehdr must be
+>> generated from the available CPUs and memory. The new elfcorehdr
+>> is prepared into a buffer, and if no errors occur, it is
+>> installed over the top of the existing elfcorehdr.
+>>
+>> In the patch 'crash hp: exclude elfcorehdr from the segment digest'
+>> the need to update purgatory due to the change in elfcorehdr was
+>> eliminated.  As a result, no changes to purgatory or boot_params
+>> (as the elfcorehdr= kernel command line parameter pointer
+>> remains unchanged and correct) are needed, just elfcorehdr.
+>>
+>> To accommodate a growing number of resources via hotplug, the
+>> elfcorehdr segment must be sufficiently large enough to accommodate
+>> changes, see the CRASH_HOTPLUG_ELFCOREHDR_SZ configure item.
+>>
+>> With this change, the kexec_file_load syscall (not kexec_load)
+>> is supported. When loading the crash kernel via kexec_file_load,
+>> the elfcorehdr is identified at load time in crash_load_segments().
 >>
 >> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 >> ---
->>   kernel/crash_core.c | 10 ++++++++++
->>   kernel/kexec_file.c |  5 +++++
->>   2 files changed, 15 insertions(+)
+>>   arch/x86/kernel/crash.c | 92 +++++++++++++++++++++++++++++++++++++++++
+>>   1 file changed, 92 insertions(+)
 >>
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 524470e18883..b6942e04a188 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -550,6 +550,16 @@ static void crash_hotplug_handler(unsigned int hp_action,
->>   		/* Flag to differentiate between normal load and hotplug */
->>   		kexec_crash_image->hotplug_event = true;
+>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>> index 9db41cce8d97..6215c51919db 100644
+>> --- a/arch/x86/kernel/crash.c
+>> +++ b/arch/x86/kernel/crash.c
+>> @@ -25,6 +25,7 @@
+>>   #include <linux/slab.h>
+>>   #include <linux/vmalloc.h>
+>>   #include <linux/memblock.h>
+>> +#include <linux/highmem.h>
 >>   
->> +		/*
->> +		 * Due to use of CPUHP_AP_ONLINE_DYN, upon unplug and during
->> +		 * this callback, the CPU is still in the for_each_present_cpu()
->> +		 * list. Must explicitly look to exclude this CPU when building
->> +		 * new list.
->> +		 */
->> +		kexec_crash_image->offlinecpu =
->> +			(hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
->> +				(unsigned int)a : ~0U;
->> +
->>   		/* Now invoke arch-specific update handler */
->>   		arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
+>>   #include <asm/processor.h>
+>>   #include <asm/hardirq.h>
+>> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
+>>   	image->elf_headers = kbuf.buffer;
+>>   	image->elf_headers_sz = kbuf.bufsz;
 >>   
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 93bb0c0ce66c..339995d42169 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -1314,6 +1314,11 @@ int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
->>   
->>   	/* Prepare one phdr of type PT_NOTE for each present CPU */
->>   	for_each_present_cpu(cpu) {
 >> +#ifdef CONFIG_CRASH_HOTPLUG
->> +		/* Skip the soon-to-be offlined cpu */
->> +		if (image->hotplug_event && (cpu == image->offlinecpu))
->> +			continue;
+>> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
+>> +	kbuf.memsz = CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ;
+>> +	/* For marking as usable to crash kernel */
+>> +	image->elf_headers_sz = kbuf.memsz;
+>> +	/* Record the index of the elfcorehdr segment */
+>> +	image->elf_index = image->nr_segments;
+>> +	image->elf_index_valid = true;
+>> +#else
+>>   	kbuf.memsz = kbuf.bufsz;
 >> +#endif
->>   		phdr->p_type = PT_NOTE;
->>   		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
->>   		phdr->p_offset = phdr->p_paddr = notes_addr;
+>>   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+>>   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>   	ret = kexec_add_buffer(&kbuf);
+>> @@ -413,3 +424,84 @@ int crash_load_segments(struct kimage *image)
+>>   	return ret;
+>>   }
+>>   #endif /* CONFIG_KEXEC_FILE */
+>> +
+>> +#ifdef CONFIG_CRASH_HOTPLUG
+>> +/**
+>> + * arch_crash_hotplug_handler() - Handle hotplug elfcorehdr changes
+>> + * @image: the active struct kimage
+>> + * @hp_action: the hot un/plug action being handled
+>> + * @a: first parameter dependent upon hp_action
+>> + * @b: first parameter dependent upon hp_action
+>> + *
+>> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
+>> + * is passed to the crash kernel via the elfcorehdr= parameter)
+>> + * must be updated with the new list of CPUs and memories. The new
+>> + * elfcorehdr is prepared in a kernel buffer, and if no errors,
+>> + * then it is written on top of the existing/old elfcorehdr.
+>> + *
+>> + * For hotplug changes to elfcorehdr to work, two conditions are
+>> + * needed:
+>> + * First, the segment containing the elfcorehdr must be large enough
+>> + * to permit a growing number of resources. See
+>> + * CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ.
+>> + * Second, purgatory must explicitly exclude the elfcorehdr from the
+>> + * list of segments it checks (since the elfcorehdr changes and thus
+>> + * would require an update to purgatory itself to update the digest).
+>> + *
+>> + */
+>> +void arch_crash_hotplug_handler(struct kimage *image,
+>> +	unsigned int hp_action, unsigned long a, unsigned long b)
+>> +{
+>> +	struct kexec_segment *ksegment;
+>> +	unsigned char *ptr = NULL;
+>> +	unsigned long elfsz = 0;
+>> +	void *elfbuf = NULL;
+>> +	unsigned long mem, memsz;
+>> +
+>> +	/* Must have valid elfcorehdr index */
+>> +	if (!image->elf_index_valid) {
+>> +		pr_err("crash hp: unable to locate elfcorehdr segment");
+>> +		goto out;
+>> +	}
+>> +
+>> +	ksegment = &image->segment[image->elf_index];
+>> +	mem = ksegment->mem;
+>> +	memsz = ksegment->memsz;
+>> +
+>> +	/*
+>> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
+>> +	 * memory resources. The elfcorehdr segment memsz must be
+>> +	 * sufficiently large to accommodate increases due to hotplug
+>> +	 * activity. See CRASH_HOTPLUG_ELFCOREHDR_SZ.
+>> +	 */
+>> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
+>> +		pr_err("crash hp: unable to prepare elfcore headers");
+>> +		goto out;
+>> +	}
+>> +	if (elfsz > memsz) {
+>> +		pr_err("crash hp: update elfcorehdr elfsz %lu > memsz %lu",
+>> +			elfsz, memsz);
+>> +		goto out;
+>> +	}
+>> +
+>> +	/*
+>> +	 * At this point, we are all but assured of success.
+>> +	 * Copy new elfcorehdr into destination.
+>> +	 */
+>> +	ptr = map_crash_pages(mem, memsz);
+>> +	if (ptr) {
+>> +		/* Temporarily invalidate the crash image while it is replaced */
+>> +		xchg(&kexec_crash_image, NULL);
+>> +		/* Write the new elfcorehdr into memory */
+>> +		memcpy_flushcache((void *)ptr, elfbuf, elfsz);
+>> +		/* The crash image is now valid once again */
+>> +		xchg(&kexec_crash_image, image);
+>> +	}
+>> +	unmap_crash_pages((void **)&ptr);
+>> +	pr_debug("crash hp: re-loaded elfcorehdr at 0x%lx\n", mem);
+>> +
+>> +out:
+>> +	if (elfbuf)
+>> +		vfree(elfbuf);
+>> +}
+>> +#endif /* CONFIG_CRASH_HOTPLUG */
 >> -- 
 >> 2.27.0
 >>
