@@ -1,192 +1,153 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 1 Mar 2022 14:12:01 -0600
-Subject: [PATCH v4 09/10] crash hp: Add x86 crash hotplug support for
- kexec_file_load
-In-Reply-To: <YhWzy87O4Y66LHH1@MiWiFi-R3L-srv>
-References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-10-eric.devolder@oracle.com>
- <YhWzy87O4Y66LHH1@MiWiFi-R3L-srv>
-Message-ID: <e2e1c555-603d-0834-c9c5-06b75c590ab6@oracle.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Wed, 2 Mar 2022 15:46:34 +0800
+Subject: Compile error ppc64le: Cannot find symbol for section 11:
+ .text.unlikely.
+In-Reply-To: <20220225034641.zvg3jfxu3vhazdms@Rk>
+References: <CA+tGwnkDsuwOyDoZUNvi9ExhSsiF1MiGvegwjpQem8c3BPJ=6g@mail.gmail.com>
+ <20211124134743.GB11728@MiWiFi-R3L-srv>
+ <20211201021926.3xfabf5zbzidvrwa@Rk>
+ <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
+ <20220225034641.zvg3jfxu3vhazdms@Rk>
+Message-ID: <20220302074634.gmxcjygyinbslnst@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Fri, Feb 25, 2022 at 11:46:41AM +0800, Coiby Xu wrote:
+>On Fri, Dec 03, 2021 at 04:54:19PM +0100, Veronika Kabatova wrote:
+>>On Wed, Dec 1, 2021 at 3:20 AM Coiby Xu <coxu@redhat.com> wrote:
+>>>
+>>>On Wed, Nov 24, 2021 at 09:47:43PM +0800, Baoquan He wrote:
+>>>>On 11/24/21 at 01:47pm, Veronika Kabatova wrote:
+>>>>> Hi,
+>>>>>
+>>>>> for a while we've been seen the following error when compiling
+>>>>> the mainline kernel with gcc 11.2 and binutils 2.37:
+>>>>>
+>>>>> 00:02:32 Cannot find symbol for section 11: .text.unlikely.
+>>>>> 00:02:32 kernel/kexec_file.o: failed
+>>>>> 00:02:32 make[3]: *** [scripts/Makefile.build:287: kernel/kexec_file.o] Error 1
+>>>>> 00:02:32 make[3]: *** Deleting file 'kernel/kexec_file.o'
+>>>>> 00:02:32 make[2]: *** [Makefile:1846: kernel] Error 2
+>>>>> 00:02:32 make[2]: *** Waiting for unfinished jobs....
+>>>>>
+>>>>> The error only happens with ppc64le. I've tested this with cross
+>>>>> compilation, but the only reference to the error I found suggests
+>>>>> the same happens with the native compiles as well:
+>>>>>
+>>>>> https://github.com/groeck/linux-build-test/commit/142cbefbc0d37962c9a6c7f28ee415ecd5fd1e98
+>>>>>
+>>>>> In case it matters, the config used is the Fedora config with
+>>>>> kselftest options enabled, which you can grab from
+>>>>>
+>>>>> https://gitlab.com/redhat/red-hat-ci-tools/kernel/cki-internal-pipelines/cki-trusted-contributors/-/jobs/1760752896/artifacts/raw/artifacts/kernel-mainline.kernel.org-ppc64le-e4e737bb5c170df6135a127739a9e6148ee3da82.config
+>>>>>
+>>>>>
+>>>>> I've reached out to the Fedora compiler folks and Nick Clifton
+>>>>> suggested this is a problem with the kernel:
+>>>>>
+>>>>>     This message comes from the recordmcount tool, which is part of the kernel
+>>>>>     sources:
+>>>>>
+>>>>>     linux/scripts/recordmcount.[ch]
+>>>>>
+>>>>>     It appears to be triggered when a compiler update causes code to be
+>>>>>     rearranged. The problem has been reported before in various forums,
+>>>>>     but in particular I found this reference:
+>>>>>
+>>>>>     https://lore.kernel.org/lkml/20201204165742.3815221-2-arnd at kernel.org/
+>>>>>
+>>>>>     The point of which to me at least is that this is a kernel issue rather than
+>>>>>     a compiler issue.  Ie there must be some weak symbols in kexec_file.o file
+>>>>>     which need to be moved elsewhere.
+>>>>
+>>>>It could be arch_kexec_kernel_verify_sig() in kernel/kexec_file.c which
+>>>>is __weak, but not implemented in any ARCH. If true, this has been
+>>>>pointed out by Eric in one patch thread from Coiby.
+>>>>
+>>>>[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+>>>>http://lkml.kernel.org/r/20211018083137.338757-2-coxu at redhat.com
+>>>>
+>>>>Maybe Coiby can fetch above config file and run the test to check.
+>>>
+>>>"[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig" alone
+>>>would fix the error. If I turn arch_kexec_apply_relocations{_add,} into
+>
+>Sorry I meant "alone won't fix the error".
+>
+>>>static function, the error would be gone. As attached is the patch would
+>>>make this error disappear.
+>>>
+>>
+>>Thank you! I can confirm the attached patch fixes the problem.
+>>
+>>
+>>Veronika
+>>
+>>>However, s390 and x86 have its own implementation of
+>>>arch_kexec_apply_relocations_add. This makes it looks like to be gcc's
+>>>issue.
+>
+>Based on the above point and further investigation, I think the root cause is
+>find_secsym_ndx in linux/scripts/recordmcount.h,
+> /*
+>  * Find a symbol in the given section, to be used as the base for relocating
+>  * the table of offsets of calls to mcount.  A local or global symbol suffices,
+>  * but avoid a Weak symbol because it may be overridden; the change in value
+>  * would invalidate the relocations of the offsets of the calls to mcount.
+>  * Often the found symbol will be the unnamed local symbol generated by
+>  * GNU 'as' for the start of each section.  For example:
+>  *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+>  *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
+>  */
+> static int find_secsym_ndx(unsigned const txtndx,
+> 				char const *const txtname,
+> 				uint_t *const recvalp,
+> 				unsigned int *sym_index,
+> 				Elf_Shdr const *const symhdr,
+> 				Elf32_Word const *symtab,
+> 				Elf32_Word const *symtab_shndx,
+> 				Elf_Ehdr const *const ehdr)
+> {
+>        ...
+>		if (txtndx == get_symindex(symp, symtab, symtab_shndx)
+>			/* avoid STB_WEAK */
+>
+>	 fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+>		txtndx, txtname);
+>
+>This function prints the above warning after failing to find
+>arch_kexec_kernel_verify_sig or arch_kexec_apply_relocations{_add,} in
+>section 11: .text.unlikely. because it ignores the weak symbol and ppc64le
+>doesn't its arch implementations of these functions. I'll see if I can fix
+>it in linux/scripts/recordmcount.h.
 
+After digging deeper into linux/scripts/recordmcount.h, I think this
+issue can be either fixed in the compiler or recordmcount. So I fild two bugs
+- gcc: https://bugzilla.redhat.com/show_bug.cgi?id=2059838
+- linux/scripts/recordmcount.h: https://bugzilla.redhat.com/show_bug.cgi?id=2059842
 
-On 2/22/22 22:10, Baoquan He wrote:
-> On 02/09/22 at 02:57pm, Eric DeVolder wrote:
->> For x86_64, when CPU or memory is hot un/plugged, the crash
->> elfcorehdr, which describes the CPUs and memory in the system,
->> must also be updated.
-> 
-> Please mark the patch as X86 related by adding:
-> 
-> x86/kexec: Add x86 crash hotplug support for kexec_file_load
-Done!
-> 
-> And also update other subject to reflect under which component the
-> changes are made, crash hp is the feature name.
-Here's what I have at the moment, is this matching expectation?
+>
+>>>
+>>>
+>>>>
+>>>>Thanks
+>>>>Baoquan
+>>>>
+>>>
+>>>--
+>>>Best regards,
+>>>Coiby
+>>
+>
+>-- 
+>Best regards,
+>Coiby
 
-pick 891fcff41a8f crash: fix minor typo/bug in debug message
-pick 8f44e0d695be crash hp: Introduce CRASH_HOTPLUG configuration options
-pick bae60e9db6ad crash: prototype change for crash_prepare_elf64_headers
-pick cb98d1d923c8 crash: generic crash hotplug support infrastructure
-pick 40e4434abad4 kexec: exclude elfcorehdr from the segment digest
-pick 75039922aedc kexec: exclude hot remove cpu from elfcorehdr notes
-pick 0be483dadeb8 x86/kexec: Add x86 crash hotplug support for kexec_file_load
-pick 388bb5e4bf9a x86/kexec: Add x86 crash hotplug support for kexec_load
+-- 
+Best regards,
+Coiby
 
-> 
-> Otherwise, this looks good to me.
-Thanks!
-eric
-
-> 
->>
->> To update the elfcorehdr for x86_64, a new elfcorehdr must be
->> generated from the available CPUs and memory. The new elfcorehdr
->> is prepared into a buffer, and if no errors occur, it is
->> installed over the top of the existing elfcorehdr.
->>
->> In the patch 'crash hp: exclude elfcorehdr from the segment digest'
->> the need to update purgatory due to the change in elfcorehdr was
->> eliminated.  As a result, no changes to purgatory or boot_params
->> (as the elfcorehdr= kernel command line parameter pointer
->> remains unchanged and correct) are needed, just elfcorehdr.
->>
->> To accommodate a growing number of resources via hotplug, the
->> elfcorehdr segment must be sufficiently large enough to accommodate
->> changes, see the CRASH_HOTPLUG_ELFCOREHDR_SZ configure item.
->>
->> With this change, the kexec_file_load syscall (not kexec_load)
->> is supported. When loading the crash kernel via kexec_file_load,
->> the elfcorehdr is identified at load time in crash_load_segments().
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
->>   arch/x86/kernel/crash.c | 92 +++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 92 insertions(+)
->>
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index 9db41cce8d97..6215c51919db 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -25,6 +25,7 @@
->>   #include <linux/slab.h>
->>   #include <linux/vmalloc.h>
->>   #include <linux/memblock.h>
->> +#include <linux/highmem.h>
->>   
->>   #include <asm/processor.h>
->>   #include <asm/hardirq.h>
->> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
->>   	image->elf_headers = kbuf.buffer;
->>   	image->elf_headers_sz = kbuf.bufsz;
->>   
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
->> +	kbuf.memsz = CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ;
->> +	/* For marking as usable to crash kernel */
->> +	image->elf_headers_sz = kbuf.memsz;
->> +	/* Record the index of the elfcorehdr segment */
->> +	image->elf_index = image->nr_segments;
->> +	image->elf_index_valid = true;
->> +#else
->>   	kbuf.memsz = kbuf.bufsz;
->> +#endif
->>   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->>   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->>   	ret = kexec_add_buffer(&kbuf);
->> @@ -413,3 +424,84 @@ int crash_load_segments(struct kimage *image)
->>   	return ret;
->>   }
->>   #endif /* CONFIG_KEXEC_FILE */
->> +
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +/**
->> + * arch_crash_hotplug_handler() - Handle hotplug elfcorehdr changes
->> + * @image: the active struct kimage
->> + * @hp_action: the hot un/plug action being handled
->> + * @a: first parameter dependent upon hp_action
->> + * @b: first parameter dependent upon hp_action
->> + *
->> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
->> + * is passed to the crash kernel via the elfcorehdr= parameter)
->> + * must be updated with the new list of CPUs and memories. The new
->> + * elfcorehdr is prepared in a kernel buffer, and if no errors,
->> + * then it is written on top of the existing/old elfcorehdr.
->> + *
->> + * For hotplug changes to elfcorehdr to work, two conditions are
->> + * needed:
->> + * First, the segment containing the elfcorehdr must be large enough
->> + * to permit a growing number of resources. See
->> + * CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ.
->> + * Second, purgatory must explicitly exclude the elfcorehdr from the
->> + * list of segments it checks (since the elfcorehdr changes and thus
->> + * would require an update to purgatory itself to update the digest).
->> + *
->> + */
->> +void arch_crash_hotplug_handler(struct kimage *image,
->> +	unsigned int hp_action, unsigned long a, unsigned long b)
->> +{
->> +	struct kexec_segment *ksegment;
->> +	unsigned char *ptr = NULL;
->> +	unsigned long elfsz = 0;
->> +	void *elfbuf = NULL;
->> +	unsigned long mem, memsz;
->> +
->> +	/* Must have valid elfcorehdr index */
->> +	if (!image->elf_index_valid) {
->> +		pr_err("crash hp: unable to locate elfcorehdr segment");
->> +		goto out;
->> +	}
->> +
->> +	ksegment = &image->segment[image->elf_index];
->> +	mem = ksegment->mem;
->> +	memsz = ksegment->memsz;
->> +
->> +	/*
->> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
->> +	 * memory resources. The elfcorehdr segment memsz must be
->> +	 * sufficiently large to accommodate increases due to hotplug
->> +	 * activity. See CRASH_HOTPLUG_ELFCOREHDR_SZ.
->> +	 */
->> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
->> +		pr_err("crash hp: unable to prepare elfcore headers");
->> +		goto out;
->> +	}
->> +	if (elfsz > memsz) {
->> +		pr_err("crash hp: update elfcorehdr elfsz %lu > memsz %lu",
->> +			elfsz, memsz);
->> +		goto out;
->> +	}
->> +
->> +	/*
->> +	 * At this point, we are all but assured of success.
->> +	 * Copy new elfcorehdr into destination.
->> +	 */
->> +	ptr = map_crash_pages(mem, memsz);
->> +	if (ptr) {
->> +		/* Temporarily invalidate the crash image while it is replaced */
->> +		xchg(&kexec_crash_image, NULL);
->> +		/* Write the new elfcorehdr into memory */
->> +		memcpy_flushcache((void *)ptr, elfbuf, elfsz);
->> +		/* The crash image is now valid once again */
->> +		xchg(&kexec_crash_image, image);
->> +	}
->> +	unmap_crash_pages((void **)&ptr);
->> +	pr_debug("crash hp: re-loaded elfcorehdr at 0x%lx\n", mem);
->> +
->> +out:
->> +	if (elfbuf)
->> +		vfree(elfbuf);
->> +}
->> +#endif /* CONFIG_CRASH_HOTPLUG */
->> -- 
->> 2.27.0
->>
-> 
 
