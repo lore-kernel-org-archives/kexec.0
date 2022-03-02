@@ -1,89 +1,166 @@
-From: David Hildenbrand <david@redhat.com>
-Date: Wed, 2 Mar 2022 10:20:34 +0100
-Subject: [PATCH v4 02/10] crash hp: Introduce CRASH_HOTPLUG configuration
- options
-In-Reply-To: <10d67f14-c5fe-0a17-e8b5-97702823cc1c@oracle.com>
-References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-3-eric.devolder@oracle.com>
- <YhWpF/Cj/V+Cx6+d@MiWiFi-R3L-srv>
- <10d67f14-c5fe-0a17-e8b5-97702823cc1c@oracle.com>
-Message-ID: <f23efdc0-20c8-ccfd-f54d-69a9b4ee531f@redhat.com>
+From: Veronika Kabatova <vkabatov@redhat.com>
+Date: Wed, 2 Mar 2022 11:52:12 +0100
+Subject: Compile error ppc64le: Cannot find symbol for section 11:
+ .text.unlikely.
+In-Reply-To: <20220302074634.gmxcjygyinbslnst@Rk>
+References: <CA+tGwnkDsuwOyDoZUNvi9ExhSsiF1MiGvegwjpQem8c3BPJ=6g@mail.gmail.com>
+ <20211124134743.GB11728@MiWiFi-R3L-srv> <20211201021926.3xfabf5zbzidvrwa@Rk>
+ <CA+tGwn==8PzG5UrnDe8_y+3M-QA446HK5tig1bjU3FY9uEkzQA@mail.gmail.com>
+ <20220225034641.zvg3jfxu3vhazdms@Rk> <20220302074634.gmxcjygyinbslnst@Rk>
+Message-ID: <CA+tGwnkuU1TCf0L4qzo4dKyunZKHYOs8=gqv8vghtp-D_4jh6A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 01.03.22 21:04, Eric DeVolder wrote:
-> 
-> 
-> On 2/22/22 21:25, Baoquan He wrote:
->> On 02/09/22 at 02:56pm, Eric DeVolder wrote:
->>> Support for CPU and memory hotplug for crash is controlled by the
->>> CRASH_HOTPLUG configuration option, introduced by this patch.
->>>
->>> The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
->>> also introduced with this patch.
->>>
->>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>> ---
->>>   arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
->>>   1 file changed, 26 insertions(+)
->>>
->>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>> index ebe8fc76949a..4e3374edab02 100644
->>> --- a/arch/x86/Kconfig
->>> +++ b/arch/x86/Kconfig
->>> @@ -2060,6 +2060,32 @@ config CRASH_DUMP
->>>   	  (CONFIG_RELOCATABLE=y).
->>>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
->>>   
->>> +config CRASH_HOTPLUG
->>> +	bool "kernel updates of crash elfcorehdr"
->>> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
->>> +	help
->>> +	  Enable the kernel to update the crash elfcorehdr (which contains
->>> +	  the list of CPUs and memory regions) directly when hot plug/unplug
->>> +	  of CPUs or memory. Otherwise userspace must monitor these hot
->>> +	  plug/unplug change notifications via udev in order to
->>> +	  unload-then-reload the crash kernel so that the list of CPUs and
->>> +	  memory regions is kept up-to-date. Note that the udev CPU and
->>> +	  memory change notifications still occur (however, userspace is not
->>> +	  required to monitor for crash dump purposes).
->>> +
->>> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
->>> +	depends on CRASH_HOTPLUG
->>> +	int
->>> +	default 131072
->>> +	help
->>> +	  Specify the maximum size of the elfcorehdr buffer/segment.
->>> +	  The 128KiB default is sized so that it can accommodate 2048
->>> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
->>> +	  region of memory.
->>> +	  For example, this size can accommodate hotplugging a machine
->>> +	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
->>> +	  with 1024 1GiB memory DIMMs).
->>
->> This example of memory could be a little misleading. The memory regions
->> may not be related to memory DIMMs. System could split them into many
->> smaller regions during bootup.
-> 
-> I changed "with 1024 1GiB memory DIMMs" to "with 1024 1GiB hotplug memories".
-> eric
+On Wed, Mar 2, 2022 at 8:50 AM Coiby Xu <coxu@redhat.com> wrote:
+>
+> On Fri, Feb 25, 2022 at 11:46:41AM +0800, Coiby Xu wrote:
+> >On Fri, Dec 03, 2021 at 04:54:19PM +0100, Veronika Kabatova wrote:
+> >>On Wed, Dec 1, 2021 at 3:20 AM Coiby Xu <coxu@redhat.com> wrote:
+> >>>
+> >>>On Wed, Nov 24, 2021 at 09:47:43PM +0800, Baoquan He wrote:
+> >>>>On 11/24/21 at 01:47pm, Veronika Kabatova wrote:
+> >>>>> Hi,
+> >>>>>
+> >>>>> for a while we've been seen the following error when compiling
+> >>>>> the mainline kernel with gcc 11.2 and binutils 2.37:
+> >>>>>
+> >>>>> 00:02:32 Cannot find symbol for section 11: .text.unlikely.
+> >>>>> 00:02:32 kernel/kexec_file.o: failed
+> >>>>> 00:02:32 make[3]: *** [scripts/Makefile.build:287: kernel/kexec_file.o] Error 1
+> >>>>> 00:02:32 make[3]: *** Deleting file 'kernel/kexec_file.o'
+> >>>>> 00:02:32 make[2]: *** [Makefile:1846: kernel] Error 2
+> >>>>> 00:02:32 make[2]: *** Waiting for unfinished jobs....
+> >>>>>
+> >>>>> The error only happens with ppc64le. I've tested this with cross
+> >>>>> compilation, but the only reference to the error I found suggests
+> >>>>> the same happens with the native compiles as well:
+> >>>>>
+> >>>>> https://github.com/groeck/linux-build-test/commit/142cbefbc0d37962c9a6c7f28ee415ecd5fd1e98
+> >>>>>
+> >>>>> In case it matters, the config used is the Fedora config with
+> >>>>> kselftest options enabled, which you can grab from
+> >>>>>
+> >>>>> https://gitlab.com/redhat/red-hat-ci-tools/kernel/cki-internal-pipelines/cki-trusted-contributors/-/jobs/1760752896/artifacts/raw/artifacts/kernel-mainline.kernel.org-ppc64le-e4e737bb5c170df6135a127739a9e6148ee3da82.config
+> >>>>>
+> >>>>>
+> >>>>> I've reached out to the Fedora compiler folks and Nick Clifton
+> >>>>> suggested this is a problem with the kernel:
+> >>>>>
+> >>>>>     This message comes from the recordmcount tool, which is part of the kernel
+> >>>>>     sources:
+> >>>>>
+> >>>>>     linux/scripts/recordmcount.[ch]
+> >>>>>
+> >>>>>     It appears to be triggered when a compiler update causes code to be
+> >>>>>     rearranged. The problem has been reported before in various forums,
+> >>>>>     but in particular I found this reference:
+> >>>>>
+> >>>>>     https://lore.kernel.org/lkml/20201204165742.3815221-2-arnd at kernel.org/
+> >>>>>
+> >>>>>     The point of which to me at least is that this is a kernel issue rather than
+> >>>>>     a compiler issue.  Ie there must be some weak symbols in kexec_file.o file
+> >>>>>     which need to be moved elsewhere.
+> >>>>
+> >>>>It could be arch_kexec_kernel_verify_sig() in kernel/kexec_file.c which
+> >>>>is __weak, but not implemented in any ARCH. If true, this has been
+> >>>>pointed out by Eric in one patch thread from Coiby.
+> >>>>
+> >>>>[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+> >>>>http://lkml.kernel.org/r/20211018083137.338757-2-coxu at redhat.com
+> >>>>
+> >>>>Maybe Coiby can fetch above config file and run the test to check.
+> >>>
+> >>>"[PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig" alone
+> >>>would fix the error. If I turn arch_kexec_apply_relocations{_add,} into
+> >
+> >Sorry I meant "alone won't fix the error".
+> >
+> >>>static function, the error would be gone. As attached is the patch would
+> >>>make this error disappear.
+> >>>
+> >>
+> >>Thank you! I can confirm the attached patch fixes the problem.
+> >>
+> >>
+> >>Veronika
+> >>
+> >>>However, s390 and x86 have its own implementation of
+> >>>arch_kexec_apply_relocations_add. This makes it looks like to be gcc's
+> >>>issue.
+> >
+> >Based on the above point and further investigation, I think the root cause is
+> >find_secsym_ndx in linux/scripts/recordmcount.h,
+> > /*
+> >  * Find a symbol in the given section, to be used as the base for relocating
+> >  * the table of offsets of calls to mcount.  A local or global symbol suffices,
+> >  * but avoid a Weak symbol because it may be overridden; the change in value
+> >  * would invalidate the relocations of the offsets of the calls to mcount.
+> >  * Often the found symbol will be the unnamed local symbol generated by
+> >  * GNU 'as' for the start of each section.  For example:
+> >  *    Num:    Value  Size Type    Bind   Vis      Ndx Name
+> >  *      2: 00000000     0 SECTION LOCAL  DEFAULT    1
+> >  */
+> > static int find_secsym_ndx(unsigned const txtndx,
+> >                               char const *const txtname,
+> >                               uint_t *const recvalp,
+> >                               unsigned int *sym_index,
+> >                               Elf_Shdr const *const symhdr,
+> >                               Elf32_Word const *symtab,
+> >                               Elf32_Word const *symtab_shndx,
+> >                               Elf_Ehdr const *const ehdr)
+> > {
+> >        ...
+> >               if (txtndx == get_symindex(symp, symtab, symtab_shndx)
+> >                       /* avoid STB_WEAK */
+> >
+> >        fprintf(stderr, "Cannot find symbol for section %u: %s.\n",
+> >               txtndx, txtname);
+> >
+> >This function prints the above warning after failing to find
+> >arch_kexec_kernel_verify_sig or arch_kexec_apply_relocations{_add,} in
+> >section 11: .text.unlikely. because it ignores the weak symbol and ppc64le
+> >doesn't its arch implementations of these functions. I'll see if I can fix
+> >it in linux/scripts/recordmcount.h.
+>
+> After digging deeper into linux/scripts/recordmcount.h, I think this
+> issue can be either fixed in the compiler or recordmcount. So I fild two bugs
+> - gcc: https://bugzilla.redhat.com/show_bug.cgi?id=2059838
 
-It's still not quite precise. Essentially it's the individual "System
-RAM" entries in /proc/iomem
+Hi,
 
-Boot memory (i.e., a single DIMM) might be represented by multiple
-entries due to rearranged holes (by the BIOS).
+I have also opened a BZ for gcc some time ago and that is where I
+was redirected to this mailing list, linking it here if it helps:
 
-While hoplugged DIMMs (under virt!) are usually represented using a
-single range, it can be different on physical machines. Last but not
-least, dax/kmem and virtio-mem behave in a different way.
+https://bugzilla.redhat.com/show_bug.cgi?id=2022470
 
--- 
-Thanks,
 
-David / dhildenb
+Veronika
+
+> - linux/scripts/recordmcount.h: https://bugzilla.redhat.com/show_bug.cgi?id=2059842
+>
+> >
+> >>>
+> >>>
+> >>>>
+> >>>>Thanks
+> >>>>Baoquan
+> >>>>
+> >>>
+> >>>--
+> >>>Best regards,
+> >>>Coiby
+> >>
+> >
+> >--
+> >Best regards,
+> >Coiby
+>
+> --
+> Best regards,
+> Coiby
+>
 
 
