@@ -1,122 +1,209 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Thu, 3 Mar 2022 09:31:40 -0600
-Subject: [PATCH v4 02/10] crash hp: Introduce CRASH_HOTPLUG configuration
- options
-In-Reply-To: <YiCvomsNsTrx0dhR@MiWiFi-R3L-srv>
-References: <20220209195706.51522-1-eric.devolder@oracle.com>
- <20220209195706.51522-3-eric.devolder@oracle.com>
- <YhWpF/Cj/V+Cx6+d@MiWiFi-R3L-srv>
- <10d67f14-c5fe-0a17-e8b5-97702823cc1c@oracle.com>
- <f23efdc0-20c8-ccfd-f54d-69a9b4ee531f@redhat.com>
- <YiCW8gEb3n1CpI6x@MiWiFi-R3L-srv>
- <5b0a9bac-cd00-35df-8e55-44624729015f@redhat.com>
- <YiCvomsNsTrx0dhR@MiWiFi-R3L-srv>
-Message-ID: <c2f89d0b-4d85-5cfe-7718-1e70a1cc9e8e@oracle.com>
+Date: Thu,  3 Mar 2022 11:27:17 -0500
+Subject: [PATCH v5 0/8] crash: Kernel handling of CPU and memory hot un/plug
+Message-ID: <20220303162725.49640-1-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+When the kdump service is loaded, if a CPU or memory is hot
+un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
+and memory in the system, must also be updated, else the resulting
+vmcore is inaccurate (eg. missing either CPU context or memory
+regions).
 
+The current solution utilizes udev to initiate an unload-then-reload
+of the kdump image (e. kernel, initrd, boot_params, puratory and
+elfcorehdr) by the userspace kexec utility. In previous posts I have
+outlined the significant performance problems related to offloading
+this activity to userspace.
 
-On 3/3/22 06:08, Baoquan He wrote:
-> On 03/03/22 at 12:36pm, David Hildenbrand wrote:
->> On 03.03.22 11:22, Baoquan He wrote:
->>> On 03/02/22 at 10:20am, David Hildenbrand wrote:
->>>> On 01.03.22 21:04, Eric DeVolder wrote:
->>>>>
->>>>>
->>>>> On 2/22/22 21:25, Baoquan He wrote:
->>>>>> On 02/09/22 at 02:56pm, Eric DeVolder wrote:
->>>>>>> Support for CPU and memory hotplug for crash is controlled by the
->>>>>>> CRASH_HOTPLUG configuration option, introduced by this patch.
->>>>>>>
->>>>>>> The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
->>>>>>> also introduced with this patch.
->>>>>>>
->>>>>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>>>>>> ---
->>>>>>>    arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
->>>>>>>    1 file changed, 26 insertions(+)
->>>>>>>
->>>>>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>>>>>> index ebe8fc76949a..4e3374edab02 100644
->>>>>>> --- a/arch/x86/Kconfig
->>>>>>> +++ b/arch/x86/Kconfig
->>>>>>> @@ -2060,6 +2060,32 @@ config CRASH_DUMP
->>>>>>>    	  (CONFIG_RELOCATABLE=y).
->>>>>>>    	  For more details see Documentation/admin-guide/kdump/kdump.rst
->>>>>>>    
->>>>>>> +config CRASH_HOTPLUG
->>>>>>> +	bool "kernel updates of crash elfcorehdr"
->>>>>>> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
->>>>>>> +	help
->>>>>>> +	  Enable the kernel to update the crash elfcorehdr (which contains
->>>>>>> +	  the list of CPUs and memory regions) directly when hot plug/unplug
->>>>>>> +	  of CPUs or memory. Otherwise userspace must monitor these hot
->>>>>>> +	  plug/unplug change notifications via udev in order to
->>>>>>> +	  unload-then-reload the crash kernel so that the list of CPUs and
->>>>>>> +	  memory regions is kept up-to-date. Note that the udev CPU and
->>>>>>> +	  memory change notifications still occur (however, userspace is not
->>>>>>> +	  required to monitor for crash dump purposes).
->>>>>>> +
->>>>>>> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
->>>>>>> +	depends on CRASH_HOTPLUG
->>>>>>> +	int
->>>>>>> +	default 131072
->>>>>>> +	help
->>>>>>> +	  Specify the maximum size of the elfcorehdr buffer/segment.
->>>>>>> +	  The 128KiB default is sized so that it can accommodate 2048
->>>>>>> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
->>>>>>> +	  region of memory.
->>>>>>> +	  For example, this size can accommodate hotplugging a machine
->>>>>>> +	  with up to 1024 CPUs and up to 1024 memory regions (e.g. 1TiB
->>>>>>> +	  with 1024 1GiB memory DIMMs).
->>>>>>
->>>>>> This example of memory could be a little misleading. The memory regions
->>>>>> may not be related to memory DIMMs. System could split them into many
->>>>>> smaller regions during bootup.
->>>>>
->>>>> I changed "with 1024 1GiB memory DIMMs" to "with 1024 1GiB hotplug memories".
->>>>> eric
->>>>
->>>> It's still not quite precise. Essentially it's the individual "System
->>>> RAM" entries in /proc/iomem
->>>>
->>>> Boot memory (i.e., a single DIMM) might be represented by multiple
->>>> entries due to rearranged holes (by the BIOS).
->>>>
->>>> While hoplugged DIMMs (under virt!) are usually represented using a
->>>> single range, it can be different on physical machines. Last but not
->>>> least, dax/kmem and virtio-mem behave in a different way.
->>>
->>> Right. How about only mentioning the 'System RAM' entries in /proc/iomem
->>> as below? It's just giving an example, talking about the details of
->>> memory regions from each type may not be necessry here. People
->>> interested can refer to code or document related to get it.
->>>
->>>
->>> + default 131072
->>> + help
->>> +   Specify the maximum size of the elfcorehdr buffer/segment.
->>> +   The 128KiB default is sized so that it can accommodate 2048
->>> +   Elf64_Phdr, where each Phdr represents either a CPU or a
->>> +   region of memory.
->>> +   For example, this size can accommodate hotplugging a machine
->>> +   with up to 1024 CPUs and up to 1024 memory regions which are
->>>      represented by 'System RAM' entries in /proc/iomem.
->>
->> Maybe changing the last paragraph to:
->>
->> "For example, this size can accommodate a machine with up to 1024 CPUs
->> and up to 1024 memory regions, for example, as represented by 'System
->> RAM' entries in /proc/iomem."
-> 
-> Yeah, this looks good. Can the 2nd 'for example' be removed or replaced
-> with 'e.g'? Please ignore it if it's normal to have two 'for example' in
-> one sentence, just gentlely ask.
-> 
-Great, I will make the change to the text as agreed upon here!
+This patchset introduces a generic crash hot un/plug handler that
+registers with the CPU and memory notifiers. Upon CPU or memory
+changes, this generic handler is invoked and performs important
+housekeeping, for example obtaining the appropriate lock, and then
+invokes an architecture specific handler to do the appropriate
+updates.
+
+In the case of x86_64, the arch specific handler generates a new
+elfcorehdr, and overwrites the old one in memory. No involvement
+with userspace needed.
+
+To realize the benefits/test this patchset, one must make a couple
+of minor changes to userspace:
+
+ - Disable the udev rule for updating kdump on hot un/plug changes
+   Eg. on RHEL: rm -f /usr/lib/udev/rules.d/98-kexec.rules
+   or other technique to neuter the rule.
+
+ - Change to the kexec_file_load for loading the kdump kernel:
+   Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+    standard_kexec_args="-p -d -s"
+   which adds the -s to select kexec_file_load syscall.
+
+This patchset supports kexec_load with a modified kexec userspace
+utility, and a working changeset to the kexec userspace utility
+is provided here (and to use, the above change to standard_kexec_args
+would be, for example, to append --hotplug-size=262144 instead of -s).
+
+ diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+ index 9826f6d..06adb7e 100644
+ --- a/kexec/arch/i386/crashdump-x86.c
+ +++ b/kexec/arch/i386/crashdump-x86.c
+ @@ -48,6 +48,7 @@
+  #include <x86/x86-linux.h>
+  
+  extern struct arch_options_t arch_options;
+ +extern unsigned long long hotplug_size;
+  
+  static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+  				  struct crash_elf_info *elf_info)
+ @@ -975,6 +976,13 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+  	} else {
+  		memsz = bufsz;
+  	}
+ +
+ +    /* If hotplug support enabled, use that size */
+ +    if (hotplug_size) {
+ +        memsz = hotplug_size;
+ +    }
+ +
+ +    info->elfcorehdr =
+  	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
+  							max_addr, -1);
+  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+ diff --git a/kexec/kexec.c b/kexec/kexec.c
+ index f63b36b..9569d9a 100644
+ --- a/kexec/kexec.c
+ +++ b/kexec/kexec.c
+ @@ -58,6 +58,7 @@
+  
+  unsigned long long mem_min = 0;
+  unsigned long long mem_max = ULONG_MAX;
+ +unsigned long long hotplug_size = 0;
+  static unsigned long kexec_flags = 0;
+  /* Flags for kexec file (fd) based syscall */
+  static unsigned long kexec_file_flags = 0;
+ @@ -672,6 +673,12 @@ static void update_purgatory(struct kexec_info *info)
+  		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+  			continue;
+  		}
+ +        /* Don't include elfcorehdr in the checksum, if hotplug
+ +         * support enabled.
+ +         */
+ +        if (hotplug_size && (info->segment[i].mem == (void *)info->elfcorehdr)) {
+ +			continue;
+ +		}
+  		sha256_update(&ctx, info->segment[i].buf,
+  			      info->segment[i].bufsz);
+  		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
+ @@ -1504,6 +1511,17 @@ int main(int argc, char *argv[])
+  		case OPT_PRINT_CKR_SIZE:
+  			print_crashkernel_region_size();
+  			return 0;
+ +		case OPT_HOTPLUG_SIZE:
+ +            /* Reserved the specified size for hotplug growth */
+ +			hotplug_size = strtoul(optarg, &endptr, 0);
+ +			if (*endptr) {
+ +				fprintf(stderr,
+ +					"Bad option value in --hotplug-size=%s\n",
+ +					optarg);
+ +				usage();
+ +				return 1;
+ +			}
+ +			break;
+  		default:
+  			break;
+  		}
+ diff --git a/kexec/kexec.h b/kexec/kexec.h
+ index 595dd68..b30dda4 100644
+ --- a/kexec/kexec.h
+ +++ b/kexec/kexec.h
+ @@ -169,6 +169,7 @@ struct kexec_info {
+  	int command_line_len;
+  
+  	int skip_checks;
+ +    unsigned long elfcorehdr;
+   };
+  
+  struct arch_map_entry {
+ @@ -231,7 +232,8 @@ extern int file_types;
+  #define OPT_PRINT_CKR_SIZE	262
+  #define OPT_LOAD_LIVE_UPDATE	263
+  #define OPT_EXEC_LIVE_UPDATE	264
+ -#define OPT_MAX			265
+ +#define OPT_HOTPLUG_SIZE	265
+ +#define OPT_MAX			266
+  #define KEXEC_OPTIONS \
+  	{ "help",		0, 0, OPT_HELP }, \
+  	{ "version",		0, 0, OPT_VERSION }, \
+ @@ -258,6 +260,7 @@ extern int file_types;
+  	{ "debug",		0, 0, OPT_DEBUG }, \
+  	{ "status",		0, 0, OPT_STATUS }, \
+  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+ +	{ "hotplug-size",     2, 0, OPT_HOTPLUG_SIZE }, \
+  
+  #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
+ 
+
+Regards,
 eric
+---
+v5: 3mar2022
+ - Reworded description of CRASH_HOTPLUG_ELFCOREHDR_SZ, per
+   David Hildenbrand.
+ - Refactored slightly a few patches per Baoquan recommendation.
+
+v4: 9feb2022
+ https://lkml.org/lkml/2022/2/9/1406
+ - Refactored patches per Baoquan suggestsions.
+ - A few corrections, per Baoquan.
+
+v3: 10jan2022
+ https://lkml.org/lkml/2022/1/10/1212
+ - Rebasing per Baoquan He request.
+ - Changed memory notifier per David Hildenbrand.
+ - Providing example kexec userspace change in cover letter.
+
+RFC v2: 7dec2021
+ https://lkml.org/lkml/2021/12/7/1088
+ - Acting upon Baoquan He suggestion of removing elfcorehdr from
+   the purgatory list of segments, removed purgatory code from
+   patchset, and it is signficiantly simpler now.
+
+RFC v1: 18nov2021
+ https://lkml.org/lkml/2021/11/18/845
+ - working patchset demonstrating kernel handling of hotplug
+   updates to x86 elfcorehdr for kexec_file_load
+
+RFC: 14dec2020
+ https://lkml.org/lkml/2020/12/14/532
+ - proposed concept of allowing kernel to handle hotplug update
+   of elfcorehdr
+---
+
+Eric DeVolder (8):
+  x86/crash: fix minor typo/bug in debug message
+  x86/crash hp: Introduce CRASH_HOTPLUG configuration options
+  crash: prototype change for crash_prepare_elf64_headers
+  crash: generic crash hotplug support infrastructure
+  kexec: exclude elfcorehdr from the segment digest
+  kexec: exclude hot remove cpu from elfcorehdr notes
+  x86/crash: Add x86 crash hotplug support for kexec_file_load
+  x86/crash: Add x86 crash hotplug support for kexec_load
+
+ arch/arm64/kernel/machine_kexec_file.c |   6 +-
+ arch/powerpc/kexec/file_load_64.c      |   2 +-
+ arch/x86/Kconfig                       |  26 +++++
+ arch/x86/kernel/crash.c                | 151 ++++++++++++++++++++++++-
+ include/linux/kexec.h                  |  21 +++-
+ kernel/crash_core.c                    | 118 +++++++++++++++++++
+ kernel/kexec_file.c                    |  15 ++-
+ 7 files changed, 329 insertions(+), 10 deletions(-)
+
+-- 
+2.27.0
+
 
