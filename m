@@ -1,58 +1,57 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Tue, 8 Mar 2022 10:04:06 -0300
-Subject: [PATCH V4] notifier/panic: Introduce panic_notifier_filter
-In-Reply-To: <YidSI33Uk8wHDuO9@alley>
-References: <TYAPR01MB6507D06BA6D32218F6E88198955F9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
- <fda509a5-ea0d-4d1d-a1c1-ca5e80010fc0@igalia.com>
- <TYAPR01MB6507D9747647685B554B8F8F955F9@TYAPR01MB6507.jpnprd01.prod.outlook.com>
- <fb5e66b6-049a-22ab-5913-a04cc302b629@igalia.com> <YfPxvzSzDLjO5ldp@alley>
- <73011b6f-084b-43f5-cc01-1818a8a57e56@igalia.com>
- <YiV/HbXftVF2iAvU@MiWiFi-R3L-srv>
- <e1033adc-46ff-5dbc-e739-1bf725b6fed0@igalia.com>
- <YiYQ/w6Hn5Zb67di@MiWiFi-R3L-srv>
- <788ab36d-ef65-4cc8-4edf-a46d2687d97e@igalia.com> <YidSI33Uk8wHDuO9@alley>
-Message-ID: <23044cc6-ae58-d464-d5d1-3b5e6d4202c8@igalia.com>
+From: David Wysochanski <dwysocha@redhat.com>
+Date: Tue, 8 Mar 2022 12:16:18 -0500
+Subject: [PATCH 0/3] makedumpfile: harden parsing of old prink buffer
+In-Reply-To: <20220307172322.7909-1-prudo@redhat.com>
+References: <20220307172322.7909-1-prudo@redhat.com>
+Message-ID: <CALF+zOmA3N9cZa6R=RFZ-K6F2T=xYrevRNxHYtxhu4vcm3fPog@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 08/03/2022 09:54, Petr Mladek wrote:
-> [...]
-> Honestly, I am not that keen about enforcing the priorities.
-> 
-> It would make sense only when the ordering is really important.
-> Then there should be some rules. It should be obvious why
-> something has to be done earlier than something else.
-> 
-> From my POV, it is just another complexity. Someone will need to
-> assign the priority to the existing notifiers. People will wonder
-> about it for newly added notifiers.
-> 
-> Reproducibility seems to be the only motivation. Is it really a
-> problem? Do the notifiers affect each other?
-> 
-> Also the notifiers are typically registered by some early boot
-> code. It will define some ordering out of box.
-> 
-> Best Regards,
-> Petr
+On Mon, Mar 7, 2022 at 12:23 PM Philipp Rudo <prudo@redhat.com> wrote:
+>
+> Hi,
+>
+> dumping the dmesg can cause an endless loop for the old prink mechanism (>
+> v3.5.0 and < v5.10.0) when the log_buf got corrupted. This series fixes those
+> cases by adding a cycle detection. The cycle detection is implemented in a
+> generic way so that it can be reused in other parts of makedumpfile.
+>
+> Thanks
+> Philipp
+>
+> Philipp Rudo (3):
+>   makedumpfile: add generic cycle detection
+>   makedumpfile: use pointer arithmetics for dump_dmesg
+>   makedumpfile: use cycle detection when parsing the prink log_buf
+>
+>  Makefile       |  2 +-
+>  detect_cycle.c | 99 ++++++++++++++++++++++++++++++++++++++++++++++++++
+>  detect_cycle.h | 40 ++++++++++++++++++++
+>  makedumpfile.c | 65 +++++++++++++++++++++++++--------
+>  4 files changed, 190 insertions(+), 16 deletions(-)
+>  create mode 100644 detect_cycle.c
+>  create mode 100644 detect_cycle.h
+>
+> --
+> 2.35.1
+>
 
-OK Petr, makes sense. I feel that one the pros of the approach would be
-to document all the notifiers in the header, but I guess nothing
-prevents me to do that heh
-I don't need enforcing the priorities for this.
+You can add
+Tested-by: Dave Wysochanski <dwysocha@redhat.com>
 
-I liked the idea of having everything "reproducible" as you said, but we
-could face the problem of how to order some independent notifiers...
-would be something "ad-hoc".
+As I mentioned in the Red Hat bug, for my testing, I ran over 1,000
+vmcores as a test set comparing "makedumpfile --dump-dmesg" output and
+saw no difference.  Then I ran the one vmcore we found the loop on,
+and with these patches the loop was correctly detected and
+makedumpfile terminated rather than running forever.
 
-I'll progress here without priorities for now, if somebody see an
-advantage for that, we can use it.
+I'm still reviewing code a bit and may have a few minor bits of
+feedback in a few days.  However, I don't offhand see anything that
+sticks out as wrong so far the code looks good.
 
-Thanks for your points,
+Thanks for doing this patchset.
 
-
-Guilherme
 
