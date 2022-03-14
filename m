@@ -1,169 +1,172 @@
-From: Philipp Rudo <prudo@redhat.com>
-Date: Mon, 14 Mar 2022 17:04:32 +0100
-Subject: [PATCH v2 4/4] makedumpfile: print error when reading with
- unsupported compression
-In-Reply-To: <20220314160432.9414-1-prudo@redhat.com>
-References: <20220314160432.9414-1-prudo@redhat.com>
-Message-ID: <20220314160432.9414-5-prudo@redhat.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Tue, 15 Mar 2022 04:17:23 +0530
+Subject: [RFC v2 PATCH 0/5] In kernel handling of CPU hotplug events for crash
+ kernel
+Message-ID: <20220314224728.79990-1-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently makedumpfile only checks if the required compression algorithm
-was enabled during build when compressing a dump but not when reading
-from one. This can lead to situations where, one version of makedumpfile
-creates the dump using a compression algorithm an other version of
-makedumpfile doesn't support. When the second version now tries to, e.g.
-extract the dmesg from the dump it will fail with an error similar to
+This patch series implements the crash hotplug handler on PowerPC introduced
+by https://lkml.org/lkml/2022/2/9/1406 patch series.
 
-	# makedumpfile --dump-dmesg vmcore dmesg.txt
-	__vtop4_x86_64: Can't get a valid pgd.
-	readmem: Can't convert a virtual address(ffffffff92e18284) to physical address.
-	readmem: type_addr: 0, addr:ffffffff92e18284, size:390
-	check_release: Can't get the address of system_utsname.
 
-	makedumpfile Failed.
+The Problem:
+============
+Post hotplug/DLPAR events the capture kernel holds stale information about the
+system. Dump collection with stale capture kernel might end up in dump capture
+failure or an inaccurate dump collection.
 
-That's because readpage_kdump_compressed{_parallel} does not return
-with an error if the page it is trying to read is compressed with an
-unsupported compression algorithm. Thus readmem copies random data from
-the (uninitialized) cachebuf to its caller and thus causing the error
-above.
 
-Fix this by checking if the required compression algorithm is supported
-in readpage_kdump_compressed{_parallel} and print a proper error message
-if it isn't.
+Existing solution:
+==================
+The existing solution to keep the capture kernel up-to-date is observe the
+hotplug event via udev rule and trigger a full capture kernel reload post
+hotplug event. 
 
-Reported-by: Dave Wysochanski <dwysocha@redhat.com>
-Signed-off-by: Philipp Rudo <prudo@redhat.com>
+Shortcomings:
+------------------------------------------------
+- Leaves a window where kernel crash might not lead to successful dump
+  collection.
+- Reloading all kexec components for each hotplug is inefficient. Since only
+  one or two kexec components need to be updated due to hotplug event reloading
+  all kexec component is redundant.
+- udev rules are prone to races if hotplug events are frequent.
+
+More about issues with an existing solution is posted here:
+ - https://lkml.org/lkml/2020/12/14/532
+ - https://lists.ozlabs.org/pipermail/linuxppc-dev/2022-February/240254.html
+
+Proposed Solution:
+==================
+Instead of reloading all kexec segments on hotplug event, this patch series
+focuses on updating only the relevant kexec segment. Once the kexec
+segments are loaded in the kernel reserved area then an arch-specific hotplug handler
+will update the relevant kexec segment based on hotplug event type.
+
+As mentioned above this patch series implemented a PowerPC crash hotplug
+handler for the CPU. The crash hotplug handler memory is in our TODO list.
+
+
+A couple of minor changes are required to realize the benefit of the patch
+series:
+
+- disalble the udev rule:
+
+  comment out the below line in kdump udev rule file:
+  RHEL: /usr/lib/udev/rules.d/98-kexec.rules
+  # SUBSYSTEM=="cpu", ACTION=="online", GOTO="kdump_reload_cpu"
+
+- kexec tool needs to be updated with patch for kexec_load system call
+  to work (not needed if -s option is used during kexec panic load):
+
 ---
- makedumpfile.c | 56 ++++++++++++++++++++++++++++++++++++++++++--------
- 1 file changed, 48 insertions(+), 8 deletions(-)
+diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
+index 695b8b0..1dc6490 100644
+--- a/kexec/arch/ppc64/kexec-elf-ppc64.c
++++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
+@@ -45,6 +45,29 @@ uint64_t initrd_base, initrd_size;
+ unsigned char reuse_initrd = 0;
+ const char *ramdisk;
+ 
++#define MAX_CORE 256
++#define PER_CORE_NODE_SIZE 1500
++
++/**
++ * get_crash_fdt_mem_sz() - calcuate mem size for crash kernel FDT
++ * @fdt: pointer to crash kernel FDT
++ *
++ * Calculate the buffer space needed to add more CPU nodes in FDT after
++ * capture kenrel load due to hot add events.
++ *
++ * Some assumption are made to calculate the additional buffer size needed
++ * to accommodate future hot add CPUs to the crash FDT. The maximum core count
++ * in the system would not go beyond MAX_CORE and memory needed to store per core
++ * date in FDT is PER_CORE_NODE_SIZE.
++ *
++ * Certainly MAX_CORE count can be replaced with possible core count and
++ * PER_CORE_NODE_SIZE to some standard value instead of randomly observed
++ * core size value on Power9 LPAR.
++ */
++static unsigned int get_crash_fdt_mem_sz(void *fdt) {
++	return fdt_totalsize(fdt) + (PER_CORE_NODE_SIZE * MAX_CORE);
++}
++
+ int elf_ppc64_probe(const char *buf, off_t len)
+ {
+ 	struct mem_ehdr ehdr;
+@@ -179,6 +202,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	uint64_t max_addr, hole_addr;
+ 	char *seg_buf = NULL;
+ 	off_t seg_size = 0;
++	unsigned int mem_sz = 0;
+ 	struct mem_phdr *phdr;
+ 	size_t size;
+ #ifdef NEED_RESERVE_DTB
+@@ -329,7 +353,13 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
+ 	if (result < 0)
+ 		return result;
+ 
+-	my_dt_offset = add_buffer(info, seg_buf, seg_size, seg_size,
++	if (info->kexec_flags & KEXEC_ON_CRASH) {
++		mem_sz = get_crash_fdt_mem_sz((void *)seg_buf);
++		fdt_set_totalsize(seg_buf, mem_sz);
++		info->fdt_index = info->nr_segments;
++	}
++
++	my_dt_offset = add_buffer(info, seg_buf, seg_size, mem_sz,
+ 				0, 0, max_addr, -1);
+ 
+ #ifdef NEED_RESERVE_DTB
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index f63b36b..846b1a8 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -672,6 +672,9 @@ static void update_purgatory(struct kexec_info *info)
+ 		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+ 			continue;
+ 		}
++		if (info->fdt_index == i)
++			continue;
++
+ 		sha256_update(&ctx, info->segment[i].buf,
+ 			      info->segment[i].bufsz);
+ 		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 595dd68..0906a1b 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -169,6 +169,7 @@ struct kexec_info {
+ 	int command_line_len;
+ 
+ 	int skip_checks;
++       // Given that we might need to update mutliple kexec segments
++       // then having array to keep indexes of all hotplug kexec segments
++       // will be helpful.
++	unsigned int fdt_index;
+ };
+ 
+ struct arch_map_entry {
+---
 
-diff --git a/makedumpfile.c b/makedumpfile.c
-index b7ac999..56f3b6c 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -865,9 +865,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
- #ifdef USELZO
--	} else if (info->flag_lzo_support
--		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
-+		if (!info->flag_lzo_support) {
-+			ERRMSG("lzo compression unsupported\n");
-+			out = FALSE;
-+			goto out_error;
-+		}
-+
- 		retlen = info->page_size;
- 		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
- 					    (unsigned char *)bufptr, &retlen,
-@@ -876,9 +881,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("lzo compression unsupported\n");
-+		ERRMSG("Try `make USELZO=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
--#ifdef USESNAPPY
- 	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
-+#ifdef USESNAPPY
- 
- 		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
- 		if (ret != SNAPPY_OK) {
-@@ -891,14 +901,24 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("snappy compression unsupported\n");
-+		ERRMSG("Try `make USESNAPPY=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
--#ifdef USEZSTD
- 	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
-+#ifdef USEZSTD
- 		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
- 		if (ZSTD_isError(ret) || (ret != info->page_size)) {
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("zstd compression unsupported\n");
-+		ERRMSG("Try `make USEZSTD=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
- 	}
- 
-@@ -964,9 +984,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
- #ifdef USELZO
--	} else if (info->flag_lzo_support
--		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
-+		if (!info->flag_lzo_support) {
-+			ERRMSG("lzo compression unsupported\n");
-+			out = FALSE;
-+			goto out_error;
-+		}
-+
- 		retlen = info->page_size;
- 		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
- 					    (unsigned char *)bufptr, &retlen,
-@@ -975,9 +1000,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("lzo compression unsupported\n");
-+		ERRMSG("Try `make USELZO=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
--#ifdef USESNAPPY
- 	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
-+#ifdef USESNAPPY
- 
- 		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
- 		if (ret != SNAPPY_OK) {
-@@ -990,14 +1020,24 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("snappy compression unsupported\n");
-+		ERRMSG("Try `make USESNAPPY=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
--#ifdef USEZSTD
- 	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
-+#ifdef USEZSTD
- 		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
- 		if (ZSTD_isError(ret) || (ret != info->page_size)) {
- 			ERRMSG("Uncompress failed: %d\n", ret);
- 			goto out_error;
- 		}
-+#else
-+		ERRMSG("zstd compression unsupported\n");
-+		ERRMSG("Try `make USEZSTD=on` when building.\n");
-+		out = FALSE;
-+		goto out_error;
- #endif
- 	}
- 
+
+Sourabh Jain (5):
+  powerpc/kexec: make update_cpus_node non-static
+  powerpc/crash hp: introduce a new config option CRASH_HOTPLUG
+  powrepc/crash hp: update kimage struct
+  powerpc/crash hp: add crash hotplug support for kexec_file_load
+  powerpc/crash hp: add crash hotplug support for kexec_load
+
+ arch/powerpc/Kconfig              |  11 +++
+ arch/powerpc/include/asm/kexec.h  |   1 +
+ arch/powerpc/kexec/core_64.c      | 153 ++++++++++++++++++++++++++++++
+ arch/powerpc/kexec/elf_64.c       |  39 ++++++++
+ arch/powerpc/kexec/file_load_64.c |  87 -----------------
+ include/linux/kexec.h             |   2 +
+ 6 files changed, 206 insertions(+), 87 deletions(-)
+
 -- 
 2.35.1
 
