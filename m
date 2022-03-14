@@ -1,118 +1,47 @@
-From: Raphael Ning <raphning@gmail.com>
-Date: Mon, 14 Mar 2022 09:21:15 +0000
-Subject: [PATCH] kexec-xen: Allow xen_kexec_exec() to return in case of Live
- Update
-Message-ID: <20220314092115.48309-1-raphning@gmail.com>
+From: Philipp Rudo <prudo@redhat.com>
+Date: Mon, 14 Mar 2022 17:04:28 +0100
+Subject: [PATCH v2 0/4] makedumpfile: harden parsing of old prink buffer
+Message-ID: <20220314160432.9414-1-prudo@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: Raphael Ning <raphning@amazon.com>
+Hi,
 
-Currently, my_exec() does not expect the Xen KEXEC_CMD_kexec hypercall
-to return on success, because it assumes that the hypercall always
-triggers an immediate reboot. However, for Live Update, the hypercall
-merely schedules the kexec operation and returns; the actual reboot
-happens asynchronously. [1]
+dumping the dmesg can cause an endless loop for the old prink mechanism (>
+v3.5.0 and < v5.10.0) when the log_buf got corrupted. This series fixes those
+cases by adding a cycle detection. The cycle detection is implemented in a
+generic way so that it can be reused in other parts of makedumpfile.
 
-Therefore, rework the Xen code path of my_exec() such that it does not
-treat a successfully processed Live Update request as an error. Also,
-rephrase the comment above the function to remove ambiguity.
+Thanks
+Philipp
 
-[1] https://lists.xen.org/archives/html/xen-devel/2021-05/msg00286.html
+v2:
+	* Rename 'idx' to 'ptr'
+	* Also print the non-loop part when a cycle was detected. Such a
+	  situation can happen when log_buf wrapped around in the kernel
+	  (log_first_idx != 0) and the corruption occurred on an
+	  idx < log_first_idx.
+	* Add patch 4 fixing a bug independent from the memory corruption but
+	  found while investigating it.
 
-Signed-off-by: Raphael Ning <raphning@amazon.com>
----
- kexec/kexec-xen.c |  9 ++++++---
- kexec/kexec.c     | 23 +++++++++++++++++++----
- kexec/kexec.h     |  2 +-
- 3 files changed, 26 insertions(+), 8 deletions(-)
+Philipp Rudo (4):
+  makedumpfile: add generic cycle detection
+  makedumpfile: use pointer arithmetics for dump_dmesg
+  makedumpfile: use cycle detection when parsing the prink log_buf
+  makedumpfile: print error when reading with unsupported compression
 
-diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
-index 47da3da466f0..44c64d99c566 100644
---- a/kexec/kexec-xen.c
-+++ b/kexec/kexec-xen.c
-@@ -247,21 +247,24 @@ int xen_kexec_status(uint64_t kexec_flags)
- 	return ret;
- }
- 
--void xen_kexec_exec(uint64_t kexec_flags)
-+int xen_kexec_exec(uint64_t kexec_flags)
- {
- 	xc_interface *xch;
- 	uint8_t type = KEXEC_TYPE_DEFAULT;
-+	int ret;
- 
- 	xch = xc_interface_open(NULL, NULL, 0);
- 	if (!xch)
--		return;
-+		return -1;
- 
- 	if (kexec_flags & KEXEC_LIVE_UPDATE)
- 		type = KEXEC_TYPE_LIVE_UPDATE;
- 
--	xc_kexec_exec(xch, type);
-+	ret = xc_kexec_exec(xch, type);
- 
- 	xc_interface_close(xch);
-+
-+	return ret;
- }
- 
- #else /* ! HAVE_LIBXENCTRL */
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index 7e4787bc8211..e7861049bbea 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -902,13 +902,28 @@ static int my_shutdown(void)
- }
- 
- /*
-- *	Exec the new kernel (reboot)
-+ *	Exec the new kernel. If successful, this triggers an immediate reboot
-+ *	and does not return, but Xen Live Update is an exception (more on this
-+ *	below).
-  */
- static int my_exec(void)
- {
--	if (xen_present())
--		xen_kexec_exec(kexec_flags);
--	else
-+	if (xen_present()) {
-+		int ret;
-+
-+		/*
-+		 * There are two cases in which the Xen hypercall may return:
-+		 * 1) An error occurred, e.g. the kexec image was not loaded.
-+		 *    The exact error is indicated by errno.
-+		 * 2) Live Update was successfully scheduled. Note that unlike
-+		 *    a normal kexec, Live Update happens asynchronously, i.e.
-+		 *    the hypercall merely schedules the kexec operation and
-+		 *    returns immediately.
-+		 */
-+		ret = xen_kexec_exec(kexec_flags);
-+		if ((kexec_flags & KEXEC_LIVE_UPDATE) && !ret)
-+			return 0;
-+	} else
- 		reboot(LINUX_REBOOT_CMD_KEXEC);
- 	/* I have failed if I make it here */
- 	fprintf(stderr, "kexec failed: %s\n", 
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 595dd681db6d..0f97a974cb8a 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -324,7 +324,7 @@ void cmdline_add_liveupdate(char **base);
- int xen_present(void);
- int xen_kexec_load(struct kexec_info *info);
- int xen_kexec_unload(uint64_t kexec_flags);
--void xen_kexec_exec(uint64_t kexec_flags);
-+int xen_kexec_exec(uint64_t kexec_flags);
- int xen_kexec_status(uint64_t kexec_flags);
- 
- extern unsigned long long get_kernel_sym(const char *text);
+ Makefile       |   2 +-
+ detect_cycle.c |  99 +++++++++++++++++++++++++++++++++++++
+ detect_cycle.h |  40 +++++++++++++++
+ makedumpfile.c | 131 ++++++++++++++++++++++++++++++++++++++++---------
+ 4 files changed, 247 insertions(+), 25 deletions(-)
+ create mode 100644 detect_cycle.c
+ create mode 100644 detect_cycle.h
+
 -- 
-2.32.0
+2.35.1
 
 
