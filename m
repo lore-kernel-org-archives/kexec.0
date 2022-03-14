@@ -1,130 +1,169 @@
 From: Philipp Rudo <prudo@redhat.com>
-Date: Mon, 14 Mar 2022 17:04:31 +0100
-Subject: [PATCH v2 3/4] makedumpfile: use cycle detection when parsing the
- prink log_buf
+Date: Mon, 14 Mar 2022 17:04:32 +0100
+Subject: [PATCH v2 4/4] makedumpfile: print error when reading with
+ unsupported compression
 In-Reply-To: <20220314160432.9414-1-prudo@redhat.com>
 References: <20220314160432.9414-1-prudo@redhat.com>
-Message-ID: <20220314160432.9414-4-prudo@redhat.com>
+Message-ID: <20220314160432.9414-5-prudo@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The old printk mechanism (> v3.5.0 and < v5.10.0) had a fixed size
-buffer (log_buf) that contains all messages. The location for the next
-message is stored in log_next_idx. In case the log_buf runs full
-log_next_idx wraps around and starts overwriting old messages@the
-beginning of the buffer. The wraparound is denoted by a message with
-msg->len == 0.
+Currently makedumpfile only checks if the required compression algorithm
+was enabled during build when compressing a dump but not when reading
+from one. This can lead to situations where, one version of makedumpfile
+creates the dump using a compression algorithm an other version of
+makedumpfile doesn't support. When the second version now tries to, e.g.
+extract the dmesg from the dump it will fail with an error similar to
 
-Following the behavior described above blindly in makedumpfile is
-dangerous as e.g. a memory corruption could overwrite (parts of) the
-log_buf. If the corruption adds a message with msg->len == 0 this leads
-to an endless loop when dumping the dmesg with makedumpfile appending
-the messages up to the corruption over and over again to the output file
-until file system is full. Fix this by using cycle detection and aboard
-once one is detected.
+	# makedumpfile --dump-dmesg vmcore dmesg.txt
+	__vtop4_x86_64: Can't get a valid pgd.
+	readmem: Can't convert a virtual address(ffffffff92e18284) to physical address.
+	readmem: type_addr: 0, addr:ffffffff92e18284, size:390
+	check_release: Can't get the address of system_utsname.
 
-While at it also verify that the index is within the log_buf and thus
-guard against corruptions with msg->len != 0.
+	makedumpfile Failed.
 
-Reported-by: Audra Mitchell <aubaker@redhat.com>
-Suggested-by: Dave Wysochanski <dwysocha@redhat.com>
+That's because readpage_kdump_compressed{_parallel} does not return
+with an error if the page it is trying to read is compressed with an
+unsupported compression algorithm. Thus readmem copies random data from
+the (uninitialized) cachebuf to its caller and thus causing the error
+above.
+
+Fix this by checking if the required compression algorithm is supported
+in readpage_kdump_compressed{_parallel} and print a proper error message
+if it isn't.
+
+Reported-by: Dave Wysochanski <dwysocha@redhat.com>
 Signed-off-by: Philipp Rudo <prudo@redhat.com>
 ---
- makedumpfile.c | 48 +++++++++++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 1 deletion(-)
+ makedumpfile.c | 56 ++++++++++++++++++++++++++++++++++++++++++--------
+ 1 file changed, 48 insertions(+), 8 deletions(-)
 
 diff --git a/makedumpfile.c b/makedumpfile.c
-index 9a05c96..b7ac999 100644
+index b7ac999..56f3b6c 100644
 --- a/makedumpfile.c
 +++ b/makedumpfile.c
-@@ -15,6 +15,7 @@
-  */
- #include "makedumpfile.h"
- #include "print_info.h"
-+#include "detect_cycle.h"
- #include "dwarf_info.h"
- #include "elf_info.h"
- #include "erase_info.h"
-@@ -5528,10 +5529,11 @@ dump_dmesg()
- 	unsigned long index, log_buf, log_end;
- 	unsigned int log_first_idx, log_next_idx;
- 	unsigned long long first_idx_sym;
-+	struct detect_cycle *dc = NULL;
- 	unsigned long log_end_2_6_24;
- 	unsigned      log_end_2_6_25;
- 	char *log_buffer = NULL, *log_ptr = NULL;
--	char *ptr;
-+	char *ptr, *next_ptr;
- 
- 	/*
- 	 * log_end has been changed to "unsigned" since linux-2.6.25.
-@@ -5679,12 +5681,55 @@ dump_dmesg()
- 			goto out;
+@@ -865,9 +865,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
  		}
- 		ptr = log_buffer + log_first_idx;
-+		dc = dc_init(ptr, log_buffer, log_next);
- 		while (ptr != log_buffer + log_next_idx) {
- 			log_ptr = log_from_ptr(ptr, log_buffer);
- 			if (!dump_log_entry(log_ptr, info->fd_dumpfile,
- 					    info->name_dumpfile))
- 				goto out;
- 			ptr = log_next(ptr, log_buffer);
-+			if (dc_next(dc, (void **) &next_ptr)) {
-+				unsigned long len;
-+				int in_cycle;
-+				char *first;
++	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+ #ifdef USELZO
+-	} else if (info->flag_lzo_support
+-		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
++		if (!info->flag_lzo_support) {
++			ERRMSG("lzo compression unsupported\n");
++			out = FALSE;
++			goto out_error;
++		}
 +
-+				/* Clear everything we have already written... */
-+				ftruncate(info->fd_dumpfile, 0);
-+				lseek(info->fd_dumpfile, 0, SEEK_SET);
-+
-+				/* ...and only write up to the corruption. */
-+				dc_find_start(dc, (void **) &first, &len);
-+				ptr = log_buffer + log_first_idx;
-+				in_cycle = FALSE;
-+				while (len) {
-+					log_ptr = log_from_ptr(ptr, log_buffer);
-+					if (!dump_log_entry(log_ptr,
-+							    info->fd_dumpfile,
-+							    info->name_dumpfile))
-+						goto out;
-+					ptr = log_next(ptr, log_buffer);
-+
-+					if (log_ptr == first)
-+						in_cycle = TRUE;
-+
-+					if (in_cycle)
-+						len--;
-+				}
-+				ERRMSG("Cycle when parsing dmesg detected.\n");
-+				ERRMSG("The printk log_buf is most likely corrupted.\n");
-+				ERRMSG("log_buf = 0x%lx, idx = 0x%lx\n", log_buf, ptr - log_buffer);
-+				close_files_for_creating_dumpfile();
-+				goto out;
-+			}
-+			if (next_ptr < log_buffer ||
-+			    next_ptr > log_buffer + log_buf_len - SIZE(printk_log)) {
-+				ERRMSG("Index outside log_buf detected.\n");
-+				ERRMSG("The printk log_buf is most likely corrupted.\n");
-+				ERRMSG("log_buf = 0x%lx, idx = 0x%lx\n", log_buf, ptr - log_buffer);
-+				close_files_for_creating_dumpfile();
-+				goto out;
-+			}
-+			ptr = next_ptr;
+ 		retlen = info->page_size;
+ 		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
+ 					    (unsigned char *)bufptr, &retlen,
+@@ -876,9 +881,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
  		}
- 		if (!close_files_for_creating_dumpfile())
- 			goto out;
-@@ -5694,6 +5739,7 @@ dump_dmesg()
- out:
- 	if (log_buffer)
- 		free(log_buffer);
-+	free(dc);
++#else
++		ERRMSG("lzo compression unsupported\n");
++		ERRMSG("Try `make USELZO=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+-#ifdef USESNAPPY
+ 	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
++#ifdef USESNAPPY
  
- 	return ret;
- }
+ 		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
+ 		if (ret != SNAPPY_OK) {
+@@ -891,14 +901,24 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++#else
++		ERRMSG("snappy compression unsupported\n");
++		ERRMSG("Try `make USESNAPPY=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+-#ifdef USEZSTD
+ 	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
++#ifdef USEZSTD
+ 		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
+ 		if (ZSTD_isError(ret) || (ret != info->page_size)) {
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++#else
++		ERRMSG("zstd compression unsupported\n");
++		ERRMSG("Try `make USEZSTD=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+ 	}
+ 
+@@ -964,9 +984,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+ #ifdef USELZO
+-	} else if (info->flag_lzo_support
+-		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
++		if (!info->flag_lzo_support) {
++			ERRMSG("lzo compression unsupported\n");
++			out = FALSE;
++			goto out_error;
++		}
++
+ 		retlen = info->page_size;
+ 		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
+ 					    (unsigned char *)bufptr, &retlen,
+@@ -975,9 +1000,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++#else
++		ERRMSG("lzo compression unsupported\n");
++		ERRMSG("Try `make USELZO=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+-#ifdef USESNAPPY
+ 	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
++#ifdef USESNAPPY
+ 
+ 		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
+ 		if (ret != SNAPPY_OK) {
+@@ -990,14 +1020,24 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++#else
++		ERRMSG("snappy compression unsupported\n");
++		ERRMSG("Try `make USESNAPPY=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+-#ifdef USEZSTD
+ 	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
++#ifdef USEZSTD
+ 		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
+ 		if (ZSTD_isError(ret) || (ret != info->page_size)) {
+ 			ERRMSG("Uncompress failed: %d\n", ret);
+ 			goto out_error;
+ 		}
++#else
++		ERRMSG("zstd compression unsupported\n");
++		ERRMSG("Try `make USEZSTD=on` when building.\n");
++		out = FALSE;
++		goto out_error;
+ #endif
+ 	}
+ 
 -- 
 2.35.1
 
