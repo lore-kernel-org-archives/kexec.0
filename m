@@ -1,57 +1,118 @@
-From: Christophe Leroy <christophe.leroy@csgroup.eu>
-Date: Fri, 11 Mar 2022 18:42:24 +0100
-Subject: [PATCHv5 0/3] enable nr_cpus for powerpc
-In-Reply-To: <CAFgQCTu3NRA1vi6auftHeXBWvPWgZRRURLHB6u7ih0TnkrzXrQ@mail.gmail.com>
-References: <1521088912-31742-1-git-send-email-kernelfans@gmail.com>
- <CAFgQCTu3NRA1vi6auftHeXBWvPWgZRRURLHB6u7ih0TnkrzXrQ@mail.gmail.com>
-Message-ID: <5b5840ab-e8ee-fa34-06e0-ca6269f2e211@csgroup.eu>
+From: Raphael Ning <raphning@gmail.com>
+Date: Mon, 14 Mar 2022 09:21:15 +0000
+Subject: [PATCH] kexec-xen: Allow xen_kexec_exec() to return in case of Live
+ Update
+Message-ID: <20220314092115.48309-1-raphning@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+From: Raphael Ning <raphning@amazon.com>
 
+Currently, my_exec() does not expect the Xen KEXEC_CMD_kexec hypercall
+to return on success, because it assumes that the hypercall always
+triggers an immediate reboot. However, for Live Update, the hypercall
+merely schedules the kexec operation and returns; the actual reboot
+happens asynchronously. [1]
 
-Le 23/03/2018 ? 06:28, Pingfan Liu a ?crit?:
-> Maintainers, ping? Any comment?
+Therefore, rework the Xen code path of my_exec() such that it does not
+treat a successfully processed Live Update request as an error. Also,
+rephrase the comment above the function to remove ambiguity.
 
-This series doesn't apply anymore, and it has build failure report from 
-the robot.
+[1] https://lists.xen.org/archives/html/xen-devel/2021-05/msg00286.html
 
-If it's still relevant, please rebase and fix.
+Signed-off-by: Raphael Ning <raphning@amazon.com>
+---
+ kexec/kexec-xen.c |  9 ++++++---
+ kexec/kexec.c     | 23 +++++++++++++++++++----
+ kexec/kexec.h     |  2 +-
+ 3 files changed, 26 insertions(+), 8 deletions(-)
 
-Christophe
+diff --git a/kexec/kexec-xen.c b/kexec/kexec-xen.c
+index 47da3da466f0..44c64d99c566 100644
+--- a/kexec/kexec-xen.c
++++ b/kexec/kexec-xen.c
+@@ -247,21 +247,24 @@ int xen_kexec_status(uint64_t kexec_flags)
+ 	return ret;
+ }
+ 
+-void xen_kexec_exec(uint64_t kexec_flags)
++int xen_kexec_exec(uint64_t kexec_flags)
+ {
+ 	xc_interface *xch;
+ 	uint8_t type = KEXEC_TYPE_DEFAULT;
++	int ret;
+ 
+ 	xch = xc_interface_open(NULL, NULL, 0);
+ 	if (!xch)
+-		return;
++		return -1;
+ 
+ 	if (kexec_flags & KEXEC_LIVE_UPDATE)
+ 		type = KEXEC_TYPE_LIVE_UPDATE;
+ 
+-	xc_kexec_exec(xch, type);
++	ret = xc_kexec_exec(xch, type);
+ 
+ 	xc_interface_close(xch);
++
++	return ret;
+ }
+ 
+ #else /* ! HAVE_LIBXENCTRL */
+diff --git a/kexec/kexec.c b/kexec/kexec.c
+index 7e4787bc8211..e7861049bbea 100644
+--- a/kexec/kexec.c
++++ b/kexec/kexec.c
+@@ -902,13 +902,28 @@ static int my_shutdown(void)
+ }
+ 
+ /*
+- *	Exec the new kernel (reboot)
++ *	Exec the new kernel. If successful, this triggers an immediate reboot
++ *	and does not return, but Xen Live Update is an exception (more on this
++ *	below).
+  */
+ static int my_exec(void)
+ {
+-	if (xen_present())
+-		xen_kexec_exec(kexec_flags);
+-	else
++	if (xen_present()) {
++		int ret;
++
++		/*
++		 * There are two cases in which the Xen hypercall may return:
++		 * 1) An error occurred, e.g. the kexec image was not loaded.
++		 *    The exact error is indicated by errno.
++		 * 2) Live Update was successfully scheduled. Note that unlike
++		 *    a normal kexec, Live Update happens asynchronously, i.e.
++		 *    the hypercall merely schedules the kexec operation and
++		 *    returns immediately.
++		 */
++		ret = xen_kexec_exec(kexec_flags);
++		if ((kexec_flags & KEXEC_LIVE_UPDATE) && !ret)
++			return 0;
++	} else
+ 		reboot(LINUX_REBOOT_CMD_KEXEC);
+ 	/* I have failed if I make it here */
+ 	fprintf(stderr, "kexec failed: %s\n", 
+diff --git a/kexec/kexec.h b/kexec/kexec.h
+index 595dd681db6d..0f97a974cb8a 100644
+--- a/kexec/kexec.h
++++ b/kexec/kexec.h
+@@ -324,7 +324,7 @@ void cmdline_add_liveupdate(char **base);
+ int xen_present(void);
+ int xen_kexec_load(struct kexec_info *info);
+ int xen_kexec_unload(uint64_t kexec_flags);
+-void xen_kexec_exec(uint64_t kexec_flags);
++int xen_kexec_exec(uint64_t kexec_flags);
+ int xen_kexec_status(uint64_t kexec_flags);
+ 
+ extern unsigned long long get_kernel_sym(const char *text);
+-- 
+2.32.0
 
-> 
-> Thanks
-> 
-> On Thu, Mar 15, 2018 at 12:41 PM, Pingfan Liu <kernelfans@gmail.com> wrote:
->> This topic has a very long history. It comes from Mahesh Salgaonkar <mahesh@linux.vnet.ibm.com>
->> For v3: https://patchwork.ozlabs.org/patch/834860/
->> I hope we can acquire it for "kexec -p" soon.
->>
->> V4->V5:
->>    improve the [1/3] implementation based on Benjamin's suggestion.
->>
->> Mahesh Salgaonkar (1):
->>    ppc64 boot: Wait for boot cpu to show up if nr_cpus limit is about to
->>      hit.
->>
->> Pingfan Liu (2):
->>    powerpc, cpu: partially unbind the mapping between cpu logical id and
->>         its seq in dt
->>    powerpc, cpu: handling the special case when boot_cpuid greater than
->>      nr_cpus
->>
->>   arch/powerpc/include/asm/paca.h    |  3 +++
->>   arch/powerpc/include/asm/smp.h     |  2 ++
->>   arch/powerpc/kernel/paca.c         | 19 ++++++++++++++-----
->>   arch/powerpc/kernel/prom.c         | 27 ++++++++++++++++-----------
->>   arch/powerpc/kernel/setup-common.c | 35 ++++++++++++++++++++++++++++++++---
->>   5 files changed, 67 insertions(+), 19 deletions(-)
->>
->> --
->> 2.7.4
->>
 
