@@ -1,71 +1,58 @@
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Tue, 15 Mar 2022 04:17:28 +0530
-Subject: [RFC v2 PATCH 5/5] powerpc/crash hp: add crash hotplug support for
- kexec_load
-In-Reply-To: <20220314224728.79990-1-sourabhjain@linux.ibm.com>
-References: <20220314224728.79990-1-sourabhjain@linux.ibm.com>
-Message-ID: <20220314224728.79990-6-sourabhjain@linux.ibm.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Tue, 15 Mar 2022 19:57:52 +0800
+Subject: [PATCH v21 1/5] kdump: return -ENOENT if required cmdline option
+ does not exist
+In-Reply-To: <20220227030717.1464-2-thunder.leizhen@huawei.com>
+References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
+ <20220227030717.1464-2-thunder.leizhen@huawei.com>
+Message-ID: <YjB/QILintgvo1AL@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The kernel changes needed to add support for crash hotplug support for
-kexec_load system calls are similar to kexec_file_load (which has already
-been implemented in earlier patches). Since kexec segment array is
-prepared by kexec tool in the userspace, the kernel does aware of which
-index FDT segment is present.
+On 02/27/22 at 11:07am, Zhen Lei wrote:
+> The crashkernel=Y,low is an optional command-line option. When it doesn't
+> exist, kernel will try to allocate minimum required memory below 4G
+> automatically. Give it a unique error code to distinguish it from other
+> error scenarios.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  kernel/crash_core.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 256cf6db573cd09..4d57c03714f4e13 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
+>  	*crash_base = 0;
+>  
+>  	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
+> -
+>  	if (!ck_cmdline)
+> -		return -EINVAL;
+> +		return -ENOENT;
 
-The only change was done to enabled crash hotplug support for kexec_load is
-updated the crash hotplug handler to identify the FDT segment from kexec
-segment array.
+Firstly, I am not sure if '-ENOENT' is a right value to return. From the
+code comment of ENOENT, it's used for file or dir?
+#define ENOENT           2      /* No such file or directory */
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/kexec/core_64.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Secondly, we ever discussed the case including
+ - no crashkernel=,low is provided;
+ - messy code is provied, e.g crashkernel=aaaaaabbbb,low
 
-diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-index a4defb84720f..bb449f6e380f 100644
---- a/arch/powerpc/kexec/core_64.c
-+++ b/arch/powerpc/kexec/core_64.c
-@@ -480,7 +480,9 @@ int update_cpus_node(void *fdt)
- void arch_crash_hotplug_handler(struct kimage *image,
-         unsigned int hp_action, unsigned long a, unsigned long b)
- {
--        void *fdt;
-+        void *fdt, *ptr;
-+        unsigned int n;
-+        unsigned long mem, memsz;
- 
- 	/* No action needed for CPU hot-unplug */
- 	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-@@ -492,6 +494,23 @@ void arch_crash_hotplug_handler(struct kimage *image,
- 		return;
- 	}
- 
-+	/* Sine kexec segments for kexec_load system call is prepred by
-+	 * kexec tool in userspace we need loop through all the segments
-+	 * to find out segment index corresponds FDT segment. In case of
-+	 * kexec_file_load it is discovered during the load itself.
-+	 */
-+        if (!image->fdt_index_valid) {
-+                for (n = 0; n < image->nr_segments; n++) {
-+                        mem = image->segment[n].mem;
-+                        memsz = image->segment[n].memsz;
-+                        ptr = __va(mem);
-+                        if (ptr && fdt_magic(ptr) == FDT_MAGIC) {
-+                                image->fdt_index = n;
-+                                image->fdt_index_valid = true;
-+                        }
-+                }
-+        }
-+
-         /* Must have valid FDT index */
-         if (!image->fdt_index_valid) {
-                 pr_err("crash hp: unable to locate FDT segment");
--- 
-2.35.1
+The 2nd one is not handled in this patchset. How about taking the
+handling into another round of patches. This patchset just adds
+crashkernel=,high purely.
+
+>  
+>  	ck_cmdline += strlen(name);
+>  
+> -- 
+> 2.25.1
+> 
 
 
