@@ -1,11 +1,11 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Tue, 15 Mar 2022 19:57:52 +0800
-Subject: [PATCH v21 1/5] kdump: return -ENOENT if required cmdline option
- does not exist
-In-Reply-To: <20220227030717.1464-2-thunder.leizhen@huawei.com>
+Date: Tue, 15 Mar 2022 19:59:33 +0800
+Subject: [PATCH v21 5/5] docs: kdump: Update the crashkernel description
+ for arm64
+In-Reply-To: <20220227030717.1464-6-thunder.leizhen@huawei.com>
 References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
- <20220227030717.1464-2-thunder.leizhen@huawei.com>
-Message-ID: <YjB/QILintgvo1AL@MiWiFi-R3L-srv>
+ <20220227030717.1464-6-thunder.leizhen@huawei.com>
+Message-ID: <YjB/pTWF8wKcATaq@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,44 +13,57 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 On 02/27/22 at 11:07am, Zhen Lei wrote:
-> The crashkernel=Y,low is an optional command-line option. When it doesn't
-> exist, kernel will try to allocate minimum required memory below 4G
-> automatically. Give it a unique error code to distinguish it from other
-> error scenarios.
+> Now arm64 has added support for "crashkernel=X,high" and
+> "crashkernel=Y,low", and implements "crashkernel=X[@offset]" in the
+> same way as x86. So update the Documentation.
 > 
 > Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+
+Looks good to me, thx.
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
 > ---
->  kernel/crash_core.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+>  Documentation/admin-guide/kernel-parameters.txt | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 256cf6db573cd09..4d57c03714f4e13 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
->  	*crash_base = 0;
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index f5a27f067db9ed9..63098786c93828c 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -789,7 +789,7 @@
+>  			memory region [offset, offset + size] for that kernel
+>  			image. If '@offset' is omitted, then a suitable offset
+>  			is selected automatically.
+> -			[KNL, X86-64] Select a region under 4G first, and
+> +			[KNL, X86-64, ARM64] Select a region under 4G first, and
+>  			fall back to reserve region above 4G when '@offset'
+>  			hasn't been specified.
+>  			See Documentation/admin-guide/kdump/kdump.rst for further details.
+> @@ -802,20 +802,20 @@
+>  			Documentation/admin-guide/kdump/kdump.rst for an example.
 >  
->  	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
-> -
->  	if (!ck_cmdline)
-> -		return -EINVAL;
-> +		return -ENOENT;
-
-Firstly, I am not sure if '-ENOENT' is a right value to return. From the
-code comment of ENOENT, it's used for file or dir?
-#define ENOENT           2      /* No such file or directory */
-
-Secondly, we ever discussed the case including
- - no crashkernel=,low is provided;
- - messy code is provied, e.g crashkernel=aaaaaabbbb,low
-
-The 2nd one is not handled in this patchset. How about taking the
-handling into another round of patches. This patchset just adds
-crashkernel=,high purely.
-
->  
->  	ck_cmdline += strlen(name);
->  
+>  	crashkernel=size[KMG],high
+> -			[KNL, X86-64] range could be above 4G. Allow kernel
+> +			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
+>  			to allocate physical memory region from top, so could
+>  			be above 4G if system have more than 4G ram installed.
+>  			Otherwise memory region will be allocated below 4G, if
+>  			available.
+>  			It will be ignored if crashkernel=X is specified.
+>  	crashkernel=size[KMG],low
+> -			[KNL, X86-64] range under 4G. When crashkernel=X,high
+> +			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
+>  			is passed, kernel could allocate physical memory region
+>  			above 4G, that cause second kernel crash on system
+>  			that require some amount of low memory, e.g. swiotlb
+>  			requires at least 64M+32K low memory, also enough extra
+>  			low memory is needed to make sure DMA buffers for 32-bit
+> -			devices won't run out. Kernel would try to allocate at
+> +			devices won't run out. Kernel would try to allocate
+>  			at least 256M below 4G automatically.
+>  			This one let user to specify own low range under 4G
+>  			for second kernel instead.
 > -- 
 > 2.25.1
 > 
