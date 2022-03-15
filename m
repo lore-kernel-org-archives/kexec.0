@@ -1,236 +1,74 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 15 Mar 2022 09:12:17 -0500
-Subject: [PATCH v5 4/8] crash: generic crash hotplug support infrastructure
-In-Reply-To: <1b7405e4-e6a3-56ff-5068-d598ba2f2b5e@linux.ibm.com>
-References: <20220303162725.49640-1-eric.devolder@oracle.com>
- <20220303162725.49640-5-eric.devolder@oracle.com>
- <1b7405e4-e6a3-56ff-5068-d598ba2f2b5e@linux.ibm.com>
-Message-ID: <2ca17bd8-fc81-19e2-7a16-e458ce8a097e@oracle.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Tue, 15 Mar 2022 17:35:35 -0300
+Subject: [PATCH] Drivers: hv: vmbus: Fix potential crash on module unload
+Message-ID: <20220315203535.682306-1-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+The vmbus driver relies on the panic notifier infrastructure to perform
+some operations when a panic event is detected. Since vmbus can be built
+as module, it is required that the driver handles both registering and
+unregistering such panic notifier callback.
+
+After commit 74347a99e73a ("x86/Hyper-V: Unload vmbus channel in hv panic callback")
+though, the panic notifier registration is done unconditionally in the module
+initialization routine whereas the unregistering procedure is conditionally
+guarded and executes only if HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE capability
+is set.
+
+This patch fixes that by unconditionally unregistering the panic notifier
+in the module's exit routine as well.
+
+Fixes: 74347a99e73a ("x86/Hyper-V: Unload vmbus channel in hv panic callback")
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
 
 
-On 3/15/22 07:08, Sourabh Jain wrote:
-> Hello Eric,
-> 
-> On 03/03/22 21:57, Eric DeVolder wrote:
->> This patch introduces a generic crash hot plug/unplug infrastructure
->> for CPU and memory changes. Upon CPU and memory changes, a generic
->> crash_hotplug_handler() obtains the appropriate lock, does some
->> important house keeping and then dispatches the hot plug/unplug event
->> to the architecture specific arch_crash_hotplug_handler(), and when
->> that handler returns, the lock is released.
->>
->> This patch modifies crash_core.c to implement a subsys_initcall()
->> function that installs handlers for hot plug/unplug events. If CPU
->> hotplug is enabled, then cpuhp_setup_state() is invoked to register a
->> handler for CPU changes. Similarly, if memory hotplug is enabled, then
->> register_memory_notifier() is invoked to install a handler for memory
->> changes. These handlers in turn invoke the common generic handler
->> crash_hotplug_handler().
->>
->> On the CPU side, cpuhp_setup_state_nocalls() is invoked with parameter
->> CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
->> the CPU still shows up in foreach_present_cpu() during the regeneration
->> of the new CPU list, thus the need to explicitly check and exclude the
->> soon-to-be offlined CPU in crash_prepare_elf64_headers().
->>
->> On the memory side, each un/plugged memory block passes through the
->> handler. For example, if a 1GiB DIMM is hotplugged, that generate 8
->> memory events, one for each 128MiB memblock.
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
->> ? include/linux/kexec.h |? 16 +++++++
->> ? kernel/crash_core.c?? | 108 ++++++++++++++++++++++++++++++++++++++++++
->> ? 2 files changed, 124 insertions(+)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index d7b59248441b..b11d75a6b2bc 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -300,6 +300,13 @@ struct kimage {
->> ????? /* Information for loading purgatory */
->> ????? struct purgatory_info purgatory_info;
->> +
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +??? bool hotplug_event;
->> +??? int offlinecpu;
->> +??? bool elf_index_valid;
->> +??? int elf_index;
-> 
-> How about keeping an array to track all kexec segment index need to be updated in
-> crash hotplug handler.
-> 
-> struct hp_segment {
->  ?? name;
->  ?? index;
->  ?? is_valid;
->  ?}
-> 
-> It will be helpful if architecture need to updated multiple kexec segments? for a hotplug event.
-> 
-> For example, on PowerPC, we might need to update FDT and elfcorehdr on memory hot plug/unplug.
-> 
-> Thanks,
-> Sourabh Jain
+Hi folks, thanks in advance for any reviews! This was build-tested
+with Debian config, on 5.17-rc7.
 
-Sourabh,
-I'm OK with that. Another idea might be if there are just two, and one of them is elfcorehdr, then 
-perhaps in addition to elf_index and elf_index_valid, maybe we add an arch_index and 
-arch_index_valid? In the case of PPC, the FDT would be stored in arch_index?
+This patch is a result of code analysis - I didn't experience this
+issue but seems a valid/feasible case.
 
-Either way.
-Thanks!
-eric
+Also, this is part of an ongoing effort of clearing/refactoring the panic
+notifiers, more will be done soon, but I prefer to send the simple bug
+fixes quickly, or else it might take a while since the next steps are more
+complex and subject to many iterations I expect.
 
-> 
-> 
->> +#endif
->> ? #endif
->> ? #ifdef CONFIG_IMA_KEXEC
->> @@ -316,6 +323,15 @@ struct kimage {
->> ????? unsigned long elf_load_addr;
->> ? };
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +void arch_crash_hotplug_handler(struct kimage *image,
->> +??? unsigned int hp_action, unsigned long a, unsigned long b);
->> +#define KEXEC_CRASH_HP_REMOVE_CPU?? 0
->> +#define KEXEC_CRASH_HP_ADD_CPU????? 1
->> +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
->> +#define KEXEC_CRASH_HP_ADD_MEMORY?? 3
->> +#endif /* CONFIG_CRASH_HOTPLUG */
->> +
->> ? /* kexec interface functions */
->> ? extern void machine_kexec(struct kimage *image);
->> ? extern int machine_kexec_prepare(struct kimage *image);
->> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->> index 256cf6db573c..76959d440f71 100644
->> --- a/kernel/crash_core.c
->> +++ b/kernel/crash_core.c
->> @@ -9,12 +9,17 @@
->> ? #include <linux/init.h>
->> ? #include <linux/utsname.h>
->> ? #include <linux/vmalloc.h>
->> +#include <linux/highmem.h>
->> +#include <linux/memory.h>
->> +#include <linux/cpuhotplug.h>
->> ? #include <asm/page.h>
->> ? #include <asm/sections.h>
->> ? #include <crypto/sha1.h>
->> +#include "kexec_internal.h"
->> +
->> ? /* vmcoreinfo stuff */
->> ? unsigned char *vmcoreinfo_data;
->> ? size_t vmcoreinfo_size;
->> @@ -491,3 +496,106 @@ static int __init crash_save_vmcoreinfo_init(void)
->> ? }
->> ? subsys_initcall(crash_save_vmcoreinfo_init);
->> +
->> +#ifdef CONFIG_CRASH_HOTPLUG
->> +void __weak arch_crash_hotplug_handler(struct kimage *image,
->> +??? unsigned int hp_action, unsigned long a, unsigned long b)
->> +{
->> +??? pr_warn("crash hp: %s not implemented", __func__);
->> +}
->> +
->> +static void crash_hotplug_handler(unsigned int hp_action,
->> +??? unsigned long a, unsigned long b)
->> +{
->> +??? /* Obtain lock while changing crash information */
->> +??? if (!mutex_trylock(&kexec_mutex))
->> +??????? return;
->> +
->> +??? /* Check kdump is loaded */
->> +??? if (kexec_crash_image) {
->> +??????? pr_debug("crash hp: hp_action %u, a %lu, b %lu", hp_action,
->> +??????????? a, b);
->> +
->> +??????? /* Needed in order for the segments to be updated */
->> +??????? arch_kexec_unprotect_crashkres();
->> +
->> +??????? /* Flag to differentiate between normal load and hotplug */
->> +??????? kexec_crash_image->hotplug_event = true;
->> +
->> +??????? /* Now invoke arch-specific update handler */
->> +??????? arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
->> +
->> +??????? /* No longer handling a hotplug event */
->> +??????? kexec_crash_image->hotplug_event = false;
->> +
->> +??????? /* Change back to read-only */
->> +??????? arch_kexec_protect_crashkres();
->> +??? }
->> +
->> +??? /* Release lock now that update complete */
->> +??? mutex_unlock(&kexec_mutex);
->> +}
->> +
->> +#if defined(CONFIG_MEMORY_HOTPLUG)
->> +static int crash_memhp_notifier(struct notifier_block *nb,
->> +??? unsigned long val, void *v)
->> +{
->> +??? struct memory_notify *mhp = v;
->> +??? unsigned long start, end;
->> +
->> +??? start = mhp->start_pfn << PAGE_SHIFT;
->> +??? end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
->> +
->> +??? switch (val) {
->> +??? case MEM_ONLINE:
->> +??????? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
->> +??????????? start, end-start);
->> +??????? break;
->> +
->> +??? case MEM_OFFLINE:
->> +??????? crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
->> +??????????? start, end-start);
->> +??????? break;
->> +??? }
->> +??? return NOTIFY_OK;
->> +}
->> +
->> +static struct notifier_block crash_memhp_nb = {
->> +??? .notifier_call = crash_memhp_notifier,
->> +??? .priority = 0
->> +};
->> +#endif
->> +
->> +#if defined(CONFIG_HOTPLUG_CPU)
->> +static int crash_cpuhp_online(unsigned int cpu)
->> +{
->> +??? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu, 0);
->> +??? return 0;
->> +}
->> +
->> +static int crash_cpuhp_offline(unsigned int cpu)
->> +{
->> +??? crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu, 0);
->> +??? return 0;
->> +}
->> +#endif
->> +
->> +static int __init crash_hotplug_init(void)
->> +{
->> +??? int result = 0;
->> +
->> +#if defined(CONFIG_MEMORY_HOTPLUG)
->> +??? register_memory_notifier(&crash_memhp_nb);
->> +#endif
->> +
->> +#if defined(CONFIG_HOTPLUG_CPU)
->> +??? result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
->> +??????????????? "crash/cpuhp",
->> +??????????????? crash_cpuhp_online, crash_cpuhp_offline);
->> +#endif
->> +
->> +??? return result;
->> +}
->> +
->> +subsys_initcall(crash_hotplug_init);
->> +#endif /* CONFIG_CRASH_HOTPLUG */
+Cheers,
+
+Guilherme
+
+
+ drivers/hv/vmbus_drv.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+index 12a2b37e87f3..12585324cc4a 100644
+--- a/drivers/hv/vmbus_drv.c
++++ b/drivers/hv/vmbus_drv.c
+@@ -2780,10 +2780,15 @@ static void __exit vmbus_exit(void)
+ 	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
+ 		kmsg_dump_unregister(&hv_kmsg_dumper);
+ 		unregister_die_notifier(&hyperv_die_block);
+-		atomic_notifier_chain_unregister(&panic_notifier_list,
+-						 &hyperv_panic_block);
+ 	}
+ 
++	/*
++	 * The panic notifier is always registered, hence we should
++	 * also unconditionally unregister it here as well.
++	 */
++	atomic_notifier_chain_unregister(&panic_notifier_list,
++					 &hyperv_panic_block);
++
+ 	free_page((unsigned long)hv_panic_page);
+ 	unregister_sysctl_table(hv_ctl_table_hdr);
+ 	hv_ctl_table_hdr = NULL;
+-- 
+2.35.1
+
 
