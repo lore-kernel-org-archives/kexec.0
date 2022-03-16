@@ -1,54 +1,77 @@
-From: David Wysochanski <dwysocha@redhat.com>
-Date: Wed, 16 Mar 2022 09:17:35 -0400
-Subject: [PATCH v2 0/4] makedumpfile: harden parsing of old prink buffer
-In-Reply-To: <20220314160432.9414-1-prudo@redhat.com>
-References: <20220314160432.9414-1-prudo@redhat.com>
-Message-ID: <CALF+zOmis2fGgQXh_bW=ZH7C5omNNYuor4B9-AO7SqDSVZ52RQ@mail.gmail.com>
+From: Tobias Powalowski <tobias.powalowski@googlemail.com>
+Date: Wed, 16 Mar 2022 14:45:45 +0100
+Subject: Qemu does not like kexec initrd
+In-Reply-To: <YjHMEsXiraMrOLN4@MiWiFi-R3L-srv>
+References: <CAHfPjO_Ln_yzU5_Crgk+SWyXWU=KALwTx6tWa7PSN2Wag-si-A@mail.gmail.com>
+ <YjHMEsXiraMrOLN4@MiWiFi-R3L-srv>
+Message-ID: <CAHfPjO_yUy=vaLVNsLh0nj0CUJVZdTT4CyZ+CUQPOg3KV=YNkw@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Mar 14, 2022 at 12:04 PM Philipp Rudo <prudo@redhat.com> wrote:
+Hi,
+here the result of my tests with qemu:
+zstd is broken
+xz --check=crc32 is broken
+lz4 -l works
+gzip works
+Is there a bugtracker to report this or only this ML?
+Thanks for your help.
+greetings
+tpowa
+
+Am Mi., 16. M?rz 2022 um 12:38 Uhr schrieb Baoquan He <bhe@redhat.com>:
 >
-> Hi,
+> Cc Tao,
 >
-> dumping the dmesg can cause an endless loop for the old prink mechanism (>
-> v3.5.0 and < v5.10.0) when the log_buf got corrupted. This series fixes those
-> cases by adding a cycle detection. The cycle detection is implemented in a
-> generic way so that it can be reused in other parts of makedumpfile.
+> On 03/16/22 at 11:57am, Tobias Powalowski wrote:
+> > Hi
+> > I just discovered this:
+> > https://githubhot.com/repo/talos-systems/talos/issues/4947
+> > I also suffer from this in my project:
+> > Loading zstd initrd will cause an error:
+> > ZSTD-data is corrupt error on qemu.
+> > Is there a fix or workaround for this issue?
+>
+> Hi Tao,
+>
+> Did you ever met this when you introduce zstd to kexec/kdump?
 >
 > Thanks
-> Philipp
+> Baoquan
 >
-> v2:
->         * Rename 'idx' to 'ptr'
->         * Also print the non-loop part when a cycle was detected. Such a
->           situation can happen when log_buf wrapped around in the kernel
->           (log_first_idx != 0) and the corruption occurred on an
->           idx < log_first_idx.
->         * Add patch 4 fixing a bug independent from the memory corruption but
->           found while investigating it.
->
-> Philipp Rudo (4):
->   makedumpfile: add generic cycle detection
->   makedumpfile: use pointer arithmetics for dump_dmesg
->   makedumpfile: use cycle detection when parsing the prink log_buf
->   makedumpfile: print error when reading with unsupported compression
->
->  Makefile       |   2 +-
->  detect_cycle.c |  99 +++++++++++++++++++++++++++++++++++++
->  detect_cycle.h |  40 +++++++++++++++
->  makedumpfile.c | 131 ++++++++++++++++++++++++++++++++++++++++---------
->  4 files changed, 247 insertions(+), 25 deletions(-)
->  create mode 100644 detect_cycle.c
->  create mode 100644 detect_cycle.h
->
-> --
-> 2.35.1
+> >
+> > --
+> > Tobias Powalowski
+> > Arch Linux Developer & Package Maintainer (tpowa)
+> > https://www.archlinux.org
+> > tpowa at archlinux.org
+> >
+> > St. Martin-Apotheke
+> > Herzog-Georg-Str. 25
+> > 89415 Lauingen
+> > https://www.st-martin-apo.de
+> > info at st-martin-apo.de
+> >
+> > _______________________________________________
+> > kexec mailing list
+> > kexec at lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/kexec
+> >
 >
 
-Thanks for doing v2.  Reviewing / testing this now...
 
+-- 
+Tobias Powalowski
+Arch Linux Developer & Package Maintainer (tpowa)
+https://www.archlinux.org
+tpowa at archlinux.org
+
+St. Martin-Apotheke
+Herzog-Georg-Str. 25
+89415 Lauingen
+https://www.st-martin-apo.de
+info at st-martin-apo.de
 
