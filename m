@@ -1,198 +1,103 @@
-From: Tobias Powalowski <tobias.powalowski@googlemail.com>
-Date: Thu, 17 Mar 2022 11:04:55 +0100
-Subject: Qemu does not like kexec initrd
-In-Reply-To: <CAHfPjO_bSkjA5coG_9diTvM1fiKJoHBmavFCcM1bAw7zws5FVA@mail.gmail.com>
-References: <CAHfPjO_Ln_yzU5_Crgk+SWyXWU=KALwTx6tWa7PSN2Wag-si-A@mail.gmail.com>
- <YjHMEsXiraMrOLN4@MiWiFi-R3L-srv>
- <CAO7dBbVUoU2Go7z6Y+Uv-fKF5+L0sC_e4Y3-Exktq-G2jJ+D6g@mail.gmail.com>
- <CAHfPjO-dFs2xfySzmOgasJfdNTxgh8YFH2FAUK+nCv93hOW6sQ@mail.gmail.com>
- <CAO7dBbXzUH8zLH32QnB0EnVJ6a7rq-oanHQnhz8hCbU4v8wg6g@mail.gmail.com>
- <CAHfPjO8ayenR7Q0JX00if1yHwq_Uy1N27=KtRAizqja-94D-kQ@mail.gmail.com>
- <CAO7dBbVC9qKp0BHicpU_AVh7for9c0YWpucDyC3wN9YP_hwB5Q@mail.gmail.com>
- <CAHfPjO_bSkjA5coG_9diTvM1fiKJoHBmavFCcM1bAw7zws5FVA@mail.gmail.com>
-Message-ID: <CAHfPjO9fFyrm=Y3qFjfb5mtSYB9yjNHZrs2Sw1hmgxM5ooobjw@mail.gmail.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Thu, 17 Mar 2022 16:16:07 +0530
+Subject: [PATCH v5 4/8] crash: generic crash hotplug support infrastructure
+In-Reply-To: <2ca17bd8-fc81-19e2-7a16-e458ce8a097e@oracle.com>
+References: <20220303162725.49640-1-eric.devolder@oracle.com>
+ <20220303162725.49640-5-eric.devolder@oracle.com>
+ <1b7405e4-e6a3-56ff-5068-d598ba2f2b5e@linux.ibm.com>
+ <2ca17bd8-fc81-19e2-7a16-e458ce8a097e@oracle.com>
+Message-ID: <79d08021-699a-016e-6ff3-15b67efa895d@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
-after doing tests with initrds, it seems the error on kernel message
-is wrong, the ZSTD archive is fine and decompression is not faulty.
-For what's it worth for, the shown error is wrong. All works as expected.
-greetings
-tpowa
 
-Am Do., 17. M?rz 2022 um 09:45 Uhr schrieb Tobias Powalowski
-<tobias.powalowski@googlemail.com>:
->
-> Hi,
-> Which upstream code?
-> Arch Linux kernel is upstream
-> Qemu is upstream
-> - Kernel message prints the error
-> greetings
-> tpowa
->
-> Am Do., 17. M?rz 2022 um 09:34 Uhr schrieb Tao Liu <ltao@redhat.com>:
-> >
-> > Hi Tobias,
-> >
-> > The kernel you provided is not an upstream kernel, which contains
-> > distribution specific modification, as well as the kexec. Since you
-> > are reporting an issue to the upstream, I suggest you:
-> >
-> > 1) re-run your tests against the upstream code, instead of
-> > distribution specific code.
-> > 2) if the issue still persists, you can report the issue to upstream,
-> > as well as the detailed log information, such as:
-> >     what is the log message?
-> >     who prints the log message, qemu? kernel? kexec?
-> >     what is the behaviour when the error occurs? kernel panic? error
-> > logs? qemu crash?
-> > For your case, Loading zstd initrd will cause an error(what error? who
-> > prints the error?) ZSTD-data is corrupt error on qemu(how do you know
-> > the data is corrupt? what attempts did you make?).
-> >
-> > Please note upstream is not responsible for the distribution specific issues.
-> >
-> > Thanks,
-> > Tao Liu
-> >
-> >
-> > On Wed, Mar 16, 2022 at 10:33 PM Tobias Powalowski
-> > <tobias.powalowski@googlemail.com> wrote:
-> > >
-> > > Kernel and zstd initrds are located here:
-> > > https://pkgbuild.com/~tpowa/archboot-images/x86_64/latest/boot/
-> > > kexec -l kernel --initrd=initrd --reuse-cmdline
-> > > systemctl kexec
-> > >
-> > > Am Mi., 16. M?rz 2022 um 15:19 Uhr schrieb Tao Liu <ltao@redhat.com>:
-> > > >
-> > > > Hi Tobias,
-> > > >
-> > > > On Wed, Mar 16, 2022 at 10:10 PM Tobias Powalowski
-> > > > <tobias.powalowski@googlemail.com> wrote:
-> > > > >
-> > > > > Hi,
-> > > > > Do you need anything from my side?
-> > > > > Test files?
-> > > > > Test system is latest Arch Linux with qemu 6.2.0
-> > > > > greetings
-> > > > > tpowa
-> > > > >
-> > > >
-> > > > Could you briefly introduce your test steps please? I will try to reproduce it.
-> > > >
-> > > > Thanks,
-> > > > Tao Liu
-> > > >
-> > > > > Am Mi., 16. M?rz 2022 um 14:58 Uhr schrieb Tao Liu <ltao@redhat.com>:
-> > > > > >
-> > > > > > Hi Baoquan,
-> > > > > >
-> > > > > > On Wed, Mar 16, 2022 at 7:38 PM Baoquan He <bhe@redhat.com> wrote:
-> > > > > > >
-> > > > > > > Cc Tao,
-> > > > > > >
-> > > > > > > On 03/16/22 at 11:57am, Tobias Powalowski wrote:
-> > > > > > > > Hi
-> > > > > > > > I just discovered this:
-> > > > > > > > https://githubhot.com/repo/talos-systems/talos/issues/4947
-> > > > > > > > I also suffer from this in my project:
-> > > > > > > > Loading zstd initrd will cause an error:
-> > > > > > > > ZSTD-data is corrupt error on qemu.
-> > > > > > > > Is there a fix or workaround for this issue?
-> > > > > > >
-> > > > > > > Hi Tao,
-> > > > > > >
-> > > > > > > Did you ever met this when you introduce zstd to kexec/kdump?
-> > > > > > >
-> > > > > > No, I haven't encountered this issue before.
-> > > > > >
-> > > > > > Thanks,
-> > > > > > Tao Liu
-> > > > > >
-> > > > > > > Thanks
-> > > > > > > Baoquan
-> > > > > > >
-> > > > > > > >
-> > > > > > > > --
-> > > > > > > > Tobias Powalowski
-> > > > > > > > Arch Linux Developer & Package Maintainer (tpowa)
-> > > > > > > > https://www.archlinux.org
-> > > > > > > > tpowa at archlinux.org
-> > > > > > > >
-> > > > > > > > St. Martin-Apotheke
-> > > > > > > > Herzog-Georg-Str. 25
-> > > > > > > > 89415 Lauingen
-> > > > > > > > https://www.st-martin-apo.de
-> > > > > > > > info at st-martin-apo.de
-> > > > > > > >
-> > > > > > > > _______________________________________________
-> > > > > > > > kexec mailing list
-> > > > > > > > kexec at lists.infradead.org
-> > > > > > > > http://lists.infradead.org/mailman/listinfo/kexec
-> > > > > > > >
-> > > > > > >
-> > > > > >
-> > > > >
-> > > > >
-> > > > > --
-> > > > > Tobias Powalowski
-> > > > > Arch Linux Developer & Package Maintainer (tpowa)
-> > > > > https://www.archlinux.org
-> > > > > tpowa at archlinux.org
-> > > > >
-> > > > > St. Martin-Apotheke
-> > > > > Herzog-Georg-Str. 25
-> > > > > 89415 Lauingen
-> > > > > https://www.st-martin-apo.de
-> > > > > info at st-martin-apo.de
-> > > > >
-> > > >
-> > >
-> > >
-> > > --
-> > > Tobias Powalowski
-> > > Arch Linux Developer & Package Maintainer (tpowa)
-> > > https://www.archlinux.org
-> > > tpowa at archlinux.org
-> > >
-> > > St. Martin-Apotheke
-> > > Herzog-Georg-Str. 25
-> > > 89415 Lauingen
-> > > https://www.st-martin-apo.de
-> > > info at st-martin-apo.de
-> > >
-> >
+On 15/03/22 19:42, Eric DeVolder wrote:
 >
 >
-> --
-> Tobias Powalowski
-> Arch Linux Developer & Package Maintainer (tpowa)
-> https://www.archlinux.org
-> tpowa at archlinux.org
+> On 3/15/22 07:08, Sourabh Jain wrote:
+>> Hello Eric,
+>>
+>> On 03/03/22 21:57, Eric DeVolder wrote:
+>>> This patch introduces a generic crash hot plug/unplug infrastructure
+>>> for CPU and memory changes. Upon CPU and memory changes, a generic
+>>> crash_hotplug_handler() obtains the appropriate lock, does some
+>>> important house keeping and then dispatches the hot plug/unplug event
+>>> to the architecture specific arch_crash_hotplug_handler(), and when
+>>> that handler returns, the lock is released.
+>>>
+>>> This patch modifies crash_core.c to implement a subsys_initcall()
+>>> function that installs handlers for hot plug/unplug events. If CPU
+>>> hotplug is enabled, then cpuhp_setup_state() is invoked to register a
+>>> handler for CPU changes. Similarly, if memory hotplug is enabled, then
+>>> register_memory_notifier() is invoked to install a handler for memory
+>>> changes. These handlers in turn invoke the common generic handler
+>>> crash_hotplug_handler().
+>>>
+>>> On the CPU side, cpuhp_setup_state_nocalls() is invoked with parameter
+>>> CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
+>>> the CPU still shows up in foreach_present_cpu() during the regeneration
+>>> of the new CPU list, thus the need to explicitly check and exclude the
+>>> soon-to-be offlined CPU in crash_prepare_elf64_headers().
+>>>
+>>> On the memory side, each un/plugged memory block passes through the
+>>> handler. For example, if a 1GiB DIMM is hotplugged, that generate 8
+>>> memory events, one for each 128MiB memblock.
+>>>
+>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>>> ---
+>>> ? include/linux/kexec.h |? 16 +++++++
+>>> ? kernel/crash_core.c?? | 108 
+>>> ++++++++++++++++++++++++++++++++++++++++++
+>>> ? 2 files changed, 124 insertions(+)
+>>>
+>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>> index d7b59248441b..b11d75a6b2bc 100644
+>>> --- a/include/linux/kexec.h
+>>> +++ b/include/linux/kexec.h
+>>> @@ -300,6 +300,13 @@ struct kimage {
+>>> ????? /* Information for loading purgatory */
+>>> ????? struct purgatory_info purgatory_info;
+>>> +
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +??? bool hotplug_event;
+>>> +??? int offlinecpu;
+>>> +??? bool elf_index_valid;
+>>> +??? int elf_index;
+>>
+>> How about keeping an array to track all kexec segment index need to 
+>> be updated in
+>> crash hotplug handler.
+>>
+>> struct hp_segment {
+>> ??? name;
+>> ??? index;
+>> ??? is_valid;
+>> ??}
+>>
+>> It will be helpful if architecture need to updated multiple kexec 
+>> segments? for a hotplug event.
+>>
+>> For example, on PowerPC, we might need to update FDT and elfcorehdr 
+>> on memory hot plug/unplug.
+>>
+>> Thanks,
+>> Sourabh Jain
 >
-> St. Martin-Apotheke
-> Herzog-Georg-Str. 25
-> 89415 Lauingen
-> https://www.st-martin-apo.de
-> info at st-martin-apo.de
+> Sourabh,
+> I'm OK with that. Another idea might be if there are just two, and one 
+> of them is elfcorehdr, then perhaps in addition to elf_index and 
+> elf_index_valid, maybe we add an arch_index and arch_index_valid? In 
+> the case of PPC, the FDT would be stored in arch_index?
 
+Yes it seems like we might not need to keep more than two kexec indexes. 
+Since this indexes are arch specific lets push them to struct 
+kimage_arch (part of kimage). So for now I will push fdt_index to struct 
+kimage_arch.
 
+Thanks,
+Sourabh Jain
 
--- 
-Tobias Powalowski
-Arch Linux Developer & Package Maintainer (tpowa)
-https://www.archlinux.org
-tpowa at archlinux.org
-
-St. Martin-Apotheke
-Herzog-Georg-Str. 25
-89415 Lauingen
-https://www.st-martin-apo.de
-info at st-martin-apo.de
 
