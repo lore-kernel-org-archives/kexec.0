@@ -1,103 +1,112 @@
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Thu, 17 Mar 2022 16:16:07 +0530
-Subject: [PATCH v5 4/8] crash: generic crash hotplug support infrastructure
-In-Reply-To: <2ca17bd8-fc81-19e2-7a16-e458ce8a097e@oracle.com>
-References: <20220303162725.49640-1-eric.devolder@oracle.com>
- <20220303162725.49640-5-eric.devolder@oracle.com>
- <1b7405e4-e6a3-56ff-5068-d598ba2f2b5e@linux.ibm.com>
- <2ca17bd8-fc81-19e2-7a16-e458ce8a097e@oracle.com>
-Message-ID: <79d08021-699a-016e-6ff3-15b67efa895d@linux.ibm.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Thu, 17 Mar 2022 20:45:35 +0800
+Subject: [RESEND PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <20220304020341.85583-2-coiby.xu@gmail.com>
+References: <20220304020341.85583-1-coiby.xu@gmail.com>
+ <20220304020341.85583-2-coiby.xu@gmail.com>
+Message-ID: <YjMtb7u3/sAWG0/7@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On 03/04/22 at 10:03am, Coiby Xu wrote:
+> From: Coiby Xu <coxu@redhat.com>
+> 
+> commit 9ec4ecef0af7790551109283ca039a7c52de343c ("kexec_file,x86,
+> powerpc: factor out kexec_file_ops functions" allows implementing
+> the arch-specific implementation of kernel image verification
+> in kexec_file_ops->verify_sig. Currently, there is no arch-specific
+> implementation of arch_kexec_kernel_verify_sig. So clean it up.
 
-On 15/03/22 19:42, Eric DeVolder wrote:
->
->
-> On 3/15/22 07:08, Sourabh Jain wrote:
->> Hello Eric,
->>
->> On 03/03/22 21:57, Eric DeVolder wrote:
->>> This patch introduces a generic crash hot plug/unplug infrastructure
->>> for CPU and memory changes. Upon CPU and memory changes, a generic
->>> crash_hotplug_handler() obtains the appropriate lock, does some
->>> important house keeping and then dispatches the hot plug/unplug event
->>> to the architecture specific arch_crash_hotplug_handler(), and when
->>> that handler returns, the lock is released.
->>>
->>> This patch modifies crash_core.c to implement a subsys_initcall()
->>> function that installs handlers for hot plug/unplug events. If CPU
->>> hotplug is enabled, then cpuhp_setup_state() is invoked to register a
->>> handler for CPU changes. Similarly, if memory hotplug is enabled, then
->>> register_memory_notifier() is invoked to install a handler for memory
->>> changes. These handlers in turn invoke the common generic handler
->>> crash_hotplug_handler().
->>>
->>> On the CPU side, cpuhp_setup_state_nocalls() is invoked with parameter
->>> CPUHP_AP_ONLINE_DYN. While this works, when a CPU is being unplugged,
->>> the CPU still shows up in foreach_present_cpu() during the regeneration
->>> of the new CPU list, thus the need to explicitly check and exclude the
->>> soon-to-be offlined CPU in crash_prepare_elf64_headers().
->>>
->>> On the memory side, each un/plugged memory block passes through the
->>> handler. For example, if a 1GiB DIMM is hotplugged, that generate 8
->>> memory events, one for each 128MiB memblock.
->>>
->>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>> ---
->>> ? include/linux/kexec.h |? 16 +++++++
->>> ? kernel/crash_core.c?? | 108 
->>> ++++++++++++++++++++++++++++++++++++++++++
->>> ? 2 files changed, 124 insertions(+)
->>>
->>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>> index d7b59248441b..b11d75a6b2bc 100644
->>> --- a/include/linux/kexec.h
->>> +++ b/include/linux/kexec.h
->>> @@ -300,6 +300,13 @@ struct kimage {
->>> ????? /* Information for loading purgatory */
->>> ????? struct purgatory_info purgatory_info;
->>> +
->>> +#ifdef CONFIG_CRASH_HOTPLUG
->>> +??? bool hotplug_event;
->>> +??? int offlinecpu;
->>> +??? bool elf_index_valid;
->>> +??? int elf_index;
->>
->> How about keeping an array to track all kexec segment index need to 
->> be updated in
->> crash hotplug handler.
->>
->> struct hp_segment {
->> ??? name;
->> ??? index;
->> ??? is_valid;
->> ??}
->>
->> It will be helpful if architecture need to updated multiple kexec 
->> segments? for a hotplug event.
->>
->> For example, on PowerPC, we might need to update FDT and elfcorehdr 
->> on memory hot plug/unplug.
->>
->> Thanks,
->> Sourabh Jain
->
-> Sourabh,
-> I'm OK with that. Another idea might be if there are just two, and one 
-> of them is elfcorehdr, then perhaps in addition to elf_index and 
-> elf_index_valid, maybe we add an arch_index and arch_index_valid? In 
-> the case of PPC, the FDT would be stored in arch_index?
+This is a nice cleanup, while the log may need to be improved. You
+should run ./scripts/checkpatch.pl on your patch before sending out.
+When we refer to a commit in log, please refer to
+Documentation/process/submitting-patches.rst.
 
-Yes it seems like we might not need to keep more than two kexec indexes. 
-Since this indexes are arch specific lets push them to struct 
-kimage_arch (part of kimage). So for now I will push fdt_index to struct 
-kimage_arch.
-
-Thanks,
-Sourabh Jain
+> 
+> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+> Signed-off-by: Coiby Xu <coiby.xu@gmail.com>
+> ---
+>  include/linux/kexec.h |  4 ----
+>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
+>  2 files changed, 13 insertions(+), 25 deletions(-)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..755fed183224 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+>  				 const Elf_Shdr *relsec,
+>  				 const Elf_Shdr *symtab);
+>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> -#ifdef CONFIG_KEXEC_SIG
+> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -				 unsigned long buf_len);
+> -#endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 8347fc158d2b..3720435807eb 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
+>  }
+>  
+> -#ifdef CONFIG_KEXEC_SIG
+> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+> -					  unsigned long buf_len)
+> -{
+> -	if (!image->fops || !image->fops->verify_sig) {
+> -		pr_debug("kernel loader does not support signature verification.\n");
+> -		return -EKEYREJECTED;
+> -	}
+> -
+> -	return image->fops->verify_sig(buf, buf_len);
+> -}
+> -
+> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -					unsigned long buf_len)
+> -{
+> -	return kexec_image_verify_sig_default(image, buf, buf_len);
+> -}
+> -#endif
+> -
+>  /*
+>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>   * @pi:		Purgatory to be relocated.
+> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_SIG
+> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
+> +		unsigned long buf_len)
+> +{
+> +	if (!image->fops || !image->fops->verify_sig) {
+> +		pr_debug("kernel loader does not support signature verification.\n");
+> +		return -EKEYREJECTED;
+> +	}
+> +
+> +	return image->fops->verify_sig(buf, buf_len);
+> +}
+> +
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+>  	int ret;
+>  
+> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+> -					   image->kernel_buf_len);
+> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
+> +			image->kernel_buf_len);
+>  	if (ret) {
+>  
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -- 
+> 2.34.1
+> 
 
 
