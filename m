@@ -1,11 +1,11 @@
 From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Fri, 18 Mar 2022 05:28:34 +0000
-Subject: [PATCH v2 2/4] makedumpfile: use pointer arithmetics for
- dump_dmesg
-In-Reply-To: <20220314160432.9414-3-prudo@redhat.com>
+Date: Fri, 18 Mar 2022 05:28:57 +0000
+Subject: [PATCH v2 4/4] makedumpfile: print error when reading with
+ unsupported compression
+In-Reply-To: <20220314160432.9414-5-prudo@redhat.com>
 References: <20220314160432.9414-1-prudo@redhat.com>
- <20220314160432.9414-3-prudo@redhat.com>
-Message-ID: <TYYPR01MB67772868FC17B774BA7CF9BEDD139@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <20220314160432.9414-5-prudo@redhat.com>
+Message-ID: <TYYPR01MB6777E6344C250E5C94E94096DD139@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -13,129 +13,165 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 -----Original Message-----
-> When parsing the printk buffer for the old printk mechanism (> v3.5.0+ and
-> < 5.10.0) a log entry is currently specified by the offset into the
-> buffer where the entry starts. Change this to use a pointers instead.
-> This is done in preparation for using the new cycle detection mechanism.
+> Currently makedumpfile only checks if the required compression algorithm
+> was enabled during build when compressing a dump but not when reading
+> from one. This can lead to situations where, one version of makedumpfile
+> creates the dump using a compression algorithm an other version of
+> makedumpfile doesn't support. When the second version now tries to, e.g.
+> extract the dmesg from the dump it will fail with an error similar to
 > 
+> 	# makedumpfile --dump-dmesg vmcore dmesg.txt
+> 	__vtop4_x86_64: Can't get a valid pgd.
+> 	readmem: Can't convert a virtual address(ffffffff92e18284) to physical address.
+> 	readmem: type_addr: 0, addr:ffffffff92e18284, size:390
+> 	check_release: Can't get the address of system_utsname.
+> 
+> 	makedumpfile Failed.
+> 
+> That's because readpage_kdump_compressed{_parallel} does not return
+> with an error if the page it is trying to read is compressed with an
+> unsupported compression algorithm. Thus readmem copies random data from
+> the (uninitialized) cachebuf to its caller and thus causing the error
+> above.
+> 
+> Fix this by checking if the required compression algorithm is supported
+> in readpage_kdump_compressed{_parallel} and print a proper error message
+> if it isn't.
+> 
+> Reported-by: Dave Wysochanski <dwysocha@redhat.com>
 > Signed-off-by: Philipp Rudo <prudo@redhat.com>
 > ---
->  makedumpfile.c | 29 +++++++++++++----------------
->  1 file changed, 13 insertions(+), 16 deletions(-)
+>  makedumpfile.c | 56 ++++++++++++++++++++++++++++++++++++++++++--------
+>  1 file changed, 48 insertions(+), 8 deletions(-)
 > 
 > diff --git a/makedumpfile.c b/makedumpfile.c
-> index 7ed9756..9a05c96 100644
+> index b7ac999..56f3b6c 100644
 > --- a/makedumpfile.c
 > +++ b/makedumpfile.c
-> @@ -5482,13 +5482,10 @@ dump_log_entry(char *logptr, int fp, const char *file_name)
->   * get log record by index; idx must point to valid message.
->   */
->  static char *
-> -log_from_idx(unsigned int idx, char *logbuf)
-> +log_from_ptr(char *logptr, char *logbuf)
->  {
-> -	char *logptr;
->  	unsigned int msglen;
-> 
-> -	logptr = logbuf + idx;
-> -
->  	/*
->  	 * A length == 0 record is the end of buffer marker.
->  	 * Wrap around and return the message at the start of
-> @@ -5502,14 +5499,13 @@ log_from_idx(unsigned int idx, char *logbuf)
->  	return logptr;
->  }
-> 
-> -static long
-> -log_next(unsigned int idx, char *logbuf)
-> +static void *
-> +log_next(void *_logptr, void *_logbuf)
->  {
-> -	char *logptr;
-> +	char *logptr = _logptr;
-> +	char *logbuf = _logbuf;
->  	unsigned int msglen;
-> 
-> -	logptr = logbuf + idx;
-> -
+> @@ -865,9 +865,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+>  #ifdef USELZO
+> -	} else if (info->flag_lzo_support
+> -		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+> +		if (!info->flag_lzo_support) {
+> +			ERRMSG("lzo compression unsupported\n");
+> +			out = FALSE;
 
-I added the following change to the log_from_ptr() and log_next() because of
-- assigning to the argument (possible but unusual)
-- the unnecessary local variables
-
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -5494,16 +5494,14 @@ log_from_ptr(char *logptr, char *logbuf)
- 
-        msglen = USHORT(logptr + OFFSET(printk_log.len));
-        if (!msglen)
--               logptr = logbuf;
-+               return logbuf;
- 
-        return logptr;
- }
- 
- static void *
--log_next(void *_logptr, void *_logbuf)
-+log_next(void *logptr, void *logbuf)
- {
--       char *logptr = _logptr;
--       char *logbuf = _logbuf;
-        unsigned int msglen;
- 
-        /*
+I removed those "out = FALSE;" lines because it's already initialized to FALSE.
 
 Thanks,
 Kazu
 
->  	/*
->  	 * A length == 0 record is the end of buffer marker. Wrap around and
->  	 * read the message at the start of the buffer as *this* one, and
-> @@ -5519,10 +5515,10 @@ log_next(unsigned int idx, char *logbuf)
->  	msglen = USHORT(logptr + OFFSET(printk_log.len));
->  	if (!msglen) {
->  		msglen = USHORT(logbuf + OFFSET(printk_log.len));
-> -		return msglen;
-> +		return logbuf + msglen;
+> +			goto out_error;
+> +		}
+> +
+>  		retlen = info->page_size;
+>  		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
+>  					    (unsigned char *)bufptr, &retlen,
+> @@ -876,9 +881,14 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +#else
+> +		ERRMSG("lzo compression unsupported\n");
+> +		ERRMSG("Try `make USELZO=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
+> -#ifdef USESNAPPY
+>  	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
+> +#ifdef USESNAPPY
+> 
+>  		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
+>  		if (ret != SNAPPY_OK) {
+> @@ -891,14 +901,24 @@ readpage_kdump_compressed(unsigned long long paddr, void *bufptr)
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +#else
+> +		ERRMSG("snappy compression unsupported\n");
+> +		ERRMSG("Try `make USESNAPPY=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
+> -#ifdef USEZSTD
+>  	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
+> +#ifdef USEZSTD
+>  		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
+>  		if (ZSTD_isError(ret) || (ret != info->page_size)) {
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +#else
+> +		ERRMSG("zstd compression unsupported\n");
+> +		ERRMSG("Try `make USEZSTD=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
 >  	}
 > 
-> -	return idx + msglen;
-> +	return logptr + msglen;
->  }
-> 
->  int
-> @@ -5530,11 +5526,12 @@ dump_dmesg()
->  {
->  	int log_buf_len, length_log, length_oldlog, ret = FALSE;
->  	unsigned long index, log_buf, log_end;
-> -	unsigned int idx, log_first_idx, log_next_idx;
-> +	unsigned int log_first_idx, log_next_idx;
->  	unsigned long long first_idx_sym;
->  	unsigned long log_end_2_6_24;
->  	unsigned      log_end_2_6_25;
->  	char *log_buffer = NULL, *log_ptr = NULL;
-> +	char *ptr;
-> 
->  	/*
->  	 * log_end has been changed to "unsigned" since linux-2.6.25.
-> @@ -5681,13 +5678,13 @@ dump_dmesg()
->  			ERRMSG("Can't open output file.\n");
->  			goto out;
+> @@ -964,9 +984,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
 >  		}
-> -		idx = log_first_idx;
-> -		while (idx != log_next_idx) {
-> -			log_ptr = log_from_idx(idx, log_buffer);
-> +		ptr = log_buffer + log_first_idx;
-> +		while (ptr != log_buffer + log_next_idx) {
-> +			log_ptr = log_from_ptr(ptr, log_buffer);
->  			if (!dump_log_entry(log_ptr, info->fd_dumpfile,
->  					    info->name_dumpfile))
->  				goto out;
-> -			idx = log_next(idx, log_buffer);
-> +			ptr = log_next(ptr, log_buffer);
+> +	} else if ((pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+>  #ifdef USELZO
+> -	} else if (info->flag_lzo_support
+> -		   && (pd.flags & DUMP_DH_COMPRESSED_LZO)) {
+> +		if (!info->flag_lzo_support) {
+> +			ERRMSG("lzo compression unsupported\n");
+> +			out = FALSE;
+> +			goto out_error;
+> +		}
+> +
+>  		retlen = info->page_size;
+>  		ret = lzo1x_decompress_safe((unsigned char *)buf, pd.size,
+>  					    (unsigned char *)bufptr, &retlen,
+> @@ -975,9 +1000,14 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
 >  		}
->  		if (!close_files_for_creating_dumpfile())
->  			goto out;
+> +#else
+> +		ERRMSG("lzo compression unsupported\n");
+> +		ERRMSG("Try `make USELZO=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
+> -#ifdef USESNAPPY
+>  	} else if ((pd.flags & DUMP_DH_COMPRESSED_SNAPPY)) {
+> +#ifdef USESNAPPY
+> 
+>  		ret = snappy_uncompressed_length(buf, pd.size, (size_t *)&retlen);
+>  		if (ret != SNAPPY_OK) {
+> @@ -990,14 +1020,24 @@ readpage_kdump_compressed_parallel(int fd_memory, unsigned long long paddr,
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +#else
+> +		ERRMSG("snappy compression unsupported\n");
+> +		ERRMSG("Try `make USESNAPPY=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
+> -#ifdef USEZSTD
+>  	} else if ((pd.flags & DUMP_DH_COMPRESSED_ZSTD)) {
+> +#ifdef USEZSTD
+>  		ret = ZSTD_decompress(bufptr, info->page_size, buf, pd.size);
+>  		if (ZSTD_isError(ret) || (ret != info->page_size)) {
+>  			ERRMSG("Uncompress failed: %d\n", ret);
+>  			goto out_error;
+>  		}
+> +#else
+> +		ERRMSG("zstd compression unsupported\n");
+> +		ERRMSG("Try `make USEZSTD=on` when building.\n");
+> +		out = FALSE;
+> +		goto out_error;
+>  #endif
+>  	}
+> 
 > --
 > 2.35.1
 
