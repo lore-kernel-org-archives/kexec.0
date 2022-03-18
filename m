@@ -1,147 +1,46 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 18 Mar 2022 20:21:10 +0800
-Subject: [RFC 0/4] Support kdump with LUKS encryption by reusing LUKS
- master key
-In-Reply-To: <c857dcf8-024e-ab8a-fd26-295ce2e0ae41@gmail.com>
-References: <20220318103423.286410-1-coxu@redhat.com>
- <c857dcf8-024e-ab8a-fd26-295ce2e0ae41@gmail.com>
-Message-ID: <20220318122110.7qjrnrduwytjle3w@Rk>
+From: David Laight <David.Laight@ACULAB.COM>
+Date: Fri, 18 Mar 2022 13:48:07 +0000
+Subject: [PATCH v4 4/4] fs/proc/vmcore: Use iov_iter_count()
+In-Reply-To: <20220318093706.161534-5-bhe@redhat.com>
+References: <20220318093706.161534-1-bhe@redhat.com>
+ <20220318093706.161534-5-bhe@redhat.com>
+Message-ID: <1592a861bd9e46e5adf1431ad6bbd25c@AcuMS.aculab.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Milan,
+From: Baoquan He
+> Sent: 18 March 2022 09:37
+> 
+> To replace open coded iter->count. This makes code cleaner.
+...
+> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
+> index 4cbb8db7c507..ed58a7edc821 100644
+> --- a/fs/proc/vmcore.c
+> +++ b/fs/proc/vmcore.c
+> @@ -319,21 +319,21 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+>  	u64 start;
+>  	struct vmcore *m = NULL;
+> 
+> -	if (iter->count == 0 || *fpos >= vmcore_size)
+> +	if (!iov_iter_count(iter) || *fpos >= vmcore_size)
 
-On Fri, Mar 18, 2022 at 12:29:06PM +0100, Milan Broz wrote:
->On 18/03/2022 11:34, Coiby Xu wrote:
->>With kdump enabled, when kernel crashes, the system could boot into the
->>kdump kernel and dump the memory image i.e. /proc/vmcore to a specified
->>target. Currently, when dumping vmcore to a LUKS encrypted device, there
->>are two problems,
->>  - for some machines, the user may don't have a chance enter the password
->>    to decrypt the device after kernel crashes and kdump initrd is loaded
->>  - LUKS2 by default use the memory-hard Argon2 key derivation function
->>    which is quite memory-consuming compared to the limited memory reserved
->>    for kdump. Take Fedora example, by default, only 256M is reserved for
->>    systems having memory between 4G-64G. With LUKS enabled, ~1300M needs
->>    to be reserved for kdump.
->>Besides the users (at least for Fedora) usually expect kdump to work out
->>of the box i.e. no manual password input is needed. And it doesn't make
->>sense to derivate the master key again in kdump kernel which seems to be
->>redundant work.
->>
->>Based on Milan's feedback [1] on Kairui's ideas to support kdump with
->>LUKS encryption, this patch set addresses the above issues by
->
->Hi,
->
->I think you are creating another attack vector here, storing the encryption
->key to yet another place... but I already mentioned that in the referenced mail.
+For some definition of 'cleaner' :-)
 
-Thanks for the quick response! I thought the take-home message of the
-referenced is we shouldn't leave the master key in the user space. Sorry 
-I seem to still misunderstand what's mentioned in the referenced mail. But
-take AES as an example, my reasoning is as follows:
-   the expanded key has already been stored in "struct crypto_aes_ctx".
-   If a hacker can somehow access the master key stored in the memory
-   reserved exclusively for kdump, it means he/she can also access the
-   expanded key stored in struct crypto_aes_ctx. So  not creating
-   another attack vector?
+iter->count is clearly a simple, cheap structure member lookup.
+OTOH iov_iter_count(iter) might be an expensive traversal of
+the vector (or worse).
 
->
->Why is it not done through keyring and forcing kdump to retain key there
->(under the same keyring key name as dm-crypt used)?
->Kernel dm-crypt supports this already; LUKS2 uses keyring by default too.
->That's all you need, or not? Why do you need to add another "kdump:" thing?
->IOW why kdump cannot copy the key to keyring under the name dm-crypt
->has in the mapping table and let dm-crypt activate the device almost without
->code changes?
+So a quick read of the code by someone who isn't an expert
+in the iov functions leaves them wondering what is going on
+or having to spend time locating the definition ...
 
-Sorry, I haven't explained how kdump works. Once the 1st kernel crashes and
-the system boots into the kdump kernel, the kdump kernel only have direct
-access to the memory exclusively reserved for it i.e. the kdump kernel
-loses the direct access to the keyring constructed in the 1st kernel. In
-theory, the kdump kernel could do some "hacking" to find out the key
-stored in the memory directly managed by the 1st kernel but I imagine
-this would be difficult task (imagine I present the memory dump of my
-computer to you and ask you to rebuild all the relevant kernel data
-structures and find the key). Besides, it's not reliable to read the
-memory directly managed by the first kernel for example the memory could
-be corrupt. So we have to pass the master key from the 1st kernel to the kdump
-kernel.
+	David
 
-Btw, if we store the key in the kernel keyring, doesn't it mean storing the
-"encryption key to another place" and thus creating "another attach vector"?
-
->
->Anyway, please fix the naming before this patchset can be read or reviewed!
->
->LUKS is user-space key management only (on-disk metadata); the kernel has
->no idea how the key is derived or what LUKS is - dm-crypt only knows the key
->(either through keyring or directly in the mapping table).
->
->Polluting kernel namespace with "luks" names variables is wrong - dm-crypt
->is used in many other mappings (plain, bitlocker, veracrypt, ...)
->Just use the dm-crypt key, do not reference LUKS at all.
-
-Thanks for pointing out my mistake of misusing the word LUKS! I'll fix this
-error once we settle down what's the correct approach to reuse master
-key for the kdump kernel.
-
->
->Milan
->
->
->
->>  1) first saving the LUKS master key to kexec when opening the encrypted
->>     device
->>  2) then saving the master key to the reserved memory for kdump when
->>     loading kdump kernel image.
->>
->>So the LUKS master key never leaves the kernel space and once the key has
->>been saved to the reserved memory for kdump, it would be wiped
->>immediately. If there is no security concern with this approach or any
->>other concern, I will drop the following assumptions made for this RFC
->>version in v1,
->>  - only x86 is supported
->>  - there is only one LUKS device for the system
->>
->>to extend the support to other architectures including POWER, ARM and
->>s390x and address the case of multiple LUKS devices. Any feedback will be
->>appreciated, thanks!
->>
->>For a proof of concept, I've patched cryptsetup [2] in a quick-and-dirty
->>way to support a new option "--kdump-kernel-master-key"
->>and hacked systemd [3]. It works for Fedora 34.
->>
->>[1] https://yhbt.net/lore/all/e5abd089-3398-fdb4-7991-0019be434b79 at gmail.com/
->>[2] https://gitlab.com/coxu/cryptsetup/-/commit/ee54bb15445da0bc3f9155a7227a9799da4dac20
->>[3] https://github.com/coiby/systemd/tree/reuse_kdump_master_key
->>
->>Coiby Xu (4):
->>   kexec, dm-crypt: receive LUKS master key from dm-crypt and pass it to
->>     kdump
->>   kdump, x86: pass the LUKS master key to kdump kernel using a kernel
->>     command line parameter luksmasterkey
->>   crash_dump: retrieve LUKS master key in kdump kernel
->>   dm-crypt: reuse LUKS master key in kdump kernel
->>
->>  arch/x86/include/asm/crash.h      |  1 +
->>  arch/x86/kernel/crash.c           | 42 ++++++++++++++++++-
->>  arch/x86/kernel/kexec-bzimage64.c |  7 ++++
->>  drivers/md/dm-crypt.c             | 26 +++++++++---
->>  include/linux/crash_dump.h        |  4 ++
->>  include/linux/kexec.h             |  7 ++++
->>  kernel/crash_dump.c               | 69 +++++++++++++++++++++++++++++++
->>  kernel/kexec_core.c               | 66 +++++++++++++++++++++++++++++
->>  8 files changed, 215 insertions(+), 7 deletions(-)
->>
->
-
--- 
-Best regards,
-Coiby
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
 
