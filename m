@@ -1,148 +1,130 @@
 From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 18 Mar 2022 18:34:21 +0800
-Subject: [RFC 2/4] kdump,
- x86: pass the LUKS master key to kdump kernel using a kernel command
- line parameter luksmasterkey
+Date: Fri, 18 Mar 2022 18:34:22 +0800
+Subject: [RFC 3/4] crash_dump: retrieve LUKS master key in kdump kernel
 In-Reply-To: <20220318103423.286410-1-coxu@redhat.com>
 References: <20220318103423.286410-1-coxu@redhat.com>
-Message-ID: <20220318103423.286410-3-coxu@redhat.com>
+Message-ID: <20220318103423.286410-4-coxu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-kdump will build up the kernel command parameter luksmasterkey as
-similar to elfcorehdr to pass the memory address of the stored info of LUKS
-master key to kdump kernel.
+kdump will retrieve the LUKS master key based on the luksmasterkey
+command line parameter.
 
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- arch/x86/include/asm/crash.h      |  1 +
- arch/x86/kernel/crash.c           | 42 ++++++++++++++++++++++++++++++-
- arch/x86/kernel/kexec-bzimage64.c |  7 ++++++
- include/linux/kexec.h             |  4 +++
- 4 files changed, 53 insertions(+), 1 deletion(-)
+ include/linux/crash_dump.h |  4 +++
+ kernel/crash_dump.c        | 69 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
 
-diff --git a/arch/x86/include/asm/crash.h b/arch/x86/include/asm/crash.h
-index 8b6bd63530dc..757374389296 100644
---- a/arch/x86/include/asm/crash.h
-+++ b/arch/x86/include/asm/crash.h
-@@ -4,6 +4,7 @@
+diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
+index 620821549b23..24acb84b716e 100644
+--- a/include/linux/crash_dump.h
++++ b/include/linux/crash_dump.h
+@@ -15,6 +15,8 @@
+ extern unsigned long long elfcorehdr_addr;
+ extern unsigned long long elfcorehdr_size;
  
- struct kimage;
++extern unsigned long long luks_master_key_addr;
++
+ #ifdef CONFIG_CRASH_DUMP
+ extern int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size);
+ extern void elfcorehdr_free(unsigned long long addr);
+@@ -32,6 +34,8 @@ extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
  
-+int crash_load_luks_key(struct kimage *image);
- int crash_load_segments(struct kimage *image);
- int crash_setup_memmap_entries(struct kimage *image,
- 		struct boot_params *params);
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e8326a8d1c5d..6d117da62da4 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -304,6 +304,7 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 				 unsigned long long mend)
- {
- 	unsigned long start, end;
-+	int r;
+ void vmcore_cleanup(void);
  
- 	cmem->ranges[0].start = mstart;
- 	cmem->ranges[0].end = mend;
-@@ -312,7 +313,19 @@ static int memmap_exclude_ranges(struct kimage *image, struct crash_mem *cmem,
- 	/* Exclude elf header region */
- 	start = image->elf_load_addr;
- 	end = start + image->elf_headers_sz - 1;
--	return crash_exclude_mem_range(cmem, start, end);
-+	r = crash_exclude_mem_range(cmem, start, end);
++int retrive_kdump_luks_master_key(u8 *buffer, unsigned int *sz);
 +
-+	if (r)
-+		return r;
-+
-+	/* Exclude LUKS master key region */
-+	if (image->luks_master_key_addr) {
-+		start = image->luks_master_key_addr;
-+		end = start + image->luks_master_key_sz - 1;
-+		return crash_exclude_mem_range(cmem, start, end);
-+	}
-+
-+	return r;
+ /* Architecture code defines this if there are other possible ELF
+  * machine types, e.g. on bi-arch capable hardware. */
+ #ifndef vmcore_elf_check_arch_cross
+diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
+index 92da32275af5..ee32de300b9e 100644
+--- a/kernel/crash_dump.c
++++ b/kernel/crash_dump.c
+@@ -15,6 +15,8 @@
+ unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
+ EXPORT_SYMBOL_GPL(elfcorehdr_addr);
+ 
++unsigned long long luks_master_key_addr;
++EXPORT_SYMBOL_GPL(luks_master_key_addr);
+ /*
+  * stores the size of elf header of crash image
+  */
+@@ -39,3 +41,70 @@ static int __init setup_elfcorehdr(char *arg)
+ 	return end > arg ? 0 : -EINVAL;
  }
- 
- /* Prepare memory map for crash dump kernel */
-@@ -383,6 +396,33 @@ int crash_setup_memmap_entries(struct kimage *image, struct boot_params *params)
- 	return ret;
- }
- 
-+int crash_load_luks_key(struct kimage *image)
+ early_param("elfcorehdr", setup_elfcorehdr);
++
++static int __init setup_luksmasterkey(char *arg)
 +{
-+	int ret;
-+	struct kexec_buf kbuf = { .image = image, .buf_min = 0,
-+				  .buf_max = ULONG_MAX, .top_down = false };
++	char *end;
 +
-+	image->luks_master_key_addr = 0;
-+	ret = kexec_pass_luks_master_key(&kbuf.buffer, &kbuf.bufsz);
-+	if (ret)
-+		return ret;
++	if (!arg)
++		return -EINVAL;
++	luks_master_key_addr = memparse(arg, &end);
++	if (end > arg)
++		return 0;
 +
-+	kbuf.memsz = kbuf.bufsz;
-+	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret) {
-+		vfree((void *)kbuf.buffer);
-+		return ret;
-+	}
-+	image->luks_master_key_addr = kbuf.mem;
-+	image->luks_master_key_sz = kbuf.bufsz;
-+	pr_debug("Loaded LUKS master key at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
-+		 image->luks_master_key_addr, kbuf.bufsz, kbuf.bufsz);
-+
-+	return ret;
++	luks_master_key_addr = 0;
++	return -EINVAL;
 +}
 +
- int crash_load_segments(struct kimage *image)
- {
- 	int ret;
-diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-index 170d0fd68b1f..64ea3b6a5768 100644
---- a/arch/x86/kernel/kexec-bzimage64.c
-+++ b/arch/x86/kernel/kexec-bzimage64.c
-@@ -76,6 +76,10 @@ static int setup_cmdline(struct kimage *image, struct boot_params *params,
- 	if (image->type == KEXEC_TYPE_CRASH) {
- 		len = sprintf(cmdline_ptr,
- 			"elfcorehdr=0x%lx ", image->elf_load_addr);
++early_param("luksmasterkey", setup_luksmasterkey);
 +
-+		if (image->luks_master_key_addr != 0)
-+			len += sprintf(cmdline_ptr + len,
-+					"luksmasterkey=0x%lx ", image->luks_master_key_addr);
- 	}
- 	memcpy(cmdline_ptr + len, cmdline, cmdline_len);
- 	cmdline_len += len;
-@@ -372,6 +376,9 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
- 		ret = crash_load_segments(image);
- 		if (ret)
- 			return ERR_PTR(ret);
-+		ret = crash_load_luks_key(image);
-+		if (ret)
-+			pr_debug("Either no LUKS master key or error to retrieve the LUKS master key\n");
- 	}
- 
- 	/*
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 91507bc684e2..456a5bc28518 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -316,6 +316,10 @@ struct kimage {
- 	void *elf_headers;
- 	unsigned long elf_headers_sz;
- 	unsigned long elf_load_addr;
++/*
++ * Architectures may override this function to read LUKS master key
++ */
++ssize_t __weak luks_key_read(char *buf, size_t count, u64 *ppos)
++{
++	return read_from_oldmem(buf, count, ppos, 0, false);
++}
 +
-+	/* LUKS master key buffer */
-+	unsigned long luks_master_key_addr;
-+	unsigned long luks_master_key_sz;
- };
- 
- /* kexec interface functions */
++int retrive_kdump_luks_master_key(u8 *buffer, unsigned int *sz)
++{
++	unsigned int key_size;
++	size_t lukskeybuf_sz;
++	unsigned int *size_ptr;
++	char *lukskeybuf;
++	u64 addr;
++	int r;
++
++	if (luks_master_key_addr == 0) {
++		pr_debug("LUKS master key memory address inaccessible");
++		return -EINVAL;
++	}
++
++	addr = luks_master_key_addr;
++
++	/* Read LUKS master key size */
++	r = luks_key_read((char *)&key_size, sizeof(unsigned int), &addr);
++
++	if (r < 0)
++		return r;
++
++	pr_debug("Retrieve LUKS master key: size=%u\n", key_size);
++	/* Read in LUKS maste rkey */
++	lukskeybuf_sz = sizeof(unsigned int) + key_size * sizeof(u8);
++	lukskeybuf = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
++					      get_order(lukskeybuf_sz));
++	if (!lukskeybuf)
++		return -ENOMEM;
++
++	addr = luks_master_key_addr;
++	r = luks_key_read((char *)lukskeybuf, lukskeybuf_sz, &addr);
++
++	if (r < 0)
++		return r;
++	size_ptr = (unsigned int *)lukskeybuf;
++	memcpy(buffer, size_ptr + 1, key_size * sizeof(u8));
++	pr_debug("Retrieve LUKS master key (size=%u): %48ph...\n", key_size, buffer);
++	*sz = key_size;
++	return 0;
++}
++EXPORT_SYMBOL(retrive_kdump_luks_master_key);
 -- 
 2.34.1
 
