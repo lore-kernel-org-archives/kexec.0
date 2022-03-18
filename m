@@ -1,69 +1,141 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 18 Mar 2022 11:27:09 +0800
-Subject: [RESEND PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
-In-Reply-To: <20220318024803.pkkwgknwur2y75mt@Rk>
-References: <20220304020341.85583-1-coiby.xu@gmail.com>
- <20220304020341.85583-2-coiby.xu@gmail.com>
- <YjMtb7u3/sAWG0/7@MiWiFi-R3L-srv>
- <20220318024803.pkkwgknwur2y75mt@Rk>
-Message-ID: <YjP8DTnAZbq646rF@MiWiFi-R3L-srv>
+From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
+Date: Fri, 18 Mar 2022 05:28:34 +0000
+Subject: [PATCH v2 2/4] makedumpfile: use pointer arithmetics for
+ dump_dmesg
+In-Reply-To: <20220314160432.9414-3-prudo@redhat.com>
+References: <20220314160432.9414-1-prudo@redhat.com>
+ <20220314160432.9414-3-prudo@redhat.com>
+Message-ID: <TYYPR01MB67772868FC17B774BA7CF9BEDD139@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 03/18/22 at 10:48am, Coiby Xu wrote:
-> On Thu, Mar 17, 2022 at 08:45:35PM +0800, Baoquan He wrote:
-> > On 03/04/22 at 10:03am, Coiby Xu wrote:
-> > > From: Coiby Xu <coxu@redhat.com>
-> > > 
-> > > commit 9ec4ecef0af7790551109283ca039a7c52de343c ("kexec_file,x86,
-> > > powerpc: factor out kexec_file_ops functions" allows implementing
-> > > the arch-specific implementation of kernel image verification
-> > > in kexec_file_ops->verify_sig. Currently, there is no arch-specific
-> > > implementation of arch_kexec_kernel_verify_sig. So clean it up.
-> > 
-> > This is a nice cleanup, while the log may need to be improved. You
-> > should run ./scripts/checkpatch.pl on your patch before sending out.
-> > When we refer to a commit in log, please refer to
-> > Documentation/process/submitting-patches.rst.
+-----Original Message-----
+> When parsing the printk buffer for the old printk mechanism (> v3.5.0+ and
+> < 5.10.0) a log entry is currently specified by the offset into the
+> buffer where the entry starts. Change this to use a pointers instead.
+> This is done in preparation for using the new cycle detection mechanism.
 > 
-> Thanks for the reminder! I've used git pre-commit hook to run
-> scripts/checkpatch.pl automatically but obviously this hook doesn't
-> apply to "git rebase --continue" and currently this no git hook that
-> for this situation. I'll use the following trick [1] to avoid this
-> mistake in the future,
->  $ git rebase -i HEAD~3 --reschedule-failed-exec --exec "git show | perl ./scripts/checkpatch.pl"
-
-Sorry, Coiby. It could be late yesterday so I was dizzy when writing
-down the comment, I didn't make my concern clear. What I meant is
-the referenced commit in log should be taken in a standard format.
-Abstracted one paragraph of Documentation/process/submitting-patches.rst
-here. We usually take the first 12 characters of the commit SHA-1 ID
-in log, but not the whole of them.
-
-=====
-If you want to refer to a specific commit, don't just refer to the
-SHA-1 ID of the commit. Please also include the oneline summary of
-the commit, to make it easier for reviewers to know what it is about.
-Example::
-
-        Commit e21d2170f36602ae2708 ("video: remove unnecessary
-        platform_set_drvdata()") removed the unnecessary
-        platform_set_drvdata(), but left the variable "dev" unused,
-        delete it.
-=====
-
-And the right parenthesis enclousing the commit subject is missing.
-
+> Signed-off-by: Philipp Rudo <prudo@redhat.com>
+> ---
+>  makedumpfile.c | 29 +++++++++++++----------------
+>  1 file changed, 13 insertions(+), 16 deletions(-)
 > 
-> [1] https://stackoverflow.com/a/70568833/1203522
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 7ed9756..9a05c96 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -5482,13 +5482,10 @@ dump_log_entry(char *logptr, int fp, const char *file_name)
+>   * get log record by index; idx must point to valid message.
+>   */
+>  static char *
+> -log_from_idx(unsigned int idx, char *logbuf)
+> +log_from_ptr(char *logptr, char *logbuf)
+>  {
+> -	char *logptr;
+>  	unsigned int msglen;
 > 
+> -	logptr = logbuf + idx;
+> -
+>  	/*
+>  	 * A length == 0 record is the end of buffer marker.
+>  	 * Wrap around and return the message at the start of
+> @@ -5502,14 +5499,13 @@ log_from_idx(unsigned int idx, char *logbuf)
+>  	return logptr;
+>  }
 > 
-> -- 
-> Best regards,
-> Coiby
+> -static long
+> -log_next(unsigned int idx, char *logbuf)
+> +static void *
+> +log_next(void *_logptr, void *_logbuf)
+>  {
+> -	char *logptr;
+> +	char *logptr = _logptr;
+> +	char *logbuf = _logbuf;
+>  	unsigned int msglen;
 > 
+> -	logptr = logbuf + idx;
+> -
 
+I added the following change to the log_from_ptr() and log_next() because of
+- assigning to the argument (possible but unusual)
+- the unnecessary local variables
+
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -5494,16 +5494,14 @@ log_from_ptr(char *logptr, char *logbuf)
+ 
+        msglen = USHORT(logptr + OFFSET(printk_log.len));
+        if (!msglen)
+-               logptr = logbuf;
++               return logbuf;
+ 
+        return logptr;
+ }
+ 
+ static void *
+-log_next(void *_logptr, void *_logbuf)
++log_next(void *logptr, void *logbuf)
+ {
+-       char *logptr = _logptr;
+-       char *logbuf = _logbuf;
+        unsigned int msglen;
+ 
+        /*
+
+Thanks,
+Kazu
+
+>  	/*
+>  	 * A length == 0 record is the end of buffer marker. Wrap around and
+>  	 * read the message at the start of the buffer as *this* one, and
+> @@ -5519,10 +5515,10 @@ log_next(unsigned int idx, char *logbuf)
+>  	msglen = USHORT(logptr + OFFSET(printk_log.len));
+>  	if (!msglen) {
+>  		msglen = USHORT(logbuf + OFFSET(printk_log.len));
+> -		return msglen;
+> +		return logbuf + msglen;
+>  	}
+> 
+> -	return idx + msglen;
+> +	return logptr + msglen;
+>  }
+> 
+>  int
+> @@ -5530,11 +5526,12 @@ dump_dmesg()
+>  {
+>  	int log_buf_len, length_log, length_oldlog, ret = FALSE;
+>  	unsigned long index, log_buf, log_end;
+> -	unsigned int idx, log_first_idx, log_next_idx;
+> +	unsigned int log_first_idx, log_next_idx;
+>  	unsigned long long first_idx_sym;
+>  	unsigned long log_end_2_6_24;
+>  	unsigned      log_end_2_6_25;
+>  	char *log_buffer = NULL, *log_ptr = NULL;
+> +	char *ptr;
+> 
+>  	/*
+>  	 * log_end has been changed to "unsigned" since linux-2.6.25.
+> @@ -5681,13 +5678,13 @@ dump_dmesg()
+>  			ERRMSG("Can't open output file.\n");
+>  			goto out;
+>  		}
+> -		idx = log_first_idx;
+> -		while (idx != log_next_idx) {
+> -			log_ptr = log_from_idx(idx, log_buffer);
+> +		ptr = log_buffer + log_first_idx;
+> +		while (ptr != log_buffer + log_next_idx) {
+> +			log_ptr = log_from_ptr(ptr, log_buffer);
+>  			if (!dump_log_entry(log_ptr, info->fd_dumpfile,
+>  					    info->name_dumpfile))
+>  				goto out;
+> -			idx = log_next(idx, log_buffer);
+> +			ptr = log_next(ptr, log_buffer);
+>  		}
+>  		if (!close_files_for_creating_dumpfile())
+>  			goto out;
+> --
+> 2.35.1
 
