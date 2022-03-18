@@ -1,49 +1,51 @@
 From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 18 Mar 2022 17:41:01 +0800
-Subject: [PATCH v4 3/3] arm64: kexec_file: use more system keyrings to verify
- kernel image signature
-In-Reply-To: <20220318094101.274950-1-coxu@redhat.com>
-References: <20220318094101.274950-1-coxu@redhat.com>
-Message-ID: <20220318094101.274950-4-coxu@redhat.com>
+Date: Fri, 18 Mar 2022 17:43:20 +0800
+Subject: [RESEND PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <YjRIqdAH2nV+DRgW@MiWiFi-R3L-srv>
+References: <20220304020341.85583-1-coiby.xu@gmail.com>
+ <20220304020341.85583-2-coiby.xu@gmail.com>
+ <YjMtb7u3/sAWG0/7@MiWiFi-R3L-srv>
+ <20220318024803.pkkwgknwur2y75mt@Rk>
+ <YjP8DTnAZbq646rF@MiWiFi-R3L-srv>
+ <20220318071824.yq3idr5eoogvtslb@Rk>
+ <YjRIqdAH2nV+DRgW@MiWiFi-R3L-srv>
+Message-ID: <20220318094320.aoia7yahtmy2hksp@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-This allows to verify arm64 kernel image signature using not only
-.builtin_trusted_keys but also .secondary_trusted_keys and .platform
-keyring.
+On Fri, Mar 18, 2022 at 04:54:01PM +0800, Baoquan He wrote:
+[...]
+>> Btw, checkpatch.pl seems to requires referring to a specific commit on
+>> the same line,
+>>
+>>     ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops functions")'
+>>     #6:     commit 9ec4ecef0af7 ("kexec_file,x86, powerpc: factor out
+>> kexec_file_ops
+>>     functions") allows implementing the arch-specific implementation of kernel
+>>     total: 1 errors, 0 warnings, 61 lines checked
+>>     NOTE: For some of the reported defects, checkpatch may be able to
+>>           mechanically convert to the typical style using --fix or --fix-inplace.
+>>     "[PATCH] kexec: clean up arch_kexec_kernel_verify_sig" has style problems, please review.
+>>     NOTE: If any of the errors are false positives, please report
+>>           them to the maintainer, see CHECKPATCH in MAINTAINERS.
+>>
+>> Is this a false positive?
+>
+>No, it's not. Youp probably copied the commit subject and modified it.
+>Please copy below two lines into your patch to replace and try again.
+>
+>commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
+>functions")
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- arch/arm64/kernel/kexec_image.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+Yes, you are right. I unintentionally changed the subject. I've sent 
+v4 to fix this commit reference issue and other checkpatch.pl warnings.
+Thanks!
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 9ec34690e255..51af1c22d6da 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -14,7 +14,6 @@
- #include <linux/kexec.h>
- #include <linux/pe.h>
- #include <linux/string.h>
--#include <linux/verification.h>
- #include <asm/byteorder.h>
- #include <asm/cpufeature.h>
- #include <asm/image.h>
-@@ -133,8 +132,7 @@ static void *image_load(struct kimage *image,
- #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
- static int image_verify_sig(const char *kernel, unsigned long kernel_len)
- {
--	return verify_pefile_signature(kernel, kernel_len, NULL,
--				       VERIFYING_KEXEC_PE_SIGNATURE);
-+	return kexec_kernel_verify_pe_sig(kernel, kernel_len);
- }
- #endif
- 
 -- 
-2.34.1
+Best regards,
+Coiby
 
 
