@@ -1,147 +1,104 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Fri, 18 Mar 2022 17:37:05 +0800
-Subject: [PATCH v4 3/4] vmcore: Convert read_from_oldmem() to take an iov_iter
+Date: Fri, 18 Mar 2022 17:37:06 +0800
+Subject: [PATCH v4 4/4] fs/proc/vmcore: Use iov_iter_count()
 In-Reply-To: <20220318093706.161534-1-bhe@redhat.com>
 References: <20220318093706.161534-1-bhe@redhat.com>
-Message-ID: <20220318093706.161534-4-bhe@redhat.com>
+Message-ID: <20220318093706.161534-5-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: "Matthew Wilcox (Oracle)" <willy@infradead.org>
+To replace open coded iter->count. This makes code cleaner.
 
-Remove the read_from_oldmem() wrapper introduced earlier and convert
-all the remaining callers to pass an iov_iter.
-
-Signed-off-by: Matthew Wilcox (Oracle) <willy@infradead.org>
-Reviewed-by: Christoph Hellwig <hch@lst.de>
-Acked-by: Baoquan He <bhe@redhat.com>
+Signed-off-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/crash_dump_64.c |  7 +++++-
- fs/proc/vmcore.c                | 40 +++++++++++++--------------------
- include/linux/crash_dump.h      | 10 ++++-----
- 3 files changed, 25 insertions(+), 32 deletions(-)
+ fs/proc/vmcore.c | 19 ++++++++++---------
+ 1 file changed, 10 insertions(+), 9 deletions(-)
 
-diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-index f922d51c9d1f..0fa87648e55c 100644
---- a/arch/x86/kernel/crash_dump_64.c
-+++ b/arch/x86/kernel/crash_dump_64.c
-@@ -55,6 +55,11 @@ ssize_t copy_oldmem_page_encrypted(struct iov_iter *iter, unsigned long pfn,
- 
- ssize_t elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0,
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
- 				cc_platform_has(CC_ATTR_GUEST_MEM_ENCRYPT));
- }
 diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index cebf49160ea5..4cbb8db7c507 100644
+index 4cbb8db7c507..ed58a7edc821 100644
 --- a/fs/proc/vmcore.c
 +++ b/fs/proc/vmcore.c
-@@ -127,7 +127,7 @@ static int open_vmcore(struct inode *inode, struct file *file)
- }
+@@ -319,21 +319,21 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 	u64 start;
+ 	struct vmcore *m = NULL;
  
- /* Reads a page from the oldmem device from given offset. */
--static ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
- 			 u64 *ppos, bool encrypted)
- {
- 	unsigned long pfn, offset;
-@@ -175,27 +175,6 @@ static ssize_t read_from_oldmem_iter(struct iov_iter *iter, size_t count,
- 	return read;
- }
+-	if (iter->count == 0 || *fpos >= vmcore_size)
++	if (!iov_iter_count(iter) || *fpos >= vmcore_size)
+ 		return 0;
  
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted)
--{
--	struct iov_iter iter;
--	struct iovec iov;
--	struct kvec kvec;
--
--	if (userbuf) {
--		iov.iov_base = (__force void __user *)buf;
--		iov.iov_len = count;
--		iov_iter_init(&iter, READ, &iov, 1, count);
--	} else {
--		kvec.iov_base = buf;
--		kvec.iov_len = count;
--		iov_iter_kvec(&iter, READ, &kvec, 1, count);
--	}
--
--	return read_from_oldmem_iter(&iter, count, ppos, encrypted);
--}
--
- /*
-  * Architectures may override this function to allocate ELF header in 2nd kernel
-  */
-@@ -215,7 +194,12 @@ void __weak elfcorehdr_free(unsigned long long addr)
-  */
- ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, false);
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos, false);
- }
+ 	iov_iter_truncate(iter, vmcore_size - *fpos);
  
- /*
-@@ -223,7 +207,13 @@ ssize_t __weak elfcorehdr_read(char *buf, size_t count, u64 *ppos)
-  */
- ssize_t __weak elfcorehdr_read_notes(char *buf, size_t count, u64 *ppos)
- {
--	return read_from_oldmem(buf, count, ppos, 0, cc_platform_has(CC_ATTR_MEM_ENCRYPT));
-+	struct kvec kvec = { .iov_base = buf, .iov_len = count };
-+	struct iov_iter iter;
-+
-+	iov_iter_kvec(&iter, READ, &kvec, 1, count);
-+
-+	return read_from_oldmem(&iter, count, ppos,
-+			cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- }
+ 	/* Read ELF core header */
+ 	if (*fpos < elfcorebuf_sz) {
+-		tsz = min(elfcorebuf_sz - (size_t)*fpos, iter->count);
++		tsz = min(elfcorebuf_sz - (size_t)*fpos, iov_iter_count(iter));
+ 		if (copy_to_iter(elfcorebuf + *fpos, tsz, iter) < tsz)
+ 			return -EFAULT;
+ 		*fpos += tsz;
+ 		acc += tsz;
  
- /*
-@@ -398,7 +388,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
- 					    m->offset + m->size - *fpos,
- 					    iter->count);
- 			start = m->paddr + *fpos - m->offset;
--			tmp = read_from_oldmem_iter(iter, tsz, &start,
-+			tmp = read_from_oldmem(iter, tsz, &start,
- 					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
- 			if (tmp < 0)
- 				return tmp;
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index a1cf7d5c03c7..0f3a656293b0 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -134,13 +134,11 @@ static inline int vmcore_add_device_dump(struct vmcoredd_data *data)
+ 		/* leave now if filled buffer already */
+-		if (iter->count == 0)
++		if (!iov_iter_count(iter))
+ 			return acc;
+ 	}
+ 
+@@ -354,7 +354,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 		/* Read device dumps */
+ 		if (*fpos < elfcorebuf_sz + vmcoredd_orig_sz) {
+ 			tsz = min(elfcorebuf_sz + vmcoredd_orig_sz -
+-				  (size_t)*fpos, iter->count);
++				  (size_t)*fpos, iov_iter_count(iter));
+ 			start = *fpos - elfcorebuf_sz;
+ 			if (vmcoredd_copy_dumps(iter, start, tsz))
+ 				return -EFAULT;
+@@ -363,13 +363,14 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 			acc += tsz;
+ 
+ 			/* leave now if filled buffer already */
+-			if (!iter->count)
++			if (!iov_iter_count(iter))
+ 				return acc;
+ 		}
  #endif /* CONFIG_PROC_VMCORE_DEVICE_DUMP */
  
- #ifdef CONFIG_PROC_VMCORE
--ssize_t read_from_oldmem(char *buf, size_t count,
--			 u64 *ppos, int userbuf,
--			 bool encrypted);
-+ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+			 u64 *ppos, bool encrypted);
- #else
--static inline ssize_t read_from_oldmem(char *buf, size_t count,
--				       u64 *ppos, int userbuf,
--				       bool encrypted)
-+static inline ssize_t read_from_oldmem(struct iov_iter *iter, size_t count,
-+				       u64 *ppos, bool encrypted)
- {
- 	return -EOPNOTSUPP;
- }
+ 		/* Read remaining elf notes */
+-		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos, iter->count);
++		tsz = min(elfcorebuf_sz + elfnotes_sz - (size_t)*fpos,
++			  iov_iter_count(iter));
+ 		kaddr = elfnotes_buf + *fpos - elfcorebuf_sz - vmcoredd_orig_sz;
+ 		if (copy_to_iter(kaddr, tsz, iter) < tsz)
+ 			return -EFAULT;
+@@ -378,7 +379,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 		acc += tsz;
+ 
+ 		/* leave now if filled buffer already */
+-		if (iter->count == 0)
++		if (!iov_iter_count(iter))
+ 			return acc;
+ 	}
+ 
+@@ -386,7 +387,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 		if (*fpos < m->offset + m->size) {
+ 			tsz = (size_t)min_t(unsigned long long,
+ 					    m->offset + m->size - *fpos,
+-					    iter->count);
++					    iov_iter_count(iter));
+ 			start = m->paddr + *fpos - m->offset;
+ 			tmp = read_from_oldmem(iter, tsz, &start,
+ 					cc_platform_has(CC_ATTR_MEM_ENCRYPT));
+@@ -396,7 +397,7 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
+ 			acc += tsz;
+ 
+ 			/* leave now if filled buffer already */
+-			if (iter->count == 0)
++			if (!iov_iter_count(iter))
+ 				return acc;
+ 		}
+ 	}
 -- 
 2.34.1
 
