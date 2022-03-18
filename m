@@ -1,130 +1,74 @@
 From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 18 Mar 2022 18:34:22 +0800
-Subject: [RFC 3/4] crash_dump: retrieve LUKS master key in kdump kernel
+Date: Fri, 18 Mar 2022 18:34:23 +0800
+Subject: [RFC 4/4] dm-crypt: reuse LUKS master key in kdump kernel
 In-Reply-To: <20220318103423.286410-1-coxu@redhat.com>
 References: <20220318103423.286410-1-coxu@redhat.com>
-Message-ID: <20220318103423.286410-4-coxu@redhat.com>
+Message-ID: <20220318103423.286410-5-coxu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-kdump will retrieve the LUKS master key based on the luksmasterkey
-command line parameter.
+When libcryptsetup passes key string starting with ":kdump", dm-crypt
+will interpret it as reusing the LUKS master key in kdump kernel.
 
 Signed-off-by: Coiby Xu <coxu@redhat.com>
 ---
- include/linux/crash_dump.h |  4 +++
- kernel/crash_dump.c        | 69 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
+ drivers/md/dm-crypt.c | 21 ++++++++++++++++-----
+ 1 file changed, 16 insertions(+), 5 deletions(-)
 
-diff --git a/include/linux/crash_dump.h b/include/linux/crash_dump.h
-index 620821549b23..24acb84b716e 100644
---- a/include/linux/crash_dump.h
-+++ b/include/linux/crash_dump.h
-@@ -15,6 +15,8 @@
- extern unsigned long long elfcorehdr_addr;
- extern unsigned long long elfcorehdr_size;
+diff --git a/drivers/md/dm-crypt.c b/drivers/md/dm-crypt.c
+index 41f9ca377312..f3986036ec40 100644
+--- a/drivers/md/dm-crypt.c
++++ b/drivers/md/dm-crypt.c
+@@ -42,6 +42,7 @@
  
-+extern unsigned long long luks_master_key_addr;
-+
- #ifdef CONFIG_CRASH_DUMP
- extern int elfcorehdr_alloc(unsigned long long *addr, unsigned long long *size);
- extern void elfcorehdr_free(unsigned long long addr);
-@@ -32,6 +34,8 @@ extern ssize_t copy_oldmem_page_encrypted(unsigned long pfn, char *buf,
+ #include <linux/device-mapper.h>
+ #include <linux/kexec.h>
++#include <linux/crash_dump.h>
  
- void vmcore_cleanup(void);
+ #include "dm-audit.h"
  
-+int retrive_kdump_luks_master_key(u8 *buffer, unsigned int *sz);
+@@ -2602,13 +2603,17 @@ static int crypt_set_key(struct crypt_config *cc, char *key)
+ {
+ 	int r = -EINVAL;
+ 	int key_string_len = strlen(key);
++	bool retrieve_kdump_key = false;
 +
- /* Architecture code defines this if there are other possible ELF
-  * machine types, e.g. on bi-arch capable hardware. */
- #ifndef vmcore_elf_check_arch_cross
-diff --git a/kernel/crash_dump.c b/kernel/crash_dump.c
-index 92da32275af5..ee32de300b9e 100644
---- a/kernel/crash_dump.c
-+++ b/kernel/crash_dump.c
-@@ -15,6 +15,8 @@
- unsigned long long elfcorehdr_addr = ELFCORE_ADDR_MAX;
- EXPORT_SYMBOL_GPL(elfcorehdr_addr);
++	if (is_kdump_kernel() && !strncmp(key, ":kdump", 5))
++		retrieve_kdump_key = true;
  
-+unsigned long long luks_master_key_addr;
-+EXPORT_SYMBOL_GPL(luks_master_key_addr);
- /*
-  * stores the size of elf header of crash image
-  */
-@@ -39,3 +41,70 @@ static int __init setup_elfcorehdr(char *arg)
- 	return end > arg ? 0 : -EINVAL;
- }
- early_param("elfcorehdr", setup_elfcorehdr);
-+
-+static int __init setup_luksmasterkey(char *arg)
-+{
-+	char *end;
-+
-+	if (!arg)
-+		return -EINVAL;
-+	luks_master_key_addr = memparse(arg, &end);
-+	if (end > arg)
-+		return 0;
-+
-+	luks_master_key_addr = 0;
-+	return -EINVAL;
-+}
-+
-+early_param("luksmasterkey", setup_luksmasterkey);
-+
-+/*
-+ * Architectures may override this function to read LUKS master key
-+ */
-+ssize_t __weak luks_key_read(char *buf, size_t count, u64 *ppos)
-+{
-+	return read_from_oldmem(buf, count, ppos, 0, false);
-+}
-+
-+int retrive_kdump_luks_master_key(u8 *buffer, unsigned int *sz)
-+{
-+	unsigned int key_size;
-+	size_t lukskeybuf_sz;
-+	unsigned int *size_ptr;
-+	char *lukskeybuf;
-+	u64 addr;
-+	int r;
-+
-+	if (luks_master_key_addr == 0) {
-+		pr_debug("LUKS master key memory address inaccessible");
-+		return -EINVAL;
+ 	/* Hyphen (which gives a key_size of zero) means there is no key. */
+-	if (!cc->key_size && strcmp(key, "-"))
++	if (!retrieve_kdump_key && !cc->key_size && strcmp(key, "-"))
+ 		goto out;
+ 
+ 	/* ':' means the key is in kernel keyring, short-circuit normal key processing */
+-	if (key[0] == ':') {
++	if (!retrieve_kdump_key && key[0] == ':') {
+ 		r = crypt_set_keyring_key(cc, key + 1);
+ 		goto out;
+ 	}
+@@ -2620,9 +2625,15 @@ static int crypt_set_key(struct crypt_config *cc, char *key)
+ 	kfree_sensitive(cc->key_string);
+ 	cc->key_string = NULL;
+ 
+-	/* Decode key from its hex representation. */
+-	if (cc->key_size && hex2bin(cc->key, key, cc->key_size) < 0)
+-		goto out;
++	if (retrieve_kdump_key) {
++		r = retrive_kdump_luks_master_key(cc->key, &cc->key_size);
++		if (r < 0)
++			goto out;
++	} else {
++		/* Decode key from its hex representation. */
++		if (cc->key_size && hex2bin(cc->key, key, cc->key_size) < 0)
++			goto out;
 +	}
-+
-+	addr = luks_master_key_addr;
-+
-+	/* Read LUKS master key size */
-+	r = luks_key_read((char *)&key_size, sizeof(unsigned int), &addr);
-+
-+	if (r < 0)
-+		return r;
-+
-+	pr_debug("Retrieve LUKS master key: size=%u\n", key_size);
-+	/* Read in LUKS maste rkey */
-+	lukskeybuf_sz = sizeof(unsigned int) + key_size * sizeof(u8);
-+	lukskeybuf = (void *)__get_free_pages(GFP_KERNEL | __GFP_ZERO,
-+					      get_order(lukskeybuf_sz));
-+	if (!lukskeybuf)
-+		return -ENOMEM;
-+
-+	addr = luks_master_key_addr;
-+	r = luks_key_read((char *)lukskeybuf, lukskeybuf_sz, &addr);
-+
-+	if (r < 0)
-+		return r;
-+	size_ptr = (unsigned int *)lukskeybuf;
-+	memcpy(buffer, size_ptr + 1, key_size * sizeof(u8));
-+	pr_debug("Retrieve LUKS master key (size=%u): %48ph...\n", key_size, buffer);
-+	*sz = key_size;
-+	return 0;
-+}
-+EXPORT_SYMBOL(retrive_kdump_luks_master_key);
+ 
+ 	r = crypt_setkey(cc);
+ 	if (!r)
 -- 
 2.34.1
 
