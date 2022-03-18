@@ -1,51 +1,80 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 18 Mar 2022 17:43:20 +0800
-Subject: [RESEND PATCH v3 1/3] kexec: clean up arch_kexec_kernel_verify_sig
-In-Reply-To: <YjRIqdAH2nV+DRgW@MiWiFi-R3L-srv>
-References: <20220304020341.85583-1-coiby.xu@gmail.com>
- <20220304020341.85583-2-coiby.xu@gmail.com>
- <YjMtb7u3/sAWG0/7@MiWiFi-R3L-srv>
- <20220318024803.pkkwgknwur2y75mt@Rk>
- <YjP8DTnAZbq646rF@MiWiFi-R3L-srv>
- <20220318071824.yq3idr5eoogvtslb@Rk>
- <YjRIqdAH2nV+DRgW@MiWiFi-R3L-srv>
-Message-ID: <20220318094320.aoia7yahtmy2hksp@Rk>
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 18 Mar 2022 18:25:54 +0800
+Subject: [PATCH v4 0/4] Convert vmcore to use an iov_iter
+In-Reply-To: <20220318093706.161534-1-bhe@redhat.com>
+References: <20220318093706.161534-1-bhe@redhat.com>
+Message-ID: <YjReMozc2vY4bn7K@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Mar 18, 2022 at 04:54:01PM +0800, Baoquan He wrote:
-[...]
->> Btw, checkpatch.pl seems to requires referring to a specific commit on
->> the same line,
->>
->>     ERROR: Please use git commit description style 'commit <12+ chars of sha1> ("<title line>")' - ie: 'commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops functions")'
->>     #6:     commit 9ec4ecef0af7 ("kexec_file,x86, powerpc: factor out
->> kexec_file_ops
->>     functions") allows implementing the arch-specific implementation of kernel
->>     total: 1 errors, 0 warnings, 61 lines checked
->>     NOTE: For some of the reported defects, checkpatch may be able to
->>           mechanically convert to the typical style using --fix or --fix-inplace.
->>     "[PATCH] kexec: clean up arch_kexec_kernel_verify_sig" has style problems, please review.
->>     NOTE: If any of the errors are false positives, please report
->>           them to the maintainer, see CHECKPATCH in MAINTAINERS.
->>
->> Is this a false positive?
->
->No, it's not. Youp probably copied the commit subject and modified it.
->Please copy below two lines into your patch to replace and try again.
->
->commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
->functions")
+Forgot adding Andrew to CC, add him.
 
-Yes, you are right. I unintentionally changed the subject. I've sent 
-v4 to fix this commit reference issue and other checkpatch.pl warnings.
-Thanks!
-
--- 
-Best regards,
-Coiby
+On 03/18/22 at 05:37pm, Baoquan He wrote:
+> Copy the description of v3 cover letter from Willy:
+> ===
+> For some reason several people have been sending bad patches to fix
+> compiler warnings in vmcore recently.  Here's how it should be done.
+> Compile-tested only on x86.  As noted in the first patch, s390 should
+> take this conversion a bit further, but I'm not inclined to do that
+> work myself.
+> 
+> This series resends Willy's v3 patches which includes patch 1~3, and
+> append one patch to clean up the open code pointed out by Al.
+> 
+> Al's concerns to v3 patches and my reply after investigation:
+> https://lore.kernel.org/all/YhiTN0MORoQmFFkO at MiWiFi-R3L-srv/T/#u
+> 
+> Willy's v3 patchset:
+> [PATCH v3 0/3] Convert vmcore to use an iov_iter
+> https://lore.kernel.org/all/20211213143927.3069508-1-willy at infradead.org/T/#u
+> 
+> Changelog:
+> ===
+> v4:
+>  - Append one patch to replace the open code with iov_iter_count().
+>    This is suggested by Al.
+>  - Fix a indentation error by replacing space with tab in
+>    arch/sh/kernel/crash_dump.c of patch 1 reported by checkpatch. The
+>    rest of patch 1~3 are untouched.
+>  - Add Christopy's Reviewed-by and my Acked-by for patch 1~3.
+> v3:
+>  - Send the correct patches this time
+> v2:
+>  - Removed unnecessary kernel-doc
+>  - Included uio.h to fix compilation problems
+>  - Made read_from_oldmem_iter static to avoid compile warnings during the
+>    conversion
+>  - Use iov_iter_truncate() (Christoph)
+> 
+> 
+> 
+> Baoquan He (1):
+>   fs/proc/vmcore: Use iov_iter_count()
+> 
+> Matthew Wilcox (Oracle) (3):
+>   vmcore: Convert copy_oldmem_page() to take an iov_iter
+>   vmcore: Convert __read_vmcore to use an iov_iter
+>   vmcore: Convert read_from_oldmem() to take an iov_iter
+> 
+>  arch/arm/kernel/crash_dump.c     |  27 +------
+>  arch/arm64/kernel/crash_dump.c   |  29 +------
+>  arch/ia64/kernel/crash_dump.c    |  32 +-------
+>  arch/mips/kernel/crash_dump.c    |  27 +------
+>  arch/powerpc/kernel/crash_dump.c |  35 ++-------
+>  arch/riscv/kernel/crash_dump.c   |  26 +------
+>  arch/s390/kernel/crash_dump.c    |  13 ++--
+>  arch/sh/kernel/crash_dump.c      |  29 ++-----
+>  arch/x86/kernel/crash_dump_32.c  |  29 +------
+>  arch/x86/kernel/crash_dump_64.c  |  48 ++++--------
+>  fs/proc/vmcore.c                 | 130 +++++++++++++------------------
+>  include/linux/crash_dump.h       |  19 ++---
+>  12 files changed, 123 insertions(+), 321 deletions(-)
+> 
+> -- 
+> 2.34.1
+> 
 
 
