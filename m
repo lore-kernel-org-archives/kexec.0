@@ -1,58 +1,117 @@
-From: 'Baoquan He' <bhe@redhat.com>
-Date: Mon, 21 Mar 2022 11:54:50 +0800
-Subject: [PATCH v4 4/4] fs/proc/vmcore: Use iov_iter_count()
-In-Reply-To: <1592a861bd9e46e5adf1431ad6bbd25c@AcuMS.aculab.com>
-References: <20220318093706.161534-1-bhe@redhat.com>
- <20220318093706.161534-5-bhe@redhat.com>
- <1592a861bd9e46e5adf1431ad6bbd25c@AcuMS.aculab.com>
-Message-ID: <Yjf3CivCFMNE/Hbs@MiWiFi-R3L-srv>
+From: Baoquan He <bhe@redhat.com>
+Date: Mon, 21 Mar 2022 12:21:33 +0800
+Subject: [PATCH v4 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <20220318094101.274950-2-coxu@redhat.com>
+References: <20220318094101.274950-1-coxu@redhat.com>
+ <20220318094101.274950-2-coxu@redhat.com>
+Message-ID: <Yjf9TbBo5ysjM7Nl@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi David,
+On 03/18/22 at 05:40pm, Coiby Xu wrote:
+> Commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
+> functions") allows implementing the arch-specific implementation of kernel
+> image verification in kexec_file_ops->verify_sig. Currently, there is no
 
-On 03/18/22 at 01:48pm, David Laight wrote:
-> From: Baoquan He
-> > Sent: 18 March 2022 09:37
-> > 
-> > To replace open coded iter->count. This makes code cleaner.
-> ...
-> > diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> > index 4cbb8db7c507..ed58a7edc821 100644
-> > --- a/fs/proc/vmcore.c
-> > +++ b/fs/proc/vmcore.c
-> > @@ -319,21 +319,21 @@ static ssize_t __read_vmcore(struct iov_iter *iter, loff_t *fpos)
-> >  	u64 start;
-> >  	struct vmcore *m = NULL;
-> > 
-> > -	if (iter->count == 0 || *fpos >= vmcore_size)
-> > +	if (!iov_iter_count(iter) || *fpos >= vmcore_size)
+Looking back at the old commit 9ec4ecef0af7, it mistakenly added a
+generic arch_kexec_kernel_verify_sig() which is marked as __weak,
+and expects any architecture will add a arch specified version if needed. 
+In fact those arch specified difference has been removed by wrapping
+them into each architecture's own struct kexec_file_ops methods. Means
+in the commit, the generic arch_kexec_kernel_verify_sig() is unnecessary
+at all.
+
+Now, you clean up that uncessary function with code change.
+
+I think description telling above analysis could be clearer. 
+
+> arch-specific implementation of arch_kexec_kernel_verify_sig. So clean it
+> up.
 > 
-> For some definition of 'cleaner' :-)
+> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/kexec.h |  4 ----
+>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
+>  2 files changed, 13 insertions(+), 25 deletions(-)
 > 
-> iter->count is clearly a simple, cheap structure member lookup.
-> OTOH iov_iter_count(iter) might be an expensive traversal of
-> the vector (or worse).
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..755fed183224 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+>  				 const Elf_Shdr *relsec,
+>  				 const Elf_Shdr *symtab);
+>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> -#ifdef CONFIG_KEXEC_SIG
+> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -				 unsigned long buf_len);
+> -#endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 8347fc158d2b..3720435807eb 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
+>  }
+>  
+> -#ifdef CONFIG_KEXEC_SIG
+> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+> -					  unsigned long buf_len)
+> -{
+> -	if (!image->fops || !image->fops->verify_sig) {
+> -		pr_debug("kernel loader does not support signature verification.\n");
+> -		return -EKEYREJECTED;
+> -	}
+> -
+> -	return image->fops->verify_sig(buf, buf_len);
+> -}
+> -
+> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -					unsigned long buf_len)
+> -{
+> -	return kexec_image_verify_sig_default(image, buf, buf_len);
+> -}
+> -#endif
+> -
+>  /*
+>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>   * @pi:		Purgatory to be relocated.
+> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_SIG
+> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
+> +		unsigned long buf_len)
+> +{
+> +	if (!image->fops || !image->fops->verify_sig) {
+> +		pr_debug("kernel loader does not support signature verification.\n");
+> +		return -EKEYREJECTED;
+> +	}
+> +
+> +	return image->fops->verify_sig(buf, buf_len);
+> +}
+> +
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+>  	int ret;
+>  
+> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+> -					   image->kernel_buf_len);
+> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
+> +			image->kernel_buf_len);
+>  	if (ret) {
+>  
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -- 
+> 2.34.1
 > 
-> So a quick read of the code by someone who isn't an expert
-> in the iov functions leaves them wondering what is going on
-> or having to spend time locating the definition ...
-
-Thanks for reviewing and looking into this.
-
-People may have the same feeling as you when looking at codes at the
-first glance. While usually we all use editor to explore codes, so.
-
-Basically, I noticed putting open code into wrapper is a tendency, see a
-lot of patches to clean up open code in sub component. About the extra
-cost of wrapper, I believe it does have. It should be one of reasons
-in some places open code is necessary. However, in fs/proc/vmcore, I
-don't have the worry since it's very tiny and can be ignorable.
-
-Thanks
-Baoquan
 
 
