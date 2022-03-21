@@ -1,71 +1,44 @@
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Mon, 21 Mar 2022 13:34:22 +0530
-Subject: [RFC v3 PATCH 5/5] powerpc/crash hp: add crash hotplug support for
- kexec_load
-In-Reply-To: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
-References: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
-Message-ID: <20220321080422.56255-6-sourabhjain@linux.ibm.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Mon, 21 Mar 2022 16:28:07 +0800
+Subject: [PATCH v4 0/3] use more system keyrings to verify arm64 kdump
+ kernel image signature
+In-Reply-To: <Yjf+GwHNHxuUvFrf@MiWiFi-R3L-srv>
+References: <20220318094101.274950-1-coxu@redhat.com>
+ <Yjf+GwHNHxuUvFrf@MiWiFi-R3L-srv>
+Message-ID: <20220321082807.eq7g3qgkbtdw6sre@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The kernel changes needed to add support for crash hotplug support for
-kexec_load system calls are similar to kexec_file_load (which has already
-been implemented in earlier patches). Since kexec segment array is
-prepared by kexec tool in the userspace, the kernel does aware of which
-index FDT segment is present.
+Hi Baoquan,
 
-The only change was done to enabled crash hotplug support for kexec_load is
-updated the crash hotplug handler to identify the FDT segment from kexec
-segment array.
+On Mon, Mar 21, 2022 at 12:24:59PM +0800, Baoquan He wrote:
+>Hi Coiby,
+>
+>On 03/18/22 at 05:40pm, Coiby Xu wrote:
+>> This patch set allows arm64 to use more system keyrings to verify kdump
+>> kernel image signature by making the existing code in x64 public.
+>
+>Could you tell more about why arm64 need use more system keyrings to
+>verify kdump kernel iamge signature?
+>
+>What problem have you encountered to make you want to do this?
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/kexec/core_64.c | 21 ++++++++++++++++++++-
- 1 file changed, 20 insertions(+), 1 deletion(-)
+Thanks for raising this question! Currently, a problem faced by arm64 is
+if a kernel image is signed by a MOK key, this kernel image would be
+rejected with the error "Lockdown: kexec: kexec of unsigned images is
+restricted; see man kernel_lockdown.7". I'll improve the cover letter
+and the 3rd commit message to have this info.
 
-diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-index a470fe6904e3..2c248dfb169b 100644
---- a/arch/powerpc/kexec/core_64.c
-+++ b/arch/powerpc/kexec/core_64.c
-@@ -480,7 +480,9 @@ int update_cpus_node(void *fdt)
- void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
- 				unsigned long a, unsigned long b)
- {
--	void *fdt;
-+	void *fdt, *ptr;
-+	unsigned int n;
-+	unsigned long mem, memsz;
- 
- 	/* No action needed for CPU hot-unplug */
- 	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-@@ -492,6 +494,23 @@ void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
- 		return;
- 	}
- 
-+	/* Sine kexec segments for kexec_load system call is prepred by
-+	 * kexec tool in userspace we need loop through all the segments
-+	 * to find out segment index corresponds FDT segment. In case of
-+	 * kexec_file_load it is discovered during the load itself.
-+	 */
-+	if (!image->arch.fdt_index_valid) {
-+		for (n = 0; n < image->nr_segments; n++) {
-+			mem = image->segment[n].mem;
-+			memsz = image->segment[n].memsz;
-+			ptr = __va(mem);
-+			if (ptr && fdt_magic(ptr) == FDT_MAGIC) {
-+				image->arch.fdt_index = n;
-+				image->arch.fdt_index_valid = true;
-+			}
-+		}
-+	}
-+
- 	/* Must have valid FDT index */
- 	if (!image->arch.fdt_index_valid) {
- 		pr_err("crash hp: unable to locate FDT segment");
+>
+>Thanks
+>Baoquan
+>
+
 -- 
-2.35.1
+Best regards,
+Coiby
 
 
