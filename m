@@ -1,52 +1,83 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Mon, 21 Mar 2022 16:35:08 +0800
-Subject: [PATCH v4 0/3] use more system keyrings to verify arm64 kdump
- kernel image signature
-In-Reply-To: <20220321082807.eq7g3qgkbtdw6sre@Rk>
-References: <20220318094101.274950-1-coxu@redhat.com>
- <Yjf+GwHNHxuUvFrf@MiWiFi-R3L-srv>
- <20220321082807.eq7g3qgkbtdw6sre@Rk>
-Message-ID: <Yjg4vGYnN2kpSDK8@MiWiFi-R3L-srv>
+Date: Mon, 21 Mar 2022 19:59:40 +0800
+Subject: [PATCH v5 2/8] x86/crash hp: Introduce CRASH_HOTPLUG
+ configuration options
+In-Reply-To: <20220303162725.49640-3-eric.devolder@oracle.com>
+References: <20220303162725.49640-1-eric.devolder@oracle.com>
+ <20220303162725.49640-3-eric.devolder@oracle.com>
+Message-ID: <20220321115940.GA354864@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 03/21/22 at 04:28pm, Coiby Xu wrote:
-> Hi Baoquan,
+On 03/03/22 at 11:27am, Eric DeVolder wrote:
+> Support for CPU and memory hotplug for crash is controlled by the
+> CRASH_HOTPLUG configuration option, introduced by this patch.
 > 
-> On Mon, Mar 21, 2022 at 12:24:59PM +0800, Baoquan He wrote:
-> > Hi Coiby,
-> > 
-> > On 03/18/22 at 05:40pm, Coiby Xu wrote:
-> > > This patch set allows arm64 to use more system keyrings to verify kdump
-> > > kernel image signature by making the existing code in x64 public.
-> > 
-> > Could you tell more about why arm64 need use more system keyrings to
-> > verify kdump kernel iamge signature?
-> > 
-> > What problem have you encountered to make you want to do this?
+> The CRASH_HOTPLUG_ELFCOREHDR_SZ related configuration option is
+> also introduced with this patch.
+
+Maybe can rephrase it as:
+
+x86/crash: Introduce new options to support cpu and memory hotplug of crash
+ 
+CRASH_HOTPLUG is to enable cpu and memory hotplug of crash.
+
+CRASH_HOTPLUG_ELFCOREHDR_SZ is used to Specify the maximum size of
+the elfcorehdr buffer/segment.
+ 
+This is a preparation for later usage.
+
+Otherwise, this looks good to me.
+
+
 > 
-> Thanks for raising this question! Currently, a problem faced by arm64 is
-> if a kernel image is signed by a MOK key, this kernel image would be
-> rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> restricted; see man kernel_lockdown.7". I'll improve the cover letter
-> and the 3rd commit message to have this info.
-
-Thanks for the effort, Coiby.
-
-Usually, when we post patch to solve issues, or improve, we had better
-tell
-
-1) what problem we encounter;
-2) why the problem happened, what is the root cause after investigation and analysis;
-3) how you fix it;
-
-The 1) and 2) are very important to help reviewer understand what's
-going on, and why this patch is needed. As you can see, in this
-patchset, only 3) is presented.
-
-Cheers
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 9f5bd41bf660..37eb26563f07 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2061,6 +2061,32 @@ config CRASH_DUMP
+>  	  (CONFIG_RELOCATABLE=y).
+>  	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>  
+> +config CRASH_HOTPLUG
+> +	bool "kernel updates of crash elfcorehdr"
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
+> +	help
+> +	  Enable the kernel to update the crash elfcorehdr (which contains
+> +	  the list of CPUs and memory regions) directly when hot plug/unplug
+> +	  of CPUs or memory. Otherwise userspace must monitor these hot
+> +	  plug/unplug change notifications via udev in order to
+> +	  unload-then-reload the crash kernel so that the list of CPUs and
+> +	  memory regions is kept up-to-date. Note that the udev CPU and
+> +	  memory change notifications still occur (however, userspace is not
+> +	  required to monitor for crash dump purposes).
+> +
+> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+> +	depends on CRASH_HOTPLUG
+> +	int
+> +	default 131072
+> +	help
+> +	  Specify the maximum size of the elfcorehdr buffer/segment.
+> +	  The 128KiB default is sized so that it can accommodate 2048
+> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
+> +	  region of memory.
+> +	  For example, this size can accommodate a machine with up to 1024
+> +	  CPUs and up to 1024 memory regions, eg. as represented by the
+> +	  'System RAM' entries in /proc/iomem.
+> +
+>  config KEXEC_JUMP
+>  	bool "kexec jump"
+>  	depends on KEXEC && HIBERNATION
+> -- 
+> 2.27.0
+> 
 
 
