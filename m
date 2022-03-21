@@ -1,183 +1,244 @@
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Mon, 21 Mar 2022 13:34:17 +0530
-Subject: [RFC v3 PATCH 0/5] In kernel handling of CPU hotplug events for crash
- kernel
-Message-ID: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
+Date: Mon, 21 Mar 2022 13:34:18 +0530
+Subject: [RFC v3 PATCH 1/5] powerpc/kexec: make update_cpus_node non-static
+In-Reply-To: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
+References: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
+Message-ID: <20220321080422.56255-2-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-This patch series implements the crash hotplug handler on PowerPC introduced
-by https://lkml.org/lkml/2022/3/3/674 patch series.
+Make the update_cpus_node function non-static and export it for
+usage in other kexec components.
 
+The update_cpus_node definition is moved to core_64.c so that it
+can be used with both kexec_load and kexec_file_load system calls.
 
-The Problem:
-============
-Post hotplug/DLPAR events the capture kernel holds stale information about the
-system. Dump collection with stale capture kernel might end up in dump capture
-failure or an inaccurate dump collection.
-
-
-Existing solution:
-==================
-The existing solution to keep the capture kernel up-to-date is observe the
-hotplug event via udev rule and trigger a full capture kernel reload post
-hotplug event. 
-
-Shortcomings:
-------------------------------------------------
-- Leaves a window where kernel crash might not lead to successful dump
-  collection.
-- Reloading all kexec components for each hotplug is inefficient. Since only
-  one or two kexec components need to be updated due to hotplug event reloading
-  all kexec component is redundant.
-- udev rules are prone to races if hotplug events are frequent.
-
-More about issues with an existing solution is posted here:
- - https://lkml.org/lkml/2020/12/14/532
- - https://lists.ozlabs.org/pipermail/linuxppc-dev/2022-February/240254.html
-
-Proposed Solution:
-==================
-Instead of reloading all kexec segments on hotplug event, this patch series
-focuses on updating only the relevant kexec segment. Once the kexec
-segments are loaded in the kernel reserved area then an arch-specific hotplug handler
-will update the relevant kexec segment based on hotplug event type.
-
-As mentioned above this patch series implemented a PowerPC crash hotplug
-handler for the CPU. The crash hotplug handler memory is in our TODO list.
-
-
-A couple of minor changes are required to realize the benefit of the patch
-series:
-
-- disalble the udev rule:
-
-  comment out the below line in kdump udev rule file:
-  RHEL: /usr/lib/udev/rules.d/98-kexec.rules
-  # SUBSYSTEM=="cpu", ACTION=="online", GOTO="kdump_reload_cpu"
-
-- kexec tool needs to be updated with patch for kexec_load system call
-  to work (not needed if -s option is used during kexec panic load):
-
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 ---
-diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-index 695b8b0..1dc6490 100644
---- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-+++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-@@ -45,6 +45,29 @@ uint64_t initrd_base, initrd_size;
- unsigned char reuse_initrd = 0;
- const char *ramdisk;
+ arch/powerpc/include/asm/kexec.h  |  1 +
+ arch/powerpc/kexec/core_64.c      | 88 +++++++++++++++++++++++++++++++
+ arch/powerpc/kexec/file_load_64.c | 87 ------------------------------
+ 3 files changed, 89 insertions(+), 87 deletions(-)
+
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 8ebdd23d987c..e1288826e22e 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -127,6 +127,7 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
+ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ 			unsigned long initrd_load_addr,
+ 			unsigned long initrd_len, const char *cmdline);
++int update_cpus_node(void *fdt);
+ #endif /* CONFIG_PPC64 */
  
-+#define MAX_CORE 256
-+#define PER_CORE_NODE_SIZE 1500
-+
+ #endif /* CONFIG_KEXEC_FILE */
+diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+index 635b5fc30b53..249d2632526d 100644
+--- a/arch/powerpc/kexec/core_64.c
++++ b/arch/powerpc/kexec/core_64.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/cpu.h>
+ #include <linux/hardirq.h>
++#include <linux/libfdt.h>
+ 
+ #include <asm/page.h>
+ #include <asm/current.h>
+@@ -378,6 +379,93 @@ void default_machine_kexec(struct kimage *image)
+ 	/* NOTREACHED */
+ }
+ 
 +/**
-+ * get_crash_fdt_mem_sz() - calcuate mem size for crash kernel FDT
-+ * @fdt: pointer to crash kernel FDT
++ * add_node_props - Reads node properties from device node structure and add
++ *                  them to fdt.
++ * @fdt:            Flattened device tree of the kernel
++ * @node_offset:    offset of the node to add a property at
++ * @dn:             device node pointer
 + *
-+ * Calculate the buffer space needed to add more CPU nodes in FDT after
-+ * capture kenrel load due to hot add events.
-+ *
-+ * Some assumption are made to calculate the additional buffer size needed
-+ * to accommodate future hot add CPUs to the crash FDT. The maximum core count
-+ * in the system would not go beyond MAX_CORE and memory needed to store per core
-+ * date in FDT is PER_CORE_NODE_SIZE.
-+ *
-+ * Certainly MAX_CORE count can be replaced with possible core count and
-+ * PER_CORE_NODE_SIZE to some standard value instead of randomly observed
-+ * core size value on Power9 LPAR.
++ * Returns 0 on success, negative errno on error.
 + */
-+static unsigned int get_crash_fdt_mem_sz(void *fdt) {
-+	return fdt_totalsize(fdt) + (PER_CORE_NODE_SIZE * MAX_CORE);
++static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
++{
++	int ret = 0;
++	struct property *pp;
++
++	if (!dn)
++		return -EINVAL;
++
++	for_each_property_of_node(dn, pp) {
++		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
++		if (ret < 0) {
++			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
++			return ret;
++		}
++	}
++	return ret;
 +}
 +
- int elf_ppc64_probe(const char *buf, off_t len)
- {
- 	struct mem_ehdr ehdr;
-@@ -179,6 +202,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	uint64_t max_addr, hole_addr;
- 	char *seg_buf = NULL;
- 	off_t seg_size = 0;
-+	unsigned int mem_sz = 0;
- 	struct mem_phdr *phdr;
- 	size_t size;
- #ifdef NEED_RESERVE_DTB
-@@ -329,7 +353,13 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
- 	if (result < 0)
- 		return result;
- 
--	my_dt_offset = add_buffer(info, seg_buf, seg_size, seg_size,
-+	if (info->kexec_flags & KEXEC_ON_CRASH) {
-+		mem_sz = get_crash_fdt_mem_sz((void *)seg_buf);
-+		fdt_set_totalsize(seg_buf, mem_sz);
-+		info->fdt_index = info->nr_segments;
++/**
++ * update_cpus_node - Update cpus node of flattened device tree using of_root
++ *                    device node.
++ * @fdt:              Flattened device tree of the kernel.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int update_cpus_node(void *fdt)
++{
++	struct device_node *cpus_node, *dn;
++	int cpus_offset, cpus_subnode_offset, ret = 0;
++
++	cpus_offset = fdt_path_offset(fdt, "/cpus");
++	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
++		pr_err("Malformed device tree: error reading /cpus node: %s\n",
++		       fdt_strerror(cpus_offset));
++		return cpus_offset;
 +	}
 +
-+	my_dt_offset = add_buffer(info, seg_buf, seg_size, mem_sz,
- 				0, 0, max_addr, -1);
- 
- #ifdef NEED_RESERVE_DTB
-diff --git a/kexec/kexec.c b/kexec/kexec.c
-index f63b36b..846b1a8 100644
---- a/kexec/kexec.c
-+++ b/kexec/kexec.c
-@@ -672,6 +672,9 @@ static void update_purgatory(struct kexec_info *info)
- 		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
- 			continue;
- 		}
-+		if (info->fdt_index == i)
-+			continue;
++	if (cpus_offset > 0) {
++		ret = fdt_del_node(fdt, cpus_offset);
++		if (ret < 0) {
++			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
++			return -EINVAL;
++		}
++	}
 +
- 		sha256_update(&ctx, info->segment[i].buf,
- 			      info->segment[i].bufsz);
- 		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
-diff --git a/kexec/kexec.h b/kexec/kexec.h
-index 595dd68..0906a1b 100644
---- a/kexec/kexec.h
-+++ b/kexec/kexec.h
-@@ -169,6 +169,7 @@ struct kexec_info {
- 	int command_line_len;
++	/* Add cpus node to fdt */
++	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
++	if (cpus_offset < 0) {
++		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
++		return -EINVAL;
++	}
++
++	/* Add cpus node properties */
++	cpus_node = of_find_node_by_path("/cpus");
++	ret = add_node_props(fdt, cpus_offset, cpus_node);
++	of_node_put(cpus_node);
++	if (ret < 0)
++		return ret;
++
++	/* Loop through all subnodes of cpus and add them to fdt */
++	for_each_node_by_type(dn, "cpu") {
++		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
++		if (cpus_subnode_offset < 0) {
++			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
++			       fdt_strerror(cpus_subnode_offset));
++			ret = cpus_subnode_offset;
++			goto out;
++		}
++
++		ret = add_node_props(fdt, cpus_subnode_offset, dn);
++		if (ret < 0)
++			goto out;
++	}
++out:
++	of_node_put(dn);
++	return ret;
++}
++
+ #ifdef CONFIG_PPC_64S_HASH_MMU
+ /* Values we need to export to the second kernel via the device tree. */
+ static unsigned long htab_base;
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 07da6bf1cf24..57f991b0a9da 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -951,93 +951,6 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+ 	return (unsigned int)(usm_entries * sizeof(u64));
+ }
  
- 	int skip_checks;
-+       // Given that we might need to update mutliple kexec segments
-+       // then having array to keep indexes of all hotplug kexec segments
-+       // will be helpful.
-+	unsigned int fdt_index;
- };
- 
- struct arch_map_entry {
----
-
----
-Changelog:
-
-v1 -> v2:
-  - Use generic hotplug handler introduced by https://lkml.org/lkml/2022/2/9/1406, a
-    significant change from v1.
-
-v2 -> v3
-  - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
-  - Rebase patche on top of https://lkml.org/lkml/2022/3/3/674 [v5]
-  - Fixed warning reported by checpatch script
----
-
-Sourabh Jain (5):
-  powerpc/kexec: make update_cpus_node non-static
-  powerpc/crash hp: introduce a new config option CRASH_HOTPLUG
-  powrepc/crash hp: update kimage struct
-  powerpc/crash hp: add crash hotplug support for kexec_file_load
-  powerpc/crash hp: add crash hotplug support for kexec_load
-
- arch/powerpc/Kconfig              |  11 +++
- arch/powerpc/include/asm/kexec.h  |   3 +
- arch/powerpc/kexec/core_64.c      | 153 ++++++++++++++++++++++++++++++
- arch/powerpc/kexec/elf_64.c       |  40 ++++++++
- arch/powerpc/kexec/file_load_64.c |  87 -----------------
- 5 files changed, 207 insertions(+), 87 deletions(-)
-
+-/**
+- * add_node_props - Reads node properties from device node structure and add
+- *                  them to fdt.
+- * @fdt:            Flattened device tree of the kernel
+- * @node_offset:    offset of the node to add a property at
+- * @dn:             device node pointer
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
+-{
+-	int ret = 0;
+-	struct property *pp;
+-
+-	if (!dn)
+-		return -EINVAL;
+-
+-	for_each_property_of_node(dn, pp) {
+-		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
+-		if (ret < 0) {
+-			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
+-			return ret;
+-		}
+-	}
+-	return ret;
+-}
+-
+-/**
+- * update_cpus_node - Update cpus node of flattened device tree using of_root
+- *                    device node.
+- * @fdt:              Flattened device tree of the kernel.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int update_cpus_node(void *fdt)
+-{
+-	struct device_node *cpus_node, *dn;
+-	int cpus_offset, cpus_subnode_offset, ret = 0;
+-
+-	cpus_offset = fdt_path_offset(fdt, "/cpus");
+-	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
+-		pr_err("Malformed device tree: error reading /cpus node: %s\n",
+-		       fdt_strerror(cpus_offset));
+-		return cpus_offset;
+-	}
+-
+-	if (cpus_offset > 0) {
+-		ret = fdt_del_node(fdt, cpus_offset);
+-		if (ret < 0) {
+-			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
+-			return -EINVAL;
+-		}
+-	}
+-
+-	/* Add cpus node to fdt */
+-	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
+-	if (cpus_offset < 0) {
+-		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
+-		return -EINVAL;
+-	}
+-
+-	/* Add cpus node properties */
+-	cpus_node = of_find_node_by_path("/cpus");
+-	ret = add_node_props(fdt, cpus_offset, cpus_node);
+-	of_node_put(cpus_node);
+-	if (ret < 0)
+-		return ret;
+-
+-	/* Loop through all subnodes of cpus and add them to fdt */
+-	for_each_node_by_type(dn, "cpu") {
+-		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
+-		if (cpus_subnode_offset < 0) {
+-			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
+-			       fdt_strerror(cpus_subnode_offset));
+-			ret = cpus_subnode_offset;
+-			goto out;
+-		}
+-
+-		ret = add_node_props(fdt, cpus_subnode_offset, dn);
+-		if (ret < 0)
+-			goto out;
+-	}
+-out:
+-	of_node_put(dn);
+-	return ret;
+-}
+-
+ /**
+  * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
+  *                       being loaded.
 -- 
 2.35.1
 
