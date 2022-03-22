@@ -1,245 +1,139 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Tue, 22 Mar 2022 09:58:10 +0800
-Subject: [PATCH v21 3/5] arm64: kdump: reimplement crashkernel=X
-In-Reply-To: <cc0186d9-29a3-8eff-e38a-95fd4dd9c46f@oracle.com>
-References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
- <20220227030717.1464-4-thunder.leizhen@huawei.com>
- <cc0186d9-29a3-8eff-e38a-95fd4dd9c46f@oracle.com>
-Message-ID: <d2c5f465-6edc-416c-3005-ef13ff3884b0@huawei.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Tue, 22 Mar 2022 10:59:12 +0800
+Subject: [PATCH v4 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <Yjf9TbBo5ysjM7Nl@MiWiFi-R3L-srv>
+References: <20220318094101.274950-1-coxu@redhat.com>
+ <20220318094101.274950-2-coxu@redhat.com>
+ <Yjf9TbBo5ysjM7Nl@MiWiFi-R3L-srv>
+Message-ID: <20220322025912.r2ahc2ztx3npt7av@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Mon, Mar 21, 2022 at 12:21:33PM +0800, Baoquan He wrote:
+>On 03/18/22 at 05:40pm, Coiby Xu wrote:
+>> Commit 9ec4ecef0af7 ("kexec_file,x86,powerpc: factor out kexec_file_ops
+>> functions") allows implementing the arch-specific implementation of kernel
+>> image verification in kexec_file_ops->verify_sig. Currently, there is no
+>
+>Looking back at the old commit 9ec4ecef0af7, it mistakenly added a
+>generic arch_kexec_kernel_verify_sig() which is marked as __weak,
+>and expects any architecture will add a arch specified version if needed.
+>In fact those arch specified difference has been removed by wrapping
+>them into each architecture's own struct kexec_file_ops methods. Means
+>in the commit, the generic arch_kexec_kernel_verify_sig() is unnecessary
+>at all.
 
+Thanks for looking at commit 9ec4ecef0af7 for me!
 
-On 2022/3/21 21:29, John Donnelly wrote:
-> On 2/26/22 9:07 PM, Zhen Lei wrote:
->> From: Chen Zhou <chenzhou10@huawei.com>
+Although commit 9ec4ecef0af7 added some code in arch_kexec_kernel_verify_sig
+so kexec_file_ops->verify_sig can be called, this commit doesn't add __weak
+arch_kexec_kernel_verify_sig itself. And kexec_file_ops isn't supposed
+to replace arch-specific implementation using __weak considering s390 and x86
+still make use of __weak to implement its own version of 
+arch_kexec_apply_relocations_add. How about the commit message as
+follows?
+
+   Currently this no arch-specific implementation of
+   arch_kexec_kernel_verify_sig. Even if we want to add an implementation
+   for an architecture in the future, we can simply use "(struct
+   kexec_file_ops*)->verify_sig". So clean it up.
+>
+>Now, you clean up that uncessary function with code change.
+>
+>I think description telling above analysis could be clearer.
+>
+>> arch-specific implementation of arch_kexec_kernel_verify_sig. So clean it
+>> up.
 >>
->> There are following issues in arm64 kdump:
->> 1. We use crashkernel=X to reserve crashkernel below 4G, which
->> will fail when there is no enough low memory.
-> 
-> ??????????????????????? " Not enough "
-
-OK, thanks
-
->> 2. If reserving crashkernel above 4G, in this case, crash dump
->> kernel will boot failure because there is no low memory available
->> for allocation.
-> 
-> ?We can't have a "boot failure". If the requested reservation
-> ?can not be met,? the kdump? configuration is not setup.
->>
->> To solve these issues, change the behavior of crashkernel=X and
->> introduce crashkernel=X,[high,low]. crashkernel=X tries low allocation
->> in DMA zone, and fall back to high allocation if it fails.
->> We can also use "crashkernel=X,high" to select a region above DMA zone,
->> which also tries to allocate at least 256M in DMA zone automatically.
->> "crashkernel=Y,low" can be used to allocate specified size low memory.
-> 
-> Is there going to be documentation on what values certain Arm platforms are going to use this on ?
-
-There is no exact formula.
-
-> 
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
->> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+>> Signed-off-by: Coiby Xu <coxu@redhat.com>
 >> ---
->> ? arch/arm64/kernel/machine_kexec.c????? |?? 9 ++-
->> ? arch/arm64/kernel/machine_kexec_file.c |? 12 ++-
->> ? arch/arm64/mm/init.c?????????????????? | 106 +++++++++++++++++++++++--
->> ? 3 files changed, 115 insertions(+), 12 deletions(-)
+>>  include/linux/kexec.h |  4 ----
+>>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
+>>  2 files changed, 13 insertions(+), 25 deletions(-)
 >>
->> diff --git a/arch/arm64/kernel/machine_kexec.c b/arch/arm64/kernel/machine_kexec.c
->> index e16b248699d5c3c..19c2d487cb08feb 100644
->> --- a/arch/arm64/kernel/machine_kexec.c
->> +++ b/arch/arm64/kernel/machine_kexec.c
->> @@ -329,8 +329,13 @@ bool crash_is_nosave(unsigned long pfn)
->> ? ????? /* in reserved memory? */
->> ????? addr = __pfn_to_phys(pfn);
->> -??? if ((addr < crashk_res.start) || (crashk_res.end < addr))
->> -??????? return false;
->> +??? if ((addr < crashk_res.start) || (crashk_res.end < addr)) {
->> +??????? if (!crashk_low_res.end)
->> +??????????? return false;
->> +
->> +??????? if ((addr < crashk_low_res.start) || (crashk_low_res.end < addr))
->> +??????????? return false;
->> +??? }
->> ? ????? if (!kexec_crash_image)
->> ????????? return true;
->> diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
->> index 59c648d51848886..889951291cc0f9c 100644
->> --- a/arch/arm64/kernel/machine_kexec_file.c
->> +++ b/arch/arm64/kernel/machine_kexec_file.c
->> @@ -65,10 +65,18 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
->> ? ????? /* Exclude crashkernel region */
->> ????? ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
->> +??? if (ret)
->> +??????? goto out;
->> +
->> +??? if (crashk_low_res.end) {
->> +??????? ret = crash_exclude_mem_range(cmem, crashk_low_res.start, crashk_low_res.end);
->> +??????? if (ret)
->> +??????????? goto out;
->> +??? }
->> ? -??? if (!ret)
->> -??????? ret =? crash_prepare_elf64_headers(cmem, true, addr, sz);
->> +??? ret = crash_prepare_elf64_headers(cmem, true, addr, sz);
->> ? +out:
->> ????? kfree(cmem);
->> ????? return ret;
->> ? }
->> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->> index 90f276d46b93bc6..30ae6638ff54c47 100644
->> --- a/arch/arm64/mm/init.c
->> +++ b/arch/arm64/mm/init.c
->> @@ -65,6 +65,44 @@ EXPORT_SYMBOL(memstart_addr);
->> ? phys_addr_t arm64_dma_phys_limit __ro_after_init;
->> ? ? #ifdef CONFIG_KEXEC_CORE
->> +/* Current arm64 boot protocol requires 2MB alignment */
->> +#define CRASH_ALIGN??????????? SZ_2M
->> +
->> +#define CRASH_ADDR_LOW_MAX??????? arm64_dma_phys_limit
->> +#define CRASH_ADDR_HIGH_MAX??????? memblock.current_limit
->> +
->> +/*
->> + * This is an empirical value in x86_64 and taken here directly. Please
->> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
->> + * details.
->> + */
->> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE??? \
->> +??? max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
->> +
->> +static int __init reserve_crashkernel_low(unsigned long long low_size)
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index 0c994ae37729..755fed183224 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+>>  				 const Elf_Shdr *relsec,
+>>  				 const Elf_Shdr *symtab);
+>>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>> -#ifdef CONFIG_KEXEC_SIG
+>> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>> -				 unsigned long buf_len);
+>> -#endif
+>>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>>
+>>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+>> index 8347fc158d2b..3720435807eb 100644
+>> --- a/kernel/kexec_file.c
+>> +++ b/kernel/kexec_file.c
+>> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>>  	return kexec_image_post_load_cleanup_default(image);
+>>  }
+>>
+>> -#ifdef CONFIG_KEXEC_SIG
+>> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>> -					  unsigned long buf_len)
+>> -{
+>> -	if (!image->fops || !image->fops->verify_sig) {
+>> -		pr_debug("kernel loader does not support signature verification.\n");
+>> -		return -EKEYREJECTED;
+>> -	}
+>> -
+>> -	return image->fops->verify_sig(buf, buf_len);
+>> -}
+>> -
+>> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>> -					unsigned long buf_len)
+>> -{
+>> -	return kexec_image_verify_sig_default(image, buf, buf_len);
+>> -}
+>> -#endif
+>> -
+>>  /*
+>>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>>   * @pi:		Purgatory to be relocated.
+>> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>>  }
+>>
+>>  #ifdef CONFIG_KEXEC_SIG
+>> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
+>> +		unsigned long buf_len)
 >> +{
->> +??? unsigned long long low_base;
+>> +	if (!image->fops || !image->fops->verify_sig) {
+>> +		pr_debug("kernel loader does not support signature verification.\n");
+>> +		return -EKEYREJECTED;
+>> +	}
 >> +
->> +??? /* passed with crashkernel=0,low ? */
->> +??? if (!low_size)
->> +??????? return 0;
->> +
->> +??? low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
->> +??? if (!low_base) {
->> +??????? pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
->> +??????? return -ENOMEM;
->> +??? }
->> +
->> +??? pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
->> +??????? low_base, low_base + low_size, low_size >> 20);
->> +
->> +??? crashk_low_res.start = low_base;
->> +??? crashk_low_res.end?? = low_base + low_size - 1;
->> +??? insert_resource(&iomem_resource, &crashk_low_res);
->> +
->> +??? return 0;
+>> +	return image->fops->verify_sig(buf, buf_len);
 >> +}
 >> +
->> ? /*
->> ?? * reserve_crashkernel() - reserves memory for crash kernel
->> ?? *
->> @@ -75,30 +113,79 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->> ? static void __init reserve_crashkernel(void)
->> ? {
->> ????? unsigned long long crash_base, crash_size;
->> -??? unsigned long long crash_max = arm64_dma_phys_limit;
->> +??? unsigned long long crash_low_size;
->> +??? unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
->> ????? int ret;
->> +??? bool fixed_base, high = false;
->> +??? char *cmdline = boot_command_line;
->> ? -??? ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
->> +??? /* crashkernel=X[@offset] */
->> +??? ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
->> ????????????????? &crash_size, &crash_base);
->> -??? /* no crashkernel= or invalid value specified */
->> -??? if (ret || !crash_size)
->> -??????? return;
->> +??? if (ret || !crash_size) {
->> +??????? /* crashkernel=X,high */
->> +??????? ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
->> +??????? if (ret || !crash_size)
->> +??????????? return;
->> +
->> +??????? /* crashkernel=Y,low */
->> +??????? ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
->> +??????? if (ret == -ENOENT)
->> +??????????? /*
->> +???????????? * crashkernel=Y,low is not specified explicitly, use
->> +???????????? * default size automatically.
->> +???????????? */
->> +??????????? crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +??????? else if (ret)
->> +??????????? /* crashkernel=Y,low is specified but Y is invalid */
->> +??????????? return;
->> +
->> +??????? /* Mark crashkernel=X,high is specified */
->> +??????? high = true;
->> +??????? crash_max = CRASH_ADDR_HIGH_MAX;
->> +??? }
->> ? +??? fixed_base = !!crash_base;
->> ????? crash_size = PAGE_ALIGN(crash_size);
->> ? ????? /* User specifies base address explicitly. */
->> -??? if (crash_base)
->> +??? if (fixed_base)
->> ????????? crash_max = crash_base + crash_size;
->> ? -??? /* Current arm64 boot protocol requires 2MB alignment */
->> -??? crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
->> +retry:
->> +??? crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
->> ???????????????????????????? crash_base, crash_max);
->> ????? if (!crash_base) {
->> +??????? /*
->> +???????? * Attempt to fully allocate low memory failed, fall back
->> +???????? * to high memory, the minimum required low memory will be
->> +???????? * reserved later.
->> +???????? */
->> +??????? if (!fixed_base && (crash_max == CRASH_ADDR_LOW_MAX)) {
->> +??????????? crash_max = CRASH_ADDR_HIGH_MAX;
->> +??????????? goto retry;
->> +??????? }
->> +
->> ????????? pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->> ????????????? crash_size);
->> ????????? return;
->> ????? }
->> ? +??? if (crash_base >= SZ_4G) {
->> +??????? /*
->> +???????? * For case crashkernel=X, low memory is not enough and fall
->> +???????? * back to reserve specified size of memory above 4G, try to
->> +???????? * allocate minimum required memory below 4G again.
->> +???????? */
->> +??????? if (!high)
->> +??????????? crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
->> +
->> +??????? if (reserve_crashkernel_low(crash_low_size)) {
->> +??????????? memblock_phys_free(crash_base, crash_size);
->> +??????????? return;
->> +??????? }
->> +??? }
->> +
->> ????? pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->> ????????? crash_base, crash_base + crash_size, crash_size >> 20);
->> ? @@ -107,6 +194,9 @@ static void __init reserve_crashkernel(void)
->> ?????? * map. Inform kmemleak so that it won't try to access it.
->> ?????? */
->> ????? kmemleak_ignore_phys(crash_base);
->> +??? if (crashk_low_res.end)
->> +??????? kmemleak_ignore_phys(crashk_low_res.start);
->> +
->> ????? crashk_res.start = crash_base;
->> ????? crashk_res.end = crash_base + crash_size - 1;
->> ????? insert_resource(&iomem_resource, &crashk_res);
-> 
-> .
-> 
+>>  static int
+>>  kimage_validate_signature(struct kimage *image)
+>>  {
+>>  	int ret;
+>>
+>> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+>> -					   image->kernel_buf_len);
+>> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
+>> +			image->kernel_buf_len);
+>>  	if (ret) {
+>>
+>>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+>> --
+>> 2.34.1
+>>
+>
 
 -- 
-Regards,
-  Zhen Lei
+Best regards,
+Coiby
+
 
