@@ -1,96 +1,55 @@
-From: Philipp Rudo <prudo@redhat.com>
-Date: Wed, 23 Mar 2022 16:35:36 +0100
-Subject: [PATCH] util_lib/elf_info: harden parsing of printk buffer
-Message-ID: <20220323153536.8527-1-prudo@redhat.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Wed, 23 Mar 2022 13:32:45 -0500
+Subject: [RFC v3 PATCH 2/5] powerpc/crash hp: introduce a new config
+ option CRASH_HOTPLUG
+In-Reply-To: <20220321080422.56255-3-sourabhjain@linux.ibm.com>
+References: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
+ <20220321080422.56255-3-sourabhjain@linux.ibm.com>
+Message-ID: <477e4fe7-0d82-fe5d-0502-7829feea1a95@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The old printk mechanism (> v3.5.0 and < v5.10.0) had a fixed size
-buffer (log_buf) that contains all messages. The location for the next
-message is stored in log_next_idx. In case the log_buf runs full
-log_next_idx wraps around and starts overwriting old messages@the
-beginning of the buffer. The wraparound is denoted by a message with
-msg->len == 0.
 
-Following the behavior described above blindly is dangerous as e.g. a
-memory corruption could overwrite (parts of) the log_buf. If the
-corruption adds a message with msg->len == 0 this leads to an endless
-loop when dumping the dmesg. Fix this by verifying that not wrapped
-around before when it encounters a message with msg->len == 0.
 
-While at it also verify that the index is within the log_buf and thus
-guard against corruptions with msg->len != 0.
+On 3/21/22 03:04, Sourabh Jain wrote:
+> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
+> hotplug events.
+> 
+> All the updates needed on the capture kernel load path in the kernel for
+> both kexec_load and kexec_file_load system will be kept under this config.
+> 
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 
-The same bug has been reported and fixed in makedumpfile [1].
+Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
 
-[1] http://lists.infradead.org/pipermail/kexec/2022-March/024272.html
-
-Signed-off-by: Philipp Rudo <prudo@redhat.com>
----
- util_lib/elf_info.c | 28 +++++++++++++++++++++++++---
- 1 file changed, 25 insertions(+), 3 deletions(-)
-
-diff --git a/util_lib/elf_info.c b/util_lib/elf_info.c
-index d252eff..ce71c60 100644
---- a/util_lib/elf_info.c
-+++ b/util_lib/elf_info.c
-@@ -763,8 +763,9 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
- {
- #define OUT_BUF_SIZE	4096
- 	uint64_t log_buf, log_buf_offset, ts_nsec;
--	uint32_t log_first_idx, log_next_idx, current_idx, len = 0, i;
-+	uint32_t log_buf_len, log_first_idx, log_next_idx, current_idx, len = 0, i;
- 	char *buf, out_buf[OUT_BUF_SIZE];
-+	bool has_wrapped_around = false;
- 	ssize_t ret;
- 	char *msg;
- 	uint16_t text_len;
-@@ -811,6 +812,7 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
- 	}
- 
- 	log_buf = read_file_pointer(fd, vaddr_to_offset(log_buf_vaddr));
-+	log_buf_len = read_file_s32(fd, vaddr_to_offset(log_buf_len_vaddr));
- 
- 	log_first_idx = read_file_u32(fd, vaddr_to_offset(log_first_idx_vaddr));
- 	log_next_idx = read_file_u32(fd, vaddr_to_offset(log_next_idx_vaddr));
-@@ -882,11 +884,31 @@ static void dump_dmesg_structured(int fd, void (*handler)(char*, unsigned int))
- 		 * and read the message at the start of the buffer.
- 		 */
- 		loglen = struct_val_u16(buf, log_offset_len);
--		if (!loglen)
-+		if (!loglen) {
-+			if (has_wrapped_around) {
-+				if (len && handler)
-+					handler(out_buf, len);
-+				fprintf(stderr, "Cycle when parsing dmesg detected.\n");
-+				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
-+				fprintf(stderr, "log_buf = 0x%lx, idx = 0x%x\n",
-+					log_buf, current_idx);
-+				exit(68);
-+			}
- 			current_idx = 0;
--		else
-+			has_wrapped_around = true;
-+		} else {
- 			/* Move to next record */
- 			current_idx += loglen;
-+			if(current_idx > log_buf_len - log_sz) {
-+				if (len && handler)
-+					handler(out_buf, len);
-+				fprintf(stderr, "Index outside log_buf detected.\n");
-+				fprintf(stderr, "The prink log_buf is most likely corrupted.\n");
-+				fprintf(stderr, "log_buf = 0x%lx, idx = 0x%x\n",
-+					log_buf, current_idx);
-+				exit(69);
-+			}
-+		}
- 	}
- 	free(buf);
- 	if (len && handler)
--- 
-2.35.1
-
+> ---
+>   arch/powerpc/Kconfig | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
+> 
+> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+> index b779603978e1..b816339ef8c7 100644
+> --- a/arch/powerpc/Kconfig
+> +++ b/arch/powerpc/Kconfig
+> @@ -623,6 +623,17 @@ config FA_DUMP
+>   	  If unsure, say "y". Only special kernels like petitboot may
+>   	  need to say "N" here.
+>   
+> +config CRASH_HOTPLUG
+> +	bool "kernel updates of crash kexec segments"
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
+> +	help
+> +	  An efficient way to keep the capture kernel up-to-date with CPU
+> +	  hotplug events. On hotplug event (CPU/memory) the kexec segments
+> +	  of capture kernel becomes stale and need to be updated with latest
+> +	  CPU and memory regions. In this method the kernel performs minimal
+> +	  update to only relevant kexec segments on CPU hotplug event, instead
+> +	  of triggering full capture reload from userspace using udev rule.
+> +
+>   config PRESERVE_FA_DUMP
+>   	bool "Preserve Firmware-assisted dump"
+>   	depends on PPC64 && PPC_POWERNV && !FA_DUMP
+> 
 
