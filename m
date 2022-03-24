@@ -1,81 +1,58 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Wed, 23 Mar 2022 13:33:04 -0500
-Subject: [RFC v3 PATCH 5/5] powerpc/crash hp: add crash hotplug support
- for kexec_load
-In-Reply-To: <20220321080422.56255-6-sourabhjain@linux.ibm.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Thu, 24 Mar 2022 11:37:27 +0530
+Subject: [RFC v3 PATCH 3/5] powrepc/crash hp: update kimage struct
+In-Reply-To: <8fc2d63d-97db-59ab-3043-d453fed1e7e3@oracle.com>
 References: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
- <20220321080422.56255-6-sourabhjain@linux.ibm.com>
-Message-ID: <02d339bc-b7fd-4a11-19ec-7a8fc05a77fc@oracle.com>
+ <20220321080422.56255-4-sourabhjain@linux.ibm.com>
+ <8fc2d63d-97db-59ab-3043-d453fed1e7e3@oracle.com>
+Message-ID: <1d9a3eaf-191c-da35-3628-38e8c0ad54bc@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Some minor nits below.
-eric
+Hello Eric,
 
-On 3/21/22 03:04, Sourabh Jain wrote:
-> The kernel changes needed to add support for crash hotplug support for
-> kexec_load system calls are similar to kexec_file_load (which has already
-> been implemented in earlier patches). Since kexec segment array is
-> prepared by kexec tool in the userspace, the kernel does aware of which
-s/kernel does aware/ kernel is not aware/ ?
+On 24/03/22 00:02, Eric DeVolder wrote:
+>
+>
+> On 3/21/22 03:04, Sourabh Jain wrote:
+>> Two new members fdt_index and fdt_index_valid are added in kimage_arch
+>> struct to track the FDT kexec segment. These new members of kimage_arch
+>> struct will help the crash hotplug handler to easily access the FDT
+>> segment from the kexec segment array. Otherwise, we have to loop through
+>> all kexec segments to find the FDT segments.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>
+>> ---
+>> ? arch/powerpc/include/asm/kexec.h | 2 ++
+>> ? 1 file changed, 2 insertions(+)
+>>
+>> diff --git a/arch/powerpc/include/asm/kexec.h 
+>> b/arch/powerpc/include/asm/kexec.h
+>> index e1288826e22e..19c2cab6a880 100644
+>> --- a/arch/powerpc/include/asm/kexec.h
+>> +++ b/arch/powerpc/include/asm/kexec.h
+>> @@ -104,6 +104,8 @@ extern const struct kexec_file_ops kexec_elf64_ops;
+>> ? struct kimage_arch {
+>> ????? struct crash_mem *exclude_ranges;
+>> ? +??? int fdt_index;
+>> +??? bool fdt_index_valid;
+>> ????? unsigned long backup_start;
+>> ????? void *backup_buf;
+>> ????? void *fdt;
+>>
+>
+> Question, for the kexec_file_load scenario, is there a need to have 
+> the fdt_index segment excluded by kexec_calculate_store_digests() ?
 
-> index FDT segment is present.
-> 
-> The only change was done to enabled crash hotplug support for kexec_load is
-s/was done to enabled/to enable/ ?
-> updated the crash hotplug handler to identify the FDT segment from kexec
-s/updated/ to update/ ?
-> segment array.
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->   arch/powerpc/kexec/core_64.c | 21 ++++++++++++++++++++-
->   1 file changed, 20 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-> index a470fe6904e3..2c248dfb169b 100644
-> --- a/arch/powerpc/kexec/core_64.c
-> +++ b/arch/powerpc/kexec/core_64.c
-> @@ -480,7 +480,9 @@ int update_cpus_node(void *fdt)
->   void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
->   				unsigned long a, unsigned long b)
->   {
-> -	void *fdt;
-> +	void *fdt, *ptr;
-> +	unsigned int n;
-> +	unsigned long mem, memsz;
->   
->   	/* No action needed for CPU hot-unplug */
->   	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
-> @@ -492,6 +494,23 @@ void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
->   		return;
->   	}
->   
-> +	/* Sine kexec segments for kexec_load system call is prepred by
-s/Sine/Since/
-s/is prepred/are prepared/
-> +	 * kexec tool in userspace we need loop through all the segments
-> +	 * to find out segment index corresponds FDT segment. In case of
-> +	 * kexec_file_load it is discovered during the load itself.
-> +	 */
-> +	if (!image->arch.fdt_index_valid) {
-> +		for (n = 0; n < image->nr_segments; n++) {
-> +			mem = image->segment[n].mem;
-> +			memsz = image->segment[n].memsz;
-> +			ptr = __va(mem);
-> +			if (ptr && fdt_magic(ptr) == FDT_MAGIC) {
-> +				image->arch.fdt_index = n;
-> +				image->arch.fdt_index_valid = true;
-How about adding a break; statement to early exit?
-> +			}
-> +		}
-> +	}
-> +
->   	/* Must have valid FDT index */
->   	if (!image->arch.fdt_index_valid) {
->   		pr_err("crash hp: unable to locate FDT segment");
-> 
+On PowerPC, SHA verification is not done for kexec_file_load system 
+call, so we might not need to exclude the FDT segment.
+
+Thanks for the review.
+
+- Sourabh Jain
+
 
