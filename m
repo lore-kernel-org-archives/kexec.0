@@ -1,99 +1,125 @@
 From: Laurent Dufour <ldufour@linux.ibm.com>
-Date: Fri, 25 Mar 2022 18:04:47 +0100
-Subject: [RFC v3 PATCH 0/5] In kernel handling of CPU hotplug events for
- crash kernel
-In-Reply-To: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
+Date: Fri, 25 Mar 2022 19:03:28 +0100
+Subject: [RFC v3 PATCH 4/5] powerpc/crash hp: add crash hotplug support
+ for kexec_file_load
+In-Reply-To: <20220321080422.56255-5-sourabhjain@linux.ibm.com>
 References: <20220321080422.56255-1-sourabhjain@linux.ibm.com>
-Message-ID: <4f67f1ca-26e4-fbd6-bff7-692cd87da1b5@linux.ibm.com>
+ <20220321080422.56255-5-sourabhjain@linux.ibm.com>
+Message-ID: <b9cf2d6a-7fec-3ef3-0600-1b09ee7c1c37@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 21/03/2022, 09:04:17, Sourabh Jain wrote:
-> This patch series implements the crash hotplug handler on PowerPC introduced
-> by https://lkml.org/lkml/2022/3/3/674 patch series.
-
-Hi Sourabh,
-
-That's a great idea!
-
+On 21/03/2022, 09:04:21, Sourabh Jain wrote:
+> Two major changes are done to enable the crash CPU hotplug handler.
+> Firstly, updated the kexec_load path to prepare kimage for hotplug
+> changes and secondly, implemented the crash hotplug handler itself.
 > 
-> The Problem:
-> ============
-> Post hotplug/DLPAR events the capture kernel holds stale information about the
-> system. Dump collection with stale capture kernel might end up in dump capture
-> failure or an inaccurate dump collection.
+> On the kexec load path, memsz allocation of crash FDT segment is
+> updated to ensure that it has sufficient buffer space to accommodate
+> future hot add CPUs. Initialized the kimage members to track the FDT
+> segment.
 > 
+> The crash hotplug handler updates the cpus node of crash FDT. While
+> we update crash FDT the kexec_crash_image is marked invalid and restored
+> after FDT update to avoid race.
 > 
-> Existing solution:
-> ==================
-> The existing solution to keep the capture kernel up-to-date is observe the
-> hotplug event via udev rule and trigger a full capture kernel reload post
-> hotplug event. 
+> Since memory crash hotplug support is not there yet the crash hotplug
+> handler simply warn the user and return.
 > 
-> Shortcomings:
-> ------------------------------------------------
-> - Leaves a window where kernel crash might not lead to successful dump
->   collection.
-> - Reloading all kexec components for each hotplug is inefficient. Since only
->   one or two kexec components need to be updated due to hotplug event reloading
->   all kexec component is redundant.
-> - udev rules are prone to races if hotplug events are frequent.
-> 
-> More about issues with an existing solution is posted here:
->  - https://lkml.org/lkml/2020/12/14/532
->  - https://lists.ozlabs.org/pipermail/linuxppc-dev/2022-February/240254.html
-> 
-> Proposed Solution:
-> ==================
-> Instead of reloading all kexec segments on hotplug event, this patch series
-> focuses on updating only the relevant kexec segment. Once the kexec
-> segments are loaded in the kernel reserved area then an arch-specific hotplug handler
-> will update the relevant kexec segment based on hotplug event type.
-> 
-> As mentioned above this patch series implemented a PowerPC crash hotplug
-> handler for the CPU. The crash hotplug handler memory is in our TODO list.
-
-If I understand corrrectly, and based on the change in the patch 4/5,
-memory hotplug operations are ignored. Does this means that once this
-series is applied, the capture kenrel will not be able to work correctly on
-this hot plug/unplugged memory areas?
-
-Thanks,
-Laurent.
-> 
-> A couple of minor changes are required to realize the benefit of the patch
-> series:
-> 
-> - disalble the udev rule:
-> 
->   comment out the below line in kdump udev rule file:
->   RHEL: /usr/lib/udev/rules.d/98-kexec.rules
->   # SUBSYSTEM=="cpu", ACTION=="online", GOTO="kdump_reload_cpu"
-> 
-> - kexec tool needs to be updated with patch for kexec_load system call
->   to work (not needed if -s option is used during kexec panic load):
-> 
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
 > ---
-> diff --git a/kexec/arch/ppc64/kexec-elf-ppc64.c b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> index 695b8b0..1dc6490 100644
-> --- a/kexec/arch/ppc64/kexec-elf-ppc64.c
-> +++ b/kexec/arch/ppc64/kexec-elf-ppc64.c
-> @@ -45,6 +45,29 @@ uint64_t initrd_base, initrd_size;
->  unsigned char reuse_initrd = 0;
->  const char *ramdisk;
+>  arch/powerpc/kexec/core_64.c | 46 ++++++++++++++++++++++++++++++++++++
+>  arch/powerpc/kexec/elf_64.c  | 40 +++++++++++++++++++++++++++++++
+>  2 files changed, 86 insertions(+)
+> 
+> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+> index 249d2632526d..a470fe6904e3 100644
+> --- a/arch/powerpc/kexec/core_64.c
+> +++ b/arch/powerpc/kexec/core_64.c
+> @@ -466,6 +466,52 @@ int update_cpus_node(void *fdt)
+>  	return ret;
+>  }
 >  
-> +#define MAX_CORE 256
-> +#define PER_CORE_NODE_SIZE 1500
-> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
 > +/**
+> + * arch_crash_hotplug_handler() - Handle hotplug FDT changes
+> + * @image: the active struct kimage
+> + * @hp_action: the hot un/plug action being handled
+> + * @a: first parameter dependent upon hp_action
+> + * @b: first parameter dependent upon hp_action
+> + *
+> + * To accurately reflect CPU hot un/plug changes, the FDT
+> + * must be updated with the new list of CPUs and memories.
+> + */
+> +void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
+> +				unsigned long a, unsigned long b)
+> +{
+> +	void *fdt;
+> +
+> +	/* No action needed for CPU hot-unplug */
+> +	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +		return;
+> +
+> +	/* crash update on memory hotplug is not support yet */
+> +	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
+> +		pr_err("crash hp: crash update is not supported with memory hotplug\n");
+		
+May be pr_info_once() that's not really an error ?
+
+> +		return;
+> +	}
+> +
+> +	/* Must have valid FDT index */
+> +	if (!image->arch.fdt_index_valid) {
+> +		pr_err("crash hp: unable to locate FDT segment");
+> +		return;
+> +	}
+> +
+> +	fdt = __va((void *)image->segment[image->arch.fdt_index].mem);
+> +
+> +	/* Temporarily invalidate the crash image while it is replaced */
+> +	xchg(&kexec_crash_image, NULL);
+> +
+> +	/* update FDT to refelect changes to CPU resrouces */
+> +	if (update_cpus_node(fdt))
+> +		pr_err("crash hp: failed to update crash FDT");
+> +
+> +	/* The crash image is now valid once again */
+> +	xchg(&kexec_crash_image, image);
+> +}
+> +#endif /* CONFIG_CRASH_HOTPLUG */
+> +
+>  #ifdef CONFIG_PPC_64S_HASH_MMU
+>  /* Values we need to export to the second kernel via the device tree. */
+>  static unsigned long htab_base;
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index eeb258002d1e..2ffe6d69e186 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -24,6 +24,33 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +#define MAX_CORE 256
+
+Why not computing something based on nr_cpus_ids and threads_per_core instead?
+
+> +#define PER_CORE_NODE_SIZE 1500
+
+Is that size function of threadsd_per_core too?
+
+> +> +/**
 > + * get_crash_fdt_mem_sz() - calcuate mem size for crash kernel FDT
 > + * @fdt: pointer to crash kernel FDT
 > + *
 > + * Calculate the buffer space needed to add more CPU nodes in FDT after
 > + * capture kenrel load due to hot add events.
+              kernel
 > + *
 > + * Some assumption are made to calculate the additional buffer size needed
 > + * to accommodate future hot add CPUs to the crash FDT. The maximum core count
@@ -103,94 +129,42 @@ Laurent.
 > + * Certainly MAX_CORE count can be replaced with possible core count and
 > + * PER_CORE_NODE_SIZE to some standard value instead of randomly observed
 > + * core size value on Power9 LPAR.
+
+See above.
+
 > + */
-> +static unsigned int get_crash_fdt_mem_sz(void *fdt) {
+> +static unsigned int get_crash_fdt_mem_sz(void *fdt)
+> +{
 > +	return fdt_totalsize(fdt) + (PER_CORE_NODE_SIZE * MAX_CORE);
+
+I guess fdt_totalsize() is already taken in account the online CPUs, isn't it?
+If that's the case, you should add the remaining needed part only.
+
 > +}
+> +#endif
 > +
->  int elf_ppc64_probe(const char *buf, off_t len)
->  {
->  	struct mem_ehdr ehdr;
-> @@ -179,6 +202,7 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
->  	uint64_t max_addr, hole_addr;
->  	char *seg_buf = NULL;
->  	off_t seg_size = 0;
-> +	unsigned int mem_sz = 0;
->  	struct mem_phdr *phdr;
->  	size_t size;
->  #ifdef NEED_RESERVE_DTB
-> @@ -329,7 +353,13 @@ int elf_ppc64_load(int argc, char **argv, const char *buf, off_t len,
->  	if (result < 0)
->  		return result;
->  
-> -	my_dt_offset = add_buffer(info, seg_buf, seg_size, seg_size,
-> +	if (info->kexec_flags & KEXEC_ON_CRASH) {
-> +		mem_sz = get_crash_fdt_mem_sz((void *)seg_buf);
-> +		fdt_set_totalsize(seg_buf, mem_sz);
-> +		info->fdt_index = info->nr_segments;
+>  static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  			unsigned long kernel_len, char *initrd,
+>  			unsigned long initrd_len, char *cmdline,
+> @@ -123,6 +150,19 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	kbuf.buf_align = PAGE_SIZE;
+>  	kbuf.top_down = true;
+>  	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	if (image->type == KEXEC_TYPE_CRASH) {
+> +		kbuf.memsz = get_crash_fdt_mem_sz(fdt);
+> +		fdt_set_totalsize(fdt, kbuf.memsz);
+> +		image->arch.fdt_index = image->nr_segments;
+> +		image->arch.fdt_index_valid = true;
+> +	} else
+> +#endif
+> +	{
+> +		kbuf.memsz = fdt_totalsize(fdt);
 > +	}
 > +
-> +	my_dt_offset = add_buffer(info, seg_buf, seg_size, mem_sz,
->  				0, 0, max_addr, -1);
->  
->  #ifdef NEED_RESERVE_DTB
-> diff --git a/kexec/kexec.c b/kexec/kexec.c
-> index f63b36b..846b1a8 100644
-> --- a/kexec/kexec.c
-> +++ b/kexec/kexec.c
-> @@ -672,6 +672,9 @@ static void update_purgatory(struct kexec_info *info)
->  		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
->  			continue;
->  		}
-> +		if (info->fdt_index == i)
-> +			continue;
-> +
->  		sha256_update(&ctx, info->segment[i].buf,
->  			      info->segment[i].bufsz);
->  		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
-> diff --git a/kexec/kexec.h b/kexec/kexec.h
-> index 595dd68..0906a1b 100644
-> --- a/kexec/kexec.h
-> +++ b/kexec/kexec.h
-> @@ -169,6 +169,7 @@ struct kexec_info {
->  	int command_line_len;
->  
->  	int skip_checks;
-> +       // Given that we might need to update mutliple kexec segments
-> +       // then having array to keep indexes of all hotplug kexec segments
-> +       // will be helpful.
-> +	unsigned int fdt_index;
->  };
->  
->  struct arch_map_entry {
-> ---
-> 
-> ---
-> Changelog:
-> 
-> v1 -> v2:
->   - Use generic hotplug handler introduced by https://lkml.org/lkml/2022/2/9/1406, a
->     significant change from v1.
-> 
-> v2 -> v3
->   - Move fdt_index and fdt_index_vaild variables to kimage_arch struct.
->   - Rebase patche on top of https://lkml.org/lkml/2022/3/3/674 [v5]
->   - Fixed warning reported by checpatch script
-> ---
-> 
-> Sourabh Jain (5):
->   powerpc/kexec: make update_cpus_node non-static
->   powerpc/crash hp: introduce a new config option CRASH_HOTPLUG
->   powrepc/crash hp: update kimage struct
->   powerpc/crash hp: add crash hotplug support for kexec_file_load
->   powerpc/crash hp: add crash hotplug support for kexec_load
-> 
->  arch/powerpc/Kconfig              |  11 +++
->  arch/powerpc/include/asm/kexec.h  |   3 +
->  arch/powerpc/kexec/core_64.c      | 153 ++++++++++++++++++++++++++++++
->  arch/powerpc/kexec/elf_64.c       |  40 ++++++++
->  arch/powerpc/kexec/file_load_64.c |  87 -----------------
->  5 files changed, 207 insertions(+), 87 deletions(-)
-> 
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out_free_fdt;
 
 
