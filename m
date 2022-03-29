@@ -1,50 +1,85 @@
-From: bhe <bhe@redhat.com>
-Date: Tue, 29 Mar 2022 18:16:43 +0800
-Subject: [ANNOUNCE] kexec-tools v2.0.24 preparation
-In-Reply-To: <YkLOjWtzcbhp2CZE@vergenet.net>
-References: <Yjs2V0Ck/kvcJAKy@vergenet.net>
- <CALu+AoT+YxFyn27yhPKL5=90_=G-gm8OVA-bqhtpPEWMb-OCgQ@mail.gmail.com>
- <YkLOjWtzcbhp2CZE@vergenet.net>
-Message-ID: <YkLci3fU3PYmRNig@MiWiFi-R3L-srv>
+From: Wei Liu <wei.liu@kernel.org>
+Date: Tue, 29 Mar 2022 12:05:33 +0000
+Subject: [PATCH] Drivers: hv: vmbus: Fix potential crash on module unload
+In-Reply-To: <PH0PR21MB302540E78316B06885EBE72AD7149@PH0PR21MB3025.namprd21.prod.outlook.com>
+References: <20220315203535.682306-1-gpiccoli@igalia.com>
+ <PH0PR21MB302540E78316B06885EBE72AD7149@PH0PR21MB3025.namprd21.prod.outlook.com>
+Message-ID: <20220329120533.pbmzmq7oqybrtlfd@liuwe-devbox-debian-v2>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 03/29/22 at 11:17am, Simon Horman wrote:
-> On Sat, Mar 26, 2022 at 02:55:43PM +0800, RuiRui Yang wrote:
-> > Hi Simon,
+On Sat, Mar 19, 2022 at 03:30:16PM +0000, Michael Kelley (LINUX) wrote:
+> From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Tuesday, March 15, 2022 1:36 PM
 > > 
-> > Recently RH CKI detected a kexec/kdump failure with kexec_load being
-> > used,  the 2nd kernel can not boot, just reset to bios/firmware
-> > instead.
+> > The vmbus driver relies on the panic notifier infrastructure to perform
+> > some operations when a panic event is detected. Since vmbus can be built
+> > as module, it is required that the driver handles both registering and
+> > unregistering such panic notifier callback.
 > > 
-> > This only happens with gcc 12.x compiled kexec-tools,  add
-> > "-fno-tree-vectorize" to purgatory/Makefile CFLAGS make the bug
-> > dissappear, but I hope people can help to verify and confirm it does
-> > fix the problem.   It would be better to wait a few days so that we
-> > can fix it in the coming release, what do you think?
+> > After commit 74347a99e73a ("x86/Hyper-V: Unload vmbus channel in hv panic
+> > callback")
+> > though, the panic notifier registration is done unconditionally in the module
+> > initialization routine whereas the unregistering procedure is conditionally
+> > guarded and executes only if HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE capability
+> > is set.
 > > 
-> > Cced Baoquan who is handling the issue..
+> > This patch fixes that by unconditionally unregistering the panic notifier
+> > in the module's exit routine as well.
 > > 
-> > Thanks!
+> > Fixes: 74347a99e73a ("x86/Hyper-V: Unload vmbus channel in hv panic callback")
+> > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> > ---
+> > 
+> > 
+> > Hi folks, thanks in advance for any reviews! This was build-tested
+> > with Debian config, on 5.17-rc7.
+> > 
+> > This patch is a result of code analysis - I didn't experience this
+> > issue but seems a valid/feasible case.
+> > 
+> > Also, this is part of an ongoing effort of clearing/refactoring the panic
+> > notifiers, more will be done soon, but I prefer to send the simple bug
+> > fixes quickly, or else it might take a while since the next steps are more
+> > complex and subject to many iterations I expect.
+> > 
+> > Cheers,
+> > 
+> > Guilherme
+> > 
+> > 
+> >  drivers/hv/vmbus_drv.c | 9 +++++++--
+> >  1 file changed, 7 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/drivers/hv/vmbus_drv.c b/drivers/hv/vmbus_drv.c
+> > index 12a2b37e87f3..12585324cc4a 100644
+> > --- a/drivers/hv/vmbus_drv.c
+> > +++ b/drivers/hv/vmbus_drv.c
+> > @@ -2780,10 +2780,15 @@ static void __exit vmbus_exit(void)
+> >  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
+> >  		kmsg_dump_unregister(&hv_kmsg_dumper);
+> >  		unregister_die_notifier(&hyperv_die_block);
+> > -		atomic_notifier_chain_unregister(&panic_notifier_list,
+> > -						 &hyperv_panic_block);
+> >  	}
+> > 
+> > +	/*
+> > +	 * The panic notifier is always registered, hence we should
+> > +	 * also unconditionally unregister it here as well.
+> > +	 */
+> > +	atomic_notifier_chain_unregister(&panic_notifier_list,
+> > +					 &hyperv_panic_block);
+> > +
+> >  	free_page((unsigned long)hv_panic_page);
+> >  	unregister_sysctl_table(hv_ctl_table_hdr);
+> >  	hv_ctl_table_hdr = NULL;
+> > --
+> > 2.35.1
 > 
-> Hi RuiRui,
+> Reviewed-by: Michael Kelley <mikelley@microsoft.com>
 > 
-> thanks for letting us know.
-> 
-> I'm happy with delaying the release for a short time to accommodate
-> resolving this problem. Please let us know when there is some progress.
 
-Thanks for quick response, Simon. I have sent a patch to fix this,
-please check the patch v2 with subject 'purgatory: do not enable
-vectorization automatically for purgatory compiling'.
-
-I tested on machine where the issue can stably reproduced, and can
-confirm adding -fno-tree-vectorize to compiling options of purgatory can
-fix the issue.
-
-Dave, please check if it is expected from you.
-
+Applied to hyperv-fixes. Thanks.
 
