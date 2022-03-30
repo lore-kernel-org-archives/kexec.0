@@ -1,96 +1,121 @@
-From: Lichen Liu <lichliu@redhat.com>
-Date: Wed, 30 Mar 2022 13:33:26 +0800
-Subject: [PATCH v2] kexec-tools: Determine if the image is lzma commpressed
-Message-ID: <20220330053326.3220260-1-lichliu@redhat.com>
+From: Li Zhengyu <lizhengyu3@huawei.com>
+Date: Wed, 30 Mar 2022 16:16:55 +0800
+Subject: [PATCH v2 -next 0/6] riscv: kexec: add kexec_file_load() support
+Message-ID: <20220330081701.177026-1-lizhengyu3@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently there are 2 functions for decompressing compressed image. The
-zlib_decompress_file() will determine if the image is compressed by gzip
-before read, but lzma_decompress_file() will not. This can cause misleading
-information to be printed when the image is not compressed by lzma and
-debug option is used:
+This patchset implement kexec_file_load() support on riscv, Most of the
+code is based on the kexec-tool-patch repo developed by Nick Kossifids.
 
-]# kexec -d -s -l /boot/vmlinuz-5.14.10-300.fc35.x86_64 \
---initrd /boot/initramfs-5.14.10-300.fc35.x86_64.img \
---reuse-cmdline
-Try gzip decompression.
-Try LZMA decompression.
-lzma_decompress_file: read on /boot/vmlinuz-5.14.10-300.fc35.x86_64 of
-65536 bytes failed
+This patch series enables us to load the riscv vmlinux by specifying
+its file decriptor, instead of user-filled buffer via kexec_file_load()
+syscall.
+``
+Contrary to kexec_load() system call, we reuse the dt blob of the first
+kernel to the 2nd explicitly.
 
-Add a helper function is_lzma_file() to help behave consistently.
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. The patch for kexec_tools has
+to be apply to riscv architecture source like this:
 
-Signed-off-by: Lichen Liu <lichliu@redhat.com>
----
-Changes in v2:
-- add a fclose() when file is too small.
+int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
+	...
+	if (info->file_mode) {
+		return prepare_kexec_file_options(info);
+	}
+	...
 
----
- kexec/lzma.c | 39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+Add following routine to prepare cmdline_ptr, cmdline_len and initrd_fd
+for syscall kexec_file_load:
 
-diff --git a/kexec/lzma.c b/kexec/lzma.c
-index 5bfccb7..2fc07e6 100644
---- a/kexec/lzma.c
-+++ b/kexec/lzma.c
-@@ -155,6 +155,42 @@ ssize_t lzread(LZFILE *lzfile, void *buf, size_t len)
- 	}
- }
- 
-+int is_lzma_file(const char *filename)
-+{
-+	FILE *fp;
-+	int ret = 0;
-+	uint8_t buf[13];
-+
-+	if (!filename)
-+		return 0;
-+
-+	fp = fopen(filename, "r");
-+	if (fp == NULL)
-+		return 0;
-+
-+	const size_t size = fread(buf, 1, sizeof(buf), fp);
-+
-+	if (size != 13) {
-+		/* file is too small to be a lzma file. */
-+		fclose(fp);
-+		return 0;
-+	}
-+
-+	lzma_filter filter = { .id = LZMA_FILTER_LZMA1 };
-+
-+	switch (lzma_properties_decode(&filter, NULL, buf, 5)) {
-+	case LZMA_OK:
-+		ret = 1;
-+		break;
-+	default:
-+		/* It's not a lzma file */
-+		ret = 0;
-+	}
-+
-+	fclose(fp);
-+	return ret;
-+}
-+
- char *lzma_decompress_file(const char *filename, off_t *r_size)
- {
- 	LZFILE *fp;
-@@ -168,6 +204,9 @@ char *lzma_decompress_file(const char *filename, off_t *r_size)
- 	if (!filename)
- 		return NULL;
- 
-+	if (!is_lzma_file(filename))
-+		return NULL;
-+
- 	fp = lzopen(filename, "rb");
- 	if (fp == 0) {
- 		dbgprintf("Cannot open `%s'\n", filename);
+int prepare_kexec_file_options(struct kexec_info *info)
+{
+	int fd;
+	ssize_t result;
+	struct stat stats;
+
+	if (arch_options.cmdline) {
+		info->command_line = (char *)arch_options.cmdline;
+		info->command_line_len = strlen(info->command_line) + 1;
+	}
+
+	if (!arch_options.initrd_path) {
+		info->initrd_fd = -1;
+		return 0;
+	}
+
+	fd = open(arch_options.initrd_path, O_RDONLY | _O_BINARY);
+	if (fd < 0) {
+		fprintf(stderr, "Cannot open `%s': %s\n", arch_options.initrd_path,
+				strerror(errno));
+		return -EINVAL;
+	}
+	result = fstat(fd, &stats);
+	if (result < 0) {
+		close(fd);
+		fprintf(stderr, "Cannot stat: %s: %s\n", arch_options.initrd_path,
+				strerror(errno));
+		return -EINVAL;
+	}
+	info->initrd_fd = fd;
+	return 0;
+}
+
+The basic usage of kexec_file is:
+1) Reload capture kernel image:
+$ kexec -s -l <riscv-vmlinux> --reuse-cmdline
+
+2) Startup capture kernel:
+$ kexec -e
+
+For kdump:
+1) Reload capture kernel image:
+$ kexec -s -p <riscv-vmlinux> --reuse-cmdline
+
+2) Do something to crash, like:
+$ echo c > /proc/sysrq-trigger
+
+v2:
+ * Support kdump
+ * Support purgatory
+ * Minor cleanups
+
+Li Zhengyu (3):
+  RISC-V: Support for kexec_file on panic
+  RISC-V: Add purgatory
+  RISC-V: Load purgatory in kexec_file
+
+Liao Chang (3):
+  kexec_file: Fix kexec_file.c build error for riscv platform
+  RISC-V: use memcpy for kexec_file mode
+  RISC-V: Add kexec_file support
+
+ arch/riscv/Kbuild                      |   2 +
+ arch/riscv/Kconfig                     |  17 +
+ arch/riscv/include/asm/kexec.h         |   4 +
+ arch/riscv/kernel/Makefile             |   1 +
+ arch/riscv/kernel/elf_kexec.c          | 448 +++++++++++++++++++++++++
+ arch/riscv/kernel/machine_kexec.c      |   4 +-
+ arch/riscv/kernel/machine_kexec_file.c |  14 +
+ arch/riscv/purgatory/.gitignore        |   4 +
+ arch/riscv/purgatory/Makefile          |  95 ++++++
+ arch/riscv/purgatory/entry.S           |  47 +++
+ arch/riscv/purgatory/purgatory.c       |  42 +++
+ include/linux/kexec.h                  |   2 +-
+ kernel/kexec_file.c                    |   4 +-
+ 13 files changed, 680 insertions(+), 4 deletions(-)
+ create mode 100644 arch/riscv/kernel/elf_kexec.c
+ create mode 100644 arch/riscv/kernel/machine_kexec_file.c
+ create mode 100644 arch/riscv/purgatory/.gitignore
+ create mode 100644 arch/riscv/purgatory/Makefile
+ create mode 100644 arch/riscv/purgatory/entry.S
+ create mode 100644 arch/riscv/purgatory/purgatory.c
+
 -- 
-2.27.0
+2.17.1
 
 
