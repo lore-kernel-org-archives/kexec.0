@@ -1,44 +1,35 @@
 From: Simon Horman <horms@verge.net.au>
-Date: Wed, 30 Mar 2022 11:13:04 +0200
-Subject: [PATCH v2] kexec-tools: Determine if the image is lzma commpressed
-In-Reply-To: <20220330053326.3220260-1-lichliu@redhat.com>
-References: <20220330053326.3220260-1-lichliu@redhat.com>
-Message-ID: <YkQfIPAwuZRsXN41@vergenet.net>
+Date: Wed, 30 Mar 2022 11:14:47 +0200
+Subject: [PATCH v2] purgatory: do not enable vectorization automatically
+ for purgatory compiling
+In-Reply-To: <YkLbjMVdz8o+SAYY@MiWiFi-R3L-srv>
+References: <20220329100155.328474-1-bhe@redhat.com>
+ <YkLbjMVdz8o+SAYY@MiWiFi-R3L-srv>
+Message-ID: <YkQfh7KIume8VLjU@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, Mar 30, 2022 at 01:33:26PM +0800, Lichen Liu wrote:
-> Currently there are 2 functions for decompressing compressed image. The
-> zlib_decompress_file() will determine if the image is compressed by gzip
-> before read, but lzma_decompress_file() will not. This can cause misleading
-> information to be printed when the image is not compressed by lzma and
-> debug option is used:
+On Tue, Mar 29, 2022 at 06:12:28PM +0800, Baoquan He wrote:
+> Redhat CKI reported kdump kernel will hang a while very early after crash
+> triggered, then reset to firmware to reboot.
 > 
-> ]# kexec -d -s -l /boot/vmlinuz-5.14.10-300.fc35.x86_64 \
-> --initrd /boot/initramfs-5.14.10-300.fc35.x86_64.img \
-> --reuse-cmdline
-> Try gzip decompression.
-> Try LZMA decompression.
-> lzma_decompress_file: read on /boot/vmlinuz-5.14.10-300.fc35.x86_64 of
-> 65536 bytes failed
+> This failure can only be observed with kdump or kexec reboot via
+> kexec_load system call. With kexec_file_load interface, both kdump and
+> kexec reboot work very well. And further investigation shows that gcc
+> version 11 doesn't have this issue, while gcc version 12 does.
 > 
-> Add a helper function is_lzma_file() to help behave consistently.
+> After checking the release notes of the latest gcc, Dave found out it's
+> because gcc 12 enables auto-vectorization for -O2 optimization level.
+> Please see below link for more information:
 > 
-> Signed-off-by: Lichen Liu <lichliu@redhat.com>
-> ---
-> Changes in v2:
-> - add a fclose() when file is too small.
+>   https://www.phoronix.com/scan.php?page=news_item&px=GCC-12-Auto-Vec-O2
+> 
+> Adding -fno-tree-vectorize to Makefile of purgatory can fix the issue.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
 
-Hi Lichen Liu,
-
-I have already applied v1 of this patch,
-so could you consider providing a follow-up patch
-which contains the delta between v1 and v2?
-
-Thanks!
-
-Ref: https://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git/commit/1b03cf7adc3c
+Thanks, applied.
 
