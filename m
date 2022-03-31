@@ -1,104 +1,120 @@
 From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 31 Mar 2022 11:38:07 +0800
-Subject: [PATCH 3/3] arm64/kexec-arm64: add support for R_AARCH64_MOVW_UABS_G*
- rela
-In-Reply-To: <20220331033807.9802-1-piliu@redhat.com>
-References: <20220331033807.9802-1-piliu@redhat.com>
-Message-ID: <20220331033807.9802-4-piliu@redhat.com>
+Date: Thu, 31 Mar 2022 11:38:34 +0800
+Subject: [PATCH] arm64/kexec-arm64: add support for
+ R_AARCH64_LDST128_ABS_LO12_NC rela
+In-Reply-To: <CAF+s44Sm0Wkb4CLDHtQY=xNQxzLPx=nKN_KO+FHk2Omug7Y=uQ@mail.gmail.com>
+References: <20220331011812.5009-1-piliu@redhat.com>
+ <CAF+s44Sm0Wkb4CLDHtQY=xNQxzLPx=nKN_KO+FHk2Omug7Y=uQ@mail.gmail.com>
+Message-ID: <CAF+s44S4scXH=Pi9hSjTQFasL2Vtg-RpN_hvO1fkm0jJh1-6pg@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Build kexec-tools with clang(clang version 13.0.1 (Fedora 13.0.1-1.fc36)).
-Then when kexec loads kernel, it runs into the error message
-"machine_apply_elf_rel: ERROR Unknown type: 264".
+I find that kexec-tools can not work with clang either, compose a
+series ([PATCH 0/3] arm64: add support for new reloc type in
+kexec-arm64.c) to fix these relocs issues.
 
-This is caused by the following reloc type in purgatory/purgatory.ro,
-which is not supported yet.
-  R_AARCH64_MOVW_UABS_G0_NC
-  R_AARCH64_MOVW_UABS_G1_NC
-  R_AARCH64_MOVW_UABS_G2_NC
-  R_AARCH64_MOVW_UABS_G3
+So please ignore this thread.
 
-Adding code to support these relocs, so kexec can work smoothly.
+Thanks,
+Pingfan
 
-Signed-off-by: Pingfan Liu <piliu@redhat.com>
-Cc: Geoff Levand <geoff@infradead.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Simon Horman <horms@verge.net.au>
-To: kexec@lists.infradead.org
----
- kexec/arch/arm64/kexec-arm64.c | 40 ++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 0aa2544..311731d 100644
---- a/kexec/arch/arm64/kexec-arm64.c
-+++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -1214,6 +1214,10 @@ enum aarch64_rel_type {
- 	R_AARCH64_NONE = 0,
- 	R_AARCH64_ABS64 = 257,
- 	R_AARCH64_PREL32 = 261,
-+	R_AARCH64_MOVW_UABS_G0_NC = 264,
-+	R_AARCH64_MOVW_UABS_G1_NC = 266,
-+	R_AARCH64_MOVW_UABS_G2_NC = 268,
-+	R_AARCH64_MOVW_UABS_G3 =269,
- 	R_AARCH64_LD_PREL_LO19 = 273,
- 	R_AARCH64_ADR_PREL_LO21 = 274,
- 	R_AARCH64_ADR_PREL_PG_HI21 = 275,
-@@ -1224,6 +1228,12 @@ enum aarch64_rel_type {
- 	R_AARCH64_LDST128_ABS_LO12_NC = 299
- };
- 
-+static uint32_t get_bits(uint32_t value, int start, int end)
-+{
-+	uint32_t mask = ((uint32_t)1 << (end + 1 - start)) - 1;
-+	return (value >> start) & mask;
-+}
-+
- void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 	unsigned long r_type, void *ptr, unsigned long address,
- 	unsigned long value)
-@@ -1247,6 +1257,36 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 		*loc32 = cpu_to_elf32(ehdr,
- 			elf32_to_cpu(ehdr, *loc32) + value - address);
- 		break;
-+
-+	/* Set a MOV[KZ] immediate field to bits [15:0] of X. No overflow check */
-+	case R_AARCH64_MOVW_UABS_G0_NC:
-+		type = "MOVW_UABS_G0_NC";
-+		loc32 = ptr;
-+		imm = get_bits(value, 0, 15);
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << 5));
-+		break;
-+	/* Set a MOV[KZ] immediate field to bits [31:16] of X. No overflow check */
-+	case R_AARCH64_MOVW_UABS_G1_NC:
-+		type = "MOVW_UABS_G1_NC";
-+		loc32 = ptr;
-+		imm = get_bits(value, 16, 31);
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << 5));
-+		break;
-+	/* Set a MOV[KZ] immediate field to bits [47:32] of X. No overflow check */
-+	case R_AARCH64_MOVW_UABS_G2_NC:
-+		type = "MOVW_UABS_G2_NC";
-+		loc32 = ptr;
-+		imm = get_bits(value, 32, 47);
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << 5));
-+		break;
-+	/* Set a MOV[KZ] immediate field to bits [63:48] of X */
-+	case R_AARCH64_MOVW_UABS_G3:
-+		type = "MOVW_UABS_G3";
-+		loc32 = ptr;
-+		imm = get_bits(value, 48, 63);
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << 5));
-+		break;
-+
- 	case R_AARCH64_LD_PREL_LO19:
- 		type = "LD_PREL_LO19";
- 		loc32 = ptr;
--- 
-2.31.1
+On Thu, Mar 31, 2022 at 9:22 AM Pingfan Liu <piliu@redhat.com> wrote:
+>
+> Sorry for forgetting to add the address of the mailing list.
+>
+> On Thu, Mar 31, 2022 at 9:18 AM Pingfan Liu <piliu@redhat.com> wrote:
+> >
+> > GCC 12 has some changes, which affects the generated AArch64 code of kexec-tools.
+> > Accordingly, a new rel type R_AARCH64_LDST128_ABS_LO12_NC is confronted
+> > by machine_apply_elf_rel() on AArch64. This fails the load of kernel
+> > with the message "machine_apply_elf_rel: ERROR Unknown type: 299"
+> >
+> > Citing from objdump -rDSl purgatory/purgatory.ro
+> >
+> > 0000000000000f80 <sha256_starts>:
+> > sha256_starts():
+> >      f80:       90000001        adrp    x1, 0 <verify_sha256_digest>
+> >                         f80: R_AARCH64_ADR_PREL_PG_HI21 .text+0xfa0
+> >      f84:       a9007c1f        stp     xzr, xzr, [x0]
+> >      f88:       3dc00021        ldr     q1, [x1]
+> >                         f88: R_AARCH64_LDST128_ABS_LO12_NC      .text+0xfa0
+> >      f8c:       90000001        adrp    x1, 0 <verify_sha256_digest>
+> >                         f8c: R_AARCH64_ADR_PREL_PG_HI21 .text+0xfb0
+> >      f90:       3dc00020        ldr     q0, [x1]
+> >                         f90: R_AARCH64_LDST128_ABS_LO12_NC      .text+0xfb0
+> >      f94:       ad008001        stp     q1, q0, [x0, #16]
+> >      f98:       d65f03c0        ret
+> >      f9c:       d503201f        nop
+> >      fa0:       6a09e667        .inst   0x6a09e667 ; undefined
+> >      fa4:       bb67ae85        .inst   0xbb67ae85 ; undefined
+> >      fa8:       3c6ef372        .inst   0x3c6ef372 ; undefined
+> >      fac:       a54ff53a        ld3w    {z26.s-z28.s}, p5/z, [x9, #-3, mul vl]
+> >      fb0:       510e527f        sub     wsp, w19, #0x394
+> >      fb4:       9b05688c        madd    x12, x4, x5, x26
+> >      fb8:       1f83d9ab        .inst   0x1f83d9ab ; undefined
+> >      fbc:       5be0cd19        .inst   0x5be0cd19 ; undefined
+> >
+> > Here, gcc generates codes, which make loads and stores carried out using
+> > the 128-bits floating-point registers. And a new rel type
+> > R_AARCH64_LDST128_ABS_LO12_NC should be handled.
+> >
+> > Make machine_apply_elf_rel() coped with this new reloc, so kexec-tools
+> > can work smoothly.
+> >
+> > Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> > Cc: Geoff Levand <geoff@infradead.org>
+> > Cc: Catalin Marinas <catalin.marinas@arm.com>
+> > Cc: Simon Horman <horms@verge.net.au>
+> > ---
+> >  kexec/arch/arm64/kexec-arm64.c | 16 ++++++++++++++++
+> >  1 file changed, 16 insertions(+)
+> >
+> > diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
+> > index 9dd072c..e25f600 100644
+> > --- a/kexec/arch/arm64/kexec-arm64.c
+> > +++ b/kexec/arch/arm64/kexec-arm64.c
+> > @@ -1248,6 +1248,10 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+> >
+> >  #if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
+> >  # define R_AARCH64_LDST64_ABS_LO12_NC 286
+> > +#endif
+> > +
+> > +#if !defined(R_AARCH64_LDST128_ABS_LO12_NC)
+> > +# define R_AARCH64_LDST128_ABS_LO12_NC 299
+> >  #endif
+> >
+> >         uint64_t *loc64;
+> > @@ -1309,6 +1313,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+> >                 *loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> >                         + (((value - address) >> 2) & 0x3ffffff));
+> >                 break;
+> > +       /* encode imm field with bits [11:3] of value */
+> >         case R_AARCH64_LDST64_ABS_LO12_NC:
+> >                 if (value & 7)
+> >                         die("%s: ERROR Unaligned value: %lx\n", __func__,
+> > @@ -1318,6 +1323,17 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+> >                 *loc32 = cpu_to_le32(le32_to_cpu(*loc32)
+> >                         + ((value & 0xff8) << (10 - 3)));
+> >                 break;
+> > +
+> > +       /* encode imm field with bits [11:4] of value */
+> > +       case R_AARCH64_LDST128_ABS_LO12_NC:
+> > +               if (value & 15)
+> > +                       die("%s: ERROR Unaligned value: %lx\n", __func__,
+> > +                               value);
+> > +               type = "LDST128_ABS_LO12_NC";
+> > +               loc32 = ptr;
+> > +               imm = value & 0xff0;
+> > +               *loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << (10 - 4)));
+> > +               break;
+> >         default:
+> >                 die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
+> >                 break;
+> > --
+> > 2.31.1
+> >
 
 
