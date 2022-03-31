@@ -1,97 +1,49 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Thu, 31 Mar 2022 19:10:15 +0800
-Subject: [PATCH v5 8/8] x86/crash: Add x86 crash hotplug support for
- kexec_load
-In-Reply-To: <20220303162725.49640-9-eric.devolder@oracle.com>
-References: <20220303162725.49640-1-eric.devolder@oracle.com>
- <20220303162725.49640-9-eric.devolder@oracle.com>
-Message-ID: <YkWMFzxJpkiTjKvL@MiWiFi-R3L-srv>
+Date: Thu, 31 Mar 2022 19:22:43 +0800
+Subject: [PATCH] kexec: Remove redundant assignments
+In-Reply-To: <20220326180948.192154-1-michalorzel.eng@gmail.com>
+References: <20220326180948.192154-1-michalorzel.eng@gmail.com>
+Message-ID: <YkWPA0XDEMq1NVcr@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 03/03/22 at 11:27am, Eric DeVolder wrote:
-> For kexec_file_load support, the loading of the crash kernel occurs
-> entirely within the kernel, and as such the elfcorehdr is readily
-> identified (so that it can be modified upon hotplug events).
+On 03/26/22 at 07:09pm, Michal Orzel wrote:
+> Get rid of redundant assignments which end up in values not being
+> read either because they are overwritten or the function ends.
 > 
-> This change enables support for kexec_load by identifying the
-> elfcorehdr segment in the arch_crash_hotplug_handler(), if it has
-> not already been identified.
+> Reported by clang-tidy [deadcode.DeadStores]
 > 
-> In general, support for kexec_load requires corresponding changes
-> to the userspace kexec-tools utility. It is the responsibility of
-> the userspace kexec utility to ensure that:
->  - the elfcorehdr segment is sufficiently large enough to accommodate
->    hotplug changes, ala CRASH_HOTPLUG_ELFCOREHDR_SZ.
->  - provides a purgatory that excludes the elfcorehdr from its list of
->    run-time segments to check.
-> These changes to the userspace kexec utility are available, but not
-> yet accepted upstream.
-
-These backgroud information should be put in cover letter, or in patch
-where they won't be grabbed into the final commit log. 
-
-> 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Signed-off-by: Michal Orzel <michalorzel.eng@gmail.com>
 > ---
-Here, if you want to put some status or backgroud information and expect
-they are not got into log, this is a appropriate place.
-
-
->  arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
+>  kernel/kexec_core.c | 2 --
+>  1 file changed, 2 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 5da30e2bc780..45cc6e3af63e 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -486,6 +486,32 @@ void arch_crash_hotplug_handler(struct kimage *image,
->  	void *elfbuf = NULL;
->  	unsigned long mem, memsz;
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 68480f731192..d08904a27362 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -768,7 +768,6 @@ static struct page *kimage_alloc_page(struct kimage *image,
+>  				kimage_free_pages(old_page);
+>  				continue;
+>  			}
+> -			addr = old_addr;
+>  			page = old_page;
+>  			break;
+>  		}
+> @@ -788,7 +787,6 @@ static int kimage_load_normal_segment(struct kimage *image,
+>  	unsigned char __user *buf = NULL;
+>  	unsigned char *kbuf = NULL;
 >  
-> +	/*
-> +	 * When the struct kimage is alloced, it is wiped to zero, so
-> +	 * the elf_index_valid defaults to false. It is set on the
-> +	 * kexec_file_load path, or here for kexec_load.
+> -	result = 0;
+>  	if (image->file_mode)
+>  		kbuf = segment->kbuf;
+>  	else
 
-         I would make the last line as:
-	 kexec_file_load path, or here for kexec_load if not already
-         identified..
+LGTM, thx
 
-> +	 */
-> +	if (!image->elf_index_valid) {
-> +		unsigned int n;
-> +
-> +		for (n = 0; n < image->nr_segments; n++) {
-> +			mem = image->segment[n].mem;
-> +			memsz = image->segment[n].memsz;
-> +			ptr = map_crash_pages(mem, memsz);
-> +			if (ptr) {
-> +				/* The segment containing elfcorehdr */
-> +				if ((ptr[0] == 0x7F) &&
-> +					(ptr[1] == 'E') &&
-> +					(ptr[2] == 'L') &&
-> +					(ptr[3] == 'F')) {
-
-Can it be like memcmp(ptr, ELFMAG, SELFMAG) as we have done in
-parse_crash_elf_headers()? With that, one line is taken.
-
-> +					image->elf_index = (int)n;
-> +					image->elf_index_valid = true;
-> +				}
-> +			}
-> +			unmap_crash_pages((void **)&ptr);
-> +		}
-> +	}
-> +
->  	/* Must have valid elfcorehdr index */
->  	if (!image->elf_index_valid) {
->  		pr_err("crash hp: unable to locate elfcorehdr segment");
-> -- 
-> 2.27.0
-> 
+Acked-by: Baoquan He <bhe@redhat.com>
 
 
