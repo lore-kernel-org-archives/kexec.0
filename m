@@ -1,52 +1,17 @@
 From: Pingfan Liu <piliu@redhat.com>
-Date: Thu, 31 Mar 2022 11:38:05 +0800
-Subject: [PATCH 1/3] arm64/kexec-arm64: add support for
- R_AARCH64_LDST128_ABS_LO12_NC rela
+Date: Thu, 31 Mar 2022 11:38:06 +0800
+Subject: [PATCH 2/3] arm64/kexec-arm64: use enum to organize the reloc type
 In-Reply-To: <20220331033807.9802-1-piliu@redhat.com>
 References: <20220331033807.9802-1-piliu@redhat.com>
-Message-ID: <20220331033807.9802-2-piliu@redhat.com>
+Message-ID: <20220331033807.9802-3-piliu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-GCC 12 has some changes, which affects the generated AArch64 code of kexec-tools.
-Accordingly, a new rel type R_AARCH64_LDST128_ABS_LO12_NC is confronted
-by machine_apply_elf_rel() on AArch64. This fails the load of kernel
-with the message "machine_apply_elf_rel: ERROR Unknown type: 299"
-
-Citing from objdump -rDSl purgatory/purgatory.ro
-
-0000000000000f80 <sha256_starts>:
-sha256_starts():
-     f80:       90000001        adrp    x1, 0 <verify_sha256_digest>
-                        f80: R_AARCH64_ADR_PREL_PG_HI21 .text+0xfa0
-     f84:       a9007c1f        stp     xzr, xzr, [x0]
-     f88:       3dc00021        ldr     q1, [x1]
-                        f88: R_AARCH64_LDST128_ABS_LO12_NC      .text+0xfa0
-     f8c:       90000001        adrp    x1, 0 <verify_sha256_digest>
-                        f8c: R_AARCH64_ADR_PREL_PG_HI21 .text+0xfb0
-     f90:       3dc00020        ldr     q0, [x1]
-                        f90: R_AARCH64_LDST128_ABS_LO12_NC      .text+0xfb0
-     f94:       ad008001        stp     q1, q0, [x0, #16]
-     f98:       d65f03c0        ret
-     f9c:       d503201f        nop
-     fa0:       6a09e667        .inst   0x6a09e667 ; undefined
-     fa4:       bb67ae85        .inst   0xbb67ae85 ; undefined
-     fa8:       3c6ef372        .inst   0x3c6ef372 ; undefined
-     fac:       a54ff53a        ld3w    {z26.s-z28.s}, p5/z, [x9, #-3, mul vl]
-     fb0:       510e527f        sub     wsp, w19, #0x394
-     fb4:       9b05688c        madd    x12, x4, x5, x26
-     fb8:       1f83d9ab        .inst   0x1f83d9ab ; undefined
-     fbc:       5be0cd19        .inst   0x5be0cd19 ; undefined
-
-Here, gcc generates codes, which make loads and stores carried out using
-the 128-bits floating-point registers. And a new rel type
-R_AARCH64_LDST128_ABS_LO12_NC should be handled.
-
-Make machine_apply_elf_rel() coped with this new reloc, so kexec-tools
-can work smoothly.
+More and more reloc type need to be supported on aarch64. Using enum to
+organize them to shorten the #ifdef macro list.
 
 Signed-off-by: Pingfan Liu <piliu@redhat.com>
 Cc: Geoff Levand <geoff@infradead.org>
@@ -54,50 +19,87 @@ Cc: Catalin Marinas <catalin.marinas@arm.com>
 Cc: Simon Horman <horms@verge.net.au>
 To: kexec@lists.infradead.org
 ---
- kexec/arch/arm64/kexec-arm64.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ kexec/arch/arm64/kexec-arm64.c | 56 +++++++++-------------------------
+ 1 file changed, 15 insertions(+), 41 deletions(-)
 
 diff --git a/kexec/arch/arm64/kexec-arm64.c b/kexec/arch/arm64/kexec-arm64.c
-index 9dd072c..e25f600 100644
+index e25f600..0aa2544 100644
 --- a/kexec/arch/arm64/kexec-arm64.c
 +++ b/kexec/arch/arm64/kexec-arm64.c
-@@ -1248,6 +1248,10 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+@@ -1210,50 +1210,24 @@ int machine_verify_elf_rel(struct mem_ehdr *ehdr)
+ 	return (ehdr->e_machine == EM_AARCH64);
+ }
  
- #if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
- # define R_AARCH64_LDST64_ABS_LO12_NC 286
-+#endif
++enum aarch64_rel_type {
++	R_AARCH64_NONE = 0,
++	R_AARCH64_ABS64 = 257,
++	R_AARCH64_PREL32 = 261,
++	R_AARCH64_LD_PREL_LO19 = 273,
++	R_AARCH64_ADR_PREL_LO21 = 274,
++	R_AARCH64_ADR_PREL_PG_HI21 = 275,
++	R_AARCH64_ADD_ABS_LO12_NC = 277,
++	R_AARCH64_JUMP26 = 282,
++	R_AARCH64_CALL26 = 283,
++	R_AARCH64_LDST64_ABS_LO12_NC = 286,
++	R_AARCH64_LDST128_ABS_LO12_NC = 299
++};
 +
-+#if !defined(R_AARCH64_LDST128_ABS_LO12_NC)
-+# define R_AARCH64_LDST128_ABS_LO12_NC 299
- #endif
- 
+ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 	unsigned long r_type, void *ptr, unsigned long address,
+ 	unsigned long value)
+ {
+-#if !defined(R_AARCH64_ABS64)
+-# define R_AARCH64_ABS64 257
+-#endif
+-
+-#if !defined(R_AARCH64_PREL32)
+-# define R_AARCH64_PREL32 261
+-#endif
+-
+-#if !defined(R_AARCH64_LD_PREL_LO19)
+-# define R_AARCH64_LD_PREL_LO19 273
+-#endif
+-
+-#if !defined(R_AARCH64_ADR_PREL_LO21)
+-# define R_AARCH64_ADR_PREL_LO21 274
+-#endif
+-
+-#if !defined(R_AARCH64_ADR_PREL_PG_HI21)
+-# define R_AARCH64_ADR_PREL_PG_HI21 275
+-#endif
+-
+-#if !defined(R_AARCH64_ADD_ABS_LO12_NC)
+-# define R_AARCH64_ADD_ABS_LO12_NC 277
+-#endif
+-
+-#if !defined(R_AARCH64_JUMP26)
+-# define R_AARCH64_JUMP26 282
+-#endif
+-
+-#if !defined(R_AARCH64_CALL26)
+-# define R_AARCH64_CALL26 283
+-#endif
+-
+-#if !defined(R_AARCH64_LDST64_ABS_LO12_NC)
+-# define R_AARCH64_LDST64_ABS_LO12_NC 286
+-#endif
+-
+-#if !defined(R_AARCH64_LDST128_ABS_LO12_NC)
+-# define R_AARCH64_LDST128_ABS_LO12_NC 299
+-#endif
+-
  	uint64_t *loc64;
-@@ -1309,6 +1313,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
- 			+ (((value - address) >> 2) & 0x3ffffff));
- 		break;
-+	/* encode imm field with bits [11:3] of value */
- 	case R_AARCH64_LDST64_ABS_LO12_NC:
- 		if (value & 7)
- 			die("%s: ERROR Unaligned value: %lx\n", __func__,
-@@ -1318,6 +1323,17 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
- 		*loc32 = cpu_to_le32(le32_to_cpu(*loc32)
- 			+ ((value & 0xff8) << (10 - 3)));
- 		break;
-+
-+	/* encode imm field with bits [11:4] of value */
-+	case R_AARCH64_LDST128_ABS_LO12_NC:
-+		if (value & 15)
-+			die("%s: ERROR Unaligned value: %lx\n", __func__,
-+				value);
-+		type = "LDST128_ABS_LO12_NC";
-+		loc32 = ptr;
-+		imm = value & 0xff0;
-+		*loc32 = cpu_to_le32(le32_to_cpu(*loc32) + (imm << (10 - 4)));
-+		break;
- 	default:
- 		die("%s: ERROR Unknown type: %lu\n", __func__, r_type);
- 		break;
+ 	uint32_t *loc32;
+ 	uint64_t *location = (uint64_t *)ptr;
+@@ -1261,7 +1235,7 @@ void machine_apply_elf_rel(struct mem_ehdr *ehdr, struct mem_sym *UNUSED(sym),
+ 	uint64_t imm;
+ 	const char *type = NULL;
+ 
+-	switch(r_type) {
++	switch((enum aarch64_rel_type)r_type) {
+ 	case R_AARCH64_ABS64:
+ 		type = "ABS64";
+ 		loc64 = ptr;
 -- 
 2.31.1
 
