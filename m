@@ -1,52 +1,25 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 31 Mar 2022 19:32:17 +0800
-Subject: [PATCH v2 0/2] x86/kexec: fix memory leak of elf header buffer
-In-Reply-To: <20220223113225.63106-1-bhe@redhat.com>
-References: <20220223113225.63106-1-bhe@redhat.com>
-Message-ID: <YkWRQdp7TxV22ygO@MiWiFi-R3L-srv>
+From: Matthew Wilcox <willy@infradead.org>
+Date: Thu, 31 Mar 2022 15:36:39 +0100
+Subject: [PATCH v4 0/4] Convert vmcore to use an iov_iter
+In-Reply-To: <YkWPrWOe1hlfqGdy@MiWiFi-R3L-srv>
+References: <20220318093706.161534-1-bhe@redhat.com>
+ <YkWPrWOe1hlfqGdy@MiWiFi-R3L-srv>
+Message-ID: <YkW8d/HuXewjSuXs@casper.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Andrew,
+On Thu, Mar 31, 2022 at 07:25:33PM +0800, Baoquan He wrote:
+> Hi Andrew,
+> 
+> On 03/18/22 at 05:37pm, Baoquan He wrote:
+> > Copy the description of v3 cover letter from Willy:
+> 
+> Could you pick this series into your tree? I reviewed the patches 1~3
+> and tested the whole patchset, no issue found.
 
-On 02/23/22 at 07:32pm, Baoquan He wrote:
-> The memory leak is reported by kmemleak detector, has been existing
-> for very long time. It casue much memory loss on large machine
-> with huge memory hotplug which will trigger kdump kernel reloading
-> many times, with kexec_file_load interface.
-
-Could you merge these two patches? Or should I ping x86 maintainers to
-take them? 
-
-Thanks
-Baoquan
-
-> 
-> And in patch 2, clean up is done to remove unneeded
-> arch_kexec_kernel_image_load() and rename functions.
-> 
-> V1 post can be found here:
-> https://lore.kernel.org/all/20211029072424.9109-1-bhe at redhat.com/T/#u
-> 
-> v1->v2:
->  No code change. The v1 post has been acked by Dave Young but not
-> merged. In v2, just merging the old patch 1 and 2 as per Dave's concern
-> in v1 post.
-> 
-> Baoquan He (2):
->   x86/kexec: fix memory leak of elf header buffer
->   kexec_file: clean up arch_kexec_kernel_image_load
-> 
->  arch/x86/kernel/machine_kexec_64.c | 23 +++++++++--------------
->  include/linux/kexec.h              |  1 -
->  kernel/kexec_file.c                |  9 ++-------
->  3 files changed, 11 insertions(+), 22 deletions(-)
-> 
-> -- 
-> 2.31.1
-> 
-
+... I'd fold patch 4 into patch 1, but yes, Andrew, please take these
+patches.
 
