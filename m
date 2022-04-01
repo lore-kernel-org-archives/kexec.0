@@ -1,128 +1,25 @@
-From: Palmer Dabbelt <palmer@dabbelt.com>
-Date: Thu, 31 Mar 2022 19:37:33 -0700 (PDT)
-Subject: [PATCH v2 -next 0/6] riscv: kexec: add kexec_file_load() support
-In-Reply-To: <20220330081701.177026-1-lizhengyu3@huawei.com>
-Message-ID: <mhng-1152c6f3-80c2-4409-848b-b882bbe2cbb8@palmer-mbp2014>
+From: Simon Horman <horms@verge.net.au>
+Date: Fri, 1 Apr 2022 16:00:42 +0200
+Subject: [PATCH] arm64: fix static data relocations in
+ machine_apply_elf_rel()
+In-Reply-To: <20220331060331.13866-1-piliu@redhat.com>
+References: <20220331060331.13866-1-piliu@redhat.com>
+Message-ID: <YkcFisYB2dGi3XBh@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, 30 Mar 2022 01:16:55 PDT (-0700), lizhengyu3 at huawei.com wrote:
-> This patchset implement kexec_file_load() support on riscv, Most of the
-> code is based on the kexec-tool-patch repo developed by Nick Kossifids.
->
-> This patch series enables us to load the riscv vmlinux by specifying
-> its file decriptor, instead of user-filled buffer via kexec_file_load()
-> syscall.
-> ``
-> Contrary to kexec_load() system call, we reuse the dt blob of the first
-> kernel to the 2nd explicitly.
->
-> To use kexec_file_load() system call, instead of kexec_load(), at kexec
-> command, '-s' options must be specified. The patch for kexec_tools has
-> to be apply to riscv architecture source like this:
->
-> int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
-> 	...
-> 	if (info->file_mode) {
-> 		return prepare_kexec_file_options(info);
-> 	}
-> 	...
->
-> Add following routine to prepare cmdline_ptr, cmdline_len and initrd_fd
-> for syscall kexec_file_load:
->
-> int prepare_kexec_file_options(struct kexec_info *info)
-> {
-> 	int fd;
-> 	ssize_t result;
-> 	struct stat stats;
->
-> 	if (arch_options.cmdline) {
-> 		info->command_line = (char *)arch_options.cmdline;
-> 		info->command_line_len = strlen(info->command_line) + 1;
-> 	}
->
-> 	if (!arch_options.initrd_path) {
-> 		info->initrd_fd = -1;
-> 		return 0;
-> 	}
->
-> 	fd = open(arch_options.initrd_path, O_RDONLY | _O_BINARY);
-> 	if (fd < 0) {
-> 		fprintf(stderr, "Cannot open `%s': %s\n", arch_options.initrd_path,
-> 				strerror(errno));
-> 		return -EINVAL;
-> 	}
-> 	result = fstat(fd, &stats);
-> 	if (result < 0) {
-> 		close(fd);
-> 		fprintf(stderr, "Cannot stat: %s: %s\n", arch_options.initrd_path,
-> 				strerror(errno));
-> 		return -EINVAL;
-> 	}
-> 	info->initrd_fd = fd;
-> 	return 0;
-> }
->
-> The basic usage of kexec_file is:
-> 1) Reload capture kernel image:
-> $ kexec -s -l <riscv-vmlinux> --reuse-cmdline
->
-> 2) Startup capture kernel:
-> $ kexec -e
->
-> For kdump:
-> 1) Reload capture kernel image:
-> $ kexec -s -p <riscv-vmlinux> --reuse-cmdline
->
-> 2) Do something to crash, like:
-> $ echo c > /proc/sysrq-trigger
->
-> v2:
->  * Support kdump
->  * Support purgatory
->  * Minor cleanups
->
-> Li Zhengyu (3):
->   RISC-V: Support for kexec_file on panic
->   RISC-V: Add purgatory
->   RISC-V: Load purgatory in kexec_file
->
-> Liao Chang (3):
->   kexec_file: Fix kexec_file.c build error for riscv platform
->   RISC-V: use memcpy for kexec_file mode
->   RISC-V: Add kexec_file support
->
->  arch/riscv/Kbuild                      |   2 +
->  arch/riscv/Kconfig                     |  17 +
->  arch/riscv/include/asm/kexec.h         |   4 +
->  arch/riscv/kernel/Makefile             |   1 +
->  arch/riscv/kernel/elf_kexec.c          | 448 +++++++++++++++++++++++++
->  arch/riscv/kernel/machine_kexec.c      |   4 +-
->  arch/riscv/kernel/machine_kexec_file.c |  14 +
->  arch/riscv/purgatory/.gitignore        |   4 +
->  arch/riscv/purgatory/Makefile          |  95 ++++++
->  arch/riscv/purgatory/entry.S           |  47 +++
->  arch/riscv/purgatory/purgatory.c       |  42 +++
->  include/linux/kexec.h                  |   2 +-
->  kernel/kexec_file.c                    |   4 +-
->  13 files changed, 680 insertions(+), 4 deletions(-)
->  create mode 100644 arch/riscv/kernel/elf_kexec.c
->  create mode 100644 arch/riscv/kernel/machine_kexec_file.c
->  create mode 100644 arch/riscv/purgatory/.gitignore
->  create mode 100644 arch/riscv/purgatory/Makefile
->  create mode 100644 arch/riscv/purgatory/entry.S
->  create mode 100644 arch/riscv/purgatory/purgatory.c
+On Thu, Mar 31, 2022 at 02:03:31PM +0800, Pingfan Liu wrote:
+> As for 'static data relocations', instead of patching an instruction (OR
+> ops), it should be assigned to value directly.
+> 
+> Signed-off-by: Pingfan Liu <piliu@redhat.com>
+> Cc: Geoff Levand <geoff@infradead.org>
+> Cc: Catalin Marinas <catalin.marinas@arm.com>
+> Cc: Simon Horman <horms@verge.net.au>
+> To: kexec at lists.infradead.org
 
-This seems like a reasonable way to do things, but I haven't looked over 
-the code yet.  Looks like the autobuilders are finding some failures, 
-and it's way too late for 5.18.  If you have time to fix the failures 
-then it'd be great to have a version based on rc1 with these fixed, so 
-we can target the next merge window.  That'll also make it easier to 
-look this over on my end.
-
-Thanks!
+Thanks, applied.
 
