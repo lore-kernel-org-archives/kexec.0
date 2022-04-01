@@ -1,40 +1,48 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 1 Apr 2022 09:23:42 +0800
-Subject: [PATCH v4 0/4] Convert vmcore to use an iov_iter
-In-Reply-To: <20220331171407.0f7458c480e1c9406ca9337e@linux-foundation.org>
-References: <20220318093706.161534-1-bhe@redhat.com>
- <YkWPrWOe1hlfqGdy@MiWiFi-R3L-srv>
- <YkW8d/HuXewjSuXs@casper.infradead.org>
- <20220331171407.0f7458c480e1c9406ca9337e@linux-foundation.org>
-Message-ID: <YkZUHu1n7ZEaqLoq@MiWiFi-R3L-srv>
+From: Coiby Xu <coxu@redhat.com>
+Date: Fri,  1 Apr 2022 09:31:15 +0800
+Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump kernel
+ image signature
+Message-ID: <20220401013118.348084-1-coxu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 03/31/22 at 05:14pm, Andrew Morton wrote:
-> On Thu, 31 Mar 2022 15:36:39 +0100 Matthew Wilcox <willy@infradead.org> wrote:
-> 
-> > On Thu, Mar 31, 2022 at 07:25:33PM +0800, Baoquan He wrote:
-> > > Hi Andrew,
-> > > 
-> > > On 03/18/22 at 05:37pm, Baoquan He wrote:
-> > > > Copy the description of v3 cover letter from Willy:
-> > > 
-> > > Could you pick this series into your tree? I reviewed the patches 1~3
-> > > and tested the whole patchset, no issue found.
-> > 
-> > ... I'd fold patch 4 into patch 1,
-> 
-> I think so too, please.  The addition then removal of a
-> read_from_oldmem() implementation is a bit odd.
-> 
-> > but yes, Andrew, please take these patches.
-> 
-> And against current -linus please.  There have been some changes since
-> then (rcu stuff).
+Currently, a problem faced by arm64 is if a kernel image is signed by a
+MOK key, loading it via the kexec_file_load() system call would be
+rejected with the error "Lockdown: kexec: kexec of unsigned images is
+restricted; see man kernel_lockdown.7".
 
-OK, I will fold 1 to 4, and send v5 based on linus's tree.
+This patch set allows arm64 to use more system keyrings to verify kdump 
+kernel image signature by making the existing code in x64 public.
+
+v5:
+ - improve commit message [Baoquan]
+
+v4:
+ - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+
+v3:
+ - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+ - clean up arch_kexec_kernel_verify_sig [Eric]
+
+v2:
+ - only x86_64 and arm64 need to enable PE file signature check [Dave]
+
+Coiby Xu (3):
+  kexec: clean up arch_kexec_kernel_verify_sig
+  kexec, KEYS: make the code in bzImage64_verify_sig generic
+  arm64: kexec_file: use more system keyrings to verify kernel image
+    signature
+
+ arch/arm64/kernel/kexec_image.c   |  4 +--
+ arch/x86/kernel/kexec-bzimage64.c | 13 +-------
+ include/linux/kexec.h             |  7 +++--
+ kernel/kexec_file.c               | 51 ++++++++++++++++++-------------
+ 4 files changed, 37 insertions(+), 38 deletions(-)
+
+-- 
+2.34.1
 
 
