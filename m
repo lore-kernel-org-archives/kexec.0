@@ -1,107 +1,72 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Fri, 1 Apr 2022 13:35:28 -0500
-Subject: [PATCH v5 8/8] x86/crash: Add x86 crash hotplug support for
- kexec_load
-In-Reply-To: <YkWMFzxJpkiTjKvL@MiWiFi-R3L-srv>
-References: <20220303162725.49640-1-eric.devolder@oracle.com>
- <20220303162725.49640-9-eric.devolder@oracle.com>
- <YkWMFzxJpkiTjKvL@MiWiFi-R3L-srv>
-Message-ID: <bc5ec4a0-a33c-1ca1-c66d-635f4e0b9731@oracle.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Sat,  2 Apr 2022 12:30:05 +0800
+Subject: [PATCH v5 0/3] Convert vmcore to use an iov_iter
+Message-ID: <20220402043008.458679-1-bhe@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+Copy the description of v3 cover letter from Willy:
+===
+For some reason several people have been sending bad patches to fix
+compiler warnings in vmcore recently.  Here's how it should be done.
+Compile-tested only on x86.  As noted in the first patch, s390 should
+take this conversion a bit further, but I'm not inclined to do that
+work myself.
+
+V4:
+[PATCH v4 0/3] Convert vmcore to use an iov_iter
+https://lore.kernel.org/all/20220318093706.161534-1-bhe at redhat.com/T/#u
+
+v3:
+[PATCH v3 0/3] Convert vmcore to use an iov_iter
+https://lore.kernel.org/all/20211213143927.3069508-1-willy at infradead.org/T/#u
 
 
-On 3/31/22 06:10, Baoquan He wrote:
-> On 03/03/22 at 11:27am, Eric DeVolder wrote:
->> For kexec_file_load support, the loading of the crash kernel occurs
->> entirely within the kernel, and as such the elfcorehdr is readily
->> identified (so that it can be modified upon hotplug events).
->>
->> This change enables support for kexec_load by identifying the
->> elfcorehdr segment in the arch_crash_hotplug_handler(), if it has
->> not already been identified.
->>
->> In general, support for kexec_load requires corresponding changes
->> to the userspace kexec-tools utility. It is the responsibility of
->> the userspace kexec utility to ensure that:
->>   - the elfcorehdr segment is sufficiently large enough to accommodate
->>     hotplug changes, ala CRASH_HOTPLUG_ELFCOREHDR_SZ.
->>   - provides a purgatory that excludes the elfcorehdr from its list of
->>     run-time segments to check.
->> These changes to the userspace kexec utility are available, but not
->> yet accepted upstream.
-> 
-> These backgroud information should be put in cover letter, or in patch
-> where they won't be grabbed into the final commit log.
-Removed.
+Changelog:
+===
+v5:
+ - Rebased on Linus's latest master branch.
+ - Merge the patch 4 of v4 into patch 2.
 
-> 
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
-> Here, if you want to put some status or backgroud information and expect
-> they are not got into log, this is a appropriate place.
-> 
-> 
->>   arch/x86/kernel/crash.c | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
->> index 5da30e2bc780..45cc6e3af63e 100644
->> --- a/arch/x86/kernel/crash.c
->> +++ b/arch/x86/kernel/crash.c
->> @@ -486,6 +486,32 @@ void arch_crash_hotplug_handler(struct kimage *image,
->>   	void *elfbuf = NULL;
->>   	unsigned long mem, memsz;
->>   
->> +	/*
->> +	 * When the struct kimage is alloced, it is wiped to zero, so
->> +	 * the elf_index_valid defaults to false. It is set on the
->> +	 * kexec_file_load path, or here for kexec_load.
-> 
->           I would make the last line as:
-> 	 kexec_file_load path, or here for kexec_load if not already
->           identified..
-done
+v4:
+ - Append one patch to replace the open code with iov_iter_count().
+   This is suggested by Al.
+ - Fix a indentation error by replacing space with tab in
+   arch/sh/kernel/crash_dump.c of patch 1 reported by checkpatch. The
+   rest of patch 1~3 are untouched.
+ - Add Christopy's Reviewed-by and my Acked-by for patch 1~3.
+v3:
+ - Send the correct patches this time
+v2:
+ - Removed unnecessary kernel-doc
+ - Included uio.h to fix compilation problems
+ - Made read_from_oldmem_iter static to avoid compile warnings during the
+   conversion
+ - Use iov_iter_truncate() (Christoph)
 
-> 
->> +	 */
->> +	if (!image->elf_index_valid) {
->> +		unsigned int n;
->> +
->> +		for (n = 0; n < image->nr_segments; n++) {
->> +			mem = image->segment[n].mem;
->> +			memsz = image->segment[n].memsz;
->> +			ptr = map_crash_pages(mem, memsz);
->> +			if (ptr) {
->> +				/* The segment containing elfcorehdr */
->> +				if ((ptr[0] == 0x7F) &&
->> +					(ptr[1] == 'E') &&
->> +					(ptr[2] == 'L') &&
->> +					(ptr[3] == 'F')) {
-> 
-> Can it be like memcmp(ptr, ELFMAG, SELFMAG) as we have done in
-> parse_crash_elf_headers()? With that, one line is taken.
-done
+Matthew Wilcox (Oracle) (3):
+  vmcore: Convert copy_oldmem_page() to take an iov_iter
+  vmcore: Convert __read_vmcore to use an iov_iter
+  vmcore: Convert read_from_oldmem() to take an iov_iter
 
-> 
->> +					image->elf_index = (int)n;
->> +					image->elf_index_valid = true;
->> +				}
->> +			}
->> +			unmap_crash_pages((void **)&ptr);
->> +		}
->> +	}
->> +
->>   	/* Must have valid elfcorehdr index */
->>   	if (!image->elf_index_valid) {
->>   		pr_err("crash hp: unable to locate elfcorehdr segment");
->> -- 
->> 2.27.0
->>
-> 
+ arch/arm/kernel/crash_dump.c     |  27 +------
+ arch/arm64/kernel/crash_dump.c   |  29 +------
+ arch/ia64/kernel/crash_dump.c    |  32 +-------
+ arch/mips/kernel/crash_dump.c    |  27 +------
+ arch/powerpc/kernel/crash_dump.c |  35 ++-------
+ arch/riscv/kernel/crash_dump.c   |  26 +------
+ arch/s390/kernel/crash_dump.c    |  13 ++--
+ arch/sh/kernel/crash_dump.c      |  29 ++-----
+ arch/x86/kernel/crash_dump_32.c  |  29 +------
+ arch/x86/kernel/crash_dump_64.c  |  48 ++++--------
+ fs/proc/vmcore.c                 | 130 +++++++++++++------------------
+ include/linux/crash_dump.h       |  19 ++---
+ 12 files changed, 123 insertions(+), 321 deletions(-)
+
+-- 
+2.34.1
+
 
