@@ -1,38 +1,35 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Sun, 3 Apr 2022 09:25:22 +0800
-Subject: [PATCH v5 1/3] vmcore: Convert copy_oldmem_page() to take an
- iov_iter
-In-Reply-To: <Ykh3FVUFQH0x11Zw@casper.infradead.org>
-References: <20220402043008.458679-1-bhe@redhat.com>
- <20220402043008.458679-2-bhe@redhat.com>
- <YkffO7QHuR2vq3gI@MiWiFi-R3L-srv>
- <Ykh3FVUFQH0x11Zw@casper.infradead.org>
-Message-ID: <Ykj3gsRD7il4KCLW@MiWiFi-R3L-srv>
+From: Philipp Rudo <prudo@redhat.com>
+Date: Mon,  4 Apr 2022 17:50:48 +0200
+Subject: [PATCH 0/2] makedumpfile: improve write_kdump_pages_cyclic
+Message-ID: <20220404155050.6898-1-prudo@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/02/22 at 05:17pm, Matthew Wilcox wrote:
-> On Sat, Apr 02, 2022 at 01:29:31PM +0800, Baoquan He wrote:
-> > On 04/02/22 at 12:30pm, Baoquan He wrote:
-> > 
-> > It's odd. I cann't see the content of patches in this series from my
-> > mailbox and mail client, but I can see them in lore.kernel.org.
-> 
-> Yes, Red Hat have screwed up their email server again.  David Hildenbrand
-> already filed a ticket, but you should too so they don't think it's
-> just him.
-> 
-> https://lore.kernel.org/linux-mm/6696fb21-090c-37c6-77a7-79423cc9c703 at redhat.com/
+Hi,
 
-I see. It could be the same issue. I just filed an internal ticket to
-request a fix, thx.
+I noticed that on s390 makedumpfile sometimes floods the console with
 
-> 
-> > https://lore.kernel.org/all/20220402043008.458679-1-bhe at redhat.com/T/#u
-> > 
-> 
+Copying data       : [100.0 %] -           eta: 0s
+
+causing the dump process to slow down dramatically. The patches attached are
+two somewhat separate approaches to fix this issue. In my opinion both patches
+make sense to be included even when one of them would be enough to fix the
+problem described above.
+
+Thanks
+Philipp
+
+Philipp Rudo (2):
+  makedumpfile: omit unnecessary calls to print_progress
+  makedumpfile: break loop after last dumpable page
+
+ makedumpfile.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+-- 
+2.35.1
 
 
