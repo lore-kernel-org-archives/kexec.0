@@ -1,67 +1,65 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Wed, 6 Apr 2022 08:06:05 +0000
-Subject: EXT: RE: crash: read error on type: "memory section root table"
-In-Reply-To: <TYYPR01MB6777C0B689B45FE92EB4712FDDE79@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-References: <DB7PR08MB327305868D5DF87C2E31B972CA1E9@DB7PR08MB3273.eurprd08.prod.outlook.com>
- <TYYPR01MB67776D129929014239C34414DD1F9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <DB7PR08MB32733EC5606D43D47FDEDCC1CAE09@DB7PR08MB3273.eurprd08.prod.outlook.com>
- <TYYPR01MB6777C0B689B45FE92EB4712FDDE79@TYYPR01MB6777.jpnprd01.prod.outlook.com>
-Message-ID: <TYYPR01MB6777B62FFF63DBFC18E6EBBADDE79@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Uladzislau Rezki <urezki@gmail.com>
+Date: Wed, 6 Apr 2022 11:13:17 +0200
+Subject: [PATCH] mm/vmalloc: fix spinning drain_vmap_work after reading
+ from /proc/vmcore
+In-Reply-To: <20220406044244.GA9959@lst.de>
+References: <75014514645de97f2d9e087aa3df0880ea311b77.1649187356.git.osandov@fb.com>
+ <20220406044244.GA9959@lst.de>
+Message-ID: <Yk1Zrd5BLeQAU+vn@pc638.lan>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> -----Original Message-----
-> > Hello,
-> >
-> > Suggested trace above gives following information after a crash -d 8 command:
-> > <...>
-> > kernel NR_CPUS: 2
-> > <readmem: ffffffffa4925820, KVADDR, "high_memory", 8, (FOE), 56017b542648>
-> > <read_diskdump: addr: ffffffffa4925820 paddr: 12925820 cnt: 8>
-> > read_diskdump: paddr/pfn: 12925820/12925 -> cache physical page: 12925000
-> > GETBUF(328 -> 0)
-> > FREEBUF(0)
-> > GETBUF(328 -> 0)
-> > FREEBUF(0)
-> > PAGESIZE=4096
-> > mem_section_size = 16384
-> > NR_SECTION_ROOTS = 2048
-> > NR_MEM_SECTIONS = 524288
-> > SECTIONS_PER_ROOT = 256
-> > SECTION_ROOT_MASK = 0xff
-> > PAGES_PER_SECTION = 32768
-> > <readmem: ffffffffa4926db0, KVADDR, "mem_section", 8, (FOE), 7ffd1b6bb000>
-> > <read_diskdump: addr: ffffffffa4926db0 paddr: 12926db0 cnt: 8>
-> > read_diskdump: paddr/pfn: 12926db0/12926 -> cache physical page: 12926000
-> > <readmem: ffff904c7f7fc000, KVADDR, "memory section root table", 16384, (FOE), 56017da26fd0>
-> > <read_diskdump: addr: ffff904c7f7fc000 paddr: 3f7fc000 cnt: 4096>
-> > read_diskdump: paddr/pfn: 3f7fc000/3f7fc -> cache physical page: 3f7fc000
-> > crash: PAG3 - errno=2 r=0 pd.size=49
-> > read_diskdump: READ_ERROR: cannot cache page: 3f7fc000
-> > crash: read error: kernel virtual address: ffff904c7f7fc000  type: "memory section root table"
+> On Tue, Apr 05, 2022 at 12:40:31PM -0700, Omar Sandoval wrote:
+> > A simple way to "fix" this would be to make set_iounmap_nonlazy() set
+> > vmap_lazy_nr to lazy_max_pages() instead of lazy_max_pages() + 1. But, I
+> > think it'd be better to get rid of this hack of clobbering vmap_lazy_nr.
+> > Instead, this fix makes __copy_oldmem_page() explicitly drain the vmap
+> > areas itself.
 > 
-> hmm, r=0 means end of file, can you check again whether pd.offset exceeds
-> the dumpfile size?  If so, somehow the dumpfile is shorter than expected.
-> 
-> I think a RHEL-based kexec-tools does "sync" after makedumpfile, but
-> can you check?
+> This fixes the bug and the interface also is better than what we had
+> before.  But a vmap/iounmap_eager would seem even better.  But hey,
+> right now it has one caller in always built ?n x86 arch code, so maybe
+> it isn't worth spending more effort on this.
+>
+IMHO, it just makes sense to remove it. The set_iounmap_nonlazy() was
+added in 2010 year:
 
-> > Note 2: The debug message of makedumpfile report 'Write bytes     : 17364943', but the file is ~5MB for '-d 31' opton.
+<snip>
+commit 3ee48b6af49cf534ca2f481ecc484b156a41451d
+Author: Cliff Wickman <cpw@sgi.com>
+Date:   Thu Sep 16 11:44:02 2010 -0500
 
-This also looks the same situation.
+    mm, x86: Saving vmcore with non-lazy freeing of vmas
 
-Does cp command always work on your machine to capture /proc/vmcore?
-e.g. with a RHEL-based kexec-tools:
+    During the reading of /proc/vmcore the kernel is doing
+    ioremap()/iounmap() repeatedly. And the buildup of un-flushed
+    vm_area_struct's is causing a great deal of overhead. (rb_next()
+    is chewing up most of that time).
 
-  core_collector cp
+    This solution is to provide function set_iounmap_nonlazy(). It
+    causes a subsequent call to iounmap() to immediately purge the
+    vma area (with try_purge_vmap_area_lazy()).
 
-The size of a vmcore should become almost same as memory size.
+    With this patch we have seen the time for writing a 250MB
+    compressed dump drop from 71 seconds to 44 seconds.
 
-Thanks,
-Kazu
+    Signed-off-by: Cliff Wickman <cpw@sgi.com>
+    Cc: Andrew Morton <akpm@linux-foundation.org>
+    Cc: kexec at lists.infradead.org
+    Cc: <stable@kernel.org>
+    LKML-Reference: <E1OwHZ4-0005WK-Tw@eag09.americas.sgi.com>
+    Signed-off-by: Ingo Molnar <mingo@elte.hu>
+<snip>
 
+and the reason was the "slow vmap" code, i.e. due to poor performance
+they decided to drop the lazily ASAP. Now we have absolutely different
+picture when it comes to performance and the vmalloc/vmap code.
+
+Any thoughts?
+
+--
+Uladzislau Rezki
 
