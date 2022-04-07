@@ -1,67 +1,71 @@
 From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Thu, 7 Apr 2022 06:42:14 +0000
-Subject: [PATCH 1/2] makedumpfile: omit unnecessary calls to print_progress
-In-Reply-To: <20220404155050.6898-2-prudo@redhat.com>
+Date: Thu, 7 Apr 2022 06:43:00 +0000
+Subject: [PATCH 2/2] makedumpfile: break loop after last dumpable page
+In-Reply-To: <20220404155050.6898-3-prudo@redhat.com>
 References: <20220404155050.6898-1-prudo@redhat.com>
- <20220404155050.6898-2-prudo@redhat.com>
-Message-ID: <TYYPR01MB67773888082CC764C9475D79DDE69@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+ <20220404155050.6898-3-prudo@redhat.com>
+Message-ID: <TYYPR01MB6777476C26FE1B8F2E618E4FDDE69@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Philipp,
-
 -----Original Message-----
-> Check first if a page is dumpable before printing the process. Otherwise
-> there is the chance that num_dumped % per == 0 at the beginning of the
-> block of undampable pages. In that case num_dumped isn't updated before
-> the next dumpable page and thus print_process is called for every page
-> in that block.
+> Once the last dumpable page was processed there is no need to finish the
+> loop to the last page. Thus exit early to improve performance.
 > 
-> This is especially annoying when the block is after the last dumpable
-> page and thus num_dumped == info->num_dumpable. In that case
-> print_process will bypass its check to only print the process once every
-> second and thus flood the console with unnecessary prints. This can lead
-> to a severe decrease in performance especially when the console is in
-> line mode.
+> Signed-off-by: Philipp Rudo <prudo@redhat.com>
+> ---
+>  makedumpfile.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 2ef3458..c944d0e 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -8884,6 +8884,12 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
+> 
+>  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
+> 
+> +		/*
+> +		 * All dumpable pages have been processed. No need to continue.
+> +		 */
+> +		if (num_dumped == info->num_dumpable)
+> +			break;
 
-Good catch and improvement, will merge this.
+This patch is likely to increase the possibility of failure to capture
+/proc/kcore, although this is an unofficial functionality...
+
+  # makedumpfile -ld31 /proc/kcore kcore.snap
+  # crash vmlinux kcore.snap
+  ...
+  crash: page incomplete: kernel virtual address: ffff916fbeffed00  type: "pglist node_id"
+
+In cyclic mode, makedumpfile first calculates only info->num_dumpable [1] and
+frees the used bitmap, and later creates 2nd bitmap again [2] at this time.
+
+  create_dumpfile
+    create_dump_bitmap
+      info->num_dumpable = get_num_dumpable_cyclic()  <<-- [1]
+    writeout_dumpfile
+      write_kdump_pages_and_bitmap_cyclic
+        foreach cycle
+          create_2nd_bitmap  <<-- [2]
+          write_kdump_pages_cyclic
+
+So with live system, num_dumped can exceed info->num_dumpable.
+If it stops at info->num_dumpable, some necessary data can be missed.
+
+Capturing /proc/kcore is still fragile and not considered enough, but
+sometimes useful... when I want to capture a snapshot of memory.
+
+(the bitmap is allocated as block, so probably it's working as some buffer?)
+
+So I will merge the 1/2 patch, but personally would not like to merge
+this patch.  How necessary is this?
 
 Thanks,
 Kazu
 
-> 
-> Signed-off-by: Philipp Rudo <prudo@redhat.com>
-> ---
->  makedumpfile.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 14556db..2ef3458 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -8884,16 +8884,16 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> 
->  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-> 
-> -		if ((num_dumped % per) == 0)
-> -			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
-> -
->  		/*
->  		 * Check the excluded page.
->  		 */
->  		if (!is_dumpable(info->bitmap2, pfn, cycle))
->  			continue;
-> 
-> +		if ((num_dumped % per) == 0)
-> +			print_progress(PROGRESS_COPY, num_dumped, info->num_dumpable, &ts_start);
->  		num_dumped++;
-> +
->  		if (!read_pfn(pfn, buf))
->  			goto out;
-> 
-> --
-> 2.35.1
 
