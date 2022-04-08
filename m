@@ -1,85 +1,51 @@
-From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
-Date: Fri, 8 Apr 2022 10:51:20 +0200
-Subject: [PATCH 0/4] Unifrom keyring support across architectures and
- functions
-In-Reply-To: <20220408074704.wkyyv2qnx66iinzo@Rk>
-References: <cover.1644953683.git.msuchanek@suse.de>
- <20220408074704.wkyyv2qnx66iinzo@Rk>
-Message-ID: <20220408085120.GV163591@kunlun.suse.cz>
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Date: Fri,  8 Apr 2022 10:52:59 +0200
+Subject: [PATCH v2 1/1] check that order of free pages falls within valid range
+Message-ID: <20220408085259.184465-1-egorenar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Apr 08, 2022 at 03:47:04PM +0800, Coiby Xu wrote:
-> Hi Michal,
-> 
-> As mentioned by Baoquan, I have a patch set "[PATCH v5 0/3] use more
-> system keyrings to verify arm64 kdump kernel image signature" [1]. The
-> differences between your patch set and mine are as follows,  - my patch set
-> only adds support for arm64 while yours also extends to
->    s390
->  - I made the code for verifying signed kernel image as PE file in x86
->    public so arm64 can reuse the code as well which seems to be better
->    approach
->  - I also cleaned up clean up arch_kexec_kernel_verify_sig
-> 
-> Would you mind if I integrate your first 3 patches with mine as follows
->  - for arm64, I'll use my version
->  - for s390, I'll use your version
+This change makes __exclude_unnecessary_pages() more robust by
+verifying that the order of a free page is valid before computing the size
+of its memory block in the buddy system.
 
-Great
+The order of a free page cannot be larger than (MAX_ORDER - 1) because
+the array 'zone.free_area' is of size MAX_ORDER.
 
-less code duplication is always good.
+This situation is reproducible with some s390x dumps:
 
-Thanks
+__exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
 
-Michal
+References:
+- https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
+- https://www.kernel.org/doc/gorman/html/understand/understand009.html
 
-> 
-> For your last patch which allows to use of platform keyring for
-> signature verification of kernel module, I'll leave it to yourself. How
-> do you think about it?
-> 
-> 
-> [1] https://lore.kernel.org/all/20220401013118.348084-1-coxu at redhat.com/
-> 
-> On Tue, Feb 15, 2022 at 08:39:37PM +0100, Michal Suchanek wrote:
-> > While testing KEXEC_SIG on powerpc I noticed discrepancy in support for
-> > different keyrings across architectures and between KEXEC_SIG and
-> > MODULE_SIG. Fix this by enabling suport for the missing keyrings.
-> > 
-> > The latter two patches obviously conflict with the ongoing module code
-> > cleanup. If they turn out desirable I will add them to the other series
-> > dealing with KEXEC_SIG.
-> > 
-> > The arm patches can be merged independently.
-> > 
-> > Thanks
-> > 
-> > Michal
-> > 
-> > Michal Suchanek (4):
-> >  Fix arm64 kexec forbidding kernels signed with keys in the secondary
-> >    keyring to boot
-> >  kexec, KEYS, arm64: Make use of platform keyring for signature
-> >    verification
-> >  kexec, KEYS, s390: Make use of built-in and secondary keyring for
-> >    signature verification
-> >  module, KEYS: Make use of platform keyring for signature verification
-> > 
-> > arch/arm64/kernel/kexec_image.c       | 13 +++++++++++--
-> > arch/s390/kernel/machine_kexec_file.c | 18 +++++++++++++-----
-> > kernel/module_signing.c               | 14 ++++++++++----
-> > 3 files changed, 34 insertions(+), 11 deletions(-)
-> > 
-> > -- 
-> > 2.31.1
-> > 
-> 
-> -- 
-> Best regards,
-> Coiby
-> 
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+---
+ makedumpfile.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index 2ef345879524..56aa026e7b34 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6457,6 +6457,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		else if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
++			if (private >= ARRAY_LENGTH(zone.free_area)) {
++				ERRMSG("Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
++				       pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
++				free(page_cache);
++				return FALSE;
++			}
+ 			nr_pages = 1 << private;
+ 			pfn_counter = &pfn_free;
+ 		}
+-- 
+2.34.1
+
 
