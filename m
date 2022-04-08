@@ -1,75 +1,68 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Fri, 8 Apr 2022 15:11:08 +0800
-Subject: [PATCH 1/4] Fix arm64 kexec forbidding kernels signed with keys
- in the secondary keyring to boot
-In-Reply-To: <83b3583f35c50c609739a8d857d14e8410293373.1644953683.git.msuchanek@suse.de>
-References: <cover.1644953683.git.msuchanek@suse.de>
- <83b3583f35c50c609739a8d857d14e8410293373.1644953683.git.msuchanek@suse.de>
-Message-ID: <Yk/eFBCqBTu4eZf2@MiWiFi-R3L-srv>
+Date: Fri, 8 Apr 2022 15:17:19 +0800
+Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
+ kernel image signature
+In-Reply-To: <20220401013118.348084-1-coxu@redhat.com>
+References: <20220401013118.348084-1-coxu@redhat.com>
+Message-ID: <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
-
-On 02/15/22 at 08:39pm, Michal Suchanek wrote:
-> commit d3bfe84129f6 ("certs: Add a secondary system keyring that can be added to dynamically")
-> split of .system_keyring into .builtin_trusted_keys and
-> .secondary_trusted_keys broke kexec, thereby preventing kernels signed by
-> keys which are now in the secondary keyring from being kexec'd.
-> 
-> Fix this by passing VERIFY_USE_SECONDARY_KEYRING to
-> verify_pefile_signature().
-> 
-> Cherry-picked from
-> commit ea93102f3224 ("Fix kexec forbidding kernels signed with keys in the secondary keyring to boot")
-
-This line may need a line feed?
-
-The patch 1~3 looks good to me. Coiby encountered the same issue
-on arm64, and has posted a patch series to fix that and there's clean up
-and code adjustment.
-
-https://lore.kernel.org/all/20220401013118.348084-1-coxu at redhat.com/T/#u
-
 Hi Coiby,
 
-Maybe you can check this patchset, and consider how to integrate your
-patches based on this patch 1~/3?
+On 04/01/22 at 09:31am, Coiby Xu wrote:
+> Currently, a problem faced by arm64 is if a kernel image is signed by a
+> MOK key, loading it via the kexec_file_load() system call would be
+> rejected with the error "Lockdown: kexec: kexec of unsigned images is
+> restricted; see man kernel_lockdown.7".
+> 
+> This patch set allows arm64 to use more system keyrings to verify kdump 
+> kernel image signature by making the existing code in x64 public.
 
-For this patch itself, ack.
+Thanks for updating. It would be great to tell why the problem is
+met, then allow arm64 to use more system keyrings can solve it.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Meanwhile, I noticed Michal also posted a patchset to address the same
+issue, while he tries to make it work on s390 too. Could you check and
+consider if these two patches can be integrated?
+
+[PATCH 0/4] Unifrom keyring support across architectures and functions
+https://lore.kernel.org/lkml/cover.1644953683.git.msuchanek at suse.de/
+
+Thanks
+Baoquan
 
 > 
-> Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
-> Cc: kexec at lists.infradead.org
-> Cc: keyrings at vger.kernel.org
-> Cc: linux-security-module at vger.kernel.org
-> Cc: stable at kernel.org
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> ---
->  arch/arm64/kernel/kexec_image.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+> v5:
+>  - improve commit message [Baoquan]
 > 
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 9ec34690e255..1fbf2ee7c005 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -133,7 +133,8 @@ static void *image_load(struct kimage *image,
->  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
->  static int image_verify_sig(const char *kernel, unsigned long kernel_len)
->  {
-> -	return verify_pefile_signature(kernel, kernel_len, NULL,
-> +	return verify_pefile_signature(kernel, kernel_len,
-> +				       VERIFY_USE_SECONDARY_KEYRING,
->  				       VERIFYING_KEXEC_PE_SIGNATURE);
->  }
->  #endif
+> v4:
+>  - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+> 
+> v3:
+>  - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+>  - clean up arch_kexec_kernel_verify_sig [Eric]
+> 
+> v2:
+>  - only x86_64 and arm64 need to enable PE file signature check [Dave]
+> 
+> Coiby Xu (3):
+>   kexec: clean up arch_kexec_kernel_verify_sig
+>   kexec, KEYS: make the code in bzImage64_verify_sig generic
+>   arm64: kexec_file: use more system keyrings to verify kernel image
+>     signature
+> 
+>  arch/arm64/kernel/kexec_image.c   |  4 +--
+>  arch/x86/kernel/kexec-bzimage64.c | 13 +-------
+>  include/linux/kexec.h             |  7 +++--
+>  kernel/kexec_file.c               | 51 ++++++++++++++++++-------------
+>  4 files changed, 37 insertions(+), 38 deletions(-)
+> 
 > -- 
-> 2.31.1
+> 2.34.1
 > 
 
 
