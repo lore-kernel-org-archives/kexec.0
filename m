@@ -1,9 +1,10 @@
 From: Li Zhengyu <lizhengyu3@huawei.com>
-Date: Fri, 8 Apr 2022 18:09:10 +0800
-Subject: [PATCH v3 -next 2/6] RISC-V: use memcpy for kexec_file mode
+Date: Fri, 8 Apr 2022 18:09:09 +0800
+Subject: [PATCH v3 -next 1/6] kexec_file: Fix kexec_file.c build error for
+ riscv platform
 In-Reply-To: <20220408100914.150110-1-lizhengyu3@huawei.com>
 References: <20220408100914.150110-1-lizhengyu3@huawei.com>
-Message-ID: <20220408100914.150110-3-lizhengyu3@huawei.com>
+Message-ID: <20220408100914.150110-2-lizhengyu3@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -12,43 +13,73 @@ To: kexec@lists.infradead.org
 
 From: Liao Chang <liaochang1@huawei.com>
 
-The pointer to buffer loading kernel binaries is in kernel space for
-kexec_fil mode, When copy_from_user copies data from pointer to a block
-of memory, it checkes that the pointer is in the user space range, on
-RISCV-V that is:
+When CONFIG_KEXEC_FILE is set for riscv platform, the compilation of
+kernel/kexec_file.c generate build error:
 
-static inline bool __access_ok(unsigned long addr, unsigned long size)
-{
-	return size <= TASK_SIZE && addr <= TASK_SIZE - size;
-}
+kernel/kexec_file.c: In function 'crash_prepare_elf64_headers':
+./arch/riscv/include/asm/page.h:110:71: error: request for member 'virt_addr' in something not a structure or union
+  110 |  ((x) >= PAGE_OFFSET && (!IS_ENABLED(CONFIG_64BIT) || (x) < kernel_map.virt_addr))
+      |                                                                       ^
+./arch/riscv/include/asm/page.h:131:2: note: in expansion of macro 'is_linear_mapping'
+  131 |  is_linear_mapping(_x) ?       \
+      |  ^~~~~~~~~~~~~~~~~
+./arch/riscv/include/asm/page.h:140:31: note: in expansion of macro '__va_to_pa_nodebug'
+  140 | #define __phys_addr_symbol(x) __va_to_pa_nodebug(x)
+      |                               ^~~~~~~~~~~~~~~~~~
+./arch/riscv/include/asm/page.h:143:24: note: in expansion of macro '__phys_addr_symbol'
+  143 | #define __pa_symbol(x) __phys_addr_symbol(RELOC_HIDE((unsigned long)(x), 0))
+      |                        ^~~~~~~~~~~~~~~~~~
+kernel/kexec_file.c:1327:36: note: in expansion of macro '__pa_symbol'
+ 1327 |   phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
 
-and TASK_SIZE is 0x4000000000 for 64-bits, which now causes
-copy_from_user to reject the access of the field 'buf' of struct
-kexec_segment that is in range [CONFIG_PAGE_OFFSET - VMALLOC_SIZE,
-CONFIG_PAGE_OFFSET), is invalid user space pointer.
-
-This patch fixes this issue by skipping access_ok(), use mempcy() instead.
+This occurs is because the "kernel_map" referenced in macro
+is_linear_mapping()  is suppose to be the one of struct kernel_mapping
+defined in arch/riscv/mm/init.c, but the 2nd argument of
+crash_prepare_elf64_header() has same symbol name, in expansion of macro
+is_linear_mapping in function crash_prepare_elf64_header(), "kernel_map"
+actually is the local variable.
 
 Signed-off-by: Liao Chang <liaochang1@huawei.com>
 ---
- arch/riscv/kernel/machine_kexec.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ include/linux/kexec.h | 2 +-
+ kernel/kexec_file.c   | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/riscv/kernel/machine_kexec.c b/arch/riscv/kernel/machine_kexec.c
-index cbef0fc73afa..df8e24559035 100644
---- a/arch/riscv/kernel/machine_kexec.c
-+++ b/arch/riscv/kernel/machine_kexec.c
-@@ -65,7 +65,9 @@ machine_kexec_prepare(struct kimage *image)
- 		if (image->segment[i].memsz <= sizeof(fdt))
- 			continue;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 58d1b58a971e..ebb1bffbf068 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -227,7 +227,7 @@ struct crash_mem {
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+ 				   unsigned long long mstart,
+ 				   unsigned long long mend);
+-extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
++extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 				       void **addr, unsigned long *sz);
+ #endif /* CONFIG_KEXEC_FILE */
  
--		if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
-+		if (image->file_mode)
-+			memcpy(&fdt, image->segment[i].buf, sizeof(fdt));
-+		else if (copy_from_user(&fdt, image->segment[i].buf, sizeof(fdt)))
- 			continue;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 8347fc158d2b..331a4f0f10f5 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -1260,7 +1260,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+ 	return 0;
+ }
  
- 		if (fdt_check_header(&fdt))
+-int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
++int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+ 			  void **addr, unsigned long *sz)
+ {
+ 	Elf64_Ehdr *ehdr;
+@@ -1324,7 +1324,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+ 	phdr++;
+ 
+ 	/* Prepare PT_LOAD type program header for kernel text region */
+-	if (kernel_map) {
++	if (need_kernel_map) {
+ 		phdr->p_type = PT_LOAD;
+ 		phdr->p_flags = PF_R|PF_W|PF_X;
+ 		phdr->p_vaddr = (unsigned long) _text;
 -- 
 2.17.1
 
