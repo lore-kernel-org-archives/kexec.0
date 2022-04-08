@@ -1,74 +1,74 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 8 Apr 2022 15:47:04 +0800
-Subject: [PATCH 0/4] Unifrom keyring support across architectures and
- functions
-In-Reply-To: <cover.1644953683.git.msuchanek@suse.de>
-References: <cover.1644953683.git.msuchanek@suse.de>
-Message-ID: <20220408074704.wkyyv2qnx66iinzo@Rk>
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 8 Apr 2022 16:07:14 +0800
+Subject: [PATCH v6 2/8] x86/crash: Introduce new options to support cpu
+ and memory hotplug
+In-Reply-To: <20220401183040.1624-3-eric.devolder@oracle.com>
+References: <20220401183040.1624-1-eric.devolder@oracle.com>
+ <20220401183040.1624-3-eric.devolder@oracle.com>
+Message-ID: <Yk/tMnoYN/p6vxxT@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Michal,
+On 04/01/22 at 02:30pm, Eric DeVolder wrote:
+> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
+> 
+> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
+> the elfcorehdr buffer/segment.
+> 
+> This is a preparation for later usage.
+> 
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
 
-As mentioned by Baoquan, I have a patch set "[PATCH v5 0/3] use more
-system keyrings to verify arm64 kdump kernel image signature" [1]. The
-differences between your patch set and mine are as follows, 
-  - my patch set only adds support for arm64 while yours also extends to
-    s390
-  - I made the code for verifying signed kernel image as PE file in x86
-    public so arm64 can reuse the code as well which seems to be better
-    approach
-  - I also cleaned up clean up arch_kexec_kernel_verify_sig
+LGTM,
 
-Would you mind if I integrate your first 3 patches with mine as follows
-  - for arm64, I'll use my version
-  - for s390, I'll use your version
+Acked-by: Baoquan He <bhe@redhat.com>
 
-For your last patch which allows to use of platform keyring for
-signature verification of kernel module, I'll leave it to yourself. How
-do you think about it?
-
-
-[1] https://lore.kernel.org/all/20220401013118.348084-1-coxu at redhat.com/
-
-On Tue, Feb 15, 2022 at 08:39:37PM +0100, Michal Suchanek wrote:
->While testing KEXEC_SIG on powerpc I noticed discrepancy in support for
->different keyrings across architectures and between KEXEC_SIG and
->MODULE_SIG. Fix this by enabling suport for the missing keyrings.
->
->The latter two patches obviously conflict with the ongoing module code
->cleanup. If they turn out desirable I will add them to the other series
->dealing with KEXEC_SIG.
->
->The arm patches can be merged independently.
->
->Thanks
->
->Michal
->
->Michal Suchanek (4):
->  Fix arm64 kexec forbidding kernels signed with keys in the secondary
->    keyring to boot
->  kexec, KEYS, arm64: Make use of platform keyring for signature
->    verification
->  kexec, KEYS, s390: Make use of built-in and secondary keyring for
->    signature verification
->  module, KEYS: Make use of platform keyring for signature verification
->
-> arch/arm64/kernel/kexec_image.c       | 13 +++++++++++--
-> arch/s390/kernel/machine_kexec_file.c | 18 +++++++++++++-----
-> kernel/module_signing.c               | 14 ++++++++++----
-> 3 files changed, 34 insertions(+), 11 deletions(-)
->
->-- 
->2.31.1
->
-
--- 
-Best regards,
-Coiby
+> ---
+>  arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+> 
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 7340d9f01b62..8b51d3196b82 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
+>  	  (CONFIG_RELOCATABLE=y).
+>  	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>  
+> +config CRASH_HOTPLUG
+> +	bool "kernel updates of crash elfcorehdr"
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
+> +	help
+> +	  Enable the kernel to update the crash elfcorehdr (which contains
+> +	  the list of CPUs and memory regions) directly when hot plug/unplug
+> +	  of CPUs or memory. Otherwise userspace must monitor these hot
+> +	  plug/unplug change notifications via udev in order to
+> +	  unload-then-reload the crash kernel so that the list of CPUs and
+> +	  memory regions is kept up-to-date. Note that the udev CPU and
+> +	  memory change notifications still occur (however, userspace is not
+> +	  required to monitor for crash dump purposes).
+> +
+> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+> +	depends on CRASH_HOTPLUG
+> +	int
+> +	default 131072
+> +	help
+> +	  Specify the maximum size of the elfcorehdr buffer/segment.
+> +	  The 128KiB default is sized so that it can accommodate 2048
+> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
+> +	  region of memory.
+> +	  For example, this size can accommodate a machine with up to 1024
+> +	  CPUs and up to 1024 memory regions, eg. as represented by the
+> +	  'System RAM' entries in /proc/iomem.
+> +
+>  config KEXEC_JUMP
+>  	bool "kexec jump"
+>  	depends on KEXEC && HIBERNATION
+> -- 
+> 2.27.0
+> 
 
 
