@@ -1,290 +1,124 @@
 From: Li Zhengyu <lizhengyu3@huawei.com>
-Date: Fri, 8 Apr 2022 18:09:11 +0800
-Subject: [PATCH v3 -next 3/6] RISC-V: Add kexec_file support
-In-Reply-To: <20220408100914.150110-1-lizhengyu3@huawei.com>
-References: <20220408100914.150110-1-lizhengyu3@huawei.com>
-Message-ID: <20220408100914.150110-4-lizhengyu3@huawei.com>
+Date: Fri, 8 Apr 2022 18:09:08 +0800
+Subject: [PATCH v3 -next 0/6] riscv: kexec: add kexec_file_load() support
+Message-ID: <20220408100914.150110-1-lizhengyu3@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: Liao Chang <liaochang1@huawei.com>
+This patchset implement kexec_file_load() support on riscv, Most of the
+code is based on the kexec-tool-patch repo developed by Nick Kossifids.
 
-This patch adds support for kexec_file on RISC-V. I tested it on riscv64
-QEMU with busybear-linux and single core along with the OpenSBI firmware
-fw_jump.bin for generic platform.
+This patch series enables us to load the riscv vmlinux by specifying
+its file decriptor, instead of user-filled buffer via kexec_file_load()
+syscall.
+``
+Contrary to kexec_load() system call, we reuse the dt blob of the first
+kernel to the 2nd explicitly.
 
-On SMP system, it depends on CONFIG_{HOTPLUG_CPU, RISCV_SBI} to
-resume/stop hart through OpenSBI firmware, it also needs a OpenSBI that
-support the HSM extension.
+To use kexec_file_load() system call, instead of kexec_load(), at kexec
+command, '-s' options must be specified. The patch for kexec_tools has
+to be apply to riscv architecture source like this:
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
-Signed-off-by: Li Zhengyu <lizhengyu3@huawei.com>
----
- arch/riscv/Kconfig                     |  11 ++
+int elf_riscv_load(int argc, char **argv, const char *buf, off_t len,
+	...
+	if (info->file_mode) {
+		return prepare_kexec_file_options(info);
+	}
+	...
+
+Add following routine to prepare cmdline_ptr, cmdline_len and initrd_fd
+for syscall kexec_file_load:
+
+int prepare_kexec_file_options(struct kexec_info *info)
+{
+	int fd;
+	ssize_t result;
+	struct stat stats;
+
+	if (arch_options.cmdline) {
+		info->command_line = (char *)arch_options.cmdline;
+		info->command_line_len = strlen(info->command_line) + 1;
+	}
+
+	if (!arch_options.initrd_path) {
+		info->initrd_fd = -1;
+		return 0;
+	}
+
+	fd = open(arch_options.initrd_path, O_RDONLY | _O_BINARY);
+	if (fd < 0) {
+		fprintf(stderr, "Cannot open `%s': %s\n", arch_options.initrd_path,
+				strerror(errno));
+		return -EINVAL;
+	}
+	result = fstat(fd, &stats);
+	if (result < 0) {
+		close(fd);
+		fprintf(stderr, "Cannot stat: %s: %s\n", arch_options.initrd_path,
+				strerror(errno));
+		return -EINVAL;
+	}
+	info->initrd_fd = fd;
+	return 0;
+}
+
+The basic usage of kexec_file is:
+1) Reload capture kernel image:
+$ kexec -s -l <riscv-vmlinux> --reuse-cmdline
+
+2) Startup capture kernel:
+$ kexec -e
+
+For kdump:
+1) Reload capture kernel image:
+$ kexec -s -p <riscv-vmlinux> --reuse-cmdline
+
+2) Do something to crash, like:
+$ echo c > /proc/sysrq-trigger
+
+v3:
+ * Rebase on v5.18-rc1
+ * Workaround for -Wmissing-prototypes
+
+v2:
+ * Support kdump
+ * Support purgatory
+ * Minor cleanups
+
+Li Zhengyu (3):
+  RISC-V: Support for kexec_file on panic
+  RISC-V: Add purgatory
+  RISC-V: Load purgatory in kexec_file
+
+Liao Chang (3):
+  kexec_file: Fix kexec_file.c build error for riscv platform
+  RISC-V: use memcpy for kexec_file mode
+  RISC-V: Add kexec_file support
+
+ arch/riscv/Kbuild                      |   2 +
+ arch/riscv/Kconfig                     |  17 +
  arch/riscv/include/asm/kexec.h         |   4 +
  arch/riscv/kernel/Makefile             |   1 +
- arch/riscv/kernel/elf_kexec.c          | 180 +++++++++++++++++++++++++
- arch/riscv/kernel/machine_kexec_file.c |  14 ++
- 5 files changed, 210 insertions(+)
+ arch/riscv/kernel/elf_kexec.c          | 448 +++++++++++++++++++++++++
+ arch/riscv/kernel/machine_kexec.c      |   4 +-
+ arch/riscv/kernel/machine_kexec_file.c |  14 +
+ arch/riscv/purgatory/.gitignore        |   4 +
+ arch/riscv/purgatory/Makefile          |  95 ++++++
+ arch/riscv/purgatory/entry.S           |  47 +++
+ arch/riscv/purgatory/purgatory.c       |  45 +++
+ include/linux/kexec.h                  |   2 +-
+ kernel/kexec_file.c                    |   4 +-
+ 13 files changed, 683 insertions(+), 4 deletions(-)
  create mode 100644 arch/riscv/kernel/elf_kexec.c
  create mode 100644 arch/riscv/kernel/machine_kexec_file.c
+ create mode 100644 arch/riscv/purgatory/.gitignore
+ create mode 100644 arch/riscv/purgatory/Makefile
+ create mode 100644 arch/riscv/purgatory/entry.S
+ create mode 100644 arch/riscv/purgatory/purgatory.c
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index 00fd9c548f26..e95e4c390514 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -383,6 +383,17 @@ config KEXEC
- 
- 	  The name comes from the similarity to the exec system call.
- 
-+config KEXEC_FILE
-+	bool "kexec file based systmem call"
-+	select KEXEC_CORE
-+	select KEXEC_ELF
-+	select HAVE_IMA_KEXEC if IMA
-+	help
-+	  This is new version of kexec system call. This system call is
-+	  file based and takes file descriptors as system call argument
-+	  for kernel and initramfs as opposed to list of segments as
-+	  accepted by previous system call.
-+
- config CRASH_DUMP
- 	bool "Build kdump crash kernel"
- 	help
-diff --git a/arch/riscv/include/asm/kexec.h b/arch/riscv/include/asm/kexec.h
-index e4e291d40759..206217b23301 100644
---- a/arch/riscv/include/asm/kexec.h
-+++ b/arch/riscv/include/asm/kexec.h
-@@ -53,4 +53,8 @@ typedef void (*riscv_kexec_method)(unsigned long first_ind_entry,
- 
- extern riscv_kexec_method riscv_kexec_norelocate;
- 
-+#ifdef CONFIG_KEXEC_FILE
-+extern const struct kexec_file_ops elf_kexec_ops;
-+#endif
-+
- #endif
-diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
-index 87adbe47bc15..6673c50c58e2 100644
---- a/arch/riscv/kernel/Makefile
-+++ b/arch/riscv/kernel/Makefile
-@@ -64,6 +64,7 @@ endif
- obj-$(CONFIG_HOTPLUG_CPU)	+= cpu-hotplug.o
- obj-$(CONFIG_KGDB)		+= kgdb.o
- obj-$(CONFIG_KEXEC)		+= kexec_relocate.o crash_save_regs.o machine_kexec.o
-+obj-$(CONFIG_KEXEC_FILE)	+= elf_kexec.o machine_kexec_file.o
- obj-$(CONFIG_CRASH_DUMP)	+= crash_dump.o
- 
- obj-$(CONFIG_JUMP_LABEL)	+= jump_label.o
-diff --git a/arch/riscv/kernel/elf_kexec.c b/arch/riscv/kernel/elf_kexec.c
-new file mode 100644
-index 000000000000..2d442a849871
---- /dev/null
-+++ b/arch/riscv/kernel/elf_kexec.c
-@@ -0,0 +1,180 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * Load ELF vmlinux file for the kexec_file_load syscall.
-+ *
-+ * Copyright (C) 2021 Huawei Technologies Co, Ltd.
-+ *
-+ * Author: Liao Chang (liaochang1 at huawei.com)
-+ *
-+ * Based on kexec-tools' kexec-elf-riscv.c, heavily modified
-+ * for kernel.
-+ */
-+
-+#define pr_fmt(fmt)	"kexec_image: " fmt
-+
-+#include <linux/elf.h>
-+#include <linux/kexec.h>
-+#include <linux/slab.h>
-+#include <linux/of.h>
-+#include <linux/libfdt.h>
-+#include <linux/types.h>
-+
-+static int riscv_kexec_elf_load(struct kimage *image, struct elfhdr *ehdr,
-+				struct kexec_elf_info *elf_info, unsigned long old_pbase,
-+				unsigned long new_pbase)
-+{
-+	int i;
-+	int ret = 0;
-+	size_t size;
-+	struct kexec_buf kbuf;
-+	const struct elf_phdr *phdr;
-+
-+	kbuf.image = image;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &elf_info->proghdrs[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+
-+		size = phdr->p_filesz;
-+		if (size > phdr->p_memsz)
-+			size = phdr->p_memsz;
-+
-+		kbuf.buffer = (void *) elf_info->buffer + phdr->p_offset;
-+		kbuf.bufsz = size;
-+		kbuf.buf_align = phdr->p_align;
-+		kbuf.mem = phdr->p_paddr - old_pbase + new_pbase;
-+		kbuf.memsz = phdr->p_memsz;
-+		kbuf.top_down = false;
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
-+			break;
-+	}
-+
-+	return ret;
-+}
-+
-+/*
-+ * Go through the available phsyical memory regions and find one that hold
-+ * an image of the specified size.
-+ */
-+static int elf_find_pbase(struct kimage *image, unsigned long kernel_len,
-+			  struct elfhdr *ehdr, struct kexec_elf_info *elf_info,
-+			  unsigned long *old_pbase, unsigned long *new_pbase)
-+{
-+	int i;
-+	int ret;
-+	struct kexec_buf kbuf;
-+	const struct elf_phdr *phdr;
-+	unsigned long lowest_paddr = ULONG_MAX;
-+	unsigned long lowest_vaddr = ULONG_MAX;
-+
-+	for (i = 0; i < ehdr->e_phnum; i++) {
-+		phdr = &elf_info->proghdrs[i];
-+		if (phdr->p_type != PT_LOAD)
-+			continue;
-+
-+		if (lowest_paddr > phdr->p_paddr)
-+			lowest_paddr = phdr->p_paddr;
-+
-+		if (lowest_vaddr > phdr->p_vaddr)
-+			lowest_vaddr = phdr->p_vaddr;
-+	}
-+
-+	kbuf.image = image;
-+	kbuf.buf_min = lowest_paddr;
-+	kbuf.buf_max = ULONG_MAX;
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	kbuf.memsz = ALIGN(kernel_len, PAGE_SIZE);
-+	kbuf.top_down = false;
-+	ret = arch_kexec_locate_mem_hole(&kbuf);
-+	if (!ret) {
-+		*old_pbase = lowest_paddr;
-+		*new_pbase = kbuf.mem;
-+		image->start = ehdr->e_entry - lowest_vaddr + kbuf.mem;
-+	}
-+	return ret;
-+}
-+
-+static void *elf_kexec_load(struct kimage *image, char *kernel_buf,
-+			    unsigned long kernel_len, char *initrd,
-+			    unsigned long initrd_len, char *cmdline,
-+			    unsigned long cmdline_len)
-+{
-+	int ret;
-+	unsigned long old_kernel_pbase = ULONG_MAX;
-+	unsigned long new_kernel_pbase = 0UL;
-+	unsigned long initrd_pbase = 0UL;
-+	void *fdt;
-+	struct elfhdr ehdr;
-+	struct kexec_buf kbuf;
-+	struct kexec_elf_info elf_info;
-+
-+	ret = kexec_build_elf_info(kernel_buf, kernel_len, &ehdr, &elf_info);
-+	if (ret)
-+		return ERR_PTR(ret);
-+
-+	ret = elf_find_pbase(image, kernel_len, &ehdr, &elf_info,
-+			     &old_kernel_pbase, &new_kernel_pbase);
-+	if (ret)
-+		goto out;
-+	pr_notice("The entry point of kernel at 0x%lx\n", image->start);
-+
-+	/* Add the kernel binary to the image */
-+	ret = riscv_kexec_elf_load(image, &ehdr, &elf_info,
-+				   old_kernel_pbase, new_kernel_pbase);
-+	if (ret)
-+		goto out;
-+
-+	kbuf.image = image;
-+	kbuf.buf_min = new_kernel_pbase + kernel_len;
-+	kbuf.buf_max = ULONG_MAX;
-+	/* Add the initrd to the image */
-+	if (initrd != NULL) {
-+		kbuf.buffer = initrd;
-+		kbuf.bufsz = kbuf.memsz = initrd_len;
-+		kbuf.buf_align = PAGE_SIZE;
-+		kbuf.top_down = false;
-+		kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+		ret = kexec_add_buffer(&kbuf);
-+		if (ret)
-+			goto out;
-+		initrd_pbase = kbuf.mem;
-+		pr_notice("Loaded initrd at 0x%lx\n", initrd_pbase);
-+	}
-+
-+	/* Add the DTB to the image */
-+	fdt = of_kexec_alloc_and_setup_fdt(image, initrd_pbase,
-+					   initrd_len, cmdline, 0);
-+	if (!fdt) {
-+		pr_err("Error setting up the new device tree.\n");
-+		ret = -EINVAL;
-+		goto out;
-+	}
-+
-+	fdt_pack(fdt);
-+	kbuf.buffer = fdt;
-+	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);
-+	kbuf.buf_align = PAGE_SIZE;
-+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
-+	kbuf.top_down = true;
-+	ret = kexec_add_buffer(&kbuf);
-+	if (ret) {
-+		pr_err("Error add DTB kbuf ret=%d\n", ret);
-+		goto out_free_fdt;
-+	}
-+	pr_notice("Loaded device tree at 0x%lx\n", kbuf.mem);
-+	goto out;
-+
-+out_free_fdt:
-+	kvfree(fdt);
-+out:
-+	kexec_free_elf_info(&elf_info);
-+	return ret ? ERR_PTR(ret) : NULL;
-+}
-+
-+const struct kexec_file_ops elf_kexec_ops = {
-+	.probe = kexec_elf_probe,
-+	.load  = elf_kexec_load,
-+};
-diff --git a/arch/riscv/kernel/machine_kexec_file.c b/arch/riscv/kernel/machine_kexec_file.c
-new file mode 100644
-index 000000000000..b0bf8c1722c0
---- /dev/null
-+++ b/arch/riscv/kernel/machine_kexec_file.c
-@@ -0,0 +1,14 @@
-+// SPDX-License-Identifier: GPL-2.0-only
-+/*
-+ * kexec_file for riscv, use vmlinux as the dump-capture kernel image.
-+ *
-+ * Copyright (C) 2021 Huawei Technologies Co, Ltd.
-+ *
-+ * Author: Liao Chang (liaochang1 at huawei.com)
-+ */
-+#include <linux/kexec.h>
-+
-+const struct kexec_file_ops * const kexec_file_loaders[] = {
-+	&elf_kexec_ops,
-+	NULL
-+};
 -- 
 2.17.1
 
