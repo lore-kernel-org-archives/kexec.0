@@ -1,51 +1,78 @@
-From: Alexander Egorenkov <egorenar@linux.ibm.com>
-Date: Fri,  8 Apr 2022 10:52:59 +0200
-Subject: [PATCH v2 1/1] check that order of free pages falls within valid range
-Message-ID: <20220408085259.184465-1-egorenar@linux.ibm.com>
+From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
+Date: Fri, 8 Apr 2022 10:59:31 +0200
+Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
+ kernel image signature
+In-Reply-To: <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
+References: <20220401013118.348084-1-coxu@redhat.com>
+ <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
+Message-ID: <20220408085931.GW163591@kunlun.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-This change makes __exclude_unnecessary_pages() more robust by
-verifying that the order of a free page is valid before computing the size
-of its memory block in the buddy system.
+On Fri, Apr 08, 2022 at 03:17:19PM +0800, Baoquan He wrote:
+> Hi Coiby,
+> 
+> On 04/01/22 at 09:31am, Coiby Xu wrote:
+> > Currently, a problem faced by arm64 is if a kernel image is signed by a
+> > MOK key, loading it via the kexec_file_load() system call would be
+> > rejected with the error "Lockdown: kexec: kexec of unsigned images is
+> > restricted; see man kernel_lockdown.7".
+> > 
+> > This patch set allows arm64 to use more system keyrings to verify kdump 
+> > kernel image signature by making the existing code in x64 public.
+> 
+> Thanks for updating. It would be great to tell why the problem is
+> met, then allow arm64 to use more system keyrings can solve it.
 
-The order of a free page cannot be larger than (MAX_ORDER - 1) because
-the array 'zone.free_area' is of size MAX_ORDER.
+The reason is that MOK keys are (if anywhere) linked to the secondary
+keyring, and only primary keyring is used on arm64.
 
-This situation is reproducible with some s390x dumps:
+Thanks
 
-__exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
+Michal
 
-References:
-- https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
-- https://www.kernel.org/doc/gorman/html/understand/understand009.html
-
-Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
----
- makedumpfile.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/makedumpfile.c b/makedumpfile.c
-index 2ef345879524..56aa026e7b34 100644
---- a/makedumpfile.c
-+++ b/makedumpfile.c
-@@ -6457,6 +6457,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
- 		else if ((info->dump_level & DL_EXCLUDE_FREE)
- 		    && info->page_is_buddy
- 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
-+			if (private >= ARRAY_LENGTH(zone.free_area)) {
-+				ERRMSG("Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
-+				       pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
-+				free(page_cache);
-+				return FALSE;
-+			}
- 			nr_pages = 1 << private;
- 			pfn_counter = &pfn_free;
- 		}
--- 
-2.34.1
-
+> 
+> Meanwhile, I noticed Michal also posted a patchset to address the same
+> issue, while he tries to make it work on s390 too. Could you check and
+> consider if these two patches can be integrated?
+> 
+> [PATCH 0/4] Unifrom keyring support across architectures and functions
+> https://lore.kernel.org/lkml/cover.1644953683.git.msuchanek at suse.de/
+> 
+> Thanks
+> Baoquan
+> 
+> > 
+> > v5:
+> >  - improve commit message [Baoquan]
+> > 
+> > v4:
+> >  - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+> > 
+> > v3:
+> >  - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+> >  - clean up arch_kexec_kernel_verify_sig [Eric]
+> > 
+> > v2:
+> >  - only x86_64 and arm64 need to enable PE file signature check [Dave]
+> > 
+> > Coiby Xu (3):
+> >   kexec: clean up arch_kexec_kernel_verify_sig
+> >   kexec, KEYS: make the code in bzImage64_verify_sig generic
+> >   arm64: kexec_file: use more system keyrings to verify kernel image
+> >     signature
+> > 
+> >  arch/arm64/kernel/kexec_image.c   |  4 +--
+> >  arch/x86/kernel/kexec-bzimage64.c | 13 +-------
+> >  include/linux/kexec.h             |  7 +++--
+> >  kernel/kexec_file.c               | 51 ++++++++++++++++++-------------
+> >  4 files changed, 37 insertions(+), 38 deletions(-)
+> > 
+> > -- 
+> > 2.34.1
+> > 
+> 
 
