@@ -1,86 +1,68 @@
-From: Li Zhengyu <lizhengyu3@huawei.com>
-Date: Fri, 8 Apr 2022 18:09:09 +0800
-Subject: [PATCH v3 -next 1/6] kexec_file: Fix kexec_file.c build error for
- riscv platform
-In-Reply-To: <20220408100914.150110-1-lizhengyu3@huawei.com>
-References: <20220408100914.150110-1-lizhengyu3@huawei.com>
-Message-ID: <20220408100914.150110-2-lizhengyu3@huawei.com>
+From: kernel test robot <lkp@intel.com>
+Date: Fri, 8 Apr 2022 21:17:51 +0800
+Subject: [PATCH v5 RESEND 1/3] vmcore: Convert copy_oldmem_page() to take
+ an iov_iter
+In-Reply-To: <20220408090636.560886-2-bhe@redhat.com>
+References: <20220408090636.560886-2-bhe@redhat.com>
+Message-ID: <202204082128.JKXXDGpa-lkp@intel.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: Liao Chang <liaochang1@huawei.com>
+Hi Baoquan,
 
-When CONFIG_KEXEC_FILE is set for riscv platform, the compilation of
-kernel/kexec_file.c generate build error:
+Thank you for the patch! Perhaps something to improve:
 
-kernel/kexec_file.c: In function 'crash_prepare_elf64_headers':
-./arch/riscv/include/asm/page.h:110:71: error: request for member 'virt_addr' in something not a structure or union
-  110 |  ((x) >= PAGE_OFFSET && (!IS_ENABLED(CONFIG_64BIT) || (x) < kernel_map.virt_addr))
-      |                                                                       ^
-./arch/riscv/include/asm/page.h:131:2: note: in expansion of macro 'is_linear_mapping'
-  131 |  is_linear_mapping(_x) ?       \
-      |  ^~~~~~~~~~~~~~~~~
-./arch/riscv/include/asm/page.h:140:31: note: in expansion of macro '__va_to_pa_nodebug'
-  140 | #define __phys_addr_symbol(x) __va_to_pa_nodebug(x)
-      |                               ^~~~~~~~~~~~~~~~~~
-./arch/riscv/include/asm/page.h:143:24: note: in expansion of macro '__phys_addr_symbol'
-  143 | #define __pa_symbol(x) __phys_addr_symbol(RELOC_HIDE((unsigned long)(x), 0))
-      |                        ^~~~~~~~~~~~~~~~~~
-kernel/kexec_file.c:1327:36: note: in expansion of macro '__pa_symbol'
- 1327 |   phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
+[auto build test WARNING on powerpc/next]
+[also build test WARNING on s390/features linus/master v5.18-rc1 next-20220408]
+[cannot apply to tip/x86/core hnaz-mm/master arm64/for-next/core]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-This occurs is because the "kernel_map" referenced in macro
-is_linear_mapping()  is suppose to be the one of struct kernel_mapping
-defined in arch/riscv/mm/init.c, but the 2nd argument of
-crash_prepare_elf64_header() has same symbol name, in expansion of macro
-is_linear_mapping in function crash_prepare_elf64_header(), "kernel_map"
-actually is the local variable.
+url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/Convert-vmcore-to-use-an-iov_iter/20220408-170846
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
+config: sh-randconfig-s032-20220408 (https://download.01.org/0day-ci/archive/20220408/202204082128.JKXXDGpa-lkp at intel.com/config)
+compiler: sh4-linux-gcc (GCC) 11.2.0
+reproduce:
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # apt-get install sparse
+        # sparse version: v0.6.4-dirty
+        # https://github.com/intel-lab-lkp/linux/commit/a5e42962f5c0bea73aa382a2415094b4bd6c6c73
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Baoquan-He/Convert-vmcore-to-use-an-iov_iter/20220408-170846
+        git checkout a5e42962f5c0bea73aa382a2415094b4bd6c6c73
+        # save the config file to linux build tree
+        mkdir build_dir
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=sh SHELL=/bin/bash arch/sh/kernel/
 
-Signed-off-by: Liao Chang <liaochang1@huawei.com>
----
- include/linux/kexec.h | 2 +-
- kernel/kexec_file.c   | 4 ++--
- 2 files changed, 3 insertions(+), 3 deletions(-)
+If you fix the issue, kindly add following tag as appropriate
+Reported-by: kernel test robot <lkp@intel.com>
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 58d1b58a971e..ebb1bffbf068 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -227,7 +227,7 @@ struct crash_mem {
- extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mstart,
- 				   unsigned long long mend);
--extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-+extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
- 				       void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b..331a4f0f10f5 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -1260,7 +1260,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 	return 0;
- }
- 
--int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-+int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
- 			  void **addr, unsigned long *sz)
- {
- 	Elf64_Ehdr *ehdr;
-@@ -1324,7 +1324,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 	phdr++;
- 
- 	/* Prepare PT_LOAD type program header for kernel text region */
--	if (kernel_map) {
-+	if (need_kernel_map) {
- 		phdr->p_type = PT_LOAD;
- 		phdr->p_flags = PF_R|PF_W|PF_X;
- 		phdr->p_vaddr = (unsigned long) _text;
+
+sparse warnings: (new ones prefixed by >>)
+>> arch/sh/kernel/crash_dump.c:23:36: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const *addr @@     got void [noderef] __iomem * @@
+   arch/sh/kernel/crash_dump.c:23:36: sparse:     expected void const *addr
+   arch/sh/kernel/crash_dump.c:23:36: sparse:     got void [noderef] __iomem *
+
+vim +23 arch/sh/kernel/crash_dump.c
+
+    13	
+    14	ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+    15				 size_t csize, unsigned long offset)
+    16	{
+    17		void  __iomem *vaddr;
+    18	
+    19		if (!csize)
+    20			return 0;
+    21	
+    22		vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
+  > 23		csize = copy_to_iter(vaddr + offset, csize, iter);
+
 -- 
-2.17.1
-
+0-DAY CI Kernel Test Service
+https://01.org/lkp
 
