@@ -1,68 +1,75 @@
-From: kernel test robot <lkp@intel.com>
-Date: Fri, 8 Apr 2022 21:17:51 +0800
-Subject: [PATCH v5 RESEND 1/3] vmcore: Convert copy_oldmem_page() to take
- an iov_iter
-In-Reply-To: <20220408090636.560886-2-bhe@redhat.com>
-References: <20220408090636.560886-2-bhe@redhat.com>
-Message-ID: <202204082128.JKXXDGpa-lkp@intel.com>
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Date: Fri, 08 Apr 2022 15:32:20 +0200
+Subject: [PATCH v2 1/1] check that order of free pages falls within
+ valid range
+In-Reply-To: <20220408085259.184465-1-egorenar@linux.ibm.com>
+References: <20220408085259.184465-1-egorenar@linux.ibm.com>
+Message-ID: <87bkxbg0pn.fsf@oc8242746057.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Baoquan,
+Alexander Egorenkov <egorenar@linux.ibm.com> writes:
 
-Thank you for the patch! Perhaps something to improve:
+> This change makes __exclude_unnecessary_pages() more robust by
+> verifying that the order of a free page is valid before computing the size
+> of its memory block in the buddy system.
+>
+> The order of a free page cannot be larger than (MAX_ORDER - 1) because
+> the array 'zone.free_area' is of size MAX_ORDER.
+>
+> This situation is reproducible with some s390x dumps:
+>
+> __exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
+>
+> References:
+> - https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
+> - https://www.kernel.org/doc/gorman/html/understand/understand009.html
+>
+> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+> ---
+>  makedumpfile.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index 2ef345879524..56aa026e7b34 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -6457,6 +6457,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+>  		else if ((info->dump_level & DL_EXCLUDE_FREE)
+>  		    && info->page_is_buddy
+>  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+> +			if (private >= ARRAY_LENGTH(zone.free_area)) {
+> +				ERRMSG("Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
+> +				       pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
+> +				free(page_cache);
+> +				return FALSE;
+> +			}
+>  			nr_pages = 1 << private;
+>  			pfn_counter = &pfn_free;
+>  		}
+> -- 
+> 2.34.1
+>
+>
+> _______________________________________________
+> kexec mailing list
+> kexec at lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 
-[auto build test WARNING on powerpc/next]
-[also build test WARNING on s390/features linus/master v5.18-rc1 next-20220408]
-[cannot apply to tip/x86/core hnaz-mm/master arm64/for-next/core]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+I found out when this can happen.
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Baoquan-He/Convert-vmcore-to-use-an-iov_iter/20220408-170846
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux.git next
-config: sh-randconfig-s032-20220408 (https://download.01.org/0day-ci/archive/20220408/202204082128.JKXXDGpa-lkp at intel.com/config)
-compiler: sh4-linux-gcc (GCC) 11.2.0
-reproduce:
-        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
-        chmod +x ~/bin/make.cross
-        # apt-get install sparse
-        # sparse version: v0.6.4-dirty
-        # https://github.com/intel-lab-lkp/linux/commit/a5e42962f5c0bea73aa382a2415094b4bd6c6c73
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Baoquan-He/Convert-vmcore-to-use-an-iov_iter/20220408-170846
-        git checkout a5e42962f5c0bea73aa382a2415094b4bd6c6c73
-        # save the config file to linux build tree
-        mkdir build_dir
-        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.2.0 make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=sh SHELL=/bin/bash arch/sh/kernel/
+If e.g. a driver calls free_pages() and gives an order > max page order,
+then __free_one_page() stores the given invalid page order in the
+'private' member of struct page and gives it back to the buddy
+allocator.
 
-If you fix the issue, kindly add following tag as appropriate
-Reported-by: kernel test robot <lkp@intel.com>
+This is what actually happened in the dump i used to reproduce this issue
+with makedumpfile.
 
-
-sparse warnings: (new ones prefixed by >>)
->> arch/sh/kernel/crash_dump.c:23:36: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const *addr @@     got void [noderef] __iomem * @@
-   arch/sh/kernel/crash_dump.c:23:36: sparse:     expected void const *addr
-   arch/sh/kernel/crash_dump.c:23:36: sparse:     got void [noderef] __iomem *
-
-vim +23 arch/sh/kernel/crash_dump.c
-
-    13	
-    14	ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
-    15				 size_t csize, unsigned long offset)
-    16	{
-    17		void  __iomem *vaddr;
-    18	
-    19		if (!csize)
-    20			return 0;
-    21	
-    22		vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
-  > 23		csize = copy_to_iter(vaddr + offset, csize, iter);
-
--- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+Regards
+Alex
+ 
 
