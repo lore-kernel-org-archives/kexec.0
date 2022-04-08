@@ -1,159 +1,75 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Fri, 8 Apr 2022 11:02:47 +0800
-Subject: [PATCH v2] mm/vmalloc: fix spinning drain_vmap_work after
- reading from /proc/vmcore
-In-Reply-To: <Yk72+9UFwsaFXoZe@chrisdown.name>
-References: <52f819991051f9b865e9ce25605509bfdbacadcd.1649277321.git.osandov@fb.com>
- <Yk72+9UFwsaFXoZe@chrisdown.name>
-Message-ID: <Yk+l1/xLzhB02aIU@MiWiFi-R3L-srv>
+Date: Fri, 8 Apr 2022 15:11:08 +0800
+Subject: [PATCH 1/4] Fix arm64 kexec forbidding kernels signed with keys
+ in the secondary keyring to boot
+In-Reply-To: <83b3583f35c50c609739a8d857d14e8410293373.1644953683.git.msuchanek@suse.de>
+References: <cover.1644953683.git.msuchanek@suse.de>
+ <83b3583f35c50c609739a8d857d14e8410293373.1644953683.git.msuchanek@suse.de>
+Message-ID: <Yk/eFBCqBTu4eZf2@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/07/22 at 03:36pm, Chris Down wrote:
-> Omar Sandoval writes:
-> > From: Omar Sandoval <osandov@fb.com>
-> > 
-> > Commit 3ee48b6af49c ("mm, x86: Saving vmcore with non-lazy freeing of
-> > vmas") introduced set_iounmap_nonlazy(), which sets vmap_lazy_nr to
-> > lazy_max_pages() + 1, ensuring that any future vunmaps() immediately
-> > purge the vmap areas instead of doing it lazily.
-> > 
-> > Commit 690467c81b1a ("mm/vmalloc: Move draining areas out of caller
-> > context") moved the purging from the vunmap() caller to a worker thread.
-> > Unfortunately, set_iounmap_nonlazy() can cause the worker thread to spin
-> > (possibly forever). For example, consider the following scenario:
-> > 
-> > 1. Thread reads from /proc/vmcore. This eventually calls
-> >   __copy_oldmem_page() -> set_iounmap_nonlazy(), which sets
-> >   vmap_lazy_nr to lazy_max_pages() + 1.
-> > 2. Then it calls free_vmap_area_noflush() (via iounmap()), which adds 2
-> >   pages (one page plus the guard page) to the purge list and
-> >   vmap_lazy_nr. vmap_lazy_nr is now lazy_max_pages() + 3, so the
-> >   drain_vmap_work is scheduled.
-> > 3. Thread returns from the kernel and is scheduled out.
-> > 4. Worker thread is scheduled in and calls drain_vmap_area_work(). It
-> >   frees the 2 pages on the purge list. vmap_lazy_nr is now
-> >   lazy_max_pages() + 1.
-> > 5. This is still over the threshold, so it tries to purge areas again,
-> >   but doesn't find anything.
-> > 6. Repeat 5.
-> > 
-> > If the system is running with only one CPU (which is typicial for kdump)
-> > and preemption is disabled, then this will never make forward progress:
-> > there aren't any more pages to purge, so it hangs. If there is more than
-> > one CPU or preemption is enabled, then the worker thread will spin
-> > forever in the background. (Note that if there were already pages to be
-> > purged at the time that set_iounmap_nonlazy() was called, this bug is
-> > avoided.)
-> > 
-> > This can be reproduced with anything that reads from /proc/vmcore
-> > multiple times. E.g., vmcore-dmesg /proc/vmcore.
-> > 
-> > It turns out that improvements to vmap() over the years have obsoleted
-> > the need for this "optimization". I benchmarked
-> > `dd if=/proc/vmcore of=/dev/null` with 4k and 1M read sizes on a system
-> > with a 32GB vmcore. The test was run on 5.17, 5.18-rc1 with a fix that
-> > avoided the hang, and 5.18-rc1 with set_iounmap_nonlazy() removed
-> > entirely:
-> > 
-> >  |5.17  |5.18+fix|5.18+removal
-> > 4k|40.86s|  40.09s|      26.73s
-> > 1M|24.47s|  23.98s|      21.84s
-> > 
-> > The removal was the fastest (by a wide margin with 4k reads). This patch
-> > removes set_iounmap_nonlazy().
-> > 
-> > Signed-off-by: Omar Sandoval <osandov@fb.com>
+Hi,
+
+On 02/15/22 at 08:39pm, Michal Suchanek wrote:
+> commit d3bfe84129f6 ("certs: Add a secondary system keyring that can be added to dynamically")
+> split of .system_keyring into .builtin_trusted_keys and
+> .secondary_trusted_keys broke kexec, thereby preventing kernels signed by
+> keys which are now in the secondary keyring from being kexec'd.
 > 
-> It probably doesn't matter, but maybe worth adding in a Fixes tag just to
-> make sure anyone getting this without context understands that 690467c81b1a
-> ("mm/vmalloc: Move draining areas out of caller context") shouldn't reach
-> further rcs without this. Unlikely that would happen anyway, though.
+> Fix this by passing VERIFY_USE_SECONDARY_KEYRING to
+> verify_pefile_signature().
 > 
-> Nice use of a bug as an impetus to clean things up :-) Thanks!
+> Cherry-picked from
+> commit ea93102f3224 ("Fix kexec forbidding kernels signed with keys in the secondary keyring to boot")
 
-Since redhat mail server has issue, the body content of patch is empty
-from my mail client. So reply here to add comment.
+This line may need a line feed?
 
-As replied in v1 to Omar, I think this is a great fix. That would be
-also great to state if this is a real issue which is breaking thing,
-then add 'Fixes' tag and Cc stable like "Cc: <stable@vger.kernel.org> # 5.17",
-or a fantastic improvement from code inspecting.
+The patch 1~3 looks good to me. Coiby encountered the same issue
+on arm64, and has posted a patch series to fix that and there's clean up
+and code adjustment.
 
-Concern this because in distros, e.g in our rhel8, we maintain old kernel
-and back port necessary patches into the kernel, those patches with
-'Fixes' tag definitely are good candidate. This is important too to LTS
-kernel.
+https://lore.kernel.org/all/20220401013118.348084-1-coxu at redhat.com/T/#u
 
-Thanks
-Baoquan
+Hi Coiby,
 
+Maybe you can check this patchset, and consider how to integrate your
+patches based on this patch 1~/3?
+
+For this patch itself, ack.
+
+Acked-by: Baoquan He <bhe@redhat.com>
 
 > 
-> > ---
-> > Changes from v1:
-> > 
-> > - Remove set_iounmap_nonlazy() entirely instead of fixing it.
-> > 
-> > arch/x86/include/asm/io.h       |  2 --
-> > arch/x86/kernel/crash_dump_64.c |  1 -
-> > mm/vmalloc.c                    | 11 -----------
-> > 3 files changed, 14 deletions(-)
-> > 
-> > diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> > index f6d91ecb8026..e9736af126b2 100644
-> > --- a/arch/x86/include/asm/io.h
-> > +++ b/arch/x86/include/asm/io.h
-> > @@ -210,8 +210,6 @@ void __iomem *ioremap(resource_size_t offset, unsigned long size);
-> > extern void iounmap(volatile void __iomem *addr);
-> > #define iounmap iounmap
-> > 
-> > -extern void set_iounmap_nonlazy(void);
-> > -
-> > #ifdef __KERNEL__
-> > 
-> > void memcpy_fromio(void *, const volatile void __iomem *, size_t);
-> > diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-> > index a7f617a3981d..97529552dd24 100644
-> > --- a/arch/x86/kernel/crash_dump_64.c
-> > +++ b/arch/x86/kernel/crash_dump_64.c
-> > @@ -37,7 +37,6 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
-> > 	} else
-> > 		memcpy(buf, vaddr + offset, csize);
-> > 
-> > -	set_iounmap_nonlazy();
-> > 	iounmap((void __iomem *)vaddr);
-> > 	return csize;
-> > }
-> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> > index e163372d3967..0b17498a34f1 100644
-> > --- a/mm/vmalloc.c
-> > +++ b/mm/vmalloc.c
-> > @@ -1671,17 +1671,6 @@ static DEFINE_MUTEX(vmap_purge_lock);
-> > /* for per-CPU blocks */
-> > static void purge_fragmented_blocks_allcpus(void);
-> > 
-> > -#ifdef CONFIG_X86_64
-> > -/*
-> > - * called before a call to iounmap() if the caller wants vm_area_struct's
-> > - * immediately freed.
-> > - */
-> > -void set_iounmap_nonlazy(void)
-> > -{
-> > -	atomic_long_set(&vmap_lazy_nr, lazy_max_pages()+1);
-> > -}
-> > -#endif /* CONFIG_X86_64 */
-> > -
-> > /*
-> >  * Purges all lazily-freed vmap areas.
-> >  */
-> > -- 
-> > 2.35.1
-> > 
-> > 
+> Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+> Cc: kexec at lists.infradead.org
+> Cc: keyrings at vger.kernel.org
+> Cc: linux-security-module at vger.kernel.org
+> Cc: stable at kernel.org
+> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+> ---
+>  arch/arm64/kernel/kexec_image.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
+> index 9ec34690e255..1fbf2ee7c005 100644
+> --- a/arch/arm64/kernel/kexec_image.c
+> +++ b/arch/arm64/kernel/kexec_image.c
+> @@ -133,7 +133,8 @@ static void *image_load(struct kimage *image,
+>  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
+>  static int image_verify_sig(const char *kernel, unsigned long kernel_len)
+>  {
+> -	return verify_pefile_signature(kernel, kernel_len, NULL,
+> +	return verify_pefile_signature(kernel, kernel_len,
+> +				       VERIFY_USE_SECONDARY_KEYRING,
+>  				       VERIFYING_KEXEC_PE_SIGNATURE);
+>  }
+>  #endif
+> -- 
+> 2.31.1
 > 
 
 
