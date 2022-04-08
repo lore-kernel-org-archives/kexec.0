@@ -1,93 +1,30 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Fri, 8 Apr 2022 17:24:28 +0800
-Subject: [PATCH v5 RESEND 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <20220408090636.560886-1-bhe@redhat.com>
-References: <20220408090636.560886-1-bhe@redhat.com>
-Message-ID: <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv>
+Date: Fri, 8 Apr 2022 17:32:52 +0800
+Subject: [PATCH v21 0/5] support reserving crashkernel above 4G on arm64
+ kdump
+In-Reply-To: <20220227030717.1464-1-thunder.leizhen@huawei.com>
+References: <20220227030717.1464-1-thunder.leizhen@huawei.com>
+Message-ID: <YlABRPBEaTldZwuL@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Add Heiko to CC.
+Hi, Lei
 
-On 04/08/22 at 05:06pm, Baoquan He wrote:
-> Copy the description of v3 cover letter from Willy:
-> ===
-> For some reason several people have been sending bad patches to fix
-> compiler warnings in vmcore recently.  Here's how it should be done.
-> Compile-tested only on x86.  As noted in the first patch, s390 should
-> take this conversion a bit further, but I'm not inclined to do that
-> work myself.
+On 02/27/22 at 11:07am, Zhen Lei wrote:
+> Changes since [v20]:
+> 1. Check whether crashkernel=Y,low is incorrectly configured or not configured. Do different processing.
+> 2. Share the existing description of x86. The configuration of arm64 is the same as that of x86.
+> 3. Define the value of macro CRASH_ADDR_HIGH_MAX as memblock.current_limit, instead of MEMBLOCK_ALLOC_ACCESSIBLE.
+> 4. To improve readability, some lightweight code adjustments have been made to reserve_craskernel(), including comments.
+> 5. The defined value of DEFAULT_CRASH_KERNEL_LOW_SIZE reconsiders swiotlb, just like x86, to share documents.
 
-Forgot adding Heiko to CC again.
+5.18 rc1 is already done, do you have plan to post a new version for
+reviewing?
 
-Hi Heiko,
-
-Andrew worried you may miss the note, "As noted in the first patch,
-s390 should take this conversion a bit further, but I'm not inclined
-to do that work myself." written in cover letter from willy.
-
-I told him you had already known this in v1 discussion. So add you in CC
-list as Andrew required. Adding words to explain, just in case confusion.
-
-> 
-> V4:
-> [PATCH v4 0/3] Convert vmcore to use an iov_iter
-> https://lore.kernel.org/all/20220318093706.161534-1-bhe at redhat.com/T/#u
-> 
-> v3:
-> [PATCH v3 0/3] Convert vmcore to use an iov_iter
-> https://lore.kernel.org/all/20211213143927.3069508-1-willy at infradead.org/T/#u
-> 
-> 
-> Changelog:
-> ===
-> v5 RESEND:
->  - Add my own Signed-off-by, no code or log change related in this round.
-> 
-> v5:
->  - Rebased on Linus's latest master branch.
->  - Merge the patch 4 of v4 into patch 2.
-> v4:
->  - Append one patch to replace the open code with iov_iter_count().
->    This is suggested by Al.
->  - Fix a indentation error by replacing space with tab in
->    arch/sh/kernel/crash_dump.c of patch 1 reported by checkpatch. The
->    rest of patch 1~3 are untouched.
->  - Add Christopy's Reviewed-by and my Acked-by for patch 1~3.
-> v3:
->  - Send the correct patches this time
-> v2:
->  - Removed unnecessary kernel-doc
->  - Included uio.h to fix compilation problems
->  - Made read_from_oldmem_iter static to avoid compile warnings during the
->    conversion
->  - Use iov_iter_truncate() (Christoph)
-> 
-> 
-> Matthew Wilcox (Oracle) (3):
->   vmcore: Convert copy_oldmem_page() to take an iov_iter
->   vmcore: Convert __read_vmcore to use an iov_iter
->   vmcore: Convert read_from_oldmem() to take an iov_iter
-> 
->  arch/arm/kernel/crash_dump.c     |  27 +------
->  arch/arm64/kernel/crash_dump.c   |  29 +------
->  arch/ia64/kernel/crash_dump.c    |  32 +-------
->  arch/mips/kernel/crash_dump.c    |  27 +------
->  arch/powerpc/kernel/crash_dump.c |  35 ++-------
->  arch/riscv/kernel/crash_dump.c   |  26 +------
->  arch/s390/kernel/crash_dump.c    |  13 ++--
->  arch/sh/kernel/crash_dump.c      |  29 ++-----
->  arch/x86/kernel/crash_dump_32.c  |  29 +------
->  arch/x86/kernel/crash_dump_64.c  |  48 ++++--------
->  fs/proc/vmcore.c                 | 130 +++++++++++++------------------
->  include/linux/crash_dump.h       |  19 ++---
->  12 files changed, 123 insertions(+), 321 deletions(-)
-> 
-> -- 
-> 2.34.1
-> 
+Thanks
+Baoquan
 
 
