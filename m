@@ -1,91 +1,159 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Fri, 8 Apr 2022 03:00:45 +0000
-Subject: [PATCH 2/2] makedumpfile: break loop after last dumpable page
-In-Reply-To: <20220407145014.2785147a@rhtmp>
-References: <20220404155050.6898-1-prudo@redhat.com>
- <20220404155050.6898-3-prudo@redhat.com>
- <TYYPR01MB6777476C26FE1B8F2E618E4FDDE69@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <20220407145014.2785147a@rhtmp>
-Message-ID: <TYYPR01MB6777BD75C24DBC1A33F4308FDDE99@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Fri, 8 Apr 2022 11:02:47 +0800
+Subject: [PATCH v2] mm/vmalloc: fix spinning drain_vmap_work after
+ reading from /proc/vmcore
+In-Reply-To: <Yk72+9UFwsaFXoZe@chrisdown.name>
+References: <52f819991051f9b865e9ce25605509bfdbacadcd.1649277321.git.osandov@fb.com>
+ <Yk72+9UFwsaFXoZe@chrisdown.name>
+Message-ID: <Yk+l1/xLzhB02aIU@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> Hi Kazu,
+On 04/07/22 at 03:36pm, Chris Down wrote:
+> Omar Sandoval writes:
+> > From: Omar Sandoval <osandov@fb.com>
+> > 
+> > Commit 3ee48b6af49c ("mm, x86: Saving vmcore with non-lazy freeing of
+> > vmas") introduced set_iounmap_nonlazy(), which sets vmap_lazy_nr to
+> > lazy_max_pages() + 1, ensuring that any future vunmaps() immediately
+> > purge the vmap areas instead of doing it lazily.
+> > 
+> > Commit 690467c81b1a ("mm/vmalloc: Move draining areas out of caller
+> > context") moved the purging from the vunmap() caller to a worker thread.
+> > Unfortunately, set_iounmap_nonlazy() can cause the worker thread to spin
+> > (possibly forever). For example, consider the following scenario:
+> > 
+> > 1. Thread reads from /proc/vmcore. This eventually calls
+> >   __copy_oldmem_page() -> set_iounmap_nonlazy(), which sets
+> >   vmap_lazy_nr to lazy_max_pages() + 1.
+> > 2. Then it calls free_vmap_area_noflush() (via iounmap()), which adds 2
+> >   pages (one page plus the guard page) to the purge list and
+> >   vmap_lazy_nr. vmap_lazy_nr is now lazy_max_pages() + 3, so the
+> >   drain_vmap_work is scheduled.
+> > 3. Thread returns from the kernel and is scheduled out.
+> > 4. Worker thread is scheduled in and calls drain_vmap_area_work(). It
+> >   frees the 2 pages on the purge list. vmap_lazy_nr is now
+> >   lazy_max_pages() + 1.
+> > 5. This is still over the threshold, so it tries to purge areas again,
+> >   but doesn't find anything.
+> > 6. Repeat 5.
+> > 
+> > If the system is running with only one CPU (which is typicial for kdump)
+> > and preemption is disabled, then this will never make forward progress:
+> > there aren't any more pages to purge, so it hangs. If there is more than
+> > one CPU or preemption is enabled, then the worker thread will spin
+> > forever in the background. (Note that if there were already pages to be
+> > purged at the time that set_iounmap_nonlazy() was called, this bug is
+> > avoided.)
+> > 
+> > This can be reproduced with anything that reads from /proc/vmcore
+> > multiple times. E.g., vmcore-dmesg /proc/vmcore.
+> > 
+> > It turns out that improvements to vmap() over the years have obsoleted
+> > the need for this "optimization". I benchmarked
+> > `dd if=/proc/vmcore of=/dev/null` with 4k and 1M read sizes on a system
+> > with a 32GB vmcore. The test was run on 5.17, 5.18-rc1 with a fix that
+> > avoided the hang, and 5.18-rc1 with set_iounmap_nonlazy() removed
+> > entirely:
+> > 
+> >  |5.17  |5.18+fix|5.18+removal
+> > 4k|40.86s|  40.09s|      26.73s
+> > 1M|24.47s|  23.98s|      21.84s
+> > 
+> > The removal was the fastest (by a wide margin with 4k reads). This patch
+> > removes set_iounmap_nonlazy().
+> > 
+> > Signed-off-by: Omar Sandoval <osandov@fb.com>
 > 
-> On Thu, 7 Apr 2022 06:43:00 +0000
-> HAGIO KAZUHITO(?????) <k-hagio-ab@nec.com> wrote:
+> It probably doesn't matter, but maybe worth adding in a Fixes tag just to
+> make sure anyone getting this without context understands that 690467c81b1a
+> ("mm/vmalloc: Move draining areas out of caller context") shouldn't reach
+> further rcs without this. Unlikely that would happen anyway, though.
 > 
-> > -----Original Message-----
-> > > Once the last dumpable page was processed there is no need to finish the
-> > > loop to the last page. Thus exit early to improve performance.
-> > >
-> > > Signed-off-by: Philipp Rudo <prudo@redhat.com>
-> > > ---
-> > >  makedumpfile.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> > >
-> > > diff --git a/makedumpfile.c b/makedumpfile.c
-> > > index 2ef3458..c944d0e 100644
-> > > --- a/makedumpfile.c
-> > > +++ b/makedumpfile.c
-> > > @@ -8884,6 +8884,12 @@ write_kdump_pages_cyclic(struct cache_data *cd_header, struct cache_data *cd_pag
-> > >
-> > >  	for (pfn = start_pfn; pfn < end_pfn; pfn++) {
-> > >
-> > > +		/*
-> > > +		 * All dumpable pages have been processed. No need to continue.
-> > > +		 */
-> > > +		if (num_dumped == info->num_dumpable)
-> > > +			break;
-> >
-> > This patch is likely to increase the possibility of failure to capture
-> > /proc/kcore, although this is an unofficial functionality...
-> >
-> >   # makedumpfile -ld31 /proc/kcore kcore.snap
-> >   # crash vmlinux kcore.snap
-> >   ...
-> >   crash: page incomplete: kernel virtual address: ffff916fbeffed00  type: "pglist node_id"
-> >
-> > In cyclic mode, makedumpfile first calculates only info->num_dumpable [1] and
-> > frees the used bitmap, and later creates 2nd bitmap again [2] at this time.
-> >
-> >   create_dumpfile
-> >     create_dump_bitmap
-> >       info->num_dumpable = get_num_dumpable_cyclic()  <<-- [1]
-> >     writeout_dumpfile
-> >       write_kdump_pages_and_bitmap_cyclic
-> >         foreach cycle
-> >           create_2nd_bitmap  <<-- [2]
-> >           write_kdump_pages_cyclic
-> >
-> > So with live system, num_dumped can exceed info->num_dumpable.
-> > If it stops at info->num_dumpable, some necessary data can be missed.
-> 
-> thanks for the explanation! I haven't considered that case and assumed
-> info->num_dumpable is constant.
-> 
-> > Capturing /proc/kcore is still fragile and not considered enough, but
-> > sometimes useful... when I want to capture a snapshot of memory.
-> >
-> > (the bitmap is allocated as block, so probably it's working as some buffer?)
-> >
-> > So I will merge the 1/2 patch, but personally would not like to merge
-> > this patch.  How necessary is this?
-> 
-> I don't think this patch is absolutely necessary. It's only a small
-> performance improvement but shouldn't have a huge impact. If you like
-> you can drop the patch.
+> Nice use of a bug as an impetus to clean things up :-) Thanks!
 
-ok, drop it at present.
+Since redhat mail server has issue, the body content of patch is empty
+from my mail client. So reply here to add comment.
 
-Applied the 1/2 patch.
-https://github.com/makedumpfile/makedumpfile/commit/3318c51c3c60ed192519cef6f6e72178151f88a8
+As replied in v1 to Omar, I think this is a great fix. That would be
+also great to state if this is a real issue which is breaking thing,
+then add 'Fixes' tag and Cc stable like "Cc: <stable@vger.kernel.org> # 5.17",
+or a fantastic improvement from code inspecting.
 
-Thanks!
-Kazu
+Concern this because in distros, e.g in our rhel8, we maintain old kernel
+and back port necessary patches into the kernel, those patches with
+'Fixes' tag definitely are good candidate. This is important too to LTS
+kernel.
+
+Thanks
+Baoquan
+
+
+> 
+> > ---
+> > Changes from v1:
+> > 
+> > - Remove set_iounmap_nonlazy() entirely instead of fixing it.
+> > 
+> > arch/x86/include/asm/io.h       |  2 --
+> > arch/x86/kernel/crash_dump_64.c |  1 -
+> > mm/vmalloc.c                    | 11 -----------
+> > 3 files changed, 14 deletions(-)
+> > 
+> > diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
+> > index f6d91ecb8026..e9736af126b2 100644
+> > --- a/arch/x86/include/asm/io.h
+> > +++ b/arch/x86/include/asm/io.h
+> > @@ -210,8 +210,6 @@ void __iomem *ioremap(resource_size_t offset, unsigned long size);
+> > extern void iounmap(volatile void __iomem *addr);
+> > #define iounmap iounmap
+> > 
+> > -extern void set_iounmap_nonlazy(void);
+> > -
+> > #ifdef __KERNEL__
+> > 
+> > void memcpy_fromio(void *, const volatile void __iomem *, size_t);
+> > diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
+> > index a7f617a3981d..97529552dd24 100644
+> > --- a/arch/x86/kernel/crash_dump_64.c
+> > +++ b/arch/x86/kernel/crash_dump_64.c
+> > @@ -37,7 +37,6 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
+> > 	} else
+> > 		memcpy(buf, vaddr + offset, csize);
+> > 
+> > -	set_iounmap_nonlazy();
+> > 	iounmap((void __iomem *)vaddr);
+> > 	return csize;
+> > }
+> > diff --git a/mm/vmalloc.c b/mm/vmalloc.c
+> > index e163372d3967..0b17498a34f1 100644
+> > --- a/mm/vmalloc.c
+> > +++ b/mm/vmalloc.c
+> > @@ -1671,17 +1671,6 @@ static DEFINE_MUTEX(vmap_purge_lock);
+> > /* for per-CPU blocks */
+> > static void purge_fragmented_blocks_allcpus(void);
+> > 
+> > -#ifdef CONFIG_X86_64
+> > -/*
+> > - * called before a call to iounmap() if the caller wants vm_area_struct's
+> > - * immediately freed.
+> > - */
+> > -void set_iounmap_nonlazy(void)
+> > -{
+> > -	atomic_long_set(&vmap_lazy_nr, lazy_max_pages()+1);
+> > -}
+> > -#endif /* CONFIG_X86_64 */
+> > -
+> > /*
+> >  * Purges all lazily-freed vmap areas.
+> >  */
+> > -- 
+> > 2.35.1
+> > 
+> > 
+> 
 
 
