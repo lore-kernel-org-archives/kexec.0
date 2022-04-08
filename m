@@ -1,74 +1,53 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Fri, 8 Apr 2022 16:07:14 +0800
-Subject: [PATCH v6 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <20220401183040.1624-3-eric.devolder@oracle.com>
-References: <20220401183040.1624-1-eric.devolder@oracle.com>
- <20220401183040.1624-3-eric.devolder@oracle.com>
-Message-ID: <Yk/tMnoYN/p6vxxT@MiWiFi-R3L-srv>
+From: Alexander Egorenkov <egorenar@linux.ibm.com>
+Date: Fri,  8 Apr 2022 10:49:11 +0200
+Subject: [PATCH 1/1] check that order of free pages falls within valid range
+Message-ID: <20220408084911.181481-1-egorenar@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/01/22 at 02:30pm, Eric DeVolder wrote:
-> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
-> 
-> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
-> the elfcorehdr buffer/segment.
-> 
-> This is a preparation for later usage.
-> 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+This change makes __exclude_unnecessary_pages() more robust by
+verifying that the order of a free page is valid before computing the size
+of its memory block in the buddy system.
 
-LGTM,
+The order of a free page cannot be larger than (MAX_ORDER - 1) because
+the array 'zone.free_area' is of size MAX_ORDER.
 
-Acked-by: Baoquan He <bhe@redhat.com>
+This situation is reproducible with some s390x dumps:
 
-> ---
->  arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
->  1 file changed, 26 insertions(+)
-> 
-> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-> index 7340d9f01b62..8b51d3196b82 100644
-> --- a/arch/x86/Kconfig
-> +++ b/arch/x86/Kconfig
-> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
->  	  (CONFIG_RELOCATABLE=y).
->  	  For more details see Documentation/admin-guide/kdump/kdump.rst
->  
-> +config CRASH_HOTPLUG
-> +	bool "kernel updates of crash elfcorehdr"
-> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
-> +	help
-> +	  Enable the kernel to update the crash elfcorehdr (which contains
-> +	  the list of CPUs and memory regions) directly when hot plug/unplug
-> +	  of CPUs or memory. Otherwise userspace must monitor these hot
-> +	  plug/unplug change notifications via udev in order to
-> +	  unload-then-reload the crash kernel so that the list of CPUs and
-> +	  memory regions is kept up-to-date. Note that the udev CPU and
-> +	  memory change notifications still occur (however, userspace is not
-> +	  required to monitor for crash dump purposes).
-> +
-> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
-> +	depends on CRASH_HOTPLUG
-> +	int
-> +	default 131072
-> +	help
-> +	  Specify the maximum size of the elfcorehdr buffer/segment.
-> +	  The 128KiB default is sized so that it can accommodate 2048
-> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
-> +	  region of memory.
-> +	  For example, this size can accommodate a machine with up to 1024
-> +	  CPUs and up to 1024 memory regions, eg. as represented by the
-> +	  'System RAM' entries in /proc/iomem.
-> +
->  config KEXEC_JUMP
->  	bool "kexec jump"
->  	depends on KEXEC && HIBERNATION
-> -- 
-> 2.27.0
-> 
+__exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
+
+References:
+- https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
+- https://www.kernel.org/doc/gorman/html/understand/understand009.html
+
+Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
+---
+ makedumpfile.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/makedumpfile.c b/makedumpfile.c
+index ca4b0f1cb58f..56aa026e7b34 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -6457,9 +6457,11 @@ __exclude_unnecessary_pages(unsigned long mem_map,
+ 		else if ((info->dump_level & DL_EXCLUDE_FREE)
+ 		    && info->page_is_buddy
+ 		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
+-			if (private > 11) {
+-				ERRMSG("Invalid buddy page order: pfn=%llx, _mapcount=%x, _count=%x, private=%lx\n", pfn, _mapcount, _count, private);
+-				abort();
++			if (private >= ARRAY_LENGTH(zone.free_area)) {
++				ERRMSG("Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
++				       pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
++				free(page_cache);
++				return FALSE;
+ 			}
+ 			nr_pages = 1 << private;
+ 			pfn_counter = &pfn_free;
+-- 
+2.34.1
 
 
