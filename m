@@ -1,50 +1,39 @@
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Mon, 11 Apr 2022 14:13:54 +0530
-Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config option
- CRASH_HOTPLUG
+Date: Mon, 11 Apr 2022 14:13:55 +0530
+Subject: [RFC v4 PATCH 3/5] powrepc/crash hp: update kimage_arch struct
 In-Reply-To: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
 References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
-Message-ID: <20220411084357.157308-3-sourabhjain@linux.ibm.com>
+Message-ID: <20220411084357.157308-4-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
-hotplug events.
-
-All the updates needed on the capture kernel load path in the kernel for
-both kexec_load and kexec_file_load system will be kept under this config.
+Two new members fdt_index and fdt_index_valid are added in kimage_arch
+struct to track the FDT kexec segment. These new members of kimage_arch
+struct will help the crash hotplug handler to easily access the FDT
+segment from the kexec segment array. Otherwise, we have to loop through
+all kexec segments to find the FDT segments.
 
 Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
 ---
- arch/powerpc/Kconfig | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/powerpc/include/asm/kexec.h | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
-index b779603978e1..777db33f75b5 100644
---- a/arch/powerpc/Kconfig
-+++ b/arch/powerpc/Kconfig
-@@ -623,6 +623,17 @@ config FA_DUMP
- 	  If unsure, say "y". Only special kernels like petitboot may
- 	  need to say "N" here.
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index e1288826e22e..19c2cab6a880 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -104,6 +104,8 @@ extern const struct kexec_file_ops kexec_elf64_ops;
+ struct kimage_arch {
+ 	struct crash_mem *exclude_ranges;
  
-+config CRASH_HOTPLUG
-+	bool "kernel updates of crash kexec segments"
-+	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
-+	help
-+	  An efficient way to keep the capture kernel up-to-date with CPU
-+	  hotplug events. On CPU hotplug event the kexec segments of capture
-+	  kernel becomes stale and need to be updated with latest CPU data.
-+	  In this method the kernel performs minimal update to only relevant
-+	  kexec segments on CPU hotplug event, instead of triggering full
-+	  capture kernel reload from userspace using udev rule.
-+
- config PRESERVE_FA_DUMP
- 	bool "Preserve Firmware-assisted dump"
- 	depends on PPC64 && PPC_POWERNV && !FA_DUMP
++	int fdt_index;
++	bool fdt_index_valid;
+ 	unsigned long backup_start;
+ 	void *backup_buf;
+ 	void *fdt;
 -- 
 2.35.1
 
