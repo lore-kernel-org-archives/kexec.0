@@ -1,12 +1,12 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Mon, 11 Apr 2022 08:54:28 -0500
-Subject: [PATCH v6 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <Yk/tMnoYN/p6vxxT@MiWiFi-R3L-srv>
+Date: Mon, 11 Apr 2022 08:54:22 -0500
+Subject: [PATCH v6 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <YlPy8CKU4zHsx6Bc@MiWiFi-R3L-srv>
 References: <20220401183040.1624-1-eric.devolder@oracle.com>
- <20220401183040.1624-3-eric.devolder@oracle.com>
- <Yk/tMnoYN/p6vxxT@MiWiFi-R3L-srv>
-Message-ID: <657edaae-cb56-9c01-383b-680a0e95f722@oracle.com>
+ <20220401183040.1624-5-eric.devolder@oracle.com>
+ <YlPy8CKU4zHsx6Bc@MiWiFi-R3L-srv>
+Message-ID: <821b3c62-eedf-c1a3-4aba-671c90d83288@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,66 +15,141 @@ To: kexec@lists.infradead.org
 
 
 
-On 4/8/22 03:07, Baoquan He wrote:
+On 4/11/22 04:20, Baoquan He wrote:
+> Hi Eric,
+> 
 > On 04/01/22 at 02:30pm, Eric DeVolder wrote:
->> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
->>
->> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
->> the elfcorehdr buffer/segment.
->>
->> This is a preparation for later usage.
->>
->> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ... ...
 > 
-> LGTM,
+>> +static void crash_hotplug_handler(unsigned int hp_action,
+>> +	unsigned long a, unsigned long b)
 > 
-> Acked-by: Baoquan He <bhe@redhat.com>
+> I am still struggling to consider if these unused parameters should be
+> kept or removed. Do you foresee or feel on which ARCH they could be used?
+> 
+> Considering our elfcorehdr updating method, once memory or cpu changed,
+> we will update elfcorehdr and cpu notes to reflect all existing memory
+> regions and cpu in the current system. We could end up with having them
+> but never being used. Then we may finally need to clean them up.
+> 
+> If you have investigated and foresee or feel they could be used on a
+> certain architecture, we can keep them for the time being.
 
-Excellent, thanks!
+So 'hp_action' and 'a' are used within the existing patch series.
+In crash_core.c, there is this bit of code:
+
++       kexec_crash_image->offlinecpu =
++           (hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
++               (unsigned int)a : ~0U;
+
+which is referencing both 'hp_action' and using 'a' from the cpu notifier handler.
+I looked into removing 'a' and setting offlinecpu directly, but I thought
+it better that offlinecpu be set within the safety of the kexec_mutex.
+Also, Sourabh Jain's work with PowerPC utilizing this framework directly
+references hp_action in the arch-specific handler.
+
+The cpu and memory notifier handlers set hp_action accordingly. For cpu handler,
+the 'a' is set with the impacted cpu. For memory handler, 'a' and 'b' form the
+impacted memory range. I agree it looks like the memory range is currently
+not useful.
+
+Let me know what you think.
 eric
 
 > 
->> ---
->>   arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
->>   1 file changed, 26 insertions(+)
->>
->> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->> index 7340d9f01b62..8b51d3196b82 100644
->> --- a/arch/x86/Kconfig
->> +++ b/arch/x86/Kconfig
->> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
->>   	  (CONFIG_RELOCATABLE=y).
->>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
->>   
->> +config CRASH_HOTPLUG
->> +	bool "kernel updates of crash elfcorehdr"
->> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
->> +	help
->> +	  Enable the kernel to update the crash elfcorehdr (which contains
->> +	  the list of CPUs and memory regions) directly when hot plug/unplug
->> +	  of CPUs or memory. Otherwise userspace must monitor these hot
->> +	  plug/unplug change notifications via udev in order to
->> +	  unload-then-reload the crash kernel so that the list of CPUs and
->> +	  memory regions is kept up-to-date. Note that the udev CPU and
->> +	  memory change notifications still occur (however, userspace is not
->> +	  required to monitor for crash dump purposes).
+>> +{
+>> +	/* Obtain lock while changing crash information */
+>> +	if (!mutex_trylock(&kexec_mutex))
+>> +		return;
 >> +
->> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
->> +	depends on CRASH_HOTPLUG
->> +	int
->> +	default 131072
->> +	help
->> +	  Specify the maximum size of the elfcorehdr buffer/segment.
->> +	  The 128KiB default is sized so that it can accommodate 2048
->> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
->> +	  region of memory.
->> +	  For example, this size can accommodate a machine with up to 1024
->> +	  CPUs and up to 1024 memory regions, eg. as represented by the
->> +	  'System RAM' entries in /proc/iomem.
+>> +	/* Check kdump is loaded */
+>> +	if (kexec_crash_image) {
+>> +		pr_debug("crash hp: hp_action %u, a %lu, b %lu", hp_action,
+>> +			a, b);
 >> +
->>   config KEXEC_JUMP
->>   	bool "kexec jump"
->>   	depends on KEXEC && HIBERNATION
+>> +		/* Needed in order for the segments to be updated */
+>> +		arch_kexec_unprotect_crashkres();
+>> +
+>> +		/* Flag to differentiate between normal load and hotplug */
+>> +		kexec_crash_image->hotplug_event = true;
+>> +
+>> +		/* Now invoke arch-specific update handler */
+>> +		arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
+>> +
+>> +		/* No longer handling a hotplug event */
+>> +		kexec_crash_image->hotplug_event = false;
+>> +
+>> +		/* Change back to read-only */
+>> +		arch_kexec_protect_crashkres();
+>> +	}
+>> +
+>> +	/* Release lock now that update complete */
+>> +	mutex_unlock(&kexec_mutex);
+>> +}
+>> +
+>> +#if defined(CONFIG_MEMORY_HOTPLUG)
+>> +static int crash_memhp_notifier(struct notifier_block *nb,
+>> +	unsigned long val, void *v)
+>> +{
+>> +	struct memory_notify *mhp = v;
+>> +	unsigned long start, end;
+>> +
+>> +	start = mhp->start_pfn << PAGE_SHIFT;
+>> +	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
+>> +
+>> +	switch (val) {
+>> +	case MEM_ONLINE:
+>> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
+>> +			start, end-start);
+>> +		break;
+>> +
+>> +	case MEM_OFFLINE:
+>> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
+>> +			start, end-start);
+>> +		break;
+>> +	}
+>> +	return NOTIFY_OK;
+>> +}
+>> +
+>> +static struct notifier_block crash_memhp_nb = {
+>> +	.notifier_call = crash_memhp_notifier,
+>> +	.priority = 0
+>> +};
+>> +#endif
+>> +
+>> +#if defined(CONFIG_HOTPLUG_CPU)
+>> +static int crash_cpuhp_online(unsigned int cpu)
+>> +{
+>> +	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu, 0);
+>> +	return 0;
+>> +}
+>> +
+>> +static int crash_cpuhp_offline(unsigned int cpu)
+>> +{
+>> +	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu, 0);
+>> +	return 0;
+>> +}
+>> +#endif
+>> +
+>> +static int __init crash_hotplug_init(void)
+>> +{
+>> +	int result = 0;
+>> +
+>> +#if defined(CONFIG_MEMORY_HOTPLUG)
+>> +	register_memory_notifier(&crash_memhp_nb);
+>> +#endif
+>> +
+>> +#if defined(CONFIG_HOTPLUG_CPU)
+>> +	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+>> +				"crash/cpuhp",
+>> +				crash_cpuhp_online, crash_cpuhp_offline);
+>> +#endif
+>> +
+>> +	return result;
+>> +}
+>> +
+>> +subsys_initcall(crash_hotplug_init);
+>> +#endif /* CONFIG_CRASH_HOTPLUG */
 >> -- 
 >> 2.27.0
 >>
