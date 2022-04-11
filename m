@@ -1,91 +1,55 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Mon, 11 Apr 2022 01:53:28 +0000
-Subject: [PATCH v2 1/1] check that order of free pages falls within valid
- range
-In-Reply-To: <87bkxbg0pn.fsf@oc8242746057.ibm.com>
-References: <20220408085259.184465-1-egorenar@linux.ibm.com>
- <87bkxbg0pn.fsf@oc8242746057.ibm.com>
-Message-ID: <TYYPR01MB67772D95131EB619CFFE897CDDEA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Mon, 11 Apr 2022 09:52:18 +0800
+Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
+ kernel image signature
+In-Reply-To: <YlOAvM4qpSlHczOd@MiWiFi-R3L-srv>
+References: <20220401013118.348084-1-coxu@redhat.com>
+ <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
+ <20220408085931.GW163591@kunlun.suse.cz>
+ <YlOAvM4qpSlHczOd@MiWiFi-R3L-srv>
+Message-ID: <20220411015218.ckw42xx5rrhidhpd@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Alex,
+On Mon, Apr 11, 2022 at 09:13:32AM +0800, Baoquan He wrote:
+>On 04/08/22 at 10:59am, Michal Such?nek wrote:
+>> On Fri, Apr 08, 2022 at 03:17:19PM +0800, Baoquan He wrote:
+>> > Hi Coiby,
+>> >
+>> > On 04/01/22 at 09:31am, Coiby Xu wrote:
+>> > > Currently, a problem faced by arm64 is if a kernel image is signed by a
+>> > > MOK key, loading it via the kexec_file_load() system call would be
+>> > > rejected with the error "Lockdown: kexec: kexec of unsigned images is
+>> > > restricted; see man kernel_lockdown.7".
+>> > >
+>> > > This patch set allows arm64 to use more system keyrings to verify kdump
+>> > > kernel image signature by making the existing code in x64 public.
+>> >
+>> > Thanks for updating. It would be great to tell why the problem is
+>> > met, then allow arm64 to use more system keyrings can solve it.
+>>
+>> The reason is that MOK keys are (if anywhere) linked to the secondary
+                                                                ^^^^^^^^^
+                                                                platform?
+>> keyring, and only primary keyring is used on arm64.
 
-thanks for the patch,
+Thanks Michal for providing the info! Btw, I think you made a typo
+because MOK keys are linked to the platform keyring, right?
 
------Original Message-----
-> Alexander Egorenkov <egorenar@linux.ibm.com> writes:
-> 
-> > This change makes __exclude_unnecessary_pages() more robust by
-> > verifying that the order of a free page is valid before computing the size
-> > of its memory block in the buddy system.
-> >
-> > The order of a free page cannot be larger than (MAX_ORDER - 1) because
-> > the array 'zone.free_area' is of size MAX_ORDER.
-> >
-> > This situation is reproducible with some s390x dumps:
-> >
-> > __exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
-> >
-> > References:
-> > - https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
-> > - https://www.kernel.org/doc/gorman/html/understand/understand009.html
-> >
-> > Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> > ---
-> >  makedumpfile.c | 6 ++++++
-> >  1 file changed, 6 insertions(+)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index 2ef345879524..56aa026e7b34 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -6457,6 +6457,12 @@ __exclude_unnecessary_pages(unsigned long mem_map,
-> >  		else if ((info->dump_level & DL_EXCLUDE_FREE)
-> >  		    && info->page_is_buddy
-> >  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
-> > +			if (private >= ARRAY_LENGTH(zone.free_area)) {
-> > +				ERRMSG("Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
-> > +				       pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
-> > +				free(page_cache);
-> > +				return FALSE;
-> > +			}
-> >  			nr_pages = 1 << private;
-> >  			pfn_counter = &pfn_free;
-> >  		}
-> > --
-> > 2.34.1
-> >
-> >
-> > _______________________________________________
-> > kexec mailing list
-> > kexec at lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/kexec
-> 
-> I found out when this can happen.
-> 
-> If e.g. a driver calls free_pages() and gives an order > max page order,
-> then __free_one_page() stores the given invalid page order in the
-> 'private' member of struct page and gives it back to the buddy
-> allocator.
-> 
-> This is what actually happened in the dump i used to reproduce this issue
-> with makedumpfile.
+>
+>Thanks for explaining. This is valuable information and should
+>be put into log for better understanding when reviewing or
+>reading code later.
 
-Good catch, though I could not reproduce it so far..
+Thanks for the reminder! I'll include this info in the commit message.
 
-but I wonder whether we have no other choice than returning FALSE?
-in other words, can't we skip (include) the invalid page with a
-warning message?
+>
 
-As I said before, I think that capturing more pages than expected
-will be better than not capturing a dump, and that is "robust"
-against unexpected values.
-
-Thanks,
-Kazu
+-- 
+Best regards,
+Coiby
 
 
