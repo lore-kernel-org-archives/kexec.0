@@ -1,62 +1,42 @@
-From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
-Date: Mon, 11 Apr 2022 10:59:38 +0200
-Subject: [PATCH v5 3/3] arm64: kexec_file: use more system keyrings to
- verify kernel image signature
-In-Reply-To: <20220401013118.348084-4-coxu@redhat.com>
-References: <20220401013118.348084-1-coxu@redhat.com>
- <20220401013118.348084-4-coxu@redhat.com>
-Message-ID: <20220411085938.GA163591@kunlun.suse.cz>
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Mon, 11 Apr 2022 10:59:39 +0200
+Subject: [PATCH v5 RESEND 0/3] Convert vmcore to use an iov_iter
+In-Reply-To: <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv>
+References: <20220408090636.560886-1-bhe@redhat.com>
+ <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv>
+Message-ID: <YlPt+3R63XYP22um@osiris>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Apr 01, 2022 at 09:31:18AM +0800, Coiby Xu wrote:
-> Currently, a problem faced by arm64 is if a kernel image is signed by a
-> MOK key, loading it via the kexec_file_load() system call would be
-> rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> restricted; see man kernel_lockdown.7".
-
-This is because image_verify_sig uses only the primary keyring that
-contains only kernel built-in keys to verify the kexec image.
-
-> This patch allows to verify arm64 kernel image signature using not only
-> .builtin_trusted_keys but also .platform and .secondary_trusted_key
-> keyring.
+On Fri, Apr 08, 2022 at 05:24:28PM +0800, Baoquan He wrote:
+> Add Heiko to CC.
 > 
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  arch/arm64/kernel/kexec_image.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
+> On 04/08/22 at 05:06pm, Baoquan He wrote:
+> > Copy the description of v3 cover letter from Willy:
+> > ===
+> > For some reason several people have been sending bad patches to fix
+> > compiler warnings in vmcore recently.  Here's how it should be done.
+> > Compile-tested only on x86.  As noted in the first patch, s390 should
+> > take this conversion a bit further, but I'm not inclined to do that
+> > work myself.
 > 
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 9ec34690e255..51af1c22d6da 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -14,7 +14,6 @@
->  #include <linux/kexec.h>
->  #include <linux/pe.h>
->  #include <linux/string.h>
-> -#include <linux/verification.h>
->  #include <asm/byteorder.h>
->  #include <asm/cpufeature.h>
->  #include <asm/image.h>
-> @@ -133,8 +132,7 @@ static void *image_load(struct kimage *image,
->  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
->  static int image_verify_sig(const char *kernel, unsigned long kernel_len)
->  {
-> -	return verify_pefile_signature(kernel, kernel_len, NULL,
-> -				       VERIFYING_KEXEC_PE_SIGNATURE);
-> +	return kexec_kernel_verify_pe_sig(kernel, kernel_len);
->  }
->  #endif
+> Forgot adding Heiko to CC again.
+> 
+> Hi Heiko,
+> 
+> Andrew worried you may miss the note, "As noted in the first patch,
+> s390 should take this conversion a bit further, but I'm not inclined
+> to do that work myself." written in cover letter from willy.
+> 
+> I told him you had already known this in v1 discussion. So add you in CC
+> list as Andrew required. Adding words to explain, just in case confusion.
 
-You can eliminate image_verify_sig here aswell and directly assign
-kexec_kernel_verify_pe_sig to fops.
+Thanks for letting me know again. I'm still aware of this, but would
+appreciate if I could be added to cc in the first patch of this
+series, so I get notified when Andrew sends this Linus.
 
-Thanks
-
-Michal
+Thanks a lot!
 
