@@ -1,42 +1,103 @@
-From: Heiko Carstens <hca@linux.ibm.com>
-Date: Mon, 11 Apr 2022 10:59:39 +0200
-Subject: [PATCH v5 RESEND 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv>
-References: <20220408090636.560886-1-bhe@redhat.com>
- <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv>
-Message-ID: <YlPt+3R63XYP22um@osiris>
+From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
+Date: Mon, 11 Apr 2022 11:01:11 +0200
+Subject: [PATCH v5 1/3] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <20220401013118.348084-2-coxu@redhat.com>
+References: <20220401013118.348084-1-coxu@redhat.com>
+ <20220401013118.348084-2-coxu@redhat.com>
+Message-ID: <20220411090111.GB163591@kunlun.suse.cz>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Apr 08, 2022 at 05:24:28PM +0800, Baoquan He wrote:
-> Add Heiko to CC.
+On Fri, Apr 01, 2022 at 09:31:16AM +0800, Coiby Xu wrote:
+> Currently there is no arch-specific implementation of
+> arch_kexec_kernel_verify_sig. Even if we want to add an implementation
+> for an architecture in the future, we can simply use "(struct
+> kexec_file_ops*)->verify_sig". So clean it up.
+Reviewed-by: Michal Suchanek <msuchanek@suse.de>
 > 
-> On 04/08/22 at 05:06pm, Baoquan He wrote:
-> > Copy the description of v3 cover letter from Willy:
-> > ===
-> > For some reason several people have been sending bad patches to fix
-> > compiler warnings in vmcore recently.  Here's how it should be done.
-> > Compile-tested only on x86.  As noted in the first patch, s390 should
-> > take this conversion a bit further, but I'm not inclined to do that
-> > work myself.
+> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
+> ---
+>  include/linux/kexec.h |  4 ----
+>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
+>  2 files changed, 13 insertions(+), 25 deletions(-)
 > 
-> Forgot adding Heiko to CC again.
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 0c994ae37729..755fed183224 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+>  				 const Elf_Shdr *relsec,
+>  				 const Elf_Shdr *symtab);
+>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> -#ifdef CONFIG_KEXEC_SIG
+> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -				 unsigned long buf_len);
+> -#endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 8347fc158d2b..3720435807eb 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
+>  }
+>  
+> -#ifdef CONFIG_KEXEC_SIG
+> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+> -					  unsigned long buf_len)
+> -{
+> -	if (!image->fops || !image->fops->verify_sig) {
+> -		pr_debug("kernel loader does not support signature verification.\n");
+> -		return -EKEYREJECTED;
+> -	}
+> -
+> -	return image->fops->verify_sig(buf, buf_len);
+> -}
+> -
+> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -					unsigned long buf_len)
+> -{
+> -	return kexec_image_verify_sig_default(image, buf, buf_len);
+> -}
+> -#endif
+> -
+>  /*
+>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>   * @pi:		Purgatory to be relocated.
+> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_SIG
+> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
+> +		unsigned long buf_len)
+> +{
+> +	if (!image->fops || !image->fops->verify_sig) {
+> +		pr_debug("kernel loader does not support signature verification.\n");
+> +		return -EKEYREJECTED;
+> +	}
+> +
+> +	return image->fops->verify_sig(buf, buf_len);
+> +}
+> +
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+>  	int ret;
+>  
+> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+> -					   image->kernel_buf_len);
+> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
+> +			image->kernel_buf_len);
+>  	if (ret) {
+>  
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> -- 
+> 2.34.1
 > 
-> Hi Heiko,
-> 
-> Andrew worried you may miss the note, "As noted in the first patch,
-> s390 should take this conversion a bit further, but I'm not inclined
-> to do that work myself." written in cover letter from willy.
-> 
-> I told him you had already known this in v1 discussion. So add you in CC
-> list as Andrew required. Adding words to explain, just in case confusion.
-
-Thanks for letting me know again. I'm still aware of this, but would
-appreciate if I could be added to cc in the first patch of this
-series, so I get notified when Andrew sends this Linus.
-
-Thanks a lot!
 
