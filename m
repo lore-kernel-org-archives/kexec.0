@@ -1,56 +1,245 @@
-From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
-Date: Mon, 11 Apr 2022 10:43:06 +0200
-Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
- kernel image signature
-In-Reply-To: <20220411015218.ckw42xx5rrhidhpd@Rk>
-References: <20220401013118.348084-1-coxu@redhat.com>
- <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
- <20220408085931.GW163591@kunlun.suse.cz>
- <YlOAvM4qpSlHczOd@MiWiFi-R3L-srv>
- <20220411015218.ckw42xx5rrhidhpd@Rk>
-Message-ID: <20220411084306.GY163591@kunlun.suse.cz>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Mon, 11 Apr 2022 14:13:53 +0530
+Subject: [RFC v4 PATCH 1/5] powerpc/kexec: make update_cpus_node non-static
+In-Reply-To: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
+References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
+Message-ID: <20220411084357.157308-2-sourabhjain@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Apr 11, 2022 at 09:52:18AM +0800, Coiby Xu wrote:
-> On Mon, Apr 11, 2022 at 09:13:32AM +0800, Baoquan He wrote:
-> > On 04/08/22 at 10:59am, Michal Such?nek wrote:
-> > > On Fri, Apr 08, 2022 at 03:17:19PM +0800, Baoquan He wrote:
-> > > > Hi Coiby,
-> > > >
-> > > > On 04/01/22 at 09:31am, Coiby Xu wrote:
-> > > > > Currently, a problem faced by arm64 is if a kernel image is signed by a
-> > > > > MOK key, loading it via the kexec_file_load() system call would be
-> > > > > rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> > > > > restricted; see man kernel_lockdown.7".
-> > > > >
-> > > > > This patch set allows arm64 to use more system keyrings to verify kdump
-> > > > > kernel image signature by making the existing code in x64 public.
-> > > >
-> > > > Thanks for updating. It would be great to tell why the problem is
-> > > > met, then allow arm64 to use more system keyrings can solve it.
-> > > 
-> > > The reason is that MOK keys are (if anywhere) linked to the secondary
->                                                                ^^^^^^^^^
->                                                                platform?
-> > > keyring, and only primary keyring is used on arm64.
-> 
-> Thanks Michal for providing the info! Btw, I think you made a typo
-> because MOK keys are linked to the platform keyring, right?
+Make the update_cpus_node function non-static and export it for
+usage in other kexec components.
 
-No, I mean secondary, through this patchset:
-https://lore.kernel.org/lkml/YhKP12KEmyqyS8rj at iki.fi/
+The update_cpus_node definition is moved to core_64.c so that it
+can be used with both kexec_load and kexec_file_load system calls.
 
-Apparently support for importing the MOK keys into the platform keyring
-also exists but I am not sure if this is upstream or downstream feature.
+Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+---
+ arch/powerpc/include/asm/kexec.h  |  1 +
+ arch/powerpc/kexec/core_64.c      | 88 +++++++++++++++++++++++++++++++
+ arch/powerpc/kexec/file_load_64.c | 87 ------------------------------
+ 3 files changed, 89 insertions(+), 87 deletions(-)
 
-At any rate the MOK keys are not included in the primary keyring which
-is the only keyring currently in use for kexec on arm64.
+diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+index 8ebdd23d987c..e1288826e22e 100644
+--- a/arch/powerpc/include/asm/kexec.h
++++ b/arch/powerpc/include/asm/kexec.h
+@@ -127,6 +127,7 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
+ int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
+ 			unsigned long initrd_load_addr,
+ 			unsigned long initrd_len, const char *cmdline);
++int update_cpus_node(void *fdt);
+ #endif /* CONFIG_PPC64 */
+ 
+ #endif /* CONFIG_KEXEC_FILE */
+diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+index 635b5fc30b53..249d2632526d 100644
+--- a/arch/powerpc/kexec/core_64.c
++++ b/arch/powerpc/kexec/core_64.c
+@@ -16,6 +16,7 @@
+ #include <linux/kernel.h>
+ #include <linux/cpu.h>
+ #include <linux/hardirq.h>
++#include <linux/libfdt.h>
+ 
+ #include <asm/page.h>
+ #include <asm/current.h>
+@@ -378,6 +379,93 @@ void default_machine_kexec(struct kimage *image)
+ 	/* NOTREACHED */
+ }
+ 
++/**
++ * add_node_props - Reads node properties from device node structure and add
++ *                  them to fdt.
++ * @fdt:            Flattened device tree of the kernel
++ * @node_offset:    offset of the node to add a property at
++ * @dn:             device node pointer
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
++{
++	int ret = 0;
++	struct property *pp;
++
++	if (!dn)
++		return -EINVAL;
++
++	for_each_property_of_node(dn, pp) {
++		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
++		if (ret < 0) {
++			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
++			return ret;
++		}
++	}
++	return ret;
++}
++
++/**
++ * update_cpus_node - Update cpus node of flattened device tree using of_root
++ *                    device node.
++ * @fdt:              Flattened device tree of the kernel.
++ *
++ * Returns 0 on success, negative errno on error.
++ */
++int update_cpus_node(void *fdt)
++{
++	struct device_node *cpus_node, *dn;
++	int cpus_offset, cpus_subnode_offset, ret = 0;
++
++	cpus_offset = fdt_path_offset(fdt, "/cpus");
++	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
++		pr_err("Malformed device tree: error reading /cpus node: %s\n",
++		       fdt_strerror(cpus_offset));
++		return cpus_offset;
++	}
++
++	if (cpus_offset > 0) {
++		ret = fdt_del_node(fdt, cpus_offset);
++		if (ret < 0) {
++			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
++			return -EINVAL;
++		}
++	}
++
++	/* Add cpus node to fdt */
++	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
++	if (cpus_offset < 0) {
++		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
++		return -EINVAL;
++	}
++
++	/* Add cpus node properties */
++	cpus_node = of_find_node_by_path("/cpus");
++	ret = add_node_props(fdt, cpus_offset, cpus_node);
++	of_node_put(cpus_node);
++	if (ret < 0)
++		return ret;
++
++	/* Loop through all subnodes of cpus and add them to fdt */
++	for_each_node_by_type(dn, "cpu") {
++		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
++		if (cpus_subnode_offset < 0) {
++			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
++			       fdt_strerror(cpus_subnode_offset));
++			ret = cpus_subnode_offset;
++			goto out;
++		}
++
++		ret = add_node_props(fdt, cpus_subnode_offset, dn);
++		if (ret < 0)
++			goto out;
++	}
++out:
++	of_node_put(dn);
++	return ret;
++}
++
+ #ifdef CONFIG_PPC_64S_HASH_MMU
+ /* Values we need to export to the second kernel via the device tree. */
+ static unsigned long htab_base;
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index 07da6bf1cf24..57f991b0a9da 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -951,93 +951,6 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
+ 	return (unsigned int)(usm_entries * sizeof(u64));
+ }
+ 
+-/**
+- * add_node_props - Reads node properties from device node structure and add
+- *                  them to fdt.
+- * @fdt:            Flattened device tree of the kernel
+- * @node_offset:    offset of the node to add a property at
+- * @dn:             device node pointer
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
+-{
+-	int ret = 0;
+-	struct property *pp;
+-
+-	if (!dn)
+-		return -EINVAL;
+-
+-	for_each_property_of_node(dn, pp) {
+-		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
+-		if (ret < 0) {
+-			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
+-			return ret;
+-		}
+-	}
+-	return ret;
+-}
+-
+-/**
+- * update_cpus_node - Update cpus node of flattened device tree using of_root
+- *                    device node.
+- * @fdt:              Flattened device tree of the kernel.
+- *
+- * Returns 0 on success, negative errno on error.
+- */
+-static int update_cpus_node(void *fdt)
+-{
+-	struct device_node *cpus_node, *dn;
+-	int cpus_offset, cpus_subnode_offset, ret = 0;
+-
+-	cpus_offset = fdt_path_offset(fdt, "/cpus");
+-	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
+-		pr_err("Malformed device tree: error reading /cpus node: %s\n",
+-		       fdt_strerror(cpus_offset));
+-		return cpus_offset;
+-	}
+-
+-	if (cpus_offset > 0) {
+-		ret = fdt_del_node(fdt, cpus_offset);
+-		if (ret < 0) {
+-			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
+-			return -EINVAL;
+-		}
+-	}
+-
+-	/* Add cpus node to fdt */
+-	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
+-	if (cpus_offset < 0) {
+-		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
+-		return -EINVAL;
+-	}
+-
+-	/* Add cpus node properties */
+-	cpus_node = of_find_node_by_path("/cpus");
+-	ret = add_node_props(fdt, cpus_offset, cpus_node);
+-	of_node_put(cpus_node);
+-	if (ret < 0)
+-		return ret;
+-
+-	/* Loop through all subnodes of cpus and add them to fdt */
+-	for_each_node_by_type(dn, "cpu") {
+-		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
+-		if (cpus_subnode_offset < 0) {
+-			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
+-			       fdt_strerror(cpus_subnode_offset));
+-			ret = cpus_subnode_offset;
+-			goto out;
+-		}
+-
+-		ret = add_node_props(fdt, cpus_subnode_offset, dn);
+-		if (ret < 0)
+-			goto out;
+-	}
+-out:
+-	of_node_put(dn);
+-	return ret;
+-}
+-
+ /**
+  * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
+  *                       being loaded.
+-- 
+2.35.1
 
-Thanks
-
-Michal
 
