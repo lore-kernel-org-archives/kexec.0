@@ -1,103 +1,131 @@
-From: Michal =?unknown-8bit?q?Such=C3=A1nek?= <msuchanek@suse.de>
-Date: Mon, 11 Apr 2022 11:01:11 +0200
-Subject: [PATCH v5 1/3] kexec: clean up arch_kexec_kernel_verify_sig
-In-Reply-To: <20220401013118.348084-2-coxu@redhat.com>
-References: <20220401013118.348084-1-coxu@redhat.com>
- <20220401013118.348084-2-coxu@redhat.com>
-Message-ID: <20220411090111.GB163591@kunlun.suse.cz>
+From: Baoquan He <bhe@redhat.com>
+Date: Mon, 11 Apr 2022 17:20:48 +0800
+Subject: [PATCH v6 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <20220401183040.1624-5-eric.devolder@oracle.com>
+References: <20220401183040.1624-1-eric.devolder@oracle.com>
+ <20220401183040.1624-5-eric.devolder@oracle.com>
+Message-ID: <YlPy8CKU4zHsx6Bc@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, Apr 01, 2022 at 09:31:16AM +0800, Coiby Xu wrote:
-> Currently there is no arch-specific implementation of
-> arch_kexec_kernel_verify_sig. Even if we want to add an implementation
-> for an architecture in the future, we can simply use "(struct
-> kexec_file_ops*)->verify_sig". So clean it up.
-Reviewed-by: Michal Suchanek <msuchanek@suse.de>
-> 
-> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  include/linux/kexec.h |  4 ----
->  kernel/kexec_file.c   | 34 +++++++++++++---------------------
->  2 files changed, 13 insertions(+), 25 deletions(-)
-> 
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 0c994ae37729..755fed183224 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -196,10 +196,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
->  				 const Elf_Shdr *relsec,
->  				 const Elf_Shdr *symtab);
->  int arch_kimage_file_post_load_cleanup(struct kimage *image);
-> -#ifdef CONFIG_KEXEC_SIG
-> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> -				 unsigned long buf_len);
-> -#endif
->  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->  
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 8347fc158d2b..3720435807eb 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
->  	return kexec_image_post_load_cleanup_default(image);
->  }
->  
-> -#ifdef CONFIG_KEXEC_SIG
-> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
-> -					  unsigned long buf_len)
-> -{
-> -	if (!image->fops || !image->fops->verify_sig) {
-> -		pr_debug("kernel loader does not support signature verification.\n");
-> -		return -EKEYREJECTED;
-> -	}
-> -
-> -	return image->fops->verify_sig(buf, buf_len);
-> -}
-> -
-> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-> -					unsigned long buf_len)
-> -{
-> -	return kexec_image_verify_sig_default(image, buf, buf_len);
-> -}
-> -#endif
-> -
->  /*
->   * arch_kexec_apply_relocations_add - apply relocations of type RELA
->   * @pi:		Purgatory to be relocated.
-> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->  }
->  
->  #ifdef CONFIG_KEXEC_SIG
-> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
-> +		unsigned long buf_len)
+Hi Eric,
+
+On 04/01/22 at 02:30pm, Eric DeVolder wrote:
+... ...
+
+> +static void crash_hotplug_handler(unsigned int hp_action,
+> +	unsigned long a, unsigned long b)
+
+I am still struggling to consider if these unused parameters should be
+kept or removed. Do you foresee or feel on which ARCH they could be used?
+
+Considering our elfcorehdr updating method, once memory or cpu changed,
+we will update elfcorehdr and cpu notes to reflect all existing memory
+regions and cpu in the current system. We could end up with having them
+but never being used. Then we may finally need to clean them up.
+
+If you have investigated and foresee or feel they could be used on a
+certain architecture, we can keep them for the time being.
+
 > +{
-> +	if (!image->fops || !image->fops->verify_sig) {
-> +		pr_debug("kernel loader does not support signature verification.\n");
-> +		return -EKEYREJECTED;
+> +	/* Obtain lock while changing crash information */
+> +	if (!mutex_trylock(&kexec_mutex))
+> +		return;
+> +
+> +	/* Check kdump is loaded */
+> +	if (kexec_crash_image) {
+> +		pr_debug("crash hp: hp_action %u, a %lu, b %lu", hp_action,
+> +			a, b);
+> +
+> +		/* Needed in order for the segments to be updated */
+> +		arch_kexec_unprotect_crashkres();
+> +
+> +		/* Flag to differentiate between normal load and hotplug */
+> +		kexec_crash_image->hotplug_event = true;
+> +
+> +		/* Now invoke arch-specific update handler */
+> +		arch_crash_hotplug_handler(kexec_crash_image, hp_action, a, b);
+> +
+> +		/* No longer handling a hotplug event */
+> +		kexec_crash_image->hotplug_event = false;
+> +
+> +		/* Change back to read-only */
+> +		arch_kexec_protect_crashkres();
 > +	}
 > +
-> +	return image->fops->verify_sig(buf, buf_len);
+> +	/* Release lock now that update complete */
+> +	mutex_unlock(&kexec_mutex);
 > +}
 > +
->  static int
->  kimage_validate_signature(struct kimage *image)
->  {
->  	int ret;
->  
-> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
-> -					   image->kernel_buf_len);
-> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
-> +			image->kernel_buf_len);
->  	if (ret) {
->  
->  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +static int crash_memhp_notifier(struct notifier_block *nb,
+> +	unsigned long val, void *v)
+> +{
+> +	struct memory_notify *mhp = v;
+> +	unsigned long start, end;
+> +
+> +	start = mhp->start_pfn << PAGE_SHIFT;
+> +	end = ((mhp->start_pfn + mhp->nr_pages) << PAGE_SHIFT) - 1;
+> +
+> +	switch (val) {
+> +	case MEM_ONLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
+> +			start, end-start);
+> +		break;
+> +
+> +	case MEM_OFFLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
+> +			start, end-start);
+> +		break;
+> +	}
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block crash_memhp_nb = {
+> +	.notifier_call = crash_memhp_notifier,
+> +	.priority = 0
+> +};
+> +#endif
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +static int crash_cpuhp_online(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu, 0);
+> +	return 0;
+> +}
+> +
+> +static int crash_cpuhp_offline(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu, 0);
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static int __init crash_hotplug_init(void)
+> +{
+> +	int result = 0;
+> +
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +	register_memory_notifier(&crash_memhp_nb);
+> +#endif
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +				"crash/cpuhp",
+> +				crash_cpuhp_online, crash_cpuhp_offline);
+> +#endif
+> +
+> +	return result;
+> +}
+> +
+> +subsys_initcall(crash_hotplug_init);
+> +#endif /* CONFIG_CRASH_HOTPLUG */
 > -- 
-> 2.34.1
+> 2.27.0
 > 
+
 
