@@ -1,61 +1,167 @@
-From: Simon Horman <horms@verge.net.au>
-Date: Sat, 9 Apr 2022 13:32:30 +0200
-Subject: [ANNOUNCE] kexec-tools 2.0.24
-Message-ID: <YlFuzrNIJGe4d42/@vergenet.net>
+From: Baoquan He <bhe@redhat.com>
+Date: Mon, 11 Apr 2022 08:32:26 +0800
+Subject: [PATCH v5 RESEND 1/3] vmcore: Convert copy_oldmem_page() to take
+ an iov_iter
+In-Reply-To: <YlDlBQYr9ldLWpFz@casper.infradead.org>
+References: <20220408090636.560886-2-bhe@redhat.com>
+ <202204082128.JKXXDGpa-lkp@intel.com>
+ <YlDbJSy4AI3/cODr@MiWiFi-R3L-srv>
+ <YlDlBQYr9ldLWpFz@casper.infradead.org>
+Message-ID: <YlN3GkuYunspGxnd@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi all,
+On 04/09/22 at 02:44am, Matthew Wilcox wrote:
+> On Sat, Apr 09, 2022 at 09:02:29AM +0800, Baoquan He wrote:
+> > I tried on x86_64 system, for the 1st step, I got this:
+> > 
+> > [ ~]# wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+> > /root/bin/make.cross: No such file or directory
+> 
+> ... I don't think we need to reproduce it to see the problem.
+> 
+> > > sparse warnings: (new ones prefixed by >>)
+> > > >> arch/sh/kernel/crash_dump.c:23:36: sparse: sparse: incorrect type in argument 1 (different address spaces) @@     expected void const *addr @@     got void [noderef] __iomem * @@
+> > >    arch/sh/kernel/crash_dump.c:23:36: sparse:     expected void const *addr
+> > >    arch/sh/kernel/crash_dump.c:23:36: sparse:     got void [noderef] __iomem *
+> > > 
+> > > vim +23 arch/sh/kernel/crash_dump.c
+> > > 
+> > >     13	
+> > >     14	ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+> > >     15				 size_t csize, unsigned long offset)
+> > >     16	{
+> > >     17		void  __iomem *vaddr;
+> > >     18	
+> > >     19		if (!csize)
+> > >     20			return 0;
+> > >     21	
+> > >     22		vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
+> > >   > 23		csize = copy_to_iter(vaddr + offset, csize, iter);
+> 
+> Unlike other architectures, sh4 does this by calling ioremap().
+> That gives us an __iomem qualified pointer, which it then warns about
+> passing to copy_to_iter().
+> 
+> There are a bunch of hacky things we could do to fix it, but for such an
+> unmaintained arch as sh, I'm inclined to do nothing.  We're more likely
+> to break something while fixing the warning.  Someone who knows the arch
+> can figure out what to do properly.
 
-I am happy to announce the release of kexec-tools 2.0.24.
+Checked code, this can be fixed by casting away __iomem when feeding
+__iomem pointer into function which doesn't expect it. While seems the
+lkp failed me again.
 
-This is a feature release coinciding with the release of v5.17
-of the Linux Kernel.
 
-This release can be downloaded from kernel.org:
+Subject: [PATCH] sh: cast away __iomem to remove sparse warning
 
-	http://kernel.org/pub/linux/utils/kernel/kexec/kexec-tools-2.0.24.tar.xz
-	http://kernel.org/pub/linux/utils/kernel/kexec/
+This warning happened when __iomem pointer is passed into fucntion which
+does expect it. casting away the __iomem can fix it.
 
-It is also tagged it in git:
+Signed-off-by: Baoquan He <bhe@redhat.com>
+---
+ arch/sh/kernel/crash_dump.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-	git://git.kernel.org/pub/scm/utils/kernel/kexec/kexec-tools.git
+diff --git a/arch/sh/kernel/crash_dump.c b/arch/sh/kernel/crash_dump.c
+index 19ce6a950aac..b45bb0b8a182 100644
+--- a/arch/sh/kernel/crash_dump.c
++++ b/arch/sh/kernel/crash_dump.c
+@@ -20,7 +20,7 @@ ssize_t copy_oldmem_page(struct iov_iter *iter, unsigned long pfn,
+ 		return 0;
+ 
+ 	vaddr = ioremap(pfn << PAGE_SHIFT, PAGE_SIZE);
+-	csize = copy_to_iter(vaddr + offset, csize, iter);
++	csize = copy_to_iter((void __force *)vaddr + offset, csize, iter);
+ 	iounmap(vaddr);
+ 
+ 	return csize;
+-- 
+2.34.1
 
-Thanks to everyone who has contributed to kexec!
+Hi Philipp,
 
-Commits since v2.0.23:
+I executed 'mkdir -p /root/bin', then can continue the next steps.
+However, the building failed with below message. I cloned linus's tree
+into the testing system. Then add remote
+https://github.com/intel-lab-lkp/linux. Forgive my stupidity on this. If
+I can test above code, I can merge it into patch in a new version.
+Otherwise, I will leave it alone as willy suggested.
 
-1d82b3faa331 kexec-tools 2.0.24
-272af539f785 kexec-tools 2.0.24-rc1
-c1ae085bd211 arm64: fix static data relocations in machine_apply_elf_rel()
-2b78a27a64f0 kexec/elf: assign one to align if sh_addralign equals zero
-1d8273d82b66 arm64/crashdump-arm64: explicit type conversion to suppress compiler warning
-33778949c132 arm64/kexec-arm64: add support for R_AARCH64_MOVW_UABS_G* rela
-e2a86b319245 arm64/kexec-arm64: use enum to organize the reloc type
-8e3f663a4dfe arm64/kexec-arm64: add support for R_AARCH64_LDST128_ABS_LO12_NC rela
-36805fe6ba33 kexec-tools: fix leak FILE pointer.
-1b03cf7adc3c purgatory: do not enable vectorization automatically for purgatory compiling
-dcfcc73c73e6 kexec-tools: Determine if the image is lzma commpressed
-f4c59879b830 util_lib/elf_info: harden parsing of printk buffer
-30bfe30bb609 github: run apt-get update before installing packages
-501646beec2b kexec-xen: Allow xen_kexec_exec() to return in case of Live Update
-1d7a308bf734 kexec-tools: print error if kexec_file_load fails
-6effda061f75 kexec-tools: mips: Concatenate --reuse-cmdline and --append
-8dda434a05ff kexec-tools: mips: Add some debug info
-95de9eccf413 arm64: fix PAGE_OFFSET calc for flipped mm
-454395e18ff1 arm64: read VA_BITS from kcore for 52-bits VA kernel
-bde864387a10 arm64/crashdump: unify routine to get page_offset
-67ea2d99e135 arm64: make phys_offset signed
-2e1ec106dc5a s390: add support for --reuse-cmdline
-d6516ba4c88f use slurp_proc_file() in get_command_line()
-193e51deccc6 add slurp_proc_file()
-91a3d0e00a5c s390: use KEXEC_ALL_OPTIONS
-defb80a20bf1 s390: add variable command line size
-b5a34a20984c arm64: support more than one crash kernel regions
-186e7b0752d8 s390: handle R_390_PLT32DBL reloc entries in machine_apply_elf_rel()
-1614959f2f0d arm64/crashdump: deduce paddr of _text based on kernel code size
-10b7e1fb5d0c kexec-tools 2.0.23.git
+[root at dell-pem710-02 linux]# wget https://download.01.org/0day-ci/archive/20220408/202204082128.JKXXDGpa-lkp at intel.com/config
+--2022-04-10 19:54:15--  https://download.01.org/0day-ci/archive/20220408/202204082128.JKXXDGpa-lkp@intel.com/config
+Resolving download.01.org (download.01.org)... 2600:1408:20:c90::4b21, 2600:1408:20:c9b::4b21, 23.208.55.108
+Connecting to download.01.org (download.01.org)|2600:1408:20:c90::4b21|:443... failed: Network is unreachable.
+Connecting to download.01.org (download.01.org)|2600:1408:20:c9b::4b21|:443... failed: Network is unreachable.
+Connecting to download.01.org (download.01.org)|23.208.55.108|:443... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 122058 (119K) [application/octet-stream]
+Saving to: ?config?
+
+config                            100%[============================================================>] 119.20K   769KB/s    in 0.2s    
+
+2022-04-10 19:54:16 (769 KB/s) - ?config? saved [122058/122058]
+
+[root at dell-pem710-02 linux]# mv config .config
+[root at dell-pem710-02 linux]# COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc make.cross C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__' O=build_dir ARCH=sh SHELL=/bin/bash arch/sh/kernel/
+Compiler will be installed in /root/0day
+make --keep-going CONFIG_OF_ALL_DTBS=y CONFIG_DTC=y CROSS_COMPILE=/root/0day/gcc-9.3.0-nolibc/sh4-linux/bin/sh4-linux- --jobs=32 C=1 CF=-fdiagnostic-prefix -D__CHECK_ENDIAN__ O=build_dir ARCH=sh SHELL=/bin/bash arch/sh/kernel/
+make[1]: Entering directory '/root/linux/build_dir'
+  SYNC    include/config/auto.conf.cmd
+***
+*** The source tree is not clean, please run 'make ARCH=sh mrproper'
+*** in /root/linux
+***
+make[2]: *** [../Makefile:574: outputmakefile] Error 1
+  HOSTCC  scripts/basic/fixdep
+make[2]: Target 'syncconfig' not remade because of errors.
+make[1]: *** [/root/linux/Makefile:722: include/config/auto.conf.cmd] Error 2
+make[1]: Failed to remake makefile 'include/config/auto.conf.cmd'.
+make[1]: Failed to remake makefile 'include/config/auto.conf'.
+***
+*** The source tree is not clean, please run 'make ARCH=sh mrproper'
+*** in /root/linux
+***
+make[1]: *** [/root/linux/Makefile:574: outputmakefile] Error 1
+  SYSHDR  arch/sh/include/generated/uapi/asm/unistd_32.h
+  SYSTBL  arch/sh/include/generated/asm/syscall_table.h
+Error: kernelrelease not valid - run 'make prepare' to update it
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.[ch]
+  HOSTCC  scripts/dtc/libfdt/fdt.o
+  HOSTCC  scripts/dtc/libfdt/fdt_ro.o
+  HOSTCC  scripts/dtc/libfdt/fdt_sw.o
+  HOSTCC  scripts/dtc/libfdt/fdt_wip.o
+  HOSTCC  scripts/dtc/libfdt/fdt_rw.o
+  HOSTCC  scripts/dtc/libfdt/fdt_strerror.o
+  HOSTCC  scripts/dtc/libfdt/fdt_empty_tree.o
+  HOSTCC  scripts/dtc/libfdt/fdt_addresses.o
+  HOSTCC  scripts/dtc/libfdt/fdt_overlay.o
+  HOSTCC  scripts/dtc/fdtoverlay.o
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTLD  scripts/dtc/fdtoverlay
+  HOSTLD  scripts/dtc/dtc
+make[1]: Target 'arch/sh/kernel/' not remade because of errors.
+make[1]: Leaving directory '/root/linux/build_dir'
+make: *** [Makefile:219: __sub-make] Error 2
+make: Target 'arch/sh/kernel/' not remade because of errors.
+[root at dell-pem710-02 linux]# 
+
+
+
+> 
+
 
