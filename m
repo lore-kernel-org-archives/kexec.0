@@ -1,115 +1,38 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 13 Apr 2022 10:41:14 +0800
-Subject: [PATCH v6 4/8] crash: add generic infrastructure for crash
- hotplug support
-In-Reply-To: <821b3c62-eedf-c1a3-4aba-671c90d83288@oracle.com>
-References: <20220401183040.1624-1-eric.devolder@oracle.com>
- <20220401183040.1624-5-eric.devolder@oracle.com>
- <YlPy8CKU4zHsx6Bc@MiWiFi-R3L-srv>
- <821b3c62-eedf-c1a3-4aba-671c90d83288@oracle.com>
-Message-ID: <YlY4SlF07iH08Qnj@MiWiFi-R3L-srv>
+Date: Wed, 13 Apr 2022 10:47:49 +0800
+Subject: [PATCH v2 0/2] x86/kexec: fix memory leak of elf header buffer
+In-Reply-To: <20220412192734.fcda8988d189c8e2e2830b03@linux-foundation.org>
+References: <20220223113225.63106-1-bhe@redhat.com>
+ <YkWRQdp7TxV22ygO@MiWiFi-R3L-srv>
+ <20220412192734.fcda8988d189c8e2e2830b03@linux-foundation.org>
+Message-ID: <YlY51XjPFN1vMvQV@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/11/22 at 08:54am, Eric DeVolder wrote:
+On 04/12/22 at 07:27pm, Andrew Morton wrote:
+> On Thu, 31 Mar 2022 19:32:17 +0800 Baoquan He <bhe@redhat.com> wrote:
 > 
-> 
-> On 4/11/22 04:20, Baoquan He wrote:
-> > Hi Eric,
+> > Hi Andrew,
 > > 
-> > On 04/01/22 at 02:30pm, Eric DeVolder wrote:
-> > ... ...
+> > On 02/23/22 at 07:32pm, Baoquan He wrote:
+> > > The memory leak is reported by kmemleak detector, has been existing
+> > > for very long time. It casue much memory loss on large machine
+> > > with huge memory hotplug which will trigger kdump kernel reloading
+> > > many times, with kexec_file_load interface.
 > > 
-> > > +static void crash_hotplug_handler(unsigned int hp_action,
-> > > +	unsigned long a, unsigned long b)
-> > 
-> > I am still struggling to consider if these unused parameters should be
-> > kept or removed. Do you foresee or feel on which ARCH they could be used?
-> > 
-> > Considering our elfcorehdr updating method, once memory or cpu changed,
-> > we will update elfcorehdr and cpu notes to reflect all existing memory
-> > regions and cpu in the current system. We could end up with having them
-> > but never being used. Then we may finally need to clean them up.
-> > 
-> > If you have investigated and foresee or feel they could be used on a
-> > certain architecture, we can keep them for the time being.
+> > Could you merge these two patches? Or should I ping x86 maintainers to
+> > take them? 
 > 
-> So 'hp_action' and 'a' are used within the existing patch series.
-> In crash_core.c, there is this bit of code:
-> 
-> +       kexec_crash_image->offlinecpu =
-> +           (hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
-> +               (unsigned int)a : ~0U;
-> 
-> which is referencing both 'hp_action' and using 'a' from the cpu notifier handler.
-> I looked into removing 'a' and setting offlinecpu directly, but I thought
-> it better that offlinecpu be set within the safety of the kexec_mutex.
-> Also, Sourabh Jain's work with PowerPC utilizing this framework directly
-> references hp_action in the arch-specific handler.
-> 
-> The cpu and memory notifier handlers set hp_action accordingly. For cpu handler,
-> the 'a' is set with the impacted cpu. For memory handler, 'a' and 'b' form the
-> impacted memory range. I agree it looks like the memory range is currently
-> not useful.
+> Ah, sorry, I tend to fall asleep if there's "x86" in the subject. 
+> Poking a sleeping Andrew is always the right thing to do.  Shall look
+> at them.
 
-OK, memory handler doesn't need the action, memory regions. While cpu
-handler needs it to exclude the hot plugged cpu.
+Thanks, Andrew.
 
-We could have two ways to acheive this as below. How do you think about
-them?
-
-static void crash_hotplug_handler(unsigned int hp_action,
-        unsigned long cpu)
-
-static int crash_memhp_notifier(struct notifier_block *nb,
-        unsigned long val, void *v)
-{
-......
-        switch (val) {
-        case MEM_ONLINE:
-                crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
-                        -1UL);
-                break;
-
-        case MEM_OFFLINE:
-                crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
-                        -1UL);
-                break;
-        }
-        return NOTIFY_OK;
-}
-
-static int crash_cpuhp_online(unsigned int cpu)
-{
-        crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
-        return 0;
-}
-
-static int crash_cpuhp_offline(unsigned int cpu)
-{
-        crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-        return 0;
-}
-
-OR,
-
-static void crash_hotplug_handler(unsigned int hp_action,
-        int* cpu)
-
-static int crash_cpuhp_online(unsigned int cpu)
-{
-        crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, NULL);
-        return 0;
-}
-
-static int crash_cpuhp_offline(unsigned int cpu)
-{
-	int dead_cpu = cpu;
-        crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, &cpu);
-        return 0;
-}
+Since it's also MM related, so ping you and x86 maintainers to see who
+can help pick them.
 
 
