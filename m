@@ -1,97 +1,124 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Wed, 13 Apr 2022 17:32:36 +0800
-Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
- kernel image signature
-In-Reply-To: <20220411084306.GY163591@kunlun.suse.cz>
-References: <20220401013118.348084-1-coxu@redhat.com>
- <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
- <20220408085931.GW163591@kunlun.suse.cz>
- <YlOAvM4qpSlHczOd@MiWiFi-R3L-srv>
- <20220411015218.ckw42xx5rrhidhpd@Rk>
- <20220411084306.GY163591@kunlun.suse.cz>
-Message-ID: <20220413093236.faudcucbhn5jwatk@Rk>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Wed, 13 Apr 2022 07:37:16 -0500
+Subject: [PATCH v6 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <YlY4SlF07iH08Qnj@MiWiFi-R3L-srv>
+References: <20220401183040.1624-1-eric.devolder@oracle.com>
+ <20220401183040.1624-5-eric.devolder@oracle.com>
+ <YlPy8CKU4zHsx6Bc@MiWiFi-R3L-srv>
+ <821b3c62-eedf-c1a3-4aba-671c90d83288@oracle.com>
+ <YlY4SlF07iH08Qnj@MiWiFi-R3L-srv>
+Message-ID: <d3ae80cd-7e1f-50e3-d90d-becf779788c0@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Apr 11, 2022 at 10:43:06AM +0200, Michal Such?nek wrote:
->On Mon, Apr 11, 2022 at 09:52:18AM +0800, Coiby Xu wrote:
->> On Mon, Apr 11, 2022 at 09:13:32AM +0800, Baoquan He wrote:
->> > On 04/08/22 at 10:59am, Michal Such?nek wrote:
->> > > On Fri, Apr 08, 2022 at 03:17:19PM +0800, Baoquan He wrote:
->> > > > Hi Coiby,
->> > > >
->> > > > On 04/01/22 at 09:31am, Coiby Xu wrote:
->> > > > > Currently, a problem faced by arm64 is if a kernel image is signed by a
->> > > > > MOK key, loading it via the kexec_file_load() system call would be
->> > > > > rejected with the error "Lockdown: kexec: kexec of unsigned images is
->> > > > > restricted; see man kernel_lockdown.7".
->> > > > >
->> > > > > This patch set allows arm64 to use more system keyrings to verify kdump
->> > > > > kernel image signature by making the existing code in x64 public.
->> > > >
->> > > > Thanks for updating. It would be great to tell why the problem is
->> > > > met, then allow arm64 to use more system keyrings can solve it.
->> > >
->> > > The reason is that MOK keys are (if anywhere) linked to the secondary
->>                                                                ^^^^^^^^^
->>                                                                platform?
->> > > keyring, and only primary keyring is used on arm64.
+
+
+On 4/12/22 21:41, Baoquan He wrote:
+> On 04/11/22 at 08:54am, Eric DeVolder wrote:
 >>
->> Thanks Michal for providing the info! Btw, I think you made a typo
->> because MOK keys are linked to the platform keyring, right?
->
->No, I mean secondary, through this patchset:
->https://lore.kernel.org/lkml/YhKP12KEmyqyS8rj at iki.fi/
+>>
+>> On 4/11/22 04:20, Baoquan He wrote:
+>>> Hi Eric,
+>>>
+>>> On 04/01/22 at 02:30pm, Eric DeVolder wrote:
+>>> ... ...
+>>>
+>>>> +static void crash_hotplug_handler(unsigned int hp_action,
+>>>> +	unsigned long a, unsigned long b)
+>>>
+>>> I am still struggling to consider if these unused parameters should be
+>>> kept or removed. Do you foresee or feel on which ARCH they could be used?
+>>>
+>>> Considering our elfcorehdr updating method, once memory or cpu changed,
+>>> we will update elfcorehdr and cpu notes to reflect all existing memory
+>>> regions and cpu in the current system. We could end up with having them
+>>> but never being used. Then we may finally need to clean them up.
+>>>
+>>> If you have investigated and foresee or feel they could be used on a
+>>> certain architecture, we can keep them for the time being.
+>>
+>> So 'hp_action' and 'a' are used within the existing patch series.
+>> In crash_core.c, there is this bit of code:
+>>
+>> +       kexec_crash_image->offlinecpu =
+>> +           (hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
+>> +               (unsigned int)a : ~0U;
+>>
+>> which is referencing both 'hp_action' and using 'a' from the cpu notifier handler.
+>> I looked into removing 'a' and setting offlinecpu directly, but I thought
+>> it better that offlinecpu be set within the safety of the kexec_mutex.
+>> Also, Sourabh Jain's work with PowerPC utilizing this framework directly
+>> references hp_action in the arch-specific handler.
+>>
+>> The cpu and memory notifier handlers set hp_action accordingly. For cpu handler,
+>> the 'a' is set with the impacted cpu. For memory handler, 'a' and 'b' form the
+>> impacted memory range. I agree it looks like the memory range is currently
+>> not useful.
+> 
+> OK, memory handler doesn't need the action, memory regions. While cpu
+> handler needs it to exclude the hot plugged cpu.
+> 
+> We could have two ways to acheive this as below. How do you think about
+> them?
+> 
+> static void crash_hotplug_handler(unsigned int hp_action,
+>          unsigned long cpu)
+> 
+> static int crash_memhp_notifier(struct notifier_block *nb,
+>          unsigned long val, void *v)
+> {
+> ......
+>          switch (val) {
+>          case MEM_ONLINE:
+>                  crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY,
+>                          -1UL);
+>                  break;
+> 
+>          case MEM_OFFLINE:
+>                  crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY,
+>                          -1UL);
+>                  break;
+>          }
+>          return NOTIFY_OK;
+> }
+> 
+> static int crash_cpuhp_online(unsigned int cpu)
+> {
+>          crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
+>          return 0;
+> }
+> 
+> static int crash_cpuhp_offline(unsigned int cpu)
+> {
+>          crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+>          return 0;
+> }
 
-Thanks for the info! This provides another approach to verify kernel
-image's signature via the secondary keyring once the end-use chooses to
-trust MOK keys by setting MokListTrustedRT.
+I'm OK with the above. Shall I post v7 or are you still looking at patches 7 and 8?
+Thanks!
+Eric
 
->
->Apparently support for importing the MOK keys into the platform keyring
->also exists but I am not sure if this is upstream or downstream feature.
-
-This is actually an upstream feature,
-
-commit 15ea0e1e3e185040bed6119f815096f2e4326242
-Author: Josh Boyer <jwboyer@fedoraproject.org>
-Date:   Thu Dec 13 01:37:56 2018 +0530
-
-     efi: Import certificates from UEFI Secure Boot
-     
-     Secure Boot stores a list of allowed certificates in the 'db' variable.
-     This patch imports those certificates into the platform keyring. The shim
-     UEFI bootloader has a similar certificate list stored in the 'MokListRT'
-     variable. We import those as well.
-     
-     Secure Boot also maintains a list of disallowed certificates in the 'dbx'
-     variable. We load those certificates into the system blacklist keyring
-     and forbid any kernel signed with those from loading.
-     
-     [zohar at linux.ibm.com: dropped Josh's original patch description]
-     Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
-     Signed-off-by: David Howells <dhowells@redhat.com>
-     Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
-     Acked-by: Serge Hallyn <serge@hallyn.com>
-     Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
-
->
->At any rate the MOK keys are not included in the primary keyring which
->is the only keyring currently in use for kexec on arm64.
-
-Good summary, thanks!
-
->
->Thanks
->
->Michal
->
-
--- 
-Best regards,
-Coiby
-
+> 
+> OR,
+> 
+> static void crash_hotplug_handler(unsigned int hp_action,
+>          int* cpu)
+> 
+> static int crash_cpuhp_online(unsigned int cpu)
+> {
+>          crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, NULL);
+>          return 0;
+> }
+> 
+> static int crash_cpuhp_offline(unsigned int cpu)
+> {
+> 	int dead_cpu = cpu;
+>          crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, &cpu);
+>          return 0;
+> }
+> 
 
