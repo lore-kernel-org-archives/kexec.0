@@ -1,50 +1,97 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 13 Apr 2022 17:29:24 +0800
-Subject: [PATCH v5 RESEND 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <YlPt+3R63XYP22um@osiris>
-References: <20220408090636.560886-1-bhe@redhat.com>
- <Yk//TCkucXiVD3s0@MiWiFi-R3L-srv> <YlPt+3R63XYP22um@osiris>
-Message-ID: <YlaX9CxqPUvCN2dS@MiWiFi-R3L-srv>
+From: Coiby Xu <coxu@redhat.com>
+Date: Wed, 13 Apr 2022 17:32:36 +0800
+Subject: [PATCH v5 0/3] use more system keyrings to verify arm64 kdump
+ kernel image signature
+In-Reply-To: <20220411084306.GY163591@kunlun.suse.cz>
+References: <20220401013118.348084-1-coxu@redhat.com>
+ <Yk/hf7JEgALZOqE8@MiWiFi-R3L-srv>
+ <20220408085931.GW163591@kunlun.suse.cz>
+ <YlOAvM4qpSlHczOd@MiWiFi-R3L-srv>
+ <20220411015218.ckw42xx5rrhidhpd@Rk>
+ <20220411084306.GY163591@kunlun.suse.cz>
+Message-ID: <20220413093236.faudcucbhn5jwatk@Rk>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/11/22 at 10:59am, Heiko Carstens wrote:
-> On Fri, Apr 08, 2022 at 05:24:28PM +0800, Baoquan He wrote:
-> > Add Heiko to CC.
-> > 
-> > On 04/08/22 at 05:06pm, Baoquan He wrote:
-> > > Copy the description of v3 cover letter from Willy:
-> > > ===
-> > > For some reason several people have been sending bad patches to fix
-> > > compiler warnings in vmcore recently.  Here's how it should be done.
-> > > Compile-tested only on x86.  As noted in the first patch, s390 should
-> > > take this conversion a bit further, but I'm not inclined to do that
-> > > work myself.
-> > 
-> > Forgot adding Heiko to CC again.
-> > 
-> > Hi Heiko,
-> > 
-> > Andrew worried you may miss the note, "As noted in the first patch,
-> > s390 should take this conversion a bit further, but I'm not inclined
-> > to do that work myself." written in cover letter from willy.
-> > 
-> > I told him you had already known this in v1 discussion. So add you in CC
-> > list as Andrew required. Adding words to explain, just in case confusion.
-> 
-> Thanks for letting me know again. I'm still aware of this, but would
-> appreciate if I could be added to cc in the first patch of this
-> series, so I get notified when Andrew sends this Linus.
+On Mon, Apr 11, 2022 at 10:43:06AM +0200, Michal Such?nek wrote:
+>On Mon, Apr 11, 2022 at 09:52:18AM +0800, Coiby Xu wrote:
+>> On Mon, Apr 11, 2022 at 09:13:32AM +0800, Baoquan He wrote:
+>> > On 04/08/22 at 10:59am, Michal Such?nek wrote:
+>> > > On Fri, Apr 08, 2022 at 03:17:19PM +0800, Baoquan He wrote:
+>> > > > Hi Coiby,
+>> > > >
+>> > > > On 04/01/22 at 09:31am, Coiby Xu wrote:
+>> > > > > Currently, a problem faced by arm64 is if a kernel image is signed by a
+>> > > > > MOK key, loading it via the kexec_file_load() system call would be
+>> > > > > rejected with the error "Lockdown: kexec: kexec of unsigned images is
+>> > > > > restricted; see man kernel_lockdown.7".
+>> > > > >
+>> > > > > This patch set allows arm64 to use more system keyrings to verify kdump
+>> > > > > kernel image signature by making the existing code in x64 public.
+>> > > >
+>> > > > Thanks for updating. It would be great to tell why the problem is
+>> > > > met, then allow arm64 to use more system keyrings can solve it.
+>> > >
+>> > > The reason is that MOK keys are (if anywhere) linked to the secondary
+>>                                                                ^^^^^^^^^
+>>                                                                platform?
+>> > > keyring, and only primary keyring is used on arm64.
+>>
+>> Thanks Michal for providing the info! Btw, I think you made a typo
+>> because MOK keys are linked to the platform keyring, right?
+>
+>No, I mean secondary, through this patchset:
+>https://lore.kernel.org/lkml/YhKP12KEmyqyS8rj at iki.fi/
 
-Right, it's my neglect. I should CC all involved during the discussion.
+Thanks for the info! This provides another approach to verify kernel
+image's signature via the secondary keyring once the end-use chooses to
+trust MOK keys by setting MokListTrustedRT.
 
-By the way, could both of you, Heiko, Christoph, help check this
-patchset and offer your ack again if it's OK to you? I removed
-Christoph's Reviewed-by because there's some change as per Al's 
-comment, and replace my own 'Acked-by' with 'Signed-off-by' according to
-our posting rule.
+>
+>Apparently support for importing the MOK keys into the platform keyring
+>also exists but I am not sure if this is upstream or downstream feature.
+
+This is actually an upstream feature,
+
+commit 15ea0e1e3e185040bed6119f815096f2e4326242
+Author: Josh Boyer <jwboyer@fedoraproject.org>
+Date:   Thu Dec 13 01:37:56 2018 +0530
+
+     efi: Import certificates from UEFI Secure Boot
+     
+     Secure Boot stores a list of allowed certificates in the 'db' variable.
+     This patch imports those certificates into the platform keyring. The shim
+     UEFI bootloader has a similar certificate list stored in the 'MokListRT'
+     variable. We import those as well.
+     
+     Secure Boot also maintains a list of disallowed certificates in the 'dbx'
+     variable. We load those certificates into the system blacklist keyring
+     and forbid any kernel signed with those from loading.
+     
+     [zohar at linux.ibm.com: dropped Josh's original patch description]
+     Signed-off-by: Josh Boyer <jwboyer@fedoraproject.org>
+     Signed-off-by: David Howells <dhowells@redhat.com>
+     Signed-off-by: Nayna Jain <nayna@linux.ibm.com>
+     Acked-by: Serge Hallyn <serge@hallyn.com>
+     Signed-off-by: Mimi Zohar <zohar@linux.ibm.com>
+
+>
+>At any rate the MOK keys are not included in the primary keyring which
+>is the only keyring currently in use for kexec on arm64.
+
+Good summary, thanks!
+
+>
+>Thanks
+>
+>Michal
+>
+
+-- 
+Best regards,
+Coiby
 
 
