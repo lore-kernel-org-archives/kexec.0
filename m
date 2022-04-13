@@ -1,61 +1,31 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Tue, 12 Apr 2022 02:25:50 +0000
-Subject: [PATCH v3 1/1] check that order of free pages falls within valid
- range
-In-Reply-To: <20220411060835.63570-1-egorenar@linux.ibm.com>
-References: <20220411060835.63570-1-egorenar@linux.ibm.com>
-Message-ID: <TYYPR01MB677730E0385D0E6AC27CE4D5DDED9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Andrew Morton <akpm@linux-foundation.org>
+Date: Tue, 12 Apr 2022 19:27:34 -0700
+Subject: [PATCH v2 0/2] x86/kexec: fix memory leak of elf header buffer
+In-Reply-To: <YkWRQdp7TxV22ygO@MiWiFi-R3L-srv>
+References: <20220223113225.63106-1-bhe@redhat.com>
+ <YkWRQdp7TxV22ygO@MiWiFi-R3L-srv>
+Message-ID: <20220412192734.fcda8988d189c8e2e2830b03@linux-foundation.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> This change makes __exclude_unnecessary_pages() more robust by
-> verifying that the order of a free page is valid before computing the size
-> of its memory block in the buddy system.
-> 
-> The order of a free page cannot be larger than (MAX_ORDER - 1) because
-> the array 'zone.free_area' is of size MAX_ORDER.
-> 
-> This situation is reproducible with some s390x dumps:
-> 
-> __exclude_unnecessary_pages: Invalid free page order: pfn=2690c0, order=52, max order=8
-> 
-> References:
-> - https://listman.redhat.com/archives/crash-utility/2021-September/009204.html
-> - https://www.kernel.org/doc/gorman/html/understand/understand009.html
-> 
-> Signed-off-by: Alexander Egorenkov <egorenar@linux.ibm.com>
-> ---
->  makedumpfile.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index 2ef345879524..a6c2a4934ff9 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -6457,6 +6457,11 @@ __exclude_unnecessary_pages(unsigned long mem_map,
->  		else if ((info->dump_level & DL_EXCLUDE_FREE)
->  		    && info->page_is_buddy
->  		    && info->page_is_buddy(flags, _mapcount, private, _count)) {
-> +			if (private >= ARRAY_LENGTH(zone.free_area)) {
-> +				MSG("WARNING: Invalid free page order: pfn=%llx, order=%lu, max order=%lu\n",
-> +				    pfn, private, ARRAY_LENGTH(zone.free_area) - 1);
-> +				continue;
-> +			}
->  			nr_pages = 1 << private;
->  			pfn_counter = &pfn_free;
->  		}
-> --
-> 2.34.1
+On Thu, 31 Mar 2022 19:32:17 +0800 Baoquan He <bhe@redhat.com> wrote:
 
-Thanks for the update.
-Applied with the available check for ARRAY_LENGTH(zone.free_area).
-https://github.com/makedumpfile/makedumpfile/commit/0ea92577d93c93af701101f22ebd0096202c8085
+> Hi Andrew,
+> 
+> On 02/23/22 at 07:32pm, Baoquan He wrote:
+> > The memory leak is reported by kmemleak detector, has been existing
+> > for very long time. It casue much memory loss on large machine
+> > with huge memory hotplug which will trigger kdump kernel reloading
+> > many times, with kexec_file_load interface.
+> 
+> Could you merge these two patches? Or should I ping x86 maintainers to
+> take them? 
 
-Thanks,
-Kazu
+Ah, sorry, I tend to fall asleep if there's "x86" in the subject. 
+Poking a sleeping Andrew is always the right thing to do.  Shall look
+at them.
 
 
