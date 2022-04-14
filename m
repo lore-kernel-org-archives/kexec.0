@@ -1,194 +1,113 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Thu, 14 Apr 2022 10:52:29 +0800
-Subject: [PATCH v7 7/8] x86/crash: Add x86 crash hotplug support for
- kexec_file_load
-In-Reply-To: <20220413164237.20845-8-eric.devolder@oracle.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-8-eric.devolder@oracle.com>
-Message-ID: <YleMbVq5XcSX+mWZ@MiWiFi-R3L-srv>
+Date: Thu, 14 Apr 2022 11:44:25 +0800
+Subject: [PATCH v6 1/4] kexec: clean up arch_kexec_kernel_verify_sig
+In-Reply-To: <20220414014344.228523-2-coxu@redhat.com>
+References: <20220414014344.228523-1-coxu@redhat.com>
+ <20220414014344.228523-2-coxu@redhat.com>
+Message-ID: <YleYmZAAnF5aOan3@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/13/22 at 12:42pm, Eric DeVolder wrote:
-> For x86_64, when CPU or memory is hot un/plugged, the crash
-> elfcorehdr, which describes the CPUs and memory in the system,
-> must also be updated.
+On 04/14/22 at 09:43am, Coiby Xu wrote:
+> Currently there is no arch-specific implementation of
+> arch_kexec_kernel_verify_sig. Even if we want to add an implementation
+> for an architecture in the future, we can simply use "(struct
+> kexec_file_ops*)->verify_sig". So clean it up.
 > 
-> To update the elfcorehdr for x86_64, a new elfcorehdr must be
-> generated from the available CPUs and memory. The new elfcorehdr
-> is prepared into a buffer, and then installed over the top of
-> the existing elfcorehdr.
-> 
-> In the patch 'kexec: exclude elfcorehdr from the segment digest'
-> the need to update purgatory due to the change in elfcorehdr was
-> eliminated.  As a result, no changes to purgatory or boot_params
-> (as the elfcorehdr= kernel command line parameter pointer
-> remains unchanged and correct) are needed, just elfcorehdr.
-> 
-> To accommodate a growing number of resources via hotplug, the
-> elfcorehdr segment must be sufficiently large enough to accommodate
-> changes, see the CRASH_HOTPLUG_ELFCOREHDR_SZ configure item.
-> 
-> With this change, crash hotplug for kexec_file_load syscall
-> is supported. When loading the crash kernel via kexec_file_load,
-> the elfcorehdr is identified at load time in crash_load_segments().
-> 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
+> Cc: stable at kernel.org
+
+It should be not worth noticing stable kernel that a clean up patch need
+be back ported.
+
+Otherwise this looks good to me,
+
+Acked-by: Baoquan He <bhe@redhat.com>
+
+> Reviewed-by: Michal Suchanek <msuchanek@suse.de>
+> Signed-off-by: Coiby Xu <coxu@redhat.com>
 > ---
->  arch/x86/kernel/crash.c | 117 ++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 117 insertions(+)
+>  include/linux/kexec.h |  4 ----
+>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
+>  2 files changed, 13 insertions(+), 25 deletions(-)
 > 
-> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-> index 9db41cce8d97..47adf69c9f71 100644
-> --- a/arch/x86/kernel/crash.c
-> +++ b/arch/x86/kernel/crash.c
-> @@ -25,6 +25,7 @@
->  #include <linux/slab.h>
->  #include <linux/vmalloc.h>
->  #include <linux/memblock.h>
-> +#include <linux/highmem.h>
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 58d1b58a971e..413235c6c797 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -202,10 +202,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
+>  				 const Elf_Shdr *relsec,
+>  				 const Elf_Shdr *symtab);
+>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> -#ifdef CONFIG_KEXEC_SIG
+> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -				 unsigned long buf_len);
+> -#endif
+>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
 >  
->  #include <asm/processor.h>
->  #include <asm/hardirq.h>
-> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
->  	image->elf_headers = kbuf.buffer;
->  	image->elf_headers_sz = kbuf.bufsz;
->  
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
-> +	kbuf.memsz = CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ;
-> +	/* For marking as usable to crash kernel */
-> +	image->elf_headers_sz = kbuf.memsz;
-> +	/* Record the index of the elfcorehdr segment */
-> +	image->elfcorehdr_index = image->nr_segments;
-> +	image->elfcorehdr_index_valid = true;
-> +#else
->  	kbuf.memsz = kbuf.bufsz;
-> +#endif
->  	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
->  	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
->  	ret = kexec_add_buffer(&kbuf);
-> @@ -413,3 +424,109 @@ int crash_load_segments(struct kimage *image)
->  	return ret;
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 8347fc158d2b..3720435807eb 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+>  	return kexec_image_post_load_cleanup_default(image);
 >  }
->  #endif /* CONFIG_KEXEC_FILE */
-> +
-> +#ifdef CONFIG_CRASH_HOTPLUG
-> +static void *map_crash_pages(unsigned long paddr, unsigned long size)
+>  
+> -#ifdef CONFIG_KEXEC_SIG
+> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+> -					  unsigned long buf_len)
+> -{
+> -	if (!image->fops || !image->fops->verify_sig) {
+> -		pr_debug("kernel loader does not support signature verification.\n");
+> -		return -EKEYREJECTED;
+> -	}
+> -
+> -	return image->fops->verify_sig(buf, buf_len);
+> -}
+> -
+> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -					unsigned long buf_len)
+> -{
+> -	return kexec_image_verify_sig_default(image, buf, buf_len);
+> -}
+> -#endif
+> -
+>  /*
+>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
+>   * @pi:		Purgatory to be relocated.
+> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
+>  }
+>  
+>  #ifdef CONFIG_KEXEC_SIG
+> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
+> +		unsigned long buf_len)
 > +{
-> +	/*
-> +	 * NOTE: The addresses and sizes passed to this routine have
-> +	 * already been fully aligned on page boundaries. There is no
-> +	 * need for massaging the address or size.
-> +	 */
-> +	void *ptr = NULL;
-> +
-> +	/* NOTE: requires arch_kexec_[un]protect_crashkres() for write access */
-> +	if (size > 0) {
-> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
-> +
-> +		ptr = kmap(page);
+> +	if (!image->fops || !image->fops->verify_sig) {
+> +		pr_debug("kernel loader does not support signature verification.\n");
+> +		return -EKEYREJECTED;
 > +	}
 > +
-> +	return ptr;
+> +	return image->fops->verify_sig(buf, buf_len);
 > +}
 > +
-> +static void unmap_crash_pages(void **ptr)
-> +{
-> +	if (ptr) {
-> +		if (*ptr)
-> +			kunmap(*ptr);
-> +		*ptr = NULL;
-> +	}
-> +}
-> +
-> +/**
-> + * arch_crash_hotplug_handler() - Handle hotplug elfcorehdr changes
-> + * @image: the active struct kimage
-> + * @hp_action: the hot un/plug action being handled
-> + * @cpu: when hp_action is KEXEC_CRASH_HP_ADD|REMOVE_CPU, the affected cpu
-> + *
-> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
-> + * is passed to the crash kernel via the elfcorehdr= parameter)
-> + * must be updated with the new list of CPUs and memories. The new
-> + * elfcorehdr is prepared in a kernel buffer, and then it is
-> + * written on top of the existing/old elfcorehdr.
-> + *
-> + * For hotplug changes to elfcorehdr to work, two conditions are
-> + * needed:
-> + * First, the segment containing the elfcorehdr must be large enough
-> + * to permit a growing number of resources. See
-> + * CONFIG_CRASH_HOTPLUG_ELFCOREHDR_SZ.
-> + * Second, purgatory must explicitly exclude the elfcorehdr from the
-> + * list of segments it checks (since the elfcorehdr changes and thus
-> + * would require an update to purgatory itself to update the digest).
-> + *
-> + */
-> +void arch_crash_hotplug_handler(struct kimage *image,
-> +	unsigned int hp_action, unsigned int cpu)
-
-We have stored the necessary information into kimage, e.g image->hotplug_event,
-image->offlinecpu, do we still need to pass down the hp_action and cpu
-in arch_crash_hotplug_handler()? Do you foresee it will be used in other
-architectures?
-
-> +{
-> +	struct kexec_segment *ksegment;
-> +	unsigned char *ptr = NULL;
-> +	unsigned long elfsz = 0;
-> +	void *elfbuf = NULL;
-> +	unsigned long mem, memsz;
-> +
-> +	if (!image->elfcorehdr_index_valid) {
-> +		pr_err("crash hp: unable to locate elfcorehdr segment");
-> +		goto out;
-> +	}
-> +
-> +	ksegment = &image->segment[image->elfcorehdr_index];
-> +	mem = ksegment->mem;
-> +	memsz = ksegment->memsz;
-> +
-> +	/*
-> +	 * Create the new elfcorehdr reflecting the changes to CPU and/or
-> +	 * memory resources.
-> +	 */
-> +	if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
-> +		pr_err("crash hp: unable to prepare elfcore headers");
-> +		goto out;
-> +	}
-> +	if (elfsz > memsz) {
-> +		pr_err("crash hp: update elfcorehdr elfsz %lu > memsz %lu",
-> +			elfsz, memsz);
-> +		goto out;
-> +	}
-> +
-> +	/*
-> +	 * At this point, we are all but assured of success.
-> +	 * Copy new elfcorehdr into destination.
-> +	 */
-> +	ptr = map_crash_pages(mem, memsz);
-> +	if (ptr) {
-> +		/*
-> +		 * Temporarily invalidate the crash image while the
-> +		 * elfcorehdr is updated.
-> +		 */
-> +		xchg(&kexec_crash_image, NULL);
-> +		memcpy_flushcache((void *)ptr, elfbuf, elfsz);
-> +		xchg(&kexec_crash_image, image);
-> +	}
-> +	unmap_crash_pages((void **)&ptr);
-> +	pr_debug("crash hp: re-loaded elfcorehdr at 0x%lx\n", mem);
-> +
-> +out:
-> +	if (elfbuf)
-> +		vfree(elfbuf);
-> +}
-> +#endif /* CONFIG_CRASH_HOTPLUG */
+>  static int
+>  kimage_validate_signature(struct kimage *image)
+>  {
+>  	int ret;
+>  
+> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
+> -					   image->kernel_buf_len);
+> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
+> +			image->kernel_buf_len);
+>  	if (ret) {
+>  
+>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
 > -- 
-> 2.27.0
+> 2.34.1
 > 
 
 
