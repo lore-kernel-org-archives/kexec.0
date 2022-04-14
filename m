@@ -1,122 +1,67 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Wed, 13 Apr 2022 12:42:32 -0400
-Subject: [PATCH v7 3/8] crash: prototype change for crash_prepare_elf64_headers
-In-Reply-To: <20220413164237.20845-1-eric.devolder@oracle.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
-Message-ID: <20220413164237.20845-4-eric.devolder@oracle.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Thu, 14 Apr 2022 09:43:40 +0800
+Subject: [PATCH v6 0/4] use more system keyrings to verify arm64 and s390
+ kexec kernel image signature
+Message-ID: <20220414014344.228523-1-coxu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From within crash_prepare_elf64_headers() there is a need to
-reference the struct kimage hotplug members. As such, this
-change passes the struct kimage as a parameter to the
-crash_prepare_elf64_headers().
+Currently, a problem faced by arm64 is if a kernel image is signed by a
+MOK key, loading it via the kexec_file_load() system call would be
+rejected with the error "Lockdown: kexec: kexec of unsigned images is
+restricted; see man kernel_lockdown.7". This happens because arm64 uses
+only the primary keyring that contains only kernel built-in keys to
+verify the kexec image.
 
-This is preparation for later patch, no functionality change.
+Similarly, s390 only uses platform keyring for kernel image signature
+verification and built-in keys and secondary keyring are not used.
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- arch/arm64/kernel/machine_kexec_file.c | 6 +++---
- arch/powerpc/kexec/file_load_64.c      | 2 +-
- arch/x86/kernel/crash.c                | 3 ++-
- include/linux/kexec.h                  | 5 +++--
- kernel/kexec_file.c                    | 4 ++--
- 5 files changed, 11 insertions(+), 9 deletions(-)
+This patch set allows arm64 and s390 to use more system keyrings to
+verify kexec kernel image signature as x86 does.
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 59c648d51848..7dbafb42ecf2 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -39,7 +39,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
--static int prepare_elf_headers(void **addr, unsigned long *sz)
-+static int prepare_elf_headers(struct kimage *image, void **addr, unsigned long *sz)
- {
- 	struct crash_mem *cmem;
- 	unsigned int nr_ranges;
-@@ -67,7 +67,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
- 
- 	if (!ret)
--		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+		ret =  crash_prepare_elf64_headers(image, cmem, true, addr, sz);
- 
- 	kfree(cmem);
- 	return ret;
-@@ -96,7 +96,7 @@ int load_other_segments(struct kimage *image,
- 
- 	/* load elf core header */
- 	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = prepare_elf_headers(&headers, &headers_sz);
-+		ret = prepare_elf_headers(image, &headers, &headers_sz);
- 		if (ret) {
- 			pr_err("Preparing elf core header failed\n");
- 			goto out_err;
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index b4981b651d9a..07da6bf1cf24 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -797,7 +797,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 		goto out;
- 
- 	/* Setup elfcorehdr segment */
--	ret = crash_prepare_elf64_headers(cmem, false, &headers, &headers_sz);
-+	ret = crash_prepare_elf64_headers(image, cmem, false, &headers, &headers_sz);
- 	if (ret) {
- 		pr_err("Failed to prepare elf headers for the core\n");
- 		goto out;
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 9730c88530fc..9db41cce8d97 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -265,7 +265,8 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 		goto out;
- 
- 	/* By default prepare 64bit headers */
--	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
-+	ret =  crash_prepare_elf64_headers(image, cmem,
-+				IS_ENABLED(CONFIG_X86_64), addr, sz);
- 
- out:
- 	vfree(cmem);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 58d1b58a971e..f93f2591fc1e 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -227,8 +227,9 @@ struct crash_mem {
- extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mstart,
- 				   unsigned long long mend);
--extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--				       void **addr, unsigned long *sz);
-+extern int crash_prepare_elf64_headers(struct kimage *image,
-+	struct crash_mem *mem, int kernel_map,
-+	void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_KEXEC_ELF
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b..801d0d0a5012 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -1260,8 +1260,8 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 	return 0;
- }
- 
--int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--			  void **addr, unsigned long *sz)
-+int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
-+	int kernel_map, void **addr, unsigned long *sz)
- {
- 	Elf64_Ehdr *ehdr;
- 	Elf64_Phdr *phdr;
+v6:
+ - integrate the first three patches of "[PATCH 0/4] Unifrom keyring
+   support across architectures and functions" from Michal [1]
+ - improve commit message [Baoquan, Michal]
+ - directly assign kexec_kernel_verify_pe_sig to
+   kexec_file_ops->verify_sig [Michal]
+
+v5:
+ - improve commit message [Baoquan]
+
+v4:
+ - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+
+v3:
+ - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+ - clean up arch_kexec_kernel_verify_sig [Eric]
+
+v2:
+ - only x86_64 and arm64 need to enable PE file signature check [Dave]
+
+[1] https://lore.kernel.org/lkml/cover.1644953683.git.msuchanek at suse.de/
+
+Coiby Xu (3):
+  kexec: clean up arch_kexec_kernel_verify_sig
+  kexec, KEYS: make the code in bzImage64_verify_sig generic
+  arm64: kexec_file: use more system keyrings to verify kernel image
+    signature
+
+Michal Suchanek (1):
+  kexec, KEYS, s390: Make use of built-in and secondary keyring for
+    signature verification
+
+ arch/arm64/kernel/kexec_image.c       | 11 +-----
+ arch/s390/kernel/machine_kexec_file.c | 18 +++++++---
+ arch/x86/kernel/kexec-bzimage64.c     | 20 +----------
+ include/linux/kexec.h                 |  7 ++--
+ kernel/kexec_file.c                   | 51 ++++++++++++++++-----------
+ 5 files changed, 50 insertions(+), 57 deletions(-)
+
 -- 
-2.27.0
+2.34.1
 
 
