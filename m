@@ -1,136 +1,209 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Thu, 14 Apr 2022 09:46:05 +0800
-Subject: [PATCH v5 2/3] kexec, KEYS: make the code in
- bzImage64_verify_sig generic
-In-Reply-To: <20220411085411.GZ163591@kunlun.suse.cz>
-References: <20220401013118.348084-1-coxu@redhat.com>
- <20220401013118.348084-3-coxu@redhat.com>
- <20220411085411.GZ163591@kunlun.suse.cz>
-Message-ID: <20220414014605.etdihzqs764v74gf@Rk>
+From: Baoquan He <bhe@redhat.com>
+Date: Thu, 14 Apr 2022 10:45:48 +0800
+Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <20220413164237.20845-5-eric.devolder@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-5-eric.devolder@oracle.com>
+Message-ID: <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Apr 11, 2022 at 10:54:11AM +0200, Michal Such?nek wrote:
->On Fri, Apr 01, 2022 at 09:31:17AM +0800, Coiby Xu wrote:
->> The code in bzImage64_verify_sig could make use of system keyrings
->s/could make/makes/
->> including .buitin_trusted_keys, .secondary_trusted_keys and .platform
->> keyring to verify signed kernel image as PE file. Make it generic so
->> both x86_64 and arm64 can use it.
->>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  arch/x86/kernel/kexec-bzimage64.c | 13 +------------
->>  include/linux/kexec.h             |  7 +++++++
->>  kernel/kexec_file.c               | 17 +++++++++++++++++
->>  3 files changed, 25 insertions(+), 12 deletions(-)
->>
->> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
->> index 170d0fd68b1f..f73aab3fde33 100644
->> --- a/arch/x86/kernel/kexec-bzimage64.c
->> +++ b/arch/x86/kernel/kexec-bzimage64.c
->> @@ -17,7 +17,6 @@
->>  #include <linux/kernel.h>
->>  #include <linux/mm.h>
->>  #include <linux/efi.h>
->> -#include <linux/verification.h>
->>
->>  #include <asm/bootparam.h>
->>  #include <asm/setup.h>
->> @@ -531,17 +530,7 @@ static int bzImage64_cleanup(void *loader_data)
->>  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
->>  static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
->>  {
->> -	int ret;
->> -
->> -	ret = verify_pefile_signature(kernel, kernel_len,
->> -				      VERIFY_USE_SECONDARY_KEYRING,
->> -				      VERIFYING_KEXEC_PE_SIGNATURE);
->> -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
->> -		ret = verify_pefile_signature(kernel, kernel_len,
->> -					      VERIFY_USE_PLATFORM_KEYRING,
->> -					      VERIFYING_KEXEC_PE_SIGNATURE);
->> -	}
->> -	return ret;
->> +	return kexec_kernel_verify_pe_sig(kernel, kernel_len);
->>  }
->
->Maybe you can completely eliminate bzImage64_verify_sig and directly
->assign kexec_kernel_verify_pe_sig to the fops?
->
->Other than that
->
->Reviewed-by: Michal Suchanek <msuchanek@suse.de>
+On 04/13/22 at 12:42pm, Eric DeVolder wrote:
+> Upon CPU and memory changes, a generic crash_hotplug_handler()
+> dispatches the hot plug/unplug event to the architecture specific
+> arch_crash_hotplug_handler(). During the process, the kexec_mutex
+> is held.
+> 
+> To support cpu hotplug, a callback is registered to capture the
+> CPUHP_AP_ONLINE_DYN online and ofline events via
+> cpuhp_setup_state_nocalls().
+> 
+> To support memory hotplug, a notifier is registered to capture the
+> MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+> 
+> The cpu callback and memory notifier then call crash_hotplug_handler()
+> to handle the hot plug/unplug event.
+> 
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  include/linux/kexec.h |  16 +++++++
+>  kernel/crash_core.c   | 101 ++++++++++++++++++++++++++++++++++++++++++
+>  2 files changed, 117 insertions(+)
+> 
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f93f2591fc1e..02daff1f47dd 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -306,6 +306,13 @@ struct kimage {
+>  
+>  	/* Information for loading purgatory */
+>  	struct purgatory_info purgatory_info;
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +	bool hotplug_event;
+> +	unsigned int offlinecpu;
+> +	bool elfcorehdr_index_valid;
+> +	int elfcorehdr_index;
+> +#endif
+>  #endif
+>  
+>  #ifdef CONFIG_IMA_KEXEC
+> @@ -322,6 +329,15 @@ struct kimage {
+>  	unsigned long elf_load_addr;
+>  };
+>  
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +void arch_crash_hotplug_handler(struct kimage *image,
+> +	unsigned int hp_action, unsigned int cpu);
+> +#define KEXEC_CRASH_HP_REMOVE_CPU   0
+> +#define KEXEC_CRASH_HP_ADD_CPU      1
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
+> +#define KEXEC_CRASH_HP_ADD_MEMORY   3
+> +#endif /* CONFIG_CRASH_HOTPLUG */
+> +
+>  /* kexec interface functions */
+>  extern void machine_kexec(struct kimage *image);
+>  extern int machine_kexec_prepare(struct kimage *image);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 256cf6db573c..ecf746243ab2 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -9,12 +9,17 @@
+>  #include <linux/init.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/highmem.h>
+> +#include <linux/memory.h>
+> +#include <linux/cpuhotplug.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+>  
+>  #include <crypto/sha1.h>
+>  
+> +#include "kexec_internal.h"
+> +
+>  /* vmcoreinfo stuff */
+>  unsigned char *vmcoreinfo_data;
+>  size_t vmcoreinfo_size;
+> @@ -491,3 +496,99 @@ static int __init crash_save_vmcoreinfo_init(void)
+>  }
+>  
+>  subsys_initcall(crash_save_vmcoreinfo_init);
+> +
+> +#ifdef CONFIG_CRASH_HOTPLUG
+> +void __weak arch_crash_hotplug_handler(struct kimage *image,
+> +	unsigned int hp_action, unsigned int cpu)
+> +{
+> +	pr_warn("crash hp: %s not implemented", __func__);
+> +}
+> +
+> +static void crash_hotplug_handler(unsigned int hp_action,
+> +	unsigned int cpu)
+> +{
+> +	/* Obtain lock while changing crash information */
+> +	if (!mutex_trylock(&kexec_mutex))
+> +		return;
+> +
+> +	/* Check kdump is loaded */
+> +	if (kexec_crash_image) {
+> +		pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
+> +
+> +		/* Needed in order for the segments to be updated */
+> +		arch_kexec_unprotect_crashkres();
+> +
+> +		/* Flag to differentiate between normal load and hotplug */
+> +		kexec_crash_image->hotplug_event = true;
+> +
+> +		/* Now invoke arch-specific update handler */
+> +		arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
+> +
+> +		/* No longer handling a hotplug event */
+> +		kexec_crash_image->hotplug_event = false;
+> +
+> +		/* Change back to read-only */
+> +		arch_kexec_protect_crashkres();
+> +	}
+> +
+> +	/* Release lock now that update complete */
+> +	mutex_unlock(&kexec_mutex);
+> +}
+> +
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +static int crash_memhp_notifier(struct notifier_block *nb,
+> +	unsigned long val, void *v)
+> +{
+> +	struct memory_notify *mhp = v;
+> +
+> +	switch (val) {
+> +	case MEM_ONLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+We don't differentiate the memory add/remove, cpu add, except of cpu
+remove. Means the hp_action only differentiate cpu remove from the other
+action. Maybe only making two types?
 
-Applied, thanks for the suggestion and reviewing the patch!
+#define KEXEC_CRASH_HP_REMOVE_CPU   0
+#define KEXEC_CRASH_HP_UPDATE_OTHER      1
 
->
+And define a new macro to replace the magic number?
 
->>  #endif
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 755fed183224..2fe39e946988 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -19,6 +19,7 @@
->>  #include <asm/io.h>
->>
->>  #include <uapi/linux/kexec.h>
->> +#include <linux/verification.h>
->>
->>  #ifdef CONFIG_KEXEC_CORE
->>  #include <linux/list.h>
->> @@ -196,6 +197,12 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
->>  				 const Elf_Shdr *relsec,
->>  				 const Elf_Shdr *symtab);
->>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
->> +#ifdef CONFIG_KEXEC_SIG
->> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
->> +int kexec_kernel_verify_pe_sig(const char *kernel,
->> +				    unsigned long kernel_len);
->> +#endif
->> +#endif
->>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->>
->>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 3720435807eb..754885b96aab 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -165,6 +165,23 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->>  }
->>
->>  #ifdef CONFIG_KEXEC_SIG
->> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
->> +int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
->> +{
->> +	int ret;
->> +
->> +	ret = verify_pefile_signature(kernel, kernel_len,
->> +				      VERIFY_USE_SECONDARY_KEYRING,
->> +				      VERIFYING_KEXEC_PE_SIGNATURE);
->> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
->> +		ret = verify_pefile_signature(kernel, kernel_len,
->> +					      VERIFY_USE_PLATFORM_KEYRING,
->> +					      VERIFYING_KEXEC_PE_SIGNATURE);
->> +	}
->> +	return ret;
->> +}
->> +#endif
->> +
->>  static int kexec_image_verify_sig(struct kimage *image, void *buf,
->>  		unsigned long buf_len)
->>  {
->> --
->> 2.34.1
->>
->
-
--- 
-Best regards,
-Coiby
+#define KEXEC_CRASH_HP_INVALID_CPU   -1U
+> +		break;
+> +
+> +	case MEM_OFFLINE:
+> +		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
+> +		break;
+> +	}
+> +	return NOTIFY_OK;
+> +}
+> +
+> +static struct notifier_block crash_memhp_nb = {
+> +	.notifier_call = crash_memhp_notifier,
+> +	.priority = 0
+> +};
+> +#endif
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +static int crash_cpuhp_online(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
+ Should making the cpu as -1U?
+ 	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, -1U);
+> +	return 0;
+> +}
+> +
+> +static int crash_cpuhp_offline(unsigned int cpu)
+> +{
+> +	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static int __init crash_hotplug_init(void)
+> +{
+> +	int result = 0;
+> +
+> +#if defined(CONFIG_MEMORY_HOTPLUG)
+> +	register_memory_notifier(&crash_memhp_nb);
+> +#endif
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +				"crash/cpuhp",
+> +				crash_cpuhp_online, crash_cpuhp_offline);
+> +#endif
+> +
+> +	return result;
+> +}
+> +
+> +subsys_initcall(crash_hotplug_init);
+> +#endif /* CONFIG_CRASH_HOTPLUG */
+> -- 
+> 2.27.0
+> 
 
 
