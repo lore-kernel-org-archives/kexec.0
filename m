@@ -1,144 +1,102 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 14 Apr 2022 18:33:43 +0800
-Subject: [PATCH v3] mm/vmalloc: fix spinning drain_vmap_work after
- reading from /proc/vmcore
-In-Reply-To: <53f25ddc953211d50bed06427d695f51f5ea37c7.1649867251.git.osandov@fb.com>
-References: <53f25ddc953211d50bed06427d695f51f5ea37c7.1649867251.git.osandov@fb.com>
-Message-ID: <Ylf4h2/vfelRoc3a@MiWiFi-R3L-srv>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Date: Thu, 14 Apr 2022 19:57:18 +0800
+Subject: [PATCH v22 7/9] arm64: kdump: Try not to use NO_BLOCK_MAPPINGS for
+ memory under 4G
+In-Reply-To: <20220414115720.1887-1-thunder.leizhen@huawei.com>
+References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
+Message-ID: <20220414115720.1887-8-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/13/22 at 09:28am, Omar Sandoval wrote:
-> From: Omar Sandoval <osandov@fb.com>
-> 
-> Commit 3ee48b6af49c ("mm, x86: Saving vmcore with non-lazy freeing of
-> vmas") introduced set_iounmap_nonlazy(), which sets vmap_lazy_nr to
-> lazy_max_pages() + 1, ensuring that any future vunmaps() immediately
-> purge the vmap areas instead of doing it lazily.
-> 
-> Commit 690467c81b1a ("mm/vmalloc: Move draining areas out of caller
-> context") moved the purging from the vunmap() caller to a worker thread.
-> Unfortunately, set_iounmap_nonlazy() can cause the worker thread to spin
-> (possibly forever). For example, consider the following scenario:
-> 
-> 1. Thread reads from /proc/vmcore. This eventually calls
->    __copy_oldmem_page() -> set_iounmap_nonlazy(), which sets
->    vmap_lazy_nr to lazy_max_pages() + 1.
-> 2. Then it calls free_vmap_area_noflush() (via iounmap()), which adds 2
->    pages (one page plus the guard page) to the purge list and
->    vmap_lazy_nr. vmap_lazy_nr is now lazy_max_pages() + 3, so the
->    drain_vmap_work is scheduled.
-> 3. Thread returns from the kernel and is scheduled out.
-> 4. Worker thread is scheduled in and calls drain_vmap_area_work(). It
->    frees the 2 pages on the purge list. vmap_lazy_nr is now
->    lazy_max_pages() + 1.
-> 5. This is still over the threshold, so it tries to purge areas again,
->    but doesn't find anything.
-> 6. Repeat 5.
-> 
-> If the system is running with only one CPU (which is typicial for kdump)
-> and preemption is disabled, then this will never make forward progress:
-> there aren't any more pages to purge, so it hangs. If there is more than
-> one CPU or preemption is enabled, then the worker thread will spin
-> forever in the background. (Note that if there were already pages to be
-> purged at the time that set_iounmap_nonlazy() was called, this bug is
-> avoided.)
-> 
-> This can be reproduced with anything that reads from /proc/vmcore
-> multiple times. E.g., vmcore-dmesg /proc/vmcore.
-> 
-> It turns out that improvements to vmap() over the years have obsoleted
-> the need for this "optimization". I benchmarked
-> `dd if=/proc/vmcore of=/dev/null` with 4k and 1M read sizes on a system
-> with a 32GB vmcore. The test was run on 5.17, 5.18-rc1 with a fix that
-> avoided the hang, and 5.18-rc1 with set_iounmap_nonlazy() removed
-> entirely:
-> 
->   |5.17  |5.18+fix|5.18+removal
-> 4k|40.86s|  40.09s|      26.73s
-> 1M|24.47s|  23.98s|      21.84s
-> 
-> The removal was the fastest (by a wide margin with 4k reads). This patch
-> removes set_iounmap_nonlazy().
-> 
-> Fixes: 690467c81b1a ("mm/vmalloc: Move draining areas out of caller context")
-> Reviewed-by: Christoph Hellwig <hch@lst.de>
-> Reviewed-by: Uladzislau Rezki (Sony) <urezki@gmail.com>
-> Acked-by: Chris Down <chris@chrisdown.name>
-> Signed-off-by: Omar Sandoval <osandov@fb.com>
+For the case crashkernel=X at offset and crashkernel=X,high, we've explicitly
+used 'crashk_res' to mark the scope of the page-level mapping required, so
+NO_BLOCK_MAPPINGS should not be required for other areas. Otherwise,
+system performance will be affected. In fact, only the case crashkernel=X
+requires page-level mapping for all low memory under 4G because it
+attempts high memory after it fails to request low memory first, and we
+cannot predict its final location.
 
-This is a great fix and with detailed explanation, thanks.
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ arch/arm64/include/asm/kexec.h |  2 ++
+ arch/arm64/mm/init.c           |  3 +++
+ arch/arm64/mm/mmu.c            | 18 +-----------------
+ 3 files changed, 6 insertions(+), 17 deletions(-)
 
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> ---
-> Changes from v2 -> v3:
-> 
-> - Add Fixes and Reviewed-by tags (no code changes)
-> 
-> Changes from v1 -> v2:
-> 
-> - Remove set_iounmap_nonlazy() entirely instead of fixing it.
-> 
->  arch/x86/include/asm/io.h       |  2 --
->  arch/x86/kernel/crash_dump_64.c |  1 -
->  mm/vmalloc.c                    | 11 -----------
->  3 files changed, 14 deletions(-)
-> 
-> diff --git a/arch/x86/include/asm/io.h b/arch/x86/include/asm/io.h
-> index f6d91ecb8026..e9736af126b2 100644
-> --- a/arch/x86/include/asm/io.h
-> +++ b/arch/x86/include/asm/io.h
-> @@ -210,8 +210,6 @@ void __iomem *ioremap(resource_size_t offset, unsigned long size);
->  extern void iounmap(volatile void __iomem *addr);
->  #define iounmap iounmap
->  
-> -extern void set_iounmap_nonlazy(void);
-> -
->  #ifdef __KERNEL__
->  
->  void memcpy_fromio(void *, const volatile void __iomem *, size_t);
-> diff --git a/arch/x86/kernel/crash_dump_64.c b/arch/x86/kernel/crash_dump_64.c
-> index a7f617a3981d..97529552dd24 100644
-> --- a/arch/x86/kernel/crash_dump_64.c
-> +++ b/arch/x86/kernel/crash_dump_64.c
-> @@ -37,7 +37,6 @@ static ssize_t __copy_oldmem_page(unsigned long pfn, char *buf, size_t csize,
->  	} else
->  		memcpy(buf, vaddr + offset, csize);
->  
-> -	set_iounmap_nonlazy();
->  	iounmap((void __iomem *)vaddr);
->  	return csize;
->  }
-> diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-> index e163372d3967..0b17498a34f1 100644
-> --- a/mm/vmalloc.c
-> +++ b/mm/vmalloc.c
-> @@ -1671,17 +1671,6 @@ static DEFINE_MUTEX(vmap_purge_lock);
->  /* for per-CPU blocks */
->  static void purge_fragmented_blocks_allcpus(void);
->  
-> -#ifdef CONFIG_X86_64
-> -/*
-> - * called before a call to iounmap() if the caller wants vm_area_struct's
-> - * immediately freed.
-> - */
-> -void set_iounmap_nonlazy(void)
-> -{
-> -	atomic_long_set(&vmap_lazy_nr, lazy_max_pages()+1);
-> -}
-> -#endif /* CONFIG_X86_64 */
-> -
->  /*
->   * Purges all lazily-freed vmap areas.
->   */
-> -- 
-> 2.35.2
-> 
-> 
-> 
+diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+index 9839bfc163d7147..8caf64065383844 100644
+--- a/arch/arm64/include/asm/kexec.h
++++ b/arch/arm64/include/asm/kexec.h
+@@ -80,6 +80,8 @@ static inline void crash_setup_regs(struct pt_regs *newregs,
+ 	}
+ }
+ 
++extern bool crash_low_mem_page_map;
++
+ #if defined(CONFIG_KEXEC_CORE) && defined(CONFIG_HIBERNATION)
+ extern bool crash_is_nosave(unsigned long pfn);
+ extern void crash_prepare_suspend(void);
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index b1b40b900fae170..d9676e30f9b657a 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -90,6 +90,7 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+ #endif
+ 
++bool crash_low_mem_page_map __initdata;
+ static bool crash_high_mem_reserved __initdata;
+ static struct resource crashk_res_high;
+ 
+@@ -147,6 +148,8 @@ static void __init reserve_crashkernel_high(void)
+ 		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+ 		if (ret || !crash_size)
+ 			return;
++	} else if (!crash_base) {
++		crash_low_mem_page_map = true;
+ 	}
+ 
+ 	crash_size = PAGE_ALIGN(crash_size);
+diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+index f84eca55b103d0c..56a973cb4c9cae6 100644
+--- a/arch/arm64/mm/mmu.c
++++ b/arch/arm64/mm/mmu.c
+@@ -483,21 +483,6 @@ void __init mark_linear_text_alias_ro(void)
+ 			    PAGE_KERNEL_RO);
+ }
+ 
+-static bool crash_mem_map __initdata;
+-
+-static int __init enable_crash_mem_map(char *arg)
+-{
+-	/*
+-	 * Proper parameter parsing is done by reserve_crashkernel(). We only
+-	 * need to know if the linear map has to avoid block mappings so that
+-	 * the crashkernel reservations can be unmapped later.
+-	 */
+-	crash_mem_map = true;
+-
+-	return 0;
+-}
+-early_param("crashkernel", enable_crash_mem_map);
+-
+ static void __init map_mem(pgd_t *pgdp)
+ {
+ 	static const u64 direct_map_end = _PAGE_END(VA_BITS_MIN);
+@@ -528,8 +513,7 @@ static void __init map_mem(pgd_t *pgdp)
+ 	memblock_mark_nomap(kernel_start, kernel_end - kernel_start);
+ 
+ #ifdef CONFIG_KEXEC_CORE
+-	if (crash_mem_map &&
+-	    (IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32)))
++	if (crash_low_mem_page_map)
+ 		eflags = NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+ 
+ 	if (crashk_res.end)
+-- 
+2.25.1
 
 
