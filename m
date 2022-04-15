@@ -1,136 +1,27 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri, 15 Apr 2022 17:37:35 +0800
-Subject: [PATCH v6 1/4] kexec: clean up arch_kexec_kernel_verify_sig
-In-Reply-To: <YleYmZAAnF5aOan3@MiWiFi-R3L-srv>
-References: <20220414014344.228523-1-coxu@redhat.com>
- <20220414014344.228523-2-coxu@redhat.com>
- <YleYmZAAnF5aOan3@MiWiFi-R3L-srv>
-Message-ID: <20220415093735.74eusyuuboa32aqs@Rk>
+From: Luis Chamberlain <mcgrof@kernel.org>
+Date: Fri, 15 Apr 2022 15:59:05 -0700
+Subject: [PATCH sysctl-next] kernel/kexec_core: move kexec_core sysctls
+ into its own file
+In-Reply-To: <20220228031801.GB150756@MiWiFi-R3L-srv>
+References: <20220223030318.213093-1-yingelin@huawei.com>
+ <YhXwkTCwt3a4Dn9T@MiWiFi-R3L-srv>
+ <c60419f8-422b-660d-8254-291182a06cbe@huawei.com>
+ <Yhbu6UxoYXFtDyFk@fedora> <YhqLnIjopfoBEBcV@bombadil.infradead.org>
+ <b07af605-ab74-a313-f8e4-da794dcde111@huawei.com>
+ <20220228031801.GB150756@MiWiFi-R3L-srv>
+Message-ID: <Yln4uQCYWw/k0vR3@bombadil.infradead.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, Apr 14, 2022 at 11:44:25AM +0800, Baoquan He wrote:
->On 04/14/22 at 09:43am, Coiby Xu wrote:
->> Currently there is no arch-specific implementation of
->> arch_kexec_kernel_verify_sig. Even if we want to add an implementation
->> for an architecture in the future, we can simply use "(struct
->> kexec_file_ops*)->verify_sig". So clean it up.
->>
->> Suggested-by: Eric W. Biederman <ebiederm@xmission.com>
->> Cc: stable at kernel.org
->
->It should be not worth noticing stable kernel that a clean up patch need
->be back ported.
+On Mon, Feb 28, 2022 at 11:18:01AM +0800, Baoquan He wrote:
+> That's OK, look forward to seeing the v2.
 
-Thanks for the suggestion! For the 2nd and 3rd patch, I'll add prerequisite
-info,
+yingelin, do you plan to post a v2? If splease base it on sysctl-testing [0]
 
-Cc: stable at kernel.org # 34d5960af253: kexec: clean up arch_kexec_kernel_verify_sig
+[0] https://git.kernel.org/pub/scm/linux/kernel/git/mcgrof/linux.git/log/?h=sysctl-testing
 
-and 
-
-Cc: stable at kernel.org # 34d5960af253: kexec: clean up arch_kexec_kernel_verify_sig
-Cc: stable at kernel.org # 83b7bb2d49ae: kexec, KEYS: make the code in bzImage64_verify_sig generic
-
-respectively.
-
->
->Otherwise this looks good to me,
->
->Acked-by: Baoquan He <bhe@redhat.com>
-
-Thanks for reviewing the patch!
-
->
->> Reviewed-by: Michal Suchanek <msuchanek@suse.de>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  include/linux/kexec.h |  4 ----
->>  kernel/kexec_file.c   | 34 +++++++++++++---------------------
->>  2 files changed, 13 insertions(+), 25 deletions(-)
->>
->> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->> index 58d1b58a971e..413235c6c797 100644
->> --- a/include/linux/kexec.h
->> +++ b/include/linux/kexec.h
->> @@ -202,10 +202,6 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
->>  				 const Elf_Shdr *relsec,
->>  				 const Elf_Shdr *symtab);
->>  int arch_kimage_file_post_load_cleanup(struct kimage *image);
->> -#ifdef CONFIG_KEXEC_SIG
->> -int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->> -				 unsigned long buf_len);
->> -#endif
->>  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->>
->>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
->> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
->> index 8347fc158d2b..3720435807eb 100644
->> --- a/kernel/kexec_file.c
->> +++ b/kernel/kexec_file.c
->> @@ -89,25 +89,6 @@ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
->>  	return kexec_image_post_load_cleanup_default(image);
->>  }
->>
->> -#ifdef CONFIG_KEXEC_SIG
->> -static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
->> -					  unsigned long buf_len)
->> -{
->> -	if (!image->fops || !image->fops->verify_sig) {
->> -		pr_debug("kernel loader does not support signature verification.\n");
->> -		return -EKEYREJECTED;
->> -	}
->> -
->> -	return image->fops->verify_sig(buf, buf_len);
->> -}
->> -
->> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
->> -					unsigned long buf_len)
->> -{
->> -	return kexec_image_verify_sig_default(image, buf, buf_len);
->> -}
->> -#endif
->> -
->>  /*
->>   * arch_kexec_apply_relocations_add - apply relocations of type RELA
->>   * @pi:		Purgatory to be relocated.
->> @@ -184,13 +165,24 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->>  }
->>
->>  #ifdef CONFIG_KEXEC_SIG
->> +static int kexec_image_verify_sig(struct kimage *image, void *buf,
->> +		unsigned long buf_len)
->> +{
->> +	if (!image->fops || !image->fops->verify_sig) {
->> +		pr_debug("kernel loader does not support signature verification.\n");
->> +		return -EKEYREJECTED;
->> +	}
->> +
->> +	return image->fops->verify_sig(buf, buf_len);
->> +}
->> +
->>  static int
->>  kimage_validate_signature(struct kimage *image)
->>  {
->>  	int ret;
->>
->> -	ret = arch_kexec_kernel_verify_sig(image, image->kernel_buf,
->> -					   image->kernel_buf_len);
->> +	ret = kexec_image_verify_sig(image, image->kernel_buf,
->> +			image->kernel_buf_len);
->>  	if (ret) {
->>
->>  		if (IS_ENABLED(CONFIG_KEXEC_SIG_FORCE)) {
->> --
->> 2.34.1
->>
->
-
--- 
-Best regards,
-Coiby
-
+  Luis
 
