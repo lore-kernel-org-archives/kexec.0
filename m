@@ -1,96 +1,71 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Mon, 18 Apr 2022 13:46:12 +0800
-Subject: [PATCH v6 3/4] arm64: kexec_file: use more system keyrings to
- verify kernel image signature
-In-Reply-To: <YlzJh8SE8pV1Et+O@MiWiFi-R3L-srv>
-References: <20220414014344.228523-1-coxu@redhat.com>
- <20220414014344.228523-4-coxu@redhat.com>
- <YlzJh8SE8pV1Et+O@MiWiFi-R3L-srv>
-Message-ID: <20220418054612.54knzv4gqoxbq57a@Rk>
+From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
+Date: Mon, 18 Apr 2022 05:03:20 +0000
+Subject: [ANNOUNCE] makedumpfile 1.7.1
+Message-ID: <TYYPR01MB6777A55BFBD97F68B48880BEDDF39@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon, Apr 18, 2022 at 10:14:31AM +0800, Baoquan He wrote:
->On 04/14/22 at 09:43am, Coiby Xu wrote:
->> Currently, a problem faced by arm64 is if a kernel image is signed by a
->> MOK key, loading it via the kexec_file_load() system call would be
->> rejected with the error "Lockdown: kexec: kexec of unsigned images is
->> restricted; see man kernel_lockdown.7".
->>
->> This happens because image_verify_sig uses only the primary keyring that
->> contains only kernel built-in keys to verify the kexec image.
->>
->> This patch allows to verify arm64 kernel image signature using not only
->> .builtin_trusted_keys but also .platform and .secondary_trusted_keys
->> keyring.
->>
->> Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
->
->Cc stable?
+Hi,
 
-Thanks for the reminder! I've added "Cc stable at kernel.org". But it seems
-I should Cc stable at vger.kernel.org instead.
+I'm pleased to announce the release of makedumpfile 1.7.1.
+Thank you everyone for your help to maintain this tool.
 
->
->Otherwise, LGTM,
->
->Acked-by: Baoquan He <bhe@redhat.com>
->
->> Cc: kexec at lists.infradead.org
->> Cc: keyrings at vger.kernel.org
->> Cc: linux-security-module at vger.kernel.org
->> Cc: stable at kernel.org
->> Co-developed-by: Michal Suchanek <msuchanek@suse.de>
->> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
->> Acked-by: Will Deacon <will@kernel.org>
->> Signed-off-by: Coiby Xu <coxu@redhat.com>
->> ---
->>  arch/arm64/kernel/kexec_image.c | 11 +----------
->>  1 file changed, 1 insertion(+), 10 deletions(-)
->>
->> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
->> index 9ec34690e255..5ed6a585f21f 100644
->> --- a/arch/arm64/kernel/kexec_image.c
->> +++ b/arch/arm64/kernel/kexec_image.c
->> @@ -14,7 +14,6 @@
->>  #include <linux/kexec.h>
->>  #include <linux/pe.h>
->>  #include <linux/string.h>
->> -#include <linux/verification.h>
->>  #include <asm/byteorder.h>
->>  #include <asm/cpufeature.h>
->>  #include <asm/image.h>
->> @@ -130,18 +129,10 @@ static void *image_load(struct kimage *image,
->>  	return NULL;
->>  }
->>
->> -#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
->> -static int image_verify_sig(const char *kernel, unsigned long kernel_len)
->> -{
->> -	return verify_pefile_signature(kernel, kernel_len, NULL,
->> -				       VERIFYING_KEXEC_PE_SIGNATURE);
->> -}
->> -#endif
->> -
->>  const struct kexec_file_ops kexec_image_ops = {
->>  	.probe = image_probe,
->>  	.load = image_load,
->>  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
->> -	.verify_sig = image_verify_sig,
->> +	.verify_sig = kexec_kernel_verify_pe_sig,
->>  #endif
->>  };
->> --
->> 2.34.1
->>
->>
->
+Download:
+The latest makedumpfile can be downloaded from the following URL.
+  https://github.com/makedumpfile/makedumpfile/releases
 
--- 
-Best regards,
-Coiby
+New features:
+- Cycle detection for printk log_buf
+- A lot of code hardening
+- Support kernels up to v5.17 (x86_64)
+
+Special thanks to Philipp Rudo (again), who has worked on hardening
+makedumpfile.  This release contains the remainder of the work,
+mainly removal of variable-length arrays.
+
+Commits since v1.7.0
+7684d26 [PATCH] Support newer kernels up to v5.17 (Kazuhito Hagio)
+0ea9257 [PATCH] check that order of free pages falls within valid range (Alexander Egorenkov)
+3318c51 [PATCH] omit unnecessary calls to print_progress() (Philipp Rudo)
+5035c08 [PATCH] print error when reading with unsupported compression (Philipp Rudo)
+68d120b [PATCH v2 3/3] use cycle detection when parsing the prink log_buf (Philipp Rudo)
+e1d2e53 [PATCH v2 2/3] use pointer arithmetics for dump_dmesg (Philipp Rudo)
+feae3d1 [PATCH v2 1/3] add generic cycle detection (Philipp Rudo)
+64b1c7f [PATCH] Fixes for rpmbuild testing (Kazuhito Hagio)
+2169de6 [PATCH v2] Simplify the generation of man pages (Leonidas Spyropoulos)
+59b1726 [PATCH] sadump, kaslr: fix failure of calculating kaslr_offset (HATAYAMA Daisuke)
+e459edc [PATCH] remove variable length array in get_machdep_info_x86_64() (Kazuhito Hagio)
+d2ffef8 [PATCH 15/15] remove variable length array in writeout_multiple_dumpfiles() (Philipp Rudo)
+704d5cb [PATCH 14/15] remove variable length array in write_kdump_pages_and_bitmap_cyclic() (Philipp Rudo)
+1424682 [PATCH 13/15] remove variable length array in write_kdump_pages_cyclic() (Philipp Rudo)
+c977617 [PATCH 12/15] remove variable length array in write_elf_load_segment() (Philipp Rudo)
+e2134cd [PATCH 11/15] remove variable length array in copy_bitmap_file() (Philipp Rudo)
+67f7a2b [PATCH 10/15] remove variable length array in __exclude_unnecessary_pages() (Philipp Rudo)
+c556030 [PATCH 09/15] remove variable length array in exclude_zero_pages_cyclic() (Philipp Rudo)
+be7ec0c [PATCH 08/15] remove variable length array in create_1st_bitmap_file() (Philipp Rudo)
+26c061c [PATCH 07/15] remove variable length array in copy_1st_bitmap_from_memory() (Philipp Rudo)
+b3a938f [PATCH 06/15] remove variable length array in check_and_modify_multiple_kdump_headers() (Philipp Rudo)
+cc5392d [PATCH 05/15] remove variable length array in get_mm_discontigmem() (Philipp Rudo)
+00a1b4d [PATCH 04/15] remove variable length array in readpage_kdump_compressed_parallel() (Philipp Rudo)
+64b5b29 [PATCH 03/15] remove variable length array in readpage_kdump_compressed() (Philipp Rudo)
+ffc64f0 [PATCH 02/15] remove variable length array in get_dom0_mapnr() (Philipp Rudo)
+f68ac34 [PATCH 01/15] sadump: remove variable length array sadump_copy_1st_bitmap_from_memory() (Philipp Rudo)
 
 
+Description of makedumpfile:
+The makedumpfile is a tool for creating a dumpfile from /proc/vmcore
+with filtering out unnecessary pages for analysis and compressing the
+remaining pages, in order to shorten the size of the dumpfile and the
+time of creating it.
+https://github.com/makedumpfile/makedumpfile
+
+-------------- next part --------------
+A non-text attachment was scrubbed...
+Name: smime.p7s
+Type: application/pkcs7-signature
+Size: 5754 bytes
+Desc: not available
+URL: <http://lists.infradead.org/pipermail/kexec/attachments/20220418/8412e456/attachment-0001.p7s>
