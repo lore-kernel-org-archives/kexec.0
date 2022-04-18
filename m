@@ -1,85 +1,164 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Mon, 18 Apr 2022 10:14:31 +0800
-Subject: [PATCH v6 3/4] arm64: kexec_file: use more system keyrings to
- verify kernel image signature
-In-Reply-To: <20220414014344.228523-4-coxu@redhat.com>
-References: <20220414014344.228523-1-coxu@redhat.com>
- <20220414014344.228523-4-coxu@redhat.com>
-Message-ID: <YlzJh8SE8pV1Et+O@MiWiFi-R3L-srv>
+Date: Mon, 18 Apr 2022 11:17:59 +0800
+Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-5-eric.devolder@oracle.com>
+ <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
+ <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
+Message-ID: <YlzYZ7WI1LH9Zy7d@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/14/22 at 09:43am, Coiby Xu wrote:
-> Currently, a problem faced by arm64 is if a kernel image is signed by a
-> MOK key, loading it via the kexec_file_load() system call would be
-> rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> restricted; see man kernel_lockdown.7".
+On 04/14/22 at 05:29pm, Eric DeVolder wrote:
+> Hi Baoquan,
+> Inline comments below.
+> Thanks!
+> eric
 > 
-> This happens because image_verify_sig uses only the primary keyring that
-> contains only kernel built-in keys to verify the kexec image.
-> 
-> This patch allows to verify arm64 kernel image signature using not only
-> .builtin_trusted_keys but also .platform and .secondary_trusted_keys
-> keyring.
-> 
-> Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+> On 4/13/22 21:45, Baoquan He wrote:
+> > On 04/13/22 at 12:42pm, Eric DeVolder wrote:
+> > > Upon CPU and memory changes, a generic crash_hotplug_handler()
+> > > dispatches the hot plug/unplug event to the architecture specific
+> > > arch_crash_hotplug_handler(). During the process, the kexec_mutex
+> > > is held.
+> > > 
+> > > To support cpu hotplug, a callback is registered to capture the
+> > > CPUHP_AP_ONLINE_DYN online and ofline events via
+> > > cpuhp_setup_state_nocalls().
+> > > 
+> > > To support memory hotplug, a notifier is registered to capture the
+> > > MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+> > > 
+> > > The cpu callback and memory notifier then call crash_hotplug_handler()
+> > > to handle the hot plug/unplug event.
+> > > 
+> > > Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> > > ---
+> > >   include/linux/kexec.h |  16 +++++++
+> > >   kernel/crash_core.c   | 101 ++++++++++++++++++++++++++++++++++++++++++
+> > >   2 files changed, 117 insertions(+)
+> > > 
+> > > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > > index f93f2591fc1e..02daff1f47dd 100644
+> > > --- a/include/linux/kexec.h
+> > > +++ b/include/linux/kexec.h
+> > > @@ -306,6 +306,13 @@ struct kimage {
+> > >   	/* Information for loading purgatory */
+> > >   	struct purgatory_info purgatory_info;
+> > > +
+> > > +#ifdef CONFIG_CRASH_HOTPLUG
+> > > +	bool hotplug_event;
+> > > +	unsigned int offlinecpu;
+> > > +	bool elfcorehdr_index_valid;
+> > > +	int elfcorehdr_index;
+> > > +#endif
+> > >   #endif
+> > >   #ifdef CONFIG_IMA_KEXEC
+> > > @@ -322,6 +329,15 @@ struct kimage {
+> > >   	unsigned long elf_load_addr;
+> > >   };
+> > > +#ifdef CONFIG_CRASH_HOTPLUG
+> > > +void arch_crash_hotplug_handler(struct kimage *image,
+> > > +	unsigned int hp_action, unsigned int cpu);
+> > > +#define KEXEC_CRASH_HP_REMOVE_CPU   0
+> > > +#define KEXEC_CRASH_HP_ADD_CPU      1
+> > > +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
+> > > +#define KEXEC_CRASH_HP_ADD_MEMORY   3
+> > > +#endif /* CONFIG_CRASH_HOTPLUG */
+> > > +
+> > >   /* kexec interface functions */
+> > >   extern void machine_kexec(struct kimage *image);
+> > >   extern int machine_kexec_prepare(struct kimage *image);
+> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> > > index 256cf6db573c..ecf746243ab2 100644
+> > > --- a/kernel/crash_core.c
+> > > +++ b/kernel/crash_core.c
+> > > @@ -9,12 +9,17 @@
+> > >   #include <linux/init.h>
+> > >   #include <linux/utsname.h>
+> > >   #include <linux/vmalloc.h>
+> > > +#include <linux/highmem.h>
+> > > +#include <linux/memory.h>
+> > > +#include <linux/cpuhotplug.h>
+> > >   #include <asm/page.h>
+> > >   #include <asm/sections.h>
+> > >   #include <crypto/sha1.h>
+> > > +#include "kexec_internal.h"
+> > > +
+> > >   /* vmcoreinfo stuff */
+> > >   unsigned char *vmcoreinfo_data;
+> > >   size_t vmcoreinfo_size;
+> > > @@ -491,3 +496,99 @@ static int __init crash_save_vmcoreinfo_init(void)
+> > >   }
+> > >   subsys_initcall(crash_save_vmcoreinfo_init);
+> > > +
+> > > +#ifdef CONFIG_CRASH_HOTPLUG
+> > > +void __weak arch_crash_hotplug_handler(struct kimage *image,
+> > > +	unsigned int hp_action, unsigned int cpu)
+> > > +{
+> > > +	pr_warn("crash hp: %s not implemented", __func__);
+> > > +}
+> > > +
+> > > +static void crash_hotplug_handler(unsigned int hp_action,
+> > > +	unsigned int cpu)
+> > > +{
+> > > +	/* Obtain lock while changing crash information */
+> > > +	if (!mutex_trylock(&kexec_mutex))
+> > > +		return;
+> > > +
+> > > +	/* Check kdump is loaded */
+> > > +	if (kexec_crash_image) {
+> > > +		pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
+> > > +
+> > > +		/* Needed in order for the segments to be updated */
+> > > +		arch_kexec_unprotect_crashkres();
+> > > +
+> > > +		/* Flag to differentiate between normal load and hotplug */
+> > > +		kexec_crash_image->hotplug_event = true;
+> > > +
+> > > +		/* Now invoke arch-specific update handler */
+> > > +		arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
+> > > +
+> > > +		/* No longer handling a hotplug event */
+> > > +		kexec_crash_image->hotplug_event = false;
+> > > +
+> > > +		/* Change back to read-only */
+> > > +		arch_kexec_protect_crashkres();
+> > > +	}
+> > > +
+> > > +	/* Release lock now that update complete */
+> > > +	mutex_unlock(&kexec_mutex);
+> > > +}
+> > > +
+> > > +#if defined(CONFIG_MEMORY_HOTPLUG)
+> > > +static int crash_memhp_notifier(struct notifier_block *nb,
+> > > +	unsigned long val, void *v)
+> > > +{
+> > > +	struct memory_notify *mhp = v;
+> > > +
+> > > +	switch (val) {
+> > > +	case MEM_ONLINE:
+> > > +		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+> > We don't differentiate the memory add/remove, cpu add, except of cpu
+> > remove. Means the hp_action only differentiate cpu remove from the other
+> > action. Maybe only making two types?
+> > 
+> > #define KEXEC_CRASH_HP_REMOVE_CPU   0
+> > #define KEXEC_CRASH_HP_UPDATE_OTHER      1
+> > 
+> Sourabh Jain's work with PPC uses REMOVE_CPU, REMOVE_MEMORY, and ADD_MEMORY.
+> Do you still want to consolidate these?
 
-Cc stable?
+I checked Sourabh's ppc patches, am wondering why memory hotplug is not
+handled. Is it going to be that CONFIG_MEMORY_HOTPLUG is enabled on ppc,
+while Sourabh is not willing to handle it for now?
 
-Otherwise, LGTM,
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> Cc: kexec at lists.infradead.org
-> Cc: keyrings at vger.kernel.org
-> Cc: linux-security-module at vger.kernel.org
-> Cc: stable at kernel.org
-> Co-developed-by: Michal Suchanek <msuchanek@suse.de>
-> Signed-off-by: Michal Suchanek <msuchanek@suse.de>
-> Acked-by: Will Deacon <will@kernel.org>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
->  arch/arm64/kernel/kexec_image.c | 11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-> index 9ec34690e255..5ed6a585f21f 100644
-> --- a/arch/arm64/kernel/kexec_image.c
-> +++ b/arch/arm64/kernel/kexec_image.c
-> @@ -14,7 +14,6 @@
->  #include <linux/kexec.h>
->  #include <linux/pe.h>
->  #include <linux/string.h>
-> -#include <linux/verification.h>
->  #include <asm/byteorder.h>
->  #include <asm/cpufeature.h>
->  #include <asm/image.h>
-> @@ -130,18 +129,10 @@ static void *image_load(struct kimage *image,
->  	return NULL;
->  }
->  
-> -#ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-> -static int image_verify_sig(const char *kernel, unsigned long kernel_len)
-> -{
-> -	return verify_pefile_signature(kernel, kernel_len, NULL,
-> -				       VERIFYING_KEXEC_PE_SIGNATURE);
-> -}
-> -#endif
-> -
->  const struct kexec_file_ops kexec_image_ops = {
->  	.probe = image_probe,
->  	.load = image_load,
->  #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
-> -	.verify_sig = image_verify_sig,
-> +	.verify_sig = kexec_kernel_verify_pe_sig,
->  #endif
->  };
-> -- 
-> 2.34.1
-> 
-> 
+Only passing KEXEC_CRASH_HP_ADD_MEMORY/KEXEC_CRASH_HP_REMOVE_MEMORY to
+indicate that they are not supported sounds weird to me, honestly.
 
 
