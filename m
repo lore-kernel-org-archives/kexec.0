@@ -1,51 +1,60 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Mon, 18 Apr 2022 17:03:39 -0500
-Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <Ylgot+LUDQl+G/5N@zn.tnic>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-3-eric.devolder@oracle.com> <Ylgot+LUDQl+G/5N@zn.tnic>
-Message-ID: <f3ea7ee0-1cb8-6928-d0af-4c2fc63a42a4@oracle.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Tue, 19 Apr 2022 13:50:27 +0530
+Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config
+ option CRASH_HOTPLUG
+In-Reply-To: <bb14b849-0fbb-072e-bb26-266da0756e17@linux.ibm.com>
+References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
+ <20220411084357.157308-3-sourabhjain@linux.ibm.com>
+ <bb14b849-0fbb-072e-bb26-266da0756e17@linux.ibm.com>
+Message-ID: <fbdea21b-5315-b334-da83-16c439d972d5@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Boris,
-Thanks for looking! I've inline comments below.
-Eric
 
-On 4/14/22 08:59, Borislav Petkov wrote:
-> On Wed, Apr 13, 2022 at 12:42:31PM -0400, Eric DeVolder wrote:
->> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
-> 
-> What for?
-Fair point, a new define isn't necessarily needed. I've now eliminated
-CONFIG_CRASH_HOTPLUG and am using CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG
-instead.
+On 14/04/22 22:10, Laurent Dufour wrote:
+> On 11/04/2022, 10:43:54, Sourabh Jain wrote:
+>> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
+>> hotplug events.
+>>
+>> All the updates needed on the capture kernel load path in the kernel for
+>> both kexec_load and kexec_file_load system will be kept under this config.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
+> Reviewed-by: Laurent Dufour <ldufour@linux.ibm.com>
 
-> 
-> Why don't you put all that new code you're adding under an
-> MEMORY_HOTPLUG ifdef? It seems you would need to do that when memory
-> hotplug is enabled, anyway.
-I think I have done that, in patch "crash: add generic infrastructure for crash
-hotplug support", I do have code under MEMORY_HOTPLUG as well as HOTPLUG_CPU.
-But...
+Thanks for the review.
 
-> 
-> Also, looking further into your patchset, you have ugly ifdeffery.
-> Instead of that, pls add stubs for the !MEMORY_HOTPLUG case so that
-> everything is abstracted away in the headers.
+- Sourabh Jain
 
-I've examined the code with this thought in mind, and I'm not exactly sure how
-this code should be restructured for !HOTPLUG stubs. I'd very much appreciate
-an example in order to facilitate accommodating the request!
-
-Thanks!
-eric
-
-> 
-> Thx.
-> 
+>
+>> ---
+>>   arch/powerpc/Kconfig | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index b779603978e1..777db33f75b5 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -623,6 +623,17 @@ config FA_DUMP
+>>   	  If unsure, say "y". Only special kernels like petitboot may
+>>   	  need to say "N" here.
+>>   
+>> +config CRASH_HOTPLUG
+>> +	bool "kernel updates of crash kexec segments"
+>> +	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
+>> +	help
+>> +	  An efficient way to keep the capture kernel up-to-date with CPU
+>> +	  hotplug events. On CPU hotplug event the kexec segments of capture
+>> +	  kernel becomes stale and need to be updated with latest CPU data.
+>> +	  In this method the kernel performs minimal update to only relevant
+>> +	  kexec segments on CPU hotplug event, instead of triggering full
+>> +	  capture kernel reload from userspace using udev rule.
+>> +
+>>   config PRESERVE_FA_DUMP
+>>   	bool "Preserve Firmware-assisted dump"
+>>   	depends on PPC64 && PPC_POWERNV && !FA_DUMP
 
