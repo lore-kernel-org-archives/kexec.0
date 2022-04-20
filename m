@@ -1,42 +1,85 @@
 From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Wed, 20 Apr 2022 04:19:48 +0000
-Subject: [ANNOUNCE] makedumpfile 1.7.1
-In-Reply-To: <cae75178-8020-8bce-6437-6e0010749cb1@archlinux.org>
-References: <TYYPR01MB6777A55BFBD97F68B48880BEDDF39@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <cae75178-8020-8bce-6437-6e0010749cb1@archlinux.org>
-Message-ID: <TYYPR01MB67779C4B6A837B9E509BE879DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Date: Wed, 20 Apr 2022 23:58:29 +0000
+Subject: [PATCH makedumpfile] Avoid false-positive mem_section validation with
+ vmlinux
+Message-ID: <TYYPR01MB6777DF79FA02B1A563395018DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> On 18/04/2022 06:03, HAGIO KAZUHITO(?? ??) wrote:
-> > Hi,
-> >
-> > I'm pleased to announce the release of makedumpfile 1.7.1.
-> > Thank you everyone for your help to maintain this tool.
-> >
-> > Download:
-> > The latest makedumpfile can be downloaded from the following URL.
-> >    https://github.com/makedumpfile/makedumpfile/releases
-> >
-> Hi Hagio,
-> 
-> I maintain the package in Arch Linux and noticed that you are signing
-> the git tag but not the commit message. Would you be able to sign both
-> next time so I can switch to validate the source using your public key?
+Currently get_mem_section() validates if SYMBOL(mem_section) is the address
+of the mem_section array first.  But there was a report that the first
+validation wrongly returned TRUE with -x vmlinux and SPARSEMEM_EXTREME
+(4.15+) on s390x.  This leads to crash failing statup with the following
+seek error:
 
-sure, I will try next time.
+  crash: seek error: kernel virtual address: 67fffc2800  type: "memory section root table"
 
-> Arch Linux packaging tool (pacman) supports this natively and it would
-> help maintain the chain of trust. It would also be useful to mention
-> your public key in the README (along with other's PGP keys who might be
-> tagging releases)
+Skip the first validation when satisfying the conditions.
 
-ok, will add it too.
+Reported-by: Dave Wysochanski <dwysocha@redhat.com>
+Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
+---
+ makedumpfile.c | 31 +++++++++++++++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-Thanks,
-Kazu
+diff --git a/makedumpfile.c b/makedumpfile.c
+index a2f45c84cee3..65d1c7c2f02c 100644
+--- a/makedumpfile.c
++++ b/makedumpfile.c
+@@ -3698,6 +3698,22 @@ validate_mem_section(unsigned long *mem_sec,
+ 	return ret;
+ }
+ 
++/*
++ * SYMBOL(mem_section) varies with the combination of memory model and
++ * its source:
++ *
++ * SPARSEMEM
++ *   vmcoreinfo: address of mem_section root array
++ *   -x vmlinux: address of mem_section root array
++ *
++ * SPARSEMEM_EXTREME v1
++ *   vmcoreinfo: address of mem_section root array
++ *   -x vmlinux: address of mem_section root array
++ *
++ * SPARSEMEM_EXTREME v2 (with 83e3c48729d9 and a0b1280368d1) 4.15+
++ *   vmcoreinfo: address of mem_section root array
++ *   -x vmlinux: address of pointer to mem_section root array
++ */
+ static int
+ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
+ 		unsigned int num_section)
+@@ -3710,12 +3726,27 @@ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
+ 		    strerror(errno));
+ 		return FALSE;
+ 	}
++
++	/*
++	 * There was a report that the first validation wrongly returned TRUE
++	 * with -x vmlinux and SPARSEMEM_EXTREME v2 on s390x, so skip it.
++	 * Howerver, leave the fallback validation as it is for the -i option.
++	 */
++	if (is_sparsemem_extreme() && info->name_vmlinux) {
++		unsigned long flag = 0;
++		if (get_symbol_type_name("mem_section", DWARF_INFO_GET_SYMBOL_TYPE,
++					NULL, &flag)
++		    && !(flag & TYPE_ARRAY))
++			goto skip_1st_validation;
++	}
++
+ 	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
+ 				   mem_section_size, mem_maps, num_section);
+ 
+ 	if (!ret && is_sparsemem_extreme()) {
+ 		unsigned long mem_section_ptr;
+ 
++skip_1st_validation:
+ 		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
+ 			     sizeof(mem_section_ptr)))
+ 			goto out;
+-- 
+2.27.0
 
