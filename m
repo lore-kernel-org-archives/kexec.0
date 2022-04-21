@@ -1,12 +1,13 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Thu, 21 Apr 2022 10:29:44 -0500
-Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config
- option CRASH_HOTPLUG
-In-Reply-To: <874k2mfz5t.fsf@mpe.ellerman.id.au>
+Date: Thu, 21 Apr 2022 10:33:26 -0500
+Subject: [RFC v4 PATCH 4/5] powerpc/crash hp: add crash hotplug support
+ for kexec_file_load
+In-Reply-To: <8598c28c-4297-c3a0-b180-12f7e596f0e4@linux.ibm.com>
 References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
- <20220411084357.157308-3-sourabhjain@linux.ibm.com>
- <874k2mfz5t.fsf@mpe.ellerman.id.au>
-Message-ID: <35ccca7c-07c2-1fc4-70da-2cc581ba818a@oracle.com>
+ <20220411084357.157308-5-sourabhjain@linux.ibm.com>
+ <20a85683-a2bf-e6dc-8d34-cc0c88496928@linux.ibm.com>
+ <8598c28c-4297-c3a0-b180-12f7e596f0e4@linux.ibm.com>
+Message-ID: <632d016e-758c-aef1-c385-e7495349ef8a@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,55 +16,220 @@ To: kexec@lists.infradead.org
 
 
 
-On 4/21/22 06:34, Michael Ellerman wrote:
-> Sourabh Jain <sourabhjain@linux.ibm.com> writes:
->> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
->> hotplug events.
->>
->> All the updates needed on the capture kernel load path in the kernel for
->> both kexec_load and kexec_file_load system will be kept under this config.
->>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
->>   arch/powerpc/Kconfig | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index b779603978e1..777db33f75b5 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -623,6 +623,17 @@ config FA_DUMP
->>   	  If unsure, say "y". Only special kernels like petitboot may
->>   	  need to say "N" here.
->>   
->> +config CRASH_HOTPLUG
->> +	bool "kernel updates of crash kexec segments"
->> +	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
->> +	help
->> +	  An efficient way to keep the capture kernel up-to-date with CPU
->> +	  hotplug events. On CPU hotplug event the kexec segments of capture
->> +	  kernel becomes stale and need to be updated with latest CPU data.
->> +	  In this method the kernel performs minimal update to only relevant
->> +	  kexec segments on CPU hotplug event, instead of triggering full
->> +	  capture kernel reload from userspace using udev rule.
+On 4/19/22 03:31, Sourabh Jain wrote:
 > 
-> Why would a user ever want to turn this off?
+> On 14/04/22 22:02, Laurent Dufour wrote:
+>> On 11/04/2022, 10:43:56, Sourabh Jain wrote:
+>>> Two major changes are done to enable the crash CPU hotplug handler.
+>>> Firstly, updated the kexec load path to prepare kimage for hotplug
+>>> changes, and secondly, implemented the crash hotplug handler.
+>>>
+>>> On the kexec load path, the memsz allocation of the crash FDT segment
+>>> is updated to ensure that it has sufficient buffer space to accommodate
+>>> future hot add CPUs. Initialized the kimage members to track the kexec
+>>> FDT segment.
+>>>
+>>> The crash hotplug handler updates the cpus node of crash FDT. While we
+>>> update crash FDT the kexec_crash_image is marked invalid and restored
+>>> after FDT update to avoid race.
+>>>
+>>> Since memory crash hotplug support is not there yet the crash hotplug
+>>> the handler simply warns the user and returns.
+>>>
+>>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>>> ---
+>>> ? arch/powerpc/kexec/core_64.c | 46 ++++++++++++++++++++++
+>>> ? arch/powerpc/kexec/elf_64.c? | 74 ++++++++++++++++++++++++++++++++++++
+>>> ? 2 files changed, 120 insertions(+)
+>>>
+>>> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+>>> index 249d2632526d..62f77cc86407 100644
+>>> --- a/arch/powerpc/kexec/core_64.c
+>>> +++ b/arch/powerpc/kexec/core_64.c
+>>> @@ -466,6 +466,52 @@ int update_cpus_node(void *fdt)
+>>> ????? return ret;
+>>> ? }
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +/**
+>>> + * arch_crash_hotplug_handler() - Handle hotplug FDT changes
+>>> + * @image: the active struct kimage
+>>> + * @hp_action: the hot un/plug action being handled
+>>> + * @a: first parameter dependent upon hp_action
+>>> + * @b: first parameter dependent upon hp_action
+>>> + *
+>>> + * To accurately reflect CPU hot un/plug changes, the FDT
+>>> + * must be updated with the new list of CPUs and memories.
+>>> + */
+>>> +void arch_crash_hotplug_handler(struct kimage *image, unsigned int hp_action,
+>>> +??????????????? unsigned long a, unsigned long b)
+>>> +{
+>>> +??? void *fdt;
+>>> +
+>>> +??? /* No action needed for CPU hot-unplug */
+>>> +??? if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+>>> +??????? return;
+>> I should have report since in the previous version too, why nothing is done
+>> when CPU are removed?
 > 
-> Seems to me we should just make it always behave this way, and not have
-> a CONFIG option at all.
+> Since CPU note addresses are already available for all possible CPUs
+> (regardless they are online or not) the PHDR is allocated for all possible
+> CPUs during elfcorehdr creation. At least for the kexec_load system call.
+> 
+> Now on the crash path, the crashing CPU initiates an IPI call to update
+> the CPU data of all online CPUs and jumps to the purgatory. Hence no
+> action is needed for the remove case.
+> 
+> With the above logic, we shouldn't be taking any action for the CPU add
+> case too, right? But on PowerPC early boot path there is validation that
+> checks the boot CPU is part of the? Flattened Device Tree (FDT) or not.
+> If the boot CPU is not found in FDT the boot fails. Hence FDT needs to be
+> updated for every new CPU added to the system but not needed when
+> CPU is removed.
+> 
+> 
+> Thanks
+> Sourabh Jain
+> 
+>>
+>>> +
+>>> +??? /* crash update on memory hotplug is not support yet */
+>>> +??? if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
+>>> +??????? pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
+>>> +??????? return;
+>>> +??? }
 
 Sourabh,
 
-Borislav Petkov also requested I remove the config option, which will be the
-case in upcoming v8.
+Baoquan's preference is to do away with the hp_action (and a and b) parameters to
+this function. As x86_64 has no need for them, I have no reason to argue for keeping
+them.
 
-Where I was using CONFIG_CRASH_HOTPLUG, I've replaced it with the
-CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG.
+If you really need hp_action, then please respond to Baoquan's concern in the
+"[PATCH v7 4/8] crash: add generic infrastructure for crash hotplug support"
+thread.
 
-Eric
+Thanks,
+eric
 
-> 
-> cheers
-> 
+
+>>> +
+>>> +??? /* Must have valid FDT index */
+>>> +??? if (!image->arch.fdt_index_valid) {
+>>> +??????? pr_err("crash hp: unable to locate FDT segment");
+>>> +??????? return;
+>>> +??? }
+>>> +
+>>> +??? fdt = __va((void *)image->segment[image->arch.fdt_index].mem);
+>>> +
+>>> +??? /* Temporarily invalidate the crash image while it is replaced */
+>>> +??? xchg(&kexec_crash_image, NULL);
+>>> +
+>>> +??? /* update FDT to refelect changes to CPU resrouces */
+>>> +??? if (update_cpus_node(fdt))
+>>> +??????? pr_err("crash hp: failed to update crash FDT");
+>>> +
+>>> +??? /* The crash image is now valid once again */
+>>> +??? xchg(&kexec_crash_image, image);
+>>> +}
+>>> +#endif /* CONFIG_CRASH_HOTPLUG */
+>>> +
+>>> ? #ifdef CONFIG_PPC_64S_HASH_MMU
+>>> ? /* Values we need to export to the second kernel via the device tree. */
+>>> ? static unsigned long htab_base;
+>>> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+>>> index eeb258002d1e..9dc774548ce4 100644
+>>> --- a/arch/powerpc/kexec/elf_64.c
+>>> +++ b/arch/powerpc/kexec/elf_64.c
+>>> @@ -24,6 +24,67 @@
+>>> ? #include <linux/slab.h>
+>>> ? #include <linux/types.h>
+>>> +#include <asm/kvm_book3s.h>
+>>> +#include <asm/kvm_ppc.h>
+>>> +
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +
+>>> +/**
+>>> + * get_cpu_node_sz() - Calculate the space needed to store a CPU device type node
+>>> + *???????????????????? in FDT. The calculation is done based on the existing CPU
+>>> + *???????????????????? node in unflatten device tree. Loop through all the
+>>> + *???????????????????? properties of the very first CPU type device node found in
+>>> + *???????????????????? unflatten device tree and returns the sum of the property
+>>> + *???????????????????? length and property string size of all properties of a CPU
+>>> + *???????????????????? node.
+>>> + */
+>> I don't think this is following the indent rules.
+>>
+>>> +static int get_cpu_node_sz(void) {
+>>> +??? struct device_node *dn = NULL;
+>>> +??? struct property *pp;
+>>> +??? int cpu_node_size = 0;
+>>> +
+>>> +??? dn = of_find_node_by_type(NULL, "cpu");
+>>> +
+>>> +??? if (!dn) {
+>>> +??????? pr_warn("Unable to locate cpu device_type node.\n");
+>>> +??????? goto out;
+>>> +??? }
+>>> +
+>>> +??? /* Every node in FDT starts with FDT_BEGIN_NODE and ends with
+>>> +???? * FDT_END_NODE that takes one byte each.
+>>> +???? */
+>>> +??? cpu_node_size = 2;
+>>> +
+>>> +??? for_each_property_of_node(dn, pp) {
+>>> +??????? /* For each property add two bytes extra. One for string null
+>>> +???????? * character for property name and other for FDT property start
+>>> +???????? * tag FDT_PROP.
+>>> +???????? */
+>> Coding style request to start with a blank comment line for multiple
+>> comment lines.
+>>
+>>> +??????? cpu_node_size = cpu_node_size + pp->length + strlen(pp->name) + 2;
+>>> +??? }
+>>> +
+>>> +out:
+>>> +??? return cpu_node_size;
+>>> +}
+>>> +
+>>> +/**
+>>> + * get_crash_fdt_mem_sz() - calcuate mem size for crash kernel FDT
+>>> + * @fdt: pointer to crash kernel FDT
+>>> + *
+>>> + * Calculate the buffer space needed to add more CPU nodes in crash FDT
+>>> + * post capture kenrel load due to CPU hotplug events.
+>>> + */
+>>> +static unsigned int get_crash_fdt_mem_sz(void *fdt)
+>>> +{
+>>> +??? int fdt_cpu_nodes_sz, offline_cpu_cnt;
+>>> +
+>>> +??? offline_cpu_cnt = (num_possible_cpus() - num_present_cpus()) / MAX_SMT_THREADS;
+>>> +??? fdt_cpu_nodes_sz = get_cpu_node_sz() * offline_cpu_cnt;
+>>> +
+>>> +??? return fdt_totalsize(fdt) + fdt_cpu_nodes_sz;
+>>> +}
+>>> +#endif
+>>> +
+>>> ? static void *elf64_load(struct kimage *image, char *kernel_buf,
+>>> ????????????? unsigned long kernel_len, char *initrd,
+>>> ????????????? unsigned long initrd_len, char *cmdline,
+>>> @@ -123,6 +184,19 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>>> ????? kbuf.buf_align = PAGE_SIZE;
+>>> ????? kbuf.top_down = true;
+>>> ????? kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>>> +
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +??? if (image->type == KEXEC_TYPE_CRASH) {
+>>> +??????? kbuf.memsz = get_crash_fdt_mem_sz(fdt);
+>>> +??????? fdt_set_totalsize(fdt, kbuf.memsz);
+>>> +??????? image->arch.fdt_index = image->nr_segments;
+>>> +??????? image->arch.fdt_index_valid = true;
+>>> +??? } else
+>>> +#endif
+>>> +??? {
+>>> +??????? kbuf.memsz = fdt_totalsize(fdt);
+>>> +??? }
+>>> +
+>>> ????? ret = kexec_add_buffer(&kbuf);
+>>> ????? if (ret)
+>>> ????????? goto out_free_fdt;
 
