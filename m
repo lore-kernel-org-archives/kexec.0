@@ -1,87 +1,107 @@
-From: Hui Li <lihui@loongson.cn>
-Date: Sun, 24 Apr 2022 10:35:23 +0800
-Subject: [PATCH v2 2/2] kexec-tools: mips: Add initrd parameter to cmdline
-In-Reply-To: <20220424023523.16869-1-lihui@loongson.cn>
-References: <20220424023523.16869-1-lihui@loongson.cn>
-Message-ID: <20220424023523.16869-3-lihui@loongson.cn>
+From: yingelin <yingelin@huawei.com>
+Date: Sun, 24 Apr 2022 10:57:40 +0800
+Subject: [PATCH sysctl-testing v2] kernel/kexec_core: move kexec_core sysctls
+ into its own file
+Message-ID: <20220424025740.50371-1-yingelin@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Loongson platform obtain the initrd parameter through cmdline in kernel.
-But kexec-tools pass the initrd through DTB.So add initrd parameter
-to cmdline in order to compatible with some platforms.It is still
-to pass the initrd parameter via command line.
+This move the kernel/kexec_core.c respective sysctls to its own file.
 
-Signed-off-by: Hui Li <lihui@loongson.cn>
+kernel/sysctl.c has grown to an insane mess, We move sysctls to places
+where features actually belong to improve the readability and reduce
+merge conflicts. At the same time, the proc-sysctl maintainers can easily
+care about the core logic other than the sysctl knobs added for some feature.
+
+We already moved all filesystem sysctls out. This patch is part of the effort
+to move kexec related sysctls out.
+
+Signed-off-by: yingelin <yingelin@huawei.com>
+
 ---
- kexec/arch/mips/kexec-elf-mips.c | 43 ++++++++++++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
+v2:
+  1. Add the explanation to commit log to help patch review and subsystem
+  maintainers better understand the context/logic behind the migration
+  2. Add CONFIG_SYSCTL to to isolate the sysctl
+  3. Change subject-prefix of sysctl-next to sysctl-testing
 
-diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
-index a2d11fc..1de418e 100644
---- a/kexec/arch/mips/kexec-elf-mips.c
-+++ b/kexec/arch/mips/kexec-elf-mips.c
-@@ -40,6 +40,44 @@ static const int probe_debug = 0;
- #define CMDLINE_PREFIX "kexec "
- static char cmdline_buf[COMMAND_LINE_SIZE] = CMDLINE_PREFIX;
- 
-+/* Converts unsigned long to ascii string. */
-+static void ultoa(unsigned long i, char *str)
+v1: https://lore.kernel.org/lkml/20220223030318.213093-1-yingelin at huawei.com/
+  1. Lack more informations in the commit log to help patch review better
+  2. Lack isolation of the sysctl
+  3. Use subject-prefix of sysctl-next
+---
+ kernel/kexec_core.c | 22 ++++++++++++++++++++++
+ kernel/sysctl.c     | 13 -------------
+ 2 files changed, 22 insertions(+), 13 deletions(-)
+
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 68480f731192..a0456baf52cc 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -936,6 +936,28 @@ int kimage_load_segment(struct kimage *image,
+ struct kimage *kexec_image;
+ struct kimage *kexec_crash_image;
+ int kexec_load_disabled;
++#ifdef CONFIG_SYSCTL
++static struct ctl_table kexec_core_sysctls[] = {
++	{
++		.procname	= "kexec_load_disabled",
++		.data		= &kexec_load_disabled,
++		.maxlen		= sizeof(int),
++		.mode		= 0644,
++		/* only handle a transition from default "0" to "1" */
++		.proc_handler	= proc_dointvec_minmax,
++		.extra1		= SYSCTL_ONE,
++		.extra2		= SYSCTL_ONE,
++	},
++	{ }
++};
++
++static int __init kexec_core_sysctl_init(void)
 +{
-+	int j = 0, k;
-+	char tmp;
-+
-+	do {
-+		str[j++] = i % 10 + '0';
-+	} while ((i /= 10) > 0);
-+	str[j] = '\0';
-+	/* Reverse the string. */
-+	for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
-+		tmp = str[k];
-+		str[k] = str[j];
-+		str[j] = tmp;
-+	}
-+}
-+
-+/* Adds initrd parameters to command line. */
-+static int cmdline_add_initrd(char *cmdline, unsigned long addr, char *new_para)
-+{
-+	int cmdlen, len;
-+	char str[30], *ptr;
-+
-+	ptr = str;
-+	strcpy(str, new_para);
-+	ptr += strlen(str);
-+	ultoa(addr, ptr);
-+	len = strlen(str);
-+	cmdlen = strlen(cmdline) + len;
-+	if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+		die("Command line overflow\n");
-+	strcat(cmdline, str);
-+
++	register_sysctl_init("kernel", kexec_core_sysctls);
 +	return 0;
 +}
-+
-+
- int elf_mips_probe(const char *buf, off_t len)
- {
- 	struct mem_ehdr ehdr;
-@@ -171,6 +209,11 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- 		/* Now that the buffer for initrd is prepared, update the dtb
- 		 * with an appropriate location */
- 		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
-+
-+		/* Add the initrd parameters to cmdline */
-+		cmdline_add_initrd(cmdline_buf, PAGE_OFFSET + initrd_base, " rd_start=");
-+		cmdline_add_initrd(cmdline_buf, initrd_size, " rd_size=");
-+
- 	}
++late_initcall(kexec_core_sysctl_init);
++#endif
  
- 
+ /*
+  * No panic_cpu check version of crash_kexec().  This function is called
+diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+index b60345cbadf0..0f3cb61a2e39 100644
+--- a/kernel/sysctl.c
++++ b/kernel/sysctl.c
+@@ -61,7 +61,6 @@
+ #include <linux/capability.h>
+ #include <linux/binfmts.h>
+ #include <linux/sched/sysctl.h>
+-#include <linux/kexec.h>
+ #include <linux/mount.h>
+ #include <linux/userfaultfd_k.h>
+ #include <linux/pid.h>
+@@ -1712,18 +1711,6 @@ static struct ctl_table kern_table[] = {
+ 		.proc_handler	= tracepoint_printk_sysctl,
+ 	},
+ #endif
+-#ifdef CONFIG_KEXEC_CORE
+-	{
+-		.procname	= "kexec_load_disabled",
+-		.data		= &kexec_load_disabled,
+-		.maxlen		= sizeof(int),
+-		.mode		= 0644,
+-		/* only handle a transition from default "0" to "1" */
+-		.proc_handler	= proc_dointvec_minmax,
+-		.extra1		= SYSCTL_ONE,
+-		.extra2		= SYSCTL_ONE,
+-	},
+-#endif
+ #ifdef CONFIG_MODULES
+ 	{
+ 		.procname	= "modprobe",
 -- 
-2.20.1
+2.26.2
 
 
