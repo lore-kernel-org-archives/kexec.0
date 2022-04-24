@@ -1,122 +1,54 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Sun, 24 Apr 2022 10:09:29 +0800
-Subject: [PATCH v2 1/1] Simplify the generation of man pages
-In-Reply-To: <20220304151748.138775-1-artafinde@archlinux.org>
-References: <20220304151748.138775-1-artafinde@archlinux.org>
-Message-ID: <20220424020929.bcuqog7emxsmuwdt@Rk>
+From: Hui Li <lihui@loongson.cn>
+Date: Sun, 24 Apr 2022 10:35:21 +0800
+Subject: [PATCH v2 0/2] kexec-tools:mips: Fix Kernel panic problem
+Message-ID: <20220424023523.16869-1-lihui@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
+Under loongson platform,use command:
+kexec -l vmlinux... --append="root=UUID=28e1..." --initrd=...
+kexec -e
+quick restart failed like this:
 
-I notice Fedora's kexec-tools failed to build using makedumpfile-1.7.1
-because it assumes makedumpfile generates .gz man files like
-makedumpfile.8.gz. Of course I can compress makedumpfile's man files
-when building Fedora's kexec-tools to fix this issue. But I want to know
-why you no longer compress man files in makedumpfile especially when
-Arch Linux also uses .gz man files according to the package content [1]?
+[    3.420791] VFS: Cannot open root device "UUID=6462a8a4-02fb-49ff-bcb6-54fe53813c2a" or unknown-block(0,0): error -6
+[    3.431262] Please append a correct "root=" boot option; here are the available partitions:
+...
+...
+...
+[    3.543175]   0801         4194304 sda1 554e69cc-01
+[    3.543175] 
+[    3.549494]   0802        62914560 sda2 554e69cc-02
+[    3.549495] 
+[    3.555818]   0803         8388608 sda3 554e69cc-03
+[    3.555819] 
+[    3.562139]   0804       174553229 sda4 554e69cc-04
+[    3.562139] 
+[    3.568463] 0b00         1048575 sr0 
+[    3.568464]  driver: sr
+[    3.574524] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+[    3.582750] ---[ end Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0) ]---
 
-[1] https://archlinux.org/packages/community/x86_64/makedumpfile/
 
-On Fri, Mar 04, 2022 at 03:17:48PM +0000, Leonidas Spyropoulos wrote:
->Use `sed` to simplify the man pages generation. Keep the .in files
->intact during make and generate the actual man pages with sed.
->Additionally package tools already gz the man pages during install so it
->doesn't really need to do that during make and it breaks reproducibility
->of the package due to timestamps on files.
->
->Motivation: https://reproducible-builds.org
->
->Signed-off-by: Leonidas Spyropoulos <artafinde@archlinux.org>
->---
-> Makefile                                      | 20 +++++++++----------
-> makedumpfile.8 => makedumpfile.8.in           |  2 +-
-> makedumpfile.conf.5 => makedumpfile.conf.5.in |  2 +-
-> 3 files changed, 11 insertions(+), 13 deletions(-)
-> rename makedumpfile.8 => makedumpfile.8.in (99%)
-> rename makedumpfile.conf.5 => makedumpfile.conf.5.in (99%)
->
->diff --git a/Makefile b/Makefile
->index 9f9fd22..f118b31 100644
->--- a/Makefile
->+++ b/Makefile
->@@ -112,26 +112,24 @@ $(OBJ_ARCH): $(SRC_ARCH)
->
-> makedumpfile: $(SRC_BASE) $(OBJ_PART) $(OBJ_ARCH)
-> 	$(CC) $(CFLAGS) $(LDFLAGS) $(OBJ_PART) $(OBJ_ARCH) -rdynamic -o $@ $< $(LIBS)
->-	echo .TH MAKEDUMPFILE 8 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.8
->-	grep -v "^.TH MAKEDUMPFILE 8" $(VPATH)makedumpfile.8 >> temp.8
->-	mv temp.8 makedumpfile.8
->-	gzip -c ./makedumpfile.8 > ./makedumpfile.8.gz
->-	echo .TH MAKEDUMPFILE.CONF 5 \"$(DATE)\" \"makedumpfile v$(VERSION)\" \"Linux System Administrator\'s Manual\" > temp.5
->-	grep -v "^.TH MAKEDUMPFILE.CONF 5" $(VPATH)makedumpfile.conf.5 >> temp.5
->-	mv temp.5 makedumpfile.conf.5
->-	gzip -c ./makedumpfile.conf.5 > ./makedumpfile.conf.5.gz
->+	@sed -e "s/@DATE@/$(DATE)/" \
->+	     -e "s/@VERSION@/$(VERSION)/" \
->+	     $(VPATH)makedumpfile.8.in > $(VPATH)makedumpfile.8
->+	@sed -e "s/@DATE@/$(DATE)/" \
->+	     -e "s/@VERSION@/$(VERSION)/" \
->+	     $(VPATH)makedumpfile.conf.5.in > $(VPATH)makedumpfile.conf.5
->
-> eppic_makedumpfile.so: extension_eppic.c
-> 	$(CC) $(CFLAGS) $(LDFLAGS) -shared -rdynamic -o $@ extension_eppic.c -fPIC -leppic -ltinfo
->
-> clean:
->-	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8.gz makedumpfile.conf.5.gz
->+	rm -f $(OBJ) $(OBJ_PART) $(OBJ_ARCH) makedumpfile makedumpfile.8 makedumpfile.conf.5
->
-> install:
-> 	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
-> 	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
->-	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8.gz
->-	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5.gz
->+	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8
->+	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5
-> 	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
-> 	mkdir -p ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts
-> 	install -m 644 -t ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts/ $(VPATH)eppic_scripts/*
->diff --git a/makedumpfile.8 b/makedumpfile.8.in
->similarity index 99%
->rename from makedumpfile.8
->rename to makedumpfile.8.in
->index ce8c700..d22588e 100644
->--- a/makedumpfile.8
->+++ b/makedumpfile.8.in
->@@ -1,4 +1,4 @@
->-.TH MAKEDUMPFILE 8 "8 Nov 2021" "makedumpfile v1.7.0++" "Linux System Administrator's Manual"
->+.TH MAKEDUMPFILE 8 "@DATE@" "makedumpfile v at VERSION@" "Linux System Administrator's Manual"
-> .SH NAME
-> makedumpfile \- make a small dumpfile of kdump
-> .SH SYNOPSIS
->diff --git a/makedumpfile.conf.5 b/makedumpfile.conf.5.in
->similarity index 99%
->rename from makedumpfile.conf.5
->rename to makedumpfile.conf.5.in
->index 0f1a49b..54e1be8 100644
->--- a/makedumpfile.conf.5
->+++ b/makedumpfile.conf.5.in
->@@ -1,4 +1,4 @@
->-.TH MAKEDUMPFILE.CONF 5 "8 Nov 2021" "makedumpfile v1.7.0++" "Linux System Administrator's Manual"
->+.TH MAKEDUMPFILE.CONF 5 "@DATE@" "makedumpfile v at VERSION@" "Linux System Administrator's Manual"
-> .SH NAME
-> makedumpfile.conf \- The filter configuration file for makedumpfile(8).
-> .SH DESCRIPTION
->-- 
->2.35.1
->
->
->_______________________________________________
->kexec mailing list
->kexec at lists.infradead.org
->http://lists.infradead.org/mailman/listinfo/kexec
->
+The reason of this problem:
+The kernel cannot parse the UUID,UUID is parsed in the initrd.
+Loongson platform obtain the initrd through cmdline in kernel.
+In kexec-tools, initrd is not added to cmdline.
+
+The following two steps to solve this problem.
+
+Hui Li (2):
+  kexec-tools: mips: Add CONFIG_LOONGSON option.
+  kexec-tools: mips: Add initrd parameter to cmdline
+
+ configure.ac                     |  5 ++++
+ kexec/arch/mips/crashdump-mips.h |  6 ++++-
+ kexec/arch/mips/kexec-elf-mips.c | 43 ++++++++++++++++++++++++++++++++
+ 3 files changed, 53 insertions(+), 1 deletion(-)
 
 -- 
-Best regards,
-Coiby
+2.20.1
 
 
