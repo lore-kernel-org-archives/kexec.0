@@ -1,55 +1,40 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 25 Apr 2022 11:49:48 +0800
-Subject: [PATCH v22 1/9] kdump: return -ENOENT if required cmdline option
- does not exist
-In-Reply-To: <20220414115720.1887-2-thunder.leizhen@huawei.com>
+From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
+Date: Mon, 25 Apr 2022 14:29:31 +0800
+Subject: [PATCH v22 0/9] support reserving crashkernel above 4G on arm64
+ kdump
+In-Reply-To: <YmYLO58lH0rf1c8B@MiWiFi-R3L-srv>
 References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
- <20220414115720.1887-2-thunder.leizhen@huawei.com>
-Message-ID: <YmYaXDrEYOXLzT5H@MiWiFi-R3L-srv>
+ <9e3f69fb-ac2b-6de5-459c-5d104247a0ac@huawei.com>
+ <YmYLO58lH0rf1c8B@MiWiFi-R3L-srv>
+Message-ID: <ffd3d9bd-b1d9-3681-5e44-ba9094835b7b@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/14/22 at 07:57pm, Zhen Lei wrote:
-> According to the current crashkernel=Y,low support in other ARCHes, it's
-> an optional command-line option. When it doesn't exist, kernel will try
-> to allocate minimum required memory below 4G automatically.
-> 
-> However, __parse_crashkernel() returns '-EINVAL' for all error cases. It
-> can't distinguish the nonexistent option from invalid option.
-> 
-> Change __parse_crashkernel() to return '-ENOENT' for the nonexistent option
-> case. With this change, crashkernel,low memory will take the default
-> value if crashkernel=,low is not specified; while crashkernel reservation
-> will fail and bail out if an invalid option is specified.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-Acked-by: Baoquan He <bhe@redhat.com>
 
-> ---
->  kernel/crash_core.c | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
+On 2022/4/25 10:45, Baoquan He wrote:
+> On 04/25/22 at 10:19am, Leizhen (ThunderTown) wrote:
+>>
+>> Hi, Catalin Marinas and Will Deacon:
+>>   Do you have time to review patches 3-4 and 6-7? These patches are a little more
+>> relevant to the arm64 architecture.
+>>
+>> Hi, Baoquan He:
+>>   Can you review patches 1 and 5 again?
 > 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index 256cf6db573cd09..4d57c03714f4e13 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
->  	*crash_base = 0;
->  
->  	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
-> -
->  	if (!ck_cmdline)
-> -		return -EINVAL;
-> +		return -ENOENT;
->  
->  	ck_cmdline += strlen(name);
->  
-> -- 
-> 2.25.1
-> 
+> Yes, and I will test and review the whole series if no one check the
+> arm64 related changes.
 
+Okay, thank you so much.
+
+> 
+>>
+>>
+
+-- 
+Regards,
+  Zhen Lei
 
