@@ -1,181 +1,122 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Mon, 25 Apr 2022 00:48:28 +0000
-Subject: [PATCH makedumpfile] Avoid false-positive mem_section validation
- with vmlinux
-In-Reply-To: <YmUj5qFjaQRdPh8z@piliu.users.ipa.redhat.com>
-References: <TYYPR01MB6777DF79FA02B1A563395018DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <YmUj5qFjaQRdPh8z@piliu.users.ipa.redhat.com>
-Message-ID: <TYYPR01MB6777712B1A1F001624E8033ADDF89@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Mon, 25 Apr 2022 09:28:01 +0800
+Subject: [PATCH sysctl-testing v2] kernel/kexec_core: move kexec_core
+ sysctls into its own file
+In-Reply-To: <20220424025740.50371-1-yingelin@huawei.com>
+References: <20220424025740.50371-1-yingelin@huawei.com>
+Message-ID: <YmX5Ic8eyMQZbIxY@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Pingfan,
-
------Original Message-----
-> On Wed, Apr 20, 2022 at 11:58:29PM +0000, HAGIO KAZUHITO(?? ??) wrote:
-> > Currently get_mem_section() validates if SYMBOL(mem_section) is the address
-> > of the mem_section array first.  But there was a report that the first
-> > validation wrongly returned TRUE with -x vmlinux and SPARSEMEM_EXTREME
-> > (4.15+) on s390x.  This leads to crash failing statup with the following
-> > seek error:
-> >
-> >   crash: seek error: kernel virtual address: 67fffc2800  type: "memory section root table"
-> >
-> > Skip the first validation when satisfying the conditions.
-> >
+On 04/24/22 at 10:57am, yingelin wrote:
+> This move the kernel/kexec_core.c respective sysctls to its own file.
 > 
-> I still prefer to your V1, which is discussed internally. In which, the
-> logic was made straight forward. And I suggest some slight change to
-> your V1, which folds "-x vmlinux" logic into is_sparsemem_extreme().
+> kernel/sysctl.c has grown to an insane mess, We move sysctls to places
+> where features actually belong to improve the readability and reduce
+> merge conflicts. At the same time, the proc-sysctl maintainers can easily
+> care about the core logic other than the sysctl knobs added for some feature.
 > 
-> What about the following: (not tested yet, if it is good, I can test it)
+> We already moved all filesystem sysctls out. This patch is part of the effort
+> to move kexec related sysctls out.
+> 
+> Signed-off-by: yingelin <yingelin@huawei.com>
 
-Thanks for your review and suggestion.
+LGTM,
 
-The purpose of my patch is to distinguish between SPARSEMEM_EXTREME
-v1 and v2, i.e. whether it has 83e3c48729d9 or not.
-
-is_sparsemem_extreme() has to return whether it's SPARSEMEM_EXTREME or
-SPARSEMEM, so unfortunately it's not suitable to use that logic in
-the function.
-
-Thanks,
-Kazu
+Acked-by: Baoquan He <bhe@redhat.com>
 
 > 
+> ---
+> v2:
+>   1. Add the explanation to commit log to help patch review and subsystem
+>   maintainers better understand the context/logic behind the migration
+>   2. Add CONFIG_SYSCTL to to isolate the sysctl
+>   3. Change subject-prefix of sysctl-next to sysctl-testing
 > 
-> diff --git a/makedumpfile.c b/makedumpfile.c
-> index a2f45c8..3ebe372 100644
-> --- a/makedumpfile.c
-> +++ b/makedumpfile.c
-> @@ -2240,11 +2240,18 @@ int
->  is_sparsemem_extreme(void)
->  {
->  	if ((ARRAY_LENGTH(mem_section)
-> -	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME()))
-> -	    || (ARRAY_LENGTH(mem_section) == NOT_FOUND_STRUCTURE))
-> -		return TRUE;
-> -	else
-> +	     == divideup(NR_MEM_SECTIONS(), _SECTIONS_PER_ROOT_EXTREME())) {
-> +	     return TRUE;
-> +	} else if (info->name_vmlinux) {
-> +		unsigned long flag = 0;
+> v1: https://lore.kernel.org/lkml/20220223030318.213093-1-yingelin at huawei.com/
+>   1. Lack more informations in the commit log to help patch review better
+>   2. Lack isolation of the sysctl
+>   3. Use subject-prefix of sysctl-next
+> ---
+>  kernel/kexec_core.c | 22 ++++++++++++++++++++++
+>  kernel/sysctl.c     | 13 -------------
+>  2 files changed, 22 insertions(+), 13 deletions(-)
+> 
+> diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+> index 68480f731192..a0456baf52cc 100644
+> --- a/kernel/kexec_core.c
+> +++ b/kernel/kexec_core.c
+> @@ -936,6 +936,28 @@ int kimage_load_segment(struct kimage *image,
+>  struct kimage *kexec_image;
+>  struct kimage *kexec_crash_image;
+>  int kexec_load_disabled;
+> +#ifdef CONFIG_SYSCTL
+> +static struct ctl_table kexec_core_sysctls[] = {
+> +	{
+> +		.procname	= "kexec_load_disabled",
+> +		.data		= &kexec_load_disabled,
+> +		.maxlen		= sizeof(int),
+> +		.mode		= 0644,
+> +		/* only handle a transition from default "0" to "1" */
+> +		.proc_handler	= proc_dointvec_minmax,
+> +		.extra1		= SYSCTL_ONE,
+> +		.extra2		= SYSCTL_ONE,
+> +	},
+> +	{ }
+> +};
 > +
-> +		if (get_symbol_type_name("mem_section", DWARF_INFO_GET_SYMBOL_TYPE,
-> +				NULL, &flag)
-> +		    && !(flag & TYPE_ARRAY))
-> +		        return TRUE;
-> +	} else {
->  		return FALSE;
-> +	}
->  }
+> +static int __init kexec_core_sysctl_init(void)
+> +{
+> +	register_sysctl_init("kernel", kexec_core_sysctls);
+> +	return 0;
+> +}
+> +late_initcall(kexec_core_sysctl_init);
+> +#endif
+>  
+>  /*
+>   * No panic_cpu check version of crash_kexec().  This function is called
+> diff --git a/kernel/sysctl.c b/kernel/sysctl.c
+> index b60345cbadf0..0f3cb61a2e39 100644
+> --- a/kernel/sysctl.c
+> +++ b/kernel/sysctl.c
+> @@ -61,7 +61,6 @@
+>  #include <linux/capability.h>
+>  #include <linux/binfmts.h>
+>  #include <linux/sched/sysctl.h>
+> -#include <linux/kexec.h>
+>  #include <linux/mount.h>
+>  #include <linux/userfaultfd_k.h>
+>  #include <linux/pid.h>
+> @@ -1712,18 +1711,6 @@ static struct ctl_table kern_table[] = {
+>  		.proc_handler	= tracepoint_printk_sysctl,
+>  	},
+>  #endif
+> -#ifdef CONFIG_KEXEC_CORE
+> -	{
+> -		.procname	= "kexec_load_disabled",
+> -		.data		= &kexec_load_disabled,
+> -		.maxlen		= sizeof(int),
+> -		.mode		= 0644,
+> -		/* only handle a transition from default "0" to "1" */
+> -		.proc_handler	= proc_dointvec_minmax,
+> -		.extra1		= SYSCTL_ONE,
+> -		.extra2		= SYSCTL_ONE,
+> -	},
+> -#endif
+>  #ifdef CONFIG_MODULES
+>  	{
+>  		.procname	= "modprobe",
+> -- 
+> 2.26.2
 > 
->  int
-> @@ -3704,28 +3711,24 @@ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
->  {
->  	int ret = FALSE;
->  	unsigned long *mem_sec = NULL;
-> +	unsigned long mem_section_ptr = SYMBOL(mem_section);
 > 
->  	if ((mem_sec = malloc(mem_section_size)) == NULL) {
->  		ERRMSG("Can't allocate memory for the mem_section. %s\n",
->  		    strerror(errno));
->  		return FALSE;
->  	}
-> -	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
-> -				   mem_section_size, mem_maps, num_section);
-> -
-> -	if (!ret && is_sparsemem_extreme()) {
-> -		unsigned long mem_section_ptr;
+> _______________________________________________
+> kexec mailing list
+> kexec at lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/kexec
 > 
-> +	if (is_sparsemem_extreme()) {
->  		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
->  			     sizeof(mem_section_ptr)))
->  			goto out;
-> +	}
-> 
-> -		ret = validate_mem_section(mem_sec, mem_section_ptr,
-> -				mem_section_size, mem_maps, num_section);
-> -
-> -		if (!ret)
-> +	ret = validate_mem_section(mem_sec, mem_section_ptr,
-> +		mem_section_size, mem_maps, num_section);
-> +	if (!ret)
->  			ERRMSG("Could not validate mem_section.\n");
-> -	}
->  out:
->  	if (mem_sec != NULL)
->  		free(mem_sec);
-> --
-> 
-> Thanks,
-> 
-> 	Pingfan
-> 
-> > Reported-by: Dave Wysochanski <dwysocha@redhat.com>
-> > Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
-> > ---
-> >  makedumpfile.c | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index a2f45c84cee3..65d1c7c2f02c 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -3698,6 +3698,22 @@ validate_mem_section(unsigned long *mem_sec,
-> >  	return ret;
-> >  }
-> >
-> > +/*
-> > + * SYMBOL(mem_section) varies with the combination of memory model and
-> > + * its source:
-> > + *
-> > + * SPARSEMEM
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of mem_section root array
-> > + *
-> > + * SPARSEMEM_EXTREME v1
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of mem_section root array
-> > + *
-> > + * SPARSEMEM_EXTREME v2 (with 83e3c48729d9 and a0b1280368d1) 4.15+
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of pointer to mem_section root array
-> > + */
-> >  static int
-> >  get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-> >  		unsigned int num_section)
-> > @@ -3710,12 +3726,27 @@ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-> >  		    strerror(errno));
-> >  		return FALSE;
-> >  	}
-> > +
-> > +	/*
-> > +	 * There was a report that the first validation wrongly returned TRUE
-> > +	 * with -x vmlinux and SPARSEMEM_EXTREME v2 on s390x, so skip it.
-> > +	 * Howerver, leave the fallback validation as it is for the -i option.
-> > +	 */
-> > +	if (is_sparsemem_extreme() && info->name_vmlinux) {
-> > +		unsigned long flag = 0;
-> > +		if (get_symbol_type_name("mem_section", DWARF_INFO_GET_SYMBOL_TYPE,
-> > +					NULL, &flag)
-> > +		    && !(flag & TYPE_ARRAY))
-> > +			goto skip_1st_validation;
-> > +	}
-> > +
-> >  	ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
-> >  				   mem_section_size, mem_maps, num_section);
-> >
-> >  	if (!ret && is_sparsemem_extreme()) {
-> >  		unsigned long mem_section_ptr;
-> >
-> > +skip_1st_validation:
-> >  		if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
-> >  			     sizeof(mem_section_ptr)))
-> >  			goto out;
-> > --
-> > 2.27.0
-> >
+
+
