@@ -1,34 +1,55 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Mon, 25 Apr 2022 11:40:17 +0800
-Subject: [PATCH v5 RESEND 0/3] Convert vmcore to use an iov_iter
-In-Reply-To: <20220408090636.560886-1-bhe@redhat.com>
-References: <20220408090636.560886-1-bhe@redhat.com>
-Message-ID: <YmYYIeU6qBDpCE4v@MiWiFi-R3L-srv>
+Date: Mon, 25 Apr 2022 11:49:48 +0800
+Subject: [PATCH v22 1/9] kdump: return -ENOENT if required cmdline option
+ does not exist
+In-Reply-To: <20220414115720.1887-2-thunder.leizhen@huawei.com>
+References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
+ <20220414115720.1887-2-thunder.leizhen@huawei.com>
+Message-ID: <YmYaXDrEYOXLzT5H@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Andrew,
+On 04/14/22 at 07:57pm, Zhen Lei wrote:
+> According to the current crashkernel=Y,low support in other ARCHes, it's
+> an optional command-line option. When it doesn't exist, kernel will try
+> to allocate minimum required memory below 4G automatically.
+> 
+> However, __parse_crashkernel() returns '-EINVAL' for all error cases. It
+> can't distinguish the nonexistent option from invalid option.
+> 
+> Change __parse_crashkernel() to return '-ENOENT' for the nonexistent option
+> case. With this change, crashkernel,low memory will take the default
+> value if crashkernel=,low is not specified; while crashkernel reservation
+> will fail and bail out if an invalid option is specified.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 
-On 04/08/22 at 05:06pm, Baoquan He wrote:
-> Copy the description of v3 cover letter from Willy:
-> ===
-> For some reason several people have been sending bad patches to fix
-> compiler warnings in vmcore recently.  Here's how it should be done.
-> Compile-tested only on x86.  As noted in the first patch, s390 should
-> take this conversion a bit further, but I'm not inclined to do that
-> work myself.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Ping!
-
-This patchset has got one ack, can we merge it now?
-
-The lkp reported issue is not related to this patchset, but an existed
-one. We can fix it in another patch.
-
-Thanks
-Baoquan
+> ---
+>  kernel/crash_core.c | 3 +--
+>  1 file changed, 1 insertion(+), 2 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 256cf6db573cd09..4d57c03714f4e13 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
+>  	*crash_base = 0;
+>  
+>  	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
+> -
+>  	if (!ck_cmdline)
+> -		return -EINVAL;
+> +		return -ENOENT;
+>  
+>  	ck_cmdline += strlen(name);
+>  
+> -- 
+> 2.25.1
+> 
 
 
