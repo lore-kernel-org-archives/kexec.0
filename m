@@ -1,229 +1,149 @@
-From: Borislav Petkov <bp@alien8.de>
-Date: Mon, 25 Apr 2022 21:25:40 +0200
-Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <cc7a6b5c-954c-54fe-be5f-324dc984ac51@oracle.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-3-eric.devolder@oracle.com>
- <Ylgot+LUDQl+G/5N@zn.tnic>
- <f3ea7ee0-1cb8-6928-d0af-4c2fc63a42a4@oracle.com>
- <Yl6PueNCZZeobMWr@zn.tnic>
- <cc7a6b5c-954c-54fe-be5f-324dc984ac51@oracle.com>
-Message-ID: <Ymb1tBJsch/TB2ph@zn.tnic>
+From: Mohamed Abuelfotoh, Hazem <abuehaze@amazon.com>
+Date: Mon, 25 Apr 2022 20:49:40 +0000
+Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
+ to 32k
+In-Reply-To: <CEAC6AFC-4D7A-4F5B-8B32-8E70B2677A97@amazon.com>
+References: <20220419172327.11288-1-abuehaze@amazon.com>
+ <9DCE6E84-37DB-49D4-B87C-B49963C68621@amazon.com>
+ <CEAC6AFC-4D7A-4F5B-8B32-8E70B2677A97@amazon.com>
+Message-ID: <E67277A8-534D-4506-96A4-E71AF8CC966D@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue, Apr 19, 2022 at 04:58:47PM -0500, Eric DeVolder wrote:
-> So in taking this concept and looking at, in particular, patch 4/8
-> "crash: add generic infrastructure for crash hotplug support", I'm not
-> exactly sure how to apply this technique.
+Ping!
 
-So I took your patch 4 and maimed into what I think it should look like,
-see below.
+?On 19/04/2022, 19:48, "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com> wrote:
 
-Now there's a single ifdef there and the registration routines are
-wrapped in IS_ENABLED() so that you register a callback only when the
-respective stuff - HOTPLUG_CPU or MEMORY_HOTPLUG - is enabled. Otherwise
-the couple of functions are unused but that's not that big of a deal.
+    Adding Simon to the thread.
 
-I've also fixed up some other issues I've encountered along the way.
+    Thank you.
 
-Holler if there are questions.
+    Hazem
 
-HTH.
+    On 19/04/2022, 19:36, "Mohamed Abuelfotoh, Hazem" <abuehaze@amazon.com> wrote:
 
----
-diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-index de62a722431e..b3c32e04d3f0 100644
---- a/include/linux/crash_core.h
-+++ b/include/linux/crash_core.h
-@@ -84,4 +84,12 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
- int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
- 		unsigned long long *crash_size, unsigned long long *crash_base);
- 
-+#define KEXEC_CRASH_HP_REMOVE_CPU	0
-+#define KEXEC_CRASH_HP_ADD_CPU		1
-+#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
-+#define KEXEC_CRASH_HP_ADD_MEMORY	3
-+
-+struct kimage;
-+void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
-+				     unsigned int cpu);
- #endif /* LINUX_CRASH_CORE_H */
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 02daff1f47dd..d907a1f0d3da 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -307,13 +307,11 @@ struct kimage {
- 	/* Information for loading purgatory */
- 	struct purgatory_info purgatory_info;
- 
--#ifdef CONFIG_CRASH_HOTPLUG
- 	bool hotplug_event;
- 	unsigned int offlinecpu;
- 	bool elfcorehdr_index_valid;
- 	int elfcorehdr_index;
- #endif
--#endif
- 
- #ifdef CONFIG_IMA_KEXEC
- 	/* Virtual address of IMA measurement buffer for kexec syscall */
-@@ -329,15 +327,6 @@ struct kimage {
- 	unsigned long elf_load_addr;
- };
- 
--#ifdef CONFIG_CRASH_HOTPLUG
--void arch_crash_hotplug_handler(struct kimage *image,
--	unsigned int hp_action, unsigned int cpu);
--#define KEXEC_CRASH_HP_REMOVE_CPU   0
--#define KEXEC_CRASH_HP_ADD_CPU      1
--#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
--#define KEXEC_CRASH_HP_ADD_MEMORY   3
--#endif /* CONFIG_CRASH_HOTPLUG */
--
- /* kexec interface functions */
- extern void machine_kexec(struct kimage *image);
- extern int machine_kexec_prepare(struct kimage *image);
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index ecf746243ab2..a6c4ee1d5c86 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -497,57 +497,50 @@ static int __init crash_save_vmcoreinfo_init(void)
- 
- subsys_initcall(crash_save_vmcoreinfo_init);
- 
--#ifdef CONFIG_CRASH_HOTPLUG
--void __weak arch_crash_hotplug_handler(struct kimage *image,
--	unsigned int hp_action, unsigned int cpu)
-+void __weak arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
-+					    unsigned int cpu)
- {
--	pr_warn("crash hp: %s not implemented", __func__);
-+	WARN(1, "crash hotplug handler not implemented");
- }
- 
--static void crash_hotplug_handler(unsigned int hp_action,
--	unsigned int cpu)
-+#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-+static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
- {
--	/* Obtain lock while changing crash information */
--	if (!mutex_trylock(&kexec_mutex))
-+	if (!kexec_crash_image)
- 		return;
- 
--	/* Check kdump is loaded */
--	if (kexec_crash_image) {
--		pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
-+	mutex_lock(&kexec_mutex);
- 
--		/* Needed in order for the segments to be updated */
--		arch_kexec_unprotect_crashkres();
-+	pr_debug("crash hotplug: hp_action %u, cpu %u", hp_action, cpu);
- 
--		/* Flag to differentiate between normal load and hotplug */
--		kexec_crash_image->hotplug_event = true;
-+	/* Needed in order for the segments to be updated */
-+	arch_kexec_unprotect_crashkres();
- 
--		/* Now invoke arch-specific update handler */
--		arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
-+	/* Flag to differentiate between normal load and hotplug */
-+	kexec_crash_image->hotplug_event = true;
- 
--		/* No longer handling a hotplug event */
--		kexec_crash_image->hotplug_event = false;
-+	/* Now invoke arch-specific update handler */
-+	arch_crash_handle_hotplug_event(kexec_crash_image, hp_action, cpu);
- 
--		/* Change back to read-only */
--		arch_kexec_protect_crashkres();
--	}
-+	/* No longer handling a hotplug event */
-+	kexec_crash_image->hotplug_event = false;
-+
-+	/* Change back to read-only */
-+	arch_kexec_protect_crashkres();
- 
- 	/* Release lock now that update complete */
- 	mutex_unlock(&kexec_mutex);
- }
- 
--#if defined(CONFIG_MEMORY_HOTPLUG)
--static int crash_memhp_notifier(struct notifier_block *nb,
--	unsigned long val, void *v)
-+static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
- {
--	struct memory_notify *mhp = v;
--
- 	switch (val) {
- 	case MEM_ONLINE:
--		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
-+		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
- 		break;
- 
- 	case MEM_OFFLINE:
--		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
-+		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
- 		break;
- 	}
- 	return NOTIFY_OK;
-@@ -557,38 +550,33 @@ static struct notifier_block crash_memhp_nb = {
- 	.notifier_call = crash_memhp_notifier,
- 	.priority = 0
- };
--#endif
- 
--#if defined(CONFIG_HOTPLUG_CPU)
- static int crash_cpuhp_online(unsigned int cpu)
- {
--	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
-+	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
- 	return 0;
- }
- 
- static int crash_cpuhp_offline(unsigned int cpu)
- {
--	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-+	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
- 	return 0;
- }
--#endif
- 
- static int __init crash_hotplug_init(void)
- {
- 	int result = 0;
- 
--#if defined(CONFIG_MEMORY_HOTPLUG)
--	register_memory_notifier(&crash_memhp_nb);
--#endif
-+	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-+		register_memory_notifier(&crash_memhp_nb);
- 
--#if defined(CONFIG_HOTPLUG_CPU)
--	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
--				"crash/cpuhp",
--				crash_cpuhp_online, crash_cpuhp_offline);
--#endif
-+	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-+		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-+						   "crash/cpuhp",
-+						   crash_cpuhp_online,
-+						   crash_cpuhp_offline);
- 
- 	return result;
- }
--
- subsys_initcall(crash_hotplug_init);
--#endif /* CONFIG_CRASH_HOTPLUG */
-+#endif
+        Hey Team,
 
--- 
-Regards/Gruss,
-    Boris.
+        - I am sending this e-mail for more context about the previous submitted patch, we are seeing an issue on aarch64 based EC2 instances where kdump will load failing showing "Number of crash memory ranges excedeed the max limit"  if the amount of memory hotplugged to the instance reach 32 GB while is 32 * 1GB memory blocks as shown below. It looks like we are hitting the CRASH_MAX_MEMORY_RANGES limit which is 32 on aarch64 compared to around 2k before been increased to 32K on x86 as mentioned in https://www.spinics.net/lists/kexec/msg26574.html . so when we hotplug a new memory region there is kexec udev rules configured to reload kdump for updating the elfcorehdr note info for memory bank/cpu changes that  works fine until we hit the CRASH_MAX_MEMORY_RANGES limit then we are seeing kdump load failure as shown below.
 
-https://people.kernel.org/tglx/notes-about-netiquette
+
+        [root at ip-xx-xx-xx-xx ec2-user]# echo 0x0000000b80000000  > /sys/devices/system/memory/probe 
+        [root at ip-xx-xx-xx-xx ec2-user]# lsmem 
+        RANGE                                 SIZE  STATE REMOVABLE BLOCK
+        0x0000000040000000-0x000000007fffffff   1G online       yes     1
+        0x0000000400000000-0x00000004bfffffff   3G online       yes 16-18
+        0x0000000500000000-0x0000000bbfffffff  27G online       yes 20-46
+
+        Memory block size:         1G
+        Total online memory:      31G
+        Total offline memory:      0B
+
+        [root at ip-xx-xx-xx-xx ec2-user]# service kdump status 
+        Redirecting to /bin/systemctl status kdump.service
+        ? kdump.service - Crash recovery kernel arming
+           Loaded: loaded (/usr/lib/systemd/system/kdump.service; enabled; vendor preset: enabled)
+           Active: active (exited) since Fri 2022-04-15 22:16:34 UTC; 9s ago
+          Process: 6185 ExecStop=/usr/bin/kdumpctl stop (code=exited, status=0/SUCCESS)
+          Process: 6194 ExecStart=/usr/bin/kdumpctl start (code=exited, status=0/SUCCESS)
+         Main PID: 6194 (code=exited, status=0/SUCCESS)
+
+        Apr 15 22:16:33 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Starting Crash recovery kernel arming...
+        Apr 15 22:16:34 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6194]: kexec: loaded kdump kernel
+        Apr 15 22:16:34 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Started Crash recovery kernel arming.
+        Apr 15 22:16:34 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6194]: Starting kdump: [OK]
+        [root at ip-xx-xx-xx-xx ec2-user]# echo 0x0000000bc0000000  > /sys/devices/system/memory/probe 
+
+        [root at ip-xx-xx-xx-xx ec2-user]# lsmem 
+        RANGE                                 SIZE  STATE REMOVABLE BLOCK
+        0x0000000040000000-0x000000007fffffff   1G online       yes     1
+        0x0000000400000000-0x00000004bfffffff   3G online       yes 16-18
+        0x0000000500000000-0x0000000bffffffff  28G online       yes 20-47
+
+        Memory block size:         1G
+        Total online memory:      32G
+        Total offline memory:      0B
+
+        [root at ip-xx-xx-xx-xx ec2-user]# service kdump status 
+        Redirecting to /bin/systemctl status kdump.service
+        ? kdump.service - Crash recovery kernel arming
+           Loaded: loaded (/usr/lib/systemd/system/kdump.service; enabled; vendor preset: enabled)
+           Active: failed (Result: exit-code) since Fri 2022-04-15 22:17:14 UTC; 1s ago
+          Process: 6362 ExecStop=/usr/bin/kdumpctl stop (code=exited, status=0/SUCCESS)
+          Process: 6371 ExecStart=/usr/bin/kdumpctl start (code=exited, status=1/FAILURE)
+         Main PID: 6371 (code=exited, status=1/FAILURE)
+
+        Apr 15 22:17:13 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Starting Crash recovery kernel arming...
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6371]: Error: Number of crash memory ranges excedeed the max limit
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6371]: kexec: load failed.
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6371]: Cannot load /boot/vmlinuz-5.10.102-99.473.amzn2.aarch64
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6371]: kexec: failed to load kdump kernel
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[6371]: Starting kdump: [FAILED]
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: kdump.service: main process exited, code=exited, status=1/FAILURE
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Failed to start Crash recovery kernel arming.
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Unit kdump.service entered failed state.
+        Apr 15 22:17:14 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: kdump.service failed.
+
+
+        - With the proposed patch, I am able to hotplug 256 GB of memory to the EC2 instance and kdump is working appropriately. 
+
+        [root at ip-xx-xx-xx-xx ec2-user]# lsmem 
+        RANGE                                  SIZE  STATE REMOVABLE  BLOCK
+        0x0000000040000000-0x000000007fffffff    1G online       yes      1
+        0x0000000400000000-0x00000004bfffffff    3G online       yes  16-18
+        0x0000000500000000-0x000000433fffffff  249G online       yes 20-268
+
+        Memory block size:         1G
+        Total online memory:     253G
+        Total offline memory:      0B
+        [root at ip-172-31-1-51 ec2-user]# service kdump status 
+        Redirecting to /bin/systemctl status kdump.service
+        ? kdump.service - Crash recovery kernel arming
+           Loaded: loaded (/usr/lib/systemd/system/kdump.service; enabled; vendor preset: enabled)
+           Active: active (exited) since Sat 2022-04-16 01:10:38 UTC; 32s ago
+          Process: 15653 ExecStop=/usr/bin/kdumpctl stop (code=exited, status=0/SUCCESS)
+          Process: 15662 ExecStart=/usr/bin/kdumpctl start (code=exited, status=0/SUCCESS)
+         Main PID: 15662 (code=exited, status=0/SUCCESS)
+
+        Apr 16 01:10:37 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Starting Crash recovery kernel arming...
+        Apr 16 01:10:38 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[15662]: kexec: loaded kdump kernel
+        Apr 16 01:10:38 ip-xx-xx-xx-xx.eu-west-1.compute.internal kdumpctl[15662]: Starting kdump: [OK]
+        Apr 16 01:10:38 ip-xx-xx-xx-xx.eu-west-1.compute.internal systemd[1]: Started Crash recovery kernel arming.
+
+
+        On 19/04/2022, 19:23, "abuehaze14" <abuehaze@amazon.com> wrote:
+
+            On ARM64 based VMs hotplugging more than 31GB of memory will cause
+            kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
+            limit which is currently 32 on ARM64 given that the  memory block size
+            is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
+            to 32K similar to what we have on x86, this should allow
+            kdump to work until the VM has 32TB which should be
+            enough for a long time.
+
+            Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+            ---
+             kexec/arch/arm64/crashdump-arm64.h | 2 +-
+             1 file changed, 1 insertion(+), 1 deletion(-)
+
+            diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+            index 12f4308..82fa69b 100644
+            --- a/kexec/arch/arm64/crashdump-arm64.h
+            +++ b/kexec/arch/arm64/crashdump-arm64.h
+            @@ -14,7 +14,7 @@
+
+             #include "kexec.h"
+
+            -#define CRASH_MAX_MEMORY_RANGES	32
+            +#define CRASH_MAX_MEMORY_RANGES	32768
+
+             /* crash dump kernel support at most two regions, low_region and high region. */
+             #define CRASH_MAX_RESERVED_RANGES	2
+            -- 
+            2.32.0
+
+
+
 
