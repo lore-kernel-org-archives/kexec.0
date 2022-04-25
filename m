@@ -1,38 +1,59 @@
-From: lizhe <sensor1010@163.com>
-Date: Mon, 25 Apr 2022 08:38:57 -0700
-Subject: [PATCH] kernel/crash_core.c : Remove redundant checks for ck_cmdline
- is NULL
-Message-ID: <20220425153857.21922-1-sensor1010@163.com>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Date: Mon, 25 Apr 2022 23:11:28 +0530
+Subject: [PATCH] kexec_file: Drop pr_err in weak implementations of
+ arch_kexec_apply_relocations[_add]
+Message-ID: <20220425174128.11455-1-naveen.n.rao@linux.vnet.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
- When ck_cmdline is NULL, the only caller of get_last_crashkernel()
- has already done non-NULL check(see __parse_crashkernel()),
- so it doesn't make any sense to make a check here
+kexec_load_purgatory() can fail for many reasons - there is no need to
+print an error when encountering unsupported relocations.
 
-Signed-off-by: lizhe <sensor1010@163.com>
+This solves a build issue on powerpc with binutils v2.36 and newer [1].
+Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
+symbols") [2], binutils started dropping section symbols that it thought
+were unused.  This isn't an issue in general, but with kexec_file.c, gcc
+is placing kexec_arch_apply_relocations[_add] into a separate
+.text.unlikely section and the section symbol ".text.unlikely" is being
+dropped. Due to this, recordmcount is unable to find a non-weak symbol
+in .text.unlikely to generate a relocation record against. Dropping
+pr_err() calls results in these functions being left in .text section,
+enabling recordmcount to emit a proper relocation record.
+
+[1] https://github.com/linuxppc/issues/issues/388
+[2] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
+
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 ---
- kernel/crash_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+ kernel/kexec_file.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 256cf6db573c..c232f01a2c54 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -222,9 +222,6 @@ static __init char *get_last_crashkernel(char *cmdline,
- 		p = strstr(p+1, name);
- 	}
- 
--	if (!ck_cmdline)
--		return NULL;
--
- 	return ck_cmdline;
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 8347fc158d2b96..55d144c58b5278 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -121,7 +121,6 @@ int __weak
+ arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
+ 				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+ {
+-	pr_err("RELA relocation unsupported.\n");
+ 	return -ENOEXEC;
  }
  
+@@ -138,7 +137,6 @@ int __weak
+ arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
+ 			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+ {
+-	pr_err("REL relocation unsupported.\n");
+ 	return -ENOEXEC;
+ }
+ 
+
+base-commit: 83d8a0d166119de813cad27ae7d61f54f9aea707
 -- 
-2.25.1
+2.35.1
 
 
