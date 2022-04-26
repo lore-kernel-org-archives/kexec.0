@@ -1,12 +1,13 @@
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Tue, 26 Apr 2022 09:17:46 +0530
-Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config
- option CRASH_HOTPLUG
-In-Reply-To: <874k2mfz5t.fsf@mpe.ellerman.id.au>
-References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
- <20220411084357.157308-3-sourabhjain@linux.ibm.com>
- <874k2mfz5t.fsf@mpe.ellerman.id.au>
-Message-ID: <3cbf4010-cbbc-e357-21a0-f50f829097b4@linux.ibm.com>
+Date: Tue, 26 Apr 2022 09:36:59 +0530
+Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-5-eric.devolder@oracle.com>
+ <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
+ <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
+Message-ID: <6f3a6cbb-0ac4-f178-fc17-18f9594da319@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -14,47 +15,157 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 
-On 21/04/22 17:04, Michael Ellerman wrote:
-> Sourabh Jain <sourabhjain@linux.ibm.com> writes:
->> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
->> hotplug events.
->>
->> All the updates needed on the capture kernel load path in the kernel for
->> both kexec_load and kexec_file_load system will be kept under this config.
->>
->> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->> Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
->> ---
->>   arch/powerpc/Kconfig | 11 +++++++++++
->>   1 file changed, 11 insertions(+)
->>
->> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->> index b779603978e1..777db33f75b5 100644
->> --- a/arch/powerpc/Kconfig
->> +++ b/arch/powerpc/Kconfig
->> @@ -623,6 +623,17 @@ config FA_DUMP
->>   	  If unsure, say "y". Only special kernels like petitboot may
->>   	  need to say "N" here.
->>   
->> +config CRASH_HOTPLUG
->> +	bool "kernel updates of crash kexec segments"
->> +	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
->> +	help
->> +	  An efficient way to keep the capture kernel up-to-date with CPU
->> +	  hotplug events. On CPU hotplug event the kexec segments of capture
->> +	  kernel becomes stale and need to be updated with latest CPU data.
->> +	  In this method the kernel performs minimal update to only relevant
->> +	  kexec segments on CPU hotplug event, instead of triggering full
->> +	  capture kernel reload from userspace using udev rule.
-> Why would a user ever want to turn this off?
+On 15/04/22 03:59, Eric DeVolder wrote:
+> Hi Baoquan,
+> Inline comments below.
+> Thanks!
+> eric
 >
-> Seems to me we should just make it always behave this way, and not have
-> a CONFIG option at all.
+> On 4/13/22 21:45, Baoquan He wrote:
+>> On 04/13/22 at 12:42pm, Eric DeVolder wrote:
+>>> Upon CPU and memory changes, a generic crash_hotplug_handler()
+>>> dispatches the hot plug/unplug event to the architecture specific
+>>> arch_crash_hotplug_handler(). During the process, the kexec_mutex
+>>> is held.
+>>>
+>>> To support cpu hotplug, a callback is registered to capture the
+>>> CPUHP_AP_ONLINE_DYN online and ofline events via
+>>> cpuhp_setup_state_nocalls().
+>>>
+>>> To support memory hotplug, a notifier is registered to capture the
+>>> MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+>>>
+>>> The cpu callback and memory notifier then call crash_hotplug_handler()
+>>> to handle the hot plug/unplug event.
+>>>
+>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>>> ---
+>>> ? include/linux/kexec.h |? 16 +++++++
+>>> ? kernel/crash_core.c?? | 101 
+>>> ++++++++++++++++++++++++++++++++++++++++++
+>>> ? 2 files changed, 117 insertions(+)
+>>>
+>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>>> index f93f2591fc1e..02daff1f47dd 100644
+>>> --- a/include/linux/kexec.h
+>>> +++ b/include/linux/kexec.h
+>>> @@ -306,6 +306,13 @@ struct kimage {
+>>> ? ????? /* Information for loading purgatory */
+>>> ????? struct purgatory_info purgatory_info;
+>>> +
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +??? bool hotplug_event;
+>>> +??? unsigned int offlinecpu;
+>>> +??? bool elfcorehdr_index_valid;
+>>> +??? int elfcorehdr_index;
+>>> +#endif
+>>> ? #endif
+>>> ? ? #ifdef CONFIG_IMA_KEXEC
+>>> @@ -322,6 +329,15 @@ struct kimage {
+>>> ????? unsigned long elf_load_addr;
+>>> ? };
+>>> ? +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +void arch_crash_hotplug_handler(struct kimage *image,
+>>> +??? unsigned int hp_action, unsigned int cpu);
+>>> +#define KEXEC_CRASH_HP_REMOVE_CPU?? 0
+>>> +#define KEXEC_CRASH_HP_ADD_CPU????? 1
+>>> +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
+>>> +#define KEXEC_CRASH_HP_ADD_MEMORY?? 3
+>>> +#endif /* CONFIG_CRASH_HOTPLUG */
+>>> +
+>>> ? /* kexec interface functions */
+>>> ? extern void machine_kexec(struct kimage *image);
+>>> ? extern int machine_kexec_prepare(struct kimage *image);
+>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+>>> index 256cf6db573c..ecf746243ab2 100644
+>>> --- a/kernel/crash_core.c
+>>> +++ b/kernel/crash_core.c
+>>> @@ -9,12 +9,17 @@
+>>> ? #include <linux/init.h>
+>>> ? #include <linux/utsname.h>
+>>> ? #include <linux/vmalloc.h>
+>>> +#include <linux/highmem.h>
+>>> +#include <linux/memory.h>
+>>> +#include <linux/cpuhotplug.h>
+>>> ? ? #include <asm/page.h>
+>>> ? #include <asm/sections.h>
+>>> ? ? #include <crypto/sha1.h>
+>>> ? +#include "kexec_internal.h"
+>>> +
+>>> ? /* vmcoreinfo stuff */
+>>> ? unsigned char *vmcoreinfo_data;
+>>> ? size_t vmcoreinfo_size;
+>>> @@ -491,3 +496,99 @@ static int __init crash_save_vmcoreinfo_init(void)
+>>> ? }
+>>> ? ? subsys_initcall(crash_save_vmcoreinfo_init);
+>>> +
+>>> +#ifdef CONFIG_CRASH_HOTPLUG
+>>> +void __weak arch_crash_hotplug_handler(struct kimage *image,
+>>> +??? unsigned int hp_action, unsigned int cpu)
+>>> +{
+>>> +??? pr_warn("crash hp: %s not implemented", __func__);
+>>> +}
+>>> +
+>>> +static void crash_hotplug_handler(unsigned int hp_action,
+>>> +??? unsigned int cpu)
+>>> +{
+>>> +??? /* Obtain lock while changing crash information */
+>>> +??? if (!mutex_trylock(&kexec_mutex))
+>>> +??????? return;
+>>> +
+>>> +??? /* Check kdump is loaded */
+>>> +??? if (kexec_crash_image) {
+>>> +??????? pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
+>>> +
+>>> +??????? /* Needed in order for the segments to be updated */
+>>> +??????? arch_kexec_unprotect_crashkres();
+>>> +
+>>> +??????? /* Flag to differentiate between normal load and hotplug */
+>>> +??????? kexec_crash_image->hotplug_event = true;
+>>> +
+>>> +??????? /* Now invoke arch-specific update handler */
+>>> +??????? arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
+>>> +
+>>> +??????? /* No longer handling a hotplug event */
+>>> +??????? kexec_crash_image->hotplug_event = false;
+>>> +
+>>> +??????? /* Change back to read-only */
+>>> +??????? arch_kexec_protect_crashkres();
+>>> +??? }
+>>> +
+>>> +??? /* Release lock now that update complete */
+>>> +??? mutex_unlock(&kexec_mutex);
+>>> +}
+>>> +
+>>> +#if defined(CONFIG_MEMORY_HOTPLUG)
+>>> +static int crash_memhp_notifier(struct notifier_block *nb,
+>>> +??? unsigned long val, void *v)
+>>> +{
+>>> +??? struct memory_notify *mhp = v;
+>>> +
+>>> +??? switch (val) {
+>>> +??? case MEM_ONLINE:
+>>> +??????? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+>> We don't differentiate the memory add/remove, cpu add, except of cpu
+>> remove. Means the hp_action only differentiate cpu remove from the other
+>> action. Maybe only making two types?
+>>
+>> #define KEXEC_CRASH_HP_REMOVE_CPU?? 0
+>> #define KEXEC_CRASH_HP_UPDATE_OTHER????? 1
+>>
+> Sourabh Jain's work with PPC uses REMOVE_CPU, REMOVE_MEMORY, and 
+> ADD_MEMORY.
+> Do you still want to consolidate these?
 
+On PowerPC different actions are needed for CPU add and memory add/remove.
+For CPU add case only FDT is updated whereas for the memory hotplug we 
+will be
+updating FDT and elfcorehdr.
 
-Yes, we don't need a new CONFIG option. Thanks for the suggestion.
-
+Ideally, I would prefer the crash hotplug handler to report all four 
+actions separately.
 
 Thanks,
 Sourabh Jain
+
 
