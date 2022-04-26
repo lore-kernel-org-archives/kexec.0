@@ -1,59 +1,60 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Tue, 26 Apr 2022 08:14:15 +0800
-Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
- to 32k
-In-Reply-To: <20220419172327.11288-1-abuehaze@amazon.com>
-References: <20220419172327.11288-1-abuehaze@amazon.com>
-Message-ID: <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Tue, 26 Apr 2022 09:17:46 +0530
+Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config
+ option CRASH_HOTPLUG
+In-Reply-To: <874k2mfz5t.fsf@mpe.ellerman.id.au>
+References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
+ <20220411084357.157308-3-sourabhjain@linux.ibm.com>
+ <874k2mfz5t.fsf@mpe.ellerman.id.au>
+Message-ID: <3cbf4010-cbbc-e357-21a0-f50f829097b4@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/19/22 at 05:23pm, abuehaze14 wrote:
-> On ARM64 based VMs hotplugging more than 31GB of memory will cause
-> kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
-> limit which is currently 32 on ARM64 given that the  memory block size
-> is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
-> to 32K similar to what we have on x86, this should allow
-> kdump to work until the VM has 32TB which should be
-> enough for a long time.
-> 
-> Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
 
-Sounds reasonable.
+On 21/04/22 17:04, Michael Ellerman wrote:
+> Sourabh Jain <sourabhjain@linux.ibm.com> writes:
+>> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
+>> hotplug events.
+>>
+>> All the updates needed on the capture kernel load path in the kernel for
+>> both kexec_load and kexec_file_load system will be kept under this config.
+>>
+>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+>> Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
+>> ---
+>>   arch/powerpc/Kconfig | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
+>> index b779603978e1..777db33f75b5 100644
+>> --- a/arch/powerpc/Kconfig
+>> +++ b/arch/powerpc/Kconfig
+>> @@ -623,6 +623,17 @@ config FA_DUMP
+>>   	  If unsure, say "y". Only special kernels like petitboot may
+>>   	  need to say "N" here.
+>>   
+>> +config CRASH_HOTPLUG
+>> +	bool "kernel updates of crash kexec segments"
+>> +	depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
+>> +	help
+>> +	  An efficient way to keep the capture kernel up-to-date with CPU
+>> +	  hotplug events. On CPU hotplug event the kexec segments of capture
+>> +	  kernel becomes stale and need to be updated with latest CPU data.
+>> +	  In this method the kernel performs minimal update to only relevant
+>> +	  kexec segments on CPU hotplug event, instead of triggering full
+>> +	  capture kernel reload from userspace using udev rule.
+> Why would a user ever want to turn this off?
+>
+> Seems to me we should just make it always behave this way, and not have
+> a CONFIG option at all.
 
-Acked-by: Baoquan He <bhe@redhat.com>
 
-By the way, Simon usually collects kexec-tools patches every one to two
-weeks, no need to always ping in a short time.
+Yes, we don't need a new CONFIG option. Thanks for the suggestion.
 
-> ---
->  kexec/arch/arm64/crashdump-arm64.h | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-> index 12f4308..82fa69b 100644
-> --- a/kexec/arch/arm64/crashdump-arm64.h
-> +++ b/kexec/arch/arm64/crashdump-arm64.h
-> @@ -14,7 +14,7 @@
->  
->  #include "kexec.h"
->  
-> -#define CRASH_MAX_MEMORY_RANGES	32
-> +#define CRASH_MAX_MEMORY_RANGES	32768
->  
->  /* crash dump kernel support at most two regions, low_region and high region. */
->  #define CRASH_MAX_RESERVED_RANGES	2
-> -- 
-> 2.32.0
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec at lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
-> 
 
+Thanks,
+Sourabh Jain
 
