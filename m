@@ -1,65 +1,232 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Tue, 26 Apr 2022 19:02:46 +0100
-Subject: [PATCH v22 5/9] arm64: kdump: Reimplement crashkernel=X
-In-Reply-To: <20220414115720.1887-6-thunder.leizhen@huawei.com>
-References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
- <20220414115720.1887-6-thunder.leizhen@huawei.com>
-Message-ID: <YmgzxsrrMlCDYsWp@arm.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Tue, 26 Apr 2022 15:08:26 -0500
+Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
+ and memory hotplug
+In-Reply-To: <Ymb1tBJsch/TB2ph@zn.tnic>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-3-eric.devolder@oracle.com> <Ylgot+LUDQl+G/5N@zn.tnic>
+ <f3ea7ee0-1cb8-6928-d0af-4c2fc63a42a4@oracle.com> <Yl6PueNCZZeobMWr@zn.tnic>
+ <cc7a6b5c-954c-54fe-be5f-324dc984ac51@oracle.com> <Ymb1tBJsch/TB2ph@zn.tnic>
+Message-ID: <0aee5cd1-eb8c-f778-c6e5-7f5ca3624d15@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, Apr 14, 2022 at 07:57:16PM +0800, Zhen Lei wrote:
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
->   * This function reserves memory area given in "crashkernel=" kernel command
->   * line parameter. The memory reserved is used by dump capture kernel when
->   * primary kernel is crashing.
-> + *
-> + * NOTE: Reservation of crashkernel,low is special since its existence
-> + * is not independent, need rely on the existence of crashkernel,high.
-> + * Here, four cases of crashkernel low memory reservation are summarized:
-> + * 1) crashkernel=Y,low is specified explicitly, the size of crashkernel low
-> + *    memory takes Y;
-> + * 2) crashkernel=,low is not given, while crashkernel=,high is specified,
-> + *    take the default crashkernel low memory size;
-> + * 3) crashkernel=X is specified, while fallback to get a memory region
-> + *    in high memory, take the default crashkernel low memory size;
-> + * 4) crashkernel='invalid value',low is specified, failed the whole
-> + *    crashkernel reservation and bail out.
+Boris,
+Many thanks for the time taken to illustrate for me!
+I've one question below.
+Eric
 
-Following the x86 behaviour made sense when we were tried to get that
-code generic. Now that we moved the logic under arch/arm64, we can
-diverge a bit. I lost track of the original (v1/v2) proposal but I
-wonder whether we still need the fallback to high for crashkernel=Y.
-Maybe simpler, no fallbacks:
+On 4/25/22 14:25, Borislav Petkov wrote:
+> On Tue, Apr 19, 2022 at 04:58:47PM -0500, Eric DeVolder wrote:
+>> So in taking this concept and looking at, in particular, patch 4/8
+>> "crash: add generic infrastructure for crash hotplug support", I'm not
+>> exactly sure how to apply this technique.
+> 
+> So I took your patch 4 and maimed into what I think it should look like,
+> see below.
+> 
+> Now there's a single ifdef there and the registration routines are
+> wrapped in IS_ENABLED() so that you register a callback only when the
+> respective stuff - HOTPLUG_CPU or MEMORY_HOTPLUG - is enabled. Otherwise
+> the couple of functions are unused but that's not that big of a deal.
+> 
+> I've also fixed up some other issues I've encountered along the way.
+> 
+> Holler if there are questions.
+> 
+> HTH.
+> 
+> ---
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index de62a722431e..b3c32e04d3f0 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -84,4 +84,12 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>   int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>   		unsigned long long *crash_size, unsigned long long *crash_base);
+>   
+> +#define KEXEC_CRASH_HP_REMOVE_CPU	0
+> +#define KEXEC_CRASH_HP_ADD_CPU		1
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
+> +#define KEXEC_CRASH_HP_ADD_MEMORY	3
+> +
+> +struct kimage;
+> +void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
+> +				     unsigned int cpu);
+>   #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index 02daff1f47dd..d907a1f0d3da 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -307,13 +307,11 @@ struct kimage {
+>   	/* Information for loading purgatory */
+>   	struct purgatory_info purgatory_info;
+>   
+> -#ifdef CONFIG_CRASH_HOTPLUG
+>   	bool hotplug_event;
+>   	unsigned int offlinecpu;
+>   	bool elfcorehdr_index_valid;
+>   	int elfcorehdr_index;
+>   #endif
+> -#endif
+>   
+>   #ifdef CONFIG_IMA_KEXEC
+>   	/* Virtual address of IMA measurement buffer for kexec syscall */
+> @@ -329,15 +327,6 @@ struct kimage {
+>   	unsigned long elf_load_addr;
+>   };
+>   
+> -#ifdef CONFIG_CRASH_HOTPLUG
+> -void arch_crash_hotplug_handler(struct kimage *image,
+> -	unsigned int hp_action, unsigned int cpu);
+> -#define KEXEC_CRASH_HP_REMOVE_CPU   0
+> -#define KEXEC_CRASH_HP_ADD_CPU      1
+> -#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
+> -#define KEXEC_CRASH_HP_ADD_MEMORY   3
+> -#endif /* CONFIG_CRASH_HOTPLUG */
+> -
+>   /* kexec interface functions */
+>   extern void machine_kexec(struct kimage *image);
+>   extern int machine_kexec_prepare(struct kimage *image);
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index ecf746243ab2..a6c4ee1d5c86 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -497,57 +497,50 @@ static int __init crash_save_vmcoreinfo_init(void)
+>   
+>   subsys_initcall(crash_save_vmcoreinfo_init);
+>   
+> -#ifdef CONFIG_CRASH_HOTPLUG
+> -void __weak arch_crash_hotplug_handler(struct kimage *image,
+> -	unsigned int hp_action, unsigned int cpu)
+> +void __weak arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
+> +					    unsigned int cpu)
+>   {
+> -	pr_warn("crash hp: %s not implemented", __func__);
+> +	WARN(1, "crash hotplug handler not implemented");
+>   }
+>   
+> -static void crash_hotplug_handler(unsigned int hp_action,
+> -	unsigned int cpu)
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+>   {
+> -	/* Obtain lock while changing crash information */
+> -	if (!mutex_trylock(&kexec_mutex))
+> +	if (!kexec_crash_image)
+>   		return;
+Why is it safe to examine kexec_crash_image outside the mutex? As I understand it, there is still 
+the (very rare) opportunity for a kdump load/unload initiated via userland and this check to 
+collide. (Similarly, I believe the mutex entry is almost always assured/likely.)
 
-	crashkernel=Y - keep the current behaviour, ignore high,low
-	crashkernel=Y,high - allocate above ZONE_DMA
-	crashkernel=Y,low - allocate within ZONE_DMA
-
-From your proposal, the difference is that the Y,high option won't
-have any default ZONE_DMA fallback, one would have to explicitly pass
-the Y,low option if needed.
-
-Just a thought, maybe it makes the code simpler. But I'm open to
-discussion if there are good arguments for the proposed (x86-like)
-behaviour. One argument could be for crashkernel=Y to fall back to high
-if distros don't want to bother with high/low settings.
-
-Another thing I may have asked in the past, what happens if we run a new
-kernel with these patches with old kexec user tools. I suspect the
-crashkernel=Y with the fallback to high will confuse the tools.
-
-BTW, please separate the NO_BLOCK_MAPPINGS optimisations from the
-crashkernel above 4G. Let's get the crashkernel reservations sorted
-first, it's been around for too long.
-
-Thanks.
-
--- 
-Catalin
+>   
+> -	/* Check kdump is loaded */
+> -	if (kexec_crash_image) {
+> -		pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
+> +	mutex_lock(&kexec_mutex);
+>   
+> -		/* Needed in order for the segments to be updated */
+> -		arch_kexec_unprotect_crashkres();
+> +	pr_debug("crash hotplug: hp_action %u, cpu %u", hp_action, cpu);
+>   
+> -		/* Flag to differentiate between normal load and hotplug */
+> -		kexec_crash_image->hotplug_event = true;
+> +	/* Needed in order for the segments to be updated */
+> +	arch_kexec_unprotect_crashkres();
+>   
+> -		/* Now invoke arch-specific update handler */
+> -		arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
+> +	/* Flag to differentiate between normal load and hotplug */
+> +	kexec_crash_image->hotplug_event = true;
+>   
+> -		/* No longer handling a hotplug event */
+> -		kexec_crash_image->hotplug_event = false;
+> +	/* Now invoke arch-specific update handler */
+> +	arch_crash_handle_hotplug_event(kexec_crash_image, hp_action, cpu);
+>   
+> -		/* Change back to read-only */
+> -		arch_kexec_protect_crashkres();
+> -	}
+> +	/* No longer handling a hotplug event */
+> +	kexec_crash_image->hotplug_event = false;
+> +
+> +	/* Change back to read-only */
+> +	arch_kexec_protect_crashkres();
+>   
+>   	/* Release lock now that update complete */
+>   	mutex_unlock(&kexec_mutex);
+>   }
+>   
+> -#if defined(CONFIG_MEMORY_HOTPLUG)
+> -static int crash_memhp_notifier(struct notifier_block *nb,
+> -	unsigned long val, void *v)
+> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
+>   {
+> -	struct memory_notify *mhp = v;
+> -
+>   	switch (val) {
+>   	case MEM_ONLINE:
+> -		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+> +		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+>   		break;
+>   
+>   	case MEM_OFFLINE:
+> -		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
+> +		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
+>   		break;
+>   	}
+>   	return NOTIFY_OK;
+> @@ -557,38 +550,33 @@ static struct notifier_block crash_memhp_nb = {
+>   	.notifier_call = crash_memhp_notifier,
+>   	.priority = 0
+>   };
+> -#endif
+>   
+> -#if defined(CONFIG_HOTPLUG_CPU)
+>   static int crash_cpuhp_online(unsigned int cpu)
+>   {
+> -	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
+> +	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
+>   	return 0;
+>   }
+>   
+>   static int crash_cpuhp_offline(unsigned int cpu)
+>   {
+> -	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+> +	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
+>   	return 0;
+>   }
+> -#endif
+>   
+>   static int __init crash_hotplug_init(void)
+>   {
+>   	int result = 0;
+>   
+> -#if defined(CONFIG_MEMORY_HOTPLUG)
+> -	register_memory_notifier(&crash_memhp_nb);
+> -#endif
+> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
+> +		register_memory_notifier(&crash_memhp_nb);
+>   
+> -#if defined(CONFIG_HOTPLUG_CPU)
+> -	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> -				"crash/cpuhp",
+> -				crash_cpuhp_online, crash_cpuhp_offline);
+> -#endif
+> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
+> +		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
+> +						   "crash/cpuhp",
+> +						   crash_cpuhp_online,
+> +						   crash_cpuhp_offline);
+>   
+>   	return result;
+>   }
+> -
+>   subsys_initcall(crash_hotplug_init);
+> -#endif /* CONFIG_CRASH_HOTPLUG */
+> +#endif
+> 
 
