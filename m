@@ -1,13 +1,11 @@
 From: Sourabh Jain <sourabhjain@linux.ibm.com>
-Date: Tue, 26 Apr 2022 09:40:29 +0530
-Subject: [RFC v4 PATCH 2/5] powerpc/crash hp: introduce a new config
- option CRASH_HOTPLUG
-In-Reply-To: <35ccca7c-07c2-1fc4-70da-2cc581ba818a@oracle.com>
-References: <20220411084357.157308-1-sourabhjain@linux.ibm.com>
- <20220411084357.157308-3-sourabhjain@linux.ibm.com>
- <874k2mfz5t.fsf@mpe.ellerman.id.au>
- <35ccca7c-07c2-1fc4-70da-2cc581ba818a@oracle.com>
-Message-ID: <9bf9eccf-d689-463d-0af2-5b3c65da4aef@linux.ibm.com>
+Date: Tue, 26 Apr 2022 09:51:25 +0530
+Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
+ and memory hotplug
+In-Reply-To: <20220413164237.20845-3-eric.devolder@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-3-eric.devolder@oracle.com>
+Message-ID: <d90f4299-e821-f5d5-957a-1e84f16816e0@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,65 +13,63 @@ Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
 
-On 21/04/22 20:59, Eric DeVolder wrote:
+On 13/04/22 22:12, Eric DeVolder wrote:
+> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
 >
+> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
+> the elfcorehdr buffer/segment.
 >
-> On 4/21/22 06:34, Michael Ellerman wrote:
->> Sourabh Jain <sourabhjain@linux.ibm.com> writes:
->>> The option CRASH_HOTPLUG enables, in kernel update to kexec segments on
->>> hotplug events.
->>>
->>> All the updates needed on the capture kernel load path in the kernel 
->>> for
->>> both kexec_load and kexec_file_load system will be kept under this 
->>> config.
->>>
->>> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
->>> Reviewed-by: Eric DeVolder <eric.devolder@oracle.com>
->>> ---
->>> ? arch/powerpc/Kconfig | 11 +++++++++++
->>> ? 1 file changed, 11 insertions(+)
->>>
->>> diff --git a/arch/powerpc/Kconfig b/arch/powerpc/Kconfig
->>> index b779603978e1..777db33f75b5 100644
->>> --- a/arch/powerpc/Kconfig
->>> +++ b/arch/powerpc/Kconfig
->>> @@ -623,6 +623,17 @@ config FA_DUMP
->>> ??????? If unsure, say "y". Only special kernels like petitboot may
->>> ??????? need to say "N" here.
->>> ? +config CRASH_HOTPLUG
->>> +??? bool "kernel updates of crash kexec segments"
->>> +??? depends on CRASH_DUMP && (HOTPLUG_CPU) && KEXEC_FILE
->>> +??? help
->>> +????? An efficient way to keep the capture kernel up-to-date with CPU
->>> +????? hotplug events. On CPU hotplug event the kexec segments of 
->>> capture
->>> +????? kernel becomes stale and need to be updated with latest CPU 
->>> data.
->>> +????? In this method the kernel performs minimal update to only 
->>> relevant
->>> +????? kexec segments on CPU hotplug event, instead of triggering full
->>> +????? capture kernel reload from userspace using udev rule.
->>
->> Why would a user ever want to turn this off?
->>
->> Seems to me we should just make it always behave this way, and not have
->> a CONFIG option at all.
+> This is a preparation for later usage.
 >
-> Sourabh,
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> Acked-by: Baoquan He <bhe@redhat.com>
+> ---
+>   arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>   1 file changed, 26 insertions(+)
 >
-> Borislav Petkov also requested I remove the config option, which will 
-> be the
-> case in upcoming v8.
->
-> Where I was using CONFIG_CRASH_HOTPLUG, I've replaced it with the
-> CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG.
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index b0142e01002e..f7b92ee1bcc7 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
+>   	  (CONFIG_RELOCATABLE=y).
+>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>   
+> +config CRASH_HOTPLUG
+> +	bool "kernel updates of crash elfcorehdr"
+> +	depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
+> +	help
+> +	  Enable the kernel to update the crash elfcorehdr (which contains
+> +	  the list of CPUs and memory regions) directly when hot plug/unplug
+> +	  of CPUs or memory. Otherwise userspace must monitor these hot
+> +	  plug/unplug change notifications via udev in order to
+> +	  unload-then-reload the crash kernel so that the list of CPUs and
+> +	  memory regions is kept up-to-date. Note that the udev CPU and
+> +	  memory change notifications still occur (however, userspace is not
+> +	  required to monitor for crash dump purposes).
+> +
+> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+> +	depends on CRASH_HOTPLUG
+> +	int
+> +	default 131072
+> +	help
+> +	  Specify the maximum size of the elfcorehdr buffer/segment.
+> +	  The 128KiB default is sized so that it can accommodate 2048
+> +	  Elf64_Phdr, where each Phdr represents either a CPU or a
+> +	  region of memory.
+> +	  For example, this size can accommodate a machine with up to 1024
+> +	  CPUs and up to 1024 memory regions, eg. as represented by the
+> +	  'System RAM' entries in /proc/iomem.
 
+Is it possible to get rid of CRASH_HOTPLUG_ELFCOREHDR_SZ?
 
-Yes good idea. Even Michael suggested there is no need for new CONFIG
-option. I will also remove CRASH_HOTPLUG config in the next version.
+How about finding the additional buffer space needed for future CPU and memory
+add during the kdump load? Not sure about the feasibility of doing this in
+kexec tool (userspace).
 
 Thanks,
 Sourabh Jain
+
+  
 
 
