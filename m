@@ -1,33 +1,48 @@
-From: Bo YU <tsu.yubo@gmail.com>
-Date: Tue, 26 Apr 2022 17:17:14 +0800
-Subject: Does Kexec have plan to support riscv64?
-Message-ID: <20220426091714.fbtmlnp7geldb6td@debian>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Tue, 26 Apr 2022 15:26:28 +0100
+Subject: [PATCH v22 4/9] arm64: kdump: Don't force page-level mappings
+ for memory above 4G
+In-Reply-To: <20220414115720.1887-5-thunder.leizhen@huawei.com>
+References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
+ <20220414115720.1887-5-thunder.leizhen@huawei.com>
+Message-ID: <YmgBFPMbyyOH/52y@arm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi,
-Sorry, send again.
- From here: https://projects.horms.net/projects/kexec/
-I noticed the kexec does not support riscv64 arch. Are we have plan to support
-riscv64 for it? Or are there others that are not suitable for this plan?
+On Thu, Apr 14, 2022 at 07:57:15PM +0800, Zhen Lei wrote:
+> @@ -540,13 +540,31 @@ static void __init map_mem(pgd_t *pgdp)
+>  	for_each_mem_range(i, &start, &end) {
+>  		if (start >= end)
+>  			break;
+> +
+> +#ifdef CONFIG_KEXEC_CORE
+> +		if (eflags && (end >= SZ_4G)) {
+> +			/*
+> +			 * The memory block cross the 4G boundary.
+> +			 * Forcibly use page-level mappings for memory under 4G.
+> +			 */
+> +			if (start < SZ_4G) {
+> +				__map_memblock(pgdp, start, SZ_4G - 1,
+> +					       pgprot_tagged(PAGE_KERNEL), flags | eflags);
+> +				start  = SZ_4G;
+> +			}
+> +
+> +			/* Page-level mappings is not mandatory for memory above 4G */
+> +			eflags = 0;
+> +		}
+> +#endif
 
-It seems we are starting to do it:
-http://lists.infradead.org/pipermail/kexec/2022-April/024533.html
+That's a bit tricky if a SoC has all RAM above 4G. IIRC AMD Seattle had
+this layout. See max_zone_phys() for how we deal with this, basically
+extending ZONE_DMA to the whole range if RAM starts above 4GB. In that
+case, crashkernel reservation would fall in the range above 4GB.
 
-If possible I can help to port kexec to riscv64(maybe need you help).
+BTW, we changed the max_zone_phys() logic with commit 791ab8b2e3db
+("arm64: Ignore any DMA offsets in the max_zone_phys() calculation").
 
-Background: I am porting debian package to riscv64. There is one ftbfs(fail to
-boot from source) issue on riscv64 about kexec-tools:
-https://buildd.debian.org/status/fetch.php?pkg=kexec-tools&arch=riscv64&ver=1%3A2.0.24-1&stamp=1649802148&raw=0
-And i am trying to fix it with patch but found that there are a lot code
-need to add. So i turn to to see the kexec upstream that does support riscv64
-or not. Maybe this is a *wrong* question to ask:(
-
-Please cc me :)
-
-BR,
-Bo
+-- 
+Catalin
 
