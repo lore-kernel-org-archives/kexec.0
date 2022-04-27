@@ -1,72 +1,73 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:48:59 -0300
-Subject: [PATCH 05/30] misc/pvpanic: Convert regular spinlock into trylock on
- panic path
+Date: Wed, 27 Apr 2022 19:49:00 -0300
+Subject: [PATCH 06/30] soc: bcm: brcmstb: Document panic notifier action and
+ remove useless header
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-6-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-7-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The pvpanic driver relies on panic notifiers to execute a callback
-on panic event. Such function is executed in atomic context - the
-panic function disables local IRQs, preemption and all other CPUs
-that aren't running the panic code.
+The panic notifier of this driver is very simple code-wise, just a memory
+write to a special position with some numeric code. But this is not clear
+from the semantic point-of-view, and there is no public documentation
+about that either.
 
-With that said, it's dangerous to use regular spinlocks in such path,
-as introduced by commit b3c0f8774668 ("misc/pvpanic: probe multiple instances").
-This patch fixes that by replacing regular spinlocks with the trylock
-safer approach.
+After discussing this in the mailing-lists [0] and having Florian explained
+it very well, this patch just document that in the code for the future
+generations asking the same questions. Also, it removes a useless header.
 
-It also fixes an old comment (about a long gone framebuffer code) and
-the notifier priority - we should execute hypervisor notifiers early,
-deferring this way the panic action to the hypervisor, as expected by
-the users that are setting up pvpanic.
+[0] https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a at gmail.com
 
-Fixes: b3c0f8774668 ("misc/pvpanic: probe multiple instances")
-Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
-Cc: Mihai Carabas <mihai.carabas@oracle.com>
-Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
-Cc: Wang ShaoBo <bobo.shaobowang@huawei.com>
-Cc: zhenwei pi <pizhenwei@bytedance.com>
+Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
+Cc: Brian Norris <computersforpeace@gmail.com>
+Cc: Doug Berger <opendmb@gmail.com>
+Cc: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Justin Chen <justinpopo6@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Markus Mayer <mmayer@broadcom.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- drivers/misc/pvpanic/pvpanic.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/soc/bcm/brcmstb/pm/pm-arm.c | 16 ++++++++++++++--
+ 1 file changed, 14 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/misc/pvpanic/pvpanic.c b/drivers/misc/pvpanic/pvpanic.c
-index 4b8f1c7d726d..049a12006348 100644
---- a/drivers/misc/pvpanic/pvpanic.c
-+++ b/drivers/misc/pvpanic/pvpanic.c
-@@ -34,7 +34,9 @@ pvpanic_send_event(unsigned int event)
- {
- 	struct pvpanic_instance *pi_cur;
+diff --git a/drivers/soc/bcm/brcmstb/pm/pm-arm.c b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+index 3cbb165d6e30..870686ae042b 100644
+--- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
++++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+@@ -25,7 +25,6 @@
+ #include <linux/kernel.h>
+ #include <linux/memblock.h>
+ #include <linux/module.h>
+-#include <linux/notifier.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+ #include <linux/panic_notifier.h>
+@@ -664,7 +663,20 @@ static void __iomem *brcmstb_ioremap_match(const struct of_device_id *matches,
  
--	spin_lock(&pvpanic_lock);
-+	if (!spin_trylock(&pvpanic_lock))
-+		return;
-+
- 	list_for_each_entry(pi_cur, &pvpanic_list, list) {
- 		if (event & pi_cur->capability & pi_cur->events)
- 			iowrite8(event, pi_cur->base);
-@@ -55,9 +57,13 @@ pvpanic_panic_notify(struct notifier_block *nb, unsigned long code, void *unused
- 	return NOTIFY_DONE;
+ 	return of_io_request_and_map(dn, index, dn->full_name);
  }
- 
+-
 +/*
-+ * Call our notifier very early on panic, deferring the
-+ * action taken to the hypervisor.
++ * The AON is a small domain in the SoC that can retain its state across
++ * various system wide sleep states and specific reset conditions; the
++ * AON DATA RAM is a small RAM of a few words (< 1KB) which can store
++ * persistent information across such events.
++ *
++ * The purpose of the below panic notifier is to help with notifying
++ * the bootloader that a panic occurred and so that it should try its
++ * best to preserve the DRAM contents holding that buffer for recovery
++ * by the kernel as opposed to wiping out DRAM clean again.
++ *
++ * Reference: comment from Florian Fainelli, at
++ * https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a@gmail.com
 + */
- static struct notifier_block pvpanic_panic_nb = {
- 	.notifier_call = pvpanic_panic_notify,
--	.priority = 1, /* let this called before broken drm_fb_helper() */
-+	.priority = INT_MAX,
- };
- 
- static void pvpanic_remove(void *param)
+ static int brcmstb_pm_panic_notify(struct notifier_block *nb,
+ 		unsigned long action, void *data)
+ {
 -- 
 2.36.0
 
