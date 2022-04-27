@@ -1,104 +1,107 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Wed, 27 Apr 2022 05:53:02 +0000
-Subject: [PATCH makedumpfile] Avoid false-positive mem_section validation
- with vmlinux
-In-Reply-To: <CAF+s44RA8N1AEbq39ehyy23yOYQx88=7Uk0o_YNGgU81PJCONQ@mail.gmail.com>
-References: <TYYPR01MB6777DF79FA02B1A563395018DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <CAF+s44RA8N1AEbq39ehyy23yOYQx88=7Uk0o_YNGgU81PJCONQ@mail.gmail.com>
-Message-ID: <TYYPR01MB67777EDCFF07C47BCEB740B4DDFA9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
+Date: Wed, 27 Apr 2022 14:54:52 +0800
+Subject: [PATCH v22 5/9] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <YmgzxsrrMlCDYsWp@arm.com>
+References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
+ <20220414115720.1887-6-thunder.leizhen@huawei.com> <YmgzxsrrMlCDYsWp@arm.com>
+Message-ID: <ee8daaa9-3258-e7e8-e5c4-c51dc9841580@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hi Pingfan, Philipp,
 
-Thank you for reviewing and testing this, applied.
-https://github.com/makedumpfile/makedumpfile/commit/6d0d95ecc04a70f8448d562ff0fbbae237f5c929
 
-Kazu
-
------Original Message-----
-> On Thu, Apr 21, 2022 at 7:58 AM HAGIO KAZUHITO(?????)
-> <k-hagio-ab@nec.com> wrote:
-> >
-> > Currently get_mem_section() validates if SYMBOL(mem_section) is the address
-> > of the mem_section array first.  But there was a report that the first
-> > validation wrongly returned TRUE with -x vmlinux and SPARSEMEM_EXTREME
-> > (4.15+) on s390x.  This leads to crash failing statup with the following
-> > seek error:
-> >
-> >   crash: seek error: kernel virtual address: 67fffc2800  type: "memory section root table"
-> >
-> > Skip the first validation when satisfying the conditions.
-> >
-> > Reported-by: Dave Wysochanski <dwysocha@redhat.com>
-> > Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
-> > ---
-> >  makedumpfile.c | 31 +++++++++++++++++++++++++++++++
-> >  1 file changed, 31 insertions(+)
-> >
-> > diff --git a/makedumpfile.c b/makedumpfile.c
-> > index a2f45c84cee3..65d1c7c2f02c 100644
-> > --- a/makedumpfile.c
-> > +++ b/makedumpfile.c
-> > @@ -3698,6 +3698,22 @@ validate_mem_section(unsigned long *mem_sec,
-> >         return ret;
-> >  }
-> >
-> > +/*
-> > + * SYMBOL(mem_section) varies with the combination of memory model and
-> > + * its source:
-> > + *
-> > + * SPARSEMEM
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of mem_section root array
-> > + *
-> > + * SPARSEMEM_EXTREME v1
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of mem_section root array
-> > + *
-> > + * SPARSEMEM_EXTREME v2 (with 83e3c48729d9 and a0b1280368d1) 4.15+
-> > + *   vmcoreinfo: address of mem_section root array
-> > + *   -x vmlinux: address of pointer to mem_section root array
-> > + */
-> >  static int
-> >  get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-> >                 unsigned int num_section)
-> > @@ -3710,12 +3726,27 @@ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
-> >                     strerror(errno));
-> >                 return FALSE;
-> >         }
-> > +
-> > +       /*
-> > +        * There was a report that the first validation wrongly returned TRUE
-> > +        * with -x vmlinux and SPARSEMEM_EXTREME v2 on s390x, so skip it.
-> > +        * Howerver, leave the fallback validation as it is for the -i option.
-> > +        */
-> > +       if (is_sparsemem_extreme() && info->name_vmlinux) {
-> > +               unsigned long flag = 0;
-> > +               if (get_symbol_type_name("mem_section", DWARF_INFO_GET_SYMBOL_TYPE,
-> > +                                       NULL, &flag)
-> > +                   && !(flag & TYPE_ARRAY))
-> > +                       goto skip_1st_validation;
-> > +       }
-> > +
-> >         ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
-> >                                    mem_section_size, mem_maps, num_section);
-> >
-> >         if (!ret && is_sparsemem_extreme()) {
-> >                 unsigned long mem_section_ptr;
-> >
-> > +skip_1st_validation:
-> >                 if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
-> >                              sizeof(mem_section_ptr)))
-> >                         goto out;
-> > --
-> > 2.27.0
-> >
-> Discussed with Kazu off-list, and with his nice help, I got clear why
-> he drops V1.
+On 2022/4/27 2:02, Catalin Marinas wrote:
+> On Thu, Apr 14, 2022 at 07:57:16PM +0800, Zhen Lei wrote:
+>>  /*
+>>   * reserve_crashkernel() - reserves memory for crash kernel
+>>   *
+>>   * This function reserves memory area given in "crashkernel=" kernel command
+>>   * line parameter. The memory reserved is used by dump capture kernel when
+>>   * primary kernel is crashing.
+>> + *
+>> + * NOTE: Reservation of crashkernel,low is special since its existence
+>> + * is not independent, need rely on the existence of crashkernel,high.
+>> + * Here, four cases of crashkernel low memory reservation are summarized:
+>> + * 1) crashkernel=Y,low is specified explicitly, the size of crashkernel low
+>> + *    memory takes Y;
+>> + * 2) crashkernel=,low is not given, while crashkernel=,high is specified,
+>> + *    take the default crashkernel low memory size;
+>> + * 3) crashkernel=X is specified, while fallback to get a memory region
+>> + *    in high memory, take the default crashkernel low memory size;
+>> + * 4) crashkernel='invalid value',low is specified, failed the whole
+>> + *    crashkernel reservation and bail out.
 > 
-> Hence,
-> Reviewed-by: Pingfan Liu <piliu@redhat.com>
+> Following the x86 behaviour made sense when we were tried to get that
+> code generic. Now that we moved the logic under arch/arm64, we can
+> diverge a bit. I lost track of the original (v1/v2) proposal but I
+> wonder whether we still need the fallback to high for crashkernel=Y.
+
+I don't think anyone has raised this demand yet! If it weren't for the
+fact that crashkernel=X appeared earlier, it would probably have been
+enough for a combination of crashkernel=X,high and crashkernel=Y,low.
+
+In fact, I also tend not to support "fallback to high for crashkernel=Y".
+I took over this from Chen Zhou. In the absence of any objection, I had
+to inherit. Now that you've brought it up, I'm happy to delete it.
+Supporting this feature complicates the code logic a lot. The point is,
+it's not fully backwards compatible yet. For example, someone may want
+crashkernel=3G to report failure, but the the new support make it work.
+
+> Maybe simpler, no fallbacks:
+> 
+> 	crashkernel=Y - keep the current behaviour, ignore high,low
+> 	crashkernel=Y,high - allocate above ZONE_DMA
+> 	crashkernel=Y,low - allocate within ZONE_DMA
+> 
+>>From your proposal, the difference is that the Y,high option won't
+> have any default ZONE_DMA fallback, one would have to explicitly pass
+> the Y,low option if needed.
+
+I agree with you. Now we don't need code generic, so there is no need to
+carry the historical burden of other ARCHs. arm64 does not need to delve
+into that empirical value(the default size of crash low memory).
+
+> 
+> Just a thought, maybe it makes the code simpler. But I'm open to
+> discussion if there are good arguments for the proposed (x86-like)
+> behaviour. One argument could be for crashkernel=Y to fall back to high
+> if distros don't want to bother with high/low settings.
+
+I think distros should take precedence over "crashkernel=Y,high". After all,
+ZONE_DMA memory is more valuable than high memory.
+
+
+> 
+> Another thing I may have asked in the past, what happens if we run a new
+> kernel with these patches with old kexec user tools. I suspect the
+> crashkernel=Y with the fallback to high will confuse the tools.
+
+If crashkernel=Y can reserve the memory in Zone_DMA successfully, the old
+kexec works well. But if crashkernel=Y fallback to high memory, the second
+kernel will boot failed, because the old kexec can only use dtb to pass the
+high memory range to the second kernel. In comparison, if no fallback, we can
+see crash memory reservation failure in the first kernel, so we have a chance
+to adjust Y.
+
+Currently, the new kexec tool will pick the last memory range(sorted by address
+in ascending order) to store Image,dtb,initrd.
+
+
+> 
+> BTW, please separate the NO_BLOCK_MAPPINGS optimisations from the
+> crashkernel above 4G. Let's get the crashkernel reservations sorted
+> first, it's been around for too long.
+
+OK, thank you. That's a good suggestion.
+
+> 
+> Thanks.
+> 
+
+-- 
+Regards,
+  Zhen Lei
+
