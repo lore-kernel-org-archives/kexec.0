@@ -1,232 +1,97 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 26 Apr 2022 15:08:26 -0500
-Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <Ymb1tBJsch/TB2ph@zn.tnic>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-3-eric.devolder@oracle.com> <Ylgot+LUDQl+G/5N@zn.tnic>
- <f3ea7ee0-1cb8-6928-d0af-4c2fc63a42a4@oracle.com> <Yl6PueNCZZeobMWr@zn.tnic>
- <cc7a6b5c-954c-54fe-be5f-324dc984ac51@oracle.com> <Ymb1tBJsch/TB2ph@zn.tnic>
-Message-ID: <0aee5cd1-eb8c-f778-c6e5-7f5ca3624d15@oracle.com>
+From: Pingfan Liu <piliu@redhat.com>
+Date: Wed, 27 Apr 2022 10:01:13 +0800
+Subject: [PATCH makedumpfile] Avoid false-positive mem_section validation
+ with vmlinux
+In-Reply-To: <TYYPR01MB6777DF79FA02B1A563395018DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <TYYPR01MB6777DF79FA02B1A563395018DDF59@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Message-ID: <CAF+s44RA8N1AEbq39ehyy23yOYQx88=7Uk0o_YNGgU81PJCONQ@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Boris,
-Many thanks for the time taken to illustrate for me!
-I've one question below.
-Eric
-
-On 4/25/22 14:25, Borislav Petkov wrote:
-> On Tue, Apr 19, 2022 at 04:58:47PM -0500, Eric DeVolder wrote:
->> So in taking this concept and looking at, in particular, patch 4/8
->> "crash: add generic infrastructure for crash hotplug support", I'm not
->> exactly sure how to apply this technique.
-> 
-> So I took your patch 4 and maimed into what I think it should look like,
-> see below.
-> 
-> Now there's a single ifdef there and the registration routines are
-> wrapped in IS_ENABLED() so that you register a callback only when the
-> respective stuff - HOTPLUG_CPU or MEMORY_HOTPLUG - is enabled. Otherwise
-> the couple of functions are unused but that's not that big of a deal.
-> 
-> I've also fixed up some other issues I've encountered along the way.
-> 
-> Holler if there are questions.
-> 
-> HTH.
-> 
+On Thu, Apr 21, 2022 at 7:58 AM HAGIO KAZUHITO(?????)
+<k-hagio-ab@nec.com> wrote:
+>
+> Currently get_mem_section() validates if SYMBOL(mem_section) is the address
+> of the mem_section array first.  But there was a report that the first
+> validation wrongly returned TRUE with -x vmlinux and SPARSEMEM_EXTREME
+> (4.15+) on s390x.  This leads to crash failing statup with the following
+> seek error:
+>
+>   crash: seek error: kernel virtual address: 67fffc2800  type: "memory section root table"
+>
+> Skip the first validation when satisfying the conditions.
+>
+> Reported-by: Dave Wysochanski <dwysocha@redhat.com>
+> Signed-off-by: Kazuhito Hagio <k-hagio-ab@nec.com>
 > ---
-> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
-> index de62a722431e..b3c32e04d3f0 100644
-> --- a/include/linux/crash_core.h
-> +++ b/include/linux/crash_core.h
-> @@ -84,4 +84,12 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
->   int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
->   		unsigned long long *crash_size, unsigned long long *crash_base);
->   
-> +#define KEXEC_CRASH_HP_REMOVE_CPU	0
-> +#define KEXEC_CRASH_HP_ADD_CPU		1
-> +#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
-> +#define KEXEC_CRASH_HP_ADD_MEMORY	3
+>  makedumpfile.c | 31 +++++++++++++++++++++++++++++++
+>  1 file changed, 31 insertions(+)
+>
+> diff --git a/makedumpfile.c b/makedumpfile.c
+> index a2f45c84cee3..65d1c7c2f02c 100644
+> --- a/makedumpfile.c
+> +++ b/makedumpfile.c
+> @@ -3698,6 +3698,22 @@ validate_mem_section(unsigned long *mem_sec,
+>         return ret;
+>  }
+>
+> +/*
+> + * SYMBOL(mem_section) varies with the combination of memory model and
+> + * its source:
+> + *
+> + * SPARSEMEM
+> + *   vmcoreinfo: address of mem_section root array
+> + *   -x vmlinux: address of mem_section root array
+> + *
+> + * SPARSEMEM_EXTREME v1
+> + *   vmcoreinfo: address of mem_section root array
+> + *   -x vmlinux: address of mem_section root array
+> + *
+> + * SPARSEMEM_EXTREME v2 (with 83e3c48729d9 and a0b1280368d1) 4.15+
+> + *   vmcoreinfo: address of mem_section root array
+> + *   -x vmlinux: address of pointer to mem_section root array
+> + */
+>  static int
+>  get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
+>                 unsigned int num_section)
+> @@ -3710,12 +3726,27 @@ get_mem_section(unsigned int mem_section_size, unsigned long *mem_maps,
+>                     strerror(errno));
+>                 return FALSE;
+>         }
 > +
-> +struct kimage;
-> +void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
-> +				     unsigned int cpu);
->   #endif /* LINUX_CRASH_CORE_H */
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 02daff1f47dd..d907a1f0d3da 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -307,13 +307,11 @@ struct kimage {
->   	/* Information for loading purgatory */
->   	struct purgatory_info purgatory_info;
->   
-> -#ifdef CONFIG_CRASH_HOTPLUG
->   	bool hotplug_event;
->   	unsigned int offlinecpu;
->   	bool elfcorehdr_index_valid;
->   	int elfcorehdr_index;
->   #endif
-> -#endif
->   
->   #ifdef CONFIG_IMA_KEXEC
->   	/* Virtual address of IMA measurement buffer for kexec syscall */
-> @@ -329,15 +327,6 @@ struct kimage {
->   	unsigned long elf_load_addr;
->   };
->   
-> -#ifdef CONFIG_CRASH_HOTPLUG
-> -void arch_crash_hotplug_handler(struct kimage *image,
-> -	unsigned int hp_action, unsigned int cpu);
-> -#define KEXEC_CRASH_HP_REMOVE_CPU   0
-> -#define KEXEC_CRASH_HP_ADD_CPU      1
-> -#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
-> -#define KEXEC_CRASH_HP_ADD_MEMORY   3
-> -#endif /* CONFIG_CRASH_HOTPLUG */
-> -
->   /* kexec interface functions */
->   extern void machine_kexec(struct kimage *image);
->   extern int machine_kexec_prepare(struct kimage *image);
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index ecf746243ab2..a6c4ee1d5c86 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -497,57 +497,50 @@ static int __init crash_save_vmcoreinfo_init(void)
->   
->   subsys_initcall(crash_save_vmcoreinfo_init);
->   
-> -#ifdef CONFIG_CRASH_HOTPLUG
-> -void __weak arch_crash_hotplug_handler(struct kimage *image,
-> -	unsigned int hp_action, unsigned int cpu)
-> +void __weak arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
-> +					    unsigned int cpu)
->   {
-> -	pr_warn("crash hp: %s not implemented", __func__);
-> +	WARN(1, "crash hotplug handler not implemented");
->   }
->   
-> -static void crash_hotplug_handler(unsigned int hp_action,
-> -	unsigned int cpu)
-> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-> +static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
->   {
-> -	/* Obtain lock while changing crash information */
-> -	if (!mutex_trylock(&kexec_mutex))
-> +	if (!kexec_crash_image)
->   		return;
-Why is it safe to examine kexec_crash_image outside the mutex? As I understand it, there is still 
-the (very rare) opportunity for a kdump load/unload initiated via userland and this check to 
-collide. (Similarly, I believe the mutex entry is almost always assured/likely.)
+> +       /*
+> +        * There was a report that the first validation wrongly returned TRUE
+> +        * with -x vmlinux and SPARSEMEM_EXTREME v2 on s390x, so skip it.
+> +        * Howerver, leave the fallback validation as it is for the -i option.
+> +        */
+> +       if (is_sparsemem_extreme() && info->name_vmlinux) {
+> +               unsigned long flag = 0;
+> +               if (get_symbol_type_name("mem_section", DWARF_INFO_GET_SYMBOL_TYPE,
+> +                                       NULL, &flag)
+> +                   && !(flag & TYPE_ARRAY))
+> +                       goto skip_1st_validation;
+> +       }
+> +
+>         ret = validate_mem_section(mem_sec, SYMBOL(mem_section),
+>                                    mem_section_size, mem_maps, num_section);
+>
+>         if (!ret && is_sparsemem_extreme()) {
+>                 unsigned long mem_section_ptr;
+>
+> +skip_1st_validation:
+>                 if (!readmem(VADDR, SYMBOL(mem_section), &mem_section_ptr,
+>                              sizeof(mem_section_ptr)))
+>                         goto out;
+> --
+> 2.27.0
+>
+Discussed with Kazu off-list, and with his nice help, I got clear why
+he drops V1.
 
->   
-> -	/* Check kdump is loaded */
-> -	if (kexec_crash_image) {
-> -		pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
-> +	mutex_lock(&kexec_mutex);
->   
-> -		/* Needed in order for the segments to be updated */
-> -		arch_kexec_unprotect_crashkres();
-> +	pr_debug("crash hotplug: hp_action %u, cpu %u", hp_action, cpu);
->   
-> -		/* Flag to differentiate between normal load and hotplug */
-> -		kexec_crash_image->hotplug_event = true;
-> +	/* Needed in order for the segments to be updated */
-> +	arch_kexec_unprotect_crashkres();
->   
-> -		/* Now invoke arch-specific update handler */
-> -		arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
-> +	/* Flag to differentiate between normal load and hotplug */
-> +	kexec_crash_image->hotplug_event = true;
->   
-> -		/* No longer handling a hotplug event */
-> -		kexec_crash_image->hotplug_event = false;
-> +	/* Now invoke arch-specific update handler */
-> +	arch_crash_handle_hotplug_event(kexec_crash_image, hp_action, cpu);
->   
-> -		/* Change back to read-only */
-> -		arch_kexec_protect_crashkres();
-> -	}
-> +	/* No longer handling a hotplug event */
-> +	kexec_crash_image->hotplug_event = false;
-> +
-> +	/* Change back to read-only */
-> +	arch_kexec_protect_crashkres();
->   
->   	/* Release lock now that update complete */
->   	mutex_unlock(&kexec_mutex);
->   }
->   
-> -#if defined(CONFIG_MEMORY_HOTPLUG)
-> -static int crash_memhp_notifier(struct notifier_block *nb,
-> -	unsigned long val, void *v)
-> +static int crash_memhp_notifier(struct notifier_block *nb, unsigned long val, void *v)
->   {
-> -	struct memory_notify *mhp = v;
-> -
->   	switch (val) {
->   	case MEM_ONLINE:
-> -		crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
-> +		handle_hotplug_event(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
->   		break;
->   
->   	case MEM_OFFLINE:
-> -		crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
-> +		handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_MEMORY, -1U);
->   		break;
->   	}
->   	return NOTIFY_OK;
-> @@ -557,38 +550,33 @@ static struct notifier_block crash_memhp_nb = {
->   	.notifier_call = crash_memhp_notifier,
->   	.priority = 0
->   };
-> -#endif
->   
-> -#if defined(CONFIG_HOTPLUG_CPU)
->   static int crash_cpuhp_online(unsigned int cpu)
->   {
-> -	crash_hotplug_handler(KEXEC_CRASH_HP_ADD_CPU, cpu);
-> +	handle_hotplug_event(KEXEC_CRASH_HP_ADD_CPU, cpu);
->   	return 0;
->   }
->   
->   static int crash_cpuhp_offline(unsigned int cpu)
->   {
-> -	crash_hotplug_handler(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
-> +	handle_hotplug_event(KEXEC_CRASH_HP_REMOVE_CPU, cpu);
->   	return 0;
->   }
-> -#endif
->   
->   static int __init crash_hotplug_init(void)
->   {
->   	int result = 0;
->   
-> -#if defined(CONFIG_MEMORY_HOTPLUG)
-> -	register_memory_notifier(&crash_memhp_nb);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_MEMORY_HOTPLUG))
-> +		register_memory_notifier(&crash_memhp_nb);
->   
-> -#if defined(CONFIG_HOTPLUG_CPU)
-> -	result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-> -				"crash/cpuhp",
-> -				crash_cpuhp_online, crash_cpuhp_offline);
-> -#endif
-> +	if (IS_ENABLED(CONFIG_HOTPLUG_CPU))
-> +		result = cpuhp_setup_state_nocalls(CPUHP_AP_ONLINE_DYN,
-> +						   "crash/cpuhp",
-> +						   crash_cpuhp_online,
-> +						   crash_cpuhp_offline);
->   
->   	return result;
->   }
-> -
->   subsys_initcall(crash_hotplug_init);
-> -#endif /* CONFIG_CRASH_HOTPLUG */
-> +#endif
-> 
+Hence,
+Reviewed-by: Pingfan Liu <piliu@redhat.com>
+
 
