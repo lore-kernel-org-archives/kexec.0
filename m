@@ -1,56 +1,40 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Wed, 27 Apr 2022 15:12:29 +0800
-Subject: [PATCH v22 4/9] arm64: kdump: Don't force page-level mappings for
- memory above 4G
-In-Reply-To: <YmgBFPMbyyOH/52y@arm.com>
-References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
- <20220414115720.1887-5-thunder.leizhen@huawei.com> <YmgBFPMbyyOH/52y@arm.com>
-Message-ID: <b635e4e8-a05d-36e5-9274-885452fd0a06@huawei.com>
+From: Borislav Petkov <bp@alien8.de>
+Date: Wed, 27 Apr 2022 12:48:09 +0200
+Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
+ and memory hotplug
+In-Reply-To: <0aee5cd1-eb8c-f778-c6e5-7f5ca3624d15@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-3-eric.devolder@oracle.com>
+ <Ylgot+LUDQl+G/5N@zn.tnic>
+ <f3ea7ee0-1cb8-6928-d0af-4c2fc63a42a4@oracle.com>
+ <Yl6PueNCZZeobMWr@zn.tnic>
+ <cc7a6b5c-954c-54fe-be5f-324dc984ac51@oracle.com>
+ <Ymb1tBJsch/TB2ph@zn.tnic>
+ <0aee5cd1-eb8c-f778-c6e5-7f5ca3624d15@oracle.com>
+Message-ID: <YmkfaSAiGIYgTlvY@zn.tnic>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Tue, Apr 26, 2022 at 03:08:26PM -0500, Eric DeVolder wrote:
+> Why is it safe to examine kexec_crash_image outside the mutex? As I
+> understand it, there is still the (very rare) opportunity for a kdump
+> load/unload initiated via userland and this check to collide. (Similarly, I
+> believe the mutex entry is almost always assured/likely.)
 
+Yeah, I guess. As the comment in do_kexec_load() says
 
-On 2022/4/26 22:26, Catalin Marinas wrote:
-> On Thu, Apr 14, 2022 at 07:57:15PM +0800, Zhen Lei wrote:
->> @@ -540,13 +540,31 @@ static void __init map_mem(pgd_t *pgdp)
->>  	for_each_mem_range(i, &start, &end) {
->>  		if (start >= end)
->>  			break;
->> +
->> +#ifdef CONFIG_KEXEC_CORE
->> +		if (eflags && (end >= SZ_4G)) {
->> +			/*
->> +			 * The memory block cross the 4G boundary.
->> +			 * Forcibly use page-level mappings for memory under 4G.
->> +			 */
->> +			if (start < SZ_4G) {
->> +				__map_memblock(pgdp, start, SZ_4G - 1,
->> +					       pgprot_tagged(PAGE_KERNEL), flags | eflags);
->> +				start  = SZ_4G;
->> +			}
->> +
->> +			/* Page-level mappings is not mandatory for memory above 4G */
->> +			eflags = 0;
->> +		}
->> +#endif
-> 
-> That's a bit tricky if a SoC has all RAM above 4G. IIRC AMD Seattle had
-> this layout. See max_zone_phys() for how we deal with this, basically
-> extending ZONE_DMA to the whole range if RAM starts above 4GB. In that
-> case, crashkernel reservation would fall in the range above 4GB.
-> 
-> BTW, we changed the max_zone_phys() logic with commit 791ab8b2e3db
-> ("arm64: Ignore any DMA offsets in the max_zone_phys() calculation").
+	"KISS: always take the mutex."
 
-Okay, thanks for your correction. I'll dig into it after I've done the original requirement.
+so ignore this part of the diff and let's always grab the mutex.
 
-> 
+Sorry for the confusion.
 
 -- 
-Regards,
-  Zhen Lei
+Regards/Gruss,
+    Boris.
+
+https://people.kernel.org/tglx/notes-about-netiquette
 
