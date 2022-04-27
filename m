@@ -1,114 +1,141 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:49:11 -0300
-Subject: [PATCH 17/30] tracing: Improve panic/die notifiers
+Date: Wed, 27 Apr 2022 19:49:12 -0300
+Subject: [PATCH 18/30] notifier: Show function names on notifier routines if
+ DEBUG_NOTIFIERS is set
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-18-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-19-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently the tracing dump_on_oops feature is implemented
-through separate notifiers, one for die/oops and the other
-for panic. With the addition of panic notifier "id", this
-patch makes use of such "id" to unify both functions.
+Currently we have a debug infrastructure in the notifiers file, but
+it's very simple/limited. This patch extends it by:
 
-It also comments the function and changes the priority of the
-notifier blocks, in order they run early compared to other
-notifiers, to prevent useless trace data (like the callback
-names for the other notifiers). Finally, we also removed an
-unnecessary header inclusion.
+(a) Showing all registered/unregistered notifiers' callback names;
 
+(b) Adding a dynamic debug tuning to allow showing called notifiers'
+function names. Notice that this should be guarded as a tunable since
+it can flood the kernel log buffer.
+
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Cong Wang <xiyou.wangcong@gmail.com>
+Cc: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Xiaoming Ni <nixiaoming@huawei.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- kernel/trace/trace.c | 57 +++++++++++++++++++++++++-------------------
- 1 file changed, 32 insertions(+), 25 deletions(-)
 
-diff --git a/kernel/trace/trace.c b/kernel/trace/trace.c
-index f4de111fa18f..c1d8a3622ccc 100644
---- a/kernel/trace/trace.c
-+++ b/kernel/trace/trace.c
-@@ -19,7 +19,6 @@
- #include <linux/kallsyms.h>
- #include <linux/security.h>
- #include <linux/seq_file.h>
--#include <linux/notifier.h>
- #include <linux/irqflags.h>
- #include <linux/debugfs.h>
- #include <linux/tracefs.h>
-@@ -9767,38 +9766,46 @@ static __init int tracer_init_tracefs(void)
+We have some design decisions that worth discussing here:
+
+(a) First of call, using C99 helps a lot to write clear and concise code, but
+due to commit 4d94f910e79a ("Kbuild: use -Wdeclaration-after-statement") we
+have a warning if mixing variable declarations with code. For this patch though,
+doing that makes the code way clear, so decision was to add the debug code
+inside brackets whenever this warning pops up. We can change that, but that'll
+cause more ifdefs in the same function.
+
+(b) In the symbol lookup helper function, we modify the parameter passed but
+even more, we return it as well! This is unusual and seems unnecessary, but was
+the strategy taken to allow embedding such function in the pr_debug() call.
+
+Not doing that would likely requiring 3 symbol_name variables to avoid
+concurrency (registering notifier A while calling notifier B) - we rely in
+local variables as a serialization mechanism.
+
+We're open for suggestions in case this design is not appropriate;
+thanks in advance!
+
+ kernel/notifier.c | 48 +++++++++++++++++++++++++++++++++++++++++++++--
+ 1 file changed, 46 insertions(+), 2 deletions(-)
+
+diff --git a/kernel/notifier.c b/kernel/notifier.c
+index ba005ebf4730..21032ebcde57 100644
+--- a/kernel/notifier.c
++++ b/kernel/notifier.c
+@@ -7,6 +7,22 @@
+ #include <linux/vmalloc.h>
+ #include <linux/reboot.h>
  
- fs_initcall(tracer_init_tracefs);
- 
--static int trace_panic_handler(struct notifier_block *this,
--			       unsigned long event, void *unused)
++#ifdef CONFIG_DEBUG_NOTIFIERS
++#include <linux/kallsyms.h>
++
 +/*
-+ * The idea is to execute the following die/panic callback early, in order
-+ * to avoid showing irrelevant information in the trace (like other panic
-+ * notifier functions); we are the 2nd to run, after hung_task/rcu_stall
-+ * warnings get disabled (to prevent potential log flooding).
++ *	Helper to get symbol names in case DEBUG_NOTIFIERS is set.
++ *	Return the modified parameter is a strategy used to achieve
++ *	the pr_debug() functionality - with this, function is only
++ *	executed if the dynamic debug tuning is effectively set.
 + */
-+static int trace_die_panic_handler(struct notifier_block *self,
-+				unsigned long ev, void *unused)
- {
--	if (ftrace_dump_on_oops)
-+	int do_dump;
++static inline char *notifier_name(struct notifier_block *nb, char *sym_name)
++{
++	lookup_symbol_name((unsigned long)(nb->notifier_call), sym_name);
++	return sym_name;
++}
++#endif
 +
-+	if (!ftrace_dump_on_oops)
-+		return NOTIFY_DONE;
+ /*
+  *	Notifier list for kernel code which wants to be called
+  *	at shutdown. This is used to stop any idling DMA operations
+@@ -34,20 +50,41 @@ static int notifier_chain_register(struct notifier_block **nl,
+ 	}
+ 	n->next = *nl;
+ 	rcu_assign_pointer(*nl, n);
 +
-+	switch (ev) {
-+	case DIE_OOPS:
-+		do_dump = 1;
-+		break;
-+	case PANIC_NOTIFIER:
-+		do_dump = 1;
-+		break;
-+	default:
-+		do_dump = 0;
-+		break;
++#ifdef CONFIG_DEBUG_NOTIFIERS
++	{
++		char sym_name[KSYM_NAME_LEN];
++
++		pr_info("notifiers: registered %s()\n",
++			notifier_name(n, sym_name));
 +	}
-+
-+	if (do_dump)
- 		ftrace_dump(ftrace_dump_on_oops);
--	return NOTIFY_OK;
-+
-+	return NOTIFY_DONE;
++#endif
+ 	return 0;
  }
  
- static struct notifier_block trace_panic_notifier = {
--	.notifier_call  = trace_panic_handler,
--	.next           = NULL,
--	.priority       = 150   /* priority: INT_MAX >= x >= 0 */
-+	.notifier_call = trace_die_panic_handler,
-+	.priority = INT_MAX - 1,
- };
+ static int notifier_chain_unregister(struct notifier_block **nl,
+ 		struct notifier_block *n)
+ {
++	int ret = -ENOENT;
++
+ 	while ((*nl) != NULL) {
+ 		if ((*nl) == n) {
+ 			rcu_assign_pointer(*nl, n->next);
+-			return 0;
++			ret = 0;
++			break;
+ 		}
+ 		nl = &((*nl)->next);
+ 	}
+-	return -ENOENT;
++
++#ifdef CONFIG_DEBUG_NOTIFIERS
++	if (!ret) {
++		char sym_name[KSYM_NAME_LEN];
++
++		pr_info("notifiers: unregistered %s()\n",
++			notifier_name(n, sym_name));
++	}
++#endif
++	return ret;
+ }
  
--static int trace_die_handler(struct notifier_block *self,
--			     unsigned long val,
--			     void *data)
--{
--	switch (val) {
--	case DIE_OOPS:
--		if (ftrace_dump_on_oops)
--			ftrace_dump(ftrace_dump_on_oops);
--		break;
--	default:
--		break;
--	}
--	return NOTIFY_OK;
--}
--
- static struct notifier_block trace_die_notifier = {
--	.notifier_call = trace_die_handler,
--	.priority = 200
-+	.notifier_call = trace_die_panic_handler,
-+	.priority = INT_MAX - 1,
- };
+ /**
+@@ -80,6 +117,13 @@ static int notifier_call_chain(struct notifier_block **nl,
+ 			nb = next_nb;
+ 			continue;
+ 		}
++
++		{
++			char sym_name[KSYM_NAME_LEN];
++
++			pr_debug("notifiers: calling %s()\n",
++				 notifier_name(nb, sym_name));
++		}
+ #endif
+ 		ret = nb->notifier_call(nb, val, v);
  
- /*
 -- 
 2.36.0
 
