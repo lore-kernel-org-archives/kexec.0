@@ -1,70 +1,56 @@
-From: Mohamed Abuelfotoh, Hazem <abuehaze@amazon.com>
-Date: Thu, 28 Apr 2022 12:15:13 +0000
-Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
- to 32k
-In-Reply-To: <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
-References: <20220419172327.11288-1-abuehaze@amazon.com>
- <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
-Message-ID: <BCB353B2-BF8E-43BE-BA15-102B38CF2F9D@amazon.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Wed, 27 Apr 2022 19:48:56 -0300
+Subject: [PATCH 02/30] ARM: kexec: Disable IRQs/FIQs also on crash CPUs
+ shutdown path
+In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-3-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Thanks Baoquan, Will we get this patch into the next kexec-tools release?
+Currently the regular CPU shutdown path for ARM disables IRQs/FIQs
+in the secondary CPUs - smp_send_stop() calls ipi_cpu_stop(), which
+is responsible for that. This makes sense, since we're turning off
+such CPUs, putting them in an endless busy-wait loop.
 
-Hazem.
+Problem is that there is an alternative path for disabling CPUs,
+in the form of function crash_smp_send_stop(), used for kexec/panic
+paths. This functions relies in a SMP call that also triggers a
+busy-wait loop [at machine_crash_nonpanic_core()], but *without*
+disabling interrupts. This might lead to odd scenarios, like early
+interrupts in the boot of kexec'd kernel or even interrupts in
+other CPUs while the main one still works in the panic path and
+assumes all secondary CPUs are (really!) off.
 
-?On 26/04/2022, 02:15, "Baoquan He" <bhe@redhat.com> wrote:
+This patch mimics the ipi_cpu_stop() interrupt disable mechanism
+in the crash CPU shutdown path, hence disabling IRQs/FIQs in all
+secondary CPUs in the kexec/panic path as well.
 
-    CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
+Cc: Marc Zyngier <maz@kernel.org>
+Cc: Russell King <linux@armlinux.org.uk>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+---
+ arch/arm/kernel/machine_kexec.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-
-
-    On 04/19/22 at 05:23pm, abuehaze14 wrote:
-    > On ARM64 based VMs hotplugging more than 31GB of memory will cause
-    > kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
-    > limit which is currently 32 on ARM64 given that the  memory block size
-    > is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
-    > to 32K similar to what we have on x86, this should allow
-    > kdump to work until the VM has 32TB which should be
-    > enough for a long time.
-    >
-    > Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
-
-    Sounds reasonable.
-
-    Acked-by: Baoquan He <bhe@redhat.com>
-
-    By the way, Simon usually collects kexec-tools patches every one to two
-    weeks, no need to always ping in a short time.
-
-    > ---
-    >  kexec/arch/arm64/crashdump-arm64.h | 2 +-
-    >  1 file changed, 1 insertion(+), 1 deletion(-)
-    >
-    > diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
-    > index 12f4308..82fa69b 100644
-    > --- a/kexec/arch/arm64/crashdump-arm64.h
-    > +++ b/kexec/arch/arm64/crashdump-arm64.h
-    > @@ -14,7 +14,7 @@
-    >
-    >  #include "kexec.h"
-    >
-    > -#define CRASH_MAX_MEMORY_RANGES      32
-    > +#define CRASH_MAX_MEMORY_RANGES      32768
-    >
-    >  /* crash dump kernel support at most two regions, low_region and high region. */
-    >  #define CRASH_MAX_RESERVED_RANGES    2
-    > --
-    > 2.32.0
-    >
-    >
-    > _______________________________________________
-    > kexec mailing list
-    > kexec at lists.infradead.org
-    > http://lists.infradead.org/mailman/listinfo/kexec
-    >
+diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+index f567032a09c0..ef788ee00519 100644
+--- a/arch/arm/kernel/machine_kexec.c
++++ b/arch/arm/kernel/machine_kexec.c
+@@ -86,6 +86,9 @@ void machine_crash_nonpanic_core(void *unused)
+ 	set_cpu_online(smp_processor_id(), false);
+ 	atomic_dec(&waiting_for_crash_ipi);
+ 
++	local_fiq_disable();
++	local_irq_disable();
++
+ 	while (1) {
+ 		cpu_relax();
+ 		wfe();
+-- 
+2.36.0
 
 
