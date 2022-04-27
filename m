@@ -1,73 +1,76 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:49:00 -0300
-Subject: [PATCH 06/30] soc: bcm: brcmstb: Document panic notifier action and
- remove useless header
+Date: Wed, 27 Apr 2022 19:49:01 -0300
+Subject: [PATCH 07/30] mips: ip22: Reword PANICED to PANICKED and remove
+ useless header
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-7-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-8-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The panic notifier of this driver is very simple code-wise, just a memory
-write to a special position with some numeric code. But this is not clear
-from the semantic point-of-view, and there is no public documentation
-about that either.
+Many other place in the kernel prefer the latter, so let's keep
+it consistent in MIPS code as well. Also, removes a useless header.
 
-After discussing this in the mailing-lists [0] and having Florian explained
-it very well, this patch just document that in the code for the future
-generations asking the same questions. Also, it removes a useless header.
-
-[0] https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a at gmail.com
-
-Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
-Cc: Brian Norris <computersforpeace@gmail.com>
-Cc: Doug Berger <opendmb@gmail.com>
-Cc: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Justin Chen <justinpopo6@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Markus Mayer <mmayer@broadcom.com>
+Cc: Thomas Bogendoerfer <tsbogend@alpha.franken.de>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- drivers/soc/bcm/brcmstb/pm/pm-arm.c | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+ arch/mips/sgi-ip22/ip22-reset.c | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/soc/bcm/brcmstb/pm/pm-arm.c b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-index 3cbb165d6e30..870686ae042b 100644
---- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-+++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-@@ -25,7 +25,6 @@
+diff --git a/arch/mips/sgi-ip22/ip22-reset.c b/arch/mips/sgi-ip22/ip22-reset.c
+index 9028dbbb45dd..8f0861c58080 100644
+--- a/arch/mips/sgi-ip22/ip22-reset.c
++++ b/arch/mips/sgi-ip22/ip22-reset.c
+@@ -11,7 +11,6 @@
+ #include <linux/interrupt.h>
  #include <linux/kernel.h>
- #include <linux/memblock.h>
- #include <linux/module.h>
+ #include <linux/sched/signal.h>
 -#include <linux/notifier.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
  #include <linux/panic_notifier.h>
-@@ -664,7 +663,20 @@ static void __iomem *brcmstb_ioremap_match(const struct of_device_id *matches,
+ #include <linux/pm.h>
+ #include <linux/timer.h>
+@@ -41,7 +40,7 @@
+ static struct timer_list power_timer, blink_timer, debounce_timer;
+ static unsigned long blink_timer_timeout;
  
- 	return of_io_request_and_map(dn, index, dn->full_name);
- }
--
-+/*
-+ * The AON is a small domain in the SoC that can retain its state across
-+ * various system wide sleep states and specific reset conditions; the
-+ * AON DATA RAM is a small RAM of a few words (< 1KB) which can store
-+ * persistent information across such events.
-+ *
-+ * The purpose of the below panic notifier is to help with notifying
-+ * the bootloader that a panic occurred and so that it should try its
-+ * best to preserve the DRAM contents holding that buffer for recovery
-+ * by the kernel as opposed to wiping out DRAM clean again.
-+ *
-+ * Reference: comment from Florian Fainelli, at
-+ * https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a@gmail.com
-+ */
- static int brcmstb_pm_panic_notify(struct notifier_block *nb,
- 		unsigned long action, void *data)
+-#define MACHINE_PANICED		1
++#define MACHINE_PANICKED		1
+ #define MACHINE_SHUTTING_DOWN	2
+ 
+ static int machine_state;
+@@ -112,7 +111,7 @@ static void debounce(struct timer_list *unused)
+ 		return;
+ 	}
+ 
+-	if (machine_state & MACHINE_PANICED)
++	if (machine_state & MACHINE_PANICKED)
+ 		sgimc->cpuctrl0 |= SGIMC_CCTRL0_SYSINIT;
+ 
+ 	enable_irq(SGI_PANEL_IRQ);
+@@ -120,7 +119,7 @@ static void debounce(struct timer_list *unused)
+ 
+ static inline void power_button(void)
  {
+-	if (machine_state & MACHINE_PANICED)
++	if (machine_state & MACHINE_PANICKED)
+ 		return;
+ 
+ 	if ((machine_state & MACHINE_SHUTTING_DOWN) ||
+@@ -167,9 +166,9 @@ static irqreturn_t panel_int(int irq, void *dev_id)
+ static int panic_event(struct notifier_block *this, unsigned long event,
+ 		      void *ptr)
+ {
+-	if (machine_state & MACHINE_PANICED)
++	if (machine_state & MACHINE_PANICKED)
+ 		return NOTIFY_DONE;
+-	machine_state |= MACHINE_PANICED;
++	machine_state |= MACHINE_PANICKED;
+ 
+ 	blink_timer_timeout = PANIC_FREQ;
+ 	blink_timeout(&blink_timer);
 -- 
 2.36.0
 
