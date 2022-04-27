@@ -1,61 +1,72 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:48:58 -0300
-Subject: [PATCH 04/30] firmware: google: Convert regular spinlock into trylock
- on panic path
+Date: Wed, 27 Apr 2022 19:48:59 -0300
+Subject: [PATCH 05/30] misc/pvpanic: Convert regular spinlock into trylock on
+ panic path
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-5-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-6-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently the gsmi driver registers a panic notifier as well as
-reboot and die notifiers. The callbacks registered are called in
-atomic and very limited context - for instance, panic disables
-preemption, local IRQs and all other CPUs that aren't running the
-current panic function.
+The pvpanic driver relies on panic notifiers to execute a callback
+on panic event. Such function is executed in atomic context - the
+panic function disables local IRQs, preemption and all other CPUs
+that aren't running the panic code.
 
-With that said, taking a spinlock in this scenario is a
-dangerous invitation for a deadlock scenario. So, we fix
-that in this commit by changing the regular spinlock with
-a trylock, which is a safer approach.
+With that said, it's dangerous to use regular spinlocks in such path,
+as introduced by commit b3c0f8774668 ("misc/pvpanic: probe multiple instances").
+This patch fixes that by replacing regular spinlocks with the trylock
+safer approach.
 
-Fixes: 74c5b31c6618 ("driver: Google EFI SMI")
-Cc: Ard Biesheuvel <ardb@kernel.org>
-Cc: David Gow <davidgow@google.com>
-Cc: Evan Green <evgreen@chromium.org>
-Cc: Julius Werner <jwerner@chromium.org>
+It also fixes an old comment (about a long gone framebuffer code) and
+the notifier priority - we should execute hypervisor notifiers early,
+deferring this way the panic action to the hypervisor, as expected by
+the users that are setting up pvpanic.
+
+Fixes: b3c0f8774668 ("misc/pvpanic: probe multiple instances")
+Cc: Christophe JAILLET <christophe.jaillet@wanadoo.fr>
+Cc: Mihai Carabas <mihai.carabas@oracle.com>
+Cc: Shile Zhang <shile.zhang@linux.alibaba.com>
+Cc: Wang ShaoBo <bobo.shaobowang@huawei.com>
+Cc: zhenwei pi <pizhenwei@bytedance.com>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- drivers/firmware/google/gsmi.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/misc/pvpanic/pvpanic.c | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-index adaa492c3d2d..b01ed02e4a87 100644
---- a/drivers/firmware/google/gsmi.c
-+++ b/drivers/firmware/google/gsmi.c
-@@ -629,7 +629,10 @@ static int gsmi_shutdown_reason(int reason)
- 	if (saved_reason & (1 << reason))
- 		return 0;
+diff --git a/drivers/misc/pvpanic/pvpanic.c b/drivers/misc/pvpanic/pvpanic.c
+index 4b8f1c7d726d..049a12006348 100644
+--- a/drivers/misc/pvpanic/pvpanic.c
++++ b/drivers/misc/pvpanic/pvpanic.c
+@@ -34,7 +34,9 @@ pvpanic_send_event(unsigned int event)
+ {
+ 	struct pvpanic_instance *pi_cur;
  
--	spin_lock_irqsave(&gsmi_dev.lock, flags);
-+	if (!spin_trylock_irqsave(&gsmi_dev.lock, flags)) {
-+		rc = -EBUSY;
-+		goto out;
-+	}
+-	spin_lock(&pvpanic_lock);
++	if (!spin_trylock(&pvpanic_lock))
++		return;
++
+ 	list_for_each_entry(pi_cur, &pvpanic_list, list) {
+ 		if (event & pi_cur->capability & pi_cur->events)
+ 			iowrite8(event, pi_cur->base);
+@@ -55,9 +57,13 @@ pvpanic_panic_notify(struct notifier_block *nb, unsigned long code, void *unused
+ 	return NOTIFY_DONE;
+ }
  
- 	saved_reason |= (1 << reason);
++/*
++ * Call our notifier very early on panic, deferring the
++ * action taken to the hypervisor.
++ */
+ static struct notifier_block pvpanic_panic_nb = {
+ 	.notifier_call = pvpanic_panic_notify,
+-	.priority = 1, /* let this called before broken drm_fb_helper() */
++	.priority = INT_MAX,
+ };
  
-@@ -646,6 +649,7 @@ static int gsmi_shutdown_reason(int reason)
- 
- 	spin_unlock_irqrestore(&gsmi_dev.lock, flags);
- 
-+out:
- 	if (rc < 0)
- 		printk(KERN_ERR "gsmi: Log Shutdown Reason failed\n");
- 	else
+ static void pvpanic_remove(void *param)
 -- 
 2.36.0
 
