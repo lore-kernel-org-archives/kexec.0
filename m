@@ -1,99 +1,88 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:49:04 -0300
-Subject: [PATCH 10/30] alpha: Clean-up the panic notifier code
+Date: Wed, 27 Apr 2022 19:49:05 -0300
+Subject: [PATCH 11/30] um: Improve panic notifiers consistency and ordering
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-11-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-12-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The alpha panic notifier has some code issues, not following
-the conventions of other notifiers. Also, it might halt the
-machine but still it is set to run as early as possible, which
-doesn't seem to be a good idea.
+Currently the panic notifiers from user mode linux don't follow
+the convention for most of the other notifiers present in the
+kernel (indentation, priority setting, numeric return).
+More important, the priorities could be improved, since it's a
+special case (userspace), hence we could run the notifiers earlier;
+user mode linux shouldn't care much with other panic notifiers but
+the ordering among the mconsole and arch notifier is important,
+given that the arch one effectively triggers a core dump.
 
-This patch cleans the code, and set the notifier to run as the
-latest, following the same approach other architectures are doing.
-Also, we remove the unnecessary include of a header already
-included indirectly.
+This patch fixes that by running the mconsole notifier as the first
+panic notifier, followed by the architecture one (that coredumps).
+Also, we remove a useless header inclusion.
 
-Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
-Cc: Matt Turner <mattst88@gmail.com>
-Cc: Richard Henderson <rth@twiddle.net>
+Cc: Anton Ivanov <anton.ivanov@cambridgegreys.com>
+Cc: Johannes Berg <johannes@sipsolutions.net>
+Cc: Richard Weinberger <richard@nod.at>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- arch/alpha/kernel/setup.c | 36 +++++++++++++++---------------------
- 1 file changed, 15 insertions(+), 21 deletions(-)
+ arch/um/drivers/mconsole_kern.c | 8 +++-----
+ arch/um/kernel/um_arch.c        | 8 ++++----
+ 2 files changed, 7 insertions(+), 9 deletions(-)
 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index b4fbbba30aa2..d88bdf852753 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -41,19 +41,11 @@
- #include <linux/sysrq.h>
- #include <linux/reboot.h>
- #endif
+diff --git a/arch/um/drivers/mconsole_kern.c b/arch/um/drivers/mconsole_kern.c
+index 8ca67a692683..2ea0421bcc3f 100644
+--- a/arch/um/drivers/mconsole_kern.c
++++ b/arch/um/drivers/mconsole_kern.c
+@@ -11,7 +11,6 @@
+ #include <linux/list.h>
+ #include <linux/mm.h>
+ #include <linux/module.h>
 -#include <linux/notifier.h>
- #include <asm/setup.h>
- #include <asm/io.h>
- #include <linux/log2.h>
- #include <linux/export.h>
+ #include <linux/panic_notifier.h>
+ #include <linux/reboot.h>
+ #include <linux/sched/debug.h>
+@@ -846,13 +845,12 @@ static int notify_panic(struct notifier_block *self, unsigned long unused1,
  
--static int alpha_panic_event(struct notifier_block *, unsigned long, void *);
--static struct notifier_block alpha_panic_block = {
--	alpha_panic_event,
--        NULL,
--        INT_MAX /* try to do it first */
--};
--
- #include <linux/uaccess.h>
- #include <asm/hwrpb.h>
- #include <asm/dma.h>
-@@ -435,6 +427,21 @@ static const struct sysrq_key_op srm_sysrq_reboot_op = {
+ 	mconsole_notify(notify_socket, MCONSOLE_PANIC, message,
+ 			strlen(message) + 1);
+-	return 0;
++	return NOTIFY_DONE;
+ }
+ 
+ static struct notifier_block panic_exit_notifier = {
+-	.notifier_call 		= notify_panic,
+-	.next 			= NULL,
+-	.priority 		= 1
++	.notifier_call	= notify_panic,
++	.priority	= INT_MAX, /* run as soon as possible */
  };
- #endif
  
-+static int alpha_panic_event(struct notifier_block *this,
-+			     unsigned long event, void *ptr)
-+{
-+	/* If we are using SRM and serial console, just hard halt here. */
-+	if (alpha_using_srm && srmcons_output)
-+		__halt();
+ static int add_notifier(void)
+diff --git a/arch/um/kernel/um_arch.c b/arch/um/kernel/um_arch.c
+index 0760e24f2eba..4485b1a7c8e4 100644
+--- a/arch/um/kernel/um_arch.c
++++ b/arch/um/kernel/um_arch.c
+@@ -246,13 +246,13 @@ static int panic_exit(struct notifier_block *self, unsigned long unused1,
+ 	bust_spinlocks(0);
+ 	uml_exitcode = 1;
+ 	os_dump_core();
+-	return 0;
 +
 +	return NOTIFY_DONE;
-+}
-+
-+static struct notifier_block alpha_panic_block = {
-+	.notifier_call = alpha_panic_event,
-+	.priority = INT_MIN, /* may not return, do it last */
-+};
-+
- void __init
- setup_arch(char **cmdline_p)
- {
-@@ -1427,19 +1434,6 @@ const struct seq_operations cpuinfo_op = {
- 	.show	= show_cpuinfo,
+ }
+ 
+ static struct notifier_block panic_exit_notifier = {
+-	.notifier_call 		= panic_exit,
+-	.next 			= NULL,
+-	.priority 		= 0
++	.notifier_call	= panic_exit,
++	.priority	= INT_MAX - 1, /* run as 2nd notifier, won't return */
  };
  
--
--static int
--alpha_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
--{
--#if 1
--	/* FIXME FIXME FIXME */
--	/* If we are using SRM and serial console, just hard halt here. */
--	if (alpha_using_srm && srmcons_output)
--		__halt();
--#endif
--        return NOTIFY_DONE;
--}
--
- static __init int add_pcspkr(void)
- {
- 	struct platform_device *pd;
+ void uml_finishsetup(void)
 -- 
 2.36.0
 
