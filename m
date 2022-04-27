@@ -1,71 +1,50 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 27 Apr 2022 19:49:21 -0300
-Subject: [PATCH 27/30] powerpc: Do not force all panic notifiers to execute
- before kdump
+Date: Wed, 27 Apr 2022 19:49:22 -0300
+Subject: [PATCH 28/30] panic: Unexport crash_kexec_post_notifiers
 In-Reply-To: <20220427224924.592546-1-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
-Message-ID: <20220427224924.592546-28-gpiccoli@igalia.com>
+Message-ID: <20220427224924.592546-29-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Commit 06e629c25daa ("powerpc/fadump: Fix inaccurate CPU state info in
-vmcore generated with panic") introduced a hardcoded setting of kernel
-parameter "crash_kexec_post_notifiers", effectively forcing all the
-panic notifiers to execute earlier in the panic path, before kdump.
+There is no users anymore of this variable that requires
+it to be "exported" in the headers; also, it was deprecated
+by the kernel parameter "panic_notifiers_level".
 
-The reason for that was a fadump issue on collecting data accurately,
-due to smp_send_stop() setting all CPUs offline, so the net effect
-desired with this change was to avoid calling the regular CPU
-shutdown function, and instead rely on crash_smp_send_stop(), which
-copes fine with fadump. The collateral effect was to increase the
-risk for kdump if fadump is not used, since it forces all panic
-notifiers to execute early, before kdump.
-
-Happens that, after a panic refactor, crash_smp_send_stop() is
-now used by default in the panic path, so there is no reason to
-mess with the notifiers ordering (which was also improved in the
-refactor) from within arch code.
-
-Fixes: 06e629c25daa ("powerpc/fadump: Fix inaccurate CPU state info in vmcore generated with panic")
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Hari Bathini <hbathini@linux.ibm.com>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: Nicholas Piggin <npiggin@gmail.com>
-Cc: Paul Mackerras <paulus@samba.org>
 Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
+ include/linux/panic.h          | 2 --
+ include/linux/panic_notifier.h | 1 -
+ 2 files changed, 3 deletions(-)
 
-We'd like to thanks specially the MiniCloud infrastructure [0] maintainers,
-that allow us to test PowerPC code in a very complete, functional and FREE
-environment.
-
-[0] https://openpower.ic.unicamp.br/minicloud
-
- arch/powerpc/kernel/fadump.c | 8 --------
- 1 file changed, 8 deletions(-)
-
-diff --git a/arch/powerpc/kernel/fadump.c b/arch/powerpc/kernel/fadump.c
-index 65562c4a0a69..35ae8c09af66 100644
---- a/arch/powerpc/kernel/fadump.c
-+++ b/arch/powerpc/kernel/fadump.c
-@@ -1649,14 +1649,6 @@ int __init setup_fadump(void)
- 		register_fadump();
- 	}
+diff --git a/include/linux/panic.h b/include/linux/panic.h
+index 34175d0188d0..d301db07a8af 100644
+--- a/include/linux/panic.h
++++ b/include/linux/panic.h
+@@ -34,8 +34,6 @@ extern int sysctl_panic_on_rcu_stall;
+ extern int sysctl_max_rcu_stall_to_panic;
+ extern int sysctl_panic_on_stackoverflow;
  
--	/*
--	 * In case of panic, fadump is triggered via ppc_panic_event()
--	 * panic notifier. Setting crash_kexec_post_notifiers to 'true'
--	 * lets panic() function take crash friendly path before panic
--	 * notifiers are invoked.
--	 */
--	crash_kexec_post_notifiers = true;
+-extern bool crash_kexec_post_notifiers;
 -
- 	return 1;
- }
  /*
+  * panic_cpu is used for synchronizing panic() and crash_kexec() execution. It
+  * holds a CPU number which is executing panic() currently. A value of
+diff --git a/include/linux/panic_notifier.h b/include/linux/panic_notifier.h
+index b5041132321d..8fda7045e2f7 100644
+--- a/include/linux/panic_notifier.h
++++ b/include/linux/panic_notifier.h
+@@ -11,7 +11,6 @@ extern struct atomic_notifier_head panic_pre_reboot_list;
+ extern struct atomic_notifier_head panic_post_reboot_list;
+ 
+ bool panic_notifiers_before_kdump(void);
+-extern bool crash_kexec_post_notifiers;
+ 
+ enum panic_notifier_val {
+ 	PANIC_UNUSED,
 -- 
 2.36.0
 
