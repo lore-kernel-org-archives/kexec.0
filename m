@@ -1,31 +1,70 @@
-From: David Hildenbrand <david@redhat.com>
-Date: Thu, 28 Apr 2022 11:49:39 +0200
-Subject: [PATCH v7 1/8] x86/crash: fix minor typo/bug in debug message
-In-Reply-To: <20220413164237.20845-2-eric.devolder@oracle.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-2-eric.devolder@oracle.com>
-Message-ID: <6369fd69-5b59-1aa4-461e-237b3f128925@redhat.com>
+From: Mohamed Abuelfotoh, Hazem <abuehaze@amazon.com>
+Date: Thu, 28 Apr 2022 12:15:13 +0000
+Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
+ to 32k
+In-Reply-To: <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
+References: <20220419172327.11288-1-abuehaze@amazon.com>
+ <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
+Message-ID: <BCB353B2-BF8E-43BE-BA15-102B38CF2F9D@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 13.04.22 18:42, Eric DeVolder wrote:
-> The pr_debug() intends to display the memsz member, but the
-> parameter is actually the bufsz member (which is already
-> displayed). Correct this to display memsz value.
-> 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-> Acked-by: Baoquan He <bhe@redhat.com>
-> ---
+Thanks Baoquan, Will we get this patch into the next kexec-tools release?
 
-Reviewed-by: David Hildenbrand <david@redhat.com>
+Hazem.
+
+?On 26/04/2022, 02:15, "Baoquan He" <bhe@redhat.com> wrote:
+
+    CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 
 
--- 
-Thanks,
 
-David / dhildenb
+    On 04/19/22 at 05:23pm, abuehaze14 wrote:
+    > On ARM64 based VMs hotplugging more than 31GB of memory will cause
+    > kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
+    > limit which is currently 32 on ARM64 given that the  memory block size
+    > is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
+    > to 32K similar to what we have on x86, this should allow
+    > kdump to work until the VM has 32TB which should be
+    > enough for a long time.
+    >
+    > Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+
+    Sounds reasonable.
+
+    Acked-by: Baoquan He <bhe@redhat.com>
+
+    By the way, Simon usually collects kexec-tools patches every one to two
+    weeks, no need to always ping in a short time.
+
+    > ---
+    >  kexec/arch/arm64/crashdump-arm64.h | 2 +-
+    >  1 file changed, 1 insertion(+), 1 deletion(-)
+    >
+    > diff --git a/kexec/arch/arm64/crashdump-arm64.h b/kexec/arch/arm64/crashdump-arm64.h
+    > index 12f4308..82fa69b 100644
+    > --- a/kexec/arch/arm64/crashdump-arm64.h
+    > +++ b/kexec/arch/arm64/crashdump-arm64.h
+    > @@ -14,7 +14,7 @@
+    >
+    >  #include "kexec.h"
+    >
+    > -#define CRASH_MAX_MEMORY_RANGES      32
+    > +#define CRASH_MAX_MEMORY_RANGES      32768
+    >
+    >  /* crash dump kernel support at most two regions, low_region and high region. */
+    >  #define CRASH_MAX_RESERVED_RANGES    2
+    > --
+    > 2.32.0
+    >
+    >
+    > _______________________________________________
+    > kexec mailing list
+    > kexec at lists.infradead.org
+    > http://lists.infradead.org/mailman/listinfo/kexec
+    >
 
 
