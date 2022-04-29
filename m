@@ -1,31 +1,37 @@
 From: Simon Horman <horms@kernel.org>
-Date: Fri, 29 Apr 2022 11:51:20 +0200
-Subject: Does Kexec have plan to support riscv64?
-In-Reply-To: <CAKq8=3JS5pRCe5kL7w=dSG_d-uF+2jgk83z2CMScnnpoW1Tb4w@mail.gmail.com>
-References: <CAKq8=3JS5pRCe5kL7w=dSG_d-uF+2jgk83z2CMScnnpoW1Tb4w@mail.gmail.com>
-Message-ID: <Ymu1GEzVBnveJykV@vergenet.net>
+Date: Fri, 29 Apr 2022 11:58:56 +0200
+Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
+ to 32k
+In-Reply-To: <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
+References: <20220419172327.11288-1-abuehaze@amazon.com>
+ <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv>
+Message-ID: <Ymu24KkCD1UHzGmI@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-+ Nick Kossifidis
+On Tue, Apr 26, 2022 at 08:14:15AM +0800, Baoquan He wrote:
+> On 04/19/22 at 05:23pm, abuehaze14 wrote:
+> > On ARM64 based VMs hotplugging more than 31GB of memory will cause
+> > kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
+> > limit which is currently 32 on ARM64 given that the  memory block size
+> > is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
+> > to 32K similar to what we have on x86, this should allow
+> > kdump to work until the VM has 32TB which should be
+> > enough for a long time.
+> > 
+> > Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+> 
+> Sounds reasonable.
+> 
+> Acked-by: Baoquan He <bhe@redhat.com>
+> 
+> By the way, Simon usually collects kexec-tools patches every one to two
+> weeks, no need to always ping in a short time.
 
-On Tue, Apr 26, 2022 at 04:55:56PM +0800, Bo YU wrote:
-> Hi,
-> >From here: https://projects.horms.net/projects/kexec/
-> I noticed the kexec does not support riscv64 arch. Are we have plan to
-> support riscv64 for it? Or are there others that are not suitable for this
-> plan?
-> If possible I can help to port kexec to riscv64(maybe need you help).
+Thanks and sorry for the delay.
 
-Hi Bo,
-
-I believe that RISCV kexec support has been merged into the upstream
-kernel. I have CCed Nick Kossifidis, who I believe was involved in that
-work, in the hop that he can provide more information.
-
-Kind regards,
-Simon
+I have applied this patch to main.
 
