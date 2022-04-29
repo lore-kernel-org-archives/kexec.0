@@ -1,278 +1,193 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Fri, 29 Apr 2022 16:25:37 +0800
-Subject: [PATCH v22 5/9] arm64: kdump: Reimplement crashkernel=X
-In-Reply-To: <a9c736a0-f2b3-5b8a-94d9-80742ccd2700@huawei.com>
-References: <20220414115720.1887-1-thunder.leizhen@huawei.com>
- <20220414115720.1887-6-thunder.leizhen@huawei.com> <YmgzxsrrMlCDYsWp@arm.com>
- <ee8daaa9-3258-e7e8-e5c4-c51dc9841580@huawei.com> <Ymk34NsIFqUgfk3b@arm.com>
- <ae7211ad-e2ac-f5b1-5aa0-701802132e73@huawei.com> <YmlphvZVMsGfFksp@arm.com>
- <YmoMvV1wzHT5V1aw@MiWiFi-R3L-srv> <YmoPhvkXQFZQOcIO@MiWiFi-R3L-srv>
- <3fc41a94-4247-40f3-14e7-f11e3001ec33@huawei.com>
- <YmtaiJhwIgP6m2Sk@MiWiFi-R3L-srv>
- <a9c736a0-f2b3-5b8a-94d9-80742ccd2700@huawei.com>
-Message-ID: <23e2dcf4-4e9a-5298-d5d8-8761b0bbbe21@huawei.com>
+From: Tao Liu <ltao@redhat.com>
+Date: Fri, 29 Apr 2022 17:06:17 +0800
+Subject: [PATCH v3 00/10] x86/sev: KEXEC/KDUMP support for SEV-ES guests
+In-Reply-To: <20220127101044.13803-1-joro@8bytes.org>
+References: <20220127101044.13803-1-joro@8bytes.org>
+Message-ID: <YmuqifsJltdh7rpv@localhost.localdomain>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Thu, Jan 27, 2022 at 11:10:34AM +0100, Joerg Roedel wrote:
+> From: Joerg Roedel <jroedel@suse.de>
+> 
+> Hi,
+> 
+> here are changes to enable kexec/kdump in SEV-ES guests. The biggest
+> problem for supporting kexec/kdump under SEV-ES is to find a way to
+> hand the non-boot CPUs (APs) from one kernel to another.
+> 
+> Without SEV-ES the first kernel parks the CPUs in a HLT loop until
+> they get reset by the kexec'ed kernel via an INIT-SIPI-SIPI sequence.
+> For virtual machines the CPU reset is emulated by the hypervisor,
+> which sets the vCPU registers back to reset state.
+> 
+> This does not work under SEV-ES, because the hypervisor has no access
+> to the vCPU registers and can't make modifications to them. So an
+> SEV-ES guest needs to reset the vCPU itself and park it using the
+> AP-reset-hold protocol. Upon wakeup the guest needs to jump to
+> real-mode and to the reset-vector configured in the AP-Jump-Table.
+> 
+> The code to do this is the main part of this patch-set. It works by
+> placing code on the AP Jump-Table page itself to park the vCPU and for
+> jumping to the reset vector upon wakeup. The code on the AP Jump Table
+> runs in 16-bit protected mode with segment base set to the beginning
+> of the page. The AP Jump-Table is usually not within the first 1MB of
+> memory, so the code can't run in real-mode.
+> 
+> The AP Jump-Table is the best place to put the parking code, because
+> the memory is owned, but read-only by the firmware and writeable by
+> the OS. Only the first 4 bytes are used for the reset-vector, leaving
+> the rest of the page for code/data/stack to park a vCPU. The code
+> can't be in kernel memory because by the time the vCPU wakes up the
+> memory will be owned by the new kernel, which might have overwritten it
+> already.
+> 
+> The other patches add initial GHCB Version 2 protocol support, because
+> kexec/kdump need the MSR-based (without a GHCB) AP-reset-hold VMGEXIT,
+> which is a GHCB protocol version 2 feature.
+> 
+> The kexec'ed kernel is also entered via the decompressor and needs
+> MMIO support there, so this patch-set also adds MMIO #VC support to
+> the decompressor and support for handling CLFLUSH instructions.
+> 
+> Finally there is also code to disable kexec/kdump support at runtime
+> when the environment does not support it (e.g. no GHCB protocol
+> version 2 support or AP Jump Table over 4GB).
+> 
+> The diffstat looks big, but most of it is moving code for MMIO #VC
+> support around to make it available to the decompressor.
+> 
+> The previous version of this patch-set can be found here:
+> 
+> 	https://lore.kernel.org/lkml/20210913155603.28383-1-joro at 8bytes.org/
+> 
+> Please review.
+> 
+> Thanks,
+> 
+> 	Joerg
+> 
+> Changes v2->v3:
+> 
+> 	- Rebased to v5.17-rc1
+> 	- Applied most review comments by Boris
+> 	- Use the name 'AP jump table' consistently
+> 	- Make kexec-disabling for unsupported guests x86-specific
+> 	- Cleanup and consolidate patches to detect GHCB v2 protocol
+> 	  support
+> 
+> Joerg Roedel (10):
+>   x86/kexec/64: Disable kexec when SEV-ES is active
+>   x86/sev: Save and print negotiated GHCB protocol version
+>   x86/sev: Set GHCB data structure version
+>   x86/sev: Cache AP Jump Table Address
+>   x86/sev: Setup code to park APs in the AP Jump Table
+>   x86/sev: Park APs on AP Jump Table with GHCB protocol version 2
+>   x86/sev: Use AP Jump Table blob to stop CPU
+>   x86/sev: Add MMIO handling support to boot/compressed/ code
+>   x86/sev: Handle CLFLUSH MMIO events
+>   x86/kexec/64: Support kexec under SEV-ES with AP Jump Table Blob
+> 
+>  arch/x86/boot/compressed/sev.c          |  45 +-
+>  arch/x86/include/asm/insn-eval.h        |   1 +
+>  arch/x86/include/asm/realmode.h         |   5 +
+>  arch/x86/include/asm/sev-ap-jumptable.h |  29 +
+>  arch/x86/include/asm/sev.h              |  11 +-
+>  arch/x86/kernel/machine_kexec_64.c      |  12 +
+>  arch/x86/kernel/process.c               |   8 +
+>  arch/x86/kernel/sev-shared.c            | 233 +++++-
+>  arch/x86/kernel/sev.c                   | 404 +++++------
+>  arch/x86/lib/insn-eval-shared.c         | 913 ++++++++++++++++++++++++
+>  arch/x86/lib/insn-eval.c                | 909 +----------------------
+>  arch/x86/realmode/Makefile              |   9 +-
+>  arch/x86/realmode/rm/Makefile           |  11 +-
+>  arch/x86/realmode/rm/header.S           |   3 +
+>  arch/x86/realmode/rm/sev.S              |  85 +++
+>  arch/x86/realmode/rmpiggy.S             |   6 +
+>  arch/x86/realmode/sev/Makefile          |  33 +
+>  arch/x86/realmode/sev/ap_jump_table.S   | 131 ++++
+>  arch/x86/realmode/sev/ap_jump_table.lds |  24 +
+>  19 files changed, 1730 insertions(+), 1142 deletions(-)
+>  create mode 100644 arch/x86/include/asm/sev-ap-jumptable.h
+>  create mode 100644 arch/x86/lib/insn-eval-shared.c
+>  create mode 100644 arch/x86/realmode/rm/sev.S
+>  create mode 100644 arch/x86/realmode/sev/Makefile
+>  create mode 100644 arch/x86/realmode/sev/ap_jump_table.S
+>  create mode 100644 arch/x86/realmode/sev/ap_jump_table.lds
+> 
+> 
+> base-commit: e783362eb54cd99b2cac8b3a9aeac942e6f6ac07
+> -- 
+> 2.34.1
+>
 
+Hi Joerg,
 
-On 2022/4/29 16:02, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2022/4/29 11:24, Baoquan He wrote:
->> On 04/28/22 at 05:33pm, Leizhen (ThunderTown) wrote:
->>>
->>>
->>> On 2022/4/28 11:52, Baoquan He wrote:
->>>> On 04/28/22 at 11:40am, Baoquan He wrote:
->>>>> Hi Catalin, Zhen Lei,
->>>>>
->>>>> On 04/27/22 at 05:04pm, Catalin Marinas wrote:
->>>>>> On Wed, Apr 27, 2022 at 09:49:20PM +0800, Leizhen (ThunderTown) wrote:
->>>>>>> On 2022/4/27 20:32, Catalin Marinas wrote:
->>>>>>>> I think one could always pass a default command line like:
->>>>>>>>
->>>>>>>> 	crashkernel=1G,high crashkernel=128M,low
->>>>>>>>
->>>>>>>> without much knowledge of the SoC memory layout.
->>>>>>>
->>>>>>> Yes, that's what the end result is. The user specify crashkernel=128M,low
->>>>>>> and the implementation ensure the 128M low memory is allocated from DMA zone.
->>>>>>> We use arm64_dma_phys_limit as the upper limit for crash low memory.
->>>>>>>
->>>>>>> +#define CRASH_ADDR_LOW_MAX             arm64_dma_phys_limit
->>>>>>> +       unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
->>>>>>> +       crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
->>>>>>>                                                crash_base, crash_max);
->>>>>>>
->>>>>>>> Another option is to only introduce crashkernel=Y,low and, when that is
->>>>>>>> passed, crashkernel=Y can go above arm64_dma_phys_limit. We won't need a
->>>>>>>> 'high' option at all:
->>>>>>>>
->>>>>>>> 	crashkernel=1G				- all within ZONE_DMA
->>>>>>>> 	crashkernel=1G crashkernel=128M,low	- 128M in ZONE_DMA
->>>>>>>> 						  1G above ZONE_DMA
->>>>>>>>
->>>>>>>> If ZONE_DMA is not present or it extends to the whole RAM, we can ignore
->>>>>>>> the 'low' option.
->>>>>>>
->>>>>>> I think although the code is hard to make generic, the interface is better to
->>>>>>> be relatively uniform. A user might have to maintain both x86 and arm64, and
->>>>>>> so on. It's not a good thing that the difference is too big.
->>>>>>
->>>>>> There will be some difference as the 4G limit doesn't always hold for
->>>>>> arm64 (though it's true in most cases). Anyway, we can probably simplify
->>>>>> things a bit while following the documented behaviour:
->>>>>>
->>>>>> 	crashkernel=Y		- current behaviour within ZONE_DMA
->>>>>> 	crashkernel=Y,high	- allocate from above ZONE_DMA
->>>>>> 	crashkernel=Y,low	- allocate within ZONE_DMA
->>>>>>
->>>>>> There is no fallback from crashkernel=Y.
->>>>>>
->>>>>> The question is whether we still want a default low allocation if
->>>>>> crashkernel=Y,low is missing but 'high' is present. If we add this, I
->>>>>> think we'd be consistent with kernel-parameters.txt for the 'low'
->>>>>> description. A default 'low' is probably not that bad but I'm tempted to
->>>>>> always mandate both 'high' and 'low'.
->>>>>
->>>>> Sorry to interrupt. Seems the ,high ,low and fallback are main concerns
->>>>> about this version. And I have the same concerns about them which comes
->>>>> from below points:
->>>>> 1) we may need to take best effort to keep ,high, ,low behaviour
->>>>> consistent on all ARCHes. Otherwise user/admin may be confused when they
->>>>> deploy/configure kdump on different machines of different ARCHes in the
->>>>> same LAB. I think we should try to avoid the confusion.
->>>
->>> Yes, but for someone who is configuring crashkernel= for the first time, he
->>> needs to read doc to understand how to configure it. The doc can show the
->>> recommended default value of 'low' size.
->>>
->>> After commit 94fb93341822 ("x86/crash: Allocate enough low memory when crashkernel=high"),
->>> the default 'low' size doesn't make much sense anymore. The default size of swiotlb_size()
->>> is 64M, far less than 256M. And if user specify "swiotlb=", he can also adjust crashkernel=Y,low.
->>>
->>>
->>> +                * -swiotlb size: user-specified with swiotlb= or default.
->>> -               low_size = swiotlb_size_or_default() + (8UL<<20);
->>> +               low_size = max(swiotlb_size_or_default() + (8UL<<20), 256UL<<20);
->>>
->>> That means all ARCHs can explicit configure crashkernel=256M,low, instead of
->>> omitting it. This may be another way to avoid confusion. It's not hard for
->>> programmer-turned-user/admin. However, this requires us to forgo backward
->>> compatibility with the default size of 'low'.
->>
->> We can make ,high and ,low simpler at first as they are alternative. If
->> possible, we can also simplify the ,high ,low implementation on x86_64
->> if it truly brings better archievement on arm64.
-> 
-> OK, I plan to remove optimization, fallback and default low size, to follow the
-> suggestion of Catalin first. But there's one minor point of contention.
-> 
-> 1)    Both "crashkernel=X,high" and "crashkernel=X,low" must be present.
-> 2)    Both "crashkernel=X,high" and "crashkernel=X,low" are present.
->    or
->       Allow "crashkernel=X,high" to be present alone. Unlike x86, the default low size is zero.
-> 
-> I prefer 2), how about you?
-> 
->>
->>>
->>>
->>>>> 2) Fallback behaviour is important to our distros. The reason is we will
->>>>> provide default value with crashkernel=xxxM along kernel of distros. In
->>>>> this case, we hope the reservation will succeed by all means. The ,high
->>>>> and ,low is an option if customer likes to take with expertise.
->>>
->>> OK, I got it.
->>>
->>>>>
->>>>> After going through arm64 memory init code, I got below summary about
->>>>> arm64_dma_phys_limit which is the first zone's upper limit. I think we
->>>>> can make use of it to facilitate to simplify code.
->>>>> ================================================================================
->>>>>                         DMA                      DMA32                    NORMAL
->>>>> 1)Raspberry Pi4         0~1G                     3G~4G                    (above 4G)
->>>>> 2)Normal machine        0~4G                     0                        (above 4G)
->>>>> 3)Special machine       (above 4G)~MAX
->>>>> 4)No DMA|DMA32                                                            (above 4G)~MAX
->>>
->>> arm64_memblock_init()
->>> 	reserve_crashkernel()        ---------------   0a30c53573b0 ("arm64: mm: Move reserve_crashkernel() into mem_init()")
->> We don't need different code for this place of reservation as you are
->> doing in this patchset, since arm64_dma_phys_limit is initialized as 
->> below. In fact, in arm64_memblock_init(), we have made memblock ready,
->> we can initialize arm64_dma_phys_limit as memblock_end_of_DRAM(). And if
->> memblock_start_of_DRAM() is bigger than 4G, we possibly can call
->> reserve_crashkernel() here too.
-> 
-> Yes. Maybe all the devices in this environment are 64-bit. One way I know of allowing
-> 32-bit devices to access high memory without SMMU is: Set a fixed value for the upper
-> 32 bits. In this case, the DMA zone should be [phys_start, phys_start + 4G).
+I tried the patch set with 5.17.0-rc1 kernel, and I have a few questions:
 
-I just read the message of commit 791ab8b2e3 ("arm64: Ignore any DMA offsets in the max_zone_phys() calculation")
+1) Is it a bug or should qemu-kvm 6.2.0 be patched with specific patch? Because
+   I found it will exit with 0 when I tried to reboot the VM with sev-es enabled.
+   However with only sev enabled, the VM can do reboot with no problem:
 
-    Currently, the kernel assumes that if RAM starts above 32-bit (or
-    zone_bits), there is still a ZONE_DMA/DMA32 at the bottom of the RAM and
-    such constrained devices have a hardwired DMA offset. In practice, we
-    haven't noticed any such hardware so let's assume that we can expand
-    ZONE_DMA32 to the available memory if no RAM below 4GB. Similarly,
-    ZONE_DMA is expanded to the 4GB limit if no RAM addressable by
-    zone_bits.
+[root at dell-per7525-03 ~]# virsh start TW-SEV-ES --console
+....
+Fedora Linux 35 (Server Edition)
+Kernel 5.17.0-rc1 on an x86_64 (ttyS0)
+....
+[root at fedora ~]# reboot
+.....
+[   48.077682] reboot: Restarting system
+[   48.078109] reboot: machine restart
+                       ^^^^^^^^^^^^^^^ guest vm reached restart
+[root at dell-per7525-03 ~]# echo $?
+0
+^^^ qemu-kvm exit with 0, no reboot back to normal VM kernel
+[root at dell-per7525-03 ~]#
 
-So your suggestion is feasible.
+2) With sev-es enabled and the 2 patch sets applied: A) [PATCH v3 00/10] x86/sev:
+KEXEC/KDUMP support for SEV-ES guests, and B) [PATCH v6 0/7] KVM: SVM: Add initial
+GHCB protocol version 2 support. I can enable kdump and have vmcore generated:
 
-> 
->>
->> phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
->>
->>> paging_init()                                       |
->>> 	map_mem()                                   |
->>> unflatten_device_tree or ACPI                       |  ----  //Raspberry Pi4 get dma zone base on dtb or ACPI
->>> bootmem_init();                                     |      |
->>> 	zone_sizes_init()                           |      |
->>> 		of_dma_get_max_cpu_address          |  ----|
->>> 		//Update arm64_dma_phys_limit       |  ----|
->>> 	reserve_crashkernel()        <--------------  //Because we need arm64_dma_phys_limit to be updated above
->>> request_standard_resources()
->>
->> Yeah, because arm64_dma_phys_limit is decided late in the 1) and 2) case
->> as I summarized, we need defer reserve_crashkernel() to bootmem_init(). But 
->> arm64_dma_phys_limit could be 1G or 4G, that's why your optimization
->> about BLOCKING may not be right since you assume the 4G boundary, while
->> forgetting Raspberry Pi4 on which 1G is the boundary of low memory and
-> 
-> No, no, my optimization for Raspberry Pi4 is fine. I do page mapping for memory
-> under 4G and block mapping for memory above 4G. But still try to reserve crash
-> low memory from DMA zone. So when 1G is the boundary, it's just not fully optimized,
-> the memory 1-4G are mapped as page.
-> 
->> high memory. So separating out BLOCKING optimization can let us focus on
->> the crashkernel,high support.
->>
->>>
->>>>>
->>>>> -------------------------------------------
->>>>>                       arm64_dma_phys_limit
->>>>> 1)Raspberry Pi4         1G                     
->>>>> 2)Normal machine        4G                     
->>>>> 3)Special machine       MAX
->>>>> 4)No DMA|DMA32          MAX
->>>>>
->>>>> Note: 3)Special machine means the machine's starting physical address is above 4G.
->>>>> WHile 4)No DMA|DMA32 means kernel w/o CONFIG_ZONE_DMA|DMA32, and has
->>>>> IOMMU hardware supporting.
->>>>> ===================================================================================
->>>>>
->>>>> I made a draft patch based on this patchset, please feel free to check and
->>>>> see if it's OK, or anything missing or wrongly understood. I removed
->>>>> reserve_crashkernel_high() and only keep reserve_crashkernel() and
->>>>> reserve_crashkernel_low() as the v21 did.
->>>>
->>>> Sorry, forgot attaching the draft patch.
->>>>
->>>> By the way, we can also have a simple version with basic ,high, ,low
->>>> support, no fallback. We can add fallback and other optimization later.
->>>> This can be plan B.
->>>
->>> Yes, That's what Catalin suggested also.
->>>
->>> Hi, Baoquan He:
->>>   Without optimization, the whole Patch 3-4 and 6-7 can be dropped.
->>>
->>> Process after abstraction:
->>> 	if (!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32)) {
->>> 		reserve_crashkernel()
->>> 		//block mapping
->>> 	} else {
->>> 		//page mapping
->>> 		reserve_crashkernel()
->>> 	}
->>>
->>> ------------ Simplified real-world process ---------
->> Yeah, this looks clearer. I would like to see a version with them.
->>
->>> arm64_memblock_init()
->>         Before reserve_crashkernel(), we can update arm64_dma_phys_limit
->> as memblock_end_of_DRAM() if CONFIG_ZONE_DMA|DMA32 is not enabled or
->> memblock_start_of_DRAM() is bigger than 4G.
->>         Then we go with:
->>         if (!arm64_dma_phys_limit)
->> 		reserve_crashkernel();
->>
->> Just personal opinion, please check if it's appropriate to handle case
->> 3) which has physical starting memory above 4G here. 
-> 
-> OK, I'll write it down and consider it in the future optimization.
-> 
->>
->>> 	if (!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32))
->>> 		reserve_crashkernel()
->>            
->>> paging_init()
->>> 	map_mem()
->>> 		if (!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32))
->>> 			//block mapping
->>> 		else
->>> 			//page mapping
->>> unflatten_device_tree or ACPI
->>> bootmem_init();
->>> 	zone_sizes_init()
->>> 		of_dma_get_max_cpu_address
->>> 		//Update arm64_dma_phys_limit
->>> 	if (IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32))
->>> 		reserve_crashkernel()
->>
->> The rest sounds good with optimization code split out.
->>
->> .
->>
-> 
+[root at fedora ~]# dmesg|grep -i sev
+[    0.030600] SEV: Hypervisor GHCB protocol version support: min=1 max=2
+[    0.030602] SEV: Using GHCB protocol version 2
+[    0.296144] AMD Memory Encryption Features active: SEV SEV-ES
+[    0.450991] SEV: AP jump table Blob successfully set up
+[root at fedora ~]# kdumpctl status
+kdump: Kdump is operational
 
--- 
-Regards,
-  Zhen Lei
+However without the 2 patch sets, I can also enable kdump and have vmcore generated:
+
+[root at fedora ~]# dmesg|grep -i sev
+[    0.295754] AMD Memory Encryption Features active: SEV SEV-ES
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ patch set A & B 
+	       not applied, so only have this string.
+[root at fedora ~]# echo c > /proc/sysrq-trigger
+...
+[    2.759403] kdump[549]: saving vmcore-dmesg.txt to /sysroot/var/crash/127.0.0.1-2022-04-18-05:58:50/
+[    2.804355] kdump[555]: saving vmcore-dmesg.txt complete
+[    2.806915] kdump[557]: saving vmcore
+                           ^^^^^^^^^^^^^ vmcore can still be generated
+...
+[    7.068981] reboot: Restarting system
+[    7.069340] reboot: machine restart
+
+[root at dell-per7525-03 ~]# echo $?
+0
+^^^ same exit issue as question 1.
+
+I doesn't have a complete technical background of the patch set, but isn't
+it the issue which this patch set is trying to solve? Or I missed something?
+
+Thanks,
+Tao Liu
+ 
+> _______________________________________________
+> Virtualization mailing list
+> Virtualization at lists.linux-foundation.org
+> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
+
 
