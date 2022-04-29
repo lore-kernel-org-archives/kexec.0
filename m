@@ -1,193 +1,150 @@
-From: Tao Liu <ltao@redhat.com>
-Date: Fri, 29 Apr 2022 17:06:17 +0800
-Subject: [PATCH v3 00/10] x86/sev: KEXEC/KDUMP support for SEV-ES guests
-In-Reply-To: <20220127101044.13803-1-joro@8bytes.org>
-References: <20220127101044.13803-1-joro@8bytes.org>
-Message-ID: <YmuqifsJltdh7rpv@localhost.localdomain>
+From: Simon Horman <horms@verge.net.au>
+Date: Fri, 29 Apr 2022 11:40:10 +0200
+Subject: [PATCH] Add method to pass initrd through cmdline
+In-Reply-To: <20220418013659.5545-1-lihui@loongson.cn>
+References: <20220418013659.5545-1-lihui@loongson.cn>
+Message-ID: <YmuyegqF7HeSfkah@vergenet.net>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, Jan 27, 2022 at 11:10:34AM +0100, Joerg Roedel wrote:
-> From: Joerg Roedel <jroedel@suse.de>
-> 
-> Hi,
-> 
-> here are changes to enable kexec/kdump in SEV-ES guests. The biggest
-> problem for supporting kexec/kdump under SEV-ES is to find a way to
-> hand the non-boot CPUs (APs) from one kernel to another.
-> 
-> Without SEV-ES the first kernel parks the CPUs in a HLT loop until
-> they get reset by the kexec'ed kernel via an INIT-SIPI-SIPI sequence.
-> For virtual machines the CPU reset is emulated by the hypervisor,
-> which sets the vCPU registers back to reset state.
-> 
-> This does not work under SEV-ES, because the hypervisor has no access
-> to the vCPU registers and can't make modifications to them. So an
-> SEV-ES guest needs to reset the vCPU itself and park it using the
-> AP-reset-hold protocol. Upon wakeup the guest needs to jump to
-> real-mode and to the reset-vector configured in the AP-Jump-Table.
-> 
-> The code to do this is the main part of this patch-set. It works by
-> placing code on the AP Jump-Table page itself to park the vCPU and for
-> jumping to the reset vector upon wakeup. The code on the AP Jump Table
-> runs in 16-bit protected mode with segment base set to the beginning
-> of the page. The AP Jump-Table is usually not within the first 1MB of
-> memory, so the code can't run in real-mode.
-> 
-> The AP Jump-Table is the best place to put the parking code, because
-> the memory is owned, but read-only by the firmware and writeable by
-> the OS. Only the first 4 bytes are used for the reset-vector, leaving
-> the rest of the page for code/data/stack to park a vCPU. The code
-> can't be in kernel memory because by the time the vCPU wakes up the
-> memory will be owned by the new kernel, which might have overwritten it
-> already.
-> 
-> The other patches add initial GHCB Version 2 protocol support, because
-> kexec/kdump need the MSR-based (without a GHCB) AP-reset-hold VMGEXIT,
-> which is a GHCB protocol version 2 feature.
-> 
-> The kexec'ed kernel is also entered via the decompressor and needs
-> MMIO support there, so this patch-set also adds MMIO #VC support to
-> the decompressor and support for handling CLFLUSH instructions.
-> 
-> Finally there is also code to disable kexec/kdump support at runtime
-> when the environment does not support it (e.g. no GHCB protocol
-> version 2 support or AP Jump Table over 4GB).
-> 
-> The diffstat looks big, but most of it is moving code for MMIO #VC
-> support around to make it available to the decompressor.
-> 
-> The previous version of this patch-set can be found here:
-> 
-> 	https://lore.kernel.org/lkml/20210913155603.28383-1-joro at 8bytes.org/
-> 
-> Please review.
-> 
-> Thanks,
-> 
-> 	Joerg
-> 
-> Changes v2->v3:
-> 
-> 	- Rebased to v5.17-rc1
-> 	- Applied most review comments by Boris
-> 	- Use the name 'AP jump table' consistently
-> 	- Make kexec-disabling for unsupported guests x86-specific
-> 	- Cleanup and consolidate patches to detect GHCB v2 protocol
-> 	  support
-> 
-> Joerg Roedel (10):
->   x86/kexec/64: Disable kexec when SEV-ES is active
->   x86/sev: Save and print negotiated GHCB protocol version
->   x86/sev: Set GHCB data structure version
->   x86/sev: Cache AP Jump Table Address
->   x86/sev: Setup code to park APs in the AP Jump Table
->   x86/sev: Park APs on AP Jump Table with GHCB protocol version 2
->   x86/sev: Use AP Jump Table blob to stop CPU
->   x86/sev: Add MMIO handling support to boot/compressed/ code
->   x86/sev: Handle CLFLUSH MMIO events
->   x86/kexec/64: Support kexec under SEV-ES with AP Jump Table Blob
-> 
->  arch/x86/boot/compressed/sev.c          |  45 +-
->  arch/x86/include/asm/insn-eval.h        |   1 +
->  arch/x86/include/asm/realmode.h         |   5 +
->  arch/x86/include/asm/sev-ap-jumptable.h |  29 +
->  arch/x86/include/asm/sev.h              |  11 +-
->  arch/x86/kernel/machine_kexec_64.c      |  12 +
->  arch/x86/kernel/process.c               |   8 +
->  arch/x86/kernel/sev-shared.c            | 233 +++++-
->  arch/x86/kernel/sev.c                   | 404 +++++------
->  arch/x86/lib/insn-eval-shared.c         | 913 ++++++++++++++++++++++++
->  arch/x86/lib/insn-eval.c                | 909 +----------------------
->  arch/x86/realmode/Makefile              |   9 +-
->  arch/x86/realmode/rm/Makefile           |  11 +-
->  arch/x86/realmode/rm/header.S           |   3 +
->  arch/x86/realmode/rm/sev.S              |  85 +++
->  arch/x86/realmode/rmpiggy.S             |   6 +
->  arch/x86/realmode/sev/Makefile          |  33 +
->  arch/x86/realmode/sev/ap_jump_table.S   | 131 ++++
->  arch/x86/realmode/sev/ap_jump_table.lds |  24 +
->  19 files changed, 1730 insertions(+), 1142 deletions(-)
->  create mode 100644 arch/x86/include/asm/sev-ap-jumptable.h
->  create mode 100644 arch/x86/lib/insn-eval-shared.c
->  create mode 100644 arch/x86/realmode/rm/sev.S
->  create mode 100644 arch/x86/realmode/sev/Makefile
->  create mode 100644 arch/x86/realmode/sev/ap_jump_table.S
->  create mode 100644 arch/x86/realmode/sev/ap_jump_table.lds
-> 
-> 
-> base-commit: e783362eb54cd99b2cac8b3a9aeac942e6f6ac07
-> -- 
-> 2.34.1
->
+Hi Hui Li,
 
-Hi Joerg,
+thanks for your patch.
 
-I tried the patch set with 5.17.0-rc1 kernel, and I have a few questions:
+On Mon, Apr 18, 2022 at 09:36:59AM +0800, Hui Li wrote:
+> Problem description:
+> Under loongson platform,use command:
+> kexec -l vmlinux... --append="root=UUID=28e1..." --initrd=...
+> kexec -e
+> quick restart failed.
+> 
+> The reason of this problem:
+> The kernel cannot parse the UUID,UUID is parsed in the initrd.
+> Loongson platform obtain the initrd through cmdline in kernel.
+> In kexec-tools, initrd is not added to cmdline.
 
-1) Is it a bug or should qemu-kvm 6.2.0 be patched with specific patch? Because
-   I found it will exit with 0 when I tried to reboot the VM with sev-es enabled.
-   However with only sev enabled, the VM can do reboot with no problem:
+Is this common to other platforms?
+If not, is there a reason that Loongson takes this approach?
 
-[root at dell-per7525-03 ~]# virsh start TW-SEV-ES --console
-....
-Fedora Linux 35 (Server Edition)
-Kernel 5.17.0-rc1 on an x86_64 (ttyS0)
-....
-[root at fedora ~]# reboot
-.....
-[   48.077682] reboot: Restarting system
-[   48.078109] reboot: machine restart
-                       ^^^^^^^^^^^^^^^ guest vm reached restart
-[root at dell-per7525-03 ~]# echo $?
-0
-^^^ qemu-kvm exit with 0, no reboot back to normal VM kernel
-[root at dell-per7525-03 ~]#
+> The solution:
+> Add initrd parameter to cmdline. and add a CONFIG_LOONGSON configuration
+> to distinguish PAGE_OFFSET between different platforms under mips.
+> 
+> Signed-off-by: Hui Li <lihui@loongson.cn>
+> ---
+>  configure.ac                     |  5 ++++
+>  kexec/arch/mips/crashdump-mips.h |  6 ++++-
+>  kexec/arch/mips/kexec-elf-mips.c | 43 ++++++++++++++++++++++++++++++++
+>  3 files changed, 53 insertions(+), 1 deletion(-)
+> 
+> diff --git a/configure.ac b/configure.ac
+> index cf8e8a2..26bfbcd 100644
+> --- a/configure.ac
+> +++ b/configure.ac
+> @@ -111,6 +111,11 @@ AC_ARG_WITH([booke],
+>  		AC_DEFINE(CONFIG_BOOKE,1,
+>  			[Define to build for BookE]))
+>  
+> +AC_ARG_WITH([loongson],
+> +		AC_HELP_STRING([--with-loongson],[build for loongson]),
+> +		AC_DEFINE(CONFIG_LOONGSON,1,
+> +			[Define to build for LoongsoN]))
+> +
+>  dnl ---Programs
+>  dnl To specify a different compiler, just 'export CC=/path/to/compiler'
+>  if test "${build}" != "${host}" ; then
+> diff --git a/kexec/arch/mips/crashdump-mips.h b/kexec/arch/mips/crashdump-mips.h
+> index 7edd859..d53c696 100644
+> --- a/kexec/arch/mips/crashdump-mips.h
+> +++ b/kexec/arch/mips/crashdump-mips.h
+> @@ -5,7 +5,11 @@ struct kexec_info;
+>  int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
+>  				unsigned long max_addr, unsigned long min_base);
+>  #ifdef __mips64
+> -#define PAGE_OFFSET	0xa800000000000000ULL
+> +#ifdef CONFIG_LOONGSON
+> +#define PAGE_OFFSET 0xFFFFFFFF80000000ULL
+> +#else
+> +#define PAGE_OFFSET 0xa800000000000000ULL
+> +#endif
 
-2) With sev-es enabled and the 2 patch sets applied: A) [PATCH v3 00/10] x86/sev:
-KEXEC/KDUMP support for SEV-ES guests, and B) [PATCH v6 0/7] KVM: SVM: Add initial
-GHCB protocol version 2 support. I can enable kdump and have vmcore generated:
+Could this be detected at runtime?
 
-[root at fedora ~]# dmesg|grep -i sev
-[    0.030600] SEV: Hypervisor GHCB protocol version support: min=1 max=2
-[    0.030602] SEV: Using GHCB protocol version 2
-[    0.296144] AMD Memory Encryption Features active: SEV SEV-ES
-[    0.450991] SEV: AP jump table Blob successfully set up
-[root at fedora ~]# kdumpctl status
-kdump: Kdump is operational
+It seems awkward to set the PAGE_OFFSET at compile time and
+thus need separate builds for separate platforms (with no warning
+if the wrong one is used).
 
-However without the 2 patch sets, I can also enable kdump and have vmcore generated:
+>  #define MAXMEM		0
+>  #else
+>  #define PAGE_OFFSET	0x80000000
+> diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+> index a2d11fc..1de418e 100644
+> --- a/kexec/arch/mips/kexec-elf-mips.c
+> +++ b/kexec/arch/mips/kexec-elf-mips.c
+> @@ -40,6 +40,44 @@ static const int probe_debug = 0;
+>  #define CMDLINE_PREFIX "kexec "
+>  static char cmdline_buf[COMMAND_LINE_SIZE] = CMDLINE_PREFIX;
+>  
+> +/* Converts unsigned long to ascii string. */
+> +static void ultoa(unsigned long i, char *str)
+> +{
+> +	int j = 0, k;
+> +	char tmp;
+> +
+> +	do {
+> +		str[j++] = i % 10 + '0';
+> +	} while ((i /= 10) > 0);
+> +	str[j] = '\0';
 
-[root at fedora ~]# dmesg|grep -i sev
-[    0.295754] AMD Memory Encryption Features active: SEV SEV-ES
-               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ patch set A & B 
-	       not applied, so only have this string.
-[root at fedora ~]# echo c > /proc/sysrq-trigger
-...
-[    2.759403] kdump[549]: saving vmcore-dmesg.txt to /sysroot/var/crash/127.0.0.1-2022-04-18-05:58:50/
-[    2.804355] kdump[555]: saving vmcore-dmesg.txt complete
-[    2.806915] kdump[557]: saving vmcore
-                           ^^^^^^^^^^^^^ vmcore can still be generated
-...
-[    7.068981] reboot: Restarting system
-[    7.069340] reboot: machine restart
+Could the above be achieved using printf?
 
-[root at dell-per7525-03 ~]# echo $?
-0
-^^^ same exit issue as question 1.
+> +	/* Reverse the string. */
+> +	for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
+> +		tmp = str[k];
+> +		str[k] = str[j];
+> +		str[j] = tmp;
+> +	}
 
-I doesn't have a complete technical background of the patch set, but isn't
-it the issue which this patch set is trying to solve? Or I missed something?
+I'm confused as to why the string needs to be reversed.
+Could it be avoided by byte-swapping 'i' before rendering it to a string? 
 
-Thanks,
-Tao Liu
- 
-> _______________________________________________
-> Virtualization mailing list
-> Virtualization at lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/virtualization
+> +}
+> +
+> +/* Adds initrd parameters to command line. */
+> +static int cmdline_add_initrd(char *cmdline, unsigned long addr, char *new_para)
+> +{
+> +	int cmdlen, len;
+> +	char str[30], *ptr;
+> +
+> +	ptr = str;
+> +	strcpy(str, new_para);
+> +	ptr += strlen(str);
+> +	ultoa(addr, ptr);
+> +	len = strlen(str);
+> +	cmdlen = strlen(cmdline) + len;
+> +	if (cmdlen > (COMMAND_LINE_SIZE - 1))
+> +		die("Command line overflow\n");
+> +	strcat(cmdline, str);
+> +
+> +	return 0;
+> +}
+> +
+> +
+>  int elf_mips_probe(const char *buf, off_t len)
+>  {
+>  	struct mem_ehdr ehdr;
+> @@ -171,6 +209,11 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+>  		/* Now that the buffer for initrd is prepared, update the dtb
+>  		 * with an appropriate location */
+>  		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
+> +
+> +		/* Add the initrd parameters to cmdline */
+> +		cmdline_add_initrd(cmdline_buf, PAGE_OFFSET + initrd_base, " rd_start=");
+> +		cmdline_add_initrd(cmdline_buf, initrd_size, " rd_size=");
+> +
 
+Will this be safe for existing use-cases?
 
