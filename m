@@ -1,40 +1,147 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Fri, 29 Apr 2022 11:01:59 -0300
-Subject: [PATCH 09/30] coresight: cpu-debug: Replace mutex with
- mutex_trylock on panic notifier
-In-Reply-To: <3cafe4fd-8a0b-2633-44a3-2995abd6c38c@arm.com>
+Date: Fri, 29 Apr 2022 11:34:51 -0300
+Subject: [PATCH 12/30] parisc: Replace regular spinlock with spin_trylock
+ on panic path
+In-Reply-To: <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-10-gpiccoli@igalia.com>
- <3cafe4fd-8a0b-2633-44a3-2995abd6c38c@arm.com>
-Message-ID: <79472351-c6ce-a060-ef24-f64b6dce1637@igalia.com>
+ <20220427224924.592546-13-gpiccoli@igalia.com>
+ <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
+Message-ID: <4a7d9670-92f8-3e12-a619-aaa64adca093@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 28/04/2022 05:11, Suzuki K Poulose wrote:
-> Hi Guilherme,
-> [...] 
-> How would you like to proceed with queuing this ? I am happy
-> either way. In case you plan to push this as part of this
-> series (I don't see any potential conflicts) :
+On 28/04/2022 13:55, Helge Deller wrote:
+> [...]
+> You may add:
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
 > 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> Helge
 
-Thanks for your review Suzuki, much appreciated!
-
-About your question, I'm not sure yet - in case the core changes would
-take a while (like if community find them polemic, require many changes,
-etc) I might split this series in 2 parts, the fixes part vs the
-improvements per se. Either way, a V2 is going to happen for sure, and
-in that moment, I'll let you know what I think it's best.
-
-But either way, any choice you prefer is fine by me as well (like if you
-want to merge it now or postpone to get merged in the future), this is
-not an urgent fix I think =)
+Thanks Helge, added!
 Cheers,
 
 
 Guilherme
+
+> 
+> 
+>> ---
+>>  arch/parisc/include/asm/pdc.h |  1 +
+>>  arch/parisc/kernel/firmware.c | 27 +++++++++++++++++++++++----
+>>  drivers/parisc/power.c        | 17 ++++++++++-------
+>>  3 files changed, 34 insertions(+), 11 deletions(-)
+>>
+>> diff --git a/arch/parisc/include/asm/pdc.h b/arch/parisc/include/asm/pdc.h
+>> index b643092d4b98..7a106008e258 100644
+>> --- a/arch/parisc/include/asm/pdc.h
+>> +++ b/arch/parisc/include/asm/pdc.h
+>> @@ -83,6 +83,7 @@ int pdc_do_firm_test_reset(unsigned long ftc_bitmap);
+>>  int pdc_do_reset(void);
+>>  int pdc_soft_power_info(unsigned long *power_reg);
+>>  int pdc_soft_power_button(int sw_control);
+>> +int pdc_soft_power_button_panic(int sw_control);
+>>  void pdc_io_reset(void);
+>>  void pdc_io_reset_devices(void);
+>>  int pdc_iodc_getc(void);
+>> diff --git a/arch/parisc/kernel/firmware.c b/arch/parisc/kernel/firmware.c
+>> index 6a7e315bcc2e..0e2f70b592f4 100644
+>> --- a/arch/parisc/kernel/firmware.c
+>> +++ b/arch/parisc/kernel/firmware.c
+>> @@ -1232,15 +1232,18 @@ int __init pdc_soft_power_info(unsigned long *power_reg)
+>>  }
+>>
+>>  /*
+>> - * pdc_soft_power_button - Control the soft power button behaviour
+>> - * @sw_control: 0 for hardware control, 1 for software control
+>> + * pdc_soft_power_button{_panic} - Control the soft power button behaviour
+>> + * @sw_control: 0 for hardware control, 1 for software control
+>>   *
+>>   *
+>>   * This PDC function places the soft power button under software or
+>>   * hardware control.
+>> - * Under software control the OS may control to when to allow to shut
+>> - * down the system. Under hardware control pressing the power button
+>> + * Under software control the OS may control to when to allow to shut
+>> + * down the system. Under hardware control pressing the power button
+>>   * powers off the system immediately.
+>> + *
+>> + * The _panic version relies in spin_trylock to prevent deadlock
+>> + * on panic path.
+>>   */
+>>  int pdc_soft_power_button(int sw_control)
+>>  {
+>> @@ -1254,6 +1257,22 @@ int pdc_soft_power_button(int sw_control)
+>>  	return retval;
+>>  }
+>>
+>> +int pdc_soft_power_button_panic(int sw_control)
+>> +{
+>> +	int retval;
+>> +	unsigned long flags;
+>> +
+>> +	if (!spin_trylock_irqsave(&pdc_lock, flags)) {
+>> +		pr_emerg("Couldn't enable soft power button\n");
+>> +		return -EBUSY; /* ignored by the panic notifier */
+>> +	}
+>> +
+>> +	retval = mem_pdc_call(PDC_SOFT_POWER, PDC_SOFT_POWER_ENABLE, __pa(pdc_result), sw_control);
+>> +	spin_unlock_irqrestore(&pdc_lock, flags);
+>> +
+>> +	return retval;
+>> +}
+>> +
+>>  /*
+>>   * pdc_io_reset - Hack to avoid overlapping range registers of Bridges devices.
+>>   * Primarily a problem on T600 (which parisc-linux doesn't support) but
+>> diff --git a/drivers/parisc/power.c b/drivers/parisc/power.c
+>> index 456776bd8ee6..8512884de2cf 100644
+>> --- a/drivers/parisc/power.c
+>> +++ b/drivers/parisc/power.c
+>> @@ -37,7 +37,6 @@
+>>  #include <linux/module.h>
+>>  #include <linux/init.h>
+>>  #include <linux/kernel.h>
+>> -#include <linux/notifier.h>
+>>  #include <linux/panic_notifier.h>
+>>  #include <linux/reboot.h>
+>>  #include <linux/sched/signal.h>
+>> @@ -175,16 +174,21 @@ static void powerfail_interrupt(int code, void *x)
+>>
+>>
+>>
+>> -/* parisc_panic_event() is called by the panic handler.
+>> - * As soon as a panic occurs, our tasklets above will not be
+>> - * executed any longer. This function then re-enables the
+>> - * soft-power switch and allows the user to switch off the system
+>> +/*
+>> + * parisc_panic_event() is called by the panic handler.
+>> + *
+>> + * As soon as a panic occurs, our tasklets above will not
+>> + * be executed any longer. This function then re-enables
+>> + * the soft-power switch and allows the user to switch off
+>> + * the system. We rely in pdc_soft_power_button_panic()
+>> + * since this version spin_trylocks (instead of regular
+>> + * spinlock), preventing deadlocks on panic path.
+>>   */
+>>  static int parisc_panic_event(struct notifier_block *this,
+>>  		unsigned long event, void *ptr)
+>>  {
+>>  	/* re-enable the soft-power switch */
+>> -	pdc_soft_power_button(0);
+>> +	pdc_soft_power_button_panic(0);
+>>  	return NOTIFY_DONE;
+>>  }
+>>
+>> @@ -193,7 +197,6 @@ static struct notifier_block parisc_panic_block = {
+>>  	.priority	= INT_MAX,
+>>  };
+>>
+>> -
+>>  static int __init power_init(void)
+>>  {
+>>  	unsigned long ret;
+> 
 
