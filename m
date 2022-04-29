@@ -1,64 +1,64 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Fri, 29 Apr 2022 15:04:22 -0300
-Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-In-Reply-To: <PH0PR21MB30256260CCF4CAB713BBB11ED7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
+From: Marc Zyngier <maz@kernel.org>
+Date: Fri, 29 Apr 2022 19:20:29 +0100
+Subject: [PATCH 02/30] ARM: kexec: Disable IRQs/FIQs also on crash CPUs
+ shutdown path
+In-Reply-To: <20220427224924.592546-3-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-20-gpiccoli@igalia.com>
- <PH0PR21MB30256260CCF4CAB713BBB11ED7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
-Message-ID: <0147d038-571b-0802-c210-ccd4d52cd5dd@igalia.com>
+ <20220427224924.592546-3-gpiccoli@igalia.com>
+Message-ID: <87mtg392fm.wl-maz@kernel.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 29/04/2022 14:30, Michael Kelley (LINUX) wrote:
-> From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Wednesday, April 27, 2022 3:49 PM
->> [...]
->>
->> @@ -2843,7 +2843,7 @@ static void __exit vmbus_exit(void)
->>  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
->>  		kmsg_dump_unregister(&hv_kmsg_dumper);
->>  		unregister_die_notifier(&hyperv_die_report_block);
->> -		atomic_notifier_chain_unregister(&panic_notifier_list,
->> +		atomic_notifier_chain_unregister(&panic_hypervisor_list,
->>  						&hyperv_panic_report_block);
->>  	}
->>
+On Wed, 27 Apr 2022 23:48:56 +0100,
+"Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
 > 
-> Using the hypervisor_list here produces a bit of a mismatch.  In many cases
-> this notifier will do nothing, and will defer to the kmsg_dump() mechanism
-> to notify the hypervisor about the panic.   Running the kmsg_dump()
-> mechanism is linked to the info_list, so I'm thinking the Hyper-V panic report
-> notifier should be on the info_list as well.  That way the reporting behavior
-> is triggered at the same point in the panic path regardless of which
-> reporting mechanism is used.
+> Currently the regular CPU shutdown path for ARM disables IRQs/FIQs
+> in the secondary CPUs - smp_send_stop() calls ipi_cpu_stop(), which
+> is responsible for that. This makes sense, since we're turning off
+> such CPUs, putting them in an endless busy-wait loop.
 > 
+> Problem is that there is an alternative path for disabling CPUs,
+> in the form of function crash_smp_send_stop(), used for kexec/panic
+> paths. This functions relies in a SMP call that also triggers a
+> busy-wait loop [at machine_crash_nonpanic_core()], but *without*
+> disabling interrupts. This might lead to odd scenarios, like early
+> interrupts in the boot of kexec'd kernel or even interrupts in
+> other CPUs while the main one still works in the panic path and
+> assumes all secondary CPUs are (really!) off.
+> 
+> This patch mimics the ipi_cpu_stop() interrupt disable mechanism
+> in the crash CPU shutdown path, hence disabling IRQs/FIQs in all
+> secondary CPUs in the kexec/panic path as well.
+> 
+> Cc: Marc Zyngier <maz@kernel.org>
+> Cc: Russell King <linux@armlinux.org.uk>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+>  arch/arm/kernel/machine_kexec.c | 3 +++
+>  1 file changed, 3 insertions(+)
+> 
+> diff --git a/arch/arm/kernel/machine_kexec.c b/arch/arm/kernel/machine_kexec.c
+> index f567032a09c0..ef788ee00519 100644
+> --- a/arch/arm/kernel/machine_kexec.c
+> +++ b/arch/arm/kernel/machine_kexec.c
+> @@ -86,6 +86,9 @@ void machine_crash_nonpanic_core(void *unused)
+>  	set_cpu_online(smp_processor_id(), false);
+>  	atomic_dec(&waiting_for_crash_ipi);
+>  
+> +	local_fiq_disable();
+> +	local_irq_disable();
+> +
 
-Hi Michael, thanks for your feedback! I agree that your idea could work,
-but...there is one downside: imagine the kmsg_dump() approach is not set
-in some Hyper-V guest, then we would rely in the regular notification
-mechanism [hv_die_panic_notify_crash()], right?
-But...you want then to run this notifier in the informational list,
-which...won't execute *by default* before kdump if no kmsg_dump() is
-set. So, this logic is convoluted when you mix it with the default level
-concept + kdump.
+My expectations would be that, since we're getting here using an IPI,
+interrupts are already masked. So what reenabled them the first place?
 
-May I suggest something? If possible, take a run with this patch set +
-DEBUG_NOTIFIER=y, in *both* cases (with and without the kmsg_dump()
-set). I did that and they run almost at the same time...I've checked the
-notifiers called, it's like almost nothing runs in-between.
+Thanks,
 
-I feel the panic notification mechanism does really fit with a
-hypervisor list, it's a good match with the nature of the list, which
-aims at informing the panic notification to the hypervisor/FW.
-Of course we can modify it if you prefer...but please take into account
-the kdump case and how it complicates the logic.
+	M.
 
-Let me know your considerations, in case you can experiment with the
-patch set as-is.
-Cheers,
-
-
-Guilherme
+-- 
+Without deviation from the norm, progress is not possible.
 
