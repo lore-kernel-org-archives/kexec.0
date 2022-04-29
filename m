@@ -1,43 +1,20 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Fri, 29 Apr 2022 11:44:43 -0300
-Subject: [PATCH 17/30] tracing: Improve panic/die notifiers
-In-Reply-To: <20220429095654.26d00b79@gandalf.local.home>
+Date: Fri, 29 Apr 2022 11:50:24 -0300
+Subject: [PATCH 20/30] panic: Add the panic informational notifier list
+In-Reply-To: <7956ab00-66b6-bd89-dcc0-f10cf2741e4d@arm.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-18-gpiccoli@igalia.com>
- <b8771b37-01f5-f50b-dbb3-9db4ee26e67e@gmail.com>
- <20220429092351.10bca4dd@gandalf.local.home>
- <832eecc5-9569-1d95-6ab8-f029b660dfcb@igalia.com>
- <20220429095654.26d00b79@gandalf.local.home>
-Message-ID: <b81cf509-60d5-a733-0b06-374d9c146559@igalia.com>
+ <20220427224924.592546-21-gpiccoli@igalia.com>
+ <7956ab00-66b6-bd89-dcc0-f10cf2741e4d@arm.com>
+Message-ID: <e169f964-2cd7-b9c5-7080-0505d52caa12@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 29/04/2022 10:56, Steven Rostedt wrote:
-> [...]
-> No. The fallthrough keyword is only needed when there's code between case
-> labels. As it is very common to list multiple cases for the same code path.
-> That is:
-> 
-> 	case DIE_OOPS:
->  	case PANIC_NOTIFIER:
->  		do_dump = 1;
->  		break;
-> 
-> Does not need a fall through label, as there's no code between the DIE_OOPS
-> and the PANIC_NOTIFIER. But if you had:
-> 
-> 	case DIE_OOPS:
-> 		x = true;
->  	case PANIC_NOTIFIER:
->  		do_dump = 1;
->  		break;
-> 
-> Then you do.
-> 
-> -- Steve
+Thanks Paul and Suzuki for the ACKs.
+Cheers,
 
-Thanks a bunch for the clarification, changed that for V2 =)
+
+Guilherme
 
