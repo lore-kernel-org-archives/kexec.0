@@ -1,153 +1,128 @@
-From: Helge Deller <deller@gmx.de>
-Date: Thu, 28 Apr 2022 18:55:52 +0200
-Subject: [PATCH 12/30] parisc: Replace regular spinlock with spin_trylock
- on panic path
-In-Reply-To: <20220427224924.592546-13-gpiccoli@igalia.com>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-13-gpiccoli@igalia.com>
-Message-ID: <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Fri, 29 Apr 2022 12:11:56 +0530
+Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
+ and memory hotplug
+In-Reply-To: <300a485c-4bc5-c58a-d34a-bacdb1fa4510@oracle.com>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-3-eric.devolder@oracle.com>
+ <d90f4299-e821-f5d5-957a-1e84f16816e0@linux.ibm.com>
+ <300a485c-4bc5-c58a-d34a-bacdb1fa4510@oracle.com>
+Message-ID: <100fa9f0-fc24-7a3f-33c6-3d4e7f6f4a93@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 4/28/22 00:49, Guilherme G. Piccoli wrote:
-> The panic notifiers' callbacks execute in an atomic context, with
-> interrupts/preemption disabled, and all CPUs not running the panic
-> function are off, so it's very dangerous to wait on a regular
-> spinlock, there's a risk of deadlock.
->
-> This patch refactors the panic notifier of parisc/power driver
-> to make use of spin_trylock - for that, we've added a second
-> version of the soft-power function. Also, some comments were
-> reorganized and trailing white spaces, useless header inclusion
-> and blank lines were removed.
->
-> Cc: Helge Deller <deller@gmx.de>
-> Cc: "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-You may add:
-Acked-by: Helge Deller <deller@gmx.de> # parisc
+On 26/04/22 20:09, Eric DeVolder wrote:
+>
+>
+> On 4/25/22 23:21, Sourabh Jain wrote:
+>>
+>> On 13/04/22 22:12, Eric DeVolder wrote:
+>>> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
+>>>
+>>> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
+>>> the elfcorehdr buffer/segment.
+>>>
+>>> This is a preparation for later usage.
+>>>
+>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>>> Acked-by: Baoquan He <bhe@redhat.com>
+>>> ---
+>>> ? arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
+>>> ? 1 file changed, 26 insertions(+)
+>>>
+>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>>> index b0142e01002e..f7b92ee1bcc7 100644
+>>> --- a/arch/x86/Kconfig
+>>> +++ b/arch/x86/Kconfig
+>>> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
+>>> ??????? (CONFIG_RELOCATABLE=y).
+>>> ??????? For more details see Documentation/admin-guide/kdump/kdump.rst
+>>> +config CRASH_HOTPLUG
+>>> +??? bool "kernel updates of crash elfcorehdr"
+>>> +??? depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && 
+>>> KEXEC_FILE
+>>> +??? help
+>>> +????? Enable the kernel to update the crash elfcorehdr (which contains
+>>> +????? the list of CPUs and memory regions) directly when hot 
+>>> plug/unplug
+>>> +????? of CPUs or memory. Otherwise userspace must monitor these hot
+>>> +????? plug/unplug change notifications via udev in order to
+>>> +????? unload-then-reload the crash kernel so that the list of CPUs and
+>>> +????? memory regions is kept up-to-date. Note that the udev CPU and
+>>> +????? memory change notifications still occur (however, userspace 
+>>> is not
+>>> +????? required to monitor for crash dump purposes).
+>>> +
+>>> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
+>>> +??? depends on CRASH_HOTPLUG
+>>> +??? int
+>>> +??? default 131072
+>>> +??? help
+>>> +????? Specify the maximum size of the elfcorehdr buffer/segment.
+>>> +????? The 128KiB default is sized so that it can accommodate 2048
+>>> +????? Elf64_Phdr, where each Phdr represents either a CPU or a
+>>> +????? region of memory.
+>>> +????? For example, this size can accommodate a machine with up to 1024
+>>> +????? CPUs and up to 1024 memory regions, eg. as represented by the
+>>> +????? 'System RAM' entries in /proc/iomem.
+>>
+>> Is it possible to get rid of CRASH_HOTPLUG_ELFCOREHDR_SZ?
+> At the moment, I do not think so. The idea behind this value is to 
+> represent the largest number of CPUs and memory regions possible in 
+> the system. Today there is NR_CPUS which could be used for CPUs, but 
+> there isn't a similar value for memory. I also am not aware of a 
+> kernel variable that could be utilized to represent the maximum number 
+> of memory regions. If there is, please let me know!
+>>
+>> How about finding the additional buffer space needed for future CPU 
+>> and memory
+>> add during the kdump load? Not sure about the feasibility of doing 
+>> this in
+>> kexec tool (userspace).
+>
+> I may not understand what you are asking, but the x86 code, for 
+> kexec_file_load, does in fact allocate all the space needed (currently 
+> via CRASH_HOTPLUG_ELFCOREHDR_SZ) upon kdump load.
+>
+> For kexec_load, I've had no problem asking the kexec tool to allocate 
+> a larger piece of memory for the elfcorehdr. But it is the same 
+> problem as CRASH_HOTPLUG_ELFCOREHDR_SZ; how big? In my workspace I 
+> tell kexec tool how big. If there are sysfs visible values for NR_CPU 
+> and memory, then we could have kexec pull those and compute.
 
-Helge
+Yeah dynamic calculation for PT_LOAD sections needed for possible memory 
+may not be straightforward. But still I did not get the rational for 
+limiting the possible PT_LOAD sections or memory ranges to only 1024. 
+Although in kexec tool the max memory ranges for x86 is 32K.
 
+commit 1bc7bc7649fa29d95c98f6a6d8dd2f08734a865c
+Author: David Hildenbrand <david@redhat.com>
+Date:?? Tue Mar 23 11:01:10 2021 +0100
 
-> ---
->  arch/parisc/include/asm/pdc.h |  1 +
->  arch/parisc/kernel/firmware.c | 27 +++++++++++++++++++++++----
->  drivers/parisc/power.c        | 17 ++++++++++-------
->  3 files changed, 34 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/parisc/include/asm/pdc.h b/arch/parisc/include/asm/pdc.h
-> index b643092d4b98..7a106008e258 100644
-> --- a/arch/parisc/include/asm/pdc.h
-> +++ b/arch/parisc/include/asm/pdc.h
-> @@ -83,6 +83,7 @@ int pdc_do_firm_test_reset(unsigned long ftc_bitmap);
->  int pdc_do_reset(void);
->  int pdc_soft_power_info(unsigned long *power_reg);
->  int pdc_soft_power_button(int sw_control);
-> +int pdc_soft_power_button_panic(int sw_control);
->  void pdc_io_reset(void);
->  void pdc_io_reset_devices(void);
->  int pdc_iodc_getc(void);
-> diff --git a/arch/parisc/kernel/firmware.c b/arch/parisc/kernel/firmware.c
-> index 6a7e315bcc2e..0e2f70b592f4 100644
-> --- a/arch/parisc/kernel/firmware.c
-> +++ b/arch/parisc/kernel/firmware.c
-> @@ -1232,15 +1232,18 @@ int __init pdc_soft_power_info(unsigned long *power_reg)
->  }
->
->  /*
-> - * pdc_soft_power_button - Control the soft power button behaviour
-> - * @sw_control: 0 for hardware control, 1 for software control
-> + * pdc_soft_power_button{_panic} - Control the soft power button behaviour
-> + * @sw_control: 0 for hardware control, 1 for software control
->   *
->   *
->   * This PDC function places the soft power button under software or
->   * hardware control.
-> - * Under software control the OS may control to when to allow to shut
-> - * down the system. Under hardware control pressing the power button
-> + * Under software control the OS may control to when to allow to shut
-> + * down the system. Under hardware control pressing the power button
->   * powers off the system immediately.
-> + *
-> + * The _panic version relies in spin_trylock to prevent deadlock
-> + * on panic path.
->   */
->  int pdc_soft_power_button(int sw_control)
->  {
-> @@ -1254,6 +1257,22 @@ int pdc_soft_power_button(int sw_control)
->  	return retval;
->  }
->
-> +int pdc_soft_power_button_panic(int sw_control)
-> +{
-> +	int retval;
-> +	unsigned long flags;
-> +
-> +	if (!spin_trylock_irqsave(&pdc_lock, flags)) {
-> +		pr_emerg("Couldn't enable soft power button\n");
-> +		return -EBUSY; /* ignored by the panic notifier */
-> +	}
-> +
-> +	retval = mem_pdc_call(PDC_SOFT_POWER, PDC_SOFT_POWER_ENABLE, __pa(pdc_result), sw_control);
-> +	spin_unlock_irqrestore(&pdc_lock, flags);
-> +
-> +	return retval;
-> +}
-> +
->  /*
->   * pdc_io_reset - Hack to avoid overlapping range registers of Bridges devices.
->   * Primarily a problem on T600 (which parisc-linux doesn't support) but
-> diff --git a/drivers/parisc/power.c b/drivers/parisc/power.c
-> index 456776bd8ee6..8512884de2cf 100644
-> --- a/drivers/parisc/power.c
-> +++ b/drivers/parisc/power.c
-> @@ -37,7 +37,6 @@
->  #include <linux/module.h>
->  #include <linux/init.h>
->  #include <linux/kernel.h>
-> -#include <linux/notifier.h>
->  #include <linux/panic_notifier.h>
->  #include <linux/reboot.h>
->  #include <linux/sched/signal.h>
-> @@ -175,16 +174,21 @@ static void powerfail_interrupt(int code, void *x)
->
->
->
-> -/* parisc_panic_event() is called by the panic handler.
-> - * As soon as a panic occurs, our tasklets above will not be
-> - * executed any longer. This function then re-enables the
-> - * soft-power switch and allows the user to switch off the system
-> +/*
-> + * parisc_panic_event() is called by the panic handler.
-> + *
-> + * As soon as a panic occurs, our tasklets above will not
-> + * be executed any longer. This function then re-enables
-> + * the soft-power switch and allows the user to switch off
-> + * the system. We rely in pdc_soft_power_button_panic()
-> + * since this version spin_trylocks (instead of regular
-> + * spinlock), preventing deadlocks on panic path.
->   */
->  static int parisc_panic_event(struct notifier_block *this,
->  		unsigned long event, void *ptr)
->  {
->  	/* re-enable the soft-power switch */
-> -	pdc_soft_power_button(0);
-> +	pdc_soft_power_button_panic(0);
->  	return NOTIFY_DONE;
->  }
->
-> @@ -193,7 +197,6 @@ static struct notifier_block parisc_panic_block = {
->  	.priority	= INT_MAX,
->  };
->
-> -
->  static int __init power_init(void)
->  {
->  	unsigned long ret;
+ ??? crashdump/x86: increase CRASH_MAX_MEMORY_RANGES to 32k
+
+ ??? virtio-mem in Linux adds/removes individual memory blocks (e.g., 128 MB
+ ??? each). Linux merges adjacent memory blocks added by virtio-mem 
+devices, but
+ ??? we can still end up with a very sparse memory layout when unplugging
+ ??? memory in corner cases.
+
+ ??? Let's increase the maximum number of crash memory ranges from ~2k 
+to 32k.
+ ??? 32k should be sufficient for a very long time.
+
+ ??? e_phnum field in the header is 16 bits wide, so we can fit a maximum of
+ ??? ~64k entries in there, shared with other entries (i.e., CPU). 
+Therefore,
+ ??? using up to 32k memory ranges is fine. (if we ever need more than ~64k,
+
+Do you see any issue if we increase the memory range count to 32K?
+
+Thanks,
+Sourabh Jain
 
 
