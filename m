@@ -1,47 +1,37 @@
-From: Mohamed Abuelfotoh, Hazem <abuehaze@amazon.com>
-Date: Mon, 2 May 2022 12:43:25 +0000
-Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
- to 32k
-In-Reply-To: <Ymu24KkCD1UHzGmI@vergenet.net>
-References: <20220419172327.11288-1-abuehaze@amazon.com>
- <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv> <Ymu24KkCD1UHzGmI@vergenet.net>
-Message-ID: <4C6AD263-1276-4915-8B73-168BAA9B7AF5@amazon.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Date: Mon, 2 May 2022 08:38:02 -0700
+Subject: [PATCH 15/30] bus: brcmstb_gisb: Clean-up panic/die notifiers
+In-Reply-To: <20220427224924.592546-16-gpiccoli@igalia.com>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-16-gpiccoli@igalia.com>
+Message-ID: <eaf3a893-00dd-8717-202e-911b395670e1@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Thanks Simon & Baoquan.
-
-Hazem
-
-?On 29/04/2022, 11:59, "Simon Horman" <horms@kernel.org> wrote:
-
-    CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 
 
+On 4/27/2022 3:49 PM, Guilherme G. Piccoli wrote:
+> This patch improves the panic/die notifiers in this driver by
+> making use of a passed "id" instead of comparing pointer
+> address; also, it removes an useless prototype declaration
+> and unnecessary header inclusion.
+> 
+> This is part of a panic notifiers refactor - this notifier in
+> the future will be moved to a new list, that encompass the
+> information notifiers only.
+> 
+> Fixes: 9eb60880d9a9 ("bus: brcmstb_gisb: add notifier handling")
+> Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
-    On Tue, Apr 26, 2022 at 08:14:15AM +0800, Baoquan He wrote:
-    > On 04/19/22 at 05:23pm, abuehaze14 wrote:
-    > > On ARM64 based VMs hotplugging more than 31GB of memory will cause
-    > > kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
-    > > limit which is currently 32 on ARM64 given that the  memory block size
-    > > is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
-    > > to 32K similar to what we have on x86, this should allow
-    > > kdump to work until the VM has 32TB which should be
-    > > enough for a long time.
-    > >
-    > > Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
-    >
-    > Sounds reasonable.
-    >
-    > Acked-by: Baoquan He <bhe@redhat.com>
-    >
-    > By the way, Simon usually collects kexec-tools patches every one to two
-    > weeks, no need to always ping in a short time.
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-    Thanks and sorry for the delay.
-
-    I have applied this patch to main.
+Not sure if the Fixes tag is warranted however as this is a clean up, 
+and not really fixing a bug.
+-- 
+Florian
 
