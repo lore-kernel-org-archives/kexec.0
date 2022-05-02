@@ -1,10 +1,11 @@
 From: Florian Fainelli <f.fainelli@gmail.com>
-Date: Mon, 2 May 2022 08:38:02 -0700
-Subject: [PATCH 15/30] bus: brcmstb_gisb: Clean-up panic/die notifiers
-In-Reply-To: <20220427224924.592546-16-gpiccoli@igalia.com>
+Date: Mon, 2 May 2022 08:38:36 -0700
+Subject: [PATCH 06/30] soc: bcm: brcmstb: Document panic notifier action
+ and remove useless header
+In-Reply-To: <20220427224924.592546-7-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-16-gpiccoli@igalia.com>
-Message-ID: <eaf3a893-00dd-8717-202e-911b395670e1@gmail.com>
+ <20220427224924.592546-7-gpiccoli@igalia.com>
+Message-ID: <a02821ab-db4f-5bff-2a98-7d74032a0652@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -14,24 +15,29 @@ To: kexec@lists.infradead.org
 
 
 On 4/27/2022 3:49 PM, Guilherme G. Piccoli wrote:
-> This patch improves the panic/die notifiers in this driver by
-> making use of a passed "id" instead of comparing pointer
-> address; also, it removes an useless prototype declaration
-> and unnecessary header inclusion.
+> The panic notifier of this driver is very simple code-wise, just a memory
+> write to a special position with some numeric code. But this is not clear
+> from the semantic point-of-view, and there is no public documentation
+> about that either.
 > 
-> This is part of a panic notifiers refactor - this notifier in
-> the future will be moved to a new list, that encompass the
-> information notifiers only.
+> After discussing this in the mailing-lists [0] and having Florian explained
+> it very well, this patch just document that in the code for the future
+> generations asking the same questions. Also, it removes a useless header.
 > 
-> Fixes: 9eb60880d9a9 ("bus: brcmstb_gisb: add notifier handling")
+> [0] https://lore.kernel.org/lkml/781cafb0-8d06-8b56-907a-5175c2da196a at gmail.com
+> 
+> Fixes: 0b741b8234c8 ("soc: bcm: brcmstb: Add support for S2/S3/S5 suspend states (ARM)")
 > Cc: Brian Norris <computersforpeace@gmail.com>
+> Cc: Doug Berger <opendmb@gmail.com>
 > Cc: Florian Fainelli <f.fainelli@gmail.com>
+> Cc: Justin Chen <justinpopo6@gmail.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Markus Mayer <mmayer@broadcom.com>
 > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 
 Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Not sure if the Fixes tag is warranted however as this is a clean up, 
-and not really fixing a bug.
+Likewise, I am not sure if the Fixes tag is necessary here.
 -- 
 Florian
 
