@@ -1,54 +1,47 @@
-From: Coiby Xu <coxu@redhat.com>
-Date: Fri,  1 Apr 2022 09:31:18 +0800
-Subject: [PATCH v5 3/3] arm64: kexec_file: use more system keyrings to verify
- kernel image signature
-In-Reply-To: <20220401013118.348084-1-coxu@redhat.com>
-References: <20220401013118.348084-1-coxu@redhat.com>
-Message-ID: <20220401013118.348084-4-coxu@redhat.com>
+From: Mohamed Abuelfotoh, Hazem <abuehaze@amazon.com>
+Date: Mon, 2 May 2022 12:43:25 +0000
+Subject: [PATCH] arm64/crashdump-arm64: increase CRASH_MAX_MEMORY_RANGES
+ to 32k
+In-Reply-To: <Ymu24KkCD1UHzGmI@vergenet.net>
+References: <20220419172327.11288-1-abuehaze@amazon.com>
+ <Ymc5VxBOQgyrrN+y@MiWiFi-R3L-srv> <Ymu24KkCD1UHzGmI@vergenet.net>
+Message-ID: <4C6AD263-1276-4915-8B73-168BAA9B7AF5@amazon.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently, a problem faced by arm64 is if a kernel image is signed by a
-MOK key, loading it via the kexec_file_load() system call would be
-rejected with the error "Lockdown: kexec: kexec of unsigned images is
-restricted; see man kernel_lockdown.7".
+Thanks Simon & Baoquan.
 
-This patch allows to verify arm64 kernel image signature using not only
-.builtin_trusted_keys but also .platform and .secondary_trusted_key
-keyring.
+Hazem
 
-Acked-by: Will Deacon <will@kernel.org>
-Signed-off-by: Coiby Xu <coxu@redhat.com>
----
- arch/arm64/kernel/kexec_image.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+?On 29/04/2022, 11:59, "Simon Horman" <horms@kernel.org> wrote:
 
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 9ec34690e255..51af1c22d6da 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -14,7 +14,6 @@
- #include <linux/kexec.h>
- #include <linux/pe.h>
- #include <linux/string.h>
--#include <linux/verification.h>
- #include <asm/byteorder.h>
- #include <asm/cpufeature.h>
- #include <asm/image.h>
-@@ -133,8 +132,7 @@ static void *image_load(struct kimage *image,
- #ifdef CONFIG_KEXEC_IMAGE_VERIFY_SIG
- static int image_verify_sig(const char *kernel, unsigned long kernel_len)
- {
--	return verify_pefile_signature(kernel, kernel_len, NULL,
--				       VERIFYING_KEXEC_PE_SIGNATURE);
-+	return kexec_kernel_verify_pe_sig(kernel, kernel_len);
- }
- #endif
- 
--- 
-2.34.1
+    CAUTION: This email originated from outside of the organization. Do not click links or open attachments unless you can confirm the sender and know the content is safe.
 
+
+
+    On Tue, Apr 26, 2022 at 08:14:15AM +0800, Baoquan He wrote:
+    > On 04/19/22 at 05:23pm, abuehaze14 wrote:
+    > > On ARM64 based VMs hotplugging more than 31GB of memory will cause
+    > > kdump to fail loading as it's hitting the CRASH_MAX_MEMORY_RANGES
+    > > limit which is currently 32 on ARM64 given that the  memory block size
+    > > is 1GB. This patch is raising CRASH_MAX_MEMORY_RANGES
+    > > to 32K similar to what we have on x86, this should allow
+    > > kdump to work until the VM has 32TB which should be
+    > > enough for a long time.
+    > >
+    > > Signed-off-by: Hazem Mohamed Abuelfotoh <abuehaze@amazon.com>
+    >
+    > Sounds reasonable.
+    >
+    > Acked-by: Baoquan He <bhe@redhat.com>
+    >
+    > By the way, Simon usually collects kexec-tools patches every one to two
+    > weeks, no need to always ping in a short time.
+
+    Thanks and sorry for the delay.
+
+    I have applied this patch to main.
 
