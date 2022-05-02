@@ -1,12 +1,11 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 2 May 2022 12:47:22 -0300
-Subject: [PATCH 06/30] soc: bcm: brcmstb: Document panic notifier action
- and remove useless header
-In-Reply-To: <a02821ab-db4f-5bff-2a98-7d74032a0652@gmail.com>
+Date: Mon, 2 May 2022 12:50:35 -0300
+Subject: [PATCH 15/30] bus: brcmstb_gisb: Clean-up panic/die notifiers
+In-Reply-To: <eaf3a893-00dd-8717-202e-911b395670e1@gmail.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-7-gpiccoli@igalia.com>
- <a02821ab-db4f-5bff-2a98-7d74032a0652@gmail.com>
-Message-ID: <baf65246-a012-93ad-1ba0-6c6d67e501b5@igalia.com>
+ <20220427224924.592546-16-gpiccoli@igalia.com>
+ <eaf3a893-00dd-8717-202e-911b395670e1@gmail.com>
+Message-ID: <af03a6ef-6b92-31cd-72d4-47b82bc47f87@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -15,12 +14,13 @@ To: kexec@lists.infradead.org
 
 On 02/05/2022 12:38, Florian Fainelli wrote:
 > [...] 
+> 
 > Acked-by: Florian Fainelli <f.fainelli@gmail.com>
 > 
-> Likewise, I am not sure if the Fixes tag is necessary here.
+> Not sure if the Fixes tag is warranted however as this is a clean up, 
+> and not really fixing a bug.
 
-Perfect Florian, thanks!  I'll add your Acked-by tag and remove the
-fixes for V2 =)
+Perfect, thanks Florian. I'll add your ACK and remove the fixes tag in V2.
 Cheers,
 
 
