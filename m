@@ -1,72 +1,71 @@
-From: Evan Green <evgreen@chromium.org>
-Date: Tue, 3 May 2022 11:03:37 -0700
-Subject: [PATCH 04/30] firmware: google: Convert regular spinlock into
- trylock on panic path
-In-Reply-To: <20220427224924.592546-5-gpiccoli@igalia.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Tue, 3 May 2022 15:06:15 -0300
+Subject: [PATCH 24/30] panic: Refactor the panic path
+In-Reply-To: <PH0PR21MB302570C9407F80AAD09E209ED7C09@PH0PR21MB3025.namprd21.prod.outlook.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-5-gpiccoli@igalia.com>
-Message-ID: <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com>
+ <20220427224924.592546-25-gpiccoli@igalia.com>
+ <PH0PR21MB30252C55EB4F97F3D78021BDD7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
+ <50178dfb-8e94-f35f-09c3-22fe197550ef@igalia.com>
+ <PH0PR21MB302570C9407F80AAD09E209ED7C09@PH0PR21MB3025.namprd21.prod.outlook.com>
+Message-ID: <12b5a753-c0f1-9da5-f269-483384752837@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, Apr 27, 2022 at 3:51 PM Guilherme G. Piccoli
-<gpiccoli@igalia.com> wrote:
->
-> Currently the gsmi driver registers a panic notifier as well as
-> reboot and die notifiers. The callbacks registered are called in
-> atomic and very limited context - for instance, panic disables
-> preemption, local IRQs and all other CPUs that aren't running the
-> current panic function.
->
-> With that said, taking a spinlock in this scenario is a
-> dangerous invitation for a deadlock scenario. So, we fix
-> that in this commit by changing the regular spinlock with
-> a trylock, which is a safer approach.
->
-> Fixes: 74c5b31c6618 ("driver: Google EFI SMI")
-> Cc: Ard Biesheuvel <ardb@kernel.org>
-> Cc: David Gow <davidgow@google.com>
-> Cc: Evan Green <evgreen@chromium.org>
-> Cc: Julius Werner <jwerner@chromium.org>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> ---
->  drivers/firmware/google/gsmi.c | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/firmware/google/gsmi.c b/drivers/firmware/google/gsmi.c
-> index adaa492c3d2d..b01ed02e4a87 100644
-> --- a/drivers/firmware/google/gsmi.c
-> +++ b/drivers/firmware/google/gsmi.c
-> @@ -629,7 +629,10 @@ static int gsmi_shutdown_reason(int reason)
->         if (saved_reason & (1 << reason))
->                 return 0;
->
-> -       spin_lock_irqsave(&gsmi_dev.lock, flags);
-> +       if (!spin_trylock_irqsave(&gsmi_dev.lock, flags)) {
-> +               rc = -EBUSY;
-> +               goto out;
-> +       }
+On 03/05/2022 14:31, Michael Kelley (LINUX) wrote:
+> [...]
+> 
+> To me, it's a weak correlation between having a kmsg dumper, and
+> wanting or not wanting the info level output to come before kdump.
+> Hyper-V is one of only a few places that register a kmsg dumper, so most
+> Linux instances outside of Hyper-V guest (and PowerPC systems?) will have
+> the info level output after kdump.  It seems like anyone who cared strongly
+> about the info level output would set the panic_notifier_level to 1 or to 3
+> so that the result is more deterministic.  But that's just my opinion, and
+> it's probably an opinion that is not as well informed on the topic as some
+> others in the discussion. So keeping things as in your patch set is not a
+> show-stopper for me.
+> 
+> However, I would request a clarification in the documentation.   The
+> panic_notifier_level affects not only the hypervisor, informational,
+> and pre_reboot lists, but it also affects panic_print_sys_info() and
+> kmsg_dump().  Specifically, at level 1, panic_print_sys_info() and
+> kmsg_dump() will not be run before kdump.  At level 3, they will
+> always be run before kdump.  Your documentation above mentions
+> "informational lists" (plural), which I take to vaguely include
+> kmsg_dump() and panic_print_sys_info(), but being explicit about
+> the effect would be better.
+> 
+> Michael
 
-gsmi_shutdown_reason() is a common function called in other scenarios
-as well, like reboot and thermal trip, where it may still make sense
-to wait to acquire a spinlock. Maybe we should add a parameter to
-gsmi_shutdown_reason() so that you can get your change on panic, but
-we don't convert other callbacks into try-fail scenarios causing us to
-miss logs.
+Thanks again Michael, to express your points and concerns - great idea
+of documentation improvement here, I'll do that for V2, for sure.
 
-Though thinking more about it, is this really a Good Change (TM)? The
-spinlock itself already disables interrupts, meaning the only case
-where this change makes a difference is if the panic happens from
-within the function that grabbed the spinlock (in which case the
-callback is also likely to panic), or in an NMI that panics within
-that window. The downside of this change is that if one core was
-politely working through an event with the lock held, and another core
-panics, we now might lose the panic log, even though it probably would
-have gone through fine assuming the other core has a chance to
-continue.
+The idea of "defaulting" to skip the info list on kdump (if no
+kmsg_dump() is set) is again a mechanism that aims at accommodating all
+users and concerns of antagonistic goals, kdump vs notifier lists.
 
--Evan
+Before this patch set, by default no notifier executed before kdump. So,
+the "pendulum"  was strongly on kdump side, and clearly this was a
+sub-optimal decision - proof of that is that both Hyper-V / PowerPC code
+forcibly set the "crash_kexec_post_notifiers". The goal here is to have
+a more lightweight list that by default runs before kdump, a secondary
+list that only runs before kdump if there's usage for that (either user
+sets that or kmsg_dumper set is considered a valid user), and the
+remaining notifiers run by default only after kdump, all of that very
+customizable through the levels idea.
+
+Now, one thing we could do to improve consistency for the hyper-v case:
+having a kmsg_dump_once() helper, and *for Hyper-V only*, call it on the
+hypervisor list, within the info notifier (that would be moved to
+hypervisor list, ofc).
+Let's wait for more feedback on that, just throwing some ideas in order
+we can have everyone happy with the end-result!
+
+Cheers,
+
+
+Guilherme
 
