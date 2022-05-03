@@ -1,160 +1,89 @@
 From: Michael Kelley (LINUX) <mikelley@microsoft.com>
-Date: Tue, 3 May 2022 17:31:43 +0000
-Subject: [PATCH 24/30] panic: Refactor the panic path
-In-Reply-To: <50178dfb-8e94-f35f-09c3-22fe197550ef@igalia.com>
+Date: Tue, 3 May 2022 17:44:03 +0000
+Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+In-Reply-To: <0147d038-571b-0802-c210-ccd4d52cd5dd@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <PH0PR21MB30252C55EB4F97F3D78021BDD7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
- <50178dfb-8e94-f35f-09c3-22fe197550ef@igalia.com>
-Message-ID: <PH0PR21MB302570C9407F80AAD09E209ED7C09@PH0PR21MB3025.namprd21.prod.outlook.com>
+ <20220427224924.592546-20-gpiccoli@igalia.com>
+ <PH0PR21MB30256260CCF4CAB713BBB11ED7FC9@PH0PR21MB3025.namprd21.prod.outlook.com>
+ <0147d038-571b-0802-c210-ccd4d52cd5dd@igalia.com>
+Message-ID: <PH0PR21MB30257E4E6E16BB8FFDE8F312D7C09@PH0PR21MB3025.namprd21.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Friday, April 29, 2022 1:38 PM
+From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Friday, April 29, 2022 11:04 AM
 > 
-> On 29/04/2022 14:53, Michael Kelley (LINUX) wrote:
+> On 29/04/2022 14:30, Michael Kelley (LINUX) wrote:
 > > From: Guilherme G. Piccoli <gpiccoli@igalia.com> Sent: Wednesday, April 27, 2022
 > 3:49 PM
 > >> [...]
-> >> +	panic_notifiers_level=
-> >> +			[KNL] Set the panic notifiers execution order.
-> >> +			Format: <unsigned int>
-> >> +			We currently have 4 lists of panic notifiers; based
-> >> +			on the functionality and risk (for panic success) the
-> >> +			callbacks are added in a given list. The lists are:
-> >> +			- hypervisor/FW notification list (low risk);
-> >> +			- informational list (low/medium risk);
-> >> +			- pre_reboot list (higher risk);
-> >> +			- post_reboot list (only run late in panic and after
-> >> +			kdump, not configurable for now).
-> >> +			This parameter defines the ordering of the first 3
-> >> +			lists with regards to kdump; the levels determine
-> >> +			which set of notifiers execute before kdump. The
-> >> +			accepted levels are:
-> >> +			0: kdump is the first thing to run, NO list is
-> >> +			executed before kdump.
-> >> +			1: only the hypervisor list is executed before kdump.
-> >> +			2 (default level): the hypervisor list and (*if*
-> >> +			there's any kmsg_dumper defined) the informational
-> >> +			list are executed before kdump.
-> >> +			3: both the hypervisor and the informational lists
-> >> +			(always) execute before kdump.
+> >>
+> >> @@ -2843,7 +2843,7 @@ static void __exit vmbus_exit(void)
+> >>  	if (ms_hyperv.misc_features & HV_FEATURE_GUEST_CRASH_MSR_AVAILABLE) {
+> >>  		kmsg_dump_unregister(&hv_kmsg_dumper);
+> >>  		unregister_die_notifier(&hyperv_die_report_block);
+> >> -		atomic_notifier_chain_unregister(&panic_notifier_list,
+> >> +		atomic_notifier_chain_unregister(&panic_hypervisor_list,
+> >>  						&hyperv_panic_report_block);
+> >>  	}
+> >>
 > >
-> > I'm not clear on why level 2 exists.  What is the scenario where
-> > execution of the info list before kdump should be conditional on the
-> > existence of a kmsg_dumper?   Maybe the scenario is described
-> > somewhere in the patch set and I just missed it.
+> > Using the hypervisor_list here produces a bit of a mismatch.  In many cases
+> > this notifier will do nothing, and will defer to the kmsg_dump() mechanism
+> > to notify the hypervisor about the panic.   Running the kmsg_dump()
+> > mechanism is linked to the info_list, so I'm thinking the Hyper-V panic report
+> > notifier should be on the info_list as well.  That way the reporting behavior
+> > is triggered at the same point in the panic path regardless of which
+> > reporting mechanism is used.
 > >
 > 
-> Hi Michael, thanks for your review/consideration. So, this idea started
-> kind of some time ago. It all started with a need of exposing more
-> information on kernel log *before* kdump and *before* pstore -
-> specifically, we're talking about panic_print. But this cause some
-> reactions, Baoquan was very concerned with that [0]. Soon after, I've
-> proposed a panic notifiers filter (orthogonal) approach, to which Petr
-> suggested instead doing a major refactor [1] - it finally is alive in
-> the form of this series.
-> 
-> The theory behind the level 2 is to allow a scenario of kdump with the
-> minimum amount of notifiers - what is the point in printing more
-> information if the user doesn't care, since it's going to kdump? Now, if
-> there is a kmsg dumper, it means that there is likely some interest in
-> collecting information, and that might as well be required before the
-> potential kdump (which is my case, hence the proposal on [0]).
-> 
-> Instead of forcing one of the two behaviors (level 1 or level 3), we
-> have a middle-term/compromise: if there's interest in collecting such
-> data (in the form of a kmsg dumper), we then execute the informational
-> notifiers before kdump. If not, why to increase (even slightly) the risk
-> for kdump?
-> 
-> I'm OK in removing the level 2 if people prefer, but I don't feel it's a
-> burden, quite opposite - seems a good way to accommodate the somewhat
-> antagonistic ideas (jump to kdump ASAP vs collecting more info in the
-> panicked kernel log).
-> 
-> [0] https://lore.kernel.org/lkml/20220126052246.GC2086 at MiWiFi-R3L-srv/
-> 
-> [1] https://lore.kernel.org/lkml/YfPxvzSzDLjO5ldp at alley/
-> 
+> Hi Michael, thanks for your feedback! I agree that your idea could work,
+> but...there is one downside: imagine the kmsg_dump() approach is not set
+> in some Hyper-V guest, then we would rely in the regular notification
+> mechanism [hv_die_panic_notify_crash()], right?
+> But...you want then to run this notifier in the informational list,
+> which...won't execute *by default* before kdump if no kmsg_dump() is
+> set. So, this logic is convoluted when you mix it with the default level
+> concept + kdump.
 
-To me, it's a weak correlation between having a kmsg dumper, and
-wanting or not wanting the info level output to come before kdump.
-Hyper-V is one of only a few places that register a kmsg dumper, so most
-Linux instances outside of Hyper-V guest (and PowerPC systems?) will have
-the info level output after kdump.  It seems like anyone who cared strongly
-about the info level output would set the panic_notifier_level to 1 or to 3
-so that the result is more deterministic.  But that's just my opinion, and
-it's probably an opinion that is not as well informed on the topic as some
-others in the discussion. So keeping things as in your patch set is not a
-show-stopper for me.
+Yes, you are right.  But to me that speaks as much to the linkage
+between the informational list and kmsg_dump() being the core
+problem.  But as I described in my reply to Patch 24, I can live with
+the linkage as-is.
 
-However, I would request a clarification in the documentation.   The
-panic_notifier_level affects not only the hypervisor, informational,
-and pre_reboot lists, but it also affects panic_print_sys_info() and
-kmsg_dump().  Specifically, at level 1, panic_print_sys_info() and
-kmsg_dump() will not be run before kdump.  At level 3, they will
-always be run before kdump.  Your documentation above mentions
-"informational lists" (plural), which I take to vaguely include
-kmsg_dump() and panic_print_sys_info(), but being explicit about
-the effect would be better.
-
-Michael
+FWIW, guests on newer versions of Hyper-V will always register a
+kmsg dumper.  The flags that are tested to decide whether to
+register provide compatibility with older versions of Hyper-V that 
+don?t support the 4K bytes of notification info.
 
 > 
-> >[...]
-> >> +	 * Based on the level configured (smaller than 4), we clear the
-> >> +	 * proper bits in "panic_notifiers_bits". Notice that this bitfield
-> >> +	 * is initialized with all notifiers set.
-> >> +	 */
-> >> +	switch (panic_notifiers_level) {
-> >> +	case 3:
-> >> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> >> +		break;
-> >> +	case 2:
-> >> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> >> +
-> >> +		if (!kmsg_has_dumpers())
-> >> +			clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> >> +		break;
-> >> +	case 1:
-> >> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> >> +		clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> >> +		break;
-> >> +	case 0:
-> >> +		clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> >> +		clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> >> +		clear_bit(PN_HYPERVISOR_BIT, &panic_notifiers_bits);
-> >> +		break;
-> >> +	}
-> >
-> > I think the above switch statement could be done as follows:
-> >
-> > if (panic_notifiers_level <= 3)
-> > 	clear_bit(PN_PRE_REBOOT_BIT, &panic_notifiers_bits);
-> > if (panic_notifiers_level <= 2)
-> > 	if (!kmsg_has_dumpers())
-> > 		clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> > if (panic_notifiers_level <=1)
-> > 	clear_bit(PN_INFO_BIT, &panic_notifiers_bits);
-> > if (panic_notifiers_level == 0)
-> > 	clear_bit(PN_HYPERVISOR_BIT, &panic_notifiers_bits);
-> >
-> > That's about half the lines of code.  It's somewhat a matter of style,
-> > so treat this as just a suggestion to consider.  I just end up looking
-> > for a better solution when I see the same line of code repeated
-> > 3 or 4 times!
-> >
+> May I suggest something? If possible, take a run with this patch set +
+> DEBUG_NOTIFIER=y, in *both* cases (with and without the kmsg_dump()
+> set). I did that and they run almost at the same time...I've checked the
+> notifiers called, it's like almost nothing runs in-between.
 > 
-> It's a good idea - I liked your code. The switch seems more
-> natural/explicit for me, even duplicating some lines, but in case more
-> people prefer your way, I can definitely change the code - thanks for
-> the suggestion.
+> I feel the panic notification mechanism does really fit with a
+> hypervisor list, it's a good match with the nature of the list, which
+> aims at informing the panic notification to the hypervisor/FW.
+> Of course we can modify it if you prefer...but please take into account
+> the kdump case and how it complicates the logic.
+
+I agree that the runtime effect of one list vs. the other is nil.  The
+code works and can stay as you written it.
+
+I was trying to align from a conceptual standpoint.  It was a bit
+unexpected that one path would be on the hypervisor list, and the
+other path effectively on the informational list.  When I see
+conceptual mismatches like that, I tend to want to understand why,
+and if there is something more fundamental that is out-of-whack.
+
+
+> 
+> Let me know your considerations, in case you can experiment with the
+> patch set as-is.
 > Cheers,
 > 
 > 
 > Guilherme
-
