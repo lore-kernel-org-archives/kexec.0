@@ -1,42 +1,51 @@
-From: lizhe <sensor1010@163.com>
-Date: Wed,  4 May 2022 05:36:23 -0700
-Subject: [PATCH] kernel/crash_core.c : Remove redundant checks for ck_cmdline
- is NULL
-Message-ID: <20220504123623.36852-1-sensor1010@163.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Wed,  4 May 2022 13:57:03 -0300
+Subject: [PATCH] Makefile: Avoid installing files in /etc
+Message-ID: <20220504165703.747333-1-gpiccoli@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-When ck_cmdline is NULL. The last three lines of
-this function(get_last_crashkernel()) are equivalent to :
-	if (!NULL)
-		return NULL;
+Some Linux distros rely on having files in /etc (Debian, et al.),
+others in *not* having them in such directory (like Arch Linux).
+Fact is that the former distros have no issues in installing files
+elsewhere, whereas Arch has issues in installing files on /etc,
+specially if such files are present there when user try to reinstall
+the packages - it fails. Arch packaging doesn't try to be smart as dpkg
+for example (that compares config files to determine if user changed that).
 
-	return NULL;
-This is obviously a redundant check
+With all of that said, this patch moves the sample conf file to
+/usr/share, a move that is well-tolerated in all distros and shouldn't
+cause regressions in packaging. Also, if some Linux distribution likes
+the idea of adding files in /etc, they can tune it in their packaging
+configuration scripts for makedumpfile, but we shouldn't have that
+as default in the Makefile. Notice that this patch intentionally skips
+the change for the .spec file, which aims specific distros, by creating
+RPM packages.
 
-Signed-off-by: lizhe <sensor1010@163.com>
+Cc: Coiby Xu <coxu@redhat.com>
+Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
+Cc: Leonidas Spyropoulos <artafinde@archlinux.org>
+Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 ---
- kernel/crash_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+ Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 256cf6db573c..c232f01a2c54 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -222,9 +222,6 @@ static __init char *get_last_crashkernel(char *cmdline,
- 		p = strstr(p+1, name);
- 	}
- 
--	if (!ck_cmdline)
--		return NULL;
--
- 	return ck_cmdline;
- }
- 
+diff --git a/Makefile b/Makefile
+index cc6b0120aa7d..014be8110836 100644
+--- a/Makefile
++++ b/Makefile
+@@ -130,6 +130,6 @@ install:
+ 	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8
+ 	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5
+-	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
+ 	mkdir -p ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts
++	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/usr/share/makedumpfile-${VERSION}/makedumpfile.conf.sample
+ 	install -m 644 -t ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts/ $(VPATH)eppic_scripts/*
 -- 
-2.25.1
+2.36.0
 
 
