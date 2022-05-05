@@ -1,101 +1,163 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 5 May 2022 13:45:37 +0800
-Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
- hotplug support
-In-Reply-To: <f2dbd4fe-6201-b5c4-2725-dec9c3dbf13e@linux.ibm.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-5-eric.devolder@oracle.com>
- <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
- <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
- <6f3a6cbb-0ac4-f178-fc17-18f9594da319@linux.ibm.com>
- <YmeBjrChOHsIYG3e@MiWiFi-R3L-srv>
- <f2dbd4fe-6201-b5c4-2725-dec9c3dbf13e@linux.ibm.com>
-Message-ID: <YnNkgfnHlUTky0lt@MiWiFi-R3L-srv>
+From: Hui Li <lihui@loongson.cn>
+Date: Thu,  5 May 2022 16:06:28 +0800
+Subject: [PATCH v3] kexec-tools:mips:Pass initrd parameter via cmdline
+Message-ID: <20220505080628.14708-1-lihui@loongson.cn>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 04/28/22 at 10:48am, Sourabh Jain wrote:
-> Hi Baoquan,
-> 
-> On 26/04/22 10:52, Baoquan He wrote:
-> > On 04/26/22 at 09:36am, Sourabh Jain wrote:
-> > > On 15/04/22 03:59, Eric DeVolder wrote:
-......
+Under loongson platform,use command:
+kexec -l vmlinux... --append="root=UUID=28e1..." --initrd=...
+kexec -e
+quick restart failed like this:
 
-> > > > > > +#if defined(CONFIG_MEMORY_HOTPLUG)
-> > > > > > +static int crash_memhp_notifier(struct notifier_block *nb,
-> > > > > > +??? unsigned long val, void *v)
-> > > > > > +{
-> > > > > > +??? struct memory_notify *mhp = v;
-> > > > > > +
-> > > > > > +??? switch (val) {
-> > > > > > +??? case MEM_ONLINE:
-> > > > > > +??????? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
-> > > > > We don't differentiate the memory add/remove, cpu add, except of cpu
-> > > > > remove. Means the hp_action only differentiate cpu remove from the other
-> > > > > action. Maybe only making two types?
-> > > > > 
-> > > > > #define KEXEC_CRASH_HP_REMOVE_CPU?? 0
-> > > > > #define KEXEC_CRASH_HP_UPDATE_OTHER????? 1
-> > > > > 
-> > > > Sourabh Jain's work with PPC uses REMOVE_CPU, REMOVE_MEMORY, and
-> > > > ADD_MEMORY.
-> > > > Do you still want to consolidate these?
-> > > On PowerPC different actions are needed for CPU add and memory add/remove.
-> > > For CPU add case only FDT is updated whereas for the memory hotplug we will
-> > > be
-> > > updating FDT and elfcorehdr.
-> > I don't understand. For elfcorehdr updating, we only need regenerate it.
-> > Do you update them different for memory add/remove?
-> 
-> We have different actions for cpu remove, CPU add and memory add/remove
-> case.
-> 
-> CPU remove: no action
-> CPU add: update flattened device tree (FDT)
-> memory add/remove: update FDT and regenerate/update elfcorehdr
-> 
-> Since memory add/remove action is same we can have common hp_action for
-> them.
+[    3.420791] VFS: Cannot open root device "UUID=6462a8a4-02fb-49ff-bcb6-54fe53813c2a" or unknown-block(0,0): error -6
+[    3.431262] Please append a correct "root=" boot option; here are the available partitions:
+...
+...
+...
+[    3.543175]   0801         4194304 sda1 554e69cc-01
+[    3.543175]
+[    3.549494]   0802        62914560 sda2 554e69cc-02
+[    3.549495]
+[    3.555818]   0803         8388608 sda3 554e69cc-03
+[    3.555819]
+[    3.562139]   0804       174553229 sda4 554e69cc-04
+[    3.562139]
+[    3.568463] 0b00         1048575 sr0
+[    3.568464]  driver: sr
+[    3.574524] Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0)
+[    3.582750] ---[ end Kernel panic - not syncing: VFS: Unable to mount root fs on unknown-block(0,0) ]---
 
-For memory hot add/remove, we need rengereate elfcorehdr, and add the
-new elfcorehdr into fdt. Except of this, FDT need to know the hp_action
-and the hot added/removed memory region, namely the start and end, e.g
-[start, end]? 
+For compatibility with previous platforms,
+loongson platform obtain the initrd parameter through cmdline in kernel,
+and the kernel also supports the use of cmdline to parse initrd.
+But under the mips architecture, kexec-tools pass the initrd through DTB.
+So some modifications are made as follows:
 
-I checked arm64 kexec code, seems we only need to know if mem hotplug
-event happened, then regenerate elfcorehdr and embed the new elfcorehdr
-into fdt. Then we don't know pass the [start, end] info into the
-handler. Please tell if ppc is different or I missed anything.
+(1) in kexec/arch/mips/kexec-elf-mips.c
+    Add patch_initrd_info() function, at runtime to distinguish different platforms.
+    Only for loongson platform, add initrd parameter to cmdline.
 
-If I am right, I would like the handler interface as Boris has made
-in his draft patch.
+(2) in kexec/arch/mips/crashdump-mips.c
+    Because loongson uses a different page_offset,
+    it should be modified to ensure that crashdump functionality is correct and reliable.
 
-void __weak arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
-                                           unsigned int cpu)
+Signed-off-by: Hui Li <lihui@loongson.cn>
+---
+ kexec/arch/mips/crashdump-mips.c |  3 ++
+ kexec/arch/mips/kexec-elf-mips.c | 73 +++++++++++++++++++++++++++++++-
+ 2 files changed, 74 insertions(+), 2 deletions(-)
 
-static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
-> 
-> > 
-> > What I saw is the added action for memory hotplug is only for message
-> > printing. Is this really needed? And memory hotplug is even not
-> > supported. Please correct me if I missed anything.
-> 
-> I agree that currently memory hp_action is only used for printing warning
-> message but
-> eventually we will be handling memory hotplug case as well.
-> 
-> > +       /* crash update on memory hotplug is not support yet */
-> > +       if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
-> > +               pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
-> > +               return;
-> > +       }
-> 
-> Thanks,
-> Sourabh Jain
-> 
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index aa09c83..548aeff 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -335,6 +335,9 @@ static int patch_elf_info(void)
+ 			/* OCTEON uses a different page_offset. */
+ 			if (strstr(line, "Octeon"))
+ 				elf_info64.page_offset = 0x8000000000000000ULL;
++			/* LOONGSON uses a different page_offset. */
++			else if (strstr(line, "Loongson"))
++				elf_info64.page_offset = 0xffffffff80000000ULL;
+ 			break;
+ 		}
+ 	}
+diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+index a2d11fc..fcc711c 100644
+--- a/kexec/arch/mips/kexec-elf-mips.c
++++ b/kexec/arch/mips/kexec-elf-mips.c
+@@ -40,6 +40,74 @@ static const int probe_debug = 0;
+ #define CMDLINE_PREFIX "kexec "
+ static char cmdline_buf[COMMAND_LINE_SIZE] = CMDLINE_PREFIX;
+ 
++/* Converts unsigned long to ascii string. */
++static void ultoa(unsigned long i, char *str)
++{
++	int j = 0, k;
++	char tmp;
++
++	do {
++		str[j++] = i % 10 + '0';
++	} while ((i /= 10) > 0);
++	str[j] = '\0';
++
++	/* Reverse the string. */
++	for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
++		tmp = str[k];
++		str[k] = str[j];
++		str[j] = tmp;
++	}
++}
++
++/* Adds initrd parameters to command line. */
++static int cmdline_add_initrd(char *cmdline, unsigned long addr, char *new_para)
++{
++	int cmdlen, len;
++	char str[30], *ptr;
++
++	ptr = str;
++	strcpy(str, new_para);
++	ptr += strlen(str);
++	ultoa(addr, ptr);
++	len = strlen(str);
++	cmdlen = strlen(cmdline) + len;
++	if (cmdlen > (COMMAND_LINE_SIZE - 1))
++		die("Command line overflow\n");
++	strcat(cmdline, str);
++
++	return 0;
++}
++
++/* add initrd to cmdline to compatible with previous platforms. */
++static int patch_initrd_info(char *cmdline, unsigned long initrd_base, unsigned long initrd_size)
++{
++	const char cpuinfo[] = "/proc/cpuinfo";
++	char line[MAX_LINE];
++	FILE *fp;
++    unsigned long page_offset = PAGE_OFFSET;
++
++	fp = fopen(cpuinfo, "r");
++	if (!fp) {
++		fprintf(stderr, "Cannot open %s: %s\n",
++		cpuinfo, strerror(errno));
++		return -1;
++	}
++	while (fgets(line, sizeof(line), fp) != 0) {
++		if (strncmp(line, "cpu model", 9) == 0) {
++			/* LOONGSON64  uses a different page_offset. */
++		if (strstr(line, "Loongson")) {
++				if (arch_options.core_header_type == CORE_TYPE_ELF64)
++					page_offset = (unsigned long)0xffffffff80000000ULL;
++				cmdline_add_initrd(cmdline, page_offset + initrd_base, " rd_start=");
++				cmdline_add_initrd(cmdline, initrd_size, " rd_size=");
++				break;
++			}
++		}
++	}
++	fclose(fp);
++	return 0;
++}
++
+ int elf_mips_probe(const char *buf, off_t len)
+ {
+ 	struct mem_ehdr ehdr;
+@@ -171,9 +239,10 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+ 		/* Now that the buffer for initrd is prepared, update the dtb
+ 		 * with an appropriate location */
+ 		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
+-	}
+-
+ 
++		/* Add the initrd parameters to cmdline */
++		patch_initrd_info(cmdline_buf, initrd_base, initrd_size);
++	}
+ 	/* This is a legacy method for commandline passing used
+ 	 * currently by Octeon CPUs only */
+ 	add_buffer(info, cmdline_buf, sizeof(cmdline_buf),
+-- 
+2.20.1
 
 
