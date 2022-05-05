@@ -1,39 +1,64 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Thu,  5 May 2022 14:45:57 -0400
-Subject: [PATCH v8 1/7] x86/crash: fix minor typo/bug in debug message
+Date: Thu,  5 May 2022 14:46:03 -0400
+Subject: [PATCH v8 7/7] x86/crash: Add x86 crash hotplug support for kexec_load
 In-Reply-To: <20220505184603.1548-1-eric.devolder@oracle.com>
 References: <20220505184603.1548-1-eric.devolder@oracle.com>
-Message-ID: <20220505184603.1548-2-eric.devolder@oracle.com>
+Message-ID: <20220505184603.1548-8-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-The pr_debug() intends to display the memsz member, but the
-parameter is actually the bufsz member (which is already
-displayed). Correct this to display memsz value.
+For kexec_file_load support, the loading of the crash kernel occurs
+entirely within the kernel, and as such the elfcorehdr is readily
+identified (so that it can be modified upon hotplug events).
+
+This change enables support for kexec_load by identifying the
+elfcorehdr segment in the arch_crash_handle_hotplug_event(),
+if it has not already been identified.
 
 Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Reviewed-by: David Hildenbrand <david@redhat.com>
 Acked-by: Baoquan He <bhe@redhat.com>
 ---
- arch/x86/kernel/crash.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/x86/kernel/crash.c | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
 diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index e8326a8d1c5d..9730c88530fc 100644
+index 951ef365f0a7..845d7c77854d 100644
 --- a/arch/x86/kernel/crash.c
 +++ b/arch/x86/kernel/crash.c
-@@ -407,7 +407,7 @@ int crash_load_segments(struct kimage *image)
- 	}
- 	image->elf_load_addr = kbuf.mem;
- 	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
--		 image->elf_load_addr, kbuf.bufsz, kbuf.bufsz);
-+		 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+@@ -485,6 +485,30 @@ void arch_crash_handle_hotplug_event(struct kimage *image,
+ 	void *elfbuf = NULL;
+ 	unsigned long mem, memsz;
  
- 	return ret;
- }
++	/*
++	 * When the struct kimage is alloced, it is wiped to zero, so
++	 * the elfcorehdr_index_valid defaults to false. It is set on the
++	 * kexec_file_load path, or here for kexec_load, if not already
++	 * identified.
++	 */
++	if (!image->elfcorehdr_index_valid) {
++		unsigned int n;
++
++		for (n = 0; n < image->nr_segments; n++) {
++			mem = image->segment[n].mem;
++			memsz = image->segment[n].memsz;
++			ptr = map_crash_pages(mem, memsz);
++			if (ptr) {
++				/* The segment containing elfcorehdr */
++				if (memcmp(ptr, ELFMAG, SELFMAG) == 0) {
++					image->elfcorehdr_index = (int)n;
++					image->elfcorehdr_index_valid = true;
++				}
++			}
++			unmap_crash_pages((void **)&ptr);
++		}
++	}
++
+ 	if (!image->elfcorehdr_index_valid) {
+ 		pr_err("crash hp: unable to locate elfcorehdr segment");
+ 		goto out;
 -- 
 2.27.0
 
