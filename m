@@ -1,78 +1,94 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Thu, 5 May 2022 17:18:41 +0800
-Subject: [PATCH v23 2/6] arm64: Use insert_resource() to simplify code
-In-Reply-To: <20220505091845.167-1-thunder.leizhen@huawei.com>
-References: <20220505091845.167-1-thunder.leizhen@huawei.com>
-Message-ID: <20220505091845.167-3-thunder.leizhen@huawei.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Thu, 5 May 2022 15:29:19 +0530
+Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <YnNkgfnHlUTky0lt@MiWiFi-R3L-srv>
+References: <20220413164237.20845-1-eric.devolder@oracle.com>
+ <20220413164237.20845-5-eric.devolder@oracle.com>
+ <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
+ <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
+ <6f3a6cbb-0ac4-f178-fc17-18f9594da319@linux.ibm.com>
+ <YmeBjrChOHsIYG3e@MiWiFi-R3L-srv>
+ <f2dbd4fe-6201-b5c4-2725-dec9c3dbf13e@linux.ibm.com>
+ <YnNkgfnHlUTky0lt@MiWiFi-R3L-srv>
+Message-ID: <e677f11b-32f9-0c89-9592-b987b00c4353@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-insert_resource() traverses the subtree layer by layer from the root node
-until a proper location is found. Compared with request_resource(), the
-parent node does not need to be determined in advance.
 
-In addition, move the insertion of node 'crashk_res' into function
-reserve_crashkernel() to make the associated code close together.
+On 05/05/22 11:15, Baoquan He wrote:
+> On 04/28/22 at 10:48am, Sourabh Jain wrote:
+>> Hi Baoquan,
+>>
+>> On 26/04/22 10:52, Baoquan He wrote:
+>>> On 04/26/22 at 09:36am, Sourabh Jain wrote:
+>>>> On 15/04/22 03:59, Eric DeVolder wrote:
+> ......
+>
+>>>>>>> +#if defined(CONFIG_MEMORY_HOTPLUG)
+>>>>>>> +static int crash_memhp_notifier(struct notifier_block *nb,
+>>>>>>> +??? unsigned long val, void *v)
+>>>>>>> +{
+>>>>>>> +??? struct memory_notify *mhp = v;
+>>>>>>> +
+>>>>>>> +??? switch (val) {
+>>>>>>> +??? case MEM_ONLINE:
+>>>>>>> +??????? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
+>>>>>> We don't differentiate the memory add/remove, cpu add, except of cpu
+>>>>>> remove. Means the hp_action only differentiate cpu remove from the other
+>>>>>> action. Maybe only making two types?
+>>>>>>
+>>>>>> #define KEXEC_CRASH_HP_REMOVE_CPU?? 0
+>>>>>> #define KEXEC_CRASH_HP_UPDATE_OTHER????? 1
+>>>>>>
+>>>>> Sourabh Jain's work with PPC uses REMOVE_CPU, REMOVE_MEMORY, and
+>>>>> ADD_MEMORY.
+>>>>> Do you still want to consolidate these?
+>>>> On PowerPC different actions are needed for CPU add and memory add/remove.
+>>>> For CPU add case only FDT is updated whereas for the memory hotplug we will
+>>>> be
+>>>> updating FDT and elfcorehdr.
+>>> I don't understand. For elfcorehdr updating, we only need regenerate it.
+>>> Do you update them different for memory add/remove?
+>> We have different actions for cpu remove, CPU add and memory add/remove
+>> case.
+>>
+>> CPU remove: no action
+>> CPU add: update flattened device tree (FDT)
+>> memory add/remove: update FDT and regenerate/update elfcorehdr
+>>
+>> Since memory add/remove action is same we can have common hp_action for
+>> them.
+> For memory hot add/remove, we need rengereate elfcorehdr, and add the
+> new elfcorehdr into fdt. Except of this, FDT need to know the hp_action
+> and the hot added/removed memory region, namely the start and end, e.g
+> [start, end]?
+>
+> I checked arm64 kexec code, seems we only need to know if mem hotplug
+> event happened, then regenerate elfcorehdr and embed the new elfcorehdr
+> into fdt. Then we don't know pass the [start, end] info into the
+> handler. Please tell if ppc is different or I missed anything.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: John Donnelly  <john.p.donnelly@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- arch/arm64/kernel/setup.c | 17 +++--------------
- arch/arm64/mm/init.c      |  1 +
- 2 files changed, 4 insertions(+), 14 deletions(-)
+Yes we don't need start and end info as such but we expect arch
+handler to have info about which hotplug action is performed.
+It is just that I don't see an significant advantage of consolidation of
+CPU ADD, memory ADD and Memory REMOVE in one hp_action as
+KEXEC_CRASH_HP_UPDATE_OTHER.
 
-diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
-index 3505789cf4bd92a..fea3223704b6339 100644
---- a/arch/arm64/kernel/setup.c
-+++ b/arch/arm64/kernel/setup.c
-@@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
- 	kernel_code.end     = __pa_symbol(__init_begin - 1);
- 	kernel_data.start   = __pa_symbol(_sdata);
- 	kernel_data.end     = __pa_symbol(_end - 1);
-+	insert_resource(&iomem_resource, &kernel_code);
-+	insert_resource(&iomem_resource, &kernel_data);
- 
- 	num_standard_resources = memblock.memory.cnt;
- 	res_size = num_standard_resources * sizeof(*standard_resources);
-@@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
- 			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
- 		}
- 
--		request_resource(&iomem_resource, res);
--
--		if (kernel_code.start >= res->start &&
--		    kernel_code.end <= res->end)
--			request_resource(res, &kernel_code);
--		if (kernel_data.start >= res->start &&
--		    kernel_data.end <= res->end)
--			request_resource(res, &kernel_data);
--#ifdef CONFIG_KEXEC_CORE
--		/* Userspace will find "Crash kernel" region in /proc/iomem. */
--		if (crashk_res.end && crashk_res.start >= res->start &&
--		    crashk_res.end <= res->end)
--			request_resource(res, &crashk_res);
--#endif
-+		insert_resource(&iomem_resource, res);
- 	}
- }
- 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 1e7b1550e2fcebb..51863f1448c6989 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -137,6 +137,7 @@ static void __init reserve_crashkernel(void)
- 	kmemleak_ignore_phys(crash_base);
- 	crashk_res.start = crash_base;
- 	crashk_res.end = crash_base + crash_size - 1;
-+	insert_resource(&iomem_resource, &crashk_res);
- }
- 
- /*
--- 
-2.25.1
+> If I am right, I would like the handler interface as Boris has made
+> in his draft patch.
+>
+> void __weak arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
+>                                             unsigned int cpu)
+>
+> static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
+The above template works fine for PowerPC as long we have four different 
+hp_action
+to indicate CPU add/remove and memory add/remove.
 
+Thanks,
+Sourabh Jain
 
