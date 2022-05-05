@@ -1,121 +1,240 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Thu,  5 May 2022 14:45:58 -0400
-Subject: [PATCH v8 2/7] crash: prototype change for crash_prepare_elf64_headers
-In-Reply-To: <20220505184603.1548-1-eric.devolder@oracle.com>
-References: <20220505184603.1548-1-eric.devolder@oracle.com>
-Message-ID: <20220505184603.1548-3-eric.devolder@oracle.com>
+Date: Thu,  5 May 2022 14:45:56 -0400
+Subject: [PATCH v8 0/7] crash: Kernel handling of CPU and memory hot un/plug
+Message-ID: <20220505184603.1548-1-eric.devolder@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From within crash_prepare_elf64_headers() there is a need to
-reference the struct kimage hotplug members. As such, this
-change passes the struct kimage as a parameter to the
-crash_prepare_elf64_headers().
+When the kdump service is loaded, if a CPU or memory is hot
+un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
+and memory in the system, must also be updated, else the resulting
+vmcore is inaccurate (eg. missing either CPU context or memory
+regions).
 
-This is preparation for later patch, no functionality change.
+The current solution utilizes udev to initiate an unload-then-reload
+of the kdump image (e. kernel, initrd, boot_params, puratory and
+elfcorehdr) by the userspace kexec utility. In previous posts I have
+outlined the significant performance problems related to offloading
+this activity to userspace.
 
-Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-Acked-by: Baoquan He <bhe@redhat.com>
+This patchset introduces a generic crash hot un/plug handler that
+registers with the CPU and memory notifiers. Upon CPU or memory
+changes, this generic handler is invoked and performs important
+housekeeping, for example obtaining the appropriate lock, and then
+invokes an architecture specific handler to do the appropriate
+updates.
+
+In the case of x86_64, the arch specific handler generates a new
+elfcorehdr, and overwrites the old one in memory. No involvement
+with userspace needed.
+
+To realize the benefits/test this patchset, one must make a couple
+of minor changes to userspace:
+
+ - Disable the udev rule for updating kdump on hot un/plug changes.
+   Add the following as the first two lines to the udev rule file
+   /usr/lib/udev/rules.d/98-kexec.rules:
+
+# For x86_64, the kernel handles updates to crash elfcorehdr
+CONST{arch}=="x86-64", GOTO="kdump_reload_end"
+
+   These two lines will cause cpu and memory hot un/plug events
+   to be skipped within this rule file, for x86_64.
+
+ - Change to the kexec_file_load for loading the kdump kernel:
+   Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+    standard_kexec_args="-p -d -s"
+   which adds the -s to select kexec_file_load syscall.
+
+This patchset supports kexec_load with a modified kexec userspace
+utility, and a working changeset to the kexec userspace utility
+is provided here (and to use, the above change to standard_kexec_args
+would be, for example, to append --hotplug-size=131072 instead of -s).
+
+ diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+ index 9826f6d..06adb7e 100644
+ --- a/kexec/arch/i386/crashdump-x86.c
+ +++ b/kexec/arch/i386/crashdump-x86.c
+ @@ -48,6 +48,7 @@
+  #include <x86/x86-linux.h>
+  
+  extern struct arch_options_t arch_options;
+ +extern unsigned long long hotplug_size;
+  
+  static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+  				  struct crash_elf_info *elf_info)
+ @@ -975,6 +976,13 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+  	} else {
+  		memsz = bufsz;
+  	}
+ +
+ +    /* If hotplug support enabled, use that size */
+ +    if (hotplug_size) {
+ +        memsz = hotplug_size;
+ +    }
+ +
+ +    info->elfcorehdr =
+  	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
+  							max_addr, -1);
+  	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+ diff --git a/kexec/kexec.c b/kexec/kexec.c
+ index f63b36b..9569d9a 100644
+ --- a/kexec/kexec.c
+ +++ b/kexec/kexec.c
+ @@ -58,6 +58,7 @@
+  
+  unsigned long long mem_min = 0;
+  unsigned long long mem_max = ULONG_MAX;
+ +unsigned long long hotplug_size = 0;
+  static unsigned long kexec_flags = 0;
+  /* Flags for kexec file (fd) based syscall */
+  static unsigned long kexec_file_flags = 0;
+ @@ -672,6 +673,12 @@ static void update_purgatory(struct kexec_info *info)
+  		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+  			continue;
+  		}
+ +        /* Don't include elfcorehdr in the checksum, if hotplug
+ +         * support enabled.
+ +         */
+ +        if (hotplug_size && (info->segment[i].mem == (void *)info->elfcorehdr)) {
+ +			continue;
+ +		}
+  		sha256_update(&ctx, info->segment[i].buf,
+  			      info->segment[i].bufsz);
+  		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
+ @@ -1504,6 +1511,17 @@ int main(int argc, char *argv[])
+  		case OPT_PRINT_CKR_SIZE:
+  			print_crashkernel_region_size();
+  			return 0;
+ +		case OPT_HOTPLUG_SIZE:
+ +            /* Reserved the specified size for hotplug growth */
+ +			hotplug_size = strtoul(optarg, &endptr, 0);
+ +			if (*endptr) {
+ +				fprintf(stderr,
+ +					"Bad option value in --hotplug-size=%s\n",
+ +					optarg);
+ +				usage();
+ +				return 1;
+ +			}
+ +			break;
+  		default:
+  			break;
+  		}
+ diff --git a/kexec/kexec.h b/kexec/kexec.h
+ index 595dd68..b30dda4 100644
+ --- a/kexec/kexec.h
+ +++ b/kexec/kexec.h
+ @@ -169,6 +169,7 @@ struct kexec_info {
+  	int command_line_len;
+  
+  	int skip_checks;
+ +    unsigned long elfcorehdr;
+   };
+  
+  struct arch_map_entry {
+ @@ -231,7 +232,8 @@ extern int file_types;
+  #define OPT_PRINT_CKR_SIZE	262
+  #define OPT_LOAD_LIVE_UPDATE	263
+  #define OPT_EXEC_LIVE_UPDATE	264
+ -#define OPT_MAX			265
+ +#define OPT_HOTPLUG_SIZE	265
+ +#define OPT_MAX			266
+  #define KEXEC_OPTIONS \
+  	{ "help",		0, 0, OPT_HELP }, \
+  	{ "version",		0, 0, OPT_VERSION }, \
+ @@ -258,6 +260,7 @@ extern int file_types;
+  	{ "debug",		0, 0, OPT_DEBUG }, \
+  	{ "status",		0, 0, OPT_STATUS }, \
+  	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+ +	{ "hotplug-size",     2, 0, OPT_HOTPLUG_SIZE }, \
+  
+  #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
+ 
+
+Regards,
+eric
 ---
- arch/arm64/kernel/machine_kexec_file.c | 6 +++---
- arch/powerpc/kexec/file_load_64.c      | 2 +-
- arch/x86/kernel/crash.c                | 3 ++-
- include/linux/kexec.h                  | 5 +++--
- kernel/kexec_file.c                    | 4 ++--
- 5 files changed, 11 insertions(+), 9 deletions(-)
+v8: 5may2022
+ - Per Borislav Petkov, eliminated CONFIG_CRASH_HOTPLUG in favor
+   of CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG, ie a new define
+   is not needed. Also use of IS_ENABLED() rather than #ifdef's.
+   Renamed crash_hotplug_handler() to handle_hotplug_event().
+   And other corrections.
+ - Per Baoquan, minimized the parameters to the arch_crash_
+   handle_hotplug_event() to hp_action and cpu.
+ - Introduce KEXEC_CRASH_HP_INVALID_CPU definition, per Baoquan.
+ - Per Sourabh Jain, renamed and repurposed CRASH_HOTPLUG_ELFCOREHDR_SZ
+   to CONFIG_CRASH_MAX_MEMORY_RANGES, mirroring kexec-tools change
+   by David Hildebrand. Folded this patch into the x86
+   kexec_file_load support patch.
 
-diff --git a/arch/arm64/kernel/machine_kexec_file.c b/arch/arm64/kernel/machine_kexec_file.c
-index 59c648d51848..7dbafb42ecf2 100644
---- a/arch/arm64/kernel/machine_kexec_file.c
-+++ b/arch/arm64/kernel/machine_kexec_file.c
-@@ -39,7 +39,7 @@ int arch_kimage_file_post_load_cleanup(struct kimage *image)
- 	return kexec_image_post_load_cleanup_default(image);
- }
- 
--static int prepare_elf_headers(void **addr, unsigned long *sz)
-+static int prepare_elf_headers(struct kimage *image, void **addr, unsigned long *sz)
- {
- 	struct crash_mem *cmem;
- 	unsigned int nr_ranges;
-@@ -67,7 +67,7 @@ static int prepare_elf_headers(void **addr, unsigned long *sz)
- 	ret = crash_exclude_mem_range(cmem, crashk_res.start, crashk_res.end);
- 
- 	if (!ret)
--		ret =  crash_prepare_elf64_headers(cmem, true, addr, sz);
-+		ret =  crash_prepare_elf64_headers(image, cmem, true, addr, sz);
- 
- 	kfree(cmem);
- 	return ret;
-@@ -96,7 +96,7 @@ int load_other_segments(struct kimage *image,
- 
- 	/* load elf core header */
- 	if (image->type == KEXEC_TYPE_CRASH) {
--		ret = prepare_elf_headers(&headers, &headers_sz);
-+		ret = prepare_elf_headers(image, &headers, &headers_sz);
- 		if (ret) {
- 			pr_err("Preparing elf core header failed\n");
- 			goto out_err;
-diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-index b4981b651d9a..07da6bf1cf24 100644
---- a/arch/powerpc/kexec/file_load_64.c
-+++ b/arch/powerpc/kexec/file_load_64.c
-@@ -797,7 +797,7 @@ static int load_elfcorehdr_segment(struct kimage *image, struct kexec_buf *kbuf)
- 		goto out;
- 
- 	/* Setup elfcorehdr segment */
--	ret = crash_prepare_elf64_headers(cmem, false, &headers, &headers_sz);
-+	ret = crash_prepare_elf64_headers(image, cmem, false, &headers, &headers_sz);
- 	if (ret) {
- 		pr_err("Failed to prepare elf headers for the core\n");
- 		goto out;
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 9730c88530fc..9db41cce8d97 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -265,7 +265,8 @@ static int prepare_elf_headers(struct kimage *image, void **addr,
- 		goto out;
- 
- 	/* By default prepare 64bit headers */
--	ret =  crash_prepare_elf64_headers(cmem, IS_ENABLED(CONFIG_X86_64), addr, sz);
-+	ret =  crash_prepare_elf64_headers(image, cmem,
-+				IS_ENABLED(CONFIG_X86_64), addr, sz);
- 
- out:
- 	vfree(cmem);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 58d1b58a971e..f93f2591fc1e 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -227,8 +227,9 @@ struct crash_mem {
- extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mstart,
- 				   unsigned long long mend);
--extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--				       void **addr, unsigned long *sz);
-+extern int crash_prepare_elf64_headers(struct kimage *image,
-+	struct crash_mem *mem, int kernel_map,
-+	void **addr, unsigned long *sz);
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_KEXEC_ELF
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b..801d0d0a5012 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -1260,8 +1260,8 @@ int crash_exclude_mem_range(struct crash_mem *mem,
- 	return 0;
- }
- 
--int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
--			  void **addr, unsigned long *sz)
-+int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
-+	int kernel_map, void **addr, unsigned long *sz)
- {
- 	Elf64_Ehdr *ehdr;
- 	Elf64_Phdr *phdr;
+v7: 13apr2022
+ https://lkml.org/lkml/2022/4/13/850
+ - Resolved parameter usage to crash_hotplug_handler(), per Baoquan.
+
+v6: 1apr2022
+ https://lkml.org/lkml/2022/4/1/1203
+ - Reword commit messages and some comment cleanup per Baoquan.
+ - Changed elf_index to elfcorehdr_index for clarity.
+ - Minor code changes per Baoquan.
+
+v5: 3mar2022
+ https://lkml.org/lkml/2022/3/3/674
+ - Reworded description of CRASH_HOTPLUG_ELFCOREHDR_SZ, per
+   David Hildenbrand.
+ - Refactored slightly a few patches per Baoquan recommendation.
+
+v4: 9feb2022
+ https://lkml.org/lkml/2022/2/9/1406
+ - Refactored patches per Baoquan suggestsions.
+ - A few corrections, per Baoquan.
+
+v3: 10jan2022
+ https://lkml.org/lkml/2022/1/10/1212
+ - Rebasing per Baoquan He request.
+ - Changed memory notifier per David Hildenbrand.
+ - Providing example kexec userspace change in cover letter.
+
+RFC v2: 7dec2021
+ https://lkml.org/lkml/2021/12/7/1088
+ - Acting upon Baoquan He suggestion of removing elfcorehdr from
+   the purgatory list of segments, removed purgatory code from
+   patchset, and it is signficiantly simpler now.
+
+RFC v1: 18nov2021
+ https://lkml.org/lkml/2021/11/18/845
+ - working patchset demonstrating kernel handling of hotplug
+   updates to x86 elfcorehdr for kexec_file_load
+
+RFC: 14dec2020
+ https://lkml.org/lkml/2020/12/14/532
+ - proposed concept of allowing kernel to handle hotplug update
+   of elfcorehdr
+---
+
+
+Eric DeVolder (7):
+  x86/crash: fix minor typo/bug in debug message
+  crash: prototype change for crash_prepare_elf64_headers
+  crash: add generic infrastructure for crash hotplug support
+  kexec: exclude elfcorehdr from the segment digest
+  kexec: exclude hot remove cpu from elfcorehdr notes
+  x86/crash: Add x86 crash hotplug support for kexec_file_load
+  x86/crash: Add x86 crash hotplug support for kexec_load
+
+ arch/arm64/kernel/machine_kexec_file.c |   6 +-
+ arch/powerpc/kexec/file_load_64.c      |   2 +-
+ arch/x86/Kconfig                       |  11 ++
+ arch/x86/kernel/crash.c                | 146 ++++++++++++++++++++++++-
+ include/linux/crash_core.h             |  10 ++
+ include/linux/kexec.h                  |  10 +-
+ kernel/crash_core.c                    | 102 +++++++++++++++++
+ kernel/kexec_file.c                    |  15 ++-
+ 8 files changed, 292 insertions(+), 10 deletions(-)
+
 -- 
 2.27.0
 
