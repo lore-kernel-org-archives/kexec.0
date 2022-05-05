@@ -1,128 +1,147 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Thu, 5 May 2022 11:31:05 -0500
-Subject: [PATCH v7 2/8] x86/crash: Introduce new options to support cpu
- and memory hotplug
-In-Reply-To: <100fa9f0-fc24-7a3f-33c6-3d4e7f6f4a93@linux.ibm.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-3-eric.devolder@oracle.com>
- <d90f4299-e821-f5d5-957a-1e84f16816e0@linux.ibm.com>
- <300a485c-4bc5-c58a-d34a-bacdb1fa4510@oracle.com>
- <100fa9f0-fc24-7a3f-33c6-3d4e7f6f4a93@linux.ibm.com>
-Message-ID: <f384f515-cab6-042d-5ba8-cef5d615b991@oracle.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Thu, 5 May 2022 18:01:23 +0100
+Subject: [PATCH v23 3/6] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <20220505091845.167-4-thunder.leizhen@huawei.com>
+References: <20220505091845.167-1-thunder.leizhen@huawei.com>
+ <20220505091845.167-4-thunder.leizhen@huawei.com>
+Message-ID: <YnQC44KVKirH0vyB@arm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
+On Thu, May 05, 2022 at 05:18:42PM +0800, Zhen Lei wrote:
+> From: Chen Zhou <chenzhou10@huawei.com>
+> 
+> There are following issues in arm64 kdump:
+> 1. We use crashkernel=X to reserve crashkernel in DMA zone, which
+> will fail when there is not enough low memory.
+> 2. If reserving crashkernel above DMA zone, in this case, crash dump
+> kernel will fail to boot because there is no low memory available
+> for allocation.
+> 
+> To solve these issues, introduce crashkernel=X,[high,low].
+> The "crashkernel=X,high" is used to select a region above DMA zone, and
+> the "crashkernel=Y,low" is used to allocate specified size low memory.
 
+Thanks for posting the simplified version, though the discussion with
+Baoquan is still ongoing. AFAICT there is no fallback if crashkernel=
+fails. The advantage with this series is cleaner code, we set the limits
+during parsing and don't have to adjust them if some of the first
+allocation failed.
 
-On 4/29/22 01:41, Sourabh Jain wrote:
-> 
-> On 26/04/22 20:09, Eric DeVolder wrote:
->>
->>
->> On 4/25/22 23:21, Sourabh Jain wrote:
->>>
->>> On 13/04/22 22:12, Eric DeVolder wrote:
->>>> CRASH_HOTPLUG is to enable cpu and memory hotplug support of crash.
->>>>
->>>> CRASH_HOTPLUG_ELFCOREHDR_SZ is used to specify the maximum size of
->>>> the elfcorehdr buffer/segment.
->>>>
->>>> This is a preparation for later usage.
->>>>
->>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>>> Acked-by: Baoquan He <bhe@redhat.com>
->>>> ---
->>>> ? arch/x86/Kconfig | 26 ++++++++++++++++++++++++++
->>>> ? 1 file changed, 26 insertions(+)
->>>>
->>>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
->>>> index b0142e01002e..f7b92ee1bcc7 100644
->>>> --- a/arch/x86/Kconfig
->>>> +++ b/arch/x86/Kconfig
->>>> @@ -2072,6 +2072,32 @@ config CRASH_DUMP
->>>> ??????? (CONFIG_RELOCATABLE=y).
->>>> ??????? For more details see Documentation/admin-guide/kdump/kdump.rst
->>>> +config CRASH_HOTPLUG
->>>> +??? bool "kernel updates of crash elfcorehdr"
->>>> +??? depends on CRASH_DUMP && (HOTPLUG_CPU || MEMORY_HOTPLUG) && KEXEC_FILE
->>>> +??? help
->>>> +????? Enable the kernel to update the crash elfcorehdr (which contains
->>>> +????? the list of CPUs and memory regions) directly when hot plug/unplug
->>>> +????? of CPUs or memory. Otherwise userspace must monitor these hot
->>>> +????? plug/unplug change notifications via udev in order to
->>>> +????? unload-then-reload the crash kernel so that the list of CPUs and
->>>> +????? memory regions is kept up-to-date. Note that the udev CPU and
->>>> +????? memory change notifications still occur (however, userspace is not
->>>> +????? required to monitor for crash dump purposes).
->>>> +
->>>> +config CRASH_HOTPLUG_ELFCOREHDR_SZ
->>>> +??? depends on CRASH_HOTPLUG
->>>> +??? int
->>>> +??? default 131072
->>>> +??? help
->>>> +????? Specify the maximum size of the elfcorehdr buffer/segment.
->>>> +????? The 128KiB default is sized so that it can accommodate 2048
->>>> +????? Elf64_Phdr, where each Phdr represents either a CPU or a
->>>> +????? region of memory.
->>>> +????? For example, this size can accommodate a machine with up to 1024
->>>> +????? CPUs and up to 1024 memory regions, eg. as represented by the
->>>> +????? 'System RAM' entries in /proc/iomem.
->>>
->>> Is it possible to get rid of CRASH_HOTPLUG_ELFCOREHDR_SZ?
->> At the moment, I do not think so. The idea behind this value is to represent the largest number of 
->> CPUs and memory regions possible in the system. Today there is NR_CPUS which could be used for 
->> CPUs, but there isn't a similar value for memory. I also am not aware of a kernel variable that 
->> could be utilized to represent the maximum number of memory regions. If there is, please let me know!
->>>
->>> How about finding the additional buffer space needed for future CPU and memory
->>> add during the kdump load? Not sure about the feasibility of doing this in
->>> kexec tool (userspace).
->>
->> I may not understand what you are asking, but the x86 code, for kexec_file_load, does in fact 
->> allocate all the space needed (currently via CRASH_HOTPLUG_ELFCOREHDR_SZ) upon kdump load.
->>
->> For kexec_load, I've had no problem asking the kexec tool to allocate a larger piece of memory for 
->> the elfcorehdr. But it is the same problem as CRASH_HOTPLUG_ELFCOREHDR_SZ; how big? In my 
->> workspace I tell kexec tool how big. If there are sysfs visible values for NR_CPU and memory, then 
->> we could have kexec pull those and compute.
-> 
-> Yeah dynamic calculation for PT_LOAD sections needed for possible memory may not be straightforward. 
-> But still I did not get the rational for limiting the possible PT_LOAD sections or memory ranges to 
-> only 1024. Although in kexec tool the max memory ranges for x86 is 32K.
-> 
-> commit 1bc7bc7649fa29d95c98f6a6d8dd2f08734a865c
-> Author: David Hildenbrand <david@redhat.com>
-> Date:?? Tue Mar 23 11:01:10 2021 +0100
-> 
->  ??? crashdump/x86: increase CRASH_MAX_MEMORY_RANGES to 32k
-> 
->  ??? virtio-mem in Linux adds/removes individual memory blocks (e.g., 128 MB
->  ??? each). Linux merges adjacent memory blocks added by virtio-mem devices, but
->  ??? we can still end up with a very sparse memory layout when unplugging
->  ??? memory in corner cases.
-> 
->  ??? Let's increase the maximum number of crash memory ranges from ~2k to 32k.
->  ??? 32k should be sufficient for a very long time.
-> 
->  ??? e_phnum field in the header is 16 bits wide, so we can fit a maximum of
->  ??? ~64k entries in there, shared with other entries (i.e., CPU). Therefore,
->  ??? using up to 32k memory ranges is fine. (if we ever need more than ~64k,
-> 
-> Do you see any issue if we increase the memory range count to 32K?
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 51863f1448c6989..11406f3e1443168 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -90,6 +90,32 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit;
+>  phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+>  #endif
+>  
+> +/* Current arm64 boot protocol requires 2MB alignment */
+> +#define CRASH_ALIGN			SZ_2M
+> +
+> +#define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
+> +#define CRASH_ADDR_HIGH_MAX		memblock.current_limit
 
-No, I do not. Allowing for 32K ranges means the elfcorehdr buffer is now 2MiB.
-I'm thinking I'll redefine/rename this config option to mirror CRASH_MAX_MEMORY_RANGES
-and default it to 32K. Then the buffer math will take into account NR_CPUS and this
-value to compute the buffer size.
+Better use memblock_get_current_limit() if you need to or just
+MEMBLOCK_ALLOC_ANYWHERE, memblock.current_limit is just a memblock
+internal. But I think we can go for (PHYS_MASK + 1) if you need
+something other than MEMBLOCK_ALLOC_ANYWHERE, memblock knows what to
+allocate anyway.
 
-Thanks!
-eric
+> +static int __init reserve_crashkernel_low(unsigned long long low_size)
+> +{
+> +	unsigned long long low_base;
+> +
+> +	low_base = memblock_phys_alloc_range(low_size, CRASH_ALIGN, 0, CRASH_ADDR_LOW_MAX);
+> +	if (!low_base) {
+> +		pr_err("cannot allocate crashkernel low memory (size:0x%llx).\n", low_size);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	pr_info("crashkernel low memory reserved: 0x%08llx - 0x%08llx (%lld MB)\n",
+> +		low_base, low_base + low_size, low_size >> 20);
+> +
+> +	crashk_low_res.start = low_base;
+> +	crashk_low_res.end   = low_base + low_size - 1;
+> +	insert_resource(&iomem_resource, &crashk_low_res);
+> +
+> +	return 0;
+> +}
+> +
+>  /*
+>   * reserve_crashkernel() - reserves memory for crash kernel
+>   *
+> @@ -100,17 +126,32 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+>  static void __init reserve_crashkernel(void)
+>  {
+>  	unsigned long long crash_base, crash_size;
+> -	unsigned long long crash_max = arm64_dma_phys_limit;
+> +	unsigned long long crash_low_size = 0;
+> +	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+> +	char *cmdline = boot_command_line;
+>  	int ret;
+>  
+>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>  		return;
+>  
+> -	ret = parse_crashkernel(boot_command_line, memblock_phys_mem_size(),
+> +	/* crashkernel=X[@offset] */
+> +	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>  				&crash_size, &crash_base);
+> -	/* no crashkernel= or invalid value specified */
+> -	if (ret || !crash_size)
+> -		return;
+> +	if (ret || !crash_size) {
 
-> 
-> Thanks,
-> Sourabh Jain
-> 
+I think we should check for ret == -ENOENT only. If the crashkernel=
+exists but is malformed or the size is 0, we shouldn't bother with
+high/low at all.
+
+> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+> +		if (ret || !crash_size)
+> +			return;
+> +
+> +		/*
+> +		 * crashkernel=Y,low can be specified or not, but invalid value
+> +		 * is not allowed.
+> +		 */
+> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+> +		if (ret && (ret != -ENOENT))
+> +			return;
+> +
+> +		crash_max = CRASH_ADDR_HIGH_MAX;
+> +	}
+>  
+>  	crash_size = PAGE_ALIGN(crash_size);
+>  
+> @@ -118,8 +159,7 @@ static void __init reserve_crashkernel(void)
+>  	if (crash_base)
+>  		crash_max = crash_base + crash_size;
+>  
+> -	/* Current arm64 boot protocol requires 2MB alignment */
+> -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
+> +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>  					       crash_base, crash_max);
+>  	if (!crash_base) {
+>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+
+I personally like this but let's see how the other thread goes. I guess
+if we want a fallback, it would come just before the check the above:
+
+	if (!crash_base && crash_max != CRASH_ADDR_HIGH_MAX) {
+		/* attempt high allocation with default low */
+		if (!crash_low_size)
+			crash_low_size = some default;
+		crash_max = CRASH_ADDR_LOW_MAX;
+		crash_base = memblock_phys_alloc_range();
+	}
+
+Well, I guess we end up with your earlier proposal but I think I
+understand it better now ;).
+
+-- 
+Catalin
 
