@@ -1,16 +1,16 @@
-From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Wed, 4 May 2022 13:11:04 -0500
-Subject: [PATCH v7 4/8] crash: add generic infrastructure for crash
- hotplug support
-In-Reply-To: <f2dbd4fe-6201-b5c4-2725-dec9c3dbf13e@linux.ibm.com>
-References: <20220413164237.20845-1-eric.devolder@oracle.com>
- <20220413164237.20845-5-eric.devolder@oracle.com>
- <YleK3J/4HNuFioIh@MiWiFi-R3L-srv>
- <4eea2373-32f3-9960-cbec-21dc1a428807@oracle.com>
- <6f3a6cbb-0ac4-f178-fc17-18f9594da319@linux.ibm.com>
- <YmeBjrChOHsIYG3e@MiWiFi-R3L-srv>
- <f2dbd4fe-6201-b5c4-2725-dec9c3dbf13e@linux.ibm.com>
-Message-ID: <6af5bf76-065c-9167-a73e-21908f4b5ef3@oracle.com>
+From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
+Date: Thu, 5 May 2022 10:13:30 +0800
+Subject: [PATCH v22 5/9] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <YnGmCwaWkvCrJoU2@arm.com>
+References: <ee8daaa9-3258-e7e8-e5c4-c51dc9841580@huawei.com>
+ <Ymk34NsIFqUgfk3b@arm.com> <ae7211ad-e2ac-f5b1-5aa0-701802132e73@huawei.com>
+ <YmlphvZVMsGfFksp@arm.com> <YmoMvV1wzHT5V1aw@MiWiFi-R3L-srv>
+ <YmoPhvkXQFZQOcIO@MiWiFi-R3L-srv>
+ <3fc41a94-4247-40f3-14e7-f11e3001ec33@huawei.com>
+ <YmtaiJhwIgP6m2Sk@MiWiFi-R3L-srv>
+ <a9c736a0-f2b3-5b8a-94d9-80742ccd2700@huawei.com>
+ <23e2dcf4-4e9a-5298-d5d8-8761b0bbbe21@huawei.com> <YnGmCwaWkvCrJoU2@arm.com>
+Message-ID: <2b48d210-855b-fbf1-e2b9-3ed0b42bcd22@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -19,190 +19,126 @@ To: kexec@lists.infradead.org
 
 
 
-On 4/28/22 00:18, Sourabh Jain wrote:
-> Hi Baoquan,
+On 2022/5/4 6:00, Catalin Marinas wrote:
+> On Fri, Apr 29, 2022 at 04:25:37PM +0800, Leizhen (ThunderTown) wrote:
+>> On 2022/4/29 16:02, Leizhen (ThunderTown) wrote:
+>>> On 2022/4/29 11:24, Baoquan He wrote:
+>>>> On 04/28/22 at 05:33pm, Leizhen (ThunderTown) wrote:
+>>>>> On 2022/4/28 11:52, Baoquan He wrote:
+>>>>>> On 04/28/22 at 11:40am, Baoquan He wrote:
+>>>>>>> On 04/27/22 at 05:04pm, Catalin Marinas wrote:
+>>>>>>>> There will be some difference as the 4G limit doesn't always hold for
+>>>>>>>> arm64 (though it's true in most cases). Anyway, we can probably simplify
+>>>>>>>> things a bit while following the documented behaviour:
+>>>>>>>>
+>>>>>>>> 	crashkernel=Y		- current behaviour within ZONE_DMA
+>>>>>>>> 	crashkernel=Y,high	- allocate from above ZONE_DMA
+>>>>>>>> 	crashkernel=Y,low	- allocate within ZONE_DMA
+> [...]
+>>>>>>> Sorry to interrupt. Seems the ,high ,low and fallback are main concerns
+>>>>>>> about this version. And I have the same concerns about them which comes
+>>>>>>> from below points:
+>>>>>>> 1) we may need to take best effort to keep ,high, ,low behaviour
+>>>>>>> consistent on all ARCHes. Otherwise user/admin may be confused when they
+>>>>>>> deploy/configure kdump on different machines of different ARCHes in the
+>>>>>>> same LAB. I think we should try to avoid the confusion.
 > 
-> On 26/04/22 10:52, Baoquan He wrote:
->> On 04/26/22 at 09:36am, Sourabh Jain wrote:
->>> On 15/04/22 03:59, Eric DeVolder wrote:
->>>> Hi Baoquan,
->>>> Inline comments below.
->>>> Thanks!
->>>> eric
->>>>
->>>> On 4/13/22 21:45, Baoquan He wrote:
->>>>> On 04/13/22 at 12:42pm, Eric DeVolder wrote:
->>>>>> Upon CPU and memory changes, a generic crash_hotplug_handler()
->>>>>> dispatches the hot plug/unplug event to the architecture specific
->>>>>> arch_crash_hotplug_handler(). During the process, the kexec_mutex
->>>>>> is held.
->>>>>>
->>>>>> To support cpu hotplug, a callback is registered to capture the
->>>>>> CPUHP_AP_ONLINE_DYN online and ofline events via
->>>>>> cpuhp_setup_state_nocalls().
->>>>>>
->>>>>> To support memory hotplug, a notifier is registered to capture the
->>>>>> MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
->>>>>>
->>>>>> The cpu callback and memory notifier then call crash_hotplug_handler()
->>>>>> to handle the hot plug/unplug event.
->>>>>>
->>>>>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
->>>>>> ---
->>>>>> ?? include/linux/kexec.h |? 16 +++++++
->>>>>> ?? kernel/crash_core.c?? | 101
->>>>>> ++++++++++++++++++++++++++++++++++++++++++
->>>>>> ?? 2 files changed, 117 insertions(+)
->>>>>>
->>>>>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
->>>>>> index f93f2591fc1e..02daff1f47dd 100644
->>>>>> --- a/include/linux/kexec.h
->>>>>> +++ b/include/linux/kexec.h
->>>>>> @@ -306,6 +306,13 @@ struct kimage {
->>>>>> ?? ????? /* Information for loading purgatory */
->>>>>> ?????? struct purgatory_info purgatory_info;
->>>>>> +
->>>>>> +#ifdef CONFIG_CRASH_HOTPLUG
->>>>>> +??? bool hotplug_event;
->>>>>> +??? unsigned int offlinecpu;
->>>>>> +??? bool elfcorehdr_index_valid;
->>>>>> +??? int elfcorehdr_index;
->>>>>> +#endif
->>>>>> ?? #endif
->>>>>> ?? ? #ifdef CONFIG_IMA_KEXEC
->>>>>> @@ -322,6 +329,15 @@ struct kimage {
->>>>>> ?????? unsigned long elf_load_addr;
->>>>>> ?? };
->>>>>> ?? +#ifdef CONFIG_CRASH_HOTPLUG
->>>>>> +void arch_crash_hotplug_handler(struct kimage *image,
->>>>>> +??? unsigned int hp_action, unsigned int cpu);
->>>>>> +#define KEXEC_CRASH_HP_REMOVE_CPU?? 0
->>>>>> +#define KEXEC_CRASH_HP_ADD_CPU????? 1
->>>>>> +#define KEXEC_CRASH_HP_REMOVE_MEMORY 2
->>>>>> +#define KEXEC_CRASH_HP_ADD_MEMORY?? 3
->>>>>> +#endif /* CONFIG_CRASH_HOTPLUG */
->>>>>> +
->>>>>> ?? /* kexec interface functions */
->>>>>> ?? extern void machine_kexec(struct kimage *image);
->>>>>> ?? extern int machine_kexec_prepare(struct kimage *image);
->>>>>> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
->>>>>> index 256cf6db573c..ecf746243ab2 100644
->>>>>> --- a/kernel/crash_core.c
->>>>>> +++ b/kernel/crash_core.c
->>>>>> @@ -9,12 +9,17 @@
->>>>>> ?? #include <linux/init.h>
->>>>>> ?? #include <linux/utsname.h>
->>>>>> ?? #include <linux/vmalloc.h>
->>>>>> +#include <linux/highmem.h>
->>>>>> +#include <linux/memory.h>
->>>>>> +#include <linux/cpuhotplug.h>
->>>>>> ?? ? #include <asm/page.h>
->>>>>> ?? #include <asm/sections.h>
->>>>>> ?? ? #include <crypto/sha1.h>
->>>>>> ?? +#include "kexec_internal.h"
->>>>>> +
->>>>>> ?? /* vmcoreinfo stuff */
->>>>>> ?? unsigned char *vmcoreinfo_data;
->>>>>> ?? size_t vmcoreinfo_size;
->>>>>> @@ -491,3 +496,99 @@ static int __init crash_save_vmcoreinfo_init(void)
->>>>>> ?? }
->>>>>> ?? ? subsys_initcall(crash_save_vmcoreinfo_init);
->>>>>> +
->>>>>> +#ifdef CONFIG_CRASH_HOTPLUG
->>>>>> +void __weak arch_crash_hotplug_handler(struct kimage *image,
->>>>>> +??? unsigned int hp_action, unsigned int cpu)
->>>>>> +{
->>>>>> +??? pr_warn("crash hp: %s not implemented", __func__);
->>>>>> +}
->>>>>> +
->>>>>> +static void crash_hotplug_handler(unsigned int hp_action,
->>>>>> +??? unsigned int cpu)
->>>>>> +{
->>>>>> +??? /* Obtain lock while changing crash information */
->>>>>> +??? if (!mutex_trylock(&kexec_mutex))
->>>>>> +??????? return;
->>>>>> +
->>>>>> +??? /* Check kdump is loaded */
->>>>>> +??? if (kexec_crash_image) {
->>>>>> +??????? pr_debug("crash hp: hp_action %u, cpu %u", hp_action, cpu);
->>>>>> +
->>>>>> +??????? /* Needed in order for the segments to be updated */
->>>>>> +??????? arch_kexec_unprotect_crashkres();
->>>>>> +
->>>>>> +??????? /* Flag to differentiate between normal load and hotplug */
->>>>>> +??????? kexec_crash_image->hotplug_event = true;
->>>>>> +
->>>>>> +??????? /* Now invoke arch-specific update handler */
->>>>>> +??????? arch_crash_hotplug_handler(kexec_crash_image, hp_action, cpu);
->>>>>> +
->>>>>> +??????? /* No longer handling a hotplug event */
->>>>>> +??????? kexec_crash_image->hotplug_event = false;
->>>>>> +
->>>>>> +??????? /* Change back to read-only */
->>>>>> +??????? arch_kexec_protect_crashkres();
->>>>>> +??? }
->>>>>> +
->>>>>> +??? /* Release lock now that update complete */
->>>>>> +??? mutex_unlock(&kexec_mutex);
->>>>>> +}
->>>>>> +
->>>>>> +#if defined(CONFIG_MEMORY_HOTPLUG)
->>>>>> +static int crash_memhp_notifier(struct notifier_block *nb,
->>>>>> +??? unsigned long val, void *v)
->>>>>> +{
->>>>>> +??? struct memory_notify *mhp = v;
->>>>>> +
->>>>>> +??? switch (val) {
->>>>>> +??? case MEM_ONLINE:
->>>>>> +??????? crash_hotplug_handler(KEXEC_CRASH_HP_ADD_MEMORY, -1U);
->>>>> We don't differentiate the memory add/remove, cpu add, except of cpu
->>>>> remove. Means the hp_action only differentiate cpu remove from the other
->>>>> action. Maybe only making two types?
+> I guess by all arches you mean just x86 here. Since the code is not
+> generic, all arches do their own stuff.
+> 
+>>> OK, I plan to remove optimization, fallback and default low size, to follow the
+>>> suggestion of Catalin first. But there's one minor point of contention.
+>>>
+>>> 1)    Both "crashkernel=X,high" and "crashkernel=X,low" must be present.
+>>> 2)    Both "crashkernel=X,high" and "crashkernel=X,low" are present.
+>>>    or
+>>>       Allow "crashkernel=X,high" to be present alone. Unlike x86, the default low size is zero.
+>>>
+>>> I prefer 2), how about you?
+> 
+> (2) works for me as well. We keep these simple as "expert" options and
+
+Okay, so I'll follow 2) to update the code.
+
+> allow crashkernel= to fall back to 'high' if not sufficient memory in
+> ZONE_DMA. That would be a slight change from the current behaviour but,
+> as Zhen Lei said, with the old tools it's just moving the error around,
+> the crashkernel wouldn't be available in either case.
+> 
+>>>>>>> 2) Fallback behaviour is important to our distros. The reason is we will
+>>>>>>> provide default value with crashkernel=xxxM along kernel of distros. In
+>>>>>>> this case, we hope the reservation will succeed by all means. The ,high
+>>>>>>> and ,low is an option if customer likes to take with expertise.
+> 
+> OK, that's good feedback.
+> 
+> So, to recap, IIUC you are fine with:
+> 
+> 	crashkernel=Y		- allocate within ZONE_DMA with fallback
+> 				  above with a default in ZONE_DMA (like
+> 				  x86, 256M or swiotlb size)
+> 	crashkernel=Y,high	- allocate from above ZONE_DMA
+> 	crashkernel=Y,low	- allocate within ZONE_DMA
+> 
+> 'crashkernel' overrides the high and low while the latter two can be
+> passed independently.
+> 
+>>>>>>> After going through arm64 memory init code, I got below summary about
+>>>>>>> arm64_dma_phys_limit which is the first zone's upper limit. I think we
+>>>>>>> can make use of it to facilitate to simplify code.
+>>>>>>> ================================================================================
+>>>>>>>                         DMA                      DMA32                    NORMAL
+>>>>>>> 1)Raspberry Pi4         0~1G                     3G~4G                    (above 4G)
+>>>>>>> 2)Normal machine        0~4G                     0                        (above 4G)
+>>>>>>> 3)Special machine       (above 4G)~MAX
+>>>>>>> 4)No DMA|DMA32                                                            (above 4G)~MAX
 >>>>>
->>>>> #define KEXEC_CRASH_HP_REMOVE_CPU?? 0
->>>>> #define KEXEC_CRASH_HP_UPDATE_OTHER????? 1
->>>>>
->>>> Sourabh Jain's work with PPC uses REMOVE_CPU, REMOVE_MEMORY, and
->>>> ADD_MEMORY.
->>>> Do you still want to consolidate these?
->>> On PowerPC different actions are needed for CPU add and memory add/remove.
->>> For CPU add case only FDT is updated whereas for the memory hotplug we will
->>> be
->>> updating FDT and elfcorehdr.
->> I don't understand. For elfcorehdr updating, we only need regenerate it.
->> Do you update them different for memory add/remove?
+>>>>> arm64_memblock_init()
+>>>>> 	reserve_crashkernel()        ---------------   0a30c53573b0 ("arm64: mm: Move reserve_crashkernel() into mem_init()")
+>>>> We don't need different code for this place of reservation as you are
+>>>> doing in this patchset, since arm64_dma_phys_limit is initialized as 
+>>>> below. In fact, in arm64_memblock_init(), we have made memblock ready,
+>>>> we can initialize arm64_dma_phys_limit as memblock_end_of_DRAM(). And if
+>>>> memblock_start_of_DRAM() is bigger than 4G, we possibly can call
+>>>> reserve_crashkernel() here too.
+>>>
+>>> Yes. Maybe all the devices in this environment are 64-bit. One way I
+>>> know of allowing 32-bit devices to access high memory without SMMU
+>>> is: Set a fixed value for the upper 32 bits. In this case, the DMA
+>>> zone should be [phys_start, phys_start + 4G).
 > 
-> We have different actions for cpu remove, CPU add and memory add/remove case.
+> We decided that this case doesn't really exists for arm64 platforms (no
+> need for special ZONE_DMA).
 > 
-> CPU remove: no action
-> CPU add: update flattened device tree (FDT)
-> memory add/remove: update FDT and regenerate/update elfcorehdr
-> 
-> Since memory add/remove action is same we can have common hp_action for them.
-> 
+>> I just read the message of commit 791ab8b2e3 ("arm64: Ignore any DMA
+>> offsets in the max_zone_phys() calculation")
 >>
->> What I saw is the added action for memory hotplug is only for message
->> printing. Is this really needed? And memory hotplug is even not
->> supported. Please correct me if I missed anything.
+>>     Currently, the kernel assumes that if RAM starts above 32-bit (or
+>>     zone_bits), there is still a ZONE_DMA/DMA32 at the bottom of the RAM and
+>>     such constrained devices have a hardwired DMA offset. In practice, we
+>>     haven't noticed any such hardware so let's assume that we can expand
+>>     ZONE_DMA32 to the available memory if no RAM below 4GB. Similarly,
+>>     ZONE_DMA is expanded to the 4GB limit if no RAM addressable by
+>>     zone_bits.
 > 
-> I agree that currently memory hp_action is only used for printing warning message but
-> eventually we will be handling memory hotplug case as well.
+> I think the above log is slightly confusing. If the DRAM starts above
+> 4G, ZONE_DMA goes to the end of DRAM. If the DRAM starts below 4G but
+> above the zone_bits for ZONE_DMA as specified in DT/ACPI, it pushes
+> ZONE_DMA to 4G. I don't remember why we did this last part, maybe in
+> case we get incorrect firmware tables, otherwise we could have extended
+> ZONE_DMA to end of DRAM.
+> 
+> Zhen Lei, if we agreed on the crashkernel behaviour, could you please
+> post a series that does the above parsing allocation? Ignore the
+> optimisations, we can look at them afterwards.
 
-Baoquan,
-It appears the straight forward thing to do here is just to keep the 4 cpu/mem add/remove 
-combinations. It appears there is value in keeping them as currently defined. However, please 
-indicate if you agree or not.
-Thanks!
-Eric
+OK, I've changed the code before the festival, and I'll test it today.
 
 > 
->> +?????? /* crash update on memory hotplug is not support yet */
->> +?????? if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
->> +?????????????? pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
->> +?????????????? return;
->> +?????? }
+> Thanks.
 > 
-> Thanks,
-> Sourabh Jain
-> 
+
+-- 
+Regards,
+  Zhen Lei
 
