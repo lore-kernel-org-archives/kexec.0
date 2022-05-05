@@ -1,49 +1,77 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Thu, 5 May 2022 17:18:44 +0800
-Subject: [PATCH v23 5/6] of: Support more than one crash kernel regions for
- kexec -s
+Date: Thu, 5 May 2022 17:18:41 +0800
+Subject: [PATCH v23 2/6] arm64: Use insert_resource() to simplify code
 In-Reply-To: <20220505091845.167-1-thunder.leizhen@huawei.com>
 References: <20220505091845.167-1-thunder.leizhen@huawei.com>
-Message-ID: <20220505091845.167-6-thunder.leizhen@huawei.com>
+Message-ID: <20220505091845.167-3-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-When "crashkernel=X,high" is used, there may be two crash regions:
-high=crashk_res and low=crashk_low_res. But now the syscall
-kexec_file_load() only add crashk_res into "linux,usable-memory-range",
-this may cause the second kernel to have no available dma memory.
+insert_resource() traverses the subtree layer by layer from the root node
+until a proper location is found. Compared with request_resource(), the
+parent node does not need to be determined in advance.
 
-Fix it like kexec tool do for option -c, add both 'high' and 'low' regions
-into the dtb.
+In addition, move the insertion of node 'crashk_res' into function
+reserve_crashkernel() to make the associated code close together.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Acked-by: John Donnelly  <john.p.donnelly@oracle.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/of/kexec.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/kernel/setup.c | 17 +++--------------
+ arch/arm64/mm/init.c      |  1 +
+ 2 files changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index b9bd1cff179388c..8d374cc552be5f2 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -386,6 +386,15 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- 				crashk_res.end - crashk_res.start + 1);
- 		if (ret)
- 			goto out;
-+
-+		if (crashk_low_res.end) {
-+			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
-+					"linux,usable-memory-range",
-+					crashk_low_res.start,
-+					crashk_low_res.end - crashk_low_res.start + 1);
-+			if (ret)
-+				goto out;
-+		}
- 	}
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 3505789cf4bd92a..fea3223704b6339 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
+ 	kernel_code.end     = __pa_symbol(__init_begin - 1);
+ 	kernel_data.start   = __pa_symbol(_sdata);
+ 	kernel_data.end     = __pa_symbol(_end - 1);
++	insert_resource(&iomem_resource, &kernel_code);
++	insert_resource(&iomem_resource, &kernel_data);
  
- 	/* add bootargs */
+ 	num_standard_resources = memblock.memory.cnt;
+ 	res_size = num_standard_resources * sizeof(*standard_resources);
+@@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
+ 			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
+ 		}
+ 
+-		request_resource(&iomem_resource, res);
+-
+-		if (kernel_code.start >= res->start &&
+-		    kernel_code.end <= res->end)
+-			request_resource(res, &kernel_code);
+-		if (kernel_data.start >= res->start &&
+-		    kernel_data.end <= res->end)
+-			request_resource(res, &kernel_data);
+-#ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+-		if (crashk_res.end && crashk_res.start >= res->start &&
+-		    crashk_res.end <= res->end)
+-			request_resource(res, &crashk_res);
+-#endif
++		insert_resource(&iomem_resource, res);
+ 	}
+ }
+ 
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e7b1550e2fcebb..51863f1448c6989 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -137,6 +137,7 @@ static void __init reserve_crashkernel(void)
+ 	kmemleak_ignore_phys(crash_base);
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
++	insert_resource(&iomem_resource, &crashk_res);
+ }
+ 
+ /*
 -- 
 2.25.1
 
