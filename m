@@ -1,38 +1,123 @@
-From: lizhe <sensor1010@163.com>
-Date: Fri,  6 May 2022 03:41:16 -0700
-Subject: [PATCH v5] kernel/crash_core.c : remove redundant check of ck_cmdline
-Message-ID: <20220506104116.259323-1-sensor1010@163.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Date: Fri, 6 May 2022 12:06:22 +0100
+Subject: [PATCH v23 3/6] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <189f24a8-9e9b-b3e9-7ac5-935433ea575b@huawei.com>
+References: <20220505091845.167-1-thunder.leizhen@huawei.com>
+ <20220505091845.167-4-thunder.leizhen@huawei.com>
+ <YnQC44KVKirH0vyB@arm.com>
+ <189f24a8-9e9b-b3e9-7ac5-935433ea575b@huawei.com>
+Message-ID: <YnUBLgUiZDhRPMzU@arm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-At the end of get_last_crashkernel(), the judgement of ck_cmdline is
-obviously unnecessary and causes redundance, let's clean it up.
+On Fri, May 06, 2022 at 11:22:51AM +0800, Leizhen (ThunderTown) wrote:
+> On 2022/5/6 1:01, Catalin Marinas wrote:
+> > On Thu, May 05, 2022 at 05:18:42PM +0800, Zhen Lei wrote:
+> >> From: Chen Zhou <chenzhou10@huawei.com>
+> >>
+> >> There are following issues in arm64 kdump:
+> >> 1. We use crashkernel=X to reserve crashkernel in DMA zone, which
+> >> will fail when there is not enough low memory.
+> >> 2. If reserving crashkernel above DMA zone, in this case, crash dump
+> >> kernel will fail to boot because there is no low memory available
+> >> for allocation.
+> >>
+> >> To solve these issues, introduce crashkernel=X,[high,low].
+> >> The "crashkernel=X,high" is used to select a region above DMA zone, and
+> >> the "crashkernel=Y,low" is used to allocate specified size low memory.
+> > 
+> > Thanks for posting the simplified version, though the discussion with
+> > Baoquan is still ongoing. AFAICT there is no fallback if crashkernel=
+> > fails. The advantage with this series is cleaner code, we set the limits
+> > during parsing and don't have to adjust them if some of the first
+> > allocation failed.
+> 
+> Yes, I'm currently implementing it in the simplest version, providing only
+> the most basic functions. Because the conclusions of this part of the discussion
+> are clear. I think I can send the fallback, default low size, and mapping optimization
+> patches separately after this basic version is merged. These three functions can
+> be discussed separately.
 
-Signed-off-by: lizhe <sensor1010@163.com>
-Acked-by: Baoquan He <bhe@redhat.com>
-Acked-by: Philipp Rudo <prudo@redhat.com>
----
- kernel/crash_core.c | 3 ---
- 1 file changed, 3 deletions(-)
+This works for me. If we decide to go for fallbacks, it can be done as a
+separate patch.
 
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 256cf6db573c..c232f01a2c54 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -222,9 +222,6 @@ static __init char *get_last_crashkernel(char *cmdline,
- 		p = strstr(p+1, name);
- 	}
- 
--	if (!ck_cmdline)
--		return NULL;
--
- 	return ck_cmdline;
- }
- 
+> >> +		ret = parse_crashkernel_high(cmdline, 0, &crash_size, &crash_base);
+> >> +		if (ret || !crash_size)
+> >> +			return;
+> >> +
+> >> +		/*
+> >> +		 * crashkernel=Y,low can be specified or not, but invalid value
+> >> +		 * is not allowed.
+> >> +		 */
+> >> +		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+> >> +		if (ret && (ret != -ENOENT))
+> >> +			return;
+> >> +
+> >> +		crash_max = CRASH_ADDR_HIGH_MAX;
+> >> +	}
+> >>  
+> >>  	crash_size = PAGE_ALIGN(crash_size);
+> >>  
+> >> @@ -118,8 +159,7 @@ static void __init reserve_crashkernel(void)
+> >>  	if (crash_base)
+> >>  		crash_max = crash_base + crash_size;
+> >>  
+> >> -	/* Current arm64 boot protocol requires 2MB alignment */
+> >> -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
+> >> +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+> >>  					       crash_base, crash_max);
+> >>  	if (!crash_base) {
+> >>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+> > 
+> > I personally like this but let's see how the other thread goes. I guess
+> 
+> Me too. This fallback complicates code logic more than just a little.
+> I'm not sure why someone would rather add fallback than change the bootup
+> options to crashkernel=X,[high|low]. Perhaps fallback to high/low is a better
+> compatible and extended mode when crashkernel=X fails to reserve memory. And
+> the code logic will be much clearer.
+> 
+> //parse crashkernel=X		//To simplify the discussion, Ignore [@offset]
+> crash_base = memblock_phys_alloc_range()
+> if (!crash_base || /* crashkernel=X is not specified */) {
+> 	//parse crashkernel=X,[high,low]
+> 	//reserve high/low memory
+> }
+> 
+> So that, the following three modes are supported:
+> 1) crashkernel=X[@offset]
+> 2) crashkernel=X,high crashkernel=X,low
+> 3) crashkernel=X[@offset] crashkernel=X,high [crashkernel=Y,low]
+
+The whole interface isn't great but if we add fall-back options, I'd
+rather stick close to what x86 does. IOW, if crashkernel=X is provided,
+ignore explicit high/low (so 3 does not exist).
+
+(if I had added it from the beginning, I'd have removed 'high'
+completely and allow crashkernel=X to fall-back to 'high' with an
+optional explicit 'low' or 'dma' if the default is not sufficient; but I
+think there's too much bikeshedding already)
+
+> > if we want a fallback, it would come just before the check the above:
+> > 
+> > 	if (!crash_base && crash_max != CRASH_ADDR_HIGH_MAX) {
+> > 		/* attempt high allocation with default low */
+> > 		if (!crash_low_size)
+> > 			crash_low_size = some default;
+> > 		crash_max = CRASH_ADDR_LOW_MAX;
+> 
+> crash_max = CRASH_ADDR_HIGH_MAX; We should fallback to high memory now.
+
+Yes, that's the idea.
+
+Anyway, please post the current series with the minor updates I
+mentioned and we can add a fallback patch (or two) on top.
+
+Thanks.
+
 -- 
-2.25.1
-
+Catalin
 
