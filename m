@@ -1,102 +1,77 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Fri, 6 May 2022 19:44:00 +0800
-Subject: [PATCH v24 4/6] of: fdt: Add memory for devices by DT property "linux,
- usable-memory-range"
+Date: Fri, 6 May 2022 19:43:58 +0800
+Subject: [PATCH v24 2/6] arm64: Use insert_resource() to simplify code
 In-Reply-To: <20220506114402.365-1-thunder.leizhen@huawei.com>
 References: <20220506114402.365-1-thunder.leizhen@huawei.com>
-Message-ID: <20220506114402.365-5-thunder.leizhen@huawei.com>
+Message-ID: <20220506114402.365-3-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-From: Chen Zhou <chenzhou10@huawei.com>
+insert_resource() traverses the subtree layer by layer from the root node
+until a proper location is found. Compared with request_resource(), the
+parent node does not need to be determined in advance.
 
-When reserving crashkernel in high memory, some low memory is reserved
-for crash dump kernel devices and never mapped by the first kernel.
-This memory range is advertised to crash dump kernel via DT property
-under /chosen,
-        linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+In addition, move the insertion of node 'crashk_res' into function
+reserve_crashkernel() to make the associated code close together.
 
-We reused the DT property linux,usable-memory-range and made the low
-memory region as the second range "BASE2 SIZE2", which keeps compatibility
-with existing user-space and older kdump kernels.
-
-Crash dump kernel reads this property at boot time and call memblock_add()
-to add the low memory region after memblock_cap_memory_range() has been
-called.
-
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
-Co-developed-by: Zhen Lei <thunder.leizhen@huawei.com>
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Tested-by: Dave Kleikamp <dave.kleikamp@oracle.com>
+Acked-by: John Donnelly  <john.p.donnelly@oracle.com>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/of/fdt.c | 33 +++++++++++++++++++++++----------
- 1 file changed, 23 insertions(+), 10 deletions(-)
+ arch/arm64/kernel/setup.c | 17 +++--------------
+ arch/arm64/mm/init.c      |  1 +
+ 2 files changed, 4 insertions(+), 14 deletions(-)
 
-diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-index ec315b060cd50d2..2f248d0acc04830 100644
---- a/drivers/of/fdt.c
-+++ b/drivers/of/fdt.c
-@@ -973,16 +973,24 @@ static void __init early_init_dt_check_for_elfcorehdr(unsigned long node)
+diff --git a/arch/arm64/kernel/setup.c b/arch/arm64/kernel/setup.c
+index 3505789cf4bd92a..fea3223704b6339 100644
+--- a/arch/arm64/kernel/setup.c
++++ b/arch/arm64/kernel/setup.c
+@@ -225,6 +225,8 @@ static void __init request_standard_resources(void)
+ 	kernel_code.end     = __pa_symbol(__init_begin - 1);
+ 	kernel_data.start   = __pa_symbol(_sdata);
+ 	kernel_data.end     = __pa_symbol(_end - 1);
++	insert_resource(&iomem_resource, &kernel_code);
++	insert_resource(&iomem_resource, &kernel_data);
  
- static unsigned long chosen_node_offset = -FDT_ERR_NOTFOUND;
+ 	num_standard_resources = memblock.memory.cnt;
+ 	res_size = num_standard_resources * sizeof(*standard_resources);
+@@ -246,20 +248,7 @@ static void __init request_standard_resources(void)
+ 			res->end = __pfn_to_phys(memblock_region_memory_end_pfn(region)) - 1;
+ 		}
  
-+/*
-+ * The main usage of linux,usable-memory-range is for crash dump kernel.
-+ * Originally, the number of usable-memory regions is one. Now there may
-+ * be two regions, low region and high region.
-+ * To make compatibility with existing user-space and older kdump, the low
-+ * region is always the last range of linux,usable-memory-range if exist.
-+ */
-+#define MAX_USABLE_RANGES		2
-+
- /**
-  * early_init_dt_check_for_usable_mem_range - Decode usable memory range
-  * location from flat tree
-  */
- void __init early_init_dt_check_for_usable_mem_range(void)
- {
--	const __be32 *prop;
--	int len;
--	phys_addr_t cap_mem_addr;
--	phys_addr_t cap_mem_size;
-+	struct memblock_region rgn[MAX_USABLE_RANGES] = {0};
-+	const __be32 *prop, *endp;
-+	int len, i;
- 	unsigned long node = chosen_node_offset;
- 
- 	if ((long)node < 0)
-@@ -991,16 +999,21 @@ void __init early_init_dt_check_for_usable_mem_range(void)
- 	pr_debug("Looking for usable-memory-range property... ");
- 
- 	prop = of_get_flat_dt_prop(node, "linux,usable-memory-range", &len);
--	if (!prop || (len < (dt_root_addr_cells + dt_root_size_cells)))
-+	if (!prop || (len % (dt_root_addr_cells + dt_root_size_cells)))
- 		return;
- 
--	cap_mem_addr = dt_mem_next_cell(dt_root_addr_cells, &prop);
--	cap_mem_size = dt_mem_next_cell(dt_root_size_cells, &prop);
-+	endp = prop + (len / sizeof(__be32));
-+	for (i = 0; i < MAX_USABLE_RANGES && prop < endp; i++) {
-+		rgn[i].base = dt_mem_next_cell(dt_root_addr_cells, &prop);
-+		rgn[i].size = dt_mem_next_cell(dt_root_size_cells, &prop);
- 
--	pr_debug("cap_mem_start=%pa cap_mem_size=%pa\n", &cap_mem_addr,
--		 &cap_mem_size);
-+		pr_debug("cap_mem_regions[%d]: base=%pa, size=%pa\n",
-+			 i, &rgn[i].base, &rgn[i].size);
-+	}
- 
--	memblock_cap_memory_range(cap_mem_addr, cap_mem_size);
-+	memblock_cap_memory_range(rgn[0].base, rgn[0].size);
-+	for (i = 1; i < MAX_USABLE_RANGES && rgn[i].size; i++)
-+		memblock_add(rgn[i].base, rgn[i].size);
+-		request_resource(&iomem_resource, res);
+-
+-		if (kernel_code.start >= res->start &&
+-		    kernel_code.end <= res->end)
+-			request_resource(res, &kernel_code);
+-		if (kernel_data.start >= res->start &&
+-		    kernel_data.end <= res->end)
+-			request_resource(res, &kernel_data);
+-#ifdef CONFIG_KEXEC_CORE
+-		/* Userspace will find "Crash kernel" region in /proc/iomem. */
+-		if (crashk_res.end && crashk_res.start >= res->start &&
+-		    crashk_res.end <= res->end)
+-			request_resource(res, &crashk_res);
+-#endif
++		insert_resource(&iomem_resource, res);
+ 	}
  }
  
- #ifdef CONFIG_SERIAL_EARLYCON
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 1e7b1550e2fcebb..51863f1448c6989 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -137,6 +137,7 @@ static void __init reserve_crashkernel(void)
+ 	kmemleak_ignore_phys(crash_base);
+ 	crashk_res.start = crash_base;
+ 	crashk_res.end = crash_base + crash_size - 1;
++	insert_resource(&iomem_resource, &crashk_res);
+ }
+ 
+ /*
 -- 
 2.25.1
 
