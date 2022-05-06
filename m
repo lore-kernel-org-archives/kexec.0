@@ -1,50 +1,49 @@
 From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Fri, 6 May 2022 19:44:01 +0800
-Subject: [PATCH v24 5/6] of: Support more than one crash kernel regions for
- kexec -s
+Date: Fri, 6 May 2022 19:43:57 +0800
+Subject: [PATCH v24 1/6] kdump: return -ENOENT if required cmdline option does
+ not exist
 In-Reply-To: <20220506114402.365-1-thunder.leizhen@huawei.com>
 References: <20220506114402.365-1-thunder.leizhen@huawei.com>
-Message-ID: <20220506114402.365-6-thunder.leizhen@huawei.com>
+Message-ID: <20220506114402.365-2-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-When "crashkernel=X,high" is used, there may be two crash regions:
-high=crashk_res and low=crashk_low_res. But now the syscall
-kexec_file_load() only add crashk_res into "linux,usable-memory-range",
-this may cause the second kernel to have no available dma memory.
+According to the current crashkernel=Y,low support in other ARCHes, it's
+an optional command-line option. When it doesn't exist, kernel will try
+to allocate minimum required memory below 4G automatically.
 
-Fix it like kexec tool do for option -c, add both 'high' and 'low' regions
-into the dtb.
+However, __parse_crashkernel() returns '-EINVAL' for all error cases. It
+can't distinguish the nonexistent option from invalid option.
+
+Change __parse_crashkernel() to return '-ENOENT' for the nonexistent option
+case. With this change, crashkernel,low memory will take the default
+value if crashkernel=,low is not specified; while crashkernel reservation
+will fail and bail out if an invalid option is specified.
 
 Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Rob Herring <robh@kernel.org>
+Acked-by: Baoquan He <bhe@redhat.com>
 ---
- drivers/of/kexec.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ kernel/crash_core.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-index b9bd1cff179388c..8d374cc552be5f2 100644
---- a/drivers/of/kexec.c
-+++ b/drivers/of/kexec.c
-@@ -386,6 +386,15 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
- 				crashk_res.end - crashk_res.start + 1);
- 		if (ret)
- 			goto out;
-+
-+		if (crashk_low_res.end) {
-+			ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
-+					"linux,usable-memory-range",
-+					crashk_low_res.start,
-+					crashk_low_res.end - crashk_low_res.start + 1);
-+			if (ret)
-+				goto out;
-+		}
- 	}
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 256cf6db573cd09..4d57c03714f4e13 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -243,9 +243,8 @@ static int __init __parse_crashkernel(char *cmdline,
+ 	*crash_base = 0;
  
- 	/* add bootargs */
+ 	ck_cmdline = get_last_crashkernel(cmdline, name, suffix);
+-
+ 	if (!ck_cmdline)
+-		return -EINVAL;
++		return -ENOENT;
+ 
+ 	ck_cmdline += strlen(name);
+ 
 -- 
 2.25.1
 
