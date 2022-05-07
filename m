@@ -1,162 +1,141 @@
-From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
-Date: Sat, 7 May 2022 17:35:32 +0800
-Subject: [PATCH v24 3/6] arm64: kdump: Reimplement crashkernel=X
-In-Reply-To: <9f6fdbb8-b6c5-3ca0-31b6-617175739e81@huawei.com>
-References: <20220506114402.365-1-thunder.leizhen@huawei.com>
- <20220506114402.365-4-thunder.leizhen@huawei.com>
- <20220506231032.GA122876@MiWiFi-R3L-srv>
- <d9b21f31-6fd2-a898-9a70-c63ff4f36212@huawei.com>
- <YnXUSBcFmEpxaqBf@MiWiFi-R3L-srv>
- <9f6fdbb8-b6c5-3ca0-31b6-617175739e81@huawei.com>
-Message-ID: <6e892914-74ae-2b8f-954e-342aaf4be870@huawei.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Sat, 7 May 2022 18:45:54 +0800
+Subject: [PATCH v23 3/6] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <YnVept85UJCaZp6p@arm.com>
+References: <20220505091845.167-1-thunder.leizhen@huawei.com>
+ <20220505091845.167-4-thunder.leizhen@huawei.com>
+ <YnQC44KVKirH0vyB@arm.com>
+ <189f24a8-9e9b-b3e9-7ac5-935433ea575b@huawei.com>
+ <YnUfmMmON2c1FZrx@MiWiFi-R3L-srv> <YnVept85UJCaZp6p@arm.com>
+Message-ID: <20220507104554.GE122876@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-
-
-On 2022/5/7 11:37, Leizhen (ThunderTown) wrote:
+On 05/06/22 at 06:45pm, Catalin Marinas wrote:
+> On Fri, May 06, 2022 at 09:16:08PM +0800, Baoquan He wrote:
+> > On 05/06/22 at 11:22am, Leizhen (ThunderTown) wrote:
+> > ......  
+> > > >> @@ -118,8 +159,7 @@ static void __init reserve_crashkernel(void)
+> > > >>  	if (crash_base)
+> > > >>  		crash_max = crash_base + crash_size;
+> > > >>  
+> > > >> -	/* Current arm64 boot protocol requires 2MB alignment */
+> > > >> -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
+> > > >> +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+> > > >>  					       crash_base, crash_max);
+> > > >>  	if (!crash_base) {
+> > > >>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+> > > > 
+> > > > I personally like this but let's see how the other thread goes. I guess
+> > > 
+> > > Me too. This fallback complicates code logic more than just a little.
+> > > I'm not sure why someone would rather add fallback than change the bootup
+> > > options to crashkernel=X,[high|low]. Perhaps fallback to high/low is a better
+> > > compatible and extended mode when crashkernel=X fails to reserve memory. And
+> > > the code logic will be much clearer.
+> > 
+> > The fallback does complicates code, while it was not made at the
+> > beginning, but added later. The original crahskernel=xM can only reserve
+> > low memory under 896M on x86 to be back compatible with the case in which
+> > normal kernel is x86_64, while kdump kernel could be i386. Then customer
+> > complained why crashkernel=xM can't be put anywhere so that they don't
+> > need to know the details of limited low memory and huge high memory fact 
+> > in system.
+> > 
+> > The implementation of fallback is truly complicated, but its use is
+> > quite simple. And it makes crashkernel reservation setting simple.
+> > Most of users don't need to know crashkernel=,high, ,low things, unless
+> > the crashkernel region is too big. Nobody wants to take away 1G or more
+> > from low memory for kdump just in case bad thing happens, while normal
+> > kernel itself is seriously impacted by limited low memory.
 > 
+> IIUC, that's exactly what happens even on x86, it may take away a
+> significant chunk of the low memory. Let's say we have 1.2GB of 'low'
+> memory (below 4GB) on an arm64 platform. A crashkernel=1G would succeed
+> in a low allocation, pretty much affecting the whole system. It would
+> only fall back to 'high' _if_ you pass something like crashkernel=1.2G
+> so that the low allocation fails. So if I got this right, I find the
+> fall-back from crashkernel=X pretty useless, we shouldn't even try it.
+
+Most of time, it's not easy to get 1G contiguous low memory. On x86,
+firmware is mapped into low 4G virt address, and system initialization
+will take some of them too. On arm64, it's hard too, e.g the physical
+memory will start at 1G or 2G position, and firmware need be mapped
+under 4G too, and kernel initialization costing. And we are eager to see
+crashkernel=,high support too because we got a bug that on an arm64
+server, its physical memory is scattered under low 4G so that the
+biggest contiguous memory is less than 300M. (Not sure if it's a prototype
+machine, I would not say its name in public.) In this case, we need
+the fallback implementation to make our default crashkernel=xM setting
+succeed getting the required memory from above 4G.
+
+So from our experience and feedback given by customer, crashkernel=xM as
+a default setting is the first choice and very easy to use and can
+satisfy 99% of needs. If big crashkernel reservation is required,
+considering low memory is limited and precious, while most of time
+high memory is huge, crashkernel=,high is recommended. The price is about
+200M or less memory for DMA, however much the required high memory is, 2G
+or more. Believe me this kind of big memory requirement happens on very
+few machines, because vmcore dumping tool makedumpfile taking the default
+cyclic buffer method to dump which require not much memory. Unless user
+has their own dumping tool or other dumping method which require much
+memory.
+
+crashkernel=xM, whether it is from its name, or the actual need, had
+better get the fallback mechanism to allow it being put anywhere.
+
 > 
-> On 2022/5/7 10:07, Baoquan He wrote:
->> On 05/07/22 at 09:34am, Leizhen (ThunderTown) wrote:
->>>
->>>
->>> On 2022/5/7 7:10, Baoquan He wrote:
->>>> On 05/06/22 at 07:43pm, Zhen Lei wrote:
->>>> ......  
->>>>> @@ -118,8 +162,7 @@ static void __init reserve_crashkernel(void)
->>>>>  	if (crash_base)
->>>>>  		crash_max = crash_base + crash_size;
->>>>>  
->>>>> -	/* Current arm64 boot protocol requires 2MB alignment */
->>>>> -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
->>>>> +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
->>>>>  					       crash_base, crash_max);
->>>>>  	if (!crash_base) {
->>>>>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
->>>>> @@ -127,6 +170,11 @@ static void __init reserve_crashkernel(void)
->>>>>  		return;
->>>>>  	}
->>>>>  
->>>>
->>>> There's corner case missed, e.g
->>>> 1) ,high and ,low are specified, CONFIG_ZONE_DMA|DMA32 is not enabled;
->>>> 2) ,high and ,low are specified, the whole system memory is under 4G.
->>>>
->>>> Below judgement can filter them away:
->>>>         
->>>> 	if (crash_base > arm64_dma_phys_limit && crash_low_size &&
->>>> 	    reserve_crashkernel_low(crash_low_size)) {
->>>>
->>>> What's your opinion? Leave it and add document to notice user, or fix it
->>>> with code change?
+> It makes more sense if crashkernel=X,high is a hint to attempt a high
+> allocation first with a default low (overridden by a ,low option) or
+> even fall-back to low if there's no memory above 4GB.
 
-I decided to modify the code and document. But the code changes aren't what
-you suggested. For the following reasons:
-1. The memory allocated for 'high' may be partially under 4G. So the low
-   memory may not be enough. Of course, it's rare.
-2. The second kernel can work properly only when the high and low memory
-   are successfully applied for. For example, high=128M, low=128M, but the
-   second kernel need 256M.
+Hmm, maybe not so much. Please also consider the big end servers usually
+carry tons of devices, its rebooting will take half an hour or even more
+time. Imagine in an lab with hundereds of servers, one time of OS upgrading 
+need to attempt high allocation firstly on each machine, then decide
+what is set. That will drive operator mad. So we give them the simplest
+way, crashkernel=xM to make it work. If you want to optimize the memory
+usage and you know each system well, then please use crashkernel=,high
+and crashkernel=,low to make it.
 
-So for the cases you listed:
-1) ,high and ,low are specified, CONFIG_ZONE_DMA|DMA32 is not enabled;
-   --> Follow you suggestion, ignore crashkernel=Y,low, don't allocate low memory.
+In our distros, the policy is if default crashkernel=xM setting with
+OS installation doesn't work well, e.g OOM or reserving too much memory
+causing wasting, bug can be reported. crashkernel=,high and
+crashkernel=,low don't work well, settle by yourself.
 
-@@ -100,6 +100,14 @@ static int __init reserve_crashkernel_low(unsigned long long low_size)
- {
-        unsigned long long low_base;
-
-+       /*
-+        * The kernel does not have any DMA zone, so the range of each DMA
-+        * zone is unknown. Please make sure both CONFIG_ZONE_DMA and
-+        * CONFIG_ZONE_DMA32 are also not set in the second kernel.
-+        */
-+       if (!IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32))
-+               return 0;
-+
-
-2) ,high and ,low are specified, the whole system memory is under 4G.
-   --> two memory ranges will be allocated, the size is what 'high' and 'low' specified.
-   --> Yes, the memory of 'low' may be above 'high', but the 'high' just hint allocation
-   --> from top, try high memory first. Of course, this may cause kexec to fail to load.
-   --> Because the memory of 'low' with small size will be used to store Image, etc..
-   --> But the memory of 'low' above 'high' is almost impossible, we use memblock API to
-   --> allocate memory from top to bottem, 'low' above 'high' need a sizeable memory block
-   --> (128M, 256M?) to be freed at init phase.
-   -->  Maybe I should add: crash_max = min(crash_base, CRASH_ADDR_LOW_MAX);
-   --> to make sure the memory of 'low' is always under 'high'
-
->>>
->>> I think maybe we can leave it unchanged. If the user configures two memory ranges,
->>> we'd better apply for two. Otherwise, he'll be confused when he inquires. Currently,
->>> crash_low_size is non-zero only when 'crashkernel=Y,low' is explicitly configured.
->>
->> Then user need know the system information, e.g how much is the high
->> memory, low memory, if CONFIG_ZONE_DMA|DMA32 is enabled. And we need
->> describe these cases in document. Any corner case or exception need
->> be noted if we don't handle it in code.
->>
->> Caring about this very much because we have CI with existed test cases
->> to run on the system, and QA will check these manually too. Support
->> engineer need detailed document if anything special but happened.
->> Anything unclear or uncovered will be reported as bug to our kernel dev.
->> Guess your company do the similar thing like this.
->>
->> This crashkerne,high and crashkernel,low reservation is special if we
->> allow ,high, ,low existing in the same zone. Imagine on system with
->> CONFIG_ZONE_DMA|DMA32 disabled, people copy the crashkernel=512M,high
->> and crashkernel=128M,low from other system, and he could get
->> crash_res at [5G, 5G+512M], while crash_low_res at [6G, 6G+128M]. Guess
->> how they will judge us.
 > 
-> OK, I got it.
+> Could you please have a look at Zhen Lei's latest series without any
+> fall-backs? I'd like to queue that if you are happy with it. We can then
+> look at adding some fall-back options on top.
+
+I am fine with the v24, except of the corner case I pointed out. I
+personally suggest merging the v24 series, and fix the corner case
+and add fall back on top, with step by step style.
+
+Thanks
+Baoquan
+
 > 
->>
->>>
->>>>
->>>> I would suggest merging this series, Lei can add this corner case
->>>> handling on top. Since this is a newly added support, we don't have
->>>> to make it one step. Doing step by step can make reviewing easier.
->>>>
->>>>> +	if (crash_low_size && reserve_crashkernel_low(crash_low_size)) {
->>>>> +		memblock_phys_free(crash_base, crash_size);
->>>>> +		return;
->>>>> +	}
->>>>> +
->>>>>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
->>>>>  		crash_base, crash_base + crash_size, crash_size >> 20);
->>>>>  
->>>>> @@ -135,6 +183,9 @@ static void __init reserve_crashkernel(void)
->>>>>  	 * map. Inform kmemleak so that it won't try to access it.
->>>>>  	 */
->>>>>  	kmemleak_ignore_phys(crash_base);
->>>>> +	if (crashk_low_res.end)
->>>>> +		kmemleak_ignore_phys(crashk_low_res.start);
->>>>> +
->>>>>  	crashk_res.start = crash_base;
->>>>>  	crashk_res.end = crash_base + crash_size - 1;
->>>>>  	insert_resource(&iomem_resource, &crashk_res);
->>>>> -- 
->>>>> 2.25.1
->>>>>
->>>>
->>>> .
->>>>
->>>
->>> -- 
->>> Regards,
->>>   Zhen Lei
->>>
->>
->> .
->>
+> IMO, we should only aim for:
+> 
+> 	crashkernel=X		ZONE_DMA allocation, no fall-back
+> 	crashkernel=X,high	hint for high allocation, small default
+> 				low, fall back to low if alloc fails
+> 	crashkernel=X,low	control the default low allocation, only
+> 				high is passed
+> 
+> With the above, I'd expect admins to just go for crashkernel=X,high on
+> modern hardware with up to date kexec tools and it does the right thing.
+> The crashkernel=X can lead to unexpected results if it eats up all the
+> low memory. Let's say this option is for backwards compatibility only.
+> 
+> Thanks.
+> 
+> -- 
+> Catalin
 > 
 
--- 
-Regards,
-  Zhen Lei
 
