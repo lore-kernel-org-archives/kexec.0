@@ -1,92 +1,120 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Sat, 7 May 2022 11:30:59 +0800
-Subject: [PATCH v24 6/6] docs: kdump: Update the crashkernel description
- for arm64
-In-Reply-To: <6e662eae-e788-13d3-368a-e88ed159fc85@huawei.com>
+From: Leizhen (ThunderTown) <thunder.leizhen@huawei.com>
+Date: Sat, 7 May 2022 11:37:03 +0800
+Subject: [PATCH v24 3/6] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <YnXUSBcFmEpxaqBf@MiWiFi-R3L-srv>
 References: <20220506114402.365-1-thunder.leizhen@huawei.com>
- <20220506114402.365-7-thunder.leizhen@huawei.com>
- <20220506231451.GB122876@MiWiFi-R3L-srv>
- <6e662eae-e788-13d3-368a-e88ed159fc85@huawei.com>
-Message-ID: <YnXn87JnfUxI2lC2@MiWiFi-R3L-srv>
+ <20220506114402.365-4-thunder.leizhen@huawei.com>
+ <20220506231032.GA122876@MiWiFi-R3L-srv>
+ <d9b21f31-6fd2-a898-9a70-c63ff4f36212@huawei.com>
+ <YnXUSBcFmEpxaqBf@MiWiFi-R3L-srv>
+Message-ID: <9f6fdbb8-b6c5-3ca0-31b6-617175739e81@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/07/22 at 09:41am, Leizhen (ThunderTown) wrote:
-> 
-> 
-> On 2022/5/7 7:14, Baoquan He wrote:
-> > On 05/06/22 at 07:44pm, Zhen Lei wrote:
-> >> Now arm64 has added support for "crashkernel=X,high" and
-> >> "crashkernel=Y,low". Unlike x86, crash low memory is not allocated if
-> >> "crashkernel=Y,low" is not specified.
-> >>
-> >> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> >> ---
-> >>  Documentation/admin-guide/kernel-parameters.txt | 9 +++++++--
-> >>  1 file changed, 7 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> >> index 3f1cc5e317ed4a5..aa44c61114aa4b8 100644
-> >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> >> @@ -808,7 +808,7 @@
-> >>  			Documentation/admin-guide/kdump/kdump.rst for an example.
-> >>  
-> >>  	crashkernel=size[KMG],high
-> >> -			[KNL, X86-64] range could be above 4G. Allow kernel
-> >> +			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
-> >>  			to allocate physical memory region from top, so could
-> >>  			be above 4G if system have more than 4G ram installed.
-> >>  			Otherwise memory region will be allocated below 4G, if
-> >> @@ -821,7 +821,7 @@
-> >>  			that require some amount of low memory, e.g. swiotlb
-> >>  			requires at least 64M+32K low memory, also enough extra
-> >>  			low memory is needed to make sure DMA buffers for 32-bit
-> >> -			devices won't run out. Kernel would try to allocate at
-> >> +			devices won't run out. Kernel would try to allocate
-> >>  			at least 256M below 4G automatically.
-> >>  			This one let user to specify own low range under 4G
-> >>  			for second kernel instead.
-> >> @@ -829,6 +829,11 @@
-> >>  			It will be ignored when crashkernel=X,high is not used
-> >>  			or memory reserved is below 4G.
-> >>  
-> >> +			[KNL, ARM64] range in low memory.
-> >> +			This one let user to specify a low range in DMA zone for
-> >                                           ^ not needed,
-> >                         Maybe Catalin can fix it when merging.
-> 
-> Delete "This one let user to" or the entire sentence? I understand it to be the former.
-
-Oh, I mean the 'to' is not needed. "This one let user specify ....". The
-'to' is a grammer mistake.
 
 
+On 2022/5/7 10:07, Baoquan He wrote:
+> On 05/07/22 at 09:34am, Leizhen (ThunderTown) wrote:
+>>
+>>
+>> On 2022/5/7 7:10, Baoquan He wrote:
+>>> On 05/06/22 at 07:43pm, Zhen Lei wrote:
+>>> ......  
+>>>> @@ -118,8 +162,7 @@ static void __init reserve_crashkernel(void)
+>>>>  	if (crash_base)
+>>>>  		crash_max = crash_base + crash_size;
+>>>>  
+>>>> -	/* Current arm64 boot protocol requires 2MB alignment */
+>>>> -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
+>>>> +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>>>>  					       crash_base, crash_max);
+>>>>  	if (!crash_base) {
+>>>>  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+>>>> @@ -127,6 +170,11 @@ static void __init reserve_crashkernel(void)
+>>>>  		return;
+>>>>  	}
+>>>>  
+>>>
+>>> There's corner case missed, e.g
+>>> 1) ,high and ,low are specified, CONFIG_ZONE_DMA|DMA32 is not enabled;
+>>> 2) ,high and ,low are specified, the whole system memory is under 4G.
+>>>
+>>> Below judgement can filter them away:
+>>>         
+>>> 	if (crash_base > arm64_dma_phys_limit && crash_low_size &&
+>>> 	    reserve_crashkernel_low(crash_low_size)) {
+>>>
+>>> What's your opinion? Leave it and add document to notice user, or fix it
+>>> with code change?
+>>
+>> I think maybe we can leave it unchanged. If the user configures two memory ranges,
+>> we'd better apply for two. Otherwise, he'll be confused when he inquires. Currently,
+>> crash_low_size is non-zero only when 'crashkernel=Y,low' is explicitly configured.
 > 
-> > 
-> > Other than this, LGTM,
-> > 
-> > Acked-by: Baoquan He <bhe@redhat.com>
-> > 
-> >> +			crash dump kernel.
-> >> +			It will be ignored when crashkernel=X,high is not used.
-> >> +
-> >>  	cryptomgr.notests
-> >>  			[KNL] Disable crypto self-tests
-> >>  
-> >> -- 
-> >> 2.25.1
-> >>
-> > 
-> > .
-> > 
+> Then user need know the system information, e.g how much is the high
+> memory, low memory, if CONFIG_ZONE_DMA|DMA32 is enabled. And we need
+> describe these cases in document. Any corner case or exception need
+> be noted if we don't handle it in code.
 > 
-> -- 
-> Regards,
->   Zhen Lei
+> Caring about this very much because we have CI with existed test cases
+> to run on the system, and QA will check these manually too. Support
+> engineer need detailed document if anything special but happened.
+> Anything unclear or uncovered will be reported as bug to our kernel dev.
+> Guess your company do the similar thing like this.
+> 
+> This crashkerne,high and crashkernel,low reservation is special if we
+> allow ,high, ,low existing in the same zone. Imagine on system with
+> CONFIG_ZONE_DMA|DMA32 disabled, people copy the crashkernel=512M,high
+> and crashkernel=128M,low from other system, and he could get
+> crash_res at [5G, 5G+512M], while crash_low_res at [6G, 6G+128M]. Guess
+> how they will judge us.
+
+OK, I got it.
+
+> 
+>>
+>>>
+>>> I would suggest merging this series, Lei can add this corner case
+>>> handling on top. Since this is a newly added support, we don't have
+>>> to make it one step. Doing step by step can make reviewing easier.
+>>>
+>>>> +	if (crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+>>>> +		memblock_phys_free(crash_base, crash_size);
+>>>> +		return;
+>>>> +	}
+>>>> +
+>>>>  	pr_info("crashkernel reserved: 0x%016llx - 0x%016llx (%lld MB)\n",
+>>>>  		crash_base, crash_base + crash_size, crash_size >> 20);
+>>>>  
+>>>> @@ -135,6 +183,9 @@ static void __init reserve_crashkernel(void)
+>>>>  	 * map. Inform kmemleak so that it won't try to access it.
+>>>>  	 */
+>>>>  	kmemleak_ignore_phys(crash_base);
+>>>> +	if (crashk_low_res.end)
+>>>> +		kmemleak_ignore_phys(crashk_low_res.start);
+>>>> +
+>>>>  	crashk_res.start = crash_base;
+>>>>  	crashk_res.end = crash_base + crash_size - 1;
+>>>>  	insert_resource(&iomem_resource, &crashk_res);
+>>>> -- 
+>>>> 2.25.1
+>>>>
+>>>
+>>> .
+>>>
+>>
+>> -- 
+>> Regards,
+>>   Zhen Lei
+>>
+> 
+> .
 > 
 
+-- 
+Regards,
+  Zhen Lei
 
