@@ -1,43 +1,50 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 9 May 2022 11:25:06 -0300
-Subject: [PATCH 24/30] panic: Refactor the panic path
-In-Reply-To: <7518924e-5bb4-e6e9-0e3e-3f5cb03bf946@igalia.com>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <4fe85e9c-4e96-e9d5-9fd8-f062bafcda4f@infradead.org>
- <7518924e-5bb4-e6e9-0e3e-3f5cb03bf946@igalia.com>
-Message-ID: <260dccd8-a4f6-882c-8767-5bc27576df14@igalia.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Mon, 9 May 2022 10:41:13 -0500
+Subject: [PATCH v8 1/7] x86/crash: fix minor typo/bug in debug message
+In-Reply-To: <YnimI5cZWXKeNSHY@MiWiFi-R3L-srv>
+References: <20220505184603.1548-1-eric.devolder@oracle.com>
+ <20220505184603.1548-2-eric.devolder@oracle.com>
+ <72764a3c-8b8c-8652-945e-9b15f31cda15@linux.ibm.com>
+ <YnimI5cZWXKeNSHY@MiWiFi-R3L-srv>
+Message-ID: <9174fbce-6160-ef5c-15cd-2a62502f21da@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 29/04/2022 13:04, Guilherme G. Piccoli wrote:
-> On 27/04/2022 21:28, Randy Dunlap wrote:
->>
->>
->> On 4/27/22 15:49, Guilherme G. Piccoli wrote:
->>> +	crash_kexec_post_notifiers
->>> +			This was DEPRECATED - users should always prefer the
->>
->> 			This is DEPRECATED - users should always prefer the
->>
->>> +			parameter "panic_notifiers_level" - check its entry
->>> +			in this documentation for details on how it works.
->>> +			Setting this parameter is exactly the same as setting
->>> +			"panic_notifiers_level=4".
->>
-> 
-> Thanks Randy, for your suggestion - but I confess I couldn't understand
-> it properly. It's related to spaces/tabs, right? What you suggest me to
-> change in this formatting? Just by looking the email I can't parse.
-> 
-> Cheers,
-> 
-> 
-> Guilherme
 
-Complete lack of attention from me, apologies!
-The suggestions was s/was/is - already fixed for V2, thanks Randy.
+
+On 5/9/22 00:26, Baoquan He wrote:
+> On 05/09/22 at 10:46am, Sourabh Jain wrote:
+>>
+>> On 06/05/22 00:15, Eric DeVolder wrote:
+>>> The pr_debug() intends to display the memsz member, but the
+>>> parameter is actually the bufsz member (which is already
+>>> displayed). Correct this to display memsz value.
+>>>
+>>> Signed-off-by: Eric DeVolder<eric.devolder@oracle.com>
+>>> Reviewed-by: David Hildenbrand<david@redhat.com>
+>>> Acked-by: Baoquan He<bhe@redhat.com>
+>>> ---
+>>>    arch/x86/kernel/crash.c | 2 +-
+>>>    1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>>> index e8326a8d1c5d..9730c88530fc 100644
+>>> --- a/arch/x86/kernel/crash.c
+>>> +++ b/arch/x86/kernel/crash.c
+>>> @@ -407,7 +407,7 @@ int crash_load_segments(struct kimage *image)
+>>>    	}
+>>>    	image->elf_load_addr = kbuf.mem;
+>>>    	pr_debug("Loaded ELF headers at 0x%lx bufsz=0x%lx memsz=0x%lx\n",
+>>> -		 image->elf_load_addr, kbuf.bufsz, kbuf.bufsz);
+>>> +		 image->elf_load_addr, kbuf.bufsz, kbuf.memsz);
+>>>
+>> I think we can push this patch separately.
+> 
+> Boris has taken this into tip/x86/kdump.
+> 
+Excellent, I'll remove this patch going forward.
+Eric
 
