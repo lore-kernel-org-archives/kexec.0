@@ -1,44 +1,47 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Date: Sat,  7 May 2022 20:12:09 +0100
-Subject: [PATCH v24 0/6] support reserving crashkernel above 4G on arm64
- kdump
-In-Reply-To: <20220506114402.365-1-thunder.leizhen@huawei.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Mon, 9 May 2022 12:04:43 +0800
+Subject: [PATCH v24 3/6] arm64: kdump: Reimplement crashkernel=X
+In-Reply-To: <Yna/bc2nDb7PT40r@arm.com>
 References: <20220506114402.365-1-thunder.leizhen@huawei.com>
-Message-ID: <165195066216.355842.15333560704698747541.b4-ty@arm.com>
+ <20220506114402.365-4-thunder.leizhen@huawei.com>
+ <20220506231032.GA122876@MiWiFi-R3L-srv> <Yna/bc2nDb7PT40r@arm.com>
+Message-ID: <YniS29/Mjabnbs2E@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri, 6 May 2022 19:43:56 +0800, Zhen Lei wrote:
-> Changes since [v23]:
-> Do two minor updates:
-> 1. Change the value of CRASH_ADDR_HIGH_MAX from memblock.current_limit to (PHYS_MASK + 1).
-> 2. The 'high' and 'low' are only take effect when crashkernel=X[@offset] does not exist.
->    If the value of crashkernel=X is invalid, the reservation of crash fails, even if 'high'
->    and 'low' are configured correctly.
+On 05/07/22 at 07:50pm, Catalin Marinas wrote:
+> On Sat, May 07, 2022 at 07:10:32AM +0800, Baoquan He wrote:
+> > On 05/06/22 at 07:43pm, Zhen Lei wrote:
+> > ......  
+> > > @@ -118,8 +162,7 @@ static void __init reserve_crashkernel(void)
+> > >  	if (crash_base)
+> > >  		crash_max = crash_base + crash_size;
+> > >  
+> > > -	/* Current arm64 boot protocol requires 2MB alignment */
+> > > -	crash_base = memblock_phys_alloc_range(crash_size, SZ_2M,
+> > > +	crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+> > >  					       crash_base, crash_max);
+> > >  	if (!crash_base) {
+> > >  		pr_warn("cannot allocate crashkernel (size:0x%llx)\n",
+> > > @@ -127,6 +170,11 @@ static void __init reserve_crashkernel(void)
+> > >  		return;
+> > >  	}
+> > >  
+> > 
+> > There's corner case missed, e.g
+> > 1) ,high and ,low are specified, CONFIG_ZONE_DMA|DMA32 is not enabled;
+> > 2) ,high and ,low are specified, the whole system memory is under 4G.
 > 
-> [...]
+> My view of ,low is that it should only used to override the default
+> ZONE_DMA allocation if that one is not suitable. If no ZONE_DMA exists
+> or everything is ZONE_DMA, ignore it altogether. That's a specialist
+> case for people that know more about the memory layout, otherwise
+> crashkernel=X works in most case with crashkernel=X,high as an
+> alternative to allow high allocation.
 
-Applied to arm64 (for-next/crashkernel), finally ;). Thanks!
-
-Only patches on top please for the fall-back implementation.
-
-[1/6] kdump: return -ENOENT if required cmdline option does not exist
-      https://git.kernel.org/arm64/c/2e5920bb073a
-[2/6] arm64: Use insert_resource() to simplify code
-      https://git.kernel.org/arm64/c/e6b394425c61
-[3/6] arm64: kdump: Reimplement crashkernel=X
-      https://git.kernel.org/arm64/c/944a45abfabc
-[4/6] of: fdt: Add memory for devices by DT property "linux,usable-memory-range"
-      https://git.kernel.org/arm64/c/fb319e77a0e7
-[5/6] of: Support more than one crash kernel regions for kexec -s
-      https://git.kernel.org/arm64/c/8af6b91f5834
-[6/6] docs: kdump: Update the crashkernel description for arm64
-      https://git.kernel.org/arm64/c/5832f1ae5060
-
--- 
-Catalin
+Totally agree with the conclusion.
 
 
