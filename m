@@ -1,56 +1,107 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 9 May 2022 10:09:21 -0300
-Subject: [PATCH 09/30] coresight: cpu-debug: Replace mutex with
- mutex_trylock on panic notifier
-In-Reply-To: <3cafe4fd-8a0b-2633-44a3-2995abd6c38c@arm.com>
+Date: Mon, 9 May 2022 11:13:17 -0300
+Subject: [PATCH 10/30] alpha: Clean-up the panic notifier code
+In-Reply-To: <20220427224924.592546-11-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-10-gpiccoli@igalia.com>
- <3cafe4fd-8a0b-2633-44a3-2995abd6c38c@arm.com>
-Message-ID: <65f24bc5-2211-0139-ee12-b2608e81ceb1@igalia.com>
+ <20220427224924.592546-11-gpiccoli@igalia.com>
+Message-ID: <f6def662-5742-b3a8-544f-bf15c636d83d@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 28/04/2022 05:11, Suzuki K Poulose wrote:
-> Hi Guilherme,
+On 27/04/2022 19:49, Guilherme G. Piccoli wrote:
+> The alpha panic notifier has some code issues, not following
+> the conventions of other notifiers. Also, it might halt the
+> machine but still it is set to run as early as possible, which
+> doesn't seem to be a good idea.
 > 
-> On 27/04/2022 23:49, Guilherme G. Piccoli wrote:
->> The panic notifier infrastructure executes registered callbacks when
->> a panic event happens - such callbacks are executed in atomic context,
->> with interrupts and preemption disabled in the running CPU and all other
->> CPUs disabled. That said, mutexes in such context are not a good idea.
->>
->> This patch replaces a regular mutex with a mutex_trylock safer approach;
->> given the nature of the mutex used in the driver, it should be pretty
->> uncommon being unable to acquire such mutex in the panic path, hence
->> no functional change should be observed (and if it is, that would be
->> likely a deadlock with the regular mutex).
->>
->> Fixes: 2227b7c74634 ("coresight: add support for CPU debug module")
->> Cc: Leo Yan <leo.yan@linaro.org>
->> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
->> Cc: Mike Leach <mike.leach@linaro.org>
->> Cc: Suzuki K Poulose <suzuki.poulose@arm.com>
->> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> This patch cleans the code, and set the notifier to run as the
+> latest, following the same approach other architectures are doing.
+> Also, we remove the unnecessary include of a header already
+> included indirectly.
 > 
-> How would you like to proceed with queuing this ? I am happy
-> either way. In case you plan to push this as part of this
-> series (I don't see any potential conflicts) :
+> Cc: Ivan Kokshaysky <ink@jurassic.park.msu.ru>
+> Cc: Matt Turner <mattst88@gmail.com>
+> Cc: Richard Henderson <rth@twiddle.net>
+> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+> ---
+>  arch/alpha/kernel/setup.c | 36 +++++++++++++++---------------------
+>  1 file changed, 15 insertions(+), 21 deletions(-)
 > 
-> Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
+> index b4fbbba30aa2..d88bdf852753 100644
+> --- a/arch/alpha/kernel/setup.c
+> +++ b/arch/alpha/kernel/setup.c
+> @@ -41,19 +41,11 @@
+>  #include <linux/sysrq.h>
+>  #include <linux/reboot.h>
+>  #endif
+> -#include <linux/notifier.h>
+>  #include <asm/setup.h>
+>  #include <asm/io.h>
+>  #include <linux/log2.h>
+>  #include <linux/export.h>
+>  
+> -static int alpha_panic_event(struct notifier_block *, unsigned long, void *);
+> -static struct notifier_block alpha_panic_block = {
+> -	alpha_panic_event,
+> -        NULL,
+> -        INT_MAX /* try to do it first */
+> -};
+> -
+>  #include <linux/uaccess.h>
+>  #include <asm/hwrpb.h>
+>  #include <asm/dma.h>
+> @@ -435,6 +427,21 @@ static const struct sysrq_key_op srm_sysrq_reboot_op = {
+>  };
+>  #endif
+>  
+> +static int alpha_panic_event(struct notifier_block *this,
+> +			     unsigned long event, void *ptr)
+> +{
+> +	/* If we are using SRM and serial console, just hard halt here. */
+> +	if (alpha_using_srm && srmcons_output)
+> +		__halt();
+> +
+> +	return NOTIFY_DONE;
+> +}
+> +
+> +static struct notifier_block alpha_panic_block = {
+> +	.notifier_call = alpha_panic_event,
+> +	.priority = INT_MIN, /* may not return, do it last */
+> +};
+> +
+>  void __init
+>  setup_arch(char **cmdline_p)
+>  {
+> @@ -1427,19 +1434,6 @@ const struct seq_operations cpuinfo_op = {
+>  	.show	= show_cpuinfo,
+>  };
+>  
+> -
+> -static int
+> -alpha_panic_event(struct notifier_block *this, unsigned long event, void *ptr)
+> -{
+> -#if 1
+> -	/* FIXME FIXME FIXME */
+> -	/* If we are using SRM and serial console, just hard halt here. */
+> -	if (alpha_using_srm && srmcons_output)
+> -		__halt();
+> -#endif
+> -        return NOTIFY_DONE;
+> -}
+> -
+>  static __init int add_pcspkr(void)
+>  {
+>  	struct platform_device *pd;
 
-Hi Suzuki, some other maintainers are taking the patches to their next
-branches for example. I'm working on V2, and I guess in the end would be
-nice to reduce the size of the series a bit.
 
-So, do you think you could pick this one for your coresight/next branch
-(or even for rc cycle, your call - this is really a fix)?
-This way, I won't re-submit this one in V2, since it's gonna be merged
-already in your branch.
+Hi folks, I'm updating Richard's email and re-sending the V1, any
+reviews are greatly appreciated!
 
-Thanks in advance,
+Cheers,
 
 
 Guilherme
