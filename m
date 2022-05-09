@@ -1,121 +1,84 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Date: Tue, 10 May 2022 10:28:11 +0200
-Subject: [PATCHv3 1/2] cpu/hotplug: Keep cpu hotplug disabled until the
- rebooting cpu is stable
-In-Reply-To: <YnneUeRJ42SRM/M+@piliu.users.ipa.redhat.com>
-References: <20220509041305.15056-1-kernelfans@gmail.com>
- <20220509041305.15056-2-kernelfans@gmail.com> <87ee13rn52.ffs@tglx>
- <YnneUeRJ42SRM/M+@piliu.users.ipa.redhat.com>
-Message-ID: <87y1z9pzac.ffs@tglx>
+From: d.hatayama@fujitsu.com <d.hatayama@fujitsu.com>
+Date: Mon, 9 May 2022 15:16:08 +0000
+Subject: [PATCH 24/30] panic: Refactor the panic path
+In-Reply-To: <20220427224924.592546-25-gpiccoli@igalia.com>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-25-gpiccoli@igalia.com>
+Message-ID: <TYAPR01MB6507D01F5694BC33628BB7DB95C69@TYAPR01MB6507.jpnprd01.prod.outlook.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue, May 10 2022 at 11:38, Pingfan Liu wrote:
-> On Mon, May 09, 2022 at 12:55:21PM +0200, Thomas Gleixner wrote:
->> On Mon, May 09 2022 at 12:13, Pingfan Liu wrote:
->> > The following code chunk repeats in both
->> > migrate_to_reboot_cpu() and smp_shutdown_nonboot_cpus():
->> > This is due to a breakage like the following:
->> 
->> I don't see what's broken here.
->> 
->
-> No, no broken. Could it be better to replace 'breakage' with
-> 'breakin'?
+Sorry for the delayed response. Unfortunately, I had 10 days holidays
+until yesterday...
 
-There is no break-in. There is a phase where CPU hotplug is reenabled,
-which might be avoided.
+>  .../admin-guide/kernel-parameters.txt         |  42 ++-
+>  include/linux/panic_notifier.h                |   1 +
+>  kernel/kexec_core.c                           |   8 +-
+>  kernel/panic.c                                | 292 +++++++++++++-----
+>  .../selftests/pstore/pstore_crash_test        |   5 +-
+>  5 files changed, 252 insertions(+), 96 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index 3f1cc5e317ed..8d3524060ce3 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+...snip...
+> @@ -3784,6 +3791,33 @@
+>                         timeout < 0: reboot immediately
+>                         Format: <timeout>
+> 
+> +       panic_notifiers_level=
+> +                       [KNL] Set the panic notifiers execution order.
+> +                       Format: <unsigned int>
+> +                       We currently have 4 lists of panic notifiers; based
+> +                       on the functionality and risk (for panic success) the
+> +                       callbacks are added in a given list. The lists are:
+> +                       - hypervisor/FW notification list (low risk);
+> +                       - informational list (low/medium risk);
+> +                       - pre_reboot list (higher risk);
+> +                       - post_reboot list (only run late in panic and after
+> +                       kdump, not configurable for now).
+> +                       This parameter defines the ordering of the first 3
+> +                       lists with regards to kdump; the levels determine
+> +                       which set of notifiers execute before kdump. The
+> +                       accepted levels are:
+> +                       0: kdump is the first thing to run, NO list is
+> +                       executed before kdump.
+> +                       1: only the hypervisor list is executed before kdump.
+> +                       2 (default level): the hypervisor list and (*if*
 
->> > +/* primary_cpu keeps unchanged after migrate_to_reboot_cpu() */
->> 
->> This comment makes no sense.
->> 
->
-> Since migrate_to_reboot_cpu() disables cpu hotplug, so the selected
-> valid online cpu -- primary_cpu keeps unchange.
+Hmmm, why are you trying to change default setting?
 
-So what is that parameter for then? If migrate_to_reboot_cpu() ensured
-that the current task is on the reboot CPU then this parameter is
-useless, no?
+Based on the current design of kdump, it's natural to put what the
+handlers for these level 1 and level 2 handlers do in
+machine_crash_shutdown(), as these are necessary by default, right?
 
->> >  void smp_shutdown_nonboot_cpus(unsigned int primary_cpu)
->> >  {
->> >  	unsigned int cpu;
->> >  	int error;
->> >  
->> > +	/*
->> > +	 * Block other cpu hotplug event, so primary_cpu is always online if
->> > +	 * it is not touched by us
->> > +	 */
->> >  	cpu_maps_update_begin();
->> > -
->> >  	/*
->> > -	 * Make certain the cpu I'm about to reboot on is online.
->> > -	 *
->> > -	 * This is inline to what migrate_to_reboot_cpu() already do.
->> > +	 * migrate_to_reboot_cpu() disables CPU hotplug assuming that
->> > +	 * no further code needs to use CPU hotplug (which is true in
->> > +	 * the reboot case). However, the kexec path depends on using
->> > +	 * CPU hotplug again; so re-enable it here.
->> 
->> You want to reduce confusion, but in reality this is even more confusing
->> than before.
->> 
->
-> This __cpu_hotplug_enable() can be considered to defer from kernel_kexec() to
-> arch-dependent code chunk (here), which is a more proper point.
->
-> Could it make things better by rephrasing the words as the following?
->    migrate_to_reboot_cpu() disables CPU hotplug to prevent the selected
->    reboot cpu from disappearing. But arches need cpu_down to hot remove
->    cpus except rebooting-cpu, so re-enabling cpu hotplug again.
+Or have you already tried that and figured out it's difficult in some
+reason and reached the current design? If so, why is that difficult?
+Could you point to if there is already such discussion online?
 
-Can you please use proper words. arches is not a word and it's closer to
-the plural of arch, than to the word architecture. This is not twitter.
+kdump is designed to perform as little things as possible before
+transferring the execution to the 2nd kernel in order to increase
+reliability. Just detour to panic() increases risks of kdump failure
+in the sense of increasing the executed codes in the abnormal
+situation, which is very the note in the explanation of
+crash_kexec_post_notifiers.
 
-And no, the architectures do not need cpu_down() at all. This very
-function smp_shutdown_nonboot_cpus() invokes cpu_down_maps_locked() to
-shut down the non boot CPUs. That fails when cpu_hotplug_disabled != 0.
+Also, the current implementation of crash_kexec_post_notifiers uses
+the panic notifier, but this is not from the technical
+reason. Ideally, it should have been implemented in the context of
+crash_kexec() independently of panic().
 
->> >  	 */
->> > -	if (!cpu_online(primary_cpu))
->> > -		primary_cpu = cpumask_first(cpu_online_mask);
->> > +	__cpu_hotplug_enable();
->> 
->> How is this decrement solving anything? At the end of this function, the
->> counter is incremented again. So what's the point of this exercise?
->> 
-> This decrement enables the cpu hot-removing.  Since
-> smp_shutdown_nonboot_cpus()->cpu_down_maps_locked(), if
-> cpu_hotplug_disabled, it returns -EBUSY.
+That is, it looks to me that, in addition to changing design of panic
+notifier, you are trying to integrate shutdown code of the crash kexec
+and the panic paths. If so, this is a big design change for kdump.
+I'm concerned about increase of reliability. I'd like you to discuss
+them carefully.
 
-Correct, so why can't you spell that out in concise words in the first
-place right at that comment which reenables hotplug?
+Thanks.
+HATAYAMA, Daisuke
 
->> What does that for arch/powerpc/kernel/kexec_machine64.c now?
->> 
->> Nothing, as far as I can tell. Which means you basically reverted
->> 011e4b02f1da ("powerpc, kexec: Fix "Processor X is stuck" issue during
->> kexec from ST mode") unless I'm completely confused.
->> 
->
-> Oops. Forget about powerpc. Considering the cpu hotplug is an
-> arch-dependent feature in machine_shutdown(), as x86 does not need it.
-
-It's not a feature, it's a architecture specific requirement. x86 is
-irrelevant here because this is a powerpc requirement.
-
->> This is tinkering at best. Can we please sit down and rethink this whole
->> machinery instead of applying random duct tape to it?
->> 
-> I try to make code look consistent.
-
-Emphasis on try. So far the attempt failed and resulted in a regression.
-
-Thanks,
-
-        tglx
 
