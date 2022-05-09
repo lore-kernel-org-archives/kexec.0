@@ -1,74 +1,70 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Mon, 9 May 2022 12:05:21 +0800
-Subject: [PATCH v24 6/6] docs: kdump: Update the crashkernel description
- for arm64
-In-Reply-To: <Yna5AVli1IIUd2kg@arm.com>
-References: <20220506114402.365-1-thunder.leizhen@huawei.com>
- <20220506114402.365-7-thunder.leizhen@huawei.com>
- <20220506231451.GB122876@MiWiFi-R3L-srv>
- <6e662eae-e788-13d3-368a-e88ed159fc85@huawei.com>
- <YnXn87JnfUxI2lC2@MiWiFi-R3L-srv> <Yna5AVli1IIUd2kg@arm.com>
-Message-ID: <YniTAbNIfaLKhFWK@MiWiFi-R3L-srv>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Mon,  9 May 2022 12:13:03 +0800
+Subject: [PATCHv3 0/2] cpu/hotplug: Keep cpu hotplug disabled until the
+ rebooting cpu is stable
+Message-ID: <20220509041305.15056-1-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/07/22 at 07:22pm, Catalin Marinas wrote:
-> On Sat, May 07, 2022 at 11:30:59AM +0800, Baoquan He wrote:
-> > On 05/07/22 at 09:41am, Leizhen (ThunderTown) wrote:
-> > > On 2022/5/7 7:14, Baoquan He wrote:
-> > > > On 05/06/22 at 07:44pm, Zhen Lei wrote:
-> > > >> Now arm64 has added support for "crashkernel=X,high" and
-> > > >> "crashkernel=Y,low". Unlike x86, crash low memory is not allocated if
-> > > >> "crashkernel=Y,low" is not specified.
-> > > >>
-> > > >> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> > > >> ---
-> > > >>  Documentation/admin-guide/kernel-parameters.txt | 9 +++++++--
-> > > >>  1 file changed, 7 insertions(+), 2 deletions(-)
-> > > >>
-> > > >> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> > > >> index 3f1cc5e317ed4a5..aa44c61114aa4b8 100644
-> > > >> --- a/Documentation/admin-guide/kernel-parameters.txt
-> > > >> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> > > >> @@ -808,7 +808,7 @@
-> > > >>  			Documentation/admin-guide/kdump/kdump.rst for an example.
-> > > >>  
-> > > >>  	crashkernel=size[KMG],high
-> > > >> -			[KNL, X86-64] range could be above 4G. Allow kernel
-> > > >> +			[KNL, X86-64, ARM64] range could be above 4G. Allow kernel
-> > > >>  			to allocate physical memory region from top, so could
-> > > >>  			be above 4G if system have more than 4G ram installed.
-> > > >>  			Otherwise memory region will be allocated below 4G, if
-> > > >> @@ -821,7 +821,7 @@
-> > > >>  			that require some amount of low memory, e.g. swiotlb
-> > > >>  			requires at least 64M+32K low memory, also enough extra
-> > > >>  			low memory is needed to make sure DMA buffers for 32-bit
-> > > >> -			devices won't run out. Kernel would try to allocate at
-> > > >> +			devices won't run out. Kernel would try to allocate
-> > > >>  			at least 256M below 4G automatically.
-> > > >>  			This one let user to specify own low range under 4G
-> > > >>  			for second kernel instead.
-> > > >> @@ -829,6 +829,11 @@
-> > > >>  			It will be ignored when crashkernel=X,high is not used
-> > > >>  			or memory reserved is below 4G.
-> > > >>  
-> > > >> +			[KNL, ARM64] range in low memory.
-> > > >> +			This one let user to specify a low range in DMA zone for
-> > > >                                           ^ not needed,
-> > > >                         Maybe Catalin can fix it when merging.
-> > > 
-> > > Delete "This one let user to" or the entire sentence? I understand it to be the former.
-> > 
-> > Oh, I mean the 'to' is not needed. "This one let user specify ....". The
-> > 'to' is a grammer mistake.
-> 
-> Slightly more correct is "This one lets the user specify..."
-> 
-> I can fix them up when applying.
+For the arches (arm/arm64/ia64/riscv), which relies on the cpu hot-removing
+mechanism to implement "kexec -e", it is important to make sure that the
+rebooting happens on a valid online cpu. And this logic should have been
+guaranteed in migrate_to_reboot_cpu().
 
-Right, thx.
+But the current code has either contradict (resolved by [2/2]) or
+redundancy (resolved by [1/2]) about the logic.
+
+V2 -> V3:
+Taking in [2/2], which also has problem with the valid rebooting
+cpu. (I had sent three patches for different arches. But maybe it is
+better to collapse them into one and collect acks from different arches'
+maintainers )
+
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: Vincent Donnefort <vincent.donnefort@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Baokun Li <libaokun1@huawei.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: kexec at lists.infradead.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+To: linux-ia64@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Peter Collingbourne <pcc@google.com>
+Cc: Marc Zyngier <maz@kernel.org>
+To: linux-arm-kernel@lists.infradead.org
+To: linux-kernel@vger.kernel.org
+
+Pingfan Liu (2):
+  cpu/hotplug: Keep cpu hotplug disabled until the rebooting cpu is
+    stable
+  arm/arm64/ia64: kexec: fix the primary cpu passed to
+    smp_shutdown_nonboot_cpus()
+
+ arch/arm/kernel/reboot.c    |  2 +-
+ arch/arm64/kernel/process.c |  2 +-
+ arch/ia64/kernel/process.c  |  2 +-
+ kernel/cpu.c                | 16 ++++++++++------
+ kernel/kexec_core.c         | 10 ++++------
+ 5 files changed, 17 insertions(+), 15 deletions(-)
+
+-- 
+2.31.1
 
 
