@@ -1,70 +1,58 @@
-From: Zhen Lei <thunder.leizhen@huawei.com>
-Date: Wed, 11 May 2022 11:20:32 +0800
-Subject: [PATCH] arm64: kdump: Do not allocate crash low memory if not needed
-Message-ID: <20220511032033.426-1-thunder.leizhen@huawei.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Tue, 10 May 2022 10:00:58 -0300
+Subject: [PATCH 05/30] misc/pvpanic: Convert regular spinlock into trylock
+ on panic path
+In-Reply-To: <YnpXGOXicwdy1E6n@alley>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-6-gpiccoli@igalia.com> <YnpXGOXicwdy1E6n@alley>
+Message-ID: <0a20dd06-f459-638e-cb4d-8255ab1a1f23@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-When "crashkernel=X,high" is specified, the specified "crashkernel=Y,low"
-memory is not required in the following corner cases:
-1. If both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, it means
-   that the devices can access any memory.
-2. If the system memory is small, the crash high memory may be allocated
-   from the DMA zones. If that happens, there's no need to allocate
-   another crash low memory because there's already one.
+On 10/05/2022 09:14, Petr Mladek wrote:
+> [...]
+>> With that said, it's dangerous to use regular spinlocks in such path,
+>> as introduced by commit b3c0f8774668 ("misc/pvpanic: probe multiple instances").
+>> This patch fixes that by replacing regular spinlocks with the trylock
+>> safer approach.
+> 
+> It seems that the lock is used just to manipulating a list. A super
+> safe solution would be to use the rcu API: rcu_add_rcu() and
+> list_del_rcu() under rcu_read_lock(). The spin lock will not be
+> needed and the list will always be valid.
+> 
+> The advantage would be that it will always call members that
+> were successfully added earlier. That said, I am not familiar
+> with pvpanic and am not sure if it is worth it.
+> 
+>> It also fixes an old comment (about a long gone framebuffer code) and
+>> the notifier priority - we should execute hypervisor notifiers early,
+>> deferring this way the panic action to the hypervisor, as expected by
+>> the users that are setting up pvpanic.
+> 
+> This should be done in a separate patch. It changes the behavior.
+> Also there might be a discussion whether it really should be
+> the maximal priority.
+> 
+> Best Regards,
+> Petr
 
-Add condition '(crash_base >= CRASH_ADDR_LOW_MAX)' to determine whether
-the 'high' memory is allocated above DMA zones. Note: when both
-CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, the entire physical
-memory is DMA accessible, CRASH_ADDR_LOW_MAX equals 'PHYS_MASK + 1'.
+Thanks for the review Petr. Patch was already merged - my goal was to be
+concise, i.e., a patch per driver / module, so the patch kinda fixes
+whatever I think is wrong with the driver with regards panic handling.
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
----
- Documentation/admin-guide/kernel-parameters.txt | 5 +++--
- arch/arm64/mm/init.c                            | 3 ++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
+Do you think it worth to remove this patch from Greg's branch just to
+split it in 2? Personally I think it's not worth, but opinions are welcome.
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index f6ff55840751a78..1b543c3109f4851 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -823,7 +823,7 @@
- 			low memory is needed to make sure DMA buffers for 32-bit
- 			devices won't run out. Kernel would try to allocate
- 			at least 256M below 4G automatically.
--			This one let user to specify own low range under 4G
-+			This one lets the user specify own low range under 4G
- 			for second kernel instead.
- 			0: to disable low allocation.
- 			It will be ignored when crashkernel=X,high is not used
-@@ -832,7 +832,8 @@
- 			[KNL, ARM64] range in low memory.
- 			This one lets the user specify a low range in the
- 			DMA zone for the crash dump kernel.
--			It will be ignored when crashkernel=X,high is not used.
-+			It will be ignored when crashkernel=X,high is not used
-+			or memory reserved is located in the DMA zones.
- 
- 	cryptomgr.notests
- 			[KNL] Disable crypto self-tests
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index 18ba66c90991ea0..ac510fb6a2c0189 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -170,7 +170,8 @@ static void __init reserve_crashkernel(void)
- 		return;
- 	}
- 
--	if (crash_low_size && reserve_crashkernel_low(crash_low_size)) {
-+	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
-+	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
- 		memblock_phys_free(crash_base, crash_size);
- 		return;
- 	}
--- 
-2.25.1
+About the RCU part, this one really could be a new patch, a good
+improvement patch - it makes sense to me, we can think about that after
+the fixes I guess.
 
+Cheers,
+
+
+Guilherme
 
