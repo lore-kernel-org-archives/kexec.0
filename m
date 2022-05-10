@@ -1,97 +1,45 @@
 From: Petr Mladek <pmladek@suse.com>
-Date: Tue, 10 May 2022 13:38:39 +0200
-Subject: [PATCH 04/30] firmware: google: Convert regular spinlock into
+Date: Tue, 10 May 2022 14:14:16 +0200
+Subject: [PATCH 05/30] misc/pvpanic: Convert regular spinlock into
  trylock on panic path
-In-Reply-To: <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com>
+In-Reply-To: <20220427224924.592546-6-gpiccoli@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-5-gpiccoli@igalia.com>
- <CAE=gft5Pq25L4KFoPWbftkPF-JN1ex2yws77mMJ4GQnn9W0L2g@mail.gmail.com>
- <adcf6d0e-c37c-6ede-479e-29959d03d8c0@igalia.com>
-Message-ID: <YnpOv4hAPV4b+6v4@alley>
+ <20220427224924.592546-6-gpiccoli@igalia.com>
+Message-ID: <YnpXGOXicwdy1E6n@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue 2022-05-03 16:12:09, Guilherme G. Piccoli wrote:
-> On 03/05/2022 15:03, Evan Green wrote:
-> > [...]
-> > gsmi_shutdown_reason() is a common function called in other scenarios
-> > as well, like reboot and thermal trip, where it may still make sense
-> > to wait to acquire a spinlock. Maybe we should add a parameter to
-> > gsmi_shutdown_reason() so that you can get your change on panic, but
-> > we don't convert other callbacks into try-fail scenarios causing us to
-> > miss logs.
-> > 
+On Wed 2022-04-27 19:48:59, Guilherme G. Piccoli wrote:
+> The pvpanic driver relies on panic notifiers to execute a callback
+> on panic event. Such function is executed in atomic context - the
+> panic function disables local IRQs, preemption and all other CPUs
+> that aren't running the panic code.
 > 
-> Hi Evan, thanks for your feedback, much appreciated!
-> What I've done in other cases like this was to have a helper checking
-> the spinlock in the panic notifier - if we can acquire that, go ahead
-> but if not, bail out. For a proper example of an implementation, check
-> patch 13 of the series:
-> https://lore.kernel.org/lkml/20220427224924.592546-14-gpiccoli at igalia.com/ .
-> 
-> Do you agree with that, or prefer really a parameter in
-> gsmi_shutdown_reason() ? I'll follow your choice =)
+> With that said, it's dangerous to use regular spinlocks in such path,
+> as introduced by commit b3c0f8774668 ("misc/pvpanic: probe multiple instances").
+> This patch fixes that by replacing regular spinlocks with the trylock
+> safer approach.
 
-I see two more alternative solutions:
+It seems that the lock is used just to manipulating a list. A super
+safe solution would be to use the rcu API: rcu_add_rcu() and
+list_del_rcu() under rcu_read_lock(). The spin lock will not be
+needed and the list will always be valid.
 
-1st variant is a trick already used in console write() callbacks.
-They do trylock() when oops_in_progress is set. They remember
-the result to prevent double unlock when printing Oops messages and
-the system will try to continue working. For example:
+The advantage would be that it will always call members that
+were successfully added earlier. That said, I am not familiar
+with pvpanic and am not sure if it is worth it.
 
-pl011_console_write(struct console *co, const char *s, unsigned int count)
-{
-[...]
-	int locked = 1;
-[...]
-	if (uap->port.sysrq)
-		locked = 0;
-	else if (oops_in_progress)
-		locked = spin_trylock(&uap->port.lock);
-	else
-		spin_lock(&uap->port.lock);
+> It also fixes an old comment (about a long gone framebuffer code) and
+> the notifier priority - we should execute hypervisor notifiers early,
+> deferring this way the panic action to the hypervisor, as expected by
+> the users that are setting up pvpanic.
 
-[...]
-
-	if (locked)
-		spin_unlock(&uap->port.lock);
-}
-
-
-2nd variant is to check panic_cpu variable. It is used in printk.c.
-We might move the function to panic.h:
-
-static bool panic_in_progress(void)
-{
-	return unlikely(atomic_read(&panic_cpu) != PANIC_CPU_INVALID);
-}
-
-and then do:
-
-	if (panic_in_progress()) {
-		...
-
-
-> > Though thinking more about it, is this really a Good Change (TM)? The
-> > spinlock itself already disables interrupts, meaning the only case
-> > where this change makes a difference is if the panic happens from
-> > within the function that grabbed the spinlock (in which case the
-> > callback is also likely to panic), or in an NMI that panics within
-> > that window.
-
-As already mentioned in the other reply, panic() sometimes stops
-the other CPUs using NMI, for example, see kdump_nmi_shootdown_cpus().
-
-Another situation is when the CPU using the lock ends in some
-infinite loop because something went wrong. The system is in
-an unpredictable state during panic().
-
-I am not sure if this is possible with the code under gsmi_dev.lock
-but such things really happen during panic() in other subsystems.
-Using trylock in the panic() code path is a good practice.
+This should be done in a separate patch. It changes the behavior.
+Also there might be a discussion whether it really should be
+the maximal priority.
 
 Best Regards,
 Petr
