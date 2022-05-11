@@ -1,46 +1,62 @@
 From: Baoquan He <bhe@redhat.com>
-Date: Wed, 11 May 2022 18:09:49 +0800
-Subject: [PATCH v8 3/7] crash: add generic infrastructure for crash
- hotplug support
-In-Reply-To: <2da2e67a-864e-246b-b9d0-673c7af937b4@oracle.com>
+Date: Wed, 11 May 2022 18:11:13 +0800
+Subject: [PATCH v8 4/7] kexec: exclude elfcorehdr from the segment digest
+In-Reply-To: <20220505184603.1548-5-eric.devolder@oracle.com>
 References: <20220505184603.1548-1-eric.devolder@oracle.com>
- <20220505184603.1548-4-eric.devolder@oracle.com>
- <YnTKcvkCoRBxqGSW@MiWiFi-R3L-srv>
- <2da2e67a-864e-246b-b9d0-673c7af937b4@oracle.com>
-Message-ID: <20220511100949.GG122876@MiWiFi-R3L-srv>
+ <20220505184603.1548-5-eric.devolder@oracle.com>
+Message-ID: <20220511101113.GH122876@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/09/22 at 10:43am, Eric DeVolder wrote:
+On 05/05/22 at 02:46pm, Eric DeVolder wrote:
+> When a crash kernel is loaded via the kexec_file_load syscall, the
+> kernel places the various segments (ie crash kernel, crash initrd,
+> boot_params, elfcorehdr, purgatory, etc) in memory. For those
+> architectures that utilize purgatory, a hash digest of the segments
+> is calculated for integrity checking. This digest is embedded into
+> the purgatory image prior to placing purgatory in memory.
 > 
-> 
-> On 5/6/22 02:12, Baoquan He wrote:
-> > On 05/05/22 at 02:45pm, Eric DeVolder wrote:
-> > ......
-> > > diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> > > index 256cf6db573c..f197af50def6 100644
-> > > --- a/kernel/crash_core.c
-> > > +++ b/kernel/crash_core.c
-> > > @@ -9,12 +9,17 @@
-> > >   #include <linux/init.h>
-> > >   #include <linux/utsname.h>
-> > >   #include <linux/vmalloc.h>
-> > > +#include <linux/highmem.h>
-> > 
-> > Wondering where highmem.h is needed. Just curious.
-> 
-> Ahh, I missed that. At one point in time we moved map_crash_pages() into
-> this file, which brought highmem.h along with it. But we have since moved
-> map_crash_pages() into x86/crash.c. And I missed eliminating highmem.h at
-> that time.
-> 
-> I have removed this for v9.
+> Since hotplug events cause changes to the elfcorehdr, purgatory
+> integrity checking fails (at crash time, and no kdump created).
+> As a result, this change explicitly excludes the elfcorehdr segment
+> from the list of segments used to create the digest. By doing so,
+> this permits changes to the elfcorehdr in response to hotplug events,
+> without having to also reload purgatory due to the change to the
+> digest.
 
-That's nice, and you can add my ack when repost.
+Remember I acked this one. Seems that is dropped, assuming no change is
+made since v7. Anyway,
 
 Acked-by: Baoquan He <bhe@redhat.com>
+
+> 
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>  kernel/kexec_file.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 801d0d0a5012..aacdf93c3507 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -765,6 +765,12 @@ static int kexec_calculate_store_digests(struct kimage *image)
+>  	for (j = i = 0; i < image->nr_segments; i++) {
+>  		struct kexec_segment *ksegment;
+>  
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +		/* This segment excluded to allow future changes via hotplug */
+> +		if (image->elfcorehdr_index_valid && (j == image->elfcorehdr_index))
+> +			continue;
+> +#endif
+> +
+>  		ksegment = &image->segment[i];
+>  		/*
+>  		 * Skip purgatory as it will be modified once we put digest
+> -- 
+> 2.27.0
+> 
 
 
