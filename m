@@ -1,135 +1,81 @@
-From: arshad hussain <arshad.super@gmail.com>
-Date: Wed, 11 May 2022 13:42:40 +0530
-Subject: /etc/kdump/pre.d/* Not getting Executed
-Message-ID: <CAKsu7qxgzxKDH0PAhBMjvjNO_DvU01k-TLMm3__oHtVBLrVDgA@mail.gmail.com>
+From: Baoquan He <bhe@redhat.com>
+Date: Wed, 11 May 2022 17:06:51 +0800
+Subject: [PATCH] arm64: kdump: Do not allocate crash low memory if not
+ needed
+In-Reply-To: <20220511032033.426-1-thunder.leizhen@huawei.com>
+References: <20220511032033.426-1-thunder.leizhen@huawei.com>
+Message-ID: <Ynt8qwG9WoiW4L+o@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Hello,
+On 05/11/22 at 11:20am, Zhen Lei wrote:
+> When "crashkernel=X,high" is specified, the specified "crashkernel=Y,low"
+> memory is not required in the following corner cases:
+> 1. If both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, it means
+>    that the devices can access any memory.
+> 2. If the system memory is small, the crash high memory may be allocated
+>    from the DMA zones. If that happens, there's no need to allocate
+>    another crash low memory because there's already one.
+> 
+> Add condition '(crash_base >= CRASH_ADDR_LOW_MAX)' to determine whether
+> the 'high' memory is allocated above DMA zones. Note: when both
+> CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, the entire physical
+> memory is DMA accessible, CRASH_ADDR_LOW_MAX equals 'PHYS_MASK + 1'.
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  Documentation/admin-guide/kernel-parameters.txt | 5 +++--
+>  arch/arm64/mm/init.c                            | 3 ++-
+>  2 files changed, 5 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+> index f6ff55840751a78..1b543c3109f4851 100644
+> --- a/Documentation/admin-guide/kernel-parameters.txt
+> +++ b/Documentation/admin-guide/kernel-parameters.txt
+> @@ -823,7 +823,7 @@
+>  			low memory is needed to make sure DMA buffers for 32-bit
+>  			devices won't run out. Kernel would try to allocate
+>  			at least 256M below 4G automatically.
+> -			This one let user to specify own low range under 4G
+> +			This one lets the user specify own low range under 4G
+                        ~ This one let users specify own low range ...
 
-I am trying to run a custom script before the dump (ie
-/etc/kdump/pre.d/* ) which I am unable to do.
-I can say this, as the script is supposed to create a folder under
-/var/crash and a file which it is not. It also does not generate the
-vmcore file.
+Other than this nitpick, LGTM
 
-I am failing to understand what obvious step I am missing. Can someone
-please help out.
+Acked-by: Baoquan He <bhe@redhat.com>
 
-While the "echo c > /proc/sysrq-trigger" successfully reboots the
-output is not what is expected.
+>  			for second kernel instead.
+>  			0: to disable low allocation.
+>  			It will be ignored when crashkernel=X,high is not used
+> @@ -832,7 +832,8 @@
+>  			[KNL, ARM64] range in low memory.
+>  			This one lets the user specify a low range in the
+>  			DMA zone for the crash dump kernel.
+> -			It will be ignored when crashkernel=X,high is not used.
+> +			It will be ignored when crashkernel=X,high is not used
+> +			or memory reserved is located in the DMA zones.
+>  
+>  	cryptomgr.notests
+>  			[KNL] Disable crypto self-tests
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index 18ba66c90991ea0..ac510fb6a2c0189 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -170,7 +170,8 @@ static void __init reserve_crashkernel(void)
+>  		return;
+>  	}
+>  
+> -	if (crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+> +	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
+> +	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+>  		memblock_phys_free(crash_base, crash_size);
+>  		return;
+>  	}
+> -- 
+> 2.25.1
+> 
 
-Here is my setup for kdump/kexec.
-
-Thanks!
-
--------Expected output-------
-01. Under /var/crash we should be having a folder as "DBGMSG-<date>".
-02. Under /var/crash we should be having a file as "test512".
-03. vmcore file
-04. dmesg file
-
--------current output-------
-Nothing under /var/crash
-
--------Below are the info and conf script details-------
-# uname -a (Kernel version)
-Linux rocky8 4.18.0-240.1.1.el8.x86_64 #1 SMP Fri Feb 19 20:41:01 UTC
-2021 x86_64 x86_64 x86_64 GNU/Linux
-
-# rpm -qa | grep -i kexec (kexec-tool version)
-kexec-tools-2.0.20-46.el8.x86_64
-
-# cat /proc/cmdline
-BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-240.1.1.el8.x86_64
-root=UUID=<UUID...> ro crashkernel=128M resume=UUID=<UUID...>
-
-
-------/etc/kdump.conf-------
-path /var/crash
-core_collector makedumpfile -l --message-level 7 -d 31
-extra_bins /var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
-kdump_pre /var/crash/kdumppre.sh
-force_rebuild 1
-
-# tree /etc/kdump/
-/etc/kdump/
-??? post.d
-??? pre.d
-    ??? 50-collect.sh
-
--------/etc/kdump/pre.d/50-collect.sh-------
-#!/bin/bash
-
-# base location
-LOC=/sysroot/var/crash
-# dbgmsg identifier string
-DBGMSG="DBGMSG"
-# log file
-LFILE=log.out
-# Granularity in seconds
-LOCFOLDER=${LOC}/$DBGMSG-$(date +%Y-%m-%d:%H:%M:%S)
-
-# Create folder.
-mkdir -p $LOCFOLDER
-
-if [ -f "/proc/spl/kstat/zfs/dbgmsg" ]; then
-    echo "/proc/spl/kstat/zfs/dbgmsg found" >> $LOCFOLDER/$LFILE
-    cat /proc/spl/kstat/zfs/dbgmsg >> $LOCFOLDER/$LFILE
-else
-    echo "/proc/spl/kstat/zfs/dbgmsg not found" >> $LOCFOLDER/$LFILE
-fi
-
-exit 0
-
--------/var/crash/kdumppre.sh-------
-#!/bin/bash
-echo "Test512.......$(date)" >> /sysroot/var/carsh/test512
-exit 0
-
-
-(Lines starting with [Debug] is the debug statement put for debugging
-to verify if we are picking up correct key=value pairs)
-# kdumpctl restart
-kdump: DEFAULT_DUMP_MODE=kdump
-kdump: kexec: unloaded kdump kernel
-kdump: Stopping kdump: [OK]
-[DEBUG]found config... path : /var/crash
-[DEBUG]found config... core_collector : makedumpfile -l --message-level 7 -d 31
-[DEBUG]found config... extra_bins : /var/crash/kdumppre.sh /bin/bash
-/usr/bin/cat /usr/bin/date
-[DEBUG]found config... kdump_pre : /var/crash/kdumppre.sh
-[DEBUG]found config... force_rebuild : 1
-kdump: restore default initrd:
-/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64.img
-[DEBUG]files=/etc/kdump.conf
-/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64  /var/crash/kdumppre.sh
-/var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
-/usr/sbin/makedumpfile
-[DEBUG]hook files=/etc/kdump.conf
-/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64  /var/crash/kdumppre.sh
-/var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
-/usr/sbin/makedumpfile /etc/fstab /etc/kdump/post.d/ /etc/kdump/pre.d/
-  /etc/kdump/pre.d/50-collect.sh :: /etc/kdump/post.d/
-/etc/kdump/pre.d/   /etc/kdump/pre.d/50-collect.sh
-kdump: Detected change(s) in the following file(s):  /etc/kdump/pre.d/
-kdump: Force rebuild /boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
-kdump: Rebuilding /boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
-kdump: rebuild kdump initrd: /sbin/mkdumprd -f
-/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
-4.18.0-240.1.1.el8_lustre.x86_64
-kdump: /sbin/kexec -s -d -p
---command-line=BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64
-ro resume=UUID=d5fad714-147f-419c-a8ea-9e7984b0ef2f irqpoll nr_cpus=1
-reset_devices cgroup_disable=memory mce=off numa=off
-udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug
-transparent_hugepage=never nokaslr novmcoredd hest_disable
-disable_cpu_apicid=0
---initrd=/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
-/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64
-kdump: kexec: loaded kdump kernel
-kdump: Starting kdump: [OK]
 
