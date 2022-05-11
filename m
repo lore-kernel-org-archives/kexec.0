@@ -1,114 +1,70 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Wed, 11 May 2022 01:50:58 +0000
-Subject: [PATCH] Makefile: Avoid installing files in /etc
-In-Reply-To: <20220504165703.747333-1-gpiccoli@igalia.com>
-References: <20220504165703.747333-1-gpiccoli@igalia.com>
-Message-ID: <TYYPR01MB6777EDEDDCA5B2C32644730DDDC89@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Zhen Lei <thunder.leizhen@huawei.com>
+Date: Wed, 11 May 2022 11:20:32 +0800
+Subject: [PATCH] arm64: kdump: Do not allocate crash low memory if not needed
+Message-ID: <20220511032033.426-1-thunder.leizhen@huawei.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> Some Linux distros rely on having files in /etc (Debian, et al.),
-> others in *not* having them in such directory (like Arch Linux).
-> Fact is that the former distros have no issues in installing files
-> elsewhere, whereas Arch has issues in installing files on /etc,
-> specially if such files are present there when user try to reinstall
-> the packages - it fails. Arch packaging doesn't try to be smart as dpkg
-> for example (that compares config files to determine if user changed that).
-> 
-> With all of that said, this patch moves the sample conf file to
-> /usr/share, a move that is well-tolerated in all distros and shouldn't
-> cause regressions in packaging. Also, if some Linux distribution likes
-> the idea of adding files in /etc, they can tune it in their packaging
-> configuration scripts for makedumpfile, but we shouldn't have that
-> as default in the Makefile.
+When "crashkernel=X,high" is specified, the specified "crashkernel=Y,low"
+memory is not required in the following corner cases:
+1. If both CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, it means
+   that the devices can access any memory.
+2. If the system memory is small, the crash high memory may be allocated
+   from the DMA zones. If that happens, there's no need to allocate
+   another crash low memory because there's already one.
 
-Fair enough, and as far as I've checked:
+Add condition '(crash_base >= CRASH_ADDR_LOW_MAX)' to determine whether
+the 'high' memory is allocated above DMA zones. Note: when both
+CONFIG_ZONE_DMA and CONFIG_ZONE_DMA32 are disabled, the entire physical
+memory is DMA accessible, CRASH_ADDR_LOW_MAX equals 'PHYS_MASK + 1'.
 
-- The makedumpfile.conf.sample file does not need to be in /etc, because
-makedumpfile does not have any default path for it and reads a config
-file only when specified with --config option.
-(and IMO it's better to place such a sample config file, used rarely,
-in /usr/share.)
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt | 5 +++--
+ arch/arm64/mm/init.c                            | 3 ++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
-- Fedora/RHEL kexec-tools packaging does not use "make install" and have
-their own install command, at least this patch will not affect them:
-https://src.fedoraproject.org/rpms/kexec-tools/blob/main/f/kexec-tools.spec#_225
-
-- Debian/Ubuntu makedumpfile packages apparently do not have the file:
-https://packages.debian.org/sid/amd64/makedumpfile/filelist
-
-On the whole I will accept this.
-
-> Notice that this patch intentionally skips
-> the change for the .spec file, which aims specific distros, by creating
-> RPM packages.
-
-However, the .spec file depends on "make install", so I will add this:
-
-diff --git a/makedumpfile.spec b/makedumpfile.spec
-index ef619b8c8af9..fd9efa0639cc 100644
---- a/makedumpfile.spec
-+++ b/makedumpfile.spec
-@@ -25,7 +25,6 @@ make LINKTYPE=dynamic
- %install
- rm -rf %{buildroot}
- mkdir -p %{buildroot}/usr/sbin
--mkdir -p %{buildroot}/etc
- mkdir -p %{buildroot}/usr/share/man/man5
- mkdir -p %{buildroot}/usr/share/man/man8
- mkdir -p %{buildroot}/usr/share/%{name}-%{version}/eppic-scripts/
-@@ -35,11 +34,11 @@ make install DESTDIR=%{buildroot}
- rm -rf %{buildroot}
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index f6ff55840751a78..1b543c3109f4851 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -823,7 +823,7 @@
+ 			low memory is needed to make sure DMA buffers for 32-bit
+ 			devices won't run out. Kernel would try to allocate
+ 			at least 256M below 4G automatically.
+-			This one let user to specify own low range under 4G
++			This one lets the user specify own low range under 4G
+ 			for second kernel instead.
+ 			0: to disable low allocation.
+ 			It will be ignored when crashkernel=X,high is not used
+@@ -832,7 +832,8 @@
+ 			[KNL, ARM64] range in low memory.
+ 			This one lets the user specify a low range in the
+ 			DMA zone for the crash dump kernel.
+-			It will be ignored when crashkernel=X,high is not used.
++			It will be ignored when crashkernel=X,high is not used
++			or memory reserved is located in the DMA zones.
  
- %files
--/etc/makedumpfile.conf.sample
- /usr/sbin/makedumpfile
- /usr/sbin/makedumpfile-R.pl
- /usr/share/man/man5/makedumpfile.conf.5.gz
- /usr/share/man/man8/makedumpfile.8.gz
-+/usr/share/%{name}-%{version}/makedumpfile.conf.sample
- /usr/share/%{name}-%{version}/eppic_scripts/
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 18ba66c90991ea0..ac510fb6a2c0189 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -170,7 +170,8 @@ static void __init reserve_crashkernel(void)
+ 		return;
+ 	}
  
- %changelog
-
-> 
-> Cc: Coiby Xu <coxu@redhat.com>
-> Cc: Kazuhito Hagio <k-hagio-ab@nec.com>
-> Cc: Leonidas Spyropoulos <artafinde@archlinux.org>
-> Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
-> ---
->  Makefile | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Makefile b/Makefile
-> index cc6b0120aa7d..014be8110836 100644
-> --- a/Makefile
-> +++ b/Makefile
-> @@ -130,6 +130,6 @@ install:
->  	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
->  	install -m 644 -t ${DESTDIR}/usr/share/man/man8 makedumpfile.8
->  	install -m 644 -t ${DESTDIR}/usr/share/man/man5 makedumpfile.conf.5
-> -	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/etc/makedumpfile.conf.sample
->  	mkdir -p ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts
-> +	install -m 644 -D $(VPATH)makedumpfile.conf ${DESTDIR}/usr/share/makedumpfile-${VERSION}/makedumpfile.conf.sample
->  	install -m 644 -t ${DESTDIR}/usr/share/makedumpfile-${VERSION}/eppic_scripts/ $(VPATH)eppic_scripts/*
-> --
-> 2.36.0
-
-The creation of ${DESTDIR}/etc is also not needed, will remove it and merge.
-
-install:
--	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
-+	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
- 	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
-
-Please let me know if any problem.
-
-Thanks,
-Kazu
+-	if (crash_low_size && reserve_crashkernel_low(crash_low_size)) {
++	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
++	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+ 		memblock_phys_free(crash_base, crash_size);
+ 		return;
+ 	}
+-- 
+2.25.1
 
 
