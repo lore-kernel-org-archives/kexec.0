@@ -1,76 +1,87 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Wed, 11 May 2022 18:13:09 +0800
-Subject: [PATCH v8 5/7] kexec: exclude hot remove cpu from elfcorehdr notes
-In-Reply-To: <20220505184603.1548-6-eric.devolder@oracle.com>
-References: <20220505184603.1548-1-eric.devolder@oracle.com>
- <20220505184603.1548-6-eric.devolder@oracle.com>
-Message-ID: <20220511101309.GI122876@MiWiFi-R3L-srv>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Wed, 11 May 2022 08:40:23 -0300
+Subject: [PATCH] Makefile: Avoid installing files in /etc
+In-Reply-To: <TYYPR01MB6777EDEDDCA5B2C32644730DDDC89@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+References: <20220504165703.747333-1-gpiccoli@igalia.com>
+ <TYYPR01MB6777EDEDDCA5B2C32644730DDDC89@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+Message-ID: <86f59a63-1ed1-7b7a-55b5-252968a19e62@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/05/22 at 02:46pm, Eric DeVolder wrote:
-> Due to use of CPUHP_AP_ONLINE_DYN, upon CPU unplug, the CPU is
-> still in the for_each_present_cpu() list when within the
-> handle_hotplug_event(). Thus the CPU must be explicitly excluded
-> when building the new list of CPUs.
+On 10/05/2022 22:50, HAGIO KAZUHITO(?? ??) wrote:
+> [...]
 > 
-> This change identifies in handle_hotplug_event() the CPU to be
-> excluded, and the check for excluding the CPU in
-> crash_prepare_elf64_headers().
+> Fair enough, and as far as I've checked:
 > 
-> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
-
-LGTM,
-
-Acked-by: Baoquan He <bhe@redhat.com>
-
-> ---
->  kernel/crash_core.c | 10 ++++++++++
->  kernel/kexec_file.c |  5 +++++
->  2 files changed, 15 insertions(+)
+> - The makedumpfile.conf.sample file does not need to be in /etc, because
+> makedumpfile does not have any default path for it and reads a config
+> file only when specified with --config option.
+> (and IMO it's better to place such a sample config file, used rarely,
+> in /usr/share.)
 > 
-> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-> index f197af50def6..7ba43f058d82 100644
-> --- a/kernel/crash_core.c
-> +++ b/kernel/crash_core.c
-> @@ -520,6 +520,16 @@ static void handle_hotplug_event(unsigned int hp_action, unsigned int cpu)
->  		/* Flag to differentiate between normal load and hotplug */
->  		kexec_crash_image->hotplug_event = true;
+> - Fedora/RHEL kexec-tools packaging does not use "make install" and have
+> their own install command, at least this patch will not affect them:
+> https://src.fedoraproject.org/rpms/kexec-tools/blob/main/f/kexec-tools.spec#_225
+> 
+> - Debian/Ubuntu makedumpfile packages apparently do not have the file:
+> https://packages.debian.org/sid/amd64/makedumpfile/filelist
+> 
+> On the whole I will accept this.
+> 
+>> Notice that this patch intentionally skips
+>> the change for the .spec file, which aims specific distros, by creating
+>> RPM packages.
+> 
+> However, the .spec file depends on "make install", so I will add this:
+> 
+> diff --git a/makedumpfile.spec b/makedumpfile.spec
+> index ef619b8c8af9..fd9efa0639cc 100644
+> --- a/makedumpfile.spec
+> +++ b/makedumpfile.spec
+> @@ -25,7 +25,6 @@ make LINKTYPE=dynamic
+>  %install
+>  rm -rf %{buildroot}
+>  mkdir -p %{buildroot}/usr/sbin
+> -mkdir -p %{buildroot}/etc
+>  mkdir -p %{buildroot}/usr/share/man/man5
+>  mkdir -p %{buildroot}/usr/share/man/man8
+>  mkdir -p %{buildroot}/usr/share/%{name}-%{version}/eppic-scripts/
+> @@ -35,11 +34,11 @@ make install DESTDIR=%{buildroot}
+>  rm -rf %{buildroot}
 >  
-> +		/*
-> +		 * Due to use of CPUHP_AP_ONLINE_DYN, upon unplug and during
-> +		 * this callback, the CPU is still in the for_each_present_cpu()
-> +		 * list. Must explicitly look to exclude this CPU when building
-> +		 * new list.
-> +		 */
-> +		kexec_crash_image->offlinecpu =
-> +			(hp_action == KEXEC_CRASH_HP_REMOVE_CPU) ?
-> +				cpu : KEXEC_CRASH_HP_INVALID_CPU;
-> +
->  		/* Now invoke arch-specific update handler */
->  		arch_crash_handle_hotplug_event(kexec_crash_image, hp_action, cpu);
+>  %files
+> -/etc/makedumpfile.conf.sample
+>  /usr/sbin/makedumpfile
+>  /usr/sbin/makedumpfile-R.pl
+>  /usr/share/man/man5/makedumpfile.conf.5.gz
+>  /usr/share/man/man8/makedumpfile.8.gz
+> +/usr/share/%{name}-%{version}/makedumpfile.conf.sample
+>  /usr/share/%{name}-%{version}/eppic_scripts/
 >  
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index aacdf93c3507..d68e5769b428 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -1314,6 +1314,11 @@ int crash_prepare_elf64_headers(struct kimage *image, struct crash_mem *mem,
->  
->  	/* Prepare one phdr of type PT_NOTE for each present CPU */
->  	for_each_present_cpu(cpu) {
-> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
-> +		/* Skip the soon-to-be offlined cpu */
-> +		if (image->hotplug_event && (cpu == image->offlinecpu))
-> +			continue;
-> +#endif
->  		phdr->p_type = PT_NOTE;
->  		notes_addr = per_cpu_ptr_to_phys(per_cpu_ptr(crash_notes, cpu));
->  		phdr->p_offset = phdr->p_paddr = notes_addr;
-> -- 
-> 2.27.0
+>  %changelog
+> 
+>> [...]
+> The creation of ${DESTDIR}/etc is also not needed, will remove it and merge.
+> 
+> install:
+> -	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8 ${DESTDIR}/etc
+> +	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
+>  	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
+> 
+> Please let me know if any problem.
+> 
+> Thanks,
+> Kazu
 > 
 
+Hi Kazu, this is perfect - thanks a bunch for the great analysis. Feel
+free to merge with your changes, it's much appreciated =)
+
+Cheers,
+
+
+Guilherme
 
