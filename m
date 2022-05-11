@@ -1,76 +1,49 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Wed, 11 May 2022 13:45:41 +0200
-Subject: [PATCH 17/30] tracing: Improve panic/die notifiers
-In-Reply-To: <20220427224924.592546-18-gpiccoli@igalia.com>
+From: Heiko Carstens <hca@linux.ibm.com>
+Date: Wed, 11 May 2022 18:45:49 +0200
+Subject: [PATCH 22/30] panic: Introduce the panic post-reboot notifier list
+In-Reply-To: <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-18-gpiccoli@igalia.com>
-Message-ID: <20220511114541.GC26047@pathway.suse.cz>
+ <20220427224924.592546-23-gpiccoli@igalia.com>
+ <7017c234-7c73-524a-11b6-fefdd5646f59@igalia.com>
+Message-ID: <YnvoPe2cTS31qbjb@osiris>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed 2022-04-27 19:49:11, Guilherme G. Piccoli wrote:
-> Currently the tracing dump_on_oops feature is implemented
-> through separate notifiers, one for die/oops and the other
-> for panic. With the addition of panic notifier "id", this
-> patch makes use of such "id" to unify both functions.
+On Mon, May 09, 2022 at 11:16:10AM -0300, Guilherme G. Piccoli wrote:
+> On 27/04/2022 19:49, Guilherme G. Piccoli wrote:
+> > Currently we have 3 notifier lists in the panic path, which will
+> > be wired in a way to allow the notifier callbacks to run in
+> > different moments at panic time, in a subsequent patch.
+> > 
+> > But there is also an odd set of architecture calls hardcoded in
+> > the end of panic path, after the restart machinery. They're
+> > responsible for late time tunings / events, like enabling a stop
+> > button (Sparc) or effectively stopping the machine (s390).
+> > 
+> > This patch introduces yet another notifier list to offer the
+> > architectures a way to add callbacks in such late moment on
+> > panic path without the need of ifdefs / hardcoded approaches.
+> > 
+> > Cc: Alexander Gordeev <agordeev@linux.ibm.com>
+> > Cc: Christian Borntraeger <borntraeger@linux.ibm.com>
+> > Cc: "David S. Miller" <davem@davemloft.net>
+> > Cc: Heiko Carstens <hca@linux.ibm.com>
+> > Cc: Sven Schnelle <svens@linux.ibm.com>
+> > Cc: Vasily Gorbik <gor@linux.ibm.com>
+> > Signed-off-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
 > 
-> It also comments the function and changes the priority of the
-> notifier blocks, in order they run early compared to other
-> notifiers, to prevent useless trace data (like the callback
-> names for the other notifiers). Finally, we also removed an
-> unnecessary header inclusion.
+> Hey S390/SPARC folks, sorry for the ping!
 > 
-> --- a/kernel/trace/trace.c
-> +++ b/kernel/trace/trace.c
-> @@ -9767,38 +9766,46 @@ static __init int tracer_init_tracefs(void)
->  
->  fs_initcall(tracer_init_tracefs);
->  
-> -static int trace_panic_handler(struct notifier_block *this,
-> -			       unsigned long event, void *unused)
-> +/*
-> + * The idea is to execute the following die/panic callback early, in order
-> + * to avoid showing irrelevant information in the trace (like other panic
-> + * notifier functions); we are the 2nd to run, after hung_task/rcu_stall
-> + * warnings get disabled (to prevent potential log flooding).
-> + */
-> +static int trace_die_panic_handler(struct notifier_block *self,
-> +				unsigned long ev, void *unused)
->  {
-> -	if (ftrace_dump_on_oops)
-> +	int do_dump;
-> +
-> +	if (!ftrace_dump_on_oops)
-> +		return NOTIFY_DONE;
-> +
-> +	switch (ev) {
-> +	case DIE_OOPS:
-> +		do_dump = 1;
-> +		break;
-> +	case PANIC_NOTIFIER:
-> +		do_dump = 1;
-> +		break;
+> Any reviews on this V1 would be greatly appreciated, I'm working on V2
+> and seeking feedback in the non-reviewed patches.
 
-DIE_OOPS and PANIC_NOTIFIER are from different enum.
-It feels like comparing apples with oranges here.
+Sorry, missed that this is quite s390 specific. So, yes, this looks
+good to me and nice to see that one of the remaining CONFIG_S390 in
+common code will be removed!
 
-IMHO, the proper way to unify the two notifiers is
-a check of the @self parameter. Something like:
-
-static int trace_die_panic_handler(struct notifier_block *self,
-				unsigned long ev, void *unused)
-{
-	if (self == trace_die_notifier && val != DIE_OOPS)
-		goto out;
-
-	ftrace_dump(ftrace_dump_on_oops);
-out:
-	return NOTIFY_DONE;
-}
-
-Best Regards,
-Petr
+For the s390 bits:
+Acked-by: Heiko Carstens <hca@linux.ibm.com>
 
