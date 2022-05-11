@@ -1,44 +1,41 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Wed, 11 May 2022 17:03:51 -0300
-Subject: [PATCH 23/30] printk: kmsg_dump: Introduce helper to inform
- number of dumpers
-In-Reply-To: <20220510134014.3923ccba@gandalf.local.home>
+Date: Wed, 11 May 2022 17:10:06 -0300
+Subject: [PATCH 10/30] alpha: Clean-up the panic notifier code
+In-Reply-To: <YnpzpkfuwzJYbPYj@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-24-gpiccoli@igalia.com>
- <20220510134014.3923ccba@gandalf.local.home>
-Message-ID: <c8818906-f113-82b6-b58b-d47ae0c16b4f@igalia.com>
+ <20220427224924.592546-11-gpiccoli@igalia.com>
+ <f6def662-5742-b3a8-544f-bf15c636d83d@igalia.com> <YnpzpkfuwzJYbPYj@alley>
+Message-ID: <37190938-8133-aafa-ea4a-e50f574dd73b@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 10/05/2022 14:40, Steven Rostedt wrote:
-> On Wed, 27 Apr 2022 19:49:17 -0300
-> "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+On 10/05/2022 11:16, Petr Mladek wrote:
+> [...]
+> Yeah, it is pretty strange behavior.
 > 
->> Currently we don't have a way to check if there are dumpers set,
->> except counting the list members maybe. This patch introduces a very
->> simple helper to provide this information, by just keeping track of
->> registered/unregistered kmsg dumpers. It's going to be used on the
->> panic path in the subsequent patch.
+> I looked into the history. This notifier was added into the alpha code
+> in 2.4.0-test2pre2. In this historic code, the default panic() code
+> either rebooted after a timeout or ended in a infinite loop. There
+> was not crasdump at that times.
 > 
-> FYI, it is considered "bad form" to reference in the change log "this
-> patch". We know this is a patch. The change log should just talk about what
-> is being done. So can you reword your change logs (you do this is almost
-> every patch). Here's what I would reword the above to be:
+> The notifier allowed to change the behavior. There were 3 notifiers:
 > 
->  Currently we don't have a way to check if there are dumpers set, except
->  perhaps by counting the list members. Introduce a very simple helper to
->  provide this information, by just keeping track of registered/unregistered
->  kmsg dumpers. This will simplify the refactoring of the panic path.
+>    + mips and mips64 ended with blinking in panic()
+>    + alpha did __halt() in this srm case
+> 
+> They both still do this. I guess that it is some historic behavior
+> that people using these architectures are used to.
+> 
+> Anyway, it makes sense to do this as the last notifier after
+> dumping other information.
+> 
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
+> 
+> Best Regards,
+> Petr
 
-Thanks for the hint, you're right - it's almost in all of my patches.
-I'll reword all of them (except the ones already merged) to remove this
-"bad form".
-
-Cheers,
-
-
-Guilherme
+Thanks a bunch for the review - added your tag for V2 =)
 
