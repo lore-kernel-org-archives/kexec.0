@@ -1,7 +1,7 @@
 From: arshad hussain <arshad.super@gmail.com>
-Date: Wed, 11 May 2022 13:38:26 +0530
-Subject: kump/etc/pre.d/* Not getting executed.
-Message-ID: <CAKsu7qwGQTfjGyt9WAuU=0wPwJBO_drcfTAYWF3SPt=ZO17i8A@mail.gmail.com>
+Date: Wed, 11 May 2022 13:42:40 +0530
+Subject: /etc/kdump/pre.d/* Not getting Executed
+Message-ID: <CAKsu7qxgzxKDH0PAhBMjvjNO_DvU01k-TLMm3__oHtVBLrVDgA@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
