@@ -1,130 +1,135 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Tue, 10 May 2022 17:11:08 -0300
-Subject: [PATCH 01/30] x86/crash,reboot: Avoid re-disabling VMX in all
- CPUs on crash/restart
-In-Reply-To: <Ynk40U/KA+hLBZRC@google.com>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-2-gpiccoli@igalia.com> <Ynk40U/KA+hLBZRC@google.com>
-Message-ID: <24a56892-adb3-809c-8c35-b5b5f001c283@igalia.com>
+From: arshad hussain <arshad.super@gmail.com>
+Date: Wed, 11 May 2022 13:38:26 +0530
+Subject: kump/etc/pre.d/* Not getting executed.
+Message-ID: <CAKsu7qwGQTfjGyt9WAuU=0wPwJBO_drcfTAYWF3SPt=ZO17i8A@mail.gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 09/05/2022 12:52, Sean Christopherson wrote:
-> I find the shortlog to be very confusing, the bug has nothing to do with disabling
-> VMX and I distinctly remember wrapping VMXOFF with exception fixup to prevent doom
-> if VMX is already disabled :-).  The issue is really that nmi_shootdown_cpus() doesn't
-> play nice with being called twice.
-> 
+Hello,
 
-Hey Sean, OK - I agree with you, the issue is really about the double
-list addition.
+I am trying to run a custom script before the dump (ie
+/etc/kdump/pre.d/* ) which I am unable to do.
+I can say this, as the script is supposed to create a folder under
+/var/crash and a file which it is not. It also does not generate the
+vmcore file.
 
-> [...]
-> 
-> Call stacks for the two callers would be very, very helpful.
-> [...]
+I am failing to understand what obvious step I am missing. Can someone
+please help out.
 
-> This feels like were just adding more duct tape to the mess.  nmi_shootdown() is
-> still unsafe for more than one caller, and it takes a _lot_ of staring and searching
-> to understand that crash_smp_send_stop() is invoked iff CONFIG_KEXEC_CORE=y, i.e.
-> that it will call smp_ops.crash_stop_other_cpus() and not just smp_send_stop().
-> 
-> Rather than shared a flag between two relatively unrelated functions, what if we
-> instead disabling virtualization in crash_nmi_callback() and then turn the reboot
-> call into a nop if an NMI shootdown has already occurred?  That will also add a
-> bit of documentation about multiple shootdowns not working.
-> 
-> And I believe there's also a lurking bug in native_machine_emergency_restart() that
-> can be fixed with cleanup.  SVM can also block INIT and so should be disabled during
-> an emergency reboot.
-> 
-> The attached patches are compile tested only.  If they seem sane, I'll post an
-> official mini series.
+While the "echo c > /proc/sysrq-trigger" successfully reboots the
+output is not what is expected.
 
-Thanks Sean, it makes sense - my patch is more a "band-aid" whereas
-yours fixes it in a more generic way. Confess I found the logic of your
-patch complex, but as you said, it requires a *lot* of code analysis to
-understand these multiple shutdown patches, the problem is complicated
-by nature heh
+Here is my setup for kdump/kexec.
 
-I've tested your patch 0001 and it works well for all cases [0], so go
-ahead and submit the miniseries, feel free to add:
+Thanks!
 
-Reported-and-tested-by: Guilherme G. Piccoli <gpiccoli@igalia.com>
+-------Expected output-------
+01. Under /var/crash we should be having a folder as "DBGMSG-<date>".
+02. Under /var/crash we should be having a file as "test512".
+03. vmcore file
+04. dmesg file
+
+-------current output-------
+Nothing under /var/crash
+
+-------Below are the info and conf script details-------
+# uname -a (Kernel version)
+Linux rocky8 4.18.0-240.1.1.el8.x86_64 #1 SMP Fri Feb 19 20:41:01 UTC
+2021 x86_64 x86_64 x86_64 GNU/Linux
+
+# rpm -qa | grep -i kexec (kexec-tool version)
+kexec-tools-2.0.20-46.el8.x86_64
+
+# cat /proc/cmdline
+BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-240.1.1.el8.x86_64
+root=UUID=<UUID...> ro crashkernel=128M resume=UUID=<UUID...>
 
 
-I've read patch 0002 and it makes sense to me as well, a good proactive
-bug fix =)
+------/etc/kdump.conf-------
+path /var/crash
+core_collector makedumpfile -l --message-level 7 -d 31
+extra_bins /var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
+kdump_pre /var/crash/kdumppre.sh
+force_rebuild 1
 
-With that said, I'll of course drop this one from V2 of this series.
-Cheers,
+# tree /etc/kdump/
+/etc/kdump/
+??? post.d
+??? pre.d
+    ??? 50-collect.sh
 
+-------/etc/kdump/pre.d/50-collect.sh-------
+#!/bin/bash
 
-Guilherme
+# base location
+LOC=/sysroot/var/crash
+# dbgmsg identifier string
+DBGMSG="DBGMSG"
+# log file
+LFILE=log.out
+# Granularity in seconds
+LOCFOLDER=${LOC}/$DBGMSG-$(date +%Y-%m-%d:%H:%M:%S)
 
+# Create folder.
+mkdir -p $LOCFOLDER
 
+if [ -f "/proc/spl/kstat/zfs/dbgmsg" ]; then
+    echo "/proc/spl/kstat/zfs/dbgmsg found" >> $LOCFOLDER/$LFILE
+    cat /proc/spl/kstat/zfs/dbgmsg >> $LOCFOLDER/$LFILE
+else
+    echo "/proc/spl/kstat/zfs/dbgmsg not found" >> $LOCFOLDER/$LFILE
+fi
 
+exit 0
 
-[0]
-A summary of my tests and the code paths that the panic shutdown take
-depending on some conditions:
-
-New function that disables VMX/SVM: cpu_crash_disable_virtualization()
-[should be executed in every online CPU on shutdown)
-
-The panic path triggers the following call stacks depending on kdump and
-post_notifiers:
-
-
-(1) kexec/kdump + !crash_kexec_post_notifiers
-->machine_crash_shutdown()
-----.crash_shutdown() <custom handler>
-------native_machine_crash_shutdown() [all custom handlers except Xen PV
-call the native generic function]
---------crash_smp_send_stop()
-----------kdump_nmi_shootdown_cpus()
-------------nmi_shootdown_cpus(kdump_nmi_callback)
---------------crash_nmi_callback()
-----------------kdump_nmi_callback()
-------------------cpu_crash_disable_virtualization()
-
-
-(2) kexec/kdump + crash_kexec_post_notifiers
-->crash_smp_send_stop()
-----kdump_nmi_shootdown_cpus()
-------nmi_shootdown_cpus(kdump_nmi_callback)
---------crash_nmi_callback()
-----------kdump_nmi_callback()
-------------cpu_crash_disable_virtualization()
-
-After this path, will execute machine_crash_shutdown() but
-crash_smp_send_stop()
-is guarded against double execution. Also, emergency restart calls
-emergency_vmx_disable_all() .
+-------/var/crash/kdumppre.sh-------
+#!/bin/bash
+echo "Test512.......$(date)" >> /sysroot/var/carsh/test512
+exit 0
 
 
-(3) !kexec/kdump + crash_kexec_post_notifiers
-
-Same as (2)
-
-
-(4) !kexec/kdump + !crash_kexec_post_notifiers
--> smp_send_stop()
-----native_stop_other_cpus()
-------apic_send_IPI_allbutself(REBOOT_VECTOR)
---------sysvec_reboot
-----------cpu_emergency_vmxoff() <if the IPI approach succeeded, CPU
-stopped here>
-
-If not:
-------register_stop_handler()
---------apic_send_IPI_allbutself(NMI_VECTOR)
-----------smp_stop_nmi_callback()
-------------cpu_emergency_vmxoff()
-
-After that, emergency_vmx_disable_all() gets called in the emergency
-restart path as well.
+(Lines starting with [Debug] is the debug statement put for debugging
+to verify if we are picking up correct key=value pairs)
+# kdumpctl restart
+kdump: DEFAULT_DUMP_MODE=kdump
+kdump: kexec: unloaded kdump kernel
+kdump: Stopping kdump: [OK]
+[DEBUG]found config... path : /var/crash
+[DEBUG]found config... core_collector : makedumpfile -l --message-level 7 -d 31
+[DEBUG]found config... extra_bins : /var/crash/kdumppre.sh /bin/bash
+/usr/bin/cat /usr/bin/date
+[DEBUG]found config... kdump_pre : /var/crash/kdumppre.sh
+[DEBUG]found config... force_rebuild : 1
+kdump: restore default initrd:
+/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64.img
+[DEBUG]files=/etc/kdump.conf
+/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64  /var/crash/kdumppre.sh
+/var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
+/usr/sbin/makedumpfile
+[DEBUG]hook files=/etc/kdump.conf
+/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64  /var/crash/kdumppre.sh
+/var/crash/kdumppre.sh /bin/bash /usr/bin/cat /usr/bin/date
+/usr/sbin/makedumpfile /etc/fstab /etc/kdump/post.d/ /etc/kdump/pre.d/
+  /etc/kdump/pre.d/50-collect.sh :: /etc/kdump/post.d/
+/etc/kdump/pre.d/   /etc/kdump/pre.d/50-collect.sh
+kdump: Detected change(s) in the following file(s):  /etc/kdump/pre.d/
+kdump: Force rebuild /boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
+kdump: Rebuilding /boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
+kdump: rebuild kdump initrd: /sbin/mkdumprd -f
+/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
+4.18.0-240.1.1.el8_lustre.x86_64
+kdump: /sbin/kexec -s -d -p
+--command-line=BOOT_IMAGE=(hd0,msdos1)/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64
+ro resume=UUID=d5fad714-147f-419c-a8ea-9e7984b0ef2f irqpoll nr_cpus=1
+reset_devices cgroup_disable=memory mce=off numa=off
+udev.children-max=2 panic=10 rootflags=nofail acpi_no_memhotplug
+transparent_hugepage=never nokaslr novmcoredd hest_disable
+disable_cpu_apicid=0
+--initrd=/boot/initramfs-4.18.0-240.1.1.el8_lustre.x86_64kdump.img
+/boot/vmlinuz-4.18.0-240.1.1.el8_lustre.x86_64
+kdump: kexec: loaded kdump kernel
+kdump: Starting kdump: [OK]
 
