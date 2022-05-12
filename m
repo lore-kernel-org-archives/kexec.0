@@ -1,150 +1,67 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Thu, 12 May 2022 10:46:37 +0800
-Subject: [PATCH v7 2/4] kexec, KEYS: make the code in
- bzImage64_verify_sig generic
-In-Reply-To: <20220512023402.9913-3-coxu@redhat.com>
-References: <20220512023402.9913-1-coxu@redhat.com>
- <20220512023402.9913-3-coxu@redhat.com>
-Message-ID: <Ynx1DUvDTL1R4Pj5@MiWiFi-R3L-srv>
+From: Pingfan Liu <kernelfans@gmail.com>
+Date: Thu, 12 May 2022 11:06:17 +0800
+Subject: [PATCHv4 0/2] cpu/hotplug: Keep cpu hotplug disabled until the
+ rebooting cpu is stable
+Message-ID: <20220512030619.13426-1-kernelfans@gmail.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/12/22 at 10:34am, Coiby Xu wrote:
-> commit 278311e417be ("kexec, KEYS: Make use of platform keyring for
-> signature verify") adds platform keyring support on x86 kexec but not
-> arm64.
-> 
-> The code in bzImage64_verify_sig makes use of system keyrings including
-> .buitin_trusted_keys, .secondary_trusted_keys and .platform keyring to
-> verify signed kernel image as PE file. Make it generic so both x86_64
-> and arm64 can use it.
-> 
-> Note this patch is needed by a later patch so Cc it to the stable tree
-> as well.
+For the architectures (arm/arm64/ia64/riscv), which relies on the cpu
+hot-removing mechanism to implement "kexec -e", it is important to
+ensure that the rebooting happens on a valid online cpu. And this logic
+should have been guaranteed in migrate_to_reboot_cpu().
 
-This note should not be added in log.
+But the current code has either contradict (resolved by [2/2]) or
+redundancy (resolved by [1/2]) about the logic.
 
-> 
-> Cc: kexec at lists.infradead.org
-> Cc: keyrings at vger.kernel.org
-> Cc: linux-security-module at vger.kernel.org
-> Cc: stable at vger.kernel.org # 34d5960af253: kexec: clean up arch_kexec_kernel_verify_sig
-> Reviewed-by: Michal Suchanek <msuchanek@suse.de>
-> Signed-off-by: Coiby Xu <coxu@redhat.com>
-> ---
 
-You can put the note here, it won't be added to commit log when merged.
-Maybe it can be removed when merged.
+V3 -> V4:
+Fix the cpu hotplug enable before kexec-rebooting in powerpc.
+Improve commit log and the code's note.
 
-Otherwise, LGTM
+V2 -> V3:
+Taking in [2/2], which also has problem with the valid rebooting
+cpu. (I had sent three patches for different arches. But maybe it is
+better to collapse them into one and collect acks from different arches'
+maintainers )
 
-Acked-by: Baoquan He <bhe@redhat.com>
+Cc: Eric Biederman <ebiederm@xmission.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vincent Donnefort <vincent.donnefort@arm.com>
+Cc: Ingo Molnar <mingo@kernel.org>
+Cc: YueHaibing <yuehaibing@huawei.com>
+Cc: Baokun Li <libaokun1@huawei.com>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Valentin Schneider <valentin.schneider@arm.com>
+Cc: kexec at lists.infradead.org
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jens Axboe <axboe@kernel.dk>
+To: linux-ia64@vger.kernel.org
+Cc: Russell King <linux@armlinux.org.uk>
+Cc: Guenter Roeck <linux@roeck-us.net>
 
->  arch/x86/kernel/kexec-bzimage64.c | 20 +-------------------
->  include/linux/kexec.h             |  7 +++++++
->  kernel/kexec_file.c               | 17 +++++++++++++++++
->  3 files changed, 25 insertions(+), 19 deletions(-)
-> 
-> diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
-> index 170d0fd68b1f..f299b48f9c9f 100644
-> --- a/arch/x86/kernel/kexec-bzimage64.c
-> +++ b/arch/x86/kernel/kexec-bzimage64.c
-> @@ -17,7 +17,6 @@
->  #include <linux/kernel.h>
->  #include <linux/mm.h>
->  #include <linux/efi.h>
-> -#include <linux/verification.h>
->  
->  #include <asm/bootparam.h>
->  #include <asm/setup.h>
-> @@ -528,28 +527,11 @@ static int bzImage64_cleanup(void *loader_data)
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-> -static int bzImage64_verify_sig(const char *kernel, unsigned long kernel_len)
-> -{
-> -	int ret;
-> -
-> -	ret = verify_pefile_signature(kernel, kernel_len,
-> -				      VERIFY_USE_SECONDARY_KEYRING,
-> -				      VERIFYING_KEXEC_PE_SIGNATURE);
-> -	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-> -		ret = verify_pefile_signature(kernel, kernel_len,
-> -					      VERIFY_USE_PLATFORM_KEYRING,
-> -					      VERIFYING_KEXEC_PE_SIGNATURE);
-> -	}
-> -	return ret;
-> -}
-> -#endif
-> -
->  const struct kexec_file_ops kexec_bzImage64_ops = {
->  	.probe = bzImage64_probe,
->  	.load = bzImage64_load,
->  	.cleanup = bzImage64_cleanup,
->  #ifdef CONFIG_KEXEC_BZIMAGE_VERIFY_SIG
-> -	.verify_sig = bzImage64_verify_sig,
-> +	.verify_sig = kexec_kernel_verify_pe_sig,
->  #endif
->  };
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 413235c6c797..da83abfc628b 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -19,6 +19,7 @@
->  #include <asm/io.h>
->  
->  #include <uapi/linux/kexec.h>
-> +#include <linux/verification.h>
->  
->  /* Location of a reserved region to hold the crash kernel.
->   */
-> @@ -202,6 +203,12 @@ int arch_kexec_apply_relocations(struct purgatory_info *pi,
->  				 const Elf_Shdr *relsec,
->  				 const Elf_Shdr *symtab);
->  int arch_kimage_file_post_load_cleanup(struct kimage *image);
-> +#ifdef CONFIG_KEXEC_SIG
-> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
-> +int kexec_kernel_verify_pe_sig(const char *kernel,
-> +				    unsigned long kernel_len);
-> +#endif
-> +#endif
->  int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
->  
->  extern int kexec_add_buffer(struct kexec_buf *kbuf);
-> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> index 3720435807eb..754885b96aab 100644
-> --- a/kernel/kexec_file.c
-> +++ b/kernel/kexec_file.c
-> @@ -165,6 +165,23 @@ void kimage_file_post_load_cleanup(struct kimage *image)
->  }
->  
->  #ifdef CONFIG_KEXEC_SIG
-> +#ifdef CONFIG_SIGNED_PE_FILE_VERIFICATION
-> +int kexec_kernel_verify_pe_sig(const char *kernel, unsigned long kernel_len)
-> +{
-> +	int ret;
-> +
-> +	ret = verify_pefile_signature(kernel, kernel_len,
-> +				      VERIFY_USE_SECONDARY_KEYRING,
-> +				      VERIFYING_KEXEC_PE_SIGNATURE);
-> +	if (ret == -ENOKEY && IS_ENABLED(CONFIG_INTEGRITY_PLATFORM_KEYRING)) {
-> +		ret = verify_pefile_signature(kernel, kernel_len,
-> +					      VERIFY_USE_PLATFORM_KEYRING,
-> +					      VERIFYING_KEXEC_PE_SIGNATURE);
-> +	}
-> +	return ret;
-> +}
-> +#endif
-> +
->  static int kexec_image_verify_sig(struct kimage *image, void *buf,
->  		unsigned long buf_len)
->  {
-> -- 
-> 2.35.3
-> 
+Pingfan Liu (2):
+  cpu/hotplug: Keep cpu hotplug disabled until the rebooting cpu is
+    stable
+  cpu/hotplug: Remove the input parameter primary_cpu of
+    smp_shutdown_nonboot_cpus()
+
+ arch/arm/kernel/reboot.c          |  2 +-
+ arch/arm64/kernel/process.c       |  2 +-
+ arch/ia64/kernel/process.c        |  2 +-
+ arch/powerpc/kexec/core_64.c      |  1 +
+ arch/riscv/kernel/machine_kexec.c |  2 +-
+ include/linux/cpu.h               |  4 ++--
+ kernel/cpu.c                      | 14 +++++++-------
+ kernel/kexec_core.c               | 11 +++++------
+ 8 files changed, 19 insertions(+), 19 deletions(-)
+
+-- 
+2.31.1
 
 
