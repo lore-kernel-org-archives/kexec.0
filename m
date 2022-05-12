@@ -1,90 +1,84 @@
-From: HAGIO KAZUHITO=?unknown-8bit?b?6JCp5bC+IOS4gOS7gQ==?= <k-hagio-ab@nec.com>
-Date: Thu, 12 May 2022 00:55:02 +0000
-Subject: [PATCH] Makefile: Avoid installing files in /etc
-In-Reply-To: <86f59a63-1ed1-7b7a-55b5-252968a19e62@igalia.com>
-References: <20220504165703.747333-1-gpiccoli@igalia.com>
- <TYYPR01MB6777EDEDDCA5B2C32644730DDDC89@TYYPR01MB6777.jpnprd01.prod.outlook.com>
- <86f59a63-1ed1-7b7a-55b5-252968a19e62@igalia.com>
-Message-ID: <TYYPR01MB6777C3DB6CED8702D04D2043DDCB9@TYYPR01MB6777.jpnprd01.prod.outlook.com>
+From: Coiby Xu <coxu@redhat.com>
+Date: Thu, 12 May 2022 10:33:58 +0800
+Subject: [PATCH v7 0/4] use more system keyrings to verify arm64 and s390
+ kexec kernel image signature
+Message-ID: <20220512023402.9913-1-coxu@redhat.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
------Original Message-----
-> On 10/05/2022 22:50, HAGIO KAZUHITO(?? ??) wrote:
-> > [...]
-> >
-> > Fair enough, and as far as I've checked:
-> >
-> > - The makedumpfile.conf.sample file does not need to be in /etc, because
-> > makedumpfile does not have any default path for it and reads a config
-> > file only when specified with --config option.
-> > (and IMO it's better to place such a sample config file, used rarely,
-> > in /usr/share.)
-> >
-> > - Fedora/RHEL kexec-tools packaging does not use "make install" and have
-> > their own install command, at least this patch will not affect them:
-> > https://src.fedoraproject.org/rpms/kexec-tools/blob/main/f/kexec-tools.spec#_225
-> >
-> > - Debian/Ubuntu makedumpfile packages apparently do not have the file:
-> > https://packages.debian.org/sid/amd64/makedumpfile/filelist
-> >
-> > On the whole I will accept this.
-> >
-> >> Notice that this patch intentionally skips
-> >> the change for the .spec file, which aims specific distros, by creating
-> >> RPM packages.
-> >
-> > However, the .spec file depends on "make install", so I will add this:
-> >
-> > diff --git a/makedumpfile.spec b/makedumpfile.spec
-> > index ef619b8c8af9..fd9efa0639cc 100644
-> > --- a/makedumpfile.spec
-> > +++ b/makedumpfile.spec
-> > @@ -25,7 +25,6 @@ make LINKTYPE=dynamic
-> >  %install
-> >  rm -rf %{buildroot}
-> >  mkdir -p %{buildroot}/usr/sbin
-> > -mkdir -p %{buildroot}/etc
-> >  mkdir -p %{buildroot}/usr/share/man/man5
-> >  mkdir -p %{buildroot}/usr/share/man/man8
-> >  mkdir -p %{buildroot}/usr/share/%{name}-%{version}/eppic-scripts/
-> > @@ -35,11 +34,11 @@ make install DESTDIR=%{buildroot}
-> >  rm -rf %{buildroot}
-> >
-> >  %files
-> > -/etc/makedumpfile.conf.sample
-> >  /usr/sbin/makedumpfile
-> >  /usr/sbin/makedumpfile-R.pl
-> >  /usr/share/man/man5/makedumpfile.conf.5.gz
-> >  /usr/share/man/man8/makedumpfile.8.gz
-> > +/usr/share/%{name}-%{version}/makedumpfile.conf.sample
-> >  /usr/share/%{name}-%{version}/eppic_scripts/
-> >
-> >  %changelog
-> >
-> >> [...]
-> > The creation of ${DESTDIR}/etc is also not needed, will remove it and merge.
-> >
-> > install:
-> > -	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
-> ${DESTDIR}/etc
-> > +	install -m 755 -d ${DESTDIR}/usr/sbin ${DESTDIR}/usr/share/man/man5 ${DESTDIR}/usr/share/man/man8
-> >  	install -m 755 -t ${DESTDIR}/usr/sbin makedumpfile $(VPATH)makedumpfile-R.pl
-> >
-> > Please let me know if any problem.
-> >
-> > Thanks,
-> > Kazu
-> >
-> 
-> Hi Kazu, this is perfect - thanks a bunch for the great analysis. Feel
-> free to merge with your changes, it's much appreciated =)
+Currently, a problem faced by arm64 is if a kernel image is signed by a
+MOK key, loading it via the kexec_file_load() system call would be
+rejected with the error "Lockdown: kexec: kexec of unsigned images is
+restricted; see man kernel_lockdown.7". This happens because arm64 uses
+only the primary keyring i.e. the .builtin_trusted_keys keyring that
+contains only kernel built-in keys to verify the kexec kernel image. MOK
+keys are loaded into the .platform keyring or/and .machine keyring. The
+.machine keyring is linked to the secondary keyring i.e.
+.secondary_trusted_keys keyring when the end-user chooses to trust MOK
+keys. The platform keyring is exclusively used for kexec kernel image
+verification and .secondary_trusted_keys together with
+.builtin_trusted_keys are the system trusted keyrings. So obviously
+there is no reason to not use .secondary_trusted_keys or .platform
+keyring for kernel image signature verification. 
 
-Thanks, applied with the changes.
-https://github.com/makedumpfile/makedumpfile/commit/09b5c879b9f787c52f1963555d8d46127c457f2a
+Similarly, s390 only uses platform keyring for kernel image signature
+verification and built-in keys and secondary keyring are not used.
 
-Kazu
+This patch set allows arm64 and s390 to use more system keyrings
+including the .secondary_trusted_keys and .platform keyring to verify
+kexec kernel image signature as x86 does.
+
+The 3rd arm64 patch depends on the first two patches. The 4th s390 patch
+can be applied independently.
+
+v7:
+ - drop the Fixes tag for the 2nd patch and add patch prerequisites
+   [Baoquan]
+ - improve cover letter
+
+v6:
+ - integrate the first three patches of "[PATCH 0/4] Unifrom keyring
+   support across architectures and functions" from Michal [1]
+ - improve commit message [Baoquan, Michal]
+ - directly assign kexec_kernel_verify_pe_sig to
+   kexec_file_ops->verify_sig [Michal]
+
+v5:
+ - improve commit message [Baoquan]
+
+v4:
+ - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+
+v3:
+ - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+ - clean up arch_kexec_kernel_verify_sig [Eric]
+
+v2:
+ - only x86_64 and arm64 need to enable PE file signature check [Dave]
+
+[1] https://lore.kernel.org/lkml/cover.1644953683.git.msuchanek at suse.de/
+
+Coiby Xu (3):
+  kexec: clean up arch_kexec_kernel_verify_sig
+  kexec, KEYS: make the code in bzImage64_verify_sig generic
+  arm64: kexec_file: use more system keyrings to verify kernel image
+    signature
+
+Michal Suchanek (1):
+  kexec, KEYS, s390: Make use of built-in and secondary keyring for
+    signature verification
+
+ arch/arm64/kernel/kexec_image.c       | 11 +-----
+ arch/s390/kernel/machine_kexec_file.c | 18 +++++++---
+ arch/x86/kernel/kexec-bzimage64.c     | 20 +----------
+ include/linux/kexec.h                 |  7 ++--
+ kernel/kexec_file.c                   | 51 ++++++++++++++++-----------
+ 5 files changed, 50 insertions(+), 57 deletions(-)
+
+-- 
+2.35.3
+
 
