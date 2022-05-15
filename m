@@ -1,62 +1,54 @@
-From: Johannes Berg <johannes@sipsolutions.net>
-Date: Fri, 13 May 2022 16:44:36 +0200
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Sun, 15 May 2022 19:12:55 -0300
 Subject: [PATCH 11/30] um: Improve panic notifiers consistency and ordering
-In-Reply-To: <4b003501-f5c3-cd66-d222-88d98c93e141@igalia.com>
+In-Reply-To: <1760d499824f9ef053af7a8dac04b48ab7d7fd3d.camel@sipsolutions.net>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
  <20220427224924.592546-12-gpiccoli@igalia.com> <Ynp2hRodh04K3pzK@alley>
  <4b003501-f5c3-cd66-d222-88d98c93e141@igalia.com>
-Message-ID: <1760d499824f9ef053af7a8dac04b48ab7d7fd3d.camel@sipsolutions.net>
+ <1760d499824f9ef053af7a8dac04b48ab7d7fd3d.camel@sipsolutions.net>
+Message-ID: <178a456d-3961-9bc2-83d2-2b9457d45fbd@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, 2022-05-11 at 17:22 -0300, Guilherme G. Piccoli wrote:
-> On 10/05/2022 11:28, Petr Mladek wrote:
-> > [...]
-> > It is not clear to me why user mode linux should not care about
-> > the other notifiers. It might be because I do not know much
-> > about the user mode linux.
-> > 
-> > Is the because they always create core dump or are never running
-> > in a hypervisor or ...?
-> > 
-> > AFAIK, the notifiers do many different things. For example, there
-> > is a notifier that disables RCU watchdog, print some extra
-> > information. Why none of them make sense here?
-> > 
+On 13/05/2022 11:44, Johannes Berg wrote:
+> [...]
+>> Maybe Anton / Johannes / Richard could give their opinions - appreciate
+>> that, I'm not attached to the priority here, it's more about users'
+>> common usage of UML I can think of...
 > 
-> Hi Petr, my understanding is that UML is a form of running Linux as a
-> regular userspace process for testing purposes.
-
-Correct.
-
-> With that said, as soon
-> as we exit in the error path, less "pollution" would happen, so users
-> can use GDB to debug the core dump for example.
+> It's hard to say ... In a sense I'm not sure it matters?
 > 
-> In later patches of this series (when we split the panic notifiers in 3
-> lists) these UML notifiers run in the pre-reboot list, so they run after
-> the informational notifiers for example (in the default level).
-> But without the list split we cannot order properly, so my gut feeling
-> is that makes sense to run them rather earlier than later in the panic
-> process...
+> OTOH something like the ftrace dump notifier (kernel/trace/trace.c)
+> might still be useful to run before the mconsole and coredump ones, even
+> if you could probably use gdb to figure out the information.
 > 
-> Maybe Anton / Johannes / Richard could give their opinions - appreciate
-> that, I'm not attached to the priority here, it's more about users'
-> common usage of UML I can think of...
+> Personally, I don't have a scenario where I'd care about the trace
+> buffers though, and most of the others I found would seem irrelevant
+> (drivers that aren't even compiled, hung tasks won't really happen since
+> we exit immediately, and similar.)
+> 
+> johannes
 
-It's hard to say ... In a sense I'm not sure it matters?
+Thanks Johannes, I agree with you.
 
-OTOH something like the ftrace dump notifier (kernel/trace/trace.c)
-might still be useful to run before the mconsole and coredump ones, even
-if you could probably use gdb to figure out the information.
+We don't have great ordering now, one thing we need to enforce is the
+order between the 2 UML notifiers, and this patch is doing that..trying
+to order against other callbacks like the ftrace dumper is messy in the
+current code.
 
-Personally, I don't have a scenario where I'd care about the trace
-buffers though, and most of the others I found would seem irrelevant
-(drivers that aren't even compiled, hung tasks won't really happen since
-we exit immediately, and similar.)
+OTOH if this patch set is accepted at some point, we'll likely have 3
+lists, and with that we can improve ordering a lot - this notifier for
+instance would run in the pre-reboot list, *after* the ftrace dumper (if
+a kmsg dumper is set).
 
-johannes
+So, my intention is to keep this patch as is for V2 (with some changes
+Johannes suggested before), unless Petr or the other maintainers want
+something different.
+Cheers,
+
+
+Guilherme
 
