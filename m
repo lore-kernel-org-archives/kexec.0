@@ -1,187 +1,96 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 16 May 2022 12:06:17 -0300
-Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-In-Reply-To: <YoJZVZl/MH0KiE/J@alley>
+Date: Mon, 16 May 2022 13:05:44 -0300
+Subject: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
+In-Reply-To: <YoJgcC8c6LaKADZV@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-20-gpiccoli@igalia.com> <YoJZVZl/MH0KiE/J@alley>
-Message-ID: <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
+ <20220427224924.592546-22-gpiccoli@igalia.com> <YoJgcC8c6LaKADZV@alley>
+Message-ID: <63a74b56-89ef-8d1f-d487-cdb986aab798@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Thanks for the review!
+Thanks again for the review! Comments inline below:
 
-I agree with the blinking stuff, I can rework and add all LED/blinking
-stuff into the loop list, it does make sense. I'll comment a bit in the
-others below...
 
-On 16/05/2022 11:01, Petr Mladek wrote:
+On 16/05/2022 11:33, Petr Mladek wrote:
 > [...]
->> --- a/arch/mips/sgi-ip22/ip22-reset.c
->> +++ b/arch/mips/sgi-ip22/ip22-reset.c
->> @@ -195,7 +195,7 @@ static int __init reboot_setup(void)
->>  	}
+>> --- a/drivers/edac/altera_edac.c
+>> +++ b/drivers/edac/altera_edac.c
+>> @@ -2163,7 +2162,7 @@ static int altr_edac_a10_probe(struct platform_device *pdev)
+>>  		int dberror, err_addr;
 >>  
->>  	timer_setup(&blink_timer, blink_timeout, 0);
->> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
->> +	atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
-> 
-> This notifier enables blinking. It is not much safe. It calls
-> mod_timer() that takes a lock internally.
-> 
-> This kind of functionality should go into the last list called
-> before panic() enters the infinite loop. IMHO, all the blinking
-> stuff should go there.
-> [...] 
->> --- a/arch/mips/sgi-ip32/ip32-reset.c
->> +++ b/arch/mips/sgi-ip32/ip32-reset.c
->> @@ -145,7 +144,7 @@ static __init int ip32_reboot_setup(void)
->>  	pm_power_off = ip32_machine_halt;
->>  
->>  	timer_setup(&blink_timer, blink_timeout, 0);
->> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
->> +	atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
-> 
-> Same here. Should be done only before the "loop".
-> [...] 
-
-Ack.
-
-
->> --- a/drivers/firmware/google/gsmi.c
->> +++ b/drivers/firmware/google/gsmi.c
->> @@ -1034,7 +1034,7 @@ static __init int gsmi_init(void)
->>  
->>  	register_reboot_notifier(&gsmi_reboot_notifier);
->>  	register_die_notifier(&gsmi_die_notifier);
->> -	atomic_notifier_chain_register(&panic_notifier_list,
->> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->>  				       &gsmi_panic_notifier);
-> 
-> I am not sure about this one. It looks like some logging or
-> pre_reboot stuff.
-> 
-
-Disagree here. I'm looping Google maintainers, so they can comment.
-(CCed Evan, David, Julius)
-
-This notifier is clearly a hypervisor notification mechanism. I've fixed
-a locking stuff there (in previous patch), I feel it's low-risk but even
-if it's mid-risk, the class of such callback remains a perfect fit with
-the hypervisor list IMHO.
-
-
-> [...] 
->> --- a/drivers/leds/trigger/ledtrig-activity.c
->> +++ b/drivers/leds/trigger/ledtrig-activity.c
->> @@ -247,7 +247,7 @@ static int __init activity_init(void)
->>  	int rc = led_trigger_register(&activity_led_trigger);
->>  
->>  	if (!rc) {
+>>  		edac->panic_notifier.notifier_call = s10_edac_dberr_handler;
 >> -		atomic_notifier_chain_register(&panic_notifier_list,
->> +		atomic_notifier_chain_register(&panic_hypervisor_list,
->>  					       &activity_panic_nb);
+>> +		atomic_notifier_chain_register(&panic_pre_reboot_list,
 > 
-> The notifier is trivial. It just sets a variable.
-> 
-> But still, it is about blinking and should be done
-> in the last "loop" list.
-> 
-> 
->>  		register_reboot_notifier(&activity_reboot_nb);
->>  	}
->> --- a/drivers/leds/trigger/ledtrig-heartbeat.c
->> +++ b/drivers/leds/trigger/ledtrig-heartbeat.c
->> @@ -190,7 +190,7 @@ static int __init heartbeat_trig_init(void)
->>  	int rc = led_trigger_register(&heartbeat_led_trigger);
+> My understanding is that this notifier first prints info about ECC
+> errors and then triggers reboot. It might make sense to split it
+> into two notifiers.
+
+I disagree here - looping the maintainers for comments (CCing Dinh /
+Tony). BTW, sorry for not having you on CC already Dinh, it was my mistake.
+
+So, my reasoning here is: this notifier should fit the info list,
+definitely! But...it's very high risk for kdump. It deep dives into the
+regmap API (there are locks in such code) plus there is an (MM)IO write
+to the device and an ARM firmware call. So, despite the nature of this
+notifier _fits the informational list_, the _code is risky_ so we should
+avoid running it before a kdump.
+
+Now, we indeed have a chicken/egg problem: want to avoid it before
+kdump, BUT in case kdump is not set, kmsg_dump() (and console flushing,
+after your suggestion Petr) will run before it and not save collected
+information from EDAC PoV.
+
+My idea: I could call a second kmsg_dump() or at least a panic console
+flush for within such notifier. Let me know what you think Petr (also
+Dinh / Tony and all interested parties).
+
+
+> [...] 
+>> --- a/drivers/leds/trigger/ledtrig-panic.c
+>> +++ b/drivers/leds/trigger/ledtrig-panic.c
+>> @@ -64,7 +63,7 @@ static long led_panic_blink(int state)
 >>  
->>  	if (!rc) {
->> -		atomic_notifier_chain_register(&panic_notifier_list,
->> +		atomic_notifier_chain_register(&panic_hypervisor_list,
->>  					       &heartbeat_panic_nb);
-> 
-> Same here. Blinking => loop list.
-
-Ack.
-
-
->> [...]
->> diff --git a/drivers/misc/bcm-vk/bcm_vk_dev.c b/drivers/misc/bcm-vk/bcm_vk_dev.c
->> index a16b99bdaa13..d9d5199cdb2b 100644
->> --- a/drivers/misc/bcm-vk/bcm_vk_dev.c
->> +++ b/drivers/misc/bcm-vk/bcm_vk_dev.c
->> @@ -1446,7 +1446,7 @@ static int bcm_vk_probe(struct pci_dev *pdev, const struct pci_device_id *ent)
->>  
->>  	/* register for panic notifier */
->>  	vk->panic_nb.notifier_call = bcm_vk_on_panic;
->> -	err = atomic_notifier_chain_register(&panic_notifier_list,
->> +	err = atomic_notifier_chain_register(&panic_hypervisor_list,
->>  					     &vk->panic_nb);
-> 
-> It seems to reset some hardware or so. IMHO, it should go into the
-> pre-reboot list.
-
-Mixed feelings here, I'm looping Broadcom maintainers to comment.
-(CC Scott and Broadcom list)
-
-I'm afraid it breaks kdump if this device is not reset beforehand - it's
-a doorbell write, so not high risk I think...
-
-But in case the not-reset device can be probed normally in kdump kernel,
-then I'm fine in moving this to the reboot list! I don't have the HW to
-test myself.
-
-
-> [...]
->> --- a/drivers/power/reset/ltc2952-poweroff.c
->> +++ b/drivers/power/reset/ltc2952-poweroff.c
->> @@ -279,7 +279,7 @@ static int ltc2952_poweroff_probe(struct platform_device *pdev)
->>  	pm_power_off = ltc2952_poweroff_kill;
->>  
->>  	data->panic_notifier.notifier_call = ltc2952_poweroff_notify_panic;
+>>  static int __init ledtrig_panic_init(void)
+>>  {
 >> -	atomic_notifier_chain_register(&panic_notifier_list,
->> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->>  				       &data->panic_notifier);
+>> +	atomic_notifier_chain_register(&panic_pre_reboot_list,
+>>  				       &led_trigger_panic_nb);
 > 
-> I looks like this somehow triggers the reboot. IMHO, it should go
-> into the pre_reboot list.
-
-Mixed feeling again here - CCing the maintainers for comments (Sebastian
-/ PM folks).
-
-This is setting a variable only, and once it's set (data->kernel_panic
-is the bool's name), it just bails out the IRQ handler and a timer
-setting - this timer seems kinda tricky, so bailing out ASAP makes sense
-IMHO.
-
-But my mixed feeling comes from the fact this notifier really is not a
-fit to any list - it's just a "watchdog"/device quiesce in some form.
-Since it's very low-risk (IIUC), I've put it here.
-
-
-> [...]
->> --- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
->> +++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
->> @@ -814,7 +814,7 @@ static int brcmstb_pm_probe(struct platform_device *pdev)
->>  		goto out;
->>  	}
+> Blinking => should go to the last "post_reboot/loop" list.
+> [...] 
+>> --- a/drivers/misc/ibmasm/heartbeat.c
+>> +++ b/drivers/misc/ibmasm/heartbeat.c
+>> @@ -32,20 +31,23 @@ static int suspend_heartbeats = 0;
+>>  static int panic_happened(struct notifier_block *n, unsigned long val, void *v)
+>>  {
+>>  	suspend_heartbeats = 1;
+>> -	return 0;
+>> +	return NOTIFY_DONE;
+>>  }
 >>  
->> -	atomic_notifier_chain_register(&panic_notifier_list,
->> +	atomic_notifier_chain_register(&panic_hypervisor_list,
->>  				       &brcmstb_pm_panic_nb);
+>> -static struct notifier_block panic_notifier = { panic_happened, NULL, 1 };
+>> +static struct notifier_block panic_notifier = {
+>> +	.notifier_call = panic_happened,
+>> +};
+>>  
+>>  void ibmasm_register_panic_notifier(void)
+>>  {
+>> -	atomic_notifier_chain_register(&panic_notifier_list, &panic_notifier);
+>> +	atomic_notifier_chain_register(&panic_pre_reboot_list,
+>> +					&panic_notifier);
 > 
-> I am not sure about this one. It instruct some HW to preserve DRAM.
-> IMHO, it better fits into pre_reboot category but I do not have
-> strong opinion.
+> Same here. Blinking => should go to the last "post_reboot/loop" list.
 
-Disagree here, I'm CCing Florian for information.
+Ack on both.
 
-This notifier preserves RAM so it's *very interesting* if we have
-kmsg_dump() for example, but maybe might be also relevant in case kdump
-kernel is configured to store something in a persistent RAM (then,
-without this notifier, after kdump reboots the system data would be lost).
+IBMasm is not blinking IIUC, but still fits properly the loop list. This
+notifier would make a heartbeat mechanism stop, and once it's stopped,
+service processor is allowed to reboot - that's my understanding.
+
 
 Cheers,
 
