@@ -1,35 +1,32 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 16 May 2022 13:08:15 -0300
-Subject: [PATCH 22/30] panic: Introduce the panic post-reboot notifier list
-In-Reply-To: <YoJjpBrz34QO+rn9@alley>
+Date: Mon, 16 May 2022 13:09:04 -0300
+Subject: [PATCH 23/30] printk: kmsg_dump: Introduce helper to inform
+ number of dumpers
+In-Reply-To: <YoJkpAp8XdS7ROgd@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-23-gpiccoli@igalia.com> <YoJjpBrz34QO+rn9@alley>
-Message-ID: <cfc89eba-1079-6c80-4806-1fb8af1404f1@igalia.com>
+ <20220427224924.592546-24-gpiccoli@igalia.com>
+ <20220510134014.3923ccba@gandalf.local.home>
+ <c8818906-f113-82b6-b58b-d47ae0c16b4f@igalia.com> <YoJkpAp8XdS7ROgd@alley>
+Message-ID: <9f20619a-b405-2dc6-9771-b574b6f5058b@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 16/05/2022 11:45, Petr Mladek wrote:
+On 16/05/2022 11:50, Petr Mladek wrote:
 > [...]
+> Shame on me that I do not care that much about the style of the commit
+> message :-)
 > 
-> The patch looks good to me. I would just suggest two changes.
+> Anyway, the code looks good to me. With the better commit message:
 > 
-> 1. I would rename the list to "panic_loop_list" instead of
->    "panic_post_reboot_list".
-> 
->    It will be more clear that it includes things that are
->    needed before panic() enters the infinite loop.
-> 
-> 
-> 2. I would move all the notifiers that enable blinking here.
-> 
->    The blinking should be done only during the infinite
->    loop when there is nothing else to do. If we enable
->    earlier then it might disturb/break more important
->    functionality (dumping information, reboot).
+> Reviewed-by: Petr Mladek <pmladek@suse.com>
 > 
 
-Perfect, I agree with you. I'll change both points in V2 =)
+Heheh, cool - I'll add your tag and improve the message in V2.
+Thanks,
+
+
+Guilherme
 
