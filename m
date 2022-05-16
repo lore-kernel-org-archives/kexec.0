@@ -1,45 +1,50 @@
 From: Petr Mladek <pmladek@suse.com>
-Date: Mon, 16 May 2022 16:45:56 +0200
-Subject: [PATCH 22/30] panic: Introduce the panic post-reboot notifier list
-In-Reply-To: <20220427224924.592546-23-gpiccoli@igalia.com>
+Date: Mon, 16 May 2022 16:50:12 +0200
+Subject: [PATCH 23/30] printk: kmsg_dump: Introduce helper to inform
+ number of dumpers
+In-Reply-To: <c8818906-f113-82b6-b58b-d47ae0c16b4f@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-23-gpiccoli@igalia.com>
-Message-ID: <YoJjpBrz34QO+rn9@alley>
+ <20220427224924.592546-24-gpiccoli@igalia.com>
+ <20220510134014.3923ccba@gandalf.local.home>
+ <c8818906-f113-82b6-b58b-d47ae0c16b4f@igalia.com>
+Message-ID: <YoJkpAp8XdS7ROgd@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed 2022-04-27 19:49:16, Guilherme G. Piccoli wrote:
-> Currently we have 3 notifier lists in the panic path, which will
-> be wired in a way to allow the notifier callbacks to run in
-> different moments at panic time, in a subsequent patch.
+On Wed 2022-05-11 17:03:51, Guilherme G. Piccoli wrote:
+> On 10/05/2022 14:40, Steven Rostedt wrote:
+> > On Wed, 27 Apr 2022 19:49:17 -0300
+> > "Guilherme G. Piccoli" <gpiccoli@igalia.com> wrote:
+> > 
+> >> Currently we don't have a way to check if there are dumpers set,
+> >> except counting the list members maybe. This patch introduces a very
+> >> simple helper to provide this information, by just keeping track of
+> >> registered/unregistered kmsg dumpers. It's going to be used on the
+> >> panic path in the subsequent patch.
+> > 
+> > FYI, it is considered "bad form" to reference in the change log "this
+> > patch". We know this is a patch. The change log should just talk about what
+> > is being done. So can you reword your change logs (you do this is almost
+> > every patch). Here's what I would reword the above to be:
+> > 
+> >  Currently we don't have a way to check if there are dumpers set, except
+> >  perhaps by counting the list members. Introduce a very simple helper to
+> >  provide this information, by just keeping track of registered/unregistered
+> >  kmsg dumpers. This will simplify the refactoring of the panic path.
 > 
-> But there is also an odd set of architecture calls hardcoded in
-> the end of panic path, after the restart machinery. They're
-> responsible for late time tunings / events, like enabling a stop
-> button (Sparc) or effectively stopping the machine (s390).
-> 
-> This patch introduces yet another notifier list to offer the
-> architectures a way to add callbacks in such late moment on
-> panic path without the need of ifdefs / hardcoded approaches.
+> Thanks for the hint, you're right - it's almost in all of my patches.
+> I'll reword all of them (except the ones already merged) to remove this
+> "bad form".
 
-The patch looks good to me. I would just suggest two changes.
+Shame on me that I do not care that much about the style of the commit
+message :-)
 
-1. I would rename the list to "panic_loop_list" instead of
-   "panic_post_reboot_list".
+Anyway, the code looks good to me. With the better commit message:
 
-   It will be more clear that it includes things that are
-   needed before panic() enters the infinite loop.
-
-
-2. I would move all the notifiers that enable blinking here.
-
-   The blinking should be done only during the infinite
-   loop when there is nothing else to do. If we enable
-   earlier then it might disturb/break more important
-   functionality (dumping information, reboot).
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
 Best Regards,
 Petr
