@@ -1,96 +1,74 @@
 From: Stephen Brennan <stephen.s.brennan@oracle.com>
-Date: Mon, 16 May 2022 17:05:07 -0700
-Subject: [PATCH 1/2] kallsyms: Move declarations to internal header
+Date: Mon, 16 May 2022 17:05:08 -0700
+Subject: [PATCH 2/2] vmcoreinfo: Include kallsyms symbols
 In-Reply-To: <20220517000508.777145-1-stephen.s.brennan@oracle.com>
 References: <20220517000508.777145-1-stephen.s.brennan@oracle.com>
-Message-ID: <20220517000508.777145-2-stephen.s.brennan@oracle.com>
+Message-ID: <20220517000508.777145-3-stephen.s.brennan@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-To include kallsyms data in the vmcoreinfo note, we must make the symbol
-declarations visible outside of kallsyms.c. Move these to a new internal
-header file.
+The internal kallsyms tables contain information which could be quite
+useful to a debugging tool in the absence of other debuginfo. If
+kallsyms is enabled, then a debugging tool could parse it and use it as
+a fallback symbol table. Combined with BTF data, live & post-mortem
+debuggers can support basic operations without needing a large DWARF
+debuginfo file available. As many as five symbols are necessary to
+properly parse kallsyms names and addresses.  Add these to the
+vmcoreinfo note.
+
+CONFIG_KALLSYMS_ABSOLUTE_PERCPU does impact the computation of symbol
+addresses. However, a debugger can infer this configuration value by
+comparing the address of _stext in the vmcoreinfo with the address
+computed via kallsyms. So there's no need to include information about
+this config value in the vmcoreinfo note.
+
+To verify that we're still well below the maximum of 4096 bytes, I
+created a script[1] to compute a rough upper bound on the possible size
+of vmcoreinfo. On v5.18-rc7, the script reports 3106 bytes, and with
+this patch, the maximum become 3370 bytes.
+
+[1]: https://github.com/brenns10/kernel_stuff/blob/master/vmcoreinfosize/
 
 Signed-off-by: Stephen Brennan <stephen.s.brennan@oracle.com>
 ---
- kernel/kallsyms.c          | 23 +----------------------
- kernel/kallsyms_internal.h | 30 ++++++++++++++++++++++++++++++
- 2 files changed, 31 insertions(+), 22 deletions(-)
- create mode 100644 kernel/kallsyms_internal.h
+ kernel/crash_core.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/kernel/kallsyms.c b/kernel/kallsyms.c
-index 79f2eb617a62..42373ff69cac 100644
---- a/kernel/kallsyms.c
-+++ b/kernel/kallsyms.c
-@@ -30,28 +30,7 @@
- #include <linux/module.h>
- #include <linux/kernel.h>
+diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+index 256cf6db573c..b9c89b80856d 100644
+--- a/kernel/crash_core.c
++++ b/kernel/crash_core.c
+@@ -15,6 +15,8 @@
  
--/*
-- * These will be re-linked against their real values
-- * during the second link stage.
-- */
--extern const unsigned long kallsyms_addresses[] __weak;
--extern const int kallsyms_offsets[] __weak;
--extern const u8 kallsyms_names[] __weak;
--
--/*
-- * Tell the compiler that the count isn't in the small data section if the arch
-- * has one (eg: FRV).
-- */
--extern const unsigned int kallsyms_num_syms
--__section(".rodata") __attribute__((weak));
--
--extern const unsigned long kallsyms_relative_base
--__section(".rodata") __attribute__((weak));
--
--extern const char kallsyms_token_table[] __weak;
--extern const u16 kallsyms_token_index[] __weak;
--
--extern const unsigned int kallsyms_markers[] __weak;
+ #include <crypto/sha1.h>
+ 
 +#include "kallsyms_internal.h"
++
+ /* vmcoreinfo stuff */
+ unsigned char *vmcoreinfo_data;
+ size_t vmcoreinfo_size;
+@@ -484,6 +486,18 @@ static int __init crash_save_vmcoreinfo_init(void)
+ 	VMCOREINFO_NUMBER(PAGE_OFFLINE_MAPCOUNT_VALUE);
+ #endif
  
- /*
-  * Expand a compressed symbol data into the resulting uncompressed string,
-diff --git a/kernel/kallsyms_internal.h b/kernel/kallsyms_internal.h
-new file mode 100644
-index 000000000000..2d0c6f2f0243
---- /dev/null
-+++ b/kernel/kallsyms_internal.h
-@@ -0,0 +1,30 @@
-+/* SPDX-License-Identifier: GPL-2.0-only */
-+#ifndef LINUX_KALLSYMS_INTERNAL_H_
-+#define LINUX_KALLSYMS_INTERNAL_H_
++#ifdef CONFIG_KALLSYMS
++	VMCOREINFO_SYMBOL(kallsyms_names);
++	VMCOREINFO_SYMBOL(kallsyms_token_table);
++	VMCOREINFO_SYMBOL(kallsyms_token_index);
++#ifdef CONFIG_KALLSYMS_BASE_RELATIVE
++	VMCOREINFO_SYMBOL(kallsyms_offsets);
++	VMCOREINFO_SYMBOL(kallsyms_relative_base);
++#else
++	VMCOREINFO_SYMBOL(kallsyms_addresses);
++#endif /* CONFIG_KALLSYMS_BASE_RELATIVE */
++#endif /* CONFIG_KALLSYMS */
 +
-+#include <linux/types.h>
-+
-+/*
-+ * These will be re-linked against their real values
-+ * during the second link stage.
-+ */
-+extern const unsigned long kallsyms_addresses[] __weak;
-+extern const int kallsyms_offsets[] __weak;
-+extern const u8 kallsyms_names[] __weak;
-+
-+/*
-+ * Tell the compiler that the count isn't in the small data section if the arch
-+ * has one (eg: FRV).
-+ */
-+extern const unsigned int kallsyms_num_syms
-+__section(".rodata") __attribute__((weak));
-+
-+extern const unsigned long kallsyms_relative_base
-+__section(".rodata") __attribute__((weak));
-+
-+extern const char kallsyms_token_table[] __weak;
-+extern const u16 kallsyms_token_index[] __weak;
-+
-+extern const unsigned int kallsyms_markers[] __weak;
-+
-+#endif // LINUX_KALLSYMS_INTERNAL_H_
+ 	arch_crash_save_vmcoreinfo();
+ 	update_vmcoreinfo_note();
+ 
 -- 
 2.30.2
 
