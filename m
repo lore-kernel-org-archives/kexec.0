@@ -1,69 +1,35 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Tue, 17 May 2022 12:19:02 -0300
-Subject: [PATCH 14/30] panic: Properly identify the panic event to the
- notifiers' callbacks
-In-Reply-To: <YoOe7ifxfW8CEHdt@alley>
+Date: Tue, 17 May 2022 12:32:39 -0300
+Subject: [PATCH 15/30] bus: brcmstb_gisb: Clean-up panic/die notifiers
+In-Reply-To: <YnqEqDnMfUgC4dM6@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-15-gpiccoli@igalia.com> <YnqBsXBImU64PAOL@alley>
- <244a412c-4589-28d1-bb77-d3648d4f0b12@igalia.com> <YoOe7ifxfW8CEHdt@alley>
-Message-ID: <bc485d09-0958-0ddc-7b2d-cbc806cf6a01@igalia.com>
+ <20220427224924.592546-16-gpiccoli@igalia.com> <YnqEqDnMfUgC4dM6@alley>
+Message-ID: <007af382-dcf5-b06d-acad-08f8d6ec7f8b@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 17/05/2022 10:11, Petr Mladek wrote:
+On 10/05/2022 12:28, Petr Mladek wrote:
 > [...]
->> You mentioned 2 cases:
->>
->> (a) Same notifier_list used in different situations;
->>
->> (b) Same *notifier callback* used in different lists;
->>
->> Mine is case (b), right? Can you show me an example of case (a)?
+> IMHO, the check of the @self parameter was the proper solution.
 > 
-> There are many examples of case (a):
+> "gisb_die_notifier" list uses @val from enum die_val.
+> "gisb_panic_notifier" list uses @val from enum panic_notifier_val.
 > 
-> [... snip ...] 
-> These all call the same list/chain in different situations.
-> The situation is distinguished by @val.
+> These are unrelated types. It might easily break when
+> someone defines the same constant also in enum die_val.
 > 
-> 
->> You can see in the following patches (or grep the kernel) that people are using
->> this identification parameter to determine which kind of OOPS trigger
->> the callback to condition the execution of the function to specific
->> cases.
-> 
-> Could you please show me some existing code for case (b)?
-> I am not able to find any except in your patches.
-> 
+> Best Regards,
+> Petr
 
-Hi Petr, thanks for the examples - I agree with you. In the end, seems
-I'm kind of abusing the API. This id is used to distinguish different
-situations in which the callback is called, but in the same
-"realm"/notifier list.
+OK Petr, I'll drop this idea for V2 - will just remove the useless
+header / prototype then. (CC Florian)
 
-In my case I have different list calling the same callback and
-(ab-)using the id to make distinction. I can rework the patches using
-pointer comparison, it's fine =)
 
-So, I'll drop this patch in V2.
+Cheers,
 
-> Anyway, the solution in 16th patch is bad, definitely.
-> hv_die_panic_notify_crash() uses "val" to disinguish
-> both:
-> 
->      + "panic_notifier_list" vs "die_chain"
->      + die_val when callen via "die_chain"
-> 
-> The API around "die_chain" API is not aware of enum panic_notifier_val
-> and the API using "panic_notifier_list" is not aware of enum die_val.
-> As I said, it is mixing apples and oranges and it is error prone.
-> 
 
-OK, I'll re-work that patch - there's more there to be changed, that one
-is complex heheh
-
-Cheers!
+Guilherme
 
