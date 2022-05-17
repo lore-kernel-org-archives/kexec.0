@@ -1,128 +1,101 @@
 From: Petr Mladek <pmladek@suse.com>
-Date: Tue, 17 May 2022 15:11:10 +0200
-Subject: [PATCH 14/30] panic: Properly identify the panic event to the
- notifiers' callbacks
-In-Reply-To: <244a412c-4589-28d1-bb77-d3648d4f0b12@igalia.com>
+Date: Tue, 17 May 2022 15:28:20 +0200
+Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+In-Reply-To: <CAE=gft7ds+dHfEkRz8rnSH1EbTpGTpKbi5Wxj9DW0Jr5mX_j4w@mail.gmail.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-15-gpiccoli@igalia.com>
- <YnqBsXBImU64PAOL@alley>
- <244a412c-4589-28d1-bb77-d3648d4f0b12@igalia.com>
-Message-ID: <YoOe7ifxfW8CEHdt@alley>
+ <20220427224924.592546-20-gpiccoli@igalia.com>
+ <YoJZVZl/MH0KiE/J@alley>
+ <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
+ <CAE=gft7ds+dHfEkRz8rnSH1EbTpGTpKbi5Wxj9DW0Jr5mX_j4w@mail.gmail.com>
+Message-ID: <YoOi9PFK/JnNwH+D@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue 2022-05-10 13:16:54, Guilherme G. Piccoli wrote:
-> On 10/05/2022 12:16, Petr Mladek wrote:
-> > [...]
-> > Hmm, this looks like a hack. PANIC_UNUSED will never be used.
-> > All notifiers will be always called with PANIC_NOTIFIER.
-> > 
-> > The @val parameter is normally used when the same notifier_list
-> > is used in different situations.
-> > 
-> > But you are going to use it when the same notifier is used
-> > in more lists. This is normally distinguished by the @nh
-> > (atomic_notifier_head) parameter.
-> > 
-> > IMHO, it is a bad idea. First, it would confuse people because
-> > it does not follow the original design of the parameters.
-> > Second, the related code must be touched anyway when
-> > the notifier is moved into another list so it does not
-> > help much.
-> > 
-> > Or do I miss anything, please?
-> > 
-> > Best Regards,
-> > Petr
-> 
-> Hi Petr, thanks for the review.
-> 
-> I'm not strong attached to this patch, so we could drop it and refactor
-> the code of next patches to use the @nh as identification - but
-> personally, I feel this parameter could be used to identify the list
-> that called such function, in other words, what is the event that
-> triggered the callback. Some notifiers are even declared with this
-> parameter called "ev", like the event that triggers the notifier.
-> 
-> 
-> You mentioned 2 cases:
-> 
-> (a) Same notifier_list used in different situations;
-> 
-> (b) Same *notifier callback* used in different lists;
-> 
-> Mine is case (b), right? Can you show me an example of case (a)?
+On Mon 2022-05-16 09:02:10, Evan Green wrote:
+> On Mon, May 16, 2022 at 8:07 AM Guilherme G. Piccoli
+> <gpiccoli@igalia.com> wrote:
+> >
+> > Thanks for the review!
+> >
+> > I agree with the blinking stuff, I can rework and add all LED/blinking
+> > stuff into the loop list, it does make sense. I'll comment a bit in the
+> > others below...
+> >
+> > On 16/05/2022 11:01, Petr Mladek wrote:
+> > > [...]
+> > >> --- a/arch/mips/sgi-ip22/ip22-reset.c
+> > >> +++ b/arch/mips/sgi-ip22/ip22-reset.c
+> > >> @@ -195,7 +195,7 @@ static int __init reboot_setup(void)
+> > >>      }
+> > >>
+> > >>      timer_setup(&blink_timer, blink_timeout, 0);
+> > >> -    atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
+> > >> +    atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
+> > >
+> > > This notifier enables blinking. It is not much safe. It calls
+> > > mod_timer() that takes a lock internally.
+> > >
+> > > This kind of functionality should go into the last list called
+> > > before panic() enters the infinite loop. IMHO, all the blinking
+> > > stuff should go there.
+> > > [...]
+> > >> --- a/arch/mips/sgi-ip32/ip32-reset.c
+> > >> +++ b/arch/mips/sgi-ip32/ip32-reset.c
+> > >> @@ -145,7 +144,7 @@ static __init int ip32_reboot_setup(void)
+> > >>      pm_power_off = ip32_machine_halt;
+> > >>
+> > >>      timer_setup(&blink_timer, blink_timeout, 0);
+> > >> -    atomic_notifier_chain_register(&panic_notifier_list, &panic_block);
+> > >> +    atomic_notifier_chain_register(&panic_hypervisor_list, &panic_block);
+> > >
+> > > Same here. Should be done only before the "loop".
+> > > [...]
+> >
+> > Ack.
+> >
+> >
+> > >> --- a/drivers/firmware/google/gsmi.c
+> > >> +++ b/drivers/firmware/google/gsmi.c
+> > >> @@ -1034,7 +1034,7 @@ static __init int gsmi_init(void)
+> > >>
+> > >>      register_reboot_notifier(&gsmi_reboot_notifier);
+> > >>      register_die_notifier(&gsmi_die_notifier);
+> > >> -    atomic_notifier_chain_register(&panic_notifier_list,
+> > >> +    atomic_notifier_chain_register(&panic_hypervisor_list,
+> > >>                                     &gsmi_panic_notifier);
+> > >
+> > > I am not sure about this one. It looks like some logging or
+> > > pre_reboot stuff.
+> > >
+> >
+> > Disagree here. I'm looping Google maintainers, so they can comment.
+> > (CCed Evan, David, Julius)
+> >
+> > This notifier is clearly a hypervisor notification mechanism. I've fixed
+> > a locking stuff there (in previous patch), I feel it's low-risk but even
+> > if it's mid-risk, the class of such callback remains a perfect fit with
+> > the hypervisor list IMHO.
+>
+> This logs a panic to our "eventlog", a tiny logging area in SPI flash
+> for critical and power-related events. In some cases this ends up
+> being the only clue we get in a Chromebook feedback report that a
+> panic occurred, so from my perspective moving it to the front of the
+> line seems like a good idea.
 
-There are many examples of case (a):
+IMHO, this would really better fit into the pre-reboot notifier list:
 
-   + module_notify_list:
-	MODULE_STATE_LIVE, 	/* Normal state. */
-	MODULE_STATE_COMING,	/* Full formed, running module_init. */
-	MODULE_STATE_GOING,	/* Going away. */
-	MODULE_STATE_UNFORMED,	/* Still setting it up. */
+   + the callback stores the log so it is similar to kmsg_dump()
+     or console_flush_on_panic()
 
+   + the callback should be proceed after "info" notifiers
+     that might add some other useful information.
 
-   + netdev_chain:
-
-	NETDEV_UP	= 1,	/* For now you can't veto a device up/down */
-	NETDEV_DOWN,
-	NETDEV_REBOOT,		/* Tell a protocol stack a network interface
-				   detected a hardware crash and restarted
-				   - we can use this eg to kick tcp sessions
-				   once done */
-	NETDEV_CHANGE,		/* Notify device state change */
-	NETDEV_REGISTER,
-	NETDEV_UNREGISTER,
-	NETDEV_CHANGEMTU,	/* notify after mtu change happened */
-	NETDEV_CHANGEADDR,	/* notify after the address change */
-	NETDEV_PRE_CHANGEADDR,	/* notify before the address change */
-	NETDEV_GOING_DOWN,
-	...
-
-    + vt_notifier_list:
-
-	#define VT_ALLOCATE		0x0001 /* Console got allocated */
-	#define VT_DEALLOCATE		0x0002 /* Console will be deallocated */
-	#define VT_WRITE		0x0003 /* A char got output */
-	#define VT_UPDATE		0x0004 /* A bigger update occurred */
-	#define VT_PREWRITE		0x0005 /* A char is about to be written to the console */
-
-    + die_chain:
-
-	DIE_OOPS = 1,
-	DIE_INT3,
-	DIE_DEBUG,
-	DIE_PANIC,
-	DIE_NMI,
-	DIE_DIE,
-	DIE_KERNELDEBUG,
-	...
-
-These all call the same list/chain in different situations.
-The situation is distinguished by @val.
-
-
-> You can see in the following patches (or grep the kernel) that people are using
-> this identification parameter to determine which kind of OOPS trigger
-> the callback to condition the execution of the function to specific
-> cases.
-
-Could you please show me some existing code for case (b)?
-I am not able to find any except in your patches.
-
-Anyway, the solution in 16th patch is bad, definitely.
-hv_die_panic_notify_crash() uses "val" to disinguish
-both:
-
-     + "panic_notifier_list" vs "die_chain"
-     + die_val when callen via "die_chain"
-
-The API around "die_chain" API is not aware of enum panic_notifier_val
-and the API using "panic_notifier_list" is not aware of enum die_val.
-As I said, it is mixing apples and oranges and it is error prone.
+Honestly, I am not sure what exactly hypervisor callbacks do. But I
+think that they do not try to extract the kernel log because they
+would need to handle the internal format.
 
 Best Regards,
 Petr
