@@ -1,43 +1,69 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Tue, 17 May 2022 16:11:00 +0200
-Subject: [PATCH 21/30] panic: Introduce the panic pre-reboot notifier list
-In-Reply-To: <e895ce94-e6b9-caf6-e5d3-06bf0149445c@igalia.com>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Tue, 17 May 2022 12:19:02 -0300
+Subject: [PATCH 14/30] panic: Properly identify the panic event to the
+ notifiers' callbacks
+In-Reply-To: <YoOe7ifxfW8CEHdt@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-22-gpiccoli@igalia.com>
- <YoJgcC8c6LaKADZV@alley>
- <63a74b56-89ef-8d1f-d487-cdb986aab798@igalia.com>
- <bed66b9467254a5a8bafc1983dad643a@intel.com>
- <e895ce94-e6b9-caf6-e5d3-06bf0149445c@igalia.com>
-Message-ID: <YoOs9GJ5Ovq63u5Q@alley>
+ <20220427224924.592546-15-gpiccoli@igalia.com> <YnqBsXBImU64PAOL@alley>
+ <244a412c-4589-28d1-bb77-d3648d4f0b12@igalia.com> <YoOe7ifxfW8CEHdt@alley>
+Message-ID: <bc485d09-0958-0ddc-7b2d-cbc806cf6a01@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Mon 2022-05-16 13:33:51, Guilherme G. Piccoli wrote:
-> On 16/05/2022 13:18, Luck, Tony wrote:
-> >> [...]
-> > Would it be possible to have some global "kdump is configured + enabled" flag?
-> > 
-> > Then notifiers could make an informed choice on whether to deep dive to
-> > get all the possible details (when there is no kdump) or just skim the high
-> > level stuff (to maximize chance of getting a successful kdump).
-> > 
-> > -Tony
+On 17/05/2022 10:11, Petr Mladek wrote:
+> [...]
+>> You mentioned 2 cases:
+>>
+>> (a) Same notifier_list used in different situations;
+>>
+>> (b) Same *notifier callback* used in different lists;
+>>
+>> Mine is case (b), right? Can you show me an example of case (a)?
 > 
-> Good idea Tony! What if I wire a kexec_crash_loaded() in the notifier?
+> There are many examples of case (a):
+> 
+> [... snip ...] 
+> These all call the same list/chain in different situations.
+> The situation is distinguished by @val.
+> 
+> 
+>> You can see in the following patches (or grep the kernel) that people are using
+>> this identification parameter to determine which kind of OOPS trigger
+>> the callback to condition the execution of the function to specific
+>> cases.
+> 
+> Could you please show me some existing code for case (b)?
+> I am not able to find any except in your patches.
+> 
 
-I like this idea.
+Hi Petr, thanks for the examples - I agree with you. In the end, seems
+I'm kind of abusing the API. This id is used to distinguish different
+situations in which the callback is called, but in the same
+"realm"/notifier list.
 
-One small problem is that kexec_crash_loaded() has valid result
-only under kexec_mutex. On the other hand, it should stay true
-once loaded so that the small race window should be innocent.
+In my case I have different list calling the same callback and
+(ab-)using the id to make distinction. I can rework the patches using
+pointer comparison, it's fine =)
 
-> With that, are you/Petr/Dinh OK in moving it for the info list?
+So, I'll drop this patch in V2.
 
-Sounds good to me.
+> Anyway, the solution in 16th patch is bad, definitely.
+> hv_die_panic_notify_crash() uses "val" to disinguish
+> both:
+> 
+>      + "panic_notifier_list" vs "die_chain"
+>      + die_val when callen via "die_chain"
+> 
+> The API around "die_chain" API is not aware of enum panic_notifier_val
+> and the API using "panic_notifier_list" is not aware of enum die_val.
+> As I said, it is mixing apples and oranges and it is error prone.
+> 
 
-Best Regards,
-Petr
+OK, I'll re-work that patch - there's more there to be changed, that one
+is complex heheh
+
+Cheers!
 
