@@ -1,60 +1,52 @@
-From: Petr Mladek <pmladek@suse.com>
-Date: Wed, 18 May 2022 09:58:18 +0200
-Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-In-Reply-To: <YoOpyW1+q+Z5as78@alley>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-20-gpiccoli@igalia.com>
- <YoJZVZl/MH0KiE/J@alley>
- <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
- <YoOpyW1+q+Z5as78@alley>
-Message-ID: <YoSnGmBJ3kYs5WMf@alley>
+From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Date: Wed, 18 May 2022 14:48:30 +0530
+Subject: [PATCH] kexec_file: Drop pr_err in weak implementations of
+ arch_kexec_apply_relocations[_add]
+In-Reply-To: <YoSk+jRjNQtUL50d@MiWiFi-R3L-srv>
+References: <20220425174128.11455-1-naveen.n.rao@linux.vnet.ibm.com>
+ <YoNqJ/MOSIVwKP/o@MiWiFi-R3L-srv>
+ <1652782155.56t7mah8ib.naveen@linux.ibm.com>
+ <8735h8b2f1.fsf@email.froward.int.ebiederm.org>
+ <87v8u3o9tk.fsf@mpe.ellerman.id.au> <YoSk+jRjNQtUL50d@MiWiFi-R3L-srv>
+Message-ID: <1652864763.xpq371r1wx.naveen@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue 2022-05-17 15:57:34, Petr Mladek wrote:
-> On Mon 2022-05-16 12:06:17, Guilherme G. Piccoli wrote:
-> > >> --- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-> > >> +++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
-> > >> @@ -814,7 +814,7 @@ static int brcmstb_pm_probe(struct platform_device *pdev)
-> > >>  		goto out;
-> > >>  	}
-> > >>  
-> > >> -	atomic_notifier_chain_register(&panic_notifier_list,
-> > >> +	atomic_notifier_chain_register(&panic_hypervisor_list,
-> > >>  				       &brcmstb_pm_panic_nb);
-> > > 
-> > > I am not sure about this one. It instruct some HW to preserve DRAM.
-> > > IMHO, it better fits into pre_reboot category but I do not have
-> > > strong opinion.
-> > 
-> > Disagree here, I'm CCing Florian for information.
-> > 
-> > This notifier preserves RAM so it's *very interesting* if we have
-> > kmsg_dump() for example, but maybe might be also relevant in case kdump
-> > kernel is configured to store something in a persistent RAM (then,
-> > without this notifier, after kdump reboots the system data would be lost).
+Baoquan He wrote:
+> On 05/18/22 at 12:26pm, Michael Ellerman wrote:
+>> 
+>> It seems that recordmcount is not really maintained anymore now that x86
+>> uses objtool?
+>> 
+>> There've been several threads about fixing recordmcount, but none of
+>> them seem to have lead to a solution.
+>> 
+>> These weak symbol vs recordmcount problems have been worked around going
+>> back as far as 2020:
 > 
-> I see. It is actually similar problem as with
-> drivers/firmware/google/gsmi.c.
+> It gives me feeling that llvm or recordmcount should make adjustment,
+> but not innocent kernel code, if there are a lot of places reported.
+> I am curious how llvm or recordmcount dev respond to this.
 
-As discussed in the other other reply, it seems that both affected
-notifiers do not store kernel logs and should stay in the "hypervisor".
+As Michael stated, this is not just llvm - binutils has also adopted the 
+same and "unused" section symbols are being dropped.
 
-> I does similar things like kmsg_dump() so it should be called in
-> the same location (after info notifier list and before kdump).
->
-> A solution might be to put it at these notifiers at the very
-> end of the "info" list or make extra "dump" notifier list.
+For recordmcount, there were a few threads and approaches that have been 
+tried:
+- https://patchwork.ozlabs.org/project/linuxppc-dev/patch/cd0f6bdfdf1ee096fb2c07e7b38940921b8e9118.1637764848.git.christophe.leroy at csgroup.eu/
+- https://patchwork.ozlabs.org/project/linuxppc-dev/list/?series=297434&state=*
 
-I just want to point out that the above idea has problems.
-Notifiers storing kernel log need to be treated as kmsg_dump().
-In particular, we would  need to know if there are any.
-We do not need to call "info" notifier list before kdump
-when there is no kernel log dumper registered.
+Objtool has picked up a more appropriate fix for this recently, and 
+long-term, we would like to move to using objtool for ftrace purposes:
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/tools/objtool/elf.c?id=4abff6d48dbcea8200c7ea35ba70c242d128ebf3
 
-Best Regards,
-Petr
+While that is being pursued, we want to unbreak some of the CI and users 
+who are hitting this.
+
+
+- Naveen
+
 
