@@ -1,61 +1,59 @@
 From: Petr Mladek <pmladek@suse.com>
-Date: Wed, 18 May 2022 09:38:52 +0200
+Date: Wed, 18 May 2022 09:58:18 +0200
 Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-In-Reply-To: <d72b9aab-675c-ac89-b73a-b1de4a0b722d@igalia.com>
+In-Reply-To: <YoOpyW1+q+Z5as78@alley>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
  <20220427224924.592546-20-gpiccoli@igalia.com>
  <YoJZVZl/MH0KiE/J@alley>
  <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
  <YoOpyW1+q+Z5as78@alley>
- <d72b9aab-675c-ac89-b73a-b1de4a0b722d@igalia.com>
-Message-ID: <YoSijKwuwbY9uHxG@alley>
+Message-ID: <YoSnGmBJ3kYs5WMf@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Tue 2022-05-17 13:42:06, Guilherme G. Piccoli wrote:
-> On 17/05/2022 10:57, Petr Mladek wrote:
-> >> Disagree here, I'm CCing Florian for information.
-> >>
-> >> This notifier preserves RAM so it's *very interesting* if we have
-> >> kmsg_dump() for example, but maybe might be also relevant in case kdump
-> >> kernel is configured to store something in a persistent RAM (then,
-> >> without this notifier, after kdump reboots the system data would be lost).
+On Tue 2022-05-17 15:57:34, Petr Mladek wrote:
+> On Mon 2022-05-16 12:06:17, Guilherme G. Piccoli wrote:
+> > >> --- a/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+> > >> +++ b/drivers/soc/bcm/brcmstb/pm/pm-arm.c
+> > >> @@ -814,7 +814,7 @@ static int brcmstb_pm_probe(struct platform_device *pdev)
+> > >>  		goto out;
+> > >>  	}
+> > >>  
+> > >> -	atomic_notifier_chain_register(&panic_notifier_list,
+> > >> +	atomic_notifier_chain_register(&panic_hypervisor_list,
+> > >>  				       &brcmstb_pm_panic_nb);
+> > > 
+> > > I am not sure about this one. It instruct some HW to preserve DRAM.
+> > > IMHO, it better fits into pre_reboot category but I do not have
+> > > strong opinion.
 > > 
-> > I see. It is actually similar problem as with
-> > drivers/firmware/google/gsmi.c.
+> > Disagree here, I'm CCing Florian for information.
 > > 
-> > I does similar things like kmsg_dump() so it should be called in
-> > the same location (after info notifier list and before kdump).
-> > 
-> > A solution might be to put it at these notifiers at the very
-> > end of the "info" list or make extra "dump" notifier list.
+> > This notifier preserves RAM so it's *very interesting* if we have
+> > kmsg_dump() for example, but maybe might be also relevant in case kdump
+> > kernel is configured to store something in a persistent RAM (then,
+> > without this notifier, after kdump reboots the system data would be lost).
 > 
-> Here I still disagree. I've commented in the other response thread
-> (about Google gsmi) about the semantics of the hypervisor list, but
-> again: this list should contain callbacks that
-> 
-> (a) Should run early, _by default_ before a kdump;
-> (b) Communicate with the firmware/hypervisor in a "low-risk" way;
-> 
-> Imagine a scenario where users configure kdump kernel to save something
-> in a persistent form in DRAM - it'd be like a late pstore, in the next
-> kernel. This callback enables that, it's meant to inform FW "hey, panic
-> happened, please from now on don't clear the RAM in the next FW-reboot".
-> I don't see a reason to postpone that - let's see if the maintainers
-> have an opinion.
+> I see. It is actually similar problem as with
+> drivers/firmware/google/gsmi.c.
 
-I have answered this in more detail in the other reply, see
-https://lore.kernel.org/r/YoShZVYNAdvvjb7z at alley
+As discussed in the other other reply, it seems that both affected
+notifiers do not store kernel logs and should stay in the "hypervisor".
 
-I agree that both notifiers in
+> I does similar things like kmsg_dump() so it should be called in
+> the same location (after info notifier list and before kdump).
+>
+> A solution might be to put it at these notifiers at the very
+> end of the "info" list or make extra "dump" notifier list.
 
-    drivers/soc/bcm/brcmstb/pm/pm-arm.c
-    drivers/firmware/google/gsmi.c
-
-better fit into the hypervisor list after all.
+I just want to point out that the above idea has problems.
+Notifiers storing kernel log need to be treated as kmsg_dump().
+In particular, we would  need to know if there are any.
+We do not need to call "info" notifier list before kdump
+when there is no kernel log dumper registered.
 
 Best Regards,
 Petr
