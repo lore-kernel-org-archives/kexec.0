@@ -1,185 +1,71 @@
 From: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
-Date: Thu, 19 May 2022 14:42:37 +0530
-Subject: [PATCH v2] kexec_file: Drop weak attribute from
+Date: Thu, 19 May 2022 14:43:38 +0530
+Subject: [PATCH] kexec_file: Drop weak attribute from
  arch_kexec_apply_relocations[_add]
-Message-ID: <20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com>
+In-Reply-To: <20220518134705.7ae186d5419b24d689a38ccc@linux-foundation.org>
+References: <20220518181828.645877-1-naveen.n.rao@linux.vnet.ibm.com>
+ <20220518134705.7ae186d5419b24d689a38ccc@linux-foundation.org>
+Message-ID: <1652950421.sq10xtycz9.naveen@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
-symbols") [1], binutils (v2.36+) started dropping section symbols that
-it thought were unused.  This isn't an issue in general, but with
-kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
-separate .text.unlikely section and the section symbol ".text.unlikely"
-is being dropped. Due to this, recordmcount is unable to find a non-weak
-symbol in .text.unlikely to generate a relocation record against.
+Andrew Morton wrote:
+> On Wed, 18 May 2022 23:48:28 +0530 "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> wrote:
+> 
+>> Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
+>> symbols") [1], binutils (v2.36+) started dropping section symbols that
+>> it thought were unused.  This isn't an issue in general, but with
+>> kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
+>> separate .text.unlikely section and the section symbol ".text.unlikely"
+>> is being dropped. Due to this, recordmcount is unable to find a non-weak
+>> symbol in .text.unlikely to generate a relocation record against.
+>> 
+>> Address this by dropping the weak attribute from these functions:
+>> - arch_kexec_apply_relocations() is not overridden by any architecture
+>>   today, so just drop the weak attribute.
+>> - arch_kexec_apply_relocations_add() is only overridden by x86 and s390.
+>>   Retain the function prototype for those and move the weak
+>>   implementation into the header as a static inline for other
+>>   architectures.
+>> 
+>> ...
+>>
+> 
+> Sigh.  This patch demonstrates why I like __weak :<
+> 
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -229,6 +225,30 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
+>>  				   unsigned long long mend);
+>>  extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+>>  				       void **addr, unsigned long *sz);
+>> +
+>> +#if defined(CONFIG_X86_64) || defined(CONFIG_S390)
+> 
+> Let's avoid listing the architectures here?  Better to add
+> 
+> 	select ARCH_HAVE_ARCH_KEXEC_APPLY_RELOCATIONS_ADD
+> 
+> to arch/<arch>/Kconfig?
 
-Address this by dropping the weak attribute from these functions.
-Instead, follow the existing pattern of having architectures #define the
-name of the function they want to override in their headers.
+I followed the approach used in commit 6e7b64b9dd6d96 ("elfcore: fix 
+building with clang") since here again, it was overridden on only two 
+architectures. I also wanted to avoid touching the architecture headers 
+so as to make it simpler to backport.
 
-[1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
+But, as Michael points out, using a #ifdef isn't too much of a change 
+either. I also confirmed that those changes still apply cleanly all the 
+way back to v5.10. I've posted a v2 which takes this approach.
 
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- arch/s390/include/asm/kexec.h |  8 ++++++
- arch/x86/include/asm/kexec.h  |  8 ++++++
- include/linux/kexec.h         | 46 +++++++++++++++++++++++++++++------
- kernel/kexec_file.c           | 34 --------------------------
- 4 files changed, 54 insertions(+), 42 deletions(-)
+> 
+> Please cc me on any additional work on this.
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 7f3c9ac34bd8d1..540dd469b0886d 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -83,4 +83,12 @@ struct kimage_arch {
- extern const struct kexec_file_ops s390_kexec_image_ops;
- extern const struct kexec_file_ops s390_kexec_elf_ops;
- 
-+#ifdef CONFIG_KEXEC_FILE
-+struct purgatory_info;
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section,
-+				     const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtab);
-+#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
-+#endif
- #endif /*_S390_KEXEC_H */
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 11b7c06e2828c3..6ad8d946cd3ebf 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -186,6 +186,14 @@ extern int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages,
- extern void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages);
- #define arch_kexec_pre_free_pages arch_kexec_pre_free_pages
- 
-+#ifdef CONFIG_KEXEC_FILE
-+struct purgatory_info;
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section,
-+				     const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtab);
-+#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
-+#endif
- #endif
- 
- typedef void crash_vmclear_fn(void);
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index 58d1b58a971e34..fcd5035209f19a 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -193,14 +193,6 @@ void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
- int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
- 				  unsigned long buf_len);
- void *arch_kexec_kernel_image_load(struct kimage *image);
--int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
--				     Elf_Shdr *section,
--				     const Elf_Shdr *relsec,
--				     const Elf_Shdr *symtab);
--int arch_kexec_apply_relocations(struct purgatory_info *pi,
--				 Elf_Shdr *section,
--				 const Elf_Shdr *relsec,
--				 const Elf_Shdr *symtab);
- int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #ifdef CONFIG_KEXEC_SIG
- int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
-@@ -229,6 +221,44 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mend);
- extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 				       void **addr, unsigned long *sz);
-+
-+#ifndef arch_kexec_apply_relocations_add
-+/*
-+ * arch_kexec_apply_relocations_add - apply relocations of type RELA
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELAs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+static inline int
-+arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
-+				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
-+{
-+	pr_err("RELA relocation unsupported.\n");
-+	return -ENOEXEC;
-+}
-+#endif
-+
-+#ifndef arch_kexec_apply_relocations
-+/*
-+ * arch_kexec_apply_relocations - apply relocations of type REL
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+static inline int
-+arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
-+			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
-+{
-+	pr_err("REL relocation unsupported.\n");
-+	return -ENOEXEC;
-+}
-+#endif
- #endif /* CONFIG_KEXEC_FILE */
- 
- #ifdef CONFIG_KEXEC_ELF
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 8347fc158d2b96..c108a2a8875463 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -108,40 +108,6 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
- }
- #endif
- 
--/*
-- * arch_kexec_apply_relocations_add - apply relocations of type RELA
-- * @pi:		Purgatory to be relocated.
-- * @section:	Section relocations applying to.
-- * @relsec:	Section containing RELAs.
-- * @symtab:	Corresponding symtab.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
--int __weak
--arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
--				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
--{
--	pr_err("RELA relocation unsupported.\n");
--	return -ENOEXEC;
--}
--
--/*
-- * arch_kexec_apply_relocations - apply relocations of type REL
-- * @pi:		Purgatory to be relocated.
-- * @section:	Section relocations applying to.
-- * @relsec:	Section containing RELs.
-- * @symtab:	Corresponding symtab.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
--int __weak
--arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
--			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
--{
--	pr_err("REL relocation unsupported.\n");
--	return -ENOEXEC;
--}
--
- /*
-  * Free up memory used by kernel, initrd, and command line. This is temporary
-  * memory allocation which is not needed any more after these buffers have
+I've copied you on the v2 patch. Thanks!
 
-base-commit: f993aed406eaf968ba3867a76bb46c95336a33d0
--- 
-2.36.1
+
+- Naveen
 
 
