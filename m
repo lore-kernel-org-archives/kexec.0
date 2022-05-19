@@ -1,70 +1,76 @@
-From: Andrew Morton <akpm@linux-foundation.org>
-Date: Thu, 19 May 2022 10:29:48 -0700
-Subject: [PATCH v2] kexec_file: Drop weak attribute from
+From: Eric W. Biederman <ebiederm@xmission.com>
+Date: Thu, 19 May 2022 12:59:17 -0500
+Subject: [PATCH] kexec_file: Drop weak attribute from
  arch_kexec_apply_relocations[_add]
-In-Reply-To: <202205192320.CoXevcfR-lkp@intel.com>
-References: <20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com>
- <202205192320.CoXevcfR-lkp@intel.com>
-Message-ID: <20220519102948.f5c990db0e5f9cfb35c2a68f@linux-foundation.org>
+In-Reply-To: <YoWySwbszfdZS9LU@MiWiFi-R3L-srv> (Baoquan He's message of "Thu, 
+ 19 May 2022 10:58:19 +0800")
+References: <20220518181828.645877-1-naveen.n.rao@linux.vnet.ibm.com>
+ <87ee0q7b92.fsf@email.froward.int.ebiederm.org>
+ <YoWySwbszfdZS9LU@MiWiFi-R3L-srv>
+Message-ID: <87bkvt4d56.fsf@email.froward.int.ebiederm.org>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, 19 May 2022 23:17:48 +0800 kernel test robot <lkp@intel.com> wrote:
+Baoquan He <bhe@redhat.com> writes:
 
-> Hi "Naveen,
-> 
-> I love your patch! Yet something to improve:
-> 
-> [auto build test ERROR on f993aed406eaf968ba3867a76bb46c95336a33d0]
-> 
-> url:    https://github.com/intel-lab-lkp/linux/commits/Naveen-N-Rao/kexec_file-Drop-weak-attribute-from-arch_kexec_apply_relocations-_add/20220519-171432
-> base:   f993aed406eaf968ba3867a76bb46c95336a33d0
-> config: s390-allmodconfig (https://download.01.org/0day-ci/archive/20220519/202205192320.CoXevcfR-lkp at intel.com/config)
-> compiler: s390-linux-gcc (GCC) 11.3.0
-> reproduce (this is a W=1 build):
->         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
->         chmod +x ~/bin/make.cross
->         # https://github.com/intel-lab-lkp/linux/commit/67171688c71cb5b05f26e0dfc45eec8d8d1428ff
->         git remote add linux-review https://github.com/intel-lab-lkp/linux
->         git fetch --no-tags linux-review Naveen-N-Rao/kexec_file-Drop-weak-attribute-from-arch_kexec_apply_relocations-_add/20220519-171432
->         git checkout 67171688c71cb5b05f26e0dfc45eec8d8d1428ff
->         # save the config file
->         mkdir build_dir && cp config build_dir/.config
->         COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=s390 SHELL=/bin/bash arch/s390/
-> 
-> If you fix the issue, kindly add following tag as appropriate
-> Reported-by: kernel test robot <lkp@intel.com>
-> 
-> All errors (new ones prefixed by >>):
-> 
->    In file included from arch/s390/kernel/machine_kexec_reloc.c:3:
-> >> arch/s390/include/asm/kexec.h:89:38: error: unknown type name 'Elf_Shdr'; did you mean 'elf_shdr'?
->       89 |                                      Elf_Shdr *section,
->          |                                      ^~~~~~~~
->          |                                      elf_shdr
->    arch/s390/include/asm/kexec.h:90:44: error: unknown type name 'Elf_Shdr'
->       90 |                                      const Elf_Shdr *relsec,
->          |                                            ^~~~~~~~
->    arch/s390/include/asm/kexec.h:91:44: error: unknown type name 'Elf_Shdr'
->       91 |                                      const Elf_Shdr *symtab);
->          |                                            ^~~~~~~~
+> Hi Eric,
+>
+> On 05/18/22 at 04:59pm, Eric W. Biederman wrote:
+>> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
+>> 
+>> > Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
+>> > symbols") [1], binutils (v2.36+) started dropping section symbols that
+>> > it thought were unused.  This isn't an issue in general, but with
+>> > kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
+>> > separate .text.unlikely section and the section symbol ".text.unlikely"
+>> > is being dropped. Due to this, recordmcount is unable to find a non-weak
+>> > symbol in .text.unlikely to generate a relocation record against.
+>> >
+>> > Address this by dropping the weak attribute from these functions:
+>> > - arch_kexec_apply_relocations() is not overridden by any architecture
+>> >   today, so just drop the weak attribute.
+>> > - arch_kexec_apply_relocations_add() is only overridden by x86 and s390.
+>> >   Retain the function prototype for those and move the weak
+>> >   implementation into the header as a static inline for other
+>> >   architectures.
+>> >
+>> > [1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
+>> 
+>> Any chance you can also get machine_kexec_post_load,
+>> crash_free_reserved_phys_range, arch_kexec_protect_protect_crashkres,
+>> arch_kexec_unprotect_crashkres, arch_kexec_kernel_image_probe,
+>> arch_kexec_kernel_image_probe, arch_kimage_file_post_load_cleanup,
+>> arch_kexec_kernel_verify_sig, and arch_kexec_locate_mem_hole as well.
+>> 
+>> That is everything in kexec that uses a __weak symbol.  If we can't
+>> count on them working we might as well just get rid of the rest
+>> preemptively.
+>
+> Is there a new rule that __weak is not suggested in kernel any more?
+> Please help provide a pointer if yes, so that I can learn that.
+>
+> In my mind, __weak is very simple and clear as a mechanism to add
+> ARCH related functionality.
 
-Thanks, I did this:
+You should be able to trace the conversation back for all of the details
+but if you can't here is the summary.
 
---- a/arch/s390/include/asm/kexec.h~kexec_file-drop-weak-attribute-from-arch_kexec_apply_relocations-fix
-+++ a/arch/s390/include/asm/kexec.h
-@@ -9,6 +9,8 @@
- #ifndef _S390_KEXEC_H
- #define _S390_KEXEC_H
- 
-+#include <linux/module.h>
-+
- #include <asm/processor.h>
- #include <asm/page.h>
- #include <asm/setup.h>
-_
+There is a tool that some architectures use called recordmcount.  The
+recordmcount looks for a symbol in a section, and ignores all weak
+symbols.  In certain cases sections become so simple there are only weak
+symbols.  At which point recordmcount fails.
 
+Which means in practice __weak symbols are unreliable and don't work
+to add ARCH related functionality.
+
+Given that __weak symbols fail randomly I would much rather have simpler
+code that doesn't fail.  It has never been the case that __weak symbols
+have been very common in the kernel.  I expect they are something like
+bool that have been gaining traction.  Still given that __weak symbols
+don't work.  I don't want them.
+
+Eric
 
