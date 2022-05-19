@@ -1,97 +1,28 @@
-From: Baoquan He <bhe@redhat.com>
-Date: Sun, 22 May 2022 11:07:57 +0800
-Subject: [PATCH v3 -next 1/6] kexec_file: Fix kexec_file.c build error
- for riscv platform
-In-Reply-To: <mhng-33c63a92-49e5-48a0-8f54-797c797ee373@palmer-mbp2014>
-References: <20220408100914.150110-2-lizhengyu3@huawei.com>
- <mhng-33c63a92-49e5-48a0-8f54-797c797ee373@palmer-mbp2014>
-Message-ID: <YompDXEY1MaHElmE@MiWiFi-R3L-srv>
+From: Guilherme G. Piccoli <gpiccoli@igalia.com>
+Date: Thu, 19 May 2022 09:07:25 -0300
+Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+In-Reply-To: <YoXr2AD+Jc/ukUhJ@alley>
+References: <20220427224924.592546-1-gpiccoli@igalia.com>
+ <20220427224924.592546-20-gpiccoli@igalia.com> <YoJZVZl/MH0KiE/J@alley>
+ <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com> <YoOpyW1+q+Z5as78@alley>
+ <YoSnGmBJ3kYs5WMf@alley> <fbbd0a8d-2ef4-4a39-4b75-354918e85778@igalia.com>
+ <YoXr2AD+Jc/ukUhJ@alley>
+Message-ID: <73ade79a-5d76-0e68-708c-f14d3665a7d2@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 05/20/22 at 08:45am, Palmer Dabbelt wrote:
-> On Fri, 08 Apr 2022 03:09:09 PDT (-0700), lizhengyu3 at huawei.com wrote:
-> > From: Liao Chang <liaochang1@huawei.com>
-> > 
-> > When CONFIG_KEXEC_FILE is set for riscv platform, the compilation of
-> > kernel/kexec_file.c generate build error:
-> > 
-> > kernel/kexec_file.c: In function 'crash_prepare_elf64_headers':
-> > ./arch/riscv/include/asm/page.h:110:71: error: request for member 'virt_addr' in something not a structure or union
-> >   110 |  ((x) >= PAGE_OFFSET && (!IS_ENABLED(CONFIG_64BIT) || (x) < kernel_map.virt_addr))
-> >       |                                                                       ^
-> > ./arch/riscv/include/asm/page.h:131:2: note: in expansion of macro 'is_linear_mapping'
-> >   131 |  is_linear_mapping(_x) ?       \
-> >       |  ^~~~~~~~~~~~~~~~~
-> > ./arch/riscv/include/asm/page.h:140:31: note: in expansion of macro '__va_to_pa_nodebug'
-> >   140 | #define __phys_addr_symbol(x) __va_to_pa_nodebug(x)
-> >       |                               ^~~~~~~~~~~~~~~~~~
-> > ./arch/riscv/include/asm/page.h:143:24: note: in expansion of macro '__phys_addr_symbol'
-> >   143 | #define __pa_symbol(x) __phys_addr_symbol(RELOC_HIDE((unsigned long)(x), 0))
-> >       |                        ^~~~~~~~~~~~~~~~~~
-> > kernel/kexec_file.c:1327:36: note: in expansion of macro '__pa_symbol'
-> >  1327 |   phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
-> > 
-> > This occurs is because the "kernel_map" referenced in macro
-> > is_linear_mapping()  is suppose to be the one of struct kernel_mapping
-> > defined in arch/riscv/mm/init.c, but the 2nd argument of
-> > crash_prepare_elf64_header() has same symbol name, in expansion of macro
-> > is_linear_mapping in function crash_prepare_elf64_header(), "kernel_map"
-> > actually is the local variable.
-> > 
-> > Signed-off-by: Liao Chang <liaochang1@huawei.com>
-> > ---
-> >  include/linux/kexec.h | 2 +-
-> >  kernel/kexec_file.c   | 4 ++--
-> >  2 files changed, 3 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> > index 58d1b58a971e..ebb1bffbf068 100644
-> > --- a/include/linux/kexec.h
-> > +++ b/include/linux/kexec.h
-> > @@ -227,7 +227,7 @@ struct crash_mem {
-> >  extern int crash_exclude_mem_range(struct crash_mem *mem,
-> >  				   unsigned long long mstart,
-> >  				   unsigned long long mend);
-> > -extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-> > +extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
-> >  				       void **addr, unsigned long *sz);
-> >  #endif /* CONFIG_KEXEC_FILE */
-> > 
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 8347fc158d2b..331a4f0f10f5 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -1260,7 +1260,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
-> >  	return 0;
-> >  }
-> > 
-> > -int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-> > +int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
-> >  			  void **addr, unsigned long *sz)
-> >  {
-> >  	Elf64_Ehdr *ehdr;
-> > @@ -1324,7 +1324,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
-> >  	phdr++;
-> > 
-> >  	/* Prepare PT_LOAD type program header for kernel text region */
-> > -	if (kernel_map) {
-> > +	if (need_kernel_map) {
-> >  		phdr->p_type = PT_LOAD;
-> >  		phdr->p_flags = PF_R|PF_W|PF_X;
-> >  		phdr->p_vaddr = (unsigned long) _text;
+On 19/05/2022 04:03, Petr Mladek wrote:
+> [...]
+> I would ignore it for now. If anyone would want to safe the log
+> then they would need to read it. They will most likely use
+> the existing kmsg_dump() infastructure. In fact, they should
+> use it to avoid a code duplication.
 > 
-> IMO this is fine: we could rename all the kernel_map stuff in arch/riscv,
-> but this is much more self-contained.  It's not been ack'd by anyone else,
-> but get_maintainers just suggests the kexec@ list so I'm going to take it
-> via the RISC-V tree along with the rest of these.
+> Best Regards,
+> Petr
 
-I ever checked this patch, and thought the renaming of kernel_map in
-arch/riscv might be more reasonable, because 'need_kernel_map' is obviously
-redundant and looks silly, considering in a generic code. But searching
-result of kernel_map under arch/riscv stops me suggesting that.
-
+Cool, thanks! I agree, let's expect people use kmsg_dump() as they should =)
 
