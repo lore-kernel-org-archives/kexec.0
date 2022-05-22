@@ -1,133 +1,97 @@
-From: Eric W. Biederman <ebiederm@xmission.com>
-Date: Fri, 20 May 2022 14:25:05 -0500
-Subject: [PATCH] kexec_file: Drop weak attribute from
- arch_kexec_apply_relocations[_add]
-In-Reply-To: <20220520104641.GB194232@MiWiFi-R3L-srv> (Baoquan He's message of
- "Fri, 20 May 2022 18:46:41 +0800")
-References: <20220518181828.645877-1-naveen.n.rao@linux.vnet.ibm.com>
- <87ee0q7b92.fsf@email.froward.int.ebiederm.org>
- <YoWySwbszfdZS9LU@MiWiFi-R3L-srv>
- <87bkvt4d56.fsf@email.froward.int.ebiederm.org>
- <20220520104641.GB194232@MiWiFi-R3L-srv>
-Message-ID: <877d6g0zxq.fsf@email.froward.int.ebiederm.org>
+From: Baoquan He <bhe@redhat.com>
+Date: Sun, 22 May 2022 11:07:57 +0800
+Subject: [PATCH v3 -next 1/6] kexec_file: Fix kexec_file.c build error
+ for riscv platform
+In-Reply-To: <mhng-33c63a92-49e5-48a0-8f54-797c797ee373@palmer-mbp2014>
+References: <20220408100914.150110-2-lizhengyu3@huawei.com>
+ <mhng-33c63a92-49e5-48a0-8f54-797c797ee373@palmer-mbp2014>
+Message-ID: <YompDXEY1MaHElmE@MiWiFi-R3L-srv>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Baoquan He <bhe@redhat.com> writes:
+On 05/20/22 at 08:45am, Palmer Dabbelt wrote:
+> On Fri, 08 Apr 2022 03:09:09 PDT (-0700), lizhengyu3 at huawei.com wrote:
+> > From: Liao Chang <liaochang1@huawei.com>
+> > 
+> > When CONFIG_KEXEC_FILE is set for riscv platform, the compilation of
+> > kernel/kexec_file.c generate build error:
+> > 
+> > kernel/kexec_file.c: In function 'crash_prepare_elf64_headers':
+> > ./arch/riscv/include/asm/page.h:110:71: error: request for member 'virt_addr' in something not a structure or union
+> >   110 |  ((x) >= PAGE_OFFSET && (!IS_ENABLED(CONFIG_64BIT) || (x) < kernel_map.virt_addr))
+> >       |                                                                       ^
+> > ./arch/riscv/include/asm/page.h:131:2: note: in expansion of macro 'is_linear_mapping'
+> >   131 |  is_linear_mapping(_x) ?       \
+> >       |  ^~~~~~~~~~~~~~~~~
+> > ./arch/riscv/include/asm/page.h:140:31: note: in expansion of macro '__va_to_pa_nodebug'
+> >   140 | #define __phys_addr_symbol(x) __va_to_pa_nodebug(x)
+> >       |                               ^~~~~~~~~~~~~~~~~~
+> > ./arch/riscv/include/asm/page.h:143:24: note: in expansion of macro '__phys_addr_symbol'
+> >   143 | #define __pa_symbol(x) __phys_addr_symbol(RELOC_HIDE((unsigned long)(x), 0))
+> >       |                        ^~~~~~~~~~~~~~~~~~
+> > kernel/kexec_file.c:1327:36: note: in expansion of macro '__pa_symbol'
+> >  1327 |   phdr->p_offset = phdr->p_paddr = __pa_symbol(_text);
+> > 
+> > This occurs is because the "kernel_map" referenced in macro
+> > is_linear_mapping()  is suppose to be the one of struct kernel_mapping
+> > defined in arch/riscv/mm/init.c, but the 2nd argument of
+> > crash_prepare_elf64_header() has same symbol name, in expansion of macro
+> > is_linear_mapping in function crash_prepare_elf64_header(), "kernel_map"
+> > actually is the local variable.
+> > 
+> > Signed-off-by: Liao Chang <liaochang1@huawei.com>
+> > ---
+> >  include/linux/kexec.h | 2 +-
+> >  kernel/kexec_file.c   | 4 ++--
+> >  2 files changed, 3 insertions(+), 3 deletions(-)
+> > 
+> > diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> > index 58d1b58a971e..ebb1bffbf068 100644
+> > --- a/include/linux/kexec.h
+> > +++ b/include/linux/kexec.h
+> > @@ -227,7 +227,7 @@ struct crash_mem {
+> >  extern int crash_exclude_mem_range(struct crash_mem *mem,
+> >  				   unsigned long long mstart,
+> >  				   unsigned long long mend);
+> > -extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+> > +extern int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+> >  				       void **addr, unsigned long *sz);
+> >  #endif /* CONFIG_KEXEC_FILE */
+> > 
+> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> > index 8347fc158d2b..331a4f0f10f5 100644
+> > --- a/kernel/kexec_file.c
+> > +++ b/kernel/kexec_file.c
+> > @@ -1260,7 +1260,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+> >  	return 0;
+> >  }
+> > 
+> > -int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+> > +int crash_prepare_elf64_headers(struct crash_mem *mem, int need_kernel_map,
+> >  			  void **addr, unsigned long *sz)
+> >  {
+> >  	Elf64_Ehdr *ehdr;
+> > @@ -1324,7 +1324,7 @@ int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
+> >  	phdr++;
+> > 
+> >  	/* Prepare PT_LOAD type program header for kernel text region */
+> > -	if (kernel_map) {
+> > +	if (need_kernel_map) {
+> >  		phdr->p_type = PT_LOAD;
+> >  		phdr->p_flags = PF_R|PF_W|PF_X;
+> >  		phdr->p_vaddr = (unsigned long) _text;
+> 
+> IMO this is fine: we could rename all the kernel_map stuff in arch/riscv,
+> but this is much more self-contained.  It's not been ack'd by anyone else,
+> but get_maintainers just suggests the kexec@ list so I'm going to take it
+> via the RISC-V tree along with the rest of these.
 
-> On 05/19/22 at 12:59pm, Eric W. Biederman wrote:
->> Baoquan He <bhe@redhat.com> writes:
->> 
->> > Hi Eric,
->> >
->> > On 05/18/22 at 04:59pm, Eric W. Biederman wrote:
->> >> "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com> writes:
->> >> 
->> >> > Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
->> >> > symbols") [1], binutils (v2.36+) started dropping section symbols that
->> >> > it thought were unused.  This isn't an issue in general, but with
->> >> > kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
->> >> > separate .text.unlikely section and the section symbol ".text.unlikely"
->> >> > is being dropped. Due to this, recordmcount is unable to find a non-weak
->> >> > symbol in .text.unlikely to generate a relocation record against.
->> >> >
->> >> > Address this by dropping the weak attribute from these functions:
->> >> > - arch_kexec_apply_relocations() is not overridden by any architecture
->> >> >   today, so just drop the weak attribute.
->> >> > - arch_kexec_apply_relocations_add() is only overridden by x86 and s390.
->> >> >   Retain the function prototype for those and move the weak
->> >> >   implementation into the header as a static inline for other
->> >> >   architectures.
->> >> >
->> >> > [1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
->> >> 
->> >> Any chance you can also get machine_kexec_post_load,
->> >> crash_free_reserved_phys_range, arch_kexec_protect_protect_crashkres,
->> >> arch_kexec_unprotect_crashkres, arch_kexec_kernel_image_probe,
->> >> arch_kexec_kernel_image_probe, arch_kimage_file_post_load_cleanup,
->> >> arch_kexec_kernel_verify_sig, and arch_kexec_locate_mem_hole as well.
->> >> 
->> >> That is everything in kexec that uses a __weak symbol.  If we can't
->> >> count on them working we might as well just get rid of the rest
->> >> preemptively.
->> >
->> > Is there a new rule that __weak is not suggested in kernel any more?
->> > Please help provide a pointer if yes, so that I can learn that.
->> >
->> > In my mind, __weak is very simple and clear as a mechanism to add
->> > ARCH related functionality.
->> 
->> You should be able to trace the conversation back for all of the details
->> but if you can't here is the summary.
->> 
->> There is a tool that some architectures use called recordmcount.  The
->> recordmcount looks for a symbol in a section, and ignores all weak
->> symbols.  In certain cases sections become so simple there are only weak
->> symbols.  At which point recordmcount fails.
->> 
->> Which means in practice __weak symbols are unreliable and don't work
->> to add ARCH related functionality.
->> 
->> Given that __weak symbols fail randomly I would much rather have simpler
->> code that doesn't fail.  It has never been the case that __weak symbols
->> have been very common in the kernel.  I expect they are something like
->> bool that have been gaining traction.  Still given that __weak symbols
->> don't work.  I don't want them.
->
-> Thanks for the summary, Eric.
->
-> From Naveen's reply, what I got is, llvm's recent change makes
-> symbol of section .text.unlikely lost,
-
-If I have read the thread correctly this change happened in both
-llvm and binutils.  So both tools chains that are used to build the
-kernel.
-
-> but the secton .text.unlikely
-> still exists. The __weak symbol will be put in .text.unlikely partly,
-> when arch_kexec_apply_relocations_add() includes the pr_err line. While
-> removing the pr_err() line will put __weak symbol
-> arch_kexec_apply_relocations_add() in .text instead.
-
-Yes.  Calling pr_err has some effect.  Either causing an mcount
-entry to be ommitted, or causing the symbols in the function to be
-placed in .text.unlikely.
-
-> Now the status is that not only recordmcount got this problem, objtools
-> met it too and got an appropriate fix. Means objtools's fix doesn't need
-> kernel's adjustment. Recordmcount need kernel to adjust because it lacks
-> continuous support and developement. Naveen also told that they are
-> converting to objtools, just the old CI cases rely on recordmcount. In
-> fact, if someone stands up to get an appropriate recordmcount fix too,
-> the problem will be gone too.
-
-If the descriptions are correct I suspect recoredmcount could just
-decided to use the weak symbol, and not ignore it.
-
-Unfortunately I looked at the code and it looks like recordmcount
-is only ignoring weak symbols on arm.  So without being able to
-reproduce this I don't understand enough of what is going to on to fix
-it.
-
-> Asking this because __weak will be sentenced to death from now on, if we
-> decide to change kernel. And this thread will be the pointer provided to
-> others when telling them not to use __weak.
-
-Well knowing that it is recordmcount all someone has to do is show that
-recordmcount has been removed/fixed for the case in question.
-
-> I am not strongly against taking off __weak, just wondering if there's
-> chance to fix it in recordmcount, and the cost comparing with kernel fix;
-> except of this issue, any other weakness of __weak. Noticed Andrew has
-> picked this patch, as a witness of this moment, raise a tiny concern.
-
-I just don't see what else we can realistically do.
-
-Eric
-
-
+I ever checked this patch, and thought the renaming of kernel_map in
+arch/riscv might be more reasonable, because 'need_kernel_map' is obviously
+redundant and looks silly, considering in a generic code. But searching
+result of kernel_map under arch/riscv stops me suggesting that.
 
 
