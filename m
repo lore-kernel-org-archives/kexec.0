@@ -1,64 +1,77 @@
-From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Fri, 20 May 2022 08:23:33 -0300
-Subject: [PATCH 24/30] panic: Refactor the panic path
-In-Reply-To: <20220519234502.GA194232@MiWiFi-R3L-srv>
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com> <Yn0TnsWVxCcdB2yO@alley>
- <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
- <20220519234502.GA194232@MiWiFi-R3L-srv>
-Message-ID: <ded31ec0-076b-2c5b-0fe6-0c274954821f@igalia.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+Date: Mon, 23 May 2022 14:06:42 +0530
+Subject: [PATCH v8 3/7] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <20220505184603.1548-4-eric.devolder@oracle.com>
+References: <20220505184603.1548-1-eric.devolder@oracle.com>
+ <20220505184603.1548-4-eric.devolder@oracle.com>
+Message-ID: <88ec248e-e00f-a84e-c652-97e49fbf2674@linux.ibm.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 19/05/2022 20:45, Baoquan He wrote:
-> [...]
->> I really appreciate the summary skill you have, to convert complex
->> problems in very clear and concise ideas. Thanks for that, very useful!
->> I agree with what was summarized above.
-> 
-> I want to say the similar words to Petr's reviewing comment when I went
-> through the patches and traced each reviewing sub-thread to try to
-> catch up. Petr has reivewed this series so carefully and given many
-> comments I want to ack immediately.
-> 
-> I agree with most of the suggestions from Petr to this patch, except of
-> one tiny concern, please see below inline comment.
+Hello Eric,
 
-Hi Baoquan, thanks! I'm glad you're also reviewing that =)
+On 06/05/22 00:15, Eric DeVolder wrote:
+> CPU and memory change notifications are received in order to
+> regenerate the elfcorehdr.
+>
+> To support cpu hotplug, a callback is registered to capture the
+> CPUHP_AP_ONLINE_DYN online and offline events via
+> cpuhp_setup_state_nocalls().
+>
+> To support memory hotplug, a notifier is registered to capture the
+> MEM_ONLINE and MEM_OFFLINE events via register_memory_notifier().
+>
+> The cpu callback and memory notifiers call handle_hotplug_event()
+> to handle the hot plug/unplug event. Then handle_hotplug_event()
+> dispatches the event to the architecture specific
+> arch_crash_handle_hotplug_event(). During the process, the
+> kexec_mutex is held.
+>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>   include/linux/crash_core.h | 10 +++++
+>   include/linux/kexec.h      |  5 +++
+>   kernel/crash_core.c        | 92 ++++++++++++++++++++++++++++++++++++++
+>   3 files changed, 107 insertions(+)
+>
+> diff --git a/include/linux/crash_core.h b/include/linux/crash_core.h
+> index de62a722431e..a240f84348aa 100644
+> --- a/include/linux/crash_core.h
+> +++ b/include/linux/crash_core.h
+> @@ -84,4 +84,14 @@ int parse_crashkernel_high(char *cmdline, unsigned long long system_ram,
+>   int parse_crashkernel_low(char *cmdline, unsigned long long system_ram,
+>   		unsigned long long *crash_size, unsigned long long *crash_base);
+>   
+> +#define KEXEC_CRASH_HP_REMOVE_CPU		0
+> +#define KEXEC_CRASH_HP_ADD_CPU			1
+> +#define KEXEC_CRASH_HP_REMOVE_MEMORY	2
+> +#define KEXEC_CRASH_HP_ADD_MEMORY		3
+> +#define KEXEC_CRASH_HP_INVALID_CPU		-1U
+> +
+> +struct kimage;
+> +void arch_crash_handle_hotplug_event(struct kimage *image, unsigned int hp_action,
+> +									unsigned int cpu);
+> +
+>   #endif /* LINUX_CRASH_CORE_H */
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index f93f2591fc1e..5935bc78ed7f 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -308,6 +308,11 @@ struct kimage {
+>   	struct purgatory_info purgatory_info;
+>   #endif
+>   
+> +	bool hotplug_event;
+> +	unsigned int offlinecpu;
+> +	bool elfcorehdr_index_valid;
+> +	int elfcorehdr_index;
+How about keeping above kimage elements under below config?
+#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
 
-
-> [...]
-> 
-> I like the proposed skeleton of panic() and code style suggested by
-> Petr very much. About panic_prefer_crash_dump which might need be added,
-> I hope it has a default value true. This makes crash_dump execute at
-> first by default just as before, unless people specify
-> panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
-> panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
-> this is inconsistent with the old behaviour.
-
-I'd like to understand better why the crash_kexec() must always be the
-first thing in your use case. If we keep that behavior, we'll see all
-sorts of workarounds - see the last patches of this series, Hyper-V and
-PowerPC folks hardcoded "crash_kexec_post_notifiers" in order to force
-execution of their relevant notifiers (like the vmbus disconnect,
-specially in arm64 that has no custom machine_crash_shutdown, or the
-fadump case in ppc). This led to more risk in kdump.
-
-The thing is: with the notifiers' split, we tried to keep only the most
-relevant/necessary stuff in this first list, things that ultimately
-should improve kdump reliability or if not, at least not break it. My
-feeling is that, with this series, we should change the idea/concept
-that kdump must run first nevertheless, not matter what. We're here
-trying to accommodate the antagonistic goals of hypervisors that need
-some clean-up (even for kdump to work) VS. kdump users, that wish a
-"pristine" system reboot ASAP after the crash.
-
-Cheers,
-
-
-Guilherme
+Thanks,
+Sourabh Jain
 
