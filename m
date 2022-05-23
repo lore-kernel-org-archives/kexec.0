@@ -1,51 +1,30 @@
 From: Guilherme G. Piccoli <gpiccoli@igalia.com>
-Date: Mon, 23 May 2022 11:56:12 -0300
-Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
-In-Reply-To: <d1cc0bee-2a98-0c2e-8796-6fb7fae6b803@broadcom.com>
+Date: Mon, 23 May 2022 17:40:07 -0300
+Subject: [PATCH 12/30] parisc: Replace regular spinlock with spin_trylock
+ on panic path
+In-Reply-To: <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-20-gpiccoli@igalia.com> <YoJZVZl/MH0KiE/J@alley>
- <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com> <YoOpyW1+q+Z5as78@alley>
- <d72b9aab-675c-ac89-b73a-b1de4a0b722d@igalia.com>
- <81878a67-21f1-fee8-1add-f381bc8b05df@broadcom.com>
- <edbaa4fa-561c-6f5e-f2ab-43ae68acaede@igalia.com>
- <d1cc0bee-2a98-0c2e-8796-6fb7fae6b803@broadcom.com>
-Message-ID: <0fac8c71-6f18-d15c-23f5-075dbc45f3f9@igalia.com>
+ <20220427224924.592546-13-gpiccoli@igalia.com>
+ <6a7c924a-54a9-c5ea-8a9d-3ea92987b436@gmx.de>
+Message-ID: <0dda86c0-3a54-8c70-d1e7-18bbb4d41bab@igalia.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On 19/05/2022 16:20, Scott Branden wrote:
-> [...] 
->> Hi Scott / Desmond, thanks for the detailed answer! Is this adapter
->> designed to run in x86 only or you have other architectures' use cases?
-> The adapter may be used in any PCIe design that supports DMA.
-> So it may be possible to run in arm64 servers.
->>
->> [...]
->> With that said, and given this is a lightweight notifier that ideally
->> should run ASAP, I'd keep this one in the hypervisor list. We can
->> "adjust" the semantic of this list to include lightweight notifiers that
->> reset adapters.
-> Sounds the best to keep system operating as tested today.
->>
->> With that said, Petr has a point - not always such list is going to be
->> called before kdump. So, that makes me think in another idea: what if we
->> have another list, but not on panic path, but instead in the custom
->> crash_shutdown()? Drivers could add callbacks there that must execute
->> before kexec/kdump, no matter what.
-> It may be beneficial for some other drivers but for our use we would 
-> then need to register for the panic path and the crash_shutdown path. 
-> We notify the VK card for 2 purposes: one to stop DMA so memory stop 
-> changing during a kdump.  And also to get the card into a good state so 
-> resets happen cleanly.
+On 28/04/2022 13:55, Helge Deller wrote:
+> [...]
+> You may add:
+> Acked-by: Helge Deller <deller@gmx.de> # parisc
+> 
+> Helge
 
-Thanks Scott! With that, I guess it's really better to keep this
-notifier in this hypervisor/early list - I'm planning to do that for V2.
-Unless Petr or somebody has strong feelings against that, of course.
+Hi Helge, do you think would be possible to still pick this one for
+v5.19 or do you prefer to hold for the next release?
 
-Cheers,
+I'm working on V2, so if it's merged for 5.19 I won't send it again.
+Thanks,
 
 
 Guilherme
