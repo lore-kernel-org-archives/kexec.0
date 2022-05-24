@@ -1,94 +1,60 @@
 From: Petr Mladek <pmladek@suse.com>
-Date: Tue, 24 May 2022 10:01:12 +0200
-Subject: [PATCH 24/30] panic: Refactor the panic path
-In-Reply-To: <ded31ec0-076b-2c5b-0fe6-0c274954821f@igalia.com>
+Date: Tue, 24 May 2022 10:04:51 +0200
+Subject: [PATCH 19/30] panic: Add the panic hypervisor notifier list
+In-Reply-To: <0fac8c71-6f18-d15c-23f5-075dbc45f3f9@igalia.com>
 References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <Yn0TnsWVxCcdB2yO@alley>
- <d313eec2-96b6-04e3-35cd-981f103d010e@igalia.com>
- <20220519234502.GA194232@MiWiFi-R3L-srv>
- <ded31ec0-076b-2c5b-0fe6-0c274954821f@igalia.com>
-Message-ID: <YoyQyHHfhIIXSX0U@alley>
+ <20220427224924.592546-20-gpiccoli@igalia.com>
+ <YoJZVZl/MH0KiE/J@alley>
+ <ad082ce7-db50-13bb-3dbb-9b595dfa78be@igalia.com>
+ <YoOpyW1+q+Z5as78@alley>
+ <d72b9aab-675c-ac89-b73a-b1de4a0b722d@igalia.com>
+ <81878a67-21f1-fee8-1add-f381bc8b05df@broadcom.com>
+ <edbaa4fa-561c-6f5e-f2ab-43ae68acaede@igalia.com>
+ <d1cc0bee-2a98-0c2e-8796-6fb7fae6b803@broadcom.com>
+ <0fac8c71-6f18-d15c-23f5-075dbc45f3f9@igalia.com>
+Message-ID: <YoyRo6gJrr4lsFpD@alley>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Fri 2022-05-20 08:23:33, Guilherme G. Piccoli wrote:
-> On 19/05/2022 20:45, Baoquan He wrote:
-> > [...]
-> >> I really appreciate the summary skill you have, to convert complex
-> >> problems in very clear and concise ideas. Thanks for that, very useful!
-> >> I agree with what was summarized above.
-> > 
-> > I want to say the similar words to Petr's reviewing comment when I went
-> > through the patches and traced each reviewing sub-thread to try to
-> > catch up. Petr has reivewed this series so carefully and given many
-> > comments I want to ack immediately.
-> > 
-> > I agree with most of the suggestions from Petr to this patch, except of
-> > one tiny concern, please see below inline comment.
+On Mon 2022-05-23 11:56:12, Guilherme G. Piccoli wrote:
+> On 19/05/2022 16:20, Scott Branden wrote:
+> > [...] 
+> >> Hi Scott / Desmond, thanks for the detailed answer! Is this adapter
+> >> designed to run in x86 only or you have other architectures' use cases?
+> > The adapter may be used in any PCIe design that supports DMA.
+> > So it may be possible to run in arm64 servers.
+> >>
+> >> [...]
+> >> With that said, and given this is a lightweight notifier that ideally
+> >> should run ASAP, I'd keep this one in the hypervisor list. We can
+> >> "adjust" the semantic of this list to include lightweight notifiers that
+> >> reset adapters.
+> > Sounds the best to keep system operating as tested today.
+> >>
+> >> With that said, Petr has a point - not always such list is going to be
+> >> called before kdump. So, that makes me think in another idea: what if we
+> >> have another list, but not on panic path, but instead in the custom
+> >> crash_shutdown()? Drivers could add callbacks there that must execute
+> >> before kexec/kdump, no matter what.
+> > It may be beneficial for some other drivers but for our use we would 
+> > then need to register for the panic path and the crash_shutdown path. 
+> > We notify the VK card for 2 purposes: one to stop DMA so memory stop 
+> > changing during a kdump.  And also to get the card into a good state so 
+> > resets happen cleanly.
 > 
-> Hi Baoquan, thanks! I'm glad you're also reviewing that =)
-> 
-> 
-> > [...]
-> > 
-> > I like the proposed skeleton of panic() and code style suggested by
-> > Petr very much. About panic_prefer_crash_dump which might need be added,
-> > I hope it has a default value true. This makes crash_dump execute at
-> > first by default just as before, unless people specify
-> > panic_prefer_crash_dump=0|n|off to disable it. Otherwise we need add
-> > panic_prefer_crash_dump=1 in kernel and in our distros to enable kdump,
-> > this is inconsistent with the old behaviour.
-> 
-> I'd like to understand better why the crash_kexec() must always be the
-> first thing in your use case. If we keep that behavior, we'll see all
-> sorts of workarounds - see the last patches of this series, Hyper-V and
-> PowerPC folks hardcoded "crash_kexec_post_notifiers" in order to force
-> execution of their relevant notifiers (like the vmbus disconnect,
-> specially in arm64 that has no custom machine_crash_shutdown, or the
-> fadump case in ppc). This led to more risk in kdump.
-> 
-> The thing is: with the notifiers' split, we tried to keep only the most
-> relevant/necessary stuff in this first list, things that ultimately
-> should improve kdump reliability or if not, at least not break it. My
-> feeling is that, with this series, we should change the idea/concept
-> that kdump must run first nevertheless, not matter what. We're here
-> trying to accommodate the antagonistic goals of hypervisors that need
-> some clean-up (even for kdump to work) VS. kdump users, that wish a
-> "pristine" system reboot ASAP after the crash.
+> Thanks Scott! With that, I guess it's really better to keep this
+> notifier in this hypervisor/early list - I'm planning to do that for V2.
+> Unless Petr or somebody has strong feelings against that, of course.
 
-Good question. I wonder if Baoquan knows about problems caused by the
-particular notifiers that will end up in the hypervisor list. Note
-that there will be some shuffles and the list will be slightly
-different in V2.
+I am fine with it because we do not have a better solution at the
+moment.
 
-Anyway, I see four possible solutions:
-
-  1. The most conservative approach is to keep the current behavior
-     and call kdump first by default.
-
-  2. A medium conservative approach to change the default default
-     behavior and call hypervisor and eventually the info notifiers
-     before kdump. There still would be the possibility to call kdump
-     first by the command line parameter.
-
-  3. Remove the possibility to call kdump first completely. It would
-     assume that all the notifiers in the info list are super safe
-     or that they make kdump actually more safe.
-
-  4. Create one more notifier list for operations that always should
-     be called before crash_dump.
-
-Regarding the extra notifier list (4th solution). It is not clear to
-me whether it would be always called even before hypervisor list or
-when kdump is not enabled. We must not over-engineer it.
-
-2nd proposal looks like a good compromise. But maybe we could do
-this change few releases later. The notifiers split is a big
-change on its own.
+It might be a good candidate for the 5th notifier list mentioned
+in the thread https://lore.kernel.org/r/YoyQyHHfhIIXSX0U at alley .
+But I am not sure if the 5th list is worth the complexity.
 
 Best Regards,
 Petr
