@@ -1,176 +1,199 @@
-From: Mimi Zohar <zohar@linux.ibm.com>
-Date: Wed, 25 May 2022 09:30:40 -0400
-Subject: [PATCH v8 0/4] use more system keyrings to verify arm64 and
- s390 kexec kernel image signature
-In-Reply-To: <20220525095957.vvref4yeaidd5iww@Rk>
-References: <20220512070123.29486-1-coxu@redhat.com>
-	 <e382780002db9767671ca5a0213237f443243537.camel@linux.ibm.com>
-	 <20220525095957.vvref4yeaidd5iww@Rk>
-Message-ID: <d1a431e8cf69b3d892c118204705739a0ed907b7.camel@linux.ibm.com>
+From: Eric DeVolder <eric.devolder@oracle.com>
+Date: Wed, 25 May 2022 08:51:55 -0500
+Subject: [PATCH v8 6/7] x86/crash: Add x86 crash hotplug support for
+ kexec_file_load
+In-Reply-To: <60bd09e4-91d6-d81c-3b97-1d5334efe6e7@linux.ibm.com>
+References: <20220505184603.1548-1-eric.devolder@oracle.com>
+ <20220505184603.1548-7-eric.devolder@oracle.com>
+ <60bd09e4-91d6-d81c-3b97-1d5334efe6e7@linux.ibm.com>
+Message-ID: <526d44b2-0120-2d52-aac3-57155a2bf80b@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Wed, 2022-05-25 at 17:59 +0800, Coiby Xu wrote:
-> Hi Mimi,
+
+
+On 5/25/22 00:25, Sourabh Jain wrote:
+> Hello Eric,
 > 
-> On Fri, May 20, 2022 at 01:04:47PM -0400, Mimi Zohar wrote:
-> >Hi Coiby,
-> >
-> >On Thu, 2022-05-12 at 15:01 +0800, Coiby Xu wrote:
-> >
-> >The cover letter should start out with an overall problem description
-> >and then continue with the specifics.  In this case each of the arch's
-> >use different keyrings to validate the kexec kernel image signature.  I
+> On 06/05/22 00:16, Eric DeVolder wrote:
+>> For x86_64, when CPU or memory is hot un/plugged, the crash
+>> elfcorehdr, which describes the CPUs and memory in the system,
+>> must also be updated.
+>>
+>> To update the elfcorehdr for x86_64, a new elfcorehdr must be
+>> generated from the available CPUs and memory. The new elfcorehdr
+>> is prepared into a buffer, and then installed over the top of
+>> the existing elfcorehdr.
+>>
+>> In the patch 'kexec: exclude elfcorehdr from the segment digest'
+>> the need to update purgatory due to the change in elfcorehdr was
+>> eliminated.? As a result, no changes to purgatory or boot_params
+>> (as the elfcorehdr= kernel command line parameter pointer
+>> remains unchanged and correct) are needed, just elfcorehdr.
+>>
+>> To accommodate a growing number of resources via hotplug, the
+>> elfcorehdr segment must be sufficiently large enough to accommodate
+>> changes, see the CRASH_MAX_MEMORY_RANGES configure item.
+>>
+>> With this change, crash hotplug for kexec_file_load syscall
+>> is supported. When loading the crash kernel via kexec_file_load,
+>> the elfcorehdr is identified at load time in crash_load_segments().
+>>
+>> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+>> ---
+>> ? arch/x86/Kconfig??????? |? 11 ++++
+>> ? arch/x86/kernel/crash.c | 117 ++++++++++++++++++++++++++++++++++++++++
+>> ? 2 files changed, 128 insertions(+)
+>>
+>> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+>> index 4bed3abf444d..bf1201fe6981 100644
+>> --- a/arch/x86/Kconfig
+>> +++ b/arch/x86/Kconfig
+>> @@ -2072,6 +2072,17 @@ config CRASH_DUMP
+>> ??????? (CONFIG_RELOCATABLE=y).
+>> ??????? For more details see Documentation/admin-guide/kdump/kdump.rst
+>> +config CRASH_MAX_MEMORY_RANGES
+>> +??? depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
+>> +??? int
+>> +??? default 32768
+>> +??? help
+>> +????? For the kexec_file_load path, specify the maximum number of
+>> +????? memory regions, eg. as represented by the 'System RAM' entries
+>> +????? in /proc/iomem, that the elfcorehdr buffer/segment can accommodate.
+>> +????? This value is combined with NR_CPUS and multiplied by Elf64_Phdr
+>> +????? size to determine the final buffer size.
+>> +
+>> ? config KEXEC_JUMP
+>> ????? bool "kexec jump"
+>> ????? depends on KEXEC && HIBERNATION
+>> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+>> index 9db41cce8d97..951ef365f0a7 100644
+>> --- a/arch/x86/kernel/crash.c
+>> +++ b/arch/x86/kernel/crash.c
+>> @@ -25,6 +25,7 @@
+>> ? #include <linux/slab.h>
+>> ? #include <linux/vmalloc.h>
+>> ? #include <linux/memblock.h>
+>> +#include <linux/highmem.h>
+>> ? #include <asm/processor.h>
+>> ? #include <asm/hardirq.h>
+>> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
+>> ????? image->elf_headers = kbuf.buffer;
+>> ????? image->elf_headers_sz = kbuf.bufsz;
+>> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+>> +??? /* Ensure elfcorehdr segment large enough for hotplug changes */
+>> +??? kbuf.memsz = (CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES) * sizeof(Elf64_Phdr);
+>> +??? /* For marking as usable to crash kernel */
+>> +??? image->elf_headers_sz = kbuf.memsz;
+>> +??? /* Record the index of the elfcorehdr segment */
+>> +??? image->elfcorehdr_index = image->nr_segments;
+>> +??? image->elfcorehdr_index_valid = true;
+>> +#else
+>> ????? kbuf.memsz = kbuf.bufsz;
+>> +#endif
+>> ????? kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+>> ????? kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>> ????? ret = kexec_add_buffer(&kbuf);
+>> @@ -413,3 +424,109 @@ int crash_load_segments(struct kimage *image)
+>> ????? return ret;
+>> ? }
+>> ? #endif /* CONFIG_KEXEC_FILE */
+>> +
+>> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+>> +static void *map_crash_pages(unsigned long paddr, unsigned long size)
+>> +{
+>> +??? /*
+>> +???? * NOTE: The addresses and sizes passed to this routine have
+>> +???? * already been fully aligned on page boundaries. There is no
+>> +???? * need for massaging the address or size.
+>> +???? */
+>> +??? void *ptr = NULL;
+>> +
+>> +??? /* NOTE: requires arch_kexec_[un]protect_crashkres() for write access */
+>> +??? if (size > 0) {
+>> +??????? struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
+>> +
+>> +??????? ptr = kmap(page);
+>> +??? }
+>> +
+>> +??? return ptr;
+>> +}
+>> +
+>> +static void unmap_crash_pages(void **ptr)
+>> +{
+>> +??? if (ptr) {
+>> +??????? if (*ptr)
+>> +??????????? kunmap(*ptr);
+>> +??????? *ptr = NULL;
+>> +??? }
+>> +}
+>> +
+>> +/**
+>> + * arch_crash_handle_hotplug_event() - Handle hotplug elfcorehdr changes
+>> + * @image: the active struct kimage
+>> + * @hp_action: the hot un/plug action being handled
+>> + * @cpu: when KEXEC_CRASH_HP_ADD/REMOVE_CPU, the cpu affected
+>> + *
+>> + * To accurately reflect hot un/plug changes, the elfcorehdr (which
+>> + * is passed to the crash kernel via the elfcorehdr= parameter)
+>> + * must be updated with the new list of CPUs and memories. The new
+>> + * elfcorehdr is prepared in a kernel buffer, and then it is
+>> + * written on top of the existing/old elfcorehdr.
+>> + *
+>> + * For hotplug changes to elfcorehdr to work, two conditions are
+>> + * needed:
+>> + * First, the segment containing the elfcorehdr must be large enough
+>> + * to permit a growing number of resources. See the
+>> + * CONFIG_CRASH_MAX_MEMORY_RANGES description.
+>> + * Second, purgatory must explicitly exclude the elfcorehdr from the
+>> + * list of segments it checks (since the elfcorehdr changes and thus
+>> + * would require an update to purgatory itself to update the digest).
+>> + *
+>> + */
+>> +void arch_crash_handle_hotplug_event(struct kimage *image,
+>> +??? unsigned int hp_action, unsigned int cpu)
+>> +{
+>> +??? struct kexec_segment *ksegment;
+>> +??? unsigned char *ptr = NULL;
+>> +??? unsigned long elfsz = 0;
+>> +??? void *elfbuf = NULL;
+>> +??? unsigned long mem, memsz;
+>> +
+>> +??? if (!image->elfcorehdr_index_valid) {
+>> +??????? pr_err("crash hp: unable to locate elfcorehdr segment");
+>> +??????? goto out;
+>> +??? }
+>> +
+>> +??? ksegment = &image->segment[image->elfcorehdr_index];
+>> +??? mem = ksegment->mem;
+>> +??? memsz = ksegment->memsz;
+>> +
+>> +??? /*
+>> +???? * Create the new elfcorehdr reflecting the changes to CPU and/or
+>> +???? * memory resources.
+>> +???? */
+>> +??? if (prepare_elf_headers(image, &elfbuf, &elfsz)) {
+>> +??????? pr_err("crash hp: unable to prepare elfcore headers");
+>> +??????? goto out;
 > 
-> Thanks for the suggestion! I will start with an overall problem
-> description in next version. For me, the bigger problem is arm kexec
-> can't make use of .secondary_trusted_keys or .platform to verify kernel
-> image signature. The by-product of the solution is it also helps
-> address the problem of inconsistent usage of keyrings by kexec between
-> different arches.
+> Prepare_elf_header uses crash_prepare_elf64_headers function to generate elfcorehdr.
+> Since crash_prepare_elf64_headers is defined under CONFIG_KEXEC_FILE option we
+> will have build issues if CONFIG_KEXEC is enabled and CONFIG_KEXEC_FILE is disabled.
 > 
-> >would continue with saying the MOK keys were originally loaded onto the
-> >.platform keyring with the other EFI keys, but recently with the new
-> >.machine keyring that changed.
-> 
-> It seems I lack some background knowledge that makes me fail to
-> appreciate what change the new .machine keyring brings to kexec. As far
-> as I can understand, the new .machine keyring doesn't seem to change
-> much about kexec kernel image signature verification. kexec should be
-> able to use MOK keys to verify signature regardless of the keys being
-> loaded into .platform keyring or into the new .machine keyring. Because
-> the MOK keys have already be used to verify the 1st booting kernel's
-> image signature. To me, the significance of the new .machine keyring is
-> the end-users-enrolled keys can be also used to verify kernel modules
-> (the end users can also add his key to the .secondary_trusted_keys
-> keyring but the key needs to vouched by any existing key from the
-> .builtin_trusted_keys or .secondary_trusted_keys which is nearly
-> impossible).
+> How about moving crash_prepare_elf64_headers function to kernel/kexec_core.c?
 
-"the significance of the new .machine keyring is the end-users-enrolled 
-keys can be also used to verify kernel modules" correct.   So any key
-stored in MOK and loaded onto the .machine keyring, could also then be
-used to verify the kexec'ed kernel image signature as well.
+Yes, of course. I originally protected against this scenario with having the
+CRASH_HOTPLUG dependent on KEXEC_FILE, but as we eliminated CRASH_HOTPLUG, your
+suggestion above is on point.
+
+Thanks!
+eric
 
 > 
-> >
-> >The purpose of this patch set is a generic solution for the different
-> >archs.
-> >
-> >
-> >> Currently, a problem faced by arm64 is if a kernel image is signed by a
-> >> MOK key, loading it via the kexec_file_load() system call would be
-> >> rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> >> restricted; see man kernel_lockdown.7". This happens because arm64 uses
-> >> only the primary keyring i.e. the .builtin_trusted_keys keyring that
-> >> contains only kernel built-in keys to verify the kexec kernel image. MOK
-> >> keys are loaded into the .platform keyring or/and .machine keyring. The
-> >> .machine keyring is linked to the secondary keyring i.e.
-> >> .secondary_trusted_keys keyring when the end-user chooses to trust MOK
-> >> keys. The platform keyring is exclusively used for kexec kernel image
-> >> verification and .secondary_trusted_keys together with
-> >> .builtin_trusted_keys are the system trusted keyrings. So obviously
-> >> there is no reason to not use .secondary_trusted_keys or .platform
-> >> keyring for kernel image signature verification.
-> >
-> >Both the ".platform" and ".machine" keyring are linked to the
-> >".secondary_trusted_keys" keyring.
+> Thanks,
+> Sourabh Jain
 > 
-> I don't find any code that links the .platform keyring to the
-> .secondary_trusted_keys keyring and one [1] of your replies to "[PATCH
-> 4/4] module, KEYS: Make use of platform keyring for signature
-> verification" is as follows,
->    "Permission for loading the pre-OS keys onto the 'platform' keyring and
->    using them is limited to verifying the kexec kernel image, nothing
->    else."
-
-Right, that should have been, "Both the .builtin_trusted_keys and
-.machine keyrings are linked ..."
-
-> 
-> [1] https://lore.kernel.org/linux-arm-kernel/3e39412657a4b0839bcf38544d591959e89877b8.camel at linux.ibm.com/
-> 
-> >The root of trust for these
-> >keyrings are very different.  Instead of saying "So obviously there is
-> >no reason to not use .secondary_trusted_keys" it would be more
-> >beneficial to describe the root of trusts, allowing others to draw
-> >their own conclusions for their usecase.
-
-Linking the .machine keyring to the .secondary keyring impacts the
-root(s) of trust.
-
-> 
-> Thanks for the suggestion! I'll add the following text in v9, do it
-> looks good to you?
-> 
-> The root of trusts of the keys in the %.builtin_trusted_keys and
-> secondary_trusted_keys keyring is a Linux distribution vendor. 
-
-The root of trust for each keyring should be described separately.
-
-.builtin_trusted_keys:
-
-For example,
-
-Keys may be built into the kernel during build or inserted into memory
-reserved for keys post build.  In both of these cases, trust is based
-on verification of the kernel image signature.  On a physical system in
-a secure boot environment, this trust is rooted in HW.
-
-.machine:
-
-< explanation >
-
-.secondary_trusted_keys:
-
-For example,
-
-Certificates signed by keys on the .builtin_trusted_keys, .machine, or
-existing keys on the .secondary_trusted_keys keryings may be loaded
-onto the .secondary_trusted_keys keyring.  This establishes a signature
-chain of trust based on keys loaded on either the .builtin_trusted_keys
-or .machine keyrings, if configured and enabled.
-
-.platform
-
-< explanation >
-
-
-thanks,
-
-Mimi
-
-
-> The
-> .platform keyring could have both UEFI db keys and MOK keys or only UEFI
-> db keys. And the .machine keyring only have MOK keys. The root trust of
-> UEFI db keys is UEFI Platform Key which is shipped by an UEFI firmware
-> vendor. The root trust of MOK keys is a Linux distribution vendor (shim
-> has built-in MOK key) and the end user could also be another root of
-> trust if he/she enrolls his own key.
-> 
-> The %.builtin_trusted_keys keyring consists of the trustable keys built
-> into the kernel when a kernel is built by a developer.
-> 
-> The .secondary_trusted_keys keyring introduced by commit d3bfe84129f6
-> ("certs: Add a secondary system keyring that can be added to
-> dynamically") consists of the trustable keys that an end-user can add
-> dynamically after booting the kernel. When this kernel enables the
-> .machine keyring and an end user chooses to trust Machine Owner Keys
-> (MOK) provided by shim, MOK keys will be added to the .machine
-> keyring and the .machine keyring is be linked to the
-> secondary_trusted_keys so keys contained in the .machine keyring will
-> automatically be searched when searching secondary_trusted_keys.
-> 
-> The .platform keyring introduced by commit 9dc92c45177a ("integrity:
-> Define a trusted platform keyring") consist of UEFI db and
-> MOK keys. If an end user chooses to Machine Owner Keys and the kernel
-> has the .machine keyring enabled, the .platform keyring only consists of
-> UEFI db keys since the MOK keys are added to the .machine keyring
-> instead.
-
-
 
