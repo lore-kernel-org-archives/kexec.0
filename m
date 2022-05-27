@@ -1,40 +1,171 @@
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Fri, 27 May 2022 02:55:33 +0000
-Subject: [PATCH v2 0/2] Allow to kexec with initramfs larger than 2G
-Message-ID: <20220527025535.3953665-1-pasha.tatashin@soleen.com>
+Date: Fri, 27 May 2022 02:55:34 +0000
+Subject: [PATCH v2 1/2] fs/kernel_read_file: Allow to read files up-to ssize_t
+In-Reply-To: <20220527025535.3953665-1-pasha.tatashin@soleen.com>
+References: <20220527025535.3953665-1-pasha.tatashin@soleen.com>
+Message-ID: <20220527025535.3953665-2-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-Currently, the largest initramfs that is supported by kexec_file_load()
-syscall is 2G.
+Currently, the maximum file size that is supported is 2G. This may be
+too small in some cases. For example, kexec_file_load() system call
+loads initramfs. In some netboot cases initramfs can be rather large.
 
-This is because kernel_read_file() returns int, and is limited to
-INT_MAX or 2G.
+Allow to use up-to ssize_t bytes. The callers still can limit the
+maximum file size via buf_size.
 
-On the other hand, there are kexec based boot loaders (i.e. u-root),
-that may need to boot netboot images that might be larger than 2G.
-
-The first patch changes the return type from int to ssize_t in
-kernel_read_file* functions.
-
-The second patch increases the maximum initramfs file size to 4G.
-
-Tested: verified that can kexec_file_load() works with 4G initramfs
-on x86_64.
-
-Pasha Tatashin (2):
-  fs/kernel_read_file: Allow to read files up-to ssize_t
-  kexec_file: Increase maximum file size to 4G
-
+Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+---
  fs/kernel_read_file.c            | 38 ++++++++++++++++----------------
  include/linux/kernel_read_file.h | 32 +++++++++++++--------------
  include/linux/limits.h           |  1 +
- kernel/kexec_file.c              | 10 ++++++---
- 4 files changed, 43 insertions(+), 38 deletions(-)
+ 3 files changed, 36 insertions(+), 35 deletions(-)
 
+diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+index 1b07550485b9..5d826274570c 100644
+--- a/fs/kernel_read_file.c
++++ b/fs/kernel_read_file.c
+@@ -29,15 +29,15 @@
+  * change between calls to kernel_read_file().
+  *
+  * Returns number of bytes read (no single read will be bigger
+- * than INT_MAX), or negative on error.
++ * than SSIZE_MAX), or negative on error.
+  *
+  */
+-int kernel_read_file(struct file *file, loff_t offset, void **buf,
+-		     size_t buf_size, size_t *file_size,
+-		     enum kernel_read_file_id id)
++ssize_t kernel_read_file(struct file *file, loff_t offset, void **buf,
++			 size_t buf_size, size_t *file_size,
++			 enum kernel_read_file_id id)
+ {
+ 	loff_t i_size, pos;
+-	size_t copied;
++	ssize_t copied;
+ 	void *allocated = NULL;
+ 	bool whole_file;
+ 	int ret;
+@@ -58,7 +58,7 @@ int kernel_read_file(struct file *file, loff_t offset, void **buf,
+ 		goto out;
+ 	}
+ 	/* The file is too big for sane activities. */
+-	if (i_size > INT_MAX) {
++	if (i_size > SSIZE_MAX) {
+ 		ret = -EFBIG;
+ 		goto out;
+ 	}
+@@ -124,12 +124,12 @@ int kernel_read_file(struct file *file, loff_t offset, void **buf,
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file);
+ 
+-int kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
+-			       size_t buf_size, size_t *file_size,
+-			       enum kernel_read_file_id id)
++ssize_t kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
++				   size_t buf_size, size_t *file_size,
++				   enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+-	int ret;
++	ssize_t ret;
+ 
+ 	if (!path || !*path)
+ 		return -EINVAL;
+@@ -144,14 +144,14 @@ int kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+ 
+-int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+-				      void **buf, size_t buf_size,
+-				      size_t *file_size,
+-				      enum kernel_read_file_id id)
++ssize_t kernel_read_file_from_path_initns(const char *path, loff_t offset,
++					  void **buf, size_t buf_size,
++					  size_t *file_size,
++					  enum kernel_read_file_id id)
+ {
+ 	struct file *file;
+ 	struct path root;
+-	int ret;
++	ssize_t ret;
+ 
+ 	if (!path || !*path)
+ 		return -EINVAL;
+@@ -171,12 +171,12 @@ int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+ }
+ EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+ 
+-int kernel_read_file_from_fd(int fd, loff_t offset, void **buf,
+-			     size_t buf_size, size_t *file_size,
+-			     enum kernel_read_file_id id)
++ssize_t kernel_read_file_from_fd(int fd, loff_t offset, void **buf,
++				 size_t buf_size, size_t *file_size,
++				 enum kernel_read_file_id id)
+ {
+ 	struct fd f = fdget(fd);
+-	int ret = -EBADF;
++	ssize_t ret = -EBADF;
+ 
+ 	if (!f.file || !(f.file->f_mode & FMODE_READ))
+ 		goto out;
+diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+index 575ffa1031d3..90451e2e12bd 100644
+--- a/include/linux/kernel_read_file.h
++++ b/include/linux/kernel_read_file.h
+@@ -35,21 +35,21 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+ 	return kernel_read_file_str[id];
+ }
+ 
+-int kernel_read_file(struct file *file, loff_t offset,
+-		     void **buf, size_t buf_size,
+-		     size_t *file_size,
+-		     enum kernel_read_file_id id);
+-int kernel_read_file_from_path(const char *path, loff_t offset,
+-			       void **buf, size_t buf_size,
+-			       size_t *file_size,
+-			       enum kernel_read_file_id id);
+-int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+-				      void **buf, size_t buf_size,
+-				      size_t *file_size,
+-				      enum kernel_read_file_id id);
+-int kernel_read_file_from_fd(int fd, loff_t offset,
+-			     void **buf, size_t buf_size,
+-			     size_t *file_size,
+-			     enum kernel_read_file_id id);
++ssize_t kernel_read_file(struct file *file, loff_t offset,
++			 void **buf, size_t buf_size,
++			 size_t *file_size,
++			 enum kernel_read_file_id id);
++ssize_t kernel_read_file_from_path(const char *path, loff_t offset,
++				   void **buf, size_t buf_size,
++				   size_t *file_size,
++				   enum kernel_read_file_id id);
++ssize_t kernel_read_file_from_path_initns(const char *path, loff_t offset,
++					  void **buf, size_t buf_size,
++					  size_t *file_size,
++					  enum kernel_read_file_id id);
++ssize_t kernel_read_file_from_fd(int fd, loff_t offset,
++				 void **buf, size_t buf_size,
++				 size_t *file_size,
++				 enum kernel_read_file_id id);
+ 
+ #endif /* _LINUX_KERNEL_READ_FILE_H */
+diff --git a/include/linux/limits.h b/include/linux/limits.h
+index b568b9c30bbf..f6bcc9369010 100644
+--- a/include/linux/limits.h
++++ b/include/linux/limits.h
+@@ -7,6 +7,7 @@
+ #include <vdso/limits.h>
+ 
+ #define SIZE_MAX	(~(size_t)0)
++#define SSIZE_MAX	((ssize_t)(SIZE_MAX >> 1))
+ #define PHYS_ADDR_MAX	(~(phys_addr_t)0)
+ 
+ #define U8_MAX		((u8)~0U)
 -- 
 2.36.1.124.g0e6072fb45-goog
 
