@@ -1,71 +1,41 @@
 From: Pasha Tatashin <pasha.tatashin@soleen.com>
-Date: Thu, 26 May 2022 21:01:14 -0400
-Subject: [PATCH] kexec_file: Increase maximum file size to 4G
-In-Reply-To: <CA+CK2bDkKzp6uvy+f09K=COd3xn+EDa5nEu2j2o7Vyhd=aG0AA@mail.gmail.com>
-References: <20220526203805.3659597-1-tatashin@google.com> <CA+CK2bDkKzp6uvy+f09K=COd3xn+EDa5nEu2j2o7Vyhd=aG0AA@mail.gmail.com>
-Message-ID: <CA+CK2bAKiJzMB_=TFKa=KC0pKaT2N3qgHnKSnZCU99hB=e+_LA@mail.gmail.com>
+Date: Fri, 27 May 2022 02:55:33 +0000
+Subject: [PATCH v2 0/2] Allow to kexec with initramfs larger than 2G
+Message-ID: <20220527025535.3953665-1-pasha.tatashin@soleen.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 To: kexec@lists.infradead.org
 
-On Thu, May 26, 2022 at 4:45 PM Pasha Tatashin
-<pasha.tatashin@soleen.com> wrote:
->
-> On Thu, May 26, 2022 at 4:38 PM Pasha Tatashin
-> <pasha.tatashin@soleen.com> wrote:
-> >
-> > In some case initrd can be large. For example, it could be a netboot
-> > image loaded by u-root, that is kexec'ing into it.
-> >
-> > The maximum size of initrd is arbitrary set to 2G. Also, the limit is
-> > not very obvious because it is hidden behind a generic INT_MAX macro.
-> >
-> > Theoretically, we could make it LONG_MAX, but it is safer to keep it
-> > sane, and just increase it to 4G.
-> >
-> > Increase the size to 4G, and make it obvious by having a new macro
-> > that specifies the maximum file size supported by kexec_file_load()
-> > syscall: KEXEC_FILE_SIZE_MAX.
+Currently, the largest initramfs that is supported by kexec_file_load()
+syscall is 2G.
 
-It appears that since:
-f7a4f689bca6072492626938aad6dd2f32c5bf97
-fs/kernel_read_file: Remove redundant size argument
+This is because kernel_read_file() returns int, and is limited to
+INT_MAX or 2G.
 
-Introduced a change to  kernel_read_file to limit the maximum file
-internally from SIZE_MAX to INT_MAX.
+On the other hand, there are kexec based boot loaders (i.e. u-root),
+that may need to boot netboot images that might be larger than 2G.
 
-Therefore, more changes will be needed. I will work on them and sent them in v2.
+The first patch changes the return type from int to ssize_t in
+kernel_read_file* functions.
 
+The second patch increases the maximum initramfs file size to 4G.
 
-> >
-> > Signed-off-by: Pasha Tatashin <tatashin@google.com>
->
-> Should be instead:
-> Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
->
-> Thanks,
-> Pasha
->
-> > ---
-> >  kernel/kexec_file.c | 8 ++++++--
-> >  1 file changed, 6 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-> > index 8347fc158d2b..1be2227b33e6 100644
-> > --- a/kernel/kexec_file.c
-> > +++ b/kernel/kexec_file.c
-> > @@ -31,6 +31,9 @@
-> >
-> >  static int kexec_calculate_store_digests(struct kimage *image);
-> >
-> > +/* Maximum size in bytes for kernel/initrd files. */
-> > +#define KEXEC_FILE_SIZE_MAX    (4UL << 30)
+Tested: verified that can kexec_file_load() works with 4G initramfs
+on x86_64.
 
-Also, I will address 32-bit, with picking minimum between SIZE_MAX and
-kexec max file.
+Pasha Tatashin (2):
+  fs/kernel_read_file: Allow to read files up-to ssize_t
+  kexec_file: Increase maximum file size to 4G
 
-Thanks,
-Pasha
+ fs/kernel_read_file.c            | 38 ++++++++++++++++----------------
+ include/linux/kernel_read_file.h | 32 +++++++++++++--------------
+ include/linux/limits.h           |  1 +
+ kernel/kexec_file.c              | 10 ++++++---
+ 4 files changed, 43 insertions(+), 38 deletions(-)
+
+-- 
+2.36.1.124.g0e6072fb45-goog
+
 
