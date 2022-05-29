@@ -4,63 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 939DCC43334
-	for <kexec@archiver.kernel.org>; Thu,  2 Jun 2022 06:44:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BAD5BC43334
+	for <kexec@archiver.kernel.org>; Thu,  2 Jun 2022 06:44:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
 	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
 	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6l11vFDT3SbwReuNHF2wBBC7AkhHXjwbP4/VHDIq5fg=; b=igKrCerQ36b3gyVOKjbZR94NIG
-	S53LJunMi7H7M7USs3bJmI8d63XcJ3zS7SvvBgk71JKwx9JdA5ll4wQvU92uPTA95eYW7VBA2+Gdu
-	oJPzTXiCJZxFbucU7ub1HbVbiQHpjAv6vjs8efXhPQc2RachSzxSJXxT8MrW/vAbrMu+wSOUasYjP
-	HdXLFzH/ajXLRvV61TNKUtFPONhyJFgwIDNv7UgL+m201xiXDUmPepfpLQ0xljTRDKrvZTiqrYlno
-	2JSX5x8BX18c6Wo95UcKoQ0IWRS0QwzY1CY/nAk/axUGagaW/1j8JJRjXT6gbjoNklqydJ8lPxoWH
-	OfokmnJA==;
+	bh=ohtsCKjwEi/bSRB2fjuGaFbtD3US6QXDQJEN41hs4rU=; b=p8LdFR44VvTbkp1F76fOl0uxBB
+	RvgXu8Vyg/9Mbw0C5XqUglY7Gm8+n7f44408AcG5qguQyqz0af/F+DveYtLTrvJbDfiQT9zhE6+VA
+	764VHv8DLERwjTrZQCmx9JKpCfHBgO93EWhKyjxauMwFpiBKesj+3jxxRcsSPUJZ9Yi4Hei2pIPVH
+	qFCsR4cSuAbeSvfnAOTytOLPXZMEuIda0QB7kPyR7Xj452Bg3x2fEsBWGLBiYTQL0iiu71V/qZm67
+	mgyEO6+8zJMvu5TxGLhSv7s6FL/e/RcgXoUxjW0IH8nQj5tYD4DPNB8KFe32HdBXq/bg/InDBLoXj
+	bef4mbvQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nweZO-001oDL-Fa; Thu, 02 Jun 2022 06:44:34 +0000
+	id 1nweZT-001oHO-8Y; Thu, 02 Jun 2022 06:44:39 +0000
 Received: from metis.ext.pengutronix.de ([2001:67c:670:201:290:27ff:fe1d:cc33])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nvCrn-003Peu-Su
-	for kexec@lists.infradead.org; Sun, 29 May 2022 06:57:37 +0000
+	id 1nvJZr-003zzp-6I
+	for kexec@lists.infradead.org; Sun, 29 May 2022 14:07:32 +0000
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvCrD-0001Nl-TF; Sun, 29 May 2022 08:56:59 +0200
+	id 1nvJZU-0006Ii-Jf; Sun, 29 May 2022 16:07:08 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvCr5-005D0y-Nd; Sun, 29 May 2022 08:56:50 +0200
+	id 1nvJZO-005H9k-2S; Sun, 29 May 2022 16:07:00 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvCr3-00Cp8z-H3; Sun, 29 May 2022 08:56:49 +0200
-Date: Sun, 29 May 2022 08:56:37 +0200
+	id 1nvJZL-00Ct7w-OW; Sun, 29 May 2022 16:06:59 +0200
+Date: Sun, 29 May 2022 16:06:55 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-To: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
+To: Christophe Leroy <christophe.leroy@csgroup.eu>
+Cc: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>,
 	Li Zhengyu <lizhengyu3@huawei.com>,
-	Palmer Dabbelt <palmer@rivosinc.com>
-Cc: Andrew Morton <akpm@linux-foundation.org>,
-	Michael Ellerman <mpe@ellerman.id.au>,
+	Palmer Dabbelt <palmer@rivosinc.com>,
+	Stephen Rothwell <sfr@canb.auug.org.au>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
 	Eric Biederman <ebiederm@xmission.com>,
-	linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org, linux-riscv@lists.infradead.org,
-	kernel@pengutronix.de, Stephen Rothwell <sfr@canb.auug.org.au>
+	"kernel@pengutronix.de" <kernel@pengutronix.de>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	"linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+	"linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>
 Subject: Re: [PATCH v2] kexec_file: Drop weak attribute from
  arch_kexec_apply_relocations[_add]
-Message-ID: <20220529065637.xgapqjp2342flbuj@pengutronix.de>
+Message-ID: <20220529140655.bnd4fgggccrorj4t@pengutronix.de>
 References: <20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com>
+ <20220529065637.xgapqjp2342flbuj@pengutronix.de>
+ <264786d9-7756-19e0-2742-8b8d17f5ace5@csgroup.eu>
 MIME-Version: 1.0
-In-Reply-To: <20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com>
+In-Reply-To: <264786d9-7756-19e0-2742-8b8d17f5ace5@csgroup.eu>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220528_235735_975401_03499C84 
-X-CRM114-Status: GOOD (  11.17  )
+X-CRM114-CacheID: sfid-20220529_070731_272443_79A9AF1F 
+X-CRM114-Status: GOOD (  25.71  )
 X-Mailman-Approved-At: Wed, 01 Jun 2022 23:44:27 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -73,49 +78,103 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4878020250565845075=="
+Content-Type: multipart/mixed; boundary="===============3925376455497148690=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---===============4878020250565845075==
+--===============3925376455497148690==
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="kx2r5dh4j5uektvu"
+	protocol="application/pgp-signature"; boundary="qvv5wvvttflg77jh"
 Content-Disposition: inline
 
 
---kx2r5dh4j5uektvu
+--qvv5wvvttflg77jh
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
 Hello,
 
-on current linux-next ARCH=3Driscv allmodconfig breaks with:
+On Sun, May 29, 2022 at 09:46:47AM +0000, Christophe Leroy wrote:
+> Le 29/05/2022 =C3=A0 08:56, Uwe Kleine-K=C3=B6nig a =C3=A9crit=C2=A0:
+> > Hello,
+> >=20
+> > on current linux-next ARCH=3Driscv allmodconfig breaks with:
+> >=20
+> >    CC      arch/riscv/kernel/elf_kexec.o
+> > arch/riscv/kernel/elf_kexec.c:345:5: error: redefinition of =E2=80=98ar=
+ch_kexec_apply_relocations_add=E2=80=99
+> >    345 | int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> >        |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> > In file included from arch/riscv/kernel/elf_kexec.c:16:
+> > include/linux/kexec.h:236:1: note: previous definition of =E2=80=98arch=
+_kexec_apply_relocations_add=E2=80=99 with type =E2=80=98int(struct purgato=
+ry_info *, Elf64_Shdr *, const Elf64_Shdr *, const Elf64_Shdr *)=E2=80=99 {=
+aka =E2=80=98int(struct purgatory_info *, struct elf64_shdr *, const struct=
+ elf64_shdr *, const struct elf64_shdr *)=E2=80=99}
+> >    236 | arch_kexec_apply_relocations_add(struct purgatory_info *pi, El=
+f_Shdr *section,
+> >        | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+> >=20
+> > (I think) because there is a conflict between the two commits:
+> >=20
+> > 233c1e6c319c kexec_file: drop weak attribute from arch_kexec_apply_relo=
+cations[_add]
+> > 838b3e28488f RISC-V: Load purgatory in kexec_file
+> >=20
+> > And so next is broken starting from
+> > 164a9037b1d33f28ba27671c16ec1c23d4a11acf which merges the riscv tree.
+> >=20
+>=20
+> In arch/riscv/include/asm/kexec.h, do the same as s390 did in commit=20
+> 233c1e6c319c:
+>=20
+> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+> index 7f3c9ac34bd8..540dd469b088 100644
+> --- a/arch/s390/include/asm/kexec.h
+> +++ b/arch/s390/include/asm/kexec.h
+> @@ -83,4 +83,12 @@ struct kimage_arch {
+>   extern const struct kexec_file_ops s390_kexec_image_ops;
+>   extern const struct kexec_file_ops s390_kexec_elf_ops;
+>=20
+> +#ifdef CONFIG_KEXEC_FILE
+> +struct purgatory_info;
+> +int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> +				     Elf_Shdr *section,
+> +				     const Elf_Shdr *relsec,
+> +				     const Elf_Shdr *symtab);
+> +#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+> +#endif
+>   #endif /*_S390_KEXEC_H */
 
-  CC      arch/riscv/kernel/elf_kexec.o
-arch/riscv/kernel/elf_kexec.c:345:5: error: redefinition of =E2=80=98arch_k=
-exec_apply_relocations_add=E2=80=99
-  345 | int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-      |     ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-In file included from arch/riscv/kernel/elf_kexec.c:16:
-include/linux/kexec.h:236:1: note: previous definition of =E2=80=98arch_kex=
-ec_apply_relocations_add=E2=80=99 with type =E2=80=98int(struct purgatory_i=
-nfo *, Elf64_Shdr *, const Elf64_Shdr *, const Elf64_Shdr *)=E2=80=99 {aka =
-=E2=80=98int(struct purgatory_info *, struct elf64_shdr *, const struct elf=
-64_shdr *, const struct elf64_shdr *)=E2=80=99}
-  236 | arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shd=
-r *section,
-      | ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+I can confirm that doing
 
-(I think) because there is a conflict between the two commits:
+diff --git a/arch/riscv/include/asm/kexec.h b/arch/riscv/include/asm/kexec.h
+index 206217b23301..eee260e8ab30 100644
+--- a/arch/riscv/include/asm/kexec.h
++++ b/arch/riscv/include/asm/kexec.h
+@@ -55,6 +55,13 @@ extern riscv_kexec_method riscv_kexec_norelocate;
+=20
+ #ifdef CONFIG_KEXEC_FILE
+ extern const struct kexec_file_ops elf_kexec_ops;
++
++struct purgatory_info;
++int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
++				     Elf_Shdr *section,
++				     const Elf_Shdr *relsec,
++				     const Elf_Shdr *symtab);
++#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+ #endif
+=20
+ #endif
 
-233c1e6c319c kexec_file: drop weak attribute from arch_kexec_apply_relocati=
-ons[_add]
-838b3e28488f RISC-V: Load purgatory in kexec_file
+on top of 838b3e28488f results in a compilable tree. And when merging
+233c1e6c319c into this, it is still building.
 
-And so next is broken starting from
-164a9037b1d33f28ba27671c16ec1c23d4a11acf which merges the riscv tree.
+I'm not enough into kexec (and riscv) to judge if this is sensible, or
+create a useful commit log but the obvious way forward is to apply the
+above patch to the riscv tree before it hits Linus' tree.
 
 Best regards
 Uwe
@@ -125,25 +184,25 @@ Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig         =
    |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---kx2r5dh4j5uektvu
+--qvv5wvvttflg77jh
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKTGRsACgkQwfwUeK3K
-7AmDxAf9Ggb6UqEX3OJcHfUAj6XII7Pgm7ANdk/sgjvS9u4KABETUJ4Dub8m44b7
-YzTKjAz6Aoat5x0aX/BoeMEGOLKrO10yBqljertv1U3F28A0fvUejuJJoBHnmQHO
-A2rACjr5HuulnTTeF3vSwtxdKVzyR5bT4ys1ELO0drRWIdeds63oFpM3vg/7Dhkm
-6DGR26o5+bBCUsDlpnNlSTy4bqMaXAtqnImET8yrafbTbDhSXbwO57dOlfT0QmTC
-p2LoUfw5d64itPHNimGmnAJxtoJEET/gGLFzTbZIJk84CEydkc+3/2DyFU3rwHTZ
-DBh5qrnvrwgxqtYd5zu0HPAfvgDQMA==
-=tj8R
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKTffwACgkQwfwUeK3K
+7Ak9FQf/SQrMKKxpQ8gVUDFht3yFkQLOJJe/adkmkFoMpxOZklvcq5hSdJP2Y1NL
+I3Y35bb9SR1VPi6fFHHGuBqB0BiK9mKo1KLb9ZY7/7udpfI1e6tPW4ea2QuscqZt
+i7IQb1Gff1YzWYfW7/Y8ZugIJTDFvuTiHTFxrOlwiQVkQnywWACEMsCBjb0Aj9XE
+9yKOSWeqmnvhvS2+2U9v8FWLJOPTSaeQ3hSjJ3xXjEkoJz3L0pHcnqyIz8UAmQhl
+DRO6UpPbq6hLtMkKF8AmIFLstoEaEt636vw7pl+9MrM3zJX7DMYiIpwGZ/431+YB
+6ERUkRrVesGri6hOFffuYrCwXZHfdw==
+=Cu9X
 -----END PGP SIGNATURE-----
 
---kx2r5dh4j5uektvu--
+--qvv5wvvttflg77jh--
 
 
---===============4878020250565845075==
+--===============3925376455497148690==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -154,5 +213,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============4878020250565845075==--
+--===============3925376455497148690==--
 
