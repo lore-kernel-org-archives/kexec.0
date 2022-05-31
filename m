@@ -1,14 +1,14 @@
 From: Eric DeVolder <eric.devolder@oracle.com>
-Date: Tue, 31 May 2022 17:22:40 -0500
-Subject: [PATCH v8 0/7] crash: Kernel handling of CPU and memory hot
- un/plug
-In-Reply-To: <5358be66-e545-4482-bad6-00d3d53aac8a@redhat.com>
+Date: Tue, 31 May 2022 17:25:32 -0500
+Subject: [PATCH v8 3/7] crash: add generic infrastructure for crash
+ hotplug support
+In-Reply-To: <b38f4597-0d9b-5b17-0b24-13d99605fb69@redhat.com>
 References: <20220505184603.1548-1-eric.devolder@oracle.com>
- <311b0834-c675-fd15-8184-82b122f4a9cc@linux.ibm.com>
- <bffb3d9e-1946-f4b6-d58c-9c44bc0bee26@oracle.com>
- <94fba107-a425-7cf6-2a7b-0562c2dcfce4@linux.ibm.com>
- <5358be66-e545-4482-bad6-00d3d53aac8a@redhat.com>
-Message-ID: <79ad6be3-a817-b6bf-b32b-74b80a512c14@oracle.com>
+ <20220505184603.1548-4-eric.devolder@oracle.com>
+ <62089f7b-4a3e-7dc8-1cda-84583e19d6fd@redhat.com>
+ <e4120abd-c3ac-ee4d-1a0d-260126914b09@oracle.com>
+ <b38f4597-0d9b-5b17-0b24-13d99605fb69@redhat.com>
+Message-ID: <24513679-d92d-ead1-2c1d-98db6a9bbdac@oracle.com>
 List-Id: <kexec.lists.infradead.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -17,157 +17,82 @@ To: kexec@lists.infradead.org
 
 
 
-On 5/31/22 08:18, David Hildenbrand wrote:
-> On 26.05.22 15:39, Sourabh Jain wrote:
->> Hello Eric,
->>
->> On 26/05/22 18:46, Eric DeVolder wrote:
->>>
->>>
->>> On 5/25/22 10:13, Sourabh Jain wrote:
->>>> Hello Eric,
->>>>
->>>> On 06/05/22 00:15, Eric DeVolder wrote:
->>>>> When the kdump service is loaded, if a CPU or memory is hot
->>>>> un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
->>>>> and memory in the system, must also be updated, else the resulting
->>>>> vmcore is inaccurate (eg. missing either CPU context or memory
->>>>> regions).
->>>>>
->>>>> The current solution utilizes udev to initiate an unload-then-reload
->>>>> of the kdump image (e. kernel, initrd, boot_params, puratory and
->>>>> elfcorehdr) by the userspace kexec utility. In previous posts I have
->>>>> outlined the significant performance problems related to offloading
->>>>> this activity to userspace.
->>>>>
->>>>> This patchset introduces a generic crash hot un/plug handler that
->>>>> registers with the CPU and memory notifiers. Upon CPU or memory
->>>>> changes, this generic handler is invoked and performs important
->>>>> housekeeping, for example obtaining the appropriate lock, and then
->>>>> invokes an architecture specific handler to do the appropriate
->>>>> updates.
->>>>>
->>>>> In the case of x86_64, the arch specific handler generates a new
->>>>> elfcorehdr, and overwrites the old one in memory. No involvement
->>>>> with userspace needed.
->>>>>
->>>>> To realize the benefits/test this patchset, one must make a couple
->>>>> of minor changes to userspace:
->>>>>
->>>>>  ? - Disable the udev rule for updating kdump on hot un/plug changes.
->>>>>  ??? Add the following as the first two lines to the udev rule file
->>>>>  ??? /usr/lib/udev/rules.d/98-kexec.rules:
->>>>
->>>> If we can have a sysfs attribute to advertise this feature then
->>>> userspace
->>>> utilities (kexec tool/udev rules) can take action accordingly. In
->>>> short, it will
->>>> help us maintain backward compatibility.
->>>>
->>>> kexec tool can use the new sysfs attribute and allocate additional
->>>> buffer space
->>>> for elfcorehdr accordingly. Similarly, the checksum-related changes
->>>> can come
->>>> under this check.
->>>>
->>>> Udev rule can use this sysfs file to decide kdump service reload is
->>>> required or not.
->>>
->>> Great idea. I've been working on the corresponding udev and
->>> kexec-tools changes and your input/idea here is quite timely.
->>>
->>> I have boolean "crash_hotplug" as a core_param(), so it will show up as:
->>>
->>> # cat /sys/module/kernel/parameters/crash_hotplug
->>> N
->>
->> How about using 0-1 instead Y/N?
->> 0 = crash hotplug not supported
->> 1 = crash hotplug supported
->>
->> Also how about keeping sysfs here instead?
->> /sys/kernel/kexec_crash_hotplug
+On 5/31/22 08:15, David Hildenbrand wrote:
+> On 12.05.22 18:10, Eric DeVolder wrote:
+>> David,
+>> Great questions! See inline responses below.
+>> eric
 > 
-> It's not only about hotplug, though. And actually we care about
-> onlining/offlining. Hmm, I wonder if there is a better name for this
-> automatic handling of cpu and memory devices.
+> Sorry for the late reply, travel and vacation ...
+No problem, greatly appreciate the feedback!
+eric
+
 > 
-In the upcoming v9, there is no /sys/kernel/crash/kexec_crash_hotplug; I have sysfs attributes for 
-memory blocks and CPUs named 'crash_hotplug' that can be utilized directly in udev rule as 
-ATTR{crash_hotplug} to determine if the kernel is handling this for crash kernel update purposes.
+>>>
+>>>> +
+>>>> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+>>>> +void __weak arch_crash_handle_hotplug_event(struct kimage *image,
+>>>> +							unsigned int hp_action, unsigned int cpu)
+>>>> +{
+>>>> +	WARN(1, "crash hotplug handler not implemented");
+>>>
+>>>
+>>> Won't that trigger on any arch that has CONFIG_HOTPLUG_CPU and CONFIG_MEMORY_HOTPLUG?
+>>> I mean, you only implement it for x86 later in this series. Or what else stops this WARN from
+>>> triggering?
+>>>
+>> You're correct. What about: printk_once(KERN_DEBUG "...") ?
+> 
+> Why even bother about printing anything? If the feature is not
+> supported, there should be some way for user space to figure out that it
+> sill has to reload on hot(un)plug manually, no?
 
-Here's the current commit message for that change:
+I've changed this to WARN_ONCE(). If that isn't agreeable, I'll remove it.
 
-====
-crash: memory and CPU hotplug sysfs attributes
+> 
+> 
+> [...]
+> 
+>>
+>>>
+>>> 2. Why can't the unprotect+reprotect not be done inside
+>>> arch_crash_handle_hotplug_event() ? It's all arch specific either way.
+>>>
+>>> IMHO, this code here should be as simple as
+>>>
+>>> if (kexec_crash_image)
+>>> 	arch_crash_handle_hotplug_event(kexec_crash_image, hp_action, cpu);
+>>>
+>>
+>> The intent of this code was to be generic infrastructure. Just invoking the
+>> arch_crash_handle_hotplug_event() would certainly be as generic as it gets.
+>> But there were a series of steps that seemed to be common, so those I hoisted
+>> into this bit of code.
+> 
+> But most common parts are actually arch_* calls already? :)
+> 
+> Anyhow, no strong opinion.
+For the time being, I'd like to leave as is. Let's see if the detection of the elfcorehdr
+segment gets moved to this code too... (discussion thread on "x86/crash: Add x86 crash hotplug 
+support for kexec_load".
 
-This introduces the crash_hotplug attribute for memory and CPUs
-for use by userspace.  This change directly facilitates the udev
-rule for managing userspace re-loading of the crash kernel.
-
-For memory, this changeset introduces the crash_hotplug attribute
-to the /sys/devices/system/memory directory. For example:
-
-  # udevadm info --attribute-walk /sys/devices/system/memory/memory81
-   looking at device '/devices/system/memory/memory81':
-     KERNEL=="memory81"
-     SUBSYSTEM=="memory"
-     DRIVER==""
-     ATTR{online}=="1"
-     ATTR{phys_device}=="0"
-     ATTR{phys_index}=="00000051"
-     ATTR{removable}=="1"
-     ATTR{state}=="online"
-     ATTR{valid_zones}=="Movable"
-
-   looking at parent device '/devices/system/memory':
-     KERNELS=="memory"
-     SUBSYSTEMS==""
-     DRIVERS==""
-     ATTRS{auto_online_blocks}=="offline"
-     ATTRS{block_size_bytes}=="8000000"
-     ATTRS{crash_hotplug}=="1"
-
-For CPUs, this changeset introduces the crash_hotplug attribute
-to the /sys/devices/system/cpu directory. For example:
-
-  # udevadm info --attribute-walk /sys/devices/system/cpu/cpu0
-   looking at device '/devices/system/cpu/cpu0':
-     KERNEL=="cpu0"
-     SUBSYSTEM=="cpu"
-     DRIVER=="processor"
-     ATTR{crash_notes}=="277c38600"
-     ATTR{crash_notes_size}=="368"
-     ATTR{online}=="1"
-
-   looking at parent device '/devices/system/cpu':
-     KERNELS=="cpu"
-     SUBSYSTEMS==""
-     DRIVERS==""
-     ATTRS{crash_hotplug}=="1"
-     ATTRS{isolated}==""
-     ATTRS{kernel_max}=="8191"
-     ATTRS{nohz_full}=="  (null)"
-     ATTRS{offline}=="4-7"
-     ATTRS{online}=="0-3"
-     ATTRS{possible}=="0-7"
-     ATTRS{present}=="0-3"
-
-With these changes in place, and by using the same attribute
-crash_hotplug name, it is possible to efficiently instruct the
-udev rule to skip crash kernel reloading.
-
-For example, the following is the proposed udev rule change for RHEL
-system 98-kexec.rules (as the first two lines of the rule file):
-
-  # The kernel handles updates to crash elfcorehdr
-  ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
-
-When examined in the context of 98-kexec.rules, the above change
-tests if crash_hotplug is set, and if so, it skips the userspace
-initiated unload-then-reload of the crash kernel.
-=====
-
-Does that work for you?
-Eric
+> 
+>>
+>>> 3. Why do we have to forward the CPU for CPU onlining/offlining but not the
+>>> memory block id (or similar) when onlining/offlining a memory block?
+>>   From patch "kexec: exclude hot remove cpu from elfcorehdr notes" commit message:
+>>
+>> Due to use of CPUHP_AP_ONLINE_DYN, upon CPU unplug, the CPU is
+>> still in the for_each_present_cpu() list when within the
+>> handle_hotplug_event(). Thus the CPU must be explicitly excluded
+>> when building the new list of CPUs.
+>>
+>> This change identifies in handle_hotplug_event() the CPU to be
+>> excluded, and the check for excluding the CPU in
+>> crash_prepare_elf64_headers().
+>>
+>> If there is a better CPUHP_ to use than _DYN, I'd be all for that!
+> 
+> Ah okay, thanks.
+> 
 
