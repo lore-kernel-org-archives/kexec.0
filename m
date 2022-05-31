@@ -4,40 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4FC4FC43334
-	for <kexec@archiver.kernel.org>; Thu,  2 Jun 2022 06:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C3DE3C43334
+	for <kexec@archiver.kernel.org>; Thu,  2 Jun 2022 06:45:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	List-Subscribe:List-Help:List-Post:List-Archive:List-Unsubscribe:List-Id:
 	In-Reply-To:MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:
 	Reply-To:Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date
 	:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=nunBLXWQiDdbNqcwwHV2EU8MQoIs9Mbvm7ee6ghpqIE=; b=XfHPPQTBjIsxQ6iyG8PWBNfcZL
-	DpwQ1Oxw3lAVeGHIL9Ksc7oDbwhrXxIlyO4ncJBcjMwsMwesy0hSthHSwsDWmhQ/T+ElZ5yorPcuF
-	0AYctgth801r4YrxWVayI4RG3UnvVmmliixlpHH5YpfSD3bkAXPJNlGptwDVHyqMcjlbR7QDlc9rv
-	/RYxuStE8L09mIjpMskYN6iYQOc2WIivM7Lgg0RTeV0Na9H19bS970oZtYXsAO4GO55UBcjP0wD8A
-	GVoZ7iGPelfTQhb7lDD+Uyu0sZAxuaGuAkLwOAnKhuLe1qu7p/1R3fm7y3HxQ1VjNYtQZvlj6uVHw
-	kBSbsUcg==;
+	bh=XnAs3npGBkgeEyt8tRnzonigltLSI69+Nz96ttqvTsA=; b=yHqUux25RbkRcpH2lqTA+BYose
+	BHpQTc2qLvjQot6+pv90e/oPBGbHShv89ZuC2OhgLsUf4I3Xrb+U2wQ0aawX2wjSUBfWeKgtjr4La
+	kc6m+3Zcs0c4y82etkf+tzvU05sub6CbQZ0/L41wp051EylkW7HJUTCdA1JKkeJW00AHrucx3ZHWa
+	12DwyG6TRTh3exkFCsvLdntwd+Twfch5Z8tGEoV5huT14hkgZH+6yqwOPI85gczlK6DLweUCf5K8r
+	XrAv7167+18/lTBMEWwPma7opWD3zaWIC4CbTmVoSNjkWzkefiOR/90QxrjKXNtyiGGo8W4NzRXsV
+	y/kMYtBA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nweZc-001oOw-66; Thu, 02 Jun 2022 06:44:48 +0000
+	id 1nweZg-001oTX-GY; Thu, 02 Jun 2022 06:44:52 +0000
 Received: from metis.ext.pengutronix.de ([2001:67c:670:201:290:27ff:fe1d:cc33])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nvlHa-0084xX-Le
-	for kexec@lists.infradead.org; Mon, 30 May 2022 19:42:32 +0000
+	id 1nvuu1-009SJo-2I
+	for kexec@lists.infradead.org; Tue, 31 May 2022 05:58:51 +0000
 Received: from drehscheibe.grey.stw.pengutronix.de ([2a0a:edc0:0:c01:1d::a2])
 	by metis.ext.pengutronix.de with esmtps (TLS1.3:ECDHE_RSA_AES_256_GCM_SHA384:256)
 	(Exim 4.92)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvlGn-0004LO-Ul; Mon, 30 May 2022 21:41:41 +0200
+	id 1nvutV-0000d1-Mm; Tue, 31 May 2022 07:58:17 +0200
 Received: from [2a0a:edc0:0:900:1d::77] (helo=ptz.office.stw.pengutronix.de)
 	by drehscheibe.grey.stw.pengutronix.de with esmtp (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvlGh-005Vep-Cd; Mon, 30 May 2022 21:41:34 +0200
+	id 1nvutO-005aW1-EE; Tue, 31 May 2022 07:58:09 +0200
 Received: from ukl by ptz.office.stw.pengutronix.de with local (Exim 4.94.2)
 	(envelope-from <ukl@pengutronix.de>)
-	id 1nvlGf-00D9uL-Eh; Mon, 30 May 2022 21:41:33 +0200
-Date: Mon, 30 May 2022 21:41:33 +0200
+	id 1nvutL-00DF4g-Ha; Tue, 31 May 2022 07:58:07 +0200
+Date: Tue, 31 May 2022 07:58:03 +0200
 From: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
 To: Palmer Dabbelt <palmer@rivosinc.com>
 Cc: wangkefeng.wang@huawei.com, guoren@linux.alibaba.com,
@@ -53,18 +53,18 @@ Cc: wangkefeng.wang@huawei.com, guoren@linux.alibaba.com,
 	akpm@linux-foundation.org, linuxppc-dev@lists.ozlabs.org
 Subject: Re: [PATCH] RISC-V: Prepare dropping week attribute from
  arch_kexec_apply_relocations[_add]
-Message-ID: <20220530194133.udwdjsb2l33hsiil@pengutronix.de>
-References: <20220530074202.pydmbbgvbtaugw5j@pengutronix.de>
- <mhng-5872aea0-6f64-4685-8f8d-fdeb42e4c972@palmer-mbp2014>
+Message-ID: <20220531055803.prq5fj6lajzqiiiu@pengutronix.de>
+References: <20220530194133.udwdjsb2l33hsiil@pengutronix.de>
+ <mhng-99e09fbd-fa71-40fc-92da-ff4af0d209a5@palmer-mbp2014>
 MIME-Version: 1.0
-In-Reply-To: <mhng-5872aea0-6f64-4685-8f8d-fdeb42e4c972@palmer-mbp2014>
+In-Reply-To: <mhng-99e09fbd-fa71-40fc-92da-ff4af0d209a5@palmer-mbp2014>
 X-SA-Exim-Connect-IP: 2a0a:edc0:0:c01:1d::a2
 X-SA-Exim-Mail-From: ukl@pengutronix.de
 X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
 X-PTX-Original-Recipient: kexec@lists.infradead.org
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220530_124230_737811_C5AA3EEF 
-X-CRM114-Status: GOOD (  36.15  )
+X-CRM114-CacheID: sfid-20220530_225849_189596_9E8A2044 
+X-CRM114-Status: GOOD (  42.67  )
 X-Mailman-Approved-At: Wed, 01 Jun 2022 23:44:28 -0700
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
@@ -77,117 +77,134 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: multipart/mixed; boundary="===============4120239136711754872=="
+Content-Type: multipart/mixed; boundary="===============3177262472504708528=="
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
 
---===============4120239136711754872==
+--===============3177262472504708528==
 Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="krrdaxdkw2concro"
+	protocol="application/pgp-signature"; boundary="yslkboxts2p5evg7"
 Content-Disposition: inline
 
 
---krrdaxdkw2concro
+--yslkboxts2p5evg7
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hello,
-
-On Mon, May 30, 2022 at 11:58:16AM -0700, Palmer Dabbelt wrote:
-> On Mon, 30 May 2022 00:42:02 PDT (-0700), u.kleine-koenig@pengutronix.de =
+On Mon, May 30, 2022 at 04:11:27PM -0700, Palmer Dabbelt wrote:
+> On Mon, 30 May 2022 12:41:33 PDT (-0700), u.kleine-koenig@pengutronix.de =
 wrote:
-> > Without this change arch/riscv/kernel/elf_kexec.c fails to compile once
-> > commit 233c1e6c319c ("kexec_file: drop weak attribute from
-> > arch_kexec_apply_relocations[_add]") is also contained in the tree.
-> > This currently happens in next-20220527.
+> > Hello,
 > >=20
-> > Prepare the RISC-V similar to the s390 adaption done in 233c1e6c319c.
-> > This is safe to do on top of the riscv change even without the change to
-> > arch_kexec_apply_relocations.
-> >=20
-> > Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
-> > Looks-good-to: liaochang (A) <liaochang1@huawei.com>
-> > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
-> > ---
-> >=20
-> > On Mon, May 30, 2022 at 09:43:26AM +0800, liaochang (A) wrote:
-> > > > I can confirm that doing
-> > > > > diff --git a/arch/riscv/include/asm/kexec.h
-> > > b/arch/riscv/include/asm/kexec.h
-> > > > index 206217b23301..eee260e8ab30 100644
-> > > > --- a/arch/riscv/include/asm/kexec.h
-> > > > +++ b/arch/riscv/include/asm/kexec.h
-> > > > @@ -55,6 +55,13 @@ extern riscv_kexec_method riscv_kexec_norelocate;
-> > > >  >  #ifdef CONFIG_KEXEC_FILE
-> > > >  extern const struct kexec_file_ops elf_kexec_ops;
-> > > > +
-> > > > +struct purgatory_info;
-> > > > +int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-> > > > +				     Elf_Shdr *section,
-> > > > +				     const Elf_Shdr *relsec,
-> > > > +				     const Elf_Shdr *symtab);
-> > > > +#define arch_kexec_apply_relocations_add arch_kexec_apply_relocati=
-ons_add
-> > > >  #endif
-> > > >  >  #endif
+> > On Mon, May 30, 2022 at 11:58:16AM -0700, Palmer Dabbelt wrote:
+> > > On Mon, 30 May 2022 00:42:02 PDT (-0700), u.kleine-koenig@pengutronix=
+=2Ede wrote:
+> > > > Without this change arch/riscv/kernel/elf_kexec.c fails to compile =
+once
+> > > > commit 233c1e6c319c ("kexec_file: drop weak attribute from
+> > > > arch_kexec_apply_relocations[_add]") is also contained in the tree.
+> > > > This currently happens in next-20220527.
+> > > > > Prepare the RISC-V similar to the s390 adaption done in
+> > > 233c1e6c319c.
+> > > > This is safe to do on top of the riscv change even without the chan=
+ge to
+> > > > arch_kexec_apply_relocations.
+> > > > > Fixes: 838b3e28488f ("RISC-V: Load purgatory in kexec_file")
+> > > > Looks-good-to: liaochang (A) <liaochang1@huawei.com>
+> > > > Signed-off-by: Uwe Kleine-K=F6nig <u.kleine-koenig@pengutronix.de>
+> > > > ---
+> > > > > On Mon, May 30, 2022 at 09:43:26AM +0800, liaochang (A) wrote:
+> > > > > > I can confirm that doing
+> > > > > > > diff --git a/arch/riscv/include/asm/kexec.h
+> > > > > b/arch/riscv/include/asm/kexec.h
+> > > > > > index 206217b23301..eee260e8ab30 100644
+> > > > > > --- a/arch/riscv/include/asm/kexec.h
+> > > > > > +++ b/arch/riscv/include/asm/kexec.h
+> > > > > > @@ -55,6 +55,13 @@ extern riscv_kexec_method riscv_kexec_norelo=
+cate;
+> > > > > >  >  #ifdef CONFIG_KEXEC_FILE
+> > > > > >  extern const struct kexec_file_ops elf_kexec_ops;
+> > > > > > +
+> > > > > > +struct purgatory_info;
+> > > > > > +int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+> > > > > > +				     Elf_Shdr *section,
+> > > > > > +				     const Elf_Shdr *relsec,
+> > > > > > +				     const Elf_Shdr *symtab);
+> > > > > > +#define arch_kexec_apply_relocations_add arch_kexec_apply_relo=
+cations_add
+> > > > > >  #endif
+> > > > > >  >  #endif
+> > > > > > > LGTM, you could send a fixup patch to riscv, thanks.
+> > > > > > > > > on top of 838b3e28488f results in a compilable tree. And
+> > > when
+> > > > > merging
+> > > > > > 233c1e6c319c into this, it is still building.
+> > > > > > > I'm not enough into kexec (and riscv) to judge if this is
+> > > > > sensible, or
+> > > > > > create a useful commit log but the obvious way forward is to ap=
+ply the
+> > > > > > above patch to the riscv tree before it hits Linus' tree.
+> > > > > Ok, here comes a patch with a generic commit log.
+> > > > > @riscv people: If you prefer, squash it into 838b3e28488f.
 > > >=20
-> > > LGTM, you could send a fixup patch to riscv, thanks.
-> > >=20
-> > > > > on top of 838b3e28488f results in a compilable tree. And when
-> > > merging
-> > > > 233c1e6c319c into this, it is still building.
-> > > > > I'm not enough into kexec (and riscv) to judge if this is
-> > > sensible, or
-> > > > create a useful commit log but the obvious way forward is to apply =
-the
-> > > > above patch to the riscv tree before it hits Linus' tree.
+> > > Sorry, just saw this after I sent my version of the fix.  They're the=
+ same,
+> > > but do you mind sending a full-on patch so I can merge it?
 > >=20
-> > Ok, here comes a patch with a generic commit log.
+> > Sorry, I don't understand your request. I found
+> > https://lore.kernel.org/linux-riscv/20220530180408.16239-1-palmer@rivos=
+inc.com/
 > >=20
-> > @riscv people: If you prefer, squash it into 838b3e28488f.
+> > but I don't know what a full-on patch is and what stops you merging my
+> > patch.
+> >=20
+> > Is it that it's in reply to a patch series and b4 fails to fetch the
+> > right patch and you ask to send it in a new thread?
 >=20
-> Sorry, just saw this after I sent my version of the fix.  They're the sam=
-e,
-> but do you mind sending a full-on patch so I can merge it?
+> Ya, with the reply bits in there my mail merge (which unfortunately isn't
+> b4, I haven't gotten around to converting yet) got tripped up.  It's kind=
+ of
+> easy to for me to screw something up trying to pull bits out of replies a=
+nd
+> such, but I think this one was pretty simple (looks like maybe some PGP or
+> MIME thing was the issue).
+>=20
+> I just put <https://git.kernel.org/pub/scm/linux/kernel/git/palmer/linux.=
+git/commit/?h=3Dfor-next&id=3D7699f7aacf3ebfee51c670b6f796b2797f0f7487>
+> on my staging branch, it looks OK to me but LMK if there's a problem.
 
-Sorry, I don't understand your request. I found
-https://lore.kernel.org/linux-riscv/20220530180408.16239-1-palmer@rivosinc.=
-com/
+there is indeed a problem, but caused by me: If you are ready to rewrite
+it, please do s/week/weak/ in the subject line. Otherwise looks good to
+me.
 
-but I don't know what a full-on patch is and what stops you merging my
-patch.=20
-
-Is it that it's in reply to a patch series and b4 fails to fetch the
-right patch and you ask to send it in a new thread?
-
-Best regards
+Best regards and thanks,
 Uwe
 
 --=20
 Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
 Industrial Linux Solutions                 | https://www.pengutronix.de/ |
 
---krrdaxdkw2concro
+--yslkboxts2p5evg7
 Content-Type: application/pgp-signature; name="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 
-iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKVHeoACgkQwfwUeK3K
-7AmIjAf/cIdZXzTm8ALuTDgUrKH3cNzpFjQ944mYn/qfLoGkdCnQlYzghw570rDo
-0QKgHNkqRQQ7lgaXGnex5HizEMdc+++QESut+gBcrV92K33EZU3XSXUp+75SE+Jz
-DjRnmCm4xkh/9zZysNW0OXLnjd4AtGMlbzXYFKsKKxtaGgd7+f06D3cTzoVOfLbL
-i0DPa56ftXEmEYl6WpqIg1gb9gQMQx7E9vsscEgoOX6u9AlinTk/cxkDA6lhMNEj
-03qeCXcYyUQtszhTYw3jo8cLqM1KGLVU3i9Blj0mAIQ8DVaXUd3hWx3AFqjeA55K
-bErpEBzedIdALZNq1g3XX9JHLEMP7Q==
-=qw7s
+iQEzBAABCgAdFiEEfnIqFpAYrP8+dKQLwfwUeK3K7AkFAmKVrmgACgkQwfwUeK3K
+7Almtgf/cMTh8gUXGvy16o7kg3cs7a7GFj0o1WI4oidOclFTc/fWRvKtowa8AzI/
+6zEA161snauy6f6RwV4kPudFteGkKV7AuNL93UYf5cLx1yEel9XMhht0KJU+HEPw
+2eaZboB92XdTrvCfnxSanTst4F33A+LK6bD6Yz+B1QZF5gCHB7GqAoTNYTK8EguB
+oHEUMlx6qCWHeC1qBGj8ldLK4kvZqL8eC3yKHezMZVa94PJJsE6KbAKBQGB3D1KN
+GfSkmkRa3fENCxe+2/WOrhLU6qhEFJqwPfEwz7V5xmQgmzlml6xdM5oxccN6E3EC
+o3yYJzG+N0fIbD3b1gHR61LRNFn5rg==
+=23PP
 -----END PGP SIGNATURE-----
 
---krrdaxdkw2concro--
+--yslkboxts2p5evg7--
 
 
---===============4120239136711754872==
+--===============3177262472504708528==
 Content-Type: text/plain; charset="us-ascii"
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7bit
@@ -198,5 +215,5 @@ kexec mailing list
 kexec@lists.infradead.org
 http://lists.infradead.org/mailman/listinfo/kexec
 
---===============4120239136711754872==--
+--===============3177262472504708528==--
 
