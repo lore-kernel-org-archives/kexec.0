@@ -4,70 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4BFAEC433EF
-	for <kexec@archiver.kernel.org>; Tue,  7 Jun 2022 10:59:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4D949C43334
+	for <kexec@archiver.kernel.org>; Tue,  7 Jun 2022 15:53:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
 	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=BolD38JLQg8G6chn6llCtoLDAPjkjnwHYJLYflVzcdE=; b=xV/L+1b2AjxD7d
-	eDXdjpgDcg92bbIWQQswl1j/qAOJyG/tAGoa3JZnSoo98WDSXo0d6N2nxa2Gj5U5UjjD6BE5moXAO
-	pEYkJfNof2W5gjlTPs6KyEc3oyAfQdACltdbRE6bRDKl+Xt+TjE1vVMgVcYRnq7A+N6o6Vo0TiWD8
-	pbPy1rf2f5sYhO3daKYB6gLnj/izDrGgHanrur5ArrncLqtVYbRLae7zXWgSqA26wi3XZTV7jtNUy
-	6RVOVznJtxvLNw3yNZEBTCfw+beWoUsAtS32YNT8T/4nqrYF3hDXNiTOTpokWT6q5P0u7tWyofmlJ
-	F4PZuqoGKZfIZhKiwyVg==;
+	List-Owner; bh=0wbKHtWAzmux8/pbhGr8YxXbddXOfqdjoZGioMlnCOc=; b=Ht6IZENr5f8njY
+	lSos1ignSi9p7wAxr4yXh8N3JYUnjI6GdWHfKr7KsIOUGEEXiFaZBoPYjLCac56ar3uVH0boZKaMO
+	msdkly/HIfEyF6GWbn3bmV2OK+6gXXTtM2vzCNgoDkSH6TBjmNq8rjQJkSvSieSZjw6goWP3QzL3d
+	bpajGJXzg7aARHzHYn7/lBrSNiUEARQEtv/cWQp6uV7e7c3OfaJ0cHK9Fs+/luNnL4ZmZj7A2YJLi
+	Ysovo0llUKxp4jd805g7uTTlq9rypAo5SH51UPqtMprPiFDi8kPWkHsYVXOSFNtq7psIt+Yy6HDXI
+	8tRNs79lQlKC6jYYWGcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nyWvU-006tHY-BJ; Tue, 07 Jun 2022 10:59:08 +0000
-Received: from mail-io1-xd31.google.com ([2607:f8b0:4864:20::d31])
+	id 1nybVx-008Lav-Ez; Tue, 07 Jun 2022 15:53:05 +0000
+Received: from mail-ej1-x62c.google.com ([2a00:1450:4864:20::62c])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nyWvO-006tCq-6r
-	for kexec@lists.infradead.org; Tue, 07 Jun 2022 10:59:04 +0000
-Received: by mail-io1-xd31.google.com with SMTP id s26so5166409ioa.3
-        for <kexec@lists.infradead.org>; Tue, 07 Jun 2022 03:58:56 -0700 (PDT)
+	id 1nybVu-008LYf-EV
+	for kexec@lists.infradead.org; Tue, 07 Jun 2022 15:53:04 +0000
+Received: by mail-ej1-x62c.google.com with SMTP id h23so25005644ejj.12
+        for <kexec@lists.infradead.org>; Tue, 07 Jun 2022 08:52:57 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
+        d=soleen.com; s=google;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=mGVtL4ApMMndKgf1Ks6ctpMBsopb4sJKa/vamOzmqrE=;
-        b=PKWwUvrYSdTwguOObnSi+2ax3nJxMFkVrT6QiW89xwjQCjlqcs8wamcMUoooJcH5JJ
-         96pmjyXKLBc3VMzuDQIlgDarMB6YQ283V9/CgPDzTy1zQi9Kk6DN4QJ4BIXY9QxsgkvH
-         VeAgn7jkSGTrcsSUPHobUfjMqMEh2D8v3CG7OntgbUrVHowKTd/Cz+8IYAjkrwan34AV
-         Xp4Ppm0xDD2AVJi29sQdfowzcdn612vnMpScjewi4P3ikYyFaUii9ywMc8dzn1tsMGWH
-         31/6+y1/Ie+UgtJYL1TCAsWYmh5v8JvgcK9aQ2HQ90CEdHJcYbFS9B3wab/Ug74VevOU
-         5w3A==
+         :cc;
+        bh=pufS40r/uX2ZtSB9s8FIZ6SlwwrSkU1jYicxPJP0Dvk=;
+        b=EI/3FnfDm7xULUdj70TuQ6pbIIND9Ooo8uGbWhUrAbDTViCBtm4wpTdixdKFNo4aCK
+         f1yE8jNnKNNOTXbuS4EI/9GbcqVUEVRKTQAMSj3vIvvF7eKo91aVzAsh+nLIzVm54tDG
+         z01TQWwsfS6Mcq+/5BW/nW49mcHHd4TAfDhm5S3Bd3Ge5bxjx8cLjrLZ2URBEjFD9ZrX
+         ZQ+oyGHvCBvbSRIasswi2yzcD8CmeiaKpp1BdunZwyBJmGWKE5c8hKDc4LWDi+6Wy66h
+         urZhDietLh4l7fsCWLfQixf/BNyrrizYPXwqKUq0kF6CmoqighGAY+ed/Cz//ADdglzR
+         FC/w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=mGVtL4ApMMndKgf1Ks6ctpMBsopb4sJKa/vamOzmqrE=;
-        b=BvbF16rwByeQZ2Ccu9eeVc3jkfQnApxDSxcK84aw4Fyo1fG6yEaVSnRM8M2poCXVgk
-         wc9Vn7HbyvBu4HTnR29sWvYa4zAbRE3KBdGRTbbBw73RTDiflBYqLushh6igXBkOYkKC
-         nM6qH64MlxjbeG8pGHZe7lnRg9MlGkAxSnj29XasfzQ2P+5SeVnST4VaA3lkBXMPmBWg
-         OhhTAO3+HYxRBT6C9gIuirzMt1AWV1HLG/viI1VOf6ojyqtzGYstx6A0huk1cYdT8xSV
-         2UrCNbdQXMsmAcqc744SjHhZrkOSTwD9A6NcPZbXD+FUu6DQKEzJeuxH1eC70DBr4FK2
-         6L7w==
-X-Gm-Message-State: AOAM531rl4oj7t4jCCFdaMoOsXMcKjgGsC/q6/24XBm9cpvx4e/ZDBYG
-	CgZYNpSolE6Ef0pdPrLrKIHfJkyAn3u20ZlgGeGMebDB+ZY=
-X-Google-Smtp-Source: ABdhPJz4atpgKpY31uRZEZJyxz58/PFsMYHNh1ROqCo0Mzq9U4BHXJnjLTf066RHYcQn1CjTq5G+bbKGT9jCVlRAKYY=
-X-Received: by 2002:a05:6638:40ab:b0:331:a983:4f75 with SMTP id
- m43-20020a05663840ab00b00331a9834f75mr5987802jam.107.1654599536066; Tue, 07
- Jun 2022 03:58:56 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=pufS40r/uX2ZtSB9s8FIZ6SlwwrSkU1jYicxPJP0Dvk=;
+        b=VkXCdBVVC5U3cq1G8qsesMwAbw7ATkPb355o0P+07pwKkFe66PKRGdqv0i3jUMbFem
+         5EfchDMhaKsHohqiX6w2JVfGb1eFDMOdI/RzQuA95v4usrOqmmjL4UKfMNbxgqyRQk1f
+         R63/K4Vhta9dZVm2t8cge4BWgX83Vir0F10knzTQcILLKYwza0Dl68XXoQwjPs1ByQzP
+         p56c7r9cTuj0lkJIvYn1frnZbOwCZrhLawrmu8zh/k5AoJSaSggoCH3JNwq9P3InrhTo
+         MuXVpRPTSpixJYABqnm3d4pB3TDmzNMKtmgaO9mFRdWf+nHf4JpoIz0iMoZ3554kRg4c
+         E4fA==
+X-Gm-Message-State: AOAM531V1wzqoiJ977ZHKJuamau2U4JVFVMm5zxM+Sm3Y3M7gGh9TuqS
+	6+DhYzciuv9ggs+dmjZJltA28srS2Xq6wcQT4f0oBQ==
+X-Google-Smtp-Source: ABdhPJzJd85uN4waRQ5S7rEJKLXqx9BZbE/tIhMePQ2Jb2RkKVtxHLi3crqOpmq8r60CdWOGHPfuTeN5wRlBGvmHDeo=
+X-Received: by 2002:a17:907:90c8:b0:711:c8e1:7109 with SMTP id
+ gk8-20020a17090790c800b00711c8e17109mr12331055ejb.492.1654617176082; Tue, 07
+ Jun 2022 08:52:56 -0700 (PDT)
 MIME-Version: 1.0
-References: <CAKsu7qxgzxKDH0PAhBMjvjNO_DvU01k-TLMm3__oHtVBLrVDgA@mail.gmail.com>
- <20220607023130.gpvvbfkkhxdphhyk@Rk>
-In-Reply-To: <20220607023130.gpvvbfkkhxdphhyk@Rk>
-From: arshad hussain <arshad.super@gmail.com>
-Date: Tue, 7 Jun 2022 16:28:45 +0530
-Message-ID: <CAKsu7qyypU8QdggTqjEUsk8+DVGREbF0787o+uHn2XJKDaafyA@mail.gmail.com>
-Subject: Re: /etc/kdump/pre.d/* Not getting Executed
-To: Coiby Xu <coxu@redhat.com>
-Cc: kexec@lists.infradead.org
+References: <20220527025535.3953665-1-pasha.tatashin@soleen.com>
+ <20220527025535.3953665-2-pasha.tatashin@soleen.com> <Yp1qO70pdxLx4h1H@MiWiFi-R3L-srv>
+In-Reply-To: <Yp1qO70pdxLx4h1H@MiWiFi-R3L-srv>
+From: Pasha Tatashin <pasha.tatashin@soleen.com>
+Date: Tue, 7 Jun 2022 11:52:18 -0400
+Message-ID: <CA+CK2bACmbW9saepkMy6G5FtssBhCv2NsoLGeFdF0XosKg5A-g@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] fs/kernel_read_file: Allow to read files up-to ssize_t
+To: Baoquan He <bhe@redhat.com>
+Cc: Sasha Levin <sashal@kernel.org>, "Eric W. Biederman" <ebiederm@xmission.com>, rburanyi@google.com, 
+	Greg Thelen <gthelen@google.com>, viro@zeniv.linux.org.uk, 
+	kexec mailing list <kexec@lists.infradead.org>, linux-fsdevel@vger.kernel.org, 
+	LKML <linux-kernel@vger.kernel.org>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220607_035902_306156_90C05D10 
-X-CRM114-Status: GOOD (  27.06  )
+X-CRM114-CacheID: sfid-20220607_085302_640040_E69073F2 
+X-CRM114-Status: GOOD (  24.38  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,107 +82,185 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-SGkgQ29pYnkgWHUsCgpJIGhhdmUgbm90IHlldCByZXNvbHZlZCB0aGlzIHNvIGZhci4gSSBjb3Vs
-ZCBnZXQgaXQgd29ya2luZyBvbmNlIGFuZAp0aGVyZWFmdGVyIEkgY291bGQgbm90IHJlcHJvZHVj
-ZSBpdC4gU28gSSBkbyBub3QgaGF2ZSBhIGRldGVybWluaXN0aWMKc3RlcCB0byByZXByb2R1Y2Ug
-dGhpcy4gU3RpbGwgV0lQIGZyb20gbXkgZW5kLiBJIGhhdmUgYWxyZWFkeSBwb3N0ZWQKdGhlIHF1
-ZXN0aW9uIHRvIGt4ZWMgZm9sa2VzOgpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1h
-aWwva2V4ZWMvMjAyMi1NYXkvMDI0OTE5Lmh0bWwuIFdpbGwKYWxzbyBwb3N0IHRoZSBidWcgdG8g
-cmVkaGF0LgoKVGhhbmtzCkFyc2hhZAoKT24gVHVlLCBKdW4gNywgMjAyMiBhdCA4OjA1IEFNIENv
-aWJ5IFh1IDxjb3h1QHJlZGhhdC5jb20+IHdyb3RlOgo+Cj4gSGksCj4KPiBIYXZlIHlvdSByZXNv
-bHZlZCB0aGlzIGlzc3VlPyBJZiBub3QsIGZlZWwgZnJlZSB0byBvcGVuIGEgYnVnIG9uCj4gaHR0
-cHM6Ly9idWd6aWxsYS5yZWRoYXQuY29tIHNpbmNlIC9ldGMva2R1bXAvcHJlLmQvIGlzIGEgZmVh
-dHVyZQo+IHByb3ZpZGVkIGJ5IEZlZG9yYS9SSEVMJ3Mga2V4ZWMtdG9vbHMuCj4KPgo+IE9uIFdl
-ZCwgTWF5IDExLCAyMDIyIGF0IDAxOjQyOjQwUE0gKzA1MzAsIGFyc2hhZCBodXNzYWluIHdyb3Rl
-Ogo+ID5IZWxsbywKPiA+Cj4gPkkgYW0gdHJ5aW5nIHRvIHJ1biBhIGN1c3RvbSBzY3JpcHQgYmVm
-b3JlIHRoZSBkdW1wIChpZQo+ID4vZXRjL2tkdW1wL3ByZS5kLyogKSB3aGljaCBJIGFtIHVuYWJs
-ZSB0byBkby4KPiA+SSBjYW4gc2F5IHRoaXMsIGFzIHRoZSBzY3JpcHQgaXMgc3VwcG9zZWQgdG8g
-Y3JlYXRlIGEgZm9sZGVyIHVuZGVyCj4gPi92YXIvY3Jhc2ggYW5kIGEgZmlsZSB3aGljaCBpdCBp
-cyBub3QuIEl0IGFsc28gZG9lcyBub3QgZ2VuZXJhdGUgdGhlCj4gPnZtY29yZSBmaWxlLgo+ID4K
-PiA+SSBhbSBmYWlsaW5nIHRvIHVuZGVyc3RhbmQgd2hhdCBvYnZpb3VzIHN0ZXAgSSBhbSBtaXNz
-aW5nLiBDYW4gc29tZW9uZQo+ID5wbGVhc2UgaGVscCBvdXQuCj4gPgo+ID5XaGlsZSB0aGUgImVj
-aG8gYyA+IC9wcm9jL3N5c3JxLXRyaWdnZXIiIHN1Y2Nlc3NmdWxseSByZWJvb3RzIHRoZQo+ID5v
-dXRwdXQgaXMgbm90IHdoYXQgaXMgZXhwZWN0ZWQuCj4gPgo+ID5IZXJlIGlzIG15IHNldHVwIGZv
-ciBrZHVtcC9rZXhlYy4KPiA+Cj4gPlRoYW5rcyEKPiA+Cj4gPi0tLS0tLS1FeHBlY3RlZCBvdXRw
-dXQtLS0tLS0tCj4gPjAxLiBVbmRlciAvdmFyL2NyYXNoIHdlIHNob3VsZCBiZSBoYXZpbmcgYSBm
-b2xkZXIgYXMgIkRCR01TRy08ZGF0ZT4iLgo+ID4wMi4gVW5kZXIgL3Zhci9jcmFzaCB3ZSBzaG91
-bGQgYmUgaGF2aW5nIGEgZmlsZSBhcyAidGVzdDUxMiIuCj4gPjAzLiB2bWNvcmUgZmlsZQo+ID4w
-NC4gZG1lc2cgZmlsZQo+ID4KPiA+LS0tLS0tLWN1cnJlbnQgb3V0cHV0LS0tLS0tLQo+ID5Ob3Ro
-aW5nIHVuZGVyIC92YXIvY3Jhc2gKPiA+Cj4gPi0tLS0tLS1CZWxvdyBhcmUgdGhlIGluZm8gYW5k
-IGNvbmYgc2NyaXB0IGRldGFpbHMtLS0tLS0tCj4gPiMgdW5hbWUgLWEgKEtlcm5lbCB2ZXJzaW9u
-KQo+ID5MaW51eCByb2NreTggNC4xOC4wLTI0MC4xLjEuZWw4Lng4Nl82NCAjMSBTTVAgRnJpIEZl
-YiAxOSAyMDo0MTowMSBVVEMKPiA+MjAyMSB4ODZfNjQgeDg2XzY0IHg4Nl82NCBHTlUvTGludXgK
-PiA+Cj4gPiMgcnBtIC1xYSB8IGdyZXAgLWkga2V4ZWMgKGtleGVjLXRvb2wgdmVyc2lvbikKPiA+
-a2V4ZWMtdG9vbHMtMi4wLjIwLTQ2LmVsOC54ODZfNjQKPiA+Cj4gPiMgY2F0IC9wcm9jL2NtZGxp
-bmUKPiA+Qk9PVF9JTUFHRT0oaGQwLG1zZG9zMSkvYm9vdC92bWxpbnV6LTQuMTguMC0yNDAuMS4x
-LmVsOC54ODZfNjQKPiA+cm9vdD1VVUlEPTxVVUlELi4uPiBybyBjcmFzaGtlcm5lbD0xMjhNIHJl
-c3VtZT1VVUlEPTxVVUlELi4uPgo+ID4KPiA+Cj4gPi0tLS0tLS9ldGMva2R1bXAuY29uZi0tLS0t
-LS0KPiA+cGF0aCAvdmFyL2NyYXNoCj4gPmNvcmVfY29sbGVjdG9yIG1ha2VkdW1wZmlsZSAtbCAt
-LW1lc3NhZ2UtbGV2ZWwgNyAtZCAzMQo+ID5leHRyYV9iaW5zIC92YXIvY3Jhc2gva2R1bXBwcmUu
-c2ggL2Jpbi9iYXNoIC91c3IvYmluL2NhdCAvdXNyL2Jpbi9kYXRlCj4gPmtkdW1wX3ByZSAvdmFy
-L2NyYXNoL2tkdW1wcHJlLnNoCj4gPmZvcmNlX3JlYnVpbGQgMQo+ID4KPiA+IyB0cmVlIC9ldGMv
-a2R1bXAvCj4gPi9ldGMva2R1bXAvCj4gPuKUnOKUgOKUgCBwb3N0LmQKPiA+4pSU4pSA4pSAIHBy
-ZS5kCj4gPiAgICDilJTilIDilIAgNTAtY29sbGVjdC5zaAo+ID4KPiA+LS0tLS0tLS9ldGMva2R1
-bXAvcHJlLmQvNTAtY29sbGVjdC5zaC0tLS0tLS0KPiA+IyEvYmluL2Jhc2gKPiA+Cj4gPiMgYmFz
-ZSBsb2NhdGlvbgo+ID5MT0M9L3N5c3Jvb3QvdmFyL2NyYXNoCj4gPiMgZGJnbXNnIGlkZW50aWZp
-ZXIgc3RyaW5nCj4gPkRCR01TRz0iREJHTVNHIgo+ID4jIGxvZyBmaWxlCj4gPkxGSUxFPWxvZy5v
-dXQKPiA+IyBHcmFudWxhcml0eSBpbiBzZWNvbmRzCj4gPkxPQ0ZPTERFUj0ke0xPQ30vJERCR01T
-Ry0kKGRhdGUgKyVZLSVtLSVkOiVIOiVNOiVTKQo+ID4KPiA+IyBDcmVhdGUgZm9sZGVyLgo+ID5t
-a2RpciAtcCAkTE9DRk9MREVSCj4gPgo+ID5pZiBbIC1mICIvcHJvYy9zcGwva3N0YXQvemZzL2Ri
-Z21zZyIgXTsgdGhlbgo+ID4gICAgZWNobyAiL3Byb2Mvc3BsL2tzdGF0L3pmcy9kYmdtc2cgZm91
-bmQiID4+ICRMT0NGT0xERVIvJExGSUxFCj4gPiAgICBjYXQgL3Byb2Mvc3BsL2tzdGF0L3pmcy9k
-Ymdtc2cgPj4gJExPQ0ZPTERFUi8kTEZJTEUKPiA+ZWxzZQo+ID4gICAgZWNobyAiL3Byb2Mvc3Bs
-L2tzdGF0L3pmcy9kYmdtc2cgbm90IGZvdW5kIiA+PiAkTE9DRk9MREVSLyRMRklMRQo+ID5maQo+
-ID4KPiA+ZXhpdCAwCj4gPgo+ID4tLS0tLS0tL3Zhci9jcmFzaC9rZHVtcHByZS5zaC0tLS0tLS0K
-PiA+IyEvYmluL2Jhc2gKPiA+ZWNobyAiVGVzdDUxMi4uLi4uLi4kKGRhdGUpIiA+PiAvc3lzcm9v
-dC92YXIvY2Fyc2gvdGVzdDUxMgo+ID5leGl0IDAKPiA+Cj4gPgo+ID4oTGluZXMgc3RhcnRpbmcg
-d2l0aCBbRGVidWddIGlzIHRoZSBkZWJ1ZyBzdGF0ZW1lbnQgcHV0IGZvciBkZWJ1Z2dpbmcKPiA+
-dG8gdmVyaWZ5IGlmIHdlIGFyZSBwaWNraW5nIHVwIGNvcnJlY3Qga2V5PXZhbHVlIHBhaXJzKQo+
-ID4jIGtkdW1wY3RsIHJlc3RhcnQKPiA+a2R1bXA6IERFRkFVTFRfRFVNUF9NT0RFPWtkdW1wCj4g
-PmtkdW1wOiBrZXhlYzogdW5sb2FkZWQga2R1bXAga2VybmVsCj4gPmtkdW1wOiBTdG9wcGluZyBr
-ZHVtcDogW09LXQo+ID5bREVCVUddZm91bmQgY29uZmlnLi4uIHBhdGggOiAvdmFyL2NyYXNoCj4g
-PltERUJVR11mb3VuZCBjb25maWcuLi4gY29yZV9jb2xsZWN0b3IgOiBtYWtlZHVtcGZpbGUgLWwg
-LS1tZXNzYWdlLWxldmVsIDcgLWQgMzEKPiA+W0RFQlVHXWZvdW5kIGNvbmZpZy4uLiBleHRyYV9i
-aW5zIDogL3Zhci9jcmFzaC9rZHVtcHByZS5zaCAvYmluL2Jhc2gKPiA+L3Vzci9iaW4vY2F0IC91
-c3IvYmluL2RhdGUKPiA+W0RFQlVHXWZvdW5kIGNvbmZpZy4uLiBrZHVtcF9wcmUgOiAvdmFyL2Ny
-YXNoL2tkdW1wcHJlLnNoCj4gPltERUJVR11mb3VuZCBjb25maWcuLi4gZm9yY2VfcmVidWlsZCA6
-IDEKPiA+a2R1bXA6IHJlc3RvcmUgZGVmYXVsdCBpbml0cmQ6Cj4gPi9ib290L2luaXRyYW1mcy00
-LjE4LjAtMjQwLjEuMS5lbDhfbHVzdHJlLng4Nl82NC5pbWcKPiA+W0RFQlVHXWZpbGVzPS9ldGMv
-a2R1bXAuY29uZgo+ID4vYm9vdC92bWxpbnV6LTQuMTguMC0yNDAuMS4xLmVsOF9sdXN0cmUueDg2
-XzY0ICAvdmFyL2NyYXNoL2tkdW1wcHJlLnNoCj4gPi92YXIvY3Jhc2gva2R1bXBwcmUuc2ggL2Jp
-bi9iYXNoIC91c3IvYmluL2NhdCAvdXNyL2Jpbi9kYXRlCj4gPi91c3Ivc2Jpbi9tYWtlZHVtcGZp
-bGUKPiA+W0RFQlVHXWhvb2sgZmlsZXM9L2V0Yy9rZHVtcC5jb25mCj4gPi9ib290L3ZtbGludXot
-NC4xOC4wLTI0MC4xLjEuZWw4X2x1c3RyZS54ODZfNjQgIC92YXIvY3Jhc2gva2R1bXBwcmUuc2gK
-PiA+L3Zhci9jcmFzaC9rZHVtcHByZS5zaCAvYmluL2Jhc2ggL3Vzci9iaW4vY2F0IC91c3IvYmlu
-L2RhdGUKPiA+L3Vzci9zYmluL21ha2VkdW1wZmlsZSAvZXRjL2ZzdGFiIC9ldGMva2R1bXAvcG9z
-dC5kLyAvZXRjL2tkdW1wL3ByZS5kLwo+ID4gIC9ldGMva2R1bXAvcHJlLmQvNTAtY29sbGVjdC5z
-aCA6OiAvZXRjL2tkdW1wL3Bvc3QuZC8KPiA+L2V0Yy9rZHVtcC9wcmUuZC8gICAvZXRjL2tkdW1w
-L3ByZS5kLzUwLWNvbGxlY3Quc2gKPiA+a2R1bXA6IERldGVjdGVkIGNoYW5nZShzKSBpbiB0aGUg
-Zm9sbG93aW5nIGZpbGUocyk6ICAvZXRjL2tkdW1wL3ByZS5kLwo+ID5rZHVtcDogRm9yY2UgcmVi
-dWlsZCAvYm9vdC9pbml0cmFtZnMtNC4xOC4wLTI0MC4xLjEuZWw4X2x1c3RyZS54ODZfNjRrZHVt
-cC5pbWcKPiA+a2R1bXA6IFJlYnVpbGRpbmcgL2Jvb3QvaW5pdHJhbWZzLTQuMTguMC0yNDAuMS4x
-LmVsOF9sdXN0cmUueDg2XzY0a2R1bXAuaW1nCj4gPmtkdW1wOiByZWJ1aWxkIGtkdW1wIGluaXRy
-ZDogL3NiaW4vbWtkdW1wcmQgLWYKPiA+L2Jvb3QvaW5pdHJhbWZzLTQuMTguMC0yNDAuMS4xLmVs
-OF9sdXN0cmUueDg2XzY0a2R1bXAuaW1nCj4gPjQuMTguMC0yNDAuMS4xLmVsOF9sdXN0cmUueDg2
-XzY0Cj4gPmtkdW1wOiAvc2Jpbi9rZXhlYyAtcyAtZCAtcAo+ID4tLWNvbW1hbmQtbGluZT1CT09U
-X0lNQUdFPShoZDAsbXNkb3MxKS9ib290L3ZtbGludXotNC4xOC4wLTI0MC4xLjEuZWw4X2x1c3Ry
-ZS54ODZfNjQKPiA+cm8gcmVzdW1lPVVVSUQ9ZDVmYWQ3MTQtMTQ3Zi00MTljLWE4ZWEtOWU3OTg0
-YjBlZjJmIGlycXBvbGwgbnJfY3B1cz0xCj4gPnJlc2V0X2RldmljZXMgY2dyb3VwX2Rpc2FibGU9
-bWVtb3J5IG1jZT1vZmYgbnVtYT1vZmYKPiA+dWRldi5jaGlsZHJlbi1tYXg9MiBwYW5pYz0xMCBy
-b290ZmxhZ3M9bm9mYWlsIGFjcGlfbm9fbWVtaG90cGx1Zwo+ID50cmFuc3BhcmVudF9odWdlcGFn
-ZT1uZXZlciBub2thc2xyIG5vdm1jb3JlZGQgaGVzdF9kaXNhYmxlCj4gPmRpc2FibGVfY3B1X2Fw
-aWNpZD0wCj4gPi0taW5pdHJkPS9ib290L2luaXRyYW1mcy00LjE4LjAtMjQwLjEuMS5lbDhfbHVz
-dHJlLng4Nl82NGtkdW1wLmltZwo+ID4vYm9vdC92bWxpbnV6LTQuMTguMC0yNDAuMS4xLmVsOF9s
-dXN0cmUueDg2XzY0Cj4gPmtkdW1wOiBrZXhlYzogbG9hZGVkIGtkdW1wIGtlcm5lbAo+ID5rZHVt
-cDogU3RhcnRpbmcga2R1bXA6IFtPS10KPiA+Cj4gPl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCj4gPmtleGVjIG1haWxpbmcgbGlzdAo+ID5rZXhlY0BsaXN0
-cy5pbmZyYWRlYWQub3JnCj4gPmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlz
-dGluZm8va2V4ZWMKPgo+IC0tCj4gQmVzdCByZWdhcmRzLAo+IENvaWJ5Cj4KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmtleGVjIG1haWxpbmcgbGlzdApr
-ZXhlY0BsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8va2V4ZWMK
+On Sun, Jun 5, 2022 at 10:45 PM Baoquan He <bhe@redhat.com> wrote:
+>
+> On 05/27/22 at 02:55am, Pasha Tatashin wrote:
+> > Currently, the maximum file size that is supported is 2G. This may be
+> > too small in some cases. For example, kexec_file_load() system call
+> > loads initramfs. In some netboot cases initramfs can be rather large.
+> >
+> > Allow to use up-to ssize_t bytes. The callers still can limit the
+> > maximum file size via buf_size.
+>
+> If we really met initramfs bigger than 2G, it's reasonable to increase
+> the limit. While wondering why we should take sszie_t, but not size_t.
+
+ssize_t instead of size_t so we can return errors as negative values.
+
+Pasha
+
+>
+> >
+> > Signed-off-by: Pasha Tatashin <pasha.tatashin@soleen.com>
+> > ---
+> >  fs/kernel_read_file.c            | 38 ++++++++++++++++----------------
+> >  include/linux/kernel_read_file.h | 32 +++++++++++++--------------
+> >  include/linux/limits.h           |  1 +
+> >  3 files changed, 36 insertions(+), 35 deletions(-)
+> >
+> > diff --git a/fs/kernel_read_file.c b/fs/kernel_read_file.c
+> > index 1b07550485b9..5d826274570c 100644
+> > --- a/fs/kernel_read_file.c
+> > +++ b/fs/kernel_read_file.c
+> > @@ -29,15 +29,15 @@
+> >   * change between calls to kernel_read_file().
+> >   *
+> >   * Returns number of bytes read (no single read will be bigger
+> > - * than INT_MAX), or negative on error.
+> > + * than SSIZE_MAX), or negative on error.
+> >   *
+> >   */
+> > -int kernel_read_file(struct file *file, loff_t offset, void **buf,
+> > -                  size_t buf_size, size_t *file_size,
+> > -                  enum kernel_read_file_id id)
+> > +ssize_t kernel_read_file(struct file *file, loff_t offset, void **buf,
+> > +                      size_t buf_size, size_t *file_size,
+> > +                      enum kernel_read_file_id id)
+> >  {
+> >       loff_t i_size, pos;
+> > -     size_t copied;
+> > +     ssize_t copied;
+> >       void *allocated = NULL;
+> >       bool whole_file;
+> >       int ret;
+> > @@ -58,7 +58,7 @@ int kernel_read_file(struct file *file, loff_t offset, void **buf,
+> >               goto out;
+> >       }
+> >       /* The file is too big for sane activities. */
+> > -     if (i_size > INT_MAX) {
+> > +     if (i_size > SSIZE_MAX) {
+> >               ret = -EFBIG;
+> >               goto out;
+> >       }
+> > @@ -124,12 +124,12 @@ int kernel_read_file(struct file *file, loff_t offset, void **buf,
+> >  }
+> >  EXPORT_SYMBOL_GPL(kernel_read_file);
+> >
+> > -int kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
+> > -                            size_t buf_size, size_t *file_size,
+> > -                            enum kernel_read_file_id id)
+> > +ssize_t kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
+> > +                                size_t buf_size, size_t *file_size,
+> > +                                enum kernel_read_file_id id)
+> >  {
+> >       struct file *file;
+> > -     int ret;
+> > +     ssize_t ret;
+> >
+> >       if (!path || !*path)
+> >               return -EINVAL;
+> > @@ -144,14 +144,14 @@ int kernel_read_file_from_path(const char *path, loff_t offset, void **buf,
+> >  }
+> >  EXPORT_SYMBOL_GPL(kernel_read_file_from_path);
+> >
+> > -int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+> > -                                   void **buf, size_t buf_size,
+> > -                                   size_t *file_size,
+> > -                                   enum kernel_read_file_id id)
+> > +ssize_t kernel_read_file_from_path_initns(const char *path, loff_t offset,
+> > +                                       void **buf, size_t buf_size,
+> > +                                       size_t *file_size,
+> > +                                       enum kernel_read_file_id id)
+> >  {
+> >       struct file *file;
+> >       struct path root;
+> > -     int ret;
+> > +     ssize_t ret;
+> >
+> >       if (!path || !*path)
+> >               return -EINVAL;
+> > @@ -171,12 +171,12 @@ int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+> >  }
+> >  EXPORT_SYMBOL_GPL(kernel_read_file_from_path_initns);
+> >
+> > -int kernel_read_file_from_fd(int fd, loff_t offset, void **buf,
+> > -                          size_t buf_size, size_t *file_size,
+> > -                          enum kernel_read_file_id id)
+> > +ssize_t kernel_read_file_from_fd(int fd, loff_t offset, void **buf,
+> > +                              size_t buf_size, size_t *file_size,
+> > +                              enum kernel_read_file_id id)
+> >  {
+> >       struct fd f = fdget(fd);
+> > -     int ret = -EBADF;
+> > +     ssize_t ret = -EBADF;
+> >
+> >       if (!f.file || !(f.file->f_mode & FMODE_READ))
+> >               goto out;
+> > diff --git a/include/linux/kernel_read_file.h b/include/linux/kernel_read_file.h
+> > index 575ffa1031d3..90451e2e12bd 100644
+> > --- a/include/linux/kernel_read_file.h
+> > +++ b/include/linux/kernel_read_file.h
+> > @@ -35,21 +35,21 @@ static inline const char *kernel_read_file_id_str(enum kernel_read_file_id id)
+> >       return kernel_read_file_str[id];
+> >  }
+> >
+> > -int kernel_read_file(struct file *file, loff_t offset,
+> > -                  void **buf, size_t buf_size,
+> > -                  size_t *file_size,
+> > -                  enum kernel_read_file_id id);
+> > -int kernel_read_file_from_path(const char *path, loff_t offset,
+> > -                            void **buf, size_t buf_size,
+> > -                            size_t *file_size,
+> > -                            enum kernel_read_file_id id);
+> > -int kernel_read_file_from_path_initns(const char *path, loff_t offset,
+> > -                                   void **buf, size_t buf_size,
+> > -                                   size_t *file_size,
+> > -                                   enum kernel_read_file_id id);
+> > -int kernel_read_file_from_fd(int fd, loff_t offset,
+> > -                          void **buf, size_t buf_size,
+> > -                          size_t *file_size,
+> > -                          enum kernel_read_file_id id);
+> > +ssize_t kernel_read_file(struct file *file, loff_t offset,
+> > +                      void **buf, size_t buf_size,
+> > +                      size_t *file_size,
+> > +                      enum kernel_read_file_id id);
+> > +ssize_t kernel_read_file_from_path(const char *path, loff_t offset,
+> > +                                void **buf, size_t buf_size,
+> > +                                size_t *file_size,
+> > +                                enum kernel_read_file_id id);
+> > +ssize_t kernel_read_file_from_path_initns(const char *path, loff_t offset,
+> > +                                       void **buf, size_t buf_size,
+> > +                                       size_t *file_size,
+> > +                                       enum kernel_read_file_id id);
+> > +ssize_t kernel_read_file_from_fd(int fd, loff_t offset,
+> > +                              void **buf, size_t buf_size,
+> > +                              size_t *file_size,
+> > +                              enum kernel_read_file_id id);
+> >
+> >  #endif /* _LINUX_KERNEL_READ_FILE_H */
+> > diff --git a/include/linux/limits.h b/include/linux/limits.h
+> > index b568b9c30bbf..f6bcc9369010 100644
+> > --- a/include/linux/limits.h
+> > +++ b/include/linux/limits.h
+> > @@ -7,6 +7,7 @@
+> >  #include <vdso/limits.h>
+> >
+> >  #define SIZE_MAX     (~(size_t)0)
+> > +#define SSIZE_MAX    ((ssize_t)(SIZE_MAX >> 1))
+> >  #define PHYS_ADDR_MAX        (~(phys_addr_t)0)
+> >
+> >  #define U8_MAX               ((u8)~0U)
+> > --
+> > 2.36.1.124.g0e6072fb45-goog
+> >
+>
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
