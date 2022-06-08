@@ -4,60 +4,60 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D42D1C43334
-	for <kexec@archiver.kernel.org>; Wed,  8 Jun 2022 07:00:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E910C433EF
+	for <kexec@archiver.kernel.org>; Wed,  8 Jun 2022 07:00:55 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:
-	Subject:Cc:To:From:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=6PYqqnBWh87wnsiDXrNtWRdMVhb6h/wfY9qF1EeIGQU=; b=3FrByAZa3i3rXP
-	AGs4tM3CZHxs96w5GrqBBKFTjFr+uZd7slDxASlypCmAMjkWYLU9vkkVfccPndcnkhL4olaRfnGJQ
-	5Mej15zPcqPFrqPJF+6SJc7BkaCMep8ygcPkP67d4QXbzDfgITkuYpTFz13bjD2kY8rc5XhJbqvKF
-	3S6d8BN1L4ltacXtxdF9WedMy8RePFMnprNX3kcynkC4+IzNYfzfa488Vveg85T2QL4Wt/SRtVbhv
-	fCsi1wGqyL5+ouql7DcsUc3XIY4B2GsB+kwThOYuxrx4wZZhNR1CoTW0kxT1Yd2Gjt7a3lXe3nSDl
-	VD/7sRpMkzM0rQo/l/wQ==;
+	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:
+	In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Content-ID:Content-Description
+	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=HvB9/MUncp2GjC7fuu6quU9pEmt/OsxFN/pd2Imv5c0=; b=CnopedyBPYywI/
+	a8QJF9/cPvBesRCq21KAQVi6ZgyySw141c+Zpo6Ky1y43aP1utjrvsAol4CbYHl3yf8e5FffVcPDe
+	9j7HyfEdwTvGT67oakjL2/Qm4gOtZaCS3OkQEdeegr0wjCLE/ZTDybI8yW3zHjVUTqBXW2zPKp90q
+	iztxfR9aHPcvezcrPTLQIT6Dg3Oz8uTSnxd5N4CG3gCUqL3kpuanPdlUFe0CjLdPj3pq9D+zPMvyU
+	CPDjyBzfEf54pgZaYqrZJfLxs2ntcS6GC+1C4J0uzv/Et+Bm4kdpTcVDkOGaveMHio/LOGcls0hKK
+	lKN3z2vg8Cg8343J/gGA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nypgO-00BNtb-BQ; Wed, 08 Jun 2022 07:00:48 +0000
-Received: from mail-pg1-x532.google.com ([2607:f8b0:4864:20::532])
+	id 1nypgP-00BNuI-UU; Wed, 08 Jun 2022 07:00:49 +0000
+Received: from mail-pj1-x102a.google.com ([2607:f8b0:4864:20::102a])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nypgJ-00BNrE-DP
-	for kexec@lists.infradead.org; Wed, 08 Jun 2022 07:00:45 +0000
-Received: by mail-pg1-x532.google.com with SMTP id e66so18055752pgc.8
-        for <kexec@lists.infradead.org>; Wed, 08 Jun 2022 00:00:39 -0700 (PDT)
+	id 1nypgL-00BNsE-RL
+	for kexec@lists.infradead.org; Wed, 08 Jun 2022 07:00:48 +0000
+Received: by mail-pj1-x102a.google.com with SMTP id d12-20020a17090abf8c00b001e2eb431ce4so17542456pjs.1
+        for <kexec@lists.infradead.org>; Wed, 08 Jun 2022 00:00:44 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:reply-to:mime-version
-         :content-transfer-encoding;
-        bh=Rzd5jHVZ1Np2+0gV097PKobFo2Ug2yArAiRpCWznZks=;
-        b=aLh0VWbB1Fj/q9OJtWN0VqMIl/GoZOK4jFT0+fWjl/fewag+xCXgldmWOywnmXnyqw
-         k8/+znBJuxwpoV0OzzFobfCWhSWi8eH4mMXPOyQU7mE5uYTLAAKAITieF0WVsO4bus3G
-         V4IPKt2znoV5C1/Fey9GH83Ylso9UA8dzOtxM9CF6wOqtbf/AYcbMJaZy6mYf/uMxeGR
-         FUkmE2CTFLX4KmlYwK+KA/6tiQL5llBBT7+g/R3yLFy/dLXYnhlapm9jJnxs4oWHyHgz
-         uA96F2sTLMvBTaqRNfEIyfnyfmzpDmFV1uili7dTguU4bT/sdEx6ycAiISjicOZPMF7B
-         IkiQ==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
+         :mime-version:content-transfer-encoding;
+        bh=0Y71+75qvfs0BWzL6gBfrDn2lzjlHUL6hjQyt+wNtxI=;
+        b=lFEEkahv8QX0NmHlMpbpwU3DLBoViwvS4Bkf2xwRJvGyqHFcvwgcjk+29VrBH/HQ0Y
+         u0vev6U6R6NGWWY+5hhqbnvFYCLMBjlbwCUdjeEmeV0BjtdobRy6VRHrADqEiQkC5/CN
+         4TbqzIu9w0iAUgpRStiIJANJO5mYmsnsmuRmNSyCSrkPUkR38bgV3oGaenT8prRz4wQV
+         wFRYSLtZ/+LseV5K4es+xa5RfcL3ueOtoSi9HJGtCtDhF5dlrKNfvlTiegxbbiCk4vCb
+         qGsNB986MXJUCxJnXwRLo9xxzl/LSoh7xEfFLlQKUD35OPJYxdViOcXpsgMnRnEXaXtm
+         HgEA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=Rzd5jHVZ1Np2+0gV097PKobFo2Ug2yArAiRpCWznZks=;
-        b=yQpSqrWNp0L2GzAfZi4JrzqCwRFkHQJov2E06PRtviKlH/Vl40q1Qu/nrnHIfkaMit
-         7uxTXU/WsKJVMlXU7noE9JXfJ8doFsEZFId270hlOdL/WsvUFZgn6C3ZzXnjqNqE2ROZ
-         93vW4aA0lbJfHCslt6AJPKiw/jziXlPaWPXC36bWnsC4PKt9n1wTxchUR6ORdm33gOUX
-         q7OyzabJKWvUt25oP9Yf5ynhojkYd7cFZiPXcjTQ3NkFCylfUcVn5YMVsXFqBaoKmveG
-         3uGCk1bsgm4Otb1zPeWtyhv86Jzi+o6yEeeS6hDubcepxkkq1+R9/YEIjVG019o0MJOZ
-         +T+Q==
-X-Gm-Message-State: AOAM530pSGXjiZcWRAUQpBeuY2qe+7CTm830QiMpZ2XgV4XJpOEwkhv9
-	+9uBZMe+PWng6sAmqcsAY/8=
-X-Google-Smtp-Source: ABdhPJyJlGe2LEF3l0HaSM5jSYhC48UeQi8mEwKBpio4r4vYBKy5lMZOyvXD9jCH+FG/RDs4YsVOKg==
-X-Received: by 2002:a05:6a00:a16:b0:518:ffe0:7229 with SMTP id p22-20020a056a000a1600b00518ffe07229mr68508072pfh.49.1654671638648;
-        Wed, 08 Jun 2022 00:00:38 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:reply-to:mime-version:content-transfer-encoding;
+        bh=0Y71+75qvfs0BWzL6gBfrDn2lzjlHUL6hjQyt+wNtxI=;
+        b=tZCYDTscVovjBJJLjlXA5dV64wIMlSsIG5vQuZc8nDoI/dsf7UejNN8bYU/5/qSxAg
+         H/895GRHfb94zwCIrLXmBWziv+l3wVdZad112+8yBlOx+MgFAkpDXqX357kHRdsaJQKI
+         qf7RDRvOQGlmd7mmlAPeiE9ad669dDYbQ/RHUlqcTcVyvYXTZaTx7CVjQ33r7H/wx0yG
+         oIQ5bdfReVf9WAa3Gxqzx9jfRH1/qLOWl+q3ULjJK4U6K0HYDt1Fc6qOadsKSyACQ/t/
+         e7ZkERq305neq9Uj6T1JayANu4EoN43vlLUD0j+mHZbXgpNL/Z7Ggtr3VKOAdtSWxKgM
+         LjGQ==
+X-Gm-Message-State: AOAM531CsIM3xzREQ4yyh2ddLr993CIvSSF+Gcr+HP5yyYPxTovwykEh
+	iIViPkqy+Q9AWAqFroN9Lro7lffvc8eJIsVo
+X-Google-Smtp-Source: ABdhPJx7+Tm4FFC4r7PiYQy5839YKi2Ajm/KYt944nHUrPqCBYGoBDa99piJ/g1V0Xo5JM25LyktVw==
+X-Received: by 2002:a17:902:f687:b0:167:58bb:c43f with SMTP id l7-20020a170902f68700b0016758bbc43fmr22706267plg.136.1654671644069;
+        Wed, 08 Jun 2022 00:00:44 -0700 (PDT)
 Received: from KASONG-MB0.tencent.com ([103.7.29.31])
-        by smtp.gmail.com with ESMTPSA id e18-20020a170902ed9200b001675991fb7fsm8396425plj.55.2022.06.08.00.00.36
+        by smtp.gmail.com with ESMTPSA id e18-20020a170902ed9200b001675991fb7fsm8396425plj.55.2022.06.08.00.00.41
         (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Jun 2022 00:00:38 -0700 (PDT)
+        Wed, 08 Jun 2022 00:00:43 -0700 (PDT)
 From: Kairui Song <ryncsn@gmail.com>
 To: linux-kernel@vger.kernel.org
 Cc: Thomas Gleixner <tglx@linutronix.de>,
@@ -68,14 +68,16 @@ Cc: Thomas Gleixner <tglx@linutronix.de>,
 	x86@kernel.org,
 	kexec@lists.infradead.org,
 	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 0/2] x86/mpparse, kexec: Fix kdump/kexec kernel panic with MPTABLE and x2apic
-Date: Wed,  8 Jun 2022 14:43:46 +0800
-Message-Id: <20220608064348.66402-1-ryncsn@gmail.com>
+Subject: [PATCH 2/2] x86/mpparse, kexec: probe apic driver early for x2apic
+Date: Wed,  8 Jun 2022 14:43:48 +0800
+Message-Id: <20220608064348.66402-3-ryncsn@gmail.com>
 X-Mailer: git-send-email 2.35.2
+In-Reply-To: <20220608064348.66402-1-ryncsn@gmail.com>
+References: <20220608064348.66402-1-ryncsn@gmail.com>
 MIME-Version: 1.0
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220608_000043_493143_4C75B3B8 
-X-CRM114-Status: GOOD (  12.40  )
+X-CRM114-CacheID: sfid-20220608_000045_940103_DDB0C67D 
+X-CRM114-Status: GOOD (  20.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,7 +98,7 @@ Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 From: Kairui Song <kasong@tencent.com>
 
 Following kernel panic is observed when doing kdump/kexec on
-qemu-kvm VMs that uses MPTABLE, not ACPI MADT, and supports x2apic:
+virtual machines that uses MPTABLE, not ACPI MADT, and supports x2apic:
 
   Intel MultiProcessor Specification v1.4
   MPTABLE: OEM ID: BOCHSCPU
@@ -136,24 +138,62 @@ qemu-kvm VMs that uses MPTABLE, not ACPI MADT, and supports x2apic:
   random: get_random_bytes called from oops_exit+0x35/0x60 with crng_init=0
   ---[ end trace c9e569df3bdbefd3 ]---
 
-It turns out MPTABLE doesn't play well with pre-enabled x2apic mode,
-this series extend the apic driver interface and let MPTABLE parse
-probe the driver properly.
+The panic happens within following init code:
+setup_arch()
+  ....
+  check_x2apic()     <-- x2apic is enabled by first kernel before kexec,
+                         this set x2apic_mode = 1, make sure later probes
+                         will recognize pre-enabled x2apic.
+  ....
+  acpi_boot_init();  <-- If ACPI MADT is in use, this will switch apic driver
+                         to x2apic, but it will do nothing with MPTABLE.
+  x86_dtb_init();
+  get_smp_config();
+    default_get_smp_config();  <-- MPTABLE setup.
+      check_physptr();
+        smp_read_mpc();
+          register_lapic_address(); <-- * panic here *
+  init_apic_mappings();
+  ....
+
+The problem here is MPTABLE setup calls register_lapic_address(), which
+is still using apic_flat driver, and access the apic MMIO interface. But
+the address is never mapped for pre-enabled x2apic, since commit
+0450193bffed6 ("x86, x2apic: Don't map lapic addr for preenabled x2apic systems"),
+then it panics.
+
+Simply map it won't work either, in x2apic mode the MMIO interface is
+not usable (Intel SDM Volume 3A 10.12.2), later setups will still fail with
+other errors. So it needs do a proper apic driver probe and switch to
+x2apic driver to perform MSR operation instead.
+
+Such issue is currently only seen with kdump/kexec, kernel enabled the
+x2apic in first kernel and kept it enabled to 2nd kernel.
 
 This can be easily reproduced with qemu-kvm, use -no-acpi and enable
 x2apic, so x2apic with MPTABLE will be in use, then trigger kdump/kexec.
 
-Kairui Song (2):
-  x86, apic: add a more generic early_probe
-  x86/mpparse, kexec: probe apic driver early for x2apic
+Signed-off-by: Kairui Song <kasong@tencent.com>
+---
+ arch/x86/kernel/mpparse.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
- arch/x86/include/asm/apic.h           |  6 ++++++
- arch/x86/kernel/apic/probe_64.c       | 16 ++++++++++++++++
- arch/x86/kernel/apic/x2apic_cluster.c |  8 +++++++-
- arch/x86/kernel/apic/x2apic_phys.c    |  8 +++++++-
- arch/x86/kernel/mpparse.c             |  4 +++-
- 5 files changed, 39 insertions(+), 3 deletions(-)
-
+diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
+index fed721f90116..7658c8184e8c 100644
+--- a/arch/x86/kernel/mpparse.c
++++ b/arch/x86/kernel/mpparse.c
+@@ -202,8 +202,10 @@ static int __init smp_read_mpc(struct mpc_table *mpc, unsigned early)
+ 		return 0;
+ 
+ 	/* Initialize the lapic mapping */
+-	if (!acpi_lapic)
++	if (!acpi_lapic) {
++		apic_early_probe();
+ 		register_lapic_address(mpc->lapic);
++	}
+ 
+ 	if (early)
+ 		return 1;
 -- 
 2.35.2
 
