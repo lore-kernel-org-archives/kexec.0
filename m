@@ -4,80 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6E910C433EF
-	for <kexec@archiver.kernel.org>; Wed,  8 Jun 2022 07:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CDEB9CCA47F
+	for <kexec@archiver.kernel.org>; Thu,  9 Jun 2022 13:55:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Reply-To:List-Subscribe:List-Help:
-	List-Post:List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:
-	In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HvB9/MUncp2GjC7fuu6quU9pEmt/OsxFN/pd2Imv5c0=; b=CnopedyBPYywI/
-	a8QJF9/cPvBesRCq21KAQVi6ZgyySw141c+Zpo6Ky1y43aP1utjrvsAol4CbYHl3yf8e5FffVcPDe
-	9j7HyfEdwTvGT67oakjL2/Qm4gOtZaCS3OkQEdeegr0wjCLE/ZTDybI8yW3zHjVUTqBXW2zPKp90q
-	iztxfR9aHPcvezcrPTLQIT6Dg3Oz8uTSnxd5N4CG3gCUqL3kpuanPdlUFe0CjLdPj3pq9D+zPMvyU
-	CPDjyBzfEf54pgZaYqrZJfLxs2ntcS6GC+1C4J0uzv/Et+Bm4kdpTcVDkOGaveMHio/LOGcls0hKK
-	lKN3z2vg8Cg8343J/gGA==;
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=twuTZLwGC6vjZbOxc5J77mmuPpsQP8oEFQJmKgGk2Ag=; b=Umtai1/86MisEh
+	IqxpeUs9HQtj/A8o1M8uigRTj3rRaZlxxGfovxUzvKM2zodWEpfHyDFy8mJYE/ZfoU7BpUx1440ap
+	c2F/aRnViXXAc3WL88K3TolaoyctbPL8ypWl50qf8Jij5aZsJabqCKSHUc91DY02+fwcRf36awosD
+	vO5IMoixsSXm8DFoDQ2GLoe0EXWELlnFJKiS7WhdNIEZZSNjyhVmHN6li1fBf54bbLjkcRizYjYev
+	NW6XvUTz8Y2XQUcLMk6dC+aJoS18S5o8/whBB1Q8vD1eShmNPJ/2kcdGw3FgM4vkA3xd0+0ZywweG
+	sXXeGUsxWe5e7kiKN0IA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nypgP-00BNuI-UU; Wed, 08 Jun 2022 07:00:49 +0000
-Received: from mail-pj1-x102a.google.com ([2607:f8b0:4864:20::102a])
+	id 1nzIcu-002L6h-IZ; Thu, 09 Jun 2022 13:55:08 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nypgL-00BNsE-RL
-	for kexec@lists.infradead.org; Wed, 08 Jun 2022 07:00:48 +0000
-Received: by mail-pj1-x102a.google.com with SMTP id d12-20020a17090abf8c00b001e2eb431ce4so17542456pjs.1
-        for <kexec@lists.infradead.org>; Wed, 08 Jun 2022 00:00:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references:reply-to
-         :mime-version:content-transfer-encoding;
-        bh=0Y71+75qvfs0BWzL6gBfrDn2lzjlHUL6hjQyt+wNtxI=;
-        b=lFEEkahv8QX0NmHlMpbpwU3DLBoViwvS4Bkf2xwRJvGyqHFcvwgcjk+29VrBH/HQ0Y
-         u0vev6U6R6NGWWY+5hhqbnvFYCLMBjlbwCUdjeEmeV0BjtdobRy6VRHrADqEiQkC5/CN
-         4TbqzIu9w0iAUgpRStiIJANJO5mYmsnsmuRmNSyCSrkPUkR38bgV3oGaenT8prRz4wQV
-         wFRYSLtZ/+LseV5K4es+xa5RfcL3ueOtoSi9HJGtCtDhF5dlrKNfvlTiegxbbiCk4vCb
-         qGsNB986MXJUCxJnXwRLo9xxzl/LSoh7xEfFLlQKUD35OPJYxdViOcXpsgMnRnEXaXtm
-         HgEA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:reply-to:mime-version:content-transfer-encoding;
-        bh=0Y71+75qvfs0BWzL6gBfrDn2lzjlHUL6hjQyt+wNtxI=;
-        b=tZCYDTscVovjBJJLjlXA5dV64wIMlSsIG5vQuZc8nDoI/dsf7UejNN8bYU/5/qSxAg
-         H/895GRHfb94zwCIrLXmBWziv+l3wVdZad112+8yBlOx+MgFAkpDXqX357kHRdsaJQKI
-         qf7RDRvOQGlmd7mmlAPeiE9ad669dDYbQ/RHUlqcTcVyvYXTZaTx7CVjQ33r7H/wx0yG
-         oIQ5bdfReVf9WAa3Gxqzx9jfRH1/qLOWl+q3ULjJK4U6K0HYDt1Fc6qOadsKSyACQ/t/
-         e7ZkERq305neq9Uj6T1JayANu4EoN43vlLUD0j+mHZbXgpNL/Z7Ggtr3VKOAdtSWxKgM
-         LjGQ==
-X-Gm-Message-State: AOAM531CsIM3xzREQ4yyh2ddLr993CIvSSF+Gcr+HP5yyYPxTovwykEh
-	iIViPkqy+Q9AWAqFroN9Lro7lffvc8eJIsVo
-X-Google-Smtp-Source: ABdhPJx7+Tm4FFC4r7PiYQy5839YKi2Ajm/KYt944nHUrPqCBYGoBDa99piJ/g1V0Xo5JM25LyktVw==
-X-Received: by 2002:a17:902:f687:b0:167:58bb:c43f with SMTP id l7-20020a170902f68700b0016758bbc43fmr22706267plg.136.1654671644069;
-        Wed, 08 Jun 2022 00:00:44 -0700 (PDT)
-Received: from KASONG-MB0.tencent.com ([103.7.29.31])
-        by smtp.gmail.com with ESMTPSA id e18-20020a170902ed9200b001675991fb7fsm8396425plj.55.2022.06.08.00.00.41
-        (version=TLS1_3 cipher=TLS_CHACHA20_POLY1305_SHA256 bits=256/256);
-        Wed, 08 Jun 2022 00:00:43 -0700 (PDT)
-From: Kairui Song <ryncsn@gmail.com>
-To: linux-kernel@vger.kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>,
-	Dave Hansen <dave.hansen@linux.intel.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	x86@kernel.org,
-	kexec@lists.infradead.org,
-	Kairui Song <kasong@tencent.com>
-Subject: [PATCH 2/2] x86/mpparse, kexec: probe apic driver early for x2apic
-Date: Wed,  8 Jun 2022 14:43:48 +0800
-Message-Id: <20220608064348.66402-3-ryncsn@gmail.com>
-X-Mailer: git-send-email 2.35.2
-In-Reply-To: <20220608064348.66402-1-ryncsn@gmail.com>
-References: <20220608064348.66402-1-ryncsn@gmail.com>
+	id 1nzIco-002L1L-0c; Thu, 09 Jun 2022 13:55:04 +0000
+Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.53])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LJltJ296wzjXKF;
+	Thu,  9 Jun 2022 21:53:28 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 9 Jun 2022 21:54:50 +0800
+Received: from thunder-town.china.huawei.com (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Thu, 9 Jun 2022 21:54:49 +0800
+From: Zhen Lei <thunder.leizhen@huawei.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin"
+	<hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, Rob Herring
+	<robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
+	<devicetree@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He
+	<bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Catalin Marinas
+	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
+	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
+	<linux-doc@vger.kernel.org>
+CC: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap
+	<rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang
+	<wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, "John
+ Donnelly" <John.p.donnelly@oracle.com>, Dave Kleikamp
+	<dave.kleikamp@oracle.com>
+Subject: [PATCH] arm64: kdump: Provide default size when crashkernel=Y,low is not specified
+Date: Thu, 9 Jun 2022 21:50:29 +0800
+Message-ID: <20220609135029.607-1-thunder.leizhen@huawei.com>
+X-Mailer: git-send-email 2.26.0.windows.1
 MIME-Version: 1.0
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220608_000045_940103_DDB0C67D 
-X-CRM114-Status: GOOD (  20.33  )
+X-CRM114-CacheID: sfid-20220609_065502_483058_F2179ACB 
+X-CRM114-Status: GOOD (  16.07  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -89,113 +74,81 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: Kairui Song <kasong@tencent.com>
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-From: Kairui Song <kasong@tencent.com>
+To be consistent with the implementation of x86 and improve cross-platform
+user experience. Try to allocate at least 256 MiB low memory automatically
+when crashkernel=Y,low is not specified.
 
-Following kernel panic is observed when doing kdump/kexec on
-virtual machines that uses MPTABLE, not ACPI MADT, and supports x2apic:
-
-  Intel MultiProcessor Specification v1.4
-  MPTABLE: OEM ID: BOCHSCPU
-  MPTABLE: Product ID: 0.1
-  MPTABLE: APIC at: 0xFEE00000
-  BUG: unable to handle page fault for address: ffffffffff5fc020
-  #PF: supervisor read access in kernel mode
-  #PF: error_code(0x0000) - not-present page
-  PGD 25e15067 P4D 25e15067 PUD 25e17067 PMD 25e18067 PTE 0
-  Oops: 0000 [#1] SMP NOPTI
-  CPU: 0 PID: 0 Comm: swapper Not tainted 5.14.10-300.fc35.x86_64 #1
-  Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.15.0-1.fc35 04/01/2014
-  RIP: 0010:native_apic_mem_read+0x2/0x10
-  Code: 14 25 20 cd e3 82 c3 90 bf 30 08 00 00 ff 14 25 18 cd e3 82 c3 cc cc cc 89 ff 89 b7 00 c0 5f ff c3 0f 1f 80 00 00 00 00 89 ff <8b> 87 00 c0 5f ff c3 0f 1f 80 00 00 00 0
-  RSP: 0000:ffffffff82e03e18 EFLAGS: 00010046
-  RAX: ffffffff81064840 RBX: ffffffffff240b6c RCX: ffffffff82f17428
-  RDX: c0000000ffffdfff RSI: 00000000ffffdfff RDI: 0000000000000020
-  RBP: ffff888023200000 R08: 0000000000000000 R09: ffffffff82e03c50
-  R10: ffffffff82e03c48 R11: ffffffff82f47468 R12: ffffffffff240b40
-  R13: ffffffffff200b30 R14: 0000000000000000 R15: 00000000000000d4
-  FS:  0000000000000000(0000) GS:ffffffff8365b000(0000) knlGS:0000000000000000
-  CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-  CR2: ffffffffff5fc020 CR3: 0000000025e10000 CR4: 00000000000006b0
-  Call Trace:
-   ? read_apic_id+0x15/0x30
-   ? register_lapic_address+0x76/0x97
-   ? default_get_smp_config+0x28b/0x42d
-   ? dmi_check_system+0x1c/0x60
-   ? acpi_boot_init+0x1d/0x4c3
-   ? setup_arch+0xb37/0xc2a
-   ? slab_is_available+0x5/0x10
-   ? start_kernel+0x61/0x980
-   ? load_ucode_bsp+0x4c/0xcd
-   ? secondary_startup_64_no_verify+0xc2/0xcb
-  Modules linked in:
-  CR2: ffffffffff5fc020
-  random: get_random_bytes called from oops_exit+0x35/0x60 with crng_init=0
-  ---[ end trace c9e569df3bdbefd3 ]---
-
-The panic happens within following init code:
-setup_arch()
-  ....
-  check_x2apic()     <-- x2apic is enabled by first kernel before kexec,
-                         this set x2apic_mode = 1, make sure later probes
-                         will recognize pre-enabled x2apic.
-  ....
-  acpi_boot_init();  <-- If ACPI MADT is in use, this will switch apic driver
-                         to x2apic, but it will do nothing with MPTABLE.
-  x86_dtb_init();
-  get_smp_config();
-    default_get_smp_config();  <-- MPTABLE setup.
-      check_physptr();
-        smp_read_mpc();
-          register_lapic_address(); <-- * panic here *
-  init_apic_mappings();
-  ....
-
-The problem here is MPTABLE setup calls register_lapic_address(), which
-is still using apic_flat driver, and access the apic MMIO interface. But
-the address is never mapped for pre-enabled x2apic, since commit
-0450193bffed6 ("x86, x2apic: Don't map lapic addr for preenabled x2apic systems"),
-then it panics.
-
-Simply map it won't work either, in x2apic mode the MMIO interface is
-not usable (Intel SDM Volume 3A 10.12.2), later setups will still fail with
-other errors. So it needs do a proper apic driver probe and switch to
-x2apic driver to perform MSR operation instead.
-
-Such issue is currently only seen with kdump/kexec, kernel enabled the
-x2apic in first kernel and kept it enabled to 2nd kernel.
-
-This can be easily reproduced with qemu-kvm, use -no-acpi and enable
-x2apic, so x2apic with MPTABLE will be in use, then trigger kdump/kexec.
-
-Signed-off-by: Kairui Song <kasong@tencent.com>
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
 ---
- arch/x86/kernel/mpparse.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ Documentation/admin-guide/kernel-parameters.txt | 10 +++-------
+ arch/arm64/mm/init.c                            | 12 +++++++++++-
+ 2 files changed, 14 insertions(+), 8 deletions(-)
 
-diff --git a/arch/x86/kernel/mpparse.c b/arch/x86/kernel/mpparse.c
-index fed721f90116..7658c8184e8c 100644
---- a/arch/x86/kernel/mpparse.c
-+++ b/arch/x86/kernel/mpparse.c
-@@ -202,8 +202,10 @@ static int __init smp_read_mpc(struct mpc_table *mpc, unsigned early)
- 		return 0;
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 8090130b544b070..9560f5af248e0d6 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -843,7 +843,9 @@
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
+ 	crashkernel=size[KMG],low
+-			[KNL, X86-64] range under 4G. When crashkernel=X,high
++			[KNL, X86-64, ARM64] range under 4G(For some platforms,
++			not all low 4G memory can be directly accessed by devices,
++			use the DMA zones instead). When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+ 			above 4G, that cause second kernel crash on system
+ 			that require some amount of low memory, e.g. swiotlb
+@@ -857,12 +859,6 @@
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
  
- 	/* Initialize the lapic mapping */
--	if (!acpi_lapic)
-+	if (!acpi_lapic) {
-+		apic_early_probe();
- 		register_lapic_address(mpc->lapic);
-+	}
+-			[KNL, ARM64] range in low memory.
+-			This one lets the user specify a low range in the
+-			DMA zone for the crash dump kernel.
+-			It will be ignored when crashkernel=X,high is not used
+-			or memory reserved is located in the DMA zones.
+-
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
  
- 	if (early)
- 		return 1;
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 339ee84e5a61a0b..5390f361208ccf7 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+ #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
+ #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
+ 
++/*
++ * This is an empirical value in x86_64 and taken here directly. Please
++ * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
++ * details.
++ */
++#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
++	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
++
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ {
+ 	unsigned long long low_base;
+@@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
+ 		 * is not allowed.
+ 		 */
+ 		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+-		if (ret && (ret != -ENOENT))
++		if (ret == -ENOENT)
++			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
++		else if (ret)
+ 			return;
+ 
+ 		crash_max = CRASH_ADDR_HIGH_MAX;
 -- 
-2.35.2
+2.25.1
 
 
 _______________________________________________
