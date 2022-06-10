@@ -4,110 +4,58 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 81E4FC433EF
-	for <kexec@archiver.kernel.org>; Thu,  9 Jun 2022 23:15:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7B327C43334
+	for <kexec@archiver.kernel.org>; Fri, 10 Jun 2022 08:54:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Mime-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ZasjhsGOpmLraomV8G+1FXrJOx9/rSubv1OK2bDsik4=; b=dceXuwZmKBm+aL
-	09gpnqXU3cduxLLHThr1VpLlq3HULbckddkKcmxT69reNH5VhqgrOWh5VBgB6NlQb44rHUgYuZK4j
-	vaNN+yrT4987ADz+S7TksQgeLius36hzrcCIAgVJx8jSvA92eKC/dUVQ0tY0DU3j8w84nVUvDKC69
-	vIlNhiBdw9dQrTy9qu0a2uarACQr/lsitlER2CXLRVJKQD1SQGqPd2tn2VmPpPJje3ZWUpW0Ms48L
-	JtsqUVm/jE0tThCWqSER1rCE6rLllEMjAwmvhDKf9lBMYI3aweJTliATBmYe1MP0yahr1gRKEgjCQ
-	z3MkjQ54Wm7aAKIHQsbw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=J1nprNJpYJEgsR/TWzpWUvKX+pfaYDhU1Kf4P1AbmwY=; b=3jo+0yLkNmcIIb
+	xXb2KdpaesM2AUoMW9/wpEA1u0p5ASX2Qi6qhBbH8Y9UfirpDfJPobmWbCyUVZzTLzfzqxJcwHVwc
+	7oqActhhmCjF9Y0Dg8LIIQlnD43vue7zW5CwXGbOhq7KF/Ia7eZXZ6cowDMto2+v0aY0RtLbCnfXT
+	9naiXxSzC9SXB39NsCyI1yo+qPeVPtb3DgtGD+0v40MJSUgaPfSB7bcKKEQ6GadB3hBqHMiv22ewT
+	etHGzire/CtapNnd/jt6XQ1b3QQUiXqvGlx9hKbBtWyEG24F2abo/RvyjiB0SzF6u82R5FaQ6DLOa
+	DYYQhO4DMZs9Ip8PRGDQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nzRNS-004XN3-Qi; Thu, 09 Jun 2022 23:15:46 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
-	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1nzRNQ-004XM2-1T; Thu, 09 Jun 2022 23:15:45 +0000
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 259N9lNa030155;
-	Thu, 9 Jun 2022 23:15:36 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- mime-version : content-transfer-encoding; s=pp1;
- bh=6rV25bVukC0FzXp8C+eOvheKB/Ow7ad3IEMVII0+WpA=;
- b=RHOtXYOZ9bsKZLp7BpFsh8xAA1w+ADlN0/KyiaOLAfMUmEKpvIjNaVHmuM1ixTKXz3u3
- 8rdap9v1Q7WMGgOkjy64pZ9O5wfQQ8c1XhuMnzbzTiQhPKj29mhNrTf9+wJ/p52qpHmb
- pjZxUs48VW1ROKzR6CVJRGFMjYGXI6eKG7a46MN/FlE2B5fRj2odL0WLZNqUGrI0Ht54
- XHIU52qptcQW51LeTjIuao6Wo0lnRXj++JfG6rO2y66mItDojOgbHHNnaPLOqYra9/zI
- 9rSPPP9+QStbwwfbnHyJGHAnENcJzUhuZnhPQYAg4V67J1yclMLjXx6cTR+BVAmR9J1P vw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gks69gysn-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jun 2022 23:15:36 +0000
-Received: from m0098393.ppops.net (m0098393.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 259NAuRn009191;
-	Thu, 9 Jun 2022 23:15:35 GMT
-Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gks69gys6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jun 2022 23:15:35 +0000
-Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
-	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 259N5ubN001267;
-	Thu, 9 Jun 2022 23:15:32 GMT
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (d06relay10.portsmouth.uk.ibm.com [9.149.109.195])
-	by ppma03ams.nl.ibm.com with ESMTP id 3gfy19fft3-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 09 Jun 2022 23:15:32 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-	by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 259NFUKJ21496240
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 9 Jun 2022 23:15:30 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 2DE6D11C04C;
-	Thu,  9 Jun 2022 23:15:30 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1AF8011C04A;
-	Thu,  9 Jun 2022 23:15:28 +0000 (GMT)
-Received: from sig-9-65-64-6.ibm.com (unknown [9.65.64.6])
-	by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Thu,  9 Jun 2022 23:15:27 +0000 (GMT)
-Message-ID: <e44bb6b11573838417b5d561173c27a1571c94b6.camel@linux.ibm.com>
-Subject: Re: [PATCH v8 3/4] arm64: kexec_file: use more system keyrings to
- verify kernel image signature
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org, Michal Suchanek
- <msuchanek@suse.de>,
-        Baoquan He <bhe@redhat.com>, Dave Young
- <dyoung@redhat.com>,
-        Will Deacon <will@kernel.org>,
-        "Eric W . Biederman"
- <ebiederm@xmission.com>,
-        Chun-Yi Lee <jlee@suse.com>, stable@vger.kernel.org,
-        keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
-        Catalin Marinas
- <catalin.marinas@arm.com>,
-        James Morse <james.morse@arm.com>,
-        AKASHI
- Takahiro <takahiro.akashi@linaro.org>,
-        open list
- <linux-kernel@vger.kernel.org>
-Date: Thu, 09 Jun 2022 19:15:27 -0400
-In-Reply-To: <20220512070123.29486-4-coxu@redhat.com>
-References: <20220512070123.29486-1-coxu@redhat.com>
-	 <20220512070123.29486-4-coxu@redhat.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-Mime-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: AZVfSAyGR6zReIne5Uk26XJVLhnwfpqj
-X-Proofpoint-ORIG-GUID: mzxr_bl7MDVagn9LqpV5ZEpivnd1vDN9
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-09_15,2022-06-09_02,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0 phishscore=0
- priorityscore=1501 bulkscore=0 adultscore=0 mlxlogscore=999 clxscore=1011
- malwarescore=0 lowpriorityscore=0 suspectscore=0 mlxscore=0 spamscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2206090085
+	id 1nzaP5-006wwE-VA; Fri, 10 Jun 2022 08:54:03 +0000
+Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
+	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1nzaP2-006wtD-P7
+	for kexec@lists.infradead.org; Fri, 10 Jun 2022 08:54:03 +0000
+Received: from localhost.localdomain (unknown [113.200.148.30])
+	by mail.loongson.cn (Coremail) with SMTP id AQAAf9DxP02hBqNicDg2AA--.3025S2;
+	Fri, 10 Jun 2022 16:53:53 +0800 (CST)
+From: Hui Li <lihui@loongson.cn>
+To: Simon Horman <horms@verge.net.au>
+Cc: kexec@lists.infradead.org
+Subject: [PATCH v4] kexec-tools: mips: Pass initrd parameter via cmdline
+Date: Fri, 10 Jun 2022 16:53:52 +0800
+Message-Id: <20220610085352.26171-1-lihui@loongson.cn>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+X-CM-TRANSID: AQAAf9DxP02hBqNicDg2AA--.3025S2
+X-Coremail-Antispam: 1UD129KBjvJXoW3XF4xKF43ZrW7urWrCw43GFg_yoW7Gryfpw
+	47t3s8Gr4rAr4xJryfAFs8u3yfXwn3A3WjvFWag34UX3Wjg3WYq3yfXF13Zr1DJrWjvF1f
+	ArWYvF95ua17Z3DanT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+	9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
+	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
+	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Xr0_Ar1l84ACjcxK6xII
+	jxv20xvEc7CjxVAFwI0_Gr1j6F4UJwA2z4x0Y4vEx4A2jsIE14v26rxl6s0DM28EF7xvwV
+	C2z280aVCY1x0267AKxVW0oVCq3wAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
+	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUGVWUXwAv7VC2z280aVAFwI0_Gr0_Cr
+	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8ZwCF04k2
+	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
+	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41l
+	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
+	AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
+	z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUyqYpUUUUU
+X-CM-SenderInfo: 5olk3xo6or00hjvr0hdfq/
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220609_161544_370638_9CEF2FCE 
-X-CRM114-Status: GOOD (  19.50  )
+X-CRM114-CacheID: sfid-20220610_015401_250499_D03ED72E 
+X-CRM114-Status: GOOD (  17.14  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -124,43 +72,161 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 2022-05-12 at 15:01 +0800, Coiby Xu wrote:
-> Currently, a problem faced by arm64 is if a kernel image is signed by a
-> MOK key, loading it via the kexec_file_load() system call would be
-> rejected with the error "Lockdown: kexec: kexec of unsigned images is
-> restricted; see man kernel_lockdown.7".
-> 
-> This happens because image_verify_sig uses only the primary keyring that
-> contains only kernel built-in keys to verify the kexec image.
+Under loongson platform, use command:
+kexec -l vmlinux... --append="root=UUID=28e1..." --initrd=...
+kexec -e
+quick restart failed like this:
 
-From the git history it's clear that .platform keyring was upstreamed
-during the same open window as commit 732b7b93d849 ("arm64: kexec_file:
-add kernel signature verification support").   Loading the MOK keys
-onto the .platform keyring was upstreamed much later.  For this reason,
-commit 732b7b93d849 only used keys on the  .builtin_trusted_keys
-keyring.   This patch is now addressing it and the newly upstreamed
-.machine keyring.
+********************************************************************
+[    3.420791] VFS: Cannot open root device "UUID=6462a8a4-02fb-49..."
+[    3.431262] Please append a correct "root=" boot option; ...
+...
+...
+...
+[    3.543175]   0801         4194304 sda1 554e69cc-01
+[    3.543175]
+[    3.549494]   0802        62914560 sda2 554e69cc-02
+[    3.549495]
+[    3.555818]   0803         8388608 sda3 554e69cc-03
+[    3.555819]
+[    3.562139]   0804       174553229 sda4 554e69cc-04
+[    3.562139]
+[    3.568463] 0b00         1048575 sr0
+[    3.568464]  driver: sr
+[    3.574524] Kernel panic - not syncing: VFS: Unable to mount root fs...
+[    3.582750] ---[ end Kernel panic - not syncing: VFS:...
+*******************************************************************
 
-Only using the .builtin_trusted_keys is the problem statement, which
-should be one of the first lines of the patch description, if not the
-first line.
+The kernel cannot parse the UUID, the UUID is parsed in the initrd.
+For compatibility with previous platforms, loongson platform obtain
+initrd parameter through cmdline in kernel, the kernel supports use
+cmdline to parse initrd. But under the mips architecture, kexec-tools
+pass the initrd through DTB.
 
-> 
-> This patch allows to verify arm64 kernel image signature using not only
-> .builtin_trusted_keys but also .platform and .secondary_trusted_keys
-> keyring.
+So some modifications as follows:
 
-Please remember to update this to include the .machine keyring.
+(1) in kexec/arch/mips/kexec-elf-mips.c
+    Add patch_initrd_info(), at runtime to distinguish different cpu,
+    only for loongson cpu, add initrd parameter to cmdline.
 
-> 
-> Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+(2) in kexec/arch/mips/crashdump-mips.c
+    Because loongson uses a different page_offset, it should be modified
+    to ensure that crashdump functionality is correct and reliable.
 
-Since the MOK keys weren't loaded onto the .platform keyring until much
-later, I would not classify this as a fix.
+Signed-off-by: Hui Li <lihui@loongson.cn>
+---
+ kexec/arch/mips/crashdump-mips.c |  3 ++
+ kexec/arch/mips/kexec-elf-mips.c | 73 +++++++++++++++++++++++++++++++-
+ 2 files changed, 74 insertions(+), 2 deletions(-)
 
-thanks,
-
-Mimi
+diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
+index aa09c83..548aeff 100644
+--- a/kexec/arch/mips/crashdump-mips.c
++++ b/kexec/arch/mips/crashdump-mips.c
+@@ -335,6 +335,9 @@ static int patch_elf_info(void)
+ 			/* OCTEON uses a different page_offset. */
+ 			if (strstr(line, "Octeon"))
+ 				elf_info64.page_offset = 0x8000000000000000ULL;
++			/* LOONGSON uses a different page_offset. */
++			else if (strstr(line, "Loongson"))
++				elf_info64.page_offset = 0xffffffff80000000ULL;
+ 			break;
+ 		}
+ 	}
+diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
+index a2d11fc..b9e0341 100644
+--- a/kexec/arch/mips/kexec-elf-mips.c
++++ b/kexec/arch/mips/kexec-elf-mips.c
+@@ -40,6 +40,74 @@ static const int probe_debug = 0;
+ #define CMDLINE_PREFIX "kexec "
+ static char cmdline_buf[COMMAND_LINE_SIZE] = CMDLINE_PREFIX;
+ 
++/* Converts unsigned long to ascii string. */
++static void ultoa(unsigned long i, char *str)
++{
++	int j = 0, k;
++	char tmp;
++
++	do {
++		str[j++] = i % 10 + '0';
++	} while ((i /= 10) > 0);
++	str[j] = '\0';
++
++	/* Reverse the string. */
++	for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
++		tmp = str[k];
++		str[k] = str[j];
++		str[j] = tmp;
++	}
++}
++
++/* Adds initrd parameters to command line. */
++static int cmdline_add_initrd(char *cmdline, unsigned long addr, char *new_para)
++{
++	int cmdlen, len;
++	char str[30], *ptr;
++
++	ptr = str;
++	strcpy(str, new_para);
++	ptr += strlen(str);
++	ultoa(addr, ptr);
++	len = strlen(str);
++	cmdlen = strlen(cmdline) + len;
++	if (cmdlen > (COMMAND_LINE_SIZE - 1))
++		die("Command line overflow\n");
++	strcat(cmdline, str);
++
++	return 0;
++}
++
++/* add initrd to cmdline to compatible with previous platforms. */
++static int patch_initrd_info(char *cmdline, unsigned long initrd_base, unsigned long initrd_size)
++{
++	const char cpuinfo[] = "/proc/cpuinfo";
++	char line[MAX_LINE];
++	FILE *fp;
++	unsigned long page_offset = PAGE_OFFSET;
++
++	fp = fopen(cpuinfo, "r");
++	if (!fp) {
++		fprintf(stderr, "Cannot open %s: %s\n",
++		cpuinfo, strerror(errno));
++		return -1;
++	}
++	while (fgets(line, sizeof(line), fp) != 0) {
++		if (strncmp(line, "cpu model", 9) == 0) {
++			/* LOONGSON64  uses a different page_offset. */
++		if (strstr(line, "Loongson")) {
++				if (arch_options.core_header_type == CORE_TYPE_ELF64)
++					page_offset = (unsigned long)0xffffffff80000000ULL;
++				cmdline_add_initrd(cmdline, page_offset + initrd_base, " rd_start=");
++				cmdline_add_initrd(cmdline, initrd_size, " rd_size=");
++				break;
++			}
++		}
++	}
++	fclose(fp);
++	return 0;
++}
++
+ int elf_mips_probe(const char *buf, off_t len)
+ {
+ 	struct mem_ehdr ehdr;
+@@ -171,9 +239,10 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
+ 		/* Now that the buffer for initrd is prepared, update the dtb
+ 		 * with an appropriate location */
+ 		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
+-	}
+-
+ 
++		/* Add the initrd parameters to cmdline */
++		patch_initrd_info(cmdline_buf, initrd_base, initrd_size);
++	}
+ 	/* This is a legacy method for commandline passing used
+ 	 * currently by Octeon CPUs only */
+ 	add_buffer(info, cmdline_buf, sizeof(cmdline_buf),
+-- 
+2.20.1
 
 
 _______________________________________________
