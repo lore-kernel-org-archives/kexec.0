@@ -4,70 +4,152 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 5923CC43334
-	for <kexec@archiver.kernel.org>; Mon, 13 Jun 2022 08:30:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id EAE27C43334
+	for <kexec@archiver.kernel.org>; Mon, 13 Jun 2022 10:31:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=xChDq8SekcJ+8Yl2OUuWicCJl6RBYkVYQgsZRdPPv3g=; b=rFNgf1pCLc/E/PqoduCAfpVoQv
-	+pH7Pn5slthY7ePRY7VC4pwjLhl8BGt8LoSeyigL4m/OexN/nlGEBcYDQexpS8Y/IX8Q9LD0kWSZB
-	BP4/yzXuppo2mFfVKGtWqAZzNnyqPDoSasIXd8yJM/UpzKD73D6vvwCd/Z9JjzfbdvT3LmZG4DCP0
-	uoHuhBfPBCLF2E+0Eh50LMCY7eoaH7G//iHmuDedqLmIuywZiGc7c9UWEJp0eWrC7XXTOZKt5S/0E
-	omXliu1MERICPvNK71lT1J07y/RUeWGvz3bI3asRpMTqGCScmGFCDOzWmOqK4VpYs38rc79UOKdJ2
-	Zv5S5OSw==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ZhYewmOgLxOwITkOWNtx2mxqp2BF3Gk46dtG9/VhcF4=; b=Bcv9BJBSntyCi8
+	owt5fK9tqJUwQsw7FMDLuoGZqsWUoCnaFn+W5EteYUocTaCGRjtMgY2TDzmZlAraWmFWHOhMxNndR
+	VpdYcgcVSe9wY2kllsMf2uMg8rgMudQ/6VVhD1bJBq7AwEDmgfEhIcgcaYfTkmOgtd96FNCtzm96I
+	crlsALnr8KpUt2ZFlGugv8/wab83X+h07JVlB0/29ddpr10Vr+iSYC1GKLKeyab6UCs1PmNXdG/r4
+	TE4rfpTxwa1LBRHL1cj1dGiraVhkP0WrbeeWPp952HeRwdKCwSV0178bDy+wifLzcNfU1pCgRzyZr
+	pZGCOZ9/Nz6hulm7v4iw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o0fSY-002Gvm-IF; Mon, 13 Jun 2022 08:30:06 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1o0hLj-002uTZ-QS; Mon, 13 Jun 2022 10:31:11 +0000
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o0fSV-002Gth-1U; Mon, 13 Jun 2022 08:30:05 +0000
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.57])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LM4Tz2RFCzjXbT;
-	Mon, 13 Jun 2022 16:28:55 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 16:29:58 +0800
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 13 Jun 2022 16:29:57 +0800
-Subject: Re: [PATCH] arm64: kdump: Provide default size when crashkernel=Y,low
- is not specified
+	id 1o0hLg-002uSV-B8
+	for kexec@lists.infradead.org; Mon, 13 Jun 2022 10:31:10 +0000
+Received: from pps.filterd (m0109334.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25D5lDxq018357;
+	Mon, 13 Jun 2022 03:30:24 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=DVNYNU/7rC7Uwo/nWYp714R8/90fl5lBcnIZ5R+amno=;
+ b=qABkOgjm6CLS3rwxg+cEhVD/uvs0z6VEqtdq4GlSbS0iol0AvxGcABNX2B0/Q4Gh9H1/
+ QI1oAGEi9X3orDCiYpdJ5AaQf4NgQbzyOj2d8Fnvp3A4t7OoY6ANhoUjXfhh1N9TJU5S
+ kyeEy+entNnP7zjP/mBJoeZ8g7EYGvF++wg= 
+Received: from nam12-dm6-obe.outbound.protection.outlook.com (mail-dm6nam12lp2170.outbound.protection.outlook.com [104.47.59.170])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3gmtc3y80c-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 13 Jun 2022 03:30:24 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=T9l46FnvshMC73I/eF0C4tIBBy73AG4rTkF5QeWdyx0jxWBRUjE7/LV6Rjn9cf2FDR5zvalciaEIgqJdpcJGxb1XzQneNuP3EZd8IiGLvKXwd0l92O3jy6Fe/5rxNAY2sJH4fcmmRiY8RMC28A6C0vIwhAif8NM8IJo8CunnNAq0znR9u2E4QHNxEqBav8xmdHz9ekSFBXlwp9jsEJxWbEEm8mNlnndtu1CwZKoUdrJhf7VZEW6MgKS8v0MJ9CCoZvDWqWxeeb0A4NiKDF2UyAsD/Nz2JVPOx0CBgczWUZrF3I3/uWsPSzQFOHuPyWWhNUg6eXRe9SJYZVGCRSFZ6Q==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=DVNYNU/7rC7Uwo/nWYp714R8/90fl5lBcnIZ5R+amno=;
+ b=YUpZDuWw9CpVn2JvWwWDzibs2+u3E8dPC9EZwHGXG6MoyX7zqvYH9gb1+0s2m6PfTSOr91E2TuSo79WY8vkD0oNjv8buRFWyakVSX2QUsMq6Ayhnl8SJgyLXi2SXlIX7wpe6wzIup9XUM4v0HejIo8fL+VkR1AvkOTPHSP45Ry6gFpQPFIyJjDN2pNIEpwnhLXOzRzBa3cgLRpUykyW4emrAYJgTHnsHpchzikZrfn3gY5b/uAFTN979y2W3Bz/tOKLpaR+BM7A7zRODjGK1TXET8z0+15THPNQUPZiObZMs9PobE9d6E04YgIC0fybRVclUFT/qXLrJ2c79P2gJJA==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com (2603:10b6:a03:379::12)
+ by CO1PR15MB4857.namprd15.prod.outlook.com (2603:10b6:303:fc::21) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5332.22; Mon, 13 Jun
+ 2022 10:30:21 +0000
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::1dd0:f1c9:43d7:b7ab]) by SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::1dd0:f1c9:43d7:b7ab%9]) with mapi id 15.20.5332.021; Mon, 13 Jun 2022
+ 10:30:21 +0000
+From: Jonathan McDowell <noodles@fb.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, Rob Herring
-	<robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-	<devicetree@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He
-	<bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>
-CC: Randy Dunlap <rdunlap@infradead.org>, Feng Zhou
-	<zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, "Chen
- Zhou" <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>
-References: <20220609135029.607-1-thunder.leizhen@huawei.com>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <2a0fb132-3a19-bdfc-5d02-0b44945154ce@huawei.com>
-Date: Mon, 13 Jun 2022 16:29:45 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
-MIME-Version: 1.0
-In-Reply-To: <20220609135029.607-1-thunder.leizhen@huawei.com>
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Mimi
+ Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+        Baoquan He <bhe@redhat.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+Subject: [PATCH v5] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Topic: [PATCH v5] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Index: AQHYfxCVApGabBMHwEaalnRer0EXpw==
+Date: Mon, 13 Jun 2022 10:30:21 +0000
+Message-ID: <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
+References: <YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG>
+ <YmgjXZphkmDKgaOA@noodles-fedora-PC23Y6EG>
+ <YnuJCH75GrhVm0Tp@noodles-fedora.dhcp.thefacebook.com>
+ <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
+In-Reply-To: <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems706-chm.china.huawei.com (10.3.19.183) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf274295-efce-4d4e-b98a-08da4d27b81c
+x-ms-traffictypediagnostic: CO1PR15MB4857:EE_
+x-microsoft-antispam-prvs:  <CO1PR15MB4857F04F530A18F1229DD051C1AB9@CO1PR15MB4857.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  TAlQfuvfovkCnVXWCOGi87a+BAPSQdbGviTBxY3rbQsUimFqraGyFqlsxXJt+EJNCLdqFdN64ncz7wN0Dv2g3wVwEmH5xLHE75aBOaOR4HWAJ0RtX9H4l+0r0hhEiZ9uFIrOvSf3aU/ioDpgKIaylBExgyA5PEDC4mjqYBL+RsljII+D67FR7QX76pZOAEHZPnpviIHs6i5u78bY2CrUk2wuy/syYh0g9gGHYLI5aX0ya85odYPL+BDI+karSqJl4xCPON0qV5QaFADvIGzvOJemriPbj6Fy7e5OUs+30Ut6DG41I/kb0vTXa+xhkd5W8FoTFdxcfFB85rsvM1ql0gQNZLYJnvcgWXWyg14EPIAZrCpGvKBTmGJbiC/ulvA9sDjfTPRt3U7br7FgI1aGT8M+jpZwlcMlRzXin86umzV3StMSTZ5u3z1oeVTNncxg79BXZG2T3xliGSmQrggt5Abm55HoVMUw7PwoUbr6icpXzcFj94e0CV+nGsWe6Qz2lmWJa0Jy49EsDGiR6DDVvnl6YmFyYUgsRpgvg6Eg515SpOuGj9k2rZ7CU+E3Ai8QkBV1v6CEaztFo8uCmybllY6KcPcSqdaeoebT69uQgNbiqMKPjm5HiJJZAXVXNa1s8LwUonF5225zyfaY6StH4h/p5zR/qCzJlae7A7yEtuSus+O50w+d9401zGDxjAFnqiwV5utQwDzI8unG/N5uTuwumoCc+xBkvpJQvQqA66m/knCrSioOE6Jw6UXngAnfiSDF7v+oMxfa8YMePZhbCg==
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR15MB4552.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(26005)(110136005)(186003)(38100700002)(9686003)(54906003)(316002)(7416002)(30864003)(38070700005)(6506007)(2906002)(921005)(508600001)(6486002)(5660300002)(122000001)(86362001)(76116006)(91956017)(66476007)(66946007)(66556008)(64756008)(66446008)(8936002)(8676002)(4326008)(6512007)(83380400001)(71200400001)(46800400005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?LOi2EZf2GRQ7gcfyRZ2oPGNcwA7AuJHOJK+LXMbx0dV7YDD4C1fMISdaFuC2?=
+ =?us-ascii?Q?wY1JbLnzwAFJkam0nqrhMyOZdu21gpqNDyssK7qq9kg0nW3xaOO5r26DPNUa?=
+ =?us-ascii?Q?NblOD0cqwXas10ASlLzAoxHooul950ToHfP6igC1qmzC89p9hVPTXFfr4pRm?=
+ =?us-ascii?Q?QNTtJgEjCsRw/yTX49MatdlpbVNyLzZlhkE6DVumia+inN/oJAMLLWsAyDHM?=
+ =?us-ascii?Q?B84xFmogxxvVX4SlG81ziCTW91MUaM8eiCVIGLylvmFwO9OCkdQtGbcSI+Ba?=
+ =?us-ascii?Q?H8B1CfNB2gJVelASl2oTRZbuAsm33y8tnKLEvuX4C5WaXbyCl/duAeirjEVn?=
+ =?us-ascii?Q?dwcBS5R6NGXiXGIsa3Fm9Q7ldxH+XEAsOxURbvaQWhmXaEN4TORyM/Fb4Y9C?=
+ =?us-ascii?Q?I7TS7FS3sxjaUcBrFtdZAzLCFfeUovkNPrvSuf6DdaC7kqpbuq2wz3HE28cf?=
+ =?us-ascii?Q?uV9/wXBGlwMozYj+hdUvaLDWn8O/PD2RR3a+4e20V5Ifu315JXH18FSMLE/Y?=
+ =?us-ascii?Q?NB9+q36/p5+Tfz+xRCieUWb4PkIp1ijY+kcsG7jv5ztt7Noj1QgXvdVEdWW8?=
+ =?us-ascii?Q?s1M9Zyu8NVDgVUhjYdIH3HTc7J2y4il+zegBydUAeED7eL1H1MpwcbNGKfAf?=
+ =?us-ascii?Q?+jKu+CatuFNg4rxzND31EwOE0zgUGpXQ+9wWRVjnYBSV8DW/s8Ud9JP/Syow?=
+ =?us-ascii?Q?5jlbeKKJQW/BDmYgDkJDaSnHY8BkyG5QCBwZJQYGRopojIldh+p10YorxNJT?=
+ =?us-ascii?Q?7ZiRkOyJy73n7MrcNnzgwGFuK0BLSriKr3apY9C1fhAGemYbvd6kJyksgCMS?=
+ =?us-ascii?Q?w0EPzpoS5fleynwwhprMiuT37uY7K5sPd/StrXgxL/wy+mLH05K0V6q8wSj5?=
+ =?us-ascii?Q?zbKfeYLKkHMYhr2gCI08VgojTh2IHKjPv0s6pU6mCIHXJm7VLJ4YWH0or+O7?=
+ =?us-ascii?Q?L7LvK5TnLw0IDqsgXKe7g/bcCWfwF7ePelxcpTZvrSnrijlz6qwptwTQluYW?=
+ =?us-ascii?Q?oJJf5FQwD2TQHbKVNFF5npuURCYwGtFrNaPr4PUXPyIN46x6/Pr9jWQ3F96r?=
+ =?us-ascii?Q?8cAek038AzRazERyiTLZ1QFGVg0SmeOVJ8Fzcw7Obt/KSR5hKY3DBm8ED5Xs?=
+ =?us-ascii?Q?Pp4p/ZazA95gu3WpkTOvxwyDUH7pMQ4Dwi5f70BO9MgHpWj4DS0NXyhtF6Pf?=
+ =?us-ascii?Q?JsCv+ctqNS86I6WrBRKbTWDIjc/CFNdbEmmOCztngWH3n94syzAHzRGaV2Ed?=
+ =?us-ascii?Q?jBjyLnYKmEL6vgCAAR1KSypej+4ggkBGPlt1Slzja33YiBftGWjax3a9822F?=
+ =?us-ascii?Q?SY7ilUlkVXseJfC1gytBXdpdnMitX+dmK7SszN/W8f6XyNvXUkK8Dmoi96/b?=
+ =?us-ascii?Q?MGxH4MIukyyC+/Pq7yRociuN8dEr44tGMvSxSyRHgAoJOLEY/DR48ldLJmyK?=
+ =?us-ascii?Q?MaGKbM6QgzLf9BHstxY3XpIIQDmzUOWHSJBjso3LDQJ1/FxB4vRgpSijuY98?=
+ =?us-ascii?Q?MguC977z/bHGoD5hFadiC2ClbmTqHFNBTA7NDQpT3LbIrVvkcl3+JncBEhW/?=
+ =?us-ascii?Q?W0H81PHdlTCt253csIfQrX9xn8cZifClaL6ff0RkZ5rFcpBiXsALa9+h1FZk?=
+ =?us-ascii?Q?OnBBmYbuSvjStSa2m1hQvUQ+MbEdWhlnJHx6eYP1TAu0OT/tZxVM/B/j9VvI?=
+ =?us-ascii?Q?w7odVh/y+MD5y4Bsdd3U5G9CKphTLglYDE+6VS85aKdF5EG8wW+Waet7y1zQ?=
+ =?us-ascii?Q?no/oKtUrmw=3D=3D?=
+Content-ID: <FECCD14696E7874DB65C9DD40BF029D6@namprd15.prod.outlook.com>
+MIME-Version: 1.0
+X-OriginatorOrg: fb.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR15MB4552.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf274295-efce-4d4e-b98a-08da4d27b81c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 13 Jun 2022 10:30:21.3674
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: +n+MhOdfyA977m6pza8JTF2xDlAjxrNy45+6WDubbq+8h7gH2u80u4iTmst7YAvP
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO1PR15MB4857
+X-Proofpoint-GUID: NPdKJXrbCXXbakjRmrcC8o-MjU66HA-U
+X-Proofpoint-ORIG-GUID: NPdKJXrbCXXbakjRmrcC8o-MjU66HA-U
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-13_03,2022-06-13_01,2022-02-23_01
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220613_013003_484789_8920C4F5 
-X-CRM114-Status: GOOD (  27.08  )
+X-CRM114-CacheID: sfid-20220613_033108_425508_E121E22B 
+X-CRM114-Status: GOOD (  33.33  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -84,84 +166,352 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On kexec file load Integrity Measurement Architecture (IMA) subsystem
+may verify the IMA signature of the kernel and initramfs, and measure
+it. The command line parameters passed to the kernel in the kexec call
+may also be measured by IMA. A remote attestation service can verify
+a TPM quote based on the TPM event log, the IMA measurement list, and
+the TPM PCR data. This can be achieved only if the IMA measurement log
+is carried over from the current kernel to the next kernel across
+the kexec call.
 
-Please ignore this patch, I have post an new patch set.
-Put: default low size, fall back and optimization together.
+powerpc and ARM64 both achieve this using device tree with a
+"linux,ima-kexec-buffer" node. x86 platforms generally don't make use of
+device tree, so use the setup_data mechanism to pass the IMA buffer to
+the new kernel.
 
-On 2022/6/9 21:50, Zhen Lei wrote:
-> To be consistent with the implementation of x86 and improve cross-platform
-> user experience. Try to allocate at least 256 MiB low memory automatically
-> when crashkernel=Y,low is not specified.
-> 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt | 10 +++-------
->  arch/arm64/mm/init.c                            | 12 +++++++++++-
->  2 files changed, 14 insertions(+), 8 deletions(-)
-> 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 8090130b544b070..9560f5af248e0d6 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -843,7 +843,9 @@
->  			available.
->  			It will be ignored if crashkernel=X is specified.
->  	crashkernel=size[KMG],low
-> -			[KNL, X86-64] range under 4G. When crashkernel=X,high
-> +			[KNL, X86-64, ARM64] range under 4G(For some platforms,
-> +			not all low 4G memory can be directly accessed by devices,
-> +			use the DMA zones instead). When crashkernel=X,high
->  			is passed, kernel could allocate physical memory region
->  			above 4G, that cause second kernel crash on system
->  			that require some amount of low memory, e.g. swiotlb
-> @@ -857,12 +859,6 @@
->  			It will be ignored when crashkernel=X,high is not used
->  			or memory reserved is below 4G.
->  
-> -			[KNL, ARM64] range in low memory.
-> -			This one lets the user specify a low range in the
-> -			DMA zone for the crash dump kernel.
-> -			It will be ignored when crashkernel=X,high is not used
-> -			or memory reserved is located in the DMA zones.
-> -
->  	cryptomgr.notests
->  			[KNL] Disable crypto self-tests
->  
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 339ee84e5a61a0b..5390f361208ccf7 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
->  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
->  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
->  
-> +/*
-> + * This is an empirical value in x86_64 and taken here directly. Please
-> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
-> + * details.
-> + */
-> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
-> +	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
-> +
->  static int __init reserve_crashkernel_low(unsigned long long low_size)
->  {
->  	unsigned long long low_base;
-> @@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
->  		 * is not allowed.
->  		 */
->  		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
-> -		if (ret && (ret != -ENOENT))
-> +		if (ret == -ENOENT)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		else if (ret)
->  			return;
->  
->  		crash_max = CRASH_ADDR_HIGH_MAX;
-> 
+(Mimi, Baoquan, I haven't included your reviewed-bys because this has
+ changed the compile guards around the ima_(free|get)_kexec_buffer
+ functions in order to fix the warning the kernel test robot found. I
+ think this is the right thing to do and avoids us compiling them on
+ platforms where they won't be used. The alternative would be to drop
+ the guards in ima.h that Mimi requested for v4.)
 
+Signed-off-by: Jonathan McDowell <noodles@fb.com>
+---
+v5:
+ - Guard ima_(free|get)_kexec_buffer functions with
+   CONFIG_HAVE_IMA_KEXEC (kernel test robot)
+ - Use setup_data_offset in setup_boot_parameters and update rather than
+   calculating in call to setup_ima_state.
+v4:
+ - Guard ima.h function prototypes with CONFIG_HAVE_IMA_KEXEC
+v3:
+ - Rebase on tip/master
+ - Pull ima_(free|get)_kexec_buffer into x86 code
+ - Push ifdefs into functions where possible
+ - Reverse fir tree variable declarations
+ - Fix section annotation on ima_free_kexec_buffer (__meminit)
+ - Only allocate ima_setup_data space when IMA_KEXEC is enabled
+v2:
+ - Fix operation with EFI systems
+---
+ arch/x86/Kconfig                      |  1 +
+ arch/x86/include/uapi/asm/bootparam.h |  9 ++++
+ arch/x86/kernel/e820.c                |  6 +--
+ arch/x86/kernel/kexec-bzimage64.c     | 42 +++++++++++++++++-
+ arch/x86/kernel/setup.c               | 62 +++++++++++++++++++++++++++
+ drivers/of/kexec.c                    |  3 ++
+ include/linux/ima.h                   |  5 +++
+ include/linux/of.h                    |  2 -
+ security/integrity/ima/ima_kexec.c    |  2 +-
+ 9 files changed, 124 insertions(+), 8 deletions(-)
+
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index f6225c9952e8..2cc727125cd6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2034,6 +2034,7 @@ config KEXEC_FILE
+ 	bool "kexec file based system call"
+ 	select KEXEC_CORE
+ 	select BUILD_BIN2C
++	select HAVE_IMA_KEXEC if IMA
+ 	depends on X86_64
+ 	depends on CRYPTO=y
+ 	depends on CRYPTO_SHA256=y
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index bea5cdcdf532..ca0796ac4403 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -11,6 +11,7 @@
+ #define SETUP_APPLE_PROPERTIES		5
+ #define SETUP_JAILHOUSE			6
+ #define SETUP_CC_BLOB			7
++#define SETUP_IMA			8
+ 
+ #define SETUP_INDIRECT			(1<<31)
+ 
+@@ -172,6 +173,14 @@ struct jailhouse_setup_data {
+ 	} __attribute__((packed)) v2;
+ } __attribute__((packed));
+ 
++/*
++ * IMA buffer setup data information from the previous kernel during kexec
++ */
++struct ima_setup_data {
++	__u64 addr;
++	__u64 size;
++} __attribute__((packed));
++
+ /* The so-called "zeropage" */
+ struct boot_params {
+ 	struct screen_info screen_info;			/* 0x000 */
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index f267205f2d5a..9dac24680ff8 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1017,10 +1017,10 @@ void __init e820__reserve_setup_data(void)
+ 		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+ 
+ 		/*
+-		 * SETUP_EFI is supplied by kexec and does not need to be
+-		 * reserved.
++		 * SETUP_EFI and SETUP_IMA are supplied by kexec and do not need
++		 * to be reserved.
+ 		 */
+-		if (data->type != SETUP_EFI)
++		if (data->type != SETUP_EFI && data->type != SETUP_IMA)
+ 			e820__range_update_kexec(pa_data,
+ 						 sizeof(*data) + data->len,
+ 						 E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 170d0fd68b1f..c63974e94272 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -186,11 +186,38 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ }
+ #endif /* CONFIG_EFI */
+ 
++static void
++setup_ima_state(const struct kimage *image, struct boot_params *params,
++		unsigned long params_load_addr,
++		unsigned int ima_setup_data_offset)
++{
++#ifdef CONFIG_IMA_KEXEC
++	struct setup_data *sd = (void *)params + ima_setup_data_offset;
++	unsigned long setup_data_phys;
++	struct ima_setup_data *ima;
++
++	if (!image->ima_buffer_size)
++		return;
++
++	sd->type = SETUP_IMA;
++	sd->len = sizeof(*ima);
++
++	ima = (void *)sd + sizeof(struct setup_data);
++	ima->addr = image->ima_buffer_addr;
++	ima->size = image->ima_buffer_size;
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + ima_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++#endif /* CONFIG_IMA_KEXEC */
++}
++
+ static int
+ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 		      unsigned long params_load_addr,
+ 		      unsigned int efi_map_offset, unsigned int efi_map_sz,
+-		      unsigned int efi_setup_data_offset)
++		      unsigned int setup_data_offset)
+ {
+ 	unsigned int nr_e820_entries;
+ 	unsigned long long mem_k, start, end;
+@@ -245,8 +272,15 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ #ifdef CONFIG_EFI
+ 	/* Setup EFI state */
+ 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+-			efi_setup_data_offset);
++			setup_data_offset);
++	setup_data_offset += sizeof(struct setup_data) +
++			sizeof(struct efi_setup_data);
+ #endif
++
++	/* Setup IMA log buffer state */
++	setup_ima_state(image, params, params_load_addr,
++			setup_data_offset);
++
+ 	/* Setup EDD info */
+ 	memcpy(params->eddbuf, boot_params.eddbuf,
+ 				EDDMAXNR * sizeof(struct edd_info));
+@@ -403,6 +437,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 				sizeof(struct setup_data) +
+ 				sizeof(struct efi_setup_data);
+ 
++	if (IS_ENABLED(CONFIG_IMA_KEXEC))
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      sizeof(struct ima_setup_data);
++
+ 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3ebb85327edb..2d0dd8b6588a 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/dma-map-ops.h>
+ #include <linux/dmi.h>
+ #include <linux/efi.h>
++#include <linux/ima.h>
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+@@ -145,6 +146,11 @@ __visible unsigned long mmu_cr4_features __ro_after_init;
+ __visible unsigned long mmu_cr4_features __ro_after_init = X86_CR4_PAE;
+ #endif
+ 
++#ifdef CONFIG_IMA
++static phys_addr_t ima_kexec_buffer_phys;
++static size_t ima_kexec_buffer_size;
++#endif
++
+ /* Boot loader ID and version as integers, for the benefit of proc_dointvec */
+ int bootloader_type, bootloader_version;
+ 
+@@ -335,6 +341,59 @@ static void __init reserve_initrd(void)
+ }
+ #endif /* CONFIG_BLK_DEV_INITRD */
+ 
++static void __init add_early_ima_buffer(u64 phys_addr)
++{
++#ifdef CONFIG_IMA
++	struct ima_setup_data *data;
++
++	data = early_memremap(phys_addr + sizeof(struct setup_data),
++			      sizeof(*data));
++	if (!data) {
++		pr_warn("setup: failed to memremap ima_setup_data entry\n");
++		return;
++	}
++	if (data->size != 0) {
++		memblock_reserve(data->addr, data->size);
++		ima_kexec_buffer_phys = data->addr;
++		ima_kexec_buffer_size = data->size;
++	}
++	early_memunmap(data, sizeof(*data));
++#else
++	pr_warn("Passed IMA kexec data, but CONFIG_IMA not set. Ignoring.\n");
++#endif
++}
++
++#if defined(CONFIG_HAVE_IMA_KEXEC) && !defined(CONFIG_OF_FLATTREE)
++int __meminit ima_free_kexec_buffer(void)
++{
++	int rc;
++
++	if (ima_kexec_buffer_size == 0)
++		return -ENOENT;
++
++	rc = memblock_phys_free(ima_kexec_buffer_phys,
++				ima_kexec_buffer_size);
++	if (rc)
++		return rc;
++
++	ima_kexec_buffer_phys = 0;
++	ima_kexec_buffer_size = 0;
++
++	return 0;
++}
++
++int __init ima_get_kexec_buffer(void **addr, size_t *size)
++{
++	if (ima_kexec_buffer_size == 0)
++		return -ENOENT;
++
++	*addr = __va(ima_kexec_buffer_phys);
++	*size = ima_kexec_buffer_size;
++
++	return 0;
++}
++#endif
++
+ static void __init parse_setup_data(void)
+ {
+ 	struct setup_data *data;
+@@ -360,6 +419,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_EFI:
+ 			parse_efi_setup(pa_data, data_len);
+ 			break;
++		case SETUP_IMA:
++			add_early_ima_buffer(pa_data);
++			break;
+ 		default:
+ 			break;
+ 		}
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 8d374cc552be..42a6c5721a43 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -9,6 +9,7 @@
+  *  Copyright (C) 2016  IBM Corporation
+  */
+ 
++#include <linux/ima.h>
+ #include <linux/kernel.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+@@ -115,6 +116,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
+ /**
+  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+  * @addr:	On successful return, set to point to the buffer contents.
+@@ -173,6 +175,7 @@ int ima_free_kexec_buffer(void)
+ 
+ 	return memblock_phys_free(addr, size);
+ }
++#endif
+ 
+ /**
+  * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 426b1744215e..ff4bd993e432 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -140,6 +140,11 @@ static inline int ima_measure_critical_data(const char *event_label,
+ 
+ #endif /* CONFIG_IMA */
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
++int ima_free_kexec_buffer(void);
++int ima_get_kexec_buffer(void **addr, size_t *size);
++#endif
++
+ #ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f0a5d6b10c5a..20a4e7cb7afe 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -441,8 +441,6 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 				   unsigned long initrd_load_addr,
+ 				   unsigned long initrd_len,
+ 				   const char *cmdline, size_t extra_fdt_size);
+-int ima_get_kexec_buffer(void **addr, size_t *size);
+-int ima_free_kexec_buffer(void);
+ #else /* CONFIG_OF */
+ 
+ static inline void of_core_init(void)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 13753136f03f..419dc405c831 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -137,7 +137,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ /*
+  * Restore the measurement list from the previous kernel.
+  */
+-void ima_load_kexec_buffer(void)
++void __init ima_load_kexec_buffer(void)
+ {
+ 	void *kexec_buffer = NULL;
+ 	size_t kexec_buffer_size = 0;
 -- 
-Regards,
-  Zhen Lei
+2.36.1
 
 _______________________________________________
 kexec mailing list
