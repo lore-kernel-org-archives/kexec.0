@@ -4,68 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4DF03C433EF
-	for <kexec@archiver.kernel.org>; Tue, 14 Jun 2022 17:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 69C97C43334
+	for <kexec@archiver.kernel.org>; Tue, 14 Jun 2022 19:00:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=0xTM6CGOfMIm+qoa/BemEQO6ctV4gUZN1OeFFSHTSUA=; b=QODbJJGYV/xmQt
-	dbvla+9D/qe2XzMetp4gXDV5WL1tptXe2YSGMgnYO1iZS+SAgku8rf2ACg0JjeSq0aBR+7CX0MreM
-	4lSA4LUtr6hdDKMe8SGETU4tLvutkhmnK8pTlC8X5XrUzxPYSOkZ9aMCynS6FW/rE6os98av4sulT
-	fAoL0N3QDS4LZh5hmRQYaBAZb/oBOjbfGqDHq/Cuhs8X90PK2iaST4xeiqriuDJ8hOFwuvWVV2Uj7
-	7s697OjBjF0Os+tfdTWnzsyOPyN3y2mYTJiBc++UapmQLiMJBHoAwKJXqFJaqDN5pBwDGsRnPA79i
-	JrU9uSi2LTwK5Tem9NFA==;
+	List-Owner; bh=d33ZmNWjun+yyByaXmeCcQhus4HktYGo2A57t0mMWkk=; b=KPlsZIKBuAEUvu
+	oZTV3WSwVQ90s4EKauBnvLe4wqs4rF+jecPkErU5xHNOAVeFjrZkT2lbyISiWsW5jg+9itGNrW09E
+	dBTzwMg8o8kP/aWNVicvxz4xWSSYD1S1kMasWNlxrD3oKQ/obDyZ9oXEZJz7a1NNJkCZV1Kgrhto+
+	guxPvKnavodOFMcXsXPXSYfIhEJ7fybAvEwEVCB/hhcDEbsng1rlZM6nheRPP2G12Kg/cC5kWoWvw
+	oksqNF38QowoXnwZUH9M6hkybgkbnnEYLlxsQZH1JM4D8q/Uj7RnUivu2yx7+6zUH/VzmZyAYGmth
+	xnY5yznQuhYiCHr6HvAQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1Aem-00AcfJ-RR; Tue, 14 Jun 2022 17:48:48 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1o1Blc-00AqqC-PW; Tue, 14 Jun 2022 18:59:56 +0000
+Received: from mga14.intel.com ([192.55.52.115])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1Aej-00Acde-Lz
-	for kexec@lists.infradead.org; Tue, 14 Jun 2022 17:48:47 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id D4C3B61763
-	for <kexec@lists.infradead.org>; Tue, 14 Jun 2022 17:48:43 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id A480EC3411D
-	for <kexec@lists.infradead.org>; Tue, 14 Jun 2022 17:48:43 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1655228923;
-	bh=7OmT/D6hvMhd1zc9LaIcgZCqNVbaN5bornIfFAq4Ejs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-	b=g6JKMMfh1PPHtZUN+XnABkWKvgL51OidTvyiO926Jts0G4N4/avrmk+4XmWVH7EQb
-	 2loqMgKbmD05aO1kP5C5mSlrOD+QzWJWtkVsGaBJopNhaIfiOlYhQ0XwHv5tWeZZTZ
-	 wfzAfdLHjo+w12F9AouDZM1+IebqCsCWr6FS50Cw6zjS2myPad+H/ho4J4zZTDhR5E
-	 sMqP15ou2FDMQWxSc6f0nCseQzfWcJRSjdW5j+AiftrUgBATg1+I+MvdAqKvi0jEUs
-	 yCCIbC04UDZVgGcZG9G7ZPuWPoJSIinAKVgdofVemTmHXflUanB6GX1KFjeKtQu0Ln
-	 mgsdV3pTPWNmQ==
-Received: by mail-ua1-f53.google.com with SMTP id h21so2236452uaw.7
-        for <kexec@lists.infradead.org>; Tue, 14 Jun 2022 10:48:43 -0700 (PDT)
-X-Gm-Message-State: AJIora9KhlbNBNRSP+dPVxfh7c9o/ada5UJAhxb8VGmupUwi9iZJFlcp
-	EovQ872s4YQbY5CMPWg7/V7qW/J+o18G+ePHCw==
-X-Google-Smtp-Source: AGRyM1s+gnSgeN1utvDKOFxtgPZXzEdw6JTNPFd02uhbxAfBMUv+CVUQUmikdfQdWuWKkYbJq1dgpPpOaExaGHnh6A4=
-X-Received: by 2002:ab0:7546:0:b0:374:ac43:ba1a with SMTP id
- k6-20020ab07546000000b00374ac43ba1amr3048993uaq.86.1655228922623; Tue, 14 Jun
- 2022 10:48:42 -0700 (PDT)
-MIME-Version: 1.0
-References: <20220614161258.1741427-1-stefanb@linux.ibm.com> <20220614161258.1741427-3-stefanb@linux.ibm.com>
-In-Reply-To: <20220614161258.1741427-3-stefanb@linux.ibm.com>
-From: Rob Herring <robh+dt@kernel.org>
-Date: Tue, 14 Jun 2022 11:48:30 -0600
-X-Gmail-Original-Message-ID: <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
-Message-ID: <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
+	id 1o1BlY-00AqpD-CR
+	for kexec@lists.infradead.org; Tue, 14 Jun 2022 18:59:54 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655233192; x=1686769192;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=TJmxkFAg5DcQYSeiZno0G1i6Bgz3X6igQii0Ttgjycw=;
+  b=oIej5bCkmUmQU9eKLIbWgsgeT28tGQ4BHWgzECwAT3BtmzD1EckmHbKW
+   xq8K3DxV3s4S3P+f59ebX7fZirSHpuu1SBSX/1004h3BdAReNsCJ6yn44
+   3k8hs+esMmbX47NpadMwJR/gy6OnAmuEYYjRZ49cKEvnW05OW9Kj+X4Ls
+   B9/g1jsnmaP2WZLMLw4dZI58l4KDNZ9HQnGjbl5YMYSTmrwDwjf+Ce8EC
+   Bh3mx+7KLUp8n1Ck5Dzws4mh7B7R58E+IKfSCY4VSIZEM2TPUJOpUrKot
+   DH8N1nLcXjlbGKsQ7evgSUJpgQK4LBDB6nPTpL84fLXOHxVDxtoQp3Sqk
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="278755527"
+X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
+   d="scan'208";a="278755527"
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 11:59:51 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
+   d="scan'208";a="712593088"
+Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
+  by orsmga004.jf.intel.com with ESMTP; 14 Jun 2022 11:59:48 -0700
+Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
+	(envelope-from <lkp@intel.com>)
+	id 1o1BlT-000MDR-Ah;
+	Tue, 14 Jun 2022 18:59:47 +0000
+Date: Wed, 15 Jun 2022 02:58:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Stefan Berger <stefanb@linux.ibm.com>, kexec@lists.infradead.org,
+	devicetree@vger.kernel.org
+Cc: kbuild-all@lists.01.org, nayna@linux.ibm.com, nasastry@in.ibm.com,
+	Stefan Berger <stefanb@linux.ibm.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>,
+	Eric Biederman <ebiederm@xmission.com>
 Subject: Re: [PATCH 2/3] tpm/kexec: Duplicate TPM measurement log in of-tree
  for kexec
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org, 
-	Nayna Jain <nayna@linux.ibm.com>, nasastry@in.ibm.com, 
-	Frank Rowand <frowand.list@gmail.com>, Eric Biederman <ebiederm@xmission.com>
+Message-ID: <202206150235.zvfG6DIM-lkp@intel.com>
+References: <20220614161258.1741427-3-stefanb@linux.ibm.com>
+MIME-Version: 1.0
+Content-Disposition: inline
+In-Reply-To: <20220614161258.1741427-3-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220614_104845_838228_A5AE6DCE 
-X-CRM114-Status: GOOD (  52.20  )
+X-CRM114-CacheID: sfid-20220614_115952_533461_313470C9 
+X-CRM114-Status: GOOD (  14.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,355 +87,191 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-(),On Tue, Jun 14, 2022 at 10:13 AM Stefan Berger <stefanb@linux.ibm.com> wrote:
->
-> The memory area of the TPM measurement log is currently not properly
-> duplicated for carrying it across kexec when an Open Firmware
-> Devicetree is used. Therefore, the contents of the log get corrupted.
-> Fix this for the kexec_file_load() syscall by allocating a buffer and
-> copying the contents of the existing log into it. The new buffer is
-> preserved across the kexec and a pointer to it is available when the new
-> kernel is started. To achieve this, store the allocated buffer's address
-> in the flattened device tree (fdt) under the name linux,tpm-kexec-buffer
-> and search for this entry early in the kernel startup before the TPM
-> subsystem starts up. Adjust the pointer in the of-tree stored under
-> linux,sml-base to point to this buffer holding the preserved log. The
-> TPM driver can then read the base address from this entry when making
-> the log available.
+Hi Stefan,
 
-This series really needs a wider Cc list of folks that worry about
-TPMs and kexec.
+Thank you for the patch! Perhaps something to improve:
 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Eric Biederman <ebiederm@xmission.com>
-> ---
->  drivers/of/device.c       |  24 +++++
->  drivers/of/kexec.c        | 190 +++++++++++++++++++++++++++++++++++++-
->  include/linux/kexec.h     |   6 ++
->  include/linux/of.h        |   5 +
->  include/linux/of_device.h |   3 +
->  kernel/kexec_file.c       |   6 ++
->  6 files changed, 233 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/of/device.c b/drivers/of/device.c
-> index 874f031442dc..0cbd47b1cabc 100644
-> --- a/drivers/of/device.c
-> +++ b/drivers/of/device.c
-> @@ -382,3 +382,27 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
->         return 0;
->  }
->  EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
-> +
-> +int of_tpm_get_sml_parameters(struct device_node *np, u64 *base, u32 *size)
+[auto build test WARNING on char-misc/char-misc-testing]
+[also build test WARNING on linus/master v5.19-rc2 next-20220614]
+[cannot apply to robh/for-next]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-of/device.c is for functions that work on a struct device. This is not
-the case here.
+url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec/20220615-001510
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 0a35780c755ccec097d15c6b4ff8b246a89f1689
+config: um-i386_defconfig (https://download.01.org/0day-ci/archive/20220615/202206150235.zvfG6DIM-lkp@intel.com/config)
+compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
+reproduce (this is a W=1 build):
+        # https://github.com/intel-lab-lkp/linux/commit/c42b5be1ad82e8a991a3d35417c9e495e7eb4c93
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec/20220615-001510
+        git checkout c42b5be1ad82e8a991a3d35417c9e495e7eb4c93
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        make W=1 O=build_dir ARCH=um SUBARCH=i386 SHELL=/bin/bash
 
-> +{
-> +       const u32 *sizep;
-> +       const u64 *basep;
-> +
-> +       sizep = of_get_property(np, "linux,sml-size", NULL);
-> +       basep = of_get_property(np, "linux,sml-base", NULL);
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
-Any new properties need a schema. For chosen, that's located here[1].
-The more common pattern for similar properties is <base size>.
+All warnings (new ones prefixed by >>):
 
-Don't use of_get_property(), but the typed functions instead.
+   In file included from include/linux/irqdomain.h:35,
+                    from include/linux/acpi.h:13,
+                    from include/linux/i2c.h:13,
+                    from drivers/input/mouse/synaptics.c:30:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   drivers/input/mouse/synaptics.c:164:27: warning: 'smbus_pnp_ids' defined but not used [-Wunused-const-variable=]
+     164 | static const char * const smbus_pnp_ids[] = {
+         |                           ^~~~~~~~~~~~~
+--
+   In file included from include/linux/irqdomain.h:35,
+                    from include/linux/acpi.h:13,
+                    from init/main.c:30:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   init/main.c:769:20: warning: no previous prototype for 'arch_post_acpi_subsys_init' [-Wmissing-prototypes]
+     769 | void __init __weak arch_post_acpi_subsys_init(void) { }
+         |                    ^~~~~~~~~~~~~~~~~~~~~~~~~~
+   init/main.c:781:20: warning: no previous prototype for 'mem_encrypt_init' [-Wmissing-prototypes]
+     781 | void __init __weak mem_encrypt_init(void) { }
+         |                    ^~~~~~~~~~~~~~~~
+   init/main.c:783:20: warning: no previous prototype for 'poking_init' [-Wmissing-prototypes]
+     783 | void __init __weak poking_init(void) { }
+         |                    ^~~~~~~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from include/linux/tick.h:8,
+                    from arch/um/kernel/process.c:24:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   arch/um/kernel/process.c:50:5: warning: no previous prototype for 'pid_to_processor_id' [-Wmissing-prototypes]
+      50 | int pid_to_processor_id(int pid)
+         |     ^~~~~~~~~~~~~~~~~~~
+   arch/um/kernel/process.c:86:7: warning: no previous prototype for '__switch_to' [-Wmissing-prototypes]
+      86 | void *__switch_to(struct task_struct *from, struct task_struct *to)
+         |       ^~~~~~~~~~~
+   arch/um/kernel/process.c: In function 'new_thread_handler':
+   arch/um/kernel/process.c:121:28: warning: variable 'n' set but not used [-Wunused-but-set-variable]
+     121 |         int (*fn)(void *), n;
+         |                            ^
+   arch/um/kernel/process.c: At top level:
+   arch/um/kernel/process.c:139:6: warning: no previous prototype for 'fork_handler' [-Wmissing-prototypes]
+     139 | void fork_handler(void)
+         |      ^~~~~~~~~~~~
+   arch/um/kernel/process.c:216:6: warning: no previous prototype for 'arch_cpu_idle' [-Wmissing-prototypes]
+     216 | void arch_cpu_idle(void)
+         |      ^~~~~~~~~~~~~
+   arch/um/kernel/process.c:253:5: warning: no previous prototype for 'copy_to_user_proc' [-Wmissing-prototypes]
+     253 | int copy_to_user_proc(void __user *to, void *from, int size)
+         |     ^~~~~~~~~~~~~~~~~
+   arch/um/kernel/process.c:263:5: warning: no previous prototype for 'clear_user_proc' [-Wmissing-prototypes]
+     263 | int clear_user_proc(void __user *buf, int size)
+         |     ^~~~~~~~~~~~~~~
+   arch/um/kernel/process.c:316:12: warning: no previous prototype for 'make_proc_sysemu' [-Wmissing-prototypes]
+     316 | int __init make_proc_sysemu(void)
+         |            ^~~~~~~~~~~~~~~~
+   arch/um/kernel/process.c:356:15: warning: no previous prototype for 'arch_align_stack' [-Wmissing-prototypes]
+     356 | unsigned long arch_align_stack(unsigned long sp)
+         |               ^~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from arch/um/kernel/time.c:10:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   arch/um/kernel/time.c:778:13: warning: no previous prototype for 'time_init' [-Wmissing-prototypes]
+     778 | void __init time_init(void)
+         |             ^~~~~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from include/linux/tick.h:8,
+                    from include/linux/sched/isolation.h:6,
+                    from kernel/workqueue.c:51:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from include/linux/tick.h:8,
+                    from kernel/irq_work.c:17:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   kernel/irq_work.c:70:13: warning: no previous prototype for 'arch_irq_work_raise' [-Wmissing-prototypes]
+      70 | void __weak arch_irq_work_raise(void)
+         |             ^~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from include/linux/tick.h:8,
+                    from include/linux/sched/isolation.h:6,
+                    from kernel/sched/fair.c:38:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   kernel/sched/fair.c:675:5: warning: no previous prototype for 'sched_update_scaling' [-Wmissing-prototypes]
+     675 | int sched_update_scaling(void)
+         |     ^~~~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/clocksource.h:19,
+                    from include/linux/clockchips.h:14,
+                    from include/linux/tick.h:8,
+                    from kernel/time/hrtimer.c:32:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   kernel/time/hrtimer.c:120:35: warning: initialized field overwritten [-Woverride-init]
+     120 |         [CLOCK_REALTIME]        = HRTIMER_BASE_REALTIME,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:120:35: note: (near initialization for 'hrtimer_clock_to_base_table[0]')
+   kernel/time/hrtimer.c:121:35: warning: initialized field overwritten [-Woverride-init]
+     121 |         [CLOCK_MONOTONIC]       = HRTIMER_BASE_MONOTONIC,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:121:35: note: (near initialization for 'hrtimer_clock_to_base_table[1]')
+   kernel/time/hrtimer.c:122:35: warning: initialized field overwritten [-Woverride-init]
+     122 |         [CLOCK_BOOTTIME]        = HRTIMER_BASE_BOOTTIME,
+         |                                   ^~~~~~~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:122:35: note: (near initialization for 'hrtimer_clock_to_base_table[7]')
+   kernel/time/hrtimer.c:123:35: warning: initialized field overwritten [-Woverride-init]
+     123 |         [CLOCK_TAI]             = HRTIMER_BASE_TAI,
+         |                                   ^~~~~~~~~~~~~~~~
+   kernel/time/hrtimer.c:123:35: note: (near initialization for 'hrtimer_clock_to_base_table[11]')
+   kernel/time/hrtimer.c: In function '__run_hrtimer':
+   kernel/time/hrtimer.c:1648:14: warning: variable 'expires_in_hardirq' set but not used [-Wunused-but-set-variable]
+    1648 |         bool expires_in_hardirq;
+         |              ^~~~~~~~~~~~~~~~~~
+--
+   In file included from include/linux/clk-provider.h:9,
+                    from lib/vsprintf.c:23:
+>> include/linux/of.h:848:48: warning: 'struct kimage' declared inside parameter list will not be visible outside of this definition or declaration
+     848 | static inline void tpm_add_kexec_buffer(struct kimage *image)
+         |                                                ^~~~~~
+   lib/vsprintf.c: In function 'va_format':
+   lib/vsprintf.c:1681:9: warning: function 'va_format' might be a candidate for 'gnu_printf' format attribute [-Wsuggest-attribute=format]
+    1681 |         buf += vsnprintf(buf, end > buf ? end - buf : 0, va_fmt->fmt, va);
+         |         ^~~
 
-> +       if (sizep == NULL && basep == NULL)
-> +               return -ENODEV;
-> +       if (sizep == NULL || basep == NULL)
-> +               return -EIO;
 
-Do we really need the error distinction?
+vim +848 include/linux/of.h
 
-> +
-> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-> +               *size = be32_to_cpup((__force __be32 *)sizep);
-> +               *base = be64_to_cpup((__force __be64 *)basep);
-> +       } else {
-> +               *size = *sizep;
-> +               *base = *basep;
+   847	
+ > 848	static inline void tpm_add_kexec_buffer(struct kimage *image)
+   849	{
+   850	}
+   851	
 
-What? Some platforms aren't properly encoded? Fix the firmware.
-
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(of_tpm_get_sml_parameters);
-> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-> index eef6f3b9939c..db5441123a70 100644
-> --- a/drivers/of/kexec.c
-> +++ b/drivers/of/kexec.c
-> @@ -14,6 +14,7 @@
->  #include <linux/memblock.h>
->  #include <linux/libfdt.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/of_fdt.h>
->  #include <linux/random.h>
->  #include <linux/slab.h>
-> @@ -221,7 +222,6 @@ static void remove_ima_buffer(void *fdt, int chosen_node)
->                 pr_debug("Removed old IMA buffer reservation.\n");
->  }
->
-> -#ifdef CONFIG_IMA_KEXEC
->  static int setup_buffer(void *fdt, int chosen_node, const char *name,
->                         uint64_t addr, uint64_t size)
->  {
-> @@ -243,6 +243,7 @@ static int setup_buffer(void *fdt, int chosen_node, const char *name,
->
->  }
->
-> +#ifdef CONFIG_IMA_KEXEC
->  /**
->   * setup_ima_buffer - add IMA buffer information to the fdt
->   * @image:             kexec image being loaded.
-> @@ -275,6 +276,190 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
->  }
->  #endif /* CONFIG_IMA_KEXEC */
->
-> +/**
-> + * tpm_get_kexec_buffer - get TPM log buffer from the previous kernel
-> + * @phyaddr:   On successful return, set to physical address of buffer
-> + * @size:      On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +static int tpm_get_kexec_buffer(void **phyaddr, size_t *size)
-> +{
-> +       int ret;
-> +       unsigned long tmp_addr;
-> +       size_t tmp_size;
-> +
-> +       ret = get_kexec_buffer("linux,tpm-kexec-buffer", &tmp_addr, &tmp_size);
-
-Again, must be documented.
-
-> +       if (ret)
-> +               return ret;
-> +
-> +       *phyaddr = (void *)tmp_addr;
-> +       *size = tmp_size;
-> +
-> +       return 0;
-> +}
-> +
-> +/**
-> + * tpm_free_kexec_buffer - free memory used by the IMA buffer
-> + */
-> +static int tpm_of_remove_kexec_buffer(void)
-> +{
-> +       struct property *prop;
-> +
-> +       prop = of_find_property(of_chosen, "linux,tpm-kexec-buffer", NULL);
-> +       if (!prop)
-> +               return -ENOENT;
-> +
-> +       return of_remove_property(of_chosen, prop);
-> +}
-> +
-> +/**
-> + * remove_tpm_buffer - remove the TPM log buffer property and reservation from @fdt
-> + *
-> + * @fdt: Flattened Device Tree to update
-> + * @chosen_node: Offset to the chosen node in the device tree
-> + *
-> + * The TPM log measurement buffer is of no use to a subsequent kernel, so we always
-> + * remove it from the device tree.
-> + */
-> +static void remove_tpm_buffer(void *fdt, int chosen_node)
-> +{
-> +       int ret;
-> +
-> +       ret = remove_buffer(fdt, chosen_node, "linux,tpm-kexec-buffer");
-> +       if (!ret)
-> +               pr_debug("Removed old TPM log buffer reservation.\n");
-
-Do we really need this print? If so, perhaps in remove_buffer() rather
-than having every caller do it.
-
-> +}
-> +
-> +/**
-> + * setup_tpm_buffer - add TPM measurement log buffer information to the fdt
-> + * @image:             kexec image being loaded.
-> + * @fdt:               Flattened device tree for the next kernel.
-> + * @chosen_node:       Offset to the chosen node.
-> + *
-> + * Return: 0 on success, or negative errno on error.
-> + */
-> +static int setup_tpm_buffer(const struct kimage *image, void *fdt,
-> +                           int chosen_node)
-> +{
-> +       return setup_buffer(fdt, chosen_node, "linux,tpm-kexec-buffer",
-> +                           image->tpm_buffer_addr, image->tpm_buffer_size);
-> +}
-> +
-> +void tpm_add_kexec_buffer(struct kimage *image)
-> +{
-> +       struct kexec_buf kbuf = { .image = image, .buf_align = 1,
-> +                                 .buf_min = 0, .buf_max = ULONG_MAX,
-> +                                 .top_down = true };
-> +       struct device_node *np;
-> +       void *buffer;
-> +       u32 size;
-> +       u64 base;
-> +       int ret;
-> +
-> +       np = of_find_node_by_name(NULL, "vtpm");
-> +       if (!np)
-> +               return;
-> +
-> +       if (of_tpm_get_sml_parameters(np, &base, &size) < 0)
-> +               return;
-> +
-> +       buffer = vmalloc(size);
-> +       if (!buffer)
-> +               return;
-> +       memcpy(buffer, __va(base), size);
-> +
-> +       kbuf.buffer = buffer;
-> +       kbuf.bufsz = size;
-> +       kbuf.memsz = size;
-> +       ret = kexec_add_buffer(&kbuf);
-> +       if (ret) {
-> +               pr_err("Error passing over kexec TPM measurement log buffer: %d\n",
-> +                      ret);
-> +               return;
-> +       }
-> +
-> +       image->tpm_buffer = buffer;
-> +       image->tpm_buffer_addr = kbuf.mem;
-> +       image->tpm_buffer_size = size;
-> +}
-> +
-> +/**
-> + * tpm_post_kexec - Make stored TPM log buffer available in of-tree
-> + */
-> +static int __init tpm_post_kexec(void)
-> +{
-> +       struct property *newprop;
-> +       struct device_node *np;
-> +       void *phyaddr;
-> +       size_t size;
-> +       u32 oflogsize;
-> +       u64 unused;
-> +       int ret;
-> +
-> +       ret = tpm_get_kexec_buffer(&phyaddr, &size);
-> +       if (ret)
-> +               return 0;
-> +
-> +       /*
-> +        * If any one of the following steps fails then the next kexec will
-> +        * cause issues due to linux,sml-base pointing to a stale buffer.
-> +        */
-> +       np = of_find_node_by_name(NULL, "vtpm");
-
-This seems pretty IBM specific.
-
-> +       if (!np)
-> +               goto err_free_memblock;
-> +
-> +       /* logsize must not have changed */
-> +       if (of_tpm_get_sml_parameters(np, &unused, &oflogsize) < 0)
-> +               goto err_free_memblock;
-> +       if (oflogsize != size)
-> +               goto err_free_memblock;
-> +
-> +       /* replace linux,sml-base with new physical address of buffer */
-> +       ret = -ENOMEM;
-> +       newprop = kzalloc(sizeof(*newprop), GFP_KERNEL);
-> +       if (!newprop)
-> +               goto err_free_memblock;
-> +
-> +       newprop->name = kstrdup("linux,sml-base", GFP_KERNEL);
-> +       if (!newprop->name)
-> +               goto err_free_newprop;
-> +
-> +       newprop->length = sizeof(phyaddr);
-> +
-> +       newprop->value = kmalloc(sizeof(u64), GFP_KERNEL);
-> +       if (!newprop->value)
-> +               goto err_free_newprop_struct;
-> +
-> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
-> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
-> +               ret = -ENODEV;
-> +               goto err_free_newprop_struct;
-> +       } else {
-> +               *(u64 *)newprop->value = (u64)phyaddr;
-> +       }
-> +
-> +       ret = of_update_property(np, newprop);
-
-Just FYI for now, there's some work happening on a better API for
-writing nodes and properties.
-
-> +       if (ret) {
-> +               pr_err("Could not update linux,sml-base with new address");
-> +               goto err_free_newprop_struct;
-> +       }
-> +
-> +       goto exit;
-> +
-> +err_free_newprop_struct:
-> +       kfree(newprop->name);
-> +err_free_newprop:
-> +       kfree(newprop);
-> +err_free_memblock:
-> +       memblock_phys_free((phys_addr_t)phyaddr, size);
-> +exit:
-> +       tpm_of_remove_kexec_buffer();
-> +
-> +       return ret;
-> +}
-> +postcore_initcall(tpm_post_kexec);
-
-Would be better if this is called explicitly at the right time when
-needed rather than using an initcall.
-
-> +
->  /*
->   * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
->   *
-> @@ -464,6 +649,9 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
->         remove_ima_buffer(fdt, chosen_node);
->         ret = setup_ima_buffer(image, fdt, fdt_path_offset(fdt, "/chosen"));
->
-> +       remove_tpm_buffer(fdt, chosen_node);
-> +       ret = setup_tpm_buffer(image, fdt, fdt_path_offset(fdt, "/chosen"));
-> +
->  out:
->         if (ret) {
->                 kvfree(fdt);
-> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-> index 58d1b58a971e..a0fd7ac0398c 100644
-> --- a/include/linux/kexec.h
-> +++ b/include/linux/kexec.h
-> @@ -319,6 +319,12 @@ struct kimage {
->         void *elf_headers;
->         unsigned long elf_headers_sz;
->         unsigned long elf_load_addr;
-> +
-> +       /* Virtual address of TPM log buffer for kexec syscall */
-> +       void *tpm_buffer;
-> +
-> +       phys_addr_t tpm_buffer_addr;
-> +       size_t tpm_buffer_size;
-
-Probably should use the same types as other buffers...
-
->  };
-
-Rob
-
-[1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/chosen.yaml
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
 
 _______________________________________________
 kexec mailing list
