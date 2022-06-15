@@ -4,99 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D45C1CCA47B
-	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 09:53:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7A1B6C43334
+	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 13:08:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=1clKYcv+EcTAvgRrX0aKc0SJ0CBGFF83P4wbS/nBMfY=; b=ylTsBufmto0GhI
-	A6Zsgotz94sspSpzrVMDDstG9nKWuZO/o+ZbIfRLz1bGzhaIb6Yp0aRB4AxX+/yscBBTFWQDyeRB+
-	20/vkzsJwemrbfPLA1Z/umiKTe3zSdAjDKV4kHoNX2vkwdBmcT1hftqZRsaxeIzHEH5nR290v50Mo
-	Z6Fz9L5atKOfwjq58N2NztDjJsNLJE/jOataS0XKMTLa70OKicKdL1f9SvAsXXOb2Jks1tH/ZzEle
-	Zsp15F2cU9GLmgLTiN+2C20w2UdqCVMbK480zBjk55RbKzUL7J9mOaFjMFaiICx/Xy24V9DLH4gfU
-	N0Z3jSCOv4pt+7UbHxAw==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
+	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=V+i1ob4aDR/+OMivzqmRrBOHGep0D3UwZvUbciiGr50=; b=nkh9k0tVenuPF9e9q4G/hXTtqL
+	ZKKViSI2AA+R3v8L9QG/eGRz98CLIxilVKWFcyGxyP7fC+FugDv+jP+QZ32J9o3Z+r47GnOjJgCuk
+	xUPckZXcjH39dt4FfF1wtKpaDXdoml9u/CDlfMgz/LGUOGCVYvxfqm3ppBk860TWw2q8izr2H++yD
+	/vL84MOGP6lJKlWgHZoDMfwB2s7gQuMQa1o+VB2JYpVOKC/coRbR9gyKIJKQqEdCP79Ao482lVRfb
+	YFyTT9i/4BxXY+OBns20YscMJ33P7qHWvU+B7okii4wuY9RvM18B54e4a6AJtvvPIzZezEng7VKbJ
+	Yczn0T8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1Pic-00DbUf-79; Wed, 15 Jun 2022 09:53:46 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1o1Sl8-00EdGn-EL; Wed, 15 Jun 2022 13:08:34 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1PiY-00DbPD-3j
-	for kexec@lists.infradead.org; Wed, 15 Jun 2022 09:53:43 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655286817;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=Sw6uD4GNioRfBtX3jEJXdTt3T/W8UHiD+VjqDyMbLsw=;
-	b=P3Y/SSdNaeYZkaSrs/nFyrmHU+Fe8ND4NQWQCsU/r9FDYDCPs0VwJScdtjOJPzZHil9YxC
-	pOVN7yGkHzCPUeFRB/6RPeDU9sJXWQmftCh97oG8E6uXR47qmn1juA38vtHTAVwLh6tORi
-	wFoMvJzT7+UMaufahRH6CI/RR1Bwk2U=
-Received: from mail-wm1-f72.google.com (mail-wm1-f72.google.com
- [209.85.128.72]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-177-KOLpDszDN_mfqe4yt2g9GA-1; Wed, 15 Jun 2022 05:53:35 -0400
-X-MC-Unique: KOLpDszDN_mfqe4yt2g9GA-1
-Received: by mail-wm1-f72.google.com with SMTP id o2-20020a05600c510200b0039747b0216fso1039173wms.0
-        for <kexec@lists.infradead.org>; Wed, 15 Jun 2022 02:53:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:message-id:date:mime-version:user-agent:subject
-         :content-language:to:cc:references:from:organization:in-reply-to
-         :content-transfer-encoding;
-        bh=Sw6uD4GNioRfBtX3jEJXdTt3T/W8UHiD+VjqDyMbLsw=;
-        b=txZRJ6W66w3rU42kUmgRkKaKGvShLk4laoRkiSnz3IHvnUkum3fNFzOUAQoH1rETeq
-         IzxBeHYfbB0s87tm3XNDSv/LAhzvusuGE5ln41gbfvOpxmmIC1QLhRq/bZWfgByW0BQ9
-         w/jpA9CHmTHRUHkpjUcz2L7m8AzY3oeR7OK2OMoCZNi5khV41wuvS0mRQfDdAHzsct7J
-         r1mQm/K3FGswbvV2WLm0eInG9dOttFj3KtPLkenIYHZMAHweY+TthzBbY/PhtxQ3rxi5
-         LN8jXQTxjEBg+6M90H3sn0S1M+sA6tqw8ax0WBh8zDa37D2XC0SO7yAkMNFLW5hsdGcD
-         3Vtg==
-X-Gm-Message-State: AJIora9PZMtKuouExDTv+BX5tBmcdkOV8hsu/IQJVqiFsNBAEBoTTWTp
-	fSyC7noNAKCWePa94ssQXR8X5/Hby/2oHA0yNsmu3ZlPcjT0BceAm9CKeVkXMvq5R/I2OJU0c+K
-	c5+lb4oFuXfWrLwPR8JJd
-X-Received: by 2002:a5d:54c3:0:b0:210:2a28:5666 with SMTP id x3-20020a5d54c3000000b002102a285666mr9020420wrv.345.1655286814572;
-        Wed, 15 Jun 2022 02:53:34 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vWQshi2ag3X1ZGvSLVqvcGr6liU6e5hkf80ENh4j2nNiQ3afv4GT3be4CkAz8Cckl+MchtEw==
-X-Received: by 2002:a5d:54c3:0:b0:210:2a28:5666 with SMTP id x3-20020a5d54c3000000b002102a285666mr9020398wrv.345.1655286814297;
-        Wed, 15 Jun 2022 02:53:34 -0700 (PDT)
-Received: from ?IPV6:2003:cb:c70a:2700:1d28:26c3:b272:fcc6? (p200300cbc70a27001d2826c3b272fcc6.dip0.t-ipconnect.de. [2003:cb:c70a:2700:1d28:26c3:b272:fcc6])
-        by smtp.gmail.com with ESMTPSA id l39-20020a05600c1d2700b0039c95b31e66sm2130939wms.31.2022.06.15.02.53.32
-        (version=TLS1_3 cipher=TLS_AES_128_GCM_SHA256 bits=128/128);
-        Wed, 15 Jun 2022 02:53:33 -0700 (PDT)
-Message-ID: <1ef10873-c20f-afd8-e560-3b7fb5516f2b@redhat.com>
-Date: Wed, 15 Jun 2022 11:53:32 +0200
-MIME-Version: 1.0
+	id 1o1Sl4-00EdFM-1F
+	for kexec@lists.infradead.org; Wed, 15 Jun 2022 13:08:32 +0000
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25FD3IfV020446;
+	Wed, 15 Jun 2022 13:08:08 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ subject : to : cc : references : from : in-reply-to : content-type :
+ content-transfer-encoding : mime-version; s=pp1;
+ bh=Zk9iYVm6CumRGe5cbQqyYI3M6KmIq46Yqnv3DuXyDdw=;
+ b=eKfvEdZIovWzkM5OqDtRZvoaLwb0V4RRDHjWBthqMliOaqSxp3V9xpfXmMVyo8eO5Fx8
+ IV1Grmtmz2MQQh4DtFfq+CG3WVekNLf6toGuOr92le1G535JMCkgAxu+2NpJGWkFJmUc
+ 7hV3S2rIQV9oBlrVtcKWiB+l5RukR0d7FjJ5zKUJPKbY6J+u2+CvSfnkd9cP4Wjadzo3
+ FEoGV54YGIiiSvmQ/2ZoNi+Cfw2qI5ykDCgeV7W/RCP7VExbPU1PpS9+4xpryeAZcfim
+ AScB30zyRL6a10x0KiCpOvMmn1xykkwV8y/UJ4Zo1qQk7hiWpHFZ/Xi45xxpSbnwM3Tt 1g== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gq8e4vgg6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jun 2022 13:08:07 +0000
+Received: from m0098416.ppops.net (m0098416.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25FCppUB028034;
+	Wed, 15 Jun 2022 13:08:07 GMT
+Received: from ppma01wdc.us.ibm.com (fd.55.37a9.ip4.static.sl-reverse.com [169.55.85.253])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gq8e4vgfw-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jun 2022 13:08:07 +0000
+Received: from pps.filterd (ppma01wdc.us.ibm.com [127.0.0.1])
+	by ppma01wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25FD5Ecg002786;
+	Wed, 15 Jun 2022 13:08:06 GMT
+Received: from b03cxnp08028.gho.boulder.ibm.com (b03cxnp08028.gho.boulder.ibm.com [9.17.130.20])
+	by ppma01wdc.us.ibm.com with ESMTP id 3gmjp93726-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 15 Jun 2022 13:08:06 +0000
+Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
+	by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25FD85MD26870038
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 15 Jun 2022 13:08:05 GMT
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id A183BBE04F;
+	Wed, 15 Jun 2022 13:08:05 +0000 (GMT)
+Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 1FC1CBE051;
+	Wed, 15 Jun 2022 13:08:05 +0000 (GMT)
+Received: from [9.47.158.152] (unknown [9.47.158.152])
+	by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
+	Wed, 15 Jun 2022 13:08:05 +0000 (GMT)
+Message-ID: <af78f4b6-4cfb-5ea6-fdc9-dfcb73f4bc8c@linux.ibm.com>
+Date: Wed, 15 Jun 2022 09:08:04 -0400
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
  Thunderbird/91.9.0
-Subject: Re: [PATCH v8 3/7] crash: add generic infrastructure for crash
- hotplug support
-To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
- x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
- dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
-Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
- dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
- thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de, rppt@kernel.org,
- konrad.wilk@oracle.com, boris.ostrovsky@oracle.com
-References: <20220505184603.1548-1-eric.devolder@oracle.com>
- <20220505184603.1548-4-eric.devolder@oracle.com>
- <62089f7b-4a3e-7dc8-1cda-84583e19d6fd@redhat.com>
- <e4120abd-c3ac-ee4d-1a0d-260126914b09@oracle.com>
- <b38f4597-0d9b-5b17-0b24-13d99605fb69@redhat.com>
- <24513679-d92d-ead1-2c1d-98db6a9bbdac@oracle.com>
-From: David Hildenbrand <david@redhat.com>
-Organization: Red Hat
-In-Reply-To: <24513679-d92d-ead1-2c1d-98db6a9bbdac@oracle.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=david@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Subject: Re: [PATCH 2/3] tpm/kexec: Duplicate TPM measurement log in of-tree
+ for kexec
 Content-Language: en-US
+To: Rob Herring <robh+dt@kernel.org>
+Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
+        Nayna Jain <nayna@linux.ibm.com>, nasastry@in.ibm.com,
+        Frank Rowand <frowand.list@gmail.com>,
+        Eric Biederman <ebiederm@xmission.com>
+References: <20220614161258.1741427-1-stefanb@linux.ibm.com>
+ <20220614161258.1741427-3-stefanb@linux.ibm.com>
+ <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
+From: Stefan Berger <stefanb@linux.ibm.com>
+In-Reply-To: <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: IL-VNwfRniJatUnXAp-7X4wvJTKfK-SL
+X-Proofpoint-GUID: Q06TEDorWv99poHCw9KIR-WCI0wDn7hY
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-15_13,2022-06-15_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
+ priorityscore=1501 malwarescore=0 mlxlogscore=999 spamscore=0 adultscore=0
+ impostorscore=0 phishscore=0 clxscore=1015 mlxscore=0 bulkscore=0
+ suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206150052
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220615_025342_300744_F5EFD929 
-X-CRM114-Status: GOOD (  13.50  )
+X-CRM114-CacheID: sfid-20220615_060830_423424_0011A3BD 
+X-CRM114-Status: GOOD (  55.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -108,53 +112,429 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 01.06.22 00:25, Eric DeVolder wrote:
-> 
-> 
-> On 5/31/22 08:15, David Hildenbrand wrote:
->> On 12.05.22 18:10, Eric DeVolder wrote:
->>> David,
->>> Great questions! See inline responses below.
->>> eric
+
+
+On 6/14/22 13:48, Rob Herring wrote:
+> (),On Tue, Jun 14, 2022 at 10:13 AM Stefan Berger <stefanb@linux.ibm.com> wrote:
 >>
->> Sorry for the late reply, travel and vacation ...
-> No problem, greatly appreciate the feedback!
-> eric
+>> The memory area of the TPM measurement log is currently not properly
+>> duplicated for carrying it across kexec when an Open Firmware
+>> Devicetree is used. Therefore, the contents of the log get corrupted.
+>> Fix this for the kexec_file_load() syscall by allocating a buffer and
+>> copying the contents of the existing log into it. The new buffer is
+>> preserved across the kexec and a pointer to it is available when the new
+>> kernel is started. To achieve this, store the allocated buffer's address
+>> in the flattened device tree (fdt) under the name linux,tpm-kexec-buffer
+>> and search for this entry early in the kernel startup before the TPM
+>> subsystem starts up. Adjust the pointer in the of-tree stored under
+>> linux,sml-base to point to this buffer holding the preserved log. The
+>> TPM driver can then read the base address from this entry when making
+>> the log available.
 > 
->>
->>>>
->>>>> +
->>>>> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
->>>>> +void __weak arch_crash_handle_hotplug_event(struct kimage *image,
->>>>> +							unsigned int hp_action, unsigned int cpu)
->>>>> +{
->>>>> +	WARN(1, "crash hotplug handler not implemented");
->>>>
->>>>
->>>> Won't that trigger on any arch that has CONFIG_HOTPLUG_CPU and CONFIG_MEMORY_HOTPLUG?
->>>> I mean, you only implement it for x86 later in this series. Or what else stops this WARN from
->>>> triggering?
->>>>
->>> You're correct. What about: printk_once(KERN_DEBUG "...") ?
->>
->> Why even bother about printing anything? If the feature is not
->> supported, there should be some way for user space to figure out that it
->> sill has to reload on hot(un)plug manually, no?
+> This series really needs a wider Cc list of folks that worry about
+> TPMs and kexec.
 > 
-> I've changed this to WARN_ONCE(). If that isn't agreeable, I'll remove it.
+>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Frank Rowand <frowand.list@gmail.com>
+>> Cc: Eric Biederman <ebiederm@xmission.com>
+>> ---
+>>   drivers/of/device.c       |  24 +++++
+>>   drivers/of/kexec.c        | 190 +++++++++++++++++++++++++++++++++++++-
+>>   include/linux/kexec.h     |   6 ++
+>>   include/linux/of.h        |   5 +
+>>   include/linux/of_device.h |   3 +
+>>   kernel/kexec_file.c       |   6 ++
+>>   6 files changed, 233 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/of/device.c b/drivers/of/device.c
+>> index 874f031442dc..0cbd47b1cabc 100644
+>> --- a/drivers/of/device.c
+>> +++ b/drivers/of/device.c
+>> @@ -382,3 +382,27 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
+>>          return 0;
+>>   }
+>>   EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
+>> +
+>> +int of_tpm_get_sml_parameters(struct device_node *np, u64 *base, u32 *size)
+> 
+> of/device.c is for functions that work on a struct device. This is not
+> the case here.
 
-Please don't use WARN* on expected error paths.
+Can I put it into platform.c?
 
--- 
-Thanks,
+I should have probably mentioned it but this function here is a copy of 
+code from tpm_read_log_of() from here: 
+https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/eventlog/of.c#L38
 
-David / dhildenb
+3/3 refactors the code in tpm/eventlog/of.c to make use of this new 
+function then to avoid code duplication. Therefore, this code here is 
+more general than necessary at this point. Maybe I should do the move in 
+a patch of its own?
 
+
+> 
+>> +{
+>> +       const u32 *sizep;
+>> +       const u64 *basep;
+>> +
+>> +       sizep = of_get_property(np, "linux,sml-size", NULL);
+>> +       basep = of_get_property(np, "linux,sml-base", NULL);
+> 
+> Any new properties need a schema. For chosen, that's located here[1].
+> The more common pattern for similar properties is <base size>.
+> 
+> Don't use of_get_property(), but the typed functions instead.
+
+I think this was done due to the little endian and big endian 
+distinction below.
+
+
+> 
+>> +       if (sizep == NULL && basep == NULL)
+>> +               return -ENODEV;
+>> +       if (sizep == NULL || basep == NULL)
+>> +               return -EIO;
+> 
+> Do we really need the error distinction?
+
+As I mentioned, this code is a copy from the TPM subsystem. There it 
+does make a distinction because similar functions for acpi and efi make 
+a distinction as well although this particular function's return code 
+doesn't matter in the end.
+
+The code I am referring to is this here:
+
+https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/eventlog/common.c#L85
+
+> 
+>> +
+>> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+>> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+>> +               *size = be32_to_cpup((__force __be32 *)sizep);
+>> +               *base = be64_to_cpup((__force __be64 *)basep);
+>> +       } else {
+>> +               *size = *sizep;
+>> +               *base = *basep;
+> 
+> What? Some platforms aren't properly encoded? Fix the firmware.
+
+It's been like this for years...
+
+> 
+>> +       }
+>> +       return 0;
+>> +}
+>> +EXPORT_SYMBOL_GPL(of_tpm_get_sml_parameters);
+>> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+>> index eef6f3b9939c..db5441123a70 100644
+>> --- a/drivers/of/kexec.c
+>> +++ b/drivers/of/kexec.c
+>> @@ -14,6 +14,7 @@
+>>   #include <linux/memblock.h>
+>>   #include <linux/libfdt.h>
+>>   #include <linux/of.h>
+>> +#include <linux/of_device.h>
+>>   #include <linux/of_fdt.h>
+>>   #include <linux/random.h>
+>>   #include <linux/slab.h>
+>> @@ -221,7 +222,6 @@ static void remove_ima_buffer(void *fdt, int chosen_node)
+>>                  pr_debug("Removed old IMA buffer reservation.\n");
+>>   }
+>>
+>> -#ifdef CONFIG_IMA_KEXEC
+>>   static int setup_buffer(void *fdt, int chosen_node, const char *name,
+>>                          uint64_t addr, uint64_t size)
+>>   {
+>> @@ -243,6 +243,7 @@ static int setup_buffer(void *fdt, int chosen_node, const char *name,
+>>
+>>   }
+>>
+>> +#ifdef CONFIG_IMA_KEXEC
+>>   /**
+>>    * setup_ima_buffer - add IMA buffer information to the fdt
+>>    * @image:             kexec image being loaded.
+>> @@ -275,6 +276,190 @@ static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
+>>   }
+>>   #endif /* CONFIG_IMA_KEXEC */
+>>
+>> +/**
+>> + * tpm_get_kexec_buffer - get TPM log buffer from the previous kernel
+>> + * @phyaddr:   On successful return, set to physical address of buffer
+>> + * @size:      On successful return, set to the buffer size.
+>> + *
+>> + * Return: 0 on success, negative errno on error.
+>> + */
+>> +static int tpm_get_kexec_buffer(void **phyaddr, size_t *size)
+>> +{
+>> +       int ret;
+>> +       unsigned long tmp_addr;
+>> +       size_t tmp_size;
+>> +
+>> +       ret = get_kexec_buffer("linux,tpm-kexec-buffer", &tmp_addr, &tmp_size);
+> 
+> Again, must be documented.
+
+Ok, I will send a PR to that repo once this is acceptable here.
+
+> 
+>> +       if (ret)
+>> +               return ret;
+>> +
+>> +       *phyaddr = (void *)tmp_addr;
+>> +       *size = tmp_size;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +/**
+>> + * tpm_free_kexec_buffer - free memory used by the IMA buffer
+>> + */
+>> +static int tpm_of_remove_kexec_buffer(void)
+>> +{
+>> +       struct property *prop;
+>> +
+>> +       prop = of_find_property(of_chosen, "linux,tpm-kexec-buffer", NULL);
+>> +       if (!prop)
+>> +               return -ENOENT;
+>> +
+>> +       return of_remove_property(of_chosen, prop);
+>> +}
+>> +
+>> +/**
+>> + * remove_tpm_buffer - remove the TPM log buffer property and reservation from @fdt
+>> + *
+>> + * @fdt: Flattened Device Tree to update
+>> + * @chosen_node: Offset to the chosen node in the device tree
+>> + *
+>> + * The TPM log measurement buffer is of no use to a subsequent kernel, so we always
+>> + * remove it from the device tree.
+>> + */
+>> +static void remove_tpm_buffer(void *fdt, int chosen_node)
+>> +{
+>> +       int ret;
+>> +
+>> +       ret = remove_buffer(fdt, chosen_node, "linux,tpm-kexec-buffer");
+>> +       if (!ret)
+>> +               pr_debug("Removed old TPM log buffer reservation.\n");
+> 
+> Do we really need this print? If so, perhaps in remove_buffer() rather
+> than having every caller do it.
+
+Ok. Let me adjust 1/3 then as well. There I preserved the pr_debug but I 
+will push it into the function and not print 'Removed old IMA log buffer 
+reservation.' but instead 'Removed old linux,ima-kexec-buffer reservation.'
+
+> 
+>> +}
+>> +
+>> +/**
+>> + * setup_tpm_buffer - add TPM measurement log buffer information to the fdt
+>> + * @image:             kexec image being loaded.
+>> + * @fdt:               Flattened device tree for the next kernel.
+>> + * @chosen_node:       Offset to the chosen node.
+>> + *
+>> + * Return: 0 on success, or negative errno on error.
+>> + */
+>> +static int setup_tpm_buffer(const struct kimage *image, void *fdt,
+>> +                           int chosen_node)
+>> +{
+>> +       return setup_buffer(fdt, chosen_node, "linux,tpm-kexec-buffer",
+>> +                           image->tpm_buffer_addr, image->tpm_buffer_size);
+>> +}
+>> +
+>> +void tpm_add_kexec_buffer(struct kimage *image)
+>> +{
+>> +       struct kexec_buf kbuf = { .image = image, .buf_align = 1,
+>> +                                 .buf_min = 0, .buf_max = ULONG_MAX,
+>> +                                 .top_down = true };
+>> +       struct device_node *np;
+>> +       void *buffer;
+>> +       u32 size;
+>> +       u64 base;
+>> +       int ret;
+>> +
+>> +       np = of_find_node_by_name(NULL, "vtpm");
+>> +       if (!np)
+>> +               return;
+>> +
+>> +       if (of_tpm_get_sml_parameters(np, &base, &size) < 0)
+>> +               return;
+>> +
+>> +       buffer = vmalloc(size);
+>> +       if (!buffer)
+>> +               return;
+>> +       memcpy(buffer, __va(base), size);
+>> +
+>> +       kbuf.buffer = buffer;
+>> +       kbuf.bufsz = size;
+>> +       kbuf.memsz = size;
+>> +       ret = kexec_add_buffer(&kbuf);
+>> +       if (ret) {
+>> +               pr_err("Error passing over kexec TPM measurement log buffer: %d\n",
+>> +                      ret);
+>> +               return;
+>> +       }
+>> +
+>> +       image->tpm_buffer = buffer;
+>> +       image->tpm_buffer_addr = kbuf.mem;
+>> +       image->tpm_buffer_size = size;
+>> +}
+>> +
+>> +/**
+>> + * tpm_post_kexec - Make stored TPM log buffer available in of-tree
+>> + */
+>> +static int __init tpm_post_kexec(void)
+>> +{
+>> +       struct property *newprop;
+>> +       struct device_node *np;
+>> +       void *phyaddr;
+>> +       size_t size;
+>> +       u32 oflogsize;
+>> +       u64 unused;
+>> +       int ret;
+>> +
+>> +       ret = tpm_get_kexec_buffer(&phyaddr, &size);
+>> +       if (ret)
+>> +               return 0;
+>> +
+>> +       /*
+>> +        * If any one of the following steps fails then the next kexec will
+>> +        * cause issues due to linux,sml-base pointing to a stale buffer.
+>> +        */
+>> +       np = of_find_node_by_name(NULL, "vtpm");
+> 
+> This seems pretty IBM specific.
+
+Yes, it is and I am not sure what to do about it. Should I cover parts 
+of the function with a #ifdef CONFIG_PPC_PSERIES ?
+
+> 
+>> +       if (!np)
+>> +               goto err_free_memblock;
+>> +
+>> +       /* logsize must not have changed */
+>> +       if (of_tpm_get_sml_parameters(np, &unused, &oflogsize) < 0)
+>> +               goto err_free_memblock;
+>> +       if (oflogsize != size)
+>> +               goto err_free_memblock;
+>> +
+>> +       /* replace linux,sml-base with new physical address of buffer */
+>> +       ret = -ENOMEM;
+>> +       newprop = kzalloc(sizeof(*newprop), GFP_KERNEL);
+>> +       if (!newprop)
+>> +               goto err_free_memblock;
+>> +
+>> +       newprop->name = kstrdup("linux,sml-base", GFP_KERNEL);
+>> +       if (!newprop->name)
+>> +               goto err_free_newprop;
+>> +
+>> +       newprop->length = sizeof(phyaddr);
+>> +
+>> +       newprop->value = kmalloc(sizeof(u64), GFP_KERNEL);
+>> +       if (!newprop->value)
+>> +               goto err_free_newprop_struct;
+>> +
+>> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+>> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+>> +               ret = -ENODEV;
+>> +               goto err_free_newprop_struct;
+>> +       } else {
+>> +               *(u64 *)newprop->value = (u64)phyaddr;
+>> +       }
+>> +
+>> +       ret = of_update_property(np, newprop);
+> 
+> Just FYI for now, there's some work happening on a better API for
+> writing nodes and properties.
+
+Ok.
+
+> 
+>> +       if (ret) {
+>> +               pr_err("Could not update linux,sml-base with new address");
+>> +               goto err_free_newprop_struct;
+>> +       }
+>> +
+>> +       goto exit;
+>> +
+>> +err_free_newprop_struct:
+>> +       kfree(newprop->name);
+>> +err_free_newprop:
+>> +       kfree(newprop);
+>> +err_free_memblock:
+>> +       memblock_phys_free((phys_addr_t)phyaddr, size);
+>> +exit:
+>> +       tpm_of_remove_kexec_buffer();
+>> +
+>> +       return ret;
+>> +}
+>> +postcore_initcall(tpm_post_kexec);
+> 
+> Would be better if this is called explicitly at the right time when
+> needed rather than using an initcall.
+
+The 'when needed' would be the TPM subsystem. However, if I was to make 
+it dependent on the TPM subsystem we would loose the TPM log if we were 
+not to kexec into a kernel with TPM subsystem or the TPM driver wasn't 
+activated. I wanted to be able to preserve the log even if a kexec'ed 
+kernel didn't support or activate the TPM driver and then a subsequent 
+one again has it activated...
+
+> 
+>> +
+>>   /*
+>>    * of_kexec_alloc_and_setup_fdt - Alloc and setup a new Flattened Device Tree
+>>    *
+>> @@ -464,6 +649,9 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+>>          remove_ima_buffer(fdt, chosen_node);
+>>          ret = setup_ima_buffer(image, fdt, fdt_path_offset(fdt, "/chosen"));
+>>
+>> +       remove_tpm_buffer(fdt, chosen_node);
+>> +       ret = setup_tpm_buffer(image, fdt, fdt_path_offset(fdt, "/chosen"));
+>> +
+>>   out:
+>>          if (ret) {
+>>                  kvfree(fdt);
+>> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+>> index 58d1b58a971e..a0fd7ac0398c 100644
+>> --- a/include/linux/kexec.h
+>> +++ b/include/linux/kexec.h
+>> @@ -319,6 +319,12 @@ struct kimage {
+>>          void *elf_headers;
+>>          unsigned long elf_headers_sz;
+>>          unsigned long elf_load_addr;
+>> +
+>> +       /* Virtual address of TPM log buffer for kexec syscall */
+>> +       void *tpm_buffer;
+>> +
+>> +       phys_addr_t tpm_buffer_addr;
+>> +       size_t tpm_buffer_size;
+> 
+> Probably should use the same types as other buffers...
+
+It did so following existing support for IMA: 
+https://elixir.bootlin.com/linux/latest/source/include/linux/kexec.h
+
+#ifdef CONFIG_IMA_KEXEC
+	/* Virtual address of IMA measurement buffer for kexec syscall */
+	void *ima_buffer;
+
+	phys_addr_t ima_buffer_addr;
+	size_t ima_buffer_size;
+#endif
+
+> 
+>>   };
+> 
+> Rob
+> 
+> [1] https://github.com/devicetree-org/dt-schema/blob/main/dtschema/schemas/chosen.yaml
 
 _______________________________________________
 kexec mailing list
