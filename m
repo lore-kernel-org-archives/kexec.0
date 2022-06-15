@@ -4,67 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 855FFC433EF
-	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 20:18:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 88BE1C433EF
+	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 21:27:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=cXya4xlhUkeZRToGe95Ogk4IJr2gjDxoWuex7axfaRo=; b=HtjU6Qtx75hZYX
-	899zjUpy/aWzWXkKHi4jBlnrG7TwoZJ/cu66FzsoCpsYDkN8n6vizaOzw1vSGAKo5RkMFSCJUoHxD
-	LJJFGgFYzpNlgw3bbiw5BHD0GXe/WHLhTePhUr6iKwfluM1g6bAcOC/FNWOpYv9vnDx+VqlTeIkPZ
-	oXGUZJwC6+gmbipjqts/3ZilS98/bLlsF8PKCvokkCTPfQJd+COhL9YYH2AhTB9g3EQx/Nv7giu0n
-	9lFNeGtOoxbv35sVFSEt/3JB/sYQHCMnVFfTGF1mZ4DJFM6sdJgNmXya4pgvO1CLM7KkXUFjvb2lY
-	fTYe5zujp0Q0QVe8jfqQ==;
+	List-Owner; bh=LHUCULQ61r9O53ErI152UXN/6x5PKkiQUd4AV1P1BLA=; b=Yn+A0R0BV6XyNc
+	WpiJ0bBa9mK71P0LipBdw4wh/GGXkF+enAmWLu6yXCSLFaL48zn/WYUfmjJIKLuQTmgPhwnqvnMDq
+	y+wmCsRMt/yA4cgiJk0umgEsNd+P+nlNFrndkHlLj6S8Qycori3VZiTEKfDnF/A5JF4fFceGhfb/u
+	egzplY5tCuV7z69Q5iK4IQWEP/d/90kFxOU6pyrM1yPm7rzzoR3CXH31dazkAPYaJ4jenKiy0e2Af
+	l64sBCb7StpjgROzSEJBJIaWSB+plBmyebv8ViKcXPVTXCs/kYPPv0JrWYQP+Tfcrswx9DaXpgpNp
+	cOset5EUdl5cK5t6yNLQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1ZTQ-00GE51-7v; Wed, 15 Jun 2022 20:18:44 +0000
-Received: from mail-io1-f47.google.com ([209.85.166.47])
+	id 1o1aXn-00GRuB-P1; Wed, 15 Jun 2022 21:27:19 +0000
+Received: from ams.source.kernel.org ([2604:1380:4601:e00::1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1ZTN-00GE3Y-50
-	for kexec@lists.infradead.org; Wed, 15 Jun 2022 20:18:42 +0000
-Received: by mail-io1-f47.google.com with SMTP id n11so13851625iod.4
-        for <kexec@lists.infradead.org>; Wed, 15 Jun 2022 13:18:40 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=xQh+eTwTpmaPBadAs7RFq9z38Ba2vaFoSOGMFjdUoUI=;
-        b=zn7fbTwXaoDiQ5vmRbfuOrawO6x11c5GM3GtL21Lkdi746J8XfGkcM/fa3K4MFN645
-         yqgBEn0V2eOXh4hqABFA6GOCwgiRAWmB5yvNDZxJKyOJHf1sKDrWeHvJoOYwF6FQsayZ
-         wSDrSR7irlSxrOF0T7K6UiHPPlxRH1mLzuLljg+xP4Ob1g3cjwKcrNj1Lylq86k1NNom
-         zzodMioGPlCgRLa3dqWBsAJUwOZSaMTqrMqxJQdkUrAyJ+bf/CnutF5Yxt8+9hdfkGSd
-         P/gBLHFtST5445YwWXo2caVrdEcRStpq0up4RlzEPF2dJJPxyG9tGBAax8cZ4AGdHwhX
-         oLWg==
-X-Gm-Message-State: AJIora+k3H3VIkwZoT+oJi1U40H5TFxHlQdpO68Dc28umuIU5o149eio
-	iA3Iz0ZluCsNnfQTzkjGZ6YClKDMsA==
-X-Google-Smtp-Source: AGRyM1vQzvutwoc1umkK9GLIslUbs5YXYG/HUfAQts8IDiFqTuJ5brxnfo7A8Z1wYlqwjLFA8zaznA==
-X-Received: by 2002:a5e:8a44:0:b0:66a:2699:df20 with SMTP id o4-20020a5e8a44000000b0066a2699df20mr717743iom.205.1655324319349;
-        Wed, 15 Jun 2022 13:18:39 -0700 (PDT)
-Received: from robh.at.kernel.org ([64.188.179.251])
-        by smtp.gmail.com with ESMTPSA id a21-20020a056638019500b0032b3a7817dbsm6584499jaq.159.2022.06.15.13.18.38
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 13:18:38 -0700 (PDT)
-Received: (nullmailer pid 1740660 invoked by uid 1000);
-	Wed, 15 Jun 2022 20:18:37 -0000
-Date: Wed, 15 Jun 2022 14:18:37 -0600
-From: Rob Herring <robh@kernel.org>
+	id 1o1aXk-00GRtQ-CM
+	for kexec@lists.infradead.org; Wed, 15 Jun 2022 21:27:17 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 080CEB82182;
+	Wed, 15 Jun 2022 21:27:15 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 4EDC5C3411A;
+	Wed, 15 Jun 2022 21:27:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=k20201202; t=1655328433;
+	bh=j0Nz9gWzlQB5Laxm3qH9cDjyMSYDdvtiAQPBRjsZCzM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=pOQ208fhg+Tmuw1zKTODfmwydFIugZW2qvQ4eq18PnBNlbcFzZBZS8nn3Cf/cgBIe
+	 qKqocbS/jmO4V0fygItYBu/gCz+W9N/oETJAi0mJsc0zZ6abxxeoQlhXWRoG560NTt
+	 1DoD6E6mvFbWSfaLX1qOKlp/8IpFwMRjIf4HRlo/zHH1AdBsO+f1T5gf+nQ8aehBoR
+	 hXffr2dfAgieVQpyCRtspShYxAlTwnqgPUFyKm826s+/hugNVeJ938ZyBxuLGLUzx9
+	 PjfMp1eb0HOZzNq84lIHWXtFh2YG2PhxYIE3pjcdsOXsV2zd3iS5gXNnboErmit2Ky
+	 VxCCiOpWkmohg==
+Date: Thu, 16 Jun 2022 00:25:04 +0300
+From: Jarkko Sakkinen <jarkko@kernel.org>
 To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org, Nayna Jain <nayna@linux.ibm.com>, nasastry@in.ibm.com, Frank Rowand <frowand.list@gmail.com>, Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 2/3] tpm/kexec: Duplicate TPM measurement log in of-tree
- for kexec
-Message-ID: <20220615201837.GB1525994-robh@kernel.org>
+Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
+	nayna@linux.ibm.com, nasastry@in.ibm.com,
+	Jason Gunthorpe <jgg@ziepe.ca>
+Subject: Re: [PATCH 3/3] tpm: of: Call of_tpm_get_sml_parameters() to get
+ base and size of log
+Message-ID: <YqpOMPVZwx1pb2mp@iki.fi>
 References: <20220614161258.1741427-1-stefanb@linux.ibm.com>
- <20220614161258.1741427-3-stefanb@linux.ibm.com>
- <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
+ <20220614161258.1741427-4-stefanb@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
+In-Reply-To: <20220614161258.1741427-4-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220615_131841_227484_173B1A2C 
-X-CRM114-Status: GOOD (  23.16  )
+X-CRM114-CacheID: sfid-20220615_142716_747136_D00D7413 
+X-CRM114-Status: GOOD (  21.69  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,40 +75,85 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue, Jun 14, 2022 at 11:48:30AM -0600, Rob Herring wrote:
-> (),On Tue, Jun 14, 2022 at 10:13 AM Stefan Berger <stefanb@linux.ibm.com> wrote:
-> >
-> > The memory area of the TPM measurement log is currently not properly
-> > duplicated for carrying it across kexec when an Open Firmware
-> > Devicetree is used. Therefore, the contents of the log get corrupted.
-> > Fix this for the kexec_file_load() syscall by allocating a buffer and
-> > copying the contents of the existing log into it. The new buffer is
-> > preserved across the kexec and a pointer to it is available when the new
-> > kernel is started. To achieve this, store the allocated buffer's address
-> > in the flattened device tree (fdt) under the name linux,tpm-kexec-buffer
-> > and search for this entry early in the kernel startup before the TPM
-> > subsystem starts up. Adjust the pointer in the of-tree stored under
-> > linux,sml-base to point to this buffer holding the preserved log. The
-> > TPM driver can then read the base address from this entry when making
-> > the log available.
+On Tue, Jun 14, 2022 at 12:12:58PM -0400, Stefan Berger wrote:
+> Simplify tpm_read_log_of() and call of_tpm_get_sml_parameters() to get
+> the base and size of the TPM log.
+> 
+> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
+> Cc: Jarkko Sakkinen <jarkko@kernel.org>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> ---
+>  drivers/char/tpm/eventlog/of.c | 31 +++++--------------------------
+>  1 file changed, 5 insertions(+), 26 deletions(-)
+> 
+> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
+> index a9ce66d09a75..e272c7a0765f 100644
+> --- a/drivers/char/tpm/eventlog/of.c
+> +++ b/drivers/char/tpm/eventlog/of.c
+> @@ -12,6 +12,7 @@
+>  
+>  #include <linux/slab.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/tpm_eventlog.h>
+>  
+>  #include "../tpm.h"
+> @@ -20,11 +21,10 @@
+>  int tpm_read_log_of(struct tpm_chip *chip)
+>  {
+>  	struct device_node *np;
+> -	const u32 *sizep;
+> -	const u64 *basep;
+>  	struct tpm_bios_log *log;
+>  	u32 size;
+>  	u64 base;
+> +	int ret;
+>  
+>  	log = &chip->log;
+>  	if (chip->dev.parent && chip->dev.parent->of_node)
+> @@ -35,30 +35,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
+>  	if (of_property_read_bool(np, "powered-while-suspended"))
+>  		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
+>  
+> -	sizep = of_get_property(np, "linux,sml-size", NULL);
+> -	basep = of_get_property(np, "linux,sml-base", NULL);
+> -	if (sizep == NULL && basep == NULL)
+> -		return -ENODEV;
+> -	if (sizep == NULL || basep == NULL)
+> -		return -EIO;
+> -
+> -	/*
+> -	 * For both vtpm/tpm, firmware has log addr and log size in big
+> -	 * endian format. But in case of vtpm, there is a method called
+> -	 * sml-handover which is run during kernel init even before
+> -	 * device tree is setup. This sml-handover function takes care
+> -	 * of endianness and writes to sml-base and sml-size in little
+> -	 * endian format. For this reason, vtpm doesn't need conversion
+> -	 * but physical tpm needs the conversion.
+> -	 */
+> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
+> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
+> -		size = be32_to_cpup((__force __be32 *)sizep);
+> -		base = be64_to_cpup((__force __be64 *)basep);
+> -	} else {
+> -		size = *sizep;
+> -		base = *basep;
+> -	}
+> +	ret = of_tpm_get_sml_parameters(np, &base, &size);
+> +	if (ret < 0)
+> +		return ret;
+>  
+>  	if (size == 0) {
+>  		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
+> -- 
+> 2.35.1
 > 
 
-> > +{
-> > +       const u32 *sizep;
-> > +       const u64 *basep;
-> > +
-> > +       sizep = of_get_property(np, "linux,sml-size", NULL);
-> > +       basep = of_get_property(np, "linux,sml-base", NULL);
-> 
-> Any new properties need a schema. For chosen, that's located here[1].
-> The more common pattern for similar properties is <base size>.
+Looks good to me.
 
-I noticed these are already documented and are TPM node properties. I 
-was thinking these are chosen node properties. Though it would be good 
-to get these common TPM properties converted to schema. That can live in 
-the kernel tree.
+Reviewed-by: Jarkko Sakkinen <jarkko@kernel.org>
 
-Rob
+BR, Jarkko
 
 _______________________________________________
 kexec mailing list
