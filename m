@@ -4,73 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48777C43334
-	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 00:55:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1E903C433EF
+	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 05:04:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Subject:In-Reply-To:
+	Message-ID:To:From:Date:Reply-To:Cc:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=50q2+yoA1d7wBsztQOWZA5aCgtDAltFwlS9aKZ9CfXY=; b=WvSpIdGJhLON4X
-	iTbT1f1a5rBe6cUpRBKd7NnOq8+4DbigVYqSSGNdOpkvIdMGcPluimpEcZt5H30tSw76H02X2Q+Fn
-	qudoCrXccyZiANoBSg927EW6rAC2oLd+Mtk4vZdf8ns1viL7XKQw7P51fekTXIhrMtTBsydfdns3f
-	d33jYXBPebrDgumWTJhR/y7ABK7jUiaZvd2OQ9sBOF3B+IjwmspJnO34CZmorxkKAp7SJxVahVBB4
-	Xajow+O85gzbl7WzFxVVCdxvw0KrA6p1aA72qQVuOjq/haMz6biC2iisGkv4dcgM5TuS1ulFGHRJS
-	t2xDOkBGggnRmD6uVO2A==;
+	References:List-Owner; bh=V1Q4fjs23r7dNPc/53vIzCcAJ+30O+hVMssAqd0nBjA=; b=Oiw
+	nIhTB2XWhazZ5k9Ycc/Rz8SS9okBOpdyzOACMqZENdi3lTVsQmFTFs60Ck2tTksxZBkO/lXFicjbO
+	VZ0lMOgRoQJLEGOEr7jcDTdROXNXqldJ9Dk/ftl+jpD9YFsyWuJp0ZkPmJwvQ5Ssw5YE5FKtv7kpA
+	lbIeA8/9j4Ov2zHFwDvqXP16pUmnE2Q3IiSBMtpPSLMIwZUDMBsgvQ/45VygJskuS+q7Pz7z6ZUlt
+	M0hOp9dLrfJAaMtrJxsKtN1QK/bI+idzdZwLi26ty2OXUfH6AI+Xh3Nm9g/W3app2ROBxVlrKm29j
+	qpuQb7dJxivB9LkJXzVPnabCbb+H5Eg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1HJJ-00Bxms-24; Wed, 15 Jun 2022 00:55:05 +0000
-Received: from mga11.intel.com ([192.55.52.93])
+	id 1o1LCn-00CbXZ-Fb; Wed, 15 Jun 2022 05:04:37 +0000
+Received: from sender4-op-o15.zoho.com ([136.143.188.15])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1HJF-00BxlZ-Hu
-	for kexec@lists.infradead.org; Wed, 15 Jun 2022 00:55:03 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655254501; x=1686790501;
-  h=date:from:to:cc:subject:message-id:references:
-   mime-version:in-reply-to;
-  bh=xcnNFG/zqM4/ixpw6inku9EczznlEWvUdxlz+0w+WCA=;
-  b=HoDTxiy+mX4m2Rl+k+SCTmru4h/I9yqkl5rHYobnXl6mxFPYSx/68N9+
-   CDRfdbJ97zxZW+6kHSGYHcvyYvziVTBYoKMASaPqx2Q02rn4gKvj9RpiV
-   p5x++08ROTMOL+UKqGpVm1+1cPxfxRihawwugaTXqaK8MmqRS/lgCiiw7
-   HY4i46esNM/MuB8KUk0JsQ5roKoHkdYvg7BgPoLdaGLoRUugbz0LCP0vr
-   jNczHs64m1dpk+dBqlpZI3st1kBHjg4Ys6uXSqVklu3m5mXZVjYPonFrt
-   ayp8C0O5KBK0LfC5yWyd2wLSZ8y3DUPdTyQdgNZHi72BPFuqn5/0vqf1Q
-   A==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10378"; a="276356725"
-X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="276356725"
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 14 Jun 2022 17:54:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.91,300,1647327600"; 
-   d="scan'208";a="570696311"
-Received: from lkp-server01.sh.intel.com (HELO 60dabacc1df6) ([10.239.97.150])
-  by orsmga002.jf.intel.com with ESMTP; 14 Jun 2022 17:54:56 -0700
-Received: from kbuild by 60dabacc1df6 with local (Exim 4.95)
-	(envelope-from <lkp@intel.com>)
-	id 1o1HJ9-000MRP-Sx;
-	Wed, 15 Jun 2022 00:54:55 +0000
-Date: Wed, 15 Jun 2022 08:54:02 +0800
-From: kernel test robot <lkp@intel.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, kexec@lists.infradead.org,
-	devicetree@vger.kernel.org
-Cc: kbuild-all@lists.01.org, nayna@linux.ibm.com, nasastry@in.ibm.com,
-	Stefan Berger <stefanb@linux.ibm.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>,
-	Eric Biederman <ebiederm@xmission.com>
-Subject: Re: [PATCH 2/3] tpm/kexec: Duplicate TPM measurement log in of-tree
- for kexec
-Message-ID: <202206150856.h2psJLGs-lkp@intel.com>
-References: <20220614161258.1741427-3-stefanb@linux.ibm.com>
+	id 1o1LCh-00CbVl-B9
+	for kexec@lists.infradead.org; Wed, 15 Jun 2022 05:04:36 +0000
+ARC-Seal: i=1; a=rsa-sha256; t=1655269456; cv=none; 
+	d=zohomail.com; s=zohoarc; 
+	b=GStgrThw5Q1PYhP2rqVOLN+xNONSuVpVddY5wEoNn17HWe9f2QpXEN4SDyOplftORljOEprEXaqOOv9nnr4IdtGU+l7aKVgm1W7d21TkgTTe9e15hzqGTBF/+VRnYbnLpAtJcF9Wt+uD/FG0emiBzjQhmeprMR7UMyPA9vNL15E=
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=zohomail.com; s=zohoarc; 
+	t=1655269456; h=Content-Type:Content-Transfer-Encoding:Date:From:MIME-Version:Message-ID:Subject:To; 
+	bh=6AXqsZRZTIdCcWnehBkb22k+2EJQJqXdSCOuqmc+0cA=; 
+	b=HPPgmyMSpBa2cPCkImcJLax4TEinX1hjH1SKUomMbcEuHrt7GJqB0G1+oNuSVGqR61GkxyPVI9RjsI5bFKh88EDlXZolHOTTNzez4r9+mPz9pdTYuegcKSqa2/g1LCqHrUmTC077uTNVXfvCPHPcHHPUV8EhorjnaqPqjPbmEKY=
+ARC-Authentication-Results: i=1; mx.zohomail.com;
+	dkim=pass  header.i=linux.beauty;
+	spf=pass  smtp.mailfrom=me@linux.beauty;
+	dmarc=pass header.from=<me@linux.beauty>
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; t=1655269456;
+	s=zmail; d=linux.beauty; i=me@linux.beauty;
+	h=Date:Date:From:From:To:To:Message-ID:In-Reply-To:Subject:Subject:MIME-Version:Content-Type:Content-Transfer-Encoding:Message-Id:Reply-To:Cc;
+	bh=6AXqsZRZTIdCcWnehBkb22k+2EJQJqXdSCOuqmc+0cA=;
+	b=EzFGn9ZZDInsOx6IO3038aT/FAhNsF8FNVmRFcFiZuIsEqFtzpZhhMS4rKA/KVNf
+	Ab2AHkP/ig76zEKdscfU0ejtP/RPBRDGID4oGaWKX/Z/WUHCgSihZo0xW1jSB5wBfVr
+	l3q3b2iWhxa5NnlGzBJVcsxaFqfKrlfVdexHezFw=
+Received: from mail.zoho.com by mx.zohomail.com
+	with SMTP id 1655269454510361.39947610994113; Tue, 14 Jun 2022 22:04:14 -0700 (PDT)
+Date: Tue, 14 Jun 2022 22:04:14 -0700
+From: Li Chen <me@linux.beauty>
+To: "linuxppc-dev" <linuxppc-dev@lists.ozlabs.org>,
+	"Michael Ellerman" <mpe@ellerman.id.au>,
+	"Benjamin Herrenschmidt" <benh@kernel.crashing.org>,
+	"Paul Mackerras" <paulus@samba.org>,
+	"Eric Biederman" <ebiederm@xmission.com>,
+	"kexec" <kexec@lists.infradead.org>
+Message-ID: <18165bf7271.d72aa7571639569.7041635736718062250@linux.beauty>
+In-Reply-To: 
+Subject: [PATCH] kexec: replace crash_mem_range with range
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <20220614161258.1741427-3-stefanb@linux.ibm.com>
+Importance: Medium
+User-Agent: Zoho Mail
+X-Mailer: Zoho Mail
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220614_175501_654115_1DE1EBE4 
-X-CRM114-Status: GOOD (  15.60  )
+X-CRM114-CacheID: sfid-20220614_220431_487306_611754E4 
+X-CRM114-Status: GOOD (  17.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,59 +79,116 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Stefan,
+From: Li Chen <lchen@ambarella.com>
 
-Thank you for the patch! Perhaps something to improve:
+We already have struct range, so just use it.
 
-[auto build test WARNING on char-misc/char-misc-testing]
-[also build test WARNING on linus/master v5.19-rc2 next-20220614]
-[cannot apply to robh/for-next]
-[If your patch is applied to the wrong git tree, kindly drop us a note.
-And when submitting patch, we suggest to use '--base' as documented in
-https://git-scm.com/docs/git-format-patch]
+Signed-off-by: Li Chen <lchen@ambarella.com>
+---
+ arch/powerpc/kexec/file_load_64.c | 2 +-
+ arch/powerpc/kexec/ranges.c       | 8 ++++----
+ include/linux/kexec.h             | 7 ++-----
+ kernel/kexec_file.c               | 2 +-
+ 4 files changed, 8 insertions(+), 11 deletions(-)
 
-url:    https://github.com/intel-lab-lkp/linux/commits/Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec/20220615-001510
-base:   https://git.kernel.org/pub/scm/linux/kernel/git/gregkh/char-misc.git 0a35780c755ccec097d15c6b4ff8b246a89f1689
-config: x86_64-randconfig-r022-20220613 (https://download.01.org/0day-ci/archive/20220615/202206150856.h2psJLGs-lkp@intel.com/config)
-compiler: gcc-11 (Debian 11.3.0-3) 11.3.0
-reproduce (this is a W=1 build):
-        # https://github.com/intel-lab-lkp/linux/commit/c42b5be1ad82e8a991a3d35417c9e495e7eb4c93
-        git remote add linux-review https://github.com/intel-lab-lkp/linux
-        git fetch --no-tags linux-review Stefan-Berger/tpm-Preserve-TPM-measurement-log-across-kexec/20220615-001510
-        git checkout c42b5be1ad82e8a991a3d35417c9e495e7eb4c93
-        # save the config file
-        mkdir build_dir && cp config build_dir/.config
-        make W=1 O=build_dir ARCH=x86_64 SHELL=/bin/bash drivers/of/
-
-If you fix the issue, kindly add following tag where applicable
-Reported-by: kernel test robot <lkp@intel.com>
-
-All warnings (new ones prefixed by >>):
-
->> drivers/of/kexec.c:306: warning: expecting prototype for tpm_free_kexec_buffer(). Prototype was for tpm_of_remove_kexec_buffer() instead
-
-
-vim +306 drivers/of/kexec.c
-
-   301	
-   302	/**
-   303	 * tpm_free_kexec_buffer - free memory used by the IMA buffer
-   304	 */
-   305	static int tpm_of_remove_kexec_buffer(void)
- > 306	{
-   307		struct property *prop;
-   308	
-   309		prop = of_find_property(of_chosen, "linux,tpm-kexec-buffer", NULL);
-   310		if (!prop)
-   311			return -ENOENT;
-   312	
-   313		return of_remove_property(of_chosen, prop);
-   314	}
-   315	
-
+diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+index b4981b651d9a..583b7fc478f2 100644
+--- a/arch/powerpc/kexec/file_load_64.c
++++ b/arch/powerpc/kexec/file_load_64.c
+@@ -34,7 +34,7 @@ struct umem_info {
+ 
+ 	/* usable memory ranges to look up */
+ 	unsigned int nr_ranges;
+-	const struct crash_mem_range *ranges;
++	const struct range *ranges;
+ };
+ 
+ const struct kexec_file_ops * const kexec_file_loaders[] = {
+diff --git a/arch/powerpc/kexec/ranges.c b/arch/powerpc/kexec/ranges.c
+index 563e9989a5bf..5fc53a5fcfdf 100644
+--- a/arch/powerpc/kexec/ranges.c
++++ b/arch/powerpc/kexec/ranges.c
+@@ -33,7 +33,7 @@
+ static inline unsigned int get_max_nr_ranges(size_t size)
+ {
+ 	return ((size - sizeof(struct crash_mem)) /
+-		sizeof(struct crash_mem_range));
++		sizeof(struct range));
+ }
+ 
+ /**
+@@ -51,7 +51,7 @@ static inline size_t get_mem_rngs_size(struct crash_mem *mem_rngs)
+ 		return 0;
+ 
+ 	size = (sizeof(struct crash_mem) +
+-		(mem_rngs->max_nr_ranges * sizeof(struct crash_mem_range)));
++		(mem_rngs->max_nr_ranges * sizeof(struct range)));
+ 
+ 	/*
+ 	 * Memory is allocated in size multiple of MEM_RANGE_CHUNK_SZ.
+@@ -98,7 +98,7 @@ static int __add_mem_range(struct crash_mem **mem_ranges, u64 base, u64 size)
+  */
+ static void __merge_memory_ranges(struct crash_mem *mem_rngs)
+ {
+-	struct crash_mem_range *ranges;
++	struct range *ranges;
+ 	int i, idx;
+ 
+ 	if (!mem_rngs)
+@@ -123,7 +123,7 @@ static void __merge_memory_ranges(struct crash_mem *mem_rngs)
+ /* cmp_func_t callback to sort ranges with sort() */
+ static int rngcmp(const void *_x, const void *_y)
+ {
+-	const struct crash_mem_range *x = _x, *y = _y;
++	const struct range *x = _x, *y = _y;
+ 
+ 	if (x->start > y->start)
+ 		return 1;
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 58d1b58a971e..d7ab4ad4c619 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -17,6 +17,7 @@
+ 
+ #include <linux/crash_core.h>
+ #include <asm/io.h>
++#include <linux/range.h>
+ 
+ #include <uapi/linux/kexec.h>
+ 
+@@ -214,14 +215,10 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+ /* Alignment required for elf header segment */
+ #define ELF_CORE_HEADER_ALIGN   4096
+ 
+-struct crash_mem_range {
+-	u64 start, end;
+-};
+-
+ struct crash_mem {
+ 	unsigned int max_nr_ranges;
+ 	unsigned int nr_ranges;
+-	struct crash_mem_range ranges[];
++	struct range ranges[];
+ };
+ 
+ extern int crash_exclude_mem_range(struct crash_mem *mem,
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 8347fc158d2b..f2758af86b93 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -1183,7 +1183,7 @@ int crash_exclude_mem_range(struct crash_mem *mem,
+ {
+ 	int i, j;
+ 	unsigned long long start, end, p_start, p_end;
+-	struct crash_mem_range temp_range = {0, 0};
++	struct range temp_range = {0, 0};
+ 
+ 	for (i = 0; i < mem->nr_ranges; i++) {
+ 		start = mem->ranges[i].start;
 -- 
-0-DAY CI Kernel Test Service
-https://01.org/lkp
+2.36.1
+
+
 
 _______________________________________________
 kexec mailing list
