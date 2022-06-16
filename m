@@ -4,85 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D0005C433EF
-	for <kexec@archiver.kernel.org>; Thu, 16 Jun 2022 02:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E6790C433EF
+	for <kexec@archiver.kernel.org>; Thu, 16 Jun 2022 02:59:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=0vmSQu58tWlTQYn1qgqS0lCC1Hw464jG5fpMSugYucs=; b=G2kV7R89uJjU9X
-	AkdZcSzKelpLp1TNcoY/tXIJ9eYtaTkVDqGY02T0n3BT+4P8t0DWmaDKStnxFiTzDVIpdKeWbU8Fr
-	4TO89OfjHzdn0BbH29vJbaEz2fhXkyOWYLOn34kmRXpriWwkI69X9xUmZ2YqkDUPf+zhjmiAhMdzJ
-	ewfC1i/khqG257W0bD6GF7O+8q96zhy93aedmubOdFHr6xtToAtqO01QF+jJYZnkq25NVJdpjkvrB
-	Tg3LOA+0lpe+ZR1hsjEAiVLeJaTT9gNyL1qDYUTfK63sitnU5a02gcj3nkmy6d3vORhD7xDrnYH+3
-	c8AQxw75S6Dy/7AOvBqQ==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=ln/L1jnJ0+41O7fi80wzluAhwkdaQ7SRcfBMTjeaTO8=; b=AQKAFBSCTdVViq
+	qWP2ibCkqYScefiT5yI1fk/6CmI7nAqOtsr1D+iAhUzMfB5qoiVQiOpOeZyBKiNzKLY5/k79o7gAb
+	kBJKjOXniCMcdCNEHvh56DcF5R8cUCeCfvzj2dDznnK0Wnoi89mGWMzosMRV8OCYhcmEMk6NF24Er
+	hZWlDmelyjLxkM4nEuHnJKplS4aTDsFAWeb72eiKzKTJmAI5y9wsLiwP+9eqd12FMrBVbuYpFq40m
+	e4uspkcN9hK0wtoOsQV/IqTRS0nkF9Sq/vVn2Z6Nh8EIcdAT7jTUWD2eGwiblb9IKWLoPKBm5uHJu
+	h93gqnihp5qLmW1DMFcw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1faB-0008Px-GZ; Thu, 16 Jun 2022 02:50:07 +0000
+	id 1o1fjS-000B8I-2b; Thu, 16 Jun 2022 02:59:42 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1fa7-0008NH-MB
-	for kexec@lists.infradead.org; Thu, 16 Jun 2022 02:50:05 +0000
+	id 1o1fjO-000B7U-Ow
+	for kexec@lists.infradead.org; Thu, 16 Jun 2022 02:59:40 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655347801;
+	s=mimecast20190719; t=1655348377;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=nm47lN81/en9RFa7PC7KN5HytoLN2v81StHx1wCGkys=;
-	b=Jm0KRbOtO1YQmtqsrG1n8YDueB1OspRCjl/ekxOy5PlRv99U36nQq6ndO57OweOj91WqpB
-	hN59zCaDG7wey69McjjnHE0omH24WJy2PnMnLaVd0QeydNRRutxlKhqglHsHBWD9VOcSe7
-	nM+6fqrn8z+Ugc6sNtEdcgz869JeGUg=
-Received: from mail-pf1-f197.google.com (mail-pf1-f197.google.com
- [209.85.210.197]) by relay.mimecast.com with ESMTP with STARTTLS
+	 in-reply-to:in-reply-to:references:references;
+	bh=SyBYL1pY81YOYBd6hVWvRLbn1C7svVUvtneGDVFIWeM=;
+	b=Mwz5n1BfWLTnfM1tqe34w6E1c22tAAOwKXYlshuIcoZCiKwJOev5hJF3HjTAEG6DAaL55Z
+	bxGGARYkGQrzsQWG4PyUK66e8Ezko6qypfowWlPRSalKusc9BdrIUKaUIoj2H80vHNJohe
+	yVCOyR7kP0V9Fd/aaKT3goSbdg88lt4=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-516-Ek1MVKBSOq6VdBLpxFIjRg-1; Wed, 15 Jun 2022 22:48:13 -0400
-X-MC-Unique: Ek1MVKBSOq6VdBLpxFIjRg-1
-Received: by mail-pf1-f197.google.com with SMTP id c191-20020a621cc8000000b0051bd765ffc5so168121pfc.21
-        for <kexec@lists.infradead.org>; Wed, 15 Jun 2022 19:48:13 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=nm47lN81/en9RFa7PC7KN5HytoLN2v81StHx1wCGkys=;
-        b=ZfPtOhxyEzxaVKIaubZTn6GiveJRxf2ZVwl1WOvAVrQtbVA5cerJzzHTByvL49qEaK
-         cec6tAf6CHbxMJNnPXIG59zc8R0aVKAqncN9LaVxcAWfRgFyNlkM8AMVE8iv1kTwfQSN
-         DfjHy7wwmpqI6LD9f6qgu/BK+HEgTmx4BQeBGEJMy4SIxcQ7AcsJGPyTFC1MQ50OnDtA
-         jBB7f5hco5nHfrTW0kumwNKUPStok1tWVqH8eLFkvKzxGEWrjiHQthSghN251WTa7gWE
-         4XvI+/EfmmhESPRZQoYQygaNePy2cQH1yIXu32TS6MVsCpq/GqcxPBDsqPj/oPhq9ISf
-         fypA==
-X-Gm-Message-State: AJIora+iTkjAjeUtXu0JqlsmIPXWWXu7WsI5kQoXiYNUKzN2xeDgU705
-	W1EIuFjtqA5uACT64DmezN8HhlI6Ebk5XRzNqhJpUmGxOwmR8BlVcAb18kLUDk/2+Xz8FMuEZaF
-	JkcfMITPz/FO3ao9dp2EU
-X-Received: by 2002:a17:90b:3845:b0:1e2:e175:be04 with SMTP id nl5-20020a17090b384500b001e2e175be04mr2713656pjb.50.1655347692640;
-        Wed, 15 Jun 2022 19:48:12 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vNxKCZA5WfH/QsdIwkuqJGtpe52oai0trhWKfXSevkSeFUljebxiedwE3bOi8tGXLV9uMwZA==
-X-Received: by 2002:a17:90b:3845:b0:1e2:e175:be04 with SMTP id nl5-20020a17090b384500b001e2e175be04mr2713631pjb.50.1655347692362;
-        Wed, 15 Jun 2022 19:48:12 -0700 (PDT)
-Received: from localhost.localdomain.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id h10-20020a170902f7ca00b001621ce92196sm354573plw.86.2022.06.15.19.48.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Wed, 15 Jun 2022 19:48:11 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: Tao Liu <ltao@redhat.com>
-Subject: [PATCH] kdump: round up the total memory size to 128M for crashkernel reservation
-Date: Thu, 16 Jun 2022 10:48:03 +0800
-Message-Id: <20220616024803.5091-1-ltao@redhat.com>
-X-Mailer: git-send-email 2.33.1
+ us-mta-528-e7JYHVoOPaK7Uddguyd0jw-1; Wed, 15 Jun 2022 22:59:33 -0400
+X-MC-Unique: e7JYHVoOPaK7Uddguyd0jw-1
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C5FE9802C17;
+	Thu, 16 Jun 2022 02:59:32 +0000 (UTC)
+Received: from localhost (ovpn-12-237.pek2.redhat.com [10.72.12.237])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B4881410DD8;
+	Thu, 16 Jun 2022 02:59:31 +0000 (UTC)
+Date: Thu, 16 Jun 2022 10:59:27 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Jonathan McDowell <noodles@fb.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	Dave Hansen <dave.hansen@linux.intel.com>,
+	"x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+	Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+	James Morris <jmorris@namei.org>,
+	"Serge E. Hallyn" <serge@hallyn.com>,
+	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+	"linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+	"linux-security-module@vger.kernel.org" <linux-security-module@vger.kernel.org>,
+	"kexec@lists.infradead.org" <kexec@lists.infradead.org>
+Subject: Re: [PATCH v5] x86/kexec: Carry forward IMA measurement log on kexec
+Message-ID: <Yqqcj0/j+fC6/K5v@MiWiFi-R3L-srv>
+References: <YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG>
+ <YmgjXZphkmDKgaOA@noodles-fedora-PC23Y6EG>
+ <YnuJCH75GrhVm0Tp@noodles-fedora.dhcp.thefacebook.com>
+ <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
+ <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
+ <60813f86e960d12ed3738531a14382769a061a02.camel@linux.ibm.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=ltao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <60813f86e960d12ed3738531a14382769a061a02.camel@linux.ibm.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220615_195003_840464_073CEA68 
-X-CRM114-Status: GOOD (  17.30  )
+X-CRM114-CacheID: sfid-20220615_195938_925980_0C29F733 
+X-CRM114-Status: GOOD (  35.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -99,80 +93,102 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The total memory size we get in kernel is usually slightly less than 2G
-with a 2G memory module machine. The main reason is bios/firmware
-reserve some area it will not export all memory as usable to Linux.
+On 06/13/22 at 05:01pm, Mimi Zohar wrote:
+> On Mon, 2022-06-13 at 10:30 +0000, Jonathan McDowell wrote:
+> > On kexec file load Integrity Measurement Architecture (IMA) subsystem
+> > may verify the IMA signature of the kernel and initramfs, and measure
+> > it. The command line parameters passed to the kernel in the kexec call
+> > may also be measured by IMA. A remote attestation service can verify
+> > a TPM quote based on the TPM event log, the IMA measurement list, and
+> > the TPM PCR data. This can be achieved only if the IMA measurement log
+> > is carried over from the current kernel to the next kernel across
+> > the kexec call.
+> > 
+> > powerpc and ARM64 both achieve this using device tree with a
+> > "linux,ima-kexec-buffer" node. x86 platforms generally don't make use of
+> > device tree, so use the setup_data mechanism to pass the IMA buffer to
+> > the new kernel.
+> > 
+> > (Mimi, Baoquan, I haven't included your reviewed-bys because this has
+> >  changed the compile guards around the ima_(free|get)_kexec_buffer
+> >  functions in order to fix the warning the kernel test robot found. I
+> >  think this is the right thing to do and avoids us compiling them on
+> >  platforms where they won't be used. The alternative would be to drop
+> >  the guards in ima.h that Mimi requested for v4.)hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh
+> > 
+> > Signed-off-by: Jonathan McDowell <noodles@fb.com>
+> > ---
+> > v5:
+> >  - Guard ima_(free|get)_kexec_buffer functions with
+> >    CONFIG_HAVE_IMA_KEXEC (kernel test robot)
+> >  - Use setup_data_offset in setup_boot_parameters and update rather than
+> >    calculating in call to setup_ima_state.
+> > v4:
+> >  - Guard ima.h function prototypes with CONFIG_HAVE_IMA_KEXEC
+> 
+> > diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+> > index 8d374cc552be..42a6c5721a43 100644
+> > --- a/drivers/of/kexec.c
+> > +++ b/drivers/of/kexec.c
+> > @@ -9,6 +9,7 @@
+> >   *  Copyright (C) 2016  IBM Corporation
+> >   */
+> >  
+> > +#include <linux/ima.h>
+> >  #include <linux/kernel.h>
+> >  #include <linux/kexec.h>
+> >  #include <linux/memblock.h>
+> > @@ -115,6 +116,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+> >  	return 0;
+> >  }
+> >  
+> > +#ifdef CONFIG_HAVE_IMA_KEXEC
+> >  /**
+> >   * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+> >   * @addr:	On successful return, set to point to the buffer contents.
+> > @@ -173,6 +175,7 @@ int ima_free_kexec_buffer(void)
+> >  
+> >  	return memblock_phys_free(addr, size);
+> >  }
+> > +#endif
+> 
+> Inside ima_{get,free}_kexec_buffer(), there's no need now to test
+> whether CONFIG_HAVE_IMA_KEXEC is enabled.
+> 
+>         if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+>                 return -ENOTSUPP;
 
-2G memory X86 kvm guest test result of the total_mem value:
-UEFI boot with ovmf: 0x7ef10000
-Legacy boot kvm guest: 0x7ff7cc00
-This is also a problem on arm64 UEFI booted system according to my test.
+Indeed. The #ifdef added by Jonathan is redundant. Not sure if the
+original IS_ENABLED(CONFIG_HAVE_IMA_KEXEC) checking inside
+ima_{get,free}_kexec_buffer() is intended. I ever reviewed below patch,
+the IS_ENABLED(CONFIG_XX) inside static function will make the function
+compiled, and will be optimized out if the CONFIG_XX is not enabled.
+However, it only has effect on static function. Here,
+ima_{get,free}_kexec_buffer() is not static, likely we should remove the
+inside IS_ENABLED() checking.
 
-Thus for example crashkernel=1G-2G:128M, if we have a 1G memory
-machine, we get total size 1023M from firmware then it will not fall
-into 1G-2G thus no memory reserved.  User will never know that, it is
-hard to let user to know the exact total value we get in kernel
+commit 4ece09be9913a87ff99ea347fd7e7adad5bdbc8f
+Author: Jisheng Zhang <jszhang@kernel.org>
+Date:   Wed Mar 23 16:06:39 2022 -0700
 
-An option is to use dmi/smbios to get physical memory size, but it's not
-reliable as well. According to Prarit hardware vendors sometimes screw
-this up. Thus round up total size to 128M to workaround this problem.
+    x86/setup: use IS_ENABLED(CONFIG_KEXEC_CORE) instead of #ifdef
+    
+    Replace the conditional compilation using "#ifdef CONFIG_KEXEC_CORE" by a
+    check for "IS_ENABLED(CONFIG_KEXEC_CORE)", to simplify the code and
+    increase compile coverage.
 
-This patch is a resend of [1] and rebased onto v5.19-rc2, and the
-original credit goes to Dave Young <dyoung@redhat.com>.
+Other than this one Mimi pointed out, this patch looks good to me, thx.
 
-[1]: http://lists.infradead.org/pipermail/kexec/2018-April/020568.html
+Reviewed-by: Baoquan He <bhe@redhat.com>
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
- kernel/crash_core.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 71122e01623c..f6c1ffce9d5a 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -9,6 +9,7 @@
- #include <linux/init.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-+#include <linux/sizes.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -43,6 +44,15 @@ static int __init parse_crashkernel_mem(char *cmdline,
- 					unsigned long long *crash_base)
- {
- 	char *cur = cmdline, *tmp;
-+	unsigned long long total_mem = system_ram;
-+
-+	/*
-+	 * Firmware sometimes reserves some memory regions for it's own use.
-+	 * so we get less than actual system memory size.
-+	 * Workaround this by round up the total size to 128M which is
-+	 * enough for most test cases.
-+	 */
-+	total_mem = roundup(total_mem, SZ_128M);
- 
- 	/* for each entry of the comma-separated list */
- 	do {
-@@ -87,13 +97,13 @@ static int __init parse_crashkernel_mem(char *cmdline,
- 			return -EINVAL;
- 		}
- 		cur = tmp;
--		if (size >= system_ram) {
-+		if (size >= total_mem) {
- 			pr_warn("crashkernel: invalid size\n");
- 			return -EINVAL;
- 		}
- 
- 		/* match ? */
--		if (system_ram >= start && system_ram < end) {
-+		if (total_mem >= start && total_mem < end) {
- 			*crash_size = size;
- 			break;
- 		}
--- 
-2.33.1
+> 
+> 
+> >  
+> >  /**
+> >   * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+> > diff --git a/include/linux/ima.h b/include/linux/ima.h
+> 
+> 
 
 
 _______________________________________________
