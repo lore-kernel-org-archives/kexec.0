@@ -4,89 +4,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5385C43334
-	for <kexec@archiver.kernel.org>; Thu, 16 Jun 2022 12:38:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 74CE0C433EF
+	for <kexec@archiver.kernel.org>; Thu, 16 Jun 2022 15:31:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=tPL1FjcytjpE1O2xalrQiIi+dxMkIa8LOdhMIDnBwsw=; b=i0Xd/iUV2+LMGI
-	R/QObAC+/PUEoitHnxRlcSgNas+Ch4E1WpwftctqeUMAmU0/Nl4kYNXpM7qU2WTGeJbY0gyXxj2NO
-	avzAK889vsk6aOnVvkkVU5N3k5q+pRt0ohOkWvbkTkaqVBj6D8/v9LGnq+HCDa4PT+DI95RLBZlEr
-	KZTTl3A5+11fTjNqzYUEZ+V5SvOhtsByVqIcg6ukpBJ1mti8CrYGVmeWu0bTy+zdIqWy3r+lEFfxH
-	Ay8PTVhMYlUohX+J1fBLqVJ59+lHVJsfNYrDURnA49rmhH5cWZx8ffbYpJjW6mTitUKq5Vr808OqN
-	wQduYyyJUFmY4+4b6suQ==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=7859wfyyo4bL2I23KCBxsCzTK3+6CukwP76mYO3Pgbg=; b=TFmYXEb1RrDZa0
+	WHeDVtiICDQecOUtP3noHtAoyb2eZDd9ZPgBWtMt8vpPclvFCVBQ6m1TWJkKD69J5d/aX38kWg34D
+	CnP1oed9uZshAfZLlIjoR0CFkzeC2LafEzqXR4iGCRdVo4Y8bVUrBYXh0doeuBTuHIm1NjISEcY4A
+	bCtTVIMe8ZXM44OWyoavbovrgutMMShtToKhDfCIRn6+/vdfC3n1/xXxZSS6h2hUkc2Yztpy2hXK9
+	MuFTrRacrD/vub0PraNHlHFgz17ZbvpDgjCZV7/VMiFhavZgdpz/evSFjx1Th0C2zbpxHz6ZNM/GE
+	a01m72axwug7vOvzYEWA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1olh-002JRY-HH; Thu, 16 Jun 2022 12:38:37 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1o1rSY-003CKA-Fs; Thu, 16 Jun 2022 15:31:02 +0000
+Received: from mx0b-00082601.pphosted.com ([67.231.153.30])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1old-002JQL-Kn
-	for kexec@lists.infradead.org; Thu, 16 Jun 2022 12:38:35 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655383111;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=J1U4+ccxioO2o2if5tY8m8K+V+bkZR3b9CE1FcjFWgs=;
-	b=jNi/8EaPSW9PsG7Sr8rvvxoW4N8VvFjJwrNLbHF74eFI/NbQFh2WF7FdkaZFWv+Yyr6p6j
-	pFAiK6Sda9oX67FzyUj36Jw0a+EvkkCsik+Ptow4Yp9WghQI7dBP+8X/YattYAItCqUe1Z
-	kGcRnfgG1IRbJ83HlhHK4MqT+FGXzZY=
-Received: from mail-qv1-f71.google.com (mail-qv1-f71.google.com
- [209.85.219.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-591-viccf7_qOiiHfmYB-fnVMQ-1; Thu, 16 Jun 2022 08:38:30 -0400
-X-MC-Unique: viccf7_qOiiHfmYB-fnVMQ-1
-Received: by mail-qv1-f71.google.com with SMTP id x17-20020a0cfe11000000b004645917e45cso1494657qvr.4
-        for <kexec@lists.infradead.org>; Thu, 16 Jun 2022 05:38:30 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=J1U4+ccxioO2o2if5tY8m8K+V+bkZR3b9CE1FcjFWgs=;
-        b=pfg+Y3qJ2qUdoaydIut2VFgwaZedA0+gjFaAc9enE/D3qlXzXpHEUZ18Hgs65jzuEh
-         EPRr0XTjEJ0gyE6DkVMTRwNMbBv3c/4FsDGoZW+S3lSYjgONUUez/oJJ1W5jjNy7Ftws
-         xUV3A0YbcXXA/mtdoLxWFc8+f2MXAQP5d4shXiCqVmWadSeFU6ymbBHnml5mYHB2mjV7
-         fPJsFtOqgnP4UBb8XFID0vkz0LIyq8x9vELForqRtUVL/t14n1jJG90TgyiUIrNQMND1
-         1HmAx5sHL5P1fcBVqNnENCZ2cIUaEEUIG0+RdMKSOwtrSlE+UbKpbF1aO3zZwMsklH7U
-         BFKw==
-X-Gm-Message-State: AJIora+f6M1zMVJOV1h5m1RbxIjPsCOz5FTz4YyO0ham4PTjQUwKi36A
-	2EbhtpQdy5s3g+SeeG11kUmIaZnRT4EPv/PxMHqmvwKPePNWP3qhlT2dO4/44bC3wdTFjsAglv+
-	Oi4qYQsiLrnZNFnUScBwi
-X-Received: by 2002:a05:6214:2484:b0:46e:55b5:9f56 with SMTP id gi4-20020a056214248400b0046e55b59f56mr3859048qvb.71.1655383109545;
-        Thu, 16 Jun 2022 05:38:29 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1twCUpPOsmHv4Nb/H9nsJ9UF88b4sWMLdzmeyX1akaa3jENfxyDO4SaAdIKpO9aT3IGPmk2fg==
-X-Received: by 2002:a05:6214:2484:b0:46e:55b5:9f56 with SMTP id gi4-20020a056214248400b0046e55b59f56mr3859025qvb.71.1655383109264;
-        Thu, 16 Jun 2022 05:38:29 -0700 (PDT)
-Received: from vschneid.remote.csb ([185.11.37.247])
-        by smtp.gmail.com with ESMTPSA id y3-20020a05620a44c300b006a75a8fd54asm1863828qkp.84.2022.06.16.05.38.27
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Thu, 16 Jun 2022 05:38:28 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: linux-kernel@vger.kernel.org,
-	kexec@lists.infradead.org,
-	linux-rt-users@vger.kernel.org
-Cc: Eric Biederman <ebiederm@xmission.com>,
-	Arnd Bergmann <arnd@arndb.de>,
-	Petr Mladek <pmladek@suse.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <jlelli@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
-Subject: [PATCH] panic, kexec: Don't mutex_trylock() in __crash_kexec()
-Date: Thu, 16 Jun 2022 13:37:09 +0100
-Message-Id: <20220616123709.347053-1-vschneid@redhat.com>
-X-Mailer: git-send-email 2.27.0
+	id 1o1rSU-003CJ6-Ar
+	for kexec@lists.infradead.org; Thu, 16 Jun 2022 15:31:00 +0000
+Received: from pps.filterd (m0109332.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25G5PoWX002362;
+	Thu, 16 Jun 2022 08:30:14 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=6mUMIxD95bnVnn6u1C9ogt5gxSh9IonaGsxPGFCXGb8=;
+ b=ppw3UFbyZTrA6QLMpYykkMOLG+PrxFn2LA3A4oKS0X/C7Wfq7f7UDjLluo/F/2GaPTDJ
+ BOkInPv4D6frvYxV9Y93RSiB5Mep145q6H897PiD0uWQ/1pw4oVpgODlImZFfXMKp0uE
+ /pb4f08p5ce3RQTH+ahlUJzCw91NBDLS51E= 
+Received: from nam11-co1-obe.outbound.protection.outlook.com (mail-co1nam11lp2173.outbound.protection.outlook.com [104.47.56.173])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3gqxc5w52s-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 16 Jun 2022 08:30:13 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=YqZ5k16jxSHcOrqqkj6zeaCRHzvSOnxhKqmHFm7YVf2F4z9tKRjv5u+l0Ll8JN+6USfLSqBQmZnNPUPtNBjq8qHWEng4Sf5usqtpp3OPcsDZFmzN3CuliC5521QqC/Iq5h7JgKWPwvhuRs8uG/CwVygb9KaQFW6L3DG7fixyGkq173VSYfqzje3GucMg377U67kaDKa0XYRw0a6ZlKea1qnynFDAChiPqECMZz73YBlllSKO89GGzbSGsIVrOdx0NDJqML4Evs2eeqS3qvuuU3wMybus922pzZlX8h8YyCTBQf90SlePwPj86mgSSzRoICSRRn2B1RCj4FnbZ60VvA==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=6mUMIxD95bnVnn6u1C9ogt5gxSh9IonaGsxPGFCXGb8=;
+ b=FwT447XMfUclT+FXyLDpU6ix65AAQ9EcJi4LqEAuHXdabJGFKGvaMjjtLTFrPrb1ZqwP2MnVyY3iLWAAsaVm4NHZGvEwpbE8BgMnQhtv/U5j/4RbepDizDohe9g0iigsgrd32akYDBqGs9TkNHAo19mcNVgwrg6XBvv73i0hHDObfimXfrtlMi2Ls6ietoFk/RAFfshgbZ3IbFCw9oOqEJjWmtEHYNR7evZuM7+f9pcIIFfJ1mn4JtjRdDiAxe3IUAAF0CdgalK2Xrfsv3swmXQNane1dRlvLr2izA7gi0yhPpaZ54RYMCfRfDdX603npu1wT63gD2vTmSGcV9lw0g==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com (2603:10b6:a03:379::12)
+ by BY3PR15MB4884.namprd15.prod.outlook.com (2603:10b6:a03:3c3::7) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Thu, 16 Jun
+ 2022 15:30:11 +0000
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::1dd0:f1c9:43d7:b7ab]) by SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::1dd0:f1c9:43d7:b7ab%8]) with mapi id 15.20.5353.015; Thu, 16 Jun 2022
+ 15:30:11 +0000
+From: Jonathan McDowell <noodles@fb.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Mimi
+ Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+        Baoquan He <bhe@redhat.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+Subject: [PATCH v6] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Topic: [PATCH v6] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Index: AQHYgZX3ey/aWxd0WE+EiviZrAsROg==
+Date: Thu, 16 Jun 2022 15:30:11 +0000
+Message-ID: <YqtMf9ivGR8Rkl8u@noodles-fedora.dhcp.thefacebook.com>
+References: <YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG>
+ <YmgjXZphkmDKgaOA@noodles-fedora-PC23Y6EG>
+ <YnuJCH75GrhVm0Tp@noodles-fedora.dhcp.thefacebook.com>
+ <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
+ <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
+In-Reply-To: <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cfde81c7-13e0-4161-f626-08da4fad1a43
+x-ms-traffictypediagnostic: BY3PR15MB4884:EE_
+x-microsoft-antispam-prvs:  <BY3PR15MB48844DE7D1166916313B12E3C1AC9@BY3PR15MB4884.namprd15.prod.outlook.com>
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  hS0HAlm7ZVZQ7FgoKpQZuq6sKkizGT+qzHavA06gtB5nTwgo1rctyh6wRVJrG+XUeQQJdUI+B+fod7j2/U9hSZKzmvhBhBfwtuQnP4Oq24SZxrr+dnouqjvmAawW1FdWzuXANbDSjyAtyixhj5uspQT3wwgL2hPfGtkfn3tJmCPzIQSIdrqZfJGASYmTOgr8lX+jBK8Rs6YBC9Dq8onusmfnM1i3Qq3h8QspVP5GAIhkpTEmQWosYR2gW0xU8rPpq3EkOULCibSd0LuscQlxRoi+I21GPH3vU4Ojgb/Z6rjXUzdfAJeTTGdVWezVit0S4mAMBkTSkn4CMJE4XcwdPFnAud0nAWVW+GAXtpmHk1YWHIGN4VSMlxWvfRosC+9whw0QVRfvlNrslpZ5Nnfo1G//N3c4nd7IUCLQZwHgqCYjprnhwgOdABXEf59fnUNNEP6K62dq1X05pmkGX0LsG2Oi1bR6YJk7RL0TcL4rvjcw1Cx/O/DGdplDhobREv4d0JV4p8HGOUtALnOFRhtV8JbViEauG3lJUKhVM84wFbUehp6bGkj4M9WSFh+AtbgtVvAJlFA28z2vJZXR0gu4iYbTGVJKuoqEyLK+crnTjbJY+7n0m4Euv46VucCL4apoI9a6cK7K3UfzASf9IeH6GPdyrlpxPplzTyMeo1IFC9mR2bz2rhE3hw0sPf6ismJKFACinoAtAQHHNl1eFRyL3FqAKSLR3Dmgj2YKnUvSIkMyDnmLTi/lmesiqdQAZS+PkU5dS7lFK9bnF11/eVl+VA==
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR15MB4552.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(366004)(2906002)(316002)(6486002)(26005)(8936002)(508600001)(91956017)(110136005)(54906003)(6506007)(4326008)(38100700002)(8676002)(66946007)(76116006)(66446008)(83380400001)(66476007)(64756008)(66556008)(30864003)(7416002)(5660300002)(86362001)(38070700005)(71200400001)(6512007)(9686003)(921005)(186003)(122000001)(46800400005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?obrQzwNkQ1DIF7t1tQ3zUqWvkG2tYJCt+5PzZSQ5k64rCyCSoR+H77sYDROi?=
+ =?us-ascii?Q?E6MCV+Qb5I4k3BThm8NbUfaBittvtRZMcH4N/GCd2R4lmFgyw272hamQSKsZ?=
+ =?us-ascii?Q?nMydE9wisKXr/iG9flSECE6xByztbcfspkK47nd6uP9qpJmGBRc4/LSEkmL3?=
+ =?us-ascii?Q?MDxHJFsT0rPNsDIXKKZxN5OdzM8yI51Zimp+zX6+EmMojBt2pni9xOlRX4jq?=
+ =?us-ascii?Q?UeakLHR2uEAKFtlbvfRuJJvORzKLh9fvQVDPzOsG91cgrPy5jejb2NTnGYmj?=
+ =?us-ascii?Q?zUZN6kGxRAh48cvMl1bqxs5ZbpmuPTG0PK6isgOkdBWwrQm65gfpo2oIDugH?=
+ =?us-ascii?Q?fzgEWnP1fWsxH9xEDIpSJLnH6Qu0BXrEGxBQ4aClhYZD8DJHgxAYVJjrILMG?=
+ =?us-ascii?Q?ZWcn6fYJvDkrojGzxeqfM9irkpMMkssHGa3wOWpekqzJxHF9S3DJB0ooQ17u?=
+ =?us-ascii?Q?w30NQcFboGkh+HBZ45TgW6ZZhu+UzEyadrjtkUkzGi/r6XK75ixa+FdHXkGD?=
+ =?us-ascii?Q?0P8HVcgdWUD0EDOX4nq0E5IFzL1lrczRnfOkpVOQThZdoHRtBUHsE7gz2NI5?=
+ =?us-ascii?Q?/l3oIIPzmyILbgMQxcIryQHq/Se0OczGN+2a5qDLu2qSnZ6o9bAktjPWfGn+?=
+ =?us-ascii?Q?Unhso/bcMsqc8OFgYLNMcXVDe49inGn+aYoHsqJ3rZHQ3/m6+SB3RSpBG35/?=
+ =?us-ascii?Q?tI+63y0VJGvzEBn5Xo4UVp3fdZM/xt4iULeTLVI7vD6Z5ef2eq6AScf7a5h6?=
+ =?us-ascii?Q?xjCsCC3eQ+aE2avdAjH0iXg+zMVGMy3ct/12a0reYmWK9ku51q4qiUKHkFN8?=
+ =?us-ascii?Q?WE5ZJVFtJjrVC7uRWEtwfdGPDPaJ2SsDnjRIZ0SXN5wOZKg8w62FZ1MYJng5?=
+ =?us-ascii?Q?093VwWqIIxvKEtqe2rMgwB1V9hxnSTG1iK/WD/sS+vRYqOqJA537uKxTHQWN?=
+ =?us-ascii?Q?UN9LiY/XWEOsJx1Iix+E83W7oMEvIMRCB5h4IL1lqM6hgKoeTjlrHkMWB/J7?=
+ =?us-ascii?Q?Iwa+R6DOAIGFGCEqOhjgzLT+1YQx/2jcibjwA1laGbfAlZUGk4p4/2PKCN58?=
+ =?us-ascii?Q?7Po3vIyojwS5vjDjMC7X7sLyE33ND1MPlgNqLrMVM7/4HNh+utYqQj0sYq9j?=
+ =?us-ascii?Q?TeJgz7aVSpBN5FCM6wqZnBgUQ5PxySb/fh7/AVgzdFDCRu2bHuJXBqQoJpLI?=
+ =?us-ascii?Q?1qQSA2X+litig3rOw3Mj2G5hP6xOcLmOpnCe3iihbbUXsEalL/zD9LEvImkR?=
+ =?us-ascii?Q?aCLXg31OcusR3PGGzwPUTKUAtDv+q9sueD0V6QiaNScNkjmK00V7ulxGJEpC?=
+ =?us-ascii?Q?s+8L5ypGu1Dr+AQC1S4A+InkAQuyVgGOiUiXJ4CIy/5b2uCePz6A8U+OiSmR?=
+ =?us-ascii?Q?1fUBMlY4xD1c2HABOMmDEhFI4jfyBScT/13VWg0R5J5Je0Jz4g7X2MYSZ4H/?=
+ =?us-ascii?Q?73qvmGwXyTiBltV/EhLiFcTFiLlCB5hdaA8JlxZ2tI+dRY0dZ9FMQQLohbvL?=
+ =?us-ascii?Q?IlvxWeVMV3yHVgBadQyFt/kXcnKIAC2QNmALFiWmqyVvhO20QXR2hzESIC8K?=
+ =?us-ascii?Q?CBoXNmQ79oUNZFcqYUPXp1lGjxkproROTw02Vn1G9hfpX9EVgg+ZGoUkwgch?=
+ =?us-ascii?Q?PNqcMo2wT8z43VTauGv1sieNvnSQlFRYU3VvL1ioXWlh/bhMoXrkaib7/sC4?=
+ =?us-ascii?Q?Gk5b9YOld8/OiJ/2YTNKzITwyueWMObKUvDzbCkmKcHw3Z6FIRgtY6YM8kt6?=
+ =?us-ascii?Q?No3d4zecXA=3D=3D?=
+Content-ID: <BAF0104D6155E14D8912CA2741FF70E1@namprd15.prod.outlook.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+X-OriginatorOrg: fb.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR15MB4552.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: cfde81c7-13e0-4161-f626-08da4fad1a43
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Jun 2022 15:30:11.4788
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: chfjgEynrKNcr/ADKXtrP7uOp8IP0OEuSItpxvrpLcsFteHQgI/BrUYtmEMfVKZ9
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BY3PR15MB4884
+X-Proofpoint-GUID: hA2CmOEnGCzn1XFTKmgU2_Q8IohHKJrH
+X-Proofpoint-ORIG-GUID: hA2CmOEnGCzn1XFTKmgU2_Q8IohHKJrH
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-16_11,2022-06-16_01,2022-02-23_01
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220616_053833_888792_17F4A7DE 
-X-CRM114-Status: GOOD (  27.46  )
+X-CRM114-CacheID: sfid-20220616_083058_533036_60619DB0 
+X-CRM114-Status: GOOD (  30.47  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,208 +167,370 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Attempting to get a crash dump out of a debug PREEMPT_RT kernel via an NMI
-panic() doesn't work. The cause of that lies in the PREEMPT_RT definition
-of mutex_trylock():
+On kexec file load Integrity Measurement Architecture (IMA) subsystem
+may verify the IMA signature of the kernel and initramfs, and measure
+it. The command line parameters passed to the kernel in the kexec call
+may also be measured by IMA. A remote attestation service can verify
+a TPM quote based on the TPM event log, the IMA measurement list, and
+the TPM PCR data. This can be achieved only if the IMA measurement log
+is carried over from the current kernel to the next kernel across
+the kexec call.
 
-	if (IS_ENABLED(CONFIG_DEBUG_RT_MUTEXES) && WARN_ON_ONCE(!in_task()))
-		return 0;
+powerpc and ARM64 both achieve this using device tree with a
+"linux,ima-kexec-buffer" node. x86 platforms generally don't make use of
+device tree, so use the setup_data mechanism to pass the IMA buffer to
+the new kernel.
 
-This prevents an NMI panic() from executing the main body of
-__crash_kexec() which does the actual kexec into the kdump kernel.
-The warning and return are explained by:
-
-  6ce47fd961fa ("rtmutex: Warn if trylock is called from hard/softirq context")
-  [...]
-  The reasons for this are:
-
-      1) There is a potential deadlock in the slowpath
-
-      2) Another cpu which blocks on the rtmutex will boost the task
-	 which allegedly locked the rtmutex, but that cannot work
-	 because the hard/softirq context borrows the task context.
-
-Use a pair of barrier-ordered variables to serialize loading vs executing a
-crash kernel.
-
-Tested by triggering NMI panics via:
-
-  $ echo 1 > /proc/sys/kernel/panic_on_unrecovered_nmi
-  $ echo 1 > /proc/sys/kernel/unknown_nmi_panic
-  $ echo 1 > /proc/sys/kernel/panic
-
-  $ ipmitool power diag
-
-Signed-off-by: Valentin Schneider <vschneid@redhat.com>
+Signed-off-by: Jonathan McDowell <noodles@fb.com>
+Reviewed-by: Mimi Zohar <zohar@linux.ibm.com> # IMA function definitions
+Reviewed-by: Baoquan He <bhe@redhat.com>
 ---
-Regarding the original explanation for the WARN & return:
-
-I don't get why 2) is a problem - if the lock is acquired by the trylock
-then the critical section will be run without interruption since it
-cannot sleep, the interrupted task may get boosted but that will not
-have any actual impact AFAICT.
-Regardless, even if this doesn't sleep, the ->wait_lock in the slowpath
-isn't NMI safe so this needs changing.
-
-I've thought about trying to defer the kexec out of an NMI (or IRQ)
-context, but that pretty much means deferring the panic() which I'm
-not sure is such a great idea.
+v6:
+ - Remove IS_ENABLED(CONFIG_HAVE_IMA_KEXEC) check from
+   ima_(free|get)_kexec_buffer now they have the ifdef guard.
+v5:
+ - Guard ima_(free|get)_kexec_buffer functions with
+   CONFIG_HAVE_IMA_KEXEC (kernel test robot)
+ - Use setup_data_offset in setup_boot_parameters and update rather than
+   calculating in call to setup_ima_state.
+v4:
+ - Guard ima.h function prototypes with CONFIG_HAVE_IMA_KEXEC
+v3:
+ - Rebase on tip/master
+ - Pull ima_(free|get)_kexec_buffer into x86 code
+ - Push ifdefs into functions where possible
+ - Reverse fir tree variable declarations
+ - Fix section annotation on ima_free_kexec_buffer (__meminit)
+ - Only allocate ima_setup_data space when IMA_KEXEC is enabled
+v2:
+ - Fix operation with EFI systems
 ---
- include/linux/kexec.h |  2 ++
- kernel/kexec.c        | 18 ++++++++++++++----
- kernel/kexec_core.c   | 41 +++++++++++++++++++++++++----------------
- kernel/kexec_file.c   | 14 ++++++++++++++
- 4 files changed, 55 insertions(+), 20 deletions(-)
+ arch/x86/Kconfig                      |  1 +
+ arch/x86/include/uapi/asm/bootparam.h |  9 ++++
+ arch/x86/kernel/e820.c                |  6 +--
+ arch/x86/kernel/kexec-bzimage64.c     | 42 +++++++++++++++++-
+ arch/x86/kernel/setup.c               | 62 +++++++++++++++++++++++++++
+ drivers/of/kexec.c                    |  9 ++--
+ include/linux/ima.h                   |  5 +++
+ include/linux/of.h                    |  2 -
+ security/integrity/ima/ima_kexec.c    |  2 +-
+ 9 files changed, 124 insertions(+), 14 deletions(-)
 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index ce6536f1d269..89bbe150752e 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -369,6 +369,8 @@ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index be0b95e51df6..670e0edc074f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2033,6 +2033,7 @@ config KEXEC_FILE
+ 	bool "kexec file based system call"
+ 	select KEXEC_CORE
+ 	select BUILD_BIN2C
++	select HAVE_IMA_KEXEC if IMA
+ 	depends on X86_64
+ 	depends on CRYPTO=y
+ 	depends on CRYPTO_SHA256=y
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index bea5cdcdf532..ca0796ac4403 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -11,6 +11,7 @@
+ #define SETUP_APPLE_PROPERTIES		5
+ #define SETUP_JAILHOUSE			6
+ #define SETUP_CC_BLOB			7
++#define SETUP_IMA			8
  
- extern struct kimage *kexec_image;
- extern struct kimage *kexec_crash_image;
-+extern bool panic_wants_kexec;
-+extern bool kexec_loading;
- extern int kexec_load_disabled;
+ #define SETUP_INDIRECT			(1<<31)
  
- #ifndef kexec_flush_icache_page
-diff --git a/kernel/kexec.c b/kernel/kexec.c
-index b5e40f069768..1253f4bb3079 100644
---- a/kernel/kexec.c
-+++ b/kernel/kexec.c
-@@ -94,14 +94,23 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
- 	/*
- 	 * Because we write directly to the reserved memory region when loading
- 	 * crash kernels we need a mutex here to prevent multiple crash kernels
--	 * from attempting to load simultaneously, and to prevent a crash kernel
--	 * from loading over the top of a in use crash kernel.
--	 *
--	 * KISS: always take the mutex.
-+	 * from attempting to load simultaneously.
- 	 */
- 	if (!mutex_trylock(&kexec_mutex))
- 		return -EBUSY;
+@@ -172,6 +173,14 @@ struct jailhouse_setup_data {
+ 	} __attribute__((packed)) v2;
+ } __attribute__((packed));
  
-+	/*
-+	 * Prevent loading a new crash kernel while one is in use.
-+	 *
-+	 * Pairs with smp_mb() in __crash_kexec().
-+	 */
-+	WRITE_ONCE(kexec_loading, true);
-+	smp_mb();
-+	if (READ_ONCE(panic_wants_kexec)) {
-+		ret = -EBUSY;
-+		goto out_unlock;
-+	}
++/*
++ * IMA buffer setup data information from the previous kernel during kexec
++ */
++struct ima_setup_data {
++	__u64 addr;
++	__u64 size;
++} __attribute__((packed));
 +
- 	if (flags & KEXEC_ON_CRASH) {
- 		dest_image = &kexec_crash_image;
- 		if (kexec_crash_image)
-@@ -165,6 +174,7 @@ static int do_kexec_load(unsigned long entry, unsigned long nr_segments,
+ /* The so-called "zeropage" */
+ struct boot_params {
+ 	struct screen_info screen_info;			/* 0x000 */
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index f267205f2d5a..9dac24680ff8 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1017,10 +1017,10 @@ void __init e820__reserve_setup_data(void)
+ 		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
  
- 	kimage_free(image);
- out_unlock:
-+	WRITE_ONCE(kexec_loading, false);
- 	mutex_unlock(&kexec_mutex);
- 	return ret;
+ 		/*
+-		 * SETUP_EFI is supplied by kexec and does not need to be
+-		 * reserved.
++		 * SETUP_EFI and SETUP_IMA are supplied by kexec and do not need
++		 * to be reserved.
+ 		 */
+-		if (data->type != SETUP_EFI)
++		if (data->type != SETUP_EFI && data->type != SETUP_IMA)
+ 			e820__range_update_kexec(pa_data,
+ 						 sizeof(*data) + data->len,
+ 						 E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 170d0fd68b1f..c63974e94272 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -186,11 +186,38 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
  }
-diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
-index 4d34c78334ce..932cc0d4daa3 100644
---- a/kernel/kexec_core.c
-+++ b/kernel/kexec_core.c
-@@ -933,6 +933,8 @@ int kimage_load_segment(struct kimage *image,
+ #endif /* CONFIG_EFI */
  
- struct kimage *kexec_image;
- struct kimage *kexec_crash_image;
-+bool panic_wants_kexec;
-+bool kexec_loading;
- int kexec_load_disabled;
- #ifdef CONFIG_SYSCTL
- static struct ctl_table kexec_core_sysctls[] = {
-@@ -964,24 +966,31 @@ late_initcall(kexec_core_sysctl_init);
-  */
- void __noclone __crash_kexec(struct pt_regs *regs)
++static void
++setup_ima_state(const struct kimage *image, struct boot_params *params,
++		unsigned long params_load_addr,
++		unsigned int ima_setup_data_offset)
++{
++#ifdef CONFIG_IMA_KEXEC
++	struct setup_data *sd = (void *)params + ima_setup_data_offset;
++	unsigned long setup_data_phys;
++	struct ima_setup_data *ima;
++
++	if (!image->ima_buffer_size)
++		return;
++
++	sd->type = SETUP_IMA;
++	sd->len = sizeof(*ima);
++
++	ima = (void *)sd + sizeof(struct setup_data);
++	ima->addr = image->ima_buffer_addr;
++	ima->size = image->ima_buffer_size;
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + ima_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++#endif /* CONFIG_IMA_KEXEC */
++}
++
+ static int
+ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 		      unsigned long params_load_addr,
+ 		      unsigned int efi_map_offset, unsigned int efi_map_sz,
+-		      unsigned int efi_setup_data_offset)
++		      unsigned int setup_data_offset)
  {
--	/* Take the kexec_mutex here to prevent sys_kexec_load
--	 * running on one cpu from replacing the crash kernel
--	 * we are using after a panic on a different cpu.
-+	/*
-+	 * This should be taking kexec_mutex before doing anything with the
-+	 * kexec_crash_image, but this code can be run in NMI context which
-+	 * means we can't even trylock.
- 	 *
--	 * If the crash kernel was not located in a fixed area
--	 * of memory the xchg(&kexec_crash_image) would be
--	 * sufficient.  But since I reuse the memory...
-+	 * Pairs with smp_mb() in do_kexec_load() and sys_kexec_file_load()
- 	 */
--	if (mutex_trylock(&kexec_mutex)) {
--		if (kexec_crash_image) {
--			struct pt_regs fixed_regs;
--
--			crash_setup_regs(&fixed_regs, regs);
--			crash_save_vmcoreinfo();
--			machine_crash_shutdown(&fixed_regs);
--			machine_kexec(kexec_crash_image);
--		}
--		mutex_unlock(&kexec_mutex);
-+	WRITE_ONCE(panic_wants_kexec, true);
-+	smp_mb();
-+	/*
-+	 * If we're panic'ing while someone else is messing with the crash
-+	 * kernel, this isn't going to end well.
-+	 */
-+	if (READ_ONCE(kexec_loading)) {
-+		WRITE_ONCE(panic_wants_kexec, false);
+ 	unsigned int nr_e820_entries;
+ 	unsigned long long mem_k, start, end;
+@@ -245,8 +272,15 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ #ifdef CONFIG_EFI
+ 	/* Setup EFI state */
+ 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+-			efi_setup_data_offset);
++			setup_data_offset);
++	setup_data_offset += sizeof(struct setup_data) +
++			sizeof(struct efi_setup_data);
+ #endif
++
++	/* Setup IMA log buffer state */
++	setup_ima_state(image, params, params_load_addr,
++			setup_data_offset);
++
+ 	/* Setup EDD info */
+ 	memcpy(params->eddbuf, boot_params.eddbuf,
+ 				EDDMAXNR * sizeof(struct edd_info));
+@@ -403,6 +437,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 				sizeof(struct setup_data) +
+ 				sizeof(struct efi_setup_data);
+ 
++	if (IS_ENABLED(CONFIG_IMA_KEXEC))
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      sizeof(struct ima_setup_data);
++
+ 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index bd6c6fd373ae..c9f375045e0d 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/dma-map-ops.h>
+ #include <linux/dmi.h>
+ #include <linux/efi.h>
++#include <linux/ima.h>
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+@@ -140,6 +141,11 @@ __visible unsigned long mmu_cr4_features __ro_after_init;
+ __visible unsigned long mmu_cr4_features __ro_after_init = X86_CR4_PAE;
+ #endif
+ 
++#ifdef CONFIG_IMA
++static phys_addr_t ima_kexec_buffer_phys;
++static size_t ima_kexec_buffer_size;
++#endif
++
+ /* Boot loader ID and version as integers, for the benefit of proc_dointvec */
+ int bootloader_type, bootloader_version;
+ 
+@@ -330,6 +336,59 @@ static void __init reserve_initrd(void)
+ }
+ #endif /* CONFIG_BLK_DEV_INITRD */
+ 
++static void __init add_early_ima_buffer(u64 phys_addr)
++{
++#ifdef CONFIG_IMA
++	struct ima_setup_data *data;
++
++	data = early_memremap(phys_addr + sizeof(struct setup_data),
++			      sizeof(*data));
++	if (!data) {
++		pr_warn("setup: failed to memremap ima_setup_data entry\n");
 +		return;
 +	}
-+
-+	if (kexec_crash_image) {
-+		struct pt_regs fixed_regs;
-+
-+		crash_setup_regs(&fixed_regs, regs);
-+		crash_save_vmcoreinfo();
-+		machine_crash_shutdown(&fixed_regs);
-+		machine_kexec(kexec_crash_image);
- 	}
- }
- STACK_FRAME_NON_STANDARD(__crash_kexec);
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 145321a5e798..4bb399e6623e 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -337,6 +337,18 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	if (!mutex_trylock(&kexec_mutex))
- 		return -EBUSY;
- 
-+	/*
-+	 * Prevent loading a new crash kernel while one is in use.
-+	 *
-+	 * Pairs with smp_mb() in __crash_kexec().
-+	 */
-+	WRITE_ONCE(kexec_loading, true);
-+	smp_mb();
-+	if (READ_ONCE(panic_wants_kexec)) {
-+		ret = -EBUSY;
-+		goto out_unlock;
++	if (data->size != 0) {
++		memblock_reserve(data->addr, data->size);
++		ima_kexec_buffer_phys = data->addr;
++		ima_kexec_buffer_size = data->size;
 +	}
++	early_memunmap(data, sizeof(*data));
++#else
++	pr_warn("Passed IMA kexec data, but CONFIG_IMA not set. Ignoring.\n");
++#endif
++}
 +
- 	dest_image = &kexec_image;
- 	if (flags & KEXEC_FILE_ON_CRASH) {
- 		dest_image = &kexec_crash_image;
-@@ -406,6 +418,8 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
- 	if ((flags & KEXEC_FILE_ON_CRASH) && kexec_crash_image)
- 		arch_kexec_protect_crashkres();
++#if defined(CONFIG_HAVE_IMA_KEXEC) && !defined(CONFIG_OF_FLATTREE)
++int __meminit ima_free_kexec_buffer(void)
++{
++	int rc;
++
++	if (ima_kexec_buffer_size == 0)
++		return -ENOENT;
++
++	rc = memblock_phys_free(ima_kexec_buffer_phys,
++				ima_kexec_buffer_size);
++	if (rc)
++		return rc;
++
++	ima_kexec_buffer_phys = 0;
++	ima_kexec_buffer_size = 0;
++
++	return 0;
++}
++
++int __init ima_get_kexec_buffer(void **addr, size_t *size)
++{
++	if (ima_kexec_buffer_size == 0)
++		return -ENOENT;
++
++	*addr = __va(ima_kexec_buffer_phys);
++	*size = ima_kexec_buffer_size;
++
++	return 0;
++}
++#endif
++
+ static void __init parse_setup_data(void)
+ {
+ 	struct setup_data *data;
+@@ -355,6 +414,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_EFI:
+ 			parse_efi_setup(pa_data, data_len);
+ 			break;
++		case SETUP_IMA:
++			add_early_ima_buffer(pa_data);
++			break;
+ 		default:
+ 			break;
+ 		}
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 8d374cc552be..d3ec430fa403 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -9,6 +9,7 @@
+  *  Copyright (C) 2016  IBM Corporation
+  */
  
-+out_unlock:
-+	WRITE_ONCE(kexec_loading, false);
- 	mutex_unlock(&kexec_mutex);
- 	kimage_free(image);
- 	return ret;
++#include <linux/ima.h>
+ #include <linux/kernel.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+@@ -115,6 +116,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
+ /**
+  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+  * @addr:	On successful return, set to point to the buffer contents.
+@@ -129,9 +131,6 @@ int ima_get_kexec_buffer(void **addr, size_t *size)
+ 	size_t tmp_size;
+ 	const void *prop;
+ 
+-	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+-		return -ENOTSUPP;
+-
+ 	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
+ 	if (!prop)
+ 		return -ENOENT;
+@@ -156,9 +155,6 @@ int ima_free_kexec_buffer(void)
+ 	size_t size;
+ 	struct property *prop;
+ 
+-	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+-		return -ENOTSUPP;
+-
+ 	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
+ 	if (!prop)
+ 		return -ENOENT;
+@@ -173,6 +169,7 @@ int ima_free_kexec_buffer(void)
+ 
+ 	return memblock_phys_free(addr, size);
+ }
++#endif
+ 
+ /**
+  * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 426b1744215e..ff4bd993e432 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -140,6 +140,11 @@ static inline int ima_measure_critical_data(const char *event_label,
+ 
+ #endif /* CONFIG_IMA */
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
++int ima_free_kexec_buffer(void);
++int ima_get_kexec_buffer(void **addr, size_t *size);
++#endif
++
+ #ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f0a5d6b10c5a..20a4e7cb7afe 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -441,8 +441,6 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 				   unsigned long initrd_load_addr,
+ 				   unsigned long initrd_len,
+ 				   const char *cmdline, size_t extra_fdt_size);
+-int ima_get_kexec_buffer(void **addr, size_t *size);
+-int ima_free_kexec_buffer(void);
+ #else /* CONFIG_OF */
+ 
+ static inline void of_core_init(void)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 13753136f03f..419dc405c831 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -137,7 +137,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ /*
+  * Restore the measurement list from the previous kernel.
+  */
+-void ima_load_kexec_buffer(void)
++void __init ima_load_kexec_buffer(void)
+ {
+ 	void *kexec_buffer = NULL;
+ 	size_t kexec_buffer_size = 0;
 -- 
-2.27.0
-
+2.36.1
 
 _______________________________________________
 kexec mailing list
