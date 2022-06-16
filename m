@@ -4,105 +4,93 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 4E9CCC43334
-	for <kexec@archiver.kernel.org>; Wed, 15 Jun 2022 21:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1D0BFC43334
+	for <kexec@archiver.kernel.org>; Thu, 16 Jun 2022 01:20:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
 	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:References:Cc:To:
-	Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
+	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
 	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=6jxz1A+YUrTC2pQ8hjUEq8u8Z4zgzd1Ckln1vx7jA7M=; b=AzFRSr65fCp44vcO6l2iLw02Ho
-	uN6xmpE3xH/iwQm+rgFl56Fl1zIM5Wgt60qbFWAW/jbV5CALmyt+aJpkQfwB/phnfu7OHo/v8Tlwt
-	VsW+drzaZhhSSkCQySqblmroJ4GqOUQvi4jmKYqMNkyHszHe3F9NHKfdbTEQSNlYmYB3rweCPYOU0
-	Wehdt1bsDvp1xh+wmW/3Tt3ZevS6qkP3iJyZ6kcIe3I67gfnII2sjbg2yktQ6+w0LGcIWfThuG4v6
-	xTutk7qAnU/odOh3Bqg/zkUmbKscImWefSsTdKpGA4Vpq0t5aBvx/E15i9i8w6OLPt/EUvMLqejK2
-	UfkV09+g==;
+	bh=pfVt0dLDbTiv4PpAtrwhKzxXpv1xoioA+IuFVvJFddY=; b=JUasVNXImWyjPS97PXTUYZHZnk
+	NEB3/FXrv95MADd6/f0glRTCT4UvZJcxEFNbZJSLJnJ33yy6V550R+g5LrtRcYVhIyGNKuNeQ80fR
+	EmqBzDxBDw9BNMbAqGYpabWNGrd8HuFpH+X2fuZ7WRiFMuAxtY686vL2NgiinU1n2joi3UOh4P54U
+	2f4f9/gsvklwtfdqcuA1SlwgtaYudx0As0BfCrG6ZuPlaaYiwbIMAqDjplNEiCvyv2eOsVb1X5VAO
+	dkvng6O0q4fxsODUqE5q+IyHHgTvC4An31PoWsBTiq6hKNwbY8pOPmEaAefIVlP+Zb4yHlJFQz8w7
+	dmjAN38w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1apP-00GViE-3e; Wed, 15 Jun 2022 21:45:31 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1o1eBT-00HNPS-EF; Thu, 16 Jun 2022 01:20:31 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1apL-00GVg0-Kz
-	for kexec@lists.infradead.org; Wed, 15 Jun 2022 21:45:30 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25FLQN2Q029281;
-	Wed, 15 Jun 2022 21:45:19 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=HxQqF5AZNyyBkcQ54ngNpw+Ul/ByxSDpXkpEm8RldsQ=;
- b=ONstXM/4eVnOTGO30A/GI36wBTr77Zh8QQoLJhR7Kbjvj3cFwlVIh9A++3Fn9yxLxnkA
- 6PBlAOEwD+1EWVR93ieXRPbgf1pkbV87lDTkzGK0ijroUbx7S5hUDSIj4FrvzFbVE9s7
- LtcAwrJXrkksbvDO/VzYIpQ2NNoeJSYh0NptiZwho/KNjGqHTaqX45stWN7qpNw9OcCR
- Ie9LwnnLCyJBJ8N4PcUv3TQklcjgrNG+pbnqm/ybarrFML4M1q1/sDIKS9A4KnsUQ/d3
- wwhxG6srJQ1w2Muhbkgxx1EF6ubNQQqn3/KJdS5Aa4bKRj9nOIFhwpQR87ANee4j5eMy fQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gqbn2ct61-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jun 2022 21:45:19 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25FLjJQx016477;
-	Wed, 15 Jun 2022 21:45:19 GMT
-Received: from ppma03wdc.us.ibm.com (ba.79.3fa9.ip4.static.sl-reverse.com [169.63.121.186])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gqbn2ct5t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jun 2022 21:45:19 +0000
-Received: from pps.filterd (ppma03wdc.us.ibm.com [127.0.0.1])
-	by ppma03wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25FLKtA3025401;
-	Wed, 15 Jun 2022 21:45:18 GMT
-Received: from b01cxnp22036.gho.pok.ibm.com (b01cxnp22036.gho.pok.ibm.com [9.57.198.26])
-	by ppma03wdc.us.ibm.com with ESMTP id 3gmjp9nrux-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 15 Jun 2022 21:45:18 +0000
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-	by b01cxnp22036.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25FLjHTE9831082
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 15 Jun 2022 21:45:17 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C521DAE05C;
-	Wed, 15 Jun 2022 21:45:17 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9B475AE05F;
-	Wed, 15 Jun 2022 21:45:17 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-	Wed, 15 Jun 2022 21:45:17 +0000 (GMT)
-Message-ID: <08cccbf2-ac65-bd73-d51f-8ea52af2e975@linux.ibm.com>
-Date: Wed, 15 Jun 2022 17:45:17 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 2/3] tpm/kexec: Duplicate TPM measurement log in of-tree
- for kexec
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        Nayna Jain <nayna@linux.ibm.com>, nasastry@in.ibm.com,
-        Frank Rowand <frowand.list@gmail.com>,
-        Eric Biederman <ebiederm@xmission.com>
-References: <20220614161258.1741427-1-stefanb@linux.ibm.com>
- <20220614161258.1741427-3-stefanb@linux.ibm.com>
- <CAL_JsqJG4MJHeu+7Ar0jWi-W6P01_EFtwiz56m_vtVy39uMtiw@mail.gmail.com>
- <af78f4b6-4cfb-5ea6-fdc9-dfcb73f4bc8c@linux.ibm.com>
- <20220615201453.GA1525994-robh@kernel.org>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20220615201453.GA1525994-robh@kernel.org>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: vWZ7LXPZfaU4xiCG9nOWskCpHAQ661-V
-X-Proofpoint-ORIG-GUID: E6u1F21zwS4lKSlhzff-uF4R6O-Wn1MI
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o1eBI-00HNKq-6X
+	for kexec@lists.infradead.org; Thu, 16 Jun 2022 01:20:22 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655342416;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=cUR6nWOeJsMYO8qiB/3GvSDR9XKhnZ2gA6LlsAwErmg=;
+	b=CEsjUeV8G4iB/eXtUksVky75RniU9zy3KLQiU+3RaJ/FBrmJQotOWmGjAECpGbvaCnrnYT
+	vpgXMF05QXdiYoTuC0usdY0KUGIKsW2EacydOQ+KWFlX9HsIVaT2ziZJpP4afUyVx7HRq+
+	/gBe7YboDzJsmXSFK8SdMfHgoMO33sc=
+Received: from mail-pg1-f199.google.com (mail-pg1-f199.google.com
+ [209.85.215.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-584-6GCAwWB_PvCpXbPJ6cuzIA-1; Wed, 15 Jun 2022 21:20:15 -0400
+X-MC-Unique: 6GCAwWB_PvCpXbPJ6cuzIA-1
+Received: by mail-pg1-f199.google.com with SMTP id 78-20020a630051000000b003fe25580679so7305309pga.9
+        for <kexec@lists.infradead.org>; Wed, 15 Jun 2022 18:20:15 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=cUR6nWOeJsMYO8qiB/3GvSDR9XKhnZ2gA6LlsAwErmg=;
+        b=jFZeiXqlRN56G0fupnllkVlRYtZ4WjRgFwTPDyUwLpBu8GHExdG2e7lVZqO8zqiQFA
+         6DPpYm7Vn+qoUcEGFy+hMrR92qrghW8tUC7A6FfHN82rBrLHWRtsLXvIgguJMFy8tthf
+         dBp2sC1/F0wTCz/z685wRE64lqzAsQUAbqYBqL7YUFjcTA1paI1MV7I4xUr0tfw3yJ5B
+         EDBSHgImXJX7JpwtN+pzzy5smOO89etBqEBNP6DTlU35z8epEffsfkEaR+77nVXRBu/z
+         z8YtHJv90CXmfWd5X5BbeJJLWT3Pu/LBtDygCYl++M+LPnn+Sp52vDrpwDAHGiJo5YMm
+         x4uQ==
+X-Gm-Message-State: AJIora8tOC5bX0y5Y2omBupVS2x+M5bqDU+siyqiMPqcF6Xm4QXPb77p
+	/gm/vulCtRZR6DOyXy+uWEzrJaSsgu7PFnQw8nSynERmcNcCZvWACUKy/WT59DBGz5dUBW/MsKm
+	pmm4jZ8GK6Kasgo8u47ed
+X-Received: by 2002:a17:90b:4a90:b0:1e8:626c:e1b2 with SMTP id lp16-20020a17090b4a9000b001e8626ce1b2mr2294016pjb.141.1655342414204;
+        Wed, 15 Jun 2022 18:20:14 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sqn3VKAg0dT9yU0B8MQXd7ZqDFnMewBiFUBEgCK9ufgmpXuBk8K/IcHn1AjJ01Rre8BgZIZA==
+X-Received: by 2002:a17:90b:4a90:b0:1e8:626c:e1b2 with SMTP id lp16-20020a17090b4a9000b001e8626ce1b2mr2293986pjb.141.1655342413815;
+        Wed, 15 Jun 2022 18:20:13 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id y14-20020a170902d64e00b0016397da033csm281330plh.62.2022.06.15.18.20.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 15 Jun 2022 18:20:13 -0700 (PDT)
+Date: Thu, 16 Jun 2022 09:15:06 +0800
+From: Coiby Xu <coxu@redhat.com>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
+	Michal Suchanek <msuchanek@suse.de>, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	Chun-Yi Lee <jlee@suse.com>
+Subject: Re: [PATCH v8 0/4] use more system keyrings to verify arm64 and s390
+ kexec kernel image signature
+Message-ID: <20220616011506.ymbz2xuhw3refasw@Rk>
+References: <20220512070123.29486-1-coxu@redhat.com>
+ <e382780002db9767671ca5a0213237f443243537.camel@linux.ibm.com>
+ <20220525095957.vvref4yeaidd5iww@Rk>
+ <d1a431e8cf69b3d892c118204705739a0ed907b7.camel@linux.ibm.com>
+ <20220527134315.afnuszqbfqkpnxpv@Rk>
+ <b3c87ce140b8d46659adcf07142e1d01ffbb2267.camel@linux.ibm.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.874,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-15_16,2022-06-15_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 adultscore=0 clxscore=1011 suspectscore=0 phishscore=0
- spamscore=0 impostorscore=0 mlxlogscore=999 lowpriorityscore=0
- malwarescore=0 mlxscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206150078
+In-Reply-To: <b3c87ce140b8d46659adcf07142e1d01ffbb2267.camel@linux.ibm.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=coxu@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220615_144528_099921_C2E10F23 
-X-CRM114-Status: GOOD (  66.82  )
+X-CRM114-CacheID: sfid-20220615_182020_590809_53D3CD35 
+X-CRM114-Status: GOOD (  33.24  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -119,272 +107,172 @@ Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+Hi Mimi,
 
+Thanks for carefully reviewing the covert letter and patches and
+suggesting various improvements! And sorry for the late reply as I need
+some time to learn more about secure boot, lockdown and IMA to better
+make sense of what you mean. 
 
-On 6/15/22 16:14, Rob Herring wrote:
-> On Wed, Jun 15, 2022 at 09:08:04AM -0400, Stefan Berger wrote:
+On Fri, May 27, 2022 at 12:45:54PM -0400, Mimi Zohar wrote:
+>
+>> new cover letter here to collect new feedback from you thus we
+>> can avoid unnecessary rounds of patch set.
+>
+>Agreed.   Much better.  Just a couple of nits.
+
+>
+>> Currently when loading a kernel image via the kexec_file_load() system
+>> call, x86 can make use of three keyrings i.e. the .builtin_trusted_keys,
+>> .secondary_trusted_keys and .platform keyrings to verify signature.
+>
+>Either "a signature" or "signatures".
+>
+>> However, arm64 and s390 can only use the .builtin_trusted_keys and
+>> .platform keyring respectively. For example, one resulting problem is
+>> kexec'ing a kernel image  would be rejected with the error "Lockdown:
+>> kexec: kexec of unsigned images is restricted; see man
+>> kernel_lockdown.7".
 >>
+>> This patch set enables arm64 and s390 to make use of the same keyrings
+>> as x86 to very the signature kexec'ed kernel image.
+>
+>  Fix "very".  Perhaps "verify the kexec'ed kernel image signature".
 >>
->> On 6/14/22 13:48, Rob Herring wrote:
->>> (),On Tue, Jun 14, 2022 at 10:13 AM Stefan Berger <stefanb@linux.ibm.com> wrote:
->>>>
->>>> The memory area of the TPM measurement log is currently not properly
->>>> duplicated for carrying it across kexec when an Open Firmware
->>>> Devicetree is used. Therefore, the contents of the log get corrupted.
->>>> Fix this for the kexec_file_load() syscall by allocating a buffer and
->>>> copying the contents of the existing log into it. The new buffer is
->>>> preserved across the kexec and a pointer to it is available when the new
->>>> kernel is started. To achieve this, store the allocated buffer's address
->>>> in the flattened device tree (fdt) under the name linux,tpm-kexec-buffer
->>>> and search for this entry early in the kernel startup before the TPM
->>>> subsystem starts up. Adjust the pointer in the of-tree stored under
->>>> linux,sml-base to point to this buffer holding the preserved log. The
->>>> TPM driver can then read the base address from this entry when making
->>>> the log available.
->>>
->>> This series really needs a wider Cc list of folks that worry about
->>> TPMs and kexec.
->>>
->>>> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>> Cc: Frank Rowand <frowand.list@gmail.com>
->>>> Cc: Eric Biederman <ebiederm@xmission.com>
->>>> ---
->>>>    drivers/of/device.c       |  24 +++++
->>>>    drivers/of/kexec.c        | 190 +++++++++++++++++++++++++++++++++++++-
->>>>    include/linux/kexec.h     |   6 ++
->>>>    include/linux/of.h        |   5 +
->>>>    include/linux/of_device.h |   3 +
->>>>    kernel/kexec_file.c       |   6 ++
->>>>    6 files changed, 233 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/drivers/of/device.c b/drivers/of/device.c
->>>> index 874f031442dc..0cbd47b1cabc 100644
->>>> --- a/drivers/of/device.c
->>>> +++ b/drivers/of/device.c
->>>> @@ -382,3 +382,27 @@ int of_device_uevent_modalias(struct device *dev, struct kobj_uevent_env *env)
->>>>           return 0;
->>>>    }
->>>>    EXPORT_SYMBOL_GPL(of_device_uevent_modalias);
->>>> +
->>>> +int of_tpm_get_sml_parameters(struct device_node *np, u64 *base, u32 *size)
->>>
->>> of/device.c is for functions that work on a struct device. This is not
->>> the case here.
+>> The recently introduced .machine keyring impacts the roots of trust by
+>> linking the .machine keyring to the .secondary keyring. The roots of
+>> trust of different keyring are described as follows,
 >>
->> Can I put it into platform.c?
-> 
-> That's for struct platform_device things.
-> Should I create a new file then?
+>"of ... keyring" -> "for the ... keyrings"
 
->> I should have probably mentioned it but this function here is a copy of code
->> from tpm_read_log_of() from here: https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/eventlog/of.c#L38
+Thanks for catching those typos and improving the wording!
+
+>
+>> .builtin_trusted_keys:
 >>
->> 3/3 refactors the code in tpm/eventlog/of.c to make use of this new function
->> then to avoid code duplication. Therefore, this code here is more general
->> than necessary at this point. Maybe I should do the move in a patch of its
->> own?
-> 
-> Maybe you should leave that function there and call it?
-
-The function would only be callable if TPM subsystem was enabled. That 
-doesn't sound right to make kexec depend on the TPM subsystem.
-
-I could just implement a less generic function that only handles the 
-vTPM case then and not target this function to be called from the TPM 
-subsystem via the refactoring in 3/3.
-
-> 
-> Generally, subsystem specific things go into the subsystems. However,
-> there's a few special cases like kexec now. That was added primarily to
-> avoid per arch duplication.
-> 
-> I've never looked at the TPM code, so sorry, I don't have more specific
-> suggestions.
-> 
->>>> +{
->>>> +       const u32 *sizep;
->>>> +       const u64 *basep;
->>>> +
->>>> +       sizep = of_get_property(np, "linux,sml-size", NULL);
->>>> +       basep = of_get_property(np, "linux,sml-base", NULL);
->>>
->>> Any new properties need a schema. For chosen, that's located here[1].
->>> The more common pattern for similar properties is <base size>.
->>>
->>> Don't use of_get_property(), but the typed functions instead.
+>> Keys may be built into the kernel during build or inserted into memory
+>> reserved for keys post build. The root of trust is the kernel build i.e.
+>> a Linux distribution vendor. On a physical system in a secure boot
+>> environment, this trust is rooted in hardware.
+>
+>Please look at my response to your question below.
+>
 >>
->> I think this was done due to the little endian and big endian distinction
->> below.
-> 
-> 
-> Right.
-> 
->>>> +       if (sizep == NULL && basep == NULL)
->>>> +               return -ENODEV;
->>>> +       if (sizep == NULL || basep == NULL)
->>>> +               return -EIO;
->>>
->>> Do we really need the error distinction?
+>> .machine:
 >>
->> As I mentioned, this code is a copy from the TPM subsystem. There it does
->> make a distinction because similar functions for acpi and efi make a
->> distinction as well although this particular function's return code doesn't
->> matter in the end.
+>> If the end-users choose to trust the keys provided by first-stage UEFI
+>> bootloader shim i.e. Machine Owner Keys (MOK keys), the keys will be
+>> added to this keyring and this keyring is linked to the
+>
+> Grammatically "and this"  needs to be fixed.
+
+How about 
+"the keys will be added to this keyring which  is linked to the..."?
+
+>
+>> .secondary_trusted_keys keyring as same as the .builtin_trusted_keys
+>> keyring. Shim has built-in keys from a Linux distribution or the
+>> end-users-enrolled keys. So the root of trust of this keyring is either
+>> a Linux distribution vendor or the end-users.
 >>
->> The code I am referring to is this here:
+>> .secondary_trusted_keys:
 >>
->> https://elixir.bootlin.com/linux/latest/source/drivers/char/tpm/eventlog/common.c#L85
+>> Certificates signed by keys on the .builtin_trusted_keys, .machine, or
+>> existing keys on the .secondary_trusted_keys keryings may be loaded
+>> onto the .secondary_trusted_keys keyring. This establishes a signature
+>> chain of trust based on keys loaded on either the .builtin_trusted_keys
+>> or .machine keyrings, if configured and enabled.
 >>
->>>
->>>> +
->>>> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->>>> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->>>> +               *size = be32_to_cpup((__force __be32 *)sizep);
->>>> +               *base = be64_to_cpup((__force __be64 *)basep);
->>>> +       } else {
->>>> +               *size = *sizep;
->>>> +               *base = *basep;
->>>
->>> What? Some platforms aren't properly encoded? Fix the firmware.
+>> .platform:
 >>
->> It's been like this for years...
-> 
-> Great! :(
-> 
-> I'm confused how IBM needs this? Only a LE machine with LE DT encoding
-> would need this. With Power being historically BE and only recently
-> (though I guess that's a few years now) supporting LE, how did the DT
-> encoding become LE for this yet not for everything else in DT?
-> 
+>> The .platform keyring consist of UEFI db and MOK keys which are used by
+>> shim to verify the first boot kernel's image signature. If end-users
+>> choose to trust MOK keys and the kernel has the .machine keyring
+>> enabled, the .platform keyring only consists of UEFI db keys since the
+>> MOK keys are added to the .machine keyring instead. Because the
+>> end-users could also enroll there own MOK keys, the root of trust could
+>
+>"there" -> "their"
+>
+>> be hardware or the end-users.
+>
+>It's always "hardware".  "or" -> "and"?
 
+Thanks for catching these issues as well!
 
-For some reason the TPM log of a hardware TPM I believe is written in 
-little endian. I am not aware of the history of it.
-
-> [...]
-> 
-> 
->>>> +/**
->>>> + * tpm_post_kexec - Make stored TPM log buffer available in of-tree
->>>> + */
->>>> +static int __init tpm_post_kexec(void)
->>>> +{
->>>> +       struct property *newprop;
->>>> +       struct device_node *np;
->>>> +       void *phyaddr;
->>>> +       size_t size;
->>>> +       u32 oflogsize;
->>>> +       u64 unused;
->>>> +       int ret;
->>>> +
->>>> +       ret = tpm_get_kexec_buffer(&phyaddr, &size);
->>>> +       if (ret)
->>>> +               return 0;
->>>> +
->>>> +       /*
->>>> +        * If any one of the following steps fails then the next kexec will
->>>> +        * cause issues due to linux,sml-base pointing to a stale buffer.
->>>> +        */
->>>> +       np = of_find_node_by_name(NULL, "vtpm");
->>>
->>> This seems pretty IBM specific.
+>
+><snip>
+>
+>> >>
+>> >> The root of trusts of the keys in the %.builtin_trusted_keys and
+>> >> secondary_trusted_keys keyring is a Linux distribution vendor.
+>> >
+>> >The root of trust for each keyring should be described separately.
+>> >
+>> >.builtin_trusted_keys:
+>> >
+>> >For example,
+>> >
+>> >Keys may be built into the kernel during build or inserted into memory
+>> >reserved for keys post build.  In both of these cases, trust is based
+>> >on verification of the kernel image signature.
 >>
->> Yes, it is and I am not sure what to do about it. Should I cover parts of
->> the function with a #ifdef CONFIG_PPC_PSERIES ?
-> 
-> #ifdef's aren't great. IS_ENABLED() is a bit better, but really put
-> implementation specific things in implementation specific code.
-> 
-> Perhaps each TPM implementation needs its own hook to do stuff?
-> 
+>> Correct me if I'm wrong, without secure boot, there is no verification
+>> of the kernel image signature so the root of trust should be trust on
+>> the kernel builder.
+>
+>No, basing the signature verification on secure boot could not have
+>been upstreamed.  
 
+Thanks for correcting me! I was a bit confused by secure boot and
+lockdown and also forgot enabling lockdown automatically when secure
+boot is enabled is a downstream feature. Btw, when testing the 4th s390
+patch, I found s390 skip signature validation when secure boot is not
+enabled, is this a mistake?
 
- From what I know it's only vTPM with of-tree that needs this.
+// arch/s390/kernel/machine_kexec_file.c
+#ifdef CONFIG_KEXEC_SIG
+int s390_verify_sig(const char *kernel, unsigned long kernel_len)
+{
+	/* Skip signature verification when not secure IPLed. */
+	if (!ipl_secure_flag)
+		return 0;
 
->>>> +       if (!np)
->>>> +               goto err_free_memblock;
->>>> +
->>>> +       /* logsize must not have changed */
->>>> +       if (of_tpm_get_sml_parameters(np, &unused, &oflogsize) < 0)
->>>> +               goto err_free_memblock;
->>>> +       if (oflogsize != size)
->>>> +               goto err_free_memblock;
->>>> +
->>>> +       /* replace linux,sml-base with new physical address of buffer */
->>>> +       ret = -ENOMEM;
->>>> +       newprop = kzalloc(sizeof(*newprop), GFP_KERNEL);
->>>> +       if (!newprop)
->>>> +               goto err_free_memblock;
->>>> +
->>>> +       newprop->name = kstrdup("linux,sml-base", GFP_KERNEL);
->>>> +       if (!newprop->name)
->>>> +               goto err_free_newprop;
->>>> +
->>>> +       newprop->length = sizeof(phyaddr);
->>>> +
->>>> +       newprop->value = kmalloc(sizeof(u64), GFP_KERNEL);
->>>> +       if (!newprop->value)
->>>> +               goto err_free_newprop_struct;
->>>> +
->>>> +       if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->>>> +           of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->>>> +               ret = -ENODEV;
->>>> +               goto err_free_newprop_struct;
->>>> +       } else {
->>>> +               *(u64 *)newprop->value = (u64)phyaddr;
->>>> +       }
->>>> +
->>>> +       ret = of_update_property(np, newprop);
->>>
->>> Just FYI for now, there's some work happening on a better API for
->>> writing nodes and properties.
->>
->> Ok.
->>
->>>
->>>> +       if (ret) {
->>>> +               pr_err("Could not update linux,sml-base with new address");
->>>> +               goto err_free_newprop_struct;
->>>> +       }
->>>> +
->>>> +       goto exit;
->>>> +
->>>> +err_free_newprop_struct:
->>>> +       kfree(newprop->name);
->>>> +err_free_newprop:
->>>> +       kfree(newprop);
->>>> +err_free_memblock:
->>>> +       memblock_phys_free((phys_addr_t)phyaddr, size);
->>>> +exit:
->>>> +       tpm_of_remove_kexec_buffer();
->>>> +
->>>> +       return ret;
->>>> +}
->>>> +postcore_initcall(tpm_post_kexec);
->>>
->>> Would be better if this is called explicitly at the right time when
->>> needed rather than using an initcall.
->>
->> The 'when needed' would be the TPM subsystem. However, if I was to make it
->> dependent on the TPM subsystem we would loose the TPM log if we were not to
->> kexec into a kernel with TPM subsystem or the TPM driver wasn't activated. I
->> wanted to be able to preserve the log even if a kexec'ed kernel didn't
->> support or activate the TPM driver and then a subsequent one again has it
->> activated...
-> 
-> Sounds like a TPM problem the TPM code should deal with. Or a scenario
-> that just shouldn't be supported. IDK
+> IMA is based on policy, regardeless of the secure
+>boot mode.  A builtin policy may be specified on the boot command line,
+>but should be replaced with a more constrained custom policy [1].
+>Unlike the builtin policy rules, the architecture specific rules are
+>persistent[2].   The architecture specific rules are normally tied to
+>the secure boot modes.  On OpenPOWER, the architecture specific
+>"measure" rules are dependent on the trusted boot mode.
+>
+>The current IMA policy rules can be viewed by cat'ing
+><securityfs>/ima/policy.
 
-It only comes down to from where tpm_post_kexec() is called. The 
-postcore_initcall() solves the issue this series is addressing in a more 
-general way than if it's called from the TPM subsystem. If this initcall 
-is unacceptable then I guess we would have to call if from the TPM 
-subsystem - no other choice then.
+Thanks for explaining IMA to me! There is still the question of what's
+the root of trust for .builtin_trusted_keys when there is no real
+signature verification. For example, when CONFIG_KEXEC_SIG is enabled,
+the default IMA policy is to not appraise kexec image. Since lockdown is
+not enabled by default, there is no real verification as
+kimage_validate_signature succeeds even when kexec_image_verify_sig
+fails. 
 
+>
+>[1] The builtin policies are not LSM aware.  The policy rules need to
+>be constrained to avoid integrity violations.
+>
+>[2] arch specific policy rules:
+>security/integrity/ima/ima_efi.c, arch/powerpc/kernel/ima_arch.c
+>
+>thanks,
+>
+>Mimi
+>
 
-   Thanks.
-     Stefan
+-- 
+Best regards,
+Coiby
+
 
 _______________________________________________
 kexec mailing list
