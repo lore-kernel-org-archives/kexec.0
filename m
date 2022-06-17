@@ -4,82 +4,76 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id B7291C43334
-	for <kexec@archiver.kernel.org>; Fri, 17 Jun 2022 08:27:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 87849C433EF
+	for <kexec@archiver.kernel.org>; Fri, 17 Jun 2022 09:34:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6GvaxLVoXn/dCL4IRGaZcuwZgNyOjXy7Jo+F7SMGc3c=; b=MIBcLB0H8fg7Y0
-	KIM1jB/UOPwwBhweC3E7SaFsO9tn7VRii69EAppyMlxy8dHWYae3GW+fBsjrq6hiGndebUvJ1gu5E
-	xUUFNUJPIDaGvHYgXCmrKvEXPf+X+6FpV8Livetcx09DcwrY98WYs6hPN2fTmzVL4D3r0BbO3sDga
-	t4c0VawZa0T4MHZBNdwzJ8xVyHriNyIUEIbh6ejFDJBPKd5pL/3F4qgdOSPPOEi4XxM2bkC76MAjM
-	G4eQi4RBrdycWRdXQbPcx4fEyFd9cUoWmZTw5od61AZmt8+V5PI81pqYHuOUAHqSONMH5GCBJcYK5
-	whkYA7S6l37+LZCPiuUw==;
+	List-Owner; bh=0lGQJYT/rbiObjskaxdtBit4R9GDS3F5CGZ1aXnts+0=; b=3kUoP/5FW2Njic
+	H0sPwMbryZvwZxpqSQaK24m3O4qZaU8lA+pUHlTLFWCskTQgUHbohUWF3kcOO5fn+OcdZHsfa1IHd
+	bY40ep3yz7eNdTpbPU/+vk1rLKEJcpEn+Nvho5dE0E6HbNl/W319qmJO2cCn5tAeAAnkwB4jp+asW
+	R3Io3fIVJdO9V0IVopbvrLGsVtyXzzDKZvbYQzA0UTcBNwI0Ji5D+JOGTBXhcsAAOMzwF+kQcleWp
+	42Pww0b58vV54QCpwCPhk6AteP+8rmaJxe2GRFLB4+8cagjFstXQb6BZt9DD1xrdKeizxWY2CAkP7
+	hf7eGHfuRagPkmqdU+zQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o27J4-006IE2-Ig; Fri, 17 Jun 2022 08:26:18 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1o28Mz-006hmU-DG; Fri, 17 Jun 2022 09:34:25 +0000
+Received: from smtp-out2.suse.de ([195.135.220.29])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o27J0-006IC0-Gh
-	for kexec@lists.infradead.org; Fri, 17 Jun 2022 08:26:16 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655454373;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	id 1o28Mx-006hjX-1O; Fri, 17 Jun 2022 09:34:24 +0000
+Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
+	by smtp-out2.suse.de (Postfix) with ESMTP id 1AAE51F9F2;
+	Fri, 17 Jun 2022 09:34:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.de; s=susede2_rsa;
+	t=1655458456; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=hTHK8486lIIQN7NgMgmBqHT4WzEpoAXoz+nMVgMQJgE=;
-	b=bkg17Hgm/Mb48+Yzv0qDrha0bW2n9fJ2VrhTYPYTlYWak6xlIItAUyb0cLbK6iDygaejDq
-	KL5M2kpIBvEPTDwuIseaV9UQ9SIm41WcBVD1M9kZp+y8pFuxWVXgQjkWT/CdtIUlow8SMZ
-	Oi01ruXzv/TPMHCS9HIDvKRCxgfbJTQ=
-Received: from mimecast-mx02.redhat.com (mx3-rdu2.redhat.com
- [66.187.233.73]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-463-Oa1fsMubMqqWgbWDxIYN4Q-1; Fri, 17 Jun 2022 04:26:09 -0400
-X-MC-Unique: Oa1fsMubMqqWgbWDxIYN4Q-1
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.rdu2.redhat.com [10.11.54.7])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	bh=h/9jqjrWjBq+e8n5l8yHB+T+IMUuGKVC8FC3ULDVvXU=;
+	b=FTPJFKA8FeF9eqe9UAx56v0OCaYJQ98NUpJd/Fyu/841zDYpmp7V+vrQsAaMyJTaLIHpDY
+	jW9QIC1yFPElNwZ+OaFngDZ+N+49bTldw4qwJSKasPgVqLc42YFrrwQd8+Us4hOBxatBb+
+	0uyd0BqBYJUd6fO4ZwcpZKpnlDzIxvI=
+DKIM-Signature: v=1; a=ed25519-sha256; c=relaxed/relaxed; d=suse.de;
+	s=susede2_ed25519; t=1655458456;
+	h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
+	 mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=h/9jqjrWjBq+e8n5l8yHB+T+IMUuGKVC8FC3ULDVvXU=;
+	b=EFEK7kcQRPw9Mm0TJwQfiIJswOmHv9RkqbMuwSjmowmKP+lRPUGBTalCTRC2LKzeJOIXfD
+	gvMyeDTeYhGX+rCg==
+Received: from kitsune.suse.cz (kitsune.suse.cz [10.100.12.127])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C34AC3C10223;
-	Fri, 17 Jun 2022 08:26:08 +0000 (UTC)
-Received: from localhost (ovpn-12-144.pek2.redhat.com [10.72.12.144])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 43C211415106;
-	Fri, 17 Jun 2022 08:26:07 +0000 (UTC)
-Date: Fri, 17 Jun 2022 16:26:02 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Zhen Lei <thunder.leizhen@huawei.com>, msalter@redhat.com,
-	ctatman@redhat.com
-Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
-	"H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	by relay2.suse.de (Postfix) with ESMTPS id B54492C141;
+	Fri, 17 Jun 2022 09:34:15 +0000 (UTC)
+Date: Fri, 17 Jun 2022 11:34:14 +0200
+From: Michal =?iso-8859-1?Q?Such=E1nek?= <msuchanek@suse.de>
+To: Mimi Zohar <zohar@linux.ibm.com>
+Cc: Coiby Xu <coxu@redhat.com>, kexec@lists.infradead.org,
+	linux-arm-kernel@lists.infradead.org, Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	Chun-Yi Lee <jlee@suse.com>, stable@vger.kernel.org,
+	keyrings@vger.kernel.org, linux-security-module@vger.kernel.org,
 	Catalin Marinas <catalin.marinas@arm.com>,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Chen Zhou <dingguo.cz@antgroup.com>,
-	John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>
-Subject: Re: [PATCH 1/5] arm64: kdump: Provide default size when
- crashkernel=Y,low is not specified
-Message-ID: <20220617082602.GE234358@MiWiFi-R3L-srv>
-References: <20220613080932.663-1-thunder.leizhen@huawei.com>
- <20220613080932.663-2-thunder.leizhen@huawei.com>
+	James Morse <james.morse@arm.com>,
+	AKASHI Takahiro <takahiro.akashi@linaro.org>,
+	open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v8 3/4] arm64: kexec_file: use more system keyrings to
+ verify kernel image signature
+Message-ID: <20220617093414.GA4660@kitsune.suse.cz>
+References: <20220512070123.29486-1-coxu@redhat.com>
+ <20220512070123.29486-4-coxu@redhat.com>
+ <e44bb6b11573838417b5d561173c27a1571c94b6.camel@linux.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20220613080932.663-2-thunder.leizhen@huawei.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.7
+In-Reply-To: <e44bb6b11573838417b5d561173c27a1571c94b6.camel@linux.ibm.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220617_012615_102240_44F963A4 
-X-CRM114-Status: GOOD (  32.12  )
+X-CRM114-CacheID: sfid-20220617_023423_267487_1CFEE4D3 
+X-CRM114-Status: GOOD (  23.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -96,98 +90,68 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/13/22 at 04:09pm, Zhen Lei wrote:
-> To be consistent with the implementation of x86 and improve cross-platform
-> user experience. Try to allocate at least 256 MiB low memory automatically
-> when crashkernel=Y,low is not specified.
+Hello,
+
+On Thu, Jun 09, 2022 at 07:15:27PM -0400, Mimi Zohar wrote:
+> On Thu, 2022-05-12 at 15:01 +0800, Coiby Xu wrote:
+> > Currently, a problem faced by arm64 is if a kernel image is signed by a
+> > MOK key, loading it via the kexec_file_load() system call would be
+> > rejected with the error "Lockdown: kexec: kexec of unsigned images is
+> > restricted; see man kernel_lockdown.7".
+> > 
+> > This happens because image_verify_sig uses only the primary keyring that
+> > contains only kernel built-in keys to verify the kexec image.
 > 
-> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-> ---
->  Documentation/admin-guide/kernel-parameters.txt |  8 +-------
->  arch/arm64/mm/init.c                            | 12 +++++++++++-
->  2 files changed, 12 insertions(+), 8 deletions(-)
+> From the git history it's clear that .platform keyring was upstreamed
+> during the same open window as commit 732b7b93d849 ("arm64: kexec_file:
+> add kernel signature verification support").   Loading the MOK keys
+> onto the .platform keyring was upstreamed much later.  For this reason,
+> commit 732b7b93d849 only used keys on the  .builtin_trusted_keys
+> keyring.   This patch is now addressing it and the newly upstreamed
+> .machine keyring.
 > 
-> diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-> index 8090130b544b070..61b179232b68001 100644
-> --- a/Documentation/admin-guide/kernel-parameters.txt
-> +++ b/Documentation/admin-guide/kernel-parameters.txt
-> @@ -843,7 +843,7 @@
->  			available.
->  			It will be ignored if crashkernel=X is specified.
->  	crashkernel=size[KMG],low
-> -			[KNL, X86-64] range under 4G. When crashkernel=X,high
-> +			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
->  			is passed, kernel could allocate physical memory region
->  			above 4G, that cause second kernel crash on system
->  			that require some amount of low memory, e.g. swiotlb
-> @@ -857,12 +857,6 @@
->  			It will be ignored when crashkernel=X,high is not used
->  			or memory reserved is below 4G.
->  
-> -			[KNL, ARM64] range in low memory.
-> -			This one lets the user specify a low range in the
-> -			DMA zone for the crash dump kernel.
-> -			It will be ignored when crashkernel=X,high is not used
-> -			or memory reserved is located in the DMA zones.
-> -
->  	cryptomgr.notests
->  			[KNL] Disable crypto self-tests
->  
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 339ee84e5a61a0b..5390f361208ccf7 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
->  #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
->  #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
->  
-> +/*
-> + * This is an empirical value in x86_64 and taken here directly. Please
-> + * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
-> + * details.
-> + */
-> +#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
-> +	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
+> Only using the .builtin_trusted_keys is the problem statement, which
+> should be one of the first lines of the patch description, if not the
+> first line.
+> 
+> > 
+> > This patch allows to verify arm64 kernel image signature using not only
+> > .builtin_trusted_keys but also .platform and .secondary_trusted_keys
+> > keyring.
+> 
+> Please remember to update this to include the .machine keyring.
+> 
+> > 
+> > Fixes: 732b7b93d849 ("arm64: kexec_file: add kernel signature verification support")
+> 
+> Since the MOK keys weren't loaded onto the .platform keyring until much
+> later, I would not classify this as a fix.
 
-About this default low value, 256M, I am not sure if it can be lowered
-down. We have Ampere Mt-Jade systems in Redhat and their biggest
-contiguous memory is less than 256M under low 4G when the firmware 32bit
-option is disabled. Obviously this will fail the default crashkernel,low
-value.
+It's definitely a fix
 
-I am not sure how common the 32bit option is disabled. If it's an
-important feature and widely set, it need be taken into consideration
-when deciding this default crashkernel,low value. Otherwise, the
-crashkernel=xM won't work in Ampere Mt-Jade system with 32bit option
-disabled, and people need specify crashkernel=xM,high,
-crashkernel=yM,low explicitly. The omission of crashkernel,low is also
-not allowed in the case.
+ea93102f32244e3f45c8b26260be77ed0cc1d16c v4.19-rc1 Fix kexec forbidding kernels signed with keys in the secondary keyring to boot
+732b7b93d849f8a44886ead563dfb6adec7f4419 v5.0-rc1 arm64: kexec_file: add kernel signature verification support
 
-Hi, Mark and Christopher,
+the arm code does not reflect the preexisting use of the secondary keyring.
 
-Add you in CC. If you happen to know contact person from Ampere, please
-also feel free to add them in this thread.
+278311e417be60f7caef6fcb12bda4da2711ceff v5.1-rc1 kexec, KEYS: Make use of platform keyring for signature
+
+This was added a bit later, indeed.
+
+Cherry-picking the changes one by one to the arm code you can get
+separate fixes tag for each change.
+
+Replacing the arm code with the x86 code by code deduplication you get
+whatever is the state of the art in the kernel in question. In 5.0 you
+get the secondary keyring, and since 5.1 you also get the platform
+keyring.
+
+Nonetheless, it's a fix for the arm code which is deficient from the
+very start.
 
 Thanks
-Baoquan
 
->  static int __init reserve_crashkernel_low(unsigned long long low_size)
->  {
->  	unsigned long long low_base;
-> @@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
->  		 * is not allowed.
->  		 */
->  		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
-> -		if (ret && (ret != -ENOENT))
-> +		if (ret == -ENOENT)
-> +			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
-> +		else if (ret)
->  			return;
->  
->  		crash_max = CRASH_ADDR_HIGH_MAX;
-> -- 
-> 2.25.1
-> 
+Michal
 
 
 _______________________________________________
