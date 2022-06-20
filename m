@@ -4,93 +4,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 6C88FC43334
-	for <kexec@archiver.kernel.org>; Mon, 20 Jun 2022 07:01:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1780BC43334
+	for <kexec@archiver.kernel.org>; Mon, 20 Jun 2022 07:43:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:To:From:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=DmdgnUbWbM08OEQ5Z8+p1OQrGz/h3TLe6kUecX2fSjg=; b=LNW0ltimMrKJbA
-	/sDaI/HV6NB4qMaOCxy87bhMLh8XzXG0uLVheUCeQZQA5xTWTvv9MuDWlEM5ajihcE55C9wL95Lgs
-	Kd3NvMWd3pNLJ1td/xp+qcff6KIYLi8LO9gjusNL7L30k8fUbB/kuV5Js3ZGt3YPpj+QeTukG3W0z
-	W9t0w1d+am4DDE7UNAPR9A60wG7lfq39mKS2yHNimyc9x6ZPY6ZWKLhawG+rVNOX3SRi8w+pkZx3V
-	xATENEaft10ihRl+enGiXAUQ9FDa8iFLSLHBaB13fQr+oTwSkpYTr31wUcyp0qV5eThfNgzmyarJo
-	lE0me8m1QcMbfk9iPuPA==;
+	List-Owner; bh=L9Bw+ENPSj983ETRwmP/kp37rXll+MaiL+f4T9Tzn2o=; b=Zh8sH1DqXq8aQ4
+	bFOjnNDtOhfN7Tiayn6+ODvcwrISM7gAYqu/xdaOstg+Imfzdc9f0YlYVRsMfvy6Nxt7J5b1BS+XT
+	l+H8tIxTm+Kekxg0kcHRdqmGqmcsjqkJopoCjJ4avj3w3wUMTq0guxWKUCpFCS008kSLi8S65BNlF
+	dn+K6NDNO3j1jAz9r5/pIYiRYS7QIfwSCJpy7eMzt4fir7TEhAFHcK6fLckPhT5gHS+VZrFIUK8KZ
+	YQbvgHs1u0BU9+BzuWkcN/hjusa5k4GBhSLQNC5MVtEyC0XpkzcIaz1Mk1NrTQA286LKUf8MzoKEs
+	8Sgh/vL3jtiAy+9x3frw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3BPk-00GZJu-TA; Mon, 20 Jun 2022 07:01:36 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1o3C40-00Gj4L-VT; Mon, 20 Jun 2022 07:43:12 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3BPi-00GZIN-8y
-	for kexec@lists.infradead.org; Mon, 20 Jun 2022 07:01:35 +0000
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25K51ogI022738;
-	Mon, 20 Jun 2022 07:01:31 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : content-transfer-encoding
- : mime-version; s=pp1; bh=CvWZ3PajcfKopraRcXPzIMHbKK7uQcUw2xmW8pvp/uc=;
- b=TVt7vfFpu6BxgGmbELCBah9J+boehgy5Celn+JN8a8E6TgF3OUfAZz+AUTGDAmbHzwMU
- jZWG5DQ8dI8C2sXpSqUmIbmLhItQGh9Hq3qbB8/Sc2a7KImNxXoBDo8EXlQbBMPidhEN
- zV3FZNGIeo5lyA/yYmiyXqLqMUqatgD7Tax+/cgtUWC+JusherW2L8XzZfvuHXnLVi0L
- TVzKM8aY7+G1ZnDyZO7mURliDHFxsiWWUP2zq/KwfieDrhjNqESgZi3l+ndPIQHr7+fA
- 0li4V1OgKZJ7L1/2UfiU4rcIK4d8wES9sgUoXNU6D4gtfIOCqJoN81FqEUaXO6p6hWto nw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gsrs78hwh-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jun 2022 07:01:30 +0000
-Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25K6J0Op012619;
-	Mon, 20 Jun 2022 07:01:30 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gsrs78hvr-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jun 2022 07:01:30 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25K6pgfO015474;
-	Mon, 20 Jun 2022 07:01:28 GMT
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (d06relay09.portsmouth.uk.ibm.com [9.149.109.194])
-	by ppma04ams.nl.ibm.com with ESMTP id 3gs6b92213-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Mon, 20 Jun 2022 07:01:28 +0000
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-	by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25K71PXk21758282
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Mon, 20 Jun 2022 07:01:25 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6EED6A4040;
-	Mon, 20 Jun 2022 07:01:25 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1AD98A4051;
-	Mon, 20 Jun 2022 07:01:23 +0000 (GMT)
-Received: from sjain014.ibmuc.com (unknown [9.43.109.136])
-	by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Mon, 20 Jun 2022 07:01:22 +0000 (GMT)
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-To: linuxppc-dev@ozlabs.org, mpe@ellerman.id.au
-Subject: [PATCH v5 5/5] powerpc/crash hp: add crash page helper functions
-Date: Mon, 20 Jun 2022 12:31:06 +0530
-Message-Id: <20220620070106.93141-6-sourabhjain@linux.ibm.com>
-X-Mailer: git-send-email 2.36.1
-In-Reply-To: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
-References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: nukIKnCn3mNVHLBsmtRKzcEA84kDLeoN
-X-Proofpoint-ORIG-GUID: gtPalnjuF1zQAaVygnwnHvw6Emg0ScDv
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o3C3x-00Gj0n-TJ
+	for kexec@lists.infradead.org; Mon, 20 Jun 2022 07:43:11 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655710986;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=ZUNmq+SKtB8IP20c0SQTXtLsVBfIbeKTb4f/dBL0tMs=;
+	b=jR/b3rV8eurNz4QKqKu6mFWRO5M1l1c2hIqjdwaPxCgWG8xmI9D3eudN1qqaD8j6UDAFtP
+	Ftcz5QZbU66N2YVC1t29OROLIVV7aGdgvIoaUaeT0R+OHkUdYoZqrhe05YVjK+ui5Dv6eP
+	MNnFGCv4uxardCvuFc2VQEjn/I4uakg=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-569-czD0OaIeNQauw7EnkZNbLw-1; Mon, 20 Jun 2022 03:43:04 -0400
+X-MC-Unique: czD0OaIeNQauw7EnkZNbLw-1
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id E0D45811E81;
+	Mon, 20 Jun 2022 07:43:02 +0000 (UTC)
+Received: from localhost (ovpn-13-50.pek2.redhat.com [10.72.13.50])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 76A10C44AE3;
+	Mon, 20 Jun 2022 07:43:01 +0000 (UTC)
+Date: Mon, 20 Jun 2022 15:42:58 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Chen Zhou <dingguo.cz@antgroup.com>,
+	John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>
+Subject: Re: [PATCH 3/5] arm64: kdump: Remove some redundant checks in
+ map_mem()
+Message-ID: <YrAlAsgBcudz77pu@MiWiFi-R3L-srv>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-4-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-20_04,2022-06-17_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015 mlxscore=0
- bulkscore=0 impostorscore=0 mlxlogscore=999 phishscore=0 malwarescore=0
- priorityscore=1501 suspectscore=0 lowpriorityscore=0 adultscore=0
- spamscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206200030
+Content-Disposition: inline
+In-Reply-To: <20220613080932.663-4-thunder.leizhen@huawei.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220620_000134_470381_18F92B50 
-X-CRM114-Status: GOOD (  16.28  )
+X-CRM114-CacheID: sfid-20220620_004310_054617_69F73AF2 
+X-CRM114-Status: GOOD (  22.49  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,46 +90,83 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, bhe@redhat.com, kexec@lists.infradead.org, ldufour@linux.ibm.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Define arch_[un]map_crash_pages functions to avoid build issues due to
-undefined arch specific function to access crash memory pages.
+On 06/13/22 at 04:09pm, Zhen Lei wrote:
+> arm64_memblock_init()
+> 	if (!IS_ENABLED(CONFIG_ZONE_DMA/DMA32))
+> 		reserve_crashkernel()
+> 			//initialize crashk_res when
+> 			//"crashkernel=" is correctly specified
+> paging_init()
+> 	map_mem()
+> 
+> As shown in the above pseudo code, the crashk_res.end can only be
+> initialized to non-zero when both "!IS_ENABLED(CONFIG_ZONE_DMA/DMA32)"
+> and crash_mem_map are true. So some checks in map_mem() can be adjusted
+> or optimized.
 
-A temporary patch to avoid build issues may need some changes in
-generic code to avoid this.
+LGTM,
 
-The issue is under discussion:
-https://lkml.org/lkml/2022/6/20/22
+Acked-by: Baoquan He <bhe@redhat.com>
 
-Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
----
- arch/powerpc/kexec/core_64.c | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-index 373cb46bcc0e..d833fa96dcfa 100644
---- a/arch/powerpc/kexec/core_64.c
-+++ b/arch/powerpc/kexec/core_64.c
-@@ -492,6 +492,13 @@ int update_cpus_node(void *fdt)
- 
- #if defined(CONFIG_HOTPLUG_CPU)
- 
-+void *arch_map_crash_pages(unsigned long paddr, unsigned long size)
-+{
-+	return __va(paddr);
-+}
-+
-+void arch_unmap_crash_pages(void **ptr) { }
-+
- int crash_hotplug_support(void) { return 1; }
- 
- /**
--- 
-2.36.1
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  arch/arm64/mm/mmu.c | 25 +++++++++++--------------
+>  1 file changed, 11 insertions(+), 14 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+> index 626ec32873c6c36..6028a5757e4eae2 100644
+> --- a/arch/arm64/mm/mmu.c
+> +++ b/arch/arm64/mm/mmu.c
+> @@ -529,12 +529,12 @@ static void __init map_mem(pgd_t *pgdp)
+>  
+>  #ifdef CONFIG_KEXEC_CORE
+>  	if (crash_mem_map) {
+> -		if (IS_ENABLED(CONFIG_ZONE_DMA) ||
+> -		    IS_ENABLED(CONFIG_ZONE_DMA32))
+> -			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+> -		else if (crashk_res.end)
+> +		if (crashk_res.end)
+>  			memblock_mark_nomap(crashk_res.start,
+>  			    resource_size(&crashk_res));
+> +		else if (IS_ENABLED(CONFIG_ZONE_DMA) ||
+> +			 IS_ENABLED(CONFIG_ZONE_DMA32))
+> +			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
+>  	}
+>  #endif
+>  
+> @@ -571,16 +571,13 @@ static void __init map_mem(pgd_t *pgdp)
+>  	 * through /sys/kernel/kexec_crash_size interface.
+>  	 */
+>  #ifdef CONFIG_KEXEC_CORE
+> -	if (crash_mem_map &&
+> -	    !IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32)) {
+> -		if (crashk_res.end) {
+> -			__map_memblock(pgdp, crashk_res.start,
+> -				       crashk_res.end + 1,
+> -				       PAGE_KERNEL,
+> -				       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> -			memblock_clear_nomap(crashk_res.start,
+> -					     resource_size(&crashk_res));
+> -		}
+> +	if (crashk_res.end) {
+> +		__map_memblock(pgdp, crashk_res.start,
+> +			       crashk_res.end + 1,
+> +			       PAGE_KERNEL,
+> +			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
+> +		memblock_clear_nomap(crashk_res.start,
+> +				     resource_size(&crashk_res));
+>  	}
+>  #endif
+>  }
+> -- 
+> 2.25.1
+> 
 
 
 _______________________________________________
