@@ -4,179 +4,103 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C5392C43334
-	for <kexec@archiver.kernel.org>; Fri, 17 Jun 2022 21:22:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 77A12C43334
+	for <kexec@archiver.kernel.org>; Mon, 20 Jun 2022 05:08:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
-	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=3aEC3cQmUFrUdhhqGa2hI3F3+sXdRZo+JJzVQopcBN4=; b=nlJzAEfXo6GQ8g
-	IE+tIFMwYFY5t11zvFcv2CarSgV5N5giK2/Cr598nARu8j7YVaUJ12T7eEUQolLlqKdSvWIPq/yq6
-	Cv/r3+QplvCLPepM/z+v+ONL2zo3ktWXQnSSxOupmsV6KcIaULiftI1Lmb3ueA405oWBfIXDPU9Mz
-	SHDbt8iIHC2okLQiML9A5GC6JugXDv24cQsquF4LcSWdJWwi+QHMdaYQFK31iNbP26rj5i3X9jN9R
-	amgBh5+9HKNurtII8BUgh9h8HCl+WxqiZkZl+hbOcDFeN/z1r6pOKYjaJA3G76GtnHNCtUj0pE2Gz
-	BouJfKSByVBOuil3MIjQ==;
+	List-Owner; bh=y9PCRGUId+RANCMS25X+kCQlk6x2hrQeBQx9SZv+/+M=; b=2qpktZqw3GPnQf
+	TBbbK/5+IBKiH7sSa+mIESs666nM2/AnZIqf09Uuals+ymSyNk5dQFM984YvJ/PrY2yZ2JBn8Bpdd
+	JtquP99rHochXrsmbTT12ePKLuCA2gSx+gF/g9mfiFRWSFu5wWU1kPEwtNhY45N5lKzPyfGiMc6T4
+	iSeXTwBf7up8To3DfXnShipkcvmNmqqHC2FsLBxtpbHzjkd6xHi8KMHthB1VJF6IVEV5vV+zrCkpK
+	LHQLeHKxbw2OGbFujt5H8IPeBtJY2RHuJ4O9AZWYqry767oH9RJKvRRWB+3XhwGPJjq6w/ATyVqTL
+	PxPnToUPrzh898Mrh2QA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o2JPx-009E0X-5x; Fri, 17 Jun 2022 21:22:13 +0000
-Received: from mga17.intel.com ([192.55.52.151])
+	id 1o39dl-00GEHP-FY; Mon, 20 Jun 2022 05:07:57 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o2JMo-009CXP-GS
-	for kexec@lists.infradead.org; Fri, 17 Jun 2022 21:19:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
-  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
-  t=1655500738; x=1687036738;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=e7BqudSyAinua5MrcNoUP9jYm5BsNEssZ6GwS7P6a9M=;
-  b=KLD/M2rx2BaW0XNP0UFugKromy85PYfT1V72K5bTxgczyqhr8TuqfVwL
-   QWCfkIBym7FFXJ0LJo0dvhkrW3XgfKzS71dPrED+1EJwQGM0wyG3flSi+
-   utosyXf6Ujfr6ecLUJDYBhwER9SpbXcNiLCHGiF4j8meaAJ0+i+CUmC/1
-   qczKAeQHTvxXy1RvS8q9pGQEhkHZopd62a3fw87xzh/Xl0rNisZ1J0YGx
-   oixRQxTHzdP0TPSwOS60thjChp0JUsVO4MRCnCBkGvzm5EWG6jyyzK+op
-   bQ4Ooe0QKnQ/eyQcXJwIMMiiB91oViRUqoh4CwfxidbJsRfMBm1mW+bJo
-   Q==;
-X-IronPort-AV: E=McAfee;i="6400,9594,10380"; a="260018760"
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="260018760"
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 17 Jun 2022 14:18:55 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.92,306,1650956400"; 
-   d="scan'208";a="728498921"
-Received: from fmsmsx602.amr.corp.intel.com ([10.18.126.82])
-  by fmsmga001.fm.intel.com with ESMTP; 17 Jun 2022 14:18:55 -0700
-Received: from fmsmsx601.amr.corp.intel.com (10.18.126.81) by
- fmsmsx602.amr.corp.intel.com (10.18.126.82) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27; Fri, 17 Jun 2022 14:18:55 -0700
-Received: from fmsedg601.ED.cps.intel.com (10.1.192.135) by
- fmsmsx601.amr.corp.intel.com (10.18.126.81) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2308.27 via Frontend Transport; Fri, 17 Jun 2022 14:18:55 -0700
-Received: from NAM10-MW2-obe.outbound.protection.outlook.com (104.47.55.107)
- by edgegateway.intel.com (192.55.55.70) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.1.2308.27; Fri, 17 Jun 2022 14:18:55 -0700
-ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
- b=JNhDKesqqhUud9Tb8jkSTGiwAmLvRVKGG6Ph3WRzb6g9s/PW3vEr3RALi1PfEBKmGh5e2QRRr+zXlRYs0Fg+A9k3G4xF9cjGylZ9i4XG6Ufa/dVHvOssysPADVXxr42gH13GgPs5k9NCFlIYOGVYxvP9ePPvxf6uOShNDrsrLDGE5rrFeeyySS4ZkM3zU2SFc/N4wa3UxgCtRLvjPHbHSq7pqOF0TZJwu5aoGYB9B6E6FJDmXyxPwyNmOTn0+F8psIZpTs1cYD900+MkMCPuxFvjE7mAarZb+EreAdghEdRpNy0FQZmTYS9oiyUG8MuBb8InOY0iskhnlzqbfachIA==
-ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
- s=arcselector9901;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
- bh=e7BqudSyAinua5MrcNoUP9jYm5BsNEssZ6GwS7P6a9M=;
- b=A4xhjwpctBGgA15YdNyV9vrof6rh/Ze96CYtypvcBj/H9HxMtwNCjPR0BBo7slTMWbK9qfiKHF1117Q/Qb2qiN1hJCsMPmsETGiMLKX/Qy4xHNkIntXqfo2r+GEf3sxjRzOG+i8Dui+RXcPO73BzPB7o5hoc4dsOt0tGnbq+iOABoQrzmbK6cjZrm7oHnmvJ7uLyosc/ujwDMzZKhXyugioXSABcsTpAeJDODHVD3Cvwpm6ceATaIBCDiv2xElivkfn42hxlHulbyk44mARw0l5hINTRlvtdLr/xzr4KuLpfCToVO2+e9MlRwY83QOeDIaq5HzEr27Ry0Ji7mHAByQ==
-ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
- smtp.mailfrom=intel.com; dmarc=pass action=none header.from=intel.com;
- dkim=pass header.d=intel.com; arc=none
-Received: from MWHPR11MB1392.namprd11.prod.outlook.com (2603:10b6:300:24::14)
- by MN2PR11MB3824.namprd11.prod.outlook.com (2603:10b6:208:f4::18) with
- Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5353.15; Fri, 17 Jun
- 2022 21:18:47 +0000
-Received: from MWHPR11MB1392.namprd11.prod.outlook.com
- ([fe80::6463:8e61:8405:30f4]) by MWHPR11MB1392.namprd11.prod.outlook.com
- ([fe80::6463:8e61:8405:30f4%12]) with mapi id 15.20.5353.016; Fri, 17 Jun
- 2022 21:18:47 +0000
-From: "Edgecombe, Rick P" <rick.p.edgecombe@intel.com>
-To: "peterz@infradead.org" <peterz@infradead.org>, "ebiederm@xmission.com"
-	<ebiederm@xmission.com>, "kexec@lists.infradead.org"
-	<kexec@lists.infradead.org>
-CC: "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-	"linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-	"keescook@chromium.org" <keescook@chromium.org>, "Yu, Yu-cheng"
-	<yu-cheng.yu@intel.com>, "x86@kernel.org" <x86@kernel.org>, "Christopherson,,
- Sean" <seanjc@google.com>, "Yang, Weijiang" <weijiang.yang@intel.com>,
-	"pbonzini@redhat.com" <pbonzini@redhat.com>
-Subject: Re: [PATCH 03/19] x86/cpufeatures: Enable CET CR4 bit for shadow
- stack
-Thread-Topic: [PATCH 03/19] x86/cpufeatures: Enable CET CR4 bit for shadow
- stack
-Thread-Index: AQHYgV3BGYVuI+Dv/0Gr8tfHe/6Wwq1R07MAgAByKQCAATT+gIAAohIA
-Date: Fri, 17 Jun 2022 21:18:47 +0000
-Message-ID: <b1d4d26144e933382a92425164f78367ff92aea5.camel@intel.com>
-References: <20220616084643.19564-1-weijiang.yang@intel.com>
-	 <20220616084643.19564-4-weijiang.yang@intel.com>
-	 <YqsEyoaxPFpZcolP@hirez.programming.kicks-ass.net>
-	 <ca4e04f2dcc33849ebb9bf128f6ff632b5ffe747.camel@intel.com>
-	 <YqxnwRn+/c+i1vL6@worktop.programming.kicks-ass.net>
-In-Reply-To: <YqxnwRn+/c+i1vL6@worktop.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Evolution 3.28.5-0ubuntu0.18.04.2 
-authentication-results: dkim=none (message not signed)
- header.d=none;dmarc=none action=none header.from=intel.com;
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1f718d7-5d07-4242-52c8-08da50a6f7a6
-x-ms-traffictypediagnostic: MN2PR11MB3824:EE_
-x-ld-processed: 46c98d88-e344-4ed4-8496-4ed7712e255d,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR11MB3824460205096EEACF58CC3CC9AF9@MN2PR11MB3824.namprd11.prod.outlook.com>
-x-ms-exchange-senderadcheck: 1
-x-ms-exchange-antispam-relay: 0
-x-microsoft-antispam: BCL:0;
-x-microsoft-antispam-message-info: aDJAOUmnR4sc8KStZ/0sxQqAKcmpb2aROygkHktfUuAA+8Sc6qqVdwPqxHeVD51vYXTYkRNEZYDft95+KfhVWCYDmOZBFd7Smv/RCxre00u8/aXVbYyuqXwcZSaPdTx8PUq7nLSpCw8khQr2ArlPwDfHMLB6x9XmBk4Q10PQkphMSNl1LJ/IrDkuBhAS5n6wnnxGsMu2YOOOjXKLWYMn8iDrAwKEX/VUPebgkquDOz3G0K7Dipu8lFbs1aI6qbrmoKGl5OUkU+V+bNNekDpaDhhZ4puajKbGY3hL8dGWcOyqf2aAXz1I7CldtPl1yxUhxU4pAdUuryrPTr3+0nWu6cyQ8I7tbUPKlJERyHmgFvVaSZUW09Xazc/z8nbIQJa+JbzhwnQygTOixR0LHvbHML0ulN6KAH3uQuhUdJWEhjXeqEP9hvk9/3MIlqubFmQW9gRQrGxcFG2F2ZLRqnLOBLREc5gQFDhNYWPTb2QLCt0j74do1mHLdemxjsSq3+Q2P+U+++j9/pvP0SjSxTQWpMVQNcdSXysNJyJzxOI1l7eMp7qVxo0eUVoeMVxqJYhQficWOpvfkUgTqy0gvWWSjjKa5z9XeY1GL/taDPM+EdqNukSKtuZtQPDEufeDW7EZ0EAwzwLqkAXVfr9aBnfaxSLfjnM8VNzNJv/prycVzrlFBMohJkuZfZUOHqslfZoa1ZI4G3gGrcKCfWDUGppAzSBxSov4Aj1qWQILVN6RjSk=
-x-forefront-antispam-report: CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:MWHPR11MB1392.namprd11.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(366004)(316002)(498600001)(54906003)(186003)(2616005)(38100700002)(6506007)(26005)(110136005)(66556008)(6512007)(76116006)(66446008)(6486002)(86362001)(122000001)(66946007)(66476007)(64756008)(8676002)(4326008)(38070700005)(82960400001)(71200400001)(2906002)(5660300002)(83380400001)(36756003)(8936002)(99106002);DIR:OUT;SFP:1102;
-x-ms-exchange-antispam-messagedata-chunkcount: 1
-x-ms-exchange-antispam-messagedata-0: =?utf-8?B?alhSTGpKaVNuMmtIUXFNWGV0cS9MYmVWUmZxczJHek5RSU4vemNsR3FMTHF4?=
- =?utf-8?B?eHFFL3NWUmFza2t4ZU93Mm1rT2tyN1hLTE5kN2ZEaTFmdWpjWEJqeFQ1bXZ2?=
- =?utf-8?B?d3NKWVhMWC9oR2RkODlJTnEvbncvYmdZV0FxUVljVXE4QTlOT2czYjlZNU5i?=
- =?utf-8?B?RGQvRVViR1JVT3ZoZEg0M3lOaUhmSzdNa2pndzVvZXEveTZwcWxYL0ZoT09E?=
- =?utf-8?B?Z3BJWDFORjZ4by8xNUZ1Q0x3M21FL3hLR0Z0ejZsUXNTV3M4NmRLU0RtVWx4?=
- =?utf-8?B?MUJPcjRHWUd3a0prMTl2aXQ2UVJiWGtUUUNpdjFSRVI3U1U2Wk9tdDFQMG5U?=
- =?utf-8?B?dGtOaUJ4RksrdGhOcU05WXZLYzJ3UDZwQzVkZStHclVrZHZTWnljM1FOYkNW?=
- =?utf-8?B?aUo4YTdEL0NCL2FVSktrV0pPVXdxOGlkVGlXb0tnbytsZnM4ZDN6NG1MblZi?=
- =?utf-8?B?eC8zcHpKM2lqTEpHcFlkZExTUjZiWEhoRW5WNGtCbUJ6SGZydHZtb0RKS3k0?=
- =?utf-8?B?c3prMWNZRmVEa2JpV2pvUWxKTHgrWG5ZbVg2eDBpMmk4RlBGQjdnaENjVE5m?=
- =?utf-8?B?T3F2ckc0TjRNWjMyY0NJZ2h4aCtLbGVxdC9hdkZSaFBjdzBSOXovcmVuNHA4?=
- =?utf-8?B?Y0pxa3FHVEMvd1lOT3p3b2NKK3JDNVBvM3Y2RkNTa0NWWUMrRDdFY29EcXdJ?=
- =?utf-8?B?YU1qVE50UVBuVHhpckwrRG04NkFaNXVPTEM1aGpMTEZNeGVqbkJMSkk4VXIz?=
- =?utf-8?B?eDVEU1o5bjRtVG1NMFlLVzA2N2tZZ3p2b3czaXdrWjFUTkxwOVV4M1krd2pL?=
- =?utf-8?B?aWJ2MEhyaVFRQ1lvTHQ2T1BRbEMycTNzM2xiUmpJbUpMZUhYd0VGK29MS0Ny?=
- =?utf-8?B?WTU0ak9MQ3g4ejR5bEg0a0pYZW1ZNzdSOVorRmE3RUVRd3VOMFh1SG9jVm5y?=
- =?utf-8?B?YXQyVU1IdFhXVVhuZndscUVRMmFGc0xyQkhNWE9sdTNLeGRkdmVkWFU2N2k4?=
- =?utf-8?B?a0xxKzJ2RzRucWQ3Q0xBWngxblRmK2ZDb2ZxUjd2TUtHUlhYdjh0bjNydGdH?=
- =?utf-8?B?dzJ5MjBjM3J2THNDNm96Mkc5WWVsbmtKZFRsZXJZejVwRElJb1RtN0xBWmF6?=
- =?utf-8?B?NFpzREhxWTVKWDVJeFJYRVpLejcwV0x3NDBta1pKSWtpeXpSNlNOQnpzUWJM?=
- =?utf-8?B?Vld1K2Q5V25IamJ5VTJZZU92Zm9oYStmUjZCeUhjYXFMYTJ2V1d3ZEZya1ND?=
- =?utf-8?B?MURHS2d6SloyZFNUaG9WYzlmejFFeE5YUFc0OWhyZjFJYitrZWJOYkFXaytQ?=
- =?utf-8?B?VHRUcjliZndsWGJtY2pmZDZ6bWVNZTBoKzVtZkZDcDVmb0tRZm9UMWZtaGJC?=
- =?utf-8?B?dU5XeVZvMGxRNCtjQTZYaVNOUGY3eVN6VE5XR1NXNGlzUGtHdzdNNDBlaXNM?=
- =?utf-8?B?SW9zYzVoMlVkOEEzWnlNVVZrYTl4MmZacTNCOFBDWnp1S3J2c0x6c2hCTnlZ?=
- =?utf-8?B?QzgwT2xsWEJRdk9BTm1qZDlycFgyR0JvaXJEalFvTHlxcXRDWUFNQjAwaWJ1?=
- =?utf-8?B?U2tpT25sdzBUaVlra2NiR0NkWXozaE5icWxGaVFTZHV5VURSaWdoWHZ4d0FF?=
- =?utf-8?B?OTdveE9lbHNsVVAvc3I1eVRESGd3NjlhYzROTGcydFBwRU9PQStFZldsaGVu?=
- =?utf-8?B?TEpUaWticlFxYW9TclBXYjNMQzRPeVlTZ1FOQTFwNkFidnpNL0RiMVhiY04y?=
- =?utf-8?B?b0hvN05IMFRPNU8wUWF4QU1Vb3Fsd3ZQQVdJT3dGbklpdHA1RFdIZUZQNndK?=
- =?utf-8?B?WTM5OXcxK1BZR1dKenhEL3ZLUXB2UlR2aGRmcXZWQlNXV3hXUnloL1BIbGVu?=
- =?utf-8?B?T0JFZGZyQ2M5RVgrbnRTNTNzR1VNdXRXeVcxMVRjcndRT1hzSStEUXIyMXN5?=
- =?utf-8?B?TkJwbmlLK1lIaElXYUpxWTVsU2htelJSL2Fpd002Q2orWDMwVk9vcjI3NEM1?=
- =?utf-8?B?NGF5bzV0WlVORlROVHJ0VDdWS2ZBeGg4ek1TUGFyVDAyd05hVzdpOVZmci96?=
- =?utf-8?B?anROL0tLMUdxVFFQRGF0ZnhiV3lwcndUcU5kS2NWNzRrV2h2ZTUvVjdSazRI?=
- =?utf-8?B?Z1lvSVV2L2x6Z2hIN1p0K0cwVXpZSE0xbGlSZzJBYkZ1aXZCcWpIZ1FEeSti?=
- =?utf-8?B?T3FJQk1Tcmo0QU1NTkRzcjVwQWdwWlJBMkEvWmZLUUpWTVlKRWlST05wdDhS?=
- =?utf-8?B?R1htV1RaUHc1U0dBejVua1FFZjR4MHh1K0FnSGxMeExXaERJNkwxdEVNS1lu?=
- =?utf-8?B?ZlZvT0VZRVc4V0Y4c3ljZnRSaXJYTzlsYnF4bWpkT1RkdVZKV2ZkWVY0cXBF?=
- =?utf-8?Q?GePniCQLxGXbNF4hm5K4ZSHs2+UEG2YOPf1a0?=
-Content-ID: <02FE8F5F91E5654F8D9F52B4CDC08E64@namprd11.prod.outlook.com>
+	id 1o39df-00GEGN-TB
+	for kexec@lists.infradead.org; Mon, 20 Jun 2022 05:07:53 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25K1J2wT005028;
+	Mon, 20 Jun 2022 05:07:18 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=VeGCcSFMnB4/3mrtIVnh+AIWhhcrlrtkJ4MQbI1mY3M=;
+ b=iCTMkRPq5SEZ5LkY6pyU9+45+GM8fn2sJPmTw6roUfpALmiU7D+x5Vh4n947DPqVrkNp
+ 8xtnVW9nHnKyVXRA9XtRaR2lnrfqFLpMVS7rLzgd0ANk0alEQMzyI6X04pk0pVPMg6cG
+ atnOu/JaY9JTo7x7YxgXL7o7W3V01ctf/D9AtG9ztrbW8sBO4NJuJRa4iLmWpLB4oVY9
+ Blho/gBsqQqNnTjAcepZZz/9rNki5jB9jNEtfNo+A6FoThtmhzzDVllK/LPrTHObtyJo
+ GW46E8GSbfj1ab2t11XBzwqllPkX7CZwyySCmmSanAYiEn3XY4zp++IanIhHu0jY+FIN pw== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gsr1aekcx-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jun 2022 05:07:11 +0000
+Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25K4xDv3008249;
+	Mon, 20 Jun 2022 05:07:10 GMT
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gsr1aekby-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jun 2022 05:07:10 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25K55aRE025895;
+	Mon, 20 Jun 2022 05:07:07 GMT
+Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
+	by ppma04ams.nl.ibm.com with ESMTP id 3gs6b91wpf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Mon, 20 Jun 2022 05:07:07 +0000
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+	by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25K57AlH25100686
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Mon, 20 Jun 2022 05:07:10 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 8C4324203F;
+	Mon, 20 Jun 2022 05:07:05 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 199F442042;
+	Mon, 20 Jun 2022 05:07:00 +0000 (GMT)
+Received: from [9.43.109.136] (unknown [9.43.109.136])
+	by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Mon, 20 Jun 2022 05:06:59 +0000 (GMT)
+Message-ID: <94f5e036-770d-4ca5-c386-9a43e7333b43@linux.ibm.com>
+Date: Mon, 20 Jun 2022 10:36:58 +0530
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-AuthAs: Internal
-X-MS-Exchange-CrossTenant-AuthSource: MWHPR11MB1392.namprd11.prod.outlook.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1f718d7-5d07-4242-52c8-08da50a6f7a6
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Jun 2022 21:18:47.5387
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 46c98d88-e344-4ed4-8496-4ed7712e255d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-CrossTenant-userprincipalname: BGcSzHwhHKrTXQCO0jn12rA+LGWxypAI4jnUOapZ1xR5jp6l7D/AJFtqyBakmLgCqw+mV7TPEHPdu6qnHtRUizJPiGX4WHfuj811ltr/cJ0=
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR11MB3824
-X-OriginatorOrg: intel.com
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v9 7/7] x86/crash: Add x86 crash hotplug support
+Content-Language: en-US
+To: Eric DeVolder <eric.devolder@oracle.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, kexec@lists.infradead.org, ebiederm@xmission.com,
+        dyoung@redhat.com, bhe@redhat.com, vgoyal@redhat.com
+Cc: tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+        dave.hansen@linux.intel.com, hpa@zytor.com, nramas@linux.microsoft.com,
+        thomas.lendacky@amd.com, robh@kernel.org, efault@gmx.de,
+        rppt@kernel.org, david@redhat.com, konrad.wilk@oracle.com,
+        boris.ostrovsky@oracle.com
+References: <20220613224240.79400-1-eric.devolder@oracle.com>
+ <20220613224240.79400-8-eric.devolder@oracle.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <20220613224240.79400-8-eric.devolder@oracle.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: Lweh2CGpAORRR1_CaluIPNglXYSMZJeo
+X-Proofpoint-GUID: vPrMKaQn4HUBcfwyr-zDRHa1N1ZPJiwa
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-20_03,2022-06-17_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ mlxlogscore=999 spamscore=0 phishscore=0 impostorscore=0 malwarescore=0
+ suspectscore=0 adultscore=0 mlxscore=0 clxscore=1011 bulkscore=0
+ lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206200023
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220617_141858_718020_3457CBF7 
-X-CRM114-Status: GOOD (  27.51  )
+X-CRM114-CacheID: sfid-20220619_220751_976413_60C27D1B 
+X-CRM114-Status: GOOD (  36.35  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -188,108 +112,141 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-+kexec people
+Hello Eric,
 
-On Fri, 2022-06-17 at 13:38 +0200, Peter Zijlstra wrote:
-> On Thu, Jun 16, 2022 at 05:12:47PM +0000, Edgecombe, Rick P wrote:
-> > On Thu, 2022-06-16 at 12:24 +0200, Peter Zijlstra wrote:
-> > > On Thu, Jun 16, 2022 at 04:46:27AM -0400, Yang Weijiang wrote:
-> > > > --- a/arch/x86/include/asm/cpu.h
-> > > > +++ b/arch/x86/include/asm/cpu.h
-> > > > @@ -74,7 +74,7 @@ void init_ia32_feat_ctl(struct cpuinfo_x86
-> > > > *c);
-> > > >    static inline void init_ia32_feat_ctl(struct cpuinfo_x86 *c)
-> > > > {}
-> > > >    #endif
-> > > >    
-> > > > -extern __noendbr void cet_disable(void);
-> > > > +extern __noendbr void ibt_disable(void);
-> > > >    
-> > > >    struct ucode_cpu_info;
-> > > >    
-> > > > diff --git a/arch/x86/kernel/cpu/common.c
-> > > > b/arch/x86/kernel/cpu/common.c
-> > > > index c296cb1c0113..86102a8d451e 100644
-> > > > --- a/arch/x86/kernel/cpu/common.c
-> > > > +++ b/arch/x86/kernel/cpu/common.c
-> > > > @@ -598,23 +598,23 @@ __noendbr void ibt_restore(u64 save)
-> > > >    
-> > > > -__noendbr void cet_disable(void)
-> > > > +__noendbr void ibt_disable(void)
-> > > >    {
-> > > >         if (cpu_feature_enabled(X86_FEATURE_IBT))
-> > > >                 wrmsrl(MSR_IA32_S_CET, 0);
-> > > 
-> > > Not sure about this rename; it really disables all of (S) CET.
-> > > 
-> > > Specifically, once we do S-SHSTK (after FRED) we might also very
-> > > much
-> > > need to kill that for kexec.
-> > 
-> > Sure, what about something like sup_cet_disable()?
-> 
-> Why bother? Arguably kexec should clear U_CET too.
+On 14/06/22 04:12, Eric DeVolder wrote:
+> For x86_64, when CPU or memory is hot un/plugged, the crash
+> elfcorehdr, which describes the CPUs and memory in the system,
+> must also be updated.
+>
+> When loading the crash kernel via kexec_load or kexec_file_load,
+> the elfcorehdr is identified at run time in
+> crash_core:handle_hotplug_event().
+>
+> To update the elfcorehdr for x86_64, a new elfcorehdr must be
+> generated from the available CPUs and memory. The new elfcorehdr
+> is prepared into a buffer, and then installed over the top of
+> the existing elfcorehdr.
+>
+> In the patch 'kexec: exclude elfcorehdr from the segment digest'
+> the need to update purgatory due to the change in elfcorehdr was
+> eliminated.  As a result, no changes to purgatory or boot_params
+> (as the elfcorehdr= kernel command line parameter pointer
+> remains unchanged and correct) are needed, just elfcorehdr.
+>
+> To accommodate a growing number of resources via hotplug, the
+> elfcorehdr segment must be sufficiently large enough to accommodate
+> changes, see the CRASH_MAX_MEMORY_RANGES configure item.
+>
+> With this change, crash hotplug for kexec_file_load syscall
+> is supported. The kexec_load is also supported, but also
+> requires a corresponding change to userspace kexec-tools.
+>
+> Signed-off-by: Eric DeVolder <eric.devolder@oracle.com>
+> ---
+>   arch/x86/Kconfig        |  11 ++++
+>   arch/x86/kernel/crash.c | 116 ++++++++++++++++++++++++++++++++++++++++
+>   2 files changed, 127 insertions(+)
+>
+> diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+> index 762a0b6ab8b6..e9eecff3b97d 100644
+> --- a/arch/x86/Kconfig
+> +++ b/arch/x86/Kconfig
+> @@ -2082,6 +2082,17 @@ config CRASH_DUMP
+>   	  (CONFIG_RELOCATABLE=y).
+>   	  For more details see Documentation/admin-guide/kdump/kdump.rst
+>   
+> +config CRASH_MAX_MEMORY_RANGES
+> +	depends on CRASH_DUMP && KEXEC_FILE && (HOTPLUG_CPU || MEMORY_HOTPLUG)
+> +	int
+> +	default 32768
+> +	help
+> +	  For the kexec_file_load path, specify the maximum number of
+> +	  memory regions, eg. as represented by the 'System RAM' entries
+> +	  in /proc/iomem, that the elfcorehdr buffer/segment can accommodate.
+> +	  This value is combined with NR_CPUS and multiplied by Elf64_Phdr
+> +	  size to determine the final buffer size.
+> +
+>   config KEXEC_JUMP
+>   	bool "kexec jump"
+>   	depends on KEXEC && HIBERNATION
+> diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
+> index 9db41cce8d97..b9cdf7a0d868 100644
+> --- a/arch/x86/kernel/crash.c
+> +++ b/arch/x86/kernel/crash.c
+> @@ -25,6 +25,7 @@
+>   #include <linux/slab.h>
+>   #include <linux/vmalloc.h>
+>   #include <linux/memblock.h>
+> +#include <linux/highmem.h>
+>   
+>   #include <asm/processor.h>
+>   #include <asm/hardirq.h>
+> @@ -398,7 +399,17 @@ int crash_load_segments(struct kimage *image)
+>   	image->elf_headers = kbuf.buffer;
+>   	image->elf_headers_sz = kbuf.bufsz;
+>   
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +	/* Ensure elfcorehdr segment large enough for hotplug changes */
+> +	kbuf.memsz = (CONFIG_NR_CPUS_DEFAULT + CONFIG_CRASH_MAX_MEMORY_RANGES) * sizeof(Elf64_Phdr);
+> +	/* For marking as usable to crash kernel */
+> +	image->elf_headers_sz = kbuf.memsz;
+> +	/* Record the index of the elfcorehdr segment */
+> +	image->elfcorehdr_index = image->nr_segments;
+> +	image->elfcorehdr_index_valid = true;
+> +#else
+>   	kbuf.memsz = kbuf.bufsz;
+> +#endif
+>   	kbuf.buf_align = ELF_CORE_HEADER_ALIGN;
+>   	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+>   	ret = kexec_add_buffer(&kbuf);
+> @@ -413,3 +424,108 @@ int crash_load_segments(struct kimage *image)
+>   	return ret;
+>   }
+>   #endif /* CONFIG_KEXEC_FILE */
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU) || defined(CONFIG_MEMORY_HOTPLUG)
+> +int crash_hotplug_support(void) { return 1; }
+> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size)
+> +{
+> +	/*
+> +	 * NOTE: The addresses and sizes passed to this routine have
+> +	 * already been fully aligned on page boundaries. There is no
+> +	 * need for massaging the address or size.
+> +	 */
+> +	void *ptr = NULL;
+> +
+> +	/* NOTE: requires arch_kexec_[un]protect_crashkres() for write access */
+> +	if (size > 0) {
+> +		struct page *page = pfn_to_page(paddr >> PAGE_SHIFT);
+> +
+> +		ptr = kmap(page);
+> +	}
+> +
+> +	return ptr;
+> +}
+> +
+> +void arch_unmap_crash_pages(void **ptr)
+> +{
+> +	if (ptr) {
+> +		if (*ptr)
+> +			kunmap(*ptr);
+> +		*ptr = NULL;
+> +	}
+> +}
 
-Hmm, I think you're right. It doesn't look the fpu stuff actually would
-reset unknown xfeatures to init. So kernels with Kernel IBT would set
-CR4.CET and then MSR_IA32_U_CET might make it to the point where
-userspace would run with CET enabled.
+Aren't arch will have build issue if arch_[un]map_crash_pages methods 
+are not defined?
 
-It seems like a general kexec problem for when the kernel enables new
-xfeatures. I suppose having vector instruction type data stick around
-is not going to show up the same way as having new enforcement rules
-applied.
+Thanks,
+Sourabh Jain
 
-But also, looking at this, the existing clearing of MSR_IA32_S_CET is
-not sufficient, since it only does it on the cpu doing the kexec. I
-think something like the below might be needed. Since per the other
-discussion we are going to need to start setting CR4.CET whenever the
-HW supports it, for KVM's benefit. So those other CPUs might get
-supervisor IBT enabled if we don't clear the msr from every CPU.
 
-diff --git a/arch/x86/kernel/crash.c b/arch/x86/kernel/crash.c
-index 9730c88530fc..eb57d7f4fa6a 100644
---- a/arch/x86/kernel/crash.c
-+++ b/arch/x86/kernel/crash.c
-@@ -96,6 +96,12 @@ static void kdump_nmi_callback(int cpu, struct
-pt_regs *regs)
-        cpu_emergency_stop_pt();
- 
-        disable_local_APIC();
-+
-+       /*
-+        * Make sure to disable CET features before kexec so the new
-kernel
-+        * doesn't get surprised by the enforcement.
-+        */
-+       cet_disable();
- }
- 
- void kdump_nmi_shootdown_cpus(void)
-diff --git a/arch/x86/kernel/process.c b/arch/x86/kernel/process.c
-index 738226472468..de65bac0ae02 100644
---- a/arch/x86/kernel/process.c
-+++ b/arch/x86/kernel/process.c
-@@ -787,6 +787,12 @@ void __noreturn stop_this_cpu(void *dummy)
-         */
-        if (cpuid_eax(0x8000001f) & BIT(0))
-                native_wbinvd();
-+
-+       /*
-+        * Make sure to disable CET features before kexec so the new
-kernel
-+        * doesn't get surprised by the enforcement.
-+        */
-+       cet_disable();
-        for (;;) {
-                /*
-                 * Use native_halt() so that memory contents don't
-change
 _______________________________________________
 kexec mailing list
 kexec@lists.infradead.org
