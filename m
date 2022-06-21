@@ -4,67 +4,68 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C608AC43334
-	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 12:46:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 2AD93C433EF
+	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 18:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=u4dn+P9dDm7fvtIqUA8hFDs6Uc5vFNchQXC4OwIsmRU=; b=NTlwMANfMk8jb9
-	1txx7J/J1QcsQB2Ujxh8a76InGysNVmP3gOwOVENZeLD+BPY/gUwcH6gidx2tuuOyggdI1YTHYgvX
-	+a1Ao9yJ6Wyx250Yn5TCR2Wv0effuG5fmR9pvCIBUCA9524KfO1eFjUmtGV8y8LPtiYzyjreh1dJz
-	xGa4aHwSUOrbmlaFv7rNtmnX1yR36yxVSusD1HhQmj5LO2tZSauwjiNS40JbBl+i2EJ1s8D7KI6Rx
-	9MTEcvXILL7rmrJ7f919yo+teLFLg9taInFh16Vt2iOmYB8kCqV0/XrYAryPotQOXCUafO6HzKjjs
-	N0uBv3iFmcPiUSgPzzcA==;
+	List-Owner; bh=NftVbCGhlipuby1SGjoNdUH97KIb03Ck1TO64JeIIxM=; b=40id4O5feqBzyb
+	tjeT9dtrWD72K7BY0YcAwbPfpf1KofWtdgB6tk+s5pYB9I7Rlpir1j0AJzYiRetc5fGw2v4RaRbMs
+	PWQU979I5Ls3i9fuapHsdhUKhu4z0xsYfj/99ySFEE0Ku8E9QOkvydREMzSRpTQliekOZfvnLQ7eW
+	9IK3CqwbzDOlw1Mt0KDNmYcdm5F7en7B1k6fgbUHpAr6p7JOUkw79HLMi8VPA7+deW0yEntilFfTO
+	VK1d5Pj7GHuuwNs6ONq2X/wX7LIHjEURk5dKvFU6Tty/YUn/pV1nJU4RbLGyROUyOUzRNUyBXEXSN
+	LebSPWx/vVE3lonT8exw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3dGk-005Q4z-5d; Tue, 21 Jun 2022 12:46:10 +0000
-Received: from szxga02-in.huawei.com ([45.249.212.188])
+	id 1o3iEu-006fc5-9w; Tue, 21 Jun 2022 18:04:36 +0000
+Received: from ams.source.kernel.org ([145.40.68.75])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3dFn-005PSW-1p; Tue, 21 Jun 2022 12:45:12 +0000
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LS5jv0q93zSh3w;
-	Tue, 21 Jun 2022 20:41:39 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 20:44:44 +0800
-Received: from thunder-town.china.huawei.com (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 20:44:43 +0800
-From: Zhen Lei <thunder.leizhen@huawei.com>
-To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
-	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin"
-	<hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, Rob Herring
-	<robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-	<devicetree@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Baoquan He
-	<bhe@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Catalin Marinas
-	<catalin.marinas@arm.com>, Will Deacon <will@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>
-CC: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap
-	<rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Kefeng Wang
-	<wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, "John
- Donnelly" <John.p.donnelly@oracle.com>, Dave Kleikamp
-	<dave.kleikamp@oracle.com>
-Subject: [PATCH v2 3/3] arm64: kdump: Remove some redundant checks in map_mem()
-Date: Tue, 21 Jun 2022 20:42:48 +0800
-Message-ID: <20220621124249.1315-4-thunder.leizhen@huawei.com>
-X-Mailer: git-send-email 2.26.0.windows.1
-In-Reply-To: <20220621124249.1315-1-thunder.leizhen@huawei.com>
-References: <20220621124249.1315-1-thunder.leizhen@huawei.com>
+	id 1o3iEr-006faf-7C; Tue, 21 Jun 2022 18:04:35 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by ams.source.kernel.org (Postfix) with ESMTPS id 97936B81AAC;
+	Tue, 21 Jun 2022 18:04:31 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 9A105C3411C;
+	Tue, 21 Jun 2022 18:04:25 +0000 (UTC)
+Date: Tue, 21 Jun 2022 19:04:22 +0100
+From: Catalin Marinas <catalin.marinas@arm.com>
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Baoquan He <bhe@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Chen Zhou <dingguo.cz@antgroup.com>,
+	John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
+	liushixin <liushixin2@huawei.com>
+Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
+ high memory
+Message-ID: <YrIIJkhKWSuAqkCx@arm.com>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-6-thunder.leizhen@huawei.com>
+ <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
+ <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
 MIME-Version: 1.0
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+Content-Disposition: inline
+In-Reply-To: <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220621_054511_469755_4633619D 
-X-CRM114-Status: GOOD (  12.13  )
+X-CRM114-CacheID: sfid-20220621_110433_585929_06EE6562 
+X-CRM114-Status: GOOD (  33.02  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -76,78 +77,82 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-arm64_memblock_init()
-	if (!IS_ENABLED(CONFIG_ZONE_DMA/DMA32))
-		reserve_crashkernel()
-			//initialize crashk_res when
-			//"crashkernel=" is correctly specified
-paging_init()
-	map_mem()
+On Tue, Jun 21, 2022 at 02:24:01PM +0800, Kefeng Wang wrote:
+> On 2022/6/21 13:33, Baoquan He wrote:
+> > On 06/13/22 at 04:09pm, Zhen Lei wrote:
+> > > If the crashkernel has both high memory above DMA zones and low memory
+> > > in DMA zones, kexec always loads the content such as Image and dtb to=
+ the
+> > > high memory instead of the low memory. This means that only high memo=
+ry
+> > > requires write protection based on page-level mapping. The allocation=
+ of
+> > > high memory does not depend on the DMA boundary. So we can reserve the
+> > > high memory first even if the crashkernel reservation is deferred.
+> > > =
 
-As shown in the above pseudo code, the crashk_res.end can only be
-initialized to non-zero when both "!IS_ENABLED(CONFIG_ZONE_DMA/DMA32)"
-and crash_mem_map are true. So some checks in map_mem() can be adjusted
-or optimized.
+> > > This means that the block mapping can still be performed on other ker=
+nel
+> > > linear address spaces, the TLB miss rate can be reduced and the system
+> > > performance will be improved.
+> > =
 
-Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
-Acked-by: Baoquan He <bhe@redhat.com>
----
- arch/arm64/mm/mmu.c | 25 +++++++++++--------------
- 1 file changed, 11 insertions(+), 14 deletions(-)
+> > Ugh, this looks a little ugly, honestly.
+> > =
 
-diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
-index 626ec32873c6c36..6028a5757e4eae2 100644
---- a/arch/arm64/mm/mmu.c
-+++ b/arch/arm64/mm/mmu.c
-@@ -529,12 +529,12 @@ static void __init map_mem(pgd_t *pgdp)
- 
- #ifdef CONFIG_KEXEC_CORE
- 	if (crash_mem_map) {
--		if (IS_ENABLED(CONFIG_ZONE_DMA) ||
--		    IS_ENABLED(CONFIG_ZONE_DMA32))
--			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
--		else if (crashk_res.end)
-+		if (crashk_res.end)
- 			memblock_mark_nomap(crashk_res.start,
- 			    resource_size(&crashk_res));
-+		else if (IS_ENABLED(CONFIG_ZONE_DMA) ||
-+			 IS_ENABLED(CONFIG_ZONE_DMA32))
-+			flags |= NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS;
- 	}
- #endif
- 
-@@ -571,16 +571,13 @@ static void __init map_mem(pgd_t *pgdp)
- 	 * through /sys/kernel/kexec_crash_size interface.
- 	 */
- #ifdef CONFIG_KEXEC_CORE
--	if (crash_mem_map &&
--	    !IS_ENABLED(CONFIG_ZONE_DMA) && !IS_ENABLED(CONFIG_ZONE_DMA32)) {
--		if (crashk_res.end) {
--			__map_memblock(pgdp, crashk_res.start,
--				       crashk_res.end + 1,
--				       PAGE_KERNEL,
--				       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
--			memblock_clear_nomap(crashk_res.start,
--					     resource_size(&crashk_res));
--		}
-+	if (crashk_res.end) {
-+		__map_memblock(pgdp, crashk_res.start,
-+			       crashk_res.end + 1,
-+			       PAGE_KERNEL,
-+			       NO_BLOCK_MAPPINGS | NO_CONT_MAPPINGS);
-+		memblock_clear_nomap(crashk_res.start,
-+				     resource_size(&crashk_res));
- 	}
- #endif
- }
--- 
-2.25.1
+> > If that's for sure arm64 can't split large page mapping of linear
+> > region, this patch is one way to optimize linear mapping. Given kdump
+> > setting is necessary on arm64 server, the booting speed is truly
+> > impacted heavily.
+> =
 
+> Is there some conclusion or discussion that arm64 can't split large page
+> mapping?
+> =
+
+> Could the crashkernel reservation (and Kfence pool) be splited dynamicall=
+y?
+> =
+
+> I found Mark replay "arm64: remove page granularity limitation from
+> KFENCE"[1],
+> =
+
+> =A0 "We also avoid live changes from block<->table mappings, since the
+> =A0 archtitecture gives us very weak guarantees there and generally requi=
+res
+> =A0 a Break-Before-Make sequence (though IIRC this was tightened up
+> =A0 somewhat, so maybe going one way is supposed to work). Unless it's
+> =A0 really necessary, I'd rather not split these block mappings while
+> =A0 they're live."
+
+The problem with splitting is that you can end up with two entries in
+the TLB for the same VA->PA mapping (e.g. one for a 4KB page and another
+for a 2MB block). In the lucky case, the CPU will trigger a TLB conflict
+abort (but can be worse like loss of coherency).
+
+Prior to FEAT_BBM (added in ARMv8.4), such scenario was not allowed at
+all, the software would have to unmap the range, TLBI, remap. With
+FEAT_BBM (level 2), we can do this without tearing the mapping down but
+we still need to handle the potential TLB conflict abort. The handler
+only needs a TLBI but if it touches the memory range being changed it
+risks faulting again. With vmap stacks and the kernel image mapped in
+the vmalloc space, we have a small window where this could be handled
+but we probably can't go into the C part of the exception handling
+(tracing etc. may access a kmalloc'ed object for example).
+
+Another option is to do a stop_machine() (if multi-processor at that
+point), disable the MMUs, modify the page tables, re-enable the MMU but
+it's also complicated.
+
+-- =
+
+Catalin
 
 _______________________________________________
 kexec mailing list
