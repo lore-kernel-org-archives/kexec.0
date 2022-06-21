@@ -4,96 +4,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 149A1C433EF
-	for <kexec@archiver.kernel.org>; Mon, 20 Jun 2022 13:26:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A96BAC433EF
+	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 05:33:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:Message-ID:
-	Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=gUB8sNrQZoGe7MAlbNd65twjmnQyViHmCVuy8BmMXYg=; b=ax9GZIUPlIvPkvGH2XaGdPZn5o
-	chl/a8/Stfm9TcS9lm6/QhF9bVPLnhOYE70ly0ZUvN9ODM4GwVHqB6vTQ/DozAYuKmjA6rGdTspAo
-	aCRYowEWdTKQ5NEc7KYVZLwoHK5/+BFIpnw0Epgap7EQC5oSv2aTYpFlm+tim4I+aV9quSZGIR7ok
-	juQct9+WWFAUDo1pUe0fDfzn2HaAVsyqGj+CyrBwlQySv2inF0UEfMPi6KlKX9IiE0bVXAJIF90v3
-	eHBo/XHUZnMYEipdg97eM5HZPpcZ95MCBRrHu/U2CLqoj3WoLfNqit5YIXZjf3cqq93iHkI1a1XwD
-	BiTjeRMg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=tHsLY96qbWMRt7qQWXFjl+dLRw+JY2YYMjsF66DhLPw=; b=QucVkqlOGgckK5
+	6noEnhbeKsTNf6CgwX4wD76bfga5PaSuBgE8SkcWJ77cYSPbj96MEPIdNf5OdIGaccILQ7s23GwQv
+	yreaWdtwTNKIagIkTVz+CaZ47iUsYYIGKxOXP393/Tur7Zp9xTjTlTK9mcjHThthosizussN5sT41
+	eZHhCegpILaftPhYi0aOhg8NxNr5rwc/OiQvxTrpsydYEmlOwsNgtUzLGXW9PSWKZLmQ+DwQCY9WL
+	jfHXEkbm3mGtFfEBbWJH9cSpgxpYRxQvlfGvhvnlt9cTNHGPjFhsy+3a48Cwc7CEK/grY76zhS+/s
+	OXBJqdep9UtP6YfSRi3g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3HQQ-000peq-9p; Mon, 20 Jun 2022 13:26:42 +0000
+	id 1o3WWD-003i0g-Go; Tue, 21 Jun 2022 05:33:41 +0000
 Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3HG6-000kQk-JX
-	for kexec@lists.infradead.org; Mon, 20 Jun 2022 13:16:04 +0000
+	id 1o3WW6-003hzC-Fb
+	for kexec@lists.infradead.org; Tue, 21 Jun 2022 05:33:37 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655730959;
+	s=mimecast20190719; t=1655789610;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=ncQr9LsCwAvRtNkynEUeHSlUPUh+xbH4xQyI+6gY25E=;
-	b=H8Dr0quFPA71NNGpkUkCiUgSSFpXtIyFcMtBk7O+pkXd9NQvV7Z0qaqlg4UgnFvYlCp1YG
-	qCAQrOhZ24FfEUxwgSOr8lstaaxlL3M2F6lNx6KdCs4rJC2HATm5GieLW9y8CKaA9WTRpl
-	iNmJ7s7BFuK0mrgJpKCHlfMRkOBvsD4=
-Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
- [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+	bh=h+MrydMOJRPtRlmLWVZnu2Vf2FmC8y0u+vnzj78C7Ng=;
+	b=SVFER4kxi2YZefPiemDFBaglr9G/muqUPfloaQJnukxy2EXLuPkDsfbSmWHaNYXf6MbiUI
+	5GdvCtZKsr2BisUqSYXEep+ZG8alhLlnSUHRH2jLwyWdwRePbTh4hc4abwSubyBAP2NBOA
+	K9CTXOjRimIk0TrA+sh4tPn9SCVyFQ8=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-588-vZb-D6XBOF6JhQR5cjE4Fw-1; Mon, 20 Jun 2022 09:15:58 -0400
-X-MC-Unique: vZb-D6XBOF6JhQR5cjE4Fw-1
-Received: by mail-pl1-f199.google.com with SMTP id m17-20020a170902d19100b0016a0e65a433so4201748plb.8
-        for <kexec@lists.infradead.org>; Mon, 20 Jun 2022 06:15:58 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to;
-        bh=ncQr9LsCwAvRtNkynEUeHSlUPUh+xbH4xQyI+6gY25E=;
-        b=ivGkR4fGWRYQbULoLY8Y3bYzAkpXIzgzNy+nCAZqaDySpq5YDSdLzq5SF+omOCwAU8
-         HEhIr2BzifzQmRiWYdmj+CTxhIlN50sW0VvC/YA1fSFvVbDXI8ZqUW1D9uG2w9ELnEQd
-         t1KTEBcXun0IM+BOPfHM3A+2+vVCB4mgdBPWAnkHkQMKKOh++NFtXVrylm0Xhmc06/dv
-         hSCS+aq/jaN/2/vsc/Ksy/lRZDrVEnGa3K32lLeNPcdlPRV9VQ40U/x1v5V2y5X6tkc2
-         uvWuc4LJyrxAlITIVxUWdIryB9niv7ZCi5DCqIRlcx/ym3pkDDS2xAW+gAnI+rCxGN1m
-         LvHg==
-X-Gm-Message-State: AJIora/dyrmgXmVxcSHZu4TxdSLVum/dcbcjLWjo4h59GuRPP1MDq8e5
-	mAc+AuIYUDPuQEahA9mR5KVjGWhIjnWty5JzMKffavS/d6k+YKDu/NhOLSiL01g4+ZzjlaayEFo
-	bTFsph0XXLJpj8CgQAkLJ
-X-Received: by 2002:a63:6e08:0:b0:40c:7557:c4aa with SMTP id j8-20020a636e08000000b0040c7557c4aamr11443472pgc.356.1655730957786;
-        Mon, 20 Jun 2022 06:15:57 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1tZnOGIEmpXjf4W8P84L+N3aI2UrxmRzitNw0xZKcxAiRTfAWfxlkVl3ezbAueoVHV1k7MOmA==
-X-Received: by 2002:a63:6e08:0:b0:40c:7557:c4aa with SMTP id j8-20020a636e08000000b0040c7557c4aamr11443456pgc.356.1655730957482;
-        Mon, 20 Jun 2022 06:15:57 -0700 (PDT)
-Received: from localhost ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id u24-20020a17090a891800b001e0c5da6a51sm4573562pjn.50.2022.06.20.06.15.56
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 20 Jun 2022 06:15:56 -0700 (PDT)
-Date: Mon, 20 Jun 2022 21:14:55 +0800
-From: Coiby Xu <coxu@redhat.com>
-To: Mimi Zohar <zohar@linux.ibm.com>
-Cc: kexec@lists.infradead.org, linux-arm-kernel@lists.infradead.org,
-	Michal Suchanek <msuchanek@suse.de>, Baoquan He <bhe@redhat.com>,
-	Dave Young <dyoung@redhat.com>, Will Deacon <will@kernel.org>,
-	"Eric W . Biederman" <ebiederm@xmission.com>,
-	Chun-Yi Lee <jlee@suse.com>
-Subject: Re: [PATCH v8 0/4] use more system keyrings to verify arm64 and s390
- kexec kernel image signature
-Message-ID: <20220620131455.lo2yzumr6ugmofuw@Rk>
-References: <20220512070123.29486-1-coxu@redhat.com>
- <e382780002db9767671ca5a0213237f443243537.camel@linux.ibm.com>
- <20220525095957.vvref4yeaidd5iww@Rk>
- <d1a431e8cf69b3d892c118204705739a0ed907b7.camel@linux.ibm.com>
- <20220527134315.afnuszqbfqkpnxpv@Rk>
- <b3c87ce140b8d46659adcf07142e1d01ffbb2267.camel@linux.ibm.com>
- <20220616011506.ymbz2xuhw3refasw@Rk>
- <20220617035724.uyc7mp4n5gdlzta5@Rk>
- <dc23f46380e6fb218181e685ad2f0a1db34500fe.camel@linux.ibm.com>
+ us-mta-154-pyhe4RwjNv-T_j2ChAXYbA-1; Tue, 21 Jun 2022 01:33:24 -0400
+X-MC-Unique: pyhe4RwjNv-T_j2ChAXYbA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id C9735101AA47;
+	Tue, 21 Jun 2022 05:33:23 +0000 (UTC)
+Received: from localhost (ovpn-12-183.pek2.redhat.com [10.72.12.183])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 303CF492C3B;
+	Tue, 21 Jun 2022 05:33:21 +0000 (UTC)
+Date: Tue, 21 Jun 2022 13:33:17 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Zhen Lei <thunder.leizhen@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+	Borislav Petkov <bp@alien8.de>, x86@kernel.org,
+	"H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Kefeng Wang <wangkefeng.wang@huawei.com>,
+	Chen Zhou <dingguo.cz@antgroup.com>,
+	John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>
+Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
+ high memory
+Message-ID: <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-6-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <dc23f46380e6fb218181e685ad2f0a1db34500fe.camel@linux.ibm.com>
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=coxu@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
 Content-Disposition: inline
+In-Reply-To: <20220613080932.663-6-thunder.leizhen@huawei.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220620_061602_797637_79B52CF7 
-X-CRM114-Status: GOOD (  17.53  )
+X-CRM114-CacheID: sfid-20220620_223334_807662_B6C4049B 
+X-CRM114-Status: GOOD (  40.28  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -105,61 +91,185 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Fri, Jun 17, 2022 at 07:58:37AM -0400, Mimi Zohar wrote:
->On Fri, 2022-06-17 at 11:57 +0800, Coiby Xu wrote:
->> >Thanks for explaining IMA to me! There is still the question of what's
->> >the root of trust for .builtin_trusted_keys when there is no real
->> >signature verification. For example, when CONFIG_KEXEC_SIG is enabled,
->> >the default IMA policy is to not appraise kexec image. Since lockdown is
->> >not enabled by default, there is no real verification as
->> >kimage_validate_signature succeeds even when kexec_image_verify_sig
->> >fails.
->>
->> I realize my reasoning is incorrect. Actually the signature
->> verification which establishes the trust on the keys happens in the
->> bootloader. So IMA appraisal or kimage_validate_signature is irrelevant
->> to the question of the root of trust of .builtin_trusted_key. For GRUB,
->> it won't verify the signature by default when secure boot is not enabled.
->> Thus the question of what's root of trust when there is no signature
->> verification is still valid.
->
->We're saying the same thing, just differently.  Your wording describes
->secure boot, how it is established, and who/what is responsible for it.
->I don't think those details are needed.  I originally said,
+Hi,
 
-I think I'm addressing a different concern or case. If kexec_file_load is going
-to verify a kernel image signature, what keys is it going to trust and why? I
-believe explaining the root trust for different keyrings is to answer this
-question. When a bootloader verifies a kernel image signature, the trust is
-based on verification of the kernel image signature which we both agree. But
-what if a bootloader doesn't do the verification? 
+On 06/13/22 at 04:09pm, Zhen Lei wrote:
+> If the crashkernel has both high memory above DMA zones and low memory
+> in DMA zones, kexec always loads the content such as Image and dtb to the
+> high memory instead of the low memory. This means that only high memory
+> requires write protection based on page-level mapping. The allocation of
+> high memory does not depend on the DMA boundary. So we can reserve the
+> high memory first even if the crashkernel reservation is deferred.
+> 
+> This means that the block mapping can still be performed on other kernel
+> linear address spaces, the TLB miss rate can be reduced and the system
+> performance will be improved.
 
->
->.builtin_trusted_keys:
->
->For example,
->
->Keys may be built into the kernel during build or inserted into memory
->reserved for keys post build.  In both of these cases, trust is based
->on verification of the kernel image signature.  On a physical system in
->a secure boot environment, this trust is rooted in HW.
->
->The last line should have said, "For example, on a physical system in a
->...".
->
->thanks,
->
->Mimi
->
+Ugh, this looks a little ugly, honestly.
 
--- 
-Best regards,
-Coiby
+If that's for sure arm64 can't split large page mapping of linear
+region, this patch is one way to optimize linear mapping. Given kdump
+setting is necessary on arm64 server, the booting speed is truly
+impacted heavily.
+
+However, I would suggest letting it as is with below reasons:
+
+1) The code will complicate the crashkernel reservatoin code which
+is already difficult to understand. 
+2) It can only optimize the two cases, first is CONFIG_ZONE_DMA|DMA32
+  disabled, the other is crashkernel=,high is specified. While both
+  two cases are corner case, most of systems have CONFIG_ZONE_DMA|DMA32
+  enabled, and most of systems have crashkernel=xM which is enough.
+  Having them optimized won't bring benefit to most of systems.
+3) Besides, the crashkernel=,high can be handled earlier because 
+  arm64 alwasys have memblock.bottom_up == false currently, thus we
+  don't need worry arbout the lower limit of crashkernel,high
+  reservation for now. If memblock.bottom_up is set true in the future,
+  this patch doesn't work any more.
+
+
+...
+        crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+                                               crash_base, crash_max);
+
+So, in my opinion, we can leave the current NON_BLOCK|SECT mapping as
+is caused by crashkernel reserving, since no regression is brought.
+And meantime, turning to check if there's any way to make the contiguous
+linear mapping and later splitting work. The patch 4, 5 in this patchset
+doesn't make much sense to me, frankly speaking.
+
+Thanks
+Baoquan
+
+> 
+> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+> ---
+>  arch/arm64/mm/init.c | 71 ++++++++++++++++++++++++++++++++++++++++----
+>  1 file changed, 65 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+> index fb24efbc46f5ef4..ae0bae2cafe6ab0 100644
+> --- a/arch/arm64/mm/init.c
+> +++ b/arch/arm64/mm/init.c
+> @@ -141,15 +141,44 @@ static void __init reserve_crashkernel(int dma_state)
+>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>  	char *cmdline = boot_command_line;
+>  	int dma_enabled = IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32);
+> -	int ret;
+> +	int ret, skip_res = 0, skip_low_res = 0;
+>  	bool fixed_base;
+>  
+>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>  		return;
+>  
+> -	if ((!dma_enabled && (dma_state != DMA_PHYS_LIMIT_UNKNOWN)) ||
+> -	     (dma_enabled && (dma_state != DMA_PHYS_LIMIT_KNOWN)))
+> -		return;
+> +	/*
+> +	 * In the following table:
+> +	 * X,high  means crashkernel=X,high
+> +	 * unknown means dma_state = DMA_PHYS_LIMIT_UNKNOWN
+> +	 * known   means dma_state = DMA_PHYS_LIMIT_KNOWN
+> +	 *
+> +	 * The first two columns indicate the status, and the last two
+> +	 * columns indicate the phase in which crash high or low memory
+> +	 * needs to be reserved.
+> +	 *  ---------------------------------------------------
+> +	 * | DMA enabled | X,high used |  unknown  |   known   |
+> +	 *  ---------------------------------------------------
+> +	 * |      N            N       |    low    |    NOP    |
+> +	 * |      Y            N       |    NOP    |    low    |
+> +	 * |      N            Y       |  high/low |    NOP    |
+> +	 * |      Y            Y       |    high   |    low    |
+> +	 *  ---------------------------------------------------
+> +	 *
+> +	 * But in this function, the crash high memory allocation of
+> +	 * crashkernel=Y,high and the crash low memory allocation of
+> +	 * crashkernel=X[@offset] for crashk_res are mixed at one place.
+> +	 * So the table above need to be adjusted as below:
+> +	 *  ---------------------------------------------------
+> +	 * | DMA enabled | X,high used |  unknown  |   known   |
+> +	 *  ---------------------------------------------------
+> +	 * |      N            N       |    res    |    NOP    |
+> +	 * |      Y            N       |    NOP    |    res    |
+> +	 * |      N            Y       |res/low_res|    NOP    |
+> +	 * |      Y            Y       |    res    |  low_res  |
+> +	 *  ---------------------------------------------------
+> +	 *
+> +	 */
+>  
+>  	/* crashkernel=X[@offset] */
+>  	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+> @@ -169,10 +198,33 @@ static void __init reserve_crashkernel(int dma_state)
+>  		else if (ret)
+>  			return;
+>  
+> +		/* See the third row of the second table above, NOP */
+> +		if (!dma_enabled && (dma_state == DMA_PHYS_LIMIT_KNOWN))
+> +			return;
+> +
+> +		/* See the fourth row of the second table above */
+> +		if (dma_enabled) {
+> +			if (dma_state == DMA_PHYS_LIMIT_UNKNOWN)
+> +				skip_low_res = 1;
+> +			else
+> +				skip_res = 1;
+> +		}
+> +
+>  		crash_max = CRASH_ADDR_HIGH_MAX;
+>  	} else if (ret || !crash_size) {
+>  		/* The specified value is invalid */
+>  		return;
+> +	} else {
+> +		/* See the 1-2 rows of the second table above, NOP */
+> +		if ((!dma_enabled && (dma_state == DMA_PHYS_LIMIT_KNOWN)) ||
+> +		     (dma_enabled && (dma_state == DMA_PHYS_LIMIT_UNKNOWN)))
+> +			return;
+> +	}
+> +
+> +	if (skip_res) {
+> +		crash_base = crashk_res.start;
+> +		crash_size = crashk_res.end - crashk_res.start + 1;
+> +		goto check_low;
+>  	}
+>  
+>  	fixed_base = !!crash_base;
+> @@ -202,9 +254,18 @@ static void __init reserve_crashkernel(int dma_state)
+>  		return;
+>  	}
+>  
+> +	crashk_res.start = crash_base;
+> +	crashk_res.end = crash_base + crash_size - 1;
+> +
+> +check_low:
+> +	if (skip_low_res)
+> +		return;
+> +
+>  	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
+>  	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+>  		memblock_phys_free(crash_base, crash_size);
+> +		crashk_res.start = 0;
+> +		crashk_res.end = 0;
+>  		return;
+>  	}
+>  
+> @@ -219,8 +280,6 @@ static void __init reserve_crashkernel(int dma_state)
+>  	if (crashk_low_res.end)
+>  		kmemleak_ignore_phys(crashk_low_res.start);
+>  
+> -	crashk_res.start = crash_base;
+> -	crashk_res.end = crash_base + crash_size - 1;
+>  	insert_resource(&iomem_resource, &crashk_res);
+>  }
+>  
+> -- 
+> 2.25.1
+> 
 
 
 _______________________________________________
