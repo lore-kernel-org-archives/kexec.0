@@ -4,97 +4,87 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 454AAC43334
-	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 08:59:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A93BDC43334
+	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 09:28:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=r7GyHkQ4qe5I8kBLq1RyaV7LEZpM89kSq3V7PKVTmhQ=; b=PfvWGJuvQOPMx+
-	8hLxrh2hzs5yhQ67oQHbzsvqVZO0YjTsKA7Xyoaw29lxm+MGfCLOqDMFQnR/J8qE+j1cYrq28VR+1
-	cN6N5RENx25n3cN6K7337zYCziTUZCPGiv72QeZCwondRvGI6lPaq7t4yN8D6oe854KBhpqYTMJVW
-	8/0JcF21p4VDny0Tmdnmp9XzKNQT5iL1fgSstmqYtMudzFUNRtHIdWIV0WUIHuR0jhBEAGWTHMlJl
-	6YW5gopq7JSyN8JzdWCxruP1AMtEeKUI61wSXQktk6K+lRG+Oc9lsjX12xO6aTJmUkwjRMIRB+em/
-	TxicF2gyjtmJMmDMb6tg==;
+	List-Owner; bh=OTjxWMiEQrWnwdK1t8FBeowFapBJtthdVdIkDokeTik=; b=UrPclx8lGC/ezQ
+	Gv/6TEcheBVN/gyf4GNMb9RK3UEBcdg3RrdUiAxnLqlpah/yT7ZuU8R3hoOdA8cmLfSHAxoNmSz8l
+	oob8pBZ5IHeCmzwebBFKlgtuLakYZBKBADDi+qm2Mf3XfIAhZG3dOuwJGE5IPlDNuWnD3GufLVTHi
+	javyqk1+E5qFs6nZY1EN+RNu4n3Eb5LAzr9rrXsStgpBuofFvj9Em6zHh8FA8+d2ZSXK5XX4uwagS
+	GNs1ZLt4M/1NzMDRq7XvNgBK76TXl6OyDuZ6J9zP+TxIPGD1VcWYCECOaCRdn6k92MrFmWUDKQ/Cp
+	Ay9J4im6QG7FCjApbF8g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3ZjK-004TgA-Jw; Tue, 21 Jun 2022 08:59:26 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1o3aB3-004cxF-5i; Tue, 21 Jun 2022 09:28:05 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3ZjG-004Td8-4Z
-	for kexec@lists.infradead.org; Tue, 21 Jun 2022 08:59:25 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25L8MfLU002079;
-	Tue, 21 Jun 2022 08:59:15 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=9QSiJLr9rFvG9IsQcH+vrpXPHg5yeQ3UUD0HemvLOak=;
- b=n0437zonrPAweAdixHS4xmuCM5d3PXzR6ZxD73lxYENyOreZCKOF/D85BLpkkLsz8On5
- OCsGeFtmHmDnn0bztPGhne5pca3yW3rQBFK3wqUflzxXdrRLsOPHmmFZO94ZUrsH44ov
- TgHTv0F2qHO0fblwRJ15sc/EOWnRc4AENPgd3Yps/YMCu0fTseQOUmomqTGTBSaan77M
- fhcEFHd9cQD0MI9d6hNWiThL9pwW8pu4meA/C5sPaH1/2Y0cbQoggruNi0Cucd1d4JlO
- rRl35szmICd5neGSNRwujIxfSjp8/uvx07u+LNcaThmovQVlsqqjULYrik40CuM/v1p8 wA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gu8b8ctbj-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jun 2022 08:59:15 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25L7mX0N025842;
-	Tue, 21 Jun 2022 08:59:15 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gu8b8ctax-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jun 2022 08:59:14 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25L8pgLw015674;
-	Tue, 21 Jun 2022 08:59:13 GMT
-Received: from b06avi18878370.portsmouth.uk.ibm.com (b06avi18878370.portsmouth.uk.ibm.com [9.149.26.194])
-	by ppma04ams.nl.ibm.com with ESMTP id 3gs6b93qcg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 21 Jun 2022 08:59:13 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-	by b06avi18878370.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25L8xFnq16712018
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 21 Jun 2022 08:59:15 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id E1DCDAE055;
-	Tue, 21 Jun 2022 08:59:09 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 9269DAE04D;
-	Tue, 21 Jun 2022 08:59:09 +0000 (GMT)
-Received: from [9.145.4.7] (unknown [9.145.4.7])
-	by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Tue, 21 Jun 2022 08:59:09 +0000 (GMT)
-Message-ID: <2df3da07-9384-d8b2-15f5-b124538b93c2@linux.ibm.com>
-Date: Tue, 21 Jun 2022 10:59:09 +0200
+	id 1o3aAw-004cu5-Up
+	for kexec@lists.infradead.org; Tue, 21 Jun 2022 09:28:00 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655803670;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding:
+	 in-reply-to:in-reply-to:references:references;
+	bh=1/6eJspt/AVzBoz5mItJSgxql1F5f7nb/z62lzZC//s=;
+	b=h92MBdQ60YyfZtTbeTYIsHZWShRLkjKqTjvj2+fhkEzm8r35rgkMIsdzQo3u8IA9caCYqf
+	5pxhNmMkM6OnewRaPK1fLodCkqUaE5yz1EyXfayLo9+RONtmB/JSoZisruRS5D5+BQzVE2
+	ixudyhNSW9jUk8rYMuFumpZtVxYWyig=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-2-MQve9TMLMYyX3G1gVtvhfA-1; Tue, 21 Jun 2022 05:27:47 -0400
+X-MC-Unique: MQve9TMLMYyX3G1gVtvhfA-1
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 539A280B70F;
+	Tue, 21 Jun 2022 09:27:46 +0000 (UTC)
+Received: from localhost (ovpn-12-183.pek2.redhat.com [10.72.12.183])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id A52A540CFD0A;
+	Tue, 21 Jun 2022 09:27:44 +0000 (UTC)
+Date: Tue, 21 Jun 2022 17:27:40 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Kefeng Wang <wangkefeng.wang@huawei.com>
+Cc: Zhen Lei <thunder.leizhen@huawei.com>,
+	Catalin Marinas <catalin.marinas@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>,
+	Mark Rutland <mark.rutland@arm.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>,
+	Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
+	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
+	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
+	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
+	Randy Dunlap <rdunlap@infradead.org>,
+	Feng Zhou <zhoufeng.zf@bytedance.com>,
+	Chen Zhou <dingguo.cz@antgroup.com>,
+	John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>,
+	liushixin <liushixin2@huawei.com>
+Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
+ high memory
+Message-ID: <YrGPDLea0ALMOqFV@MiWiFi-R3L-srv>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-6-thunder.leizhen@huawei.com>
+ <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
+ <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.10.0
-Subject: Re: [PATCH v5 1/5] powerpc/kexec: make update_cpus_node non-static
-Content-Language: fr
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au
-References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
- <20220620070106.93141-2-sourabhjain@linux.ibm.com>
-From: Laurent Dufour <ldufour@linux.ibm.com>
-In-Reply-To: <20220620070106.93141-2-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: xuE0eHp_5TAqd5f70xtgvJEbGlsHlhgI
-X-Proofpoint-ORIG-GUID: 1MAYFnzZaqPZEDtg-TVT1vpENA4EjQYb
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-21_03,2022-06-17_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 mlxlogscore=999
- spamscore=0 priorityscore=1501 impostorscore=0 clxscore=1011 phishscore=0
- malwarescore=0 suspectscore=0 lowpriorityscore=0 mlxscore=0 bulkscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2206210036
+Content-Disposition: inline
+In-Reply-To: <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220621_015922_619444_91F378FB 
-X-CRM114-Status: GOOD (  33.87  )
+X-CRM114-CacheID: sfid-20220621_022759_098313_CAD0A6AE 
+X-CRM114-Status: GOOD (  40.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -106,247 +96,124 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20/06/2022, 09:01:02, Sourabh Jain wrote:
-> Make the update_cpus_node function non-static and export it for
-> usage in other kexec components.
-> 
-> The update_cpus_node definition is moved to core_64.c so that it
-> can be used with both kexec_load and kexec_file_load system calls.
-> 
-> No functional change intended.
+On 06/21/22 at 02:24pm, Kefeng Wang wrote:
+> =
 
-And FWIW
-Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  arch/powerpc/include/asm/kexec.h  |  1 +
->  arch/powerpc/kexec/core_64.c      | 88 +++++++++++++++++++++++++++++++
->  arch/powerpc/kexec/file_load_64.c | 87 ------------------------------
->  3 files changed, 89 insertions(+), 87 deletions(-)
-> 
-> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-> index 2aefe14e1442..c8040c93b15a 100644
-> --- a/arch/powerpc/include/asm/kexec.h
-> +++ b/arch/powerpc/include/asm/kexec.h
-> @@ -129,6 +129,7 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image);
->  int setup_new_fdt_ppc64(const struct kimage *image, void *fdt,
->  			unsigned long initrd_load_addr,
->  			unsigned long initrd_len, const char *cmdline);
-> +int update_cpus_node(void *fdt);
->  #endif /* CONFIG_PPC64 */
->  
->  #endif /* CONFIG_KEXEC_FILE */
-> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-> index 6cc7793b8420..65b3afb2169a 100644
-> --- a/arch/powerpc/kexec/core_64.c
-> +++ b/arch/powerpc/kexec/core_64.c
-> @@ -16,6 +16,7 @@
->  #include <linux/kernel.h>
->  #include <linux/cpu.h>
->  #include <linux/hardirq.h>
-> +#include <linux/libfdt.h>
->  
->  #include <asm/page.h>
->  #include <asm/current.h>
-> @@ -377,6 +378,93 @@ void default_machine_kexec(struct kimage *image)
->  	/* NOTREACHED */
->  }
->  
-> +/**
-> + * add_node_props - Reads node properties from device node structure and add
-> + *                  them to fdt.
-> + * @fdt:            Flattened device tree of the kernel
-> + * @node_offset:    offset of the node to add a property at
-> + * @dn:             device node pointer
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
-> +{
-> +	int ret = 0;
-> +	struct property *pp;
-> +
-> +	if (!dn)
-> +		return -EINVAL;
-> +
-> +	for_each_property_of_node(dn, pp) {
-> +		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
-> +		if (ret < 0) {
-> +			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
-> +			return ret;
-> +		}
-> +	}
-> +	return ret;
-> +}
-> +
-> +/**
-> + * update_cpus_node - Update cpus node of flattened device tree using of_root
-> + *                    device node.
-> + * @fdt:              Flattened device tree of the kernel.
-> + *
-> + * Returns 0 on success, negative errno on error.
-> + */
-> +int update_cpus_node(void *fdt)
-> +{
-> +	struct device_node *cpus_node, *dn;
-> +	int cpus_offset, cpus_subnode_offset, ret = 0;
-> +
-> +	cpus_offset = fdt_path_offset(fdt, "/cpus");
-> +	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
-> +		pr_err("Malformed device tree: error reading /cpus node: %s\n",
-> +		       fdt_strerror(cpus_offset));
-> +		return cpus_offset;
-> +	}
-> +
-> +	if (cpus_offset > 0) {
-> +		ret = fdt_del_node(fdt, cpus_offset);
-> +		if (ret < 0) {
-> +			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
-> +			return -EINVAL;
-> +		}
-> +	}
-> +
-> +	/* Add cpus node to fdt */
-> +	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
-> +	if (cpus_offset < 0) {
-> +		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
-> +		return -EINVAL;
-> +	}
-> +
-> +	/* Add cpus node properties */
-> +	cpus_node = of_find_node_by_path("/cpus");
-> +	ret = add_node_props(fdt, cpus_offset, cpus_node);
-> +	of_node_put(cpus_node);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	/* Loop through all subnodes of cpus and add them to fdt */
-> +	for_each_node_by_type(dn, "cpu") {
-> +		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
-> +		if (cpus_subnode_offset < 0) {
-> +			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
-> +			       fdt_strerror(cpus_subnode_offset));
-> +			ret = cpus_subnode_offset;
-> +			goto out;
-> +		}
-> +
-> +		ret = add_node_props(fdt, cpus_subnode_offset, dn);
-> +		if (ret < 0)
-> +			goto out;
-> +	}
-> +out:
-> +	of_node_put(dn);
-> +	return ret;
-> +}
-> +
->  #ifdef CONFIG_PPC_64S_HASH_MMU
->  /* Values we need to export to the second kernel via the device tree. */
->  static unsigned long htab_base;
-> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
-> index 07da6bf1cf24..57f991b0a9da 100644
-> --- a/arch/powerpc/kexec/file_load_64.c
-> +++ b/arch/powerpc/kexec/file_load_64.c
-> @@ -951,93 +951,6 @@ unsigned int kexec_extra_fdt_size_ppc64(struct kimage *image)
->  	return (unsigned int)(usm_entries * sizeof(u64));
->  }
->  
-> -/**
-> - * add_node_props - Reads node properties from device node structure and add
-> - *                  them to fdt.
-> - * @fdt:            Flattened device tree of the kernel
-> - * @node_offset:    offset of the node to add a property at
-> - * @dn:             device node pointer
-> - *
-> - * Returns 0 on success, negative errno on error.
-> - */
-> -static int add_node_props(void *fdt, int node_offset, const struct device_node *dn)
-> -{
-> -	int ret = 0;
-> -	struct property *pp;
-> -
-> -	if (!dn)
-> -		return -EINVAL;
-> -
-> -	for_each_property_of_node(dn, pp) {
-> -		ret = fdt_setprop(fdt, node_offset, pp->name, pp->value, pp->length);
-> -		if (ret < 0) {
-> -			pr_err("Unable to add %s property: %s\n", pp->name, fdt_strerror(ret));
-> -			return ret;
-> -		}
-> -	}
-> -	return ret;
-> -}
-> -
-> -/**
-> - * update_cpus_node - Update cpus node of flattened device tree using of_root
-> - *                    device node.
-> - * @fdt:              Flattened device tree of the kernel.
-> - *
-> - * Returns 0 on success, negative errno on error.
-> - */
-> -static int update_cpus_node(void *fdt)
-> -{
-> -	struct device_node *cpus_node, *dn;
-> -	int cpus_offset, cpus_subnode_offset, ret = 0;
-> -
-> -	cpus_offset = fdt_path_offset(fdt, "/cpus");
-> -	if (cpus_offset < 0 && cpus_offset != -FDT_ERR_NOTFOUND) {
-> -		pr_err("Malformed device tree: error reading /cpus node: %s\n",
-> -		       fdt_strerror(cpus_offset));
-> -		return cpus_offset;
-> -	}
-> -
-> -	if (cpus_offset > 0) {
-> -		ret = fdt_del_node(fdt, cpus_offset);
-> -		if (ret < 0) {
-> -			pr_err("Error deleting /cpus node: %s\n", fdt_strerror(ret));
-> -			return -EINVAL;
-> -		}
-> -	}
-> -
-> -	/* Add cpus node to fdt */
-> -	cpus_offset = fdt_add_subnode(fdt, fdt_path_offset(fdt, "/"), "cpus");
-> -	if (cpus_offset < 0) {
-> -		pr_err("Error creating /cpus node: %s\n", fdt_strerror(cpus_offset));
-> -		return -EINVAL;
-> -	}
-> -
-> -	/* Add cpus node properties */
-> -	cpus_node = of_find_node_by_path("/cpus");
-> -	ret = add_node_props(fdt, cpus_offset, cpus_node);
-> -	of_node_put(cpus_node);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	/* Loop through all subnodes of cpus and add them to fdt */
-> -	for_each_node_by_type(dn, "cpu") {
-> -		cpus_subnode_offset = fdt_add_subnode(fdt, cpus_offset, dn->full_name);
-> -		if (cpus_subnode_offset < 0) {
-> -			pr_err("Unable to add %s subnode: %s\n", dn->full_name,
-> -			       fdt_strerror(cpus_subnode_offset));
-> -			ret = cpus_subnode_offset;
-> -			goto out;
-> -		}
-> -
-> -		ret = add_node_props(fdt, cpus_subnode_offset, dn);
-> -		if (ret < 0)
-> -			goto out;
-> -	}
-> -out:
-> -	of_node_put(dn);
-> -	return ret;
-> -}
-> -
->  /**
->   * setup_new_fdt_ppc64 - Update the flattend device-tree of the kernel
->   *                       being loaded.
+> On 2022/6/21 13:33, Baoquan He wrote:
+> > Hi,
+> > =
+
+> > On 06/13/22 at 04:09pm, Zhen Lei wrote:
+> > > If the crashkernel has both high memory above DMA zones and low memory
+> > > in DMA zones, kexec always loads the content such as Image and dtb to=
+ the
+> > > high memory instead of the low memory. This means that only high memo=
+ry
+> > > requires write protection based on page-level mapping. The allocation=
+ of
+> > > high memory does not depend on the DMA boundary. So we can reserve the
+> > > high memory first even if the crashkernel reservation is deferred.
+> > > =
+
+> > > This means that the block mapping can still be performed on other ker=
+nel
+> > > linear address spaces, the TLB miss rate can be reduced and the system
+> > > performance will be improved.
+> > Ugh, this looks a little ugly, honestly.
+> > =
+
+> > If that's for sure arm64 can't split large page mapping of linear
+> > region, this patch is one way to optimize linear mapping. Given kdump
+> > setting is necessary on arm64 server, the booting speed is truly
+> > impacted heavily.
+> =
+
+> Is there some conclusion or discussion that arm64 can't split large page
+> mapping?
+
+Yes, please see below commit log. =
+
+commit d27cfa1fc823 ("arm64: mm: set the contiguous bit for kernel mappings=
+ where appropriate")
+
+> =
+
+> Could the crashkernel reservation (and Kfence pool) be splited dynamicall=
+y?
+
+For crashkernel region, we have arch_kexec_protect_crashkres() to secure
+the region, and crash_shrink_memory() could be called to shrink it.
+While crahshkernel region could be crossig part of a block mapping or secti=
+on
+mapping and the mapping need be splitted, that will cause TLB conflicts.
+
+> =
+
+> I found Mark replay "arm64: remove page granularity limitation from
+> KFENCE"[1],
+> =
+
+> =A0 "We also avoid live changes from block<->table mappings, since the
+> =A0 archtitecture gives us very weak guarantees there and generally requi=
+res
+> =A0 a Break-Before-Make sequence (though IIRC this was tightened up
+> =A0 somewhat, so maybe going one way is supposed to work). Unless it's
+> =A0 really necessary, I'd rather not split these block mappings while
+> =A0 they're live."
+> =
+
+> Hi Mark and Catalin,=A0 could you give some comment,=A0 many thanks.
+> =
+
+> [1] https://lore.kernel.org/lkml/20210920101938.GA13863@C02TD0UTHF1T.loca=
+l/T/#m1a7f974593f5545cbcfc0d21560df4e7926b1381
+> =
+
+> =
+
+> > =
+
+> > However, I would suggest letting it as is with below reasons:
+> > =
+
+> > 1) The code will complicate the crashkernel reservatoin code which
+> > is already difficult to understand.
+> > 2) It can only optimize the two cases, first is CONFIG_ZONE_DMA|DMA32
+> >    disabled, the other is crashkernel=3D,high is specified. While both
+> >    two cases are corner case, most of systems have CONFIG_ZONE_DMA|DMA32
+> >    enabled, and most of systems have crashkernel=3DxM which is enough.
+> >    Having them optimized won't bring benefit to most of systems.
+> > 3) Besides, the crashkernel=3D,high can be handled earlier because
+> >    arm64 alwasys have memblock.bottom_up =3D=3D false currently, thus we
+> >    don't need worry arbout the lower limit of crashkernel,high
+> >    reservation for now. If memblock.bottom_up is set true in the future,
+> >    this patch doesn't work any more.
+> > =
+
+> > =
+
+> > ...
+> >          crash_base =3D memblock_phys_alloc_range(crash_size, CRASH_ALI=
+GN,
+> >                                                 crash_base, crash_max);
+> > =
+
+> > So, in my opinion, we can leave the current NON_BLOCK|SECT mapping as
+> > is caused by crashkernel reserving, since no regression is brought.
+> > And meantime, turning to check if there's any way to make the contiguous
+> > linear mapping and later splitting work. The patch 4, 5 in this patchset
+> > doesn't make much sense to me, frankly speaking.
+> > =
+
+> > Thanks
+> > Baoquan
+> =
+
 
 
 _______________________________________________
