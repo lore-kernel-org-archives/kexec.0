@@ -4,37 +4,37 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 75727C43334
-	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 12:44:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 1C980C43334
+	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 12:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:Subject:CC
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=fjwrVY0omjYVIwrXXAPWkGdeYXQT9LtSWAP3PodR/XE=; b=pfuQnFHStCGJoJ
-	jDOBHikhoNPZ3meebcldf/1xuwmgtlXWzFf0slKh/l4mOXyY36IqmO/7gX3sIb918FT1zMh88KdEs
-	i/BGm3Akj3yZ/xdqU+CJ2KOzJ0UtKY4jB9CrvKDskGnio5uXabedCI6bA5ARbr098BoQN8jdfrVyQ
-	kjaySaHDCI2XlWSYU/dMksI7Do7e8ohLVEetQyh5JjLzd8N5ix/bj8de5LaldPDMOSVzd4CV74hAL
-	tT35VsDtNmunyysKhvu0BoDSxxpob4YxfrZTLWNh+nhGofCmLRBFaB5ay+wsrG2Pd2nhDBdNYmbpo
-	pXEx7a+PXRMlyD3cPtow==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-ID:Date:Subject:CC:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=uZdc9eH0EiN8Fj/YWV2idVHHzExwXtuNewR4wIrL1pY=; b=J+wy9dxnoTzTug
+	dJLPz5J/TXBuPmOQSodPXkS4BI24SDHk4ypg/SLyYGxCqTUCVcdGHlESj7RjPjILCetqlYuPQoecm
+	rz5+zTdQ0swzRHAwXsYxxgeb0PAqQ4iqzvfe3puBPOkxsm7zxocwrr7Cz6uYjLwZK9890pxKdESLU
+	74TeKpt3G6OMbm8fJlAEvPmoAsCEGnHs/+8CEsbCrsXpgSciUI4x+kim0WHKvMXM2um/PieeADC+f
+	E6rwxqilmRWjbrlUBuOO24A3xPzD0rcUUg3rUPP22ApPHoOU4INaSV3TTnbNfDc+iuAxB0KykFPdk
+	PzBQGK/GyC+n1tmW6UKQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3dFP-005PIW-JQ; Tue, 21 Jun 2022 12:44:47 +0000
-Received: from szxga08-in.huawei.com ([45.249.212.255])
+	id 1o3dFl-005PSZ-Fx; Tue, 21 Jun 2022 12:45:09 +0000
+Received: from szxga02-in.huawei.com ([45.249.212.188])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3dFM-005PGV-Jz; Tue, 21 Jun 2022 12:44:46 +0000
-Received: from dggpemm500021.china.huawei.com (unknown [172.30.72.56])
-	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LS5kz5jl2z1KC0B;
-	Tue, 21 Jun 2022 20:42:35 +0800 (CST)
+	id 1o3dFQ-005PGy-BT; Tue, 21 Jun 2022 12:44:50 +0000
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.54])
+	by szxga02-in.huawei.com (SkyGuard) with ESMTP id 4LS5jW1zbyzSgs6;
+	Tue, 21 Jun 2022 20:41:19 +0800 (CST)
 Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500021.china.huawei.com (7.185.36.109) with Microsoft SMTP Server
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 20:44:41 +0800
+ 15.1.2375.24; Tue, 21 Jun 2022 20:44:42 +0800
 Received: from thunder-town.china.huawei.com (10.174.178.55) by
  dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 20:44:40 +0800
+ 15.1.2375.24; Tue, 21 Jun 2022 20:44:41 +0800
 From: Zhen Lei <thunder.leizhen@huawei.com>
 To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin"
@@ -51,18 +51,20 @@ CC: Zhen Lei <thunder.leizhen@huawei.com>, Randy Dunlap
 	<wangkefeng.wang@huawei.com>, Chen Zhou <dingguo.cz@antgroup.com>, "John
  Donnelly" <John.p.donnelly@oracle.com>, Dave Kleikamp
 	<dave.kleikamp@oracle.com>
-Subject: [PATCH v2 0/3] arm64: kdump: Function supplement and performance optimization
-Date: Tue, 21 Jun 2022 20:42:45 +0800
-Message-ID: <20220621124249.1315-1-thunder.leizhen@huawei.com>
+Subject: [PATCH v2 1/3] arm64: kdump: Provide default size when crashkernel=Y,low is not specified
+Date: Tue, 21 Jun 2022 20:42:46 +0800
+Message-ID: <20220621124249.1315-2-thunder.leizhen@huawei.com>
 X-Mailer: git-send-email 2.26.0.windows.1
+In-Reply-To: <20220621124249.1315-1-thunder.leizhen@huawei.com>
+References: <20220621124249.1315-1-thunder.leizhen@huawei.com>
 MIME-Version: 1.0
 X-Originating-IP: [10.174.178.55]
 X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
  dggpemm500006.china.huawei.com (7.185.36.236)
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220621_054444_862312_98A0FBD5 
-X-CRM114-Status: GOOD (  12.52  )
+X-CRM114-CacheID: sfid-20220621_054448_766094_26F555F5 
+X-CRM114-Status: GOOD (  16.92  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,43 +81,74 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-v1 --> v2:
-1. Update the commit message of Patch 1, explicitly indicates that "crashkernel=X,high"
-   is specified but "crashkernel=Y,low" is not specified.
-2. Drop Patch 4-5. Currently, focus on function integrity, performance optimization
-   will be considered in later versions.
-3. Patch 3 is not mandatory, it's just a cleanup now, although it is a must for patch 4-5.
-   But to avoid subsequent duplication of effort, I'm glad it was accepted.
+To be consistent with the implementation of x86 and improve cross-platform
+user experience. Try to allocate at least 256 MiB low memory automatically
+for the case that crashkernel=,high is explicitly specified, while
+crashkenrel=,low is omitted.
 
+Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+Acked-by: Baoquan He <bhe@redhat.com>
+---
+ Documentation/admin-guide/kernel-parameters.txt |  8 +-------
+ arch/arm64/mm/init.c                            | 12 +++++++++++-
+ 2 files changed, 12 insertions(+), 8 deletions(-)
 
-v1:
-After the basic functions of "support reserving crashkernel above 4G on arm64
-kdump"(see https://lkml.org/lkml/2022/5/6/428) are implemented, we still have
-three features to be improved.
-1. When crashkernel=X,high is specified but crashkernel=Y,low is not specified,
-   the default crash low memory size is provided.
-2. For crashkernel=X without '@offset', if the low memory fails to be allocated,
-   fall back to reserve region from high memory(above DMA zones).
-3. If crashkernel=X,high is used, page mapping is performed only for the crash
-   high memory, and block mapping is still used for other linear address spaces.
-   Compared to the previous version:
-   (1) For crashkernel=X[@offset], the memory above 4G is not changed to block
-       mapping, leave it to the next time.
-   (2) The implementation method is modified. Now the implementation is simpler
-       and clearer.
-
-Zhen Lei (3):
-  arm64: kdump: Provide default size when crashkernel=Y,low is not
-    specified
-  arm64: kdump: Support crashkernel=X fall back to reserve region above
-    DMA zones
-  arm64: kdump: Remove some redundant checks in map_mem()
-
- .../admin-guide/kernel-parameters.txt         | 10 ++-----
- arch/arm64/mm/init.c                          | 28 +++++++++++++++++--
- arch/arm64/mm/mmu.c                           | 25 ++++++++---------
- 3 files changed, 39 insertions(+), 24 deletions(-)
-
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 2522b11e593f239..65a2c3a22a4b57d 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -843,7 +843,7 @@
+ 			available.
+ 			It will be ignored if crashkernel=X is specified.
+ 	crashkernel=size[KMG],low
+-			[KNL, X86-64] range under 4G. When crashkernel=X,high
++			[KNL, X86-64, ARM64] range under 4G. When crashkernel=X,high
+ 			is passed, kernel could allocate physical memory region
+ 			above 4G, that cause second kernel crash on system
+ 			that require some amount of low memory, e.g. swiotlb
+@@ -857,12 +857,6 @@
+ 			It will be ignored when crashkernel=X,high is not used
+ 			or memory reserved is below 4G.
+ 
+-			[KNL, ARM64] range in low memory.
+-			This one lets the user specify a low range in the
+-			DMA zone for the crash dump kernel.
+-			It will be ignored when crashkernel=X,high is not used
+-			or memory reserved is located in the DMA zones.
+-
+ 	cryptomgr.notests
+ 			[KNL] Disable crypto self-tests
+ 
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index 339ee84e5a61a0b..5390f361208ccf7 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -96,6 +96,14 @@ phys_addr_t __ro_after_init arm64_dma_phys_limit = PHYS_MASK + 1;
+ #define CRASH_ADDR_LOW_MAX		arm64_dma_phys_limit
+ #define CRASH_ADDR_HIGH_MAX		(PHYS_MASK + 1)
+ 
++/*
++ * This is an empirical value in x86_64 and taken here directly. Please
++ * refer to the code comment in reserve_crashkernel_low() of x86_64 for more
++ * details.
++ */
++#define DEFAULT_CRASH_KERNEL_LOW_SIZE	\
++	max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20)
++
+ static int __init reserve_crashkernel_low(unsigned long long low_size)
+ {
+ 	unsigned long long low_base;
+@@ -147,7 +155,9 @@ static void __init reserve_crashkernel(void)
+ 		 * is not allowed.
+ 		 */
+ 		ret = parse_crashkernel_low(cmdline, 0, &crash_low_size, &crash_base);
+-		if (ret && (ret != -ENOENT))
++		if (ret == -ENOENT)
++			crash_low_size = DEFAULT_CRASH_KERNEL_LOW_SIZE;
++		else if (ret)
+ 			return;
+ 
+ 		crash_max = CRASH_ADDR_HIGH_MAX;
 -- 
 2.25.1
 
