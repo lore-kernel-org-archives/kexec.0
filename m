@@ -4,48 +4,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05FD1C433EF
-	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 06:24:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 467ECC433EF
+	for <kexec@archiver.kernel.org>; Tue, 21 Jun 2022 07:57:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=hmWNyGAF09PvU7aN9u991cdHgmxUMY8NmoVGqOXWwJQ=; b=QKwcPBbjAViNGi
-	SCH14n1HvGpoaIEhCTD90UMBEeYAnWT2cCre6Ve1v/ydSCAG0Q1RzzTCDMYogX6ZMnD0z0gWkBDjU
-	aCBNYJHRcS6iiPHVaOsT0y58NKK75NavjuuDsW6ZVRNceMYyQZsx43RWKibfBT2IsWy5vimdPIYpB
-	4geJhsEfQZ+BPYcAPcK3F5Yj0HNynJq3/iS09hw2V9a3395lZ1m/4yGMSPXqWva9qbOmJ0LqoRnpd
-	HKQiHtlQQ/o+XA+2Y3lQ6NMR++9y1P9tKkkwYh/y1eiTMnnN/cS3Cg8y76nTQz6mRbd3JUIHVgdN9
-	Gop7OPZcP3xqoCY+HvTQ==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=E9/GXGIqeOU5ebMqvHNUvXcXZYKu+oH2O3F20pZWpfc=; b=0aMWL+qk5skGxq0GKzWIWd3HMl
+	Ejb8f89FOaK3Zc8J+Zhh425g5BIlqwtvqwg8wa/ppwOsCjZzz9YVEJ0299yXv6uTYgxmfgv+c+t/y
+	kVoaxl2TsFt+iJyenpIaakk/6MVjVK6iz+Z1QEXRYkcEDF2ZY9u03FMu9sMkk6Jw6s/Ed4ttdnB5H
+	XlqgkSD9Xas/L7ieF4JpdkxvY5YcKBaKGryt+KO934T8CBbVGTVWU1FJuXCu1ymlsdc8sqmwva6JE
+	5Aav03tHLHc4dquwkzqVi3hRjdn7d+TAPtjOaqpfA5DU1nvnLoTfDrZSFRjheUV/xM/dC6aml62Pd
+	6BuWGn4g==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3XJR-003rGT-Vi; Tue, 21 Jun 2022 06:24:33 +0000
+	id 1o3YlG-004Eqw-P0; Tue, 21 Jun 2022 07:57:22 +0000
 Received: from szxga01-in.huawei.com ([45.249.212.187])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3XJO-003rDe-4J; Tue, 21 Jun 2022 06:24:32 +0000
-Received: from dggpemm500022.china.huawei.com (unknown [172.30.72.55])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LRxK01kWszkWZJ;
-	Tue, 21 Jun 2022 14:23:00 +0800 (CST)
-Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
- dggpemm500022.china.huawei.com (7.185.36.162) with Microsoft SMTP Server
+	id 1o3YlD-004EnW-65; Tue, 21 Jun 2022 07:57:21 +0000
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.57])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LRzMG6ybKzcbCw;
+	Tue, 21 Jun 2022 15:55:06 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 14:24:09 +0800
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
+ 15.1.2375.24; Tue, 21 Jun 2022 15:56:41 +0800
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
  (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Tue, 21 Jun 2022 14:24:03 +0800
-Message-ID: <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
-Date: Tue, 21 Jun 2022 14:24:01 +0800
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
+ 15.1.2375.24; Tue, 21 Jun 2022 15:56:40 +0800
 Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
  high memory
-Content-Language: en-US
-To: Baoquan He <bhe@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>,
-	Catalin Marinas <catalin.marinas@arm.com>, Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>
+To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>,
+	Ard Biesheuvel <ardb@kernel.org>
 CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin"
 	<hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, Rob Herring
@@ -55,21 +49,27 @@ CC: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
 	<linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
 	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
 	<linux-doc@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou
-	<zhoufeng.zf@bytedance.com>, Chen Zhou <dingguo.cz@antgroup.com>, "John
- Donnelly" <John.p.donnelly@oracle.com>, Dave Kleikamp
-	<dave.kleikamp@oracle.com>, liushixin <liushixin2@huawei.com>
+	<zhoufeng.zf@bytedance.com>, Kefeng Wang <wangkefeng.wang@huawei.com>, "Chen
+ Zhou" <dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>,
+	Dave Kleikamp <dave.kleikamp@oracle.com>
 References: <20220613080932.663-1-thunder.leizhen@huawei.com>
  <20220613080932.663-6-thunder.leizhen@huawei.com>
  <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <4ad5f8c9-a411-da4e-f626-ead83d107bca@huawei.com>
+Date: Tue, 21 Jun 2022 15:56:40 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
+MIME-Version: 1.0
 In-Reply-To: <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500001.china.huawei.com (7.185.36.107)
+Content-Language: en-US
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
 X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220620_232430_541932_B2EB7294 
-X-CRM114-Status: GOOD (  24.77  )
+X-CRM114-CacheID: sfid-20220621_005719_615772_5B181E9B 
+X-CRM114-Status: GOOD (  44.83  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,67 +81,214 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ck9uIDIwMjIvNi8yMSAxMzozMywgQmFvcXVhbiBIZSB3cm90ZToKPiBIaSwKPgo+IE9uIDA2LzEz
-LzIyIGF0IDA0OjA5cG0sIFpoZW4gTGVpIHdyb3RlOgo+PiBJZiB0aGUgY3Jhc2hrZXJuZWwgaGFz
-IGJvdGggaGlnaCBtZW1vcnkgYWJvdmUgRE1BIHpvbmVzIGFuZCBsb3cgbWVtb3J5Cj4+IGluIERN
-QSB6b25lcywga2V4ZWMgYWx3YXlzIGxvYWRzIHRoZSBjb250ZW50IHN1Y2ggYXMgSW1hZ2UgYW5k
-IGR0YiB0byB0aGUKPj4gaGlnaCBtZW1vcnkgaW5zdGVhZCBvZiB0aGUgbG93IG1lbW9yeS4gVGhp
-cyBtZWFucyB0aGF0IG9ubHkgaGlnaCBtZW1vcnkKPj4gcmVxdWlyZXMgd3JpdGUgcHJvdGVjdGlv
-biBiYXNlZCBvbiBwYWdlLWxldmVsIG1hcHBpbmcuIFRoZSBhbGxvY2F0aW9uIG9mCj4+IGhpZ2gg
-bWVtb3J5IGRvZXMgbm90IGRlcGVuZCBvbiB0aGUgRE1BIGJvdW5kYXJ5LiBTbyB3ZSBjYW4gcmVz
-ZXJ2ZSB0aGUKPj4gaGlnaCBtZW1vcnkgZmlyc3QgZXZlbiBpZiB0aGUgY3Jhc2hrZXJuZWwgcmVz
-ZXJ2YXRpb24gaXMgZGVmZXJyZWQuCj4+Cj4+IFRoaXMgbWVhbnMgdGhhdCB0aGUgYmxvY2sgbWFw
-cGluZyBjYW4gc3RpbGwgYmUgcGVyZm9ybWVkIG9uIG90aGVyIGtlcm5lbAo+PiBsaW5lYXIgYWRk
-cmVzcyBzcGFjZXMsIHRoZSBUTEIgbWlzcyByYXRlIGNhbiBiZSByZWR1Y2VkIGFuZCB0aGUgc3lz
-dGVtCj4+IHBlcmZvcm1hbmNlIHdpbGwgYmUgaW1wcm92ZWQuCj4gVWdoLCB0aGlzIGxvb2tzIGEg
-bGl0dGxlIHVnbHksIGhvbmVzdGx5Lgo+Cj4gSWYgdGhhdCdzIGZvciBzdXJlIGFybTY0IGNhbid0
-IHNwbGl0IGxhcmdlIHBhZ2UgbWFwcGluZyBvZiBsaW5lYXIKPiByZWdpb24sIHRoaXMgcGF0Y2gg
-aXMgb25lIHdheSB0byBvcHRpbWl6ZSBsaW5lYXIgbWFwcGluZy4gR2l2ZW4ga2R1bXAKPiBzZXR0
-aW5nIGlzIG5lY2Vzc2FyeSBvbiBhcm02NCBzZXJ2ZXIsIHRoZSBib290aW5nIHNwZWVkIGlzIHRy
-dWx5Cj4gaW1wYWN0ZWQgaGVhdmlseS4KCklzIHRoZXJlIHNvbWUgY29uY2x1c2lvbiBvciBkaXNj
-dXNzaW9uIHRoYXQgYXJtNjQgY2FuJ3Qgc3BsaXQgbGFyZ2UgcGFnZSAKbWFwcGluZz8KCkNvdWxk
-IHRoZSBjcmFzaGtlcm5lbCByZXNlcnZhdGlvbiAoYW5kIEtmZW5jZSBwb29sKSBiZSBzcGxpdGVk
-IGR5bmFtaWNhbGx5PwoKSSBmb3VuZCBNYXJrIHJlcGxheSAiYXJtNjQ6IHJlbW92ZSBwYWdlIGdy
-YW51bGFyaXR5IGxpbWl0YXRpb24gZnJvbSAKS0ZFTkNFIlsxXSwKCiDCoCAiV2UgYWxzbyBhdm9p
-ZCBsaXZlIGNoYW5nZXMgZnJvbSBibG9jazwtPnRhYmxlIG1hcHBpbmdzLCBzaW5jZSB0aGUKIMKg
-IGFyY2h0aXRlY3R1cmUgZ2l2ZXMgdXMgdmVyeSB3ZWFrIGd1YXJhbnRlZXMgdGhlcmUgYW5kIGdl
-bmVyYWxseSByZXF1aXJlcwogwqAgYSBCcmVhay1CZWZvcmUtTWFrZSBzZXF1ZW5jZSAodGhvdWdo
-IElJUkMgdGhpcyB3YXMgdGlnaHRlbmVkIHVwCiDCoCBzb21ld2hhdCwgc28gbWF5YmUgZ29pbmcg
-b25lIHdheSBpcyBzdXBwb3NlZCB0byB3b3JrKS4gVW5sZXNzIGl0J3MKIMKgIHJlYWxseSBuZWNl
-c3NhcnksIEknZCByYXRoZXIgbm90IHNwbGl0IHRoZXNlIGJsb2NrIG1hcHBpbmdzIHdoaWxlCiDC
-oCB0aGV5J3JlIGxpdmUuIgoKSGkgTWFyayBhbmQgQ2F0YWxpbizCoCBjb3VsZCB5b3UgZ2l2ZSBz
-b21lIGNvbW1lbnQswqAgbWFueSB0aGFua3MuCgpbMV0gCmh0dHBzOi8vbG9yZS5rZXJuZWwub3Jn
-L2xrbWwvMjAyMTA5MjAxMDE5MzguR0ExMzg2M0BDMDJURDBVVEhGMVQubG9jYWwvVC8jbTFhN2Y5
-NzQ1OTNmNTU0NWNiY2ZjMGQyMTU2MGRmNGU3OTI2YjEzODEKCgo+Cj4gSG93ZXZlciwgSSB3b3Vs
-ZCBzdWdnZXN0IGxldHRpbmcgaXQgYXMgaXMgd2l0aCBiZWxvdyByZWFzb25zOgo+Cj4gMSkgVGhl
-IGNvZGUgd2lsbCBjb21wbGljYXRlIHRoZSBjcmFzaGtlcm5lbCByZXNlcnZhdG9pbiBjb2RlIHdo
-aWNoCj4gaXMgYWxyZWFkeSBkaWZmaWN1bHQgdG8gdW5kZXJzdGFuZC4KPiAyKSBJdCBjYW4gb25s
-eSBvcHRpbWl6ZSB0aGUgdHdvIGNhc2VzLCBmaXJzdCBpcyBDT05GSUdfWk9ORV9ETUF8RE1BMzIK
-PiAgICBkaXNhYmxlZCwgdGhlIG90aGVyIGlzIGNyYXNoa2VybmVsPSxoaWdoIGlzIHNwZWNpZmll
-ZC4gV2hpbGUgYm90aAo+ICAgIHR3byBjYXNlcyBhcmUgY29ybmVyIGNhc2UsIG1vc3Qgb2Ygc3lz
-dGVtcyBoYXZlIENPTkZJR19aT05FX0RNQXxETUEzMgo+ICAgIGVuYWJsZWQsIGFuZCBtb3N0IG9m
-IHN5c3RlbXMgaGF2ZSBjcmFzaGtlcm5lbD14TSB3aGljaCBpcyBlbm91Z2guCj4gICAgSGF2aW5n
-IHRoZW0gb3B0aW1pemVkIHdvbid0IGJyaW5nIGJlbmVmaXQgdG8gbW9zdCBvZiBzeXN0ZW1zLgo+
-IDMpIEJlc2lkZXMsIHRoZSBjcmFzaGtlcm5lbD0saGlnaCBjYW4gYmUgaGFuZGxlZCBlYXJsaWVy
-IGJlY2F1c2UKPiAgICBhcm02NCBhbHdhc3lzIGhhdmUgbWVtYmxvY2suYm90dG9tX3VwID09IGZh
-bHNlIGN1cnJlbnRseSwgdGh1cyB3ZQo+ICAgIGRvbid0IG5lZWQgd29ycnkgYXJib3V0IHRoZSBs
-b3dlciBsaW1pdCBvZiBjcmFzaGtlcm5lbCxoaWdoCj4gICAgcmVzZXJ2YXRpb24gZm9yIG5vdy4g
-SWYgbWVtYmxvY2suYm90dG9tX3VwIGlzIHNldCB0cnVlIGluIHRoZSBmdXR1cmUsCj4gICAgdGhp
-cyBwYXRjaCBkb2Vzbid0IHdvcmsgYW55IG1vcmUuCj4KPgo+IC4uLgo+ICAgICAgICAgIGNyYXNo
-X2Jhc2UgPSBtZW1ibG9ja19waHlzX2FsbG9jX3JhbmdlKGNyYXNoX3NpemUsIENSQVNIX0FMSUdO
-LAo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNyYXNo
-X2Jhc2UsIGNyYXNoX21heCk7Cj4KPiBTbywgaW4gbXkgb3Bpbmlvbiwgd2UgY2FuIGxlYXZlIHRo
-ZSBjdXJyZW50IE5PTl9CTE9DS3xTRUNUIG1hcHBpbmcgYXMKPiBpcyBjYXVzZWQgYnkgY3Jhc2hr
-ZXJuZWwgcmVzZXJ2aW5nLCBzaW5jZSBubyByZWdyZXNzaW9uIGlzIGJyb3VnaHQuCj4gQW5kIG1l
-YW50aW1lLCB0dXJuaW5nIHRvIGNoZWNrIGlmIHRoZXJlJ3MgYW55IHdheSB0byBtYWtlIHRoZSBj
-b250aWd1b3VzCj4gbGluZWFyIG1hcHBpbmcgYW5kIGxhdGVyIHNwbGl0dGluZyB3b3JrLiBUaGUg
-cGF0Y2ggNCwgNSBpbiB0aGlzIHBhdGNoc2V0Cj4gZG9lc24ndCBtYWtlIG11Y2ggc2Vuc2UgdG8g
-bWUsIGZyYW5rbHkgc3BlYWtpbmcuCj4KPiBUaGFua3MKPiBCYW9xdWFuCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QKa2V4
-ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFu
-L2xpc3RpbmZvL2tleGVjCg==
+
+
+On 2022/6/21 13:33, Baoquan He wrote:
+> Hi,
+> 
+> On 06/13/22 at 04:09pm, Zhen Lei wrote:
+>> If the crashkernel has both high memory above DMA zones and low memory
+>> in DMA zones, kexec always loads the content such as Image and dtb to the
+>> high memory instead of the low memory. This means that only high memory
+>> requires write protection based on page-level mapping. The allocation of
+>> high memory does not depend on the DMA boundary. So we can reserve the
+>> high memory first even if the crashkernel reservation is deferred.
+>>
+>> This means that the block mapping can still be performed on other kernel
+>> linear address spaces, the TLB miss rate can be reduced and the system
+>> performance will be improved.
+> 
+> Ugh, this looks a little ugly, honestly.
+> 
+> If that's for sure arm64 can't split large page mapping of linear
+> region, this patch is one way to optimize linear mapping. Given kdump
+> setting is necessary on arm64 server, the booting speed is truly
+> impacted heavily.
+
+There is also a performance impact when running.
+
+> 
+> However, I would suggest letting it as is with below reasons:
+> 
+> 1) The code will complicate the crashkernel reservatoin code which
+> is already difficult to understand. 
+
+Yeah, I feel it, too.
+
+> 2) It can only optimize the two cases, first is CONFIG_ZONE_DMA|DMA32
+>   disabled, the other is crashkernel=,high is specified. While both
+>   two cases are corner case, most of systems have CONFIG_ZONE_DMA|DMA32
+>   enabled, and most of systems have crashkernel=xM which is enough.
+>   Having them optimized won't bring benefit to most of systems.
+
+The case of CONFIG_ZONE_DMA|DMA32 disabled have been resolved by
+commit 031495635b46 ("arm64: Do not defer reserve_crashkernel() for platforms with no DMA memory zones").
+Currently the performance problem to be optimized is that DMA is enabled.
+
+
+> 3) Besides, the crashkernel=,high can be handled earlier because 
+>   arm64 alwasys have memblock.bottom_up == false currently, thus we
+>   don't need worry arbout the lower limit of crashkernel,high
+>   reservation for now. If memblock.bottom_up is set true in the future,
+>   this patch doesn't work any more.
+> 
+> 
+> ...
+>         crash_base = memblock_phys_alloc_range(crash_size, CRASH_ALIGN,
+>                                                crash_base, crash_max);
+> 
+> So, in my opinion, we can leave the current NON_BLOCK|SECT mapping as
+> is caused by crashkernel reserving, since no regression is brought.
+> And meantime, turning to check if there's any way to make the contiguous
+> linear mapping and later splitting work. The patch 4, 5 in this patchset
+> doesn't make much sense to me, frankly speaking.
+
+OK. As discussed earlier, I can rethink if there is a better way to patch 4-5,
+and this time focus on patch 1-2. In this way, all the functions are complete,
+and only optimization is left.
+
+> 
+> Thanks
+> Baoquan
+> 
+>>
+>> Signed-off-by: Zhen Lei <thunder.leizhen@huawei.com>
+>> ---
+>>  arch/arm64/mm/init.c | 71 ++++++++++++++++++++++++++++++++++++++++----
+>>  1 file changed, 65 insertions(+), 6 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index fb24efbc46f5ef4..ae0bae2cafe6ab0 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -141,15 +141,44 @@ static void __init reserve_crashkernel(int dma_state)
+>>  	unsigned long long crash_max = CRASH_ADDR_LOW_MAX;
+>>  	char *cmdline = boot_command_line;
+>>  	int dma_enabled = IS_ENABLED(CONFIG_ZONE_DMA) || IS_ENABLED(CONFIG_ZONE_DMA32);
+>> -	int ret;
+>> +	int ret, skip_res = 0, skip_low_res = 0;
+>>  	bool fixed_base;
+>>  
+>>  	if (!IS_ENABLED(CONFIG_KEXEC_CORE))
+>>  		return;
+>>  
+>> -	if ((!dma_enabled && (dma_state != DMA_PHYS_LIMIT_UNKNOWN)) ||
+>> -	     (dma_enabled && (dma_state != DMA_PHYS_LIMIT_KNOWN)))
+>> -		return;
+>> +	/*
+>> +	 * In the following table:
+>> +	 * X,high  means crashkernel=X,high
+>> +	 * unknown means dma_state = DMA_PHYS_LIMIT_UNKNOWN
+>> +	 * known   means dma_state = DMA_PHYS_LIMIT_KNOWN
+>> +	 *
+>> +	 * The first two columns indicate the status, and the last two
+>> +	 * columns indicate the phase in which crash high or low memory
+>> +	 * needs to be reserved.
+>> +	 *  ---------------------------------------------------
+>> +	 * | DMA enabled | X,high used |  unknown  |   known   |
+>> +	 *  ---------------------------------------------------
+>> +	 * |      N            N       |    low    |    NOP    |
+>> +	 * |      Y            N       |    NOP    |    low    |
+>> +	 * |      N            Y       |  high/low |    NOP    |
+>> +	 * |      Y            Y       |    high   |    low    |
+>> +	 *  ---------------------------------------------------
+>> +	 *
+>> +	 * But in this function, the crash high memory allocation of
+>> +	 * crashkernel=Y,high and the crash low memory allocation of
+>> +	 * crashkernel=X[@offset] for crashk_res are mixed at one place.
+>> +	 * So the table above need to be adjusted as below:
+>> +	 *  ---------------------------------------------------
+>> +	 * | DMA enabled | X,high used |  unknown  |   known   |
+>> +	 *  ---------------------------------------------------
+>> +	 * |      N            N       |    res    |    NOP    |
+>> +	 * |      Y            N       |    NOP    |    res    |
+>> +	 * |      N            Y       |res/low_res|    NOP    |
+>> +	 * |      Y            Y       |    res    |  low_res  |
+>> +	 *  ---------------------------------------------------
+>> +	 *
+>> +	 */
+>>  
+>>  	/* crashkernel=X[@offset] */
+>>  	ret = parse_crashkernel(cmdline, memblock_phys_mem_size(),
+>> @@ -169,10 +198,33 @@ static void __init reserve_crashkernel(int dma_state)
+>>  		else if (ret)
+>>  			return;
+>>  
+>> +		/* See the third row of the second table above, NOP */
+>> +		if (!dma_enabled && (dma_state == DMA_PHYS_LIMIT_KNOWN))
+>> +			return;
+>> +
+>> +		/* See the fourth row of the second table above */
+>> +		if (dma_enabled) {
+>> +			if (dma_state == DMA_PHYS_LIMIT_UNKNOWN)
+>> +				skip_low_res = 1;
+>> +			else
+>> +				skip_res = 1;
+>> +		}
+>> +
+>>  		crash_max = CRASH_ADDR_HIGH_MAX;
+>>  	} else if (ret || !crash_size) {
+>>  		/* The specified value is invalid */
+>>  		return;
+>> +	} else {
+>> +		/* See the 1-2 rows of the second table above, NOP */
+>> +		if ((!dma_enabled && (dma_state == DMA_PHYS_LIMIT_KNOWN)) ||
+>> +		     (dma_enabled && (dma_state == DMA_PHYS_LIMIT_UNKNOWN)))
+>> +			return;
+>> +	}
+>> +
+>> +	if (skip_res) {
+>> +		crash_base = crashk_res.start;
+>> +		crash_size = crashk_res.end - crashk_res.start + 1;
+>> +		goto check_low;
+>>  	}
+>>  
+>>  	fixed_base = !!crash_base;
+>> @@ -202,9 +254,18 @@ static void __init reserve_crashkernel(int dma_state)
+>>  		return;
+>>  	}
+>>  
+>> +	crashk_res.start = crash_base;
+>> +	crashk_res.end = crash_base + crash_size - 1;
+>> +
+>> +check_low:
+>> +	if (skip_low_res)
+>> +		return;
+>> +
+>>  	if ((crash_base >= CRASH_ADDR_LOW_MAX) &&
+>>  	     crash_low_size && reserve_crashkernel_low(crash_low_size)) {
+>>  		memblock_phys_free(crash_base, crash_size);
+>> +		crashk_res.start = 0;
+>> +		crashk_res.end = 0;
+>>  		return;
+>>  	}
+>>  
+>> @@ -219,8 +280,6 @@ static void __init reserve_crashkernel(int dma_state)
+>>  	if (crashk_low_res.end)
+>>  		kmemleak_ignore_phys(crashk_low_res.start);
+>>  
+>> -	crashk_res.start = crash_base;
+>> -	crashk_res.end = crash_base + crash_size - 1;
+>>  	insert_resource(&iomem_resource, &crashk_res);
+>>  }
+>>  
+>> -- 
+>> 2.25.1
+>>
+> 
+> .
+> 
+
+-- 
+Regards,
+  Zhen Lei
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
