@@ -4,98 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6A44C43334
-	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 08:40:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54343C433EF
+	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 12:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
-	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
-	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
-	bh=hdC5nD0GUv7nECNkHbBVQ57c00kjp1DKjqFJ3mEsUm4=; b=aCwFc7wKZb5+9khWM5HtYuOsnE
-	jFQAEoTR8pEU5F6TCo2IIlJIJA/WkVoBPlFpXESWHEAXlUg+4xVBLldlHw9Gxgr/zT/zI2hhhe+Jb
-	UKvtFNW7FVooR8dL7cqq7h0Jvx+gVaOm1fYTh9IIIc8SD1u5wMm8sgkzcYkLx/AFA1Mm+XtXxBCrb
-	f9u81PYPfTQbI6PlISKilQVhWZGgr9MZqA+f4RI4VeB/4Xjesz8ewmdNTDVwdeLN1ZkJlcjJdPQ1p
-	Fld9jxG5kkvXWHp1IBwLqZYiZFwp2d15LJUpR6m9Frd+F4PZiKZhasAxAXxyy9eVSo2XWBK7cdufJ
-	NPGeHb7Q==;
+	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
+	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=wKTgW8S1zDP5Y7Z6lM/dnSXrs5SG2vvX3aHA5g8neik=; b=maaMiYD6dOz8yZ
+	JDorP7kIYoKeRCzKiVBkkuHMFq/FmMrF6ByLSINScCcBw6W8f3ZxIAxBpKsQsvUL9Sm8Trp37EcZD
+	rLpMjcr12SQT7+ItCJpEr4jAHCoMLPlkT0Dy1bZrhI2DjdI/Es51ZOJLzeoiBf+FiUP8/hDVGl/39
+	6PZfXJJ+v+i2aPyqtLKlRBaz/j8ZkdLbrKcBjDPt/khkQQeHErNznJnT5ldKXpRav633fl72Zz3sX
+	DXqeQmM0Il3Ltpixl2C43YHNtpDY9xQLbngNuaPmQb0m40obJ6L67g0wbwURbWIJLbKO51V2zxIcY
+	osi4DeryaR62bKE+tKsQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3vut-009Jb2-Sr; Wed, 22 Jun 2022 08:40:51 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1o3z57-00AGsm-LI; Wed, 22 Jun 2022 12:03:37 +0000
+Received: from szxga01-in.huawei.com ([45.249.212.187])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3vur-009JZ6-3Y
-	for kexec@lists.infradead.org; Wed, 22 Jun 2022 08:40:50 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25M8NmcQ011003;
-	Wed, 22 Jun 2022 08:40:42 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=ZQ+dEbpWJFMETnununWmQP43T3T8Azzd7hTNqrMT9JU=;
- b=R/MyRn6Q1dW4BCS2tj4NMXx6dRPSAQC/gRO3DToF0k0pG7ndz8K3CPbAXOXoBtXt2Q/U
- EtVz8Csw+LikPVXcBYSAkYuElrt84gV4vPLWln5za2UPrsneKX71e+aVFX6nxV43VCW2
- 6QUzeN8KXpS/W2Vx5bYQViF/sxfMmAyUAitPEk2L87fizt/xKC4x3Nu4vRx8QOHbxcy4
- l3/yWnmoIBkVeSp7aL/yxaau/Iznix/Kn/GC1v+6AVoE+dEHxJRXsAIaQZPG6JxSho3j
- 304BUsmvoa8kUCbd5CshOVCIxWc1Gh0U0wa9bsjbYh7LL2B6s9ybpnnz8Pp5GAFVrMQz JQ== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3guyhm0fru-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 08:40:41 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25M8RNSB028228;
-	Wed, 22 Jun 2022 08:40:41 GMT
-Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3guyhm0fq6-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 08:40:41 +0000
-Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
-	by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25M8avtA016975;
-	Wed, 22 Jun 2022 08:40:38 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-	by ppma06ams.nl.ibm.com with ESMTP id 3gs5yhnax7-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 08:40:38 +0000
-Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
-	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25M8eZAK21233962
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jun 2022 08:40:35 GMT
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id ADC3B11C050;
-	Wed, 22 Jun 2022 08:40:35 +0000 (GMT)
-Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E4B311C04A;
-	Wed, 22 Jun 2022 08:40:33 +0000 (GMT)
-Received: from [9.43.27.116] (unknown [9.43.27.116])
-	by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Wed, 22 Jun 2022 08:40:33 +0000 (GMT)
-Message-ID: <bc8f37cb-006a-0c33-2de8-1481b4201be1@linux.ibm.com>
-Date: Wed, 22 Jun 2022 14:10:32 +0530
+	id 1o3z53-00AGnM-Oi; Wed, 22 Jun 2022 12:03:36 +0000
+Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
+	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LShnt6bYjzkWgG;
+	Wed, 22 Jun 2022 20:02:10 +0800 (CST)
+Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
+ dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 22 Jun 2022 20:03:23 +0800
+Received: from [10.174.177.243] (10.174.177.243) by
+ dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Wed, 22 Jun 2022 20:03:22 +0800
+Message-ID: <ba3a97d6-262d-6413-135d-0be9b0af9a6a@huawei.com>
+Date: Wed, 22 Jun 2022 20:03:21 +0800
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.10.0
-Subject: Re: [PATCH v5 1/5] powerpc/kexec: make update_cpus_node non-static
+User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
+ Thunderbird/91.9.1
+Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
+ high memory
 Content-Language: en-US
-To: Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au
-References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
- <20220620070106.93141-2-sourabhjain@linux.ibm.com>
- <2df3da07-9384-d8b2-15f5-b124538b93c2@linux.ibm.com>
-From: Sourabh Jain <sourabhjain@linux.ibm.com>
-In-Reply-To: <2df3da07-9384-d8b2-15f5-b124538b93c2@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: rq3qBF01Xbcu7F1WoKukn5-Yxxb0rMFT
-X-Proofpoint-ORIG-GUID: CNYtTFeCdoWLtxJtMB1lF2Lntx1H000b
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
- definitions=2022-06-21_11,2022-06-22_01,2022-02-23_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
- lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 impostorscore=0
- mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
- priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206220041
+To: Catalin Marinas <catalin.marinas@arm.com>
+CC: Baoquan He <bhe@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>, "Ard
+ Biesheuvel" <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Thomas
+ Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
+ Petkov" <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
+	Eric Biederman <ebiederm@xmission.com>, Rob Herring <robh+dt@kernel.org>,
+	Frank Rowand <frowand.list@gmail.com>, <devicetree@vger.kernel.org>, "Dave
+ Young" <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Will Deacon
+	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>, Jonathan Corbet
+	<corbet@lwn.net>, <linux-doc@vger.kernel.org>, Randy Dunlap
+	<rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Chen Zhou
+	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
+ Kleikamp" <dave.kleikamp@oracle.com>, liushixin <liushixin2@huawei.com>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-6-thunder.leizhen@huawei.com>
+ <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
+ <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com> <YrIIJkhKWSuAqkCx@arm.com>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
+In-Reply-To: <YrIIJkhKWSuAqkCx@arm.com>
+X-Originating-IP: [10.174.177.243]
+X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
+ dggpemm500001.china.huawei.com (7.185.36.107)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220622_014049_200330_C619D0C3 
-X-CRM114-Status: GOOD (  13.34  )
+X-CRM114-CacheID: sfid-20220622_050334_172251_B38FE1E9 
+X-CRM114-Status: GOOD (  23.89  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -107,29 +81,66 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-
-On 21/06/22 14:29, Laurent Dufour wrote:
-> On 20/06/2022, 09:01:02, Sourabh Jain wrote:
->> Make the update_cpus_node function non-static and export it for
->> usage in other kexec components.
->>
->> The update_cpus_node definition is moved to core_64.c so that it
->> can be used with both kexec_load and kexec_file_load system calls.
->>
->> No functional change intended.
-> And FWIW
-> Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
-Thank you!
-
-- Sourabh Jain
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+Ck9uIDIwMjIvNi8yMiAyOjA0LCBDYXRhbGluIE1hcmluYXMgd3JvdGU6Cj4gT24gVHVlLCBKdW4g
+MjEsIDIwMjIgYXQgMDI6MjQ6MDFQTSArMDgwMCwgS2VmZW5nIFdhbmcgd3JvdGU6Cj4+IE9uIDIw
+MjIvNi8yMSAxMzozMywgQmFvcXVhbiBIZSB3cm90ZToKPj4+IE9uIDA2LzEzLzIyIGF0IDA0OjA5
+cG0sIFpoZW4gTGVpIHdyb3RlOgo+Pj4+IElmIHRoZSBjcmFzaGtlcm5lbCBoYXMgYm90aCBoaWdo
+IG1lbW9yeSBhYm92ZSBETUEgem9uZXMgYW5kIGxvdyBtZW1vcnkKPj4+PiBpbiBETUEgem9uZXMs
+IGtleGVjIGFsd2F5cyBsb2FkcyB0aGUgY29udGVudCBzdWNoIGFzIEltYWdlIGFuZCBkdGIgdG8g
+dGhlCj4+Pj4gaGlnaCBtZW1vcnkgaW5zdGVhZCBvZiB0aGUgbG93IG1lbW9yeS4gVGhpcyBtZWFu
+cyB0aGF0IG9ubHkgaGlnaCBtZW1vcnkKPj4+PiByZXF1aXJlcyB3cml0ZSBwcm90ZWN0aW9uIGJh
+c2VkIG9uIHBhZ2UtbGV2ZWwgbWFwcGluZy4gVGhlIGFsbG9jYXRpb24gb2YKPj4+PiBoaWdoIG1l
+bW9yeSBkb2VzIG5vdCBkZXBlbmQgb24gdGhlIERNQSBib3VuZGFyeS4gU28gd2UgY2FuIHJlc2Vy
+dmUgdGhlCj4+Pj4gaGlnaCBtZW1vcnkgZmlyc3QgZXZlbiBpZiB0aGUgY3Jhc2hrZXJuZWwgcmVz
+ZXJ2YXRpb24gaXMgZGVmZXJyZWQuCj4+Pj4KPj4+PiBUaGlzIG1lYW5zIHRoYXQgdGhlIGJsb2Nr
+IG1hcHBpbmcgY2FuIHN0aWxsIGJlIHBlcmZvcm1lZCBvbiBvdGhlciBrZXJuZWwKPj4+PiBsaW5l
+YXIgYWRkcmVzcyBzcGFjZXMsIHRoZSBUTEIgbWlzcyByYXRlIGNhbiBiZSByZWR1Y2VkIGFuZCB0
+aGUgc3lzdGVtCj4+Pj4gcGVyZm9ybWFuY2Ugd2lsbCBiZSBpbXByb3ZlZC4KPj4+IFVnaCwgdGhp
+cyBsb29rcyBhIGxpdHRsZSB1Z2x5LCBob25lc3RseS4KPj4+Cj4+PiBJZiB0aGF0J3MgZm9yIHN1
+cmUgYXJtNjQgY2FuJ3Qgc3BsaXQgbGFyZ2UgcGFnZSBtYXBwaW5nIG9mIGxpbmVhcgo+Pj4gcmVn
+aW9uLCB0aGlzIHBhdGNoIGlzIG9uZSB3YXkgdG8gb3B0aW1pemUgbGluZWFyIG1hcHBpbmcuIEdp
+dmVuIGtkdW1wCj4+PiBzZXR0aW5nIGlzIG5lY2Vzc2FyeSBvbiBhcm02NCBzZXJ2ZXIsIHRoZSBi
+b290aW5nIHNwZWVkIGlzIHRydWx5Cj4+PiBpbXBhY3RlZCBoZWF2aWx5Lgo+PiBJcyB0aGVyZSBz
+b21lIGNvbmNsdXNpb24gb3IgZGlzY3Vzc2lvbiB0aGF0IGFybTY0IGNhbid0IHNwbGl0IGxhcmdl
+IHBhZ2UKPj4gbWFwcGluZz8KPj4KPj4gQ291bGQgdGhlIGNyYXNoa2VybmVsIHJlc2VydmF0aW9u
+IChhbmQgS2ZlbmNlIHBvb2wpIGJlIHNwbGl0ZWQgZHluYW1pY2FsbHk/Cj4+Cj4+IEkgZm91bmQg
+TWFyayByZXBsYXkgImFybTY0OiByZW1vdmUgcGFnZSBncmFudWxhcml0eSBsaW1pdGF0aW9uIGZy
+b20KPj4gS0ZFTkNFIlsxXSwKPj4KPj4gIMKgICJXZSBhbHNvIGF2b2lkIGxpdmUgY2hhbmdlcyBm
+cm9tIGJsb2NrPC0+dGFibGUgbWFwcGluZ3MsIHNpbmNlIHRoZQo+PiAgwqAgYXJjaHRpdGVjdHVy
+ZSBnaXZlcyB1cyB2ZXJ5IHdlYWsgZ3VhcmFudGVlcyB0aGVyZSBhbmQgZ2VuZXJhbGx5IHJlcXVp
+cmVzCj4+ICDCoCBhIEJyZWFrLUJlZm9yZS1NYWtlIHNlcXVlbmNlICh0aG91Z2ggSUlSQyB0aGlz
+IHdhcyB0aWdodGVuZWQgdXAKPj4gIMKgIHNvbWV3aGF0LCBzbyBtYXliZSBnb2luZyBvbmUgd2F5
+IGlzIHN1cHBvc2VkIHRvIHdvcmspLiBVbmxlc3MgaXQncwo+PiAgwqAgcmVhbGx5IG5lY2Vzc2Fy
+eSwgSSdkIHJhdGhlciBub3Qgc3BsaXQgdGhlc2UgYmxvY2sgbWFwcGluZ3Mgd2hpbGUKPj4gIMKg
+IHRoZXkncmUgbGl2ZS4iCj4gVGhlIHByb2JsZW0gd2l0aCBzcGxpdHRpbmcgaXMgdGhhdCB5b3Ug
+Y2FuIGVuZCB1cCB3aXRoIHR3byBlbnRyaWVzIGluCj4gdGhlIFRMQiBmb3IgdGhlIHNhbWUgVkEt
+PlBBIG1hcHBpbmcgKGUuZy4gb25lIGZvciBhIDRLQiBwYWdlIGFuZCBhbm90aGVyCj4gZm9yIGEg
+Mk1CIGJsb2NrKS4gSW4gdGhlIGx1Y2t5IGNhc2UsIHRoZSBDUFUgd2lsbCB0cmlnZ2VyIGEgVExC
+IGNvbmZsaWN0Cj4gYWJvcnQgKGJ1dCBjYW4gYmUgd29yc2UgbGlrZSBsb3NzIG9mIGNvaGVyZW5j
+eSkuClRoYW5rcyBmb3IgeW91ciBleHBsYW5hdGlvbu+8jAo+IFByaW9yIHRvIEZFQVRfQkJNIChh
+ZGRlZCBpbiBBUk12OC40KSwgc3VjaCBzY2VuYXJpbyB3YXMgbm90IGFsbG93ZWQgYXQKPiBhbGws
+IHRoZSBzb2Z0d2FyZSB3b3VsZCBoYXZlIHRvIHVubWFwIHRoZSByYW5nZSwgVExCSSwgcmVtYXAu
+IFdpdGgKPiBGRUFUX0JCTSAobGV2ZWwgMiksIHdlIGNhbiBkbyB0aGlzIHdpdGhvdXQgdGVhcmlu
+ZyB0aGUgbWFwcGluZyBkb3duIGJ1dAo+IHdlIHN0aWxsIG5lZWQgdG8gaGFuZGxlIHRoZSBwb3Rl
+bnRpYWwgVExCIGNvbmZsaWN0IGFib3J0LiBUaGUgaGFuZGxlcgo+IG9ubHkgbmVlZHMgYSBUTEJJ
+IGJ1dCBpZiBpdCB0b3VjaGVzIHRoZSBtZW1vcnkgcmFuZ2UgYmVpbmcgY2hhbmdlZCBpdAo+IHJp
+c2tzIGZhdWx0aW5nIGFnYWluLiBXaXRoIHZtYXAgc3RhY2tzIGFuZCB0aGUga2VybmVsIGltYWdl
+IG1hcHBlZCBpbgo+IHRoZSB2bWFsbG9jIHNwYWNlLCB3ZSBoYXZlIGEgc21hbGwgd2luZG93IHdo
+ZXJlIHRoaXMgY291bGQgYmUgaGFuZGxlZAo+IGJ1dCB3ZSBwcm9iYWJseSBjYW4ndCBnbyBpbnRv
+IHRoZSBDIHBhcnQgb2YgdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwo+ICh0cmFjaW5nIGV0Yy4gbWF5
+IGFjY2VzcyBhIGttYWxsb2MnZWQgb2JqZWN0IGZvciBleGFtcGxlKS4KClNvIGlmIHdpdGhvdXQg
+RkVBVF9CQk3vvIx3ZSBjYW4gb25seSBndWFyYW50ZWUgQkJNIHNlcXVlbmNlIHZpYQoKInVubWFw
+IHRoZSByYW5nZSwgVExCSSwgcmVtYXAiIG9yIHRoZSBmb2xsb3dpbmcgb3B0aW9uLCBhbmQgd2l0
+aAoKRkVBVF9CQk0gKGxldmVsIDIpLCB3ZSBjb3VsZCBoYXZlIGVhc3kgd2F5IHRvIGF2b2lkIFRM
+QiBjb25mbGljdCBmb3IKCnNvbWUgdm1hbGxvYyBzcGFjZSwgYnV0IHN0aWxsIGhhcmQgdG8gZGVh
+bCB3aXRoIG90aGVyIHNjZW5jZT8KCgo+Cj4gQW5vdGhlciBvcHRpb24gaXMgdG8gZG8gYSBzdG9w
+X21hY2hpbmUoKSAoaWYgbXVsdGktcHJvY2Vzc29yIGF0IHRoYXQKPiBwb2ludCksIGRpc2FibGUg
+dGhlIE1NVXMsIG1vZGlmeSB0aGUgcGFnZSB0YWJsZXMsIHJlLWVuYWJsZSB0aGUgTU1VIGJ1dAo+
+IGl0J3MgYWxzbyBjb21wbGljYXRlZC4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
+ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
