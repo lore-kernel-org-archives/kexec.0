@@ -4,95 +4,73 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 8D1E9C433EF
-	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 15:34:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 3AD2AC43334
+	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 15:42:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:In-Reply-To:From:
-	References:To:Subject:Date:Message-ID:Reply-To:Content-ID:Content-Description
-	:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=16ZaUS7H0B+gIFd3qyrXdHwq4KRgYmOIOwfk0Tx2ycY=; b=yualf99K9UQKKZ
-	1x8866UbeiN7Mm6F3Q3fM80GIY8IHuOTEp6BSS29ZgPtqfzIe9WnKaInPUHYSYpQJHI+ttqrnhBoX
-	WRe9BpyW0XJgYjolQRwaxZpFPwsQUFNyTkZo9dwCcsC9HtvWnZvSenq6S4UQCBxZLw25+YOfpPMKs
-	cqWbqqEBs1xyi7oYia/41JbKhvKWQmgLjAu26BLCZLJwgntmoGP5a0BQr9I06XqmW/P2EGVGMkNyV
-	fteTpINmgcJDOnG67Gl4kJPAfXbWmC4NKBbkzNntKOAnFw/lelXUYDjoBJiwW70pSVmmt2EOEOycU
-	Y+g66ZOy+wkPv1RNa0bw==;
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=VrFq9Yih36qQJHJiRLvu32xzMmnTWZUBrBCDGvsh2SQ=; b=gvwkmOEFZkUZQ5
+	Pnw0/+n7C8Q9YS5AF7nkQdGUYaQ+t7OUSqwcZ+acPY1jmLNJwjTHgpZKo3VXvwpXgdyWZCeTDFv9T
+	UnTmm1L/oSuoy9FwT0v+Aau8PTpmkPUcflNBesinqwVCML/MA2Iqk6xBchUqQrsAhwuyurOfKV69G
+	zy6SJvAaFkVjkyYmL2mvUgeASHgdAAINr/7S8NXPJxRBJFDekkyqZ9PYnpL7rFANC0K71oNRHbUaY
+	aUhZPWBpPf+99wBqNmkzJtgXFLZQOUadefALhvIxhqdpvYvVBqM3JGxWsb8SrygKsPspIZJpGNF0K
+	hHqzi3HL4VlnC0vXpf8w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o42Ms-00BCrl-6w; Wed, 22 Jun 2022 15:34:10 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1o42Up-00BEOe-S4; Wed, 22 Jun 2022 15:42:23 +0000
+Received: from mga04.intel.com ([192.55.52.120])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o42Mp-00BCqR-5h
-	for kexec@lists.infradead.org; Wed, 22 Jun 2022 15:34:08 +0000
-Received: from pps.filterd (m0098409.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25MEpKDF018624;
-	Wed, 22 Jun 2022 15:34:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- subject : to : cc : references : from : in-reply-to : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=fXnI9BJ+eT4kh1Bl1pOj1MQY0/BIJ1rTZJngWBFMbjw=;
- b=cH4t9swpy0/cajQ9OIUQmbYcxrxG6GedvGGEccZuMucM8Hh6VbpfynEOIO9RFEuMscyp
- qcW8EI/2p6Z/ZmF3UhTspCoNqNBaeNN3I3EXgC9dBrVvXZFHHsalUkta5o6LLb80n8rx
- p4Tx+jLu9u72ujF89JIFf0PXH1lJJPU9/h1GB0P6JdOZ6P9e8ZmLx/750v18IhnmQtWH
- vA9rC4F4ll8GcKLYf0VDnIxuq5CuO6c8Uwu5iCy3Jkxnin+CbXA+rn0lXsKtZ+L+tS82
- AzqkbNGjJx6BIegb2hkfoRD5XrwWtwlfIMEt23PMfjybdYRXgM0+lOJNhoLBLXtEYOVw SA== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv56x98e2-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 15:34:04 +0000
-Received: from m0098409.ppops.net (m0098409.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25MEptuh020382;
-	Wed, 22 Jun 2022 15:34:03 GMT
-Received: from ppma04fra.de.ibm.com (6a.4a.5195.ip4.static.sl-reverse.com [149.81.74.106])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv56x98cv-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 15:34:03 +0000
-Received: from pps.filterd (ppma04fra.de.ibm.com [127.0.0.1])
-	by ppma04fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25MFM6L2009056;
-	Wed, 22 Jun 2022 15:34:01 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-	by ppma04fra.de.ibm.com with ESMTP id 3gs6b8vk8t-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Wed, 22 Jun 2022 15:34:01 +0000
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-	by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25MFXwNB19005880
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Wed, 22 Jun 2022 15:33:58 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 1D5815204F;
-	Wed, 22 Jun 2022 15:33:58 +0000 (GMT)
-Received: from [9.145.21.142] (unknown [9.145.21.142])
-	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id B93245204E;
-	Wed, 22 Jun 2022 15:33:57 +0000 (GMT)
-Message-ID: <ca1f9857-e3f6-6beb-2419-91a5865f2953@linux.ibm.com>
-Date: Wed, 22 Jun 2022 17:33:57 +0200
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
- Gecko/20100101 Thunderbird/91.10.0
-Subject: Re: [PATCH v5 5/5] powerpc/crash hp: add crash page helper functions
-Content-Language: fr
-To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org,
-        mpe@ellerman.id.au
-References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
- <20220620070106.93141-6-sourabhjain@linux.ibm.com>
-From: Laurent Dufour <ldufour@linux.ibm.com>
-In-Reply-To: <20220620070106.93141-6-sourabhjain@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: lhuxE-aTjfBmZgMQ9nmcC_cNHdFP4Tv_
-X-Proofpoint-GUID: 7bEHyUCfQKV93meI1lJGZzZz1DGdyoxA
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o42Um-00BEKv-4S
+	for kexec@lists.infradead.org; Wed, 22 Jun 2022 15:42:21 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1655912540; x=1687448540;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=asHJVhWeV+R8cmVwvDLScqFgc1cDRCkZ63VeXkC61AY=;
+  b=QMyOC/LSpk3sYyYONjHBPSlidTuo8xHr+TWEH+5eGExKziSf144ST8VS
+   uZqd35UJcC6huvHENBKq6wWhZs0W3Y5GgDCpGTHGyzNb4Dw2AOF/zkoU6
+   tMkqcoQQJDweZDzP5744btyhSwjkw1DxWVljSqiLn4yITwJXR8pPDqW9q
+   6zeTgZ+6LB6Rw9hyKKJc6nKp/SaY0jP46213/H86X5Nle86zaoa8hEyf+
+   CsZIHAMddcHVPgRXqF74dpmY+/f8vlQo4en28CyRsVh0gX6d4U8SAix7h
+   hmIEdL1VKiPohEWW4OpKdWwSxpIUwrvRnTuMfDomioIXvOa+RWc78EIGJ
+   g==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10386"; a="279220694"
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="279220694"
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 22 Jun 2022 08:34:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,212,1650956400"; 
+   d="scan'208";a="538513263"
+Received: from lkp-server02.sh.intel.com (HELO a67cc04a5eeb) ([10.239.97.151])
+  by orsmga003.jf.intel.com with ESMTP; 22 Jun 2022 08:34:51 -0700
+Received: from kbuild by a67cc04a5eeb with local (Exim 4.95)
+	(envelope-from <lkp@intel.com>)
+	id 1o42NW-0001QG-QX;
+	Wed, 22 Jun 2022 15:34:50 +0000
+Date: Wed, 22 Jun 2022 23:34:47 +0800
+From: kernel test robot <lkp@intel.com>
+To: Valentin Schneider <vschneid@redhat.com>, linux-kernel@vger.kernel.org,
+	kexec@lists.infradead.org, linux-rt-users@vger.kernel.org
+Cc: kbuild-all@lists.01.org, Eric Biederman <ebiederm@xmission.com>,
+	Arnd Bergmann <arnd@arndb.de>, Petr Mladek <pmladek@suse.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+	Juri Lelli <jlelli@redhat.com>,
+	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>
+Subject: Re: [PATCH] panic, kexec: Don't mutex_trylock() in __crash_kexec()
+Message-ID: <202206222322.WsTIFQGo-lkp@intel.com>
+References: <20220616123709.347053-1-vschneid@redhat.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-22_04,2022-06-22_03,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- spamscore=0 clxscore=1015 impostorscore=0 mlxlogscore=999 bulkscore=0
- lowpriorityscore=0 adultscore=0 mlxscore=0 phishscore=0 malwarescore=0
- suspectscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206220077
+Content-Disposition: inline
+In-Reply-To: <20220616123709.347053-1-vschneid@redhat.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220622_083407_264495_4D215C71 
-X-CRM114-Status: GOOD (  20.95  )
+X-CRM114-CacheID: sfid-20220622_084220_259848_E6470953 
+X-CRM114-Status: GOOD (  13.64  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -104,52 +82,77 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 20/06/2022, 09:01:06, Sourabh Jain wrote:
-> Define arch_[un]map_crash_pages functions to avoid build issues due to
-> undefined arch specific function to access crash memory pages.
-> 
-> A temporary patch to avoid build issues may need some changes in
-> generic code to avoid this.
-> 
-> The issue is under discussion:
-> https://lkml.org/lkml/2022/6/20/22
-> 
-> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
-> ---
->  arch/powerpc/kexec/core_64.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
-> index 373cb46bcc0e..d833fa96dcfa 100644
-> --- a/arch/powerpc/kexec/core_64.c
-> +++ b/arch/powerpc/kexec/core_64.c
-> @@ -492,6 +492,13 @@ int update_cpus_node(void *fdt)
->  
->  #if defined(CONFIG_HOTPLUG_CPU)
->  
-> +void *arch_map_crash_pages(unsigned long paddr, unsigned long size)
-> +{
-> +	return __va(paddr);
-> +}
+Hi Valentin,
 
-Why not define this as an inline in the appropriate PowerPC header file?
+I love your patch! Yet something to improve:
 
-> +
-> +void arch_unmap_crash_pages(void **ptr) { }
+[auto build test ERROR on soc/for-next]
+[also build test ERROR on linus/master v5.19-rc3 next-20220622]
+[If your patch is applied to the wrong git tree, kindly drop us a note.
+And when submitting patch, we suggest to use '--base' as documented in
+https://git-scm.com/docs/git-format-patch]
 
-same here
+url:    https://github.com/intel-lab-lkp/linux/commits/Valentin-Schneider/panic-kexec-Don-t-mutex_trylock-in-__crash_kexec/20220616-203915
+base:   https://git.kernel.org/pub/scm/linux/kernel/git/soc/soc.git for-next
+config: riscv-randconfig-c024-20220622 (https://download.01.org/0day-ci/archive/20220622/202206222322.WsTIFQGo-lkp@intel.com/config)
+compiler: riscv64-linux-gcc (GCC) 11.3.0
+reproduce (this is a W=1 build):
+        wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+        chmod +x ~/bin/make.cross
+        # https://github.com/intel-lab-lkp/linux/commit/d05873bf87d81eb3ddfa1fe20b3743cc4a1ab259
+        git remote add linux-review https://github.com/intel-lab-lkp/linux
+        git fetch --no-tags linux-review Valentin-Schneider/panic-kexec-Don-t-mutex_trylock-in-__crash_kexec/20220616-203915
+        git checkout d05873bf87d81eb3ddfa1fe20b3743cc4a1ab259
+        # save the config file
+        mkdir build_dir && cp config build_dir/.config
+        COMPILER_INSTALL_PATH=$HOME/0day COMPILER=gcc-11.3.0 make.cross W=1 O=build_dir ARCH=riscv SHELL=/bin/bash
 
-> +
->  int crash_hotplug_support(void) { return 1; }
->  
->  /**
+If you fix the issue, kindly add following tag where applicable
+Reported-by: kernel test robot <lkp@intel.com>
 
+All errors (new ones prefixed by >>):
+
+   riscv64-linux-ld: kernel/kexec_core.o: in function `kimage_crash_copy_vmcoreinfo':
+   kernel/kexec_core.c:502: undefined reference to `machine_kexec_cleanup'
+   riscv64-linux-ld: kernel/kexec_core.o: in function `clear_bit':
+>> arch/riscv/include/asm/bitops.h:129: undefined reference to `machine_crash_shutdown'
+   riscv64-linux-ld: kernel/kexec_core.o: in function `kimage_free_pages':
+   kernel/kexec_core.c:337: undefined reference to `machine_kexec'
+   riscv64-linux-ld: kernel/kexec_core.o: in function `kimage_free':
+   kernel/kexec_core.c:651: undefined reference to `riscv_crash_save_regs'
+   riscv64-linux-ld: kernel/kexec_core.o: in function `__nr_to_section':
+   include/linux/mmzone.h:1403: undefined reference to `machine_shutdown'
+   riscv64-linux-ld: include/linux/mmzone.h:1403: undefined reference to `machine_kexec'
+   riscv64-linux-ld: kernel/kexec_file.o: in function `__section_mem_map_addr':
+   include/linux/mmzone.h:1434: undefined reference to `machine_kexec_prepare'
+
+
+vim +129 arch/riscv/include/asm/bitops.h
+
+fab957c11efe2f Palmer Dabbelt 2017-07-10  117  
+fab957c11efe2f Palmer Dabbelt 2017-07-10  118  /**
+fab957c11efe2f Palmer Dabbelt 2017-07-10  119   * clear_bit - Clears a bit in memory
+fab957c11efe2f Palmer Dabbelt 2017-07-10  120   * @nr: Bit to clear
+fab957c11efe2f Palmer Dabbelt 2017-07-10  121   * @addr: Address to start counting from
+fab957c11efe2f Palmer Dabbelt 2017-07-10  122   *
+fab957c11efe2f Palmer Dabbelt 2017-07-10  123   * Note: there are no guarantees that this function will not be reordered
+fab957c11efe2f Palmer Dabbelt 2017-07-10  124   * on non x86 architectures, so if you are writing portable code,
+fab957c11efe2f Palmer Dabbelt 2017-07-10  125   * make sure not to rely on its reordering guarantees.
+fab957c11efe2f Palmer Dabbelt 2017-07-10  126   */
+fab957c11efe2f Palmer Dabbelt 2017-07-10  127  static inline void clear_bit(int nr, volatile unsigned long *addr)
+fab957c11efe2f Palmer Dabbelt 2017-07-10  128  {
+fab957c11efe2f Palmer Dabbelt 2017-07-10 @129  	__op_bit(and, __NOT, nr, addr);
+fab957c11efe2f Palmer Dabbelt 2017-07-10  130  }
+fab957c11efe2f Palmer Dabbelt 2017-07-10  131  
+
+-- 
+0-DAY CI Kernel Test Service
+https://01.org/lkp
 
 _______________________________________________
 kexec mailing list
