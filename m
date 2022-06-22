@@ -4,88 +4,98 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 902F7C433EF
-	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 08:35:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D6A44C43334
+	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 08:40:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
-	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=CmGd+Ue27tve0uRBb/K2weLdF1xs0aUsGDgVg+uNq0o=; b=DbLC8Kr6DfpTp0
-	1aVqjQufKo7Q6DyUyCfMJp72ej7iuh2ZOgHCpNvncJZG5d9IR79LZpX9C6Lc50abJxZDjzsjxH0Zy
-	GGMUffL9uX/jrb63E3lflJRf+EnnPi3W2maTyFNc3uF0mJp4DMsSspIJxHmXlocYKwlSNVlC68t2s
-	D4iBBp7BKEOoJafCqps33/03F2cUzOMPmVoQREx8uyLZn0O12CiLoFuATtOYb4hO/eWPnriiIfUY9
-	K1db8TU4xcpRVE/BF8TZWIBKs6rgPnIWSwisxgsuVEgtYxyPHrTSF62Ypvo7BuEfqOmwTJ6YZM9Q0
-	UoeJBa716WWUU24EQKPA==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
+	Content-Transfer-Encoding:Cc:List-Subscribe:List-Help:List-Post:List-Archive:
+	List-Unsubscribe:List-Id:In-Reply-To:From:References:To:Subject:MIME-Version:
+	Date:Message-ID:Reply-To:Content-ID:Content-Description:Resent-Date:
+	Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Owner;
+	bh=hdC5nD0GUv7nECNkHbBVQ57c00kjp1DKjqFJ3mEsUm4=; b=aCwFc7wKZb5+9khWM5HtYuOsnE
+	jFQAEoTR8pEU5F6TCo2IIlJIJA/WkVoBPlFpXESWHEAXlUg+4xVBLldlHw9Gxgr/zT/zI2hhhe+Jb
+	UKvtFNW7FVooR8dL7cqq7h0Jvx+gVaOm1fYTh9IIIc8SD1u5wMm8sgkzcYkLx/AFA1Mm+XtXxBCrb
+	f9u81PYPfTQbI6PlISKilQVhWZGgr9MZqA+f4RI4VeB/4Xjesz8ewmdNTDVwdeLN1ZkJlcjJdPQ1p
+	Fld9jxG5kkvXWHp1IBwLqZYiZFwp2d15LJUpR6m9Frd+F4PZiKZhasAxAXxyy9eVSo2XWBK7cdufJ
+	NPGeHb7Q==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3vpm-009HZl-9Q; Wed, 22 Jun 2022 08:35:34 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1o3vut-009Jb2-Sr; Wed, 22 Jun 2022 08:40:51 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3vpi-009HXk-4N
-	for kexec@lists.infradead.org; Wed, 22 Jun 2022 08:35:32 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1655886929;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding:
-	 in-reply-to:in-reply-to:references:references;
-	bh=FXbG8YAYtCcHZc9mu4c2Nm+a/RYeu4/cnHXEYuhco7U=;
-	b=VhIcEmy9j9x3FeabZaRe+8Fb+g75MHWMV5rjp1tm0TnzLfMLXUPGZi7c4KSfvK3FmpUCHI
-	szD3VnFlX2ThczSibQEPs8L3HlADRYFd92sBtaaOxQLetNLx4HgeZQCIe2asDGBLCaw7Ym
-	HyshX5dd0r/2CtD9g9qsyN9C9N02Tzs=
-Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
- [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-44-MIsd6_-XM4S793yov44VGw-1; Wed, 22 Jun 2022 04:35:25 -0400
-X-MC-Unique: MIsd6_-XM4S793yov44VGw-1
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.rdu2.redhat.com [10.11.54.8])
-	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 094F48001EA;
-	Wed, 22 Jun 2022 08:35:24 +0000 (UTC)
-Received: from localhost (ovpn-13-227.pek2.redhat.com [10.72.13.227])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id 33F7CC28115;
-	Wed, 22 Jun 2022 08:35:22 +0000 (UTC)
-Date: Wed, 22 Jun 2022 16:35:16 +0800
-From: Baoquan He <bhe@redhat.com>
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Kefeng Wang <wangkefeng.wang@huawei.com>,
-	Zhen Lei <thunder.leizhen@huawei.com>,
-	Ard Biesheuvel <ardb@kernel.org>,
-	Mark Rutland <mark.rutland@arm.com>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-	x86@kernel.org, "H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>,
-	Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org,
-	Dave Young <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	kexec@lists.infradead.org, linux-kernel@vger.kernel.org,
-	Will Deacon <will@kernel.org>, linux-arm-kernel@lists.infradead.org,
-	Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org,
-	Randy Dunlap <rdunlap@infradead.org>,
-	Feng Zhou <zhoufeng.zf@bytedance.com>,
-	Chen Zhou <dingguo.cz@antgroup.com>,
-	John Donnelly <John.p.donnelly@oracle.com>,
-	Dave Kleikamp <dave.kleikamp@oracle.com>,
-	liushixin <liushixin2@huawei.com>
-Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
- high memory
-Message-ID: <YrLUREAoBMSZo7RR@MiWiFi-R3L-srv>
-References: <20220613080932.663-1-thunder.leizhen@huawei.com>
- <20220613080932.663-6-thunder.leizhen@huawei.com>
- <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
- <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com>
- <YrIIJkhKWSuAqkCx@arm.com>
+	id 1o3vur-009JZ6-3Y
+	for kexec@lists.infradead.org; Wed, 22 Jun 2022 08:40:50 +0000
+Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25M8NmcQ011003;
+	Wed, 22 Jun 2022 08:40:42 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : subject : to : cc : references : from : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=ZQ+dEbpWJFMETnununWmQP43T3T8Azzd7hTNqrMT9JU=;
+ b=R/MyRn6Q1dW4BCS2tj4NMXx6dRPSAQC/gRO3DToF0k0pG7ndz8K3CPbAXOXoBtXt2Q/U
+ EtVz8Csw+LikPVXcBYSAkYuElrt84gV4vPLWln5za2UPrsneKX71e+aVFX6nxV43VCW2
+ 6QUzeN8KXpS/W2Vx5bYQViF/sxfMmAyUAitPEk2L87fizt/xKC4x3Nu4vRx8QOHbxcy4
+ l3/yWnmoIBkVeSp7aL/yxaau/Iznix/Kn/GC1v+6AVoE+dEHxJRXsAIaQZPG6JxSho3j
+ 304BUsmvoa8kUCbd5CshOVCIxWc1Gh0U0wa9bsjbYh7LL2B6s9ybpnnz8Pp5GAFVrMQz JQ== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3guyhm0fru-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 08:40:41 +0000
+Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25M8RNSB028228;
+	Wed, 22 Jun 2022 08:40:41 GMT
+Received: from ppma06ams.nl.ibm.com (66.31.33a9.ip4.static.sl-reverse.com [169.51.49.102])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3guyhm0fq6-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 08:40:41 +0000
+Received: from pps.filterd (ppma06ams.nl.ibm.com [127.0.0.1])
+	by ppma06ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25M8avtA016975;
+	Wed, 22 Jun 2022 08:40:38 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+	by ppma06ams.nl.ibm.com with ESMTP id 3gs5yhnax7-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 08:40:38 +0000
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25M8eZAK21233962
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Jun 2022 08:40:35 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id ADC3B11C050;
+	Wed, 22 Jun 2022 08:40:35 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 7E4B311C04A;
+	Wed, 22 Jun 2022 08:40:33 +0000 (GMT)
+Received: from [9.43.27.116] (unknown [9.43.27.116])
+	by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+	Wed, 22 Jun 2022 08:40:33 +0000 (GMT)
+Message-ID: <bc8f37cb-006a-0c33-2de8-1481b4201be1@linux.ibm.com>
+Date: Wed, 22 Jun 2022 14:10:32 +0530
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <YrIIJkhKWSuAqkCx@arm.com>
-X-Scanned-By: MIMEDefang 2.85 on 10.11.54.8
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
+ Thunderbird/91.10.0
+Subject: Re: [PATCH v5 1/5] powerpc/kexec: make update_cpus_node non-static
+Content-Language: en-US
+To: Laurent Dufour <ldufour@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au
+References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
+ <20220620070106.93141-2-sourabhjain@linux.ibm.com>
+ <2df3da07-9384-d8b2-15f5-b124538b93c2@linux.ibm.com>
+From: Sourabh Jain <sourabhjain@linux.ibm.com>
+In-Reply-To: <2df3da07-9384-d8b2-15f5-b124538b93c2@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-GUID: rq3qBF01Xbcu7F1WoKukn5-Yxxb0rMFT
+X-Proofpoint-ORIG-GUID: CNYtTFeCdoWLtxJtMB1lF2Lntx1H000b
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.64.514
+ definitions=2022-06-21_11,2022-06-22_01,2022-02-23_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1015
+ lowpriorityscore=0 phishscore=0 adultscore=0 bulkscore=0 impostorscore=0
+ mlxlogscore=999 mlxscore=0 spamscore=0 suspectscore=0 malwarescore=0
+ priorityscore=1501 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206220041
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220622_013530_257694_FEAD689D 
-X-CRM114-Status: GOOD (  41.05  )
+X-CRM114-CacheID: sfid-20220622_014049_200330_C619D0C3 
+X-CRM114-Status: GOOD (  13.34  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,106 +107,27 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Hi Catalin,
 
-On 06/21/22 at 07:04pm, Catalin Marinas wrote:
-> On Tue, Jun 21, 2022 at 02:24:01PM +0800, Kefeng Wang wrote:
-> > On 2022/6/21 13:33, Baoquan He wrote:
-> > > On 06/13/22 at 04:09pm, Zhen Lei wrote:
-> > > > If the crashkernel has both high memory above DMA zones and low mem=
-ory
-> > > > in DMA zones, kexec always loads the content such as Image and dtb =
-to the
-> > > > high memory instead of the low memory. This means that only high me=
-mory
-> > > > requires write protection based on page-level mapping. The allocati=
-on of
-> > > > high memory does not depend on the DMA boundary. So we can reserve =
-the
-> > > > high memory first even if the crashkernel reservation is deferred.
-> > > > =
+On 21/06/22 14:29, Laurent Dufour wrote:
+> On 20/06/2022, 09:01:02, Sourabh Jain wrote:
+>> Make the update_cpus_node function non-static and export it for
+>> usage in other kexec components.
+>>
+>> The update_cpus_node definition is moved to core_64.c so that it
+>> can be used with both kexec_load and kexec_file_load system calls.
+>>
+>> No functional change intended.
+> And FWIW
+> Reviewed-by: Laurent Dufour <laurent.dufour@fr.ibm.com>
+Thank you!
 
-> > > > This means that the block mapping can still be performed on other k=
-ernel
-> > > > linear address spaces, the TLB miss rate can be reduced and the sys=
-tem
-> > > > performance will be improved.
-> > > =
-
-> > > Ugh, this looks a little ugly, honestly.
-> > > =
-
-> > > If that's for sure arm64 can't split large page mapping of linear
-> > > region, this patch is one way to optimize linear mapping. Given kdump
-> > > setting is necessary on arm64 server, the booting speed is truly
-> > > impacted heavily.
-> > =
-
-> > Is there some conclusion or discussion that arm64 can't split large page
-> > mapping?
-> > =
-
-> > Could the crashkernel reservation (and Kfence pool) be splited dynamica=
-lly?
-> > =
-
-> > I found Mark replay "arm64: remove page granularity limitation from
-> > KFENCE"[1],
-> > =
-
-> > =A0 "We also avoid live changes from block<->table mappings, since the
-> > =A0 archtitecture gives us very weak guarantees there and generally req=
-uires
-> > =A0 a Break-Before-Make sequence (though IIRC this was tightened up
-> > =A0 somewhat, so maybe going one way is supposed to work). Unless it's
-> > =A0 really necessary, I'd rather not split these block mappings while
-> > =A0 they're live."
-> =
-
-> The problem with splitting is that you can end up with two entries in
-> the TLB for the same VA->PA mapping (e.g. one for a 4KB page and another
-> for a 2MB block). In the lucky case, the CPU will trigger a TLB conflict
-> abort (but can be worse like loss of coherency).
-
-Thanks for this explanation. Is this a drawback of arm64 design? X86
-code do the same thing w/o issue, is there way to overcome this on
-arm64 from hardware or software side?
-
-I ever got a arm64 server with huge memory, w or w/o crashkernel setting =
-
-have different bootup time. And the more often TLB miss and flush will
-cause performance cost. It is really a pity if we have very powerful
-arm64 cpu and system capacity, but bottlenecked by this drawback.
-
-> =
-
-> Prior to FEAT_BBM (added in ARMv8.4), such scenario was not allowed at
-> all, the software would have to unmap the range, TLBI, remap. With
-> FEAT_BBM (level 2), we can do this without tearing the mapping down but
-> we still need to handle the potential TLB conflict abort. The handler
-> only needs a TLBI but if it touches the memory range being changed it
-> risks faulting again. With vmap stacks and the kernel image mapped in
-> the vmalloc space, we have a small window where this could be handled
-> but we probably can't go into the C part of the exception handling
-> (tracing etc. may access a kmalloc'ed object for example).
-> =
-
-> Another option is to do a stop_machine() (if multi-processor at that
-> point), disable the MMUs, modify the page tables, re-enable the MMU but
-> it's also complicated.
-> =
-
-> -- =
-
-> Catalin
-> =
-
-
+- Sourabh Jain
 
 _______________________________________________
 kexec mailing list
