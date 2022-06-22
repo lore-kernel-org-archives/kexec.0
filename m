@@ -4,98 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 73B13C433EF
-	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 05:48:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 517A1C43334
+	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 08:17:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:
-	Subject:MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=uKXcyRgOZHxRhNVmUYFJSqu83qnU/NWX/Bz3UAkPrYs=; b=tPxjgcI96qakBw
-	q1c6NuF0N8QovwFK5nt6O2j2ioko+DQTJHoIWRvHQHXkcvLB7LemYCWWRyZif8RBR/VRkbcsXrc5K
-	3QY5vKbQN/8psyXKF7dL0Vz2I9aHUUmZlDHzm+X5q3RaV/20T0xAwhy8lRDKaE0x5H77Xs/8z0U+S
-	okNPj5EusceMBc7p56fKCt9We9XHO6Hi/6pb7s84EIbjgZ9b8NPqzPOTwq5F66rLQIUP/v1j4Fuee
-	WjCFi40n2ddrm9xf42+sRIcEudfEKrthOPLG4WCoV3UQBKCG6hDS8ba0T88eyzqNeINNvfC0dkNPi
-	AY2Gg0nr80eFrJDmKOWw==;
+	List-Owner; bh=wnHbwGdDiiBo+84jQ74t/XGLwHTkhpLHlydPsHE7954=; b=KEYN/irVn8wkKH
+	oNFs/XokmykXQnsRpRiftpL0xUkagixiWcOes5QFt+/pE977fmqv/IBLECtAaTgyClIbTjmnvFZpL
+	pyxrF267QJ2A1eD1pJCsI+Aw8pUYRTNS9DEARXeq+9sa4L3w4CiBPpscJmOFiis57mfrNrlB/JLjS
+	dNTFg/fWlWlSaTYqrE3cYRL4S5xh+hES/7LwXn5eq7ctIGA+dV62yGGBGROPac97O9Q2+rhsu5vT4
+	QkiRyplxKm0KEgC2tr0owgDljsXvgyrbe0kOoPGiyFkY4CkrwBqd+s2jAS9BpaAfE7YZ4xoIG+Lkq
+	XUQnA4sVWwlC091s4yPg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3tDc-008eFH-M5; Wed, 22 Jun 2022 05:48:00 +0000
-Received: from casper.infradead.org ([2001:8b0:10b:1236::1])
+	id 1o3vXx-009D7V-K4; Wed, 22 Jun 2022 08:17:09 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1UAe-00EyxK-Da; Wed, 15 Jun 2022 14:39:00 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
-	In-Reply-To:From:References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender
-	:Reply-To:Content-ID:Content-Description;
-	bh=75kgVCcqOPOLeu4JBiLLFab/dM4uNZ1dcLuvpDx9ZCg=; b=QKJkD59ykV7yiOyz/dtWW2y9vx
-	hndlFBRcaZsnBnrqZoup91OkoTyawJySwoVhlpL7dLf1AhSC2FT/c1b4wWjKQQz3Ts/zk9OO98kFv
-	+FC9l5GCJhBfrKE6kZA+D8NGU0EPzmXivPQuJSxTabgMFPBoq60T1jrKka72ogzWgFlDhGdSM9nPh
-	kdjC7+L/1mmMVS/0lHPYAqTJBRL/pruzfhR3AXDHwTQN0WJWsKaG8l/fi8PkDOVPumbtXx3qSg2rS
-	NUVNxFl3FBtUihYMEXUFbZYAP0aeGi7k0B0/nMXwVUG0DmoNEeofCrPrumTBifLWluIAqDy0snXDE
-	ptf+tVOQ==;
-Received: from fanzine.igalia.com ([178.60.130.6] helo=fanzine2.igalia.com)
-	by casper.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o1UAa-0017cW-IG; Wed, 15 Jun 2022 14:38:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=igalia.com;
-	s=20170329; h=Content-Transfer-Encoding:Content-Type:In-Reply-To:From:
-	References:Cc:To:Subject:MIME-Version:Date:Message-ID:Sender:Reply-To:
-	Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-	Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:
-	List-Subscribe:List-Post:List-Owner:List-Archive;
-	bh=75kgVCcqOPOLeu4JBiLLFab/dM4uNZ1dcLuvpDx9ZCg=; b=kAIWl67VuUe8cBDkmFOZTh4b+J
-	Uy6PgE2+CwIEzhFEfsXCTAadcMkk5TefuTIBHvgzxNrjmUz+/r/f3fMBR5i8mMC7UweLMh9MkeJoD
-	97gkOJRUGibA77qDy9s4vL7NkQkS1Sv+TX4WpruLFHmbGvImVgE9LeYadgdIraA8AGxMlB+PxaWy/
-	1adKvJuvvpCbTsZosCqi5SMDlMupfKEgEY7JpKMS8HhvbF7gyowCTheRqW0YX0S9D05qpW9G1fKLt
-	DJUWQ6k8Tz/HxaHb6kuJRSWnDBXrsJA/DQco3hh/lFSm8XLWvSeNFNfH2bKr+ugXM0hH/Gw2zl2s+
-	laFslj7w==;
-Received: from 179.red-81-39-194.dynamicip.rima-tde.net ([81.39.194.179] helo=[192.168.15.167])
-	by fanzine2.igalia.com with esmtpsa 
-	(Cipher TLS1.3:ECDHE_X25519__RSA_PSS_RSAE_SHA256__AES_128_GCM:128) (Exim)
-	id 1o1U8m-002LYs-SW; Wed, 15 Jun 2022 16:37:04 +0200
-Message-ID: <362f6520-8209-1721-823c-11928338f57d@igalia.com>
-Date: Wed, 15 Jun 2022 11:36:39 +0200
+	id 1o3vXu-009D5d-Jd
+	for kexec@lists.infradead.org; Wed, 22 Jun 2022 08:17:08 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1655885823;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=5I/iErIMtMGpE55q/wJaJnkGwpxHk2Uqy8J578HM5OU=;
+	b=SrOyUUF2tH5MbX2TYLYSaXI8RreYBbcpdn2TD64ZQnHj1qMoemijemjeD7O7bWnKkm72v9
+	GiRWrw/y1/ADP5j0jLgKBvytmUpMZ/HeNkD9bFpqD57yEz9p8rNd82hR6q8KBtMLfyK6Nm
+	S00POHdJ9KL3GS9A11AGonj6vJXSeIQ=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-223-J6o4FJi3MQm-otSuf83Gig-1; Wed, 22 Jun 2022 04:16:59 -0400
+X-MC-Unique: J6o4FJi3MQm-otSuf83Gig-1
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.rdu2.redhat.com [10.11.54.2])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 50F9B8001EA;
+	Wed, 22 Jun 2022 08:16:59 +0000 (UTC)
+Received: from localhost (ovpn-13-227.pek2.redhat.com [10.72.13.227])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 7CF2440C141F;
+	Wed, 22 Jun 2022 08:16:57 +0000 (UTC)
+Date: Wed, 22 Jun 2022 16:16:54 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Tao Liu <ltao@redhat.com>
+Cc: vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
+	linux-kernel@vger.kernel.org,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH] kdump: round up the total memory size to 128M for
+ crashkernel reservation
+Message-ID: <YrLP9i4YtJz71ecx@MiWiFi-R3L-srv>
+References: <20220616024803.5091-1-ltao@redhat.com>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH 24/30] panic: Refactor the panic path
-Content-Language: en-US
-To: Petr Mladek <pmladek@suse.com>
-Cc: bhe@redhat.com, d.hatayama@jp.fujitsu.com,
- "Eric W. Biederman" <ebiederm@xmission.com>,
- Mark Rutland <mark.rutland@arm.com>, mikelley@microsoft.com,
- vkuznets@redhat.com, akpm@linux-foundation.org, kexec@lists.infradead.org,
- linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com,
- linuxppc-dev@lists.ozlabs.org, linux-alpha@vger.kernel.org,
- linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org,
- linux-hyperv@vger.kernel.org, linux-leds@vger.kernel.org,
- linux-mips@vger.kernel.org, linux-parisc@vger.kernel.org,
- linux-pm@vger.kernel.org, linux-remoteproc@vger.kernel.org,
- linux-s390@vger.kernel.org, linux-tegra@vger.kernel.org,
- linux-um@lists.infradead.org, linux-xtensa@linux-xtensa.org,
- netdev@vger.kernel.org, openipmi-developer@lists.sourceforge.net,
- rcu@vger.kernel.org, sparclinux@vger.kernel.org,
- xen-devel@lists.xenproject.org, x86@kernel.org, kernel-dev@igalia.com,
- kernel@gpiccoli.net, halves@canonical.com, fabiomirmar@gmail.com,
- alejandro.j.jimenez@oracle.com, andriy.shevchenko@linux.intel.com,
- arnd@arndb.de, bp@alien8.de, corbet@lwn.net, dave.hansen@linux.intel.com,
- dyoung@redhat.com, feng.tang@intel.com, gregkh@linuxfoundation.org,
- hidehiro.kawai.ez@hitachi.com, jgross@suse.com, john.ogness@linutronix.de,
- keescook@chromium.org, luto@kernel.org, mhiramat@kernel.org,
- mingo@redhat.com, paulmck@kernel.org, peterz@infradead.org,
- rostedt@goodmis.org, senozhatsky@chromium.org, stern@rowland.harvard.edu,
- tglx@linutronix.de, vgoyal@redhat.com, will@kernel.org
-References: <20220427224924.592546-1-gpiccoli@igalia.com>
- <20220427224924.592546-25-gpiccoli@igalia.com>
- <87fskzuh11.fsf@email.froward.int.ebiederm.org>
- <0d084eed-4781-c815-29c7-ac62c498e216@igalia.com> <Yqic0R8/UFqTbbMD@alley>
-From: "Guilherme G. Piccoli" <gpiccoli@igalia.com>
-In-Reply-To: <Yqic0R8/UFqTbbMD@alley>
+Content-Disposition: inline
+In-Reply-To: <20220616024803.5091-1-ltao@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.11.54.2
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220615_153856_647908_86CE0600 
-X-CRM114-Status: UNSURE (   5.50  )
-X-CRM114-Notice: Please train this message.
-X-Mailman-Approved-At: Tue, 21 Jun 2022 22:47:55 -0700
+X-CRM114-CacheID: sfid-20220622_011706_950374_A87EA4ED 
+X-CRM114-Status: GOOD (  30.59  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -112,23 +80,133 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Perfect Petr, thanks for your feedback!
+Hi Tao,
 
-I'll be out for some weeks, but after that what I'm doing is to split
-the series in 2 parts:
+On 06/16/22 at 10:48am, Tao Liu wrote:
+> The total memory size we get in kernel is usually slightly less than 2G
+> with a 2G memory module machine. The main reason is bios/firmware
+> reserve some area it will not export all memory as usable to Linux.
+> 
+> 2G memory X86 kvm guest test result of the total_mem value:
+> UEFI boot with ovmf: 0x7ef10000
+> Legacy boot kvm guest: 0x7ff7cc00
+> This is also a problem on arm64 UEFI booted system according to my test.
+> 
+> Thus for example crashkernel=1G-2G:128M, if we have a 1G memory
+> machine, we get total size 1023M from firmware then it will not fall
+> into 1G-2G thus no memory reserved.  User will never know that, it is
+> hard to let user to know the exact total value we get in kernel
 
-(a) The general fixes, which should be reviewed by subsystem maintainers
-and even merged individually by them.
+The code change looks good to me, while the patch log need be improved.
+I rewrite it at below. However, here, the crashkernel=1G-2G:128M exmaple,
+above it there has been a 2G memory kvm guest example, then we get here
+to give an crashkernel=1G-2G:128M case. The logic looks not so smooth.
 
-(b) The proper panic refactor, which includes the notifiers list split,
-etc. I'll think about what I consider the best solution for the
-crash_dump required ones, and will try to split in very simple patches
-to make it easier to review.
+Could you rethink about this, e.g using the crashkernel=2G-3G:192M, or
+trying on kvm guest with 1G meory and getting its total_mem value? I
+mean unifying the examples based on your testing.
 
-Cheers,
+And also see inline comment about the code comment part.
 
+......
 
-Guilherme
+Rewritten log:
+===
+The total memory size we get in kernel is usually slightly less than
+the actual memory size because BIOS/firmware will reserve some meory
+region. So it won't export all memory as usable.
+
+E.g, on my kvm guest with 2G meory, the total_mem value shows:
+UEFI boot with ovmf: 0x7ef10000
+Legacy boot kvm guest: 0x7ff7cc00
+
+When specifying crashkernel=1G-2G:128M, if we have a 1G memory
+machine, we get total size 1023M from firmware. Then it will not fall
+into 1G-2G, thus no memory reserved.  User will never know this, it is
+hard to let user know the exact total value in kernel
+
+One way is to use dmi/smbios to get physical memory size, but it's not
+reliable as well. According to Prarit hardware vendors sometimes screw
+this up. Thus round up total size to 128M to work around this problem.
+
+This patch is a resend of [1] and rebased onto v5.19-rc2, and the
+original credit goes to Dave Young <dyoung@redhat.com>.
+===
+>
+
+> 
+> [1]: http://lists.infradead.org/pipermail/kexec/2018-April/020568.html
+> 
+> Signed-off-by: Tao Liu <ltao@redhat.com>
+> ---
+>  kernel/crash_core.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 71122e01623c..f6c1ffce9d5a 100644
+> --- a/kernel/crash_core.c
+>
+
+> 
+> [1]: http://lists.infradead.org/pipermail/kexec/2018-April/020568.html
+> 
+> Signed-off-by: Tao Liu <ltao@redhat.com>
+> ---
+>  kernel/crash_core.c | 14 ++++++++++++--
+>  1 file changed, 12 insertions(+), 2 deletions(-)
+> 
+> diff --git a/kernel/crash_core.c b/kernel/crash_core.c
+> index 71122e01623c..f6c1ffce9d5a 100644
+> --- a/kernel/crash_core.c
+> +++ b/kernel/crash_core.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/init.h>
+>  #include <linux/utsname.h>
+>  #include <linux/vmalloc.h>
+> +#include <linux/sizes.h>
+>  
+>  #include <asm/page.h>
+>  #include <asm/sections.h>
+> @@ -43,6 +44,15 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>  					unsigned long long *crash_base)
+>  {
+>  	char *cur = cmdline, *tmp;
+> +	unsigned long long total_mem = system_ram;
+> +
+> +	/*
+> +	 * Firmware sometimes reserves some memory regions for it's own use.
+                                                               ~~~ its, typo
+> +	 * so we get less than actual system memory size.
+           so the system memory size is less than the actual physical memory size.
+
+> +	 * Workaround this by round up the total size to 128M which is
+           s/Work around/Workaround/, workaround is an noun. s/round up/rounding up/
+> +	 * enough for most test cases.
+> +	 */
+> +	total_mem = roundup(total_mem, SZ_128M);
+>  
+>  	/* for each entry of the comma-separated list */
+>  	do {
+> @@ -87,13 +97,13 @@ static int __init parse_crashkernel_mem(char *cmdline,
+>  			return -EINVAL;
+>  		}
+>  		cur = tmp;
+> -		if (size >= system_ram) {
+> +		if (size >= total_mem) {
+>  			pr_warn("crashkernel: invalid size\n");
+>  			return -EINVAL;
+>  		}
+>  
+>  		/* match ? */
+> -		if (system_ram >= start && system_ram < end) {
+> +		if (total_mem >= start && total_mem < end) {
+>  			*crash_size = size;
+>  			break;
+>  		}
+> -- 
+> 2.33.1
+> 
+
 
 _______________________________________________
 kexec mailing list
