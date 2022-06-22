@@ -4,72 +4,95 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 54343C433EF
-	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 12:03:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id B16A6C43334
+	for <kexec@archiver.kernel.org>; Wed, 22 Jun 2022 15:11:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:CC:To:Subject:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:Cc:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:References:To:Subject:From:
 	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=wKTgW8S1zDP5Y7Z6lM/dnSXrs5SG2vvX3aHA5g8neik=; b=maaMiYD6dOz8yZ
-	JDorP7kIYoKeRCzKiVBkkuHMFq/FmMrF6ByLSINScCcBw6W8f3ZxIAxBpKsQsvUL9Sm8Trp37EcZD
-	rLpMjcr12SQT7+ItCJpEr4jAHCoMLPlkT0Dy1bZrhI2DjdI/Es51ZOJLzeoiBf+FiUP8/hDVGl/39
-	6PZfXJJ+v+i2aPyqtLKlRBaz/j8ZkdLbrKcBjDPt/khkQQeHErNznJnT5ldKXpRav633fl72Zz3sX
-	DXqeQmM0Il3Ltpixl2C43YHNtpDY9xQLbngNuaPmQb0m40obJ6L67g0wbwURbWIJLbKO51V2zxIcY
-	osi4DeryaR62bKE+tKsQ==;
+	List-Owner; bh=qeAAbEtDo4M8t8mRFNZhDzXAL/v96PtbDp1sRw9g7Ds=; b=07Kosz5PwBxgz+
+	J2T2m6ePg+P2Y0JPjmwAPyQZsLpPwuG32zWNKOz9+GUQThGNXyJF4oUn5v/FrfJcCT9UJXHY14vFi
+	zKhZ7cWA+VTFRzIBC5HNM+HOpPN91PtT0jCtuMmXUao28E+W7ZnY7jfFIca8MnvA35EllJWCQ/bmu
+	4Vlyn0UzKfIWz2SMm7OipeCDB4b2fHuWhn2fikkMRiO+m0UGXavaCWviGKyH2TTNxM7x/roKXDmSK
+	c09DMMm4xRME9afS6cNN6CE+PEjIPUifgH4dVtxy2Ys6WCjwolIXjjZ4OhxHmtse3NQwkfl4+rgPI
+	kuWLoNJ3AxKnFx5OUopA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3z57-00AGsm-LI; Wed, 22 Jun 2022 12:03:37 +0000
-Received: from szxga01-in.huawei.com ([45.249.212.187])
+	id 1o420z-00B87e-8W; Wed, 22 Jun 2022 15:11:33 +0000
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o3z53-00AGnM-Oi; Wed, 22 Jun 2022 12:03:36 +0000
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.55])
-	by szxga01-in.huawei.com (SkyGuard) with ESMTP id 4LShnt6bYjzkWgG;
-	Wed, 22 Jun 2022 20:02:10 +0800 (CST)
-Received: from dggpemm500001.china.huawei.com (7.185.36.107) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 22 Jun 2022 20:03:23 +0800
-Received: from [10.174.177.243] (10.174.177.243) by
- dggpemm500001.china.huawei.com (7.185.36.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Wed, 22 Jun 2022 20:03:22 +0800
-Message-ID: <ba3a97d6-262d-6413-135d-0be9b0af9a6a@huawei.com>
-Date: Wed, 22 Jun 2022 20:03:21 +0800
+	id 1o420s-00B85a-LY
+	for kexec@lists.infradead.org; Wed, 22 Jun 2022 15:11:30 +0000
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25MEFxv4006100;
+	Wed, 22 Jun 2022 15:11:19 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
+ mime-version : from : subject : to : cc : references : in-reply-to :
+ content-type : content-transfer-encoding; s=pp1;
+ bh=4aR/eqNzP7f6fEUmgs0DXFBtNfPaEooLM6+JvaooyiM=;
+ b=RukTGax4mdcTaiZsGrUxIC7Oyrbyprif8g4I8aoKsN0569y7UDH5SJwFbiLWzAPvS0kN
+ vzURL9D8f6PZn5SOHw8mQs858yvKbTgUf9pdJbJTx32JfiyAKMRHUMhyzdqm0CfUgVAj
+ czRvmpggaKeMSH/tOPZcrm3pwmoXh1THmbeGNg7862wwg43Penaw916eQ6ve7lmV9M3G
+ YHzdj9ZKE+d0du8nZfgkCp7D6m2huxeln3KQHuGuTjEzAodWAv7ECrVhz6W4AEP6cB1P
+ N7Z/tJWomdbZ79EDtwCn3SUbQG1OGTbj9fftHo0IyPp4F3Bl5Yww05bns+PnG2rD1qhc rg== 
+Received: from pps.reinject (localhost [127.0.0.1])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv4pq9eyt-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 15:11:19 +0000
+Received: from m0098420.ppops.net (m0098420.ppops.net [127.0.0.1])
+	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25MF6rRF030811;
+	Wed, 22 Jun 2022 15:11:18 GMT
+Received: from ppma03ams.nl.ibm.com (62.31.33a9.ip4.static.sl-reverse.com [169.51.49.98])
+	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3gv4pq9ey3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 15:11:18 +0000
+Received: from pps.filterd (ppma03ams.nl.ibm.com [127.0.0.1])
+	by ppma03ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25MF5b9d002394;
+	Wed, 22 Jun 2022 15:11:16 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+	by ppma03ams.nl.ibm.com with ESMTP id 3gs6b8wu07-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Wed, 22 Jun 2022 15:11:16 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+	by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25MFBDTT16908668
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Wed, 22 Jun 2022 15:11:13 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 5CAEC5204E;
+	Wed, 22 Jun 2022 15:11:13 +0000 (GMT)
+Received: from [9.145.21.142] (unknown [9.145.21.142])
+	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 0B4B65204F;
+	Wed, 22 Jun 2022 15:11:13 +0000 (GMT)
+Message-ID: <17712acb-cf52-42c1-3ab2-b88acc95e7e8@linux.ibm.com>
+Date: Wed, 22 Jun 2022 17:11:12 +0200
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.1
-Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
- high memory
-Content-Language: en-US
-To: Catalin Marinas <catalin.marinas@arm.com>
-CC: Baoquan He <bhe@redhat.com>, Zhen Lei <thunder.leizhen@huawei.com>, "Ard
- Biesheuvel" <ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "Thomas
- Gleixner" <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, "Borislav
- Petkov" <bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>,
-	Eric Biederman <ebiederm@xmission.com>, Rob Herring <robh+dt@kernel.org>,
-	Frank Rowand <frowand.list@gmail.com>, <devicetree@vger.kernel.org>, "Dave
- Young" <dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
-	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Will Deacon
-	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>, Jonathan Corbet
-	<corbet@lwn.net>, <linux-doc@vger.kernel.org>, Randy Dunlap
-	<rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Chen Zhou
-	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
- Kleikamp" <dave.kleikamp@oracle.com>, liushixin <liushixin2@huawei.com>
-References: <20220613080932.663-1-thunder.leizhen@huawei.com>
- <20220613080932.663-6-thunder.leizhen@huawei.com>
- <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
- <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com> <YrIIJkhKWSuAqkCx@arm.com>
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
-In-Reply-To: <YrIIJkhKWSuAqkCx@arm.com>
-X-Originating-IP: [10.174.177.243]
-X-ClientProxiedBy: dggems704-chm.china.huawei.com (10.3.19.181) To
- dggpemm500001.china.huawei.com (7.185.36.107)
-X-CFilter-Loop: Reflected
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:91.0)
+ Gecko/20100101 Thunderbird/91.10.0
+From: Laurent Dufour <ldufour@linux.ibm.com>
+Subject: Re: [PATCH v5 3/5] powerpc/crash hp: add crash hotplug support for
+ kexec_file_load
+To: Sourabh Jain <sourabhjain@linux.ibm.com>, linuxppc-dev@ozlabs.org,
+        mpe@ellerman.id.au
+References: <20220620070106.93141-1-sourabhjain@linux.ibm.com>
+ <20220620070106.93141-4-sourabhjain@linux.ibm.com>
+Content-Language: fr
+In-Reply-To: <20220620070106.93141-4-sourabhjain@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 9SNJJLbYf1QGdX6rawwV5DpBDaq0aErC
+X-Proofpoint-GUID: lxldGJ8InGnCTVwvZpcjmBzb9dcuvdTN
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-22_04,2022-06-22_03,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 malwarescore=0 bulkscore=0
+ spamscore=0 clxscore=1015 adultscore=0 suspectscore=0 lowpriorityscore=0
+ impostorscore=0 mlxscore=0 mlxlogscore=999 priorityscore=1501 phishscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
+ definitions=main-2206220075
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220622_050334_172251_B38FE1E9 
-X-CRM114-Status: GOOD (  23.89  )
+X-CRM114-CacheID: sfid-20220622_081127_112856_9B4ADAB8 
+X-CRM114-Status: GOOD (  46.55  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,66 +104,270 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Transfer-Encoding: base64
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Cc: eric.devolder@oracle.com, kexec@lists.infradead.org, bhe@redhat.com, hbathini@linux.ibm.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Ck9uIDIwMjIvNi8yMiAyOjA0LCBDYXRhbGluIE1hcmluYXMgd3JvdGU6Cj4gT24gVHVlLCBKdW4g
-MjEsIDIwMjIgYXQgMDI6MjQ6MDFQTSArMDgwMCwgS2VmZW5nIFdhbmcgd3JvdGU6Cj4+IE9uIDIw
-MjIvNi8yMSAxMzozMywgQmFvcXVhbiBIZSB3cm90ZToKPj4+IE9uIDA2LzEzLzIyIGF0IDA0OjA5
-cG0sIFpoZW4gTGVpIHdyb3RlOgo+Pj4+IElmIHRoZSBjcmFzaGtlcm5lbCBoYXMgYm90aCBoaWdo
-IG1lbW9yeSBhYm92ZSBETUEgem9uZXMgYW5kIGxvdyBtZW1vcnkKPj4+PiBpbiBETUEgem9uZXMs
-IGtleGVjIGFsd2F5cyBsb2FkcyB0aGUgY29udGVudCBzdWNoIGFzIEltYWdlIGFuZCBkdGIgdG8g
-dGhlCj4+Pj4gaGlnaCBtZW1vcnkgaW5zdGVhZCBvZiB0aGUgbG93IG1lbW9yeS4gVGhpcyBtZWFu
-cyB0aGF0IG9ubHkgaGlnaCBtZW1vcnkKPj4+PiByZXF1aXJlcyB3cml0ZSBwcm90ZWN0aW9uIGJh
-c2VkIG9uIHBhZ2UtbGV2ZWwgbWFwcGluZy4gVGhlIGFsbG9jYXRpb24gb2YKPj4+PiBoaWdoIG1l
-bW9yeSBkb2VzIG5vdCBkZXBlbmQgb24gdGhlIERNQSBib3VuZGFyeS4gU28gd2UgY2FuIHJlc2Vy
-dmUgdGhlCj4+Pj4gaGlnaCBtZW1vcnkgZmlyc3QgZXZlbiBpZiB0aGUgY3Jhc2hrZXJuZWwgcmVz
-ZXJ2YXRpb24gaXMgZGVmZXJyZWQuCj4+Pj4KPj4+PiBUaGlzIG1lYW5zIHRoYXQgdGhlIGJsb2Nr
-IG1hcHBpbmcgY2FuIHN0aWxsIGJlIHBlcmZvcm1lZCBvbiBvdGhlciBrZXJuZWwKPj4+PiBsaW5l
-YXIgYWRkcmVzcyBzcGFjZXMsIHRoZSBUTEIgbWlzcyByYXRlIGNhbiBiZSByZWR1Y2VkIGFuZCB0
-aGUgc3lzdGVtCj4+Pj4gcGVyZm9ybWFuY2Ugd2lsbCBiZSBpbXByb3ZlZC4KPj4+IFVnaCwgdGhp
-cyBsb29rcyBhIGxpdHRsZSB1Z2x5LCBob25lc3RseS4KPj4+Cj4+PiBJZiB0aGF0J3MgZm9yIHN1
-cmUgYXJtNjQgY2FuJ3Qgc3BsaXQgbGFyZ2UgcGFnZSBtYXBwaW5nIG9mIGxpbmVhcgo+Pj4gcmVn
-aW9uLCB0aGlzIHBhdGNoIGlzIG9uZSB3YXkgdG8gb3B0aW1pemUgbGluZWFyIG1hcHBpbmcuIEdp
-dmVuIGtkdW1wCj4+PiBzZXR0aW5nIGlzIG5lY2Vzc2FyeSBvbiBhcm02NCBzZXJ2ZXIsIHRoZSBi
-b290aW5nIHNwZWVkIGlzIHRydWx5Cj4+PiBpbXBhY3RlZCBoZWF2aWx5Lgo+PiBJcyB0aGVyZSBz
-b21lIGNvbmNsdXNpb24gb3IgZGlzY3Vzc2lvbiB0aGF0IGFybTY0IGNhbid0IHNwbGl0IGxhcmdl
-IHBhZ2UKPj4gbWFwcGluZz8KPj4KPj4gQ291bGQgdGhlIGNyYXNoa2VybmVsIHJlc2VydmF0aW9u
-IChhbmQgS2ZlbmNlIHBvb2wpIGJlIHNwbGl0ZWQgZHluYW1pY2FsbHk/Cj4+Cj4+IEkgZm91bmQg
-TWFyayByZXBsYXkgImFybTY0OiByZW1vdmUgcGFnZSBncmFudWxhcml0eSBsaW1pdGF0aW9uIGZy
-b20KPj4gS0ZFTkNFIlsxXSwKPj4KPj4gIMKgICJXZSBhbHNvIGF2b2lkIGxpdmUgY2hhbmdlcyBm
-cm9tIGJsb2NrPC0+dGFibGUgbWFwcGluZ3MsIHNpbmNlIHRoZQo+PiAgwqAgYXJjaHRpdGVjdHVy
-ZSBnaXZlcyB1cyB2ZXJ5IHdlYWsgZ3VhcmFudGVlcyB0aGVyZSBhbmQgZ2VuZXJhbGx5IHJlcXVp
-cmVzCj4+ICDCoCBhIEJyZWFrLUJlZm9yZS1NYWtlIHNlcXVlbmNlICh0aG91Z2ggSUlSQyB0aGlz
-IHdhcyB0aWdodGVuZWQgdXAKPj4gIMKgIHNvbWV3aGF0LCBzbyBtYXliZSBnb2luZyBvbmUgd2F5
-IGlzIHN1cHBvc2VkIHRvIHdvcmspLiBVbmxlc3MgaXQncwo+PiAgwqAgcmVhbGx5IG5lY2Vzc2Fy
-eSwgSSdkIHJhdGhlciBub3Qgc3BsaXQgdGhlc2UgYmxvY2sgbWFwcGluZ3Mgd2hpbGUKPj4gIMKg
-IHRoZXkncmUgbGl2ZS4iCj4gVGhlIHByb2JsZW0gd2l0aCBzcGxpdHRpbmcgaXMgdGhhdCB5b3Ug
-Y2FuIGVuZCB1cCB3aXRoIHR3byBlbnRyaWVzIGluCj4gdGhlIFRMQiBmb3IgdGhlIHNhbWUgVkEt
-PlBBIG1hcHBpbmcgKGUuZy4gb25lIGZvciBhIDRLQiBwYWdlIGFuZCBhbm90aGVyCj4gZm9yIGEg
-Mk1CIGJsb2NrKS4gSW4gdGhlIGx1Y2t5IGNhc2UsIHRoZSBDUFUgd2lsbCB0cmlnZ2VyIGEgVExC
-IGNvbmZsaWN0Cj4gYWJvcnQgKGJ1dCBjYW4gYmUgd29yc2UgbGlrZSBsb3NzIG9mIGNvaGVyZW5j
-eSkuClRoYW5rcyBmb3IgeW91ciBleHBsYW5hdGlvbu+8jAo+IFByaW9yIHRvIEZFQVRfQkJNIChh
-ZGRlZCBpbiBBUk12OC40KSwgc3VjaCBzY2VuYXJpbyB3YXMgbm90IGFsbG93ZWQgYXQKPiBhbGws
-IHRoZSBzb2Z0d2FyZSB3b3VsZCBoYXZlIHRvIHVubWFwIHRoZSByYW5nZSwgVExCSSwgcmVtYXAu
-IFdpdGgKPiBGRUFUX0JCTSAobGV2ZWwgMiksIHdlIGNhbiBkbyB0aGlzIHdpdGhvdXQgdGVhcmlu
-ZyB0aGUgbWFwcGluZyBkb3duIGJ1dAo+IHdlIHN0aWxsIG5lZWQgdG8gaGFuZGxlIHRoZSBwb3Rl
-bnRpYWwgVExCIGNvbmZsaWN0IGFib3J0LiBUaGUgaGFuZGxlcgo+IG9ubHkgbmVlZHMgYSBUTEJJ
-IGJ1dCBpZiBpdCB0b3VjaGVzIHRoZSBtZW1vcnkgcmFuZ2UgYmVpbmcgY2hhbmdlZCBpdAo+IHJp
-c2tzIGZhdWx0aW5nIGFnYWluLiBXaXRoIHZtYXAgc3RhY2tzIGFuZCB0aGUga2VybmVsIGltYWdl
-IG1hcHBlZCBpbgo+IHRoZSB2bWFsbG9jIHNwYWNlLCB3ZSBoYXZlIGEgc21hbGwgd2luZG93IHdo
-ZXJlIHRoaXMgY291bGQgYmUgaGFuZGxlZAo+IGJ1dCB3ZSBwcm9iYWJseSBjYW4ndCBnbyBpbnRv
-IHRoZSBDIHBhcnQgb2YgdGhlIGV4Y2VwdGlvbiBoYW5kbGluZwo+ICh0cmFjaW5nIGV0Yy4gbWF5
-IGFjY2VzcyBhIGttYWxsb2MnZWQgb2JqZWN0IGZvciBleGFtcGxlKS4KClNvIGlmIHdpdGhvdXQg
-RkVBVF9CQk3vvIx3ZSBjYW4gb25seSBndWFyYW50ZWUgQkJNIHNlcXVlbmNlIHZpYQoKInVubWFw
-IHRoZSByYW5nZSwgVExCSSwgcmVtYXAiIG9yIHRoZSBmb2xsb3dpbmcgb3B0aW9uLCBhbmQgd2l0
-aAoKRkVBVF9CQk0gKGxldmVsIDIpLCB3ZSBjb3VsZCBoYXZlIGVhc3kgd2F5IHRvIGF2b2lkIFRM
-QiBjb25mbGljdCBmb3IKCnNvbWUgdm1hbGxvYyBzcGFjZSwgYnV0IHN0aWxsIGhhcmQgdG8gZGVh
-bCB3aXRoIG90aGVyIHNjZW5jZT8KCgo+Cj4gQW5vdGhlciBvcHRpb24gaXMgdG8gZG8gYSBzdG9w
-X21hY2hpbmUoKSAoaWYgbXVsdGktcHJvY2Vzc29yIGF0IHRoYXQKPiBwb2ludCksIGRpc2FibGUg
-dGhlIE1NVXMsIG1vZGlmeSB0aGUgcGFnZSB0YWJsZXMsIHJlLWVuYWJsZSB0aGUgTU1VIGJ1dAo+
-IGl0J3MgYWxzbyBjb21wbGljYXRlZC4KPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18Ka2V4ZWMgbWFpbGluZyBsaXN0CmtleGVjQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9rZXhlYwo=
+On 20/06/2022, 09:01:04, Sourabh Jain wrote:
+> Two major changes are done to enable the crash CPU hotplug handler.
+> Firstly, updated the kexec load path to prepare kimage for hotplug
+> changes, and secondly, implemented the arch specific crash hotplug
+> handler.
+> 
+> On the kexec load path, the memsz allocation for the crash FDT segment
+> is updated to ensure that it has sufficient buffer space to accommodate
+> future hot add CPUs. Additionally, kimage_arch struct member fdt_index
+             ^
+           added ?
+> is initialized with the index of FDT segment in kexec segment array.
+
+May be you should mention that the index of FDT segment is recorded to not
+fetch it at each hotplug operation.
+
+> The crash hotplug handler updates the cpus node of crash FDT. While we
+> update crash FDT the kexec_crash_image is marked invalid and restored
+> after FDT update to avoid race.
+> 
+> Since memory crash hotplug support is not there yet the crash hotplug
+> handler simply warns the user and returns.
+
+It might be good to explain here why CPU hot remove operations are ignored.
+
+> 
+> Signed-off-by: Sourabh Jain <sourabhjain@linux.ibm.com>
+> ---
+>  arch/powerpc/kexec/core_64.c      | 49 ++++++++++++++++++++
+>  arch/powerpc/kexec/elf_64.c       | 74 +++++++++++++++++++++++++++++++
+>  arch/powerpc/kexec/file_load_64.c |  5 +++
+>  3 files changed, 128 insertions(+)
+> 
+> diff --git a/arch/powerpc/kexec/core_64.c b/arch/powerpc/kexec/core_64.c
+> index 65b3afb2169a..6d448b55dfad 100644
+> --- a/arch/powerpc/kexec/core_64.c
+> +++ b/arch/powerpc/kexec/core_64.c
+> @@ -465,6 +465,55 @@ int update_cpus_node(void *fdt)
+>  	return ret;
+>  }
+>  
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +
+> +int crash_hotplug_support(void) { return 1; }
+> +
+> +/**
+> + * arch_crash_hotplug_handler() - Handle hotplug kexec segements changes FDT, elfcorehdr
+> + * @image: the active struct kimage
+> + * @hp_action: the hot un/plug action being handled
+> + * @cpu: when KEXEC_CRASH_HP_ADD/REMOVE_CPU, the cpu affected
+> + *
+> + * To accurately reflect CPU hot un/plug changes, the FDT
+> + * must be updated with the new list of CPUs.
+> + */
+> +void arch_crash_handle_hotplug_event(struct kimage *image,
+> +				     unsigned int hp_action, unsigned int cpu)
+> +
+> +{
+> +	void *fdt;
+> +
+> +	/* No action needed for CPU hot-unplug */
+
+Why?
+I think your comment should explain why CPU hot-unplug operations are ignored?
+
+> +	if (hp_action == KEXEC_CRASH_HP_REMOVE_CPU)
+> +		return;
+> +
+> +	/* crash update on memory hotplug is not support yet */
+> +	if (hp_action == KEXEC_CRASH_HP_REMOVE_MEMORY || hp_action == KEXEC_CRASH_HP_ADD_MEMORY) {
+> +		pr_info_once("crash hp: crash update is not supported with memory hotplug\n");
+> +		return;
+> +	}
+> +
+> +	/* Must have valid FDT index */
+> +	if (!image->arch.fdt_index < 0) {
+
+        if (image->arch.fdt_index >= 0) {
+
+I think this is easier to read.
+
+> +		pr_err("crash hp: unable to locate FDT segment");
+> +		return;
+> +	}
+> +
+> +	fdt = __va((void *)image->segment[image->arch.fdt_index].mem);
+> +
+> +	/* Temporarily invalidate the crash image while it is replaced */
+> +	xchg(&kexec_crash_image, NULL);
+> +
+> +	/* update FDT to refelect changes to CPU resrouces */
+> +	if (update_cpus_node(fdt))
+> +		pr_err("crash hp: failed to update crash FDT");
+> +
+> +	/* The crash image is now valid once again */
+> +	xchg(&kexec_crash_image, image);
+> +}
+> +#endif
+> +
+>  #ifdef CONFIG_PPC_64S_HASH_MMU
+>  /* Values we need to export to the second kernel via the device tree. */
+>  static unsigned long htab_base;
+> diff --git a/arch/powerpc/kexec/elf_64.c b/arch/powerpc/kexec/elf_64.c
+> index eeb258002d1e..8ef18d6c3c32 100644
+> --- a/arch/powerpc/kexec/elf_64.c
+> +++ b/arch/powerpc/kexec/elf_64.c
+> @@ -24,6 +24,68 @@
+>  #include <linux/slab.h>
+>  #include <linux/types.h>
+>  
+> +#include <asm/kvm_book3s.h>
+> +#include <asm/kvm_ppc.h>
+
+Are these 2 KVM specifics headers really required?
+
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +/**
+> + * get_cpu_node_sz() - Calculate the space needed to store a CPU device
+> + *		       type node in FDT. The calculation is done based on
+> + *		       the existing CPU node in unflatten device tree. Loop
+> + *		       through all the properties of the very first CPU type
+> + *		       device node found in unflatten device tree and returns
+> + *		       the sum of the property length and property string size
+> + *		       of all properties of a CPU node.
+
+This indentation style looks weird to me.
+
+> + */
+> +static int get_cpu_node_sz(void)
+> +{
+> +	struct device_node *dn = NULL;
+There is no need to initialize dn here, it is assigned right after
+> +	struct property *pp;
+> +	int cpu_node_size = 0;
+> +
+> +	dn = of_find_node_by_type(NULL, "cpu");
+> +
+> +	if (!dn) {
+> +		pr_warn("Unable to locate cpu device_type node.\n");
+> +		goto out;
+You could return 0 here, and remove the initialization of cpu_node_size.
+> +	}
+> +
+> +	/* Every node in FDT starts with FDT_BEGIN_NODE and ends with
+> +	 * FDT_END_NODE that takes one byte each.
+> +	 */
+> +	cpu_node_size = 2;
+> +
+> +	for_each_property_of_node(dn, pp) {
+> +		/**
+> +		 * For each property add two bytes extra. One for string null
+> +		 * character for property name and other for FDT property start
+> +		 * tag FDT_PROP.
+> +		 */
+> +		cpu_node_size = cpu_node_size + pp->length + strlen(pp->name) + 2;
+                cpu_node_size += pp->length + strlen(pp->name) + 2;
+
+This shortens a bit that line.
+
+> +	}
+> +
+> +out:
+> +	return cpu_node_size;
+> +}
+> +
+> +/*
+> + * get_crash_fdt_mem_sz() - calcuate mem size for crash kernel FDT
+> + * @fdt: pointer to crash kernel FDT
+> + *
+> + * Calculate the buffer space needed to accommodate more CPU nodes in
+> + * crash FDT post capture kernel load due to CPU hotplug events.
+> + */
+> +static unsigned int get_crash_fdt_mem_sz(void *fdt)
+> +{
+> +	int fdt_cpu_nodes_sz, offline_cpu_cnt;
+> +
+> +	offline_cpu_cnt = (num_possible_cpus() - num_present_cpus()) / MAX_SMT_THREADS;
+> +	fdt_cpu_nodes_sz = get_cpu_node_sz() * offline_cpu_cnt;
+> +
+> +	return fdt_totalsize(fdt) + fdt_cpu_nodes_sz;
+> +}
+> +#endif
+> +
+>  static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  			unsigned long kernel_len, char *initrd,
+>  			unsigned long initrd_len, char *cmdline,
+> @@ -123,6 +185,18 @@ static void *elf64_load(struct kimage *image, char *kernel_buf,
+>  	kbuf.buf_align = PAGE_SIZE;
+>  	kbuf.top_down = true;
+>  	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+> +
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +	if (image->type == KEXEC_TYPE_CRASH) {
+> +		kbuf.memsz = get_crash_fdt_mem_sz(fdt);
+
+Why do you keep the previous assignment of kbuf.memsz few lines ago :
+
+	kbuf.buffer = fdt;
+	kbuf.bufsz = kbuf.memsz = fdt_totalsize(fdt);  <<<<<
+	kbuf.buf_align = PAGE_SIZE;
+	kbuf.top_down = true;
+	kbuf.mem = KEXEC_BUF_MEM_UNKNOWN;
+
+#if defined(CONFIG_HOTPLUG_CPU)
+	if (image->type == KEXEC_TYPE_CRASH) {
+		kbuf.memsz = get_crash_fdt_mem_sz(fdt);
+		fdt_set_totalsize(fdt, kbuf.memsz);
+		image->arch.fdt_index = image->nr_segments;
+	} else
+#endif
+	{
+		kbuf.memsz = fdt_totalsize(fdt);
+	}
+
+And what about kbuf.bufsz?
+
+
+> +		fdt_set_totalsize(fdt, kbuf.memsz);
+> +		image->arch.fdt_index = image->nr_segments;
+> +	} else
+> +#endif
+> +	{
+> +		kbuf.memsz = fdt_totalsize(fdt);
+
+Why not setting image->arch.fdt_index to -1 here?
+
+> +	}
+> +
+>  	ret = kexec_add_buffer(&kbuf);
+>  	if (ret)
+>  		goto out_free_fdt;
+> diff --git a/arch/powerpc/kexec/file_load_64.c b/arch/powerpc/kexec/file_load_64.c
+> index 57f991b0a9da..8345c4f5316d 100644
+> --- a/arch/powerpc/kexec/file_load_64.c
+> +++ b/arch/powerpc/kexec/file_load_64.c
+> @@ -1116,6 +1116,11 @@ int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+>  		return ret;
+>  	}
+>  
+> +#if defined(CONFIG_HOTPLUG_CPU)
+> +	/* Mark fdt_index invalid */
+> +	image->arch.fdt_index = -1;
+
+Why doing this here instead of elf64_load()?
+I think your patch only applies to the ELF image format, isn't it?
+
+Cheers,
+Laurent.
+
+> +#endif
+> +
+>  	return kexec_image_probe_default(image, buf, buf_len);
+>  }
+>  
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
