@@ -4,58 +4,64 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id C21E7C433EF
-	for <kexec@archiver.kernel.org>; Sat, 25 Jun 2022 02:50:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 78A1EC43334
+	for <kexec@archiver.kernel.org>; Sat, 25 Jun 2022 17:05:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=655xghm8ODm5fMDVARVp2EuIc5oqW4ukdHFy+WEnWNE=; b=4dT4MZZU/5HUsX
-	L6qOjcOVRC+bGM66G+Pem/5jGeyIsJocFoSOFN3BBZNAfnGd+yt5DLhf7EB0CxeFVGvQP+i8/49BK
-	ahLzd9QmwA1E9Cy51nQkPG1jtfv6jkCUr34LiSywhXTE+bVvlyzCDXrz7IEfnCXhpM8pSyac939O+
-	lxxHX8FYv+GtMrP9QaUEgyCsoYTPzWIOCV6yMcfclunZn+1yMllmsumNBtLRJ0jdk5pL5LKFeFLrP
-	zDglzvhbXlUPKB0UlwjalBfH0ucwcEOHf+x1uTBMdoVjSK1+JI+JHRIo3izRmS7Wetn9AvJ3RTG+3
-	JA4U64EpYKTS6v1Sm2ZA==;
+	List-Archive:List-Unsubscribe:List-Id:Subject:MIME-Version:Message-ID:
+	In-Reply-To:Date:References:Cc:To:From:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=UEl9aPk1YjlzxicC2F2kUkeTAIDRlKaT1jmIBZ425oc=; b=l0V9dg+nm8xWluVSwrQiuibpck
+	fhL3wnEt2qCmkdf2zHUsassZCj834Li2MBDqRbEZNcSs6Yqyb261QxSidSJp0ShWyEOLp1YBfHsQm
+	WSTKKuS0GrrY70uX1ZRMpuAhp/pDRztjmDm4kbD3H8cnRO+2H6y7SSi0rhCRIk8Sm+APYl/0qSi54
+	pbw+Ei4ufuuSfn7qloiFBliR67wUzHyFDz0XiQn3i8AYUczgsPDGV9123vz8P5OxWcT/6yN8uEfpK
+	lZSyl5kZ4oYjDRAFLphiarWTF6VctQELugqlBnxBtceEL+4VF8A0TwaeObl6LCa7O/B7nf+U1YG97
+	l1wAIwlg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o4vs0-004SDv-Ag; Sat, 25 Jun 2022 02:50:00 +0000
-Received: from mail.loongson.cn ([114.242.206.163] helo=loongson.cn)
-	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o4vrv-004SDK-RC
-	for kexec@lists.infradead.org; Sat, 25 Jun 2022 02:49:58 +0000
-Received: from localhost.localdomain (unknown [113.200.148.30])
-	by mail.loongson.cn (Coremail) with SMTP id AQAAf9Dx_9fNd7Zi06NYAA--.2963S2;
-	Sat, 25 Jun 2022 10:49:50 +0800 (CST)
-From: Hui Li <lihui@loongson.cn>
-To: Simon Horman <horms@verge.net.au>
-Cc: kexec@lists.infradead.org
-Subject: [PATCH v6] kexec-tools: mips: Pass initrd parameter via cmdline
-Date: Sat, 25 Jun 2022 10:49:49 +0800
-Message-Id: <20220625024949.4274-1-lihui@loongson.cn>
-X-Mailer: git-send-email 2.20.1
+	id 1o59DR-006tPB-Do; Sat, 25 Jun 2022 17:05:01 +0000
+Received: from out02.mta.xmission.com ([166.70.13.232])
+	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
+	id 1o59DL-006tNx-2L
+	for kexec@lists.infradead.org; Sat, 25 Jun 2022 17:04:56 +0000
+Received: from in01.mta.xmission.com ([166.70.13.51]:41708)
+	by out02.mta.xmission.com with esmtps  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1o59DJ-008ljH-LL; Sat, 25 Jun 2022 11:04:53 -0600
+Received: from ip68-227-174-4.om.om.cox.net ([68.227.174.4]:57554 helo=email.froward.int.ebiederm.org.xmission.com)
+	by in01.mta.xmission.com with esmtpsa  (TLS1.3) tls TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384
+	(Exim 4.93)
+	(envelope-from <ebiederm@xmission.com>)
+	id 1o59DI-009wBm-Ke; Sat, 25 Jun 2022 11:04:53 -0600
+From: "Eric W. Biederman" <ebiederm@xmission.com>
+To: Valentin Schneider <vschneid@redhat.com>
+Cc: linux-kernel@vger.kernel.org,  kexec@lists.infradead.org,
+ linux-rt-users@vger.kernel.org,  Arnd Bergmann <arnd@arndb.de>,
+ Petr Mladek <pmladek@suse.com>,  Thomas Gleixner <tglx@linutronix.de>,
+ Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+ Juri Lelli <jlelli@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
+ Andrew Morton <akpm@linux-foundation.org> , Vivek Goyal <vgoyal@redhat.com>
+References: <20220620111520.1039685-1-vschneid@redhat.com>
+Date: Sat, 25 Jun 2022 12:04:46 -0500
+In-Reply-To: <20220620111520.1039685-1-vschneid@redhat.com> (Valentin
+	Schneider's message of "Mon, 20 Jun 2022 12:15:20 +0100")
+Message-ID: <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/27.1 (gnu/linux)
 MIME-Version: 1.0
-X-CM-TRANSID: AQAAf9Dx_9fNd7Zi06NYAA--.2963S2
-X-Coremail-Antispam: 1UD129KBjvJXoW3XF4xKF48trWDtr13Ww15Jwb_yoW7uw48pw
-	43tas8Gr4rXrs7tryfAFs8Zw4fWwnxA3WjqFW3W34UX3W5Xw1YqrWfXF13ZryDJr4YvF1f
-	trWYqr95ua1xZw7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-	9KBjDU0xBIdaVrnRJUUUk2b7Iv0xC_Kw4lb4IE77IF4wAFF20E14v26r1j6r4UM7CY07I2
-	0VC2zVCF04k26cxKx2IYs7xG6rWj6s0DM7CIcVAFz4kK6r1j6r18M28lY4IEw2IIxxk0rw
-	A2F7IY1VAKz4vEj48ve4kI8wA2z4x0Y4vE2Ix0cI8IcVAFwI0_Jr0_JF4l84ACjcxK6xII
-	jxv20xvEc7CjxVAFwI0_Jr0_Gr1l84ACjcxK6I8E87Iv67AKxVWxJVW8Jr1l84ACjcxK6I
-	8E87Iv6xkF7I0E14v26r4j6r4UJwAS0I0E0xvYzxvE52x082IY62kv0487Mc02F40EFcxC
-	0VAKzVAqx4xG6I80ewAv7VC0I7IYx2IY67AKxVWUJVWUGwAv7VC2z280aVAFwI0_Jr0_Gr
-	1lOx8S6xCaFVCjc4AY6r1j6r4UM4x0Y48IcxkI7VAKI48JMxkIecxEwVAFwVW8JwCF04k2
-	0xvY0x0EwIxGrwCFx2IqxVCFs4IE7xkEbVWUJVW8JwC20s026c02F40E14v26r1j6r18MI
-	8I3I0E7480Y4vE14v26r106r1rMI8E67AF67kF1VAFwI0_Jrv_JF1lIxkGc2Ij64vIr41l
-	IxAIcVC0I7IYx2IY67AKxVWUJVWUCwCI42IY6xIIjxv20xvEc7CjxVAFwI0_Jr0_Gr1lIx
-	AIcVCF04k26cxKx2IYs7xG6rW3Jr0E3s1lIxAIcVC2z280aVAFwI0_Jr0_Gr1lIxAIcVC2
-	z280aVCY1x0267AKxVWUJVW8JbIYCTnIWIevJa73UjIFyTuYvjxUg9aBUUUUU
-X-CM-SenderInfo: 5olk3xo6or00hjvr0hdfq/
+X-XM-SPF: eid=1o59DI-009wBm-Ke;;;mid=<87r13c7jyp.fsf@email.froward.int.ebiederm.org>;;;hst=in01.mta.xmission.com;;;ip=68.227.174.4;;;frm=ebiederm@xmission.com;;;spf=softfail
+X-XM-AID: U2FsdGVkX18w4luJIoAO0o2bnltbvBhRK+Y2TiFzlm0=
+X-SA-Exim-Connect-IP: 68.227.174.4
+X-SA-Exim-Mail-From: ebiederm@xmission.com
+Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
+X-SA-Exim-Version: 4.2.1 (built Sat, 08 Feb 2020 21:53:50 +0000)
+X-SA-Exim-Scanned: Yes (on in01.mta.xmission.com)
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220624_194956_304109_F7A0CB92 
-X-CRM114-Status: GOOD (  17.43  )
+X-CRM114-CacheID: sfid-20220625_100455_149513_FCBCE5FB 
+X-CRM114-Status: GOOD (  25.97  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -72,184 +78,71 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Under loongson platform, use command:
-kexec -l vmlinux... --append="root=UUID=28e1..." --initrd=...
-kexec -e
-quick restart failed like this:
+Valentin Schneider <vschneid@redhat.com> writes:
 
-********************************************************************
-[    3.420791] VFS: Cannot open root device "UUID=6462a8a4-02fb-49..."
-[    3.431262] Please append a correct "root=" boot option; ...
-...
-...
-...
-[    3.543175]   0801         4194304 sda1 554e69cc-01
-[    3.543175]
-[    3.549494]   0802        62914560 sda2 554e69cc-02
-[    3.549495]
-[    3.555818]   0803         8388608 sda3 554e69cc-03
-[    3.555819]
-[    3.562139]   0804       174553229 sda4 554e69cc-04
-[    3.562139]
-[    3.568463] 0b00         1048575 sr0
-[    3.568464]  driver: sr
-[    3.574524] Kernel panic - not syncing: VFS: Unable to mount root fs...
-[    3.582750] ---[ end Kernel panic - not syncing: VFS:...
-*******************************************************************
+> Attempting to get a crash dump out of a debug PREEMPT_RT kernel via an NMI
+> panic() doesn't work. The cause of that lies in the PREEMPT_RT definition
+> of mutex_trylock():
+>
+> 	if (IS_ENABLED(CONFIG_DEBUG_RT_MUTEXES) && WARN_ON_ONCE(!in_task()))
+> 		return 0;
+>
+> This prevents an NMI panic() from executing the main body of
+> __crash_kexec() which does the actual kexec into the kdump kernel.
+> The warning and return are explained by:
+>
+>   6ce47fd961fa ("rtmutex: Warn if trylock is called from hard/softirq context")
+>   [...]
+>   The reasons for this are:
+>
+>       1) There is a potential deadlock in the slowpath
+>
+>       2) Another cpu which blocks on the rtmutex will boost the task
+> 	 which allegedly locked the rtmutex, but that cannot work
+> 	 because the hard/softirq context borrows the task context.
+>
+> Furthermore, grabbing the lock isn't NMI safe, so do away with it and
+> use an atomic variable to serialize reads vs writes of
+> kexec_crash_image.
+>
+> Tested by triggering NMI panics via:
+>
+>   $ echo 1 > /proc/sys/kernel/panic_on_unrecovered_nmi
+>   $ echo 1 > /proc/sys/kernel/unknown_nmi_panic
+>   $ echo 1 > /proc/sys/kernel/panic
+>
+>   $ ipmitool power diag
+>
+> Fixes: 6ce47fd961fa ("rtmutex: Warn if trylock is called from hard/softirq context")
+> Signed-off-by: Valentin Schneider <vschneid@redhat.com>
 
-The kernel cannot parse the UUID, the UUID is parsed in the initrd.
-For compatibility with previous platforms, loongson platform obtain
-initrd parameter through cmdline in kernel, the kernel supports use
-cmdline to parse initrd. But under the mips architecture, kexec-tools
-pass the initrd through DTB.
+I am not particularly fond of this patch as it adds more complexity than
+is necessary to solve the problem.
 
-Made the following modifications:
+Calling a spade a spade PREEMPT_RT's mutex_trylock implementation is
+broken as it can not support the use cases of an ordinary mutex_trylock.
+I have not seen (possibly I skimmed too quickly) anywhere in the
+discussion why PREEMPT_RT is not being fixed.  Looking at the code
+there is enough going on in try_to_take_rt_mutex that I can imagine
+that some part of that code is not nmi safe.  So I can believe
+PREEMPT_RT may be unfix-ably broken.
 
-(1) in kexec/arch/mips/kexec-elf-mips.c
-    Add patch_initrd_info(), at runtime to distinguish different cpu,
-    only for loongson cpu, add initrd parameter to cmdline.
 
-(2) in kexec/arch/mips/crashdump-mips.c
-    Because loongson uses a different page_offset, it should be modified
-    to ensure that crashdump functionality is correct and reliable.
+At this point I recommend going back to being ``unconventional'' with
+the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
+use a mutex for locking rather than xchg()").
 
-(3) in kexec/arch/mips/crashdump-mips.h
-    Added platform-specific page_offset macro definition.
+That would also mean that we don't have to worry about the lockdep code
+doing something weird in the future and breaking kexec.
 
-Signed-off-by: Hui Li <lihui@loongson.cn>
----
- kexec/arch/mips/crashdump-mips.c |  5 ++-
- kexec/arch/mips/crashdump-mips.h |  2 +
- kexec/arch/mips/kexec-elf-mips.c | 76 +++++++++++++++++++++++++++++++-
- 3 files changed, 80 insertions(+), 3 deletions(-)
+Your change starting to is atomic_cmpxchng is most halfway to a revert
+of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
+xchg()").  So we might as well go the whole way and just document that
+the kexec on panic code can not use conventional kernel locking
+primitives and has to dig deep and build it's own.  At which point it
+makes no sense for the rest of the kexec code to use anything different.
 
-diff --git a/kexec/arch/mips/crashdump-mips.c b/kexec/arch/mips/crashdump-mips.c
-index aa09c83..d9f4515 100644
---- a/kexec/arch/mips/crashdump-mips.c
-+++ b/kexec/arch/mips/crashdump-mips.c
-@@ -334,7 +334,10 @@ static int patch_elf_info(void)
- 		if (strncmp(line, "cpu model", 9) == 0) {
- 			/* OCTEON uses a different page_offset. */
- 			if (strstr(line, "Octeon"))
--				elf_info64.page_offset = 0x8000000000000000ULL;
-+				elf_info64.page_offset = OCTEON_PAGE_OFFSET;
-+			/* LOONGSON uses a different page_offset. */
-+			else if (strstr(line, "Loongson"))
-+				elf_info64.page_offset = LOONGSON_PAGE_OFFSET;
- 			break;
- 		}
- 	}
-diff --git a/kexec/arch/mips/crashdump-mips.h b/kexec/arch/mips/crashdump-mips.h
-index 7edd859..55c9925 100644
---- a/kexec/arch/mips/crashdump-mips.h
-+++ b/kexec/arch/mips/crashdump-mips.h
-@@ -13,6 +13,8 @@ int load_crashdump_segments(struct kexec_info *info, char *mod_cmdline,
- #endif
- #define __pa(x)		((unsigned long)(X) & 0x7fffffff)
- 
-+#define LOONGSON_PAGE_OFFSET	0xffffffff80000000ULL
-+#define OCTEON_PAGE_OFFSET	0x8000000000000000ULL
- 
- #define CRASH_MAX_MEMMAP_NR	(KEXEC_MAX_SEGMENTS + 1)
- #define CRASH_MAX_MEMORY_RANGES	(MAX_MEMORY_RANGES + 2)
-diff --git a/kexec/arch/mips/kexec-elf-mips.c b/kexec/arch/mips/kexec-elf-mips.c
-index a2d11fc..31f4c47 100644
---- a/kexec/arch/mips/kexec-elf-mips.c
-+++ b/kexec/arch/mips/kexec-elf-mips.c
-@@ -40,6 +40,77 @@ static const int probe_debug = 0;
- #define CMDLINE_PREFIX "kexec "
- static char cmdline_buf[COMMAND_LINE_SIZE] = CMDLINE_PREFIX;
- 
-+/* Converts unsigned long to ascii string. */
-+static void ultoa(unsigned long i, char *str)
-+{
-+	int j = 0, k;
-+	char tmp;
-+
-+	do {
-+		str[j++] = i % 10 + '0';
-+	} while ((i /= 10) > 0);
-+	str[j] = '\0';
-+
-+	/* Reverse the string. */
-+	for (j = 0, k = strlen(str) - 1; j < k; j++, k--) {
-+		tmp = str[k];
-+		str[k] = str[j];
-+		str[j] = tmp;
-+	}
-+}
-+
-+/* Adds initrd parameters to command line. */
-+static int cmdline_add_initrd(char *cmdline, unsigned long addr, char *new_para)
-+{
-+	int cmdlen, len;
-+	char str[30], *ptr;
-+
-+	ptr = str;
-+	strcpy(str, new_para);
-+	ptr += strlen(str);
-+	ultoa(addr, ptr);
-+	len = strlen(str);
-+	cmdlen = strlen(cmdline) + len;
-+	if (cmdlen > (COMMAND_LINE_SIZE - 1))
-+		die("Command line overflow\n");
-+	strcat(cmdline, str);
-+
-+	return 0;
-+}
-+
-+/* add initrd to cmdline to compatible with previous platforms. */
-+static int patch_initrd_info(char *cmdline, unsigned long base,
-+			     unsigned long size)
-+{
-+	const char cpuinfo[] = "/proc/cpuinfo";
-+	char line[MAX_LINE];
-+	FILE *fp;
-+	unsigned long page_offset = PAGE_OFFSET;
-+
-+	fp = fopen(cpuinfo, "r");
-+	if (!fp) {
-+		fprintf(stderr, "Cannot open %s: %s\n",
-+		cpuinfo, strerror(errno));
-+		return -1;
-+	}
-+	while (fgets(line, sizeof(line), fp) != 0) {
-+		if (strncmp(line, "cpu model", 9) == 0) {
-+			if (strstr(line, "Loongson")) {
-+				/* LOONGSON64  uses a different page_offset. */
-+				if (arch_options.core_header_type ==
-+				    CORE_TYPE_ELF64)
-+					page_offset = LOONGSON_PAGE_OFFSET;
-+				cmdline_add_initrd(cmdline,
-+					     page_offset + base, " rd_start=");
-+				cmdline_add_initrd(cmdline, size, " rd_size=");
-+				break;
-+			}
-+		}
-+	}
-+	fclose(fp);
-+	return 0;
-+}
-+
- int elf_mips_probe(const char *buf, off_t len)
- {
- 	struct mem_ehdr ehdr;
-@@ -171,9 +242,10 @@ int elf_mips_load(int argc, char **argv, const char *buf, off_t len,
- 		/* Now that the buffer for initrd is prepared, update the dtb
- 		 * with an appropriate location */
- 		dtb_set_initrd(&dtb_buf, &dtb_length, initrd_base, initrd_base + initrd_size);
--	}
--
- 
-+		/* Add the initrd parameters to cmdline */
-+		patch_initrd_info(cmdline_buf, initrd_base, initrd_size);
-+	}
- 	/* This is a legacy method for commandline passing used
- 	 * currently by Octeon CPUs only */
- 	add_buffer(info, cmdline_buf, sizeof(cmdline_buf),
--- 
-2.20.1
-
+Eric
 
 _______________________________________________
 kexec mailing list
