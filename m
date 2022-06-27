@@ -4,78 +4,88 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id E5F69C43334
-	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 11:11:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBCECC433EF
+	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 12:42:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
-	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
-	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-	:Resent-Message-ID:List-Owner;
-	bh=RknWN0jTuUNf9zTxgxdHIrZsYycQjiOITmYGsZMkdMw=; b=U9lol513JCUjGbf2Q5xBIy2o3B
-	0J9RlxNjUVz8e/a0dTa4+Di/Wt9p/wneJoXyEAHFwSFMb5WOs9mMJE7hZ26vj0Dvg7UzgI55j8qKL
-	1fbMGVKEFxgPpTPS2KUsjRIdascQnE/h0KJEgiZsU6vA9DwaH2NwSEGhQRpyk8mCC632Hgqhz9/0Y
-	X5YR0Lbno9oKFdvyeODOtcllVO12O2OdrU3bwwFDh0nrKnJSE1lref5W2123fF22ufTiuJBoocOoH
-	ayp9SrjYY23PHo7Cl4NuZDHg/WWsBGlAOF1fya/sM1PV2ZFxroph95PrrYBBHz5WUeNq8qVbdhbku
-	drLsa75g==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=yEE0U9gERTfhke7YbxINNcX9+7Ha0z+9UYzC484KVYk=; b=yBI9ef4oz2XdMA
+	skTLlv6Y6d1MIWJ/3sDRZ/ISTeRSGv/H7o2LM6/L9kXgAIWeFAGghv+1PSNogsq6Ce7ru2YtHc7sZ
+	9W39TNu3eVsRUG/MmqFAIroyzMXPsIsAxUssrkHHVCUh+Q5Rt0liMbU5dpY3OIyuvj5mJ4z6JR7+G
+	fRi8n0FZ434HVWnnZTDZ2KcrBbRZEuho1WMFCo8n+BHabcCSvXsQkMLuXr23zgHchjkpHpiYTz7Yn
+	uSUMqxrJGBRcFLoqG+hTFcLbCf+VQqGGgXV7bjJy9SZu4aWanoM6v9sddnTjehhizO8FkmLSrlPB7
+	tM9gheUi/BAve03mekOQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5mee-000PMN-1f; Mon, 27 Jun 2022 11:11:44 +0000
-Received: from szxga03-in.huawei.com ([45.249.212.189])
+	id 1o5o4e-000xo1-Ov; Mon, 27 Jun 2022 12:42:40 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5mea-000PJq-Ul; Mon, 27 Jun 2022 11:11:43 +0000
-Received: from dggpemm500023.china.huawei.com (unknown [172.30.72.56])
-	by szxga03-in.huawei.com (SkyGuard) with ESMTP id 4LWlQR6B2gz9srK;
-	Mon, 27 Jun 2022 19:10:55 +0800 (CST)
-Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
- dggpemm500023.china.huawei.com (7.185.36.83) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 27 Jun 2022 19:11:34 +0800
-Received: from [10.174.178.55] (10.174.178.55) by
- dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
- 15.1.2375.24; Mon, 27 Jun 2022 19:11:33 +0800
-Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
- high memory
-To: Baoquan He <bhe@redhat.com>
-CC: Catalin Marinas <catalin.marinas@arm.com>, Kefeng Wang
-	<wangkefeng.wang@huawei.com>, Ard Biesheuvel <ardb@kernel.org>, Mark Rutland
-	<mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar
-	<mingo@redhat.com>, Borislav Petkov <bp@alien8.de>, <x86@kernel.org>, "H .
- Peter Anvin" <hpa@zytor.com>, Eric Biederman <ebiederm@xmission.com>, "Rob
- Herring" <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>,
-	<devicetree@vger.kernel.org>, Dave Young <dyoung@redhat.com>, Vivek Goyal
-	<vgoyal@redhat.com>, <kexec@lists.infradead.org>,
-	<linux-kernel@vger.kernel.org>, Will Deacon <will@kernel.org>,
-	<linux-arm-kernel@lists.infradead.org>, Jonathan Corbet <corbet@lwn.net>,
-	<linux-doc@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Feng Zhou
-	<zhoufeng.zf@bytedance.com>, Chen Zhou <dingguo.cz@antgroup.com>, "John
- Donnelly" <John.p.donnelly@oracle.com>, Dave Kleikamp
-	<dave.kleikamp@oracle.com>, liushixin <liushixin2@huawei.com>
-References: <20220613080932.663-1-thunder.leizhen@huawei.com>
- <20220613080932.663-6-thunder.leizhen@huawei.com>
- <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
- <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com> <YrIIJkhKWSuAqkCx@arm.com>
- <YrLUREAoBMSZo7RR@MiWiFi-R3L-srv> <YrRzvO5F0dumsbAU@arm.com>
- <Yrkbak66vYT55H4x@MiWiFi-R3L-srv>
- <e3318551-4134-245a-c060-86ab81eb3e68@huawei.com>
- <YrmDo7Sx1jNQ4WFd@MiWiFi-R3L-srv>
-From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Message-ID: <5996a53a-70eb-bb30-c8a6-b0c2c8ebb0f9@huawei.com>
-Date: Mon, 27 Jun 2022 19:11:32 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.7.0
+	id 1o5o4b-000xlC-1D
+	for kexec@lists.infradead.org; Mon, 27 Jun 2022 12:42:38 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656333754;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=E+n3Y/O+OmufE7x8Fqncdr2+EU4ZYCNX0XlR2Xu4Dqo=;
+	b=HI0M7AXX/p4SU2VCblGzZFn7iuMlD4GrChXSz5c5AIUNglh6xPmK3My1gJQc5x4VdrSXdS
+	NelivsYrez6NBl9RFjXnA15Vjswot47jMOSiwFRhFRbBzMKF5FVYANstRfqrYKv0vVRLTi
+	GuRq3MvslTs9uCve6r2WezkwQbOhUp0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-532-6TWDIhw2M1mbnp5YWphPHw-1; Mon, 27 Jun 2022 08:42:25 -0400
+X-MC-Unique: 6TWDIhw2M1mbnp5YWphPHw-1
+Received: by mail-wm1-f70.google.com with SMTP id i184-20020a1c3bc1000000b003a026f48333so3516817wma.4
+        for <kexec@lists.infradead.org>; Mon, 27 Jun 2022 05:42:25 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=E+n3Y/O+OmufE7x8Fqncdr2+EU4ZYCNX0XlR2Xu4Dqo=;
+        b=tkLq481mmRq/3ykllAPMnDoHA2j03EXz3BmbQwt/wE9Xmq6RfGCV1BsovfMt3Rsy2T
+         CSKP64ifKUA1AUsaP2TmPxM8OUnEVtW1a2S5KveFABQGnLQC3KARQnZNB0H414Gi106q
+         yu6Tt771puEP9drbtce4vit/QTpM0B9kOzB/H3x6WWc3f3Q5V32wfv8kdT7N1MZPYq37
+         rr+Vy9HTHkeaION0ssAFs8AA0tkzZ0N/WVk/Sk2FoYpW9XXs0l40YkSthfQm4yK26Hh/
+         CDNmaNg5p+281tBdxfacYEcWD/fGJqWdottXbR9uVQxkA01iGtZsq0UyUXim4BpZewY4
+         n6nw==
+X-Gm-Message-State: AJIora/uG+HTpD5xNm0fI0MFOV2g4wFE+UxS5kuB+2ewCV7O/A5e5yUx
+	j+U0e2uo5b02HKUAQqnp3JPD08r6d7SB8D1XKmW5GzItMdunfqJFQpX3ie3tnrxGprDrfOVuzmP
+	6DgdfQAh0l5gzNSpepXxZ
+X-Received: by 2002:a05:6000:69c:b0:21b:9280:9b2d with SMTP id bo28-20020a056000069c00b0021b92809b2dmr11433068wrb.203.1656333744231;
+        Mon, 27 Jun 2022 05:42:24 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1sJQ27sm+aJCjHu6xlQQhyYlKZ+HBejyIkW+SlC/p31t1lmrQbyAqnkqUNfQtUZa+j6nj85CQ==
+X-Received: by 2002:a05:6000:69c:b0:21b:9280:9b2d with SMTP id bo28-20020a056000069c00b0021b92809b2dmr11433043wrb.203.1656333743939;
+        Mon, 27 Jun 2022 05:42:23 -0700 (PDT)
+Received: from vschneid.remote.csb ([185.11.37.247])
+        by smtp.gmail.com with ESMTPSA id bk20-20020a0560001d9400b0021b8b998ca5sm9882182wrb.107.2022.06.27.05.42.23
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Mon, 27 Jun 2022 05:42:23 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Petr Mladek
+ <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
+In-Reply-To: <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
+References: <20220620111520.1039685-1-vschneid@redhat.com>
+ <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
+Date: Mon, 27 Jun 2022 13:42:22 +0100
+Message-ID: <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-In-Reply-To: <YrmDo7Sx1jNQ4WFd@MiWiFi-R3L-srv>
-Content-Language: en-US
-X-Originating-IP: [10.174.178.55]
-X-ClientProxiedBy: dggems705-chm.china.huawei.com (10.3.19.182) To
- dggpemm500006.china.huawei.com (7.185.36.236)
-X-CFilter-Loop: Reflected
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220627_041141_388462_1526094D 
-X-CRM114-Status: GOOD (  19.27  )
+X-CRM114-CacheID: sfid-20220627_054237_201501_DF3CF49B 
+X-CRM114-Status: GOOD (  23.96  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -92,62 +102,63 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+On 25/06/22 12:04, Eric W. Biederman wrote:
+> I am not particularly fond of this patch as it adds more complexity than
+> is necessary to solve the problem.
+>
+> Calling a spade a spade PREEMPT_RT's mutex_trylock implementation is
+> broken as it can not support the use cases of an ordinary mutex_trylock.
+> I have not seen (possibly I skimmed too quickly) anywhere in the
+> discussion why PREEMPT_RT is not being fixed.  Looking at the code
+> there is enough going on in try_to_take_rt_mutex that I can imagine
+> that some part of that code is not nmi safe.  So I can believe
+> PREEMPT_RT may be unfix-ably broken.
+>
 
+AFAICT same goes for !PREEMPT_RT given the mutex_unlock(); it's a bit
+convoluted but you can craft scenarios where the NMI ends up spinning on
+mutex->wait_lock that is owned by the interrupted task, e.g.
 
-On 2022/6/27 18:17, Baoquan He wrote:
-> On 06/27/22 at 05:17pm, Leizhen (ThunderTown) wrote:
->>
->>
->> On 2022/6/27 10:52, Baoquan He wrote:
->>> On 06/23/22 at 03:07pm, Catalin Marinas wrote:
->>>> On Wed, Jun 22, 2022 at 04:35:16PM +0800, Baoquan He wrote:
->>>>> On 06/21/22 at 07:04pm, Catalin Marinas wrote:
->>>>>> The problem with splitting is that you can end up with two entries in
->>>>>> the TLB for the same VA->PA mapping (e.g. one for a 4KB page and another
->>>>>> for a 2MB block). In the lucky case, the CPU will trigger a TLB conflict
->>>>>> abort (but can be worse like loss of coherency).
->>>>>
->>>>> Thanks for this explanation. Is this a drawback of arm64 design? X86
->>>>> code do the same thing w/o issue, is there way to overcome this on
->>>>> arm64 from hardware or software side?
->>>>
->>>> It is a drawback of the arm64 implementations. Having multiple TLB
->>>> entries for the same VA would need additional logic in hardware to
->>>> detect, so the microarchitects have pushed back. In ARMv8.4, some
->>>> balanced was reached with FEAT_BBM so that the only visible side-effect
->>>> is a potential TLB conflict abort that could be resolved by software.
->>>
->>> I see, thx.
->>>
->>>>
->>>>> I ever got a arm64 server with huge memory, w or w/o crashkernel setting 
->>>>> have different bootup time. And the more often TLB miss and flush will
->>>>> cause performance cost. It is really a pity if we have very powerful
->>>>> arm64 cpu and system capacity, but bottlenecked by this drawback.
->>>>
->>>> Is it only the boot time affected or the runtime performance as well?
->>>
->>> Sorry for late reply. What I observerd is the boot time serious latecy
->>> with huge memory. Since the timestamp is not available at that time,
->>> we can't tell the number. I didn't notice the runtime performance.
->>
->> There's some data here, and I see you're not on the cc list.
->>
->> https://lore.kernel.org/linux-mm/1656241815-28494-1-git-send-email-guanghuifeng@linux.alibaba.com/T/
-> 
-> Thanks, Zhen Lei. I also saw the patch. That seems to be a good way,
+  CPU0                    CPU1
 
-Yes.
+                          crash_shrink_memory()
+                            mutex_lock();
+  crash_get_memory_size()
+    mutex_lock()
+      raw_spin_lock(&lock->wait_lock);
+      // Lock acquired
+  <NMI>
+                            mutex_unlock()
+                              <Release lock->owner>;
 
-> since there's only one process running at that time. Not sure if there's
-> still risk of multiple TLB entries for the same VA existing.
-> 
-> .
-> 
+  // Owner is free at this point so this succeeds
+  mutex_trylock();
+  // No kexec_crash_image
+  mutex_unlock()
+    raw_spin_lock(&lock->wait_lock);
 
--- 
-Regards,
-  Zhen Lei
+>
+> At this point I recommend going back to being ``unconventional'' with
+> the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
+> use a mutex for locking rather than xchg()").
+>
+> That would also mean that we don't have to worry about the lockdep code
+> doing something weird in the future and breaking kexec.
+>
+> Your change starting to is atomic_cmpxchng is most halfway to a revert
+> of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
+> xchg()").  So we might as well go the whole way and just document that
+> the kexec on panic code can not use conventional kernel locking
+> primitives and has to dig deep and build it's own.  At which point it
+> makes no sense for the rest of the kexec code to use anything different.
+>
+
+Hm, I'm a bit torn about that one, ideally I'd prefer to keep "homegrown"
+locking primitives to just where they are needed (loading & kexec'ing), but
+I'm also not immensely fond of the "hybrid" mutex+cmpxchg approach.
+
+> Eric
+
 
 _______________________________________________
 kexec mailing list
