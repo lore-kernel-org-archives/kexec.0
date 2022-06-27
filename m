@@ -4,88 +4,65 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CBCECC433EF
-	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 12:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BF25AC433EF
+	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 22:34:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=yEE0U9gERTfhke7YbxINNcX9+7Ha0z+9UYzC484KVYk=; b=yBI9ef4oz2XdMA
-	skTLlv6Y6d1MIWJ/3sDRZ/ISTeRSGv/H7o2LM6/L9kXgAIWeFAGghv+1PSNogsq6Ce7ru2YtHc7sZ
-	9W39TNu3eVsRUG/MmqFAIroyzMXPsIsAxUssrkHHVCUh+Q5Rt0liMbU5dpY3OIyuvj5mJ4z6JR7+G
-	fRi8n0FZ434HVWnnZTDZ2KcrBbRZEuho1WMFCo8n+BHabcCSvXsQkMLuXr23zgHchjkpHpiYTz7Yn
-	uSUMqxrJGBRcFLoqG+hTFcLbCf+VQqGGgXV7bjJy9SZu4aWanoM6v9sddnTjehhizO8FkmLSrlPB7
-	tM9gheUi/BAve03mekOQ==;
+	List-Owner; bh=JgzXstpbEkmEA7tcBxcbwXfieU63rPmRYiiEsbq1iJs=; b=ZENtZa9w16Q5cO
+	GxSgohB29T/TWDvwesTGYlEMtmeFZUXkOvfHU0yoPSs3LIf9yr4Ajhazn0bzse4iSlpJlkHzMIXU+
+	UpE10YWAQOG7fCPJCojofnhCQdyhYk+FZXl4Sovt7wyKJQumaxi2pdPgndA9p7oVQs7Z8V/wA8Upm
+	uKrAsc6SdaJm/2edo+Txvcl3uQ+DdRhMlt7n+518CG2WszdsvypAnj67Cv9tRyd2IJvbX++pfhh/a
+	kGP8FUZNnbZdw6bUfxkcuV96QoGee5W3Mhz8LDX7hxjeHUypmcnJfPo8AbpvnhCtoyg901JcSkDzs
+	XYxr9BAom3Fs5S80X3/w==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5o4e-000xo1-Ov; Mon, 27 Jun 2022 12:42:40 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1o5xIr-0037uI-4G; Mon, 27 Jun 2022 22:33:57 +0000
+Received: from mail-io1-f48.google.com ([209.85.166.48])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5o4b-000xlC-1D
-	for kexec@lists.infradead.org; Mon, 27 Jun 2022 12:42:38 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656333754;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=E+n3Y/O+OmufE7x8Fqncdr2+EU4ZYCNX0XlR2Xu4Dqo=;
-	b=HI0M7AXX/p4SU2VCblGzZFn7iuMlD4GrChXSz5c5AIUNglh6xPmK3My1gJQc5x4VdrSXdS
-	NelivsYrez6NBl9RFjXnA15Vjswot47jMOSiwFRhFRbBzMKF5FVYANstRfqrYKv0vVRLTi
-	GuRq3MvslTs9uCve6r2WezkwQbOhUp0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-532-6TWDIhw2M1mbnp5YWphPHw-1; Mon, 27 Jun 2022 08:42:25 -0400
-X-MC-Unique: 6TWDIhw2M1mbnp5YWphPHw-1
-Received: by mail-wm1-f70.google.com with SMTP id i184-20020a1c3bc1000000b003a026f48333so3516817wma.4
-        for <kexec@lists.infradead.org>; Mon, 27 Jun 2022 05:42:25 -0700 (PDT)
+	id 1o5xIp-0037sk-2U
+	for kexec@lists.infradead.org; Mon, 27 Jun 2022 22:33:56 +0000
+Received: by mail-io1-f48.google.com with SMTP id k15so11135387iok.5
+        for <kexec@lists.infradead.org>; Mon, 27 Jun 2022 15:33:54 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=E+n3Y/O+OmufE7x8Fqncdr2+EU4ZYCNX0XlR2Xu4Dqo=;
-        b=tkLq481mmRq/3ykllAPMnDoHA2j03EXz3BmbQwt/wE9Xmq6RfGCV1BsovfMt3Rsy2T
-         CSKP64ifKUA1AUsaP2TmPxM8OUnEVtW1a2S5KveFABQGnLQC3KARQnZNB0H414Gi106q
-         yu6Tt771puEP9drbtce4vit/QTpM0B9kOzB/H3x6WWc3f3Q5V32wfv8kdT7N1MZPYq37
-         rr+Vy9HTHkeaION0ssAFs8AA0tkzZ0N/WVk/Sk2FoYpW9XXs0l40YkSthfQm4yK26Hh/
-         CDNmaNg5p+281tBdxfacYEcWD/fGJqWdottXbR9uVQxkA01iGtZsq0UyUXim4BpZewY4
-         n6nw==
-X-Gm-Message-State: AJIora/uG+HTpD5xNm0fI0MFOV2g4wFE+UxS5kuB+2ewCV7O/A5e5yUx
-	j+U0e2uo5b02HKUAQqnp3JPD08r6d7SB8D1XKmW5GzItMdunfqJFQpX3ie3tnrxGprDrfOVuzmP
-	6DgdfQAh0l5gzNSpepXxZ
-X-Received: by 2002:a05:6000:69c:b0:21b:9280:9b2d with SMTP id bo28-20020a056000069c00b0021b92809b2dmr11433068wrb.203.1656333744231;
-        Mon, 27 Jun 2022 05:42:24 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1sJQ27sm+aJCjHu6xlQQhyYlKZ+HBejyIkW+SlC/p31t1lmrQbyAqnkqUNfQtUZa+j6nj85CQ==
-X-Received: by 2002:a05:6000:69c:b0:21b:9280:9b2d with SMTP id bo28-20020a056000069c00b0021b92809b2dmr11433043wrb.203.1656333743939;
-        Mon, 27 Jun 2022 05:42:23 -0700 (PDT)
-Received: from vschneid.remote.csb ([185.11.37.247])
-        by smtp.gmail.com with ESMTPSA id bk20-20020a0560001d9400b0021b8b998ca5sm9882182wrb.107.2022.06.27.05.42.23
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to;
+        bh=32Nxg6F78wS9IwAB+Cxihgn8oha1HxjScddi+4nCHG4=;
+        b=fkN7hApP8Ud7hK3HnEmZmYEp+lf0Sch2S2WxTzdJcJyo+8GIjKhcqW49JrpqXmTUgP
+         FI+4nAv1Bfjc96VYuKWq19s1YXTJKSY1BfFaQ2Gcu1q9UcEI0H6duZSbBFf1FMt8QlXP
+         yBuU57UyhDTrb35FQL26EGgYm6YmiLLZ3cROSQ8n+K6wP33JeOPnWofWbKohha8i9lRg
+         6rccGSfKu+j8Nq0xLBb/ppJU82KqrNE7FiAH0Rc5y28rpZngwyZ8PpgPTjyOwjHXEIRS
+         qvFBevldrmrrujnp138GqlfOd1MIIScDD+y+6QKPdBVfyCVTwwfb4kLGPiHGbz7XENwy
+         hoqw==
+X-Gm-Message-State: AJIora9k0ao5uVH2SuSfitLveJrCGi/wvsPCd6q3NscMpN+d1+oh+9Ed
+	mZPYPeYIBM9xjcoW7+xOuNCcpZx6eQ==
+X-Google-Smtp-Source: AGRyM1uizCsd2c8405104reVZ4+WqtbFQDYdp2onLnzKzFfvElEFQ48+N7iSI1kQlWIgwkVWg4FWcw==
+X-Received: by 2002:a05:6638:d4d:b0:333:1aea:4b9f with SMTP id d13-20020a0566380d4d00b003331aea4b9fmr9645855jak.149.1656369234311;
+        Mon, 27 Jun 2022 15:33:54 -0700 (PDT)
+Received: from robh.at.kernel.org ([64.188.179.253])
+        by smtp.gmail.com with ESMTPSA id q4-20020a5d87c4000000b0066961821575sm5863196ios.34.2022.06.27.15.33.53
         (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 05:42:23 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
-To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Petr Mladek
- <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
- "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
-In-Reply-To: <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
-References: <20220620111520.1039685-1-vschneid@redhat.com>
- <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
-Date: Mon, 27 Jun 2022 13:42:22 +0100
-Message-ID: <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
+        Mon, 27 Jun 2022 15:33:53 -0700 (PDT)
+Received: (nullmailer pid 3088698 invoked by uid 1000);
+	Mon, 27 Jun 2022 22:33:52 -0000
+Date: Mon, 27 Jun 2022 16:33:52 -0600
+From: Rob Herring <robh@kernel.org>
+To: Stefan Berger <stefanb@linux.ibm.com>
+Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org, linux-integrity@vger.kernel.org, nayna@linux.ibm.com, nasastry@in.ibm.com
+Subject: Re: [PATCH v2 0/3] tpm: Preserve TPM measurement log across kexec
+Message-ID: <20220627223352.GA3082294-robh@kernel.org>
+References: <20220616154130.2052541-1-stefanb@linux.ibm.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20220616154130.2052541-1-stefanb@linux.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220627_054237_201501_DF3CF49B 
-X-CRM114-Status: GOOD (  23.96  )
+X-CRM114-CacheID: sfid-20220627_153355_163916_9948398E 
+X-CRM114-Status: UNSURE (   9.98  )
+X-CRM114-Notice: Please train this message.
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -102,63 +79,16 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 25/06/22 12:04, Eric W. Biederman wrote:
-> I am not particularly fond of this patch as it adds more complexity than
-> is necessary to solve the problem.
->
-> Calling a spade a spade PREEMPT_RT's mutex_trylock implementation is
-> broken as it can not support the use cases of an ordinary mutex_trylock.
-> I have not seen (possibly I skimmed too quickly) anywhere in the
-> discussion why PREEMPT_RT is not being fixed.  Looking at the code
-> there is enough going on in try_to_take_rt_mutex that I can imagine
-> that some part of that code is not nmi safe.  So I can believe
-> PREEMPT_RT may be unfix-ably broken.
->
+On Thu, Jun 16, 2022 at 11:41:27AM -0400, Stefan Berger wrote:
+> The of-tree driver does not currently preserve the IBM vTPM 1.2 and
+> vTPM 2.0 measurement logs across a kexec. This series fixes this for the
+> kexec_file_load() syscall using the flattened device tree (fdt) to
+> carry the measurement log's buffer across kexec.
 
-AFAICT same goes for !PREEMPT_RT given the mutex_unlock(); it's a bit
-convoluted but you can craft scenarios where the NMI ends up spinning on
-mutex->wait_lock that is owned by the interrupted task, e.g.
+As mentioned in v1, please Cc other folks that might care about TPMs 
+and kexec. I'm sure it's not only IBM.
 
-  CPU0                    CPU1
-
-                          crash_shrink_memory()
-                            mutex_lock();
-  crash_get_memory_size()
-    mutex_lock()
-      raw_spin_lock(&lock->wait_lock);
-      // Lock acquired
-  <NMI>
-                            mutex_unlock()
-                              <Release lock->owner>;
-
-  // Owner is free at this point so this succeeds
-  mutex_trylock();
-  // No kexec_crash_image
-  mutex_unlock()
-    raw_spin_lock(&lock->wait_lock);
-
->
-> At this point I recommend going back to being ``unconventional'' with
-> the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
-> use a mutex for locking rather than xchg()").
->
-> That would also mean that we don't have to worry about the lockdep code
-> doing something weird in the future and breaking kexec.
->
-> Your change starting to is atomic_cmpxchng is most halfway to a revert
-> of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
-> xchg()").  So we might as well go the whole way and just document that
-> the kexec on panic code can not use conventional kernel locking
-> primitives and has to dig deep and build it's own.  At which point it
-> makes no sense for the rest of the kexec code to use anything different.
->
-
-Hm, I'm a bit torn about that one, ideally I'd prefer to keep "homegrown"
-locking primitives to just where they are needed (loading & kexec'ing), but
-I'm also not immensely fond of the "hybrid" mutex+cmpxchg approach.
-
-> Eric
-
+Rob
 
 _______________________________________________
 kexec mailing list
