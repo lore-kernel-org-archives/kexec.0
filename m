@@ -4,86 +4,75 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id DE12FC43334
-	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 07:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A3A96C433EF
+	for <kexec@archiver.kernel.org>; Mon, 27 Jun 2022 09:26:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
-	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=vFvrraTXJw6SJHCJ1McW8++1O+pkf78iIV2g0dKwXUE=; b=e0lN62NfyAocTc
-	wxvbOYx7P/OTBm3yXJeKgj/wUOi/a/L00AI72Y5I1Qqvmiqds3fa5+OpKHzTq+DYRHLISohZNkbmq
-	EyrR+YFgv5m6yzyRGYkt+OgejL+DL+FD9d4HI1n/Nd6GH2Qia6k1KZR8ZkOR3a6xlrWF15aX58O9F
-	tDsmeV2wcRDvNlM8sRbrkPDnG9Hx57eB1bKsT7Q6SGnI/bQOVtyS/kT017EINvaD+EnV+TUbia8TE
-	7H4hvimrG6Ci0Nu0wv83h3Y1hTbg0x4vNiQh1mShS/39YI0rA9W/XNyguai0DyLsGDo2u/yBnTNe2
-	/a0lff3EdJtQY+1cIJxA==;
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:Date:
+	Message-ID:From:References:CC:To:Subject:Reply-To:Content-ID:
+	Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+	:Resent-Message-ID:List-Owner;
+	bh=QcwWW3B9mVibJL0COkHkcg2iAUnJdfXUwLaNXluURsE=; b=sKmTrWXwhVmQhDtRmjuRlpSZt7
+	9zCcVYAq7VF6ZbYQuzOvlCkksCpVdEpAdcUBoNu9EzM/2sADZEgOryQis6Lyagmbf5WfYE6KXRygb
+	bUkMGjbaWsn27WkXjgxEVkFesBwD+9GwZuNRGAZha2h+pF8NYwu+ll/OEmqX+C0xlFsMvpDFvjrU6
+	OI2nPX1Bx2cHk6qYpHeABXgmChA6TAc+V/BYMPWBWU0lORMjJ+A9mjGn84PK0rYRALJC9+yEW7YHj
+	3Ty3enn0oK8gR/Dmhdg1OiDvF004zIeqpL44W4mZxZJ0xn8MwY7Rs3D8iClXKHki4QEDpa1gnQQjN
+	AFk/QsIw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5jXM-00GXSd-Kr; Mon, 27 Jun 2022 07:52:00 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1o5l0Z-00HI8f-KT; Mon, 27 Jun 2022 09:26:15 +0000
+Received: from szxga08-in.huawei.com ([45.249.212.255])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o5jXG-00GXOQ-4E
-	for kexec@lists.infradead.org; Mon, 27 Jun 2022 07:51:58 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656316311;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 content-transfer-encoding:content-transfer-encoding;
-	bh=xZRxk45blbbVKouBNkJa4r6LzelZm251Oyfsi7Y/n3g=;
-	b=bJhRIxVOqBf/Ix3+m5S9NzQSURhV7wix3pCcL1sNUY1APWkYLuWH18P2vn9slblyw/9ogz
-	B7D23/gKAQ35DAkqPrHVyE8E5F1yImivsBK/HoIyy1Xe1DWMDo94WAqDspmH+zKmAl+irF
-	btLB9PNfE6TubYhLQVC+ZUO7q4QdZ3U=
-Received: from mail-pj1-f71.google.com (mail-pj1-f71.google.com
- [209.85.216.71]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-137-N3RXQ-TWP9Grc8ndYEVZaQ-1; Mon, 27 Jun 2022 03:51:48 -0400
-X-MC-Unique: N3RXQ-TWP9Grc8ndYEVZaQ-1
-Received: by mail-pj1-f71.google.com with SMTP id j23-20020a17090a061700b001e89529d397so3237179pjj.6
-        for <kexec@lists.infradead.org>; Mon, 27 Jun 2022 00:51:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xZRxk45blbbVKouBNkJa4r6LzelZm251Oyfsi7Y/n3g=;
-        b=QccUmydwam2l5P+fYEY5ey66GHtwrcbTdLONJcChSopvNRerACZg1Rg3Ct9vqOyOv2
-         PWnEH2qjjOlGgAhO2t0Lg2KYnt08ehELm20kwurXiGO5Ol547jS4RyrVcqwauFyUB7HE
-         wje/sXAc+QZmMvuWHMoPCqnl+Ye8rTahUPic2KJPeev6Nim5g8CCAXQpJjAyCK+BsdM/
-         dprJ9pGJkQ6A9L+92VSNjdxISFipULqasx0xzSa5KyzA2mYSKVZBZp5t/rayu3IC2b5n
-         D0ugL9y1Y169cT6KJRiNwDD1fMa5vo+9f/V5djmstE2ZO9NZYkRdutVxEQV8vXaxQzCB
-         eTGQ==
-X-Gm-Message-State: AJIora+qCGG+ACTQ+DoEQMHcfVacuZ5e6Nkd0lghua2oXoT3tSH8jqW+
-	nmpgRcSXtNzaIPfx4WVmQiRdMdUXbH5NZDn6keaIx4MALJgNNaWrkS4UWGcsOQxVBSgqgv5yMU6
-	NB/KniDj2OynDDl+KhdFx
-X-Received: by 2002:a17:903:230d:b0:16a:73ce:9068 with SMTP id d13-20020a170903230d00b0016a73ce9068mr13186037plh.57.1656316307234;
-        Mon, 27 Jun 2022 00:51:47 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1vA7kWLyjSTH2Ul73cyviWapNDDOK80s/6Tz5T94ix0V5MyOp52lL87RqwN812fFM4e7ARtjQ==
-X-Received: by 2002:a17:903:230d:b0:16a:73ce:9068 with SMTP id d13-20020a170903230d00b0016a73ce9068mr13186019plh.57.1656316306908;
-        Mon, 27 Jun 2022 00:51:46 -0700 (PDT)
-Received: from localhost.localdomain.com ([209.132.188.80])
-        by smtp.gmail.com with ESMTPSA id em20-20020a17090b015400b001eae86cf683sm6520169pjb.42.2022.06.27.00.51.43
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Mon, 27 Jun 2022 00:51:46 -0700 (PDT)
-From: Tao Liu <ltao@redhat.com>
-To: bhe@redhat.com,
-	vgoyal@redhat.com,
-	dyoung@redhat.com,
-	kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org
-Cc: akpm@linux-foundation.org,
-	Tao Liu <ltao@redhat.com>
-Subject: [PATCH v2] kdump: round up the total memory size to 128M for crashkernel reservation
-Date: Mon, 27 Jun 2022 15:44:41 +0800
-Message-Id: <20220627074440.187222-1-ltao@redhat.com>
-X-Mailer: git-send-email 2.33.1
+	id 1o5ksX-00HEBG-Fy; Mon, 27 Jun 2022 09:18:00 +0000
+Received: from dggpemm500020.china.huawei.com (unknown [172.30.72.56])
+	by szxga08-in.huawei.com (SkyGuard) with ESMTP id 4LWhsP34JVz1L8j0;
+	Mon, 27 Jun 2022 17:15:37 +0800 (CST)
+Received: from dggpemm500006.china.huawei.com (7.185.36.236) by
+ dggpemm500020.china.huawei.com (7.185.36.49) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 17:17:50 +0800
+Received: from [10.174.178.55] (10.174.178.55) by
+ dggpemm500006.china.huawei.com (7.185.36.236) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id
+ 15.1.2375.24; Mon, 27 Jun 2022 17:17:49 +0800
+Subject: Re: [PATCH 5/5] arm64: kdump: Don't defer the reservation of crash
+ high memory
+To: Baoquan He <bhe@redhat.com>, Catalin Marinas <catalin.marinas@arm.com>
+CC: Kefeng Wang <wangkefeng.wang@huawei.com>, Ard Biesheuvel
+	<ardb@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner
+	<tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>, Borislav Petkov
+	<bp@alien8.de>, <x86@kernel.org>, "H . Peter Anvin" <hpa@zytor.com>, "Eric
+ Biederman" <ebiederm@xmission.com>, Rob Herring <robh+dt@kernel.org>, "Frank
+ Rowand" <frowand.list@gmail.com>, <devicetree@vger.kernel.org>, Dave Young
+	<dyoung@redhat.com>, Vivek Goyal <vgoyal@redhat.com>,
+	<kexec@lists.infradead.org>, <linux-kernel@vger.kernel.org>, Will Deacon
+	<will@kernel.org>, <linux-arm-kernel@lists.infradead.org>, Jonathan Corbet
+	<corbet@lwn.net>, <linux-doc@vger.kernel.org>, Randy Dunlap
+	<rdunlap@infradead.org>, Feng Zhou <zhoufeng.zf@bytedance.com>, Chen Zhou
+	<dingguo.cz@antgroup.com>, John Donnelly <John.p.donnelly@oracle.com>, "Dave
+ Kleikamp" <dave.kleikamp@oracle.com>, liushixin <liushixin2@huawei.com>
+References: <20220613080932.663-1-thunder.leizhen@huawei.com>
+ <20220613080932.663-6-thunder.leizhen@huawei.com>
+ <YrFYHYgX3mC//t2l@MiWiFi-R3L-srv>
+ <3f66323d-f371-b931-65fb-edfae0f01c88@huawei.com> <YrIIJkhKWSuAqkCx@arm.com>
+ <YrLUREAoBMSZo7RR@MiWiFi-R3L-srv> <YrRzvO5F0dumsbAU@arm.com>
+ <Yrkbak66vYT55H4x@MiWiFi-R3L-srv>
+From: "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <e3318551-4134-245a-c060-86ab81eb3e68@huawei.com>
+Date: Mon, 27 Jun 2022 17:17:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.7.0
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=ltao@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+In-Reply-To: <Yrkbak66vYT55H4x@MiWiFi-R3L-srv>
+Content-Language: en-US
+X-Originating-IP: [10.174.178.55]
+X-ClientProxiedBy: dggems701-chm.china.huawei.com (10.3.19.178) To
+ dggpemm500006.china.huawei.com (7.185.36.236)
+X-CFilter-Loop: Reflected
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220627_005154_304502_92D4AE93 
-X-CRM114-Status: GOOD (  17.32  )
+X-CRM114-CacheID: sfid-20220627_021757_933558_9EA4D82F 
+X-CRM114-Status: GOOD (  18.61  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -100,83 +89,52 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-The total memory size we get in kernel is usually slightly less than
-the actual memory size because BIOS/firmware will reserve some memory
-region. So it won't export all memory as usable.
 
-E.g, on my x86_64 kvm guest with 1G memory, the total_mem value shows:
-UEFI boot with ovmf:   0x3faef000
-Legacy boot kvm guest: 0x3ff7ec00
 
-When specifying crashkernel=1G-2G:128M, if we have a 1G memory machine,
-we get total size 1023M from firmware. Then it will not fall into
-1G-2G, thus no memory reserved. User will never know this, it is hard
-to let user know the exact total value in kernel.
+On 2022/6/27 10:52, Baoquan He wrote:
+> On 06/23/22 at 03:07pm, Catalin Marinas wrote:
+>> On Wed, Jun 22, 2022 at 04:35:16PM +0800, Baoquan He wrote:
+>>> On 06/21/22 at 07:04pm, Catalin Marinas wrote:
+>>>> The problem with splitting is that you can end up with two entries in
+>>>> the TLB for the same VA->PA mapping (e.g. one for a 4KB page and another
+>>>> for a 2MB block). In the lucky case, the CPU will trigger a TLB conflict
+>>>> abort (but can be worse like loss of coherency).
+>>>
+>>> Thanks for this explanation. Is this a drawback of arm64 design? X86
+>>> code do the same thing w/o issue, is there way to overcome this on
+>>> arm64 from hardware or software side?
+>>
+>> It is a drawback of the arm64 implementations. Having multiple TLB
+>> entries for the same VA would need additional logic in hardware to
+>> detect, so the microarchitects have pushed back. In ARMv8.4, some
+>> balanced was reached with FEAT_BBM so that the only visible side-effect
+>> is a potential TLB conflict abort that could be resolved by software.
+> 
+> I see, thx.
+> 
+>>
+>>> I ever got a arm64 server with huge memory, w or w/o crashkernel setting 
+>>> have different bootup time. And the more often TLB miss and flush will
+>>> cause performance cost. It is really a pity if we have very powerful
+>>> arm64 cpu and system capacity, but bottlenecked by this drawback.
+>>
+>> Is it only the boot time affected or the runtime performance as well?
+> 
+> Sorry for late reply. What I observerd is the boot time serious latecy
+> with huge memory. Since the timestamp is not available at that time,
+> we can't tell the number. I didn't notice the runtime performance.
 
-One way is to use dmi/smbios to get physical memory size, but it's not
-reliable as well. According to Prarit hardware vendors sometimes screw
-this up. Thus round up total size to 128M to work around this problem.
+There's some data here, and I see you're not on the cc list.
 
-This patch is a resend of [1] and rebased onto v5.19-rc2, and the
-original credit goes to Dave Young <dyoung@redhat.com>.
+https://lore.kernel.org/linux-mm/1656241815-28494-1-git-send-email-guanghuifeng@linux.alibaba.com/T/
 
-[1]: http://lists.infradead.org/pipermail/kexec/2018-April/020568.html
+> 
+> .
+> 
 
-Signed-off-by: Tao Liu <ltao@redhat.com>
----
-v1 -> v2:
-Modified commit log based on Baoquan's advice.
----
- kernel/crash_core.c | 14 ++++++++++++--
- 1 file changed, 12 insertions(+), 2 deletions(-)
-
-diff --git a/kernel/crash_core.c b/kernel/crash_core.c
-index 71122e01623c..b58b27cbdb61 100644
---- a/kernel/crash_core.c
-+++ b/kernel/crash_core.c
-@@ -9,6 +9,7 @@
- #include <linux/init.h>
- #include <linux/utsname.h>
- #include <linux/vmalloc.h>
-+#include <linux/sizes.h>
- 
- #include <asm/page.h>
- #include <asm/sections.h>
-@@ -43,6 +44,15 @@ static int __init parse_crashkernel_mem(char *cmdline,
- 					unsigned long long *crash_base)
- {
- 	char *cur = cmdline, *tmp;
-+	unsigned long long total_mem = system_ram;
-+
-+	/*
-+	 * Firmware sometimes reserves some memory regions for its own use,
-+	 * so the system memory size is less than the actual physical memory
-+	 * size. Work around this by rounding up the total size to 128M,
-+	 * which is enough for most test cases.
-+	 */
-+	total_mem = roundup(total_mem, SZ_128M);
- 
- 	/* for each entry of the comma-separated list */
- 	do {
-@@ -87,13 +97,13 @@ static int __init parse_crashkernel_mem(char *cmdline,
- 			return -EINVAL;
- 		}
- 		cur = tmp;
--		if (size >= system_ram) {
-+		if (size >= total_mem) {
- 			pr_warn("crashkernel: invalid size\n");
- 			return -EINVAL;
- 		}
- 
- 		/* match ? */
--		if (system_ram >= start && system_ram < end) {
-+		if (total_mem >= start && total_mem < end) {
- 			*crash_size = size;
- 			break;
- 		}
 -- 
-2.33.1
-
+Regards,
+  Zhen Lei
 
 _______________________________________________
 kexec mailing list
