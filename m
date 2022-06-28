@@ -4,102 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 919E1C433EF
-	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 13:30:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id CF97BCCA479
+	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 15:43:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gFwyMfGZZqE/tdXgaaCiXyc56fQc8CbjiR9xw3AFwCQ=; b=F10ufqBkvo6pK8
-	fbEky6jbjWJttm3uBE+kUNTIhX1x0NRtGWXo9jQfHCZBkDUG7uXbKU/IlE7yMd+CTykS+YZ8OSIew
-	hKTgci1H0aIiHXDmYvbpkvzLHVrgfoSg4DrPwLBvhUpEeRFxoZ4hG0A7YxQHP1B+inNFKb5b4l2Q2
-	OihyJ6dj99p9ShtzhwZrcK+ZSphAeZ3QYrZc/4IbkwUPLWxroF6cQpBqTcgwuIYmVQTICXBlpfMWe
-	HXjYlGgUHah3akEezsnCu/2gakPKChZyNAYaH6paL8glmP5ly6xs/bXJaBZ6ukfR6f8NyoCP/eRS4
-	mUTZtNHPfhPnP+oVjpug==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=UIVzFVRcxzOWvGT8GT0DVPWcl2GbF6//M+anfJPzzY4=; b=skj4eCezMVBKSQ
+	j+ZIIwhOBIj+GJS8ffmnSIUT7KUCrUZLUhroV4E7rD9fgXoKJWQ+keXzvLHJB4phMnlQi+R1APwfT
+	7LIS50XfGSNlgjGT+Jvj9J46Yw0sux8ULo+vv03dw+HuicP7gfBM2I5v9onXGd7DDRzDafg0tTYhT
+	P+mdiu51bUNQrdVvkhluFj6ZzA1ZXHGuIyqEVv/rLtPmgtdyHAresQalBxc3gip/3S4dlaBBEV8qd
+	8AFfQV6XitdTmXm0lEsh++dYcepwMF/3f2bv7VvBD3Z0trJ9ItIaL7IFHYh3iEGZn0FEcZwiWFR18
+	tp6bLU0IETpj7JVregQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6BI3-006PtS-5t; Tue, 28 Jun 2022 13:30:03 +0000
+	id 1o6DNL-0070xX-B3; Tue, 28 Jun 2022 15:43:39 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6BI0-006PsR-GH
-	for kexec@lists.infradead.org; Tue, 28 Jun 2022 13:30:02 +0000
+	id 1o6DNH-0070wq-Qc
+	for kexec@lists.infradead.org; Tue, 28 Jun 2022 15:43:37 +0000
 Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SD1ZL3011915;
-	Tue, 28 Jun 2022 13:29:52 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=FNQemyB/OW0nWHwzGNJkEHsB83P2tTckEJpnuaiqO7U=;
- b=EpWM1uaQ/DOrfOsliXHvUCm9G32BotfF9QYQO3ixauF8Cpxr9HIM67f5HIkYoN6kO7ws
- B50BED37E/khCBktxNYgc1qokcK/9/BpJNCksEDNG3fjbpKL2pL+1t/MTZtPrtFavTJj
- XqhHklSuN4x8UEQLVgbhwAUay0Ntu43kLYp3pQv61mVSseCo+TnsNDgIRhFPaxhiPziR
- OYaccrNOgUkxZ3COcLQ5zEqKrSth6wIew3BfsSucDPzKZDFqj78qNNNmeOwQh7VkvdqJ
- qGMHSQX8AZTN+O+OB2df2SQJlqeKHWIZ2rZH8xFzQn/bzPVLURjwZHXzsz5DNKMmpucM Xw== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h025sh8na-1
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SFhC1H008012;
+	Tue, 28 Jun 2022 15:43:26 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : content-transfer-encoding : mime-version; s=pp1;
+ bh=7PDB5FSkvAvomXijQiQvYer1vtrWRDpDFMakABgM6Aw=;
+ b=LqwaM7aeMpE+VqTwx0qMxNtZ/kH797UvgdPknwlDHN5K+/TgPBtOJ01NE56Op5QOY26q
+ FC6r2sAHlg7cv44/wSjhBgArxmER8/JVSd3fFsGdIYLYnw1gjZSngQawxreEcExMa2nL
+ 5PDjHKhIetYcSeKmCz+qZNpXmgCBezwKwXBiS2Vz3H/MigFU0/yG1EaX3cLxiWLvmTbV
+ dL+Elz4HepSWEJN8jHjF4LYPJZtKqVfG7G7mD/VA8Sp8Vlc9rmmhu/P6Mob1ZgmI6kfs
+ nLOvp7+K2Nzd8u47dyFt4/X2pzTJQdHxYrIabhiOAba4NAys3r3IWHwdI8sgfPlS75qo 7A== 
+Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h04hh0034-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 13:29:52 +0000
-Received: from m0098404.ppops.net (m0098404.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25SD1wPx015765;
-	Tue, 28 Jun 2022 13:29:51 GMT
-Received: from ppma03dal.us.ibm.com (b.bd.3ea9.ip4.static.sl-reverse.com [169.62.189.11])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h025sh8ms-1
+	Tue, 28 Jun 2022 15:43:25 +0000
+Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
+	by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SFb5rg010438;
+	Tue, 28 Jun 2022 15:43:23 GMT
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
+	by ppma06fra.de.ibm.com with ESMTP id 3gwsmhutqt-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 13:29:51 +0000
-Received: from pps.filterd (ppma03dal.us.ibm.com [127.0.0.1])
-	by ppma03dal.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SDJtvh013165;
-	Tue, 28 Jun 2022 13:29:50 GMT
-Received: from b03cxnp08027.gho.boulder.ibm.com (b03cxnp08027.gho.boulder.ibm.com [9.17.130.19])
-	by ppma03dal.us.ibm.com with ESMTP id 3gwt0a13jp-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 13:29:50 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-	by b03cxnp08027.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SDTnI214025152
+	Tue, 28 Jun 2022 15:43:23 +0000
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+	by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SFhKPh20316476
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Jun 2022 13:29:49 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 5B19DBE053;
-	Tue, 28 Jun 2022 13:29:49 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id A5602BE04F;
-	Tue, 28 Jun 2022 13:29:48 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-	Tue, 28 Jun 2022 13:29:48 +0000 (GMT)
-Message-ID: <170c78f7-f0ba-c186-dacf-55759dae9b83@linux.ibm.com>
-Date: Tue, 28 Jun 2022 09:29:48 -0400
-MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v2 1/3] tpm: of: Move of-tree specific code from tpm
- driver into of driver
-Content-Language: en-US
-To: Rob Herring <robh@kernel.org>
-Cc: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, nayna@linux.ibm.com,
-        nasastry@in.ibm.com, Jarkko Sakkinen <jarkko@kernel.org>,
-        Jason Gunthorpe <jgg@ziepe.ca>, Frank Rowand <frowand.list@gmail.com>
-References: <20220616154130.2052541-1-stefanb@linux.ibm.com>
- <20220616154130.2052541-2-stefanb@linux.ibm.com>
- <20220627224325.GB3082294-robh@kernel.org>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20220627224325.GB3082294-robh@kernel.org>
+	Tue, 28 Jun 2022 15:43:20 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id BA1D95204F;
+	Tue, 28 Jun 2022 15:43:20 +0000 (GMT)
+Received: from li-NotSettable.ibm.com.com (unknown [9.43.54.243])
+	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2222E5204E;
+	Tue, 28 Jun 2022 15:43:17 +0000 (GMT)
+From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+To: Greg KH <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
+Cc: <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Subject: [PATCH v4.14] kexec_file: drop weak attribute from arch_kexec_apply_relocations[_add]
+Date: Tue, 28 Jun 2022 21:12:46 +0530
+Message-Id: <20220628154249.204911-1-naveen.n.rao@linux.vnet.ibm.com>
+X-Mailer: git-send-email 2.31.1
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: ejAW8MjeayEDOFS4zHLIlz_R7LRBy4JK
-X-Proofpoint-ORIG-GUID: MGZzN5PnmhnegDiOa0wS5Ex5fN_GJmaN
+X-Proofpoint-ORIG-GUID: SyCfyuZxd_dTWrD3z57P3XOAQdx8LqT1
+X-Proofpoint-GUID: SyCfyuZxd_dTWrD3z57P3XOAQdx8LqT1
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-28_07,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501 mlxscore=0
- adultscore=0 spamscore=0 phishscore=0 malwarescore=0 mlxlogscore=999
- bulkscore=0 suspectscore=0 clxscore=1015 impostorscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206280055
+ definitions=2022-06-28_09,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ clxscore=1011 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ phishscore=0 mlxlogscore=910 impostorscore=0 mlxscore=0 spamscore=0
+ bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2206280063
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220628_063000_607747_C1BC409E 
-X-CRM114-Status: GOOD (  37.79  )
+X-CRM114-CacheID: sfid-20220628_084335_912220_C42FB5AF 
+X-CRM114-Status: GOOD (  20.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -111,195 +94,142 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
+commit 3e35142ef99fe6b4fe5d834ad43ee13cca10a2dc upstream.
 
+Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
+symbols") [1], binutils (v2.36+) started dropping section symbols that
+it thought were unused.  This isn't an issue in general, but with
+kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
+separate .text.unlikely section and the section symbol ".text.unlikely"
+is being dropped. Due to this, recordmcount is unable to find a non-weak
+symbol in .text.unlikely to generate a relocation record against.
 
-On 6/27/22 18:43, Rob Herring wrote:
-> On Thu, Jun 16, 2022 at 11:41:28AM -0400, Stefan Berger wrote:
->> Simplify tpm_read_log_of() by moving Openfirmware-specific code into
->> the Openfirmware driver to make the code reusable. Call the new
-> 
-> There is no such 'Openfirmware driver'.
-> 
->> of_tpm_get_sml_parameters() function from the TPM Openfirmware driver.
->>
->> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
->> Cc: Jarkko Sakkinen <jarkko@kernel.org>
->> Cc: Jason Gunthorpe <jgg@ziepe.ca>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Frank Rowand <frowand.list@gmail.com>
->> ---
->>   drivers/char/tpm/eventlog/of.c | 31 +++++--------------------------
->>   drivers/of/Makefile            |  2 +-
->>   drivers/of/device_node.c       | 27 +++++++++++++++++++++++++++
-> 
-> Humm, definitely the wrong direction. Generally, code for specific
-> bindings does not go in drivers/of/. There used to be some, but we've
-> moved it to the appropriate subsystems. kexec was an exception to not
-> have 2 copies of the same code in arch/.
+Address this by dropping the weak attribute from these functions.
+Instead, follow the existing pattern of having architectures #define the
+name of the function they want to override in their headers.
 
-The function I am moving here is called by the TPM subsystem and also 
-now by of/kexec.c. The latter is compiled under the following conditions:
+[1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
 
-ifdef CONFIG_KEXEC_FILE
-ifdef CONFIG_OF_FLATTREE
-obj-y	+= kexec.o
-endif
-endif
+[akpm@linux-foundation.org: arch/s390/include/asm/kexec.h needs linux/module.h]
+Link: https://lkml.kernel.org/r/20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+---
+ arch/x86/include/asm/kexec.h |  6 ++++++
+ include/linux/kexec.h        | 26 ++++++++++++++++++++++----
+ kernel/kexec_file.c          | 18 ------------------
+ 3 files changed, 28 insertions(+), 22 deletions(-)
 
-The code that current calls it is compiled under the following conditions:
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 5125fca472bb0b..e699819bf7b349 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -21,6 +21,7 @@
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/string.h>
++#include <linux/module.h>
+ 
+ #include <asm/page.h>
+ #include <asm/ptrace.h>
+@@ -217,6 +218,11 @@ extern int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages,
+ extern void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages);
+ #define arch_kexec_pre_free_pages arch_kexec_pre_free_pages
+ 
++#ifdef CONFIG_KEXEC_FILE
++int arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
++				     Elf_Shdr *sechdrs, unsigned int relsec);
++#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
++#endif
+ #endif
+ 
+ typedef void crash_vmclear_fn(void);
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index 1ce6ba5f04077d..07578da0e2f5b1 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -163,6 +163,28 @@ int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
+ 			       int (*func)(u64, u64, void *));
+ extern int kexec_add_buffer(struct kexec_buf *kbuf);
+ int kexec_locate_mem_hole(struct kexec_buf *kbuf);
++
++#ifndef arch_kexec_apply_relocations_add
++/* Apply relocations of type RELA */
++static inline int
++arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
++				 Elf_Shdr *sechdrs, unsigned int relsec)
++{
++	pr_err("RELA relocation unsupported.\n");
++	return -ENOEXEC;
++}
++#endif
++
++#ifndef arch_kexec_apply_relocations
++/* Apply relocations of type REL */
++static inline int
++arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
++			     unsigned int relsec)
++{
++	pr_err("REL relocation unsupported.\n");
++	return -ENOEXEC;
++}
++#endif
+ #endif /* CONFIG_KEXEC_FILE */
+ 
+ struct kimage {
+@@ -288,10 +310,6 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
+ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+ 					unsigned long buf_len);
+-int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+-					Elf_Shdr *sechdrs, unsigned int relsec);
+-int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-					unsigned int relsec);
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 9d979b2954ef7f..4e95641e8dd6ec 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -53,24 +53,6 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+ }
+ #endif
+ 
+-/* Apply relocations of type RELA */
+-int __weak
+-arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-				 unsigned int relsec)
+-{
+-	pr_err("RELA relocation unsupported.\n");
+-	return -ENOEXEC;
+-}
+-
+-/* Apply relocations of type REL */
+-int __weak
+-arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-			     unsigned int relsec)
+-{
+-	pr_err("REL relocation unsupported.\n");
+-	return -ENOEXEC;
+-}
+-
+ /*
+  * Free up memory used by kernel, initrd, and command line. This is temporary
+  * memory allocation which is not needed any more after these buffers have
 
-tpm-$(CONFIG_OF) += eventlog/of.o
+base-commit: f051383ef03bde49ca992f297ec80757a702e774
+-- 
+2.36.1
 
-To make it available to both I could keep it in the TPM subsystem like this:
-
-obj-$(CONFIG_OF) = tpm_of.o
-
-
-Jarrko, if you read this, any comment?
-
-
-    Stefan
-
-
-> 
->>   include/linux/of_device_node.h |  9 +++++++++
-> 
-> of_tpm.h would be the right name assuming we kept this structure which
-> we shouldn't. Probably linux/tpm.h? Just a guess, I'm not familar with
-> the TPM code really.
-> 
-> 
->>   4 files changed, 42 insertions(+), 27 deletions(-)
->>   create mode 100644 drivers/of/device_node.c
->>   create mode 100644 include/linux/of_device_node.h
->>
->> diff --git a/drivers/char/tpm/eventlog/of.c b/drivers/char/tpm/eventlog/of.c
->> index a9ce66d09a75..5b18f4333ad1 100644
->> --- a/drivers/char/tpm/eventlog/of.c
->> +++ b/drivers/char/tpm/eventlog/of.c
->> @@ -12,6 +12,7 @@
->>   
->>   #include <linux/slab.h>
->>   #include <linux/of.h>
->> +#include <linux/of_device_node.h>
->>   #include <linux/tpm_eventlog.h>
->>   
->>   #include "../tpm.h"
->> @@ -20,11 +21,10 @@
->>   int tpm_read_log_of(struct tpm_chip *chip)
->>   {
->>   	struct device_node *np;
->> -	const u32 *sizep;
->> -	const u64 *basep;
->>   	struct tpm_bios_log *log;
->>   	u32 size;
->>   	u64 base;
->> +	int ret;
->>   
->>   	log = &chip->log;
->>   	if (chip->dev.parent && chip->dev.parent->of_node)
->> @@ -35,30 +35,9 @@ int tpm_read_log_of(struct tpm_chip *chip)
->>   	if (of_property_read_bool(np, "powered-while-suspended"))
->>   		chip->flags |= TPM_CHIP_FLAG_ALWAYS_POWERED;
->>   
->> -	sizep = of_get_property(np, "linux,sml-size", NULL);
->> -	basep = of_get_property(np, "linux,sml-base", NULL);
->> -	if (sizep == NULL && basep == NULL)
->> -		return -ENODEV;
->> -	if (sizep == NULL || basep == NULL)
->> -		return -EIO;
->> -
->> -	/*
->> -	 * For both vtpm/tpm, firmware has log addr and log size in big
->> -	 * endian format. But in case of vtpm, there is a method called
->> -	 * sml-handover which is run during kernel init even before
->> -	 * device tree is setup. This sml-handover function takes care
->> -	 * of endianness and writes to sml-base and sml-size in little
->> -	 * endian format. For this reason, vtpm doesn't need conversion
->> -	 * but physical tpm needs the conversion.
->> -	 */
->> -	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> -	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->> -		size = be32_to_cpup((__force __be32 *)sizep);
->> -		base = be64_to_cpup((__force __be64 *)basep);
->> -	} else {
->> -		size = *sizep;
->> -		base = *basep;
->> -	}
->> +	ret = of_tpm_get_sml_parameters(np, &base, &size);
->> +	if (ret < 0)
->> +		return ret;
->>   
->>   	if (size == 0) {
->>   		dev_warn(&chip->dev, "%s: Event log area empty\n", __func__);
->> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
->> index e0360a44306e..1c9feac450ad 100644
->> --- a/drivers/of/Makefile
->> +++ b/drivers/of/Makefile
->> @@ -1,5 +1,5 @@
->>   # SPDX-License-Identifier: GPL-2.0
->> -obj-y = base.o device.o platform.o property.o
->> +obj-y = base.o device.o platform.o property.o device_node.o
->>   obj-$(CONFIG_OF_KOBJ) += kobj.o
->>   obj-$(CONFIG_OF_DYNAMIC) += dynamic.o
->>   obj-$(CONFIG_OF_FLATTREE) += fdt.o
->> diff --git a/drivers/of/device_node.c b/drivers/of/device_node.c
->> new file mode 100644
->> index 000000000000..71a19bc1bac2
->> --- /dev/null
->> +++ b/drivers/of/device_node.c
->> @@ -0,0 +1,27 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +#include <linux/export.h>
->> +#include <linux/of_device_node.h>
->> +
->> +int of_tpm_get_sml_parameters(struct device_node *np, u64 *base, u32 *size)
->> +{
->> +	const u32 *sizep;
->> +	const u64 *basep;
->> +
->> +	sizep = of_get_property(np, "linux,sml-size", NULL);
->> +	basep = of_get_property(np, "linux,sml-base", NULL);
->> +	if (sizep == NULL && basep == NULL)
->> +		return -ENODEV;
->> +	if (sizep == NULL || basep == NULL)
->> +		return -EIO;
->> +
->> +	if (of_property_match_string(np, "compatible", "IBM,vtpm") < 0 &&
->> +	    of_property_match_string(np, "compatible", "IBM,vtpm20") < 0) {
->> +		*size = be32_to_cpup((__force __be32 *)sizep);
->> +		*base = be64_to_cpup((__force __be64 *)basep);
->> +	} else {
->> +		*size = *sizep;
->> +		*base = *basep;
->> +	}
->> +	return 0;
->> +}
->> +EXPORT_SYMBOL_GPL(of_tpm_get_sml_parameters);
->> diff --git a/include/linux/of_device_node.h b/include/linux/of_device_node.h
->> new file mode 100644
->> index 000000000000..ae3faf023aab
->> --- /dev/null
->> +++ b/include/linux/of_device_node.h
->> @@ -0,0 +1,9 @@
->> +/* SPDX-License-Identifier: GPL-2.0 */
->> +#ifndef _LINUX_OF_DEVICE_NODE_H
->> +#define _LINUX_OF_DEVICE_NODE_H
->> +
->> +#include <linux/of.h>
->> +
->> +int of_tpm_get_sml_parameters(struct device_node *np, u64 *base, u32 *size);
->> +
->> +#endif /* _LINUX_OF_DEVICE_NODE_H */
->> -- 
->> 2.35.1
->>
->>
 
 _______________________________________________
 kexec mailing list
