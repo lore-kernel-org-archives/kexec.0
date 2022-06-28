@@ -4,89 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56611C433EF
-	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 17:33:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 66BA1C43334
+	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 23:51:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
-	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=UI86Xif8APXi1V5AR+4WCpIEqHdE0hr3BLZfvZZd42g=; b=4I8GiLI3WUyqoh
-	gbZAXCCCWrTyxiIcHnClsZ9Ntsjk5E6fVt1O6HCUkKtFZMd7tROwImJlY3aKM1R/RMf4h0DlMxOAH
-	3vIZD3Fudoi01tiKq5y/CLsD6N/kindlnoJ8xjZrND0TWdG3OcYWe09wk+qC7sbUpMFGslKiu8154
-	DwoJIP23CU+6DmtLsCyEUWjfKtr/NOubW1X9fc/WBpDdXjdHLq3Ie3iG9F/oaVTQoYgkG9VuvmjfN
-	1yBEbhJyoMsVcfe9P8so7ay251zsJkUzbXZX+obuf4NZlTZQbGonhA9OjSWF61eLrerks401MVSoI
-	deUzOuPr3gXnplteAtQg==;
+	List-Owner; bh=i1DJUvyA1+hQnDyxVc9e7i4Gs1hDDXjR37XHIssnQwY=; b=2Vw2PIVH2iFUvA
+	vT1DnN6CFFQTmBOhALiyrZw1t6FojcyUbHNC24DNIh6cRPX/gnh/uSQT2JeZx0rWvjS/AaBzpjXOh
+	PA+EEnVut59tsLWYOKVCvgKFxzrdsaTiQS6QAmGGB5PTwATLUubt0Y/gof0v5H+iI3VHNdxZhtWy1
+	F40mWpsOYyEXoAYW4x9mFKp0W1rCtvtWf9BbrfL4vV31w0G0PMR1rJ19IoPcz9OmaYPDj/8bqlx1C
+	Z84kJxiC8fUuOms/giwsflAKZTwXDgEQroCcANEg5VbiYZcNE8RAvZxUWlNmNaLuFYl6wOYMkv9GS
+	n5bBn7UBKuvhiHoovYsg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6F5T-007QVR-TA; Tue, 28 Jun 2022 17:33:19 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
+	id 1o6Kz9-008h2x-NB; Tue, 28 Jun 2022 23:51:11 +0000
+Received: from mga05.intel.com ([192.55.52.43])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6F5R-007QTx-Ku
-	for kexec@lists.infradead.org; Tue, 28 Jun 2022 17:33:19 +0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656437593;
-	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-	 in-reply-to:in-reply-to:references:references;
-	bh=a7VE0tuK7nWwEOYtUcFLI6mabEeaSx3vxPSmkSS0cDM=;
-	b=cH0snIUcPURQ1eGOZtA8e7U5+giPGpTtd4RvkH5Xfks92ZcAnw/0agPayutmT5CzAWoGgG
-	hNtvhW7DTrKzZ2n9W+IUu/REa0hWuCU3tQi+i+Fmtlzvarqn6vOJJLQvg560j2YTx4nuy1
-	E2Ny7q2eyg1P1qZPf7Tf3E278Ammoa0=
-Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
- [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
- (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-668-gtqdrbl6PYeKT5n3hXR64Q-1; Tue, 28 Jun 2022 13:33:12 -0400
-X-MC-Unique: gtqdrbl6PYeKT5n3hXR64Q-1
-Received: by mail-wm1-f70.google.com with SMTP id i184-20020a1c3bc1000000b003a026f48333so5369929wma.4
-        for <kexec@lists.infradead.org>; Tue, 28 Jun 2022 10:33:11 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20210112;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=a7VE0tuK7nWwEOYtUcFLI6mabEeaSx3vxPSmkSS0cDM=;
-        b=1kr5oVbh70jopb12sBlJFi/7RUueRVjrIAIoMZMIpaXa7YqLmdf6phYxfcnVEzPtvC
-         kOh5GQLeh/HJutPSLhemkv0SDto6Q2kp8mrAoFGwr/oP5GgfPHQvVK9zG6VAQZhFbi/S
-         h4TFd2Cy1hfPgQaQXw09q7D41nUytbB4aRNB/Tvl8bqEr8Jde56iyWk2X91HB1uWJ519
-         KzXJr5HYCDOViim5qUJJtw4OmN7dl4oft/Uq2vDzFuXrWXQLLHuTn1IimeHnwqbgpmNV
-         SVaZr6mpZTgj49Jy80UYWXfTAnz3eJRK5gjMM2YsNGABYIfmUpaDxObc/aCNdtVLIJM8
-         vTVg==
-X-Gm-Message-State: AJIora9tcQUIiYCejaxALJfMfE9SXyS9Y0kXlbpn+Gn8971UQ/52a2Wr
-	iScXWMOB63HhqkN5hpaMW2jHGaOd5nOq7pR9dLNnxyh3GdECH2K0qnrlzcycpVY3bT8QUf6eL+I
-	7k6QmM4dQ6JH/T17LpzRI
-X-Received: by 2002:adf:e5cc:0:b0:21b:8bab:8e95 with SMTP id a12-20020adfe5cc000000b0021b8bab8e95mr19211058wrn.454.1656437590820;
-        Tue, 28 Jun 2022 10:33:10 -0700 (PDT)
-X-Google-Smtp-Source: AGRyM1uNa1HHSsL0XcWy6n2rjIDIIsOFT4WH5URrvmgY8hvsAi2gczAwVJVbvUfAU+CLisMd3Ks0BA==
-X-Received: by 2002:adf:e5cc:0:b0:21b:8bab:8e95 with SMTP id a12-20020adfe5cc000000b0021b8bab8e95mr19211039wrn.454.1656437590549;
-        Tue, 28 Jun 2022 10:33:10 -0700 (PDT)
-Received: from vschneid.remote.csb ([185.11.37.247])
-        by smtp.gmail.com with ESMTPSA id u3-20020a05600c210300b003a044fe7fe7sm156300wml.9.2022.06.28.10.33.09
-        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
-        Tue, 28 Jun 2022 10:33:09 -0700 (PDT)
-From: Valentin Schneider <vschneid@redhat.com>
+	id 1o6Kz6-008h1X-Gg
+	for kexec@lists.infradead.org; Tue, 28 Jun 2022 23:51:10 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple;
+  d=intel.com; i=@intel.com; q=dns/txt; s=Intel;
+  t=1656460268; x=1687996268;
+  h=date:from:to:cc:subject:message-id:references:
+   mime-version:in-reply-to;
+  bh=dI3HshvmacGZNIxLwiGqhbPCAPM3w/IVmJ97bcAXWCk=;
+  b=elUgXQ+eaWXqS3tP1wxNsGwjY0GRVB79Xr2zVo3PR1brbq3U7fqTjXv2
+   MFuCWmbqx2LbM+Nr+YmsR0N1MkEOfhSG6CAX9DYmeVaN/wfEW311tZyHX
+   12r+l+MxJn4daXPRh/hXmEhQE76SLphqb0Gy5BKke/T/iAmtZ6W9/qU8h
+   q+JcAl011Se5MoRtaisW2d9VbOHy3xbyjeblWVXJsfL7OEEWyb/TfEvo0
+   NsLJlr4jgjYzf8x9F/bjN0atLaE8OPLOUfJMcK8KWKd2BWfxHkpK+bImk
+   Q4L9cKXEUHfj649RE9C0FQDGGgsczZiQD3AQyp24LtMTKVsM8uZwmnUO9
+   A==;
+X-IronPort-AV: E=McAfee;i="6400,9594,10392"; a="368190799"
+X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
+   d="scan'208";a="368190799"
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/ECDHE-RSA-AES256-GCM-SHA384; 28 Jun 2022 16:51:07 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.92,230,1650956400"; 
+   d="scan'208";a="617363723"
+Received: from black.fi.intel.com ([10.237.72.28])
+  by orsmga008.jf.intel.com with ESMTP; 28 Jun 2022 16:50:59 -0700
+Received: by black.fi.intel.com (Postfix, from userid 1000)
+	id 95514CE; Wed, 29 Jun 2022 02:51:05 +0300 (EEST)
+Date: Wed, 29 Jun 2022 02:51:05 +0300
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
 To: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
- linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Petr Mladek
- <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
- Andrzej Siewior <bigeasy@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
- "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Andrew Morton
- <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
-Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
-In-Reply-To: <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
-References: <20220620111520.1039685-1-vschneid@redhat.com>
- <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
- <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
-Date: Tue, 28 Jun 2022 18:33:08 +0100
-Message-ID: <xhsmhmtdw66cr.mognet@vschneid.remote.csb>
+Cc: Dave Hansen <dave.hansen@intel.com>, Borislav Petkov <bp@alien8.de>,
+	Andy Lutomirski <luto@kernel.org>,
+	Sean Christopherson <seanjc@google.com>,
+	Andrew Morton <akpm@linux-foundation.org>,
+	Joerg Roedel <jroedel@suse.de>, Ard Biesheuvel <ardb@kernel.org>,
+	Andi Kleen <ak@linux.intel.com>,
+	Kuppuswamy Sathyanarayanan <sathyanarayanan.kuppuswamy@linux.intel.com>,
+	David Rientjes <rientjes@google.com>,
+	Vlastimil Babka <vbabka@suse.cz>,
+	Tom Lendacky <thomas.lendacky@amd.com>,
+	Thomas Gleixner <tglx@linutronix.de>,
+	Peter Zijlstra <peterz@infradead.org>,
+	Paolo Bonzini <pbonzini@redhat.com>, Ingo Molnar <mingo@redhat.com>,
+	Varad Gautam <varad.gautam@suse.com>,
+	Dario Faggioli <dfaggioli@suse.com>,
+	Mike Rapoport <rppt@kernel.org>,
+	David Hildenbrand <david@redhat.com>, marcelo.cerri@canonical.com,
+	tim.gardner@canonical.com, khalid.elmously@canonical.com,
+	philip.cox@canonical.com, x86@kernel.org, linux-mm@kvack.org,
+	linux-coco@lists.linux.dev, linux-efi@vger.kernel.org,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCHv7 11/14] x86: Disable kexec if system has unaccepted
+ memory
+Message-ID: <20220628235105.z6ytdzxofrdkjti4@black.fi.intel.com>
+References: <20220614120231.48165-1-kirill.shutemov@linux.intel.com>
+ <20220614120231.48165-12-kirill.shutemov@linux.intel.com>
+ <6be29d38-5c93-7cc9-0de7-235d3f83773c@intel.com>
+ <87a6a3aw50.fsf@email.froward.int.ebiederm.org>
+ <20220624020005.txpxlsbjbebf6oq4@black.fi.intel.com>
 MIME-Version: 1.0
-Authentication-Results: relay.mimecast.com;
-	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
-X-Mimecast-Spam-Score: 0
-X-Mimecast-Originator: redhat.com
+Content-Disposition: inline
+In-Reply-To: <20220624020005.txpxlsbjbebf6oq4@black.fi.intel.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220628_103317_823114_1405B8B3 
-X-CRM114-Status: GOOD (  17.13  )
+X-CRM114-CacheID: sfid-20220628_165108_624736_E98CB060 
+X-CRM114-Status: GOOD (  23.95  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -103,50 +104,124 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 27/06/22 13:42, Valentin Schneider wrote:
-> On 25/06/22 12:04, Eric W. Biederman wrote:
->> At this point I recommend going back to being ``unconventional'' with
->> the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
->> use a mutex for locking rather than xchg()").
->>
->> That would also mean that we don't have to worry about the lockdep code
->> doing something weird in the future and breaking kexec.
->>
->> Your change starting to is atomic_cmpxchng is most halfway to a revert
->> of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
->> xchg()").  So we might as well go the whole way and just document that
->> the kexec on panic code can not use conventional kernel locking
->> primitives and has to dig deep and build it's own.  At which point it
->> makes no sense for the rest of the kexec code to use anything different.
->>
->
-> Hm, I'm a bit torn about that one, ideally I'd prefer to keep "homegrown"
-> locking primitives to just where they are needed (loading & kexec'ing), but
-> I'm also not immensely fond of the "hybrid" mutex+cmpxchg approach.
->
+On Fri, Jun 24, 2022 at 05:00:05AM +0300, Kirill A. Shutemov wrote:
+> > If there is some deep and fundamental why this can not be supported
+> > then it probably makes sense to put some code in the arch_kexec_load
+> > hook that verifies that deep and fundamental reason is present.
+> 
+> Sounds straight-forward. I can do this.
 
-8c5a1cf0ad3a ("kexec: use a mutex for locking rather than xchg()") was
-straightforward enough because it turned
+What about the patch below?
 
-        if (xchg(&lock, 1))
-                return -EBUSY;
+From 0b758600e1eef5525f2a46630ab3559f118a272a Mon Sep 17 00:00:00 2001
+From: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Date: Tue, 10 May 2022 19:02:18 +0300
+Subject: [PATCH] x86: Disable kexec if system has unaccepted memory
 
-into
+On kexec, the target kernel has to know what memory has been accepted.
+Information in EFI map is out of date and cannot be used.
 
-        if (!mutex_trylock(&lock))
-                return -EBUSY;
+boot_params.unaccepted_memory can be used to pass the bitmap between two
+kernels on kexec, but the use-case is not yet implemented.
 
-Now, most of the kexec_mutex uses are trylocks, except for:
-- crash_get_memory_size()
-- crash_shrink_memory()
+Disable kexec on machines with unaccepted memory for now.
 
-I really don't want to go down the route of turning those into cmpxchg
-try-loops, would it be acceptable to make those use trylocks (i.e. return
--EBUSY if the cmpxchg fails)?
+Signed-off-by: Kirill A. Shutemov <kirill.shutemov@linux.intel.com>
+---
+ arch/x86/mm/unaccepted_memory.c | 16 ++++++++++++++++
+ include/linux/kexec.h           |  2 ++
+ kernel/kexec.c                  |  4 ++++
+ kernel/kexec_core.c             |  5 +++++
+ kernel/kexec_file.c             |  4 ++++
+ 5 files changed, 31 insertions(+)
 
-Otherwise, we keep the mutexes for functions like those which go nowhere
-near an NMI.
-
+diff --git a/arch/x86/mm/unaccepted_memory.c b/arch/x86/mm/unaccepted_memory.c
+index 566c3a72aee8..529c3fd1dab3 100644
+--- a/arch/x86/mm/unaccepted_memory.c
++++ b/arch/x86/mm/unaccepted_memory.c
+@@ -1,4 +1,5 @@
+ // SPDX-License-Identifier: GPL-2.0-only
++#include <linux/kexec.h>
+ #include <linux/memblock.h>
+ #include <linux/mm.h>
+ #include <linux/pfn.h>
+@@ -98,3 +99,18 @@ bool range_contains_unaccepted_memory(phys_addr_t start, phys_addr_t end)
+ 
+ 	return ret;
+ }
++
++#ifdef CONFIG_KEXEC_CORE
++int arch_kexec_load(void)
++{
++	if (!boot_params.unaccepted_memory)
++		return 0;
++
++	/*
++	 * TODO: Information on memory acceptance status has to be communicated
++	 * between kernel.
++	 */
++	pr_warn_once("Disable kexec: not yet supported on systems with unaccepted memory\n");
++	return -EOPNOTSUPP;
++}
++#endif
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index ce6536f1d269..dfd9493d0b4b 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -396,6 +396,8 @@ void crash_free_reserved_phys_range(unsigned long begin, unsigned long end);
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
++int arch_kexec_load(void);
++
+ #ifndef page_to_boot_pfn
+ static inline unsigned long page_to_boot_pfn(struct page *page)
+ {
+diff --git a/kernel/kexec.c b/kernel/kexec.c
+index b5e40f069768..352b3742f07a 100644
+--- a/kernel/kexec.c
++++ b/kernel/kexec.c
+@@ -195,6 +195,10 @@ static inline int kexec_load_check(unsigned long nr_segments,
+ {
+ 	int result;
+ 
++	result = arch_kexec_load();
++	if (result)
++		return result;
++
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+ 		return -EPERM;
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index 4d34c78334ce..4d51b9271f6b 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -1238,3 +1238,8 @@ void __weak arch_kexec_protect_crashkres(void)
+ 
+ void __weak arch_kexec_unprotect_crashkres(void)
+ {}
++
++int __weak arch_kexec_load(void)
++{
++	return 0;
++}
+diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+index 145321a5e798..d531df94ffbb 100644
+--- a/kernel/kexec_file.c
++++ b/kernel/kexec_file.c
+@@ -324,6 +324,10 @@ SYSCALL_DEFINE5(kexec_file_load, int, kernel_fd, int, initrd_fd,
+ 	int ret = 0, i;
+ 	struct kimage **dest_image, *image;
+ 
++	ret = arch_kexec_load();
++	if (ret)
++		return ret;
++
+ 	/* We only trust the superuser with rebooting the system. */
+ 	if (!capable(CAP_SYS_BOOT) || kexec_load_disabled)
+ 		return -EPERM;
+-- 
+ Kirill A. Shutemov
 
 _______________________________________________
 kexec mailing list
