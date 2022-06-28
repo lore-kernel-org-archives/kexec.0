@@ -4,85 +4,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id D5846C43334
-	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 15:43:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id BC508C43334
+	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 15:44:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
 	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
 	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=2ImtTRLwdQFJvC8KCN3i6snQtpJoPtybuI4IVS39ZPw=; b=IjS16eee53Q3XD
-	t+HVwUEInrKJT8MIl1NZeR1+zF8Q7/BAT0SBRnij/oZFnC0Ijlhpt+eRoxipMzJ9Ee8uWh8yaM5nS
-	RVt4gagqwgPY0Rg0DclFf1eWYf8fHkY6PknjuSDEBch01omtI9iiRgGo2WzfvE8l5pmtgcn4/lQpv
-	Xl26ikWezHtdelr8ztqIfdvh5iS1WMB9PuZbQWaDBH4DhZqoKeaVUI7sastjCWS0L76OILGA/Mxjh
-	adWacbcKmxXv3ry5YfXFB2ZXUh1vM7CbF4J2G1ATXwLo0FTu40peeJ5uaOz13NnH1KrL9+XndTWZL
-	tgugbARQ9NIatFps3ZQA==;
+	List-Owner; bh=UTqa/AQXUd7SyCsjDF0WUZXnpjVOPfVsLoxza9e4mow=; b=zUGg31QbsMnhj9
+	jCorwxpHjfu9Gho0sRFPBkoH7BezlNuk/9K+UDBAcaKceyNwpnHuKrRsfrzDQ2jiQ6tCU3yRPui9e
+	FpptY9gIVF0p7xtfORR3q1H3z6vwBDhv6E7gIgNQqsQPjy8XU18t6aep9sLWHXZtGZ+RkvrtCdSdX
+	IK+C6/GVBg2MNklxbaaM7d34lionDl4aAGkyP93YiMKLUSAL3Y9hGAWV4APqlAwkJ+y1HRoHMu+v+
+	hQG3+fJPR7MncSayDyrTol8NtWo7Dgevc7ddk1J1qZIOQ7p0tNbiPaaLX3+vSWySVoM34W3wCqoCF
+	RNglTUExqqInp704enWw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6DNU-0070zj-NG; Tue, 28 Jun 2022 15:43:48 +0000
+	id 1o6DNd-00713L-0I; Tue, 28 Jun 2022 15:43:57 +0000
 Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6DNR-0070yU-Jn
-	for kexec@lists.infradead.org; Tue, 28 Jun 2022 15:43:47 +0000
-Received: from pps.filterd (m0187473.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SFgR68032966;
-	Tue, 28 Jun 2022 15:43:41 GMT
+	id 1o6DNa-00711X-4c
+	for kexec@lists.infradead.org; Tue, 28 Jun 2022 15:43:55 +0000
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SFhCCs008015;
+	Tue, 28 Jun 2022 15:43:49 GMT
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
  : date : message-id : content-transfer-encoding : mime-version; s=pp1;
- bh=neThbNghizSFP7EOZ7hK0Y1yq3+zbZIj9qScBcvSU4Q=;
- b=Ze14GAJN1A9UYMnCXlUff6RYneS42SsAvmYwGbw3CP4Dh6IjT7fvyoUN0htLNxhO4Y9k
- OyRc02b/3QUVg/ddhTNaHZ9z/6XrqVRCo09EPDVzbnwRpTr4sXfWno19shWFVNmByDCp
- +FcnZeNWE4/abfmkp/5mRcU6OHI/g3+qX8CXeUaE6KZyMDxcIqkGucpA3+KE2qaOlLCR
- p5xfyYgNFcNiNiZqOyISxeW2N+fV7YkBWN3hOysTuJEf2TSL6Qi2B0Q7YoLCG3WBgD4H
- F2CYQhm78xSjKu3vjZwlaNV+8v9CNrZutk2NLDGkv+b9QaPnxWQBjDao++pLhOqgxMMr Zw== 
-Received: from ppma06fra.de.ibm.com (48.49.7a9f.ip4.static.sl-reverse.com [159.122.73.72])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h04gwr114-1
+ bh=eGOAAX/MzK0GnpKpJPxVK06tkihlGybYABV69N5IrRo=;
+ b=BX9mMf3S8xiZdVhn7kyjiR0qa2eeBqd6G4jHS/42gavEWaJ63mNDO4tBGK6nwo/jbJpk
+ rrF0YBng8C6b5xnjARlonP+gpdGmg3eSSi70ekke2iLgybOZt0D5t2uo8OMlYsxAUKxO
+ YQvwcdvuXHMtwj0hlLstVGdA2/Razg8u3qO4HSZg8+ECEIgI2H2vfKoviM7Uspr1cCZc
+ w8rZw7GJPsf01GElRpDRhbpcnJOudQXui1KnJPP/PjTfcvgsJkM6pY/GBJQgLCib+zh4
+ BFCnPCNH7MPNN0g1eea1K+3xnyTjgo7VjKB21fsNV452c9oMGaoasUfPo2WLhQuKXVHy 9w== 
+Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h04hh00gn-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 15:43:41 +0000
-Received: from pps.filterd (ppma06fra.de.ibm.com [127.0.0.1])
-	by ppma06fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SFb6HD010444;
-	Tue, 28 Jun 2022 15:43:38 GMT
-Received: from b06avi18626390.portsmouth.uk.ibm.com (b06avi18626390.portsmouth.uk.ibm.com [9.149.26.192])
-	by ppma06fra.de.ibm.com with ESMTP id 3gwsmhutqw-1
+	Tue, 28 Jun 2022 15:43:48 +0000
+Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
+	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SFaeuV020210;
+	Tue, 28 Jun 2022 15:43:46 GMT
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
+	by ppma04ams.nl.ibm.com with ESMTP id 3gwt08w3gx-1
 	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 15:43:38 +0000
+	Tue, 28 Jun 2022 15:43:46 +0000
 Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-	by b06avi18626390.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SFgaOw22348146
+	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SFhije23200104
 	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Jun 2022 15:42:37 GMT
+	Tue, 28 Jun 2022 15:43:44 GMT
 Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 6E60A52051;
-	Tue, 28 Jun 2022 15:43:36 +0000 (GMT)
+	by IMSVA (Postfix) with ESMTP id 297995204E;
+	Tue, 28 Jun 2022 15:43:44 +0000 (GMT)
 Received: from li-NotSettable.ibm.com.com (unknown [9.43.54.243])
-	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 3BE295204E;
-	Tue, 28 Jun 2022 15:43:34 +0000 (GMT)
+	by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id EA78752050;
+	Tue, 28 Jun 2022 15:43:41 +0000 (GMT)
 From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
 To: Greg KH <gregkh@linuxfoundation.org>, <stable@vger.kernel.org>
 Cc: <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
         kexec@lists.infradead.org, Michael Ellerman <mpe@ellerman.id.au>,
         "Eric W. Biederman" <ebiederm@xmission.com>,
         Andrew Morton <akpm@linux-foundation.org>
-Subject: [PATCH v4.19] kexec_file: drop weak attribute from arch_kexec_apply_relocations[_add]
-Date: Tue, 28 Jun 2022 21:12:47 +0530
-Message-Id: <20220628154249.204911-2-naveen.n.rao@linux.vnet.ibm.com>
+Subject: [PATCH v4.9] kexec_file: drop weak attribute from arch_kexec_apply_relocations[_add]
+Date: Tue, 28 Jun 2022 21:12:48 +0530
+Message-Id: <20220628154249.204911-3-naveen.n.rao@linux.vnet.ibm.com>
 X-Mailer: git-send-email 2.31.1
 X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: D4oakxCir4GpxG6QsefZYaPf6XBs_-oj
-X-Proofpoint-ORIG-GUID: D4oakxCir4GpxG6QsefZYaPf6XBs_-oj
+X-Proofpoint-ORIG-GUID: Nt3itEkV3yye9lE6mGJaPGpcuPKHR-R9
+X-Proofpoint-GUID: Nt3itEkV3yye9lE6mGJaPGpcuPKHR-R9
 X-Proofpoint-UnRewURL: 0 URL was un-rewritten
 MIME-Version: 1.0
 X-Proofpoint-Virus-Version: vendor=baseguard
  engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
  definitions=2022-06-28_09,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- impostorscore=0 mlxscore=0 adultscore=0 malwarescore=0 mlxlogscore=999
- clxscore=1015 suspectscore=0 phishscore=0 lowpriorityscore=0 spamscore=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 suspectscore=0 malwarescore=0
+ clxscore=1015 priorityscore=1501 lowpriorityscore=0 adultscore=0
+ phishscore=0 mlxlogscore=910 impostorscore=0 mlxscore=0 spamscore=0
  bulkscore=0 classifier=spam adjust=0 reason=mlx scancount=1
  engine=8.12.0-2204290000 definitions=main-2206280063
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220628_084345_700860_29C0EAE0 
-X-CRM114-Status: GOOD (  21.13  )
+X-CRM114-CacheID: sfid-20220628_084354_294662_F7B3A0B9 
+X-CRM114-Status: GOOD (  19.93  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -123,43 +123,16 @@ Cc: "Eric W. Biederman" <ebiederm@xmission.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 ---
- arch/s390/include/asm/kexec.h | 10 ++++++++
- arch/x86/include/asm/kexec.h  |  9 +++++++
- include/linux/kexec.h         | 46 +++++++++++++++++++++++++++++------
- kernel/kexec_file.c           | 34 --------------------------
- 4 files changed, 57 insertions(+), 42 deletions(-)
+ arch/x86/include/asm/kexec.h |  7 +++++++
+ include/linux/kexec.h        | 26 ++++++++++++++++++++++----
+ kernel/kexec_file.c          | 18 ------------------
+ 3 files changed, 29 insertions(+), 22 deletions(-)
 
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 825dd0f7f22118..ba9b0e76470c52 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -9,6 +9,8 @@
- #ifndef _S390_KEXEC_H
- #define _S390_KEXEC_H
- 
-+#include <linux/module.h>
-+
- #include <asm/processor.h>
- #include <asm/page.h>
- /*
-@@ -69,4 +71,12 @@ int *kexec_file_update_kernel(struct kimage *iamge,
- extern const struct kexec_file_ops s390_kexec_image_ops;
- extern const struct kexec_file_ops s390_kexec_elf_ops;
- 
-+#ifdef CONFIG_KEXEC_FILE
-+struct purgatory_info;
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section,
-+				     const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtab);
-+#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
-+#endif
- #endif /*_S390_KEXEC_H */
 diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 5125fca472bb0b..0a41c62369f2cb 100644
+index 1624a7ffa95d89..3f1f58c1a9ce63 100644
 --- a/arch/x86/include/asm/kexec.h
 +++ b/arch/x86/include/asm/kexec.h
-@@ -21,6 +21,7 @@
+@@ -20,6 +20,7 @@
  #ifndef __ASSEMBLY__
  
  #include <linux/string.h>
@@ -167,58 +140,33 @@ index 5125fca472bb0b..0a41c62369f2cb 100644
  
  #include <asm/page.h>
  #include <asm/ptrace.h>
-@@ -217,6 +218,14 @@ extern int arch_kexec_post_alloc_pages(void *vaddr, unsigned int pages,
- extern void arch_kexec_pre_free_pages(void *vaddr, unsigned int pages);
- #define arch_kexec_pre_free_pages arch_kexec_pre_free_pages
- 
+@@ -206,6 +207,12 @@ struct kexec_entry64_regs {
+ 	uint64_t r15;
+ 	uint64_t rip;
+ };
++
 +#ifdef CONFIG_KEXEC_FILE
-+struct purgatory_info;
-+int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
-+				     Elf_Shdr *section,
-+				     const Elf_Shdr *relsec,
-+				     const Elf_Shdr *symtab);
++int arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
++				     Elf_Shdr *sechdrs, unsigned int relsec);
 +#define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
 +#endif
  #endif
  
  typedef void crash_vmclear_fn(void);
 diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index fe9f6f2dd811d2..29bffbc6d73aa7 100644
+index 406c33dcae137a..565be657098b0b 100644
 --- a/include/linux/kexec.h
 +++ b/include/linux/kexec.h
-@@ -174,14 +174,6 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
- 				   bool get_value);
- void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
- 
--int __weak arch_kexec_apply_relocations_add(struct purgatory_info *pi,
--					    Elf_Shdr *section,
--					    const Elf_Shdr *relsec,
--					    const Elf_Shdr *symtab);
--int __weak arch_kexec_apply_relocations(struct purgatory_info *pi,
--					Elf_Shdr *section,
--					const Elf_Shdr *relsec,
--					const Elf_Shdr *symtab);
- 
- int __weak arch_kexec_walk_mem(struct kexec_buf *kbuf,
- 			       int (*func)(struct resource *, void *));
-@@ -206,6 +198,44 @@ extern int crash_exclude_mem_range(struct crash_mem *mem,
- 				   unsigned long long mend);
- extern int crash_prepare_elf64_headers(struct crash_mem *mem, int kernel_map,
- 				       void **addr, unsigned long *sz);
+@@ -148,6 +148,28 @@ struct kexec_file_ops {
+ 	kexec_verify_sig_t *verify_sig;
+ #endif
+ };
 +
 +#ifndef arch_kexec_apply_relocations_add
-+/*
-+ * arch_kexec_apply_relocations_add - apply relocations of type RELA
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELAs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
++/* Apply relocations of type RELA */
 +static inline int
-+arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
-+				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
++arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
++				 Elf_Shdr *sechdrs, unsigned int relsec)
 +{
 +	pr_err("RELA relocation unsupported.\n");
 +	return -ENOEXEC;
@@ -226,63 +174,50 @@ index fe9f6f2dd811d2..29bffbc6d73aa7 100644
 +#endif
 +
 +#ifndef arch_kexec_apply_relocations
-+/*
-+ * arch_kexec_apply_relocations - apply relocations of type REL
-+ * @pi:		Purgatory to be relocated.
-+ * @section:	Section relocations applying to.
-+ * @relsec:	Section containing RELs.
-+ * @symtab:	Corresponding symtab.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
++/* Apply relocations of type REL */
 +static inline int
-+arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
-+			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
++arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
++			     unsigned int relsec)
 +{
 +	pr_err("REL relocation unsupported.\n");
 +	return -ENOEXEC;
 +}
 +#endif
- #endif /* CONFIG_KEXEC_FILE */
+ #endif
  
  struct kimage {
+@@ -320,10 +342,6 @@ void * __weak arch_kexec_kernel_image_load(struct kimage *image);
+ int __weak arch_kimage_file_post_load_cleanup(struct kimage *image);
+ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+ 					unsigned long buf_len);
+-int __weak arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr,
+-					Elf_Shdr *sechdrs, unsigned int relsec);
+-int __weak arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-					unsigned int relsec);
+ void arch_kexec_protect_crashkres(void);
+ void arch_kexec_unprotect_crashkres(void);
+ 
 diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 89d41c0a10f1e5..ab1934a2b2e6e9 100644
+index 2edaed6803ff79..eb775e699836ad 100644
 --- a/kernel/kexec_file.c
 +++ b/kernel/kexec_file.c
-@@ -110,40 +110,6 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+@@ -59,24 +59,6 @@ int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
  }
  #endif
  
--/*
-- * arch_kexec_apply_relocations_add - apply relocations of type RELA
-- * @pi:		Purgatory to be relocated.
-- * @section:	Section relocations applying to.
-- * @relsec:	Section containing RELAs.
-- * @symtab:	Corresponding symtab.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
+-/* Apply relocations of type RELA */
 -int __weak
--arch_kexec_apply_relocations_add(struct purgatory_info *pi, Elf_Shdr *section,
--				 const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+-arch_kexec_apply_relocations_add(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-				 unsigned int relsec)
 -{
 -	pr_err("RELA relocation unsupported.\n");
 -	return -ENOEXEC;
 -}
 -
--/*
-- * arch_kexec_apply_relocations - apply relocations of type REL
-- * @pi:		Purgatory to be relocated.
-- * @section:	Section relocations applying to.
-- * @relsec:	Section containing RELs.
-- * @symtab:	Corresponding symtab.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
+-/* Apply relocations of type REL */
 -int __weak
--arch_kexec_apply_relocations(struct purgatory_info *pi, Elf_Shdr *section,
--			     const Elf_Shdr *relsec, const Elf_Shdr *symtab)
+-arch_kexec_apply_relocations(const Elf_Ehdr *ehdr, Elf_Shdr *sechdrs,
+-			     unsigned int relsec)
 -{
 -	pr_err("REL relocation unsupported.\n");
 -	return -ENOEXEC;
@@ -292,7 +227,7 @@ index 89d41c0a10f1e5..ab1934a2b2e6e9 100644
   * Free up memory used by kernel, initrd, and command line. This is temporary
   * memory allocation which is not needed any more after these buffers have
 
-base-commit: 6a10ec7750739d143e6df5a8085fa389b3258866
+base-commit: 4ffa4be5a14beeb008bd2b4fbc681222bfec90c7
 -- 
 2.36.1
 
