@@ -4,92 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 48609C433EF
-	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 17:25:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 56611C433EF
+	for <kexec@archiver.kernel.org>; Tue, 28 Jun 2022 17:33:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:List-Subscribe:List-Help:List-Post:List-Archive:
-	List-Unsubscribe:List-Id:In-Reply-To:From:References:Cc:To:Subject:
-	MIME-Version:Date:Message-ID:Reply-To:Content-ID:Content-Description:
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=zwBN1rEAtFsCpBh+7K02+EJSHr+abKOTqgpHEItfVTU=; b=W7l6nN6qtz7Lic
-	taAmAbasOSCEZk+g4DN4aYG7T6y1wThxsJoZ+LCdQlGH7A+p6kFEaRpzoCQS9MMlFw2tdI4zwmJfh
-	o4y/nq3OLpYd1rpAtNBB/sI6wmFk5g/AKqeJRgpVoZvtZ7V3fW0iOTKwNVNSJPEiF6J9cKDS09Zve
-	4x528aAuEFoyW9SWTQdRLNVoBMlNFFOo8ddmU/W6uvEA1gSdpRtgfiT8qRpw32v9Kbl/eYb8chS8b
-	FiPydGIG/Nbbe4ft1oIdSltqRps4AYP1nnh501qBTwnCcIE6dKcKKNJjnO/CyEQgtYld8q7J+uuwk
-	MNeCEXyGdQA182VYDHgw==;
+	List-Owner; bh=UI86Xif8APXi1V5AR+4WCpIEqHdE0hr3BLZfvZZd42g=; b=4I8GiLI3WUyqoh
+	gbZAXCCCWrTyxiIcHnClsZ9Ntsjk5E6fVt1O6HCUkKtFZMd7tROwImJlY3aKM1R/RMf4h0DlMxOAH
+	3vIZD3Fudoi01tiKq5y/CLsD6N/kindlnoJ8xjZrND0TWdG3OcYWe09wk+qC7sbUpMFGslKiu8154
+	DwoJIP23CU+6DmtLsCyEUWjfKtr/NOubW1X9fc/WBpDdXjdHLq3Ie3iG9F/oaVTQoYgkG9VuvmjfN
+	1yBEbhJyoMsVcfe9P8so7ay251zsJkUzbXZX+obuf4NZlTZQbGonhA9OjSWF61eLrerks401MVSoI
+	deUzOuPr3gXnplteAtQg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6Exn-007ODZ-Cx; Tue, 28 Jun 2022 17:25:23 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1o6F5T-007QVR-TA; Tue, 28 Jun 2022 17:33:19 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6Exk-007ODE-3V
-	for kexec@lists.infradead.org; Tue, 28 Jun 2022 17:25:21 +0000
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25SH86e2016204;
-	Tue, 28 Jun 2022 17:25:16 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : date :
- mime-version : subject : to : cc : references : from : in-reply-to :
- content-type : content-transfer-encoding; s=pp1;
- bh=m4j3y3RvkIM6SWeHtONEy1ljKBPfeHeA0FSrfKMn9qs=;
- b=qG1qnycdUJJg71tCbFND6rP86rIil8j2PsHZFDbyZ8o+W943G/lE28lH8dW/PNV9k5G4
- DHwuvG+dRZVoTu2WQKkq9549yZCg20G2hFWUJ4yocqecMdDa27z9dHQV8Ai2HlYguCVI
- VLErP6tHcCJIIie1QvmsG6qO9zhjg/Xjj2D0Gf6dxSJ5nZRT75ntNuGW9YxFzixTRSqW
- DyRnjZTpZl34dnRScCaqKiec+eVf9TLI9xdWMR0Yqw7Qzik6BDHVkMyBO4Uk6li/O1Tn
- 05SAhXqdbtNf7hqrHEbB7Vz64UiI4RULlEoVDYcL4ttZAZE+nVWGtQA51qgsZ4gh3YrU HQ== 
-Received: from ppma04wdc.us.ibm.com (1a.90.2fa9.ip4.static.sl-reverse.com [169.47.144.26])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h05sd0huq-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 17:25:16 +0000
-Received: from pps.filterd (ppma04wdc.us.ibm.com [127.0.0.1])
-	by ppma04wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25SHLBC9021275;
-	Tue, 28 Jun 2022 17:25:15 GMT
-Received: from b03cxnp08026.gho.boulder.ibm.com (b03cxnp08026.gho.boulder.ibm.com [9.17.130.18])
-	by ppma04wdc.us.ibm.com with ESMTP id 3gwt09pxyg-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 28 Jun 2022 17:25:15 +0000
-Received: from b03ledav005.gho.boulder.ibm.com (b03ledav005.gho.boulder.ibm.com [9.17.130.236])
-	by b03cxnp08026.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25SHPEOd33489318
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 28 Jun 2022 17:25:14 GMT
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 64E64BE04F;
-	Tue, 28 Jun 2022 17:25:14 +0000 (GMT)
-Received: from b03ledav005.gho.boulder.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id C91D2BE054;
-	Tue, 28 Jun 2022 17:25:13 +0000 (GMT)
-Received: from [9.47.158.152] (unknown [9.47.158.152])
-	by b03ledav005.gho.boulder.ibm.com (Postfix) with ESMTP;
-	Tue, 28 Jun 2022 17:25:13 +0000 (GMT)
-Message-ID: <4dec36a6-e4be-196c-1af7-3d84c964394f@linux.ibm.com>
-Date: Tue, 28 Jun 2022 13:25:13 -0400
+	id 1o6F5R-007QTx-Ku
+	for kexec@lists.infradead.org; Tue, 28 Jun 2022 17:33:19 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656437593;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a7VE0tuK7nWwEOYtUcFLI6mabEeaSx3vxPSmkSS0cDM=;
+	b=cH0snIUcPURQ1eGOZtA8e7U5+giPGpTtd4RvkH5Xfks92ZcAnw/0agPayutmT5CzAWoGgG
+	hNtvhW7DTrKzZ2n9W+IUu/REa0hWuCU3tQi+i+Fmtlzvarqn6vOJJLQvg560j2YTx4nuy1
+	E2Ny7q2eyg1P1qZPf7Tf3E278Ammoa0=
+Received: from mail-wm1-f70.google.com (mail-wm1-f70.google.com
+ [209.85.128.70]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-668-gtqdrbl6PYeKT5n3hXR64Q-1; Tue, 28 Jun 2022 13:33:12 -0400
+X-MC-Unique: gtqdrbl6PYeKT5n3hXR64Q-1
+Received: by mail-wm1-f70.google.com with SMTP id i184-20020a1c3bc1000000b003a026f48333so5369929wma.4
+        for <kexec@lists.infradead.org>; Tue, 28 Jun 2022 10:33:11 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=a7VE0tuK7nWwEOYtUcFLI6mabEeaSx3vxPSmkSS0cDM=;
+        b=1kr5oVbh70jopb12sBlJFi/7RUueRVjrIAIoMZMIpaXa7YqLmdf6phYxfcnVEzPtvC
+         kOh5GQLeh/HJutPSLhemkv0SDto6Q2kp8mrAoFGwr/oP5GgfPHQvVK9zG6VAQZhFbi/S
+         h4TFd2Cy1hfPgQaQXw09q7D41nUytbB4aRNB/Tvl8bqEr8Jde56iyWk2X91HB1uWJ519
+         KzXJr5HYCDOViim5qUJJtw4OmN7dl4oft/Uq2vDzFuXrWXQLLHuTn1IimeHnwqbgpmNV
+         SVaZr6mpZTgj49Jy80UYWXfTAnz3eJRK5gjMM2YsNGABYIfmUpaDxObc/aCNdtVLIJM8
+         vTVg==
+X-Gm-Message-State: AJIora9tcQUIiYCejaxALJfMfE9SXyS9Y0kXlbpn+Gn8971UQ/52a2Wr
+	iScXWMOB63HhqkN5hpaMW2jHGaOd5nOq7pR9dLNnxyh3GdECH2K0qnrlzcycpVY3bT8QUf6eL+I
+	7k6QmM4dQ6JH/T17LpzRI
+X-Received: by 2002:adf:e5cc:0:b0:21b:8bab:8e95 with SMTP id a12-20020adfe5cc000000b0021b8bab8e95mr19211058wrn.454.1656437590820;
+        Tue, 28 Jun 2022 10:33:10 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1uNa1HHSsL0XcWy6n2rjIDIIsOFT4WH5URrvmgY8hvsAi2gczAwVJVbvUfAU+CLisMd3Ks0BA==
+X-Received: by 2002:adf:e5cc:0:b0:21b:8bab:8e95 with SMTP id a12-20020adfe5cc000000b0021b8bab8e95mr19211039wrn.454.1656437590549;
+        Tue, 28 Jun 2022 10:33:10 -0700 (PDT)
+Received: from vschneid.remote.csb ([185.11.37.247])
+        by smtp.gmail.com with ESMTPSA id u3-20020a05600c210300b003a044fe7fe7sm156300wml.9.2022.06.28.10.33.09
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Tue, 28 Jun 2022 10:33:09 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: "Eric W. Biederman" <ebiederm@xmission.com>
+Cc: linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Petr Mladek
+ <pmladek@suse.com>, Thomas Gleixner <tglx@linutronix.de>, Sebastian
+ Andrzej Siewior <bigeasy@linutronix.de>, Juri Lelli <jlelli@redhat.com>,
+ "Luis Claudio R. Goncalves" <lgoncalv@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
+Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
+In-Reply-To: <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
+References: <20220620111520.1039685-1-vschneid@redhat.com>
+ <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
+ <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
+Date: Tue, 28 Jun 2022 18:33:08 +0100
+Message-ID: <xhsmhmtdw66cr.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:91.0) Gecko/20100101
- Thunderbird/91.9.0
-Subject: Re: [PATCH v3 0/3] tpm: Preserve TPM measurement log across kexec
- (ppc64)
-Content-Language: en-US
-To: kexec@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linuxppc-dev@lists.ozlabs.org
-Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au
-References: <20220628165820.883222-1-stefanb@linux.ibm.com>
-From: Stefan Berger <stefanb@linux.ibm.com>
-In-Reply-To: <20220628165820.883222-1-stefanb@linux.ibm.com>
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: UPxcaoS2IWgnZEiR4HPlabB68h_GKNcO
-X-Proofpoint-GUID: UPxcaoS2IWgnZEiR4HPlabB68h_GKNcO
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-28_10,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- bulkscore=0 lowpriorityscore=0 suspectscore=0 impostorscore=0
- mlxlogscore=662 adultscore=0 malwarescore=0 clxscore=1015 mlxscore=0
- spamscore=0 phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2206280068
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220628_102520_309356_3DF50C40 
-X-CRM114-Status: GOOD (  18.37  )
+X-CRM114-CacheID: sfid-20220628_103317_823114_1405B8B3 
+X-CRM114-Status: GOOD (  17.13  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -101,46 +98,55 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 6/28/22 12:58, Stefan Berger wrote:
-> The of-tree subsystem does not currently preserve the IBM vTPM 1.2 and
-> vTPM 2.0 measurement logs across a kexec on ppc64. This series fixes this
-> for the kexec_file_load() syscall using the flattened device tree (fdt) to
-> carry the measurement log's buffer across kexec.
-> 
->     Stefan
-> 
+On 27/06/22 13:42, Valentin Schneider wrote:
+> On 25/06/22 12:04, Eric W. Biederman wrote:
+>> At this point I recommend going back to being ``unconventional'' with
+>> the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
+>> use a mutex for locking rather than xchg()").
+>>
+>> That would also mean that we don't have to worry about the lockdep code
+>> doing something weird in the future and breaking kexec.
+>>
+>> Your change starting to is atomic_cmpxchng is most halfway to a revert
+>> of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
+>> xchg()").  So we might as well go the whole way and just document that
+>> the kexec on panic code can not use conventional kernel locking
+>> primitives and has to dig deep and build it's own.  At which point it
+>> makes no sense for the rest of the kexec code to use anything different.
+>>
+>
+> Hm, I'm a bit torn about that one, ideally I'd prefer to keep "homegrown"
+> locking primitives to just where they are needed (loading & kexec'ing), but
+> I'm also not immensely fond of the "hybrid" mutex+cmpxchg approach.
+>
 
-v3:
-  - Moved TPM Open Firmware related function to 
-drivers/char/tpm/eventlog/tpm_of.c
+8c5a1cf0ad3a ("kexec: use a mutex for locking rather than xchg()") was
+straightforward enough because it turned
 
-v2:
-  - rearranged patches
-  - fixed compilation issues for x86
+        if (xchg(&lock, 1))
+                return -EBUSY;
 
+into
 
-> Stefan Berger (3):
->    tpm: of: Make of-tree specific function commonly available
->    of: kexec: Refactor IMA buffer related functions to make them reusable
->    tpm/kexec: Duplicate TPM measurement log in of-tree for kexec
-> 
->   drivers/char/Makefile              |   1 +
->   drivers/char/tpm/Makefile          |   1 +
->   drivers/char/tpm/eventlog/of.c     |  31 +--
->   drivers/char/tpm/eventlog/tpm_of.c |  27 +++
->   drivers/of/kexec.c                 | 293 +++++++++++++++++++++++++----
->   include/linux/kexec.h              |   6 +
->   include/linux/of.h                 |   8 +-
->   include/linux/tpm.h                |   5 +
->   kernel/kexec_file.c                |   6 +
->   9 files changed, 315 insertions(+), 63 deletions(-)
->   create mode 100644 drivers/char/tpm/eventlog/tpm_of.c
-> 
+        if (!mutex_trylock(&lock))
+                return -EBUSY;
+
+Now, most of the kexec_mutex uses are trylocks, except for:
+- crash_get_memory_size()
+- crash_shrink_memory()
+
+I really don't want to go down the route of turning those into cmpxchg
+try-loops, would it be acceptable to make those use trylocks (i.e. return
+-EBUSY if the cmpxchg fails)?
+
+Otherwise, we keep the mutexes for functions like those which go nowhere
+near an NMI.
+
 
 _______________________________________________
 kexec mailing list
