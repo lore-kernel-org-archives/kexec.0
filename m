@@ -4,68 +4,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 25C2EC433EF
-	for <kexec@archiver.kernel.org>; Wed, 29 Jun 2022 11:55:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 26748C43334
+	for <kexec@archiver.kernel.org>; Wed, 29 Jun 2022 12:25:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-ID:Date:References
+	:In-Reply-To:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=xEQALPpdj9t3veASqitftq3+q0Y3B458pVCdBNSu62Q=; b=NGh+AIeqIfik+X
-	i8Q8AMjoaRcG66isrq0PMX4iF3HMaXdJRqZ6F2kwRJUpYhd4LVAjFjgbNtpUX4wbmHYaexFF5AmNU
-	ThcJ4uXk3oIGi4i99zGQ7lSTDRmzeHe446Dl6/u6P2XKlsSbH9n/U52WA8gWunMeGgNggTK1DeHiI
-	qlN4vhZTOUon21VMDp3Q0SEjqPmlqfD6VVSDCyDddYOAvWpGkIEV6VXjlHwlBggfelRJFBZwNkugH
-	ykXOgdeYH6Lcus8liEzoFNw6NzNDslHk5lJWBNCjD5ovG7cCxEFjGR2F/e0XnRWdLmYtxJnSHsvsG
-	aUPAe701qxBHtGD8ZFbQ==;
+	List-Owner; bh=1vGNy0kMGDOf1is+3Q6ZjILvcp6EtkJZrx4G8/bMni4=; b=COy/xjRv+rWt/a
+	OjZDmqfgNCCp63qCemeB7NfCKzxtDJdpHNuicnMk8M9JQs63gNU3RmZpTBfVOQcihv0HTbEKtJEgG
+	hsip5AcnF1eVJauWmTsvfPlSsm7CKZcALb3SkPzU5JWClEetuPcMv4DuRCKIIffqTEEcOdB1Jk9sr
+	YXZw3G25EQKcTG6LFJIqqUTvMCR8+FBXtd3ioi14AuClA1SecLNypxBzpS95N/q1IkVvHVxW1bop/
+	B4iHUfXE8gM6ZhC4B7yh9DYNvLZ2jvNQ+CG/l9FihGWPdm46+L49+YG7pOAYFTNjCJr44yX0zJntM
+	PD4T5NptFAUD96rWlahw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6WIO-00Bcde-Af; Wed, 29 Jun 2022 11:55:48 +0000
-Received: from smtp-out1.suse.de ([195.135.220.28])
+	id 1o6WlH-00BnZm-5G; Wed, 29 Jun 2022 12:25:39 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6WIL-00Bcaq-Na
-	for kexec@lists.infradead.org; Wed, 29 Jun 2022 11:55:47 +0000
-Received: from relay2.suse.de (relay2.suse.de [149.44.160.134])
-	by smtp-out1.suse.de (Postfix) with ESMTP id D6707220E0;
-	Wed, 29 Jun 2022 11:55:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=suse.com; s=susede1;
-	t=1656503739; h=from:from:reply-to:date:date:message-id:message-id:to:to:cc:cc:
-	 mime-version:mime-version:content-type:content-type:
+	id 1o6WjB-00BmTC-Bl
+	for kexec@lists.infradead.org; Wed, 29 Jun 2022 12:23:30 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656505408;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=bF/LSSs2g8Q6JLHlya2E6zoiGTFvYRLz8XXwkmSkeI0=;
-	b=GiHzf/Mi0x/V4my9jBprmV4ydlz1A8WxABnZ+n81Wxqgcgfa5dMtxOIA1EtJvo/rN3uJA2
-	lVEHsSW5xKN4UPsqhddeK8fDq9C8Ja+RTbdCzXAXQbd42plY8G+0Ag9wjXuWsqEC65fpBQ
-	7IkSyEbV5gRPYtEG9fw8bcHwqH1ITFM=
-Received: from suse.cz (pathway.suse.cz [10.100.12.24])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by relay2.suse.de (Postfix) with ESMTPS id A79142C141;
-	Wed, 29 Jun 2022 11:55:39 +0000 (UTC)
-Date: Wed, 29 Jun 2022 13:55:39 +0200
-From: Petr Mladek <pmladek@suse.com>
-To: Valentin Schneider <vschneid@redhat.com>
+	bh=D4xckCgJ4Bw0w9xbbVbINWepGBRVBzb5aJNwu4HG9GY=;
+	b=GZemZxqZMnJF9RJQYewXP64f3io+7VajIogHffvmn6aPLULDcPK2q4tWUvS2zUonQ6OSl9
+	KMv8mRrSZ1FOJWCfKqOWiUbmwFcl8BoFEWIKMf3tVTSYmSsm3vtBHoxzvE14cxdJIrh/vd
+	xugwIGY52MqMH0zxk+vSyaJVBtzqBjw=
+Received: from mail-wr1-f72.google.com (mail-wr1-f72.google.com
+ [209.85.221.72]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-571-NcK1mfPUNLi8gOnIrpS6fA-1; Wed, 29 Jun 2022 08:23:26 -0400
+X-MC-Unique: NcK1mfPUNLi8gOnIrpS6fA-1
+Received: by mail-wr1-f72.google.com with SMTP id q6-20020adfea06000000b0021bad47edaeso2405335wrm.20
+        for <kexec@lists.infradead.org>; Wed, 29 Jun 2022 05:23:26 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=D4xckCgJ4Bw0w9xbbVbINWepGBRVBzb5aJNwu4HG9GY=;
+        b=yU32/pBX6ZgRzoA3y8E8k6g+PnRn84rsw4h7IX9KTo6SZDM+nDlVAvqpoLwJjvpEL5
+         FucEJ2BSlg7on36tFjd5toxY5X6PA6veCeH8uZrKltqvVNw/bQ7MB1fkXcI8spfVljDH
+         OLcKh8g4c0LcNffOizslit7acvJ4iESJV1Nr+3aK1IotZuZd4oSqFmrQha1xBN3soShj
+         F3k6uBU9hMPEkm0xX0dWlCZy7rJSTKSHk5Yp1OuRpT3guSJ22YGwYB5rwjQw6Y1LxF08
+         HSaXI5bKssVw2FLQVK5yBzNWr1ozevTrx28PFWJ09kC0yuGXzS3RCGsfu8jtF/bfKZqC
+         Ih7g==
+X-Gm-Message-State: AJIora/PKPTNOtWuxi8Hx/17RW8+5zExsd3r+91vu5e6z2tshW+np25G
+	1gqBqnIzA0tRszmvpi4arWiTjbAwPvwVfoBPstmp4jWNfLNxyGgzEoXI0CZZexAckzib1x76fVm
+	Nnn/v0jO/7k3bebVNQOkc
+X-Received: by 2002:a05:6000:1281:b0:21b:9c01:df79 with SMTP id f1-20020a056000128100b0021b9c01df79mr2793324wrx.563.1656505405767;
+        Wed, 29 Jun 2022 05:23:25 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1v9pJO/EqSfuHhWYEuTzIM+Ml0Cf5xYU+IXYXEoEGJo5PASFAvTCOcpNz8z35DuzQpGGt5rXw==
+X-Received: by 2002:a05:6000:1281:b0:21b:9c01:df79 with SMTP id f1-20020a056000128100b0021b9c01df79mr2793306wrx.563.1656505405591;
+        Wed, 29 Jun 2022 05:23:25 -0700 (PDT)
+Received: from vschneid.remote.csb ([185.11.37.247])
+        by smtp.gmail.com with ESMTPSA id o12-20020a1c750c000000b003a04b248896sm2888552wmc.35.2022.06.29.05.23.24
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Wed, 29 Jun 2022 05:23:24 -0700 (PDT)
+From: Valentin Schneider <vschneid@redhat.com>
+To: Petr Mladek <pmladek@suse.com>
 Cc: "Eric W. Biederman" <ebiederm@xmission.com>,
-	linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
-	linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-	Thomas Gleixner <tglx@linutronix.de>,
-	Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-	Juri Lelli <jlelli@redhat.com>,
-	"Luis Claudio R. Goncalves" <lgoncalv@redhat.com>,
-	Andrew Morton <akpm@linux-foundation.org>,
-	Vivek Goyal <vgoyal@redhat.com>
+ linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+ linux-rt-users@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Thomas
+ Gleixner <tglx@linutronix.de>, Sebastian Andrzej Siewior
+ <bigeasy@linutronix.de>, Juri Lelli <jlelli@redhat.com>, "Luis Claudio R.
+ Goncalves" <lgoncalv@redhat.com>, Andrew Morton
+ <akpm@linux-foundation.org>, Vivek Goyal <vgoyal@redhat.com>
 Subject: Re: [PATCH v2] panic, kexec: Make __crash_kexec() NMI safe
-Message-ID: <20220629115539.GB12720@pathway.suse.cz>
+In-Reply-To: <20220629115539.GB12720@pathway.suse.cz>
 References: <20220620111520.1039685-1-vschneid@redhat.com>
  <87r13c7jyp.fsf@email.froward.int.ebiederm.org>
  <xhsmhpmiu5lch.mognet@vschneid.remote.csb>
  <xhsmhmtdw66cr.mognet@vschneid.remote.csb>
+ <20220629115539.GB12720@pathway.suse.cz>
+Date: Wed, 29 Jun 2022 13:23:08 +0100
+Message-ID: <xhsmhk08z64lv.mognet@vschneid.remote.csb>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <xhsmhmtdw66cr.mognet@vschneid.remote.csb>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=vschneid@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220629_045545_989662_1452F5BA 
-X-CRM114-Status: GOOD (  26.40  )
+X-CRM114-CacheID: sfid-20220629_052329_514887_B0101E62 
+X-CRM114-Status: GOOD (  14.86  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -82,62 +106,47 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Tue 2022-06-28 18:33:08, Valentin Schneider wrote:
-> On 27/06/22 13:42, Valentin Schneider wrote:
-> > On 25/06/22 12:04, Eric W. Biederman wrote:
-> >> At this point I recommend going back to being ``unconventional'' with
-> >> the kexec locking and effectively reverting commit 8c5a1cf0ad3a ("kexec:
-> >> use a mutex for locking rather than xchg()").
-> >>
-> >> That would also mean that we don't have to worry about the lockdep code
-> >> doing something weird in the future and breaking kexec.
-> >>
-> >> Your change starting to is atomic_cmpxchng is most halfway to a revert
-> >> of commit 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than
-> >> xchg()").  So we might as well go the whole way and just document that
-> >> the kexec on panic code can not use conventional kernel locking
-> >> primitives and has to dig deep and build it's own.  At which point it
-> >> makes no sense for the rest of the kexec code to use anything different.
-> >>
-> >
-> > Hm, I'm a bit torn about that one, ideally I'd prefer to keep "homegrown"
-> > locking primitives to just where they are needed (loading & kexec'ing), but
-> > I'm also not immensely fond of the "hybrid" mutex+cmpxchg approach.
-> >
-> 
-> 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than xchg()") was
-> straightforward enough because it turned
-> 
->         if (xchg(&lock, 1))
->                 return -EBUSY;
-> 
-> into
-> 
->         if (!mutex_trylock(&lock))
->                 return -EBUSY;
-> 
-> Now, most of the kexec_mutex uses are trylocks, except for:
-> - crash_get_memory_size()
-> - crash_shrink_memory()
-> 
-> I really don't want to go down the route of turning those into cmpxchg
-> try-loops, would it be acceptable to make those use trylocks (i.e. return
-> -EBUSY if the cmpxchg fails)?
+On 29/06/22 13:55, Petr Mladek wrote:
+> On Tue 2022-06-28 18:33:08, Valentin Schneider wrote:
+>>
+>> 8c5a1cf0ad3a ("kexec: use a mutex for locking rather than xchg()") was
+>> straightforward enough because it turned
+>>
+>>         if (xchg(&lock, 1))
+>>                 return -EBUSY;
+>>
+>> into
+>>
+>>         if (!mutex_trylock(&lock))
+>>                 return -EBUSY;
+>>
+>> Now, most of the kexec_mutex uses are trylocks, except for:
+>> - crash_get_memory_size()
+>> - crash_shrink_memory()
+>>
+>> I really don't want to go down the route of turning those into cmpxchg
+>> try-loops, would it be acceptable to make those use trylocks (i.e. return
+>> -EBUSY if the cmpxchg fails)?
+>
+> IMHO, -EBUSY is acceptable for both crash_get_memory_size()
+> and crash_shrink_memory(). They are used in the sysfs interface.
+>
+>> Otherwise, we keep the mutexes for functions like those which go nowhere
+>> near an NMI.
+>
+> If we go this way then I would hide the locking into some wrappers,
+> like crash_kexec_trylock()/unlock() that would do both mutex
+> and xchg. The xchg part might be hidden in a separate wrapper
+> __crash_kexec_trylock()/unlock() or
+> crash_kexec_atomic_trylock()/unlock().
+>
 
-IMHO, -EBUSY is acceptable for both crash_get_memory_size()
-and crash_shrink_memory(). They are used in the sysfs interface.
+Makes sense, thanks. I've started playing with the trylock/-EBUSY approach,
+I'll toss it out if I don't end up hating it.
 
-> Otherwise, we keep the mutexes for functions like those which go nowhere
-> near an NMI.
+> Best Regards,
+> Petr
 
-If we go this way then I would hide the locking into some wrappers,
-like crash_kexec_trylock()/unlock() that would do both mutex
-and xchg. The xchg part might be hidden in a separate wrapper
-__crash_kexec_trylock()/unlock() or
-crash_kexec_atomic_trylock()/unlock().
-
-Best Regards,
-Petr
 
 _______________________________________________
 kexec mailing list
