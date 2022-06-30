@@ -4,116 +4,59 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7D565C43334
-	for <kexec@archiver.kernel.org>; Thu, 30 Jun 2022 11:55:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id D2610C43334
+	for <kexec@archiver.kernel.org>; Thu, 30 Jun 2022 13:20:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=gCQ5bOQRowNWbX+kxSX4rajsXjm24MmIaLk3jV4qCBs=; b=4ld2mQUWXRBwPT
-	SNK+Bpgid3DKFrAWxgXUOh8APw2ahLDBgNTgZeOyPYArmqU4rK9jXPFVXD5uSj8eaMI6CXZ1izhrZ
-	+QSUG9qzO9+QealqLzMC5Tm9Qdel8MXcDUFWhXVbteh5OhgQJYs/tfUn28ey50p1hoft46/YFmtrI
-	06nlJp+mTgXl4L34ViyWPAg7qMKzCB10TEVAfIva0x4ROfw84kyfAlPqzpgOTuyJvi75e8v8NDzC3
-	0C0ImbXXEzIHNF00IcN5paHZqNqYau4OCOSiu0tF8urIAdWZOXOJm6eINIG6pXJ26IQTtSQo/o65r
-	wOH7uClsKe7pp+D4L5aA==;
+	List-Owner; bh=26YW2mk4YXUikqGMUiVuyUkTRZlY7nI7zmw2xqCPuLM=; b=qnSCTAMFvxFvkx
+	tk0/oJpssuaaZ1z7/3ZIAmeySmkjx8+ZCqwqV5PNxDcpLAdxkNl0bcfJCyiH8mMpYzYUjO1mMag0M
+	ei6vluUBk/K2L3Msy134KBSe2QBiOvHXwPZuyQ9GMBNTnXs+O6i2ttD6Iom4WUh5FEHGvZNgx+QO+
+	0jV40zTT90oZbTYSYMKCqHkbYH99efWdHkuDw7s8NVxv6ozhtitCEP+whFTa42lkTbeaePCfy+lNb
+	I0E7kxHf2j0QDrZlR3KK6Bz61Y9pTW7YqGZL1vPNRxaq1O6jeDLeuCENMbNdsmyZ3/wYSSuKRZZSu
+	g0VOSo81cP3lERsq9/Jg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6slD-00Gxv4-1p; Thu, 30 Jun 2022 11:55:03 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5] helo=mx0a-001b2d01.pphosted.com)
+	id 1o6u65-00HGjp-Ro; Thu, 30 Jun 2022 13:20:41 +0000
+Received: from dfw.source.kernel.org ([139.178.84.217])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6skz-00GxpO-AI
-	for kexec@lists.infradead.org; Thu, 30 Jun 2022 11:54:50 +0000
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25UAd4ae023725;
-	Thu, 30 Jun 2022 11:54:14 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=y0ICbooO6ZnULmmiPkLxDZXQ7SEBVCNNquvW2a/RDpw=;
- b=dJyNjeYFHQBePCnbyOvglEPZBuD1cOI1+ciEJcPfWvdb4kX5SzEpg4ICiSja5aTYR3QB
- O8AZ5bdYEFwM5M7Trm6Ed9ugAmg/Cozvc8hTHEVY5BeG+wJLXzBv76Z1GgcnPJ24EyEd
- ksNL2FhDxEX/iQn0Q2XOzsGlmUd3d3vN2JhGayE1t14fpcqWmmvRJtOgL8k57obEd/Ya
- hBHbI+ihbG6XmtAcQOZiI+bLO7kYDT7W8RdL7qeWEuZWQ8jUo5loaTVc6C16tBC+Hj4W
- SKiUI+BkySrTMO5NehBsRwI55hcAAtyQkZ4+NkNG0h+sGPfbOg/sQBNh6BlUoyqKnX2U 4A== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h19qnjj0v-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jun 2022 11:54:13 +0000
-Received: from m0098419.ppops.net (m0098419.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 25UBaJu4017926;
-	Thu, 30 Jun 2022 11:54:13 GMT
-Received: from ppma04ams.nl.ibm.com (63.31.33a9.ip4.static.sl-reverse.com [169.51.49.99])
-	by mx0b-001b2d01.pphosted.com (PPS) with ESMTPS id 3h19qnjj06-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jun 2022 11:54:13 +0000
-Received: from pps.filterd (ppma04ams.nl.ibm.com [127.0.0.1])
-	by ppma04ams.nl.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 25UBoo2w015598;
-	Thu, 30 Jun 2022 11:54:11 GMT
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (d06relay13.portsmouth.uk.ibm.com [9.149.109.198])
-	by ppma04ams.nl.ibm.com with ESMTP id 3gwt0901uf-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Thu, 30 Jun 2022 11:54:10 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-	by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 25UBs8t921823828
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Thu, 30 Jun 2022 11:54:08 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7D5434C040;
-	Thu, 30 Jun 2022 11:54:08 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id EBBC44C044;
-	Thu, 30 Jun 2022 11:54:04 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.211.82.30])
-	by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Thu, 30 Jun 2022 11:54:04 +0000 (GMT)
-Message-ID: <cec0d90e9d70719cf3dee203d5b975b9e420d27f.camel@linux.ibm.com>
-Subject: Re: [PATCH v7] x86/kexec: Carry forward IMA measurement log on kexec
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Jonathan McDowell <noodles@fb.com>, Thomas Gleixner
- <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov
- <bp@alien8.de>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
-        Dmitry
- Kasatkin <dmitry.kasatkin@gmail.com>,
-        James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
-        Baoquan He <bhe@redhat.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-integrity@vger.kernel.org"
-	 <linux-integrity@vger.kernel.org>,
-        "linux-security-module@vger.kernel.org"
-	 <linux-security-module@vger.kernel.org>,
-        "kexec@lists.infradead.org"
-	 <kexec@lists.infradead.org>
-Date: Thu, 30 Jun 2022 07:54:02 -0400
-In-Reply-To: <Yr1geLyslnjKck86@noodles-fedora.dhcp.thefacebook.com>
-References: <YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG>
-	 <YmgjXZphkmDKgaOA@noodles-fedora-PC23Y6EG>
-	 <YnuJCH75GrhVm0Tp@noodles-fedora.dhcp.thefacebook.com>
-	 <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
-	 <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
-	 <YqtMf9ivGR8Rkl8u@noodles-fedora.dhcp.thefacebook.com>
-	 <Yr1geLyslnjKck86@noodles-fedora.dhcp.thefacebook.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-GUID: Gdetm-DrlqQvFJcIwmEVVE3eweFCrF-u
-X-Proofpoint-ORIG-GUID: NnhuNQTy9jYivibx86zBkACLu3kppZxv
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o6u60-00HGjG-Hh
+	for kexec@lists.infradead.org; Thu, 30 Jun 2022 13:20:38 +0000
+Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
+	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+	(No client certificate requested)
+	by dfw.source.kernel.org (Postfix) with ESMTPS id E785461F08;
+	Thu, 30 Jun 2022 13:20:35 +0000 (UTC)
+Received: by smtp.kernel.org (Postfix) with ESMTPSA id 04A5BC34115;
+	Thu, 30 Jun 2022 13:20:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=linuxfoundation.org;
+	s=korg; t=1656595235;
+	bh=Gjs1D9vdtTbVIpCgMrFXplqipTLraLCHH4B9AHCpl/4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+	b=sPO7S7+b+VQXn8XPN0Aw/4Cm1s3T9irr43M+Rxhf7IsLt0Z7FH7ZkueR5Fs8fNffu
+	 5O1hEithJbc9BVXJ3XXFkLmP8iLjrMUzyFsVGbxhF+PkRy9C8fKnNqR0MAB8+fsaOH
+	 mBKZa/1WC/aN80kxm4eGk7DCzStxPLqGLvLerwlA=
+Date: Thu, 30 Jun 2022 15:20:32 +0200
+From: Greg KH <gregkh@linuxfoundation.org>
+To: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
+Cc: stable@vger.kernel.org, linux-kernel@vger.kernel.org,
+	linuxppc-dev@lists.ozlabs.org, kexec@lists.infradead.org,
+	Michael Ellerman <mpe@ellerman.id.au>,
+	"Eric W. Biederman" <ebiederm@xmission.com>,
+	Andrew Morton <akpm@linux-foundation.org>
+Subject: Re: [PATCH v4.9] kexec_file: drop weak attribute from
+ arch_kexec_apply_relocations[_add]
+Message-ID: <Yr2jIISAEVwi+YYH@kroah.com>
+References: <20220628154249.204911-3-naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-06-30_07,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 adultscore=0 impostorscore=0
- spamscore=0 mlxscore=0 clxscore=1015 lowpriorityscore=0 suspectscore=0
- phishscore=0 bulkscore=0 malwarescore=0 priorityscore=1501 mlxlogscore=999
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.12.0-2204290000
- definitions=main-2206300045
+Content-Disposition: inline
+In-Reply-To: <20220628154249.204911-3-naveen.n.rao@linux.vnet.ibm.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220630_045449_505283_8A22A86C 
-X-CRM114-Status: GOOD (  23.41  )
+X-CRM114-CacheID: sfid-20220630_062036_686988_29F415EF 
+X-CRM114-Status: GOOD (  14.22  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -130,36 +73,40 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Thu, 2022-06-30 at 08:36 +0000, Jonathan McDowell wrote:
-> On kexec file load, the Integrity Measurement Architecture (IMA)
-> subsystem may verify the IMA signature of the kernel and initramfs, and
-> measure it. The command line parameters passed to the kernel in the
-> kexec call may also be measured by IMA.
+On Tue, Jun 28, 2022 at 09:12:48PM +0530, Naveen N. Rao wrote:
+> commit 3e35142ef99fe6b4fe5d834ad43ee13cca10a2dc upstream.
 > 
-> A remote attestation service can verify a TPM quote based on the TPM
-> event log, the IMA measurement list and the TPM PCR data. This can
-> be achieved only if the IMA measurement log is carried over from the
-> current kernel to the next kernel across the kexec call.
+> Since commit d1bcae833b32f1 ("ELF: Don't generate unused section
+> symbols") [1], binutils (v2.36+) started dropping section symbols that
+> it thought were unused.  This isn't an issue in general, but with
+> kexec_file.c, gcc is placing kexec_arch_apply_relocations[_add] into a
+> separate .text.unlikely section and the section symbol ".text.unlikely"
+> is being dropped. Due to this, recordmcount is unable to find a non-weak
+> symbol in .text.unlikely to generate a relocation record against.
 > 
-> PowerPC and ARM64 both achieve this using device tree with a
-> "linux,ima-kexec-buffer" node. x86 platforms generally don't make use of
-> device tree, so use the setup_data mechanism to pass the IMA buffer to
-> the new kernel.
+> Address this by dropping the weak attribute from these functions.
+> Instead, follow the existing pattern of having architectures #define the
+> name of the function they want to override in their headers.
 > 
-> (Mimi, Baoquan, I haven't included your reviewed-bys because this has
->  changed the section annotations to __init and Boris reasonably enough
->  wants to make sure IMA folk are happy before taking this update.)
-
-FYI, comments like this should be added before the patch changelog
-(after the '---' separator).
-
+> [1] https://sourceware.org/git/?p=binutils-gdb.git;a=commit;h=d1bcae833b32f1
 > 
-> Signed-off-by: Jonathan McDowell <noodles@fb.com>
-> Link: https://lore.kernel.org/r/YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG
+> [akpm@linux-foundation.org: arch/s390/include/asm/kexec.h needs linux/module.h]
+> Link: https://lkml.kernel.org/r/20220519091237.676736-1-naveen.n.rao@linux.vnet.ibm.com
+> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
+> Cc: "Eric W. Biederman" <ebiederm@xmission.com>
+> Cc: <stable@vger.kernel.org>
+> Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+> ---
+>  arch/x86/include/asm/kexec.h |  7 +++++++
+>  include/linux/kexec.h        | 26 ++++++++++++++++++++++----
+>  kernel/kexec_file.c          | 18 ------------------
+>  3 files changed, 29 insertions(+), 22 deletions(-)
+> 
 
-Reviewed-by: Mimi Zohar <zohar@linux.ibm.com> # IMA function
-definitions
+All now queued up, thanks.
 
+greg k-h
 
 _______________________________________________
 kexec mailing list
