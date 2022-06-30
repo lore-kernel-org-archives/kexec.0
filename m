@@ -4,41 +4,151 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CDC2CC433EF
-	for <kexec@archiver.kernel.org>; Thu, 30 Jun 2022 07:25:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 76BA1C433EF
+	for <kexec@archiver.kernel.org>; Thu, 30 Jun 2022 08:37:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-	d=lists.infradead.org; s=bombadil.20210309; h=Sender:Content-Type:
-	Content-Transfer-Encoding:Reply-To:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Date:Subject:To:From:Mime-Version:
-	Message-Id:Cc:Content-ID:Content-Description:Resent-Date:Resent-From:
-	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
-	List-Owner; bh=1KHhfuTG92KAwaMXk+ktC7z9aapHc9z9rkVUDS0zVuI=; b=mLeF+54F2B1MVN
-	/iONB83gwETfhtGt5Wbvg11q4s8ykRPsX2A4n8IyqApbijjbRFUSAPEw0kMHdY/DYkpG4P68ReS5W
-	iLqR5xG5W640fp0BVnCtqUHjEXTLYEjMZIHcl8K3XCblUdbje9MX0vLxDpuMnHVYSnbbotvPHOI5h
-	Wx9q7CftN4OMhFCiTM3xzs1bUS/Bl8pxRNd7cYDK/lnN06RCB8Nv6rYwaduwHRPUq3uyL5xStqoOF
-	Qh/PC+zYhWymwOt0ddtrrmqg/+OtJKHcSOzzuffHg81APnZR2up4b867Sdlc/6+QbPKXNw2O893Z7
-	K3FsJ9R+/aIzcKiFkHOg==;
+	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
+	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Content-ID:In-Reply-To:
+	References:Message-ID:Date:Subject:CC:To:From:Reply-To:Content-Description:
+	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
+	List-Owner; bh=prd65rTLObMdMWicjcnMpzyE6uhjCw4poVHLHjQdmZU=; b=x5C5eJmqz85Axa
+	yw25f6J/1CkeFoGUIycaNqIppePp/WBZrqmJa7yyyU27dDcA+A3xlq/RdwFMtUg+dnB8L8dgzqreJ
+	1wl05AOffadiBUamVAUWpdkqeUCr1/7K9jr/H/MU4loDUQ9tqWfu/ia3JlCm5k25qP1ad1w1rhScY
+	uAbIalB80JDApr74TcYSx2WVE4nBLtWQl2ON1/HKlfG8vjXgNGxE5hzpJW7qkx/mVWaxH+/N2vXWj
+	JIf8LGV02ND0NdVPu5dx6RpBy+5+bf3w3JOJ0JRp6/Mjn/w05Vs79JnNd+C7TXYwZogh1l6l0QtS4
+	noBUN06Ql235L+P4iNYg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6oYh-00Flfo-88; Thu, 30 Jun 2022 07:25:51 +0000
-Received: from rioun.com ([14.58.103.146])
+	id 1o6pfj-00G3UN-SL; Thu, 30 Jun 2022 08:37:11 +0000
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o6oYe-00FlbM-9T
-	for kexec@lists.infradead.org; Thu, 30 Jun 2022 07:25:50 +0000
-Received: from [192.168.8.101] (unknown [77.81.142.67])
-	by rioun.com (Postfix) with ESMTPA id AD7C710BA6A
-	for <kexec@lists.infradead.org>; Thu, 30 Jun 2022 07:14:55 +0000 (UTC)
-Message-Id: <XP84GI8I-83G3-WUD6-BTPJ-YNBC8I1VG0@stcbk.com>
-Mime-Version: 1.0
-From: Euro-Millions Lottery <noreply@stcbk.com>
-To: kexec <kexec@lists.infradead.org>
-Subject: [Info] CONGRATULATION  Thu Jun 30
-Date: Thu, 30 Jun 2022 03:14:59 -0400
-X-Mailer: MBM 8.5.4-US
+	id 1o6pfV-00G3O4-7a
+	for kexec@lists.infradead.org; Thu, 30 Jun 2022 08:36:59 +0000
+Received: from pps.filterd (m0044012.ppops.net [127.0.0.1])
+	by mx0a-00082601.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 25U0LfIs010118;
+	Thu, 30 Jun 2022 01:36:15 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=NUK3F9Q28Yz5isv60OklhEKSZPcKkRV1zvnBl+LAkz8=;
+ b=k1YztCLPkaLjlCnwDl7V6Xo+Nlgzpix6dCDuSNTK4z4M+eD6zMrkws733dvN511seKw6
+ uvf+plF0WwgufzalKybscHl6TRaqNxYbXJGQkG+aT1kzT3ztLLJfC+PhLorCbS5MM9WC
+ VZYf77e9xWlx0WQeUDJavsCpWZ9EVcGVcdY= 
+Received: from nam02-sn1-obe.outbound.protection.outlook.com (mail-sn1anam02lp2043.outbound.protection.outlook.com [104.47.57.43])
+	by mx0a-00082601.pphosted.com (PPS) with ESMTPS id 3h0tdsctxf-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Thu, 30 Jun 2022 01:36:15 -0700
+ARC-Seal: i=1; a=rsa-sha256; s=arcselector9901; d=microsoft.com; cv=none;
+ b=kmzwmVaqRc9nYSsPYhUVZPnYIXFgn6050qIP+/Rl57NQfq1rbyfwSrExZWVkqjN+4c6V6//y37eOQ2qiE5zyoY/K1gUNI2Z2g3m2j2/5D2Av3jMcb5mIsqt/qACvTyq/NlpYNq4YET/IG0NvBJ1hESnmw1XfsNJOIQ6fQSQYR8gVyj+z89LdYqBGB/jXXZw6OZc3XZ1jxCk2SWOlE2NvcodoPK7t1q7JdZQQhWerHKnarBDit7e26KcPLOwoi3yvkahstwbCU9+md8P5+myQjVJcC3FR4ip173UJ2bFOeCPPzwCoaD4JIQTz5K0L1bXLBKoh0VK0Vycan2W79hqnHQ==
+ARC-Message-Signature: i=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=arcselector9901;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-AntiSpam-MessageData-ChunkCount:X-MS-Exchange-AntiSpam-MessageData-0:X-MS-Exchange-AntiSpam-MessageData-1;
+ bh=NUK3F9Q28Yz5isv60OklhEKSZPcKkRV1zvnBl+LAkz8=;
+ b=F4PvDCN5wQdcEvyQvaZexKdW2ww06bfc4rqb82we0ij4EnAy1w2DJrCScECC6sSbh4gyjyyeF7+mwnXzVBMC0yvBVsFBDYOkWWT+9pmo2WVW0235ZxL0+qBV7EdgFqCHKMfGn/TP+e3WeI/ooyk9JkTXHKjehF6I69r0ZL4cKks9TocbfDntw9TyGMBlX9IhABymYdI1413nUWmJwztK89WNmd02+Qi4Uqn1tNGf/OBRJP/82G9ZjwJgFk73IB4dlxLtFOQ5lKTHRTOwJxx35y5+MfFgFL/+O2Wh6kRu5fGB2Qzpi62MjwhjAB+BUStaKWs3kMohOkP+SHe5TXJRVw==
+ARC-Authentication-Results: i=1; mx.microsoft.com 1; spf=pass
+ smtp.mailfrom=fb.com; dmarc=pass action=none header.from=fb.com; dkim=pass
+ header.d=fb.com; arc=none
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com (2603:10b6:a03:379::12)
+ by SA1PR15MB4531.namprd15.prod.outlook.com (2603:10b6:806:19a::9) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.5395.14; Thu, 30 Jun
+ 2022 08:36:12 +0000
+Received: from SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::81f9:c21c:c5bf:e174]) by SJ0PR15MB4552.namprd15.prod.outlook.com
+ ([fe80::81f9:c21c:c5bf:e174%8]) with mapi id 15.20.5395.015; Thu, 30 Jun 2022
+ 08:36:12 +0000
+From: Jonathan McDowell <noodles@fb.com>
+To: Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@redhat.com>,
+        Borislav Petkov <bp@alien8.de>,
+        Dave Hansen <dave.hansen@linux.intel.com>,
+        "x86@kernel.org" <x86@kernel.org>, "H. Peter Anvin" <hpa@zytor.com>,
+        Mimi
+ Zohar <zohar@linux.ibm.com>,
+        Dmitry Kasatkin <dmitry.kasatkin@gmail.com>,
+        James Morris <jmorris@namei.org>, "Serge E. Hallyn" <serge@hallyn.com>,
+        Baoquan He <bhe@redhat.com>
+CC: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-integrity@vger.kernel.org" <linux-integrity@vger.kernel.org>,
+        "linux-security-module@vger.kernel.org"
+	<linux-security-module@vger.kernel.org>,
+        "kexec@lists.infradead.org"
+	<kexec@lists.infradead.org>
+Subject: [PATCH v7] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Topic: [PATCH v7] x86/kexec: Carry forward IMA measurement log on kexec
+Thread-Index: AQHYjFx0SApM58Y/sE2piFEMXX7o2g==
+Date: Thu, 30 Jun 2022 08:36:12 +0000
+Message-ID: <Yr1geLyslnjKck86@noodles-fedora.dhcp.thefacebook.com>
+References: <YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG>
+ <YmgjXZphkmDKgaOA@noodles-fedora-PC23Y6EG>
+ <YnuJCH75GrhVm0Tp@noodles-fedora.dhcp.thefacebook.com>
+ <Yn01Cfb3Divf49g7@noodles-fedora.dhcp.thefacebook.com>
+ <YqcRuQFq5fg1XhB/@noodles-fedora.dhcp.thefacebook.com>
+ <YqtMf9ivGR8Rkl8u@noodles-fedora.dhcp.thefacebook.com>
+In-Reply-To: <YqtMf9ivGR8Rkl8u@noodles-fedora.dhcp.thefacebook.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b90059dd-a373-4a79-4c22-08da5a7396fa
+x-ms-traffictypediagnostic: SA1PR15MB4531:EE_
+x-fb-source: Internal
+x-ms-exchange-senderadcheck: 1
+x-ms-exchange-antispam-relay: 0
+x-microsoft-antispam: BCL:0;
+x-microsoft-antispam-message-info:  e/ckD15o32Gz4r6Ap0JsmOZO4VNpS72dKj2p10dZO77DWEkwWQqpmX/eTpyrRuboloolHaQHnc4z/k5jWTHBfxcLuIl2tSxsBm8IJE2uCeJ4RiRYQScdavW6LfWloOqmELHLpDk/oYAkr19ozKdDMYbHJ6rTnT3QGXktcDK2q5QZUJk4Ts8DSKMOfjSKLHyNpRsxFhQfMDTNkE0SxLwgRE9BctHMwH4dTNhOymCWkNyFf0leSHNktVvbBoV9aEBPiTY2g5dW05bNGfxCFcS9ePqMTXp4H2IfDk54IvXu1X7w8++9253pQgen5RUf5S0bRllSb9ewOP1Kc/rf1KWvWXGfcKIv2dVivo2ahkoXMD221nlpLxTfa4VS/xxA4RrDqfLk6Ax98BVS4COtzsomaeiBrDsPN3nlp5fl+UxnGjXNpCz/QbmEGr8er9/fY8wElEwVVJppRdrRXF9bdUCsN/FPPm0ZHPkZH5RU+ObICCsBrsBXaBRZACSvvhGodDT3fYCJuP6iMxvRSDppFMMle1y7oR/Y6oQ2Djdk8FFsY0HefMI2Mt2z5eRX17J7YCrNwAeFoKjA8tmzC5FF84thnd0Jd1qK3fKydzPuj/4oAnQfdDmBc0VwJCqra8pwrkQvPejO0zlpNOGTGwydCICq5IxFMxZixq/optrMeJd2dChnMtzk0c3xMfrICfI2eMWFfhnvrpKuNKaOk5OThnt0xKxAdPmdz1TfGulsKJ1sup6C3qNTs69E7kZiN4LkHB8zg5zpce+2MMh7rsolYS9StkTu+ivRNYsXFG+xtX/bLe7flgdDS5CVrIm6dyKgzbgsHmyIGy2genxxW8URNuo8/Gb59QVbUzfMNTYyjmVBAgRffs+VZ7jBDfV4ovxYDOSV2K7BA2pa8CQyytE5q5v/ZA==
+x-forefront-antispam-report:  CIP:255.255.255.255;CTRY:;LANG:en;SCL:1;SRV:;IPV:NLI;SFV:NSPM;H:SJ0PR15MB4552.namprd15.prod.outlook.com;PTR:;CAT:NONE;SFS:(13230016)(4636009)(39860400002)(396003)(366004)(376002)(346002)(136003)(6512007)(38100700002)(86362001)(122000001)(7416002)(26005)(186003)(41300700001)(921005)(83380400001)(38070700005)(9686003)(6506007)(66946007)(64756008)(8936002)(91956017)(71200400001)(478600001)(966005)(316002)(66556008)(6486002)(110136005)(8676002)(66446008)(4326008)(76116006)(5660300002)(2906002)(30864003)(54906003)(66476007)(46800400005);DIR:OUT;SFP:1102;
+x-ms-exchange-antispam-messagedata-chunkcount: 1
+x-ms-exchange-antispam-messagedata-0:  =?us-ascii?Q?gCsvU5D7F3KOlrL2DtbFv+Omrk8U06zAiCzZriOBgWSnRtd+ajVS6iDMgwV4?=
+ =?us-ascii?Q?HK+60p1gOD8CkCPUpi3ok3GFGjSWpW+Ixg9Hd72LCaNgiPupDk9bvf8RxGr+?=
+ =?us-ascii?Q?GYu6b0TR+1MeffRnU+4zCqPccgqo5gH4Aq2es0/h7w1JrF9nh++nNA2V+S0j?=
+ =?us-ascii?Q?iMZx03plgfVO51Cqi9Pl2tLAJJjxMHen0ZOMbrZoheJzUGwi1h42HSiy2Jjk?=
+ =?us-ascii?Q?4NzZnAm5EB8gewHiQHsJh7o/kNAjZ51gSDgU0EpEpcag277fTX6ZD9z4sbgY?=
+ =?us-ascii?Q?EizbAXHkIidhMneFlBWobP7jh2DEmRy1OL7ZfBo2Zy6INumwwHh4iVrllNmx?=
+ =?us-ascii?Q?8Jbi2Z0rdJOtGE4YSAHbG0hIT/3wvYSfrFRKckM2ZNEJKxRkIDIRs3qd/5pd?=
+ =?us-ascii?Q?PZojbjF9OJuUy3IUoWi0qYmDwaPV7Xkz0lCccaCOrtDzQlWxjDr453AXC9Bi?=
+ =?us-ascii?Q?z9W1SQX5/WRg9rk18TsE5Mea6XqnQFGFZlkftRkPfXG2dtbspyaakrJOrXc1?=
+ =?us-ascii?Q?UFUG74G1Np5yB+7ioGOl3BFClntrIoUCMD0bratzbbLc2Saiyc1Ssoa9Zp13?=
+ =?us-ascii?Q?5wAenSKJxao8lO7NMG6FBU6Wlj2F8hNCeR1mE/8IqH3IIUlANmmzlIwxd+Lf?=
+ =?us-ascii?Q?mvKoapjEDATWczpNP7fTu1wBWvmhkZrHwUbnuCp6NRlNJRym0IylwSGQOhee?=
+ =?us-ascii?Q?uBFyk8DXm93mPewicENPm7wpnZuNdvHf0OgZrQOzstxYSaXiQ+E9GFlQTPQl?=
+ =?us-ascii?Q?W5TVwkmrxN0LiJztGTKtBlQuqd93e044rfdNUn9NHH8KBFcpNFiuW9nAYPZl?=
+ =?us-ascii?Q?p5uMYnQrbB+e4eOLAobgHIRddPCUKj9Oyyks/0La60jyINUUtgP2O632ja7h?=
+ =?us-ascii?Q?9vYpnoQ+2KvIEfnmLKKqtY7Zt0xYgtpK50xuOckVuIGEXmRPL7dZWBoel9yt?=
+ =?us-ascii?Q?dSHb8M9H7VFylCmF1IudhLAA94TgDkR24nqoWkQL9tXH+VYfgay6AoB6dsTn?=
+ =?us-ascii?Q?zQturrn/G/qHO8bNsVnOyifAdvGlVLXwT4wFoGjZKY1usi16yu+eATr9yowK?=
+ =?us-ascii?Q?e5eYimsCUl9ymjpQlVK+eUwbGgUDZdJPcoerIWWmh0vX3Vd3aGwXM4T7RXfE?=
+ =?us-ascii?Q?YagDIMmTvfcB1dFwOUp7mY2omj0LSb0ccHuK/QUhKC0m4zt60+QNmfKO0GfR?=
+ =?us-ascii?Q?OrzqbCy730gV3/kU5Qmu2J8kpWFHIC5aFOV47+19TQKl9FbuBKZ6wJSZdEGa?=
+ =?us-ascii?Q?DWNtw3sIlifgxmBkJC5HNSmGbLn1iJcRJ+H3i3XerutUKfjvf0gHL8Zzd00/?=
+ =?us-ascii?Q?q7dFzrLdnFW049fqxyg79iMalnUAz6Ag+jL0O1TSxkupzfaWYr5rQdZhhI1e?=
+ =?us-ascii?Q?RE192JuAWLd1CteZbq4xSLxPpKj+VLKa4pTfHriXNeFIk9Mwr+KUYSNN9slH?=
+ =?us-ascii?Q?C/dSXIvicKKkiUWg/RlXDL0E8WQt929tMpmK9o9CV0HjX/2cZaL0204zY1kZ?=
+ =?us-ascii?Q?TZzZMAgH3rEgmqksaqei1jtD7SMyGmyTC0O08zCeEoh0aOfQtwPSkOlwJf5Z?=
+ =?us-ascii?Q?ocVqz52/BqFjXl+aKuWswNM0+YHODSf4SeMmSZnv?=
+Content-ID: <F395F811FBBA9643A454F62D6FE43F4C@namprd15.prod.outlook.com>
+X-OriginatorOrg: fb.com
+X-MS-Exchange-CrossTenant-AuthAs: Internal
+X-MS-Exchange-CrossTenant-AuthSource: SJ0PR15MB4552.namprd15.prod.outlook.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b90059dd-a373-4a79-4c22-08da5a7396fa
+X-MS-Exchange-CrossTenant-originalarrivaltime: 30 Jun 2022 08:36:12.6446
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-CrossTenant-userprincipalname: 2yuRE/UYGX6mxI/6EobzCwNIRLfkwYKUWWh1M5R+KKZ1emefUNUSm2Pwm1ylwJrl
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: SA1PR15MB4531
+X-Proofpoint-ORIG-GUID: 7L-Hn8IPP1u-sRsuTcXtqc1Ss7uuyAJB
+X-Proofpoint-GUID: 7L-Hn8IPP1u-sRsuTcXtqc1Ss7uuyAJB
+X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+MIME-Version: 1.0
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-06-30_05,2022-06-28_01,2022-06-22_01
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220630_002548_495727_B8FAC9A4 
-X-CRM114-Status: UNSURE (   0.02  )
-X-CRM114-Notice: Please train this message.
+X-CRM114-CacheID: sfid-20220630_013657_314767_BC24D473 
+X-CRM114-Status: GOOD (  31.36  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -50,106 +160,399 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Reply-To: info@vajenthura.com
-Content-Transfer-Encoding: quoted-printable
-Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Attn:=A0Email=A0Account=A0Holder,
+On kexec file load, the Integrity Measurement Architecture (IMA)
+subsystem may verify the IMA signature of the kernel and initramfs, and
+measure it. The command line parameters passed to the kernel in the
+kexec call may also be measured by IMA.
 
+A remote attestation service can verify a TPM quote based on the TPM
+event log, the IMA measurement list and the TPM PCR data. This can
+be achieved only if the IMA measurement log is carried over from the
+current kernel to the next kernel across the kexec call.
 
+PowerPC and ARM64 both achieve this using device tree with a
+"linux,ima-kexec-buffer" node. x86 platforms generally don't make use of
+device tree, so use the setup_data mechanism to pass the IMA buffer to
+the new kernel.
 
-Congratulations
-We=A0happily=A0announce=A0to=A0you=A0the=A0draw=A0(#1526)=A0of=A0the=A0Euro=
--Millions,=A0online=A0Sweepstakes=A0promotion=A0held=A0in=A0United=A0States=
-.=A0Your=A0active=A0e-mail=A0address=A0attached=A0to=A0the=A0World=A0Wide=
-=A0Web=A0computer=A0generated=A0ticket=A0number:=A0B7607545=A04139=A0with=
-=A0reference=A0number=A0EAAL/JA2C110P7=A0and=A0Serial=A0number=A0USA5365/3,=
-=A0Batch=A0number=A0ZA87-2PY,=A0drew=A0the=A0Lucky=A0Numbers:=A003=A008=A01=
-8=A024=A040=A0Lucky=A0Stars=A003=A011.=A0This=A0subsequently=A0won=A0you=A0=
-the=A0lottery=A0in=A0the=A01st=A0category=A0i.e.=A0matches=A06=A0lucky=A0nu=
-mbers=A0as=A0jackpot=A0prize.=A0You=A0have=A0therefore=A0been=A0allocated=
-=A0to=A0claim=A0a=A0total=A0sum=A0of=A0$11,691,315=A0(Eleven=A0Million,=A0S=
-ix=A0hundred=A0and=A0ninety=A0one=A0thousand,=A0three=A0hundred=A0and=A0fif=
-teen=A0dollars).=A0This=A0is=A0from=A0A=A0total=A0cash=A0prize=A0of=A0$39,9=
-00,000.00=A0Shared=A0amongst=A0the=A0(6)=A0lucky=A0winners=A0in=A0"1st"=A0c=
-ategory.
+(Mimi, Baoquan, I haven't included your reviewed-bys because this has
+ changed the section annotations to __init and Boris reasonably enough
+ wants to make sure IMA folk are happy before taking this update.)
 
+Signed-off-by: Jonathan McDowell <noodles@fb.com>
+Link: https://lore.kernel.org/r/YmKyvlF3my1yWTvK@noodles-fedora-PC23Y6EG
+---
+v7:
+ - Correct section annotation to __init for ima_free_kexec_buffer + also
+   on OF variants. (kernel test robot)
+v6:
+ - Remove IS_ENABLED(CONFIG_HAVE_IMA_KEXEC) check from
+   ima_(free|get)_kexec_buffer now they have the ifdef guard.
+v5:
+ - Guard ima_(free|get)_kexec_buffer functions with
+   CONFIG_HAVE_IMA_KEXEC (kernel test robot)
+ - Use setup_data_offset in setup_boot_parameters and update rather than
+   calculating in call to setup_ima_state.
+v4:
+ - Guard ima.h function prototypes with CONFIG_HAVE_IMA_KEXEC
+v3:
+ - Rebase on tip/master
+ - Pull ima_(free|get)_kexec_buffer into x86 code
+ - Push ifdefs into functions where possible
+ - Reverse fir tree variable declarations
+ - Fix section annotation on ima_free_kexec_buffer (__meminit)
+ - Only allocate ima_setup_data space when IMA_KEXEC is enabled
+v2:
+ - Fix operation with EFI systems
+---
+ arch/x86/Kconfig                      |  1 +
+ arch/x86/include/uapi/asm/bootparam.h |  9 ++++
+ arch/x86/kernel/e820.c                |  6 +--
+ arch/x86/kernel/kexec-bzimage64.c     | 42 +++++++++++++++++-
+ arch/x86/kernel/setup.c               | 63 +++++++++++++++++++++++++++
+ drivers/of/kexec.c                    | 13 +++---
+ include/linux/ima.h                   |  5 +++
+ include/linux/of.h                    |  2 -
+ security/integrity/ima/ima_kexec.c    |  2 +-
+ 9 files changed, 127 insertions(+), 16 deletions(-)
 
-=A0Additional=A0information=A0Jackpot=A0winner(s)=A0Lucky=A0Dip=A0winners=
-=A0Machine=A0used=A0for=A0draw=A0Ball=A0set=A0used=A014=A0SAPPHIRE=A021=A0T=
-his=A0promotion=A0was=A0drawn=A0based=A0on=A0email=A0address=A0as=A0the=A0k=
-ey=A0identification=A0for=A0setting=A0up=A0online=A0accounts.=A0All=A0valid=
-=A0email=A0addresses=A0in=A0the=A0World=A0Wide=A0Web=A0Draw=A0used/particip=
-ants=A0for=A0the=A0online=A0email=A0promotion=A0version=A0were=A0selected=
-=A0randomly=A0via=A0computer=A0balloting=A0from=A0a=A0global=A0website=A0co=
-llaboration=A0with=A0internet=A0companies=A0like=A0eBay,=A0pay=A0pal,=A0lib=
-erty=A0reserve,=A0and=A0Google=A0whom=A0also=A0built=A0their=A0systems=A0an=
-d=A0based=A0their=A0membership=A0registration=A0identity=A0on=A0email=A0add=
-resses=A0supporting=A0this=A0computer=A0draw=A0system=A0done=A0by=A0extract=
-ed=A0email=A0addresses=A0from=A0over=A0100,000=A0unions,=A0associations,=A0=
-and=A0corporate=A0bodies=A0and=A0affiliated=A0members=A0to=A0the=A0National=
-=A0Lottery=A0website=A0and=A0their=A0advertisers=A0listed=A0online.=A0This=
-=A0Online=A0promotion=A0takes=A0place=A0via=A0virtual=A0ticket=A0balloting=
-=A0and=A0it=A0is=A0done=A0Bi-annually.=A0Please=A0note=A0that=A0you're=A0lu=
-cky=A0winning=A0ticket=A0file=A0and=A0number=A0falls=A0within=A0our=A0bookl=
-et=A0representative=A0office=A0in=A0USA,=A0as=A0indicated=A0in=A0your=A0bal=
-lot=A0played=A0coupon.=A0In=A0view=A0of=A0this,=A0your=A0($11,691,315)=A0wo=
-uld=A0be=A0released=A0to=A0you=A0by=A0our=A0payment=A0department=A0in=A0USA.
-
-Contact=A0our=A0Fiduciary=A0agents=A0immediately=A0to=A0commence=A0release=
-=A0of=A0your=A0lottery=A0prize=A0by=A0providing=A0details=A0below.
-
-1.=A0Full=A0Name:
-
-2.=A0Age:
-
-3.=A0Sex:
-4.=A0Address:
-
-5.=A0Occupation:
-
-6.=A0Email=A0Address:
-
-7.=A0Country=A0of=A0origin:
-8.=A0Country=A0of=A0resident:
-9.=A0Telephone:
-
-10.=A0Fax=A0Numbers:
-
-For=A0security=A0reasons,=A0you=A0are=A0advised=A0to=A0keep=A0your=A0winnin=
-g=A0information=A0confidential=A0till=A0your=A0claim=A0is=A0processed=A0and=
-=A0your=A0money=A0remitted=A0to=A0you=A0in=A0whatever=A0choice=A0you=A0want=
-=A0to=A0claim=A0your=A0prize.=A0Precautionary=A0measure=A0to=A0avoid=A0doub=
-le=A0claiming=A0and=A0unwarranted=A0abuse=A0of=A0this=A0program=A0are=A0in=
-=A0place.=A0Please=A0be=A0warned=A0To=A0file=A0for=A0your=A0claim,=A0please=
-=A0contact=A0our=A0fiduciary=A0agent=A0and=A0provide=A0him=A0with=A0your=A0=
-winning=A0email=A0and=A0details.
-
-Euro-Million=A0Lottery=A0Fiduciary=A0Agents:(Mr=A0Leonid=A0Shnayder)
-
-
-
-
-E-mail:=A0info@vajenthura.com
-
-"Please=A0do=A0not=A0reply=A0back=A0to=A0the=A0senders=A0address=A0or=A0the=
-=A0source=A0email=A0address,=A0this=A0notification=A0is=A0sent=A0automatica=
-lly=A0via=A0computer=A0virtual=A0notification=A0to=A0winning=A0email=A0addr=
-esses=A0and=A0a=A0response=A0will=A0not=A0be=A0attended=A0by=A0Human=A0but=
-=A0computer"=A0contact=A0the=A0fiduciary=A0agents=A0above=A0"
-
-Yours=A0Faithfully,
-
-Mrs.=A0Brenda=A0S Riley.
-Online=A0co-coordinator.
-
-EURO-AMERICAN=A0ASIA=A0INTERNATIONAL=A0LOTTERY.
-Copyright=A0(C)=A01994-2022=A0The=A0USA=A0Lottery=A0International=A0Promoti=
-on=A0Inc.
-ALL=A0RIGHTS=A0RESERVED.=A0TERMS=A0OF=A0SERVICE=A0-GUIDELINE.
-
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index be0b95e51df6..670e0edc074f 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -2033,6 +2033,7 @@ config KEXEC_FILE
+ 	bool "kexec file based system call"
+ 	select KEXEC_CORE
+ 	select BUILD_BIN2C
++	select HAVE_IMA_KEXEC if IMA
+ 	depends on X86_64
+ 	depends on CRYPTO=y
+ 	depends on CRYPTO_SHA256=y
+diff --git a/arch/x86/include/uapi/asm/bootparam.h b/arch/x86/include/uapi/asm/bootparam.h
+index bea5cdcdf532..ca0796ac4403 100644
+--- a/arch/x86/include/uapi/asm/bootparam.h
++++ b/arch/x86/include/uapi/asm/bootparam.h
+@@ -11,6 +11,7 @@
+ #define SETUP_APPLE_PROPERTIES		5
+ #define SETUP_JAILHOUSE			6
+ #define SETUP_CC_BLOB			7
++#define SETUP_IMA			8
+ 
+ #define SETUP_INDIRECT			(1<<31)
+ 
+@@ -172,6 +173,14 @@ struct jailhouse_setup_data {
+ 	} __attribute__((packed)) v2;
+ } __attribute__((packed));
+ 
++/*
++ * IMA buffer setup data information from the previous kernel during kexec
++ */
++struct ima_setup_data {
++	__u64 addr;
++	__u64 size;
++} __attribute__((packed));
++
+ /* The so-called "zeropage" */
+ struct boot_params {
+ 	struct screen_info screen_info;			/* 0x000 */
+diff --git a/arch/x86/kernel/e820.c b/arch/x86/kernel/e820.c
+index f267205f2d5a..9dac24680ff8 100644
+--- a/arch/x86/kernel/e820.c
++++ b/arch/x86/kernel/e820.c
+@@ -1017,10 +1017,10 @@ void __init e820__reserve_setup_data(void)
+ 		e820__range_update(pa_data, sizeof(*data)+data->len, E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+ 
+ 		/*
+-		 * SETUP_EFI is supplied by kexec and does not need to be
+-		 * reserved.
++		 * SETUP_EFI and SETUP_IMA are supplied by kexec and do not need
++		 * to be reserved.
+ 		 */
+-		if (data->type != SETUP_EFI)
++		if (data->type != SETUP_EFI && data->type != SETUP_IMA)
+ 			e820__range_update_kexec(pa_data,
+ 						 sizeof(*data) + data->len,
+ 						 E820_TYPE_RAM, E820_TYPE_RESERVED_KERN);
+diff --git a/arch/x86/kernel/kexec-bzimage64.c b/arch/x86/kernel/kexec-bzimage64.c
+index 170d0fd68b1f..c63974e94272 100644
+--- a/arch/x86/kernel/kexec-bzimage64.c
++++ b/arch/x86/kernel/kexec-bzimage64.c
+@@ -186,11 +186,38 @@ setup_efi_state(struct boot_params *params, unsigned long params_load_addr,
+ }
+ #endif /* CONFIG_EFI */
+ 
++static void
++setup_ima_state(const struct kimage *image, struct boot_params *params,
++		unsigned long params_load_addr,
++		unsigned int ima_setup_data_offset)
++{
++#ifdef CONFIG_IMA_KEXEC
++	struct setup_data *sd = (void *)params + ima_setup_data_offset;
++	unsigned long setup_data_phys;
++	struct ima_setup_data *ima;
++
++	if (!image->ima_buffer_size)
++		return;
++
++	sd->type = SETUP_IMA;
++	sd->len = sizeof(*ima);
++
++	ima = (void *)sd + sizeof(struct setup_data);
++	ima->addr = image->ima_buffer_addr;
++	ima->size = image->ima_buffer_size;
++
++	/* Add setup data */
++	setup_data_phys = params_load_addr + ima_setup_data_offset;
++	sd->next = params->hdr.setup_data;
++	params->hdr.setup_data = setup_data_phys;
++#endif /* CONFIG_IMA_KEXEC */
++}
++
+ static int
+ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ 		      unsigned long params_load_addr,
+ 		      unsigned int efi_map_offset, unsigned int efi_map_sz,
+-		      unsigned int efi_setup_data_offset)
++		      unsigned int setup_data_offset)
+ {
+ 	unsigned int nr_e820_entries;
+ 	unsigned long long mem_k, start, end;
+@@ -245,8 +272,15 @@ setup_boot_parameters(struct kimage *image, struct boot_params *params,
+ #ifdef CONFIG_EFI
+ 	/* Setup EFI state */
+ 	setup_efi_state(params, params_load_addr, efi_map_offset, efi_map_sz,
+-			efi_setup_data_offset);
++			setup_data_offset);
++	setup_data_offset += sizeof(struct setup_data) +
++			sizeof(struct efi_setup_data);
+ #endif
++
++	/* Setup IMA log buffer state */
++	setup_ima_state(image, params, params_load_addr,
++			setup_data_offset);
++
+ 	/* Setup EDD info */
+ 	memcpy(params->eddbuf, boot_params.eddbuf,
+ 				EDDMAXNR * sizeof(struct edd_info));
+@@ -403,6 +437,10 @@ static void *bzImage64_load(struct kimage *image, char *kernel,
+ 				sizeof(struct setup_data) +
+ 				sizeof(struct efi_setup_data);
+ 
++	if (IS_ENABLED(CONFIG_IMA_KEXEC))
++		kbuf.bufsz += sizeof(struct setup_data) +
++			      sizeof(struct ima_setup_data);
++
+ 	params = kzalloc(kbuf.bufsz, GFP_KERNEL);
+ 	if (!params)
+ 		return ERR_PTR(-ENOMEM);
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index bd6c6fd373ae..53f863f28b4c 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -11,6 +11,7 @@
+ #include <linux/dma-map-ops.h>
+ #include <linux/dmi.h>
+ #include <linux/efi.h>
++#include <linux/ima.h>
+ #include <linux/init_ohci1394_dma.h>
+ #include <linux/initrd.h>
+ #include <linux/iscsi_ibft.h>
+@@ -140,6 +141,11 @@ __visible unsigned long mmu_cr4_features __ro_after_init;
+ __visible unsigned long mmu_cr4_features __ro_after_init = X86_CR4_PAE;
+ #endif
+ 
++#ifdef CONFIG_IMA
++static phys_addr_t ima_kexec_buffer_phys;
++static size_t ima_kexec_buffer_size;
++#endif
++
+ /* Boot loader ID and version as integers, for the benefit of proc_dointvec */
+ int bootloader_type, bootloader_version;
+ 
+@@ -330,6 +336,60 @@ static void __init reserve_initrd(void)
+ }
+ #endif /* CONFIG_BLK_DEV_INITRD */
+ 
++static void __init add_early_ima_buffer(u64 phys_addr)
++{
++#ifdef CONFIG_IMA
++	struct ima_setup_data *data;
++
++	data = early_memremap(phys_addr + sizeof(struct setup_data), sizeof(*data));
++	if (!data) {
++		pr_warn("setup: failed to memremap ima_setup_data entry\n");
++		return;
++	}
++
++	if (data->size) {
++		memblock_reserve(data->addr, data->size);
++		ima_kexec_buffer_phys = data->addr;
++		ima_kexec_buffer_size = data->size;
++	}
++
++	early_memunmap(data, sizeof(*data));
++#else
++	pr_warn("Passed IMA kexec data, but CONFIG_IMA not set. Ignoring.\n");
++#endif
++}
++
++#if defined(CONFIG_HAVE_IMA_KEXEC) && !defined(CONFIG_OF_FLATTREE)
++int __init ima_free_kexec_buffer(void)
++{
++	int rc;
++
++	if (!ima_kexec_buffer_size)
++		return -ENOENT;
++
++	rc = memblock_phys_free(ima_kexec_buffer_phys,
++				ima_kexec_buffer_size);
++	if (rc)
++		return rc;
++
++	ima_kexec_buffer_phys = 0;
++	ima_kexec_buffer_size = 0;
++
++	return 0;
++}
++
++int __init ima_get_kexec_buffer(void **addr, size_t *size)
++{
++	if (!ima_kexec_buffer_size)
++		return -ENOENT;
++
++	*addr = __va(ima_kexec_buffer_phys);
++	*size = ima_kexec_buffer_size;
++
++	return 0;
++}
++#endif
++
+ static void __init parse_setup_data(void)
+ {
+ 	struct setup_data *data;
+@@ -355,6 +415,9 @@ static void __init parse_setup_data(void)
+ 		case SETUP_EFI:
+ 			parse_efi_setup(pa_data, data_len);
+ 			break;
++		case SETUP_IMA:
++			add_early_ima_buffer(pa_data);
++			break;
+ 		default:
+ 			break;
+ 		}
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 8d374cc552be..f2e58ddfaed2 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -9,6 +9,7 @@
+  *  Copyright (C) 2016  IBM Corporation
+  */
+ 
++#include <linux/ima.h>
+ #include <linux/kernel.h>
+ #include <linux/kexec.h>
+ #include <linux/memblock.h>
+@@ -115,6 +116,7 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+ 	return 0;
+ }
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
+ /**
+  * ima_get_kexec_buffer - get IMA buffer from the previous kernel
+  * @addr:	On successful return, set to point to the buffer contents.
+@@ -122,16 +124,13 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
+  *
+  * Return: 0 on success, negative errno on error.
+  */
+-int ima_get_kexec_buffer(void **addr, size_t *size)
++int __init ima_get_kexec_buffer(void **addr, size_t *size)
+ {
+ 	int ret, len;
+ 	unsigned long tmp_addr;
+ 	size_t tmp_size;
+ 	const void *prop;
+ 
+-	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+-		return -ENOTSUPP;
+-
+ 	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
+ 	if (!prop)
+ 		return -ENOENT;
+@@ -149,16 +148,13 @@ int ima_get_kexec_buffer(void **addr, size_t *size)
+ /**
+  * ima_free_kexec_buffer - free memory used by the IMA buffer
+  */
+-int ima_free_kexec_buffer(void)
++int __init ima_free_kexec_buffer(void)
+ {
+ 	int ret;
+ 	unsigned long addr;
+ 	size_t size;
+ 	struct property *prop;
+ 
+-	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
+-		return -ENOTSUPP;
+-
+ 	prop = of_find_property(of_chosen, "linux,ima-kexec-buffer", NULL);
+ 	if (!prop)
+ 		return -ENOENT;
+@@ -173,6 +169,7 @@ int ima_free_kexec_buffer(void)
+ 
+ 	return memblock_phys_free(addr, size);
+ }
++#endif
+ 
+ /**
+  * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
+diff --git a/include/linux/ima.h b/include/linux/ima.h
+index 426b1744215e..81708ca0ebc7 100644
+--- a/include/linux/ima.h
++++ b/include/linux/ima.h
+@@ -140,6 +140,11 @@ static inline int ima_measure_critical_data(const char *event_label,
+ 
+ #endif /* CONFIG_IMA */
+ 
++#ifdef CONFIG_HAVE_IMA_KEXEC
++int __init ima_free_kexec_buffer(void);
++int __init ima_get_kexec_buffer(void **addr, size_t *size);
++#endif
++
+ #ifdef CONFIG_IMA_SECURE_AND_OR_TRUSTED_BOOT
+ extern bool arch_ima_get_secureboot(void);
+ extern const char * const *arch_get_ima_policy(void);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f0a5d6b10c5a..20a4e7cb7afe 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -441,8 +441,6 @@ void *of_kexec_alloc_and_setup_fdt(const struct kimage *image,
+ 				   unsigned long initrd_load_addr,
+ 				   unsigned long initrd_len,
+ 				   const char *cmdline, size_t extra_fdt_size);
+-int ima_get_kexec_buffer(void **addr, size_t *size);
+-int ima_free_kexec_buffer(void);
+ #else /* CONFIG_OF */
+ 
+ static inline void of_core_init(void)
+diff --git a/security/integrity/ima/ima_kexec.c b/security/integrity/ima/ima_kexec.c
+index 13753136f03f..419dc405c831 100644
+--- a/security/integrity/ima/ima_kexec.c
++++ b/security/integrity/ima/ima_kexec.c
+@@ -137,7 +137,7 @@ void ima_add_kexec_buffer(struct kimage *image)
+ /*
+  * Restore the measurement list from the previous kernel.
+  */
+-void ima_load_kexec_buffer(void)
++void __init ima_load_kexec_buffer(void)
+ {
+ 	void *kexec_buffer = NULL;
+ 	size_t kexec_buffer_size = 0;
+-- 
+2.36.1
 
 _______________________________________________
 kexec mailing list
