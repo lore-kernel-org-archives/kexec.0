@@ -4,67 +4,90 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 80BC8C433EF
-	for <kexec@archiver.kernel.org>; Thu, 30 Jun 2022 23:17:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id E1544CCA483
+	for <kexec@archiver.kernel.org>; Fri,  1 Jul 2022 02:26:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
-	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
+	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=HRNwriNFMd+nIucyQe4FoKQWc2O8VHh6rPKFNpLJ2VM=; b=F/j72ZfJSOOyqc
-	9KGYxr0zdcMf/yYtQ3ypdnL+TFJAS0pmaSLIGF3fvr9Tr+65Hmc9yNouOkUT2OTOUcwc8zvOBLi5C
-	jkRXWzqV2Nk1Pb09HceN6CLs1UbbiOsgZSshn0MjN6Oh0WJqGmwL4SGU32xzvHow0DKU0enphbSRw
-	tWMgDxVBZZNozvpirFmvtV1O3eL6egVBYSxCNt0lZN8OTmqSj2e2Isrsm9MzGElaOX1/thAiWGfjU
-	vrtiCrr++rvc/2MzbjbAeMBCix/uTDYC/S+mcltylz+t0WZm8c7pnE28pKERBesNqxKwlZd2sjp3P
-	N2GjLSJn/r54uVPBuWTA==;
+	List-Owner; bh=QEWiF9u8MyTjjp6Glum6c4L7bfHpzUVQdkwQqKac1Fk=; b=voxNvFSRN/wBUC
+	O2sqH72YYefbPO0PyH9UG5ILGwhUffMX5SvrpBBlcWc8nkqH6UujG50rorMReqzQou6Z5y448fKH3
+	noTzIqbMo2EFB+gYyeM1EOalg+XtJjB2nsVyzGunyK7AXD4JeYNpVfDUGd97P9fIvJe0Y25j1antX
+	SxavxGUj2WJU5wkJjiEqEU7Woy7VONMy7ngabxQ4difxGcvjLAuJG8O7GOutryGqqYgpqJS3XT+nn
+	ziqMAC/RudYX6xRq6I/XpNVQxobPnyhszUVyjH5m1nLsZEuJS8+Os2Sr4r6Rk0YO0/s5CI+bLmtuI
+	KMfbQzwiZhD/aPRyhZag==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o73PF-0022uH-5p; Thu, 30 Jun 2022 23:17:05 +0000
-Received: from dfw.source.kernel.org ([2604:1380:4641:c500::1])
+	id 1o76MW-002PAO-VE; Fri, 01 Jul 2022 02:26:28 +0000
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o73PC-0022sv-Iw
-	for kexec@lists.infradead.org; Thu, 30 Jun 2022 23:17:04 +0000
-Received: from smtp.kernel.org (relay.kernel.org [52.25.139.140])
-	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-	(No client certificate requested)
-	by dfw.source.kernel.org (Postfix) with ESMTPS id 95365615B5;
-	Thu, 30 Jun 2022 23:17:01 +0000 (UTC)
-Received: by smtp.kernel.org (Postfix) with ESMTPSA id AC06DC341C7;
-	Thu, 30 Jun 2022 23:17:00 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=k20201202; t=1656631021;
-	bh=n6mhqJyBBGDTk5KWSPiBhw/VEJ5HKNOC9gzwL4tu7Gw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-	b=g0ywGvs4T3+HsnunBmZj5bd7HklMf7tvLU+rEjx98mg6OGxaro3YPTcFdcD58IgSG
-	 0l0JbSVNpFigNfJDb3Bx+riZKhV2t4f5hgA6WoR1lvoBDUukGSviBFimnodSrq0O2p
-	 i7I9C6deqLQyZIL400b0aXqkGXUUUi3LaNkyW5oDxb0G1xnNB99O03Drf55Mz6X8OD
-	 FwZSVgGNyRTZSxlPZ0/3Qg0b2nf5okvpYNPwkN2wY2RyUh+dhs3wL7Stlg7QVPKmIZ
-	 yDFmRvDHntMaWyJU5syRkzEb+QujjFTHD27tU/I59FBkztFdSsrs4QrMmw3RezIczO
-	 TymCZLkFmprCQ==
-Date: Fri, 1 Jul 2022 02:16:57 +0300
-From: Jarkko Sakkinen <jarkko@kernel.org>
-To: Stefan Berger <stefanb@linux.ibm.com>
-Cc: Rob Herring <robh@kernel.org>, kexec@lists.infradead.org,
-	devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-	nayna@linux.ibm.com, nasastry@in.ibm.com,
-	Jason Gunthorpe <jgg@ziepe.ca>,
-	Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 1/3] tpm: of: Move of-tree specific code from tpm
- driver into of driver
-Message-ID: <Yr4u6eADhCEc6rSM@kernel.org>
-References: <20220616154130.2052541-1-stefanb@linux.ibm.com>
- <20220616154130.2052541-2-stefanb@linux.ibm.com>
- <20220627224325.GB3082294-robh@kernel.org>
- <170c78f7-f0ba-c186-dacf-55759dae9b83@linux.ibm.com>
- <Yru83e4OLW7vH5/o@kernel.org>
- <6e097ec9-0657-b920-89c5-cef3e95bd7ea@linux.ibm.com>
+	id 1o76MS-002P88-3G
+	for kexec@lists.infradead.org; Fri, 01 Jul 2022 02:26:25 +0000
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2612DILQ026326;
+	Fri, 1 Jul 2022 02:26:16 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
+ : date : message-id : in-reply-to : references : mime-version :
+ content-transfer-encoding; s=pp1;
+ bh=+JBEOOgUYaZ53VuXJUT+Rv0IUQ1U69LPXFeOS4DwJrQ=;
+ b=djFmDz+s08aQk19unZliYEM4Nk96DjN1M7TQp6ZfOK0uQWifWOTYlXxWtwDvGE27YZqG
+ R0SO6VibYL7wDsVrPen3TB2ZOqAUIFRRuub1HgeUqzPJRZnGINlhF66tDPPyOaMnb4yb
+ tWCw+keMMT7HXoO2nZm8a2ffvel26QkSjN57J5v8TLcXy8V3Y+npbwFr4HIJRRv04KrS
+ P10VJr2CFREtd8fWjr36GGun1gEtEWDugpiqZy2ldXiWnlJpHhiXpbdgQAGwvwp0gba6
+ Y7VG/bMoM4ovj8eKMOh21wwCG3121B8U4Kjq77J4lOf0jPou1WAbHQT7ofiAsXx5TJQL +A== 
+Received: from ppma05wdc.us.ibm.com (1b.90.2fa9.ip4.static.sl-reverse.com [169.47.144.27])
+	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1qxxr8q8-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Jul 2022 02:26:16 +0000
+Received: from pps.filterd (ppma05wdc.us.ibm.com [127.0.0.1])
+	by ppma05wdc.us.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2612M1pQ029106;
+	Fri, 1 Jul 2022 02:26:15 GMT
+Received: from b01cxnp23033.gho.pok.ibm.com (b01cxnp23033.gho.pok.ibm.com [9.57.198.28])
+	by ppma05wdc.us.ibm.com with ESMTP id 3gwt0aq0c3-1
+	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+	Fri, 01 Jul 2022 02:26:15 +0000
+Received: from b01ledav002.gho.pok.ibm.com (b01ledav002.gho.pok.ibm.com [9.57.199.107])
+	by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2612QESJ40370642
+	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+	Fri, 1 Jul 2022 02:26:14 GMT
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 4108D124054;
+	Fri,  1 Jul 2022 02:26:14 +0000 (GMT)
+Received: from b01ledav002.gho.pok.ibm.com (unknown [127.0.0.1])
+	by IMSVA (Postfix) with ESMTP id 28BD9124053;
+	Fri,  1 Jul 2022 02:26:14 +0000 (GMT)
+Received: from sbct-3.pok.ibm.com (unknown [9.47.158.153])
+	by b01ledav002.gho.pok.ibm.com (Postfix) with ESMTP;
+	Fri,  1 Jul 2022 02:26:14 +0000 (GMT)
+From: Stefan Berger <stefanb@linux.ibm.com>
+To: kexec@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-integrity@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org
+Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
+        Palmer Dabbelt <palmer@rivosinc.com>
+Subject: [PATCH v4 2/5] drivers: of: kexec ima: Support 32-bit platforms
+Date: Thu, 30 Jun 2022 22:26:00 -0400
+Message-Id: <20220701022603.31076-3-stefanb@linux.ibm.com>
+X-Mailer: git-send-email 2.36.1
+In-Reply-To: <20220701022603.31076-1-stefanb@linux.ibm.com>
+References: <20220701022603.31076-1-stefanb@linux.ibm.com>
 MIME-Version: 1.0
-Content-Disposition: inline
-In-Reply-To: <6e097ec9-0657-b920-89c5-cef3e95bd7ea@linux.ibm.com>
+X-TM-AS-GCONF: 00
+X-Proofpoint-ORIG-GUID: 3wf_zMkLlgyZAKGRJYPBujGK9_HFnMgg
+X-Proofpoint-GUID: 3wf_zMkLlgyZAKGRJYPBujGK9_HFnMgg
+X-Proofpoint-Virus-Version: vendor=baseguard
+ engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
+ definitions=2022-07-01_01,2022-06-28_01,2022-06-22_01
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 impostorscore=0
+ suspectscore=0 mlxscore=0 priorityscore=1501 malwarescore=0 spamscore=0
+ mlxlogscore=999 adultscore=0 clxscore=1011 bulkscore=0 lowpriorityscore=0
+ phishscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.12.0-2204290000 definitions=main-2207010003
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220630_161702_726159_49CD5CFF 
-X-CRM114-Status: GOOD (  28.22  )
+X-CRM114-CacheID: sfid-20220630_192624_205917_3E41721E 
+X-CRM114-Status: GOOD (  18.44  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -81,68 +104,36 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On Wed, Jun 29, 2022 at 10:16:37AM -0400, Stefan Berger wrote:
-> 
-> 
-> On 6/28/22 22:45, Jarkko Sakkinen wrote:
-> > On Tue, Jun 28, 2022 at 09:29:48AM -0400, Stefan Berger wrote:
-> > > 
-> > > 
-> > > On 6/27/22 18:43, Rob Herring wrote:
-> > > > On Thu, Jun 16, 2022 at 11:41:28AM -0400, Stefan Berger wrote:
-> > > > > Simplify tpm_read_log_of() by moving Openfirmware-specific code into
-> > > > > the Openfirmware driver to make the code reusable. Call the new
-> > > > 
-> > > > There is no such 'Openfirmware driver'.
-> > > > 
-> > > > > of_tpm_get_sml_parameters() function from the TPM Openfirmware driver.
-> > > > > 
-> > > > > Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> > > > > Cc: Jarkko Sakkinen <jarkko@kernel.org>
-> > > > > Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > Cc: Frank Rowand <frowand.list@gmail.com>
-> > > > > ---
-> > > > >    drivers/char/tpm/eventlog/of.c | 31 +++++--------------------------
-> > > > >    drivers/of/Makefile            |  2 +-
-> > > > >    drivers/of/device_node.c       | 27 +++++++++++++++++++++++++++
-> > > > 
-> > > > Humm, definitely the wrong direction. Generally, code for specific
-> > > > bindings does not go in drivers/of/. There used to be some, but we've
-> > > > moved it to the appropriate subsystems. kexec was an exception to not
-> > > > have 2 copies of the same code in arch/.
-> > > 
-> > > The function I am moving here is called by the TPM subsystem and also now by
-> > > of/kexec.c. The latter is compiled under the following conditions:
-> > > 
-> > > ifdef CONFIG_KEXEC_FILE
-> > > ifdef CONFIG_OF_FLATTREE
-> > > obj-y	+= kexec.o
-> > > endif
-> > > endif
-> > > 
-> > > The code that current calls it is compiled under the following conditions:
-> > > 
-> > > tpm-$(CONFIG_OF) += eventlog/of.o
-> > > 
-> > > To make it available to both I could keep it in the TPM subsystem like this:
-> > > 
-> > > obj-$(CONFIG_OF) = tpm_of.o
-> > > 
-> > > 
-> > > Jarrko, if you read this, any comment?
-> > > 
-> > > 
-> > >     Stefan
-> > 
-> > Why can't you convert of_tpm_get_sml_parameters() to inline function?
-> 
-> I can do that and put it into include/linux/tpm.h. The only concern would
-> have been the size of the function.
+From: Palmer Dabbelt <palmer@rivosinc.com>
 
-It is somewhat insignificant amount (dozens of bytes at most).
+RISC-V recently added kexec_file() support, which uses enables kexec
+IMA.  We're the first 32-bit platform to support this, so we found a
+build bug.
 
-BR, Jarkko
+[ Several tags removed; for testing by krobot ]
+Signed-off-by: Palmer Dabbelt <palmer@rivosinc.com>
+---
+ drivers/of/kexec.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
+index 91b04b04eec4..c4f9b6655a2e 100644
+--- a/drivers/of/kexec.c
++++ b/drivers/of/kexec.c
+@@ -253,8 +253,8 @@ static int setup_ima_buffer(const struct kimage *image, void *fdt,
+ 	if (ret)
+ 		return -EINVAL;
+ 
+-	pr_debug("IMA buffer at 0x%llx, size = 0x%zx\n",
+-		 image->ima_buffer_addr, image->ima_buffer_size);
++	pr_debug("IMA buffer at 0x%pa, size = 0x%zx\n",
++		 &image->ima_buffer_addr, image->ima_buffer_size);
+ 
+ 	return 0;
+ }
+-- 
+2.35.1
+
 
 _______________________________________________
 kexec mailing list
