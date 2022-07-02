@@ -4,88 +4,78 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id CB190CCA479
-	for <kexec@archiver.kernel.org>; Fri,  1 Jul 2022 07:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 180D9C43334
+	for <kexec@archiver.kernel.org>; Sat,  2 Jul 2022 11:35:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
+	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=AFu8S0nJIDEjI+mpT4KGGV9LkB/uSrZkd/FMV6kds98=; b=Dybk/gyXRSqmOA
-	lEuLl9geUYG4mK/fOcQisliOQVTKGfKicFNs9nJo4m2OaMOo44eiPOjlQwJUmUjiWe4LiPk7w+3vo
-	gCT6ZeMGuL6FYBhFELsnr61HOLTywDnr2iSNS7nafzkqGya73Tj8lLGCYvAFeey/7LvrvQP/7zYbj
-	G6tY68roBu3jTnw1n0fbEw/08ZWZkvA1Vx871PUPZ+ZWAJOgxWNlKTlJn3FqEt8VR1FzG6nmoJo70
-	7wUvzphW00zEYaCTRZKo0UazGyCT0r5uzD+8wkAWOPTC1lckVQi/3O4+kIcrmtSGnLbziPTilzh/p
-	zHm9BTKA7ghVjTHva+bQ==;
+	List-Owner; bh=6Xbsbvp+peoXKdNi+JRSDWnCxDYaq+YtCjHnUmVwmRM=; b=kqGZap7CSPlBVT
+	UZJ0QENKBYOyBEdlyd0buOLQrU+ZMVdH9fmB3rZXaTKW+wyM48Y7UDnXHDbMkhpJ9JAOSPCYUMLFF
+	7QnVGy892GqeTaxkRPcFBVgGZInhsyU049u/ac9qdKQnXUmvk8xkSsMPd2OLjVXR6zOMYiYOH3ABE
+	VAkNpchgye0R9fpnxprfLaXlxGaxZwY4c+5clGo4Bk/baq62dTpm/g47bf8IsZJFO9I6sCncwZgmf
+	XhQZEqHV3K5YNjBXp79R/ERvDWK4vY9sG8KIM4/H7gU2QRh5Glzq7A6ave7nquTF9pfZNQFBrIzbv
+	5eMiS3kdDcFt2VLTMHOA==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o7BBu-003QlV-4c; Fri, 01 Jul 2022 07:35:50 +0000
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5])
+	id 1o7bPQ-009IWY-EE; Sat, 02 Jul 2022 11:35:32 +0000
+Received: from mail-ot1-x32b.google.com ([2607:f8b0:4864:20::32b])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o7BBq-003QkP-RI
-	for kexec@lists.infradead.org; Fri, 01 Jul 2022 07:35:48 +0000
-Received: from pps.filterd (m0127361.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 2617STH8018546;
-	Fri, 1 Jul 2022 07:35:46 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-transfer-encoding; s=pp1;
- bh=AuotTv//2vpnaKk0+ERgaBUpY14yc+MaS21uWhbY1cU=;
- b=m39auTEYyT6c1O0tp4Em4Kbczoti7d6YnLIN3Tz/I2OKok/DWC1HI8tfaSCeU6jDoG4h
- h1hK7k3D7aheCFQGlfiMfDutqaryRTD54wrR/JE1lxd6WO87lkbChVnP65fxLUJ2Ld3y
- A5bkMsrJjdqus1DCoplPX+1tc06ji0Urz/VcUVgffz8qQPQRgXGnVWqwTWc+SFl1n17i
- N5PlUYdXLXKLnWd7lAvDmDiqEKoXolmuxwN/u+A1E+iV0LTJT7r9D93cOW2yZPcL34n2
- M2YWxqgQCaEfDMdc7MDxqJt+t58rTaWOm0hUFUuVGFgoi4TjVzAdXCM6bf0mK98pkgbV IQ== 
-Received: from ppma05fra.de.ibm.com (6c.4a.5195.ip4.static.sl-reverse.com [149.81.74.108])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h1vjpg78u-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Jul 2022 07:35:45 +0000
-Received: from pps.filterd (ppma05fra.de.ibm.com [127.0.0.1])
-	by ppma05fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 2617SJ3H018417;
-	Fri, 1 Jul 2022 07:35:44 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-	by ppma05fra.de.ibm.com with ESMTP id 3gwt0970c9-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Fri, 01 Jul 2022 07:35:43 +0000
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 2617ZfD823396658
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Fri, 1 Jul 2022 07:35:41 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 7E5CB4C040;
-	Fri,  1 Jul 2022 07:35:41 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 128C74C044;
-	Fri,  1 Jul 2022 07:35:40 +0000 (GMT)
-Received: from li-NotSettable.ibm.com.com (unknown [9.43.100.5])
-	by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Fri,  1 Jul 2022 07:35:39 +0000 (GMT)
-From: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>
-To: Andrew Morton <akpm@linux-foundation.org>,
-        Eric Biederman <ebiederm@xmission.com>
-Cc: <linux-kernel@vger.kernel.org>, kexec@lists.infradead.org
-Subject: [PATCH 1/2] kexec_file: Drop weak attribute from functions
-Date: Fri,  1 Jul 2022 13:04:04 +0530
-Message-Id: <2cd7ca1fe4d6bb6ca38e3283c717878388ed6788.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
-X-Mailer: git-send-email 2.31.1
-In-Reply-To: <cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
-References: <cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
+	id 1o7bPJ-009IV4-O0; Sat, 02 Jul 2022 11:35:27 +0000
+Received: by mail-ot1-x32b.google.com with SMTP id cb12-20020a056830618c00b00616b871cef3so3853708otb.5;
+        Sat, 02 Jul 2022 04:35:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20210112;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=RFiZUZZVdPzHI8JLiBXe+pUN/57tquJciO81AmMC/BA=;
+        b=KN9aXvzietpOoqWtAuIT0/EzLMIFdo7EYJ/20eohQO81UE88xxD8ZynwS5k+eo/5SN
+         dVTumsABhTmdi2CmOJdK74+S2kQgl3RZHRjK8aScYGcxEXdtrglRS87eTj7viWNzJpEh
+         QnUgEHHfAxWjo+KqHLhaHX10e5sXWmzcWDgb82M0mj/OhB8tVmLsNcsV0HVfT+q5ajop
+         8dlMEithwF8n6HlHSVvtLg7vXY61FyOBLwVd+i0oHumWidm87Unh98UmW7ioSbq1rr3A
+         j+0eDVcwMHzDlpzoWZJ0GEs4kVw1nxjDXNYpQh6RJ8JxTo6Vuy9PNFgNHaHI3vTitvnl
+         cc8Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20210112;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=RFiZUZZVdPzHI8JLiBXe+pUN/57tquJciO81AmMC/BA=;
+        b=dluzE60e4S+Xe94BkArXdlBherDUOKQHY/C2O7YXOQ6Pd25aeoBXADMJOxBX5ttgJ7
+         AUJAOfQVpV2fYWgItn8oLKzhgMzgP1VfnQH43hRJp29QYDAXVJvCrFhv2ZN47Ni0xEDq
+         rPxFydOm0R2FwdnF41xUN6GtgeUDs97666dBH6hT97NYZKhKt780IV9EzpaKmIq+rIK9
+         UGiYQJy4kJyY8WxP5GII+ZUMKpr1nZrLKfwCvFfSJSimNzxcguRv65EqG5/+n1pr2Eq7
+         JmQXnv8LCv2UaaIYyqCH0qIXi/hZzNUlw38f0FbpyboYBq1rsKitkKnt2r60jK/vQU+/
+         9xMA==
+X-Gm-Message-State: AJIora+5di7WrHMqnckqnILB5v9jm/9+Ya6NLp/qBzpJU+ua6GIuJmxF
+	/OctXUf8r21H38XKlLhhNjxYTmwVbd9vlhAsltY=
+X-Google-Smtp-Source: AGRyM1uobC4dAaGgs7nDWylHgtCkJQNwSOTPhM+xTt0IrwNmqp6vfZopMuDjj62vnVBzuVqlh6hwKIyO9jvlBgEXOVU=
+X-Received: by 2002:a05:6830:2692:b0:618:b992:cbc9 with SMTP id
+ l18-20020a056830269200b00618b992cbc9mr5668496otu.117.1656761723858; Sat, 02
+ Jul 2022 04:35:23 -0700 (PDT)
 MIME-Version: 1.0
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: QlQ5uHlqaShLgs9bUvvmlRGb2h4E5Qn3
-X-Proofpoint-GUID: QlQ5uHlqaShLgs9bUvvmlRGb2h4E5Qn3
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-01_04,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 lowpriorityscore=0
- mlxlogscore=999 suspectscore=0 adultscore=0 mlxscore=0 priorityscore=1501
- spamscore=0 malwarescore=0 phishscore=0 bulkscore=0 impostorscore=0
- clxscore=1015 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2204290000 definitions=main-2207010024
+References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
+ <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
+ <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
+ <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr> <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
+ <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
+In-Reply-To: <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
+From: Yixun Lan <yixun.lan@gmail.com>
+Date: Sat, 2 Jul 2022 11:35:12 +0000
+Message-ID: <CALecT5gdqW9Na_s9PiFAZt0u=_uPCu0zYdUCb4UfuSV6fM_Q+w@mail.gmail.com>
+Subject: Re: RISC-V: patched kexec-tools on github for review/testing
+To: Nick Kossifidis <mick@ics.forth.gr>
+Cc: Alexandre Ghiti <alexandre.ghiti@canonical.com>, ebiederm@xmission.com, 
+	kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, 
+	"linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, 
+	Mike Rapoport <rppt@kernel.org>, geert+renesas@glider.be, 
+	Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
+	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, 
+	Atish Patra <atish.patra@wdc.com>
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220701_003547_040542_F44377AC 
-X-CRM114-Status: GOOD (  22.36  )
+X-CRM114-CacheID: sfid-20220702_043525_848180_7BCE3F83 
+X-CRM114-Status: GOOD (  39.40  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -97,243 +87,113 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-Drop __weak attribute from functions in kexec_file.c:
-- arch_kexec_kernel_image_probe()
-- arch_kimage_file_post_load_cleanup()
-- arch_kexec_kernel_image_load()
-- arch_kexec_locate_mem_hole()
-- arch_kexec_kernel_verify_sig()
-
-arch_kexec_kernel_image_load() calls into kexec_image_load_default(), so
-drop the static attribute for the latter.
-
-arch_kexec_kernel_verify_sig() is not overridden by any architecture, so
-drop the __weak attribute.
-
-Suggested-by: Eric Biederman <ebiederm@xmission.com>
-Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
----
- arch/arm64/include/asm/kexec.h   |  4 ++-
- arch/powerpc/include/asm/kexec.h |  9 +++++++
- arch/s390/include/asm/kexec.h    |  3 +++
- arch/x86/include/asm/kexec.h     |  6 +++++
- include/linux/kexec.h            | 44 +++++++++++++++++++++++++++-----
- kernel/kexec_file.c              | 35 ++-----------------------
- 6 files changed, 61 insertions(+), 40 deletions(-)
-
-diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
-index 9839bfc163d714..78d272b26ebd11 100644
---- a/arch/arm64/include/asm/kexec.h
-+++ b/arch/arm64/include/asm/kexec.h
-@@ -115,7 +115,9 @@ extern const struct kexec_file_ops kexec_image_ops;
- 
- struct kimage;
- 
--extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
-+int arch_kimage_file_post_load_cleanup(struct kimage *image);
-+#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-+
- extern int load_other_segments(struct kimage *image,
- 		unsigned long kernel_load_addr, unsigned long kernel_size,
- 		char *initrd, unsigned long initrd_len,
-diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
-index 2aefe14e144229..1e5e9b6ec78d9d 100644
---- a/arch/powerpc/include/asm/kexec.h
-+++ b/arch/powerpc/include/asm/kexec.h
-@@ -120,6 +120,15 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
- #ifdef CONFIG_PPC64
- struct kexec_buf;
- 
-+int arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len);
-+#define arch_kexec_kernel_image_probe arch_kexec_kernel_image_probe
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image);
-+#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
-+
-+int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
-+#define arch_kexec_locate_mem_hole arch_kexec_locate_mem_hole
-+
- int load_crashdump_segments_ppc64(struct kimage *image,
- 				  struct kexec_buf *kbuf);
- int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
-diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
-index 649ecdcc873453..8886aadc11a3a6 100644
---- a/arch/s390/include/asm/kexec.h
-+++ b/arch/s390/include/asm/kexec.h
-@@ -92,5 +92,8 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 				     const Elf_Shdr *relsec,
- 				     const Elf_Shdr *symtab);
- #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image);
-+#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
- #endif
- #endif /*_S390_KEXEC_H */
-diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
-index 6ad8d946cd3ebf..5ec359c1b50cb3 100644
---- a/arch/x86/include/asm/kexec.h
-+++ b/arch/x86/include/asm/kexec.h
-@@ -193,6 +193,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
- 				     const Elf_Shdr *relsec,
- 				     const Elf_Shdr *symtab);
- #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
-+
-+void *arch_kexec_kernel_image_load(struct kimage *image);
-+#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
-+
-+int arch_kimage_file_post_load_cleanup(struct kimage *image);
-+#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
- #endif
- #endif
- 
-diff --git a/include/linux/kexec.h b/include/linux/kexec.h
-index ce6536f1d26997..5e0bc3f9eac3e9 100644
---- a/include/linux/kexec.h
-+++ b/include/linux/kexec.h
-@@ -188,21 +188,53 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
- 				   void *buf, unsigned int size,
- 				   bool get_value);
- void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
-+void *kexec_image_load_default(struct kimage *image);
-+
-+#ifndef arch_kexec_kernel_image_probe
-+static inline int
-+arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len)
-+{
-+	return kexec_image_probe_default(image, buf, buf_len);
-+}
-+#endif
-+
-+#ifndef arch_kimage_file_post_load_cleanup
-+static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
-+{
-+	return kexec_image_post_load_cleanup_default(image);
-+}
-+#endif
-+
-+#ifndef arch_kexec_kernel_image_load
-+static inline void *arch_kexec_kernel_image_load(struct kimage *image)
-+{
-+	return kexec_image_load_default(image);
-+}
-+#endif
- 
--/* Architectures may override the below functions */
--int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
--				  unsigned long buf_len);
--void *arch_kexec_kernel_image_load(struct kimage *image);
--int arch_kimage_file_post_load_cleanup(struct kimage *image);
- #ifdef CONFIG_KEXEC_SIG
- int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
- 				 unsigned long buf_len);
- #endif
--int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
- 
- extern int kexec_add_buffer(struct kexec_buf *kbuf);
- int kexec_locate_mem_hole(struct kexec_buf *kbuf);
- 
-+#ifndef arch_kexec_locate_mem_hole
-+/**
-+ * arch_kexec_locate_mem_hole - Find free memory to place the segments.
-+ * @kbuf:                       Parameters for the memory search.
-+ *
-+ * On success, kbuf->mem will have the start address of the memory region found.
-+ *
-+ * Return: 0 on success, negative errno on error.
-+ */
-+static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
-+{
-+	return kexec_locate_mem_hole(kbuf);
-+}
-+#endif
-+
- /* Alignment required for elf header segment */
- #define ELF_CORE_HEADER_ALIGN   4096
- 
-diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
-index 9b2839775c837b..66e4ce29fc6961 100644
---- a/kernel/kexec_file.c
-+++ b/kernel/kexec_file.c
-@@ -56,14 +56,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
- 	return ret;
- }
- 
--/* Architectures can provide this probe function */
--int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
--					 unsigned long buf_len)
--{
--	return kexec_image_probe_default(image, buf, buf_len);
--}
--
--static void *kexec_image_load_default(struct kimage *image)
-+void *kexec_image_load_default(struct kimage *image)
- {
- 	if (!image->fops || !image->fops->load)
- 		return ERR_PTR(-ENOEXEC);
-@@ -74,11 +67,6 @@ static void *kexec_image_load_default(struct kimage *image)
- 				 image->cmdline_buf_len);
- }
- 
--void * __weak arch_kexec_kernel_image_load(struct kimage *image)
--{
--	return kexec_image_load_default(image);
--}
--
- int kexec_image_post_load_cleanup_default(struct kimage *image)
- {
- 	if (!image->fops || !image->fops->cleanup)
-@@ -87,11 +75,6 @@ int kexec_image_post_load_cleanup_default(struct kimage *image)
- 	return image->fops->cleanup(image->image_loader_data);
- }
- 
--int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
--{
--	return kexec_image_post_load_cleanup_default(image);
--}
--
- #ifdef CONFIG_KEXEC_SIG
- static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
- 					  unsigned long buf_len)
-@@ -104,8 +87,7 @@ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
- 	return image->fops->verify_sig(buf, buf_len);
- }
- 
--int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
--					unsigned long buf_len)
-+int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf, unsigned long buf_len)
- {
- 	return kexec_image_verify_sig_default(image, buf, buf_len);
- }
-@@ -616,19 +598,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
- 	return ret == 1 ? 0 : -EADDRNOTAVAIL;
- }
- 
--/**
-- * arch_kexec_locate_mem_hole - Find free memory to place the segments.
-- * @kbuf:                       Parameters for the memory search.
-- *
-- * On success, kbuf->mem will have the start address of the memory region found.
-- *
-- * Return: 0 on success, negative errno on error.
-- */
--int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
--{
--	return kexec_locate_mem_hole(kbuf);
--}
--
- /**
-  * kexec_add_buffer - place a buffer in a kexec segment
-  * @kbuf:	Buffer contents and memory parameters.
--- 
-2.36.1
-
-
-_______________________________________________
-kexec mailing list
-kexec@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/kexec
+aGkgTmljawoKT24gVGh1LCBOb3YgMjUsIDIwMjEgYXQgMTE6NDUgUE0gTmljayBLb3NzaWZpZGlz
+IDxtaWNrQGljcy5mb3J0aC5ncj4gd3JvdGU6Cj4KPiDOo8+EzrnPgiAyMDIxLTEwLTE1IDEwOjA3
+LCBBbGV4YW5kcmUgR2hpdGkgzq3Os8+BzrHPiM61Ogo+ID4gT24gU2F0LCBPY3QgOSwgMjAyMSBh
+dCAzOjI1IFBNIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3MuZm9ydGguZ3I+Cj4gPiB3cm90ZToK
+PiA+Pgo+ID4+IM6jz4TOuc+CIDIwMjEtMTAtMDYgMTQ6MTAsIEFsZXhhbmRyZSBHaGl0aSDOrc6z
+z4HOsc+IzrU6Cj4gPj4gPgo+ID4+ID4gU28gSSBmb2xsb3dlZCB0aGUgaW5zdHJ1Y3Rpb25zIGhl
+cmU6Cj4gPj4gPiBodHRwczovL2RvY3VtZW50YXRpb24uc3VzZS5jb20vZnItZnIvc2xlcy8xMi1T
+UDMvaHRtbC9TTEVTLWFsbC9jaGEtdHVuaW5nLWtleGVjLmh0bWwjY2hhLXR1bmluZy1rZXhlYy1i
+YXNpYy11c2FnZSwKPiA+PiA+IGJlbG93IHRoZSBvdXRwdXQgb24gYW4gVW5tYXRjaGVkIGJvYXJk
+IHVzaW5nIGEgdm1saW51eCBzdG9yZWQgb24gYSBzZAo+ID4+ID4gY2FyZDoKPiA+PiA+Cj4gPj4g
+PiB1YnVudHVAdWJ1bnR1On4kIHN1ZG8gc2Jpbi9rZXhlYyAtbCB2bWxpbnV4IC0tYXBwZW5kPSIk
+KGNhdAo+ID4+ID4gL3Byb2MvY21kbGluZSkiIC0taW5pdHJkPS9ib290L2luaXRyZC5pbWcKPiA+
+PiA+IFdhcm5pbmc6IE5vIGNtZGxpbmUgcHJvdmlkZWQsIHVzaW5nIGFwcGVuZCBzdHJpbmcgYXMg
+Y21kbGluZQo+ID4+ID4gV2FybmluZzogTm8gZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13
+YXJlL2ZkdAo+ID4+ID4gWyAxODEzLjQ3MjY3MV0gSU5GTzogdGFzayBrd29ya2VyLzE6MDo5ODgg
+YmxvY2tlZCBmb3IgbW9yZSB0aGFuIDEyMAo+ID4+ID4gc2Vjb25kcy4KPiA+PiA+IFsgMTgxMy40
+Nzg3NTFdICAgICAgIE5vdCB0YWludGVkIDUuMTUuMC1yYzErICMxNQo+ID4+ID4gWyAxODEzLjQ4
+MzExMF0gImVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVvdXRfc2VjcyIK
+PiA+PiA+IGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KPiA+PiA+IENvdWxkIG5vdCBmaW5kIGEgZnJl
+ZSBhcmVhIG9mIG1lbW9yeSBvZiAweDMwMDAgYnl0ZXMuLi4KPiA+PiA+IGxvY2F0ZV9ob2xlIGZh
+aWxlZAo+ID4+ID4KPiA+PiA+IEkgdXNlZCB0aGUgVWJ1bnR1IGtlcm5lbCwgc28gdGhpcyBpcyBw
+cmV0dHkgbGFyZ2U6Cj4gPj4gPiAtcnd4cnd4ci14IDEgdWJ1bnR1IHVidW50dSAyNzdNIE9jdCAg
+NSAxNTo0NyB2bWxpbnV4Cj4gPj4gPiAtcnctci0tci0tIDEgcm9vdCByb290IDk4TSBTZXAgMjEg
+MDM6MjUgL2Jvb3QvaW5pdHJkLmltZwo+ID4+ID4KPiA+Pgo+ID4+IEFDSywgSSBoYXZlbid0IHRl
+c3RlZCBpbml0cmQgbXVjaCBUQkgsIEkgdXN1YWxseSBkb24ndCB1c2UgYW4gaW5pdHJkLAo+ID4+
+IGFuZCB3aGVuIEkgZG8gaXQncyBhIHNtYWxsIGJ1c3lib3gtYmFzZWQgcm9vdGZzLgo+ID4+Cj4g
+Pj4gPiBUaGVuIGlmIEkgZG9uJ3QgbG9hZCB0aGUgaW5pdHJkIChJIHNvbWV0aW1lcyBoYXZlIHRo
+ZSBzYW1lIHdhcm5pbmcgYXMKPiA+PiA+IGFib3ZlKSBJIGNhbiBhdCBsZWFzdCBrZXhlYyB0aGUg
+bmV3IGtlcm5lbCBidXQgaXQgZmFpbHMgdG8gYm9vdDoKPiA+PiA+Cj4gPj4gPiB1YnVudHVAdWJ1
+bnR1On4kIHN1ZG8gLi9zYmluL2tleGVjIC1lCj4gPj4gPiBXYXJuaW5nOiBObyBjbWRsaW5lIG9y
+IGFwcGVuZCBzdHJpbmcgcHJvdmlkZWQKPiA+PiA+IFdhcm5pbmc6IE5vIGR0YiBwcm92aWRlZCwg
+dXNpbmcgL3N5cy9maXJtd2FyZS9mZHQKPiA+PiA+IFsuLi5dCj4gPj4gPiBbICAgIDAuMDAwMDAw
+XSBTQkkgdjAuMiBIU00gZXh0ZW5zaW9uIGRldGVjdGVkCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBD
+UFUgd2l0aCBoYXJ0aWQ9MCBpcyBub3QgYXZhaWxhYmxlCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAt
+LS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPiA+PiA+IFsgICAgMC4wMDAwMDBd
+IGtlcm5lbCBCVUcgYXQgYXJjaC9yaXNjdi9rZXJuZWwvc21wYm9vdC5jOjEwNyEKPiA+PiA+IFsg
+ICAgMC4wMDAwMDBdIEtlcm5lbCBCVUcgWyMxXQo+ID4+ID4gWyAgICAwLjAwMDAwMF0gTW9kdWxl
+cyBsaW5rZWQgaW46Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSBDUFU6IDAgUElEOiAwIENvbW06IHN3
+YXBwZXIgTm90IHRhaW50ZWQgNS4xNS4wLXJjMSsgIzE1Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSBI
+YXJkd2FyZSBuYW1lOiBTaUZpdmUgSGlGaXZlIFVubWF0Y2hlZCBBMDAgKERUKQo+ID4+ID4gWyAg
+ICAwLjAwMDAwMF0gZXBjIDogc2V0dXBfc21wKzB4Y2MvMHgxNDIKPiA+PiA+IFsgICAgMC4wMDAw
+MDBdICByYSA6IHNldHVwX3NtcCsweGM0LzB4MTQyCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBlcGMg
+OiBmZmZmZmZmZjgwYTA0MDgwIHJhIDogZmZmZmZmZmY4MGEwNDA3OCBzcCA6Cj4gPj4gPiBmZmZm
+ZmZmZjgxODAzZWMwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgZ3AgOiBmZmZmZmZmZjgxYTIzMjIw
+IHRwIDogZmZmZmZmZmY4MTgxMDUwMCB0MCA6Cj4gPj4gPiBmZmZmZmZmZjgxYTM1NTFmCj4gPj4g
+PiBbICAgIDAuMDAwMDAwXSAgdDEgOiBmZmZmZmZmZmZmZmZmZmZmIHQyIDogMDAwMDAwMDAwMDAw
+MDAwMCBzMCA6Cj4gPj4gPiBmZmZmZmZmZjgxODAzZjAwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAg
+czEgOiAwMDAwMDAwMDAwMDAwMDAwIGEwIDogMDAwMDAwMDAwMDAwMDAwMCBhMSA6Cj4gPj4gPiAw
+MDAwMDAwMDAwMDAwMDAwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgYTIgOiAwMDAwMDAwMDAwMDAw
+MDAwIGEzIDogMDAwMDAwMDAwMDAwMDAwMSBhNCA6Cj4gPj4gPiAwMDAwMDAwMDAwMDAwMDAwCj4g
+Pj4gPiBbICAgIDAuMDAwMDAwXSAgYTUgOiBmZmZmZmZmZjgwYzY0NTAwIGE2IDogMDAwMDAwMDAw
+MDAwMDAwNCBhNyA6Cj4gPj4gPiAwMDAwMDAwMDAwMDBmZjAwCj4gPj4gPiBbICAgIDAuMDAwMDAw
+XSAgczIgOiAwMDAwMDAwMDAwMDAwMDA1IHMzIDogMDAwMDAwMDAwMDAwMDAwMCBzNCA6Cj4gPj4g
+PiBmZmZmZmZmZjgxMThmOWE4Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgczUgOiAwMDAwMDAwMDAw
+MDAwMDA3IHM2IDogZmZmZmZmZmY4MGMwYjc5MCBzNyA6Cj4gPj4gPiAwMDAwMDAwMDgwMDAwMjAw
+Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgczggOiAwMDAwMDAwMDAwMDAwZmZmIHM5IDogMDAwMDAw
+MDA4MTAwMDIwMCBzMTA6Cj4gPj4gPiAwMDAwMDAwMDAwMDAwMDE4Cj4gPj4gPiBbICAgIDAuMDAw
+MDAwXSAgczExOiAwMDAwMDAwMDAwMDAwMDBiIHQzIDogMDAwMDAwMDAwMGZmMDAwMCB0NCA6Cj4g
+Pj4gPiBmZmZmZmZmZmZmZmZmZmZmCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgdDUgOiBmZmZmZmZm
+ZjgwYzBiN2EwIHQ2IDogZmZmZmZmZmY4MTgwM2JkOAo+ID4+ID4gWyAgICAwLjAwMDAwMF0gc3Rh
+dHVzOiAwMDAwMDAwMjAwMDAwMTAwIGJhZGFkZHI6IDAwMDAwMDAwMDAwMDAwMDAKPiA+PiA+IGNh
+dXNlOiAwMDAwMDAwMDAwMDAwMDAzCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBh
+MDQwODA+XSBzZXR1cF9zbXArMHhjYy8weDE0Mgo+ID4+ID4gWyAgICAwLjAwMDAwMF0gWzxmZmZm
+ZmZmZjgwYTAzZDg4Pl0gc2V0dXBfYXJjaCsweDU2YS8weDU5MAo+ID4+ID4gWyAgICAwLjAwMDAw
+MF0gWzxmZmZmZmZmZjgwYTAwYWEyPl0gc3RhcnRfa2VybmVsKzB4YWEvMHhhNWMKPiA+PiA+IFsg
+ICAgMC4wMDAwMDBdIHJhbmRvbTogZ2V0X3JhbmRvbV9ieXRlcyBjYWxsZWQgZnJvbQo+ID4+ID4g
+b29wc19leGl0KzB4NDQvMHg3MCB3aXRoIGNybmdfaW5pdD0wCj4gPj4gPiBbICAgIDAuMDAwMDAw
+XSAtLS1bIGVuZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0KPiA+PiA+IFsgICAgMC4wMDAw
+MDBdIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCB0aGUgaWRs
+ZQo+ID4+ID4gdGFzayEKPiA+PiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIEtlcm5lbCBwYW5p
+YyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbAo+ID4+ID4gdGhlIGlkbGUgdGFzayEg
+XS0tLQo+ID4+ID4KPiA+PiA+IFRoaXMgcmVsaWFibHkgZmFpbHMgaGVyZS4KPiA+PiA+Cj4gPj4K
+PiA+PiBUaGlzIGxvb2tzIHdlaXJkLCBJJ2xsIGNoZWNrIGl0IG91dCAod2UgaGF2ZSBhbiB1bm1h
+dGNoZWQgaGVyZSBzbyBJJ2xsCj4gPj4gdHJ5IHRvIGdldCBteSBoYW5kcyBvbiBpdCBzb21ldGlt
+ZSBuZXh0IHdlZWspLgo+ID4+Cj4gPj4gRGlkIHlvdSB0cnkga2R1bXAgPyBEbyB5b3UgZ2V0IHRo
+ZSBzYW1lIGVycm9yID8KPiA+Cj4gPiBrZHVtcCB3b3JrcyBmaW5lLCBpdCBmYWlscyB0byBmaW5k
+IHRoZSByb290ZnMgYnV0IEkgdGhpbmsgbXkgc2V0dXAgaXMKPiA+IGZhdWx0eSBoZXJlLgo+ID4g
+SSB0b29rIGEgcXVpY2sgbG9vayBhdCBrZXhlY19yZWxvY2F0ZS5TLCBhbmQgdGhlIHVzZSBvZiB2
+YV9wYV9vZmZzZXQKPiA+IGlzIGFsc28gd3JvbmcgaGVyZSwgd2Ugc2hvdWxkIHVzZSB2YV9rZXJu
+ZWxfcGFfb2Zmc2V0IGFzIGl0IGlzIHVzZWQgdG8KPiA+IG1vZGlmeSBhIHRleHQgYWRkcmVzcyBC
+dXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4KPiA+Cj4gPiBBbGV4Cj4gPgo+Cj4g
+U29ycnkgZm9yIHRoZSBkZWxheSwgSSBmaW5hbGx5IGdvdCBzb21lIHRpbWUgdG8gd29yayBvbiB0
+aGlzLiBBcyBpdAo+IHR1cm5zIG91dCBJJ20gcGFzc2luZyBjcHUgaWQgaW5zdGVhZCBvZiBoYXJ0
+IGlkIHRvIHRoZSBuZXh0IGtlcm5lbCAodGhhdAo+IGNvbW1lbnQgb24gc21wLmggY2xhaW1pbmcg
+dGhhdCByYXdfc21wX3Byb2Nlc3Nvcl9pZCByZXR1cm5zIHRoZSBoYXJ0IGlkCj4gZGlkbid0IGhl
+bHAgbXVjaCkgYW5kIGludGVyZXN0aW5nbHkgZW5vdWdoIGNwdSBpZCBhbmQgaGFydCBpZCBtYXRj
+aCBvbgo+IHFlbXUgYW5kIGFsc28gc29tZXRpbWVzIG1hdGNoIG9uIHRoZSB1bm1hdGNoZWQgLyB1
+bmxlYXNoZWQgYm9hcmQuIEFsc28KPiBvbiB1bm1hdGNoZWQgLyB1bmxlYXNoZWQsIGhhcnQgaWQg
+MCBpcyB1c2VkIGJ5IHRoZSBub24tbGludXggaGFydCBzbyBpZgo+IHdlIHBhc3MgdGhlIGNwdSBp
+ZCBvZiB0aGUgYm9vdCBjcHUgdGhhdCdzIGFsd2F5cyBnb2luZyB0byBiZSAwIGl0J2xsIGJlCj4g
+aW52YWxpZCwgYnV0IHRoYXQncyBub3QgYWx3YXlzIHRoZSBjYXNlLCBlc3BlY2lhbGx5IGZvciBr
+ZHVtcC4gSSdtIGFsc28KPiBnZXR0aW5nIGFuIGVycm9yIHdoZW4gdHJ5aW5nIHRvIG1vdW50IHRo
+ZSByb290ZnMgb24ga2R1bXAgb24gdGhlCj4gdW5tYXRjaGVkIGJvYXJkLCBiZWNhdXNlIHN3aW90
+bGIgY2FuJ3QgYWxsb2NhdGUgYm91bmNlIGJ1ZmZlcnMgYW5kIHRoZQo+IHBjaWUgZHJpdmVyIGRv
+ZXNuJ3Qgd29yaywgc28gbm8gbnZtZSBhY2Nlc3MuIEknbSBsb29raW5nIGZvciBhIHdheSB0bwo+
+IG1ha2UgdGhpcyB3b3JrIHdpdGhvdXQgbWVzc2luZyB0aGluZ3MgdXAsIGluIGFueSBjYXNlIEkn
+bGwgc2VuZCBzb21lCj4gcGF0Y2hlcyBvdmVyIHRoZSB3ZWVrZW5kLiBGb3IgdGhlIGluaXRyZCBp
+c3N1ZSBJIG5lZWQgdG8gcGF0Y2gKPiBrZXhlYy10b29scy4KPgo+IFJlZ2FyZHMsCj4gTmljawo+
+CgpwaW5nLCBhbnkgdXBkYXRlIGZvciB0aGlzPyBhbnkgbmV3IHBhdGNoIGZvciBrZXhlYy10b29s
+cz8KCkknZCBhbHNvIGxpa2UgdG8gdHJ5IGtleGVjIG9uIHVubWF0Y2hlZCBib2FyZCwgYW5kIGVu
+Y291bnRlciB0aGUgc2FtZSBlcnJvcgphcyBBbGV4YW5kcmUgR2hpdGkgcmVwb3J0ZWQsIGdlbmVy
+YWxseSBJJ20gdXNpbmcgYWxtb3N0IHNhbWUgY21kbGluZQoKWWl4dW4gTGFuCgpfX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
+a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2tleGVjCg==
