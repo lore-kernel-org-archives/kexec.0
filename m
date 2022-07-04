@@ -4,78 +4,89 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 180D9C43334
-	for <kexec@archiver.kernel.org>; Sat,  2 Jul 2022 11:35:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id A4EEAC43334
+	for <kexec@archiver.kernel.org>; Mon,  4 Jul 2022 01:52:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:Cc:To:Subject:Message-ID:Date:From:
-	In-Reply-To:References:MIME-Version:Reply-To:Content-ID:Content-Description:
-	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=6Xbsbvp+peoXKdNi+JRSDWnCxDYaq+YtCjHnUmVwmRM=; b=kqGZap7CSPlBVT
-	UZJ0QENKBYOyBEdlyd0buOLQrU+ZMVdH9fmB3rZXaTKW+wyM48Y7UDnXHDbMkhpJ9JAOSPCYUMLFF
-	7QnVGy892GqeTaxkRPcFBVgGZInhsyU049u/ac9qdKQnXUmvk8xkSsMPd2OLjVXR6zOMYiYOH3ABE
-	VAkNpchgye0R9fpnxprfLaXlxGaxZwY4c+5clGo4Bk/baq62dTpm/g47bf8IsZJFO9I6sCncwZgmf
-	XhQZEqHV3K5YNjBXp79R/ERvDWK4vY9sG8KIM4/H7gU2QRh5Glzq7A6ave7nquTF9pfZNQFBrIzbv
-	5eMiS3kdDcFt2VLTMHOA==;
+	List-Archive:List-Unsubscribe:List-Id:MIME-Version:Message-Id:Date:Subject:Cc
+	:To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+	Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:
+	List-Owner; bh=AUtDkPiddTzUyh32/3IY2M3JuQCIl6Fx8pM2iIA+8ng=; b=rk99Zd8dWhlUQG
+	t2omCBWimcp8jiHTnSg3s4qdM/aUdwEBOWBFxcOaco3YqfWgqIzPIM2KVWVQFwRVCQKw8dEw5w8JP
+	bjqLHjzaTJU4J1GQ7O4Gm+OUK08Y2V1kpTwrjjOK6coF0HoK434K4FQNYUmzeszLW3OLq4Pdfy0hN
+	IPAkNswhRBp2o0UNkjAgar96fhrm6nM0Yuk0M1jQNd65X03fvwS5TEfA8z6ZMqaAiGVw7sYBGY31B
+	AXOKItLrHVIHFS1Tvcj0CTBsbGxw64u5iARe645TSkdQO/0WYEAqUXHwlXIVs7+0IaU8tHOt/hNE6
+	zYpOnIh4b7DfNLiilkjg==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o7bPQ-009IWY-EE; Sat, 02 Jul 2022 11:35:32 +0000
-Received: from mail-ot1-x32b.google.com ([2607:f8b0:4864:20::32b])
+	id 1o8BGL-0037Jm-SJ; Mon, 04 Jul 2022 01:52:33 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o7bPJ-009IV4-O0; Sat, 02 Jul 2022 11:35:27 +0000
-Received: by mail-ot1-x32b.google.com with SMTP id cb12-20020a056830618c00b00616b871cef3so3853708otb.5;
-        Sat, 02 Jul 2022 04:35:24 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20210112;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RFiZUZZVdPzHI8JLiBXe+pUN/57tquJciO81AmMC/BA=;
-        b=KN9aXvzietpOoqWtAuIT0/EzLMIFdo7EYJ/20eohQO81UE88xxD8ZynwS5k+eo/5SN
-         dVTumsABhTmdi2CmOJdK74+S2kQgl3RZHRjK8aScYGcxEXdtrglRS87eTj7viWNzJpEh
-         QnUgEHHfAxWjo+KqHLhaHX10e5sXWmzcWDgb82M0mj/OhB8tVmLsNcsV0HVfT+q5ajop
-         8dlMEithwF8n6HlHSVvtLg7vXY61FyOBLwVd+i0oHumWidm87Unh98UmW7ioSbq1rr3A
-         j+0eDVcwMHzDlpzoWZJ0GEs4kVw1nxjDXNYpQh6RJ8JxTo6Vuy9PNFgNHaHI3vTitvnl
-         cc8Q==
+	id 1o8BGB-0037BW-2a
+	for kexec@lists.infradead.org; Mon, 04 Jul 2022 01:52:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1656899542;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 content-transfer-encoding:content-transfer-encoding;
+	bh=FG09NB0u+itbKukOM5H/RLays7V1RS1EZPZR3jC98rI=;
+	b=QTFeVpGnSyOihPu1QdWVtdZbxXW6DdTLhp0nD2xhrNuKzGaxaZjCQXkPaOTa+OWZQdnFRR
+	slEOshuP9ynvTGVjREQX30Uv25yWvWclTMZCnr1l1f+Js7jnSBU8ukjx4U9mFlI2q58PZL
+	A0RxxSFofterQfFBQEt1wRNFJkHJlbg=
+Received: from mail-pl1-f199.google.com (mail-pl1-f199.google.com
+ [209.85.214.199]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-98-iK2tD7UBMyaplq7U6BB3iQ-1; Sun, 03 Jul 2022 21:52:15 -0400
+X-MC-Unique: iK2tD7UBMyaplq7U6BB3iQ-1
+Received: by mail-pl1-f199.google.com with SMTP id h18-20020a170902f55200b0016a4a78bd71so4282493plf.9
+        for <kexec@lists.infradead.org>; Sun, 03 Jul 2022 18:52:15 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20210112;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RFiZUZZVdPzHI8JLiBXe+pUN/57tquJciO81AmMC/BA=;
-        b=dluzE60e4S+Xe94BkArXdlBherDUOKQHY/C2O7YXOQ6Pd25aeoBXADMJOxBX5ttgJ7
-         AUJAOfQVpV2fYWgItn8oLKzhgMzgP1VfnQH43hRJp29QYDAXVJvCrFhv2ZN47Ni0xEDq
-         rPxFydOm0R2FwdnF41xUN6GtgeUDs97666dBH6hT97NYZKhKt780IV9EzpaKmIq+rIK9
-         UGiYQJy4kJyY8WxP5GII+ZUMKpr1nZrLKfwCvFfSJSimNzxcguRv65EqG5/+n1pr2Eq7
-         JmQXnv8LCv2UaaIYyqCH0qIXi/hZzNUlw38f0FbpyboYBq1rsKitkKnt2r60jK/vQU+/
-         9xMA==
-X-Gm-Message-State: AJIora+5di7WrHMqnckqnILB5v9jm/9+Ya6NLp/qBzpJU+ua6GIuJmxF
-	/OctXUf8r21H38XKlLhhNjxYTmwVbd9vlhAsltY=
-X-Google-Smtp-Source: AGRyM1uobC4dAaGgs7nDWylHgtCkJQNwSOTPhM+xTt0IrwNmqp6vfZopMuDjj62vnVBzuVqlh6hwKIyO9jvlBgEXOVU=
-X-Received: by 2002:a05:6830:2692:b0:618:b992:cbc9 with SMTP id
- l18-20020a056830269200b00618b992cbc9mr5668496otu.117.1656761723858; Sat, 02
- Jul 2022 04:35:23 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=FG09NB0u+itbKukOM5H/RLays7V1RS1EZPZR3jC98rI=;
+        b=Umbz5qD+YrAr3kEYSvMXvwBR9/bjb9votRUFLnCu6l1042pOPis4EMxRxFPlFAUmMa
+         09r/qMUzlS9gT5Mz6nRQltF4ssskktvUf5WHometwLmAKfaK68eFRPtYdlyIsK94hdgg
+         QtGg4IsMCGXf1vpRLwe1IOWVxMWYBZwYoiU1t3gp9XkPbaOjtBXLBKg/U/xTPp9ong8Y
+         yVN8CNGgK6BTcr9HmRgTCuSPVq/vGwWgNN1+ehmDKxNtUufEI3eBh1uDESXmTWB+DgPe
+         mzHmvlQx68ArPwpGIsfP9dnNPX2fnscXheDOsWBZf66l8acGghrpiaoADFquHSgWzy8J
+         LK9A==
+X-Gm-Message-State: AJIora/cQ984V0AbJZScJ9g7S/3VkVMm7ljfMzPFsdx4qaO9HM9dyrBY
+	3Q/1bxkWaGHC3Q5wxxvLjcWZ66/UTiKWQYVHKGj+slRaowELXqfWm6bvJGvgVF4IVvJSsgq2ruu
+	Dk4+HjZCrKT8HCu1+ovRxUr7PeBxbZD+c/XdGlNQkBPdn65hQuTRHTt7+25Yq2HJcLXo=
+X-Received: by 2002:a17:902:d292:b0:16b:e6a4:5768 with SMTP id t18-20020a170902d29200b0016be6a45768mr979399plc.128.1656899533837;
+        Sun, 03 Jul 2022 18:52:13 -0700 (PDT)
+X-Google-Smtp-Source: AGRyM1tg48NWmOzfaIjIwWMZGLTLkGUFf7ZRE5pa/sLMc785xjASL9MdcB56k/sQgVST+0LLk+zSIw==
+X-Received: by 2002:a17:902:d292:b0:16b:e6a4:5768 with SMTP id t18-20020a170902d29200b0016be6a45768mr979365plc.128.1656899533455;
+        Sun, 03 Jul 2022 18:52:13 -0700 (PDT)
+Received: from localhost ([209.132.188.80])
+        by smtp.gmail.com with ESMTPSA id a25-20020aa79719000000b0052551c1a413sm19825856pfg.204.2022.07.03.18.52.12
+        (version=TLS1_3 cipher=TLS_AES_256_GCM_SHA384 bits=256/256);
+        Sun, 03 Jul 2022 18:52:13 -0700 (PDT)
+From: Coiby Xu <coxu@redhat.com>
+To: kexec@lists.infradead.org,
+	linux-integrity@vger.kernel.org
+Cc: Mimi Zohar <zohar@linux.ibm.com>,
+	linux-arm-kernel@lists.infradead.org,
+	Michal Suchanek <msuchanek@suse.de>,
+	Baoquan He <bhe@redhat.com>,
+	Dave Young <dyoung@redhat.com>,
+	Will Deacon <will@kernel.org>,
+	"Eric W . Biederman" <ebiederm@xmission.com>,
+	Chun-Yi Lee <jlee@suse.com>
+Subject: [PATCH v9 0/4] unify the keyrings of arm64 and s390 with x86 to verify kexec'ed kernel signature
+Date: Mon,  4 Jul 2022 09:51:57 +0800
+Message-Id: <20220704015201.59744-1-coxu@redhat.com>
+X-Mailer: git-send-email 2.35.3
 MIME-Version: 1.0
-References: <00c521b5b872b06c9350145c7d39fe7c@mailhost.ics.forth.gr>
- <CA+zEjCs0n8KA_oaFKJbaP6kNohDA=qJHvUKhePUK+hDFJSbHig@mail.gmail.com>
- <CA+zEjCscL1dWASm7u20p1B7-JeJaGTXiWG=K1XiWtZj=VFX+WQ@mail.gmail.com>
- <d75edc49681473bf8b88e474ae61b524@mailhost.ics.forth.gr> <CA+zEjCsc60mxPynL7DDGxfaUz7uif3uXPx3atnHbvM3ei_TETA@mail.gmail.com>
- <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
-In-Reply-To: <2ec74f4bd0e7b7cb4b579e9e042fc035@mailhost.ics.forth.gr>
-From: Yixun Lan <yixun.lan@gmail.com>
-Date: Sat, 2 Jul 2022 11:35:12 +0000
-Message-ID: <CALecT5gdqW9Na_s9PiFAZt0u=_uPCu0zYdUCb4UfuSV6fM_Q+w@mail.gmail.com>
-Subject: Re: RISC-V: patched kexec-tools on github for review/testing
-To: Nick Kossifidis <mick@ics.forth.gr>
-Cc: Alexandre Ghiti <alexandre.ghiti@canonical.com>, ebiederm@xmission.com, 
-	kexec@lists.infradead.org, linux-riscv <linux-riscv@lists.infradead.org>, 
-	"linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, Alexandre ghiti <alex@ghiti.fr>, 
-	Mike Rapoport <rppt@kernel.org>, geert+renesas@glider.be, 
-	Stephano Cetola <scetola@linuxfoundation.org>, Philipp Tomsich <philipp.tomsich@vrull.eu>, 
-	Palmer Dabbelt <palmer@dabbelt.com>, Anup Patel <anup.patel@wdc.com>, 
-	Atish Patra <atish.patra@wdc.com>
+Authentication-Results: relay.mimecast.com;
+	auth=pass smtp.auth=CUSA124A263 smtp.mailfrom=coxu@redhat.com
+X-Mimecast-Spam-Score: 0
+X-Mimecast-Originator: redhat.com
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220702_043525_848180_7BCE3F83 
-X-CRM114-Status: GOOD (  39.40  )
+X-CRM114-CacheID: sfid-20220703_185223_222545_70571918 
+X-CRM114-Status: GOOD (  19.70  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -87,113 +98,145 @@ List-Post: <mailto:kexec@lists.infradead.org>
 List-Help: <mailto:kexec-request@lists.infradead.org?subject=help>
 List-Subscribe: <http://lists.infradead.org/mailman/listinfo/kexec>,
  <mailto:kexec-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-aGkgTmljawoKT24gVGh1LCBOb3YgMjUsIDIwMjEgYXQgMTE6NDUgUE0gTmljayBLb3NzaWZpZGlz
-IDxtaWNrQGljcy5mb3J0aC5ncj4gd3JvdGU6Cj4KPiDOo8+EzrnPgiAyMDIxLTEwLTE1IDEwOjA3
-LCBBbGV4YW5kcmUgR2hpdGkgzq3Os8+BzrHPiM61Ogo+ID4gT24gU2F0LCBPY3QgOSwgMjAyMSBh
-dCAzOjI1IFBNIE5pY2sgS29zc2lmaWRpcyA8bWlja0BpY3MuZm9ydGguZ3I+Cj4gPiB3cm90ZToK
-PiA+Pgo+ID4+IM6jz4TOuc+CIDIwMjEtMTAtMDYgMTQ6MTAsIEFsZXhhbmRyZSBHaGl0aSDOrc6z
-z4HOsc+IzrU6Cj4gPj4gPgo+ID4+ID4gU28gSSBmb2xsb3dlZCB0aGUgaW5zdHJ1Y3Rpb25zIGhl
-cmU6Cj4gPj4gPiBodHRwczovL2RvY3VtZW50YXRpb24uc3VzZS5jb20vZnItZnIvc2xlcy8xMi1T
-UDMvaHRtbC9TTEVTLWFsbC9jaGEtdHVuaW5nLWtleGVjLmh0bWwjY2hhLXR1bmluZy1rZXhlYy1i
-YXNpYy11c2FnZSwKPiA+PiA+IGJlbG93IHRoZSBvdXRwdXQgb24gYW4gVW5tYXRjaGVkIGJvYXJk
-IHVzaW5nIGEgdm1saW51eCBzdG9yZWQgb24gYSBzZAo+ID4+ID4gY2FyZDoKPiA+PiA+Cj4gPj4g
-PiB1YnVudHVAdWJ1bnR1On4kIHN1ZG8gc2Jpbi9rZXhlYyAtbCB2bWxpbnV4IC0tYXBwZW5kPSIk
-KGNhdAo+ID4+ID4gL3Byb2MvY21kbGluZSkiIC0taW5pdHJkPS9ib290L2luaXRyZC5pbWcKPiA+
-PiA+IFdhcm5pbmc6IE5vIGNtZGxpbmUgcHJvdmlkZWQsIHVzaW5nIGFwcGVuZCBzdHJpbmcgYXMg
-Y21kbGluZQo+ID4+ID4gV2FybmluZzogTm8gZHRiIHByb3ZpZGVkLCB1c2luZyAvc3lzL2Zpcm13
-YXJlL2ZkdAo+ID4+ID4gWyAxODEzLjQ3MjY3MV0gSU5GTzogdGFzayBrd29ya2VyLzE6MDo5ODgg
-YmxvY2tlZCBmb3IgbW9yZSB0aGFuIDEyMAo+ID4+ID4gc2Vjb25kcy4KPiA+PiA+IFsgMTgxMy40
-Nzg3NTFdICAgICAgIE5vdCB0YWludGVkIDUuMTUuMC1yYzErICMxNQo+ID4+ID4gWyAxODEzLjQ4
-MzExMF0gImVjaG8gMCA+IC9wcm9jL3N5cy9rZXJuZWwvaHVuZ190YXNrX3RpbWVvdXRfc2VjcyIK
-PiA+PiA+IGRpc2FibGVzIHRoaXMgbWVzc2FnZS4KPiA+PiA+IENvdWxkIG5vdCBmaW5kIGEgZnJl
-ZSBhcmVhIG9mIG1lbW9yeSBvZiAweDMwMDAgYnl0ZXMuLi4KPiA+PiA+IGxvY2F0ZV9ob2xlIGZh
-aWxlZAo+ID4+ID4KPiA+PiA+IEkgdXNlZCB0aGUgVWJ1bnR1IGtlcm5lbCwgc28gdGhpcyBpcyBw
-cmV0dHkgbGFyZ2U6Cj4gPj4gPiAtcnd4cnd4ci14IDEgdWJ1bnR1IHVidW50dSAyNzdNIE9jdCAg
-NSAxNTo0NyB2bWxpbnV4Cj4gPj4gPiAtcnctci0tci0tIDEgcm9vdCByb290IDk4TSBTZXAgMjEg
-MDM6MjUgL2Jvb3QvaW5pdHJkLmltZwo+ID4+ID4KPiA+Pgo+ID4+IEFDSywgSSBoYXZlbid0IHRl
-c3RlZCBpbml0cmQgbXVjaCBUQkgsIEkgdXN1YWxseSBkb24ndCB1c2UgYW4gaW5pdHJkLAo+ID4+
-IGFuZCB3aGVuIEkgZG8gaXQncyBhIHNtYWxsIGJ1c3lib3gtYmFzZWQgcm9vdGZzLgo+ID4+Cj4g
-Pj4gPiBUaGVuIGlmIEkgZG9uJ3QgbG9hZCB0aGUgaW5pdHJkIChJIHNvbWV0aW1lcyBoYXZlIHRo
-ZSBzYW1lIHdhcm5pbmcgYXMKPiA+PiA+IGFib3ZlKSBJIGNhbiBhdCBsZWFzdCBrZXhlYyB0aGUg
-bmV3IGtlcm5lbCBidXQgaXQgZmFpbHMgdG8gYm9vdDoKPiA+PiA+Cj4gPj4gPiB1YnVudHVAdWJ1
-bnR1On4kIHN1ZG8gLi9zYmluL2tleGVjIC1lCj4gPj4gPiBXYXJuaW5nOiBObyBjbWRsaW5lIG9y
-IGFwcGVuZCBzdHJpbmcgcHJvdmlkZWQKPiA+PiA+IFdhcm5pbmc6IE5vIGR0YiBwcm92aWRlZCwg
-dXNpbmcgL3N5cy9maXJtd2FyZS9mZHQKPiA+PiA+IFsuLi5dCj4gPj4gPiBbICAgIDAuMDAwMDAw
-XSBTQkkgdjAuMiBIU00gZXh0ZW5zaW9uIGRldGVjdGVkCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBD
-UFUgd2l0aCBoYXJ0aWQ9MCBpcyBub3QgYXZhaWxhYmxlCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAt
-LS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0tLS0tLS0KPiA+PiA+IFsgICAgMC4wMDAwMDBd
-IGtlcm5lbCBCVUcgYXQgYXJjaC9yaXNjdi9rZXJuZWwvc21wYm9vdC5jOjEwNyEKPiA+PiA+IFsg
-ICAgMC4wMDAwMDBdIEtlcm5lbCBCVUcgWyMxXQo+ID4+ID4gWyAgICAwLjAwMDAwMF0gTW9kdWxl
-cyBsaW5rZWQgaW46Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSBDUFU6IDAgUElEOiAwIENvbW06IHN3
-YXBwZXIgTm90IHRhaW50ZWQgNS4xNS4wLXJjMSsgIzE1Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSBI
-YXJkd2FyZSBuYW1lOiBTaUZpdmUgSGlGaXZlIFVubWF0Y2hlZCBBMDAgKERUKQo+ID4+ID4gWyAg
-ICAwLjAwMDAwMF0gZXBjIDogc2V0dXBfc21wKzB4Y2MvMHgxNDIKPiA+PiA+IFsgICAgMC4wMDAw
-MDBdICByYSA6IHNldHVwX3NtcCsweGM0LzB4MTQyCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBlcGMg
-OiBmZmZmZmZmZjgwYTA0MDgwIHJhIDogZmZmZmZmZmY4MGEwNDA3OCBzcCA6Cj4gPj4gPiBmZmZm
-ZmZmZjgxODAzZWMwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgZ3AgOiBmZmZmZmZmZjgxYTIzMjIw
-IHRwIDogZmZmZmZmZmY4MTgxMDUwMCB0MCA6Cj4gPj4gPiBmZmZmZmZmZjgxYTM1NTFmCj4gPj4g
-PiBbICAgIDAuMDAwMDAwXSAgdDEgOiBmZmZmZmZmZmZmZmZmZmZmIHQyIDogMDAwMDAwMDAwMDAw
-MDAwMCBzMCA6Cj4gPj4gPiBmZmZmZmZmZjgxODAzZjAwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAg
-czEgOiAwMDAwMDAwMDAwMDAwMDAwIGEwIDogMDAwMDAwMDAwMDAwMDAwMCBhMSA6Cj4gPj4gPiAw
-MDAwMDAwMDAwMDAwMDAwCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgYTIgOiAwMDAwMDAwMDAwMDAw
-MDAwIGEzIDogMDAwMDAwMDAwMDAwMDAwMSBhNCA6Cj4gPj4gPiAwMDAwMDAwMDAwMDAwMDAwCj4g
-Pj4gPiBbICAgIDAuMDAwMDAwXSAgYTUgOiBmZmZmZmZmZjgwYzY0NTAwIGE2IDogMDAwMDAwMDAw
-MDAwMDAwNCBhNyA6Cj4gPj4gPiAwMDAwMDAwMDAwMDBmZjAwCj4gPj4gPiBbICAgIDAuMDAwMDAw
-XSAgczIgOiAwMDAwMDAwMDAwMDAwMDA1IHMzIDogMDAwMDAwMDAwMDAwMDAwMCBzNCA6Cj4gPj4g
-PiBmZmZmZmZmZjgxMThmOWE4Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgczUgOiAwMDAwMDAwMDAw
-MDAwMDA3IHM2IDogZmZmZmZmZmY4MGMwYjc5MCBzNyA6Cj4gPj4gPiAwMDAwMDAwMDgwMDAwMjAw
-Cj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgczggOiAwMDAwMDAwMDAwMDAwZmZmIHM5IDogMDAwMDAw
-MDA4MTAwMDIwMCBzMTA6Cj4gPj4gPiAwMDAwMDAwMDAwMDAwMDE4Cj4gPj4gPiBbICAgIDAuMDAw
-MDAwXSAgczExOiAwMDAwMDAwMDAwMDAwMDBiIHQzIDogMDAwMDAwMDAwMGZmMDAwMCB0NCA6Cj4g
-Pj4gPiBmZmZmZmZmZmZmZmZmZmZmCj4gPj4gPiBbICAgIDAuMDAwMDAwXSAgdDUgOiBmZmZmZmZm
-ZjgwYzBiN2EwIHQ2IDogZmZmZmZmZmY4MTgwM2JkOAo+ID4+ID4gWyAgICAwLjAwMDAwMF0gc3Rh
-dHVzOiAwMDAwMDAwMjAwMDAwMTAwIGJhZGFkZHI6IDAwMDAwMDAwMDAwMDAwMDAKPiA+PiA+IGNh
-dXNlOiAwMDAwMDAwMDAwMDAwMDAzCj4gPj4gPiBbICAgIDAuMDAwMDAwXSBbPGZmZmZmZmZmODBh
-MDQwODA+XSBzZXR1cF9zbXArMHhjYy8weDE0Mgo+ID4+ID4gWyAgICAwLjAwMDAwMF0gWzxmZmZm
-ZmZmZjgwYTAzZDg4Pl0gc2V0dXBfYXJjaCsweDU2YS8weDU5MAo+ID4+ID4gWyAgICAwLjAwMDAw
-MF0gWzxmZmZmZmZmZjgwYTAwYWEyPl0gc3RhcnRfa2VybmVsKzB4YWEvMHhhNWMKPiA+PiA+IFsg
-ICAgMC4wMDAwMDBdIHJhbmRvbTogZ2V0X3JhbmRvbV9ieXRlcyBjYWxsZWQgZnJvbQo+ID4+ID4g
-b29wc19leGl0KzB4NDQvMHg3MCB3aXRoIGNybmdfaW5pdD0wCj4gPj4gPiBbICAgIDAuMDAwMDAw
-XSAtLS1bIGVuZCB0cmFjZSAwMDAwMDAwMDAwMDAwMDAwIF0tLS0KPiA+PiA+IFsgICAgMC4wMDAw
-MDBdIEtlcm5lbCBwYW5pYyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbCB0aGUgaWRs
-ZQo+ID4+ID4gdGFzayEKPiA+PiA+IFsgICAgMC4wMDAwMDBdIC0tLVsgZW5kIEtlcm5lbCBwYW5p
-YyAtIG5vdCBzeW5jaW5nOiBBdHRlbXB0ZWQgdG8ga2lsbAo+ID4+ID4gdGhlIGlkbGUgdGFzayEg
-XS0tLQo+ID4+ID4KPiA+PiA+IFRoaXMgcmVsaWFibHkgZmFpbHMgaGVyZS4KPiA+PiA+Cj4gPj4K
-PiA+PiBUaGlzIGxvb2tzIHdlaXJkLCBJJ2xsIGNoZWNrIGl0IG91dCAod2UgaGF2ZSBhbiB1bm1h
-dGNoZWQgaGVyZSBzbyBJJ2xsCj4gPj4gdHJ5IHRvIGdldCBteSBoYW5kcyBvbiBpdCBzb21ldGlt
-ZSBuZXh0IHdlZWspLgo+ID4+Cj4gPj4gRGlkIHlvdSB0cnkga2R1bXAgPyBEbyB5b3UgZ2V0IHRo
-ZSBzYW1lIGVycm9yID8KPiA+Cj4gPiBrZHVtcCB3b3JrcyBmaW5lLCBpdCBmYWlscyB0byBmaW5k
-IHRoZSByb290ZnMgYnV0IEkgdGhpbmsgbXkgc2V0dXAgaXMKPiA+IGZhdWx0eSBoZXJlLgo+ID4g
-SSB0b29rIGEgcXVpY2sgbG9vayBhdCBrZXhlY19yZWxvY2F0ZS5TLCBhbmQgdGhlIHVzZSBvZiB2
-YV9wYV9vZmZzZXQKPiA+IGlzIGFsc28gd3JvbmcgaGVyZSwgd2Ugc2hvdWxkIHVzZSB2YV9rZXJu
-ZWxfcGFfb2Zmc2V0IGFzIGl0IGlzIHVzZWQgdG8KPiA+IG1vZGlmeSBhIHRleHQgYWRkcmVzcyBC
-dXQgZml4aW5nIHRoYXQgZGlkIG5vdCB3b3JrIGVpdGhlci4KPiA+Cj4gPiBBbGV4Cj4gPgo+Cj4g
-U29ycnkgZm9yIHRoZSBkZWxheSwgSSBmaW5hbGx5IGdvdCBzb21lIHRpbWUgdG8gd29yayBvbiB0
-aGlzLiBBcyBpdAo+IHR1cm5zIG91dCBJJ20gcGFzc2luZyBjcHUgaWQgaW5zdGVhZCBvZiBoYXJ0
-IGlkIHRvIHRoZSBuZXh0IGtlcm5lbCAodGhhdAo+IGNvbW1lbnQgb24gc21wLmggY2xhaW1pbmcg
-dGhhdCByYXdfc21wX3Byb2Nlc3Nvcl9pZCByZXR1cm5zIHRoZSBoYXJ0IGlkCj4gZGlkbid0IGhl
-bHAgbXVjaCkgYW5kIGludGVyZXN0aW5nbHkgZW5vdWdoIGNwdSBpZCBhbmQgaGFydCBpZCBtYXRj
-aCBvbgo+IHFlbXUgYW5kIGFsc28gc29tZXRpbWVzIG1hdGNoIG9uIHRoZSB1bm1hdGNoZWQgLyB1
-bmxlYXNoZWQgYm9hcmQuIEFsc28KPiBvbiB1bm1hdGNoZWQgLyB1bmxlYXNoZWQsIGhhcnQgaWQg
-MCBpcyB1c2VkIGJ5IHRoZSBub24tbGludXggaGFydCBzbyBpZgo+IHdlIHBhc3MgdGhlIGNwdSBp
-ZCBvZiB0aGUgYm9vdCBjcHUgdGhhdCdzIGFsd2F5cyBnb2luZyB0byBiZSAwIGl0J2xsIGJlCj4g
-aW52YWxpZCwgYnV0IHRoYXQncyBub3QgYWx3YXlzIHRoZSBjYXNlLCBlc3BlY2lhbGx5IGZvciBr
-ZHVtcC4gSSdtIGFsc28KPiBnZXR0aW5nIGFuIGVycm9yIHdoZW4gdHJ5aW5nIHRvIG1vdW50IHRo
-ZSByb290ZnMgb24ga2R1bXAgb24gdGhlCj4gdW5tYXRjaGVkIGJvYXJkLCBiZWNhdXNlIHN3aW90
-bGIgY2FuJ3QgYWxsb2NhdGUgYm91bmNlIGJ1ZmZlcnMgYW5kIHRoZQo+IHBjaWUgZHJpdmVyIGRv
-ZXNuJ3Qgd29yaywgc28gbm8gbnZtZSBhY2Nlc3MuIEknbSBsb29raW5nIGZvciBhIHdheSB0bwo+
-IG1ha2UgdGhpcyB3b3JrIHdpdGhvdXQgbWVzc2luZyB0aGluZ3MgdXAsIGluIGFueSBjYXNlIEkn
-bGwgc2VuZCBzb21lCj4gcGF0Y2hlcyBvdmVyIHRoZSB3ZWVrZW5kLiBGb3IgdGhlIGluaXRyZCBp
-c3N1ZSBJIG5lZWQgdG8gcGF0Y2gKPiBrZXhlYy10b29scy4KPgo+IFJlZ2FyZHMsCj4gTmljawo+
-CgpwaW5nLCBhbnkgdXBkYXRlIGZvciB0aGlzPyBhbnkgbmV3IHBhdGNoIGZvciBrZXhlYy10b29s
-cz8KCkknZCBhbHNvIGxpa2UgdG8gdHJ5IGtleGVjIG9uIHVubWF0Y2hlZCBib2FyZCwgYW5kIGVu
-Y291bnRlciB0aGUgc2FtZSBlcnJvcgphcyBBbGV4YW5kcmUgR2hpdGkgcmVwb3J0ZWQsIGdlbmVy
-YWxseSBJJ20gdXNpbmcgYWxtb3N0IHNhbWUgY21kbGluZQoKWWl4dW4gTGFuCgpfX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwprZXhlYyBtYWlsaW5nIGxpc3QK
-a2V4ZWNAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2tleGVjCg==
+Currently when loading a kernel image via the kexec_file_load() system
+call, x86 can make use of three keyrings i.e. the .builtin_trusted_keys,
+.secondary_trusted_keys and .platform keyrings to verify a signature.
+However, arm64 and s390 can only use the .builtin_trusted_keys and
+.platform keyring respectively. For example, one resulting problem is
+kexec'ing a kernel image  would be rejected with the error "Lockdown:
+kexec: kexec of unsigned images is restricted; see man
+kernel_lockdown.7".
+
+This patch set enables arm64 and s390 to make use of the same keyrings
+as x86 to verify the signature kexec'ed kernel image.
+
+The recently introduced .machine keyring impacts the roots of trust by
+linking the .machine keyring to the .secondary keyring. The roots of
+trust for different keyrings are described as follows,
+
+.builtin_trusted_keys:
+
+Keys may be built into the kernel during build or inserted into memory
+reserved for keys post build. The root of trust is based on verification
+of the kernel image signature. For example, on a physical system in a
+secure boot environment, this trust is rooted in hardware.
+
+.machine:
+
+If the end-users choose to trust the keys provided by first-stage UEFI
+bootloader shim i.e. Machine Owner Keys (MOK keys), the keys will be
+added to this keyring which is linked to the .secondary_trusted_keys
+keyring as the same as the .builtin_trusted_keys keyring. Shim has
+built-in keys from a Linux distribution or the end-users-enrolled keys.
+So the root of trust of this keyring is either a Linux distribution
+vendor or the end-users.
+
+.secondary_trusted_keys:
+
+Certificates signed by keys on the .builtin_trusted_keys, .machine, or
+existing keys on the .secondary_trusted_keys keryings may be loaded
+onto the .secondary_trusted_keys keyring. This establishes a signature
+chain of trust based on keys loaded on either the .builtin_trusted_keys
+or .machine keyrings, if configured and enabled.
+
+.platform:
+
+The .platform keyring consist of UEFI db and MOK keys which are used by
+shim to verify the first boot kernel's image signature. If end-users
+choose to trust MOK keys and the kernel has the .machine keyring
+enabled, the .platform keyring only consists of UEFI db keys since the
+MOK keys are added to the .machine keyring instead. Because the
+end-users could also enroll their own MOK keys, the root of trust could
+be hardware and the end-users.
+
+The 3rd arm64 patch depends on the first two patches. The 4th s390 patch
+can be applied independently.
+
+I've tested the patch set on 5.19.0-rc2 and it works as expected. 
+
+For arm64, the tests were done as follows,
+  1. build 5.19.0-rc2
+  2. generate keys and add them to .secondary_trusted_keys, MOK, UEFI
+     db;
+  3. sign different kernel images with different keys including keys
+     from .builtin_trusted_key, .secondary_trusted_keys keyring, a UEFI db
+     key and MOK key
+  4. Without lockdown, all kernel images can be kexec'ed; with lockdown
+     enabled, only the kernel image signed by the key from the
+     .builtin_trusted_key keyring can be kexec'ed
+
+For 390, I commented out the code that skips signature verification when
+secure boot is not enabled since the testing machine doesn't supports
+secure boot and can confirm before applying the patch, kernel images
+signed by keys from .builtin_trusted_key, .secondary_trusted_keys
+couldn't be kexec'ed when lockdown is enabled; after applying the patch,
+those kernel images could be kexec'ed.
+
+v9:
+ - improve cover letter, subject line and commit messages, expecially
+   regarding the root of trust of different keyrings and the .machine
+   keyring [Mimi]
+ - fix two code format issues [Mimi]
+ - add test results [Mimi]
+
+v8:
+ - drop "Cc: stable@vger.kernel.org" for the first two prerequisite
+   patches [Baoquan]
+
+v7:
+ - drop the Fixes tag for the 2nd patch and add patch prerequisites
+   [Baoquan]
+ - improve cover letter
+
+v6:
+ - integrate the first three patches of "[PATCH 0/4] Unifrom keyring
+   support across architectures and functions" from Michal [1]
+ - improve commit message [Baoquan, Michal]
+ - directly assign kexec_kernel_verify_pe_sig to
+   kexec_file_ops->verify_sig [Michal]
+
+v5:
+ - improve commit message [Baoquan]
+
+v4:
+ - fix commit reference format issue and other checkpatch.pl warnings [Baoquan]
+
+v3:
+ - s/arch_kexec_kernel_verify_pe_sig/kexec_kernel_verify_pe_sig [Eric]
+ - clean up arch_kexec_kernel_verify_sig [Eric]
+
+v2:
+ - only x86_64 and arm64 need to enable PE file signature check [Dave]
+
+[1] https://lore.kernel.org/lkml/cover.1644953683.git.msuchanek@suse.de/
+
+Coiby Xu (3):
+  kexec: clean up arch_kexec_kernel_verify_sig
+  kexec, KEYS: make the code in bzImage64_verify_sig generic
+  arm64: kexec_file: use more system keyrings to verify kernel image
+    signature
+
+Michal Suchanek (1):
+  kexec, KEYS, s390: Make use of built-in and secondary keyring for
+    signature verification
+
+ arch/arm64/kernel/kexec_image.c       | 11 +-----
+ arch/s390/kernel/machine_kexec_file.c | 18 +++++++---
+ arch/x86/kernel/kexec-bzimage64.c     | 20 +----------
+ include/linux/kexec.h                 |  6 ++--
+ kernel/kexec_file.c                   | 51 ++++++++++++++++-----------
+ 5 files changed, 49 insertions(+), 57 deletions(-)
+
+-- 
+2.35.3
+
+
+_______________________________________________
+kexec mailing list
+kexec@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/kexec
