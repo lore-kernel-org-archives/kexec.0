@@ -4,65 +4,66 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 05B99C433EF
-	for <kexec@archiver.kernel.org>; Mon,  4 Jul 2022 02:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id C092CC43334
+	for <kexec@archiver.kernel.org>; Mon,  4 Jul 2022 04:10:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
 	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
 	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=qOSWuZogpNmFHzt/CMPxRi/GP3Ol/J5bGdKofgs5yyk=; b=DG3zqFiwqipzVl
-	Js56WhKSE81Jb1zkzc7LwnBd+HcQDglBEX0OXMQ7LdZvTJIFM1njhs49AMdL+MvKPibtgx7uLJW+i
-	boeoUEpfE5A+oxA3l4rXkxfRgRV32H0gakUN/JV8lvwA8hSHCs8iqZcuZpefCqtULma+I5KMyowBm
-	AwlUm40Bp0OCzunYViLCrVFI2AmKw9g9BraB5RBG5BqOd4G10By/YvV1CGH+uCfKQpLbjBOIZOspk
-	k5BBnSR9AbkZxrKZ7achvZ9KsS8U0ODKPoxSk92vkjaKPr72zOwcctFA6BTaolgl5clh9isE7L0P9
-	Tc62x8g44vQksOTwuUtA==;
+	List-Owner; bh=XIJEV2u2VYK5w7xVIVI4A/VvcxEEssBQuCfrLgoXqKY=; b=ho2/zp+uwHAUvl
+	4wbs9bN0V6BzwY+FUd7IvMyV+lLLR1HMaAIidiC1u+CubPgJmPUrdyf7PwQ6xBjWAYPX7GPUCQX7W
+	ffUcxbJVjSORu4ixbTsOP74chbugDpwlc3Xg/51GCBlJzlnZQyOqQv/SslAG3AeiDNMj2L71ahjYB
+	+sS2uqsCoRDNC4PJMEmQkBK45IxzqnUk1RNKD4o5xs4OLx7XV6HcG33mCfNfoJaljayKIHM5IL/DB
+	ybxbcNQYpT0FB6s+3VeIqO3+NIw4G65j1etybvxofSIbp1E8I0lp1/p0s/mf63jEbVPPcEqrAI3MK
+	wFUWYtwwqHffABT9gzqQ==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8CE8-003rH3-JT; Mon, 04 Jul 2022 02:54:20 +0000
-Received: from us-smtp-delivery-124.mimecast.com ([170.10.129.124])
+	id 1o8DPc-004PRc-8b; Mon, 04 Jul 2022 04:10:16 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8CE5-003rBO-9C
-	for kexec@lists.infradead.org; Mon, 04 Jul 2022 02:54:18 +0000
+	id 1o8DPZ-004PPW-CL
+	for kexec@lists.infradead.org; Mon, 04 Jul 2022 04:10:15 +0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
-	s=mimecast20190719; t=1656903255;
+	s=mimecast20190719; t=1656907811;
 	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
 	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
 	 in-reply-to:in-reply-to:references:references;
-	bh=1P+Z0NPfnwQi7DbmZ8kWxij8Re3KK3gRyK0ayDPLp8E=;
-	b=PfZJPrkoghe6EHCBavINgGRIxJY2Nwi7pe9PSvg68tJSPdbsjPMY8JfqeTB1W++5BiidIv
-	mHYMA0FwY95oBGW4fe7VqbKhvEyyDULE0KgNpyQYRs5QJJges4obWmJnCd+R5wlqjyvTR9
-	X3OW2M76lDTZgHuepbL4hqTvZnJUh3w=
+	bh=h/0n1xOQTRIgIgYXZqhUj+TjOAOlOYVv8CHk8AaHFQ8=;
+	b=c0rYENSIxerhGyUEyI33QFmSDfP0lQdwPedMa1XxIwq1kW/jDMvnNpsBhO6zBOr+wqX9bh
+	rAmzn4Vjyyqo1Kb1v9QF8Rq7yoKLeAjrbuidYm/KM9yRN5ehi6Mo4pIZjZD888UQGe6qeh
+	aj17EgzL2jYSPzVXofKonoLFJ+xwdv0=
 Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
  [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
  (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- us-mta-375-3Y-jYpWXPkaCqKBkgi_BZA-1; Sun, 03 Jul 2022 22:54:10 -0400
-X-MC-Unique: 3Y-jYpWXPkaCqKBkgi_BZA-1
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.rdu2.redhat.com [10.11.54.1])
+ us-mta-654-AOVq9mvUMfiybYxGbi8RjQ-1; Mon, 04 Jul 2022 00:10:06 -0400
+X-MC-Unique: AOVq9mvUMfiybYxGbi8RjQ-1
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.rdu2.redhat.com [10.11.54.5])
 	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
 	(No client certificate requested)
-	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id 9B27A185A7B2;
-	Mon,  4 Jul 2022 02:54:09 +0000 (UTC)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id EA548101A588;
+	Mon,  4 Jul 2022 04:10:05 +0000 (UTC)
 Received: from localhost (ovpn-13-121.pek2.redhat.com [10.72.13.121])
-	by smtp.corp.redhat.com (Postfix) with ESMTPS id C36A1400DFD0;
-	Mon,  4 Jul 2022 02:54:08 +0000 (UTC)
-Date: Mon, 4 Jul 2022 10:54:05 +0800
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id AC62218EA8;
+	Mon,  4 Jul 2022 04:10:04 +0000 (UTC)
+Date: Mon, 4 Jul 2022 12:10:00 +0800
 From: Baoquan He <bhe@redhat.com>
-To: Jianglei Nie <niejianglei2021@163.com>
-Cc: vgoyal@redhat.com, dyoung@redhat.com, kexec@lists.infradead.org,
-	linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
-	Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] proc/vmcore: fix potential memory leak in vmcore_init()
-Message-ID: <YsJWTT71QAfTef5N@MiWiFi-R3L-srv>
-References: <20220629165216.2161430-1-niejianglei2021@163.com>
+To: "Naveen N. Rao" <naveen.n.rao@linux.vnet.ibm.com>, coxu@redhat.com
+Cc: Andrew Morton <akpm@linux-foundation.org>,
+	Eric Biederman <ebiederm@xmission.com>,
+	linux-kernel@vger.kernel.org, kexec@lists.infradead.org
+Subject: Re: [PATCH 1/2] kexec_file: Drop weak attribute from functions
+Message-ID: <YsJoGKribMH77HBQ@MiWiFi-R3L-srv>
+References: <cover.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
+ <2cd7ca1fe4d6bb6ca38e3283c717878388ed6788.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
 MIME-Version: 1.0
 Content-Disposition: inline
-In-Reply-To: <20220629165216.2161430-1-niejianglei2021@163.com>
-X-Scanned-By: MIMEDefang 2.84 on 10.11.54.1
+In-Reply-To: <2cd7ca1fe4d6bb6ca38e3283c717878388ed6788.1656659357.git.naveen.n.rao@linux.vnet.ibm.com>
+X-Scanned-By: MIMEDefang 2.79 on 10.11.54.5
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220703_195417_431300_33C5D019 
-X-CRM114-Status: GOOD (  21.86  )
+X-CRM114-CacheID: sfid-20220703_211013_538935_C8008FD0 
+X-CRM114-Status: GOOD (  24.15  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -79,73 +80,250 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-On 06/30/22 at 12:52am, Jianglei Nie wrote:
-> elfcorehdr_alloc() allocates a memory chunk for elfcorehdr_addr with
-> kzalloc(). If is_vmcore_usable() returns false, elfcorehdr_addr is a
-> predefined value. If parse_crash_elf_headers() occurs some error and
-> returns a negetive value, the elfcorehdr_addr should be released with
-> elfcorehdr_free().
+On 07/01/22 at 01:04pm, Naveen N. Rao wrote:
+> Drop __weak attribute from functions in kexec_file.c:
+> - arch_kexec_kernel_image_probe()
+> - arch_kimage_file_post_load_cleanup()
+> - arch_kexec_kernel_image_load()
+> - arch_kexec_locate_mem_hole()
+> - arch_kexec_kernel_verify_sig()
 > 
-> We can fix by calling elfcorehdr_free() when parse_crash_elf_headers()
-> fails.
+> arch_kexec_kernel_image_load() calls into kexec_image_load_default(), so
+> drop the static attribute for the latter.
 > 
-> Signed-off-by: Jianglei Nie <niejianglei2021@163.com>
+> arch_kexec_kernel_verify_sig() is not overridden by any architecture, so
+> drop the __weak attribute.
+
+The dropping of arch_kexec_kernel_verify_sig() conflicts with patch 1 of
+anotherpatchset, and the other patches in the patchset depends on the
+patch 1.
+
+[PATCH v9 0/4] unify the keyrings of arm64 and s390 with x86 to verify kexec'ed kernel signature
+
+Hi, Naveen, Coiby, 
+
+Please negotiate how to solve the conflict.
+
+Thanks
+Baoquan
+
+> 
+> Suggested-by: Eric Biederman <ebiederm@xmission.com>
+> Signed-off-by: Naveen N. Rao <naveen.n.rao@linux.vnet.ibm.com>
 > ---
->  fs/proc/vmcore.c | 1 +
->  1 file changed, 1 insertion(+)
+>  arch/arm64/include/asm/kexec.h   |  4 ++-
+>  arch/powerpc/include/asm/kexec.h |  9 +++++++
+>  arch/s390/include/asm/kexec.h    |  3 +++
+>  arch/x86/include/asm/kexec.h     |  6 +++++
+>  include/linux/kexec.h            | 44 +++++++++++++++++++++++++++-----
+>  kernel/kexec_file.c              | 35 ++-----------------------
+>  6 files changed, 61 insertions(+), 40 deletions(-)
 > 
-> diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-> index 4eaeb645e759..7e028cd1e59d 100644
-> --- a/fs/proc/vmcore.c
-> +++ b/fs/proc/vmcore.c
-> @@ -1568,6 +1568,7 @@ static int __init vmcore_init(void)
->  		return rc;
->  	rc = parse_crash_elf_headers();
->  	if (rc) {
-> +		elfcorehdr_free(elfcorehdr_addr);
->  		pr_warn("Kdump: vmcore not initialized\n");
->  		return rc;
-
-Guess it's found by code inspecting since if vmcore_init() failed, kdump
-kernel won't do anyting meaningful and reboot, then nobody notice or
-care about this leak.
-
-If so, is this better?
-
-diff --git a/fs/proc/vmcore.c b/fs/proc/vmcore.c
-index 7e028cd1e59d..ea2f44d77786 100644
---- a/fs/proc/vmcore.c
-+++ b/fs/proc/vmcore.c
-@@ -1568,16 +1568,16 @@ static int __init vmcore_init(void)
- 		return rc;
- 	rc = parse_crash_elf_headers();
- 	if (rc) {
--		elfcorehdr_free(elfcorehdr_addr);
- 		pr_warn("Kdump: vmcore not initialized\n");
--		return rc;
-+		goto fail;
- 	}
--	elfcorehdr_free(elfcorehdr_addr);
- 	elfcorehdr_addr = ELFCORE_ADDR_ERR;
- 
- 	proc_vmcore = proc_create("vmcore", S_IRUSR, NULL, &vmcore_proc_ops);
- 	if (proc_vmcore)
- 		proc_vmcore->size = vmcore_size;
-+fail:
-+	elfcorehdr_free(elfcorehdr_addr);
- 	return 0;
- }
- fs_initcall(vmcore_init);
-
->  	}
+> diff --git a/arch/arm64/include/asm/kexec.h b/arch/arm64/include/asm/kexec.h
+> index 9839bfc163d714..78d272b26ebd11 100644
+> --- a/arch/arm64/include/asm/kexec.h
+> +++ b/arch/arm64/include/asm/kexec.h
+> @@ -115,7 +115,9 @@ extern const struct kexec_file_ops kexec_image_ops;
+>  
+>  struct kimage;
+>  
+> -extern int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+> +
+>  extern int load_other_segments(struct kimage *image,
+>  		unsigned long kernel_load_addr, unsigned long kernel_size,
+>  		char *initrd, unsigned long initrd_len,
+> diff --git a/arch/powerpc/include/asm/kexec.h b/arch/powerpc/include/asm/kexec.h
+> index 2aefe14e144229..1e5e9b6ec78d9d 100644
+> --- a/arch/powerpc/include/asm/kexec.h
+> +++ b/arch/powerpc/include/asm/kexec.h
+> @@ -120,6 +120,15 @@ int setup_purgatory(struct kimage *image, const void *slave_code,
+>  #ifdef CONFIG_PPC64
+>  struct kexec_buf;
+>  
+> +int arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len);
+> +#define arch_kexec_kernel_image_probe arch_kexec_kernel_image_probe
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+> +
+> +int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+> +#define arch_kexec_locate_mem_hole arch_kexec_locate_mem_hole
+> +
+>  int load_crashdump_segments_ppc64(struct kimage *image,
+>  				  struct kexec_buf *kbuf);
+>  int setup_purgatory_ppc64(struct kimage *image, const void *slave_code,
+> diff --git a/arch/s390/include/asm/kexec.h b/arch/s390/include/asm/kexec.h
+> index 649ecdcc873453..8886aadc11a3a6 100644
+> --- a/arch/s390/include/asm/kexec.h
+> +++ b/arch/s390/include/asm/kexec.h
+> @@ -92,5 +92,8 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+>  				     const Elf_Shdr *relsec,
+>  				     const Elf_Shdr *symtab);
+>  #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>  #endif
+>  #endif /*_S390_KEXEC_H */
+> diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+> index 6ad8d946cd3ebf..5ec359c1b50cb3 100644
+> --- a/arch/x86/include/asm/kexec.h
+> +++ b/arch/x86/include/asm/kexec.h
+> @@ -193,6 +193,12 @@ int arch_kexec_apply_relocations_add(struct purgatory_info *pi,
+>  				     const Elf_Shdr *relsec,
+>  				     const Elf_Shdr *symtab);
+>  #define arch_kexec_apply_relocations_add arch_kexec_apply_relocations_add
+> +
+> +void *arch_kexec_kernel_image_load(struct kimage *image);
+> +#define arch_kexec_kernel_image_load arch_kexec_kernel_image_load
+> +
+> +int arch_kimage_file_post_load_cleanup(struct kimage *image);
+> +#define arch_kimage_file_post_load_cleanup arch_kimage_file_post_load_cleanup
+>  #endif
+>  #endif
+>  
+> diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+> index ce6536f1d26997..5e0bc3f9eac3e9 100644
+> --- a/include/linux/kexec.h
+> +++ b/include/linux/kexec.h
+> @@ -188,21 +188,53 @@ int kexec_purgatory_get_set_symbol(struct kimage *image, const char *name,
+>  				   void *buf, unsigned int size,
+>  				   bool get_value);
+>  void *kexec_purgatory_get_symbol_addr(struct kimage *image, const char *name);
+> +void *kexec_image_load_default(struct kimage *image);
+> +
+> +#ifndef arch_kexec_kernel_image_probe
+> +static inline int
+> +arch_kexec_kernel_image_probe(struct kimage *image, void *buf, unsigned long buf_len)
+> +{
+> +	return kexec_image_probe_default(image, buf, buf_len);
+> +}
+> +#endif
+> +
+> +#ifndef arch_kimage_file_post_load_cleanup
+> +static inline int arch_kimage_file_post_load_cleanup(struct kimage *image)
+> +{
+> +	return kexec_image_post_load_cleanup_default(image);
+> +}
+> +#endif
+> +
+> +#ifndef arch_kexec_kernel_image_load
+> +static inline void *arch_kexec_kernel_image_load(struct kimage *image)
+> +{
+> +	return kexec_image_load_default(image);
+> +}
+> +#endif
+>  
+> -/* Architectures may override the below functions */
+> -int arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> -				  unsigned long buf_len);
+> -void *arch_kexec_kernel_image_load(struct kimage *image);
+> -int arch_kimage_file_post_load_cleanup(struct kimage *image);
+>  #ifdef CONFIG_KEXEC_SIG
+>  int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+>  				 unsigned long buf_len);
+>  #endif
+> -int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+>  extern int kexec_add_buffer(struct kexec_buf *kbuf);
+>  int kexec_locate_mem_hole(struct kexec_buf *kbuf);
+>  
+> +#ifndef arch_kexec_locate_mem_hole
+> +/**
+> + * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+> + * @kbuf:                       Parameters for the memory search.
+> + *
+> + * On success, kbuf->mem will have the start address of the memory region found.
+> + *
+> + * Return: 0 on success, negative errno on error.
+> + */
+> +static inline int arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> +{
+> +	return kexec_locate_mem_hole(kbuf);
+> +}
+> +#endif
+> +
+>  /* Alignment required for elf header segment */
+>  #define ELF_CORE_HEADER_ALIGN   4096
+>  
+> diff --git a/kernel/kexec_file.c b/kernel/kexec_file.c
+> index 9b2839775c837b..66e4ce29fc6961 100644
+> --- a/kernel/kexec_file.c
+> +++ b/kernel/kexec_file.c
+> @@ -56,14 +56,7 @@ int kexec_image_probe_default(struct kimage *image, void *buf,
+>  	return ret;
+>  }
+>  
+> -/* Architectures can provide this probe function */
+> -int __weak arch_kexec_kernel_image_probe(struct kimage *image, void *buf,
+> -					 unsigned long buf_len)
+> -{
+> -	return kexec_image_probe_default(image, buf, buf_len);
+> -}
+> -
+> -static void *kexec_image_load_default(struct kimage *image)
+> +void *kexec_image_load_default(struct kimage *image)
+>  {
+>  	if (!image->fops || !image->fops->load)
+>  		return ERR_PTR(-ENOEXEC);
+> @@ -74,11 +67,6 @@ static void *kexec_image_load_default(struct kimage *image)
+>  				 image->cmdline_buf_len);
+>  }
+>  
+> -void * __weak arch_kexec_kernel_image_load(struct kimage *image)
+> -{
+> -	return kexec_image_load_default(image);
+> -}
+> -
+>  int kexec_image_post_load_cleanup_default(struct kimage *image)
+>  {
+>  	if (!image->fops || !image->fops->cleanup)
+> @@ -87,11 +75,6 @@ int kexec_image_post_load_cleanup_default(struct kimage *image)
+>  	return image->fops->cleanup(image->image_loader_data);
+>  }
+>  
+> -int __weak arch_kimage_file_post_load_cleanup(struct kimage *image)
+> -{
+> -	return kexec_image_post_load_cleanup_default(image);
+> -}
+> -
+>  #ifdef CONFIG_KEXEC_SIG
+>  static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>  					  unsigned long buf_len)
+> @@ -104,8 +87,7 @@ static int kexec_image_verify_sig_default(struct kimage *image, void *buf,
+>  	return image->fops->verify_sig(buf, buf_len);
+>  }
+>  
+> -int __weak arch_kexec_kernel_verify_sig(struct kimage *image, void *buf,
+> -					unsigned long buf_len)
+> +int arch_kexec_kernel_verify_sig(struct kimage *image, void *buf, unsigned long buf_len)
+>  {
+>  	return kexec_image_verify_sig_default(image, buf, buf_len);
+>  }
+> @@ -616,19 +598,6 @@ int kexec_locate_mem_hole(struct kexec_buf *kbuf)
+>  	return ret == 1 ? 0 : -EADDRNOTAVAIL;
+>  }
+>  
+> -/**
+> - * arch_kexec_locate_mem_hole - Find free memory to place the segments.
+> - * @kbuf:                       Parameters for the memory search.
+> - *
+> - * On success, kbuf->mem will have the start address of the memory region found.
+> - *
+> - * Return: 0 on success, negative errno on error.
+> - */
+> -int __weak arch_kexec_locate_mem_hole(struct kexec_buf *kbuf)
+> -{
+> -	return kexec_locate_mem_hole(kbuf);
+> -}
+> -
+>  /**
+>   * kexec_add_buffer - place a buffer in a kexec segment
+>   * @kbuf:	Buffer contents and memory parameters.
 > -- 
-> 2.25.1
-> 
-> 
-> _______________________________________________
-> kexec mailing list
-> kexec@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/kexec
+> 2.36.1
 > 
 
 
