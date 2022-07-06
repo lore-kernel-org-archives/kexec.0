@@ -4,103 +4,72 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 Received: from bombadil.infradead.org (bombadil.infradead.org [198.137.202.133])
 	(using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
 	(No client certificate requested)
-	by smtp.lore.kernel.org (Postfix) with ESMTPS id 7066FC43334
-	for <kexec@archiver.kernel.org>; Tue,  5 Jul 2022 22:47:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTPS id 59F1FC433EF
+	for <kexec@archiver.kernel.org>; Wed,  6 Jul 2022 01:16:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
 	d=lists.infradead.org; s=bombadil.20210309; h=Sender:
 	Content-Transfer-Encoding:Content-Type:List-Subscribe:List-Help:List-Post:
-	List-Archive:List-Unsubscribe:List-Id:MIME-Version:References:In-Reply-To:
-	Date:Cc:To:From:Subject:Message-ID:Reply-To:Content-ID:Content-Description:
+	List-Archive:List-Unsubscribe:List-Id:In-Reply-To:MIME-Version:References:
+	Message-ID:Subject:Cc:To:From:Date:Reply-To:Content-ID:Content-Description:
 	Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:
-	List-Owner; bh=ItfyElihS+WX5JanKoyRM9gyTSUmCzlP3r4PfwGXdS4=; b=boxn6KFfq3HSS1
-	LT5an6d5bJiggJqCQl84gP2JkTSgbvSeE8+A7fb5Rwl+/lyFMBhymslEBpNrmSX+vc4qQ51nEwEs7
-	6WtPSksHppQw7PoqVQktaypC4VLyTuDn573vNfTxh69/7nOHDtsesCq61SHYFpCBHygEsYLU3DMG7
-	iq6ZjzBijlM6Bcc7xI+kYsa0jv3F0E0nCysOXb+Rg7H/kiYKF0hv9hI2mm5+kD1SS+xR+9TyTxuEu
-	sIOWi6wa5Mwc35Sh39MRp+Lf/Lo5odm3+C+dZVpT+qgQDBRUivnDWjNvFFCxAH6unOY4yBkRLkVi4
-	AvJpvTh10uIHW2OP1t4A==;
+	List-Owner; bh=GQSjLxqEM4m9eR0e0DyNe3znAJPJcpLz8AMbZskoUl8=; b=FY2MUAUErkFMJb
+	nSTubAOHDsKlBzX+6Gt3nVosKipAF9brwHO/34mVTvLdmYe4elw3g5UjkIAeVX/8+HHiXL7ZpjP/n
+	p3H69SvwH9rUQ5zA+ry4tte/a2lSdmBj1ajZJvdwC4BwYjLnEnX8Go+Yh9sSbmF6BQfnUvoWwCUt5
+	5KXszJT4KB+pZaD/LDj8igxksfYLr1XrD3Qb9MEAqxHW4Jca+a7fPg5q5jvxcfggFJ1jbzKVbmL8g
+	CLQs508TigTSHWo5TWrUL2ZOuqSjNxsFKNrsnHdbrSmfwzITInQ3AX8+aGQrG1oRZQkzKemmmHqcC
+	ij6ZSwONe/uJ7Y0h9xKw==;
 Received: from localhost ([::1] helo=bombadil.infradead.org)
 	by bombadil.infradead.org with esmtp (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8rKE-003H2z-2d; Tue, 05 Jul 2022 22:47:22 +0000
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1])
+	id 1o8teU-005Clk-CT; Wed, 06 Jul 2022 01:16:26 +0000
+Received: from us-smtp-delivery-124.mimecast.com ([170.10.133.124])
 	by bombadil.infradead.org with esmtps (Exim 4.94.2 #2 (Red Hat Linux))
-	id 1o8rK9-003H1D-NE
-	for kexec@lists.infradead.org; Tue, 05 Jul 2022 22:47:20 +0000
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (8.17.1.5/8.17.1.5) with ESMTP id 265LofWc018671;
-	Tue, 5 Jul 2022 22:47:05 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ibm.com; h=message-id : subject :
- from : to : cc : date : in-reply-to : references : content-type :
- content-transfer-encoding : mime-version; s=pp1;
- bh=qTkmdsElXaiI1gFxf5tq/TR/wAqNux/WQh/17NhFdpo=;
- b=dwLd9bdyGhDwHfRQ4U5QkUxUd3Zfr622lV48dIHcrYhh8iS8Mcb2aiw+69VtUoTXDC9e
- 28MeyfSCLc3bnn3q4m8v+ZmnWPwLypZf7YcYKs7SvctVfexTLt0RxnTGhn964iueaM1R
- YpEK7EPqCqPD5qEGmJPu5udIlQpdLPEXk3i8p1PmTlXXm6rdpuTkzkvwktnqjlh5NXrb
- 3z5GpGQquw637RMADPcP+drUpy0v0SXD8aFLoV3lcale9n9diU39XdiW4aHVvFTjYWmx
- HFYL41Iwfs9AY1o8eASTAdKp3pFRsZIErrx74cGYFLtN1dUhscMuQ5UmKxwt3rCS3X/W qg== 
-Received: from pps.reinject (localhost [127.0.0.1])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h4wju937n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Jul 2022 22:47:04 +0000
-Received: from m0098399.ppops.net (m0098399.ppops.net [127.0.0.1])
-	by pps.reinject (8.17.1.5/8.17.1.5) with ESMTP id 265MdY6L003859;
-	Tue, 5 Jul 2022 22:47:04 GMT
-Received: from ppma02fra.de.ibm.com (47.49.7a9f.ip4.static.sl-reverse.com [159.122.73.71])
-	by mx0a-001b2d01.pphosted.com (PPS) with ESMTPS id 3h4wju936w-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Jul 2022 22:47:04 +0000
-Received: from pps.filterd (ppma02fra.de.ibm.com [127.0.0.1])
-	by ppma02fra.de.ibm.com (8.16.1.2/8.16.1.2) with SMTP id 265MM0K2001260;
-	Tue, 5 Jul 2022 22:47:01 GMT
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (d06relay11.portsmouth.uk.ibm.com [9.149.109.196])
-	by ppma02fra.de.ibm.com with ESMTP id 3h4uwp030n-1
-	(version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-	Tue, 05 Jul 2022 22:47:01 +0000
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-	by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id 265MkwHw23855430
-	(version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-	Tue, 5 Jul 2022 22:46:58 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 56A3FAE045;
-	Tue,  5 Jul 2022 22:46:58 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-	by IMSVA (Postfix) with ESMTP id 3A85DAE04D;
-	Tue,  5 Jul 2022 22:46:55 +0000 (GMT)
-Received: from li-f45666cc-3089-11b2-a85c-c57d1a57929f.ibm.com (unknown [9.211.99.148])
-	by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-	Tue,  5 Jul 2022 22:46:55 +0000 (GMT)
-Message-ID: <47256afac54d68c23f0bdec257ffa26ddf1eb25d.camel@linux.ibm.com>
-Subject: Re: [PATCH v4 4/5] of: kexec: Refactor IMA buffer related functions
- to make them reusable
-From: Mimi Zohar <zohar@linux.ibm.com>
-To: Stefan Berger <stefanb@linux.ibm.com>, kexec@lists.infradead.org,
-        devicetree@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
-Cc: nayna@linux.ibm.com, nasastry@in.ibm.com, mpe@ellerman.id.au,
-        Rob
- Herring <robh+dt@kernel.org>,
-        Frank Rowand <frowand.list@gmail.com>, Borislav Petkov <bp@suse.de>,
-        Jonathan McDowell <noodles@fb.com>
-Date: Tue, 05 Jul 2022 18:46:54 -0400
-In-Reply-To: <20220701022603.31076-5-stefanb@linux.ibm.com>
-References: <20220701022603.31076-1-stefanb@linux.ibm.com>
-	 <20220701022603.31076-5-stefanb@linux.ibm.com>
-X-Mailer: Evolution 3.28.5 (3.28.5-18.el8) 
-X-TM-AS-GCONF: 00
-X-Proofpoint-ORIG-GUID: -x1Dh1y0EJb-AfkgfkHymnGfWTli0eet
-X-Proofpoint-GUID: r5JLXk2Kpw16oJa3Z5CMPR49-qQNuX-5
-X-Proofpoint-UnRewURL: 0 URL was un-rewritten
+	id 1o8teQ-005Ckv-Fz
+	for kexec@lists.infradead.org; Wed, 06 Jul 2022 01:16:24 +0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=redhat.com;
+	s=mimecast20190719; t=1657070180;
+	h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+	 to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+	 in-reply-to:in-reply-to:references:references;
+	bh=a/DwyB/KjYRjvge/ktUbps99y6aLqO83xElyXhGYrI4=;
+	b=WTN8QsYoZDFVxaCznUb8yy6AOuxORZM7U66LnFdwh6HW3XyQDyvVq7BgxisbOocyCkr/Gm
+	vOFBSARsyrQ7l/Ekh1uJ4PPHLNEp3kl2afNnGBZ4V3h0hszOzBtHhijMfXcUE7Yf4e41Uo
+	+sYSjmMJugyYCMcq+5deSVPKXiukm4I=
+Received: from mimecast-mx02.redhat.com (mimecast-mx02.redhat.com
+ [66.187.233.88]) by relay.mimecast.com with ESMTP with STARTTLS
+ (version=TLSv1.2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ us-mta-82-BBXpMsGbO_CcnyjPGWvKiA-1; Tue, 05 Jul 2022 21:16:11 -0400
+X-MC-Unique: BBXpMsGbO_CcnyjPGWvKiA-1
+Received: from smtp.corp.redhat.com (int-mx09.intmail.prod.int.rdu2.redhat.com [10.11.54.9])
+	(using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+	(No client certificate requested)
+	by mimecast-mx02.redhat.com (Postfix) with ESMTPS id D543380174C;
+	Wed,  6 Jul 2022 01:16:10 +0000 (UTC)
+Received: from localhost (ovpn-13-62.pek2.redhat.com [10.72.13.62])
+	by smtp.corp.redhat.com (Postfix) with ESMTPS id 38FBE492C3B;
+	Wed,  6 Jul 2022 01:16:09 +0000 (UTC)
+Date: Wed, 6 Jul 2022 09:16:01 +0800
+From: Baoquan He <bhe@redhat.com>
+To: Eric DeVolder <eric.devolder@oracle.com>
+Cc: linux-kernel@vger.kernel.org, x86@kernel.org, kexec@lists.infradead.org,
+	ebiederm@xmission.com, dyoung@redhat.com, vgoyal@redhat.com,
+	tglx@linutronix.de, mingo@redhat.com, bp@alien8.de,
+	dave.hansen@linux.intel.com, hpa@zytor.com,
+	nramas@linux.microsoft.com, thomas.lendacky@amd.com,
+	robh@kernel.org, efault@gmx.de, rppt@kernel.org, david@redhat.com,
+	sourabhjain@linux.ibm.com, konrad.wilk@oracle.com,
+	boris.ostrovsky@oracle.com
+Subject: Re: [PATCH v9 0/7] crash: Kernel handling of CPU and memory hot
+ un/plug
+Message-ID: <YsTiUXjVL1ativXJ@MiWiFi-R3L-srv>
+References: <20220613224240.79400-1-eric.devolder@oracle.com>
+ <51e85040-5622-dae2-dc28-f167660184f0@oracle.com>
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=baseguard
- engine=ICAP:2.0.205,Aquarius:18.0.883,Hydra:6.0.517,FMLib:17.11.122.1
- definitions=2022-07-05_18,2022-06-28_01,2022-06-22_01
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 clxscore=1011
- priorityscore=1501 phishscore=0 mlxlogscore=999 malwarescore=0 bulkscore=0
- suspectscore=0 mlxscore=0 impostorscore=0 adultscore=0 spamscore=0
- lowpriorityscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.12.0-2206140000 definitions=main-2207050097
+Content-Disposition: inline
+In-Reply-To: <51e85040-5622-dae2-dc28-f167660184f0@oracle.com>
+X-Scanned-By: MIMEDefang 2.85 on 10.11.54.9
 X-CRM114-Version: 20100106-BlameMichelson ( TRE 0.8.0 (BSD) ) MR-646709E3 
-X-CRM114-CacheID: sfid-20220705_154718_074869_4686864F 
-X-CRM114-Status: GOOD (  34.66  )
+X-CRM114-CacheID: sfid-20220705_181622_731228_F030B296 
+X-CRM114-Status: GOOD (  54.62  )
 X-BeenThere: kexec@lists.infradead.org
 X-Mailman-Version: 2.1.34
 Precedence: list
@@ -117,240 +86,314 @@ Content-Transfer-Encoding: 7bit
 Sender: "kexec" <kexec-bounces@lists.infradead.org>
 Errors-To: kexec-bounces+kexec=archiver.kernel.org@lists.infradead.org
 
-[Cc'ing Borislav Petkov <bp@suse.de>, Jonathan McDowell <noodles@fb.com
->]
+On 07/05/22 at 10:17am, Eric DeVolder wrote:
+> Nudge...
+> Thanks!
 
-Hi Stefan,
-
-On Thu, 2022-06-30 at 22:26 -0400, Stefan Berger wrote:
-> Refactor IMA buffer related functions to make them reusable for carrying
-> TPM logs across kexec.
-> 
-> Signed-off-by: Stefan Berger <stefanb@linux.ibm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Frank Rowand <frowand.list@gmail.com>
-> Cc: Mimi Zohar <zohar@linux.ibm.com>
-
-Refactoring the ima_get_kexec_buffer sounds good, but there's a merge
-conflict with Jonathan McDowell's commit "b69a2afd5afc x86/kexec: Carry
-forward IMA measurement log on kexec".
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/tree/drivers/of/kexec.c
-
-thanks,
-
-Mimi
+Seems DavidH has concern and rasied it after you posted v9. Is that
+solved?
 
 > 
-> ---
-> v4:
->  - Move debug output into setup_buffer()
-> ---
->  drivers/of/kexec.c | 131 ++++++++++++++++++++++++++-------------------
->  1 file changed, 76 insertions(+), 55 deletions(-)
+> On 6/13/22 17:42, Eric DeVolder wrote:
+> > When the kdump service is loaded, if a CPU or memory is hot
+> > un/plugged, the crash elfcorehdr (for x86), which describes the CPUs
+> > and memory in the system, must also be updated, else the resulting
+> > vmcore is inaccurate (eg. missing either CPU context or memory
+> > regions).
+> > 
+> > The current solution utilizes udev to initiate an unload-then-reload
+> > of the kdump image (e. kernel, initrd, boot_params, puratory and
+> > elfcorehdr) by the userspace kexec utility. In previous posts I have
+> > outlined the significant performance problems related to offloading
+> > this activity to userspace.
+> > 
+> > This patchset introduces a generic crash hot un/plug handler that
+> > registers with the CPU and memory notifiers. Upon CPU or memory
+> > changes, this generic handler is invoked and performs important
+> > housekeeping, for example obtaining the appropriate lock, and then
+> > invokes an architecture specific handler to do the appropriate
+> > updates.
+> > 
+> > In the case of x86_64, the arch specific handler generates a new
+> > elfcorehdr, and overwrites the old one in memory. No involvement
+> > with userspace needed.
+> > 
+> > To realize the benefits/test this patchset, one must make a couple
+> > of minor changes to userspace:
+> > 
+> >   - Prevent udev from updating kdump crash kernel on hot un/plug changes.
+> >     Add the following as the first lines to the udev rule file
+> >     /usr/lib/udev/rules.d/98-kexec.rules:
+> > 
+> >     # The kernel handles updates to crash elfcorehdr for cpu and memory changes
+> >     SUBSYSTEM=="cpu", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+> >     SUBSYSTEM=="memory", ATTRS{crash_hotplug}=="1", GOTO="kdump_reload_end"
+> > 
+> >     These lines will cause cpu and memory hot un/plug events to be
+> >     skipped within this rule file, if the kernel has these changes
+> >     enabled.
+> > 
+> >   - Change to the kexec_file_load for loading the kdump kernel:
+> >     Eg. on RHEL: in /usr/bin/kdumpctl, change to:
+> >      standard_kexec_args="-p -d -s"
+> >     which adds the -s to select kexec_file_load syscall.
+> > 
+> > This patchset supports kexec_load with a modified kexec userspace
+> > utility, and a working changeset to the kexec userspace utility
+> > is provided here (and to use, the above change to standard_kexec_args
+> > would be, for example, to append --hotplug instead of -s).
+> > 
+> >    diff --git a/kexec/arch/i386/crashdump-x86.c b/kexec/arch/i386/crashdump-x86.c
+> >    index 9826f6d..4ed395a 100644
+> >    --- a/kexec/arch/i386/crashdump-x86.c
+> >    +++ b/kexec/arch/i386/crashdump-x86.c
+> >    @@ -48,6 +48,7 @@
+> >     #include <x86/x86-linux.h>
+> >     extern struct arch_options_t arch_options;
+> >    +extern int do_hotplug;
+> >     static int get_kernel_page_offset(struct kexec_info *UNUSED(info),
+> >     				  struct crash_elf_info *elf_info)
+> >    @@ -975,6 +976,14 @@ int load_crashdump_segments(struct kexec_info *info, char* mod_cmdline,
+> >     	} else {
+> >     		memsz = bufsz;
+> >     	}
+> >    +
+> >    +	/* If hotplug support enabled, use larger size to accomodate changes */
+> >    +	if (do_hotplug) {
+> >    +		long int nr_cpus = get_nr_cpus();
+> >    +		memsz = (nr_cpus + CRASH_MAX_MEMORY_RANGES) * sizeof(Elf64_Phdr);
+> >    +	}
+> >    +
+> >    +    info->elfcorehdr =
+> >     	elfcorehdr = add_buffer(info, tmp, bufsz, memsz, align, min_base,
+> >     							max_addr, -1);
+> >     	dbgprintf("Created elf header segment at 0x%lx\n", elfcorehdr);
+> >    diff --git a/kexec/crashdump-elf.c b/kexec/crashdump-elf.c
+> >    index b8bb686..5e29f7a 100644
+> >    --- a/kexec/crashdump-elf.c
+> >    +++ b/kexec/crashdump-elf.c
+> >    @@ -43,11 +43,7 @@ int FUNC(struct kexec_info *info,
+> >     	int (*get_note_info)(int cpu, uint64_t *addr, uint64_t *len);
+> >     	long int count_cpu;
+> >    -	if (xen_present())
+> >    -		nr_cpus = xen_get_nr_phys_cpus();
+> >    -	else
+> >    -		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> >    -
+> >    +	nr_cpus = get_nr_cpus();
+> >     	if (nr_cpus < 0) {
+> >     		return -1;
+> >     	}
+> >    diff --git a/kexec/crashdump.h b/kexec/crashdump.h
+> >    index 18bd691..28d3278 100644
+> >    --- a/kexec/crashdump.h
+> >    +++ b/kexec/crashdump.h
+> >    @@ -57,7 +57,6 @@ unsigned long phys_to_virt(struct crash_elf_info *elf_info,
+> >     			   unsigned long long paddr);
+> >     unsigned long xen_architecture(struct crash_elf_info *elf_info);
+> >    -int xen_get_nr_phys_cpus(void);
+> >     int xen_get_note(int cpu, uint64_t *addr, uint64_t *len);
+> >     int xen_get_crashkernel_region(uint64_t *start, uint64_t *end);
+> >    diff --git a/kexec/kexec-xen.h b/kexec/kexec-xen.h
+> >    index 70fb576..f54a2dd 100644
+> >    --- a/kexec/kexec-xen.h
+> >    +++ b/kexec/kexec-xen.h
+> >    @@ -83,5 +83,6 @@ extern int __xc_interface_close(xc_interface *xch);
+> >     #endif
+> >     int xen_get_kexec_range(int range, uint64_t *start, uint64_t *end);
+> >    +int xen_get_nr_phys_cpus(void);
+> >     #endif /* KEXEC_XEN_H */
+> >    diff --git a/kexec/kexec.c b/kexec/kexec.c
+> >    index 829a6ea..3668b73 100644
+> >    --- a/kexec/kexec.c
+> >    +++ b/kexec/kexec.c
+> >    @@ -58,6 +58,7 @@
+> >     unsigned long long mem_min = 0;
+> >     unsigned long long mem_max = ULONG_MAX;
+> >    +int do_hotplug = 0;
+> >     static unsigned long kexec_flags = 0;
+> >     /* Flags for kexec file (fd) based syscall */
+> >     static unsigned long kexec_file_flags = 0;
+> >    @@ -489,6 +490,17 @@ static int add_backup_segments(struct kexec_info *info,
+> >     	return 0;
+> >     }
+> >    +long int get_nr_cpus(void)
+> >    +{
+> >    +    long int nr_cpus;
+> >    +
+> >    +	if (xen_present())
+> >    +		nr_cpus = xen_get_nr_phys_cpus();
+> >    +	else
+> >    +		nr_cpus = sysconf(_SC_NPROCESSORS_CONF);
+> >    +    return nr_cpus;
+> >    +}
+> >    +
+> >     static char *slurp_fd(int fd, const char *filename, off_t size, off_t *nread)
+> >     {
+> >     	char *buf;
+> >    @@ -672,6 +684,14 @@ static void update_purgatory(struct kexec_info *info)
+> >     		if (info->segment[i].mem == (void *)info->rhdr.rel_addr) {
+> >     			continue;
+> >     		}
+> >    +
+> >    +		/* Don't include elfcorehdr in the checksum, if hotplug
+> >    +		 * support enabled.
+> >    +		 */
+> >    +		if (do_hotplug && (info->segment[i].mem == (void *)info->elfcorehdr)) {
+> >    +			continue;
+> >    +		}
+> >    +
+> >     		sha256_update(&ctx, info->segment[i].buf,
+> >     			      info->segment[i].bufsz);
+> >     		nullsz = info->segment[i].memsz - info->segment[i].bufsz;
+> >    @@ -1565,6 +1585,9 @@ int main(int argc, char *argv[])
+> >     		case OPT_PRINT_CKR_SIZE:
+> >     			print_crashkernel_region_size();
+> >     			return 0;
+> >    +		case OPT_HOTPLUG:
+> >    +			do_hotplug = 1;
+> >    +			break;
+> >     		default:
+> >     			break;
+> >     		}
+> >    diff --git a/kexec/kexec.h b/kexec/kexec.h
+> >    index 0f97a97..b0428cc 100644
+> >    --- a/kexec/kexec.h
+> >    +++ b/kexec/kexec.h
+> >    @@ -169,6 +169,7 @@ struct kexec_info {
+> >     	int command_line_len;
+> >     	int skip_checks;
+> >    +	unsigned long elfcorehdr;
+> >     };
+> >     struct arch_map_entry {
+> >    @@ -231,7 +232,8 @@ extern int file_types;
+> >     #define OPT_PRINT_CKR_SIZE	262
+> >     #define OPT_LOAD_LIVE_UPDATE	263
+> >     #define OPT_EXEC_LIVE_UPDATE	264
+> >    -#define OPT_MAX			265
+> >    +#define OPT_HOTPLUG		265
+> >    +#define OPT_MAX		266
+> >     #define KEXEC_OPTIONS \
+> >     	{ "help",		0, 0, OPT_HELP }, \
+> >     	{ "version",		0, 0, OPT_VERSION }, \
+> >    @@ -258,6 +260,7 @@ extern int file_types;
+> >     	{ "debug",		0, 0, OPT_DEBUG }, \
+> >     	{ "status",		0, 0, OPT_STATUS }, \
+> >     	{ "print-ckr-size",     0, 0, OPT_PRINT_CKR_SIZE }, \
+> >    +	{ "hotplug",		0, 0, OPT_HOTPLUG }, \
+> >     #define KEXEC_OPT_STR "h?vdfixyluet:pscaS"
+> >    @@ -290,6 +293,8 @@ extern unsigned long add_buffer_phys_virt(struct kexec_info *info,
+> >     	int buf_end, int phys);
+> >     extern void arch_reuse_initrd(void);
+> >    +extern long int get_nr_cpus(void);
+> >    +
+> >     extern int ifdown(void);
+> >     extern char purgatory[];
+> > 
+> > Regards,
+> > eric
+> > ---
+> > 
+> > v9: 13jun2022
+> >   - Rebased to 5.18.0
+> >   - Per Sourabh, moved crash_prepare_elf64_headers() into common
+> >     crash_core.c to avoid compile issues with kexec_load only path.
+> >   - Per David Hildebrand, replaced mutex_trylock() with mutex_lock().
+> >   - Changed the __weak arch_crash_handle_hotplug_event() to utilize
+> >     WARN_ONCE() instead of WARN(). Fix some formatting issues.
+> >   - Per Sourabh, introduced sysfs attribute crash_hotplug for memory
+> >     and CPUs; for use by userspace (udev) to determine if the kernel
+> >     performs crash hot un/plug support.
+> >   - Per Sourabh, moved the code detecting the elfcorehdr segment from
+> >     arch/x86 into crash_core:handle_hotplug_event() so both kexec_load
+> >     and kexec_file_load can benefit.
+> >   - Updated userspace kexec-tools kexec utility to reflect change to
+> >     using CRASH_MAX_MEMORY_RANGES and get_nr_cpus().
+> > 
+> > v8: 5may2022
+> >   https://lkml.org/lkml/2022/5/5/1133
+> >   - Per Borislav Petkov, eliminated CONFIG_CRASH_HOTPLUG in favor
+> >     of CONFIG_HOTPLUG_CPU || CONFIG_MEMORY_HOTPLUG, ie a new define
+> >     is not needed. Also use of IS_ENABLED() rather than #ifdef's.
+> >     Renamed crash_hotplug_handler() to handle_hotplug_event().
+> >     And other corrections.
+> >   - Per Baoquan, minimized the parameters to the arch_crash_
+> >     handle_hotplug_event() to hp_action and cpu.
+> >   - Introduce KEXEC_CRASH_HP_INVALID_CPU definition, per Baoquan.
+> >   - Per Sourabh Jain, renamed and repurposed CRASH_HOTPLUG_ELFCOREHDR_SZ
+> >     to CONFIG_CRASH_MAX_MEMORY_RANGES, mirroring kexec-tools change
+> >     by David Hildebrand. Folded this patch into the x86
+> >     kexec_file_load support patch.
+> > 
+> > v7: 13apr2022
+> >   https://lkml.org/lkml/2022/4/13/850
+> >   - Resolved parameter usage to crash_hotplug_handler(), per Baoquan.
+> > 
+> > v6: 1apr2022
+> >   https://lkml.org/lkml/2022/4/1/1203
+> >   - Reword commit messages and some comment cleanup per Baoquan.
+> >   - Changed elf_index to elfcorehdr_index for clarity.
+> >   - Minor code changes per Baoquan.
+> > 
+> > v5: 3mar2022
+> >   https://lkml.org/lkml/2022/3/3/674
+> >   - Reworded description of CRASH_HOTPLUG_ELFCOREHDR_SZ, per
+> >     David Hildenbrand.
+> >   - Refactored slightly a few patches per Baoquan recommendation.
+> > 
+> > v4: 9feb2022
+> >   https://lkml.org/lkml/2022/2/9/1406
+> >   - Refactored patches per Baoquan suggestsions.
+> >   - A few corrections, per Baoquan.
+> > 
+> > v3: 10jan2022
+> >   https://lkml.org/lkml/2022/1/10/1212
+> >   - Rebasing per Baoquan He request.
+> >   - Changed memory notifier per David Hildenbrand.
+> >   - Providing example kexec userspace change in cover letter.
+> > 
+> > RFC v2: 7dec2021
+> >   https://lkml.org/lkml/2021/12/7/1088
+> >   - Acting upon Baoquan He suggestion of removing elfcorehdr from
+> >     the purgatory list of segments, removed purgatory code from
+> >     patchset, and it is signficiantly simpler now.
+> > 
+> > RFC v1: 18nov2021
+> >   https://lkml.org/lkml/2021/11/18/845
+> >   - working patchset demonstrating kernel handling of hotplug
+> >     updates to x86 elfcorehdr for kexec_file_load
+> > 
+> > RFC: 14dec2020
+> >   https://lkml.org/lkml/2020/12/14/532
+> >   - proposed concept of allowing kernel to handle hotplug update
+> >     of elfcorehdr
+> > ---
+> > 
+> > 
+> > Eric DeVolder (7):
+> >    crash: move crash_prepare_elf64_headers
+> >    crash: prototype change for crash_prepare_elf64_headers
+> >    crash: add generic infrastructure for crash hotplug support
+> >    kexec: exclude elfcorehdr from the segment digest
+> >    kexec: exclude hot remove cpu from elfcorehdr notes
+> >    crash: memory and cpu hotplug sysfs attributes
+> >    x86/crash: Add x86 crash hotplug support
+> > 
+> >   .../admin-guide/mm/memory-hotplug.rst         |   8 +
+> >   Documentation/core-api/cpu_hotplug.rst        |  18 ++
+> >   arch/arm64/kernel/machine_kexec_file.c        |   6 +-
+> >   arch/powerpc/kexec/file_load_64.c             |   2 +-
+> >   arch/x86/Kconfig                              |  11 +
+> >   arch/x86/kernel/crash.c                       | 119 ++++++++-
+> >   drivers/base/cpu.c                            |  13 +
+> >   drivers/base/memory.c                         |  13 +
+> >   include/linux/crash_core.h                    |  12 +
+> >   include/linux/kexec.h                         |  14 +-
+> >   kernel/crash_core.c                           | 241 ++++++++++++++++++
+> >   kernel/kexec_file.c                           | 105 +-------
+> >   12 files changed, 456 insertions(+), 106 deletions(-)
+> > 
 > 
-> diff --git a/drivers/of/kexec.c b/drivers/of/kexec.c
-> index c4f9b6655a2e..0710703acfb0 100644
-> --- a/drivers/of/kexec.c
-> +++ b/drivers/of/kexec.c
-> @@ -115,48 +115,59 @@ static int do_get_kexec_buffer(const void *prop, int len, unsigned long *addr,
->  	return 0;
->  }
->  
-> -/**
-> - * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> - * @addr:	On successful return, set to point to the buffer contents.
-> - * @size:	On successful return, set to the buffer size.
-> - *
-> - * Return: 0 on success, negative errno on error.
-> - */
-> -int ima_get_kexec_buffer(void **addr, size_t *size)
-> +static int get_kexec_buffer(const char *name, unsigned long *addr, size_t *size)
->  {
->  	int ret, len;
-> -	unsigned long tmp_addr;
->  	unsigned long start_pfn, end_pfn;
-> -	size_t tmp_size;
->  	const void *prop;
->  
-> -	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> -		return -ENOTSUPP;
-> -
-> -	prop = of_get_property(of_chosen, "linux,ima-kexec-buffer", &len);
-> +	prop = of_get_property(of_chosen, name, &len);
->  	if (!prop)
->  		return -ENOENT;
->  
-> -	ret = do_get_kexec_buffer(prop, len, &tmp_addr, &tmp_size);
-> +	ret = do_get_kexec_buffer(prop, len, addr, size);
->  	if (ret)
->  		return ret;
->  
-> -	/* Do some sanity on the returned size for the ima-kexec buffer */
-> -	if (!tmp_size)
-> +	/* Do some sanity on the returned size for the kexec buffer */
-> +	if (!*size)
->  		return -ENOENT;
->  
->  	/*
->  	 * Calculate the PFNs for the buffer and ensure
->  	 * they are with in addressable memory.
->  	 */
-> -	start_pfn = PHYS_PFN(tmp_addr);
-> -	end_pfn = PHYS_PFN(tmp_addr + tmp_size - 1);
-> +	start_pfn = PHYS_PFN(*addr);
-> +	end_pfn = PHYS_PFN(*addr + *size - 1);
->  	if (!page_is_ram(start_pfn) || !page_is_ram(end_pfn)) {
-> -		pr_warn("IMA buffer at 0x%lx, size = 0x%zx beyond memory\n",
-> -			tmp_addr, tmp_size);
-> +		pr_warn("%s buffer at 0x%lx, size = 0x%zx beyond memory\n",
-> +			name, *addr, *size);
->  		return -EINVAL;
->  	}
->  
-> +	return 0;
-> +}
-> +
-> +/**
-> + * ima_get_kexec_buffer - get IMA buffer from the previous kernel
-> + * @addr:	On successful return, set to point to the buffer contents.
-> + * @size:	On successful return, set to the buffer size.
-> + *
-> + * Return: 0 on success, negative errno on error.
-> + */
-> +int ima_get_kexec_buffer(void **addr, size_t *size)
-> +{
-> +	int ret;
-> +	unsigned long tmp_addr;
-> +	size_t tmp_size;
-> +
-> +	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> +		return -ENOTSUPP;
-> +
-> +	ret = get_kexec_buffer("linux,ima-kexec-buffer", &tmp_addr, &tmp_size);
-> +	if (ret)
-> +		return ret;
-> +
->  	*addr = __va(tmp_addr);
->  	*size = tmp_size;
->  
-> @@ -191,72 +202,82 @@ int ima_free_kexec_buffer(void)
->  	return memblock_phys_free(addr, size);
->  }
->  
-> -/**
-> - * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
-> - *
-> - * @fdt: Flattened Device Tree to update
-> - * @chosen_node: Offset to the chosen node in the device tree
-> - *
-> - * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-> - * remove it from the device tree.
-> - */
-> -static void remove_ima_buffer(void *fdt, int chosen_node)
-> +static int remove_buffer(void *fdt, int chosen_node, const char *name)
->  {
->  	int ret, len;
->  	unsigned long addr;
->  	size_t size;
->  	const void *prop;
->  
-> -	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> -		return;
-> -
-> -	prop = fdt_getprop(fdt, chosen_node, "linux,ima-kexec-buffer", &len);
-> +	prop = fdt_getprop(fdt, chosen_node, name, &len);
->  	if (!prop)
-> -		return;
-> +		return -ENOENT;
->  
->  	ret = do_get_kexec_buffer(prop, len, &addr, &size);
-> -	fdt_delprop(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +	fdt_delprop(fdt, chosen_node, name);
->  	if (ret)
-> -		return;
-> +		return ret;
->  
->  	ret = fdt_find_and_del_mem_rsv(fdt, addr, size);
->  	if (!ret)
-> -		pr_debug("Removed old IMA buffer reservation.\n");
-> +		pr_debug("Remove old %s buffer reserveration", name);
-> +	return ret;
->  }
->  
-> -#ifdef CONFIG_IMA_KEXEC
->  /**
-> - * setup_ima_buffer - add IMA buffer information to the fdt
-> - * @image:		kexec image being loaded.
-> - * @fdt:		Flattened device tree for the next kernel.
-> - * @chosen_node:	Offset to the chosen node.
-> + * remove_ima_buffer - remove the IMA buffer property and reservation from @fdt
->   *
-> - * Return: 0 on success, or negative errno on error.
-> + * @fdt: Flattened Device Tree to update
-> + * @chosen_node: Offset to the chosen node in the device tree
-> + *
-> + * The IMA measurement buffer is of no use to a subsequent kernel, so we always
-> + * remove it from the device tree.
->   */
-> -static int setup_ima_buffer(const struct kimage *image, void *fdt,
-> -			    int chosen_node)
-> +static void remove_ima_buffer(void *fdt, int chosen_node)
-> +{
-> +	if (!IS_ENABLED(CONFIG_HAVE_IMA_KEXEC))
-> +		return;
-> +
-> +	remove_buffer(fdt, chosen_node, "linux,ima-kexec-buffer");
-> +}
-> +
-> +#ifdef CONFIG_IMA_KEXEC
-> +static int setup_buffer(void *fdt, int chosen_node, const char *name,
-> +			phys_addr_t addr, size_t size)
->  {
->  	int ret;
->  
-> -	if (!image->ima_buffer_size)
-> +	if (!size)
->  		return 0;
->  
->  	ret = fdt_appendprop_addrrange(fdt, 0, chosen_node,
-> -				       "linux,ima-kexec-buffer",
-> -				       image->ima_buffer_addr,
-> -				       image->ima_buffer_size);
-> +				       name, addr, size);
->  	if (ret < 0)
->  		return -EINVAL;
->  
-> -	ret = fdt_add_mem_rsv(fdt, image->ima_buffer_addr,
-> -			      image->ima_buffer_size);
-> +	ret = fdt_add_mem_rsv(fdt, addr, size);
->  	if (ret)
->  		return -EINVAL;
->  
-> -	pr_debug("IMA buffer at 0x%pa, size = 0x%zx\n",
-> -		 &image->ima_buffer_addr, image->ima_buffer_size);
-> +	pr_debug("%s at 0x%pa, size = 0x%zx\n", name, &addr, size);
->  
->  	return 0;
-> +
-> +}
-> +
-> +/**
-> + * setup_ima_buffer - add IMA buffer information to the fdt
-> + * @image:		kexec image being loaded.
-> + * @fdt:		Flattened device tree for the next kernel.
-> + * @chosen_node:	Offset to the chosen node.
-> + *
-> + * Return: 0 on success, or negative errno on error.
-> + */
-> +static int setup_ima_buffer(const struct kimage *image, void *fdt,
-> +			    int chosen_node)
-> +{
-> +	return setup_buffer(fdt, chosen_node, "linux,ima-kexec-buffer",
-> +			    image->ima_buffer_addr, image->ima_buffer_size);
->  }
->  #else /* CONFIG_IMA_KEXEC */
->  static inline int setup_ima_buffer(const struct kimage *image, void *fdt,
-
 
 
 _______________________________________________
